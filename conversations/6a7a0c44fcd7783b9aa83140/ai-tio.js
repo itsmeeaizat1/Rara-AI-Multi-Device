@@ -10,7 +10,7 @@ const pluginConfig = {
   name: "ai-tio",
   alias: ["tio", "aio", "tioai", "asktio"],
   category: "ai",
-  description: "Tanya AI menggunakan Tio AI (AIO) - multi model dalam satu API",
+  description: "Tanya AI menggunakan Tio AI (AIO) - 3 format: OpenAI, Gemini, Anthropic",
   usage: ".ai-tio <pertanyaan>",
   example: ".ai-tio jelaskan tentang black hole",
   isOwner: false,
@@ -22,14 +22,42 @@ const pluginConfig = {
   isEnabled: true,
 };
 
+// ═══════════════════════════════════════════════
+// MODEL ROUTING - auto detect which provider to use
+// ═══════════════════════════════════════════════
+
 const TIO_MODELS = [
-  { id: "claude-sonnet-4-20250514", label: "Claude Sonnet 4", desc: "Paling pintar" },
-  { id: "claude-3-5-haiku-20241022", label: "Claude 3.5 Haiku", desc: "Cepat & hemat" },
-  { id: "gpt-4o", label: "GPT-4o", desc: "OpenAI flagship" },
-  { id: "gpt-4o-mini", label: "GPT-4o Mini", desc: "Cepat & murah" },
-  { id: "gemini-2.0-flash", label: "Gemini 2.0 Flash", desc: "Google" },
-  { id: "deepseek-chat", label: "DeepSeek Chat", desc: "Reasoning" },
+  // Anthropic format
+  { id: "claude-sonnet-4-20250514", label: "Claude Sonnet 4", format: "anthropic", desc: "Paling pinter" },
+  { id: "claude-3-5-haiku-20241022", label: "Claude 3.5 Haiku", format: "anthropic", desc: "Cepat & hemat" },
+  { id: "claude-3-haiku-20240307", label: "Claude 3 Haiku", format: "anthropic", desc: "Legacy" },
+  // OpenAI format
+  { id: "gpt-4o", label: "GPT-4o", format: "openai", desc: "OpenAI flagship" },
+  { id: "gpt-4o-mini", label: "GPT-4o Mini", format: "openai", desc: "Cepat & murah" },
+  { id: "gpt-4-turbo", label: "GPT-4 Turbo", format: "openai", desc: "OpenAI turbo" },
+  { id: "gpt-3.5-turbo", label: "GPT-3.5 Turbo", format: "openai", desc: "Hemat" },
+  { id: "deepseek-chat", label: "DeepSeek Chat", format: "openai", desc: "Reasoning" },
+  { id: "deepseek-reasoner", label: "DeepSeek Reasoner", format: "openai", desc: "Deep reasoning" },
+  // Gemini format
+  { id: "gemini-2.0-flash", label: "Gemini 2.0 Flash", format: "gemini", desc: "Google cepat" },
+  { id: "gemini-1.5-pro", label: "Gemini 1.5 Pro", format: "gemini", desc: "Google pro" },
+  { id: "gemini-1.5-flash", label: "Gemini 1.5 Flash", format: "gemini", desc: "Google hemat" },
 ];
+
+function getProviderKey(modelId) {
+  const model = TIO_MODELS.find((m) => m.id === modelId);
+  if (!model) return "tio_anthropic"; // default
+  return "tio_" + model.format;
+}
+
+function getEndpoint(format) {
+  switch (format) {
+    case "openai": return "https://ai.tioo.eu.org/v1/chat/completions";
+    case "gemini": return null; // dynamic per model
+    case "anthropic": return "https://ai.tioo.eu.org/v1/messages";
+    default: return "https://ai.tioo.eu.org/v1/messages";
+  }
+}
 
 async function handler(m, { sock, config: botConfig }) {
   try {
@@ -37,35 +65,52 @@ async function handler(m, { sock, config: botConfig }) {
     const raw = m.text?.trim() || "";
     const prompt = raw.replace(/^\.ai-tio\s+/i, "").replace(/^\.tio\s+/i, "").replace(/^\.aio\s+/i, "").trim();
 
-    if (!prompt) {
-      const aiHelp = botConfig.aiHelp || {};
-      const currentModel = aiHelp.model || "claude-sonnet-4-20250514";
-      const hasKey = !!(aiHelp.apiKey || process.env.OPENAI_API_KEY);
+    const aiHelp = botConfig.aiHelp || {};
+    const currentModel = aiHelp.model || "claude-sonnet-4-20250514";
+    const hasKey = !!(aiHelp.apiKey || process.env.OPENAI_API_KEY);
 
-      const modelLines = TIO_MODELS.map((mdl, i) =>
-        `  ${i + 1}. *${mdl.label}* (${mdl.id})\n     ${mdl.desc}${mdl.id === currentModel ? " ✅ aktif" : ""}`
+    if (!prompt) {
+      const currentMdl = TIO_MODELS.find((m) => m.id === currentModel);
+      const currentLabel = currentMdl?.label || currentModel;
+      const currentFormat = currentMdl?.format || "anthropic";
+
+      // Group by format
+      const anthropicModels = TIO_MODELS.filter((m) => m.format === "anthropic");
+      const openaiModels = TIO_MODELS.filter((m) => m.format === "openai");
+      const geminiModels = TIO_MODELS.filter((m) => m.format === "gemini");
+
+      const fmtList = (list) => list.map((mdl, i) =>
+        `  ${mdl.id === currentModel ? "✅" : "  "} *${mdl.label}* (${mdl.id})\n      ${mdl.desc}`
       ).join("\n");
 
       const text =
         alyaHeader("Tio AI (AIO)", "🤖") +
         "\n\n" +
         bracketBox("🤖", "ɪɴꜰᴏ", [
-          `◦ Multi-model AI dalam satu API`,
-          `◦ Endpoint: *ai.tioo.eu.org*`,
+          `◦ Multi-model AI via *ai.tioo.eu.org*`,
+          `◦ 3 Format: OpenAI / Gemini / Anthropic`,
           `◦ API Key: *${hasKey ? "Terpasang ✅" : "Belum diisi ❌"}*`,
-          `◦ Model aktif: *${currentModel}*`,
+          `◦ Model aktif: *${currentLabel}*`,
+          `◦ Format: *${currentFormat.toUpperCase()}*`,
         ]) +
         "\n\n" +
-        bracketBox("📋", "ᴍᴏᴅᴇʟ ᴛᴇʀꜱᴇᴅɪᴀ", [
-          modelLines,
+        bracketBox("🟣", "ᴀɴᴛʜʀᴏᴘɪᴄ", [
+          fmtList(anthropicModels),
+        ]) +
+        "\n\n" +
+        bracketBox("🟢", "ᴏᴘᴇɴᴀɪ", [
+          fmtList(openaiModels),
+        ]) +
+        "\n\n" +
+        bracketBox("🔵", "ɢᴇᴍɪɴɪ", [
+          fmtList(geminiModels),
         ]) +
         "\n\n" +
         bracketBox("📋", "ᴄᴏᴍᴍᴀɴᴅ", [
           `◦ *${prefix}ai-tio <pertanyaan>* — tanya AI`,
           `◦ *${prefix}ai-tio model <nama>* — ganti model`,
-          `◦ *${prefix}ai-tio list* — lihat model tersedia`,
+          `◦ *${prefix}ai-tio list* — lihat semua model`,
           `◦ *${prefix}ai-set apiKey <key>* — set API key`,
-          `◦ *${prefix}ai-set endpoint <url>* — set endpoint`,
         ]) +
         "\n\n" +
         separator("━", 22) +
@@ -81,13 +126,26 @@ async function handler(m, { sock, config: botConfig }) {
       const modelArg = prompt.slice(6).trim();
 
       if (modelArg.toLowerCase() === "list") {
-        const modelLines = TIO_MODELS.map((mdl, i) =>
-          `  ${i + 1}. *${mdl.label}* (${mdl.id}) — ${mdl.desc}`
-        ).join("\n");
         const text =
           alyaHeader("Tio AI Models", "🤖") +
           "\n\n" +
-          bracketBox("📋", "ᴍᴏᴅᴇʟ", [modelLines]) +
+          bracketBox("🟣", "ᴀɴᴛʜʀᴏᴘɪᴄ", [
+            TIO_MODELS.filter((m) => m.format === "anthropic")
+              .map((mdl) => `  ${mdl.id === currentModel ? "✅" : "  "} *${mdl.label}* (${mdl.id})`)
+              .join("\n"),
+          ]) +
+          "\n\n" +
+          bracketBox("🟢", "ᴏᴘᴇɴᴀɪ", [
+            TIO_MODELS.filter((m) => m.format === "openai")
+              .map((mdl) => `  ${mdl.id === currentModel ? "✅" : "  "} *${mdl.label}* (${mdl.id})`)
+              .join("\n"),
+          ]) +
+          "\n\n" +
+          bracketBox("🔵", "ɢᴇᴍɪɴɪ", [
+            TIO_MODELS.filter((m) => m.format === "gemini")
+              .map((mdl) => `  ${mdl.id === currentModel ? "✅" : "  "} *${mdl.label}* (${mdl.id})`)
+              .join("\n"),
+          ]) +
           "\n\n" +
           separator("━", 22) +
           "\n" +
@@ -106,12 +164,10 @@ async function handler(m, { sock, config: botConfig }) {
           "\n\n" +
           bracketBox("⚠️", "ᴇʀʀᴏʀ", [
             `◦ Model *${modelArg}* tidak ditemukan`,
-            `◦ Ketik *${prefix}ai-tio model list* untuk lihat semua model`,
+            `◦ Ketik *${prefix}ai-tio model list* untuk lihat semua`,
           ]) +
           "\n\n" +
-          separator("━", 22) +
-          "\n" +
-          tipText(`Ketik ${prefix}ai-tio model list`);
+          separator("━", 22);
         await m.reply(text);
         return { handled: true };
       }
@@ -125,25 +181,40 @@ async function handler(m, { sock, config: botConfig }) {
         bracketBox("✅", "ᴘᴇʀᴜʙᴀʜᴀɴ", [
           `◦ Model: *${found.label}*`,
           `◦ ID: *${found.id}*`,
-          `◦ Deskripsi: *${found.desc}*`,
+          `◦ Format: *${found.format.toUpperCase()}*`,
+          `◦ Endpoint: *${getEndpoint(found.format) || "dynamic"}*`,
+          `◦ ${found.desc}`,
         ]) +
         "\n\n" +
         separator("━", 22) +
         "\n" +
-        tipText(`Seketik ${prefix}ai-tio <pertanyaan> untuk tes`);
+        tipText(`Ketik ${prefix}ai-tio <pertanyaan> untuk tes`);
       await m.reply(text);
       return { handled: true };
     }
 
     // Handle "list" subcommand
     if (prompt.toLowerCase() === "list") {
-      const modelLines = TIO_MODELS.map((mdl, i) =>
-        `  ${i + 1}. *${mdl.label}* (${mdl.id}) — ${mdl.desc}`
-      ).join("\n");
       const text =
         alyaHeader("Tio AI Models", "🤖") +
         "\n\n" +
-        bracketBox("📋", "ᴍᴏᴅᴇʟ", [modelLines]) +
+        bracketBox("🟣", "ᴀɴᴛʜʀᴏᴘɪᴄ", [
+          TIO_MODELS.filter((m) => m.format === "anthropic")
+            .map((mdl) => `  ${mdl.id === currentModel ? "✅" : "  "} *${mdl.label}* (${mdl.id}) — ${mdl.desc}`)
+            .join("\n"),
+        ]) +
+        "\n\n" +
+        bracketBox("🟢", "ᴏᴘᴇɴᴀɪ", [
+          TIO_MODELS.filter((m) => m.format === "openai")
+            .map((mdl) => `  ${mdl.id === currentModel ? "✅" : "  "} *${mdl.label}* (${mdl.id}) — ${mdl.desc}`)
+            .join("\n"),
+        ]) +
+        "\n\n" +
+        bracketBox("🔵", "ɢᴇᴍɪɴɪ", [
+          TIO_MODELS.filter((m) => m.format === "gemini")
+            .map((mdl) => `  ${mdl.id === currentModel ? "✅" : "  "} *${mdl.label}* (${mdl.id}) — ${mdl.desc}`)
+            .join("\n"),
+        ]) +
         "\n\n" +
         separator("━", 22) +
         "\n" +
@@ -152,10 +223,8 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    // Call Tio AI
-    const aiHelp = botConfig.aiHelp || {};
+    // ═══ Call Tio AI ═══
     const apiKey = aiHelp.apiKey || process.env.OPENAI_API_KEY || "";
-    const apiEndpoint = aiHelp.apiEndpoint || "https://ai.tioo.eu.org/v1/messages";
     const model = aiHelp.model || "claude-sonnet-4-20250514";
     const systemPrompt = aiHelp.systemPrompt || "Kamu adalah Nova AI, asisten yang ramah dan cerdas. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia.";
 
@@ -165,26 +234,34 @@ async function handler(m, { sock, config: botConfig }) {
         "\n\n" +
         bracketBox("⚠️", "ᴇʀʀᴏʀ", [
           `◦ API Key Tio AI belum di-set`,
-          `◦ Set di config.js bagian aiHelp.apiKey`,
+          `◦ Set di config.js: aiHelp.apiKey`,
           `◦ Atau ketik *${prefix}ai-set apiKey <key>*`,
         ]) +
         "\n\n" +
-        separator("━", 22) +
-        "\n" +
-        tipText(`Set API key dulu sebelum menggunakan`);
+        separator("━", 22);
       await m.reply(text);
       return { handled: true };
     }
 
-    // Build conversation context from quoted message if available
+    // Auto-route to correct provider based on model
+    const providerKey = getProviderKey(model);
+    const modelInfo = TIO_MODELS.find((m) => m.id === model);
+    const format = modelInfo?.format || "anthropic";
+
+    // Build messages
     const messages = [];
     if (m.quoted && m.quoted.text) {
       messages.push({ role: "assistant", content: m.quoted.text });
     }
     messages.push({ role: "user", content: prompt });
 
+    // For Gemini format, the endpoint is dynamic per model
+    const apiEndpoint = format === "gemini"
+      ? `https://ai.tioo.eu.org/v1beta/models/${model}:generateContent`
+      : getEndpoint(format);
+
     const reply = await callAI({
-      providerKey: "tio",
+      providerKey: providerKey,
       model: model,
       messages: messages,
       systemPrompt: systemPrompt,
@@ -195,7 +272,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     // Format response
-    const modelLabel = TIO_MODELS.find((mdl) => mdl.id === model)?.label || model;
+    const modelLabel = modelInfo?.label || model;
     const replyText = reply.length > 3800 ? reply.slice(0, 3800) + "\n\n_... respon dipotong_" : reply;
 
     const text =
@@ -203,6 +280,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n\n" +
       bracketBox("🤖", "ʀᴇꜱᴘᴏɴ", [
         `◦ Model: *${modelLabel}*`,
+        `◦ Format: *${format.toUpperCase()}*`,
         `◦ Pertanyaan: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
         "",
         replyText,
