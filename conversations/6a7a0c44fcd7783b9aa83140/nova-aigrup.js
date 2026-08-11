@@ -10,19 +10,46 @@ import config from "../../config.js";
 const COOLDOWN_MS = 30000;
 const groupCooldowns = new Map();
 
-// Simbol yang menandakan bot harus respon (tag, reply, atau pertanyaan)
+// Format definitions (sync dengan aigrup.js)
+const TIO_FORMATS = {
+  openai: {
+    label: "OpenAI",
+    emoji: "🟢",
+    apiKeyField: "openaiApiKey",
+    modelField: "openaiModel",
+    defaultModel: "deepseek-v4-flash:free",
+    endpoint: "https://ai.tioo.eu.org/v1/chat/completions",
+    providerKey: "tio_openai",
+  },
+  gemini: {
+    label: "Gemini",
+    emoji: "🔵",
+    apiKeyField: "geminiApiKey",
+    modelField: "geminiModel",
+    defaultModel: "deepseek-v4-flash:free",
+    endpoint: null, // dynamic: /v1beta/models/{model}:generateContent
+    providerKey: "tio_gemini",
+  },
+  anthropic: {
+    label: "Anthropic",
+    emoji: "🟣",
+    apiKeyField: "anthropicApiKey",
+    modelField: "anthropicModel",
+    defaultModel: "deepseek-v4-flash:free",
+    endpoint: "https://ai.tioo.eu.org/v1/messages",
+    providerKey: "tio_anthropic",
+  },
+};
+
 function shouldRespondToMessage(m, probability) {
-  // Selalu respon kalau di-tag atau di-reply
+  // Selalu respon kalau di-reply (reply ke bot)
   if (m.quoted && m.quoted.fromMe) return true;
-  if (m.mentionedJid && m.mentionedJid.length > 0) {
-    // Cek apakah bot sendiri yang di-tag
-    // (botNumber di-pass dari handler)
-    return true;
-  }
+  // Selalu respon kalau di-tag/mention
+  if (m.mentionedJid && m.mentionedJid.length > 0) return true;
   // Respon kalau ada tanda tanya (pertanyaan)
   const text = (m.text || "").toLowerCase();
-  if (text.includes("?") || text.includes("ngomong") || text.includes("bot")) {
-    return Math.random() < (probability / 100) * 1.5; // sedikit lebih tinggi untuk pertanyaan
+  if (text.includes("?")) {
+    return Math.random() < Math.min((probability / 100) * 1.5, 1);
   }
   // Random probability
   return Math.random() < (probability / 100);
@@ -35,15 +62,6 @@ export async function handleAiGrup(m, sock, botNumber) {
     const aigrup = db.db.data.aigrup;
     if (!aigrup.enabled) return false;
 
-    // Cek apakah grup ini di-enable (atau global ON)
-    // Kalau groups kosong tapi enabled=true → semua grup
-    const groupEnabled = aigrup.groups[m.chat] || (Object.keys(aigrup.groups).length === 0);
-    if (!groupEnabled && aigrup.enabled) {
-      // Global ON, semua grup aktif
-    } else if (!groupEnabled) {
-      return false;
-    }
-
     // Cooldown per grup
     const lastTime = groupCooldowns.get(m.chat);
     if (lastTime && Date.now() - lastTime < COOLDOWN_MS) return false;
@@ -52,22 +70,30 @@ export async function handleAiGrup(m, sock, botNumber) {
     const shouldRespond = shouldRespondToMessage(m, aigrup.probability || 20);
     if (!shouldRespond) return false;
 
-    // Set cooldown
-    groupCooldowns.set(m.chat, Date.now());
-
-    // Ambil context pesan + nama pengirim
+    // Ambil data
     const senderName = m.pushName || m.senderName || "seseorang";
     const userMessage = m.text || "";
-
     if (!userMessage || userMessage.length < 2) return false;
 
-    // Build AI request
+    // ═══ Resolve format & model dari database ═══
+    const fmtKey = aigrup.format || "openai";
+    const fmt = TIO_FORMATS[fmtKey] || TIO_FORMATS.openai;
+    const model = aigrup.model || fmt.defaultModel;
+
+    // ═══ Resolve API key ═══
     const aiHelp = config.aiHelp || {};
-    const apiKey = aiHelp.openaiApiKey || aiHelp.apiKey || process.env.OPENAI_API_KEY || "";
+    const formatKey = aiHelp[fmt.apiKeyField] || "";
+    const fallbackKey = aiHelp.apiKey || process.env.OPENAI_API_KEY || "";
+    const apiKey = formatKey || fallbackKey;
     if (!apiKey) return false;
 
-    const model = aiHelp.openaiModel || aiHelp.model || "deepseek-v4-flash:free";
-    const systemPrompt = aiHelp.aigrupSystemPrompt || 
+    // ═══ Set endpoint (Gemini dynamic per model) ═══
+    const apiEndpoint = fmtKey === "gemini"
+      ? `https://ai.tioo.eu.org/v1beta/models/${model}:generateContent`
+      : fmt.endpoint;
+
+    // ═══ System prompt ═══
+    const systemPrompt = aiHelp.aigrupSystemPrompt ||
       `Kamu adalah teman dalam grup WhatsApp. Namamu Nova. ` +
       `Kamu sedang ikut nimbrung dalam percakapan grup. ` +
       `Jawab santai, singkat, dan natural seperti chat biasa. ` +
@@ -78,7 +104,7 @@ export async function handleAiGrup(m, sock, botNumber) {
       `Jika pesan tidak perlu respon, balas dengan sangat singkat atau abaikan. ` +
       `JANGAN mengaku sebagai AI/bot. Kamu teman biasa.`;
 
-    // Ambil history singkat
+    // Build messages
     const messages = [];
     messages.push({ role: "system", content: systemPrompt });
     messages.push({ role: "user", content: `${senderName}: ${userMessage}` });
@@ -86,23 +112,27 @@ export async function handleAiGrup(m, sock, botNumber) {
     // Typing indicator
     await sock.sendPresenceUpdate("composing", m.chat);
 
-    // Delay natural
+    // Natural delay
     const delay = Math.min(userMessage.length * 15, 1500);
     await new Promise((r) => setTimeout(r, delay));
 
+    // Call AI dengan format yang dipilih
     const reply = await callAI({
-      providerKey: "tio_openai",
+      providerKey: fmt.providerKey,
       model: model,
       messages: messages,
       apiKey: apiKey,
-      apiEndpoint: "https://ai.tioo.eu.org/v1/chat/completions",
+      apiEndpoint: apiEndpoint,
       temperature: 0.8,
       maxTokens: 300,
     });
 
     if (!reply || reply.length < 2) return false;
 
-    // Kirim respon (tanpa quote, biar natural)
+    // Set cooldown
+    groupCooldowns.set(m.chat, Date.now());
+
+    // Kirim respon
     await sock.sendPresenceUpdate("paused", m.chat);
     await m.reply(reply);
     return true;
