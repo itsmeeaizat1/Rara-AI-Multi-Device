@@ -7,7 +7,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
  * Beda dari .deepseek (V4 scraper lama) dan .deepseekv2 (v3.2 thinking, API xemoz)
  * API: https://api-xemoz-official.my.id/api/ai/deepseek-v4-flash.php
  *
- * Params: pesan, session (id percakapan), reset (opsional, reset sesi)
+ * Params: pesan, session (id percakapan), reset (opsional, value apa saja = reset)
  * Response: result.answer (jawaban), result.reasoning (proses berpikir), result.conversation_id
  */
 
@@ -28,17 +28,19 @@ const pluginConfig = {
 };
 
 const API_URL = "https://api-xemoz-official.my.id/api/ai/deepseek-v4-flash.php";
-
-// Session storage per user — pakai sender sebagai session id biar konsisten
-const activeSessions = new Set();
+const MAX_RETRIES = 2;
+const RETRY_DELAY = 3000;
 
 function sessionKey(m) {
   return m.sender || m.key?.remoteJid || "unknown";
 }
 
 function toSessionId(rawKey) {
-  // API cuma butuh string bebas sebagai session id, pakai hash sederhana dari jid
   return String(rawKey).replace(/[^a-zA-Z0-9]/g, "").slice(0, 40) || "novauser";
+}
+
+function sleep(ms) {
+  return new Promise(r => setTimeout(r, ms));
 }
 
 async function callDeepSeekV4Flash(pesan, session, reset) {
@@ -60,14 +62,39 @@ async function callDeepSeekV4Flash(pesan, session, reset) {
     throw new Error(data?.error || data?.message || `HTTP ${res.status}`);
   }
 
-  const answer = data?.result?.answer || "";
-  if (!answer) throw new Error("Response AI kosong.");
-
   return {
-    answer,
+    answer: data?.result?.answer || "",
     reasoning: data?.result?.reasoning || "",
     conversationId: data?.result?.conversation_id || "",
   };
+}
+
+async function callWithRetry(pesan, session, reset) {
+  let lastError = null;
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const result = await callDeepSeekV4Flash(pesan, session, reset);
+
+      // Reset calls return empty answer — that's expected
+      if (reset) return result;
+
+      // Normal calls should have answer — retry if empty
+      if (result.answer && result.answer.trim()) {
+        return result;
+      }
+
+      // Empty answer on normal call — might be temp server issue
+      lastError = new Error("AI sedang memproses, coba lagi...");
+    } catch (error) {
+      lastError = error;
+    }
+
+    if (attempt < MAX_RETRIES) await sleep(RETRY_DELAY);
+  }
+
+  // If all retries failed but we have a conversation_id, the session is valid
+  throw lastError || new Error("Response AI kosong setelah beberapa percobaan.");
 }
 
 async function handler(m, { sock }) {
@@ -80,19 +107,24 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(m, sock, claraWrap("DeepSeek V4 Flash", help));
   }
 
+  // Reset session — reset param terima value apa saja
   if (text.toLowerCase() === "reset") {
-    activeSessions.delete(key);
     try {
-      await callDeepSeekV4Flash("reset session", sessionId, true);
+      await callDeepSeekV4Flash("reset", sessionId, true);
     } catch {}
-    return m.reply(claraWrap("DeepSeek V4 Flash", "Sesi percakapan direset."));
+    return m.reply(claraWrap("DeepSeek V4 Flash", "Sesi percakapan direset. Kirim pesan baru untuk memulai."));
   }
 
   await m.react("🕐");
 
   try {
-    const result = await callDeepSeekV4Flash(text, sessionId, false);
-    activeSessions.add(key);
+    const result = await callWithRetry(text, sessionId, false);
+
+    if (!result.answer || !result.answer.trim()) {
+      await m.react("✅");
+      return m.reply(claraWrap("DeepSeek V4 Flash", "AI sedang sibuk, coba kirim ulang pertanyaan kamu."));
+    }
+
     await m.react("✅");
     return m.reply(claraWrap("DeepSeek V4 Flash", result.answer));
   } catch (error) {
