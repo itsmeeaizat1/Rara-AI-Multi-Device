@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "edge-tts": "^1.0.1",
+    "edge-tts-node": "^1.5.7"
+  }
+}
