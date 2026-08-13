@@ -34,7 +34,7 @@ import { UserProfileModal } from "./components/UserProfileModal";
 export default function App() {
   // State
   const [songs, setSongs] = useState<Song[]>(INITIAL_SONGS);
-  const [currentSong, setCurrentSong] = useState<Song | null>(INITIAL_SONGS[0]);
+  const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<string>("home");
@@ -113,12 +113,14 @@ export default function App() {
   };
 
   const handleNextSong = () => {
+    if (songs.length === 0) return;
     if (!currentSong) return;
     const idx = songs.findIndex((s) => s.id === currentSong.id);
     handlePlayPause(songs[(idx + 1) % songs.length]);
   };
 
   const handlePrevSong = () => {
+    if (songs.length === 0) return;
     if (!currentSong) return;
     const idx = songs.findIndex((s) => s.id === currentSong.id);
     handlePlayPause(songs[(idx - 1 + songs.length) % songs.length]);
@@ -238,20 +240,35 @@ export default function App() {
                   <Music className="w-5 h-5 text-emerald-400" />
                   <h2 className="text-lg font-bold">Pilih Lagu</h2>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredSongs.map((song) => (
-                    <SongCard
-                      key={song.id}
-                      song={song}
-                      isPlaying={isPlaying && currentSong?.id === song.id}
-                      onPlay={() => handlePlayPause(song)}
-                      onKaraoke={() => {
-                        setCurrentSong(song);
-                        setIsKaraokeOpen(true);
-                      }}
-                    />
-                  ))}
-                </div>
+                {filteredSongs.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 text-center">
+                    <Music className="w-12 h-12 text-neutral-700 mb-3" />
+                    <p className="text-neutral-500 text-sm mb-1">Belum ada lagu di pustaka kamu</p>
+                    <p className="text-neutral-600 text-xs mb-4">Cari dari YouTube atau upload file audio sendiri</p>
+                    <button
+                      onClick={() => setIsImportOpen(true)}
+                      className="inline-flex items-center gap-2 bg-pink-500 hover:bg-pink-400 text-black font-bold px-5 py-2.5 rounded-full transition shadow-lg"
+                    >
+                      <PlusCircle className="w-4 h-4" />
+                      Import Musik
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredSongs.map((song) => (
+                      <SongCard
+                        key={song.id}
+                        song={song}
+                        isPlaying={isPlaying && currentSong?.id === song.id}
+                        onPlay={() => handlePlayPause(song)}
+                        onKaraoke={() => {
+                          setCurrentSong(song);
+                          setIsKaraokeOpen(true);
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}
