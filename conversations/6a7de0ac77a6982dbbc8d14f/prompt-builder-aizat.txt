@@ -1,0 +1,35 @@
+Buatkan website portfolio personal untuk "Aizat Alamudin — Software Engineer" dengan desain glassmorphism modern.
+
+DESIGN SYSTEM:
+- Primary: #315eea, Secondary: #5b4be8, Accent: #20a9c8
+- Background: #edf5ff, Surface: #ffffff, Text: #17213a, Muted: #65738d
+- Border radius: 2.2rem (sangat rounded)
+- Font heading: Trebuchet MS / Segoe UI, Font body: Segoe UI
+- Glass-morphism navbar dengan backdrop blur, gradient buttons (blue to purple to teal)
+- Radial gradient backgrounds di setiap halaman
+
+HALAMAN (PUBLIC):
+1. Home - Hero section dengan nama "Aizat Alamudin", tagline "Membangun aplikasi web yang rapi, responsif, dan mudah digunakan", deskripsi singkat, tombol "Mari bekerja sama" dan "Lihat project". Preview 2-3 project terbaru dan preview produk.
+2. Projects (/work) - Grid listing semua project dengan judul, deskripsi, tanggal, dan kategori.
+3. Produk (/produk) - Katalog produk dengan card layout (nama, foto, stok, harga).
+4. Catatan/Blog (/blog) - List artikel dengan kategori (UI/UX, Mindset, Teknologi, Product & Design), reading time, dan tanggal.
+5. Blog Post Detail (/post/[slug]) - Halaman artikel individual dengan konten lengkap, kategori, tanggal, reading time, tombol "Kembali".
+6. About (/about) - Bio singkat Aizat Alamudin.
+7. Contact (/contact) - Contact links: Email, WhatsApp, TikTok.
+
+NAVBAR (di semua halaman): Logo "Aizat Alamudin." dengan link: Project, Produk, Catatan, Tentang, Kontak. Responsive dengan hamburger menu di mobile.
+
+FOOTER: "Aizat Alamudin (c) 2026" + link "Beranda"
+
+ENTITIES (DATABASE):
+1. Project - title (string), description (string), category (string), date (date), link (string optional), imageUrl (string optional)
+2. Product - name (string), description (string), price (number), stock (number), photoUrl (string)
+3. BlogPost - title (string), slug (string), category (string), excerpt (string), content (rich text), readingTime (number), publishedDate (date), coverImage (string optional)
+
+ADMIN PANEL (hanya untuk owner yang login):
+- Halaman admin dashboard untuk manage Projects, Products, dan Blog Posts (CRUD: create, read, update, delete)
+- Form untuk upload foto produk, set harga & stok
+- Editor untuk tulis blog post dengan rich text
+- Hanya user yang login (role admin) yang bisa akses halaman admin dan melakukan create/edit/delete
+- Visitor tanpa login hanya bisa melihat konten public (read-only)
+- Enable Row-Level Security: data visible to all users (public read), tapi hanya admin yang bisa write
