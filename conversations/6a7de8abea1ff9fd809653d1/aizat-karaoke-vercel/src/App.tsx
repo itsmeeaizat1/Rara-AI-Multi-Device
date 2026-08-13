@@ -100,7 +100,7 @@ export default function App() {
       setCurrentSong(target);
       setCurrentTime(0);
       setIsPlaying(true);
-      audioEngine.playMusic(target.audioUrl, target.bpm, (t) => setCurrentTime(t));
+      audioEngine.playMusic(target.audioUrl, target.bpm, (t) => setCurrentTime(t), target.youtubeVideoId);
     } else {
       if (isPlaying) {
         audioEngine.pauseMusic();
@@ -346,7 +346,7 @@ export default function App() {
           song={currentSong}
           isPlaying={isPlaying}
           currentTime={currentTime}
-          durationSec={currentSong.durationSec}
+          durationSec={audioEngine.getDuration() || currentSong.durationSec || 0}
           onClose={() => setIsFullPlayerOpen(false)}
           onPlayPause={() => handlePlayPause()}
           onNext={handleNextSong}

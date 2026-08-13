@@ -153,7 +153,7 @@ export const FullScreenPlayer: React.FC<FullScreenPlayerProps> = ({
           <div className="w-full max-w-3xl aspect-video rounded-2xl overflow-hidden shadow-2xl border border-neutral-800 bg-black">
             {song.youtubeVideoId ? (
               <iframe
-                src={`https://www.youtube.com/embed/${song.youtubeVideoId}?autoplay=1&enablejsapi=1`}
+                src={`https://www.youtube.com/embed/${song.youtubeVideoId}?enablejsapi=1src={`https://www.youtube.com/embed/${song.youtubeVideoId}?autoplay=1&enablejsapi=1`}mute=1`}
                 title={song.title}
                 className="w-full h-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
