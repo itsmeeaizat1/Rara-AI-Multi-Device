@@ -1,0 +1,194 @@
+const FALLBACK_TICKER = 'Selamat datang di website Aizat Alamudin';
+
+function setupNavigation() {
+  const header = document.querySelector('header');
+  if (!header || document.body.hasAttribute('data-article-page') || document.querySelector('article')) {
+    return;
+  }
+
+  header.className = 'shared-header';
+  header.innerHTML = `
+    <nav class="shared-nav" aria-label="Navigasi utama">
+      <a href="/" class="shared-brand">Aizat Alamudin<span>.</span></a>
+      <button class="shared-menu-button" type="button" aria-label="Buka menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div class="shared-nav-links" id="mobileNavigation">
+        <a href="/work">Project</a>
+        <a href="/produk">Produk</a>
+        <a href="/blog">Catatan</a>
+        <a href="/about">Tentang</a>
+        <a href="/contact" class="shared-contact-link">Kontak <span>↗</span></a>
+      </div>
+    </nav>
+  `;
+
+  const button = header.querySelector('.shared-menu-button');
+  const menu = header.querySelector('.shared-nav-links');
+
+  function closeMenu() {
+    menu.classList.remove('is-open');
+    button.setAttribute('aria-expanded', 'false');
+  }
+
+  button.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const isOpen = menu.classList.toggle('is-open');
+    button.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  menu.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!header.contains(event.target)) {
+      closeMenu();
+    }
+  });
+}
+
+function updateClock() {
+  const clock = document.getElementById('wpClock');
+  if (!clock) return;
+
+  clock.textContent = new Intl.DateTimeFormat('id-ID', {
+    timeZone: 'Asia/Jakarta',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).format(new Date());
+}
+
+function renderWeatherWidget() {
+  if (document.getElementById('weatherPopup')) return;
+
+  const weather = document.createElement('div');
+  weather.id = 'weatherPopup';
+  weather.className = 'weather-popup show';
+  weather.setAttribute('role', 'status');
+  weather.setAttribute('aria-live', 'polite');
+  weather.innerHTML = `
+    <button id="wpClose" class="wp-close" type="button" aria-label="Tutup">×</button>
+    <div class="wp-row">
+      <div class="wp-icon" id="wpIcon">☀</div>
+      <div>
+        <div class="wp-temp" id="wpTemp">--°</div>
+        <div class="wp-loc" id="wpLoc">Mendeteksi lokasi…</div>
+      </div>
+    </div>
+    <div class="wp-desc" id="wpDesc">Memuat data cuaca…</div>
+    <div class="clock-row">
+      <span class="clock-label">WIB</span>
+      <span class="clock-time" id="wpClock">--:--:--</span>
+    </div>
+  `;
+
+  document.body.appendChild(weather);
+  weather.querySelector('#wpClose').addEventListener('click', () => {
+    weather.classList.remove('show');
+    weather.classList.add('fade-out');
+  });
+}
+
+function loadWeather() {
+  const setFallback = () => {
+    const location = document.getElementById('wpLoc');
+    const description = document.getElementById('wpDesc');
+    const icon = document.getElementById('wpIcon');
+    if (location) location.textContent = 'Jakarta, ID';
+    if (description) description.textContent = 'Data cuaca tidak tersedia';
+    if (icon) icon.textContent = '🌡️';
+  };
+
+  const fetchWeather = (latitude, longitude, locationName) => {
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`)
+      .then((response) => response.json())
+      .then((data) => {
+        const current = data.current_weather;
+        const descriptions = {
+          0: ['☀️', 'Cerah'],
+          1: ['🌤️', 'Cerah berawan'],
+          2: ['⛅', 'Berawan'],
+          3: ['☁️', 'Mendung'],
+          45: ['🌫️', 'Berkabut'],
+          51: ['🌦️', 'Gerimis'],
+          61: ['🌧️', 'Hujan ringan'],
+          63: ['🌧️', 'Hujan'],
+          65: ['🌧️', 'Hujan lebat'],
+          80: ['🌦️', 'Hujan lokal'],
+          95: ['⛈️', 'Badai petir']
+        };
+        const weatherInfo = descriptions[current.weathercode] || ['🌡️', 'Cuaca tidak diketahui'];
+        document.getElementById('wpIcon').textContent = weatherInfo[0];
+        document.getElementById('wpTemp').textContent = `${Math.round(current.temperature)}°C`;
+        document.getElementById('wpLoc').textContent = locationName;
+        document.getElementById('wpDesc').textContent = weatherInfo[1];
+      })
+      .catch(setFallback);
+  };
+
+  if (!navigator.geolocation) {
+    fetchWeather(-6.2088, 106.8456, 'Jakarta, ID');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => fetchWeather(position.coords.latitude, position.coords.longitude, 'Lokasi Anda'),
+    () => fetchWeather(-6.2088, 106.8456, 'Jakarta, ID'), {
+      timeout: 8000
+    }
+  );
+}
+
+async function renderTicker() {
+  let message = FALLBACK_TICKER;
+  try {
+    const response = await fetch('/data.json?version=19', {
+      cache: 'no-store'
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (Array.isArray(data.ticker) && data.ticker.some((item) => typeof item === 'string' && item.trim())) {
+        message = data.ticker.find((item) => typeof item === 'string' && item.trim()).trim();
+      }
+    }
+  } catch {
+    // Gunakan pesan cadangan.
+  }
+
+  document.querySelectorAll('.index-ticker-fallback, .fixed-ticker').forEach((ticker) => ticker.remove());
+
+  const ticker = document.createElement('div');
+  ticker.className = 'ticker-bar fixed-ticker';
+  ticker.setAttribute('aria-label', 'Informasi terbaru');
+  ticker.innerHTML = `
+    <div class="ticker-track">
+      <span class="ticker-message">
+        <span class="ticker-dot"></span>
+        <span class="ticker-copy"></span>
+      </span>
+    </div>
+  `;
+  ticker.querySelector('.ticker-copy').textContent = message;
+  document.body.appendChild(ticker);
+
+  const item = ticker.querySelector('.ticker-message');
+  requestAnimationFrame(() => {
+    const distance = item.scrollWidth + window.innerWidth + 80;
+    item.style.setProperty('--ticker-distance', `${distance}px`);
+    item.classList.add('ticker-running');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupNavigation();
+  renderWeatherWidget();
+  updateClock();
+  setInterval(updateClock, 1000);
+  loadWeather();
+  renderTicker();
+});

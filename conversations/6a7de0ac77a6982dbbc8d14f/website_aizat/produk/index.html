@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produk — Aizat Alamudin</title>
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/mobile-fixes.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="site-bg">
+  <header class="shared-header">
+    <nav class="shared-nav" aria-label="Navigasi utama">
+      <a href="/" class="shared-brand">Aizat Alamudin<span>.</span></a>
+      <button class="shared-menu-button" type="button" aria-label="Buka menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div class="shared-nav-links">
+        <a href="/work">Project</a>
+        <a href="/produk">Produk</a>
+        <a href="/blog">Catatan</a>
+        <a href="/about">Tentang</a>
+        <a href="/contact" class="shared-contact-link">Kontak <span>↗</span></a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="px-6 py-20 lg:px-8 lg:py-28">
+    <div class="mx-auto max-w-6xl">
+      <p class="mb-5 text-xl font-bold uppercase text-[var(--color-muted)]">Produk</p>
+      <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <div>
+          <h1 class="max-w-4xl font-heading text-5xl font-bold leading-tight sm:text-7xl">Hal-hal yang sedang saya bangun<span class="text-[var(--color-primary)]">.</span></h1>
+          <p class="mt-8 max-w-2xl text-xl leading-9 text-[var(--color-muted)]">Kelola katalog produk, foto, stok, dan harga dari satu tempat.</p>
+        </div>
+        <button id="addProductButton" type="button" class="gradient-button rounded-full px-6 py-4 font-bold text-[var(--color-primary-contrast)]">+ Tambah produk</button>
+      </div>
+
+      <section class="mt-14 grid gap-8 lg:grid-cols-[.8fr_1.2fr]" aria-label="Pengelola produk">
+        <form id="productForm" class="soft-card rounded-[var(--radius)] p-6 sm:p-8">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm font-bold uppercase text-[var(--color-primary)]">Editor produk</p>
+              <h2 id="formTitle" class="mt-2 font-heading text-3xl font-bold">Produk baru</h2>
+            </div>
+            <button id="cancelButton" type="button" class="hidden text-sm font-bold text-[var(--color-muted)]">Batal</button>
+          </div>
+
+          <label class="mt-8 block text-sm font-bold" for="productName">Nama produk</label>
+          <input id="productName" required type="text" placeholder="Contoh: Template Portfolio" class="mt-2 w-full rounded-[var(--radius)] border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 outline-none focus:border-[var(--color-primary)]">
+
+          <div class="mt-5 grid gap-5 sm:grid-cols-2">
+            <div>
+              <label class="block text-sm font-bold" for="productStock">Stok</label>
+              <input id="productStock" required min="0" type="number" placeholder="0" class="mt-2 w-full rounded-[var(--radius)] border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 outline-none focus:border-[var(--color-primary)]">
+            </div>
+            <div>
+              <label class="block text-sm font-bold" for="productPrice">Harga</label>
+              <input id="productPrice" required min="0" type="number" placeholder="150000" class="mt-2 w-full rounded-[var(--radius)] border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 outline-none focus:border-[var(--color-primary)]">
+            </div>
+          </div>
+
+          <label class="mt-5 block text-sm font-bold" for="productImage">Foto produk</label>
+          <input id="productImage" accept="image/*" type="file" class="mt-2 block w-full rounded-[var(--radius)] border border-dashed border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 text-sm text-[var(--color-muted)]">
+          <div id="imagePreview" class="mt-4 hidden overflow-hidden rounded-[var(--radius)] bg-[var(--color-bg)]"></div>
+
+          <button type="submit" class="gradient-button mt-7 w-full rounded-full px-6 py-4 font-bold text-[var(--color-primary-contrast)]">Simpan produk</button>
+          <p id="formMessage" class="mt-4 text-center text-sm font-semibold text-[var(--color-primary)]" role="status"></p>
+        </form>
+
+        <section>
+          <div class="mb-5 flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm font-bold uppercase text-[var(--color-muted)]">Katalog</p>
+              <h2 class="font-heading text-3xl font-bold">Daftar produk</h2>
+            </div>
+            <span id="productCount" class="rounded-full bg-[color-mix(in_srgb,var(--color-primary)_10%,var(--color-surface))] px-4 py-2 text-sm font-bold text-[var(--color-primary)]">0 produk</span>
+          </div>
+          <div id="productList" class="grid gap-6 sm:grid-cols-2"></div>
+        </section>
+      </section>
+    </div>
+  </main>
+
+  <footer class="border-t border-[var(--color-line)] px-6 py-10 lg:px-8">
+    <div class="mx-auto flex max-w-6xl justify-between text-[var(--color-muted)]">
+      <a href="/" class="transition hover:text-[var(--color-primary)]">Aizat Alamudin © 2026</a>
+      <a href="/" class="text-[var(--color-primary)]">Beranda ↑</a>
+    </div>
+  </footer>
+
+  <script src="/nav.js?v=18"></script>
+  <script>
+    const storageKey = 'aizat-products';
+    const defaultProducts = [{
+        id: 1,
+        name: 'Produk digital pertama',
+        stock: 0,
+        price: 0,
+        image: '',
+        status: 'Segera hadir'
+      },
+      {
+        id: 2,
+        name: 'Tools sederhana',
+        stock: 0,
+        price: 0,
+        image: '',
+        status: 'Dalam proses'
+      }
+    ];
+    let products = JSON.parse(localStorage.getItem(storageKey) || 'null') || defaultProducts;
+    let editingId = null;
+    let selectedImage = '';
+
+    const form = document.getElementById('productForm');
+    const nameInput = document.getElementById('productName');
+    const stockInput = document.getElementById('productStock');
+    const priceInput = document.getElementById('productPrice');
+    const imageInput = document.getElementById('productImage');
+    const imagePreview = document.getElementById('imagePreview');
+    const formTitle = document.getElementById('formTitle');
+    const cancelButton = document.getElementById('cancelButton');
+    const formMessage = document.getElementById('formMessage');
+
+    function saveProducts() {
+      localStorage.setItem(storageKey, JSON.stringify(products));
+    }
+
+    function formatPrice(price) {
+      return Number(price) > 0 ? new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0
+      }).format(price) : 'Harga belum ditentukan';
+    }
+
+    function renderProducts() {
+      const list = document.getElementById('productList');
+      document.getElementById('productCount').textContent = `${products.length} produk`;
+      list.innerHTML = products.map((product) => `
+        <article class="soft-card overflow-hidden rounded-[var(--radius)]">
+          <div class="flex h-48 items-center justify-center overflow-hidden bg-[color-mix(in_srgb,var(--color-primary)_8%,var(--color-surface))]">
+            ${product.image ? `<img src="${product.image}" alt="${product.name}" class="h-full w-full object-cover">` : `<span class="font-heading text-6xl font-bold text-[var(--color-primary)]">${product.name.charAt(0).toUpperCase()}</span>`}
+          </div>
+          <div class="p-6">
+            <p class="text-xs font-bold uppercase text-[var(--color-primary)]">${product.status || 'Produk'}</p>
+            <h3 class="mt-2 font-heading text-2xl font-bold">${product.name}</h3>
+            <div class="mt-5 grid grid-cols-2 gap-3 text-sm">
+              <div class="rounded-2xl bg-[var(--color-bg)] p-3"><span class="block text-[var(--color-muted)]">Stok</span><strong>${product.stock}</strong></div>
+              <div class="rounded-2xl bg-[var(--color-bg)] p-3"><span class="block text-[var(--color-muted)]">Harga</span><strong>${formatPrice(product.price)}</strong></div>
+            </div>
+            <div class="mt-5 flex gap-3">
+              <button type="button" data-edit="${product.id}" class="flex-1 rounded-full border border-[var(--color-line)] px-4 py-3 text-sm font-bold text-[var(--color-primary)]">Edit</button>
+              <button type="button" data-delete="${product.id}" class="rounded-full px-4 py-3 text-sm font-bold text-[var(--color-muted)]">Hapus</button>
+            </div>
+          </div>
+        </article>
+      `).join('');
+
+      list.querySelectorAll('[data-edit]').forEach((button) => button.addEventListener('click', () => editProduct(Number(button.dataset.edit))));
+      list.querySelectorAll('[data-delete]').forEach((button) => button.addEventListener('click', () => deleteProduct(Number(button.dataset.delete))));
+    }
+
+    function resetForm() {
+      editingId = null;
+      selectedImage = '';
+      form.reset();
+      imagePreview.innerHTML = '';
+      imagePreview.classList.add('hidden');
+      formTitle.textContent = 'Produk baru';
+      cancelButton.classList.add('hidden');
+      formMessage.textContent = '';
+    }
+
+    function editProduct(id) {
+      const product = products.find((item) => item.id === id);
+      if (!product) return;
+      editingId = id;
+      selectedImage = product.image || '';
+      nameInput.value = product.name;
+      stockInput.value = product.stock;
+      priceInput.value = product.price;
+      formTitle.textContent = 'Edit produk';
+      cancelButton.classList.remove('hidden');
+      showPreview(selectedImage);
+      form.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+
+    function deleteProduct(id) {
+      if (!confirm('Hapus produk ini dari katalog?')) return;
+      products = products.filter((product) => product.id !== id);
+      saveProducts();
+      renderProducts();
+      if (editingId === id) resetForm();
+    }
+
+    function showPreview(source) {
+      if (!source) {
+        imagePreview.innerHTML = '';
+        imagePreview.classList.add('hidden');
+        return;
+      }
+      imagePreview.innerHTML = `<img src="${source}" alt="Pratinjau foto produk" class="h-40 w-full object-cover">`;
+      imagePreview.classList.remove('hidden');
+    }
+
+    imageInput.addEventListener('change', () => {
+      const file = imageInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        selectedImage = reader.result;
+        showPreview(selectedImage);
+      });
+      reader.readAsDataURL(file);
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const product = {
+        id: editingId || Date.now(),
+        name: nameInput.value.trim(),
+        stock: Number(stockInput.value),
+        price: Number(priceInput.value),
+        image: selectedImage,
+        status: Number(stockInput.value) > 0 ? 'Tersedia' : 'Segera hadir'
+      };
+      if (editingId) {
+        products = products.map((item) => item.id === editingId ? product : item);
+      } else {
+        products.unshift(product);
+      }
+      saveProducts();
+      renderProducts();
+      formMessage.textContent = 'Produk berhasil disimpan.';
+      resetForm();
+      formMessage.textContent = 'Produk berhasil disimpan.';
+    });
+
+    document.getElementById('addProductButton').addEventListener('click', () => {
+      resetForm();
+      nameInput.focus();
+      form.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
+    cancelButton.addEventListener('click', resetForm);
+    renderProducts();
+
+  </script>
+</body>
+
+</html>
