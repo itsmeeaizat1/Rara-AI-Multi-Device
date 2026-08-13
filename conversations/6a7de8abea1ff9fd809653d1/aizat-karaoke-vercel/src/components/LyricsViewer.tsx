@@ -93,14 +93,14 @@ export const LyricsViewer: React.FC<LyricsViewerProps> = ({
   const handleFetchOnlineLyrics = async () => {
     setLoadingFetch(true);
     try {
-      const res = await fetch("/api/lyrics-fetch", {
+      const res = await fetch("/api/lyrics/fetch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: song.title, artist: song.artist }),
       });
       const data = await res.json();
-      if (data.lrc && onUpdateLyrics) {
-        const parsed = parseLRC(data.lrc);
+      if (data.lrcText && onUpdateLyrics) {
+        const parsed = parseLRC(data.lrcText);
         if (parsed.length > 0) {
           onUpdateLyrics(parsed);
         }
