@@ -88,7 +88,7 @@ function sayHello(name) {
 }
 console.log(sayHello("User"))
 text: Ini contoh kodenya: (opsional)
-footer: Powered by Nova AI (opsional)
+footer: Nova Ai WhatsApp Bot (opsional)
 [/RICH:CODE]
 
 Bahasa didukung: javascript (js, ts, typescript), python (py), go (golang), lua, bash (sh, shell)

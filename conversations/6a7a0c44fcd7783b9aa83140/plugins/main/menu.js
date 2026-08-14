@@ -240,7 +240,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                 videoMessage: mediaV1.videoMessage,
               },
               body: { text },
-              footer: { text: `🌸 ${config.bot?.name} | Powered by Nova AI` },
+              footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
               contextInfo: {
                 isForwarded: true, forwardingScore: 9,
                 participant: "0@s.whatsapp.net",
@@ -281,7 +281,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                 },
               },
               body: { text },
-              footer: { text: `🌸 ${config.bot?.name} | Powered by Nova AI` },
+              footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
               contextInfo: {
                 isForwarded: true, forwardingScore: 9,
                 participant: "0@s.whatsapp.net",
@@ -339,7 +339,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             interactiveMessage: {
               header: { title: "", subtitle: "", hasMediaAttachment: true, videoMessage: media4.videoMessage },
               body: { text },
-              footer: { text: `🌸 ${config.bot?.name} | Powered by Nova AI` },
+              footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
               contextInfo: { isForwarded: true, forwardingScore: 9, participant: "0@s.whatsapp.net", quotedMessage: { conversation: `${config.bot?.name}` }, mentionedJid: [m.sender] },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({}),
@@ -366,7 +366,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             interactiveMessage: {
               header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova-AI", address: `v${config.bot?.version || "1.0.0"}`, jpegThumbnail: thumbV5 } },
               body: { text },
-              footer: { text: `🌸 ${config.bot?.name} | Powered by Nova AI` },
+              footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
               contextInfo: { mentionedJid: [m.sender], isForwarded: true, forwardingScore: 9 },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({}),

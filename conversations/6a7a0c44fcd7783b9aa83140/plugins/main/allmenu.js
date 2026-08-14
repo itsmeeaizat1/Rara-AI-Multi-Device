@@ -346,7 +346,7 @@ ${readMore}
                   },
                 },
                 body: { text: txt },
-                footer: { text: `🌸 ${config.bot?.name} | Powered by Nova AI` },
+                footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
                 contextInfo: {
                   mentionedJid: [m.sender],
                   isForwarded: true,
