@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
     const groups = Object.keys(db.groups || {}).length;
 
     const text =
-      claraWrap("Info V2", [`◦ Bot: *${botConfig.bot?.name || "Ourin-AI"}*`,
+      claraWrap("Info V2", [`◦ Bot: *${botConfig.bot?.name || "Nova AI"}*`,
         `◦ Versi: *${botConfig.bot?.version || "1.0.0"}*`,
         `◦ Mode: *${(botConfig.mode || "public").toUpperCase()}*`,
         `◦ Prefix: *${prefix}*`,

@@ -1,7 +1,7 @@
 import { getWeatherFooter, clearWeatherCache } from "./nova-weather-footer.js";
 
-const PATCH_KEY = "ourin.weatherFooterPatched";
-const ORIGINAL_SEND_MESSAGE = Symbol("ourin.originalSendMessage");
+const PATCH_KEY = "nova.weatherFooterPatched";
+const ORIGINAL_SEND_MESSAGE = Symbol("nova.originalSendMessage");
 
 function appendWeatherFooter(text) {
   if (typeof text !== "string") return text;

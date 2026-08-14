@@ -8,7 +8,7 @@ const pluginConfig = {
   category: "group",
   description: "Ganti nama grup",
   usage: ".setgroupname <nama baru>",
-  example: ".setgroupname Grup RPG Ourin",
+  example: ".setgroupname Grup RPG Nova",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!name) {
       const text =
         claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}setgroupname <nama>*`,
-          `◦ Contoh: *${prefix}setgroupname Grup RPG Ourin*`].join("\n")) +
+          `◦ Contoh: *${prefix}setgroupname Grup RPG Nova*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

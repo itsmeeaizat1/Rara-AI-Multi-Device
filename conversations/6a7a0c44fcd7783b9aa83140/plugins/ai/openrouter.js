@@ -136,7 +136,7 @@ async function callOpenRouter(apiKey, modelId, messages) {
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
-      "HTTP-Referer": "https://github.com/itsmeeaizat/Ourin-Ai-Whatsapp-Bot-Multi-Device",
+      "HTTP-Referer": "https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device",
       "X-Title": "Nova AI WhatsApp Bot",
     },
     body: JSON.stringify({

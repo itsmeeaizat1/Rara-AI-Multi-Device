@@ -1,5 +1,5 @@
 const THEME = {
-  botName: "Ourin-AI",
+  botName: "Nova AI",
   ownerName: "Owner",
   prefix: ".",
   boxWidth: 22,

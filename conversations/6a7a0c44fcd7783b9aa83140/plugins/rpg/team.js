@@ -8,7 +8,7 @@ const pluginConfig = {
   category: "rpg",
   description: "Buat atau kelola tim/guild",
   usage: ".team <nama>",
-  example: ".team OurinSquad",
+  example: ".team NovaSquad",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!name) {
       const text =
         claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}team <nama>*`,
-          `◦ Contoh: *${prefix}team OurinSquad*`].join("\n")) +
+          `◦ Contoh: *${prefix}team NovaSquad*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

@@ -346,7 +346,7 @@ ${readMore}
                   },
                 },
                 body: { text: txt },
-                footer: { text: `🌸 ${config.bot?.name} | Powered by ourin-baileys` },
+                footer: { text: `🌸 ${config.bot?.name} | Powered by Nova AI` },
                 contextInfo: {
                   mentionedJid: [m.sender],
                   isForwarded: true,

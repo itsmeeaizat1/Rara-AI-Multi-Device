@@ -27,7 +27,7 @@ export async function convertToStickerFromBuffer(buffer, mime, options = {}) {
   fs.writeFileSync(inputPath, buffer);
 
   const sticker = await Sticker(inputPath, {
-    pack: options.pack ?? "Ourin-AI",
+    pack: options.pack ?? "Nova AI",
     author: options.author ?? "Bot",
     type: options.type ?? "full",
     quality: options.quality ?? 80,

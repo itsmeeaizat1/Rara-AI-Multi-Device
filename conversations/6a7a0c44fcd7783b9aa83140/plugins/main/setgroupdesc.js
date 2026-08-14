@@ -8,7 +8,7 @@ const pluginConfig = {
   category: "group",
   description: "Ganti deskripsi grup",
   usage: ".setgroupdesc <deskripsi>",
-  example: ".setgroupdesc Grup RPG Ourin Official",
+  example: ".setgroupdesc Grup RPG Nova Official",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!desc) {
       const text =
         claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}setgroupdesc <deskripsi>*`,
-          `◦ Contoh: *${prefix}setgroupdesc Grup RPG Ourin*`].join("\n")) +
+          `◦ Contoh: *${prefix}setgroupdesc Grup RPG Nova*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
