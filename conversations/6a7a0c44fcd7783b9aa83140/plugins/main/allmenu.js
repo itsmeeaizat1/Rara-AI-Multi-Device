@@ -125,21 +125,28 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 ╎❏ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
 ╎❏ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
 ╎❏ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
+╎❏ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
 ╎❏ *Role:* ${roleEmoji} ${userRole}
 ╎❏ *Level:* ${userLevel}
 ╎❏ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
 ╎❏ *Total Xp:* ${userExp.toLocaleString()}
+╎❏ *Status:* ${user?.banned ? "Banned" : "Aktif"}
 ╠┈┈「 *Info Hari* 」
 ╎❏ *Waktu:* ${timeStr} WIB
 ╎❏ *Hari:* ${dayName} ${weton}
 ╎❏ *Tanggal:* ${dateStr}
 ╎❏ *Tanggal Islam:* ${islamicDate}
+╎❏ *Zona:* Asia/Jakarta
 ╠┈┈「 *Info Bot* 」
 ╎❏ *Bot Name:* ${botConfig.bot?.name || "Nova-AI"}
+╎❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
+╎❏ *Version:* ${botConfig.bot?.version || "-"}
+╎❏ *Developer:* ${botConfig.bot?.developer || "-"}
 ╎❏ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
 ╎❏ *Platform:* ${platform}
 ╎❏ *Type:* Node.Js
 ╎❏ *Baileys:* Multi Device
+╎❏ *Node.js:* ${process.version}
 ╎❏ *Prefix:* [ *${prefix}* ]
 ╎❏ *Uptime:* ${runtimeStr}
 ╎❏ *Total User:* ${totalUsers}

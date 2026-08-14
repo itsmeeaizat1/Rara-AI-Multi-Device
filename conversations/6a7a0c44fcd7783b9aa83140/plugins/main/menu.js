@@ -68,7 +68,7 @@ function getIslamicDate(date = new Date()) {
 
 
 // ── Build menu text (defaultMenu template) ──
-async function buildMenuText(m, botConfig, db, uptime) {
+async function buildMenuText(m, botConfig, db, uptime, sock) {
   const prefix = botConfig.command?.prefix || ".";
   const user = db.getUser(m.sender);
   const timeHelper = await import("../../src/lib/nova-time.js");
@@ -102,21 +102,28 @@ async function buildMenuText(m, botConfig, db, uptime) {
 ╎❏ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
 ╎❏ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
 ╎❏ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
+╎❏ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
 ╎❏ *Role:* ${roleEmoji} ${userRole}
 ╎❏ *Level:* ${userLevel}
 ╎❏ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
 ╎❏ *Total Xp:* ${userExp.toLocaleString()}
+╎❏ *Status:* ${user?.banned ? "Banned" : "Aktif"}
 ╠┈┈「 *Info Hari* 」
 ╎❏ *Waktu:* ${timeStr} WIB
 ╎❏ *Hari:* ${dayName} ${weton}
 ╎❏ *Tanggal:* ${dateStr}
 ╎❏ *Tanggal Islam:* ${islamicDate}
+╎❏ *Zona:* Asia/Jakarta
 ╠┈┈「 *Info Bot* 」
 ╎❏ *Bot Name:* ${botConfig.bot?.name || "Nova-AI"}
+╎❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
+╎❏ *Version:* ${botConfig.bot?.version || "-"}
+╎❏ *Developer:* ${botConfig.bot?.developer || "-"}
 ╎❏ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
 ╎❏ *Platform:* ${platform}
 ╎❏ *Type:* Node.Js
 ╎❏ *Baileys:* Multi Device
+╎❏ *Node.js:* ${process.version}
 ╎❏ *Prefix:* [ *${prefix}* ]
 ╎❏ *Uptime:* ${runtimeStr}
 ╎❏ *Total User:* ${totalUsers}
@@ -184,7 +191,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   const menuVariant = savedVariant || botConfig.ui?.menuVariant || 2;
   const groupData = m.isGroup ? db.getGroup(m.chat) || {} : {};
   const botMode = groupData.botMode || "md";
-  const text = await buildMenuText(m, botConfig, db, uptime);
+  const text = await buildMenuText(m, botConfig, db, uptime, sock);
 
   let imageBuffer = null;
   let thumbBuffer = null;
