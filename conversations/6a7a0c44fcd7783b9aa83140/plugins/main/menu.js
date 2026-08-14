@@ -84,6 +84,9 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
   else if (m.isPremium) { userRole = "Premium"; roleEmoji = "💎"; }
 
   const totalUsers = db.getUserCount();
+  const allUsers = db.getAllUsers();
+  const totalRegistered = Object.values(allUsers).filter(u => u.registeredAt).length;
+  const totalPremium = Object.values(allUsers).filter(u => u.isPremium).length;
   const userExp = user?.exp || 0;
   const userLevel = Math.floor(userExp / 20000) + 1;
   const expMin = (userLevel - 1) * 20000;
@@ -127,6 +130,8 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 ╎❏ *Prefix:* [ *${prefix}* ]
 ╎❏ *Uptime:* ${runtimeStr}
 ╎❏ *Total User:* ${totalUsers}
+╎❏ *Total Registrasi:* ${totalRegistered}
+╎❏ *Premium User:* ${totalPremium}
 ╚┈┈┈┈┈┈┈┈┈❖
 ${readMore}
 ╔┈「 *Menu* 」

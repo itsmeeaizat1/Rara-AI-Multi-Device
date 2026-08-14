@@ -107,6 +107,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   const runtimeStr = formatUptime(uptime);
   const platform = process.platform;
   const totalUsers = db.getUserCount();
+  const allUsers = db.getAllUsers();
+  const totalRegistered = Object.values(allUsers).filter(u => u.registeredAt).length;
+  const totalPremium = Object.values(allUsers).filter(u => u.isPremium).length;
   const userExp = user?.exp || 0;
   const userLevel = Math.floor(userExp / 20000) + 1;
   const expMin = (userLevel - 1) * 20000;
@@ -150,6 +153,8 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 ╎❏ *Prefix:* [ *${prefix}* ]
 ╎❏ *Uptime:* ${runtimeStr}
 ╎❏ *Total User:* ${totalUsers}
+╎❏ *Total Registrasi:* ${totalRegistered}
+╎❏ *Premium User:* ${totalPremium}
 ╎❏ *Total Fitur:* ${totalFeatures}
 ╚┈┈┈┈┈┈┈┈┈❖
 ${readMore}
