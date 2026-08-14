@@ -23,15 +23,16 @@ async function handler(m, { sock, config: botConfig }) {
     const action = args[0]?.toLowerCase() || "list";
     const db = getDatabase();
     const gid = m.key?.remoteJid || "";
-    if (!db.grpExpense) db.grpExpense = {};
-    if (!db.grpExpense[gid]) db.grpExpense[gid] = [];
-    const expenses = db.grpExpense[gid];
+    const allExpenses = db.setting("grpExpense") || {};
+    if (!allExpenses[gid]) allExpenses[gid] = [];
+    const expenses = allExpenses[gid];
     
     if (action === "add") {
       const desc = args.slice(1).join(" ").replace(/\d+\s*(rb|ribu|k|jt|juta)?/gi, "").trim() || "expense";
       const amt = parseAmount(args.slice(1).join(" "));
       expenses.push({ desc, amount: amt, by: m.sender, date: Date.now() });
-      db.write();
+      db.setting("grpExpense", allExpenses);
+      db.save();
       await m.reply(claraWrap("Group Expense", [`◦ Item: *${desc}*`, `◦ Nominal: *Rp${amt.toLocaleString("id-ID")}*`,
         `◦ Oleh: @${m.sender.split("@")[0]}`].join("\n")));
     } else if (action === "split") {

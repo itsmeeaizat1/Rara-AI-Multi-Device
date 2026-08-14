@@ -361,6 +361,7 @@ async function updateOrderStatus(m, sock, db, args) {
 
   transactions[trxId] = trx;
   db.setting("storeTransactions", transactions);
+  db.save();
 
   // Notifikasi ke pembeli
   const buyerJid = trx.buyerJid;
