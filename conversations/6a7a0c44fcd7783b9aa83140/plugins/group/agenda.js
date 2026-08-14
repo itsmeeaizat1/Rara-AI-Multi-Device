@@ -259,7 +259,6 @@ function startAgendaChecker() {
 
             // ─── Reminder: H-1 hour ───
             if (!event.reminded1h && diff <= 3600000 && diff > 0) {
-              const members = await getGroupMembers(sock, groupId);
               const lines = [
                 `╎ ⏰ PENGINGAT: 1 Jam Lagi!`,
                 ``,
@@ -273,7 +272,6 @@ function startAgendaChecker() {
               try {
                 await sock.sendMessage(groupId, {
                   text: claraWrap("Agenda - Pengingat", lines.join("\n")),
-                  mentions: members,
                 });
               } catch (e) {}
 
@@ -282,7 +280,6 @@ function startAgendaChecker() {
 
             // ─── Reminder: H-1 day ───
             if (!event.reminded1d && diff <= 86400000 && diff > 3600000) {
-              const members = await getGroupMembers(sock, groupId);
               const lines = [
                 `╎ ⏰ PENGINGAT: Besok!`,
                 ``,
@@ -296,7 +293,6 @@ function startAgendaChecker() {
               try {
                 await sock.sendMessage(groupId, {
                   text: claraWrap("Agenda - Pengingat", lines.join("\n")),
-                  mentions: members,
                 });
               } catch (e) {}
 
@@ -305,7 +301,6 @@ function startAgendaChecker() {
 
             // ─── Event time reached ───
             if (diff <= 0 && !event.notified) {
-              const members = await getGroupMembers(sock, groupId);
               const lines = [
                 `╎ 🔔 WAKTUNYA TIBA!`,
                 ``,
@@ -318,7 +313,6 @@ function startAgendaChecker() {
               try {
                 await sock.sendMessage(groupId, {
                   text: claraWrap("Agenda - Waktu Tiba", lines.join("\n")),
-                  mentions: members,
                 });
               } catch (e) {}
 
@@ -716,7 +710,7 @@ export default {
       ``,
       `╎ 📌 Auto-reminder akan dikirim:`,
       `╎    H-1 jam sebelum acara`,
-      `╎    Saat waktunya tiba (tag semua member)`,
+      `╎    Saat waktunya tiba (notifikasi tanpa tag)`,
     ];
 
     const text = claraWrap("Agenda - Acara Baru", lines.join("\n")) +
