@@ -1,366 +1,322 @@
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import sharp from "sharp";
+import config from "../../config.js";
+import te from "../../src/lib/nova-error.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const pluginConfig = {
+  name: "stikergrid",
+  alias: ["stickergrid", "sgrid", "gridstiker"],
+  category: "sticker",
+  desc: "Menggabungkan 2-4 foto menjadi satu stiker kolase/grid",
+  usage: ".stikergrid (lalu kirim 2-4 foto)",
+  example: ".stikergrid",
+  isOwner: false,
+  isPremium: false,
+  isGroup: true,
+  isPrivate: true,
+  cooldown: 10,
+  energi: 2,
+  isEnabled: true,
+};
 
-// ─── Temp store for collecting images per user ───
-const TEMP_DIR = path.join(process.cwd(), "temp", "stikergrid");
-if (!fs.existsSync(TEMP_DIR)) fs.mkdirSync(TEMP_DIR, { recursive: true });
+// ─── Session collector (in-memory) ───
+const sessions = new Map();
+const SESSION_TIMEOUT = 45000; // 45 detik
+const MIN_PHOTOS = 2;
+const MAX_PHOTOS = 4;
 
-// { userId: { images: [buffer1, buffer2, ...], timestamp, groupId } }
-const gridSessions = new Map();
-
-// Auto-cleanup after 60 seconds
-function getSession(userId, groupId) {
-  const key = `${userId}:${groupId}`;
-  return gridSessions.get(key);
-}
-
-function setSession(userId, groupId, data) {
-  const key = `${userId}:${groupId}`;
-  data.timestamp = Date.now();
-  gridSessions.set(key, data);
-  // Auto-expire after 60s
-  setTimeout(() => {
-    if (gridSessions.get(key) === data) {
-      gridSessions.delete(key);
-    }
-  }, 60000);
-}
-
-function clearSession(userId, groupId) {
-  const key = `${userId}:${groupId}`;
-  gridSessions.delete(key);
-}
-
-// ─── Grid layout using sharp ───
-async function createGridCollage(images, options = {}) {
-  const sharp = (await import("sharp")).default;
-
-  const gap = options.gap || 10;
-  const bg = options.background || { r: 255, g: 255, b: 255, alpha: 1 };
-  const cellSize = options.cellSize || 480;
-  const padding = options.padding || 15;
-
-  let cols, rows;
-  const count = images.length;
-
-  if (count === 2) {
-    cols = 2; rows = 1;
-  } else if (count === 3) {
-    cols = 3; rows = 1;
-  } else if (count === 4) {
-    cols = 2; rows = 2;
-  } else {
-    throw new Error("Jumlah foto harus 2-4");
+function createSession(chatJid, sender, sock, m) {
+  const existing = sessions.get(chatJid);
+  if (existing) {
+    clearTimeout(existing.timer);
   }
 
-  const totalWidth = cols * cellSize + (cols - 1) * gap + padding * 2;
-  const totalHeight = rows * cellSize + (rows - 1) * gap + padding * 2;
+  const session = {
+    images: [],
+    sender,
+    timer: null,
+    startedAt: Date.now(),
+  };
 
-  // Process each image: resize to cell, cover mode
-  const processedImages = [];
+  session.timer = setTimeout(async () => {
+    const s = sessions.get(chatJid);
+    if (s && s.images.length > 0) {
+      sessions.delete(chatJid);
+      try {
+        await sock.sendMessage(chatJid, {
+          text: claraWrap(
+            "Stiker Grid",
+            `Sesi kolase kedaluwarsa.\nFoto terkumpul: ${s.images.length}/${MIN_PHOTOS}\n\nKirim ulang \`${config.command?.prefix || "."}stikergrid\` untuk mencoba lagi.`
+          ),
+        });
+      } catch (_) {}
+    } else {
+      sessions.delete(chatJid);
+    }
+  }, SESSION_TIMEOUT);
+
+  sessions.set(chatJid, session);
+  return session;
+}
+
+// ─── Grid layout config ───
+function getGridLayout(count) {
+  // Output: 512x512, gap 10px, padding 10px
+  const SIZE = 512;
+  const GAP = 10;
+  const PAD = 10;
+
+  if (count === 2) {
+    // Side by side: 2 kolom, 1 baris
+    const cellSize = Math.floor((SIZE - PAD * 2 - GAP) / 2);
+    return {
+      count,
+      cellSize,
+      cells: [
+        { x: PAD, y: PAD, w: cellSize, h: SIZE - PAD * 2 },
+        { x: PAD + cellSize + GAP, y: PAD, w: cellSize, h: SIZE - PAD * 2 },
+      ],
+      canvasW: SIZE,
+      canvasH: SIZE,
+    };
+  }
+
+  if (count === 3) {
+    // 2 atas, 1 bawah (lebar penuh)
+    const cellSize = Math.floor((SIZE - PAD * 2 - GAP) / 2);
+    const bottomH = SIZE - PAD * 2 - cellSize - GAP;
+    return {
+      count,
+      cellSize,
+      cells: [
+        { x: PAD, y: PAD, w: cellSize, h: cellSize },
+        { x: PAD + cellSize + GAP, y: PAD, w: cellSize, h: cellSize },
+        { x: PAD, y: PAD + cellSize + GAP, w: SIZE - PAD * 2, h: bottomH },
+      ],
+      canvasW: SIZE,
+      canvasH: SIZE,
+    };
+  }
+
+  // count === 4: 2x2 grid
+  const cellSize = Math.floor((SIZE - PAD * 2 - GAP) / 2);
+  return {
+    count,
+    cellSize,
+    cells: [
+      { x: PAD, y: PAD, w: cellSize, h: cellSize },
+      { x: PAD + cellSize + GAP, y: PAD, w: cellSize, h: cellSize },
+      { x: PAD, y: PAD + cellSize + GAP, w: cellSize, h: cellSize },
+      { x: PAD + cellSize + GAP, y: PAD + cellSize + GAP, w: cellSize, h: cellSize },
+    ],
+    canvasW: SIZE,
+    canvasH: SIZE,
+  };
+}
+
+// ─── Build collage ───
+async function buildCollage(images) {
+  const layout = getGridLayout(images.length);
+
+  // Prepare each image: resize + crop to fit cell (cover mode)
+  const composites = [];
   for (let i = 0; i < images.length; i++) {
-    const img = await sharp(images[i])
-      .resize(cellSize, cellSize, {
+    const cell = layout.cells[i];
+    const img = images[i];
+
+    // Resize to cover the cell dimensions, then crop to exact size
+    const processed = await sharp(img)
+      .resize(cell.w, cell.h, {
         fit: "cover",
         position: "centre",
       })
       .png()
       .toBuffer();
-    processedImages.push(img);
-  }
 
-  // Create composite using sharp
-  const composites = [];
-  for (let i = 0; i < processedImages.length; i++) {
-    const col = i % cols;
-    const row = Math.floor(i / cols);
-    const left = padding + col * (cellSize + gap);
-    const top = padding + row * (cellSize + gap);
     composites.push({
-      input: processedImages[i],
-      left,
-      top,
+      input: processed,
+      left: cell.x,
+      top: cell.y,
     });
   }
 
-  const result = await sharp({
+  // Create blank canvas and composite all images
+  const collage = await sharp({
     create: {
-      width: totalWidth,
-      height: totalHeight,
+      width: layout.canvasW,
+      height: layout.canvasH,
       channels: 4,
-      background: bg,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
     },
   })
     .composite(composites)
     .png()
     .toBuffer();
 
-  return result;
+  return collage;
 }
 
-// ─── Convert to sticker (webp) ───
-async function imageToSticker(buffer, packname, author) {
-  const sharp = (await import("sharp")).default;
+// ─── Handler ───
+async function handler(m, { sock, db }) {
+  const prefix = config.command?.prefix || ".";
+  const chatJid = m.chat;
 
-  let webpBuffer = await sharp(buffer)
-    .resize(512, 512, {
-      fit: "contain",
-      background: { r: 0, g: 0, b: 0, alpha: 0 },
-    })
-    .webp({ quality: 90 })
-    .toBuffer();
+  // Cek apakah ini image masuk saat sesi aktif
+  const session = sessions.get(chatJid);
+  const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
-  return webpBuffer;
-}
+  // ─── Mode: koleksi foto sedang aktif ───
+  if (session && isImage && !m.text?.toLowerCase().includes("stikergrid")) {
+    await m.react("🕐");
 
-// ─── Check owner ───
-function checkOwner(botConfig, m) {
-  const ownerJid = botConfig?.owner?.[0] || botConfig?.ownerNumber || "";
-  const sender = m.sender || m.key?.participant || "";
-  if (!ownerJid) return false;
-  const cleanOwner = ownerJid.replace(/[^0-9]/g, "");
-  const cleanSender = sender.replace(/[^0-9]/g, "");
-  return cleanOwner === cleanSender;
-}
-
-// ─── Plugin ───
-export default {
-  name: "stikergrid",
-  alias: ["sg", "stikergrip", "gridstiker", "kolasestiker", "collagestiker"],
-  category: "sticker",
-  desc: "Stiker Kolase - Gabungkan 2-4 foto jadi 1 stiker grid. Kirim foto dengan caption .stikergrid untuk mulai mengumpulkan.",
-  usage: ".stikergrid - Mulai/mode bantuan\nKirim 2-4 foto dengan caption .stikergrid untuk langsung jadi kolase\n.stikergrid selesai - Buat kolase dari foto terkumpul\n.stikergrid batal - Batalkan sesi\n.stikergrid status - Lihat foto terkumpul",
-  example: ".stikergrid (lalu kirim 2-4 foto dengan caption yang sama)\n.stikergrid selesai",
-  wait: "🕐",
-  error: "❌",
-
-  async handler(m, { sock, config: botConfig }) {
-    const prefix = botConfig.command?.prefix || ".";
-    const groupId = m.key?.remoteJid || m.chat || "";
-    const sender = m.sender || m.key?.participant || "";
-    const senderName = m.pushName || sender.split("@")[0];
-    const raw = m.text?.trim() || "";
-    const packname = botConfig?.sticker?.packname || botConfig?.bot?.name || "Nova-AI";
-    const author = botConfig?.sticker?.author || "Bot";
-
-    // ─── Check if this is an image with caption ───
-    const isImageMsg = m.isImage || (m.msg?.imageMessage != null);
-    const hasCaption = raw.toLowerCase().startsWith(`${prefix}stikergrid`) ||
-                       raw.toLowerCase().startsWith(`${prefix}sg`) ||
-                       raw.toLowerCase().startsWith(`${prefix}stikergrip`) ||
-                       raw.toLowerCase().startsWith(`${prefix}gridstiker`) ||
-                       raw.toLowerCase().startsWith(`${prefix}kolasestiker`) ||
-                       raw.toLowerCase().startsWith(`${prefix}collagestiker`);
-
-    // ─── Image with .stikergrid caption → collect ───
-    if (isImageMsg && hasCaption) {
-      await m.react("🕐");
-
+    try {
       let buffer;
-      try {
+      if (m.quoted && m.quoted.isMedia) {
+        buffer = await m.quoted.download();
+      } else if (m.isMedia) {
         buffer = await m.download();
-      } catch (e) {
-        await m.reply(claraWrap("StikerGrid", [
-          `╎ Gagal mengunduh foto.`,
-          `╎ Coba kirim ulang ya.`,
-        ].join("\n")));
-        await m.react("❌");
-        return { handled: true };
       }
 
-      if (!buffer || buffer.length === 0) {
-        await m.reply(claraWrap("StikerGrid", [
-          `╎ Foto kosong, coba ulangi.`,
-        ].join("\n")));
-        await m.react("❌");
-        return { handled: true };
-      }
-
-      let session = getSession(sender, groupId) || { images: [], started: true };
-
-      if (session.images.length >= 4) {
-        await m.reply(claraWrap("StikerGrid", [
-          `╎ Sudah ada 4 foto! Maksimal 4 ya.`,
-          `╎ Ketik *${prefix}stikergrid selesai* untuk buat kolase.`,
-          `╎ Atau *${prefix}stikergrid batal* untuk ulang.`,
-        ].join("\n")));
-        return { handled: true };
+      if (!buffer) {
+        await m.reply(claraWrap("Stiker Grid", "Gagal mengunduh foto. Coba kirim ulang."));
+        return;
       }
 
       session.images.push(buffer);
-      setSession(sender, groupId, session);
-
       const count = session.images.length;
-      const remaining = 4 - count;
 
-      if (count < 2) {
-        await m.reply(claraWrap("StikerGrid", [
-          `╎ Foto ${count} tersimpan!`,
-          ``,
-          `╎ Kumpulkan minimal 2 foto.`,
-          `╎ Sisa: *${remaining - 1}* foto lagi buat maksimal`,
-          `╎ Atau ketik *${prefix}stikergrid selesai* kalau udah cukup (min 2).`,
-        ].join("\n")));
-        await m.react("✅");
-        return { handled: true };
-      } else if (count === 2 || count === 3) {
-        await m.reply(claraWrap("StikerGrid", [
-          `╎ Foto ${count} tersimpan!`,
-          ``,
-          `╎ Sisa: *${remaining}* slot lagi (maksimal 4).`,
-          `╎ Ketik *${prefix}stikergrid selesai* untuk buat kolase sekarang.`,
-          `╎ Atau kirim foto lagi dengan caption *${prefix}stikergrid*.`,
-        ].join("\n")));
-        await m.react("✅");
-        return { handled: true };
-      } else if (count === 4) {
-        // Auto-generate when 4 reached
-        await m.reply(claraWrap("StikerGrid", [
-          `╎ 4 foto terkumpul! Membuat kolase...`,
-        ].join("\n")));
-        await m.react("🕐");
-
-        try {
-          const collage = await createGridCollage(session.images);
-          const sticker = await imageToSticker(collage, packname, author);
-          await sock.sendMessage(groupId, {
-            sticker,
-            isAiSticker: true,
-            isAvatar: true,
-            contextInfo: { isForwarded: true, forwardingScore: 1, premium: 1 },
-          }, { quoted: m });
-          clearSession(sender, groupId);
-          await m.react("✅");
-        } catch (e) {
-          await m.reply(claraWrap("StikerGrid", [
-            `╎ Gagal membuat kolase: ${e.message}`,
-            `╎ Coba *${prefix}stikergrid selesai* lagi ya.`,
-          ].join("\n")));
-          await m.react("❌");
-        }
-        return { handled: true };
-      }
-    }
-
-    // ─── Text commands ───
-    const subMatch = raw.toLowerCase().match(
-      new RegExp(`^${prefix}(stikergrid|sg|stikergrip|gridstiker|kolasestiker|collagestiker)\\s*(selesai|batal|status|bantu|help)?`, "i")
-    );
-
-    if (!subMatch) {
-      // Not an image and not a recognized command
-      return { handled: false };
-    }
-
-    const subCmd = subMatch[1]?.toLowerCase() || "";
-    const action = subMatch[2]?.toLowerCase() || "";
-
-    // ─── Help ───
-    if (action === "help" || action === "bantu" || (!action && !isImageMsg)) {
-      await m.reply(claraWrap("StikerGrid - Bantuan", [
-        `╎ Stiker Kolase / Multi-Foto`,
-        ``,
-        `╎ Cara Pakai:`,
-        `╎ 1. Kirim 2-4 foto dengan caption *${prefix}stikergrid*`,
-        `╎ 2. Bot otomatis kumpulkan fotonya`,
-        `╎ 3. Setelah cukup, ketik *${prefix}stikergrid selesai*`,
-        `╎ 4. Bot gabungkan jadi 1 stiker kolase!`,
-        ``,
-        `╎ Command lain:`,
-        `╎    *${prefix}stikergrid status* - Lihat foto terkumpul`,
-        `╎    *${prefix}stikergrid batal* - Batalkan sesi`,
-        `╎    *${prefix}stikergrid selesai* - Buat kolase (min 2 foto)`,
-        ``,
-        `╎ Layout otomatis:`,
-        `╎    2 foto = side by side (2x1)`,
-        `╎    3 foto = 3 kolom (3x1)`,
-        `╎    4 foto = grid 2x2`,
-      ].join("\n")));
-      await m.react("✅");
-      return { handled: true };
-    }
-
-    // ─── Status ───
-    if (action === "status") {
-      const session = getSession(sender, groupId);
-      if (!session || session.images.length === 0) {
-        await m.reply(claraWrap("StikerGrid - Status", [
-          `╎ Belum ada foto terkumpul.`,
-          `╎ Kirim foto dengan caption *${prefix}stikergrid* untuk mulai.`,
-        ].join("\n")));
-        await m.react("✅");
-        return { handled: true };
+      if (count < MIN_PHOTOS) {
+        await m.reply(
+          claraWrap(
+            "Stiker Grid",
+            `Foto ${count}/${MIN_PHOTOS} terkumpul.\nKirim ${MIN_PHOTOS - count} foto lagi, atau kirim ${MAX_PHOTOS - count} foto maksimal.\n\nKetik *selesai* untuk langsung buat, atau *batal* untuk batalkan.`
+          )
+        );
+        return;
       }
 
-      await m.reply(claraWrap("StikerGrid - Status", [
-        `╎ Foto terkumpul: *${session.images.length}*`,
-        ``,
-        `╎ Sisa slot: *${4 - session.images.length}*`,
-        `╎ Ketik *${prefix}stikergrid selesai* untuk buat kolase.`,
-        `╎ Ketik *${prefix}stikergrid batal* untuk ulang.`,
-      ].join("\n")));
-      await m.react("✅");
-      return { handled: true };
-    }
-
-    // ─── Cancel ───
-    if (action === "batal") {
-      clearSession(sender, groupId);
-      await m.reply(claraWrap("StikerGrid", [
-        `╎ Sesi dibatalkan.`,
-        `╎ Semua foto terkumpul dihapus.`,
-        `╎ Kirim foto baru dengan caption *${prefix}stikergrid* untuk mulai lagi.`,
-      ].join("\n")));
-      await m.react("✅");
-      return { handled: true };
-    }
-
-    // ─── Selesai: generate collage ───
-    if (action === "selesai") {
-      const session = getSession(sender, groupId);
-      if (!session || session.images.length < 2) {
-        await m.reply(claraWrap("StikerGrid", [
-          `╎ Belum cukup foto!`,
-          ``,
-          `╎ Minimal 2 foto untuk buat kolase.`,
-          `╎ Foto terkumpul: *${session ? session.images.length : 0}*`,
-          `╎ Kirim foto dengan caption *${prefix}stikergrid* untuk menambah.`,
-        ].join("\n")));
-        await m.react("❌");
-        return { handled: true };
+      // Sudah cukup MIN_PHOTOS - cek apakah user mau lanjut atau selesai
+      if (count < MAX_PHOTOS) {
+        // Beri pilihan: lanjut kirim atau sekarang
+        await m.reply(
+          claraWrap(
+            "Stiker Grid",
+            `Foto ${count} terkumpul.\n\nKirim ${MAX_PHOTOS - count} foto lagi untuk grid lebih penuh, atau ketik *selesai* untuk buat stiker sekarang.\nKetik *batal* untuk membatalkan.`
+          )
+        );
+        return;
       }
 
-      await m.react("🕐");
+      // Sudah MAX_PHOTOS - langsung proses
+      await processCollage(session, chatJid, sock, m);
+    } catch (err) {
+      console.log("[StikerGrid] Error collecting:", err.message);
+      await m.reply(claraWrap("Stiker Grid", "Terjadi error saat mengumpulkan foto."));
+    }
+    return;
+  }
 
-      try {
-        const collage = await createGridCollage(session.images);
-        const sticker = await imageToSticker(collage, packname, author);
+  // ─── Command text: .stikergrid ───
+  const isCommand = m.text?.toLowerCase().includes("stikergrid") ||
+    m.command === "stikergrid";
 
-        // Also send preview image (optional)
-        await sock.sendMessage(groupId, {
-          sticker,
-          isAiSticker: true,
-          isAvatar: true,
-          contextInfo: { isForwarded: true, forwardingScore: 1, premium: 1 },
-        }, { quoted: m });
+  if (!isCommand) return;
 
-        clearSession(sender, groupId);
-        await m.react("✅");
-      } catch (e) {
-        await m.reply(claraWrap("StikerGrid", [
-          `╎ Gagal membuat kolase: ${e.message}`,
-          `╎ Coba kirim ulang fotonya.`,
-        ].join("\n")));
-        await m.react("❌");
+  // Cek text "selesai" atau "batal"
+  if (m.text?.toLowerCase().trim() === "selesai" && session && session.images.length >= MIN_PHOTOS) {
+    await processCollage(session, chatJid, sock, m);
+    return;
+  }
+
+  if (m.text?.toLowerCase().trim() === "batal" && session) {
+    clearTimeout(session.timer);
+    sessions.delete(chatJid);
+    await m.reply(claraWrap("Stiker Grid", "Sesi kolase dibatalkan."));
+    return;
+  }
+
+  // ─── Mulai sesi baru ───
+  await m.react("🕐");
+
+  const newSession = createSession(chatJid, m.sender, sock, m);
+
+  // Kalau command disertai image, langsung kumpul foto pertama
+  if (isImage) {
+    try {
+      let buffer;
+      if (m.quoted && m.quoted.isMedia) {
+        buffer = await m.quoted.download();
+      } else if (m.isMedia) {
+        buffer = await m.download();
       }
-      return { handled: true };
+      if (buffer) {
+        newSession.images.push(buffer);
+      }
+    } catch (_) {}
+  }
+
+  const collected = newSession.images.length;
+
+  await m.reply(
+    claraWrap(
+      "Stiker Grid",
+      `Mode kolase stiker aktif.\n\nKirim ${MIN_PHOTOS}-${MAX_PHOTOS} foto untuk digabung jadi satu stiker grid.\n\nFoto terkumpul: ${collected}/${MIN_PHOTOS}\n\nKetik *selesai* untuk buat stiker (min ${MIN_PHOTOS} foto).\nKetik *batal* untuk membatalkan.\nSesi otomatis berakhir dalam 45 detik.`
+    )
+  );
+  await m.react("✅");
+}
+
+// ─── Process collage & send sticker ───
+async function processCollage(session, chatJid, sock, m) {
+  try {
+    if (session.images.length < MIN_PHOTOS) {
+      await sock.sendMessage(chatJid, {
+        text: claraWrap(
+          "Stiker Grid",
+          `Foto belum cukup. Minimal ${MIN_PHOTOS} foto, saat ini ${session.images.length}.`
+        ),
+      });
+      return;
     }
 
-    return { handled: false };
-  },
-};
+    if (session.images.length > MAX_PHOTOS) {
+      session.images = session.images.slice(0, MAX_PHOTOS);
+    }
+
+    await sock.sendMessage(chatJid, {
+      text: claraWrap("Stiker Grid", `Membuat kolase dari ${session.images.length} foto...`),
+    });
+
+    // Build collage
+    const collageBuffer = await buildCollage(session.images);
+
+    // Clear session
+    clearTimeout(session.timer);
+    sessions.delete(chatJid);
+
+    // Kirim sebagai stiker
+    const packname = config.sticker?.packname || config.bot?.name || "Nova-AI";
+    const author = config.sticker?.author || config.owner?.name || "Bot";
+
+    await sock.sendImageAsSticker(chatJid, collageBuffer, m, { packname, author });
+
+    // React ke pesan terakhir
+    try {
+      await sock.sendMessage(chatJid, {
+        react: { text: "✅", key: m.key },
+      });
+    } catch (_) {}
+  } catch (err) {
+    console.log("[StikerGrid] Error:", err.message);
+    clearTimeout(session?.timer);
+    sessions.delete(chatJid);
+    await sock.sendMessage(chatJid, {
+      text: claraWrap("Stiker Grid", te(m.prefix || ".", "stikergrid", m.pushName || "User"), "error"),
+    });
+  }
+}
+
+export default { config: pluginConfig, handler };
