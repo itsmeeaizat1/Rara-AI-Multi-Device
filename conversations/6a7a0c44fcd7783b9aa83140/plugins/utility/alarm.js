@@ -1,4 +1,4 @@
-import { alyaHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
@@ -26,7 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
         await m.reply(claraWrap("Alarm", ["◦ Tidak ada alarm aktif"].join("\n")));
         return { handled: true };
       }
-      let text = alyaHeader("Alarm Aktif", "⏰") + "\n\n";
+      let text = claraHeader("Alarm Aktif", "⏰") + "\n\n";
       myAlarms.forEach((a, i) => { text += `${i+1}. *${a.time}* - ${a.message}\n`; });
       text += "\n" + separator("━", 22);
       await m.reply(text);

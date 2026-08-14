@@ -1,4 +1,4 @@
-import { alyaHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
@@ -39,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
         const [db2,mb,yb] = b.date.split("-").map(Number);
         return new Date(ya,ma-1,da) - new Date(yb,mb-1,db2);
       });
-      let text = alyaHeader("Kalender Event", "📅") + "\n\n";
+      let text = claraHeader("Kalender Event", "📅") + "\n\n";
       db.calendar[gid].forEach((e, i) => { text += `${i+1}. 📅 *${e.date}* - ${e.name}\n`; });
       text += "\n" + separator("━", 22) + "\n" + tipText(`${prefix}calendar del <nomor> untuk hapus`);
       await m.reply(text);

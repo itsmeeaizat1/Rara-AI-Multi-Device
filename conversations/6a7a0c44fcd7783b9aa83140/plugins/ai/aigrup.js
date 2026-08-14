@@ -1,5 +1,5 @@
 import {
-  alyaHeader,
+  claraHeader,
   separator,
   tipText,
   claraWrap,

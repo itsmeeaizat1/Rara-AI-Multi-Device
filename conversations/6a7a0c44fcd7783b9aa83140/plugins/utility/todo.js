@@ -1,4 +1,4 @@
-import { alyaHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig }) {
         await m.reply(claraWrap("To-Do List", ["◦ Belum ada tugas", `◦ Ketik: *${prefix}todo add <tugas>*`].join("\n")));
         return { handled: true };
       }
-      let text = alyaHeader("To-Do List", "📝") + "\n\n";
+      let text = claraHeader("To-Do List", "📝") + "\n\n";
       todos.forEach((t, i) => {
         text += `${t.done ? "✅" : "⬜"} ${i+1}. ${t.text}\n`;
       });

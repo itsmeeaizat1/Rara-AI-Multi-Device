@@ -1,4 +1,4 @@
-import { alyaHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
@@ -22,7 +22,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(prompt);
     const choices = result.split("|").map(s => s.trim()).filter(Boolean).slice(0, 4);
     if (choices.length < 2) throw new Error("Gagal membuat polling");
-    const pollMsg = alyaHeader("AI Poll: " + topic, "📊") + "\n\n";
+    const pollMsg = claraHeader("AI Poll: " + topic, "📊") + "\n\n";
     let text = pollMsg;
     choices.forEach((c, i) => { text += `${["1️⃣","2️⃣","3️⃣","4️⃣"][i]} ${c}\n`; });
     text += "\n" + separator("━", 22) + "\n" + tipText("Ketik nomor pilihanmu!");

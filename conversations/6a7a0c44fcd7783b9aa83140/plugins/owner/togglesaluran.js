@@ -5,7 +5,7 @@ import {
   getAllNotifyStatus,
   setNotifyEnabled,
 } from "../../src/lib/nova-saluran-broadcast.js";
-import { alyaHeader,
+import { claraHeader,
     separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 

@@ -1,5 +1,5 @@
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { alyaHeader,
+import { claraHeader,
     separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 

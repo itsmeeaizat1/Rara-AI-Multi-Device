@@ -45,9 +45,9 @@ function processFile(filepath) {
   // 4. bracketBox("emoji", "label", `tmpl`) -> claraWrap
   content = content.replace(/bracketBox\(\s*"[^"]*"\s*,\s*"([^"]+)"\s*,\s*(`[^`]*`)\s*\)/g, 'claraWrap("$1", $2)');
   
-  // 5. alyaHeader("title", "emoji") -> claraWrap
-  content = content.replace(/alyaHeader\("([^"]+)",\s*"([^"]*)"\)/g, 'claraWrap("$1", "$2")');
-  content = content.replace(/alyaHeader\("([^"]+)"\)/g, 'claraWrap("$1", "")');
+  // 5. claraHeader("title", "emoji") -> claraWrap
+  content = content.replace(/claraHeader\("([^"]+)",\s*"([^"]*)"\)/g, 'claraWrap("$1", "$2")');
+  content = content.replace(/claraHeader\("([^"]+)"\)/g, 'claraWrap("$1", "")');
   
   // 6. sendReplyWithNav with te() -> m.reply(claraWrap("name", te(...), "error"))
   content = content.replace(/(await\s+|return\s+)?sendReplyWithNav\(sock,\s*m,\s*te\(m\.prefix,\s*m\.command,\s*m\.pushName\)\s*,\s*"([^"]+)"\)\s*;?/g, 

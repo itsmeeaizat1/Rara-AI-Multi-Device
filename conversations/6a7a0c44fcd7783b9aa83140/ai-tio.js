@@ -1,5 +1,5 @@
 import {
-  alyaHeader,
+  claraHeader,
   bracketBox,
   separator,
   tipText,
@@ -115,7 +115,7 @@ async function handler(m, { sock, config: botConfig }) {
     // ═══ No args → show menu ═══
     if (!body) {
       const text =
-        alyaHeader("Tio AI (AIO)", "🤖") +
+        claraHeader("Tio AI (AIO)", "🤖") +
         "\n\n" +
         bracketBox("🤖", "ɪɴꜰᴏ", [
           `◦ 34 model AI via *ai.tioo.eu.org*`,
@@ -168,7 +168,7 @@ async function handler(m, { sock, config: botConfig }) {
         `  *${mdl.label}* (${mdl.id})\n    ${mdl.desc}`
       ).join("\n");
 
-      let text = alyaHeader("Tio AI Models" + (filterFree ? " (Free)" : ""), "🤖") + "\n\n";
+      let text = claraHeader("Tio AI Models" + (filterFree ? " (Free)" : ""), "🤖") + "\n\n";
       if (freeModels.length) {
         text += bracketBox("🆓", "ꜰʀᴇᴇ ᴍᴏᴅᴇʟꜱ", [fmtLines(freeModels)]) + "\n\n";
       }
@@ -188,7 +188,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (!fmtArg || !modelArg) {
         const text =
-          alyaHeader("Ganti Model", "⚙️") +
+          claraHeader("Ganti Model", "⚙️") +
           "\n\n" +
           bracketBox("📋", "ᴄᴀʀᴀ", [
             `◦ *${prefix}tio model openai deepseek-v4-flash:free*`,
@@ -204,7 +204,7 @@ async function handler(m, { sock, config: botConfig }) {
       const fmtKey = resolveFormat(fmtArg);
       if (!fmtKey) {
         const text =
-          alyaHeader("Format Tidak Valid", "⚠️") +
+          claraHeader("Format Tidak Valid", "⚠️") +
           "\n\n" +
           bracketBox("⚠️", "ᴇʀʀᴏʀ", [
             `◦ Format *${fmtArg}* tidak dikenal`,
@@ -222,7 +222,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (!found) {
         const text =
-          alyaHeader("Model Tidak Ditemukan", "⚠️") +
+          claraHeader("Model Tidak Ditemukan", "⚠️") +
           "\n\n" +
           bracketBox("⚠️", "ᴇʀʀᴏʀ", [
             `◦ Model *${modelArg}* tidak ada`,
@@ -237,7 +237,7 @@ async function handler(m, { sock, config: botConfig }) {
       botConfig.aiHelp[fmtKey + "Model"] = found.id;
 
       const text =
-        alyaHeader("Model Diganti", "✅") +
+        claraHeader("Model Diganti", "✅") +
         "\n\n" +
         bracketBox("✅", "ᴘᴇʀᴜʙᴀʜᴀɴ", [
           `◦ Format: *${fmt.label}*`,
@@ -257,7 +257,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!fmtKey) {
       const text =
-        alyaHeader("Format Tidak Dikenal", "⚠️") +
+        claraHeader("Format Tidak Dikenal", "⚠️") +
         "\n\n" +
         bracketBox("⚠️", "ᴇʀʀᴏʀ", [
           `◦ Format *${parts[0]}* tidak dikenal`,
@@ -275,7 +275,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!prompt) {
       const text =
-        alyaHeader(fmt.label + " - Kosong", "⚠️") +
+        claraHeader(fmt.label + " - Kosong", "⚠️") +
         "\n\n" +
         bracketBox("⚠️", "ᴇʀʀᴏʀ", [
           `◦ Pesan tidak boleh kosong`,
@@ -289,7 +289,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Check API key
     if (!apiKey) {
       const text =
-        alyaHeader("API Key Belum Diisi", "⚠️") +
+        claraHeader("API Key Belum Diisi", "⚠️") +
         "\n\n" +
         bracketBox("⚠️", "ᴇʀʀᴏʀ", [
           `◦ API Key Tio AI belum di-set`,
@@ -335,7 +335,7 @@ async function handler(m, { sock, config: botConfig }) {
     const replyText = reply.length > 3800 ? reply.slice(0, 3800) + "\n\n_... respon dipotong_" : reply;
 
     const text =
-      alyaHeader("Tio AI", fmt.emoji) +
+      claraHeader("Tio AI", fmt.emoji) +
       "\n\n" +
       bracketBox(fmt.emoji, "ʀᴇꜱᴘᴏɴ", [
         `◦ Format: *${fmt.label}*`,
@@ -355,7 +355,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      alyaHeader("Tio AI Error", "❌") +
+      claraHeader("Tio AI Error", "❌") +
       "\n\n" +
       bracketBox("❌", "ᴇʀʀᴏʀ", [
         `◦ Status: *Gagal*`,

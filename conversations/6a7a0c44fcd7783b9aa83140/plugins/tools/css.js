@@ -1,4 +1,4 @@
-import { alyaHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
     if (!TEMPLATES[tpl]) throw new Error(`Template "${tpl}" tidak ada. Pilih: ${Object.keys(TEMPLATES).join(", ")}`);
-    await m.reply(alyaHeader("CSS: " + tpl, "🎯") + "\n\n```css\n" + TEMPLATES[tpl] + "\n```\n\n" + separator("━", 22));
+    await m.reply(claraHeader("CSS: " + tpl, "🎯") + "\n\n```css\n" + TEMPLATES[tpl] + "\n```\n\n" + separator("━", 22));
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

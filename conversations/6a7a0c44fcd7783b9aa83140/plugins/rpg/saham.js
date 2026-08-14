@@ -1,6 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getPlayer, savePlayer, ensurePlayer, addGold } from "../../src/lib/nova-rpg-service.js";
-import { alyaHeader, separator, tipText, formatNumber , claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraHeader, separator, tipText, formatNumber , claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 // === STOCK MARKET ENGINE ===

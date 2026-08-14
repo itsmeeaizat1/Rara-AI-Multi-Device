@@ -1,4 +1,4 @@
-import { alyaHeader,
+import { claraHeader,
     separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
@@ -75,7 +75,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!partnerJid || !startDate) {
       const text =
-        alyaHeader("Anniversary", statusEmoji) + "\n\n" +
+        claraHeader("Anniversary", statusEmoji) + "\n\n" +
         claraWrap("sᴛᴀᴛᴜs", [`◦ Status: *Belum punya pasangan*`, `◦ Belum ada hari jadian atau nikah`].join("\n")) + "\n\n" +
         separator("━", 22) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk mulai cerita cinta`);
@@ -118,7 +118,7 @@ async function handler(m, { sock, config: botConfig }) {
     const bondLevel = Math.floor(affection / 100) + 1;
 
     const text =
-      alyaHeader("Anniversary", statusEmoji) + "\n\n" +
+      claraHeader("Anniversary", statusEmoji) + "\n\n" +
       claraWrap("ᴀɴɴɪᴠᴇʀsᴀʀʏ", [
         `◦ Kamu: *${userName}*`,
         `◦ Pasangan: *${partnerName}*`,

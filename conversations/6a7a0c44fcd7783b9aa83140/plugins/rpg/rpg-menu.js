@@ -1,4 +1,4 @@
-import { alyaHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {

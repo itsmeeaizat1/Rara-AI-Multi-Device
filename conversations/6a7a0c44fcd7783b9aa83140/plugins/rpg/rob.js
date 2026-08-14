@@ -1,4 +1,4 @@
-import { alyaHeader,
+import { claraHeader,
     separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getPlayer, ensurePlayer, addGold, savePlayer } from "../../src/lib/nova-rpg-service.js";

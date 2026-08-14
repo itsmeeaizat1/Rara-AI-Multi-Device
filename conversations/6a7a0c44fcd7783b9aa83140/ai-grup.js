@@ -1,5 +1,5 @@
 import {
-  alyaHeader,
+  claraHeader,
   bracketBox,
   separator,
   tipText,
@@ -108,7 +108,7 @@ async function handler(m, { sock, config: botConfig }) {
     const blockFromGroup = async (action) => {
       if (m.isGroup) {
         await m.reply(
-          alyaHeader("Ditolak", "🚫") + "\n\n" +
+          claraHeader("Ditolak", "🚫") + "\n\n" +
           bracketBox("🚫", "ᴇʀʀᴏʀ", [
             `◦ ${action} hanya bisa dari *chat pribadi*`,
             `◦ Bukan dari dalam grup`,
@@ -126,7 +126,7 @@ async function handler(m, { sock, config: botConfig }) {
       const enabledGroups = Object.entries(aigrup.groups || {}).filter(([, v]) => v).map(([k]) => k);
       const freeModels = TIO_MODELS.filter((mdl) => mdl.free);
       const text =
-        alyaHeader("AI Grup Status", "🤖") +
+        claraHeader("AI Grup Status", "🤖") +
         "\n\n" +
         bracketBox("🤖", "ꜱᴛᴀᴛᴜꜱ", [
           `◦ Global: *${aigrup.enabled ? "ON ✅" : "OFF ❌"}*`,
@@ -162,7 +162,7 @@ async function handler(m, { sock, config: botConfig }) {
       const fmtLines = (list) => list.map((mdl) =>
         `  *${mdl.label}* (${mdl.id})`
       ).join("\n");
-      let text = alyaHeader("Model Tersedia", "🤖") + "\n\n";
+      let text = claraHeader("Model Tersedia", "🤖") + "\n\n";
       text += bracketBox("🆓", "ꜰʀᴇᴇ ᴍᴏᴅᴇʟꜱ", [fmtLines(freeModels)]) + "\n\n";
       text += bracketBox("💎", "ᴘʀᴇᴍɪᴜᴍ ᴍᴏᴅᴇʟꜱ", [fmtLines(premiumModels)]) + "\n\n";
       text += separator("━", 22) + "\n" +
@@ -177,7 +177,7 @@ async function handler(m, { sock, config: botConfig }) {
       const prob = parseInt(args[1] || "0", 10);
       if (isNaN(prob) || prob < 0 || prob > 100) {
         await m.reply(
-          alyaHeader("Probability", "⚙️") + "\n\n" +
+          claraHeader("Probability", "⚙️") + "\n\n" +
           bracketBox("⚙️", "ᴄᴀʀᴀ", [
             `◦ *${prefix}aigrup prob 30* — 30% chance`,
             `◦ Range: 0-100`,
@@ -196,7 +196,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (subcmd === "list") {
       const groups = Object.entries(aigrup.groups || {}).filter(([, v]) => v);
       await m.reply(
-        alyaHeader("Grup AI Aktif", "🤖") + "\n\n" +
+        claraHeader("Grup AI Aktif", "🤖") + "\n\n" +
         bracketBox("🤖", "ɪɴꜰᴏ", [
           `◦ Global: *${aigrup.enabled ? "ON" : "OFF"}*`,
           `◦ Grup terdaftar: *${groups.length}*`,
@@ -211,7 +211,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (await blockFromGroup("Toggle AI Grup")) return { handled: true };
       if (!currentKey) {
         await m.reply(
-          alyaHeader("API Key Belum Diisi", "⚠️") + "\n\n" +
+          claraHeader("API Key Belum Diisi", "⚠️") + "\n\n" +
           bracketBox("⚠️", "ᴇʀʀᴏʀ", [
             `◦ API Key untuk format *${TIO_FORMATS[currentFmt]?.label || currentFmt}* belum di-set`,
             `◦ Set di config.js: aiHelp.${TIO_FORMATS[currentFmt]?.apiKeyField || "apiKey"}`,
@@ -222,7 +222,7 @@ async function handler(m, { sock, config: botConfig }) {
       aigrup.enabled = true;
       db.save();
       await m.reply(
-        alyaHeader("AI Grup Aktif", "✅") + "\n\n" +
+        claraHeader("AI Grup Aktif", "✅") + "\n\n" +
         bracketBox("✅", "ᴀᴋᴛɪꜰ", [
           `◦ Status: *ON*`,
           `◦ Format: *${TIO_FORMATS[currentFmt]?.label || currentFmt}*`,
@@ -242,7 +242,7 @@ async function handler(m, { sock, config: botConfig }) {
       aigrup.enabled = false;
       db.save();
       await m.reply(
-        alyaHeader("AI Grup Nonaktif", "✅") + "\n\n" +
+        claraHeader("AI Grup Nonaktif", "✅") + "\n\n" +
         bracketBox("✅", "ᴅɪᴍᴀᴛɪᴋᴀɴ", [
           `◦ Status: *OFF*`,
           `◦ Bot tidak nimbrung lagi`,
@@ -274,7 +274,7 @@ async function handler(m, { sock, config: botConfig }) {
           `  *${mdl.label}* (${mdl.id})`
         ).join("\n");
         await m.reply(
-          alyaHeader(`Model ${fmt.label}`, fmt.emoji) + "\n\n" +
+          claraHeader(`Model ${fmt.label}`, fmt.emoji) + "\n\n" +
           bracketBox(fmt.emoji, `${fmt.label.toUpperCase()} ꜰᴏʀᴍᴀᴛ`, [
             `◦ API Key: *${apiKey ? "Terpasang ✅" : "Belum ❌"}*`,
             `◦ Model saat ini: *${aigrup.format === fmtKey ? currentModel : fmt.defaultModel}*`,
@@ -297,7 +297,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!modelInput && turnOn) {
         if (!apiKey) {
           await m.reply(
-            alyaHeader("API Key Belum Diisi", "⚠️") + "\n\n" +
+            claraHeader("API Key Belum Diisi", "⚠️") + "\n\n" +
             bracketBox("⚠️", "ᴇʀʀᴏʀ", [
               `◦ API Key untuk *${fmt.label}* belum di-set`,
               `◦ Set di config.js: aiHelp.${fmt.apiKeyField}`,
@@ -310,7 +310,7 @@ async function handler(m, { sock, config: botConfig }) {
         aigrup.enabled = true;
         db.save();
         await m.reply(
-          alyaHeader("AI Grup Aktif", fmt.emoji) + "\n\n" +
+          claraHeader("AI Grup Aktif", fmt.emoji) + "\n\n" +
           bracketBox("✅", "ᴀᴋᴛɪꜰ", [
             `◦ Status: *ON*`,
             `◦ Format: *${fmt.label}*`,
@@ -328,7 +328,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (!foundModel) {
         await m.reply(
-          alyaHeader("Model Tidak Ditemukan", "⚠️") + "\n\n" +
+          claraHeader("Model Tidak Ditemukan", "⚠️") + "\n\n" +
           bracketBox("⚠️", "ᴇʀʀᴏʀ", [
             `◦ Model *${modelInput}* tidak ada`,
             `◦ Ketik *${prefix}aigrup model* untuk lihat semua`,
@@ -344,7 +344,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (turnOn) {
         if (!apiKey) {
           await m.reply(
-            alyaHeader("API Key Belum Diisi", "⚠️") + "\n\n" +
+            claraHeader("API Key Belum Diisi", "⚠️") + "\n\n" +
             bracketBox("⚠️", "ᴇʀʀᴏʀ", [
               `◦ API Key untuk *${fmt.label}* belum di-set`,
               `◦ Set di config.js: aiHelp.${fmt.apiKeyField}`,
@@ -360,7 +360,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.save();
 
       await m.reply(
-        alyaHeader("AI Grup Update", fmt.emoji) + "\n\n" +
+        claraHeader("AI Grup Update", fmt.emoji) + "\n\n" +
         bracketBox(fmt.emoji, "ᴘᴇʀᴜʙᴀʜᴀɴ", [
           `◦ Format: *${fmt.label}*`,
           `◦ Model: *${foundModel.label}*`,

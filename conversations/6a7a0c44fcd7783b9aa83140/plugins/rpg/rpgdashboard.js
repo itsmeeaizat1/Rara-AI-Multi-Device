@@ -1,5 +1,5 @@
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { alyaHeader,
+import { claraHeader,
   separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { RPG_CATEGORIES } from "./rpgdashboardglobal.js";
@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("rpgdashboard", "Kategori tidak ditemukan."));
     }
 
-    let text = alyaHeader(`Dashboard ${cat.name}`, cat.emoji) + "\n\n";
+    let text = claraHeader(`Dashboard ${cat.name}`, cat.emoji) + "\n\n";
 
     text += claraWrap("INFO", [`◦ Kategori: *${cat.name}*`, `◦ Total Command: *${cat.commands.length}*`].join("\n")) + "\n\n";
 

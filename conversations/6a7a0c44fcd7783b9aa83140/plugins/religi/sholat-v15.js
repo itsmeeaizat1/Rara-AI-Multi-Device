@@ -1,4 +1,4 @@
-import { alyaHeader,
+import { claraHeader,
     separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { fetchPrayerTimes, buildPrayerMessage, PRAYER_LABELS, PRAYER_EMOJIS, ADVANCE_REMINDER_MINUTES } from "../../src/lib/nova-sholat-scheduler.js";
@@ -342,7 +342,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      alyaHeader(`Jadwal Sholat - ${city}`, "🕌") +
+      claraHeader(`Jadwal Sholat - ${city}`, "🕌") +
       "\n\n" +
       claraWrap(next.label, [
         `◦ Waktu: *${formatTime24(next.time)}*`,

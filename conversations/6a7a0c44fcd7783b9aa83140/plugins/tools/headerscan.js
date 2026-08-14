@@ -1,4 +1,4 @@
-import { alyaHeader,  separator, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraHeader,  separator, claraWrap } from "../../src/lib/nova-menu-style.js";
 import https from "node:https";
 import http from "node:http";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
