@@ -4,8 +4,8 @@ import path from "path";
 import fs from "fs";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "jodohfun",
-  alias: ["jodohfun", "jodohmatch", "matchfun"],
+  name: "jodoh",
+  alias: ["jodoh"],
   category: "fun",
   description: "Jodohkan 2 member random dengan kecocokan",
   usage: ".jodoh",
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
   try {
     groupMeta = m.groupMetadata;
   } catch (e) {
-    return m.reply(claraWrap("jodohfun", "❌ *ɢᴀɢᴀʟ*\n\n> Tidak bisa mengambil data grup!"));
+    return m.reply(claraWrap("jodoh", "❌ *ɢᴀɢᴀʟ*\n\n> Tidak bisa mengambil data grup!"));
   }
 
   const participants = groupMeta.participants || [];

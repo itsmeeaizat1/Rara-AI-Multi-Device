@@ -8,7 +8,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "soulmatchfun",
-    alias: ["soulmatchfun", "soul2", "match2"],
+    alias: ["soulmatchfun"],
     category: 'fun',
     description: 'Cek kecocokan jiwa dengan seseorang',
     usage: '.soulmatch nama1|nama2',

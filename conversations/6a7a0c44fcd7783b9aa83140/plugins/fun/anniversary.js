@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "annifun",
-  alias: ["annifun", "anniversaryfun", "harijadianfun"],
+  alias: ["annifun"],
   category: "fun",
   description: "Tracker anniversary/hari jadian dengan countdown",
   usage:

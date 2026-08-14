@@ -3,7 +3,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getRandomItem } from '../../src/lib/nova-game-data.js'
 const pluginConfig = {
     name: "bucin",
-    alias: ["bucin", "bucinfun", "bucinlevel"],
+    alias: ["bucin"],
     category: 'fun',
     description: 'Random kata-kata bucin/romantis',
     usage: '.bucin',

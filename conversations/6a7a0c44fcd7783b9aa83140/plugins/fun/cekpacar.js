@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'cekpacar',
-    alias: ['pacar', 'pasangan', 'gebetan'],
+    alias: ['cekpacar'],
     category: 'fun',
     description: 'Cek status hubungan seseorang',
     usage: '.cekpacar atau .cekpacar @tag',
