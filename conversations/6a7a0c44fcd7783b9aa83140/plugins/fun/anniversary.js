@@ -4,8 +4,8 @@ import moment from "moment-timezone";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "annifun",
-  alias: ["annifun"],
+  name: "anniversary",
+  alias: ["anniversary"],
   category: "fun",
   description: "Tracker anniversary/hari jadian dengan countdown",
   usage:
@@ -188,7 +188,7 @@ async function handler(m, { sock }) {
     // Parse DD/MM/YYYY
     const parts = dateStr.split(/[\/\-.]/);
     if (parts.length !== 3) {
-      return m.reply(claraWrap("annifun", "Format tanggal salah. Gunakan: DD/MM/YYYY\n\nContoh: .anniversary set 14/02/2024"));
+      return m.reply(claraWrap("anniversary", "Format tanggal salah. Gunakan: DD/MM/YYYY\n\nContoh: .anniversary set 14/02/2024"));
     }
 
     const day = parseInt(parts[0]);
@@ -206,7 +206,7 @@ async function handler(m, { sock }) {
     }
 
     if (anniDate.isAfter(moment().tz(TZ), "day")) {
-      return m.reply(claraWrap("annifun", "Tanggal anniversary tidak bisa di masa depan!"));
+      return m.reply(claraWrap("anniversary", "Tanggal anniversary tidak bisa di masa depan!"));
     }
 
     const userData = db.getUser(m.sender) || {};
@@ -253,7 +253,7 @@ async function handler(m, { sock }) {
       }
 
       if (anniList.length === 0) {
-        return m.reply(claraWrap("annifun", "Belum ada member di grup ini yang punya data anniversary."));
+        return m.reply(claraWrap("anniversary", "Belum ada member di grup ini yang punya data anniversary."));
       }
 
       // Sort by days descending (longest relationship first)
@@ -286,7 +286,7 @@ async function handler(m, { sock }) {
     const fun = userData.fun || {};
 
     if (!fun.jadiPacar && !fun.anniversaryDate) {
-      return m.reply(claraWrap("annifun", "Kamu belum punya data anniversary untuk dihapus."));
+      return m.reply(claraWrap("anniversary", "Kamu belum punya data anniversary untuk dihapus."));
     }
 
     // Only delete custom anniversary date, keep jadiPacar from terima

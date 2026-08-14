@@ -5,8 +5,8 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
-  name: "anniversary",
-  alias: ["anniversary", "anni", "harijadian"],
+  name: "anniversarymatch",
+  alias: ["anniversarymatch", "anni", "harijadian"],
   category: "rpg",
   description: "Cek hari jadian/nikah & countdown anniversary",
   usage: ".anniversary",
