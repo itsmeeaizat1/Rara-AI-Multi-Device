@@ -120,7 +120,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   const more = String.fromCharCode(8206);
   const readMore = more.repeat(4001);
 
-  // ── before section (Info User / Info Hari / Info Bot) ──
+  // ── before section (Info User / Info Waktu / Info Bot / Info Server) ──
   let txt = `╔┈┈「 *Info User* 」
 ╎
 ╎❏ *Nama:*  ${m.pushName || "User"}
@@ -134,7 +134,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 ╎❏ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
 ╎❏ *Total Xp:* ${userExp.toLocaleString()}
 ╎❏ *Status:* ${user?.banned ? "Banned" : "Aktif"}
-╠┈┈「 *Info Hari* 」
+╠┈┈「 *Info Waktu* 」
 ╎❏ *Waktu:* ${timeStr} WIB
 ╎❏ *Hari:* ${dayName} ${weton}
 ╎❏ *Tanggal:* ${dateStr}
@@ -146,16 +146,17 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 ╎❏ *Version:* ${botConfig.bot?.version || "-"}
 ╎❏ *Developer:* ${botConfig.bot?.developer || "-"}
 ╎❏ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
-╎❏ *Platform:* ${platform}
-╎❏ *Type:* Node.Js
-╎❏ *Baileys:* Multi Device
-╎❏ *Node.js:* ${process.version}
 ╎❏ *Prefix:* [ *${prefix}* ]
 ╎❏ *Uptime:* ${runtimeStr}
 ╎❏ *Total User:* ${totalUsers}
 ╎❏ *Total Registrasi:* ${totalRegistered}
 ╎❏ *Premium User:* ${totalPremium}
 ╎❏ *Total Fitur:* ${totalFeatures}
+╠┈┈「 *Info Server* 」
+╎❏ *Platform:* ${platform}
+╎❏ *Type:* Node.Js
+╎❏ *Baileys:* Multi Device
+╎❏ *Node.js:* ${process.version}
 ╚┈┈┈┈┈┈┈┈┈❖
 ${readMore}
 `;

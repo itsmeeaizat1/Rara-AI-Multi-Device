@@ -111,7 +111,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 ╎❏ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
 ╎❏ *Total Xp:* ${userExp.toLocaleString()}
 ╎❏ *Status:* ${user?.banned ? "Banned" : "Aktif"}
-╠┈┈「 *Info Hari* 」
+╠┈┈「 *Info Waktu* 」
 ╎❏ *Waktu:* ${timeStr} WIB
 ╎❏ *Hari:* ${dayName} ${weton}
 ╎❏ *Tanggal:* ${dateStr}
@@ -123,15 +123,16 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 ╎❏ *Version:* ${botConfig.bot?.version || "-"}
 ╎❏ *Developer:* ${botConfig.bot?.developer || "-"}
 ╎❏ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
-╎❏ *Platform:* ${platform}
-╎❏ *Type:* Node.Js
-╎❏ *Baileys:* Multi Device
-╎❏ *Node.js:* ${process.version}
 ╎❏ *Prefix:* [ *${prefix}* ]
 ╎❏ *Uptime:* ${runtimeStr}
 ╎❏ *Total User:* ${totalUsers}
 ╎❏ *Total Registrasi:* ${totalRegistered}
 ╎❏ *Premium User:* ${totalPremium}
+╠┈┈「 *Info Server* 」
+╎❏ *Platform:* ${platform}
+╎❏ *Type:* Node.Js
+╎❏ *Baileys:* Multi Device
+╎❏ *Node.js:* ${process.version}
 ╚┈┈┈┈┈┈┈┈┈❖
 ${readMore}
 ╔┈「 *Menu* 」
