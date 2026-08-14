@@ -39,6 +39,9 @@ async function handler(m, { sock, db }) {
   let followerCount = null;
   let postsCount = null;
   let channelDesc = "";
+  let lastPostText = null;
+  let lastPostTime = null;
+
   if (isChannelSet) {
     try {
       const metadata = await sock.newsletterMetadata("jid", channelId);
@@ -59,6 +62,37 @@ async function handler(m, { sock, db }) {
           } catch (e2) {
             console.log("[Channel] MessagesCount fetch failed:", e2.message);
           }
+        }
+
+        // ─── Ambil postingan terakhir ───
+        // Coba berbagai kemungkinan method di Baileys
+        try {
+          if (typeof sock.newsletterMessages === "function") {
+            const posts = await sock.newsletterMessages(channelId, 1);
+            if (posts && Array.isArray(posts) && posts.length > 0) {
+              const last = posts[0];
+              lastPostText = last?.message?.conversation
+                || last?.message?.extendedTextMessage?.text
+                || last?.message?.imageMessage?.caption
+                || last?.message?.videoMessage?.caption
+                || last?.message?.newsletterMessage?.message?.conversation
+                || null;
+              lastPostTime = last?.messageTimestamp || last?.t || last?.createdAt || null;
+            }
+          } else if (typeof sock.fetchNewsletterMessages === "function") {
+            const posts = await sock.fetchNewsletterMessages(channelId, 1);
+            if (posts && Array.isArray(posts) && posts.length > 0) {
+              const last = posts[0];
+              lastPostText = last?.message?.conversation
+                || last?.message?.extendedTextMessage?.text
+                || last?.message?.imageMessage?.caption
+                || last?.message?.videoMessage?.caption
+                || null;
+              lastPostTime = last?.messageTimestamp || last?.t || last?.createdAt || null;
+            }
+          }
+        } catch (e3) {
+          console.log("[Channel] Last post fetch failed:", e3.message);
         }
       }
     } catch (e) {
@@ -91,6 +125,32 @@ async function handler(m, { sock, db }) {
   lines.push("");
   lines.push(`╎ Ikuti saluran untuk update fitur terbaru,`);
   lines.push(`╎ info maintenance, dan pengumuman penting`);
+
+  // ─── Postingan Terakhir ───
+  if (lastPostText) {
+    const postShort = lastPostText.length > 150 ? lastPostText.slice(0, 150) + "..." : lastPostText;
+    lines.push("");
+    lines.push(`╎❏ *Postingan Terakhir:*`);
+    lines.push(`╎ ${postShort}`);
+
+    if (lastPostTime) {
+      try {
+        const ts = typeof lastPostTime === "number" && lastPostTime > 1e12
+          ? lastPostTime
+          : typeof lastPostTime === "number" && lastPostTime > 1e9
+            ? lastPostTime * 1000
+            : lastPostTime;
+        const dateStr = new Date(ts).toLocaleString("id-ID", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        lines.push(`╎❏ *Waktu:* ${dateStr}`);
+      } catch (_) {}
+    }
+  }
 
   // ─── Thumbnail via externalAdReply (banner dari asset) ───
   let thumbBuffer = null;
