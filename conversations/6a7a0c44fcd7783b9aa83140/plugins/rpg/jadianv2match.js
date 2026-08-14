@@ -10,12 +10,12 @@ const VN_DIR = path.join(process.cwd(), "assets", "audio");
 const VN_TEMBAK_V2 = "vn_tembak_v2.mp3"; // VN saat confess v2
 
 const pluginConfig = {
-  name: "jadianv2",
-  alias: ["jadian2", "tembakv2", "confessv2"],
+  name: "jadianv2match",
+  alias: ["jadianv2match"],
   category: "game",
   description: "Tembak seseorang buat jadian (V2 - versi enhanced)",
-  usage: ".jadianv2 @member",
-  example: ".jadianv2 @628xxxx",
+  usage: ".jadianv2match @member",
+  example: ".jadianv2match @628xxxx",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -67,8 +67,8 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("Cara Pakai", [
           "◦ Penggunaan: *" + prefix + "jadianv2 @member*",
           "◦ Contoh: *" + prefix + "jadianv2 @628xxxx*",
-          "◦ Target harus ketik *" + prefix + "mauv2* untuk terima",
-          "◦ Target harus ketik *" + prefix + "enggav2* untuk tolak",
+          "◦ Target harus ketik *" + prefix + "terimav2match* untuk terima",
+          "◦ Target harus ketik *" + prefix + "tolakv2match* untuk tolak",
         ].join("\n")) + "\n" +
         tipText("Tembak orang yang kamu suka (versi enhanced)!");
 
@@ -199,8 +199,8 @@ async function handler(m, { sock, config: botConfig }) {
     text += separator("─", 28) + "\n\n";
     text += "💫 *" + targetName + "*, " + confessorName + " nembak kamu (V2)!\n\n";
     text += "⏳ Kamu punya *5 menit* buat jawab:\n\n";
-    text += "✅ Ketik *" + prefix + "mauv2* — Mau jadian!\n";
-    text += "❌ Ketik *" + prefix + "enggav2* — Nggak mau\n\n";
+    text += "✅ Ketik *" + prefix + "terimav2match* — Mau jadian!\n";
+    text += "❌ Ketik *" + prefix + "tolakv2match* — Nggak mau\n\n";
     text += decor + "\n";
     text += tipText("Jangan buat dia deg-degan terlalu lama...");
 

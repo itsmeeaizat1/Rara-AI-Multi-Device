@@ -10,12 +10,12 @@ const VN_DIR = path.join(process.cwd(), "assets", "audio");
 const VN_PUTUS = "vn_putus_sedih.mp3"; // VN saat putus
 
 const pluginConfig = {
-  name: "putus",
-  alias: ["breakup", "ceraijadian", "putuspacar"],
+  name: "putusmatch",
+  alias: ["putusmatch"],
   category: "game",
   description: "Putus sama pacar (jadian)",
-  usage: ".putus",
-  example: ".putus",
+  usage: ".putusmatch",
+  example: ".putusmatch",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
           "◦ Ketik *" + prefix + "jadian @member* untuk mulai"].join("\n")) + "\n" +
         tipText("Belum pacaran, mau putus sama siapa? 😂");
 
-      await sendReplyWithNav(sock, m, text, "putus");
+      await sendReplyWithNav(sock, m, text, "putusmatch");
       return { handled: true };
     }
 

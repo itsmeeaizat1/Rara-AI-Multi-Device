@@ -3,12 +3,12 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "tembakfun",
-  alias: ["tembakfun", "tembakconfess", "tembak2"],
+  name: "jadian",
+  alias: ["jadian"],
   category: "fun",
   description: "Menembak seseorang untuk pacaran",
-  usage: ".tembak @tag",
-  example: ".tembak @628xxx",
+  usage: ".jadian @tag",
+  example: ".jadian @628xxx",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -18,7 +18,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-if (!global.tembakSessions) global.tembakSessions = {};
+if (!global.jadianSessions) global.jadianSessions = {};
 
 const SESSION_TIMEOUT = 3600000;
 const romanticQuotes = [
@@ -53,18 +53,18 @@ async function handler(m, { sock }) {
 
   if (!targetJid) {
     return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `> \`${m.prefix}tembak @tag\`\n\n` +
+        `> \`${m.prefix}jadian @tag\`\n\n` +
         `> Contoh:\n` +
-        `> \`${m.prefix}tembak @628xxx\`\n` +
+        `> \`${m.prefix}jadian @628xxx\`\n` +
         `> Reply pesan + \`${m.prefix}tembak\``, "tembak");
   }
 
   if (targetJid === m.sender) {
-    return m.reply(claraWrap("tembakfun", `Tidak bisa menembak diri sendiri!`));
+    return m.reply(claraWrap("jadian", `Tidak bisa menembak diri sendiri!`));
   }
 
   if (targetJid === m.botNumber) {
-    return m.reply(claraWrap("tembakfun", `Bot tidak bisa pacaran!`));
+    return m.reply(claraWrap("jadian", `Bot tidak bisa pacaran!`));
   }
 
   let senderData = db.getUser(m.sender) || {};
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
   if (targetData.fun.pasangan && targetData.fun.pasangan !== m.sender) {
     const targetPartner = db.getUser(targetData.fun.pasangan);
     if (targetPartner?.fun?.pasangan === targetJid) {
-      return m.reply(claraWrap("tembakfun", `💔 *ᴅɪᴀ sᴜᴅᴀʜ ᴘᴀᴄᴀʀᴀɴ*\n\n` +
+      return m.reply(claraWrap("jadian", `💔 *ᴅɪᴀ sᴜᴅᴀʜ ᴘᴀᴄᴀʀᴀɴ*\n\n` +
           `Pasangannya: @${targetData.fun.pasangan.split("@")[0]}`));
     }
   }
@@ -100,9 +100,9 @@ async function handler(m, { sock }) {
     db.setUser(m.sender, senderData);
     db.setUser(targetJid, targetData);
 
-    delete global.tembakSessions[`${m.chat}_${targetJid}`];
+    delete global.jadianSessions[`${m.chat}_${targetJid}`];
 
-    return m.reply(claraWrap("tembakfun", `💕 *CIE CIEE :3*\n\n` +
+    return m.reply(claraWrap("jadian", `💕 *CIE CIEE :3*\n\n` +
         `@${m.sender.split("@")[0]} dan @${targetJid.split("@")[0]} resmi pacaran !\n\n` +
         `Semoga langgeng yak! 💍`));
   }
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
   senderData.fun.tembakCount++;
   db.setUser(m.sender, senderData);
 
-  global.tembakSessions[`${m.chat}_${targetJid}`] = {
+  global.jadianSessions[`${m.chat}_${targetJid}`] = {
     shooter: m.sender,
     target: targetJid,
     chat: m.chat,
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
       `gunakan: \`${m.prefix}terima\` / \`${m.prefix}tolak\``);
 
   if (sentMsg?.key?.id) {
-    global.tembakSessions[`${m.chat}_${targetJid}`].messageId = sentMsg.key.id;
+    global.jadianSessions[`${m.chat}_${targetJid}`].messageId = sentMsg.key.id;
   }
 }
 
@@ -141,7 +141,7 @@ async function answerHandler(m, sock) {
 
   const db = getDatabase();
 
-  const allSessions = Object.entries(global.tembakSessions || {}).filter(
+  const allSessions = Object.entries(global.jadianSessions || {}).filter(
     ([key, val]) => val.target === m.sender && val.chat === m.chat,
   );
 
@@ -168,7 +168,7 @@ async function answerHandler(m, sock) {
     db.setUser(sessData.shooter, shooterData);
     db.setUser(m.sender, targetData);
 
-    delete global.tembakSessions[sessKey];
+    delete global.jadianSessions[sessKey];
 
     await m.reply(claraWrap("WIDIHHHH, CIE CIE DITERIMA", `💕 *WIDIHHHH, CIE CIE DITERIMA* @${sessData.shooter.split("@")[0]}\n\n` +
         `@${m.sender.split("@")[0]} dan @${sessData.shooter.split("@")[0]} resmi pacaran\n\n` +
@@ -191,9 +191,9 @@ async function answerHandler(m, sock) {
     db.setUser(sessData.shooter, shooterData);
     db.setUser(m.sender, targetData);
 
-    delete global.tembakSessions[sessKey];
+    delete global.jadianSessions[sessKey];
 
-    await m.reply(claraWrap("tembakfun", `💔 *WADUHH, YANG SABAR YAK* @${sessData.shooter.split("@")[0]}\n\n` +
+    await m.reply(claraWrap("jadian", `💔 *WADUHH, YANG SABAR YAK* @${sessData.shooter.split("@")[0]}\n\n` +
         `@${m.sender.split("@")[0]} menolak @${sessData.shooter.split("@")[0]} sebagai pacarnya\n\n` +
         `Sabar ya, masih banyak yang lain! 😢`));
     return true;

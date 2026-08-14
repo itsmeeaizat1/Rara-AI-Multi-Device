@@ -4,8 +4,8 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "terimafun",
-  alias: ["terimafun", "acceptfun", "terimacf"],
+  name: "terima",
+  alias: ["terima"],
   category: "fun",
   description: "Menerima tembakan dari seseorang",
   usage: ".terima @tag",
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
   }
 
   if (!shooterJid) {
-    const sessions = global.tembakSessions || {};
+    const sessions = global.jadianSessions || {};
     const mySession = Object.entries(sessions).find(
       ([key, val]) => val.target === m.sender && val.chat === m.chat,
     );
@@ -59,11 +59,11 @@ async function handler(m, { sock }) {
   }
 
   if (shooterJid === m.sender) {
-    return m.reply(claraWrap("terimafun", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak bisa menerima diri sendiri!`));
+    return m.reply(claraWrap("terima", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak bisa menerima diri sendiri!`));
   }
 
   if (shooterJid === m.botNumber) {
-    return m.reply(claraWrap("terimafun", `❌ *ɢᴀɢᴀʟ*\n\n> Bot tidak bisa pacaran!`));
+    return m.reply(claraWrap("terima", `❌ *ɢᴀɢᴀʟ*\n\n> Bot tidak bisa pacaran!`));
   }
 
   let shooterData = db.getUser(shooterJid) || {};
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     shooterData.fun.pasangan !== m.sender &&
     shooterData.fun.tembakTarget !== m.sender
   ) {
-    return m.reply(claraWrap("terimafun", `❌ *ᴛɪᴅᴀᴋ ᴍᴇɴᴇᴍʙᴀᴋ*\n\n` +
+    return m.reply(claraWrap("terima", `❌ *ᴛɪᴅᴀᴋ ᴍᴇɴᴇᴍʙᴀᴋ*\n\n` +
         `> @${shooterJid.split("@")[0]} tidak sedang menembakmu`));
   }
 
@@ -93,8 +93,8 @@ async function handler(m, { sock }) {
   db.setUser(m.sender, myData);
 
   const sessionKey = `${m.chat}_${m.sender}`;
-  if (global.tembakSessions?.[sessionKey]) {
-    delete global.tembakSessions[sessionKey];
+  if (global.jadianSessions?.[sessionKey]) {
+    delete global.jadianSessions[sessionKey];
   }
 
   const quote =
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
   const ctx = saluranCtx();
   ctx.mentionedJid = [m.sender, shooterJid];
 
-  await m.reply(claraWrap("terimafun", `💕 *WIDIHHHH, CIE CIE DITERIMA* @${shooterJid.split("@")[0]}\n\n` +
+  await m.reply(claraWrap("terima", `💕 *WIDIHHHH, CIE CIE DITERIMA* @${shooterJid.split("@")[0]}\n\n` +
       `@${m.sender.split("@")[0]} dan @${shooterJid.split("@")[0]} resmi pacaran\n\n` +
       `Semoga langgeng dan bahagia 💍`));
 }

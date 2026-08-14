@@ -4,19 +4,19 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
-import { pendingProposals, cleanExpired } from "./nikah.js";
+import { pendingProposals, cleanExpired } from "./nikahmatch.js";
 
 // VN files for romantic moments (put files in assets/vn/)
 const VN_DIR = path.join(process.cwd(), "assets", "audio");
 const VN_NIKAH = "vn_nikah_romantis.mp3"; // VN saat nikah diterima
 
 const pluginConfig = {
-  name: "terima",
-  alias: ["terima", "accept", "terimacouple"],
+  name: "terimanikahmatch",
+  alias: ["terimanikahmatch"],
   category: "game",
   description: "Terima lamaran nikah",
-  usage: ".terima",
-  example: ".terima",
+  usage: ".terimanikahmatch",
+  example: ".terimanikahmatch",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
           "◦ Atau lamaran sudah expired (5 menit)"].join("\n")) + "\n" +
         tipText("Tunggu seseorang melamar kamu");
 
-      await sendReplyWithNav(sock, m, text, "terima");
+      await sendReplyWithNav(sock, m, text, "terimanikahmatch");
       return { handled: true };
     }
 
@@ -65,7 +65,7 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("Salah Tempat", ["◦ Lamaran harus dijawab di grup yang sama"].join("\n")) + "\n" +
         tipText("Balas di grup tempat kamu dilamar");
 
-      await sendReplyWithNav(sock, m, text, "terima");
+      await sendReplyWithNav(sock, m, text, "terimanikahmatch");
       return { handled: true };
     }
 
@@ -81,14 +81,14 @@ async function handler(m, { sock, config: botConfig }) {
     if (proposerUser.rpg.spouse) {
       pendingProposals.delete(m.sender);
       const text = claraWrap("Maaf", ["◦ " + proposerName + " sudah menikah dengan orang lain"].join("\n"));
-      await sendReplyWithNav(sock, m, text, "terima");
+      await sendReplyWithNav(sock, m, text, "terimanikahmatch");
       return { handled: true };
     }
 
     if (targetUser.rpg.spouse) {
       pendingProposals.delete(m.sender);
       const text = claraWrap("Sudah Menikah", ["◦ Kamu sudah menikah!"].join("\n"));
-      await sendReplyWithNav(sock, m, text, "terima");
+      await sendReplyWithNav(sock, m, text, "terimanikahmatch");
       return { handled: true };
     }
 

@@ -3,8 +3,8 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "tolakfun",
-  alias: ["tolakfun", "rejectfun", "tolakcf"],
+  name: "tolak",
+  alias: ["tolak"],
   category: "fun",
   description: "Menolak tembakan dari seseorang",
   usage: ".tolak @tag",
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
   }
 
   if (!shooterJid) {
-    const sessions = global.tembakSessions || {};
+    const sessions = global.jadianSessions || {};
     const mySession = Object.entries(sessions).find(
       ([key, val]) => val.target === m.sender && val.chat === m.chat,
     );
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   }
 
   if (shooterJid === m.sender) {
-    return m.reply(claraWrap("tolakfun", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak bisa menolak diri sendiri!`));
+    return m.reply(claraWrap("tolak", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak bisa menolak diri sendiri!`));
   }
 
   if (shooterJid === m.botNumber) {
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     shooterData.fun.pasangan !== m.sender &&
     shooterData.fun.tembakTarget !== m.sender
   ) {
-    return m.reply(claraWrap("tolakfun", `❌ *ᴛɪᴅᴀᴋ ᴍᴇɴᴇᴍʙᴀᴋ*\n\n` +
+    return m.reply(claraWrap("tolak", `❌ *ᴛɪᴅᴀᴋ ᴍᴇɴᴇᴍʙᴀᴋ*\n\n` +
         `> @${shooterJid.split("@")[0]} tidak sedang menembakmu`));
   }
 
@@ -90,8 +90,8 @@ async function handler(m, { sock }) {
   db.setUser(m.sender, myData);
 
   const sessionKey = `${m.chat}_${m.sender}`;
-  if (global.tembakSessions?.[sessionKey]) {
-    delete global.tembakSessions[sessionKey];
+  if (global.jadianSessions?.[sessionKey]) {
+    delete global.jadianSessions[sessionKey];
   }
 
   const quote =
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
   const ctx = saluranCtx();
   ctx.mentionedJid = [m.sender, shooterJid];
 
-  await m.reply(claraWrap("tolakfun", `💔 *WADUHH, YANG SABAR YAK* @${shooterJid.split("@")[0]}\n\n` +
+  await m.reply(claraWrap("tolak", `💔 *WADUHH, YANG SABAR YAK* @${shooterJid.split("@")[0]}\n\n` +
       `@${m.sender.split("@")[0]} menolak @${shooterJid.split("@")[0]} sebagai pacarnya\n\n` +
       `Sabar ya, masih banyak yang lain! 😢`));
 }

@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { pendingProposals, cleanExpired } from "./nikah.js";
+import { pendingProposals, cleanExpired } from "./nikahmatch.js";
 import { separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -10,12 +10,12 @@ const VN_DIR = path.join(process.cwd(), "assets", "audio");
 const VN_TOLAK_NIKAH = "vn_tolak_nikah.mp3"; // VN saat nikah ditolak
 
 const pluginConfig = {
-  name: "tolak",
-  alias: ["tolak", "reject", "tolakcouple"],
+  name: "tolaknikahmatch",
+  alias: ["tolaknikahmatch"],
   category: "game",
   description: "Tolak lamaran nikah",
-  usage: ".tolak",
-  example: ".tolak",
+  usage: ".tolaknikahmatch",
+  example: ".tolaknikahmatch",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -53,7 +53,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText("Tunggu seseorang melamar kamu");
 
-      await sendReplyWithNav(sock, m, text, "tolak");
+      await sendReplyWithNav(sock, m, text, "tolaknikahmatch");
       return { handled: true };
     }
 

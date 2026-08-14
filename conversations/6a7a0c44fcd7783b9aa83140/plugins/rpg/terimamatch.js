@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { pendingConfessions, cleanExpired } from "./jadian.js";
+import { pendingConfessions, cleanExpired } from "./jadianmatch.js";
 import { separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // VN files (put files in assets/vn/)
@@ -11,12 +11,12 @@ const VN_DIR = path.join(process.cwd(), "assets", "audio");
 const VN_MAU_JADIAN = "vn_mau_jadian.mp3"; // VN saat jadian diterima
 
 const pluginConfig = {
-  name: "mau",
-  alias: ["maujadian", "terimajadian", "acceptjadian"],
+  name: "terimamatch",
+  alias: ["terimamatch"],
   category: "game",
   description: "Terima confession jadian (pacaran)",
-  usage: ".mau",
-  example: ".mau",
+  usage: ".terimamatch",
+  example: ".terimamatch",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -59,7 +59,7 @@ async function handler(m, { sock, config: botConfig }) {
         ].join("\n")) + "\n" +
         tipText("Sabar ya, jodong nggak kemana");
 
-      await sendReplyWithNav(sock, m, text, "mau");
+      await sendReplyWithNav(sock, m, text, "terimamatch");
       return { handled: true };
     }
 
@@ -70,7 +70,7 @@ async function handler(m, { sock, config: botConfig }) {
         ].join("\n")) + "\n" +
         tipText("Balas di grup tempat kamu ditembak");
 
-      await sendReplyWithNav(sock, m, text, "mau");
+      await sendReplyWithNav(sock, m, text, "terimamatch");
       return { handled: true };
     }
 
@@ -89,7 +89,7 @@ async function handler(m, { sock, config: botConfig }) {
       const text = claraWrap("Maaf", [
         confessorName + " sudah jadian dengan orang lain",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "mau");
+      await sendReplyWithNav(sock, m, text, "terimamatch");
       return { handled: true };
     }
 
@@ -99,7 +99,7 @@ async function handler(m, { sock, config: botConfig }) {
         "◦ Kamu sudah jadian dengan orang lain!",
         "◦ Putus dulu dengan *" + prefix + "putus*",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "mau");
+      await sendReplyWithNav(sock, m, text, "terimamatch");
       return { handled: true };
     }
 
@@ -108,7 +108,7 @@ async function handler(m, { sock, config: botConfig }) {
       const text = claraWrap("Sudah Menikah", [
         "◦ Ada salah satu pihak yang sudah menikah!",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "mau");
+      await sendReplyWithNav(sock, m, text, "terimamatch");
       return { handled: true };
     }
 

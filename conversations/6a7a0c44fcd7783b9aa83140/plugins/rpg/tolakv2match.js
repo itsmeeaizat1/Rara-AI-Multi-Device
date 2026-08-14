@@ -1,21 +1,21 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { pendingConfessions, cleanExpired } from "./jadian.js";
-import { separator,
-  tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { pendingConfessionsV2, cleanExpired } from "./jadianv2match.js";
+import { separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // VN files (put files in assets/vn/)
 const VN_DIR = path.join(process.cwd(), "assets", "audio");
-const VN_TOLAK_JADIAN = "vn_tolak_jadian.mp3"; // VN saat jadian ditolak
+const VN_TOLAK_V2 = "vn_tolak_v2.mp3"; // VN saat jadian v2 ditolak
 
 const pluginConfig = {
-  name: "engga",
-  alias: ["nogak", "nolakjadian", "tolakjadian", "gamau"],
+  name: "tolakv2match",
+  alias: ["tolakv2match"],
   category: "game",
-  description: "Tolak confession jadian (pacaran)",
-  usage: ".engga",
-  example: ".engga",
+  description: "Tolak confession jadian V2 (pacaran)",
+  usage: ".tolakv2match",
+  example: ".tolakv2match",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -25,19 +25,19 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const TOLAK_QUOTES = [
-  "Maaf ya, gue nggak bisa. Bukan berarti lu nggak bagus, cuma perasaan gue belum nyampe situ.",
-  "Gue hargai keberanian lu, tapi jawaban gue: belum bisa. Maaf.",
-  "Lu terlalu baik buat gue, dan gue terlalu jujur buat pura-pura mau.",
+const TOLAK_QUOTES_V2 = [
+  "Maaf ya, aku nggak bisa. Bukan berarti kamu nggak bagus, cuma perasaan aku belum nyampe situ.",
+  "Aku hargai keberanian kamu, tapi jawaban aku: belum bisa. Maaf.",
+  "Kamu terlalu baik buat aku, dan aku terlalu jujur buat pura-pura mau.",
   "Mungkin di waktu yang lain, kita bisa. Tapi bukan sekarang. Maaf ya.",
-  "Gue nggak mau ngerasa kayak ngasih harapan palsu, jadi gue jujur aja: engga.",
-  "Terima kasih udah berani nembak, tapi gue belum siap. Maaf.",
+  "Aku nggak mau ngerasa kayak ngasih harapan palsu, jadi aku jujur aja: engga.",
+  "Terima kasih udah berani nembak, tapi aku belum siap. Maaf.",
 ];
 
-const TOLAK_DECOR = [
+const TOLAK_DECOR_V2 = [
   "💔😔💔😔💔",
   "❌🚫❌🚫❌",
-  "🖔😢🖔😢🖔",
+  "ESHESHESH",
 ];
 
 async function handler(m, { sock, config: botConfig }) {
@@ -45,15 +45,17 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
 
     cleanExpired();
-    const confession = pendingConfessions.get(m.sender);
+    const confession = pendingConfessionsV2.get(m.sender);
 
     if (!confession) {
       const text =
-        claraWrap("Tidak Ada Confession", ["◦ Nggak ada yang nembak kamu saat ini",
-          "◦ Atau confession sudah expired (5 menit)"].join("\n")) + "\n" +
+        claraWrap("Tidak Ada Confession V2", [
+          "◦ Nggak ada yang nembak kamu (V2) saat ini",
+          "◦ Atau confession sudah expired (5 menit)",
+        ].join("\n")) + "\n" +
         tipText("Sabar ya, jodong nggak kemana");
 
-      await sendReplyWithNav(sock, m, text, "engga");
+      await sendReplyWithNav(sock, m, text, "tolakv2match");
       return { handled: true };
     }
 
@@ -61,15 +63,17 @@ async function handler(m, { sock, config: botConfig }) {
     const confessorName = confession.confessorName;
     const targetName = confession.targetName;
 
-    pendingConfessions.delete(m.sender);
+    pendingConfessionsV2.delete(m.sender);
 
-    const quote = TOLAK_QUOTES[Math.floor(Math.random() * TOLAK_QUOTES.length)];
-    const decor = TOLAK_DECOR[Math.floor(Math.random() * TOLAK_DECOR.length)];
-    const time = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+    const quote = TOLAK_QUOTES_V2[Math.floor(Math.random() * TOLAK_QUOTES_V2.length)];
+    const decor = TOLAK_DECOR_V2[Math.floor(Math.random() * TOLAK_DECOR_V2.length)];
+    const time = new Date().toLocaleDateString("id-ID", {
+      day: "numeric", month: "long", year: "numeric",
+    });
 
     let text = "";
     text += decor + "\n";
-    text += "💔 *DITOLAK* 💔\n";
+    text += "💔 *DITOLAK V2* 💔\n";
     text += decor + "\n\n";
     text += "“" + quote + "”\n\n";
     text += separator("─", 28) + "\n";
@@ -82,11 +86,14 @@ async function handler(m, { sock, config: botConfig }) {
     text += decor + "\n";
     text += tipText("Jangan menyerah, jodong masih banyak!");
 
-    await sock.sendMessage(m.chat, { text: text, mentions: [confessorJid, m.sender] });
+    await sock.sendMessage(m.chat, {
+      text: text,
+      mentions: [confessorJid, m.sender],
+    });
 
     // Kirim VN (jika file ada)
     try {
-      const vnPath = path.join(VN_DIR, VN_TOLAK_JADIAN);
+      const vnPath = path.join(VN_DIR, VN_TOLAK_V2);
       if (fs.existsSync(vnPath)) {
         const vnBuffer = fs.readFileSync(vnPath);
         await sock.sendMessage(m.chat, {
@@ -96,7 +103,7 @@ async function handler(m, { sock, config: botConfig }) {
         });
       }
     } catch (e) {
-      console.log("[engga.js] VN error:", e.message);
+      console.log("[enggav2.js] VN error:", e.message);
     }
 
     return { handled: true };
