@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { pendingProposals, cleanExpired } from "./marry.js";
+import { pendingProposals, cleanExpired } from "./nikah.js";
 import { separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 

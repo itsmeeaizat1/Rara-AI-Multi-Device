@@ -4,7 +4,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
-import { pendingProposals, cleanExpired } from "./marry.js";
+import { pendingProposals, cleanExpired } from "./nikah.js";
 
 // VN files for romantic moments (put files in assets/vn/)
 const VN_DIR = path.join(process.cwd(), "assets", "audio");

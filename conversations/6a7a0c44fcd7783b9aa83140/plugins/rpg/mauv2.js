@@ -3,20 +3,20 @@ import fs from "fs";
 import path from "path";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { pendingConfessions, cleanExpired } from "./jadian.js";
+import { pendingConfessionsV2, cleanExpired } from "./jadianv2.js";
 import { separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // VN files (put files in assets/vn/)
 const VN_DIR = path.join(process.cwd(), "assets", "audio");
-const VN_MAU_JADIAN = "vn_mau_jadian.mp3"; // VN saat jadian diterima
+const VN_MAU_V2 = "vn_mau_v2.mp3"; // VN saat jadian v2 diterima
 
 const pluginConfig = {
-  name: "mau",
-  alias: ["maujadian", "terimajadian", "acceptjadian"],
+  name: "mauv2",
+  alias: ["mau2", "terimajadianv2", "acceptjadianv2"],
   category: "game",
-  description: "Terima confession jadian (pacaran)",
-  usage: ".mau",
-  example: ".mau",
+  description: "Terima confession jadian V2 (pacaran)",
+  usage: ".mauv2",
+  example: ".mauv2",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -26,21 +26,21 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const ACCEPT_QUOTES = [
-  "Gue mau! Dari sekian banyak orang, gue pilih lu buat bareng.",
-  "Akhirnya lu bilang juga. Gue udah nunggu ini dari lama.",
-  "Gue mau jadi alasan lu tersenyum, dan alasan lu balik lagi kalo lu sedih.",
-  "Jujur, gue juga suka sama lu. Tinggal lu bilang aja, gue langsung mau.",
-  "Gue nggak butuh waktu buat mikir, jawaban gue: mau, seratus persen mau.",
-  "Dari semua tembakan yang pernah gue denger, ini yang paling bikin gue mau.",
-  "Lu nembak, gue kena. Lu nanya mau nggak, gue jawab: mau banget.",
+const ACCEPT_QUOTES_V2 = [
+  "Aku mau! Bukan karena terpaksa, tapi karena kamu memang yang aku tunggu.",
+  "Akhirnya kamu bilang juga. Aku udah nunggu momen ini dari lama.",
+  "Aku mau jadi alasan kamu tersenyum, dan alasan kamu balik lagi kalo kamu sedih.",
+  "Jujur, aku juga suka sama kamu dari awal. Tinggal kamu bilang aja, aku langsung mau.",
+  "Aku nggak butuh waktu buat mikir, jawaban aku: mau, seratus persen mau.",
+  "Di dunia yang serba nggak pasti, aku yakin mau sama kamu.",
+  "Kamu nembak, aku kena. Kamu nanya mau nggak, aku jawab: mau banget.",
 ];
 
-const ACCEPT_DECOR = [
-  "🌸💕🌸💕🌸",
-  "✨💗✨💗✨",
-  "🌹💕🌹💕🌹",
-  "💫💖💫💖💫",
+const ACCEPT_DECOR_V2 = [
+  "💫💝💫💝💫",
+  "🌸💖🌸💖🌸",
+  "✨💘✨💘✨",
+  "🌹💗🌹💗🌹",
 ];
 
 async function handler(m, { sock, config: botConfig }) {
@@ -49,28 +49,28 @@ async function handler(m, { sock, config: botConfig }) {
     const db = getDatabase();
 
     cleanExpired();
-    const confession = pendingConfessions.get(m.sender);
+    const confession = pendingConfessionsV2.get(m.sender);
 
     if (!confession) {
       const text =
-        claraWrap("Tidak Ada Confession", [
-          "◦ Nggak ada yang nembak kamu saat ini",
+        claraWrap("Tidak Ada Confession V2", [
+          "◦ Nggak ada yang nembak kamu (V2) saat ini",
           "◦ Atau confession sudah expired (5 menit)",
         ].join("\n")) + "\n" +
         tipText("Sabar ya, jodong nggak kemana");
 
-      await sendReplyWithNav(sock, m, text, "mau");
+      await sendReplyWithNav(sock, m, text, "mauv2");
       return { handled: true };
     }
 
     if (confession.groupId !== m.chat) {
       const text =
         claraWrap("Salah Tempat", [
-          "◦ Confession harus dijawab di grup yang sama",
+          "◦ Confession V2 harus dijawab di grup yang sama",
         ].join("\n")) + "\n" +
         tipText("Balas di grup tempat kamu ditembak");
 
-      await sendReplyWithNav(sock, m, text, "mau");
+      await sendReplyWithNav(sock, m, text, "mauv2");
       return { handled: true };
     }
 
@@ -85,34 +85,34 @@ async function handler(m, { sock, config: botConfig }) {
 
     // Validasi status
     if (confessorUser.rpg.dating) {
-      pendingConfessions.delete(m.sender);
+      pendingConfessionsV2.delete(m.sender);
       const text = claraWrap("Maaf", [
         confessorName + " sudah jadian dengan orang lain",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "mau");
+      await sendReplyWithNav(sock, m, text, "mauv2");
       return { handled: true };
     }
 
     if (targetUser.rpg.dating) {
-      pendingConfessions.delete(m.sender);
+      pendingConfessionsV2.delete(m.sender);
       const text = claraWrap("Sudah Jadian", [
         "◦ Kamu sudah jadian dengan orang lain!",
         "◦ Putus dulu dengan *" + prefix + "putus*",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "mau");
+      await sendReplyWithNav(sock, m, text, "mauv2");
       return { handled: true };
     }
 
     if (confessorUser.rpg.spouse || targetUser.rpg.spouse) {
-      pendingConfessions.delete(m.sender);
+      pendingConfessionsV2.delete(m.sender);
       const text = claraWrap("Sudah Menikah", [
         "◦ Ada salah satu pihak yang sudah menikah!",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "mau");
+      await sendReplyWithNav(sock, m, text, "mauv2");
       return { handled: true };
     }
 
-    // Finalize jadian
+    // Finalize jadian v2
     const now = Date.now();
     confessorUser.rpg.dating = m.sender;
     confessorUser.rpg.datingAt = now;
@@ -123,17 +123,17 @@ async function handler(m, { sock, config: botConfig }) {
     targetUser.rpg.partner = confessorName;
 
     db.save();
-    pendingConfessions.delete(m.sender);
+    pendingConfessionsV2.delete(m.sender);
 
     const dateStr = new Date(now).toLocaleDateString("id-ID", {
       day: "numeric", month: "long", year: "numeric",
     });
-    const quote = ACCEPT_QUOTES[Math.floor(Math.random() * ACCEPT_QUOTES.length)];
-    const decor = ACCEPT_DECOR[Math.floor(Math.random() * ACCEPT_DECOR.length)];
+    const quote = ACCEPT_QUOTES_V2[Math.floor(Math.random() * ACCEPT_QUOTES_V2.length)];
+    const decor = ACCEPT_DECOR_V2[Math.floor(Math.random() * ACCEPT_DECOR_V2.length)];
 
     let text = "";
     text += decor + "\n";
-    text += "💕 *JADIAN RESMI* 💕\n";
+    text += "💫 *JADIAN V2 RESMI* 💫\n";
     text += decor + "\n\n";
     text += "@" + confessorJid.split("@")[0] + " 💑 @" + m.sender.split("@")[0] + "\n\n";
     text += "“" + quote + "”\n\n";
@@ -141,7 +141,7 @@ async function handler(m, { sock, config: botConfig }) {
     text += "👤 Cowok   : *" + confessorName + "*\n";
     text += "👥 Cewek   : *" + targetName + "*\n";
     text += "📅 Tanggal : " + dateStr + "\n";
-    text += "💖 Status  : *Pacaran*\n";
+    text += "💖 Status  : *Pacaran (V2)*\n";
     text += separator("─", 30) + "\n\n";
     text += "🌹 Selamat jadian! Semoga langgeng! 🌹\n\n";
     text += decor + "\n";
@@ -152,7 +152,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // Kirim VN musik romantis (jika file ada)
     try {
-      const vnPath = path.join(VN_DIR, VN_MAU_JADIAN);
+      const vnPath = path.join(VN_DIR, VN_MAU_V2);
       if (fs.existsSync(vnPath)) {
         const vnBuffer = fs.readFileSync(vnPath);
         await sock.sendMessage(m.chat, {
@@ -162,7 +162,7 @@ async function handler(m, { sock, config: botConfig }) {
         });
       }
     } catch (e) {
-      console.log("[mau.js] VN error:", e.message);
+      console.log("[mauv2.js] VN error:", e.message);
     }
 
     return { handled: true };
