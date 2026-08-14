@@ -4,7 +4,7 @@
 </div>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-21.1.0-orange?style=flat-square&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/Version-21.2.0-orange?style=flat-square&logo=git&logoColor=white">
   <img src="https://img.shields.io/badge/Total_Plugin-1087-blue?style=flat-square&logo=fire">
   <img src="https://img.shields.io/badge/Total_Command-3500%2B-blueviolet?style=flat-square&logo=terminal">
   <img src="https://img.shields.io/badge/Kategori-36-green?style=flat-square&logo=folder">
