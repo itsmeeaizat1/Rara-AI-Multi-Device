@@ -37,13 +37,29 @@ async function handler(m, { sock, db }) {
 
   // ─── Ambil info saluran dari API (jika ID valid) ───
   let followerCount = null;
+  let postsCount = null;
   let channelDesc = "";
   if (isChannelSet) {
     try {
       const metadata = await sock.newsletterMetadata("jid", channelId);
       if (metadata) {
         followerCount = metadata.subscribers || metadata.followerCount || null;
-        channelDesc = metadata.description || metadata.about || "";
+        channelDesc = metadata.description || metadata.about || metadata.status || "";
+
+        // Ambil total postingan (beberapa kemungkinan field di Baileys)
+        postsCount = metadata.messagesCount || metadata.postsCount || metadata.totalPosts || null;
+
+        // Kalau belum ketemu, coba pakai newsletterMessagesCount
+        if (postsCount === null && typeof sock.newsletterMessagesCount === "function") {
+          try {
+            const countData = await sock.newsletterMessagesCount(channelId);
+            if (countData && typeof countData === "object") {
+              postsCount = countData.messages || countData.count || countData.total || null;
+            }
+          } catch (e2) {
+            console.log("[Channel] MessagesCount fetch failed:", e2.message);
+          }
+        }
       }
     } catch (e) {
       console.log("[Channel] Metadata fetch failed:", e.message);
@@ -58,6 +74,10 @@ async function handler(m, { sock, db }) {
 
   if (followerCount !== null) {
     lines.push(`╎❏ *Pengikut:* ${Number(followerCount).toLocaleString("id-ID")}`);
+  }
+
+  if (postsCount !== null) {
+    lines.push(`╎❏ *Total Postingan:* ${Number(postsCount).toLocaleString("id-ID")}`);
   }
 
   if (channelDesc) {
