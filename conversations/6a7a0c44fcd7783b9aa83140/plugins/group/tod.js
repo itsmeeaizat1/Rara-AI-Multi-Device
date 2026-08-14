@@ -30,7 +30,7 @@ function saveDB(db) {
 
 function isTodOn(groupId) {
   const db = loadDB();
-  return db.groups[groupId]?.enabled !== false; // default ON
+  return db.groups[groupId]?.enabled === true; // default OFF
 }
 
 function toggleOn(groupId) {
