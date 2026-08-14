@@ -22,6 +22,30 @@ const pluginConfig = {
 // Banner asset - isi gambar kamu di sini
 const BANNER_PATH = "assets/image/channel-banner.png";
 
+// Helper format tanggal
+function formatDate(ts) {
+  try {
+    const ms = typeof ts === "number" && ts > 1e12 ? ts : typeof ts === "number" && ts > 1e9 ? ts * 1000 : ts;
+    return new Date(ms).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  } catch {
+    return null;
+  }
+}
+
+// Helper format uptime
+function formatUptime(ms) {
+  const d = Math.floor(ms / 86400000);
+  const h = Math.floor((ms % 86400000) / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  if (d > 0) return `${d}h ${h}j ${m}m`;
+  if (h > 0) return `${h}j ${m}m`;
+  return `${m} menit`;
+}
+
 async function handler(m, { sock, db }) {
   await m.react("🕐");
   const prefix = config.command?.prefix || ".";
@@ -31,6 +55,8 @@ async function handler(m, { sock, db }) {
   const channelLink = "https://whatsapp.com/channel/example";
   const botName = config.bot?.name || "Nova AI";
   const botVersion = config.bot?.version || "1.0.0";
+  const ownerNumber = config.owner?.[0] || config.owner || "";
+  const ownerName = config.ownerName || "Owner";
 
   // Cek apakah saluran sudah di-set
   const isChannelSet = channelId && channelId !== "@newsletter" && /^120363/.test(channelId);
@@ -39,6 +65,11 @@ async function handler(m, { sock, db }) {
   let followerCount = null;
   let postsCount = null;
   let channelDesc = "";
+  let createdAt = null;
+  let verifiedStatus = null;
+  let channelState = null;
+  let reactionSettings = null;
+  let privacyType = null;
   let lastPostText = null;
   let lastPostTime = null;
 
@@ -48,11 +79,14 @@ async function handler(m, { sock, db }) {
       if (metadata) {
         followerCount = metadata.subscribers || metadata.followerCount || null;
         channelDesc = metadata.description || metadata.about || metadata.status || "";
-
-        // Ambil total postingan (beberapa kemungkinan field di Baileys)
         postsCount = metadata.messagesCount || metadata.postsCount || metadata.totalPosts || null;
+        createdAt = metadata.creation_time || metadata.createdAt || metadata.creationTime || null;
+        verifiedStatus = metadata.verification || metadata.verified || null;
+        channelState = metadata.state || metadata.status_type || null;
+        reactionSettings = metadata.reactions || metadata.reactionSettings || null;
+        privacyType = metadata.privacy || metadata.privacyType || metadata.access || null;
 
-        // Kalau belum ketemu, coba pakai newsletterMessagesCount
+        // Kalau postsCount belum ketemu
         if (postsCount === null && typeof sock.newsletterMessagesCount === "function") {
           try {
             const countData = await sock.newsletterMessagesCount(channelId);
@@ -65,7 +99,6 @@ async function handler(m, { sock, db }) {
         }
 
         // ─── Ambil postingan terakhir ───
-        // Coba berbagai kemungkinan method di Baileys
         try {
           if (typeof sock.newsletterMessages === "function") {
             const posts = await sock.newsletterMessages(channelId, 1);
@@ -100,7 +133,7 @@ async function handler(m, { sock, db }) {
     }
   }
 
-  // ─── Body text ───
+  // ─── Body text: Info Saluran ───
   const lines = [
     `╎❏ *Bot:* ${botName} v${botVersion}`,
     `╎❏ *Saluran:* ${channelName}`,
@@ -119,12 +152,42 @@ async function handler(m, { sock, db }) {
     lines.push(`╎❏ *Deskripsi:* ${descShort}`);
   }
 
+  if (createdAt) {
+    const dateStr = formatDate(createdAt);
+    if (dateStr) lines.push(`╎❏ *Dibuat:* ${dateStr}`);
+  }
+
+  if (verifiedStatus !== null) {
+    const verifiedStr = verifiedStatus === true || verifiedStatus === "VERIFIED"
+      ? "Terverifikasi ✓"
+      : verifiedStatus === false || verifiedStatus === "UNVERIFIED"
+        ? "Belum Terverifikasi"
+        : String(verifiedStatus);
+    lines.push(`╎❏ *Verifikasi:* ${verifiedStr}`);
+  }
+
+  if (channelState) {
+    const stateStr = typeof channelState === "string" ? channelState : String(channelState);
+    lines.push(`╎❏ *Status:* ${stateStr}`);
+  }
+
+  if (privacyType) {
+    const privacyStr = typeof privacyType === "string" ? privacyType : String(privacyType);
+    lines.push(`╎❏ *Tipe:* ${privacyStr}`);
+  }
+
+  if (reactionSettings !== null && reactionSettings !== undefined) {
+    const reactStr = typeof reactionSettings === "string"
+      ? reactionSettings
+      : typeof reactionSettings === "object"
+        ? (reactionSettings?.enabled ? "Aktif" : "Nonaktif")
+        : String(reactionSettings);
+    lines.push(`╎❏ *Reaction:* ${reactStr}`);
+  }
+
   lines.push("");
   lines.push(`╎ Klik link di bawah untuk follow saluran:`);
   lines.push(`╎ ${channelLink}`);
-  lines.push("");
-  lines.push(`╎ Ikuti saluran untuk update fitur terbaru,`);
-  lines.push(`╎ info maintenance, dan pengumuman penting`);
 
   // ─── Postingan Terakhir ───
   if (lastPostText) {
@@ -134,23 +197,28 @@ async function handler(m, { sock, db }) {
     lines.push(`╎ ${postShort}`);
 
     if (lastPostTime) {
-      try {
-        const ts = typeof lastPostTime === "number" && lastPostTime > 1e12
-          ? lastPostTime
-          : typeof lastPostTime === "number" && lastPostTime > 1e9
-            ? lastPostTime * 1000
-            : lastPostTime;
-        const dateStr = new Date(ts).toLocaleString("id-ID", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        lines.push(`╎❏ *Waktu:* ${dateStr}`);
-      } catch (_) {}
+      const dateStr = formatDate(lastPostTime);
+      if (dateStr) lines.push(`╎❏ *Waktu:* ${dateStr}`);
     }
   }
+
+  // ─── Info Bot ───
+  lines.push("");
+  lines.push(`╎❏ *Owner:* ${ownerName}`);
+  if (ownerNumber) {
+    const ownerStr = String(ownerNumber).replace(/[^0-9]/g, "");
+    lines.push(`╎❏ *Nomor Owner:* ${ownerStr}`);
+  }
+
+  // Uptime bot
+  try {
+    const uptimeMs = process.uptime() * 1000;
+    lines.push(`╎❏ *Uptime:* ${formatUptime(uptimeMs)}`);
+  } catch (_) {}
+
+  lines.push("");
+  lines.push(`╎ Ikuti saluran untuk update fitur terbaru,`);
+  lines.push(`╎ info maintenance, dan pengumuman penting`);
 
   // ─── Thumbnail via externalAdReply (banner dari asset) ───
   let thumbBuffer = null;
