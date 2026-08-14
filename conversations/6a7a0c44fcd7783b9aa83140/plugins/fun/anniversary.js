@@ -219,6 +219,7 @@ async function handler(m, { sock }) {
     }
 
     db.setUser(m.sender, userData);
+    db.save();
 
     const days = getDaysDiff(anniDate.valueOf());
 
@@ -298,6 +299,7 @@ async function handler(m, { sock }) {
     }
 
     db.setUser(m.sender, userData);
+    db.save();
 
     return m.reply(claraWrap("Anniversary", "Data anniversary kamu telah dihapus."));
   }
