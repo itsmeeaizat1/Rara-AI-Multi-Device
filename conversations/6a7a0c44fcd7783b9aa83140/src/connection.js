@@ -535,6 +535,13 @@ async function startConnection(options = {}) {
       } catch (e) {
         colors.logger.debug("giveaway", "skipped: " + e.message);
       }
+      try {
+        const { startAgendaChecker } =
+          await import("../plugins/group/agenda.js");
+        startAgendaChecker();
+      } catch (e) {
+        colors.logger.debug("agenda", "skipped: " + e.message);
+      }
     }
 
     options.onConnectionUpdate && (await options.onConnectionUpdate(u, sock));
