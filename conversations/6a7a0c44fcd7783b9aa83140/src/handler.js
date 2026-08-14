@@ -158,8 +158,8 @@ async function messageHandler(msg, sock) {
       if (config.dev?.debugLog) logger.error("antibug", e.message);
     }
     try {
-      const { handleAntiRvoV2 } = await import("../plugins/group/antirvo-v2.js");
-      await handleAntiRvoV2(m, sock, db);
+      const { handleAntiRvo } = await import("../plugins/group/antirvo.js");
+      await handleAntiRvo(m, sock, db);
     } catch (e) {
       if (config.dev?.debugLog) logger.error("antirvo", e.message);
     }

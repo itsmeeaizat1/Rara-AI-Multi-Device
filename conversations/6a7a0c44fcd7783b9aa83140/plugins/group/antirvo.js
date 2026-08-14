@@ -5,7 +5,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "antirvo-v2",
+  name: "antirvo",
   alias: ["antiviewonce", "antivo", "antireadviewonce"],
   category: "group",
   description: "Auto-capture pesan sekali lihat (view once) menjadi media biasa",
@@ -45,7 +45,7 @@ function getViewOnceContent(msg) {
 }
 
 // ─── Hook: dipanggil di handler.js untuk setiap incoming message ───
-export async function handleAntiRvoV2(m, sock, db) {
+export async function handleAntiRvo(m, sock, db) {
   if (m.fromMe) return false;
 
   let isEnabled = false;
