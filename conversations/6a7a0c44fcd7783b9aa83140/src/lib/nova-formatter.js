@@ -538,4 +538,72 @@ function truncate(text, maxLength, suffix = "...") {
   return text.slice(0, maxLength - suffix.length) + suffix;
 }
 
-export { CHARS, EMOJIS, formatUptime, formatDate, formatNumber, formatFileSize, createLine, createHeader, createFooter, createBodyLine, createArrowLine, createDashboard, createBotInfo, createUserProfile, createBotStatus, createCategoryMenu, createCategorySection, createMainMenu, createCommandList, createWaitMessage, createSuccessMessage, createErrorMessage, createWarningMessage, getTimeGreeting, capitalize, truncate }
+export { CHARS, EMOJIS, formatUptime, formatDate, formatNumber, formatFileSize, createLine, createHeader, createFooter, createBodyLine, createArrowLine, createDashboard, createBotInfo, createUserProfile, createBotStatus, createCategoryMenu, createCategorySection, createMainMenu, createCommandList, createWaitMessage, createSuccessMessage, createErrorMessage, createWarningMessage, getTimeGreeting, capitalize, truncate, getImportantDay }
+/**
+ * Deteksi hari penting nasional Indonesia berdasarkan tanggal.
+ * Cek dari daftar statis (hardcode) lalu fallback ke API online.
+ * @param {Date} [date=new Date()] - Tanggal untuk dicek
+ * @returns {Promise<string>} Nama hari penting atau "Tidak ada"
+ */
+async function getImportantDay(date = new Date()) {
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+  const key = `${mm}-${dd}`;
+
+  // Daftar hari penting nasional & internasional (fix date)
+  const hariPenting = {
+    "01-01": "Tahun Baru Masehi",
+    "01-25": "Hari Nutrisi Nasional",
+    "02-04": "Hari Kanker Sedunia",
+    "02-09": "Hari Pers Nasional",
+    "02-14": "Hari Emansipasi Wanita",
+    "03-08": "Hari Wanita Sedunia",
+    "03-21": "Hari Down Syndrome Sedunia",
+    "04-07": "Hari Kesehatan Nasional",
+    "04-21": "Hari Kartini",
+    "04-22": "Hari Bumi",
+    "05-01": "Hari Buruh Internasional",
+    "05-02": "Hari Pendidikan Nasional (Hardiknas)",
+    "05-20": "Hari Kebangkitan Nasional",
+    "05-31": "Hari Anti Tembakau Sedunia",
+    "06-01": "Hari Lahir Pancasila",
+    "06-29": "Hari Bakti TNI AU",
+    "07-22": "Hari Sumpah Pemuda",
+    "08-17": "Hari Kemerdekaan RI",
+    "09-01": "Hari Polisi Internasional",
+    "09-30": "Hari Penghapusan Ekstrimisme",
+    "10-01": "Hari Kesaktian Pancasila",
+    "10-02": "Hari Batik Nasional",
+    "10-05": "Hari TNI",
+    "10-10": "Hari Mental Sedunia",
+    "10-28": "Hari Sumpah Pemuda",
+    "11-10": "Hari Pahlawan",
+    "11-20": "Hari Anak Sedunia",
+    "12-01": "Hari AIDS Sedunia",
+    "12-22": "Hari Ibu",
+    "12-25": "Hari Raya Natal",
+  };
+
+  // Cek dari daftar statis dulu
+  if (hariPenting[key]) {
+    return hariPenting[key];
+  }
+
+  // Fallback: cek dari API online (api-harilibur)
+  try {
+    const year = date.getFullYear();
+    const res = await fetch(
+      `https://api-harilibur.vercel.app/api?year=${year}&month=${parseInt(mm)}`
+    );
+    if (res.ok) {
+      const data = await res.json();
+      const today = `${year}-${mm}-${dd}`;
+      const match = data.find((h) => h.holiday_date === today && h.is_national_holiday);
+      if (match) return match.holiday_name;
+    }
+  } catch {
+    // API unreachable, return default
+  }
+
+  return "Tidak ada";
+}

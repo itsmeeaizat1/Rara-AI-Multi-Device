@@ -7,6 +7,7 @@ import {
 import _sharp from "sharp";
 import config from "../../config.js";
 import {
+  getImportantDay,
   formatUptime,
   getTimeGreeting,
 } from "../../src/lib/nova-formatter.js";
@@ -23,7 +24,8 @@ function getSharp() {
 }
 import axios from "axios";
 import sharp from "sharp";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {
+  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "menu",
@@ -79,6 +81,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
   const dateStr = timeHelper.formatFull("DD MMMM YYYY");
   const weton = getWeton(now);
   const islamicDate = getIslamicDate(now);
+  const importantDay = await getImportantDay(now);
 
   let userRole = "User", roleEmoji = "👤";
   if (m.isOwner) { userRole = "Owner"; roleEmoji = "👑"; }
@@ -130,6 +133,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 ╎❏ *Tanggal:* ${dateStr}
 ╎❏ *Tanggal Islam:* ${islamicDate}
 ╎❏ *Zona:* Asia/Jakarta
+╎❏ *Hari Penting:* ${importantDay}
 ╠┈┈「 *Info Bot* 」
 ╎❏ *Bot Name:* ${botConfig.bot?.name || "Nova-AI"}
 ╎❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}

@@ -6,6 +6,7 @@ import axios from "axios";
 import {
   getTimeGreeting,
   formatUptime,
+  getImportantDay,
 } from "../../src/lib/nova-formatter.js";
 import {
   getCommandsByCategory,
@@ -87,6 +88,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   const dateStr = timeHelper.formatFull("DD MMMM YYYY");
   const weton = getWeton(now);
   const islamicDate = getIslamicDate(now);
+  const importantDay = await getImportantDay(now);
 
   const groupData = m.isGroup ? db.getGroup(m.chat) || {} : {};
   const botMode = groupData.botMode || "md";
@@ -153,6 +155,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 ╎❏ *Tanggal:* ${dateStr}
 ╎❏ *Tanggal Islam:* ${islamicDate}
 ╎❏ *Zona:* Asia/Jakarta
+╎❏ *Hari Penting:* ${importantDay}
 ╠┈┈「 *Info Bot* 」
 ╎❏ *Bot Name:* ${botConfig.bot?.name || "Nova-AI"}
 ╎❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
