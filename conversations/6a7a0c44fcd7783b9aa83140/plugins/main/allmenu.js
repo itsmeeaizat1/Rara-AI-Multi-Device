@@ -415,11 +415,6 @@ ${readMore}
           mentionedJid: [m.sender],
           forwardingScore: 9,
           isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-            newsletterJid: config.saluran?.id || "120363400911374213@newsletter",
-            newsletterName: config.saluran?.name || config.bot?.name || "Nova-AI",
-            serverMessageId: 127,
-          },
         },
       }, { quoted: m });
     } else {

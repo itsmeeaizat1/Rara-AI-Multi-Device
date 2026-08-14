@@ -367,7 +367,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova-AI", address: `v${config.bot?.version || "1.0.0"}`, jpegThumbnail: thumbV5 } },
               body: { text },
               footer: { text: `🌸 ${config.bot?.name} | Powered by ourin-baileys` },
-              contextInfo: { mentionedJid: [m.sender], isForwarded: true, forwardingScore: 9, forwardedNewsletterMessageInfo: { newsletterJid: saluranId, newsletterName: saluranName, serverMessageId: 127 } },
+              contextInfo: { mentionedJid: [m.sender], isForwarded: true, forwardingScore: 9 },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({}),
                 buttons: [
@@ -405,7 +405,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             interactiveMessage: {
               header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova-AI", address: await weatherMenu(), jpegThumbnail: thumbV6 } },
               body: { text },
-              contextInfo: { mentionedJid: [m.sender], isForwarded: true, forwardingScore: 9, forwardedNewsletterMessageInfo: { newsletterJid: saluranId, newsletterName: saluranName, serverMessageId: 127 } },
+              contextInfo: { mentionedJid: [m.sender], isForwarded: true, forwardingScore: 9 },
               nativeFlowMessage: {
                 buttons: [
                   { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Kategori", id: `${prefix}menukategori` }) },
