@@ -23,9 +23,9 @@ const pluginConfig = {
 const VARIANTS = {
   v1: {
     id: 1,
-    name: "BASIC",
-    desc: "",
-    emoji: "🖼️",
+    name: "VIDEO GIF",
+    desc: "Header video/GIF animasi + tombol quick_reply + banner greeting",
+    emoji: "🎬",
   },
   v2: {
     id: 2,

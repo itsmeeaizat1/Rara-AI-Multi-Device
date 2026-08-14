@@ -218,9 +218,72 @@ ${readMore}
   const allmenuVariant = savedVariant || botConfig.ui?.allmenuVariant || 2;
   try {
     switch (allmenuVariant) {
-      case 1:
-        await m.reply(claraWrap("allmenu", txt));
+      case 1: {
+        // V1: Video/GIF header - support URL or local file
+        const allmenuVideoUrl = botConfig.ui?.allmenuVideoUrl || config.ui?.allmenuVideoUrl || "";
+        let mediaV1;
+        if (allmenuVideoUrl && /^https?:\/\//i.test(allmenuVideoUrl)) {
+          try {
+            const videoRes = await axios.get(allmenuVideoUrl, { responseType: "arraybuffer", timeout: 15000 });
+            mediaV1 = await prepareWAMessageMedia(
+              { video: Buffer.from(videoRes.data), gifPlayback: true },
+              { upload: sock.waUploadToServer },
+            );
+          } catch (e) {
+            console.error("[AllMenu V1] Video URL fetch failed:", e.message);
+            const localVid = fs.existsSync(config.assets["nova-mp4"]) ? fs.readFileSync(config.assets["nova-mp4"]) : fs.readFileSync(config.assets["nova"]);
+            mediaV1 = await prepareWAMessageMedia(
+              { video: localVid, gifPlayback: true },
+              { upload: sock.waUploadToServer },
+            );
+          }
+        } else {
+          const localVideoPath = fs.existsSync(config.assets["nova-mp4"]) ? config.assets["nova-mp4"] : config.assets["nova"];
+          mediaV1 = await prepareWAMessageMedia(
+            { video: fs.readFileSync(localVideoPath), gifPlayback: true },
+            { upload: sock.waUploadToServer },
+          );
+        }
+        await sock.relayMessage(m.chat, {
+          viewOnceMessage: {
+            message: {
+              messageContextInfo: {},
+              interactiveMessage: {
+                header: {
+                  title: "", subtitle: "",
+                  hasMediaAttachment: true,
+                  videoMessage: mediaV1.videoMessage,
+                },
+                body: { text: txt },
+                footer: {
+                  text: "🌸 Pilih tombol dibawah untuk kembali ke menu~",
+                },
+                contextInfo: {
+                  isForwarded: true,
+                  forwardingScore: 9,
+                  participant: "0@s.whatsapp.net",
+                  quotedMessage: { conversation: `${config.bot?.name}` },
+                  mentionedJid: [m.sender],
+                },
+                nativeFlowMessage: {
+                  messageParamsJson: JSON.stringify({
+                    limited_time_offer: { text: `${greeting}`, expiration_time: Date.now() + 1000000 },
+                  }),
+                  buttons: [
+                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Kategori", id: `${prefix}menukategori` }) },
+                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Info Lainnya", id: `${prefix}infov2` }) },
+                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Menu", id: `${prefix}menu` }) },
+                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Tanya AI", id: `${prefix}aihelp` }) },
+                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Rules", id: `${prefix}rules` }) },
+                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Owner", id: `${prefix}owner` }) },
+                  ],
+                },
+              },
+            },
+          },
+        }, {});
         break;
+      }
       case 2: {
         const media = await prepareWAMessageMedia(
           { image: fs.readFileSync(config.assets["nova"]) },

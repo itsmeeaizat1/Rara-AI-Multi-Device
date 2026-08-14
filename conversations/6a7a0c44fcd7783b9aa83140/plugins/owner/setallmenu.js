@@ -21,9 +21,9 @@ const pluginConfig = {
 const VARIANTS = {
   v1: {
     id: 1,
-    name: "ALLMENU BASIC",
-    desc: "ini mengikuti dari setreply",
-    emoji: "📝",
+    name: "ALLMENU VIDEO GIF",
+    desc: "Header video/GIF animasi + tombol quick_reply + banner greeting",
+    emoji: "🎬",
   },
   v2: {
     id: 2,
