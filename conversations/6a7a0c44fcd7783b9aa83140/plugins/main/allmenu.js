@@ -351,11 +351,6 @@ ${readMore}
                   mentionedJid: [m.sender],
                   isForwarded: true,
                   forwardingScore: 9,
-                  forwardedNewsletterMessageInfo: {
-                    newsletterJid: config.saluran?.id || "120363400911374213@newsletter",
-                    newsletterName: config.saluran?.name || config.bot?.name || "Nova-AI",
-                    serverMessageId: 127,
-                  },
                 },
                 nativeFlowMessage: {
                   buttons: [
