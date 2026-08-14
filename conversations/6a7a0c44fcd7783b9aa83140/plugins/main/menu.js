@@ -15,6 +15,7 @@ import {
   getCategories,
 } from "../../src/lib/nova-plugins.js";
 import fs from "fs";
+import os from "os";
 import path from "path";
 
 function getSharp() {
@@ -87,6 +88,18 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
   const allUsers = db.getAllUsers();
   const totalRegistered = Object.values(allUsers).filter(u => u.registeredAt).length;
   const totalPremium = Object.values(allUsers).filter(u => u.isPremium).length;
+  const memUsage = process.memoryUsage();
+  const totalMem = os.totalmem();
+  const freeMem = os.freemem();
+  const usedMem = totalMem - freeMem;
+  const memPercent = ((usedMem / totalMem) * 100).toFixed(1);
+  const cpuModel = os.cpus()[0]?.model || "Unknown";
+  const cpuCores = os.cpus().length;
+  const cpuSpeed = os.cpus()[0]?.speed || "-";
+  const hostname = os.hostname();
+  const serverUptime = formatUptime(os.uptime());
+  const loadAvg = os.loadavg()[0].toFixed(2);
+  const formatBytes = (b) => (b / 1024 / 1024 / 1024).toFixed(2) + " GB";
   const userExp = user?.exp || 0;
   const userLevel = Math.floor(userExp / 20000) + 1;
   const expMin = (userLevel - 1) * 20000;
@@ -130,9 +143,16 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 ╎❏ *Premium User:* ${totalPremium}
 ╠┈┈「 *Info Server* 」
 ╎❏ *Platform:* ${platform}
+╎❏ *Hostname:* ${hostname}
 ╎❏ *Type:* Node.Js
 ╎❏ *Baileys:* Multi Device
 ╎❏ *Node.js:* ${process.version}
+╎❏ *Server Uptime:* ${serverUptime}
+╎❏ *CPU:* ${cpuModel}
+╎❏ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
+╎❏ *Load Avg:* ${loadAvg}
+╎❏ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
+╎❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
 ╚┈┈┈┈┈┈┈┈┈❖
 ${readMore}
 ╔┈「 *Menu* 」
