@@ -147,11 +147,6 @@ async function handler(m, { sock, db }) {
     lines.push(`╎❏ *Total Postingan:* ${Number(postsCount).toLocaleString("id-ID")}`);
   }
 
-  if (channelDesc) {
-    const descShort = channelDesc.length > 100 ? channelDesc.slice(0, 100) + "..." : channelDesc;
-    lines.push(`╎❏ *Deskripsi:* ${descShort}`);
-  }
-
   if (createdAt) {
     const dateStr = formatDate(createdAt);
     if (dateStr) lines.push(`╎❏ *Dibuat:* ${dateStr}`);
@@ -183,6 +178,11 @@ async function handler(m, { sock, db }) {
         ? (reactionSettings?.enabled ? "Aktif" : "Nonaktif")
         : String(reactionSettings);
     lines.push(`╎❏ *Reaction:* ${reactStr}`);
+  }
+
+  if (channelDesc) {
+    const descShort = channelDesc.length > 100 ? channelDesc.slice(0, 100) + "..." : channelDesc;
+    lines.push(`╎❏ *Deskripsi:* ${descShort}`);
   }
 
   lines.push("");
