@@ -39,6 +39,7 @@ async function handler(m, { sock }) {
         db.setUser(exPartner, exData)
     }
     db.setUser(m.sender, senderData)
+    db.save()
     await m.reply(claraWrap("PUTUS!", `💔 *PUTUS!*\n\n` +
         `@${m.sender.split('@')[0]} dan @${exPartner.split('@')[0]} resmi putus !!\n\n` +
         `Semoga mendapat yang lebih baik! 🙏`))

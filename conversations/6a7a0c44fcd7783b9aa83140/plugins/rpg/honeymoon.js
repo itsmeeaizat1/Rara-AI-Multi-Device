@@ -93,6 +93,7 @@ async function handler(m, { sock, config: botConfig }) {
     partnerRpg.affection = (partnerRpg.affection || 0) + affectionBonus;
     partnerRpg.lastHoneymoon = now;
     db.setUser(rpg.spouse, { rpg: partnerRpg });
+    db.save();
 
     const totalAffection = rpg.affection;
     const bondLevel = Math.floor(totalAffection / 100) + 1;

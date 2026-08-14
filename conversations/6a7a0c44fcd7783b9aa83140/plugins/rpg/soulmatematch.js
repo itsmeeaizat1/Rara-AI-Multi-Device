@@ -7,7 +7,7 @@ import { claraHeader,
 const pluginConfig = {
   name: "soulmatematch",
   alias: ["soulmatematch"],
-  category: "fun",
+  category: "rpg",
   description: "Cek soul score / compatibility dengan member lain",
   usage: ".soulmatematch <nama|@tag>",
   example: ".soulmatematch Adi",

@@ -179,6 +179,7 @@ async function handler(m, { sock, config: botConfig }) {
       targetPartnerRpg.exp = (targetPartnerRpg.exp || 0) + winExp;
       targetPartnerRpg.koin = (targetPartnerRpg.koin || 0) + winGold;
       db.setUser(targetPartner, { rpg: targetPartnerRpg });
+      db.save();
     }
 
     db.setCooldown(m.sender, "couplewar", 3600);

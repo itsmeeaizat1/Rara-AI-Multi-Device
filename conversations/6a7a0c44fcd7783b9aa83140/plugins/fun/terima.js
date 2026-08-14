@@ -91,6 +91,7 @@ async function handler(m, { sock }) {
 
   db.setUser(shooterJid, shooterData);
   db.setUser(m.sender, myData);
+  db.save();
 
   const sessionKey = `${m.chat}_${m.sender}`;
   if (global.jadianSessions?.[sessionKey]) {

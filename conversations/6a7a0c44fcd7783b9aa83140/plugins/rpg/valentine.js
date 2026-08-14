@@ -91,6 +91,7 @@ async function handler(m, { sock, config: botConfig }) {
     const partnerInv = partner?.inventory || {};
     partnerInv[gift] = (partnerInv[gift] || 0) + 1;
     db.setUser(partnerJid, { inventory: partnerInv });
+    db.save();
 
     const totalAffection = rpg.affection;
     const bondLevel = Math.floor(totalAffection / 100) + 1;

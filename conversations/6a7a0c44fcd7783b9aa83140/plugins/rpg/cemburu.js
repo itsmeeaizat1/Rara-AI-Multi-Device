@@ -96,6 +96,7 @@ async function handler(m, { sock, config: botConfig }) {
     const partnerRpg = partner?.rpg || {};
     partnerRpg.affection = Math.max(0, (partnerRpg.affection || 0) - Math.floor(affectionLoss / 2));
     db.setUser(partnerJid, { rpg: partnerRpg });
+    db.save();
 
     // Kirim notifikasi ke pasangan
     const notifText =

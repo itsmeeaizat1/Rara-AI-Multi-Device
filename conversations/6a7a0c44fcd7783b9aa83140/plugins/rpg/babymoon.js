@@ -102,6 +102,7 @@ async function handler(m, { sock, config: botConfig }) {
     partnerRpg.koin = (partnerRpg.koin || 0) + goldBonus;
     partnerRpg.lastBabymoon = now;
     db.setUser(rpg.spouse, { rpg: partnerRpg });
+    db.save();
 
     const totalAffection = rpg.affection;
     const bondLevel = Math.floor(totalAffection / 100) + 1;

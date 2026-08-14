@@ -80,6 +80,7 @@ async function handler(m, { sock, config: botConfig }) {
     partnerRpg.lastConflictAt = Date.now();
     partnerRpg.partnerRagu = true; // Tandai pasangan sedang ragu
     db.setUser(partnerJid, { rpg: partnerRpg });
+    db.save();
 
     db.setCooldown(m.sender, "ragu", 3600);
 

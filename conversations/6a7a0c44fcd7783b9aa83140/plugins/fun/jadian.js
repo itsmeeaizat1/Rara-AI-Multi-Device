@@ -99,6 +99,7 @@ async function handler(m, { sock }) {
 
     db.setUser(m.sender, senderData);
     db.setUser(targetJid, targetData);
+    db.save();
 
     delete global.jadianSessions[`${m.chat}_${targetJid}`];
 
@@ -167,6 +168,7 @@ async function answerHandler(m, sock) {
 
     db.setUser(sessData.shooter, shooterData);
     db.setUser(m.sender, targetData);
+    db.save();
 
     delete global.jadianSessions[sessKey];
 
@@ -190,6 +192,7 @@ async function answerHandler(m, sock) {
 
     db.setUser(sessData.shooter, shooterData);
     db.setUser(m.sender, targetData);
+    db.save();
 
     delete global.jadianSessions[sessKey];
 

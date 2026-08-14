@@ -84,6 +84,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Reset ragu status pengirim juga
     rpg.raguActive = false;
     db.setUser(m.sender, { rpg });
+    db.save();
 
     const totalAffection = rpg.affection;
     const bondLevel = Math.floor(totalAffection / 100) + 1;

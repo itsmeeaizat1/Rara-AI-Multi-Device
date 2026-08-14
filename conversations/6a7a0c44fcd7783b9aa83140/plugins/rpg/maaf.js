@@ -88,6 +88,7 @@ async function handler(m, { sock, config: botConfig }) {
     partnerRpg.affection = (partnerRpg.affection || 0) + affectionGain;
     partnerRpg.lastConflictAt = 0;
     db.setUser(partnerJid, { rpg: partnerRpg });
+    db.save();
 
     db.setCooldown(m.sender, "maaf", 1800);
 

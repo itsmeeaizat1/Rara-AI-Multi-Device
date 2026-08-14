@@ -72,6 +72,7 @@ async function handler(m, { sock, config: botConfig }) {
     const partnerRpg = partner?.rpg || {};
     partnerRpg.affection = (partnerRpg.affection || 0) + affectionGain;
     db.setUser(partnerJid, { rpg: partnerRpg });
+    db.save();
 
     db.setCooldown(m.sender, "cuddling", 600);
 
