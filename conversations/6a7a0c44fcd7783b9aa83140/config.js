@@ -199,7 +199,7 @@ const config = {
   goodbye: { defaultEnabled: false },
 
   ui: {
-    menuVariant: 3,
+    menuVariant: 2,
   },
 
   // ═══════════════════════════════════════════
