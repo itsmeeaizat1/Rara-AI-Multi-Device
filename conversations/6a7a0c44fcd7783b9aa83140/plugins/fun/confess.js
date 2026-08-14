@@ -4,8 +4,8 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "confessfun",
-  alias: ["confess", "confessfun2", "confess2"],
+  name: "confess",
+  alias: ["confess"],
   category: "fun",
   description: "Kirim pesan anonim ke seseorang",
   usage: ".confess nomor|pesan",
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
     successTxt += `> _Nanti kalau dia balas pesannya, aku bakal langsung terusin ke sini kak! Santai aja_ 😉`;
     await m.reply(successTxt);
   } catch (error) {
-    m.reply(claraWrap("confessfun", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(claraWrap("confess", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 
