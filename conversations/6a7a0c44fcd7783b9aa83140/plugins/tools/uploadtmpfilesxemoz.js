@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
       mimetype = content?.mimetype || "application/octet-stream";
       filename = content?.fileName || `file.${getFileExtension(mimetype)}`;
     } catch {
-      return m.reply(te(m.prefix, m.command, m.pushName));
+      return m.reply(claraWrap("uploadtmpfilesxemoz", te(m.prefix, m.command, m.pushName), "error"));
     }
   } else if (m.message) {
     const type = getContentType(m.message);
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
       mimetype = content?.mimetype || "application/octet-stream";
       filename = content?.fileName || `file.${getFileExtension(mimetype)}`;
     } catch {
-      return m.reply(te(m.prefix, m.command, m.pushName));
+      return m.reply(claraWrap("uploadtmpfilesxemoz", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
 

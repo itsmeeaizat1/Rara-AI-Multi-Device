@@ -1,0 +1,338 @@
+[
+  {
+    "img": "https://logo.clearbit.com/google.com",
+    "name": "Google"
+  },
+  {
+    "img": "https://logo.clearbit.com/apple.com",
+    "name": "Apple"
+  },
+  {
+    "img": "https://logo.clearbit.com/microsoft.com",
+    "name": "Microsoft"
+  },
+  {
+    "img": "https://logo.clearbit.com/facebook.com",
+    "name": "Facebook"
+  },
+  {
+    "img": "https://logo.clearbit.com/instagram.com",
+    "name": "Instagram"
+  },
+  {
+    "img": "https://logo.clearbit.com/twitter.com",
+    "name": "Twitter"
+  },
+  {
+    "img": "https://logo.clearbit.com/youtube.com",
+    "name": "YouTube"
+  },
+  {
+    "img": "https://logo.clearbit.com/netflix.com",
+    "name": "Netflix"
+  },
+  {
+    "img": "https://logo.clearbit.com/amazon.com",
+    "name": "Amazon"
+  },
+  {
+    "img": "https://logo.clearbit.com/samsung.com",
+    "name": "Samsung"
+  },
+  {
+    "img": "https://logo.clearbit.com/sony.com",
+    "name": "Sony"
+  },
+  {
+    "img": "https://logo.clearbit.com/intel.com",
+    "name": "Intel"
+  },
+  {
+    "img": "https://logo.clearbit.com/amd.com",
+    "name": "AMD"
+  },
+  {
+    "img": "https://logo.clearbit.com/nvidia.com",
+    "name": "Nvidia"
+  },
+  {
+    "img": "https://logo.clearbit.com/spotify.com",
+    "name": "Spotify"
+  },
+  {
+    "img": "https://logo.clearbit.com/tiktok.com",
+    "name": "TikTok"
+  },
+  {
+    "img": "https://logo.clearbit.com/telegram.org",
+    "name": "Telegram"
+  },
+  {
+    "img": "https://logo.clearbit.com/whatsapp.com",
+    "name": "WhatsApp"
+  },
+  {
+    "img": "https://logo.clearbit.com/discord.com",
+    "name": "Discord"
+  },
+  {
+    "img": "https://logo.clearbit.com/twitch.tv",
+    "name": "Twitch"
+  },
+  {
+    "img": "https://logo.clearbit.com/reddit.com",
+    "name": "Reddit"
+  },
+  {
+    "img": "https://logo.clearbit.com/pinterest.com",
+    "name": "Pinterest"
+  },
+  {
+    "img": "https://logo.clearbit.com/linkedin.com",
+    "name": "LinkedIn"
+  },
+  {
+    "img": "https://logo.clearbit.com/github.com",
+    "name": "GitHub"
+  },
+  {
+    "img": "https://logo.clearbit.com/adobe.com",
+    "name": "Adobe"
+  },
+  {
+    "img": "https://logo.clearbit.com/paypal.com",
+    "name": "PayPal"
+  },
+  {
+    "img": "https://logo.clearbit.com/zoom.us",
+    "name": "Zoom"
+  },
+  {
+    "img": "https://logo.clearbit.com/dropbox.com",
+    "name": "Dropbox"
+  },
+  {
+    "img": "https://logo.clearbit.com/slack.com",
+    "name": "Slack"
+  },
+  {
+    "img": "https://logo.clearbit.com/shopee.co.id",
+    "name": "Shopee"
+  },
+  {
+    "img": "https://logo.clearbit.com/tokopedia.com",
+    "name": "Tokopedia"
+  },
+  {
+    "img": "https://logo.clearbit.com/lazada.co.id",
+    "name": "Lazada"
+  },
+  {
+    "img": "https://logo.clearbit.com/bukalapak.com",
+    "name": "Bukalapak"
+  },
+  {
+    "img": "https://logo.clearbit.com/blibli.com",
+    "name": "Blibli"
+  },
+  {
+    "img": "https://logo.clearbit.com/olx.co.id",
+    "name": "OLX"
+  },
+  {
+    "img": "https://logo.clearbit.com/gojek.com",
+    "name": "Gojek"
+  },
+  {
+    "img": "https://logo.clearbit.com/grab.com",
+    "name": "Grab"
+  },
+  {
+    "img": "https://logo.clearbit.com/traveloka.com",
+    "name": "Traveloka"
+  },
+  {
+    "img": "https://logo.clearbit.com/tiket.com",
+    "name": "Tiket"
+  },
+  {
+    "img": "https://logo.clearbit.com/ovo.id",
+    "name": "OVO"
+  },
+  {
+    "img": "https://logo.clearbit.com/dana.id",
+    "name": "DANA"
+  },
+  {
+    "img": "https://logo.clearbit.com/linkaja.id",
+    "name": "LinkAja"
+  },
+  {
+    "img": "https://logo.clearbit.com/mcdonalds.com",
+    "name": "McDonalds"
+  },
+  {
+    "img": "https://logo.clearbit.com/starbucks.com",
+    "name": "Starbucks"
+  },
+  {
+    "img": "https://logo.clearbit.com/kfc.com",
+    "name": "KFC"
+  },
+  {
+    "img": "https://logo.clearbit.com/subway.com",
+    "name": "Subway"
+  },
+  {
+    "img": "https://logo.clearbit.com/pizzahut.com",
+    "name": "Pizza Hut"
+  },
+  {
+    "img": "https://logo.clearbit.com/dominos.com",
+    "name": "Dominos Pizza"
+  },
+  {
+    "img": "https://logo.clearbit.com/burgerking.com",
+    "name": "Burger King"
+  },
+  {
+    "img": "https://logo.clearbit.com/cocacola.com",
+    "name": "Coca-Cola"
+  },
+  {
+    "img": "https://logo.clearbit.com/pepsi.com",
+    "name": "Pepsi"
+  },
+  {
+    "img": "https://logo.clearbit.com/nestle.com",
+    "name": "Nestle"
+  },
+  {
+    "img": "https://logo.clearbit.com/unilever.com",
+    "name": "Unilever"
+  },
+  {
+    "img": "https://logo.clearbit.com/gillette.com",
+    "name": "Gillette"
+  },
+  {
+    "img": "https://logo.clearbit.com/nivea.com",
+    "name": "Nivea"
+  },
+  {
+    "img": "https://logo.clearbit.com/garnier.com",
+    "name": "Garnier"
+  },
+  {
+    "img": "https://logo.clearbit.com/toyota.com",
+    "name": "Toyota"
+  },
+  {
+    "img": "https://logo.clearbit.com/honda.com",
+    "name": "Honda"
+  },
+  {
+    "img": "https://logo.clearbit.com/suzuki.com",
+    "name": "Suzuki"
+  },
+  {
+    "img": "https://logo.clearbit.com/nissan.com",
+    "name": "Nissan"
+  },
+  {
+    "img": "https://logo.clearbit.com/mazda.com",
+    "name": "Mazda"
+  },
+  {
+    "img": "https://logo.clearbit.com/ferrari.com",
+    "name": "Ferrari"
+  },
+  {
+    "img": "https://logo.clearbit.com/bmw.com",
+    "name": "BMW"
+  },
+  {
+    "img": "https://logo.clearbit.com/mercedes-benz.com",
+    "name": "Mercedes-Benz"
+  },
+  {
+    "img": "https://logo.clearbit.com/audi.com",
+    "name": "Audi"
+  },
+  {
+    "img": "https://logo.clearbit.com/lamborghini.com",
+    "name": "Lamborghini"
+  },
+  {
+    "img": "https://logo.clearbit.com/porsche.com",
+    "name": "Porsche"
+  },
+  {
+    "img": "https://logo.clearbit.com/tesla.com",
+    "name": "Tesla"
+  },
+  {
+    "img": "https://logo.clearbit.com/yamaha.com",
+    "name": "Yamaha"
+  },
+  {
+    "img": "https://logo.clearbit.com/valvesoftware.com",
+    "name": "Steam"
+  },
+  {
+    "img": "https://logo.clearbit.com/ea.com",
+    "name": "EA Sports"
+  },
+  {
+    "img": "https://logo.clearbit.com/ubisoft.com",
+    "name": "Ubisoft"
+  },
+  {
+    "img": "https://logo.clearbit.com/nintendo.com",
+    "name": "Nintendo"
+  },
+  {
+    "img": "https://logo.clearbit.com/playstation.com",
+    "name": "PlayStation"
+  },
+  {
+    "img": "https://logo.clearbit.com/xbox.com",
+    "name": "Xbox"
+  },
+  {
+    "img": "https://logo.clearbit.com/nike.com",
+    "name": "Nike"
+  },
+  {
+    "img": "https://logo.clearbit.com/adidas.com",
+    "name": "Adidas"
+  },
+  {
+    "img": "https://logo.clearbit.com/puma.com",
+    "name": "Puma"
+  },
+  {
+    "img": "https://logo.clearbit.com/zara.com",
+    "name": "Zara"
+  },
+  {
+    "img": "https://logo.clearbit.com/hm.com",
+    "name": "H and M"
+  },
+  {
+    "img": "https://logo.clearbit.com/gucci.com",
+    "name": "Gucci"
+  },
+  {
+    "img": "https://logo.clearbit.com/louisvuitton.com",
+    "name": "Louis Vuitton"
+  },
+  {
+    "img": "https://logo.clearbit.com/chanel.com",
+    "name": "Chanel"
+  },
+  {
+    "img": "https://logo.clearbit.com/prada.com",
+    "name": "Prada"
+  }
+]

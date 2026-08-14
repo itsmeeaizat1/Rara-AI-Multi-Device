@@ -1,0 +1,242 @@
+[
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2013-1a.jpg/400px-Cat_November_2013-1a.jpg",
+    "name": "Kucing",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/YellowLabradorLooking_new.jpg/400px-YellowLabradorLooking_new.jpg",
+    "name": "Anjing",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Tiger_%28Panthera_tigris_tigris%29_3.jpg/400px-Tiger_%28Panthera_tigris_tigris%29_3.jpg",
+    "name": "Harimau",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/2e/Elephant_-_Kruger_National_Park.jpg/400px-Elephant_-_Kruger_National_Park.jpg",
+    "name": "Gajah",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Lion6.jpg/400px-Lion6.jpg",
+    "name": "Singa",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/24_adelie_penguins.jpg/400px-24_adelie_penguins.jpg",
+    "name": "Penguin",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Polar_bear_-_Alaska_%28cropped%29.jpg/400px-Polar_bear_-_Alaska_%28cropped%29.jpg",
+    "name": "Beruang Kutub",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Giraffe_-_Melbourne_Zoo.jpg/400px-Giraffe_-_Melbourne_Zoo.jpg",
+    "name": "Jerapah",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Hippopotamus_at_London_Zoo_2014-03-06_04.jpg/400px-Hippopotamus_at_London_Zoo_2014-03-06_04.jpg",
+    "name": "Kuda Nil",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Peacock.displaying.better.800px.jpg/400px-Peacock.displaying.better.800px.jpg",
+    "name": "Merak",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/A_wild_Boar_in_Madrid.jpg/400px-A_wild_Boar_in_Madrid.jpg",
+    "name": "Babi Hutan",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Panda_Cub_from_Wolong.jpg/400px-Panda_Cub_from_Wolong.jpg",
+    "name": "Panda",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Koala_climbing_tree.jpg/400px-Koala_climbing_tree.jpg",
+    "name": "Koala",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Dolphin_jump.jpg/400px-Dolphin_jump.jpg",
+    "name": "Lumba Lumba",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Baleines_Golfe_Saint-Laurent_4.jpg/400px-Baleines_Golfe_Saint-Laurent_4.jpg",
+    "name": "Paus",
+    "category": "Hewan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/400px-PNG_transparency_demonstration_1.png",
+    "name": "Boneka",
+    "category": "Benda"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Dictionary_of_Old_English_word_ne.pdf/page1-400px-Dictionary_of_Old_English_word_ne.pdf.jpg",
+    "name": "Buku",
+    "category": "Benda"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Clock_face_15_minutes.svg/400px-Clock_face_15_minutes.svg.png",
+    "name": "Jam",
+    "category": "Benda"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Laptop_Folded.jpg/400px-Laptop_Folded.jpg",
+    "name": "Laptop",
+    "category": "Benda"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/IPhone_4S_no_shadow.jpg/400px-IPhone_4S_no_shadow.jpg",
+    "name": "HP",
+    "category": "Benda"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Commons-logo.svg/400px-Commons-logo.svg.png",
+    "name": "Bola",
+    "category": "Benda"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Chain_Hung_From_Stars.svg/400px-Chain_Hung_From_Stars.svg.png",
+    "name": "Sepeda",
+    "category": "Benda"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Automobil_Agnelli_1899.jpg/400px-Automobil_Agnelli_1899.jpg",
+    "name": "Mobil",
+    "category": "Benda"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Japanese_knife.jpg/400px-Japanese_knife.jpg",
+    "name": "Pisau",
+    "category": "Benda"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Coffee_mug_2.jpg/400px-Coffee_mug_2.jpg",
+    "name": "Gelas",
+    "category": "Benda"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Purse_%281%29.jpg/400px-Purse_%281%29.jpg",
+    "name": "Dompet",
+    "category": "Benda"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Umbrella.jpg/400px-Umbrella.jpg",
+    "name": "Payung",
+    "category": "Benda"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Tour_Eiffel_Wikimedia_Commons.jpg/400px-Tour_Eiffel_Wikimedia_Commons.jpg",
+    "name": "Menara Eiffel",
+    "category": "Tempat"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Statue_of_Liberty_7.jpg/400px-Statue_of_Liberty_7.jpg",
+    "name": "Patung Liberty",
+    "category": "Tempat"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Great_Wall_of_China_July_2006.JPG/400px-Great_Wall_of_China_July_2006.JPG.jpg",
+    "name": "Tembok China",
+    "category": "Tempat"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Borobudur-Nothwest-view.jpg/400px-Borobudur-Nothwest-view.jpg",
+    "name": "Borobudur",
+    "category": "Tempat"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Prambanan_-_Candi_Shiwa.jpg/400px-Prambanan_-_Candi_Shiwa.jpg",
+    "name": "Prambanan",
+    "category": "Tempat"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Monas_Jakarta_Indonesia.jpg/400px-Monas_Jakarta_Indonesia.jpg",
+    "name": "Monas",
+    "category": "Tempat"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Big_Ben_2010.jpg/400px-Big_Ben_2010.jpg",
+    "name": "Big Ben",
+    "category": "Tempat"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Pisa_P1050816.jpg/400px-Pisa_P1050816.jpg",
+    "name": "Menara Pisa",
+    "category": "Tempat"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Taj_Mahal_%28Edited%29.jpeg/400px-Taj_Mahal_%28Edited%29.jpeg",
+    "name": "Taj Mahal",
+    "category": "Tempat"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Pyramids_of_Giza_1.jpg/400px-Pyramids_of_Giza_1.jpg",
+    "name": "Piramida",
+    "category": "Tempat"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Sydney_Opera_House_Sails.jpg/400px-Sydney_Opera_House_Sails.jpg",
+    "name": "Opera House",
+    "category": "Tempat"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Nasi_goreng.jpg/400px-Nasi_goreng.jpg",
+    "name": "Nasi Goreng",
+    "category": "Makanan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Sate_Ponorogo.jpg/400px-Sate_Ponorogo.jpg",
+    "name": "Sate",
+    "category": "Makanan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Rendang.jpg/400px-Rendang.jpg",
+    "name": "Rendang",
+    "category": "Makanan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Gudeg.jpg/400px-Gudeg.jpg",
+    "name": "Gudeg",
+    "category": "Makanan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Bakso.jpg/400px-Bakso.jpg",
+    "name": "Bakso",
+    "category": "Makanan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Gado-gado.jpg/400px-Gado-gado.jpg",
+    "name": "Gado Gado",
+    "category": "Makanan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Pizza-3007395.jpg/400px-Pizza-3007395.jpg",
+    "name": "Pizza",
+    "category": "Makanan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Cheeseburger.jpg/400px-Cheeseburger.jpg",
+    "name": "Burger",
+    "category": "Makanan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Sushi_platter.jpg/400px-Sushi_platter.jpg",
+    "name": "Sushi",
+    "category": "Makanan"
+  },
+  {
+    "img": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Sop_buntut.jpg/400px-Sop_buntut.jpg",
+    "name": "Sop Buntut",
+    "category": "Makanan"
+  }
+]

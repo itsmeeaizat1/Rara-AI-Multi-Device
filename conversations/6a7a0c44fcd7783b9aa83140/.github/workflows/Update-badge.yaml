@@ -1,0 +1,59 @@
+name: Auto Update Feature Badge
+
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Memberikan izin agar workflow bisa mengedit file di repo
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Get Last Commit Message (Feature Name)
+      id: commit
+      run: |
+        # Mengambil pesan commit terakhir sebagai nama fitur
+        LAST_COMMIT=$(git log -1 --pretty=format:"%s")
+        echo "feature_name=$LAST_COMMIT" >> $GITHUB_OUTPUT
+
+    - name: Update README with Latest Feature
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const featureName = "${{ steps.commit.outputs.feature_name }}";
+          
+          // Membuat URL badge dinamis berdasarkan pesan commit (spasi diganti %20)
+          const encodedName = encodeURIComponent(featureName.substring(0, 30)); // Batasi 30 karakter agar tidak kepanjangan
+          const badgeUrl = `https://img.shields.io/badge/Update-${encodedName}-success?style=for-the-badge`;
+          const badgeMarkdown = `![Fitur Terbaru](${badgeUrl})`;
+
+          let readme = fs.readFileSync('README.md', 'utf8');
+          
+          // Format teks yang akan dimasukkan ke README
+          const newContent = `> 🔥 **Fitur/Update Terbaru:** ${badgeMarkdown}\n> *Commit: "${featureName}"*`;
+
+          // Mengganti isi di dalam tag HTML README
+          const startTag = '<!--START_SECTION:latest-update-->';
+          const endTag = '<!--END_SECTION:latest-update-->';
+          
+          if (readme.includes(startTag) && readme.includes(endTag)) {
+            const startIndex = readme.indexOf(startTag) + startTag.length;
+            const endIndex = readme.indexOf(endTag);
+            const updatedReadme = readme.substring(0, startIndex) + '\n' + newContent + '\n' + readme.substring(endIndex);
+            fs.writeFileSync('README.md', updatedReadme, 'utf8');
+            console.log('README berhasil di-update otomatis!');
+          }
+
+    - name: Commit and Push Changes to Repo
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add README.md
+        git commit -m "docs: auto update latest feature badge [skip ci]" || echo "Tidak ada perubahan"
+        git push

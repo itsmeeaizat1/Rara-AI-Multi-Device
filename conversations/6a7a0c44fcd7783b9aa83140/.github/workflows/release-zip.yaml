@@ -1,0 +1,22 @@
+name: Create Release Zip
+
+on:
+  push:
+    tags:
+      - 'v*' # Berjalan otomatis saat membuat tag versi baru (contoh: v3.0.1)
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Zip repository
+      run: |
+        zip -r bot-source.zip . -x "*.git*"
+    - name: Upload Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: bot-source.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

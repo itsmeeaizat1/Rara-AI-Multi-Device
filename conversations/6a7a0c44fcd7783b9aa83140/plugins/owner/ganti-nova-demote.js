@@ -1,0 +1,41 @@
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import fs from 'fs'
+import path from 'path'
+import te from '../../src/lib/nova-error.js'
+import { updateAssetUrl } from '../../src/lib/nova-uploader.js'
+import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+const pluginConfig = {
+    name: 'ganti-nova-demote.jpg',
+    alias: ['gantinovademote', 'setnovademote'],
+    category: 'owner',
+    description: 'Ganti gambar nova-demote.jpg',
+    usage: '.ganti-nova-demote.jpg (reply/kirim gambar)',
+    example: '.ganti-nova-demote.jpg',
+    isOwner: true,
+    isPremium: false,
+    isGroup: false,
+    isPrivate: false,
+    cooldown: 5,
+    energi: 0,
+    isEnabled: true
+}
+
+async function handler(m, { sock }) {
+    const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
+    if (!isImage) return m.reply(claraWrap("Ganti-nova-demote.jpg", `🖼️ *ɢᴀɴᴛɪ NOVA-DEMOTE.JPG*\n\n> Kirim/reply gambar untuk mengganti\n> File: assets/images/nova-demote.jpg`))
+    try {
+        let buffer = m.quoted && m.quoted.isMedia ? await m.quoted.download() : await m.download()
+        if (!buffer) { const __navText = claraWrap("ganti-nova-demote.jpg", '❌ Gagal mendownload gambar'); return await m.reply(__navText); }
+        await m.reply(claraWrap("Ganti-nova-demote.jpg", `⏳ Sedang mengupload gambar...`))
+        try {
+            const newUrl = await updateAssetUrl('nova-demote', buffer, 'nova-demote.jpg')
+            m.reply(claraWrap("Ganti-nova-demote.jpg", `✅ *ʙᴇʀʜᴀsɪʟ*\n\n> Gambar nova-demote.jpg telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`))
+        } catch (e) {
+            m.reply(claraWrap("ganti-nova-demote.jpg", `❌ Gagal mengupload gambar: ${e.message}`))
+        }
+    } catch (error) {
+        await m.reply(claraWrap("ganti-nova-demote.jpg", te(m.prefix, m.command, m.pushName), "error"))
+    }
+}
+
+export { pluginConfig as config, handler }

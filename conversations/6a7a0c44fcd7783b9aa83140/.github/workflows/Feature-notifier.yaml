@@ -1,0 +1,31 @@
+name: WhatsApp Bot Feature Update Notifier
+
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  detect-features:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2 # Mengambil 2 riwayat commit terakhir untuk dibandingkan
+
+    - name: Analyze New Features & File Updates
+      run: |
+        echo "========================================================"
+        echo "   🚀 INFORMASI PEMBARUAN / FITUR TERBARU BOT WHATSAPP"
+        echo "========================================================"
+        echo "Waktu Update : $(date)"
+        echo "--------------------------------------------------------"
+        echo "Daftar file atau fitur baru yang ditambahkan/diperbarui:"
+        
+        # Mendeteksi file apa saja yang berubah atau baru ditambahkan pada commit terakhir
+        git diff --name-status HEAD^ HEAD
+        
+        echo "========================================================"
+        echo "   Pemberitahuan: Fitur baru berhasil dicatat di sistem!"
+        echo "========================================================"

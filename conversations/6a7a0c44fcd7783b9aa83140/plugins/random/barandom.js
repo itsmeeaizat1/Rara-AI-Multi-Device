@@ -1,0 +1,35 @@
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import axios from 'axios'
+import config from '../../config.js'
+import te from '../../src/lib/nova-error.js'
+const pluginConfig = {
+    name: "barandom",
+    alias: ["barandom", "ba", "barand"],
+    category: 'random',
+    description: 'Random gambar Blue Archive',
+    usage: '.barandom',
+    example: '.barandom',
+    isOwner: false,
+    isPremium: false,
+    isGroup: false,
+    isPrivate: false,
+    cooldown: 5,
+    energi: 1,
+    isEnabled: true
+}
+
+async function handler(m, { sock }) {
+    const api = 'https://api.nexray.web.id/random/ba'
+    await m.react('🕐')
+    try {
+        await sock.sendMedia(m.chat, api, null, m, {
+            type: 'image'
+        })
+        
+        await m.react('✅')
+    } catch (e) {
+        m.reply(claraWrap("barandom", te(m.prefix, m.command, m.pushName), "error"))}
+}
+
+export { pluginConfig as config, handler }

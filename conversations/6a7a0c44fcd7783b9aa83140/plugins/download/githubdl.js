@@ -1,0 +1,91 @@
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import config from '../../config.js'
+import path from 'path'
+import fs from 'fs'
+import te from '../../src/lib/nova-error.js'
+const pluginConfig = {
+    name: 'githubdl',
+    alias: ['gitdl', 'gitclone', 'repodownload'],
+    category: 'download',
+    description: 'Download repository GitHub sebagai ZIP',
+    usage: '.githubdl <user> <repo> <branch>',
+    example: '.githubdl niceplugin NiceBot main',
+    isOwner: false,
+    isPremium: false,
+    isGroup: false,
+    isPrivate: false,
+    cooldown: 15,
+    energi: 1,
+    isEnabled: true
+}
+
+async function handler(m, { sock }) {
+    const args = m.args || []
+    let username, repo, branch
+    
+    if (args[0]?.includes('github.com')) {
+        const urlMatch = args[0].match(/github\.com\/([^\/]+)\/([^\/]+)/i)
+        if (urlMatch) {
+            username = urlMatch[1]
+            repo = urlMatch[2].replace(/\.git$/, '')
+            branch = args[1] || 'main'
+        }
+    } else {
+        username = args[0]
+        repo = args[1]
+        branch = args[2] || 'main'
+    }
+    
+    if (!username) {
+        return m.reply(
+            `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+            `> \`${m.prefix}githubdl <user> <repo> <branch>\`\n\n` +
+            `> Contoh:\n` +
+            `> \`${m.prefix}githubdl niceplugin NiceBot main\`\n` +
+            `> \`${m.prefix}githubdl https://github.com/user/repo\``
+        )
+    }
+    
+    if (!repo) {
+        { const __navText = claraWrap("ʀᴇᴘᴏ ᴅɪʙᴜᴛᴜʜᴋᴀɴ", `❌ *ʀᴇᴘᴏ ᴅɪʙᴜᴛᴜʜᴋᴀɴ*\n\n> Masukkan nama repository`); return await sendReplyWithNav(sock, m, __navText, "githubdl"); }
+    }
+    
+    await m.react('🕐')
+
+    try {
+        const repoInfo = await fetch(`https://api.github.com/repos/${username}/${repo}`)
+        
+        if (!repoInfo.ok) {
+            return m.reply(`❌ *ʀᴇᴘᴏ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n> \`${username}/${repo}\` tidak ada`)
+        }
+        
+        const repoData = await repoInfo.json()
+        const defaultBranch = repoData.default_branch || 'main'
+        branch = branch || defaultBranch
+        
+        const zipUrl = `https://github.com/${username}/${repo}/archive/refs/heads/${branch}.zip`
+        
+        const checkRes = await fetch(zipUrl, { method: 'HEAD' })
+        if (!checkRes.ok) {
+            return m.reply(`❌ *ʙʀᴀɴᴄʜ ᴛɪᴅᴀᴋ ᴀᴅᴀ*\n\n> Branch \`${branch}\` tidak ditemukan\n> Default: \`${defaultBranch}\``)
+        }
+        
+        await sock.sendMedia(m.chat, zipUrl, null, m, {
+            type: 'document',
+            fileName: `${repo} - Branch: ${branch}.zip`,
+            mimetype: 'application/zip',
+            contextInfo: {
+                forwardingScore: 99,
+                isForwarded: true
+            }
+        })
+        
+        await m.react('✅')
+        
+    } catch (e) {
+        m.reply(claraWrap("githubdl", te(m.prefix, m.command, m.pushName), "error"))
+    }
+}
+
+export { pluginConfig as config, handler }

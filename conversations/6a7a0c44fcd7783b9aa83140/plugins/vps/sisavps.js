@@ -1,0 +1,78 @@
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import axios from 'axios'
+import config from '../../config.js'
+import te from '../../src/lib/nova-error.js'
+
+const pluginConfig = {
+    name: ['sisavps', 'sisadroplet', 'vpsquota'],
+    alias: [],
+    category: 'vps',
+    description: 'Cek sisa kuota VPS',
+    usage: '.sisavps',
+    example: '.sisavps',
+    isOwner: false,
+    isPremium: false,
+    isGroup: false,
+    isPrivate: false,
+    cooldown: 10,
+    energi: 0,
+    isEnabled: true
+}
+
+function hasAccess(sender, isOwner) {
+    if (isOwner) return true
+    const cleanSender = sender?.split('@')[0]
+    if (!cleanSender) return false
+    const doConfig = config.digitalocean || {}
+    return (doConfig.sellers || []).includes(cleanSender) || 
+           (doConfig.ownerPanels || []).includes(cleanSender)
+}
+
+async function handler(m, { sock }) {
+    const token = config.digitalocean?.token
+    
+    if (!token) {
+        return sendReplyWithNav(sock, m, `DigitalOcean belum disetup. Isi digitalocean.token di config.js`, "sisavps")
+    }
+    
+    if (!hasAccess(m.sender, m.isOwner)) {
+        return m.reply(`Akses ditolak. Fitur ini hanya untuk Owner/Seller.`)
+    }
+    
+    await m.react("🕐")
+    try {
+        const [accountRes, dropletsRes] = await Promise.all([
+            axios.get('https://api.digitalocean.com/v2/account', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            }),
+            axios.get('https://api.digitalocean.com/v2/droplets', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+        ])
+        
+        const account = accountRes.data.account
+        const droplets = dropletsRes.data.droplets || []
+        const dropletLimit = account.droplet_limit
+        const dropletsUsed = droplets.length
+        const dropletsRemaining = dropletLimit - dropletsUsed
+        
+        let txt = `╔┈┈「 *Kuota DigitalOcean* 」
+╎
+╎❏ *Limit:* ${dropletLimit} droplet
+╎❏ *Terpakai:* ${dropletsUsed} droplet
+╎❏ *Sisa:* ${dropletsRemaining} droplet
+╚┈┈┈┈┈┈┈┈┈❖
+
+Email: ${account.email}
+Status: ${account.status}`
+        
+        m.react("✅")
+        await m.reply(txt)
+        
+    } catch (err) {
+        return m.reply(te(m.prefix, m.command, m.pushName))
+    }
+}
+
+export { pluginConfig as config, handler };

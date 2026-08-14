@@ -1,0 +1,33 @@
+name: Bot – Prepare & Check
+
+on:
+  workflow_dispatch:
+
+jobs:
+  prepare-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install system libs (for canvas)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev libpng-dev libfreetype6-dev build-essential pkg-config
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+      - name: Verify installed canvas packages
+        run: |
+          node -e "try { console.log(require('@napi-rs/canvas') ? 'napi-canvas OK' : 'napi-canvas missing') } catch(e){ console.error('napi-canvas load failed:', e.message); process.exit(1) }"
+
+      - name: Syntax check (quick)
+        run: |
+          node --check index.js

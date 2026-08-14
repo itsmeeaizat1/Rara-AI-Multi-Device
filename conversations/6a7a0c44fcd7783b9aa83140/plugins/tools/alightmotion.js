@@ -17,7 +17,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "amprem",
-  alias: ["alightmotion", "am", "alightprem"],
+  alias: ["alightmotion", "alight", "am2"],
   category: "tools",
   description: "Alight Motion Premium creator",
   usage: ".amprem bulk <jumlah>\n.amprem send <email>\n.amprem verify <email>\n.amprem verify <email> <link>\n.ampremcreate\n.tempmail\n.tempmail read [email]",

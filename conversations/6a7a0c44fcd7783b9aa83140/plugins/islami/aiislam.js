@@ -21,7 +21,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aiislam",
-  alias: ["aiquran", "aislam", "tanyaislam"],
+  alias: ["aiislam", "islamai2", "aiislam2"],
   category: "islami",
   description: "AI Islamic Scholar + Quran reader (eQuran.id API Kemenag)",
   usage: ".aiislam <pertanyaan>\n.aiislam surah <nomor>\n.aiislam ayah <surah>:<ayah>\n.aiislam tafsir <surah>:<ayah>\n.aiislam asktafsir <surah>:<ayah>\n.aiislam list\n.aiislam reset",
@@ -177,12 +177,8 @@ function formatSurahContent(surah) {
     const a = surah.ayat[i];
     text += `${a.nomorAyat}. ${a.teksArab}\n`;
     text += `${a.teksLatin}\n`;
-    text => `${a.teksIndonesia}\n\n`;
     text += `${a.teksIndonesia}\n\n`;
   }
-
-  // Fix: remove the accidental line
-  text = text.replace(/text =>.*\n/, "");
 
   if (surah.ayat.length > 10) {
     text += `Menampilkan 10 dari ${surah.jumlahAyat} ayat.\n`;

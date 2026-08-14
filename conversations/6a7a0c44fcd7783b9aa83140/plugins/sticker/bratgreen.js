@@ -1,0 +1,44 @@
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import axios from 'axios'
+import config from '../../config.js'
+import te from '../../src/lib/nova-error.js'
+const pluginConfig = {
+    name: 'bratgreen',
+    alias: ["bratgreen", "brat2", "bratgreen2"],
+    category: 'sticker',
+    description: 'Membuat sticker brat ijo',
+    usage: '.brat2 <text>',
+    example: '.brat2 Hai semua',
+    isOwner: false,
+    isPremium: false,
+    isGroup: false,
+    isPrivate: false,
+    cooldown: 10,
+    energi: 1,
+    isEnabled: true
+}
+
+async function handler(m, { sock }) {
+    const text = m.text
+    if (!text) {
+        { const __navText = `🖼️ *ʙʀᴀᴛ ɢʀᴇᴇɴ*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratgreen Hai semua\``; return await sendReplyWithNav(sock, m, __navText, "bratgreen"); }
+    }
+    
+    m.react('🕐')
+    
+    try {
+        const url = `https://api.nova.my.id/api/brat-grenn?text=${encodeURIComponent(text)}`
+        await sock.sendImageAsSticker(m.chat, url, m, {
+            packname: config.sticker.packname,
+            author: config.sticker.author
+        })
+        
+        m.react('✅')
+        
+    } catch (error) {
+        m.reply(claraWrap("bratgreen", te(m.prefix, m.command, m.pushName), "error"))
+    }
+}
+
+export { pluginConfig as config, handler }

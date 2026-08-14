@@ -1,0 +1,29 @@
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import axios from "axios";
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+
+const pluginConfig = {
+  name: "aivoicefuture", alias: ["aivoice2", "aivoicefuture", "ttsaifuture"], category: "future",
+  description: "Text ke suara realistik multi-bahasa", usage: ".aivoice <text>",
+  example: ".aivoice halo semuanya", isOwner: false, isPremium: true,
+  isGroup: true, isPrivate: true, cooldown: 15, energi: 3, isEnabled: true,
+};
+
+async function handler(m, { sock, config: botConfig }) {
+  try {
+    const prefix = botConfig.command?.prefix || ".";
+    const text = m.text?.trim();
+    if (!text) {
+      { const __navText = (claraWrap("AI Voice", [`◦ Penggunaan: *${prefix}aivoice <text>*`,
+        `◦ Contoh: *${prefix}aivoice halo selamat datang*`].join("\n"))); await sendReplyWithNav(sock, m, __navText, "aivoice"); };
+      return { handled: true };
+    }
+    const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=id&client=tw-ob`;
+    const { data } = await axios.get(url, { timeout: 15000, responseType: "arraybuffer", headers: {"User-Agent":"Mozilla/5.0"} });
+    await sock.sendMessage(m.key.remoteJid, { audio: Buffer.from(data), mimetype: "audio/mp3", ptt: true }, { quoted: m });
+  } catch (e) {
+    await m.reply("Error: " + e.message);
+  }
+  return { handled: true };
+}
+export { pluginConfig as config, handler };

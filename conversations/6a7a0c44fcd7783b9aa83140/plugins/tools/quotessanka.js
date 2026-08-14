@@ -1,0 +1,63 @@
+import axios from "axios";
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+
+const pluginConfig = {
+  name: "quotessanka",
+  alias: ["quotesanka", "motivasisanka"],
+  category: "tools",
+  description: "Random quotes motivasi via Sanka API",
+  usage: ".quotessanka",
+  example: ".quotessanka",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 10,
+  energi: 2,
+  isEnabled: true,
+};
+
+const API_BASE = "https://www.sankavollerei.web.id";
+const API_KEY = "planaai";
+
+async function handler(m, { sock }) {
+  await m.react("🕐");
+
+  try {
+    const url = `${API_BASE}/random/quotes?apikey=${API_KEY}`;
+
+    const res = await axios.get(url, {
+      timeout: 20000,
+      validateStatus: () => true,
+      headers: { "User-Agent": "Mozilla/5.0" },
+    });
+
+    if (res.status !== 200 || !res.data?.status) {
+      throw new Error(res.data?.message || "API error");
+    }
+
+    const quotes = res.data.result?.quotes;
+
+    if (!quotes || !quotes.length) {
+      throw new Error("Tidak ada quotes ditemukan");
+    }
+
+    // Ambil 1 quote random dari list
+    const quote = quotes[Math.floor(Math.random() * quotes.length)];
+
+    let txt = `Quotes Sanka\n\n`;
+    txt += `"${quote}"\n\n`;
+    txt += `~ ${res.data.by || "Sanka Vollerei"}`;
+
+    await sendReplyWithNav(m, sock, txt, { commandName: "quotessanka" });
+    await m.react("✅");
+  } catch (e) {
+    console.error("[QUOTESSANKA] Error:", e.message);
+    let txt = `Gagal mengambil quotes!\n\n`;
+    txt += `Error: ${e.message}`;
+    await m.reply(claraWrap("quotessanka", txt));
+  }
+}
+
+export { pluginConfig as config, handler };

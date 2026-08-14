@@ -1,0 +1,56 @@
+import te from "../../src/lib/nova-error.js";
+import moment from "moment-timezone";
+import axios from "axios";
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+
+const pluginConfig = {
+  name: "iqc",
+  alias: ["iqchat", "iphonechat"],
+  category: "canvas",
+  description: "Membuat gambar chat iPhone style",
+  usage: ".iqc <text>",
+  example: ".iqc Hai cantik",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 10,
+  energi: 1,
+  isEnabled: true,
+};
+
+async function handler(m, { sock }) {
+  const text = m.args.join(" ");
+  if (!text) {
+    return sendReplyWithNav(sock, m, claraWrap("ɪǫᴄ ᴄʜᴀᴛ", `📱 *ɪǫᴄ ᴄʜᴀᴛ*\n\n> Masukkan teks untuk chat\n\n\`Contoh: ${m.prefix}iqc Hai cantik\``), "iqc");
+  }
+
+  m.react("🕐");
+
+  try {
+    const now = new Date();
+    const time = moment(now).tz("Asia/Jakarta").format("HH:mm");
+
+    const apiUrl = `https://api.nexray.eu.cc/maker/v1/iqc?text=${encodeURIComponent(text)}&provider=INDOSAT&jam=${encodeURIComponent(time)}&baterai=100`;
+
+    const res = await axios.get(apiUrl, {
+      responseType: "arraybuffer",
+      timeout: 30000
+    });
+
+    if (res.headers["content-type"] && !res.headers["content-type"].includes("image")) {
+      throw new Error("Gagal membuat IQC, format bukan gambar");
+    }
+
+    const cardBuffer = Buffer.from(res.data);
+
+    m.react("✅");
+    await sock.sendMessage(m.chat, { image: cardBuffer, caption: "" }, { quoted: m });
+  } catch (error) {
+    console.error("[IQC]", error.message);
+    m.reply(claraWrap("Gagal membuat gambar chat.", "😔 *Gagal membuat gambar chat.* \n\nSistem gagal menghubungi server pembuat chat. Silakan coba beberapa saat lagi ya."));
+  }
+}
+
+export { pluginConfig as config, handler };
