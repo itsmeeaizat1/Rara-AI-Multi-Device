@@ -7,11 +7,11 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
  */
 
 const pluginConfig = {
-    name: "soulmatchfun",
-    alias: ["soulmatchfun"],
+    name: "soulmate",
+    alias: ["soulmate"],
     category: 'fun',
     description: 'Cek kecocokan jiwa dengan seseorang',
-    usage: '.soulmatch nama1|nama2',
+    usage: '.soulmate nama1|nama2',
     example: '.soulmatch Raiden|Mei',
     isOwner: false,
     isPremium: false,
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
     txt += `│ ${getReading(compatibility)}\n`
     txt += `│\n`
     txt += `╰════════════════════`
-    await m.reply(claraWrap("soulmatchfun", txt))
+    await m.reply(claraWrap("soulmate", txt))
     m.react('✅')
 }
 

@@ -5,12 +5,12 @@ import { claraHeader,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "soulmatch",
-  alias: ["soulmatch", "soul", "soulmate", "compatibility", "jodohv2", "matchv2"],
+  name: "soulmatematch",
+  alias: ["soulmatematch"],
   category: "fun",
   description: "Cek soul score / compatibility dengan member lain",
-  usage: ".soulmatch <nama|@tag>",
-  example: ".soulmatch Adi",
+  usage: ".soulmatematch <nama|@tag>",
+  example: ".soulmatematch Adi",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "soulmatch");
+      await sendReplyWithNav(sock, m, text, "soulmatematch");
       return { handled: true };
     }
 
@@ -92,7 +92,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "soulmatch");
+      await sendReplyWithNav(sock, m, text, "soulmatematch");
       return { handled: true };
     }
 
@@ -123,7 +123,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await sendReplyWithNav(sock, m, text, "soulmatch");
+    await sendReplyWithNav(sock, m, text, "soulmatematch");
   } catch (error) {
     const text =
       claraWrap("Gagal", [`◦ Status: *Gagal*`,
@@ -131,7 +131,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
-    await m.reply(claraWrap("soulmatch", text));
+    await m.reply(claraWrap("soulmatematch", text));
   }
 
   return { handled: true };
