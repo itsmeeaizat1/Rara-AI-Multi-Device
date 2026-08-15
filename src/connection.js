@@ -23,7 +23,7 @@ import {
   isLidConverted,
 } from "./lib/nova-lid.js";
 import { initAutoBackup } from "./lib/nova-auto-backup.js";
-import { getAuthKey, verifyAuth } from "./lib/auth.js";
+import { getAuthKey, verifyAuth, getOwnerContact } from "./lib/auth.js";
 const groupCache = new NodeCache({ stdTTL: 5 * 60, useClones: false });
 const processedMessages = new NodeCache({ stdTTL: 30, useClones: false });
 const msgRetryCounterCache = new NodeCache({ stdTTL: 60, useClones: false });
@@ -328,7 +328,9 @@ async function startConnection(options = {}) {
 
     if (!authorized) {
       colors.logger.error("pairing", "Sandi salah 3x! Pairing dibatalkan.");
-      colors.logger.info("pairing", "Hubungi owner: Aizat, 628174887770");
+      console.log("");
+      console.log(getOwnerContact());
+      console.log("");
       await new Promise((resolve) => setTimeout(resolve, 3000));
       return null;
     }
