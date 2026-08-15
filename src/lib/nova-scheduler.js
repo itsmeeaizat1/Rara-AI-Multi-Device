@@ -32,6 +32,7 @@ function startDailyLimitReset(options = {}) {
   const hour = options.hour ?? 0;
   const minute = options.minute ?? 0;
   const defaultLimit = options.defaultLimit ?? 25;
+  const premiumLimit = options.premiumLimit ?? 1000;
 
   if (activeCronJobs.has("dailyLimitReset")) {
     activeCronJobs.get("dailyLimitReset").stop();
@@ -43,10 +44,10 @@ function startDailyLimitReset(options = {}) {
     async () => {
       try {
         const db = getDatabase();
-        const resetCount = db.resetAllEnergi(defaultLimit, -1);
+        const resetCount = db.resetAllEnergi(defaultLimit, premiumLimit);
         logger.success(
           "Scheduler",
-          `Daily limit reset complete! ${resetCount} users reset (regular: ${defaultLimit}, premium: ∞)`,
+          `Daily limit reset complete! ${resetCount} users reset (regular: ${defaultLimit}, premium: ${premiumLimit})`,
         );
         db.incrementStat("dailyResets");
         db.setting("lastLimitReset", new Date().toISOString());
@@ -378,6 +379,7 @@ function startSchedulerByName(name, sock, config = null) {
         hour: cfg.scheduler?.resetHour ?? 0,
         minute: cfg.scheduler?.resetMinute ?? 0,
         defaultLimit: cfg.energi?.default ?? 25,
+        premiumLimit: cfg.energi?.premium ?? 1000,
       });
       started = true;
       schedulerName = "Daily Limit Reset";
@@ -451,6 +453,7 @@ function initScheduler(config, sock = null) {
       hour: config.scheduler?.resetHour ?? 0,
       minute: config.scheduler?.resetMinute ?? 0,
       defaultLimit: config.energi?.default ?? 25,
+      premiumLimit: config.energi?.premium ?? 1000,
     });
   }
   if (sock) loadScheduledMessages(sock);
