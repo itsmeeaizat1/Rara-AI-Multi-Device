@@ -93,8 +93,8 @@ function cssColor(input) {
 
 // ─── Parse flags ───
 function parseFlags(text) {
-  const opts = { font: "helvetica", color: "black", titlecolor: null, size: 11, img: 0, imgmode: "doc" };
-  const flagRegex = /(font|color|titlecolor|size|img|imgmode|out)=([^\s]+)/gi;
+  const opts = { font: "helvetica", color: "black", titlecolor: null, size: 11, img: 0, imgmode: "doc", tpl: 1 };
+  const flagRegex = /(font|color|titlecolor|size|img|imgmode|out|tpl)=([^\s]+)/gi;
   let match;
   const flags = [];
   while ((match = flagRegex.exec(text)) !== null) {
@@ -118,6 +118,9 @@ function parseFlags(text) {
       const mode = f.value.toLowerCase();
       if (mode === "gambar" || mode === "img" || mode === "image") opts.imgmode = "img";
       else opts.imgmode = "doc";
+    } else if (f.key === "tpl") {
+      const t = parseInt(f.value);
+      if (t >= 1 && t <= 5) opts.tpl = t;
     }
   }
   const cleaned = text.replace(flagRegex, "").replace(/^\s+/, "").trim();
@@ -243,8 +246,521 @@ async function createPDF(rawText, format, opts) {
   return await pdfDoc.save();
 }
 
+// === CV CONTENT PARSER ===
+function parseCVContent(rawText) {
+  const lines = rawText.split("\n").map(l => l.trim());
+  const cv = { name: "", position: "", contact: "", sections: [] };
+  
+  let idx = 0;
+  // Line 1: Name
+  while (idx < lines.length && !lines[idx]) idx++;
+  if (idx < lines.length) cv.name = lines[idx++];
+  // Line 2: Position
+  while (idx < lines.length && !lines[idx]) idx++;
+  if (idx < lines.length && !lines[idx].startsWith("#")) cv.position = lines[idx++];
+  // Line 3: Contact
+  while (idx < lines.length && !lines[idx]) idx++;
+  if (idx < lines.length && !lines[idx].startsWith("#")) cv.contact = lines[idx++];
+  
+  // Parse sections
+  let currentSection = null;
+  for (; idx < lines.length; idx++) {
+    const line = lines[idx];
+    if (!line) continue;
+    
+    if (line.startsWith("#")) {
+      if (currentSection) cv.sections.push(currentSection);
+      currentSection = { header: line.replace(/^#\s*/, ""), items: [] };
+    } else if (currentSection) {
+      if (line.startsWith("- ") || line.startsWith("• ")) {
+        currentSection.items.push({ type: "bullet", text: line.replace(/^[-•*]\s*/, "") });
+      } else {
+        // Check if it's a sub-item (indented or continuation)
+        const prevItem = currentSection.items[currentSection.items.length - 1];
+        if (prevItem && prevItem.type === "bullet") {
+          currentSection.items.push({ type: "sub", text: line });
+        } else {
+          currentSection.items.push({ type: "text", text: line });
+        }
+      }
+    }
+  }
+  if (currentSection) cv.sections.push(currentSection);
+  return cv;
+}
+
+// === TEMPLATE COLOR SCHEMES ===
+const CV_TEMPLATES = {
+  1: { name: "Professional", accent: "#000080", light: "#000050", bg: null },
+  2: { name: "Modern Sidebar", accent: "#1a5276", light: "#d4e6f1", bg: "#1a5276" },
+  3: { name: "Creative Header", accent: "#8e44ad", light: "#f5eef8", bg: null },
+  4: { name: "Minimalist", accent: "#333333", light: "#666666", bg: null },
+  5: { name: "Executive", accent: "#1c3d3a", light: "#c0c0c0", bg: null },
+};
+
+// === PNG TEMPLATE RENDERERS ===
+async function renderCV_PNG(cv, tpl, opts, scale) {
+  const scheme = CV_TEMPLATES[tpl] || CV_TEMPLATES[1];
+  const accent = scheme.accent;
+  const fontSet = FONTS[opts.font] || FONTS.helvetica;
+  const font = fontSet.css;
+  
+  const baseW = 794;
+  const W = Math.round(baseW * scale);
+  const margin = Math.round(50 * scale);
+  const fontSize = Math.round(12 * scale);
+  const headerSize = Math.round(14 * scale);
+  const nameSize = Math.round(24 * scale);
+  const lineH = Math.round(18 * scale);
+  
+  // First pass: calculate height
+  let totalH = Math.round(60 * scale);
+  
+  if (tpl === 2) {
+    // Sidebar: need at least full page
+    totalH = Math.round(1123 * scale);
+  } else if (tpl === 3) {
+    totalH += Math.round(120 * scale); // header band
+    for (const sec of cv.sections) {
+      totalH += Math.round(28 * scale);
+      for (const item of sec.items) {
+        totalH += lineH;
+      }
+      totalH += Math.round(15 * scale);
+    }
+  } else {
+    totalH += Math.round(40 * scale); // name area
+    for (const sec of cv.sections) {
+      totalH += Math.round(28 * scale);
+      for (const item of sec.items) {
+        totalH += lineH;
+      }
+      totalH += Math.round(15 * scale);
+    }
+  }
+  totalH = Math.max(totalH, Math.round(1123 * scale));
+  const H = totalH;
+  
+  const canvas = new Canvas(W, H);
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, W, H);
+  
+  function wrap(text, fontStr, maxW) {
+    const words = text.split(" ");
+    const out = [];
+    let cur = "";
+    for (const w of words) {
+      const t = cur ? cur + " " + w : w;
+      ctx.font = fontStr;
+      if (ctx.measureText(t).width > maxW && cur) { out.push(cur); cur = w; }
+      else cur = t;
+    }
+    if (cur) out.push(cur);
+    return out;
+  }
+  
+  if (tpl === 1) {
+    // === TEMPLATE 1: PROFESSIONAL (centered, underline) ===
+    let y = Math.round(60 * scale);
+    const contentW = W - margin * 2;
+    
+    // Name
+    ctx.fillStyle = accent;
+    ctx.font = "bold " + nameSize + "px " + font;
+    ctx.textAlign = "center";
+    ctx.fillText(cv.name, W / 2, y);
+    const nameW = ctx.measureText(cv.name).width;
+    y += Math.round(6 * scale);
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = Math.round(2 * scale);
+    ctx.beginPath();
+    ctx.moveTo(W / 2 - nameW / 2, y);
+    ctx.lineTo(W / 2 + nameW / 2, y);
+    ctx.stroke();
+    y += Math.round(24 * scale);
+    
+    // Position + contact
+    if (cv.position) { ctx.fillStyle = "#333"; ctx.font = fontSize + "px " + font; ctx.fillText(cv.position, W / 2, y); y += Math.round(18 * scale); }
+    if (cv.contact) { ctx.fillStyle = "#555"; ctx.font = Math.round(11 * scale) + "px " + font; ctx.fillText(cv.contact, W / 2, y); y += Math.round(28 * scale); }
+    
+    // Sections
+    ctx.textAlign = "left";
+    for (const sec of cv.sections) {
+      ctx.fillStyle = accent;
+      ctx.font = "bold " + headerSize + "px " + font;
+      ctx.fillText(sec.header.toUpperCase(), margin, y);
+      y += Math.round(4 * scale);
+      ctx.strokeStyle = "#ccc";
+      ctx.lineWidth = Math.round(0.5 * scale);
+      ctx.beginPath(); ctx.moveTo(margin, y); ctx.lineTo(W - margin, y); ctx.stroke();
+      y += Math.round(20 * scale);
+      
+      for (const item of sec.items) {
+        if (item.type === "bullet") {
+          ctx.fillStyle = accent;
+          ctx.beginPath();
+          ctx.arc(margin + Math.round(4 * scale), y - Math.round(4 * scale), Math.round(2.5 * scale), 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#000";
+          ctx.font = fontSize + "px " + font;
+          const wrapped = wrap(item.text, fontSize + "px " + font, contentW - Math.round(20 * scale));
+          for (const w of wrapped) { ctx.fillText(w, margin + Math.round(14 * scale), y); y += lineH; }
+        } else if (item.type === "sub") {
+          ctx.fillStyle = "#555";
+          ctx.font = Math.round(11 * scale) + "px " + font;
+          ctx.fillText("• " + item.text, margin + Math.round(14 * scale), y);
+          y += lineH;
+        } else {
+          ctx.fillStyle = "#000";
+          ctx.font = fontSize + "px " + font;
+          const wrapped = wrap(item.text, fontSize + "px " + font, contentW - Math.round(10 * scale));
+          for (const w of wrapped) { ctx.fillText(w, margin + Math.round(14 * scale), y); y += lineH; }
+        }
+      }
+      y += Math.round(10 * scale);
+    }
+  }
+  
+  else if (tpl === 2) {
+    // === TEMPLATE 2: MODERN SIDEBAR ===
+    const sideW = Math.round(260 * scale);
+    const mainX = sideW + Math.round(20 * scale);
+    const mainW = W - mainX - margin;
+    
+    // Sidebar background
+    ctx.fillStyle = accent;
+    ctx.fillRect(0, 0, sideW, H);
+    
+    // Sidebar: Name
+    let sy = Math.round(50 * scale);
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold " + Math.round(20 * scale) + "px " + font;
+    ctx.textAlign = "left";
+    const sideMargin = Math.round(25 * scale);
+    // Wrap name
+    const nameParts = wrap(cv.name, "bold " + Math.round(20 * scale) + "px " + font, sideW - sideMargin * 2);
+    for (const np of nameParts) { ctx.fillText(np, sideMargin, sy); sy += Math.round(24 * scale); }
+    sy += Math.round(8 * scale);
+    
+    // Position
+    if (cv.position) {
+      ctx.fillStyle = scheme.light;
+      ctx.font = Math.round(12 * scale) + "px " + font;
+      ctx.fillText(cv.position, sideMargin, sy);
+      sy += Math.round(30 * scale);
+    }
+    
+    // Contact
+    if (cv.contact) {
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold " + Math.round(11 * scale) + "px " + font;
+      ctx.fillText("KONTAK", sideMargin, sy);
+      sy += Math.round(4 * scale);
+      ctx.strokeStyle = "rgba(255,255,255,0.3)";
+      ctx.lineWidth = Math.round(1 * scale);
+      ctx.beginPath(); ctx.moveTo(sideMargin, sy); ctx.lineTo(sideW - sideMargin, sy); ctx.stroke();
+      sy += Math.round(18 * scale);
+      ctx.fillStyle = scheme.light;
+      ctx.font = Math.round(10 * scale) + "px " + font;
+      const contactLines = wrap(cv.contact, Math.round(10 * scale) + "px " + font, sideW - sideMargin * 2);
+      for (const cl of contactLines) { ctx.fillText(cl, sideMargin, sy); sy += Math.round(15 * scale); }
+      sy += Math.round(20 * scale);
+    }
+    
+    // Sidebar: Skills section
+    const skillSec = cv.sections.find(s => s.header.toUpperCase().includes("SKILL") || s.header.toUpperCase().includes("KEAHLIAN"));
+    if (skillSec) {
+      ctx.fillStyle = "#fff";
+      ctx.font = "bold " + Math.round(11 * scale) + "px " + font;
+      ctx.fillText("SKILL", sideMargin, sy);
+      sy += Math.round(4 * scale);
+      ctx.strokeStyle = "rgba(255,255,255,0.3)";
+      ctx.beginPath(); ctx.moveTo(sideMargin, sy); ctx.lineTo(sideW - sideMargin, sy); ctx.stroke();
+      sy += Math.round(18 * scale);
+      ctx.fillStyle = scheme.light;
+      ctx.font = Math.round(10 * scale) + "px " + font;
+      for (const item of skillSec.items) {
+        if (item.type === "bullet") {
+          ctx.fillText("• " + item.text, sideMargin, sy);
+          sy += Math.round(16 * scale);
+        }
+      }
+    }
+    
+    // Main area: Profil + Pengalaman + Pendidikan
+    let my = Math.round(50 * scale);
+    for (const sec of cv.sections) {
+      if (sec.header.toUpperCase().includes("SKILL") || sec.header.toUpperCase().includes("KEAHLIAN")) continue;
+      
+      ctx.fillStyle = accent;
+      ctx.font = "bold " + headerSize + "px " + font;
+      ctx.textAlign = "left";
+      ctx.fillText(sec.header.toUpperCase(), mainX, my);
+      my += Math.round(4 * scale);
+      ctx.strokeStyle = scheme.light;
+      ctx.lineWidth = Math.round(1 * scale);
+      ctx.beginPath(); ctx.moveTo(mainX, my); ctx.lineTo(mainX + mainW, my); ctx.stroke();
+      my += Math.round(20 * scale);
+      
+      for (const item of sec.items) {
+        if (item.type === "bullet") {
+          ctx.fillStyle = accent;
+          ctx.beginPath();
+          ctx.arc(mainX + Math.round(4 * scale), my - Math.round(4 * scale), Math.round(2.5 * scale), 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = "#000";
+          ctx.font = fontSize + "px " + font;
+          const wrapped = wrap(item.text, fontSize + "px " + font, mainW - Math.round(20 * scale));
+          for (const w of wrapped) { ctx.fillText(w, mainX + Math.round(14 * scale), my); my += lineH; }
+        } else if (item.type === "sub") {
+          ctx.fillStyle = "#555";
+          ctx.font = Math.round(11 * scale) + "px " + font;
+          ctx.fillText("• " + item.text, mainX + Math.round(14 * scale), my);
+          my += lineH;
+        } else {
+          ctx.fillStyle = "#000";
+          ctx.font = fontSize + "px " + font;
+          const wrapped = wrap(item.text, fontSize + "px " + font, mainW - Math.round(10 * scale));
+          for (const w of wrapped) { ctx.fillText(w, mainX + Math.round(14 * scale), my); my += lineH; }
+        }
+      }
+      my += Math.round(15 * scale);
+    }
+  }
+  
+  else if (tpl === 3) {
+    // === TEMPLATE 3: CREATIVE HEADER ===
+    const headerH = Math.round(130 * scale);
+    const contentW = W - margin * 2;
+    
+    // Header band
+    ctx.fillStyle = accent;
+    ctx.fillRect(0, 0, W, headerH);
+    
+    // Name in header
+    ctx.fillStyle = "#fff";
+    ctx.font = "bold " + nameSize + "px " + font;
+    ctx.textAlign = "center";
+    ctx.fillText(cv.name, W / 2, Math.round(55 * scale));
+    
+    // Position
+    if (cv.position) {
+      ctx.fillStyle = "rgba(255,255,255,0.85)";
+      ctx.font = Math.round(13 * scale) + "px " + font;
+      ctx.fillText(cv.position, W / 2, Math.round(85 * scale));
+    }
+    
+    // Contact
+    if (cv.contact) {
+      ctx.fillStyle = "rgba(255,255,255,0.7)";
+      ctx.font = Math.round(11 * scale) + "px " + font;
+      ctx.fillText(cv.contact, W / 2, Math.round(108 * scale));
+    }
+    
+    // Body
+    let y = headerH + Math.round(35 * scale);
+    ctx.textAlign = "left";
+    
+    for (const sec of cv.sections) {
+      // Section header with colored pill background
+      const headerStr = sec.header.toUpperCase();
+      ctx.font = "bold " + headerSize + "px " + font;
+      const pillW = ctx.measureText(headerStr).width + Math.round(20 * scale);
+      const pillH = Math.round(24 * scale);
+      
+      ctx.fillStyle = scheme.light;
+      ctx.fillRect(margin, y - Math.round(18 * scale), pillW, pillH);
+      ctx.fillStyle = accent;
+      ctx.fillText(headerStr, margin + Math.round(10 * scale), y);
+      y += Math.round(22 * scale);
+      
+      for (const item of sec.items) {
+        if (item.type === "bullet") {
+          // Colored square bullet
+          ctx.fillStyle = accent;
+          ctx.fillRect(margin, y - Math.round(12 * scale), Math.round(5 * scale), Math.round(5 * scale));
+          ctx.fillStyle = "#000";
+          ctx.font = fontSize + "px " + font;
+          const wrapped = wrap(item.text, fontSize + "px " + font, contentW - Math.round(20 * scale));
+          for (const w of wrapped) { ctx.fillText(w, margin + Math.round(14 * scale), y); y += lineH; }
+        } else if (item.type === "sub") {
+          ctx.fillStyle = "#666";
+          ctx.font = Math.round(11 * scale) + "px " + font;
+          ctx.fillText("▸ " + item.text, margin + Math.round(14 * scale), y);
+          y += lineH;
+        } else {
+          ctx.fillStyle = "#000";
+          ctx.font = fontSize + "px " + font;
+          const wrapped = wrap(item.text, fontSize + "px " + font, contentW - Math.round(10 * scale));
+          for (const w of wrapped) { ctx.fillText(w, margin + Math.round(14 * scale), y); y += lineH; }
+        }
+      }
+      y += Math.round(18 * scale);
+    }
+  }
+  
+  else if (tpl === 4) {
+    // === TEMPLATE 4: MINIMALIST ===
+    let y = Math.round(70 * scale);
+    const contentW = W - margin * 2;
+    
+    // Name (left-aligned, bold, no underline)
+    ctx.fillStyle = "#1a1a1a";
+    ctx.font = "bold " + Math.round(22 * scale) + "px " + font;
+    ctx.textAlign = "left";
+    ctx.fillText(cv.name, margin, y);
+    y += Math.round(28 * scale);
+    
+    // Position
+    if (cv.position) {
+      ctx.fillStyle = "#555";
+      ctx.font = Math.round(13 * scale) + "px " + font;
+      ctx.fillText(cv.position, margin, y);
+      y += Math.round(18 * scale);
+    }
+    
+    // Contact
+    if (cv.contact) {
+      ctx.fillStyle = "#888";
+      ctx.font = Math.round(11 * scale) + "px " + font;
+      ctx.fillText(cv.contact, margin, y);
+      y += Math.round(24 * scale);
+    }
+    
+    // Thin separator
+    ctx.strokeStyle = "#ddd";
+    ctx.lineWidth = Math.round(0.5 * scale);
+    ctx.beginPath(); ctx.moveTo(margin, y); ctx.lineTo(W - margin, y); ctx.stroke();
+    y += Math.round(25 * scale);
+    
+    for (const sec of cv.sections) {
+      // Section header (caps, no color, just letter spacing)
+      ctx.fillStyle = "#1a1a1a";
+      ctx.font = "bold " + Math.round(11 * scale) + "px " + font;
+      ctx.fillText(sec.header.toUpperCase(), margin, y);
+      y += Math.round(18 * scale);
+      
+      for (const item of sec.items) {
+        if (item.type === "bullet") {
+          ctx.fillStyle = "#999";
+          ctx.font = fontSize + "px " + font;
+          ctx.fillText("—", margin, y);
+          ctx.fillStyle = "#333";
+          const wrapped = wrap(item.text, fontSize + "px " + font, contentW - Math.round(20 * scale));
+          for (const w of wrapped) { ctx.fillText(w, margin + Math.round(16 * scale), y); y += lineH; }
+        } else if (item.type === "sub") {
+          ctx.fillStyle = "#777";
+          ctx.font = Math.round(11 * scale) + "px " + font;
+          ctx.fillText(item.text, margin + Math.round(16 * scale), y);
+          y += lineH;
+        } else {
+          ctx.fillStyle = "#333";
+          ctx.font = fontSize + "px " + font;
+          const wrapped = wrap(item.text, fontSize + "px " + font, contentW - Math.round(10 * scale));
+          for (const w of wrapped) { ctx.fillText(w, margin + Math.round(16 * scale), y); y += lineH; }
+        }
+      }
+      y += Math.round(18 * scale);
+    }
+  }
+  
+  else if (tpl === 5) {
+    // === TEMPLATE 5: EXECUTIVE ===
+    let y = Math.round(55 * scale);
+    const contentW = W - margin * 2;
+    
+    // Name (left-aligned, bold, large)
+    ctx.fillStyle = accent;
+    ctx.font = "bold " + Math.round(26 * scale) + "px " + font;
+    ctx.textAlign = "left";
+    ctx.fillText(cv.name, margin, y);
+    y += Math.round(8 * scale);
+    
+    // Gold/silver accent line (full width, thick)
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = Math.round(3 * scale);
+    ctx.beginPath(); ctx.moveTo(margin, y); ctx.lineTo(W - margin, y); ctx.stroke();
+    y += Math.round(22 * scale);
+    
+    // Position + contact on same line
+    if (cv.position) {
+      ctx.fillStyle = "#333";
+      ctx.font = "bold " + Math.round(13 * scale) + "px " + font;
+      ctx.fillText(cv.position, margin, y);
+      y += Math.round(18 * scale);
+    }
+    if (cv.contact) {
+      ctx.fillStyle = "#666";
+      ctx.font = Math.round(11 * scale) + "px " + font;
+      ctx.fillText(cv.contact, margin, y);
+      y += Math.round(30 * scale);
+    }
+    
+    // Two-column layout: left = profil + skill, right = pengalaman + pendidikan
+    const colW = Math.round((contentW - Math.round(30 * scale)) / 2);
+    const rightX = margin + colW + Math.round(30 * scale);
+    
+    // Left column sections
+    let leftY = y;
+    let rightY = y;
+    
+    for (const sec of cv.sections) {
+      const isLeftCol = sec.header.toUpperCase().includes("PROFIL") || sec.header.toUpperCase().includes("SKILL") || sec.header.toUpperCase().includes("KEAHLIAN");
+      const colX = isLeftCol ? margin : rightX;
+      const colWidth = colW;
+      let cy = isLeftCol ? leftY : rightY;
+      
+      // Section header with left border accent
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = Math.round(3 * scale);
+      ctx.beginPath(); ctx.moveTo(colX, cy - Math.round(14 * scale)); ctx.lineTo(colX, cy); ctx.stroke();
+      
+      ctx.fillStyle = accent;
+      ctx.font = "bold " + Math.round(12 * scale) + "px " + font;
+      ctx.fillText(sec.header.toUpperCase(), colX + Math.round(10 * scale), cy);
+      cy += Math.round(18 * scale);
+      
+      for (const item of sec.items) {
+        if (item.type === "bullet") {
+          ctx.fillStyle = accent;
+          ctx.font = fontSize + "px " + font;
+          ctx.fillText("▸", colX, cy);
+          ctx.fillStyle = "#000";
+          const wrapped = wrap(item.text, fontSize + "px " + font, colWidth - Math.round(16 * scale));
+          for (const w of wrapped) { ctx.fillText(w, colX + Math.round(14 * scale), cy); cy += lineH; }
+        } else if (item.type === "sub") {
+          ctx.fillStyle = "#666";
+          ctx.font = Math.round(11 * scale) + "px " + font;
+          ctx.fillText("  " + item.text, colX + Math.round(14 * scale), cy);
+          cy += lineH;
+        } else {
+          ctx.fillStyle = "#000";
+          ctx.font = fontSize + "px " + font;
+          const wrapped = wrap(item.text, fontSize + "px " + font, colWidth - Math.round(16 * scale));
+          for (const w of wrapped) { ctx.fillText(w, colX + Math.round(14 * scale), cy); cy += lineH; }
+        }
+      }
+      cy += Math.round(20 * scale);
+      
+      if (isLeftCol) leftY = cy;
+      else rightY = cy;
+    }
+  }
+  
+  return await canvas.toBuffer("png");
+}
+
+
 // ─── Render HD image with skia-canvas ───
 async function renderImage(rawText, format, opts, upscale) {
+  // CV Template routing
+  if (format === "cv" && opts.tpl && opts.tpl >= 1 && opts.tpl <= 5) {
+    const cv = parseCVContent(rawText);
+    const scaleMap = { 4: 1.56, 8: 3.12, 16: 6.0 };
+    const scale = scaleMap[upscale] || 1;
+    return await renderCV_PNG(cv, opts.tpl, opts, scale);
+  }
   const fontSet = FONTS[opts.font] || FONTS.helvetica;
   const bodyHex = cssColor(opts.color);
   const titleHex = cssColor(opts.titlecolor ? opts.titlecolor : opts.color);
@@ -562,7 +1078,12 @@ async function handler(m, { sock, config: botConfig }) {
         "Baris - atau * = bullet point\n\n" +
         "Mode:\n" +
         "default = PDF biasa\n" +
-        "cv = PDF template CV (judul center + garis)\n" +
+        "cv = PDF template CV\n" +
+        "  tpl=1 Professional (default)\n" +
+        "  tpl=2 Modern Sidebar\n" +
+        "  tpl=3 Creative Header\n" +
+        "  tpl=4 Minimalist\n" +
+        "  tpl=5 Executive\n" +
         "surat = PDF template surat (judul center)\n" +
         "word = Word .doc format\n" +
         "aicv = AI buat CV otomatis\n" +
@@ -589,7 +1110,8 @@ async function handler(m, { sock, config: botConfig }) {
         prefix + "txttopdf font=times color=navy img=8 cv\n" +
         "Budi Santoso\nSoftware Engineer\n\n" +
         "Contoh AI CV:\n" +
-        prefix + "txttopdf aicv buatkan cv lamaran kerja ke restoran. Nama Andi, pengalaman cafe 2 tahun, skill: masak, pelayanan\n\n" +
+        prefix + "txttopdf aicv buatkan cv lamaran kerja ke restoran. Nama Andi, pengalaman cafe 2 tahun\n" +
+        prefix + "txttopdf tpl=2 aicv buatkan cv lamaran ke kantor. Nama Budi, admin, bisa excel\n\n" +
         "Contoh AI Portofolio:\n" +
         prefix + "txttopdf aiporto buatkan portofolio web developer. Nama Sari, proyek: website company, app laundry\n\n" +
         "Bisa juga reply pesan yg berisi teks",
@@ -701,7 +1223,8 @@ async function handler(m, { sock, config: botConfig }) {
       const pageCount = pdfDoc2.getPageCount();
       const wordCount = content.split(/\s+/).length;
 
-      const formatLabel = (aiGenerated ? "AI Generated " : "") + (format === "cv" ? "CV Template" : format === "surat" ? "Surat Template" : "Standard PDF");
+      const tplName = format === "cv" && opts.tpl ? " (" + (CV_TEMPLATES[opts.tpl] ? CV_TEMPLATES[opts.tpl].name : "Professional") + ")" : "";
+      const formatLabel = (aiGenerated ? "AI Generated " : "") + (format === "cv" ? "CV Template" + tplName : format === "surat" ? "Surat Template" : "Standard PDF");
       const imgLabel = opts.img > 0 ? "\nUpscale: " + opts.img + "x HD image" : "";
 
       await m.react("✅");
