@@ -9,7 +9,7 @@ const pluginConfig = {
     description: 'Toggle notifikasi level up',
     usage: '.levelup <on/off>',
     example: '.levelup on',
-    isOwner: false,
+    isOwner: true,
     isPremium: false,
     isGroup: false,
     isPrivate: false,
