@@ -34,6 +34,15 @@ if (!global.registrationSessions) global.registrationSessions = {};
 
 const SESSION_TIMEOUT = 300000;
 const DEFAULT_REWARDS = { koin: 30000, energi: 300, exp: 300000 };
+
+// Random bonus untuk first-time registration
+function generateRandomBonus() {
+  return {
+    koin: Math.floor(Math.random() * 4) * 10000 + 10000,
+    energi: Math.floor(Math.random() * 4) * 50 + 50,
+    exp: Math.floor(Math.random() * 4) * 100000 + 100000,
+  };
+}
 const REGISTRATION_IMAGE_CANDIDATES = [
   "nova-daftar",
   "nova",
@@ -185,7 +194,7 @@ function buildRewardPreview(user) {
     return `🎁 *Status Bonus*\n> Bonus daftar pertama sudah pernah kamu klaim\n> Daftar ulang tidak mendapat reward lagi`;
   }
 
-  return `🎁 *Bonus Daftar Pertama*\n> 💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n> ⚡ +${rewards.energi} Energi\n> ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP`;
+  return `🎁 *Bonus Daftar Pertama*\n> 💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n> ⚡ +${rewards.energi} Energi\n> ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n> 🎲 Plus random bonus limit/koin/exp!`;
 }
 
 function buildConfirmationRewardBlock(user) {
@@ -198,7 +207,7 @@ function buildConfirmationRewardBlock(user) {
   return `╭┈┈⬡「 🎁 *ʀᴇᴡᴀʀᴅs* 」\n┃ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n┃ ⚡ +${rewards.energi} Energi\n┃ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈⬡`;
 }
 
-function buildSuccessRewardBlock(alreadyClaimedReward) {
+function buildSuccessRewardBlock(alreadyClaimedReward, randomBonus) {
   const rewards = getRegistrationRewards();
 
   if (alreadyClaimedReward) {
@@ -332,10 +341,12 @@ async function handler(m, { sock }) {
         unregisteredAt: null,
       });
 
+      let randomBonus = null;
       if (!alreadyClaimedReward) {
-        db.updateKoin(m.sender, rewards.koin);
-        db.updateEnergi(m.sender, rewards.energi);
-        db.updateExp(m.sender, rewards.exp);
+        randomBonus = generateRandomBonus();
+        db.updateKoin(m.sender, rewards.koin + randomBonus.koin);
+        db.updateEnergi(m.sender, rewards.energi + randomBonus.energi);
+        db.updateExp(m.sender, rewards.exp + randomBonus.exp);
       }
       await db.save();
 
@@ -344,7 +355,7 @@ async function handler(m, { sock }) {
           `🎉 *Pendaftaran Berhasil!*\n\n` +
           `Selamat datang, *${name}*!\n\n` +
           `${buildUserDataBlock(name, age, finalGender || "Tidak disebutkan", serial)}\n\n` +
-          `${buildSuccessRewardBlock(alreadyClaimedReward)}\n\n` +
+          `${buildSuccessRewardBlock(alreadyClaimedReward, randomBonus)}\n\n` +
           `🚀 Sekarang kamu sudah siap menggunakan bot!`,
         contextInfo: getRegistrationContextInfo(),
       }, { quoted: m });
@@ -664,10 +675,12 @@ async function registrationAnswerHandler(m, sock) {
       unregisteredAt: null,
     });
 
+    let randomBonus = null;
     if (!alreadyClaimedReward) {
-      db.updateKoin(m.sender, rewards.koin);
-      db.updateEnergi(m.sender, rewards.energi);
-      db.updateExp(m.sender, rewards.exp);
+      randomBonus = generateRandomBonus();
+      db.updateKoin(m.sender, rewards.koin + randomBonus.koin);
+      db.updateEnergi(m.sender, rewards.energi + randomBonus.energi);
+      db.updateExp(m.sender, rewards.exp + randomBonus.exp);
     }
 
     await db.save();
@@ -680,7 +693,7 @@ async function registrationAnswerHandler(m, sock) {
           `🎉 *ᴘᴇɴᴅᴀꜰᴛᴀʀᴀɴ ʙᴇʀʜᴀsɪʟ!*\n\n` +
           `Selamat datang, *${finalName}*!\n\n` +
           `${buildUserDataBlock(finalName, finalAge, finalGender, serial)}\n\n` +
-          `${buildSuccessRewardBlock(alreadyClaimedReward)}\n\n` +
+          `${buildSuccessRewardBlock(alreadyClaimedReward, randomBonus)}\n\n` +
           `🚀 Sekarang kamu sudah siap menggunakan bot!`,
         contextInfo: getRegistrationContextInfo(),
       },

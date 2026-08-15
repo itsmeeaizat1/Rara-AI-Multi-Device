@@ -34,6 +34,15 @@ if (!global.captchaSessions) global.captchaSessions = {}
 const CAPTCHA_TTL = 180000
 const MAX_ATTEMPTS = 3
 const DEFAULT_REWARDS = { koin: 30000, energi: 300, exp: 300000 }
+
+// Random bonus untuk first-time registration
+function generateRandomBonus() {
+  return {
+    koin: Math.floor(Math.random() * 4) * 10000 + 10000,
+    energi: Math.floor(Math.random() * 4) * 50 + 50,
+    exp: Math.floor(Math.random() * 4) * 100000 + 100000,
+  };
+}
 const CAPTCHA_API_TIMEOUT = 8000
 
 // Daftar API captcha online (dicoba berurutan)
@@ -339,18 +348,26 @@ function buildUserDataBlock(name, age, gender) {
   )
 }
 
-function buildSuccessRewardBlock(alreadyClaimed) {
+function buildSuccessRewardBlock(alreadyClaimed, randomBonus) {
   var rewards = getRewards()
   if (alreadyClaimed) {
-    return "╔┈┈「 \U0001F381 BONUS 」\n╜┈❏ Bonus daftar sudah pernah diklaim\n╜┈❏ Tidak ada reward tambahan\n╚┈┈❖"
+    return "╭┈┈「 \U0001F381 BONUS 」\n╜┈❏ Bonus daftar sudah pernah diklaim\n╜┈❏ Tidak ada reward tambahan\n╚┈┈❕"
   }
-  return (
-    "╔┈┈「 \U0001F381 REWARDS 」\n" +
+  var msg =
+    "╭┈┈「 \U0001F381 REWARDS 」\n" +
     "╜┈❏ \U0001F4B0 +" + rewards.koin.toLocaleString("id-ID") + " Koin\n" +
     "╜┈❏ ⚡ +" + rewards.energi + " Energi\n" +
     "╜┈❏ ⭐ +" + rewards.exp.toLocaleString("id-ID") + " EXP\n" +
-    "╚┈┈❖"
-  )
+    "╚┈┈❕"
+  if (randomBonus) {
+    msg +=
+      "\n╭┈┈「 \U0001F3B2 RANDOM BONUS 」\n" +
+      "╜┈❏ \U0001F4B0 +" + randomBonus.koin.toLocaleString("id-ID") + " Koin\n" +
+      "╜┈❏ ⚡ +" + randomBonus.energi + " Energi\n" +
+      "╜┈❏ ⭐ +" + randomBonus.exp.toLocaleString("id-ID") + " EXP\n" +
+      "╚┈┈❕"
+  }
+  return msg
 }
 
 async function handler(m, { sock }) {
@@ -543,10 +560,12 @@ async function captchaAnswerHandler(m, sock) {
         unregisteredAt: null,
       })
 
+      var randomBonus = null
       if (!alreadyClaimed) {
-        db.updateKoin(m.sender, rewards.koin)
-        db.updateEnergi(m.sender, rewards.energi)
-        db.updateExp(m.sender, rewards.exp)
+        randomBonus = generateRandomBonus()
+        db.updateKoin(m.sender, rewards.koin + randomBonus.koin)
+        db.updateEnergi(m.sender, rewards.energi + randomBonus.energi)
+        db.updateExp(m.sender, rewards.exp + randomBonus.exp)
       }
       await db.save()
       clearCaptchaSession(m.sender)
@@ -554,7 +573,7 @@ async function captchaAnswerHandler(m, sock) {
       await sock.sendMessage(m.chat, {
         text: "\U0001F389 *Pendaftaran Berhasil!*\n\nSelamat datang, *" + session.name + "*!\n\n" +
           buildUserDataBlock(session.name, session.age, session.gender || "Tidak disebutkan", serial) +
-          "\n\n" + buildSuccessRewardBlock(alreadyClaimed) + "\n\n\U0001F680 Sekarang kamu sudah siap menggunakan bot!",
+          "\n\n" + buildSuccessRewardBlock(alreadyClaimed, randomBonus) + "\n\n\U0001F680 Sekarang kamu sudah siap menggunakan bot!",
         contextInfo: getRegistrationContextInfo(),
       }, { quoted: m })
       return true
@@ -634,10 +653,12 @@ async function captchaAnswerHandler(m, sock) {
       unregisteredAt: null,
     })
 
+    var randomBonus = null
     if (!alreadyClaimed) {
-      db.updateKoin(m.sender, rewards.koin)
-      db.updateEnergi(m.sender, rewards.energi)
-      db.updateExp(m.sender, rewards.exp)
+      randomBonus = generateRandomBonus()
+      db.updateKoin(m.sender, rewards.koin + randomBonus.koin)
+      db.updateEnergi(m.sender, rewards.energi + randomBonus.energi)
+      db.updateExp(m.sender, rewards.exp + randomBonus.exp)
     }
     await db.save()
     clearCaptchaSession(m.sender)
@@ -645,7 +666,7 @@ async function captchaAnswerHandler(m, sock) {
     await sock.sendMessage(m.chat, {
       text: "\U0001F389 *Pendaftaran Berhasil!*\n\nSelamat datang, *" + session.name + "*!\n\n" +
         buildUserDataBlock(session.name, session.age, gender, serial) +
-        "\n\n" + buildSuccessRewardBlock(alreadyClaimed) + "\n\n\U0001F680 Sekarang kamu sudah siap menggunakan bot!",
+        "\n\n" + buildSuccessRewardBlock(alreadyClaimed, randomBonus) + "\n\n\U0001F680 Sekarang kamu sudah siap menggunakan bot!",
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
     return true
