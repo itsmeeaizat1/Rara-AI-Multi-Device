@@ -518,12 +518,20 @@ async function messageHandler(msg, sock) {
     }
 
     // === ENERGI NOTIF SETELAH EKSEKUSI ===
-    if (energiDeducted > 0 && !m.isNewsletter) {
+    if (energiCost > 0 && !m.isNewsletter && !m.isOwner) {
       try {
-        await m.reply(
-          `${energiDeducted} limit terpakai\n` +
-          `sisa limit: ${sisaEnergi}`
-        );
+        let notifText;
+        if (isUnlimited || energiDeducted === 0) {
+          // Premium unlimited — tetap kasih notif
+          notifText =
+            `${energiCost} limit terpakai\n` +
+            `sisa limit: ∞ (Premium)`;
+        } else {
+          notifText =
+            `${energiDeducted} limit terpakai\n` +
+            `sisa limit: ${sisaEnergi}`;
+        }
+        await m.reply(notifText);
       } catch {}
     }
   } catch (error) {
