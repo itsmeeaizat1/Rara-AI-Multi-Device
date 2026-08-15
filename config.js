@@ -95,7 +95,7 @@ const config = {
 
   energi: {
     enabled: true, // Jika true, maka sistem energi/limit akan bekerja
-    default: 1000,
+    default: 300,
     premium: 1000,
     owner: -1,
   },
