@@ -1,13 +1,13 @@
 <div align="center">
   <h1>🌟 Nova-Ai WhatsApp Bot MD 🌟</h1>
-  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 3.500+ Command, 1.087 Plugin & 36 Kategori!</b></p>
+  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 1.900+ Command, 1.220 Plugin & 38 Kategori!</b></p>
 </div>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Version-21.2.0-orange?style=flat-square&logo=git&logoColor=white">
-  <img src="https://img.shields.io/badge/Total_Plugin-1087-blue?style=flat-square&logo=fire">
-  <img src="https://img.shields.io/badge/Total_Command-3500%2B-blueviolet?style=flat-square&logo=terminal">
-  <img src="https://img.shields.io/badge/Kategori-36-green?style=flat-square&logo=folder">
+  <img src="https://img.shields.io/badge/Total_Plugin-1220-blue?style=flat-square&logo=fire">
+  <img src="https://img.shields.io/badge/Total_Command-1900%2B-blueviolet?style=flat-square&logo=terminal">
+  <img src="https://img.shields.io/badge/Kategori-38-green?style=flat-square&logo=folder">
   <img src="https://img.shields.io/badge/Node.js-20--22-green?style=flat-square&logo=node.js">
   <img src="https://img.shields.io/badge/Baileys-MultiDevice-blue?style=flat-square&logo=whatsapp">
 </p>
@@ -32,7 +32,7 @@ Auto Sync:
 
 ---
 
-## ✨ Fitur Unggulan v21.1.0
+## ✨ Fitur Unggulan v21.2.0
 
 ### 🤖 AI Integration Automation (AIO)
 Integrasi AI dengan 34 model dari 3 format API berbeda:
@@ -96,7 +96,7 @@ Status: Approved
 * 3x warn system, auto-kick, auto-delete
 * Admin immune, default OFF saat pairing baru
 
-### 🎮 RPG System (112 Modul)
+### 🎮 RPG System (152 Modul)
 * Adventure, hunting, mining
 * Economy, inventory, leveling
 * Crafting, trading, auction
@@ -141,7 +141,7 @@ Status: Approved
 * 10 fitur utama + fitur baru v21
 * Link ke .menu, .owner, .donasi
 
-### 🆕 Fitur Baru v21.1.0
+### 🆕 Fitur Baru v21.2.0
 
 ### 💰 Daily Claim System (V1 + V2)
 * V1: Streak 7 hari, base 200 Gold + 50 Exp
@@ -299,15 +299,115 @@ Fitur RPG eksklusif untuk premium user:
 * Material per tier: Crystal, Essence, Scales, Feathers, Soul Stones
 * Level requirement scaling per evolution tier
 
-## 📊 Statistik Bot v21.1.0
+### 🏢 Office Suite Plugin (8 Plugin)
+Tools produktivitas kantor lengkap:
+* .surat — Generator surat resmi (PKL, domisili, keterangan, lamaran)
+* .notulen — Notula rapat otomatis dengan agenda & decisions
+* .kontrak — Generator kontrak kerja/service dengan template legal
+* .ttd — Digital signature/TTD generator dengan QRIS fallback
+* .kalkulatur — Kalkulator ilmiah + konverter (suhu, mata uang, satuan)
+* .word2pdf — Konversi DOCX/Word ke PDF dengan format preservation
+* .sppd — Surat Perintah Perjalanan Dinas generator
+* .kop — Generator kop surat organisasi/perusahaan
+
+### 🌐 Internet & Web Tools (15 Plugin)
+Tools analisis web & internet:
+* .sslcheck — Cek sertifikat SSL domain
+* .sitedown — Cek apakah website down/online
+* .portscan — Scan port terbuka pada host
+* .subdomain — Enumerasi subdomain dari target
+* .metatag — Ekstrak meta tags dari URL
+* .speedurl — Test kecepatan loading website
+* .doh — DNS over HTTPS lookup
+* .redirect — Trace redirect chain URL
+* .techstack — Deteksi teknologi website (CMS, framework, server)
+* .whoishistory — History WHOIS domain
+* .certcompare — Bandingkan sertifikat SSL 2 domain
+* .domaincheck — Cek ketersediaan & info domain
+* .urldiff — Bandingkan isi 2 URL
+* .robots — Ekstrak & analisis robots.txt
+* .webarchive — Cek snapshot Wayback Machine
+
+### 📊 Sistem Limit Tiered (300/1000/Unlimited)
+Sistem limit harian dengan tier berbeda:
+* Free user: 300 limit/hari
+* Premium user: 1.000 limit/hari
+* Owner: Unlimited
+* Reset otomatis setiap 00:00 WIB
+* Weekend bonus: +300 limit untuk free user
+* .mylimit — Cek sisa limit harian
+* .transferlimit — Transfer limit antar user (5% tax)
+* .topuplimit — Owner top-up limit user
+* Warning notifikasi saat limit < 50
+* Bonus registrasi: fixed + random (coins, energy, exp)
+
+### 🔐 Pairing Password Protection
+Sistem keamanan pairing dengan sandi:
+* Password di file terpisah (src/lib/auth.js) untuk obfuscation aman
+* 3x percobaan, setelah gagal bot exit
+* Rainbow "Nova AI Whatsapp Bot" tampil saat pairing berhasil & gagal
+* Kontak owner ditampilkan setelah 3x gagal
+* Dead man's switch di index.js — bot crash jika auth.js hilang
+
+### 🎯 Utility & Productivity (6 Plugin)
+* .lelang — Sistem lelang dengan anti-snipe logic
+* .langganan — Tracker langganan (Netflix, Spotify, dll)
+* .blacklist — Registry scammer dengan normalisasi nomor
+* .hutang — Tracker hutang/IOU dengan deadline
+* .patungan — Split bill & patungan grup dengan tracking bayar
+* .hafalan — Quran memorization tracker dengan spaced repetition
+* .absenv2 — Absensi canggih dengan RSVP & persistence
+
+### 🛠️ Developer Tools (10 Plugin)
+* .barcode — Generate barcode (CODE128, EAN13, UPC, ITF, dll)
+* .morse — Encode/decode Morse code
+* .biner — Konversi biner/decimal/hexa/oktal
+* .cron — Parser & validator cron expression
+* .textcase — Konversi case (UPPER, lower, Title, camelCase, dll)
+* .diff — Perbandingan teks side-by-side
+* .regextest — Tester regex dengan highlight match
+* .json — Formatter & validator JSON
+* .lorem — Generator lorem ipsum
+* .extracttext — Ekstrak teks dari PDF (standard & AI mode)
+
+### 🎮 Fun Baru (5 Plugin)
+* .roastme — AI roasting (mild/savage/nuclear)
+* .detektifbohong — AI deteksi kebohongan
+* .tebakbakat — Tebak bakat berbasis MBTI
+* .yesno — Decision maker magic 8-ball
+* .pohon — Generator pohon kehidupan ASCII
+
+### 📄 Document Generation (.txttopdf)
+PDF/PNG generation suite dengan AI:
+* 5 template CV profesional (tpl=1-5)
+* AI CV Generator (.txttopdf aicv [context])
+* AI Portfolio Generator (.txttopdf aiporto [context])
+* Custom font (times, helvetica, courier)
+* Custom color accent (navy, crimson, hex code)
+* HD rendering up to 600dpi (img=16)
+* Output: document (default) atau gambar
+* ZIP export untuk multi-file
+
+### 🎨 Stiker Kreatif (2 Plugin)
+* .stikerframe — 12 jenis bingkai (polaroid, neon, vintage, heart, dll)
+* .stikergrid — Kolase 2-4 foto jadi 1 stiker grid
+
+### 🤖 AI & Info Terbaru
+* .nutrisi — AI kalori & nutrition scanner (Gemini Vision)
+* .berita — AI news summarizer dengan Google Search grounding
+* .channelnovaofficial — Info saluran WA resmi dengan CTA button
+
+## 📊 Statistik Bot v21.2.0
 
 | Metric | Count |
 |--------|-------|
-| Total Plugin | 1.087 |
-| Total Command | 3.500+ |
-| Kategori | 36 |
-| RPG Module | 118 |
+| Total Plugin | 1.220 |
+| Total Command | 1.900+ |
+| Kategori | 38 |
+| RPG Module | 152 |
 | AI Model | 34 |
+| Tools Plugin | 149 |
+| Watermarked | 1.220 (100%) |
 | Moderasi Plugin | 5 |
 | Menu Variasi | 6 |
 | Nav Button Plugin | 1.019 |
@@ -321,7 +421,7 @@ Fitur RPG eksklusif untuk premium user:
 
 ## 💻 Spesifikasi Panel/Server
 
-Bot ini butuh resource yang cukup karena 1.087 plugin dan 3.500+ command. Berikut spek minimum dan rekomendasi:
+Bot ini butuh resource yang cukup karena 1.220 plugin dan 1.900+ command. Berikut spek minimum dan rekomendasi:
 
 ### Minimum (1-3 jadibot session)
 
