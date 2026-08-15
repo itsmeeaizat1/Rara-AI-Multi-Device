@@ -313,6 +313,7 @@ async function startConnection(options = {}) {
         authorized = true;
         console.log("");
         colors.logger.success("pairing", "Sandi benar, melanjutkan pairing...");
+        console.log(getOwnerContact());
         console.log("");
         break;
       }
