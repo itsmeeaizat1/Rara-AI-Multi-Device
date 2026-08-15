@@ -415,7 +415,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
 
     await m.react("🕐");
-    await m.reply(claraWrap("AI Anchor", `_Generating berita: ${topic}_"));
+    await m.reply(claraWrap("AI Anchor", "Generating berita: " + topic));
 
     try {
       const content = await generateNewsContent(topic, sock);
