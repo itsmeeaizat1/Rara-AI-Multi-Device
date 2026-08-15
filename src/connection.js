@@ -24,6 +24,7 @@ import {
 } from "./lib/nova-lid.js";
 import { initAutoBackup } from "./lib/nova-auto-backup.js";
 import { getAuthKey, verifyAuth, getOwnerContact } from "./lib/auth.js";
+import { trackMessage as pulseTrack } from "../plugins/future/autopulse.js";
 const groupCache = new NodeCache({ stdTTL: 5 * 60, useClones: false });
 const processedMessages = new NodeCache({ stdTTL: 30, useClones: false });
 const msgRetryCounterCache = new NodeCache({ stdTTL: 60, useClones: false });
@@ -858,6 +859,13 @@ async function startConnection(options = {}) {
       if (msgAge > 5 * 60 * 1000) {
         continue;
       }
+      // === AutoPulse: Track group activity ===
+      try {
+        if (groupJid && groupJid.endsWith("@g.us")) {
+          const _sender = msg.key?.participant || msg.key?.remoteJid || "";
+          const _pdb = (await import("./lib/nova-database.js")).getDatabase(); pulseTrack(_pdb, groupJid, _sender, Date.now());
+        }
+      } catch {}
 
       const metadataKeys = [
         "senderKeyDistributionMessage",
