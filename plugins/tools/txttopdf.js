@@ -283,7 +283,9 @@ function parseCVContent(rawText) {
         // Continuation/description line after a bullet (or standalone paragraph) —
         // always render as plain text, never the gray ">" sub-style, so multi-line
         // descriptions stay visually consistent line to line.
-        currentSection.items.push({ type: "text", text: line });
+        // Also strip any ">" prefix the AI might add (markdown quote syntax).
+        const cleanText = line.replace(/^>+\s*/, "");
+        currentSection.items.push({ type: "text", text: cleanText });
       }
     }
   }
@@ -427,11 +429,6 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
           ctx.font = fontSize + "px " + font;
           const wrapped = wrap(item.text, fontSize + "px " + font, contentW - Math.round(20 * scale));
           for (const w of wrapped) { ctx.fillText(w, margin + Math.round(14 * scale), y); y += lineH; }
-        } else if (item.type === "sub") {
-          ctx.fillStyle = "#555";
-          ctx.font = Math.round(11 * scale) + "px " + font;
-          const subW1 = wrap("• " + item.text, Math.round(11 * scale) + "px " + font, contentW - Math.round(14 * scale));
-          for (const w of subW1) { ctx.fillText(w, margin + Math.round(14 * scale), y); y += lineH; }
         } else {
           ctx.fillStyle = "#000";
           ctx.font = fontSize + "px " + font;
@@ -536,11 +533,6 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
           ctx.font = fontSize + "px " + font;
           const wrapped = wrap(item.text, fontSize + "px " + font, mainW - Math.round(20 * scale));
           for (const w of wrapped) { ctx.fillText(w, mainX + Math.round(14 * scale), my); my += lineH; }
-        } else if (item.type === "sub") {
-          ctx.fillStyle = "#555";
-          ctx.font = Math.round(11 * scale) + "px " + font;
-          const subW2 = wrap("• " + item.text, Math.round(11 * scale) + "px " + font, mainW - Math.round(14 * scale));
-          for (const w of subW2) { ctx.fillText(w, mainX + Math.round(14 * scale), my); my += lineH; }
         } else {
           ctx.fillStyle = "#000";
           ctx.font = fontSize + "px " + font;
@@ -613,11 +605,6 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
           ctx.font = fontSize + "px " + font;
           const wrapped = wrap(item.text, fontSize + "px " + font, contentW - Math.round(20 * scale));
           for (const w of wrapped) { ctx.fillText(w, margin + Math.round(14 * scale), y); y += lineH; }
-        } else if (item.type === "sub") {
-          ctx.fillStyle = "#666";
-          ctx.font = Math.round(11 * scale) + "px " + font;
-          const subWrapped = wrap("> " + item.text, Math.round(11 * scale) + "px " + font, contentW - Math.round(20 * scale));
-          for (const w of subWrapped) { ctx.fillText(w, margin + Math.round(14 * scale), y); y += lineH; }
         } else {
           ctx.fillStyle = "#000";
           ctx.font = fontSize + "px " + font;
@@ -680,11 +667,6 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
           ctx.fillStyle = "#333";
           const wrapped = wrap(item.text, fontSize + "px " + font, contentW - Math.round(20 * scale));
           for (const w of wrapped) { ctx.fillText(w, margin + Math.round(16 * scale), y); y += lineH; }
-        } else if (item.type === "sub") {
-          ctx.fillStyle = "#777";
-          ctx.font = Math.round(11 * scale) + "px " + font;
-          ctx.fillText(item.text, margin + Math.round(16 * scale), y);
-          y += lineH;
         } else {
           ctx.fillStyle = "#333";
           ctx.font = fontSize + "px " + font;
@@ -762,11 +744,6 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
           ctx.fillStyle = "#000";
           const wrapped = wrap(item.text, fontSize + "px " + font, colWidth - Math.round(16 * scale));
           for (const w of wrapped) { ctx.fillText(w, colX + Math.round(14 * scale), cy); cy += lineH; }
-        } else if (item.type === "sub") {
-          ctx.fillStyle = "#666";
-          ctx.font = Math.round(11 * scale) + "px " + font;
-          ctx.fillText("  " + item.text, colX + Math.round(14 * scale), cy);
-          cy += lineH;
         } else {
           ctx.fillStyle = "#000";
           ctx.font = fontSize + "px " + font;
@@ -872,9 +849,6 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
           page.drawCircle({ x: MARGIN + 3, y: y - 2, size: 1.5, color: rgb(accent[0], accent[1], accent[2]) });
           let res = drawWrapped(page, item.text, MARGIN + 12, y, bodySize, font, black, contentW - 12);
           page = res.page; y = res.y;
-        } else if (item.type === "sub") {
-          let res = drawWrapped(page, "• " + item.text, MARGIN + 12, y, bodySize - 1, font, grayLight, contentW - 12);
-          page = res.page; y = res.y;
         } else {
           let res = drawWrapped(page, item.text, MARGIN + 12, y, bodySize, font, black, contentW - 12);
           page = res.page; y = res.y;
@@ -954,11 +928,6 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
           page = res.page; 
           if (res.page !== page) { page = res.page; page.drawRectangle({ x: 0, y: 0, width: sideW, height: PAGE_H, color: rgb(accent[0], accent[1], accent[2]) }); }
           my = res.y;
-        } else if (item.type === "sub") {
-          let res = drawWrapped(page, "• " + item.text, mainX + 12, my, bodySize - 1, font, grayLight, mainW - 12);
-          page = res.page;
-          if (res.page !== page) { page = res.page; page.drawRectangle({ x: 0, y: 0, width: sideW, height: PAGE_H, color: rgb(accent[0], accent[1], accent[2]) }); }
-          my = res.y;
         } else {
           let res = drawWrapped(page, item.text, mainX + 12, my, bodySize, font, black, mainW - 12);
           page = res.page;
@@ -1008,9 +977,6 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
           page.drawSquare({ x: MARGIN, y: y - 8, size: 4, color: rgb(accent[0], accent[1], accent[2]) });
           let res = drawWrapped(page, item.text, MARGIN + 12, y, bodySize, font, black, MAX_W - 12);
           page = res.page; y = res.y;
-        } else if (item.type === "sub") {
-          let res = drawWrapped(page, "> " + item.text, MARGIN + 12, y, bodySize - 1, font, grayLight, MAX_W - 12);
-          page = res.page; y = res.y;
         } else {
           let res = drawWrapped(page, item.text, MARGIN + 12, y, bodySize, font, black, MAX_W - 12);
           page = res.page; y = res.y;
@@ -1053,9 +1019,6 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
         if (item.type === "bullet") {
           page.drawText("—", { x: MARGIN, y, size: bodySize, font, color: rgb(0.6, 0.6, 0.6) });
           let res = drawWrapped(page, item.text, MARGIN + 14, y, bodySize, font, [0.2, 0.2, 0.2], MAX_W - 14);
-          page = res.page; y = res.y;
-        } else if (item.type === "sub") {
-          let res = drawWrapped(page, item.text, MARGIN + 14, y, bodySize - 1, font, grayLight, MAX_W - 14);
           page = res.page; y = res.y;
         } else {
           let res = drawWrapped(page, item.text, MARGIN + 14, y, bodySize, font, [0.2, 0.2, 0.2], MAX_W - 14);
@@ -1110,9 +1073,6 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
         if (item.type === "bullet") {
           page.drawText(">", { x: colX, y: cy, size: bodySize, font, color: rgb(accent[0], accent[1], accent[2]) });
           let res = drawWrapped(page, item.text, colX + 12, cy, bodySize, font, black, colW - 12);
-          page = res.page; cy = res.y;
-        } else if (item.type === "sub") {
-          let res = drawWrapped(page, "  " + item.text, colX + 12, cy, bodySize - 1, font, grayLight, colW - 12);
           page = res.page; cy = res.y;
         } else {
           let res = drawWrapped(page, item.text, colX + 12, cy, bodySize, font, black, colW - 12);
