@@ -379,24 +379,34 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
     let y = Math.round(60 * scale);
     const contentW = W - margin * 2;
     
-    // Name
+    // Name (wrapped if too long)
     ctx.fillStyle = accent;
     ctx.font = "bold " + nameSize + "px " + font;
     ctx.textAlign = "center";
-    ctx.fillText(cv.name, W / 2, y);
-    const nameW = ctx.measureText(cv.name).width;
-    y += Math.round(6 * scale);
+    const nameLines1 = wrap(cv.name, "bold " + nameSize + "px " + font, contentW);
+    let lastNameW1 = 0;
+    for (const nl of nameLines1) { ctx.fillText(nl, W / 2, y); lastNameW1 = ctx.measureText(nl).width; y += Math.round(nameSize * 1.15); }
+    y -= Math.round(nameSize * 1.15) - Math.round(6 * scale);
     ctx.strokeStyle = accent;
     ctx.lineWidth = Math.round(2 * scale);
     ctx.beginPath();
-    ctx.moveTo(W / 2 - nameW / 2, y);
-    ctx.lineTo(W / 2 + nameW / 2, y);
+    ctx.moveTo(W / 2 - lastNameW1 / 2, y);
+    ctx.lineTo(W / 2 + lastNameW1 / 2, y);
     ctx.stroke();
     y += Math.round(24 * scale);
     
-    // Position + contact
-    if (cv.position) { ctx.fillStyle = "#333"; ctx.font = fontSize + "px " + font; ctx.fillText(cv.position, W / 2, y); y += Math.round(18 * scale); }
-    if (cv.contact) { ctx.fillStyle = "#555"; ctx.font = Math.round(11 * scale) + "px " + font; ctx.fillText(cv.contact, W / 2, y); y += Math.round(28 * scale); }
+    // Position + contact (wrapped if too long)
+    if (cv.position) {
+      ctx.fillStyle = "#333"; ctx.font = fontSize + "px " + font;
+      const posLines1 = wrap(cv.position, fontSize + "px " + font, contentW);
+      for (const pl of posLines1) { ctx.fillText(pl, W / 2, y); y += Math.round(18 * scale); }
+    }
+    if (cv.contact) {
+      ctx.fillStyle = "#555"; ctx.font = Math.round(11 * scale) + "px " + font;
+      const conLines1 = wrap(cv.contact, Math.round(11 * scale) + "px " + font, contentW);
+      for (const cl of conLines1) { ctx.fillText(cl, W / 2, y); y += Math.round(16 * scale); }
+      y += Math.round(12 * scale);
+    }
     
     // Sections
     ctx.textAlign = "left";
@@ -457,12 +467,13 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
     for (const np of nameParts) { ctx.fillText(np, sideMargin, sy); sy += Math.round(24 * scale); }
     sy += Math.round(8 * scale);
     
-    // Position
+    // Position (wrapped)
     if (cv.position) {
       ctx.fillStyle = accentLightHex;
       ctx.font = Math.round(12 * scale) + "px " + font;
-      ctx.fillText(cv.position, sideMargin, sy);
-      sy += Math.round(30 * scale);
+      const posLines2 = wrap(cv.position, Math.round(12 * scale) + "px " + font, sideW - sideMargin * 2);
+      for (const pl of posLines2) { ctx.fillText(pl, sideMargin, sy); sy += Math.round(16 * scale); }
+      sy += Math.round(14 * scale);
     }
     
     // Contact
@@ -496,8 +507,9 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
       ctx.font = Math.round(10 * scale) + "px " + font;
       for (const item of skillSec.items) {
         if (item.type === "bullet") {
-          ctx.fillText("• " + item.text, sideMargin, sy);
-          sy += Math.round(16 * scale);
+          const skillWrapped = wrap("• " + item.text, Math.round(10 * scale) + "px " + font, sideW - sideMargin * 2);
+          for (const w of skillWrapped) { ctx.fillText(w, sideMargin, sy); sy += Math.round(14 * scale); }
+          sy += Math.round(3 * scale);
         }
       }
     }
@@ -552,24 +564,30 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
     ctx.fillStyle = accent;
     ctx.fillRect(0, 0, W, headerH);
     
-    // Name in header
+    // Name in header (wrapped)
     ctx.fillStyle = "#fff";
     ctx.font = "bold " + nameSize + "px " + font;
     ctx.textAlign = "center";
-    ctx.fillText(cv.name, W / 2, Math.round(55 * scale));
+    const headerContentW = W - margin * 2;
+    let hny = Math.round(55 * scale);
+    const nameLines3 = wrap(cv.name, "bold " + nameSize + "px " + font, headerContentW);
+    for (const nl of nameLines3) { ctx.fillText(nl, W / 2, hny); hny += Math.round(nameSize * 1.1); }
+    hny += Math.round(6 * scale);
     
-    // Position
+    // Position (wrapped)
     if (cv.position) {
       ctx.fillStyle = "rgba(255,255,255,0.85)";
       ctx.font = Math.round(13 * scale) + "px " + font;
-      ctx.fillText(cv.position, W / 2, Math.round(85 * scale));
+      const posLines3 = wrap(cv.position, Math.round(13 * scale) + "px " + font, headerContentW);
+      for (const pl of posLines3) { ctx.fillText(pl, W / 2, hny); hny += Math.round(17 * scale); }
     }
     
-    // Contact
+    // Contact (wrapped)
     if (cv.contact) {
       ctx.fillStyle = "rgba(255,255,255,0.7)";
       ctx.font = Math.round(11 * scale) + "px " + font;
-      ctx.fillText(cv.contact, W / 2, Math.round(108 * scale));
+      const conLines3 = wrap(cv.contact, Math.round(11 * scale) + "px " + font, headerContentW);
+      for (const cl of conLines3) { ctx.fillText(cl, W / 2, hny); hny += Math.round(15 * scale); }
     }
     
     // Body
@@ -619,27 +637,29 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
     let y = Math.round(70 * scale);
     const contentW = W - margin * 2;
     
-    // Name (left-aligned, bold, no underline)
+    // Name (left-aligned, bold, no underline, wrapped)
     ctx.fillStyle = "#1a1a1a";
     ctx.font = "bold " + Math.round(22 * scale) + "px " + font;
     ctx.textAlign = "left";
-    ctx.fillText(cv.name, margin, y);
-    y += Math.round(28 * scale);
+    const nameLines4 = wrap(cv.name, "bold " + Math.round(22 * scale) + "px " + font, contentW);
+    for (const nl of nameLines4) { ctx.fillText(nl, margin, y); y += Math.round(26 * scale); }
+    y += Math.round(2 * scale);
     
-    // Position
+    // Position (wrapped)
     if (cv.position) {
       ctx.fillStyle = "#555";
       ctx.font = Math.round(13 * scale) + "px " + font;
-      ctx.fillText(cv.position, margin, y);
-      y += Math.round(18 * scale);
+      const posLines4 = wrap(cv.position, Math.round(13 * scale) + "px " + font, contentW);
+      for (const pl of posLines4) { ctx.fillText(pl, margin, y); y += Math.round(17 * scale); }
     }
     
-    // Contact
+    // Contact (wrapped)
     if (cv.contact) {
       ctx.fillStyle = "#888";
       ctx.font = Math.round(11 * scale) + "px " + font;
-      ctx.fillText(cv.contact, margin, y);
-      y += Math.round(24 * scale);
+      const conLines4 = wrap(cv.contact, Math.round(11 * scale) + "px " + font, contentW);
+      for (const cl of conLines4) { ctx.fillText(cl, margin, y); y += Math.round(15 * scale); }
+      y += Math.round(9 * scale);
     }
     
     // Thin separator
@@ -684,12 +704,13 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
     let y = Math.round(55 * scale);
     const contentW = W - margin * 2;
     
-    // Name (left-aligned, bold, large)
+    // Name (left-aligned, bold, large, wrapped)
     ctx.fillStyle = accent;
     ctx.font = "bold " + Math.round(26 * scale) + "px " + font;
     ctx.textAlign = "left";
-    ctx.fillText(cv.name, margin, y);
-    y += Math.round(8 * scale);
+    const nameLines5 = wrap(cv.name, "bold " + Math.round(26 * scale) + "px " + font, contentW);
+    for (const nl of nameLines5) { ctx.fillText(nl, margin, y); y += Math.round(30 * scale); }
+    y -= Math.round(30 * scale) - Math.round(8 * scale);
     
     // Gold/silver accent line (full width, thick)
     ctx.strokeStyle = accent;
@@ -697,18 +718,19 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
     ctx.beginPath(); ctx.moveTo(margin, y); ctx.lineTo(W - margin, y); ctx.stroke();
     y += Math.round(22 * scale);
     
-    // Position + contact on same line
+    // Position + contact (wrapped)
     if (cv.position) {
       ctx.fillStyle = "#333";
       ctx.font = "bold " + Math.round(13 * scale) + "px " + font;
-      ctx.fillText(cv.position, margin, y);
-      y += Math.round(18 * scale);
+      const posLines5 = wrap(cv.position, "bold " + Math.round(13 * scale) + "px " + font, contentW);
+      for (const pl of posLines5) { ctx.fillText(pl, margin, y); y += Math.round(17 * scale); }
     }
     if (cv.contact) {
       ctx.fillStyle = "#666";
       ctx.font = Math.round(11 * scale) + "px " + font;
-      ctx.fillText(cv.contact, margin, y);
-      y += Math.round(30 * scale);
+      const conLines5 = wrap(cv.contact, Math.round(11 * scale) + "px " + font, contentW);
+      for (const cl of conLines5) { ctx.fillText(cl, margin, y); y += Math.round(15 * scale); }
+      y += Math.round(15 * scale);
     }
     
     // Two-column layout: left = profil + skill, right = pengalaman + pendidikan
@@ -818,17 +840,28 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
     let y = PAGE_H - MARGIN;
     const contentW = MAX_W;
     
-    // Name centered + underline
+    // Name centered + underline (wrapped if too long)
     if (cv.name) {
-      const tw = boldFont.widthOfTextAtSize(cv.name, nameSize);
-      const x = (PAGE_W - tw) / 2;
-      page.drawText(cv.name, { x, y, size: nameSize, font: boldFont, color: rgb(accent[0], accent[1], accent[2]) });
-      y -= nameSize + 4;
-      page.drawLine({ start: { x, y: y + 2 }, end: { x: x + tw, y: y + 2 }, thickness: 1.5, color: rgb(accent[0], accent[1], accent[2]) });
+      const nameLinesP1 = wrapText(cv.name, boldFont, nameSize, contentW);
+      let lastTw1 = 0;
+      for (const nl of nameLinesP1) {
+        const tw = boldFont.widthOfTextAtSize(nl, nameSize);
+        page.drawText(nl, { x: (PAGE_W - tw) / 2, y, size: nameSize, font: boldFont, color: rgb(accent[0], accent[1], accent[2]) });
+        lastTw1 = tw; y -= nameSize + 2;
+      }
+      y += 2;
+      page.drawLine({ start: { x: (PAGE_W - lastTw1) / 2, y: y + 2 }, end: { x: (PAGE_W + lastTw1) / 2, y: y + 2 }, thickness: 1.5, color: rgb(accent[0], accent[1], accent[2]) });
       y -= 18;
     }
-    if (cv.position) { const tw = font.widthOfTextAtSize(cv.position, bodySize); page.drawText(cv.position, { x: (PAGE_W - tw) / 2, y, size: bodySize, font, color: rgb(gray[0], gray[1], gray[2]) }); y -= 16; }
-    if (cv.contact) { const tw = font.widthOfTextAtSize(cv.contact, bodySize - 1); page.drawText(cv.contact, { x: (PAGE_W - tw) / 2, y, size: bodySize - 1, font, color: rgb(grayLight[0], grayLight[1], grayLight[2]) }); y -= 25; }
+    if (cv.position) {
+      const posLinesP1 = wrapText(cv.position, font, bodySize, contentW);
+      for (const pl of posLinesP1) { const tw = font.widthOfTextAtSize(pl, bodySize); page.drawText(pl, { x: (PAGE_W - tw) / 2, y, size: bodySize, font, color: rgb(gray[0], gray[1], gray[2]) }); y -= 15; }
+    }
+    if (cv.contact) {
+      const conLinesP1 = wrapText(cv.contact, font, bodySize - 1, contentW);
+      for (const cl of conLinesP1) { const tw = font.widthOfTextAtSize(cl, bodySize - 1); page.drawText(cl, { x: (PAGE_W - tw) / 2, y, size: bodySize - 1, font, color: rgb(grayLight[0], grayLight[1], grayLight[2]) }); y -= 14; }
+      y -= 11;
+    }
     
     for (const sec of cv.sections) {
       page.drawText(sec.header.toUpperCase(), { x: MARGIN, y, size: headerSize, font: boldFont, color: rgb(accent[0], accent[1], accent[2]) });
@@ -869,12 +902,14 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
     
     // Name
     if (cv.name) {
-      page.drawText(cv.name, { x: sideMargin, y: sy, size: 14, font: boldFont, color: rgb(1, 1, 1) });
-      sy -= 20;
+      const nameLinesP2 = wrapText(cv.name, boldFont, 14, sideW - sideMargin * 2);
+      for (const nl of nameLinesP2) { page.drawText(nl, { x: sideMargin, y: sy, size: 14, font: boldFont, color: rgb(1, 1, 1) }); sy -= 17; }
+      sy -= 3;
     }
     if (cv.position) {
-      page.drawText(cv.position, { x: sideMargin, y: sy, size: 9, font, color: rgb(accentLight[0], accentLight[1], accentLight[2]) });
-      sy -= 25;
+      const posLinesP2 = wrapText(cv.position, font, 9, sideW - sideMargin * 2);
+      for (const pl of posLinesP2) { page.drawText(pl, { x: sideMargin, y: sy, size: 9, font, color: rgb(accentLight[0], accentLight[1], accentLight[2]) }); sy -= 12; }
+      sy -= 13;
     }
     
     // Contact
@@ -947,9 +982,20 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
     page.drawRectangle({ x: 0, y: PAGE_H - headerH, width: PAGE_W, height: headerH, color: rgb(accent[0], accent[1], accent[2]) });
     
     let hy = PAGE_H - 35;
-    if (cv.name) { const tw = boldFont.widthOfTextAtSize(cv.name, nameSize); page.drawText(cv.name, { x: (PAGE_W - tw) / 2, y: hy, size: nameSize, font: boldFont, color: rgb(1, 1, 1) }); hy -= 22; }
-    if (cv.position) { const tw = font.widthOfTextAtSize(cv.position, bodySize); page.drawText(cv.position, { x: (PAGE_W - tw) / 2, y: hy, size: bodySize, font, color: rgb(0.9, 0.9, 0.9) }); hy -= 15; }
-    if (cv.contact) { const tw = font.widthOfTextAtSize(cv.contact, bodySize - 1); page.drawText(cv.contact, { x: (PAGE_W - tw) / 2, y: hy, size: bodySize - 1, font, color: rgb(0.8, 0.8, 0.8) }); }
+    const headerContentWP3 = PAGE_W - MARGIN * 2;
+    if (cv.name) {
+      const nameLinesP3 = wrapText(cv.name, boldFont, nameSize, headerContentWP3);
+      for (const nl of nameLinesP3) { const tw = boldFont.widthOfTextAtSize(nl, nameSize); page.drawText(nl, { x: (PAGE_W - tw) / 2, y: hy, size: nameSize, font: boldFont, color: rgb(1, 1, 1) }); hy -= 20; }
+      hy -= 2;
+    }
+    if (cv.position) {
+      const posLinesP3 = wrapText(cv.position, font, bodySize, headerContentWP3);
+      for (const pl of posLinesP3) { const tw = font.widthOfTextAtSize(pl, bodySize); page.drawText(pl, { x: (PAGE_W - tw) / 2, y: hy, size: bodySize, font, color: rgb(0.9, 0.9, 0.9) }); hy -= 14; }
+    }
+    if (cv.contact) {
+      const conLinesP3 = wrapText(cv.contact, font, bodySize - 1, headerContentWP3);
+      for (const cl of conLinesP3) { const tw = font.widthOfTextAtSize(cl, bodySize - 1); page.drawText(cl, { x: (PAGE_W - tw) / 2, y: hy, size: bodySize - 1, font, color: rgb(0.8, 0.8, 0.8) }); hy -= 13; }
+    }
     
     let y = PAGE_H - headerH - 25;
     for (const sec of cv.sections) {
@@ -983,9 +1029,20 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
     let y = PAGE_H - MARGIN;
     
     // Name left-aligned
-    if (cv.name) { page.drawText(cv.name, { x: MARGIN, y, size: 18, font: boldFont, color: rgb(0.1, 0.1, 0.1) }); y -= 24; }
-    if (cv.position) { page.drawText(cv.position, { x: MARGIN, y, size: bodySize, font, color: rgb(0.4, 0.4, 0.4) }); y -= 15; }
-    if (cv.contact) { page.drawText(cv.contact, { x: MARGIN, y, size: bodySize - 1, font, color: rgb(0.5, 0.5, 0.5) }); y -= 20; }
+    if (cv.name) {
+      const nameLinesP4 = wrapText(cv.name, boldFont, 18, MAX_W);
+      for (const nl of nameLinesP4) { page.drawText(nl, { x: MARGIN, y, size: 18, font: boldFont, color: rgb(0.1, 0.1, 0.1) }); y -= 22; }
+      y -= 2;
+    }
+    if (cv.position) {
+      const posLinesP4 = wrapText(cv.position, font, bodySize, MAX_W);
+      for (const pl of posLinesP4) { page.drawText(pl, { x: MARGIN, y, size: bodySize, font, color: rgb(0.4, 0.4, 0.4) }); y -= 14; }
+    }
+    if (cv.contact) {
+      const conLinesP4 = wrapText(cv.contact, font, bodySize - 1, MAX_W);
+      for (const cl of conLinesP4) { page.drawText(cl, { x: MARGIN, y, size: bodySize - 1, font, color: rgb(0.5, 0.5, 0.5) }); y -= 13; }
+      y -= 7;
+    }
     
     // Thin separator
     page.drawLine({ start: { x: MARGIN, y }, end: { x: PAGE_W - MARGIN, y }, thickness: 0.5, color: rgb(0.85, 0.85, 0.85) });
@@ -1018,12 +1075,23 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
     let y = PAGE_H - MARGIN;
     
     // Name left-aligned bold
-    if (cv.name) { page.drawText(cv.name, { x: MARGIN, y, size: 22, font: boldFont, color: rgb(accent[0], accent[1], accent[2]) }); y -= 6; }
+    if (cv.name) {
+      const nameLinesP5 = wrapText(cv.name, boldFont, 22, MAX_W);
+      for (const nl of nameLinesP5) { page.drawText(nl, { x: MARGIN, y, size: 22, font: boldFont, color: rgb(accent[0], accent[1], accent[2]) }); y -= 24; }
+      y += 18;
+    }
     // Thick accent line
     page.drawLine({ start: { x: MARGIN, y }, end: { x: PAGE_W - MARGIN, y }, thickness: 2.5, color: rgb(accent[0], accent[1], accent[2]) });
     y -= 20;
-    if (cv.position) { page.drawText(cv.position, { x: MARGIN, y, size: bodySize, font: boldFont, color: rgb(0.2, 0.2, 0.2) }); y -= 16; }
-    if (cv.contact) { page.drawText(cv.contact, { x: MARGIN, y, size: bodySize - 1, font, color: rgb(0.4, 0.4, 0.4) }); y -= 28; }
+    if (cv.position) {
+      const posLinesP5 = wrapText(cv.position, boldFont, bodySize, MAX_W);
+      for (const pl of posLinesP5) { page.drawText(pl, { x: MARGIN, y, size: bodySize, font: boldFont, color: rgb(0.2, 0.2, 0.2) }); y -= 14; }
+    }
+    if (cv.contact) {
+      const conLinesP5 = wrapText(cv.contact, font, bodySize - 1, MAX_W);
+      for (const cl of conLinesP5) { page.drawText(cl, { x: MARGIN, y, size: bodySize - 1, font, color: rgb(0.4, 0.4, 0.4) }); y -= 13; }
+      y -= 15;
+    }
     
     // Two-column layout
     const colW = (MAX_W - 25) / 2;
