@@ -295,21 +295,22 @@ function parseCVContent(rawText) {
 
 // === TEMPLATE COLOR SCHEMES ===
 const CV_TEMPLATES = {
-  1: { name: "Professional", accent: "#000080", light: "#000050", bg: null },
-  2: { name: "Modern Sidebar", accent: "#1a5276", light: "#d4e6f1", bg: "#1a5276" },
-  3: { name: "Creative Header", accent: "#8e44ad", light: "#f5eef8", bg: null },
-  4: { name: "Minimalist", accent: "#333333", light: "#666666", bg: null },
-  5: { name: "Executive", accent: "#1c3d3a", light: "#c0c0c0", bg: null },
+  1: { name: "Professional", accent: "#000000", light: "#333333", bg: null },
+  2: { name: "Modern Sidebar", accent: "#1a7a4c", light: "#d4f0e0", bg: "#1a7a4c" },
+  3: { name: "Creative Header", accent: "#2e8b57", light: "#e8f5ee", bg: null },
+  4: { name: "Minimalist", accent: "#1a1a1a", light: "#555555", bg: null },
+  5: { name: "Executive", accent: "#0d5c3a", light: "#c0c0c0", bg: null },
 };
 
 // === PNG TEMPLATE RENDERERS ===
 async function renderCV_PNG(cv, tpl, opts, scale) {
   const scheme = CV_TEMPLATES[tpl] || CV_TEMPLATES[1];
   // Use user custom color as accent if provided (not default black)
-  const accent = (opts.color && opts.color !== "black") ? cssColor(opts.color) : scheme.accent;
+  // Professional template (tpl=1): always use black for all text — standard professional CV
+  const accent = (tpl === 1) ? "#000000" : ((opts.color && opts.color !== "black") ? cssColor(opts.color) : scheme.accent);
   // Auto-generate light variant from accent
   const accentLightHex = (() => {
-    const rgb = parseColor(opts.color && opts.color !== "black" ? opts.color : scheme.accent);
+    const rgb = parseColor(tpl === 1 ? "#000000" : (opts.color && opts.color !== "black" ? opts.color : scheme.accent));
     if (!rgb) return scheme.light;
     // Mix accent with 80% white for a very light tint (better contrast with accent text)
     const mix = (c) => Math.min(255, Math.round(c*255 * 0.2 + 255 * 0.8));
@@ -394,14 +395,14 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
     ctx.stroke();
     y += Math.round(24 * scale);
     
-    // Position + contact (wrapped if too long)
+    // Position + contact (wrapped, all black for professional)
     if (cv.position) {
-      ctx.fillStyle = "#333"; ctx.font = fontSize + "px " + font;
+      ctx.fillStyle = "#000"; ctx.font = fontSize + "px " + font;
       const posLines1 = wrap(cv.position, fontSize + "px " + font, contentW);
       for (const pl of posLines1) { ctx.fillText(pl, W / 2, y); y += Math.round(18 * scale); }
     }
     if (cv.contact) {
-      ctx.fillStyle = "#555"; ctx.font = Math.round(11 * scale) + "px " + font;
+      ctx.fillStyle = "#000"; ctx.font = Math.round(11 * scale) + "px " + font;
       const conLines1 = wrap(cv.contact, Math.round(11 * scale) + "px " + font, contentW);
       for (const cl of conLines1) { ctx.fillText(cl, W / 2, y); y += Math.round(16 * scale); }
       y += Math.round(12 * scale);
@@ -767,7 +768,8 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
   const cv = parseCVContent(rawText);
   const scheme = CV_TEMPLATES[tpl] || CV_TEMPLATES[1];
   // Use user custom color as accent if provided (not default black)
-  const accent = parseColor(opts.color && opts.color !== "black" ? opts.color : scheme.accent) || [0, 0, 0.5];
+  // Professional template (tpl=1): always use black for all text — standard professional CV
+  const accent = (tpl === 1) ? [0, 0, 0] : (parseColor(opts.color && opts.color !== "black" ? opts.color : scheme.accent) || [0, 0, 0.5]);
   const accentLight = (() => {
     const a = accent;
     // Mix accent with 80% white for very light tint
@@ -829,11 +831,11 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
     }
     if (cv.position) {
       const posLinesP1 = wrapText(cv.position, font, bodySize, contentW);
-      for (const pl of posLinesP1) { const tw = font.widthOfTextAtSize(pl, bodySize); page.drawText(pl, { x: (PAGE_W - tw) / 2, y, size: bodySize, font, color: rgb(gray[0], gray[1], gray[2]) }); y -= 15; }
+      for (const pl of posLinesP1) { const tw = font.widthOfTextAtSize(pl, bodySize); page.drawText(pl, { x: (PAGE_W - tw) / 2, y, size: bodySize, font, color: rgb(black[0], black[1], black[2]) }); y -= 15; }
     }
     if (cv.contact) {
       const conLinesP1 = wrapText(cv.contact, font, bodySize - 1, contentW);
-      for (const cl of conLinesP1) { const tw = font.widthOfTextAtSize(cl, bodySize - 1); page.drawText(cl, { x: (PAGE_W - tw) / 2, y, size: bodySize - 1, font, color: rgb(grayLight[0], grayLight[1], grayLight[2]) }); y -= 14; }
+      for (const cl of conLinesP1) { const tw = font.widthOfTextAtSize(cl, bodySize - 1); page.drawText(cl, { x: (PAGE_W - tw) / 2, y, size: bodySize - 1, font, color: rgb(black[0], black[1], black[2]) }); y -= 14; }
       y -= 11;
     }
     
