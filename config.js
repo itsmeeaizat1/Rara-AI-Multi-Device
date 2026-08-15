@@ -47,6 +47,10 @@ const config = {
     "nova-mp3": "./assets/audio/nova-mp3.mp3",
     "nova-font": "./assets/nova-font.ttf",
     "nova-kertas": "./assets/image/nova-kertas.jpg",
+    "nova-qr": "./assets/image/nova-qr.jpg",
+    "nova-goodbye": "./assets/image/nova-goodbye.jpg",
+    "nova-welcome": "./assets/image/nova-welcome.jpg",
+    "channel-banner": "./assets/image/channel-banner.png",
     "test": "./assets/image/test.webp"
   },
 
