@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import yts from "yt-search";
 import { generateWAMessageFromContent, proto } from "nova";
 import axios from "axios";

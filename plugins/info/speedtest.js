@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { execSync } from "child_process";
 import os from "os";
 import config from "../../config.js";

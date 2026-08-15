@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import FormData from 'form-data'
 import _sharp from 'sharp'
 import axios from "axios";

@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: 'delppgc',
     alias: ['delprofilegc', 'delppgroup', 'hapusppgc'],

@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { getPlugin } from "../../src/lib/nova-plugins.js";
 import config from "../../config.js";

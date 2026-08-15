@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import config from "../../config.js";

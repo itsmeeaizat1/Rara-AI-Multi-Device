@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import * as botmodePlugin from "../group/botmode.js";
 import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
 import _sharp from "sharp";

@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * plugins/owner/loker.js
  * Command .loker — konfigurasi scheduler lowongan kerja otomatis (owner only).

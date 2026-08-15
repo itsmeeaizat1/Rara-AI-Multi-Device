@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import * as _canvas from "@napi-rs/canvas";
 import path from "path";
 import fs from "fs";

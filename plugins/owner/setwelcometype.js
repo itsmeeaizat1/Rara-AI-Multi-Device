@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import fs from "fs";
 import config from "../../config.js";
