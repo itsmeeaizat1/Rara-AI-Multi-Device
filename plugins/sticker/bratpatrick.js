@@ -1,0 +1,42 @@
+import axios from "axios";
+import config from "../../config.js";
+import te from "../../src/lib/nova-error.js";
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+const pluginConfig = {
+  name: "bratpatrick",
+  alias: [],
+  category: "sticker",
+  description: "Membuat sticker brat patrick",
+  usage: ".bratpatrick <text>",
+  example: ".bratpatrick Hai semua",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 10,
+  energi: 1,
+  isEnabled: true,
+};
+
+async function handler(m, { sock }) {
+  const text = m.args.join(" ");
+  if (!text) {
+    return sendReplyWithNav(sock, m, `🖼️ *BRAT PATRICK*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratpatrick Hai semua\``, "bratpatrick");
+  }
+
+  m.react("🕐");
+
+  try {
+    const url = `https://api.nova.my.id/api/bratpatrick?text=${encodeURIComponent(text)}`;
+    await sock.sendImageAsSticker(m.chat, url, m, {
+      packname: config.sticker.packname,
+      author: config.sticker.author,
+    });
+    m.react("✅");
+  } catch (error) {
+    m.reply(claraWrap("bratpatrick", te(m.prefix, m.command, m.pushName), "error"));
+  }
+}
+
+export { pluginConfig as config, handler };

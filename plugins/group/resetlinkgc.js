@@ -1,0 +1,35 @@
+import te from '../../src/lib/nova-error.js'
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+const pluginConfig = {
+    name: 'resetlinkgc',
+    alias: ['resetlink', 'revokelink', 'newlink'],
+    category: 'group',
+    description: 'Reset link invite grup',
+    usage: '.resetlinkgc',
+    example: '.resetlinkgc',
+    isOwner: false,
+    isPremium: false,
+    isGroup: true,
+    isPrivate: false,
+    cooldown: 60,
+    energi: 0,
+    isEnabled: true,
+    isAdmin: true,
+    isBotAdmin: true
+}
+
+async function handler(m, { sock }) {
+    m.react('🕐')
+    
+    try {
+        await sock.groupRevokeInvite(m.chat)
+        
+        m.react('✅')
+        { const __navText = `✅ *ʟɪɴᴋ ɢʀᴜᴘ ᴅɪʀᴇsᴇᴛ*\nLink grup lama sudah tidak berlaku.\nGunakan \`${m.prefix}linkgc\` untuk mendapatkan link baru.`; await m.reply(__navText); }
+        
+    } catch (err) {
+        m.reply(claraWrap("resetlinkgc", te(m.prefix, m.command, m.pushName), "error"))
+    }
+}
+
+export { pluginConfig as config, handler }

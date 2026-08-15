@@ -1,0 +1,96 @@
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { stopSchedulerByName, getFullSchedulerStatus } from '../../src/lib/nova-scheduler.js'
+import { stopSholatScheduler } from '../../src/lib/nova-sholat-scheduler.js'
+import { getDatabase } from '../../src/lib/nova-database.js'
+import te from '../../src/lib/nova-error.js'
+import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+const pluginConfig = {
+    name: 'stopschedule',
+    alias: ['stopscheduler', 'schedstop', 'pauseschedule'],
+    category: 'owner',
+    description: 'Menghentikan scheduler tertentu atau semua',
+    usage: '.stopschedule <nama|all>',
+    example: '.stopschedule sholat',
+    isOwner: true,
+    isPremium: false,
+    isGroup: false,
+    isPrivate: false,
+    cooldown: 3,
+    energi: 0,
+    isEnabled: true
+};
+
+async function handler(m, { sock, args }) {
+    try {
+        const target = args[0]?.toLowerCase();
+        
+        if (!target) {
+            const helpText = `🛑 *sᴛᴏᴘ sᴄʜᴇᴅᴜʟᴇʀ*
+
+*Usage:*
+\`.stopschedule <nama>\`
+
+*Available schedulers:*
+• \`limitreset\` - Daily Limit Reset
+• \`groupschedule\` - Group Schedule
+• \`sewa\` - Sewa Checker
+• \`messages\` - Scheduled Messages
+• \`sholat\` - Sholat Scheduler
+• \`all\` - Semua scheduler
+
+*Example:*
+\`.stopschedule sholat\`
+\`.stopschedule all\``;
+            
+            await sendReplyWithNav(sock, m, helpText, "stopschedule");
+            return;
+        }
+        
+        if (target === 'sholat') {
+            const db = getDatabase();
+            const wasEnabled = db.setting('autoSholat');
+            
+            if (!wasEnabled) {
+                m.reply(claraWrap("Stopschedule", `ℹ️ Sholat Scheduler sudah dalam keadaan nonaktif`));
+                return;
+            }
+            
+            stopSholatScheduler();
+            db.setting('autoSholat', false);
+            
+            await m.reply(`🛑 *sᴄʜᴇᴅᴜʟᴇʀ ᴅɪʜᴇɴᴛɪᴋᴀɴ*
+
+> Scheduler: *Sholat Scheduler*
+> Status: ❌ Dihentikan
+
+_Gunakan \`.startschedule sholat\` untuk mengaktifkan kembali_`);
+            return;
+        }
+        
+        if (target === 'all') {
+            stopSholatScheduler();
+            const db = getDatabase();
+            db.setting('autoSholat', false);
+        }
+        
+        const result = stopSchedulerByName(target);
+        
+        if (result.stopped) {
+            { const __navText = `🛑 *sᴄʜᴇᴅᴜʟᴇʀ ᴅɪʜᴇɴᴛɪᴋᴀɴ*
+
+> Scheduler: *${result.name}*
+> Status: ❌ Dihentikan
+
+_Gunakan \`.startschedule ${target}\` untuk mengaktifkan kembali_`; await m.reply(__navText); };
+        } else {
+            await m.reply(`❌ Scheduler tidak ditemukan atau sudah nonaktif
+
+Gunakan \`.stopschedule\` untuk melihat daftar scheduler`);
+        }
+    } catch (error) {
+        console.error('[StopSchedule Error]', error);
+        await m.reply(claraWrap("stopschedule", te(m.prefix, m.command, m.pushName), "error"));
+    }
+}
+
+export { pluginConfig as config, handler }

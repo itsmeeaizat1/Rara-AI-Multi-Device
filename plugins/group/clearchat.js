@@ -1,0 +1,56 @@
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import te from '../../src/lib/nova-error.js'
+import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+const pluginConfig = {
+    name: ['clearchat', 'cc', 'cleangc', 'deletechat', 'delchat'],
+    alias: [],
+    category: 'group',
+    description: 'Membersihkan chat grup',
+    usage: '.clearchat',
+    example: '.clearchat',
+    isOwner: false,
+    isPremium: false,
+    isGroup: true,
+    isPrivate: false,
+    isAdmin: true,
+    isBotAdmin: true,
+    cooldown: 60,
+    energi: 0,
+    isEnabled: true
+}
+
+async function handler(m, { sock }) {
+    
+    try {
+        const now = Math.floor(Date.now() / 1000)
+        
+        await sock.chatModify({ 
+            delete: true, 
+            lastMessages: [{ 
+                key: m.key, 
+                messageTimestamp: m.messageTimestamp || now
+            }] 
+        }, m.chat)
+        
+        await m.reply(claraWrap("Clearchat", `✅ *ᴄʜᴀᴛ ᴅɪʙᴇʀsɪʜᴋᴀɴ*\n\n> Chat grup telah dibersihkan oleh @${m.sender.split('@')[0]}`))
+        
+    } catch (error) {
+        try {
+            await sock.chatModify({ 
+                clear: { 
+                    messages: [{ 
+                        id: m.key.id, 
+                        fromMe: m.key.fromMe,
+                        timestamp: Math.floor(Date.now() / 1000)
+                    }] 
+                } 
+            }, m.chat)
+            
+            m.reply(claraWrap("Clearchat", `✅ *ᴄʜᴀᴛ ᴅɪʙᴇʀsɪʜᴋᴀɴ*\n\nChat grup di wa bot telah dibersihkan oleh @${m.sender.split('@')[0]}\nSilahkan lihat sendiri di wa bot kamu`))
+        } catch (e) {
+            m.reply(claraWrap("clearchat", te(m.prefix, m.command, m.pushName), "error"))
+        }
+    }
+}
+
+export { pluginConfig as config, handler }

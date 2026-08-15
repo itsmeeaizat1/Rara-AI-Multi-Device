@@ -1,0 +1,29 @@
+name: Main CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+      - name: Syntax check
+        run: |
+          find . -path ./node_modules -prune -o -name "*.js" -print | while read f; do
+            node --check "$f" || echo "Warning: $f has syntax error"
+          done

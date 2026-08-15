@@ -1,0 +1,281 @@
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+
+const pluginConfig = {
+  name: "jadwal",
+  alias: ["jadwal", "jadwaledu", "scheduleedu"],
+  category: "education",
+  description: "Jadwal kuliah personal - catat dan cek jadwal kelas harian",
+  usage: ".jadwal <command>",
+  example: ".jadwal list",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: true,
+  cooldown: 3,
+  energi: 1,
+  isEnabled: true,
+};
+
+// Store: sender -> [{ id, day, startTime, endTime, subject, room, lecturer }]
+const scheduleStore = new Map();
+
+const DAYS = ["senin", "selasa", "rabu", "kamis", "jumat", "sabtu", "minggu"];
+const DAY_EMOJI = { "senin": "Sen", "selasa": "Sel", "rabu": "Rab", "kamis": "Kam", "jumat": "Jum", "sabtu": "Sab", "minggu": "Min" };
+
+function getSchedule(sender) {
+  if (!scheduleStore.has(sender)) scheduleStore.set(sender, []);
+  return scheduleStore.get(sender);
+}
+
+function genId() {
+  return "JW" + Math.random().toString(36).substring(2, 5).toUpperCase();
+}
+
+function parseTime(str) {
+  const match = str.match(/^(\d{1,2})[:.](\d{2})$/);
+  if (!match) return null;
+  const h = parseInt(match[1]);
+  const m = parseInt(match[2]);
+  if (h < 0 || h > 23 || m < 0 || m > 59) return null;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+}
+
+function timeToMinutes(timeStr) {
+  const [h, m] = timeStr.split(":").map(Number);
+  return h * 60 + m;
+}
+
+function getCurrentDay() {
+  const days = ["minggu", "senin", "selasa", "rabu", "kamis", "jumat", "sabtu"];
+  return days[new Date().getDay()];
+}
+
+function formatDay(day) {
+  return day.charAt(0).toUpperCase() + day.slice(1);
+}
+
+async function handler(m, { sock, args }) {
+  const sender = m.sender;
+  const cmd = (args[0] || "").toLowerCase();
+  const cmdArgs = args.slice(1);
+
+  if (!cmd || cmd === "help" || cmd === "menu") {
+    let txt = `Jadwal Kuliah\n\n`;
+    txt += `Perintah:\n`;
+    txt += `1. \`${m.prefix}jadwal add <hari> | <jam mulai> | <jam selesai> | <matkul> | <ruang (opsional)>\` - Tambah jadwal\n`;
+    txt += `2. \`${m.prefix}jadwal list\` - Lihat semua jadwal\n`;
+    txt += `3. \`${m.prefix}jadwal hari <nama hari>\` - Lihat jadwal per hari\n`;
+    txt += `4. \`${m.prefix}jadwal today\` - Lihat jadwal hari ini\n`;
+    txt += `5. \`${m.prefix}jadwal next\` - Kelas terdekat\n`;
+    txt += `6. \`${m.prefix}jadwal del <id>\` - Hapus jadwal\n`;
+    txt += `7. \`${m.prefix}jadwal clear\` - Hapus semua jadwal\n\n`;
+    txt += `Hari: senin, selasa, rabu, kamis, jumat, sabtu, minggu\n`;
+    txt += `Format jam: HH.MM atau HH:MM\n\n`;
+    txt += `Contoh:\n`;
+    txt += `\`${m.prefix}jadwal add senin | 08.00 | 09.30 | Kalkulus | R.301\`\n`;
+    txt += `\`${m.prefix}jadwal today\``;
+    return await sendReplyWithNav(m, sock, txt, { commandName: "jadwal" });
+  }
+
+  await m.react("🕐");
+
+  try {
+    // === ADD ===
+    if (cmd === "add" || cmd === "tambah") {
+      const input = cmdArgs.join(" ");
+      const parts = input.split("|").map(s => s.trim());
+      if (parts.length < 4) {
+        return m.reply(claraWrap("jadwal", "Format salah!\n\nContoh: `.jadwal add senin | 08.00 | 09.30 | Kalkulus | R.301`\n\nFormat: <hari> | <jam mulai> | <jam selesai> | <matkul> | <ruang (opsional)>"));
+      }
+
+      const day = parts[0].toLowerCase();
+      if (!DAYS.includes(day)) {
+        return m.reply(claraWrap("Jadwal", `Hari "${parts[0]}" tidak valid!\n\nPilih: ${DAYS.join(", ")}`));
+      }
+
+      const startTime = parseTime(parts[1]);
+      if (!startTime) {
+        return m.reply(claraWrap("Jadwal", `Jam mulai "${parts[1]}" tidak valid!\n\nFormat: HH.MM atau HH:MM (contoh: 08.00)`));
+      }
+
+      const endTime = parseTime(parts[2]);
+      if (!endTime) {
+        return m.reply(claraWrap("Jadwal", `Jam selesai "${parts[2]}" tidak valid!\n\nFormat: HH.MM atau HH:MM (contoh: 09.30)`));
+      }
+
+      if (timeToMinutes(endTime) <= timeToMinutes(startTime)) {
+        return m.reply(claraWrap("Jadwal", "Jam selesai harus setelah jam mulai!"));
+      }
+
+      const subject = parts[3] || "Tanpa nama";
+      const room = parts[4] || "";
+      const id = genId();
+      const schedule = getSchedule(sender);
+      schedule.push({ id, day, startTime, endTime, subject, room, created: Date.now() });
+
+      let txt = `Jadwal Ditambahkan!\n\n`;
+      txt += `ID: ${id}\n`;
+      txt += `Hari: ${formatDay(day)}\n`;
+      txt += `Jam: ${startTime} - ${endTime}\n`;
+      txt += `Matkul: ${subject}\n`;
+      if (room) txt += `Ruang: ${room}\n`;
+      await m.reply(txt);
+      await m.react("✅");
+    }
+
+    // === LIST ALL ===
+    else if (cmd === "list" || cmd === "all" || cmd === "semua") {
+      const schedule = getSchedule(sender);
+      if (schedule.length === 0) {
+        return m.reply(claraWrap("jadwal", "Belum ada jadwal tersimpan.\n\nKetik `.jadwal add` untuk menambah."));
+      }
+
+      // Group by day
+      let txt = `Jadwal Kuliah (${schedule.length} kelas)\n\n`;
+      for (const day of DAYS) {
+        const dayClasses = schedule.filter(s => s.day === day).sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
+        if (dayClasses.length === 0) continue;
+        txt += `${formatDay(day)}\n`;
+        for (const c of dayClasses) {
+          txt += `  ${c.startTime}-${c.endTime} | ${c.subject}`;
+          if (c.room) txt += ` | ${c.room}`;
+          txt += ` [${c.id}]\n`;
+        }
+        txt += `\n`;
+      }
+      await m.reply(txt);
+      await m.react("✅");
+    }
+
+    // === TODAY ===
+    else if (cmd === "today" || cmd === "hariini" || cmd === "sekarang") {
+      const schedule = getSchedule(sender);
+      const today = getCurrentDay();
+      const todayClasses = schedule.filter(s => s.day === today).sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
+
+      if (todayClasses.length === 0) {
+        return m.reply(claraWrap("Jadwal", `Hari ini (${formatDay(today)}) tidak ada kelas. Santai dulu!`));
+      }
+
+      const now = new Date();
+      const nowMin = now.getHours() * 60 + now.getMinutes();
+      let txt = `Jadwal Hari Ini (${formatDay(today)})\n\n`;
+      for (const c of todayClasses) {
+        const startMin = timeToMinutes(c.startTime);
+        const endMin = timeToMinutes(c.endTime);
+        let status = "";
+        if (nowMin < startMin) status = ` (dalam ${Math.round((startMin - nowMin) / 60 * 10) / 10} jam)`;
+        else if (nowMin >= startMin && nowMin < endMin) status = " (SEDANG BERLANGSUNG)";
+        else status = " (selesai)";
+
+        txt += `${c.startTime}-${c.endTime} | ${c.subject}`;
+        if (c.room) txt += ` | ${c.room}`;
+        txt += `${status}\n`;
+      }
+      await m.reply(txt);
+      await m.react("✅");
+    }
+
+    // === NEXT CLASS ===
+    else if (cmd === "next" || cmd === "berikutnya" || cmd === "selanjutnya") {
+      const schedule = getSchedule(sender);
+      const today = getCurrentDay();
+      const now = new Date();
+      const nowMin = now.getHours() * 60 + now.getMinutes();
+
+      // Find next class today
+      let nextClass = null;
+      let nextDay = today;
+      let dayOffset = 0;
+
+      for (let offset = 0; offset < 7; offset++) {
+        const dayIdx = (DAYS.indexOf(today) + offset) % 7;
+        const checkDay = DAYS[dayIdx];
+        const dayClasses = schedule.filter(s => s.day === checkDay).sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
+        for (const c of dayClasses) {
+          if (offset === 0 && timeToMinutes(c.startTime) <= nowMin) continue;
+          nextClass = c;
+          nextDay = checkDay;
+          dayOffset = offset;
+          break;
+        }
+        if (nextClass) break;
+      }
+
+      if (!nextClass) {
+        return m.reply(claraWrap("Jadwal", "Tidak ada kelas terjadwal untuk minggu ini!"));
+      }
+
+      let txt = `Kelas Terdekat\n\n`;
+      if (dayOffset === 0) txt += `Hari ini`;
+      else if (dayOffset === 1) txt += `Besok`;
+      else txt += `${dayOffset} hari lagi (${formatDay(nextDay)})`;
+      txt += `\n\n`;
+      txt += `${nextClass.startTime}-${nextClass.endTime}\n`;
+      txt += `${nextClass.subject}\n`;
+      if (nextClass.room) txt += `Ruang: ${nextClass.room}\n`;
+
+      if (dayOffset === 0) {
+        const minsUntil = timeToMinutes(nextClass.startTime) - nowMin;
+        const hoursUntil = Math.floor(minsUntil / 60);
+        const minsRem = minsUntil % 60;
+        txt += `Dimulai dalam: ${hoursUntil > 0 ? hoursUntil + " jam " : ""}${minsRem} menit`;
+      }
+      await m.reply(txt);
+      await m.react("✅");
+    }
+
+    // === BY DAY ===
+    else if (cmd === "hari") {
+      const day = cmdArgs[0]?.toLowerCase();
+      if (!day || !DAYS.includes(day)) {
+        return m.reply(claraWrap("Jadwal", `Hari tidak valid!\n\nPilih: ${DAYS.join(", ")}`));
+      }
+
+      const schedule = getSchedule(sender);
+      const dayClasses = schedule.filter(s => s.day === day).sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
+
+      if (dayClasses.length === 0) {
+        return m.reply(claraWrap("Jadwal", `${formatDay(day)} tidak ada kelas.`));
+      }
+
+      let txt = `Jadwal ${formatDay(day)}\n\n`;
+      for (const c of dayClasses) {
+        txt += `${c.startTime}-${c.endTime} | ${c.subject}`;
+        if (c.room) txt += ` | ${c.room}`;
+        txt += ` [${c.id}]\n`;
+      }
+      await m.reply(txt);
+      await m.react("✅");
+    }
+
+    // === DELETE ===
+    else if (cmd === "del" || cmd === "hapus") {
+      const id = cmdArgs[0]?.toUpperCase();
+
+      const schedule = getSchedule(sender);
+      const idx = schedule.findIndex(s => s.id === id);
+
+      const removed = schedule.splice(idx, 1)[0];
+      await m.reply(claraWrap("Jadwal", `Jadwal dihapus!\n\n${removed.subject} - ${formatDay(removed.day)} ${removed.startTime}`));
+      await m.react("✅");
+    }
+
+    // === CLEAR ===
+    else if (cmd === "clear" || cmd === "reset") {
+      scheduleStore.set(sender, []);
+      await m.reply(claraWrap("Jadwal", "Semua jadwal dihapus!"));
+      await m.react("✅");
+    }
+
+    else {
+      await m.reply(`Perintah tidak ditemukan!\n\nKetik \`${m.prefix}jadwal help\` untuk bantuan.`);
+    }
+  } catch (e) {
+    console.error("[JADWAL] Error:", e.message);
+    await m.reply(claraWrap("jadwal", `Error: ${e.message}`));
+  }
+}
+
+export { pluginConfig as config, handler };

@@ -1,0 +1,42 @@
+name: Scan WhatsApp Bot Bugs & Errors
+
+on:
+  push:
+    branches: [ "main", "master", "dev" ]
+  pull_request:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    - name: Install Project Dependencies
+      run: |
+        if [ -f package.json ]; then
+          npm install
+        else
+          echo "Tidak ada package.json"
+        fi
+
+    - name: Check for Syntax and Runtime Errors in JS Files
+      run: |
+        echo "=== MEMULAI PEMINDAIAN SCRIPT BOT ==="
+        
+        # Mengecek file .js utama tanpa melewati folder node_modules secara aman
+        find . -path "./node_modules" -prune -o -name "*.js" -print | while read file; do
+          node -c "$file" || exit 1
+        done
+        
+        echo "=== SEMUA SINTAKS FILE .JS AMAN (TIDAK ADA SYNTAX ERROR) ==="
+    
+    - name: Basic Code Quality Check (Optional Linter)
+      run: |
+        npx eslint . || echo "Peringatan: Ada beberapa gaya penulisan yang tidak standar, tapi file tetap bisa jalan."

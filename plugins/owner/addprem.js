@@ -1,0 +1,243 @@
+import config from "../../config.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
+import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { notifyPremiumAdd } from "../../src/lib/nova-saluran-broadcast.js";
+import {
+  addJadibotPremium,
+  removeJadibotPremium,
+  getJadibotPremiums,
+} from "../../src/lib/nova-jadibot-database.js";
+const pluginConfig = {
+  name: "addprem",
+  alias: [
+    "addpremium",
+    "setprem",
+    "delprem",
+    "delpremium",
+    "listprem",
+    "premlist",
+  ],
+  category: "owner",
+  description: "Kelola premium users",
+  usage:
+    ".addprem <nomor/@tag> [hari]\n.delprem <nomor/@tag>\n.listprem\n.cekprem <nomor/@tag>",
+  example: ".addprem 6281234567890 30",
+  isOwner: true,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 3,
+  energi: 0,
+  isEnabled: true,
+};
+
+function formatDate(ts) {
+  return new Date(ts).toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function extractTarget(m) {
+  if (m.quoted) return m.quoted.sender?.replace(/[^0-9]/g, "") || "";
+  if (m.mentionedJid?.length)
+    return m.mentionedJid[0]?.replace(/[^0-9]/g, "") || "";
+  if (m.args?.length) return m.args[0].replace(/[^0-9]/g, "");
+  return "";
+}
+
+function toMentionJid(value) {
+  const number = String(value || "").replace(/[^0-9]/g, "");
+  return number ? `${number}@s.whatsapp.net` : null;
+}
+
+async function handler(m, { sock, jadibotId, isJadibot }) {
+  const db = getDatabase();
+  const cmd = m.command.toLowerCase();
+
+  const isAdd = ["addprem", "addpremium", "setprem"].includes(cmd);
+  const isDel = ["delprem", "delpremium"].includes(cmd);
+  const isList = ["listprem", "premlist"].includes(cmd);
+
+  if (!db.data.premium) db.data.premium = [];
+
+  if (isList) {
+    if (isJadibot && jadibotId) {
+      const jbPremiums = getJadibotPremiums(jadibotId);
+      if (jbPremiums.length === 0) {
+        return m.reply(
+          `💎 Belum ada premium di jadibot ini\nGunakan \`${m.prefix}addprem\` untuk menambah`,
+        );
+      }
+      let txt = `💎 *DAFTAR PREMIUM JADIBOT* — ${jadibotId}\n\n`;
+      const mentions = jbPremiums
+        .map((p) => (typeof p === "string" ? p : p.jid))
+        .map(toMentionJid)
+        .filter(Boolean);
+      jbPremiums.forEach((p, i) => {
+        const num = typeof p === "string" ? p : p.jid;
+        const number = String(num || "").replace(/[^0-9]/g, "");
+        txt += `${i + 1}. @${number}\n`;
+      });
+      txt += `\nTotal: *${jbPremiums.length}* premium`;
+      return m.reply(txt, { mentions });
+    }
+
+    if (db.data.premium.length === 0) {
+      return m.reply(claraWrap("addprem", `💎 Belum ada premium terdaftar`));
+    }
+    let txt = `💎 *DAFTAR PREMIUM*\n\n`;
+    const now = Date.now();
+    const mentions = db.data.premium
+      .map((p) => (typeof p === "string" ? p : p.id))
+      .map(toMentionJid)
+      .filter(Boolean);
+    db.data.premium.forEach((p, i) => {
+      const num = typeof p === "string" ? p : p.id;
+      const remaining =
+        typeof p === "object" && p.expired
+          ? Math.ceil((p.expired - now) / (1000 * 60 * 60 * 24))
+          : null;
+      const status =
+        remaining === null
+          ? "Permanent"
+          : remaining > 0
+            ? remaining + "d"
+            : "Expired";
+      const number = String(num || "").replace(/[^0-9]/g, "");
+      txt += `${i + 1}. @${number} — ${status}\n`;
+    });
+    txt += `\nTotal: *${db.data.premium.length}* premium`;
+    return m.reply(txt, { mentions });
+  }
+
+  let targetNumber = await extractTarget(m);
+
+  if (!targetNumber) {
+    return sendReplyWithNav(sock, m, `💎 *${isAdd ? "ADD" : "DEL"} PREMIUM*\n\nMasukkan nomor atau tag user\n\`Contoh: ${m.prefix}${cmd} 6281234567890\``, "addprem");
+  }
+
+  if (targetNumber.startsWith("0")) {
+    targetNumber = "62" + targetNumber.slice(1);
+  }
+
+  if (targetNumber.length < 10 || targetNumber.length > 15) {
+    return m.reply(claraWrap("Addprem", `❌ Format nomor tidak valid`));
+  }
+
+  if (isJadibot && jadibotId) {
+    if (isAdd) {
+      if (addJadibotPremium(jadibotId, targetNumber)) {
+        return m.reply(
+          `✅ Berhasil menambahkan *${targetNumber}* sebagai premium jadibot`,
+        );
+      } else {
+        return m.reply(`❌ \`${targetNumber}\` sudah premium di Jadibot ini`);
+      }
+    } else if (isDel) {
+      if (removeJadibotPremium(jadibotId, targetNumber)) {
+        await m.react("✅");
+        return m.reply(
+          `✅ Berhasil menghapus *${targetNumber}* dari premium jadibot`,
+        );
+      } else {
+        return m.reply(`❌ \`${targetNumber}\` bukan premium di Jadibot ini`);
+      }
+    }
+    return;
+  }
+
+  if (isAdd) {
+    const existingIndex = db.data.premium.findIndex((p) =>
+      typeof p === "string" ? p === targetNumber : p.id === targetNumber,
+    );
+
+    const days =
+      parseInt(m.args?.find((a) => /^\d+$/.test(a) && a.length <= 4)) || 30;
+    const pushName = m.quoted?.pushName || m.pushName || "Unknown";
+    const now = Date.now();
+
+    let newExpired;
+
+    if (existingIndex !== -1) {
+      const currentData = db.data.premium[existingIndex];
+      const currentExpired =
+        typeof currentData === "string" ? now : currentData.expired || now;
+      const baseTime = currentExpired > now ? currentExpired : now;
+      newExpired = baseTime + days * 24 * 60 * 60 * 1000;
+
+      if (typeof currentData === "string") {
+        db.data.premium[existingIndex] = {
+          id: targetNumber,
+          expired: newExpired,
+          name: pushName,
+          addedAt: now,
+        };
+      } else {
+        db.data.premium[existingIndex].expired = newExpired;
+        db.data.premium[existingIndex].name = pushName;
+      }
+    } else {
+      newExpired = now + days * 24 * 60 * 60 * 1000;
+      db.data.premium.push({
+        id: targetNumber,
+        expired: newExpired,
+        name: pushName,
+        addedAt: now,
+      });
+    }
+
+    const jid = targetNumber + "@s.whatsapp.net";
+    const user = db.getUser(jid) || db.setUser(jid);
+
+    if (user.energi !== -1) {
+      user.energi = config.energi?.premium || 999999;
+    }
+    user.isPremium = true;
+
+    db.setUser(jid, user);
+    db.updateExp(jid, 200000);
+    db.updateKoin(jid, 20000);
+
+    db.save();
+
+    // Broadcast ke saluran WA - user baru premium
+    await notifyPremiumAdd(sock, {
+      name: pushName,
+      phoneNumber: targetNumber,
+      days,
+      price: "N/A (Owner Add)",
+      expiredStr: formatDate(newExpired),
+      isExtend: existingIndex !== -1,
+      totalPremium: db.data.premium.length,
+    }).catch(() => {});
+
+    return m.reply(
+      `✅ Berhasil ${existingIndex !== -1 ? "memperpanjang" : "menambahkan"} premium *${targetNumber}* selama *${days} hari*\nExpired: *${formatDate(newExpired)}*`,
+    );
+  } else if (isDel) {
+    const index = db.data.premium.findIndex((p) =>
+      typeof p === "string" ? p === targetNumber : p.id === targetNumber,
+    );
+
+    if (index === -1) {
+      return m.reply(claraWrap("Addprem", `❌ *${targetNumber}* bukan premium`));
+    }
+
+    db.data.premium.splice(index, 1);
+
+    const jid = targetNumber + "@s.whatsapp.net";
+    const user = db.getUser(jid);
+    if (user) {
+      user.isPremium = false;
+      db.setUser(jid, user);
+    }
+
+    db.save();
+    await m.react("✅");
+    { const __navText = `✅ Berhasil menghapus *${targetNumber}* dari premium`; return await m.reply(__navText); };
+  }
+}
+
+export { pluginConfig as config, handler };
