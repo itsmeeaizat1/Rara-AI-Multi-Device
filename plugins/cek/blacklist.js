@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "blacklist",
-  alias: ["cekpenipu", "scamcheck", "ceknomor", "penipu"],
+  alias: ["cekpenipu", "scamcheck", "penipu"],
   category: "cek",
   description: "Registry penipu/scammer - catat, cek, pantau nomor penipu",
   usage: ".blacklist <add/cek/list/info/remove/stats>",
