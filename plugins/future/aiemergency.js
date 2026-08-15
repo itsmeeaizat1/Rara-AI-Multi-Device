@@ -64,7 +64,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   // ==================== ON / OFF
   if (sub === "on" || sub === "enable") {
-    if (!m.isAdmin && !m.isOwner) {
+    if (!m.isOwner) {
       await m.reply(claraWrap("Emergency Watch", "Khusus admin/owner."));
       return { handled: true };
     }
@@ -77,7 +77,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (sub === "off" || sub === "disable") {
-    if (!m.isAdmin && !m.isOwner) {
+    if (!m.isOwner) {
       await m.reply(claraWrap("Emergency Watch", "Khusus admin/owner."));
       return { handled: true };
     }
@@ -90,7 +90,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   // ==================== ADD ADMIN
   if (sub === "addadmin" || sub === "admin") {
-    if (!m.isAdmin && !m.isOwner) {
+    if (!m.isOwner) {
       await m.reply(claraWrap("Emergency Watch", "Khusus admin/owner."));
       return { handled: true };
     }
@@ -108,7 +108,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   // ==================== KEYWORDS
   if (sub === "keyword" || sub === "kata") {
-    if (!m.isAdmin && !m.isOwner) {
+    if (!m.isOwner) {
       await m.reply(claraWrap("Emergency Watch", "Khusus admin/owner."));
       return { handled: true };
     }
