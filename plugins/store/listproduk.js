@@ -11,7 +11,7 @@ const pluginConfig = {
   description: "🛍️ Lihat daftar produk yang tersedia",
   usage: ".listproduk",
   example: ".listproduk",
-  isOwner: false,
+  isOwner: true,
   isPremium: false,
   isGroup: false,
   isPrivate: false,
