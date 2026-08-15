@@ -93,7 +93,7 @@ function cssColor(input) {
 // ─── Parse flags ───
 function parseFlags(text) {
   const opts = { font: "helvetica", color: "black", titlecolor: null, size: 11, img: 0, imgmode: "doc" };
-  const flagRegex = /(font|color|titlecolor|size|img|imgmode)=([^\s]+)/gi;
+  const flagRegex = /(font|color|titlecolor|size|img|imgmode|out)=([^\s]+)/gi;
   let match;
   const flags = [];
   while ((match = flagRegex.exec(text)) !== null) {
@@ -113,9 +113,9 @@ function parseFlags(text) {
     } else if (f.key === "img") {
       const im = parseInt(f.value);
       if (im === 4 || im === 8 || im === 16) opts.img = im;
-    } else if (f.key === "imgmode") {
+    } else if (f.key === "imgmode" || f.key === "out") {
       const mode = f.value.toLowerCase();
-      if (mode === "img" || mode === "image") opts.imgmode = "img";
+      if (mode === "gambar" || mode === "img" || mode === "image") opts.imgmode = "img";
       else opts.imgmode = "doc";
     }
   }
@@ -491,14 +491,16 @@ async function handler(m, { sock, config: botConfig }) {
         "img=4 (150dpi HD)\n" +
         "img=8 (300dpi Full HD)\n" +
         "img=16 (600dpi Ultra HD)\n" +
-        "imgmode=doc (default, no compress)\n" +
-        "imgmode=img (inline, WA compress)\n" +
+        "out=document (default, no compress)\n" +
+        "out=gambar (inline, WA compress)\n" +
         "Bot kirim PDF + PNG HD\n\n" +
         "Warna: navy crimson teal gold indigo\n" +
         "brown maroon olive orange purple\n" +
         "atau hex #RRGGBB\n\n" +
         "Contoh:\n" +
         prefix + "txttopdf font=times color=navy img=8 cv\n" +
+        "Budi Santoso\nSoftware Engineer\n\n" +
+        prefix + "txttopdf img=4 out=gambar cv\n" +
         "Budi Santoso\nSoftware Engineer\n\n" +
         "Bisa juga reply pesan yg berisi teks",
         { title: "Text to PDF/Word Converter" }
@@ -607,7 +609,7 @@ async function handler(m, { sock, config: botConfig }) {
               caption: claraWrap("HD Preview " + opts.img + "x", [
                 "Resolusi: " + resLabel,
                 "Ukuran: " + imgKB + " KB",
-                "Mode: Image (WA compressed)",
+                "Mode: Gambar (WA compressed)",
               ].join("\n")),
             });
           }
@@ -674,7 +676,7 @@ async function handler(m, { sock, config: botConfig }) {
               caption: claraWrap("HD Preview " + opts.img + "x", [
                 "Resolusi: " + resLabel,
                 "Ukuran: " + imgKB + " KB",
-                "Mode: Image (WA compressed)",
+                "Mode: Gambar (WA compressed)",
               ].join("\n")),
             });
           }
