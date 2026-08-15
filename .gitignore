@@ -20,4 +20,3 @@ __pycache__/
 # User uploads - never push to repo
 incoming_files/
 scripts/
-skills/
