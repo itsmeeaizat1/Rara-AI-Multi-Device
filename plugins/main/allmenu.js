@@ -322,10 +322,7 @@ ${readMore}
         break;
       }
       case 2: {
-        const media = await prepareWAMessageMedia(
-          { image: fs.readFileSync(config.assets["nova"]) },
-          { upload: sock.waUploadToServer },
-        );
+        const thumbV2All = await _sharp(fs.readFileSync(config.assets["nova"])).resize(640, 360).toBuffer();
         await sock.relayMessage(m.chat, {
           viewOnceMessage: {
             message: {
@@ -334,7 +331,12 @@ ${readMore}
                 header: {
                   title: "", subtitle: "",
                   hasMediaAttachment: true,
-                  imageMessage: media.imageMessage,
+                  locationMessage: {
+                    degreesLatitude: 0, degreesLongitude: 0,
+                    name: config.bot?.name || "Nova-AI",
+                    address: `v${config.bot?.version || "1.0.0"}`,
+                    jpegThumbnail: thumbV2All,
+                  },
                 },
                 body: { text: txt },
                 footer: {
@@ -444,14 +446,22 @@ ${readMore}
     }
   } catch (error) {
     console.error("[AllMenu] Error:", error.message);
-    if (imageBuffer) {
+    const fallbackThumbAll = imageBuffer ? await _sharp(imageBuffer).resize(640, 360).toBuffer() : null;
+    if (fallbackThumbAll) {
       await sock.sendMessage(m.chat, {
-        image: imageBuffer,
-        caption: txt,
+        text: txt,
         contextInfo: {
           mentionedJid: [m.sender],
           forwardingScore: 9,
           isForwarded: true,
+          externalAdReply: {
+            title: config.bot?.name || "Nova-AI",
+            body: `BOT WHATSAPP MULTI DEVICE`,
+            thumbnail: fallbackThumbAll,
+            renderLargerThumbnail: true,
+            showAdAttribution: false,
+            previewType: "VIDEO",
+          },
         },
       }, { quoted: m });
     } else {

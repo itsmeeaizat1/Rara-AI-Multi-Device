@@ -514,8 +514,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     }
   } catch (error) {
     console.error("[Menu] Error:", error.message);
-    if (imageBuffer) {
-      await sock.sendMessage(m.chat, { image: imageBuffer, caption: text, contextInfo: getContextInfo(botConfig, m, thumbBuffer) }, { quoted: m });
+    const fallbackThumb = thumbBuffer || (imageBuffer ? await _sharp(imageBuffer).resize(640, 360).toBuffer() : null);
+    if (fallbackThumb) {
+      await sock.sendMessage(m.chat, { text, contextInfo: getContextInfo(botConfig, m, fallbackThumb, true) }, { quoted: m });
     } else {
       await m.reply(claraWrap("menu", text));
     }
