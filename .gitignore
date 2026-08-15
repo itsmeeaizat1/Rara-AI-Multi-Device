@@ -16,3 +16,6 @@ __pycache__/
 # Environment
 .agents/.env
 *.env
+
+# User uploads - never push to repo
+incoming_files/
