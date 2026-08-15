@@ -19,6 +19,7 @@ const NOTIFY_EVENTS = {
   userBlocked: "User Diblokir",
   userKicked: "User Dikick Grup",
   premiumAdd: "User Baru Premium",
+  dailyLimitReset: "Reset Limit Harian",
 };
 
 // Cek apakah event ini enabled (default: true)
@@ -221,6 +222,18 @@ async function notifyWarningGiven(sock, data) {
   return broadcastToSaluran(sock, msg);
 }
 
+// Daily limit reset notification
+async function notifyDailyLimitReset(sock, data) {
+  if (!isNotifyEnabled("dailyLimitReset")) return { sent: false, reason: "Toggle off" };
+  let msg = `\u267B\uFE0F *RESET LIMIT HARIAN*\n\n`;
+  msg += `Limit semua user telah direset!\n`;
+  msg += `\u2022 User gratis: ${data.defaultLimit} limit\n`;
+  msg += `\u2022 User premium: ${data.premiumLimit} limit\n`;
+  msg += `\u2022 Total user: ${data.resetCount} user\n\n`;
+  msg += `> Reset otomatis setiap hari jam 00:00 WIB`;
+  return broadcastToSaluran(sock, msg);
+}
+
 export {
   NOTIFY_EVENTS,
   broadcastToSaluran,
@@ -239,4 +252,5 @@ export {
   notifyWarningGiven,
   notifyUserKicked,
   notifyPremiumAdd,
+  notifyDailyLimitReset,
 };
