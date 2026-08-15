@@ -1,6 +1,18 @@
-.agents/.env
+# Base44 internal files - NEVER push to GitHub
+.agents/
+base44/
+conversations/
+blobs/
+.base44-conversation-workspace
+
+# Dependencies
 node_modules/
 .npm/
+
+# Cache
 __pycache__/
 .cache/
-blobs/
+
+# Environment
+.agents/.env
+*.env
