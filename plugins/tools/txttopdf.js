@@ -306,7 +306,14 @@ const CV_TEMPLATES = {
 // === PNG TEMPLATE RENDERERS ===
 async function renderCV_PNG(cv, tpl, opts, scale) {
   const scheme = CV_TEMPLATES[tpl] || CV_TEMPLATES[1];
-  const accent = scheme.accent;
+  // Use user custom color as accent if provided (not default black)
+  const accent = (opts.color && opts.color !== "black") ? cssColor(opts.color) : scheme.accent;
+  // Auto-generate light variant from accent
+  const accentLightHex = (() => {
+    const rgb = parseColor(opts.color && opts.color !== "black" ? opts.color : scheme.accent);
+    if (!rgb) return scheme.light;
+    return "#" + Math.min(255, Math.round(rgb[0]*255 + 0.25*255)).toString(16).padStart(2,"0") + Math.min(255, Math.round(rgb[1]*255 + 0.25*255)).toString(16).padStart(2,"0") + Math.min(255, Math.round(rgb[2]*255 + 0.25*255)).toString(16).padStart(2,"0");
+  })();
   const fontSet = FONTS[opts.font] || FONTS.helvetica;
   const font = fontSet.css;
   
@@ -450,7 +457,7 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
     
     // Position
     if (cv.position) {
-      ctx.fillStyle = scheme.light;
+      ctx.fillStyle = accentLightHex;
       ctx.font = Math.round(12 * scale) + "px " + font;
       ctx.fillText(cv.position, sideMargin, sy);
       sy += Math.round(30 * scale);
@@ -466,7 +473,7 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
       ctx.lineWidth = Math.round(1 * scale);
       ctx.beginPath(); ctx.moveTo(sideMargin, sy); ctx.lineTo(sideW - sideMargin, sy); ctx.stroke();
       sy += Math.round(18 * scale);
-      ctx.fillStyle = scheme.light;
+      ctx.fillStyle = accentLightHex;
       ctx.font = Math.round(10 * scale) + "px " + font;
       const contactLines = wrap(cv.contact, Math.round(10 * scale) + "px " + font, sideW - sideMargin * 2);
       for (const cl of contactLines) { ctx.fillText(cl, sideMargin, sy); sy += Math.round(15 * scale); }
@@ -483,7 +490,7 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
       ctx.strokeStyle = "rgba(255,255,255,0.3)";
       ctx.beginPath(); ctx.moveTo(sideMargin, sy); ctx.lineTo(sideW - sideMargin, sy); ctx.stroke();
       sy += Math.round(18 * scale);
-      ctx.fillStyle = scheme.light;
+      ctx.fillStyle = accentLightHex;
       ctx.font = Math.round(10 * scale) + "px " + font;
       for (const item of skillSec.items) {
         if (item.type === "bullet") {
@@ -503,7 +510,7 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
       ctx.textAlign = "left";
       ctx.fillText(sec.header.toUpperCase(), mainX, my);
       my += Math.round(4 * scale);
-      ctx.strokeStyle = scheme.light;
+      ctx.strokeStyle = accentLightHex;
       ctx.lineWidth = Math.round(1 * scale);
       ctx.beginPath(); ctx.moveTo(mainX, my); ctx.lineTo(mainX + mainW, my); ctx.stroke();
       my += Math.round(20 * scale);
@@ -574,7 +581,7 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
       const pillW = ctx.measureText(headerStr).width + Math.round(20 * scale);
       const pillH = Math.round(24 * scale);
       
-      ctx.fillStyle = scheme.light;
+      ctx.fillStyle = accentLightHex;
       ctx.fillRect(margin, y - Math.round(18 * scale), pillW, pillH);
       ctx.fillStyle = accent;
       ctx.fillText(headerStr, margin + Math.round(10 * scale), y);
@@ -761,8 +768,12 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
 async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
   const cv = parseCVContent(rawText);
   const scheme = CV_TEMPLATES[tpl] || CV_TEMPLATES[1];
-  const accent = parseColor(scheme.accent) || [0, 0, 0.5];
-  const accentLight = parseColor(scheme.light) || [0.8, 0.8, 0.9];
+  // Use user custom color as accent if provided (not default black)
+  const accent = parseColor(opts.color && opts.color !== "black" ? opts.color : scheme.accent) || [0, 0, 0.5];
+  const accentLight = (() => {
+    const a = accent;
+    return [Math.min(1, a[0] + 0.25), Math.min(1, a[1] + 0.25), Math.min(1, a[2] + 0.25)];
+  })();
   
   const bodySize = 10;
   const headerSize = 11;
