@@ -14,7 +14,7 @@ const pluginConfig = {
   isGroup: true,
   isPrivate: false,
   cooldown: 5,
-  energi: 0,
+  energi: 1,
   isEnabled: true,
 };
 

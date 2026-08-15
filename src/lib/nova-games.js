@@ -332,7 +332,7 @@ class NovaGames {
         isGroup: false,
         isPrivate: false,
         cooldown: cfg.cooldown,
-        energi: 0,
+        energi: cfg.energi || 1,
         isEnabled: true,
         ...overrides,
       },
