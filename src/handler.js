@@ -461,12 +461,36 @@ async function messageHandler(msg, sock) {
   let energiDeducted = 0;
   let sisaEnergi = 0;
   let isUnlimited = false;
+  let isWeekendDouble = false;
+
+  // Weekend double limit (Sabtu-Minggu)
+  if (config.energi?.weekendDouble !== false && energiCost > 0) {
+    const hariIni = new Date().toLocaleDateString("en-US", { timeZone: "Asia/Jakarta", weekday: "short" });
+    if (hariIni === "Sat" || hariIni === "Sun") {
+      isWeekendDouble = true;
+    }
+  }
 
   if (config.energi?.enabled && energiCost > 0 && !m.isOwner) {
     try {
       const db = getDatabase();
       const user = db.getUser(m.sender);
-      const currentEnergi = user?.energi ?? config.energi?.default ?? 25;
+      let currentEnergi = user?.energi ?? config.energi?.default ?? 25;
+
+      // Weekend: gratis user dapat double limit (bonus di awal hari)
+      // Cek apakah sudah dikasih bonus weekend
+      if (isWeekendDouble && !user?.isPremium && currentEnergi !== -1) {
+        const lastWeekendBonus = db.setting?.("weekendBonus_" + m.sender);
+        const today = new Date().toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" });
+        if (lastWeekendBonus !== today) {
+          const baseLimit = config.energi?.default ?? 300;
+          const bonusLimit = baseLimit; // double = base + base
+          currentEnergi = Math.min(currentEnergi + bonusLimit, baseLimit * 2);
+          db.updateEnergi(m.sender, bonusLimit); // tambah energi
+          db.setting("weekendBonus_" + m.sender, today);
+          db.save();
+        }
+      }
 
       if (currentEnergi === -1) {
         isUnlimited = true;
@@ -532,6 +556,28 @@ async function messageHandler(msg, sock) {
             `sisa limit: ${sisaEnergi}`;
         }
         await m.reply(notifText);
+
+        // === WARNING LIMIT RENDAH ===
+        if (!isUnlimited && energiDeducted > 0) {
+          const warnThresholds = [50, 30, 10];
+          for (const threshold of warnThresholds) {
+            if (sisaEnergi <= threshold && sisaEnergi > 0) {
+              try {
+                await m.reply(
+                  `⚠️ *Limit Menipis!*
+
+` +
+                  `Sisa limit kamu: *${sisaEnergi}*
+` +
+                  `Gunakan dengan bijak atau beli Premium untuk limit lebih banyak.
+` +
+                  `Ketik \`.buyenergi <jumlah>\` untuk beli limit pake koin.`
+                );
+              } catch {}
+              break;
+            }
+          }
+        }
       } catch {}
     }
   } catch (error) {
