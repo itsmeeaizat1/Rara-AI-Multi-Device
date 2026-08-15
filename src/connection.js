@@ -322,12 +322,13 @@ async function startConnection(options = {}) {
       if (remaining > 0) {
         colors.logger.error("pairing", `Sandi salah! Sisa percobaan: ${remaining}`);
       } else {
-        colors.logger.error("pairing", "Sandi salah 3x! Pairing dibatalkan.");
+        colors.logger.error("pairing", "Sandi salah 3x! Akses diblokir.");
       }
     }
 
     if (!authorized) {
-      colors.logger.error("pairing", "Akses ditolak. Bot tidak akan pairing.");
+      colors.logger.error("pairing", "Sandi salah 3x! Pairing dibatalkan.");
+      colors.logger.info("pairing", "Hubungi owner: Aizat, 628174887770");
       await new Promise((resolve) => setTimeout(resolve, 3000));
       return null;
     }
