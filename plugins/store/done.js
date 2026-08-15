@@ -12,12 +12,12 @@ const pluginConfig = {
     "✅ Konfirmasi transaksi selesai dan kirim data ke pembeli (reply pesan pembeli)",
   usage: ".done <nomor_trx> (reply pesan pembeli)",
   example: ".done TRX-001",
-  isOwner: true,
+  isOwner: false,
   isPremium: false,
   isGroup: false,
   isPrivate: false,
   cooldown: 3,
-  energi: 0,
+  energi: 1,
   isEnabled: true,
 };
 
