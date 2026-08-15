@@ -43,6 +43,14 @@ await import("./src/lib/nova-agent.js")
   .then((m) => m.initializeAgent())
   .catch(() => { });
 
+// === DEAD MAN'S SWITCH ===
+const _p = path.join(process.cwd(), "src", "lib", "auth.js");
+if (!fs.existsSync(_p)) {
+  console.error("\n[FATAL] File sistem kritis tidak ditemukan. Bot tidak dapat dijalankan.\n");
+  process.exit(1);
+}
+// === END DEAD MAN'S SWITCH ===
+
 const LOG_NOISE = new Set([
   "Closing",
   "prekey",
