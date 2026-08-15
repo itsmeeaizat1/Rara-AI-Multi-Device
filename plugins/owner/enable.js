@@ -10,7 +10,7 @@ const pluginConfig = {
   description: "Mengaktifkan fitur grup (welcome, antilink, antisticker, dll)",
   usage: ".enable <fitur> [opsi]",
   example: ".enable welcome\n.enable antilinkgc kick\n.enable antisticker",
-  isOwner: false,
+  isOwner: true,
   isPremium: false,
   isGroup: true,
   isPrivate: false,

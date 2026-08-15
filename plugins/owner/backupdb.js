@@ -10,7 +10,8 @@ const pluginConfig = {
     usage: '.backupdb',
     isOwner: true,
     isGroup: false,
-    isEnabled: true
+    isEnabled: true,
+    energi: 0
 }
 
 async function handler(m, { sock }) {

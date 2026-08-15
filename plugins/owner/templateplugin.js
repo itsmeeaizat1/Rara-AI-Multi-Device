@@ -28,7 +28,7 @@ const pluginConfig = {
     description: 'Example plugin',
     usage: '.example',
     example: '.example',
-    isOwner: false,
+    isOwner: true,
     isPremium: false,
     isGroup: false,
     isPrivate: false,

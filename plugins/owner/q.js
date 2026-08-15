@@ -10,7 +10,8 @@ const pluginConfig = {
     usage: '.q (reply pesan)',
     isOwner: true,
     cooldown: 3,
-    isEnabled: true
+    isEnabled: true,
+    energi: 0
 }
 
 async function handler(m, { sock }) {

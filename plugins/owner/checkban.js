@@ -11,6 +11,7 @@ const pluginConfig = {
   description: "Check actual ban state",
   usage: ".checkban",
   isOwner: true,
+  energi: 0,
 };
 
 async function handler(m, { sock }) {
