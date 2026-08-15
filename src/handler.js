@@ -456,6 +456,47 @@ async function messageHandler(msg, sock) {
     return;
   }
 
+  // === ENERGI / LIMIT CHECK & DEDUCTION ===
+  const energiCost = plugin.config.energi || 0;
+  let energiDeducted = 0;
+  let sisaEnergi = 0;
+  let isUnlimited = false;
+
+  if (config.energi?.enabled && energiCost > 0 && !m.isOwner) {
+    try {
+      const db = getDatabase();
+      const user = db.getUser(m.sender);
+      const currentEnergi = user?.energi ?? config.energi?.default ?? 25;
+
+      if (currentEnergi === -1) {
+        isUnlimited = true;
+      } else if (currentEnergi < energiCost) {
+        // Energi tidak cukup
+        if (!m.isNewsletter) {
+          try {
+            await m.reply(
+              (config.messages?.energiExceeded ||
+               "⚡ *Energi Habis!* Energi kamu sudah habis. Tunggu reset besok atau beli Premium.")
+            );
+          } catch {}
+        }
+        return;
+      } else {
+        // Potong energi
+        const result = db.updateEnergi(m.sender, -energiCost);
+        if (result === -1) {
+          isUnlimited = true;
+        } else {
+          energiDeducted = energiCost;
+          sisaEnergi = result;
+          db.save();
+        }
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("energi", e.message);
+    }
+  }
+
   // Run the plugin handler
   try {
     // Auto typing/read - check DB setting first, fallback to config
@@ -474,6 +515,16 @@ async function messageHandler(msg, sock) {
 
     if (autoTypingOn) {
       await sock.sendPresenceUpdate("paused", m.chat);
+    }
+
+    // === ENERGI NOTIF SETELAH EKSEKUSI ===
+    if (energiDeducted > 0 && !m.isNewsletter) {
+      try {
+        await m.reply(
+          `${energiDeducted} limit terpakai\n` +
+          `sisa limit: ${sisaEnergi}`
+        );
+      } catch {}
     }
   } catch (error) {
     logger.error("plugin", `${command}: ${error.message}`);
