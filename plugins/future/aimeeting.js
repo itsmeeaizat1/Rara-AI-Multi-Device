@@ -39,7 +39,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   // ==================== START
   if (sub === "start" || sub === "mulai") {
-    if (!m.isAdmin && !m.isOwner) {
+    if (!m.isOwner) {
       await m.reply(claraWrap("AI Meeting", "Khusus admin/owner."));
       return { handled: true };
     }
