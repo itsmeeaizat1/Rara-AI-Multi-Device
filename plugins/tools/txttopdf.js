@@ -280,13 +280,10 @@ function parseCVContent(rawText) {
       if (line.startsWith("- ") || line.startsWith("• ")) {
         currentSection.items.push({ type: "bullet", text: line.replace(/^[-•*]\s*/, "") });
       } else {
-        // Check if it's a sub-item (indented or continuation)
-        const prevItem = currentSection.items[currentSection.items.length - 1];
-        if (prevItem && prevItem.type === "bullet") {
-          currentSection.items.push({ type: "sub", text: line });
-        } else {
-          currentSection.items.push({ type: "text", text: line });
-        }
+        // Continuation/description line after a bullet (or standalone paragraph) —
+        // always render as plain text, never the gray ">" sub-style, so multi-line
+        // descriptions stay visually consistent line to line.
+        currentSection.items.push({ type: "text", text: line });
       }
     }
   }
