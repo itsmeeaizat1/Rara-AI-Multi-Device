@@ -17,6 +17,7 @@ const config = {
   session: {
     pairingNumber: "628xxxxxxxx", // Nomor WA yang akan di-pair, ini penting
     usePairingCode: true, // true = Pairing Code, false = QR Code
+    pairingPassword: "Aizat123#*", // Sandi untuk akses pairing (kosongkan untuk nonaktifkan)
   },
 
   bot: {
