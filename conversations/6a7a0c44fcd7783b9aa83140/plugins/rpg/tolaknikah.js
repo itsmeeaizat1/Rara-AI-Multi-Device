@@ -10,8 +10,8 @@ const VN_DIR = path.join(process.cwd(), "assets", "audio");
 const VN_TOLAK_NIKAH = "vn_tolak_nikah.mp3"; // VN saat nikah ditolak
 
 const pluginConfig = {
-  name: "tolaknikahmatch",
-  alias: ["tolaknikahmatch"],
+  name: "tolaknikah",
+  alias: ["tolaknikah"],
   category: "game",
   description: "Tolak lamaran nikah",
   usage: ".tolaknikahmatch",

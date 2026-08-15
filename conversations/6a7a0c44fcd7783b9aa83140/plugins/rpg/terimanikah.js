@@ -11,8 +11,8 @@ const VN_DIR = path.join(process.cwd(), "assets", "audio");
 const VN_NIKAH = "vn_nikah_romantis.mp3"; // VN saat nikah diterima
 
 const pluginConfig = {
-  name: "terimanikahmatch",
-  alias: ["terimanikahmatch"],
+  name: "terimanikah",
+  alias: ["terimanikah"],
   category: "game",
   description: "Terima lamaran nikah",
   usage: ".terimanikahmatch",

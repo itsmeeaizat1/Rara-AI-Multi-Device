@@ -11,7 +11,7 @@ const VN_LAMAR = "vn_lamar_romantis.mp3"; // VN saat melamar
 
 const pluginConfig = {
   name: "nikahmatch",
-  alias: ["nikahmatch"],
+  alias: ["nikahmatch", "marry", "wedding", "nikah", "menikah", "kawin"],
   category: "game",
   description: "Lamar nikah player lain di grup",
   usage: ".nikahmatch @member",
