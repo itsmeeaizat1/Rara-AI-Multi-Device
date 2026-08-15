@@ -92,8 +92,8 @@ function cssColor(input) {
 
 // ─── Parse flags ───
 function parseFlags(text) {
-  const opts = { font: "helvetica", color: "black", titlecolor: null, size: 11, img: 0 };
-  const flagRegex = /(font|color|titlecolor|size|img)=([^\s]+)/gi;
+  const opts = { font: "helvetica", color: "black", titlecolor: null, size: 11, img: 0, imgmode: "doc" };
+  const flagRegex = /(font|color|titlecolor|size|img|imgmode)=([^\s]+)/gi;
   let match;
   const flags = [];
   while ((match = flagRegex.exec(text)) !== null) {
@@ -113,6 +113,10 @@ function parseFlags(text) {
     } else if (f.key === "img") {
       const im = parseInt(f.value);
       if (im === 4 || im === 8 || im === 16) opts.img = im;
+    } else if (f.key === "imgmode") {
+      const mode = f.value.toLowerCase();
+      if (mode === "img" || mode === "image") opts.imgmode = "img";
+      else opts.imgmode = "doc";
     }
   }
   const cleaned = text.replace(flagRegex, "").replace(/^\s+/, "").trim();
@@ -484,10 +488,12 @@ async function handler(m, { sock, config: botConfig }) {
         "titlecolor=red (judul aja)\n" +
         "size=12 (ukuran font 8-24)\n\n" +
         "Upscale HD image:\n" +
-        "img=4 (150dpi HD preview)\n" +
+        "img=4 (150dpi HD)\n" +
         "img=8 (300dpi Full HD)\n" +
         "img=16 (600dpi Ultra HD)\n" +
-        "Bot kirim PDF + PNG HD image\n\n" +
+        "imgmode=doc (default, no compress)\n" +
+        "imgmode=img (inline, WA compress)\n" +
+        "Bot kirim PDF + PNG HD\n\n" +
         "Warna: navy crimson teal gold indigo\n" +
         "brown maroon olive orange purple\n" +
         "atau hex #RRGGBB\n\n" +
@@ -582,13 +588,29 @@ async function handler(m, { sock, config: botConfig }) {
           const imgKB = (imgBuf.length / 1024).toFixed(1);
           const resLabel = opts.img === 4 ? "150dpi" : opts.img === 8 ? "300dpi" : "600dpi";
 
-          await sock.sendMessage(m.chat, {
-            image: { url: imgPath },
-            caption: claraWrap("HD Preview " + opts.img + "x", [
-              "Resolusi: " + resLabel,
-              "Ukuran: " + imgKB + " KB",
-            ].join("\n")),
-          });
+          if (opts.imgmode === "doc") {
+            // Send as document — no WA compression, full HD quality
+            await sock.sendMessage(m.chat, {
+              document: { url: imgPath },
+              fileName: "hd_" + opts.img + "x_" + timestamp + ".png",
+              mimetype: "image/png",
+              caption: claraWrap("HD " + opts.img + "x (Document)", [
+                "Resolusi: " + resLabel,
+                "Ukuran: " + imgKB + " KB",
+                "Mode: Document (no compression)",
+              ].join("\n")),
+            });
+          } else {
+            // Send as image — WA compresses but inline preview
+            await sock.sendMessage(m.chat, {
+              image: { url: imgPath },
+              caption: claraWrap("HD Preview " + opts.img + "x", [
+                "Resolusi: " + resLabel,
+                "Ukuran: " + imgKB + " KB",
+                "Mode: Image (WA compressed)",
+              ].join("\n")),
+            });
+          }
 
           setTimeout(() => { try { fs.unlinkSync(imgPath); } catch (e) {} }, 60000);
         } catch (imgErr) {
@@ -633,13 +655,29 @@ async function handler(m, { sock, config: botConfig }) {
           const imgKB = (imgBuf.length / 1024).toFixed(1);
           const resLabel = opts.img === 4 ? "150dpi" : opts.img === 8 ? "300dpi" : "600dpi";
 
-          await sock.sendMessage(m.chat, {
-            image: { url: imgPath },
-            caption: claraWrap("HD Preview " + opts.img + "x", [
-              "Resolusi: " + resLabel,
-              "Ukuran: " + imgKB + " KB",
-            ].join("\n")),
-          });
+          if (opts.imgmode === "doc") {
+            // Send as document — no WA compression, full HD quality
+            await sock.sendMessage(m.chat, {
+              document: { url: imgPath },
+              fileName: "hd_" + opts.img + "x_" + timestamp + ".png",
+              mimetype: "image/png",
+              caption: claraWrap("HD " + opts.img + "x (Document)", [
+                "Resolusi: " + resLabel,
+                "Ukuran: " + imgKB + " KB",
+                "Mode: Document (no compression)",
+              ].join("\n")),
+            });
+          } else {
+            // Send as image — WA compresses but inline preview
+            await sock.sendMessage(m.chat, {
+              image: { url: imgPath },
+              caption: claraWrap("HD Preview " + opts.img + "x", [
+                "Resolusi: " + resLabel,
+                "Ukuran: " + imgKB + " KB",
+                "Mode: Image (WA compressed)",
+              ].join("\n")),
+            });
+          }
 
           setTimeout(() => { try { fs.unlinkSync(imgPath); } catch (e) {} }, 60000);
         } catch (imgErr) {
