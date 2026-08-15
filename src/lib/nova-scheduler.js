@@ -33,6 +33,7 @@ function startDailyLimitReset(options = {}) {
   const minute = options.minute ?? 0;
   const defaultLimit = options.defaultLimit ?? 25;
   const premiumLimit = options.premiumLimit ?? 1000;
+  const sock = options.sock || null;
 
   if (activeCronJobs.has("dailyLimitReset")) {
     activeCronJobs.get("dailyLimitReset").stop();
@@ -51,6 +52,37 @@ function startDailyLimitReset(options = {}) {
         );
         db.incrementStat("dailyResets");
         db.setting("lastLimitReset", new Date().toISOString());
+
+        // === Notif reset limit ke semua user ===
+        if (sock) {
+          try {
+            const users = db.db.data.users || {};
+            const ownerNumbers = config.owner?.number || [];
+            const ownerJids = new Set(ownerNumbers.map(n => n + "@s.whatsapp.net"));
+
+            const notifText =
+              `\u267B\uFE0F *Limit Harian Direset*\n\n` +
+              `Limit kamu sudah direset!\n` +
+              `\u2022 User gratis: ${defaultLimit} limit\n` +
+              `\u2022 User premium: ${premiumLimit} limit\n\n` +
+              `> ${resetCount} user telah direset`;
+
+            let sent = 0;
+            for (const jid of Object.keys(users)) {
+              // Skip owner (unlimited)
+              if (ownerJids.has(jid)) continue;
+              try {
+                await sock.sendMessage(jid, { text: notifText });
+                sent++;
+                // Delay 500ms antar kirim biar gak rate limit
+                if (sent % 10 === 0) await new Promise(r => setTimeout(r, 500));
+              } catch {}
+            }
+            logger.info("Scheduler", `Reset notif sent to ${sent} users`);
+          } catch (e) {
+            logger.error("Scheduler", `Reset notif failed: ${e.message}`);
+          }
+        }
       } catch (error) {
         logger.error("Scheduler", `Daily limit reset failed: ${error.message}`);
       }
@@ -380,6 +412,7 @@ function startSchedulerByName(name, sock, config = null) {
         minute: cfg.scheduler?.resetMinute ?? 0,
         defaultLimit: cfg.energi?.default ?? 25,
         premiumLimit: cfg.energi?.premium ?? 1000,
+        sock,
       });
       started = true;
       schedulerName = "Daily Limit Reset";
@@ -454,6 +487,7 @@ function initScheduler(config, sock = null) {
       minute: config.scheduler?.resetMinute ?? 0,
       defaultLimit: config.energi?.default ?? 25,
       premiumLimit: config.energi?.premium ?? 1000,
+      sock,
     });
   }
   if (sock) loadScheduledMessages(sock);
