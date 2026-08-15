@@ -3,7 +3,7 @@ import { logger } from "./nova-logger.js";
 import { CronJob } from "cron";
 import moment from "moment-timezone";
 import { saluranCtx } from "./nova-context.js";
-import { notifySewaExpired, notifySpamDetected, notifyUserKicked, notifyWarningGiven } from "./nova-saluran-broadcast.js";
+import { notifySewaExpired, notifySpamDetected, notifyUserKicked, notifyWarningGiven, notifyDailyLimitReset } from "./nova-saluran-broadcast.js";
 import config from "../../config.js";
 
 const scheduledTasks = new Map();
@@ -81,6 +81,20 @@ function startDailyLimitReset(options = {}) {
             logger.info("Scheduler", `Reset notif sent to ${sent} users`);
           } catch (e) {
             logger.error("Scheduler", `Reset notif failed: ${e.message}`);
+          }
+        }
+
+        // === Broadcast ke Saluran WA ===
+        if (sock) {
+          try {
+            await notifyDailyLimitReset(sock, {
+              defaultLimit,
+              premiumLimit,
+              resetCount,
+            });
+            logger.info("Scheduler", "Reset notif sent to saluran");
+          } catch (e) {
+            logger.error("Scheduler", `Saluran notif failed: ${e.message}`);
           }
         }
       } catch (error) {
