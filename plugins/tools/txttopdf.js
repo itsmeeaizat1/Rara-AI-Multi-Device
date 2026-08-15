@@ -171,6 +171,11 @@ async function createPDF(rawText, format, opts) {
   const font = await pdfDoc.embedFont(fontSet.regular);
   const boldFont = await pdfDoc.embedFont(fontSet.bold);
 
+  // CV Template routing for PDF
+  if (format === "cv" && opts.tpl && opts.tpl >= 1 && opts.tpl <= 5) {
+    return await renderCV_PDF(rawText, opts.tpl, opts, pdfDoc, font, boldFont);
+  }
+
   const bodyColor = parseColor(opts.color) || [0, 0, 0];
   const titleColorRaw = opts.titlecolor ? opts.titlecolor : opts.color;
   const titleColor = parseColor(titleColorRaw) || bodyColor;
@@ -587,7 +592,7 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
         } else if (item.type === "sub") {
           ctx.fillStyle = "#666";
           ctx.font = Math.round(11 * scale) + "px " + font;
-          ctx.fillText("▸ " + item.text, margin + Math.round(14 * scale), y);
+          ctx.fillText("> " + item.text, margin + Math.round(14 * scale), y);
           y += lineH;
         } else {
           ctx.fillStyle = "#000";
@@ -725,7 +730,7 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
         if (item.type === "bullet") {
           ctx.fillStyle = accent;
           ctx.font = fontSize + "px " + font;
-          ctx.fillText("▸", colX, cy);
+          ctx.fillText(">", colX, cy);
           ctx.fillStyle = "#000";
           const wrapped = wrap(item.text, fontSize + "px " + font, colWidth - Math.round(16 * scale));
           for (const w of wrapped) { ctx.fillText(w, colX + Math.round(14 * scale), cy); cy += lineH; }
@@ -749,6 +754,298 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
   }
   
   return await canvas.toBuffer("png");
+}
+
+
+// === PDF CV TEMPLATE RENDERER ===
+async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
+  const cv = parseCVContent(rawText);
+  const scheme = CV_TEMPLATES[tpl] || CV_TEMPLATES[1];
+  const accent = parseColor(scheme.accent) || [0, 0, 0.5];
+  const accentLight = parseColor(scheme.light) || [0.8, 0.8, 0.9];
+  
+  const bodySize = 10;
+  const headerSize = 11;
+  const nameSize = 20;
+  const lineH = 15;
+  
+  function newPage() {
+    const p = pdfDoc.addPage([PAGE_W, PAGE_H]);
+    return p;
+  }
+  
+  function drawText(page, text, x, y, size, f, color) {
+    const wrapped = wrapText(text, f, size, PAGE_W - MARGIN * 2);
+    for (const w of wrapped) {
+      page.drawText(w, { x, y, size, font: f, color: rgb(color[0], color[1], color[2]) });
+      y -= lineH;
+    }
+    return y;
+  }
+  
+  function drawWrapped(page, text, x, y, size, f, color, maxW) {
+    const wrapped = wrapText(text, f, size, maxW);
+    for (const w of wrapped) {
+      if (y < MARGIN + 20) { page = newPage(); y = PAGE_H - MARGIN; }
+      page.drawText(w, { x, y, size, font: f, color: rgb(color[0], color[1], color[2]) });
+      y -= lineH;
+    }
+    return { page, y };
+  }
+  
+  const black = [0, 0, 0];
+  const gray = [0.3, 0.3, 0.3];
+  const grayLight = [0.5, 0.5, 0.5];
+  const white = [1, 1, 1];
+  
+  if (tpl === 1) {
+    // === TEMPLATE 1: PROFESSIONAL ===
+    let page = newPage();
+    let y = PAGE_H - MARGIN;
+    const contentW = MAX_W;
+    
+    // Name centered + underline
+    if (cv.name) {
+      const tw = boldFont.widthOfTextAtSize(cv.name, nameSize);
+      const x = (PAGE_W - tw) / 2;
+      page.drawText(cv.name, { x, y, size: nameSize, font: boldFont, color: rgb(accent[0], accent[1], accent[2]) });
+      y -= nameSize + 4;
+      page.drawLine({ start: { x, y: y + 2 }, end: { x: x + tw, y: y + 2 }, thickness: 1.5, color: rgb(accent[0], accent[1], accent[2]) });
+      y -= 18;
+    }
+    if (cv.position) { const tw = font.widthOfTextAtSize(cv.position, bodySize); page.drawText(cv.position, { x: (PAGE_W - tw) / 2, y, size: bodySize, font, color: rgb(gray[0], gray[1], gray[2]) }); y -= 16; }
+    if (cv.contact) { const tw = font.widthOfTextAtSize(cv.contact, bodySize - 1); page.drawText(cv.contact, { x: (PAGE_W - tw) / 2, y, size: bodySize - 1, font, color: rgb(grayLight[0], grayLight[1], grayLight[2]) }); y -= 25; }
+    
+    for (const sec of cv.sections) {
+      page.drawText(sec.header.toUpperCase(), { x: MARGIN, y, size: headerSize, font: boldFont, color: rgb(accent[0], accent[1], accent[2]) });
+      y -= 3;
+      page.drawLine({ start: { x: MARGIN, y }, end: { x: PAGE_W - MARGIN, y }, thickness: 0.5, color: rgb(0.8, 0.8, 0.8) });
+      y -= 18;
+      
+      for (const item of sec.items) {
+        if (item.type === "bullet") {
+          // Draw dot
+          page.drawCircle({ x: MARGIN + 3, y: y - 2, size: 1.5, color: rgb(accent[0], accent[1], accent[2]) });
+          let res = drawWrapped(page, item.text, MARGIN + 12, y, bodySize, font, black, contentW - 12);
+          page = res.page; y = res.y;
+        } else if (item.type === "sub") {
+          let res = drawWrapped(page, "• " + item.text, MARGIN + 12, y, bodySize - 1, font, grayLight, contentW - 12);
+          page = res.page; y = res.y;
+        } else {
+          let res = drawWrapped(page, item.text, MARGIN + 12, y, bodySize, font, black, contentW - 12);
+          page = res.page; y = res.y;
+        }
+      }
+      y -= 8;
+    }
+  }
+  
+  else if (tpl === 2) {
+    // === TEMPLATE 2: MODERN SIDEBAR ===
+    let page = newPage();
+    const sideW = 180;
+    const mainX = sideW + 15;
+    const mainW = PAGE_W - mainX - MARGIN;
+    
+    // Sidebar background (draw on all pages - but we start with 1 page)
+    page.drawRectangle({ x: 0, y: 0, width: sideW, height: PAGE_H, color: rgb(accent[0], accent[1], accent[2]) });
+    
+    let sy = PAGE_H - MARGIN;
+    const sideMargin = 15;
+    
+    // Name
+    if (cv.name) {
+      page.drawText(cv.name, { x: sideMargin, y: sy, size: 14, font: boldFont, color: rgb(1, 1, 1) });
+      sy -= 20;
+    }
+    if (cv.position) {
+      page.drawText(cv.position, { x: sideMargin, y: sy, size: 9, font, color: rgb(accentLight[0], accentLight[1], accentLight[2]) });
+      sy -= 25;
+    }
+    
+    // Contact
+    if (cv.contact) {
+      page.drawText("KONTAK", { x: sideMargin, y: sy, size: 8, font: boldFont, color: rgb(1, 1, 1) });
+      sy -= 3;
+      page.drawLine({ start: { x: sideMargin, y: sy }, end: { x: sideW - sideMargin, y: sy }, thickness: 0.5, color: rgb(0.6, 0.6, 0.8) });
+      sy -= 14;
+      let res = drawWrapped(page, cv.contact, sideMargin, sy, 8, font, accentLight, sideW - sideMargin * 2);
+      page = res.page; sy = res.y;
+      sy -= 15;
+    }
+    
+    // Skills in sidebar
+    const skillSec = cv.sections.find(s => s.header.toUpperCase().includes("SKILL") || s.header.toUpperCase().includes("KEAHLIAN"));
+    if (skillSec) {
+      // Re-draw sidebar on new page if needed
+      if (sy < MARGIN + 50) { page = newPage(); page.drawRectangle({ x: 0, y: 0, width: sideW, height: PAGE_H, color: rgb(accent[0], accent[1], accent[2]) }); sy = PAGE_H - MARGIN; }
+      page.drawText("SKILL", { x: sideMargin, y: sy, size: 8, font: boldFont, color: rgb(1, 1, 1) });
+      sy -= 3;
+      page.drawLine({ start: { x: sideMargin, y: sy }, end: { x: sideW - sideMargin, y: sy }, thickness: 0.5, color: rgb(0.6, 0.6, 0.8) });
+      sy -= 14;
+      for (const item of skillSec.items) {
+        if (item.type === "bullet") {
+          page.drawText("• " + item.text, { x: sideMargin, y: sy, size: 8, font, color: rgb(accentLight[0], accentLight[1], accentLight[2]) });
+          sy -= 13;
+        }
+      }
+    }
+    
+    // Main area
+    let my = PAGE_H - MARGIN;
+    for (const sec of cv.sections) {
+      if (sec.header.toUpperCase().includes("SKILL") || sec.header.toUpperCase().includes("KEAHLIAN")) continue;
+      
+      page.drawText(sec.header.toUpperCase(), { x: mainX, y: my, size: headerSize, font: boldFont, color: rgb(accent[0], accent[1], accent[2]) });
+      my -= 3;
+      page.drawLine({ start: { x: mainX, y: my }, end: { x: mainX + mainW, y: my }, thickness: 0.5, color: rgb(accentLight[0], accentLight[1], accentLight[2]) });
+      my -= 18;
+      
+      for (const item of sec.items) {
+        if (item.type === "bullet") {
+          page.drawCircle({ x: mainX + 3, y: my - 2, size: 1.5, color: rgb(accent[0], accent[1], accent[2]) });
+          let res = drawWrapped(page, item.text, mainX + 12, my, bodySize, font, black, mainW - 12);
+          page = res.page; 
+          if (res.page !== page) { page = res.page; page.drawRectangle({ x: 0, y: 0, width: sideW, height: PAGE_H, color: rgb(accent[0], accent[1], accent[2]) }); }
+          my = res.y;
+        } else if (item.type === "sub") {
+          let res = drawWrapped(page, "• " + item.text, mainX + 12, my, bodySize - 1, font, grayLight, mainW - 12);
+          page = res.page;
+          if (res.page !== page) { page = res.page; page.drawRectangle({ x: 0, y: 0, width: sideW, height: PAGE_H, color: rgb(accent[0], accent[1], accent[2]) }); }
+          my = res.y;
+        } else {
+          let res = drawWrapped(page, item.text, mainX + 12, my, bodySize, font, black, mainW - 12);
+          page = res.page;
+          if (res.page !== page) { page = res.page; page.drawRectangle({ x: 0, y: 0, width: sideW, height: PAGE_H, color: rgb(accent[0], accent[1], accent[2]) }); }
+          my = res.y;
+        }
+      }
+      my -= 12;
+    }
+  }
+  
+  else if (tpl === 3) {
+    // === TEMPLATE 3: CREATIVE HEADER ===
+    let page = newPage();
+    const headerH = 110;
+    
+    // Header band
+    page.drawRectangle({ x: 0, y: PAGE_H - headerH, width: PAGE_W, height: headerH, color: rgb(accent[0], accent[1], accent[2]) });
+    
+    let hy = PAGE_H - 35;
+    if (cv.name) { const tw = boldFont.widthOfTextAtSize(cv.name, nameSize); page.drawText(cv.name, { x: (PAGE_W - tw) / 2, y: hy, size: nameSize, font: boldFont, color: rgb(1, 1, 1) }); hy -= 22; }
+    if (cv.position) { const tw = font.widthOfTextAtSize(cv.position, bodySize); page.drawText(cv.position, { x: (PAGE_W - tw) / 2, y: hy, size: bodySize, font, color: rgb(0.9, 0.9, 0.9) }); hy -= 15; }
+    if (cv.contact) { const tw = font.widthOfTextAtSize(cv.contact, bodySize - 1); page.drawText(cv.contact, { x: (PAGE_W - tw) / 2, y: hy, size: bodySize - 1, font, color: rgb(0.8, 0.8, 0.8) }); }
+    
+    let y = PAGE_H - headerH - 25;
+    for (const sec of cv.sections) {
+      // Pill background
+      const headerStr = sec.header.toUpperCase();
+      const pillW = boldFont.widthOfTextAtSize(headerStr, headerSize) + 15;
+      page.drawRectangle({ x: MARGIN, y: y - 12, width: pillW, height: 18, color: rgb(accentLight[0], accentLight[1], accentLight[2]) });
+      page.drawText(headerStr, { x: MARGIN + 7, y: y - 4, size: headerSize, font: boldFont, color: rgb(accent[0], accent[1], accent[2]) });
+      y -= 20;
+      
+      for (const item of sec.items) {
+        if (item.type === "bullet") {
+          page.drawSquare({ x: MARGIN, y: y - 8, size: 4, color: rgb(accent[0], accent[1], accent[2]) });
+          let res = drawWrapped(page, item.text, MARGIN + 12, y, bodySize, font, black, MAX_W - 12);
+          page = res.page; y = res.y;
+        } else if (item.type === "sub") {
+          let res = drawWrapped(page, "> " + item.text, MARGIN + 12, y, bodySize - 1, font, grayLight, MAX_W - 12);
+          page = res.page; y = res.y;
+        } else {
+          let res = drawWrapped(page, item.text, MARGIN + 12, y, bodySize, font, black, MAX_W - 12);
+          page = res.page; y = res.y;
+        }
+      }
+      y -= 12;
+    }
+  }
+  
+  else if (tpl === 4) {
+    // === TEMPLATE 4: MINIMALIST ===
+    let page = newPage();
+    let y = PAGE_H - MARGIN;
+    
+    // Name left-aligned
+    if (cv.name) { page.drawText(cv.name, { x: MARGIN, y, size: 18, font: boldFont, color: rgb(0.1, 0.1, 0.1) }); y -= 24; }
+    if (cv.position) { page.drawText(cv.position, { x: MARGIN, y, size: bodySize, font, color: rgb(0.4, 0.4, 0.4) }); y -= 15; }
+    if (cv.contact) { page.drawText(cv.contact, { x: MARGIN, y, size: bodySize - 1, font, color: rgb(0.5, 0.5, 0.5) }); y -= 20; }
+    
+    // Thin separator
+    page.drawLine({ start: { x: MARGIN, y }, end: { x: PAGE_W - MARGIN, y }, thickness: 0.5, color: rgb(0.85, 0.85, 0.85) });
+    y -= 22;
+    
+    for (const sec of cv.sections) {
+      page.drawText(sec.header.toUpperCase(), { x: MARGIN, y, size: 9, font: boldFont, color: rgb(0.1, 0.1, 0.1) });
+      y -= 16;
+      
+      for (const item of sec.items) {
+        if (item.type === "bullet") {
+          page.drawText("—", { x: MARGIN, y, size: bodySize, font, color: rgb(0.6, 0.6, 0.6) });
+          let res = drawWrapped(page, item.text, MARGIN + 14, y, bodySize, font, [0.2, 0.2, 0.2], MAX_W - 14);
+          page = res.page; y = res.y;
+        } else if (item.type === "sub") {
+          let res = drawWrapped(page, item.text, MARGIN + 14, y, bodySize - 1, font, grayLight, MAX_W - 14);
+          page = res.page; y = res.y;
+        } else {
+          let res = drawWrapped(page, item.text, MARGIN + 14, y, bodySize, font, [0.2, 0.2, 0.2], MAX_W - 14);
+          page = res.page; y = res.y;
+        }
+      }
+      y -= 14;
+    }
+  }
+  
+  else if (tpl === 5) {
+    // === TEMPLATE 5: EXECUTIVE ===
+    let page = newPage();
+    let y = PAGE_H - MARGIN;
+    
+    // Name left-aligned bold
+    if (cv.name) { page.drawText(cv.name, { x: MARGIN, y, size: 22, font: boldFont, color: rgb(accent[0], accent[1], accent[2]) }); y -= 6; }
+    // Thick accent line
+    page.drawLine({ start: { x: MARGIN, y }, end: { x: PAGE_W - MARGIN, y }, thickness: 2.5, color: rgb(accent[0], accent[1], accent[2]) });
+    y -= 20;
+    if (cv.position) { page.drawText(cv.position, { x: MARGIN, y, size: bodySize, font: boldFont, color: rgb(0.2, 0.2, 0.2) }); y -= 16; }
+    if (cv.contact) { page.drawText(cv.contact, { x: MARGIN, y, size: bodySize - 1, font, color: rgb(0.4, 0.4, 0.4) }); y -= 28; }
+    
+    // Two-column layout
+    const colW = (MAX_W - 25) / 2;
+    const rightX = MARGIN + colW + 25;
+    let leftY = y;
+    let rightY = y;
+    
+    for (const sec of cv.sections) {
+      const isLeftCol = sec.header.toUpperCase().includes("PROFIL") || sec.header.toUpperCase().includes("SKILL") || sec.header.toUpperCase().includes("KEAHLIAN");
+      const colX = isLeftCol ? MARGIN : rightX;
+      let cy = isLeftCol ? leftY : rightY;
+      
+      // Left border accent
+      page.drawLine({ start: { x: colX, y: cy - 14 }, end: { x: colX, y: cy + 2 }, thickness: 2.5, color: rgb(accent[0], accent[1], accent[2]) });
+      page.drawText(sec.header.toUpperCase(), { x: colX + 8, y: cy, size: 10, font: boldFont, color: rgb(accent[0], accent[1], accent[2]) });
+      cy -= 16;
+      
+      for (const item of sec.items) {
+        if (item.type === "bullet") {
+          page.drawText(">", { x: colX, y: cy, size: bodySize, font, color: rgb(accent[0], accent[1], accent[2]) });
+          let res = drawWrapped(page, item.text, colX + 12, cy, bodySize, font, black, colW - 12);
+          page = res.page; cy = res.y;
+        } else if (item.type === "sub") {
+          let res = drawWrapped(page, "  " + item.text, colX + 12, cy, bodySize - 1, font, grayLight, colW - 12);
+          page = res.page; cy = res.y;
+        } else {
+          let res = drawWrapped(page, item.text, colX + 12, cy, bodySize, font, black, colW - 12);
+          page = res.page; cy = res.y;
+        }
+      }
+      cy += 15;
+      if (isLeftCol) leftY = cy; else rightY = cy;
+    }
+  }
+  
+  return await pdfDoc.save();
 }
 
 
