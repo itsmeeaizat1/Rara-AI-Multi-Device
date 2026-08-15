@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { Canvas } from "skia-canvas";
+import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
@@ -10,9 +11,9 @@ const pluginConfig = {
   name: "txttopdf",
   alias: ["texttopdf", "txt2pdf", "topdf", "makpdf", "txttodoc", "texttodoc", "txt2doc", "todoc", "makeword"],
   category: "tools",
-  description: "Convert text ke PDF atau Word (.doc) - auto format rapih + custom font, warna & upscale HD",
-  usage: ".txttopdf <teks>  |  .txttopdf cv <teks>  |  .txttopdf font=times color=blue img=8 <teks>",
-  example: ".txttopdf font=times color=navy img=8 cv\nBudi Santoso\nSoftware Engineer",
+  description: "Convert text ke PDF/Word + AI CV/Portfolio (kasih data diri, AI yg buat) - font, warna & HD",
+  usage: ".txttopdf <teks>  |  .txttopdf aicv <info>  |  .txttopdf aiporto <info>",
+  example: ".txttopdf aicv buatkan cv lamaran ke restoran. Nama Andi, exp cafe 2 thn",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -453,6 +454,91 @@ function escapeHtml(text) {
   return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+
+// ─── AI CV & Portfolio Generator ───
+const CV_PROMPT = `Kamu adalah JOKI CV profesional. Tugas kamu bantu user buat CV lengkap dan rapi dari info seadanya. User mungkin cuma kasih konteks minim (ex: "buat cv lamaran ke restoran, nama Andi, bisa masak"). Kamu LENGKAPIN sendiri semua bagian yang kurang biar CV keliatan profesional dan siap pakai.
+
+FORMAT OUTPUT WAJIB (LANGSUNG output CV, jangan ada intro/penjelasan/nanya balik):
+
+Baris 1: NAMA (dari user, atau buat nama yang cocok)
+Baris 2: Posisi yang dilamar - Kota (dari user atau kosongin)
+Baris 3: Email (dari user atau buat email masuk akal) | Telepon (dari user atau buat 08xx)
+
+# PROFIL
+2-3 kalimat promosi diri yang sesuai posisi yang dilamar. Buat yang menarik dan profesional.
+
+# PENGALAMAN
+- Posisi di Tempat Kerja (tahun) - apa yang dikerjain dan pencapaian
+- Posisi di Tempat Kerja (tahun) - apa yang dikerjain dan pencapaian
+(Buat pengalaman yang masuk akal dan relevan. Kalau user udah kasih pengalaman, pakai itu. Kalau belum, buat yang realistis.)
+
+# PENDIDIKAN
+- Jenjang - Nama Sekolah/Kampus (tahun)
+(Buat yang masuk akal sesuai posisi. SMK untuk restoran, S1 untuk tech, dll.)
+
+# SKILL
+- Skill teknis utama yang relevan
+- Skill soft dan penunjang
+
+PERMINTAAN USER: __INPUT__
+
+ATURAN JOKI:
+1. OUTPUT LANGSUNG CV-nya. JANGAN nanya balik, jangan bilang "berikut CV-nya" atau penjelasan apapun
+2. Pakai format: # untuk section header, - untuk bullet point
+3. Lengkapin SEMUA bagian. User kasih nama doyan? Tetap buat full CV lengkap
+4. Sesuaikan tone dengan posisi (restoran = kasar vs sopan, tech = technical, dll)
+5. Buat CV yang bikin user keliatan berpengalaman dan profesional
+6. Bahasa Indonesia natural
+7. Maksimal 1 halaman A4`;
+
+const PORTO_PROMPT = `Kamu adalah JOKI portofolio profesional. Tugas kamu bantu user buat portofolio lengkap dan rapi dari info seadanya. User mungkin cuma kasih konteks minim (ex: "buat portofolio web dev, nama Sari, pernah bikin website company"). Kamu LENGKAPIN sendiri semua bagian yang kurang biar portofolio keliatan profesional dan siap pakai.
+
+FORMAT OUTPUT WAJIB (LANGSUNG output, jangan ada intro/penjelasan/nanya balik):
+
+Baris 1: NAMA (dari user, atau buat nama yang cocok)
+Baris 2: Profesi/Bidang - Kota (dari user atau kosongin)
+Baris 3: Email (dari user atau buat masuk akal) | Telepon (dari user atau buat 08xx)
+
+# TENTANG SAYA
+2-3 kalimat deskripsi profesional yang menarik sesuai bidang user.
+
+# PROYEK UNGGULAN
+- Nama Proyek: Deskripsi singkat, peran user, dan hasil/impact
+- Nama Proyek: Deskripsi singkat, peran user, dan hasil/impact
+- Nama Proyek: Deskripsi singkat, peran user, dan hasil/impact
+(Buat proyek yang masuk akal dan relevan. Kalau user udah sebut, pakai itu. Kalau belum, buat yang realistis.)
+
+# KEAHLIAN
+- Skill teknis utama
+- Tools dan teknologi yang relevan
+
+# PENGALAMAN
+- Posisi di Tempat Kerja (tahun) - deskripsi singkat
+
+# PENDIDIKAN
+- Jenjang - Institusi (tahun)
+
+PERMINTAAN USER: __INPUT__
+
+ATURAN JOKI:
+1. OUTPUT LANGSUNG portofolio-nya. JANGAN nanya balik atau kasih penjelasan
+2. Pakai format: # untuk section header, - untuk bullet point
+3. Lengkapin SEMUA bagian. User kasih nama doyan? Tetap buat full portofolio
+4. Sesuaikan dengan bidang (web dev, design, photography, videographer, dll)
+5. Buat yang bikin user keliatan berpengalaman dan profesional
+6. Bahasa Indonesia natural
+7. Maksimal 1 halaman A4`;
+
+function cleanAIOutput(text) {
+  return text
+    .replace(/^```[a-z]*\n?/i, "")
+    .replace(/\n?```$/i, "")
+    .replace(/^Here is.*?:/i, "")
+    .replace(/^Berikut.*?:/i, "")
+    .replace(/^Ini.*?:/i, "")
+    .trim();
+}
+
 // ─── Handler ───
 async function handler(m, { sock, config: botConfig }) {
   try {
@@ -478,7 +564,9 @@ async function handler(m, { sock, config: botConfig }) {
         "default = PDF biasa\n" +
         "cv = PDF template CV (judul center + garis)\n" +
         "surat = PDF template surat (judul center)\n" +
-        "word = Word .doc format\n\n" +
+        "word = Word .doc format\n" +
+        "aicv = AI buat CV otomatis\n" +
+        "aiporto = AI buat portofolio\n\n" +
         "Custom font & warna:\n" +
         "font=helvetica (default)\n" +
         "font=times (serif formal)\n" +
@@ -497,11 +585,13 @@ async function handler(m, { sock, config: botConfig }) {
         "Warna: navy crimson teal gold indigo\n" +
         "brown maroon olive orange purple\n" +
         "atau hex #RRGGBB\n\n" +
-        "Contoh:\n" +
+        "Contoh CV manual:\n" +
         prefix + "txttopdf font=times color=navy img=8 cv\n" +
         "Budi Santoso\nSoftware Engineer\n\n" +
-        prefix + "txttopdf img=4 out=gambar cv\n" +
-        "Budi Santoso\nSoftware Engineer\n\n" +
+        "Contoh AI CV:\n" +
+        prefix + "txttopdf aicv buatkan cv lamaran kerja ke restoran. Nama Andi, pengalaman cafe 2 tahun, skill: masak, pelayanan\n\n" +
+        "Contoh AI Portofolio:\n" +
+        prefix + "txttopdf aiporto buatkan portofolio web developer. Nama Sari, proyek: website company, app laundry\n\n" +
         "Bisa juga reply pesan yg berisi teks",
         { title: "Text to PDF/Word Converter" }
       );
@@ -514,6 +604,7 @@ async function handler(m, { sock, config: botConfig }) {
     let format = "plain";
     let outputType = "pdf";
     let content = afterFlags;
+    let aiGenerated = false;
 
     const lowerInput = afterFlags.toLowerCase();
     if (lowerInput.startsWith("cv ") || lowerInput.startsWith("cv\n")) {
@@ -522,6 +613,55 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (lowerInput.startsWith("surat ") || lowerInput.startsWith("surat\n")) {
       format = "surat";
       content = afterFlags.substring(5).trim();
+    } else if (lowerInput.startsWith("aicv ") || lowerInput.startsWith("aicv\n") ||
+               lowerInput.startsWith("cvai ") || lowerInput.startsWith("cvai\n")) {
+      // AI-generated CV
+      const userInput = afterFlags.replace(/^aicv\s+|^cvai\s+/i, "").trim();
+      if (!userInput || userInput.length < 3) {
+        await m.react("❌");
+        return m.reply(claraWrap("TxtToPDF AI", "Kasih info buat CV!\nContoh: .txttopdf aicv buatkan cv lamaran ke restoran. Nama Andi, pengalaman cafe 2 thn, skill: masak, pelayanan pelanggan"));
+      }
+      await m.react("🕐");
+      await m.reply(claraWrap("Joki CV AI", "AI lagi nulis CV kamu...\n\nInfo: " + userInput.substring(0, 100) + "..."));
+      try {
+        const aiResult = await UnlimitedAI(CV_PROMPT.replace("__INPUT__", userInput), "nova-ai");
+        if (!aiResult || aiResult.status === false) {
+          await m.react("❌");
+          return m.reply(claraWrap("TxtToPDF AI", "AI gagal generate CV. Coba lagi nanti."));
+        }
+        const aiText = typeof aiResult === "string" ? aiResult : (aiResult.answer || "");
+        content = cleanAIOutput(aiText);
+        format = "cv";
+        aiGenerated = true;
+      } catch (aiErr) {
+        await m.react("❌");
+        return m.reply(claraWrap("TxtToPDF AI", "Error AI: " + aiErr.message));
+      }
+    } else if (lowerInput.startsWith("aiporto ") || lowerInput.startsWith("aiporto\n") ||
+               lowerInput.startsWith("portoai ") || lowerInput.startsWith("portoai\n") ||
+               lowerInput.startsWith("aiportofolio ") || lowerInput.startsWith("aiportofolio\n")) {
+      // AI-generated Portfolio
+      const userInput = afterFlags.replace(/^aiporto\s+|^portoai\s+|^aiportofolio\s+/i, "").trim();
+      if (!userInput || userInput.length < 3) {
+        await m.react("❌");
+        return m.reply(claraWrap("TxtToPDF AI", "Kasih info buat portofolio!\nContoh: .txttopdf aiporto buatkan portofolio web dev. Nama Sari, proyek: website company, app laundry, design poster"));
+      }
+      await m.react("🕐");
+      await m.reply(claraWrap("Joki Portofolio AI", "AI lagi nulis portofolio kamu...\n\nInfo: " + userInput.substring(0, 100) + "..."));
+      try {
+        const aiResult = await UnlimitedAI(PORTO_PROMPT.replace("__INPUT__", userInput), "nova-ai");
+        if (!aiResult || aiResult.status === false) {
+          await m.react("❌");
+          return m.reply(claraWrap("TxtToPDF AI", "AI gagal generate portofolio. Coba lagi nanti."));
+        }
+        const aiText = typeof aiResult === "string" ? aiResult : (aiResult.answer || "");
+        content = cleanAIOutput(aiText);
+        format = "cv";
+        aiGenerated = true;
+      } catch (aiErr) {
+        await m.react("❌");
+        return m.reply(claraWrap("TxtToPDF AI", "Error AI: " + aiErr.message));
+      }
     } else if (lowerInput.startsWith("word ") || lowerInput.startsWith("word\n") ||
                lowerInput.startsWith("doc ") || lowerInput.startsWith("doc\n")) {
       outputType = "doc";
@@ -561,7 +701,7 @@ async function handler(m, { sock, config: botConfig }) {
       const pageCount = pdfDoc2.getPageCount();
       const wordCount = content.split(/\s+/).length;
 
-      const formatLabel = format === "cv" ? "CV Template" : format === "surat" ? "Surat Template" : "Standard PDF";
+      const formatLabel = (aiGenerated ? "AI Generated " : "") + (format === "cv" ? "CV Template" : format === "surat" ? "Surat Template" : "Standard PDF");
       const imgLabel = opts.img > 0 ? "\nUpscale: " + opts.img + "x HD image" : "";
 
       await m.react("✅");
