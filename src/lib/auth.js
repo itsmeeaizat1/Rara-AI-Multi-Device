@@ -20,6 +20,6 @@ export function verifyAuth(input) {
 }
 
 export function getOwnerContact() {
-  const tagline = gradient.rainbow("Nova AJ Whatsapp Bot");
+  const tagline = gradient.rainbow("Nova AI Whatsapp Bot");
   return `${tagline}\n\nAizat\nTlp: 08174887770\nTiktok: itsmee_aizat\nGithub: itsmeeaizat`;
 }
