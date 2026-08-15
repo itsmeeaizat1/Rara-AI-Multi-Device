@@ -5,7 +5,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 const pluginConfig = {
   name: "couple",
   alias: ["couple", "couplestatus", "statuscouple"],
-  category: "game",
+  category: "rpg",
   description: "Lihat status pasangan RPG kamu",
   usage: ".couple",
   example: ".couple",

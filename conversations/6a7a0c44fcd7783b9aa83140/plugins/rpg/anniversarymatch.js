@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!partnerJid || !startDate) {
       const text =
         claraHeader("Anniversary", statusEmoji) + "\n\n" +
-        claraWrap("sᴛᴀᴛᴜs", [`◦ Status: *Belum punya pasangan*`, `◦ Belum ada hari jadian atau nikah`].join("\n")) + "\n\n" +
+        claraWrap("status", [`◦ Status: *Belum punya pasangan*`, `◦ Belum ada hari jadian atau nikah`].join("\n")) + "\n\n" +
         separator("━", 22) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk mulai cerita cinta`);
 
@@ -119,7 +119,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text =
       claraHeader("Anniversary", statusEmoji) + "\n\n" +
-      claraWrap("ᴀɴɴɪᴠᴇʀsᴀʀʏ", [
+      claraWrap("anniversary", [
         `◦ Kamu: *${userName}*`,
         `◦ Pasangan: *${partnerName}*`,
         `◦ Status: *${statusLabel}* ${statusEmoji}`,
@@ -128,7 +128,7 @@ async function handler(m, { sock, config: botConfig }) {
         `◦ Hari ke: *${days}*`,
         `◦ Milestone: *${milestone}*`,
       ]) + "\n\n" +
-      claraWrap("ʙᴏɴᴅ", [`◦ Affection: *${affection}*`, `◦ Bond Level: *${bondLevel}*`, ...annivInfo].join("\n")) + "\n\n" +
+      claraWrap("bond", [`◦ Affection: *${affection}*`, `◦ Bond Level: *${bondLevel}*`, ...annivInfo].join("\n")) + "\n\n" +
       separator("━", 22) + "\n" +
       tipText(`Tingkatkan affection: ${prefix}cuddling, ${prefix}kiss, ${prefix}sayang, ${prefix}kado`);
 

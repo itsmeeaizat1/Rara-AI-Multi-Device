@@ -81,7 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
     let text = claraWrap("Dashboard Couple", "💑") + "\n\n";
 
     // Stats
-    text += claraWrap("ʀᴀʅᴀʀʜ", ["◦ Total pasangan: *" + totalCouples + "*", "◦ Bonus married: *+5% EXP*", "◦ Biaya cerai: *25.000 koin*"].join("\n")) + "\n\n";
+    text += claraWrap("raʅarh", ["◦ Total pasangan: *" + totalCouples + "*", "◦ Bonus married: *+5% EXP*", "◦ Biaya cerai: *25.000 koin*"].join("\n")) + "\n\n";
 
     // My couple status
     if (myCouple) {

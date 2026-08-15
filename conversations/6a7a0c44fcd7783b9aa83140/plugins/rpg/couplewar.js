@@ -196,7 +196,7 @@ async function handler(m, { sock, config: botConfig }) {
         `◦ Power: *${myPower}*`,
         `◦ Team 2: *${targetName} & ${targetPartnerName}*`,
         `◦ Power: *${targetPower}*`].join("\n")) + "\n\n" +
-      claraWrap("ᴘᴇᴍᴇɴᴀɴɢ", [`◦ Pemenang: *${winnerTeam}*`, `◦ Affection: *+${winnerAff}*`, `◦ EXP: *+${winnerExp}*`, `◦ Gold: *+${winnerGold}*`, `◦ Power Gap: *${powerDiff}*`].join("\n")) + "\n\n" +
+      claraWrap("pemenang", [`◦ Pemenang: *${winnerTeam}*`, `◦ Affection: *+${winnerAff}*`, `◦ EXP: *+${winnerExp}*`, `◦ Gold: *+${winnerGold}*`, `◦ Power Gap: *${powerDiff}*`].join("\n")) + "\n\n" +
       separator("━", 22) + "\n" +
       tipText(`War lagi 1 jam lagi ${prefix}couplewar @target`);
 

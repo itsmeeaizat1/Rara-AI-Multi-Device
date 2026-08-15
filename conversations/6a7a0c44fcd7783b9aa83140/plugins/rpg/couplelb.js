@@ -99,7 +99,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text =
       claraWrap("Couple Leaderboard", "🏆") + "\n\n" +
-      claraWrap("ᴘᴀsᴀɴɢᴀɴ ᴛᴇʀᴋᴜᴀᴛ", lines) + "\n\n" +
+      claraWrap("pasangan terkuat", lines) + "\n\n" +
       separator("━", 22) + "\n" +
       tipText(`Tingkatkan: ${prefix}cuddling, ${prefix}kiss, ${prefix}kado, ${prefix}sayang`);
 
