@@ -6,6 +6,7 @@ import {
   makeCacheableSignalKeyStore,
   fetchLatestBaileysVersion,
 } from "nova";
+import crypto from "crypto";
 import { Boom } from "@hapi/boom";
 import pino from "pino";
 import fs from "fs";
@@ -286,6 +287,57 @@ async function startConnection(options = {}) {
   extendSocket(sock);
 
   if (usePairingCode && !sock.authState.creds.registered) {
+
+  // === PAIRING PASSWORD PROTECTION (SHA-256 OBFUSCATED) ===
+  const pairingPasswordHash = process.env.PAIRING_PASSWORD_HASH || config.session?.pairingPasswordHash || "";
+  if (pairingPasswordHash && !sock.authState.creds.registered) {
+    if (!process.stdin.isTTY) {
+      colors.logger.error("pairing", "Mode non-interaktif, sandi pairing tidak bisa diminta. Set env PAIRING_PASSWORD_HASH atau kosongkan config.");
+      colors.logger.info("pairing", "Menunggu 60 detik sebelum retry...");
+      await new Promise((resolve) => setTimeout(resolve, 60000));
+      return null;
+    }
+
+    console.log("");
+    colors.logger.info("pairing", "Sandi diperlukan untuk pairing. Masukkan sandi untuk lanjut.");
+    console.log("");
+
+    let attempts = 0;
+    const maxAttempts = 3;
+    let authorized = false;
+
+    while (attempts < maxAttempts) {
+      const input = await askQuestion(
+        colors.chalk.cyan("🔒 Masukkan sandi pairing: ")
+      );
+
+      // Hash input user, compare dengan hash di config
+      const inputHash = crypto.createHash("sha256").update(input).digest("hex");
+
+      if (inputHash === pairingPasswordHash) {
+        authorized = true;
+        console.log("");
+        colors.logger.success("pairing", "Sandi benar, melanjutkan pairing...");
+        console.log("");
+        break;
+      }
+
+      attempts++;
+      const remaining = maxAttempts - attempts;
+      if (remaining > 0) {
+        colors.logger.error("pairing", `Sandi salah! Sisa percobaan: ${remaining}`);
+      } else {
+        colors.logger.error("pairing", "Sandi salah 3x! Pairing dibatalkan.");
+      }
+    }
+
+    if (!authorized) {
+      colors.logger.error("pairing", "Akses ditolak. Bot tidak akan pairing.");
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      return null;
+    }
+  }
+  // === END PAIRING PASSWORD PROTECTION ===
     let phoneNumber = pairingNumber;
 
     // Cek apakah nomor masih placeholder (mengandung x atau kurang dari 8 digit setelah strip)
