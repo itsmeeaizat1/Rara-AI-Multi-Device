@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
 import { CronJob } from "cron";

@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * plugins/owner/setjadibot.js
  * Command .setjadibot — atur akses jadibot (owner only).

@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import config from '../../config.js'
 import { hasFullAccess, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'

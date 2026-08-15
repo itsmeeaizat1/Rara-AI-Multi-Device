@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import http from "http";
 import https from "https";
 import te from "../../src/lib/nova-error.js";

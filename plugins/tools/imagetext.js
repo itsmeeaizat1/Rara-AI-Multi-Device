@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { spawn } from "node:child_process";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";

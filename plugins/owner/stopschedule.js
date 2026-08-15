@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { stopSchedulerByName, getFullSchedulerStatus } from '../../src/lib/nova-scheduler.js'
 import { stopSholatScheduler } from '../../src/lib/nova-sholat-scheduler.js'

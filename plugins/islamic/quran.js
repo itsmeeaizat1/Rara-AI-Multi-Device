@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import * as cheerio from 'cheerio'
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";

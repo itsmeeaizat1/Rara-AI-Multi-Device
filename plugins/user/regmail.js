@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { sendOtpEmail, isEmailConfigured, getEmailUser, setEmailDb } from "../../src/lib/nova-email.js";
 import config from "../../config.js";

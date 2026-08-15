@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getPlayer, savePlayer, ensurePlayer, addGold } from "../../src/lib/nova-rpg-service.js";
 import { claraHeader, separator, tipText, formatNumber , claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";

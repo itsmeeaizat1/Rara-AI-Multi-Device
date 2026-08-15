@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import crypto from "crypto";
 import {
   generateWAMessage,

@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // plugins/fun/chatdna.js
 // Chat DNA Analyzer - Analyze chat patterns and generate fun "DNA" profiles
 // Commands: .chatdna (@tag), .dnamatch @user1 @user2, .chatdnaon, .chatdnaoff
@@ -271,7 +272,7 @@ function generateDNA(jid) {
   } else if (avgResp < 300) {
     respDesc = `${Math.round(avgResp / 60)}m - Sedang. Mikir dulu sebelum balas. Strategis`;
   } else {
-    respDesc = `${Math.round(avgResp / 60)}m - Lambat. Bikin penasaran. Main hard to get?";
+    respDesc = `${Math.round(avgResp / 60)}m - Lambat. Bikin penasaran. Main hard to get?`;
   }
 
   const toxicity = user.totalMessages > 0
@@ -601,4 +602,4 @@ async function handler(m, { sock }) {
   }
 }
 
-export { pluginConfig as config, handler, trackDNA };
+export { pluginConfig as config, handler };

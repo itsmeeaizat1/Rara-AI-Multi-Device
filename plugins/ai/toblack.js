@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { uploadImage } from "../../src/lib/nova-uploader.js";
 import { f } from "../../src/lib/nova-http.js";

@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const MUSIC_LIST = []
 for (let i = 1; i <= 52; i++) {
     MUSIC_LIST.push(`music${i}`)

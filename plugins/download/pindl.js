@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import { pinterestdl } from "../../src/lib/nova-pinterest.js";
 import path from "path";

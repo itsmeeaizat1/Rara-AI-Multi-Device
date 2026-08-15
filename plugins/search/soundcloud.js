@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { load } from "cheerio";
 import fetch from "node-fetch";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";

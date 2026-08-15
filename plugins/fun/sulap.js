@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: 'sulap',
     alias: ['magic', 'magictrick'],

@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import {
   prepareWAMessageMedia,
