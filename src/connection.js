@@ -285,6 +285,54 @@ async function startConnection(options = {}) {
   connectionState.sock = sock;
   extendSocket(sock);
 
+  // === PAIRING PASSWORD PROTECTION ===
+  const pairingPassword = process.env.PAIRING_PASSWORD || config.session?.pairingPassword || "";
+  if (pairingPassword && !sock.authState.creds.registered) {
+    if (!process.stdin.isTTY) {
+      colors.logger.error("pairing", "Mode non-interaktif, sandi pairing tidak bisa diminta. Set env PAIRING_PASSWORD atau kosongkan config.");
+      colors.logger.info("pairing", "Menunggu 60 detik sebelum retry...");
+      await new Promise((resolve) => setTimeout(resolve, 60000));
+      return null;
+    }
+
+    console.log("");
+    colors.logger.info("pairing", "Sandi diperlukan untuk pairing. Masukkan sandi untuk lanjut.");
+    console.log("");
+
+    let attempts = 0;
+    const maxAttempts = 3;
+    let authorized = false;
+
+    while (attempts < maxAttempts) {
+      const input = await askQuestion(
+        colors.chalk.cyan("🔒 Masukkan sandi pairing: ")
+      );
+
+      if (input === pairingPassword) {
+        authorized = true;
+        console.log("");
+        colors.logger.success("pairing", "Sandi benar, melanjutkan pairing...");
+        console.log("");
+        break;
+      }
+
+      attempts++;
+      const remaining = maxAttempts - attempts;
+      if (remaining > 0) {
+        colors.logger.error("pairing", `Sandi salah! Sisa percobaan: ${remaining}`);
+      } else {
+        colors.logger.error("pairing", "Sandi salah 3x! Pairing dibatalkan.");
+      }
+    }
+
+    if (!authorized) {
+      colors.logger.error("pairing", "Akses ditolak. Bot tidak akan pairing.");
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+      return null;
+    }
+  }
+  // === END PAIRING PASSWORD PROTECTION ===
+
   if (usePairingCode && !sock.authState.creds.registered) {
 
     let phoneNumber = pairingNumber;
