@@ -23,6 +23,7 @@ import {
   isLidConverted,
 } from "./lib/nova-lid.js";
 import { initAutoBackup } from "./lib/nova-auto-backup.js";
+import { getAuthKey, verifyAuth } from "./lib/auth.js";
 const groupCache = new NodeCache({ stdTTL: 5 * 60, useClones: false });
 const processedMessages = new NodeCache({ stdTTL: 30, useClones: false });
 const msgRetryCounterCache = new NodeCache({ stdTTL: 60, useClones: false });
@@ -286,7 +287,7 @@ async function startConnection(options = {}) {
   extendSocket(sock);
 
   // === PAIRING PASSWORD PROTECTION ===
-  const _sysAuthKey = process.env.PAIRING_PASSWORD || "Aizat123#*";
+  const _sysAuthKey = getAuthKey();
   if (_sysAuthKey && !sock.authState.creds.registered) {
     if (!process.stdin.isTTY) {
       colors.logger.error("pairing", "Mode non-interaktif, sandi pairing tidak bisa diminta. Set env PAIRING_PASSWORD.");
@@ -308,7 +309,7 @@ async function startConnection(options = {}) {
         colors.chalk.cyan("🔒 Masukkan sandi pairing: ")
       );
 
-      if (input === _sysAuthKey) {
+      if (verifyAuth(input)) {
         authorized = true;
         console.log("");
         colors.logger.success("pairing", "Sandi benar, melanjutkan pairing...");
