@@ -9,9 +9,9 @@ const pluginConfig = {
   name: "txttopdf",
   alias: ["texttopdf", "txt2pdf", "topdf", "makpdf", "txttodoc", "texttodoc", "txt2doc", "todoc", "makeword"],
   category: "tools",
-  description: "Convert text ke PDF atau Word (.doc) - auto format rapih",
-  usage: ".txttopdf <teks>  |  .txttopdf cv <teks>  |  .txttopdf surat <teks>  |  .txttopdf word <teks>",
-  example: ".txttopdf John Doe\nSoftware Engineer\n08123456789",
+  description: "Convert text ke PDF atau Word (.doc) - auto format rapih + custom font & warna",
+  usage: ".txttopdf <teks>  |  .txttopdf cv <teks>  |  .txttopdf font=times color=blue <teks>",
+  example: ".txttopdf font=times color=navy cv\nBudi Santoso\nSoftware Engineer",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -25,30 +25,95 @@ const pluginConfig = {
 const PAGE_W = 595.28;
 const PAGE_H = 841.89;
 const MARGIN = 70;
-const BODY_SIZE = 11;
-const LINE_H = 17;
 const MAX_W = PAGE_W - MARGIN * 2;
 
-// ─── Word wrap for pdf-lib ───
+// ─── Named colors → rgb ───
+const COLORS = {
+  black: [0, 0, 0], white: [1, 1, 1],
+  red: [0.8, 0, 0], darkred: [0.55, 0, 0],
+  green: [0, 0.6, 0], darkgreen: [0, 0.4, 0],
+  blue: [0, 0, 0.8], darkblue: [0, 0, 0.55], navy: [0, 0, 0.5],
+  lightblue: [0.2, 0.4, 0.8], skyblue: [0.13, 0.5, 0.76],
+  yellow: [0.8, 0.8, 0], orange: [0.9, 0.5, 0],
+  purple: [0.5, 0, 0.5], violet: [0.4, 0.2, 0.6],
+  gray: [0.4, 0.4, 0.4], grey: [0.4, 0.4, 0.4], darkgray: [0.3, 0.3, 0.3],
+  brown: [0.5, 0.25, 0], teal: [0, 0.5, 0.5],
+  maroon: [0.5, 0, 0], olive: [0.5, 0.5, 0],
+  pink: [1, 0.5, 0.8], magenta: [0.8, 0, 0.8],
+  cyan: [0, 0.8, 0.8], gold: [0.8, 0.65, 0],
+  crimson: [0.86, 0.08, 0.24], indigo: [0.29, 0, 0.51],
+};
+
+// ─── Font map ───
+const FONTS = {
+  helvetica: { regular: StandardFonts.Helvetica, bold: StandardFonts.HelveticaBold, italic: StandardFonts.HelveticaOblique, cssName: "Helvetica, Arial, sans-serif" },
+  times: { regular: StandardFonts.TimesRoman, bold: StandardFonts.TimesRomanBold, italic: StandardFonts.TimesRomanItalic, cssName: "'Times New Roman', Times, serif" },
+  courier: { regular: StandardFonts.Courier, bold: StandardFonts.CourierBold, italic: StandardFonts.CourierOblique, cssName: "'Courier New', Courier, monospace" },
+};
+
+function parseColor(input) {
+  if (!input) return [0, 0, 0];
+  const lower = input.toLowerCase().trim();
+  if (COLORS[lower]) return COLORS[lower];
+  if (/^#[0-9a-f]{6}$/i.test(lower)) {
+    const r = parseInt(lower.substring(1, 3), 16) / 255;
+    const g = parseInt(lower.substring(3, 5), 16) / 255;
+    const b = parseInt(lower.substring(5, 7), 16) / 255;
+    return [r, g, b];
+  }
+  if (/^#[0-9a-f]{3}$/i.test(lower)) {
+    const r = parseInt(lower[1] + lower[1], 16) / 255;
+    const g = parseInt(lower[2] + lower[2], 16) / 255;
+    const b = parseInt(lower[3] + lower[3], 16) / 255;
+    return [r, g, b];
+  }
+  return null;
+}
+
+// ─── Parse flags from input ───
+function parseFlags(text) {
+  const opts = { font: "helvetica", color: "black", titlecolor: null, size: 11 };
+  let cleaned = text;
+
+  const flagRegex = /(font|color|titlecolor|size)=([^\s]+)/gi;
+  let match;
+  const flags = [];
+  while ((match = flagRegex.exec(text)) !== null) {
+    flags.push({ key: match[1].toLowerCase(), value: match[2], index: match.index, length: match[0].length });
+  }
+
+  for (const f of flags) {
+    if (f.key === "font") {
+      const fn = f.value.toLowerCase();
+      if (FONTS[fn]) opts.font = fn;
+    } else if (f.key === "color") {
+      opts.color = f.value;
+    } else if (f.key === "titlecolor") {
+      opts.titlecolor = f.value;
+    } else if (f.key === "size") {
+      const s = parseInt(f.value);
+      if (s >= 8 && s <= 24) opts.size = s;
+    }
+  }
+
+  // Remove flags from text
+  cleaned = text.replace(flagRegex, "").replace(/^\s+/, "").trim();
+
+  return { opts, cleaned };
+}
+
+// ─── Word wrap ───
 function wrapText(text, font, size, maxWidth) {
   const result = [];
-  const paragraphs = text.split("\n");
-  for (const para of paragraphs) {
-    if (para.trim() === "") {
-      result.push("");
-      continue;
-    }
+  for (const para of text.split("\n")) {
+    if (para.trim() === "") { result.push(""); continue; }
     const words = para.split(/\s+/);
     let line = "";
     for (const word of words) {
       const test = line ? line + " " + word : word;
-      const w = font.widthOfTextAtSize(test, size);
-      if (w > maxWidth && line) {
-        result.push(line);
-        line = word;
-      } else {
-        line = test;
-      }
+      if (font.widthOfTextAtSize(test, size) > maxWidth && line) {
+        result.push(line); line = word;
+      } else { line = test; }
     }
     if (line) result.push(line);
   }
@@ -56,32 +121,34 @@ function wrapText(text, font, size, maxWidth) {
 }
 
 // ─── Create PDF ───
-async function createPDF(rawText, format) {
+async function createPDF(rawText, format, opts) {
   const pdfDoc = await PDFDocument.create();
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const italicFont = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
+  const fontSet = FONTS[opts.font] || FONTS.helvetica;
+  const font = await pdfDoc.embedFont(fontSet.regular);
+  const boldFont = await pdfDoc.embedFont(fontSet.bold);
+  const italicFont = await pdfDoc.embedFont(fontSet.italic);
+
+  const bodyColor = parseColor(opts.color) || [0, 0, 0];
+  const titleColorRaw = opts.titlecolor ? opts.titlecolor : opts.color;
+  const titleColor = parseColor(titleColorRaw) || bodyColor;
+  const headerColor = parseColor(opts.titlecolor ? opts.titlecolor : opts.color) || bodyColor;
+
+  const bodySize = opts.size || 11;
+  const lineH = Math.ceil(bodySize * 1.5);
 
   let page = pdfDoc.addPage([PAGE_W, PAGE_H]);
   let y = PAGE_H - MARGIN;
 
-  // Parse: first line = title, rest = body
   const lines = rawText.split("\n");
   let title = "";
   let bodyStart = 0;
 
-  // Find first non-empty line as title
   for (let i = 0; i < lines.length; i++) {
-    if (lines[i].trim()) {
-      title = lines[i].trim();
-      bodyStart = i + 1;
-      break;
-    }
+    if (lines[i].trim()) { title = lines[i].trim(); bodyStart = i + 1; break; }
   }
-
   const body = lines.slice(bodyStart).join("\n").trim();
 
-  // ─── Draw title ───
+  // ─── Title ───
   if (title) {
     const titleSize = format === "cv" ? 18 : 16;
     let titleX = MARGIN;
@@ -89,137 +156,108 @@ async function createPDF(rawText, format) {
       const tw = boldFont.widthOfTextAtSize(title, titleSize);
       titleX = (PAGE_W - tw) / 2;
     }
-    page.drawText(title, { x: titleX, y, size: titleSize, font: boldFont, color: rgb(0, 0, 0) });
+    page.drawText(title, { x: titleX, y, size: titleSize, font: boldFont, color: rgb(titleColor[0], titleColor[1], titleColor[2]) });
     y -= titleSize + 8;
 
-    // Underline for CV
     if (format === "cv") {
       const tw = boldFont.widthOfTextAtSize(title, titleSize);
       page.drawLine({
         start: { x: titleX, y: y + 4 },
         end: { x: titleX + tw, y: y + 4 },
         thickness: 1,
-        color: rgb(0.3, 0.3, 0.3),
+        color: rgb(titleColor[0] * 0.7, titleColor[1] * 0.7, titleColor[2] * 0.7),
       });
       y -= 15;
-    } else {
-      y -= 12;
-    }
+    } else { y -= 12; }
   }
 
-  // ─── Draw body ───
+  // ─── Body ───
   if (body) {
-    const bodyLines = body.split("\n");
-    for (let i = 0; i < bodyLines.length; i++) {
-      let line = bodyLines[i];
+    for (let line of body.split("\n")) {
       const trimmed = line.trim();
+      if (trimmed === "") { y -= lineH * 0.5; continue; }
 
-      // Empty line = spacing
-      if (trimmed === "") {
-        y -= LINE_H * 0.5;
-        continue;
-      }
-
-      // Section header (starts with # or all caps short line)
       const isHeader = trimmed.startsWith("#") || (/^[A-Z][A-Z\s]{2,30}$/.test(trimmed) && trimmed.length < 40);
       const isBullet = trimmed.startsWith("- ") || trimmed.startsWith("• ") || trimmed.startsWith("* ");
 
       let drawText = trimmed;
       let useFont = font;
-      let useSize = BODY_SIZE;
+      let useSize = bodySize;
+      let useColor = bodyColor;
 
       if (isHeader) {
         drawText = trimmed.replace(/^#\s*/, "");
         useFont = boldFont;
-        useSize = 12;
-        y -= 5; // extra space before header
+        useSize = bodySize + 1;
+        useColor = headerColor;
+        y -= 5;
       } else if (isBullet) {
         drawText = "  " + drawText.replace(/^[-•*]\s*/, "• ");
       }
 
-      // Word wrap
       const wrapped = wrapText(drawText, useFont, useSize, MAX_W);
 
       for (const wl of wrapped) {
-        // Page break check
         if (y < MARGIN + 20) {
           page = pdfDoc.addPage([PAGE_W, PAGE_H]);
           y = PAGE_H - MARGIN;
         }
-
         page.drawText(wl, {
-          x: MARGIN,
-          y,
-          size: useSize,
-          font: useFont,
-          color: rgb(0, 0, 0),
+          x: MARGIN, y, size: useSize, font: useFont,
+          color: rgb(useColor[0], useColor[1], useColor[2]),
         });
-        y -= LINE_H;
+        y -= lineH;
       }
-
       if (isHeader) y -= 3;
     }
-  }
-
-  // Footer: page numbers
-  const pages = pdfDoc.getPageCount();
-  for (let p = 0; p < pages; p++) {
-    const pg = pdfDoc.getPages()[p];
-    const footerText = "Halaman " + (p + 1) + " / " + pages;
-    const fw = font.widthOfTextAtSize(footerText, 8);
-    pg.drawText(footerText, {
-      x: (PAGE_W - fw) / 2,
-      y: 30,
-      size: 8,
-      font,
-      color: rgb(0.5, 0.5, 0.5),
-    });
   }
 
   return await pdfDoc.save();
 }
 
-// ─── Create Word .doc (HTML based) ───
-function createDoc(rawText, format) {
+// ─── Create Word .doc ───
+function createDoc(rawText, format, opts) {
+  const fontSet = FONTS[opts.font] || FONTS.helvetica;
+  const bodyColor = opts.color || "black";
+  const titleColor = opts.titlecolor ? opts.titlecolor : opts.color;
+  const bodySize = (opts.size || 11) + "pt";
+
   const lines = rawText.split("\n");
   let title = "";
   let bodyStart = 0;
-
   for (let i = 0; i < lines.length; i++) {
-    if (lines[i].trim()) {
-      title = lines[i].trim();
-      bodyStart = i + 1;
-      break;
-    }
+    if (lines[i].trim()) { title = lines[i].trim(); bodyStart = i + 1; break; }
+  }
+  const body = lines.slice(bodyStart).join("\n").trim();
+
+  function colorToHex(c) {
+    const rgb = parseColor(c);
+    if (!rgb) return "#000000";
+    const toHex = (v) => Math.round(v * 255).toString(16).padStart(2, "0");
+    return "#" + toHex(rgb[0]) + toHex(rgb[1]) + toHex(rgb[2]);
   }
 
-  const body = lines.slice(bodyStart).join("\n").trim();
-  const bodyLines = body.split("\n");
+  const bodyHex = /^#[0-9a-f]{3,6}$/i.test(bodyColor) ? bodyColor : colorToHex(bodyColor);
+  const titleHex = /^#[0-9a-f]{3,6}$/i.test(titleColor) ? titleColor : colorToHex(titleColor);
 
   let bodyHtml = "";
-  for (let line of bodyLines) {
+  for (let line of body.split("\n")) {
     const trimmed = line.trim();
-    if (trimmed === "") {
-      bodyHtml += "<br/>";
-      continue;
-    }
-
+    if (trimmed === "") { bodyHtml += "<br/>"; continue; }
     const isHeader = trimmed.startsWith("#") || (/^[A-Z][A-Z\s]{2,30}$/.test(trimmed) && trimmed.length < 40);
     const isBullet = trimmed.startsWith("- ") || trimmed.startsWith("• ") || trimmed.startsWith("* ");
-
     if (isHeader) {
-      const h = trimmed.replace(/^#\s*/, "");
-      bodyHtml += '<h3 style="margin:12px 0 4px 0;color:#333;">' + escapeHtml(h) + "</h3>";
+      bodyHtml += '<h3 style="margin:12px 0 4px 0;color:' + titleHex + ';">' + escapeHtml(trimmed.replace(/^#\s*/, "")) + "</h3>";
     } else if (isBullet) {
-      const item = escapeHtml(trimmed.replace(/^[-•*]\s*/, ""));
-      bodyHtml += '<p style="margin:2px 0 2px 20px;font-size:11pt;">• ' + item + "</p>";
+      bodyHtml += '<p style="margin:2px 0 2px 20px;font-size:' + bodySize + ';color:' + bodyHex + ';font-family:' + fontSet.cssName + ';">• ' + escapeHtml(trimmed.replace(/^[-•*]\s*/, "")) + "</p>";
     } else {
-      bodyHtml += '<p style="margin:2px 0;font-size:11pt;">' + escapeHtml(trimmed) + "</p>";
+      bodyHtml += '<p style="margin:2px 0;font-size:' + bodySize + ';color:' + bodyHex + ';font-family:' + fontSet.cssName + ';">' + escapeHtml(trimmed) + "</p>";
     }
   }
 
   const titleAlign = (format === "cv" || format === "surat") ? "center" : "left";
-  const titleBorder = format === "cv" ? "border-bottom:2px solid #333;padding-bottom:8px;" : "";
+  const titleBorder = format === "cv" ? "border-bottom:2px solid " + titleHex + ";padding-bottom:8px;" : "";
+  const titleSize = format === "cv" ? "18pt" : "16pt";
 
   const html = `<!DOCTYPE html>
 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
@@ -228,8 +266,8 @@ function createDoc(rawText, format) {
 <title>${escapeHtml(title)}</title>
 <style>
 @page { size: A4; margin: 2.54cm; }
-body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #000; }
-h1 { font-size: 16pt; margin: 0 0 12px 0; text-align: ${titleAlign}; ${titleBorder} }
+body { font-family: ${fontSet.cssName}; font-size: ${bodySize}; color: ${bodyHex}; }
+h1 { font-size: ${titleSize}; margin: 0 0 12px 0; text-align: ${titleAlign}; color: ${titleHex}; ${titleBorder} }
 </style>
 </head>
 <body>
@@ -242,11 +280,7 @@ ${bodyHtml}
 }
 
 function escapeHtml(text) {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 // ─── Handler ───
@@ -255,7 +289,6 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const text = (m.text || "").trim();
 
-    // Get text from quoted message if no text
     let inputText = text;
     if (!inputText && m.quoted?.text) {
       inputText = m.quoted.text.trim();
@@ -276,39 +309,50 @@ async function handler(m, { sock, config: botConfig }) {
         "cv = PDF template CV (judul center + garis)\n" +
         "surat = PDF template surat (judul center)\n" +
         "word = Word .doc format\n\n" +
-        "Bisa juga reply pesan yg berisi teks\n\n" +
-        "Contoh CV:\n" +
-        prefix + "txttopdf cv\n" +
-        "Budi Santoso\n" +
-        "Software Engineer - Jakarta\n" +
-        "Email: budi@email.com | 08123456789\n" +
-        "\n" +
-        "# PENGALAMAN\n" +
-        "- Senior Dev di PT ABC (2020-2024)\n" +
-        "- Junior Dev di PT XYZ (2018-2020)\n" +
-        "\n" +
-        "# PENDIDIKAN\n" +
-        "- S1 Teknik Informatika UI (2014-2018)",
+        "Custom font & warna:\n" +
+        "font=helvetica (default)\n" +
+        "font=times (serif formal)\n" +
+        "font=courier (monospace)\n" +
+        "color=navy (judul + isi)\n" +
+        "color=#336699 (hex color)\n" +
+        "titlecolor=red (judul aja)\n" +
+        "size=12 (ukuran font 8-24)\n\n" +
+        "Warna tersedia:\n" +
+        "black red green blue navy darkblue\n" +
+        "orange purple brown teal maroon\n" +
+        "crimson indigo gold olive gray\n" +
+        "atau hex #RRGGBB\n\n" +
+        "Contoh:\n" +
+        prefix + "txttopdf font=times color=navy cv\n" +
+        "Budi Santoso\nSoftware Engineer\n\n" +
+        prefix + "txttopdf color=#8B0000 surat\n" +
+        "Surat Lamaran\n\n" +
+        prefix + "txttopdf word font=courier color=blue\n" +
+        "Judul Dokumen\nIsi dokumen...\n\n" +
+        "Bisa juga reply pesan yg berisi teks",
         { title: "Text to PDF/Word Converter" }
       );
     }
 
-    // Parse mode
+    // ─── Parse flags (font=, color=, titlecolor=, size=) ───
+    const { opts, cleaned: afterFlags } = parseFlags(inputText);
+
+    // ─── Parse mode ───
     let format = "plain";
     let outputType = "pdf";
-    let content = inputText;
+    let content = afterFlags;
 
-    const lowerInput = inputText.toLowerCase();
+    const lowerInput = afterFlags.toLowerCase();
     if (lowerInput.startsWith("cv ") || lowerInput.startsWith("cv\n")) {
       format = "cv";
-      content = inputText.substring(2).trim();
+      content = afterFlags.substring(2).trim();
     } else if (lowerInput.startsWith("surat ") || lowerInput.startsWith("surat\n")) {
       format = "surat";
-      content = inputText.substring(5).trim();
+      content = afterFlags.substring(5).trim();
     } else if (lowerInput.startsWith("word ") || lowerInput.startsWith("word\n") ||
                lowerInput.startsWith("doc ") || lowerInput.startsWith("doc\n")) {
       outputType = "doc";
-      content = inputText.replace(/^word\s+|^doc\s+/i, "").trim();
+      content = afterFlags.replace(/^word\s+|^doc\s+/i, "").trim();
     }
 
     // Check if triggered via .txttodoc alias
@@ -320,32 +364,33 @@ async function handler(m, { sock, config: botConfig }) {
     if (!content || content.length < 2) {
       return m.reply(claraWrap("TxtToPDF", "Teks terlalu pendek!\nMinimal 2 karakter."));
     }
-
     if (content.length > 8000) {
       return m.reply(claraWrap("TxtToPDF", "Teks terlalu panjang!\nMaksimal 8000 karakter."));
     }
 
     await m.react("🕐");
 
-    // ─── Generate file ───
     const timestamp = Date.now();
     const tmpDir = "/tmp";
 
+    // Build info string for caption
+    const fontName = opts.font.charAt(0).toUpperCase() + opts.font.slice(1);
+    const colorDisplay = opts.color || "black";
+    const titleColorDisplay = opts.titlecolor ? opts.titlecolor : "(same)";
+
     if (outputType === "pdf") {
-      const pdfBytes = await createPDF(content, format);
+      const pdfBytes = await createPDF(content, format, opts);
       const fileName = "nova_" + timestamp + ".pdf";
       const filePath = path.join(tmpDir, fileName);
       fs.writeFileSync(filePath, pdfBytes);
 
       const stats = fs.statSync(filePath);
       const sizeKB = (stats.size / 1024).toFixed(1);
-
-      // Count pages
       const pdfDoc2 = await PDFDocument.load(pdfBytes);
       const pageCount = pdfDoc2.getPageCount();
-
-      // Count words
       const wordCount = content.split(/\s+/).length;
+
+      const formatLabel = format === "cv" ? "CV Template" : format === "surat" ? "Surat Template" : "Standard PDF";
 
       await m.react("✅");
       await sock.sendMessage(m.chat, {
@@ -353,21 +398,21 @@ async function handler(m, { sock, config: botConfig }) {
         fileName: "dokumen_" + timestamp + ".pdf",
         mimetype: "application/pdf",
         caption: claraWrap("TxtToPDF Berhasil", [
-          "Format: " + (format === "cv" ? "CV Template" : format === "surat" ? "Surat Template" : "Standard PDF"),
+          "Format: " + formatLabel,
+          "Font: " + fontName,
+          "Warna: " + colorDisplay,
+          "Title color: " + titleColorDisplay,
+          "Size: " + opts.size + "pt",
           "Halaman: " + pageCount,
           "Kata: " + wordCount,
           "Ukuran: " + sizeKB + " KB",
         ].join("\n")),
       });
 
-      // Cleanup
-      setTimeout(() => {
-        try { fs.unlinkSync(filePath); } catch (e) {}
-      }, 60000);
+      setTimeout(() => { try { fs.unlinkSync(filePath); } catch (e) {} }, 60000);
 
     } else {
-      // Word .doc
-      const html = createDoc(content, format);
+      const html = createDoc(content, format, opts);
       const fileName = "nova_" + timestamp + ".doc";
       const filePath = path.join(tmpDir, fileName);
       fs.writeFileSync(filePath, html, "utf-8");
@@ -383,15 +428,16 @@ async function handler(m, { sock, config: botConfig }) {
         mimetype: "application/msword",
         caption: claraWrap("TxtToWord Berhasil", [
           "Format: Word .doc",
+          "Font: " + fontName,
+          "Warna: " + colorDisplay,
+          "Title color: " + titleColorDisplay,
+          "Size: " + opts.size + "pt",
           "Kata: " + wordCount,
           "Ukuran: " + sizeKB + " KB",
         ].join("\n")),
       });
 
-      // Cleanup
-      setTimeout(() => {
-        try { fs.unlinkSync(filePath); } catch (e) {}
-      }, 60000);
+      setTimeout(() => { try { fs.unlinkSync(filePath); } catch (e) {} }, 60000);
     }
   } catch (e) {
     console.error("txttopdf error:", e);
