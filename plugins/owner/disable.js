@@ -10,7 +10,7 @@ const pluginConfig = {
   description: "Mematikan fitur grup (welcome, antilink, antisticker, dll)",
   usage: ".disable <fitur>",
   example: ".disable welcome\n.disable antilinkgc\n.disable antisticker",
-  isOwner: false,
+  isOwner: true,
   isPremium: false,
   isGroup: true,
   isPrivate: false,

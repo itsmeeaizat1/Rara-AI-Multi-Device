@@ -11,6 +11,7 @@ const pluginConfig = {
   usage: ".autosambut on/off/delay/add/del/list",
   example: ".autosambut on",
   isOwner: true,
+  energi: 0,
   isGroup: true,
   cooldown: 3,
   isEnabled: true,

@@ -8,6 +8,7 @@ export const category = "owner";
 export const desc = "Toggle panel message logging (group only, private never logged)";
 export const owner = true;
 export const cooldown = 3;
+export const energi = 0;
 
 export async function execute(ctx, args) {
   const { m, sock } = ctx;

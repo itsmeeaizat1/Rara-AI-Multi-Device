@@ -10,7 +10,7 @@ const pluginConfig = {
   category: 'owner',
   description: 'Menampilkan info payment',
   usage: '.payment',
-  isOwner: false,
+  isOwner: true,
   isPremium: false,
   isGroup: false,
   isPrivate: false,
