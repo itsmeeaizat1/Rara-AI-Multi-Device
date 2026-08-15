@@ -14,10 +14,11 @@ const pluginConfig = {
     description: 'Menampilkan informasi sistem (RAM, CPU, Disk, Latency)',
     usage: '.ram | .cpu | .disk | .ping',
     isGroup: false,
+    isOwner: true,
     isBotAdmin: false,
     isAdmin: false,
     cooldown: 5,
-    energi: 1,
+    energi: 0,
     isEnabled: true
 };
 
