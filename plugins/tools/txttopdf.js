@@ -312,7 +312,9 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
   const accentLightHex = (() => {
     const rgb = parseColor(opts.color && opts.color !== "black" ? opts.color : scheme.accent);
     if (!rgb) return scheme.light;
-    return "#" + Math.min(255, Math.round(rgb[0]*255 + 0.25*255)).toString(16).padStart(2,"0") + Math.min(255, Math.round(rgb[1]*255 + 0.25*255)).toString(16).padStart(2,"0") + Math.min(255, Math.round(rgb[2]*255 + 0.25*255)).toString(16).padStart(2,"0");
+    // Mix accent with 80% white for a very light tint (better contrast with accent text)
+    const mix = (c) => Math.min(255, Math.round(c*255 * 0.2 + 255 * 0.8));
+    return "#" + mix(rgb[0]).toString(16).padStart(2,"0") + mix(rgb[1]).toString(16).padStart(2,"0") + mix(rgb[2]).toString(16).padStart(2,"0");
   })();
   const fontSet = FONTS[opts.font] || FONTS.helvetica;
   const font = fontSet.css;
@@ -421,8 +423,8 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
         } else if (item.type === "sub") {
           ctx.fillStyle = "#555";
           ctx.font = Math.round(11 * scale) + "px " + font;
-          ctx.fillText("• " + item.text, margin + Math.round(14 * scale), y);
-          y += lineH;
+          const subW1 = wrap("• " + item.text, Math.round(11 * scale) + "px " + font, contentW - Math.round(14 * scale));
+          for (const w of subW1) { ctx.fillText(w, margin + Math.round(14 * scale), y); y += lineH; }
         } else {
           ctx.fillStyle = "#000";
           ctx.font = fontSize + "px " + font;
@@ -528,8 +530,8 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
         } else if (item.type === "sub") {
           ctx.fillStyle = "#555";
           ctx.font = Math.round(11 * scale) + "px " + font;
-          ctx.fillText("• " + item.text, mainX + Math.round(14 * scale), my);
-          my += lineH;
+          const subW2 = wrap("• " + item.text, Math.round(11 * scale) + "px " + font, mainW - Math.round(14 * scale));
+          for (const w of subW2) { ctx.fillText(w, mainX + Math.round(14 * scale), my); my += lineH; }
         } else {
           ctx.fillStyle = "#000";
           ctx.font = fontSize + "px " + font;
@@ -599,8 +601,8 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
         } else if (item.type === "sub") {
           ctx.fillStyle = "#666";
           ctx.font = Math.round(11 * scale) + "px " + font;
-          ctx.fillText("> " + item.text, margin + Math.round(14 * scale), y);
-          y += lineH;
+          const subWrapped = wrap("> " + item.text, Math.round(11 * scale) + "px " + font, contentW - Math.round(20 * scale));
+          for (const w of subWrapped) { ctx.fillText(w, margin + Math.round(14 * scale), y); y += lineH; }
         } else {
           ctx.fillStyle = "#000";
           ctx.font = fontSize + "px " + font;
@@ -772,7 +774,8 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
   const accent = parseColor(opts.color && opts.color !== "black" ? opts.color : scheme.accent) || [0, 0, 0.5];
   const accentLight = (() => {
     const a = accent;
-    return [Math.min(1, a[0] + 0.25), Math.min(1, a[1] + 0.25), Math.min(1, a[2] + 0.25)];
+    // Mix accent with 80% white for very light tint
+    return [a[0] * 0.2 + 0.8, a[1] * 0.2 + 0.8, a[2] * 0.2 + 0.8];
   })();
   
   const bodySize = 10;
