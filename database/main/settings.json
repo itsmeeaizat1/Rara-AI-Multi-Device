@@ -4,7 +4,7 @@
   "ownerType": 2,
   "welcomeType": 7,
   "replyVariant": 6,
-  "menuVariant": 5,
+  "menuVariant": 1,
   "botAfk": {
     "active": false
   },
@@ -45,7 +45,7 @@
   "errorLog": [],
   "jpmBlacklist": [],
   "bannedUsers": [],
-  "allmenuVariant": 6,
+  "allmenuVariant": 1,
   "menucatVariant": 5,
   "notifMakan": {},
   "storeProducts": [],
@@ -57,7 +57,7 @@
   },
   "autoReactSW": {
     "enabled": true,
-    "emoji": "🔥"
+    "emoji": "\ud83d\udd25"
   },
   "customPaymentText": "",
   "bcgcEnabled": false,

@@ -133,8 +133,9 @@ async function handler(m, { sock, db }) {
     }
 
     try {
+      const localVidCat1 = fs.existsSync(config.assets["nova-mp4"]) ? config.assets["nova-mp4"] : config.assets["nova"];
       const media = await prepareWAMessageMedia(
-        { image: fs.readFileSync(config.assets["nova"]) },
+        { video: fs.readFileSync(localVidCat1), gifPlayback: true },
         { upload: sock.waUploadToServer },
       );
       await sock.relayMessage(m.chat, {
@@ -145,7 +146,7 @@ async function handler(m, { sock, db }) {
               header: {
                 title: "", subtitle: "",
                 hasMediaAttachment: true,
-                imageMessage: media.imageMessage,
+                videoMessage: media.videoMessage,
               },
               body: { text: txt },
               footer: { text: `🌸 ${config.bot?.name} | Pilih tombol dibawah` },
@@ -219,8 +220,9 @@ async function handler(m, { sock, db }) {
   }
 
   try {
+    const localVidCat2 = fs.existsSync(config.assets["nova-mp4"]) ? config.assets["nova-mp4"] : config.assets["nova2"];
     const media = await prepareWAMessageMedia(
-      { image: fs.readFileSync(config.assets["nova2"]) },
+      { video: fs.readFileSync(localVidCat2), gifPlayback: true },
       { upload: sock.waUploadToServer },
     );
     await sock.relayMessage(m.chat, {
@@ -231,7 +233,7 @@ async function handler(m, { sock, db }) {
             header: {
               title: "", subtitle: "",
               hasMediaAttachment: true,
-              imageMessage: media.imageMessage,
+              videoMessage: media.videoMessage,
             },
             body: { text: txt },
             footer: { text: `🌸 ${config.bot?.name} | Pilih tombol dibawah` },
