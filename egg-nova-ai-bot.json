@@ -1,0 +1,142 @@
+{
+    "_comment": "NOVA AI WHATSAPP BOT - Pterodactyl Egg Configuration",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2026-08-16T19:36:00+07:00",
+    "name": "Nova AI WhatsApp Bot",
+    "author": "Aizat",
+    "description": "Nova AI WhatsApp Bot Multi-Device (Baileys) - Node.js ESM. Bot WhatsApp dengan sistem plugin modular, RPG, AI, game, dan 38+ fitur unik.",
+    "features": null,
+    "docker_images": {
+        "Node 22": "ghcr.io\/parkervcp\/yolks:node_22"
+    },
+    "file_denylist": [],
+    "startup": "node index.js",
+    "config": {
+        "files": "{\n    \"config.js\": {\n        \"parser\": \"javascript\",\n        \"find\": {\n            \"botName\": \"Nova AI Bot\",\n            \"ownerNumber\": \"\"\n        }\n    }\n}",
+        "startup": "{\n    \"done\": \"Nova AI Bot Connected\"\n}",
+        "logs": "{\n    \"custom\": false,\n    \"location\": \"logs\/latest.log\"\n}",
+        "stop": "^C"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/ash\n# Nova AI WhatsApp Bot Installation Script\n\necho \"=== Installing Nova AI WhatsApp Bot ===\"\n\ncd \/mnt\/server\n\n# Check if package.json exists\nif [ ! -f \"package.json\" ]; then\n    echo \"ERROR: package.json not found!\"\n    echo \"Please upload your bot files first.\"\n    exit 1\nfi\n\n# Install npm dependencies\necho \"Installing npm dependencies...\"\nnpm install --production 2>&1\n\n# Create required directories\nmkdir -p session database assets logs plugins\/future\n\necho \"=== Installation Complete ===\"\necho \"Starting Nova AI WhatsApp Bot...\"",
+            "container": "ghcr.io\/parkervcp\/installers:alpine",
+            "entrypoint": "ash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Node Env",
+            "description": "Environment mode for the bot (production or development)",
+            "env_variable": "NODE_ENV",
+            "default_value": "production",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:production,development",
+            "field_type": "text"
+        },
+        {
+            "name": "Auto Restart",
+            "description": "Auto restart bot if crash (1=on, 0=off)",
+            "env_variable": "AUTO_RESTART",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+            {
+            "name": "Owner Number",
+            "description": "Nomor WhatsApp owner bot (format: 62xxx)",
+            "env_variable": "OWNER_NUMBER",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Bot Name",
+            "description": "Nama bot yang ditampilkan",
+            "env_variable": "BOT_NAME",
+            "default_value": "Nova AI Bot",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Prefix Command",
+            "description": "Prefix untuk command bot (default: .)",
+            "env_variable": "PREFIX",
+            "default_value": ".",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Timezone",
+            "description": "Timezone untuk bot (default: Asia/Jakarta)",
+            "env_variable": "TZ",
+            "default_value": "Asia/Jakarta",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Max RAM (MB)",
+            "description": "Batas maksimal RAM untuk Node.js",
+            "env_variable": "NODE_OPTIONS",
+            "default_value": "--max-old-space-size=512",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Session Name",
+            "description": "Nama folder session WhatsApp",
+            "env_variable": "SESSION_NAME",
+            "default_value": "session",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "GitHub Token",
+            "description": "Token GitHub untuk auto pull update (opsional)",
+            "env_variable": "GITHUB_TOKEN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|string",
+            "field_type": "text"
+        },
+        {
+            "name": "Enable Welcome",
+            "description": "Auto welcome member baru (1=on, 0=off)",
+            "env_variable": "ENABLE_WELCOME",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Enable Auto Read",
+            "description": "Auto read pesan masuk (1=on, 0=off)",
+            "env_variable": "AUTO_READ",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "nullable|boolean",
+            "field_type": "text"
+        }
+    ]
+}
