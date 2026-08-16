@@ -176,7 +176,7 @@ function getContextInfo(botConfig, m, thumbBuffer, renderLargerThumbnail = false
   const ctx = {
     mentionedJid: [m.sender],
     forwardingScore: 9,
-    isForwarded: true,
+    isForwarded: false,
     externalAdReply: {
       title: botConfig.bot?.name || "Nova-AI",
       body: `BOT WHATSAPP MULTI DEVICE`,
@@ -280,7 +280,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               body: { text },
               footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
               contextInfo: {
-                isForwarded: true, forwardingScore: 9,
+                isForwarded: false, forwardingScore: 9,
                 participant: "0@s.whatsapp.net",
                 quotedMessage: { conversation: `${config.bot?.name}` },
                 mentionedJid: [m.sender],
@@ -321,7 +321,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               body: { text },
               footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
               contextInfo: {
-                isForwarded: true, forwardingScore: 9,
+                isForwarded: false, forwardingScore: 9,
                 participant: "0@s.whatsapp.net",
                 quotedMessage: { conversation: `${config.bot?.name}` },
                 mentionedJid: [m.sender],
@@ -378,7 +378,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               header: { title: "", subtitle: "", hasMediaAttachment: true, videoMessage: media4.videoMessage },
               body: { text },
               footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
-              contextInfo: { isForwarded: true, forwardingScore: 9, participant: "0@s.whatsapp.net", quotedMessage: { conversation: `${config.bot?.name}` }, mentionedJid: [m.sender] },
+              contextInfo: { isForwarded: false, forwardingScore: 9, participant: "0@s.whatsapp.net", quotedMessage: { conversation: `${config.bot?.name}` }, mentionedJid: [m.sender] },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({}),
                 buttons: [
@@ -405,7 +405,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova-AI", address: `v${config.bot?.version || "1.0.0"}`, jpegThumbnail: thumbV5 } },
               body: { text },
               footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
-              contextInfo: { mentionedJid: [m.sender], isForwarded: true, forwardingScore: 9 },
+              contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({}),
                 buttons: [
@@ -443,7 +443,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             interactiveMessage: {
               header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova-AI", address: await weatherMenu(), jpegThumbnail: thumbV6 } },
               body: { text },
-              contextInfo: { mentionedJid: [m.sender], isForwarded: true, forwardingScore: 9 },
+              contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
               nativeFlowMessage: {
                 buttons: [
                   { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Kategori", id: `${prefix}menukategori` }) },
@@ -514,7 +514,15 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     }
   } catch (error) {
     console.error("[Menu] Error:", error.message);
-    const fallbackThumb = thumbBuffer || (imageBuffer ? await _sharp(imageBuffer).resize(640, 360).toBuffer() : null);
+    let fallbackThumb = null;
+    try {
+      const rawThumb = imageBuffer || thumbBuffer;
+      if (rawThumb) {
+        fallbackThumb = await _sharp(rawThumb).resize(640, 360, { fit: "cover" }).toBuffer();
+      }
+    } catch (e) {
+      fallbackThumb = thumbBuffer || imageBuffer || null;
+    }
     if (fallbackThumb) {
       await sock.sendMessage(m.chat, { text, contextInfo: getContextInfo(botConfig, m, fallbackThumb, true) }, { quoted: m });
     } else {
