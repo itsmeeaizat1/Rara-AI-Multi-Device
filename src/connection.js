@@ -196,12 +196,24 @@ function createReadlineInterface() {
  * @param {string} question - Pertanyaan
  * @returns {Promise<string>} Input dari user
  */
-function askQuestion(question) {
+function askQuestion(question, timeoutMs = 30000) {
   return new Promise((resolve) => {
     const rlIntf = createReadlineInterface();
+    let settled = false;
+    const timer = setTimeout(() => {
+      if (!settled) {
+        settled = true;
+        rlIntf.close();
+        resolve("");
+      }
+    }, timeoutMs);
     rlIntf.question(question, (answer) => {
-      rlIntf.close();
-      resolve(answer.trim());
+      if (!settled) {
+        settled = true;
+        clearTimeout(timer);
+        rlIntf.close();
+        resolve(answer.trim());
+      }
     });
   });
 }
@@ -356,9 +368,9 @@ async function startConnection(options = {}) {
       console.log("");
 
       if (!process.stdin.isTTY) {
-        colors.logger.error("pairing", "Mode non-interaktif (Docker/Koyeb). Set env PAIRING_NUMBER=628xxx di dashboard Koyeb.");
-        colors.logger.info("pairing", "Menunggu 60 detik sebelum retry koneksi...");
-        await new Promise((resolve) => setTimeout(resolve, 60000));
+        colors.logger.error("pairing", "Mode non-interaktif (Pterodactyl/Docker).");
+        colors.logger.error("pairing", "Set PAIRING_NUMBER di Server Variables (format: 628xxx) lalu restart.");
+        colors.logger.info("pairing", "Atau ganti usePairingCode=false di config.js untuk pakai QR Code.");
         return null;
       }
 
@@ -380,7 +392,10 @@ async function startConnection(options = {}) {
     colors.logger.info("pairing", `meminta kode untuk ${phoneNumber}`);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+      if (!connectionState.sock || !sock.ws?.readyState || sock.ws.readyState !== 1) {
+        throw new Error("Koneksi WebSocket belum stabil. Tunggu reconnect.");
+      }
       const code = await sock.requestPairingCode(phoneNumber, "NOVAAI01");
       console.log("");
       console.log(
