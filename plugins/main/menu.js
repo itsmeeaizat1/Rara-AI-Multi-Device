@@ -461,57 +461,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       default:
         await m.reply(claraWrap("menu", text));
     }
-
-    // ── Audio menu ──
-    const audioEnabled = db.setting("audioMenu") !== false;
-    if (audioEnabled) {
-      const audioPath = botConfig.assets["nova-mp3"];
-      const audioVariant = db.setting("menuAudioStyle") || 1;
-      try {
-        if (audioVariant === 1) {
-          try {
-            const tempDir = path.join(process.cwd(), "temp");
-            if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
-            const destPath = path.join(tempDir, "menu_audio_opus.ogg");
-            if (!fs.existsSync(destPath)) {
-              const mp3Path = path.join(tempDir, "menu_audio.mp3");
-              fs.copyFileSync(audioPath, mp3Path);
-              const { spawn } = await import("child_process");
-              await new Promise((resolve, reject) => {
-                const ffmpeg = spawn("ffmpeg", ["-y", "-i", mp3Path, "-c:a", "libopus", "-b:a", "48k", "-vbr", "on", destPath]);
-                ffmpeg.on("close", (code) => { if (fs.existsSync(mp3Path)) fs.unlinkSync(mp3Path); if (code === 0) resolve(); else reject(new Error("FFmpeg error")); });
-                ffmpeg.on("error", (err) => { if (fs.existsSync(mp3Path)) fs.unlinkSync(mp3Path); reject(err); });
-              });
-            }
-            await sock.sendMessage(m.chat, { audio: { url: destPath }, mimetype: "audio/ogg; codecs=opus", ptt: true }, { quoted: m });
-          } catch {
-            await sock.sendMessage(m.chat, { audio: { url: audioPath }, mimetype: "audio/mpeg", ptt: false }, { quoted: m });
-          }
-        } else if (audioVariant === 2) {
-          const qpoll = { key: { participant: "0@s.whatsapp.net" }, message: { pollCreationMessage: { name: config.bot.name } } };
-          try {
-            const tempDir = path.join(process.cwd(), "temp");
-            if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
-            const destPath = path.join(tempDir, "menu_audio_opus.ogg");
-            if (!fs.existsSync(destPath)) {
-              const mp3Path = path.join(tempDir, "menu_audio.mp3");
-              fs.copyFileSync(audioPath, mp3Path);
-              const { spawn } = await import("child_process");
-              await new Promise((resolve, reject) => {
-                const ffmpeg = spawn("ffmpeg", ["-y", "-i", mp3Path, "-c:a", "libopus", "-b:a", "48k", "-vbr", "on", destPath]);
-                ffmpeg.on("close", (code) => { if (fs.existsSync(mp3Path)) fs.unlinkSync(mp3Path); if (code === 0) resolve(); else reject(new Error("FFmpeg error")); });
-                ffmpeg.on("error", (err) => { if (fs.existsSync(mp3Path)) fs.unlinkSync(mp3Path); reject(err); });
-              });
-            }
-            await sock.sendMessage(m.chat, { audio: { url: destPath }, mimetype: "audio/ogg; codecs=opus", ptt: true }, { quoted: qpoll });
-          } catch {
-            await sock.sendMessage(m.chat, { audio: fs.readFileSync(audioPath), mimetype: "audio/mpeg", ptt: false }, { quoted: qpoll });
-          }
-        } else {
-          await sock.sendMessage(m.chat, { audio: fs.readFileSync(audioPath), mimetype: "audio/mpeg", ptt: false }, { quoted: m });
-        }
-      } catch (e) { console.error("[Menu] Error sending audio:", e.message); }
-    }
   } catch (error) {
     console.error("[Menu] Error:", error.message);
     let fallbackThumb = null;
@@ -529,6 +478,58 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       await m.reply(claraWrap("menu", text));
     }
   }
+
+  // ── Audio menu (independent try-catch, runs even if menu display failed) ──
+  try {
+    const audioEnabled = db.setting("audioMenu") !== false;
+    if (audioEnabled) {
+      const audioPath = botConfig.assets["nova-mp3"];
+      const audioVariant = db.setting("menuAudioStyle") || 1;
+      if (audioVariant === 1) {
+        try {
+          const tempDir = path.join(process.cwd(), "temp");
+          if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
+          const destPath = path.join(tempDir, "menu_audio_opus.ogg");
+          if (!fs.existsSync(destPath)) {
+            const mp3Path = path.join(tempDir, "menu_audio.mp3");
+            fs.copyFileSync(audioPath, mp3Path);
+            const { spawn } = await import("child_process");
+            await new Promise((resolve, reject) => {
+              const ffmpeg = spawn("ffmpeg", ["-y", "-i", mp3Path, "-c:a", "libopus", "-b:a", "48k", "-vbr", "on", destPath]);
+              ffmpeg.on("close", (code) => { if (fs.existsSync(mp3Path)) fs.unlinkSync(mp3Path); if (code === 0) resolve(); else reject(new Error("FFmpeg error")); });
+              ffmpeg.on("error", (err) => { if (fs.existsSync(mp3Path)) fs.unlinkSync(mp3Path); reject(err); });
+            });
+          }
+          await sock.sendMessage(m.chat, { audio: { url: destPath }, mimetype: "audio/ogg; codecs=opus", ptt: true }, { quoted: m });
+        } catch {
+          await sock.sendMessage(m.chat, { audio: { url: audioPath }, mimetype: "audio/mpeg", ptt: false }, { quoted: m });
+        }
+      } else if (audioVariant === 2) {
+        const qpoll = { key: { participant: "0@s.whatsapp.net" }, message: { pollCreationMessage: { name: config.bot.name } } };
+        try {
+          const tempDir = path.join(process.cwd(), "temp");
+          if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
+          const destPath = path.join(tempDir, "menu_audio_opus.ogg");
+          if (!fs.existsSync(destPath)) {
+            const mp3Path = path.join(tempDir, "menu_audio.mp3");
+            fs.copyFileSync(audioPath, mp3Path);
+            const { spawn } = await import("child_process");
+            await new Promise((resolve, reject) => {
+              const ffmpeg = spawn("ffmpeg", ["-y", "-i", mp3Path, "-c:a", "libopus", "-b:a", "48k", "-vbr", "on", destPath]);
+              ffmpeg.on("close", (code) => { if (fs.existsSync(mp3Path)) fs.unlinkSync(mp3Path); if (code === 0) resolve(); else reject(new Error("FFmpeg error")); });
+              ffmpeg.on("error", (err) => { if (fs.existsSync(mp3Path)) fs.unlinkSync(mp3Path); reject(err); });
+            });
+          }
+          await sock.sendMessage(m.chat, { audio: { url: destPath }, mimetype: "audio/ogg; codecs=opus", ptt: true }, { quoted: qpoll });
+        } catch {
+          await sock.sendMessage(m.chat, { audio: fs.readFileSync(audioPath), mimetype: "audio/mpeg", ptt: false }, { quoted: qpoll });
+        }
+      } else {
+        await sock.sendMessage(m.chat, { audio: fs.readFileSync(audioPath), mimetype: "audio/mpeg", ptt: false }, { quoted: m });
+      }
+    }
+  } catch (e) { console.error("[Menu] Error sending audio:", e.message); }
+
   await m.react("✅");
 }
 
