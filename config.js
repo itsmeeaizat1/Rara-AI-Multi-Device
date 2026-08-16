@@ -497,5 +497,23 @@ config.isPartner = isPartner;
 config.isBanned = isBanned;
 config.setBotNumber = setBotNumber;
 
-export { config, isOwner, setBotNumber, isPremium, isPartner, isBanned };
+// Get owner name by number (checks config + database)
+function getOwnerName(number) {
+  if (!number) return config.owner?.name || "Owner";
+  const clean = String(number).replace(/[^0-9]/g, "");
+  // Check config owner
+  const cfgNumbers = (config.owner?.number || []).map(n => String(n).replace(/[^0-9]/g, ""));
+  if (cfgNumbers.includes(clean)) return config.owner?.name || "Owner";
+  // Check database owner list for custom names
+  try {
+    const db = global.novaDb;
+    if (db?.data?.ownerList) {
+      const entry = db.data.ownerList.find(o => String(o.number).replace(/[^0-9]/g, "") === clean);
+      if (entry?.name) return entry.name;
+    }
+  } catch {}
+  return "Owner";
+}
+
+export { config, isOwner, setBotNumber, isPremium, isPartner, isBanned, getOwnerName };
 export default config;

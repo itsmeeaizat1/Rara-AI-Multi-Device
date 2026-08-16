@@ -6,7 +6,7 @@
  */
 
 import { getDatabase } from "./nova-database.js";
-import config from "../config.js";
+import config from "../../config.js";
 import { logger } from "./nova-logger.js";
 
 let sock = null;

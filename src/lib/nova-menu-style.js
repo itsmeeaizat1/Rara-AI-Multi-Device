@@ -43,6 +43,11 @@ function claraLine(title, text) {
 // Backward compat alias
 const alyaHeader = claraHeader;
 
+// Format number with comma separator (e.g. 1234567 -> "1,234,567")
+function formatNumber(num) {
+  return String(num).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export {
   claraHeader,
   alyaHeader, // backward compat
@@ -51,4 +56,5 @@ export {
   claraLine,
   separator,
   tipText,
+  formatNumber,
 };
