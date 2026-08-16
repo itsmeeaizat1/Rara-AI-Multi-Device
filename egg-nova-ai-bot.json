@@ -4,13 +4,19 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2026-08-16T19:36:00+07:00",
+    "exported_at": "2026-08-16T19:37:00+07:00",
     "name": "Nova AI WhatsApp Bot",
     "author": "Aizat",
-    "description": "Nova AI WhatsApp Bot Multi-Device (Baileys) - Node.js ESM. Bot WhatsApp dengan sistem plugin modular, RPG, AI, game, dan 38+ fitur unik.",
+    "description": "Nova AI WhatsApp Bot Multi-Device (Baileys) - Node.js ESM. Bot WhatsApp dengan sistem plugin modular, RPG, AI, game, dan 38+ fitur unik. Support Node.js 20-26.",
     "features": null,
     "docker_images": {
-        "Node 22": "ghcr.io\/parkervcp\/yolks:node_22"
+        "Node 20": "ghcr.io\/parkervcp\/yolks:node_20",
+        "Node 21": "ghcr.io\/parkervcp\/yolks:node_21",
+        "Node 22": "ghcr.io\/parkervcp\/yolks:node_22",
+        "Node 23": "ghcr.io\/parkervcp\/yolks:node_23",
+        "Node 24": "ghcr.io\/parkervcp\/yolks:node_24",
+        "Node 25": "ghcr.io\/parkervcp\/yolks:node_25",
+        "Node 26": "ghcr.io\/parkervcp\/yolks:node_26"
     },
     "file_denylist": [],
     "startup": "node index.js",
@@ -22,15 +28,25 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/ash\n# Nova AI WhatsApp Bot Installation Script\n\necho \"=== Installing Nova AI WhatsApp Bot ===\"\n\ncd \/mnt\/server\n\n# Check if package.json exists\nif [ ! -f \"package.json\" ]; then\n    echo \"ERROR: package.json not found!\"\n    echo \"Please upload your bot files first.\"\n    exit 1\nfi\n\n# Install npm dependencies\necho \"Installing npm dependencies...\"\nnpm install --production 2>&1\n\n# Create required directories\nmkdir -p session database assets logs plugins\/future\n\necho \"=== Installation Complete ===\"\necho \"Starting Nova AI WhatsApp Bot...\"",
+            "script": "#!\/bin\/ash\n# Nova AI WhatsApp Bot Installation Script\n\necho \"=== Installing Nova AI WhatsApp Bot ===\"\n\ncd \/mnt\/server\n\n# Check if package.json exists\nif [ ! -f \"package.json\" ]; then\n    echo \"ERROR: package.json not found!\"\n    echo \"Please upload your bot files first.\"\n    exit 1\nfi\n\n# Install npm dependencies\necho \"Installing npm dependencies...\"\nnpm install --production 2>&1\n\n# Create required directories\nmkdir -p session database assets logs plugins\/future\n\necho \"=== Installation Complete ===\necho \"Starting Nova AI WhatsApp Bot...\"",
             "container": "ghcr.io\/parkervcp\/installers:alpine",
             "entrypoint": "ash"
         }
     },
     "variables": [
         {
+            "name": "Node Version",
+            "description": "Pilih versi Node.js (20-26). Default: 22",
+            "env_variable": "NODE_VERSION",
+            "default_value": "22",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|in:20,21,22,23,24,25,26",
+            "field_type": "text"
+        },
+        {
             "name": "Node Env",
-            "description": "Environment mode for the bot (production or development)",
+            "description": "Environment mode (production atau development)",
             "env_variable": "NODE_ENV",
             "default_value": "production",
             "user_viewable": true,
@@ -40,7 +56,7 @@
         },
         {
             "name": "Auto Restart",
-            "description": "Auto restart bot if crash (1=on, 0=off)",
+            "description": "Auto restart bot kalau crash (1=on, 0=off)",
             "env_variable": "AUTO_RESTART",
             "default_value": "1",
             "user_viewable": true,
@@ -48,7 +64,7 @@
             "rules": "required|boolean",
             "field_type": "text"
         },
-            {
+        {
             "name": "Owner Number",
             "description": "Nomor WhatsApp owner bot (format: 62xxx)",
             "env_variable": "OWNER_NUMBER",
@@ -80,7 +96,7 @@
         },
         {
             "name": "Timezone",
-            "description": "Timezone untuk bot (default: Asia/Jakarta)",
+            "description": "Timezone bot (default: Asia/Jakarta)",
             "env_variable": "TZ",
             "default_value": "Asia/Jakarta",
             "user_viewable": true,
