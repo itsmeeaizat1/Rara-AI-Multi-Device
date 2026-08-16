@@ -209,6 +209,7 @@ const config = {
     menuVideoUrl: "",
     allmenuVideoUrl: "",
     allmenuVariant: 3,
+    replyVariant: 7,
   },
 
   // ═══════════════════════════════════════════

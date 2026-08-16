@@ -85,7 +85,7 @@ async function handler(m, { sock, db }) {
     return;
   }
 
-  const current = db.setting("replyVariant") || config.ui?.replyVariant || 1;
+  const current = db.setting("replyVariant") || config.ui?.replyVariant || 7;
 
   const rows = [];
   for (const [key, val] of Object.entries(VARIANTS)) {
