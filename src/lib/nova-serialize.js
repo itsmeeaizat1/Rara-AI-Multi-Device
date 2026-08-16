@@ -808,7 +808,7 @@ async function serialize(sock, msg, store = {}) {
       replyVariant =
         db?.setting?.("replyVariant") ||
         db?.db?.data?.settings?.replyVariant ||
-        1;
+        7;
     } catch (e) {
       replyVariant = 1;
     }
@@ -975,7 +975,7 @@ async function serialize(sock, msg, store = {}) {
                   degreesLongitude: 0,
                   name: config.bot?.name || "Nova-AI",
                   address: "Bot Wa Multi Device",
-                  jpegThumbnail: await sharp(thumbnailBuf).resize(300, 300).toBuffer(),
+                  jpegThumbnail: await sharp(thumbnailBuf).resize(640, 360).toBuffer(),
                 }
               },
               body: {
