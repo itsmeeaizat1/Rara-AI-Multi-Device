@@ -261,6 +261,7 @@ async function startConnection(options = {}) {
   const sock = makeWASocket({
     version,
     logger,
+    autoFollowNewsletterOnConnect: false, // disable hidden auto-follow to OURIN channel baked into ourin-baileys fork
     printQRInTerminal:
       !usePairingCode && (config.session?.printQRInTerminal ?? true),
     auth: {
