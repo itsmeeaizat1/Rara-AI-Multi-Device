@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import AdmZip from "adm-zip";
 import archiver from "archiver";
-import tar from "tar";
+import * as tar from "tar";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import fs from "node:fs";
 import path from "node:path";
