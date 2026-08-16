@@ -68,10 +68,10 @@ function handler(m, { sock }) {
     if (action === 'list') {
         const list = listByRole(server, role)
         if (list.length === 0) {
-            return m.reply(claraWrap("rolemanager", `📋 *ᴅᴀꜰᴛᴀʀ ${roleLabel.toUpperCase()} ${serverLabel}*\n\n> Belum ada ${role} terdaftar.`))
+            return m.reply(claraWrap("rolemanager", `📋 *Daftar ${roleLabel.toUpperCase()} ${serverLabel}*\n\n> Belum ada ${role} terdaftar.`))
         }
         
-        let txt = `📋 *ᴅᴀꜰᴛᴀʀ ${roleLabel.toUpperCase()} ${serverLabel}*\n\n`
+        let txt = `📋 *Daftar ${roleLabel.toUpperCase()} ${serverLabel}*\n\n`
         txt += `> Total: *${list.length}* ${role}\n\n`
         list.forEach((num, i) => {
             txt += `${i + 1}. \`${num}\`\n`
@@ -82,7 +82,7 @@ function handler(m, { sock }) {
     
     if (!canManageRole(m.sender, server, role, m.isOwner)) {
         const userRole = getUserRole(m.sender, server)
-        return m.reply(claraWrap("rolemanager", `❌ *ᴀᴋsᴇs ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+        return m.reply(claraWrap("rolemanager", `❌ *Akses Ditolak*\n\n` +
             `> Kamu tidak bisa mengelola *${roleLabel}* di *${serverLabel}*\n` +
             `> Role kamu: *${userRole ? capitalize(userRole) : 'Tidak ada'}*\n\n` +
             `> Hirarki: Owner > CEO > Reseller`))
@@ -98,7 +98,7 @@ function handler(m, { sock }) {
     }
     
     if (!targetUser) {
-        return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
             `> \`${m.prefix}${m.command} @user\`\n` +
             `> \`${m.prefix}${m.command} 628xxx\`\n` +
             `> Reply pesan user`, "rolemanager")
@@ -107,27 +107,27 @@ function handler(m, { sock }) {
     if (action === 'add') {
         const result = addRole(targetUser, server, role)
         if (!result.success) {
-            return m.reply(claraWrap("rolemanager", `❌ *ɢᴀɢᴀʟ*\n\n> ${result.error}`))
+            return m.reply(claraWrap("rolemanager", `❌ *Gagal*\n\n> ${result.error}`))
         }
         
         m.react('✅')
-        return m.reply(`✅ *${roleLabel.toUpperCase()} ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
-            `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-            `┃ 📱 ɴᴏᴍᴏʀ: \`${targetUser}\`\n` +
-            `┃ 🏷️ ʀᴏʟᴇ: \`${roleLabel}\`\n` +
-            `┃ 🖥️ sᴇʀᴠᴇʀ: \`${serverLabel}\`\n` +
-            `┃ 📊 ᴛᴏᴛᴀʟ: \`${listByRole(server, role).length}\` ${role}\n` +
+        return m.reply(`✅ *${roleLabel.toUpperCase()} Ditambahkan*\n\n` +
+            `╭┈┈⬡「 📋 *Detail* 」\n` +
+            `┃ 📱 Nomor: \`${targetUser}\`\n` +
+            `┃ 🏷️ Role: \`${roleLabel}\`\n` +
+            `┃ 🖥️ sErver: \`${serverLabel}\`\n` +
+            `┃ 📊 Total: \`${listByRole(server, role).length}\` ${role}\n` +
             `╰┈┈⬡`)
     }
     
     if (action === 'del') {
         const result = removeRole(targetUser, server, role)
         if (!result.success) {
-            return m.reply(claraWrap("rolemanager", `❌ *ɢᴀɢᴀʟ*\n\n> ${result.error}`))
+            return m.reply(claraWrap("rolemanager", `❌ *Gagal*\n\n> ${result.error}`))
         }
         
         m.react('✅')
-        return m.reply(`✅ *${roleLabel.toUpperCase()} ᴅɪʜᴀᴘᴜs*\n\n` +
+        return m.reply(`✅ *${roleLabel.toUpperCase()} Dihapus*\n\n` +
             `> Nomor: \`${targetUser}\`\n` +
             `> Server: *${serverLabel}*\n` +
             `> Total: *${listByRole(server, role).length}* ${role}`)

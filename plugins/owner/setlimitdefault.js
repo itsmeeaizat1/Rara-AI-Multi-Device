@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
         const db = getDatabase()
         const currentDefault = db.setting('defaultLimit') || config.limits?.default || 25
         
-        return m.reply(claraWrap("sᴇᴛ ᴅᴇғᴀᴜʟᴛ ʟɪᴍɪᴛ", `📊 *sᴇᴛ ᴅᴇғᴀᴜʟᴛ ʟɪᴍɪᴛ*\n\n` +
+        return m.reply(claraWrap("sEt DeғAult Limit", `📊 *sEt DeғAult Limit*\n\n` +
             `> Limit default saat ini: \`${currentDefault}\`\n\n` +
             `*Cara pakai:*\n` +
             `> \`${m.prefix}setlimitdefault <jumlah>\`\n\n` +
@@ -35,13 +35,13 @@ async function handler(m, { sock }) {
     }
     
     if (newLimit < 1 || newLimit > 1000) {
-        { const __navText = `❌ *ɢᴀɢᴀʟ*\n\n> Limit harus antara 1 - 1000`; return await m.reply(claraWrap("setlimitdefault", __navText)); }
+        { const __navText = `❌ *Gagal*\n\n> Limit harus antara 1 - 1000`; return await m.reply(claraWrap("setlimitdefault", __navText)); }
     }
     
     const db = getDatabase()
     db.setting('defaultLimit', newLimit)
     
-    await m.reply(claraWrap("ʙᴇʀʜᴀsɪʟ", `✅ *ʙᴇʀʜᴀsɪʟ*\n\n` +
+    await m.reply(claraWrap("Berhasil", `✅ *Berhasil*\n\n` +
         `> Default limit diubah menjadi: \`${newLimit}\`\n` +
         `> User baru akan mendapat limit ini`))
 }

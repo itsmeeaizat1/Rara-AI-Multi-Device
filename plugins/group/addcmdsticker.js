@@ -29,14 +29,14 @@ async function handler(m, { sock }) {
     if (!commandName) {
         const existingCmds = listStickerCommands()
         
-        let txt = `🖼️ *sᴛɪᴄᴋᴇʀ ᴛᴏ ᴄᴏᴍᴍᴀɴᴅ*\n\n`
+        let txt = `🖼️ *sTicker To Command*\n\n`
         txt += `> Reply sticker + ketik command yang ingin dijadikan shortcut.\n\n`
         txt += `*Contoh:*\n`
         txt += `> Reply sticker, lalu ketik:\n`
         txt += `> \`.addcmdsticker menu\`\n\n`
         
         if (existingCmds.length > 0) {
-            txt += `╭┈┈⬡「 📋 *ᴀᴋᴛɪꜰ* 」\n`
+            txt += `╭┈┈⬡「 📋 *Aktif* 」\n`
             for (const cmd of existingCmds.slice(0, 10)) {
                 txt += `┃ 🖼️ → \`${cmd.command}\`\n`
             }
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     if (success) {
         await m.react('✅')
         await m.reply(
-            `✅ *sᴛɪᴄᴋᴇʀ ᴄᴏᴍᴍᴀɴᴅ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
+            `✅ *sTicker Command Ditambahkan*\n\n` +
             `> 🖼️ Sticker → \`.${cleanCmd}\`\n\n` +
             `_Kirim sticker tersebut untuk menjalankan command!_`
         )

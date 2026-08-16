@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig }) {
       user.stamina -= 10;
       user.lastHunt = Date.now();
       db.write();
-      await sendReplyWithNav(sock, m, claraWrap("Hunt", "") + "\n\n" + claraWrap("ᴋᴀʙᴜʀ", [`◦ ${animal.name} berhasil kabur!`, "◦ Coba lagi nanti"].join("\n")) + "\n\n" + separator("━", 22), "hunt");
+      await sendReplyWithNav(sock, m, claraWrap("Hunt", "") + "\n\n" + claraWrap("Kabur", [`◦ ${animal.name} berhasil kabur!`, "◦ Coba lagi nanti"].join("\n")) + "\n\n" + separator("━", 22), "hunt");
       return { handled: true };
     }
     
@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
     
     await sendReplyWithNav(sock, m, claraWrap("Hunt", [`◦ Target: *${animal.name}*`,
       `◦ HP: *-${animal.hp}* ❤️`,
-      `◦ Stamina: *-10* ⚡`].join("\n")) + "\n\n" + claraWrap("ʜᴀsɪʟ", [`◦ EXP: *+${animal.exp}* ✨`, `◦ Money: *+Rp${animal.money.toLocaleString("id-ID")}* 💰`].join("\n")) + "\n\n" + separator("━", 22) + "\n" + tipText(`Tunggu 20 menit untuk berburu lagi`), "hunt");
+      `◦ Stamina: *-10* ⚡`].join("\n")) + "\n\n" + claraWrap("Hasil", [`◦ EXP: *+${animal.exp}* ✨`, `◦ Money: *+Rp${animal.money.toLocaleString("id-ID")}* 💰`].join("\n")) + "\n\n" + separator("━", 22) + "\n" + tipText(`Tunggu 20 menit untuk berburu lagi`), "hunt");
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("Stopdandeletejadibot", `❌ Tidak ada session jadibot tersimpan`))
         }
 
-        let txt = ` *sᴛᴏᴘ & ᴅᴇʟᴇᴛᴇ Jadibot*\n\n`
+        let txt = ` *sTop & Delete Jadibot*\n\n`
         txt += `Pilih target dengan mention atau reply:\n\n`
 
         sessions.forEach((s, i) => {
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
         await m.react('✅')
 
         await sock.sendMessage(m.chat, {
-            text: ` *Jadibot ᴅɪʜᴀᴘᴜs*\n\n` +
+            text: ` *Jadibot Dihapus*\n\n` +
                 `> 📱 Nomor: *@${id}*\n` +
                 `>  Status: *Deleted*\n\n` +
                 `Session telah dihapus secara permanen.\n` +

@@ -50,7 +50,7 @@ function buildMemoryBook(prefix, groupName) {
       `◦ Vibe: *${vibe}*`,
       `◦ Momen: *${highlight}*`].join("\n")) +
     "\n" +
-    claraWrap("ᴛᴏᴘ ᴍᴇᴍʙᴇʀ", topMembers) +
+    claraWrap("Top Member", topMembers) +
     "\n\n" +
     separator("━", 22) +
     "\n" +

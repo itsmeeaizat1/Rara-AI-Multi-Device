@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     
     if (user.isPremium || config.isPremium(m.sender)) {
         return m.reply(
-            `✨ *ᴘʀᴇᴍɪᴜᴍ ᴜsᴇʀ*\n\n` +
+            `✨ *Premium User*\n\n` +
             `> Kamu sudah premium!\n` +
             `> Semua fitur sudah ter-unlock!`
         )
@@ -51,13 +51,13 @@ async function handler(m, { sock }) {
         const unlockedFeatures = user.unlockedFeatures || []
         
         let text = `╭━━━━━━━━━━━━━━━━━╮\n`
-        text += `┃  🛒 *ʙᴜʏ ꜰɪᴛᴜʀ*\n`
+        text += `┃  🛒 *Buy Fitur*\n`
         text += `╰━━━━━━━━━━━━━━━━━╯\n\n`
         
         text += `> Harga: *${formatNumber(PRICE_PER_FEATURE)}* bal/fitur\n`
         text += `> Koin: *${formatNumber(user.koin || 0)}*\n\n`
         
-        text += `╭┈┈⬡「 📋 *ꜰɪᴛᴜʀ* 」\n`
+        text += `╭┈┈⬡「 📋 *Fitur* 」\n`
         
         for (const feature of PREMIUM_FEATURES) {
             const isUnlocked = unlockedFeatures.includes(feature.id)
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
     
     if (!feature) {
         return m.reply(
-            `❌ *ɢᴀɢᴀʟ*\n\n` +
+            `❌ *Gagal*\n\n` +
             `> Fitur \`${featureName}\` tidak ditemukan\n` +
             `> Ketik \`.buyfitur\` untuk lihat daftar`
         )
@@ -89,12 +89,12 @@ async function handler(m, { sock }) {
     const unlockedFeatures = user.unlockedFeatures || []
     
     if (unlockedFeatures.includes(feature.id)) {
-        return m.reply(`❌ *ɢᴀɢᴀʟ*\n\n> Fitur \`${feature.name}\` sudah ter-unlock!`)
+        return m.reply(`❌ *Gagal*\n\n> Fitur \`${feature.name}\` sudah ter-unlock!`)
     }
     
     if ((user.koin || 0) < PRICE_PER_FEATURE) {
         return m.reply(
-            `❌ *ɢᴀɢᴀʟ*\n\n` +
+            `❌ *Gagal*\n\n` +
             `> Koin tidak cukup!\n` +
             `> Butuh: *${formatNumber(PRICE_PER_FEATURE)}*\n` +
             `> Kamu punya: *${formatNumber(user.koin || 0)}*`
@@ -110,11 +110,11 @@ async function handler(m, { sock }) {
     m.react('✅')
     
     await m.reply(
-        `✅ *ꜰɪᴛᴜʀ ᴅɪ-ᴜɴʟᴏᴄᴋ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-        `┃ 🎁 ꜰɪᴛᴜʀ: *${feature.name}*\n` +
-        `┃ 💵 ʜᴀʀɢᴀ: *-${formatNumber(PRICE_PER_FEATURE)}* bal\n` +
-        `┃ 💰 sɪsᴀ: *${formatNumber(newKoin)}*\n` +
+        `✅ *Fitur Di-Unlock*\n\n` +
+        `╭┈┈⬡「 📋 *Detail* 」\n` +
+        `┃ 🎁 Fitur: *${feature.name}*\n` +
+        `┃ 💵 Harga: *-${formatNumber(PRICE_PER_FEATURE)}* bal\n` +
+        `┃ 💰 sIsa: *${formatNumber(newKoin)}*\n` +
         `╰┈┈⬡\n\n` +
         `> _${feature.desc}_\n\n` +
         `> 💡 Tip: Jadi *Premium* untuk unlock SEMUA!`

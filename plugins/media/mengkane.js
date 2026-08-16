@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     const command = m.command?.toLowerCase()
     
     if (command === 'mengkane' || !command.startsWith('mengkane')) {
-        return m.reply(`🎵 *ᴍᴇɴɢᴋᴀɴᴇ ᴍᴜsɪᴄ*\n\n` +
+        return m.reply(`🎵 *Mengkane Music*\n\n` +
             `> Tersedia: mengkane1 - mengkane52\n` +
             `> Contoh: \`${m.prefix}mengkane1\``)
     }

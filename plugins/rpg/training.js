@@ -37,9 +37,9 @@ async function handler(m, { sock }) {
   const trainType = args[0]?.toLowerCase();
 
   if (!trainType) {
-    let txt = `🏋️ *ᴛʀᴀɪɴɪɴɢ sʏsᴛᴇᴍ*\n\n`;
+    let txt = `🏋️ *Training sYstem*\n\n`;
     txt += `> Latihan untuk meningkatkan stats!\n\n`;
-    txt += `*📊 *sᴛᴀᴛs ᴋᴀᴍᴜ:*
+    txt += `*📊 *sTats Kamu:*
 \n`;
     txt += `> ⚔️ Attack: *${user.rpg.attack || 10}*\n`;
     txt += `> 🛡️ Defense: *${user.rpg.defense || 5}*\n`;
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     txt += `> 🍀 Luck: *${user.rpg.luck || 5}*\n`;
     txt += `> ⚡ Stamina: *${user.rpg.stamina ?? 100}*\n`;
     txt += `\n\n`;
-    txt += `*🏋️ *ᴛʀᴀɪɴɪɴɢ:*
+    txt += `*🏋️ *Training:*
 \n`;
     for (const [key, train] of Object.entries(TRAINING_TYPES)) {
       txt += `> ${train.name}\n`;
@@ -67,12 +67,12 @@ async function handler(m, { sock }) {
   user.rpg.stamina = user.rpg.stamina ?? 100;
 
   if (user.rpg.stamina < training.staminaCost) {
-    return sendReplyWithNav(sock, m, `⚡ *sᴛᴀᴍɪɴᴀ ᴋᴜʀᴀɴɢ*\n\n` + `> Butuh: ${training.staminaCost}\n` + `> Punya: ${user.rpg.stamina}\n\n` + `💡 Gunakan \`${m.prefix}rest\` atau makan makanan`, "training");
+    return sendReplyWithNav(sock, m, `⚡ *sTamina Kurang*\n\n` + `> Butuh: ${training.staminaCost}\n` + `> Punya: ${user.rpg.stamina}\n\n` + `💡 Gunakan \`${m.prefix}rest\` atau makan makanan`, "training");
   }
 
   user.rpg.stamina -= training.staminaCost;
 
-  m.reply(claraWrap("Training", `🏋️ *ʟᴀᴛɪʜᴀɴ ${training.name.toUpperCase()}...*`));
+  m.reply(claraWrap("Training", `🏋️ *Latihan ${training.name.toUpperCase()}...*`));
   await new Promise((r) => setTimeout(r, 2500));
 
   const statBonus = Math.floor(Math.random() * (training.bonus[1] - training.bonus[0] + 1)) + training.bonus[0];
@@ -82,8 +82,8 @@ async function handler(m, { sock }) {
   await addExpWithLevelCheck(sock, m, db, user, training.exp);
   db.save();
 
-  return sendReplyWithNav(sock, m, `💪 *ᴛʀᴀɪɴɪɴɢ sᴇʟᴇsᴀɪ!*\n\n` +
-      `*📊 *ʀᴇsᴜʟᴛ:*
+  return sendReplyWithNav(sock, m, `💪 *Training sElesai!*\n\n` +
+      `*📊 *Result:*
 \n` +
       `> 🏋️ Training: *${training.name}*\n` +
       `> 📈 ${training.stat}: *${currentStat} → ${currentStat + statBonus}* (+${statBonus})\n` +

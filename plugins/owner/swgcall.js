@@ -89,7 +89,7 @@ async function handler(m, { sock, db }) {
     }
 
     let report =
-      `✅ *ʙʀᴏᴀᴅᴄᴀsᴛ sᴡɢᴄ sᴇʟᴇsᴀɪ*\n\n` +
+      `✅ *Broadcast sWgc sElesai*\n\n` +
       `> Total: *${total}* grup\n` +
       `> Berhasil: *${success}* ✅\n` +
       `> Gagal: *${failed}* ❌`;
@@ -157,7 +157,7 @@ async function handler(m, { sock, db }) {
     rawContent.backgroundColor = "#128C7E";
   } else {
     return m.reply(
-      `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+      `⚠️ *Cara Pakai*\n\n` +
         `> \`${m.prefix}swgcall teks\` - Story teks ke semua grup\n` +
         `> Reply gambar/video/audio + \`${m.prefix}swgcall\`\n` +
         `> Kirim gambar/video + caption \`${m.prefix}swgcall\`\n\n` +
@@ -204,7 +204,7 @@ async function handler(m, { sock, db }) {
 
     await sock.sendMessage(m.chat, {
       text:
-        `📢 *ᴋᴏɴꜰɪʀᴍᴀsɪ ʙʀᴏᴀᴅᴄᴀsᴛ sᴡɢᴄ*\n\n` +
+        `📢 *Konfirmasi Broadcast sWgc*\n\n` +
         `> Media: *${mediaType}*\n` +
         `> Total Grup: *${groupList.length}*\n` +
         `> Estimasi: *~${estimatedTime} detik*\n\n` +
@@ -252,7 +252,7 @@ async function handler(m, { sock, db }) {
     });
   } catch (error) {
     await m.reply(
-      `❌ *ᴇʀʀᴏʀ*\n\n> Gagal mengambil daftar grup.\n> _${error.message}_`,
+      `❌ *Error*\n\n> Gagal mengambil daftar grup.\n> _${error.message}_`,
     );
     if (tempFile && fs.existsSync(tempFile)) {
       try {

@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-        await sendReplyWithNav(sock, m, `❌ *ᴛᴀʀɢᴇᴛ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n` +
+        await sendReplyWithNav(sock, m, `❌ *Target Tidak Ditemukan*\n\n` +
             `> Reply pesan user atau mention!\n` +
             `> Contoh: \`${m.prefix}kick @user\``, "kick")
         return
@@ -41,12 +41,12 @@ async function handler(m, { sock }) {
     const targetNumber = targetJid.replace(/@.*$/, '')
 
     if (targetJid === botNumber || targetNumber === botNumber.replace(/@.*$/, '')) {
-        await m.reply(claraWrap("kick", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak bisa kick bot sendiri!`))
+        await m.reply(claraWrap("kick", `❌ *Gagal*\n\n> Tidak bisa kick bot sendiri!`))
         return
     }
 
     if (targetJid === m.sender) {
-        await m.reply(claraWrap("kick", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak bisa kick diri sendiri!`))
+        await m.reply(claraWrap("kick", `❌ *Gagal*\n\n> Tidak bisa kick diri sendiri!`))
         return
     }
 
@@ -55,12 +55,12 @@ async function handler(m, { sock }) {
         const targetParticipant = findParticipantByNumber(groupMeta.participants, targetJid)
         
         if (!targetParticipant) {
-            m.reply(claraWrap("Kick", `❌ *ɢᴀɢᴀʟ*\n\n> User tidak ditemukan dalam grup!`))
+            m.reply(claraWrap("Kick", `❌ *Gagal*\n\n> User tidak ditemukan dalam grup!`))
             return
         }
         
         if (targetParticipant.admin) {
-            await m.reply(claraWrap("kick", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak bisa kick admin grup!`))
+            await m.reply(claraWrap("kick", `❌ *Gagal*\n\n> Tidak bisa kick admin grup!`))
             return
         }
         

@@ -34,11 +34,11 @@ function buildMenu(prefix) {
       "◦ Konsep: *Pesan dikunci, terbuka nanti*",
       "◦ Cooldown: *10 detik*"].join("\n")) +
     "\n" +
-    claraWrap("ᴘʀᴇꜱᴇᴛ ɪᴅᴇᴀ", PRESETS) +
+    claraWrap("PreꜱEt Idea", PRESETS) +
     "\n\n" +
     separator("━", 22) +
     "\n" +
-    claraWrap("ᴘᴀᴋᴀɪ", [`◦ ${prefix}timecapsule <hari>|<pesan>`, `◦ Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
+    claraWrap("Pakai", [`◦ ${prefix}timecapsule <hari>|<pesan>`, `◦ Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
     "\n\n" +
     separator("━", 22) +
     "\n" +

@@ -43,20 +43,20 @@ async function handler(m, { sock }) {
     }
     
     if (!targetJid || amount <= 0) {
-        return sendReplyWithNav(sock, m, `⚡ *ᴅᴇʟ ᴇɴᴇʀɢɪ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚡ *Del Energi*\n\n` +
             `> \`.delenergi <jumlah>\` - dari diri sendiri\n` +
             `> \`.delenergi <jumlah> @user\` - dari user\n\n` +
             `\`Contoh: ${m.prefix}delenergi 50\``, "delenergi")
     }
     
     if (amount <= 0) {
-        return m.reply(claraWrap("Delenergi", `❌ *ɢᴀɢᴀʟ*\n\n> Jumlah harus lebih dari 0`))
+        return m.reply(claraWrap("Delenergi", `❌ *Gagal*\n\n> Jumlah harus lebih dari 0`))
     }
     
     const user = db.getUser(targetJid)
     
     if (!user) {
-        return m.reply(claraWrap("Delenergi", `❌ *ɢᴀɢᴀʟ*\n\n> User tidak ditemukan di database`))
+        return m.reply(claraWrap("Delenergi", `❌ *Gagal*\n\n> User tidak ditemukan di database`))
     }
     
     if (user.energi === -1) {
@@ -67,11 +67,11 @@ async function handler(m, { sock }) {
     
     await m.react('✅')
     
-    await m.reply(claraWrap("delenergi", `✅ *ᴇɴᴇʀɢɪ ᴅɪᴋᴜʀᴀɴɢɪ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-        `┃ 👤 ᴜsᴇʀ: @${targetJid.split('@')[0]}\n` +
-        `┃ ➖ ᴋᴜʀᴀɴɢ: *-${formatNumber(amount)}*\n` +
-        `┃ ⚡ sɪsᴀ: *${formatNumber(newEnergi)}*\n` +
+    await m.reply(claraWrap("delenergi", `✅ *Energi Dikurangi*\n\n` +
+        `╭┈┈⬡「 📋 *Detail* 」\n` +
+        `┃ 👤 User: @${targetJid.split('@')[0]}\n` +
+        `┃ ➖ Kurang: *-${formatNumber(amount)}*\n` +
+        `┃ ⚡ sIsa: *${formatNumber(newEnergi)}*\n` +
         `╰┈┈⬡`))
 }
 

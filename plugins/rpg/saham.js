@@ -237,7 +237,7 @@ async function handler(m, { sock, config: botConfig }) {
       const hours = Math.floor(timeLeft / 60);
       const mins = timeLeft % 60;
       
-      txt += claraWrap("ᴇᴠᴇɴᴛ ᴀᴋᴛɪꜰ", [`◦ Event: *${market.currentEvent.name}*`, `◦ Efek: ${market.currentEvent.multiplier > 1 ? "Naik" : market.currentEvent.multiplier < 1 ? "Turun" : "Netral"} ${Math.abs(Math.round((market.currentEvent.multiplier - 1) * 100))}%`, `◦ Sisa waktu: ${hours > 0 ? `${hours}j ` : ""}${mins}m`, `◦ Info: ${market.currentEvent.msg}`].join("\n"));
+      txt += claraWrap("Event Aktif", [`◦ Event: *${market.currentEvent.name}*`, `◦ Efek: ${market.currentEvent.multiplier > 1 ? "Naik" : market.currentEvent.multiplier < 1 ? "Turun" : "Netral"} ${Math.abs(Math.round((market.currentEvent.multiplier - 1) * 100))}%`, `◦ Sisa waktu: ${hours > 0 ? `${hours}j ` : ""}${mins}m`, `◦ Info: ${market.currentEvent.msg}`].join("\n"));
       
       txt += "\n" + tipText(
         market.currentEvent.multiplier > 1

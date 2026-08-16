@@ -24,7 +24,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     if (!m.quoted) {
         return m.reply(
-            `📢 *ᴛᴏᴛᴀɢ*\n\n` +
+            `📢 *Totag*\n\n` +
             `> Reply pesan yang ingin di-forward ke semua member\n\n` +
             `> Contoh: Reply pesan lalu ketik \`${m.prefix}totag\``
         )

@@ -105,9 +105,9 @@ async function handler(m, { sock }) {
   const pluginName = m.args?.[0]?.trim();
 
   if (!pluginName) {
-    return sendReplyWithNav(sock, m, `📦 *ɢᴇᴛ ᴘʟᴜɢɪɴ*\n\n` +
+    return sendReplyWithNav(sock, m, `📦 *Get Plugin*\n\n` +
       `> Dapatkan source code plugin\n\n` +
-      `╭┈┈⬡「 📋 *ғᴏʀᴍᴀᴛ* 」\n` +
+      `╭┈┈⬡「 📋 *ғOrmat* 」\n` +
       `┃ .getplugin <nama>\n` +
       `╰┈┈┈┈┈┈┈┈⬡\n\n` +
       `*Contoh:*\n` +
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
 
   if (!pluginInfo) {
     const similar = getSimilarPlugins(pluginName, pluginsDir);
-    let text = `❌ *ᴘʟᴜɢɪɴ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n`;
+    let text = `❌ *Plugin Tidak Ditemukan*\n\n`;
     text += `> Plugin \`${pluginName}\` tidak ditemukan\n\n`;
 
     if (similar.length > 0) {

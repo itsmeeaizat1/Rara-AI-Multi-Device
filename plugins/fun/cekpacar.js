@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     
     if (!userData.fun?.pasangan) {
         const nama = isOther ? `@${targetJid.split('@')[0]}` : 'Kamu'
-        return sendReplyWithNav(sock, m, `💔 *sᴛᴀᴛᴜs ʜᴜʙᴜɴɢᴀɴ*\n\n` +
+        return sendReplyWithNav(sock, m, `💔 *sTatus Hubungan*\n\n` +
             `*${nama}* tidak punya pasangan.\n` +
             `TIP: Cari pasangan dulu dengan \`${m.prefix}tembak @tag\``, "cekpacar")
     }
@@ -51,10 +51,10 @@ async function handler(m, { sock }) {
     const isMutual = partnerData.fun?.pasangan === targetJid
     const nama = isOther ? `@${targetJid.split('@')[0]}` : 'Kamu'
     if (isMutual) {
-        await m.reply(claraWrap("sᴛᴀᴛᴜs ʜᴜʙᴜɴɢᴀɴ", `💕 *sᴛᴀᴛᴜs ʜᴜʙᴜɴɢᴀɴ*\n\n` +
+        await m.reply(claraWrap("sTatus Hubungan", `💕 *sTatus Hubungan*\n\n` +
             `*${nama}* sedang pacaran dengan @${partnerJid.split('@')[0]}! 🥳`))
     } else {
-        await m.reply(claraWrap("sᴛᴀᴛᴜs ʜᴜʙᴜɴɢᴀɴ", `💭 *sᴛᴀᴛᴜs ʜᴜʙᴜɴɢᴀɴ*\n\n` +
+        await m.reply(claraWrap("sTatus Hubungan", `💭 *sTatus Hubungan*\n\n` +
             `*${nama}* lagi pdkt sama @${partnerJid.split('@')[0]}\n` +
             `Status: *Digantung* 😅\n\n` +
             `Menunggu jawaban...`))

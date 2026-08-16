@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   const url = args[0]?.trim();
 
   if (!url || !url.includes("pixeldrain.com")) {
-    return sendReplyWithNav(sock, m, `📥 *ᴘɪxᴇʟᴅʀᴀɪɴ ᴅᴏᴡɴʟᴏᴀᴅ*\n\n` +
+    return sendReplyWithNav(sock, m, `📥 *Pixeldrain Download*\n\n` +
         `> Download file dari Pixeldrain\n\n` +
         `*Format:*\n` +
         `> \`${m.prefix}pixeldraindl <url>\`\n\n` +
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
 
     if (!data?.status || !data?.data) {
       return m.reply(
-        "❌ *ɢᴀɢᴀʟ*\n\n> File tidak ditemukan atau link tidak valid",
+        "❌ *Gagal*\n\n> File tidak ditemukan atau link tidak valid",
       );
     }
 
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
         }
       })
     } else if (sizeInMB > 100) {
-      await m.reply(claraWrap("Pixeldraindl", `⚠️ *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇsᴀʀ*\n\n> File ${file.size} terlalu besar untuk dikirim\n> Gunakan link download di atas`));
+      await m.reply(claraWrap("Pixeldraindl", `⚠️ *File Terlalu Besar*\n\n> File ${file.size} terlalu besar untuk dikirim\n> Gunakan link download di atas`));
     }
 
     m.react("✅");

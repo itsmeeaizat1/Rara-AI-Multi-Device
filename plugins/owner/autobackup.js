@@ -30,8 +30,8 @@ async function handler(m, { sock }) {
     const status = getBackupStatus();
     const ownerNum = config.owner?.number?.[0] || "Tidak diset";
 
-    let txt = `🗂️ *ᴀᴜᴛᴏ ʙᴀᴄᴋᴜᴘ sʏsᴛᴇᴍ*\n\n`;
-    txt += `╭┈┈⬡「 📊 *sᴛᴀᴛᴜs* 」\n`;
+    let txt = `🗂️ *Auto Backup sYstem*\n\n`;
+    txt += `╭┈┈⬡「 📊 *sTatus* 」\n`;
     txt += `┃ 🔘 Status: ${status.enabled ? "✅ *ON*" : "❌ *OFF*"}\n`;
     txt += `┃ ⏱️ Interval: ${status.interval}\n`;
     txt += `┃ 📅 Last Backup: ${status.lastBackup ? timeHelper.fromTimestamp(status.lastBackup, "DD MMMM YYYY HH:mm:ss") : "-"}\n`;
@@ -39,19 +39,19 @@ async function handler(m, { sock }) {
     txt += `┃ 📤 Dikirim ke: ${ownerNum}\n`;
     txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
 
-    txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
+    txt += `*Cara Pakai:*\n`;
     txt += `> \`${m.prefix}autobackup on <interval>\`\n`;
     txt += `> \`${m.prefix}autobackup off\`\n`;
     txt += `> \`${m.prefix}autobackup status\`\n`;
     txt += `> \`${m.prefix}autobackup now\`\n\n`;
 
-    txt += `*ꜰᴏʀᴍᴀᴛ ɪɴᴛᴇʀᴠᴀʟ:*\n`;
+    txt += `*Format Interval:*\n`;
     txt += `> • \`5m\` = 5 menit\n`;
     txt += `> • \`1h\` = 1 jam\n`;
     txt += `> • \`6h\` = 6 jam\n`;
     txt += `> • \`1d\` = 1 hari\n\n`;
 
-    txt += `*ᴄᴏɴᴛᴏʜ:*\n`;
+    txt += `*Contoh:*\n`;
     txt += `> \`${m.prefix}autobackup on 6h\` - backup setiap 6 jam`;
 
     return await sendReplyWithNav(sock, m, txt, "autobackup");
@@ -65,9 +65,9 @@ async function handler(m, { sock }) {
 
       if (!interval) {
         return m.reply(
-          `⚠️ *ɪɴᴛᴇʀᴠᴀʟ ᴅɪʙᴜᴛᴜʜᴋᴀɴ*\n\n` +
+          `⚠️ *Interval Dibutuhkan*\n\n` +
             `> \`${m.prefix}autobackup on <interval>\`\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
+            `*Contoh:*\n` +
             `> \`${m.prefix}autobackup on 30m\` - tiap 30 menit\n` +
             `> \`${m.prefix}autobackup on 6h\` - tiap 6 jam\n` +
             `> \`${m.prefix}autobackup on 1d\` - tiap 1 hari`,
@@ -77,15 +77,15 @@ async function handler(m, { sock }) {
       const result = enableAutoBackup(interval, sock);
 
       if (!result.success) {
-        return m.reply(claraWrap("autobackup", `❌ *ɢᴀɢᴀʟ*\n\n> ${result.error}`));
+        return m.reply(claraWrap("autobackup", `❌ *Gagal*\n\n> ${result.error}`));
       }
 
       const ownerNum = config.owner?.number?.[0] || "Owner #1";
 
       await m.react("✅");
       return m.reply(
-        `✅ *ᴀᴜᴛᴏ ʙᴀᴄᴋᴜᴘ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*\n\n` +
-          `╭┈┈⬡「 ⚙️ *sᴇᴛᴛɪɴɢs* 」\n` +
+        `✅ *Auto Backup Diaktifkan*\n\n` +
+          `╭┈┈⬡「 ⚙️ *sEttings* 」\n` +
           `┃ ⏱️ Interval: ${result.interval}\n` +
           `┃ 📤 Dikirim ke: ${ownerNum}\n` +
           `┃ 📦 Exclude: node_modules, .git, storages, dll\n` +
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
 
       await m.react("✅");
       return m.reply(
-        `❌ *ᴀᴜᴛᴏ ʙᴀᴄᴋᴜᴘ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*\n\n` +
+        `❌ *Auto Backup Dinonaktifkan*\n\n` +
           `> Backup otomatis sudah dihentikan.\n` +
           `> Gunakan \`${m.prefix}autobackup on <interval>\` untuk mengaktifkan kembali.`,
       );
@@ -112,8 +112,8 @@ async function handler(m, { sock }) {
       const status = getBackupStatus();
       const ownerNum = config.owner?.number?.[0] || "Tidak diset";
 
-      let txt = `🗂️ *sᴛᴀᴛᴜs ᴀᴜᴛᴏ ʙᴀᴄᴋᴜᴘ*\n\n`;
-      txt += `╭┈┈⬡「 📊 *ɪɴꜰᴏ* 」\n`;
+      let txt = `🗂️ *sTatus Auto Backup*\n\n`;
+      txt += `╭┈┈⬡「 📊 *Info* 」\n`;
       txt += `┃ 🔘 Enabled: ${status.enabled ? "✅ Ya" : "❌ Tidak"}\n`;
       txt += `┃ ⏱️ Interval: ${status.interval}\n`;
       txt += `┃ 🔄 Running: ${status.isRunning ? "✅ Ya" : "❌ Tidak"}\n`;
@@ -130,14 +130,14 @@ async function handler(m, { sock }) {
     case "trigger": {
       await m.react("🕐");
       await m.reply(
-        `🕕 *ᴍᴇᴍʙᴜᴀᴛ ʙᴀᴄᴋᴜᴘ...*\n\n> Mohon tunggu, sedang membuat backup...`,
+        `🕕 *Membuat Backup...*\n\n> Mohon tunggu, sedang membuat backup...`,
       );
 
       try {
         await triggerManualBackup(sock);
         await m.react("✅");
         return m.reply(
-          `✅ *ʙᴀᴄᴋᴜᴘ sᴇʟᴇsᴀɪ*\n\n> Backup telah dikirim ke owner!`,
+          `✅ *Backup sElesai*\n\n> Backup telah dikirim ke owner!`,
         );
       } catch (error) {
         await m.reply(claraWrap("autobackup", te(m.prefix, m.command, m.pushName), "error"));
@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
 
     default:
       return m.reply(
-        `⚠️ *ᴀᴄᴛɪᴏɴ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\n` +
+        `⚠️ *Action Tidak Valid*\n\n` +
           `> Pilih: \`on\`, \`off\`, \`status\`, atau \`now\`\n` +
           `> Contoh: \`${m.prefix}autobackup on 6h\``,
       );

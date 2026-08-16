@@ -155,10 +155,10 @@ function checkMode(m, getActiveJadibots) {
       allowed: false,
       isAfk: true,
       afkMessage:
-        `💤 *ʙᴏᴛ sᴇᴅᴀɴɢ ᴀꜰᴋ*\n\n` +
-        `╭┈┈⬡「 📋 *ɪɴꜰᴏ* 」\n` +
-        `┃ 📝 ᴀʟᴀsᴀɴ: \`${botAfk.reason || "AFK"}\`\n` +
-        `┃ ⏱️ sᴇᴊᴀᴋ: \`${duration}\` yang lalu\n` +
+        `💤 *Bot sEdang Afk*\n\n` +
+        `╭┈┈⬡「 📋 *Info* 」\n` +
+        `┃ 📝 Alasan: \`${botAfk.reason || "AFK"}\`\n` +
+        `┃ ⏱️ sEjak: \`${duration}\` yang lalu\n` +
         `╰┈┈⬡\n\n` +
         `> Bot tidak bisa menerima perintah saat ini\n` +
         `> Mohon tunggu sampai owner mengaktifkan kembali`,
@@ -213,10 +213,10 @@ function checkMode(m, getActiveJadibots) {
         allowed: false,
         hasJadibots: true,
         jadibotMessage:
-          `🤖 *ᴍᴏᴅᴇ ᴘʀɪᴠᴀᴛᴇ*\n\n` +
+          `🤖 *Mode Private*\n\n` +
           `Bot utama sedang dalam mode private.\n` +
           `Kamu bisa menggunakan bot turunan kami:\n\n` +
-          `╭┈┈⬡「 📱 *ʙᴏᴛ ᴛᴇʀsᴇᴅɪᴀ* 」\n` +
+          `╭┈┈⬡「 📱 *Bot Tersedia* 」\n` +
           `${jadibotList}` +
           `╰┈┈⬡\n\n` +
           `> Pilih salah satu bot di atas untuk akses fitur.`,

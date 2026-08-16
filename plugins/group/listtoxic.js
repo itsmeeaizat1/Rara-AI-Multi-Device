@@ -28,17 +28,17 @@ async function handler(m, { sock }) {
     const customWords = groupData.toxicWords || []
     const defaultWords = DEFAULT_TOXIC_WORDS || []
     
-    let text = `📋 *ᴅᴀꜰᴛᴀʀ ᴋᴀᴛᴀ ᴛᴏxɪᴄ*\n\n`
+    let text = `📋 *Daftar Kata Toxic*\n\n`
     
     if (customWords.length > 0) {
-        text += `╭┈┈⬡「 ✏️ *ᴄᴜsᴛᴏᴍ* (${customWords.length}) 」\n`
+        text += `╭┈┈⬡「 ✏️ *Custom* (${customWords.length}) 」\n`
         for (let i = 0; i < customWords.length; i++) {
             text += `┃ ${i + 1}. ${customWords[i]}\n`
         }
         text += `╰┈┈┈┈┈┈┈┈⬡\n\n`
     }
     
-    text += `╭┈┈⬡「 📦 *ᴅᴇꜰᴀᴜʟᴛ* (${defaultWords.length}) 」\n`
+    text += `╭┈┈⬡「 📦 *Default* (${defaultWords.length}) 」\n`
     
     for (let i = 0; i < defaultWords.length; i++) {
         text += `┃ ${i + 1}. ${defaultWords[i]}\n`

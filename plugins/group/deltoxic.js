@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const word = m.args.join(' ').trim().toLowerCase()
     
     if (!word) {
-        return sendReplyWithNav(sock, m, claraWrap("ᴅᴇʟ ᴛᴏxɪᴄ", `🗑️ *ᴅᴇʟ ᴛᴏxɪᴄ*\n\n` +
+        return sendReplyWithNav(sock, m, claraWrap("Del Toxic", `🗑️ *Del Toxic*\n\n` +
             `> Gunakan: \`.deltoxic <kata>\`\n\n` +
             `\`Contoh: ${m.prefix}deltoxic katakasar\``), "deltoxic")
     }
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     const index = toxicWords.indexOf(word)
     
     if (index === -1) {
-        { const __navText = `❌ *ɢᴀɢᴀʟ*\n\n> Kata \`${word}\` tidak ada di daftar`; return await m.reply(claraWrap("deltoxic", __navText)); }
+        { const __navText = `❌ *Gagal*\n\n> Kata \`${word}\` tidak ada di daftar`; return await m.reply(claraWrap("deltoxic", __navText)); }
     }
     
     toxicWords.splice(index, 1)
@@ -43,10 +43,10 @@ async function handler(m, { sock }) {
     
     m.react('✅')
     
-    await m.reply(claraWrap("ᴋᴀᴛᴀ ᴛᴏxɪᴄ ᴅɪʜᴀᴘᴜs", `✅ *ᴋᴀᴛᴀ ᴛᴏxɪᴄ ᴅɪʜᴀᴘᴜs*\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-        `┃ 📝 ᴋᴀᴛᴀ: \`${word}\`\n` +
-        `┃ 📊 sɪsᴀ: \`${toxicWords.length}\` kata\n` +
+    await m.reply(claraWrap("Kata Toxic Dihapus", `✅ *Kata Toxic Dihapus*\n\n` +
+        `╭┈┈⬡「 📋 *Detail* 」\n` +
+        `┃ 📝 Kata: \`${word}\`\n` +
+        `┃ 📊 sIsa: \`${toxicWords.length}\` kata\n` +
         `╰┈┈⬡`))
 }
 

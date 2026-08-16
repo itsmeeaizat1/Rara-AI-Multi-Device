@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     }
     
     if (!targetJid || amount <= 0) {
-        return sendReplyWithNav(sock, m, `⭐ *ᴀᴅᴅ ᴇxᴘ*\n\n` +
+        return sendReplyWithNav(sock, m, `⭐ *Add Exp*\n\n` +
             `> \`.addexp <jumlah>\` - ke diri sendiri\n` +
             `> \`.addexp <jumlah> @user\` - ke user\n` +
             `> Max: 9.000.000.000 (9B)\n\n` +
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     }
     
     if (amount <= 0) {
-        return m.reply(claraWrap("Addexp", `❌ *ɢᴀɢᴀʟ*\n\n> Jumlah exp harus lebih dari 0`))
+        return m.reply(claraWrap("Addexp", `❌ *Gagal*\n\n> Jumlah exp harus lebih dari 0`))
     }
     
     if (amount > MAX_EXP) {

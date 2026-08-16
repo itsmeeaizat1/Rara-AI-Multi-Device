@@ -121,15 +121,15 @@ async function handler(m, { sock, config: botConfig }) {
     
     if (!isImage && !isVideo) {
         await m.reply(
-            `🖼️ *sᴛɪᴄᴋᴇʀ ᴍᴀᴋᴇʀ*\n\n` +
+            `🖼️ *sTicker Maker*\n\n` +
             `Kirim/reply gambar atau video dengan caption:\n` +
             `\`${m.prefix}s\`\n\n` +
-            `*ᴏᴘsɪ:*\n` +
+            `*Opsi:*\n` +
             `> \`--crop\` - Crop jadi kotak\n` +
             `> \`--resize WxH\` - Resize ke ukuran\n` +
             `> \`--circle\` - Bentuk lingkaran\n` +
             `> \`--rounded\` - Sudut melengkung\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
+            `*Contoh:*\n` +
             `> \`${m.prefix}s --crop\`\n` +
             `> \`${m.prefix}s --resize 256x256\`\n` +
             `> \`${m.prefix}s --circle\`\n` +

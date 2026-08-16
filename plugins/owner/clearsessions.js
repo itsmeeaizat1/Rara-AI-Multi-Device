@@ -56,11 +56,11 @@ async function handler(m, { sock })  {
         }
         
         await m.react('✅')
-        await m.reply(claraWrap("Clearsessions", `╭┈┈⬡「 🗑️ *ᴄʟᴇᴀʀ sᴇssɪᴏɴs* 」
+        await m.reply(claraWrap("Clearsessions", `╭┈┈⬡「 🗑️ *Clear sEssions* 」
 ┃
-┃ ㊗ ᴅᴇʟᴇᴛᴇᴅ: *${deleted}* file
-┃ ㊗ sᴋɪᴘᴘᴇᴅ: *${skipped}* file
-┃ ㊗ ɴᴏᴛᴇ: creds.json tidak dihapus
+┃ ㊗ Deleted: *${deleted}* file
+┃ ㊗ sKipped: *${skipped}* file
+┃ ㊗ Note: creds.json tidak dihapus
 ┃
 ╰┈┈⬡
 

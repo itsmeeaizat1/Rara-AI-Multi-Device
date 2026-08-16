@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const text = m.args.join(' ')
 
     if (!text) {
-        return sendReplyWithNav(sock, m, claraWrap("ᴍᴀᴛʜ ɢᴘᴛ", `📐 *ᴍᴀᴛʜ ɢᴘᴛ*\n\n> Masukkan soal matematika\n\n\`Contoh: ${m.prefix}matematika 2+2 berapa?\``), "matematika")
+        return sendReplyWithNav(sock, m, claraWrap("Math Gpt", `📐 *Math Gpt*\n\n> Masukkan soal matematika\n\n\`Contoh: ${m.prefix}matematika 2+2 berapa?\``), "matematika")
     }
 
     m.react('🕐')

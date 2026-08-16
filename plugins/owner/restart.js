@@ -27,8 +27,8 @@ async function handler(m, { sock }) {
         const startTime = Date.now()
         
         await sock.sendMessage(m.chat, {
-            text: `🔄 *ʀᴇsᴛᴀʀᴛɪɴɢ ʙᴏᴛ...*\n\n` +
-                  `╭┈┈⬡「 📊 *ɪɴꜰᴏ* 」\n` +
+            text: `🔄 *Restarting Bot...*\n\n` +
+                  `╭┈┈⬡「 📊 *Info* 」\n` +
                   `┃ ⏰ Time: ${new Date().toLocaleTimeString('id-ID')}\n` +
                   `┃ 🔧 Method: Process Spawn\n` +
                   `┃ 📦 PID: ${process.pid}\n` +

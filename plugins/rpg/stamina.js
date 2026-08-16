@@ -40,11 +40,11 @@ async function handler(m, { sock }) {
     const potionCost = 5000;
 
     if (user.rpg.stamina >= user.rpg.maxStamina) {
-      return m.reply(claraWrap("Stamina", `⚡ *sᴛᴀᴍɪɴᴀ ᴘᴇɴᴜʜ*\n\n> Stamina kamu sudah penuh!`));
+      return m.reply(claraWrap("Stamina", `⚡ *sTamina Penuh*\n\n> Stamina kamu sudah penuh!`));
     }
 
     if ((user.koin || 0) < potionCost) {
-      { const __navText = `❌ *sᴀʟᴅᴏ ᴛɪᴅᴀᴋ ᴄᴜᴋᴜᴘ*\n\n` + `> Biaya: Rp ${potionCost.toLocaleString("id-ID")}\n` + `> Saldo: Rp ${(user.koin || 0).toLocaleString("id-ID")}`; return await sendReplyWithNav(sock, m, __navText, "stamina"); };
+      { const __navText = `❌ *sAldo Tidak Cukup*\n\n` + `> Biaya: Rp ${potionCost.toLocaleString("id-ID")}\n` + `> Saldo: Rp ${(user.koin || 0).toLocaleString("id-ID")}`; return await sendReplyWithNav(sock, m, __navText, "stamina"); };
     }
 
     user.koin -= potionCost;
@@ -56,8 +56,8 @@ async function handler(m, { sock }) {
     return sendRpgPreview(
       sock,
       m.chat,
-      `⚡ *sᴛᴀᴍɪɴᴀ ᴅɪɪsɪ*\n\n` +
-        `*💊 *ʀᴇsᴛᴏʀᴇ:*
+      `⚡ *sTamina Diisi*\n\n` +
+        `*💊 *Restore:*
 \n` +
         `> ⚡ Stamina: *+${restored}*\n` +
         `> 💵 Biaya: *-Rp ${potionCost.toLocaleString("id-ID")}*\n` +
@@ -71,8 +71,8 @@ async function handler(m, { sock }) {
 
   const staminaBar = createStaminaBar(user.rpg.stamina, user.rpg.maxStamina);
 
-  let txt = `⚡ *sᴛᴀᴍɪɴᴀ sᴛᴀᴛᴜs*\n\n`;
-  txt += `*📊 *ɪɴꜰᴏ:*
+  let txt = `⚡ *sTamina sTatus*\n\n`;
+  txt += `*📊 *Info:*
 \n`;
   txt += `> ⚡ Stamina: *${user.rpg.stamina}/${user.rpg.maxStamina}*\n`;
   txt += `> 📊 [${staminaBar}]\n`;

@@ -187,7 +187,7 @@ async function handler(m, { sock }) {
     const board = renderBoard(room.game.render());
 
     const txt =
-      `🎮 *ᴛɪᴄ ᴛᴀᴄ ᴛᴏᴇ*\n\n` +
+      `🎮 *Tic Tac Toe*\n\n` +
       `Partner ditemukan!\n\n` +
       `❌ @${room.game.playerX.split("@")[0]}\n` +
       `⭕ @${room.game.playerO.split("@")[0]}\n\n` +
@@ -216,7 +216,7 @@ async function handler(m, { sock }) {
     await safeReact(m, "🕕");
     await safeReply(
       m,
-      `🎮 *ᴛɪᴄ ᴛᴀᴄ ᴛᴏᴇ*\n\n` +
+      `🎮 *Tic Tac Toe*\n\n` +
         `Room dibuat! Menunggu partner...\n\n` +
         `> Ketik \`.tictactoe${roomName ? " " + roomName : ""}\` untuk join\n` +
         `> Room akan expired dalam 5 menit`,
@@ -338,7 +338,7 @@ async function answerHandler(m, sock) {
   // Continue game
   await safeReply(
     m,
-    `🎮 *ᴛɪᴄ ᴛᴀᴄ ᴛᴏᴇ*\n\n` +
+    `🎮 *Tic Tac Toe*\n\n` +
       `${board}\n\n` +
       `> Giliran: @${room.game.currentTurn.split("@")[0]}`,
     { mentions: [room.game.currentTurn] },

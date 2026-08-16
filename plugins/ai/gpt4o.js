@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return sendReplyWithNav(sock, m, claraWrap("ɢᴘᴛ-4ᴏ", `🧠 *ɢᴘᴛ-4ᴏ*\n\n> Masukkan pertanyaan\n\n\`Contoh: ${m.prefix}gpt4o Hai apa kabar?\``), "gpt4o");
+    return sendReplyWithNav(sock, m, claraWrap("Gpt-4O", `🧠 *Gpt-4O*\n\n> Masukkan pertanyaan\n\n\`Contoh: ${m.prefix}gpt4o Hai apa kabar?\``), "gpt4o");
   }
 
   m.react("🕐");

@@ -24,7 +24,7 @@ async function handler(m, { sock, config }) {
     const newName = m.args.join(' ')
     
     if (!newName) {
-        return sendReplyWithNav(sock, m, `👨‍💻 *ɢᴀɴᴛɪ ɴᴀᴍᴀ ᴅᴇᴠᴇʟᴏᴘᴇʀ*\n\n> Nama saat ini: *${config.bot?.developer || '-'}*\n\n*Penggunaan:*\n\`${m.prefix}ganti-namadev <nama baru>\``, "ganti-namadev")
+        return sendReplyWithNav(sock, m, `👨‍💻 *Ganti Nama Developer*\n\n> Nama saat ini: *${config.bot?.developer || '-'}*\n\n*Penggunaan:*\n\`${m.prefix}ganti-namadev <nama baru>\``, "ganti-namadev")
     }
     
     try {
@@ -40,7 +40,7 @@ async function handler(m, { sock, config }) {
         
         config.bot.developer = newName
         
-        m.reply(claraWrap("Ganti-namadev", `✅ *ʙᴇʀʜᴀsɪʟ*\n\n> Nama developer diganti ke: *${newName}*`))
+        m.reply(claraWrap("Ganti-namadev", `✅ *Berhasil*\n\n> Nama developer diganti ke: *${newName}*`))
         
     } catch (error) {
         await m.reply(claraWrap("ganti-namadev", te(m.prefix, m.command, m.pushName), "error"))

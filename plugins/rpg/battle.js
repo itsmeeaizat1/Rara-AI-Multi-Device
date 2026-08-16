@@ -79,7 +79,7 @@ async function handler(m, { sock, config: botConfig }) {
         `◦ Gold: *+${rewardGold}*`,
         `◦ HP sekarang: *${finalHp}/${maxHp}*`].join("\n")) +
       "\n\n" +
-      claraWrap("ʟᴏɢ", log.slice(-4)) +
+      claraWrap("Log", log.slice(-4)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

@@ -41,9 +41,9 @@ async function handler(m, { sock, config: botConfig, db }) {
         `◦ Locked: *${locked.length}*`,
         `◦ Total: *${unlocked.length + locked.length}*`].join("\n")) +
       "\n\n" +
-      claraWrap("ᴜɴʟᴏᴄᴋᴇᴅ", unlocked.map((a) => `◦ ${a}`)) +
+      claraWrap("Unlocked", unlocked.map((a) => `◦ ${a}`)) +
       "\n\n" +
-      claraWrap("ʟᴏᴄᴋᴇᴅ", locked.map((a) => `◦ ${a}`)) +
+      claraWrap("Locked", locked.map((a) => `◦ ${a}`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

@@ -20,7 +20,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const newDesc = m.text?.trim() || ''
     if (!m.text && m.args?.length === 0) {
-        await m.reply(`⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        await m.reply(`⚠️ *Cara Pakai*\n\n` +
             `> \`${m.prefix}setdeskgc Deskripsi baru\`\n` +
             `> \`${m.prefix}setdeskgc clear\` - Hapus deskripsi`)
         return
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     const descToSet = newDesc.toLowerCase() === 'clear' ? '' : newDesc
     
     if (descToSet.length > 2048) {
-        await m.reply(claraWrap("setdeskgc", `⚠️ *ᴠᴀʟɪᴅᴀsɪ*\n\n` +
+        await m.reply(claraWrap("setdeskgc", `⚠️ *Validasi*\n\n` +
             `> Deskripsi maksimal 2048 karakter.`))
         return
     }
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
         }
     } catch (error) {
         await m.reply(
-            `❌ *ɢᴀɢᴀʟ*\n\n` +
+            `❌ *Gagal*\n\n` +
             `> Tidak dapat mengubah deskripsi grup.\n` +
             `> _${error.message}_`
         )

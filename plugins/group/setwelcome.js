@@ -24,8 +24,8 @@ async function handler(m, { sock }) {
   const text = m.fullArgs?.trim() || m.args.join(" ");
 
   if (!text) {
-    return sendReplyWithNav(sock, m, `📝 *sᴇᴛ ᴡᴇʟᴄᴏᴍᴇ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀ* 」\n` +
+    return sendReplyWithNav(sock, m, `📝 *sEt Welcome*\n\n` +
+        `╭┈┈⬡「 📋 *Placeholder* 」\n` +
         `┃ ◦ \`{user}\` - Nama member\n` +
         `┃ ◦ \`{number}\` - Nomor member\n` +
         `┃ ◦ \`{group}\` - Nama grup\n` +

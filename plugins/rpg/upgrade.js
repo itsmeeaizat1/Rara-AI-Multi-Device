@@ -36,7 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
           "◦ *HP* - Upgrade health - 150 Gold",
           "◦ *SPD* - Upgrade speed - 250 Gold"].join("\n")) +
         "\n\n" +
-        claraWrap("ɪɴꜰᴏ", [`◦ Penggunaan: *${prefix}upgrade <stat>*`, `◦ Contoh: *${prefix}upgrade atk*`].join("\n")) +
+        claraWrap("Info", [`◦ Penggunaan: *${prefix}upgrade <stat>*`, `◦ Contoh: *${prefix}upgrade atk*`].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +

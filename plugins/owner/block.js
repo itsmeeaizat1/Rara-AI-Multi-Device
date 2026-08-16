@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-        return sendReplyWithNav(sock, m, '⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n' +
+        return sendReplyWithNav(sock, m, '⚠️ *Cara Pakai*\n\n' +
             '> `.block 628xxx` — Blokir via nomor\n' +
             '> `.block` (reply pesan) — Blokir pengirim\n' +
             '> `.block @mention` — Blokir yang di-mention\n' +
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
       phoneNumber: targetJid.split('@')[0],
     }).catch(() => {})
         return m.reply(
-            `🚫 *ɴᴏᴍᴏʀ ᴅɪʙʟᴏᴋɪʀ*\n\n` +
+            `🚫 *Nomor Diblokir*\n\n` +
             `> Target: @${targetJid.split('@')[0]}\n` +
             `> Gunakan \`.unblock\` untuk membuka blokir`,
             { mentions: [targetJid] }

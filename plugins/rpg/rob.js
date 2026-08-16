@@ -97,7 +97,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("Rob", "🥷") +
       "\n\n" +
-      claraWrap("ʜᴀꜱɪʟ", lines) +
+      claraWrap("HaꜱIl", lines) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

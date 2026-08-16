@@ -43,15 +43,15 @@ async function handler(m, { sock }) {
     const groupMode = groupData.botMode || null
     
     if (!mode) {
-        let txt = `╭┈┈⬡「 🤖 *ʙᴏᴛ ᴍᴏᴅᴇ* 」\n`
-        txt += `┃ ㊗ ɢʟᴏʙᴀʟ: *${globalMode.toUpperCase()}*\n`
+        let txt = `╭┈┈⬡「 🤖 *Bot Mode* 」\n`
+        txt += `┃ ㊗ Global: *${globalMode.toUpperCase()}*\n`
         
         if (m.isGroup) {
-            txt += `┃ ㊗ ɢʀᴜᴘ: *${(groupMode || 'INHERIT').toUpperCase()}*\n`
+            txt += `┃ ㊗ Grup: *${(groupMode || 'INHERIT').toUpperCase()}*\n`
         }
         txt += `╰┈┈⬡\n\n`
         
-        txt += `╭┈┈⬡「 📋 *ᴀᴠᴀɪʟᴀʙʟᴇ ᴍᴏᴅᴇs* 」\n`
+        txt += `╭┈┈⬡「 📋 *Available Modes* 」\n`
         
         const currentMode = m.isGroup ? (groupMode || globalMode) : globalMode
         
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
         }
         txt += `╰┈┈⬡\n\n`
         
-        txt += `*ꜰʟᴀɢ sᴛᴏʀᴇ:*\n`
+        txt += `*Flag sTore:*\n`
         txt += `> \`${m.prefix}botmode store\` - Manual order\n`
         txt += `> \`${m.prefix}botmode md\` → Mode default\n`
         txt += `> \`${m.prefix}botmode all\` → Semua fitur`
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
 
     if (!VALID_MODES.includes(mode)) {
         return m.reply(
-            `❌ *ᴍᴏᴅᴇ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\n` +
+            `❌ *Mode Tidak Valid*\n\n` +
             `> Mode tersedia: \`${VALID_MODES.join(', ')}\``
         )
     }
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
     }
 
     await m.reply(
-        `✅ *ᴍᴏᴅᴇ ᴅɪᴜʙᴀʜ*\n\n` +
+        `✅ *Mode Diubah*\n\n` +
         `> Mode: *${mode.toUpperCase()}*\n` +
         `> ${MODE_DESCRIPTIONS[mode]}\n` +
         extraInfo +

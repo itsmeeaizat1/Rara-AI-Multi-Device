@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid || amount <= 0) {
-        return sendReplyWithNav(sock, m, `💰 *ᴀᴅᴅ ᴋᴏɪɴ*\n\n` +
+        return sendReplyWithNav(sock, m, `💰 *Add Koin*\n\n` +
             `> \`.addkoin <jumlah>\` - ke diri sendiri\n` +
             `> \`.addkoin <jumlah> @user\` - ke orang lain\n` +
             `> Max: 9.000.000.000.000 (9T)\n\n` +

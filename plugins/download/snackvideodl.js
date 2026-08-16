@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
     
     if (!url) {
-        return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
             `> \`${m.prefix}svdl <url>\`\n\n` +
             `> Contoh:\n` +
             `> \`${m.prefix}svdl https://www.snackvideo.com/@xxx/video/xxx\``, "snackvideodl")

@@ -318,14 +318,14 @@ Mungkin kakaknya sedikit typo atau salah ketik? 😅👇`
         })
     }
     
-    // let msg = `╭━━━━『 ❌ *ᴄᴏᴍᴍᴀɴᴅ ɴᴏᴛ ꜰᴏᴜɴᴅ* 』━━━━╮\n\n`
-    // msg += `┃ 🔎 *ɪɴᴘᴜᴛ:* \`${prefix}${inputCommand}\`\n`
-    // msg += `┃ 📊 *ꜰᴏᴜɴᴅ:* ${suggestions.length} saran\n`
-    // msg += `┃ 🎯 *ᴛᴏᴘ ᴍᴀᴛᴄʜ:* \`${prefix}${topMatch.command}\`\n`
-    // msg += `┃ ${confidence.emoji} *ᴄᴏɴꜰɪᴅᴇɴᴄᴇ:* ${topPercent}% (${confidence.text})\n\n`
+    // let msg = `╭━━━━『 ❌ *Command Not Found* 』━━━━╮\n\n`
+    // msg += `┃ 🔎 *Input:* \`${prefix}${inputCommand}\`\n`
+    // msg += `┃ 📊 *Found:* ${suggestions.length} saran\n`
+    // msg += `┃ 🎯 *Top Match:* \`${prefix}${topMatch.command}\`\n`
+    // msg += `┃ ${confidence.emoji} *Confidence:* ${topPercent}% (${confidence.text})\n\n`
     // msg += `╰━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n`
     
-    // msg += `╭┈┈⬡「 💡 *sᴀʀᴀɴ ᴄᴏᴍᴍᴀɴᴅ* 」`
+    // msg += `╭┈┈⬡「 💡 *sAran Command* 」`
     
     // suggestions.forEach((s, i) => {
     //     const matchPercent = Math.round(s.similarity * 100)
@@ -341,7 +341,7 @@ Mungkin kakaknya sedikit typo atau salah ketik? 😅👇`
     
     // msg += `╰┈┈⬡\n\n`
     
-    // msg += `╭┈┈⬡「 ℹ️ *ᴛɪᴘs* 」\n`
+    // msg += `╭┈┈⬡「 ℹ️ *Tips* 」\n`
     // msg += `┃ • Pilih command dari daftar di atas\n`
     // msg += `┃ • Ketik \`${prefix}menu\` untuk daftar lengkap\n`
     // msg += `┃ • Ketik \`${prefix}help <cmd>\` untuk bantuan\n`

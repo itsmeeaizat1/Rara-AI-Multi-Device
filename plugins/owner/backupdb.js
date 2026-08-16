@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     
     await m.reply(
         `🕕 *Membuat backup database...*\n\n` +
-        `╭┈┈⬡「 📦 *ᴀᴘᴀ ʏᴀɴɢ ᴅɪ-ʙᴀᴄᴋᴜᴘ* 」\n` +
+        `╭┈┈⬡「 📦 *Apa Yang Di-Backup* 」\n` +
         backupContents.map(c => `┃ ${c}`).join('\n') +
         `\n╰┈┈┈┈┈┈┈┈⬡`
     )

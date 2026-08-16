@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   const pluginName = args[0]?.toLowerCase();
 
   if (!pluginName) {
-    return sendReplyWithNav(sock, m, `🔌 *ᴇɴᴀʙʟᴇ ᴘʟᴜɢɪɴ*\n\n` +
+    return sendReplyWithNav(sock, m, `🔌 *Enable Plugin*\n\n` +
         `> Masukkan nama plugin yang ingin diaktifkan\n\n` +
         `*Contoh:*\n` +
         `> \`${m.prefix}enableplugin sticker\`\n` +
@@ -84,8 +84,8 @@ async function handler(m, { sock }) {
 
     fs.writeFileSync(filePath, content);
 
-    await m.reply(claraWrap("enableplugin", `✅ *ᴘʟᴜɢɪɴ ᴇɴᴀʙʟᴇᴅ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
+    await m.reply(claraWrap("enableplugin", `✅ *Plugin Enabled*\n\n` +
+        `╭┈┈⬡「 📋 *Detail* 」\n` +
         `┃ 📦 Plugin: *${plugin.config.name}*\n` +
         `┃ 📁 Category: *${category}*\n` +
         `┃ 📄 File: *${file}*\n` +

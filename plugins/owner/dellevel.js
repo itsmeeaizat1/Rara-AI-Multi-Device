@@ -42,8 +42,8 @@ async function handler(m, { sock }) {
   }
 
   if (!targetJid || levels <= 0) {
-    return sendReplyWithNav(sock, m, `📊 *ᴅᴇʟ ʟᴇᴠᴇʟ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴜsᴀɢᴇ* 」\n` +
+    return sendReplyWithNav(sock, m, `📊 *Del Level*\n\n` +
+        `╭┈┈⬡「 📋 *Usage* 」\n` +
         `┃ > \`.dellevel <jumlah>\` - ke diri sendiri\n` +
         `┃ > \`.dellevel <jumlah> @user\` - ke orang lain\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
@@ -60,8 +60,8 @@ async function handler(m, { sock }) {
   db.save();
   await m.react("✅");
 
-  await m.reply(claraWrap("dellevel", `✅ *ʟᴇᴠᴇʟ ᴅɪᴋᴜʀᴀɴɢɪ*\n\n` +
-      `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
+  await m.reply(claraWrap("dellevel", `✅ *Level Dikurangi*\n\n` +
+      `╭┈┈⬡「 📋 *Detail* 」\n` +
       `┃ 👤 User: @${targetJid.split("@")[0]}\n` +
       `┃ ➖ Kurang: *-${levels} Level*\n` +
       `┃ 🚄 Exp Removed: *-${expToRemove.toLocaleString("id-ID")}*\n` +

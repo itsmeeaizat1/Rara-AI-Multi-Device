@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return sendReplyWithNav(sock, m, `📱 *ɢsᴍᴀʀᴇɴᴀ*\n\n` +
+    return sendReplyWithNav(sock, m, `📱 *Gsmarena*\n\n` +
         `> Cari spesifikasi HP lengkap\n\n` +
         `\`Contoh: ${m.prefix}gsmarena samsung galaxy s25\``, "gsmarena");
   }
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
 }
 
 function formatList(results, query, prefix) {
-  let txt = `📱 *ʜᴀsɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ*\n`;
+  let txt = `📱 *Hasil Pencarian*\n`;
   txt += `> *${query}*\n\n`;
 
   results.slice(0, 10).forEach((d, i) => {
@@ -74,7 +74,7 @@ function formatDetail(device) {
   let txt = `📱 *${device.name}*\n\n`;
 
   if (device.quickSpec && device.quickSpec.length > 0) {
-    txt += `📋 *ʀɪɴɢᴋᴀsᴀɴ:*\n`;
+    txt += `📋 *Ringkasan:*\n`;
     for (const s of device.quickSpec) {
       txt += `> 🔹 *${s.name}:* ${s.value}\n`;
     }

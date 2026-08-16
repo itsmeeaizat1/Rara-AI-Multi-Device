@@ -24,14 +24,14 @@ async function handler(m, { sock }) {
     const prompt = m.text
     
     if (!prompt) {
-        return sendReplyWithNav(sock, m, `🎨 *ᴀɴɪᴍᴇ ᴀʀᴛ ɢᴇɴᴇʀᴀᴛᴏʀ*\n\n` +
+        return sendReplyWithNav(sock, m, `🎨 *Anime Art Generator*\n\n` +
             `> Generate gambar anime AI dari prompt!\n\n` +
-            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
+            `*Cara Pakai:*\n` +
             `> \`${m.prefix}anime-gen <deskripsi>\`\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
+            `*Contoh:*\n` +
             `> \`${m.prefix}anime-gen girl, vibrant color, smilling, yellow pink gradient hair\`\n` +
             `> \`${m.prefix}anime-gen boy, dark aesthetic, silver hair, red eyes\`\n\n` +
-            `*ᴛɪᴘs:*\n` +
+            `*Tips:*\n` +
             `> • Gunakan bahasa Inggris\n` +
             `> • Makin detail prompt, makin bagus hasil\n` +
             `> • Tambahkan style: vibrant, dark, pastel, etc`, "anime-gen")
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
         const data = await f(apiUrl)
         
         if (!data?.status || !data?.data?.url) {
-            return m.reply('❌ *ɢᴀɢᴀʟ*\n\n> Gagal generate gambar. Coba lagi nanti!')
+            return m.reply('❌ *Gagal*\n\n> Gagal generate gambar. Coba lagi nanti!')
         }
         
         const result = data.data  
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
         m.react('✅')
     } catch (error) {
         if (error.code === 'ECONNABORTED') {
-            m.reply(claraWrap("Anime-gen", '⏱️ *ᴛɪᴍᴇᴏᴜᴛ*\n\n> Request terlalu lama. Coba lagi!'))
+            m.reply(claraWrap("Anime-gen", '⏱️ *Timeout*\n\n> Request terlalu lama. Coba lagi!'))
         } else {
             m.reply(claraWrap("anime-gen", te(m.prefix, m.command, m.pushName), "error"))
         }

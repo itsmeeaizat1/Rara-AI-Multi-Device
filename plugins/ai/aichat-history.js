@@ -46,7 +46,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text =
       claraWrap("AI History", "📜") +
-      claraWrap("ʀɪᴡᴀʏᴀᴛ", lines) +
+      claraWrap("Riwayat", lines) +
       
       "\n" ;
 

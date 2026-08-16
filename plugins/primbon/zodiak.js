@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     const zodiac = m.args[0]?.toLowerCase()
     
     if (!zodiac || !validZodiacs.includes(zodiac)) {
-        return m.reply(`⭐ *ᴢᴏᴅɪᴀᴋ*\n\n> Masukkan nama zodiak:\n\n${validZodiacs.map(z => `• ${z}`).join('\n')}\n\n\`Contoh: ${m.prefix}zodiak aries\``)
+        return m.reply(`⭐ *Zodiak*\n\n> Masukkan nama zodiak:\n\n${validZodiacs.map(z => `• ${z}`).join('\n')}\n\n\`Contoh: ${m.prefix}zodiak aries\``)
     }
     
     m.react('🕐')
@@ -36,19 +36,19 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(claraWrap("zodiak", `❌ *ɢᴀɢᴀʟ*\n\n> Gagal mendapatkan ramalan`))
+            return m.reply(claraWrap("zodiak", `❌ *Gagal*\n\n> Gagal mendapatkan ramalan`))
         }
         
         const r = data.data
-        const response = `⭐ *ᴢᴏᴅɪᴀᴋ ${zodiac.toUpperCase()}*\n\n` +
+        const response = `⭐ *Zodiak ${zodiac.toUpperCase()}*\n\n` +
             `${r.zodiak}\n\n` +
-            `🔢 *ɴᴏᴍᴏʀ:* ${r.nomor_keberuntungan}\n` +
-            `🌸 *ʙᴜɴɢᴀ:* ${r.bunga_keberuntungan}\n` +
-            `🎨 *ᴡᴀʀɴᴀ:* ${r.warna_keberuntungan}\n` +
-            `💎 *ʙᴀᴛᴜ:* ${r.batu_keberuntungan}\n` +
-            `🔥 *ᴇʟᴇᴍᴇɴ:* ${r.elemen_keberuntungan}\n` +
-            `🪐 *ᴘʟᴀɴᴇᴛ:* ${r.planet_yang_mengitari}\n` +
-            `💕 *ᴘᴀsᴀɴɢᴀɴ:* ${r.pasangan_zodiak}`
+            `🔢 *Nomor:* ${r.nomor_keberuntungan}\n` +
+            `🌸 *Bunga:* ${r.bunga_keberuntungan}\n` +
+            `🎨 *Warna:* ${r.warna_keberuntungan}\n` +
+            `💎 *Batu:* ${r.batu_keberuntungan}\n` +
+            `🔥 *Elemen:* ${r.elemen_keberuntungan}\n` +
+            `🪐 *Planet:* ${r.planet_yang_mengitari}\n` +
+            `💕 *Pasangan:* ${r.pasangan_zodiak}`
         
         m.react('✅')
         await m.reply(response)

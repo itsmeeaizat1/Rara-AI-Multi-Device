@@ -142,7 +142,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     if (isJadibot && jadibotId) {
       const jbOwners = getJadibotOwners(jadibotId);
       if (jbOwners.length === 0) {
-        return m.reply(`📋 *ᴅᴀꜰᴛᴀʀ ᴏᴡɴᴇʀ ᴊᴀᴅɪʙᴏᴛ*\n\n> Belum ada owner terdaftar.\n> Gunakan \`${m.prefix}addowner\` untuk menambah.`);
+        return m.reply(`📋 *Daftar Owner Jadibot*\n\n> Belum ada owner terdaftar.\n> Gunakan \`${m.prefix}addowner\` untuk menambah.`);
       }
       let txt = `📋 *DAFTAR OWNER JADIBOT* — ${jadibotId}\n\n`;
       const mentions = jbOwners.map(toMentionJid).filter(Boolean);
@@ -159,7 +159,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
       const allOwners = [...new Set([...panelOwners, ...fullOwners])];
 
       if (allOwners.length === 0) {
-        return m.reply(claraWrap("addowner", `📋 *ᴅᴀꜰᴛᴀʀ ᴏᴡɴᴇʀ ᴘᴀɴᴇʟ*\n\n> Belum ada owner panel terdaftar.`));
+        return m.reply(claraWrap("addowner", `📋 *Daftar Owner Panel*\n\n> Belum ada owner panel terdaftar.`));
       }
       let txt = `📋 *DAFTAR OWNER PANEL*\n\n`;
       const mentions = allOwners.map(toMentionJid).filter(Boolean);
@@ -182,7 +182,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
       const allOwners = [...new Set([...configOwners, ...dbOwners])];
 
       if (allOwners.length === 0) {
-        return m.reply(claraWrap("addowner", `📋 *ᴅᴀꜰᴛᴀʀ ᴏᴡɴᴇʀ*\n\n> Belum ada owner terdaftar.`));
+        return m.reply(claraWrap("addowner", `📋 *Daftar Owner*\n\n> Belum ada owner terdaftar.`));
       }
       let txt = `📋 *DAFTAR OWNER*\n\n`;
       const mentions = allOwners.map(toMentionJid).filter(Boolean);
@@ -217,7 +217,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
   }
 
   if (targetNumber.length < 10 || targetNumber.length > 15) {
-    return m.reply(claraWrap("Addowner", `❌ *ɢᴀɢᴀʟ*\n\n> Format nomor tidak valid`));
+    return m.reply(claraWrap("Addowner", `❌ *Gagal*\n\n> Format nomor tidak valid`));
   }
 
   if (isJadibot && jadibotId) {

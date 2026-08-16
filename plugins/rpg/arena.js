@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         "◦ Reset: *Minggu depan*",
         "◦ Total Match: *120*"].join("\n")) +
       "\n\n" +
-      claraWrap("ᴛᴏᴘ ᴘʟᴀʏᴇʀ", lines) +
+      claraWrap("Top Player", lines) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

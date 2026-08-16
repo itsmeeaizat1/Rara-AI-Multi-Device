@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
         const db = getDatabase();
         const sholatEnabled = db.setting('autoSholat') || false;
 
-        let text = `📊 *sᴄʜᴇᴅᴜʟᴇʀ sᴛᴀᴛᴜs*\n\n`;
+        let text = `📊 *sCheduler sTatus*\n\n`;
 
         for (const sched of status.schedulers) {
             const statusIcon = sched.running ? '✅' : '❌';

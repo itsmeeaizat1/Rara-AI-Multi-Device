@@ -41,7 +41,7 @@ function handler(m, { sock }) {
   );
 
   if (!hasAccess && !m.isOwner) {
-    return m.reply(claraWrap("ɢᴀɢᴀʟ", `❌ *ɢᴀɢᴀʟ*\n\n> Kamu tidak memiliki akses ke CPanel!`));
+    return m.reply(claraWrap("Gagal", `❌ *Gagal*\n\n> Kamu tidak memiliki akses ke CPanel!`));
   }
 
   const db = getDatabase();
@@ -62,13 +62,13 @@ function handler(m, { sock }) {
     statusDesc = `Tunggu ${formatTime(remaining)} lagi`;
   }
 
-  let text = `⏱️ *sᴛᴀᴛᴜs ᴊᴇᴅᴀ ᴘᴀɴᴇʟ*\n\n`;
-  text += `╭┈┈⬡「 📊 *sᴛᴀᴛᴜs* 」\n`;
+  let text = `⏱️ *sTatus Jeda Panel*\n\n`;
+  text += `╭┈┈⬡「 📊 *sTatus* 」\n`;
   text += `┃ ${status}\n`;
   text += `┃ ${statusDesc}\n`;
   text += `╰┈┈⬡\n\n`;
 
-  text += `╭┈┈⬡「 ⚙️ *ᴋᴏɴꜰɪɢ* 」\n`;
+  text += `╭┈┈⬡「 ⚙️ *Konfig* 」\n`;
   text += `┃ ◦ Jeda: *${jedaMs === 0 ? "OFF" : formatTime(jedaMs)}*\n`;
   text += `┃ ◦ Default: *5 menit*\n`;
 

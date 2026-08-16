@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetJid) {
-    return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+    return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
         `> \`${m.prefix}jadian @tag\`\n\n` +
         `> Contoh:\n` +
         `> \`${m.prefix}jadian @628xxx\`\n` +
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
   if (senderData.fun.pasangan) {
     const partnerData = db.getUser(senderData.fun.pasangan);
     if (partnerData?.fun?.pasangan === m.sender) {
-      return m.reply(`❌ *sᴜᴅᴀʜ ᴘᴜɴʏᴀ ᴘᴀsᴀɴɢᴀɴ*\n\n` +
+      return m.reply(`❌ *sUdah Punya Pasangan*\n\n` +
           `Pasanganmu: @${senderData.fun.pasangan.split("@")[0]}\n` +
           `Putus dulu sama ${partnerData.name} dengan cara: \`${m.prefix}putus\``);
     }
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
   if (targetData.fun.pasangan && targetData.fun.pasangan !== m.sender) {
     const targetPartner = db.getUser(targetData.fun.pasangan);
     if (targetPartner?.fun?.pasangan === targetJid) {
-      return m.reply(claraWrap("jadian", `💔 *ᴅɪᴀ sᴜᴅᴀʜ ᴘᴀᴄᴀʀᴀɴ*\n\n` +
+      return m.reply(claraWrap("jadian", `💔 *Dia sUdah Pacaran*\n\n` +
           `Pasangannya: @${targetData.fun.pasangan.split("@")[0]}`));
     }
   }

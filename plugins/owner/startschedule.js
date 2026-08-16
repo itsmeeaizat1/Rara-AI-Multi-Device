@@ -26,7 +26,7 @@ async function handler(m, { sock, args }) {
         const target = args[0]?.toLowerCase();
         
         if (!target) {
-            const helpText = `▶️ *sᴛᴀʀᴛ sᴄʜᴇᴅᴜʟᴇʀ*
+            const helpText = `▶️ *sTart sCheduler*
 
 *Usage:*
 \`.startschedule <nama>\`
@@ -59,7 +59,7 @@ async function handler(m, { sock, args }) {
             initSholatScheduler(sock);
             db.setting('autoSholat', true);
             
-            await m.reply(claraWrap("Startschedule", `▶️ *sᴄʜᴇᴅᴜʟᴇʀ ᴅɪᴍᴜʟᴀɪ*
+            await m.reply(claraWrap("Startschedule", `▶️ *sCheduler Dimulai*
 
 > Scheduler: *Sholat Scheduler*
 > Status: ✅ Aktif
@@ -77,7 +77,7 @@ _Notifikasi waktu sholat akan dikirim ke grup yang mengaktifkan fitur ini_`));
         const result = startSchedulerByName(target, sock);
         
         if (result.started) {
-            await m.reply(claraWrap("Startschedule", `▶️ *sᴄʜᴇᴅᴜʟᴇʀ ᴅɪᴍᴜʟᴀɪ*
+            await m.reply(claraWrap("Startschedule", `▶️ *sCheduler Dimulai*
 
 > Scheduler: *${result.name}*
 > Status: ✅ Aktif

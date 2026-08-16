@@ -57,7 +57,7 @@ async function getPlayAudioDownload(url) {
 async function handler(m, { sock, text }) {
   const query = m.text?.trim();
   if (!query)
-    { const __navText = `🎵 *ᴘʟᴀʏ*\n\n> Contoh:\n\`${m.prefix}play komang\``; return await m.reply(claraWrap("play", __navText)); };
+    { const __navText = `🎵 *Play*\n\n> Contoh:\n\`${m.prefix}play komang\``; return await m.reply(claraWrap("play", __navText)); };
 
   m.react("🕐");
 

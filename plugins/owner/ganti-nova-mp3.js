@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const isAudio = m.type === 'audioMessage' || (m.quoted && m.quoted.type === 'audioMessage')
     
     if (!isAudio) {
-        return sendReplyWithNav(m, sock, claraWrap("Ganti-nova.mp3", `🎵 *ɢᴀɴᴛɪ ᴏᴜʀɪɴ.ᴍᴘ3*\n\n> Kirim/reply audio untuk mengganti\n> File: assets/audio/nova.mp3`), { commandName: "ganti-nova.mp3" })
+        return sendReplyWithNav(m, sock, claraWrap("Ganti-nova.mp3", `🎵 *Ganti Ourin.Mp3*\n\n> Kirim/reply audio untuk mengganti\n> File: assets/audio/nova.mp3`), { commandName: "ganti-nova.mp3" })
     }
     
     try {
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("Ganti-nova.mp3", `⏳ Sedang mengupload gambar...`))
         try {
             const newUrl = await updateAssetUrl('nova-mp3', buffer, 'nova.mp3')
-            { const __navText = `✅ *ʙᴇʀʜᴀsɪʟ*\n\n> File nova.mp3 telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`; await m.reply(__navText); }
+            { const __navText = `✅ *Berhasil*\n\n> File nova.mp3 telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`; await m.reply(__navText); }
         } catch (e) {
             m.reply(claraWrap("ganti-nova.mp3", `❌ Gagal mengupload file: ${e.message}`))
         }

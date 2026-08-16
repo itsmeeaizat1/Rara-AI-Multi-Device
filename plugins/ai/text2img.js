@@ -24,7 +24,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return sendReplyWithNav(sock, m, claraWrap("ᴛᴇxᴛ ᴛᴏ ɪᴍᴀɢᴇ", `📿 *ᴛᴇxᴛ ᴛᴏ ɪᴍᴀɢᴇ*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}text2img Buat gambar dari teks\``), "text2img");
+    return sendReplyWithNav(sock, m, claraWrap("Text To Image", `📿 *Text To Image*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}text2img Buat gambar dari teks\``), "text2img");
   }
 
   m.react("🕐");

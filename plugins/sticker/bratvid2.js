@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const text = m.args.join(' ')
     
     if (!text) {
-        { const __navText = `🎬 *ʙʀᴀᴛ ᴠɪᴅᴇᴏ ᴠ2*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratvid2 hello world\``; return await sendReplyWithNav(sock, m, __navText, "bratvid2"); }
+        { const __navText = `🎬 *Brat Video V2*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratvid2 hello world\``; return await sendReplyWithNav(sock, m, __navText, "bratvid2"); }
     }
     
     m.react('🕐')

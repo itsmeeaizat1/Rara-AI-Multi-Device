@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     
     if (action === 'private') {
         if (!m.isOwner) {
-            return m.reply(claraWrap("Autoreply", `❌ *ɢᴀɢᴀʟ*\n\n> Hanya owner yang bisa mengatur autoreply private!`))
+            return m.reply(claraWrap("Autoreply", `❌ *Gagal*\n\n> Hanya owner yang bisa mengatur autoreply private!`))
         }
         
         const subAction = args[1]?.toLowerCase()
@@ -47,12 +47,12 @@ async function handler(m, { sock }) {
         if (subAction === 'on') {
             db.setting('autoreplyPrivate', true)
             m.react('✅')
-            return m.reply(claraWrap("Autoreply", `✅ *ᴀᴜᴛᴏʀᴇᴘʟʏ ᴘʀɪᴠᴀᴛᴇ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*\n\n> Bot akan merespon otomatis di private chat`))
+            return m.reply(claraWrap("Autoreply", `✅ *Autoreply Private Diaktifkan*\n\n> Bot akan merespon otomatis di private chat`))
         }
         
         if (subAction === 'off') {
             db.setting('autoreplyPrivate', false)
-            return m.reply(claraWrap("Autoreply", `❌ *ᴀᴜᴛᴏʀᴇᴘʟʏ ᴘʀɪᴠᴀᴛᴇ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*\n\n> Bot tidak akan merespon otomatis di private chat`))
+            return m.reply(claraWrap("Autoreply", `❌ *Autoreply Private Dinonaktifkan*\n\n> Bot tidak akan merespon otomatis di private chat`))
         }
         
         const currentStatus = db.setting('autoreplyPrivate') ?? false
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
     
     if (action === 'global') {
         if (!m.isOwner) {
-            return m.reply(claraWrap("Autoreply", `❌ *ɢᴀɢᴀʟ*\n\n> Hanya owner yang bisa mengatur global autoreply!`))
+            return m.reply(claraWrap("Autoreply", `❌ *Gagal*\n\n> Hanya owner yang bisa mengatur global autoreply!`))
         }
         
         const subAction = args[1]?.toLowerCase()
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
             const pipeIdx = fullBody.indexOf('|')
             if (pipeIdx === -1) {
                 return m.reply(
-                    `❌ *ꜰᴏʀᴍᴀᴛ sᴀʟᴀʜ*\n\n` +
+                    `❌ *Format sAlah*\n\n` +
                     `> Gunakan format: \`trigger|reply\`\n\n` +
                     `> Contoh:\n` +
                     `> \`${m.prefix}autoreply global add halo|Hai {name}!\``
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
             const reply = fullBody.substring(pipeIdx + 1)
             
             if (!trigger.trim() || !reply) {
-                return m.reply(claraWrap("Autoreply", `❌ *ɢᴀɢᴀʟ*\n\n> Trigger dan reply tidak boleh kosong!`))
+                return m.reply(claraWrap("Autoreply", `❌ *Gagal*\n\n> Trigger dan reply tidak boleh kosong!`))
             }
             
             const existingIndex = globalCustomReplies.findIndex(r => r.trigger.toLowerCase() === trigger.trim().toLowerCase())
@@ -116,12 +116,12 @@ async function handler(m, { sock }) {
         if (subAction === 'del' || subAction === 'rm') {
             const trigger = args.slice(2).join(' ').toLowerCase().trim()
             if (!trigger) {
-                return m.reply(claraWrap("Autoreply", `❌ *ɢᴀɢᴀʟ*\n\n> Masukkan trigger yang mau dihapus!`))
+                return m.reply(claraWrap("Autoreply", `❌ *Gagal*\n\n> Masukkan trigger yang mau dihapus!`))
             }
             
             const index = globalCustomReplies.findIndex(r => r.trigger === trigger)
             if (index === -1) {
-                return m.reply(`❌ *ɢᴀɢᴀʟ*\n\n> Trigger \`${trigger}\` tidak ditemukan!`)
+                return m.reply(`❌ *Gagal*\n\n> Trigger \`${trigger}\` tidak ditemukan!`)
             }
             
             globalCustomReplies.splice(index, 1)
@@ -153,7 +153,7 @@ async function handler(m, { sock }) {
         }
         
         return m.reply(
-            `📱 *ɢʟᴏʙᴀʟ ᴀᴜᴛᴏʀᴇᴘʟʏ*\n\n` +
+            `📱 *Global Autoreply*\n\n` +
             `> \`${m.prefix}autoreply global add trigger|reply\`\n` +
             `> \`${m.prefix}autoreply global del trigger\`\n` +
             `> \`${m.prefix}autoreply global list\``
@@ -172,7 +172,7 @@ async function handler(m, { sock }) {
     }
     
     if (!m.isAdmin && !m.isOwner) {
-        return m.reply(claraWrap("Autoreply", `❌ *ɢᴀɢᴀʟ*\n\n> Hanya admin yang bisa mengatur autoreply di grup!`))
+        return m.reply(claraWrap("Autoreply", `❌ *Gagal*\n\n> Hanya admin yang bisa mengatur autoreply di grup!`))
     }
     
     const groupData = db.getGroup(m.chat) || {}
@@ -217,12 +217,12 @@ async function handler(m, { sock }) {
     if (action === 'on') {
         db.setGroup(m.chat, { ...groupData, autoreply: true })
         m.react('✅')
-        return m.reply(claraWrap("Autoreply", `✅ *ᴀᴜᴛᴏʀᴇᴘʟʏ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*\n\n> Bot akan merespon otomatis di grup ini`))
+        return m.reply(claraWrap("Autoreply", `✅ *Autoreply Diaktifkan*\n\n> Bot akan merespon otomatis di grup ini`))
     }
     
     if (action === 'off') {
         db.setGroup(m.chat, { ...groupData, autoreply: false })
-        return m.reply(claraWrap("Autoreply", `❌ *ᴀᴜᴛᴏʀᴇᴘʟʏ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*\n\n> Bot tidak akan merespon otomatis di grup ini`))
+        return m.reply(claraWrap("Autoreply", `❌ *Autoreply Dinonaktifkan*\n\n> Bot tidak akan merespon otomatis di grup ini`))
     }
     
     if (action === 'add') {
@@ -254,7 +254,7 @@ async function handler(m, { sock }) {
         const reply = fullBody.substring(pipeIdx + 1)
         
         if (!trigger) {
-            return m.reply(claraWrap("Autoreply", `❌ *ɢᴀɢᴀʟ*\n\n> Trigger tidak boleh kosong!`))
+            return m.reply(claraWrap("Autoreply", `❌ *Gagal*\n\n> Trigger tidak boleh kosong!`))
         }
         
         let imageBuffer = null
@@ -328,14 +328,14 @@ async function handler(m, { sock }) {
         const trigger = args.slice(1).join(' ').toLowerCase().trim()
         
         if (!trigger) {
-            return m.reply(`❌ *ɢᴀɢᴀʟ*\n\n> Masukkan trigger yang mau dihapus!\n\n\`${m.prefix}autoreply del halo\``)
+            return m.reply(`❌ *Gagal*\n\n> Masukkan trigger yang mau dihapus!\n\n\`${m.prefix}autoreply del halo\``)
         }
         
         const customReplies = groupData.customReplies || []
         const index = customReplies.findIndex(r => r.trigger === trigger)
         
         if (index === -1) {
-            return m.reply(`❌ *ɢᴀɢᴀʟ*\n\n> Trigger \`${trigger}\` tidak ditemukan!`)
+            return m.reply(`❌ *Gagal*\n\n> Trigger \`${trigger}\` tidak ditemukan!`)
         }
         
         if (customReplies[index].image) {
@@ -406,10 +406,10 @@ async function handler(m, { sock }) {
         }
         
         db.setGroup(m.chat, { ...groupData, customReplies: [] })
-        return m.reply(claraWrap("Autoreply", `🗑️ *ᴀᴜᴛᴏʀᴇᴘʟʏ ᴅɪʀᴇsᴇᴛ*\n\n> Semua autoreply custom dihapus!`))
+        return m.reply(claraWrap("Autoreply", `🗑️ *Autoreply Direset*\n\n> Semua autoreply custom dihapus!`))
     }
     
-    return m.reply(`❌ *ᴀᴄᴛɪᴏɴ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\n> Gunakan: \`on\`, \`off\`, \`private on/off\`, \`add\`, \`del\`, \`list\`, \`reset\``)
+    return m.reply(`❌ *Action Tidak Valid*\n\n> Gunakan: \`on\`, \`off\`, \`private on/off\`, \`add\`, \`del\`, \`list\`, \`reset\``)
 }
 
 export { pluginConfig as config, handler }

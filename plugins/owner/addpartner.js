@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     if (cmd === 'addpartner') {
         const target = await extractNumber(m)
         if (!target) {
-            return sendReplyWithNav(sock, m, `🤝 *ᴀᴅᴅ ᴘᴀʀᴛɴᴇʀ*\n\n` +
+            return sendReplyWithNav(sock, m, `🤝 *Add Partner*\n\n` +
                 `> Cara pakai:\n` +
                 `> \`${m.prefix}addpartner @tag [hari]\`\n` +
                 `> \`${m.prefix}addpartner 6281xxx 30\`\n\n` +
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
     if (cmd === 'listpartner') {
         const partners = db.data.partner
         if (!partners.length) {
-            return m.reply(claraWrap("addpartner", `🤝 *ᴅᴀꜰᴛᴀʀ ᴘᴀʀᴛɴᴇʀ*\n\n> Belum ada partner.`))
+            return m.reply(claraWrap("addpartner", `🤝 *Daftar Partner*\n\n> Belum ada partner.`))
         }
 
         let txt = `🤝 *DAFTAR PARTNER*\n\n`

@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const text = m.text || m.quoted?.text
     
     if (!text) {
-        return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
             `> \`${m.prefix}pakustad <pertanyaan>\`\n\n` +
             `> Contoh: \`${m.prefix}pakustad kenapa aku ganteng\``, "pakustad")
     }

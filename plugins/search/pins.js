@@ -31,7 +31,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const query = m.text?.trim();
   if (!query) {
-    return sendReplyWithNav(sock, m, `🔍 *ᴘɪɴᴛᴇʀᴇsᴛ sᴇᴀʀᴄʜ*\n\n` +
+    return sendReplyWithNav(sock, m, `🔍 *Pinterest sEarch*\n\n` +
       `> Contoh:\n` +
       `\`${m.prefix}pins Zhao Lusi\``, "pins");
   }

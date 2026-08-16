@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
 
   const isImage = m.isImage || (m.quoted && m.quoted.isImage);
   if (!isImage) {
-    return sendReplyWithNav(m, sock, claraWrap("Novabanana", `🍌 *ɴᴀɴᴏ ʙᴀɴᴀɴᴀ*\n\n> Reply atau kirim gambar dengan caption`), { commandName: "novabanana" });
+    return sendReplyWithNav(m, sock, claraWrap("Novabanana", `🍌 *Nano Banana*\n\n> Reply atau kirim gambar dengan caption`), { commandName: "novabanana" });
   }
 
   m.react("🕐");
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     }
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
-      return m.reply(claraWrap("ɢᴀɢᴀʟ", `❌ *ɢᴀɢᴀʟ*\n\n> Gagal mengunduh gambar`));
+      return m.reply(claraWrap("Gagal", `❌ *Gagal*\n\n> Gagal mengunduh gambar`));
     }
 
     const resultBuffer = await live3d(mediaBuffer, prompt).then(

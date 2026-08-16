@@ -36,9 +36,9 @@ async function handler(m, { sock }) {
   const targetJid = m.quoted?.sender || m.mentions?.[0];
   console.log(targetJid);
   if (!targetJid) {
-    return sendReplyWithNav(sock, m, `🕵️ *ᴄᴏʟᴏɴɢ ᴘᴘ*\n\n` +
+    return sendReplyWithNav(sock, m, `🕵️ *Colong Pp*\n\n` +
         `> Reply pesan seseorang untuk mencuri PP-nya\n\n` +
-        `*ᴄᴀʀᴀ:*\n` +
+        `*Cara:*\n` +
         `> Reply pesan target → \`${m.prefix}colongpp\``, "colongpp");
   }
   try {
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
     await sock.updateProfilePicture(botJid, processed);
     const targetNumber = targetJid.split("@")[0];
     await m.react("✅");
-    return m.reply(claraWrap("colongpp", `✅ *ᴘᴘ ʙᴇʀʜᴀsɪʟ ᴅɪᴄᴏʟᴏɴɢ!*\n\n` +
+    return m.reply(claraWrap("colongpp", `✅ *Pp Berhasil Dicolong!*\n\n` +
         `> 🎯 Target: @${targetNumber}\n` +
         `> 📸 Sumber: ${source}`));
   } catch (err) {

@@ -39,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("AI Model", [...lines.flatMap((line, index) => [line, index < lines.length - 1 ? "" : null].join("\n")).filter(Boolean),
         ]) +
         "\n\n" +
-        claraWrap("ᴘᴀᴋᴀɪ", [`◦ *${prefix}aichat-model list* — lihat daftar model`, `◦ *${prefix}aichat-model <provider> <model>* — ganti model aktif`, `◦ Contoh: *${prefix}aichat-model gemini gemini-1.5-pro*`].join("\n")) +
+        claraWrap("Pakai", [`◦ *${prefix}aichat-model list* — lihat daftar model`, `◦ *${prefix}aichat-model <provider> <model>* — ganti model aktif`, `◦ Contoh: *${prefix}aichat-model gemini gemini-1.5-pro*`].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +

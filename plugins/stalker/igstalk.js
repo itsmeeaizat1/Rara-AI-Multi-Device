@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     
     if (!username) {
         return m.reply(
-            `📸 *ɪɴsᴛᴀɢʀᴀᴍ sᴛᴀʟᴋ*\n\n` +
+            `📸 *Instagram sTalk*\n\n` +
             `> Masukkan username Instagram\n\n` +
             `\`Contoh: ${m.prefix}igstalk cristiano\``
         )
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("igstalk", `❌ Akun *@${username}* tidak ditemukan`))
         }
         
-        const caption = `📸 *ɪɴsᴛᴀɢʀᴀᴍ sᴛᴀʟᴋ*\n\n` +
+        const caption = `📸 *Instagram sTalk*\n\n` +
             `👤 *Username:* ${d.username}\n` +
             `📛 *Nama:* ${d.full_name || '-'}\n` +
             `✅ *Verified:* ${d.is_verified ? 'Ya' : 'Tidak'}\n` +

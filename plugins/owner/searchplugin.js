@@ -87,9 +87,9 @@ async function handler(m, { sock }) {
   const name = m.text?.trim();
 
   if (!name) {
-    return sendReplyWithNav(sock, m, `🔍 *sᴇᴀʀᴄʜ ᴘʟᴜɢɪɴ*\n\n` +
+    return sendReplyWithNav(sock, m, `🔍 *sEarch Plugin*\n\n` +
         `> Cari dan tampilkan info plugin\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
+        `*Contoh:*\n` +
         `> \`${m.prefix}splugin sticker\`\n` +
         `> \`${m.prefix}splugin menu\``, "searchplugin");
   }
@@ -106,12 +106,12 @@ async function handler(m, { sock }) {
 
     if (!info) {
       return m.reply(
-        `❌ *ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n> Plugin \`${name}\` tidak ditemukan`,
+        `❌ *Tidak Ditemukan*\n\n> Plugin \`${name}\` tidak ditemukan`,
       );
     }
 
     if (info.error) {
-      return m.reply(`⚠️ *ᴘʟᴜɢɪɴ ᴇʀʀᴏʀ*\n\n` +
+      return m.reply(`⚠️ *Plugin Error*\n\n` +
           `> File: \`${info.file}\`\n` +
           `> Folder: \`${info.folder}\`\n` +
           `> Error: \`${info.error}\``);
@@ -128,23 +128,23 @@ async function handler(m, { sock }) {
 
     await m.react("✅");
     return m.reply(
-      `📋 *ɪɴꜰᴏ ᴘʟᴜɢɪɴ*\n\n` +
-        `╭┈┈⬡「 📝 *ᴅᴇᴛᴀɪʟ* 」\n` +
-        `┃ 📛 ɴᴀᴍᴀ: \`${info.name || "-"}\`\n` +
-        `┃ 🏷️ ᴀʟɪᴀs: \`${aliases}\`\n` +
-        `┃ 📁 ᴄᴀᴛᴇɢᴏʀʏ: \`${info.category || "-"}\`\n` +
-        `┃ 📄 ᴅᴇsᴄ: ${info.description || "-"}\n` +
-        `┃ 📝 ᴜsᴀɢᴇ: \`${info.usage || "-"}\`\n` +
-        `┃ 📌 ᴇxᴀᴍᴘʟᴇ: \`${info.example || "-"}\`\n` +
+      `📋 *Info Plugin*\n\n` +
+        `╭┈┈⬡「 📝 *Detail* 」\n` +
+        `┃ 📛 Nama: \`${info.name || "-"}\`\n` +
+        `┃ 🏷️ Alias: \`${aliases}\`\n` +
+        `┃ 📁 Category: \`${info.category || "-"}\`\n` +
+        `┃ 📄 Desc: ${info.description || "-"}\n` +
+        `┃ 📝 Usage: \`${info.usage || "-"}\`\n` +
+        `┃ 📌 Example: \`${info.example || "-"}\`\n` +
         `╰┈┈⬡\n\n` +
-        `╭┈┈⬡「 ⚙️ *sᴇᴛᴛɪɴɢs* 」\n` +
-        `┃ 🔓 ᴇɴᴀʙʟᴇᴅ: ${isEnabled}\n` +
-        `┃ 👑 ᴏᴡɴᴇʀ ᴏɴʟʏ: ${isOwner}\n` +
-        `┃ 💎 ᴘʀᴇᴍɪᴜᴍ: ${isPremium}\n` +
-        `┃ 👥 ɢʀᴏᴜᴘ ᴏɴʟʏ: ${isGroup}\n` +
-        `┃ 🛡️ ᴀᴅᴍɪɴ ᴏɴʟʏ: ${isAdmin}\n` +
-        `┃ ⏱️ ᴄᴏᴏʟᴅᴏᴡɴ: \`${info.cooldown || 0}s\`\n` +
-        `┃ 🎫 ʟɪᴍɪᴛ: \`${info.limit || 0}\`\n` +
+        `╭┈┈⬡「 ⚙️ *sEttings* 」\n` +
+        `┃ 🔓 Enabled: ${isEnabled}\n` +
+        `┃ 👑 Owner Only: ${isOwner}\n` +
+        `┃ 💎 Premium: ${isPremium}\n` +
+        `┃ 👥 Group Only: ${isGroup}\n` +
+        `┃ 🛡️ Admin Only: ${isAdmin}\n` +
+        `┃ ⏱️ Cooldown: \`${info.cooldown || 0}s\`\n` +
+        `┃ 🎫 Limit: \`${info.limit || 0}\`\n` +
         `╰┈┈⬡`,
     );
   } catch (error) {

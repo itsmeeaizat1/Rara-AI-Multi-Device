@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
     }
     
     if (!target) {
-        return sendReplyWithNav(sock, m, `✊✌️✋ *sᴜɪᴛ ᴘᴠᴘ*\n\n` +
+        return sendReplyWithNav(sock, m, `✊✌️✋ *sUit Pvp*\n\n` +
             `> Tag orang yang mau kamu tantang!\n\n` +
             `*Contoh:*\n` +
             `> \`.suit @628xxx\``, "suitpvp")
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
     }
     
     await m.reply(claraWrap("suitpvp", `Kamu menantang @${target.split('@')[0]} untuk adu suit\n\n` +
-            `╭┈┈⬡「 💬 *ʀᴇsᴘᴏɴ* 」\n` +
+            `╭┈┈⬡「 💬 *Respon* 」\n` +
             `┃ ✅ Ketik *terima* / *gas* / *ok*\n` +
             `┃ ❌ Ketik *tolak* / *gabisa*\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
@@ -128,12 +128,12 @@ async function answerHandler(m, sock) {
             room.status = 'playing'
             
             
-            await sendReplyWithNav(sock, m, `✊✌️✋ *sᴜɪᴛ ᴅɪᴍᴜʟᴀɪ!*\n\n` +
+            await sendReplyWithNav(sock, m, `✊✌️✋ *sUit Dimulai!*\n\n` +
                     `@${room.p.split('@')[0]} vs @${room.p2.split('@')[0]}\n\n` +
                     `> 📩 Cek *Private Chat* untuk memilih!\n` +
                     `> ⏱️ Timeout: 90 detik`, "suitpvp")
             
-            const pmMessage = `✊✌️✋ *sᴜɪᴛ - ᴘɪʟɪʜ ᴊᴀᴡᴀʙᴀɴ*\n\n` +
+            const pmMessage = `✊✌️✋ *sUit - Pilih Jawaban*\n\n` +
                 `Ketik salah satu:\n\n` +
                 `┃ ✊ *batu*\n` +
                 `┃ ✌️ *gunting*\n` +
@@ -241,7 +241,7 @@ async function answerHandler(m, sock) {
                 winner = room.p2
             }
             
-            let resultTxt = `✊✌️✋ *ʜᴀsɪʟ sᴜɪᴛ*\n\n`
+            let resultTxt = `✊✌️✋ *Hasil sUit*\n\n`
             resultTxt += `@${room.p.split('@')[0]} ${EMOJI[room.pilih]} ${room.pilih}\n`
             resultTxt += `@${room.p2.split('@')[0]} ${EMOJI[room.pilih2]} ${room.pilih2}\n\n`
             

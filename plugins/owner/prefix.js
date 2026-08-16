@@ -62,7 +62,7 @@ function handler(m, { sock }) {
     switch (cmd) {
         case 'addprefix': {
             if (args.length === 0) {
-                return m.reply(`✏️ *ᴀᴅᴅ ᴘʀᴇғɪx*\n\n` +
+                return m.reply(`✏️ *Add PreғIx*\n\n` +
                     `> Tambah prefix baru untuk bot\n\n` +
                     `*Format:*\n` +
                     `> \`${m.prefix}addprefix <prefix1> <prefix2> ...\`\n\n` +
@@ -75,7 +75,7 @@ function handler(m, { sock }) {
             if (args.includes('<noprefix>') || args.includes('noprefix')) {
                 data.noprefix = true
                 savePrefixes(data)
-                return m.reply(`✅ *ɴᴏᴘʀᴇғɪx ᴅɪᴀᴋᴛɪғᴋᴀɴ*\n\n` +
+                return m.reply(`✅ *NopreғIx DiaktiғKan*\n\n` +
                     `> Bot sekarang bisa dijalankan tanpa prefix\n` +
                     `> Ketik langsung nama command (misal: \`menu\`)`)
             }
@@ -93,7 +93,7 @@ function handler(m, { sock }) {
             data.prefixes = [...new Set([...data.prefixes, ...newPrefixes])]
             savePrefixes(data)
             
-            m.reply(`✅ *ᴘʀᴇғɪx ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
+            m.reply(`✅ *PreғIx Ditambahkan*\n\n` +
                 `> Added: \`${newPrefixes.join('` `')}\`\n\n` +
                 `*Semua prefix aktif:*\n` +
                 `> \`${getAllPrefixes().join('` `')}\`` +
@@ -104,7 +104,7 @@ function handler(m, { sock }) {
         case 'setprefix':
         case 'gantiprefix': {
             if (args.length === 0) {
-                return m.reply(`🔄 *ɢᴀɴᴛɪ/sᴇᴛ ᴘʀᴇғɪx*\n\n` +
+                return m.reply(`🔄 *Ganti/sEt PreғIx*\n\n` +
                     `> Ganti semua prefix dengan yang baru\n\n` +
                     `*Format:*\n` +
                     `> \`${m.prefix}${cmd} <prefix1> <prefix2> ...\`\n\n` +
@@ -127,7 +127,7 @@ function handler(m, { sock }) {
             data.noprefix = hasNoprefix
             savePrefixes(data)
             
-            let replyText = `✅ *ᴘʀᴇғɪx ᴅɪɢᴀɴᴛɪ*\n\n`
+            let replyText = `✅ *PreғIx Diganti*\n\n`
             
             if (newPrefixes.length > 0) {
                 replyText += `> New prefixes: \`${newPrefixes.join('` `')}\`\n`
@@ -147,7 +147,7 @@ function handler(m, { sock }) {
         
         case 'delprefix': {
             if (args.length === 0) {
-                return m.reply(`🗑️ *ᴅᴇʟᴇᴛᴇ ᴘʀᴇғɪx*\n\n` +
+                return m.reply(`🗑️ *Delete PreғIx*\n\n` +
                     `> Hapus prefix dari database\n\n` +
                     `*Format:*\n` +
                     `> \`${m.prefix}delprefix <prefix1> <prefix2> ...\`\n\n` +
@@ -159,7 +159,7 @@ function handler(m, { sock }) {
             if (args.includes('<noprefix>') || args.includes('noprefix')) {
                 data.noprefix = false
                 savePrefixes(data)
-                return m.reply(claraWrap("Prefix", `✅ *ɴᴏᴘʀᴇғɪx ᴅɪɴᴏɴᴀᴋᴛɪғᴋᴀɴ*`))
+                return m.reply(claraWrap("Prefix", `✅ *NopreғIx DinonaktiғKan*`))
             }
             
             const toDelete = args
@@ -175,7 +175,7 @@ function handler(m, { sock }) {
             
             savePrefixes(data)
             
-            m.reply(`✅ *ᴘʀᴇғɪx ᴅɪʜᴀᴘᴜs*\n\n` +
+            m.reply(`✅ *PreғIx Dihapus*\n\n` +
                 `> Deleted: \`${deleted.length > 0 ? deleted.join('` `') : 'None'}\`\n\n` +
                 `*Semua prefix aktif:*\n` +
                 `> \`${getAllPrefixes().join('` `')}\`` +
@@ -187,14 +187,14 @@ function handler(m, { sock }) {
             const all = getAllPrefixes()
             const configPref = config.command?.prefix || '.'
             
-            let text = `📋 *ʟɪsᴛ ᴘʀᴇғɪx*\n\n`
-            text += `╭┈┈⬡「 ⚙️ *ᴄᴏɴғɪɢ* 」\n`
+            let text = `📋 *List PreғIx*\n\n`
+            text += `╭┈┈⬡「 ⚙️ *ConғIg* 」\n`
             text += `┃ Default: \`${configPref}\`\n`
             text += `┃ Noprefix: ${data.noprefix ? '✅ Aktif' : '❌ Nonaktif'}\n`
             text += `╰┈┈┈┈┈┈┈┈⬡\n\n`
             
             if (data.prefixes.length > 0) {
-                text += `╭┈┈⬡「 📁 *ᴅᴀᴛᴀʙᴀsᴇ* 」\n`
+                text += `╭┈┈⬡「 📁 *Database* 」\n`
                 data.prefixes.forEach((p, i) => {
                     text += `┃ ${i + 1}. \`${p}\`\n`
                 })
@@ -214,7 +214,7 @@ function handler(m, { sock }) {
             data.noprefix = false
             savePrefixes(data)
             
-            m.reply(`✅ *ᴘʀᴇғɪx ᴅɪʀᴇsᴇᴛ*\n\n` +
+            m.reply(`✅ *PreғIx Direset*\n\n` +
                 `> Semua prefix di database dihapus!\n` +
                 `> Noprefix dinonaktifkan!\n` +
                 `> Hanya tersisa prefix dari config.js\n\n` +

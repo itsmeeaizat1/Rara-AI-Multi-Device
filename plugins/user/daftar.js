@@ -201,20 +201,20 @@ function buildConfirmationRewardBlock(user) {
   const rewards = getRegistrationRewards();
 
   if (user?.hasClaimedRegisterReward) {
-    return `╭┈┈⬡「 🎁 *ʙᴏɴᴜs* 」\n┃ Bonus daftar pertama sudah pernah diambil\n┃ Daftar ulang tidak mendapat reward lagi\n╰┈┈┈┈┈┈┈┈⬡`;
+    return `╭┈┈⬡「 🎁 *Bonus* 」\n┃ Bonus daftar pertama sudah pernah diambil\n┃ Daftar ulang tidak mendapat reward lagi\n╰┈┈┈┈┈┈┈┈⬡`;
   }
 
-  return `╭┈┈⬡「 🎁 *ʀᴇᴡᴀʀᴅs* 」\n┃ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n┃ ⚡ +${rewards.energi} Energi\n┃ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈⬡`;
+  return `╭┈┈⬡「 🎁 *Rewards* 」\n┃ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n┃ ⚡ +${rewards.energi} Energi\n┃ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈⬡`;
 }
 
 function buildSuccessRewardBlock(alreadyClaimedReward, randomBonus) {
   const rewards = getRegistrationRewards();
 
   if (alreadyClaimedReward) {
-    return `╭┈┈⬡「 🎁 *ʙᴏɴᴜs* 」\n┃ Bonus daftar sudah pernah diklaim\n┃ Tidak ada reward tambahan kali ini\n╰┈┈┈┈┈┈┈┈⬡`;
+    return `╭┈┈⬡「 🎁 *Bonus* 」\n┃ Bonus daftar sudah pernah diklaim\n┃ Tidak ada reward tambahan kali ini\n╰┈┈┈┈┈┈┈┈⬡`;
   }
 
-  return `╭┈┈⬡「 🎁 *ʀᴇᴡᴀʀᴅs* 」\n┃ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n┃ ⚡ +${rewards.energi} Energi\n┃ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈⬡`;
+  return `╭┈┈⬡「 🎁 *Rewards* 」\n┃ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n┃ ⚡ +${rewards.energi} Energi\n┃ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈⬡`;
 }
 
 function generateSerialNumber() {
@@ -271,7 +271,7 @@ function buildWelcomeMessage(user, registrationRequired, prefix) {
 
 function buildConfirmationPrompt(session, user) {
   return (
-    `✅ *ᴘᴇʀᴛᴀɴʏᴀᴀɴ 4/4*\n\n` +
+    `✅ *Pertanyaan 4/4*\n\n` +
     `Apakah data berikut sudah benar?\n\n` +
     `${buildUserDataBlock(session.name, session.age, session.gender)}\n\n` +
     `${buildConfirmationRewardBlock(user)}\n\n` +
@@ -433,7 +433,7 @@ async function registrationAnswerHandler(m, sock) {
     const sent = await sendRegistrationPrompt(
       sock,
       m,
-      `🎂 *ᴘᴇʀᴛᴀɴʏᴀᴀɴ 2/4*\n\n` +
+      `🎂 *Pertanyaan 2/4*\n\n` +
       `Halo *${name}* 👋\n\n` +
       `> Berapa umurmu?\n\n` +
       `📌 Umur hanya boleh *1 - 100* tahun\n` +
@@ -461,7 +461,7 @@ async function registrationAnswerHandler(m, sock) {
     const sent = await sendRegistrationPrompt(
       sock,
       m,
-      `� *ᴘᴇʀᴛᴀɴʏᴀᴀɴ 3/4*\n\n` +
+      `� *Pertanyaan 3/4*\n\n` +
       `> Kamu cowo atau cewe?\n\n` +
       `┃ � *Cowo* / *Cowok* / *Laki-laki* / *L*\n` +
       `┃ � *Cewe* / *Cewek* / *Perempuan* / *P*\n\n` +
@@ -589,7 +589,7 @@ async function registrationAnswerHandler(m, sock) {
       const sent = await sendRegistrationPrompt(
         sock,
         m,
-        `📛 *ʀᴇᴠɪsɪ ɴᴀᴍᴀ*\n\n` +
+        `📛 *Revisi Nama*\n\n` +
         `> Kirim nama yang benar ya.\n\n` +
         `📩 Reply pesan ini dengan nama baru kamu`,
       );
@@ -606,7 +606,7 @@ async function registrationAnswerHandler(m, sock) {
       const sent = await sendRegistrationPrompt(
         sock,
         m,
-        `🎂 *ʀᴇᴠɪsɪ ᴜᴍᴜʀ*\n\n` +
+        `🎂 *Revisi Umur*\n\n` +
         `> Kirim umur yang benar ya.\n\n` +
         `📌 Umur hanya boleh *1 - 100* tahun\n` +
         `📩 Reply pesan ini dengan angka umur baru kamu`,
@@ -626,7 +626,7 @@ async function registrationAnswerHandler(m, sock) {
       const sent = await sendRegistrationPrompt(
         sock,
         m,
-        `👤 *ʀᴇᴠɪsɪ ɢᴇɴᴅᴇʀ*\n\n` +
+        `👤 *Revisi Gender*\n\n` +
         `> Pilih gender yang benar ya.\n\n` +
         `┃ � *Cowo* / *Cowok* / *Laki-laki* / *L*\n` +
         `┃ 👧 *Cewe* / *Cewek* / *Perempuan* / *P*\n\n` +
@@ -690,7 +690,7 @@ async function registrationAnswerHandler(m, sock) {
       m.chat,
       {
         text:
-          `🎉 *ᴘᴇɴᴅᴀꜰᴛᴀʀᴀɴ ʙᴇʀʜᴀsɪʟ!*\n\n` +
+          `🎉 *Pendaftaran Berhasil!*\n\n` +
           `Selamat datang, *${finalName}*!\n\n` +
           `${buildUserDataBlock(finalName, finalAge, finalGender, serial)}\n\n` +
           `${buildSuccessRewardBlock(alreadyClaimedReward, randomBonus)}\n\n` +

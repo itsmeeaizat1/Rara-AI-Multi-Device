@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     
     if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("serverinfo", `❌ *ᴀᴋsᴇs ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+        return m.reply(claraWrap("serverinfo", `❌ *Akses Ditolak*\n\n` +
             `> Kamu tidak punya akses ke *${serverLabel}*\n` +
             `> Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     
     if (missingConfig.length > 0) {
         const available = getAvailableServers(pteroConfig)
-        let txt = `⚠️ *sᴇʀᴠᴇʀ ${serverLabel} ʙᴇʟᴜᴍ ᴋᴏɴꜰɪɢ*\n\n`
+        let txt = `⚠️ *sErver ${serverLabel} Belum Konfig*\n\n`
         if (available.length > 0) {
             txt += `> Server tersedia: *${available.join(', ')}*`
         }
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
     }
     
     if (!serverId || isNaN(serverId)) {
-        return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
             `> \`${m.prefix}${m.command} serverid\`\n\n` +
             `> Lihat ID dengan \`${m.prefix}listserver${serverVersion}\``, "serverinfo")
     }
@@ -110,24 +110,24 @@ async function handler(m, { sock }) {
         const limits = s.limits || {}
         const features = s.feature_limits || {}
         
-        let txt = `📊 *ɪɴꜰᴏ sᴇʀᴠᴇʀ [${serverLabel}]*\n\n`
-        txt += `╭─「 📋 *ᴅᴇᴛᴀɪʟ* 」\n`
-        txt += `┃ 🆔 \`ɪᴅ\`: *${s.id}*\n`
-        txt += `┃ 📛 \`ɴᴀᴍᴀ\`: *${s.name}*\n`
-        txt += `┃ 👤 \`ᴏᴡɴᴇʀ ɪᴅ\`: *${s.user}*\n`
-        txt += `┃ 📝 \`ᴅᴇsᴋʀɪᴘsɪ\`: *${s.description || '-'}*\n`
-        txt += `┃ 📊 \`sᴛᴀᴛᴜs\`: *${s.suspended ? '⛔ Suspended' : '✅ Active'}*\n`
+        let txt = `📊 *Info sErver [${serverLabel}]*\n\n`
+        txt += `╭─「 📋 *Detail* 」\n`
+        txt += `┃ 🆔 \`Id\`: *${s.id}*\n`
+        txt += `┃ 📛 \`Nama\`: *${s.name}*\n`
+        txt += `┃ 👤 \`Owner Id\`: *${s.user}*\n`
+        txt += `┃ 📝 \`Deskripsi\`: *${s.description || '-'}*\n`
+        txt += `┃ 📊 \`sTatus\`: *${s.suspended ? '⛔ Suspended' : '✅ Active'}*\n`
         txt += `╰───────────────\n\n`
-        txt += `╭─「 🧠 *sᴘᴇsɪꜰɪᴋᴀsɪ* 」\n`
-        txt += `┃ 💾 \`ʀᴀᴍ\`: *${formatBytes(limits.memory)}*\n`
-        txt += `┃ ⚡ \`ᴄᴘᴜ\`: *${limits.cpu === 0 ? 'Unlimited' : limits.cpu + '%'}*\n`
-        txt += `┃ 📦 \`ᴅɪsᴋ\`: *${formatBytes(limits.disk)}*\n`
-        txt += `┃ 🔄 \`sᴡᴀᴘ\`: *${limits.swap} MB*\n`
+        txt += `╭─「 🧠 *sPesifikasi* 」\n`
+        txt += `┃ 💾 \`Ram\`: *${formatBytes(limits.memory)}*\n`
+        txt += `┃ ⚡ \`Cpu\`: *${limits.cpu === 0 ? 'Unlimited' : limits.cpu + '%'}*\n`
+        txt += `┃ 📦 \`Disk\`: *${formatBytes(limits.disk)}*\n`
+        txt += `┃ 🔄 \`sWap\`: *${limits.swap} MB*\n`
         txt += `╰───────────────\n\n`
-        txt += `╭─「 📦 *ꜰᴇᴀᴛᴜʀᴇ ʟɪᴍɪᴛs* 」\n`
-        txt += `┃ 🗄️ \`ᴅᴀᴛᴀʙᴀsᴇ\`: *${features.databases}*\n`
-        txt += `┃ 💾 \`ʙᴀᴄᴋᴜᴘ\`: *${features.backups}*\n`
-        txt += `┃ 🔌 \`ᴀʟʟᴏᴄᴀᴛɪᴏɴs\`: *${features.allocations}*\n`
+        txt += `╭─「 📦 *Feature Limits* 」\n`
+        txt += `┃ 🗄️ \`Database\`: *${features.databases}*\n`
+        txt += `┃ 💾 \`Backup\`: *${features.backups}*\n`
+        txt += `┃ 🔌 \`Allocations\`: *${features.allocations}*\n`
         txt += `╰───────────────`
         
         return m.reply(claraWrap("serverinfo", txt))

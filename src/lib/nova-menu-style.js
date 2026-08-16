@@ -18,7 +18,7 @@ function separator(char = "┈", repeat = 22) {
 }
 
 function tipText(text) {
-  return `🌸 *ᴛɪᴘ:* ${text}`;
+  return `🌸 *Tip:* ${text}`;
 }
 
 // === Clara-MD Auto Formatter ===

@@ -31,10 +31,10 @@ async function handler(m, { sock }) {
     if (amount <= 0) {
         const user = db.getUser(m.sender) || db.setUser(m.sender)
         
-        return sendReplyWithNav(sock, m, claraWrap("ʙᴜʏ ᴇɴᴇʀɢɪ", `🛒 *ʙᴜʏ ᴇɴᴇʀɢɪ*\n\n` +
-            `╭┈┈⬡「 💰 *ɪɴꜰᴏ* 」\n` +
-            `┃ 💵 ʜᴀʀɢᴀ: *${PRICE_PER_ENERGI}* koin/energi\n` +
-            `┃ 💰 ᴋᴏɪɴ ᴋᴀᴍᴜ: *${formatNumber(user.koin || 0)}*\n` +
+        return sendReplyWithNav(sock, m, claraWrap("Buy Energi", `🛒 *Buy Energi*\n\n` +
+            `╭┈┈⬡「 💰 *Info* 」\n` +
+            `┃ 💵 Harga: *${PRICE_PER_ENERGI}* koin/energi\n` +
+            `┃ 💰 Koin Kamu: *${formatNumber(user.koin || 0)}*\n` +
             `╰┈┈⬡\n\n` +
             `> Gunakan: \`.buyenergi <jumlah>\`\n\n` +
             `\`Contoh: ${m.prefix}buyenergi 10\``), "buyenergi")
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     const user = db.getUser(m.sender) || db.setUser(m.sender)
     
     if ((user.koin || 0) < totalPrice) {
-        return sendReplyWithNav(sock, m, claraWrap("ɢᴀɢᴀʟ", `❌ *ɢᴀɢᴀʟ*\n\n` +
+        return sendReplyWithNav(sock, m, claraWrap("Gagal", `❌ *Gagal*\n\n` +
             `> Koin tidak cukup!\n` +
             `> Butuh: *${formatNumber(totalPrice)}*\n` +
             `> Kamu punya: *${formatNumber(user.koin || 0)}*`), "buyenergi")
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
     
     if (user.energi === -1) {
         m.react('✅')
-        return m.reply(claraWrap("ᴘᴇᴍʙᴇʟɪᴀɴ ʙᴇʀʜᴀsɪʟ", `✅ *ᴘᴇᴍʙᴇʟɪᴀɴ ʙᴇʀʜᴀsɪʟ*\n\n` +
+        return m.reply(claraWrap("Pembelian Berhasil", `✅ *Pembelian Berhasil*\n\n` +
             `> Tapi kamu sudah punya unlimited energi!\n` +
             `> Koin dikembalikan.`))
     }
@@ -64,14 +64,14 @@ async function handler(m, { sock }) {
     
     m.react('✅')
     
-    await sendReplyWithNav(sock, m, claraWrap("ᴘᴇᴍʙᴇʟɪᴀɴ ʙᴇʀʜᴀsɪʟ", `✅ *ᴘᴇᴍʙᴇʟɪᴀɴ ʙᴇʀʜᴀsɪʟ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-        `┃ ⚡ ᴇɴᴇʀɢɪ: *+${formatNumber(amount)}*\n` +
-        `┃ 💵 ʜᴀʀɢᴀ: *-${formatNumber(totalPrice)}* koin\n` +
+    await sendReplyWithNav(sock, m, claraWrap("Pembelian Berhasil", `✅ *Pembelian Berhasil*\n\n` +
+        `╭┈┈⬡「 📋 *Detail* 」\n` +
+        `┃ ⚡ Energi: *+${formatNumber(amount)}*\n` +
+        `┃ 💵 Harga: *-${formatNumber(totalPrice)}* koin\n` +
         `╰┈┈⬡\n\n` +
-        `╭┈┈⬡「 💰 *sᴀʟᴅᴏ* 」\n` +
-        `┃ ⚡ ᴇɴᴇʀɢɪ: *${formatNumber(newEnergi)}*\n` +
-        `┃ 💰 ᴋᴏɪɴ: *${formatNumber(newKoin)}*\n` +
+        `╭┈┈⬡「 💰 *sAldo* 」\n` +
+        `┃ ⚡ Energi: *${formatNumber(newEnergi)}*\n` +
+        `┃ 💰 Koin: *${formatNumber(newKoin)}*\n` +
         `╰┈┈⬡`), "buyenergi")
 }
 

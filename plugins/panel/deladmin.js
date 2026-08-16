@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     
     if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("deladmin", `❌ *ᴀᴋsᴇs ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+        return m.reply(claraWrap("deladmin", `❌ *Akses Ditolak*\n\n` +
             `> Kamu tidak punya akses ke *${serverLabel}*\n` +
             `> Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     
     if (missingConfig.length > 0) {
         const available = getAvailableServers(pteroConfig)
-        let txt = `⚠️ *sᴇʀᴠᴇʀ ${serverLabel} ʙᴇʟᴜᴍ ᴋᴏɴꜰɪɢ*\n\n`
+        let txt = `⚠️ *sErver ${serverLabel} Belum Konfig*\n\n`
         if (available.length > 0) {
             txt += `> Server tersedia: *${available.join(', ')}*`
         } else {
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
     const userId = m.text?.trim()
     
     if (!userId || isNaN(userId)) {
-        return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
             `> \`${m.prefix}${m.command} userid\`\n\n` +
             `> Lihat user ID dengan \`${m.prefix}listadmin${serverVersion}\``, "deladmin")
     }
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
             }
         })
         
-        return m.reply(`✅ *ᴀᴅᴍɪɴ ᴅɪʜᴀᴘᴜs [${serverLabel}]*\n\n` +
+        return m.reply(`✅ *Admin Dihapus [${serverLabel}]*\n\n` +
             `> User ID: \`${userId}\`\n` +
             `> Username: \`${user.username}\`\n` +
             `> Email: \`${user.email}\``)

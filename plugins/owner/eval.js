@@ -33,7 +33,7 @@ async function handler(m, { sock, store }) {
     const code = m.fullArgs?.trim() || m.text?.trim()
 
     if (!code) {
-        return sendReplyWithNav(sock, m, `⚙️ *ᴇᴠᴀʟ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚙️ *Eval*\n\n` +
             `> Masukkan kode JavaScript!\n\n` +
             `*Contoh:*\n` +
             `> .$ 1 + 1\n` +
@@ -76,8 +76,8 @@ async function handler(m, { sock, store }) {
     const type = isError ? result?.name || 'Error' : typeof result
 
     await m.reply(
-        `⚙️ *ᴇᴠᴀʟ ʀᴇsᴜʟᴛ*\n\n` +
-        `╭┈┈⬡「 📋 *ɪɴғᴏ* 」\n` +
+        `⚙️ *Eval Result*\n\n` +
+        `╭┈┈⬡「 📋 *InғO* 」\n` +
         `┃ ${status}\n` +
         `┃ Type: ${type}\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +

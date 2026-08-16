@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!success) {
       user.lastFish = Date.now();
       db.write();
-      await sendReplyWithNav(sock, m, claraWrap("Fish", "") + "\n\n" + claraWrap("ɢᴀɢᴀʟ", ["◦ Tidak ada ikan yang tertangkap!", "◦ Coba lagi nanti"].join("\n")) + "\n\n" + separator("━", 22), "fish");
+      await sendReplyWithNav(sock, m, claraWrap("Fish", "") + "\n\n" + claraWrap("Gagal", ["◦ Tidak ada ikan yang tertangkap!", "◦ Coba lagi nanti"].join("\n")) + "\n\n" + separator("━", 22), "fish");
       return { handled: true };
     }
     
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
     addUserMoney(db, m.sender, fish.money);
     
     await sendReplyWithNav(sock, m, claraWrap("Fish", [`◦ Ikan: *${fish.name}*${fish.rare ? " ✨ RARE!" : ""}`,
-      `◦ Stamina: *-${staminaLoss}* ⚡`].join("\n")) + "\n\n" + claraWrap("ʜᴀsɪʟ", [`◦ EXP: *+${fish.exp}* ✨`, `◦ Money: *+Rp${fish.money.toLocaleString("id-ID")}* 💰`].join("\n")) + "\n\n" + separator("━", 22) + "\n" + tipText(`Tunggu 15 menit untuk mancing lagi`), "fish");
+      `◦ Stamina: *-${staminaLoss}* ⚡`].join("\n")) + "\n\n" + claraWrap("Hasil", [`◦ EXP: *+${fish.exp}* ✨`, `◦ Money: *+Rp${fish.money.toLocaleString("id-ID")}* 💰`].join("\n")) + "\n\n" + separator("━", 22) + "\n" + tipText(`Tunggu 15 menit untuk mancing lagi`), "fish");
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
   const query = m.text?.trim();
 
   if (!query) {
-    return sendReplyWithNav(sock, m, `📌 *ᴘɪɴᴛᴇʀᴇsᴛ ᴠɪᴅᴇᴏ sᴇᴀʀᴄʜ*\n\n` +
+    return sendReplyWithNav(sock, m, `📌 *Pinterest Video sEarch*\n\n` +
         `> Masukkan query pencarian\n\n` +
         `\`${m.prefix}pinvid anime\``, "pinvid");
   }

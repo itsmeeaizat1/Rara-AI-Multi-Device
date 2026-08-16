@@ -440,7 +440,7 @@ async function handler(m, { sock }) {
   }
   if (sub === "off") {
     if (!currentStatus) {
-      return sendReplyWithNav(sock, m, `⚠️ *ᴡᴇʟᴄᴏᴍᴇ ᴀʟʀᴇᴀᴅʏ ɪɴᴀᴄᴛɪᴠᴇ*\n\n` +
+      return sendReplyWithNav(sock, m, `⚠️ *Welcome Already Inactive*\n\n` +
         `> Status: *❌ OFF*\n` +
         `> Welcome sudah nonaktif di grup ini.\n\n` +
         `_Gunakan \`${m.prefix}welcome on\` untuk mengaktifkan._`, "welcome");

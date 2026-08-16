@@ -53,17 +53,17 @@ async function handler(m, { sock }) {
   }
 
   if (!shooterJid) {
-    return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+    return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
         `> Reply pesan tembakan + \`${m.prefix}tolak\`\n` +
         `> Atau \`${m.prefix}tolak @tag\``, "tolak");
   }
 
   if (shooterJid === m.sender) {
-    return m.reply(claraWrap("tolak", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak bisa menolak diri sendiri!`));
+    return m.reply(claraWrap("tolak", `❌ *Gagal*\n\n> Tidak bisa menolak diri sendiri!`));
   }
 
   if (shooterJid === m.botNumber) {
-    return m.reply(claraWrap("Tolak", `❌ *ɢᴀɢᴀʟ*\n\n> Bot tidak punya hati untuk ditolak!`));
+    return m.reply(claraWrap("Tolak", `❌ *Gagal*\n\n> Bot tidak punya hati untuk ditolak!`));
   }
 
   let shooterData = db.getUser(shooterJid) || {};
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     shooterData.fun.pasangan !== m.sender &&
     shooterData.fun.tembakTarget !== m.sender
   ) {
-    return m.reply(claraWrap("tolak", `❌ *ᴛɪᴅᴀᴋ ᴍᴇɴᴇᴍʙᴀᴋ*\n\n` +
+    return m.reply(claraWrap("tolak", `❌ *Tidak Menembak*\n\n` +
         `> @${shooterJid.split("@")[0]} tidak sedang menembakmu`));
   }
 

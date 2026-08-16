@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
 
   if (!query) {
     return m.reply(
-      `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+      `⚠️ *Cara Pakai*\n\n` +
         `> \`${m.prefix}npm <query>\`\n\n` +
         `> Contoh:\n` +
         `> \`${m.prefix}npm axios\``,
@@ -40,11 +40,11 @@ async function handler(m, { sock }) {
 
     if (!data.objects || data.objects.length === 0) {
       return m.reply(
-        `❌ *ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n> Package "${query}" tidak ditemukan`,
+        `❌ *Tidak Ditemukan*\n\n> Package "${query}" tidak ditemukan`,
       );
     }
 
-    let text = `📦 *ɴᴘᴍ sᴇᴀʀᴄʜ*\n\n`;
+    let text = `📦 *Npm sEarch*\n\n`;
     text += `> Query: \`${query}\`\n`;
     text += `> Found: ${data.total} packages\n\n`;
 

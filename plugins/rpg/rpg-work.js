@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig }) {
     
     await sendReplyWithNav(sock, m, claraWrap("Work", [`◦ Pekerjaan: *${job.name}*`,
       `◦ Stamina: *-${job.stamina}* ⚡`,
-      `◦ Sisa: *${user.stamina}/100*`].join("\n")) + "\n\n" + claraWrap("ɢᴀᴊɪ", [`◦ EXP: *+${job.exp}* ✨`, `◦ Money: *+Rp${job.money.toLocaleString("id-ID")}* 💰`].join("\n")) + "\n\n" + separator("━", 22) + "\n" + tipText(`Tunggu 30 menit untuk bekerja lagi`), "rpgwork");
+      `◦ Sisa: *${user.stamina}/100*`].join("\n")) + "\n\n" + claraWrap("Gaji", [`◦ EXP: *+${job.exp}* ✨`, `◦ Money: *+Rp${job.money.toLocaleString("id-ID")}* 💰`].join("\n")) + "\n\n" + separator("━", 22) + "\n" + tipText(`Tunggu 30 menit untuk bekerja lagi`), "rpgwork");
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

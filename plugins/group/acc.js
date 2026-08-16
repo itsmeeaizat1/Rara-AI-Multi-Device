@@ -38,8 +38,8 @@ async function handler(m, { sock }) {
     const option = args.slice(1).join(' ')?.trim()
 
     if (!sub || !['list', 'approve', 'reject'].includes(sub)) {
-        return m.reply(claraWrap("ᴊᴏɪɴ ʀᴇQᴜᴇsᴛ ᴍᴀɴᴀɢᴇʀ", `📋 *ᴊᴏɪɴ ʀᴇQᴜᴇsᴛ ᴍᴀɴᴀɢᴇʀ*\n\n` +
-            `╭┈┈⬡「 📌 *ᴄᴏᴍᴍᴀɴᴅ* 」\n` +
+        return m.reply(claraWrap("Join ReQUest Manager", `📋 *Join ReQUest Manager*\n\n` +
+            `╭┈┈⬡「 📌 *Command* 」\n` +
             `┃ ${m.prefix}acc list\n` +
             `┃ ${m.prefix}acc approve all\n` +
             `┃ ${m.prefix}acc reject all\n` +
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
         }
 
         if (sub === 'list') {
-            let text = `📋 *ᴅᴀꜰᴛᴀʀ ᴘᴇʀᴍɪɴᴛᴀᴀɴ ᴍᴀsᴜᴋ*\n\n`
+            let text = `📋 *Daftar Permintaan Masuk*\n\n`
             text += `> Total: ${pendingList.length} permintaan\n\n`
 
             for (let i = 0; i < pendingList.length; i++) {
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
 
         await m.react('✅')
         return m.reply(
-            `📋 *ʜᴀsɪʟ ${label.toUpperCase()}*\n\n` +
+            `📋 *Hasil ${label.toUpperCase()}*\n\n` +
             text + `\n` +
             `> ✅ ${successCount}/${targets.length} berhasil`
         )

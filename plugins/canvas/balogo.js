@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const parts = input.split(/[&,]/).map(s => s.trim()).filter(s => s)
     
     if (parts.length < 2) {
-        { const __navText = `🎮 *ʙʟᴜᴇ ᴀʀᴄʜɪᴠᴇ ʟᴏɢᴏ*\n\n> Masukkan 2 teks untuk logo\n\n> Contoh: ${m.prefix}balogo Blue & Archive`; return await m.reply(__navText); }
+        { const __navText = `🎮 *Blue Archive Logo*\n\n> Masukkan 2 teks untuk logo\n\n> Contoh: ${m.prefix}balogo Blue & Archive`; return await m.reply(__navText); }
     }
     
     const textL = parts[0]

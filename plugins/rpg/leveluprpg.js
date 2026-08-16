@@ -29,19 +29,19 @@ function handler(m, { sock }) {
   if (sub === "on") {
     user.settings.rpgLevelupNotif = true;
     db.save();
-    return m.reply(claraWrap("ʀᴘɢ ʟᴇᴠᴇʟ ᴜᴘ ɴᴏᴛɪꜰ", `✅ *ʀᴘɢ ʟᴇᴠᴇʟ ᴜᴘ ɴᴏᴛɪꜰ*\n\n` + `> Status: *ON* ✅\n` + `> Kamu akan menerima notifikasi RPG saat naik level!`));
+    return m.reply(claraWrap("Rpg Level Up Notif", `✅ *Rpg Level Up Notif*\n\n` + `> Status: *ON* ✅\n` + `> Kamu akan menerima notifikasi RPG saat naik level!`));
   }
 
   if (sub === "off") {
     user.settings.rpgLevelupNotif = false;
     db.save();
-    return m.reply(claraWrap("ʀᴘɢ ʟᴇᴠᴇʟ ᴜᴘ ɴᴏᴛɪꜰ", `❌ *ʀᴘɢ ʟᴇᴠᴇʟ ᴜᴘ ɴᴏᴛɪꜰ*\n\n` + `> Status: *OFF* ❌\n` + `> Notifikasi RPG level up dinonaktifkan.`));
+    return m.reply(claraWrap("Rpg Level Up Notif", `❌ *Rpg Level Up Notif*\n\n` + `> Status: *OFF* ❌\n` + `> Notifikasi RPG level up dinonaktifkan.`));
   }
 
   const status = user.settings.rpgLevelupNotif !== false ? "ON ✅" : "OFF ❌";
-  return m.reply(claraWrap("ʀᴘɢ ʟᴇᴠᴇʟ ᴜᴘ ɴᴏᴛɪꜰ", `🔔 *ʀᴘɢ ʟᴇᴠᴇʟ ᴜᴘ ɴᴏᴛɪꜰ*\n\n` +
+  return m.reply(claraWrap("Rpg Level Up Notif", `🔔 *Rpg Level Up Notif*\n\n` +
       `> Status saat ini: *${status}*\n\n` +
-      `*📋 *ᴜsᴀɢᴇ:*
+      `*📋 *Usage:*
 \n` +
       `> > \`.leveluprpg on\` - Aktifkan\n` +
       `> > \`.leveluprpg off\` - Nonaktifkan\n` +

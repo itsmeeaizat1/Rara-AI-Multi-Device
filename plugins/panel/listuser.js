@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
     
     if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("listuser", `❌ *ᴀᴋsᴇs ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+        return m.reply(claraWrap("listuser", `❌ *Akses Ditolak*\n\n` +
             `> Kamu tidak punya akses ke *${serverLabel}*\n` +
             `> Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
     
     if (missingConfig.length > 0) {
         const available = getAvailableServers(pteroConfig)
-        let txt = `⚠️ *sᴇʀᴠᴇʀ ${serverLabel} ʙᴇʟᴜᴍ ᴋᴏɴꜰɪɢ*\n\n`
+        let txt = `⚠️ *sErver ${serverLabel} Belum Konfig*\n\n`
         if (available.length > 0) {
             txt += `> Server tersedia: *${available.join(', ')}*\n`
             txt += `> Contoh: \`${m.prefix}listuser${available[0]}\``
@@ -99,10 +99,10 @@ async function handler(m, { sock }) {
         const users = res.data.data || []
         
         if (users.length === 0) {
-            return m.reply(claraWrap("listuser", `📋 *ᴅᴀꜰᴛᴀʀ ᴜsᴇʀ [${serverLabel}]*\n\n> Tidak ada user terdaftar.`))
+            return m.reply(claraWrap("listuser", `📋 *Daftar User [${serverLabel}]*\n\n> Tidak ada user terdaftar.`))
         }
         
-        let txt = `📋 *ᴅᴀꜰᴛᴀʀ ᴜsᴇʀ [${serverLabel}]*\n\n`
+        let txt = `📋 *Daftar User [${serverLabel}]*\n\n`
         txt += `> Total: *${users.length}* user\n\n`
         
         users.slice(0, 20).forEach((u, i) => {

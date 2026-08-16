@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const text =
       claraWrap("Leaderboards", "🏆") +
       "\n\n" +
-      claraWrap("ᴛᴏᴘ ᴘʟᴀʏᴇʀ", lines) +
+      claraWrap("Top Player", lines) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

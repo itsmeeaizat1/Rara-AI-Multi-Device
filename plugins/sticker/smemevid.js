@@ -30,12 +30,12 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const isVideo = m.isVideo || (m.quoted && m.quoted.isVideo) || (m.quoted && m.quoted.type === 'videoMessage')
     if (!isVideo) {
-        return m.reply(`🎬 *ᴍᴇᴍᴇ ᴠɪᴅᴇᴏ*\n\n> Reply atau kirim video dengan caption\n\n\`Contoh: ${m.prefix}smemevid Top|Bottom\``)
+        return m.reply(`🎬 *Meme Video*\n\n> Reply atau kirim video dengan caption\n\n\`Contoh: ${m.prefix}smemevid Top|Bottom\``)
     }
 
     const input = m.args.join(' ')
     if (!input || !input.includes('|')) {
-        { const __navText = `🎬 *ᴍᴇᴍᴇ ᴠɪᴅᴇᴏ*\n\n> Format: top|bottom\n\n\`Contoh: ${m.prefix}smemevid WIDTH OR HEIGHT|WHY NOT BOTH?\``; return await sendReplyWithNav(sock, m, __navText, "smemevid"); }
+        { const __navText = `🎬 *Meme Video*\n\n> Format: top|bottom\n\n\`Contoh: ${m.prefix}smemevid WIDTH OR HEIGHT|WHY NOT BOTH?\``; return await sendReplyWithNav(sock, m, __navText, "smemevid"); }
     }
 
     const [top, bottom] = input.split('|').map(s => s.trim().toUpperCase())
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
         }
 
         if (!mediaBuffer) {
-            return m.reply(claraWrap("smemevid", `❌ *ɢᴀɢᴀʟ*\n\n> Gagal mengunduh video`))
+            return m.reply(claraWrap("smemevid", `❌ *Gagal*\n\n> Gagal mengunduh video`))
         }
 
         const tempId = Date.now()
@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
         } catch (e) {}
 
     } catch (error) {
-        m.reply(claraWrap("smemevid", `❌ *ɢᴀɢᴀʟ*\n\n> Terjadi kesalahan saat memproses video`))
+        m.reply(claraWrap("smemevid", `❌ *Gagal*\n\n> Terjadi kesalahan saat memproses video`))
     }
 }
 

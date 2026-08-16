@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        return m.reply(claraWrap("Ganti-nova2.jpg", `🖼️ *ɢᴀɴᴛɪ ᴏᴜʀɪɴ2.ᴊᴘɢ*\n\n> Kirim/reply gambar untuk mengganti\n> File: assets/images/nova2.jpg`))
+        return m.reply(claraWrap("Ganti-nova2.jpg", `🖼️ *Ganti Ourin2.Jpg*\n\n> Kirim/reply gambar untuk mengganti\n> File: assets/images/nova2.jpg`))
     }
     
     try {
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("Ganti-nova2.jpg", `⏳ Sedang mengupload gambar...`))
         try {
             const newUrl = await updateAssetUrl('nova2', buffer, 'nova2.jpg')
-            { const __navText = `✅ *ʙᴇʀʜᴀsɪʟ*\n\n> Gambar nova2.jpg telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`; await m.reply(__navText); }
+            { const __navText = `✅ *Berhasil*\n\n> Gambar nova2.jpg telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`; await m.reply(__navText); }
         } catch (e) {
             m.reply(claraWrap("ganti-nova2.jpg", `❌ Gagal mengupload gambar: ${e.message}`))
         }

@@ -55,9 +55,9 @@ async function handler(m, { sock }) {
     
     if (!text) {
         return m.reply(
-            `🐬 *ᴅᴏʟᴘʜɪɴ ᴀɪ*\n\n` +
+            `🐬 *Dolphin Ai*\n\n` +
             `> Chat dengan Dolphin AI 24B Model\n\n` +
-            `╭┈┈⬡「 📋 *ᴛᴇᴍᴘʟᴀᴛᴇs* 」\n` +
+            `╭┈┈⬡「 📋 *Templates* 」\n` +
             `┃ • \`logical\` - Jawaban logis\n` +
             `┃ • \`creative\` - Jawaban kreatif\n` +
             `┃ • \`summarize\` - Ringkasan\n` +

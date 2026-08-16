@@ -68,7 +68,7 @@ async function handler(m, { sock, db }) {
     })
 
     await sock.sendMessage(m.chat, {
-        text: `🎨 *sᴇᴛ ᴏᴡɴᴇʀ ᴛʏᴘᴇ*\n\n> Type saat ini: *V${current}*\n> _${VARIANTS[current].name}_\n\n> Pilih variant owner:`,
+        text: `🎨 *sEt Owner Type*\n\n> Type saat ini: *V${current}*\n> _${VARIANTS[current].name}_\n\n> Pilih variant owner:`,
         footer: config.bot?.name || 'Nova-AI',
         contextInfo: {
             mentionedJid: [m.sender],

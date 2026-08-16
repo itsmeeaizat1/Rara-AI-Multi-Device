@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     
     if (birthdays.length === 0) {
         return m.reply(
-            `❌ *ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴅᴀᴛᴀ*\n\n` +
+            `❌ *Tidak Ada Data*\n\n` +
             `> Belum ada member yang set birthday\n\n` +
             `> Gunakan: .setbirthday DD-MM`
         )
@@ -64,9 +64,9 @@ async function handler(m, { sock }) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
     
     let text = `╭━━━━━━━━━━━━━━━━━╮\n`
-    text += `┃  🎂 *ᴅᴀғᴛᴀʀ ᴜʟᴛᴀʜ*\n`
+    text += `┃  🎂 *DaғTar Ultah*\n`
     text += `╰━━━━━━━━━━━━━━━━━╯\n\n`
-    text += `╭┈┈⬡「 📋 *${birthdays.length} ᴍᴇᴍʙᴇʀ* 」\n`
+    text += `╭┈┈⬡「 📋 *${birthdays.length} Member* 」\n`
     
     const mentions = []
     

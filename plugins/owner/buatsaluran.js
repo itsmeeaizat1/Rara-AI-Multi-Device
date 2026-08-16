@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
   }
 
   if (!name || name.length < 2) {
-    return sendReplyWithNav(sock, m, "📢 *ʙᴜᴀᴛ sᴀʟᴜʀᴀɴ*\n\n" +
+    return sendReplyWithNav(sock, m, "📢 *Buat sAluran*\n\n" +
         "> `.buatsaluran Nama Saluran`\n" +
         "> `.buatsaluran Nama|Deskripsi`\n\n" +
         "📝 Contoh:\n" +
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     const saluranId = result?.id || result?.thread_metadata?.id || "unknown";
     const saluranName = result?.name || name;
     await m.react("✅");
-    return m.reply(`📢 *sᴀʟᴜʀᴀɴ ᴅɪʙᴜᴀᴛ*\n\n` +
+    return m.reply(`📢 *sAluran Dibuat*\n\n` +
         `> Nama: ${saluranName}\n` +
         (description ? `> Deskripsi: ${description}\n` : "") +
         `> ID: ${saluranId}\n` +

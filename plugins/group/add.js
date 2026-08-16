@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const args = m.args || []
     
     if (args.length === 0) {
-        return m.reply(`👥 *ᴀᴅᴅ ᴍᴇᴍʙᴇʀ*\n\n` +
+        return m.reply(`👥 *Add Member*\n\n` +
             `> Cara pakai:\n` +
             `> 1. Di grup: \`${m.prefix}add <nomor>\`\n` +
             `> 2. Multiple: \`${m.prefix}add <nomor1> <nomor2> ...\`\n` +
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
                 const groupInfo = await sock.groupGetInviteInfo(linkMatch[1])
                 targetGroup = groupInfo.id
             } catch (e) {
-                return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\n> Link grup tidak valid atau sudah expired!`))
+                return m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Link grup tidak valid atau sudah expired!`))
             }
         } else if (arg.includes('@g.us')) {
             targetGroup = arg
@@ -64,11 +64,11 @@ async function handler(m, { sock }) {
     }
     
     if (targetNumbers.length === 0) {
-        return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\n> Masukkan nomor yang valid!`))
+        return m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Masukkan nomor yang valid!`))
     }
     
     if (!targetGroup) {
-        return m.reply(`❌ *ɢᴀɢᴀʟ*\n\n> Jalankan di grup atau sertakan link grup!\n\n\`${m.prefix}add <nomor> <link_grup>\``)
+        return m.reply(`❌ *Gagal*\n\n> Jalankan di grup atau sertakan link grup!\n\n\`${m.prefix}add <nomor> <link_grup>\``)
     }
     
     try {
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
         )
         
         if (!botParticipant || !['admin', 'superadmin'].includes(botParticipant.admin)) {
-            return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\n> Bot bukan admin di grup *${groupMeta.subject}*!`))
+            return m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Bot bukan admin di grup *${groupMeta.subject}*!`))
         }
         
         if (!m.isGroup) {
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
             )
             
             if (!senderParticipant || !['admin', 'superadmin'].includes(senderParticipant.admin)) {
-                return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\n> Kamu bukan admin di grup *${groupMeta.subject}*!`))
+                return m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Kamu bukan admin di grup *${groupMeta.subject}*!`))
             }
         }
         
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
         }
         
         if (validNumbers.length === 0) {
-            return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\n> Semua nomor sudah ada di grup!`))
+            return m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Semua nomor sudah ada di grup!`))
         }
         
         m.react('🕐')
@@ -147,13 +147,13 @@ async function handler(m, { sock }) {
         }
         
         if (failedList.length > 0) {
-            resultText += `❌ *ɢᴀɢᴀʟ (${failedList.length}):*\n`
+            resultText += `❌ *Gagal (${failedList.length}):*\n`
             failedList.forEach(f => resultText += `• @${f.num} (${f.status})\n`)
             resultText += `\n`
         }
         
         if (alreadyInGroup.length > 0) {
-            resultText += `⏭️ *sᴜᴅᴀʜ ᴅɪ ɢʀᴜᴘ (${alreadyInGroup.length}):*\n`
+            resultText += `⏭️ *sUdah Di Grup (${alreadyInGroup.length}):*\n`
             alreadyInGroup.forEach(n => resultText += `• @${n}\n`)
         }
         
@@ -162,9 +162,9 @@ async function handler(m, { sock }) {
     } catch (error) {
         
         if (error.message?.includes('not-authorized')) {
-            await m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\n> Bot tidak memiliki izin untuk menambah member!`))
+            await m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Bot tidak memiliki izin untuk menambah member!`))
         } else if (error.message?.includes('forbidden')) {
-            await m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\n> Bot tidak memiliki akses ke grup ini!`))
+            await m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Bot tidak memiliki akses ke grup ini!`))
         } else {
             m.reply(claraWrap("add", te(m.prefix, m.command, m.pushName), "error"))
         }

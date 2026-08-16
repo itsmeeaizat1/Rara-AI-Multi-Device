@@ -39,7 +39,7 @@ async function handler(m, { sock, store }) {
     }
 
     if (!code) {
-        return sendReplyWithNav(sock, m, `⚙️ *ᴇxᴇᴄ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚙️ *Exec*\n\n` +
             `> Reply pesan berisi kode JavaScript!\n\n` +
             `*Atau:*\n` +
             `> .> <code>\n\n` +
@@ -94,10 +94,10 @@ async function handler(m, { sock, store }) {
     const codePreview = code.length > 100 ? code.slice(0, 100) + '...' : code
 
     await m.reply(
-        `⚙️ *ᴇxᴇᴄ ʀᴇsᴜʟᴛ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴄᴏᴅᴇ* 」\n` +
+        `⚙️ *Exec Result*\n\n` +
+        `╭┈┈⬡「 📋 *Code* 」\n` +
         `┃ \`${codePreview}\`\n` +
-        `├┈┈⬡「 📊 *ʀᴇsᴜʟᴛ* 」\n` +
+        `├┈┈⬡「 📊 *Result* 」\n` +
         `┃ ${status}\n` +
         `┃ Type: ${type}\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +

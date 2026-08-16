@@ -26,9 +26,9 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return sendReplyWithNav(sock, m, `📥 *ᴀʟʟ ɪɴ ᴏɴᴇ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\n` +
+    return sendReplyWithNav(sock, m, `📥 *All In One Downloader*\n\n` +
         `> Download dari berbagai platform!\n\n` +
-        `╭┈┈⬡「 🌐 *ᴘʟᴀᴛꜰᴏʀᴍ* 」\n` +
+        `╭┈┈⬡「 🌐 *Platform* 」\n` +
         `┃ • Instagram\n` +
         `┃ • TikTok\n` +
         `┃ • Facebook\n` +

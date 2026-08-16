@@ -19,7 +19,7 @@ async function handler(m, { sock }) {
     let targetJid = text
 
     if (!targetJid) {
-        return sendReplyWithNav(sock, m, '🗑️ *ʜᴀᴘᴜs sᴀʟᴜʀᴀɴ*\n\n' +
+        return sendReplyWithNav(sock, m, '🗑️ *Hapus sAluran*\n\n' +
             '> `.hapussaluran <id_saluran>` — Hapus saluran\n\n' +
             '📝 Contoh:\n' +
             '> `.hapussaluran 120363xxx@newsletter`\n\n' +

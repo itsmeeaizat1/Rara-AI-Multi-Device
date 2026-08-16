@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         `◦ Members: *${members.length}/20*`,
         "◦ Gold: *500*"].join("\n")) +
       "\n\n" +
-      claraWrap("ᴍᴇᴍʙᴇʀꜱ", members.map((name) => `◦ ${name}`)) +
+      claraWrap("Memberꜱ", members.map((name) => `◦ ${name}`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig, db }) {
           "4. Healer - ATK +5, DEF +8",
           "5. Assassin - ATK +18, DEF +2"].join("\n")) +
         "\n\n" +
-        claraWrap("ɪɴꜰᴏ", [`◦ Penggunaan: *${prefix}job <nama job>*`, `◦ Contoh: *${prefix}job Warrior*`].join("\n")) +
+        claraWrap("Info", [`◦ Penggunaan: *${prefix}job <nama job>*`, `◦ Contoh: *${prefix}job Warrior*`].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +

@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        { const __navText = claraWrap("ꜰɪɢᴜʀᴇ sᴛʏʟᴇ ᴠ2", `🎭 *ꜰɪɢᴜʀᴇ sᴛʏʟᴇ ᴠ2*\n\n> Kirim/reply gambar untuk diubah ke style Figure\n\n\`${m.prefix}tofigurev2\``); return await sendReplyWithNav(sock, m, __navText, "tofigurev2"); }
+        { const __navText = claraWrap("Figure sTyle V2", `🎭 *Figure sTyle V2*\n\n> Kirim/reply gambar untuk diubah ke style Figure\n\n\`${m.prefix}tofigurev2\``); return await sendReplyWithNav(sock, m, __navText, "tofigurev2"); }
     }
     
     m.react('🕐')

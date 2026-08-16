@@ -21,7 +21,7 @@ async function handler(m, { sock, config: botConfig }) {
     const topHours = Object.entries(stats.hourly || {}).sort((a,b) => b[1]-a[1]).slice(0, 3);
     
     let text = claraWrap("Group Analytics", "📊") + "\n\n";
-    text += claraWrap("sᴛᴀᴛs", [`◦ Total pesan: *${stats.total || 0}*`, `◦ Member aktif: *${Object.keys(stats.users || {}).length}*`].join("\n")) + "\n\n";
+    text += claraWrap("sTats", [`◦ Total pesan: *${stats.total || 0}*`, `◦ Member aktif: *${Object.keys(stats.users || {}).length}*`].join("\n")) + "\n\n";
     if (topUsers.length) {
       text += "*Top Members:*\n";
       topUsers.forEach(([u, c], i) => { text += `${i+1}. @${u.split("@")[0]} - ${c} pesan\n`; });

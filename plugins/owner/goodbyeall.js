@@ -25,9 +25,9 @@ async function handler(m, { sock }) {
     const action = args[0]?.toLowerCase()
     
     if (!action || !['on', 'off'].includes(action)) {
-        return m.resendReplyWithNav(sock, m, `👋 *ɢᴏᴏᴅʙʏᴇ ɢʟᴏʙᴀʟ*\n\n` +
+        return m.resendReplyWithNav(sock, m, `👋 *Goodbye Global*\n\n` +
             `> Aktifkan/nonaktifkan goodbye di SEMUA grup sekaligus\n\n` +
-            `╭┈┈⬡「 📋 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
+            `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
             `┃ ${m.prefix}goodbyeall on\n` +
             `┃ ${m.prefix}goodbyeall off\n` +
             `╰┈┈┈┈┈┈┈┈⬡`, "goodbyeall") }
@@ -48,14 +48,14 @@ async function handler(m, { sock }) {
         await m.react('✅')
         
         if (status) {
-            return m.m.reply(claraWrap("goodbyeall", `✅ *ɢᴏᴏᴅʙʏᴇ ɢʟᴏʙᴀʟ ᴏɴ*\n\n` +
-                `╭┈┈⬡「 📊 *ʀᴇsᴜʟᴛ* 」\n` +
+            return m.m.reply(claraWrap("goodbyeall", `✅ *Goodbye Global On*\n\n` +
+                `╭┈┈⬡「 📊 *Result* 」\n` +
                 `┃ 🌐 Total Grup: *${count}*\n` +
                 `┃ ✅ Goodbye: *AKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈⬡\n\n` +
                 `> Member yang keluar akan dikirim pesan perpisahan!`))       } else {
-            return m.reply(claraWrap("goodbyeall", `❌ *ɢᴏᴏᴅʙʏᴇ ɢʟᴏʙᴀʟ ᴏꜰꜰ*\n\n` +
-                `╭┈┈⬡「 📊 *ʀᴇsᴜʟᴛ* 」\n` +
+            return m.reply(claraWrap("goodbyeall", `❌ *Goodbye Global Off*\n\n` +
+                `╭┈┈⬡「 📊 *Result* 」\n` +
                 `┃ 🌐 Total Grup: *${count}*\n` +
                 `┃ ❌ Goodbye: *NONAKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈⬡\n\n` +

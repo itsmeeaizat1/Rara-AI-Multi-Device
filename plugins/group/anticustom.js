@@ -174,7 +174,7 @@ async function startWizard(m, sock, mode, isFirstSetup = false) {
 
 function buildGuideMessage(m, status, mode, rules) {
   return (
-    `🛡️ *ᴀɴᴛɪᴄᴜsᴛᴏᴍ*\n\n` +
+    `🛡️ *Anticustom*\n\n` +
     `> Status: *${status.toUpperCase()}*\n` +
     `> Mode default: *${normalizeAction(mode).toUpperCase()}*\n` +
     `> Total rule: *${rules.length}*\n\n` +
@@ -257,7 +257,7 @@ async function handler(m, { sock }) {
       await m.reply(claraWrap("anticustom", "📋 Belum ada rule AntiCustom di grup ini."));
       return;
     }
-    await m.reply(claraWrap("Anticustom", `📋 *ʟɪsᴛ ᴀɴᴛɪᴄᴜsᴛᴏᴍ*\n\n${rules.map(formatRule).join("\n\n")}`));
+    await m.reply(claraWrap("Anticustom", `📋 *List Anticustom*\n\n${rules.map(formatRule).join("\n\n")}`));
     return;
   }
 

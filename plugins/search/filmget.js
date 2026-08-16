@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   const url = args[0]?.trim();
 
   if (!url || !url.includes("neoxr.eu")) {
-    return sendReplyWithNav(sock, m, `🎬 *ꜰɪʟᴍ ᴅᴇᴛᴀɪʟ*\n\n` +
+    return sendReplyWithNav(sock, m, `🎬 *Film Detail*\n\n` +
         `> Ambil detail film dari URL\n\n` +
         `*Format:*\n` +
         `> \`${m.prefix}filmget <url>\`\n\n` +
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     const { data } = await axios.get(apiUrl, { timeout: 30000 });
 
     if (!data?.status || !data?.data) {
-      return m.reply(claraWrap("filmget", "❌ *ɢᴀɢᴀʟ*\n\n> Film tidak ditemukan"));
+      return m.reply(claraWrap("filmget", "❌ *Gagal*\n\n> Film tidak ditemukan"));
     }
 
     const film = data.data;
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     }
 
     let text = `🎬 *${film.title || "Film"}*\n\n`;
-    text += `╭┈┈⬡「 📋 *ɪɴꜰᴏ* 」\n`;
+    text += `╭┈┈⬡「 📋 *Info* 」\n`;
     text += `┃ ⭐ Rating: ${film.rating || "-"}\n`;
     text += `┃ 📺 Quality: ${film.quality || "-"}\n`;
     text += `┃ ⏱️ Duration: ${film.duration || "-"}\n`;

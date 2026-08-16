@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-        return sendReplyWithNav(sock, m, '🔇 *ᴍᴜᴛᴇ ᴄʜᴀᴛ*\n\n' +
+        return sendReplyWithNav(sock, m, '🔇 *Mute Chat*\n\n' +
             '> `.mutechat 628xxx` — Mute chat\n' +
             '> `.mutechat` (di private chat) — Mute chat ini\n' +
             '> `.mutechat buka 628xxx` — Unmute chat', "mutechat")
@@ -50,8 +50,8 @@ async function handler(m, { sock }) {
         await m.react('✅')
         const target = targetJid.split('@')[0]
         return m.reply(mute
-                ? `🔇 *ᴄʜᴀᴛ ᴅɪᴍᴜᴛᴇ*\n\n> Target: ${target}`
-                : `🔊 *ᴄʜᴀᴛ ᴅɪᴜɴᴍᴜᴛᴇ*\n\n> Target: ${target}`)
+                ? `🔇 *Chat Dimute*\n\n> Target: ${target}`
+                : `🔊 *Chat Diunmute*\n\n> Target: ${target}`)
     } catch (err) {
         return m.reply(claraWrap("mutechat", `❌ Gagal: ${err.message}`))
     }

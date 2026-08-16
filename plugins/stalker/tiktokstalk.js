@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]?.replace('@', '')
     
     if (!username) {
-        { const __navText = `🎵 *ᴛɪᴋᴛᴏᴋ sᴛᴀʟᴋ*\n\n> Masukkan username TikTok\n\n\`Contoh: ${m.prefix}tiktokstalk mrbeast\``; return await sendReplyWithNav(sock, m, __navText, "tiktokstalk"); }
+        { const __navText = `🎵 *Tiktok sTalk*\n\n> Masukkan username TikTok\n\n\`Contoh: ${m.prefix}tiktokstalk mrbeast\``; return await sendReplyWithNav(sock, m, __navText, "tiktokstalk"); }
     }
     
     m.react('🕐')
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
         const d = res.data.data
         const s = d.stats
         
-        const caption = `🎵 *ᴛɪᴋᴛᴏᴋ sᴛᴀʟᴋ*\n\n` +
+        const caption = `🎵 *Tiktok sTalk*\n\n` +
             `👤 *Username:* @${d.username}\n` +
             `📛 *Nama:* ${d.nickname}\n` +
             `✅ *Verified:* ${d.verified ? 'Ya' : 'Tidak'}\n` +

@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     db.save()
     
     await m.reply(
-        `✅ *ɪɴᴛʀᴏ ᴅɪʀᴇsᴇᴛ!*\n` +
+        `✅ *Intro Direset!*\n` +
         `Intro grup dikembalikan ke default.\n\n` +
         `Ketik *${m.prefix}intro* untuk melihat hasilnya.`
     )

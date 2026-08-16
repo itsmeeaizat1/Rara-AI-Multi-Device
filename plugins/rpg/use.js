@@ -25,8 +25,8 @@ async function handler(m, { sock }) {
   const itemKey = args[0]?.toLowerCase();
 
   if (!itemKey) {
-    return sendReplyWithNav(sock, m, `🎒 *ᴜsᴇ ɪᴛᴇᴍ*\n\n` +
-      `*📋 *ᴜsᴀɢᴇ:*
+    return sendReplyWithNav(sock, m, `🎒 *Use Item*\n\n` +
+      `*📋 *Usage:*
 \n` +
       `> > \`.use <nama_item>\`\n` +
       `> > Cek inventory: \`.inventory\`\n` +
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
   const count = user.inventory[itemKey] || 0;
 
   if (count <= 0) {
-    return sendReplyWithNav(sock, m, `❌ *ɪᴛᴇᴍ ᴛɪᴅᴀᴋ ᴀᴅᴀ*\n\n` +
+    return sendReplyWithNav(sock, m, `❌ *Item Tidak Ada*\n\n` +
       `> Kamu tidak memiliki item *${itemKey}*!\n` +
       `> Cek inventory: \`.inventory\``, "use");
   }
@@ -55,44 +55,44 @@ async function handler(m, { sock }) {
   switch (itemKey) {
     case "potion":
       if (user.rpg.health >= user.rpg.maxHealth) {
-        return m.reply(claraWrap("Use", `❤️ *ʜᴇᴀʟᴛʜ ᴘᴇɴᴜʜ*\n\n> Nyawa kamu sudah penuh!`));
+        return m.reply(claraWrap("Use", `❤️ *Health Penuh*\n\n> Nyawa kamu sudah penuh!`));
       }
       user.rpg.health = Math.min(user.rpg.health + 50, user.rpg.maxHealth);
       user.inventory[itemKey]--;
-      msg = `🥤 *ɪᴛᴇᴍ ᴅɪɢᴜɴᴀᴋᴀɴ*\n\n> Kamu meminum *Health Potion*.\n> ❤️ Health sekarang: ${user.rpg.health}/${user.rpg.maxHealth}`;
+      msg = `🥤 *Item Digunakan*\n\n> Kamu meminum *Health Potion*.\n> ❤️ Health sekarang: ${user.rpg.health}/${user.rpg.maxHealth}`;
       break;
 
     case "mpotion":
       if (user.rpg.mana >= user.rpg.maxMana) {
-        return m.reply(claraWrap("Use", `💧 *ᴍᴀɴᴀ ᴘᴇɴᴜʜ*\n\n> Mana kamu sudah penuh!`));
+        return m.reply(claraWrap("Use", `💧 *Mana Penuh*\n\n> Mana kamu sudah penuh!`));
       }
       user.rpg.mana = Math.min(user.rpg.mana + 50, user.rpg.maxMana);
       user.inventory[itemKey]--;
-      msg = `🧪 *ɪᴛᴇᴍ ᴅɪɢᴜɴᴀᴋᴀɴ*\n\n> Kamu meminum *Mana Potion*.\n> 💧 Mana sekarang: ${user.rpg.mana}/${user.rpg.maxMana}`;
+      msg = `🧪 *Item Digunakan*\n\n> Kamu meminum *Mana Potion*.\n> 💧 Mana sekarang: ${user.rpg.mana}/${user.rpg.maxMana}`;
       break;
 
     case "stamina":
       if (user.rpg.stamina >= user.rpg.maxStamina) {
-        return m.reply(claraWrap("Use", `⚡ *sᴛᴀᴍɪɴᴀ ᴘᴇɴᴜʜ*\n\n> Stamina kamu sudah penuh!`));
+        return m.reply(claraWrap("Use", `⚡ *sTamina Penuh*\n\n> Stamina kamu sudah penuh!`));
       }
       user.rpg.stamina = Math.min(user.rpg.stamina + 20, user.rpg.maxStamina);
       user.inventory[itemKey]--;
-      msg = `⚡ *ɪᴛᴇᴍ ᴅɪɢᴜɴᴀᴋᴀɴ*\n\n> Kamu meminum *Stamina Potion*.\n> ⚡ Stamina sekarang: ${user.rpg.stamina}/${user.rpg.maxStamina}`;
+      msg = `⚡ *Item Digunakan*\n\n> Kamu meminum *Stamina Potion*.\n> ⚡ Stamina sekarang: ${user.rpg.stamina}/${user.rpg.maxStamina}`;
       break;
 
     case "herb":
       if (user.rpg.health >= user.rpg.maxHealth) {
-        return m.reply(claraWrap("Use", `❤️ *ʜᴇᴀʟᴛʜ ᴘᴇɴᴜʜ*\n\n> Nyawa kamu sudah penuh!`));
+        return m.reply(claraWrap("Use", `❤️ *Health Penuh*\n\n> Nyawa kamu sudah penuh!`));
       }
       user.rpg.health = Math.min(user.rpg.health + 20, user.rpg.maxHealth);
       user.inventory[itemKey]--;
-      msg = `🌿 *ɪᴛᴇᴍ ᴅɪɢᴜɴᴀᴋᴀɴ*\n\n> Kamu mengunyah *Herba*.\n> ❤️ Health sekarang: ${user.rpg.health}/${user.rpg.maxHealth}`;
+      msg = `🌿 *Item Digunakan*\n\n> Kamu mengunyah *Herba*.\n> ❤️ Health sekarang: ${user.rpg.health}/${user.rpg.maxHealth}`;
       break;
 
     case "leather":
       user.rpg.attack = (user.rpg.attack || 10) + 3;
       user.inventory[itemKey]--;
-      msg = `👞 *ɪᴛᴇᴍ ᴅɪɢᴜɴᴀᴋᴀɴ*\n\n> Kamu memakai *Kulit* sebagai pelindung.\n> ⚔️ Attack bertambah: +3 (sekarang: ${user.rpg.attack})`;
+      msg = `👞 *Item Digunakan*\n\n> Kamu memakai *Kulit* sebagai pelindung.\n> ⚔️ Attack bertambah: +3 (sekarang: ${user.rpg.attack})`;
       break;
 
     case "mysterybox": {
@@ -122,33 +122,33 @@ async function handler(m, { sock }) {
         user.inventory[pick.type] = (user.inventory[pick.type] || 0) + qty;
         rewardMsg = `${pick.icon} ${pick.type}: +${qty}`;
       }
-      msg = `📦 *ᴍʏsᴛᴇʀʏ ʙᴏx ᴅɪʙᴜᴋᴀ!*\n\n> Kamu membuka Mystery Box...\n> ${rewardMsg}`;
+      msg = `📦 *Mystery Box Dibuka!*\n\n> Kamu membuka Mystery Box...\n> ${rewardMsg}`;
       break;
     }
 
     case "bowlramen":
       if (user.rpg.health >= user.rpg.maxHealth) {
-        return m.reply(claraWrap("Use", `❤️ *ʜᴇᴀʟᴛʜ ᴘᴇɴᴜʜ*\n\n> Nyawa kamu sudah penuh, tidak perlu makan ramen lagi!`));
+        return m.reply(claraWrap("Use", `❤️ *Health Penuh*\n\n> Nyawa kamu sudah penuh, tidak perlu makan ramen lagi!`));
       }
       user.rpg.health = Math.min(user.rpg.health + 40, user.rpg.maxHealth);
       user.inventory[itemKey]--;
-      msg = `🍜 *ɪᴛᴇᴍ ᴅɪɢᴜɴᴀᴋᴀɴ*\n\n> Kamu memakan semangkuk *Ramen Hangat*.\n> ❤️ Health memulih: ${user.rpg.health}/${user.rpg.maxHealth}`;
+      msg = `🍜 *Item Digunakan*\n\n> Kamu memakan semangkuk *Ramen Hangat*.\n> ❤️ Health memulih: ${user.rpg.health}/${user.rpg.maxHealth}`;
       break;
 
     case "chakra":
       if (user.rpg.stamina >= user.rpg.maxStamina) {
-        return m.reply(claraWrap("Use", `⚡ *sᴛᴀᴍɪɴᴀ ᴘᴇɴᴜʜ*\n\n> Stamina/Chakra kamu sudah penuh!`));
+        return m.reply(claraWrap("Use", `⚡ *sTamina Penuh*\n\n> Stamina/Chakra kamu sudah penuh!`));
       }
       user.rpg.stamina = Math.min(user.rpg.stamina + 30, user.rpg.maxStamina);
       user.inventory[itemKey]--;
-      msg = `🌀 *ɪᴛᴇᴍ ᴅɪɢᴜɴᴀᴋᴀɴ*\n\n> Kamu menyerap *Kepingan Chakra*.\n> ⚡ Stamina bertambah: ${user.rpg.stamina}/${user.rpg.maxStamina}`;
+      msg = `🌀 *Item Digunakan*\n\n> Kamu menyerap *Kepingan Chakra*.\n> ⚡ Stamina bertambah: ${user.rpg.stamina}/${user.rpg.maxStamina}`;
       break;
 
     case "kunai":
     case "shuriken":
       user.rpg.attack = (user.rpg.attack || 10) + 2;
       user.inventory[itemKey]--;
-      msg = `🗡️ *ɪᴛᴇᴍ ᴅɪɢᴜɴᴀᴋᴀɴ*\n\n> Kamu melengkapi dirimu dengan *${itemKey.toUpperCase()}*.\n> ⚔️ Attack bertambah: +2 (sekarang: ${user.rpg.attack})`;
+      msg = `🗡️ *Item Digunakan*\n\n> Kamu melengkapi dirimu dengan *${itemKey.toUpperCase()}*.\n> ⚔️ Attack bertambah: +2 (sekarang: ${user.rpg.attack})`;
       break;
 
     case "scroll": {
@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
         db.updateExp(m.sender, amount);
         sRewardMsg = `${sPick.icon} EXP Ninja: +${amount.toLocaleString("id-ID")}`;
       }
-      msg = `📜 *sᴄʀᴏʟʟ ᴅɪʙᴀᴄᴀ!*\n\n> Kamu membuka Gulungan Rahasia Ninja...\n> ${sRewardMsg}`;
+      msg = `📜 *sCroll Dibaca!*\n\n> Kamu membuka Gulungan Rahasia Ninja...\n> ${sRewardMsg}`;
       break;
     }
 
@@ -188,14 +188,14 @@ async function handler(m, { sock }) {
       db.updateExp(m.sender, rewardExp);
 
       msg =
-        `🎁 *ᴄʀᴀᴛᴇ ᴅɪʙᴜᴋᴀ*\n\n` +
+        `🎁 *Crate Dibuka*\n\n` +
         `> Kamu membuka *${itemKey} Crate*!\n` +
         `> 💰 Money: +Rp ${rewardMoney.toLocaleString("id-ID")}\n` +
         `> 🚄 Exp: +${rewardExp}`;
       break;
 
     default:
-      return m.reply(claraWrap("Use", `❌ *ɪᴛᴇᴍ ᴛɪᴅᴀᴋ ᴅᴀᴘᴀᴛ ᴅɪɢᴜɴᴀᴋᴀɴ*\n\n> Item *${itemKey}* tidak bisa digunakan langsung.`));
+      return m.reply(claraWrap("Use", `❌ *Item Tidak Dapat Digunakan*\n\n> Item *${itemKey}* tidak bisa digunakan langsung.`));
   }
 
   db.save();

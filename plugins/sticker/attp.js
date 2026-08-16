@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
         text = m.quoted.text.trim()
     }
     if (!text) {
-        return sendReplyWithNav(sock, m, `🎨 *ᴀɴɪᴍᴀᴛᴇᴅ ᴛᴇxᴛ sᴛɪᴄᴋᴇʀ*\n\n` +
+        return sendReplyWithNav(sock, m, `🎨 *Animated Text sTicker*\n\n` +
             `> Masukkan teks untuk sticker\n\n` +
             `> Contoh: \`${m.prefix}attp Hello World\``, "attp")
     }

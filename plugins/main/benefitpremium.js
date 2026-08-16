@@ -34,9 +34,9 @@ async function handler(m, { sock }) {
     const premiumLimit = config.limits?.premium || 100
     
     const message = 
-        `⭐ *ᴀᴘᴀ ɪᴛᴜ ᴘʀᴇᴍɪᴜᴍ?*\n\n` +
+        `⭐ *Apa Itu Premium?*\n\n` +
         `Premium adalah *user berbayar* yang mendapatkan akses ke fitur eksklusif dan keuntungan lebih.\n\n` +
-        `╭┈┈⬡「 💎 *ᴋᴇᴜɴᴛᴜɴɢᴀɴ ᴘʀᴇᴍɪᴜᴍ* 」\n` +
+        `╭┈┈⬡「 💎 *Keuntungan Premium* 」\n` +
         `┃ ✦ \`\`\`Limit harian: ${premiumLimit}x (vs ${defaultLimit}x user biasa)\`\`\`\n` +
         `┃ ✦ \`\`\`Cooldown lebih rendah\`\`\`\n` +
         `┃ ✦ \`\`\`Akses fitur eksklusif\`\`\`\n` +
@@ -44,13 +44,13 @@ async function handler(m, { sock }) {
         `┃ ✦ \`\`\`No watermark di beberapa fitur\`\`\`\n` +
         `┃ ✦ \`\`\`Support prioritas\`\`\`\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `╭┈┈⬡「 ⚙️ *ᴄᴀʀᴀ ᴍᴇɴᴅᴀᴘᴀᴛᴋᴀɴ* 」\n` +
+        `╭┈┈⬡「 ⚙️ *Cara Mendapatkan* 」\n` +
         `┃ \`Premium didapatkan melalui:\`\n` +
         `┃ • Hubungi owner bot\n` +
         `┃ • \`\`\`${config.command?.prefix || '.'}addprem <nomor> <durasi>\`\`\`\n` +
         `┃ • Contoh: .addprem 628xxx 30d\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴀꜰᴛᴀʀ ᴄᴏᴍᴍᴀɴᴅ ᴘʀᴇᴍɪᴜᴍ* 」\n` +
+        `╭┈┈⬡「 📋 *Daftar Command Premium* 」\n` +
         `┃ \`Total: ${totalCommands} command\`\n` +
         `┃\n` +
         (totalCommands > 0 

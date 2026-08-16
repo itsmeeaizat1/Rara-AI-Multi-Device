@@ -18,7 +18,7 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const bet = parseInt(m.text?.trim()) || 0;
     if (!bet || bet < 100) {
-      await sendReplyWithNav(sock, m, claraWrap("Slot", "") + "\n\n" + claraWrap("ɪɴꜰᴏ", [`◦ Penggunaan: *${prefix}rpgslot <jumlah>*`, `◦ Minimal bet: *Rp100*`, `◦ 3 sama = x5 | 2 sama = x2`].join("\n")) + "\n\n" + separator("━", 22), "rpgslot");
+      await sendReplyWithNav(sock, m, claraWrap("Slot", "") + "\n\n" + claraWrap("Info", [`◦ Penggunaan: *${prefix}rpgslot <jumlah>*`, `◦ Minimal bet: *Rp100*`, `◦ 3 sama = x5 | 2 sama = x2`].join("\n")) + "\n\n" + separator("━", 22), "rpgslot");
       return { handled: true };
     }
     const db = getDatabase();

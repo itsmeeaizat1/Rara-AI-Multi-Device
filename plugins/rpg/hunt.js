@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const text =
       claraWrap("Hunt", "⚔️") +
       "\n\n" +
-      claraWrap("ʜᴀꜱɪʟ", [
+      claraWrap("HaꜱIl", [
         `◦ Monster: *${monster.name}*`,
         `◦ HP: *${monster.hp}*`,
         `◦ Gold: *${killed ? "+" + monster.gold : "0"}*`,

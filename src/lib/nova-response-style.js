@@ -1,8 +1,8 @@
 const SMALL_CAPS = {
-  a: "ᴀ", b: "ʙ", c: "ᴄ", d: "ᴅ", e: "ᴇ", f: "ꜰ", g: "ɢ", h: "ʜ",
-  i: "ɪ", j: "ᴊ", k: "ᴋ", l: "ʟ", m: "ᴍ", n: "ɴ", o: "ᴏ", p: "ᴘ",
-  q: "ǫ", r: "ʀ", s: "s", t: "ᴛ", u: "ᴜ", v: "ᴠ", w: "ᴡ", x: "x",
-  y: "ʏ", z: "ᴢ",
+  a: "A", b: "B", c: "C", d: "D", e: "E", f: "F", g: "G", h: "H",
+  i: "I", j: "J", k: "K", l: "L", m: "M", n: "N", o: "O", p: "P",
+  q: "Q", r: "R", s: "s", t: "T", u: "U", v: "V", w: "W", x: "x",
+  y: "Y", z: "Z",
 };
 
 
@@ -15,7 +15,7 @@ function separator(char = "━", repeat = 22) {
 }
 
 function tipText(text) {
-  return `💡 *ᴛɪᴘ:* ${text}`;
+  return `💡 *Tip:* ${text}`;
 }
 
 function smartGreeting(prefix = ".", userName = "") {

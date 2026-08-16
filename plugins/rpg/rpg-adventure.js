@@ -51,8 +51,8 @@ async function handler(m, { sock, config: botConfig }) {
     addUserMoney(db, m.sender, money);
     
     let text = claraWrap("Adventure", "⚔️") + "\n\n";
-    text += claraWrap("ᴘᴇᴛᴜᴀʟᴀɴɢ", [`◦ Musuh: *${enemy}*`, `◦ HP Berkurang: *-${hpLoss}* ❤️`, `◦ Sisa HP: *${user.health}/100*`].join("\n")) + "\n\n";
-    text += claraWrap("ʜᴀsɪʟ", [
+    text += claraWrap("Petualang", [`◦ Musuh: *${enemy}*`, `◦ HP Berkurang: *-${hpLoss}* ❤️`, `◦ Sisa HP: *${user.health}/100*`].join("\n")) + "\n\n";
+    text += claraWrap("Hasil", [
       `◦ EXP: *+${exp}* ✨`,
       `◦ Money: *+Rp${money.toLocaleString("id-ID")}* 💰`,
       `◦ Iron: *+${iron}* ⚙️`,
@@ -61,7 +61,7 @@ async function handler(m, { sock, config: botConfig }) {
     ].filter(Boolean)) + "\n\n";
     
     if (leveledUp) {
-      text += claraWrap("ʟᴇᴠᴇʟ ᴜᴘ!", [`◦ Level: *${oldLevel} → ${newLevel}*`, `◦ Congrats! 🔥`].join("\n")) + "\n\n";
+      text += claraWrap("Level Up!", [`◦ Level: *${oldLevel} → ${newLevel}*`, `◦ Congrats! 🔥`].join("\n")) + "\n\n";
     }
     
     text += separator("━", 22) + "\n" + tipText(`Tunggu 1 jam untuk petualang lagi`);

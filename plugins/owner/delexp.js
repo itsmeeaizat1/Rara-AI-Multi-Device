@@ -45,31 +45,31 @@ async function handler(m, { sock }) {
     }
     
     if (!targetJid || amount <= 0) {
-        return sendReplyWithNav(sock, m, `⭐ *ᴅᴇʟ ᴇxᴘ*\n\n` +
+        return sendReplyWithNav(sock, m, `⭐ *Del Exp*\n\n` +
             `> \`.delexp <jumlah>\` - dari diri sendiri\n` +
             `> \`.delexp <jumlah> @user\` - dari user\n\n` +
             `\`Contoh: ${m.prefix}delexp 5000\``, "delexp")
     }
     
     if (amount <= 0) {
-        return m.reply(claraWrap("Delexp", `❌ *ɢᴀɢᴀʟ*\n\n> Jumlah harus lebih dari 0`))
+        return m.reply(claraWrap("Delexp", `❌ *Gagal*\n\n> Jumlah harus lebih dari 0`))
     }
     
     const user = db.getUser(targetJid)
     
     if (!user) {
-        return m.reply(claraWrap("Delexp", `❌ *ɢᴀɢᴀʟ*\n\n> User tidak ditemukan di database`))
+        return m.reply(claraWrap("Delexp", `❌ *Gagal*\n\n> User tidak ditemukan di database`))
     }
     
     const newExp = db.updateExp(targetJid, -amount)
     
     await m.react('✅')
     
-    await m.reply(claraWrap("delexp", `✅ *ᴇxᴘ ᴅɪᴋᴜʀᴀɴɢɪ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-        `┃ 👤 ᴜsᴇʀ: @${targetJid.split('@')[0]}\n` +
-        `┃ ➖ ᴋᴜʀᴀɴɢ: *-${formatNumber(amount)}*\n` +
-        `┃ ⭐ sɪsᴀ: *${formatNumber(newExp)}*\n` +
+    await m.reply(claraWrap("delexp", `✅ *Exp Dikurangi*\n\n` +
+        `╭┈┈⬡「 📋 *Detail* 」\n` +
+        `┃ 👤 User: @${targetJid.split('@')[0]}\n` +
+        `┃ ➖ Kurang: *-${formatNumber(amount)}*\n` +
+        `┃ ⭐ sIsa: *${formatNumber(newExp)}*\n` +
         `╰┈┈⬡`))
 }
 

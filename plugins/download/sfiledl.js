@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
 
     if (!url) {
-        return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
             `> \`${m.prefix}sfiledl <url_sfile>\`\n\n` +
             `> Contoh: \`${m.prefix}sfiledl https://sfile.mobi/xxxxx\``, "sfiledl")
     }

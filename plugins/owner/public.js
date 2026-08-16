@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     try {
         const isRealOwner = validateOwner(m);
         if (!isRealOwner) {
-            return m.reply(claraWrap("Public", '🚫 *ᴀᴋsᴇs ᴅɪᴛᴏʟᴀᴋ*\n\n> Hanya owner yang bisa mengubah mode bot!'));
+            return m.reply(claraWrap("Public", '🚫 *Akses Ditolak*\n\n> Hanya owner yang bisa mengubah mode bot!'));
         }
         const currentMode = config.mode;
         if (currentMode === 'public') {
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         const db = getDatabase();
         db.setting('botMode', 'public');
         
-        const responseText = `🌐 *ᴍᴏᴅᴇ ᴘᴜʙʟɪᴄ ᴀᴋᴛɪꜰ*\n\n` +
+        const responseText = `🌐 *Mode Public Aktif*\n\n` +
             `> Bot sekarang merespon semua user!\n\n` +
             `_Gunakan .self untuk menutup akses_`;
         await m.reply(responseText);

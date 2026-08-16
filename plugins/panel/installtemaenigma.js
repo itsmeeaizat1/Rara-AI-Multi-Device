@@ -67,7 +67,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎨 *ɪɴsᴛᴀʟʟ ᴛᴇᴍᴀ ᴇɴɪɢᴍᴀ* 」\n┃ ㊗ ᴜsᴀɢᴇ: \`${m.prefix}installtemaenigma <ip>|<password>|<link_wa>|<link_group>|<link_channel>\`\n╰┈┈⬡\n\n> Contoh:\n> \`${m.prefix}installtemaenigma 192.168.1.1|pass|https://wa.me/628xxx|https://t.me/group|https://t.me/channel\``, "installtemaenigma")
+        return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎨 *Install Tema Enigma* 」\n┃ ㊗ Usage: \`${m.prefix}installtemaenigma <ip>|<password>|<link_wa>|<link_group>|<link_channel>\`\n╰┈┈⬡\n\n> Contoh:\n> \`${m.prefix}installtemaenigma 192.168.1.1|pass|https://wa.me/628xxx|https://t.me/group|https://t.me/channel\``, "installtemaenigma")
     }
 
     const parts = text.split('|')
@@ -95,10 +95,10 @@ function handler(m, { sock }) {
 
     conn.on('ready', async () => {
         try {
-            await m.reply(claraWrap("installtemaenigma", `🕕 *[1/3] ɪɴsᴛᴀʟʟ ᴅᴇᴘᴇɴᴅᴇɴᴄɪᴇs...*\n\n> Menginstall Node.js, Yarn, Composer...`))
+            await m.reply(claraWrap("installtemaenigma", `🕕 *[1/3] Install Dependencies...*\n\n> Menginstall Node.js, Yarn, Composer...`))
             await execSSH(conn, DEPS_CMD)
 
-            await m.reply(claraWrap("installtemaenigma", `🕕 *[2/3] ɪɴsᴛᴀʟʟ ᴛᴇᴍᴀ...*\n\n> Mendownload & install tema Enigma...`))
+            await m.reply(claraWrap("installtemaenigma", `🕕 *[2/3] Install Tema...*\n\n> Mendownload & install tema Enigma...`))
             await execSSHInteractive(conn, THEME_CMD, [
                 { trigger: 'AKSES TOKEN', value: 'skyzodev' },
                 { trigger: 'Masukkan pilihan', value: '1' },
@@ -108,11 +108,11 @@ function handler(m, { sock }) {
                 { trigger: 'channel', value: linkChannel }
             ])
 
-            await m.reply(claraWrap("installtemaenigma", `🕕 *[3/3] ʙᴜɪʟᴅ ᴀssᴇᴛs...*\n\n> Compiling panel assets...`))
+            await m.reply(claraWrap("installtemaenigma", `🕕 *[3/3] Build Assets...*\n\n> Compiling panel assets...`))
             await execSSH(conn, BUILD_CMD)
 
             m.react('✅')
-            await m.reply(claraWrap("installtemaenigma", `╭┈┈⬡「 ✅ *ᴛᴇᴍᴀ ᴇɴɪɢᴍᴀ* 」\n┃ ㊗ sᴛᴀᴛᴜs: *Terinstall*\n┃ ㊗ ɪᴘ: ${ipvps}\n╰┈┈⬡\n\n> _Tema Enigma + dependencies berhasil diinstall!_`))
+            await m.reply(claraWrap("installtemaenigma", `╭┈┈⬡「 ✅ *Tema Enigma* 」\n┃ ㊗ sTatus: *Terinstall*\n┃ ㊗ Ip: ${ipvps}\n╰┈┈⬡\n\n> _Tema Enigma + dependencies berhasil diinstall!_`))
         } catch (err) {
             m.reply(claraWrap("installtemaenigma", te(m.prefix, m.command, m.pushName), "error"))
         } finally {

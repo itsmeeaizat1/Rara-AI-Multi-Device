@@ -23,14 +23,14 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
-    if (!isImage) return m.reply(claraWrap("Ganti-nova-promote.jpg", `🖼️ *ɢᴀɴᴛɪ NOVA-PROMOTE.JPG*\n\n> Kirim/reply gambar untuk mengganti\n> File: assets/images/nova-promote.jpg`))
+    if (!isImage) return m.reply(claraWrap("Ganti-nova-promote.jpg", `🖼️ *Ganti NOVA-PROMOTE.JPG*\n\n> Kirim/reply gambar untuk mengganti\n> File: assets/images/nova-promote.jpg`))
     try {
         let buffer = m.quoted && m.quoted.isMedia ? await m.quoted.download() : await m.download()
         if (!buffer) { const __navText = claraWrap("ganti-nova-promote.jpg", '❌ Gagal mendownload gambar'); return await m.reply(__navText); }
         await m.reply(claraWrap("Ganti-nova-promote.jpg", `⏳ Sedang mengupload gambar...`))
         try {
             const newUrl = await updateAssetUrl('nova-promote', buffer, 'nova-promote.jpg')
-            m.reply(claraWrap("Ganti-nova-promote.jpg", `✅ *ʙᴇʀʜᴀsɪʟ*\n\n> Gambar nova-promote.jpg telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`))
+            m.reply(claraWrap("Ganti-nova-promote.jpg", `✅ *Berhasil*\n\n> Gambar nova-promote.jpg telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`))
         } catch (e) {
             m.reply(claraWrap("ganti-nova-promote.jpg", `❌ Gagal mengupload gambar: ${e.message}`))
         }

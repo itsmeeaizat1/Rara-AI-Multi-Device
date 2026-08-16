@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     
     if (missingConfig.length > 0) {
         const available = getAvailableServers(pteroConfig)
-        let txt = `⚠️ *sᴇʀᴠᴇʀ ${serverKey.toUpperCase()} ʙᴇʟᴜᴍ ᴋᴏɴꜰɪɢ*\n\n`
+        let txt = `⚠️ *sErver ${serverKey.toUpperCase()} Belum Konfig*\n\n`
         if (available.length > 0) {
             txt += `> Server tersedia: *${available.join(', ')}*`
         }
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     
     if (!serverId) {
         return m.reply(
-            `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+            `⚠️ *Cara Pakai*\n\n` +
             `> \`${m.prefix}delpanel ID\` - Hapus server saja\n` +
             `> \`${m.prefix}delpanel ID full\` - Hapus server + user\n` +
             `> \`${m.prefix}delpanel s2 ID\` - Dari server 2\n\n` +
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
             isUserAdmin = userInfo.root_admin
         } catch (e) {}
         
-        await m.reply(`🗑️ *ᴍᴇɴɢʜᴀᴘᴜs ᴘᴀɴᴇʟ...*\n\n> Server: *${serverLabel}*\n> Panel: \`${server.name}\`\n> Mode: *${option === 'full' ? 'Server + User' : 'Server saja'}*`)
+        await m.reply(`🗑️ *Menghapus Panel...*\n\n> Server: *${serverLabel}*\n> Panel: \`${server.name}\`\n> Mode: *${option === 'full' ? 'Server + User' : 'Server saja'}*`)
         
         await axios.delete(`${serverConfig.domain}/api/application/servers/${serverId}`, {
             headers: {
@@ -119,7 +119,7 @@ async function handler(m, { sock }) {
             }
         })
         
-        let result = `✅ *sᴇʀᴠᴇʀ ᴅɪʜᴀᴘᴜs [${serverLabel}]*\n\n`
+        let result = `✅ *sErver Dihapus [${serverLabel}]*\n\n`
         result += `> Nama: \`${server.name}\`\n`
         result += `> ID: \`${serverId}\`\n`
         
@@ -132,7 +132,7 @@ async function handler(m, { sock }) {
                         'Accept': 'Application/vnd.pterodactyl.v1+json'
                     }
                 })
-                result += `\n✅ *ᴜsᴇʀ ᴅɪʜᴀᴘᴜs*\n`
+                result += `\n✅ *User Dihapus*\n`
                 result += `> Username: \`${userInfo.username}\`\n`
                 result += `> ID: \`${userId}\``
             } catch (userErr) {

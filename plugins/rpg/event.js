@@ -38,9 +38,9 @@ async function handler(m, { sock, config: botConfig, db }) {
       claraWrap("Event", [`◦ Active: *${active.length} event*`,
         "◦ Next Reset: *Senin 00:00*"].join("\n")) +
       "\n\n" +
-      claraWrap("ᴅᴀꜰᴛᴀʀ ᴇᴠᴇɴᴛ", active.map((e) => `◦ ${e.title} - ${e.reward} (${e.end})`)) +
+      claraWrap("Daftar Event", active.map((e) => `◦ ${e.title} - ${e.reward} (${e.end})`)) +
       "\n\n" +
-      claraWrap("ᴇɴᴅᴇᴅ", ended.map((e) => `◦ ${e.title} - ${e.status}`)) +
+      claraWrap("Ended", ended.map((e) => `◦ ${e.title} - ${e.status}`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

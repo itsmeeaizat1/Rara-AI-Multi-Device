@@ -14,7 +14,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (!m.quoted) {
-        return m.reply('⭐ *sᴛᴀʀ ᴍᴇssᴀɢᴇ*\n\n' +
+        return m.reply('⭐ *sTar Message*\n\n' +
             '> `.star` (reply pesan) — Beri bintang\n' +
             '> `.star hapus` (reply pesan) — Hapus bintang')
     }

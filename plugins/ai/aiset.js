@@ -58,8 +58,8 @@ async function handler(m, { sock, config: botConfig }) {
           `◦ Provider: *${aiHelpConfig.provider || "openai"}*`,
           `◦ Model: *${aiHelpConfig.model || "gpt-4o-mini"}*`,
           `◦ Endpoint: *${aiHelpConfig.apiEndpoint || "https://api.openai.com/v1/chat/completions"}*`].join("\n")) +
-        claraWrap("ᴘʀᴏᴠɪᴅᴇʀ", buildProviderList(prefix)) +
-        claraWrap("ᴘᴀᴋᴀɪ", [`◦ *${prefix}aiset list* — lihat pengaturan AI`, `◦ *${prefix}aiset provider <nama>* — lihat provider`, `◦ *${prefix}aiset on/off* — owner toggle AI Help`, `◦ *${prefix}aiset mode offline/online* — owner ganti mode`].join("\n")) +
+        claraWrap("Provider", buildProviderList(prefix)) +
+        claraWrap("Pakai", [`◦ *${prefix}aiset list* — lihat pengaturan AI`, `◦ *${prefix}aiset provider <nama>* — lihat provider`, `◦ *${prefix}aiset on/off* — owner toggle AI Help`, `◦ *${prefix}aiset mode offline/online* — owner ganti mode`].join("\n")) +
         
         "\n" ;
 

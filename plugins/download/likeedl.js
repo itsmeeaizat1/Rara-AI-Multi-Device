@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     
     if (!url) {
         return m.reply(
-            `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+            `⚠️ *Cara Pakai*\n\n` +
             `> \`${m.prefix}lkdl <url>\`\n\n` +
             `> Contoh:\n` +
             `> \`${m.prefix}lkdl https://likee.video/@xxx\``

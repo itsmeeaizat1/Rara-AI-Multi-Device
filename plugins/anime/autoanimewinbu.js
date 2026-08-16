@@ -46,7 +46,7 @@ async function handler(m, { sock, args }) {
             saveState({ ...state, enabled: true })
 
             return sock.sendMessage(m.chat, {
-                text: `✅ *ᴀᴜᴛᴏ ᴀɴɪᴍᴇ sᴛᴀʀᴛᴇᴅ*\n\n` +
+                text: `✅ *Auto Anime sTarted*\n\n` +
                     `> 📲 Grup target: *${groups.length}*\n` +
                     `> ⏱️ Interval: *${interval} menit*\n` +
                     `> 🎞️ Filter: *Pixeldrain 720p+*\n` +
@@ -97,7 +97,7 @@ async function handler(m, { sock, args }) {
             const running = isRunning()
             const groups = state.groups || []
 
-            let txt = `📊 *ᴀᴜᴛᴏ ᴀɴɪᴍᴇ sᴛᴀᴛᴜs*\n\n`
+            let txt = `📊 *Auto Anime sTatus*\n\n`
             txt += `> 🔄 Status: *${running ? '🟢 ON' : '🔴 OFF'}*\n`
             txt += `> 💾 Auto-start: *${state.enabled ? 'Ya' : 'Tidak'}*\n`
             txt += `> 📋 Sudah terkirim: *${sent.size}* episode\n`
@@ -134,7 +134,7 @@ async function handler(m, { sock, args }) {
                 const list = await getOngoingAnimeList()
                 if (list.length === 0) return m.reply(claraWrap("Autoanimewinbu", '❌ Tidak ada anime ditemukan'))
 
-                let txt = `📺 *ᴅᴀꜰᴛᴀʀ ᴀɴɪᴍᴇ ᴛᴇʀʙᴀʀᴜ*\n\n`
+                let txt = `📺 *Daftar Anime Terbaru*\n\n`
                 txt += `> Total: *${list.length}* anime\n\n`
                 list.slice(0, 15).forEach((a, i) => {
                     txt += `*${i + 1}.* ${a.title}\n`
@@ -219,9 +219,9 @@ async function handler(m, { sock, args }) {
         default: {
             const running = isRunning()
             return sock.sendMessage(m.chat, {
-                text: `🎬 *ᴀᴜᴛᴏ ᴀɴɪᴍᴇ ᴡɪɴʙᴜ*\n\n` +
+                text: `🎬 *Auto Anime Winbu*\n\n` +
                     `> Status: *${running ? '🟢 ON' : '🔴 OFF'}*\n\n` +
-                    `*ᴄᴏᴍᴍᴀɴᴅs:*\n` +
+                    `*Commands:*\n` +
                     `> \`${m.prefix}aaw start\` — Mulai auto-check\n` +
                     `> \`${m.prefix}aaw stop\` — Hentikan\n` +
                     `> \`${m.prefix}aaw status\` — Lihat status\n` +

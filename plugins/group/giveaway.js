@@ -218,13 +218,13 @@ async function createGiveaway(session, sock, m) {
 
   const giveawayText =
     "🎉 *G I V E A W A Y*\n\n" +
-    `╭┈┈⬡「 📋 *ɪɴꜰᴏ* 」\n` +
-    `┃ 🎁 ᴛɪᴛʟᴇ: *${giveaway.title}*\n` +
-    `┃ 🏆 ʜᴀᴅɪᴀʜ: *${giveaway.prizeName}*\n` +
-    `┃ 👥 ᴘᴇᴍᴇɴᴀɴɢ: ${giveaway.winners}\n` +
-    `┃ ⏰ ʙᴇʀᴀᴋʜɪʀ: ${endTimeFormatted}\n` +
-    `┃ ⏱️ ᴅᴜʀᴀsɪ: ${remaining}\n` +
-    `┃ 🆔 ɪᴅ: \`${giveawayId}\`\n` +
+    `╭┈┈⬡「 📋 *Info* 」\n` +
+    `┃ 🎁 Title: *${giveaway.title}*\n` +
+    `┃ 🏆 Hadiah: *${giveaway.prizeName}*\n` +
+    `┃ 👥 Pemenang: ${giveaway.winners}\n` +
+    `┃ ⏰ Berakhir: ${endTimeFormatted}\n` +
+    `┃ ⏱️ Durasi: ${remaining}\n` +
+    `┃ 🆔 Id: \`${giveawayId}\`\n` +
     `╰┈┈⬡\n\n` +
     `> Klik tombol *Join* untuk ikut giveaway!`;
 
@@ -285,9 +285,9 @@ async function endGiveaway(giveawayId, sock, db) {
       text:
         `😔 *GIVEAWAY BERAKHIR*\n\n` +
         `Giveaway *${giveaway.title}* berakhir tanpa peserta.\n\n` +
-        `╭┈┈⬡「 📋 *ɪɴꜰᴏ* 」\n` +
-        `┃ 🆔 ɪᴅ: \`${giveawayId}\`\n` +
-        `┃ 👥 ᴘᴇsᴇʀᴛᴀ: 0\n` +
+        `╭┈┈⬡「 📋 *Info* 」\n` +
+        `┃ 🆔 Id: \`${giveawayId}\`\n` +
+        `┃ 👥 Peserta: 0\n` +
         `╰┈┈⬡`,
       contextInfo: getCtx(),
     });
@@ -321,14 +321,14 @@ async function endGiveaway(giveawayId, sock, db) {
     {
       text:
         `🎊 *GIVEAWAY BERAKHIR!*\n\n` +
-        `╭┈┈⬡「 🏆 *ᴘᴇᴍᴇɴᴀɴɢ* 」\n` +
+        `╭┈┈⬡「 🏆 *Pemenang* 」\n` +
         `${winnerText}\n` +
         `╰┈┈⬡\n\n` +
-        `╭┈┈⬡「 📋 *ɪɴꜰᴏ* 」\n` +
-        `┃ 🎁 ᴛɪᴛʟᴇ: *${giveaway.title}*\n` +
-        `┃ 🏆 ʜᴀᴅɪᴀʜ: *${giveaway.prizeName}*\n` +
-        `┃ 🆔 ɪᴅ: \`${giveawayId}\`\n` +
-        `┃ 👥 ᴘᴇsᴇʀᴛᴀ: ${giveaway.participants.length}\n` +
+        `╭┈┈⬡「 📋 *Info* 」\n` +
+        `┃ 🎁 Title: *${giveaway.title}*\n` +
+        `┃ 🏆 Hadiah: *${giveaway.prizeName}*\n` +
+        `┃ 🆔 Id: \`${giveawayId}\`\n` +
+        `┃ 👥 Peserta: ${giveaway.participants.length}\n` +
         `╰┈┈⬡\n\n` +
         `> Hadiah dikirim ke private chat pemenang!`,
       contextInfo: { ...getCtx(), mentionedJid: giveaway.winnerList },
@@ -355,14 +355,14 @@ async function endGiveaway(giveawayId, sock, db) {
         winnerJid,
         {
           text:
-            `🎉 *sᴇʟᴀᴍᴀᴛ!*\n\n` +
+            `🎉 *sElamat!*\n\n` +
             `> Kamu memenangkan giveaway!\n\n` +
-            `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-            `┃ 🎁 ᴛɪᴛʟᴇ: \`${giveaway.title}\`\n` +
-            `┃ 🏆 ʜᴀᴅɪᴀʜ: *${giveaway.prizeName}*\n` +
-            `┃ 🆔 ɪᴅ: \`${giveawayId}\`\n` +
+            `╭┈┈⬡「 📋 *Detail* 」\n` +
+            `┃ 🎁 Title: \`${giveaway.title}\`\n` +
+            `┃ 🏆 Hadiah: *${giveaway.prizeName}*\n` +
+            `┃ 🆔 Id: \`${giveawayId}\`\n` +
             `╰┈┈⬡\n\n` +
-            `╭┈┈⬡「 🎁 *ᴅᴇᴛᴀɪʟ ʜᴀᴅɪᴀʜ* 」\n` +
+            `╭┈┈⬡「 🎁 *Detail Hadiah* 」\n` +
             `${giveaway.prizeDetails || "Hubungi admin untuk detail"}\n` +
             `╰┈┈⬡\n\n` +
             `> _Ini informasi resmi dari bot._`,
@@ -557,13 +557,13 @@ async function handler(m, { sock }) {
     await sock.sendMessage(giveaway.chatId, {
       text:
         `🔄 *GIVEAWAY REROLL!*\n\n` +
-        `╭┈┈⬡「 🏆 *ᴘᴇᴍᴇɴᴀɴɢ ʙᴀʀᴜ* 」\n` +
+        `╭┈┈⬡「 🏆 *Pemenang Baru* 」\n` +
         `${winnerText}\n` +
         `╰┈┈⬡\n\n` +
-        `╭┈┈⬡「 📋 *ɪɴꜰᴏ* 」\n` +
-        `┃ 🎁 ᴛɪᴛʟᴇ: *${giveaway.title}*\n` +
-        `┃ 🏆 ʜᴀᴅɪᴀʜ: *${giveaway.prizeName}*\n` +
-        `┃ 🆔 ɪᴅ: \`${giveawayId}\`\n` +
+        `╭┈┈⬡「 📋 *Info* 」\n` +
+        `┃ 🎁 Title: *${giveaway.title}*\n` +
+        `┃ 🏆 Hadiah: *${giveaway.prizeName}*\n` +
+        `┃ 🆔 Id: \`${giveawayId}\`\n` +
         `╰┈┈⬡`,
       contextInfo: { ...getCtx(), mentionedJid: giveaway.winnerList },
     });
@@ -574,14 +574,14 @@ async function handler(m, { sock }) {
         ctx.mentionedJid = [winnerJid];
         await sock.sendMessage(winnerJid, {
           text:
-            `🎉 *sᴇʟᴀᴍᴀᴛ!*\n\n` +
+            `🎉 *sElamat!*\n\n` +
             `> Kamu memenangkan giveaway (reroll)!\n\n` +
-            `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-            `┃ 🎁 ᴛɪᴛʟᴇ: \`${giveaway.title}\`\n` +
-            `┃ 🏆 ʜᴀᴅɪᴀʜ: *${giveaway.prizeName}*\n` +
-            `┃ 🆔 ɪᴅ: \`${giveawayId}\`\n` +
+            `╭┈┈⬡「 📋 *Detail* 」\n` +
+            `┃ 🎁 Title: \`${giveaway.title}\`\n` +
+            `┃ 🏆 Hadiah: *${giveaway.prizeName}*\n` +
+            `┃ 🆔 Id: \`${giveawayId}\`\n` +
             `╰┈┈⬡\n\n` +
-            `╭┈┈⬡「 🎁 *ᴅᴇᴛᴀɪʟ ʜᴀᴅɪᴀʜ* 」\n` +
+            `╭┈┈⬡「 🎁 *Detail Hadiah* 」\n` +
             `${giveaway.prizeDetails || "Hubungi admin untuk detail"}\n` +
             `╰┈┈⬡\n\n` +
             `> _Ini informasi resmi dari bot._`,

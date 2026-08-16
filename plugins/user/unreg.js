@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     m.chat,
     {
       text:
-        `✅ *ᴜɴʀᴇɢɪsᴛᴇʀ ʙᴇʀʜᴀsɪʟ!*\n\n` +
+        `✅ *Unregister Berhasil!*\n\n` +
         `Data pendaftaran kamu sudah dihapus.\n\n` +
         `> Untuk daftar ulang: \`${m.prefix}daftar\``,
       contextInfo: {
