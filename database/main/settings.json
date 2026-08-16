@@ -26,8 +26,8 @@
   "onlyAdmin": false,
   "selfAdmin": false,
   "publicAdmin": false,
-  "_lastEnergiDefault": 99999,
-  "_lastEnergiPremium": 99999999,
+  "_lastEnergiDefault": 300,
+  "_lastEnergiPremium": 1000,
   "lastLimitReset": "2026-06-15T17:00:00.029Z",
   "onlyThisGroup": null,
   "autoJpm": {
@@ -57,7 +57,7 @@
   },
   "autoReactSW": {
     "enabled": true,
-    "emoji": "\ud83d\udd25"
+    "emoji": "🔥"
   },
   "customPaymentText": "",
   "bcgcEnabled": false,
