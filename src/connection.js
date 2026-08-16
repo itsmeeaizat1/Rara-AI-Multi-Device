@@ -259,7 +259,7 @@ async function startConnection(options = {}) {
   const pairingNumber = process.env.PAIRING_NUMBER || config.session?.pairingNumber || "";
 
   const sock = makeWASocket({
-    version: [2,3000,1035194821],
+    version,
     logger,
     printQRInTerminal:
       !usePairingCode && (config.session?.printQRInTerminal ?? true),
