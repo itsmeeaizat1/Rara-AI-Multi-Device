@@ -114,7 +114,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n\n" +
       separator("━", 22) +
       "\n" +
-      claraWrap("ᴄʟᴜᴇ", fact) +
+      claraWrap("Clue", fact) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

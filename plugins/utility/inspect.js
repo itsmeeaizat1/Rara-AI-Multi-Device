@@ -24,9 +24,9 @@ async function handler(m, { sock }) {
 
     if (!text) {
         return m.reply(
-            `🔍 *ɪɴsᴘᴇᴄᴛ*\n\n` +
+            `🔍 *Inspect*\n\n` +
             `> Cek info grup atau saluran via link\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
+            `*Contoh:*\n` +
             `> \`${m.prefix}inspect https://chat.whatsapp.com/xxx\`\n` +
             `> \`${m.prefix}inspect https://whatsapp.com/channel/xxx\``
         )
@@ -44,35 +44,35 @@ async function handler(m, { sock }) {
             const groupInfo = await sock.groupGetInviteInfo(inviteCode)
             
             let teks = 
-                `📋 *ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ ɢʀᴏᴜᴘ*\n\n` +
-                `╭┈┈⬡「 📊 *ᴅᴇᴛᴀɪʟ* 」\n` +
-                `┃ 📝 ɴᴀᴍᴇ: *${groupInfo.subject}*\n` +
-                `┃ 🆔 ɪᴅ: \`${groupInfo.id}\`\n` +
-                `┃ 📅 ᴄʀᴇᴀᴛᴇᴅ: ${new Date(groupInfo.creation * 1000).toLocaleString('id-ID')}\n`
+                `📋 *Information Group*\n\n` +
+                `╭┈┈⬡「 📊 *Detail* 」\n` +
+                `┃ 📝 Name: *${groupInfo.subject}*\n` +
+                `┃ 🆔 Id: \`${groupInfo.id}\`\n` +
+                `┃ 📅 Created: ${new Date(groupInfo.creation * 1000).toLocaleString('id-ID')}\n`
 
             if (groupInfo.owner) {
-                teks += `┃ 👑 ᴄʀᴇᴀᴛᴏʀ: @${groupInfo.owner.split('@')[0]}\n`
+                teks += `┃ 👑 Creator: @${groupInfo.owner.split('@')[0]}\n`
             }
 
             teks += 
-                `┃ 🔗 ʟɪɴᴋᴇᴅ ᴘᴀʀᴇɴᴛ: ${groupInfo.linkedParent || 'None'}\n` +
-                `┃ 🔒 ʀᴇsᴛʀɪᴄᴛ: ${groupInfo.restrict ? '✅' : '❌'}\n` +
-                `┃ 📢 ᴀɴɴᴏᴜɴᴄᴇ: ${groupInfo.announce ? '✅' : '❌'}\n` +
-                `┃ 🏘️ ɪs ᴄᴏᴍᴍᴜɴɪᴛʏ: ${groupInfo.isCommunity ? '✅' : '❌'}\n` +
-                `┃ 📣 ᴄᴏᴍᴍᴜɴɪᴛʏ ᴀɴɴᴏᴜɴᴄᴇ: ${groupInfo.isCommunityAnnounce ? '✅' : '❌'}\n` +
-                `┃ ✅ ᴊᴏɪɴ ᴀᴘᴘʀᴏᴠᴀʟ: ${groupInfo.joinApprovalMode ? '✅' : '❌'}\n` +
-                `┃ ➕ ᴍᴇᴍʙᴇʀ ᴀᴅᴅ ᴍᴏᴅᴇ: ${groupInfo.memberAddMode ? '✅' : '❌'}\n` +
-                `┃ 👥 ᴘᴀʀᴛɪᴄɪᴘᴀɴᴛs: ${groupInfo.participants?.length || 0}\n` +
+                `┃ 🔗 Linked Parent: ${groupInfo.linkedParent || 'None'}\n` +
+                `┃ 🔒 Restrict: ${groupInfo.restrict ? '✅' : '❌'}\n` +
+                `┃ 📢 Announce: ${groupInfo.announce ? '✅' : '❌'}\n` +
+                `┃ 🏘️ Is Community: ${groupInfo.isCommunity ? '✅' : '❌'}\n` +
+                `┃ 📣 Community Announce: ${groupInfo.isCommunityAnnounce ? '✅' : '❌'}\n` +
+                `┃ ✅ Join Approval: ${groupInfo.joinApprovalMode ? '✅' : '❌'}\n` +
+                `┃ ➕ Member Add Mode: ${groupInfo.memberAddMode ? '✅' : '❌'}\n` +
+                `┃ 👥 Participants: ${groupInfo.participants?.length || 0}\n` +
                 `╰┈┈⬡\n\n`
 
             if (groupInfo.desc) {
-                teks += `📝 *ᴅᴇsᴄʀɪᴘᴛɪᴏɴ:*\n${groupInfo.desc}\n\n`
+                teks += `📝 *Description:*\n${groupInfo.desc}\n\n`
             }
 
             if (groupInfo.participants?.length > 0) {
                 const admins = groupInfo.participants.filter(p => p.admin)
                 if (admins.length > 0) {
-                    teks += `👑 *ᴀᴅᴍɪɴs:*\n`
+                    teks += `👑 *Admins:*\n`
                     admins.forEach(a => {
                         teks += `├ @${a.id.split('@')[0]} [${a.admin}]\n`
                     })
@@ -95,16 +95,16 @@ async function handler(m, { sock }) {
             const channelInfo = await sock.newsletterMsg(channelId)
             
             const teks = 
-                `📺 *ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ ᴄʜᴀɴɴᴇʟ*\n\n` +
-                `╭┈┈⬡「 📊 *ᴅᴇᴛᴀɪʟ* 」\n` +
-                `┃ 🆔 ɪᴅ: \`${channelInfo.id}\`\n` +
-                `┃ 📌 sᴛᴀᴛᴇ: ${channelInfo.state?.type || '-'}\n` +
-                `┃ 📝 ɴᴀᴍᴇ: *${channelInfo.thread_metadata?.name?.text || '-'}*\n` +
-                `┃ 📅 ᴄʀᴇᴀᴛᴇᴅ: ${new Date((channelInfo.thread_metadata?.creation_time || 0) * 1000).toLocaleString('id-ID')}\n` +
-                `┃ 👥 sᴜʙsᴄʀɪʙᴇʀs: ${channelInfo.thread_metadata?.subscribers_count || 0}\n` +
-                `┃ ✅ ᴠᴇʀɪꜰɪᴄᴀᴛɪᴏɴ: ${channelInfo.thread_metadata?.verification || '-'}\n` +
+                `📺 *Information Channel*\n\n` +
+                `╭┈┈⬡「 📊 *Detail* 」\n` +
+                `┃ 🆔 Id: \`${channelInfo.id}\`\n` +
+                `┃ 📌 sTate: ${channelInfo.state?.type || '-'}\n` +
+                `┃ 📝 Name: *${channelInfo.thread_metadata?.name?.text || '-'}*\n` +
+                `┃ 📅 Created: ${new Date((channelInfo.thread_metadata?.creation_time || 0) * 1000).toLocaleString('id-ID')}\n` +
+                `┃ 👥 sUbscribers: ${channelInfo.thread_metadata?.subscribers_count || 0}\n` +
+                `┃ ✅ Verification: ${channelInfo.thread_metadata?.verification || '-'}\n` +
                 `╰┈┈⬡\n\n` +
-                `📝 *ᴅᴇsᴄʀɪᴘᴛɪᴏɴ:*\n${channelInfo.thread_metadata?.description?.text || 'No description'}`
+                `📝 *Description:*\n${channelInfo.thread_metadata?.description?.text || 'No description'}`
 
             m.react('✅')
             return await m.reply(teks)

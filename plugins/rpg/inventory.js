@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const text =
       claraWrap("Inventory", "🎒") +
       "\n\n" +
-      claraWrap("ɪꜱɪ ᴛᴀꜱ", items.map((item) => `◦ ${item.name}: *${item.qty} pcs*`)) +
+      claraWrap("IꜱI Taꜱ", items.map((item) => `◦ ${item.name}: *${item.qty} pcs*`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

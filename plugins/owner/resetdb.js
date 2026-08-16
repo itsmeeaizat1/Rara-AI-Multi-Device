@@ -34,13 +34,13 @@ async function handler(m, { sock }) {
     if (confirm !== 'confirm') {
         global.resetDbPending[m.sender] = Date.now()
         
-        return m.reply(claraWrap("resetdb", `⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ!*\n\n` +
+        return m.reply(claraWrap("resetdb", `⚠️ *Peringatan!*\n\n` +
             `> Ini akan menghapus SEMUA data:\n` +
             `> • Data user\n` +
             `> • Data group\n` +
             `> • Data clan\n` +
             `> • Semua statistik\n\n` +
-            `╭┈┈⬡「 ⚠️ *ᴋᴏɴғɪʀᴍᴀsɪ* 」\n` +
+            `╭┈┈⬡「 ⚠️ *KonғIrmasi* 」\n` +
             `┃ Ketik: *.resetdb confirm*\n` +
             `┃ dalam 60 detik\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
@@ -86,8 +86,8 @@ async function handler(m, { sock }) {
         
         await db.save()
         
-        await m.reply(`✅ *ᴅᴀᴛᴀʙᴀsᴇ ᴅɪʀᴇsᴇᴛ!*\n\n` +
-            `╭┈┈⬡「 📊 *ᴅᴀᴛᴀ ᴅɪʜᴀᴘᴜs* 」\n` +
+        await m.reply(`✅ *Database Direset!*\n\n` +
+            `╭┈┈⬡「 📊 *Data Dihapus* 」\n` +
             `┃ 👤 Users: ${userCount}\n` +
             `┃ 👥 Groups: ${groupCount}\n` +
             `┃ ⚔️ Clans: ${clanCount}\n` +

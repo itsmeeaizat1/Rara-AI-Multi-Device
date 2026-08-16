@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const text =
       claraWrap("Quest", "📜") +
       "\n\n" +
-      claraWrap("ᴍɪꜱɪ", quests.map((q) => `◦ ${q.title}\n  Reward: *${q.reward}*\n  Progress: *${q.progress}*`)) +
+      claraWrap("MiꜱI", quests.map((q) => `◦ ${q.title}\n  Reward: *${q.reward}*\n  Progress: *${q.progress}*`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

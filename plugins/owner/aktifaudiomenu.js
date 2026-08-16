@@ -25,7 +25,7 @@ async function handler(m, { sock, db }) {
     const current = db.setting('audioMenu') !== false
 
     if (!option) {
-        return sendReplyWithNav(sock, m, `🔊 *ᴀᴜᴅɪᴏ ᴍᴇɴᴜ sᴇᴛᴛɪɴɢ*\n\n` +
+        return sendReplyWithNav(sock, m, `🔊 *Audio Menu sEtting*\n\n` +
             `> Status: *${current ? '✅ Aktif' : '❌ Nonaktif'}*\n\n` +
             `*Cara pakai:*\n` +
             `> \`${m.prefix}aktifaudiomenu ya\` - Aktifkan audio\n` +

@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     
     if (!arg) {
         const status = current ? '✅ Aktif' : '❌ Nonaktif'
-        return sendReplyWithNav(sock, m, `🖼️ *ᴀᴜᴛᴏsᴛɪᴄᴋᴇʀ*\n\n` +
+        return sendReplyWithNav(sock, m, `🖼️ *Autosticker*\n\n` +
             `> Status: ${status}\n\n` +
             `> Gunakan:\n` +
             `> \`${m.prefix}autosticker on\` - aktifkan\n` +
@@ -40,20 +40,20 @@ async function handler(m, { sock }) {
     
     if (arg === 'on' || arg === '1' || arg === 'aktif') {
         if (current) {
-            return m.reply(claraWrap("Autosticker", `🖼️ *ᴀᴜᴛᴏsᴛɪᴄᴋᴇʀ*\n\n> Sudah aktif!`))
+            return m.reply(claraWrap("Autosticker", `🖼️ *Autosticker*\n\n> Sudah aktif!`))
         }
         db.setGroup(m.chat, { autosticker: true })
         await db.save()
-        return m.reply(claraWrap("Autosticker", `🖼️ *ᴀᴜᴛᴏsᴛɪᴄᴋᴇʀ*\n\n> ✅ Berhasil diaktifkan!\n> Gambar/video akan otomatis jadi sticker`))
+        return m.reply(claraWrap("Autosticker", `🖼️ *Autosticker*\n\n> ✅ Berhasil diaktifkan!\n> Gambar/video akan otomatis jadi sticker`))
     }
     
     if (arg === 'off' || arg === '0' || arg === 'nonaktif') {
         if (!current) {
-            return m.reply(claraWrap("Autosticker", `🖼️ *ᴀᴜᴛᴏsᴛɪᴄᴋᴇʀ*\n\n> Sudah nonaktif!`))
+            return m.reply(claraWrap("Autosticker", `🖼️ *Autosticker*\n\n> Sudah nonaktif!`))
         }
         db.setGroup(m.chat, { autosticker: false })
         await db.save()
-        { const __navText = `🖼️ *ᴀᴜᴛᴏsᴛɪᴄᴋᴇʀ*\n\n> ❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
+        { const __navText = `🖼️ *Autosticker*\n\n> ❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
     }
     
     return m.reply(`❌ Gunakan: \`${m.prefix}autosticker on/off\``)

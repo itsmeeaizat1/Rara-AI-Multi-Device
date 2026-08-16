@@ -74,7 +74,7 @@ async function checkAfk(m, sock) {
             const mentionedAfk = getAfkUser(mentioned)
             if (mentionedAfk) {
                 const duration = formatDuration(Date.now() - mentionedAfk.time)
-                await m.reply(claraWrap("ᴜsᴇʀ ᴀꜰᴋ", `💤 *ᴜsᴇʀ ᴀꜰᴋ*\n\n` +
+                await m.reply(claraWrap("User Afk", `💤 *User Afk*\n\n` +
                         `\`\`\`Hustt, jangan di ganggu!\`\`\` \`@${mentioned.split('@')[0]}\` lagi AFK\n` +
                         `🍀 \`Alasan:\` *${mentionedAfk.reason}*\n` +
                         `🍀 \`Sejak:\` *${duration} yang lalu*`))

@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     
     if (!username) {
         return m.reply(
-            `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+            `⚠️ *Cara Pakai*\n\n` +
             `> \`${m.prefix}githubdl <user> <repo> <branch>\`\n\n` +
             `> Contoh:\n` +
             `> \`${m.prefix}githubdl niceplugin NiceBot main\`\n` +
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     }
     
     if (!repo) {
-        { const __navText = claraWrap("ʀᴇᴘᴏ ᴅɪʙᴜᴛᴜʜᴋᴀɴ", `❌ *ʀᴇᴘᴏ ᴅɪʙᴜᴛᴜʜᴋᴀɴ*\n\n> Masukkan nama repository`); return await sendReplyWithNav(sock, m, __navText, "githubdl"); }
+        { const __navText = claraWrap("Repo Dibutuhkan", `❌ *Repo Dibutuhkan*\n\n> Masukkan nama repository`); return await sendReplyWithNav(sock, m, __navText, "githubdl"); }
     }
     
     await m.react('🕐')
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
         const repoInfo = await fetch(`https://api.github.com/repos/${username}/${repo}`)
         
         if (!repoInfo.ok) {
-            return m.reply(`❌ *ʀᴇᴘᴏ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n> \`${username}/${repo}\` tidak ada`)
+            return m.reply(`❌ *Repo Tidak Ditemukan*\n\n> \`${username}/${repo}\` tidak ada`)
         }
         
         const repoData = await repoInfo.json()
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
         
         const checkRes = await fetch(zipUrl, { method: 'HEAD' })
         if (!checkRes.ok) {
-            return m.reply(`❌ *ʙʀᴀɴᴄʜ ᴛɪᴅᴀᴋ ᴀᴅᴀ*\n\n> Branch \`${branch}\` tidak ditemukan\n> Default: \`${defaultBranch}\``)
+            return m.reply(`❌ *Branch Tidak Ada*\n\n> Branch \`${branch}\` tidak ditemukan\n> Default: \`${defaultBranch}\``)
         }
         
         await sock.sendMedia(m.chat, zipUrl, null, m, {

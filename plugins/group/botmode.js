@@ -115,12 +115,12 @@ function handler(m, { sock }) {
         extraInfo = `\n\n📋 *Manual mode*\n` +
             `> Admin perlu confirm order manual\n` +
             `> Product: \`${products.length}\` item\n\n` +
-            `*ᴘᴀɴᴅᴜᴀɴ:*\n` +
+            `*Panduan:*\n` +
             `> \`${m.prefix}addprod <kode> <harga> <nama>\`\n` +
             `> \`${m.prefix}listprod\` - Lihat produk`
     }
 
-    return m.reply(claraWrap("ᴍᴏᴅᴇ ᴅɪᴜʙᴀʜ", `✅ *ᴍᴏᴅᴇ ᴅɪᴜʙᴀʜ*\n\n` +
+    return m.reply(claraWrap("Mode Diubah", `✅ *Mode Diubah*\n\n` +
         `> Mode: *${mode.toUpperCase()}* (${MODES[mode].name})\n` +
         `> Grup: *${m.chat.split('@')[0]}*\n` +
         extraInfo +

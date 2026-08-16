@@ -22,7 +22,7 @@ if (!global.absensi) global.absensi = {}
 async function handler(m, { sock }) {
     const chatId = m.chat
     if (!global.absensi[chatId]) {
-        return m.reply(claraWrap("ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴀʙsᴇɴ", `❌ *ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴀʙsᴇɴ*\n\n` +
+        return m.reply(claraWrap("Tidak Ada Absen", `❌ *Tidak Ada Absen*\n\n` +
             `> Belum ada sesi absen di grup ini!\n\n` +
             `> Admin dapat memulai dengan\n` +
             `> *.mulaiabsen [keterangan]*`))
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
             `╭┈┈⬡「 📋 INFO LAIN 」\n` +
             `┃ 📅 ${dateStr}\n` +
             `┃ 👥 Total: ${absen.peserta.length}\n` +
-            `├┈┈⬡「 📝 *ᴅᴀғᴛᴀʀ ʜᴀᴅɪʀ* 」\n` +
+            `├┈┈⬡「 📝 *DaғTar Hadir* 」\n` +
             `${list}\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
             `> _Ketik *${m.prefix}absen* untuk hadir_\n` +

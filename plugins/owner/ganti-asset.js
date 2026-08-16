@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
         const isMedia = isImage || isVideo || isAudio || isDocument;
 
         if (!isMedia) {
-            return sendReplyWithNav(sock, m, `🖼️ *ɢᴀɴᴛɪ ᴀssᴇᴛ*\n\n> Silakan reply media (gambar/video/audio/document) dengan pesan \`${m.prefix}ganti-asset\``, "ganti-asset");
+            return sendReplyWithNav(sock, m, `🖼️ *Ganti Asset*\n\n> Silakan reply media (gambar/video/audio/document) dengan pesan \`${m.prefix}ganti-asset\``, "ganti-asset");
         }
 
         m.react('🕐');

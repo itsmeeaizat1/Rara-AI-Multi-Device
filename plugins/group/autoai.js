@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
     cfg.enableCommands = true;
     db.save();
     return m.reply(
-      `✅ *ᴇɴᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅ*
+      `✅ *Enable Command*
 
 ` +
         `> User sekarang bisa menggunakan command walau AutoAI aktif
@@ -175,7 +175,7 @@ async function handler(m, { sock }) {
     cfg.enableCommands = false;
     db.save();
     return m.reply(
-      `🔒 *ᴅɪsᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅ*
+      `🔒 *Disable Command*
 
 ` +
         `> Semua command (kecuali owner) diblokir saat AutoAI aktif
@@ -200,7 +200,7 @@ async function handler(m, { sock }) {
           )
           .join("\n")
       : "  ▸ (belum ada custom persona)";
-    let txt = `🤖 *ᴅᴀғᴛᴀʀ ᴘᴇʀsᴏɴᴀ*\n\n`;
+    let txt = `🤖 *DaғTar Persona*\n\n`;
     txt += `*Bawaan:*\n${builtIn}\n\n`;
     txt += `*Custom:*\n${custom}\n\n`;
     txt += `*Global:* ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}\n\n`;
@@ -276,8 +276,8 @@ async function handler(m, { sock }) {
       };
       db.save();
       return m.reply(
-        `🌐 *ᴀᴜᴛᴏ ᴀɪ ɢʟᴏʙᴀʟ ᴅɪᴀᴋᴛɪғᴋᴀɴ*\n\n` +
-          `╭┈┈⬡「 📋 *ɪɴғᴏ* 」\n` +
+        `🌐 *Auto Ai Global DiaktiғKan*\n\n` +
+          `╭┈┈⬡「 📋 *InғO* 」\n` +
           `┃ 🎭 Karakter: *${characterName}*\n` +
           `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n` +
           `╰┈┈┈┈┈┈┈┈⬡\n\n` +
@@ -289,7 +289,7 @@ async function handler(m, { sock }) {
       db.db.data.autoai_global.enabled = false;
       db.save();
       return m.reply(
-        `🌐 *ᴀᴜᴛᴏ ᴀɪ ɢʟᴏʙᴀʟ ᴅɪɴᴏɴᴀᴋᴛɪғᴋᴀɴ*\n\n> AutoAI hanya aktif di grup yang sudah di-set`,
+        `🌐 *Auto Ai Global DinonaktiғKan*\n\n> AutoAI hanya aktif di grup yang sudah di-set`,
       );
     }
   }
@@ -314,7 +314,7 @@ async function handler(m, { sock }) {
     const customList = customP.length
       ? customP.map(([k, v]) => `> ${k} - ${v.name} (custom)`).join("\n")
       : "";
-    let txt = `🤖 *ᴀᴜᴛᴏ ᴀɪ*\n\n`;
+    let txt = `🤖 *Auto Ai*\n\n`;
     txt += `> Mengaktifkan/menonaktifkan auto AI response\n\n`;
     txt += `*Penggunaan:*\n`;
     txt += `> .autoai on --novamode=<karakter|custom> --type=<text|voice> --mode=<onlychat|assistant>\n`;
@@ -348,7 +348,7 @@ async function handler(m, { sock }) {
       ? `\n\n> ℹ️ Global masih aktif, tapi grup ini opted-out\n> ℹ️ Ketik *.autoai global off* untuk matikan global`
       : "";
     return m.reply(
-      `🤖 *ᴀᴜᴛᴏ ᴀɪ ᴅɪɴᴏɴᴀᴋᴛɪғᴋᴀɴ*\n\n> Auto AI untuk grup ini telah dimatikan\n> Semua command kembali aktif${globalStatus}`,
+      `🤖 *Auto Ai DinonaktiғKan*\n\n> Auto AI untuk grup ini telah dimatikan\n> Semua command kembali aktif${globalStatus}`,
     );
   }
 
@@ -382,8 +382,8 @@ async function handler(m, { sock }) {
       activatedAt: new Date().toISOString(),
     };
     db.save();
-    let txt = `🤖 *ᴀᴜᴛᴏ ᴀɪ ᴅɪᴀᴋᴛɪғᴋᴀɴ*\n\n`;
-    txt += `╭┈┈⬡「 📋 *ɪɴғᴏ* 」\n`;
+    let txt = `🤖 *Auto Ai DiaktiғKan*\n\n`;
+    txt += `╭┈┈⬡「 📋 *InғO* 」\n`;
     txt += `┃ 🎭 Karakter: *Custom*\n`;
     txt += `┃ 🧠 Logic: ${customLogic.substring(0, 100)}${customLogic.length > 100 ? "..." : ""}\n`;
     txt += `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
@@ -412,8 +412,8 @@ async function handler(m, { sock }) {
       activatedAt: new Date().toISOString(),
     };
     db.save();
-    let txt = `🤖 *ᴀᴜᴛᴏ ᴀɪ ᴅɪᴀᴋᴛɪғᴋᴀɴ*\n\n`;
-    txt += `╭┈┈⬡「 📋 *ɪɴғᴏ* 」\n`;
+    let txt = `🤖 *Auto Ai DiaktiғKan*\n\n`;
+    txt += `╭┈┈⬡「 📋 *InғO* 」\n`;
     txt += `┃ 🎭 Karakter: *${customPersona.name}* (custom)\n`;
     txt += `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
     txt += `┃ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
@@ -451,8 +451,8 @@ async function handler(m, { sock }) {
   };
   db.save();
 
-  let txt = `🤖 *ᴀᴜᴛᴏ ᴀɪ ᴅɪᴀᴋᴛɪғᴋᴀɴ*\n\n`;
-  txt += `╭┈┈⬡「 📋 *ɪɴғᴏ* 」\n`;
+  let txt = `🤖 *Auto Ai DiaktiғKan*\n\n`;
+  txt += `╭┈┈⬡「 📋 *InғO* 」\n`;
   txt += `┃ 🎭 Karakter: *${characters[charKey].name}*\n`;
   txt += `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
   txt += `┃ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;

@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
 
   if (!user.rpg) user.rpg = {};
 
-  m.reply(claraWrap("Beg", "🙏 *sᴇᴅᴀɴɢ ᴍᴇɴɢᴇᴍɪs...*"));
+  m.reply(claraWrap("Beg", "🙏 *sEdang Mengemis...*"));
   await new Promise((r) => setTimeout(r, 2000));
 
   const responses = [
@@ -53,12 +53,12 @@ async function handler(m, { sock }) {
 
   let txt = "";
   if (result.success && result.money > 0) {
-    txt = `🙏 *ɴɢᴇᴍɪs sᴜᴋsᴇs*\n\n> ${result.msg}\n> 💰 Dapat: *+Rp ${result.money.toLocaleString("id-ID")}*`;
+    txt = `🙏 *Ngemis sUkses*\n\n> ${result.msg}\n> 💰 Dapat: *+Rp ${result.money.toLocaleString("id-ID")}*`;
     if (result.exp > 0) txt += `\n> 🚄 Exp: *+${result.exp}*`;
   } else if (result.money < 0) {
-    txt = `😭 *ɴɢᴇᴍɪs ɢᴀɢᴀʟ*\n\n> ${result.msg}\n> 💸 Lost: *Rp ${Math.abs(result.money).toLocaleString("id-ID")}*`;
+    txt = `😭 *Ngemis Gagal*\n\n> ${result.msg}\n> 💸 Lost: *Rp ${Math.abs(result.money).toLocaleString("id-ID")}*`;
   } else {
-    txt = `😢 *ɴɢᴇᴍɪs ɢᴀɢᴀʟ*\n\n> ${result.msg}`;
+    txt = `😢 *Ngemis Gagal*\n\n> ${result.msg}`;
   }
 
   await sendReplyWithNav(sock, m, txt, "beg");

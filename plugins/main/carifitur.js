@@ -142,8 +142,8 @@ async function loadAllPlugins() {
 async function handler(m, { sock }) {
   const keyword = m.text;
   if (!keyword) {
-    return sendReplyWithNav(sock, m, `🔍 *ᴄᴀʀɪ ꜰɪᴛᴜʀ*\n\n` +
-      `╭┈┈⬡「 📋 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
+    return sendReplyWithNav(sock, m, `🔍 *Cari Fitur*\n\n` +
+      `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
       `┃ \`${m.prefix}carifitur <keyword>\`\n` +
       `╰┈┈⬡\n\n` +
       `> Contoh:\n` +
@@ -201,12 +201,12 @@ async function handler(m, { sock }) {
     matches.sort((a, b) => b.score - a.score);
     if (matches.length === 0) {
       return m.reply(
-        `🔍 *ʜᴀsɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ*\n\n> Tidak ditemukan fitur dengan keyword \`${keyword}\``,
+        `🔍 *Hasil Pencarian*\n\n> Tidak ditemukan fitur dengan keyword \`${keyword}\``,
       );
     }
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
-    let text = `🔍 *ʜᴀsɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ: "${keyword}"*\n`;
+    let text = `🔍 *Hasil Pencarian: "${keyword}"*\n`;
     text += `> Ditemukan *${matches.length}* fitur\n`;
     text += `> Pilih salah satu command di bawah:\n\n`;
     const topMatches = matches.slice(0, 15);

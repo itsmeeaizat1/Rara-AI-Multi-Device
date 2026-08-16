@@ -794,7 +794,7 @@ async function startConnection(options = {}) {
                 config.bot?.support || config.bot?.developer || "owner";
               await sock.sendMessage(event.id, {
                 text:
-                  `⛔ *sᴇᴡᴀʙᴏᴛ*\n\n` +
+                  `⛔ *SewaBot*\n\n` +
                   `> Grup ini tidak terdaftar dalam sistem sewa.\n` +
                   `> Bot akan meninggalkan grup ini.\n\n` +
                   `_Hubungi ${ownerContact} untuk sewa bot._`,
@@ -827,11 +827,11 @@ async function startConnection(options = {}) {
             config.saluran?.name || config.bot?.name || "Nova-AI";
 
           const welcomeText =
-            `👋 *ʜᴀɪ, sᴀʟᴀᴍ ᴋᴇɴᴀʟ!*\n\n` +
+            `👋 *Hai, Salam Kenal!*\n\n` +
             `Aku *${config.bot?.name || "Nova-AI"}* 🤖\n\n` +
             `Terima kasih sudah mengundang aku ke *${groupName}*!\n` +
             `Aku diundang oleh ${inviterMention} ✨\n\n` +
-            `╭┈┈⬡「 📋 *ɪɴꜰᴏ* 」\n` +
+            `╭┈┈⬡「 📋 *Info* 」\n` +
             `┃ 🔧 Developer: *${config.bot?.developer || "Aizat"}*\n` +
             `┃ 📢 Prefix: \`${prefix}\`\n` +
             `┃ 📩 Support: ${config.bot?.support || "-"}\n` +
@@ -1215,7 +1215,7 @@ async function startConnection(options = {}) {
             await currentSock.sendMessage(
               jid,
               {
-                text: `❌ *ᴇᴠᴀʟ ᴇʀʀᴏʀ*\n\n\`\`\`\n${err.message}\n\`\`\``,
+                text: `❌ *Eval Error*\n\n\`\`\`\n${err.message}\n\`\`\``,
               },
               { quoted: msg },
             );
@@ -1238,7 +1238,7 @@ async function startConnection(options = {}) {
             await currentSock.sendMessage(
               jid,
               {
-                text: `🕕 *ᴇxᴇᴄᴜᴛɪɴɢ...*\n\n\`$ ${command}\``,
+                text: `🕕 *Executing...*\n\n\`$ ${command}\``,
               },
               { quoted: msg },
             );
@@ -1253,12 +1253,12 @@ async function startConnection(options = {}) {
             const output = stdout || stderr || "No output";
 
             await currentSock.sendMessage(jid, {
-              text: `✅ *ᴛᴇʀᴍɪɴᴀʟ*\n\n\`$ ${command}\`\n\n\`\`\`\n${output.slice(0, 3500)}\n\`\`\``,
+              text: `✅ *Terminal*\n\n\`$ ${command}\`\n\n\`\`\`\n${output.slice(0, 3500)}\n\`\`\``,
             });
           } catch (err) {
             const errorMsg = err.stderr || err.stdout || err.message;
             await currentSock.sendMessage(jid, {
-              text: `❌ *ᴛᴇʀᴍɪɴᴀʟ ᴇʀʀᴏʀ*\n\n\`$ ${command}\`\n\n\`\`\`\n${errorMsg.slice(0, 3500)}\n\`\`\``,
+              text: `❌ *Terminal Error*\n\n\`$ ${command}\`\n\n\`\`\`\n${errorMsg.slice(0, 3500)}\n\`\`\``,
             });
           }
           continue;

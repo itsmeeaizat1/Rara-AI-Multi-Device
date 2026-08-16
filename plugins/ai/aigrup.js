@@ -167,7 +167,7 @@ async function handler(m, { sock, config: botConfig }) {
           `◦ Probability: *${aigrup.probability}%*`,
           `◦ Proactive: *${aigrup.proactiveInterval || 60} menit*`,
           `◦ Grup aktif: *${enabledGroups.length}*`].join("\n")) +
-        claraWrap("ᴄᴏᴍᴍᴀɴᴅ", [`◦ *${prefix}aigrup openai <model> on* — set format+model, ON`, `◦ *${prefix}aigrup gemini <model> on* — set format+model, ON`, `◦ *${prefix}aigrup anthropic <model> on* — set format+model, ON`, `◦ *${prefix}aigrup openai on* — pakai format OpenAI, ON`, `◦ *${prefix}aigrup on* — pakai format saat ini, ON`, `◦ *${prefix}aigrup off* — matikan`, `◦ *${prefix}aigrup prob <0-100>* — atur probability respon`, `◦ *${prefix}aigrup spam on/off* — toggle proactive`, `◦ *${prefix}aigrup interval <menit>* — atur jeda ngomong`, `◦ *${prefix}aigrup model* — lihat semua model`, `◦ *${prefix}aigrup list* — lihat grup aktif`].join("\n")) +
+        claraWrap("Command", [`◦ *${prefix}aigrup openai <model> on* — set format+model, ON`, `◦ *${prefix}aigrup gemini <model> on* — set format+model, ON`, `◦ *${prefix}aigrup anthropic <model> on* — set format+model, ON`, `◦ *${prefix}aigrup openai on* — pakai format OpenAI, ON`, `◦ *${prefix}aigrup on* — pakai format saat ini, ON`, `◦ *${prefix}aigrup off* — matikan`, `◦ *${prefix}aigrup prob <0-100>* — atur probability respon`, `◦ *${prefix}aigrup spam on/off* — toggle proactive`, `◦ *${prefix}aigrup interval <menit>* — atur jeda ngomong`, `◦ *${prefix}aigrup model* — lihat semua model`, `◦ *${prefix}aigrup list* — lihat grup aktif`].join("\n")) +
         
         "\n" ;
       await m.reply(text);
@@ -419,7 +419,7 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
           "InclusionAI": "🤝", "Poolside": "🏖️", "Coding": "💻",
         };
         let text2 = "";
-        text2 += claraWrap(`${fmt.label.toUpperCase()} ꜰᴏʀᴍᴀᴛ`, [
+        text2 += claraWrap(`${fmt.label.toUpperCase()} Format`, [
           `◦ API Key: *${apiKey ? "Terpasang ✅" : "Belum ❌"}*`,
           `◦ Model saat ini: *${aigrup.format === fmtKey ? currentModel : fmt.defaultModel}*`,
           `◦ Semua model support format ini`,

@@ -25,24 +25,24 @@ async function handler(m, { sock, config: botConfig }) {
     const quoted = m.quoted
     
     if (!quoted) {
-        return sendReplyWithNav(sock, m, `🖼️ *sᴛɪᴄᴋᴇʀ ᴡᴀᴛᴇʀᴍᴀʀᴋ*\n\n` +
+        return sendReplyWithNav(sock, m, `🖼️ *sTicker Watermark*\n\n` +
             `> Reply sticker dengan caption:\n` +
             `> \`${m.prefix}swm packname\`\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
+            `*Contoh:*\n` +
             `> \`${m.prefix}swm Nova-AI\`\n` +
             `> \`${m.prefix}swm Nova-AI|LuckyArchz\` _(packname + author)_`, "swm")
     }
     
     const isSticker = quoted.type === 'stickerMessage' || quoted.isSticker
     if (!isSticker) {
-        return m.reply(claraWrap("Swm", `❌ *ɢᴀɢᴀʟ*\n\n> Reply pesan sticker, bukan ${quoted.type?.replace('Message', '') || 'media lain'}`))
+        return m.reply(claraWrap("Swm", `❌ *Gagal*\n\n> Reply pesan sticker, bukan ${quoted.type?.replace('Message', '') || 'media lain'}`))
     }
     
     const input = m.text?.trim()
     if (!input) {
-        return sendReplyWithNav(sock, m, `❌ *ɢᴀɢᴀʟ*\n\n` +
+        return sendReplyWithNav(sock, m, `❌ *Gagal*\n\n` +
             `> Masukkan packname\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
+            `*Contoh:*\n` +
             `> \`${m.prefix}swm Nova-AI\`\n` +
             `> \`${m.prefix}swm Nova-AI|LuckyArchz\` _(+ author)_`, "swm")
     }
@@ -64,7 +64,7 @@ async function handler(m, { sock, config: botConfig }) {
         const buffer = await quoted.download()
         
         if (!buffer || buffer.length === 0) {
-            return m.reply(claraWrap("Swm", `❌ *ɢᴀɢᴀʟ*\n\n> Gagal mendownload sticker`))
+            return m.reply(claraWrap("Swm", `❌ *Gagal*\n\n> Gagal mendownload sticker`))
         }
         
         const exifOpts = { packname, author, emojis: ['🤖'] }

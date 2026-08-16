@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     
     if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("delserver", `❌ *ᴀᴋsᴇs ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+        return m.reply(claraWrap("delserver", `❌ *Akses Ditolak*\n\n` +
             `> Kamu tidak punya akses ke *${serverLabel}*\n` +
             `> Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
     
     if (missingConfig.length > 0) {
         const available = getAvailableServers(pteroConfig)
-        let txt = `⚠️ *sᴇʀᴠᴇʀ ${serverLabel} ʙᴇʟᴜᴍ ᴋᴏɴꜰɪɢ*\n\n`
+        let txt = `⚠️ *sErver ${serverLabel} Belum Konfig*\n\n`
         if (available.length > 0) {
             txt += `> Server tersedia: *${available.join(', ')}*\n`
             txt += `> Contoh: \`${m.prefix}delserver${available[0]} serverid\``
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     
     if (!serverId || isNaN(serverId)) {
         const available = getAvailableServers(pteroConfig)
-        return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
             `> \`${m.prefix}${m.command} serverid\`\n\n` +
             `> Server tersedia: *${available.join(', ') || 'none'}*\n` +
             `> Lihat ID dengan \`${m.prefix}listserver${serverVersion}\``, "delserver")
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
             }
         })
         
-        return m.reply(`✅ *sᴇʀᴠᴇʀ ᴅɪʜᴀᴘᴜs*\n\n` +
+        return m.reply(`✅ *sErver Dihapus*\n\n` +
             `> Panel: *${serverLabel}*\n` +
             `> Server ID: \`${serverId}\`\n` +
             `> Nama: \`${server.name}\``)

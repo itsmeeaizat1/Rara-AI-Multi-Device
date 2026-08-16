@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]
     
     if (!username) {
-        { const __navText = `📦 *ɴᴘᴍ sᴛᴀʟᴋ*\n\n> Masukkan username NPM\n\n\`Contoh: ${m.prefix}npmstalk hanya_zann\``; return await sendReplyWithNav(sock, m, __navText, "npmstalk"); }
+        { const __navText = `📦 *Npm sTalk*\n\n> Masukkan username NPM\n\n\`Contoh: ${m.prefix}npmstalk hanya_zann\``; return await sendReplyWithNav(sock, m, __navText, "npmstalk"); }
     }
     
     m.react('🕐')
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
         const d = res.data.data
         const s = d.stats || {}
         
-        let caption = `📦 *ɴᴘᴍ sᴛᴀʟᴋ*\n\n` +
+        let caption = `📦 *Npm sTalk*\n\n` +
             `👤 *Username:* ${d.username}\n` +
             `📛 *Nama:* ${d.name || '-'}\n` +
             `📧 *Email:* ${d.email || '-'}\n\n` +

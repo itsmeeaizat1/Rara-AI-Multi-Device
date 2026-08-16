@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (!text) {
-        return sendReplyWithNav(sock, m, `🎭 *ᴇᴍᴏᴊɪ ᴍɪx*\n\n` +
+        return sendReplyWithNav(sock, m, `🎭 *Emoji Mix*\n\n` +
             `> Gabungkan 2 emoji menjadi 1\n\n` +
             `> Contoh: \`${m.prefix}emojimix 😂🔥\``, "emojimix")
     }

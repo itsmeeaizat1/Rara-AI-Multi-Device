@@ -452,7 +452,7 @@ async function handler(m, { sock }) {
       }
       m.react("✅");
       return m.reply(
-        `✅ *ɢᴏᴏᴅʙʏᴇ ɢʟᴏʙᴀʟ ᴏɴ*\n\n` +
+        `✅ *Goodbye Global On*\n\n` +
         `> Goodbye diaktifkan di *${count}* grup!`,
       );
     } catch (err) {
@@ -474,7 +474,7 @@ async function handler(m, { sock }) {
       }
       m.react("✅");
       return m.reply(
-        `❌ *ɢᴏᴏᴅʙʏᴇ ɢʟᴏʙᴀʟ ᴏꜰꜰ*\n\n` +
+        `❌ *Goodbye Global Off*\n\n` +
         `> Goodbye dinonaktifkan di *${count}* grup!`,
       );
     } catch (err) {
@@ -484,7 +484,7 @@ async function handler(m, { sock }) {
   if (sub === "on") {
     if (currentStatus) {
       return m.reply(
-        `⚠️ *ɢᴏᴏᴅʙʏᴇ ᴀʟʀᴇᴀᴅʏ ᴀᴄᴛɪᴠᴇ*\n\n` +
+        `⚠️ *Goodbye Already Active*\n\n` +
         `> Status: *✅ ON*\n` +
         `> Goodbye sudah aktif di grup ini.\n\n` +
         `_Gunakan \`${m.prefix}goodbye off\` untuk menonaktifkan._`,
@@ -492,7 +492,7 @@ async function handler(m, { sock }) {
     }
     db.setGroup(m.chat, { goodbye: true, leave: true });
     return m.reply(
-      `✅ *ɢᴏᴏᴅʙʏᴇ ᴀᴋᴛɪꜰ*\n\n` +
+      `✅ *Goodbye Aktif*\n\n` +
       `> Goodbye message berhasil diaktifkan!\n` +
       `> Member yang keluar akan diberi pesan.\n\n` +
       `_Gunakan \`${m.prefix}setgoodbye\` untuk custom pesan._`,
@@ -500,22 +500,22 @@ async function handler(m, { sock }) {
   }
   if (sub === "off") {
     if (!currentStatus) {
-      return sendReplyWithNav(sock, m, `⚠️ *ɢᴏᴏᴅʙʏᴇ ᴀʟʀᴇᴀᴅʏ ɪɴᴀᴄᴛɪᴠᴇ*\n\n` +
+      return sendReplyWithNav(sock, m, `⚠️ *Goodbye Already Inactive*\n\n` +
         `> Status: *❌ OFF*\n` +
         `> Goodbye sudah nonaktif di grup ini.\n\n` +
         `_Gunakan \`${m.prefix}goodbye on\` untuk mengaktifkan._`, "goodbye");
     }
     db.setGroup(m.chat, { goodbye: false, leave: false });
     return m.reply(
-      `❌ *ɢᴏᴏᴅʙʏᴇ ɴᴏɴᴀᴋᴛɪꜰ*\n\n` +
+      `❌ *Goodbye Nonaktif*\n\n` +
       `> Goodbye message berhasil dinonaktifkan.\n` +
       `> Member yang keluar tidak akan diberi pesan.`,
     );
   }
   m.reply(
-    `👋 *ɢᴏᴏᴅʙʏᴇ sᴇᴛᴛɪɴɢs*\n\n` +
+    `👋 *Goodbye sEttings*\n\n` +
     `> Status: *${currentStatus ? "✅ ON" : "❌ OFF"}*\n\n` +
-    `\`\`\`━━━ ᴘɪʟɪʜᴀɴ ━━━\`\`\`\n` +
+    `\`\`\`━━━ Pilihan ━━━\`\`\`\n` +
     `> \`${m.prefix}goodbye on\` → Aktifkan\n` +
     `> \`${m.prefix}goodbye off\` → Nonaktifkan\n` +
     `> \`${m.prefix}goodbye on all\` → Global ON (owner)\n` +

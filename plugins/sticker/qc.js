@@ -85,13 +85,13 @@ async function handler(m, { sock }) {
     if (args.length < 2) {
         const colorList = Object.keys(COLORS).join(', ')
         return m.reply(
-            `💬 *ǫᴜᴏᴛᴇ sᴛɪᴄᴋᴇʀ*\n\n` +
-            `╭┈┈⬡「 📋 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
+            `💬 *Quote sTicker*\n\n` +
+            `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
             `┃ ◦ \`${m.prefix}qc <warna> <text>\`\n` +
             `┃ ◦ Reply pesan + \`${m.prefix}qc <warna>\`\n` +
             `╰┈┈⬡\n\n` +
             `> Contoh: \`${m.prefix}qc pink Hai semuanya!\`\n\n` +
-            `╭┈┈⬡「 🎨 *ᴡᴀʀɴᴀ* 」\n` +
+            `╭┈┈⬡「 🎨 *Warna* 」\n` +
             `┃ ${colorList}\n` +
             `╰┈┈⬡`
         )
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
     const backgroundColor = COLORS[color]
     
     if (!backgroundColor) {
-        return m.reply(`❌ *ᴇʀʀᴏʀ*\n\n> Warna \`${color}\` tidak ditemukan!\n> Gunakan salah satu warna yang tersedia.`)
+        return m.reply(`❌ *Error*\n\n> Warna \`${color}\` tidak ditemukan!\n> Gunakan salah satu warna yang tersedia.`)
     }
     
     let message = args.slice(1).join(' ')
@@ -111,11 +111,11 @@ async function handler(m, { sock }) {
     }
     
     if (!message) {
-        { const __navText = `❌ *ᴇʀʀᴏʀ*\n\n> Masukkan text untuk quote!`; return await sendReplyWithNav(sock, m, __navText, "qc"); }
+        { const __navText = `❌ *Error*\n\n> Masukkan text untuk quote!`; return await sendReplyWithNav(sock, m, __navText, "qc"); }
     }
     
     if (message.length > 80) {
-        return m.reply(claraWrap("Qc", `❌ *ᴇʀʀᴏʀ*\n\n> Maksimal 80 karakter! (Saat ini: ${message.length})`))
+        return m.reply(claraWrap("Qc", `❌ *Error*\n\n> Maksimal 80 karakter! (Saat ini: ${message.length})`))
     }
     
     m.react('🕐')

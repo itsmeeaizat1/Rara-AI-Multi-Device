@@ -24,14 +24,14 @@ async function handler(m, { sock }) {
     const groupData = db.getGroup(m.chat)
     
     if (!groupData?.welcomeMsg) {
-        return m.reply(claraWrap("Resetwelcome", `❌ *ɢᴀɢᴀʟ*\n\n> Welcome message sudah default`))
+        return m.reply(claraWrap("Resetwelcome", `❌ *Gagal*\n\n> Welcome message sudah default`))
     }
     
     db.setGroup(m.chat, { welcomeMsg: null })
     
     m.react('✅')
     
-    { const __navText = claraWrap("ᴡᴇʟᴄᴏᴍᴇ ᴅɪʀᴇsᴇᴛ", `✅ *ᴡᴇʟᴄᴏᴍᴇ ᴅɪʀᴇsᴇᴛ*\n\n> Kembali ke pesan default`); await m.reply(__navText); }
+    { const __navText = claraWrap("Welcome Direset", `✅ *Welcome Direset*\n\n> Kembali ke pesan default`); await m.reply(__navText); }
 }
 
 export { pluginConfig as config, handler }

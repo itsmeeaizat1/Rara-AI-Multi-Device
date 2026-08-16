@@ -24,7 +24,7 @@ function handler(m, { sock }) {
     
     db.setGroup(m.chat, { groupRules: null })
     
-    m.reply(claraWrap("ɢʀᴜᴘ ʀᴜʟᴇs ᴅɪʀᴇsᴇᴛ", `✅ *ɢʀᴜᴘ ʀᴜʟᴇs ᴅɪʀᴇsᴇᴛ*\n` +
+    m.reply(claraWrap("Grup Rules Direset", `✅ *Grup Rules Direset*\n` +
         `Rules grup berhasil direset ke default!\n` +
         `Ketik \`${m.prefix}rulesgrup\` untuk melihat.`))
 }

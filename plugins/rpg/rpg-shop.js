@@ -26,9 +26,9 @@ async function handler(m, { sock, config: botConfig }) {
     
     if (!action || (action !== "buy" && action !== "sell" && action !== "list")) {
       let text = claraWrap("RPG Shop", "🏪") + "\n\n";
-      text += claraWrap("ᴄᴀʀᴀ ᴘᴀᴋᴀɪ", [`◦ Beli: *${prefix}rpgshop buy <item> <jumlah>*`, `◦ Jual: *${prefix}rpgshop sell <item> <jumlah>*`, `◦ List: *${prefix}rpgshop list*`].join("\n")) + "\n\n";
-      text += claraWrap("ʜᴀʀɢᴀ ʙᴇʟɪ", Object.entries(BUY).map(([k,v]) => `◦ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
-      text += claraWrap("ʜᴀʀɢᴀ ᴊᴜᴀʟ", Object.entries(SELL).map(([k,v]) => `◦ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
+      text += claraWrap("Cara Pakai", [`◦ Beli: *${prefix}rpgshop buy <item> <jumlah>*`, `◦ Jual: *${prefix}rpgshop sell <item> <jumlah>*`, `◦ List: *${prefix}rpgshop list*`].join("\n")) + "\n\n";
+      text += claraWrap("Harga Beli", Object.entries(BUY).map(([k,v]) => `◦ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
+      text += claraWrap("Harga Jual", Object.entries(SELL).map(([k,v]) => `◦ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
       text += separator("━", 22);
       await sendReplyWithNav(sock, m, text, "rpgshop");
       return { handled: true };
@@ -36,8 +36,8 @@ async function handler(m, { sock, config: botConfig }) {
     
     if (action === "list") {
       let text = claraWrap("RPG Shop List", "🏪") + "\n\n";
-      text += claraWrap("ʙᴇʟɪ", Object.entries(BUY).map(([k,v]) => `◦ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
-      text += claraWrap("ᴊᴜᴀʟ", Object.entries(SELL).map(([k,v]) => `◦ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
+      text += claraWrap("Beli", Object.entries(BUY).map(([k,v]) => `◦ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
+      text += claraWrap("Jual", Object.entries(SELL).map(([k,v]) => `◦ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
       text += separator("━", 22);
       await sendReplyWithNav(sock, m, text, "rpgshop");
       return { handled: true };

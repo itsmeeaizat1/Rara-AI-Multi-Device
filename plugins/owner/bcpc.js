@@ -123,13 +123,13 @@ async function handler(m, { sock }) {
       m.chat,
       {
         text:
-          `📱 *ʙʀᴏᴀᴅᴄᴀsᴛ ᴘʀɪᴠᴀᴛᴇ*\n\n` +
-          `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-          `┃ 📝 ᴘᴇsᴀɴ: \`${input.substring(0, 50)}${input.length > 50 ? "..." : ""}\`\n` +
-          `┃ 📷 ᴍᴇᴅɪᴀ: \`${mediaBuffer ? mediaType : "Tidak"}\`\n` +
-          `┃ 👥 ᴛᴀʀɢᴇᴛ: \`${filtered.length}\` kontak\n` +
-          `┃ ⏱️ ᴊᴇᴅᴀ: \`${jeda}ms\`\n` +
-          `┃ 📊 ᴇsᴛɪᴍᴀsɪ: \`${Math.ceil((filtered.length * jeda) / 60000)} menit\`\n` +
+          `📱 *Broadcast Private*\n\n` +
+          `╭┈┈⬡「 📋 *Detail* 」\n` +
+          `┃ 📝 Pesan: \`${input.substring(0, 50)}${input.length > 50 ? "..." : ""}\`\n` +
+          `┃ 📷 Media: \`${mediaBuffer ? mediaType : "Tidak"}\`\n` +
+          `┃ 👥 Target: \`${filtered.length}\` kontak\n` +
+          `┃ ⏱️ Jeda: \`${jeda}ms\`\n` +
+          `┃ 📊 Estimasi: \`${Math.ceil((filtered.length * jeda) / 60000)} menit\`\n` +
           `╰┈┈⬡\n\n` +
           `> Memulai broadcast...`,
         contextInfo: ctx,
@@ -169,11 +169,11 @@ async function handler(m, { sock }) {
       m.chat,
       {
         text:
-          `✅ *ʙʀᴏᴀᴅᴄᴀsᴛ ᴘʀɪᴠᴀᴛᴇ sᴇʟᴇsᴀɪ*\n\n` +
-          `╭┈┈⬡「 📊 *ʜᴀsɪʟ* 」\n` +
-          `┃ ✅ ʙᴇʀʜᴀsɪʟ: \`${success}\`\n` +
-          `┃ ❌ ɢᴀɢᴀʟ: \`${failed}\`\n` +
-          `┃ 📊 ᴛᴏᴛᴀʟ: \`${filtered.length}\`\n` +
+          `✅ *Broadcast Private sElesai*\n\n` +
+          `╭┈┈⬡「 📊 *Hasil* 」\n` +
+          `┃ ✅ Berhasil: \`${success}\`\n` +
+          `┃ ❌ Gagal: \`${failed}\`\n` +
+          `┃ 📊 Total: \`${filtered.length}\`\n` +
           `╰┈┈⬡`,
         contextInfo: ctx,
       },

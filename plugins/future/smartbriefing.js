@@ -19,7 +19,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Weather
     try {
       const { data: w } = await axios.get(`https://wttr.in/${encodeURIComponent(city)}?format=%C+%t+%h+%w`, { timeout: 8000, headers: {"User-Agent":"curl"} });
-      text += claraWrap("ᴄᴜᴀᴄᴀ", `◦ ${city}: ${w}`) + "\n\n";
+      text += claraWrap("Cuaca", `◦ ${city}: ${w}`) + "\n\n";
     } catch {}
     
     // Prayer times
@@ -28,14 +28,14 @@ async function handler(m, { sock, config: botConfig }) {
       const [y,mo,d] = today.split("-");
       const { data: p } = await axios.get(`https://api.myquran.com/v2/sholat/jadwal/kota/jakarta/${y}/${mo}/${d}`, { timeout: 8000 });
       const j = p?.data?.jadwal;
-      if (j) text += claraWrap("ᴊᴀᴅᴡᴀʟ sʜᴏʟᴀᴛ", [`◦ Subuh: *${j.subuh}*`, `◦ Dzuhur: *${j.dzuhur}*`, `◦ Ashar: *${j.ashar}*`, `◦ Maghrib: *${j.maghrib}*`, `◦ Isya: *${j.isya}*`].join("\n")) + "\n\n";
+      if (j) text += claraWrap("Jadwal sHolat", [`◦ Subuh: *${j.subuh}*`, `◦ Dzuhur: *${j.dzuhur}*`, `◦ Ashar: *${j.ashar}*`, `◦ Maghrib: *${j.maghrib}*`, `◦ Isya: *${j.isya}*`].join("\n")) + "\n\n";
     } catch {}
     
     // News
     try {
       const { data } = await axios.get("https://news.google.com/rss?hl=id&gl=ID&ceid=ID:id", { timeout: 8000 });
       const items = (data.match(/<title>([^<]+)<\/title>/g) || []).slice(1, 6).map(t => t.replace(/<\/?title>/g, ""));
-      text += claraWrap("ʙᴇʀɪᴛᴀ ᴛᴇʀᴀᴋʜɪʀ", items.map((it,i) => `◦ ${i+1}. ${it.substring(0,60)}`)) + "\n\n";
+      text += claraWrap("Berita Terakhir", items.map((it,i) => `◦ ${i+1}. ${it.substring(0,60)}`)) + "\n\n";
     } catch {}
     
     text += separator("━", 22) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`);

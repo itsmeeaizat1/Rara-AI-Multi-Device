@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const isVideo = m.type === 'videoMessage' || (m.quoted && m.quoted.type === 'videoMessage')
     
     if (!isVideo) {
-        return sendReplyWithNav(m, sock, claraWrap("Ganti-nova.mp4", `🎬 *ɢᴀɴᴛɪ ᴏᴜʀɪɴ.ᴍᴘ4*\n\n> Kirim/reply video untuk mengganti\n> File: assets/video/nova.mp4`), { commandName: "ganti-nova.mp4" })
+        return sendReplyWithNav(m, sock, claraWrap("Ganti-nova.mp4", `🎬 *Ganti Ourin.Mp4*\n\n> Kirim/reply video untuk mengganti\n> File: assets/video/nova.mp4`), { commandName: "ganti-nova.mp4" })
     }
     
     try {
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("Ganti-nova.mp4", `⏳ Sedang mengupload gambar...`))
         try {
             const newUrl = await updateAssetUrl('nova-mp4', buffer, 'nova.mp4')
-            { const __navText = `✅ *ʙᴇʀʜᴀsɪʟ*\n\n> File nova.mp4 telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`; await m.reply(__navText); }
+            { const __navText = `✅ *Berhasil*\n\n> File nova.mp4 telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`; await m.reply(__navText); }
         } catch (e) {
             m.reply(claraWrap("ganti-nova.mp4", `❌ Gagal mengupload file: ${e.message}`))
         }

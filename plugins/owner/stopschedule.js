@@ -26,7 +26,7 @@ async function handler(m, { sock, args }) {
         const target = args[0]?.toLowerCase();
         
         if (!target) {
-            const helpText = `🛑 *sᴛᴏᴘ sᴄʜᴇᴅᴜʟᴇʀ*
+            const helpText = `🛑 *sTop sCheduler*
 
 *Usage:*
 \`.stopschedule <nama>\`
@@ -59,7 +59,7 @@ async function handler(m, { sock, args }) {
             stopSholatScheduler();
             db.setting('autoSholat', false);
             
-            await m.reply(`🛑 *sᴄʜᴇᴅᴜʟᴇʀ ᴅɪʜᴇɴᴛɪᴋᴀɴ*
+            await m.reply(`🛑 *sCheduler Dihentikan*
 
 > Scheduler: *Sholat Scheduler*
 > Status: ❌ Dihentikan
@@ -77,7 +77,7 @@ _Gunakan \`.startschedule sholat\` untuk mengaktifkan kembali_`);
         const result = stopSchedulerByName(target);
         
         if (result.stopped) {
-            { const __navText = `🛑 *sᴄʜᴇᴅᴜʟᴇʀ ᴅɪʜᴇɴᴛɪᴋᴀɴ*
+            { const __navText = `🛑 *sCheduler Dihentikan*
 
 > Scheduler: *${result.name}*
 > Status: ❌ Dihentikan

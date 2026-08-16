@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
         const participants = groupMeta.participants || []
         
         if (participants.length === 0) {
-            return m.reply(claraWrap("Delpremall", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak ada member di grup ini`))
+            return m.reply(claraWrap("Delpremall", `❌ *Gagal*\n\n> Tidak ada member di grup ini`))
         }
         
         await m.react('🕐')
@@ -61,12 +61,12 @@ async function handler(m, { sock }) {
         db.save()
         
         
-        await m.reply(`🗑️ *ᴅᴇʟ ᴘʀᴇᴍɪᴜᴍ ᴀʟʟ*\n\n` +
-            `╭┈┈⬡「 📋 *ʜᴀsɪʟ* 」\n` +
-            `┃ 👥 ᴛᴏᴛᴀʟ ᴍᴇᴍʙᴇʀ: \`${participants.length}\`\n` +
-            `┃ ✅ ᴅɪʜᴀᴘᴜs: \`${removedCount}\`\n` +
-            `┃ ⏭️ ʙᴜᴋᴀɴ ᴘʀᴇᴍɪᴜᴍ: \`${notPremCount}\`\n` +
-            `┃ 💎 sɪsᴀ ᴘʀᴇᴍɪᴜᴍ: \`${db.data.premium.length}\`\n` +
+        await m.reply(`🗑️ *Del Premium All*\n\n` +
+            `╭┈┈⬡「 📋 *Hasil* 」\n` +
+            `┃ 👥 Total Member: \`${participants.length}\`\n` +
+            `┃ ✅ Dihapus: \`${removedCount}\`\n` +
+            `┃ ⏭️ Bukan Premium: \`${notPremCount}\`\n` +
+            `┃ 💎 sIsa Premium: \`${db.data.premium.length}\`\n` +
             `╰┈┈⬡\n\n` +
             `> Grup: ${groupMeta.subject}`)
         

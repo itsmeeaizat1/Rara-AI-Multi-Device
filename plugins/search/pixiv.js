@@ -45,9 +45,9 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
-    let caption = `🎨 *ᴘɪxɪᴠ sᴇᴀʀᴄʜ*\n`;
-    caption += `📝 *ᴋᴜᴇʀʏ:* ${query}\n`;
-    caption += `📊 *ʜᴀsɪʟ:* ${results.length} artwork\n\n`;
+    let caption = `🎨 *Pixiv sEarch*\n`;
+    caption += `📝 *Kuery:* ${query}\n`;
+    caption += `📊 *Hasil:* ${results.length} artwork\n\n`;
 
     results.forEach((art, i) => {
       const aiLabel = art.aiType === 2 ? " 🤖" : "";

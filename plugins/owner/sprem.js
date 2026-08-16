@@ -18,7 +18,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   if (!m.quoted) {
-    return m.reply("⭐ *sᴛɪᴄᴋᴇʀ ᴘʀᴇᴍɪᴜᴍ*\n\n" +
+    return m.reply("⭐ *sTicker Premium*\n\n" +
         "> Reply sticker yang mau dijadikan premium!\n\n" +
         `> Penggunaan: \`${m.prefix}sprem\``);
   }

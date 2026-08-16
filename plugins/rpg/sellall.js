@@ -63,15 +63,15 @@ async function handler(m, { sock }) {
   }
 
   if (soldItems.length === 0) {
-    return m.reply(claraWrap("Sellall", `❌ *ᴛɪᴅᴀᴋ ᴀᴅᴀ ɪᴛᴇᴍ*\n\n> Tidak ada item yang bisa dijual!`));
+    return m.reply(claraWrap("Sellall", `❌ *Tidak Ada Item*\n\n> Tidak ada item yang bisa dijual!`));
   }
 
   user.koin = (user.koin || 0) + totalEarned;
 
   db.save();
 
-  let txt = `💰 *sᴇʟʟ ᴀʟʟ sᴜᴋsᴇs*\n\n`;
-  txt += `*📦 *ɪᴛᴇᴍ ᴛᴇʀᴊᴜᴀʟ:*
+  let txt = `💰 *sEll All sUkses*\n\n`;
+  txt += `*📦 *Item Terjual:*
 \n`;
   for (const s of soldItems.slice(0, 10)) {
     txt += `> ${s.item}: ${s.qty}x = Rp ${s.earned.toLocaleString("id-ID")}\n`;

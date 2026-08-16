@@ -29,7 +29,7 @@ function handler(m, { sock }) {
     if (!option) {
         const status = groupData.antiphising || 'off'
         const mode = groupData.antiphisingMode || 'remove'
-        return sendReplyWithNav(sock, m, `🎣 *ᴀɴᴛɪᴘʜɪsɪɴɢ*\n\n` +
+        return sendReplyWithNav(sock, m, `🎣 *Antiphising*\n\n` +
             `> Status: *${status.toUpperCase()}*\n` +
             `> Mode: *${mode.toUpperCase()}*\n\n` +
             `> Deteksi pesan phising seperti klik link, verifikasi akun, login palsu, shortener mencurigakan, URL IP, punycode, dan pola sejenis.\n\n` +

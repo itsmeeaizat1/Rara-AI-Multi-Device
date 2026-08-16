@@ -24,7 +24,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.text
     if (!text) {
-        return sendReplyWithNav(sock, m, claraWrap("ᴀɪᴄʜᴀᴛ", `🤖 *ᴀɪᴄʜᴀᴛ*\n\n> Masukkan pertanyaan\n\n\`Contoh: ${m.prefix}ai4chat Apa itu JavaScript?\``), "ai4chat")
+        return sendReplyWithNav(sock, m, claraWrap("Aichat", `🤖 *Aichat*\n\n> Masukkan pertanyaan\n\n\`Contoh: ${m.prefix}ai4chat Apa itu JavaScript?\``), "ai4chat")
     }
     m.react('🕐')
     try {

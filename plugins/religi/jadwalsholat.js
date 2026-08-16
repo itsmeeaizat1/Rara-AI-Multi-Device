@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
   try {
     const kota = await searchKota(city);
     if (!kota) {
-      return m.reply(claraWrap("ɢᴀɢᴀʟ", `❌ *ɢᴀɢᴀʟ*\n\n> Kota "${city}" tidak ditemukan\n> Coba nama kabupaten/kota lain`));
+      return m.reply(claraWrap("Gagal", `❌ *Gagal*\n\n> Kota "${city}" tidak ditemukan\n> Coba nama kabupaten/kota lain`));
     }
     const jadwalData = await getTodaySchedule(kota.id);
     const times = extractPrayerTimes(jadwalData);
@@ -41,20 +41,20 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
-    const caption = `🕌 *ᴊᴀᴅᴡᴀʟ sʜᴏʟᴀᴛ*
+    const caption = `🕌 *Jadwal sHolat*
 ╭┈┈⬡「 📍 *${lokasi}* 」
 ┃ 📅 ${today}
 ┃ 🗺️ ${daerah}
 ╰┈┈⬡
-╭┈┈⬡「 ⏰ *ᴡᴀᴋᴛᴜ sʜᴏʟᴀᴛ* 」
-┃ 🌙 ɪᴍsᴀᴋ: \`${times.imsak}\`
-┃ 🌅 sᴜʙᴜʜ: \`${times.subuh}\`
-┃ ☀️ ᴛᴇʀʙɪᴛ: \`${times.terbit}\`
-┃ 🌤️ ᴅʜᴜʜᴀ: \`${times.dhuha}\`
-┃ 🌞 ᴅᴢᴜʜᴜʀ: \`${times.dzuhur}\`
-┃ 🌇 ᴀsʜᴀʀ: \`${times.ashar}\`
-┃ 🌆 ᴍᴀɢʜʀɪʙ: \`${times.maghrib}\`
-┃ 🌃 ɪsʏᴀ: \`${times.isya}\`
+╭┈┈⬡「 ⏰ *Waktu sHolat* 」
+┃ 🌙 Imsak: \`${times.imsak}\`
+┃ 🌅 sUbuh: \`${times.subuh}\`
+┃ ☀️ Terbit: \`${times.terbit}\`
+┃ 🌤️ Dhuha: \`${times.dhuha}\`
+┃ 🌞 Dzuhur: \`${times.dzuhur}\`
+┃ 🌇 Ashar: \`${times.ashar}\`
+┃ 🌆 Maghrib: \`${times.maghrib}\`
+┃ 🌃 Isya: \`${times.isya}\`
 ╰┈┈⬡
 > _Sumber: myquran.com | Jangan lupa sholat ya! 🤲_`;
     const adzanUrl = "https://media.vocaroo.com/mp3/1ofLT2YUJAjQ";

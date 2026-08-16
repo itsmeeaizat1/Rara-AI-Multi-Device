@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("Menu 2", "📑") +
       "\n\n" +
-      claraWrap("ᴇxᴛʀᴀ", lines) +
+      claraWrap("Extra", lines) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

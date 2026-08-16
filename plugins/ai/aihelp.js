@@ -272,7 +272,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!query) {
-      const helpCard = claraWrap("ᴀɪ ʜᴇʟᴘ", [`◦ Mode: *${mode.toUpperCase()}*`, `◦ Status: *${enabled ? "ON" : "OFF"}*`, `◦ Ketik ${prefix}aihelp <pertanyaan>`, `◦ Contoh: ${prefix}aihelp cara download tiktok`, `◦ Owner: ${prefix}aihelp on/off`, `◦ Owner: ${prefix}aihelp mode online/offline`].join("\n"));
+      const helpCard = claraWrap("Ai Help", [`◦ Mode: *${mode.toUpperCase()}*`, `◦ Status: *${enabled ? "ON" : "OFF"}*`, `◦ Ketik ${prefix}aihelp <pertanyaan>`, `◦ Contoh: ${prefix}aihelp cara download tiktok`, `◦ Owner: ${prefix}aihelp on/off`, `◦ Owner: ${prefix}aihelp mode online/offline`].join("\n"));
 
       const text =
         claraWrap("Asisten Fitur", "🤖") +
@@ -294,7 +294,7 @@ async function handler(m, { sock, config: botConfig }) {
       });
 
       if (onlineResult.ok) {
-        const card = claraWrap("ᴏɴʟɪɴᴇ", [`◦ Pertanyaan: *${query}*`, ``, ...onlineResult.text.split("\n").map((line) => `┃ ${line}`)].join("\n"));
+        const card = claraWrap("Online", [`◦ Pertanyaan: *${query}*`, ``, ...onlineResult.text.split("\n").map((line) => `┃ ${line}`)].join("\n"));
 
         const text =
           claraWrap("Online AI", "🤖") +
@@ -320,7 +320,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (matchedIntent) {
       const intentText = matchedIntent.response(prefix);
-      const card = claraWrap("ɪɴꜱᴛʀᴜᴋꜱɪ", [`◦ Pertanyaan: *${query}*`, `◦ Kategori: *${("intent match")}*`, ``, ...intentText.split("\n").map((line) => `┃ ${line}`)].join("\n"));
+      const card = claraWrap("InꜱTrukꜱI", [`◦ Pertanyaan: *${query}*`, `◦ Kategori: *${("intent match")}*`, ``, ...intentText.split("\n").map((line) => `┃ ${line}`)].join("\n"));
 
       const text =
         claraWrap("Instruksi", "📋") +

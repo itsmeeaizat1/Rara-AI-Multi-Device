@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     const remaining = lastDaily + DAILY_COOLDOWN - now;
     const hours = Math.floor(remaining / (1000 * 60 * 60));
     const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    return mm.reply(claraWrap("ᴄᴏᴏʟᴅᴏᴡɴ", `🕕 *ᴄᴏᴏʟᴅᴏᴡɴ*\n\n> Kamu sudah klaim hari ini.\n> Tunggu: *${hours} jam ${minutes} menit* lagi.`))
+    return mm.reply(claraWrap("Cooldown", `🕕 *Cooldown*\n\n> Kamu sudah klaim hari ini.\n> Tunggu: *${hours} jam ${minutes} menit* lagi.`))
   }
 
   const expReward = Math.floor(Math.random() * 5000) + 1000;
@@ -52,9 +52,9 @@ async function handler(m, { sock }) {
 
   const greeting = getTimeGreeting();
 
-  let txt = `🎉 *ᴅᴀɪʟʏ ᴄʟᴀɪᴍ sᴜᴋsᴇs*\n`;
+  let txt = `🎉 *Daily Claim sUkses*\n`;
   txt += `> ${greeting}, @${m.sender.split("@")[0]}\n\n`;
-  txt += `╭┈┈⬡「 🎁 *ʀᴇᴡᴀʀᴅs* 」\n`;
+  txt += `╭┈┈⬡「 🎁 *Rewards* 」\n`;
   txt += `┃ 🚄 Exp: *+${expReward}*\n`;
   txt += `┃ 💰 Koin: *+${moneyReward.toLocaleString("id-ID")}*\n`;
   txt += `┃ 🥤 Potion: *+${potionReward}*\n`;

@@ -31,7 +31,7 @@ function handler(m, { sock }) {
             return m.reply(claraWrap("Delantilink", `📋 Daftar antilink kosong!`))
         }
         
-        let txt = `🔗 *ᴅᴀꜰᴛᴀʀ ᴀɴᴛɪʟɪɴᴋ*\n\n`
+        let txt = `🔗 *Daftar Antilink*\n\n`
         antilinkList.forEach((l, i) => {
             txt += `> ${i + 1}. \`${l}\`\n`
         })
@@ -53,7 +53,7 @@ function handler(m, { sock }) {
     antilinkList.splice(index, 1)
     db.setGroup(m.chat, { antilinkList })
     
-    m.reply(`✅ *ᴀɴᴛɪʟɪɴᴋ ᴅɪʜᴀᴘᴜs*\n\n` +
+    m.reply(`✅ *Antilink Dihapus*\n\n` +
         `> Link: \`${link}\`\n` +
         `> Sisa: *${antilinkList.length}* link`)
 }

@@ -260,8 +260,8 @@ async function sendBackupToOwner(backupInfo) {
     const state = loadBackupState();
 
     const caption =
-      `🗂️ *ᴀᴜᴛᴏ ʙᴀᴄᴋᴜᴘ*\n\n` +
-      `╭┈┈⬡「 📋 *ɪɴꜰᴏ* 」\n` +
+      `🗂️ *Auto Backup*\n\n` +
+      `╭┈┈⬡「 📋 *Info* 」\n` +
       `┃ 📅 Waktu: ${timeHelper.formatDateTime("DD MMMM YYYY HH:mm:ss")} WIB\n` +
       `┃ 📦 Size: ${sizeInMB} MB\n` +
       `┃ 📁 Files: ${backupInfo.fileCount}\n` +

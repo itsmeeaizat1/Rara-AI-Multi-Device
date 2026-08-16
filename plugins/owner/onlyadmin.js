@@ -24,14 +24,14 @@ async function handler(m, { sock }) {
     if (cmd === 'selfadmin') {
         if (current) {
             db.setting('onlyAdmin', false)
-            return m.reply(claraWrap("Onlyadmin", '❌ *ᴏɴʟʏᴀᴅᴍɪɴ ɴᴏɴᴀᴋᴛɪꜰ*\n\n> Bot bisa diakses semua orang'))
+            return m.reply(claraWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\n> Bot bisa diakses semua orang'))
         }
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
         await m.react('✅')
-        return m.reply('✅ *ᴏɴʟʏᴀᴅᴍɪɴ ᴀᴋᴛɪꜰ*\n\n' +
-            '╭┈┈⬡「 🔒 *ᴀᴋsᴇs* 」\n' +
+        return m.reply('✅ *Onlyadmin Aktif*\n\n' +
+            '╭┈┈⬡「 🔒 *Akses* 」\n' +
             '┃ ✅ Admin grup\n' +
             '┃ ✅ Owner bot\n' +
             '┃ ❌ Member biasa\n' +
@@ -42,14 +42,14 @@ async function handler(m, { sock }) {
     if (cmd === 'publicadmin') {
         if (current) {
             db.setting('onlyAdmin', false)
-            return m.reply(claraWrap("Onlyadmin", '❌ *ᴏɴʟʏᴀᴅᴍɪɴ ɴᴏɴᴀᴋᴛɪꜰ*\n\n> Bot bisa diakses semua orang'))
+            return m.reply(claraWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\n> Bot bisa diakses semua orang'))
         }
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
         await m.react('✅')
-        return m.reply('✅ *ᴏɴʟʏᴀᴅᴍɪɴ ᴀᴋᴛɪꜰ*\n\n' +
-            '╭┈┈⬡「 🔒 *ᴀᴋsᴇs* 」\n' +
+        return m.reply('✅ *Onlyadmin Aktif*\n\n' +
+            '╭┈┈⬡「 🔒 *Akses* 」\n' +
             '┃ ✅ Admin grup\n' +
             '┃ ✅ Owner bot\n' +
             '┃ ✅ Private chat (semua)\n' +
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     }
 
     if (!args || args === 'status') {
-        return sendReplyWithNav(sock, m, `🔒 *ᴏɴʟʏᴀᴅᴍɪɴ*\n\n` +
+        return sendReplyWithNav(sock, m, `🔒 *Onlyadmin*\n\n` +
             `> Status: ${current ? '✅ Aktif' : '❌ Nonaktif'}\n\n` +
             `*Penggunaan:*\n` +
             `> \`.onlyadmin on\` — Aktifkan\n` +
@@ -73,8 +73,8 @@ async function handler(m, { sock }) {
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
         await m.react('✅')
-        return m.reply('✅ *ᴏɴʟʏᴀᴅᴍɪɴ ᴀᴋᴛɪꜰ*\n\n' +
-            '╭┈┈⬡「 🔒 *ᴀᴋsᴇs* 」\n' +
+        return m.reply('✅ *Onlyadmin Aktif*\n\n' +
+            '╭┈┈⬡「 🔒 *Akses* 」\n' +
             '┃ ✅ Admin grup\n' +
             '┃ ✅ Owner bot\n' +
             '┃ ✅ Private chat (semua)\n' +
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
     if (args === 'off') {
         if (!current) return m.reply(claraWrap("Onlyadmin", '⚠️ OnlyAdmin sudah nonaktif.'))
         db.setting('onlyAdmin', false)
-        return m.reply(claraWrap("Onlyadmin", '❌ *ᴏɴʟʏᴀᴅᴍɪɴ ɴᴏɴᴀᴋᴛɪꜰ*\n\n> Bot bisa diakses semua orang'))
+        return m.reply(claraWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\n> Bot bisa diakses semua orang'))
     }
 
     return m.reply(claraWrap("Onlyadmin", '❌ Argumen tidak valid. Gunakan: `on` atau `off`'))

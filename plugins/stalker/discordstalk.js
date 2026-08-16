@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
 
   if (!userId) {
     return m.reply(
-      `🎮 *ᴅɪsᴄᴏʀᴅ sᴛᴀʟᴋ*\n\n` +
+      `🎮 *Discord sTalk*\n\n` +
         `> Masukkan Discord User ID\n\n` +
         `\`Contoh: ${m.prefix}discordstalk 297574907510784000\``,
     );
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
       : "-";
 
     const caption =
-      `🎮 *ᴅɪsᴄᴏʀᴅ sᴛᴀʟᴋ*\n\n` +
+      `🎮 *Discord sTalk*\n\n` +
       `👤 *Username:* ${d.username || "-"}\n` +
       `📛 *Display Name:* ${d.global_name || "-"}\n` +
       `🔢 *Discriminator:* #${d.discriminator || "0"}\n` +

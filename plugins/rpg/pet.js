@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig, db }) {
           "◦ 3. *Naga* - 500 Gold",
           "◦ 4. *Phoenix* - 1000 Gold"].join("\n")) +
         "\n\n" +
-        claraWrap("ɪɴꜰᴏ", [`◦ Penggunaan: *${prefix}pet <nama>*`, `◦ Contoh: *${prefix}pet Kucing*`].join("\n")) +
+        claraWrap("Info", [`◦ Penggunaan: *${prefix}pet <nama>*`, `◦ Contoh: *${prefix}pet Kucing*`].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +

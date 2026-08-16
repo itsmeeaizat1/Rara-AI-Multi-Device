@@ -33,14 +33,14 @@ async function handler(m, { sock }) {
   const maxMana = 50 + (user.level || 1) * 3;
 
   if (currentStamina >= maxStamina && currentHealth >= maxHealth && currentMana >= maxMana) {
-    return sendReplyWithNav(sock, m, `💤 *sᴜᴅᴀʜ ꜰᴜʟʟ*\n\n` +
+    return sendReplyWithNav(sock, m, `💤 *sUdah Full*\n\n` +
         `> ⚡ Stamina: ${currentStamina}/${maxStamina}\n` +
         `> ❤️ Health: ${currentHealth}/${maxHealth}\n` +
         `> 💙 Mana: ${currentMana}/${maxMana}\n\n` +
         `💡 Kamu sudah dalam kondisi prima!`, "meditation");
   }
 
-  m.reply(claraWrap("Meditation", `💤 *ʙᴇʀɪsᴛɪʀᴀʜᴀᴛ...*\n\n> Memulihkan energi...`));
+  m.reply(claraWrap("Meditation", `💤 *Beristirahat...*\n\n> Memulihkan energi...`));
   await new Promise((r) => setTimeout(r, 3000));
 
   const staminaRecovered = Math.min(maxStamina - currentStamina, 40 + Math.floor(Math.random() * 20));
@@ -53,8 +53,8 @@ async function handler(m, { sock }) {
 
   db.save();
 
-  return sendReplyWithNav(sock, m, `✨ *ɪsᴛɪʀᴀʜᴀᴛ sᴇʟᴇsᴀɪ!*\n\n` +
-      `*💖 *ᴘᴜʟɪʜ:*
+  return sendReplyWithNav(sock, m, `✨ *Istirahat sElesai!*\n\n` +
+      `*💖 *Pulih:*
 \n` +
       `> ⚡ Stamina: *+${staminaRecovered}* (${user.rpg.stamina}/${maxStamina})\n` +
       `> ❤️ Health: *+${healthRecovered}* (${user.rpg.health}/${maxHealth})\n` +

@@ -41,9 +41,9 @@ async function handler(m, { sock, config: botConfig, db }) {
     const text =
       claraWrap("Equipment", "🛡️") +
       "\n\n" +
-      claraWrap("ᴇǫᴜɪᴘᴘᴇᴅ", equipped.map((e) => `◦ ${e.slot}: *${e.name}* (ATK:${e.atk ?? 0} DEF:${e.def ?? 0} ${e.bonus ?? ""})`.trim())) +
+      claraWrap("Equipped", equipped.map((e) => `◦ ${e.slot}: *${e.name}* (ATK:${e.atk ?? 0} DEF:${e.def ?? 0} ${e.bonus ?? ""})`.trim())) +
       "\n\n" +
-      claraWrap("ɪɴᴠᴇɴᴛᴏʀʏ", inventory.map((item) => `◦ ${item}`)) +
+      claraWrap("Inventory", inventory.map((item) => `◦ ${item}`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

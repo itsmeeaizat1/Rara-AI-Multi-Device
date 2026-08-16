@@ -47,13 +47,13 @@ async function handler(m, { sock }) {
     const targetNumber = resolveTarget(m)
 
     if (!targetNumber || targetNumber.length < 10 || targetNumber.length > 15) {
-        return sendReplyWithNav(sock, m, `🚫 *ʙᴀɴ ᴜsᴇʀ*\n\n` +
+        return sendReplyWithNav(sock, m, `🚫 *Ban User*\n\n` +
             `> Masukkan nomor atau tag user\n\n` +
             `\`Contoh: ${m.prefix}ban 6281234567890\``, "ban")
     }
 
     if (config.isOwner(targetNumber)) {
-        return m.reply(claraWrap("Ban", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak dapat ban owner`))
+        return m.reply(claraWrap("Ban", `❌ *Gagal*\n\n> Tidak dapat ban owner`))
     }
 
     const db = getDatabase()
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     })
 
     if (alreadyBanned) {
-        { const __navText = `❌ *ɢᴀɢᴀʟ*\n\n> Nomor \`${targetNumber}\` sudah dibanned`; return await m.reply(__navText); }
+        { const __navText = `❌ *Gagal*\n\n> Nomor \`${targetNumber}\` sudah dibanned`; return await m.reply(__navText); }
     }
 
     bannedList.push(targetNumber)
@@ -81,11 +81,11 @@ async function handler(m, { sock }) {
     }).catch(() => {})
 
     await m.reply(
-        `🚫 *ᴜsᴇʀ ᴅɪʙᴀɴɴᴇᴅ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-        `┃ 📱 ɴᴏᴍᴏʀ: \`${targetNumber}\`\n` +
-        `┃ 🚫 sᴛᴀᴛᴜs: \`Banned\`\n` +
-        `┃ 📊 ᴛᴏᴛᴀʟ: \`${bannedList.length}\` ᴜsᴇʀ\n` +
+        `🚫 *User Dibanned*\n\n` +
+        `╭┈┈⬡「 📋 *Detail* 」\n` +
+        `┃ 📱 Nomor: \`${targetNumber}\`\n` +
+        `┃ 🚫 sTatus: \`Banned\`\n` +
+        `┃ 📊 Total: \`${bannedList.length}\` User\n` +
         `╰┈┈⬡`
     )
 }

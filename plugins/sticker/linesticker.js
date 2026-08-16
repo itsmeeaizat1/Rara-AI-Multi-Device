@@ -24,16 +24,16 @@ async function handler(m, { sock }) {
     const url = m.args?.[0]?.trim()
     
     if (!url || !url.includes('store.line.me')) {
-        return sendReplyWithNav(sock, m, `🎨 *ʟɪɴᴇ sᴛɪᴄᴋᴇʀ ᴘᴀᴄᴋ*\n\n` +
+        return sendReplyWithNav(sock, m, `🎨 *Line sTicker Pack*\n\n` +
             `> Download LINE sticker pack\n\n` +
-            `╭┈┈⬡「 📋 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
+            `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
             `┃ ${m.prefix}linesticker <url>\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-            `*ᴄᴀʀᴀ ᴅᴀᴘᴀᴛ ᴜʀʟ:*\n` +
+            `*Cara Dapat Url:*\n` +
             `> 1. Buka https://store.line.me\n` +
             `> 2. Pilih sticker pack\n` +
             `> 3. Copy URL dari browser\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
+            `*Contoh:*\n` +
             `> ${m.prefix}linesticker https://store.line.me/stickershop/product/9801/en`, "linesticker")
     }
     
@@ -66,8 +66,8 @@ async function handler(m, { sock }) {
         }
         
         await m.reply(
-            `🎨 *ʟɪɴᴇ sᴛɪᴄᴋᴇʀ ᴘᴀᴄᴋ*\n\n` +
-            `╭┈┈⬡「 📦 *ɪɴꜰᴏ* 」\n` +
+            `🎨 *Line sTicker Pack*\n\n` +
+            `╭┈┈⬡「 📦 *Info* 」\n` +
             `┃ 📝 *Title:* ${title}\n` +
             `┃ 👤 *Author:* ${author}\n` +
             `┃ 🎬 *Animated:* ${isAnimated ? 'Ya' : 'Tidak'}\n` +

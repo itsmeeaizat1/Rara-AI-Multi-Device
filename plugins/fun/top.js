@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
             list += `*${index + 1}* ${medals[index]} @${jid.split('@')[0]}\n`
         })
         
-        await m.reply(claraWrap("Top", `🏆 *ᴛᴏᴘ 5 ${kategori.toUpperCase()}*\n${list}`))
+        await m.reply(claraWrap("Top", `🏆 *Top 5 ${kategori.toUpperCase()}*\n${list}`))
         m.react('✅')
     } catch (error) {
         m.reply(claraWrap("topfun", te(m.prefix, m.command, m.pushName), "error"))

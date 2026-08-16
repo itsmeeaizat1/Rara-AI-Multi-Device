@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
   const stats = getRegistrationStats(db);
 
   if (!normalizedArgs) {
-    return sendReplyWithNav(sock, m, claraWrap("sɪsᴛᴇᴍ ᴅᴀꜰᴛᴀʀ", `⚙️ *sɪsᴛᴇᴍ ᴅᴀꜰᴛᴀʀ*\n\n` +
+    return sendReplyWithNav(sock, m, claraWrap("sIstem Daftar", `⚙️ *sIstem Daftar*\n\n` +
         `Status: ${currentStatus ? "✅ ON (Wajib Daftar)" : "❌ OFF"}\n\n` +
         `*Statistik:*\n` +
         `> Total registered: *${stats.totalRegistered}*\n` +
@@ -92,9 +92,9 @@ async function handler(m, { sock }) {
       m.chat,
       {
         text:
-          `📊 *sᴛᴀᴛɪsᴛɪᴋ ᴅᴀꜰᴛᴀʀ*\n\n` +
+          `📊 *sTatistik Daftar*\n\n` +
           `Status sistem: ${currentStatus ? "✅ ON (Wajib Daftar)" : "❌ OFF"}\n\n` +
-          `╭┈┈⬡「 📈 *sᴛᴀᴛs* 」\n` +
+          `╭┈┈⬡「 📈 *sTats* 」\n` +
           `┃ Total registered: *${stats.totalRegistered}*\n` +
           `┃ Register hari ini: *${stats.registeredToday}*\n` +
           `┃ Unreg hari ini: *${stats.unregisteredToday}*\n` +
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
       m.chat,
       {
         text:
-          `✅ *sɪsᴛᴇᴍ ᴅᴀꜰᴛᴀʀ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ!*\n\n` +
+          `✅ *sIstem Daftar Diaktifkan!*\n\n` +
           `User sekarang wajib daftar sebelum menggunakan command!\n\n` +
           `> Command: \`${m.prefix}daftar\``,
         contextInfo: getRegistrationContextInfo(),
@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
       m.chat,
       {
         text:
-          `❌ *sɪsᴛᴇᴍ ᴅᴀꜰᴛᴀʀ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ!*\n\n` +
+          `❌ *sIstem Daftar Dinonaktifkan!*\n\n` +
           `User tidak perlu daftar untuk menggunakan command.`,
         contextInfo: getRegistrationContextInfo(),
       },

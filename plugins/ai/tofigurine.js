@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === 'imageMessage'))
     
     if (!isImage) {
-        return sendReplyWithNav(sock, m, `🎭 *ᴛᴏ ꜰɪɢᴜʀ 3*\n\n` +
+        return sendReplyWithNav(sock, m, `🎭 *To Figur 3*\n\n` +
             `> Kirim/reply gambar untuk diubah ke figurine/action figure\n\n` +
             `\`${m.prefix}tofigure3\``, "tofigure3")
     }

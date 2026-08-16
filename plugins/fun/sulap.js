@@ -32,7 +32,7 @@ function sleep(ms) {
 
 async function handler(m, { sock }) {
 
-    const sent = await m.reply(claraWrap("sulap", `🎩✨ *ᴘᴇʀᴛᴜɴᴊᴜᴋᴀɴ sᴜʟᴀᴘ*\n\n` +
+    const sent = await m.reply(claraWrap("sulap", `🎩✨ *Pertunjukan sUlap*\n\n` +
             `Siapa yang ingin dihilangkan?\n\n` +
             `> Reply pesan ini + mention orangnya`))
 

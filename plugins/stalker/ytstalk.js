@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]
     
     if (!username) {
-        { const __navText = `📺 *ʏᴏᴜᴛᴜʙᴇ sᴛᴀʟᴋ*\n\n> Masukkan username YouTube\n\n\`Contoh: ${m.prefix}ytstalk mrbeast\``; return await sendReplyWithNav(sock, m, __navText, "ytstalk"); }
+        { const __navText = `📺 *Youtube sTalk*\n\n> Masukkan username YouTube\n\n\`Contoh: ${m.prefix}ytstalk mrbeast\``; return await sendReplyWithNav(sock, m, __navText, "ytstalk"); }
     }
     
     m.react('🕐')
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         
         const c = res.data.data
         
-        let caption = `📺 *ʏᴏᴜᴛᴜʙᴇ sᴛᴀʟᴋ*\n\n` +
+        let caption = `📺 *Youtube sTalk*\n\n` +
             `👤 *Nama:* ${c.name}\n` +
             `🔗 *Username:* @${username}\n` +
             `✅ *Verified:* ${c.verified ? 'Ya' : 'Tidak'}\n\n` +

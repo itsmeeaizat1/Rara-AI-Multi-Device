@@ -37,53 +37,53 @@ async function handler(m, { sock }) {
     const userServers = getAccessibleServers(m.sender)
     const userRoleList = userServers.map(s => `${s.server.toUpperCase()}:${s.role}`).join(', ') || 'Tidak ada'
     
-    let txt = `🖥️ *ᴄᴘᴀɴᴇʟ ᴍᴇɴᴜ v2.0*\n\n`
+    let txt = `🖥️ *Cpanel Menu v2.0*\n\n`
     txt += `> V1: ${serverStatuses.v1} | V2: ${serverStatuses.v2} | V3: ${serverStatuses.v3} | V4: ${serverStatuses.v4} | V5: ${serverStatuses.v5}\n`
     txt += `> Role kamu: *${m.isOwner ? 'Bot Owner' : userRoleList}*\n\n`
     
-    txt += `╭─「 📦 *ᴄʀᴇᴀᴛᴇ sᴇʀᴠᴇʀ* 」\n`
+    txt += `╭─「 📦 *Create sErver* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}1gb${ver}\` - \`${prefix}10gb${ver}\` | \`${prefix}unli${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 👑 *ᴏᴡɴᴇʀ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
+    txt += `╭─「 👑 *Owner Management* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}addowner${ver}\` | \`${prefix}delowner${ver}\` | \`${prefix}listowner${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 🎯 *ᴄᴇᴏ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
+    txt += `╭─「 🎯 *Ceo Management* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}addceo${ver}\` | \`${prefix}delceo${ver}\` | \`${prefix}listceo${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 👥 *ʀᴇsᴇʟʟᴇʀ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
+    txt += `╭─「 👥 *Reseller Management* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}addreseller${ver}\` | \`${prefix}delreseller${ver}\` | \`${prefix}listreseller${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 🔐 *ᴀᴅᴍɪɴ ᴘᴀɴᴇʟ* 」\n`
+    txt += `╭─「 🔐 *Admin Panel* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}cadmin${ver}\` | \`${prefix}deladmin${ver}\` | \`${prefix}listadmin${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 🖥️ *sᴇʀᴠᴇʀ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
+    txt += `╭─「 🖥️ *sErver Management* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}listserver${ver}\` | \`${prefix}delserver${ver}\` | \`${prefix}serverinfo${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 👤 *ᴜsᴇʀ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
+    txt += `╭─「 👤 *User Management* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}listuser${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 🏪 *ɢᴄ sᴇʟʟᴇʀ ᴘᴀɴᴇʟ* 」\n`
+    txt += `╭─「 🏪 *Gc sEller Panel* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}addgcseller${ver}\` | \`${prefix}resetgcseller${ver}\`\n`
     }
@@ -92,19 +92,19 @@ async function handler(m, { sock }) {
     const doConfig = config.digitalocean || {}
     const doHasToken = doConfig.token ? '✅' : '❌'
     
-    txt += `╭─「 🌊 *ᴅɪɢɪᴛᴀʟᴏᴄᴇᴀɴ ᴠᴘs* 」\n`
+    txt += `╭─「 🌊 *Digitalocean Vps* 」\n`
     txt += `┃ Status: ${doHasToken} Token\n`
     txt += `┃\n`
-    txt += `┃ 📦 *ᴄʀᴇᴀᴛᴇ ᴠᴘs:*\n`
+    txt += `┃ 📦 *Create Vps:*\n`
     txt += `┃ \`${prefix}vps1g1c\` - 1GB/1CPU\n`
     txt += `┃ \`${prefix}vps2g1c\` - 2GB/1CPU\n`
     txt += `┃ \`${prefix}vps4g2c\` - 4GB/2CPU\n`
     txt += `┃ \`${prefix}vps8g4c\` - 8GB/4CPU\n`
     txt += `┃\n`
-    txt += `┃ 🔧 *ᴍᴀɴᴀɢᴇ:*\n`
+    txt += `┃ 🔧 *Manage:*\n`
     txt += `┃ \`${prefix}listvps\` | \`${prefix}cekvps\` | \`${prefix}delvps\` | \`${prefix}sisavps\`\n`
     txt += `┃\n`
-    txt += `┃ ⚡ *ᴋᴏɴᴛʀᴏʟ:*\n`
+    txt += `┃ ⚡ *Kontrol:*\n`
     txt += `┃ \`${prefix}turnon\` | \`${prefix}turnoff\` | \`${prefix}restartvps\`\n`
     txt += `╰───────────────\n\n`
     

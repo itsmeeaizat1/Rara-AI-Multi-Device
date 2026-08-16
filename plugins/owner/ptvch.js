@@ -37,14 +37,14 @@ async function handler(m, { sock }) {
     }
     
     if (!video) {
-        return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
             `> Kirim *video* atau *balas video* lalu ketik:\n` +
             `> \`${m.prefix}ptvch\``, "ptvch")
     }
     
     const channelId = config.saluran?.id || '120363404849776664@newsletter'
     
-    await m.reply(claraWrap("Ptvch", `🕕 *ᴍᴇɴɢɪʀɪᴍ ᴘᴛᴠ ᴋᴇ ᴄʜᴀɴɴᴇʟ...*`))
+    await m.reply(claraWrap("Ptvch", `🕕 *Mengirim Ptv Ke Channel...*`))
     
     try {
         await sock.sendMessage(channelId, {
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
         })
         
         await m.react('✅')
-        { const __navText = `✅ *sᴜᴋsᴇs*\n\n> Video berhasil dikirim ke channel sebagai PTV.`; return await m.reply(__navText); }
+        { const __navText = `✅ *sUkses*\n\n> Video berhasil dikirim ke channel sebagai PTV.`; return await m.reply(__navText); }
         
     } catch (err) {
         return m.reply(claraWrap("ptvch", te(m.prefix, m.command, m.pushName), "error"))

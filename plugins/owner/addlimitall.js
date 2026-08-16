@@ -24,14 +24,14 @@ async function handler(m, { sock }) {
         const amount = parseInt(m.args[0])
         
         if (isNaN(amount) || amount <= 0) {
-            return m.reply(`⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n> Masukkan jumlah limit yang ingin ditambahkan.\n\n\`Contoh: ${m.prefix}addlimitall 50\``)
+            return m.reply(`⚠️ *Cara Pakai*\n\n> Masukkan jumlah limit yang ingin ditambahkan.\n\n\`Contoh: ${m.prefix}addlimitall 50\``)
         }
         
         const groupMeta = m.groupMetadata
         const participants = groupMeta.participants || []
         
         if (participants.length === 0) {
-            return m.reply(claraWrap("Addenergiall", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak ada member di grup ini`))
+            return m.reply(claraWrap("Addenergiall", `❌ *Gagal*\n\n> Tidak ada member di grup ini`))
         }
         
         await m.react('🕐')

@@ -24,7 +24,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return sendReplyWithNav(sock, m, claraWrap("ɪǫᴄ ᴄʜᴀᴛ", `📱 *ɪǫᴄ ᴄʜᴀᴛ*\n\n> Masukkan teks untuk chat\n\n\`Contoh: ${m.prefix}iqc Hai cantik\``), "iqc");
+    return sendReplyWithNav(sock, m, claraWrap("Iqc Chat", `📱 *Iqc Chat*\n\n> Masukkan teks untuk chat\n\n\`Contoh: ${m.prefix}iqc Hai cantik\``), "iqc");
   }
 
   m.react("🕐");

@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-        return sendReplyWithNav(sock, m, '⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n' +
+        return sendReplyWithNav(sock, m, '⚠️ *Cara Pakai*\n\n' +
             '> `.unblock 628xxx` — Unblock via nomor\n' +
             '> `.unblock` (reply pesan) — Unblock pengirim\n' +
             '> `.unblock @mention` — Unblock yang di-mention\n' +
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     try {
         await sock.updateBlockStatus(targetJid, 'unblock')
         await m.react('✅')
-        return m.reply(claraWrap("unblock", `✅ *ɴᴏᴍᴏʀ ᴅɪ-ᴜɴʙʟᴏᴄᴋ*\n\n` +
+        return m.reply(claraWrap("unblock", `✅ *Nomor Di-Unblock*\n\n` +
             `> Target: @${targetJid.split('@')[0]}`))
     } catch (err) {
         return m.reply(claraWrap("unblock", te(m.prefix, m.command, m.pushName), "error"))

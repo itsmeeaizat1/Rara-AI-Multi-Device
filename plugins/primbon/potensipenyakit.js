@@ -22,7 +22,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (m.args.length < 3) {
-        return m.reply(`🏥 *ᴘᴏᴛᴇɴsɪ ᴘᴇɴʏᴀᴋɪᴛ*\n\n> Format: tgl bln thn\n\n\`Contoh: ${m.prefix}potensipenyakit 12 05 1998\``)
+        return m.reply(`🏥 *Potensi Penyakit*\n\n> Format: tgl bln thn\n\n\`Contoh: ${m.prefix}potensipenyakit 12 05 1998\``)
     }
     
     const [tgl, bln, thn] = m.args
@@ -33,14 +33,14 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(claraWrap("potensipenyakit", `❌ *ɢᴀɢᴀʟ*\n\n> Gagal menganalisa`))
+            return m.reply(claraWrap("potensipenyakit", `❌ *Gagal*\n\n> Gagal menganalisa`))
         }
         
         const result = data.data
-        const response = `🏥 *ᴘᴏᴛᴇɴsɪ ᴘᴇɴʏᴀᴋɪᴛ*\n\n` +
+        const response = `🏥 *Potensi Penyakit*\n\n` +
             `> Tanggal: *${tgl}-${bln}-${thn}*\n\n` +
-            `📊 *ᴇʟᴇᴍᴇɴ:*\n${result.sektor}\n\n` +
-            `⚠️ *ᴘᴏᴛᴇɴsɪ:*\n${result.elemen}\n\n` +
+            `📊 *Elemen:*\n${result.sektor}\n\n` +
+            `⚠️ *Potensi:*\n${result.elemen}\n\n` +
             `> _${result.catatan}_`
         
         m.react('✅')

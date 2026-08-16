@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
         const maxWarn = groupData.toxicMaxWarn || 3
         const method = groupData.toxicMethod || 'kick'
 
-        let txt = `🛡️ *ᴀɴᴛɪᴛᴏxɪᴄ*\n\n`
+        let txt = `🛡️ *Antitoxic*\n\n`
         txt += `> Status: *${status}*\n`
         txt += `> Kata: *${toxicCount}*\n`
         txt += `> Max Warn: *${maxWarn}*\n`

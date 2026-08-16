@@ -57,12 +57,12 @@ async function handler(m, { sock }) {
     }
     
     if (m.isVideo || m.quoted?.isVideo) {
-        return m.reply(`❌ *ᴛɪᴅᴀᴋ ᴅɪᴅᴜᴋᴜɴɢ*\n\n> Hanya gambar/screenshot yang didukung\n> Video tidak bisa diproses\n\n\`Reply atau kirim gambar dengan caption ${m.prefix}animeapaini\``)
+        return m.reply(`❌ *Tidak Didukung*\n\n> Hanya gambar/screenshot yang didukung\n> Video tidak bisa diproses\n\n\`Reply atau kirim gambar dengan caption ${m.prefix}animeapaini\``)
     }
     
     if (!imageMsg && !imageBuffer) {
         return m.reply(
-            `🔍 *ᴀɴɪᴍᴇ ᴀᴘᴀ ɪɴɪ?*\n\n` +
+            `🔍 *Anime Apa Ini?*\n\n` +
             `> Kirim gambar dengan caption:\n` +
             `> \`${m.prefix}animeapaini\`\n\n` +
             `> Atau reply gambar dengan:\n` +
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
         const filename = d.filename || 'Unknown'
         const animeName = filename.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').replace(/\.mp4|\.mkv|\.avi/gi, '').trim() || 'Unknown Anime'
         
-        const caption = `🔍 *ᴀɴɪᴍᴇ ᴀᴘᴀ ɪɴɪ?*\n\n` +
+        const caption = `🔍 *Anime Apa Ini?*\n\n` +
             `🎬 *Anime:* ${animeName}\n` +
             `📺 *Episode:* ${d.episode || 'Movie/OVA'}\n` +
             `🆔 *AniList ID:* ${d.anilist || '-'}\n\n` +

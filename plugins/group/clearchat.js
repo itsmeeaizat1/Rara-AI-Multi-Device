@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
             }] 
         }, m.chat)
         
-        await m.reply(claraWrap("Clearchat", `✅ *ᴄʜᴀᴛ ᴅɪʙᴇʀsɪʜᴋᴀɴ*\n\n> Chat grup telah dibersihkan oleh @${m.sender.split('@')[0]}`))
+        await m.reply(claraWrap("Clearchat", `✅ *Chat Dibersihkan*\n\n> Chat grup telah dibersihkan oleh @${m.sender.split('@')[0]}`))
         
     } catch (error) {
         try {
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
                 } 
             }, m.chat)
             
-            m.reply(claraWrap("Clearchat", `✅ *ᴄʜᴀᴛ ᴅɪʙᴇʀsɪʜᴋᴀɴ*\n\nChat grup di wa bot telah dibersihkan oleh @${m.sender.split('@')[0]}\nSilahkan lihat sendiri di wa bot kamu`))
+            m.reply(claraWrap("Clearchat", `✅ *Chat Dibersihkan*\n\nChat grup di wa bot telah dibersihkan oleh @${m.sender.split('@')[0]}\nSilahkan lihat sendiri di wa bot kamu`))
         } catch (e) {
             m.reply(claraWrap("clearchat", te(m.prefix, m.command, m.pushName), "error"))
         }

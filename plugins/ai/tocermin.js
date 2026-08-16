@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === 'imageMessage'))
     
     if (!isImage) {
-        return sendReplyWithNav(sock, m, `🪞 *ᴛᴏ ᴄᴇʀᴍɪɴ*\n\n` +
+        return sendReplyWithNav(sock, m, `🪞 *To Cermin*\n\n` +
             `> Kirim/reply gambar untuk efek cermin\n\n` +
             `\`${m.prefix}tocermin\``, "tocermin")
     }

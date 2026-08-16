@@ -47,7 +47,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const text =
       claraWrap("Bounty", "🏆") +
       "\n\n" +
-      claraWrap("ᴛᴇʀꜱᴇᴅɪᴀ", available.map((b) => `◦ ${b.title} - *${b.reward}*`)) +
+      claraWrap("TerꜱEdia", available.map((b) => `◦ ${b.title} - *${b.reward}*`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

@@ -89,7 +89,7 @@ function handler(m, { sock }) {
     if (!parsed) return sendReplyWithNav(sock, m, '❌ Command tidak valid.', "gcseller")
 
     if (!hasAccess(m.sender, m.isOwner)) {
-        return sendReplyWithNav(sock, m, '❌ *ᴀᴋsᴇs ᴅɪᴛᴏʟᴀᴋ*\n\n> Fitur ini hanya untuk Owner atau Owner Panel.', "gcseller")
+        return sendReplyWithNav(sock, m, '❌ *Akses Ditolak*\n\n> Fitur ini hanya untuk Owner atau Owner Panel.', "gcseller")
     }
 
     const { action, version } = parsed
@@ -104,13 +104,13 @@ function handler(m, { sock }) {
         saveGcSeller(version, m.chat)
         m.react('✅')
 
-        let txt = `✅ *ɢᴄ sᴇʟʟᴇʀ ${serverLabel} ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n`
-        txt += `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n`
-        txt += `┃ 🖥️ sᴇʀᴠᴇʀ: \`${serverLabel}\`\n`
-        txt += `┃ 👥 ɢʀᴜᴘ: \`${m.groupName || m.chat}\`\n`
-        txt += `┃ 🔓 ᴀᴋsᴇs: \`1gb${version}\` - \`10gb${version}\`, \`unli${version}\`\n`
+        let txt = `✅ *Gc sEller ${serverLabel} Ditambahkan*\n\n`
+        txt += `╭┈┈⬡「 📋 *Detail* 」\n`
+        txt += `┃ 🖥️ sErver: \`${serverLabel}\`\n`
+        txt += `┃ 👥 Grup: \`${m.groupName || m.chat}\`\n`
+        txt += `┃ 🔓 Akses: \`1gb${version}\` - \`10gb${version}\`, \`unli${version}\`\n`
         if (current) {
-            txt += `┃ ⚠️ ᴘʀᴇᴠ: \`${current}\` (diganti)\n`
+            txt += `┃ ⚠️ Prev: \`${current}\` (diganti)\n`
         }
         txt += `╰┈┈⬡\n\n`
         txt += `> Semua member grup ini sekarang bisa create server ${serverLabel}.`
@@ -125,7 +125,7 @@ function handler(m, { sock }) {
 
         saveGcSeller(version, null)
         m.react('✅')
-        return m.reply(`✅ *ɢᴄ sᴇʟʟᴇʀ ${serverLabel} ᴅɪʀᴇsᴇᴛ*\n\n` +
+        return m.reply(`✅ *Gc sEller ${serverLabel} Direset*\n\n` +
             `> Grup: \`${current}\`\n` +
             `> Server *${serverLabel}* tidak lagi terhubung ke grup manapun.`)
     }

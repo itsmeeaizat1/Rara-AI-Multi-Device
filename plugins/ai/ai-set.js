@@ -67,8 +67,8 @@ async function handler(m, { sock, config: botConfig }) {
           `◦ Gemini Key: *${aiHelpConfig.geminiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
           `◦ Anthropic Key: *${aiHelpConfig.anthropicApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
           `◦ System Prompt: *${String(aiHelpConfig.systemPrompt || "").slice(0, 80)}...*`].join("\n")) +
-        claraWrap("ᴘʀᴏᴠɪᴅᴇʀ", buildProviderList(prefix)) +
-        claraWrap("ᴘᴇʀɪɴᴛᴀʜ", [`◦ *${prefix}ai-set list* — lihat pengaturan AI`, `◦ *${prefix}ai-set provider <nama>* — ganti provider`, `◦ *${prefix}ai-set model <model>* — ganti model`, `◦ *${prefix}ai-set apiKey <key>* — set API key (fallback)`, `◦ *${prefix}ai-set apiKey openai <key>* — set OpenAI key`, `◦ *${prefix}ai-set apiKey gemini <key>* — set Gemini key`, `◦ *${prefix}ai-set apiKey anthropic <key>* — set Anthropic key`, `◦ *${prefix}ai-set endpoint <url>* — set endpoint`, `◦ *${prefix}ai-set prompt <teks>* — set system prompt`, `◦ *${prefix}ai-set on/off* — nyalakan/matikan AI`, `◦ *${prefix}ai-set mode offline/online* — ganti mode`, `◦ *${prefix}ai-addprovider* — tambah provider custom`].join("\n")) +
+        claraWrap("Provider", buildProviderList(prefix)) +
+        claraWrap("Perintah", [`◦ *${prefix}ai-set list* — lihat pengaturan AI`, `◦ *${prefix}ai-set provider <nama>* — ganti provider`, `◦ *${prefix}ai-set model <model>* — ganti model`, `◦ *${prefix}ai-set apiKey <key>* — set API key (fallback)`, `◦ *${prefix}ai-set apiKey openai <key>* — set OpenAI key`, `◦ *${prefix}ai-set apiKey gemini <key>* — set Gemini key`, `◦ *${prefix}ai-set apiKey anthropic <key>* — set Anthropic key`, `◦ *${prefix}ai-set endpoint <url>* — set endpoint`, `◦ *${prefix}ai-set prompt <teks>* — set system prompt`, `◦ *${prefix}ai-set on/off* — nyalakan/matikan AI`, `◦ *${prefix}ai-set mode offline/online* — ganti mode`, `◦ *${prefix}ai-addprovider* — tambah provider custom`].join("\n")) +
         
         "\n" ;
 

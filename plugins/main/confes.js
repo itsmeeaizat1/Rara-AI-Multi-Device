@@ -83,7 +83,7 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("Confes", [`◦ Penggunaan: *${prefix}confes <nomor>|<mode>|<pesan>*`,
           `◦ Contoh: *${prefix}confes 6281234567890|nembak|Aku suka kamu*`].join("\n")) +
         "\n" +
-        claraWrap("ᴍᴏᴅᴇ", ["🫣 nembak", "🤙 kenalan", "🍭 ndate", "💘 pcr", "🗝️ lowkey", "📩 dm"].join("\n")) +
+        claraWrap("Mode", ["🫣 nembak", "🤙 kenalan", "🍭 ndate", "💘 pcr", "🗝️ lowkey", "📩 dm"].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +

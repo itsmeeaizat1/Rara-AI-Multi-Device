@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
   }
 
   if (!text) {
-    return sendReplyWithNav(sock, m, `🖼️ *ʙʀᴀᴛ ɪᴍᴀɢᴇ*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratimg Hai semua\``, "brat");
+    return sendReplyWithNav(sock, m, `🖼️ *Brat Image*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratimg Hai semua\``, "brat");
   }
 
   m.react("🕐");

@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
 
     if (!url) {
-        return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
             `> \`${m.prefix}ccdl <url>\`\n\n` +
             `> Contoh:\n` +
             `> \`${m.prefix}ccdl https://www.capcut.com/t/xxx\``, "capcutdl")

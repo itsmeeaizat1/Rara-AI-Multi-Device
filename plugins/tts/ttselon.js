@@ -49,7 +49,7 @@ function convertToOpus(inputPath, outputPath) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text)
-    return sendReplyWithNav(sock, m, `🚀 *ᴇʟᴏɴ ᴍᴜsᴋ ᴛᴛs*\n\n> Gunakan: \`${m.prefix}ttselon <text>\``, "ttselon");
+    return sendReplyWithNav(sock, m, `🚀 *Elon Musk Tts*\n\n> Gunakan: \`${m.prefix}ttselon <text>\``, "ttselon");
 
 
   try {

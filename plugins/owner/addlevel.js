@@ -39,8 +39,8 @@ async function handler(m, { sock }) {
     }
     
     if (!targetJid || levels <= 0) {
-        return sendReplyWithNav(sock, m, `📊 *ᴀᴅᴅ ʟᴇᴠᴇʟ*\n\n` +
-            `╭┈┈⬡「 📋 *ᴜsᴀɢᴇ* 」\n` +
+        return sendReplyWithNav(sock, m, `📊 *Add Level*\n\n` +
+            `╭┈┈⬡「 📋 *Usage* 」\n` +
             `┃ > \`.addlevel <jumlah>\` - ke diri sendiri\n` +
             `┃ > \`.addlevel <jumlah> @user\` - ke orang lain\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     }
     
     if (levels <= 0) {
-        return m.reply(claraWrap("Addlevel", `❌ *ɢᴀɢᴀʟ*\n\n> Jumlah level harus lebih dari 0`))
+        return m.reply(claraWrap("Addlevel", `❌ *Gagal*\n\n> Jumlah level harus lebih dari 0`))
     }
     
     const user = db.getUser(targetJid) || db.setUser(targetJid)

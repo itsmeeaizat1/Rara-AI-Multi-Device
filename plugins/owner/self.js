@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     try {
         const isRealOwner = validateOwner(m);
         if (!isRealOwner) {
-            return m.reply(claraWrap("Self", '🚫 *ᴀᴋsᴇs ᴅɪᴛᴏʟᴀᴋ*\n\n> Hanya owner yang bisa mengubah mode bot!'));
+            return m.reply(claraWrap("Self", '🚫 *Akses Ditolak*\n\n> Hanya owner yang bisa mengubah mode bot!'));
         }
         const currentMode = config.mode;
         if (currentMode === 'self') {
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         const db = getDatabase();
         db.setting('botMode', 'self');
         
-        const responseText = `🔒 *ᴍᴏᴅᴇ sᴇʟꜰ ᴀᴋᴛɪꜰ*\n\n` +
+        const responseText = `🔒 *Mode sElf Aktif*\n\n` +
             `> Bot sekarang hanya merespon:\n` +
             `> • Owner bot\n` +
             `> • Bot sendiri (fromMe)\n\n` +

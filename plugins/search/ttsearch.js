@@ -29,9 +29,9 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ sᴇᴀʀᴄʜ* 」
+    return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎵 *Tiktok sEarch* 」
 ┃
-㊗ ᴜsᴀɢᴇ: \`${m.prefix}ttsearch <query>\`
+㊗ Usage: \`${m.prefix}ttsearch <query>\`
 ┃
 ╰┈┈⬡
 

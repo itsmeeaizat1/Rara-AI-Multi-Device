@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
   if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
     const userRole = getUserRole(m.sender, serverVersion);
     return m.reply(
-      `❌ *ᴀᴋsᴇs ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+      `❌ *Akses Ditolak*\n\n` +
         `> Kamu tidak punya akses ke *${serverLabel}*\n` +
         `> Role kamu: *${userRole || "Tidak ada"}*`,
     );
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
 
   if (missingConfig.length > 0) {
     const available = getAvailableServers(pteroConfig);
-    let txt = `⚠️ *sᴇʀᴠᴇʀ ${serverLabel} ʙᴇʟᴜᴍ ᴋᴏɴꜰɪɢ*\n\n`;
+    let txt = `⚠️ *sErver ${serverLabel} Belum Konfig*\n\n`;
     if (available.length > 0) {
       txt += `> Server tersedia: *${available.join(", ")}*\n`;
       txt += `> Contoh: \`${m.prefix}cadmin${available[0]} username\``;
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
   if (!username) {
     const available = getAvailableServers(pteroConfig);
     return m.reply(
-      `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+      `⚠️ *Cara Pakai*\n\n` +
         `> \`${m.prefix}${m.command} username\`\n` +
         `> \`${m.prefix}${m.command} username,628xxx\`\n` +
         `> Reply/mention user\n\n` +
@@ -163,7 +163,7 @@ async function handler(m, { sock }) {
   const password = username + crypto.randomBytes(3).toString("hex");
 
   await m.reply(
-    `🛠️ *ᴍᴇᴍʙᴜᴀᴛ ᴀᴅᴍɪɴ ᴘᴀɴᴇʟ...*\n\n> Server: *${serverLabel}*\n> Username: \`${username}\`\n> Target: \`${targetUser.split("@")[0]}\``,
+    `🛠️ *Membuat Admin Panel...*\n\n> Server: *${serverLabel}*\n> Username: \`${username}\`\n> Target: \`${targetUser.split("@")[0]}\``,
   );
 
   try {
@@ -189,16 +189,16 @@ async function handler(m, { sock }) {
 
     const user = userRes.data.attributes;
 
-    let detailTxt = `✅ *ᴀᴅᴍɪɴ ᴘᴀɴᴇʟ ʙᴇʀʜᴀsɪʟ ᴅɪʙᴜᴀᴛ*\n\n`;
-    detailTxt += `╭─「 📋 *ᴅᴇᴛᴀɪʟ ᴀᴋᴜɴ* 」\n`;
-    detailTxt += `┃ 🖥️ \`sᴇʀᴠᴇʀ\`: *${serverLabel}*\n`;
-    detailTxt += `┃ 🆔 \`ᴜsᴇʀ ɪᴅ\`: *${user.id}*\n`;
-    detailTxt += `┃ 👤 \`ᴜsᴇʀɴᴀᴍᴇ\`: *${user.username}*\n`;
-    detailTxt += `┃ 🔐 \`ᴘᴀssᴡᴏʀᴅ\`: *${password}*\n`;
-    detailTxt += `┃ 👑 \`sᴛᴀᴛᴜs\`: *Root Admin*\n`;
-    detailTxt += `┃ 🗓️ \`ᴛᴀɴɢɢᴀʟ\`: *${formatDate()}*\n`;
+    let detailTxt = `✅ *Admin Panel Berhasil Dibuat*\n\n`;
+    detailTxt += `╭─「 📋 *Detail Akun* 」\n`;
+    detailTxt += `┃ 🖥️ \`sErver\`: *${serverLabel}*\n`;
+    detailTxt += `┃ 🆔 \`User Id\`: *${user.id}*\n`;
+    detailTxt += `┃ 👤 \`Username\`: *${user.username}*\n`;
+    detailTxt += `┃ 🔐 \`Password\`: *${password}*\n`;
+    detailTxt += `┃ 👑 \`sTatus\`: *Root Admin*\n`;
+    detailTxt += `┃ 🗓️ \`Tanggal\`: *${formatDate()}*\n`;
     detailTxt += `╰───────────────\n\n`;
-    detailTxt += `🌐 *ʟᴏɢɪɴ ᴘᴀɴᴇʟ:* ${serverConfig.domain}\n\n`;
+    detailTxt += `🌐 *Login Panel:* ${serverConfig.domain}\n\n`;
     detailTxt += `> ⚠️ Akun ini memiliki akses penuh!\n`;
     detailTxt += `> ⚠️ Jangan bagikan ke siapapun!`;
 
@@ -206,7 +206,7 @@ async function handler(m, { sock }) {
 
     if (targetUser !== m.sender) {
       await m.reply(
-        `✅ *ᴀᴅᴍɪɴ ᴘᴀɴᴇʟ ʙᴇʀʜᴀsɪʟ ᴅɪʙᴜᴀᴛ*\n\n> Server: *${serverLabel}*\n> Data telah dikirim ke \`${targetUser.split("@")[0]}\``,
+        `✅ *Admin Panel Berhasil Dibuat*\n\n> Server: *${serverLabel}*\n> Data telah dikirim ke \`${targetUser.split("@")[0]}\``,
       );
     }
   } catch (err) {

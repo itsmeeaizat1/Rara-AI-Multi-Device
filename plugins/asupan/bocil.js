@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
         m.react('✅')
         
     } catch (error) {
-        m.reply(claraWrap("ᴇʀʀᴏʀ", `❌ *ᴇʀʀᴏʀ*\n\n> Video tidak ditemukan`))
+        m.reply(claraWrap("Error", `❌ *Error*\n\n> Video tidak ditemukan`))
     }
 }
 

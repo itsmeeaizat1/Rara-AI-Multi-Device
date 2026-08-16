@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
   const isSelfGroup = selfGroups.includes(m.chat);
 
   if (isSelfGroup) {
-    return m.reply(claraWrap("ɢʀᴜᴘ ɪɴɪ sᴜᴅᴀʜ ᴍᴏᴅᴇ sᴇʟꜰ", `ℹ️ *ɢʀᴜᴘ ɪɴɪ sᴜᴅᴀʜ ᴍᴏᴅᴇ sᴇʟꜰ*\n\n` +
+    return m.reply(claraWrap("Grup Ini sUdah Mode sElf", `ℹ️ *Grup Ini sUdah Mode sElf*\n\n` +
         `> Bot hanya merespon owner & bot sendiri\n\n` +
         `_Gunakan ${m.prefix}publicthisgc untuk membuka akses_`));
   }
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
   const updatedPublic = publicGroups.filter((id) => id !== m.chat);
   db.setting("publicGroups", updatedPublic);
 
-  return m.reply(claraWrap("ᴍᴏᴅᴇ sᴇʟꜰ ᴀᴋᴛɪꜰ", `🔒 *ᴍᴏᴅᴇ sᴇʟꜰ ᴀᴋᴛɪꜰ*\n\n` +
+  return m.reply(claraWrap("Mode sElf Aktif", `🔒 *Mode sElf Aktif*\n\n` +
       `> Bot di grup ini sekarang hanya merespon:\n` +
       `> • Owner bot\n` +
       `> • Bot sendiri (fromMe)\n\n` +

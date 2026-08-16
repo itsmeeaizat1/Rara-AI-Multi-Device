@@ -98,7 +98,7 @@ function getBackupOutputDir(projectRoot) {
 
 async function handler(m, { sock }) {
   await m.react("🕐");
-  await m.reply(claraWrap("Backupsc", `📦 *ʙᴀᴄᴋᴜᴘ sᴄʀɪᴘᴛ*\n\n> Memproses backup...\n> Mohon tunggu sebentar...`));
+  await m.reply(claraWrap("Backupsc", `📦 *Backup sCript*\n\n> Memproses backup...\n> Mohon tunggu sebentar...`));
   try {
     const projectRoot = process.cwd();
     const timestamp = moment().tz("Asia/Jakarta").format("YYYY-MM-DD_HH-mm-ss");
@@ -193,12 +193,12 @@ async function handler(m, { sock }) {
         fileName: zipFileName,
         mimetype: "application/zip",
         caption:
-          `✅ *ʙᴀᴄᴋᴜᴘ sᴇʟᴇsᴀɪ*\n\n` +
-          `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-          `┃ 📝 ɴᴀᴍᴀ: \`${zipFileName}\`\n` +
-          `┃ 📊 sɪᴢᴇ: \`${fileSizeMB} MB\`\n` +
-          `┃ 📁 ꜰɪʟᴇ: \`${fileCount}\`\n` +
-          `┃ 📅 ᴛᴀɴɢɢᴀʟ: \`${moment().tz("Asia/Jakarta").format("DD/MM/YYYY")}\`\n` +
+          `✅ *Backup sElesai*\n\n` +
+          `╭┈┈⬡「 📋 *Detail* 」\n` +
+          `┃ 📝 Nama: \`${zipFileName}\`\n` +
+          `┃ 📊 sIze: \`${fileSizeMB} MB\`\n` +
+          `┃ 📁 File: \`${fileCount}\`\n` +
+          `┃ 📅 Tanggal: \`${moment().tz("Asia/Jakarta").format("DD/MM/YYYY")}\`\n` +
           `╰┈┈⬡`,
         contextInfo: {
           forwardingScore: 9999,

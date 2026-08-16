@@ -52,13 +52,13 @@ function handler(m, { sock, db }) {
     if (args === 'on') {
         group.notifSholat = true;
         db.setGroup(m.chat, group);
-        return m.reply(claraWrap("Notifsholat", `✅ *ɴᴏᴛɪꜰ sʜᴏʟᴀᴛ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*\n\n> Grup ini akan menerima pengingat waktu sholat\n> Lokasi: ${kotaSetting.nama}`));
+        return m.reply(claraWrap("Notifsholat", `✅ *Notif sHolat Diaktifkan*\n\n> Grup ini akan menerima pengingat waktu sholat\n> Lokasi: ${kotaSetting.nama}`));
     }
 
     if (args === 'off') {
         group.notifSholat = false;
         db.setGroup(m.chat, group);
-        return m.reply(claraWrap("Notifsholat", `❌ *ɴᴏᴛɪꜰ sʜᴏʟᴀᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`));
+        return m.reply(claraWrap("Notifsholat", `❌ *Notif sHolat Dinonaktifkan*`));
     }
 }
 

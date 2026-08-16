@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
     
     if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("listadmin", `❌ *ᴀᴋsᴇs ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+        return m.reply(claraWrap("listadmin", `❌ *Akses Ditolak*\n\n` +
             `> Kamu tidak punya akses ke *${serverLabel}*\n` +
             `> Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
     
     if (missingConfig.length > 0) {
         const available = getAvailableServers(pteroConfig)
-        let txt = `⚠️ *sᴇʀᴠᴇʀ ${serverLabel} ʙᴇʟᴜᴍ ᴋᴏɴꜰɪɢ*\n\n`
+        let txt = `⚠️ *sErver ${serverLabel} Belum Konfig*\n\n`
         if (available.length > 0) {
             txt += `> Server tersedia: *${available.join(', ')}*`
         } else {
@@ -96,10 +96,10 @@ async function handler(m, { sock }) {
         const admins = users.filter(u => u.attributes.root_admin)
         
         if (admins.length === 0) {
-            return m.reply(claraWrap("listadmin", `📋 *ᴅᴀꜰᴛᴀʀ ᴀᴅᴍɪɴ [${serverLabel}]*\n\n> Tidak ada admin terdaftar.`))
+            return m.reply(claraWrap("listadmin", `📋 *Daftar Admin [${serverLabel}]*\n\n> Tidak ada admin terdaftar.`))
         }
         
-        let txt = `📋 *ᴅᴀꜰᴛᴀʀ ᴀᴅᴍɪɴ [${serverLabel}]*\n\n`
+        let txt = `📋 *Daftar Admin [${serverLabel}]*\n\n`
         txt += `> Total: *${admins.length}* admin\n\n`
         
         admins.forEach((u, i) => {

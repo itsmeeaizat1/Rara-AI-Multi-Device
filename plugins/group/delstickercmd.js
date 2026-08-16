@@ -27,14 +27,14 @@ async function handler(m, { sock }) {
         const existingCmds = listStickerCommands()
         if (existingCmds.length === 0) {
             return m.reply(
-                `🖼️ *sᴛɪᴄᴋᴇʀ ᴄᴏᴍᴍᴀɴᴅs*\n\n` +
+                `🖼️ *sTicker Commands*\n\n` +
                 `> Tidak ada sticker command yang terdaftar.\n` +
                 `> Tambahkan dengan \`.addcmdsticker\``
             )
         }
         
-        let txt = `🖼️ *sᴛɪᴄᴋᴇʀ ᴄᴏᴍᴍᴀɴᴅs*\n\n`
-        txt += `╭┈┈⬡「 📋 *ᴅᴀꜰᴛᴀʀ* 」\n`
+        let txt = `🖼️ *sTicker Commands*\n\n`
+        txt += `╭┈┈⬡「 📋 *Daftar* 」\n`
         
         for (const cmd of existingCmds) {
             txt += `┃ 🖼️ → \`.${cmd.command}\`\n`
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
     if (deleted) {
         await m.react('✅')
         await m.reply(
-            `✅ *sᴛɪᴄᴋᴇʀ ᴄᴏᴍᴍᴀɴᴅ ᴅɪʜᴀᴘᴜs*\n\n` +
+            `✅ *sTicker Command Dihapus*\n\n` +
             `> 🗑️ \`${deletedCmd}\` telah dihapus.`
         )
     } else {

@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
         const participants = groupMeta.participants || []
         
         if (participants.length === 0) {
-            return m.reply(claraWrap("Addpremall", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak ada member di grup ini`))
+            return m.reply(claraWrap("Addpremall", `❌ *Gagal*\n\n> Tidak ada member di grup ini`))
         }
         
         await m.react('🕐')
@@ -76,12 +76,12 @@ async function handler(m, { sock }) {
           }).catch(() => {});
         }
         
-        await m.reply(`💎 *ᴀᴅᴅ ᴘʀᴇᴍɪᴜᴍ ᴀʟʟ*\n\n` +
-            `╭┈┈⬡「 📋 *ʜᴀsɪʟ* 」\n` +
-            `┃ 👥 ᴛᴏᴛᴀʟ ᴍᴇᴍʙᴇʀ: \`${participants.length}\`\n` +
-            `┃ ✅ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ: \`${addedCount}\`\n` +
-            `┃ ⏭️ sᴜᴅᴀʜ ᴘʀᴇᴍɪᴜᴍ: \`${alreadyPremCount}\`\n` +
-            `┃ 💎 ᴛᴏᴛᴀʟ ᴘʀᴇᴍɪᴜᴍ: \`${db.data.premium.length}\`\n` +
+        await m.reply(`💎 *Add Premium All*\n\n` +
+            `╭┈┈⬡「 📋 *Hasil* 」\n` +
+            `┃ 👥 Total Member: \`${participants.length}\`\n` +
+            `┃ ✅ Ditambahkan: \`${addedCount}\`\n` +
+            `┃ ⏭️ sUdah Premium: \`${alreadyPremCount}\`\n` +
+            `┃ 💎 Total Premium: \`${db.data.premium.length}\`\n` +
             `╰┈┈⬡\n\n` +
             `> Grup: ${groupMeta.subject}`)
         

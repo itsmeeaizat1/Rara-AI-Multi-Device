@@ -29,7 +29,7 @@ function handler(m, { sock }) {
     if (!option) {
         const status = groupData.antijudol || 'off'
         const mode = groupData.antijudolMode || 'remove'
-        return sendReplyWithNav(sock, m, `🎰 *ᴀɴᴛɪᴊᴜᴅᴏʟ*\n\n` +
+        return sendReplyWithNav(sock, m, `🎰 *Antijudol*\n\n` +
             `> Status: *${status.toUpperCase()}*\n` +
             `> Mode: *${mode.toUpperCase()}*\n\n` +
             `> Deteksi konten judol seperti judi, slot, gacor, maxwin, togel, bonus member, link alternatif, dan pola sejenis.\n\n` +

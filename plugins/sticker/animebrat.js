@@ -24,7 +24,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.args.join(' ')
     if (!text) {
-        { const __navText = `🖼️ *ʙʀᴀᴛ ᴀɴɪᴍᴇ sᴛɪᴄᴋᴇʀ*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}animebrat Hai semua\``; return await sendReplyWithNav(sock, m, __navText, "bratanime"); }
+        { const __navText = `🖼️ *Brat Anime sTicker*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}animebrat Hai semua\``; return await sendReplyWithNav(sock, m, __navText, "bratanime"); }
     }
     
     m.react('🕐')

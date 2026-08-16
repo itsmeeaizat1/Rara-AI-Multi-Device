@@ -164,10 +164,10 @@ async function handler(m, { sock, config: botConfig }) {
           `◦ OpenAI Key: *${aiHelp.openaiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
           `◦ Gemini Key: *${aiHelp.geminiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
           `◦ Anthropic Key: *${aiHelp.anthropicApiKey ? "Terpasang ✅" : "Belum ❌"}*`].join("\n")) +
-        claraWrap("ᴏᴘᴇɴᴀɪ ꜰᴏʀᴍᴀᴛ", [`  *${prefix}tio openai <pesan>*`, `  Endpoint: /v1/chat/completions`].join("\n")) +
-        claraWrap("ɢᴇᴍɪɴɪ ꜰᴏʀᴍᴀᴛ", [`  *${prefix}tio gemini <pesan>*`, `  Endpoint: /v1beta/models/{model}:generateContent`].join("\n")) +
-        claraWrap("ᴀɴᴛʜʀᴏᴘɪᴄ ꜰᴏʀᴍᴀᴛ", [`  *${prefix}tio anthropic <pesan>*`, `  Endpoint: /v1/messages`].join("\n")) +
-        claraWrap("ᴄᴏᴍᴍᴀɴᴅ ʟᴀɪɴ", [`◦ *${prefix}tio model <format> <nama>* — ganti model`, `◦ *${prefix}tio list* — lihat semua model`, `◦ *${prefix}tio list free* — lihat model gratis`, `◦ Set API key di config.js:`, `    aiHelp.openaiApiKey / geminiApiKey / anthropicApiKey`].join("\n")) +
+        claraWrap("Openai Format", [`  *${prefix}tio openai <pesan>*`, `  Endpoint: /v1/chat/completions`].join("\n")) +
+        claraWrap("Gemini Format", [`  *${prefix}tio gemini <pesan>*`, `  Endpoint: /v1beta/models/{model}:generateContent`].join("\n")) +
+        claraWrap("Anthropic Format", [`  *${prefix}tio anthropic <pesan>*`, `  Endpoint: /v1/messages`].join("\n")) +
+        claraWrap("Command Lain", [`◦ *${prefix}tio model <format> <nama>* — ganti model`, `◦ *${prefix}tio list* — lihat semua model`, `◦ *${prefix}tio list free* — lihat model gratis`, `◦ Set API key di config.js:`, `    aiHelp.openaiApiKey / geminiApiKey / anthropicApiKey`].join("\n")) +
         
         "\n" ;
 

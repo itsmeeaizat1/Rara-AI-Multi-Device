@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.text
     if (!text) {
-        { const __navText = `🖼️ *ʙʀᴀᴛ ɢʀᴇᴇɴ*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratgreen Hai semua\``; return await sendReplyWithNav(sock, m, __navText, "bratgreen"); }
+        { const __navText = `🖼️ *Brat Green*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratgreen Hai semua\``; return await sendReplyWithNav(sock, m, __navText, "bratgreen"); }
     }
     
     m.react('🕐')

@@ -24,7 +24,7 @@ function handler(m, { sock }) {
     const link = m.text?.toLowerCase()
     
     if (!link) {
-        return sendReplyWithNav(sock, m, `🔗 *ᴀᴅᴅ ᴀɴᴛɪʟɪɴᴋ*\n\n` +
+        return sendReplyWithNav(sock, m, `🔗 *Add Antilink*\n\n` +
             `> Masukkan domain/pattern link yang ingin diblokir\n\n` +
             `\`Contoh:\`\n` +
             `\`${m.prefix}addantilink tiktok.com\`\n` +

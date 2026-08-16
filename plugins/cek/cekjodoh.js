@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const parts = input.split(/[&,]/).map(s => s.trim()).filter(s => s)
     
     if (parts.length < 2) {
-        { const __navText = claraWrap("ᴄᴇᴋ ᴊᴏᴅᴏʜ", `💕 *ᴄᴇᴋ ᴊᴏᴅᴏʜ*\n\n> Masukkan 2 nama!\n\n> Contoh: ${m.prefix}cekjodoh Budi & Ani`); return await sendReplyWithNav(sock, m, __navText, "cekjodoh"); }
+        { const __navText = claraWrap("Cek Jodoh", `💕 *Cek Jodoh*\n\n> Masukkan 2 nama!\n\n> Contoh: ${m.prefix}cekjodoh Budi & Ani`); return await sendReplyWithNav(sock, m, __navText, "cekjodoh"); }
     }
     
     const percent = Math.floor(Math.random() * 101)

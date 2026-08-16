@@ -182,7 +182,7 @@ async function handler(m, { sock }) {
     const avatarBuffer = await getAvatarBuffer(sock, m.sender);
     const isImage = m.isImage || (m.quoted && m.quoted.isImage);
     if (!isImage) {
-      return sendReplyWithNav(sock, m, `📷 *ꜰᴀᴋᴇ sᴛᴏʀʏ 2*\n\n` +
+      return sendReplyWithNav(sock, m, `📷 *Fake sTory 2*\n\n` +
           `> Reply gambar!\n\n` +
           `> Format: \`${m.prefix}fakestory2 <nama>\`\n` +
           `> Contoh: \`${m.prefix}fakestory2 Misaki\``, "fakestory2");
@@ -194,7 +194,7 @@ async function handler(m, { sock }) {
       imageBuffer = await m.quoted.download();
     }
     if (!imageBuffer) {
-      return m.reply(claraWrap("Fakestory2", `❌ *ɢᴀɢᴀʟ*\n\n> Tidak bisa download gambar`));
+      return m.reply(claraWrap("Fakestory2", `❌ *Gagal*\n\n> Tidak bisa download gambar`));
     }
     const resultBuffer = await createFakeStory(
       username,

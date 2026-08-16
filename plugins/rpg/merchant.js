@@ -47,9 +47,9 @@ function handler(m, { sock }) {
   const qty = Math.max(1, parseInt(args[2]) || 1);
 
   if (!action || !["buy", "sell", "list"].includes(action)) {
-    let txt = `🏪 *ᴍᴇʀᴄʜᴀɴᴛ sʜᴏᴘ*\n\n`;
+    let txt = `🏪 *Merchant sHop*\n\n`;
     txt += `> Selamat datang di toko!\n\n`;
-    txt += `*📋 *ᴄᴏᴍᴍᴀɴᴅ:*
+    txt += `*📋 *Command:*
 \n`;
     txt += `> ${m.prefix}merchant list\n`;
     txt += `> ${m.prefix}merchant buy <item> <qty>\n`;
@@ -60,8 +60,8 @@ function handler(m, { sock }) {
   }
 
   if (action === "list") {
-    let txt = `🏪 *ᴅᴀꜰᴛᴀʀ ɪᴛᴇᴍ*\n\n`;
-    txt += `*📦 *sʜᴏᴘ:*
+    let txt = `🏪 *Daftar Item*\n\n`;
+    txt += `*📦 *sHop:*
 \n`;
 
     for (const [key, item] of Object.entries(SHOP_ITEMS)) {
@@ -89,15 +89,15 @@ function handler(m, { sock }) {
 
     const totalCost = item.buyPrice * qty;
     if ((user.koin || 0) < totalCost) {
-      return sendReplyWithNav(sock, m, `❌ *ʙᴀʟᴀɴᴄᴇ ᴋᴜʀᴀɴɢ*\n\n` + `> Harga: ${totalCost.toLocaleString()}\n` + `> Balance: ${(user.koin || 0).toLocaleString()}`, "merchant");
+      return sendReplyWithNav(sock, m, `❌ *Balance Kurang*\n\n` + `> Harga: ${totalCost.toLocaleString()}\n` + `> Balance: ${(user.koin || 0).toLocaleString()}`, "merchant");
     }
 
     user.koin -= totalCost;
     user.inventory[itemKey] = (user.inventory[itemKey] || 0) + qty;
     db.save();
 
-    return sendReplyWithNav(sock, m, `✅ *ᴘᴇᴍʙᴇʟɪᴀɴ ʙᴇʀʜᴀsɪʟ*\n\n` +
-        `*🛒 *ᴅᴇᴛᴀɪʟ:*
+    return sendReplyWithNav(sock, m, `✅ *Pembelian Berhasil*\n\n` +
+        `*🛒 *Detail:*
 \n` +
         `> 📦 Item: *${item.name}*\n` +
         `> 📊 Qty: *${qty}*\n` +
@@ -118,7 +118,7 @@ function handler(m, { sock }) {
 
     const have = user.inventory[itemKey] || 0;
     if (have < qty) {
-      return sendReplyWithNav(sock, m, `❌ *ɪᴛᴇᴍ ᴋᴜʀᴀɴɢ*\n\n` + `> Punya: ${have}\n` + `> Mau jual: ${qty}`, "merchant");
+      return sendReplyWithNav(sock, m, `❌ *Item Kurang*\n\n` + `> Punya: ${have}\n` + `> Mau jual: ${qty}`, "merchant");
     }
 
     const totalEarn = item.sellPrice * qty;
@@ -127,8 +127,8 @@ function handler(m, { sock }) {
     if (user.inventory[itemKey] <= 0) delete user.inventory[itemKey];
     db.save();
 
-    return sendReplyWithNav(sock, m, `✅ *ᴘᴇɴᴊᴜᴀʟᴀɴ ʙᴇʀʜᴀsɪʟ*\n\n` +
-        `*💰 *ᴅᴇᴛᴀɪʟ:*
+    return sendReplyWithNav(sock, m, `✅ *Penjualan Berhasil*\n\n` +
+        `*💰 *Detail:*
 \n` +
         `> 📦 Item: *${item.name}*\n` +
         `> 📊 Qty: *${qty}*\n` +

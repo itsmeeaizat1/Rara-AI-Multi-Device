@@ -84,14 +84,14 @@ async function handler(m, { sock, plugins }) {
 
     if (activeAccess.length === 0) {
       return m.reply(
-        `📊 *ᴜsᴇʀ ᴀᴄᴄᴇss*\n\nTarget: @${target.split("@")[0]}\nStatus: *Tidak punya akses khusus*`,
+        `📊 *User Access*\n\nTarget: @${target.split("@")[0]}\nStatus: *Tidak punya akses khusus*`,
         {
           mentions: sock.parseMention(`@${target.split("@")[0]}`),
         },
       );
     }
 
-    let txt = `📊 *ᴜsᴇʀ ᴀᴄᴄᴇss*\n\n`;
+    let txt = `📊 *User Access*\n\n`;
     txt += `Target: @${target.split("@")[0]}\n`;
     txt += `Total: *${activeAccess.length}* commands\n`;
     txt += `━━━━━━━━━━━━━━━\n\n`;
@@ -131,7 +131,7 @@ async function handler(m, { sock, plugins }) {
       user.access[existingIdx].expired = expiredTime;
       db.setUser(target, user);
       return m.reply(
-        `✅ *ᴀᴋsᴇs ᴅɪᴘᴇʀʙᴀʀᴜɪ*\n\n` +
+        `✅ *Akses Diperbarui*\n\n` +
           `Command: \`${commandTarget}\`\n` +
           `Durasi: *${durationTarget}*\n` +
           `Target: @${target.split("@")[0]}`,
@@ -147,10 +147,10 @@ async function handler(m, { sock, plugins }) {
     // console.log('[DEBUG AddAccess] After save:', JSON.stringify(db.getUser(target)?.access))
 
     await m.reply(
-      `✅ *ᴀᴋsᴇs ᴅɪʙᴇʀɪᴋᴀɴ*\n\n` +
-        `┃ 🔑 ᴄᴍᴅ: \`${commandTarget}\`\n` +
-        `┃ ⏱️ ᴅᴜʀᴀsɪ: *${durationTarget}*\n` +
-        `┃ 👤 ᴛᴀʀɢᴇᴛ: @${target.split("@")[0]}\n`,
+      `✅ *Akses Diberikan*\n\n` +
+        `┃ 🔑 Cmd: \`${commandTarget}\`\n` +
+        `┃ ⏱️ Durasi: *${durationTarget}*\n` +
+        `┃ 👤 Target: @${target.split("@")[0]}\n`,
       { mentions: [target] },
     );
   }

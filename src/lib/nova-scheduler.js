@@ -555,7 +555,7 @@ async function startGroupScheduleChecker(sock) {
                 "not_announcement",
               );
               await groupScheduleSock.sendMessage(groupId, {
-                text: `🔓 *ᴀᴜᴛᴏ ᴏᴘᴇɴ*\n\n> Grup dibuka otomatis sesuai jadwal.\n> Waktu: ${currentTime} WIB`,
+                text: `🔓 *Auto Open*\n\n> Grup dibuka otomatis sesuai jadwal.\n> Waktu: ${currentTime} WIB`,
               });
               notifiedGroups.add(notifyKey);
               logger.success(
@@ -573,7 +573,7 @@ async function startGroupScheduleChecker(sock) {
                 );
                 try {
                   await groupScheduleSock.sendMessage(groupId, {
-                    text: `⚠️ *ɢᴀɢᴀʟ ᴀᴜᴛᴏ ᴏᴘᴇɴ*\n\n> Bot bukan admin, tidak bisa mengubah pengaturan grup.\n> Jadikan bot sebagai admin untuk mengaktifkan fitur ini.`,
+                    text: `⚠️ *Gagal Auto Open*\n\n> Bot bukan admin, tidak bisa mengubah pengaturan grup.\n> Jadikan bot sebagai admin untuk mengaktifkan fitur ini.`,
                   });
                 } catch {}
               } else {
@@ -593,7 +593,7 @@ async function startGroupScheduleChecker(sock) {
                 "announcement",
               );
               await groupScheduleSock.sendMessage(groupId, {
-                text: `🔒 *ᴀᴜᴛᴏ ᴄʟᴏsᴇ*\n\n> Grup ditutup otomatis sesuai jadwal.\n> Waktu: ${currentTime} WIB`,
+                text: `🔒 *Auto Close*\n\n> Grup ditutup otomatis sesuai jadwal.\n> Waktu: ${currentTime} WIB`,
               });
               notifiedGroups.add(notifyKey);
               logger.success(
@@ -611,7 +611,7 @@ async function startGroupScheduleChecker(sock) {
                 );
                 try {
                   await groupScheduleSock.sendMessage(groupId, {
-                    text: `⚠️ *ɢᴀɢᴀʟ ᴀᴜᴛᴏ ᴄʟᴏsᴇ*\n\n> Bot bukan admin, tidak bisa mengubah pengaturan grup.\n> Jadikan bot sebagai admin untuk mengaktifkan fitur ini.`,
+                    text: `⚠️ *Gagal Auto Close*\n\n> Bot bukan admin, tidak bisa mengubah pengaturan grup.\n> Jadikan bot sebagai admin untuk mengaktifkan fitur ini.`,
                   });
                 } catch {}
               } else {

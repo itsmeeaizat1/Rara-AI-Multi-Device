@@ -186,15 +186,15 @@ async function handler(m, { sock, config: botConfig }) {
           `◦ Contoh: *${prefix}jadwalsholat Jakarta*`,
           `◦ Contoh: *${prefix}jadwalsholat Serang*`].join("\n")) +
         "\n" +
-        claraWrap("ꜱᴛᴀᴛᴜꜱ", [`◦ Chat: *${chatLabel}*`, `◦ Status: *${currentStatus}*`, `◦ Kota: *${currentCity}*`, `◦ Izin: *${permissionLabel}*`].join("\n")) +
+        claraWrap("ꜱTatuꜱ", [`◦ Chat: *${chatLabel}*`, `◦ Status: *${currentStatus}*`, `◦ Kota: *${currentCity}*`, `◦ Izin: *${permissionLabel}*`].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +
-        claraWrap("ꜰɪᴛᴜʀ", ["🔔 Reminder 5 menit sebelum", "🕌 Notifikasi waktu sholat", "📿 Info iqamah/jamaah", "🤲 Auto pengingat harian"].join("\n")) +
+        claraWrap("Fitur", ["🔔 Reminder 5 menit sebelum", "🕌 Notifikasi waktu sholat", "📿 Info iqamah/jamaah", "🤲 Auto pengingat harian"].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +
-        claraWrap("ɪᴢɪɴ", ["🔒 owner: hanya owner", "👤 user: semua user", "🔑 owner+user: owner + user", "🛡️ owner+admin: owner + admin grup (bot harus admin)"].join("\n")) +
+        claraWrap("Izin", ["🔒 owner: hanya owner", "👤 user: semua user", "🔑 owner+user: owner + user", "🛡️ owner+admin: owner + admin grup (bot harus admin)"].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +
@@ -354,11 +354,11 @@ async function handler(m, { sock, config: botConfig }) {
       "\n\n" +
       separator("━", 22) +
       "\n" +
-      claraWrap("ᴊᴀᴅᴡᴀʟ ᴀᴅᴢᴀɴ", prayerLines) +
+      claraWrap("Jadwal Adzan", prayerLines) +
       "\n\n" +
       separator("━", 22) +
       "\n" +
-      claraWrap("ᴊᴀᴅᴡᴀʟ ɪǫᴀᴍᴀʜ", iqamahLines) +
+      claraWrap("Jadwal Iqamah", iqamahLines) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

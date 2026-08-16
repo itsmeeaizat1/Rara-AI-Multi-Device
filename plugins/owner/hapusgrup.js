@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid || !targetJid.endsWith('@g.us')) {
-        return sendReplyWithNav(sock, m, '🗑️ *ʜᴀᴘᴜs ɢʀᴜᴘ*\n\n' +
+        return sendReplyWithNav(sock, m, '🗑️ *Hapus Grup*\n\n' +
             '> `.hapusgrup` (di dalam grup) — Keluar dari grup ini\n' +
             '> `.hapusgrup <id_grup>` — Keluar dari grup tertentu\n\n' +
             '⚠️ Bot akan keluar dari grup, bukan menghapus grup secara permanen', "hapusgrup")
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
         await sock.groupLeave(targetJid)
         await m.react('✅')
         return m.reply(
-            `🗑️ *ʙᴏᴛ ᴋᴇʟᴜᴀʀ ᴅᴀʀɪ ɢʀᴜᴘ*\n\n` +
+            `🗑️ *Bot Keluar Dari Grup*\n\n` +
             `> Grup: ${groupName}\n` +
             `> ID: ${targetJid}`
         )

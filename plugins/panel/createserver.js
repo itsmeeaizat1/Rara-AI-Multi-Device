@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
   const gcSellerAccess = isGcSeller(m.chat, serverVersion)
   if (!gcSellerAccess && !hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
     const userRole = getUserRole(m.sender, serverVersion);
-    return sendReplyWithNav(sock, m, `❌ *ᴀᴋsᴇs ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+    return sendReplyWithNav(sock, m, `❌ *Akses Ditolak*\n\n` +
       `> Kamu tidak punya akses ke *${serverVersion.toUpperCase()}*\n` +
       `> Role kamu di ${serverVersion.toUpperCase()}: *${userRole || "Tidak ada"}*\n\n` +
       `> Hubungi admin untuk mendapat akses.`, "Panel");
@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
 
   if (missingConfig.length > 0) {
     const available = getAvailableServers(pteroConfig);
-    let txt = `⚠️ *sᴇʀᴠᴇʀ ${serverVersion.toUpperCase()} ʙᴇʟᴜᴍ ᴋᴏɴꜰɪɢ*\n\n`;
+    let txt = `⚠️ *sErver ${serverVersion.toUpperCase()} Belum Konfig*\n\n`;
     if (available.length > 0) {
       txt += `> Server tersedia: *${available.join(", ")}*\n`;
       txt += `> Contoh: \`${m.prefix}${ram}${available[0]} username\``;
@@ -177,7 +177,7 @@ async function handler(m, { sock }) {
   if (!username) {
     const available = getAvailableServers(pteroConfig);
     const userRole = getUserRole(m.sender, serverVersion) || "Guest";
-    return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+    return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
       `> \`${m.prefix}${m.command} username\`\n` +
       `> \`${m.prefix}${m.command} username,628xxx\`\n` +
       `> Reply/tag pesan user\n\n` +

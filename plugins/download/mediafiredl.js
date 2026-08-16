@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return sendReplyWithNav(sock, m, `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+    return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
         `> \`${m.prefix}mfdl <url>\`\n\n` +
         `> Contoh:\n` +
         `> \`${m.prefix}mfdl https://www.mediafire.com/file/xxx\``, "mediafiredl");

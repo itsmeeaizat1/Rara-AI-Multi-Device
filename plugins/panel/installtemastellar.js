@@ -39,7 +39,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎨 *ɪɴsᴛᴀʟʟ ᴛᴇᴍᴀ sᴛᴇʟʟᴀʀ* 」\n┃ ㊗ ᴜsᴀɢᴇ: \`${m.prefix}installtemastellar <ip>|<password>\`\n╰┈┈⬡\n\n> \`Contoh: ${m.prefix}installtemastellar 192.168.1.1|secretpass\``, "installtemastellar")
+        return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎨 *Install Tema sTellar* 」\n┃ ㊗ Usage: \`${m.prefix}installtemastellar <ip>|<password>\`\n╰┈┈⬡\n\n> \`Contoh: ${m.prefix}installtemastellar 192.168.1.1|secretpass\``, "installtemastellar")
     }
 
     const parts = text.split('|')
@@ -64,17 +64,17 @@ function handler(m, { sock }) {
 
     conn.on('ready', async () => {
         try {
-            await m.reply(claraWrap("installtemastellar", `🕕 *[1/3] ɪɴsᴛᴀʟʟ ᴅᴇᴘᴇɴᴅᴇɴᴄɪᴇs...*\n\n> Menginstall Node.js, Yarn, Composer...`))
+            await m.reply(claraWrap("installtemastellar", `🕕 *[1/3] Install Dependencies...*\n\n> Menginstall Node.js, Yarn, Composer...`))
             await execSSH(conn, DEPS_CMD)
 
-            await m.reply(claraWrap("installtemastellar", `🕕 *[2/3] ɪɴsᴛᴀʟʟ ᴛᴇᴍᴀ...*\n\n> Mendownload & install tema Stellar...`))
+            await m.reply(claraWrap("installtemastellar", `🕕 *[2/3] Install Tema...*\n\n> Mendownload & install tema Stellar...`))
             await execSSH(conn, THEME_CMD)
 
-            await m.reply(claraWrap("installtemastellar", `🕕 *[3/3] ʙᴜɪʟᴅ ᴀssᴇᴛs...*\n\n> Compiling panel assets...`))
+            await m.reply(claraWrap("installtemastellar", `🕕 *[3/3] Build Assets...*\n\n> Compiling panel assets...`))
             await execSSH(conn, BUILD_CMD)
 
             m.react('✅')
-            await m.reply(claraWrap("installtemastellar", `╭┈┈⬡「 ✅ *ᴛᴇᴍᴀ sᴛᴇʟʟᴀʀ* 」\n┃ ㊗ sᴛᴀᴛᴜs: *Terinstall*\n┃ ㊗ ɪᴘ: ${ipvps}\n╰┈┈⬡\n\n> _Tema Stellar + dependencies berhasil diinstall!_`))
+            await m.reply(claraWrap("installtemastellar", `╭┈┈⬡「 ✅ *Tema sTellar* 」\n┃ ㊗ sTatus: *Terinstall*\n┃ ㊗ Ip: ${ipvps}\n╰┈┈⬡\n\n> _Tema Stellar + dependencies berhasil diinstall!_`))
         } catch (err) {
             m.reply(claraWrap("installtemastellar", te(m.prefix, m.command, m.pushName), "error"))
         } finally {

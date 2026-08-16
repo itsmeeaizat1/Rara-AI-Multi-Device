@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
     const targetNumber = resolveTarget(m)
 
     if (!targetNumber || targetNumber.length < 10 || targetNumber.length > 15) {
-        return sendReplyWithNav(sock, m, claraWrap("ᴜɴʙᴀɴ ᴜsᴇʀ", `✅ *ᴜɴʙᴀɴ ᴜsᴇʀ*\n\n` +
+        return sendReplyWithNav(sock, m, claraWrap("Unban User", `✅ *Unban User*\n\n` +
             `> Masukkan nomor atau tag user\n\n` +
             `\`Contoh: ${m.prefix}unban 6281234567890\``), "unban")
     }
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
     })
 
     if (index === -1) {
-        { const __navText = `❌ *ɢᴀɢᴀʟ*\n\n> Nomor \`${targetNumber}\` tidak dalam daftar banned`; return await m.reply(claraWrap("unban", __navText)); }
+        { const __navText = `❌ *Gagal*\n\n> Nomor \`${targetNumber}\` tidak dalam daftar banned`; return await m.reply(claraWrap("unban", __navText)); }
     }
 
     bannedList.splice(index, 1)
@@ -69,11 +69,11 @@ async function handler(m, { sock }) {
 
     await m.react('✅')
 
-    await m.reply(claraWrap("ᴜsᴇʀ ᴅɪᴜɴʙᴀɴ", `✅ *ᴜsᴇʀ ᴅɪᴜɴʙᴀɴ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-        `┃ 📱 ɴᴏᴍᴏʀ: \`${targetNumber}\`\n` +
-        `┃ ✅ sᴛᴀᴛᴜs: \`Unbanned\`\n` +
-        `┃ 📊 ᴛᴏᴛᴀʟ: \`${bannedList.length}\` ᴜsᴇʀ\n` +
+    await m.reply(claraWrap("User Diunban", `✅ *User Diunban*\n\n` +
+        `╭┈┈⬡「 📋 *Detail* 」\n` +
+        `┃ 📱 Nomor: \`${targetNumber}\`\n` +
+        `┃ ✅ sTatus: \`Unbanned\`\n` +
+        `┃ 📊 Total: \`${bannedList.length}\` User\n` +
         `╰┈┈⬡`))
 }
 

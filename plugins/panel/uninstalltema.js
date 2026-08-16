@@ -23,8 +23,8 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (!text) {
-        return sendReplyWithNav(sock, m, `╭┈┈⬡「 🗑️ *ᴜɴɪɴsᴛᴀʟʟ ᴛᴇᴍᴀ* 」
-┃ ㊗ ᴜsᴀɢᴇ: \`${m.prefix}uinstalltema <ip>|<password>\`
+        return sendReplyWithNav(sock, m, `╭┈┈⬡「 🗑️ *Uninstall Tema* 」
+┃ ㊗ Usage: \`${m.prefix}uinstalltema <ip>|<password>\`
 ╰┈┈⬡
 
 > \`Contoh: ${m.prefix}uinstalltema 192.168.1.1|secretpass\``, "root")
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
     const ress = new Client()
     
     m.react('🕐')
-    await m.reply(claraWrap("root", `🕕 *ᴍᴇᴍᴘʀᴏsᴇs ᴜɴɪɴsᴛᴀʟʟ ᴛᴇᴍᴀ...*\n\n> Tunggu 1-10 menit hingga proses selesai`))
+    await m.reply(claraWrap("root", `🕕 *Memproses Uninstall Tema...*\n\n> Tunggu 1-10 menit hingga proses selesai`))
     
     ress.on('ready', () => {
         ress.exec(command, (err, stream) => {
@@ -61,9 +61,9 @@ async function handler(m, { sock }) {
             
             stream.on('close', async () => {
                 m.react('✅')
-                await m.reply(claraWrap("root", `╭┈┈⬡「 ✅ *ᴜɴɪɴsᴛᴀʟʟ ᴛᴇᴍᴀ* 」
-┃ ㊗ sᴛᴀᴛᴜs: *Berhasil*
-┃ ㊗ ɪᴘ: ${ipvps}
+                await m.reply(claraWrap("root", `╭┈┈⬡「 ✅ *Uninstall Tema* 」
+┃ ㊗ sTatus: *Berhasil*
+┃ ㊗ Ip: ${ipvps}
 ╰┈┈⬡
 
 > _Tema berhasil diuninstall!_`))

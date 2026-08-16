@@ -46,31 +46,31 @@ async function handler(m, { sock }) {
     }
     
     if (!targetJid || amount <= 0) {
-        return sendReplyWithNav(sock, m, `💰 *ᴅᴇʟ ᴋᴏɪɴ*\n\n` +
+        return sendReplyWithNav(sock, m, `💰 *Del Koin*\n\n` +
             `> \`.delkoin <jumlah>\` - dari diri sendiri\n` +
             `> \`.delkoin <jumlah> @user\` - dari user\n\n` +
             `\`Contoh: ${m.prefix}delkoin 50000\``, "delkoin")
     }
     
     if (amount <= 0) {
-        return m.reply(claraWrap("Delkoin", `❌ *ɢᴀɢᴀʟ*\n\n> Jumlah harus lebih dari 0`))
+        return m.reply(claraWrap("Delkoin", `❌ *Gagal*\n\n> Jumlah harus lebih dari 0`))
     }
     
     const user = db.getUser(targetJid)
     
     if (!user) {
-        return m.reply(claraWrap("Delkoin", `❌ *ɢᴀɢᴀʟ*\n\n> User tidak ditemukan di database`))
+        return m.reply(claraWrap("Delkoin", `❌ *Gagal*\n\n> User tidak ditemukan di database`))
     }
     
     const newKoin = db.updateKoin(targetJid, -amount)
     
     await m.react('✅')
     
-    await m.reply(claraWrap("delkoin", `✅ *ᴋᴏɪɴ ᴅɪᴋᴜʀᴀɴɢɪ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-        `┃ 👤 ᴜsᴇʀ: @${targetJid.split('@')[0]}\n` +
-        `┃ ➖ ᴋᴜʀᴀɴɢ: *-${formatKoin(amount)}*\n` +
-        `┃ 💰 sɪsᴀ: *${formatKoin(newKoin)}*\n` +
+    await m.reply(claraWrap("delkoin", `✅ *Koin Dikurangi*\n\n` +
+        `╭┈┈⬡「 📋 *Detail* 」\n` +
+        `┃ 👤 User: @${targetJid.split('@')[0]}\n` +
+        `┃ ➖ Kurang: *-${formatKoin(amount)}*\n` +
+        `┃ 💰 sIsa: *${formatKoin(newKoin)}*\n` +
         `╰┈┈⬡`))
 }
 

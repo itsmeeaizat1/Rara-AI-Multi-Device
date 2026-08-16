@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const introText = m.fullArgs?.trim() || m.text?.trim()
     
     if (!introText) {
-        return sendReplyWithNav(sock, m, `📝 *sᴇᴛ ɪɴᴛʀᴏ*\n\n` +
+        return sendReplyWithNav(sock, m, `📝 *sEt Intro*\n\n` +
             `> Masukkan pesan intro!\n\n` +
             `*Placeholder yang tersedia:*\n` +
             `> @user - Nama pengguna\n` +
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     db.setGroup(m.chat, groupData)
     db.save()
     
-    await m.reply(claraWrap("setintro", `✅ *ɪɴᴛʀᴏ ᴅɪsᴀᴠᴇ!*\n` +
+    await m.reply(claraWrap("setintro", `✅ *Intro Disave!*\n` +
         `Pesan intro grup berhasil diubah.\n` +
         `Ketik *${m.prefix}intro* untuk melihat hasilnya.`))
 }

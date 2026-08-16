@@ -31,8 +31,8 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
 
   if (!text) {
-    return sendReplyWithNav(sock, m, `📱 *ᴀɴᴅʀᴏɪᴅ1 sᴇᴀʀᴄʜ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
+    return sendReplyWithNav(sock, m, `📱 *Android1 sEarch*\n\n` +
+        `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
         `┃ 🔍 \`${m.prefix}android1 <query>\` - Cari APK\n` +
         `╰┈┈⬡\n\n` +
         `> Contoh:\n` +

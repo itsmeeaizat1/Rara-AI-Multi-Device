@@ -106,7 +106,7 @@ async function handler(m, { sock, command, args }) {
             const linodeInfo = await infoRes.json()
             const ipAddress = linodeInfo.ipv4?.[0] || 'Pending'
             
-            const msg = `✅ *ʟɪɴᴏᴅᴇ ${spec.label} ʙᴇʀʜᴀsɪʟ ᴅɪʙᴜᴀᴛ*\n\n` +
+            const msg = `✅ *Linode ${spec.label} Berhasil Dibuat*\n\n` +
                 `> 🆔 ID: \`${linodeId}\`\n` +
                 `> 🏷️ Label: \`${label}\`\n` +
                 `> 🌐 IP: \`${ipAddress}\`\n` +
@@ -134,10 +134,10 @@ async function handler(m, { sock, command, args }) {
             if (!res.ok) throw new Error('Gagal mendapatkan daftar Linode')
             
             if (!data.data || data.data.length === 0) {
-                return m.reply(claraWrap("linode", `📋 *ᴅᴀғᴛᴀʀ ʟɪɴᴏᴅᴇ*\n\n> Tidak ada VPS aktif.`))
+                return m.reply(claraWrap("linode", `📋 *DaғTar Linode*\n\n> Tidak ada VPS aktif.`))
             }
             
-            let msg = `📋 *ᴅᴀғᴛᴀʀ ʟɪɴᴏᴅᴇ ᴠᴘs*\n\n`
+            let msg = `📋 *DaғTar Linode Vps*\n\n`
             data.data.forEach((l, i) => {
                 msg += `*${i + 1}. ${l.label}*\n`
                 msg += `> ID: \`${l.id}\`\n`
@@ -290,7 +290,7 @@ async function handler(m, { sock, command, args }) {
             const balance = (data.koin || 0) / 100
             const credit = (data.credit_remaining || 0) / 100
             
-            const msg = `💰 *sᴀʟᴅᴏ ᴀᴋᴜɴ ʟɪɴᴏᴅᴇ*\n\n` +
+            const msg = `💰 *sAldo Akun Linode*\n\n` +
                 `> 💵 Balance: $${balance.toFixed(2)}\n` +
                 `> 🎁 Credit: $${credit.toFixed(2)}`
             
@@ -315,7 +315,7 @@ async function handler(m, { sock, command, args }) {
             if (!res.ok) throw new Error('Gagal mendapatkan data')
             
             const total = data.data?.length || 0
-            await m.reply(claraWrap("linode", `📊 *ᴛᴏᴛᴀʟ ʟɪɴᴏᴅᴇ ᴀᴋᴛɪғ*\n\n> ${total} VPS`))
+            await m.reply(claraWrap("linode", `📊 *Total Linode Aktiғ*\n\n> ${total} VPS`))
             m.react('✅')
             return
         }
@@ -338,7 +338,7 @@ async function handler(m, { sock, command, args }) {
             
             if (!res.ok) throw new Error('Gagal mendapatkan detail')
             
-            const msg = `🔍 *ᴅᴇᴛᴀɪʟ ʟɪɴᴏᴅᴇ*\n\n` +
+            const msg = `🔍 *Detail Linode*\n\n` +
                 `> 🆔 ID: \`${l.id}\`\n` +
                 `> 🏷️ Label: \`${l.label}\`\n` +
                 `> 📊 Status: ${l.status}\n` +
@@ -351,7 +351,7 @@ async function handler(m, { sock, command, args }) {
             return
         }
         
-        await m.reply(claraWrap("linode", `☁️ *ʟɪɴᴏᴅᴇ ᴄᴏᴍᴍᴀɴᴅs*\n\n` +
+        await m.reply(claraWrap("linode", `☁️ *Linode Commands*\n\n` +
             `> .linode2gb <label> - Buat VPS 2GB\n` +
             `> .linode4gb <label> - Buat VPS 4GB\n` +
             `> .linode8gb <label> - Buat VPS 8GB\n` +

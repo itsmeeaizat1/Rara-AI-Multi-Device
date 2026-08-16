@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
     
     if (!url) {
-        return sendReplyWithNav(sock, m, `🎬 *ᴠɪᴅᴇʏ ᴅᴏᴡɴʟᴏᴀᴅ*\n\n` +
+        return sendReplyWithNav(sock, m, `🎬 *Videy Download*\n\n` +
             `> Masukkan URL videy.co\n\n` +
             `\`Contoh: ${m.prefix}videy https://videy.co/v?id=7ZH1ZRIF\``, "videy")
     }

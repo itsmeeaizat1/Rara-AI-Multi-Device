@@ -119,7 +119,7 @@ class NovaGames {
 
       const question = getRandomItem(cfg.dataFile);
       if (!question) {
-        await m.reply("❌ *ᴅᴀᴛᴀ ᴛɪᴅᴀᴋ ᴛᴇʀsᴇᴅɪᴀ*\n\n> Data game tidak tersedia!");
+        await m.reply("❌ *Data Tidak Tersedia*\n\n> Data game tidak tersedia!");
         return;
       }
 
@@ -131,7 +131,7 @@ class NovaGames {
         try {
           imageBuffer = await fetchBuffer(question[cfg.imageField]);
         } catch {
-          await m.reply("❌ *ɢᴀɢᴀʟ ᴍᴇᴍᴜᴀᴛ ɢᴀᴍʙᴀʀ*\n\n> Coba lagi nanti!");
+          await m.reply("❌ *Gagal Memuat Gambar*\n\n> Coba lagi nanti!");
           return;
         }
 

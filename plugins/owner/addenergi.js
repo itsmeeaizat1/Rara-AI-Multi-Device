@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid || (!isUnlimited && amount <= 0)) {
-        return sendReplyWithNav(sock, m, `⚡ *ᴀᴅᴅ ᴇɴᴇʀɢɪ*\n\n` +
+        return sendReplyWithNav(sock, m, `⚡ *Add Energi*\n\n` +
             `> \`.addenergi <jumlah>\` - ke diri sendiri\n` +
             `> \`.addenergi <jumlah> @user\` - ke user\n` +
             `> \`.addenergi --unlimited\` - unlimited\n\n` +

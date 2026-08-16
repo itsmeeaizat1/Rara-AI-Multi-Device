@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("Grup Bot", "👥") +
       "\n\n" +
-      claraWrap("ɢʀᴜᴘ ʙᴏᴛ", lines) +
+      claraWrap("Grup Bot", lines) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

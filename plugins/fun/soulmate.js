@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     
     if (!text || !text.includes('|')) {
         return m.reply(
-            `💫 *sᴏᴜʟ ᴍᴀᴛᴄʜ*\n\n` +
+            `💫 *sOul Match*\n\n` +
             `> Cek kecocokan jiwa 2 orang!\n\n` +
             `*Format:*\n` +
             `> \`.soulmatch nama1|nama2\`\n\n` +

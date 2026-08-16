@@ -49,7 +49,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const text =
       claraWrap("Gamble", "🎰") +
       "\n\n" +
-      claraWrap("ʜᴀꜱɪʟ", [
+      claraWrap("HaꜱIl", [
         `◦ Taruhan: *${amount} Gold*`,
         `◦ Hasil: *${result} Gold*`,
         `◦ Multiplier: *${win ? "x" + multiplier : "x0"}*`,

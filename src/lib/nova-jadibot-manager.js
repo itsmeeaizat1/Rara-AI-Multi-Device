@@ -420,7 +420,7 @@ async function startJadibot(sock, m, userJid, usePairing = true) {
           {
             image: qrBuffer,
             caption:
-              `🤖 *ᴊᴀᴅɪʙᴏᴛ — Qʀ ᴄᴏᴅᴇ*\n\n` +
+              `🤖 *Jadibot — QR Code*\n\n` +
               `Scan kode QR ini untuk menjadi bot.\n\n` +
               `> ⏱️ Expired dalam 20 detik\n` +
               `> 📊 QR Count: ${qrCount}/3`,
@@ -468,7 +468,7 @@ async function startJadibot(sock, m, userJid, usePairing = true) {
         sock
           .sendMessage(m.chat, {
             text:
-              `✅ *ᴊᴀᴅɪʙᴏᴛ ᴛᴇʀʜᴜʙᴜɴɢ*\n\n` +
+              `✅ *Jadibot Terhubung*\n\n` +
               `> 📱 Nomor: *@${id}*\n` +
               `> 🟢 Status: *Online*\n` +
               `> ⏱️ Mulai: *${new Date().toLocaleTimeString("id-ID")}*\n\n` +
@@ -536,7 +536,7 @@ async function startJadibot(sock, m, userJid, usePairing = true) {
 
         await safeSend(sock, m?.chat, {
           text:
-            `${statusEmoji} *ᴊᴀᴅɪʙᴏᴛ ᴅɪsᴄᴏɴɴᴇᴄᴛᴇᴅ*\n\n` +
+            `${statusEmoji} *Jadibot Disconnected*\n\n` +
             `> 📱 Nomor: *@${id}*\n` +
             `> 🔢 Code: \`${errorInfo.code}\`\n` +
             `> 📋 Alasan: *${errorInfo.reason}*\n` +
@@ -551,7 +551,7 @@ async function startJadibot(sock, m, userJid, usePairing = true) {
 
         await safeSend(sock, m?.chat, {
           text:
-            `🔄 *ᴊᴀᴅɪʙᴏᴛ ʀᴇᴄᴏɴɴᴇᴄᴛɪɴɢ...*\n\n` +
+            `🔄 *Jadibot Reconnecting...*\n\n` +
             `> 📱 Nomor: *@${id}*\n` +
             `> 📋 Alasan: *${errorInfo.reason}*\n` +
             `> 🔁 Percobaan: *${attempts + 1}/${MAX_RECONNECT_ATTEMPTS}*\n\n` +
@@ -675,7 +675,7 @@ async function startJadibot(sock, m, userJid, usePairing = true) {
           m.chat,
           {
             text:
-              `🔗 *ᴘᴀɪʀɪɴɢ ᴄᴏᴅᴇ*\n\n` +
+              `🔗 *Pairing Code*\n\n` +
               `Masukkan kode berikut di WhatsApp kamu:\n\n` +
               `> 📱 *Settings → Linked Devices → Link a Device*\n\n` +
               `\`\`\`${pairingCode}\`\`\`\n\n` +
@@ -720,7 +720,7 @@ async function startJadibot(sock, m, userJid, usePairing = true) {
       }
 
       await safeSend(sock, m?.chat, {
-        text: `❌ *ᴊᴀᴅɪʙᴏᴛ ɢᴀɢᴀʟ*\n\n> ${errorMsg}`,
+        text: `❌ *Jadibot Gagal*\n\n> ${errorMsg}`,
       });
 
       try {

@@ -30,9 +30,9 @@ async function handler(m, { sock }) {
   const name = m.text?.trim();
   if (!name) {
     return m.reply(
-      `🎮 *ꜰᴀᴋᴇ ᴅᴇᴠᴇʟᴏᴘᴇʀ 3*\n\n` +
+      `🎮 *Fake Developer 3*\n\n` +
         `> Masukkan nama untuk profile\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
+        `*Cara Pakai:*\n` +
         `> 1. Kirim foto + caption \`${m.prefix}fakedev3 <nama>\`\n` +
         `> 2. Reply foto dengan \`${m.prefix}fakedev3 <nama>\``,
     );

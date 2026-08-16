@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     }
 
     if (!target) {
-        await sendReplyWithNav(sock, m, `❌ *ᴛᴀʀɢᴇᴛ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n` +
+        await sendReplyWithNav(sock, m, `❌ *Target Tidak Ditemukan*\n\n` +
             `> Reply pesan user atau mention!\n` +
             `> Contoh: \`${m.prefix}promote @user\``, "promote")
         return
@@ -42,12 +42,12 @@ async function handler(m, { sock }) {
         const participant = groupMeta.participants.find(p => getParticipantJid(p) === target)
 
         if (!participant) {
-            m.reply(claraWrap("Promote", `❌ *ɢᴀɢᴀʟ*\n\n> User tidak ditemukan di grup!`))
+            m.reply(claraWrap("Promote", `❌ *Gagal*\n\n> User tidak ditemukan di grup!`))
             return
         }
 
         if (participant.admin) {
-            await m.reply(claraWrap("Promote", `❌ *ɢᴀɢᴀʟ*\n\n> User sudah menjadi admin!`))
+            await m.reply(claraWrap("Promote", `❌ *Gagal*\n\n> User sudah menjadi admin!`))
             return
         }
 

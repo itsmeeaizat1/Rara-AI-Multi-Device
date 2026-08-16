@@ -49,8 +49,8 @@ async function handler(m, { sock, config: botConfig }) {
     const result = pickRandom(["Kamu menemukan tambang emas!", "Kamu menemukan gua dengan ore!", "Kamu menggali jauh ke bawah tanah!", "Kamu menemukan deposit berlian!"]);
     
     let text = claraWrap("Mining", "⛏️") + "\n\n";
-    text += claraWrap("ɴᴀᴍʙᴀɴɢ", [`◦ ${result}`, `◦ Stamina: *-${staminaLoss}* ⚡`, `◦ Sisa: *${user.stamina}/100*`].join("\n")) + "\n\n";
-    text += claraWrap("ʜᴀsɪʟ", [
+    text += claraWrap("Nambang", [`◦ ${result}`, `◦ Stamina: *-${staminaLoss}* ⚡`, `◦ Sisa: *${user.stamina}/100*`].join("\n")) + "\n\n";
+    text += claraWrap("Hasil", [
       `◦ Iron: *+${iron}* ⚙️`,
       `◦ Rock: *+${rock}* 🪨`,
       diamond > 0 ? `◦ Diamond: *+${diamond}* 💎` : "",

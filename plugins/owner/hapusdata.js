@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
 
         await sock.sendMessage(m.chat, {
             text:
-                `🗑️ *ᴅᴀᴛᴀ ᴅɪʀᴇsᴇᴛ*\n\n` +
+                `🗑️ *Data Direset*\n\n` +
                 `> 📁 File direset: *${result.resetCount}/${result.total}*\n` +
                 `> 💾 Backup: \`${result.backupFolder}/\`\n\n` +
                 `Semua data telah dikembalikan ke default.\n\n` +
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
 
     pendingReset.set(m.sender, Date.now())
 
-    let txt = `⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ — ʜᴀᴘᴜs ᴅᴀᴛᴀ*\n\n`
+    let txt = `⚠️ *Peringatan — Hapus Data*\n\n`
     txt += `Aksi ini akan menghapus *SEMUA* data berikut:\n\n`
 
     for (const { label, entries, size } of existing) {

@@ -83,8 +83,8 @@ async function handler(m, { sock }) {
   };
 
   if (!url) {
-    return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ᴅᴏᴡɴʟᴏᴀᴅ* 」
-┃ ㊗ ᴜsᴀɢᴇ: \`${m.prefix}ttmp3 <url>\`
+    return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎵 *Tiktok Download* 」
+┃ ㊗ Usage: \`${m.prefix}ttmp3 <url>\`
 ╰┈┈⬡
 
 > Contoh: ${m.prefix}ttmp3 https://vt.tiktok.com/xxx`, "ttmp3");
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     cleanupTempFiles();
     console.error("[TikTokDL] Error:", err);
-    m.reply(claraWrap("Ttmp3", `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴᴅᴜʜ*\n\n> ${err.message}`));
+    m.reply(claraWrap("Ttmp3", `❌ *Gagal Mengunduh*\n\n> ${err.message}`));
   }
 }
 

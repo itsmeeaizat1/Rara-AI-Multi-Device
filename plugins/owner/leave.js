@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
     const inviteCode = await extractInviteCode(input);
 
     if (!inviteCode) {
-      return m.reply(claraWrap("Leave", `❌ *ɢᴀɢᴀʟ*\n\n> Link invite tidak valid`));
+      return m.reply(claraWrap("Leave", `❌ *Gagal*\n\n> Link invite tidak valid`));
     }
 
     try {
@@ -60,13 +60,13 @@ async function handler(m, { sock }) {
       groupName = groupInfo.subject || "Unknown";
     } catch (error) {
       return m.reply(
-        `❌ *ɢᴀɢᴀʟ*\n\n> Tidak dapat mengambil info grup dari link`,
+        `❌ *Gagal*\n\n> Tidak dapat mengambil info grup dari link`,
       );
     }
   } else {
     return m.reply(
-      `🚪 *ʟᴇᴀᴠᴇ ɢʀᴜᴘ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
+      `🚪 *Leave Grup*\n\n` +
+        `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
         `┃ ◦ Di grup: \`.leave\`\n` +
         `┃ ◦ Via link: \`.leave <link>\`\n` +
         `╰┈┈⬡\n\n` +
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetGroupJid) {
-    return m.reply(claraWrap("Leave", `❌ *ɢᴀɢᴀʟ*\n\n> Grup tidak ditemukan`));
+    return m.reply(claraWrap("Leave", `❌ *Gagal*\n\n> Grup tidak ditemukan`));
   }
 
   await m.react("🕐");
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     if (m.isGroup && targetGroupJid === m.chat) {
       await sock.sendMessage(m.chat, {
         text:
-          `👋 *ɢᴏᴏᴅʙʏᴇ*\n\n` +
+          `👋 *Goodbye*\n\n` +
           `> Bot akan keluar dari grup ini.\n` +
           `> Terima kasih sudah menggunakan bot!`,
         contextInfo: {
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
 
     if (!m.isGroup || targetGroupJid !== m.chat) {
       await m.react("✅");
-      await m.reply(claraWrap("leave", `✅ *ʙᴇʀʜᴀsɪʟ ᴋᴇʟᴜᴀʀ*\n\n` + `> Bot telah keluar dari: *${groupName}*`));
+      await m.reply(claraWrap("leave", `✅ *Berhasil Keluar*\n\n` + `> Bot telah keluar dari: *${groupName}*`));
     }
   } catch (error) {
     global.sewaLeaving = false;

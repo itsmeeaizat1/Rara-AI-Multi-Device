@@ -155,7 +155,7 @@ async function handler(m, { sock, db }) {
       }
     } catch (error) {
       await m.reply(
-        `❌ *ᴇʀʀᴏʀ*\n\n` + `> Gagal posting story V2.\n` + `> _${error.message}_`,
+        `❌ *Error*\n\n` + `> Gagal posting story V2.\n` + `> _${error.message}_`,
       );
     }
     return;
@@ -238,7 +238,7 @@ async function handler(m, { sock, db }) {
     rawContent.backgroundColor = "#128C7E";
   } else {
     await m.reply(
-      `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+      `⚠️ *Cara Pakai*\n\n` +
       `> \`${m.prefix}swgcv2 teks\` - Story teks\n` +
       `> Reply gambar/video/audio + \`${m.prefix}swgcv2\`\n` +
       `> Kirim gambar/video + caption \`${m.prefix}swgcv2\``,
@@ -287,7 +287,7 @@ async function handler(m, { sock, db }) {
 
     await sock.sendMessage(m.chat, {
       text:
-        `📋 *ᴘɪʟɪʜ ɢʀᴜᴘ ᴜɴᴛᴜᴋ ᴘᴏsᴛ sᴛᴏʀʏ ᴠ2*\n\n` +
+        `📋 *Pilih Grup Untuk Post sTory V2*\n\n` +
         `> Media: *${mediaType}*\n` +
         `> Total Grup: *${groupList.length}*\n\n` +
         `_Pilih grup dari daftar di bawah:_`,
@@ -338,7 +338,7 @@ async function handler(m, { sock, db }) {
     });
   } catch (error) {
     await m.reply(
-      `❌ *ᴇʀʀᴏʀ*\n\n` +
+      `❌ *Error*\n\n` +
       `> Gagal mengambil daftar grup.\n` +
       `> _${error.message}_`,
     );

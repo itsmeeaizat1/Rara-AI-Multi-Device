@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const text = m.text
     
     if (!text) {
-        { const __navText = `🖼️ *ʙʀᴀᴛ ʜᴅ sᴛɪᴄᴋᴇʀ*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}brathd hello world\``; return await sendReplyWithNav(sock, m, __navText, "brathd"); }
+        { const __navText = `🖼️ *Brat Hd sTicker*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}brathd hello world\``; return await sendReplyWithNav(sock, m, __navText, "brathd"); }
     }
     
     m.react('🕐')

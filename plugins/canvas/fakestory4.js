@@ -217,7 +217,7 @@ async function handler(m, { sock }) {
       imageBottomBuffer = imageTopBuffer;
     }
     if (!imageTopBuffer) {
-      return sendReplyWithNav(sock, m, `📷 *ꜰᴀᴋᴇ sᴛᴏʀʏ 4*\n\n` +
+      return sendReplyWithNav(sock, m, `📷 *Fake sTory 4*\n\n` +
           `> Kirim/reply 1-2 gambar!\n\n` +
           `> Format: \`${m.prefix}fakestory4 <nama>\`\n` +
           `> Contoh: \`${m.prefix}fakestory4 Misaki\`\n\n` +
@@ -233,7 +233,7 @@ async function handler(m, { sock }) {
       m.chat,
       {
         image: resultBuffer,
-        caption: `📷 *ꜰᴀᴋᴇ sᴛᴏʀʏ*\n\n> ᴜsᴇʀɴᴀᴍᴇ: \`${username}\``,
+        caption: `📷 *Fake sTory*\n\n> Username: \`${username}\``,
       },
       { quoted: m },
     );

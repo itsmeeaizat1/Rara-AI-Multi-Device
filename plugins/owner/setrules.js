@@ -23,7 +23,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim() || (m.quoted?.body || m.quoted?.text || '')
     
     if (!text) {
-        return sendReplyWithNav(sock, m, claraWrap("sᴇᴛ ʙᴏᴛ ʀᴜʟᴇs", `📝 *sᴇᴛ ʙᴏᴛ ʀᴜʟᴇs*\n\n` +
+        return sendReplyWithNav(sock, m, claraWrap("sEt Bot Rules", `📝 *sEt Bot Rules*\n\n` +
             `> Masukkan teks rules yang baru\n\n` +
             `\`Contoh:\`\n` +
             `\`${m.prefix}setrules 1. Jangan spam\\n2. Hormati sesama\``), "setrules")
@@ -31,7 +31,7 @@ function handler(m, { sock }) {
     
     db.setting('botRules', text)
     
-    m.reply(claraWrap("ʙᴏᴛ ʀᴜʟᴇs ᴅɪᴜᴘᴅᴀᴛᴇ", `✅ *ʙᴏᴛ ʀᴜʟᴇs ᴅɪᴜᴘᴅᴀᴛᴇ*\n\n` +
+    m.reply(claraWrap("Bot Rules Diupdate", `✅ *Bot Rules Diupdate*\n\n` +
         `> Rules bot berhasil diubah!\n` +
         `> Ketik \`${m.prefix}rules\` untuk melihat.`))
 }

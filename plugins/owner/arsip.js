@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetJid) {
-    return sendReplyWithNav(sock, m, "📁 *ᴀʀsɪᴘ ᴄʜᴀᴛ*\n\n" +
+    return sendReplyWithNav(sock, m, "📁 *Arsip Chat*\n\n" +
         "> `.arsip 628xxx` — Arsipkan chat\n" +
         "> `.arsip` (di private chat) — Arsipkan chat ini\n" +
         "> `.arsip` (reply pesan) — Arsipkan chat pengirim\n" +
@@ -78,8 +78,8 @@ async function handler(m, { sock }) {
     await m.react("✅");
     const target = targetJid.split("@")[0];
     return m.reply(archive
-        ? `📁 *ᴄʜᴀᴛ ᴅɪᴀʀsɪᴘᴋᴀɴ*\n\n> Target: ${target}\n> Gunakan \`.arsip buka ${target}\` untuk membuka`
-        : `📂 *ᴀʀsɪᴘ ᴅɪʙᴜᴋᴀ*\n\n> Target: ${target}`);
+        ? `📁 *Chat Diarsipkan*\n\n> Target: ${target}\n> Gunakan \`.arsip buka ${target}\` untuk membuka`
+        : `📂 *Arsip Dibuka*\n\n> Target: ${target}`);
   } catch (err) {
     return m.reply(claraWrap("arsip", `❌ Gagal: ${err.message}`));
   }

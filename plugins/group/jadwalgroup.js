@@ -55,11 +55,11 @@ async function handler(m, { sock, db }) {
         const openTime = group.scheduleOpen || null;
         const closeTime = group.scheduleClose || null;
         
-        let scheduleInfo = `⏰ *ᴊᴀᴅᴡᴀʟ ɢʀᴜᴘ*
+        let scheduleInfo = `⏰ *Jadwal Grup*
 
-「 📋 *sᴛᴀᴛᴜs* 」
-🔓 ᴏᴘᴇɴ: *${openTime || 'Tidak aktif'}*
-🔒 ᴄʟᴏsᴇ: *${closeTime || 'Tidak aktif'}*
+「 📋 *sTatus* 」
+🔓 Open: *${openTime || 'Tidak aktif'}*
+🔒 Close: *${closeTime || 'Tidak aktif'}*
 
 *Cara Penggunaan:*
 \`.jadwalgroup open 06:00\`
@@ -75,7 +75,7 @@ async function handler(m, { sock, db }) {
         const type = args[1]?.toLowerCase();
         
         if (type !== 'open' && type !== 'close') {
-            await m.reply(`⚠️ *ᴠᴀʟɪᴅᴀsɪ ɢᴀɢᴀʟ*\n\n` +
+            await m.reply(`⚠️ *Validasi Gagal*\n\n` +
                 `> Gunakan: \`.jadwalgroup hapus open\`\n` +
                 `> atau: \`.jadwalgroup hapus close\``);
             return;
@@ -87,20 +87,20 @@ async function handler(m, { sock, db }) {
             delete group.scheduleOpen;
             db.setGroup(m.chat, group);
             
-            await m.reply(claraWrap("jadwalgroup", `✅ *ʙᴇʀʜᴀsɪʟ*\n\n` +
+            await m.reply(claraWrap("jadwalgroup", `✅ *Berhasil*\n\n` +
                 `> Jadwal *buka grup* otomatis telah dihapus.`));
         } else {
             delete group.scheduleClose;
             db.setGroup(m.chat, group);
             
-            await m.reply(claraWrap("jadwalgroup", `✅ *ʙᴇʀʜᴀsɪʟ*\n\n` +
+            await m.reply(claraWrap("jadwalgroup", `✅ *Berhasil*\n\n` +
                 `> Jadwal *tutup grup* otomatis telah dihapus.`));
         }
         return;
     }
     
     if (action !== 'open' && action !== 'close') {
-        await m.reply(`⚠️ *ᴠᴀʟɪᴅᴀsɪ ɢᴀɢᴀʟ*\n\n` +
+        await m.reply(`⚠️ *Validasi Gagal*\n\n` +
             `> Action harus \`open\` atau \`close\`!\n\n` +
             `> *Contoh:*\n` +
             `> \`.jadwalgroup open 06:00\`\n` +
@@ -109,7 +109,7 @@ async function handler(m, { sock, db }) {
     }
     
     if (!time) {
-        await sendReplyWithNav(sock, m, `⚠️ *ᴠᴀʟɪᴅᴀsɪ ɢᴀɢᴀʟ*\n\n` +
+        await sendReplyWithNav(sock, m, `⚠️ *Validasi Gagal*\n\n` +
             `> Waktu harus diisi!\n\n` +
             `> *Format:* \`HH:MM\` (24 jam)\n` +
             `> *Contoh:* \`.jadwalgroup ${action} 08:00\``, "jadwalgroup");
@@ -118,7 +118,7 @@ async function handler(m, { sock, db }) {
     
     const parsed = parseTime(time);
     if (!parsed) {
-        await sendReplyWithNav(sock, m, `⚠️ *ᴠᴀʟɪᴅᴀsɪ ɢᴀɢᴀʟ*\n\n` +
+        await sendReplyWithNav(sock, m, `⚠️ *Validasi Gagal*\n\n` +
             `> Format waktu tidak valid!\n\n` +
             `> *Format:* \`HH:MM\` (24 jam)\n` +
             `> *Contoh:* \`06:00\`, \`22:30\`, \`08:15\``, "jadwalgroup");
@@ -139,12 +139,12 @@ async function handler(m, { sock, db }) {
     const actionText = action === 'open' ? 'BUKA' : 'TUTUP';
     const emoji = action === 'open' ? '🔓' : '🔒';
     
-    const successMsg = `✅ *ᴊᴀᴅᴡᴀʟ ᴅɪsɪᴍᴘᴀɴ*
+    const successMsg = `✅ *Jadwal Disimpan*
 
-╭┈┈⬡「 ⏰ *sᴇᴛᴛɪɴɢ* 」
-┃ ㊗ ${emoji} ᴀᴋsɪ: *${actionText}*
-┃ ㊗ ⏱️ ᴡᴀᴋᴛᴜ: *${formattedTime} WIB*
-┃ ㊗ 📡 sᴛᴀᴛᴜs: *🟢 Aktif*
+╭┈┈⬡「 ⏰ *sEtting* 」
+┃ ㊗ ${emoji} Aksi: *${actionText}*
+┃ ㊗ ⏱️ Waktu: *${formattedTime} WIB*
+┃ ㊗ 📡 sTatus: *🟢 Aktif*
 ╰┈┈⬡
 
 > _Grup akan otomatis ${action === 'open' ? 'dibuka' : 'ditutup'}_

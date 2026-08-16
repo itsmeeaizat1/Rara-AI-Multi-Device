@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
 
   if (!username) {
     return m.reply(
-      `🎮 *ʀᴏʙʟᴏx sᴛᴀʟᴋ*\n\n` +
+      `🎮 *Roblox sTalk*\n\n` +
         `> Masukkan username Roblox\n\n` +
         `\`Contoh: ${m.prefix}robloxstalk Linkmon99\``,
     );
@@ -174,7 +174,7 @@ async function handler(m, { sock }) {
       : "tidak tersedia";
 
     const caption =
-      `🎮 *ʀᴏʙʟᴏx sᴛᴀʟᴋ*\n\n` +
+      `🎮 *Roblox sTalk*\n\n` +
       `*PROFILE*\n` +
       `🆔 *ID*: ${res.id}\n` +
       `🎄 *Username*: ${res.username}\n` +

@@ -25,9 +25,9 @@ async function handler(m, { sock }) {
     const action = args[0]?.toLowerCase()
     
     if (!action || !['on', 'off'].includes(action)) {
-        return m.resendReplyWithNav(sock, m, `👋 *ᴡᴇʟᴄᴏᴍᴇ ɢʟᴏʙᴀʟ*\n\n` +
+        return m.resendReplyWithNav(sock, m, `👋 *Welcome Global*\n\n` +
             `> Aktifkan/nonaktifkan welcome di SEMUA grup sekaligus\n\n` +
-            `╭┈┈⬡「 📋 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
+            `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
             `┃ ${m.prefix}welcomeall on\n` +
             `┃ ${m.prefix}welcomeall off\n` +
             `╰┈┈┈┈┈┈┈┈⬡`, "welcomeall") }
@@ -48,14 +48,14 @@ async function handler(m, { sock }) {
         await m.react('✅')
         
         if (status) {
-            return m.m.reply(claraWrap("welcomeall", `✅ *ᴡᴇʟᴄᴏᴍᴇ ɢʟᴏʙᴀʟ ᴏɴ*\n\n` +
-                `╭┈┈⬡「 📊 *ʀᴇsᴜʟᴛ* 」\n` +
+            return m.m.reply(claraWrap("welcomeall", `✅ *Welcome Global On*\n\n` +
+                `╭┈┈⬡「 📊 *Result* 」\n` +
                 `┃ 🌐 Total Grup: *${count}*\n` +
                 `┃ ✅ Welcome: *AKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈⬡\n\n` +
                 `> Semua member baru akan disambut otomatis!`))       } else {
-            return m.reply(claraWrap("welcomeall", `❌ *ᴡᴇʟᴄᴏᴍᴇ ɢʟᴏʙᴀʟ ᴏꜰꜰ*\n\n` +
-                `╭┈┈⬡「 📊 *ʀᴇsᴜʟᴛ* 」\n` +
+            return m.reply(claraWrap("welcomeall", `❌ *Welcome Global Off*\n\n` +
+                `╭┈┈⬡「 📊 *Result* 」\n` +
                 `┃ 🌐 Total Grup: *${count}*\n` +
                 `┃ ❌ Welcome: *NONAKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈⬡\n\n` +
