@@ -400,7 +400,16 @@ async function startConnection(options = {}) {
       );
       console.log("");
     } catch (error) {
-      colors.logger.error("pairing", `gagal: ${error.message}`);
+      const msg = error?.message || String(error);
+      if (msg.includes("8 chars")) {
+        colors.logger.error("pairing", "Custom pairing code harus 8 karakter. Periksa konfigurasi.");
+      } else if (msg.includes("rate") || msg.includes("428")) {
+        colors.logger.error("pairing", "Rate limited. Tunggu 5-10 menit sebelum coba lagi.");
+      } else if (msg.includes("banned") || msg.includes("blocked")) {
+        colors.logger.error("pairing", "Nomor diblokir WhatsApp. Gunakan nomor lain.");
+      } else {
+        colors.logger.error("pairing", `gagal: ${msg}`);
+      }
     }
   }
 
