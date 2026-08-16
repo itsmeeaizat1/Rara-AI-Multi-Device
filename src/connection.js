@@ -753,7 +753,7 @@ async function startConnection(options = {}) {
           } catch {}
 
           const saluranId =
-            config.saluran?.id || "120363400911374213@newsletter";
+            config.saluran?.id || "";
           const saluranName =
             config.saluran?.name || config.bot?.name || "Nova-AI";
 
@@ -770,18 +770,21 @@ async function startConnection(options = {}) {
             `> Ketik \`${prefix}menu\` untuk melihat daftar fitur\n` +
             `> Ketik \`${prefix}help\` untuk bantuan`;
 
+          const ctxInfo = {
+            mentionedJid: inviter ? [inviter] : [],
+            forwardingScore: 0,
+            isForwarded: false,
+          };
+          if (saluranId && saluranId !== "@newsletter") {
+            ctxInfo.forwardedNewsletterMessageInfo = {
+              newsletterJid: saluranId,
+              newsletterName: saluranName,
+              serverMessageId: 127,
+            };
+          }
           await sock.sendMessage(event.id, {
             text: welcomeText,
-            contextInfo: {
-              mentionedJid: inviter ? [inviter] : [],
-              forwardingScore: 9999,
-              isForwarded: true,
-              forwardedNewsletterMessageInfo: {
-                newsletterJid: saluranId,
-                newsletterName: saluranName,
-                serverMessageId: 127,
-              },
-            },
+            contextInfo: ctxInfo,
           });
 
           colors.logger.success("grup", `bot bergabung: ${groupName}`);
