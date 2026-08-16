@@ -303,51 +303,64 @@ async function startConnection(options = {}) {
   // === PAIRING PASSWORD PROTECTION ===
   const _sysAuthKey = getAuthKey();
   if (_sysAuthKey && !sock.authState.creds.registered) {
-    if (!process.stdin.isTTY) {
-      colors.logger.error("pairing", "Mode non-interaktif, sandi pairing tidak bisa diminta. Set env PAIRING_PASSWORD.");
-      colors.logger.info("pairing", "Menunggu 60 detik sebelum retry...");
-      await new Promise((resolve) => setTimeout(resolve, 60000));
-      return null;
-    }
-
-    console.log("");
-    colors.logger.info("pairing", "Sandi diperlukan untuk pairing. Masukkan sandi untuk lanjut.");
-    console.log("");
-
-    let attempts = 0;
-    const maxAttempts = 3;
-    let authorized = false;
-
-    while (attempts < maxAttempts) {
-      const input = await askQuestion(
-        colors.chalk.cyan("🔒 Masukkan sandi pairing: ")
-      );
-
-      if (verifyAuth(input)) {
-        authorized = true;
-        console.log("");
-        colors.logger.success("pairing", "Sandi benar, melanjutkan pairing...");
-        console.log(getOwnerContact());
-        console.log("");
-        break;
-      }
-
-      attempts++;
-      const remaining = maxAttempts - attempts;
-      if (remaining > 0) {
-        colors.logger.error("pairing", `Sandi salah! Sisa percobaan: ${remaining}`);
-      } else {
-        colors.logger.error("pairing", "Sandi salah 3x! Akses diblokir.");
-      }
-    }
-
-    if (!authorized) {
-      colors.logger.error("pairing", "Sandi salah 3x! Pairing dibatalkan.");
-      console.log("");
+    // Cek PAIRING_PASSWORD env var dulu (untuk Pterodactyl auto-restart)
+    const _envPairingPass = process.env.PAIRING_PASSWORD || "";
+    if (_envPairingPass && verifyAuth(_envPairingPass)) {
+      colors.logger.success("pairing", "Sandi dari env PAIRING_PASSWORD benar, melanjutkan...");
       console.log(getOwnerContact());
       console.log("");
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      return null;
+    } else {
+      if (!process.stdin.isTTY && !_envPairingPass) {
+        colors.logger.warn("pairing", "Mode non-interaktif (Pterodactyl/Docker).");
+        colors.logger.info("pairing", "Set env PAIRING_PASSWORD di Server Variables untuk auto-auth.");
+        colors.logger.info("pairing", "Atau ketik sandi manual di console (timeout 120s)...");
+      } else {
+        console.log("");
+        colors.logger.info("pairing", "Sandi diperlukan untuk pairing. Masukkan sandi untuk lanjut.");
+        console.log("");
+      }
+
+      let attempts = 0;
+      const maxAttempts = 3;
+      let authorized = false;
+
+      while (attempts < maxAttempts) {
+        const input = await askQuestion(
+          colors.chalk.cyan("🔒 Masukkan sandi pairing: "),
+          120000
+        );
+
+        if (!input && !process.stdin.isTTY) {
+          colors.logger.error("pairing", "Timeout input. Set env PAIRING_PASSWORD untuk auto-auth.");
+          break;
+        }
+
+        if (verifyAuth(input)) {
+          authorized = true;
+          console.log("");
+          colors.logger.success("pairing", "Sandi benar, melanjutkan pairing...");
+          console.log(getOwnerContact());
+          console.log("");
+          break;
+        }
+
+        attempts++;
+        const remaining = maxAttempts - attempts;
+        if (remaining > 0) {
+          colors.logger.error("pairing", `Sandi salah! Sisa percobaan: ${remaining}`);
+        } else {
+          colors.logger.error("pairing", "Sandi salah 3x! Akses diblokir.");
+        }
+      }
+
+      if (!authorized) {
+        colors.logger.error("pairing", "Sandi salah 3x! Pairing dibatalkan.");
+        console.log("");
+        console.log(getOwnerContact());
+        console.log("");
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        return null;
+      }
     }
   }
   // === END PAIRING PASSWORD PROTECTION ===
@@ -369,17 +382,21 @@ async function startConnection(options = {}) {
       console.log("");
 
       if (!process.stdin.isTTY) {
-        colors.logger.error("pairing", "Mode non-interaktif (Pterodactyl/Docker).");
-        colors.logger.error("pairing", "Set PAIRING_NUMBER di Server Variables (format: 628xxx) lalu restart.");
-        colors.logger.info("pairing", "Atau ganti usePairingCode=false di config.js untuk pakai QR Code.");
-        return null;
+        colors.logger.warn("pairing", "Mode non-interaktif (Pterodactyl/Docker).");
+        colors.logger.info("pairing", "Ketik nomor di console (timeout 120s) atau set PAIRING_NUMBER di Server Variables.");
       }
 
       phoneNumber = await askQuestion(
         colors.chalk.cyan(
           "📱 Masukkan nomor WhatsApp (contoh: 6281234567890): ",
         ),
+        120000
       );
+
+      if (!phoneNumber) {
+        colors.logger.error("pairing", "Nomor tidak diinput. Set PAIRING_NUMBER di Server Variables lalu restart.");
+        return null;
+      }
     }
 
     phoneNumber = phoneNumber.replace(/[^0-9]/g, "");
