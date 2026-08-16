@@ -589,12 +589,16 @@ async function getImportantDay(date = new Date()) {
     return hariPenting[key];
   }
 
-  // Fallback: cek dari API online (api-harilibur)
+  // Fallback: cek dari API online (api-harilibur) - dengan timeout 5 detik
   try {
     const year = date.getFullYear();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
     const res = await fetch(
-      `https://api-harilibur.vercel.app/api?year=${year}&month=${parseInt(mm)}`
+      `https://api-harilibur.vercel.app/api?year=${year}&month=${parseInt(mm)}`,
+      { signal: controller.signal }
     );
+    clearTimeout(timeoutId);
     if (res.ok) {
       const data = await res.json();
       const today = `${year}-${mm}-${dd}`;
@@ -602,7 +606,7 @@ async function getImportantDay(date = new Date()) {
       if (match) return match.holiday_name;
     }
   } catch {
-    // API unreachable, return default
+    // API unreachable atau timeout, return default
   }
 
   return "Tidak ada";

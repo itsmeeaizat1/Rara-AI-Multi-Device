@@ -12,6 +12,7 @@ import {
   formatUptime,
   getTimeGreeting,
 } from "../../src/lib/nova-formatter.js";
+import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/nova-time.js";
 import {
   getCommandsByCategory,
   getCategories,
@@ -75,11 +76,10 @@ function getIslamicDate(date = new Date()) {
 async function buildMenuText(m, botConfig, db, uptime, sock) {
   const prefix = botConfig.command?.prefix || ".";
   const user = db.getUser(m.sender);
-  const timeHelper = await import("../../src/lib/nova-time.js");
   const now = new Date();
-  const timeStr = timeHelper.formatTime("HH:mm");
-  const dayName = timeHelper.formatFull("dddd");
-  const dateStr = timeHelper.formatFull("DD MMMM YYYY");
+  const timeStr = fmtTime("HH:mm");
+  const dayName = fmtFull("dddd");
+  const dateStr = fmtFull("DD MMMM YYYY");
   const weton = getWeton(now);
   const islamicDate = getIslamicDate(now);
   const importantDay = await getImportantDay(now);
@@ -428,10 +428,10 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         const thumbV6 = await sharp(fs.readFileSync(config.assets["nova"])).resize(640, 360).toBuffer();
         async function weatherMenu(city = "Jakarta") {
           try {
-            const geo = await axios.get(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`);
+            const geo = await axios.get(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`, { timeout: 5000 });
             const loc = geo.data.results?.[0];
             if (!loc) return "Cuaca tidak tersedia";
-            const weather = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,weather_code`);
+            const weather = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,weather_code`, { timeout: 5000 });
             const c = weather.data.current;
             const kondisi = { 0: "Cerah", 1: "Cerah Berawan", 2: "Berawan", 3: "Mendung", 45: "Berkabut", 51: "Gerimis", 61: "Hujan Ringan", 63: "Hujan", 95: "Badai Petir" }[c.weather_code] || "Tidak diketahui";
             return `${kondisi} | ${Math.round(c.temperature_2m)}°C\n${loc.name}`;
