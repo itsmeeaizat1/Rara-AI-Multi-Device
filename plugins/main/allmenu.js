@@ -296,7 +296,7 @@ ${readMore}
                   text: "🌸 Pilih tombol dibawah untuk kembali ke menu~",
                 },
                 contextInfo: {
-                  isForwarded: true,
+                  isForwarded: false,
                   forwardingScore: 9,
                   participant: "0@s.whatsapp.net",
                   quotedMessage: { conversation: `${config.bot?.name}` },
@@ -343,7 +343,7 @@ ${readMore}
                   text: "🌸 Pilih tombol dibawah untuk kembali ke menu~",
                 },
                 contextInfo: {
-                  isForwarded: true,
+                  isForwarded: false,
                   forwardingScore: 9,
                   participant: "0@s.whatsapp.net",
                   quotedMessage: { conversation: `${config.bot?.name}` },
@@ -388,7 +388,7 @@ ${readMore}
                 footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
                 contextInfo: {
                   mentionedJid: [m.sender],
-                  isForwarded: true,
+                  isForwarded: false,
                   forwardingScore: 9,
                 },
                 nativeFlowMessage: {
@@ -411,8 +411,38 @@ ${readMore}
       default:
         await m.reply(claraWrap("allmenu", txt));
     }
+  } catch (error) {
+    console.error("[AllMenu] Error:", error.message);
+    let fallbackThumbAll = null;
+    try {
+      fallbackThumbAll = imageBuffer ? await _sharp(imageBuffer).resize(640, 360, { fit: "cover" }).toBuffer() : null;
+    } catch (e) {
+      fallbackThumbAll = imageBuffer || null;
+    }
+    if (fallbackThumbAll) {
+      await sock.sendMessage(m.chat, {
+        text: txt,
+        contextInfo: {
+          mentionedJid: [m.sender],
+          forwardingScore: 9,
+          isForwarded: false,
+          externalAdReply: {
+            title: config.bot?.name || "Nova-AI",
+            body: `BOT WHATSAPP MULTI DEVICE`,
+            thumbnail: fallbackThumbAll,
+            renderLargerThumbnail: true,
+            showAdAttribution: false,
+            previewType: "VIDEO",
+          },
+        },
+      }, { quoted: m });
+    } else {
+      await m.reply(claraWrap("allmenu", txt));
+    }
+  }
 
-    // ── Audio ──
+  // ── Audio (independent try-catch, runs even if menu display failed) ──
+  try {
     const audioEnabled = db.setting("audioMenu") !== false;
     if (audioEnabled) {
       const audioPath = botConfig.assets["nova-mp3"];
@@ -444,30 +474,8 @@ ${readMore}
         }, { quoted: m });
       }
     }
-  } catch (error) {
-    console.error("[AllMenu] Error:", error.message);
-    const fallbackThumbAll = imageBuffer ? await _sharp(imageBuffer).resize(640, 360).toBuffer() : null;
-    if (fallbackThumbAll) {
-      await sock.sendMessage(m.chat, {
-        text: txt,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          forwardingScore: 9,
-          isForwarded: true,
-          externalAdReply: {
-            title: config.bot?.name || "Nova-AI",
-            body: `BOT WHATSAPP MULTI DEVICE`,
-            thumbnail: fallbackThumbAll,
-            renderLargerThumbnail: true,
-            showAdAttribution: false,
-            previewType: "VIDEO",
-          },
-        },
-      }, { quoted: m });
-    } else {
-      await m.reply(claraWrap("allmenu", txt));
-    }
-  }
+  } catch (e) { console.error("[AllMenu] Error sending audio:", e.message); }
+
   await m.react("✅");
 }
 

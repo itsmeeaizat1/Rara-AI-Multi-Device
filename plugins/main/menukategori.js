@@ -150,7 +150,7 @@ async function handler(m, { sock, db }) {
               body: { text: txt },
               footer: { text: `🌸 ${config.bot?.name} | Pilih tombol dibawah` },
               contextInfo: {
-                isForwarded: true,
+                isForwarded: false,
                 forwardingScore: 9,
                 participant: "0@s.whatsapp.net",
                 quotedMessage: { conversation: `${config.bot?.name}` },
@@ -236,7 +236,7 @@ async function handler(m, { sock, db }) {
             body: { text: txt },
             footer: { text: `🌸 ${config.bot?.name} | Pilih tombol dibawah` },
             contextInfo: {
-              isForwarded: true,
+              isForwarded: false,
               forwardingScore: 9,
               participant: "0@s.whatsapp.net",
               quotedMessage: { conversation: `${config.bot?.name}` },
