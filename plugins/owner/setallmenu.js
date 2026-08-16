@@ -69,7 +69,7 @@ async function handler(m, { sock, db }) {
   }
 
   const current =
-    db.setting("allmenuVariant") || config.ui?.allmenuVariant || 2;
+    db.setting("allmenuVariant") || config.ui?.allmenuVariant || 3;
 
   const rows = [];
   for (const [key, val] of Object.entries(VARIANTS)) {

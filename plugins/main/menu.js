@@ -219,7 +219,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   await m.react("🕐");
   const prefix = botConfig.command?.prefix || ".";
   const savedVariant = db.setting("menuVariant");
-  const menuVariant = savedVariant || botConfig.ui?.menuVariant || 2;
+  const menuVariant = savedVariant || botConfig.ui?.menuVariant || 3;
   const groupData = m.isGroup ? db.getGroup(m.chat) || {} : {};
   const botMode = groupData.botMode || "md";
   const text = await buildMenuText(m, botConfig, db, uptime, sock);

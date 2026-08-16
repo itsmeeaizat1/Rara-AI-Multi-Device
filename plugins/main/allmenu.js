@@ -252,7 +252,7 @@ ${readMore}
   } catch (e) {}
 
   const savedVariant = db.setting("allmenuVariant");
-  const allmenuVariant = savedVariant || botConfig.ui?.allmenuVariant || 2;
+  const allmenuVariant = savedVariant || botConfig.ui?.allmenuVariant || 3;
   try {
     switch (allmenuVariant) {
       case 1: {
