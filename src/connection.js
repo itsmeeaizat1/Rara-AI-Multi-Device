@@ -393,9 +393,6 @@ async function startConnection(options = {}) {
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 5000));
-      if (!connectionState.sock || !sock.ws?.readyState || sock.ws.readyState !== 1) {
-        throw new Error("Koneksi WebSocket belum stabil. Tunggu reconnect.");
-      }
       const code = await sock.requestPairingCode(phoneNumber, "NOVAAI01");
       console.log("");
       console.log(
