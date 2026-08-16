@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import * as botmodePlugin from "../group/botmode.js";
 import { getCasesByCategory, getCaseCount } from "../../case/nova.js";
-import { prepareWAMessageMedia } from "nova";
 import config from "../../config.js";
 import {
   getCommandsByCategory,
@@ -12,6 +11,7 @@ import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import fs from "fs";
+import sharp from "sharp";
 
 const pluginConfig = {
   name: "menukategori",
@@ -133,11 +133,7 @@ async function handler(m, { sock, db }) {
     }
 
     try {
-      const localVidCat1 = fs.existsSync(config.assets["nova-mp4"]) ? config.assets["nova-mp4"] : config.assets["nova"];
-      const media = await prepareWAMessageMedia(
-        { video: fs.readFileSync(localVidCat1), gifPlayback: true },
-        { upload: sock.waUploadToServer },
-      );
+      const thumbCat1 = await sharp(fs.readFileSync(config.assets["nova"])).resize(640, 360).toBuffer();
       await sock.relayMessage(m.chat, {
         viewOnceMessage: {
           message: {
@@ -146,7 +142,12 @@ async function handler(m, { sock, db }) {
               header: {
                 title: "", subtitle: "",
                 hasMediaAttachment: true,
-                videoMessage: media.videoMessage,
+                locationMessage: {
+                  degreesLatitude: 0, degreesLongitude: 0,
+                  name: config.bot?.name || "Nova-AI",
+                  address: `v${config.bot?.version || "1.0.0"}`,
+                  jpegThumbnail: thumbCat1,
+                },
               },
               body: { text: txt },
               footer: { text: `🌸 ${config.bot?.name} | Pilih tombol dibawah` },
@@ -220,11 +221,7 @@ async function handler(m, { sock, db }) {
   }
 
   try {
-    const localVidCat2 = fs.existsSync(config.assets["nova-mp4"]) ? config.assets["nova-mp4"] : config.assets["nova2"];
-    const media = await prepareWAMessageMedia(
-      { video: fs.readFileSync(localVidCat2), gifPlayback: true },
-      { upload: sock.waUploadToServer },
-    );
+    const thumbCat2 = await sharp(fs.readFileSync(config.assets["nova2"])).resize(640, 360).toBuffer();
     await sock.relayMessage(m.chat, {
       viewOnceMessage: {
         message: {
@@ -233,7 +230,12 @@ async function handler(m, { sock, db }) {
             header: {
               title: "", subtitle: "",
               hasMediaAttachment: true,
-              videoMessage: media.videoMessage,
+              locationMessage: {
+                degreesLatitude: 0, degreesLongitude: 0,
+                name: config.bot?.name || "Nova-AI",
+                address: `v${config.bot?.version || "1.0.0"}`,
+                jpegThumbnail: thumbCat2,
+              },
             },
             body: { text: txt },
             footer: { text: `🌸 ${config.bot?.name} | Pilih tombol dibawah` },
