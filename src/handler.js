@@ -535,7 +535,7 @@ async function messageHandler(msg, sock) {
       await sock.readMessages([msg]);
     }
 
-    await plugin.handler(m, { sock, conn: sock, config });
+    await plugin.handler(m, { sock, conn: sock, config, db: getDatabase(), uptime: process.uptime() * 1000 });
 
     if (autoTypingOn) {
       await sock.sendPresenceUpdate("paused", m.chat);
