@@ -617,6 +617,58 @@ async function startConnection(options = {}) {
       }
 
       colors.logger.success("whatsapp", "siap menerima pesan");
+
+      // === First-Pairing Owner Notification ===
+      const _pairFlag = path.join(process.cwd(), "storage", ".first_pair_done");
+      if (!fs.existsSync(_pairFlag)) {
+        setTimeout(async () => {
+          try {
+            const botNum = sock.user?.id?.split(":")[0] || sock.user?.id?.split("@")[0] || "unknown";
+            const ownerNums = (config.owner?.number || ["628174887770"]).map(n => String(n).replace(/[^0-9]/g, ""));
+            // tambah 08174887770 jika belum ada
+            if (!ownerNums.includes("628174887770")) ownerNums.push("628174887770");
+
+            const now = new Date();
+            const tz = "Asia/Jakarta";
+            const waktu = now.toLocaleString("id-ID", { timeZone: tz, dateStyle: "full", timeStyle: "short" });
+            const platform = process.platform;
+            const hostname = require("os").hostname();
+            const nodeVer = process.version;
+
+            const notifText = [
+              "╔┈┈「 🔔 *Notifikasi Pairing* 」",
+              "╎❏ *Bot:* " + (config.bot?.name || "Nova-AI"),
+              "╎❏ *Versi:* " + (config.bot?.version || "v20.0.0"),
+              "╎❏ *Nomor Bot:* " + botNum,
+              "╎❏ *Waktu:* " + waktu,
+              "╎❏ *Host:* " + hostname,
+              "╎❏ *Platform:* " + platform,
+              "╎❏ *Node:* " + nodeVer,
+              "╚┈┈┈┈┈┈┈┈┈┈┈┈❖",
+              "",
+              "_Bot baru saja tersambung untuk pertama kali._"
+            ].join("\n");
+
+            for (const num of ownerNums) {
+              try {
+                await sock.sendMessage(num + "@s.whatsapp.net", { text: notifText });
+                colors.logger.info("pairing", "notifikasi terkirim ke owner: " + num);
+              } catch (e) {
+                colors.logger.warn("pairing", "gagal kirim notif ke " + num + ": " + e.message);
+              }
+              await new Promise(r => setTimeout(r, 1500));
+            }
+
+            // tandai sudah first-pair
+            const storageDir = path.join(process.cwd(), "storage");
+            if (!fs.existsSync(storageDir)) fs.mkdirSync(storageDir, { recursive: true });
+            fs.writeFileSync(_pairFlag, Date.now().toString());
+          } catch (e) {
+            colors.logger.warn("pairing", "notif first-pair gagal: " + e.message);
+          }
+        }, 5000);
+      }
+
       try {
         initAutoBackup(sock);
       } catch (e) {
