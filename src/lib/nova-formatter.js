@@ -548,6 +548,7 @@ export { CHARS, EMOJIS, formatUptime, formatDate, formatNumber, formatFileSize, 
 async function getImportantDay(date = new Date()) {
   const mm = String(date.getMonth() + 1).padStart(2, "0");
   const dd = String(date.getDate()).padStart(2, "0");
+  const yyyy = date.getFullYear();
   const key = `${mm}-${dd}`;
 
   // Daftar hari penting nasional & internasional (fix date)
@@ -586,28 +587,33 @@ async function getImportantDay(date = new Date()) {
 
   // Cek dari daftar statis dulu
   if (hariPenting[key]) {
-    return hariPenting[key];
+    return `${dd} ${getMonthName(mm)} ${yyyy} - ${hariPenting[key]}`;
   }
 
   // Fallback: cek dari API online (api-harilibur) - dengan timeout 5 detik
   try {
-    const year = date.getFullYear();
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
     const res = await fetch(
-      `https://api-harilibur.vercel.app/api?year=${year}&month=${parseInt(mm)}`,
+      `https://api-harilibur.vercel.app/api?year=${yyyy}&month=${parseInt(mm)}`,
       { signal: controller.signal }
     );
     clearTimeout(timeoutId);
     if (res.ok) {
       const data = await res.json();
-      const today = `${year}-${mm}-${dd}`;
+      const today = `${yyyy}-${mm}-${dd}`;
       const match = data.find((h) => h.holiday_date === today && h.is_national_holiday);
-      if (match) return match.holiday_name;
+      if (match) return `${dd} ${getMonthName(mm)} ${yyyy} - ${match.holiday_name}`;
     }
   } catch {
     // API unreachable atau timeout, return default
   }
 
-  return "Tidak ada";
+  return "Tidak ada hari penting hari ini";
+}
+
+// Helper untuk nama bulan dalam bahasa Indonesia
+function getMonthName(mm) {
+  const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+  return months[parseInt(mm) - 1] || mm;
 }
