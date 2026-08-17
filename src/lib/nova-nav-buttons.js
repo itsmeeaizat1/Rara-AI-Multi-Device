@@ -48,6 +48,13 @@ function isNavButtonsEnabled(chat) {
  */
 async function sendReplyWithNav(sock, m, text, cmdName = "") {
   try {
+    // WhatsApp Channel (saluran/newsletter) tidak mendukung interactive/button
+    // message — kirim plain text kalau chat-nya @newsletter, biar gak muncul
+    // placeholder "versi WhatsApp Anda tidak mendukungnya".
+    if (m.chat && m.chat.endsWith("@newsletter")) {
+      return await sock.sendMessage(m.chat, { text });
+    }
+
     // Cek toggle — kalau off, fallback ke m.reply biasa
     if (!isNavButtonsEnabled(m.chat)) {
       return await m.reply(text);
