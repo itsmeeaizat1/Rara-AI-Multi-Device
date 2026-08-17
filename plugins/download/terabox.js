@@ -33,9 +33,9 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `📦 *TeraBox Downloader*\n\n` +
         `Download video atau file dari TeraBox.\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}terabox <link>*\n\n` +
+        `*${m.prefix}terabox <link>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}terabox https://terabox.com/s/xxx*\n\n` +
+        `*${m.prefix}terabox https://terabox.com/s/xxx*\n\n` +
         `_File dikirim sebagai dokumen, mungkin agak lama_`, "terabox");
   }
 
@@ -50,9 +50,9 @@ async function handler(m, { sock }) {
 
     let caption =
       `📦 *TeraBox*\n\n` +
-      `> 📌 ${result.file_name}\n` +
-      `> 📏 Size: ${result.file_size}\n` +
-      `> ⏱️ Durasi: ${result.duration}`;
+      `📌 ${result.file_name}\n` +
+      `📏 Size: ${result.file_size}\n` +
+      `⏱️ Durasi: ${result.duration}`;
 
     if (result.thumbnail) {
       await sock.sendMedia(m.chat, result.thumbnail, caption, m, {

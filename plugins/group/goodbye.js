@@ -453,7 +453,7 @@ async function handler(m, { sock }) {
       m.react("✅");
       return m.reply(
         `✅ *Goodbye Global On*\n\n` +
-        `> Goodbye diaktifkan di *${count}* grup!`,
+        `Goodbye diaktifkan di *${count}* grup!`,
       );
     } catch (err) {
       return m.reply(claraWrap("goodbye", te(m.prefix, m.command, m.pushName), "error"));
@@ -475,7 +475,7 @@ async function handler(m, { sock }) {
       m.react("✅");
       return m.reply(
         `❌ *Goodbye Global Off*\n\n` +
-        `> Goodbye dinonaktifkan di *${count}* grup!`,
+        `Goodbye dinonaktifkan di *${count}* grup!`,
       );
     } catch (err) {
       return m.reply(claraWrap("goodbye", te(m.prefix, m.command, m.pushName), "error"));
@@ -485,43 +485,43 @@ async function handler(m, { sock }) {
     if (currentStatus) {
       return m.reply(
         `⚠️ *Goodbye Already Active*\n\n` +
-        `> Status: *✅ ON*\n` +
-        `> Goodbye sudah aktif di grup ini.\n\n` +
+        `Status: *✅ ON*\n` +
+        `Goodbye sudah aktif di grup ini.\n\n` +
         `_Gunakan \`${m.prefix}goodbye off\` untuk menonaktifkan._`,
       );
     }
     db.setGroup(m.chat, { goodbye: true, leave: true });
     return m.reply(
       `✅ *Goodbye Aktif*\n\n` +
-      `> Goodbye message berhasil diaktifkan!\n` +
-      `> Member yang keluar akan diberi pesan.\n\n` +
+      `Goodbye message berhasil diaktifkan!\n` +
+      `Member yang keluar akan diberi pesan.\n\n` +
       `_Gunakan \`${m.prefix}setgoodbye\` untuk custom pesan._`,
     );
   }
   if (sub === "off") {
     if (!currentStatus) {
       return sendReplyWithNav(sock, m, `⚠️ *Goodbye Already Inactive*\n\n` +
-        `> Status: *❌ OFF*\n` +
-        `> Goodbye sudah nonaktif di grup ini.\n\n` +
+        `Status: *❌ OFF*\n` +
+        `Goodbye sudah nonaktif di grup ini.\n\n` +
         `_Gunakan \`${m.prefix}goodbye on\` untuk mengaktifkan._`, "goodbye");
     }
     db.setGroup(m.chat, { goodbye: false, leave: false });
     return m.reply(
       `❌ *Goodbye Nonaktif*\n\n` +
-      `> Goodbye message berhasil dinonaktifkan.\n` +
-      `> Member yang keluar tidak akan diberi pesan.`,
+      `Goodbye message berhasil dinonaktifkan.\n` +
+      `Member yang keluar tidak akan diberi pesan.`,
     );
   }
   m.reply(
     `👋 *Goodbye sEttings*\n\n` +
-    `> Status: *${currentStatus ? "✅ ON" : "❌ OFF"}*\n\n` +
+    `Status: *${currentStatus ? "✅ ON" : "❌ OFF"}*\n\n` +
     `\`\`\`━━━ Pilihan ━━━\`\`\`\n` +
-    `> \`${m.prefix}goodbye on\` → Aktifkan\n` +
-    `> \`${m.prefix}goodbye off\` → Nonaktifkan\n` +
-    `> \`${m.prefix}goodbye on all\` → Global ON (owner)\n` +
-    `> \`${m.prefix}goodbye off all\` → Global OFF (owner)\n` +
-    `> \`${m.prefix}setgoodbye\` → Custom pesan\n` +
-    `> \`${m.prefix}resetgoodbye\` → Reset default`,
+    `\`${m.prefix}goodbye on\` → Aktifkan\n` +
+    `\`${m.prefix}goodbye off\` → Nonaktifkan\n` +
+    `\`${m.prefix}goodbye on all\` → Global ON (owner)\n` +
+    `\`${m.prefix}goodbye off all\` → Global OFF (owner)\n` +
+    `\`${m.prefix}setgoodbye\` → Custom pesan\n` +
+    `\`${m.prefix}resetgoodbye\` → Reset default`,
   );
 }
 export { pluginConfig as config, handler, sendGoodbyeMessage };

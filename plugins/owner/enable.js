@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
         const current = groupData[f.dbKey];
         const active = isOn(current, f.on);
         const icon = active ? "ON" : "OFF";
-        txt += `> ${icon}  ${feat}\n`;
+        txt += `${icon}  ${feat}\n`;
       }
       txt += `\n`;
     }
@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
   await m.react("✅");
 
   let txt = `ENABLE - ${feature.label}\n`;
-  txt += `> Status: ON`;
+  txt += `Status: ON`;
   if (feature.modes) {
     const newMode = mode && feature.modes.includes(mode) ? mode : (groupData[feature.modeKey] || feature.modes[0]);
     txt += `\n> Mode: ${newMode}`;

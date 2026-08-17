@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
 
   if (isSelfGroup) {
     return m.reply(claraWrap("Grup Ini sUdah Mode sElf", `ℹ️ *Grup Ini sUdah Mode sElf*\n\n` +
-        `> Bot hanya merespon owner & bot sendiri\n\n` +
+        `Bot hanya merespon owner & bot sendiri\n\n` +
         `_Gunakan ${m.prefix}publicthisgc untuk membuka akses_`));
   }
 
@@ -42,9 +42,9 @@ async function handler(m, { sock }) {
   db.setting("publicGroups", updatedPublic);
 
   return m.reply(claraWrap("Mode sElf Aktif", `🔒 *Mode sElf Aktif*\n\n` +
-      `> Bot di grup ini sekarang hanya merespon:\n` +
-      `> • Owner bot\n` +
-      `> • Bot sendiri (fromMe)\n\n` +
+      `Bot di grup ini sekarang hanya merespon:\n` +
+      `• Owner bot\n` +
+      `• Bot sendiri (fromMe)\n\n` +
       `📋 *Grup lain tidak terpengaruh*\n\n` +
       `_Gunakan ${m.prefix}publicthisgc untuk membuka akses_`));
 }

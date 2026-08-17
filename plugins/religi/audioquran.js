@@ -296,7 +296,7 @@ async function handler(m, { sock, args }) {
   if (args.length === 0) {
     return m.reply(
       `🕌 *AUDIO QURAN*\n\n` +
-      `> Mode yang tersedia:\n` +
+      `Mode yang tersedia:\n` +
       `- \`.audio-quran reciters\` (List qari)\n` +
       `- \`.audio-quran suwar\` (List surah 1-114)\n` +
       `- \`.audio-quran radios\` (List radio live)\n` +
@@ -335,7 +335,7 @@ async function handler(m, { sock, args }) {
       caption += `*Qari:* ${reciterName}\n`;
       caption += `*Moshaf:* ${moshafName}\n`;
       caption += `*Surah:* ke-${surahId}\n\n`;
-      caption += `> Sedang mengirim audio...`;
+      caption += `Sedang mengirim audio...`;
       
       await m.reply(claraWrap("audioquran", caption));
       

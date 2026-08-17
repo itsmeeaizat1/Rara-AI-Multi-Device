@@ -183,9 +183,9 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.isImage);
     if (!isImage) {
       return sendReplyWithNav(sock, m, `📷 *Fake sTory 2*\n\n` +
-          `> Reply gambar!\n\n` +
-          `> Format: \`${m.prefix}fakestory2 <nama>\`\n` +
-          `> Contoh: \`${m.prefix}fakestory2 Misaki\``, "fakestory2");
+          `Reply gambar!\n\n` +
+          `Format: \`${m.prefix}fakestory2 <nama>\`\n` +
+          `Contoh: \`${m.prefix}fakestory2 Misaki\``, "fakestory2");
     }
     let imageBuffer;
     if (m.isImage && m.download) {

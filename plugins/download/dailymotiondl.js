@@ -32,9 +32,9 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `🎬 *Dailymotion Downloader*\n\n` +
         `Download video dari Dailymotion, otomatis dikonversi ke MP4.\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}dailymotiondl <link>*\n\n` +
+        `*${m.prefix}dailymotiondl <link>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}dailymotiondl https://www.dailymotion.com/video/xxx*\n\n` +
+        `*${m.prefix}dailymotiondl https://www.dailymotion.com/video/xxx*\n\n` +
         `_Proses konversi mungkin agak lama_`, "dailymotiondl");
   }
 
@@ -49,9 +49,9 @@ async function handler(m, { sock }) {
 
     let caption =
       `🎬 *Dailymotion*\n\n` +
-      `> 📌 ${result.title}\n` +
-      `> ⏱️ Durasi: ${result.duration}\n` +
-      `> 📺 Kualitas: ${result.quality}`;
+      `📌 ${result.title}\n` +
+      `⏱️ Durasi: ${result.duration}\n` +
+      `📺 Kualitas: ${result.quality}`;
 
     if (result.thumbnail) {
       await sock.sendMedia(m.chat, result.thumbnail, caption, m, {

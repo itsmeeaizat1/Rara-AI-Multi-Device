@@ -268,7 +268,7 @@ async function sendBackupToOwner(backupInfo) {
       `┃ ⏱️ Interval: ${formatInterval(state.intervalMs)}\n` +
       `┃ #️⃣ Backup ke-${state.backupCount + 1}\n` +
       `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-      `> ${config.bot?.name || "Nova-AI"} Auto Backup System`;
+      `${config.bot?.name || "Nova-AI"} Auto Backup System`;
 
     await sockInstance.sendMessage(ownerJid, {
       document: { url: backupInfo.path },

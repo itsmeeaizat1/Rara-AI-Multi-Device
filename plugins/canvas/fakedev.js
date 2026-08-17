@@ -30,10 +30,10 @@ async function handler(m, { sock }) {
   const name = m.text?.trim();
   if (!name) {
     return sendReplyWithNav(sock, m, `🎮 *Fake Developer*\n\n` +
-        `> Masukkan nama untuk profile\n\n` +
+        `Masukkan nama untuk profile\n\n` +
         `*Cara Pakai:*\n` +
-        `> 1. Kirim foto + caption \`${m.prefix}fakedev <nama>\`\n` +
-        `> 2. Reply foto dengan \`${m.prefix}fakedev <nama>\``, "fakedev");
+        `1. Kirim foto + caption \`${m.prefix}fakedev <nama>\`\n` +
+        `2. Reply foto dengan \`${m.prefix}fakedev <nama>\``, "fakedev");
   }
   let buffer = null;
   if (

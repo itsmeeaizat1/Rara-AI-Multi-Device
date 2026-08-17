@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
 
     const sent = await m.reply(claraWrap("sulap", `🎩✨ *Pertunjukan sUlap*\n\n` +
             `Siapa yang ingin dihilangkan?\n\n` +
-            `> Reply pesan ini + mention orangnya`))
+            `Reply pesan ini + mention orangnya`))
 
     global.sulapSessions.set(sent.key.id, {
         admin: m.sender,
@@ -116,7 +116,7 @@ async function replyHandler(m, sock) {
             text: `${line}\n\n` +
                 `🎯 @${targetNumber} telah menghilang!\n` +
                 `🎩 Pesulap: @${senderNumber}\n\n` +
-                `> _Pertunjukan selesai~_ ✨`,
+                `_Pertunjukan selesai~_ ✨`,
             mentions: [targetJid, m.sender]
         })
 

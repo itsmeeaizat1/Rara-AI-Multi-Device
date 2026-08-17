@@ -45,8 +45,8 @@ async function handler(m, { sock, config: botConfig }) {
     for (const [key, info] of Object.entries(statuses)) {
       const status = info.enabled ? "ON" : "OFF";
       const emoji = info.enabled ? "🟢" : "🔴";
-      text += `> ${emoji} *${info.label}*\n`;
-      text += `> Status: *${status}* | Toggle: \`${prefix}togglesaluran ${key}\`\n\n`;
+      text += `${emoji} *${info.label}*\n`;
+      text += `Status: *${status}* | Toggle: \`${prefix}togglesaluran ${key}\`\n\n`;
       if (info.enabled) onCount++;
       else offCount++;
     }
@@ -117,7 +117,7 @@ async function handler(m, { sock, config: botConfig }) {
   // Unknown event
   let availableList = "";
   for (const [key, label] of Object.entries(NOTIFY_EVENTS)) {
-    availableList += `> \`${key}\` — ${label}\n`;
+    availableList += `\`${key}\` — ${label}\n`;
   }
 
   return sendReplyWithNav(

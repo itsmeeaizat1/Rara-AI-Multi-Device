@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     
     if (!global.absensi[chatId]) {
         return m.reply(claraWrap("Tidak Ada Absen", `❌ *Tidak Ada Absen*\n\n` +
-            `> Tidak ada sesi absen di grup ini!`))
+            `Tidak ada sesi absen di grup ini!`))
     }
     
     const absen = global.absensi[chatId]

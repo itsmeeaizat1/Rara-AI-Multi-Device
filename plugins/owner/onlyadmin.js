@@ -60,10 +60,10 @@ async function handler(m, { sock }) {
 
     if (!args || args === 'status') {
         return sendReplyWithNav(sock, m, `🔒 *Onlyadmin*\n\n` +
-            `> Status: ${current ? '✅ Aktif' : '❌ Nonaktif'}\n\n` +
+            `Status: ${current ? '✅ Aktif' : '❌ Nonaktif'}\n\n` +
             `*Penggunaan:*\n` +
-            `> \`.onlyadmin on\` — Aktifkan\n` +
-            `> \`.onlyadmin off\` — Nonaktifkan\n\n` +
+            `\`.onlyadmin on\` — Aktifkan\n` +
+            `\`.onlyadmin off\` — Nonaktifkan\n\n` +
             `_Hanya admin grup, owner, dan private chat yang bisa akses bot_`, "onlyadmin")
     }
 

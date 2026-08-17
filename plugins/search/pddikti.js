@@ -145,7 +145,7 @@ async function handler(m, { sock,  args }) {
   if (args.length === 0) {
     return m.reply(
       `🎓 *PDDIKTI SEARCH*\n\n` +
-      `> Mode pencarian:\n` +
+      `Mode pencarian:\n` +
       `- \`.pddikti all <query>\`\n` +
       `- \`.pddikti mhs <nama/NIM>\`\n` +
       `- \`.pddikti dosen <nama/NIDN>\`\n` +
@@ -242,7 +242,7 @@ async function handler(m, { sock,  args }) {
           txt += `- @ ${item.nama_pt ?? "-"}\n\n`;
         }
       }
-      if (r.count > 10) txt += `> ... +${r.count - 10} hasil lainnya.\n`;
+      if (r.count > 10) txt += `... +${r.count - 10} hasil lainnya.\n`;
     }
     
     m.react("✅");

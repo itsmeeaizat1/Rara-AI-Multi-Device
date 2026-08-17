@@ -29,22 +29,22 @@ function handler(m, { sock }) {
     
     if (!args || args === 'status') {
         return sendReplyWithNav(sock, m, `🔗 *Auto Download*\n\n` +
-            `> Status: ${current ? '✅ Aktif' : '❌ Nonaktif'}\n\n` +
+            `Status: ${current ? '✅ Aktif' : '❌ Nonaktif'}\n\n` +
             `*Platform Support:*\n` +
-            `> TikTok, Instagram, Facebook\n` +
-            `> YouTube, Twitter/X\n` +
-            `> Telegram, Discord\n\n` +
+            `TikTok, Instagram, Facebook\n` +
+            `YouTube, Twitter/X\n` +
+            `Telegram, Discord\n\n` +
             `*Penggunaan:*\n` +
-            `> \`${m.prefix}autodl on\` - Aktifkan\n` +
-            `> \`${m.prefix}autodl off\` - Nonaktifkan`, "autodl")
+            `\`${m.prefix}autodl on\` - Aktifkan\n` +
+            `\`${m.prefix}autodl off\` - Nonaktifkan`, "autodl")
     }
     
     if (args === 'on') {
         db.setGroup(m.chat, { ...groupData, autodl: true })
         m.react('✅')
         return m.reply(claraWrap("autodl", `✅ *Auto Download Aktif*\n\n` +
-            `> Kirim link sosmed dan bot akan auto download!\n` +
-            `> Support: TikTok, IG, FB, YouTube, Twitter/X`))
+            `Kirim link sosmed dan bot akan auto download!\n` +
+            `Support: TikTok, IG, FB, YouTube, Twitter/X`))
     }
     
     if (args === 'off') {

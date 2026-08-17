@@ -30,13 +30,13 @@ function handler(m, { sock }) {
         const status = groupData.antijudol || 'off'
         const mode = groupData.antijudolMode || 'remove'
         return sendReplyWithNav(sock, m, `🎰 *Antijudol*\n\n` +
-            `> Status: *${status.toUpperCase()}*\n` +
-            `> Mode: *${mode.toUpperCase()}*\n\n` +
-            `> Deteksi konten judol seperti judi, slot, gacor, maxwin, togel, bonus member, link alternatif, dan pola sejenis.\n\n` +
-            `> \`${m.prefix}antijudol on\`\n` +
-            `> \`${m.prefix}antijudol off\`\n` +
-            `> \`${m.prefix}antijudol metode kick\`\n` +
-            `> \`${m.prefix}antijudol metode remove\``, "antijudol")
+            `Status: *${status.toUpperCase()}*\n` +
+            `Mode: *${mode.toUpperCase()}*\n\n` +
+            `Deteksi konten judol seperti judi, slot, gacor, maxwin, togel, bonus member, link alternatif, dan pola sejenis.\n\n` +
+            `\`${m.prefix}antijudol on\`\n` +
+            `\`${m.prefix}antijudol off\`\n` +
+            `\`${m.prefix}antijudol metode kick\`\n` +
+            `\`${m.prefix}antijudol metode remove\``, "antijudol")
     }
 
     if (option === 'on') {

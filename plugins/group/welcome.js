@@ -441,13 +441,13 @@ async function handler(m, { sock }) {
   if (sub === "off") {
     if (!currentStatus) {
       return sendReplyWithNav(sock, m, `⚠️ *Welcome Already Inactive*\n\n` +
-        `> Status: *❌ OFF*\n` +
-        `> Welcome sudah nonaktif di grup ini.\n\n` +
+        `Status: *❌ OFF*\n` +
+        `Welcome sudah nonaktif di grup ini.\n\n` +
         `_Gunakan \`${m.prefix}welcome on\` untuk mengaktifkan._`, "welcome");
     }
     db.setGroup(m.chat, { welcome: false });
     return m.reply(claraWrap("Welcome Nonaktif", [`Welcome message berhasil dinonaktifkan.`, `Member baru tidak akan disambut.`].join("\n")));
   }
-  m.reply(claraWrap("Welcome Settings", [`Status: *${currentStatus ? "✅ ON" : "❌ OFF"}*`, ``, `━━━ Pilihan ━━━`, `> \`${m.prefix}welcome on\` → Aktifkan`, `> \`${m.prefix}welcome off\` → Nonaktifkan`, `> \`${m.prefix}welcome on all\` → Global ON (owner)`, `> \`${m.prefix}welcome off all\` → Global OFF (owner)`, `> \`${m.prefix}setwelcome\` → Custom pesan`, `> \`${m.prefix}resetwelcome\` → Reset default`].join("\n")));
+  m.reply(claraWrap("Welcome Settings", [`Status: *${currentStatus ? "✅ ON" : "❌ OFF"}*`, ``, `━━━ Pilihan ━━━`, `\`${m.prefix}welcome on\` → Aktifkan`, `\`${m.prefix}welcome off\` → Nonaktifkan`, `\`${m.prefix}welcome on all\` → Global ON (owner)`, `\`${m.prefix}welcome off all\` → Global OFF (owner)`, `\`${m.prefix}setwelcome\` → Custom pesan`, `\`${m.prefix}resetwelcome\` → Reset default`].join("\n")));
 }
 export { pluginConfig as config, handler, sendWelcomeMessage };

@@ -84,7 +84,7 @@ function handler(m, { sock }) {
   text += `╰┈┈⬡\n\n`;
 
   if (m.isOwner) {
-    text += `> _Owner: gunakan \`${m.prefix}jedacreate\` untuk setting_`;
+    text += `_Owner: gunakan \`${m.prefix}jedacreate\` untuk setting_`;
   }
 
   return m.reply(claraWrap("cekjeda", text));

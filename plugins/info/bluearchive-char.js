@@ -83,11 +83,11 @@ async function handler(m, { sock }) {
   if (!name) {
     return m.reply(
       `🎮 *Blue Archive Character*\n\n` +
-        `> Lihat info character Blue Archive\n\n` +
-        `> *Contoh:*\n` +
-        `> ${m.prefix}bluearchive-char shiroko\n` +
-        `> ${m.prefix}bachar hoshino\n` +
-        `> ${m.prefix}ba aru`,
+        `Lihat info character Blue Archive\n\n` +
+        `*Contoh:*\n` +
+        `${m.prefix}bluearchive-char shiroko\n` +
+        `${m.prefix}bachar hoshino\n` +
+        `${m.prefix}ba aru`,
     );
   }
 
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
     let caption = `🎮 *${char.name?.toUpperCase()}*\n\n`;
 
     if (char.bio) {
-      caption += `> ${char.bio.substring(0, 200)}${char.bio.length > 200 ? "..." : ""}\n\n`;
+      caption += `${char.bio.substring(0, 200)}${char.bio.length > 200 ? "..." : ""}\n\n`;
     }
 
     caption += `╭┈┈⬡「 📋 *Profile* 」\n`;

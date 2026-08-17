@@ -67,10 +67,10 @@ async function handler(m, { sock }) {
         return sendReplyWithNav(sock, m, `🖥️ *CARBON CODE*\n\n` +
             `Fitur ini mengubah teks kode program kamu menjadi gambar cantik ala Carbon\n\n` +
             `*Cara pakai:*\n` +
-            `> \`${m.prefix}carbon <kode>\`\n` +
-            `> Atau kamu bisa reply pesan yang berisi kode\n\n` +
+            `\`${m.prefix}carbon <kode>\`\n` +
+            `Atau kamu bisa reply pesan yang berisi kode\n\n` +
             `*Contoh:*\n` +
-            `> \`${m.prefix}carbon console.log("Halo")\``, "carbon")
+            `\`${m.prefix}carbon console.log("Halo")\``, "carbon")
     }
 
     await m.react("🕐")

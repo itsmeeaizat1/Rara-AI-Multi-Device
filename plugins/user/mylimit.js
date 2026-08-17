@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
     msg += `╎❏ Bonus weekend: *+${formatNumber(weekendBonus)} limit*\n`;
   }
   msg += `╚┈┈┈┈┈┈┈┈┈┈┈┈❖\n\n`;
-  msg += `> Beli limit? Ketik \`.buyenergi <jumlah>\``;
+  msg += `Beli limit? Ketik \`.buyenergi <jumlah>\``;
 
   return sendReplyWithNav(sock, m, msg, "mylimit");
 }

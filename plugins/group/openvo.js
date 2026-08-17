@@ -23,15 +23,15 @@ async function handler(m, { sock }) {
 
     if (!quoted) {
         await sendReplyWithNav(sock, m, `❌ *Gagal*\n\n` +
-            `> Balas pesan 1x lihat dengan perintah ini!\n` +
-            `> Gunakan: \`${m.prefix}openvo\` (reply pesan 1x lihat)`, "rvo")
+            `Balas pesan 1x lihat dengan perintah ini!\n` +
+            `Gunakan: \`${m.prefix}openvo\` (reply pesan 1x lihat)`, "rvo")
         return
     }
 
     const quotedMsg = quoted.message
     if (!quotedMsg) {
         await sendReplyWithNav(sock, m, `❌ *Pesan Tidak Ditemukan*\n\n` +
-            `> Tidak dapat membaca pesan yang di-reply.`, "rvo")
+            `Tidak dapat membaca pesan yang di-reply.`, "rvo")
         return
     }
 
@@ -40,14 +40,14 @@ async function handler(m, { sock }) {
 
     if (!content) {
         await sendReplyWithNav(sock, m, `❌ *Konten Tidak Ditemukan*\n\n` +
-            `> Konten pesan tidak dapat dibaca.`, "rvo")
+            `Konten pesan tidak dapat dibaca.`, "rvo")
         return
     }
 
     if (!content.viewOnce) {
         await m.reply(claraWrap("openvo", `❌ *Bukan Viewonce*\n\n` +
-            `> Pesan yang di-reply bukan pesan 1x lihat!\n` +
-            `> Balas pesan dengan ikon 1x lihat (👁️).`))
+            `Pesan yang di-reply bukan pesan 1x lihat!\n` +
+            `Balas pesan dengan ikon 1x lihat (👁️).`))
         return
     }
 
@@ -77,8 +77,8 @@ async function handler(m, { sock }) {
 
         if (!buffer || buffer.length < 100) {
             await sendReplyWithNav(sock, m, `❌ *Gagal Mengunduh*\n\n` +
-                `> Tidak dapat mengunduh media.\n` +
-                `> Media mungkin sudah kadaluarsa.`, "rvo")
+                `Tidak dapat mengunduh media.\n` +
+                `Media mungkin sudah kadaluarsa.`, "rvo")
             return
         }
         const quoted = m.quoted ? m.quoted : m
@@ -102,8 +102,8 @@ async function handler(m, { sock }) {
     } catch (error) {
         await m.reply(
             `❌ *Error*\n\n` +
-            `> Gagal membuka pesan 1x lihat.\n` +
-            `> _${error.message}_`
+            `Gagal membuka pesan 1x lihat.\n` +
+            `_${error.message}_`
         )
     }
 }

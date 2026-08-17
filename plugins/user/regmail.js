@@ -90,22 +90,22 @@ async function handler(m, { args, sock }) {
     txt += `📛 Nama: *${user.regName || "-"}*\n`;
     txt += `📧 Email: *${user.regEmail || "-"}*\n`;
     txt += `🔑 SN: *${user.regSerial || "-"}*\n\n`;
-    txt += `> Untuk unregister: \`${m.prefix}unreg\``;
+    txt += `Untuk unregister: \`${m.prefix}unreg\``;
     return await sendReplyWithNav(m, sock, txt, { commandName: "regmail" });
   }
 
   if (!isEmailConfigured()) {
     let txt = `❌ Sistem registrasi email belum dikonfigurasi!\n\n`;
     txt += `Owner perlu set email SMTP dulu dengan:\n`;
-    txt += `> \`${m.prefix}setemail <email> <app-password>\`\n\n`;
+    txt += `\`${m.prefix}setemail <email> <app-password>\`\n\n`;
     txt += `Atau gunakan \`${m.prefix}daftar\` untuk daftar tanpa email.`;
     return await m.reply(claraWrap("regmail", txt));
   }
 
   if (getOtpSession(m.sender)) {
     let txt = `📝 Kamu masih punya sesi OTP aktif!\n\n`;
-    txt += `> Ketik \`${m.prefix}verotp <kode>\` untuk verifikasi\n`;
-    txt += `> Atau tunggu ${Math.round(OTP_TTL / 60000)} menit sampai kedaluwarsa`;
+    txt += `Ketik \`${m.prefix}verotp <kode>\` untuk verifikasi\n`;
+    txt += `Atau tunggu ${Math.round(OTP_TTL / 60000)} menit sampai kedaluwarsa`;
     return await sendReplyWithNav(m, sock, txt, { commandName: "regmail" });
   }
 
@@ -113,9 +113,9 @@ async function handler(m, { args, sock }) {
     let txt = `📧 *REGISTRASI EMAIL*\n\n`;
     txt += `Daftar bot dengan verifikasi email OTP!\n\n`;
     txt += `*Cara Pakai:*\n`;
-    txt += `> \`${m.prefix}regmail <nama>, <email>\`\n\n`;
+    txt += `\`${m.prefix}regmail <nama>, <email>\`\n\n`;
     txt += `*Contoh:*\n`;
-    txt += `> \`${m.prefix}regmail Aizat, aizat@gmail.com\`\n\n`;
+    txt += `\`${m.prefix}regmail Aizat, aizat@gmail.com\`\n\n`;
     txt += `Setelah itu, kode OTP akan dikirim ke email kamu.\n`;
     txt += `Verifikasi dengan: \`${m.prefix}verotp <kode>\``;
     return await sendReplyWithNav(m, sock, txt, { commandName: "regmail" });
@@ -124,8 +124,8 @@ async function handler(m, { args, sock }) {
   const input = args.join(" ").split(",");
   if (input.length < 2) {
     let txt = `❌ Format salah!\n\n`;
-    txt += `> \`${m.prefix}regmail <nama>, <email>\`\n`;
-    txt += `> Contoh: \`${m.prefix}regmail Aizat, aizat@gmail.com\``;
+    txt += `\`${m.prefix}regmail <nama>, <email>\`\n`;
+    txt += `Contoh: \`${m.prefix}regmail Aizat, aizat@gmail.com\``;
     return await sendReplyWithNav(m, sock, txt, { commandName: "regmail" });
   }
 
@@ -160,8 +160,8 @@ async function handler(m, { args, sock }) {
     txt += `📛 Nama: *${name}*\n\n`;
     txt += `Kode OTP sudah dikirim ke email kamu.\n`;
     txt += `Verifikasi dalam ${Math.round(OTP_TTL / 60000)} menit!\n\n`;
-    txt += `> Ketik: \`${m.prefix}verotp <kode>\`\n`;
-    txt += `> Contoh: \`${m.prefix}verotp 123456\``;
+    txt += `Ketik: \`${m.prefix}verotp <kode>\`\n`;
+    txt += `Contoh: \`${m.prefix}verotp 123456\``;
 
     await sendReplyWithNav(m, sock, txt, { commandName: "regmail" });
     await m.react("✅");

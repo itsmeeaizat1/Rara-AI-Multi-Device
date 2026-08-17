@@ -33,15 +33,15 @@ async function handler(m, { sock }) {
         let text = `🎂 *sEt Birthday*\n\n`
         
         if (currentBday) {
-            text += `> Birthday kamu: *${currentBday}*\n\n`
+            text += `Birthday kamu: *${currentBday}*\n\n`
         }
         
         text += `╭┈┈⬡「 📋 *ғOrmat* 」\n`
         text += `┃ ${m.prefix}setbirthday DD-MM\n`
         text += `╰┈┈┈┈┈┈┈┈⬡\n\n`
         text += `*Contoh:*\n`
-        text += `> ${m.prefix}setbirthday 25-12\n`
-        text += `> ${m.prefix}setbirthday 01-01`
+        text += `${m.prefix}setbirthday 25-12\n`
+        text += `${m.prefix}setbirthday 01-01`
         
         return await sendReplyWithNav(sock, m, text, "setbirthday")
     }
@@ -81,8 +81,8 @@ async function handler(m, { sock }) {
         `┃ 📅 Tanggal: *${day} ${months[month - 1]}*\n` +
         `┃ 👤 User: @${cleanJid}\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `> Bot akan mengucapkan selamat\n` +
-        `> ulang tahun di hari spesialmu! 🎉`,
+        `Bot akan mengucapkan selamat\n` +
+        `ulang tahun di hari spesialmu! 🎉`,
         { mentions: [userJid] }
     )
 }

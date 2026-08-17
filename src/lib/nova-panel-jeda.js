@@ -31,9 +31,9 @@ function checkPanelJeda(m) {
             allowed: false,
             remaining: remaining,
             message: `⏱️ *Jeda Aktif*\n\n` +
-                `> Mohon tunggu *${formatTime(remaining)}* sebelum membuat panel lagi.\n\n` +
-                `> _Jeda ini berlaku untuk semua user._\n` +
-                `> _Gunakan \`.cekjeda\` untuk cek status._`
+                `Mohon tunggu *${formatTime(remaining)}* sebelum membuat panel lagi.\n\n` +
+                `_Jeda ini berlaku untuk semua user._\n` +
+                `_Gunakan \`.cekjeda\` untuk cek status._`
         }
     }
     

@@ -25,7 +25,7 @@ function handler(m, { sock }) {
     
     if (!link) {
         return sendReplyWithNav(sock, m, `🔗 *Add Antilink*\n\n` +
-            `> Masukkan domain/pattern link yang ingin diblokir\n\n` +
+            `Masukkan domain/pattern link yang ingin diblokir\n\n` +
             `\`Contoh:\`\n` +
             `\`${m.prefix}addantilink tiktok.com\`\n` +
             `\`${m.prefix}addantilink chat.whatsapp.com\`\n` +

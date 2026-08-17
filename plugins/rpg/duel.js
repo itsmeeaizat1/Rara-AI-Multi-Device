@@ -91,8 +91,8 @@ async function handler(m, { sock }) {
   txt += `🏆 *Pemenang:* @${winner.split("@")[0]}\n`;
   txt += `💀 *Kalah:* @${loser.split("@")[0]} (Mundur dengan luka parah)\n\n`;
   txt += `🎁 *Pemenang Berhak Membawa Pulang:*\n`;
-  txt += `> 💰 Uang Taruhan Lawan: *+Rp ${bet.toLocaleString("id-ID")}*\n`;
-  txt += `> ✨ Bonus EXP Pertarungan: *+${expGain} EXP*`;
+  txt += `💰 Uang Taruhan Lawan: *+Rp ${bet.toLocaleString("id-ID")}*\n`;
+  txt += `✨ Bonus EXP Pertarungan: *+${expGain} EXP*`;
 
   await sendRpgPreview(sock, m.chat, txt, "⚔️ ARENA DUEL", "Hasil Duel!", { quoted: m });
 }

@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     
     if (!word) {
         return sendReplyWithNav(sock, m, claraWrap("Del Toxic", `🗑️ *Del Toxic*\n\n` +
-            `> Gunakan: \`.deltoxic <kata>\`\n\n` +
+            `Gunakan: \`.deltoxic <kata>\`\n\n` +
             `\`Contoh: ${m.prefix}deltoxic katakasar\``), "deltoxic")
     }
     

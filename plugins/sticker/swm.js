@@ -26,11 +26,11 @@ async function handler(m, { sock, config: botConfig }) {
     
     if (!quoted) {
         return sendReplyWithNav(sock, m, `🖼️ *sTicker Watermark*\n\n` +
-            `> Reply sticker dengan caption:\n` +
-            `> \`${m.prefix}swm packname\`\n\n` +
+            `Reply sticker dengan caption:\n` +
+            `\`${m.prefix}swm packname\`\n\n` +
             `*Contoh:*\n` +
-            `> \`${m.prefix}swm Nova-AI\`\n` +
-            `> \`${m.prefix}swm Nova-AI|LuckyArchz\` _(packname + author)_`, "swm")
+            `\`${m.prefix}swm Nova-AI\`\n` +
+            `\`${m.prefix}swm Nova-AI|LuckyArchz\` _(packname + author)_`, "swm")
     }
     
     const isSticker = quoted.type === 'stickerMessage' || quoted.isSticker
@@ -41,10 +41,10 @@ async function handler(m, { sock, config: botConfig }) {
     const input = m.text?.trim()
     if (!input) {
         return sendReplyWithNav(sock, m, `❌ *Gagal*\n\n` +
-            `> Masukkan packname\n\n` +
+            `Masukkan packname\n\n` +
             `*Contoh:*\n` +
-            `> \`${m.prefix}swm Nova-AI\`\n` +
-            `> \`${m.prefix}swm Nova-AI|LuckyArchz\` _(+ author)_`, "swm")
+            `\`${m.prefix}swm Nova-AI\`\n` +
+            `\`${m.prefix}swm Nova-AI|LuckyArchz\` _(+ author)_`, "swm")
     }
     
     let packname, author

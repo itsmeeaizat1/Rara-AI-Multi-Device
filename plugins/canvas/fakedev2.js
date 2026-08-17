@@ -31,10 +31,10 @@ async function handler(m, { sock }) {
   if (!name) {
     return m.reply(
       `🎮 *Fake Developer 2*\n\n` +
-        `> Masukkan nama untuk profile\n\n` +
+        `Masukkan nama untuk profile\n\n` +
         `*Cara Pakai:*\n` +
-        `> 1. Kirim foto + caption \`${m.prefix}fakedev2 <nama>\`\n` +
-        `> 2. Reply foto dengan \`${m.prefix}fakedev2 <nama>\``,
+        `1. Kirim foto + caption \`${m.prefix}fakedev2 <nama>\`\n` +
+        `2. Reply foto dengan \`${m.prefix}fakedev2 <nama>\``,
     );
   }
   let buffer = null;

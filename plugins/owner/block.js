@@ -54,8 +54,8 @@ async function handler(m, { sock }) {
     }).catch(() => {})
         return m.reply(
             `🚫 *Nomor Diblokir*\n\n` +
-            `> Target: @${targetJid.split('@')[0]}\n` +
-            `> Gunakan \`.unblock\` untuk membuka blokir`,
+            `Target: @${targetJid.split('@')[0]}\n` +
+            `Gunakan \`.unblock\` untuk membuka blokir`,
             { mentions: [targetJid] }
         )
     } catch (err) {

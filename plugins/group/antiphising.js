@@ -30,13 +30,13 @@ function handler(m, { sock }) {
         const status = groupData.antiphising || 'off'
         const mode = groupData.antiphisingMode || 'remove'
         return sendReplyWithNav(sock, m, `🎣 *Antiphising*\n\n` +
-            `> Status: *${status.toUpperCase()}*\n` +
-            `> Mode: *${mode.toUpperCase()}*\n\n` +
-            `> Deteksi pesan phising seperti klik link, verifikasi akun, login palsu, shortener mencurigakan, URL IP, punycode, dan pola sejenis.\n\n` +
-            `> \`${m.prefix}antiphising on\`\n` +
-            `> \`${m.prefix}antiphising off\`\n` +
-            `> \`${m.prefix}antiphising metode kick\`\n` +
-            `> \`${m.prefix}antiphising metode remove\``, "antiphising")
+            `Status: *${status.toUpperCase()}*\n` +
+            `Mode: *${mode.toUpperCase()}*\n\n` +
+            `Deteksi pesan phising seperti klik link, verifikasi akun, login palsu, shortener mencurigakan, URL IP, punycode, dan pola sejenis.\n\n` +
+            `\`${m.prefix}antiphising on\`\n` +
+            `\`${m.prefix}antiphising off\`\n` +
+            `\`${m.prefix}antiphising metode kick\`\n` +
+            `\`${m.prefix}antiphising metode remove\``, "antiphising")
     }
 
     if (option === 'on') {

@@ -51,8 +51,8 @@ async function handler(m, { sock }) {
     const userRoleList = userServers.map(s => s.server.toUpperCase() + ':' + s.role).join(', ') || 'Tidak ada'
     
     let txt = `Cpanel Menu v2.0\n\n`
-    txt += `> V1: ${serverStatuses.v1} | V2: ${serverStatuses.v2} | V3: ${serverStatuses.v3} | V4: ${serverStatuses.v4} | V5: ${serverStatuses.v5}\n`
-    txt += `> Role kamu: *${m.isOwner ? 'Bot Owner' : userRoleList}*\n\n`
+    txt += `V1: ${serverStatuses.v1} | V2: ${serverStatuses.v2} | V3: ${serverStatuses.v3} | V4: ${serverStatuses.v4} | V5: ${serverStatuses.v5}\n`
+    txt += `Role kamu: *${m.isOwner ? 'Bot Owner' : userRoleList}*\n\n`
     
     // Reseller hanya lihat command yang relevan
     const isResellerOnly = !m.isOwner && userServers.every(s => s.role === 'reseller')
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
         txt += `╰───────────────\n\n`
     }
     
-    txt += `> _Powered by ${config.info?.website || 'NovaAI'}_`
+    txt += `_Powered by ${config.info?.website || 'NovaAI'}_`
     
     await m.reply(claraWrap("cpanel", txt))
 }

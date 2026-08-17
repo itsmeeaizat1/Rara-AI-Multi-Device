@@ -73,8 +73,8 @@ async function handler(m, { sock }) {
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
         return m.reply(claraWrap("serverinfo", `❌ *Akses Ditolak*\n\n` +
-            `> Kamu tidak punya akses ke *${serverLabel}*\n` +
-            `> Role kamu: *${userRole || 'Tidak ada'}*`))
+            `Kamu tidak punya akses ke *${serverLabel}*\n` +
+            `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
     
     const serverId = m.text?.trim()
@@ -86,15 +86,15 @@ async function handler(m, { sock }) {
         const available = getAvailableServers(pteroConfig)
         let txt = `⚠️ *sErver ${serverLabel} Belum Konfig*\n\n`
         if (available.length > 0) {
-            txt += `> Server tersedia: *${available.join(', ')}*`
+            txt += `Server tersedia: *${available.join(', ')}*`
         }
         return m.reply(claraWrap("serverinfo", txt))
     }
     
     if (!serverId || isNaN(serverId)) {
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}${m.command} serverid\`\n\n` +
-            `> Lihat ID dengan \`${m.prefix}listserver${serverVersion}\``, "serverinfo")
+            `\`${m.prefix}${m.command} serverid\`\n\n` +
+            `Lihat ID dengan \`${m.prefix}listserver${serverVersion}\``, "serverinfo")
     }
     
     try {

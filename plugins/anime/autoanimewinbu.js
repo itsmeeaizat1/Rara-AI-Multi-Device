@@ -35,9 +35,9 @@ async function handler(m, { sock, args }) {
             if (groups.length === 0) {
                 return m.reply(
                     `❌ Belum ada grup target!\n\n` +
-                    `> Tambahkan grup dulu:\n` +
-                    `> \`${m.prefix}autoanimewinbu addgrup\` (di grup target)\n` +
-                    `> \`${m.prefix}autoanimewinbu addgrup 120363xxx@g.us\``
+                    `Tambahkan grup dulu:\n` +
+                    `\`${m.prefix}autoanimewinbu addgrup\` (di grup target)\n` +
+                    `\`${m.prefix}autoanimewinbu addgrup 120363xxx@g.us\``
                 )
             }
 
@@ -47,10 +47,10 @@ async function handler(m, { sock, args }) {
 
             return sock.sendMessage(m.chat, {
                 text: `✅ *Auto Anime sTarted*\n\n` +
-                    `> 📲 Grup target: *${groups.length}*\n` +
-                    `> ⏱️ Interval: *${interval} menit*\n` +
-                    `> 🎞️ Filter: *Pixeldrain 720p+*\n` +
-                    `> ⏰ Max age: *24 jam*\n\n` +
+                    `📲 Grup target: *${groups.length}*\n` +
+                    `⏱️ Interval: *${interval} menit*\n` +
+                    `🎞️ Filter: *Pixeldrain 720p+*\n` +
+                    `⏰ Max age: *24 jam*\n\n` +
                     `Pengecekan pertama dimulai...`,
                 interactiveButtons: [
                     {
@@ -98,16 +98,16 @@ async function handler(m, { sock, args }) {
             const groups = state.groups || []
 
             let txt = `📊 *Auto Anime sTatus*\n\n`
-            txt += `> 🔄 Status: *${running ? '🟢 ON' : '🔴 OFF'}*\n`
-            txt += `> 💾 Auto-start: *${state.enabled ? 'Ya' : 'Tidak'}*\n`
-            txt += `> 📋 Sudah terkirim: *${sent.size}* episode\n`
-            txt += `> ⏱️ Interval: *${state.interval || 5} menit*\n`
-            txt += `> 📲 Grup target: *${groups.length}*\n`
+            txt += `🔄 Status: *${running ? '🟢 ON' : '🔴 OFF'}*\n`
+            txt += `💾 Auto-start: *${state.enabled ? 'Ya' : 'Tidak'}*\n`
+            txt += `📋 Sudah terkirim: *${sent.size}* episode\n`
+            txt += `⏱️ Interval: *${state.interval || 5} menit*\n`
+            txt += `📲 Grup target: *${groups.length}*\n`
 
             if (groups.length > 0) {
                 txt += `\n*Grup:*\n`
                 groups.forEach((g, i) => {
-                    txt += `> ${i + 1}. \`${g}\`\n`
+                    txt += `${i + 1}. \`${g}\`\n`
                 })
             }
 
@@ -135,7 +135,7 @@ async function handler(m, { sock, args }) {
                 if (list.length === 0) return m.reply(claraWrap("Autoanimewinbu", '❌ Tidak ada anime ditemukan'))
 
                 let txt = `📺 *Daftar Anime Terbaru*\n\n`
-                txt += `> Total: *${list.length}* anime\n\n`
+                txt += `Total: *${list.length}* anime\n\n`
                 list.slice(0, 15).forEach((a, i) => {
                     txt += `*${i + 1}.* ${a.title}\n`
                 })
@@ -165,8 +165,8 @@ async function handler(m, { sock, args }) {
 
             if (!grupId || !grupId.includes('@g.us')) {
                 return sendReplyWithNav(sock, m, `❌ ID grup tidak valid\n\n` +
-                    `> Gunakan di dalam grup, atau:\n` +
-                    `> \`${m.prefix}autoanimewinbu addgrup 120363xxx@g.us\``, "autoanimewinbu")
+                    `Gunakan di dalam grup, atau:\n` +
+                    `\`${m.prefix}autoanimewinbu addgrup 120363xxx@g.us\``, "autoanimewinbu")
             }
 
             const groups = state.groups || []
@@ -220,17 +220,17 @@ async function handler(m, { sock, args }) {
             const running = isRunning()
             return sock.sendMessage(m.chat, {
                 text: `🎬 *Auto Anime Winbu*\n\n` +
-                    `> Status: *${running ? '🟢 ON' : '🔴 OFF'}*\n\n` +
+                    `Status: *${running ? '🟢 ON' : '🔴 OFF'}*\n\n` +
                     `*Commands:*\n` +
-                    `> \`${m.prefix}aaw start\` — Mulai auto-check\n` +
-                    `> \`${m.prefix}aaw stop\` — Hentikan\n` +
-                    `> \`${m.prefix}aaw status\` — Lihat status\n` +
-                    `> \`${m.prefix}aaw cek\` — Manual check sekarang\n` +
-                    `> \`${m.prefix}aaw list\` — Daftar anime terbaru\n` +
-                    `> \`${m.prefix}aaw addgrup\` — Tambah grup target\n` +
-                    `> \`${m.prefix}aaw delgrup\` — Hapus grup target\n` +
-                    `> \`${m.prefix}aaw interval 10\` — Ubah interval\n` +
-                    `> \`${m.prefix}aaw reset\` — Reset riwayat terkirim`,
+                    `\`${m.prefix}aaw start\` — Mulai auto-check\n` +
+                    `\`${m.prefix}aaw stop\` — Hentikan\n` +
+                    `\`${m.prefix}aaw status\` — Lihat status\n` +
+                    `\`${m.prefix}aaw cek\` — Manual check sekarang\n` +
+                    `\`${m.prefix}aaw list\` — Daftar anime terbaru\n` +
+                    `\`${m.prefix}aaw addgrup\` — Tambah grup target\n` +
+                    `\`${m.prefix}aaw delgrup\` — Hapus grup target\n` +
+                    `\`${m.prefix}aaw interval 10\` — Ubah interval\n` +
+                    `\`${m.prefix}aaw reset\` — Reset riwayat terkirim`,
                 interactiveButtons: [
                     {
                         name: 'quick_reply',

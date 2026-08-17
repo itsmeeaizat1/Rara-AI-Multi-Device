@@ -220,11 +220,11 @@ async function handler(m, { sock, args }) {
     const similarity = Math.max(0, Math.round((1 - result.changes / (originalWords / 2)) * 100));
 
     let txt = `Hasil Parafrase\n\n`;
-    txt += `> ${originalWords} kata | ${result.changes} kata diubah\n`;
-    txt += `> Intensitas: ${intensity < 0.6 ? "Normal" : "Agresif"}\n`;
-    txt += `> Estimasi similarity: ~${Math.max(0, 100 - result.changes * 5)}%\n\n`;
+    txt += `${originalWords} kata | ${result.changes} kata diubah\n`;
+    txt += `Intensitas: ${intensity < 0.6 ? "Normal" : "Agresif"}\n`;
+    txt += `Estimasi similarity: ~${Math.max(0, 100 - result.changes * 5)}%\n\n`;
     txt += `${result.text}\n\n`;
-    txt += `> _Tip: baca ulang hasil parafrase, sesuaikan konteks kalimat jika perlu_`;
+    txt += `_Tip: baca ulang hasil parafrase, sesuaikan konteks kalimat jika perlu_`;
 
     await m.reply(txt);
     await m.react("✅");

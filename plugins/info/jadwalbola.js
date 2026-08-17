@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     let text = `⚽ *Jadwal Pertandingan*\n\n`;
-    if (filter) text += `> Filter: \`${filter}\`\n\n`;
+    if (filter) text += `Filter: \`${filter}\`\n\n`;
 
     for (const [date, games] of Object.entries(grouped)) {
       text += `📅 *${date}*\n\n`;

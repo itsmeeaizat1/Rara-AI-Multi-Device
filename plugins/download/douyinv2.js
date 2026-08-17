@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
       `╭┈┈⬡「 DOUYIN V2 」\n` +
       `┃ Usage: ${m.prefix}douyinv2 <url>\n` +
       `╰┈┈⬡\n\n` +
-      `> ${m.prefix}douyinv2 https://v.douyin.com/xxx`,
+      `${m.prefix}douyinv2 https://v.douyin.com/xxx`,
       "douyinv2");
   }
 

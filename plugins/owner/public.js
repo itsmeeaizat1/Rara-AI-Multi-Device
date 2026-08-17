@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
         db.setting('botMode', 'public');
         
         const responseText = `🌐 *Mode Public Aktif*\n\n` +
-            `> Bot sekarang merespon semua user!\n\n` +
+            `Bot sekarang merespon semua user!\n\n` +
             `_Gunakan .self untuk menutup akses_`;
         await m.reply(responseText);
         console.log(`[Mode] Changed to PUBLIC by ${m.pushName} (${m.sender})`);

@@ -83,7 +83,7 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}resepid acak\`\n`;
     txt += `\`${m.prefix}resepid kategori tempe\`\n`;
     txt += `\`${m.prefix}resepid populer\`\n\n`;
-    txt += `> Sumber: Cookpad Indonesia (Kaggle dataset)`;
+    txt += `Sumber: Cookpad Indonesia (Kaggle dataset)`;
     txt += `\nResep internasional? Gunakan: ${m.prefix}resep (792+ resep, 170+ negara)`;
 
     return await sendReplyWithNav(m, sock, txt, { commandName: "resepid" });

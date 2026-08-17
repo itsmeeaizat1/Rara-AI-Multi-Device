@@ -92,11 +92,11 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `🔗 *Join Grup*\n\n` +
         `Bot akan join ke grup berdasarkan link invite yang kamu berikan.\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}join <link>* — Join via link langsung\n` +
-        `> *${m.prefix}join* (reply pesan) — Join dari link di pesan yang di-reply\n\n` +
+        `*${m.prefix}join <link>* — Join via link langsung\n` +
+        `*${m.prefix}join* (reply pesan) — Join dari link di pesan yang di-reply\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}join https://chat.whatsapp.com/xxx*\n` +
-        `> Reply pesan berisi link lalu ketik *${m.prefix}join*\n\n` +
+        `*${m.prefix}join https://chat.whatsapp.com/xxx*\n` +
+        `Reply pesan berisi link lalu ketik *${m.prefix}join*\n\n` +
         `_Bot akan mendeteksi semua link grup di pesan dan join satu per satu_`, "join");
   }
 
@@ -104,10 +104,10 @@ async function handler(m, { sock }) {
 
   if (inviteCodes.length === 0) {
     return m.reply(claraWrap("join", `❌ *Tidak Ada Link Grup*\n\n` +
-        `> Bot tidak menemukan link invite grup di pesan tersebut.\n\n` +
+        `Bot tidak menemukan link invite grup di pesan tersebut.\n\n` +
         `*Format link yang didukung:*\n` +
-        `> *https://chat.whatsapp.com/xxx*\n` +
-        `> *https://invite.whatsapp.com/xxx*`));
+        `*https://chat.whatsapp.com/xxx*\n` +
+        `*https://invite.whatsapp.com/xxx*`));
   }
 
   m.react("🕐");
@@ -127,9 +127,9 @@ async function handler(m, { sock }) {
     const ctx = saluranCtx();
     return m.reply(
       `✅ *Berhasil Join!*\n\n` +
-        `> 🏠 Nama: *${result.subject}*\n` +
-        `> 👥 Member: *${result.members}*\n` +
-        `> 👤 Owner: *${result.owner}*`,
+        `🏠 Nama: *${result.subject}*\n` +
+        `👥 Member: *${result.members}*\n` +
+        `👤 Owner: *${result.owner}*`,
       { contextInfo: ctx }
     );
   }
@@ -163,10 +163,10 @@ async function handler(m, { sock }) {
 
   resultText +=
     `\n*Hasil:*\n` +
-    `> ✅ Berhasil: *${successCount}*\n` +
-    `> ⚠️ Sudah member: *${alreadyCount}*\n` +
-    `> ❌ Gagal: *${failedCount}*\n` +
-    `> 📊 Total: *${inviteCodes.length}*`;
+    `✅ Berhasil: *${successCount}*\n` +
+    `⚠️ Sudah member: *${alreadyCount}*\n` +
+    `❌ Gagal: *${failedCount}*\n` +
+    `📊 Total: *${inviteCodes.length}*`;
 
   return m.reply(resultText);
 }

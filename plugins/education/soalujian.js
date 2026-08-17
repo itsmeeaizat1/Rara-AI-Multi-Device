@@ -537,7 +537,7 @@ async function handler(m, { sock, args }) {
       }
       txt += `\n> Balas A/B/C/D`;
     } else {
-      txt += `> Tulis jawabanmu (min 5 karakter)`;
+      txt += `Tulis jawabanmu (min 5 karakter)`;
     }
     txt += `\n> Ketik *skip* untuk lewati, *stop* untuk berhenti`;
 
@@ -577,7 +577,7 @@ async function handler(m, { sock, args }) {
       }
       txt += `\n> Balas A/B/C/D`;
     } else {
-      txt += `> Tulis jawabanmu`;
+      txt += `Tulis jawabanmu`;
     }
     txt += `\n> skip / stop`;
     await m.reply(txt);
@@ -722,7 +722,7 @@ async function handler(m, { sock, args }) {
     // Send first question
     const q = questions[0];
     let txt = `Quiz: ${JENJANG_NAMES[jenjang]} - ${mapel.toUpperCase()}\n`;
-    txt += `> ${questions.length} soal (${mode === "mc" ? "PG" : mode === "essay" ? "Essay" : "Mix"}) | Quiz hari ini: ${dailyCheck.used + 1}/${MAX_QUIZ_PER_DAY}\n\n`;
+    txt += `${questions.length} soal (${mode === "mc" ? "PG" : mode === "essay" ? "Essay" : "Mix"}) | Quiz hari ini: ${dailyCheck.used + 1}/${MAX_QUIZ_PER_DAY}\n\n`;
     txt += `Soal 1/${questions.length}`;
     txt += q.type === "mc" ? ` [Pilihan Ganda]\n\n` : ` [Essay]\n\n`;
     txt += `${q.question}\n\n`;
@@ -733,7 +733,7 @@ async function handler(m, { sock, args }) {
       }
       txt += `\n> Balas A/B/C/D`;
     } else {
-      txt += `> Tulis jawabanmu (min 5 karakter)`;
+      txt += `Tulis jawabanmu (min 5 karakter)`;
     }
     txt += `\n> Ketik *skip* / *stop*`;
 

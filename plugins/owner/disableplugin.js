@@ -59,10 +59,10 @@ async function handler(m, { sock }) {
 
   if (!pluginName) {
     return sendReplyWithNav(sock, m, `🔌 *Disable Plugin*\n\n` +
-        `> Masukkan nama plugin yang ingin dinonaktifkan\n\n` +
+        `Masukkan nama plugin yang ingin dinonaktifkan\n\n` +
         `*Contoh:*\n` +
-        `> \`${m.prefix}disableplugin sticker\`\n` +
-        `> \`${m.prefix}disableplugin tiktok\``, "disableplugin");
+        `\`${m.prefix}disableplugin sticker\`\n` +
+        `\`${m.prefix}disableplugin tiktok\``, "disableplugin");
   }
 
   const found = await findPluginFile(pluginName);
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
         `┃ 📄 File: *${file}*\n` +
         `┃ 🔴 Status: *Disabled*\n` +
         `╰┈┈⬡\n\n` +
-        `> Restart bot atau gunakan hot reload untuk apply.`));
+        `Restart bot atau gunakan hot reload untuk apply.`));
   } catch (error) {
     await m.reply(claraWrap("disableplugin", te(m.prefix, m.command, m.pushName), "error"));
   }

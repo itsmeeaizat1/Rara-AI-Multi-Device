@@ -76,8 +76,8 @@ async function handler(m, { sock, db }) {
         
         if (type !== 'open' && type !== 'close') {
             await m.reply(`⚠️ *Validasi Gagal*\n\n` +
-                `> Gunakan: \`.jadwalgroup hapus open\`\n` +
-                `> atau: \`.jadwalgroup hapus close\``);
+                `Gunakan: \`.jadwalgroup hapus open\`\n` +
+                `atau: \`.jadwalgroup hapus close\``);
             return;
         }
         
@@ -88,40 +88,40 @@ async function handler(m, { sock, db }) {
             db.setGroup(m.chat, group);
             
             await m.reply(claraWrap("jadwalgroup", `✅ *Berhasil*\n\n` +
-                `> Jadwal *buka grup* otomatis telah dihapus.`));
+                `Jadwal *buka grup* otomatis telah dihapus.`));
         } else {
             delete group.scheduleClose;
             db.setGroup(m.chat, group);
             
             await m.reply(claraWrap("jadwalgroup", `✅ *Berhasil*\n\n` +
-                `> Jadwal *tutup grup* otomatis telah dihapus.`));
+                `Jadwal *tutup grup* otomatis telah dihapus.`));
         }
         return;
     }
     
     if (action !== 'open' && action !== 'close') {
         await m.reply(`⚠️ *Validasi Gagal*\n\n` +
-            `> Action harus \`open\` atau \`close\`!\n\n` +
-            `> *Contoh:*\n` +
-            `> \`.jadwalgroup open 06:00\`\n` +
-            `> \`.jadwalgroup close 22:00\``);
+            `Action harus \`open\` atau \`close\`!\n\n` +
+            `*Contoh:*\n` +
+            `\`.jadwalgroup open 06:00\`\n` +
+            `\`.jadwalgroup close 22:00\``);
         return;
     }
     
     if (!time) {
         await sendReplyWithNav(sock, m, `⚠️ *Validasi Gagal*\n\n` +
-            `> Waktu harus diisi!\n\n` +
-            `> *Format:* \`HH:MM\` (24 jam)\n` +
-            `> *Contoh:* \`.jadwalgroup ${action} 08:00\``, "jadwalgroup");
+            `Waktu harus diisi!\n\n` +
+            `*Format:* \`HH:MM\` (24 jam)\n` +
+            `*Contoh:* \`.jadwalgroup ${action} 08:00\``, "jadwalgroup");
         return;
     }
     
     const parsed = parseTime(time);
     if (!parsed) {
         await sendReplyWithNav(sock, m, `⚠️ *Validasi Gagal*\n\n` +
-            `> Format waktu tidak valid!\n\n` +
-            `> *Format:* \`HH:MM\` (24 jam)\n` +
-            `> *Contoh:* \`06:00\`, \`22:30\`, \`08:15\``, "jadwalgroup");
+            `Format waktu tidak valid!\n\n` +
+            `*Format:* \`HH:MM\` (24 jam)\n` +
+            `*Contoh:* \`06:00\`, \`22:30\`, \`08:15\``, "jadwalgroup");
         return;
     }
     

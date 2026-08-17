@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
 
   if (!query) {
     return sendReplyWithNav(sock, m, `🎧 *MURROTTAL*\n\n` +
-        `> Masukkan nama surah\n\n` +
+        `Masukkan nama surah\n\n` +
         `\`Contoh: ${m.prefix}murrotal al fatihah\`\n` +
         `\`Contoh: ${m.prefix}murrotal ar rahman\``, "murrotal");
   }

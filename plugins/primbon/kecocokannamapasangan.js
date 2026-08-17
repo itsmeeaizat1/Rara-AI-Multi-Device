@@ -36,11 +36,11 @@ async function handler(m, { sock }) {
         
         const result = data.data
         const response = `💕 *Kecocokan Nama Pasangan*\n\n` +
-            `> 👤 ${result.nama_anda}\n` +
-            `> 💑 ${result.nama_pasangan}\n\n` +
+            `👤 ${result.nama_anda}\n` +
+            `💑 ${result.nama_pasangan}\n\n` +
             `✅ *ꜱIꜱI PoꜱItif:*\n${result.sisi_positif}\n\n` +
             `❌ *ꜱIꜱI Negatif:*\n${result.sisi_negatif}\n\n` +
-            `> _${result.catatan}_`
+            `_${result.catatan}_`
         
         m.react('✅')
         await m.reply(response)

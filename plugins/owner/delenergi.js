@@ -44,8 +44,8 @@ async function handler(m, { sock }) {
     
     if (!targetJid || amount <= 0) {
         return sendReplyWithNav(sock, m, `⚡ *Del Energi*\n\n` +
-            `> \`.delenergi <jumlah>\` - dari diri sendiri\n` +
-            `> \`.delenergi <jumlah> @user\` - dari user\n\n` +
+            `\`.delenergi <jumlah>\` - dari diri sendiri\n` +
+            `\`.delenergi <jumlah> @user\` - dari user\n\n` +
             `\`Contoh: ${m.prefix}delenergi 50\``, "delenergi")
     }
     

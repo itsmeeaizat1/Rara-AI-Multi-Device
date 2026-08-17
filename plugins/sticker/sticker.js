@@ -125,15 +125,15 @@ async function handler(m, { sock, config: botConfig }) {
             `Kirim/reply gambar atau video dengan caption:\n` +
             `\`${m.prefix}s\`\n\n` +
             `*Opsi:*\n` +
-            `> \`--crop\` - Crop jadi kotak\n` +
-            `> \`--resize WxH\` - Resize ke ukuran\n` +
-            `> \`--circle\` - Bentuk lingkaran\n` +
-            `> \`--rounded\` - Sudut melengkung\n\n` +
+            `\`--crop\` - Crop jadi kotak\n` +
+            `\`--resize WxH\` - Resize ke ukuran\n` +
+            `\`--circle\` - Bentuk lingkaran\n` +
+            `\`--rounded\` - Sudut melengkung\n\n` +
             `*Contoh:*\n` +
-            `> \`${m.prefix}s --crop\`\n` +
-            `> \`${m.prefix}s --resize 256x256\`\n` +
-            `> \`${m.prefix}s --circle\`\n` +
-            `> \`${m.prefix}s PackName Author\``
+            `\`${m.prefix}s --crop\`\n` +
+            `\`${m.prefix}s --resize 256x256\`\n` +
+            `\`${m.prefix}s --circle\`\n` +
+            `\`${m.prefix}s PackName Author\``
         )
         return
     }

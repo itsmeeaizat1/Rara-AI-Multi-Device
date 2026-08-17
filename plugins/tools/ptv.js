@@ -37,8 +37,8 @@ async function handler(m, { sock }) {
     
     if (!video) {
         return sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
-            `> Kirim *video* atau *balas video* lalu ketik:\n` +
-            `> \`${m.prefix}ptv\``, "ptv")
+            `Kirim *video* atau *balas video* lalu ketik:\n` +
+            `\`${m.prefix}ptv\``, "ptv")
     }
     
     { const __navText = `🕕 *MEMBUAT PTV...*`; await m.reply(__navText); }

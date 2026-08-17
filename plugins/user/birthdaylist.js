@@ -45,8 +45,8 @@ async function handler(m, { sock }) {
     if (birthdays.length === 0) {
         return m.reply(
             `❌ *Tidak Ada Data*\n\n` +
-            `> Belum ada member yang set birthday\n\n` +
-            `> Gunakan: .setbirthday DD-MM`
+            `Belum ada member yang set birthday\n\n` +
+            `Gunakan: .setbirthday DD-MM`
         )
     }
     
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
     }
     
     text += `╰┈┈┈┈┈┈┈┈⬡\n\n`
-    text += `> Set birthday: .setbirthday DD-MM`
+    text += `Set birthday: .setbirthday DD-MM`
     
     { const __navText = (text, { mentions }); await m.reply(claraWrap("birthdaylist", __navText)); }
 }

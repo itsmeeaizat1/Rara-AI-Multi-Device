@@ -46,9 +46,9 @@ async function handler(m, { sock }) {
     
     if (!data) {
         return sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
-            `> \`${m.prefix}qrcustom <url/text>\`\n\n` +
+            `\`${m.prefix}qrcustom <url/text>\`\n\n` +
             `*Contoh:*\n` +
-            `> \`${m.prefix}qrcustom https://wa.me/628xxx\`\n\n` +
+            `\`${m.prefix}qrcustom https://wa.me/628xxx\`\n\n` +
             `💡 Reply gambar untuk custom logo di tengah QR`, "qrcustom")
     }
     

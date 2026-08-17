@@ -206,7 +206,7 @@ async function handler(m, { sock, args }) {
 
   if (!type || !query) {
     let txt = `Anime Search (MyAnimeList)\n\n`;
-    txt += `> Source: Jikan API (gratis, no API key)\n\n`;
+    txt += `Source: Jikan API (gratis, no API key)\n\n`;
     txt += `\`${m.prefix}animesearch <type> <judul>\`\n\n`;
     txt += `Tipe tersedia:\n`;
     txt += `1. \`${m.prefix}animesearch anime <judul>\` - Cari anime\n`;

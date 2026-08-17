@@ -38,14 +38,14 @@ function handler(m, { sock }) {
             `┃ ◦ Mode: *${mode.toUpperCase()}*\n` +
             `╰┈┈⬡\n\n` +
             `*Deteksi:*\n` +
-            `> • chat.whatsapp.com (grup)\n` +
-            `> • wa.me (kontak)\n` +
-            `> • whatsapp.com/channel (saluran)\n\n` +
+            `• chat.whatsapp.com (grup)\n` +
+            `• wa.me (kontak)\n` +
+            `• whatsapp.com/channel (saluran)\n\n` +
             `*Cara Pakai:*\n` +
-            `> \`${m.prefix}antilinkgc on\` - Aktifkan\n` +
-            `> \`${m.prefix}antilinkgc off\` - Nonaktifkan\n` +
-            `> \`${m.prefix}antilinkgc metode kick\` - Mode kick user\n` +
-            `> \`${m.prefix}antilinkgc metode remove\` - Mode hapus pesan`, "antilinkgc")
+            `\`${m.prefix}antilinkgc on\` - Aktifkan\n` +
+            `\`${m.prefix}antilinkgc off\` - Nonaktifkan\n` +
+            `\`${m.prefix}antilinkgc metode kick\` - Mode kick user\n` +
+            `\`${m.prefix}antilinkgc metode remove\` - Mode hapus pesan`, "antilinkgc")
     }
     
     if (option === 'on') {

@@ -24,9 +24,9 @@ async function handler(m, { sock }) {
 
     if (!url) {
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}ccdl <url>\`\n\n` +
-            `> Contoh:\n` +
-            `> \`${m.prefix}ccdl https://www.capcut.com/t/xxx\``, "capcutdl")
+            `\`${m.prefix}ccdl <url>\`\n\n` +
+            `Contoh:\n` +
+            `\`${m.prefix}ccdl https://www.capcut.com/t/xxx\``, "capcutdl")
     }
 
     if (!url.match(/capcut\.com/i)) {

@@ -128,7 +128,7 @@ async function handler(m, { sock, args }) {
 
       const firstCard = deck[order[0]];
       let txt = `Quiz: ${deckName}\n\n`;
-      txt += `> ${deck.length} kartu - ketik *flip* untuk jawaban\n\n`;
+      txt += `${deck.length} kartu - ketik *flip* untuk jawaban\n\n`;
       txt += `Kartu 1/${deck.length}\n\n`;
       txt += `Q: ${firstCard.q}\n\n`;
       txt += `Balas:\n`;

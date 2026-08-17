@@ -39,8 +39,8 @@ async function handler(m, { sock }) {
 
     if (!text) {
         return sendReplyWithNav(sock, m, `── .✦ 𝗖𝗘𝗞 𝗜𝗗 𝗖𝗛𝗔𝗡𝗡𝗘𝗟 ✦. ── 𝜗ৎ\n\n` +
-            `> Masukkan link channel WhatsApp\n\n` +
-            `> \`${m.prefix}cekidch https://whatsapp.com/channel/xxxxx\``, "cekidch")
+            `Masukkan link channel WhatsApp\n\n` +
+            `\`${m.prefix}cekidch https://whatsapp.com/channel/xxxxx\``, "cekidch")
     }
 
     if (!text.includes('https://whatsapp.com/channel/')) {

@@ -25,9 +25,9 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `📕 *RedNote Downloader*\n\n` +
         `Download video atau foto dari XiaoHongShu (RedNote).\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}rednotedl <link>*\n\n` +
+        `*${m.prefix}rednotedl <link>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}rednotedl https://www.xiaohongshu.com/xxx*`, "rednotedl");
+        `*${m.prefix}rednotedl https://www.xiaohongshu.com/xxx*`, "rednotedl");
   }
 
   m.react("🕐");

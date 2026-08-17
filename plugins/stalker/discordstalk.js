@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
   if (!userId) {
     return m.reply(
       `🎮 *Discord sTalk*\n\n` +
-        `> Masukkan Discord User ID\n\n` +
+        `Masukkan Discord User ID\n\n` +
         `\`Contoh: ${m.prefix}discordstalk 297574907510784000\``,
     );
   }
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
       `🔢 *Discriminator:* #${d.discriminator || "0"}\n` +
       `🆔 *User ID:* ${d.id}\n\n` +
       `📅 *Dibuat:* ${createdDate}\n\n` +
-      `> _Discord User Lookup_`;
+      `_Discord User Lookup_`;
 
     m.react("✅");
 

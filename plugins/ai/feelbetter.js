@@ -27,10 +27,10 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `💚 *FeelBetterBot*\n\n` +
         `AI yang siap mendengarkan curhatan kamu — tanpa menghakimi, dengan hangat dan empatik.\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}feelbetter <curhatan>*\n\n` +
+        `*${m.prefix}feelbetter <curhatan>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}feelbetter lagi sedih nih*\n` +
-        `> *${m.prefix}feelbetter aku capek banget belakangan*\n\n` +
+        `*${m.prefix}feelbetter lagi sedih nih*\n` +
+        `*${m.prefix}feelbetter aku capek banget belakangan*\n\n` +
         `_Bot ini bukan pengganti profesional, tapi bisa jadi tempat curhat yang aman_`, "feelbetter");
   }
 

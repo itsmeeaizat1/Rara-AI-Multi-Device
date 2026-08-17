@@ -114,11 +114,11 @@ async function handler(m, { sock }) {
         `┃ ◦ \`--post\` — Shortcut for --method POST\n` +
         `╰┈┈⬡\n\n` +
         `\`Examples:\`\n` +
-        `> .get https://api.example.com\n` +
-        `> .get https://api.example.com --post --json {\"key\":\"val\"}\n` +
-        `> .get https://api.example.com --method PUT --json {\"id\":1}\n` +
-        `> .get https://api.example.com --header \"Authorization: Bearer token\"\n` +
-        `> .get https://api.example.com --auth user:pass -v`, "get");
+        `.get https://api.example.com\n` +
+        `.get https://api.example.com --post --json {\"key\":\"val\"}\n` +
+        `.get https://api.example.com --method PUT --json {\"id\":1}\n` +
+        `.get https://api.example.com --header \"Authorization: Bearer token\"\n` +
+        `.get https://api.example.com --auth user:pass -v`, "get");
   }
 
   const isVerbose = /--verbose|-v\b/i.test(input);

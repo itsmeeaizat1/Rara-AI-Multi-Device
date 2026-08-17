@@ -137,7 +137,7 @@ class NovaGames {
 
         let caption = `${cfg.emoji} *${cfg.title}*\n\n`;
         if (cfg.questionField && question[cfg.questionField]) {
-          caption += `> ${question[cfg.questionField]}\n`;
+          caption += `${question[cfg.questionField]}\n`;
         }
         caption += `💡 Hint: *${getHint(answer, cfg.hintCount)}*\n`;
         caption += `⏱️ Waktu: *${cfg.timeout / 1000} detik*\n`;

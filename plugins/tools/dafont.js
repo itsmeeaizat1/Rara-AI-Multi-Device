@@ -60,10 +60,10 @@ async function handler(m, { sock }) {
       `🔤 *DaFont Search*\n\n` +
         `Cari font dari DaFont, lalu reply nomor buat download.\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}dafont <nama font>*\n\n` +
+        `*${m.prefix}dafont <nama font>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}dafont arial*\n` +
-        `> *${m.prefix}dafont horror*\n\n` +
+        `*${m.prefix}dafont arial*\n` +
+        `*${m.prefix}dafont horror*\n\n` +
         `_Setelah daftar muncul, reply pesan bot dengan nomor font buat download_`
     );
   }
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
     const items = result.results.slice(0, 10);
 
     let txt = `🔤 *DaFont — ${result.count} Font Ditemukan*\n\n`;
-    txt += `> Pencarian: *${text}*\n\n`;
+    txt += `Pencarian: *${text}*\n\n`;
 
     items.forEach((v, i) => {
       txt += `*${i + 1}.* ${v.name}\n`;
@@ -115,9 +115,9 @@ async function dafontAnswerHandler(m, sock) {
   const v = session.data[index];
 
   let detail = `🔤 *${v.name}*\n\n` +
-    `> 👤 Author: ${v.author}\n` +
-    `> 📥 Downloads: ${v.downloads || "-"}\n` +
-    `> 📜 License: ${v.license || "-"}`;
+    `👤 Author: ${v.author}\n` +
+    `📥 Downloads: ${v.downloads || "-"}\n` +
+    `📜 License: ${v.license || "-"}`;
 
   if (v.preview) {
     await sock.sendMedia(m.chat, v.preview, detail, m, { type: "image" });

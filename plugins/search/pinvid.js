@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
 
   if (!query) {
     return sendReplyWithNav(sock, m, `📌 *Pinterest Video sEarch*\n\n` +
-        `> Masukkan query pencarian\n\n` +
+        `Masukkan query pencarian\n\n` +
         `\`${m.prefix}pinvid anime\``, "pinvid");
   }
 

@@ -28,11 +28,11 @@ async function handler(m, { sock }) {
 
   if (!url || !url.includes("pixeldrain.com")) {
     return sendReplyWithNav(sock, m, `📥 *Pixeldrain Download*\n\n` +
-        `> Download file dari Pixeldrain\n\n` +
+        `Download file dari Pixeldrain\n\n` +
         `*Format:*\n` +
-        `> \`${m.prefix}pixeldraindl <url>\`\n\n` +
+        `\`${m.prefix}pixeldraindl <url>\`\n\n` +
         `*Contoh:*\n` +
-        `> \`${m.prefix}pixeldraindl https://pixeldrain.com/u/xxxxx\``, "pixeldraindl");
+        `\`${m.prefix}pixeldraindl https://pixeldrain.com/u/xxxxx\``, "pixeldraindl");
   }
 
   m.react("🕐");

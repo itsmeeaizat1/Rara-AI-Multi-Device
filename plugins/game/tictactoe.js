@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
     return safeReply(
       m,
       `❌ Kamu masih dalam game!\n\n` +
-        `> Selesaikan game kamu atau ketik *nyerah* untuk menyerah.`,
+        `Selesaikan game kamu atau ketik *nyerah* untuk menyerah.`,
     );
   }
 
@@ -192,9 +192,9 @@ async function handler(m, { sock }) {
       `❌ @${room.game.playerX.split("@")[0]}\n` +
       `⭕ @${room.game.playerO.split("@")[0]}\n\n` +
       `${board}\n\n` +
-      `> Giliran: @${room.game.currentTurn.split("@")[0]}\n` +
-      `> Reply pesan ini dengan angka 1-9\n` +
-      `> Ketik *nyerah* untuk menyerah`;
+      `Giliran: @${room.game.currentTurn.split("@")[0]}\n` +
+      `Reply pesan ini dengan angka 1-9\n` +
+      `Ketik *nyerah* untuk menyerah`;
 
     await safeReact(m, "🎮");
     await safeReply(m, txt, {
@@ -218,8 +218,8 @@ async function handler(m, { sock }) {
       m,
       `🎮 *Tic Tac Toe*\n\n` +
         `Room dibuat! Menunggu partner...\n\n` +
-        `> Ketik \`.tictactoe${roomName ? " " + roomName : ""}\` untuk join\n` +
-        `> Room akan expired dalam 5 menit`,
+        `Ketik \`.tictactoe${roomName ? " " + roomName : ""}\` untuk join\n` +
+        `Room akan expired dalam 5 menit`,
     );
 
     // Auto delete after 5 min
@@ -327,7 +327,7 @@ async function answerHandler(m, sock) {
     await safeReact(m, "🤝");
     await safeReply(
       m,
-      `🤝 *SERI!*\n\n` + `${board}\n\n` + `> Tidak ada pemenang!`,
+      `🤝 *SERI!*\n\n` + `${board}\n\n` + `Tidak ada pemenang!`,
       { mentions: [room.game.playerX, room.game.playerO] },
     );
 
@@ -340,7 +340,7 @@ async function answerHandler(m, sock) {
     m,
     `🎮 *Tic Tac Toe*\n\n` +
       `${board}\n\n` +
-      `> Giliran: @${room.game.currentTurn.split("@")[0]}`,
+      `Giliran: @${room.game.currentTurn.split("@")[0]}`,
     { mentions: [room.game.currentTurn] },
   );
 

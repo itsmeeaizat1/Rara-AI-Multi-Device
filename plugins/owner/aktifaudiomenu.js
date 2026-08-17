@@ -26,10 +26,10 @@ async function handler(m, { sock, db }) {
 
     if (!option) {
         return sendReplyWithNav(sock, m, `🔊 *Audio Menu sEtting*\n\n` +
-            `> Status: *${current ? '✅ Aktif' : '❌ Nonaktif'}*\n\n` +
+            `Status: *${current ? '✅ Aktif' : '❌ Nonaktif'}*\n\n` +
             `*Cara pakai:*\n` +
-            `> \`${m.prefix}aktifaudiomenu ya\` - Aktifkan audio\n` +
-            `> \`${m.prefix}aktifaudiomenu gak\` - Nonaktifkan audio`, "aktifaudiomenu")
+            `\`${m.prefix}aktifaudiomenu ya\` - Aktifkan audio\n` +
+            `\`${m.prefix}aktifaudiomenu gak\` - Nonaktifkan audio`, "aktifaudiomenu")
     }
 
     if (option === 'ya' || option === 'on' || option === '1' || option === 'aktif') {

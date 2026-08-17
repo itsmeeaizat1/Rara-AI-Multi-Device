@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
             `┃ ⏱️ Durasi: \`${duration}\`\n` +
             `┃ 📝 Alasan: \`${currentAfk.reason || '-'}\`\n` +
             `╰┈┈⬡\n\n` +
-            `> Bot siap menerima command!`))
+            `Bot siap menerima command!`))
     } else {
         const reason = m.args.join(' ') || 'AFK'
         
@@ -55,8 +55,8 @@ async function handler(m, { sock }) {
             `┃ ✅ Bot sendiri (fromMe)\n` +
             `┃ ❌ Semua user lain\n` +
             `╰┈┈⬡\n\n` +
-            `> User lain akan dapat pesan AFK\n` +
-            `> Ketik \`${m.prefix}botafk\` untuk kembali online`), "botafk")
+            `User lain akan dapat pesan AFK\n` +
+            `Ketik \`${m.prefix}botafk\` untuk kembali online`), "botafk")
     }
 }
 

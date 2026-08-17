@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     
     if (!isImage) {
         return sendReplyWithNav(sock, m, `🎨 *To Anime*\n\n` +
-            `> Kirim/reply gambar untuk diubah ke gaya anime\n\n` +
+            `Kirim/reply gambar untuk diubah ke gaya anime\n\n` +
             `\`${m.prefix}toanime\``, "toanime")
     }
     

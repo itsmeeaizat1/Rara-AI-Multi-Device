@@ -40,12 +40,12 @@ async function handler(m, { sock, store }) {
 
     if (!code) {
         return sendReplyWithNav(sock, m, `⚙️ *Exec*\n\n` +
-            `> Reply pesan berisi kode JavaScript!\n\n` +
+            `Reply pesan berisi kode JavaScript!\n\n` +
             `*Atau:*\n` +
-            `> .> <code>\n\n` +
+            `.> <code>\n\n` +
             `*Contoh:*\n` +
-            `> Reply pesan: \`return m.chat\`\n` +
-            `> Lalu ketik: .>`, "exec")
+            `Reply pesan: \`return m.chat\`\n` +
+            `Lalu ketik: .>`, "exec")
     }
 
     code = code.trim()

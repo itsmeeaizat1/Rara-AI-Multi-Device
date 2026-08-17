@@ -89,13 +89,13 @@ async function handler(m, { sock }) {
       `╎❏ *Gratis* — via API Xemoz\n` +
       `╚┈┈┈┈┈┈┈┈┈❖\n\n` +
       `*Cara pakai:*\n` +
-      `> ${m.prefix}tanyadokter <pertanyaan>\n\n` +
+      `${m.prefix}tanyadokter <pertanyaan>\n\n` +
       `*Contoh:*\n` +
-      `> ${m.prefix}tanyadokter cara agar jantung sehat\n` +
-      `> ${m.prefix}aikesehatan cara biar sembuh\n` +
-      `> ${m.prefix}tanyadokter gejala demam berdarah\n\n` +
+      `${m.prefix}tanyadokter cara agar jantung sehat\n` +
+      `${m.prefix}aikesehatan cara biar sembuh\n` +
+      `${m.prefix}tanyadokter gejala demam berdarah\n\n` +
       `*Reset sesi:*\n` +
-      `> ${m.prefix}tanyadokter reset`;
+      `${m.prefix}tanyadokter reset`;
     return sendReplyWithNav(sock, m, help, "tanyadokter");
   }
 

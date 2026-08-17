@@ -361,7 +361,7 @@ async function messageHandler(msg, sock) {
           if (closest) {
             notFoundText += `Mungkin maksudmu: *${m.prefix}${closest}* ?\n\n`;
           }
-          notFoundText += `> Ketik *${m.prefix}tanyaai <pertanyaan>* untuk tanya AI lebih lanjut`;
+          notFoundText += `Ketik *${m.prefix}tanyaai <pertanyaan>* untuk tanya AI lebih lanjut`;
           await m.reply(notFoundText);
         } catch {}
       }

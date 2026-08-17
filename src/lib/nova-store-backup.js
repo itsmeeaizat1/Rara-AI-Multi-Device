@@ -132,8 +132,8 @@ async function sendStoreBackup(sock) {
             `┃ 📁 Files: ${backupInfo.fileCount}\n` +
             `┃ 🔖 Schema: v${SCHEMA_VERSION}\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-            `> Type-safe backup. Kompatibel dengan versi mendatang.\n` +
-            `> ${config.bot?.name || 'Nova-AI'} Store Backup System`
+            `Type-safe backup. Kompatibel dengan versi mendatang.\n` +
+            `${config.bot?.name || 'Nova-AI'} Store Backup System`
         
         await sock.sendMessage(ownerJid, {
             document: { url: backupInfo.path },

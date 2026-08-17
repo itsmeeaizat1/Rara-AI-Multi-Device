@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
 
   if (!url) {
     return sendReplyWithNav(sock, m, `📥 *All In One Downloader*\n\n` +
-        `> Download dari berbagai platform!\n\n` +
+        `Download dari berbagai platform!\n\n` +
         `╭┈┈⬡「 🌐 *Platform* 」\n` +
         `┃ • Instagram\n` +
         `┃ • TikTok\n` +
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
         `┃ • CapCut\n` +
         `┃ • Threads / Reddit\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `> *Contoh:* ${m.prefix}aio https://instagram.com/p/xxx`, "aio");
+        `*Contoh:* ${m.prefix}aio https://instagram.com/p/xxx`, "aio");
   }
 
   if (!url.startsWith("http")) {

@@ -38,7 +38,7 @@ async function handler(m, { sock, args }) {
     txt += `4. \`${m.prefix}daftarsiswa hapus\` - Hapus pendaftaran\n\n`;
     txt += `Contoh:\n`;
     txt += `\`${m.prefix}daftarsiswa Andi Pratama\`\n\n`;
-    txt += `> Nama akan tampil di leaderboard`;
+    txt += `Nama akan tampil di leaderboard`;
     return await sendReplyWithNav(m, sock, txt, { commandName: "daftarsiswa" });
   }
 

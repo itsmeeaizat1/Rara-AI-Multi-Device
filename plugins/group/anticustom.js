@@ -112,10 +112,10 @@ function parsePatternAnswer(text) {
 
 function buildSummary(session) {
   return (
-    `> Judul: *${session.title}*\n` +
-    `> Tipe deteksi: *${session.type}*\n` +
-    `> Pattern: ${session.patterns.map((item) => `\`${item}\``).join(", ")}\n` +
-    `> Action: *${formatAction(session.action)}*`
+    `Judul: *${session.title}*\n` +
+    `Tipe deteksi: *${session.type}*\n` +
+    `Pattern: ${session.patterns.map((item) => `\`${item}\``).join(", ")}\n` +
+    `Action: *${formatAction(session.action)}*`
   );
 }
 
@@ -130,8 +130,8 @@ async function startWizard(m, sock, mode, isFirstSetup = false) {
 
   if (existing) {
     await m.reply(`⚠️ Kamu masih punya sesi AntiCustom yang belum selesai.\n\n` +
-        `> Balas pertanyaan terakhir bot untuk lanjut\n` +
-        `> Atau batalkan dengan \`${m.prefix}anticustom cancel\``);
+        `Balas pertanyaan terakhir bot untuk lanjut\n` +
+        `Atau batalkan dengan \`${m.prefix}anticustom cancel\``);
     return;
   }
 
@@ -167,28 +167,28 @@ async function startWizard(m, sock, mode, isFirstSetup = false) {
     intro +
       `*Pertanyaan 1/4*\n` +
       `Judulnya apa?\n\n` +
-      `> Reply pesan ini dengan judul rule yang kamu mau\n` +
-      `> Contoh: \`Anti Kata Kotor\``,
+      `Reply pesan ini dengan judul rule yang kamu mau\n` +
+      `Contoh: \`Anti Kata Kotor\``,
   );
 }
 
 function buildGuideMessage(m, status, mode, rules) {
   return (
     `🛡️ *Anticustom*\n\n` +
-    `> Status: *${status.toUpperCase()}*\n` +
-    `> Mode default: *${normalizeAction(mode).toUpperCase()}*\n` +
-    `> Total rule: *${rules.length}*\n\n` +
+    `Status: *${status.toUpperCase()}*\n` +
+    `Mode default: *${normalizeAction(mode).toUpperCase()}*\n` +
+    `Total rule: *${rules.length}*\n\n` +
     `Kalau mau nambah AntiCustom lagi:\n` +
-    `> \`${m.prefix}anticustom add\`\n\n` +
+    `\`${m.prefix}anticustom add\`\n\n` +
     `Kalau mau atur status:\n` +
-    `> \`${m.prefix}anticustom on\`\n` +
-    `> \`${m.prefix}anticustom off\`\n\n` +
+    `\`${m.prefix}anticustom on\`\n` +
+    `\`${m.prefix}anticustom off\`\n\n` +
     `Kalau mau lihat atau hapus rule:\n` +
-    `> \`${m.prefix}anticustom list\`\n` +
-    `> \`${m.prefix}anticustom del <judul>\`\n\n` +
+    `\`${m.prefix}anticustom list\`\n` +
+    `\`${m.prefix}anticustom del <judul>\`\n\n` +
     `Kalau mau ubah mode default:\n` +
-    `> \`${m.prefix}anticustom metode kick\`\n` +
-    `> \`${m.prefix}anticustom metode remove\``
+    `\`${m.prefix}anticustom metode kick\`\n` +
+    `\`${m.prefix}anticustom metode remove\``
   );
 }
 
@@ -323,12 +323,12 @@ async function replyHandler(m, { sock }) {
         `Oke, judulnya *${session.title}*.\n\n` +
         `Sekarang, berikan kata-kata yang ingin dideteksi oleh aku.\n\n` +
         `Kamu bisa pilih salah satu format:\n` +
-        `> *Contains*: kirim kata dipisah koma atau baris baru\n` +
-        `> *Regex*: awali jawaban dengan \`regex:\`\n\n` +
+        `*Contains*: kirim kata dipisah koma atau baris baru\n` +
+        `*Regex*: awali jawaban dengan \`regex:\`\n\n` +
         `Contoh contains:\n` +
-        `> \`anjing, goblok, tolol\`\n\n` +
+        `\`anjing, goblok, tolol\`\n\n` +
         `Contoh regex:\n` +
-        `> \`regex: (anj|anjing|a+n+j+)\`\n\n` +
+        `\`regex: (anj|anjing|a+n+j+)\`\n\n` +
         `*Reply pesan ini dengan jawabanmu*`,
     );
     return true;
@@ -350,7 +350,7 @@ async function replyHandler(m, { sock }) {
       `🛡️ *Pertanyaan 3/4*\n\n` +
         `Berarti kamu mau ini ya:\n` +
         `${session.patterns.map((item, index) => `${index + 1}. \`${item}\``).join("\n")}\n\n` +
-        `> Tipe deteksi: *${session.type}*\n\n` +
+        `Tipe deteksi: *${session.type}*\n\n` +
         `Oke siap, kalau pesan member mengandung kata-kata itu, kamu ingin aku *hapus pesan* atau langsung *kick*?\n\n` +
         `*Reply pesan ini dengan:* \`hapus\` atau \`kick\``,
     );
@@ -432,8 +432,8 @@ async function replyHandler(m, { sock }) {
         text:
           `✅ *AntiCustom berhasil dibuat*\n\n` +
           `${buildSummary(session)}\n\n` +
-          `> Status otomatis: *ON*\n` +
-          `> Total rule baru: *${generatedRules.length}*\n\n` +
+          `Status otomatis: *ON*\n` +
+          `Total rule baru: *${generatedRules.length}*\n\n` +
           `Kalau mau lihat panduan lagi, ketik \`${m.prefix}anticustom\``,
       },
       { quoted: m },

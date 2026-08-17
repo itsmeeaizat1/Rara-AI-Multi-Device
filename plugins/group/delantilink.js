@@ -33,7 +33,7 @@ function handler(m, { sock }) {
         
         let txt = `🔗 *Daftar Antilink*\n\n`
         antilinkList.forEach((l, i) => {
-            txt += `> ${i + 1}. \`${l}\`\n`
+            txt += `${i + 1}. \`${l}\`\n`
         })
         txt += `\n> Total: *${antilinkList.length}* link`
         txt += `\n\n\`${m.prefix}delantilink <domain>\` untuk hapus`
@@ -54,8 +54,8 @@ function handler(m, { sock }) {
     db.setGroup(m.chat, { antilinkList })
     
     m.reply(`✅ *Antilink Dihapus*\n\n` +
-        `> Link: \`${link}\`\n` +
-        `> Sisa: *${antilinkList.length}* link`)
+        `Link: \`${link}\`\n` +
+        `Sisa: *${antilinkList.length}* link`)
 }
 
 export { pluginConfig as config, handler }

@@ -25,16 +25,16 @@ async function handler(m, { sock }) {
     
     if (!prompt) {
         return sendReplyWithNav(sock, m, `🎨 *Anime Art Generator*\n\n` +
-            `> Generate gambar anime AI dari prompt!\n\n` +
+            `Generate gambar anime AI dari prompt!\n\n` +
             `*Cara Pakai:*\n` +
-            `> \`${m.prefix}anime-gen <deskripsi>\`\n\n` +
+            `\`${m.prefix}anime-gen <deskripsi>\`\n\n` +
             `*Contoh:*\n` +
-            `> \`${m.prefix}anime-gen girl, vibrant color, smilling, yellow pink gradient hair\`\n` +
-            `> \`${m.prefix}anime-gen boy, dark aesthetic, silver hair, red eyes\`\n\n` +
+            `\`${m.prefix}anime-gen girl, vibrant color, smilling, yellow pink gradient hair\`\n` +
+            `\`${m.prefix}anime-gen boy, dark aesthetic, silver hair, red eyes\`\n\n` +
             `*Tips:*\n` +
-            `> • Gunakan bahasa Inggris\n` +
-            `> • Makin detail prompt, makin bagus hasil\n` +
-            `> • Tambahkan style: vibrant, dark, pastel, etc`, "anime-gen")
+            `• Gunakan bahasa Inggris\n` +
+            `• Makin detail prompt, makin bagus hasil\n` +
+            `• Tambahkan style: vibrant, dark, pastel, etc`, "anime-gen")
     }
     
     m.react('🕐')

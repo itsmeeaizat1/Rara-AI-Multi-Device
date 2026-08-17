@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
         `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
         `┃ 🔍 \`${m.prefix}android1 <query>\` - Cari APK\n` +
         `╰┈┈⬡\n\n` +
-        `> Contoh:\n` +
+        `Contoh:\n` +
         `\`${m.prefix}android1 Subway Surfer\``, "android1");
   }
 
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
       caption += `   └ ⭐ ${app.rating}/5\n\n`;
     });
 
-    caption += `> Pilih angka untuk download langsung`;
+    caption += `Pilih angka untuk download langsung`;
 
     const buttons = apps.slice(0, 10).map((app, i) => ({
       title: `${i + 1}. ${app.name.substring(0, 20)}`,

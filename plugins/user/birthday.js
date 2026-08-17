@@ -29,8 +29,8 @@ async function handler(m, { sock }) {
         if (target === m.sender) {
             return m.reply(
                 `❌ Kamu belum set birthday!\n\n` +
-                `> Gunakan: ${m.prefix}setbirthday DD-MM\n` +
-                `> Contoh: ${m.prefix}setbirthday 25-12`
+                `Gunakan: ${m.prefix}setbirthday DD-MM\n` +
+                `Contoh: ${m.prefix}setbirthday 25-12`
             )
         }
         { const __navText = claraWrap("birthday", `❌ User belum set birthday!`); return await m.reply(__navText); }
@@ -67,8 +67,8 @@ async function handler(m, { sock }) {
     
     if (isToday) {
         text += `\n\n🎊 *HAPPY BIRTHDAY!* 🎊\n`
-        text += `> Semoga panjang umur dan\n`
-        text += `> sukses selalu! 🎉🎂`
+        text += `Semoga panjang umur dan\n`
+        text += `sukses selalu! 🎉🎂`
     }
     
     await m.reply(text, { mentions: [target] })

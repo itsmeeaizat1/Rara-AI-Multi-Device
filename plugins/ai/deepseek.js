@@ -27,10 +27,10 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("DeepSeek V4", `🧠 *DeepSeek V4*\n\n` +
         `AI yang bisa mikir dulu sebelum jawab — cocok buat pertanyaan yang butuh penalaran.\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}deepseek <pertanyaan>*\n\n` +
+        `*${m.prefix}deepseek <pertanyaan>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}deepseek Jelaskan black hole*\n` +
-        `> *${m.prefix}deepseek Buat kode sorting algorithm*\n\n` +
+        `*${m.prefix}deepseek Jelaskan black hole*\n` +
+        `*${m.prefix}deepseek Buat kode sorting algorithm*\n\n` +
         `_Bot akan mikir dulu, baru jawab — jadi agak lama sedikit_`));
   }
 

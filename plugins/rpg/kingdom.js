@@ -169,14 +169,14 @@ async function handler(m, { sock, config: botConfig }) {
       const status = level > 0
         ? `Lv ${level} | ${b.resourceEmoji} +${prod}/jam`
         : "Belum dibangun";
-      text += `> ${b.emoji} *${b.name}* — ${status}\n`;
+      text += `${b.emoji} *${b.name}* — ${status}\n`;
       if (level === 0) {
-        text += `> Bangun: \`${prefix}kingdom build ${key}\`\n`;
+        text += `Bangun: \`${prefix}kingdom build ${key}\`\n`;
       } else if (level < b.maxLevel) {
         const cost = getUpgradeCost(b, level);
-        text += `> Upgrade: \`${prefix}kingdom upgrade ${key}\` (${cost.toLocaleString("id-ID")}G)\n`;
+        text += `Upgrade: \`${prefix}kingdom upgrade ${key}\` (${cost.toLocaleString("id-ID")}G)\n`;
       } else {
-        text += `> MAX LEVEL!\n`;
+        text += `MAX LEVEL!\n`;
       }
       text += "\n";
     }
@@ -196,9 +196,9 @@ async function handler(m, { sock, config: botConfig }) {
     if (!buildKey || !BUILDINGS[buildKey]) {
       let list = "";
       for (const [key, b] of Object.entries(BUILDINGS)) {
-        list += `> ${b.emoji} *${b.name}* — ${b.baseCost.toLocaleString("id-ID")}G\n`;
-        list += `> ${b.desc}\n`;
-        list += `> \`${prefix}kingdom build ${key}\`\n\n`;
+        list += `${b.emoji} *${b.name}* — ${b.baseCost.toLocaleString("id-ID")}G\n`;
+        list += `${b.desc}\n`;
+        list += `\`${prefix}kingdom build ${key}\`\n\n`;
       }
       return sendReplyWithNav(
         sock,

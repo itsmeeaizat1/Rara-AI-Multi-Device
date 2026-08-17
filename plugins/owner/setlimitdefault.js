@@ -27,11 +27,11 @@ async function handler(m, { sock }) {
         const currentDefault = db.setting('defaultLimit') || config.limits?.default || 25
         
         return m.reply(claraWrap("sEt DeғAult Limit", `📊 *sEt DeғAult Limit*\n\n` +
-            `> Limit default saat ini: \`${currentDefault}\`\n\n` +
+            `Limit default saat ini: \`${currentDefault}\`\n\n` +
             `*Cara pakai:*\n` +
-            `> \`${m.prefix}setlimitdefault <jumlah>\`\n\n` +
+            `\`${m.prefix}setlimitdefault <jumlah>\`\n\n` +
             `*Contoh:*\n` +
-            `> \`${m.prefix}setlimitdefault 50\``))
+            `\`${m.prefix}setlimitdefault 50\``))
     }
     
     if (newLimit < 1 || newLimit > 1000) {
@@ -42,8 +42,8 @@ async function handler(m, { sock }) {
     db.setting('defaultLimit', newLimit)
     
     await m.reply(claraWrap("Berhasil", `✅ *Berhasil*\n\n` +
-        `> Default limit diubah menjadi: \`${newLimit}\`\n` +
-        `> User baru akan mendapat limit ini`))
+        `Default limit diubah menjadi: \`${newLimit}\`\n` +
+        `User baru akan mendapat limit ini`))
 }
 
 export { pluginConfig as config, handler }

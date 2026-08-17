@@ -31,8 +31,8 @@ async function handler(m, { sock }) {
     
     if (!targetUser) {
         await m.reply(claraWrap("Cara Pakai", `⚠️ *Cara Pakai*\n\n` +
-            `> Reply pesan user + \`${m.prefix}resetwarn\`\n` +
-            `> Atau: \`${m.prefix}resetwarn @user\``))
+            `Reply pesan user + \`${m.prefix}resetwarn\`\n` +
+            `Atau: \`${m.prefix}resetwarn @user\``))
         return
     }
     

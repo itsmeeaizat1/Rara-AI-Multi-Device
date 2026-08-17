@@ -49,8 +49,8 @@ async function handler(m, { sock }) {
 
   if (!text || !text.includes("pastebin.com")) {
     return sendReplyWithNav(sock, m, `📋 *GET PAsTEBIN*\n\n` +
-      `> Masukkan link Pastebin yang valid\n\n` +
-      `> Contoh: \`${m.prefix}getpaste https://pastebin.com/Gu8RZaqv\``, "getpaste");
+      `Masukkan link Pastebin yang valid\n\n` +
+      `Contoh: \`${m.prefix}getpaste https://pastebin.com/Gu8RZaqv\``, "getpaste");
   }
 
   m.react("🕐");

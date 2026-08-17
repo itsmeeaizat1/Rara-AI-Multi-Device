@@ -94,8 +94,8 @@ async function handler(m, { sock }) {
         text += `✅ Aktif: ${status.summary.totalActive + (sholatEnabled ? 1 : 0)}\n`;
         text += `❌ Nonaktif: ${status.summary.totalInactive + (!sholatEnabled ? 1 : 0)}\n\n`;
 
-        text += `> Gunakan \`.stopschedule <key>\` untuk stop\n`;
-        text += `> Gunakan \`.startschedule <key>\` untuk start`;
+        text += `Gunakan \`.stopschedule <key>\` untuk stop\n`;
+        text += `Gunakan \`.startschedule <key>\` untuk start`;
 
         await m.reply(claraWrap("cekschedule", text));
     } catch (error) {

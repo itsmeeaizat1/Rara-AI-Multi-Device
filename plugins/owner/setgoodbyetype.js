@@ -84,7 +84,7 @@ async function handler(m, { sock, db }) {
     `- *V5 Simple* ✨ — Pesan teks sederhana disertai foto profile member yang keluar, tidak terlalu mencolok namun informatif\n\n` +
     `- *V6 Video* 🎥 — Mengirimkan video perpisahan yang estetik dilengkapi caption otomatis untuk member\n\n` +
     `- *V7 Interactive Quoted* 💬 — Mengirimkan pesan interaktif dan fake quoted dari orang yang keluar\n\n` +
-    `> Pilih tipe goodbye dari tombol di bawah 👇`;
+    `Pilih tipe goodbye dari tombol di bawah 👇`;
   await sock.sendButton(
     m.chat,
     getAssetBuffer("nova"),

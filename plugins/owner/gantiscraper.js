@@ -124,7 +124,7 @@ async function handler(m, { sock }) {
     text +=
       `╰───────⬡\n\n` +
       `Total: ${scrapers.length} scraper\n\n` +
-      `> Gunakan \`${m.prefix}gantiscraper <nama>\` dengan reply code`;
+      `Gunakan \`${m.prefix}gantiscraper <nama>\` dengan reply code`;
 
     return await m.reply(claraWrap("gantiscraper", text));
   }

@@ -25,10 +25,10 @@ async function handler(m, { sock }) {
     if (!text) {
         return m.reply(
             `🔍 *Inspect*\n\n` +
-            `> Cek info grup atau saluran via link\n\n` +
+            `Cek info grup atau saluran via link\n\n` +
             `*Contoh:*\n` +
-            `> \`${m.prefix}inspect https://chat.whatsapp.com/xxx\`\n` +
-            `> \`${m.prefix}inspect https://whatsapp.com/channel/xxx\``
+            `\`${m.prefix}inspect https://chat.whatsapp.com/xxx\`\n` +
+            `\`${m.prefix}inspect https://whatsapp.com/channel/xxx\``
         )
     }
 

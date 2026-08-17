@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     let text = `🏆 *Info Turnamen Mobile Legends*\n\n`;
-    text += `> 5 Turnamen Terbaru\n\n`;
+    text += `5 Turnamen Terbaru\n\n`;
 
     for (let i = 0; i < tournaments.length; i++) {
       const t = tournaments[i];

@@ -102,9 +102,9 @@ async function handler(m, { sock, args }) {
       txt += `\n`;
     }
 
-    txt += `> Ketik .edulb pg untuk detail PG\n`;
-    txt += `> Ketik .edulb essay untuk detail essay\n`;
-    txt += `> Ketik .edulb profil untuk profil kamu`;
+    txt += `Ketik .edulb pg untuk detail PG\n`;
+    txt += `Ketik .edulb essay untuk detail essay\n`;
+    txt += `Ketik .edulb profil untuk profil kamu`;
 
     return await sendReplyWithNav(m, sock, txt, { commandName: "eduleaderboard" });
   }
@@ -137,7 +137,7 @@ async function handler(m, { sock, args }) {
     }
 
     if (pgRanked.length > 20) txt += `Total: ${pgRanked.length} siswa\n`;
-    txt += `> Berdasarkan akurasi jawaban PG`;
+    txt += `Berdasarkan akurasi jawaban PG`;
     return await m.reply(txt);
   }
 
@@ -168,7 +168,7 @@ async function handler(m, { sock, args }) {
     }
 
     if (essayRanked.length > 20) txt += `Total: ${essayRanked.length} siswa\n`;
-    txt += `> Berdasarkan rata-rata kata kunci essay`;
+    txt += `Berdasarkan rata-rata kata kunci essay`;
     return await m.reply(txt);
   }
 
@@ -246,7 +246,7 @@ async function handler(m, { sock, args }) {
       txt += `\n`;
     }
 
-    txt += `> Mapel ${mapel} - PG dan essay dipisah`;
+    txt += `Mapel ${mapel} - PG dan essay dipisah`;
     return await m.reply(txt);
   }
 
@@ -303,7 +303,7 @@ async function handler(m, { sock, args }) {
       txt += `\n`;
     }
 
-    txt += `> Jenjang ${jenjangKey} - PG dan essay dipisah`;
+    txt += `Jenjang ${jenjangKey} - PG dan essay dipisah`;
     return await m.reply(txt);
   }
 

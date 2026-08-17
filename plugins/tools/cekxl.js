@@ -41,10 +41,10 @@ async function handler(m, { sock }) {
         return sendReplyWithNav(sock, m, `📱 *CEK XL/AXIS*\n\n` +
             `Fitur ini digunakan untuk mengecek informasi paket dan kuota yang tersedia pada nomor XL atau Axis kamu secara lengkap dan detail\n\n` +
             `*Cara pakai:*\n` +
-            `> \`${m.prefix}cekxl <nomor hp>\`\n\n` +
+            `\`${m.prefix}cekxl <nomor hp>\`\n\n` +
             `*Contoh:*\n` +
-            `> \`${m.prefix}cekxl 083150850721\`\n` +
-            `> \`${m.prefix}cekxl 6281234567890\`\n\n` +
+            `\`${m.prefix}cekxl 083150850721\`\n` +
+            `\`${m.prefix}cekxl 6281234567890\`\n\n` +
             `_Format nomor bisa pakai 08xx, 628xx, atau tanpa awalan_`, "cekxl")
     }
 
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
 
         if (data.balance || data.pulsa) {
             txt += `💰 *SALDO*\n`
-            txt += `> Pulsa: *${data.balance || data.pulsa}*\n\n`
+            txt += `Pulsa: *${data.balance || data.pulsa}*\n\n`
         }
 
         if (data.result && typeof data.result === "object") {

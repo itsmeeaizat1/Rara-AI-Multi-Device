@@ -29,16 +29,16 @@ async function handler(m, { sock }) {
   if (!m.quoted && !m.isMedia) {
     return m.reply(
       `🔄 *CONVERTER*\n\n` +
-        `> Reply file dengan format tujuan\n\n` +
+        `Reply file dengan format tujuan\n\n` +
         `*Format:*\n` +
-        `> \`${m.prefix}converter <format>\`\n\n` +
+        `\`${m.prefix}converter <format>\`\n\n` +
         `*Contoh:*\n` +
-        `> \`${m.prefix}converter mp3\`\n` +
-        `> \`${m.prefix}converter mp4\`\n` +
-        `> \`${m.prefix}converter png\`\n\n` +
+        `\`${m.prefix}converter mp3\`\n` +
+        `\`${m.prefix}converter mp4\`\n` +
+        `\`${m.prefix}converter png\`\n\n` +
         `*Cara pakai:*\n` +
-        `> 1. Reply file yang mau diconvert\n` +
-        `> 2. Ketik \`${m.prefix}converter <format>\``,
+        `1. Reply file yang mau diconvert\n` +
+        `2. Ketik \`${m.prefix}converter <format>\``,
     );
   }
 

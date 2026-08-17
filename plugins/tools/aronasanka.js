@@ -27,7 +27,7 @@ async function handler(m, { sock, args }) {
 
   if (!text) {
     let txt = `Arona AI\n\n`;
-    txt += `> Chat dengan Arona (Blue Archive)\n\n`;
+    txt += `Chat dengan Arona (Blue Archive)\n\n`;
     txt += `\`${m.prefix}arona <text>\`\n\n`;
     txt += `Contoh:\n`;
     txt += `1. \`${m.prefix}arona hai arona\`\n`;

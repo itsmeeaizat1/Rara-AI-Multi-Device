@@ -28,10 +28,10 @@ async function handler(m, { sock }) {
   if (!option) {
     const current = db.setting("antiCall") ?? config.features?.antiCall ?? true;
     return sendReplyWithNav(sock, m, `📞 *Anti Call*\n\n` +
-        `> Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
+        `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}anticall on* — Aktifkan\n` +
-        `> *${m.prefix}anticall off* — Nonaktifkan\n\n` +
+        `*${m.prefix}anticall on* — Aktifkan\n` +
+        `*${m.prefix}anticall off* — Nonaktifkan\n\n` +
         `_Bot akan otomatis menolak panggilan masuk_`, "anticall");
   }
 
@@ -39,13 +39,13 @@ async function handler(m, { sock }) {
     db.setting("antiCall", true);
     const ctx = saluranCtx();
     return m.reply(claraWrap("anticall", `📞 *Anti Call Aktif*\n\n` +
-        `> Bot akan otomatis menolak panggilan masuk`));
+        `Bot akan otomatis menolak panggilan masuk`));
   }
 
   if (option === "off") {
     db.setting("antiCall", false);
     return m.reply(claraWrap("anticall", `📞 *Anti Call Nonaktif*\n\n` +
-        `> Bot tidak akan menolak panggilan masuk`));
+        `Bot tidak akan menolak panggilan masuk`));
   }
 
   return m.reply(claraWrap("Anticall", `❌ *Opsi Tidak Valid*\n\n> Gunakan *${m.prefix}anticall on* atau *${m.prefix}anticall off*`));

@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     if (!username) {
         return m.reply(
             `📸 *Instagram sTalk*\n\n` +
-            `> Masukkan username Instagram\n\n` +
+            `Masukkan username Instagram\n\n` +
             `\`Contoh: ${m.prefix}igstalk cristiano\``
         )
     }

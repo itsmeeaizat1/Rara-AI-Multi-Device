@@ -25,17 +25,17 @@ async function handler(m, { sock }) {
     
     if (!introText) {
         return sendReplyWithNav(sock, m, `📝 *sEt Intro*\n\n` +
-            `> Masukkan pesan intro!\n\n` +
+            `Masukkan pesan intro!\n\n` +
             `*Placeholder yang tersedia:*\n` +
-            `> @user - Nama pengguna\n` +
-            `> @group - Nama grup\n` +
-            `> @count - Jumlah member\n` +
-            `> @date - Tanggal hari ini\n` +
-            `> @time - Waktu sekarang\n` +
-            `> @desc - Deskripsi grup\n` +
-            `> @botname - Nama bot\n\n` +
+            `@user - Nama pengguna\n` +
+            `@group - Nama grup\n` +
+            `@count - Jumlah member\n` +
+            `@date - Tanggal hari ini\n` +
+            `@time - Waktu sekarang\n` +
+            `@desc - Deskripsi grup\n` +
+            `@botname - Nama bot\n\n` +
             `*Contoh:*\n` +
-            `> .setintro Selamat datang @user di grup @group! 👋`, "setintro")
+            `.setintro Selamat datang @user di grup @group! 👋`, "setintro")
     }
     
     const groupData = db.getGroup(m.chat) || db.setGroup(m.chat)

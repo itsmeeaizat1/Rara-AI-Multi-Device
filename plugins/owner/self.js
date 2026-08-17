@@ -42,9 +42,9 @@ async function handler(m, { sock }) {
         db.setting('botMode', 'self');
         
         const responseText = `🔒 *Mode sElf Aktif*\n\n` +
-            `> Bot sekarang hanya merespon:\n` +
-            `> • Owner bot\n` +
-            `> • Bot sendiri (fromMe)\n\n` +
+            `Bot sekarang hanya merespon:\n` +
+            `• Owner bot\n` +
+            `• Bot sendiri (fromMe)\n\n` +
             `_Gunakan .public untuk membuka akses_`;
         await m.reply(responseText);
         console.log(`[Mode] Changed to SELF by ${m.pushName} (${m.sender})`);

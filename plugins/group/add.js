@@ -25,17 +25,17 @@ async function handler(m, { sock }) {
     
     if (args.length === 0) {
         return m.reply(`👥 *Add Member*\n\n` +
-            `> Cara pakai:\n` +
-            `> 1. Di grup: \`${m.prefix}add <nomor>\`\n` +
-            `> 2. Multiple: \`${m.prefix}add <nomor1> <nomor2> ...\`\n` +
-            `> 3. Di private: \`${m.prefix}add <nomor> <link_grup>\`\n\n` +
-            `> Contoh:\n` +
-            `> \`${m.prefix}add 6281234567890\`\n` +
-            `> \`${m.prefix}add 628123 628456 628789\`\n` +
-            `> \`${m.prefix}add 628123 https://chat.whatsapp.com/xxx\`\n\n` +
-            `> Syarat:\n` +
-            `> - Bot harus admin di grup target\n` +
-            `> - Yang jalankan command harus admin`)
+            `Cara pakai:\n` +
+            `1. Di grup: \`${m.prefix}add <nomor>\`\n` +
+            `2. Multiple: \`${m.prefix}add <nomor1> <nomor2> ...\`\n` +
+            `3. Di private: \`${m.prefix}add <nomor> <link_grup>\`\n\n` +
+            `Contoh:\n` +
+            `\`${m.prefix}add 6281234567890\`\n` +
+            `\`${m.prefix}add 628123 628456 628789\`\n` +
+            `\`${m.prefix}add 628123 https://chat.whatsapp.com/xxx\`\n\n` +
+            `Syarat:\n` +
+            `- Bot harus admin di grup target\n` +
+            `- Yang jalankan command harus admin`)
     }
     
     let targetGroup = m.isGroup ? m.chat : null

@@ -28,10 +28,10 @@ async function handler(m, { sock }) {
   if (!option) {
     const current = db.setting("autoRead") ?? config.features?.autoRead ?? false;
     return sendReplyWithNav(sock, m, `📖 *Auto Read*\n\n` +
-        `> Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
+        `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}autoread on* — Aktifkan\n` +
-        `> *${m.prefix}autoread off* — Nonaktifkan\n\n` +
+        `*${m.prefix}autoread on* — Aktifkan\n` +
+        `*${m.prefix}autoread off* — Nonaktifkan\n\n` +
         `_Bot akan otomatis membaca pesan masuk_`, "autoread");
   }
 
@@ -39,13 +39,13 @@ async function handler(m, { sock }) {
     db.setting("autoRead", true);
     const ctx = saluranCtx();
     return m.reply(claraWrap("autoread", `📖 *Auto Read Aktif*\n\n` +
-        `> Bot akan otomatis membaca pesan masuk`));
+        `Bot akan otomatis membaca pesan masuk`));
   }
 
   if (option === "off") {
     db.setting("autoRead", false);
     return m.reply(claraWrap("autoread", `📖 *Auto Read Nonaktif*\n\n` +
-        `> Bot tidak akan otomatis membaca pesan`));
+        `Bot tidak akan otomatis membaca pesan`));
   }
 
   return m.reply(claraWrap("Autoread", `❌ *Opsi Tidak Valid*\n\n> Gunakan *${m.prefix}autoread on* atau *${m.prefix}autoread off*`));

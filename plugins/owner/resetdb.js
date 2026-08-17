@@ -35,16 +35,16 @@ async function handler(m, { sock }) {
         global.resetDbPending[m.sender] = Date.now()
         
         return m.reply(claraWrap("resetdb", `⚠️ *Peringatan!*\n\n` +
-            `> Ini akan menghapus SEMUA data:\n` +
-            `> • Data user\n` +
-            `> • Data group\n` +
-            `> • Data clan\n` +
-            `> • Semua statistik\n\n` +
+            `Ini akan menghapus SEMUA data:\n` +
+            `• Data user\n` +
+            `• Data group\n` +
+            `• Data clan\n` +
+            `• Semua statistik\n\n` +
             `╭┈┈⬡「 ⚠️ *KonғIrmasi* 」\n` +
             `┃ Ketik: *.resetdb confirm*\n` +
             `┃ dalam 60 detik\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-            `> ❌ Aksi ini TIDAK BISA dibatalkan!`))
+            `❌ Aksi ini TIDAK BISA dibatalkan!`))
     }
     
     const pending = global.resetDbPending[m.sender]
@@ -92,8 +92,8 @@ async function handler(m, { sock }) {
             `┃ 👥 Groups: ${groupCount}\n` +
             `┃ ⚔️ Clans: ${clanCount}\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-            `> Backup disimpan di:\n` +
-            `> \`${path.basename(backupPath)}\``)
+            `Backup disimpan di:\n` +
+            `\`${path.basename(backupPath)}\``)
         
     } catch (error) {
         await m.reply(claraWrap("resetdb", te(m.prefix, m.command, m.pushName), "error"))

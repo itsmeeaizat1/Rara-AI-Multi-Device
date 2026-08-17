@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
         await sock.updateBlockStatus(targetJid, 'unblock')
         await m.react('✅')
         return m.reply(claraWrap("unblock", `✅ *Nomor Di-Unblock*\n\n` +
-            `> Target: @${targetJid.split('@')[0]}`))
+            `Target: @${targetJid.split('@')[0]}`))
     } catch (err) {
         return m.reply(claraWrap("unblock", te(m.prefix, m.command, m.pushName), "error"))
     }

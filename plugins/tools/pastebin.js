@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `*Cara pakai:*\n` +
         `• \`${m.prefix}pastebin <text>\`\n` +
         `• Reply teks dengan \`${m.prefix}pastebin\`\n\n` +
-        `> Contoh: \`${m.prefix}pastebin console.log("Hello")\``, "pastebin");
+        `Contoh: \`${m.prefix}pastebin console.log("Hello")\``, "pastebin");
   }
 
   const api_dev_key = "h9WMT2Mn9QW-qDhvUSc-KObqAYcjI0he";
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
       `╎❏ 📊 UKURAN: *${text.length} chars*\n` +
       `╎❏ 🔗 LINK: ${url}\n` +
       `╚┈┈┈┈┈┈┈┈┈❖\n\n` +
-      `> Paste akan expired sesuai pengaturan Pastebin.`;
+      `Paste akan expired sesuai pengaturan Pastebin.`;
     await sendToolsPreview(
       sock,
       m.chat,

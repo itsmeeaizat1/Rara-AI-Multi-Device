@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
         `╎❏ • items: Nama:unit:harga (pisah koma)\n` +
         `╎❏ • total: Total harga\n` +
         `╚┈┈┈┈┈┈┈┈┈❖\n\n` +
-        `> Contoh:\n` +
+        `Contoh:\n` +
         `\`${m.prefix}invoicemaker TokoKu|INV001|15/01/2026|paid|Nasi Goreng:1x:15000,Es Teh:2x:6000|21000\``, "invoicemaker");
   }
 
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
     });
     caption += `╚┈┈┈┈┈┈┈┈┈❖\n\n`;
 
-    caption += `> 💰 Total: *Rp${data.total.toLocaleString("id-ID")}*`;
+    caption += `💰 Total: *Rp${data.total.toLocaleString("id-ID")}*`;
 
     await sock.sendMessage(
       m.chat,

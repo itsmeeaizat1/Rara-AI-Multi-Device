@@ -29,8 +29,8 @@ async function handler(m, { sock }) {
 
   if (!text) {
     return sendReplyWithNav(sock, m, `📱 *Apk Mod sEarch*\n\n` +
-        `> Cari APK MOD Premium\n\n` +
-        `> Contoh:\n` +
+        `Cari APK MOD Premium\n\n` +
+        `Contoh:\n` +
         `\`${m.prefix}apkmod vpn\``, "apkmod");
   }
 

@@ -142,16 +142,16 @@ async function handler(m, { sock, args }) {
       if (neededScore > 100) {
         txt += `*Tidak mungkin mencapai target!*\n`;
         txt += `Butuh nilai: ${neededScore.toFixed(1)}/100\n`;
-        txt += `> _Saran: turunkan target atau perbaiki komponen lain_`;
+        txt += `_Saran: turunkan target atau perbaiki komponen lain_`;
       } else if (neededScore < 0) {
         txt += `*Sudah pasti lulus!*\n`;
         txt += `Butuh nilai minimal: 0/100\n`;
-        txt += `> _Bisa santai untuk komponen sisanya_`;
+        txt += `_Bisa santai untuk komponen sisanya_`;
       } else {
         const grade = scoreToLetter(neededScore);
         txt += `Butuh nilai minimal: *${neededScore.toFixed(1)}/100*\n`;
         txt += `Huruf minimal: *${grade.letter}*\n`;
-        txt += `> _Semangat belajar! target ${target} masih bisa dicapai_`;
+        txt += `_Semangat belajar! target ${target} masih bisa dicapai_`;
       }
       await m.reply(txt);
       await m.react("✅");

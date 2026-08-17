@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
       caption += `   🔗 ${art.url}\n\n`;
     });
 
-    caption += `> 🎨 Powered by Pixiv`;
+    caption += `🎨 Powered by Pixiv`;
 
     const buttons = results.slice(0, 5).map((art, i) => ({
       title: `${art.title.slice(0, 20)}${art.title.length > 20 ? "..." : ""}`,

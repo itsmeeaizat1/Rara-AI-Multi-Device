@@ -96,9 +96,9 @@ async function handler(m, { sock }) {
           sock,
           m.chat,
           `❌ *ROOM SUDAH ADA*\n\n` +
-          `> Masih ada sesi permainan di chat ini!\n` +
-          `> Host: @${ut[m.chat].host.split("@")[0]}\n` +
-          `> Status: ${ut[m.chat].status}`,
+          `Masih ada sesi permainan di chat ini!\n` +
+          `Host: @${ut[m.chat].host.split("@")[0]}\n` +
+          `Status: ${ut[m.chat].status}`,
           "🐍🎲 ULAR TANGGA",
           "Permainan klasik!",
           [ut[m.chat].host],
@@ -185,8 +185,8 @@ async function handler(m, { sock }) {
           .map((l) => `┃ ${l}`)
           .join("\n")}\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `> Total: ${players.length}/4\n` +
-        `> ${players.length >= 2 ? `✅ Bisa mulai! \`${prefix}ut start\`` : "🕕 Butuh 1 player lagi"}`,
+        `Total: ${players.length}/4\n` +
+        `${players.length >= 2 ? `✅ Bisa mulai! \`${prefix}ut start\`` : "🕕 Butuh 1 player lagi"}`,
         "👥 PLAYER JOINED",
         `${players.length}/4 players`,
         players,
@@ -248,8 +248,8 @@ async function handler(m, { sock }) {
                 .map((l) => `┃ ${l}`)
                 .join("\n")}\n` +
               `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-              `> 🎯 Giliran: @${players[0].split("@")[0]}\n` +
-              `> Ketik *kocok* untuk lempar dadu!`,
+              `🎯 Giliran: @${players[0].split("@")[0]}\n` +
+              `Ketik *kocok* untuk lempar dadu!`,
             contextInfo: utCtx(players),
           },
           { quoted: m },
@@ -265,8 +265,8 @@ async function handler(m, { sock }) {
             .map((l) => `┃ ${l}`)
             .join("\n")}\n` +
           `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-          `> 🎯 Giliran: @${players[0].split("@")[0]}\n` +
-          `> Ketik *kocok* untuk lempar dadu!`,
+          `🎯 Giliran: @${players[0].split("@")[0]}\n` +
+          `Ketik *kocok* untuk lempar dadu!`,
           "🎮 GAME STARTED",
           "Lempar dadu!",
           players,
@@ -366,7 +366,7 @@ async function handler(m, { sock }) {
         await sendUT(
           sock,
           m.chat,
-          `> Giliran: @${players[ut[m.chat].turn].split("@")[0]}\n> Ketik *kocok*`,
+          `Giliran: @${players[ut[m.chat].turn].split("@")[0]}\n> Ketik *kocok*`,
           "🐍🎲 ULAR TANGGA",
           "Permainan klasik!",
           [players[ut[m.chat].turn]],
@@ -408,7 +408,7 @@ async function handler(m, { sock }) {
       `┃ ⭐ +${WIN_REWARD.exp.toLocaleString()} EXP\n` +
       `┃ ⚡ +${WIN_REWARD.energi} Energi\n` +
       `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-      `> Min 2 player, Max 4 player`,
+      `Min 2 player, Max 4 player`,
       "🐍🎲 ULAR TANGGA",
       "Ayo main!",
       [],
@@ -531,7 +531,7 @@ async function answerHandler(m, sock) {
           `┃ ⭐ +${WIN_REWARD.exp.toLocaleString()} EXP\n` +
           `┃ ⚡ +${WIN_REWARD.energi} Energi\n` +
           `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-          `> GG WP! Main lagi? \`.ut create\``,
+          `GG WP! Main lagi? \`.ut create\``,
         contextInfo: utCtx([m.sender]),
       });
     } else {
@@ -578,8 +578,8 @@ async function answerHandler(m, sock) {
       caption:
         `🎲 *DADU: ${dadu}* ${DICE_EMOJI[dadu - 1]}\n\n` +
         `${color} ${name}: *${oldPos}* → *${newPos}*${event}\n\n` +
-        `> 🎯 Giliran: @${nextPlayer.split("@")[0]}\n` +
-        `> Ketik *kocok*`,
+        `🎯 Giliran: @${nextPlayer.split("@")[0]}\n` +
+        `Ketik *kocok*`,
       contextInfo: utCtx([nextPlayer]),
     });
   } else {
@@ -588,8 +588,8 @@ async function answerHandler(m, sock) {
       m.chat,
       `🎲 *DADU: ${dadu}* ${DICE_EMOJI[dadu - 1]}\n\n` +
       `${color} ${name}: *${oldPos}* → *${newPos}*${event}\n\n` +
-      `> 🎯 Giliran: @${nextPlayer.split("@")[0]}\n` +
-      `> Ketik *kocok*`,
+      `🎯 Giliran: @${nextPlayer.split("@")[0]}\n` +
+      `Ketik *kocok*`,
       "🎲 GILIRAN",
       PLAYER_NAMES[nextTurn],
       [nextPlayer],

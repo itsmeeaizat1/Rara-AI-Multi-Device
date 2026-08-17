@@ -207,7 +207,7 @@ async function handler(m, { sock, args }) {
     txt += `Contoh:\n`;
     txt += `\`${m.prefix}sitasi apa https://example.com/article\`\n`;
     txt += `\`${m.prefix}sitasi ieee https://ieeexplore.ieee.org/document/12345\`\n\n`;
-    txt += `> _Otomatis ambil metadata dari halaman web_`;
+    txt += `_Otomatis ambil metadata dari halaman web_`;
     return await sendReplyWithNav(m, sock, txt, { commandName: "sitasi" });
   }
 

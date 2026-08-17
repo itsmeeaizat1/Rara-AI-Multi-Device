@@ -30,12 +30,12 @@ async function handler(m, { sock }) {
     if (!arg) {
         const status = current ? '✅ Aktif' : '❌ Nonaktif'
         return sendReplyWithNav(sock, m, `🎬 *Automedia*\n\n` +
-            `> Status: ${status}\n\n` +
-            `> Gunakan:\n` +
-            `> \`${m.prefix}automedia on\` - aktifkan\n` +
-            `> \`${m.prefix}automedia off\` - nonaktifkan\n\n` +
-            `> _Otomatis jadikan sticker jadi gambar_\n` +
-            `> Video gak jadi bang`, "automedia")
+            `Status: ${status}\n\n` +
+            `Gunakan:\n` +
+            `\`${m.prefix}automedia on\` - aktifkan\n` +
+            `\`${m.prefix}automedia off\` - nonaktifkan\n\n` +
+            `_Otomatis jadikan sticker jadi gambar_\n` +
+            `Video gak jadi bang`, "automedia")
     }
     
     if (arg === 'on' || arg === '1' || arg === 'aktif') {

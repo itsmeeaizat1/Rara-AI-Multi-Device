@@ -26,8 +26,8 @@ async function handler(m, { sock, db }) {
     if (!action) {
         const status = group.antiremove || 'off'
         await sendReplyWithNav(sock, m, `🗑️ *AntiRemove*\n\n` +
-            `> Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*\n\n` +
-            `> \`.antiremove on/off\``, "antiremove")
+            `Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*\n\n` +
+            `\`.antiremove on/off\``, "antiremove")
         return
     }
 

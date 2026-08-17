@@ -26,7 +26,7 @@ async function handler(m, { sock, args }) {
 
   if (!prompt) {
     let txt = `Text2Img - Pollinations AI\n\n`;
-    txt += `> Generate gambar dari text (gratis tanpa API key)\n\n`;
+    txt += `Generate gambar dari text (gratis tanpa API key)\n\n`;
     txt += `\`${m.prefix}text2img <text>\`\n\n`;
     txt += `Contoh:\n`;
     txt += `1. \`${m.prefix}text2img kucing terbang di langit\`\n`;
@@ -108,9 +108,9 @@ async function handler(m, { sock, args }) {
     await m.react("✅");
 
     let caption = `Text2Img - Pollinations AI\n`;
-    caption += `> Prompt: ${cleanPrompt}\n`;
-    caption += `> Model: ${model}\n`;
-    caption += `> Size: ${width}x${height}`;
+    caption += `Prompt: ${cleanPrompt}\n`;
+    caption += `Model: ${model}\n`;
+    caption += `Size: ${width}x${height}`;
 
     await sock.sendMessage(
       m.chat,

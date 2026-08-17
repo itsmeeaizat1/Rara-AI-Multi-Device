@@ -58,8 +58,8 @@ async function handler(m, { sock, args }) {
 
   if (!cmd || cmd === "help" || cmd === "menu") {
     let txt = `Ummah Hadith (UmmahAPI)\n\n`;
-    txt += `> 36,000+ hadiths dari 10 collections\n`;
-    txt += `> Free, no API key required\n\n`;
+    txt += `36,000+ hadiths dari 10 collections\n`;
+    txt += `Free, no API key required\n\n`;
     txt += `Perintah:\n`;
     txt += `1. \`${m.prefix}ummah daily\` - Hadith hari ini\n`;
     txt += `2. \`${m.prefix}ummah random\` - Hadith random\n`;

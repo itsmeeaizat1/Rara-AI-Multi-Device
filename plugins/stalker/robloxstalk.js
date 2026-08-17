@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
   if (!username) {
     return m.reply(
       `🎮 *Roblox sTalk*\n\n` +
-        `> Masukkan username Roblox\n\n` +
+        `Masukkan username Roblox\n\n` +
         `\`Contoh: ${m.prefix}robloxstalk Linkmon99\``,
     );
   }

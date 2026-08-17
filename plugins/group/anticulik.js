@@ -30,10 +30,10 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Anti Culik", `🛡️ *Anti Culik*\n\n` +
         `Bot akan otomatis keluar dari grup jika ditambah oleh orang yang tidak dikenal tanpa izin.\n\n` +
         `*STATUS:*\n` +
-        `> Mode: *${status === "on" ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
+        `Mode: *${status === "on" ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}anticulik on* — Aktifkan\n` +
-        `> *${m.prefix}anticulik off* — Nonaktifkan\n\n` +
+        `*${m.prefix}anticulik on* — Aktifkan\n` +
+        `*${m.prefix}anticulik off* — Nonaktifkan\n\n` +
         `_Jika aktif, bot hanya bisa join via *${m.prefix}join* atau ditambah oleh owner_`));
   }
 
@@ -41,16 +41,16 @@ async function handler(m, { sock }) {
     db.setting("anticulik", "on");
     const ctx = saluranCtx();
     return m.reply(claraWrap("anticulik", `🛡️ *Anti Culik Aktif*\n\n` +
-        `> Bot akan keluar otomatis jika ditambah tanpa izin\n` +
-        `> Satu-satunya cara bot bisa join: *${m.prefix}join* oleh owner\n\n` +
+        `Bot akan keluar otomatis jika ditambah tanpa izin\n` +
+        `Satu-satunya cara bot bisa join: *${m.prefix}join* oleh owner\n\n` +
         `_Member yang menambah bot akan diberi peringatan_`));
   }
 
   if (option === "off") {
     db.setting("anticulik", "off");
     return m.reply(claraWrap("anticulik", `🛡️ *Anti Culik Nonaktif*\n\n` +
-        `> Bot tidak akan keluar otomatis jika ditambah ke grup\n` +
-        `> Siapapun bisa menambahkan bot ke grup`));
+        `Bot tidak akan keluar otomatis jika ditambah ke grup\n` +
+        `Siapapun bisa menambahkan bot ke grup`));
   }
 
   return m.reply(claraWrap("Anticulik", `❌ *Opsi Tidak Valid*\n\n> Gunakan *${m.prefix}anticulik on* atau *${m.prefix}anticulik off*`));
@@ -100,8 +100,8 @@ async function handleAntiCulik(event, sock, db) {
     text:
       `🛡️ *Anti Culik*\n\n` +
       `Minimal izin dulu ya bang, jangan asal culik 🗿\n\n` +
-      `> Bot ditambah oleh ${inviterMention} tanpa izin\n` +
-      `> Bot akan keluar dari grup ini\n\n` +
+      `Bot ditambah oleh ${inviterMention} tanpa izin\n` +
+      `Bot akan keluar dari grup ini\n\n` +
       `_Hubungi owner untuk menambahkan bot dengan cara yang benar_`,
     contextInfo: saluranCtx(),
     mentionedJid: inviter ? [inviter] : [],

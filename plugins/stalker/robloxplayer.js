@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     if (!query) {
         return m.reply(
             `🎮 *Roblox Player sEarch*\n\n` +
-            `> Masukkan username untuk dicari\n\n` +
+            `Masukkan username untuk dicari\n\n` +
             `\`${m.prefix}robloxplayer linkmon\``
         )
     }
@@ -48,8 +48,8 @@ async function handler(m, { sock }) {
         const players = res.data.data.slice(0, 10)
         
         let text = `🎮 *Roblox Player sEarch*\n\n`
-        text += `> Query: \`${query}\`\n`
-        text += `> Ditemukan: *${players.length}* player\n\n`
+        text += `Query: \`${query}\`\n`
+        text += `Ditemukan: *${players.length}* player\n\n`
         
         players.forEach((player, i) => {
             text += `╭┈┈⬡「 ${i + 1}. *${player.displayName}* 」\n`
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
             text += `╰┈┈⬡\n\n`
         })
         
-        text += `> _Gunakan \`.robloxstalk <username>\` untuk info detail_`
+        text += `_Gunakan \`.robloxstalk <username>\` untuk info detail_`
         
         await m.reply(text)
         m.react('✅')

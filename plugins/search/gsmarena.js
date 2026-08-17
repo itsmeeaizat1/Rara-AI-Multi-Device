@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
     return sendReplyWithNav(sock, m, `📱 *Gsmarena*\n\n` +
-        `> Cari spesifikasi HP lengkap\n\n` +
+        `Cari spesifikasi HP lengkap\n\n` +
         `\`Contoh: ${m.prefix}gsmarena samsung galaxy s25\``, "gsmarena");
   }
 
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
 
 function formatList(results, query, prefix) {
   let txt = `📱 *Hasil Pencarian*\n`;
-  txt += `> *${query}*\n\n`;
+  txt += `*${query}*\n\n`;
 
   results.slice(0, 10).forEach((d, i) => {
     txt += `${i + 1}. 📱 *${d.name}*\n`;
@@ -62,7 +62,7 @@ function formatList(results, query, prefix) {
         d.description.length > 80
           ? d.description.slice(0, 80) + "..."
           : d.description;
-      txt += `> ${desc}\n`;
+      txt += `${desc}\n`;
     }
   });
 
@@ -76,7 +76,7 @@ function formatDetail(device) {
   if (device.quickSpec && device.quickSpec.length > 0) {
     txt += `📋 *Ringkasan:*\n`;
     for (const s of device.quickSpec) {
-      txt += `> 🔹 *${s.name}:* ${s.value}\n`;
+      txt += `🔹 *${s.name}:* ${s.value}\n`;
     }
     txt += "\n";
   }
@@ -85,7 +85,7 @@ function formatDetail(device) {
     for (const cat of device.detailSpec.slice(0, 8)) {
       txt += `📌 *${cat.category}:*\n`;
       for (const s of cat.specifications.slice(0, 5)) {
-        txt += `> • *${s.name}:* ${s.value}\n`;
+        txt += `• *${s.name}:* ${s.value}\n`;
       }
       txt += "\n";
     }

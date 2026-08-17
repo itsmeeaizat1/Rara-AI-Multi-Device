@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     
     if (!action || !['on', 'off'].includes(action)) {
         return m.resendReplyWithNav(sock, m, `👋 *Goodbye Global*\n\n` +
-            `> Aktifkan/nonaktifkan goodbye di SEMUA grup sekaligus\n\n` +
+            `Aktifkan/nonaktifkan goodbye di SEMUA grup sekaligus\n\n` +
             `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
             `┃ ${m.prefix}goodbyeall on\n` +
             `┃ ${m.prefix}goodbyeall off\n` +
@@ -53,13 +53,13 @@ async function handler(m, { sock }) {
                 `┃ 🌐 Total Grup: *${count}*\n` +
                 `┃ ✅ Goodbye: *AKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-                `> Member yang keluar akan dikirim pesan perpisahan!`))       } else {
+                `Member yang keluar akan dikirim pesan perpisahan!`))       } else {
             return m.reply(claraWrap("goodbyeall", `❌ *Goodbye Global Off*\n\n` +
                 `╭┈┈⬡「 📊 *Result* 」\n` +
                 `┃ 🌐 Total Grup: *${count}*\n` +
                 `┃ ❌ Goodbye: *NONAKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-                `> Goodbye dinonaktifkan di semua grup.`))
+                `Goodbye dinonaktifkan di semua grup.`))
         }
     } catch (error) {
         console.error('[GoodbyeAll] Error:', error.message)

@@ -72,7 +72,7 @@ function handler(m, { sock }) {
         }
         
         let txt = `📋 *Daftar ${roleLabel.toUpperCase()} ${serverLabel}*\n\n`
-        txt += `> Total: *${list.length}* ${role}\n\n`
+        txt += `Total: *${list.length}* ${role}\n\n`
         list.forEach((num, i) => {
             txt += `${i + 1}. \`${num}\`\n`
         })
@@ -83,9 +83,9 @@ function handler(m, { sock }) {
     if (!canManageRole(m.sender, server, role, m.isOwner)) {
         const userRole = getUserRole(m.sender, server)
         return m.reply(claraWrap("rolemanager", `❌ *Akses Ditolak*\n\n` +
-            `> Kamu tidak bisa mengelola *${roleLabel}* di *${serverLabel}*\n` +
-            `> Role kamu: *${userRole ? capitalize(userRole) : 'Tidak ada'}*\n\n` +
-            `> Hirarki: Owner > CEO > Reseller`))
+            `Kamu tidak bisa mengelola *${roleLabel}* di *${serverLabel}*\n` +
+            `Role kamu: *${userRole ? capitalize(userRole) : 'Tidak ada'}*\n\n` +
+            `Hirarki: Owner > CEO > Reseller`))
     }
     
     let targetUser = null
@@ -99,9 +99,9 @@ function handler(m, { sock }) {
     
     if (!targetUser) {
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}${m.command} @user\`\n` +
-            `> \`${m.prefix}${m.command} 628xxx\`\n` +
-            `> Reply pesan user`, "rolemanager")
+            `\`${m.prefix}${m.command} @user\`\n` +
+            `\`${m.prefix}${m.command} 628xxx\`\n` +
+            `Reply pesan user`, "rolemanager")
     }
     
     if (action === 'add') {
@@ -128,9 +128,9 @@ function handler(m, { sock }) {
         
         m.react('✅')
         return m.reply(`✅ *${roleLabel.toUpperCase()} Dihapus*\n\n` +
-            `> Nomor: \`${targetUser}\`\n` +
-            `> Server: *${serverLabel}*\n` +
-            `> Total: *${listByRole(server, role).length}* ${role}`)
+            `Nomor: \`${targetUser}\`\n` +
+            `Server: *${serverLabel}*\n` +
+            `Total: *${listByRole(server, role).length}* ${role}`)
     }
 }
 

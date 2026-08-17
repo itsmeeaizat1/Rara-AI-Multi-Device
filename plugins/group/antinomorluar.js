@@ -66,8 +66,8 @@ async function handler(m, { sock }) {
     const status = groupData.antinomorluar ? "ON" : "OFF";
     const currentBlock = groupData.nomorluarBlock || "60";
     let txt = `Anti Nomor Luar\n\n`;
-    txt += `> Status: ${status}\n`;
-    txt += `> Prefix diblokir: ${currentBlock}\n\n`;
+    txt += `Status: ${status}\n`;
+    txt += `Prefix diblokir: ${currentBlock}\n\n`;
     txt += `Cara pakai:\n`;
     txt += `1. ${m.prefix}antinomorluar on 60 - aktifkan, blokir 60\n`;
     txt += `2. ${m.prefix}antinomorluar set 60,44 - blokir 60 dan 44\n`;

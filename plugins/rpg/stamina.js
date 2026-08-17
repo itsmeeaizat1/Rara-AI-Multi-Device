@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     }
 
     if ((user.koin || 0) < potionCost) {
-      { const __navText = `❌ *sAldo Tidak Cukup*\n\n` + `> Biaya: Rp ${potionCost.toLocaleString("id-ID")}\n` + `> Saldo: Rp ${(user.koin || 0).toLocaleString("id-ID")}`; return await sendReplyWithNav(sock, m, __navText, "stamina"); };
+      { const __navText = `❌ *sAldo Tidak Cukup*\n\n` + `Biaya: Rp ${potionCost.toLocaleString("id-ID")}\n` + `Saldo: Rp ${(user.koin || 0).toLocaleString("id-ID")}`; return await sendReplyWithNav(sock, m, __navText, "stamina"); };
     }
 
     user.koin -= potionCost;
@@ -59,9 +59,9 @@ async function handler(m, { sock }) {
       `⚡ *sTamina Diisi*\n\n` +
         `*💊 *Restore:*
 \n` +
-        `> ⚡ Stamina: *+${restored}*\n` +
-        `> 💵 Biaya: *-Rp ${potionCost.toLocaleString("id-ID")}*\n` +
-        `> 📊 Sekarang: *${user.rpg.stamina}/${user.rpg.maxStamina}*\n` +
+        `⚡ Stamina: *+${restored}*\n` +
+        `💵 Biaya: *-Rp ${potionCost.toLocaleString("id-ID")}*\n` +
+        `📊 Sekarang: *${user.rpg.stamina}/${user.rpg.maxStamina}*\n` +
         ``,
       "⚡ STAMINA",
       "Restore",
@@ -74,11 +74,11 @@ async function handler(m, { sock }) {
   let txt = `⚡ *sTamina sTatus*\n\n`;
   txt += `*📊 *Info:*
 \n`;
-  txt += `> ⚡ Stamina: *${user.rpg.stamina}/${user.rpg.maxStamina}*\n`;
-  txt += `> 📊 [${staminaBar}]\n`;
+  txt += `⚡ Stamina: *${user.rpg.stamina}/${user.rpg.maxStamina}*\n`;
+  txt += `📊 [${staminaBar}]\n`;
   txt += `\n\n`;
-  txt += `> Isi stamina: \`${m.prefix}stamina isi\` (Rp 5.000)\n`;
-  txt += `> Stamina pulih otomatis setiap jam`;
+  txt += `Isi stamina: \`${m.prefix}stamina isi\` (Rp 5.000)\n`;
+  txt += `Stamina pulih otomatis setiap jam`;
 
   await sendRpgPreview(sock, m.chat, txt, "⚡ STAMINA", "Status", {
     quoted: m,

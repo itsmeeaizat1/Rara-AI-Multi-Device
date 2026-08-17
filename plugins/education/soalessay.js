@@ -257,7 +257,7 @@ async function handler(m, { sock, args }) {
     txt += `\n${"=".repeat(30)}\n`;
     txt += `Soal Essay ${session.current + 1}/${session.questions.length}\n\n`;
     txt += `${nextQ.q}\n\n`;
-    txt += `> Tulis jawabanmu atau ketik *skip* untuk lewati`;
+    txt += `Tulis jawabanmu atau ketik *skip* untuk lewati`;
     await m.reply(txt);
     await m.react("✅");
     return;
@@ -283,7 +283,7 @@ async function handler(m, { sock, args }) {
     txt += `${"=".repeat(30)}\n`;
     txt += `Soal Essay ${session.current + 1}/${session.questions.length}\n\n`;
     txt += `${nextQ.q}\n\n`;
-    txt += `> Tulis jawabanmu atau ketik *skip* untuk lewati`;
+    txt += `Tulis jawabanmu atau ketik *skip* untuk lewati`;
     await m.reply(txt);
     await m.react("✅");
     return;
@@ -325,7 +325,7 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}essay sd ipa 3\`\n`;
     txt += `\`${m.prefix}essay sma fisika 5\`\n`;
     txt += `\`${m.prefix}essay smk rpl 2\`\n\n`;
-    txt += `> _Skor berdasarkan kata kunci dalam jawabanmu_`;
+    txt += `_Skor berdasarkan kata kunci dalam jawabanmu_`;
     return await sendReplyWithNav(m, sock, txt, { commandName: "soalessay" });
   }
 
@@ -367,11 +367,11 @@ async function handler(m, { sock, args }) {
 
     const q = questions[0];
     let txt = `Soal Essay: ${JENJANG_NAMES[jenjang]} - ${mapel.toUpperCase()}\n\n`;
-    txt += `> ${questions.length} soal | tulis jawabanmu langsung\n`;
-    txt += `> Ketik *skip* untuk lewati, *stop* untuk berhenti\n\n`;
+    txt += `${questions.length} soal | tulis jawabanmu langsung\n`;
+    txt += `Ketik *skip* untuk lewati, *stop* untuk berhenti\n\n`;
     txt += `Soal 1/${questions.length}\n\n`;
     txt += `${q.q}\n\n`;
-    txt += `> Tulis jawabanmu di bawah ini`;
+    txt += `Tulis jawabanmu di bawah ini`;
 
     await m.reply(txt);
     await m.react("✅");

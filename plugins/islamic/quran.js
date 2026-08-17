@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
 
   if (!query) {
     return sendReplyWithNav(sock, m, `📖 *QURAN*\n\n` +
-        `> Masukkan nama surah\n\n` +
+        `Masukkan nama surah\n\n` +
         `\`Contoh: ${m.prefix}quran al fatihah\`\n` +
         `\`Contoh: ${m.prefix}quran al baqarah\``, "quran");
   }

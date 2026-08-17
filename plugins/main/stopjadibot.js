@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     if (!isJadibotActive(sender)) {
         return m.reply(
             `❌ *Kamu tidak menjadi jadibot*\n\n` +
-            `> Ketik \`${m.prefix}jadibot\` untuk menjadi bot`
+            `Ketik \`${m.prefix}jadibot\` untuk menjadi bot`
         )
     }
 
@@ -49,9 +49,9 @@ async function handler(m, { sock }) {
         await m.react('✅')
 
         await m.reply(`*Jadibot Dihentikan*\n\n` +
-            `> Nomor: *@${sender.split('@')[0]}*\n` +
-            `> Uptime: *${uptime}*\n` +
-            `> 💾 Session: *Tersimpan*\n\n` +
+            `Nomor: *@${sender.split('@')[0]}*\n` +
+            `Uptime: *${uptime}*\n` +
+            `💾 Session: *Tersimpan*\n\n` +
             `Ketik \`${m.prefix}jadibot\` untuk mengaktifkan kembali.`)
     } catch (e) {
         await m.reply(claraWrap("stopjadibot", `❌ Gagal menghentikan jadibot: ${e.message}`))

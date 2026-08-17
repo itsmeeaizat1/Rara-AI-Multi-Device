@@ -95,7 +95,7 @@ async function handler(m, { sock, db }) {
     `📂🗂️ *MENUCAT VARIANT*\n\n` +
     `Atur tampilan menu per kategori ketika user memilih kategori dari menu utama 📋✨\n` +
     `Variant aktif saat ini: *V${current} — ${VARIANTS[`v${current}`]?.name || "Unknown"}* 🎯\n\n` +
-    `> Pilih variant menucat dari tombol di bawah 👇`;
+    `Pilih variant menucat dari tombol di bawah 👇`;
 
   await sock.sendButton(
     m.chat,

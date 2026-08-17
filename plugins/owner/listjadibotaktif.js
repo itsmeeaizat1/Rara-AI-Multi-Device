@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     }
 
     let txt = `🟢 *Jadibot Aktif*\n\n`
-    txt += `> 📊 Total: *${active.length}* bot aktif\n\n`
+    txt += `📊 Total: *${active.length}* bot aktif\n\n`
 
     active.forEach((s, i) => {
         const uptime = formatUptime(Date.now() - s.startedAt)
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
         txt += `   ⏱️ *${uptime}* — 👤 @${owner}\n\n`
     })
 
-    txt += `> \`${m.prefix}stopalljadibot\` — Hentikan semua`
+    txt += `\`${m.prefix}stopalljadibot\` — Hentikan semua`
 
     const mentions = active.flatMap(s => [s.jid, s.ownerJid].filter(Boolean))
 

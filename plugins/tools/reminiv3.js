@@ -26,7 +26,7 @@ async function handler(m, { sock, args }) {
 
   if (!isImage) {
     let txt = `HD Image V3 - Pollinations AI\n\n`;
-    txt += `> Reply gambar untuk enhance (gratis)\n\n`;
+    txt += `Reply gambar untuk enhance (gratis)\n\n`;
     txt += `\`${m.prefix}reminiv3\`\n\n`;
     txt += `Opsi:\n`;
     txt += `1. \`${m.prefix}reminiv3 2\` (2x upscale)\n`;
@@ -85,9 +85,9 @@ async function handler(m, { sock, args }) {
     await m.react("✅");
 
     let caption = `HD V3 - Done\n`;
-    caption += `> Engine: Pollinations AI (flux)\n`;
-    caption += `> Source: image.pollinations.ai\n`;
-    if (enhance) caption += `> Mode: enhance + upscale`;
+    caption += `Engine: Pollinations AI (flux)\n`;
+    caption += `Source: image.pollinations.ai\n`;
+    if (enhance) caption += `Mode: enhance + upscale`;
 
     await sock.sendMessage(
       m.chat,
@@ -98,7 +98,7 @@ async function handler(m, { sock, args }) {
     console.error("[HD3] Error:", e.message);
     let txt = `Gagal enhance gambar!\n\n`;
     txt += `Error: ${e.message}\n\n`;
-    txt += `> Coba \`${m.prefix}remini\` atau \`${m.prefix}reminiv2\``;
+    txt += `Coba \`${m.prefix}remini\` atau \`${m.prefix}reminiv2\``;
     await m.reply(claraWrap("reminiv3", txt));
   }
 }

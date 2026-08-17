@@ -66,8 +66,8 @@ async function handler(m, { sock }) {
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
         return m.reply(claraWrap("deladmin", `❌ *Akses Ditolak*\n\n` +
-            `> Kamu tidak punya akses ke *${serverLabel}*\n` +
-            `> Role kamu: *${userRole || 'Tidak ada'}*`))
+            `Kamu tidak punya akses ke *${serverLabel}*\n` +
+            `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
     
     const serverConfig = getServerConfig(pteroConfig, serverKey)
@@ -77,9 +77,9 @@ async function handler(m, { sock }) {
         const available = getAvailableServers(pteroConfig)
         let txt = `⚠️ *sErver ${serverLabel} Belum Konfig*\n\n`
         if (available.length > 0) {
-            txt += `> Server tersedia: *${available.join(', ')}*`
+            txt += `Server tersedia: *${available.join(', ')}*`
         } else {
-            txt += `> Isi di \`config.js\` bagian \`pterodactyl.server1\``
+            txt += `Isi di \`config.js\` bagian \`pterodactyl.server1\``
         }
         return m.reply(claraWrap("deladmin", txt))
     }
@@ -88,8 +88,8 @@ async function handler(m, { sock }) {
     
     if (!userId || isNaN(userId)) {
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}${m.command} userid\`\n\n` +
-            `> Lihat user ID dengan \`${m.prefix}listadmin${serverVersion}\``, "deladmin")
+            `\`${m.prefix}${m.command} userid\`\n\n` +
+            `Lihat user ID dengan \`${m.prefix}listadmin${serverVersion}\``, "deladmin")
     }
     
     try {
@@ -112,9 +112,9 @@ async function handler(m, { sock }) {
         })
         
         return m.reply(`✅ *Admin Dihapus [${serverLabel}]*\n\n` +
-            `> User ID: \`${userId}\`\n` +
-            `> Username: \`${user.username}\`\n` +
-            `> Email: \`${user.email}\``)
+            `User ID: \`${userId}\`\n` +
+            `Username: \`${user.username}\`\n` +
+            `Email: \`${user.email}\``)
         
     } catch (err) {
         return m.reply(claraWrap("deladmin", te(m.prefix, m.command, m.pushName), "error"))

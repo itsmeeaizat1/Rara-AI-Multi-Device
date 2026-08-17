@@ -151,7 +151,7 @@ async function handler(m, { sock, config: botConfig }) {
       text += "\n" + "MATERIAL DIBUTUHKAN:\n";
       for (const [item, qty] of Object.entries(req.items)) {
         const have = user.inventory?.[item] || 0;
-        text += `> ${item}: *${have}/${qty}* ${have >= qty ? "✅" : "❌"}\n`;
+        text += `${item}: *${have}/${qty}* ${have >= qty ? "✅" : "❌"}\n`;
       }
 
       const canEvolve = goldOk && levelOk && itemsOk;
@@ -221,7 +221,7 @@ async function handler(m, { sock, config: botConfig }) {
         "MATERIAL DIBUTUHKAN:\n" +
         Object.entries(req.items).map(([item, qty]) => {
           const have = user.inventory?.[item] || 0;
-          return `> ${item}: *${have}/${qty}* ${have >= qty ? "✅" : "❌"}`;
+          return `${item}: *${have}/${qty}* ${have >= qty ? "✅" : "❌"}`;
         }).join("\n") +
         "\n\n" + tipText("Cari material lewat berburu, dungeon, atau expedition"),
         "petevolve"

@@ -86,27 +86,27 @@ async function handler(m, { sock }) {
         let idx = 1;
         if (imageKeys.length > 0) {
             listText += `*🖼️ Image Assets:*\n`;
-            imageKeys.forEach(k => { listText += `> ${idx++}. ${k}\n`; });
+            imageKeys.forEach(k => { listText += `${idx++}. ${k}\n`; });
             listText += `\n`;
         }
         if (videoKeys.length > 0) {
             listText += `*🎥 Video Assets:*\n`;
-            videoKeys.forEach(k => { listText += `> ${idx++}. ${k}\n`; });
+            videoKeys.forEach(k => { listText += `${idx++}. ${k}\n`; });
             listText += `\n`;
         }
         if (audioKeys.length > 0) {
             listText += `*🎵 Audio Assets:*\n`;
-            audioKeys.forEach(k => { listText += `> ${idx++}. ${k}\n`; });
+            audioKeys.forEach(k => { listText += `${idx++}. ${k}\n`; });
             listText += `\n`;
         }
         if (fontKeys.length > 0) {
             listText += `*🔤 Font Assets:*\n`;
-            fontKeys.forEach(k => { listText += `> ${idx++}. ${k}\n`; });
+            fontKeys.forEach(k => { listText += `${idx++}. ${k}\n`; });
             listText += `\n`;
         }
         if (otherKeys.length > 0) {
             listText += `*📁 Other Assets:*\n`;
-            otherKeys.forEach(k => { listText += `> ${idx++}. ${k}\n`; });
+            otherKeys.forEach(k => { listText += `${idx++}. ${k}\n`; });
             listText += `\n`;
         }
 

@@ -42,10 +42,10 @@ async function handler(m, { sock }) {
     const saluranName = result?.name || name;
     await m.react("✅");
     return m.reply(`📢 *sAluran Dibuat*\n\n` +
-        `> Nama: ${saluranName}\n` +
-        (description ? `> Deskripsi: ${description}\n` : "") +
-        `> ID: ${saluranId}\n` +
-        `> Subscribers: ${result?.subscribers || 0}\n\n` +
+        `Nama: ${saluranName}\n` +
+        (description ? `Deskripsi: ${description}\n` : "") +
+        `ID: ${saluranId}\n` +
+        `Subscribers: ${result?.subscribers || 0}\n\n` +
         `_Saluran ini bisa dikonfigurasi di config.saluran.id_`);
   } catch (err) {
     return m.reply(claraWrap("buatsaluran", `❌ Gagal membuat saluran: ${err.message}`));

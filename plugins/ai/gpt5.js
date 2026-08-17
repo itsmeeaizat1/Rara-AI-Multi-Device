@@ -27,10 +27,10 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `🤖 *GPT-4.1 Nano*\n\n` +
         `Tanya apa aja ke AI, nanti dijawab pakai model GPT-4.1 Nano.\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}gpt5 <pertanyaan>*\n\n` +
+        `*${m.prefix}gpt5 <pertanyaan>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}gpt5 Apa itu quantum computing?*\n` +
-        `> *${m.prefix}gpt5 Buat puisi tentang Indonesia*\n\n` +
+        `*${m.prefix}gpt5 Apa itu quantum computing?*\n` +
+        `*${m.prefix}gpt5 Buat puisi tentang Indonesia*\n\n` +
         `_Jawaban bisa agak lama, sabar ya_`, "gpt5");
   }
 

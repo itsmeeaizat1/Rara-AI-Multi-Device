@@ -120,9 +120,9 @@ async function handler(m, { sock }) {
     if (command === 'ephoto') {
         const effectList = Object.keys(EFFECT_URLS).map(e => `• \`${m.prefix}${e}\``).join('\n')
         return m.reply(`🎨 *Ephoto Effects*\n\n` +
-            `> Buat efek text keren!\n\n` +
+            `Buat efek text keren!\n\n` +
             `╭┈┈⬡「 📋 *Daftar Efek* 」\n${effectList}\n╰┈┈┈┈┈┈┈┈⬡\n\n` +
-            `> *Contoh:* ${m.prefix}glitchtext Nova-AI`)
+            `*Contoh:* ${m.prefix}glitchtext Nova-AI`)
     }
     
     if (!text) {

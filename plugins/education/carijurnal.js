@@ -31,7 +31,7 @@ async function handler(m, { sock, args }) {
     txt += `Contoh:\n`;
     txt += `\`${m.prefix}carijurnal machine learning\`\n`;
     txt += `\`${m.prefix}carijurnal deep learning 10\`\n\n`;
-    txt += `> _OpenAlex: 250M+ paper, free, no API key_`;
+    txt += `_OpenAlex: 250M+ paper, free, no API key_`;
     return await sendReplyWithNav(m, sock, txt, { commandName: "carijurnal" });
   }
 
@@ -63,8 +63,8 @@ async function handler(m, { sock, args }) {
     const total = res.data.meta?.count || results.length;
 
     let txt = `Hasil Pencarian Jurnal\n\n`;
-    txt += `> "${searchQuery}"\n`;
-    txt += `> ${total.toLocaleString()} paper ditemukan\n\n`;
+    txt += `"${searchQuery}"\n`;
+    txt += `${total.toLocaleString()} paper ditemukan\n\n`;
 
     for (let i = 0; i < results.length; i++) {
       const w = results[i];
@@ -99,7 +99,7 @@ async function handler(m, { sock, args }) {
       txt += `\n`;
     }
 
-    txt += `> _Sortir by cited count | OpenAlex API_`;
+    txt += `_Sortir by cited count | OpenAlex API_`;
 
     await m.reply(txt);
     await m.react("✅");

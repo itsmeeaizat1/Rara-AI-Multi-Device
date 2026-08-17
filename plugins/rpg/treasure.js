@@ -80,10 +80,10 @@ async function handler(m, { sock }) {
     if (availableChests.length === 0) {
       txt += `Yah kak, kamu belum punya peti harta satupun nih... 😭\n\n`;
       txt += `💡 *Tips dapet peti:*\n`;
-      txt += `> ⚔️ Eksplorasi \`.adventure\` / Dungeon\n`;
-      txt += `> 👹 Bunuh Boss\n`;
-      txt += `> 🗓️ Selesaikan \`.daily\` / \`.weekly\`\n`;
-      txt += `> 🛒 Beli di \`.shop\``;
+      txt += `⚔️ Eksplorasi \`.adventure\` / Dungeon\n`;
+      txt += `👹 Bunuh Boss\n`;
+      txt += `🗓️ Selesaikan \`.daily\` / \`.weekly\`\n`;
+      txt += `🛒 Beli di \`.shop\``;
     } else {
       txt += `Wah peti kamu ada banyak nih! Mau buka yang mana kak?\n\n`;
       for (const [key, chest] of availableChests) {

@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
   txt += `💔 @${spouseJid.split("@")[0]}\n\n`;
   txt += `😭 *RESMI BERAKHIR! KINI KALIAN KEMBALI JOMBLO!* 😭\n\n`;
   txt += `💸 Biaya Pengacara/Sidang: *Rp -${divorceCost.toLocaleString("id-ID")}*\n\n`;
-  txt += `> _"Sudah sudah... nangisnya di pojokan aja. Life must go on..." - Hakim Bot_ 🥀🚬`;
+  txt += `_"Sudah sudah... nangisnya di pojokan aja. Life must go on..." - Hakim Bot_ 🥀🚬`;
 
   await sendReplyWithNav(sock, m, txt, "divorce");
 }

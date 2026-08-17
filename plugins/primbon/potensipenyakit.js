@@ -38,10 +38,10 @@ async function handler(m, { sock }) {
         
         const result = data.data
         const response = `🏥 *Potensi Penyakit*\n\n` +
-            `> Tanggal: *${tgl}-${bln}-${thn}*\n\n` +
+            `Tanggal: *${tgl}-${bln}-${thn}*\n\n` +
             `📊 *Elemen:*\n${result.sektor}\n\n` +
             `⚠️ *Potensi:*\n${result.elemen}\n\n` +
-            `> _${result.catatan}_`
+            `_${result.catatan}_`
         
         m.react('✅')
         await m.reply(response)

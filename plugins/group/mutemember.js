@@ -46,12 +46,12 @@ async function handler(m, { sock }) {
 
     if (!targetJid) {
         return sendReplyWithNav(sock, m, `🔇 *MUTE MEMBER*\n\n` +
-            `> Bisukan member tertentu di grup ini\n` +
-            `> Pesan member yang dimute akan dihapus oleh bot\n\n` +
+            `Bisukan member tertentu di grup ini\n` +
+            `Pesan member yang dimute akan dihapus oleh bot\n\n` +
             `\`Contoh:\`\n` +
-            `> ${m.prefix}mutemember @user\n` +
-            `> ${m.prefix}mutemember 6281234567890\n` +
-            `> Reply pesan member + ${m.prefix}mutemember`, "mutemember")
+            `${m.prefix}mutemember @user\n` +
+            `${m.prefix}mutemember 6281234567890\n` +
+            `Reply pesan member + ${m.prefix}mutemember`, "mutemember")
     }
 
     const targetNumber = targetJid.replace(/@.+/g, '')
@@ -88,8 +88,8 @@ async function handler(m, { sock }) {
         `┃ 🔇 sTatus: \`Muted\`\n` +
         `┃ 📊 Total Mute: \`${mutedMembers.length}\` Member\n` +
         `╰┈┈⬡\n\n` +
-        `> Semua pesan dari member ini akan dihapus otomatis\n` +
-        `> Gunakan \`${m.prefix}unmutemember\` untuk unmute`)
+        `Semua pesan dari member ini akan dihapus otomatis\n` +
+        `Gunakan \`${m.prefix}unmutemember\` untuk unmute`)
 }
 
 function isMutedMember(groupJid, senderJid, db) {

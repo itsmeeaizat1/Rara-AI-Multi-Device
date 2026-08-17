@@ -70,8 +70,8 @@ async function handler(m, { sock }) {
         text += `╰┈┈⬡\n\n`
         
         if (onlineMembers.length === 0) {
-            text += `> _Tidak ada member yang terdeteksi online_\n`
-            text += `> _Pastikan member telah membuka WA_`
+            text += `_Tidak ada member yang terdeteksi online_\n`
+            text += `_Pastikan member telah membuka WA_`
         } else {
             text += `╭┈┈⬡「 🟢 *Member Online* 」\n`
             
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
             }
             
             text += `╰┈┈⬡\n\n`
-            text += `> 🟢 Online | ⌨️ Mengetik | 🎤 Rekam Audio`
+            text += `🟢 Online | ⌨️ Mengetik | 🎤 Rekam Audio`
         }
         
         m.react('✅')

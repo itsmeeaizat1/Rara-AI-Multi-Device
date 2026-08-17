@@ -65,8 +65,8 @@ async function handler(m, { sock }) {
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
         return m.reply(claraWrap("listadmin", `❌ *Akses Ditolak*\n\n` +
-            `> Kamu tidak punya akses ke *${serverLabel}*\n` +
-            `> Role kamu: *${userRole || 'Tidak ada'}*`))
+            `Kamu tidak punya akses ke *${serverLabel}*\n` +
+            `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
     
     const serverConfig = getServerConfig(pteroConfig, serverKey)
@@ -76,9 +76,9 @@ async function handler(m, { sock }) {
         const available = getAvailableServers(pteroConfig)
         let txt = `⚠️ *sErver ${serverLabel} Belum Konfig*\n\n`
         if (available.length > 0) {
-            txt += `> Server tersedia: *${available.join(', ')}*`
+            txt += `Server tersedia: *${available.join(', ')}*`
         } else {
-            txt += `> Isi di \`config.js\` bagian \`pterodactyl.server1\``
+            txt += `Isi di \`config.js\` bagian \`pterodactyl.server1\``
         }
         return m.reply(claraWrap("listadmin", txt))
     }
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
         }
         
         let txt = `📋 *Daftar Admin [${serverLabel}]*\n\n`
-        txt += `> Total: *${admins.length}* admin\n\n`
+        txt += `Total: *${admins.length}* admin\n\n`
         
         admins.forEach((u, i) => {
             const attr = u.attributes

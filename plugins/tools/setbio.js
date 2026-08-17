@@ -22,8 +22,8 @@ async function handler(m, { sock }) {
     
     if (!newBio && m.args?.length === 0) {
         await sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
-            `> \`${m.prefix}setbio Bio bot baru\`\n` +
-            `> \`${m.prefix}setbio clear\` - Hapus bio`, "setbio")
+            `\`${m.prefix}setbio Bio bot baru\`\n` +
+            `\`${m.prefix}setbio clear\` - Hapus bio`, "setbio")
         return
     }
     
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     
     if (bioToSet.length > 139) {
         await m.reply(claraWrap("setbio", `⚠️ *VALIDAsI*\n\n` +
-            `> Bio maksimal 139 karakter.`))
+            `Bio maksimal 139 karakter.`))
         return
     }
     
@@ -40,17 +40,17 @@ async function handler(m, { sock }) {
         
         if (bioToSet) {
             await m.reply(claraWrap("setbio", `✅ *BIO BOT DIUBAH*\n\n` +
-                `> Bio bot sekarang:\n` +
-                `> _${bioToSet}_`))
+                `Bio bot sekarang:\n` +
+                `_${bioToSet}_`))
         } else {
             await m.reply(claraWrap("setbio", `✅ *BIO BOT DIHAPUs*\n\n` +
-                `> Bio bot berhasil dihapus!`))
+                `Bio bot berhasil dihapus!`))
         }
     } catch (error) {
         await m.reply(
             `❌ *GAGAL*\n\n` +
-            `> Tidak dapat mengubah bio bot.\n` +
-            `> _${error.message}_`
+            `Tidak dapat mengubah bio bot.\n` +
+            `_${error.message}_`
         )
     }
 }

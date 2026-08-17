@@ -36,8 +36,8 @@ async function handler(m, { sock, db }) {
         await db.save()
 
         await m.reply(claraWrap("V${id}", `✅ Owner type diubah ke *V${id}*\n\n` +
-            `> *${VARIANTS[id].name}*\n` +
-            `> _${VARIANTS[id].desc}_`))
+            `*${VARIANTS[id].name}*\n` +
+            `_${VARIANTS[id].desc}_`))
         return
     }
 

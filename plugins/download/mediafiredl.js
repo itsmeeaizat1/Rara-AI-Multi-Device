@@ -36,9 +36,9 @@ async function handler(m, { sock }) {
 
   if (!url) {
     return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-        `> \`${m.prefix}mfdl <url>\`\n\n` +
-        `> Contoh:\n` +
-        `> \`${m.prefix}mfdl https://www.mediafire.com/file/xxx\``, "mediafiredl");
+        `\`${m.prefix}mfdl <url>\`\n\n` +
+        `Contoh:\n` +
+        `\`${m.prefix}mfdl https://www.mediafire.com/file/xxx\``, "mediafiredl");
   }
 
   if (!url.match(/mediafire\.com/i)) {

@@ -24,9 +24,9 @@ async function handler(m, { sock }) {
     
     if (!query) {
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}applemusic <query>\`\n\n` +
-            `> Contoh:\n` +
-            `> \`${m.prefix}applemusic Best Friend\``, "applemusic")
+            `\`${m.prefix}applemusic <query>\`\n\n` +
+            `Contoh:\n` +
+            `\`${m.prefix}applemusic Best Friend\``, "applemusic")
     }
     
     try {
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
         const tracks = res.data.result.slice(0, 5)
         
         let txt = `🍎 *Apple Music sEarch*\n\n`
-        txt += `> Query: *${query}*\n\n`                                                                                    
+        txt += `Query: *${query}*\n\n`                                                                                    
         
         tracks.forEach((t, i) => {
             txt += `*${i + 1}.* \`\`\`${t.title}\`\`\`\n`

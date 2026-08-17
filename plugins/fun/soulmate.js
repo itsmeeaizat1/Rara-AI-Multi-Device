@@ -67,11 +67,11 @@ async function handler(m, { sock }) {
     if (!text || !text.includes('|')) {
         return m.reply(
             `💫 *sOul Match*\n\n` +
-            `> Cek kecocokan jiwa 2 orang!\n\n` +
+            `Cek kecocokan jiwa 2 orang!\n\n` +
             `*Format:*\n` +
-            `> \`.soulmatch nama1|nama2\`\n\n` +
+            `\`.soulmatch nama1|nama2\`\n\n` +
             `*Contoh:*\n` +
-            `> \`.soulmatch Raiden|Mei\``
+            `\`.soulmatch Raiden|Mei\``
         )
     }
     

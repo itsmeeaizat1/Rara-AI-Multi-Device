@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
   msg += `╎❏ Biaya admin: *${formatNumber(fee)} limit (5%)*\n`;
   msg += `╎❏ Total dipotong: *${formatNumber(totalDeduct)} limit*\n`;
   msg += `╚┈┈┈┈┈┈┈┈┈┈┈┈❖\n\n`;
-  msg += `> Sisa limit kamu: ${formatNumber(senderEnergi - totalDeduct)}`;
+  msg += `Sisa limit kamu: ${formatNumber(senderEnergi - totalDeduct)}`;
 
   return sendReplyWithNav(sock, m, msg, "transferlimit");
 }

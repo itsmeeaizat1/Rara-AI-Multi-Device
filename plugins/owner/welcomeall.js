@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     
     if (!action || !['on', 'off'].includes(action)) {
         return m.resendReplyWithNav(sock, m, `👋 *Welcome Global*\n\n` +
-            `> Aktifkan/nonaktifkan welcome di SEMUA grup sekaligus\n\n` +
+            `Aktifkan/nonaktifkan welcome di SEMUA grup sekaligus\n\n` +
             `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
             `┃ ${m.prefix}welcomeall on\n` +
             `┃ ${m.prefix}welcomeall off\n` +
@@ -53,13 +53,13 @@ async function handler(m, { sock }) {
                 `┃ 🌐 Total Grup: *${count}*\n` +
                 `┃ ✅ Welcome: *AKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-                `> Semua member baru akan disambut otomatis!`))       } else {
+                `Semua member baru akan disambut otomatis!`))       } else {
             return m.reply(claraWrap("welcomeall", `❌ *Welcome Global Off*\n\n` +
                 `╭┈┈⬡「 📊 *Result* 」\n` +
                 `┃ 🌐 Total Grup: *${count}*\n` +
                 `┃ ❌ Welcome: *NONAKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-                `> Welcome dinonaktifkan di semua grup.`))
+                `Welcome dinonaktifkan di semua grup.`))
         }
     } catch (error) {
         console.error('[WelcomeAll] Error:', error.message)

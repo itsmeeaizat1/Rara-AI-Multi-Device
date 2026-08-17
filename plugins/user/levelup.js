@@ -30,21 +30,21 @@ function handler(m, { sock }) {
         user.settings.levelupNotif = true
         db.save()
         return m.reply(claraWrap("Level Up Notif", `✅ *Level Up Notif*\n\n` +
-            `> Status: *ON* ✅\n` +
-            `> Kamu akan menerima notifikasi saat naik level!`))
+            `Status: *ON* ✅\n` +
+            `Kamu akan menerima notifikasi saat naik level!`))
     }
     
     if (sub === 'off') {
         user.settings.levelupNotif = false
         db.save()
         return m.reply(claraWrap("Level Up Notif", `❌ *Level Up Notif*\n\n` +
-            `> Status: *OFF* ❌\n` +
-            `> Notifikasi level up dinonaktifkan.`))
+            `Status: *OFF* ❌\n` +
+            `Notifikasi level up dinonaktifkan.`))
     }
     
     const status = user.settings.levelupNotif !== false ? 'ON ✅' : 'OFF ❌'
     return m.reply(claraWrap("Level Up Notif", `🔔 *Level Up Notif*\n\n` +
-        `> Status saat ini: *${status}*\n\n` +
+        `Status saat ini: *${status}*\n\n` +
         `╭┈┈⬡「 📋 *Usage* 」\n` +
         `┃ > \`.levelup on\` - Aktifkan\n` +
         `┃ > \`.levelup off\` - Nonaktifkan\n` +

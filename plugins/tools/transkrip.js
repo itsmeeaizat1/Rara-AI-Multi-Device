@@ -53,15 +53,15 @@ async function handler(m, { sock }) {
     const isAudio = quoted.type === 'audioMessage' || /audio/.test(quoted.mimetype || '');
     if (!isAudio) {
         return sendReplyWithNav(sock, m, `🎤 *TRANsKRIP*\n\n` +
-            `> Reply voice note atau audio untuk mengonversi ke teks\n` +
-            `> Contoh: reply VN → ketik \`${m.prefix}transkrip\``, "transkrip");
+            `Reply voice note atau audio untuk mengonversi ke teks\n` +
+            `Contoh: reply VN → ketik \`${m.prefix}transkrip\``, "transkrip");
     }
     const groqKey = config.APIkey?.groq;
     if (!groqKey) {
         return sendReplyWithNav(sock, m, `❌ *GAGAL*\n\n` +
-            `> API Key Groq belum diatur\n` +
-            `> Set di config.js → APIkey.groq\n` +
-            `> Gratis di https://console.groq.com`, "transkrip");
+            `API Key Groq belum diatur\n` +
+            `Set di config.js → APIkey.groq\n` +
+            `Gratis di https://console.groq.com`, "transkrip");
     }
     m.react('🕐');
     const tmpDir = path.join(process.cwd(), 'tmp');
@@ -88,9 +88,9 @@ async function handler(m, { sock }) {
             `╎❏ ${text}\n` +
             `╎❏ \n` +
             `╚┈┈┈┈┈┈┈┈┈❖\n\n` +
-            `> 🤖 Model: Whisper Large V3\n` +
-            `> 🌐 Bahasa: Indonesia\n` +
-            `> 📊 Ukuran: ~${(buffer.length / 1024).toFixed(1)} KB`
+            `🤖 Model: Whisper Large V3\n` +
+            `🌐 Bahasa: Indonesia\n` +
+            `📊 Ukuran: ~${(buffer.length / 1024).toFixed(1)} KB`
         );
         m.react('✅');
     } catch (error) {

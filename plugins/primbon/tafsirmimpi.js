@@ -37,8 +37,8 @@ async function handler(m, { sock }) {
         
         const r = data.data
         let response = `🌙 *Tafsir Mimpi*\n\n`
-        response += `> Kata kunci: *${r.keyword}*\n`
-        response += `> Ditemukan: *${r.total} hasil*\n\n`
+        response += `Kata kunci: *${r.keyword}*\n`
+        response += `Ditemukan: *${r.total} hasil*\n\n`
         
         r.hasil.slice(0, 10).forEach((h, i) => {
             response += `*${i+1}. ${h.mimpi}*\n> ${h.tafsir}\n\n`

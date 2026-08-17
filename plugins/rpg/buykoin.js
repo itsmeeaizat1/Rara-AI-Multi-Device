@@ -31,14 +31,14 @@ async function handler(m, { sock }) {
 
   if (!amountStr) {
     let txt = `💱 *Buy Koin*\n\n`;
-    txt += `> Tukar EXP menjadi Koin!\n\n`;
+    txt += `Tukar EXP menjadi Koin!\n\n`;
     txt += `*📊 Kurs:*\n`;
-    txt += `> 💎 ${EXP_PER_KOIN} EXP = 1 Koin\n\n`;
+    txt += `💎 ${EXP_PER_KOIN} EXP = 1 Koin\n\n`;
     txt += `*📋 Saldo:*\n`;
-    txt += `> 🚄 EXP: *${(user.exp || 0).toLocaleString("id-ID")}*\n`;
-    txt += `> 💰 Koin: *${(user.koin || 0).toLocaleString("id-ID")}*\n\n`;
-    txt += `> Contoh: \`.buykoin 10000\`\n`;
-    txt += `> Akan menggunakan ${10000 * EXP_PER_KOIN} EXP untuk 10.000 Koin`;
+    txt += `🚄 EXP: *${(user.exp || 0).toLocaleString("id-ID")}*\n`;
+    txt += `💰 Koin: *${(user.koin || 0).toLocaleString("id-ID")}*\n\n`;
+    txt += `Contoh: \`.buykoin 10000\`\n`;
+    txt += `Akan menggunakan ${10000 * EXP_PER_KOIN} EXP untuk 10.000 Koin`;
 
     return await sendReplyWithNav(sock, m, txt, "buykoin");
   }
@@ -59,9 +59,9 @@ async function handler(m, { sock }) {
   if ((user.exp || 0) < expNeeded) {
     const maxPossible = Math.floor((user.exp || 0) / EXP_PER_KOIN);
     return sendReplyWithNav(sock, m, `❌ *EXP tidak cukup!*\n\n` +
-        `> Dibutuhkan: *${expNeeded.toLocaleString("id-ID")} EXP*\n` +
-        `> EXP kamu: *${(user.exp || 0).toLocaleString("id-ID")} EXP*\n\n` +
-        `> Maksimal: *${maxPossible.toLocaleString("id-ID")} Koin*`, "buykoin");
+        `Dibutuhkan: *${expNeeded.toLocaleString("id-ID")} EXP*\n` +
+        `EXP kamu: *${(user.exp || 0).toLocaleString("id-ID")} EXP*\n\n` +
+        `Maksimal: *${maxPossible.toLocaleString("id-ID")} Koin*`, "buykoin");
   }
 
   // Use manual user update instead of updateKoin/updateExp to do batch update
@@ -77,11 +77,11 @@ async function handler(m, { sock }) {
 
   let txt = `💱 *Tukar Berhasil!*\n\n`;
   txt += `*📋 Detail:*\n`;
-  txt += `> 🚄 EXP: *-${expNeeded.toLocaleString("id-ID")}*\n`;
-  txt += `> 💰 Koin: *+${koinAmount.toLocaleString("id-ID")}*\n\n`;
+  txt += `🚄 EXP: *-${expNeeded.toLocaleString("id-ID")}*\n`;
+  txt += `💰 Koin: *+${koinAmount.toLocaleString("id-ID")}*\n\n`;
   txt += `*📊 Saldo Sekarang:*\n`;
-  txt += `> 🚄 EXP: *${newExp.toLocaleString("id-ID")}*\n`;
-  txt += `> 💰 Koin: *${newKoin.toLocaleString("id-ID")}*`;
+  txt += `🚄 EXP: *${newExp.toLocaleString("id-ID")}*\n`;
+  txt += `💰 Koin: *${newKoin.toLocaleString("id-ID")}*`;
 
   await sendReplyWithNav(sock, m, txt, "buykoin");
 }

@@ -277,11 +277,11 @@ function buildConfirmationPrompt(session, user) {
     `${buildConfirmationRewardBlock(user)}\n\n` +
     `🛠️ Kalau ada yang salah, kamu bisa revisi per bagian.\n\n` +
     `*Reply pesan ini dengan:*\n` +
-    `> \`ya\` untuk simpan\n` +
-    `> \`revisi nama\` untuk ubah nama\n` +
-    `> \`revisi umur\` untuk ubah umur\n` +
-    `> \`revisi gender\` untuk ubah gender\n` +
-    `> \`batal\` untuk batalkan`
+    `\`ya\` untuk simpan\n` +
+    `\`revisi nama\` untuk ubah nama\n` +
+    `\`revisi umur\` untuk ubah umur\n` +
+    `\`revisi gender\` untuk ubah gender\n` +
+    `\`batal\` untuk batalkan`
   );
 }
 
@@ -293,7 +293,7 @@ async function handler(m, { sock }) {
     return m.reply(
       `✅ Kamu sudah terdaftar!\n\n` +
       `${buildUserDataBlock(user.regName, user.regAge, user.regGender, user.regSerial)}\n\n` +
-      `> Untuk unregister: \`${m.prefix}unreg\``,
+      `Untuk unregister: \`${m.prefix}unreg\``,
     );
   }
 
@@ -365,8 +365,8 @@ async function handler(m, { sock }) {
   if (getRegistrationSessionEntry(m.sender).session) {
     return m.reply(
       `📝 Masih ada sesi pendaftaran aktif!\n\n` +
-      `> Reply pesan terakhir bot untuk melanjutkan\n` +
-      `> Atau ketik: \`${m.prefix}bataldaftar\``,
+      `Reply pesan terakhir bot untuk melanjutkan\n` +
+      `Atau ketik: \`${m.prefix}bataldaftar\``,
     );
   }
 
@@ -435,10 +435,10 @@ async function registrationAnswerHandler(m, sock) {
       m,
       `🎂 *Pertanyaan 2/4*\n\n` +
       `Halo *${name}* 👋\n\n` +
-      `> Berapa umurmu?\n\n` +
+      `Berapa umurmu?\n\n` +
       `📌 Umur hanya boleh *1 - 100* tahun\n` +
       `📩 Reply pesan ini dengan angka umur kamu\n\n` +
-      `> Contoh: \`17\``,
+      `Contoh: \`17\``,
     );
 
     session.promptId = sent?.key?.id || session.promptId;
@@ -462,7 +462,7 @@ async function registrationAnswerHandler(m, sock) {
       sock,
       m,
       `� *Pertanyaan 3/4*\n\n` +
-      `> Kamu cowo atau cewe?\n\n` +
+      `Kamu cowo atau cewe?\n\n` +
       `┃ � *Cowo* / *Cowok* / *Laki-laki* / *L*\n` +
       `┃ � *Cewe* / *Cewek* / *Perempuan* / *P*\n\n` +
       `📩 Reply pesan ini dengan jawabanmu`,
@@ -484,8 +484,8 @@ async function registrationAnswerHandler(m, sock) {
     if (!gender) {
       await m.reply(
         `❌ Gender tidak valid!\n\n` +
-        `> Balas dengan: *Cowo* / *Cowok* / *Laki-laki* / *L*\n` +
-        `> Atau: *Cewe* / *Cewek* / *Perempuan* / *P*`,
+        `Balas dengan: *Cowo* / *Cowok* / *Laki-laki* / *L*\n` +
+        `Atau: *Cewe* / *Cewek* / *Perempuan* / *P*`,
       );
       return true;
     }
@@ -562,8 +562,8 @@ async function registrationAnswerHandler(m, sock) {
     if (!gender) {
       await m.reply(
         `❌ Gender tidak valid!\n\n` +
-        `> Balas dengan: *Cowo* / *Cowok* / *Laki-laki* / *L*\n` +
-        `> Atau: *Cewe* / *Cewek* / *Perempuan* / *P*`,
+        `Balas dengan: *Cowo* / *Cowok* / *Laki-laki* / *L*\n` +
+        `Atau: *Cewe* / *Cewek* / *Perempuan* / *P*`,
       );
       return true;
     }
@@ -590,7 +590,7 @@ async function registrationAnswerHandler(m, sock) {
         sock,
         m,
         `📛 *Revisi Nama*\n\n` +
-        `> Kirim nama yang benar ya.\n\n` +
+        `Kirim nama yang benar ya.\n\n` +
         `📩 Reply pesan ini dengan nama baru kamu`,
       );
 
@@ -607,7 +607,7 @@ async function registrationAnswerHandler(m, sock) {
         sock,
         m,
         `🎂 *Revisi Umur*\n\n` +
-        `> Kirim umur yang benar ya.\n\n` +
+        `Kirim umur yang benar ya.\n\n` +
         `📌 Umur hanya boleh *1 - 100* tahun\n` +
         `📩 Reply pesan ini dengan angka umur baru kamu`,
       );
@@ -627,7 +627,7 @@ async function registrationAnswerHandler(m, sock) {
         sock,
         m,
         `👤 *Revisi Gender*\n\n` +
-        `> Pilih gender yang benar ya.\n\n` +
+        `Pilih gender yang benar ya.\n\n` +
         `┃ � *Cowo* / *Cowok* / *Laki-laki* / *L*\n` +
         `┃ 👧 *Cewe* / *Cewek* / *Perempuan* / *P*\n\n` +
         `📩 Reply pesan ini dengan jawabanmu`,
@@ -642,7 +642,7 @@ async function registrationAnswerHandler(m, sock) {
     ) {
       await m.reply(
         `❌ Revisi belum spesifik!\n\n` +
-        `> Reply: \`revisi nama\`, \`revisi umur\`, atau \`revisi gender\``,
+        `Reply: \`revisi nama\`, \`revisi umur\`, atau \`revisi gender\``,
       );
       return true;
     }

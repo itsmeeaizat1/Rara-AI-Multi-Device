@@ -65,7 +65,7 @@ function startDailyLimitReset(options = {}) {
               `Limit kamu sudah direset!\n` +
               `\u2022 User gratis: ${defaultLimit} limit\n` +
               `\u2022 User premium: ${premiumLimit} limit\n\n` +
-              `> ${resetCount} user telah direset`;
+              `${resetCount} user telah direset`;
 
             let sent = 0;
             for (const jid of Object.keys(users)) {

@@ -44,7 +44,7 @@ async function handler(m) {
 
         await m.react('✅')
         await m.reply(claraWrap("sampah", `🗑️ *TEMP CLEANED!*\n\n` +
-            `> Total file/folder dihapus: *${deleted}*`))
+            `Total file/folder dihapus: *${deleted}*`))
 
     } catch (error) {
         await m.reply(claraWrap("sampah", te(m.prefix, m.command, m.pushName), "error"))

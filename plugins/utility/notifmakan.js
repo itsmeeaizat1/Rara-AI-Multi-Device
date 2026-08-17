@@ -41,12 +41,12 @@ function handler(m, { sock }) {
         }
 
         info += `\n*📋 Cara Pakai:*\n`
-        info += `> \`${m.prefix}notifmakan on 07.00,12.00,19.00\`\n`
-        info += `> \`${m.prefix}notifmakan on 07.00,12.00 Nasi Goreng\`\n`
-        info += `> \`${m.prefix}notifmakan edit 08.00,13.00\`\n`
-        info += `> \`${m.prefix}notifmakan off\`\n`
+        info += `\`${m.prefix}notifmakan on 07.00,12.00,19.00\`\n`
+        info += `\`${m.prefix}notifmakan on 07.00,12.00 Nasi Goreng\`\n`
+        info += `\`${m.prefix}notifmakan edit 08.00,13.00\`\n`
+        info += `\`${m.prefix}notifmakan off\`\n`
         info += `\n> 💡 _Jam bisa pakai titik atau titik dua (07.00 / 07:00)_\n`
-        info += `> 💡 _Bisa multiple jam, pisahkan pakai koma_`
+        info += `💡 _Bisa multiple jam, pisahkan pakai koma_`
 
         return sendReplyWithNav(sock, m, info, "notifmakan")
     }
@@ -86,7 +86,7 @@ function handler(m, { sock }) {
         reply += `⏰ *Jadwal:*\n`
         for (const j of jadwal) {
             const label = getMealLabel(j)
-            reply += `> 🕐 *${j}* WIB _(${label})_\n`
+            reply += `🕐 *${j}* WIB _(${label})_\n`
         }
         if (menu) reply += `\n🍴 *Menu:* _${menu}_`
         reply += `\n\n> 💡 _Notifikasi akan dikirim ke chat ini setiap hari_`
@@ -116,7 +116,7 @@ function handler(m, { sock }) {
         reply += `⏰ *Jadwal baru:*\n`
         for (const j of jadwal) {
             const label = getMealLabel(j)
-            reply += `> 🕐 *${j}* WIB _(${label})_\n`
+            reply += `🕐 *${j}* WIB _(${label})_\n`
         }
         if (menu) reply += `\n🍴 *Menu:* _${menu}_`
 

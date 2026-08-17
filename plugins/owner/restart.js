@@ -33,8 +33,8 @@ async function handler(m, { sock }) {
                   `┃ 🔧 Method: Process Spawn\n` +
                   `┃ 📦 PID: ${process.pid}\n` +
                   `╰┈┈⬡\n\n` +
-                  `> Bot akan restart dalam 2 detik...\n` +
-                  `> Proses mungkin memakan waktu 10-30 detik`
+                  `Bot akan restart dalam 2 detik...\n` +
+                  `Proses mungkin memakan waktu 10-30 detik`
         }, { quoted: m })
         
         console.log('[Restart] Command triggered by:', m.sender)

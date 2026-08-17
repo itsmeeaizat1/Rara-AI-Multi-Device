@@ -21,10 +21,10 @@ const pluginConfig = {
 async function handler(m, { sock, args }) {
     if (!m.quoted || !m.quoted.key || !m.quoted.key.id) {
         await m.reply(claraWrap("Validasi Gagal", `⚠️ *Validasi Gagal*\n\n` +
-            `> Reply pesan yang ingin di-pin!\n\n` +
+            `Reply pesan yang ingin di-pin!\n\n` +
             `*Cara penggunaan:*\n` +
-            `> Reply pesan → ketik \`.pin\`\n` +
-            `> Optional: \`.pin 24\` (pin 24 jam)`));
+            `Reply pesan → ketik \`.pin\`\n` +
+            `Optional: \`.pin 24\` (pin 24 jam)`));
         return;
     }
     
@@ -59,8 +59,8 @@ async function handler(m, { sock, args }) {
         
     } catch (error) {
         await m.reply(claraWrap("Error", `❌ *Error*\n\n` +
-            `> Gagal mem-pin pesan.\n` +
-            `> _${error.message}_`));
+            `Gagal mem-pin pesan.\n` +
+            `_${error.message}_`));
     }
 }
 

@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     
     if (!word) {
         return sendReplyWithNav(sock, m, `📝 *Add Toxic*\n\n` +
-            `> Gunak{ const __navText = ` +
+            `Gunak{ const __navText = ` +
             `\`Contoh: ${m.prefix}addtoxic katakasar\``, "addtoxic")
     }
     

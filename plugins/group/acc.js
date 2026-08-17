@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
 
         if (sub === 'list') {
             let text = `📋 *Daftar Permintaan Masuk*\n\n`
-            text += `> Total: ${pendingList.length} permintaan\n\n`
+            text += `Total: ${pendingList.length} permintaan\n\n`
 
             for (let i = 0; i < pendingList.length; i++) {
                 const req = pendingList[i]
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
                 text += `   🕐 ${time}\n\n`
             }
 
-            text += `> Gunakan \`${m.prefix}acc approve all\` atau \`${m.prefix}acc reject all\``
+            text += `Gunakan \`${m.prefix}acc approve all\` atau \`${m.prefix}acc reject all\``
 
             const mentions = pendingList.map(r => r.jid)
             return m.reply(claraWrap("acc", text))
@@ -92,9 +92,9 @@ async function handler(m, { sock }) {
             const label = action === 'approve' ? 'Diterima' : 'Ditolak'
             await m.react('✅')
             return m.reply(claraWrap("${label.toUpperCase()} SEMUA", `✅ *${label.toUpperCase()} SEMUA*\n\n` +
-                `> ✅ Berhasil: ${success}\n` +
-                `> ❌ Gagal: ${failed}\n` +
-                `> 📊 Total: ${results.length}`))
+                `✅ Berhasil: ${success}\n` +
+                `❌ Gagal: ${failed}\n` +
+                `📊 Total: ${results.length}`))
         }
 
         const indices = option.split('|').map(n => parseInt(n.trim()) - 1).filter(n => !isNaN(n) && n >= 0 && n < pendingList.length)
@@ -102,8 +102,8 @@ async function handler(m, { sock }) {
         if (!indices.length) {
             return m.reply(
                 `❌ Nomor tidak valid.\n\n` +
-                `> Gunakan \`${m.prefix}acc list\` untuk melihat daftar.\n` +
-                `> Contoh: \`${m.prefix}acc ${action} 1|2|3\``
+                `Gunakan \`${m.prefix}acc list\` untuk melihat daftar.\n` +
+                `Contoh: \`${m.prefix}acc ${action} 1|2|3\``
             )
         }
 
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
         return m.reply(
             `📋 *Hasil ${label.toUpperCase()}*\n\n` +
             text + `\n` +
-            `> ✅ ${successCount}/${targets.length} berhasil`
+            `✅ ${successCount}/${targets.length} berhasil`
         )
     } catch (error) {
         m.reply(claraWrap("acc", te(m.prefix, m.command, m.pushName), "error"))

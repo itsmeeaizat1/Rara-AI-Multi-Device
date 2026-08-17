@@ -104,7 +104,7 @@ async function handler(m, { sock, args }) {
 
   if (!isImage) {
     let txt = `*HD IMAGE V2*\n\n`;
-    txt += `> Reply gambar untuk enhance\n\n`;
+    txt += `Reply gambar untuk enhance\n\n`;
     txt += `\`\`\`${m.prefix}reminiv2\`\`\`\n\n`;
     txt += `*Opsi:*\n`;
     txt += `1. \`${m.prefix}reminiv2\` (default: 4x, general)\n`;
@@ -177,18 +177,18 @@ async function handler(m, { sock, args }) {
     const wantDoc = input.includes("doc") || input.includes("document");
 
     let caption = `*HD V2 - DONE*\n`;
-    caption += `> Scale: ${scale}x\n`;
-    caption += `> Model: ${model}\n`;
-    caption += `> Size: ${sizeMB}MB\n`;
-    if (useFx) caption += `> Face enhance: yes\n`;
-    caption += `> Source: image-upscaling.net`;
+    caption += `Scale: ${scale}x\n`;
+    caption += `Model: ${model}\n`;
+    caption += `Size: ${sizeMB}MB\n`;
+    if (useFx) caption += `Face enhance: yes\n`;
+    caption += `Source: image-upscaling.net`;
 
     if (wantDoc || resultBuffer.length > 5 * 1024 * 1024) {
       // Document mode — no compress, full HD
       if (resultBuffer.length > 5 * 1024 * 1024) {
-        caption += `> Mode: Auto-Document (size > 5MB)`;
+        caption += `Mode: Auto-Document (size > 5MB)`;
       } else {
-        caption += `> Mode: Document (no compress)`;
+        caption += `Mode: Document (no compress)`;
       }
       await sock.sendMessage(
         m.chat,
@@ -201,7 +201,7 @@ async function handler(m, { sock, args }) {
         { quoted: m },
       );
     } else {
-      caption += `> Quality: Full HD`;
+      caption += `Quality: Full HD`;
       await sock.sendMessage(
         m.chat,
         { image: resultBuffer, caption, jpegQuality: 100 },
@@ -212,7 +212,7 @@ async function handler(m, { sock, args }) {
     console.error("[HD4] Error:", e.message);
     let txt = `❌ Gagal enhance gambar!\n\n`;
     txt += `Error: ${e.message}\n\n`;
-    txt += `> Coba lagi atau gunakan \`${m.prefix}remini\` / \`${m.prefix}hd3\``;
+    txt += `Coba lagi atau gunakan \`${m.prefix}remini\` / \`${m.prefix}hd3\``;
     await m.reply(claraWrap("reminiv2", txt));
   }
 }

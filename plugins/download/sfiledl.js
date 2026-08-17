@@ -25,8 +25,8 @@ async function handler(m, { sock }) {
 
     if (!url) {
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}sfiledl <url_sfile>\`\n\n` +
-            `> Contoh: \`${m.prefix}sfiledl https://sfile.mobi/xxxxx\``, "sfiledl")
+            `\`${m.prefix}sfiledl <url_sfile>\`\n\n` +
+            `Contoh: \`${m.prefix}sfiledl https://sfile.mobi/xxxxx\``, "sfiledl")
     }
 
     if (!url.includes('sfile.mobi') && !url.includes('sfile.co')) {

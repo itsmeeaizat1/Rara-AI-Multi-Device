@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
             `┃ 💵 Harga: *${PRICE_PER_ENERGI}* koin/energi\n` +
             `┃ 💰 Koin Kamu: *${formatNumber(user.koin || 0)}*\n` +
             `╰┈┈⬡\n\n` +
-            `> Gunakan: \`.buyenergi <jumlah>\`\n\n` +
+            `Gunakan: \`.buyenergi <jumlah>\`\n\n` +
             `\`Contoh: ${m.prefix}buyenergi 10\``), "buyenergi")
     }
     
@@ -45,9 +45,9 @@ async function handler(m, { sock }) {
     
     if ((user.koin || 0) < totalPrice) {
         return sendReplyWithNav(sock, m, claraWrap("Gagal", `❌ *Gagal*\n\n` +
-            `> Koin tidak cukup!\n` +
-            `> Butuh: *${formatNumber(totalPrice)}*\n` +
-            `> Kamu punya: *${formatNumber(user.koin || 0)}*`), "buyenergi")
+            `Koin tidak cukup!\n` +
+            `Butuh: *${formatNumber(totalPrice)}*\n` +
+            `Kamu punya: *${formatNumber(user.koin || 0)}*`), "buyenergi")
     }
     
     db.updateKoin(m.sender, -totalPrice)
@@ -55,8 +55,8 @@ async function handler(m, { sock }) {
     if (user.energi === -1) {
         m.react('✅')
         return m.reply(claraWrap("Pembelian Berhasil", `✅ *Pembelian Berhasil*\n\n` +
-            `> Tapi kamu sudah punya unlimited energi!\n` +
-            `> Koin dikembalikan.`))
+            `Tapi kamu sudah punya unlimited energi!\n` +
+            `Koin dikembalikan.`))
     }
     
     const newEnergi = db.updateEnergi(m.sender, amount)

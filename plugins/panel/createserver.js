@@ -180,9 +180,9 @@ async function handler(m, { sock }) {
   if (!gcSellerAccess && !hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
     const userRole = getUserRole(m.sender, serverVersion);
     return sendReplyWithNav(sock, m, `❌ *Akses Ditolak*\n\n` +
-      `> Kamu tidak punya akses ke *${serverVersion.toUpperCase()}*\n` +
-      `> Role kamu di ${serverVersion.toUpperCase()}: *${userRole || "Tidak ada"}*\n\n` +
-      `> Hubungi admin untuk mendapat akses.`, "Panel");
+      `Kamu tidak punya akses ke *${serverVersion.toUpperCase()}*\n` +
+      `Role kamu di ${serverVersion.toUpperCase()}: *${userRole || "Tidak ada"}*\n\n` +
+      `Hubungi admin untuk mendapat akses.`, "Panel");
   }
 
   const jedaCheck = checkPanelJeda(m);
@@ -197,10 +197,10 @@ async function handler(m, { sock }) {
     const available = getAvailableServers(pteroConfig);
     let txt = `⚠️ *sErver ${serverVersion.toUpperCase()} Belum Konfig*\n\n`;
     if (available.length > 0) {
-      txt += `> Server tersedia: *${available.join(", ")}*\n`;
-      txt += `> Contoh: \`${m.prefix}${ram}${available[0]} username\``;
+      txt += `Server tersedia: *${available.join(", ")}*\n`;
+      txt += `Contoh: \`${m.prefix}${ram}${available[0]} username\``;
     } else {
-      txt += `> Isi config pterodactyl di \`config.js\``;
+      txt += `Isi config pterodactyl di \`config.js\``;
     }
     return m.reply(claraWrap("Panel", txt));
   }
@@ -222,12 +222,12 @@ async function handler(m, { sock }) {
     const available = getAvailableServers(pteroConfig);
     const userRole = getUserRole(m.sender, serverVersion) || "Guest";
     return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-      `> \`${m.prefix}${m.command} username\`\n` +
-      `> \`${m.prefix}${m.command} username,628xxx\`\n` +
-      `> Reply/tag pesan user\n\n` +
-      `> Server: *${serverVersion.toUpperCase()}*\n` +
-      `> Role kamu: *${capitalize(userRole)}*\n` +
-      `> Server tersedia: *${available.join(", ") || "none"}*`, "Panel");
+      `\`${m.prefix}${m.command} username\`\n` +
+      `\`${m.prefix}${m.command} username,628xxx\`\n` +
+      `Reply/tag pesan user\n\n` +
+      `Server: *${serverVersion.toUpperCase()}*\n` +
+      `Role kamu: *${capitalize(userRole)}*\n` +
+      `Server tersedia: *${available.join(", ") || "none"}*`, "Panel");
   }
 
   if (!/^[a-z0-9_]{3,16}$/.test(username)) {

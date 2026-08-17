@@ -25,16 +25,16 @@ async function handler(m, { sock }) {
     
     if (!url || !url.includes('store.line.me')) {
         return sendReplyWithNav(sock, m, `🎨 *Line sTicker Pack*\n\n` +
-            `> Download LINE sticker pack\n\n` +
+            `Download LINE sticker pack\n\n` +
             `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
             `┃ ${m.prefix}linesticker <url>\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
             `*Cara Dapat Url:*\n` +
-            `> 1. Buka https://store.line.me\n` +
-            `> 2. Pilih sticker pack\n` +
-            `> 3. Copy URL dari browser\n\n` +
+            `1. Buka https://store.line.me\n` +
+            `2. Pilih sticker pack\n` +
+            `3. Copy URL dari browser\n\n` +
             `*Contoh:*\n` +
-            `> ${m.prefix}linesticker https://store.line.me/stickershop/product/9801/en`, "linesticker")
+            `${m.prefix}linesticker https://store.line.me/stickershop/product/9801/en`, "linesticker")
     }
     
     await m.react('🕐')
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
             `┃ 🎬 *Animated:* ${isAnimated ? 'Ya' : 'Tidak'}\n` +
             `┃ 📊 *Total:* ${stickerUrls.length}\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-            `> 🕕 Mengirim sticker...`
+            `🕕 Mengirim sticker...`
         )
         
         const maxStickers = Math.min(stickerUrls.length, 10)
