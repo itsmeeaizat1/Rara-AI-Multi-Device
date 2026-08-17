@@ -13,6 +13,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import fs from "fs";
 import sharp from "sharp";
 import { getMenuImage, getMenuThumbnail, syncMenuImageFromDb } from "../../src/lib/nova-asset-manager.js";
+import { getWeatherAddress, getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 
 const pluginConfig = {
   name: "menukategori",
@@ -106,8 +107,10 @@ async function handler(m, { sock, db }) {
       return total > 0;
     });
 
+    const _weatherFooter = await getWeatherFooter().catch(() => null);
+    const _weatherBlock = _weatherFooter ? `${_weatherFooter}\n\n` : "";
     // ── Keterangan simbol ──
-    let txt = `╔┈┈「 *Keterangan* 」
+    let txt = `${_weatherBlock}╔┈┈「 *Keterangan* 」
 ╎
 ╎❏ Ⓞ = Hanya untuk owner
 ╎❏ ⓟ = Hanya untuk premium
@@ -211,7 +214,9 @@ async function handler(m, { sock, db }) {
 
   const emoji = CATEGORY_EMOJIS[matchedCat] || "📁";
 
-  let txt = `╔┈「 ${emoji} *${matchedCat}* 」\n`;
+  const _weatherFooter2 = await getWeatherFooter().catch(() => null);
+  const _weatherBlock2 = _weatherFooter2 ? `${_weatherFooter2}\n\n` : "";
+  let txt = `${_weatherBlock2}╔┈「 ${emoji} *${matchedCat}* 」\n`;
   for (const cmd of allCommands) {
     const symbols = getCommandSymbols(cmd);
     txt += `╎ぎ ${prefix}${cmd}${symbols}\n`;
