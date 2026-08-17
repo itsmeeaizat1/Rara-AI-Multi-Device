@@ -250,6 +250,24 @@ function buildFooter(normalized) {
   return lines.join("\n");
 }
 
+
+export async function getWeatherAddress() {
+  try {
+    const now = Date.now();
+    if (!cachedWeather || now >= cacheExpiry) {
+      const data = await fetchWeather();
+      cachedWeather = data;
+      cacheExpiry = now + CACHE_TTL_MS;
+    }
+    const w = cachedWeather;
+    const { location } = getWeatherConfig();
+    const emoji = symbolFor(w.weather_code);
+    return `${emoji} ${w.description} • ${fmt(w.temperature_2m, "°C")} • ${location.name || "Lokasi"}`;
+  } catch {
+    return null;
+  }
+}
+
 export async function getWeatherFooter(forceRefresh = false) {
   const now = Date.now();
   if (!forceRefresh && cachedWeather && now < cacheExpiry) {
