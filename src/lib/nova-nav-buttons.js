@@ -6,6 +6,7 @@
  */
 
 import proto from "nova";
+import { generateWAMessageFromContent } from "nova";
 import { getDatabase } from "./nova-database.js";
 
 /**
@@ -85,22 +86,20 @@ async function sendReplyWithNav(sock, m, text, cmdName = "") {
  * Generate WA interactive message dengan buttons
  */
 function generateWAMessageInteractive(chat, body, buttons) {
-  const interactiveMessage = proto.Message.InteractiveMessage.create({
-    body: { text: body },
-    footer: { text: "Nova AI" },
-    nativeFlowMessage: {
-      buttons,
+  const msg = generateWAMessageFromContent(chat, {
+    viewOnceMessage: {
+      message: {
+        messageContextInfo: {},
+        interactiveMessage: {
+          body: { text: body },
+          footer: { text: "Nova AI" },
+          nativeFlowMessage: { buttons },
+        },
+      },
     },
-  });
+  }, {});
 
-  const message = proto.Message.fromObject({
-    interactiveMessage,
-  });
-
-  return {
-    key: { id: "", remoteJid: chat },
-    message,
-  };
+  return msg;
 }
 
 export { sendReplyWithNav };
