@@ -11,7 +11,7 @@ const pluginConfig = {
     category: 'stalker',
     description: 'Stalk akun NPM (Node Package Manager)',
     usage: '.npmstalk <username>',
-    example: '.npmstalk hanya_zann',
+    example: '.npmstalk aizat',
     isOwner: false,
     isPremium: false,
     isGroup: false,
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]
     
     if (!username) {
-        { const __navText = `📦 *Npm sTalk*\n\n> Masukkan username NPM\n\n\`Contoh: ${m.prefix}npmstalk hanya_zann\``; return await sendReplyWithNav(sock, m, __navText, "npmstalk"); }
+        { const __navText = `📦 *Npm sTalk*\n\n> Masukkan username NPM\n\n\`Contoh: ${m.prefix}npmstalk aizat\``; return await sendReplyWithNav(sock, m, __navText, "npmstalk"); }
     }
     
     m.react('🕐')

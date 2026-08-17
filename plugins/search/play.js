@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Nama Plugin: Play
- * Pembuat Code: Zann
+ * Pembuat Code: Aizat
  * Saluran: https://whatsapp.com/channel/0029Vb7g5Qt90x2yn7bOlM2U
  */
 

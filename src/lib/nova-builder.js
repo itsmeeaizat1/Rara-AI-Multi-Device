@@ -11,7 +11,7 @@
  * - Baileys: @whiskeysockets/baileys (latest)
  *
  * Created by Nixel
- * Contributors: ~ Ahmad tumbuh kembang
+ * Contributors: Claude Sonnet 5, OpenAI Luna, GLM
  *
  * WhatsApp: wa.me/6285188349341
  * Channel: https://whatsapp.com/channel/0029VbCV1ck8fewpdNb2TY2k
@@ -1475,7 +1475,7 @@ class AIRich extends BaseBuilder {
         const notif = notification
             ? {
                 sessionTransparencyMetadata: {
-                    disclaimerText: '~ Ahmad tumbuh kembang',
+                    disclaimerText: 'Nova AI',
                     hcaId: `hca_${Date.now()}`,
                     sessionTransparencyType: 1,
                 },

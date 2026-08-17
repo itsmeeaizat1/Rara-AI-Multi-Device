@@ -10,7 +10,7 @@ const pluginConfig = {
     category: 'canvas',
     description: 'Membuat gambar fake call WhatsApp',
     usage: '.fakecall <nama> | <durasi>',
-    example: '.fakecall Zann | 19.00',
+    example: '.fakecall Aizat | 19.00',
     isOwner: false,
     isPremium: false,
     isGroup: false,

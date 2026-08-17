@@ -1,9 +1,7 @@
 /**
  * Credits & Thanks to
- * Developer = Aizat ( Zann )
- * Lead owner = HyuuSATAN
- * Owner = Keisya
- * Designer = Danzzz
+ * Developer = Aizat
+ * Coding Assistant = Claude Sonnet 5, OpenAI Luna, GLM
  * Wileys = Penyedia baileys
  * Penyedia API
  * Penyedia Scraper
