@@ -138,7 +138,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 ╎❏ *Zona:* Asia/Jakarta
 ╎❏ *Hari Penting:* ${importantDay}
 ╠┈┈「 *Info Bot* 」
-╎❏ *Bot Name:* ${botConfig.bot?.name || "Nova-AI"}
+╎❏ *Bot Name:* ${botConfig.bot?.name || "Nova AI Whatsapp Bot"}
 ╎❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
 ╎❏ *Version:* ${botConfig.bot?.version || "-"}
 ╎❏ *Developer:* ${botConfig.bot?.developer || "-"}
@@ -173,14 +173,14 @@ ${readMore}
 
 function getContextInfo(botConfig, m, thumbBuffer, renderLargerThumbnail = false) {
   const saluranId = botConfig.saluran?.id || "120363400911374213@newsletter";
-  const saluranName = botConfig.saluran?.name || botConfig.bot?.name || "Nova-AI";
+  const saluranName = botConfig.saluran?.name || botConfig.bot?.name || "Nova AI Whatsapp Bot";
   const saluranLink = botConfig.saluran?.link || "";
   const ctx = {
     mentionedJid: [m.sender],
     forwardingScore: 9,
     isForwarded: false,
     externalAdReply: {
-      title: botConfig.bot?.name || "Nova-AI",
+      title: botConfig.bot?.name || "Nova AI Whatsapp Bot",
       body: `BOT WHATSAPP MULTI DEVICE`,
       sourceUrl: saluranLink,
       previewType: "VIDEO",
@@ -235,7 +235,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   } catch (e) { console.error("Gagal load assets:", e.message); }
 
   const saluranId = botConfig.saluran?.id || "120363400911374213@newsletter";
-  const saluranName = botConfig.saluran?.name || botConfig.bot?.name || "Nova-AI";
+  const saluranName = botConfig.saluran?.name || botConfig.bot?.name || "Nova AI Whatsapp Bot";
   const greeting = getTimeGreeting();
 
 
@@ -316,7 +316,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                 hasMediaAttachment: true,
                 locationMessage: {
                   degreesLatitude: 0, degreesLongitude: 0,
-                  name: config.bot?.name || "Nova-AI",
+                  name: config.bot?.name || "Nova AI Whatsapp Bot",
                   address: `v${config.bot?.version || "1.0.0"}`,
                   jpegThumbnail: thumbV2,
                 },
@@ -388,7 +388,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                   hasMediaAttachment: true,
                   locationMessage: {
                     degreesLatitude: 0, degreesLongitude: 0,
-                    name: config.bot?.name || "Nova-AI",
+                    name: config.bot?.name || "Nova AI Whatsapp Bot",
                     address: (await getWeatherAddress()) || `v${config.bot?.version || "1.0.0"}`,
                     jpegThumbnail: thumbV3,
                   },
@@ -450,7 +450,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
           viewOnceMessage: { message: {
             messageContextInfo: {},
             interactiveMessage: {
-              header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova-AI", address: `v${config.bot?.version || "1.0.0"}`, jpegThumbnail: thumbV5 } },
+              header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova AI Whatsapp Bot", address: `v${config.bot?.version || "1.0.0"}`, jpegThumbnail: thumbV5 } },
               body: { text },
               footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
               contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
@@ -489,7 +489,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
           viewOnceMessage: { message: {
             messageContextInfo: {},
             interactiveMessage: {
-              header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova-AI", address: await weatherMenu(), jpegThumbnail: thumbV6 } },
+              header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova AI Whatsapp Bot", address: await weatherMenu(), jpegThumbnail: thumbV6 } },
               body: { text },
               contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
               nativeFlowMessage: {

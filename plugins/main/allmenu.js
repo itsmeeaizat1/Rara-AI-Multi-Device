@@ -161,7 +161,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 ╎❏ *Zona:* Asia/Jakarta
 ╎❏ *Hari Penting:* ${importantDay}
 ╠┈┈「 *Info Bot* 」
-╎❏ *Bot Name:* ${botConfig.bot?.name || "Nova-AI"}
+╎❏ *Bot Name:* ${botConfig.bot?.name || "Nova AI Whatsapp Bot"}
 ╎❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
 ╎❏ *Version:* ${botConfig.bot?.version || "-"}
 ╎❏ *Developer:* ${botConfig.bot?.developer || "-"}
@@ -336,7 +336,7 @@ ${readMore}
                   hasMediaAttachment: true,
                   locationMessage: {
                     degreesLatitude: 0, degreesLongitude: 0,
-                    name: config.bot?.name || "Nova-AI",
+                    name: config.bot?.name || "Nova AI Whatsapp Bot",
                     address: `v${config.bot?.version || "1.0.0"}`,
                     jpegThumbnail: thumbV2All,
                   },
@@ -413,7 +413,7 @@ ${readMore}
                   hasMediaAttachment: true,
                   locationMessage: {
                     degreesLatitude: 0, degreesLongitude: 0,
-                    name: config.bot?.name || "Nova-AI",
+                    name: config.bot?.name || "Nova AI Whatsapp Bot",
                     address: (await getWeatherAddress()) || `v${config.bot?.version || "1.0.0"}`,
                     jpegThumbnail: thumbnail,
                   },
@@ -460,7 +460,7 @@ ${readMore}
           forwardingScore: 9,
           isForwarded: false,
           externalAdReply: {
-            title: config.bot?.name || "Nova-AI",
+            title: config.bot?.name || "Nova AI Whatsapp Bot",
             body: `BOT WHATSAPP MULTI DEVICE`,
             thumbnail: fallbackThumbAll,
             renderLargerThumbnail: true,
