@@ -235,7 +235,7 @@ async function handler(m, { sock, args }) {
                     {
                         name: 'quick_reply',
                         buttonParamsJson: JSON.stringify({
-                            display_text: running ? '🛑 Stop' : '▶️ Start',
+                            display_text: running ? 'Stop' : 'Start',
                             id: `${m.prefix}autoanimewinbu ${running ? 'stop' : 'start'}`
                         })
                     },

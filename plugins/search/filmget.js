@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
       buttons.push({
         name: "cta_url",
         buttonParamsJson: JSON.stringify({
-          display_text: `▶️ ${streams[0].server}`,
+          display_text: `${streams[0].server}`,
           url: streams[0].url,
         }),
       });
