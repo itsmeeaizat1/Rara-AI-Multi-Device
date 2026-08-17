@@ -32,6 +32,8 @@ import {
 import fsc from "fs";
 import axios from "axios";
 import { getDatabase } from "./nova-database.js";
+import { getWeatherAddress } from "./nova-weather-footer.js";
+
 import { saluranCtx } from "./nova-context.js";
 import { getAssetBuffer } from "./nova-asset-manager.js";
 import sharp from "sharp";
@@ -968,7 +970,7 @@ async function serialize(sock, msg, store = {}) {
                   degreesLatitude: 0,
                   degreesLongitude: 0,
                   name: config.bot?.name || "Nova-AI",
-                  address: "Bot Wa Multi Device",
+                  address: (await getWeatherAddress()) || config.bot?.name || "Nova-AI",
                   jpegThumbnail: await sharp(thumbnailBuf).resize(640, 360).toBuffer(),
                 }
               },
