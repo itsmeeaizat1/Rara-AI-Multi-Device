@@ -743,7 +743,7 @@ async function serialize(sock, msg, store = {}) {
   m.to = m.chat;
   m.botNumber = decodeJid(sock.user?.id)?.replace(/@.+/g, "") || "";
   m.botJid = decodeJid(sock.user?.id) || "";
-  m.botName = sock.user?.name || config.bot?.name || "Nova-AI";
+  m.botName = sock.user?.name || config.bot?.name || "Nova AI Whatsapp Bot";
   m.messageId = m.id;
   m.chatId = m.chat;
   m.senderId = m.sender;
@@ -892,7 +892,7 @@ async function serialize(sock, msg, store = {}) {
         {
           caption: `${config.info?.website}\n\n${text}`,
           url: config.info?.website || "https://github.com",
-          title: config.bot?.name || "Nova-AI",
+          title: config.bot?.name || "Nova AI Whatsapp Bot",
           description:
             `Pengembang: ${config.bot.developer} | Versi: ${config.bot.version}` ||
             "WhatsApp Bot",
@@ -921,7 +921,7 @@ async function serialize(sock, msg, store = {}) {
             itemCount: 999,
             status: 1,
             surface: 1,
-            message: config.bot?.name || "Nova-AI",
+            message: config.bot?.name || "Nova AI Whatsapp Bot",
             orderTitle: "System Notification",
             sellerJid: "0@s.whatsapp.net",
             token: "ARU1+",
@@ -977,8 +977,8 @@ async function serialize(sock, msg, store = {}) {
                 locationMessage: {
                   degreesLatitude: 0,
                   degreesLongitude: 0,
-                  name: config.bot?.name || "Nova-AI",
-                  address: (await getWeatherAddress()) || config.bot?.name || "Nova-AI",
+                  name: config.bot?.name || "Nova AI Whatsapp Bot",
+                  address: (await getWeatherAddress()) || config.bot?.name || "Nova AI Whatsapp Bot",
                   jpegThumbnail: await sharp(thumbnailBuf).resize(640, 360).toBuffer(),
                 }
               },
