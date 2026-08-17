@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "nova-ai",
-  alias: ["novaai", "nova"],
+  alias: ["novaai", "nova", "tanyaai", "tanya"],
   category: "ai",
   description: "Chat dengan Nova AI — Asisten bot cerdas",
   usage: ".nova-ai <pertanyaan>",

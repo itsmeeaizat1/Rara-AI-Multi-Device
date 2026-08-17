@@ -11,7 +11,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "aihelp",
-  alias: ["aihelp", "bantuanai", "aiassistant", "tanyaai", "tanya"],
+  alias: ["aihelp", "bantuanai", "aiassistant"],
   category: "ai",
   description: "Asisten offline/online untuk mencari fitur dan cara pakai command",
   usage: ".aihelp <pertanyaan> | .aihelp on/off",
