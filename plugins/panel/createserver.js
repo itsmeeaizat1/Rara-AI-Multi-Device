@@ -320,14 +320,15 @@ async function handler(m, { sock }) {
 
     const ramLabel = specs.ram === 0 ? "Unlimited" : `${specs.ram / 1000} GB`;
 
-    let detailTxt = `✅ *PANEL BERHASIL DIBUAT*\n\n`;
-    detailTxt += `🖥️ Server: *${serverLabel}*\n`;
-    detailTxt += `👤 Username: *${user.username}*\n`;
-    detailTxt += `🔐 Password: *${password}*\n`;
-    detailTxt += `💾 RAM: *${ramLabel}*\n`;
-    detailTxt += `🆔 Server ID: *${server.id}*\n`;
-    detailTxt += `🌐 Panel: ${serverConfig.domain}\n\n`;
-    detailTxt += `⚠️ Simpan data ini, jangan bagikan ke siapapun!`;
+    // Info akun lengkap (untuk DM)
+    let detailTxt = `PANEL BERHASIL DIBUAT\n\n`;
+    detailTxt += `Server: *${serverLabel}*\n`;
+    detailTxt += `Username: *${user.username}*\n`;
+    detailTxt += `Password: *${password}*\n`;
+    detailTxt += `RAM: *${ramLabel}*\n`;
+    detailTxt += `Server ID: *${server.id}*\n`;
+    detailTxt += `Panel: ${serverConfig.domain}\n\n`;
+    detailTxt += `Simpan data ini, jangan bagikan ke siapapun!`;
 
     const headerMedia = await prepareWAMessageMedia(
       { image: getAssetBuffer("nova-v8") },
@@ -335,16 +336,14 @@ async function handler(m, { sock }) {
     );
 
     const msg = generateWAMessageFromContent(
-      targetUser,
+      m.sender,
       {
         viewOnceMessage: {
           message: {
             messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
             interactiveMessage: proto.Message.InteractiveMessage.fromObject({
               contextInfo: {
-                mentionedJid: [targetUser],
-                isForwarded: true,
-                forwardingScore: 999,
+                mentionedJid: [m.sender],
               },
               body: proto.Message.InteractiveMessage.Body.fromObject({ text: detailTxt }),
               footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: `Panel Pterodactyl - ${serverConfig.domain}` }),
@@ -356,31 +355,16 @@ async function handler(m, { sock }) {
                 buttons: [
                   {
                     name: "cta_copy",
-                    buttonParamsJson: JSON.stringify({ display_text: "📋 Copy Username", copy_code: username }),
+                    buttonParamsJson: JSON.stringify({ display_text: "Copy Username", copy_code: username }),
                   },
                   {
                     name: "cta_copy",
-                    buttonParamsJson: JSON.stringify({ display_text: "📋 Copy Password", copy_code: password }),
+                    buttonParamsJson: JSON.stringify({ display_text: "Copy Password", copy_code: password }),
                   },
                   {
                     name: "cta_url",
-                    buttonParamsJson: JSON.stringify({ display_text: "🌐 Buka Panel", url: serverConfig.domain }),
+                    buttonParamsJson: JSON.stringify({ display_text: "Buka Panel", url: serverConfig.domain }),
                   },
-                
-                  {
-                    name: "quick_reply",
-                    buttonParamsJson: JSON.stringify({
-                      display_text: "Kembali",
-                      id: m.prefix + "menu"
-                    })
-                  },
-                  {
-                    name: "quick_reply",
-                    buttonParamsJson: JSON.stringify({
-                      display_text: "Tanya AI",
-                      id: m.prefix + "aihelp"
-                    })
-                  }
                 ],
               }),
             }),
@@ -390,13 +374,62 @@ async function handler(m, { sock }) {
       {}
     );
 
-    await sock.relayMessage(targetUser, msg.message, { messageId: msg.key.id });
+    // Kirim info akun ke DM pembuat (private message)
+    await sock.relayMessage(m.sender, msg.message, { messageId: msg.key.id });
+
+    // Jika target bukan pembuat, kirim juga ke target
+    if (targetUser !== m.sender) {
+      const msgTarget = generateWAMessageFromContent(
+        targetUser,
+        {
+          viewOnceMessage: {
+            message: {
+              messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
+              interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+                contextInfo: {
+                  mentionedJid: [targetUser],
+                },
+                body: proto.Message.InteractiveMessage.Body.fromObject({ text: detailTxt }),
+                footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: `Panel Pterodactyl - ${serverConfig.domain}` }),
+                header: proto.Message.InteractiveMessage.Header.fromObject({
+                  hasMediaAttachment: true,
+                  imageMessage: headerMedia.imageMessage,
+                }),
+                nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+                  buttons: [
+                    {
+                      name: "cta_copy",
+                      buttonParamsJson: JSON.stringify({ display_text: "Copy Username", copy_code: username }),
+                    },
+                    {
+                      name: "cta_copy",
+                      buttonParamsJson: JSON.stringify({ display_text: "Copy Password", copy_code: password }),
+                    },
+                    {
+                      name: "cta_url",
+                      buttonParamsJson: JSON.stringify({ display_text: "Buka Panel", url: serverConfig.domain }),
+                    },
+                  ],
+                }),
+              }),
+            },
+          },
+        },
+        {}
+      );
+      await sock.relayMessage(targetUser, msgTarget.message, { messageId: msgTarget.key.id });
+    }
 
     await setPanelLastUsed();
 
-    if (targetUser !== m.sender) {
-      await m.reply(`✅ Panel *${serverLabel}* berhasil dibuat untuk \`${targetUser.split("@")[0]}\``);
-    }
+    // Di grup/chat: hanya konfirmasi singkat, TANPA password
+    let confirmTxt = `Panel *${serverLabel}* berhasil dibuat\n\n`;
+    confirmTxt += `Untuk: ${targetUser.split("@")[0]}\n`;
+    confirmTxt += `Server: ${serverLabel}\n`;
+    confirmTxt += `RAM: ${ramLabel}\n\n`;
+    confirmTxt += `Detail akun sudah dikirim ke DM kamu`;
+    
+    await m.reply(claraWrap("Panel", confirmTxt));
   } catch (err) {
     const rawMsg = err?.response?.data?.errors?.[0]?.detail || err?.response?.data?.message || err.message;
     const errorMap = {
@@ -406,7 +439,7 @@ async function handler(m, { sock }) {
       'unauthorized': 'API key tidak punya permission, buat key baru dengan semua permissions',
     };
     const friendly = Object.entries(errorMap).find(([k]) => rawMsg.toLowerCase().includes(k));
-    return m.reply(claraWrap("Panel", `❌ *GAGAL MEMBUAT PANEL*\n\n${friendly ? friendly[1] : rawMsg}`));
+    return m.reply(claraWrap("Panel", `GAGAL MEMBUAT PANEL\n\n${friendly ? friendly[1] : rawMsg}`));
   }
 }
 
