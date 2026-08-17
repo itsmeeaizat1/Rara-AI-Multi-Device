@@ -44,7 +44,7 @@ const config = {
     "nova3": "./assets/image/nova3.jpg",
     "pp-kosong": "./assets/image/pp-kosong.jpg",
     "nova-mp4": "./assets/video/nova-mp4.mp4",
-    "nova-mp3": "./assets/audio/nova-mp3.mp3",
+    "nova-mp3": "./assets/audio/cinta-terbaik-cassandra.mp3",
     "nova-font": "./assets/nova-font.ttf",
     "nova-kertas": "./assets/image/nova-kertas.jpg",
     "nova-qr": "./assets/image/nova-qr.jpg",
