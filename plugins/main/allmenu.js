@@ -23,7 +23,7 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
+import { getWeatherAddress, getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 
 const pluginConfig = {
   name: "allmenu",
@@ -111,6 +111,8 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   else if (m.isPremium) { userRole = "Premium"; roleEmoji = "💎"; }
 
   const greeting = getTimeGreeting();
+  const _weatherFooter = await getWeatherFooter().catch(() => null);
+  const _weatherBlock = _weatherFooter ? `${_weatherFooter}\n\n` : "";
   const runtimeStr = formatUptime(uptime);
   const platform = process.platform;
   const totalUsers = db.getUserCount();
@@ -294,7 +296,7 @@ ${readMore}
                   hasMediaAttachment: true,
                   videoMessage: mediaV1.videoMessage,
                 },
-                body: { text: txt },
+                body: { text: _weatherBlock + txt },
                 footer: {
                   text: "🌸 Pilih tombol dibawah untuk kembali ke menu~",
                 },
@@ -341,7 +343,7 @@ ${readMore}
                     jpegThumbnail: thumbV2All,
                   },
                 },
-                body: { text: txt },
+                body: { text: _weatherBlock + txt },
                 footer: {
                   text: "🌸 Pilih tombol dibawah untuk kembali ke menu~",
                 },
@@ -418,7 +420,7 @@ ${readMore}
                     jpegThumbnail: thumbnail,
                   },
                 },
-                body: { text: txt },
+                body: { text: _weatherBlock + txt },
                 footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
                 contextInfo: {
                   mentionedJid: [m.sender],

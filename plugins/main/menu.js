@@ -27,7 +27,7 @@ function getSharp() {
 }
 import axios from "axios";
 import sharp from "sharp";
-import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
+import { getWeatherAddress, getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import {
   claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -226,6 +226,8 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   const groupData = m.isGroup ? db.getGroup(m.chat) || {} : {};
   const botMode = groupData.botMode || "md";
   const text = await buildMenuText(m, botConfig, db, uptime, sock);
+  const _weatherFooter = await getWeatherFooter().catch(() => null);
+  const _weatherBlock = _weatherFooter ? `${_weatherFooter}\n\n` : "";
 
   let imageBuffer = null;
   let thumbBuffer = null;
@@ -280,7 +282,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                 hasMediaAttachment: true,
                 videoMessage: mediaV1.videoMessage,
               },
-              body: { text },
+              body: { text: _weatherBlock + text },
               footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
               contextInfo: {
                 isForwarded: false, forwardingScore: 9,
@@ -321,7 +323,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                   jpegThumbnail: thumbV2,
                 },
               },
-              body: { text },
+              body: { text: _weatherBlock + text },
               footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
               contextInfo: {
                 isForwarded: false, forwardingScore: 9,
@@ -393,7 +395,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                     jpegThumbnail: thumbV3,
                   },
                 },
-                body: { text },
+                body: { text: _weatherBlock + text },
                 footer: { text: "🌸 Silahkan pilih dari salah satu tombol di bawah" },
                 contextInfo: { mentionedJid: [m.sender], isForwarded: false },
                 nativeFlowMessage: {
@@ -424,7 +426,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             messageContextInfo: {},
             interactiveMessage: {
               header: { title: "", subtitle: "", hasMediaAttachment: true, videoMessage: media4.videoMessage },
-              body: { text },
+              body: { text: _weatherBlock + text },
               footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
               contextInfo: { isForwarded: false, forwardingScore: 9, participant: "0@s.whatsapp.net", quotedMessage: { conversation: `${config.bot?.name}` }, mentionedJid: [m.sender] },
               nativeFlowMessage: {
@@ -451,7 +453,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             messageContextInfo: {},
             interactiveMessage: {
               header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova AI Whatsapp Bot", address: `v${config.bot?.version || "1.0.0"}`, jpegThumbnail: thumbV5 } },
-              body: { text },
+              body: { text: _weatherBlock + text },
               footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
               contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
               nativeFlowMessage: {
@@ -490,7 +492,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             messageContextInfo: {},
             interactiveMessage: {
               header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova AI Whatsapp Bot", address: await weatherMenu(), jpegThumbnail: thumbV6 } },
-              body: { text },
+              body: { text: _weatherBlock + text },
               contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
               nativeFlowMessage: {
                 buttons: [
