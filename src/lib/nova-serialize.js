@@ -893,13 +893,7 @@ async function serialize(sock, msg, store = {}) {
           quoted: m,
           contextInfo: {
             mentionedJid: options?.mentions || [m?.sender] || [],
-            isForwarded: true,
-            forwardingScore: 9,
-            forwardedNewsletterMessageInfo: {
-              newsletterJid: config.saluran?.id,
-              newsletterName: config.saluran?.name || config.bot?.name || "Nova-AI",
-              serverMessageId: Math.floor(Math.random() * 1000000),
-            },
+            isForwarded: false,
           },
         },
       );
@@ -983,8 +977,7 @@ async function serialize(sock, msg, store = {}) {
               },
               contextInfo: {
                 mentionedJid: options?.mentions || [m?.sender] || [],
-                isForwarded: true,
-                forwardingScore: 9,
+                isForwarded: false,
                 ...options.contextInfo
               },
               nativeFlowMessage: {
