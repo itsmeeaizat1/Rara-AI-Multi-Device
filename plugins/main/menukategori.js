@@ -12,6 +12,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import fs from "fs";
 import sharp from "sharp";
+import { getMenuImage, getMenuThumbnail, syncMenuImageFromDb } from "../../src/lib/nova-asset-manager.js";
 
 const pluginConfig = {
   name: "menukategori",
@@ -53,6 +54,7 @@ function getCommandSymbols(cmdName) {
 
 async function handler(m, { sock, db }) {
   await m.react("🕐");
+  syncMenuImageFromDb(db);
   const prefix = config.command?.prefix || ".";
   const args = m.args || [];
   const categoryArg = args[0]?.toLowerCase();
@@ -133,7 +135,7 @@ async function handler(m, { sock, db }) {
     }
 
     try {
-      const thumbCat1 = await sharp(fs.readFileSync(config.assets["nova"])).resize(640, 360).toBuffer();
+      const thumbCat1 = await getMenuThumbnail("nova");
       await sock.relayMessage(m.chat, {
         viewOnceMessage: {
           message: {
@@ -221,7 +223,7 @@ async function handler(m, { sock, db }) {
   }
 
   try {
-    const thumbCat2 = await sharp(fs.readFileSync(config.assets["nova2"])).resize(640, 360).toBuffer();
+    const thumbCat2 = await getMenuThumbnail("nova");
     await sock.relayMessage(m.chat, {
       viewOnceMessage: {
         message: {

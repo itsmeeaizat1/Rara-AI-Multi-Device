@@ -6,6 +6,7 @@ import {
   proto,
 } from "nova";
 import _sharp from "sharp";
+import { getMenuImage, getMenuThumbnail, getAssetBuffer, syncMenuImageFromDb } from "../../src/lib/nova-asset-manager.js";
 import config from "../../config.js";
 import {
   getImportantDay,
@@ -218,6 +219,7 @@ function getVerifiedQuoted(botConfig, m) {
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   await m.react("🕐");
+  syncMenuImageFromDb(db);
   const prefix = botConfig.command?.prefix || ".";
   const savedVariant = db.setting("menuVariant");
   const menuVariant = savedVariant || botConfig.ui?.menuVariant || 3;
@@ -228,8 +230,8 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   let imageBuffer = null;
   let thumbBuffer = null;
   try {
-    imageBuffer = fs.readFileSync(botConfig.assets["nova"]);
-    thumbBuffer = fs.readFileSync(botConfig.assets["nova2"]);
+    imageBuffer = await getMenuImage("nova");
+    thumbBuffer = getAssetBuffer("nova2");
   } catch (e) { console.error("Gagal load assets:", e.message); }
 
   const saluranId = botConfig.saluran?.id || "120363400911374213@newsletter";
@@ -304,7 +306,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       }
 
       case 2: {
-        const thumbV2 = await sharp(fs.readFileSync(config.assets["nova"])).resize(640, 360).toBuffer();
+        const thumbV2 = await getMenuThumbnail("nova");
         await sock.relayMessage(m.chat, {
           viewOnceMessage: { message: {
             messageContextInfo: {},
@@ -345,7 +347,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       }
 
       case 3: {
-        const thumbV3 = await sharp(fs.readFileSync(config.assets["nova"])).resize(640, 360).toBuffer();
+        const thumbV3 = await getMenuThumbnail("nova");
         // Build kategori popup dari case system
         const allCats = getCasesByCategory();
         const categoryOrder = [
@@ -443,7 +445,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       }
 
       case 5: {
-        const thumbV5 = await sharp(fs.readFileSync(config.assets["nova"])).resize(640, 360).toBuffer();
+        const thumbV5 = await getMenuThumbnail("nova");
         const msg5 = generateWAMessageFromContent(m.chat, {
           viewOnceMessage: { message: {
             messageContextInfo: {},
@@ -471,7 +473,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       }
 
       case 6: {
-        const thumbV6 = await sharp(fs.readFileSync(config.assets["nova"])).resize(640, 360).toBuffer();
+        const thumbV6 = await getMenuThumbnail("nova");
         async function weatherMenu(city = "Jakarta") {
           try {
             const geo = await axios.get(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`, { timeout: 5000 });

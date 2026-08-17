@@ -2,6 +2,7 @@
 import * as botmodePlugin from "../group/botmode.js";
 import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
 import _sharp from "sharp";
+import { getMenuImage, getMenuThumbnail, getAssetBuffer, syncMenuImageFromDb } from "../../src/lib/nova-asset-manager.js";
 import config from "../../config.js";
 import axios from "axios";
 import {
@@ -81,6 +82,7 @@ function getCommandSymbols(cmdName) {
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   await m.react("🕐");
+  syncMenuImageFromDb(db);
   const prefix = botConfig.command?.prefix || ".";
   const user = db.getUser(m.sender);
   const timeHelper = await import("../../src/lib/nova-time.js");
@@ -249,7 +251,7 @@ ${readMore}
   // ── Send ──
   let imageBuffer = null;
   try {
-    imageBuffer = fs.readFileSync(botConfig.assets["nova"]);
+    imageBuffer = await getMenuImage("nova");
   } catch (e) {}
 
   const savedVariant = db.setting("allmenuVariant");
@@ -323,7 +325,7 @@ ${readMore}
         break;
       }
       case 2: {
-        const thumbV2All = await _sharp(fs.readFileSync(config.assets["nova"])).resize(640, 360).toBuffer();
+        const thumbV2All = await getMenuThumbnail("nova");
         await sock.relayMessage(m.chat, {
           viewOnceMessage: {
             message: {
@@ -370,7 +372,7 @@ ${readMore}
         break;
       }
       case 3: {
-        const thumbnail = await _sharp(fs.readFileSync(config.assets["nova"])).resize(640, 360).toBuffer();
+        const thumbnail = await getMenuThumbnail("nova");
         // Build kategori popup dari case system
         const allCatsAll = getCasesByCategory();
         const categoryOrderAll = [
@@ -446,7 +448,7 @@ ${readMore}
     console.error("[AllMenu] Error:", error.message);
     let fallbackThumbAll = null;
     try {
-      fallbackThumbAll = imageBuffer ? await _sharp(imageBuffer).resize(640, 360, { fit: "cover" }).toBuffer() : null;
+      fallbackThumbAll = await getMenuThumbnail("nova");
     } catch (e) {
       fallbackThumbAll = imageBuffer || null;
     }
