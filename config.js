@@ -21,7 +21,7 @@ const config = {
 
   bot: {
     name: "Nova Ai Multi Device", // Nama bot
-    version: "20.0.0", // Versi bot (major: 1000+ plugin, sewa, saluran, moderasi, Tio AI, RPG)
+    version: "21.2.0", // Versi bot (major: 1000+ plugin, sewa, saluran, moderasi, Tio AI, RPG)
     developer: "Aizat", // Nama developer
   },
 
@@ -54,7 +54,7 @@ const config = {
     "test": "./assets/image/test.webp"
   },
 
-  mode: "public",
+  mode: "self", // Default self pas pairing baru
 
   // Untuk mengganti prefix
   command: {
