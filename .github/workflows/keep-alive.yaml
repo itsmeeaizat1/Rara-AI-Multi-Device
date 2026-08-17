@@ -14,11 +14,13 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v4
-      
+      with:
+        fetch-depth: 0
+
     - name: Send dummy commit / ping
       run: |
         git config --global user.name "GitHub Actions Bot"
         git config --global user.email "actions@github.com"
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
         git commit --allow-empty -m "Keep-alive: Refresh repository status"
-        git push
+        git push origin HEAD:main
