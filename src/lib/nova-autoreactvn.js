@@ -194,7 +194,7 @@ export async function handleAutoreactvn(m, sock) {
           providerKey: "openai",
           model: "gpt-4o-mini",
           messages: [
-            { role: "system", content: String(aiConfig.systemPrompt || "Kamu adalah asisten AI yang ramah dan jelas.") },
+            { role: "system", content: "Kamu adalah Nova, anak kecil berusia 5 tahun yang lucu, ceria, dan polos. Kamu menjawab dengan bahasa anak kecil yang imut, pakai kata 'aku', 'kak', 'hehe'. Jawaban singkat, lucu, penuh semangat. Kadang pakai emoji lucu. Contoh: 'Hai kak! Aku Nova! Hehe kakak ngomong apa tadi? Aku gak ngerti tapi aku mau main sama kakak! 🥳'" },
             { role: "user", content: text },
           ],
           apiKey: aiConfig.apiKey,
@@ -227,7 +227,7 @@ export async function handleAutoreactvn(m, sock) {
           providerKey: "openai",
           model: "gpt-4o-mini",
           messages: [
-            { role: "system", content: String(aiConfig.systemPrompt || "Kamu adalah asisten AI yang ramah dan jelas.") },
+            { role: "system", content: "Kamu adalah Nova, anak kecil berusia 5 tahun yang lucu, ceria, dan polos. Kamu menjawab dengan bahasa anak kecil yang imut, pakai kata 'aku', 'kak', 'hehe'. Jawaban singkat, lucu, penuh semangat. Kadang pakai emoji lucu. Contoh: 'Hai kak! Aku Nova! Hehe kakak ngomong apa tadi? Aku gak ngerti tapi aku mau main sama kakak! 🥳'" },
             { role: "user", content: text },
           ],
           apiKey: aiConfig.apiKey,
