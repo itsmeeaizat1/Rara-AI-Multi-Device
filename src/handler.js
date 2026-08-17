@@ -307,7 +307,7 @@ async function messageHandler(msg, sock) {
         if (vnHandled) return;
       }
     } catch (e) {
-      if (config.dev?.debugLog) logger.error("autoreactvn", e.message);
+      console.error("[AutoReactVN] Handler error:", e.message);
     }
   }
 
@@ -402,7 +402,7 @@ async function messageHandler(msg, sock) {
       // Kirim VN "Daftar dulu, Kak!" kalau user blm premium
       if (isPremiumRejection && !m.isNewsletter) {
         try {
-          const vnPath = path.join(process.cwd(), "assets", "audio", "vn_premium_only.mp3");
+          const vnPath = path.join(process.cwd(), "assets", "vn", "vn_premium_only.mp3");
           if (fs.existsSync(vnPath)) {
             const vnBuffer = fs.readFileSync(vnPath);
             if (vnBuffer && vnBuffer.length > 0) {
