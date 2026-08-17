@@ -409,7 +409,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               },
             },
           },
-        }, { quoted: getVerifiedQuoted(botConfig), userJid: sock.user.jid });
+        }, { quoted: m, userJid: sock.user.jid });
         await sock.relayMessage(m.chat, msg3.message, { messageId: msg3.key.id });
         break;
       }
@@ -501,7 +501,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               },
             },
           } },
-        }, { quoted: getVerifiedQuoted(botConfig), userJid: sock.user.jid });
+        }, { quoted: m, userJid: sock.user.jid });
         await sock.relayMessage(m.chat, msg6.message, { messageId: msg6.key.id });
         break;
       }

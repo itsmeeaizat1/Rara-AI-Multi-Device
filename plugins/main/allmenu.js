@@ -18,24 +18,7 @@ import {
   getPluginsByCategory,
 } from "../../src/lib/nova-plugins.js";
 import { getCasesByCategory, getCaseCount } from "../../case/nova.js";
-
-/**
- * Fake quoted stanza — quote box nunjukin nama bot ("Nova AI Whatsapp Bot")
- * bukan "Anda", biar konsisten branded.
- */
-function getVerifiedQuoted(botConfig) {
-  return {
-    key: { participant: `0@s.whatsapp.net`, remoteJid: `status@broadcast` },
-    message: {
-      contactMessage: {
-        displayName: `🪸 ${botConfig?.bot?.name || "Nova AI Whatsapp Bot"}`,
-        vcard: `BEGIN:VCARD\nVERSION:3.0\nN:XL;ttname,;;;\nFN:ttname\nitem1.TEL;waid=13135550002:+1 (313) 555-0002\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
-        sendEphemeral: true,
-      },
-    },
-  };
-}
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { getDatabase} from "../../src/lib/nova-database.js";
 import fs from "fs";
 import path from "path";
 import os from "os";
@@ -454,7 +437,7 @@ ${readMore}
               },
             },
           },
-        }, { quoted: getVerifiedQuoted(config), userJid: sock.user.jid });
+        }, { quoted: m, userJid: sock.user.jid });
         await sock.relayMessage(m.chat, msg3.message, { messageId: msg3.key.id });
         break;
       }
@@ -485,7 +468,7 @@ ${readMore}
             previewType: "VIDEO",
           },
         },
-      }, { quoted: getVerifiedQuoted(config) });
+      }, { quoted: m });
     } else {
       await m.reply(claraWrap("allmenu", txt));
     }
@@ -515,13 +498,13 @@ ${readMore}
           audio: { url: destPath },
           mimetype: "audio/ogg; codecs=opus",
           ptt: true,
-        }, { quoted: getVerifiedQuoted(config) });
+        }, { quoted: m });
       } catch {
         await sock.sendMessage(m.chat, {
           audio: { url: audioPath },
           mimetype: "audio/mpeg",
           ptt: false,
-        }, { quoted: getVerifiedQuoted(config) });
+        }, { quoted: m });
       }
     }
   } catch (e) { console.error("[AllMenu] Error sending audio:", e.message); }
