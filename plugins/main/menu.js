@@ -346,24 +346,69 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
       case 3: {
         const thumbV3 = await sharp(fs.readFileSync(config.assets["nova"])).resize(640, 360).toBuffer();
-        const content = {
-          buttonsMessage: {
-            buttons: [
-              { buttonId: `${prefix}menu`, buttonText: { displayText: "Kategori" }, type: 1 },
-              { buttonId: `${prefix}info`, buttonText: { displayText: "Info Lainnya" }, type: 1 },
-              { buttonId: `${prefix}allmenu`, buttonText: { displayText: "All Menu" }, type: 1 },
-              { buttonId: `${prefix}aihelp`, buttonText: { displayText: "Tanya AI" }, type: 1 },
-              { buttonId: `${prefix}rules`, buttonText: { displayText: "Rules" }, type: 1 },
-              { buttonId: `${prefix}owner`, buttonText: { displayText: "Owner" }, type: 1 },
-            ],
-            locationMessage: { jpegThumbnail: thumbV3, name: config.bot.name, address: (await getWeatherAddress()) || `Versi: ${config.bot.version}` },
-            contentText: text,
-            footerText: "🌸 Silahkan pilih dari salah satu tombol di bawah",
-            headerType: 6,
-          },
+        // Build kategori popup dari case system
+        const allCats = getCasesByCategory();
+        const categoryOrder = [
+          "ai", "sticker", "download", "fun", "canvas", "tools",
+          "game", "rpg", "media", "search", "group", "main",
+          "utility", "religi", "info", "cek", "economy", "user",
+          "random", "premium", "ephoto", "jpm", "pushkontak",
+          "panel", "owner", "store",
+        ];
+        const catNames = {
+          ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
+          canvas: "Canvas", tools: "Tools", game: "Game", rpg: "RPG",
+          media: "Media", search: "Search", group: "Group", main: "Main",
+          utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
+          economy: "Economy", user: "User", random: "Random", premium: "Premium",
+          ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
+          panel: "Panel", owner: "Owner", store: "Store",
         };
-        const msg = generateWAMessageFromContent(m.chat, content, { userJid: sock.user.jid });
-        await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+        const catRows = Object.keys(allCats)
+          .sort((a, b) => {
+            const ia = categoryOrder.indexOf(a), ib = categoryOrder.indexOf(b);
+            return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+          })
+          .filter(cat => {
+            if (cat === "owner" && !m.isOwner) return false;
+            return (allCats[cat] || []).length > 0;
+          })
+          .map(cat => ({
+            title: catNames[cat] || cat.charAt(0).toUpperCase() + cat.slice(1),
+            id: `${prefix}menukategori ${cat}`,
+          }));
+        const msg3 = generateWAMessageFromContent(m.chat, {
+          viewOnceMessage: {
+            message: {
+              messageContextInfo: {},
+              interactiveMessage: {
+                header: {
+                  hasMediaAttachment: true,
+                  locationMessage: {
+                    degreesLatitude: 0, degreesLongitude: 0,
+                    name: config.bot?.name || "Nova-AI",
+                    address: (await getWeatherAddress()) || `v${config.bot?.version || "1.0.0"}`,
+                    jpegThumbnail: thumbV3,
+                  },
+                },
+                body: { text },
+                footer: { text: "🌸 Silahkan pilih dari salah satu tombol di bawah" },
+                contextInfo: { mentionedJid: [m.sender], isForwarded: false },
+                nativeFlowMessage: {
+                  buttons: [
+                    { name: "single_select", buttonParamsJson: JSON.stringify({ title: "Kategori", sections: [{ title: "Pilih Kategori", rows: catRows }] }) },
+                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Info Lainnya", id: `${prefix}infov2` }) },
+                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "All Menu", id: `${prefix}allmenu` }) },
+                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Tanya AI", id: `${prefix}aihelp` }) },
+                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Rules", id: `${prefix}rules` }) },
+                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Owner", id: `${prefix}owner` }) },
+                  ],
+                },
+              },
+            },
+          },
+        }, { quoted: m, userJid: sock.user.jid });
+        await sock.relayMessage(m.chat, msg3.message, { messageId: msg3.key.id });
         break;
       }
 

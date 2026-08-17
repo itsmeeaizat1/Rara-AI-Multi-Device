@@ -371,6 +371,37 @@ ${readMore}
       }
       case 3: {
         const thumbnail = await _sharp(fs.readFileSync(config.assets["nova"])).resize(640, 360).toBuffer();
+        // Build kategori popup dari case system
+        const allCatsAll = getCasesByCategory();
+        const categoryOrderAll = [
+          "ai", "sticker", "download", "fun", "canvas", "tools",
+          "game", "rpg", "media", "search", "group", "main",
+          "utility", "religi", "info", "cek", "economy", "user",
+          "random", "premium", "ephoto", "jpm", "pushkontak",
+          "panel", "owner", "store",
+        ];
+        const catNamesAll = {
+          ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
+          canvas: "Canvas", tools: "Tools", game: "Game", rpg: "RPG",
+          media: "Media", search: "Search", group: "Group", main: "Main",
+          utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
+          economy: "Economy", user: "User", random: "Random", premium: "Premium",
+          ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
+          panel: "Panel", owner: "Owner", store: "Store",
+        };
+        const catRowsAll = Object.keys(allCatsAll)
+          .sort((a, b) => {
+            const ia = categoryOrderAll.indexOf(a), ib = categoryOrderAll.indexOf(b);
+            return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+          })
+          .filter(cat => {
+            if (cat === "owner" && !m.isOwner) return false;
+            return (allCatsAll[cat] || []).length > 0;
+          })
+          .map(cat => ({
+            title: catNamesAll[cat] || cat.charAt(0).toUpperCase() + cat.slice(1),
+            id: `${prefix}menukategori ${cat}`,
+          }));
         const msg3 = generateWAMessageFromContent(m.chat, {
           viewOnceMessage: {
             message: {
@@ -390,11 +421,10 @@ ${readMore}
                 contextInfo: {
                   mentionedJid: [m.sender],
                   isForwarded: false,
-                  forwardingScore: 9,
                 },
                 nativeFlowMessage: {
                   buttons: [
-                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Kategori", id: `${prefix}menukategori` }) },
+                    { name: "single_select", buttonParamsJson: JSON.stringify({ title: "Kategori", sections: [{ title: "Pilih Kategori", rows: catRowsAll }] }) },
                     { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Info Lainnya", id: `${prefix}infov2` }) },
                     { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Menu", id: `${prefix}menu` }) },
                     { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Tanya AI", id: `${prefix}aihelp` }) },
