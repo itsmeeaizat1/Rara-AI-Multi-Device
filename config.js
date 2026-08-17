@@ -327,9 +327,9 @@ const config = {
   // bisa dikosongin
   pterodactyl: {
     server1: {
-      domain: "",
-      apikey: "",
-      capikey: "",
+      domain: "https://benefit-utils-protective-nebraska.trycloudflare.com",
+      apikey: "ptla_jSBrjeEFXXCZVt1DytYqMu9TyFlGre04xATB5Ijl4YN",
+      capikey: "ptla_jSBrjeEFXXCZVt1DytYqMu9TyFlGre04xATB5Ijl4YN",
       egg: "15",
       nestid: "5",
       location: "1",
