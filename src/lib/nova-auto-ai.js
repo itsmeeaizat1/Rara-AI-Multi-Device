@@ -106,7 +106,7 @@ PENTING: text WAJIB mengandung placeholder {{IE_0}}...{{/IE_0}} untuk setiap URL
 4. LIST (saat user minta info singkat format daftar key-value):
 [RICH:LIST]
 title: Info Bot
-rows: Nama | Nova AI;; Versi | 2.4.5;; Developer | Zann
+rows: Nama | Nova AI;; Versi | 2.4.5;; Developer | Aizat
 footer: © Nova AI (opsional)
 [/RICH:LIST]
 

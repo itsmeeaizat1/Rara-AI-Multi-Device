@@ -390,7 +390,7 @@ const config = {
   //  APIkey
   APIkey: {
     // kalian bisa daftar di https://api.lolhuman.xyz, lalu ambil apikeynya
-    lolhuman: "APIKey-Milik-Bot-NovaMD(Zann,HyuuSATANN,Keisya,Danzz)",
+    lolhuman: "APIKey-Milik-Bot-NovaMD",
     // kalian bisa daftar di https://api.neoxr.eu, lalu ambil apikeynya
     neoxr: "Milik-Bot-NovaMD",
     fgsi: "fgsiapi-20c1605c-6d",

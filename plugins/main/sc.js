@@ -36,12 +36,12 @@ async function handler(m, { sock }) {
   return await sock.sendMessage(m.chat, {
     image: getAssetBuffer("nova"),
     caption: caption,
-    footer: `Link ini mengarahkan kamu ke Youtube Zanspiw`,
+    footer: `Link ini mengarahkan kamu ke Youtube Nova AI`,
     interactiveButtons: [
       {
         name: "cta_url",
         buttonParamsJson: JSON.stringify({
-          display_text: "Kunjungi Youtube Zanspiw",
+          display_text: "Kunjungi Youtube Nova AI",
           url: "https://youtube.com/@JanpiwWok",
           merchant_url: "https://youtube.com/@JanpiwWok",
         }),

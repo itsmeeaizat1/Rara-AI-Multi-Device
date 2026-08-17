@@ -4,7 +4,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 /**
  * @file plugins/owner/schedule.js
  * @description Command untuk mengelola scheduled messages
- * @author Lucky Archz, Keisya, hyuuSATAN
+ * @author Aizat
  * @version 1.1.0
  */
 
