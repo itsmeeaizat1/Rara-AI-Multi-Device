@@ -14,6 +14,7 @@ import {
 import te from "../../src/lib/nova-error.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { initSholatScheduler, stopSholatScheduler } from "../../src/lib/nova-sholat-scheduler.js";
 
 const pluginConfig = {
   name: "autosholat",
@@ -73,6 +74,13 @@ async function handler(m, { sock, db }) {
 
   if (args === "on") {
     database.setting("autoSholat", true);
+    await database.save();
+    // Start / re-schedule cron jobs
+    try {
+      initSholatScheduler(sock);
+    } catch (e) {
+      console.error("[autosholat] Failed to init scheduler:", e.message);
+    }
     await m.react("✅");
     const kota = database.setting("autoSholatKota") || { nama: "KOTA JAKARTA" };
     return m.reply(
@@ -87,6 +95,13 @@ async function handler(m, { sock, db }) {
 
   if (args === "off") {
     database.setting("autoSholat", false);
+    await database.save();
+    // Stop all cron jobs
+    try {
+      stopSholatScheduler();
+    } catch (e) {
+      console.error("[autosholat] Failed to stop scheduler:", e.message);
+    }
     return m.reply(
       `❌ *Sistem Pengingat Sholat Dinonaktifkan.*\n\n` +
       `Baiklah, aku tidak akan lagi menyiarkan jadwal sholat dan memutarkan audio adzan secara otomatis ke grup-grup.`
