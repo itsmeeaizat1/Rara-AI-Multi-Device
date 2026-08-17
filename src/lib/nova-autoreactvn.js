@@ -3,6 +3,8 @@ import fs from "fs";
 import path from "path";
 import { spawn } from "child_process";
 import { getDatabase } from "./nova-database.js";
+import { callAI } from "./nova-ai-service.js";
+import config from "../../config.js";
 
 const VN_DIR = path.join(process.cwd(), "assets", "vn");
 const TEMP_DIR = path.join(process.cwd(), "temp");
@@ -175,12 +177,74 @@ export async function handleAutoreactvn(m, sock) {
     ensureDir(VN_DIR);
     const vnPath = path.join(VN_DIR, matched.vnFile);
     if (!fs.existsSync(vnPath)) {
-      console.log("[AutoReactVN] File tidak ditemukan:", vnPath);
-      return false;
+      console.log("[AutoReactVN] File tidak ditemukan:", vnPath, "— fallback ke AI");
+
+      // AUTO-CLEANUP: hapus trigger yang filenya udah gak ada
+      const updatedTriggers = triggers.filter(t => t.vnFile !== matched.vnFile);
+      if (updatedTriggers.length !== triggers.length) {
+        db.setting("autoreactvnTriggers", updatedTriggers);
+        db.save().catch(() => {});
+        console.log("[AutoReactVN] Trigger orphan dihapus:", matched.trigger, "->", matched.vnFile);
+      }
+
+      // Fallback ke AI: balas pakai AI chat
+      try {
+        const aiConfig = config.aiHelp || {};
+        const aiReply = await callAI({
+          providerKey: "openai",
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: String(aiConfig.systemPrompt || "Kamu adalah asisten AI yang ramah dan jelas.") },
+            { role: "user", content: text },
+          ],
+          apiKey: aiConfig.apiKey,
+          apiEndpoint: aiConfig.apiEndpoint,
+        });
+
+        if (aiReply && aiReply.trim()) {
+          await sock.sendMessage(m.chat, { text: aiReply.slice(0, 1500) }, { quoted: m });
+          console.log("[AutoReactVN] AI fallback terkirim untuk trigger:", matched.trigger);
+        }
+      } catch (aiErr) {
+        console.error("[AutoReactVN] AI fallback gagal:", aiErr.message);
+      }
+
+      // Update cooldown walaupun fallback (biar gak spam AI)
+      chatCooldowns.set(chatId, now);
+      userCooldowns.set(sender, now);
+
+      return true;
     }
 
     const buffer = fs.readFileSync(vnPath);
-    if (!buffer || buffer.length === 0) return false;
+    if (!buffer || buffer.length === 0) {
+      console.log("[AutoReactVN] File kosong/corrupt:", vnPath, "— fallback ke AI");
+
+      // Fallback ke AI juga kalau file corrupt
+      try {
+        const aiConfig = config.aiHelp || {};
+        const aiReply = await callAI({
+          providerKey: "openai",
+          model: "gpt-4o-mini",
+          messages: [
+            { role: "system", content: String(aiConfig.systemPrompt || "Kamu adalah asisten AI yang ramah dan jelas.") },
+            { role: "user", content: text },
+          ],
+          apiKey: aiConfig.apiKey,
+          apiEndpoint: aiConfig.apiEndpoint,
+        });
+
+        if (aiReply && aiReply.trim()) {
+          await sock.sendMessage(m.chat, { text: aiReply.slice(0, 1500) }, { quoted: m });
+        }
+      } catch (aiErr) {
+        console.error("[AutoReactVN] AI fallback gagal:", aiErr.message);
+      }
+
+      chatCooldowns.set(chatId, now);
+      userCooldowns.set(sender, now);
+      return true;
+    }
 
     // Kirim VN — convert ke OGG/Opus dulu untuk PTT
     try {
