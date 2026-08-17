@@ -37,6 +37,26 @@ import { getWeatherAddress } from "./nova-weather-footer.js";
 import { saluranCtx } from "./nova-context.js";
 import { getAssetBuffer } from "./nova-asset-manager.js";
 import sharp from "sharp";
+
+/**
+ * Fake quoted stanza — bikin quote box nunjukin nama bot ("Nova AI Whatsapp Bot")
+ * bukan "Anda", biar reply konsisten branded di semua fitur utama.
+ */
+function getBotNameQuoted() {
+  return {
+    key: {
+      participant: "0@s.whatsapp.net",
+      remoteJid: "status@broadcast",
+    },
+    message: {
+      contactMessage: {
+        displayName: `🪸 ${config.bot?.name || "Nova AI Whatsapp Bot"}`,
+        vcard: `BEGIN:VCARD\nVERSION:3.0\nN:XL;ttname,;;;\nFN:ttname\nitem1.TEL;waid=13135550002:+1 (313) 555-0002\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
+        sendEphemeral: true,
+      },
+    },
+  };
+}
 let _prefixCache = null;
 let _prefixCacheTime = 0;
 const PREFIX_CACHE_TTL = 30000;
@@ -874,7 +894,7 @@ async function serialize(sock, msg, store = {}) {
           },
         },
         {
-          quoted: m,
+          quoted: getBotNameQuoted(),
         },
       );
     } else if (replyVariant === 4) {
@@ -892,7 +912,7 @@ async function serialize(sock, msg, store = {}) {
           previewType: 0,
         },
         {
-          quoted: m,
+          quoted: getBotNameQuoted(),
           contextInfo: {
             mentionedJid: options?.mentions || [m?.sender] || [],
             isForwarded: false,
@@ -953,7 +973,7 @@ async function serialize(sock, msg, store = {}) {
           ...options,
         },
         {
-          quoted: m,
+          quoted: getBotNameQuoted(),
         },
       );
     } else if (replyVariant === 7) {
@@ -988,7 +1008,7 @@ async function serialize(sock, msg, store = {}) {
             }
           }
         }
-      }, { quoted: m, userJid: sock.user.jid });
+      }, { quoted: getBotNameQuoted(), userJid: sock.user.jid });
 
       return sock.relayMessage(m.chat, msg.message, {
         messageId: msg.key.id,
