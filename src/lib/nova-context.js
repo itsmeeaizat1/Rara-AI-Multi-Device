@@ -48,16 +48,8 @@ function getRandomPraise() {
 }
 
 function _saluranCtx() {
-  const saluranId = config.saluran?.id || "120363400911374213@newsletter";
-  const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
   return {
-    forwardingScore: 9,
-    isForwarded: true,
-    forwardedNewsletterMessageInfo: {
-      newsletterJid: saluranId,
-      newsletterName: saluranName,
-      serverMessageId: 127,
-    },
+    isForwarded: false,
   };
 }
 
@@ -71,7 +63,7 @@ function getWinnerContextInfo() {
 
 function getRpgContextInfo(title, body) {
   const base = _saluranCtx();
-  if (title || body) {
+  if ((title || body) && rpgThumbBuffer) {
     base.externalAdReply = {
       title: title || config.bot?.name || "Nova RPG",
       body: body || "",

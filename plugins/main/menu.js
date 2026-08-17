@@ -177,18 +177,19 @@ function getContextInfo(botConfig, m, thumbBuffer, renderLargerThumbnail = false
   const saluranLink = botConfig.saluran?.link || "";
   const ctx = {
     mentionedJid: [m.sender],
-    forwardingScore: 9,
     isForwarded: false,
-    externalAdReply: {
+  };
+  if (thumbBuffer) {
+    ctx.externalAdReply = {
       title: botConfig.bot?.name || "Nova AI Whatsapp Bot",
       body: `BOT WHATSAPP MULTI DEVICE`,
       sourceUrl: saluranLink,
       previewType: "PHOTO",
       showAdAttribution: false,
       renderLargerThumbnail,
-    },
-  };
-  if (thumbBuffer) ctx.externalAdReply.thumbnail = thumbBuffer;
+      thumbnail: thumbBuffer,
+    };
+  }
   return ctx;
 }
 

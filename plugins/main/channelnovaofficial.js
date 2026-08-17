@@ -233,18 +233,19 @@ async function handler(m, { sock, db }) {
 
   const contextInfo = {
     mentionedJid: [m.sender],
-    forwardingScore: 9,
-    isForwarded: true,
-    externalAdReply: {
+    isForwarded: false,
+  };
+  if (thumbBuffer) {
+    contextInfo.externalAdReply = {
       title: botName,
       body: "Saluran WhatsApp Resmi",
       sourceUrl: channelLink,
-      previewType: "IMAGE",
+      previewType: "PHOTO",
       showAdAttribution: false,
       renderLargerThumbnail: true,
-    },
-  };
-  if (thumbBuffer) contextInfo.externalAdReply.thumbnail = thumbBuffer;
+      thumbnail: thumbBuffer,
+    };
+  }
 
   await m.reply(claraWrap("Saluran Resmi", lines.join("\n")), { contextInfo });
   await m.react("✅");
