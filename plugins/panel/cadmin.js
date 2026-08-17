@@ -189,26 +189,31 @@ async function handler(m, { sock }) {
 
     const user = userRes.data.attributes;
 
-    let detailTxt = `✅ *Admin Panel Berhasil Dibuat*\n\n`;
-    detailTxt += `╭─「 📋 *Detail Akun* 」\n`;
-    detailTxt += `┃ 🖥️ \`sErver\`: *${serverLabel}*\n`;
-    detailTxt += `┃ 🆔 \`User Id\`: *${user.id}*\n`;
-    detailTxt += `┃ 👤 \`Username\`: *${user.username}*\n`;
-    detailTxt += `┃ 🔐 \`Password\`: *${password}*\n`;
-    detailTxt += `┃ 👑 \`sTatus\`: *Root Admin*\n`;
-    detailTxt += `┃ 🗓️ \`Tanggal\`: *${formatDate()}*\n`;
-    detailTxt += `╰───────────────\n\n`;
-    detailTxt += `🌐 *Login Panel:* ${serverConfig.domain}\n\n`;
-    detailTxt += `> ⚠️ Akun ini memiliki akses penuh!\n`;
-    detailTxt += `> ⚠️ Jangan bagikan ke siapapun!`;
+    let detailTxt = `ADMIN PANEL BERHASIL DIBUAT\n\n`;
+    detailTxt += `Server: *${serverLabel}*\n`;
+    detailTxt += `User ID: *${user.id}*\n`;
+    detailTxt += `Username: *${user.username}*\n`;
+    detailTxt += `Password: *${password}*\n`;
+    detailTxt += `Status: *Root Admin*\n`;
+    detailTxt += `Tanggal: *${formatDate()}*\n\n`;
+    detailTxt += `Login Panel: ${serverConfig.domain}\n\n`;
+    detailTxt += `Akun ini memiliki akses penuh!\nJangan bagikan ke siapapun!`;
 
-    await sock.sendMessage(targetUser, { text: detailTxt });
+    // Kirim info akun ke DM pembuat
+    await sock.sendMessage(m.sender, { text: detailTxt });
 
+    // Jika target bukan pembuat, kirim juga ke target
     if (targetUser !== m.sender) {
-      await m.reply(
-        `✅ *Admin Panel Berhasil Dibuat*\n\n> Server: *${serverLabel}*\n> Data telah dikirim ke \`${targetUser.split("@")[0]}\``,
-      );
+      await sock.sendMessage(targetUser, { text: detailTxt });
     }
+
+    // Di grup/chat: hanya konfirmasi singkat
+    let confirmTxt = `Admin Panel berhasil dibuat\n\n`;
+    confirmTxt += `Server: ${serverLabel}\n`;
+    confirmTxt += `Untuk: ${targetUser.split("@")[0]}\n\n`;
+    confirmTxt += `Detail akun sudah dikirim ke DM kamu`;
+
+    await m.reply(claraWrap("Admin", confirmTxt));
   } catch (err) {
     return m.reply(claraWrap("Admin", te(m.prefix, m.command, m.pushName), "error"))
   }
