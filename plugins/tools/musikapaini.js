@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
       buttons.push({
         name: "cta_url",
         buttonParamsJson: JSON.stringify({
-          display_text: "▶️ YouTube",
+          display_text: "YouTube",
           url: `https://youtube.com/watch?v=${links.youtube.vid}`,
         }),
       });

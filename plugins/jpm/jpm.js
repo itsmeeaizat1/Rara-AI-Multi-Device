@@ -1401,7 +1401,7 @@ async function handleSetDelay(m, sock, db, input) {
       {
         name: "quick_reply",
         buttonParamsJson: JSON.stringify({
-          display_text: "↩️ Kembali",
+          display_text: "Kembali",
           id: `${prefix}jpm`,
         }),
       },
