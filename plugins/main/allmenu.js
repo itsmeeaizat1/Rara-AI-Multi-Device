@@ -302,7 +302,6 @@ ${readMore}
                 },
                 contextInfo: {
                   isForwarded: false,
-                  forwardingScore: 9,
                   participant: "0@s.whatsapp.net",
                   quotedMessage: { conversation: `${config.bot?.name}` },
                   mentionedJid: [m.sender],
@@ -349,7 +348,6 @@ ${readMore}
                 },
                 contextInfo: {
                   isForwarded: false,
-                  forwardingScore: 9,
                   participant: "0@s.whatsapp.net",
                   quotedMessage: { conversation: `${config.bot?.name}` },
                   mentionedJid: [m.sender],
@@ -459,7 +457,6 @@ ${readMore}
         text: txt,
         contextInfo: {
           mentionedJid: [m.sender],
-          forwardingScore: 9,
           isForwarded: false,
           externalAdReply: {
             title: config.bot?.name || "Nova AI Whatsapp Bot",
