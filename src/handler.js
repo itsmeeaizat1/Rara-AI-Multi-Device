@@ -355,12 +355,14 @@ async function messageHandler(msg, sock) {
           closest = cmd;
         }
       }
-      if (closest && !m.isNewsletter) {
+      if (!m.isNewsletter) {
         try {
-          await m.reply(
-            `❓ Command *${m.prefix}${command}* tidak ditemukan\n\n` +
-            `Mungkin maksudmu: *${m.prefix}${closest}* ?`
-          );
+          let notFoundText = `❓ Command *${m.prefix}${command}* tidak ditemukan\n\n`;
+          if (closest) {
+            notFoundText += `Mungkin maksudmu: *${m.prefix}${closest}* ?\n\n`;
+          }
+          notFoundText += `> Ketik *${m.prefix}tanyaai <pertanyaan>* untuk tanya AI lebih lanjut`;
+          await m.reply(notFoundText);
         } catch {}
       }
     }
