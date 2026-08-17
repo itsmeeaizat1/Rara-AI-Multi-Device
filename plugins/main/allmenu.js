@@ -465,7 +465,7 @@ ${readMore}
             thumbnail: fallbackThumbAll,
             renderLargerThumbnail: true,
             showAdAttribution: false,
-            previewType: "VIDEO",
+            previewType: "PHOTO",
           },
         },
       }, { quoted: m });

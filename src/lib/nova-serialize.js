@@ -805,14 +805,14 @@ async function serialize(sock, msg, store = {}) {
       }
     } catch (e) { }
 
-    let replyVariant = 1;
+    let replyVariant = 7;
     try {
       replyVariant =
         db?.setting?.("replyVariant") ||
         db?.db?.data?.settings?.replyVariant ||
         7;
     } catch (e) {
-      replyVariant = 1;
+      replyVariant = 7;
     }
 
     let contextInfo = {
@@ -821,7 +821,7 @@ async function serialize(sock, msg, store = {}) {
         title: config.bot?.name || "Nova AI Whatsapp Bot",
         body: `BOT WHATSAPP MULTI DEVICE`,
         sourceUrl: config.saluran?.link || "",
-        previewType: "VIDEO",
+        previewType: "PHOTO",
         showAdAttribution: false,
         renderLargerThumbnail: false,
       },
@@ -992,7 +992,7 @@ async function serialize(sock, msg, store = {}) {
                   title: config.bot?.name || "Nova AI Whatsapp Bot",
                   body: `BOT WHATSAPP MULTI DEVICE`,
                   sourceUrl: config.saluran?.link || "",
-                  previewType: "VIDEO",
+                  previewType: "PHOTO",
                   showAdAttribution: false,
                   renderLargerThumbnail: false,
                 },

@@ -183,7 +183,7 @@ function getContextInfo(botConfig, m, thumbBuffer, renderLargerThumbnail = false
       title: botConfig.bot?.name || "Nova AI Whatsapp Bot",
       body: `BOT WHATSAPP MULTI DEVICE`,
       sourceUrl: saluranLink,
-      previewType: "VIDEO",
+      previewType: "PHOTO",
       showAdAttribution: false,
       renderLargerThumbnail,
     },
