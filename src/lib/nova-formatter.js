@@ -609,7 +609,7 @@ async function getImportantDay(date = new Date()) {
     // API unreachable atau timeout, return default
   }
 
-  return "Tidak ada hari penting hari ini";
+  return "";
 }
 
 // Helper untuk nama bulan dalam bahasa Indonesia
