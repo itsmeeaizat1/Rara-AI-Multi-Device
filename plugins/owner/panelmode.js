@@ -20,9 +20,9 @@ const pluginConfig = {
 }
 
 const MODES = {
-    'dm': { num: 1, name: 'PM Only', desc: 'Info akun dikirim ke DM pembuat saja' },
-    'grup': { num: 2, name: 'Grup Only', desc: 'Info akun dikirim di grup/chat saja' },
-    'both': { num: 3, name: 'PM + Grup', desc: 'Info akun dikirim ke DM dan grup' }
+    'dm': { num: 1, name: 'DM Only', desc: 'Info akun dikirim ke DM pembuat saja' },
+    'group': { num: 2, name: 'Group Only', desc: 'Info akun dikirim di grup/chat saja' },
+    'dmdangroup': { num: 3, name: 'DM + Group', desc: 'Info akun dikirim ke DM dan grup' }
 }
 
 async function handler(m, { sock }) {
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
 
     // Cek mode saat ini
     const currentMode = db.setting('panelDeliveryMode') || 1
-    const currentName = currentMode === 1 ? 'dm' : currentMode === 2 ? 'grup' : 'both'
+    const currentName = currentMode === 1 ? 'dm' : currentMode === 2 ? 'group' : 'dmdangroup'
     const currentInfo = MODES[currentName] || MODES['dm']
 
     if (!text || text === 'cek' || text === 'status') {
@@ -40,9 +40,9 @@ async function handler(m, { sock }) {
         txt += 'Mode aktif: *' + currentName + ' - ' + currentInfo.name + '*\n'
         txt += currentInfo.desc + '\n\n'
         txt += 'Pilihan:\n'
-        txt += '  dm   = PM only (ke DM pembuat)\n'
-        txt += '  grup = Grup only (di grup/chat)\n'
-        txt += '  both = PM + Grup (dua-duanya)\n\n'
+        txt += '  dm         = DM only (ke DM pembuat)\n'
+        txt += '  group      = Group only (di grup/chat)\n'
+        txt += '  dmdangroup = DM + Group (dua-duanya)\n\n'
         txt += 'Cara pakai: ' + prefix + 'togglecpanelinfo dm'
 
         return m.reply(claraWrap('panelmode', txt))
@@ -50,10 +50,10 @@ async function handler(m, { sock }) {
 
     if (!MODES[text]) {
         return m.reply(claraWrap('panelmode', 
-            'Mode tidak valid. Pilih: dm, grup, atau both\n\n' +
+            'Mode tidak valid. Pilih: dm, group, atau dmdangroup\n\n' +
             prefix + 'togglecpanelinfo dm\n' +
-            prefix + 'togglecpanelinfo grup\n' +
-            prefix + 'togglecpanelinfo both'
+            prefix + 'togglecpanelinfo group\n' +
+            prefix + 'togglecpanelinfo dmdangroup'
         ))
     }
 
