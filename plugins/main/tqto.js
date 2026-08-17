@@ -22,9 +22,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const credits = [
         { name: 'Aizat', role: 'Pembuat Bot', icon: '👑' },
-        { name: 'Claude Sonnet 5', role: 'Coding Assistant', icon: '🤖' },
-        { name: 'OpenAI Luna', role: 'AI Coding', icon: '🤖' },
-        { name: 'GLM (Terbaru)', role: 'AI Coding', icon: '🤖' },
+        { name: 'Claude Sonnet 5', role: 'Coding Assistant', icon: '〽' },
+        { name: 'OpenAI Luna', role: 'AI Coding', icon: '〽' },
+        { name: 'GLM (Terbaru)', role: 'AI Coding', icon: '〽' },
     ]
 
     const navText = `🍟 *Terima kasih kepada yang sudah berkontribusi di ${config.bot.name}*
