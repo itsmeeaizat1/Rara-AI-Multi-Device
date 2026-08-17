@@ -168,9 +168,10 @@ async function handler(m, { sock }) {
   const ramInput = parts[0]
   const diskInput = parts[1]
   const cpuInput = parts[2]
-  const numberInput = parts[3]
+  const usernameInput = parts[3]
+  const numberInput = parts[4]
 
-  if (!ramInput || !diskInput || !cpuInput || !numberInput) {
+  if (!ramInput || !diskInput || !cpuInput || !usernameInput || !numberInput) {
     return m.reply(claraWrap("Panel",
       `Format tidak lengkap\n\n` +
       `Gunakan: ${prefix}cp <ram> <disk> <cpu> <nomor>\n` +
@@ -250,9 +251,8 @@ async function handler(m, { sock }) {
     ))
   }
 
-  // Generate username from target number
-  const baseUsername = 'nova' + targetUser.split("@")[0].slice(-6)
-  const username = baseUsername.toLowerCase()
+  // Use custom username from command
+  const username = usernameInput.toLowerCase().replace(/[^a-z0-9_]/g, '')
   const email = `${username}@nova.md`
   const name = capitalize(username) + " Server"
   const password = username + crypto.randomBytes(3).toString("hex")
