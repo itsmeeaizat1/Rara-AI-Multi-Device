@@ -41,16 +41,41 @@ async function handler(m, { sock, args }) {
   // ON
   if (action === "on") {
     db.setting("autoreactvnEnabled", true);
+
+    // Auto-seed default triggers pakai VN yang udah ada di assets/vn/
+    // kalau belum ada trigger sama sekali (biar gak "kirim on tapi gak ada yang kebalas")
+    let seeded = 0;
+    if (triggers.length === 0) {
+      const defaultMap = [
+        { file: "vn_hai_hai_juga.mp3", words: ["hai", "halo", "hallo", "hi"] },
+        { file: "vn_masa_sih_kak.mp3", words: ["masa sih", "yakin", "serius", "beneran", "emang"] },
+        { file: "vn_daftar_dulu_kak.mp3", words: ["daftar", "cara daftar", "gimana daftar"] },
+      ];
+      for (const entry of defaultMap) {
+        const vnPath = path.join(VN_DIR, entry.file);
+        if (!fs.existsSync(vnPath)) continue;
+        const size = fs.statSync(vnPath).size;
+        for (const word of entry.words) {
+          if (!triggers.find(t => t.trigger === word)) {
+            triggers.push({ trigger: word, vnFile: entry.file, size });
+            seeded++;
+          }
+        }
+      }
+      if (seeded > 0) db.setting("autoreactvnTriggers", triggers);
+    }
+
     await db.save();
     await m.react("✅");
-    return m.reply(
-      claraWrap("AutoReactVN", [
-        "✅ AUTOREACTVN DIAKTIFKAN",
-        "",
-        "Bot akan auto-reply dengan VN",
-        "saat user kirim kata trigger",
-      ].join("\n"))
-    );
+
+    let onTxt = "✅ AUTOREACTVN DIAKTIFKAN\n\nBot akan auto-reply dengan VN\nsaat user kirim kata trigger";
+    if (seeded > 0) {
+      onTxt += "\n\nTrigger default otomatis diset (" + seeded + "):\n";
+      onTxt += triggers.slice(0, seeded).map((t, i) => "  " + (i + 1) + ". " + t.trigger).join("\n");
+      onTxt += "\n\nCek: " + m.prefix + "autoreactvn list";
+    }
+
+    return m.reply(claraWrap("AutoReactVN", onTxt));
   }
 
   // OFF
