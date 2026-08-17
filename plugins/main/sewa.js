@@ -1,49 +1,199 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, tipText, bracketBox } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
+import * as timeHelper from "../../src/lib/nova-time.js";
+import config from "../../config.js";
 
 const pluginConfig = {
   name: "sewa",
   alias: ["sewa2", "sewamain", "sewabot2"],
   category: "info",
-  description: "Info sewa bot",
+  description: "Info detail sewa bot - harga, paket, dan cara sewa",
   usage: ".sewa",
   example: ".sewa",
   isOwner: false,
   isPremium: false,
   isGroup: true,
-  isPrivate: false,
+  isPrivate: true,
   cooldown: 5,
   energi: 0,
   isEnabled: true,
 };
 
-async function handler(m, { sock, config: botConfig }) {
+function formatCountdown(expiredAt) {
+  const diff = expiredAt - Date.now();
+  if (diff <= 0) return "EXPIRED";
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const minutes = Math.floor((diff % 3600000) / 60000);
+  if (days > 0) return days + " hari " + hours + " jam";
+  if (hours > 0) return hours + " jam " + minutes + " menit";
+  return minutes + " menit";
+}
+
+function buildPriceList() {
+  const p = config.sewaPrice || {};
+  return [
+    `Harian    → ${p.daily || "Rp 5.000"}`,
+    `Mingguan  → ${p.weekly || "Rp 25.000"}`,
+    `Bulanan   → ${p.monthly || "Rp 50.000"}`,
+    `Tahunan   → ${p.yearly || "Rp 300.000"}`,
+    `Permanent → ${p.lifetime || "Rp 500.000"}`,
+    `Custom    → ${p.custom || "Nego"}`,
+  ];
+}
+
+function buildPaymentMethods() {
+  const payment = config.payment || {};
+  const methods = [];
+
+  if (payment.qrisUrl) methods.push("QRIS (scan di chat owner)");
+
+  const eWallets = (payment.methods || []).filter((m) => m.number);
+  for (const m of eWallets) {
+    methods.push(`${m.name}: ${m.number}${m.holder ? " (${m.holder})" : ""}`);
+  }
+
+  const banks = payment.banks || [];
+  for (const b of banks) {
+    if (b.number) methods.push(`${b.name}: ${b.number}${b.holder ? " (${b.holder})" : ""}`);
+  }
+
+  if (methods.length === 0) {
+    methods.push("Hubungi owner untuk metode pembayaran");
+  }
+
+  return methods;
+}
+
+function buildFeatureList() {
+  return [
+    "1200+ perintah AI & tools",
+    "Auto-reply AI multi-provider",
+    "Sticker maker & canvas editor",
+    "Download manager (YT, TT, IG)",
+    "Game & RPG economy system",
+    "Group moderation lengkap",
+    "Auto-weather di menu",
+    "Voice note auto-react",
+    "Anti-link, anti-toxic, anti-spam",
+    "Update fitur rutin",
+  ];
+}
+
+async function handler(m, { sock, config: botConfig, db }) {
   try {
     const prefix = botConfig.command?.prefix || ".";
 
-    const text =
-      claraWrap("Sewa", ["◦ Bot ini dapat disewa.",
-        "◦ Hubungi owner untuk info harga dan durasi."].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}owner untuk kontak owner`) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali`);
+    // Ambil data sewa grup (kalau ada)
+    const database = db || getDatabase();
+    if (!database.db.data.sewa) {
+      database.db.data.sewa = { enabled: false, groups: {} };
+      database.db.write();
+    }
 
-    await m.reply(claraWrap("sewa", text));
+    const sewaData = database.db.data.sewa.groups[m.chat];
+    const isGroup = m.isGroup;
+    const ownerName = botConfig.owner?.name || "Owner";
+    const ownerNumbers = botConfig.owner?.number || [];
+    const ownerNumber = ownerNumbers[0] || "628174887770";
+    const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
+
+    // ── BAGIAN 1: STATUS SEWA GRUP (kalau di grup dan sudah terdaftar) ──
+    let sewaStatus = "";
+
+    if (isGroup && sewaData) {
+      const groupName = sewaData.name || m.chat.split("@")[0];
+
+      if (sewaData.isLifetime) {
+        sewaStatus = bracketBox("♾️", "Status Sewa Grup Ini", [
+          `Grup: *${groupName}*`,
+          `Status: *PERMANENT* ♾️`,
+          `Bot aktif selamanya di sini`,
+        ]);
+      } else {
+        const countdown = formatCountdown(sewaData.expiredAt);
+        const expiredStr = timeHelper.fromTimestamp(sewaData.expiredAt, "D MMMM YYYY HH:mm");
+        const isExpired = sewaData.expiredAt <= Date.now();
+        sewaStatus = bracketBox(isExpired ? "❌" : "✅", "Status Sewa Grup Ini", [
+          `Grup: *${groupName}*`,
+          `Status: *${isExpired ? "EXPIRED" : "AKTIF"}*`,
+          `Sisa waktu: *${countdown}*`,
+          `Berakhir: *${expiredStr} WIB*`,
+        ]);
+      }
+      sewaStatus += "\n\n";
+    } else if (isGroup && !sewaData) {
+      sewaStatus = bracketBox("⚠️", "Status Sewa Grup Ini", [
+        `Grup ini *BELUM TERDAFTAR* sewa`,
+        `Bot bisa keluar sewaktu-waktu`,
+        `Sewa sekarang biar bot tetap di sini!`,
+      ]);
+      sewaStatus += "\n\n";
+    }
+
+    // ── BAGIAN 2: PAKET HARGA ──
+    const priceBox = bracketBox("💰", "Daftar Harga Sewa", buildPriceList());
+
+    // ── BAGIAN 3: FITUR YANG DIDAPAT ──
+    const featureBox = bracketBox("🎁", "Fitur Yang Kamu Dapat", buildFeatureList());
+
+    // ── BAGIAN 4: METODE PEMBAYARAN ──
+    const paymentBox = bracketBox("💳", "Metode Pembayaran", buildPaymentMethods());
+
+    // ── BAGIAN 5: CARA SEWA ──
+    const caraBox = bracketBox("📝", "Cara Sewa", [
+      `Ketik *${prefix}daftarsewa* di private chat`,
+      `Isi data diri (nama, umur, asal)`,
+      `Kirim link invite grup kamu`,
+      `Pilih durasi sewa`,
+      `Pembayaran ke owner`,
+      `Owner approve → bot auto-join!`,
+    ]);
+
+    // ── BAGIAN 6: KONTAK OWNER ──
+    const ownerBox = bracketBox("👨‍💻", "Kontak Owner", [
+      `Nama: *${ownerName}*`,
+      `Nomor: wa.me/${ownerNumber}`,
+      `Chat untuk info lebih lanjut`,
+    ]);
+
+    // ── BAGIAN 7: FORMAT DURASI ──
+    const formatBox = bracketBox("⏱️", "Format Durasi", [
+      `30i = 30 menit`,
+      `12h = 12 jam`,
+      `7d = 7 hari`,
+      `1m = 1 bulan`,
+      `1y = 1 tahun`,
+      `lifetime = permanen`,
+    ]);
+
+    // ── GABUNG SEMUA ──
+    let fullText = sewaStatus +
+      priceBox + "\n\n" +
+      featureBox + "\n\n" +
+      caraBox + "\n\n" +
+      paymentBox + "\n\n" +
+      formatBox + "\n\n" +
+      ownerBox + "\n\n" +
+      tipText(`Ketik ${prefix}daftarsewa untuk daftar sekarang!`) + "\n" +
+      tipText(`Ketik ${prefix}menu untuk kembali ke menu`);
+
+    await sendReplyWithNav(sock, m, fullText, "sewa");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await sendReplyWithNav(sock, m, text, "sewa");
+    await sendReplyWithNav(sock, m,
+      claraWrap("Gagal", [
+        `Status: *Gagal*`,
+        `Alasan: *${error.message}*`,
+        `Coba lagi nanti atau hubungi owner`,
+      ].join("\n")),
+      "sewa"
+    );
   }
 
   return { handled: true };
 }
 
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler };
