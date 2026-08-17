@@ -12,6 +12,7 @@ import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nov
 import { isGcSeller } from './gcseller.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
 import fs from 'fs'
+import { getDatabase } from '../../src/lib/nova-database.js'
 const RAM_OPTIONS = [
   "1gb",
   "2gb",
@@ -320,7 +321,10 @@ async function handler(m, { sock }) {
 
     const ramLabel = specs.ram === 0 ? "Unlimited" : `${specs.ram / 1000} GB`;
 
-    // Info akun lengkap (untuk DM)
+    // Baca delivery mode dari database (1=PM, 2=Grup, 3=PM+Grup)
+    const db = getDatabase()
+    const deliveryMode = db.setting('panelDeliveryMode') || 1
+
     let detailTxt = `PANEL BERHASIL DIBUAT\n\n`;
     detailTxt += `Server: *${serverLabel}*\n`;
     detailTxt += `Username: *${user.username}*\n`;
@@ -335,60 +339,16 @@ async function handler(m, { sock }) {
       { upload: sock.waUploadToServer }
     );
 
-    const msg = generateWAMessageFromContent(
-      m.sender,
-      {
-        viewOnceMessage: {
-          message: {
-            messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
-            interactiveMessage: proto.Message.InteractiveMessage.fromObject({
-              contextInfo: {
-                mentionedJid: [m.sender],
-              },
-              body: proto.Message.InteractiveMessage.Body.fromObject({ text: detailTxt }),
-              footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: `Panel Pterodactyl - ${serverConfig.domain}` }),
-              header: proto.Message.InteractiveMessage.Header.fromObject({
-                hasMediaAttachment: true,
-                imageMessage: headerMedia.imageMessage,
-              }),
-              nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
-                buttons: [
-                  {
-                    name: "cta_copy",
-                    buttonParamsJson: JSON.stringify({ display_text: "Copy Username", copy_code: username }),
-                  },
-                  {
-                    name: "cta_copy",
-                    buttonParamsJson: JSON.stringify({ display_text: "Copy Password", copy_code: password }),
-                  },
-                  {
-                    name: "cta_url",
-                    buttonParamsJson: JSON.stringify({ display_text: "Buka Panel", url: serverConfig.domain }),
-                  },
-                ],
-              }),
-            }),
-          },
-        },
-      },
-      {}
-    );
-
-    // Kirim info akun ke DM pembuat (private message)
-    await sock.relayMessage(m.sender, msg.message, { messageId: msg.key.id });
-
-    // Jika target bukan pembuat, kirim juga ke target
-    if (targetUser !== m.sender) {
-      const msgTarget = generateWAMessageFromContent(
-        targetUser,
+    // Helper: bikin interactive message dengan tombol copy
+    function buildPanelMsg(recipient) {
+      return generateWAMessageFromContent(
+        recipient,
         {
           viewOnceMessage: {
             message: {
               messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
               interactiveMessage: proto.Message.InteractiveMessage.fromObject({
-                contextInfo: {
-                  mentionedJid: [targetUser],
-                },
+                contextInfo: { mentionedJid: [recipient] },
                 body: proto.Message.InteractiveMessage.Body.fromObject({ text: detailTxt }),
                 footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: `Panel Pterodactyl - ${serverConfig.domain}` }),
                 header: proto.Message.InteractiveMessage.Header.fromObject({
@@ -397,18 +357,9 @@ async function handler(m, { sock }) {
                 }),
                 nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
                   buttons: [
-                    {
-                      name: "cta_copy",
-                      buttonParamsJson: JSON.stringify({ display_text: "Copy Username", copy_code: username }),
-                    },
-                    {
-                      name: "cta_copy",
-                      buttonParamsJson: JSON.stringify({ display_text: "Copy Password", copy_code: password }),
-                    },
-                    {
-                      name: "cta_url",
-                      buttonParamsJson: JSON.stringify({ display_text: "Buka Panel", url: serverConfig.domain }),
-                    },
+                    { name: "cta_copy", buttonParamsJson: JSON.stringify({ display_text: "Copy Username", copy_code: username }) },
+                    { name: "cta_copy", buttonParamsJson: JSON.stringify({ display_text: "Copy Password", copy_code: password }) },
+                    { name: "cta_url", buttonParamsJson: JSON.stringify({ display_text: "Buka Panel", url: serverConfig.domain }) },
                   ],
                 }),
               }),
@@ -417,19 +368,43 @@ async function handler(m, { sock }) {
         },
         {}
       );
-      await sock.relayMessage(targetUser, msgTarget.message, { messageId: msgTarget.key.id });
+    }
+
+    // Helper: kirim detail ke chat tertentu (untuk grup mode)
+    async function sendDetailToChat(chatId) {
+      const panelMsg = buildPanelMsg(chatId)
+      await sock.relayMessage(chatId, panelMsg.message, { messageId: panelMsg.key.id })
+    }
+
+    // Konfirmasi singkat tanpa password (untuk grup)
+    const confirmTxt = `Panel *${serverLabel}* berhasil dibuat\n\nUntuk: ${targetUser.split("@")[0]}\nServer: ${serverLabel}\nRAM: ${ramLabel}`;
+
+    // Mode 1: PM Only - kirim ke DM pembuat + target
+    if (deliveryMode === 1) {
+      await sendDetailToChat(m.sender)
+      if (targetUser !== m.sender) {
+        await sendDetailToChat(targetUser)
+      }
+      await m.reply(claraWrap("Panel", confirmTxt + "\n\nDetail akun sudah dikirim ke DM kamu"))
+    }
+    // Mode 2: Grup Only - kirim detail lengkap di grup/chat
+    else if (deliveryMode === 2) {
+      await sendDetailToChat(m.chat)
+      // Kalau target bukan pembuat dan bukan di chat yang sama, kirim juga ke target
+      if (targetUser !== m.sender && targetUser !== m.chat) {
+        await sendDetailToChat(targetUser)
+      }
+    }
+    // Mode 3: PM + Grup - kirim ke DM dan grup
+    else if (deliveryMode === 3) {
+      await sendDetailToChat(m.sender)
+      await sendDetailToChat(m.chat)
+      if (targetUser !== m.sender && targetUser !== m.chat) {
+        await sendDetailToChat(targetUser)
+      }
     }
 
     await setPanelLastUsed();
-
-    // Di grup/chat: hanya konfirmasi singkat, TANPA password
-    let confirmTxt = `Panel *${serverLabel}* berhasil dibuat\n\n`;
-    confirmTxt += `Untuk: ${targetUser.split("@")[0]}\n`;
-    confirmTxt += `Server: ${serverLabel}\n`;
-    confirmTxt += `RAM: ${ramLabel}\n\n`;
-    confirmTxt += `Detail akun sudah dikirim ke DM kamu`;
-    
-    await m.reply(claraWrap("Panel", confirmTxt));
   } catch (err) {
     const rawMsg = err?.response?.data?.errors?.[0]?.detail || err?.response?.data?.message || err.message;
     const errorMap = {
