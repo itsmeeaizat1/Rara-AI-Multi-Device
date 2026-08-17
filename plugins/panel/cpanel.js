@@ -3,7 +3,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 import config from '../../config.js'
-import { getRoles, getUserRole, getAccessibleServers, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
+import { getRoles, getUserRole, getAccessibleServers, hasAccessToServer, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
 const pluginConfig = {
     name: 'cpanel',
     alias: ['panelmenu', 'menupanel'],
@@ -21,6 +21,19 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
+    // Cek akses: owner atau punya panel role (reseller/ceo/owner panel)
+    if (!m.isOwner) {
+        const userServers = getAccessibleServers(m.sender)
+        if (userServers.length === 0) {
+            return m.reply(claraWrap("cpanel",
+                "Akses Ditolak\n\n" +
+                "Hanya *Bot Owner* atau *Reseller/CEO Panel* yang bisa akses menu ini\n\n" +
+                "Minta owner untuk add kamu sebagai reseller:\n" +
+                ".addreseller v1 @tag"
+            ))
+        }
+    }
+
     const pteroConfig = config.pterodactyl
     const prefix = m.prefix || '.'
     
@@ -35,78 +48,85 @@ async function handler(m, { sock }) {
     }
     
     const userServers = getAccessibleServers(m.sender)
-    const userRoleList = userServers.map(s => `${s.server.toUpperCase()}:${s.role}`).join(', ') || 'Tidak ada'
+    const userRoleList = userServers.map(s => s.server.toUpperCase() + ':' + s.role).join(', ') || 'Tidak ada'
     
-    let txt = `🖥️ *Cpanel Menu v2.0*\n\n`
+    let txt = `Cpanel Menu v2.0\n\n`
     txt += `> V1: ${serverStatuses.v1} | V2: ${serverStatuses.v2} | V3: ${serverStatuses.v3} | V4: ${serverStatuses.v4} | V5: ${serverStatuses.v5}\n`
     txt += `> Role kamu: *${m.isOwner ? 'Bot Owner' : userRoleList}*\n\n`
     
-    txt += `╭─「 📦 *Create sErver* 」\n`
+    // Reseller hanya lihat command yang relevan
+    const isResellerOnly = !m.isOwner && userServers.every(s => s.role === 'reseller')
+    
+    if (!isResellerOnly) {
+        txt += `╭─「 *Owner Management* 」\n`
+        for (const ver of VALID_SERVERS) {
+            txt += `┃ \`${prefix}addowner${ver}\` | \`${prefix}delowner${ver}\` | \`${prefix}listowner${ver}\`\n`
+        }
+        txt += `╰───────────────\n\n`
+        
+        txt += `╭─「 *Ceo Management* 」\n`
+        for (const ver of VALID_SERVERS) {
+            txt += `┃ \`${prefix}addceo${ver}\` | \`${prefix}delceo${ver}\` | \`${prefix}listceo${ver}\`\n`
+        }
+        txt += `╰───────────────\n\n`
+        
+        txt += `╭─「 *Reseller Management* 」\n`
+        for (const ver of VALID_SERVERS) {
+            txt += `┃ \`${prefix}addreseller${ver}\` | \`${prefix}delreseller${ver}\` | \`${prefix}listreseller${ver}\`\n`
+        }
+        txt += `╰───────────────\n\n`
+    }
+    
+    txt += `╭─「 *Create Server* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}1gb${ver}\` - \`${prefix}10gb${ver}\` | \`${prefix}unli${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 👑 *Owner Management* 」\n`
-    for (const ver of VALID_SERVERS) {
-        txt += `┃ \`${prefix}addowner${ver}\` | \`${prefix}delowner${ver}\` | \`${prefix}listowner${ver}\`\n`
-    }
-    txt += `╰───────────────\n\n`
-    
-    txt += `╭─「 🎯 *Ceo Management* 」\n`
-    for (const ver of VALID_SERVERS) {
-        txt += `┃ \`${prefix}addceo${ver}\` | \`${prefix}delceo${ver}\` | \`${prefix}listceo${ver}\`\n`
-    }
-    txt += `╰───────────────\n\n`
-    
-    txt += `╭─「 👥 *Reseller Management* 」\n`
-    for (const ver of VALID_SERVERS) {
-        txt += `┃ \`${prefix}addreseller${ver}\` | \`${prefix}delreseller${ver}\` | \`${prefix}listreseller${ver}\`\n`
-    }
-    txt += `╰───────────────\n\n`
-    
-    txt += `╭─「 🔐 *Admin Panel* 」\n`
+    txt += `╭─「 *Admin Panel* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}cadmin${ver}\` | \`${prefix}deladmin${ver}\` | \`${prefix}listadmin${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 🖥️ *sErver Management* 」\n`
+    txt += `╭─「 *Server Management* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}listserver${ver}\` | \`${prefix}delserver${ver}\` | \`${prefix}serverinfo${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 👤 *User Management* 」\n`
+    txt += `╭─「 *User Management* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}listuser${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 🏪 *Gc sEller Panel* 」\n`
-    for (const ver of VALID_SERVERS) {
-        txt += `┃ \`${prefix}addgcseller${ver}\` | \`${prefix}resetgcseller${ver}\`\n`
+    if (!isResellerOnly) {
+        txt += `╭─「 *Gc Seller Panel* 」\n`
+        for (const ver of VALID_SERVERS) {
+            txt += `┃ \`${prefix}addgcseller${ver}\` | \`${prefix}resetgcseller${ver}\`\n`
+        }
+        txt += `╰───────────────\n\n`
+        
+        const doConfig = config.digitalocean || {}
+        const doHasToken = doConfig.token ? '✅' : '❌'
+        
+        txt += `╭─「 *Digitalocean Vps* 」\n`
+        txt += `┃ Status: ${doHasToken} Token\n`
+        txt += `┃\n`
+        txt += `┃ Create Vps:\n`
+        txt += `┃ \`${prefix}vps1g1c\` - 1GB/1CPU\n`
+        txt += `┃ \`${prefix}vps2g1c\` - 2GB/1CPU\n`
+        txt += `┃ \`${prefix}vps4g2c\` - 4GB/2CPU\n`
+        txt += `┃ \`${prefix}vps8g4c\` - 8GB/4CPU\n`
+        txt += `┃\n`
+        txt += `┃ Manage:\n`
+        txt += `┃ \`${prefix}listvps\` | \`${prefix}cekvps\` | \`${prefix}delvps\` | \`${prefix}sisavps\`\n`
+        txt += `┃\n`
+        txt += `┃ Kontrol:\n`
+        txt += `┃ \`${prefix}turnon\` | \`${prefix}turnoff\` | \`${prefix}restartvps\`\n`
+        txt += `╰───────────────\n\n`
     }
-    txt += `╰───────────────\n\n`
-    
-    const doConfig = config.digitalocean || {}
-    const doHasToken = doConfig.token ? '✅' : '❌'
-    
-    txt += `╭─「 🌊 *Digitalocean Vps* 」\n`
-    txt += `┃ Status: ${doHasToken} Token\n`
-    txt += `┃\n`
-    txt += `┃ 📦 *Create Vps:*\n`
-    txt += `┃ \`${prefix}vps1g1c\` - 1GB/1CPU\n`
-    txt += `┃ \`${prefix}vps2g1c\` - 2GB/1CPU\n`
-    txt += `┃ \`${prefix}vps4g2c\` - 4GB/2CPU\n`
-    txt += `┃ \`${prefix}vps8g4c\` - 8GB/4CPU\n`
-    txt += `┃\n`
-    txt += `┃ 🔧 *Manage:*\n`
-    txt += `┃ \`${prefix}listvps\` | \`${prefix}cekvps\` | \`${prefix}delvps\` | \`${prefix}sisavps\`\n`
-    txt += `┃\n`
-    txt += `┃ ⚡ *Kontrol:*\n`
-    txt += `┃ \`${prefix}turnon\` | \`${prefix}turnoff\` | \`${prefix}restartvps\`\n`
-    txt += `╰───────────────\n\n`
     
     txt += `> _Powered by ${config.info?.website || 'NovaAI'}_`
     

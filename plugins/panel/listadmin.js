@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import config from '../../config.js'
-import { hasFullAccess, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
+import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
 import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const allCommands = VALID_SERVERS.map(v => `listadmin${v}`)
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     const { server: serverVersion, serverKey } = parseServerVersion(m.command)
     const serverLabel = serverVersion.toUpperCase()
     
-    if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
+    if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
         return m.reply(claraWrap("listadmin", `❌ *Akses Ditolak*\n\n` +
             `> Kamu tidak punya akses ke *${serverLabel}*\n` +
