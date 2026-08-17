@@ -103,7 +103,30 @@ export async function handleAutoreactvn(m, sock) {
     if (!db) return false;
     if (db.setting("autoreactvnEnabled") !== true) return false;
 
-    const triggers = db.setting("autoreactvnTriggers") || [];
+    let triggers = db.setting("autoreactvnTriggers") || [];
+
+    // Self-heal: kalau udah aktif tapi triggers masih kosong (misal diaktifkan
+    // sebelum update ini ada), auto-seed pakai VN yang udah tersedia di assets/vn/
+    if (triggers.length === 0) {
+      const defaultMap = [
+        { file: "vn_hai_hai_juga.mp3", words: ["hai", "halo", "hallo", "hi"] },
+        { file: "vn_masa_sih_kak.mp3", words: ["masa sih", "yakin", "serius", "beneran", "emang"] },
+        { file: "vn_daftar_dulu_kak.mp3", words: ["daftar", "cara daftar", "gimana daftar"] },
+      ];
+      for (const entry of defaultMap) {
+        const vnPath = path.join(VN_DIR, entry.file);
+        if (!fs.existsSync(vnPath)) continue;
+        const size = fs.statSync(vnPath).size;
+        for (const word of entry.words) {
+          triggers.push({ trigger: word, vnFile: entry.file, size });
+        }
+      }
+      if (triggers.length > 0) {
+        db.setting("autoreactvnTriggers", triggers);
+        db.save().catch(() => {});
+      }
+    }
+
     if (triggers.length === 0) return false;
 
     // Ambil teks pesan
