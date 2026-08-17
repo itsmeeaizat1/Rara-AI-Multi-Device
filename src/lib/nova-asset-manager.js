@@ -77,3 +77,99 @@ export function updateAssetAndSave(key, buffer, filepath) {
     }
   }
 }
+
+// ── Menu Image: 2 Mode (asset / url) ──
+import sharp from 'sharp';
+
+let urlMenuCache = null; // cache buffer hasil fetch URL
+let urlMenuCacheUrl = null; // URL yang sudah di-cache
+
+/**
+ * Get the menu preview image buffer (supports asset mode & url mode).
+ * Mode dikontrol oleh config.bot.menuImage:
+ *   - mode "asset": baca dari config.assets[asset] (lokal file)
+ *   - mode "url":   fetch dari URL, cache di memory
+ * 
+ * @param {string} [fallbackKey] - Key asset fallback jika config gak ada (default: "nova")
+ * @returns {Promise<Buffer|null>} Image buffer
+ */
+export function syncMenuImageFromDb(db) {
+  try {
+    if (!db || !config?.bot?.menuImage) return;
+    const dbMode = db.setting('menuImageMode');
+    const dbUrl = db.setting('menuImageUrl');
+    const dbAsset = db.setting('menuImageAsset');
+    if (dbMode) config.bot.menuImage.mode = dbMode;
+    if (dbUrl !== undefined) config.bot.menuImage.url = dbUrl || '';
+    if (dbAsset) config.bot.menuImage.asset = dbAsset;
+    // Reset URL cache jika mode berubah
+    urlMenuCache = null;
+    urlMenuCacheUrl = null;
+  } catch (e) {
+    console.error('[AssetManager] Failed to sync menu image from db:', e.message);
+  }
+}
+
+export async function getMenuImage(fallbackKey = 'nova') {
+  const cfg = config?.bot?.menuImage || {};
+  const mode = cfg.mode || 'asset';
+
+  if (mode === 'url' && cfg.url) {
+    // Cache hit
+    if (urlMenuCache && urlMenuCacheUrl === cfg.url) {
+      return urlMenuCache;
+    }
+    try {
+      const axios = (await import('axios')).default;
+      const res = await axios.get(cfg.url, { responseType: 'arraybuffer', timeout: 10000 });
+      urlMenuCache = Buffer.from(res.data);
+      urlMenuCacheUrl = cfg.url;
+      console.log('[AssetManager] 🌐 Menu image loaded from URL:', cfg.url);
+      return urlMenuCache;
+    } catch (e) {
+      console.error('[AssetManager] ❌ Failed to fetch menu URL, fallback to asset:', e.message);
+      // Fallback ke asset mode
+      return getAssetBuffer(cfg.asset || fallbackKey);
+    }
+  }
+
+  // Asset mode (default)
+  return getAssetBuffer(cfg.asset || fallbackKey);
+}
+
+/**
+ * Get the menu preview as a 640x360 thumbnail (landscape, JPEG).
+ * Uses sharp to resize. Returns Buffer or null.
+ * 
+ * @param {string} [fallbackKey] - Asset key fallback
+ * @returns {Promise<Buffer|null>} Thumbnail buffer (640x360 JPEG)
+ */
+export async function getMenuThumbnail(fallbackKey = 'nova') {
+  try {
+    const img = await getMenuImage(fallbackKey);
+    if (!img) return null;
+    return await sharp(img).resize(640, 360, { fit: 'cover' }).jpeg({ quality: 80 }).toBuffer();
+  } catch (e) {
+    console.error('[AssetManager] ❌ Failed to generate menu thumbnail:', e.message);
+    return null;
+  }
+}
+
+/**
+ * Set menu image mode (owner command helper).
+ * @param {string} mode - "asset" or "url"
+ * @param {string} [url] - URL if mode is "url"
+ * @param {string} [asset] - Asset key if mode is "asset"
+ */
+export function setMenuImageMode(mode, url, asset) {
+  if (!config.bot) config.bot = {};
+  if (!config.bot.menuImage) config.bot.menuImage = {};
+  if (mode) config.bot.menuImage.mode = mode;
+  if (url !== undefined) config.bot.menuImage.url = url;
+  if (asset !== undefined) config.bot.menuImage.asset = asset;
+  // Reset URL cache jika ganti mode/URL
+  if (mode === 'asset' || url !== undefined) {
+    urlMenuCache = null;
+    urlMenuCacheUrl = null;
+  }
+}

@@ -23,6 +23,11 @@ const config = {
     name: "Nova Ai Multi Device", // Nama bot
     version: "21.2.0", // Versi bot (major: 1000+ plugin, sewa, saluran, moderasi, Tio AI, RPG)
     developer: "Aizat", // Nama developer
+    menuImage: {
+      mode: "asset", // "asset" = gambar dari folder lokal, "url" = gambar dari link URL
+      url: "", // Isi link URL gambar jika mode "url" (contoh: "https://example.com/banner.jpg")
+      asset: "nova", // Key asset yang dipakai jika mode "asset" (lihat config.assets di bawah)
+    },
   },
 
   assets: {
