@@ -22,6 +22,7 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 
 const pluginConfig = {
   name: "allmenu",
@@ -380,7 +381,7 @@ ${readMore}
                   locationMessage: {
                     degreesLatitude: 0, degreesLongitude: 0,
                     name: config.bot?.name || "Nova-AI",
-                    address: `v${config.bot?.version || "1.0.0"}`,
+                    address: (await getWeatherAddress()) || `v${config.bot?.version || "1.0.0"}`,
                     jpegThumbnail: thumbnail,
                   },
                 },

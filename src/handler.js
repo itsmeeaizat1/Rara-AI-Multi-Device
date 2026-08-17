@@ -298,16 +298,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Auto-AI: if not a command, check if auto-AI should respond
-  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
-    try {
-      const { handleAutoAI, isAutoAIEnabled } = await import("./lib/nova-auto-ai.js");
-      if (typeof isAutoAIEnabled === "function" && isAutoAIEnabled(m, sock)) {
-        await handleAutoAI(m, sock);
-      }
-    } catch {}
-
-    // Auto React VN: check trigger words, reply with voice note
+  // Auto React VN: jalan walau fromMe (owner testing di self-chat), asal bukan command/newsletter
+  if (!m.isCommand && !m.isNewsletter) {
     try {
       const { handleAutoreactvn, isAutoreactvnEnabled } = await import("./lib/nova-autoreactvn.js");
       if (typeof isAutoreactvnEnabled === "function" && isAutoreactvnEnabled(m, sock)) {
@@ -317,6 +309,16 @@ async function messageHandler(msg, sock) {
     } catch (e) {
       if (config.dev?.debugLog) logger.error("autoreactvn", e.message);
     }
+  }
+
+  // Auto-AI: if not a command, check if auto-AI should respond
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+    try {
+      const { handleAutoAI, isAutoAIEnabled } = await import("./lib/nova-auto-ai.js");
+      if (typeof isAutoAIEnabled === "function" && isAutoAIEnabled(m, sock)) {
+        await handleAutoAI(m, sock);
+      }
+    } catch {}
 
     return;
   }
