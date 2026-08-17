@@ -9,6 +9,7 @@ import { isLid, lidToJid } from '../../src/lib/nova-lid.js'
 import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
 import te from '../../src/lib/nova-error.js'
+import { getDatabase } from '../../src/lib/nova-database.js'
 const allCommands = VALID_SERVERS.map((v) => `cadmin${v}`);
 const allAliases = VALID_SERVERS.map((v) => `createadmin${v}`);
 
@@ -199,21 +200,35 @@ async function handler(m, { sock }) {
     detailTxt += `Login Panel: ${serverConfig.domain}\n\n`;
     detailTxt += `Akun ini memiliki akses penuh!\nJangan bagikan ke siapapun!`;
 
-    // Kirim info akun ke DM pembuat
-    await sock.sendMessage(m.sender, { text: detailTxt });
+    // Baca delivery mode (1=PM, 2=Grup, 3=PM+Grup)
+    const db = getDatabase()
+    const deliveryMode = db.setting('panelDeliveryMode') || 1
 
-    // Jika target bukan pembuat, kirim juga ke target
-    if (targetUser !== m.sender) {
-      await sock.sendMessage(targetUser, { text: detailTxt });
+    const confirmTxt = `Admin Panel berhasil dibuat\n\nServer: ${serverLabel}\nUntuk: ${targetUser.split("@")[0]}`
+
+    // Mode 1: PM Only
+    if (deliveryMode === 1) {
+      await sock.sendMessage(m.sender, { text: detailTxt })
+      if (targetUser !== m.sender) {
+        await sock.sendMessage(targetUser, { text: detailTxt })
+      }
+      await m.reply(claraWrap("Admin", confirmTxt + "\n\nDetail akun sudah dikirim ke DM kamu"))
     }
-
-    // Di grup/chat: hanya konfirmasi singkat
-    let confirmTxt = `Admin Panel berhasil dibuat\n\n`;
-    confirmTxt += `Server: ${serverLabel}\n`;
-    confirmTxt += `Untuk: ${targetUser.split("@")[0]}\n\n`;
-    confirmTxt += `Detail akun sudah dikirim ke DM kamu`;
-
-    await m.reply(claraWrap("Admin", confirmTxt));
+    // Mode 2: Grup Only
+    else if (deliveryMode === 2) {
+      await sock.sendMessage(m.chat, { text: detailTxt })
+      if (targetUser !== m.sender && targetUser !== m.chat) {
+        await sock.sendMessage(targetUser, { text: detailTxt })
+      }
+    }
+    // Mode 3: PM + Grup
+    else if (deliveryMode === 3) {
+      await sock.sendMessage(m.sender, { text: detailTxt })
+      await sock.sendMessage(m.chat, { text: detailTxt })
+      if (targetUser !== m.sender && targetUser !== m.chat) {
+        await sock.sendMessage(targetUser, { text: detailTxt })
+      }
+    }
   } catch (err) {
     return m.reply(claraWrap("Admin", te(m.prefix, m.command, m.pushName), "error"))
   }
