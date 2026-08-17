@@ -28,8 +28,8 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `🎒 *Use Item*\n\n` +
       `*📋 *Usage:*
 \n` +
-      `> \`.use <nama_item>\`\n` +
-      `> Cek inventory: \`.inventory\`\n` +
+      `\`.use <nama_item>\`\n` +
+      `Cek inventory: \`.inventory\`\n` +
       ``, "use");
   }
 

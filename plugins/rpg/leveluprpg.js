@@ -43,8 +43,8 @@ function handler(m, { sock }) {
       `Status saat ini: *${status}*\n\n` +
       `*📋 *Usage:*
 \n` +
-      `> \`.leveluprpg on\` - Aktifkan\n` +
-      `> \`.leveluprpg off\` - Nonaktifkan\n` +
+      `\`.leveluprpg on\` - Aktifkan\n` +
+      `\`.leveluprpg off\` - Nonaktifkan\n` +
       ``));
 }
 
