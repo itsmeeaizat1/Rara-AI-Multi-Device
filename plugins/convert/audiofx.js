@@ -4,7 +4,8 @@ import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
+
 const EFFECTS = {
     bass:      { emoji: '🔊', filter: 'bass=g=20:f=110:w=0.6', desc: 'Bass boost' },
     blown:     { emoji: '💥', filter: 'acrusher=level_in=4:level_out=5:bits=8:mode=log:aa=1', desc: 'Distortion' },
@@ -35,18 +36,14 @@ const EFFECTS = {
 
 const EFFECT_NAMES = Object.keys(EFFECTS)
 
-const allAliases = []
-for (const name of EFFECT_NAMES) {
-    allAliases.push(name)
-}
-
 const pluginConfig = {
-    name: [...EFFECT_NAMES],
-    alias: [],
+    name: "audiofun",
+    alias: ["audiofx", "fx", "audioeffect", "voicefx", "voiceeffect",
+            ...EFFECT_NAMES],
     category: 'convert',
-    description: 'Audio effects & voice changer',
-    usage: '.<effect>',
-    example: '',
+    description: 'Audio effects & voice changer (25 efek)',
+    usage: '.audiofun <efek> atau .audiofun list',
+    example: '.audiofun bass (reply audio)',
     isOwner: false,
     isPremium: false,
     isGroup: false,
@@ -71,73 +68,91 @@ function getMediaSource(m) {
     return null
 }
 
-function buildEffectList() {
+function buildEffectList(prefix) {
     const categories = {
-        '🎚️ *Bass & Tone*': ['bass', 'fat', 'deep', 'smooth'],
-        '⏩ *Speed*': ['fast', 'superfast', 'slow', 'superslow', 'nightcore'],
-        '🎙️ *Voice*': ['tupai', 'helium', 'robot', 'demon', 'phone'],
-        '🌊 *Space & Echo*': ['echo', 'cave', 'concert', 'underwater', 'reverse'],
-        '💀 *Distortion*': ['blown', 'earrape', 'radio', '8bit'],
-        '〰️ *Modulation*': ['tremolo', 'vibrato'],
+        'Bass & Tone': ['bass', 'fat', 'deep', 'smooth'],
+        'Speed': ['fast', 'superfast', 'slow', 'superslow', 'nightcore'],
+        'Voice': ['tupai', 'helium', 'robot', 'demon', 'phone'],
+        'Space & Echo': ['echo', 'cave', 'concert', 'underwater', 'reverse'],
+        'Distortion': ['blown', 'earrape', 'radio', '8bit'],
+        'Modulation': ['tremolo', 'vibrato'],
     }
 
-    let txt = `🎧 *AUDIO FX* — ${EFFECT_NAMES.length} effects\n\n`
-    txt += `Reply audio/video lalu ketik efeknya\n\n`
-
+    const boxes = []
     for (const [cat, effects] of Object.entries(categories)) {
-        txt += `${cat}\n`
-        for (const name of effects) {
+        const lines = effects.map(name => {
             const fx = EFFECTS[name]
-            txt += `  ${fx.emoji} *.${name}* — ${fx.desc}\n`
-        }
-        txt += `\n`
+            return fx.emoji + ' .' + prefix + ' ' + name + ' — ' + fx.desc
+        })
+        boxes.push(bracketBox('🎵', cat, lines))
     }
 
-    txt += `_Contoh: reply audio lalu ketik .bass_`
-    return txt
+    return boxes.join('\n\n') +
+        '\n\n' + bracketBox('💡', 'Cara Pakai', [
+            'Reply audio/video lalu ketik command',
+            'Contoh: .' + prefix + ' bass',
+            'Atau langsung: .' + prefix + ' nightcore',
+            'Total ' + EFFECT_NAMES.length + ' efek tersedia',
+        ])
 }
 
 async function handler(m, { sock }) {
+    const prefix = m.prefix || '.'
     const command = m.command
-    const effectName = command === 'audiofx' || command === 'fx' || command === 'audioeffect'
-        ? m.args?.[0]?.toLowerCase()
-        : command.toLowerCase()
 
-    if (!effectName || effectName === 'list') {
-        return sendReplyWithNav(sock, m, buildEffectList(), "audiofx")
+    // Kalau command langsung nama efek (alias), pakai itu
+    let effectName
+    if (EFFECT_NAMES.includes(command.toLowerCase())) {
+        effectName = command.toLowerCase()
+    } else {
+        // Kalau .audiofun <efek>
+        effectName = m.args?.[0]?.toLowerCase()
+    }
+
+    // Kalau gak ada efek atau minta list
+    if (!effectName || effectName === 'list' || effectName === 'menu') {
+        return sendReplyWithNav(sock, m, buildEffectList('audiofun'), "audiofun")
     }
 
     const fx = EFFECTS[effectName]
     if (!fx) {
-        return sendReplyWithNav(sock, m, `❌ Efek *${effectName}* tidak ditemukan\n\n` +
-            `Ketik *${m.prefix}audiofx list* untuk daftar efek`, "audiofx")
+        return sendReplyWithNav(sock, m,
+            claraWrap("Audiofun",
+                'Efek *' + effectName + '* tidak ditemukan\n\n' +
+                'Ketik *' + prefix + 'audiofun list* untuk daftar efek'),
+            "audiofun")
     }
 
     const media = getMediaSource(m)
     if (!media) {
-        return sendReplyWithNav(m, sock, claraWrap("Audiofx", `${fx.emoji} *${effectName.toUpperCase()}*\n\nReply audio/video dengan command ini`), { commandName: "audiofx" })
+        return sendReplyWithNav(sock, m,
+            claraWrap("Audiofun",
+                fx.emoji + ' *' + effectName.toUpperCase() + '*\n\n' +
+                'Reply audio/video dengan command ini\n' +
+                'Contoh: reply audio lalu ketik *' + prefix + 'audiofun ' + effectName + '*'),
+            "audiofun")
     }
 
-    m.react('🕐')
+    await m.react('🕐')
 
     const tempDir = path.join(process.cwd(), 'temp')
     if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true })
 
     const ts = Date.now()
-    const inputPath = path.join(tempDir, `fx_in_${ts}.${media.ext}`)
-    const outputPath = path.join(tempDir, `fx_out_${ts}.mp3`)
+    const inputPath = path.join(tempDir, 'fx_in_' + ts + '.' + media.ext)
+    const outputPath = path.join(tempDir, 'fx_out_' + ts + '.mp3')
 
     try {
         const buffer = await media.download()
         if (!buffer?.length) {
-            return m.reply(`❌ Gagal download media`)
+            return m.reply('Gagal download media')
         }
 
         fs.writeFileSync(inputPath, buffer)
-        await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -af "${fx.filter}" -vn "${outputPath}"`)
+        await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + fx.filter + '" -vn "' + outputPath + '"')
 
         if (!fs.existsSync(outputPath)) {
-            return m.reply(`❌ Gagal memproses audio`)
+            return m.reply('Gagal memproses audio')
         }
 
         const audioBuffer = fs.readFileSync(outputPath)
@@ -146,12 +161,12 @@ async function handler(m, { sock }) {
             type: 'audio'
         })
 
-        m.react('✅')
+        await m.react('✅')
     } catch (error) {
         m.reply(te(m.prefix, m.command, m.pushName))
     } finally {
-        if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath)
-        if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath)
+        try { fs.existsSync(inputPath) && fs.unlinkSync(inputPath) } catch {}
+        try { fs.existsSync(outputPath) && fs.unlinkSync(outputPath) } catch {}
     }
 }
 
