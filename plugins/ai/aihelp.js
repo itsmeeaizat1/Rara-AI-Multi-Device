@@ -274,11 +274,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!query) {
       const helpCard = claraWrap("Ai Help", [`◦ Mode: *${mode.toUpperCase()}*`, `◦ Status: *${enabled ? "ON" : "OFF"}*`, `◦ Ketik ${prefix}aihelp <pertanyaan>`, `◦ Contoh: ${prefix}aihelp cara download tiktok`, `◦ Owner: ${prefix}aihelp on/off`, `◦ Owner: ${prefix}aihelp mode online/offline`].join("\n"));
 
-      const text =
-        claraWrap("Asisten Fitur", "🤖") +
-        helpCard +
-        
-
+      const text = claraWrap("Asisten Fitur", "🤖") + helpCard;
 
       await sendReplyWithNav(sock, m, text, "aihelp");
       return { handled: true };
@@ -296,22 +292,13 @@ async function handler(m, { sock, config: botConfig }) {
       if (onlineResult.ok) {
         const card = claraWrap("Online", [`◦ Pertanyaan: *${query}*`, ``, ...onlineResult.text.split("\n").map((line) => `┃ ${line}`)].join("\n"));
 
-        const text =
-          claraWrap("Online AI", "🤖") +
-          card +
-          
-          "\n" ;
+        const text = claraWrap("Online AI", "🤖") + card + "\n";
 
         await m.reply(text);
         return { handled: true };
       }
 
-      const text =
-        claraWrap("Fallback", [`◦ Alasan: *${onlineResult.reason || "unknown"}*`,
-          "◦ Status: *Menggunakan offline match*"].join("\n")) +
-        "Maaf, AI online sedang tidak dapat diakses. Saya bantu pakai mode offline dulu ya." +
-        
-        "\n" ;
+      const text = claraWrap("Fallback", [`◦ Alasan: *${onlineResult.reason || "unknown"}*`, "◦ Status: *Menggunakan offline match*"].join("\n")) + "\nMaaf, AI online sedang tidak dapat diakses. Saya bantu pakai mode offline dulu ya.";
 
       await m.reply(text);
     }
@@ -322,11 +309,7 @@ async function handler(m, { sock, config: botConfig }) {
       const intentText = matchedIntent.response(prefix);
       const card = claraWrap("InꜱTrukꜱI", [`◦ Pertanyaan: *${query}*`, `◦ Kategori: *${("intent match")}*`, ``, ...intentText.split("\n").map((line) => `┃ ${line}`)].join("\n"));
 
-      const text =
-        claraWrap("Instruksi", "📋") +
-        card +
-        
-        "\n" ;
+      const text = claraWrap("Instruksi", "📋") + card + "\n";
 
       await m.reply(text);
       return { handled: true };
