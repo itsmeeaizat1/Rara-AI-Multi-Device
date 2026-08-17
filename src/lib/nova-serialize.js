@@ -817,6 +817,14 @@ async function serialize(sock, msg, store = {}) {
 
     let contextInfo = {
       mentionedJid: options?.mentions || [m?.sender] || [],
+      externalAdReply: {
+        title: config.bot?.name || "Nova AI Whatsapp Bot",
+        body: `BOT WHATSAPP MULTI DEVICE`,
+        sourceUrl: config.saluran?.link || "",
+        previewType: "VIDEO",
+        showAdAttribution: false,
+        renderLargerThumbnail: false,
+      },
       ...options.contextInfo,
     };
 
@@ -980,6 +988,14 @@ async function serialize(sock, msg, store = {}) {
               contextInfo: {
                 mentionedJid: options?.mentions || [m?.sender] || [],
                 isForwarded: false,
+                externalAdReply: {
+                  title: config.bot?.name || "Nova AI Whatsapp Bot",
+                  body: `BOT WHATSAPP MULTI DEVICE`,
+                  sourceUrl: config.saluran?.link || "",
+                  previewType: "VIDEO",
+                  showAdAttribution: false,
+                  renderLargerThumbnail: false,
+                },
                 ...options.contextInfo
               },
               nativeFlowMessage: {
