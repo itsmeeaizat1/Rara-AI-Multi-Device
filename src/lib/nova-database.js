@@ -6,7 +6,7 @@ const FLUSH_INTERVAL_MS = 5000;
 
 const defaultUsers = {};
 const defaultGroups = {};
-const defaultSettings = { selfMode: false };
+const defaultSettings = { selfMode: false, autoreactvnEnabled: false };
 const defaultStats = {};
 const defaultSewa = { enabled: false, groups: {} };
 
