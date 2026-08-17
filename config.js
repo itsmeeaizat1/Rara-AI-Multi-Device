@@ -20,7 +20,7 @@ const config = {
   },
 
   bot: {
-    name: "Nova Ai Multi Device", // Nama bot
+    name: "Nova AI Whatsapp Bot", // Nama bot
     version: "21.2.0", // Versi bot (major: 1000+ plugin, sewa, saluran, moderasi, Tio AI, RPG)
     developer: "Aizat", // Nama developer
     menuImage: {
