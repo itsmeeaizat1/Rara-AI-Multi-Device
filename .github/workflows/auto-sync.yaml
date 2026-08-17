@@ -5,12 +5,22 @@ on:
     - cron: '0 8 * * 1' # Cek update setiap hari Senin jam 8 pagi
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Pull latest changes
-      run: |
-        git pull origin main
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
+    - name: Sync repository state
+      run: |
+        git config --global user.name "GitHub Actions Bot"
+        git config --global user.email "actions@github.com"
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+        echo "Repository is up to date at $(date -u)"
+        git log --oneline -5
