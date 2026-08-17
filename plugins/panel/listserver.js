@@ -2,7 +2,7 @@
 import axios from 'axios'
 import config from '../../config.js'
 import { isLid, lidToJid } from '../../src/lib/nova-lid.js'
-import { hasFullAccess, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
+import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
 import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const allCommands = [...VALID_SERVERS.map(v => `listserver${v}`), 'listserver']
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
     const { server: serverVersion, serverKey } = parseServerVersion(m.command)
     const serverLabel = serverVersion.toUpperCase()
     
-    if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
+    if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
         return m.reply(claraWrap("listserver", `❌ *Akses Ditolak*\n\n` +
             `Maaf ya, kamu tidak memiliki izin akses penuh ke panel *${serverLabel}* ini.\n` +

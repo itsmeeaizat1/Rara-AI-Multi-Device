@@ -6,7 +6,7 @@ import axios from 'axios'
 import crypto from 'crypto'
 import config from '../../config.js'
 import { isLid, lidToJid } from '../../src/lib/nova-lid.js'
-import { hasFullAccess, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
+import { hasAccessToServer, getUserRole, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
 import te from '../../src/lib/nova-error.js'
 const allCommands = VALID_SERVERS.map((v) => `cadmin${v}`);
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
   const { server: serverVersion, serverKey } = parseServerVersion(m.command);
   const serverLabel = serverVersion.toUpperCase();
 
-  if (!hasFullAccess(m.sender, serverVersion, m.isOwner)) {
+  if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
     const userRole = getUserRole(m.sender, serverVersion);
     return m.reply(
       `❌ *Akses Ditolak*\n\n` +
