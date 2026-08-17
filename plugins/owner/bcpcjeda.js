@@ -49,13 +49,13 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `⏱️ *JEDA BROADCAST PRIVATE*\n\n` +
       `Jeda saat ini: *${formatDelay(current)}* (${current}ms)\n\n` +
       `*CARA PAKAI:*\n` +
-      `> \`${m.prefix}bcpcjeda <angka><satuan>\`\n\n` +
+      `\`${m.prefix}bcpcjeda <angka><satuan>\`\n\n` +
       `*SATUAN:*\n` +
       `• \`s\` — detik\n• \`m\` — menit\n• \`h\` — jam\n• \`d\` — hari\n\n` +
       `*CONTOH:*\n` +
-      `> \`${m.prefix}bcpcjeda 5s\` → 5 detik\n` +
-      `> \`${m.prefix}bcpcjeda 2m\` → 2 menit\n` +
-      `> \`${m.prefix}bcpcjeda 1h\` → 1 jam`, "bcpcjeda")
+      `\`${m.prefix}bcpcjeda 5s\` → 5 detik\n` +
+      `\`${m.prefix}bcpcjeda 2m\` → 2 menit\n` +
+      `\`${m.prefix}bcpcjeda 1h\` → 1 jam`, "bcpcjeda")
   }
 
   const ms = parseDelay(input)

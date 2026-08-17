@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     }
     
     caption += `╰┈┈⬡\n\n`
-    caption += `> Total: \`${bannedUsers.length}\` Banned User`
+    caption += `Total: \`${bannedUsers.length}\` Banned User`
     
     await m.reply(claraWrap("listban", caption))
 }

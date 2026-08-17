@@ -38,10 +38,10 @@ async function handler(m, { sock }) {
         const target = await extractNumber(m)
         if (!target) {
             return sendReplyWithNav(sock, m, `🤝 *Add Partner*\n\n` +
-                `> Cara pakai:\n` +
-                `> \`${m.prefix}addpartner @tag [hari]\`\n` +
-                `> \`${m.prefix}addpartner 6281xxx 30\`\n\n` +
-                `> Default: 30 hari`, "addpartner")
+                `Cara pakai:\n` +
+                `\`${m.prefix}addpartner @tag [hari]\`\n` +
+                `\`${m.prefix}addpartner 6281xxx 30\`\n\n` +
+                `Default: 30 hari`, "addpartner")
         }
         let targetNumber = target.replace(/@.+/g, '')
         if (targetNumber.startsWith('08')) {

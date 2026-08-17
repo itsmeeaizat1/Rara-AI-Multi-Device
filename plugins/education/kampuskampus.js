@@ -132,7 +132,7 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}kamus sks\`\n`;
     txt += `\`${m.prefix}kamus skripsi\`\n`;
     txt += `\`${m.prefix}kamus ipk\`\n\n`;
-    txt += `> _${Object.keys(GLOSSARY).length} istilah tersedia_`;
+    txt += `_${Object.keys(GLOSSARY).length} istilah tersedia_`;
     return await sendReplyWithNav(m, sock, txt, { commandName: "kampuskampus" });
   }
 

@@ -156,9 +156,9 @@ function handler(m, { sock }) {
 
   if (!args || args === "status") {
     return sendReplyWithNav(sock, m, `🤖 *AntiBot*\n\n` +
-      `> Status: ${current ? "✅ Aktif" : "❌ Nonaktif"}\n\n` +
-      `> Deteksi: *Smart Heuristic*\n\n` +
-      `> \`.antibot on/off\``, "antibot");
+      `Status: ${current ? "✅ Aktif" : "❌ Nonaktif"}\n\n` +
+      `Deteksi: *Smart Heuristic*\n\n` +
+      `\`.antibot on/off\``, "antibot");
   }
 
   if (args === "on") {

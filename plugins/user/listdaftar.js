@@ -165,11 +165,11 @@ async function handler(m, { sock }) {
   );
 
   let text = `📋 *Daftar User Terdaftar*\n\n`;
-  text += `> Total hasil: *${registeredUsers.length}* user\n`;
-  text += `> Halaman: *${page}/${totalPages}*\n`;
-  text += `> Urut: *${options.sort === "terbaru" ? "Terbaru" : "Default"}*\n`;
+  text += `Total hasil: *${registeredUsers.length}* user\n`;
+  text += `Halaman: *${page}/${totalPages}*\n`;
+  text += `Urut: *${options.sort === "terbaru" ? "Terbaru" : "Default"}*\n`;
   if (options.search) {
-    text += `> Search: *${options.search}*\n`;
+    text += `Search: *${options.search}*\n`;
   }
   text += `\n`;
 

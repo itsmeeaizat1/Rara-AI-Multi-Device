@@ -185,8 +185,8 @@ async function handler(m, { sock, args }) {
 
   if (!cmd || cmd === "help" || cmd === "menu") {
     let txt = `Anime Stream Search\n\n`;
-    txt += `> 14+ situs anime (Sanka API)\n`;
-    txt += `> Rate limit: 25 req/min (safe mode)\n\n`;
+    txt += `14+ situs anime (Sanka API)\n`;
+    txt += `Rate limit: 25 req/min (safe mode)\n\n`;
     txt += `Perintah:\n`;
     txt += `1. \`${m.prefix}animestream search <judul>\` - Cari anime\n`;
     txt += `2. \`${m.prefix}animestream detail <slug>\` - Detail anime + episode list\n`;
@@ -244,8 +244,8 @@ async function handler(m, { sock, args }) {
       }
 
       let txt = `Hasil Pencarian: ${query}\n`;
-      txt += `> Sumber: ${source}\n`;
-      txt += `> Ditemukan: ${list.length} anime\n\n`;
+      txt += `Sumber: ${source}\n`;
+      txt += `Ditemukan: ${list.length} anime\n\n`;
 
       for (let i = 0; i < Math.min(list.length, 10); i++) {
         const a = list[i];
@@ -437,7 +437,7 @@ async function handler(m, { sock, args }) {
 
       const list = extractAnimeList(res.data.data, source);
       let txt = `Anime Ongoing (${source})\n`;
-      txt += `> Halaman ${page}\n\n`;
+      txt += `Halaman ${page}\n\n`;
 
       for (let i = 0; i < Math.min(list.length, 10); i++) {
         const a = list[i];
@@ -468,7 +468,7 @@ async function handler(m, { sock, args }) {
 
       const list = extractAnimeList(res.data.data, source);
       let txt = `Anime Tamat (${source})\n`;
-      txt += `> Halaman ${page}\n\n`;
+      txt += `Halaman ${page}\n\n`;
 
       for (let i = 0; i < Math.min(list.length, 10); i++) {
         const a = list[i];
@@ -538,7 +538,7 @@ async function handler(m, { sock, args }) {
 
       const list = extractAnimeList(res.data.data, source);
       let txt = `Anime Populer (Samehadaku)\n`;
-      txt += `> Halaman ${page}\n\n`;
+      txt += `Halaman ${page}\n\n`;
 
       for (let i = 0; i < Math.min(list.length, 10); i++) {
         const a = list[i];
@@ -576,7 +576,7 @@ async function handler(m, { sock, args }) {
 
         const list = extractAnimeList(res.data.data, source);
         let txt = `Anime Genre: ${genreSlug}\n`;
-        txt += `> Sumber: ${source} | Halaman ${page}\n\n`;
+        txt += `Sumber: ${source} | Halaman ${page}\n\n`;
 
         for (let i = 0; i < Math.min(list.length, 15); i++) {
           const a = list[i];

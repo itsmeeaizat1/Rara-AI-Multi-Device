@@ -36,10 +36,10 @@ async function handler(m, { sock }) {
 
   if (!text) {
     return sendReplyWithNav(sock, m, `📸 *sCREENsHOT WEB*\n\n` +
-        `> Screenshot halaman website\n\n` +
-        `> *Contoh:*\n` +
-        `> ${m.prefix}ssweb https://google.com\n` +
-        `> ${m.prefix}ss https://github.com --mobile`, "ssweb");
+        `Screenshot halaman website\n\n` +
+        `*Contoh:*\n` +
+        `${m.prefix}ssweb https://google.com\n` +
+        `${m.prefix}ss https://github.com --mobile`, "ssweb");
   }
 
   let mode = "desktop";

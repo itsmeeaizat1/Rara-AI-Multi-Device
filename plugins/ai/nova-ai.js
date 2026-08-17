@@ -24,11 +24,11 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
     return sendReplyWithNav(sock, m, `🤖 *Nova AI*\n\n` +
-        `> Asisten cerdas siap membantu\n\n` +
+        `Asisten cerdas siap membantu\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}nova-ai <pertanyaan>*\n\n` +
+        `*${m.prefix}nova-ai <pertanyaan>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}nova-ai Apa itu Node.js?*`, "nova-ai");
+        `*${m.prefix}nova-ai Apa itu Node.js?*`, "nova-ai");
   }
 
   await m.react("🕐");

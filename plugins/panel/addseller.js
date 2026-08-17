@@ -94,7 +94,7 @@ function handler(m, { sock }) {
         }
         
         let txt = `📋 *Daftar sEller/Reseller*\n\n`
-        txt += `> Total: *${pteroConfig.sellers.length}* seller\n\n`
+        txt += `Total: *${pteroConfig.sellers.length}* seller\n\n`
         pteroConfig.sellers.forEach((s, i) => {
             txt += `${i + 1}. \`${s}\`\n`
         })
@@ -115,9 +115,9 @@ function handler(m, { sock }) {
     
     if (!targetUser) {
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}${cmd} @user\`\n` +
-            `> \`${m.prefix}${cmd} 628xxx\`\n` +
-            `> Reply pesan user`, "addseller")
+            `\`${m.prefix}${cmd} @user\`\n` +
+            `\`${m.prefix}${cmd} 628xxx\`\n` +
+            `Reply pesan user`, "addseller")
     }
     
     if (isAdd) {
@@ -159,8 +159,8 @@ function handler(m, { sock }) {
         if (saveConfig()) {
             m.react('✅')
             return m.reply(`✅ *sEller Dihapus*\n\n` +
-                `> Nomor: \`${targetUser}\`\n` +
-                `> Total: *${pteroConfig.sellers.length}* seller`)
+                `Nomor: \`${targetUser}\`\n` +
+                `Total: *${pteroConfig.sellers.length}* seller`)
         } else {
             return m.reply(claraWrap("addseller", `❌ Gagal menyimpan ke config.js`))
         }

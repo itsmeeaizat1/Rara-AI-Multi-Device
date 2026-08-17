@@ -40,19 +40,19 @@ async function handler(m, { sock }) {
     txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
 
     txt += `*Cara Pakai:*\n`;
-    txt += `> \`${m.prefix}autobackup on <interval>\`\n`;
-    txt += `> \`${m.prefix}autobackup off\`\n`;
-    txt += `> \`${m.prefix}autobackup status\`\n`;
-    txt += `> \`${m.prefix}autobackup now\`\n\n`;
+    txt += `\`${m.prefix}autobackup on <interval>\`\n`;
+    txt += `\`${m.prefix}autobackup off\`\n`;
+    txt += `\`${m.prefix}autobackup status\`\n`;
+    txt += `\`${m.prefix}autobackup now\`\n\n`;
 
     txt += `*Format Interval:*\n`;
-    txt += `> • \`5m\` = 5 menit\n`;
-    txt += `> • \`1h\` = 1 jam\n`;
-    txt += `> • \`6h\` = 6 jam\n`;
-    txt += `> • \`1d\` = 1 hari\n\n`;
+    txt += `• \`5m\` = 5 menit\n`;
+    txt += `• \`1h\` = 1 jam\n`;
+    txt += `• \`6h\` = 6 jam\n`;
+    txt += `• \`1d\` = 1 hari\n\n`;
 
     txt += `*Contoh:*\n`;
-    txt += `> \`${m.prefix}autobackup on 6h\` - backup setiap 6 jam`;
+    txt += `\`${m.prefix}autobackup on 6h\` - backup setiap 6 jam`;
 
     return await sendReplyWithNav(sock, m, txt, "autobackup");
   }
@@ -66,11 +66,11 @@ async function handler(m, { sock }) {
       if (!interval) {
         return m.reply(
           `⚠️ *Interval Dibutuhkan*\n\n` +
-            `> \`${m.prefix}autobackup on <interval>\`\n\n` +
+            `\`${m.prefix}autobackup on <interval>\`\n\n` +
             `*Contoh:*\n` +
-            `> \`${m.prefix}autobackup on 30m\` - tiap 30 menit\n` +
-            `> \`${m.prefix}autobackup on 6h\` - tiap 6 jam\n` +
-            `> \`${m.prefix}autobackup on 1d\` - tiap 1 hari`,
+            `\`${m.prefix}autobackup on 30m\` - tiap 30 menit\n` +
+            `\`${m.prefix}autobackup on 6h\` - tiap 6 jam\n` +
+            `\`${m.prefix}autobackup on 1d\` - tiap 1 hari`,
         );
       }
 
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
           `┃ 📤 Dikirim ke: ${ownerNum}\n` +
           `┃ 📦 Exclude: node_modules, .git, storages, dll\n` +
           `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-          `> Backup pertama akan dikirim dalam ${result.interval}`,
+          `Backup pertama akan dikirim dalam ${result.interval}`,
       );
     }
 
@@ -102,8 +102,8 @@ async function handler(m, { sock }) {
       await m.react("✅");
       return m.reply(
         `❌ *Auto Backup Dinonaktifkan*\n\n` +
-          `> Backup otomatis sudah dihentikan.\n` +
-          `> Gunakan \`${m.prefix}autobackup on <interval>\` untuk mengaktifkan kembali.`,
+          `Backup otomatis sudah dihentikan.\n` +
+          `Gunakan \`${m.prefix}autobackup on <interval>\` untuk mengaktifkan kembali.`,
       );
     }
 
@@ -147,8 +147,8 @@ async function handler(m, { sock }) {
     default:
       return m.reply(
         `⚠️ *Action Tidak Valid*\n\n` +
-          `> Pilih: \`on\`, \`off\`, \`status\`, atau \`now\`\n` +
-          `> Contoh: \`${m.prefix}autobackup on 6h\``,
+          `Pilih: \`on\`, \`off\`, \`status\`, atau \`now\`\n` +
+          `Contoh: \`${m.prefix}autobackup on 6h\``,
       );
   }
 }

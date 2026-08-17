@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
     txt += `├ \`${prefix}cekowner\` — Cek role user\n`
     txt += `└ \`${prefix}listpartner\` — Daftar partner\n\n`
 
-    txt += `> _Hubungi owner untuk info lebih lanjut_`
+    txt += `_Hubungi owner untuk info lebih lanjut_`
 
     await m.reply(claraWrap("benefitpartner", txt))
 }

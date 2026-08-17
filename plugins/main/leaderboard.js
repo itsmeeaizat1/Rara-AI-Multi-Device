@@ -190,9 +190,9 @@ async function handler(m, { sock }) {
     
     const myRankIndex = users.findIndex(u => u.jid === senderJid)
     if (myRankIndex !== -1) {
-        text += `> Posisi kamu: *#${myRankIndex + 1}* dari *${formatNumber(users.length)}* user.`
+        text += `Posisi kamu: *#${myRankIndex + 1}* dari *${formatNumber(users.length)}* user.`
     } else {
-        text += `> Kamu belum terdaftar di database.`
+        text += `Kamu belum terdaftar di database.`
     }
     
     await m.reply(claraWrap("leaderboard2", text, { mentions }))

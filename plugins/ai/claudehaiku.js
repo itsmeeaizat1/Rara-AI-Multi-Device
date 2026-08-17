@@ -27,10 +27,10 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `🤍 *Claude Haiku 4.5*\n\n` +
         `Tanya apa aja ke AI Claude Haiku — cepat dan ringan, cocok buat pertanyaan sehari-hari.\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}claudehaiku <pertanyaan>*\n\n` +
+        `*${m.prefix}claudehaiku <pertanyaan>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}claudehaiku Jelaskan teori relativitas*\n` +
-        `> *${m.prefix}claudehaiku Tips biar produktif*\n\n` +
+        `*${m.prefix}claudehaiku Jelaskan teori relativitas*\n` +
+        `*${m.prefix}claudehaiku Tips biar produktif*\n\n` +
         `_Respons cepat, tapi tetap cerdas_`, "claudehaiku");
   }
 

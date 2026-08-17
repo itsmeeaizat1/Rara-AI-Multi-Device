@@ -30,15 +30,15 @@ async function handler(m, { sock, db }) {
         return sendReplyWithNav(sock, m, `🛡️ *ANTI SPAM GROUP*\n\n` +
             `Fitur ini melindungi grup dari member yang mengirim pesan berulang-ulang dengan sangat cepat dan brutal sehingga mengganggu kenyamanan member lain\n\n` +
             `*Cara pakai:*\n` +
-            `> \`${m.prefix}antispam on\` (Aktifkan fitur antispam)\n` +
-            `> \`${m.prefix}antispam off\` (Matikan fitur antispam)\n\n` +
+            `\`${m.prefix}antispam on\` (Aktifkan fitur antispam)\n` +
+            `\`${m.prefix}antispam off\` (Matikan fitur antispam)\n\n` +
             `*Pilih Metode Hukuman:*\n` +
-            `> \`${m.prefix}antispam warning\` (Beri teguran keras hingga 3 kali peringatan)\n` +
-            `> \`${m.prefix}antispam kick\` (Otomatis tendang spammer langsung tanpa ampun)\n` +
-            `> \`${m.prefix}antispam delete\` (Hapus seluruh pesan spam yang dikirimkan)\n\n` +
+            `\`${m.prefix}antispam warning\` (Beri teguran keras hingga 3 kali peringatan)\n` +
+            `\`${m.prefix}antispam kick\` (Otomatis tendang spammer langsung tanpa ampun)\n` +
+            `\`${m.prefix}antispam delete\` (Hapus seluruh pesan spam yang dikirimkan)\n\n` +
             `*Atur Sensitivitas Jeda (Delay):*\n` +
-            `> \`${m.prefix}antispam 2\` (Set jarak antar pesan maksimal 2 detik)\n` +
-            `> \`${m.prefix}antispam 1500\` (Set jarak ke 1500 milidetik)`, "antispam")
+            `\`${m.prefix}antispam 2\` (Set jarak antar pesan maksimal 2 detik)\n` +
+            `\`${m.prefix}antispam 1500\` (Set jarak ke 1500 milidetik)`, "antispam")
     }
 
     const groupData = db.getGroup(m.chat) || {}
@@ -56,7 +56,7 @@ async function handler(m, { sock, db }) {
         db.setGroup(m.chat, groupData)
         
         return m.reply(claraWrap("antispam", `🛡️ *SENSITIVITAS ANTI SPAM DIPERBARUI*\n\n` +
-            `> Jeda Maksimal: *${delayMs} ms* (${(delayMs/1000).toFixed(1)} detik)\n\n` +
+            `Jeda Maksimal: *${delayMs} ms* (${(delayMs/1000).toFixed(1)} detik)\n\n` +
             `Sistem kini akan menganggap pesan sebagai spam jika anggota mengirim beberapa pesan dengan jeda di bawah *${(delayMs/1000).toFixed(1)} detik* antar pesannya`))
     }
 
@@ -70,7 +70,7 @@ async function handler(m, { sock, db }) {
         db.setGroup(m.chat, groupData)
         
         await m.reply(claraWrap("antispam", `🛡️ *ANTI SPAM DIPERBARUI*\n\n` +
-            `> Status: *${isEnable ? "AKTIF ✅" : "NONAKTIF ❌"}*\n\n` +
+            `Status: *${isEnable ? "AKTIF ✅" : "NONAKTIF ❌"}*\n\n` +
             `Sistem bot kini akan ${isEnable ? "mengawasi secara ketat" : "berhenti mengawasi"} setiap aktivitas spam atau flood pesan yang dilakukan oleh member di dalam grup ini`))
     } else {
         groupData.antispamAction = action
@@ -82,7 +82,7 @@ async function handler(m, { sock, db }) {
         if (action === "delete") textAction = "Menghapus pesan spam yang mengganggu"
         
         await m.reply(claraWrap("antispam", `🛡️ *AKSI ANTI SPAM DIPERBARUI*\n\n` +
-            `> Metode Hukuman: *${action.toUpperCase()}*\n\n` +
+            `Metode Hukuman: *${action.toUpperCase()}*\n\n` +
             `Sistem bot akan langsung mengambil tindakan berupa *${textAction}* apabila ada member yang terdeteksi melakukan pelanggaran berupa tindakan spam brutal`))
     }
 }
@@ -133,14 +133,14 @@ async function handleSpamAction(m, sock, db) {
         
         if (userData.warnings >= 3) {
             await m.reply(claraWrap("antispam", `⚠️ *PERINGATAN SPAM MAKSIMAL*\n\n` +
-                `> Teruntuk: @${senderId.split("@")[0]}\n\n` +
+                `Teruntuk: @${senderId.split("@")[0]}\n\n` +
                 `Kamu telah mendapatkan 3 kali teguran peringatan karena mengirim pesan spam secara berkelanjutan. Harap segera berhenti melakukan spam atau jajaran admin grup dapat mengambil tindakan tegas terhadap pelanggaran ini!`))
             userData.warnings = 0 
             userData.count = 0
             spamTracker.set(chatKey, userData)
         } else {
             await m.reply(claraWrap("antispam", `⚠️ *TEGURAN SPAM TERDETEKSI*\n\n` +
-                `> Peringatan ke-${userData.warnings} dari maksimal 3 peringatan\n\n` +
+                `Peringatan ke-${userData.warnings} dari maksimal 3 peringatan\n\n` +
                 `Halo @${senderId.split("@")[0]}, tolong jangan melakukan pengiriman pesan berulang-ulang di grup ini secara cepat! Sistem kami mendeteksi aktivitasmu sebagai spam. Mohon hargai kenyamanan member lainnya`))
             userData.count = 0 
             spamTracker.set(chatKey, userData)

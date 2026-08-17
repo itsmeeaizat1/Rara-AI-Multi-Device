@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
       `╭┈┈⬡「 TIKTOK V2 」\n` +
       `┃ Usage: ${m.prefix}tiktokv2 <url>\n` +
       `╰┈┈⬡\n\n` +
-      `> ${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`,
+      `${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`,
       "tiktokv2");
   }
   m.react("🕐");

@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
 
   return m.reply(
     `✅ Sesi pendaftaran berhasil dibatalkan.\n\n` +
-      `> Mulai lagi dengan: \`${m.prefix}daftar\``,
+      `Mulai lagi dengan: \`${m.prefix}daftar\``,
   );
 }
 

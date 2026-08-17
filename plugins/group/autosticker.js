@@ -30,11 +30,11 @@ async function handler(m, { sock }) {
     if (!arg) {
         const status = current ? '✅ Aktif' : '❌ Nonaktif'
         return sendReplyWithNav(sock, m, `🖼️ *Autosticker*\n\n` +
-            `> Status: ${status}\n\n` +
-            `> Gunakan:\n` +
-            `> \`${m.prefix}autosticker on\` - aktifkan\n` +
-            `> \`${m.prefix}autosticker off\` - nonaktifkan\n\n` +
-            `> _Otomatis jadikan gambar/video jadi sticker_`, "autosticker")
+            `Status: ${status}\n\n` +
+            `Gunakan:\n` +
+            `\`${m.prefix}autosticker on\` - aktifkan\n` +
+            `\`${m.prefix}autosticker off\` - nonaktifkan\n\n` +
+            `_Otomatis jadikan gambar/video jadi sticker_`, "autosticker")
     }
     
     

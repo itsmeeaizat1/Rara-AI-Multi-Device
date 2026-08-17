@@ -25,8 +25,8 @@ async function handler(m, { sock }) {
     } catch (error) {
         await m.reply(
             `❌ *Gagal*\n\n` +
-            `> Tidak dapat menghapus foto grup.\n` +
-            `> _${error.message}_`
+            `Tidak dapat menghapus foto grup.\n` +
+            `_${error.message}_`
         )
     }
 }

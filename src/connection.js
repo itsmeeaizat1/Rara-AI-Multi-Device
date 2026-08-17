@@ -769,8 +769,8 @@ async function startConnection(options = {}) {
               await sock.sendMessage(event.id, {
                 text:
                   `⛔ *SewaBot*\n\n` +
-                  `> Grup ini tidak terdaftar dalam sistem sewa.\n` +
-                  `> Bot akan meninggalkan grup ini.\n\n` +
+                  `Grup ini tidak terdaftar dalam sistem sewa.\n` +
+                  `Bot akan meninggalkan grup ini.\n\n` +
                   `_Hubungi ${ownerContact} untuk sewa bot._`,
               });
               await new Promise((r) => setTimeout(r, 2000));
@@ -810,8 +810,8 @@ async function startConnection(options = {}) {
             `┃ 📢 Prefix: \`${prefix}\`\n` +
             `┃ 📩 Support: ${config.bot?.support || "-"}\n` +
             `╰┈┈⬡\n\n` +
-            `> Ketik \`${prefix}menu\` untuk melihat daftar fitur\n` +
-            `> Ketik \`${prefix}help\` untuk bantuan`;
+            `Ketik \`${prefix}menu\` untuk melihat daftar fitur\n` +
+            `Ketik \`${prefix}help\` untuk bantuan`;
 
           const ctxInfo = {
             mentionedJid: inviter ? [inviter] : [],

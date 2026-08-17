@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
 
     if (!targetNumber || targetNumber.length < 10 || targetNumber.length > 15) {
         return sendReplyWithNav(sock, m, `🚫 *Ban User*\n\n` +
-            `> Masukkan nomor atau tag user\n\n` +
+            `Masukkan nomor atau tag user\n\n` +
             `\`Contoh: ${m.prefix}ban 6281234567890\``, "ban")
     }
 

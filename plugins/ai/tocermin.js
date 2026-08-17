@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     
     if (!isImage) {
         return sendReplyWithNav(sock, m, `🪞 *To Cermin*\n\n` +
-            `> Kirim/reply gambar untuk efek cermin\n\n` +
+            `Kirim/reply gambar untuk efek cermin\n\n` +
             `\`${m.prefix}tocermin\``, "tocermin")
     }
     

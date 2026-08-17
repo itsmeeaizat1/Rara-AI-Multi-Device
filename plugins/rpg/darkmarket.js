@@ -220,10 +220,10 @@ async function handler(m, { sock, config: botConfig }) {
       const stockBar = item.stockQty > 0
         ? `${item.stockQty} pcs`
         : "HABIS";
-      text += `> ${item.emoji} *${item.name}*\n`;
-      text += `> Harga: *${item.price.toLocaleString("id-ID")}* (~${item.discount}% off)\n`;
-      text += `> Stok: *${stockBar}*\n`;
-      text += `> Beli: \`${prefix}darkmarket buy ${item.key}\`\n\n`;
+      text += `${item.emoji} *${item.name}*\n`;
+      text += `Harga: *${item.price.toLocaleString("id-ID")}* (~${item.discount}% off)\n`;
+      text += `Stok: *${stockBar}*\n`;
+      text += `Beli: \`${prefix}darkmarket buy ${item.key}\`\n\n`;
     }
   }
 

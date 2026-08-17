@@ -25,10 +25,10 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `🎨 *Text to Image (Flux)*\n\n` +
       `Buat gambar dari deskripsi teks pakai AI Flux Klein 4B.\n\n` +
       `*PENGGUNAAN:*\n` +
-      `> *${m.prefix}txt2img2 <deskripsi>*\n\n` +
+      `*${m.prefix}txt2img2 <deskripsi>*\n\n` +
       `*CONTOH:*\n` +
-      `> *${m.prefix}txt2img2 Mobil Lamborghini revuelto*\n` +
-      `> *${m.prefix}txt2img2 Kucing lucu pakai topi*\n\n` +
+      `*${m.prefix}txt2img2 Mobil Lamborghini revuelto*\n` +
+      `*${m.prefix}txt2img2 Kucing lucu pakai topi*\n\n` +
       `_Proses generate agak lama, sekitar 30-60 detik_`, "text2img4");
   }
 

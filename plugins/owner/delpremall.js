@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
             `┃ ⏭️ Bukan Premium: \`${notPremCount}\`\n` +
             `┃ 💎 sIsa Premium: \`${db.data.premium.length}\`\n` +
             `╰┈┈⬡\n\n` +
-            `> Grup: ${groupMeta.subject}`)
+            `Grup: ${groupMeta.subject}`)
         
     } catch (error) {
         await m.reply(claraWrap("delpremall", te(m.prefix, m.command, m.pushName), "error"))

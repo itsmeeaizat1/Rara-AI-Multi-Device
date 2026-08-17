@@ -141,11 +141,11 @@ async function handler(m, { sock }) {
       );
       builder.addVideo(zann.url);
 
-      const authorText = `> 👤 *Author:* ${result.author.nickname} (@${result.author.fullname})\n`;
-      const descText = `> 📝 *Caption:* ${result.title || "-"}\n`;
-      const musicText = `> 🎵 *Music:* ${result.music_info.title} - ${result.music_info.author}\n`;
-      const durationText = result.durations > 0 ? `> ⏱️ *Duration:* ${result.duration}\n` : "";
-      const infoText = `> 📅 *Uploaded:* ${result.taken_at}\n${durationText}> 🌎 *Region:* ${result.region}`;
+      const authorText = `👤 *Author:* ${result.author.nickname} (@${result.author.fullname})\n`;
+      const descText = `📝 *Caption:* ${result.title || "-"}\n`;
+      const musicText = `🎵 *Music:* ${result.music_info.title} - ${result.music_info.author}\n`;
+      const durationText = result.durations > 0 ? `⏱️ *Duration:* ${result.duration}\n` : "";
+      const infoText = `📅 *Uploaded:* ${result.taken_at}\n${durationText}> 🌎 *Region:* ${result.region}`;
       builder.addText("# TIKTOK DOWNLOADER\n\n" + authorText + descText + musicText + infoText);
 
       builder.addTable([

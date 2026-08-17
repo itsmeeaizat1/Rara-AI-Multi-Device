@@ -74,13 +74,13 @@ async function handler(m, { sock }) {
   txt += `*📦 *Item Terjual:*
 \n`;
   for (const s of soldItems.slice(0, 10)) {
-    txt += `> ${s.item}: ${s.qty}x = Rp ${s.earned.toLocaleString("id-ID")}\n`;
+    txt += `${s.item}: ${s.qty}x = Rp ${s.earned.toLocaleString("id-ID")}\n`;
   }
   if (soldItems.length > 10) {
-    txt += `> ... dan ${soldItems.length - 10} item lainnya\n`;
+    txt += `... dan ${soldItems.length - 10} item lainnya\n`;
   }
   txt += `\n\n`;
-  txt += `> 💵 Total: *Rp ${totalEarned.toLocaleString("id-ID")}*`;
+  txt += `💵 Total: *Rp ${totalEarned.toLocaleString("id-ID")}*`;
 
   await sendReplyWithNav(sock, m, txt, "sellall");
 }

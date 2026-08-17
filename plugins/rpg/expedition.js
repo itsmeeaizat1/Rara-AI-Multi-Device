@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
     txt += `Rombongan ekspedisi kamu sudah berangkat menuju tujuan!\n`;
     txt += `📍 Tujuan: *${exp.name}*\n`;
     txt += `⏱️ Estimasi Waktu: *${formatTime(exp.duration)}*\n\n`;
-    txt += `> Silakan santai dulu kak, nanti ambil hasilnya pakai perintah \`${m.prefix}expedition claim\`!`;
+    txt += `Silakan santai dulu kak, nanti ambil hasilnya pakai perintah \`${m.prefix}expedition claim\`!`;
 
     return await sendReplyWithNav(sock, m, txt, "expedition");
   }

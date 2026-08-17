@@ -26,9 +26,9 @@ async function handler(m, { sock }) {
 
   if (!isVideoMessage && !isDocumentMessage) {
     return sendReplyWithNav(sock, m, `✨ *WINK VIDEO ENHANCER*\n\n` +
-        `> Bikin video buram jadi *Ultra HD* pakai AI Wink!\n\n` +
+        `Bikin video buram jadi *Ultra HD* pakai AI Wink!\n\n` +
         `*Cara pakai:*\n` +
-        `> Kirim/reply video lalu caption \`${m.prefix}wink\`\n\n` +
+        `Kirim/reply video lalu caption \`${m.prefix}wink\`\n\n` +
         `⚠️ _Fitur Premium, proses estimasi 1-5 menit tergantung durasi video_`, "wink");
   }
 
@@ -47,8 +47,8 @@ async function handler(m, { sock }) {
 
     await m.reply(
       `🎬 *PROsEs WINK ENHANCE DIMULAI*\n\n` +
-        `> Video lagi diproses AI Wink biar jadi *Ultra HD* ✨\n` +
-        `> Estimasi *1-5 menit*, mohon sabar ya!`,
+        `Video lagi diproses AI Wink biar jadi *Ultra HD* ✨\n` +
+        `Estimasi *1-5 menit*, mohon sabar ya!`,
     );
 
     const result = await winkEnhance(videoBuffer, {

@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   const user = db.getUser(m.sender);
 
   if (!user?.isRegistered) {
-    return m.reply(claraWrap("unreg", `❌ Kamu belum terdaftar!\n\n` + `> Daftar dengan \`${m.prefix}daftar\``));
+    return m.reply(claraWrap("unreg", `❌ Kamu belum terdaftar!\n\n` + `Daftar dengan \`${m.prefix}daftar\``));
   }
 
   const saluranId = config.saluran?.id || "120363400911374213@newsletter";
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
       text:
         `✅ *Unregister Berhasil!*\n\n` +
         `Data pendaftaran kamu sudah dihapus.\n\n` +
-        `> Untuk daftar ulang: \`${m.prefix}daftar\``,
+        `Untuk daftar ulang: \`${m.prefix}daftar\``,
       contextInfo: {
         forwardingScore: 9999,
         isForwarded: true,

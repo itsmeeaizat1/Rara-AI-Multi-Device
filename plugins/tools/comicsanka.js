@@ -55,7 +55,7 @@ async function handler(m, { sock, args }) {
 
   if (!cmd || cmd === "help" || cmd === "menu") {
     let txt = `Comic Sanka\n\n`;
-    txt += `> Baca & cari komik dari Sanka API\n\n`;
+    txt += `Baca & cari komik dari Sanka API\n\n`;
     txt += `Perintah:\n`;
     txt += `1. \`${m.prefix}comicsanka search <judul>\` - Cari komik\n`;
     txt += `2. \`${m.prefix}comicsanka detail <slug>\` - Detail komik + chapter\n`;
@@ -165,7 +165,7 @@ async function handler(m, { sock, args }) {
 
       let txt = `${data.title || data.name || slug}\n`;
       txt += `${images.length} halaman\n`;
-      txt += `> Mengirim ${Math.min(images.length, 10)} halaman pertama...`;
+      txt += `Mengirim ${Math.min(images.length, 10)} halaman pertama...`;
       await m.reply(claraWrap("comicsanka", txt));
 
       for (let i = 0; i < Math.min(images.length, 10); i++) {
@@ -195,7 +195,7 @@ async function handler(m, { sock, args }) {
       const list = extractList(res.data.result || res.data.data);
 
       let txt = `Komik Terbaru\n`;
-      txt += `> Halaman ${page}\n\n`;
+      txt += `Halaman ${page}\n\n`;
       for (let i = 0; i < Math.min(list.length, 15); i++) {
         const c = list[i];
         txt += `${i + 1}. ${getTitle(c)}\n`;
@@ -414,7 +414,7 @@ async function handler(m, { sock, args }) {
       const list = extractList(res.data.result || res.data.data);
 
       let txt = `Komik Berwarna\n`;
-      txt += `> Halaman ${page}\n\n`;
+      txt += `Halaman ${page}\n\n`;
       for (let i = 0; i < Math.min(list.length, 15); i++) {
         const c = list[i];
         txt += `${i + 1}. ${getTitle(c)}\n`;
@@ -436,7 +436,7 @@ async function handler(m, { sock, args }) {
       const list = extractList(res.data.result || res.data.data);
 
       let txt = `Pustaka Komik\n`;
-      txt += `> Halaman ${page}\n\n`;
+      txt += `Halaman ${page}\n\n`;
       for (let i = 0; i < Math.min(list.length, 15); i++) {
         const c = list[i];
         txt += `${i + 1}. ${getTitle(c)}\n`;

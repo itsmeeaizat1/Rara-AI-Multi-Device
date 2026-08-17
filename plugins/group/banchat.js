@@ -31,8 +31,8 @@ async function handler(m, { sock }) {
         if (isUnban) {
             if (!groupData.isBanned) {
                 return mm.reply(claraWrap("banchat", `⚠️ *Grup Tidak Diban*\n\n` +
-                    `> Grup ini tidak dalam status banned.\n` +
-                    `> Semua user bisa menggunakan bot.`))            }
+                    `Grup ini tidak dalam status banned.\n` +
+                    `Semua user bisa menggunakan bot.`))            }
             
             db.setGroup(m.chat, { ...groupData, isBanned: false })
             
@@ -43,15 +43,15 @@ async function handler(m, { sock }) {
                     `┃ 📊 sTatus: *✅ AKTIF*\n` +
                     `┃ 👤 Unban Oleh: @${m.sender.split('@')[0]}\n` +
                     `╰┈┈⬡\n\n` +
-                    `> Semua member sekarang bisa menggunakan bot kembali.`,
+                    `Semua member sekarang bisa menggunakan bot kembali.`,
                 mentions: [m.sender]
             }, { quoted: m })
         }
         
         if (groupData.isBanned) {
             return m.m.reply(`⚠️ *Grup sUdah Diban*\n\n` +
-                `> Grup ini sudah dalam status banned.\n` +
-                `> Gunakan \`.unbanchat\` untuk membuka akses.`)       }
+                `Grup ini sudah dalam status banned.\n` +
+                `Gunakan \`.unbanchat\` untuk membuka akses.`)       }
         
         db.setGroup(m.chat, { ...groupData, isBanned: true })
         
@@ -61,8 +61,8 @@ async function handler(m, { sock }) {
                 `┃ 📊 sTatus: *🔴 BANNED*\n` +
                 `┃ 👤 Ban Oleh: @${m.sender.split('@')[0]}\n` +
                 `╰┈┈⬡\n\n` +
-                `> Member biasa tidak bisa menggunakan bot di grup ini.\n` +
-                `> Hanya owner yang bisa menggunakan bot.`))
+                `Member biasa tidak bisa menggunakan bot di grup ini.\n` +
+                `Hanya owner yang bisa menggunakan bot.`))
         
     } catch (error) {
         m.reply(claraWrap("banchat", te(m.prefix, m.command, m.pushName), "error"))

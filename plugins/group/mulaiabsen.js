@@ -26,9 +26,9 @@ async function handler(m, { sock }) {
 
   if (global.absensi[chatId]) {
     return m.reply(claraWrap("Masih Ada Absen", `❌ *Masih Ada Absen*\n\n` +
-        `> Masih ada sesi absen di grup ini!\n\n` +
-        `> Ketik *.hapusabsen* untuk menghapus\n` +
-        `> atau *.cekabsen* untuk melihat daftar`));
+        `Masih ada sesi absen di grup ini!\n\n` +
+        `Ketik *.hapusabsen* untuk menghapus\n` +
+        `atau *.cekabsen* untuk melihat daftar`));
   }
 
   const keterangan = m.text?.trim() || "Absen Harian";

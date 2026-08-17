@@ -38,8 +38,8 @@ async function handler(m, { sock }) {
     }
     if (!buffer) {
         await sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> Reply gambar + \`${m.prefix}setppgc\`\n` +
-            `> Kirim gambar + caption \`${m.prefix}setppgc\``, "setppgc")
+            `Reply gambar + \`${m.prefix}setppgc\`\n` +
+            `Kirim gambar + caption \`${m.prefix}setppgc\``, "setppgc")
         return
     }
     try {
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     } catch (error) {
         await m.reply(
             `❌ Gagal mengubah foto grup.\n` +
-            `> _${error.message}_`
+            `_${error.message}_`
         )
     }
 }

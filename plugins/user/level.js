@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
   txt += `┃ ${expInLevel.toLocaleString("id-ID")} / ${expNeeded.toLocaleString("id-ID")}\n`;
   txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
 
-  txt += `> Next level: *${expToNextLevel(exp).toLocaleString("id-ID")} exp* lagi!`;
+  txt += `Next level: *${expToNextLevel(exp).toLocaleString("id-ID")} exp* lagi!`;
 
   { const __navText = (txt, { mentions: [targetJid] }); await m.reply(claraWrap("level", __navText)); };
 }

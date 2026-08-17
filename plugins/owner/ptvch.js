@@ -38,8 +38,8 @@ async function handler(m, { sock }) {
     
     if (!video) {
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> Kirim *video* atau *balas video* lalu ketik:\n` +
-            `> \`${m.prefix}ptvch\``, "ptvch")
+            `Kirim *video* atau *balas video* lalu ketik:\n` +
+            `\`${m.prefix}ptvch\``, "ptvch")
     }
     
     const channelId = config.saluran?.id || '120363404849776664@newsletter'

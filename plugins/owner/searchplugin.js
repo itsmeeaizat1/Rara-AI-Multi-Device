@@ -88,10 +88,10 @@ async function handler(m, { sock }) {
 
   if (!name) {
     return sendReplyWithNav(sock, m, `🔍 *sEarch Plugin*\n\n` +
-        `> Cari dan tampilkan info plugin\n\n` +
+        `Cari dan tampilkan info plugin\n\n` +
         `*Contoh:*\n` +
-        `> \`${m.prefix}splugin sticker\`\n` +
-        `> \`${m.prefix}splugin menu\``, "searchplugin");
+        `\`${m.prefix}splugin sticker\`\n` +
+        `\`${m.prefix}splugin menu\``, "searchplugin");
   }
 
   m.react("🕐");
@@ -112,9 +112,9 @@ async function handler(m, { sock }) {
 
     if (info.error) {
       return m.reply(`⚠️ *Plugin Error*\n\n` +
-          `> File: \`${info.file}\`\n` +
-          `> Folder: \`${info.folder}\`\n` +
-          `> Error: \`${info.error}\``);
+          `File: \`${info.file}\`\n` +
+          `Folder: \`${info.folder}\`\n` +
+          `Error: \`${info.error}\``);
     }
 
     const aliases = Array.isArray(info.alias)

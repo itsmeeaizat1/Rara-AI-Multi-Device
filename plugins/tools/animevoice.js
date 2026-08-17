@@ -118,8 +118,8 @@ async function handler(m, { sock, args }) {
   // Show help if no args
   if (!input) {
     let txt = `Anime Voice TTS\n\n`;
-    txt += `> Suara karakter anime asli (VITS)\n`;
-    txt += `> Source: Hugging Face (gratis, no API key)\n\n`;
+    txt += `Suara karakter anime asli (VITS)\n`;
+    txt += `Source: Hugging Face (gratis, no API key)\n\n`;
     txt += `\`${m.prefix}animevoice <karakter> <text>\`\n\n`;
     txt += `Contoh:\n`;
     txt += `1. \`${m.prefix}animevoice paimon hello everyone\`\n`;
@@ -134,7 +134,7 @@ async function handler(m, { sock, args }) {
   // Show full character list
   if (input === "list") {
     let txt = `Anime Voice - Daftar Karakter\n\n`;
-    txt += `> Total: ${Object.keys(CHARACTERS).length} karakter\n\n`;
+    txt += `Total: ${Object.keys(CHARACTERS).length} karakter\n\n`;
     txt += `Genshin Impact:\n`;
     const genshin = Object.entries(CHARACTERS).filter(([k, v]) => v.includes("Genshin"));
     for (let i = 0; i < genshin.length; i++) {
@@ -284,9 +284,9 @@ async function handler(m, { sock, args }) {
     await m.react("✅");
 
     let caption = `Anime Voice TTS\n`;
-    caption += `> Karakter: ${speaker.split("(")[0].trim()}\n`;
-    caption += `> Bahasa: ${lang}\n`;
-    caption += `> Text: ${text}`;
+    caption += `Karakter: ${speaker.split("(")[0].trim()}\n`;
+    caption += `Bahasa: ${lang}\n`;
+    caption += `Text: ${text}`;
 
     await sock.sendMessage(
       m.chat,

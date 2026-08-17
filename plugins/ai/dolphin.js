@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     if (!text) {
         return m.reply(
             `🐬 *Dolphin Ai*\n\n` +
-            `> Chat dengan Dolphin AI 24B Model\n\n` +
+            `Chat dengan Dolphin AI 24B Model\n\n` +
             `╭┈┈⬡「 📋 *Templates* 」\n` +
             `┃ • \`logical\` - Jawaban logis\n` +
             `┃ • \`creative\` - Jawaban kreatif\n` +
@@ -64,9 +64,9 @@ async function handler(m, { sock }) {
             `┃ • \`code-beginner\` - Kode pemula\n` +
             `┃ • \`code-advanced\` - Kode lanjutan\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-            `> *Contoh:*\n` +
-            `> ${m.prefix}dolphin apa itu AI?\n` +
-            `> ${m.prefix}dolphin --creative buat puisi`
+            `*Contoh:*\n` +
+            `${m.prefix}dolphin apa itu AI?\n` +
+            `${m.prefix}dolphin --creative buat puisi`
         )
     }
     

@@ -31,16 +31,16 @@ async function handler(m, { args, sock, isOwner }) {
     let txt = `📧 *SET EMAIL SMTP*\n\n`;
     txt += `Konfigurasi email untuk kirim OTP registrasi.\n\n`;
     txt += `*Cara Pakai:*\n`;
-    txt += `> \`${m.prefix}setemail <email> <app-password>\`\n\n`;
+    txt += `\`${m.prefix}setemail <email> <app-password>\`\n\n`;
     txt += `*Contoh (Gmail):*\n`;
-    txt += `> \`${m.prefix}setemail bot@gmail.com aaaa bbbb cccc dddd\`\n\n`;
+    txt += `\`${m.prefix}setemail bot@gmail.com aaaa bbbb cccc dddd\`\n\n`;
 
     if (isEmailConfigured()) {
       txt += `✅ Status: Aktif\n`;
       txt += `📧 Email: *${getEmailUser()}*\n\n`;
-      txt += `> \`${m.prefix}setemail info\` untuk lihat status\n`;
-      txt += `> \`${m.prefix}setemail test\` untuk test kirim email\n`;
-      txt += `> \`${m.prefix}setemail off\` untuk matikan`;
+      txt += `\`${m.prefix}setemail info\` untuk lihat status\n`;
+      txt += `\`${m.prefix}setemail test\` untuk test kirim email\n`;
+      txt += `\`${m.prefix}setemail off\` untuk matikan`;
     } else {
       txt += `❌ Status: Belum dikonfigurasi\n\n`;
       txt += `*Cara dapat Gmail App Password:*\n`;
@@ -71,9 +71,9 @@ async function handler(m, { args, sock, isOwner }) {
       txt += `🌐 Host: *${config.emailOtp?.host || "smtp.gmail.com"}*\n`;
       txt += `🔌 Port: *${config.emailOtp?.port || 587}*\n`;
       txt += `🔒 Secure: *${config.emailOtp?.secure ? "Yes" : "No"}*\n\n`;
-      txt += `> \`${m.prefix}setemail info\` untuk lihat status\n`;
-      txt += `> \`${m.prefix}setemail test\` untuk test kirim email\n`;
-      txt += `> \`${m.prefix}setemail off\` untuk matikan`;
+      txt += `\`${m.prefix}setemail info\` untuk lihat status\n`;
+      txt += `\`${m.prefix}setemail test\` untuk test kirim email\n`;
+      txt += `\`${m.prefix}setemail off\` untuk matikan`;
     } else {
       txt += `❌ Status: *Belum dikonfigurasi*\n\n`;
       txt += `Set dengan: \`${m.prefix}setemail <email> <app-password>\``;
@@ -127,7 +127,7 @@ async function handler(m, { args, sock, isOwner }) {
   txt += `🌐 Host: *${config.emailOtp.host || "smtp.gmail.com"}*\n`;
   txt += `🔌 Port: *${config.emailOtp.port || 587}*\n\n`;
   txt += `Sekarang user bisa daftar dengan:\n`;
-  txt += `> \`${m.prefix}regmail <nama>, <email>\``;
+  txt += `\`${m.prefix}regmail <nama>, <email>\``;
 
   await sendReplyWithNav(m, sock, txt, { commandName: "setemail" });
 }

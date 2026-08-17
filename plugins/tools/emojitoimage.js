@@ -36,13 +36,13 @@ async function handler(m, { sock }) {
 
   if (!emoji) {
     return sendReplyWithNav(sock, m, `🖼️ *EMOJI TO IMAGE*\n\n` +
-        `> Konversi emoji ke gambar HD\n\n` +
+        `Konversi emoji ke gambar HD\n\n` +
         `*Format:*\n` +
-        `> \`${m.prefix}emojitoimage <emoji> [style]\`\n\n` +
+        `\`${m.prefix}emojitoimage <emoji> [style]\`\n\n` +
         `*Contoh:*\n` +
-        `> \`${m.prefix}emojitoimage 😳 apple\`\n\n` +
+        `\`${m.prefix}emojitoimage 😳 apple\`\n\n` +
         `*Style tersedia:*\n` +
-        `> ${STYLES.join(", ")}`, "emojitoimage");
+        `${STYLES.join(", ")}`, "emojitoimage");
   }
 
   const validStyle = STYLES.includes(style) ? style : "apple";

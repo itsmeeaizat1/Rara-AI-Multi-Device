@@ -154,9 +154,9 @@ async function handler(m, { sock }) {
       `✅ *Enable Command*
 
 ` +
-        `> User sekarang bisa menggunakan command walau AutoAI aktif
+        `User sekarang bisa menggunakan command walau AutoAI aktif
 ` +
-        `> Bot tetap merespon saat di-tag/reply
+        `Bot tetap merespon saat di-tag/reply
 
 ` +
         `_Gunakan ${m.prefix}autoai disablecommand untuk menonaktifkan_`,
@@ -178,9 +178,9 @@ async function handler(m, { sock }) {
       `🔒 *Disable Command*
 
 ` +
-        `> Semua command (kecuali owner) diblokir saat AutoAI aktif
+        `Semua command (kecuali owner) diblokir saat AutoAI aktif
 ` +
-        `> Bot hanya merespon saat di-tag atau di-reply
+        `Bot hanya merespon saat di-tag atau di-reply
 
 ` +
         `_Gunakan ${m.prefix}autoai enablecommand untuk mengaktifkan kembali_`,
@@ -204,10 +204,10 @@ async function handler(m, { sock }) {
     txt += `*Bawaan:*\n${builtIn}\n\n`;
     txt += `*Custom:*\n${custom}\n\n`;
     txt += `*Global:* ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}\n\n`;
-    txt += `> .autoai on --novamode=<key>\n`;
-    txt += `> .autoai tambahpersona nama | logic\n`;
-    txt += `> .autoai hapuspersona nama\n`;
-    txt += `> .autoai global on/off`;
+    txt += `.autoai on --novamode=<key>\n`;
+    txt += `.autoai tambahpersona nama | logic\n`;
+    txt += `.autoai hapuspersona nama\n`;
+    txt += `.autoai global on/off`;
     return await m.reply(claraWrap("autoai", txt));
   }
 
@@ -281,9 +281,9 @@ async function handler(m, { sock }) {
           `┃ 🎭 Karakter: *${characterName}*\n` +
           `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n` +
           `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-          `> ℹ️ AutoAI aktif di seluruh grup\n` +
-          `> ℹ️ Grup yang sudah punya config tetap pakai config sendiri\n` +
-          `> ℹ️ Ketik *.autoai global off* untuk menonaktifkan`,
+          `ℹ️ AutoAI aktif di seluruh grup\n` +
+          `ℹ️ Grup yang sudah punya config tetap pakai config sendiri\n` +
+          `ℹ️ Ketik *.autoai global off* untuk menonaktifkan`,
       );
     } else {
       db.db.data.autoai_global.enabled = false;
@@ -308,36 +308,36 @@ async function handler(m, { sock }) {
 
   if (!mode || !["on", "off"].includes(mode)) {
     const charList = Object.entries(characters)
-      .map(([key, val]) => `> ${key} - ${val.name}`)
+      .map(([key, val]) => `${key} - ${val.name}`)
       .join("\n");
     const customP = Object.entries(db.db.data.autoai_personas);
     const customList = customP.length
-      ? customP.map(([k, v]) => `> ${k} - ${v.name} (custom)`).join("\n")
+      ? customP.map(([k, v]) => `${k} - ${v.name} (custom)`).join("\n")
       : "";
     let txt = `🤖 *Auto Ai*\n\n`;
-    txt += `> Mengaktifkan/menonaktifkan auto AI response\n\n`;
+    txt += `Mengaktifkan/menonaktifkan auto AI response\n\n`;
     txt += `*Penggunaan:*\n`;
-    txt += `> .autoai on --novamode=<karakter|custom> --type=<text|voice> --mode=<onlychat|assistant>\n`;
-    txt += `> .autoai off\n`;
-    txt += `> .autoai tambahpersona nama | logic\n`;
-    txt += `> .autoai hapuspersona nama\n`;
-    txt += `> .autoai listpersona\n`;
-    txt += `> .autoai global on/off\n`;
-    txt += `> .autoai enablecommand / disablecommand\n\n`;
+    txt += `.autoai on --novamode=<karakter|custom> --type=<text|voice> --mode=<onlychat|assistant>\n`;
+    txt += `.autoai off\n`;
+    txt += `.autoai tambahpersona nama | logic\n`;
+    txt += `.autoai hapuspersona nama\n`;
+    txt += `.autoai listpersona\n`;
+    txt += `.autoai global on/off\n`;
+    txt += `.autoai enablecommand / disablecommand\n\n`;
     txt += `*Karakter bawaan:*\n${charList}\n`;
     if (customList) txt += `\n*Karakter custom:*\n${customList}\n`;
     txt += `\n*Global:* ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}\n\n`;
     txt += `*Response Type:*\n`;
-    txt += `> text - Reply dengan text biasa\n`;
-    txt += `> voice - Reply dengan voice note (TTS)\n\n`;
+    txt += `text - Reply dengan text biasa\n`;
+    txt += `voice - Reply dengan voice note (TTS)\n\n`;
     txt += `*Mode AutoAI:*\n`;
-    txt += `> assistant - Bot bisa jalankan aksi (buka tutup grup, kick, rich message)\n`;
-    txt += `> onlychat - Bot hanya murni chat santai biasa\n\n`;
+    txt += `assistant - Bot bisa jalankan aksi (buka tutup grup, kick, rich message)\n`;
+    txt += `onlychat - Bot hanya murni chat santai biasa\n\n`;
     txt += `*Contoh:*\n`;
-    txt += `> .autoai on --novamode=furina --type=text\n`;
-    txt += `> .autoai on --novamode=custom --logic=kamu adalah nexa ai\n`;
-    txt += `> .autoai tambahpersona nexa | kamu adalah nexa ai\n`;
-    txt += `> .autoai global on --novamode=furina`;
+    txt += `.autoai on --novamode=furina --type=text\n`;
+    txt += `.autoai on --novamode=custom --logic=kamu adalah nexa ai\n`;
+    txt += `.autoai tambahpersona nexa | kamu adalah nexa ai\n`;
+    txt += `.autoai global on --novamode=furina`;
     return await sendReplyWithNav(sock, m, txt, "autoai");
   }
 
@@ -389,11 +389,11 @@ async function handler(m, { sock }) {
     txt += `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
     txt += `┃ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
     txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
-    txt += `> ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
-    txt += `> ℹ️ Bot respond ketika di-reply atau di-tag\n`;
+    txt += `ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
+    txt += `ℹ️ Bot respond ketika di-reply atau di-tag\n`;
     txt +=
-      responseType === "voice" ? `> ℹ️ Response dalam bentuk voice note\n` : "";
-    txt += `> ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
+      responseType === "voice" ? `ℹ️ Response dalam bentuk voice note\n` : "";
+    txt += `ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
     return m.reply(txt, { mentions: [m.sender] });
   }
 
@@ -418,11 +418,11 @@ async function handler(m, { sock }) {
     txt += `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
     txt += `┃ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
     txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
-    txt += `> ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
-    txt += `> ℹ️ Bot respond ketika di-reply atau di-tag\n`;
+    txt += `ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
+    txt += `ℹ️ Bot respond ketika di-reply atau di-tag\n`;
     txt +=
-      responseType === "voice" ? `> ℹ️ Response dalam bentuk voice note\n` : "";
-    txt += `> ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
+      responseType === "voice" ? `ℹ️ Response dalam bentuk voice note\n` : "";
+    txt += `ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
     return m.reply(txt, { mentions: [m.sender] });
   }
 
@@ -457,11 +457,11 @@ async function handler(m, { sock }) {
   txt += `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
   txt += `┃ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
   txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
-  txt += `> ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
-  txt += `> ℹ️ Bot respond ketika di-reply atau di-tag\n`;
+  txt += `ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
+  txt += `ℹ️ Bot respond ketika di-reply atau di-tag\n`;
   txt +=
-    responseType === "voice" ? `> ℹ️ Response dalam bentuk voice note\n` : "";
-  txt += `> ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
+    responseType === "voice" ? `ℹ️ Response dalam bentuk voice note\n` : "";
+  txt += `ℹ️ Ketik *.autoai off* untuk menonaktifkan`;
 
   await m.reply(txt, { mentions: [m.sender] });
 }

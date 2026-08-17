@@ -31,8 +31,8 @@ async function handler(m, { sock }) {
     txt += `*Cara Pakai:*\n`;
     txt += `👉 \`${m.prefix}confess nomor|pesan\`\n\n`;
     txt += `*Contoh:*\n`;
-    txt += `> \`${m.prefix}confess 6281234567890|Hai kak, aku suka deh liat senyum kamu!\`\n\n`;
-    txt += `> 🤫 _Tenang aja, identitas kamu 100% aman dan dirahasiakan!_`;
+    txt += `\`${m.prefix}confess 6281234567890|Hai kak, aku suka deh liat senyum kamu!\`\n\n`;
+    txt += `🤫 _Tenang aja, identitas kamu 100% aman dan dirahasiakan!_`;
     return await m.reply(claraWrap("confess", txt));
   }
 
@@ -79,8 +79,8 @@ async function handler(m, { sock }) {
     `Sstt.. Ada seseorang yang diam-diam ngirim pesan buat kamu nih:\n\n` +
     `💬 *Isi Pesan:*\n` +
     `\`\`\`${message}\`\`\`\n\n` +
-    `> 🔒 _Pesan ini dikirim secara anonim (identitas pengirim dirahasiakan)._\n` +
-    `> ✉️ _Kamu bisa balas pesan ini kok! Tinggal *REPLY* aja pesannya ya!_`;
+    `🔒 _Pesan ini dikirim secara anonim (identitas pengirim dirahasiakan)._\n` +
+    `✉️ _Kamu bisa balas pesan ini kok! Tinggal *REPLY* aja pesannya ya!_`;
 
   try {
     const sentMsg = await sock.sendMessage(targetJid, {
@@ -103,9 +103,9 @@ async function handler(m, { sock }) {
     }, 24 * 60 * 60 * 1000);
 
     let successTxt = `✅ *MENFESS BERHASIL TERKIRIM!* ✅\n\n`;
-    successTxt += `> 📱 Terkirim ke: \`${targetNumber}\`\n`;
-    successTxt += `> 🔒 Identitas kamu aman sentosa!\n\n`;
-    successTxt += `> _Nanti kalau dia balas pesannya, aku bakal langsung terusin ke sini kak! Santai aja_ 😉`;
+    successTxt += `📱 Terkirim ke: \`${targetNumber}\`\n`;
+    successTxt += `🔒 Identitas kamu aman sentosa!\n\n`;
+    successTxt += `_Nanti kalau dia balas pesannya, aku bakal langsung terusin ke sini kak! Santai aja_ 😉`;
     await m.reply(successTxt);
   } catch (error) {
     m.reply(claraWrap("confess", te(m.prefix, m.command, m.pushName), "error"));
@@ -133,7 +133,7 @@ async function replyHandler(m, { sock }) {
     `Orang yang kamu kirimin menfess tadi barusan balas pesanmu:\n\n` +
     `💬 *Isi Balasan:*\n` +
     `\`\`\`${replyMessage}\`\`\`\n\n` +
-    `> 🔒 _Tenang, identitas kamu masih aman!_`;
+    `🔒 _Tenang, identitas kamu masih aman!_`;
 
   try {
     await sock.sendMessage(confessInfo.senderChat, {

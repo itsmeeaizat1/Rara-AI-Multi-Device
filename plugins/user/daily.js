@@ -53,13 +53,13 @@ async function handler(m, { sock }) {
   const greeting = getTimeGreeting();
 
   let txt = `🎉 *Daily Claim sUkses*\n`;
-  txt += `> ${greeting}, @${m.sender.split("@")[0]}\n\n`;
+  txt += `${greeting}, @${m.sender.split("@")[0]}\n\n`;
   txt += `╭┈┈⬡「 🎁 *Rewards* 」\n`;
   txt += `┃ 🚄 Exp: *+${expReward}*\n`;
   txt += `┃ 💰 Koin: *+${moneyReward.toLocaleString("id-ID")}*\n`;
   txt += `┃ 🥤 Potion: *+${potionReward}*\n`;
   txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
-  txt += `> Jangan lupa claim lagi besok!`;
+  txt += `Jangan lupa claim lagi besok!`;
 
   await sendReplyWithNav(sock, m, txt, "daily");
 }

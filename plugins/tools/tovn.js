@@ -59,10 +59,10 @@ async function handler(m, { sock }) {
     
     if (!mediaSource) {
         await sendReplyWithNav(sock, m, claraWrap("GAGAL", `❌ *GAGAL*\n\n` +
-            `> Tidak ada audio/video yang terdeteksi!\n\n` +
+            `Tidak ada audio/video yang terdeteksi!\n\n` +
             `*Cara penggunaan:*\n` +
-            `> 1. Kirim audio/video + caption \`${m.prefix}tovn\`\n` +
-            `> 2. Reply audio/video dengan \`${m.prefix}tovn\``), "tovn")
+            `1. Kirim audio/video + caption \`${m.prefix}tovn\`\n` +
+            `2. Reply audio/video dengan \`${m.prefix}tovn\``), "tovn")
         return
     }
 
@@ -81,8 +81,8 @@ async function handler(m, { sock }) {
 
         if (!buffer || buffer.length === 0) {
             await m.reply(claraWrap("GAGAL", `❌ *GAGAL*\n\n` +
-                `> Tidak dapat mengunduh media.\n` +
-                `> Media mungkin sudah tidak tersedia.`))
+                `Tidak dapat mengunduh media.\n` +
+                `Media mungkin sudah tidak tersedia.`))
             return
         }
 
@@ -104,8 +104,8 @@ async function handler(m, { sock }) {
 
         if (!fs.existsSync(outputPath)) {
             await m.reply(claraWrap("KONVERsI GAGAL", `❌ *KONVERsI GAGAL*\n\n` +
-                `> Gagal mengkonversi ke voice note.\n` +
-                `> Pastikan ffmpeg terinstall dengan benar.`))
+                `Gagal mengkonversi ke voice note.\n` +
+                `Pastikan ffmpeg terinstall dengan benar.`))
             return
         }
 
@@ -120,8 +120,8 @@ async function handler(m, { sock }) {
 
     } catch (error) {
         await m.reply(claraWrap("ERROR", `❌ *ERROR*\n\n` +
-            `> Terjadi kesalahan saat memproses.\n` +
-            `> _${error.message}_`))
+            `Terjadi kesalahan saat memproses.\n` +
+            `_${error.message}_`))
     } finally {
         if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath)
         if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath)

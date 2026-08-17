@@ -23,9 +23,9 @@ async function handler(m, { sock }) {
     const chatId = m.chat
     if (!global.absensi[chatId]) {
         return m.reply(claraWrap("Tidak Ada Absen", `❌ *Tidak Ada Absen*\n\n` +
-            `> Belum ada sesi absen di grup ini!\n\n` +
-            `> Admin dapat memulai dengan\n` +
-            `> *.mulaiabsen [keterangan]*`))
+            `Belum ada sesi absen di grup ini!\n\n` +
+            `Admin dapat memulai dengan\n` +
+            `*.mulaiabsen [keterangan]*`))
     }
     const absen = global.absensi[chatId]
     if (absen.peserta.includes(m.sender)) {
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
             `├┈┈⬡「 📝 *DaғTar Hadir* 」\n` +
             `${list}\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-            `> _Ketik *${m.prefix}absen* untuk hadir_\n` +
-            `> _Ketik *${m.prefix}cekabsen* untuk melihat daftar_`))
+            `_Ketik *${m.prefix}absen* untuk hadir_\n` +
+            `_Ketik *${m.prefix}cekabsen* untuk melihat daftar_`))
 }
 export { pluginConfig as config, handler }

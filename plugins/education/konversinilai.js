@@ -115,7 +115,7 @@ async function handler(m, { sock, args }) {
     txt += `  Huruf: *${grade4.letter}*\n`;
     txt += `  IPK: *${grade4.gpa}*\n`;
     txt += `  Predikat: *${grade4.predicate}*\n\n`;
-    txt += `> _8-tier: A/AB/B/BC/C/CD/D/E\n4-tier: A/B/C/D/E_`;
+    txt += `_8-tier: A/AB/B/BC/C/CD/D/E\n4-tier: A/B/C/D/E_`;
 
     await m.reply(claraWrap(txt.split("\n").filter(l => l.trim())));
     await m.react("✅");

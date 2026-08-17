@@ -41,10 +41,10 @@ async function handler(m, { sock }) {
     if (!username) {
         return m.reply(
             `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}githubdl <user> <repo> <branch>\`\n\n` +
-            `> Contoh:\n` +
-            `> \`${m.prefix}githubdl niceplugin NiceBot main\`\n` +
-            `> \`${m.prefix}githubdl https://github.com/user/repo\``
+            `\`${m.prefix}githubdl <user> <repo> <branch>\`\n\n` +
+            `Contoh:\n` +
+            `\`${m.prefix}githubdl niceplugin NiceBot main\`\n` +
+            `\`${m.prefix}githubdl https://github.com/user/repo\``
         )
     }
     

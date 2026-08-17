@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
         `┃\n` +
         commandList.map(cmd => `┃ ${cmd}`).join('\n') +
         `\n╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `> Hubungi owner untuk mendapatkan akses!`
+        `Hubungi owner untuk mendapatkan akses!`
     
     await m.reply(claraWrap("benefitowner", message))
 }

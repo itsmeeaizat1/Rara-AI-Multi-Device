@@ -27,9 +27,9 @@ async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
   if (!isImage) {
     return sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
-        `> Reply gambar dengan \`${m.prefix}ocr\`\n\n` +
-        `> Media yang didukung:\n` +
-        `> JPG, PNG, GIF, WEBP`, "ocr");
+        `Reply gambar dengan \`${m.prefix}ocr\`\n\n` +
+        `Media yang didukung:\n` +
+        `JPG, PNG, GIF, WEBP`, "ocr");
   }
   await m.react("🕐");
   { const __navText = `🕕 *MEMPROsEs...*\n\n> Mengekstrak teks dari gambar...`; await m.reply(__navText); };
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
         .map((l) => `╎❏ ${l}`)
         .join("\n")}\n` +
       `╰┈┈┈┈┈┈┈┈❖\n\n` +
-      `> Total: ${extractedText.length} karakter`;
+      `Total: ${extractedText.length} karakter`;
     await sendToolsPreview(
       sock,
       m.chat,

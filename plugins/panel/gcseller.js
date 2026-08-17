@@ -113,7 +113,7 @@ function handler(m, { sock }) {
             txt += `┃ ⚠️ Prev: \`${current}\` (diganti)\n`
         }
         txt += `╰┈┈⬡\n\n`
-        txt += `> Semua member grup ini sekarang bisa create server ${serverLabel}.`
+        txt += `Semua member grup ini sekarang bisa create server ${serverLabel}.`
         return m.reply(claraWrap("gcseller", txt))
     }
 
@@ -126,8 +126,8 @@ function handler(m, { sock }) {
         saveGcSeller(version, null)
         m.react('✅')
         return m.reply(`✅ *Gc sEller ${serverLabel} Direset*\n\n` +
-            `> Grup: \`${current}\`\n` +
-            `> Server *${serverLabel}* tidak lagi terhubung ke grup manapun.`)
+            `Grup: \`${current}\`\n` +
+            `Server *${serverLabel}* tidak lagi terhubung ke grup manapun.`)
     }
 }
 

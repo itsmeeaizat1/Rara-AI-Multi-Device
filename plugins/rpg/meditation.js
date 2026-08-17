@@ -34,9 +34,9 @@ async function handler(m, { sock }) {
 
   if (currentStamina >= maxStamina && currentHealth >= maxHealth && currentMana >= maxMana) {
     return sendReplyWithNav(sock, m, `💤 *sUdah Full*\n\n` +
-        `> ⚡ Stamina: ${currentStamina}/${maxStamina}\n` +
-        `> ❤️ Health: ${currentHealth}/${maxHealth}\n` +
-        `> 💙 Mana: ${currentMana}/${maxMana}\n\n` +
+        `⚡ Stamina: ${currentStamina}/${maxStamina}\n` +
+        `❤️ Health: ${currentHealth}/${maxHealth}\n` +
+        `💙 Mana: ${currentMana}/${maxMana}\n\n` +
         `💡 Kamu sudah dalam kondisi prima!`, "meditation");
   }
 
@@ -56,11 +56,11 @@ async function handler(m, { sock }) {
   return sendReplyWithNav(sock, m, `✨ *Istirahat sElesai!*\n\n` +
       `*💖 *Pulih:*
 \n` +
-      `> ⚡ Stamina: *+${staminaRecovered}* (${user.rpg.stamina}/${maxStamina})\n` +
-      `> ❤️ Health: *+${healthRecovered}* (${user.rpg.health}/${maxHealth})\n` +
-      `> 💙 Mana: *+${manaRecovered}* (${user.rpg.mana}/${maxMana})\n` +
+      `⚡ Stamina: *+${staminaRecovered}* (${user.rpg.stamina}/${maxStamina})\n` +
+      `❤️ Health: *+${healthRecovered}* (${user.rpg.health}/${maxHealth})\n` +
+      `💙 Mana: *+${manaRecovered}* (${user.rpg.mana}/${maxMana})\n` +
       `\n\n` +
-      `> Kamu merasa lebih segar! 🌟`, "meditation");
+      `Kamu merasa lebih segar! 🌟`, "meditation");
 }
 
 export { pluginConfig as config, handler };

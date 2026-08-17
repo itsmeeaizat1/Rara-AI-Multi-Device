@@ -27,7 +27,7 @@ async function handler(m, { sock, args }) {
 
   if (!text) {
     let txt = `TTS Nahida\n\n`;
-    txt += `> Suara Nahida (Genshin Impact)\n\n`;
+    txt += `Suara Nahida (Genshin Impact)\n\n`;
     txt += `\`${m.prefix}ttsnahida <text>\`\n\n`;
     txt += `Contoh:\n`;
     txt += `1. \`${m.prefix}ttsnahida hello everyone\`\n`;
@@ -63,7 +63,7 @@ async function handler(m, { sock, args }) {
     const audioBuffer = Buffer.from(res.data);
 
     let caption = `TTS Nahida\n`;
-    caption += `> Text: ${text}`;
+    caption += `Text: ${text}`;
 
     await sock.sendMessage(
       m.chat,

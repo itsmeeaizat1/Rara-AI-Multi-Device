@@ -25,9 +25,9 @@ async function handler(m, { sock }) {
 
   if (!ip) {
     return sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
-        `> \`${m.prefix}ipwho <ip>\`\n\n` +
-        `> Contoh:\n` +
-        `> \`${m.prefix}ipwho 8.8.8.8\``, "ipwho");
+        `\`${m.prefix}ipwho <ip>\`\n\n` +
+        `Contoh:\n` +
+        `\`${m.prefix}ipwho 8.8.8.8\``, "ipwho");
   }
 
   const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;

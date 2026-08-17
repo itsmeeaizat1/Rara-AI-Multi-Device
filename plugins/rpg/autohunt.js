@@ -63,8 +63,8 @@ async function handler(m, { sock, config: botConfig }) {
         sock,
         m,
         `⚡ *STAMINA KURANG*\n\n` +
-        `> Butuh minimal: ${STAMINA_PER_HUNT}\n` +
-        `> Stamina kamu: ${stamina}\n\n` +
+        `Butuh minimal: ${STAMINA_PER_HUNT}\n` +
+        `Stamina kamu: ${stamina}\n\n` +
         `💡 Gunakan \`${prefix}stamina isi\` atau makan makanan`,
         "autohunt"
       );
@@ -77,8 +77,8 @@ async function handler(m, { sock, config: botConfig }) {
         sock,
         m,
         `❤️ *HP TERLALU RENDAH*\n\n` +
-        `> HP: ${hp}/${maxHp}\n` +
-        `> Minimal: ${Math.ceil((maxHp * MIN_HP_PERCENT) / 100)} HP\n\n` +
+        `HP: ${hp}/${maxHp}\n` +
+        `Minimal: ${Math.ceil((maxHp * MIN_HP_PERCENT) / 100)} HP\n\n` +
         `💡 Gunakan \`${prefix}heal\` dulu`,
         "autohunt"
       );
@@ -184,7 +184,7 @@ async function handler(m, { sock, config: botConfig }) {
       "LOG BERBURU\n";
 
     for (const log of huntLog) {
-      text += `> ${log}\n`;
+      text += `${log}\n`;
     }
 
     text +=

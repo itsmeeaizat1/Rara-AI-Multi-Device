@@ -63,10 +63,10 @@ async function handler(m, { sock }) {
     if (!imageMsg && !imageBuffer) {
         return m.reply(
             `🔍 *Anime Apa Ini?*\n\n` +
-            `> Kirim gambar dengan caption:\n` +
-            `> \`${m.prefix}animeapaini\`\n\n` +
-            `> Atau reply gambar dengan:\n` +
-            `> \`${m.prefix}animeapaini\`\n\n` +
+            `Kirim gambar dengan caption:\n` +
+            `\`${m.prefix}animeapaini\`\n\n` +
+            `Atau reply gambar dengan:\n` +
+            `\`${m.prefix}animeapaini\`\n\n` +
             `⚠️ *Catatan:* Video tidak didukung, hanya gambar/screenshot`
         )
     }

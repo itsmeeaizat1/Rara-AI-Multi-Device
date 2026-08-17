@@ -86,8 +86,8 @@ async function handler(m, { sock }) {
     const userRole = getUserRole(m.sender, serverVersion);
     return m.reply(
       `❌ *Akses Ditolak*\n\n` +
-        `> Kamu tidak punya akses ke *${serverLabel}*\n` +
-        `> Role kamu: *${userRole || "Tidak ada"}*`,
+        `Kamu tidak punya akses ke *${serverLabel}*\n` +
+        `Role kamu: *${userRole || "Tidak ada"}*`,
     );
   }
 
@@ -98,10 +98,10 @@ async function handler(m, { sock }) {
     const available = getAvailableServers(pteroConfig);
     let txt = `⚠️ *sErver ${serverLabel} Belum Konfig*\n\n`;
     if (available.length > 0) {
-      txt += `> Server tersedia: *${available.join(", ")}*\n`;
-      txt += `> Contoh: \`${m.prefix}cadmin${available[0]} username\``;
+      txt += `Server tersedia: *${available.join(", ")}*\n`;
+      txt += `Contoh: \`${m.prefix}cadmin${available[0]} username\``;
     } else {
-      txt += `> Isi di \`config.js\` bagian \`pterodactyl.server1\``;
+      txt += `Isi di \`config.js\` bagian \`pterodactyl.server1\``;
     }
     return await m.reply(claraWrap("Admin", txt));
   }
@@ -123,10 +123,10 @@ async function handler(m, { sock }) {
     const available = getAvailableServers(pteroConfig);
     return m.reply(
       `⚠️ *Cara Pakai*\n\n` +
-        `> \`${m.prefix}${m.command} username\`\n` +
-        `> \`${m.prefix}${m.command} username,628xxx\`\n` +
-        `> Reply/mention user\n\n` +
-        `> Server tersedia: *${available.join(", ") || "none"}*`,
+        `\`${m.prefix}${m.command} username\`\n` +
+        `\`${m.prefix}${m.command} username,628xxx\`\n` +
+        `Reply/mention user\n\n` +
+        `Server tersedia: *${available.join(", ") || "none"}*`,
     );
   }
 

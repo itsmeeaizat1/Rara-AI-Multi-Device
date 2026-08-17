@@ -119,9 +119,9 @@ async function handler(m, { sock }) {
   for (const [key, item] of Object.entries(grouped)) {
     const rarityIcon = RARITY_COLORS[item.rarity] || "⚪";
     if (item.item === "trash") {
-      txt += `> ${rarityIcon} ${item.name} *(Ampas x${item.count})*\n`;
+      txt += `${rarityIcon} ${item.name} *(Ampas x${item.count})*\n`;
     } else {
-      txt += `> ${rarityIcon} ${item.name} *x${item.totalQty}*\n`;
+      txt += `${rarityIcon} ${item.name} *x${item.totalQty}*\n`;
     }
 
     if (["epic", "legendary", "mythic"].includes(item.rarity)) hasRare = true;

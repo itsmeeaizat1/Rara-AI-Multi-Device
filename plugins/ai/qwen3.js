@@ -27,10 +27,10 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `🔵 *Qwen3 80B*\n\n` +
         `Tanya apa aja ke AI Qwen3 — model besar dari Alibaba yang jago bahasa apa aja.\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}qwen3 <pertanyaan>*\n\n` +
+        `*${m.prefix}qwen3 <pertanyaan>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}qwen3 Apa itu machine learning?*\n` +
-        `> *${m.prefix}qwen3 Buat resep masakan Indonesia*\n\n` +
+        `*${m.prefix}qwen3 Apa itu machine learning?*\n` +
+        `*${m.prefix}qwen3 Buat resep masakan Indonesia*\n\n` +
         `_Model 80B, jadi agak lama tapi jawabannya mantap_`, "qwen3");
   }
 

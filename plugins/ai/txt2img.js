@@ -26,10 +26,10 @@ async function handler(m, { sock }) {
     const input = m.args.join(' ')
     if (!input) {
         return sendReplyWithNav(sock, m, `🎨 *Text To Image*\n\n` +
-            `> Generate gambar dari teks dengan AI\n\n` +
+            `Generate gambar dari teks dengan AI\n\n` +
             `\`Contoh: ${m.prefix}txt2img beautiful sunset | anime\`\n\n` +
             `🎭 *sTyles*\n` +
-            `> \`${STYLES.join(', ')}\``, "text2img3")
+            `\`${STYLES.join(', ')}\``, "text2img3")
     }
 
     const [prompt, styleInput] = input.split('|').map(s => s.trim())

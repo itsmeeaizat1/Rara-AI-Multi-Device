@@ -160,8 +160,8 @@ function checkMode(m, getActiveJadibots) {
         `┃ 📝 Alasan: \`${botAfk.reason || "AFK"}\`\n` +
         `┃ ⏱️ sEjak: \`${duration}\` yang lalu\n` +
         `╰┈┈⬡\n\n` +
-        `> Bot tidak bisa menerima perintah saat ini\n` +
-        `> Mohon tunggu sampai owner mengaktifkan kembali`,
+        `Bot tidak bisa menerima perintah saat ini\n` +
+        `Mohon tunggu sampai owner mengaktifkan kembali`,
     };
   }
 
@@ -219,7 +219,7 @@ function checkMode(m, getActiveJadibots) {
           `╭┈┈⬡「 📱 *Bot Tersedia* 」\n` +
           `${jadibotList}` +
           `╰┈┈⬡\n\n` +
-          `> Pilih salah satu bot di atas untuk akses fitur.`,
+          `Pilih salah satu bot di atas untuk akses fitur.`,
         jadibotMentions: mentions,
       };
     }

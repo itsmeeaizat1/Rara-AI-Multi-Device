@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
         `┃ > \`.dellevel <jumlah>\` - ke diri sendiri\n` +
         `┃ > \`.dellevel <jumlah> @user\` - ke orang lain\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `> Contoh: \`${m.prefix}dellevel 5\``, "dellevel");
+        `Contoh: \`${m.prefix}dellevel 5\``, "dellevel");
   }
 
   const user = db.getUser(targetJid) || db.setUser(targetJid);

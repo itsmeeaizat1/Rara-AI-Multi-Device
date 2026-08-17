@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
           `┃ ⏱️ Jeda: \`${jeda}ms\`\n` +
           `┃ 📊 Estimasi: \`${Math.ceil((filtered.length * jeda) / 60000)} menit\`\n` +
           `╰┈┈⬡\n\n` +
-          `> Memulai broadcast...`,
+          `Memulai broadcast...`,
         contextInfo: ctx,
       },
       { quoted: m },

@@ -28,14 +28,14 @@ async function handler(m, { sock,  db }) {
     if (!action) {
         const status = group.antiswgc || 'off'
         await sendReplyWithNav(sock, m, `📡 *Antiswgc*\n\n` +
-            `> Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*\n\n` +
-            `> Fitur ini mendeteksi tipe SW group mention seperti:\n` +
-            `> • groupStatusMentionMessage\n` +
-            `> • groupMentionedMessage\n` +
-            `> • statusMentionMessage\n` +
-            `> • contextInfo.groupMentions\n\n` +
-            `> \`${m.prefix}antiswgc on\`\n` +
-            `> \`${m.prefix}antiswgc off\``, "antiswgc")
+            `Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*\n\n` +
+            `Fitur ini mendeteksi tipe SW group mention seperti:\n` +
+            `• groupStatusMentionMessage\n` +
+            `• groupMentionedMessage\n` +
+            `• statusMentionMessage\n` +
+            `• contextInfo.groupMentions\n\n` +
+            `\`${m.prefix}antiswgc on\`\n` +
+            `\`${m.prefix}antiswgc off\``, "antiswgc")
         return
     }
 

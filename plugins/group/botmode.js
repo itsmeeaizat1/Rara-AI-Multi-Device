@@ -81,7 +81,7 @@ function handler(m, { sock }) {
             ...modeLines,
             "",
             `*Flag store:*`,
-            `> \`${m.prefix}botmode store\` - Manual order`,
+            `\`${m.prefix}botmode store\` - Manual order`,
             "",
             `_Pengaturan per-grup_`,].join("\n")))
     }
@@ -113,16 +113,16 @@ function handler(m, { sock }) {
     if (mode === 'store') {
         const products = newGroupData.storeConfig?.products || []
         extraInfo = `\n\n📋 *Manual mode*\n` +
-            `> Admin perlu confirm order manual\n` +
-            `> Product: \`${products.length}\` item\n\n` +
+            `Admin perlu confirm order manual\n` +
+            `Product: \`${products.length}\` item\n\n` +
             `*Panduan:*\n` +
-            `> \`${m.prefix}addprod <kode> <harga> <nama>\`\n` +
-            `> \`${m.prefix}listprod\` - Lihat produk`
+            `\`${m.prefix}addprod <kode> <harga> <nama>\`\n` +
+            `\`${m.prefix}listprod\` - Lihat produk`
     }
 
     return m.reply(claraWrap("Mode Diubah", `✅ *Mode Diubah*\n\n` +
-        `> Mode: *${mode.toUpperCase()}* (${MODES[mode].name})\n` +
-        `> Grup: *${m.chat.split('@')[0]}*\n` +
+        `Mode: *${mode.toUpperCase()}* (${MODES[mode].name})\n` +
+        `Grup: *${m.chat.split('@')[0]}*\n` +
         extraInfo +
         `\n\n> Ketik \`${m.prefix}menu\` untuk melihat menu.`))
 }

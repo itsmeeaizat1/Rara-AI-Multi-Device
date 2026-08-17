@@ -24,9 +24,9 @@ async function handler(m, { sock }) {
 
   if (!emoji) {
     return sendReplyWithNav(sock, m, `🎭 *EMOJI TO ANIMAsI*\n\n` +
-        `> Konversi emoji ke sticker animasi\n\n` +
+        `Konversi emoji ke sticker animasi\n\n` +
         `*Contoh:*\n` +
-        `> \`${m.prefix}emojitoanimasi 😳\``, "emojitoanimasi");
+        `\`${m.prefix}emojitoanimasi 😳\``, "emojitoanimasi");
   }
 
   m.react("🕐");

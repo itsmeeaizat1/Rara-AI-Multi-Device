@@ -64,8 +64,8 @@ async function handler(m, { sock }) {
     
     if (!targetUser) {
         await sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
-            `> Reply pesan user + \`${m.prefix}warn alasan\`\n` +
-            `> Atau: \`${m.prefix}warn @user alasan\``, "warn")
+            `Reply pesan user + \`${m.prefix}warn alasan\`\n` +
+            `Atau: \`${m.prefix}warn @user alasan\``, "warn")
         return
     }
     try {
@@ -105,8 +105,8 @@ async function handler(m, { sock }) {
             await m.reply(claraWrap("warn", `🚨 *MAX WARNING TERCAPAI*\n\n` +
                 `@${targetName} telah dikeluarkan dari grup karena mencapai batas pelanggaran!\n\n` +
                 `*Rincian:*\n` +
-                `> Warning: *${warnCount}/${maxWarns}*\n` +
-                `> Alasan Terakhir: *${reason}*`))
+                `Warning: *${warnCount}/${maxWarns}*\n` +
+                `Alasan Terakhir: *${reason}*`))
             delete warnings[targetUser]
             db.setGroup(m.chat, { ...groupData, warnings: warnings })
         } catch (e) {
@@ -117,8 +117,8 @@ async function handler(m, { sock }) {
             `⚠️ *PERINGATAN DIBERIKAN*\n\n` +
             `@${targetName} telah menerima Surat Peringatan (SP${warnCount})!\n\n` +
             `*Rincian:*\n` +
-            `> Warning ke: *${warnCount}/${maxWarns}*\n` +
-            `> Alasan: *${reason}*\n\n` +
+            `Warning ke: *${warnCount}/${maxWarns}*\n` +
+            `Alasan: *${reason}*\n\n` +
             `_${maxWarns - warnCount} warning lagi = KICK OTOMATIS_`,
             { mentions: [targetUser] }
         )

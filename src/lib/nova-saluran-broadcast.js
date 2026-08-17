@@ -230,7 +230,7 @@ async function notifyDailyLimitReset(sock, data) {
   msg += `\u2022 User gratis: ${data.defaultLimit} limit\n`;
   msg += `\u2022 User premium: ${data.premiumLimit} limit\n`;
   msg += `\u2022 Total user: ${data.resetCount} user\n\n`;
-  msg += `> Reset otomatis setiap hari jam 00:00 WIB`;
+  msg += `Reset otomatis setiap hari jam 00:00 WIB`;
   return broadcastToSaluran(sock, msg);
 }
 

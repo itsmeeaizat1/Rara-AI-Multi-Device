@@ -26,8 +26,8 @@ async function handler(m, { sock }) {
     db.setting('defaultLimit', null)
     
     await m.reply(claraWrap("Berhasil", `✅ *Berhasil*\n\n` +
-        `> Default limit direset ke config: \`${configDefault}\`\n` +
-        `> User baru akan mendapat limit dari config`))
+        `Default limit direset ke config: \`${configDefault}\`\n` +
+        `User baru akan mendapat limit dari config`))
 }
 
 export { pluginConfig as config, handler }

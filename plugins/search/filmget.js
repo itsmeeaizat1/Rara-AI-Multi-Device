@@ -26,10 +26,10 @@ async function handler(m, { sock }) {
 
   if (!url || !url.includes("neoxr.eu")) {
     return sendReplyWithNav(sock, m, `🎬 *Film Detail*\n\n` +
-        `> Ambil detail film dari URL\n\n` +
+        `Ambil detail film dari URL\n\n` +
         `*Format:*\n` +
-        `> \`${m.prefix}filmget <url>\`\n\n` +
-        `> Gunakan \`${m.prefix}film <judul>\` untuk cari film dulu`, "filmget");
+        `\`${m.prefix}filmget <url>\`\n\n` +
+        `Gunakan \`${m.prefix}film <judul>\` untuk cari film dulu`, "filmget");
   }
 
 
@@ -68,12 +68,12 @@ async function handler(m, { sock }) {
     text += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
 
     text += `📝 *Synopsis:*\n`;
-    text += `> ${film.synopsis || "-"}\n\n`;
+    text += `${film.synopsis || "-"}\n\n`;
 
     if (streams.length > 0) {
       text += `▶️ *Streaming:*\n`;
       streams.forEach((s, i) => {
-        text += `> ${i + 1}. ${s.server}\n`;
+        text += `${i + 1}. ${s.server}\n`;
       });
       text += `\n`;
     }
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
     if (downloads.length > 0) {
       text += `📥 *Download:*\n`;
       downloads.forEach((d, i) => {
-        text += `> ${i + 1}. ${d.provider}\n`;
+        text += `${i + 1}. ${d.provider}\n`;
       });
     }
 

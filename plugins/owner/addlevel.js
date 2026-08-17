@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
             `┃ > \`.addlevel <jumlah>\` - ke diri sendiri\n` +
             `┃ > \`.addlevel <jumlah> @user\` - ke orang lain\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-            `> Contoh: \`${m.prefix}addlevel 5\``, "addlevel")
+            `Contoh: \`${m.prefix}addlevel 5\``, "addlevel")
     }
     
     if (levels <= 0) {

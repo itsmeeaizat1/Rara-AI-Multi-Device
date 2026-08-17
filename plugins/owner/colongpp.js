@@ -37,9 +37,9 @@ async function handler(m, { sock }) {
   console.log(targetJid);
   if (!targetJid) {
     return sendReplyWithNav(sock, m, `🕵️ *Colong Pp*\n\n` +
-        `> Reply pesan seseorang untuk mencuri PP-nya\n\n` +
+        `Reply pesan seseorang untuk mencuri PP-nya\n\n` +
         `*Cara:*\n` +
-        `> Reply pesan target → \`${m.prefix}colongpp\``, "colongpp");
+        `Reply pesan target → \`${m.prefix}colongpp\``, "colongpp");
   }
   try {
     let ppBuffer;
@@ -65,8 +65,8 @@ async function handler(m, { sock }) {
     const targetNumber = targetJid.split("@")[0];
     await m.react("✅");
     return m.reply(claraWrap("colongpp", `✅ *Pp Berhasil Dicolong!*\n\n` +
-        `> 🎯 Target: @${targetNumber}\n` +
-        `> 📸 Sumber: ${source}`));
+        `🎯 Target: @${targetNumber}\n` +
+        `📸 Sumber: ${source}`));
   } catch (err) {
     console.error("[ColongPP] Error:", err.message);
     return m.reply(claraWrap("colongpp", te(m.prefix, m.command, m.pushName), "error"));

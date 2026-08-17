@@ -39,7 +39,7 @@ async function handler(m, { sock, args }) {
 
   if (!input) {
     let txt = `Anime Image Search\n\n`;
-    txt += `> Source: nekos.life API (gratis, SFW)\n\n`;
+    txt += `Source: nekos.life API (gratis, SFW)\n\n`;
     txt += `Kategori tersedia:\n`;
     for (let i = 0; i < CATEGORIES.length; i++) {
       const c = CATEGORIES[i];
@@ -91,8 +91,8 @@ async function handler(m, { sock, args }) {
     await m.react("✅");
 
     let caption = `Anime Image\n`;
-    caption += `> Kategori: ${category.label}\n`;
-    caption += `> Source: nekos.life`;
+    caption += `Kategori: ${category.label}\n`;
+    caption += `Source: nekos.life`;
 
     if (isGif) {
       // Send as video/gif for animated

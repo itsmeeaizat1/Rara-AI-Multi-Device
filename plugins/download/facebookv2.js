@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
       `╭┈┈⬡「 FACEBOOK V2 」\n` +
       `┃ Usage: ${m.prefix}facebookv2 <url>\n` +
       `╰┈┈⬡\n\n` +
-      `> ${m.prefix}facebookv2 https://www.facebook.com/watch?v=xxx`,
+      `${m.prefix}facebookv2 https://www.facebook.com/watch?v=xxx`,
       "facebookv2");
   }
   m.react("🕐");

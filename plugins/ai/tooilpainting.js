@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     
     if (!isImage) {
         return sendReplyWithNav(sock, m, `🖼️ *To Oil Painting*\n\n` +
-            `> Kirim/reply gambar untuk diubah ke gaya lukisan minyak\n\n` +
+            `Kirim/reply gambar untuk diubah ke gaya lukisan minyak\n\n` +
             `\`${m.prefix}tooilpainting\``, "tooilpainting")
     }
     

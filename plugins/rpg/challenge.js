@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         `💰 Koin: *+Rp ${challenge.reward.gold.toLocaleString()}*\n` +
         `✨ EXP: *+${challenge.reward.exp}*\n` +
         `\n\n` +
-        `> _Tantangan baru akan diberikan besok pagi!_`, "challenge");
+        `_Tantangan baru akan diberikan besok pagi!_`, "challenge");
   }
 
   let txt = `📋 *TANTANGAN HARIAN GUILD* 📋\n\n`;
@@ -94,11 +94,11 @@ async function handler(m, { sock }) {
   txt += `✨ EXP: *${challenge.reward.exp}*\n\n`;
 
   if (isComplete && !challenge.claimed) {
-    txt += `> 💡 Yuk buruan ketik \`${m.prefix}challenge claim\` untuk klaim hadiahnya kak!`;
+    txt += `💡 Yuk buruan ketik \`${m.prefix}challenge claim\` untuk klaim hadiahnya kak!`;
   } else if (challenge.claimed) {
-    txt += `> ✅ Kamu hebat! Hadiah sudah diambil. Besok ada misi baru lagi ya!`;
+    txt += `✅ Kamu hebat! Hadiah sudah diambil. Besok ada misi baru lagi ya!`;
   } else {
-    txt += `> Semangat kerjainnya kak! Kalau udah selesai nanti ambil hadiahnya.`;
+    txt += `Semangat kerjainnya kak! Kalau udah selesai nanti ambil hadiahnya.`;
   }
 
   return await sendReplyWithNav(sock, m, txt, "challenge");

@@ -26,10 +26,10 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `🔍 *Google News*\n\n` +
         `Cari berita terbaru dari Google News.\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}google <topik>*\n\n` +
+        `*${m.prefix}google <topik>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}google gempa hari ini*\n` +
-        `> *${m.prefix}google teknologi terbaru*`, "google");
+        `*${m.prefix}google gempa hari ini*\n` +
+        `*${m.prefix}google teknologi terbaru*`, "google");
   }
 
   m.react("🕐");
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     }
 
     let txt = `🔍 *Google News*\n\n`;
-    txt += `> Pencarian: *${query}*\n\n`;
+    txt += `Pencarian: *${query}*\n\n`;
 
     items.forEach((item) => {
       txt += `*${item.index_node}.* ${item.resource_title}\n`;

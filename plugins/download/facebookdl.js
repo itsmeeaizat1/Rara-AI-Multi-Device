@@ -25,9 +25,9 @@ async function handler(m, { sock }) {
     if (!url) {
         return m.reply(
             `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}facebookdl <url>\`\n\n` +
-            `> Contoh:\n` +
-            `> \`${m.prefix}fbdown https://www.facebook.com/watch?v=xxx\``
+            `\`${m.prefix}facebookdl <url>\`\n\n` +
+            `Contoh:\n` +
+            `\`${m.prefix}fbdown https://www.facebook.com/watch?v=xxx\``
         )
     }
     

@@ -177,7 +177,7 @@ async function handler(m, { sock, args }) {
     const tip = COOKING_TIPS[Math.floor(Math.random() * COOKING_TIPS.length)];
     let txt = `Tips Dapur\n\n`;
     txt += `${tip}\n\n`;
-    txt += `> Ketik \`${m.prefix}dapur tips\` untuk tips lainnya`;
+    txt += `Ketik \`${m.prefix}dapur tips\` untuk tips lainnya`;
     return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
   }
 
@@ -282,7 +282,7 @@ async function handler(m, { sock, args }) {
     let txt = `Suhu Masak: ${query}\n\n`;
     txt += `Suhu internal aman: ${temp.temp}C (${Math.round(temp.temp * 9/5 + 32)}F)\n`;
     txt += `Catatan: ${temp.note}\n\n`;
-    txt += `> Gunakan termometer dapur untuk akurasi`;
+    txt += `Gunakan termometer dapur untuk akurasi`;
     return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
   }
 
@@ -309,7 +309,7 @@ async function handler(m, { sock, args }) {
     txt += `Suhu: ${guide.suhu || guide.suku || "N/A"}\n`;
     txt += `Daya tahan: ${guide.lama}\n`;
     txt += `Catatan: ${guide.catatan}\n\n`;
-    txt += `> Simpan dengan benar agar makanan tetap segar dan aman`;
+    txt += `Simpan dengan benar agar makanan tetap segar dan aman`;
     return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
   }
 

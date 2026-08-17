@@ -48,9 +48,9 @@ async function handler(m, { sock }) {
   const text = m.args?.join(" ");
   if (!text) {
     return sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
-        `> \`${m.prefix}nulis <teks>\`\n\n` +
-        `> Contoh:\n` +
-        `> \`${m.prefix}nulis Aku cinta kamu selamanya\``, "nulis");
+        `\`${m.prefix}nulis <teks>\`\n\n` +
+        `Contoh:\n` +
+        `\`${m.prefix}nulis Aku cinta kamu selamanya\``, "nulis");
   }
   if (text.length > 500) {
     { const __navText = `❌ *TEKs TERLALU PANJANG*\n\n> Maksimal 500 karakter`; return await m.reply(__navText); };

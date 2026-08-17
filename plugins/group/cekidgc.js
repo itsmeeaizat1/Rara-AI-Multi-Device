@@ -75,9 +75,9 @@ async function handler(m, { sock }) {
     } else {
       return m.reply(
         `── .✦ 𝗖𝗘𝗞 𝗜𝗗 𝗚𝗥𝗨𝗣 ✦. ── 𝜗ৎ\n\n` +
-          `> Gunakan di grup atau masukkan link grup\n\n` +
-          `> \`${m.prefix}cekidgc\` — di dalam grup\n` +
-          `> \`${m.prefix}cekidgc https://chat.whatsapp.com/xxx\``,
+          `Gunakan di grup atau masukkan link grup\n\n` +
+          `\`${m.prefix}cekidgc\` — di dalam grup\n` +
+          `\`${m.prefix}cekidgc https://chat.whatsapp.com/xxx\``,
       );
     }
 

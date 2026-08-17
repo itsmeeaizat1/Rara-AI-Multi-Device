@@ -65,11 +65,11 @@ async function handler(m, { sock }) {
 
     if (!targetJid) {
         return sendReplyWithNav(sock, m, `🔊 *UNMUTE MEMBER*\n\n` +
-            `> Membuka mute member tertentu\n\n` +
+            `Membuka mute member tertentu\n\n` +
             `\`Contoh:\`\n` +
-            `> ${m.prefix}unmutemember @user\n` +
-            `> ${m.prefix}unmutemember 6281234567890\n` +
-            `> Reply pesan member + ${m.prefix}unmutemember`, "unmutemember")
+            `${m.prefix}unmutemember @user\n` +
+            `${m.prefix}unmutemember 6281234567890\n` +
+            `Reply pesan member + ${m.prefix}unmutemember`, "unmutemember")
     }
 
     const targetNumber = targetJid.replace(/@.+/g, '')

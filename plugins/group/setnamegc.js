@@ -24,13 +24,13 @@ async function handler(m, { sock }) {
     
     if (!newName) {
         await sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}setnamegc Nama Grup Baru\``, "setnamegc")
+            `\`${m.prefix}setnamegc Nama Grup Baru\``, "setnamegc")
         return
     }
     
     if (newName.length < 1 || newName.length > 100) {
         await m.reply(claraWrap("setnamegc", `⚠️ *Validasi*\n\n` +
-            `> Nama grup harus 1-100 karakter.`))
+            `Nama grup harus 1-100 karakter.`))
         return
     }
     
@@ -41,8 +41,8 @@ async function handler(m, { sock }) {
     } catch (error) {
         await m.reply(
             `❌ *Gagal*\n\n` +
-            `> Tidak dapat mengubah nama grup.\n` +
-            `> _${error.message}_`
+            `Tidak dapat mengubah nama grup.\n` +
+            `_${error.message}_`
         )
     }
 }

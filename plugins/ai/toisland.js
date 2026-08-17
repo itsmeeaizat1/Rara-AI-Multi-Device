@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     
     if (!isImage) {
         return sendReplyWithNav(sock, m, `🏝️ *To Island*\n\n` +
-            `> Kirim/reply gambar untuk suasana pulau\n\n` +
+            `Kirim/reply gambar untuk suasana pulau\n\n` +
             `\`${m.prefix}toisland\``, "toisland")
     }
     

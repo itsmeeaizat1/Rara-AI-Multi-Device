@@ -60,9 +60,9 @@ function handler(m, { sock }) {
             `┃ ◦ Jeda saat ini: *${formatTime(currentJeda)}*\n` +
             `┃ ◦ Default: *5 menit*\n` +
             `╰┈┈⬡\n\n` +
-            `> Gunakan: \`${m.prefix}jedacreate <waktu>\`\n` +
-            `> Contoh: \`${m.prefix}jedacreate 5m\` (5 menit)\n` +
-            `> Untuk nonaktifkan: \`${m.prefix}jedacreate 0\`\n\n` +
+            `Gunakan: \`${m.prefix}jedacreate <waktu>\`\n` +
+            `Contoh: \`${m.prefix}jedacreate 5m\` (5 menit)\n` +
+            `Untuk nonaktifkan: \`${m.prefix}jedacreate 0\`\n\n` +
             `*Format waktu:*\n` +
             `• \`30s\` = 30 detik\n` +
             `• \`5m\` = 5 menit\n` +
@@ -82,14 +82,14 @@ function handler(m, { sock }) {
     
     if (jedaMs === 0) {
         return m.reply(claraWrap("jedacreate", `✅ *Jeda Dinonaktifkan*\n\n` +
-            `> Panel create sekarang tanpa jeda`))
+            `Panel create sekarang tanpa jeda`))
     }
     
     return m.reply(claraWrap("jedacreate", `✅ *Jeda Diset*\n\n` +
         `╭┈┈⬡「 ⏱️ *Konfig* 」\n` +
         `┃ ◦ Jeda: *${formatTime(jedaMs)}*\n` +
         `╰┈┈⬡\n\n` +
-        `> Setelah panel dibuat, SEMUA user harus menunggu ${formatTime(jedaMs)} sebelum bisa create lagi.`))
+        `Setelah panel dibuat, SEMUA user harus menunggu ${formatTime(jedaMs)} sebelum bisa create lagi.`))
 }
 
 export { pluginConfig as config, handler }

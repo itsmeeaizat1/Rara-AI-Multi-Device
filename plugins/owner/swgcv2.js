@@ -155,7 +155,7 @@ async function handler(m, { sock, db }) {
       }
     } catch (error) {
       await m.reply(
-        `❌ *Error*\n\n` + `> Gagal posting story V2.\n` + `> _${error.message}_`,
+        `❌ *Error*\n\n` + `Gagal posting story V2.\n` + `_${error.message}_`,
       );
     }
     return;
@@ -239,9 +239,9 @@ async function handler(m, { sock, db }) {
   } else {
     await m.reply(
       `⚠️ *Cara Pakai*\n\n` +
-      `> \`${m.prefix}swgcv2 teks\` - Story teks\n` +
-      `> Reply gambar/video/audio + \`${m.prefix}swgcv2\`\n` +
-      `> Kirim gambar/video + caption \`${m.prefix}swgcv2\``,
+      `\`${m.prefix}swgcv2 teks\` - Story teks\n` +
+      `Reply gambar/video/audio + \`${m.prefix}swgcv2\`\n` +
+      `Kirim gambar/video + caption \`${m.prefix}swgcv2\``,
     );
     return;
   }
@@ -288,8 +288,8 @@ async function handler(m, { sock, db }) {
     await sock.sendMessage(m.chat, {
       text:
         `📋 *Pilih Grup Untuk Post sTory V2*\n\n` +
-        `> Media: *${mediaType}*\n` +
-        `> Total Grup: *${groupList.length}*\n\n` +
+        `Media: *${mediaType}*\n` +
+        `Total Grup: *${groupList.length}*\n\n` +
         `_Pilih grup dari daftar di bawah:_`,
       contextInfo: {
         ...saluranCtx(),
@@ -339,8 +339,8 @@ async function handler(m, { sock, db }) {
   } catch (error) {
     await m.reply(
       `❌ *Error*\n\n` +
-      `> Gagal mengambil daftar grup.\n` +
-      `> _${error.message}_`,
+      `Gagal mengambil daftar grup.\n` +
+      `_${error.message}_`,
     );
     if (tempFile && fs.existsSync(tempFile)) {
       try {

@@ -129,12 +129,12 @@ async function handler(m, { sock }) {
 
     if (!code) {
         return sendReplyWithNav(sock, m, `🔄 *EsM TO CJs CONVERTER*\n\n` +
-            `> Convert ES Modules ke CommonJS\n\n` +
-            `> *Cara pakai:*\n` +
-            `> Reply kode ESM dengan ${m.prefix}esmtocjs\n\n` +
-            `> *Contoh ESM:*\n` +
-            `> \`import axios from 'axios'\`\n` +
-            `> \`export default function() {}\``, "esmtocjs")
+            `Convert ES Modules ke CommonJS\n\n` +
+            `*Cara pakai:*\n` +
+            `Reply kode ESM dengan ${m.prefix}esmtocjs\n\n` +
+            `*Contoh ESM:*\n` +
+            `\`import axios from 'axios'\`\n` +
+            `\`export default function() {}\``, "esmtocjs")
     }
 
     try {

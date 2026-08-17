@@ -33,8 +33,8 @@ async function handler(m, { sock }) {
     }
     if (!text) {
         return sendReplyWithNav(sock, m, `🎨 *Animated Text sTicker*\n\n` +
-            `> Masukkan teks untuk sticker\n\n` +
-            `> Contoh: \`${m.prefix}attp Hello World\``, "attp")
+            `Masukkan teks untuk sticker\n\n` +
+            `Contoh: \`${m.prefix}attp Hello World\``, "attp")
     }
     if (text.length > 100) {
         { const __navText = `❌ Teks terlalu panjang! Maksimal 100 karakter.`; return await m.reply(__navText); }

@@ -28,8 +28,8 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `🎒 *Use Item*\n\n` +
       `*📋 *Usage:*
 \n` +
-      `> > \`.use <nama_item>\`\n` +
-      `> > Cek inventory: \`.inventory\`\n` +
+      `> \`.use <nama_item>\`\n` +
+      `> Cek inventory: \`.inventory\`\n` +
       ``, "use");
   }
 
@@ -46,8 +46,8 @@ async function handler(m, { sock }) {
 
   if (count <= 0) {
     return sendReplyWithNav(sock, m, `❌ *Item Tidak Ada*\n\n` +
-      `> Kamu tidak memiliki item *${itemKey}*!\n` +
-      `> Cek inventory: \`.inventory\``, "use");
+      `Kamu tidak memiliki item *${itemKey}*!\n` +
+      `Cek inventory: \`.inventory\``, "use");
   }
 
   let msg = "";
@@ -189,9 +189,9 @@ async function handler(m, { sock }) {
 
       msg =
         `🎁 *Crate Dibuka*\n\n` +
-        `> Kamu membuka *${itemKey} Crate*!\n` +
-        `> 💰 Money: +Rp ${rewardMoney.toLocaleString("id-ID")}\n` +
-        `> 🚄 Exp: +${rewardExp}`;
+        `Kamu membuka *${itemKey} Crate*!\n` +
+        `💰 Money: +Rp ${rewardMoney.toLocaleString("id-ID")}\n` +
+        `🚄 Exp: +${rewardExp}`;
       break;
 
     default:

@@ -63,9 +63,9 @@ async function handler(m, { sock }) {
         txt += `╰┈┈⬡\n\n`
         
         txt += `*Flag sTore:*\n`
-        txt += `> \`${m.prefix}botmode store\` - Manual order\n`
-        txt += `> \`${m.prefix}botmode md\` → Mode default\n`
-        txt += `> \`${m.prefix}botmode all\` → Semua fitur`
+        txt += `\`${m.prefix}botmode store\` - Manual order\n`
+        txt += `\`${m.prefix}botmode md\` → Mode default\n`
+        txt += `\`${m.prefix}botmode all\` → Semua fitur`
         
         await m.reply(claraWrap("botmode", txt))
         return
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
     if (!VALID_MODES.includes(mode)) {
         return m.reply(
             `❌ *Mode Tidak Valid*\n\n` +
-            `> Mode tersedia: \`${VALID_MODES.join(', ')}\``
+            `Mode tersedia: \`${VALID_MODES.join(', ')}\``
         )
     }
 
@@ -106,11 +106,11 @@ async function handler(m, { sock }) {
 
     await m.reply(
         `✅ *Mode Diubah*\n\n` +
-        `> Mode: *${mode.toUpperCase()}*\n` +
-        `> ${MODE_DESCRIPTIONS[mode]}\n` +
+        `Mode: *${mode.toUpperCase()}*\n` +
+        `${MODE_DESCRIPTIONS[mode]}\n` +
         extraInfo +
         `\n\n` +
-        (m.isGroup ? `> _Mode grup ini juga diubah._` : `> _Mode global diubah._`)
+        (m.isGroup ? `_Mode grup ini juga diubah._` : `_Mode global diubah._`)
     )
 
     console.log(`[BotMode] Changed to ${mode.toUpperCase()} by ${m.pushName} (${m.sender})`)

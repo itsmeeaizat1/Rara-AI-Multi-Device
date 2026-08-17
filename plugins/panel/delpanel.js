@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
         const available = getAvailableServers(pteroConfig)
         let txt = `⚠️ *sErver ${serverKey.toUpperCase()} Belum Konfig*\n\n`
         if (available.length > 0) {
-            txt += `> Server tersedia: *${available.join(', ')}*`
+            txt += `Server tersedia: *${available.join(', ')}*`
         }
         return await m.reply(claraWrap("delpanel", txt))
     }
@@ -76,10 +76,10 @@ async function handler(m, { sock }) {
     if (!serverId) {
         return m.reply(
             `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}delpanel ID\` - Hapus server saja\n` +
-            `> \`${m.prefix}delpanel ID full\` - Hapus server + user\n` +
-            `> \`${m.prefix}delpanel s2 ID\` - Dari server 2\n\n` +
-            `> Lihat ID dengan \`${m.prefix}listserver\``
+            `\`${m.prefix}delpanel ID\` - Hapus server saja\n` +
+            `\`${m.prefix}delpanel ID full\` - Hapus server + user\n` +
+            `\`${m.prefix}delpanel s2 ID\` - Dari server 2\n\n` +
+            `Lihat ID dengan \`${m.prefix}listserver\``
         )
     }
     
@@ -120,8 +120,8 @@ async function handler(m, { sock }) {
         })
         
         let result = `✅ *sErver Dihapus [${serverLabel}]*\n\n`
-        result += `> Nama: \`${server.name}\`\n`
-        result += `> ID: \`${serverId}\`\n`
+        result += `Nama: \`${server.name}\`\n`
+        result += `ID: \`${serverId}\`\n`
         
         if (option === 'full' && userInfo && !isUserAdmin) {
             try {
@@ -133,8 +133,8 @@ async function handler(m, { sock }) {
                     }
                 })
                 result += `\n✅ *User Dihapus*\n`
-                result += `> Username: \`${userInfo.username}\`\n`
-                result += `> ID: \`${userId}\``
+                result += `Username: \`${userInfo.username}\`\n`
+                result += `ID: \`${userId}\``
             } catch (userErr) {
                 result += `\n⚠️ User gagal dihapus (mungkin masih punya server lain)`
             }

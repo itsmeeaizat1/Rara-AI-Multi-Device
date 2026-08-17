@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
         const en = r.energi_negatif.details
         
         const response = `🍀 *Nomor Hoki*\n\n` +
-            `> Nomor: *${r.nomor}*\n\n` +
+            `Nomor: *${r.nomor}*\n\n` +
             `📊 *Angka Bagua:* ${r.angka_bagua_shuzi.value}%\n\n` +
             `✅ *Energi PoꜱItif:* ${r.energi_positif.total}%\n` +
             `├ Kekayaan: ${ep.kekayaan}\n` +
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
             `├ Kehilangan: ${en.kehilangan}\n` +
             `├ Malapetaka: ${en.malapetaka}\n` +
             `└ Kehancuran: ${en.kehancuran}\n\n` +
-            `> Status: ${r.analisis.status ? '✅ HOKI' : '❌ TIDAK HOKI'}`
+            `Status: ${r.analisis.status ? '✅ HOKI' : '❌ TIDAK HOKI'}`
         
         m.react('✅')
         await m.reply(response)

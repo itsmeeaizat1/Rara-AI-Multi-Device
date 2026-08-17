@@ -102,7 +102,7 @@ async function handler(m, { sock, db }) {
     `🎨🖼️ *MENU VARIANT*\n\n` +
     `Atur tampilan menu utama bot ketika user mengetik perintah menu 📋✨\n` +
     `Variant aktif saat ini: *V${current} — ${VARIANTS[`v${current}`]?.name || "Unknown"}* 🎯\n\n` +
-    `> Pilih variant menu dari tombol di bawah 👇`;
+    `Pilih variant menu dari tombol di bawah 👇`;
 
   await sock.sendButton(
     m.chat,

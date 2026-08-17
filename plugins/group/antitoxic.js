@@ -127,17 +127,17 @@ async function handler(m, { sock }) {
         const method = groupData.toxicMethod || 'kick'
 
         let txt = `🛡️ *Antitoxic*\n\n`
-        txt += `> Status: *${status}*\n`
-        txt += `> Kata: *${toxicCount}*\n`
-        txt += `> Max Warn: *${maxWarn}*\n`
-        txt += `> Metode: *${method}*\n\n`
+        txt += `Status: *${status}*\n`
+        txt += `Kata: *${toxicCount}*\n`
+        txt += `Max Warn: *${maxWarn}*\n`
+        txt += `Metode: *${method}*\n\n`
         txt += `*Command:*\n`
-        txt += `> \`.antitoxic on/off\`\n`
-        txt += `> \`.antitoxic warn <1-10>\`\n`
-        txt += `> \`.antitoxic metode kick/delete\`\n`
-        txt += `> \`.addtoxic <kata>\`\n`
-        txt += `> \`.deltoxic <kata>\`\n`
-        txt += `> \`.listtoxic\``
+        txt += `\`.antitoxic on/off\`\n`
+        txt += `\`.antitoxic warn <1-10>\`\n`
+        txt += `\`.antitoxic metode kick/delete\`\n`
+        txt += `\`.addtoxic <kata>\`\n`
+        txt += `\`.deltoxic <kata>\`\n`
+        txt += `\`.listtoxic\``
 
         await m.reply(claraWrap("antitoxic", txt))
         return

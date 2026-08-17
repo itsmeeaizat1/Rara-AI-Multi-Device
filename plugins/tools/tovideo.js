@@ -116,10 +116,10 @@ async function handler(m, { sock }) {
 
     if (!downloadFn) {
         return sendReplyWithNav(sock, m, `❌ *GAGAL*\n\n` +
-            `> Tidak ada sticker yang terdeteksi!\n\n` +
+            `Tidak ada sticker yang terdeteksi!\n\n` +
             `*Cara penggunaan:*\n` +
-            `> 1. Kirim sticker + caption \`${m.prefix}tovideo\`\n` +
-            `> 2. Reply sticker dengan \`${m.prefix}tovideo\``, "tovideo")
+            `1. Kirim sticker + caption \`${m.prefix}tovideo\`\n` +
+            `2. Reply sticker dengan \`${m.prefix}tovideo\``, "tovideo")
     }
 
     await m.react('🕐')

@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     
     if (existingRoom) {
         return m.reply(claraWrap("suitpvp", `❌ Kamu masih dalam game suit!\n\n` +
-            `> Selesaikan game kamu dulu.`))
+            `Selesaikan game kamu dulu.`))
     }
     
     let target = null
@@ -51,9 +51,9 @@ async function handler(m, { sock }) {
     
     if (!target) {
         return sendReplyWithNav(sock, m, `✊✌️✋ *sUit Pvp*\n\n` +
-            `> Tag orang yang mau kamu tantang!\n\n` +
+            `Tag orang yang mau kamu tantang!\n\n` +
             `*Contoh:*\n` +
-            `> \`.suit @628xxx\``, "suitpvp")
+            `\`.suit @628xxx\``, "suitpvp")
     }
     
     if (target === m.sender) {
@@ -130,8 +130,8 @@ async function answerHandler(m, sock) {
             
             await sendReplyWithNav(sock, m, `✊✌️✋ *sUit Dimulai!*\n\n` +
                     `@${room.p.split('@')[0]} vs @${room.p2.split('@')[0]}\n\n` +
-                    `> 📩 Cek *Private Chat* untuk memilih!\n` +
-                    `> ⏱️ Timeout: 90 detik`, "suitpvp")
+                    `📩 Cek *Private Chat* untuk memilih!\n` +
+                    `⏱️ Timeout: 90 detik`, "suitpvp")
             
             const pmMessage = `✊✌️✋ *sUit - Pilih Jawaban*\n\n` +
                 `Ketik salah satu:\n\n` +
@@ -251,7 +251,7 @@ async function answerHandler(m, sock) {
                 db.updateKoin(winner, WIN_REWARD)
                 
                 resultTxt += `🏆 @${winner.split('@')[0]} menang!\n`
-                resultTxt += `> +Rp ${WIN_REWARD.toLocaleString()}`
+                resultTxt += `+Rp ${WIN_REWARD.toLocaleString()}`
             }
             
             await sock.sendMessage(room.chat, {

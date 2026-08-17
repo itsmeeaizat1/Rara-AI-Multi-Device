@@ -34,11 +34,11 @@ async function handler(m, { sock, store }) {
 
     if (!code) {
         return sendReplyWithNav(sock, m, `⚙️ *Eval*\n\n` +
-            `> Masukkan kode JavaScript!\n\n` +
+            `Masukkan kode JavaScript!\n\n` +
             `*Contoh:*\n` +
-            `> .$ 1 + 1\n` +
-            `> .$ m.chat\n` +
-            `> .$ db.getUser(m.sender)`, "eval")
+            `.$ 1 + 1\n` +
+            `.$ m.chat\n` +
+            `.$ db.getUser(m.sender)`, "eval")
     }
 
     const db = getDatabase()

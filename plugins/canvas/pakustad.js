@@ -24,8 +24,8 @@ async function handler(m, { sock }) {
     
     if (!text) {
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}pakustad <pertanyaan>\`\n\n` +
-            `> Contoh: \`${m.prefix}pakustad kenapa aku ganteng\``, "pakustad")
+            `\`${m.prefix}pakustad <pertanyaan>\`\n\n` +
+            `Contoh: \`${m.prefix}pakustad kenapa aku ganteng\``, "pakustad")
     }
     
     await m.react('🕐')

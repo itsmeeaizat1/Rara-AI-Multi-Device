@@ -66,8 +66,8 @@ async function handler(m, { sock }) {
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
         return m.reply(claraWrap("delserver", `❌ *Akses Ditolak*\n\n` +
-            `> Kamu tidak punya akses ke *${serverLabel}*\n` +
-            `> Role kamu: *${userRole || 'Tidak ada'}*`))
+            `Kamu tidak punya akses ke *${serverLabel}*\n` +
+            `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
     
     const serverId = m.text?.trim()
@@ -79,10 +79,10 @@ async function handler(m, { sock }) {
         const available = getAvailableServers(pteroConfig)
         let txt = `⚠️ *sErver ${serverLabel} Belum Konfig*\n\n`
         if (available.length > 0) {
-            txt += `> Server tersedia: *${available.join(', ')}*\n`
-            txt += `> Contoh: \`${m.prefix}delserver${available[0]} serverid\``
+            txt += `Server tersedia: *${available.join(', ')}*\n`
+            txt += `Contoh: \`${m.prefix}delserver${available[0]} serverid\``
         } else {
-            txt += `> Isi config pterodactyl di \`config.js\``
+            txt += `Isi config pterodactyl di \`config.js\``
         }
         return m.reply(claraWrap("delserver", txt))
     }
@@ -90,9 +90,9 @@ async function handler(m, { sock }) {
     if (!serverId || isNaN(serverId)) {
         const available = getAvailableServers(pteroConfig)
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}${m.command} serverid\`\n\n` +
-            `> Server tersedia: *${available.join(', ') || 'none'}*\n` +
-            `> Lihat ID dengan \`${m.prefix}listserver${serverVersion}\``, "delserver")
+            `\`${m.prefix}${m.command} serverid\`\n\n` +
+            `Server tersedia: *${available.join(', ') || 'none'}*\n` +
+            `Lihat ID dengan \`${m.prefix}listserver${serverVersion}\``, "delserver")
     }
     
     try {
@@ -115,9 +115,9 @@ async function handler(m, { sock }) {
         })
         
         return m.reply(`✅ *sErver Dihapus*\n\n` +
-            `> Panel: *${serverLabel}*\n` +
-            `> Server ID: \`${serverId}\`\n` +
-            `> Nama: \`${server.name}\``)
+            `Panel: *${serverLabel}*\n` +
+            `Server ID: \`${serverId}\`\n` +
+            `Nama: \`${server.name}\``)
         
     } catch (err) {
         return m.reply(claraWrap("delserver", te(m.prefix, m.command, m.pushName), "error"))

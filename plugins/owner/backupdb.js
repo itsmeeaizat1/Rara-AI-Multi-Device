@@ -39,8 +39,8 @@ async function handler(m, { sock }) {
             `📦 Size: ${result.size}\n` +
             `📁 Files: ${result.files}\n` +
             `🔖 Schema: v${SCHEMA_VERSION}\n\n` +
-            `> Type-safe backup, kompatibel dengan update mendatang.\n` +
-            `> Backup telah dikirim ke owner utama.`
+            `Type-safe backup, kompatibel dengan update mendatang.\n` +
+            `Backup telah dikirim ke owner utama.`
         )
     } else {
         { const __navText = claraWrap("backupdb", `❌ Backup gagal: ${result.error}`); await m.reply(__navText); }

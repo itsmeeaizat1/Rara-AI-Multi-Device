@@ -25,9 +25,9 @@ async function handler(m, { sock }) {
 
   if (!domain) {
     return sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
-        `> \`${m.prefix}lookup <domain>\`\n\n` +
-        `> Contoh:\n` +
-        `> \`${m.prefix}lookup google.com\``, "lookup");
+        `\`${m.prefix}lookup <domain>\`\n\n` +
+        `Contoh:\n` +
+        `\`${m.prefix}lookup google.com\``, "lookup");
   }
 
   domain = domain.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0];
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     }
 
     let text = `🔍 *DNs LOOKUP*\n\n`;
-    text += `> Domain: \`${domain}\`\n\n`;
+    text += `Domain: \`${domain}\`\n\n`;
 
     if (dnsData && !dnsData.includes("error")) {
       const lines = dnsData.split("\n").filter((l) => l.trim());

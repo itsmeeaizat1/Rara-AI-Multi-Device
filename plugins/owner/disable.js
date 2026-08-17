@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
   await m.react("✅");
 
   let txt = `DISABLE - ${feature.label}\n`;
-  txt += `> Status: OFF`;
+  txt += `Status: OFF`;
 
   return await sendReplyWithNav(m, sock, txt, { commandName: "disable" });
 }

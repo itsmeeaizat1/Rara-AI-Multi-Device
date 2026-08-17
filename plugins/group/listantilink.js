@@ -50,8 +50,8 @@ function handler(m, { sock }) {
         txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`
     }
     
-    txt += `> Default: *${DEFAULT_BLOCKED_LINKS.length}* link\n`
-    txt += `> Custom: *${customList.length}* link\n\n`
+    txt += `Default: *${DEFAULT_BLOCKED_LINKS.length}* link\n`
+    txt += `Custom: *${customList.length}* link\n\n`
     txt += `\`${m.prefix}addantilink <link>\` untuk tambah\n`
     txt += `\`${m.prefix}delantilink <link>\` untuk hapus`
     

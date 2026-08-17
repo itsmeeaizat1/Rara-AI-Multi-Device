@@ -28,19 +28,19 @@ function handler(m, { sock }) {
     if (!subCmd || subCmd === 'status') {
         const status = current ? '✅ ON' : '❌ OFF'
         return sendReplyWithNav(sock, m, `🎤 *Cmd Voice Note*\n\n` +
-            `> Status: *${status}*\n\n` +
-            `> \`${m.prefix}cmdvn on\` — Command via VN\n` +
-            `> \`${m.prefix}cmdvn off\` — Command via text (default)\n\n` +
-            `> Saat ON, kirim VN berisi nama command\n` +
-            `> Contoh: VN "menu" → trigger .menu`, "cmdvn")
+            `Status: *${status}*\n\n` +
+            `\`${m.prefix}cmdvn on\` — Command via VN\n` +
+            `\`${m.prefix}cmdvn off\` — Command via text (default)\n\n` +
+            `Saat ON, kirim VN berisi nama command\n` +
+            `Contoh: VN "menu" → trigger .menu`, "cmdvn")
     }
 
     if (subCmd === 'on') {
         db.setting('cmdVn', true)
         return m.reply(claraWrap("cmdvn", `✅ *Cmd Vn Aktif*\n\n` +
-            `> Kirim voice note berisi nama command\n` +
-            `> Bot akan transkrip dan jalankan otomatis\n` +
-            `> Contoh: VN "menu" → trigger .menu`))
+            `Kirim voice note berisi nama command\n` +
+            `Bot akan transkrip dan jalankan otomatis\n` +
+            `Contoh: VN "menu" → trigger .menu`))
     }
 
     if (subCmd === 'off') {

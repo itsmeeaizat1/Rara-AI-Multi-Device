@@ -44,8 +44,8 @@ async function handler(m, { sock, args }) {
 
   if (!cmd || cmd === "help" || cmd === "menu") {
     let txt = `Sunnah (sunnah.com API)\n\n`;
-    txt += `> API Key: ${hasKey() ? "ON" : "OFF (no key)"}\n`;
-    txt += `> Official sunnah.com hadith database\n\n`;
+    txt += `API Key: ${hasKey() ? "ON" : "OFF (no key)"}\n`;
+    txt += `Official sunnah.com hadith database\n\n`;
     if (!hasKey()) {
       txt += `_Butuh API key! Request di:_\nhttps://github.com/sunnah-com/api/issues\n\n`;
     }
@@ -195,7 +195,7 @@ async function handler(m, { sock, args }) {
 
       const hadiths = res.data.data;
       let txt = `Hadith: ${collection} - Buku ${bookNumber}\n`;
-      txt += `> Halaman ${page}\n\n`;
+      txt += `Halaman ${page}\n\n`;
 
       for (let i = 0; i < hadiths.length; i++) {
         const h = hadiths[i];

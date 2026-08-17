@@ -73,10 +73,10 @@ async function handler(m, { sock }) {
 
   if (!audioBuffer) {
     return sendReplyWithNav(sock, m, `🎵 *MUsIK APA INI?*\n\n` +
-        `> Identifikasi lagu dari audio\n\n` +
+        `Identifikasi lagu dari audio\n\n` +
         `*Cara pakai:*\n` +
-        `> Reply audio dengan \`${m.prefix}musikapaini\`\n` +
-        `> Atau kirim audio + caption command`, "musikapaini");
+        `Reply audio dengan \`${m.prefix}musikapaini\`\n` +
+        `Atau kirim audio + caption command`, "musikapaini");
   }
 
   m.react("🕐");

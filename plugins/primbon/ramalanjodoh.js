@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
             response += `${i+1}. ${h}\n\n`
         })
         
-        response += `> ⚠️ _${data.data.peringatan}_`
+        response += `⚠️ _${data.data.peringatan}_`
         
         m.react('✅')
         await m.reply(response)

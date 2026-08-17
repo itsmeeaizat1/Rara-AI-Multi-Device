@@ -76,15 +76,15 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, claraWrap("sIstem Daftar", `⚙️ *sIstem Daftar*\n\n` +
         `Status: ${currentStatus ? "✅ ON (Wajib Daftar)" : "❌ OFF"}\n\n` +
         `*Statistik:*\n` +
-        `> Total registered: *${stats.totalRegistered}*\n` +
-        `> Register hari ini: *${stats.registeredToday}*\n` +
-        `> Unreg hari ini: *${stats.unregisteredToday}*\n` +
-        `> Sesi aktif: *${stats.activeSessions}*\n\n` +
+        `Total registered: *${stats.totalRegistered}*\n` +
+        `Register hari ini: *${stats.registeredToday}*\n` +
+        `Unreg hari ini: *${stats.unregisteredToday}*\n` +
+        `Sesi aktif: *${stats.activeSessions}*\n\n` +
         `*Usage:*\n` +
-        `> \`${m.prefix}sistemdaftar on\` - Wajibkan daftar\n` +
-        `> \`${m.prefix}sistemdaftar off\` - Matikan wajib daftar\n` +
-        `> \`${m.prefix}sistemdaftar stats\` - Lihat statistik\n\n` +
-        `> Jika ON, user harus \`${m.prefix}daftar\` sebelum pakai command`), "sistemdaftar");
+        `\`${m.prefix}sistemdaftar on\` - Wajibkan daftar\n` +
+        `\`${m.prefix}sistemdaftar off\` - Matikan wajib daftar\n` +
+        `\`${m.prefix}sistemdaftar stats\` - Lihat statistik\n\n` +
+        `Jika ON, user harus \`${m.prefix}daftar\` sebelum pakai command`), "sistemdaftar");
   }
 
   if (normalizedArgs === "stats") {
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
         text:
           `✅ *sIstem Daftar Diaktifkan!*\n\n` +
           `User sekarang wajib daftar sebelum menggunakan command!\n\n` +
-          `> Command: \`${m.prefix}daftar\``,
+          `Command: \`${m.prefix}daftar\``,
         contextInfo: getRegistrationContextInfo(),
       },
       { quoted: m },

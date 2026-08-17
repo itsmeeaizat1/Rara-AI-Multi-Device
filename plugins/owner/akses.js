@@ -58,8 +58,8 @@ async function handler(m, { sock, plugins }) {
         `⚠️ *Format Salah*\n\n` +
           `Format: \`${m.prefix}addakses <command> <durasi> <target>\`\n\n` +
           `*Contoh:*\n` +
-          `> \`${m.prefix}addakses addowner 30d @user\` (30 Hari)\n` +
-          `> \`${m.prefix}addakses unban permanent @user\` (Selamanya)\n\n` +
+          `\`${m.prefix}addakses addowner 30d @user\` (30 Hari)\n` +
+          `\`${m.prefix}addakses unban permanent @user\` (Selamanya)\n\n` +
           `*Durasi Support:* 1h, 1d, 30d, 1y`,
       );
     }

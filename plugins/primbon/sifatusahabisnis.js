@@ -38,9 +38,9 @@ async function handler(m, { sock }) {
         
         const r = data.data
         const response = `💼 *sIfat Usaha/Bisnis*\n\n` +
-            `> Lahir: *${r.hari_lahir}*\n\n` +
+            `Lahir: *${r.hari_lahir}*\n\n` +
             `📊 *Analisa:*\n${r.usaha}\n\n` +
-            `> _${r.catatan}_`
+            `_${r.catatan}_`
         
         m.react('✅')
         await m.reply(response)

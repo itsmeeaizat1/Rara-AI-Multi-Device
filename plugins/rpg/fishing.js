@@ -70,9 +70,9 @@ async function handler(m, { sock }) {
 
   let txt = `HAPPP! Kailnya ditarik! 🎣💦\n\nWah, kamu berhasil dapetin:\n`;
   if (caught.item === "trash") {
-    txt += `> ${caught.name} 🤢\nYahh dapetnya sampah kak... Lumayan lah dapet *+${expReward} EXP* pengalaman buang sampah pada tempatnya! 😂\n\n`;
+    txt += `${caught.name} 🤢\nYahh dapetnya sampah kak... Lumayan lah dapet *+${expReward} EXP* pengalaman buang sampah pada tempatnya! 😂\n\n`;
   } else {
-    txt += `> *${caught.name}* 🎉✨\nAsik banget! Kamu juga dapet *+${expReward} EXP* nih!\n\n`;
+    txt += `*${caught.name}* 🎉✨\nAsik banget! Kamu juga dapet *+${expReward} EXP* nih!\n\n`;
   }
   
   txt += `⚡ Stamina terpakai: *-${staminaCost}*\n`;

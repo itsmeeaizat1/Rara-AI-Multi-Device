@@ -155,7 +155,7 @@ async function handler(m, { sock }) {
                 return m.reply(
                     `⚔️ *MISI SHINOBI MASIH AKTIF*\n\n` +
                     `Kamu masih berada di medan pertempuran!\n` +
-                    `> Balas pesan terakhir bot dengan (\`serang\` / \`lari\`) atau batalkan misi (ketik \`batal\`).`,
+                    `Balas pesan terakhir bot dengan (\`serang\` / \`lari\`) atau batalkan misi (ketik \`batal\`).`,
                 );
             }
         }
@@ -175,15 +175,15 @@ async function handler(m, { sock }) {
 
         let txt = `⛩️ *LOBI SHINOBI*\n\n`;
         txt += `📊 *Statistik Shinobi:*\n`;
-        txt += `> Level: *${userLevel}*\n`;
-        txt += `> Stamina: *${user.rpg.stamina ?? 100}/100*\n\n`;
+        txt += `Level: *${userLevel}*\n`;
+        txt += `Stamina: *${user.rpg.stamina ?? 100}/100*\n\n`;
         txt += `Pilih lokasi misi yang ingin kamu jelajahi:\n\n`;
 
         for (const d of LOCATIONS) {
             if (userLevel >= d.levelReq) {
                 txt += `🔓 *${d.id}.* ${d.name} (Lv ${d.levelReq}+)\n`;
             } else {
-                txt += `> 🔒 *${d.id}.* ${d.name} (Butuh Lv ${d.levelReq})\n`;
+                txt += `🔒 *${d.id}.* ${d.name} (Butuh Lv ${d.levelReq})\n`;
             }
         }
         txt += `\n> 💡 Balas pesan ini dengan *angka* lokasi misi (contoh: \`1\`) atau ketik \`batal\` untuk keluar.`;
@@ -252,7 +252,7 @@ async function kyubigameAnswerHandler(m, sock) {
                 `⚡ *CHAKRA/STAMINA TIDAK CUKUP*\n\n` +
                 `Kamu butuh setidaknya *${staminaCost} stamina* untuk masuk.\n` +
                 `Sisa stamina kamu saat ini hanya *${user.rpg.stamina}*.\n\n` +
-                `> 💡 *Tips:* Gunakan perintah \`.rest\` atau batalkan dulu (ketik \`batal\`).`,
+                `💡 *Tips:* Gunakan perintah \`.rest\` atau batalkan dulu (ketik \`batal\`).`,
             );
             return true;
         }
@@ -279,11 +279,11 @@ async function kyubigameAnswerHandler(m, sock) {
 
         let txt = `⛩️ *MEMASUKI AREA MISI*\n\n`;
         txt += `Kamu melompat perlahan menyusuri *${location.name}*...\n`;
-        txt += `> ⚡ Stamina berkurang *${staminaCost}*\n\n`;
+        txt += `⚡ Stamina berkurang *${staminaCost}*\n\n`;
         txt += `Tiba-tiba, seorang *👹 ${monster}* melesat dari kegelapan dan menghadang jalanmu!\n\n`;
         txt += `*⚔️ APA YANG INGIN KAMU LAKUKAN?*\n`;
-        txt += `> Balas pesan ini dengan \`serang\` untuk melawan\n`;
-        txt += `> Balas pesan ini dengan \`lari\` untuk mundur (berisiko)`;
+        txt += `Balas pesan ini dengan \`serang\` untuk melawan\n`;
+        txt += `Balas pesan ini dengan \`lari\` untuk mundur (berisiko)`;
 
         await m.reply(claraWrap("kyubigame", txt));
         return true;
@@ -323,12 +323,12 @@ async function kyubigameAnswerHandler(m, sock) {
                 reportText += `🎉 *MISI BERHASIL!*\n\n`;
                 reportText += `Dengan jutsu mematikan, kamu berhasil mengalahkan *${session.monster}*!\n\n`;
                 reportText += `*🎁 HADIAH PENYELESAIAN MISI:*\n`;
-                reportText += `> ✨ EXP: *+${Math.floor(expReward)}*\n`;
-                reportText += `> 💰 Ryo (Koin): *+${ryoReward.toLocaleString()}*\n`;
+                reportText += `✨ EXP: *+${Math.floor(expReward)}*\n`;
+                reportText += `💰 Ryo (Koin): *+${ryoReward.toLocaleString()}*\n`;
 
                 if (droppedItems.length > 0) {
                     reportText += `\n*📦 BARANG JARAHAN SHINOBI:*\n`;
-                    reportText += `> ${droppedItems.join("\n> ")}\n`;
+                    reportText += `${droppedItems.join("\n> ")}\n`;
                 }
 
             } else {
@@ -340,9 +340,9 @@ async function kyubigameAnswerHandler(m, sock) {
                 reportText += `Kekuatanmu belum sebanding! *${session.monster}* memukul mundur dirimu dengan telak.\n`;
                 reportText += `Kamu berhasil menggunakan jutsu substitusi dan merangkak keluar dengan tubuh penuh luka.\n\n`;
                 reportText += `*💔 KERUGIAN:*\n`;
-                reportText += `> 💸 Uang jatuh: *-${ryoLoss.toLocaleString()} Ryo*\n`;
-                reportText += `> ❤️ Darah berkurang: *-40 HP*\n\n`;
-                reportText += `> 💡 *Tips:* Naikan levelmu, makan ramen, atau perkuat jutsumu!`;
+                reportText += `💸 Uang jatuh: *-${ryoLoss.toLocaleString()} Ryo*\n`;
+                reportText += `❤️ Darah berkurang: *-40 HP*\n\n`;
+                reportText += `💡 *Tips:* Naikan levelmu, makan ramen, atau perkuat jutsumu!`;
 
             }
 
@@ -364,7 +364,7 @@ async function kyubigameAnswerHandler(m, sock) {
                 reportText += `💥 *GAGAL KABUR!*\n\n`;
                 reportText += `Kakimu tersandung jebakan ninja! *${session.monster}* mengejarmu dan mendaratkan serangannya di tubuhmu!\n\n`;
                 reportText += `*💔 KERUGIAN:*\n`;
-                reportText += `> ❤️ Darah berkurang: *-${hpLoss} HP*`;
+                reportText += `❤️ Darah berkurang: *-${hpLoss} HP*`;
             }
 
             delete user.rpg.kyubigame_session;
@@ -374,9 +374,9 @@ async function kyubigameAnswerHandler(m, sock) {
         } else {
             await m.reply(
                 `❓ *PERINTAH TIDAK DIKENAL*\n\n` +
-                `> Balas dengan \`serang\` untuk melawan musuh.\n` +
-                `> Balas dengan \`lari\` untuk kabur.\n` +
-                `> Balas dengan \`batal\` jika ingin membatalkan misi.`,
+                `Balas dengan \`serang\` untuk melawan musuh.\n` +
+                `Balas dengan \`lari\` untuk kabur.\n` +
+                `Balas dengan \`batal\` jika ingin membatalkan misi.`,
             );
             return true;
         }

@@ -72,7 +72,7 @@ async function handler(m, { sock, args }) {
       }
       txt += `\nTotal SKS: ${totalSKS}\nTotal Bobot: ${totalBobot.toFixed(1)}\n`;
       txt += `IPK: *${ipk.toFixed(2)}*\nPredikat: *${getPredicate(ipk)}*\n\n`;
-      txt += `> _Konversi: A=4, AB=3.5, B=3, BC=2.5, C=2, CD=1.5, D=1, E=0_`;
+      txt += `_Konversi: A=4, AB=3.5, B=3, BC=2.5, C=2, CD=1.5, D=1, E=0_`;
       await m.reply(claraWrap("IPK", txt));
       await m.react("✅");
     }

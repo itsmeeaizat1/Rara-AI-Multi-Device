@@ -106,14 +106,14 @@ async function handler(m, { sock }) {
 
   if (!pluginName) {
     return sendReplyWithNav(sock, m, `📦 *Get Plugin*\n\n` +
-      `> Dapatkan source code plugin\n\n` +
+      `Dapatkan source code plugin\n\n` +
       `╭┈┈⬡「 📋 *ғOrmat* 」\n` +
       `┃ .getplugin <nama>\n` +
       `╰┈┈┈┈┈┈┈┈⬡\n\n` +
       `*Contoh:*\n` +
-      `> .getplugin menu\n` +
-      `> .getplugin sticker\n` +
-      `> .getplugin game/tebakgambar`, "getplugin");
+      `.getplugin menu\n` +
+      `.getplugin sticker\n` +
+      `.getplugin game/tebakgambar`, "getplugin");
   }
 
   const pluginsDir = path.join(process.cwd(), "plugins");
@@ -141,12 +141,12 @@ async function handler(m, { sock }) {
   if (!pluginInfo) {
     const similar = getSimilarPlugins(pluginName, pluginsDir);
     let text = `❌ *Plugin Tidak Ditemukan*\n\n`;
-    text += `> Plugin \`${pluginName}\` tidak ditemukan\n\n`;
+    text += `Plugin \`${pluginName}\` tidak ditemukan\n\n`;
 
     if (similar.length > 0) {
       text += `*Mungkin maksud kamu:*\n`;
       similar.forEach((s) => {
-        text += `> - \`${s}\`\n`;
+        text += `- \`${s}\`\n`;
       });
     }
 

@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
   } else {
     return m.reply(
       `👋 *sWgcv2 All Global*\n\n` +
-      `> Kirim pesan *Status Grup V2* ke SEMUA grup sekaligus.\n\n` +
+      `Kirim pesan *Status Grup V2* ke SEMUA grup sekaligus.\n\n` +
       `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
       `┃ ${m.prefix}swgcv2all Halo semua!\n` +
       `┃ atau reply gambar/video dengan caption ${m.prefix}swgcv2all\n` +
@@ -177,7 +177,7 @@ async function handler(m, { sock }) {
       `┃ ✅ Sukses: *${successCount}*\n` +
       `┃ ❌ Gagal: *${failCount}*\n` +
       `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-      `> Broadcast Status Grup V2 (Ring Pink) berhasil dikirim ke semua grup!`));
+      `Broadcast Status Grup V2 (Ring Pink) berhasil dikirim ke semua grup!`));
 
   } catch (error) {
     console.error("[SwgcV2All] Error:", error.message);

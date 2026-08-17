@@ -65,8 +65,8 @@ async function handler(m, { sock }) {
     text += `╎❏ ${benefit}\n`;
   }
   text += `╚┈┈┈┈┈┈┈┈┈❖\n\n`;
-  text += `> Donasi berapapun sangat berharga\n`;
-  text += `> Contact: @${config.owner?.number?.[0] || "owner"}`;
+  text += `Donasi berapapun sangat berharga\n`;
+  text += `Contact: @${config.owner?.number?.[0] || "owner"}`;
 
   const copyButtons = payments.map((pay) => ({
     name: "cta_copy",

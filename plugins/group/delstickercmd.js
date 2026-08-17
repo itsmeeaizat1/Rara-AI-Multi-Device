@@ -28,8 +28,8 @@ async function handler(m, { sock }) {
         if (existingCmds.length === 0) {
             return m.reply(
                 `🖼️ *sTicker Commands*\n\n` +
-                `> Tidak ada sticker command yang terdaftar.\n` +
-                `> Tambahkan dengan \`.addcmdsticker\``
+                `Tidak ada sticker command yang terdaftar.\n` +
+                `Tambahkan dengan \`.addcmdsticker\``
             )
         }
         
@@ -42,8 +42,8 @@ async function handler(m, { sock }) {
         txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`
         
         txt += `*Hapus dengan:*\n`
-        txt += `> \`.delstickercmd <command>\`\n`
-        txt += `> atau reply sticker + \`.delstickercmd\``
+        txt += `\`.delstickercmd <command>\`\n`
+        txt += `atau reply sticker + \`.delstickercmd\``
         
         return await m.reply(claraWrap("delstickercmd", txt))
     }
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
         } else {
             return m.reply(
                 `❌ Sticker command \`${cleanCmd}\` tidak ditemukan!\n\n` +
-                `> Lihat daftar dengan \`.delstickercmd\``
+                `Lihat daftar dengan \`.delstickercmd\``
             )
         }
     }
@@ -82,13 +82,13 @@ async function handler(m, { sock }) {
         await m.react('✅')
         await m.reply(
             `✅ *sTicker Command Dihapus*\n\n` +
-            `> 🗑️ \`${deletedCmd}\` telah dihapus.`
+            `🗑️ \`${deletedCmd}\` telah dihapus.`
         )
     } else {
         await m.reply(
             `❌ Gagal menghapus!\n\n` +
-            `> Reply sticker yang ingin dihapus, atau\n` +
-            `> Ketik nama command: \`.delstickercmd menu\``
+            `Reply sticker yang ingin dihapus, atau\n` +
+            `Ketik nama command: \`.delstickercmd menu\``
         )
     }
 }

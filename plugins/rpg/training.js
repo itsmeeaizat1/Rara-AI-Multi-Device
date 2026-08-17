@@ -38,22 +38,22 @@ async function handler(m, { sock }) {
 
   if (!trainType) {
     let txt = `🏋️ *Training sYstem*\n\n`;
-    txt += `> Latihan untuk meningkatkan stats!\n\n`;
+    txt += `Latihan untuk meningkatkan stats!\n\n`;
     txt += `*📊 *sTats Kamu:*
 \n`;
-    txt += `> ⚔️ Attack: *${user.rpg.attack || 10}*\n`;
-    txt += `> 🛡️ Defense: *${user.rpg.defense || 5}*\n`;
-    txt += `> ❤️ Health: *${user.rpg.health || 100}*\n`;
-    txt += `> 💨 Speed: *${user.rpg.speed || 10}*\n`;
-    txt += `> 🍀 Luck: *${user.rpg.luck || 5}*\n`;
-    txt += `> ⚡ Stamina: *${user.rpg.stamina ?? 100}*\n`;
+    txt += `⚔️ Attack: *${user.rpg.attack || 10}*\n`;
+    txt += `🛡️ Defense: *${user.rpg.defense || 5}*\n`;
+    txt += `❤️ Health: *${user.rpg.health || 100}*\n`;
+    txt += `💨 Speed: *${user.rpg.speed || 10}*\n`;
+    txt += `🍀 Luck: *${user.rpg.luck || 5}*\n`;
+    txt += `⚡ Stamina: *${user.rpg.stamina ?? 100}*\n`;
     txt += `\n\n`;
     txt += `*🏋️ *Training:*
 \n`;
     for (const [key, train] of Object.entries(TRAINING_TYPES)) {
-      txt += `> ${train.name}\n`;
-      txt += `> ⚡ Stamina: ${train.staminaCost}\n`;
-      txt += `> → \`${m.prefix}training ${key}\`\n> \n`;
+      txt += `${train.name}\n`;
+      txt += `⚡ Stamina: ${train.staminaCost}\n`;
+      txt += `→ \`${m.prefix}training ${key}\`\n> \n`;
     }
     txt += ``;
     return await sendReplyWithNav(sock, m, txt, "training");
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
   user.rpg.stamina = user.rpg.stamina ?? 100;
 
   if (user.rpg.stamina < training.staminaCost) {
-    return sendReplyWithNav(sock, m, `⚡ *sTamina Kurang*\n\n` + `> Butuh: ${training.staminaCost}\n` + `> Punya: ${user.rpg.stamina}\n\n` + `💡 Gunakan \`${m.prefix}rest\` atau makan makanan`, "training");
+    return sendReplyWithNav(sock, m, `⚡ *sTamina Kurang*\n\n` + `Butuh: ${training.staminaCost}\n` + `Punya: ${user.rpg.stamina}\n\n` + `💡 Gunakan \`${m.prefix}rest\` atau makan makanan`, "training");
   }
 
   user.rpg.stamina -= training.staminaCost;
@@ -85,10 +85,10 @@ async function handler(m, { sock }) {
   return sendReplyWithNav(sock, m, `💪 *Training sElesai!*\n\n` +
       `*📊 *Result:*
 \n` +
-      `> 🏋️ Training: *${training.name}*\n` +
-      `> 📈 ${training.stat}: *${currentStat} → ${currentStat + statBonus}* (+${statBonus})\n` +
-      `> ⚡ Stamina: *-${training.staminaCost}*\n` +
-      `> ✨ EXP: *+${training.exp}*\n` +
+      `🏋️ Training: *${training.name}*\n` +
+      `📈 ${training.stat}: *${currentStat} → ${currentStat + statBonus}* (+${statBonus})\n` +
+      `⚡ Stamina: *-${training.staminaCost}*\n` +
+      `✨ EXP: *+${training.exp}*\n` +
       ``, "training");
 }
 

@@ -353,22 +353,22 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `🤖 *Nova Assistant*\n\n` +
       `Aku bisa bantu kamu ngendaliin bot pakai bahasa natural.\n\n` +
       `*GRUP:*\n` +
-      `> .ai tutup grup / buka grup\n` +
-      `> .ai kick @user / promote @user\n` +
-      `> .ai tagall info meeting\n` +
-      `> .ai ganti nama grup jadi Grup Keren\n` +
-      `> .ai link grup / info grup\n` +
-      `> .ai mute grup / unmute grup\n` +
-      `> .ai hidetag pengumuman\n` +
-      `> .ai antilink / antitoxic\n\n` +
+      `.ai tutup grup / buka grup\n` +
+      `.ai kick @user / promote @user\n` +
+      `.ai tagall info meeting\n` +
+      `.ai ganti nama grup jadi Grup Keren\n` +
+      `.ai link grup / info grup\n` +
+      `.ai mute grup / unmute grup\n` +
+      `.ai hidetag pengumuman\n` +
+      `.ai antilink / antitoxic\n\n` +
       `*UMUM:*\n` +
-      `> .ai menu / ping / stats\n` +
-      `> .ai afk lagi makan\n` +
-      `> .ai polling Makan apa? | Nasi, Mie, Bakso\n` +
-      `> .ai sticker (reply gambar)\n\n` +
+      `.ai menu / ping / stats\n` +
+      `.ai afk lagi makan\n` +
+      `.ai polling Makan apa? | Nasi, Mie, Bakso\n` +
+      `.ai sticker (reply gambar)\n\n` +
       `*Tanya apapun:*\n` +
-      `> .ai Apa itu AI?\n` +
-      `> .ai Cerita lucu dong\n\n` +
+      `.ai Apa itu AI?\n` +
+      `.ai Cerita lucu dong\n\n` +
       `Tinggal ketik apa yang kamu mau, aku yang eksekusi!`, "ai");
   }
 
@@ -429,8 +429,8 @@ async function handler(m, { sock }) {
       m.text = originalText;
 
       await m.reply(claraWrap("Gagal eksekusi", `❌ *Gagal eksekusi*\n\n` +
-        `> Command: *${intent.command}*\n` +
-        `> Error: _${error.message}_`));
+        `Command: *${intent.command}*\n` +
+        `Error: _${error.message}_`));
     }
     return;
   }

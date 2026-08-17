@@ -100,7 +100,7 @@ async function handler(m, { sock, db }) {
     `- *V3 Document* 📄 — Allmenu dikirim sebagai file document dengan thumbnail kecil dan verified quoted reply, terlihat seperti file resmi\n\n` +
     `- *V4 Interactive Button* 🔘 — Pesan interaktif dengan tombol single_select untuk memilih kategori dan quick_reply untuk navigasi, tampilan modern\n\n` +
     `- *V5 NativeFlow* ✨ — NativeFlow message dengan limited_time_offer badge dan interactive buttons, tampilan paling premium dan eye-catching\n\n` +
-    `> Pilih variant allmenu dari tombol di bawah 👇`;
+    `Pilih variant allmenu dari tombol di bawah 👇`;
 
   await sock.sendButton(
     m.chat,

@@ -31,7 +31,7 @@ function handler(m, { sock }) {
             `╭┈┈⬡「 📋 *Info* 」\n` +
             `┃ ◦ Status: *${status}*\n` +
             `╰┈┈⬡\n\n` +
-            `> Gunakan: \`${m.prefix}autoforward on/off\`\n\n` +
+            `Gunakan: \`${m.prefix}autoforward on/off\`\n\n` +
             `_Fitur ini akan meneruskan semua pesan ke grup ini_`, "autoforward")
     }
     
@@ -42,7 +42,7 @@ function handler(m, { sock }) {
             `╭┈┈⬡「 ✅ *Aktif* 」\n` +
             `┃ ◦ Status: *ON*\n` +
             `╰┈┈⬡\n\n` +
-            `> _Semua pesan akan di-forward_`))
+            `_Semua pesan akan di-forward_`))
     }
     
     if (option === 'off') {

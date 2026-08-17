@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
             `┃ ⏭️ sUdah Premium: \`${alreadyPremCount}\`\n` +
             `┃ 💎 Total Premium: \`${db.data.premium.length}\`\n` +
             `╰┈┈⬡\n\n` +
-            `> Grup: ${groupMeta.subject}`)
+            `Grup: ${groupMeta.subject}`)
         
     } catch (error) {
         await m.reply(claraWrap("addpremall", te(m.prefix, m.command, m.pushName), "error"))

@@ -58,14 +58,14 @@ async function handler(m, { args, sock }) {
   const session = getOtpSession(m.sender);
   if (!session) {
     let txt = `❌ Tidak ada sesi OTP aktif!\n\n`;
-    txt += `> Daftar dulu dengan: \`${m.prefix}regmail <nama>, <email>\``;
+    txt += `Daftar dulu dengan: \`${m.prefix}regmail <nama>, <email>\``;
     return await sendReplyWithNav(m, sock, txt, { commandName: "verotp" });
   }
 
   if (!args[0]) {
     let txt = `🔑 *VERIFIKASI OTP*\n\n`;
     txt += `Masukkan kode OTP yang dikirim ke email:\n`;
-    txt += `> \`${m.prefix}verotp <kode>\`\n\n`;
+    txt += `\`${m.prefix}verotp <kode>\`\n\n`;
     txt += `Contoh: \`${m.prefix}verotp 123456\``;
     return await sendReplyWithNav(m, sock, txt, { commandName: "verotp" });
   }
@@ -81,7 +81,7 @@ async function handler(m, { args, sock }) {
       clearOtpSession(m.sender);
       let txt = `❌ Kode OTP salah ${MAX_ATTEMPTS}x!\n\n`;
       txt += `Sesi dibatalkan. Silakan daftar ulang:\n`;
-      txt += `> \`${m.prefix}regmail <nama>, <email>\``;
+      txt += `\`${m.prefix}regmail <nama>, <email>\``;
       await m.reply(claraWrap("verotp", txt));
       return;
     }
@@ -89,7 +89,7 @@ async function handler(m, { args, sock }) {
     const remaining = MAX_ATTEMPTS - session.attempts;
     let txt = `❌ Kode OTP salah!\n\n`;
     txt += `Sisa percobaan: *${remaining}x*\n`;
-    txt += `> Ketik: \`${m.prefix}verotp <kode>\``;
+    txt += `Ketik: \`${m.prefix}verotp <kode>\``;
     await m.reply(claraWrap("verotp", txt));
     return;
   }
@@ -141,7 +141,7 @@ async function handler(m, { args, sock }) {
     }
 
     txt += `Selamat datang di ${config.bot?.name || "Nova AI"}!\n`;
-    txt += `> Ketik \`${m.prefix}menu\` untuk melihat fitur`;
+    txt += `Ketik \`${m.prefix}menu\` untuk melihat fitur`;
 
     await sendReplyWithNav(m, sock, txt, { commandName: "verotp" });
     await m.react("✅");

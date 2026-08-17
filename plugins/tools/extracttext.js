@@ -415,7 +415,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     await m.reply(claraWrap("Extract Text", [
       `❌ *GAGAL*`,
       ``,
-      `> ${error.message || "Terjadi kesalahan"}`,
+      `${error.message || "Terjadi kesalahan"}`,
     ].join("\n")));
     await m.react("✅");
   }

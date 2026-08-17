@@ -25,8 +25,8 @@ async function handler(m, { sock }) {
     
     if (!text) {
         return sendReplyWithNav(sock, m, `🎭 *Emoji Mix*\n\n` +
-            `> Gabungkan 2 emoji menjadi 1\n\n` +
-            `> Contoh: \`${m.prefix}emojimix 😂🔥\``, "emojimix")
+            `Gabungkan 2 emoji menjadi 1\n\n` +
+            `Contoh: \`${m.prefix}emojimix 😂🔥\``, "emojimix")
     }
     
     const emojiRegex = /\p{Extended_Pictographic}/gu

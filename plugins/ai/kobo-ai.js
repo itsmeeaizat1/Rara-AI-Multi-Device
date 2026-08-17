@@ -24,11 +24,11 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
     return sendReplyWithNav(sock, m, `🌬️ *Kobo Kanaeru*\n\n` +
-        `> VTuber Hololive Indonesia Gen 3\n> Wind Shaman yang cheerfull dan suka prank!\n\n` +
+        `VTuber Hololive Indonesia Gen 3\n> Wind Shaman yang cheerfull dan suka prank!\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}kobo-ai <pertanyaan>*\n\n` +
+        `*${m.prefix}kobo-ai <pertanyaan>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}kobo-ai Kobo lagi apa?*`, "kobo-ai");
+        `*${m.prefix}kobo-ai Kobo lagi apa?*`, "kobo-ai");
   }
 
   await m.react("🕐");

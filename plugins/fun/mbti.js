@@ -90,8 +90,8 @@ async function handler(m, { sock, args }) {
 
         const q = res.data.questions[0];
         let txt = `MBTI Personality Test\n\n`;
-        txt += `> 32 pertanyaan - OpenJung API\n`;
-        txt += `> Sesi berlaku 10 menit\n\n`;
+        txt += `32 pertanyaan - OpenJung API\n`;
+        txt += `Sesi berlaku 10 menit\n\n`;
         txt += `Pertanyaan 1/32\n`;
         txt += `Dimensi: ${q.dimension}\n\n`;
         txt += `A. ${q.leftTrait}\n`;
@@ -182,7 +182,7 @@ async function handler(m, { sock, args }) {
 
       // Share URL
       if (r.shareUrl) txt += `Detail: ${r.shareUrl}\n\n`;
-      txt += `> _Test selesai! 32/32 pertanyaan terjawab_`;
+      txt += `_Test selesai! 32/32 pertanyaan terjawab_`;
 
       await m.reply(claraWrap(txt.split("\n").filter(l => l.trim())));
       await m.react("✅");

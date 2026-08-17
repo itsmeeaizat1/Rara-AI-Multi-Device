@@ -124,13 +124,13 @@ async function handler(m, { sock, args }) {
     await m.react("✅");
 
     let caption = `*HD ENHANCED*\n`;
-    caption += `> Scale: ${scale}x\n`;
-    caption += `> Size: ${sizeMB}MB\n`;
+    caption += `Scale: ${scale}x\n`;
+    caption += `Size: ${sizeMB}MB\n`;
 
     if (wantDoc) {
       // Force document mode — no compress, full quality
-      caption += `> Mode: Document (no compress)\n`;
-      caption += `> Quality: Full HD`;
+      caption += `Mode: Document (no compress)\n`;
+      caption += `Quality: Full HD`;
       await sock.sendMessage(
         m.chat,
         {
@@ -143,8 +143,8 @@ async function handler(m, { sock, args }) {
       );
     } else if (resultBuffer.length > 5 * 1024 * 1024) {
       // Auto document mode kalau > 5MB (WhatsApp compress image > 5MB)
-      caption += `> Mode: Auto-Document (size > 5MB)\n`;
-      caption += `> Quality: Full HD`;
+      caption += `Mode: Auto-Document (size > 5MB)\n`;
+      caption += `Quality: Full HD`;
       await sock.sendMessage(
         m.chat,
         {
@@ -157,7 +157,7 @@ async function handler(m, { sock, args }) {
       );
     } else {
       // Image mode dengan jpegQuality 100
-      caption += `> Quality: Full HD`;
+      caption += `Quality: Full HD`;
       await sock.sendMessage(
         m.chat,
         {
@@ -172,7 +172,7 @@ async function handler(m, { sock, args }) {
     console.error("[REMINI] Error:", e.message);
     let txt = `❌ Gagal enhance gambar!\n\n`;
     txt += `Error: ${e.message}\n\n`;
-    txt += `> Coba lagi atau gunakan \`${m.prefix}hd3\` / \`${m.prefix}reminiv2\``;
+    txt += `Coba lagi atau gunakan \`${m.prefix}hd3\` / \`${m.prefix}reminiv2\``;
     await m.reply(claraWrap("remini", txt));
   }
 }

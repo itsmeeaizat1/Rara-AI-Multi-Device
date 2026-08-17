@@ -54,10 +54,10 @@ async function handler(m, { sock }) {
 
   if (!targetJid) {
     return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-        `> \`${m.prefix}jadian @tag\`\n\n` +
-        `> Contoh:\n` +
-        `> \`${m.prefix}jadian @628xxx\`\n` +
-        `> Reply pesan + \`${m.prefix}tembak\``, "tembak");
+        `\`${m.prefix}jadian @tag\`\n\n` +
+        `Contoh:\n` +
+        `\`${m.prefix}jadian @628xxx\`\n` +
+        `Reply pesan + \`${m.prefix}tembak\``, "tembak");
   }
 
   if (targetJid === m.sender) {

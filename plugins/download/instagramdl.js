@@ -25,10 +25,10 @@ async function handler(m, { sock }) {
 
   if (!url) {
     return sendReplyWithNav(sock, m, `📸 *Instagram Downloader*\n\n` +
-        `> \`${m.prefix}igdl <url>\`\n\n` +
+        `\`${m.prefix}igdl <url>\`\n\n` +
         `*Contoh:*\n` +
-        `> \`${m.prefix}igdl https://www.instagram.com/reel/xxx\`\n` +
-        `> \`${m.prefix}igdl https://www.instagram.com/p/xxx\``, "instagramdl");
+        `\`${m.prefix}igdl https://www.instagram.com/reel/xxx\`\n` +
+        `\`${m.prefix}igdl https://www.instagram.com/p/xxx\``, "instagramdl");
   }
 
   if (!IG_REGEX.test(url)) {

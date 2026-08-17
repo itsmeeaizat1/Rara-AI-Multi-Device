@@ -86,8 +86,8 @@ async function handler(m, { sock }) {
       `┃ Atau: ${prefix}spotifyplay <spotify url>\n` +
       `╰┈┈⬡\n\n` +
       `Contoh:\n` +
-      `> ${prefix}spotifyplay blinding lights the weeknd\n` +
-      `> ${prefix}spotifyplay https://open.spotify.com/track/xxx`,
+      `${prefix}spotifyplay blinding lights the weeknd\n` +
+      `${prefix}spotifyplay https://open.spotify.com/track/xxx`,
       "spotifyplay"
     );
   }

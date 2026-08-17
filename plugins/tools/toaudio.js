@@ -62,16 +62,16 @@ async function handler(m, { sock }) {
     
     if (!mediaSource) {
         await sendReplyWithNav(sock, m, `❌ *GAGAL*\n\n` +
-            `> Tidak ada video/voice note yang terdeteksi!\n\n` +
+            `Tidak ada video/voice note yang terdeteksi!\n\n` +
             `*Cara penggunaan:*\n` +
-            `> 1. Kirim video + caption \`${m.prefix}toaudio\`\n` +
-            `> 2. Reply video/VN dengan \`${m.prefix}toaudio\``, "toaudio")
+            `1. Kirim video + caption \`${m.prefix}toaudio\`\n` +
+            `2. Reply video/VN dengan \`${m.prefix}toaudio\``, "toaudio")
         return
     }
     if (!isVideo && !isPtt) {
         await sendReplyWithNav(sock, m, `⚠️ *sUDAH AUDIO*\n\n` +
-            `> Media ini sudah dalam format audio.\n` +
-            `> Gunakan \`${m.prefix}tovn\` jika ingin mengubah ke voice note.`, "toaudio")
+            `Media ini sudah dalam format audio.\n` +
+            `Gunakan \`${m.prefix}tovn\` jika ingin mengubah ke voice note.`, "toaudio")
         return
     }
 
@@ -89,8 +89,8 @@ async function handler(m, { sock }) {
 
         if (!buffer || buffer.length === 0) {
             await sendReplyWithNav(sock, m, `❌ *GAGAL*\n\n` +
-                `> Tidak dapat mengunduh media.\n` +
-                `> Media mungkin sudah tidak tersedia.`, "toaudio")
+                `Tidak dapat mengunduh media.\n` +
+                `Media mungkin sudah tidak tersedia.`, "toaudio")
             return
         }
 
@@ -100,8 +100,8 @@ async function handler(m, { sock }) {
 
         if (!fs.existsSync(outputPath)) {
             await m.reply(claraWrap("toaudio", `❌ *KONVERsI GAGAL*\n\n` +
-                `> Gagal mengekstrak audio dari media.\n` +
-                `> Pastikan ffmpeg terinstall dengan benar.`))
+                `Gagal mengekstrak audio dari media.\n` +
+                `Pastikan ffmpeg terinstall dengan benar.`))
             return
         }
 
@@ -114,8 +114,8 @@ async function handler(m, { sock }) {
     } catch (error) {
         await m.reply(
             `❌ *ERROR*\n\n` +
-            `> Terjadi kesalahan saat memproses.\n` +
-            `> _${error.message}_`
+            `Terjadi kesalahan saat memproses.\n` +
+            `_${error.message}_`
         )
     } finally {
         if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath)

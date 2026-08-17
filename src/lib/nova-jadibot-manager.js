@@ -422,8 +422,8 @@ async function startJadibot(sock, m, userJid, usePairing = true) {
             caption:
               `🤖 *Jadibot — QR Code*\n\n` +
               `Scan kode QR ini untuk menjadi bot.\n\n` +
-              `> ⏱️ Expired dalam 20 detik\n` +
-              `> 📊 QR Count: ${qrCount}/3`,
+              `⏱️ Expired dalam 20 detik\n` +
+              `📊 QR Count: ${qrCount}/3`,
           },
           { quoted: m },
         );
@@ -469,11 +469,11 @@ async function startJadibot(sock, m, userJid, usePairing = true) {
           .sendMessage(m.chat, {
             text:
               `✅ *Jadibot Terhubung*\n\n` +
-              `> 📱 Nomor: *@${id}*\n` +
-              `> 🟢 Status: *Online*\n` +
-              `> ⏱️ Mulai: *${new Date().toLocaleTimeString("id-ID")}*\n\n` +
+              `📱 Nomor: *@${id}*\n` +
+              `🟢 Status: *Online*\n` +
+              `⏱️ Mulai: *${new Date().toLocaleTimeString("id-ID")}*\n\n` +
               `Bot kamu aktif dan siap menerima perintah!\n\n` +
-              `> ℹ️ Ketik \`${m.prefix || "."}stopjadibot\` untuk menghentikan`,
+              `ℹ️ Ketik \`${m.prefix || "."}stopjadibot\` untuk menghentikan`,
             mentions: [userJid],
           })
           .catch((e) => {
@@ -537,12 +537,12 @@ async function startJadibot(sock, m, userJid, usePairing = true) {
         await safeSend(sock, m?.chat, {
           text:
             `${statusEmoji} *Jadibot Disconnected*\n\n` +
-            `> 📱 Nomor: *@${id}*\n` +
-            `> 🔢 Code: \`${errorInfo.code}\`\n` +
-            `> 📋 Alasan: *${errorInfo.reason}*\n` +
-            `> ℹ️ ${errorInfo.action}\n\n` +
+            `📱 Nomor: *@${id}*\n` +
+            `🔢 Code: \`${errorInfo.code}\`\n` +
+            `📋 Alasan: *${errorInfo.reason}*\n` +
+            `ℹ️ ${errorInfo.action}\n\n` +
             (errorInfo.fatal
-              ? `> ⚠️ Session dihapus. Gunakan \`.jadibot\` untuk memulai ulang.`
+              ? `⚠️ Session dihapus. Gunakan \`.jadibot\` untuk memulai ulang.`
               : ""),
           mentions: [userJid],
         });
@@ -552,10 +552,10 @@ async function startJadibot(sock, m, userJid, usePairing = true) {
         await safeSend(sock, m?.chat, {
           text:
             `🔄 *Jadibot Reconnecting...*\n\n` +
-            `> 📱 Nomor: *@${id}*\n` +
-            `> 📋 Alasan: *${errorInfo.reason}*\n` +
-            `> 🔁 Percobaan: *${attempts + 1}/${MAX_RECONNECT_ATTEMPTS}*\n\n` +
-            `> Reconnect dalam ${RECONNECT_INTERVAL / 1000} detik...`,
+            `📱 Nomor: *@${id}*\n` +
+            `📋 Alasan: *${errorInfo.reason}*\n` +
+            `🔁 Percobaan: *${attempts + 1}/${MAX_RECONNECT_ATTEMPTS}*\n\n` +
+            `Reconnect dalam ${RECONNECT_INTERVAL / 1000} detik...`,
           mentions: [userJid],
         });
 
@@ -677,10 +677,10 @@ async function startJadibot(sock, m, userJid, usePairing = true) {
             text:
               `🔗 *Pairing Code*\n\n` +
               `Masukkan kode berikut di WhatsApp kamu:\n\n` +
-              `> 📱 *Settings → Linked Devices → Link a Device*\n\n` +
+              `📱 *Settings → Linked Devices → Link a Device*\n\n` +
               `\`\`\`${pairingCode}\`\`\`\n\n` +
-              `> 🕕 Kode berlaku beberapa menit\n` +
-              `> ⚠️ Jangan bagikan kode ini ke siapapun`,
+              `🕕 Kode berlaku beberapa menit\n` +
+              `⚠️ Jangan bagikan kode ini ke siapapun`,
             contextInfo: saluranCtx(),
             interactiveButtons: [
               {

@@ -90,13 +90,13 @@ async function handler(m, { sock, db }) {
 
     let report =
       `✅ *Broadcast sWgc sElesai*\n\n` +
-      `> Total: *${total}* grup\n` +
-      `> Berhasil: *${success}* ✅\n` +
-      `> Gagal: *${failed}* ❌`;
+      `Total: *${total}* grup\n` +
+      `Berhasil: *${success}* ✅\n` +
+      `Gagal: *${failed}* ❌`;
 
     if (failedGroups.length > 0) {
       report +=
-        `\n\n*Grup gagal:*\n` + failedGroups.map((g) => `> • ${g}`).join("\n");
+        `\n\n*Grup gagal:*\n` + failedGroups.map((g) => `• ${g}`).join("\n");
     }
 
     await m.reply(report);
@@ -158,9 +158,9 @@ async function handler(m, { sock, db }) {
   } else {
     return m.reply(
       `⚠️ *Cara Pakai*\n\n` +
-        `> \`${m.prefix}swgcall teks\` - Story teks ke semua grup\n` +
-        `> Reply gambar/video/audio + \`${m.prefix}swgcall\`\n` +
-        `> Kirim gambar/video + caption \`${m.prefix}swgcall\`\n\n` +
+        `\`${m.prefix}swgcall teks\` - Story teks ke semua grup\n` +
+        `Reply gambar/video/audio + \`${m.prefix}swgcall\`\n` +
+        `Kirim gambar/video + caption \`${m.prefix}swgcall\`\n\n` +
         `⚠️ _Fitur ini akan mengirim story ke SEMUA grup!_`,
     );
   }
@@ -205,9 +205,9 @@ async function handler(m, { sock, db }) {
     await sock.sendMessage(m.chat, {
       text:
         `📢 *Konfirmasi Broadcast sWgc*\n\n` +
-        `> Media: *${mediaType}*\n` +
-        `> Total Grup: *${groupList.length}*\n` +
-        `> Estimasi: *~${estimatedTime} detik*\n\n` +
+        `Media: *${mediaType}*\n` +
+        `Total Grup: *${groupList.length}*\n` +
+        `Estimasi: *~${estimatedTime} detik*\n\n` +
         `⚠️ _Story akan dipost ke SEMUA grup!_\n` +
         `_Tekan konfirmasi untuk melanjutkan._`,
       contextInfo: {

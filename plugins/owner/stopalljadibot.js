@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
                 `Total: *${stopped.length}* jadibot\n` +
                 `Session: *Tersimpan*\n\n` +
                 `Dihentikan: ${names}\n\n` +
-                `> Semua session disimpan dan bisa diaktifkan ulang.`,
+                `Semua session disimpan dan bisa diaktifkan ulang.`,
             mentions: stopped.map(id => id + '@s.whatsapp.net')
         }, { quoted: m })
     } catch (error) {

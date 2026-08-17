@@ -26,10 +26,10 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
     return sendReplyWithNav(sock, m, `📌 *Pinterest Download*\n\n` +
-        `> Download gambar/video dari Pinterest\n\n` +
+        `Download gambar/video dari Pinterest\n\n` +
         `*Contoh:*\n` +
-        `> \`${m.prefix}pindl https://pin.it/xxx\`\n` +
-        `> \`${m.prefix}pindl https://pinterest.com/pin/xxx\``, "pindl");
+        `\`${m.prefix}pindl https://pin.it/xxx\`\n` +
+        `\`${m.prefix}pindl https://pinterest.com/pin/xxx\``, "pindl");
   }
   if (!url.includes("pinterest") && !url.includes("pin.it")) {
     { const __navText = "❌ URL tidak valid. Gunakan link Pinterest."; return await m.reply(__navText); };

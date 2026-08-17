@@ -39,8 +39,8 @@ async function handler(m, { sock }) {
         await m.react('✅')
         return m.reply(
             `🗑️ *Bot Keluar Dari Grup*\n\n` +
-            `> Grup: ${groupName}\n` +
-            `> ID: ${targetJid}`
+            `Grup: ${groupName}\n` +
+            `ID: ${targetJid}`
         )
     } catch (err) {
         return m.reply(claraWrap("hapusgrup", `❌ Gagal keluar dari grup: ${err.message}`))

@@ -42,8 +42,8 @@ async function handler(m, { sock }) {
     if (user.isPremium || config.isPremium(m.sender)) {
         return m.reply(
             `✨ *Premium User*\n\n` +
-            `> Kamu sudah premium!\n` +
-            `> Semua fitur sudah ter-unlock!`
+            `Kamu sudah premium!\n` +
+            `Semua fitur sudah ter-unlock!`
         )
     }
     
@@ -54,8 +54,8 @@ async function handler(m, { sock }) {
         text += `┃  🛒 *Buy Fitur*\n`
         text += `╰━━━━━━━━━━━━━━━━━╯\n\n`
         
-        text += `> Harga: *${formatNumber(PRICE_PER_FEATURE)}* bal/fitur\n`
-        text += `> Koin: *${formatNumber(user.koin || 0)}*\n\n`
+        text += `Harga: *${formatNumber(PRICE_PER_FEATURE)}* bal/fitur\n`
+        text += `Koin: *${formatNumber(user.koin || 0)}*\n\n`
         
         text += `╭┈┈⬡「 📋 *Fitur* 」\n`
         
@@ -69,8 +69,8 @@ async function handler(m, { sock }) {
         }
         
         text += `╰┈┈┈┈┈┈┈┈⬡\n\n`
-        text += `> Gunakan: \`.buyfitur <id>\`\n`
-        text += `> Atau jadi *Premium* unlock semua!`
+        text += `Gunakan: \`.buyfitur <id>\`\n`
+        text += `Atau jadi *Premium* unlock semua!`
         
         await m.reply(claraWrap("buyfitur", text))
         return
@@ -81,8 +81,8 @@ async function handler(m, { sock }) {
     if (!feature) {
         return m.reply(
             `❌ *Gagal*\n\n` +
-            `> Fitur \`${featureName}\` tidak ditemukan\n` +
-            `> Ketik \`.buyfitur\` untuk lihat daftar`
+            `Fitur \`${featureName}\` tidak ditemukan\n` +
+            `Ketik \`.buyfitur\` untuk lihat daftar`
         )
     }
     
@@ -95,9 +95,9 @@ async function handler(m, { sock }) {
     if ((user.koin || 0) < PRICE_PER_FEATURE) {
         return m.reply(
             `❌ *Gagal*\n\n` +
-            `> Koin tidak cukup!\n` +
-            `> Butuh: *${formatNumber(PRICE_PER_FEATURE)}*\n` +
-            `> Kamu punya: *${formatNumber(user.koin || 0)}*`
+            `Koin tidak cukup!\n` +
+            `Butuh: *${formatNumber(PRICE_PER_FEATURE)}*\n` +
+            `Kamu punya: *${formatNumber(user.koin || 0)}*`
         )
     }
     
@@ -116,8 +116,8 @@ async function handler(m, { sock }) {
         `┃ 💵 Harga: *-${formatNumber(PRICE_PER_FEATURE)}* bal\n` +
         `┃ 💰 sIsa: *${formatNumber(newKoin)}*\n` +
         `╰┈┈⬡\n\n` +
-        `> _${feature.desc}_\n\n` +
-        `> 💡 Tip: Jadi *Premium* untuk unlock SEMUA!`
+        `_${feature.desc}_\n\n` +
+        `💡 Tip: Jadi *Premium* untuk unlock SEMUA!`
     )
 }
 

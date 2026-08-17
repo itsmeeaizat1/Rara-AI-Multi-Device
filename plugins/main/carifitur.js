@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
       `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
       `┃ \`${m.prefix}carifitur <keyword>\`\n` +
       `╰┈┈⬡\n\n` +
-      `> Contoh:\n` +
+      `Contoh:\n` +
       `\`${m.prefix}carifitur sticker\`\n` +
       `\`${m.prefix}carifitur download\`\n` +
       `\`${m.prefix}carifitur game\``, "carifitur");
@@ -207,8 +207,8 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
     let text = `🔍 *Hasil Pencarian: "${keyword}"*\n`;
-    text += `> Ditemukan *${matches.length}* fitur\n`;
-    text += `> Pilih salah satu command di bawah:\n\n`;
+    text += `Ditemukan *${matches.length}* fitur\n`;
+    text += `Pilih salah satu command di bawah:\n\n`;
     const topMatches = matches.slice(0, 15);
     for (let i = 0; i < Math.min(5, topMatches.length); i++) {
       const p = topMatches[i];

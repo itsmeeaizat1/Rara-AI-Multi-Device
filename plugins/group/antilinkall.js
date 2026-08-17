@@ -31,24 +31,24 @@ function handler(m, { sock }) {
     const mode = groupData.antilinkallMode || "remove";
 
     return m.reply(claraWrap("Antilink All", `🔗 *Antilink All*\n\n` +
-        `> Status: *${status === "on" ? "Aktif ✅" : "Nonaktif ❌"}*\n` +
-        `> Mode: *${mode.toUpperCase()}*\n\n` +
+        `Status: *${status === "on" ? "Aktif ✅" : "Nonaktif ❌"}*\n` +
+        `Mode: *${mode.toUpperCase()}*\n\n` +
         `*DETEKSI:*\n` +
-        `> • https:// / http:// (dengan protokol)\n` +
-        `> • www. (subdomain)\n` +
-        `> • Domain extension (.com, .id, .io, .net, dll)\n` +
-        `> • Shortlink (bit.ly, t.me, tinyurl, dll)\n\n` +
+        `• https:// / http:// (dengan protokol)\n` +
+        `• www. (subdomain)\n` +
+        `• Domain extension (.com, .id, .io, .net, dll)\n` +
+        `• Shortlink (bit.ly, t.me, tinyurl, dll)\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}antilinkall on* — Aktifkan\n` +
-        `> *${m.prefix}antilinkall off* — Nonaktifkan\n` +
-        `> *${m.prefix}antilinkall metode kick* — Mode kick user\n` +
-        `> *${m.prefix}antilinkall metode remove* — Mode hapus pesan`));
+        `*${m.prefix}antilinkall on* — Aktifkan\n` +
+        `*${m.prefix}antilinkall off* — Nonaktifkan\n` +
+        `*${m.prefix}antilinkall metode kick* — Mode kick user\n` +
+        `*${m.prefix}antilinkall metode remove* — Mode hapus pesan`));
   }
 
   if (option === "on") {
     db.setGroup(m.chat, { antilinkall: "on" });
     return m.reply(claraWrap("antilinkall", `✅ *Antilink All Aktif*\n\n` +
-        `> Semua link akan dideteksi otomatis\n> Mendeteksi domain extension, bukan hanya http/https`));
+        `Semua link akan dideteksi otomatis\n> Mendeteksi domain extension, bukan hanya http/https`));
   }
 
   if (option === "off") {

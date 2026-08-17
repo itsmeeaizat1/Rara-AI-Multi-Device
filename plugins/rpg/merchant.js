@@ -48,12 +48,12 @@ function handler(m, { sock }) {
 
   if (!action || !["buy", "sell", "list"].includes(action)) {
     let txt = `🏪 *Merchant sHop*\n\n`;
-    txt += `> Selamat datang di toko!\n\n`;
+    txt += `Selamat datang di toko!\n\n`;
     txt += `*📋 *Command:*
 \n`;
-    txt += `> ${m.prefix}merchant list\n`;
-    txt += `> ${m.prefix}merchant buy <item> <qty>\n`;
-    txt += `> ${m.prefix}merchant sell <item> <qty>\n`;
+    txt += `${m.prefix}merchant list\n`;
+    txt += `${m.prefix}merchant buy <item> <qty>\n`;
+    txt += `${m.prefix}merchant sell <item> <qty>\n`;
     txt += `\n\n`;
     txt += `💰 *Balance:* ${(user.koin || 0).toLocaleString()}`;
     return sendReplyWithNav(sock, m, txt, "merchant");
@@ -65,12 +65,12 @@ function handler(m, { sock }) {
 \n`;
 
     for (const [key, item] of Object.entries(SHOP_ITEMS)) {
-      txt += `> ${item.name}\n`;
-      txt += `> 💵 Beli: ${item.buyPrice.toLocaleString()}\n`;
-      txt += `> 💰 Jual: ${item.sellPrice.toLocaleString()}\n`;
-      txt += `> 📝 ${item.desc}\n`;
-      txt += `> → \`${key}\`\n`;
-      txt += `> \n`;
+      txt += `${item.name}\n`;
+      txt += `💵 Beli: ${item.buyPrice.toLocaleString()}\n`;
+      txt += `💰 Jual: ${item.sellPrice.toLocaleString()}\n`;
+      txt += `📝 ${item.desc}\n`;
+      txt += `→ \`${key}\`\n`;
+      txt += `\n`;
     }
     txt += ``;
 
@@ -89,7 +89,7 @@ function handler(m, { sock }) {
 
     const totalCost = item.buyPrice * qty;
     if ((user.koin || 0) < totalCost) {
-      return sendReplyWithNav(sock, m, `❌ *Balance Kurang*\n\n` + `> Harga: ${totalCost.toLocaleString()}\n` + `> Balance: ${(user.koin || 0).toLocaleString()}`, "merchant");
+      return sendReplyWithNav(sock, m, `❌ *Balance Kurang*\n\n` + `Harga: ${totalCost.toLocaleString()}\n` + `Balance: ${(user.koin || 0).toLocaleString()}`, "merchant");
     }
 
     user.koin -= totalCost;
@@ -99,10 +99,10 @@ function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `✅ *Pembelian Berhasil*\n\n` +
         `*🛒 *Detail:*
 \n` +
-        `> 📦 Item: *${item.name}*\n` +
-        `> 📊 Qty: *${qty}*\n` +
-        `> 💵 Total: *-${totalCost.toLocaleString()}*\n` +
-        `> 💰 Sisa: *${user.koin.toLocaleString()}*\n` +
+        `📦 Item: *${item.name}*\n` +
+        `📊 Qty: *${qty}*\n` +
+        `💵 Total: *-${totalCost.toLocaleString()}*\n` +
+        `💰 Sisa: *${user.koin.toLocaleString()}*\n` +
         ``, "merchant");
   }
 
@@ -118,7 +118,7 @@ function handler(m, { sock }) {
 
     const have = user.inventory[itemKey] || 0;
     if (have < qty) {
-      return sendReplyWithNav(sock, m, `❌ *Item Kurang*\n\n` + `> Punya: ${have}\n` + `> Mau jual: ${qty}`, "merchant");
+      return sendReplyWithNav(sock, m, `❌ *Item Kurang*\n\n` + `Punya: ${have}\n` + `Mau jual: ${qty}`, "merchant");
     }
 
     const totalEarn = item.sellPrice * qty;
@@ -130,10 +130,10 @@ function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `✅ *Penjualan Berhasil*\n\n` +
         `*💰 *Detail:*
 \n` +
-        `> 📦 Item: *${item.name}*\n` +
-        `> 📊 Qty: *${qty}*\n` +
-        `> 💵 Total: *+${totalEarn.toLocaleString()}*\n` +
-        `> 💰 Balance: *${user.koin.toLocaleString()}*\n` +
+        `📦 Item: *${item.name}*\n` +
+        `📊 Qty: *${qty}*\n` +
+        `💵 Total: *+${totalEarn.toLocaleString()}*\n` +
+        `💰 Balance: *${user.koin.toLocaleString()}*\n` +
         ``, "merchant");
   }
 }

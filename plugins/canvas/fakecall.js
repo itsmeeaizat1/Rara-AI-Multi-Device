@@ -45,8 +45,8 @@ async function handler(m, { sock }) {
     
     if (!text || !text.includes('|')) {
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}fakecall <nama> | <durasi>\`\n\n` +
-            `> Contoh: \`${m.prefix}fakecall Marin | 19.00\`\n\n` +
+            `\`${m.prefix}fakecall <nama> | <durasi>\`\n\n` +
+            `Contoh: \`${m.prefix}fakecall Marin | 19.00\`\n\n` +
             `💡 *Tips:* Reply gambar untuk custom avatar`, "fakecall")
     }
     

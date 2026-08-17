@@ -179,12 +179,12 @@ async function handler(m, { sock }) {
   text += `┃ Status: *${compatibilityText(compatibility)}*\n`;
   text += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
   if (usedRegistration) {
-    text += `> ✨ _Dijodohkan berdasarkan data registrasi_\n`;
+    text += `✨ _Dijodohkan berdasarkan data registrasi_\n`;
   }
   if (registrationRequired) {
-    text += `> 🔒 _Mode wajib daftar aktif, hanya member terdaftar yang dipilih_\n`;
+    text += `🔒 _Mode wajib daftar aktif, hanya member terdaftar yang dipilih_\n`;
   }
-  text += `> _"${quote}"_`;
+  text += `_"${quote}"_`;
 
   { const __navText = (text, { mentions: [person1, person2] }); await m.reply(__navText); };
 }

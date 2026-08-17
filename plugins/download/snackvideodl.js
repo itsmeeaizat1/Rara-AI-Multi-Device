@@ -24,9 +24,9 @@ async function handler(m, { sock }) {
     
     if (!url) {
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}svdl <url>\`\n\n` +
-            `> Contoh:\n` +
-            `> \`${m.prefix}svdl https://www.snackvideo.com/@xxx/video/xxx\``, "snackvideodl")
+            `\`${m.prefix}svdl <url>\`\n\n` +
+            `Contoh:\n` +
+            `\`${m.prefix}svdl https://www.snackvideo.com/@xxx/video/xxx\``, "snackvideodl")
     }
     
     if (!url.match(/snackvideo\.com/i)) {

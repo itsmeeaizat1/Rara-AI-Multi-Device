@@ -90,8 +90,8 @@ async function handler(m, { sock }) {
       await sock.sendMessage(m.chat, {
         text:
           `👋 *Goodbye*\n\n` +
-          `> Bot akan keluar dari grup ini.\n` +
-          `> Terima kasih sudah menggunakan bot!`,
+          `Bot akan keluar dari grup ini.\n` +
+          `Terima kasih sudah menggunakan bot!`,
         contextInfo: {
           forwardingScore: 9999,
           isForwarded: true,
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
 
     if (!m.isGroup || targetGroupJid !== m.chat) {
       await m.react("✅");
-      await m.reply(claraWrap("leave", `✅ *Berhasil Keluar*\n\n` + `> Bot telah keluar dari: *${groupName}*`));
+      await m.reply(claraWrap("leave", `✅ *Berhasil Keluar*\n\n` + `Bot telah keluar dari: *${groupName}*`));
     }
   } catch (error) {
     global.sewaLeaving = false;

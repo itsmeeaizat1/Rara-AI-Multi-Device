@@ -41,10 +41,10 @@ async function handler(m, { sock }) {
         await sock.sendMessage(m.chat, {
             text:
                 `🗑️ *Data Direset*\n\n` +
-                `> 📁 File direset: *${result.resetCount}/${result.total}*\n` +
-                `> 💾 Backup: \`${result.backupFolder}/\`\n\n` +
+                `📁 File direset: *${result.resetCount}/${result.total}*\n` +
+                `💾 Backup: \`${result.backupFolder}/\`\n\n` +
                 `Semua data telah dikembalikan ke default.\n\n` +
-                `> ⚠️ Restart bot untuk memastikan data tersinkronisasi`
+                `⚠️ Restart bot untuk memastikan data tersinkronisasi`
         }, { quoted: m })
         return
     }
@@ -84,11 +84,11 @@ async function handler(m, { sock }) {
     txt += `Aksi ini akan menghapus *SEMUA* data berikut:\n\n`
 
     for (const { label, entries, size } of existing) {
-        txt += `> ${label}: *${entries}* data (${size})\n`
+        txt += `${label}: *${entries}* data (${size})\n`
     }
 
     txt += `\n> 📦 Total: *${(totalSize / 1024).toFixed(1)} KB*\n`
-    txt += `> 💾 Backup otomatis dibuat sebelum reset\n\n`
+    txt += `💾 Backup otomatis dibuat sebelum reset\n\n`
     txt += `Ketik \`${m.prefix}hapusdata ya\` dalam 60 detik untuk melanjutkan.`
 
     await sock.sendMessage(m.chat, {

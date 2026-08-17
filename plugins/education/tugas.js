@@ -121,7 +121,7 @@ async function handler(m, { sock, args }) {
       if (subject) txt += `Matkul: ${subject}\n`;
       txt += `Deadline: ${formatDate(deadline)}\n`;
       txt += `Status: ${days < 0 ? "TERLEWAT" : days === 0 ? "HARI INI" : days + " hari lagi"}\n\n`;
-      txt += `> _Ketik \`${m.prefix}tugas done ${id}\` jika sudah selesai_`;
+      txt += `_Ketik \`${m.prefix}tugas done ${id}\` jika sudah selesai_`;
       await m.reply(txt);
       await m.react("✅");
     }

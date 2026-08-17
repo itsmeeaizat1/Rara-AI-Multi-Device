@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
       `╭┈┈⬡「 YTMP4 V2 」\n` +
       `┃ Usage: ${m.prefix}ytmp4v2 <url>\n` +
       `╰┈┈⬡\n\n` +
-      `> ${m.prefix}ytmp4v2 https://youtu.be/xxx`,
+      `${m.prefix}ytmp4v2 https://youtu.be/xxx`,
       "ytmp4v2");
   }
   m.react("🕐");

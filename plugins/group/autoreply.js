@@ -79,9 +79,9 @@ async function handler(m, { sock }) {
             if (pipeIdx === -1) {
                 return m.reply(
                     `❌ *Format sAlah*\n\n` +
-                    `> Gunakan format: \`trigger|reply\`\n\n` +
-                    `> Contoh:\n` +
-                    `> \`${m.prefix}autoreply global add halo|Hai {name}!\``
+                    `Gunakan format: \`trigger|reply\`\n\n` +
+                    `Contoh:\n` +
+                    `\`${m.prefix}autoreply global add halo|Hai {name}!\``
                 )
             }
             
@@ -154,9 +154,9 @@ async function handler(m, { sock }) {
         
         return m.reply(
             `📱 *Global Autoreply*\n\n` +
-            `> \`${m.prefix}autoreply global add trigger|reply\`\n` +
-            `> \`${m.prefix}autoreply global del trigger\`\n` +
-            `> \`${m.prefix}autoreply global list\``
+            `\`${m.prefix}autoreply global add trigger|reply\`\n` +
+            `\`${m.prefix}autoreply global del trigger\`\n` +
+            `\`${m.prefix}autoreply global list\``
         )
     }
     

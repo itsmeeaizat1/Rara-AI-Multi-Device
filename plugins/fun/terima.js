@@ -55,8 +55,8 @@ async function handler(m, { sock }) {
 
   if (!shooterJid) {
     return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-        `> Reply pesan tembakan + \`${m.prefix}terima\`\n` +
-        `> Atau \`${m.prefix}terima @tag\``, "terima");
+        `Reply pesan tembakan + \`${m.prefix}terima\`\n` +
+        `Atau \`${m.prefix}terima @tag\``, "terima");
   }
 
   if (shooterJid === m.sender) {
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     shooterData.fun.tembakTarget !== m.sender
   ) {
     return m.reply(claraWrap("terima", `❌ *Tidak Menembak*\n\n` +
-        `> @${shooterJid.split("@")[0]} tidak sedang menembakmu`));
+        `@${shooterJid.split("@")[0]} tidak sedang menembakmu`));
   }
 
   shooterData.fun.pasangan = m.sender;

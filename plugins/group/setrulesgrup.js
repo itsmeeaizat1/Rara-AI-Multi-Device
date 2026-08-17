@@ -25,7 +25,7 @@ function handler(m, { sock }) {
 
     if (!text) {
         return sendReplyWithNav(sock, m, claraWrap("sEt Grup Rules", `📝 *sEt Grup Rules*\n\n` +
-            `> Masukkan teks rules yang baru\n\n` +
+            `Masukkan teks rules yang baru\n\n` +
             `\`Contoh:\`\n` +
             `\`${m.prefix}setrulesgrup 1. Jangan spam
 2. Hormati sesama\``), "setrulesgrup")

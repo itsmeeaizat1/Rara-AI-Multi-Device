@@ -28,11 +28,11 @@ async function handler(m, { sock }) {
 
   if (!query) {
     return sendReplyWithNav(sock, m, `🎬 *Film sEarch*\n\n` +
-        `> Cari dan nonton film online\n\n` +
+        `Cari dan nonton film online\n\n` +
         `*Format:*\n` +
-        `> \`${m.prefix}film <judul>\`\n\n` +
+        `\`${m.prefix}film <judul>\`\n\n` +
         `*Contoh:*\n` +
-        `> \`${m.prefix}film civil war\``, "film");
+        `\`${m.prefix}film civil war\``, "film");
   }
 
 
@@ -58,14 +58,14 @@ async function handler(m, { sock }) {
     }, 300000);
 
     let text = `🎬 *Hasil Pencarian*\n\n`;
-    text += `> Ditemukan *${films.length}* film untuk "${query}"\n\n`;
+    text += `Ditemukan *${films.length}* film untuk "${query}"\n\n`;
 
     films.forEach((f, i) => {
       text += `*${i + 1}. ${f.title}*\n`;
-      text += `> ⭐ ${f.rating} | 📺 ${f.quality} | 📅 ${f.release}\n\n`;
+      text += `⭐ ${f.rating} | 📺 ${f.quality} | 📅 ${f.release}\n\n`;
     });
 
-    text += `> _Pilih film dari list di bawah_`;
+    text += `_Pilih film dari list di bawah_`;
 
     const listItems = films.map((f, i) => ({
       header: "",

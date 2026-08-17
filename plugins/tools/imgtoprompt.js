@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
         }
         const responseText = `🎨 *IMAGE TO PROMPT*\n\n` +
             `\`\`\`${result.prompt}\`\`\`\n\n` +
-            `> _Generated at: ${result.generatedAt || new Date().toISOString()}_`;
+            `_Generated at: ${result.generatedAt || new Date().toISOString()}_`;
         await m.reply(responseText);
     } catch (error) {
         console.error('[ImgToPrompt Error]', error);

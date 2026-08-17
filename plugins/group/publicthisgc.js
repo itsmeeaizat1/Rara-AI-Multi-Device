@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
 
   if (isPublicGroup && !isSelfGroup) {
     return m.reply(claraWrap("Grup Ini sUdah Mode Public", `ℹ️ *Grup Ini sUdah Mode Public*\n\n` +
-        `> Bot merespon semua member di grup ini\n\n` +
+        `Bot merespon semua member di grup ini\n\n` +
         `_Gunakan ${m.prefix}selfthisgc untuk menutup akses_`));
   }
 
@@ -43,8 +43,8 @@ async function handler(m, { sock }) {
   }
 
   return m.reply(claraWrap("Mode Public Diaktifkasi", `🌐 *Mode Public Diaktifkasi*\n\n` +
-      `> Bot sekarang merespon semua member di grup ini\n` +
-      `> Override mode global aktif untuk grup ini\n\n` +
+      `Bot sekarang merespon semua member di grup ini\n` +
+      `Override mode global aktif untuk grup ini\n\n` +
       `📋 *Grup lain tidak terpengaruh*\n\n` +
       `_Gunakan ${m.prefix}selfthisgc untuk menutup akses lagi_`));
 }

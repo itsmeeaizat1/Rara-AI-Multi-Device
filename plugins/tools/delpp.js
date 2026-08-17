@@ -29,13 +29,13 @@ async function handler(m, { sock }) {
         
         await m.reply(
             `✅ *PP BOT DIHAPUs*\n\n` +
-            `> Foto profil bot berhasil dihapus!`
+            `Foto profil bot berhasil dihapus!`
         )
     } catch (error) {
         await m.reply(
             `❌ *GAGAL*\n\n` +
-            `> Tidak dapat menghapus foto bot.\n` +
-            `> _${error.message}_`
+            `Tidak dapat menghapus foto bot.\n` +
+            `_${error.message}_`
         )
     }
 }

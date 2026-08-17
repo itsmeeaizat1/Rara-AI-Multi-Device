@@ -24,11 +24,11 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
     return sendReplyWithNav(sock, m, `👓 *Waguri-san*\n\n` +
-        `> Gadis pemalu dari "The Girl I Like Forgot Her Glasses"\n> Manis, perhatian, dan sering salah tingkah~\n\n` +
+        `Gadis pemalu dari "The Girl I Like Forgot Her Glasses"\n> Manis, perhatian, dan sering salah tingkah~\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}waguri-ai <pertanyaan>*\n\n` +
+        `*${m.prefix}waguri-ai <pertanyaan>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}waguri-ai Waguri-san, halo!*`, "waguri-ai");
+        `*${m.prefix}waguri-ai Waguri-san, halo!*`, "waguri-ai");
   }
 
   await m.react("🕐");

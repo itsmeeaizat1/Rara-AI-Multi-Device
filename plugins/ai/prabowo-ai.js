@@ -24,11 +24,11 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
     return sendReplyWithNav(sock, m, `🇮🇩 *Pak Prabowo*\n\n` +
-        `> Pria Sawit — Presiden RI\n> Tegas, patriotik, dan karismatik\n\n` +
+        `Pria Sawit — Presiden RI\n> Tegas, patriotik, dan karismatik\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}prabowo-ai <pertanyaan>*\n\n` +
+        `*${m.prefix}prabowo-ai <pertanyaan>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}prabowo-ai Saudara, kita harus berdaulat!*`, "prabowo-ai");
+        `*${m.prefix}prabowo-ai Saudara, kita harus berdaulat!*`, "prabowo-ai");
   }
 
   await m.react("🕐");

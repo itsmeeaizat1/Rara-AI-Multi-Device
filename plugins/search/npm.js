@@ -24,9 +24,9 @@ async function handler(m, { sock }) {
   if (!query) {
     return m.reply(
       `⚠️ *Cara Pakai*\n\n` +
-        `> \`${m.prefix}npm <query>\`\n\n` +
-        `> Contoh:\n` +
-        `> \`${m.prefix}npm axios\``,
+        `\`${m.prefix}npm <query>\`\n\n` +
+        `Contoh:\n` +
+        `\`${m.prefix}npm axios\``,
     );
   }
 
@@ -45,23 +45,23 @@ async function handler(m, { sock }) {
     }
 
     let text = `📦 *Npm sEarch*\n\n`;
-    text += `> Query: \`${query}\`\n`;
-    text += `> Found: ${data.total} packages\n\n`;
+    text += `Query: \`${query}\`\n`;
+    text += `Found: ${data.total} packages\n\n`;
 
     data.objects.slice(0, 8).forEach((item, i) => {
       const pkg = item.package;
       const score = Math.round((item.score?.final || 0) * 100);
 
       text += `${i + 1}. *${pkg.name}*\n`;
-      text += `> 📌 v${pkg.version}\n`;
+      text += `📌 v${pkg.version}\n`;
       if (pkg.description) {
-        text += `> 📝 ${pkg.description.slice(0, 50)}${pkg.description.length > 50 ? "..." : ""}\n`;
+        text += `📝 ${pkg.description.slice(0, 50)}${pkg.description.length > 50 ? "..." : ""}\n`;
       }
-      text += `> 🔗 ${pkg.links?.npm || "-"}\n`;
+      text += `🔗 ${pkg.links?.npm || "-"}\n`;
       if (pkg.author?.name) {
-        text += `> 👤 ${pkg.author.name}\n`;
+        text += `👤 ${pkg.author.name}\n`;
       }
-      text += `> ⭐ Score: ${score}%`;
+      text += `⭐ Score: ${score}%`;
     });
 
     await m.react("✅");

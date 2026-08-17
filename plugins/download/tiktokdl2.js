@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
         return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎵 *Tiktok Download* 」\n` +
             `┃ ㊗ Usage: \`${m.prefix}tiktok2 <url>\`\n` +
             `╰┈┈⬡\n\n` +
-            `> Contoh: ${m.prefix}tiktok2 https://vt.tiktok.com/xxx`, "tiktok2")
+            `Contoh: ${m.prefix}tiktok2 https://vt.tiktok.com/xxx`, "tiktok2")
     }
 
     if (!url.match(/tiktok\.com|vt\.tiktok/i)) {

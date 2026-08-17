@@ -226,7 +226,7 @@ async function createGiveaway(session, sock, m) {
     `┃ ⏱️ Durasi: ${remaining}\n` +
     `┃ 🆔 Id: \`${giveawayId}\`\n` +
     `╰┈┈⬡\n\n` +
-    `> Klik tombol *Join* untuk ikut giveaway!`;
+    `Klik tombol *Join* untuk ikut giveaway!`;
 
   const joinButton = [
     {
@@ -330,7 +330,7 @@ async function endGiveaway(giveawayId, sock, db) {
         `┃ 🆔 Id: \`${giveawayId}\`\n` +
         `┃ 👥 Peserta: ${giveaway.participants.length}\n` +
         `╰┈┈⬡\n\n` +
-        `> Hadiah dikirim ke private chat pemenang!`,
+        `Hadiah dikirim ke private chat pemenang!`,
       contextInfo: { ...getCtx(), mentionedJid: giveaway.winnerList },
     },
     { quoted: fakeQuoted },
@@ -356,7 +356,7 @@ async function endGiveaway(giveawayId, sock, db) {
         {
           text:
             `🎉 *sElamat!*\n\n` +
-            `> Kamu memenangkan giveaway!\n\n` +
+            `Kamu memenangkan giveaway!\n\n` +
             `╭┈┈⬡「 📋 *Detail* 」\n` +
             `┃ 🎁 Title: \`${giveaway.title}\`\n` +
             `┃ 🏆 Hadiah: *${giveaway.prizeName}*\n` +
@@ -365,7 +365,7 @@ async function endGiveaway(giveawayId, sock, db) {
             `╭┈┈⬡「 🎁 *Detail Hadiah* 」\n` +
             `${giveaway.prizeDetails || "Hubungi admin untuk detail"}\n` +
             `╰┈┈⬡\n\n` +
-            `> _Ini informasi resmi dari bot._`,
+            `_Ini informasi resmi dari bot._`,
           contextInfo: ctx,
         },
         { quoted: winnerFakeQuoted },
@@ -575,7 +575,7 @@ async function handler(m, { sock }) {
         await sock.sendMessage(winnerJid, {
           text:
             `🎉 *sElamat!*\n\n` +
-            `> Kamu memenangkan giveaway (reroll)!\n\n` +
+            `Kamu memenangkan giveaway (reroll)!\n\n` +
             `╭┈┈⬡「 📋 *Detail* 」\n` +
             `┃ 🎁 Title: \`${giveaway.title}\`\n` +
             `┃ 🏆 Hadiah: *${giveaway.prizeName}*\n` +
@@ -584,7 +584,7 @@ async function handler(m, { sock }) {
             `╭┈┈⬡「 🎁 *Detail Hadiah* 」\n` +
             `${giveaway.prizeDetails || "Hubungi admin untuk detail"}\n` +
             `╰┈┈⬡\n\n` +
-            `> _Ini informasi resmi dari bot._`,
+            `_Ini informasi resmi dari bot._`,
           contextInfo: ctx,
         });
       } catch (e) {}
@@ -599,7 +599,7 @@ async function handler(m, { sock }) {
         `┃ ${prefix}giveawaylist — Lihat daftar\n` +
         `┃ ${prefix}giveawaydelete — Hapus giveaway\n` +
         `┃ ${prefix}giveawayreroll — Reroll pemenang\n\n` +
-        `> Alias: ga, gacreate, galist, gadelete, gareroll`,
+        `Alias: ga, gacreate, galist, gadelete, gareroll`,
     );
     return;
   }

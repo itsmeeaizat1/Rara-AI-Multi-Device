@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const prompt = m.text;
   if (!prompt) {
     return sendReplyWithNav(sock, m, `🍌 *NOVA BANANA SUPER 2*\n\n` +
-        `> Buat gambar dengan AI\n\n` +
+        `Buat gambar dengan AI\n\n` +
         `\`Contoh: ${m.prefix}novabanana2 make a cat\``, "novabanana2");
   }
 

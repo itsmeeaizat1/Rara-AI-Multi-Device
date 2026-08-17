@@ -117,7 +117,7 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}ringkasan Lorem ipsum dolor sit amet...\`\n`;
     txt += `\`${m.prefix}ringkasan 3 Lorem ipsum dolor sit amet...\`\n\n`;
     txt += `Min 50 karakter. Maks 5000 karakter.\n`;
-    txt += `> _Extractive summarization - pilih kalimat terpenting berdasarkan frekuensi kata_`;
+    txt += `_Extractive summarization - pilih kalimat terpenting berdasarkan frekuensi kata_`;
     return await sendReplyWithNav(m, sock, txt, { commandName: "ringkasan" });
   }
 
@@ -148,14 +148,14 @@ async function handler(m, { sock, args }) {
     const originalSentences = splitSentences(inputText);
 
     let txt = `Ringkasan Teks\n\n`;
-    txt += `> ${originalSentences.length} kalimat asli -> ${summary.length} poin\n`;
-    txt += `> Estimasi baca asli: ${readingTime}\n\n`;
+    txt += `${originalSentences.length} kalimat asli -> ${summary.length} poin\n`;
+    txt += `Estimasi baca asli: ${readingTime}\n\n`;
     txt += `Poin Utama:\n`;
     for (let i = 0; i < summary.length; i++) {
       txt += `${i + 1}. ${summary[i]}\n`;
     }
     txt += `\nKata Kunci: ${keywords.join(", ")}\n\n`;
-    txt += `> _Ringkas dengan ${numPoints} poin_`;
+    txt += `_Ringkas dengan ${numPoints} poin_`;
 
     await m.reply(txt);
     await m.react("✅");

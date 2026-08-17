@@ -32,8 +32,8 @@ async function handler(m, { sock }) {
 
     if (!targetJid) {
         await sendReplyWithNav(sock, m, `❌ *Target Tidak Ditemukan*\n\n` +
-            `> Reply pesan user atau mention!\n` +
-            `> Contoh: \`${m.prefix}kick @user\``, "kick")
+            `Reply pesan user atau mention!\n` +
+            `Contoh: \`${m.prefix}kick @user\``, "kick")
         return
     }
 

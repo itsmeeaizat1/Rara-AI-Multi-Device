@@ -100,10 +100,10 @@ async function handler(m, { sock }) {
             `🎬 *MOVIEKU*\n\n` +
             `Fitur ini membantu kamu mencari informasi lengkap tentang film dari database Movieku, termasuk sinopsis, detail film, dan link download dalam berbagai kualitas resolusi\n\n` +
             `*Cara pakai:*\n` +
-            `> \`${m.prefix}movieku <judul film>\`\n\n` +
+            `\`${m.prefix}movieku <judul film>\`\n\n` +
             `*Contoh:*\n` +
-            `> \`${m.prefix}movieku avengers\`\n` +
-            `> \`${m.prefix}movieku one piece\`\n\n` +
+            `\`${m.prefix}movieku avengers\`\n` +
+            `\`${m.prefix}movieku one piece\`\n\n` +
             `_Hasil pencarian akan menampilkan film yang paling relevan dengan judul yang kamu cari_`
         )
     }

@@ -33,8 +33,8 @@ async function handler(m, { sock }) {
       `• \`{banks}\` — Daftar bank\n` +
       `• \`{qris}\` — Status QRIS\n\n` +
       `*CONTOH:*\n` +
-      `> \`${m.prefix}custompayment Halo! Bayar ke {methods}\`\n\n` +
-      `> \`${m.prefix}custompayment reset\` — Kembalikan ke default`, "custompayment")
+      `\`${m.prefix}custompayment Halo! Bayar ke {methods}\`\n\n` +
+      `\`${m.prefix}custompayment reset\` — Kembalikan ke default`, "custompayment")
   }
 
   if (input.toLowerCase() === 'reset') {

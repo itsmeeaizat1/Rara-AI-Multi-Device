@@ -40,9 +40,9 @@ async function handler(m, { sock }) {
     return sendReplyWithNav(sock, m, `🎵 *Douyin Downloader*\n\n` +
         `Download video atau audio dari Douyin (TikTok China).\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}douyindl <link>*\n\n` +
+        `*${m.prefix}douyindl <link>*\n\n` +
         `*CONTOH:*\n` +
-        `> *${m.prefix}douyindl https://v.douyin.com/xxx*`, "douyindl");
+        `*${m.prefix}douyindl https://v.douyin.com/xxx*`, "douyindl");
   }
 
   m.react("🕐");

@@ -26,10 +26,10 @@ async function handler(m, { sock }) {
   if (!option) {
     const current = db.setting("onlyPc") || false;
     return sendReplyWithNav(sock, m, `💬 *Only Private*\n\n` +
-        `> Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
+        `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
         `*PENGGUNAAN:*\n` +
-        `> *${m.prefix}onlypc on* — Bot hanya bisa diakses di private chat\n` +
-        `> *${m.prefix}onlypc off* — Bot bisa diakses di mana saja\n\n` +
+        `*${m.prefix}onlypc on* — Bot hanya bisa diakses di private chat\n` +
+        `*${m.prefix}onlypc off* — Bot bisa diakses di mana saja\n\n` +
         `_Jika aktif, mode Only Group akan otomatis nonaktif_`, "onlypc");
   }
 
@@ -38,15 +38,15 @@ async function handler(m, { sock }) {
     db.setting("onlyGc", false);
     await m.react("✅");
     return m.reply(claraWrap("onlypc", `💬 *Only Private Aktif*\n\n` +
-        `> Bot hanya bisa diakses di private chat\n` +
-        `> Mode Only Group dinonaktifkan`));
+        `Bot hanya bisa diakses di private chat\n` +
+        `Mode Only Group dinonaktifkan`));
   }
 
   if (option === "off") {
     db.setting("onlyPc", false);
     return m.reply(
       `💬 *Only Private Nonaktif*\n\n` +
-        `> Bot bisa diakses di mana saja`
+        `Bot bisa diakses di mana saja`
     );
   }
 

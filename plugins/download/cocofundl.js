@@ -24,9 +24,9 @@ async function handler(m, { sock }) {
     
     if (!url) {
         return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `> \`${m.prefix}cfdl <url>\`\n\n` +
-            `> Contoh:\n` +
-            `> \`${m.prefix}cfdl https://www.cocofun.com/share/post/xxx\``, "cocofundl")
+            `\`${m.prefix}cfdl <url>\`\n\n` +
+            `Contoh:\n` +
+            `\`${m.prefix}cfdl https://www.cocofun.com/share/post/xxx\``, "cocofundl")
     }
     
     if (!url.match(/cocofun\.com/i)) {

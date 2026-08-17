@@ -107,12 +107,12 @@ async function handler(m, { sock, command, args }) {
             const ipAddress = linodeInfo.ipv4?.[0] || 'Pending'
             
             const msg = `✅ *Linode ${spec.label} Berhasil Dibuat*\n\n` +
-                `> 🆔 ID: \`${linodeId}\`\n` +
-                `> 🏷️ Label: \`${label}\`\n` +
-                `> 🌐 IP: \`${ipAddress}\`\n` +
-                `> 🔑 Password: \`${rootPass}\`\n` +
-                `> 💾 RAM: ${spec.ram}\n` +
-                `> 📍 Region: ap-south`
+                `🆔 ID: \`${linodeId}\`\n` +
+                `🏷️ Label: \`${label}\`\n` +
+                `🌐 IP: \`${ipAddress}\`\n` +
+                `🔑 Password: \`${rootPass}\`\n` +
+                `💾 RAM: ${spec.ram}\n` +
+                `📍 Region: ap-south`
             
             await m.reply(claraWrap("linode", msg))
             m.react('✅')
@@ -140,9 +140,9 @@ async function handler(m, { sock, command, args }) {
             let msg = `📋 *DaғTar Linode Vps*\n\n`
             data.data.forEach((l, i) => {
                 msg += `*${i + 1}. ${l.label}*\n`
-                msg += `> ID: \`${l.id}\`\n`
-                msg += `> IP: \`${l.ipv4?.[0] || '-'}\`\n`
-                msg += `> Status: ${l.status}\n\n`
+                msg += `ID: \`${l.id}\`\n`
+                msg += `IP: \`${l.ipv4?.[0] || '-'}\`\n`
+                msg += `Status: ${l.status}\n\n`
             })
             
             await m.reply(msg.trim())
@@ -291,8 +291,8 @@ async function handler(m, { sock, command, args }) {
             const credit = (data.credit_remaining || 0) / 100
             
             const msg = `💰 *sAldo Akun Linode*\n\n` +
-                `> 💵 Balance: $${balance.toFixed(2)}\n` +
-                `> 🎁 Credit: $${credit.toFixed(2)}`
+                `💵 Balance: $${balance.toFixed(2)}\n` +
+                `🎁 Credit: $${credit.toFixed(2)}`
             
             await m.reply(claraWrap("linode", msg))
             m.react('✅')
@@ -339,12 +339,12 @@ async function handler(m, { sock, command, args }) {
             if (!res.ok) throw new Error('Gagal mendapatkan detail')
             
             const msg = `🔍 *Detail Linode*\n\n` +
-                `> 🆔 ID: \`${l.id}\`\n` +
-                `> 🏷️ Label: \`${l.label}\`\n` +
-                `> 📊 Status: ${l.status}\n` +
-                `> 📍 Region: ${l.region}\n` +
-                `> 💾 Type: ${l.type}\n` +
-                `> 🌐 IP: \`${l.ipv4?.join(', ') || '-'}\``
+                `🆔 ID: \`${l.id}\`\n` +
+                `🏷️ Label: \`${l.label}\`\n` +
+                `📊 Status: ${l.status}\n` +
+                `📍 Region: ${l.region}\n` +
+                `💾 Type: ${l.type}\n` +
+                `🌐 IP: \`${l.ipv4?.join(', ') || '-'}\``
             
             await m.reply(claraWrap("linode", msg))
             m.react('✅')
@@ -352,19 +352,19 @@ async function handler(m, { sock, command, args }) {
         }
         
         await m.reply(claraWrap("linode", `☁️ *Linode Commands*\n\n` +
-            `> .linode2gb <label> - Buat VPS 2GB\n` +
-            `> .linode4gb <label> - Buat VPS 4GB\n` +
-            `> .linode8gb <label> - Buat VPS 8GB\n` +
-            `> .linode16gb <label> - Buat VPS 16GB\n` +
-            `> .listlinode - Daftar VPS\n` +
-            `> .onlinode <id> - Hidupkan VPS\n` +
-            `> .offlinode <id> - Matikan VPS\n` +
-            `> .rebootlinode <id> - Restart VPS\n` +
-            `> .rebuildlinode <id> <image> - Rebuild\n` +
-            `> .delinode <id> - Hapus VPS\n` +
-            `> .saldolinode - Cek saldo\n` +
-            `> .sisalinode - Total VPS\n` +
-            `> .cekvpslinode <id> - Detail VPS`))
+            `.linode2gb <label> - Buat VPS 2GB\n` +
+            `.linode4gb <label> - Buat VPS 4GB\n` +
+            `.linode8gb <label> - Buat VPS 8GB\n` +
+            `.linode16gb <label> - Buat VPS 16GB\n` +
+            `.listlinode - Daftar VPS\n` +
+            `.onlinode <id> - Hidupkan VPS\n` +
+            `.offlinode <id> - Matikan VPS\n` +
+            `.rebootlinode <id> - Restart VPS\n` +
+            `.rebuildlinode <id> <image> - Rebuild\n` +
+            `.delinode <id> - Hapus VPS\n` +
+            `.saldolinode - Cek saldo\n` +
+            `.sisalinode - Total VPS\n` +
+            `.cekvpslinode <id> - Detail VPS`))
         
     } catch (err) {
         m.reply(claraWrap("linode", te(m.prefix, m.command, m.pushName), "error"))
