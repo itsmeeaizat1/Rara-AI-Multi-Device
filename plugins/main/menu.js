@@ -26,6 +26,7 @@ function getSharp() {
 }
 import axios from "axios";
 import sharp from "sharp";
+import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 import {
   claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -355,9 +356,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               { buttonId: `${prefix}rules`, buttonText: { displayText: "Rules" }, type: 1 },
               { buttonId: `${prefix}owner`, buttonText: { displayText: "Owner" }, type: 1 },
             ],
-            locationMessage: { jpegThumbnail: thumbV3, name: config.bot.name, address: `Versi: ${config.bot.version}` },
+            locationMessage: { jpegThumbnail: thumbV3, name: config.bot.name, address: (await getWeatherAddress()) || `Versi: ${config.bot.version}` },
             contentText: text,
-            footerText: "🍔 Silahkan pilih dari salah satu tombol di bawah",
+            footerText: "🌸 Silahkan pilih dari salah satu tombol di bawah",
             headerType: 6,
           },
         };
