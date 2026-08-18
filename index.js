@@ -1,4 +1,16 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+//
+// ============================================================
+//  LICENSE: Custom Proprietary License
+//  Copyright (c) 2024-2026 Aizat (github.com/itsmeeaizat)
+//  All Rights Reserved. Made in Indonesia.
+//
+//  Dilarang: menjual, menyewakan, menghapus watermark,
+//  mengklaim sebagai karya sendiri, atau mendistribusikan
+//  ulang tanpa izin tertulis dari pembuat.
+//  Lihat file LICENSE untuk ketentuan lengkap.
+// ============================================================
+//
 import path from "path";
 import fs from "fs";
 import config from "./config.js";

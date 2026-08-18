@@ -18,7 +18,7 @@
     "plugin"
   ],
   "author": "Aizat",
-  "license": "ISC",
+  "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "engines": {
     "node": ">=22.0.0"
