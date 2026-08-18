@@ -611,6 +611,46 @@ Saya adalah Aizat, pengembang bot WhatsApp ini. Jika kamu ingin mengikuti perkem
 ![GitHub Actions](https://img.shields.io/badge/-GitHub_Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white)
 ![npm](https://img.shields.io/badge/-npm-CB3837?style=flat-square&logo=npm&logoColor=white)
 
+## 📄 License
+
+<div align="center">
+
+![License](https://img.shields.io/badge/License-Custom_Proprietary-red?style=flat-square&logo=github&logoColor=white)
+![Copyright](https://img.shields.io/badge/Copyright-2024--2026_Aizat-blue?style=flat-square)
+
+</div>
+
+Bot ini dilisensikan di bawah **Custom Proprietary License** yang dibuat oleh **Aizat**.
+
+### Ketentuan Utama:
+
+**Diperbolehkan:**
+1. Penggunaan pribadi dan non-komersial
+2. Deploy di server pribadi
+3. Mempelajari kode untuk tujuan edukasi
+4. Melaporkan bug dan memberikan saran
+
+**Dilarang:**
+1. Menjual atau menyewakan bot tanpa izin tertulis dari pembuat
+2. Menghapus watermark `// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA`
+3. Mengklaim bot ini sebagai karya sendiri (plagiarisme)
+4. Mendistribusikan ulang tanpa menyertakan nama pembuat dan file LICENSE
+5. Mengubah nama bot/brand untuk menyamarkan asal-usul
+6. Mengkomersialkan plugin/fitur sebagai produk terpisah
+7. Menghapus atau memodifikasi file LICENSE ini
+
+### Penggunaan Komersial:
+Untuk penggunaan komersial (sewa bot, premium, monetisasi), wajib mendapatkan izin tertulis dari pembuat.
+
+### Hak Cipta:
+Copyright (c) 2024-2026 **Aizat** (github.com/itsmeeaizat)  
+All Rights Reserved.  
+Made in Indonesia 🇮🇩
+
+Lihat file [LICENSE](LICENSE) untuk ketentuan lengkap.
+
+---
+
 ## 💰 Donate
 
 <p align="center">
