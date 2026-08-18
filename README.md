@@ -15,13 +15,25 @@
 ---
 
 Build:
-![Node.js](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/bot-run.yaml/badge.svg)
+![Bot Run](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/bot-run.yaml/badge.svg)
+![Bot Prepare Check](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/bot-prepare-check.yaml/badge.svg)
 
-Repo Stats:
+Deploy:
+![Auto Deploy](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/Auto-Deploy-to-Panel-&-VPS.yaml/badge.svg)
+![Release Zip](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/release-zip.yaml/badge.svg)
+![Auto Clean Session](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/Auto-Clean-Session-Cache.yaml/badge.svg)
+
+Code Quality:
+![Syntax Scanner](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/syntax-error-scanner.yaml/badge.svg)
+![ESLint Auto Fix](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/github_workflows_EslintAutoFix.yaml/badge.svg)
+![CodeQL](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/codeql.yaml/badge.svg)
+
+Automation:
 ![Keep Alive](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/keep-alive.yaml/badge.svg)
-
-Auto Sync:
 ![Auto Sync](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/auto-sync.yaml/badge.svg)
+![Feature Notifier](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/Feature-notifier.yaml/badge.svg)
+![Update Badge](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/Update-badge.yaml/badge.svg)
+![Main](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/main.yml/badge.svg)
 
 
 <!--START_SECTION:latest-update-->
