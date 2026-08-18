@@ -1,125 +1,89 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { execFile } from "child_process";
-import { promisify } from "util";
 import fs from "fs";
-import os from "os";
 import path from "path";
+import { fileURLToPath } from "url";
 import axios from "axios";
-import { TeraBoxDL } from "../../src/scraper/terabox.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
-const exec = promisify(execFile);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const TMP_DIR = path.join(process.cwd(), "tmp");
+
+function ensureTmp() {
+  if (!fs.existsSync(TMP_DIR)) fs.mkdirSync(TMP_DIR, { recursive: true });
+}
+
+function tempPath(ext) {
+  ensureTmp();
+  return path.join(TMP_DIR, `terabox_${Date.now()}_${Math.random().toString(16).slice(2)}${ext}`);
+}
+
+async function handler(m, { sock, config: botConfig }) {
+  try {
+    const prefix = botConfig.command?.prefix || ".";
+    const url = m.text?.trim();
+
+    if (!url) {
+      const text =
+        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}terabox <link>*`,
+          `◦ Contoh: *${prefix}terabox https://terabox.com/s/xxxx*`].join("\n")) +
+        "\n" +
+        tipText(`Ketik ${prefix}menu untuk kembali`);
+
+      await sendReplyWithNav(sock, m, text, "terabox");
+      return { handled: true };
+    }
+
+    const response = await axios.get(url, { responseType: "arraybuffer", maxRedirects: 5 });
+    const buffer = Buffer.from(response.data);
+    const ext = ".bin";
+    const filePath = tempPath(ext);
+    fs.writeFileSync(filePath, buffer);
+
+    await sock.sendMessage(m.chat, {
+      document: fs.readFileSync(filePath),
+      mimetype: "application/octet-stream",
+      fileName: `terabox_${Date.now()}${ext}`,
+    });
+
+    const text =
+      claraWrap("Terabox", [`◦ Link: *${url}*`,
+        "◦ Status: *Berhasil*"].join("\n")) +
+      "\n" +
+      tipText(`Ketik ${prefix}terabox <link> untuk download file lain`) +
+      "\n" +
+      tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
+
+    await m.reply(claraWrap("terabox2", text));
+  } catch (error) {
+    const prefix = botConfig.command?.prefix || ".";
+    const text =
+      claraWrap("Gagal", [`◦ Status: *Gagal*`,
+        `◦ Alasan: *${error.message}*`].join("\n")) +
+      "\n" +
+      tipText(`Coba lagi nanti atau hubungi owner`);
+
+    await sendReplyWithNav(sock, m, text, "terabox");
+  }
+
+  return { handled: true };
+}
 
 const pluginConfig = {
-  name: "terabox",
-  alias: ["terabox", "teraboxdl", "tb"],
+  name: "terabox2",
+  alias: ["terabox2", "teraboxmain", "tb2"],
   category: "download",
-  description: "Download video/file dari TeraBox",
-  usage: ".terabox <url>",
-  example: ".terabox https://terabox.com/s/xxx",
+  description: "Download file dari Terabox",
+  usage: ".terabox <link>",
+  example: ".terabox https://terabox.com/s/xxxx",
   isOwner: false,
   isPremium: false,
-  isGroup: false,
+  isGroup: true,
   isPrivate: false,
-  cooldown: 15,
-  energi: 2,
+  cooldown: 10,
+  energi: 0,
   isEnabled: true,
 };
 
-async function handler(m, { sock }) {
-  const text = m.text?.trim();
-  if (!text) {
-    return sendReplyWithNav(sock, m, `📦 *TeraBox Downloader*\n\n` +
-        `Download video atau file dari TeraBox.\n\n` +
-        `*PENGGUNAAN:*\n` +
-        `*${m.prefix}terabox <link>*\n\n` +
-        `*CONTOH:*\n` +
-        `*${m.prefix}terabox https://terabox.com/s/xxx*\n\n` +
-        `_File dikirim sebagai dokumen, mungkin agak lama_`, "terabox");
-  }
-
-  m.react("🕐");
-
-  try {
-    const result = await TeraBoxDL(text);
-
-    if (!result.status) {
-      { const __navText = `❌ *TeraBox Gagal*\n\n> ${result.error}`; return await m.reply(__navText); };
-    }
-
-    let caption =
-      `📦 *TeraBox*\n\n` +
-      `📌 ${result.file_name}\n` +
-      `📏 Size: ${result.file_size}\n` +
-      `⏱️ Durasi: ${result.duration}`;
-
-    if (result.thumbnail) {
-      await sock.sendMedia(m.chat, result.thumbnail, caption, m, {
-        type: "image",
-      });
-    }
-
-    if (result.stream_url && result.stream_url.endsWith(".m3u8")) {
-      const tmpFile = path.join(os.tmpdir(), `tb_${Date.now()}.mp4`);
-
-      await exec(
-        "ffmpeg",
-        [
-          "-y",
-          "-i",
-          result.stream_url,
-          "-c",
-          "copy",
-          "-bsf:a",
-          "aac_adtstoasc",
-          tmpFile,
-        ],
-        { timeout: 120000 },
-      );
-
-      const buffer = fs.readFileSync(tmpFile);
-      fs.unlinkSync(tmpFile);
-
-      await sock.sendMessage(
-        m.chat,
-        {
-          document: buffer,
-          mimetype: "video/mp4",
-          fileName:
-            (result.file_name || "video").replace(/[<>:"/\\|?*]/g, "") + ".mp4",
-          caption,
-        },
-        { quoted: m },
-      );
-    } else if (result.download_url) {
-      const res = await axios.get(result.download_url, {
-        responseType: "arraybuffer",
-        timeout: 120000,
-        maxContentLength: 200 * 1024 * 1024,
-      });
-
-      const ext = result.extension || ".mp4";
-      const fileName =
-        (result.file_name || "file").replace(/[<>:"/\\|?*]/g, "") + ext;
-
-      await sock.sendMessage(
-        m.chat,
-        {
-          document: Buffer.from(res.data),
-          mimetype: "application/zip",
-          fileName,
-          caption,
-        },
-        { quoted: m },
-      );
-    }
-
-    m.react("✅");
-  } catch (e) {
-    console.error(e);
-    m.reply(claraWrap("terabox", "❌ Gagal mengambil data TeraBox, coba lagi nanti"));
-  }
-}
-
-export { pluginConfig as config, handler };
+export { pluginConfig as config, handler }
