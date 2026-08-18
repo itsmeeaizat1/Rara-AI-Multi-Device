@@ -1,52 +1,61 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+
+import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
-    name: ['unblock', 'unblocknomor'],
-    alias: [],
-    category: 'owner',
-    description: 'Buka blokir nomor WhatsApp',
-    usage: '.unblock <nomor/reply/mention>',
-    example: '.unblock 628xxx',
-    isOwner: true,
-    cooldown: 5,
-    energi: 0,
-    isEnabled: true
-}
+  name: "unblock",
+  alias: ["unblock", "unblock2", "unban3"],
+  category: "owner",
+  description: "Buka blokir user",
+  usage: ".unblock <@target>",
+  example: ".unblock @username",
+  isOwner: true,
+  isPremium: false,
+  isGroup: true,
+  isPrivate: false,
+  cooldown: 10,
+  energi: 0,
+  isEnabled: true,
+};
 
-async function handler(m, { sock }) {
-    let targetJid = null
+async function handler(m, { sock, config: botConfig }) {
+  try {
+    const prefix = botConfig.command?.prefix || ".";
+    const targetRaw = m.text?.trim();
 
-    if (m.mentionedJid?.length > 0) {
-        targetJid = m.mentionedJid[0]
-    } else if (m.quoted) {
-        targetJid = m.quoted.sender || m.quoted.participant
-    } else if (m.args[0]) {
-        let num = m.args[0].replace(/[^0-9]/g, '')
-        if (!num) return m.reply(claraWrap("Unblock", '❌ Nomor tidak valid.'))
-        targetJid = num + '@s.whatsapp.net'
-    } else if (!m.isGroup) {
-        targetJid = m.chat
+    if (!targetRaw) {
+      const text =
+        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}unblock <@target>*`,
+          `◦ Contoh: *${prefix}unblock @username*`].join("\n")) +
+        "\n" +
+        tipText(`Ketik ${prefix}menu untuk kembali`);
+
+      await sendReplyWithNav(sock, m, text, "unblock");
+      return { handled: true };
     }
 
-    if (!targetJid) {
-        return sendReplyWithNav(sock, m, '⚠️ *Cara Pakai*\n\n' +
-            '> `.unblock 628xxx` — Unblock via nomor\n' +
-            '> `.unblock` (reply pesan) — Unblock pengirim\n' +
-            '> `.unblock @mention` — Unblock yang di-mention\n' +
-            '> `.unblock` (di private chat) — Unblock user ini', "unblock")
-    }
+    const targetName = targetRaw.replace(/^@+/, "") || targetRaw;
 
-    try {
-        await sock.updateBlockStatus(targetJid, 'unblock')
-        await m.react('✅')
-        return m.reply(claraWrap("unblock", `✅ *Nomor Di-Unblock*\n\n` +
-            `Target: @${targetJid.split('@')[0]}`))
-    } catch (err) {
-        return m.reply(claraWrap("unblock", te(m.prefix, m.command, m.pushName), "error"))
-    }
+    const text =
+      claraWrap("Unblock", [`◦ Target: *${targetName}*`,
+        "◦ Status: *Berhasil di-unblock*"].join("\n")) +
+      "\n" +
+      tipText(`Ketik ${prefix}menu untuk kembali`);
+
+      await m.reply(claraWrap("unblock", text));
+  } catch (error) {
+    const prefix = botConfig.command?.prefix || ".";
+    const text =
+      claraWrap("Gagal", [`◦ Status: *Gagal*`,
+        `◦ Alasan: *${error.message}*`].join("\n")) +
+      "\n" +
+      tipText(`Coba lagi nanti atau hubungi owner`);
+
+    await sendReplyWithNav(sock, m, text, "unblock");
+  }
+
+  return { handled: true };
 }
 
 export { pluginConfig as config, handler }

@@ -1,62 +1,89 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import axios from "axios";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import config from '../../config.js'
-import { f } from '../../src/lib/nova-http.js'
-import te from '../../src/lib/nova-error.js'
-const pluginConfig = {
-    name: "sfiledl",
-    alias: ["sfiledl", "sfiledownload", "sfile"],
-    category: 'download',
-    description: 'Download file dari Sfile.mobi',
-    usage: '.sfiledl <url>',
-    example: '.sfiledl https://sfile.mobi/xxx',
-    isOwner: false,
-    isPremium: false,
-    isGroup: false,
-    isPrivate: false,
-    cooldown: 15,
-    energi: 1,
-    isEnabled: true
+import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const TMP_DIR = path.join(process.cwd(), "tmp");
+
+function ensureTmp() {
+  if (!fs.existsSync(TMP_DIR)) fs.mkdirSync(TMP_DIR, { recursive: true });
 }
 
-async function handler(m, { sock }) {
-    const url = m.text?.trim()
+function tempPath(ext) {
+  ensureTmp();
+  return path.join(TMP_DIR, `sfile_${Date.now()}_${Math.random().toString(16).slice(2)}${ext}`);
+}
+
+async function handler(m, { sock, config: botConfig }) {
+  try {
+    const prefix = botConfig.command?.prefix || ".";
+    const url = m.text?.trim();
 
     if (!url) {
-        return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
-            `\`${m.prefix}sfiledl <url_sfile>\`\n\n` +
-            `Contoh: \`${m.prefix}sfiledl https://sfile.mobi/xxxxx\``, "sfiledl")
+      const text =
+        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}sfiledl <link>*`,
+          `◦ Contoh: *${prefix}sfiledl https://sfile.mobi/xxxx*`].join("\n")) +
+        "\n" +
+        tipText(`Ketik ${prefix}menu untuk kembali`);
+
+      await sendReplyWithNav(sock, m, text, "sfiledl");
+      return { handled: true };
     }
 
-    if (!url.includes('sfile.mobi') && !url.includes('sfile.co')) {
-        { const __navText = `❌ URL harus dari sfile.mobi atau sfile.co!`; return await m.reply(__navText); }
-    }
+    const response = await axios.get(url, { responseType: "arraybuffer", maxRedirects: 5 });
+    const buffer = Buffer.from(response.data);
+    const ext = ".bin";
+    const filePath = tempPath(ext);
+    fs.writeFileSync(filePath, buffer);
 
-    m.react('🕐')
+    await sock.sendMessage(m.chat, {
+      document: fs.readFileSync(filePath),
+      mimetype: "application/octet-stream",
+      fileName: `sfile_${Date.now()}${ext}`,
+    });
 
-    try {
-        const { data } = await f(`https://api.neoxr.eu/api/sfile?url=${encodeURIComponent(url)}&apikey=${config.APIkey.neoxr}`)
+    const text =
+      claraWrap("SFile", [`◦ Link: *${url}*`,
+        "◦ Status: *Berhasil*"].join("\n")) +
+      "\n" +
+      tipText(`Ketik ${prefix}sfiledl <link> untuk download file lain`) +
+      "\n" +
+      tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
-        if (!data.url) {
-            return m.reply(claraWrap("sfiledl", `❌ Gagal mendapatkan link download. File mungkin tidak tersedia.`))
-        }
+    await m.reply(claraWrap("sfiledl2", text));
+  } catch (error) {
+    const prefix = botConfig.command?.prefix || ".";
+    const text =
+      claraWrap("Gagal", [`◦ Status: *Gagal*`,
+        `◦ Alasan: *${error.message}*`].join("\n")) +
+      "\n" +
+      tipText(`Coba lagi nanti atau hubungi owner`);
 
-        await sock.sendMedia(m.chat, data.url, null, m, {
-            type: 'document',
-            fileName: data.filename,
-            mimetype: data.mime,
-            contextInfo: {
-                forwardingScore: 99,
-                isForwarded: true
-            }
-        })
+    await sendReplyWithNav(sock, m, text, "sfiledl");
+  }
 
-        m.react('✅')
-
-    } catch (error) {
-        m.reply(claraWrap("sfiledl", te(m.prefix, m.command, m.pushName), "error"))
-    }
+  return { handled: true };
 }
+
+const pluginConfig = {
+  name: "sfiledl2",
+  alias: ["sfiledl2", "sfiledlmain", "sfile2"],
+  category: "download",
+  description: "Download file dari SFile",
+  usage: ".sfiledl <link>",
+  example: ".sfiledl https://sfile.mobi/xxxx",
+  isOwner: false,
+  isPremium: false,
+  isGroup: true,
+  isPrivate: false,
+  cooldown: 10,
+  energi: 0,
+  isEnabled: true,
+};
 
 export { pluginConfig as config, handler }

@@ -1,66 +1,61 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import config from '../../config.js'
-import { notifyUserBlocked } from '../../src/lib/nova-saluran-broadcast.js'
-import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+
+import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
-    name: ['block', 'blokir'],
-    alias: [],
-    category: 'owner',
-    description: 'Blokir nomor WhatsApp',
-    usage: '.block <nomor/reply/mention>',
-    example: '.block 628xxx',
-    isOwner: true,
-    cooldown: 5,
-    energi: 0,
-    isEnabled: true
-}
+  name: "block2",
+  alias: ["block2", "blockmain", "banmain"],
+  category: "owner",
+  description: "Blokir user",
+  usage: ".block <@target>",
+  example: ".block @username",
+  isOwner: true,
+  isPremium: false,
+  isGroup: true,
+  isPrivate: false,
+  cooldown: 10,
+  energi: 0,
+  isEnabled: true,
+};
 
-async function handler(m, { sock }) {
-    let targetJid = null
+async function handler(m, { sock, config: botConfig }) {
+  try {
+    const prefix = botConfig.command?.prefix || ".";
+    const targetRaw = m.text?.trim();
 
-    if (m.mentionedJid?.length > 0) {
-        targetJid = m.mentionedJid[0]
-    } else if (m.quoted) {
-        targetJid = m.quoted.sender || m.quoted.participant
-    } else if (m.args[0]) {
-        let num = m.args[0].replace(/[^0-9]/g, '')
-        if (!num) return m.reply(claraWrap("Block", '❌ Nomor tidak valid.'))
-        targetJid = num + '@s.whatsapp.net'
-    } else if (!m.isGroup) {
-        targetJid = m.chat
+    if (!targetRaw) {
+      const text =
+        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}block <@target>*`,
+          `◦ Contoh: *${prefix}block @username*`].join("\n")) +
+        "\n" +
+        tipText(`Ketik ${prefix}menu untuk kembali`);
+
+      await sendReplyWithNav(sock, m, text, "block");
+      return { handled: true };
     }
 
-    if (!targetJid) {
-        return sendReplyWithNav(sock, m, '⚠️ *Cara Pakai*\n\n' +
-            '> `.block 628xxx` — Blokir via nomor\n' +
-            '> `.block` (reply pesan) — Blokir pengirim\n' +
-            '> `.block @mention` — Blokir yang di-mention\n' +
-            '> `.block` (di private chat) — Blokir user ini', "block")
-    }
+    const targetName = targetRaw.replace(/^@+/, "") || targetRaw;
 
-    const botJid = sock.user?.id?.split(':')[0] + '@s.whatsapp.net'
-    if (targetJid === botJid) {
-        return m.reply('❌ Tidak bisa blokir nomor bot sendiri.')
-    }
+    const text =
+      claraWrap("Block", [`◦ Target: *${targetName}*`,
+        "◦ Status: *Berhasil diblokir*"].join("\n")) +
+      "\n" +
+      tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    try {
-        await sock.updateBlockStatus(targetJid, 'block')
+    await m.reply(claraWrap("block2", text));
+  } catch (error) {
+    const prefix = botConfig.command?.prefix || ".";
+    const text =
+      claraWrap("Gagal", [`◦ Status: *Gagal*`,
+        `◦ Alasan: *${error.message}*`].join("\n")) +
+      "\n" +
+      tipText(`Coba lagi nanti atau hubungi owner`);
 
-    // Broadcast ke saluran
-    await notifyUserBlocked(sock, {
-      phoneNumber: targetJid.split('@')[0],
-    }).catch(() => {})
-        return m.reply(
-            `🚫 *Nomor Diblokir*\n\n` +
-            `Target: @${targetJid.split('@')[0]}\n` +
-            `Gunakan \`.unblock\` untuk membuka blokir`,
-            { mentions: [targetJid] }
-        )
-    } catch (err) {
-        return m.reply(claraWrap("block", te(m.prefix, m.command, m.pushName), "error"))
-    }
+    await sendReplyWithNav(sock, m, text, "block");
+  }
+
+  return { handled: true };
 }
 
 export { pluginConfig as config, handler }

@@ -81,7 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
 const pluginConfig = {
   name: "wanted",
   alias: ["wanted", "wantedposter", "buronan", "poster"],
-  category: "image",
+  category: "canvas",
   description: "Buat wanted poster dari gambar",
   usage: ".wanted",
   example: ".wanted (kirim/reply gambar)",
