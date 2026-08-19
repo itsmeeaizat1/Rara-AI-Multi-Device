@@ -7,7 +7,7 @@ const pluginConfig = {
   name: "quranv3",
   alias: ["quran3", "alquran3", "quranv3", "bacaquran3"],
   category: "islamic",
-  description: "Al-Quran lengkap: baca surat, ayat, audio murottal, dan random ayat (3 bahasa)",
+  description: "Al-Quran lengkap: baca surat, ayat, audio murottal, dan random ayat (Arab + Indonesia)",
   usage: ".quranv3 [subcommand] [args]",
   example: ".quranv3 1\n.quranv3 2 255\n.quranv3 audio 1\n.quranv3 random",
   isOwner: false,
@@ -47,16 +47,16 @@ async function handler(m, { sock }) {
     // ===== HELP / MENU =====
     if (!subCmd || subCmd === "help" || subCmd === "menu" || subCmd === "how") {
       let txt = claraWrap("Al-Quran V3", [
-        "Al-Quran lengkap dengan teks Arab, terjemahan Indonesia & English, plus audio murottal.",
+        "Al-Quran lengkap dengan teks Arab dan terjemahan Indonesia, plus audio murottal.",
         "Data real-time dari alquran.cloud API",
         "",
         "CARA PAKAI:",
-        m.prefix + "quranv3 — Random ayat (Arab + Indo + English + audio)",
+        m.prefix + "quranv3 — Random ayat (Arab + Indo + audio)",
         m.prefix + "quranv3 random — Random ayat juga",
         m.prefix + "quranv3 <surat> — Baca 10 ayat pertama (Arab + Indo)",
         m.prefix + "quranv3 <surat> <ayat> — Baca ayat spesifik + audio",
-        m.prefix + "quranv3 surah <nomor> — Baca full surat (Arab + English)",
-        m.prefix + "quranv3 ayah <surat>:<ayat> — Baca ayat (English)",
+        m.prefix + "quranv3 surah <nomor> — Baca full surat (Arab + Indo)",
+        m.prefix + "quranv3 ayah <surat>:<ayat> — Baca ayat spesifik (Arab + Indo + audio)",
         m.prefix + "quranv3 audio <surat> — Audio murottal full surat",
         m.prefix + "quranv3 audio <surat> <ayat> — Audio murottal 1 ayat",
         "",
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
         const maxAyah = 286;
         const ayah = Math.floor(Math.random() * maxAyah) + 1;
         try {
-          const url = API_BASE + "/ayah/" + surah + ":" + ayah + "/editions/quran-uthmani,id.indonesian,en.pickthall,ar.alafasy";
+          const url = API_BASE + "/ayah/" + surah + ":" + ayah + "/editions/quran-uthmani,id.indonesian,ar.alafasy";
           const json = await fetchJson(url);
           if (json.code === 200 && json.data) {
             data = json;
@@ -99,8 +99,7 @@ async function handler(m, { sock }) {
 
       const arabic = data.data[0];
       const indo = data.data[1];
-      const english = data.data[2];
-      const audio = data.data[3];
+      const audio = data.data[2];
       const surahInfo = arabic.surah;
 
       let txt = claraWrap("Random Ayat", [
@@ -114,9 +113,6 @@ async function handler(m, { sock }) {
         "",
         "*Terjemahan Indonesia:*",
         indo.text,
-        "",
-        "*English (Pickthall):*",
-        english.text,
         "",
         "Juz: " + arabic.juz + " | Hal: " + arabic.page,
         "Sumber: alquran.cloud API",
@@ -162,7 +158,7 @@ async function handler(m, { sock }) {
           "Ayat: " + ayatNum + " dari " + surah.numberOfAyahs,
           "Qari: Mishary Rashid Alafasy",
           "",
-          "*Terjemahan: *",
+          "*Terjemahan:*",
           indoRes.data.text,
           "",
           "Audio sedang dikirim...",
@@ -205,7 +201,7 @@ async function handler(m, { sock }) {
       return;
     }
 
-    // ===== SURAH MODE (Arab + English) =====
+    // ===== SURAH MODE (Arab + Indo) =====
     if (subCmd === "surah") {
       const suratNum = parseInt(args[1]);
       if (!suratNum || suratNum < 1 || suratNum > 114) {
@@ -213,10 +209,9 @@ async function handler(m, { sock }) {
       }
 
       await m.react("🕐");
-      const json = await fetchJson(API_BASE + "/surah/" + suratNum + "/editions/quran-uthmani,en.pickthall,id.indonesian");
+      const json = await fetchJson(API_BASE + "/surah/" + suratNum + "/editions/quran-uthmani,id.indonesian");
       const surahData = json.data[0];
-      const englishData = json.data[1];
-      const indoData = json.data[2];
+      const indoData = json.data[1];
       const totalAyahs = surahData.numberOfAyahs;
       const limit = Math.min(10, totalAyahs);
 
@@ -231,7 +226,6 @@ async function handler(m, { sock }) {
       for (let i = 0; i < limit; i++) {
         lines.push("*" + surahData.englishName + ":" + surahData.ayahs[i].numberInSurah + "*");
         lines.push(surahData.ayahs[i].text);
-        lines.push("_" + englishData.ayahs[i].text + "_");
         lines.push(indoData.ayahs[i].text);
         lines.push("");
       }
@@ -249,7 +243,7 @@ async function handler(m, { sock }) {
       return await m.reply(claraWrap("Al-Quran V3", lines));
     }
 
-    // ===== AYAH MODE (English) =====
+    // ===== AYAH MODE (Arab + Indo + audio) =====
     if (subCmd === "ayah") {
       const parts = args[1] ? args[1].split(":") : [];
       const suratNum = parseInt(parts[0]);
@@ -264,7 +258,7 @@ async function handler(m, { sock }) {
       }
 
       await m.react("🕐");
-      const json = await fetchJson(API_BASE + "/ayah/" + suratNum + ":" + ayatNum + "/editions/quran-uthmani,en.asad,id.indonesian,ar.alafasy");
+      const json = await fetchJson(API_BASE + "/ayah/" + suratNum + ":" + ayatNum + "/editions/quran-uthmani,id.indonesian,ar.alafasy");
 
       if (json.code !== 200) {
         await m.react("❌");
@@ -272,21 +266,17 @@ async function handler(m, { sock }) {
       }
 
       const arabic = json.data[0];
-      const english = json.data[1];
-      const indo = json.data[2];
-      const audio = json.data[3];
+      const indo = json.data[1];
+      const audio = json.data[2];
       const surahInfo = arabic.surah;
 
       let txt = claraWrap("Al-Quran V3", [
         "Surat: *" + surahInfo.englishName + "* (" + surahInfo.name + ")",
         "Ayat: " + arabic.numberInSurah + " dari " + surahInfo.numberOfAyahs,
-        "Edition: " + english.edition.englishName,
+        "Arti: " + surahInfo.englishNameTranslation,
         "",
         "*Teks Arab:*",
         arabic.text,
-        "",
-        "*English (Asad):*",
-        english.text,
         "",
         "*Terjemahan Indonesia:*",
         indo.text,
@@ -322,16 +312,14 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Quran V3", "Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
       }
 
-      const [arabRes, indoRes, englishRes, audioRes] = await Promise.all([
+      const [arabRes, indoRes, audioRes] = await Promise.all([
         fetchJson(API_BASE + "/ayah/" + suratNum + ":" + ayatNum + "/quran-uthmani"),
         fetchJson(API_BASE + "/ayah/" + suratNum + ":" + ayatNum + "/id.indonesian"),
-        fetchJson(API_BASE + "/ayah/" + suratNum + ":" + ayatNum + "/en.pickthall"),
         fetchJson(API_BASE + "/ayah/" + suratNum + ":" + ayatNum + "/ar.alafasy"),
       ]);
 
       const arabAyah = arabRes.data;
       const indoAyah = indoRes.data;
-      const englishAyah = englishRes.data;
       const audioUrl = audioRes.data.audio;
 
       let txt = claraWrap("Al-Quran V3", [
@@ -345,9 +333,6 @@ async function handler(m, { sock }) {
         "",
         "*Terjemahan Indonesia:*",
         indoAyah.text,
-        "",
-        "*English (Pickthall):*",
-        englishAyah.text,
         "",
         "Juz: " + arabAyah.juz + " | Hal: " + arabAyah.page,
         "Sumber: alquran.cloud API",
