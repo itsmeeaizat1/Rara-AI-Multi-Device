@@ -6,7 +6,7 @@ const FLUSH_INTERVAL_MS = 5000;
 
 const defaultUsers = {};
 const defaultGroups = {};
-const defaultSettings = { selfMode: true, autoreactvnEnabled: false };
+const defaultSettings = { selfMode: true, autoreactvnEnabled: false, autoJokeEnabled: false, autoFactEnabled: false, autoRoastEnabled: false, autoHadithEnabled: false, autoChallengeEnabled: false };
 const defaultStats = {};
 const defaultSewa = { enabled: false, groups: {} };
 
