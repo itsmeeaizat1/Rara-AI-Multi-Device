@@ -427,15 +427,7 @@ async function runBroadcast(
   const _bcType = mode === "channel" ? "channel" : "group";
   const broadcastText = broadcastFormat({ botName: _botName, senderName: _senderName, message: text, type: _bcType });
 
-  await m.reply(
-    `📢 *JPM ${modeLabel} Dimulai*\n\n` +
-      `📝 Pesan: *${text.substring(0, 50)}${text.length > 50 ? "..." : ""}*\n` +
-      `📷 Media: *${mediaBuffer ? mediaType : "Tidak ada"}*\n` +
-      `👥 Target: *${groupIds.length}* ${mode === "channel" ? "channel" : "grup"}\n` +
-      `⏱️ Jeda: *${(jedaJpm / 1000).toFixed(1)} detik*\n` +
-      `📊 Estimasi: *${Math.ceil((groupIds.length * jedaJpm) / 60000)} menit*\n\n` +
-      `_Sedang mengirim ke semua target..._`,
-  );
+  await m.reply(claraWrap(`JPM ${modeLabel} Dimulai`, `📝 Pesan: ${text.substring(0, 50)}${text.length > 50 ? "..." : ""}\n📷 Media: ${mediaBuffer ? mediaType : "Tidak ada"}\n👥 Target: ${groupIds.length} ${mode === "channel" ? "channel" : "grup"}\n⏱️ Jeda: ${(jedaJpm / 1000).toFixed(1)} detik\n📊 Estimasi: ${Math.ceil((groupIds.length * jedaJpm) / 60000)} menit\n\nSedang mengirim ke semua target...`));
 
   global.statusjpm = true;
   let successCount = 0;
@@ -445,12 +437,7 @@ async function runBroadcast(
     if (global.stopjpm) {
       delete global.stopjpm;
       delete global.statusjpm;
-      await m.reply(
-        `⏹️ *JPM Dihentikan*\n\n` +
-          `✅ Berhasil: *${successCount}*\n` +
-          `❌ Gagal: *${failedCount}*\n` +
-          `⏸️ Sisa: *${groupIds.length - successCount - failedCount}*`,
-      );
+      await m.reply(claraWrap("JPM Dihentikan", `✅ Berhasil: ${successCount}\n❌ Gagal: ${failedCount}\n⏸️ Sisa: ${groupIds.length - successCount - failedCount}`));
       return;
     }
 
@@ -494,37 +481,12 @@ async function runBroadcast(
 
   delete global.statusjpm;
   m.react("✅");
-  await m.reply(
-    `✅ *JPM ${modeLabel} Selesai!*\n\n` +
-      `✅ Berhasil: *${successCount}*\n` +
-      `❌ Gagal: *${failedCount}*\n` +
-      `📊 Total: *${groupIds.length}*`,
-  );
+  await m.reply(claraWrap(`JPM ${modeLabel} Selesai`, `✅ Berhasil: ${successCount}\n❌ Gagal: ${failedCount}\n📊 Total: ${groupIds.length}`));
 }
 
 function showHelp(m) {
   const p = m.prefix;
-  return m.reply(
-    `📢 *JPM — Sistem Broadcast Massal*\n\n` +
-      `Sistem lengkap untuk mengirim pesan ke seluruh grup, channel, atau target tertentu secara otomatis maupun manual.\n\n` +
-      `*CARA PAKAI:*\n` +
-      `Ketik *${p}jpm* untuk membuka menu interaktif\n` +
-      `Bisa reply/kirim teks, foto, audio, atau video lalu ketik *${p}jpm*\n` +
-      `Pilih mode pengiriman dari tombol yang muncul\n\n` +
-      `*MODE BROADCAST:*\n` +
-      `📢 *JPM Basic* — Kirim pesan ke semua grup tanpa tag\n` +
-      `👁️ *JPM Hidetag* — Kirim pesan ke semua grup, tag tersembunyi\n` +
-      `📺 *JPM Channel* — Kirim pesan ke semua channel newsletter\n` +
-      `🚀 *JPM Update* — Broadcast changelog/update ke semua grup\n` +
-      `🔄 *Auto JPM* — Atur jadwal siaran otomatis berdasar interval\n\n` +
-      `*PENGATURAN:*\n` +
-      `⏱️ *Atur Delay* — Jeda antar pengiriman per grup\n` +
-      `🚫 *Blacklist JPM* — Kelola grup yang dikecualikan dari JPM\n` +
-      `🚫 *Blacklist AutoJPM* — Kelola grup yang dikecualikan dari AutoJPM\n` +
-      `⏹️ *Stop JPM* — Hentikan JPM yang sedang berjalan\n\n` +
-      `*FORMAT INTERVAL:*\n` +
-      `*10m* (10 menit) • *1h* (1 jam) • *2h30m* (2 jam 30 menit) • *1d* (1 hari)`,
-  );
+  return m.reply(claraWrap("JPM — Sistem Broadcast Massal", `Sistem lengkap untuk mengirim pesan ke seluruh grup, channel, atau target tertentu secara otomatis maupun manual.\n\nCARA PAKAI:\nKetik *${p}jpm* untuk membuka menu interaktif\nBisa reply/kirim teks, foto, audio, atau video lalu ketik *${p}jpm*\nPilih mode pengiriman dari tombol yang muncul\n\nMODE BROADCAST:\n📢 JPM Basic — Kirim pesan ke semua grup tanpa tag\n👁️ JPM Hidetag — Kirim pesan ke semua grup, tag tersembunyi\n📺 JPM Channel — Kirim pesan ke semua channel newsletter\n🚀 JPM Update — Broadcast changelog/update ke semua grup\n🔄 Auto JPM — Atur jadwal siaran otomatis berdasar interval\n\nPENGATURAN:\n⏱️ Atur Delay — Jeda antar pengiriman per grup\n🚫 Blacklist JPM — Kelola grup yang dikecualikan dari JPM\n🚫 Blacklist AutoJPM — Kelola grup yang dikecualikan dari AutoJPM\n⏹️ Stop JPM — Hentikan JPM yang sedang berjalan\n\nFORMAT INTERVAL:\n10m (10 menit) • 1h (1 jam) • 2h30m (2 jam 30 menit) • 1d (1 hari)`));
 }
 
 async function handler(m, { sock }) {
@@ -689,9 +651,7 @@ async function handleInternalCommand(m, sock, db, fullInput) {
     }
   }
 
-  return m.reply(
-    `❌ Perintah tidak dikenali. Ketik *${prefix}jpm* untuk membuka menu.`,
-  );
+  return m.reply(claraWrap("JPM", `❌ Perintah tidak dikenali. Ketik *${prefix}jpm* untuk membuka menu.`));
 }
 
 async function executeJpmWithSession(m, sock, db, mode) {
@@ -721,9 +681,7 @@ async function executeJpmWithSession(m, sock, db, mode) {
     );
 
   if (global.statusjpm) {
-    return m.reply(
-      `❌ *JPM Sedang Berjalan*\n\n> Ketik *${m.prefix}stopjpm* untuk menghentikan terlebih dahulu.`,
-    );
+    return m.reply(claraWrap("JPM", `❌ JPM sedang berjalan\n\nKetik *${m.prefix}stopjpm* untuk menghentikan terlebih dahulu.`));
   }
 
 
@@ -733,10 +691,7 @@ async function executeJpmWithSession(m, sock, db, mode) {
       db,
     );
     if (groupIds.length === 0) {
-      return m.reply(
-        `❌ *Tidak Ada Grup*\n\n` +
-          `Bot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`,
-      );
+      return m.reply(claraWrap("JPM", `❌ Tidak ada grup\n\nBot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`));
     }
     await runBroadcast(sock, m, db, {
       groupIds,
@@ -771,9 +726,7 @@ async function handleJpmDirect(m, sock, db, text, mode) {
   }
 
   if (global.statusjpm) {
-    return m.reply(
-      `❌ *JPM Sedang Berjalan*\n\n> Ketik *${m.prefix}stopjpm* untuk menghentikan.`,
-    );
+    return m.reply(claraWrap("JPM", `❌ JPM sedang berjalan\n\nKetik *${m.prefix}stopjpm* untuk menghentikan.`));
   }
 
 
@@ -798,9 +751,7 @@ async function handleJpmDirect(m, sock, db, text, mode) {
       db,
     );
     if (groupIds.length === 0) {
-      return m.reply(
-        `❌ *Tidak Ada Grup*\n\n> Bot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`,
-      );
+      return m.reply(claraWrap("JPM", `❌ Tidak ada grup\n\nBot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`));
     }
 
     await runBroadcast(sock, m, db, {
@@ -843,9 +794,7 @@ async function handleJpmChannelWithContent(
   mediaType,
 ) {
   if (global.statusjpm) {
-    return m.reply(
-      `❌ *JPM Sedang Berjalan*\n\n> Ketik *${m.prefix}stopjpm* untuk menghentikan.`,
-    );
+    return m.reply(claraWrap("JPM", `❌ JPM sedang berjalan\n\nKetik *${m.prefix}stopjpm* untuk menghentikan.`));
   }
 
 
@@ -868,22 +817,13 @@ async function handleJpmChannelWithContent(
     const channels = await fetchAllSubscribedChannels(sock);
     const channelIds = Object.keys(channels);
     if (channelIds.length === 0) {
-      return m.reply(
-        `❌ *Tidak Ada Channel*\n\n> Bot belum subscribe channel apapun`,
-      );
+      return m.reply(claraWrap("JPM", "❌ Tidak ada channel\n\nBot belum subscribe channel apapun"));
     }
 
     const jedaJpm = db.setting("jedaJpm") || 5000;
     const ctx = saluranCtx();
 
-    await m.reply(
-      `📢 *JPM Channel Dimulai*\n\n` +
-        `📝 Pesan: *${text.substring(0, 50)}${text.length > 50 ? "..." : ""}*\n` +
-        `📷 Media: *${mediaBuffer ? mediaType : "Tidak ada"}*\n` +
-        `📺 Target: *${channelIds.length}* channel\n` +
-        `⏱️ Jeda: *${(jedaJpm / 1000).toFixed(1)} detik*\n\n` +
-        `_Sedang mengirim ke semua channel..._`,
-    );
+    await m.reply(claraWrap("JPM Channel Dimulai", `📝 Pesan: ${text.substring(0, 50)}${text.length > 50 ? "..." : ""}\n📷 Media: ${mediaBuffer ? mediaType : "Tidak ada"}\n📺 Target: ${channelIds.length} channel\n⏱️ Jeda: ${(jedaJpm / 1000).toFixed(1)} detik\n\nSedang mengirim ke semua channel...`));
 
     global.statusjpm = true;
     let successCount = 0;
@@ -897,11 +837,7 @@ async function handleJpmChannelWithContent(
       if (global.stopjpm) {
         delete global.stopjpm;
         delete global.statusjpm;
-        await m.reply(
-          `⏹️ *JPM Channel Dihentikan*\n\n` +
-            `✅ Berhasil: *${successCount}*\n` +
-            `❌ Gagal: *${failedCount}*`,
-        );
+        await m.reply(claraWrap("JPM Channel Dihentikan", `✅ Berhasil: ${successCount}\n❌ Gagal: ${failedCount}`));
         return;
       }
       try {
@@ -923,12 +859,7 @@ async function handleJpmChannelWithContent(
 
     delete global.statusjpm;
     m.react("✅");
-    await m.reply(
-      `✅ *JPM Channel Selesai!*\n\n` +
-        `✅ Berhasil: *${successCount}*\n` +
-        `❌ Gagal: *${failedCount}*\n` +
-        `📊 Total: *${channelIds.length}*`,
-    );
+    await m.reply(claraWrap("JPM Channel Selesai", `✅ Berhasil: ${successCount}\n❌ Gagal: ${failedCount}\n📊 Total: ${channelIds.length}`));
   } catch (error) {
     delete global.statusjpm;
     m.reply(claraWrap("jpm", te(m.prefix, m.command, m.pushName), "error"));
@@ -953,9 +884,7 @@ async function handleJpmUpdate(m, sock, db, input) {
 
 async function handleJpmUpdateWithContent(m, sock, db, input) {
   if (global.statusjpm) {
-    return m.reply(
-      `❌ *JPM Sedang Berjalan*\n\n> Ketik *${m.prefix}stopjpm* untuk menghentikan.`,
-    );
+    return m.reply(claraWrap("JPM", `❌ JPM sedang berjalan\n\nKetik *${m.prefix}stopjpm* untuk menghentikan.`));
   }
 
   let version = config.bot?.version || "v1.0";
@@ -1152,9 +1081,7 @@ async function startAutoJpmSession(m, sock, db) {
 async function completeAutoJpmSetup(m, sock, db, intervalStr) {
   const intervalMs = parseInterval(intervalStr);
   if (!intervalMs)
-    return m.reply(
-      `❌ Interval tidak valid. Contoh: *15m*, *1h*, *2h30m*, *1d*`,
-    );
+    return m.reply(claraWrap("Auto JPM", "❌ Interval tidak valid. Contoh: 15m, 1h, 2h30m, 1d"));
   if (intervalMs < 15 * 60 * 1000)
     return m.reply(claraWrap("jpm", `❌ Interval minimal *15 menit* untuk mencegah spam.`));
 
@@ -1213,14 +1140,7 @@ async function completeAutoJpmSetup(m, sock, db, intervalStr) {
   startAutoJpmScheduler(sock);
   delete jpmSessions[m.sender];
 
-  return m.reply(
-    `✅ *Auto JPM Aktif!*\n\n` +
-      `⏱️ Interval: *${formatInterval(intervalMs)}*\n` +
-      `🕒 Pertama kali: *${timeHelper.fromTimestamp(updatedConfig.nextRun)}*\n` +
-      `📷 Media: *${updatedConfig.message.media?.type || "Tidak ada"}*\n` +
-      `📝 Pesan: *${previewText(updatedConfig.message.text)}*\n\n` +
-      `_AutoJPM akan berjalan secara otomatis sesuai jadwal._`,
-  );
+  return m.reply(claraWrap("Auto JPM Aktif", `⏱️ Interval: ${formatInterval(intervalMs)}\n🕒 Pertama kali: ${timeHelper.fromTimestamp(updatedConfig.nextRun)}\n📷 Media: ${updatedConfig.message.media?.type || "Tidak ada"}\n📝 Pesan: ${previewText(updatedConfig.message.text)}\n\nAutoJPM akan berjalan secara otomatis sesuai jadwal.`));
 }
 
 async function handleAutoJpm(m, sock, db, input, fullInput) {
@@ -1243,18 +1163,14 @@ async function handleAutoJpm(m, sock, db, input, fullInput) {
   if (["status", "info"].includes(action)) return showAutoJpmStatus(m);
 
   if (!["on", "start", "enable"].includes(action)) {
-    return m.reply(
-      `❌ Format salah. Gunakan *${prefix}autojpm on/off/status*.`,
-    );
+    return m.reply(claraWrap("Auto JPM", `❌ Format salah. Gunakan *${prefix}autojpm on/off/status*.`));
   }
 
   if (!intervalRaw) return startAutoJpmSession(m, sock, db);
 
   const intervalMs = parseInterval(intervalRaw);
   if (!intervalMs)
-    return m.reply(
-      `❌ Interval tidak valid. Contoh: *10m*, *1h*, *2h30m*, *1d*.`,
-    );
+    return m.reply(claraWrap("Auto JPM", "❌ Interval tidak valid. Contoh: 10m, 1h, 2h30m, 1d."));
   if (intervalMs < 15 * 60 * 1000)
     return m.reply(claraWrap("jpm", `❌ Interval minimal *15 menit* untuk mencegah spam.`));
 
@@ -1319,32 +1235,14 @@ async function handleAutoJpm(m, sock, db, input, fullInput) {
   setAutoJpmConfig(updatedConfig);
   startAutoJpmScheduler(sock);
 
-  return m.reply(
-    `✅ *Auto JPM Aktif!*\n\n` +
-      `⏱️ Interval: *${formatInterval(intervalMs)}*\n` +
-      `🕒 Pertama kali: *${timeHelper.fromTimestamp(updatedConfig.nextRun)}*\n` +
-      `📷 Media: *${updatedConfig.message.media?.type || "Tidak ada"}*\n` +
-      `📝 Pesan: *${previewText(updatedConfig.message.text)}*`,
-  );
+  return m.reply(claraWrap("Auto JPM Aktif", `⏱️ Interval: ${formatInterval(intervalMs)}\n🕒 Pertama kali: ${timeHelper.fromTimestamp(updatedConfig.nextRun)}\n📷 Media: ${updatedConfig.message.media?.type || "Tidak ada"}\n📝 Pesan: ${previewText(updatedConfig.message.text)}`));
 }
 
 function showAutoJpmStatus(m) {
   const current = getAutoJpmConfig();
   if (!current?.message)
-    return m.reply(
-      `ℹ️ AutoJPM belum dikonfigurasi. Ketik *${m.prefix}jpm* untuk mengatur.`,
-    );
-  return m.reply(
-    `📢 *Status Auto JPM*\n\n` +
-      `Status: *${current.enabled ? "✅ Aktif" : "❌ Nonaktif"}*\n` +
-      `Interval: *${formatInterval(current.intervalMs || 0)}*\n\n` +
-      `*Jadwal:*\n` +
-      `Terakhir: *${current.lastRun ? timeHelper.fromTimestamp(current.lastRun) : "Belum pernah"}*\n` +
-      `Berikutnya: *${current.nextRun ? timeHelper.fromTimestamp(current.nextRun) : "Belum dijadwalkan"}*\n\n` +
-      `*Pesan:*\n` +
-      `Teks: *${previewText(current.message?.text)}*\n` +
-      `Media: *${current.message?.media?.type ? current.message.media.type.toUpperCase() : "Tidak ada"}*`,
-  );
+    return m.reply(claraWrap("Auto JPM", `ℹ️ AutoJPM belum dikonfigurasi. Ketik *${m.prefix}jpm* untuk mengatur.`));
+  return m.reply(claraWrap("Status Auto JPM", `Status: ${current.enabled ? "✅ Aktif" : "❌ Nonaktif"}\nInterval: ${formatInterval(current.intervalMs || 0)}\n\nJadwal:\nTerakhir: ${current.lastRun ? timeHelper.fromTimestamp(current.lastRun) : "Belum pernah"}\nBerikutnya: ${current.nextRun ? timeHelper.fromTimestamp(current.nextRun) : "Belum dijadwalkan"}\n\nPesan:\nTeks: ${previewText(current.message?.text)}\nMedia: ${current.message?.media?.type ? current.message.media.type.toUpperCase() : "Tidak ada"}`));
 }
 
 async function handleSetDelay(m, sock, db, input) {
@@ -1352,12 +1250,7 @@ async function handleSetDelay(m, sock, db, input) {
   const prefix = m.prefix;
 
   if (!input) {
-    const body =
-      `⏱️ *JPM Delay*\n\n` +
-      `Atur jeda waktu antar pengiriman pesan ke setiap grup.\n` +
-      `Semakin lama delay, semakin aman dari spam detection.\n\n` +
-      `Delay saat ini: *${current}ms* (*${(current / 1000).toFixed(1)} detik*)\n\n` +
-      `*Pilih delay di bawah:*`;
+    const body = claraWrap("JPM Delay", `Atur jeda waktu antar pengiriman pesan ke setiap grup.\nSemakin lama delay, semakin aman dari spam detection.\n\nDelay saat ini: ${current}ms (${(current / 1000).toFixed(1)} detik)\n\nPilih delay di bawah:`);
 
     const buttons = [
       {
