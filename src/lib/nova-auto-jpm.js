@@ -6,6 +6,8 @@ import fs from "fs";
 import { saluranCtx } from "./nova-context.js";
 import path from "path";
 import { getAssetBuffer } from "./nova-asset-manager.js";
+import { broadcastFormat } from "./nova-menu-style.js";
+
 let autoJpmTimer = null;
 let sock = null;
 let isSending = false;
@@ -69,8 +71,8 @@ function scheduleNextRun(sendImmediately = false) {
   }
 }
 
-function buildPayload(message, contextInfo) {
-  const text = message?.text || "";
+function buildPayload(message, contextInfo, formattedText) {
+  const text = formattedText || message?.text || "";
   const media = message?.media;
   if (!media || !media.path || !fs.existsSync(media.path)) {
     return { payload: { text, contextInfo }, sendTextAfter: false };
@@ -105,9 +107,10 @@ function buildPayload(message, contextInfo) {
         document: buffer,
         mimetype: media.mimetype || "application/octet-stream",
         fileName: media.fileName || "file",
+        caption: text || undefined,
         contextInfo,
       },
-      sendTextAfter: Boolean(text),
+      sendTextAfter: false,
     };
   }
   return { payload: { text, contextInfo }, sendTextAfter: false };
@@ -118,6 +121,15 @@ async function sendAutoJpm(cfg) {
   const message = cfg.message || {};
   if (!message.text && !message.media) return;
   const contextInfo = buildContextInfo();
+
+  // Wrap message text with broadcast header info
+  const botName = config.bot?.name || "Nova AI";
+  const senderName = cfg.senderName || "Owner";
+  const rawText = message.text || "";
+  const formattedText = rawText
+    ? broadcastFormat({ botName, senderName, message: rawText, type: "group" })
+    : "";
+
   let groupIds = [];
   global.statusautojpm = true;
   try {
@@ -133,7 +145,8 @@ async function sendAutoJpm(cfg) {
   groupIds = groupIds.filter((id) => !allBlacklist.includes(id));
   if (!groupIds.length) return;
   const jedaJpm = db.setting("jedaJpm") || 5000;
-  const payloadInfo = buildPayload(message, contextInfo);
+  const payloadInfo = buildPayload(message, contextInfo, formattedText);
+
   for (const groupId of groupIds) {
     if (!getAutoJpmConfig().enabled || global.stopjpm) {
       if (global.stopjpm) delete global.stopjpm;
@@ -141,8 +154,8 @@ async function sendAutoJpm(cfg) {
     }
     try {
       await sock.sendMessage(groupId, payloadInfo.payload);
-      if (payloadInfo.sendTextAfter && message.text) {
-        await sock.sendMessage(groupId, { text: message.text, contextInfo });
+      if (payloadInfo.sendTextAfter && formattedText) {
+        await sock.sendMessage(groupId, { text: formattedText, contextInfo });
       }
     } catch (error) {
       logger.error("AutoJPM", `Failed ${groupId}: ${error.message}`);

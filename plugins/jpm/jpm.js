@@ -25,7 +25,7 @@ import path from "path";
 import fs from "fs";
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, broadcastFormat } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "jpm",
@@ -421,6 +421,12 @@ async function runBroadcast(
         ? "Update"
         : "Basic";
 
+  // Wrap text with broadcast header info for recipients
+  const _botName = config.bot?.name || "Nova AI";
+  const _senderName = m.pushName || "Owner";
+  const _bcType = mode === "channel" ? "channel" : "group";
+  const broadcastText = broadcastFormat({ botName: _botName, senderName: _senderName, message: text, type: _bcType });
+
   await m.reply(
     `📢 *JPM ${modeLabel} Dimulai*\n\n` +
       `📝 Pesan: *${text.substring(0, 50)}${text.length > 50 ? "..." : ""}*\n` +
@@ -457,24 +463,24 @@ async function runBroadcast(
         if (mediaBuffer) {
           await sock.sendMessage(targetId, {
             [mediaType]: mediaBuffer,
-            caption: text,
+            caption: broadcastText,
             mentions,
             contextInfo: hidetagCtx,
           });
         } else {
           await sock.sendMessage(targetId, {
-            text,
+            text: broadcastText,
             mentions,
             contextInfo: hidetagCtx,
           });
         }
       } else if (mediaBuffer) {
-        await sock.sendMedia(targetId, mediaBuffer, text, null, {
+        await sock.sendMedia(targetId, mediaBuffer, broadcastText, null, {
           type: mediaType,
           contextInfo: { forwardingScore: 99, isForwarded: true },
         });
       } else {
-        await sock.sendText(targetId, text, null, {
+        await sock.sendText(targetId, broadcastText, null, {
           contextInfo: { forwardingScore: 99, isForwarded: true },
         });
       }
@@ -883,6 +889,10 @@ async function handleJpmChannelWithContent(
     let successCount = 0;
     let failedCount = 0;
 
+    const chBotName = config.bot?.name || "Nova AI";
+    const chSenderName = m.pushName || "Owner";
+    const chBroadcastText = broadcastFormat({ botName: chBotName, senderName: chSenderName, message: text, type: "channel" });
+
     for (const chId of channelIds) {
       if (global.stopjpm) {
         delete global.stopjpm;
@@ -898,11 +908,11 @@ async function handleJpmChannelWithContent(
         if (mediaBuffer) {
           await sock.sendMessage(chId, {
             [mediaType]: mediaBuffer,
-            caption: text,
+            caption: chBroadcastText,
             contextInfo: ctx,
           });
         } else {
-          await sock.sendMessage(chId, { text, contextInfo: ctx });
+          await sock.sendMessage(chId, { text: chBroadcastText, contextInfo: ctx });
         }
         successCount++;
       } catch {
@@ -967,13 +977,13 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
 
     const botName = config.bot?.name || "Nova-AI";
     const dateStr = timeHelper.formatDate("DD MMMM YYYY");
-    const updateMessage =
-      `🚀 *UPDATE !! | ${version}*\n\n` +
-      `📅 *Tanggal:* ${dateStr}\n\n` +
-      `*CHANGELOG:*\n${changelog}\n\n` +
-      `*CATATAN TERBARU:*\n` +
-      `💡 Ketik *${m.prefix}menu* untuk mengeksplorasi fitur-fitur ini.\n` +
-      `📢 _Terima kasih telah menggunakan ${botName}_`;
+    const updateContent =
+      `UPDATE ${version}\n\n` +
+      `Tanggal: ${dateStr}\n\n` +
+      `CHANGELOG:\n${changelog}\n\n` +
+      `Ketik ${m.prefix}menu untuk mengeksplorasi fitur-fitur ini.\n` +
+      `Terima kasih telah menggunakan ${botName}`;
+    const updateMessage = broadcastFormat({ botName, senderName: m.pushName || "Owner", message: updateContent, type: "group" });
 
     const jedaJpm = db.setting("jedaJpm") || 5000;
 
