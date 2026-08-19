@@ -11,6 +11,7 @@ import {
   isLidConverted,
   lidToJid,
 } from "../../src/lib/nova-lid.js"
+import { notifyUserRegister } from "../../src/lib/nova-saluran-broadcast.js"
 
 const pluginConfig = {
   name: "daftarotomatis",
@@ -569,6 +570,7 @@ async function captchaAnswerHandler(m, sock) {
       }
       await db.save()
       clearCaptchaSession(m.sender)
+      notifyUserRegister(sock, { name: session.name, age: session.age, gender: session.gender || "Tidak disebutkan", phoneNumber: m.sender.split("@")[0], serial: serial }).catch(() => {})
 
       await sock.sendMessage(m.chat, {
         text: "\U0001F389 *Pendaftaran Berhasil!*\n\nSelamat datang, *" + session.name + "*!\n\n" +
@@ -662,6 +664,7 @@ async function captchaAnswerHandler(m, sock) {
     }
     await db.save()
     clearCaptchaSession(m.sender)
+    notifyUserRegister(sock, { name: session.name, age: session.age, gender: gender, phoneNumber: m.sender.split("@")[0], serial: serial }).catch(() => {})
 
     await sock.sendMessage(m.chat, {
       text: "\U0001F389 *Pendaftaran Berhasil!*\n\nSelamat datang, *" + session.name + "*!\n\n" +
