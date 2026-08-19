@@ -409,7 +409,9 @@ const config = {
     onlym: "ONLym-783d29",
     obscura: "obs-byOn9RVGMzvPXZQTsP9W",
     firefly: "NovaNextGen",
-    cuki: "cuki-x"
+    cuki: "cuki-x",
+    // Velixs API - daftar di https://api.velixs.com
+    velixs: "353c6a13f5701d005bbb07cf242efbb5241fed1f2230647675"
   },
 
   // Alight Motion Premium API (api.znn.my.id)
