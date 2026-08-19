@@ -1,7 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, broadcastFormat } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import config from "../../config.js";
 
 const pluginConfig = {
   name: "broadcast",
@@ -26,8 +27,10 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!message) {
       const text =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}broadcast <pesan>*`,
-          `◦ Contoh: *${prefix}broadcast Update bot v2.0*`].join("\n")) +
+        claraWrap("Cara Pakai", [
+          `Penggunaan: *${prefix}broadcast <pesan>*`,
+          `Contoh: *${prefix}broadcast Update bot v2.0*`,
+        ].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -41,44 +44,57 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!groupJids.length) {
       const text =
-        claraWrap("Broadcast", ["◦ Target: *Tidak ada grup terdaftar*",
-          "◦ Status: *Dibatalkan*"].join("\n")) +
+        claraWrap("Broadcast", [
+          "Target: Tidak ada grup terdaftar",
+          "Status: Dibatalkan",
+        ].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await m.reply(claraWrap("broadcast", text));
+      await m.reply(text);
       return { handled: true };
     }
+
+    const botName = config.bot?.name || "Nova AI";
+    const senderName = m.pushName || "Owner";
+    const broadcastText = broadcastFormat({
+      botName,
+      senderName,
+      message,
+      type: "group",
+    });
 
     const success = [];
     const failed = [];
 
     for (const jid of groupJids) {
       try {
-        await sock.sendMessage(jid, {
-          text: `📢 *BROADCAST*\n◦ Dari: *${m.pushName || "Owner"}*\n◦ Pesan:\n${message}`,
-        });
+        await sock.sendMessage(jid, { text: broadcastText });
         success.push(jid);
       } catch {
         failed.push(jid);
       }
     }
 
-    const text =
-      claraWrap("Broadcast", [`◦ Pesan: *${message.slice(0, 50)}${message.length > 50 ? "..." : ""}*`,
-        `◦ Target: *${groupJids.length} Grup*`,
-        `◦ Berhasil: *${success.length}*`,
-        `◦ Gagal: *${failed.length}*`,
-        "◦ Status: *SELESAI*"].join("\n")) +
+    const result =
+      claraWrap("Broadcast Selesai", [
+        `Pesan: ${message.slice(0, 50)}${message.length > 50 ? "..." : ""}`,
+        `Target: ${groupJids.length} Grup`,
+        `Berhasil: ${success.length}`,
+        `Gagal: ${failed.length}`,
+        "Status: SELESAI",
+      ].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("broadcast", text));
+    await m.reply(result);
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [
+        "Status: Gagal",
+        `Alasan: ${error.message}`,
+      ].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

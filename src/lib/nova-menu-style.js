@@ -57,4 +57,28 @@ export {
   separator,
   tipText,
   formatNumber,
+  broadcastFormat,
 };
+
+
+// === Broadcast Message Formatter ===
+// Wraps broadcast content with consistent header info for recipients
+function broadcastFormat({ botName = "Nova AI", senderName = "Owner", message, type = "group" }) {
+  const now = new Date()
+  const tanggal = now.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })
+  const waktu = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })
+  const typeLabel = type === "private" ? "Private Chat" : type === "channel" ? "Channel" : "Grup"
+  
+  const lines = [
+    `Bot: ${botName}`,
+    `Pengirim: ${senderName}`,
+    `Tipe: ${typeLabel}`,
+    `Tanggal: ${tanggal}`,
+    `Waktu: ${waktu}`,
+    "",
+    "Pesan:",
+    message,
+  ].filter(l => l !== undefined)
+  
+  return bracketBox("📢", "BROADCAST INFO", lines.filter(l => l !== undefined))
+}

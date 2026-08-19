@@ -5,7 +5,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, broadcastFormat } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bcgc",
@@ -65,12 +65,10 @@ async function handler(m, { sock }) {
 
   if (command === "stopbcgc" || command === "stopbroadcastgc") {
     if (!global.statusBcgc) {
-      return m.reply(claraWrap("Bcgc", `❌ Tidak ada broadcast grup yang sedang berjalan.`));
+      return m.reply(claraWrap("Broadcast Grup", "Tidak ada broadcast grup yang sedang berjalan."));
     }
     global.stopBcgc = true;
-    return m.reply(
-      `⏹️ *Broadcast Grup Dihentikan*\n\n> Proses broadcast sedang dihentikan...`,
-    );
+    return m.reply(claraWrap("Broadcast Grup", "Sedang dihentikan..."));
   }
 
   if (
@@ -83,50 +81,48 @@ async function handler(m, { sock }) {
 
   if (input.toLowerCase() === "on") {
     db.setting("bcgcEnabled", true);
-    return m.reply(
-      `✅ *Broadcast Grup Diaktifkan*\n\n> Sekarang kamu bisa mengirim broadcast ke semua grup.`,
-    );
+    return m.reply(claraWrap("Broadcast Grup", "Berhasil diaktifkan. Sekarang kamu bisa mengirim broadcast ke semua grup."));
   }
 
   if (input.toLowerCase() === "off") {
     db.setting("bcgcEnabled", false);
-    return m.reply(
-      `✅ *Broadcast Grup Dinonaktifkan*\n\n> Broadcast grup telah dimatikan.`,
-    );
+    return m.reply(claraWrap("Broadcast Grup", "Berhasil dinonaktifkan."));
   }
 
   if (!input && !m.quoted) {
     const enabled = db.setting("bcgcEnabled");
     const jeda = db.setting("jedaBcgc") || 5000;
-    return sendReplyWithNav(sock, m, `📢 *Broadcast Grup*\n\n` +
-        `Kirim pesan ke seluruh grup sekaligus dalam satu perintah.\n\n` +
-        `*Status saat ini:*\n` +
-        `Broadcast: *${enabled ? "✅ Aktif" : "❌ Nonaktif"}*\n` +
-        `Jeda: *${formatDelay(jeda)}* (*${jeda}ms*)\n\n` +
-        `*PENGGUNAAN:*\n` +
-        `*${m.prefix}bcgc on* — Aktifkan broadcast\n` +
-        `*${m.prefix}bcgc off* — Nonaktifkan broadcast\n` +
-        `*${m.prefix}bcgc <pesan>* — Kirim broadcast teks\n` +
-        `*${m.prefix}bcgc* (reply foto/video/audio/dokumen) — Kirim dengan media\n` +
-        `*${m.prefix}bcgc* (reply pesan teks) — Kirim isi pesan yang di-reply\n\n` +
-        `*JEDA:*\n` +
-        `*${m.prefix}jedabcgc 5s* — Set jeda 5 detik\n` +
-        `*${m.prefix}jedabcgc 2m* — Set jeda 2 menit\n\n` +
-        `*STOP:*\n` +
-        `*${m.prefix}stopbcgc* — Hentikan broadcast yang berjalan`, "bcgc");
+    return sendReplyWithNav(sock, m, claraWrap("Broadcast Grup", [
+      "Kirim pesan ke seluruh grup sekaligus dalam satu perintah.",
+      "",
+      "STATUS:",
+      `Broadcast: ${enabled ? "Aktif" : "Nonaktif"}`,
+      `Jeda: ${formatDelay(jeda)} (${jeda}ms)`,
+      "",
+      "PENGGUNAAN:",
+      `${m.prefix}bcgc on — Aktifkan broadcast`,
+      `${m.prefix}bcgc off — Nonaktifkan broadcast`,
+      `${m.prefix}bcgc <pesan> — Kirim broadcast teks`,
+      `${m.prefix}bcgc (reply media) — Kirim dengan media`,
+      `${m.prefix}bcgc (reply teks) — Kirim isi pesan yang di-reply`,
+      "",
+      "JEDA:",
+      `${m.prefix}jedabcgc 5s — Set jeda 5 detik`,
+      `${m.prefix}jedabcgc 2m — Set jeda 2 menit`,
+      "",
+      "STOP:",
+      `${m.prefix}stopbcgc — Hentikan broadcast`,
+    ].join("\n")), "bcgc");
   }
 
   if (global.statusBcgc) {
-    return m.reply(
-      `❌ *Broadcast Sedang Berjalan*\n\n> Ketik *${m.prefix}stopbcgc* untuk menghentikan terlebih dahulu.`,
-    );
+    return m.reply(claraWrap("Broadcast Grup", `Sedang berjalan. Ketik ${m.prefix}stopbcgc untuk menghentikan.`));
   }
 
   const enabled = db.setting("bcgcEnabled");
   if (!enabled) {
-    return m.reply(claraWrap("Bcgc", `❌ *Broadcast Belum Aktif*\n\n> Ketik *${m.prefix}bcgc on* dulu untuk mengaktifkan.`));
+    return m.reply(claraWrap("Broadcast Grup", `Belum aktif. Ketik ${m.prefix}bcgc on dulu untuk mengaktifkan.`));
   }
-
 
   try {
     let mediaBuffer = null;
@@ -139,42 +135,26 @@ async function handler(m, { sock }) {
     }
 
     if (qmsg.isImage) {
-      try {
-        mediaBuffer = await qmsg.download();
-        mediaType = "image";
-      } catch {}
+      try { mediaBuffer = await qmsg.download(); mediaType = "image"; } catch {}
     } else if (qmsg.isVideo) {
-      try {
-        mediaBuffer = await qmsg.download();
-        mediaType = "video";
-      } catch {}
+      try { mediaBuffer = await qmsg.download(); mediaType = "video"; } catch {}
     } else if (qmsg.isAudio || qmsg.mimetype?.startsWith("audio")) {
-      try {
-        mediaBuffer = await qmsg.download();
-        mediaType = "audio";
-      } catch {}
+      try { mediaBuffer = await qmsg.download(); mediaType = "audio"; } catch {}
     } else if (qmsg.isSticker) {
-      try {
-        mediaBuffer = await qmsg.download();
-        mediaType = "sticker";
-      } catch {}
-    } else if (
-      qmsg.isDocument ||
-      (qmsg.mimetype && !qmsg.mimetype.startsWith("text/plain"))
-    ) {
-      try {
-        mediaBuffer = await qmsg.download();
-        mediaType = "document";
-      } catch {}
+      try { mediaBuffer = await qmsg.download(); mediaType = "sticker"; } catch {}
+    } else if (qmsg.isDocument || (qmsg.mimetype && !qmsg.mimetype.startsWith("text/plain"))) {
+      try { mediaBuffer = await qmsg.download(); mediaType = "document"; } catch {}
     }
 
     if (!text && !mediaBuffer) {
-      return sendReplyWithNav(sock, m, `❌ *Tidak Ada Konten*\n\n` +
-          `Kirim pesan, foto, audio, video, atau dokumen terlebih dahulu.\n\n` +
-          `*Cara yang benar:*\n` +
-          `1. Kirim teks/foto/video/audio/dokumen\n` +
-          `2. Reply pesan tersebut dengan *${m.prefix}bcgc*\n` +
-          `3. Bot akan broadcast ke semua grup`, "bcgc");
+      return sendReplyWithNav(sock, m, claraWrap("Broadcast Grup", [
+        "Tidak ada konten terdeteksi.",
+        "",
+        "Cara yang benar:",
+        `1. Kirim teks/foto/video/audio/dokumen`,
+        `2. Reply pesan tersebut dengan ${m.prefix}bcgc`,
+        "3. Bot akan broadcast ke semua grup",
+      ].join("\n")), "bcgc");
     }
 
     const allGroups = await fetchGroupsSafe(sock);
@@ -185,87 +165,81 @@ async function handler(m, { sock }) {
     groupIds = groupIds.filter((id) => !blacklist.includes(id));
 
     if (groupIds.length === 0) {
-      return m.reply(
-        `❌ *Tidak Ada Grup*\n\n> Bot tidak menemukan grup yang bisa dituju${blCount > 0 ? ` (${blCount} grup di-blacklist)` : ""}`,
-      );
+      return m.reply(claraWrap("Broadcast Grup", `Tidak ada grup yang bisa dituju${blCount > 0 ? ` (${blCount} grup di-blacklist)` : ""}.`));
     }
 
     const jeda = db.setting("jedaBcgc") || 5000;
     const ctx = saluranCtx();
 
-    await m.reply(
-      `📢 *Broadcast Grup Dimulai*\n\n` +
-        `📝 Pesan: *${text.substring(0, 50)}${text.length > 50 ? "..." : ""}*\n` +
-        `📷 Media: *${mediaBuffer ? mediaType : "Tidak ada"}*\n` +
-        `👥 Target: *${groupIds.length}* grup\n` +
-        `⏱️ Jeda: *${formatDelay(jeda)}*\n` +
-        `📊 Estimasi: *${Math.ceil((groupIds.length * jeda) / 60000)} menit*\n\n` +
-        `_Sedang mengirim ke semua grup..._`,
-    );
+    // Status report ke owner (claraWrap)
+    await m.reply(claraWrap("Broadcast Grup Dimulai", [
+      `Pesan: ${text.substring(0, 50)}${text.length > 50 ? "..." : ""}`,
+      `Media: ${mediaBuffer ? mediaType : "Tidak ada"}`,
+      `Target: ${groupIds.length} grup`,
+      `Jeda: ${formatDelay(jeda)}`,
+      `Estimasi: ${Math.ceil((groupIds.length * jeda) / 60000)} menit`,
+      "",
+      "Sedang mengirim ke semua grup...",
+    ].join("\n")));
 
     global.statusBcgc = true;
     let success = 0;
     let failed = 0;
 
+    // Format pesan dengan header info untuk penerima
+    const botName = config.bot?.name || "Nova AI";
+    const senderName = m.pushName || "Owner";
+    const broadcastText = broadcastFormat({
+      botName,
+      senderName,
+      message: text,
+      type: "group",
+    });
+
     for (const gid of groupIds) {
       if (global.stopBcgc) {
         delete global.stopBcgc;
         delete global.statusBcgc;
-        await m.reply(
-          `⏹️ *Broadcast Grup Dihentikan*\n\n` +
-            `✅ Berhasil: *${success}*\n` +
-            `❌ Gagal: *${failed}*\n` +
-            `⏸️ Sisa: *${groupIds.length - success - failed}*`,
-        );
+        await m.reply(claraWrap("Broadcast Grup Dihentikan", [
+          `Berhasil: ${success}`,
+          `Gagal: ${failed}`,
+          `Sisa: ${groupIds.length - success - failed}`,
+        ].join("\n")));
         return;
       }
 
       try {
         if (mediaType === "sticker") {
-          await sock.sendMessage(
-            gid,
-            { sticker: mediaBuffer, contextInfo: ctx },
-            { quoted: m },
-          );
+          // Sticker tidak bisa pakai caption, kirim sticker dulu lalu text info
+          await sock.sendMessage(gid, { sticker: mediaBuffer, contextInfo: ctx });
+          await sock.sendMessage(gid, { text: broadcastText, contextInfo: ctx });
         } else if (mediaType === "audio") {
-          await sock.sendMessage(
-            gid,
-            {
-              audio: mediaBuffer,
-              mimetype: qmsg.mimetype || "audio/mpeg",
-              ptt: qmsg.ptt || false,
-              contextInfo: ctx,
-            },
-            { quoted: m },
-          );
+          // Audio: kirim audio dulu, lalu text info terpisah
+          await sock.sendMessage(gid, {
+            audio: mediaBuffer,
+            mimetype: qmsg.mimetype || "audio/mpeg",
+            ptt: qmsg.ptt || false,
+            contextInfo: ctx,
+          });
+          await sock.sendMessage(gid, { text: broadcastText, contextInfo: ctx });
         } else if (mediaType === "document") {
-          await sock.sendMessage(
-            gid,
-            {
-              document: mediaBuffer,
-              mimetype: qmsg.mimetype || "application/octet-stream",
-              fileName: qmsg.fileName || "file",
-              caption: text || undefined,
-              contextInfo: ctx,
-            },
-            { quoted: m },
-          );
+          await sock.sendMessage(gid, {
+            document: mediaBuffer,
+            mimetype: qmsg.mimetype || "application/octet-stream",
+            fileName: qmsg.fileName || "file",
+            caption: broadcastText,
+            contextInfo: ctx,
+          });
         } else if (mediaBuffer) {
-          await sock.sendMessage(
-            gid,
-            {
-              [mediaType]: mediaBuffer,
-              caption: text,
-              contextInfo: ctx,
-            },
-            { quoted: m },
-          );
+          // Image/video: caption = broadcast text dengan header info
+          await sock.sendMessage(gid, {
+            [mediaType]: mediaBuffer,
+            caption: broadcastText,
+            contextInfo: ctx,
+          });
         } else {
-          await sock.sendMessage(
-            gid,
-            { text, contextInfo: ctx },
-            { quoted: m },
-          );
+          // Text only
+          await sock.sendMessage(gid, { text: broadcastText, contextInfo: ctx });
         }
         success++;
       } catch {
@@ -277,15 +251,14 @@ async function handler(m, { sock }) {
 
     delete global.statusBcgc;
     m.react("✅");
-    await m.reply(
-      `✅ *Broadcast Grup Selesai!*\n\n` +
-        `✅ Berhasil: *${success}*\n` +
-        `❌ Gagal: *${failed}*\n` +
-        `📊 Total: *${groupIds.length}*`,
-    );
+    await m.reply(claraWrap("Broadcast Grup Selesai", [
+      `Berhasil: ${success}`,
+      `Gagal: ${failed}`,
+      `Total: ${groupIds.length}`,
+    ].join("\n")));
   } catch (e) {
     delete global.statusBcgc;
-    m.reply(claraWrap("bcgc", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(claraWrap("Broadcast Grup", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 
@@ -293,32 +266,38 @@ async function handleSetDelay(m, db, input) {
   const current = db.setting("jedaBcgc") || 5000;
 
   if (!input) {
-    return sendReplyWithNav(sock, m, `⏱️ *Jeda Broadcast Grup*\n\n` +
-        `Atur jeda waktu antar pengiriman pesan ke setiap grup.\n` +
-        `Semakin lama jeda, semakin aman dari spam detection.\n\n` +
-        `Jeda saat ini: *${formatDelay(current)}* (*${current}ms*)\n\n` +
-        `*CARA PAKAI:*\n` +
-        `*${m.prefix}jedabcgc <angka><satuan>*\n\n` +
-        `*SATUAN:*\n` +
-        `*s* — detik • *m* — menit • *h* — jam • *d* — hari\n\n` +
-        `*CONTOH:*\n` +
-        `*${m.prefix}jedabcgc 5s* → 5 detik\n` +
-        `*${m.prefix}jedabcgc 2m* → 2 menit\n` +
-        `*${m.prefix}jedabcgc 1h* → 1 jam`, "bcgc");
+    return sendReplyWithNav(sock, m, claraWrap("Jeda Broadcast Grup", [
+      "Atur jeda waktu antar pengiriman pesan ke setiap grup.",
+      "Semakin lama jeda, semakin aman dari spam detection.",
+      "",
+      `Jeda saat ini: ${formatDelay(current)} (${current}ms)`,
+      "",
+      "CARA PAKAI:",
+      `${m.prefix}jedabcgc <angka><satuan>`,
+      "",
+      "SATUAN:",
+      "s — detik, m — menit, h — jam, d — hari",
+      "",
+      "CONTOH:",
+      `${m.prefix}jedabcgc 5s -> 5 detik`,
+      `${m.prefix}jedabcgc 2m -> 2 menit`,
+      `${m.prefix}jedabcgc 1h -> 1 jam`,
+    ].join("\n")), "bcgc");
   }
 
   const ms = parseDelay(input);
   if (!ms || ms < 1000) {
-    { const __navText = claraWrap("5s", `❌ Format salah. Contoh: *5s*, *2m*, *1h*, *1d*`); return await sendReplyWithNav(sock, m, __navText, "bcgc"); };
+    return m.reply(claraWrap("Jeda Broadcast Grup", "Format salah. Contoh: 5s, 2m, 1h, 1d"));
   }
 
   db.setting("jedaBcgc", ms);
-  return m.reply(
-    `✅ *Jeda Broadcast Grup Diubah*\n\n` +
-      `Sebelumnya: *${formatDelay(current)}* (*${current}ms*)\n` +
-      `Sekarang: *${formatDelay(ms)}* (*${ms}ms*)\n\n` +
-      `Estimasi 100 grup: *${Math.ceil((100 * ms) / 60000)} menit*`,
-  );
+  return m.reply(claraWrap("Jeda Broadcast Grup", [
+    "Jeda berhasil diubah",
+    `Sebelumnya: ${formatDelay(current)} (${current}ms)`,
+    `Sekarang: ${formatDelay(ms)} (${ms}ms)`,
+    "",
+    `Estimasi 100 grup: ${Math.ceil((100 * ms) / 60000)} menit`,
+  ].join("\n")));
 }
 
-export { pluginConfig as config, handler };
+export { pluginConfig as config, handler }
