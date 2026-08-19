@@ -82,7 +82,7 @@ function help(m) {
     "  Jumlah loker per broadcast (1–10).",
     "",
     "• `" + p + "loker sumber [nama]`",
-    "  Lihat/toggle sumber loker: remotive, arbeitnow, themuse, jobicy, jobstreet.",
+    "  Lihat/toggle sumber loker: remotive, arbeitnow, themuse, jobicy.",
     "  Contoh: " + p + "loker sumber themuse",
     "",
     "• `" + p + "loker test`",
@@ -284,7 +284,7 @@ async function handler(m, { sock }) {
 
   // ── SUMBER (toggle sources) ──────────────────────────────────────────
   if (action === "sumber" || action === "sources") {
-    const AVAILABLE = ["remotive", "arbeitnow", "themuse", "jobicy", "jobstreet"];
+    const AVAILABLE = ["remotive", "arbeitnow", "themuse", "jobicy"];
     const choice = (args[0] || "").toLowerCase();
 
     if (!choice) {

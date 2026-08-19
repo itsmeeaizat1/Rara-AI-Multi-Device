@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     const mergedCategories = category ? [category] : settings.categories || [];
 
     const jobs = await fetchNewJobs({
-      sources: ["remotive", "arbeitnow", "themuse", "jobicy", "jobstreet"],
+      sources: ["remotive", "arbeitnow"],
       keywords: mergedKeywords,
       categories: mergedCategories,
       limit: 5,
