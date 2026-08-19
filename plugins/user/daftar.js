@@ -11,6 +11,7 @@ import {
 } from "../../src/lib/nova-lid.js";
 import config from "../../config.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { notifyUserRegister } from "../../src/lib/nova-saluran-broadcast.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -349,6 +350,7 @@ async function handler(m, { sock }) {
         db.updateExp(m.sender, rewards.exp + randomBonus.exp);
       }
       await db.save();
+      notifyUserRegister(sock, { name: name, age: age, gender: finalGender || "Tidak disebutkan", phoneNumber: m.sender.split("@")[0], serial: serial }).catch(() => {});
 
       await sock.sendMessage(m.chat, {
         text:
@@ -685,6 +687,7 @@ async function registrationAnswerHandler(m, sock) {
 
     await db.save();
     clearRegistrationSession(m.sender);
+    notifyUserRegister(sock, { name: finalName, age: finalAge, gender: finalGender, phoneNumber: m.sender.split("@")[0], serial: serial }).catch(() => {});
 
     await sock.sendMessage(
       m.chat,
