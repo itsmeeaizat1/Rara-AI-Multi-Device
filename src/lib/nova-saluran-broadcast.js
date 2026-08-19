@@ -20,6 +20,7 @@ const NOTIFY_EVENTS = {
   userKicked: "User Dikick Grup",
   premiumAdd: "User Baru Premium",
   dailyLimitReset: "Reset Limit Harian",
+  userRegister: "User Baru Daftar",
 };
 
 // Cek apakah event ini enabled (default: true)
@@ -199,6 +200,25 @@ async function notifyPremiumAdd(sock, data) {
   return broadcastToSaluran(sock, msg);
 }
 
+
+// User baru daftar
+async function notifyUserRegister(sock, data) {
+  if (!isNotifyEnabled("userRegister")) return { sent: false, reason: "Toggle off" };
+  const now = new Date();
+  const dateStr = now.toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" });
+  const timeStr = now.toLocaleTimeString("id-ID", { timeZone: "Asia/Jakarta", hour: "2-digit", minute: "2-digit" });
+  let msg = `*USER BARU DAFTAR*\n\n`;
+  msg += `Nama: ${data.name || "-"}\n`;
+  msg += `Umur: ${data.age || "-"} tahun\n`;
+  msg += `Gender: ${data.gender || "Tidak disebutkan"}\n`;
+  msg += `Nomor: ${data.phoneNumber || "-"}\n`;
+  msg += `Tanggal: ${dateStr}\n`;
+  msg += `Waktu: ${timeStr} WIB\n`;
+  msg += `Serial: ${data.serial || "-"}\n\n`;
+  msg += `Total user: ${data.totalUsers || "-"}`;
+  return broadcastToSaluran(sock, msg);
+}
+
 // Anti-spam detect
 async function notifySpamDetected(sock, data) {
   let msg = `*SPAM TERDETEKSI*\n\n`;
@@ -253,4 +273,5 @@ export {
   notifyUserKicked,
   notifyPremiumAdd,
   notifyDailyLimitReset,
+  notifyUserRegister,
 };

@@ -1335,17 +1335,10 @@ async function handleSetDelay(m, sock, db, input) {
 
   const ms = parseInt(input);
   if (isNaN(ms) || ms < 1000 || ms > 30000) {
-    return m.reply(
-      `❌ Delay harus antara *1000ms* (1 detik) sampai *30000ms* (30 detik)`,
-    );
+    return m.reply(claraWrap("JPM Delay", "❌ Delay harus antara 1000ms (1 detik) sampai 30000ms (30 detik)"));
   }
   db.setting("jedaJpm", ms);
-  return m.reply(
-    `✅ *Delay JPM Diubah*\n\n` +
-      `Sebelumnya: *${current}ms* (*${(current / 1000).toFixed(1)} detik*)\n` +
-      `Sekarang: *${ms}ms* (*${(ms / 1000).toFixed(1)} detik*)\n\n` +
-      `Estimasi 100 grup: *${Math.ceil((100 * ms) / 60000)} menit*`,
-  );
+  return m.reply(claraWrap("JPM Delay", `✅ Delay JPM diubah\n\nSebelumnya: ${current}ms (${(current / 1000).toFixed(1)} detik)\nSekarang: ${ms}ms (${(ms / 1000).toFixed(1)} detik)\n\nEstimasi 100 grup: ${Math.ceil((100 * ms) / 60000)} menit`));
 }
 
 async function handleBlacklist(m, sock, db, settingKey, label) {
@@ -1371,7 +1364,7 @@ async function handleBlacklist(m, sock, db, settingKey, label) {
       `Ketik command diikuti nomor grup (bisa lebih dari satu, pisahkan spasi).\n\n` +
       `*Contoh:*\n` +
       `*${m.prefix}${settingKey === "autoJpmBlacklist" ? "blautojpm" : "bljpm"} 2 3 7*`;
-    return m.reply(listText);
+    return m.reply(claraWrap("JPM Blacklist", listText));
   }
 
   const args = m.text.trim().split(/\s+/);
@@ -1391,9 +1384,7 @@ async function handleBlacklist(m, sock, db, settingKey, label) {
   }
 
   if (toggled.length === 0) {
-    return m.reply(
-      `❌ Tidak ada nomor grup yang valid.\n\nKetik *${m.prefix}${settingKey === "autoJpmBlacklist" ? "blautojpm" : "bljpm"}* untuk melihat daftar nomor.`,
-    );
+    return m.reply(claraWrap("JPM Blacklist", `❌ Tidak ada nomor grup yang valid.\n\nKetik *${m.prefix}${settingKey === "autoJpmBlacklist" ? "blautojpm" : "bljpm"}* untuk melihat daftar nomor.`));
   }
 
   db.setting(settingKey, blacklist);
