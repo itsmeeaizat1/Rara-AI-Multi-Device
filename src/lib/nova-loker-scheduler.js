@@ -60,7 +60,7 @@ function getLokerSettings(db) {
         ]),
     sources: Array.isArray(stored.sources) && stored.sources.length
       ? stored.sources
-      : (Array.isArray(base.sources) ? base.sources : ["remotive", "arbeitnow", "themuse", "jobstreet"]),
+      : (Array.isArray(base.sources) ? base.sources : ["remotive", "arbeitnow", "themuse"]),
     targets: Array.isArray(stored.targets) ? stored.targets : [],
   };
 }
@@ -345,58 +345,6 @@ function normalizeJobicy(job) {
   };
 }
 
-
-function normalizeJobStreet(job) {
-  const posted = job.date_posted?.dateTimeUtc || job.datePosted || "";
-  return {
-    id: `jobstreet_${job.id || (job.title + "-" + job.company)}`,
-    title: job.title || "-",
-    company: job.company || "-",
-    location: job.location || "-",
-    type: job.work_types?.label || job.jobType || "Full-time",
-    tags: [],
-    url: job.url || `https://www.jobstreet.co.id/job/${job.id}` || "",
-    postedAt: posted,
-    expiryDate: posted ? estimateExpiry(posted) : "",
-    salary: job.salary || "",
-    source: "JobStreet ID",
-    image: null,
-  };
-}
-
-async function fetchJobStreet({ keywords = [], limit = 20 } = {}) {
-  const API_KEY = "e1cc39d5";
-  const API_BASE = "https://api.andaraz.com/api/jobstreet";
-  const allJobs = [];
-
-  for (const kw of (keywords.length ? keywords : ["developer", "marketing", "designer"])) {
-    try {
-      const url = `${API_BASE}/search?apikey=${API_KEY}&q=${encodeURIComponent(kw)}&page=1`;
-      const res = await fetchWithTimeout(url);
-      if (!res.ok) {
-        logger.warn("LOKER", `JobStreet search ${kw}: HTTP ${res.status}, skip`);
-        continue;
-      }
-      const data = await res.json();
-      if (!data.status) {
-        logger.warn("LOKER", `JobStreet search ${kw}: ${data.message || "gagal"}, skip`);
-        continue;
-      }
-      const jobs = data.jobs || data.results || data.data || [];
-      if (!Array.isArray(jobs)) continue;
-      for (const job of jobs) {
-        allJobs.push(normalizeJobStreet(job));
-        if (allJobs.length >= limit) break;
-      }
-      if (allJobs.length >= limit) break;
-    } catch (e) {
-      logger.warn("LOKER", `JobStreet fetch error (${kw}): ${e.message}, skip`);
-    }
-  }
-
-  logger.info("LOKER", `JobStreet: ${allJobs.length} lowongan dari ${keywords.length} keyword`);
-  return allJobs;
-}
 async function fetchRemotive({ keywords = [], categories = [], limit = 20 } = {}) {
   try {
     const params = new URLSearchParams({ limit: String(limit) });
@@ -480,7 +428,6 @@ async function fetchNewJobs({ sources, keywords, categories, limit, sentIds = {}
   if (sources.includes("arbeitnow")) fetchers.push(fetchArbeitnow({ keywords, limit: limit + 20 }));
   if (sources.includes("themuse")) fetchers.push(fetchTheMuse({ keywords, limit: limit + 20 }));
   if (sources.includes("jobicy")) fetchers.push(fetchJobicy({ keywords, categories, limit: limit + 20 }));
-  if (sources.includes("jobstreet")) fetchers.push(fetchJobStreet({ keywords, limit: limit + 20 }));
 
   const results = await Promise.allSettled(fetchers);
   for (const r of results) if (r.status === "fulfilled") allJobs.push(...r.value);
@@ -677,7 +624,6 @@ export {
   fetchArbeitnow,
   fetchTheMuse,
   fetchJobicy,
-  fetchJobStreet,
   formatLokerMessage,
   getSentIds,
   markSent,
