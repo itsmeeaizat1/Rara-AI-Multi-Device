@@ -2,7 +2,6 @@
 .agents/
 base44/
 conversations/
-blobs/
 .base44-conversation-workspace
 
 # Dependencies
