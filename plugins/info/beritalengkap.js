@@ -4,12 +4,12 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "beritav2",
-  alias: ["beritalengkapv2", "newsapiv2", "beritasourcev2"],
+  name: "beritalengkap",
+  alias: ["sumberberita", "news5", "berita5"],
   category: "info",
-  description: "Berita V2 — 5 sumber berita Indonesia via Andaraz API",
-  usage: ".beritav2 <source> — Lihat berita\n.beritav2 list — Lihat semua sumber\n.beritav2 — Info plugin",
-  example: ".beritav2 antaranews\n.beritav2 cnn\n.beritav2 bola",
+  description: "Berita Lengkap — 5 sumber berita Indonesia via Andaraz API",
+  usage: ".beritalengkap <source> — Lihat berita\n.beritalengkap list — Lihat semua sumber\n.beritalengkap — Info plugin",
+  example: ".beritalengkap antaranews\n.beritalengkap cnn\n.beritalengkap bola",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -78,7 +78,7 @@ function formatBerita(sourceLabel, articles) {
   }
   lines.push("Source: " + sourceLabel + " via Andaraz API");
 
-  return claraWrap("Berita V2", lines, "info");
+  return claraWrap("Berita Lengkap", lines, "info");
 }
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
@@ -86,7 +86,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const input = (args[0] || "").toLowerCase().trim();
 
     if (!input || input === "help" || input === "info") {
-      return m.reply(claraWrap("Berita V2", [
+      return m.reply(claraWrap("Berita Lengkap", [
         "Berita terbaru dari 5 sumber Indonesia",
         "Source: Andaraz API",
         "",
@@ -120,13 +120,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
       lines.push("");
       lines.push("Ketik: " + usedPrefix + "beritaapi <source>");
-      return m.reply(claraWrap("Berita V2", lines, "info"));
+      return m.reply(claraWrap("Berita Lengkap", lines, "info"));
     }
 
     // Validate source
     if (!SOURCES[input]) {
       const available = Object.keys(SOURCES).join(", ");
-      return m.reply(claraWrap("Berita V2", [
+      return m.reply(claraWrap("Berita Lengkap", [
         "Sumber tidak ditemukan: " + input,
         "",
         "Sumber tersedia: " + available,
@@ -135,13 +135,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ], "warn"));
     }
 
-    m.reply(claraWrap("Berita V2", "Mengambil berita dari " + SOURCES[input].label + "..."));
+    m.reply(claraWrap("Berita Lengkap", "Mengambil berita dari " + SOURCES[input].label + "..."));
 
     const result = await fetchBerita(input);
     return m.reply(formatBerita(result.source, result.articles));
   } catch (e) {
     console.error("[BeritaAPI]", e);
-    m.reply(claraWrap("Berita V2", [
+    m.reply(claraWrap("Berita Lengkap", [
       "Error: " + e.message,
       "",
       "Kemungkinan penyebab:",
