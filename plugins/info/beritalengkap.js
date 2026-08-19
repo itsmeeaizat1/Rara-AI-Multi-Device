@@ -1,15 +1,15 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Berita API — 5 source berita Indonesia via Andaraz API
-// Source: antaranews, bbc, beritajakarta, bola, cnn
+// Berita Lengkap — 10 sumber berita Indonesia via Andaraz API
+// Source: antaranews, bbc, beritajakarta, bola, cnn, detik, idx, kompas, okezone, sindonews
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "beritalengkap",
-  alias: ["sumberberita", "news5", "berita5"],
+  alias: ["sumberberita", "news5", "berita5", "news10", "berita10"],
   category: "info",
-  description: "Berita Lengkap — 5 sumber berita Indonesia via Andaraz API",
+  description: "Berita Lengkap — 10 sumber berita Indonesia via Andaraz API",
   usage: ".beritalengkap <source> — Lihat berita\n.beritalengkap list — Lihat semua sumber\n.beritalengkap — Info plugin",
-  example: ".beritalengkap antaranews\n.beritalengkap cnn\n.beritalengkap bola",
+  example: ".beritalengkap detik\n.beritalengkap kompas\n.beritalengkap sindonews",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -28,6 +28,11 @@ const SOURCES = {
   beritajakarta: { label: "Berita Jakarta", url: "beritajakarta", desc: "Berita Jakarta & sekitar" },
   bola: { label: "Bola Sports", url: "bola", desc: "Berita olahraga & sepak bola" },
   cnn: { label: "CNN Indonesia", url: "cnn", desc: "Berita nasional, ekonomi, hiburan" },
+  detik: { label: "Detik.com", url: "detik", desc: "Berita terkini & viral" },
+  idx: { label: "IDX Channel", url: "idx", desc: "Berita ekonomi & pasar modal" },
+  kompas: { label: "Kompas", url: "kompas", desc: "Berita nasional & internasional" },
+  okezone: { label: "Okezone", url: "okezone", desc: "Berita nasional, sport, hiburan" },
+  sindonews: { label: "Sindo News", url: "sindonews", desc: "Berita nasional & internasional" },
 };
 
 async function fetchBerita(sourceKey) {
@@ -66,7 +71,6 @@ function formatBerita(sourceLabel, articles) {
     const article = articles[i];
     const title = article.title || "N/A";
     const link = article.link || "";
-    const image = article.image || null;
 
     lines.push((i + 1) + ". " + title);
     if (link) lines.push("   " + link);
@@ -87,7 +91,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (!input || input === "help" || input === "info") {
       return m.reply(claraWrap("Berita Lengkap", [
-        "Berita terbaru dari 5 sumber Indonesia",
+        "Berita terbaru dari 10 sumber Indonesia",
         "Source: Andaraz API",
         "",
         "SUMBER TERSEDIA:",
@@ -96,20 +100,26 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         "3. beritajakarta - Berita Jakarta (lokal)",
         "4. bola - Bola Sports (olahraga)",
         "5. cnn - CNN Indonesia (lengkap)",
+        "6. detik - Detik.com (terkini & viral)",
+        "7. idx - IDX Channel (ekonomi)",
+        "8. kompas - Kompas (nasional)",
+        "9. okezone - Okezone (nasional & sport)",
+        "10. sindonews - Sindo News (nasional)",
         "",
         "CARA PAKAI:",
-        usedPrefix + "beritaapi <source> - Lihat berita",
-        usedPrefix + "beritaapi list - Lihat semua sumber",
+        usedPrefix + "beritalengkap <source> - Lihat berita",
+        usedPrefix + "beritalengkap list - Lihat semua sumber",
         "",
         "Contoh:",
-        usedPrefix + "beritaapi cnn",
-        usedPrefix + "beritaapi bola",
+        usedPrefix + "beritalengkap detik",
+        usedPrefix + "beritalengkap kompas",
+        usedPrefix + "beritalengkap sindonews",
       ]));
     }
 
     if (input === "list" || input === "sumber" || input === "sources") {
       const lines = [
-        "DAFTAR SUMBER BERITA",
+        "DAFTAR SUMBER BERITA (10 SOURCE)",
         "",
       ];
       let i = 1;
@@ -119,7 +129,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         i++;
       }
       lines.push("");
-      lines.push("Ketik: " + usedPrefix + "beritaapi <source>");
+      lines.push("Ketik: " + usedPrefix + "beritalengkap <source>");
       return m.reply(claraWrap("Berita Lengkap", lines, "info"));
     }
 
@@ -131,7 +141,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         "",
         "Sumber tersedia: " + available,
         "",
-        "Ketik " + usedPrefix + "beritaapi list untuk lihat semua sumber",
+        "Ketik " + usedPrefix + "beritalengkap list untuk lihat semua sumber",
       ], "warn"));
     }
 
@@ -140,7 +150,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const result = await fetchBerita(input);
     return m.reply(formatBerita(result.source, result.articles));
   } catch (e) {
-    console.error("[BeritaAPI]", e);
+    console.error("[BeritaLengkap]", e);
     m.reply(claraWrap("Berita Lengkap", [
       "Error: " + e.message,
       "",
