@@ -234,6 +234,8 @@ const config = {
     geminiApiKey: "",
     // Anthropic format: /v1/messages
     anthropicApiKey: "",
+    // ClipDrop API key untuk watermark remover (.nowm) — gratis 100 credits di clipdrop.co/apis
+    clipdropApiKey: "",
     // Fallback key (kalau per-format kosong, pakai ini)
     apiKey: "",
     // ═══════════════════════════════════════════
