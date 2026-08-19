@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // UnblurImage AI — Unblur & upscale gambar via unblurimage.ai API, no token needed
+// Tested: v1 PASS (53KB->4.1MB), v2 PASS (53KB->663KB), v3 FAIL (Cloudflare block)
 import crypto from "node:crypto";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -8,7 +9,7 @@ const pluginConfig = {
   alias: ["unblur", "unblurimage", "hdai", "sharpenai", "jernihkan"],
   category: "tools",
   description: "UnblurImage AI — unblur & upscale gambar ke HD via unblurimage.ai, gratis tanpa token",
-  usage: ".unblurimg (reply gambar)\n.unblurimg 2x (reply gambar)\n.unblurimg 4x v2 (reply gambar)",
+  usage: ".unblurimg (reply gambar)\n.unblurimg 2x (reply gambar)\n.unblurimg 4x v1 (reply gambar)",
   example: ".unblurimg (reply gambar)\n.unblurimg 4x",
   isOwner: false,
   isPremium: true,
@@ -18,6 +19,13 @@ const pluginConfig = {
   energi: 0,
   isEnabled: true,
 };
+
+// Model yang tersedia (v3 diblokir Cloudflare, dihapus)
+const VALID_MODELS = ["v1", "v2"];
+// Code processing dari API
+const PROCESSING_CODES = [100000, 100001, 300006];
+// Code error dari API
+const ERROR_CODES = [300008, 300009, 300010, 500000];
 
 function generateRandomIP() {
   const ranges = [
@@ -47,43 +55,74 @@ async function unblurImage(imageBuffer, scaleFactor, model, mime) {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
   };
 
-  // Create job
+  // Step 1: Create job
   const createRes = await fetch(baseUrl + "/create-job", { method: "POST", headers, body: formData });
-  const createData = await createRes.json();
-  const jobId = createData?.result?.job_id;
+  const createText = await createRes.text();
 
-  if (!jobId) {
-    throw new Error("Gagal membuat job: " + JSON.stringify(createData).substring(0, 300));
+  // Check if response is HTML (Cloudflare block)
+  if (createText.trim().startsWith("<") || createText.includes("<!DOCTYPE")) {
+    throw new Error("API " + model + " diblokir (Cloudflare). Gunakan model v1 atau v2.");
   }
 
-  // Poll for result
+  let createData;
+  try {
+    createData = JSON.parse(createText);
+  } catch {
+    throw new Error("Response API tidak valid. Coba lagi.");
+  }
+
+  const jobId = createData?.result?.job_id;
+  if (!jobId) {
+    const errMsg = createData?.message?.en || createData?.message?.id || JSON.stringify(createData).substring(0, 200);
+    throw new Error("Gagal membuat job: " + errMsg);
+  }
+
+  // Step 2: Poll for result
   let outputUrl = null;
   let attempts = 0;
-  const maxAttempts = 120; // ~2 minutes max
+  const maxAttempts = 90; // ~90 seconds max (1s interval)
 
   while (!outputUrl && attempts < maxAttempts) {
     attempts++;
     const pollRes = await fetch(baseUrl + "/get-job/" + jobId, { headers });
-    const pollData = await pollRes.json();
+    const pollText = await pollRes.text();
 
+    let pollData;
+    try {
+      pollData = JSON.parse(pollText);
+    } catch {
+      // Not JSON, skip and retry
+      await new Promise((r) => setTimeout(r, 1500));
+      continue;
+    }
+
+    // Success
     if (pollData.code === 100000 && pollData.result?.output_url?.[0]) {
       outputUrl = pollData.result.output_url[0];
       break;
     }
 
-    const processingCodes = [100000, 100001, 300006];
-    if (!processingCodes.includes(pollData.code)) {
-      throw new Error("API error: " + (pollData.message || JSON.stringify(pollData).substring(0, 200)));
+    // Error codes
+    if (ERROR_CODES.includes(pollData.code)) {
+      const errMsg = pollData.message?.en || pollData.message?.id || "Gagal memproses gambar";
+      throw new Error("API error (code " + pollData.code + "): " + errMsg);
     }
 
-    // Small delay to avoid hammering
+    // Unknown code that's not processing
+    if (!PROCESSING_CODES.includes(pollData.code)) {
+      const errMsg = pollData.message?.en || pollData.message?.id || JSON.stringify(pollData).substring(0, 200);
+      throw new Error("API error (code " + pollData.code + "): " + errMsg);
+    }
+
+    // Still processing, wait
     await new Promise((r) => setTimeout(r, 1000));
   }
 
-  if (!outputUrl) throw new Error("Timeout menunggu hasil. Coba lagi.");
+  if (!outputUrl) throw new Error("Timeout menunggu hasil (" + maxAttempts + " detik). Coba lagi.");
 
-  // Download result
+  // Step 3: Download result
   const resultRes = await fetch(outputUrl);
+  if (!resultRes.ok) throw new Error("Gagal download hasil: HTTP " + resultRes.status);
   const resultBuffer = Buffer.from(await resultRes.arrayBuffer());
   return { buffer: resultBuffer, url: outputUrl };
 }
@@ -91,8 +130,6 @@ async function unblurImage(imageBuffer, scaleFactor, model, mime) {
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
     // Parse args: [scale] [model]
-    // scale: 2, 4, 8 (default 4)
-    // model: v1, v2, v3 (default v2)
     let scale = "4";
     let model = "v2";
 
@@ -101,7 +138,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (["2", "2x", "4", "4x", "8", "8x"].includes(lower)) {
         scale = lower.replace("x", "");
       }
-      if (["v1", "v2", "v3"].includes(lower)) {
+      if (VALID_MODELS.includes(lower)) {
         model = lower;
       }
     }
@@ -122,20 +159,29 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         usedPrefix + "unblurimg 2x - Upscale 2x",
         usedPrefix + "unblurimg 4x - Upscale 4x (default)",
         usedPrefix + "unblurimg 8x - Upscale 8x",
-        usedPrefix + "unblurimg 4x v3 - Pakai model v3",
+        usedPrefix + "unblurimg 4x v1 - Pakai model v1",
+        usedPrefix + "unblurimg 4x v2 - Pakai model v2",
         "",
         "Scale: 2x, 4x, 8x",
-        "Model: v1, v2, v3 (default v2)",
+        "Model: v1, v2 (default v2)",
         "Source: unblurimage.ai",
       ]));
     }
 
-    m.reply(claraWrap("UnblurImage AI", "Sedang memproses gambar...\nScale: " + scale + "x | Model: " + model + "\nMungkin butuh 30-60 detik."));
+    m.reply(claraWrap("UnblurImage AI", "Sedang memproses gambar...\nScale: " + scale + "x | Model: " + model + "\nEstimasi: 10-60 detik."));
 
     // Download image
     const imageBuffer = await q.download();
     if (!imageBuffer || imageBuffer.length === 0) {
       return m.reply(claraWrap("UnblurImage AI", "Gagal download gambar. Coba lagi!"));
+    }
+
+    // Validate size (min 5KB, max 10MB)
+    if (imageBuffer.length < 5000) {
+      return m.reply(claraWrap("UnblurImage AI", "Gambar terlalu kecil (min 5KB). Gunakan gambar yang lebih besar."));
+    }
+    if (imageBuffer.length > 10 * 1024 * 1024) {
+      return m.reply(claraWrap("UnblurImage AI", "Gambar terlalu besar (max 10MB)."));
     }
 
     // Unblur/upscale
@@ -175,8 +221,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "Kemungkinan penyebab:",
       "1. API unblurimage.ai sedang maintenance",
       "2. IP diblokir sementara",
-      "3. Gambar terlalu besar (max ~10MB)",
-      "4. Timeout (coba lagi)",
+      "3. Gambar terlalu kecil (min 5KB)",
+      "4. Gambar terlalu besar (max 10MB)",
+      "5. Timeout (coba lagi)",
     ], "warn"));
   }
 }
