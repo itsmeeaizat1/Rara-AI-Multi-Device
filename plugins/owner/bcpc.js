@@ -3,7 +3,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { decodeAndNormalize } from "../../src/lib/nova-lid.js";
 import config from "../../config.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, broadcastFormat } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bcpc",
@@ -43,19 +43,21 @@ async function handler(m, { sock }) {
 
   if (!input) {
     const jeda = db.setting("jedaBcpc") || 5000;
-    return sendReplyWithNav(sock, m, claraWrap("BROADCAST PRIVATE CHAT", `📱 *BROADCAST PRIVATE CHAT*\n\n` +
-        `Jeda: ${jeda}ms (${(jeda / 1000).toFixed(1)}s)\n\n` +
-        `*PENGGUNAAN:*\n` +
-        `• \`${m.prefix}bcpc <pesan>\` — Kirim ke semua kontak\n` +
-        `• \`${m.prefix}bcpc (reply media)\` — Kirim dengan media\n\n` +
-        `⚠️ *Peringatan:* Bot akan mengirim pesan ke semua kontak yang tersimpan!\n\n` +
-        `ℹ️ *Note:* Kontak hanya terdeteksi jika mereka sudah pernah mengirim pesan ke bot. Kontak yang hanya disimpan tapi belum pernah chat tidak akan muncul.`), "bcpc");
+    return sendReplyWithNav(sock, m, claraWrap("Broadcast Private Chat", [
+      `Jeda: ${jeda}ms (${(jeda / 1000).toFixed(1)}s)`,
+      "",
+      "PENGGUNAAN:",
+      `${m.prefix}bcpc <pesan> — Kirim ke semua kontak`,
+      `${m.prefix}bcpc (reply media) — Kirim dengan media`,
+      "",
+      "Peringatan: Bot akan mengirim pesan ke semua kontak yang tersimpan!",
+      "Note: Kontak hanya terdeteksi jika mereka sudah pernah mengirim pesan ke bot.",
+    ].join("\n")), "bcpc");
   }
 
   if (global.statusBcpc) {
-    return m.reply(claraWrap("bcpc", `❌ Broadcast private sedang berjalan.\nKetik \`${m.prefix}stopbcpc\` untuk menghentikan.`));
+    return m.reply(claraWrap("Broadcast Private", `Sedang berjalan. Ketik ${m.prefix}stopbcpc untuk menghentikan.`));
   }
-
 
   try {
     let mediaBuffer = null;
@@ -111,27 +113,26 @@ async function handler(m, { sock }) {
     }
 
     if (privateJids.size === 0) {
-      return m.reply(claraWrap("bcpc", "❌ Tidak ada kontak ditemukan.\n\nPastikan bot sudah pernah menerima pesan dari kontak tersebut.",));
+      return m.reply(claraWrap("Broadcast Private", "Tidak ada kontak ditemukan. Pastikan bot sudah pernah menerima pesan dari kontak tersebut."));
     }
 
     const filtered = [...privateJids];
-
     const jeda = db.setting("jedaBcpc") || 5000;
     const ctx = getBcContextInfo();
 
+    // Status report ke owner (claraWrap style)
     await sock.sendMessage(
       m.chat,
       {
-        text:
-          `📱 *Broadcast Private*\n\n` +
-          `╭┈┈⬡「 📋 *Detail* 」\n` +
-          `┃ 📝 Pesan: \`${input.substring(0, 50)}${input.length > 50 ? "..." : ""}\`\n` +
-          `┃ 📷 Media: \`${mediaBuffer ? mediaType : "Tidak"}\`\n` +
-          `┃ 👥 Target: \`${filtered.length}\` kontak\n` +
-          `┃ ⏱️ Jeda: \`${jeda}ms\`\n` +
-          `┃ 📊 Estimasi: \`${Math.ceil((filtered.length * jeda) / 60000)} menit\`\n` +
-          `╰┈┈⬡\n\n` +
-          `Memulai broadcast...`,
+        text: claraWrap("Broadcast Private Dimulai", [
+          `Pesan: ${input.substring(0, 50)}${input.length > 50 ? "..." : ""}`,
+          `Media: ${mediaBuffer ? mediaType : "Tidak ada"}`,
+          `Target: ${filtered.length} kontak`,
+          `Jeda: ${jeda}ms`,
+          `Estimasi: ${Math.ceil((filtered.length * jeda) / 60000)} menit`,
+          "",
+          "Sedang mengirim ke semua kontak...",
+        ].join("\n")),
         contextInfo: ctx,
       },
       { quoted: m },
@@ -141,6 +142,16 @@ async function handler(m, { sock }) {
     let success = 0;
     let failed = 0;
 
+    // Format pesan yang dikirim ke penerima
+    const botName = config.bot?.name || "Nova AI";
+    const senderName = m.pushName || "Owner";
+    const broadcastText = broadcastFormat({
+      botName,
+      senderName,
+      message: input,
+      type: "private",
+    });
+
     for (const jid of filtered) {
       if (global.stopBcpc) {
         delete global.stopBcpc;
@@ -148,12 +159,14 @@ async function handler(m, { sock }) {
       }
       try {
         if (mediaBuffer) {
-          await sock.sendMedia(jid, mediaBuffer, input, null, {
+          // Media + caption dengan header broadcast
+          await sock.sendMedia(jid, mediaBuffer, broadcastText, null, {
             type: mediaType,
             contextInfo: ctx,
           });
         } else {
-          await sock.sendText(jid, input, null, { contextInfo: ctx });
+          // Text broadcast dengan header info
+          await sock.sendText(jid, broadcastText, null, { contextInfo: ctx });
         }
         success++;
       } catch {
@@ -165,23 +178,22 @@ async function handler(m, { sock }) {
     delete global.statusBcpc;
     m.react("✅");
 
+    // Hasil ke owner (claraWrap style, no typo)
     await sock.sendMessage(
       m.chat,
       {
-        text:
-          `✅ *Broadcast Private sElesai*\n\n` +
-          `╭┈┈⬡「 📊 *Hasil* 」\n` +
-          `┃ ✅ Berhasil: \`${success}\`\n` +
-          `┃ ❌ Gagal: \`${failed}\`\n` +
-          `┃ 📊 Total: \`${filtered.length}\`\n` +
-          `╰┈┈⬡`,
+        text: claraWrap("Broadcast Private Selesai", [
+          `Berhasil: ${success}`,
+          `Gagal: ${failed}`,
+          `Total: ${filtered.length}`,
+        ].join("\n")),
         contextInfo: ctx,
       },
       { quoted: m },
     );
   } catch (e) {
     delete global.statusBcpc;
-    m.reply(claraWrap("bcpc", "Gagal: " + e.message));
+    m.reply(claraWrap("Broadcast Private", "Gagal: " + e.message));
   }
 }
 

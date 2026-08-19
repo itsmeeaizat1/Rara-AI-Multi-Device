@@ -46,29 +46,38 @@ async function handler(m, { sock }) {
   const current = db.setting('jedaBcpc') || 5000
 
   if (!input) {
-    return sendReplyWithNav(sock, m, `⏱️ *JEDA BROADCAST PRIVATE*\n\n` +
-      `Jeda saat ini: *${formatDelay(current)}* (${current}ms)\n\n` +
-      `*CARA PAKAI:*\n` +
-      `\`${m.prefix}bcpcjeda <angka><satuan>\`\n\n` +
-      `*SATUAN:*\n` +
-      `• \`s\` — detik\n• \`m\` — menit\n• \`h\` — jam\n• \`d\` — hari\n\n` +
-      `*CONTOH:*\n` +
-      `\`${m.prefix}bcpcjeda 5s\` → 5 detik\n` +
-      `\`${m.prefix}bcpcjeda 2m\` → 2 menit\n` +
-      `\`${m.prefix}bcpcjeda 1h\` → 1 jam`, "bcpcjeda")
+    return sendReplyWithNav(sock, m, claraWrap("Jeda Broadcast Private", [
+      `Jeda saat ini: ${formatDelay(current)} (${current}ms)`,
+      "",
+      "CARA PAKAI:",
+      `${m.prefix}bcpcjeda <angka><satuan>`,
+      "",
+      "SATUAN:",
+      "s — detik",
+      "m — menit",
+      "h — jam",
+      "d — hari",
+      "",
+      "CONTOH:",
+      `${m.prefix}bcpcjeda 5s -> 5 detik`,
+      `${m.prefix}bcpcjeda 2m -> 2 menit`,
+      `${m.prefix}bcpcjeda 1h -> 1 jam`,
+    ].join("\n")), "bcpcjeda")
   }
 
   const ms = parseDelay(input)
   if (!ms || ms < 1000) {
-    return m.reply('❌ Format salah. Contoh: `5s`, `2m`, `1h`, `1d`')
+    return m.reply(claraWrap("Jeda Broadcast", "Format salah. Contoh: 5s, 2m, 1h, 1d"))
   }
 
   const prev = current
   db.setting('jedaBcpc', ms)
 
-  return m.reply(claraWrap("bcpcjeda", `✅ *Jeda broadcast private diubah*\n\n` +
-    `Sebelumnya: *${formatDelay(prev)}*\n` +
-    `Sekarang: *${formatDelay(ms)}*`))
+  return m.reply(claraWrap("Jeda Broadcast Private", [
+    "Jeda berhasil diubah",
+    `Sebelumnya: ${formatDelay(prev)}`,
+    `Sekarang: ${formatDelay(ms)}`,
+  ].join("\n")))
 }
 
 export { pluginConfig as config, handler }
