@@ -19,7 +19,9 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const API_KEY = "e1cc39d5";
+import fs from "node:fs";
+const andarazConfig = JSON.parse(fs.readFileSync(new URL("../../config/andaraz-api.json", import.meta.url), "utf8"));
+const API_KEY = andarazConfig.apikey;
 const API_BASE = "https://api.andaraz.com/api/berita";
 
 const SOURCES = {
