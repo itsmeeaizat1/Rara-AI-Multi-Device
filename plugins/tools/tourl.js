@@ -26,6 +26,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
+// Termai Key (c.termai.cc) — dipakai di: fakecall, animeapaini, smeme, musikapaini, qrcustom, tourl
 const termaiKey = "AIzaBj7z2z3xBjsk";
 const termaiDomain = "https://c.termai.cc";
 
