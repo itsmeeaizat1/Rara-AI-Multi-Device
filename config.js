@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "./src/lib/nova-database.js";
 import * as ownerPremiumDb from "./src/lib/nova-premium-db.js";
+import { payment, donasi } from "./payment.config.js";
 
 //  utamakan baca object config sampai bawah
 const config = {
@@ -72,36 +73,8 @@ const config = {
     token: "", // Vercel Token untuk fitur deploy ( Kalau .deploy mau work, ini wajib di isi )
   },
 
-  payment: {
-    qrisUrl: "./assets/image/aizat-store-qris.jpg",
-    methods: [
-      { name: "Dana", number: "", holder: "" },
-      { name: "GoPay", number: "", holder: "" },
-      { name: "OVO", number: "", holder: "" },
-      { name: "ShopeePay", number: "", holder: "" },
-    ],
-    banks: [],
-    customText: "https://imgdrop.web.id/KodpV.webp",
-  },
-
-  donasi: {
-    payment: [
-      { name: "Dana", number: "08xxxxxxxxxx", holder: "Nama Owner" },
-      { name: "GoPay", number: "08xxxxxxxxxx", holder: "Nama Owner" },
-      { name: "OVO", number: "08xxxxxxxxxx", holder: "Nama Owner" },
-    ],
-    links: [
-      { name: "Saweria", url: "saweria.co/username" },
-      { name: "Trakteer", url: "trakteer.id/username" },
-    ],
-    benefits: [
-      "Mendukung development",
-      "Server lebih stabil",
-      "Fitur baru lebih cepat",
-      "Priority support",
-    ],
-    qris: "./assets/image/aizat-store-qris.jpg",
-  },
+  payment,
+  donasi,
 
   energi: {
     enabled: true, // Jika true, maka sistem energi/limit akan bekerja
