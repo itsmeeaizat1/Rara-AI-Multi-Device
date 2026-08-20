@@ -311,6 +311,45 @@ async function messageHandler(msg, sock) {
     }
   }
 
+  // Auto VN Translate: real-time voice note detection & translate
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+    try {
+      const { handleAutoVnTranslate, isAutoVnEnabled } = await import("../plugins/owner/toggleautovn.js");
+      if (typeof isAutoVnEnabled === "function" && isAutoVnEnabled(m, sock)) {
+        const vnTrans = await handleAutoVnTranslate(m, sock);
+        if (vnTrans) return;
+      }
+    } catch (e) {
+      console.error("[AutoVnTranslate] Hook error:", e.message);
+    }
+  }
+
+  // Auto OCR Solve: real-time image detection for math/code
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+    try {
+      const { handleAutoOcrSolve, isAutoOcrEnabled } = await import("../plugins/owner/toggleocrsolve.js");
+      if (typeof isAutoOcrEnabled === "function" && isAutoOcrEnabled(m, sock)) {
+        const ocrResult = await handleAutoOcrSolve(m, sock);
+        if (ocrResult) return;
+      }
+    } catch (e) {
+      console.error("[AutoOcrSolve] Hook error:", e.message);
+    }
+  }
+
+  // Auto Meme Gen: real-time image detection for instant meme
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+    try {
+      const { handleAutoMemeGen, isAutoMemeEnabled } = await import("../plugins/owner/toggleautomeme.js");
+      if (typeof isAutoMemeEnabled === "function" && isAutoMemeEnabled(m, sock)) {
+        const memeResult = await handleAutoMemeGen(m, sock);
+        if (memeResult) return;
+      }
+    } catch (e) {
+      console.error("[AutoMemeGen] Hook error:", e.message);
+    }
+  }
+
   // Auto-AI: if not a command, check if auto-AI should respond
   if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
     try {
