@@ -29,8 +29,7 @@ async function uploadTo0x0(buffer, filename) {
   });
 
   const res = await axios.post(
-// Termai Key (c.termai.cc) — dipakai di: fakecall, animeapaini, smeme, musikapaini, qrcustom, tourl
-    "https://c.termai.cc/api/upload?key=AIzaBj7z2z3xBjsk",
+    "https://c.termai.cc/api/upload?key=" + config.APIkey.termai,
     form,
     {
       headers: form.getHeaders(),
