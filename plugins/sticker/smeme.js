@@ -74,6 +74,7 @@ async function handler(m, { sock }) {
     let imageUrl;
     try {
       const uploadRes = await axios.post(
+// Termai Key (c.termai.cc) — dipakai di: fakecall, animeapaini, smeme, musikapaini, qrcustom, tourl
         "https://c.termai.cc/api/upload?key=AIzaBj7z2z3xBjsk",
         form,
         {

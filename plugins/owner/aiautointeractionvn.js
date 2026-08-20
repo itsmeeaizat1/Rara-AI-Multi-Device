@@ -241,6 +241,7 @@ async function topMediaTTS(text, emotion = "Happy") {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        // Voice AI API Key (x-api-key) — dipakai di: aiautointeractionvn
         "x-api-key": "dac23a9006fc4039ae6aac98ae7c7b46",
       },
       body: JSON.stringify({
