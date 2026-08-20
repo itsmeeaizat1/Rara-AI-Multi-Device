@@ -7,8 +7,8 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "toggleocrsolve",
-  alias: ["toggleocr", "ocrsolve", "automath", "autocodefix", "toggleautomath"],
+  name: "ocrsolve",
+  alias: ["toggleocr", "toggleocrsolve", "automath", "autocodefix", "toggleautomath"],
   category: "owner",
   description: "Toggle on/off auto OCR code/math solver dari foto (real-time)",
   usage: ".toggleocrsolve on/off — Toggle\n.toggleocrsolve status — Cek status\n.toggleocrsolve mode math/code/auto — Set mode deteksi",

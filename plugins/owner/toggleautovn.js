@@ -7,8 +7,8 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "toggleautovn",
-  alias: ["togglevn", "autovn", "autotranslatevn", "vntranslate", "autovoicetranslate"],
+  name: "autotranslatevn",
+  alias: ["toggleautovn", "autovn", "vntranslate", "autovoicetranslate"],
   category: "owner",
   description: "Toggle on/off auto-translate voice note (real-time VN detection)",
   usage: ".toggleautovn on/off — Toggle auto VN translate\n.toggleautovn status — Cek status\n.toggleautovn lang <kode> — Set bahasa target (id, en, su, jv)",
