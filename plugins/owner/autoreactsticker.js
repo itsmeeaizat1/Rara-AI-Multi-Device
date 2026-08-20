@@ -424,31 +424,31 @@ async function handler(m, { sock, args }) {
   }
 
   // COLLECT: auto-koleksi semua sticker di grup
-  if (action === "collect" || action === "auto_collect") {
+  if (action === "autosave" || action === "autosave_favorit") {
     const subArg = (args[1] || "").toLowerCase();
     if (!subArg || !["on", "off"].includes(subArg)) {
-      const collectStatus = db.setting("autoreactstickerCollect") || false;
+      const collectStatus = db.setting("autoreactstickerAutosave") || false;
       return m.reply(claraWrap("AutoReactSticker", [
-        "AUTO-COLLECT STICKER",
+        "AUTOSAVE FAVORIT STIKER",
         "",
         "Status: " + (collectStatus ? "✅ Aktif" : "❌ Nonaktif"),
         "Koleksi saat ini: " + collection.length + " sticker",
         "",
-        "Saat ON, bot otomatis simpan SEMUA",
-        "sticker yang dikirim di grup",
+        "Saat ON, bot otomatis simpan stiker",
+        "baru yang user kirim di grup",
         "",
         "Set:",
-        "1. " + m.prefix + "autoreactsticker collect on",
-        "2. " + m.prefix + "autoreactsticker collect off",
+        "1. " + m.prefix + ".autoreactsticker autosave on",
+        "2. " + m.prefix + ".autoreactsticker autosave off",
       ].join("\n")));
     }
-    db.setting("autoreactstickerCollect", subArg === "on");
+    db.setting("autoreactstickerAutosave", subArg === "on");
     await db.save();
     await m.react("✅");
     return m.reply(claraWrap("AutoReactSticker", [
-      subArg === "on" ? "✅ AUTO-COLLECT DIAKTIFKAN" : "❌ AUTO-COLLECT DINONAKTIFKAN",
+      subArg === "on" ? "✅ AUTOSAVE FAVORIT DIAKTIFKAN" : "❌ AUTOSAVE FAVORIT DINONAKTIFKAN",
       "",
-      subArg === "on" ? "Bot otomatis simpan semua sticker di grup" : "Bot berhenti koleksi otomatis",
+      subArg === "on" ? "Bot otomatis simpan stiker baru yg dikirim di grup" : "Bot berhenti simpan stiker otomatis",
       "Koleksi saat ini: " + collection.length + " sticker",
     ].join("\n")));
   }
@@ -487,12 +487,12 @@ async function handler(m, { sock, args }) {
   const privMs = db.setting("autoreactstickerJedaPrivate") ?? 5000;
   const grpMs = db.setting("autoreactstickerJedaGrup") ?? 15000;
 
-  const collectStatus = db.setting("autoreactstickerCollect") || false;
+  const collectStatus = db.setting("autoreactstickerAutosave") || false;
   return m.reply(claraWrap("AutoReactSticker", [
     "AUTO REACT STICKER",
     "",
     "Status: " + (enabled ? "✅ Aktif" : "❌ Nonaktif"),
-    "Auto-collect: " + (collectStatus ? "✅ Aktif" : "❌ Nonaktif"),
+    "Autosave: " + (collectStatus ? "✅ Aktif" : "❌ Nonaktif"),
     "Random pool: " + collection.length + " sticker",
     "Trigger-based: " + triggers.length + " trigger",
     "Jeda Private: " + (privMs / 1000).toFixed(1) + " detik",
@@ -500,7 +500,7 @@ async function handler(m, { sock, args }) {
     "",
     "Perintah:",
     "1. " + m.prefix + "autoreactsticker on/off",
-    "2. " + m.prefix + "autoreactsticker collect on/off",
+    "2. " + m.prefix + ".autoreactsticker autosave on/off",
     "3. " + m.prefix + "autoreactsticker add (reply sticker → random pool)",
     "4. " + m.prefix + "autoreactsticker set <trigger> (reply sticker)",
     "5. " + m.prefix + "autoreactsticker del <nomor>",
