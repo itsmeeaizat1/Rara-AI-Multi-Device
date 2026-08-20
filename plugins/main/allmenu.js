@@ -2,7 +2,7 @@
 import * as botmodePlugin from "../group/botmode.js";
 import { generateWAMessageFromContent, prepareWAMessageMedia, proto } from "nova";
 import _sharp from "sharp";
-import { getMenuImage, getMenuThumbnail, getAssetBuffer, syncMenuImageFromDb } from "../../src/lib/nova-asset-manager.js";
+import { getMenuImage, getMenuThumbnail, getAssetBuffer, getStaticThumbnail, syncMenuImageFromDb } from "../../src/lib/nova-asset-manager.js";
 import config from "../../config.js";
 import axios from "axios";
 import {
@@ -326,7 +326,7 @@ ${readMore}
         break;
       }
       case 2: {
-        const thumbV2All = await getMenuThumbnail("nova");
+        const thumbV2All = await getStaticThumbnail("nova-thumbnail");
         await sock.relayMessage(m.chat, {
           viewOnceMessage: {
             message: {
@@ -372,7 +372,7 @@ ${readMore}
         break;
       }
       case 3: {
-        const thumbnail = await getMenuThumbnail("nova");
+        const thumbnail = await getStaticThumbnail("nova-thumbnail");
         // Build kategori popup dari case system
         const allCatsAll = getCasesByCategory();
         const categoryOrderAll = [
@@ -448,7 +448,7 @@ ${readMore}
     console.error("[AllMenu] Error:", error.message);
     let fallbackThumbAll = null;
     try {
-      fallbackThumbAll = await getMenuThumbnail("nova");
+      fallbackThumbAll = await getStaticThumbnail("nova-thumbnail");
     } catch (e) {
       fallbackThumbAll = imageBuffer || null;
     }

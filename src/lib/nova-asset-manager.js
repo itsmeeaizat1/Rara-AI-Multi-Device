@@ -157,6 +157,26 @@ export async function getMenuThumbnail(fallbackKey = 'nova') {
 }
 
 /**
+ * Get a fixed, dedicated thumbnail (e.g. externalAdReply / jpegThumbnail preview card).
+ * Unlike getMenuThumbnail(), this ALWAYS reads directly from the given asset key —
+ * it ignores config.bot.menuImage overrides so the small preview thumbnail stays
+ * independent from the main big header image.
+ *
+ * @param {string} [assetKey] - Asset key to load directly (default: 'nova-thumbnail')
+ * @returns {Promise<Buffer|null>} Thumbnail buffer (640x360 JPEG)
+ */
+export async function getStaticThumbnail(assetKey = 'nova-thumbnail') {
+  try {
+    const img = getAssetBuffer(assetKey);
+    if (!img) return null;
+    return await sharp(img).resize(640, 360, { fit: 'cover' }).jpeg({ quality: 80 }).toBuffer();
+  } catch (e) {
+    console.error('[AssetManager] ❌ Failed to generate static thumbnail:', e.message);
+    return null;
+  }
+}
+
+/**
  * Set menu image mode (owner command helper).
  * @param {string} mode - "asset" or "url"
  * @param {string} [url] - URL if mode is "url"

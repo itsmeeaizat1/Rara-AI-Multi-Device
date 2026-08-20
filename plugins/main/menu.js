@@ -6,7 +6,7 @@ import {
   proto,
 } from "nova";
 import _sharp from "sharp";
-import { getMenuImage, getMenuThumbnail, getAssetBuffer, syncMenuImageFromDb } from "../../src/lib/nova-asset-manager.js";
+import { getMenuImage, getMenuThumbnail, getAssetBuffer, getStaticThumbnail, syncMenuImageFromDb } from "../../src/lib/nova-asset-manager.js";
 import config from "../../config.js";
 import {
   getImportantDay,
@@ -234,7 +234,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   let thumbBuffer = null;
   try {
     imageBuffer = await getMenuImage("nova");
-    thumbBuffer = getAssetBuffer("nova2");
+    thumbBuffer = await getStaticThumbnail("nova-thumbnail");
   } catch (e) { console.error("Gagal load assets:", e.message); }
 
   const saluranId = botConfig.saluran?.id || "120363400911374213@newsletter";
