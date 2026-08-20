@@ -1,13 +1,13 @@
 <div align="center">
   <h1>🌟 Nova-Ai WhatsApp Bot MD 🌟</h1>
-  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 1.900+ Command, 1.220 Plugin & 38 Kategori!</b></p>
+  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 2.100+ Command, 1.533 Plugin & 39 Kategori!</b></p>
 </div>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-21.2.0-orange?style=flat-square&logo=git&logoColor=white">
-  <img src="https://img.shields.io/badge/Total_Plugin-1220-blue?style=flat-square&logo=fire">
-  <img src="https://img.shields.io/badge/Total_Command-1900%2B-blueviolet?style=flat-square&logo=terminal">
-  <img src="https://img.shields.io/badge/Kategori-38-green?style=flat-square&logo=folder">
+  <img src="https://img.shields.io/badge/Version-21.3.0-orange?style=flat-square&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/Total_Plugin-1533-blue?style=flat-square&logo=fire">
+  <img src="https://img.shields.io/badge/Total_Command-2100%2B-blueviolet?style=flat-square&logo=terminal">
+  <img src="https://img.shields.io/badge/Kategori-39-green?style=flat-square&logo=folder">
   <img src="https://img.shields.io/badge/Node.js-20--22-green?style=flat-square&logo=node.js">
   <img src="https://img.shields.io/badge/Baileys-MultiDevice-blue?style=flat-square&logo=whatsapp">
 </p>
@@ -37,14 +37,14 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20Member%20Join%20Request%20System-success?style=for-the-badge)
-> *Commit: "feat: member join request notification + approval system (setujugabung/tolakgabung)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20Multi%20Language%20System%20(20%20Bahasa)-success?style=for-the-badge)
+> *Commit: "feat: multi-language system (.languagemenubot) — Google Translate API, 20 bahasa, default OFF"*
 <!--END_SECTION:latest-update-->
 
 
 ---
 
-## ✨ Fitur Unggulan v21.2.0
+## ✨ Fitur Unggulan v21.3.0
 
 ### 🤖 AI Integration Automation (AIO)
 Integrasi AI dengan 34 model dari 3 format API berbeda:
@@ -153,7 +153,7 @@ Status: Approved
 * 10 fitur utama + fitur baru v21
 * Link ke .menu, .owner, .donasi
 
-### 🆕 Fitur Baru v21.2.0
+### 🆕 Fitur Baru v21.3.0
 
 ### 💰 Daily Claim System (V1 + V2)
 * V1: Streak 7 hari, base 200 Gold + 50 Exp
@@ -284,6 +284,20 @@ Setujui: .setujugabung 628xxx https://chat.whatsapp.com/xxxxx
 Tolak: .tolakgabung 628xxx https://chat.whatsapp.com/xxxxx
 ```
 
+### 🌍 Multi-Language System (.languagemenubot)
+Sistem multi-bahasa terintegrasi — bot support 20 bahasa dengan Google Translate API:
+* .languagemenubot — Lihat daftar 20 bahasa yang didukung
+* .languagemenubot <code> — Set bahasa (contoh: .languagemenubot en)
+* .languagemenubot reset — Kembali ke Indonesia (default)
+* .languagemenubot on/off — Owner: aktifkan/matikan fitur (master toggle)
+* Default: OFF — Indonesia murni, zero translation
+* Translation: Google Translate API (gratis, no API key)
+* Cache: 500 entries (LRU) untuk avoid repeated API calls
+* Yang ke-translate: AI response, menu, tombol, m.reply() calls
+* 20 bahasa: ID, EN, AR, ZH, JA, KO, ES, FR, DE, PT, RU, HI, TH, VI, TR, IT, NL, MS, FIL, UR
+* Dictionary statis untuk common UI phrases (Kembali, Tanya AI, Status, dll)
+* Per-user setting — tiap user bisa set bahasa berbeda
+
 ### 🎙️ Auto React Voice Note (.autoreactvn)
 Sistem trigger voice note otomatis berdasarkan keyword di chat:
 * .autoreactvn set trigger1,trigger2,trigger3 — Bulk assign 1 VN ke banyak trigger
@@ -409,7 +423,7 @@ PDF/PNG generation suite dengan AI:
 * .berita — AI news summarizer dengan Google Search grounding
 * .channelnovaofficial — Info saluran WA resmi dengan CTA button
 
-## 📊 Statistik Bot v21.2.0
+## 📊 Statistik Bot v21.3.0
 
 | Metric | Count |
 |--------|-------|
