@@ -11,12 +11,12 @@ import { claraHeader,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "togglesaluran",
-  alias: ["togglasaluran", "salurantoggle", "notifsaluran", "togglenotif"],
+  name: "autobroadcastchannel",
+  alias: ["autobcsaluran", "autobroadcastsaluran", "autosaluran", "togglesaluran", "togglasaluran", "salurantoggle", "notifsaluran", "togglenotif"],
   category: "owner",
-  description: "Toggle on/off notifikasi saluran per event",
-  usage: ".togglesaluran (lihat status) / .togglesaluran <event> (toggle) / .togglesaluran all on/off",
-  example: ".togglesaluran\n.togglesaluran sewaRegister\n.togglesaluran all off",
+  description: "Auto broadcast saluran — toggle on/off semua event notifikasi saluran",
+  usage: ".autobroadcastchannel (lihat status)\n.autobroadcastchannel all on/off\n.autobroadcastchannel <event> (toggle per event)",
+  example: ".autobroadcastchannel all on\n.autobroadcastchannel sewaRegister",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -38,26 +38,25 @@ async function handler(m, { sock, config: botConfig }) {
     let offCount = 0;
 
     let text =
-      claraWrap("Toggle Saluran", [`◦ Saluran: *${botConfig.saluran?.name || "-"}*`,
-        `◦ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`].join("\n")) +
+      claraWrap("AutoBroadcastChannel", [`Saluran: *${botConfig.saluran?.name || "-"}*`,
+        `Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`].join("\n")) +
       "\nSTATUS TOGGLE:\n\n";
 
     for (const [key, info] of Object.entries(statuses)) {
       const status = info.enabled ? "ON" : "OFF";
-      const emoji = info.enabled ? "🟢" : "🔴";
-      text += `${emoji} *${info.label}*\n`;
-      text += `Status: *${status}* | Toggle: \`${prefix}togglesaluran ${key}\`\n\n`;
+      text += `${info.enabled ? "ON" : "OFF"} *${info.label}*\n`;
+      text += `Toggle: ${prefix}autobroadcastchannel ${key}\n\n`;
       if (info.enabled) onCount++;
       else offCount++;
     }
 
     text +=
-      separator("━", 22) +
+      separator("-", 22) +
       "\n" +
-      tipText(`ON: ${onCount} | OFF: ${offCount}`) + "\n" +
-      tipText(`Toggle semua: \`${prefix}togglesaluran all on/off\``);
+      `ON: ${onCount} | OFF: ${offCount}` + "\n" +
+      `All toggle: ${prefix}autobroadcastchannel all on/off`;
 
-    return sendReplyWithNav(sock, m, text, "togglesaluran");
+    return sendReplyWithNav(sock, m, text, "autobroadcastchannel");
   }
 
   // Toggle all
@@ -67,8 +66,8 @@ async function handler(m, { sock, config: botConfig }) {
       return sendReplyWithNav(
         sock,
         m,
-        claraWrap("Toggle Saluran", [`Gunakan: \`${prefix}togglesaluran all on\` atau \`${prefix}togglesaluran all off\``].join("\n")),
-        "togglesaluran"
+        claraWrap("AutoBroadcastChannel", `Gunakan: ${prefix}autobroadcastchannel all on atau ${prefix}autobroadcastchannel all off`),
+        "autobroadcastchannel"
       );
     }
 
@@ -82,13 +81,12 @@ async function handler(m, { sock, config: botConfig }) {
     return sendReplyWithNav(
       sock,
       m,
-      claraWrap("Toggle Saluran", "🔔") + "\n\n" +
-      claraWrap("SEMUA EVENT", [
-        `◦ Status: *${enabled ? "ALL ON" : "ALL OFF"}*`,
-        `◦ Total: *${count} event*`,
-      ]) + "\n\n" +
-      tipText(`Cek status: \`${prefix}togglesaluran\``),
-      "togglesaluran"
+      claraWrap("AutoBroadcastChannel", [
+        `Status: *${enabled ? "ALL ON" : "ALL OFF"}*`,
+        `Total: *${count} event*`,
+      ].join("\n")) + "\n\n" +
+      `Cek status: ${prefix}autobroadcastchannel`,
+      "autobroadcastchannel"
     );
   }
 
@@ -103,31 +101,32 @@ async function handler(m, { sock, config: botConfig }) {
     return sendReplyWithNav(
       sock,
       m,
-      claraWrap("Toggle Saluran", "🔔") + "\n\n" +
-      claraWrap("TOGGLE BERHASIL", [
-        `◦ Event: *${NOTIFY_EVENTS[subCmd]}*`,
-        `◦ Status: *${newVal ? "ON" : "OFF"}*`,
-      ]) + "\n\n" +
-      tipText(`${newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan"}`) + "\n" +
-      tipText(`Cek semua: \`${prefix}togglesaluran\``),
-      "togglesaluran"
+      claraWrap("AutoBroadcastChannel", [
+        `Event: *${NOTIFY_EVENTS[subCmd]}*`,
+        `Status: *${newVal ? "ON" : "OFF"}*`,
+      ].join("\n")) + "\n\n" +
+      (newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan") + "\n" +
+      `Cek semua: ${prefix}autobroadcastchannel`,
+      "autobroadcastchannel"
     );
   }
 
   // Unknown event
   let availableList = "";
   for (const [key, label] of Object.entries(NOTIFY_EVENTS)) {
-    availableList += `\`${key}\` — ${label}\n`;
+    availableList += `${key} - ${label}\n`;
   }
 
   return sendReplyWithNav(
     sock,
     m,
-    claraWrap("Toggle Saluran", [`Event: *${subCmd}*`,
-      `Tidak ada dalam daftar toggle`].join("\n")) + "\nEVENT TERSEDIA:\n\n" +
+    claraWrap("AutoBroadcastChannel", [
+      `Event: *${subCmd}*`,
+      `Tidak ada dalam daftar`,
+    ].join("\n")) + "\nEVENT TERSEDIA:\n\n" +
     availableList +
-    "\n" + tipText(`Contoh: \`${prefix}togglesaluran sewaRegister\``),
-    "togglesaluran"
+    "\nContoh: " + prefix + "autobroadcastchannel sewaRegister",
+    "autobroadcastchannel"
   );
 }
 
