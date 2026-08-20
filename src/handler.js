@@ -286,7 +286,25 @@ async function messageHandler(msg, sock) {
       if (config.dev?.debugLog) logger.error("registration", e.message);
     }
 
-    // Captcha session handler (daftarotomatis captcha verification)
+    // VN Captcha Interrogation: jika user lagi dalam sesi ujian suara, verify VN
+  if (!m.isCommand && !m.fromMe) {
+    try {
+      const { verifyVnCaptcha, hasVnCaptchaChallenge, isVnCaptchaBlocked } = await import("../plugins/owner/vncaptcha.js");
+      const senderJid = m.key?.remoteJid || m.sender;
+      if (typeof isVnCaptchaBlocked === "function" && isVnCaptchaBlocked(senderJid)) {
+        await sock.sendMessage(senderJid, { text: "Nomor diblokir 24 jam karena gagal verifikasi suara. Coba lagi besok." });
+        return;
+      }
+      if (typeof hasVnCaptchaChallenge === "function" && hasVnCaptchaChallenge(senderJid)) {
+        const vnResult = await verifyVnCaptcha(m, sock);
+        if (vnResult) return;
+      }
+    } catch (e) {
+      console.error("[VNCaptcha] Hook error:", e.message);
+    }
+  }
+
+  // Captcha session handler (daftarotomatis captcha verification)
     try {
       const { captchaAnswerHandler } = await import("./../plugins/user/daftarotomatis.js");
       if (typeof captchaAnswerHandler === "function") {
