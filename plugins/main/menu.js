@@ -1,12 +1,18 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// menu.js — Menu utama dengan 6 variant tampilan
+// Thumbnail: assets/image/nova-thumbnail.jpg (via getStaticThumbnail)
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import {
   prepareWAMessageMedia,
   generateWAMessageFromContent,
-  proto,
 } from "nova";
-import _sharp from "sharp";
-import { getMenuImage, getMenuThumbnail, getAssetBuffer, getStaticThumbnail, syncMenuImageFromDb } from "../../src/lib/nova-asset-manager.js";
+import sharp from "sharp";
+import {
+  getMenuImage,
+  getAssetBuffer,
+  getStaticThumbnail,
+  syncMenuImageFromDb,
+} from "../../src/lib/nova-asset-manager.js";
 import config from "../../config.js";
 import {
   getImportantDay,
@@ -21,15 +27,10 @@ import {
 import fs from "fs";
 import os from "os";
 import path from "path";
-
-function getSharp() {
-  return _sharp;
-}
 import axios from "axios";
-import sharp from "sharp";
 import { getWeatherAddress, getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
-import {
-  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { isNavButtonsEnabled } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "menu",
@@ -47,16 +48,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const CATEGORY_EMOJIS = {
-  owner: "👑", main: "🏠", utility: "🔧", fun: "🎮", group: "👥",
-  download: "📥", search: "🔍", tools: "🛠️", sticker: "🖼️", ai: "🤖",
-  game: "🎯", rpg: "🗡️", media: "🎬", info: "ℹ️", religi: "☪️",
-  panel: "🖥️", user: "📊", linode: "☁️", random: "🎲", canvas: "🎨",
-  vps: "🌊", store: "🏪", premium: "💎", convert: "🔄", economy: "💰",
-  cek: "📋", ephoto: "🎨", jpm: "📢", pushkontak: "📱",
-};
-
-// ── Weton (Javanese 5-day cycle) ──
+// ── Helper: Weton (Javanese 5-day cycle) ──
 function getWeton(date = new Date()) {
   const wetonDays = ["Pahing", "Pon", "Wage", "Kliwon", "Legi"];
   const refDate = new Date(1900, 0, 1);
@@ -64,7 +56,7 @@ function getWeton(date = new Date()) {
   return wetonDays[((diffDays % 5) + 5) % 5];
 }
 
-// ── Islamic (Hijri) date ──
+// ── Helper: Islamic (Hijri) date ──
 function getIslamicDate(date = new Date()) {
   try {
     return new Intl.DateTimeFormat("id-ID-u-ca-islamic", {
@@ -73,8 +65,72 @@ function getIslamicDate(date = new Date()) {
   } catch { return "-"; }
 }
 
+// ── Helper: Format bytes ──
+function formatBytes(b) {
+  return (b / 1024 / 1024 / 1024).toFixed(2) + " GB";
+}
 
-// ── Build menu text (defaultMenu template) ──
+// ── Category ordering & display names ──
+const CATEGORY_ORDER = [
+  "ai", "sticker", "download", "fun", "canvas", "tools",
+  "game", "rpg", "media", "search", "group", "main",
+  "utility", "religi", "info", "cek", "economy", "user",
+  "random", "premium", "ephoto", "jpm", "pushkontak",
+  "panel", "owner", "store",
+];
+
+const CATEGORY_NAMES = {
+  ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
+  canvas: "Canvas", tools: "Tools", game: "Game", rpg: "RPG",
+  media: "Media", search: "Search", group: "Group", main: "Main",
+  utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
+  economy: "Economy", user: "User", random: "Random", premium: "Premium",
+  ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
+  panel: "Panel", owner: "Owner", store: "Store",
+};
+
+// ── Build category rows for single_select ──
+function buildCategoryRows(prefix, m) {
+  const allCats = getCasesByCategory();
+  return Object.keys(allCats)
+    .sort((a, b) => {
+      const ia = CATEGORY_ORDER.indexOf(a), ib = CATEGORY_ORDER.indexOf(b);
+      return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+    })
+    .filter(cat => {
+      if (cat === "owner" && !m.isOwner) return false;
+      return (allCats[cat] || []).length > 0;
+    })
+    .map(cat => ({
+      title: CATEGORY_NAMES[cat] || cat.charAt(0).toUpperCase() + cat.slice(1),
+      id: `${prefix}menukategori ${cat}`,
+    }));
+}
+
+// ── Standard 6-button layout ──
+function buildButtons(prefix, includeCategorySelect = false) {
+  if (includeCategorySelect) {
+    const catRows = buildCategoryRows(prefix, { isOwner: true });
+    return [
+      { name: "single_select", buttonParamsJson: JSON.stringify({ title: "Kategori", sections: [{ title: "Pilih Kategori", rows: catRows }] }) },
+      { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Info Lainnya", id: `${prefix}infov2` }) },
+      { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "All Menu", id: `${prefix}allmenu` }) },
+      { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Tanya AI", id: `${prefix}aihelp` }) },
+      { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Rules", id: `${prefix}rules` }) },
+      { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Owner", id: `${prefix}owner` }) },
+    ];
+  }
+  return [
+    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Kategori", id: `${prefix}menukategori` }) },
+    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Info Lainnya", id: `${prefix}infov2` }) },
+    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "All Menu", id: `${prefix}allmenu` }) },
+    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Tanya AI", id: `${prefix}aihelp` }) },
+    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Rules", id: `${prefix}rules` }) },
+    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Owner", id: `${prefix}owner` }) },
+  ];
+}
+
+// ── Build menu text ──
 async function buildMenuText(m, botConfig, db, uptime, sock) {
   const prefix = botConfig.command?.prefix || ".";
   const user = db.getUser(m.sender);
@@ -96,8 +152,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
   const totalPremium = Object.values(allUsers).filter(u => u.isPremium).length;
   const memUsage = process.memoryUsage();
   const totalMem = os.totalmem();
-  const freeMem = os.freemem();
-  const usedMem = totalMem - freeMem;
+  const usedMem = totalMem - os.freemem();
   const memPercent = ((usedMem / totalMem) * 100).toFixed(1);
   const cpuModel = os.cpus()[0]?.model || "Unknown";
   const cpuCores = os.cpus().length;
@@ -105,7 +160,6 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
   const hostname = os.hostname();
   const serverUptime = formatUptime(os.uptime());
   const loadAvg = os.loadavg()[0].toFixed(2);
-  const formatBytes = (b) => (b / 1024 / 1024 / 1024).toFixed(2) + " GB";
   const userExp = user?.exp || 0;
   const userLevel = Math.floor(userExp / 20000) + 1;
   const expMin = (userLevel - 1) * 20000;
@@ -117,7 +171,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
   const more = String.fromCharCode(8206);
   const readMore = more.repeat(4001);
 
-  let txt = `╔┈┈「 *Info User* 」
+  return `╔┈┈「 *Info User* 」
 ╎
 ╎❏ *Nama:*  ${m.pushName || "User"}
 ╎❏ *Nomor:* @${m.sender.split("@")[0]}
@@ -168,12 +222,10 @@ ${readMore}
 ╎ぎ ${prefix}tanyaai
 ╚┈┈┈┈┈┈┈┈┈❖
 `;
-  return txt;
 }
 
-function getContextInfo(botConfig, m, thumbBuffer, renderLargerThumbnail = false) {
-  const saluranId = botConfig.saluran?.id || "120363400911374213@newsletter";
-  const saluranName = botConfig.saluran?.name || botConfig.bot?.name || "Nova AI Whatsapp Bot";
+// ── Context info for externalAdReply ──
+function getContextInfo(botConfig, m, thumbBuffer, renderLarger = false) {
   const saluranLink = botConfig.saluran?.link || "";
   const ctx = {
     mentionedJid: [m.sender],
@@ -186,20 +238,21 @@ function getContextInfo(botConfig, m, thumbBuffer, renderLargerThumbnail = false
       sourceUrl: saluranLink,
       previewType: "PHOTO",
       showAdAttribution: false,
-      renderLargerThumbnail,
+      renderLargerThumbnail: renderLarger,
       thumbnail: thumbBuffer,
     };
   }
   return ctx;
 }
 
+// ── Verified quoted message ──
 function getVerifiedQuoted(botConfig, m) {
   if (m) {
     return {
       key: { participant: `${m.sender}`, remoteJid: `status@broadcast` },
       message: {
         contactMessage: {
-          displayName: `🍂 Yth. ${m.pushName}`,
+          displayName: `Yth. ${m.pushName}`,
           vcard: `BEGIN:VCARD\nVERSION:3.0\nN:XL;ttname,;;;\nFN:ttname\nitem1.TEL;waid=${m.sender.split("@")[0]}:${m.sender.split("@")[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
           sendEphemeral: true,
         },
@@ -210,7 +263,7 @@ function getVerifiedQuoted(botConfig, m) {
     key: { participant: `0@s.whatsapp.net`, remoteJid: `status@broadcast` },
     message: {
       contactMessage: {
-        displayName: `🪸 ${botConfig.bot?.name}`,
+        displayName: `${botConfig.bot?.name}`,
         vcard: `BEGIN:VCARD\nVERSION:3.0\nN:XL;ttname,;;;\nFN:ttname\nitem1.TEL;waid=13135550002:+1 (313) 555-0002\nitem1.X-ABLabel:Ponsel\nEND:VCARD`,
         sendEphemeral: true,
       },
@@ -218,18 +271,23 @@ function getVerifiedQuoted(botConfig, m) {
   };
 }
 
+// ── Main handler ──
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   await m.react("🕐");
   syncMenuImageFromDb(db);
   const prefix = botConfig.command?.prefix || ".";
   const savedVariant = db.setting("menuVariant");
   const menuVariant = savedVariant || botConfig.ui?.menuVariant || 3;
-  const groupData = m.isGroup ? db.getGroup(m.chat) || {} : {};
-  const botMode = groupData.botMode || "md";
   const text = await buildMenuText(m, botConfig, db, uptime, sock);
   const _weatherFooter = await getWeatherFooter().catch(() => null);
   const _weatherBlock = _weatherFooter ? `${_weatherFooter}\n\n` : "";
+  const greeting = getTimeGreeting();
+  const navEnabled = isNavButtonsEnabled(m.chat);
+  const botName = config.bot?.name || "Nova AI Whatsapp Bot";
+  const botVersion = `v${config.bot?.version || "1.0.0"}`;
+  const footerText = `${botName} | Nova Ai WhatsApp Bot`;
 
+  // Load assets
   let imageBuffer = null;
   let thumbBuffer = null;
   try {
@@ -237,29 +295,20 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     thumbBuffer = await getStaticThumbnail("nova-thumbnail");
   } catch (e) { console.error("Gagal load assets:", e.message); }
 
-  const saluranId = botConfig.saluran?.id || "120363400911374213@newsletter";
-  const saluranName = botConfig.saluran?.name || botConfig.bot?.name || "Nova AI Whatsapp Bot";
-  const greeting = getTimeGreeting();
-
-
   try {
     switch (menuVariant) {
+      // ── V1: Video/GIF header ──
       case 1: {
-        // V1: Video/GIF header - support URL or local file
         const menuVideoUrl = botConfig.ui?.menuVideoUrl || config.ui?.menuVideoUrl || "";
         let mediaV1;
         if (menuVideoUrl && /^https?:\/\//i.test(menuVideoUrl)) {
-          // Load from URL
           try {
-            const { default: axios } = await import("axios");
             const videoRes = await axios.get(menuVideoUrl, { responseType: "arraybuffer", timeout: 15000 });
             mediaV1 = await prepareWAMessageMedia(
               { video: Buffer.from(videoRes.data), gifPlayback: true },
               { upload: sock.waUploadToServer },
             );
           } catch (e) {
-            console.error("[Menu V1] Video URL fetch failed:", e.message);
-            // Fallback to local file
             const localVid = fs.existsSync(config.assets["nova-mp4"]) ? fs.readFileSync(config.assets["nova-mp4"]) : fs.readFileSync(config.assets["nova"]);
             mediaV1 = await prepareWAMessageMedia(
               { video: localVid, gifPlayback: true },
@@ -267,7 +316,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             );
           }
         } else {
-          // Load from local file (assets/video/)
           const localVideoPath = fs.existsSync(config.assets["nova-mp4"]) ? config.assets["nova-mp4"] : config.assets["nova"];
           mediaV1 = await prepareWAMessageMedia(
             { video: fs.readFileSync(localVideoPath), gifPlayback: true },
@@ -284,23 +332,16 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                 videoMessage: mediaV1.videoMessage,
               },
               body: { text: _weatherBlock + text },
-              footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
+              footer: { text: `${greeting} | ${footerText}` },
               contextInfo: {
                 isForwarded: false, forwardingScore: 9,
                 participant: "0@s.whatsapp.net",
-                quotedMessage: { conversation: `${config.bot?.name}` },
+                quotedMessage: { conversation: botName },
                 mentionedJid: [m.sender],
               },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({ limited_time_offer: { text: `${greeting}`, expiration_time: Date.now() + 1000000 } }),
-                buttons: [
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Kategori", id: `${prefix}menukategori` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Info Lainnya", id: `${prefix}infov2` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "All Menu", id: `${prefix}allmenu` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Tanya AI", id: `${prefix}aihelp` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Rules", id: `${prefix}rules` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Owner", id: `${prefix}owner` }) },
-                ],
+                buttons: buildButtons(prefix),
               },
             },
           } },
@@ -308,8 +349,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         break;
       }
 
+      // ── V2: Location thumbnail header ──
       case 2: {
-        const thumbV2 = await getMenuThumbnail("nova");
+        const thumbV2 = await getStaticThumbnail("nova-thumbnail");
         await sock.relayMessage(m.chat, {
           viewOnceMessage: { message: {
             messageContextInfo: {},
@@ -319,29 +361,22 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                 hasMediaAttachment: true,
                 locationMessage: {
                   degreesLatitude: 0, degreesLongitude: 0,
-                  name: config.bot?.name || "Nova AI Whatsapp Bot",
-                  address: `v${config.bot?.version || "1.0.0"}`,
+                  name: botName,
+                  address: botVersion,
                   jpegThumbnail: thumbV2,
                 },
               },
               body: { text: _weatherBlock + text },
-              footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
+              footer: { text: `${greeting} | ${footerText}` },
               contextInfo: {
                 isForwarded: false, forwardingScore: 9,
                 participant: "0@s.whatsapp.net",
-                quotedMessage: { conversation: `${config.bot?.name}` },
+                quotedMessage: { conversation: botName },
                 mentionedJid: [m.sender],
               },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({ limited_time_offer: { text: `${greeting}`, expiration_time: Date.now() + 1000000 } }),
-                buttons: [
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Kategori", id: `${prefix}menukategori` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Info Lainnya", id: `${prefix}infov2` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "All Menu", id: `${prefix}allmenu` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Tanya AI", id: `${prefix}aihelp` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Rules", id: `${prefix}rules` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Owner", id: `${prefix}owner` }) },
-                ],
+                buttons: buildButtons(prefix),
               },
             },
           } },
@@ -349,39 +384,10 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         break;
       }
 
+      // ── V3: Location thumbnail + single_select kategori (default) ──
       case 3: {
-        const thumbV3 = await getMenuThumbnail("nova");
-        // Build kategori popup dari case system
-        const allCats = getCasesByCategory();
-        const categoryOrder = [
-          "ai", "sticker", "download", "fun", "canvas", "tools",
-          "game", "rpg", "media", "search", "group", "main",
-          "utility", "religi", "info", "cek", "economy", "user",
-          "random", "premium", "ephoto", "jpm", "pushkontak",
-          "panel", "owner", "store",
-        ];
-        const catNames = {
-          ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
-          canvas: "Canvas", tools: "Tools", game: "Game", rpg: "RPG",
-          media: "Media", search: "Search", group: "Group", main: "Main",
-          utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
-          economy: "Economy", user: "User", random: "Random", premium: "Premium",
-          ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
-          panel: "Panel", owner: "Owner", store: "Store",
-        };
-        const catRows = Object.keys(allCats)
-          .sort((a, b) => {
-            const ia = categoryOrder.indexOf(a), ib = categoryOrder.indexOf(b);
-            return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
-          })
-          .filter(cat => {
-            if (cat === "owner" && !m.isOwner) return false;
-            return (allCats[cat] || []).length > 0;
-          })
-          .map(cat => ({
-            title: catNames[cat] || cat.charAt(0).toUpperCase() + cat.slice(1),
-            id: `${prefix}menukategori ${cat}`,
-          }));
+        const thumbV3 = await getStaticThumbnail("nova-thumbnail");
+        const catRows = buildCategoryRows(prefix, m);
         const msg3 = generateWAMessageFromContent(m.chat, {
           viewOnceMessage: {
             message: {
@@ -391,23 +397,16 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                   hasMediaAttachment: true,
                   locationMessage: {
                     degreesLatitude: 0, degreesLongitude: 0,
-                    name: config.bot?.name || "Nova AI Whatsapp Bot",
-                    address: (await getWeatherAddress()) || `v${config.bot?.version || "1.0.0"}`,
+                    name: botName,
+                    address: (await getWeatherAddress()) || botVersion,
                     jpegThumbnail: thumbV3,
                   },
                 },
                 body: { text: _weatherBlock + text },
-                footer: { text: "🌸 Silahkan pilih dari salah satu tombol di bawah" },
+                footer: { text: "Silahkan pilih dari salah satu tombol di bawah" },
                 contextInfo: { mentionedJid: [m.sender], isForwarded: false },
                 nativeFlowMessage: {
-                  buttons: [
-                    { name: "single_select", buttonParamsJson: JSON.stringify({ title: "Kategori", sections: [{ title: "Pilih Kategori", rows: catRows }] }) },
-                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Info Lainnya", id: `${prefix}infov2` }) },
-                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "All Menu", id: `${prefix}allmenu` }) },
-                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Tanya AI", id: `${prefix}aihelp` }) },
-                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Rules", id: `${prefix}rules` }) },
-                    { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Owner", id: `${prefix}owner` }) },
-                  ],
+                  buttons: buildButtons(prefix, true),
                 },
               },
             },
@@ -417,6 +416,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         break;
       }
 
+      // ── V4: Video header (local only) ──
       case 4: {
         const media4 = await prepareWAMessageMedia(
           { video: fs.existsSync(config.assets["nova-mp4"]) ? fs.readFileSync(config.assets["nova-mp4"]) : fs.readFileSync(config.assets["nova"]), gifPlayback: true },
@@ -428,17 +428,11 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             interactiveMessage: {
               header: { title: "", subtitle: "", hasMediaAttachment: true, videoMessage: media4.videoMessage },
               body: { text: _weatherBlock + text },
-              footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
-              contextInfo: { isForwarded: false, forwardingScore: 9, participant: "0@s.whatsapp.net", quotedMessage: { conversation: `${config.bot?.name}` }, mentionedJid: [m.sender] },
+              footer: { text: footerText },
+              contextInfo: { isForwarded: false, forwardingScore: 9, participant: "0@s.whatsapp.net", quotedMessage: { conversation: botName }, mentionedJid: [m.sender] },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({}),
-                buttons: [
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Kategori", id: `${prefix}menukategori` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "All Menu", id: `${prefix}allmenu` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Tanya AI", id: `${prefix}aihelp` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Rules", id: `${prefix}rules` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Owner", id: `${prefix}owner` }) },
-                ],
+                buttons: buildButtons(prefix),
               },
             },
           } },
@@ -447,26 +441,20 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         break;
       }
 
+      // ── V5: Location thumbnail (verified quoted) ──
       case 5: {
-        const thumbV5 = await getMenuThumbnail("nova");
+        const thumbV5 = await getStaticThumbnail("nova-thumbnail");
         const msg5 = generateWAMessageFromContent(m.chat, {
           viewOnceMessage: { message: {
             messageContextInfo: {},
             interactiveMessage: {
-              header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova AI Whatsapp Bot", address: `v${config.bot?.version || "1.0.0"}`, jpegThumbnail: thumbV5 } },
+              header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: botName, address: botVersion, jpegThumbnail: thumbV5 } },
               body: { text: _weatherBlock + text },
-              footer: { text: `🌸 ${config.bot?.name} | Nova Ai WhatsApp Bot` },
+              footer: { text: footerText },
               contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({}),
-                buttons: [
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Kategori", id: `${prefix}menukategori` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Info Lainnya", id: `${prefix}infov2` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "All Menu", id: `${prefix}allmenu` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Tanya AI", id: `${prefix}aihelp` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Rules", id: `${prefix}rules` }) },
-                  { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Owner", id: `${prefix}owner` }) },
-                ],
+                buttons: buildButtons(prefix),
               },
             },
           } },
@@ -475,24 +463,25 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         break;
       }
 
+      // ── V6: Weather address header ──
       case 6: {
-        const thumbV6 = await getMenuThumbnail("nova");
-        async function weatherMenu(city = "Jakarta") {
-          try {
-            const geo = await axios.get(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`, { timeout: 5000 });
-            const loc = geo.data.results?.[0];
-            if (!loc) return "Cuaca tidak tersedia";
+        const thumbV6 = await getStaticThumbnail("nova-thumbnail");
+        let weatherStr = "Cuaca tidak tersedia";
+        try {
+          const geo = await axios.get("https://geocoding-api.open-meteo.com/v1/search?name=Jakarta&count=1", { timeout: 5000 });
+          const loc = geo.data.results?.[0];
+          if (loc) {
             const weather = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m,weather_code`, { timeout: 5000 });
             const c = weather.data.current;
             const kondisi = { 0: "Cerah", 1: "Cerah Berawan", 2: "Berawan", 3: "Mendung", 45: "Berkabut", 51: "Gerimis", 61: "Hujan Ringan", 63: "Hujan", 95: "Badai Petir" }[c.weather_code] || "Tidak diketahui";
-            return `${kondisi} | ${Math.round(c.temperature_2m)}°C\n${loc.name}`;
-          } catch { return "Cuaca tidak tersedia"; }
-        }
+            weatherStr = `${kondisi} | ${Math.round(c.temperature_2m)}°C ${loc.name}`;
+          }
+        } catch {}
         const msg6 = generateWAMessageFromContent(m.chat, {
           viewOnceMessage: { message: {
             messageContextInfo: {},
             interactiveMessage: {
-              header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: config.bot?.name || "Nova AI Whatsapp Bot", address: await weatherMenu(), jpegThumbnail: thumbV6 } },
+              header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: botName, address: weatherStr, jpegThumbnail: thumbV6 } },
               body: { text: _weatherBlock + text },
               contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
               nativeFlowMessage: {
@@ -509,8 +498,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         break;
       }
 
+      // ── Default: plain text (claraWrap) ──
       default:
-        await m.reply(claraWrap("menu", text));
+        await m.reply(claraWrap("Menu", text));
     }
   } catch (error) {
     console.error("[Menu] Error:", error.message);
@@ -518,7 +508,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     try {
       const rawThumb = imageBuffer || thumbBuffer;
       if (rawThumb) {
-        fallbackThumb = await _sharp(rawThumb).resize(640, 360, { fit: "cover" }).toBuffer();
+        fallbackThumb = await sharp(rawThumb).resize(640, 360, { fit: "cover" }).jpeg({ quality: 80 }).toBuffer();
       }
     } catch (e) {
       fallbackThumb = thumbBuffer || imageBuffer || null;
@@ -526,11 +516,11 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     if (fallbackThumb) {
       await sock.sendMessage(m.chat, { text, contextInfo: getContextInfo(botConfig, m, fallbackThumb, true) }, { quoted: m });
     } else {
-      await m.reply(claraWrap("menu", text));
+      await m.reply(claraWrap("Menu", text));
     }
   }
 
-  // ── Audio menu (independent try-catch, runs even if menu display failed) ──
+  // ── Audio menu (independent, runs even if display failed) ──
   try {
     const audioEnabled = db.setting("audioMenu") !== false;
     if (audioEnabled) {
@@ -556,7 +546,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
           await sock.sendMessage(m.chat, { audio: { url: audioPath }, mimetype: "audio/mpeg", ptt: false }, { quoted: m });
         }
       } else if (audioVariant === 2) {
-        const qpoll = { key: { participant: "0@s.whatsapp.net" }, message: { pollCreationMessage: { name: config.bot.name } } };
+        const qpoll = { key: { participant: "0@s.whatsapp.net" }, message: { pollCreationMessage: { name: botName } } };
         try {
           const tempDir = path.join(process.cwd(), "temp");
           if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
