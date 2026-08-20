@@ -6,7 +6,7 @@ import { payment, donasi } from "./config/setpayment.js";
 //  utamakan baca object config sampai bawah
 const config = {
   info: {
-    website: "https://firefly.maiku.my.id",
+    website: "https://itsmee_aizat.oneapp.dev/",
     grupwa: "https://chat.whatsapp.com/xxxx",
   },
 
