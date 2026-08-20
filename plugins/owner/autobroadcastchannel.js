@@ -12,11 +12,11 @@ import { claraHeader,
 
 const pluginConfig = {
   name: "autobroadcastchannel",
-  alias: ["autobcsaluran", "autobc"],
+  alias: ["autobcsaluran", "autobc", "autobroadcast", "autosaluran", "autobcchannel"],
   category: "owner",
   description: "Auto broadcast saluran — toggle on/off semua event notifikasi saluran",
-  usage: ".autobroadcastchannel (lihat status)\n.autobroadcastchannel all on/off\n.autobroadcastchannel <event> (toggle per event)",
-  example: ".autobroadcastchannel all on\n.autobroadcastchannel sewaRegister",
+  usage: ".autobroadcastchannel (lihat status)\n.autobroadcastchannel all on/off\n.autobroadcastchannel <event> on/off",
+  example: ".autobroadcastchannel all on\n.autobroadcastchannel userBanned on",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
     for (const [key, info] of Object.entries(statuses)) {
       const status = info.enabled ? "ON" : "OFF";
       text += `${info.enabled ? "ON" : "OFF"} *${info.label}*\n`;
-      text += `Toggle: ${prefix}autobroadcastchannel ${key}\n\n`;
+      text += `Toggle: ${prefix}autobroadcastchannel ${key} on/off\n\n`;
       if (info.enabled) onCount++;
       else offCount++;
     }
@@ -90,11 +90,22 @@ async function handler(m, { sock, config: botConfig }) {
     );
   }
 
-  // Toggle specific event
+  // Toggle specific event — support explicit on/off ATAU flip
   if (NOTIFY_EVENTS[subCmd]) {
     const statuses = getAllNotifyStatus();
     const current = statuses[subCmd].enabled;
-    const newVal = !current;
+
+    // Cek apakah ada argumen on/off eksplisit
+    const explicitArg = args[1]?.toLowerCase();
+    let newVal;
+    if (explicitArg === "on") {
+      newVal = true;
+    } else if (explicitArg === "off") {
+      newVal = false;
+    } else {
+      // Tanpa on/off → flip state
+      newVal = !current;
+    }
 
     setNotifyEnabled(subCmd, newVal);
 
@@ -125,7 +136,7 @@ async function handler(m, { sock, config: botConfig }) {
       `Tidak ada dalam daftar`,
     ].join("\n")) + "\nEVENT TERSEDIA:\n\n" +
     availableList +
-    "\nContoh: " + prefix + "autobroadcastchannel sewaRegister",
+    "\nContoh: " + prefix + "autobroadcastchannel userBanned on",
     "autobroadcastchannel"
   );
 }
