@@ -56,7 +56,8 @@ const config = {
     "nova-goodbye": "./assets/image/nova-goodbye.jpg",
     "nova-welcome": "./assets/image/nova-welcome.jpg",
     "channel-banner": "./assets/image/channel-banner.png",
-    "test": "./assets/image/test.webp"
+    "test": "./assets/image/test.webp",
+    "aizat-store-qris": "./assets/image/aizat-store-qris.jpg"
   },
 
   mode: "self", // Default self pas pairing baru
@@ -72,7 +73,7 @@ const config = {
   },
 
   payment: {
-    qrisUrl: "",
+    qrisUrl: "./assets/image/aizat-store-qris.jpg",
     methods: [
       { name: "Dana", number: "", holder: "" },
       { name: "GoPay", number: "", holder: "" },
@@ -99,7 +100,7 @@ const config = {
       "Fitur baru lebih cepat",
       "Priority support",
     ],
-    qris: "https://imgdrop.web.id/KodpV.webp",
+    qris: "./assets/image/aizat-store-qris.jpg",
   },
 
   energi: {
