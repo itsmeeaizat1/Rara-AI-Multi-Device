@@ -19,7 +19,7 @@ const pluginConfig = {
 };
 
 import fs from "node:fs";
-const andarazConfig = JSON.parse(fs.readFileSync(new URL("../../config/andaraz-api.json", import.meta.url), "utf8"));
+const andarazConfig = JSON.parse(fs.readFileSync(new URL("../../../src/lib/config/andaraz-api.json", import.meta.url), "utf8"));
 const API_KEY = andarazConfig.apikey;
 const API_BASE = "https://api.andaraz.com/api/jobstreet";
 

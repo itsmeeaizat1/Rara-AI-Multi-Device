@@ -21,7 +21,7 @@ const pluginConfig = {
 
 const API_BASE = sankaConfig.baseUrl;
 import fs from "node:fs";
-const sankaConfig = JSON.parse(fs.readFileSync(new URL("../../config/sankavollerei-api.json", import.meta.url), "utf8"));
+const sankaConfig = JSON.parse(fs.readFileSync(new URL("../../../src/lib/config/sankavollerei-api.json", import.meta.url), "utf8"));
 const API_KEY = sankaConfig.apikey;
 
 async function handler(m, { sock }) {
