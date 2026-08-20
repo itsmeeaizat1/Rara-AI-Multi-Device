@@ -29,7 +29,7 @@ const pluginConfig = {
   category: "owner",
   description: "Toggle AI auto VN interaction (Gemini Live style) — VN masuk, AI balas suara neural natural",
   usage: ".aiautointeractionvn on/off — Toggle\n.aiautointeractionvn status — Cek status\n.aiautointeractionvn voice <id> — Pilih voice neural\n.aiautointeractionvn lang <kode> — Set bahasa\n.aiautointeractionvn mode api/free — API=Gemini, Free=Edge Neural TTS",
-  example: ".aiautointeractionvn on\n.aiautointeractionvn voice ardi",
+  example: ".aiautointeractionvn on\n.aiautointeractionvn voice gadis",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -80,7 +80,7 @@ async function handler(m, { sock, config: botConfig }) {
       cfg[gid] = {
         enabled: true,
         mode: cfg[gid]?.mode || "free",
-        voice: cfg[gid]?.voice || "ardi",
+        voice: cfg[gid]?.voice || "gadis",
         lang: cfg[gid]?.lang || "id",
       };
       db.db.write();
@@ -182,7 +182,7 @@ async function handler(m, { sock, config: botConfig }) {
     } else {
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
       const mode = cfg[gid]?.mode || "free";
-      const voiceId = cfg[gid]?.voice || "ardi";
+      const voiceId = cfg[gid]?.voice || "gadis";
       const voiceInfo = VOICE_OPTIONS.find(v => v.id === voiceId);
       const lang = cfg[gid]?.lang || "id";
       const text = claraWrap("AI Auto VN Interaction", [
@@ -421,7 +421,7 @@ export async function handleAiAutoVnInteraction(m, sock) {
     if (m.fromMe) return false;
     if (m.isCommand) return false;
 
-    const voiceId = cfg.voice || "ardi";
+    const voiceId = cfg.voice || "gadis";
     const botConfig = (await import("../../config.js")).default;
 
     // Set "recording" presence — biar kelihatan hidup
