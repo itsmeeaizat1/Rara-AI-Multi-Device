@@ -268,11 +268,10 @@ async function handler(m, { sock, config: botConfig }) {
 export async function handleAutoOcrSolve(m, sock) {
   try {
     const db = getDatabase();
-    if (!db.db.data.autoOcrSolve) return true; // default ON
+    if (!db.db.data.autoOcrSolve) return false;
     const gid = m.key?.remoteJid || "";
     const cfg = db.db.data.autoOcrSolve[gid];
-    if (!cfg) return true; // default ON
-    if (cfg.enabled === false) return false; // explicitly OFF
+    if (!cfg || !cfg.enabled) return false;
 
     const msg = m.message || {};
     const imageMsg = msg.imageMessage || m.quoted?.msg?.imageMessage;
@@ -369,12 +368,11 @@ export async function handleAutoOcrSolve(m, sock) {
 export function isAutoOcrEnabled(m, sock) {
   try {
     const db = getDatabase();
-    if (!db.db.data.autoOcrSolve) return true; // default ON
+    if (!db.db.data.autoOcrSolve) return false;
     const gid = m.key?.remoteJid || "";
     const cfg = db.db.data.autoOcrSolve[gid];
-    // If no config exists for this chat, default ON
-    if (!cfg) return true;
-    return cfg.enabled !== false; // ON unless explicitly set to false
+    if (!cfg) return false;
+    return cfg.enabled === true;
   } catch {
     return false;
   }
