@@ -1239,62 +1239,131 @@ async function startConnection(options = {}) {
         }
       }
 
-      // === Auto-Collect Stiker (simpan stiker yang lewat di grup) ===
+      // === Stiker Handler: AI Vision auto-tag + Saveall raw collect ===
       try {
         if (isGroup && !msg.key.fromMe && msgType === "stickerMessage") {
           const { getDatabase: _acDb } = await import("./lib/nova-database.js");
           const _acDbInst = _acDb();
-          const _acCollect = _acDbInst.setting("autoreactstickerAutosave") || false;
-          if (_acCollect) {
+          const _acAutosave = _acDbInst.setting("autoreactstickerAutosave") || false;
+          const _acSaveall = _acDbInst.setting("autoreactstickerSaveall") || false;
+
+          if (_acAutosave || _acSaveall) {
             const fs_ac = await import("fs");
             const path_ac = await import("path");
+            const crypto_ac = await import("crypto");
             const _acDir = path_ac.join(process.cwd(), "assets", "stickers");
             if (!fs_ac.existsSync(_acDir)) fs_ac.mkdirSync(_acDir, { recursive: true });
 
             // Download stiker
             const _acBuffer = await currentSock.downloadMediaMessage(msg).catch(() => null);
             if (_acBuffer && _acBuffer.length > 0 && _acBuffer.length < 500 * 1024) {
-              // Hash sederhana untuk dedup (cegah stiker duplikat)
-              const crypto_ac = await import("crypto");
               const _acHash = crypto_ac.createHash("md5").update(_acBuffer).digest("hex");
 
-              // Cek duplikat
-              const _acExisting = _acDbInst.setting("autoreactstickerCollection") || [];
-              const _acAlreadyExists = _acExisting.some((s) => s.hash === _acHash);
-              if (!_acAlreadyExists) {
-                // Max 500 stiker — buang yang lama kalau penuh
-                let _acCollection = [..._acExisting];
-                if (_acCollection.length >= 500) {
-                  // Hapus 50 stiker tertua
-                  const _toRemove = _acCollection.splice(0, 50);
-                  for (const _old of _toRemove) {
-                    const _oldPath = path_ac.join(_acDir, _old.file);
-                    if (fs_ac.existsSync(_oldPath)) {
-                      try { fs_ac.unlinkSync(_oldPath); } catch {}
+              // Cek duplikat di collection
+              const _acExistingCol = _acDbInst.setting("autoreactstickerCollection") || [];
+              const _acExistingTrg = _acDbInst.setting("autoreactstickerTriggers") || [];
+              const _acAlreadyInCol = _acExistingCol.some((s) => s.hash === _acHash);
+              const _acAlreadyInTrg = _acExistingTrg.some((t) => t.hash === _acHash);
+
+              if (!_acAlreadyInCol && !_acAlreadyInTrg) {
+                // Mode 1: AI Vision auto-tag
+                if (_acAutosave) {
+                  // Call AI Vision untuk tag stiker
+                  let _aiTriggers = [];
+                  try {
+                    const { getApiKey: _aiGetKey } = await import("./lib/nova-api-keys.js");
+                    const _gemKey = _aiGetKey("gemini");
+                    if (_gemKey) {
+                      const _b64 = _acBuffer.toString("base64");
+                      const _aiPrompt = "Lihat stiker WhatsApp ini. Berikan 3-5 kata trigger dalam bahasa Indonesia yang cocok untuk stiker ini (kata yang orang biasa ketik di chat yang relate dengan stiker ini). Hanya jawab dengan kata-kata dipisah koma, tanpa penjelasan. Contoh: wkwk, haha, lucu, pusing, marah, sedih, love, siap, ok";
+                      const _aiRes = await fetch(
+                        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + _gemKey,
+                        {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            contents: [{ parts: [
+                              { inlineData: { data: _b64, mimeType: "image/webp" } },
+                              { text: _aiPrompt },
+                            ]}],
+                            generationConfig: { temperature: 0.3, maxOutputTokens: 100 },
+                          }),
+                        }
+                      );
+                      if (_aiRes.ok) {
+                        const _aiData = await _aiRes.json();
+                        const _aiText = _aiData?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+                        _aiTriggers = _aiText.split(/[,;\n]/)
+                          .map((t) => t.trim().toLowerCase().replace(/[^a-z0-9]/g, ""))
+                          .filter((t) => t.length >= 2 && t.length <= 20)
+                          .slice(0, 5);
+                      }
                     }
+                  } catch {}
+
+                  if (_aiTriggers.length > 0) {
+                    // Simpan stiker + bind trigger dari AI
+                    const _acFileName = "sticker_ai_" + _acHash.slice(0, 8) + "_" + Date.now() + ".webp";
+                    const _acFilePath = path_ac.join(_acDir, _acFileName);
+                    fs_ac.writeFileSync(_acFilePath, _acBuffer);
+
+                    let _trgList = [..._acExistingTrg];
+                    for (const _wt of _aiTriggers) {
+                      const _ex = _trgList.findIndex((t) => t.trigger === _wt);
+                      if (_ex !== -1) {
+                        // Update existing trigger dengan stiker baru
+                        const _oldF = _trgList[_ex].stickerFile;
+                        if (_oldF && _oldF !== _acFileName) {
+                          const _op = path_ac.join(_acDir, _oldF);
+                          if (fs_ac.existsSync(_op)) { try { fs_ac.unlinkSync(_op); } catch {} }
+                        }
+                        _trgList[_ex] = { trigger: _wt, stickerFile: _acFileName, size: _acBuffer.length, hash: _acHash, source: "ai-vision" };
+                      } else {
+                        _trgList.push({ trigger: _wt, stickerFile: _acFileName, size: _acBuffer.length, hash: _acHash, source: "ai-vision" });
+                      }
+                    }
+                    _acDbInst.setting("autoreactstickerTriggers", _trgList);
+                    _acDbInst.save().catch(() => {});
+                  } else {
+                    // AI gagal → simpen ke random pool sebagai fallback
+                    let _acCol = [..._acExistingCol];
+                    if (_acCol.length >= 500) {
+                      const _rm = _acCol.splice(0, 50);
+                      for (const _o of _rm) {
+                        const _op = path_ac.join(_acDir, _o.file);
+                        if (fs_ac.existsSync(_op)) { try { fs_ac.unlinkSync(_op); } catch {} }
+                      }
+                    }
+                    const _fName = "sticker_ai_" + Date.now() + "_" + _acHash.slice(0, 8) + ".webp";
+                    fs_ac.writeFileSync(path_ac.join(_acDir, _fName), _acBuffer);
+                    _acCol.push({ file: _fName, size: _acBuffer.length, hash: _acHash, added: Date.now(), source: "ai-vision" });
+                    _acDbInst.setting("autoreactstickerCollection", _acCol);
+                    _acDbInst.save().catch(() => {});
                   }
                 }
 
-                const _acFileName = "sticker_auto_" + Date.now() + "_" + _acHash.slice(0, 8) + ".webp";
-                const _acFilePath = path_ac.join(_acDir, _acFileName);
-                fs_ac.writeFileSync(_acFilePath, _acBuffer);
-
-                _acCollection.push({
-                  file: _acFileName,
-                  size: _acBuffer.length,
-                  hash: _acHash,
-                  added: Date.now(),
-                  source: "auto-collect",
-                });
-
-                _acDbInst.setting("autoreactstickerCollection", _acCollection);
-                _acDbInst.save().catch(() => {});
+                // Mode 2: Saveall raw collect (tanpa AI)
+                if (_acSaveall && !_acAutosave) {
+                  let _acCol = [..._acExistingCol];
+                  if (_acCol.length >= 500) {
+                    const _rm = _acCol.splice(0, 50);
+                    for (const _o of _rm) {
+                      const _op = path_ac.join(_acDir, _o.file);
+                      if (fs_ac.existsSync(_op)) { try { fs_ac.unlinkSync(_op); } catch {} }
+                    }
+                  }
+                  const _fName = "sticker_raw_" + Date.now() + "_" + _acHash.slice(0, 8) + ".webp";
+                  fs_ac.writeFileSync(path_ac.join(_acDir, _fName), _acBuffer);
+                  _acCol.push({ file: _fName, size: _acBuffer.length, hash: _acHash, added: Date.now(), source: "saveall" });
+                  _acDbInst.setting("autoreactstickerCollection", _acCol);
+                  _acDbInst.save().catch(() => {});
+                }
               }
             }
           }
         }
       } catch (e) {
-        if (config.dev?.debugLog) colors.logger.debug("sticker-collect", e.message);
+        if (config.dev?.debugLog) colors.logger.debug("sticker-handler", e.message);
       }
 
       // === Auto Reaction Emoji (grup) ===

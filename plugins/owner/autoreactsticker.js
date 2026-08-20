@@ -4,16 +4,18 @@ import path from "path";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
 
 const pluginConfig = {
   name: "autoreactsticker",
   alias: ["ars", "autostickerreply", "stickerreact", "setautostiker"],
   category: "owner",
-  description: "Auto reply pesan dengan sticker — random koleksi & trigger-based",
+  description: "Auto reply pesan dengan sticker — manual trigger, AI Vision auto-tag, & saveall",
   usage:
     ".autoreactsticker on/off\n" +
-    ".autoreactsticker add (reply sticker → tambah ke random pool)\n" +
-    ".autoreactsticker set <trigger> (reply sticker → bind trigger)\n" +
+    ".autoreactsticker set <trigger> (reply sticker → bind manual)\n" +
+    ".autoreactsticker autosave on/off (AI Vision auto-tag)\n" +
+    ".autoreactsticker saveall on/off (simpan semua tanpa AI)\n" +
     ".autoreactsticker del <nomor>\n" +
     ".autoreactsticker deltrigger <trigger>\n" +
     ".autoreactsticker list\n" +
@@ -36,6 +38,57 @@ function ensureDir() {
   }
 }
 
+/**
+ * AI Vision: analisis stiker → return array trigger words
+ */
+async function aiVisionTagSticker(buffer) {
+  const geminiKey = getApiKey("gemini");
+  if (!geminiKey) return [];
+
+  try {
+    const base64 = buffer.toString("base64");
+    const prompt =
+      "Lihat stiker WhatsApp ini. Berikan 3-5 kata trigger dalam bahasa Indonesia " +
+      "yang cocok untuk stiker ini (kata yang orang biasa ketik di chat yang relate dengan stiker ini). " +
+      "Hanya jawab dengan kata-kata dipisah koma, tanpa penjelasan. " +
+      "Contoh: wkwk, haha, lucu, pusing, marah, sedih, love, siap, ok";
+
+    const res = await fetch(
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + geminiKey,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { inlineData: { data: base64, mimeType: "image/webp" } },
+                { text: prompt },
+              ],
+            },
+          ],
+          generationConfig: { temperature: 0.3, maxOutputTokens: 100 },
+        }),
+      }
+    );
+
+    if (!res.ok) return [];
+    const data = await res.json();
+    const text =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+    const triggers = text
+      .split(/[,;\n]/)
+      .map((t) => t.trim().toLowerCase().replace(/[^a-z0-9]/g, ""))
+      .filter((t) => t.length >= 2 && t.length <= 20)
+      .slice(0, 5);
+
+    return triggers;
+  } catch {
+    return [];
+  }
+}
+
 async function handler(m, { sock, args }) {
   if (!m.isOwner) {
     return m.reply(claraWrap("AutoReactSticker", "Fitur ini khusus owner!"));
@@ -54,14 +107,19 @@ async function handler(m, { sock, args }) {
     await db.save();
     await m.react("✅");
 
+    const autosave = db.setting("autoreactstickerAutosave") || false;
+    const saveall = db.setting("autoreactstickerSaveall") || false;
+
     let txt = "✅ AUTOREACT STICKER DIAKTIFKAN\n\n";
-    txt += "Bot akan auto-reply pesan dengan sticker\n\n";
     txt += "Random pool: " + collection.length + " sticker\n";
     txt += "Trigger-based: " + triggers.length + " trigger\n";
+    txt += "AI Vision autosave: " + (autosave ? "✅" : "❌") + "\n";
+    txt += "Saveall: " + (saveall ? "✅" : "❌") + "\n";
     if (collection.length === 0 && triggers.length === 0) {
       txt += "\n⚠️ Belum ada sticker!\n";
-      txt += "Tambah: reply sticker + " + m.prefix + "autoreactsticker add\n";
-      txt += "Atau set trigger: reply sticker + " + m.prefix + "autoreactsticker set <kata>";
+      txt += "Manual: reply sticker + " + m.prefix + "autoreactsticker set <kata>\n";
+      txt += "AI Vision: " + m.prefix + "autoreactsticker autosave on\n";
+      txt += "Raw collect: " + m.prefix + "autoreactsticker saveall on";
     }
     return m.reply(claraWrap("AutoReactSticker", txt));
   }
@@ -77,7 +135,99 @@ async function handler(m, { sock, args }) {
     ].join("\n")));
   }
 
-  // SET TRIGGER: reply sticker + .autoreactsticker set <trigger1,trigger2,...>
+  // AUTOSAVE (AI Vision auto-tag): .autoreactsticker autosave on/off
+  if (action === "autosave") {
+    const subArg = (args[1] || "").toLowerCase();
+    if (!subArg || !["on", "off"].includes(subArg)) {
+      const status = db.setting("autoreactstickerAutosave") || false;
+      const hasGemini = hasApiKey("gemini");
+      return m.reply(claraWrap("AutoReactSticker", [
+        "AUTOSAVE — AI VISION AUTO-TAG",
+        "",
+        "Status: " + (status ? "✅ Aktif" : "❌ Nonaktif"),
+        "Gemini API: " + (hasGemini ? "✅ Terpasang" : "❌ Belum set (.setkey gemini)"),
+        "Koleksi: " + collection.length + " sticker",
+        "",
+        "Saat ON, bot lihat stiker pakai AI Vision,",
+        "auto-assign trigger kata, lalu simpan.",
+        "",
+        "Set:",
+        "1. " + m.prefix + ".autoreactsticker autosave on",
+        "2. " + m.prefix + ".autoreactsticker autosave off",
+      ].join("\n")));
+    }
+
+    if (subArg === "on" && !hasApiKey("gemini")) {
+      return m.reply(claraWrap("AutoReactSticker", [
+        "⚠️ Gemini API Key belum diset!",
+        "",
+        "AI Vision butuh Gemini API key.",
+        "Set: " + m.prefix + ".setkey gemini <key>",
+        "Dapatkan: https://aistudio.google.com/apikey",
+      ].join("\n")));
+    }
+
+    db.setting("autoreactstickerAutosave", subArg === "on");
+    // Kalau autosave on, matikan saveall
+    if (subArg === "on") {
+      db.setting("autoreactstickerSaveall", false);
+    }
+    await db.save();
+    await m.react("✅");
+    return m.reply(claraWrap("AutoReactSticker", [
+      subArg === "on"
+        ? "✅ AUTOSAVE AI VISION DIAKTIFKAN"
+        : "❌ AUTOSAVE AI VISION DINONAKTIFKAN",
+      "",
+      subArg === "on"
+        ? "Bot lihat stiker pakai AI Vision,\nauto-assign trigger, lalu simpen\nSaveall dimatikan (diambil alih AI)"
+        : "Bot berhenti auto-tag stiker",
+      "",
+      "Koleksi: " + collection.length + " sticker",
+    ].join("\n")));
+  }
+
+  // SAVEALL (raw collect tanpa AI): .autoreactsticker saveall on/off
+  if (action === "saveall") {
+    const subArg = (args[1] || "").toLowerCase();
+    if (!subArg || !["on", "off"].includes(subArg)) {
+      const status = db.setting("autoreactstickerSaveall") || false;
+      return m.reply(claraWrap("AutoReactSticker", [
+        "SAVEALL — RAW COLLECT",
+        "",
+        "Status: " + (status ? "✅ Aktif" : "❌ Nonaktif"),
+        "Koleksi: " + collection.length + " sticker",
+        "",
+        "Saat ON, bot simpen SEMUA stiker yang",
+        "user kirim di grup ke random pool (tanpa AI)",
+        "",
+        "Set:",
+        "1. " + m.prefix + ".autoreactsticker saveall on",
+        "2. " + m.prefix + ".autoreactsticker saveall off",
+      ].join("\n")));
+    }
+
+    db.setting("autoreactstickerSaveall", subArg === "on");
+    // Kalau saveall on, matikan autosave
+    if (subArg === "on") {
+      db.setting("autoreactstickerAutosave", false);
+    }
+    await db.save();
+    await m.react("✅");
+    return m.reply(claraWrap("AutoReactSticker", [
+      subArg === "on"
+        ? "✅ SAVEALL DIAKTIFKAN"
+        : "❌ SAVEALL DINONAKTIFKAN",
+      "",
+      subArg === "on"
+        ? "Bot simpen semua stiker ke random pool (tanpa AI)\nAutosave AI Vision dimatikan"
+        : "Bot berhenti simpan stiker otomatis",
+      "",
+      "Koleksi: " + collection.length + " sticker",
+    ].join("\n")));
+  }
+
+  // SET TRIGGER: reply sticker + .autoreactsticker set <trigger>
   if (action === "set") {
     const rawTriggers = args.slice(1).join(" ").trim();
     if (!rawTriggers) {
@@ -102,7 +252,6 @@ async function handler(m, { sock, args }) {
       return m.reply(claraWrap("AutoReactSticker", "Trigger tidak boleh kosong!"));
     }
 
-    // Cek apakah ada sticker yang di-reply
     const isSticker =
       m.msg?.stickerMessage ||
       (m.quoted && m.quoted.type === "stickerMessage");
@@ -118,7 +267,6 @@ async function handler(m, { sock, args }) {
       return m.reply(claraWrap("AutoReactSticker", txt));
     }
 
-    // Download sticker
     let buffer;
     try {
       buffer = m.quoted?.isMedia ? await m.quoted.download() : await m.download();
@@ -130,14 +278,12 @@ async function handler(m, { sock, args }) {
       return m.reply(claraWrap("AutoReactSticker", "Sticker kosong, coba lagi!"));
     }
 
-    // Simpan sticker ke assets/stickers/
     ensureDir();
     const fileLabel = triggerList.length === 1 ? triggerList[0] : triggerList[0] + "_dst";
     const fileName = "sticker_" + fileLabel.replace(/\s+/g, "_") + "_" + Date.now() + ".webp";
     const filePath = path.join(STICKER_DIR, fileName);
     fs.writeFileSync(filePath, buffer);
 
-    // Simpan ke database — 1 sticker file untuk semua trigger
     let added = 0;
     let updated = 0;
 
@@ -146,7 +292,6 @@ async function handler(m, { sock, args }) {
       const newEntry = { trigger, stickerFile: fileName, size: buffer.length };
 
       if (existingIndex !== -1) {
-        // Update existing — hapus file lama kalau berbeda
         const oldFile = triggers[existingIndex].stickerFile;
         if (oldFile && oldFile !== fileName) {
           const oldPath = path.join(STICKER_DIR, oldFile);
@@ -179,7 +324,7 @@ async function handler(m, { sock, args }) {
     return m.reply(claraWrap("AutoReactSticker", resultTxt));
   }
 
-  // DEL TRIGGER: .autoreactsticker deltrigger <trigger>
+  // DEL TRIGGER
   if (action === "deltrigger" || action === "rmttrigger") {
     const trigger = args.slice(1).join(" ").trim().toLowerCase();
     if (!trigger) {
@@ -195,7 +340,6 @@ async function handler(m, { sock, args }) {
     if (stickerFile) {
       const sPath = path.join(STICKER_DIR, stickerFile);
       if (fs.existsSync(sPath)) {
-        // Cek apakah file dipakai trigger lain
         const sharedCount = triggers.filter((t) => t.stickerFile === stickerFile).length;
         if (sharedCount <= 1) {
           try { fs.unlinkSync(sPath); } catch {}
@@ -215,7 +359,7 @@ async function handler(m, { sock, args }) {
     ].join("\n")));
   }
 
-  // ADD: reply sticker + .autoreactsticker add (random pool)
+  // ADD: reply sticker + .autoreactsticker add (manual random pool)
   if (action === "add") {
     const isSticker =
       m.msg?.stickerMessage ||
@@ -228,9 +372,6 @@ async function handler(m, { sock, args }) {
         "Cara tambah ke random pool:",
         "1. Reply sebuah sticker",
         "2. Ketik: " + m.prefix + "autoreactsticker add",
-        "",
-        "Untuk set trigger (balas kata spesifik):",
-        m.prefix + "autoreactsticker set <trigger>",
       ].join("\n")));
     }
 
@@ -268,11 +409,10 @@ async function handler(m, { sock, args }) {
     ].join("\n")));
   }
 
-  // DEL: .autoreactsticker del <nomor> (hapus dari random pool)
+  // DEL: .autoreactsticker del <nomor>
   if (action === "del" || action === "rm") {
     const subArg = (args[1] || "").toLowerCase();
 
-    // Kalau "trigger" ikut, redirect ke deltrigger
     if (subArg === "trigger" && args[2]) {
       const trigger = args.slice(2).join(" ").trim().toLowerCase();
       const index = triggers.findIndex((t) => t.trigger === trigger);
@@ -300,7 +440,6 @@ async function handler(m, { sock, args }) {
       ].join("\n")));
     }
 
-    // Hapus dari random pool by nomor
     const num = parseInt(args[1] || "0");
     if (isNaN(num) || num < 1 || num > collection.length) {
       return m.reply(claraWrap("AutoReactSticker", [
@@ -333,23 +472,23 @@ async function handler(m, { sock, args }) {
   if (action === "list" || action === "ls") {
     let txt = "AUTOREACT STICKER\n\n";
 
-    // Random pool
     txt += "*Random Pool* (" + collection.length + ")\n";
     if (collection.length === 0) {
       txt += "  Kosong\n";
     } else {
       collection.forEach((s, i) => {
-        txt += "  " + (i + 1) + ". " + s.file + " (" + (s.size / 1024).toFixed(1) + " KB)\n";
+        const src = s.source === "ai-vision" ? " [AI]" : (s.source === "saveall" ? " [RAW]" : "");
+        txt += "  " + (i + 1) + ". " + s.file + " (" + (s.size / 1024).toFixed(1) + " KB)" + src + "\n";
       });
     }
 
-    // Triggers
     txt += "\n*Trigger-Based* (" + triggers.length + ")\n";
     if (triggers.length === 0) {
       txt += "  Kosong\n";
     } else {
       triggers.forEach((t, i) => {
-        txt += "  " + (i + 1) + ". \"" + t.trigger + "\" → " + t.stickerFile + "\n";
+        const tag = t.source === "ai-vision" ? " [AI]" : "";
+        txt += "  " + (i + 1) + ". \"" + t.trigger + "\"" + tag + " → " + t.stickerFile + "\n";
       });
     }
 
@@ -423,36 +562,6 @@ async function handler(m, { sock, args }) {
     ].join("\n")));
   }
 
-  // COLLECT: auto-koleksi semua sticker di grup
-  if (action === "autosave" || action === "autosave_favorit") {
-    const subArg = (args[1] || "").toLowerCase();
-    if (!subArg || !["on", "off"].includes(subArg)) {
-      const collectStatus = db.setting("autoreactstickerAutosave") || false;
-      return m.reply(claraWrap("AutoReactSticker", [
-        "AUTOSAVE FAVORIT STIKER",
-        "",
-        "Status: " + (collectStatus ? "✅ Aktif" : "❌ Nonaktif"),
-        "Koleksi saat ini: " + collection.length + " sticker",
-        "",
-        "Saat ON, bot otomatis simpan stiker",
-        "baru yang user kirim di grup",
-        "",
-        "Set:",
-        "1. " + m.prefix + ".autoreactsticker autosave on",
-        "2. " + m.prefix + ".autoreactsticker autosave off",
-      ].join("\n")));
-    }
-    db.setting("autoreactstickerAutosave", subArg === "on");
-    await db.save();
-    await m.react("✅");
-    return m.reply(claraWrap("AutoReactSticker", [
-      subArg === "on" ? "✅ AUTOSAVE FAVORIT DIAKTIFKAN" : "❌ AUTOSAVE FAVORIT DINONAKTIFKAN",
-      "",
-      subArg === "on" ? "Bot otomatis simpan stiker baru yg dikirim di grup" : "Bot berhenti simpan stiker otomatis",
-      "Koleksi saat ini: " + collection.length + " sticker",
-    ].join("\n")));
-  }
-
   // CLEAR ALL
   if (action === "clear" || action === "reset") {
     for (const entry of collection) {
@@ -462,7 +571,6 @@ async function handler(m, { sock, args }) {
       }
     }
     for (const entry of triggers) {
-      // Hanya hapus file yang tidak shared
       const sharedCount = triggers.filter((t) => t.stickerFile === entry.stickerFile).length;
       if (sharedCount <= 1) {
         const fp = path.join(STICKER_DIR, entry.stickerFile);
@@ -474,6 +582,8 @@ async function handler(m, { sock, args }) {
     db.setting("autoreactstickerCollection", []);
     db.setting("autoreactstickerTriggers", []);
     db.setting("autoreactstickerEnabled", false);
+    db.setting("autoreactstickerAutosave", false);
+    db.setting("autoreactstickerSaveall", false);
     await db.save();
     return m.reply(claraWrap("AutoReactSticker", [
       "🗑 SEMUA STICKER & TRIGGER DIHAPUS",
@@ -484,15 +594,17 @@ async function handler(m, { sock, args }) {
 
   // STATUS / HELP
   const enabled = db.setting("autoreactstickerEnabled") || false;
+  const autosaveStatus = db.setting("autoreactstickerAutosave") || false;
+  const saveallStatus = db.setting("autoreactstickerSaveall") || false;
   const privMs = db.setting("autoreactstickerJedaPrivate") ?? 5000;
   const grpMs = db.setting("autoreactstickerJedaGrup") ?? 15000;
 
-  const collectStatus = db.setting("autoreactstickerAutosave") || false;
   return m.reply(claraWrap("AutoReactSticker", [
     "AUTO REACT STICKER",
     "",
     "Status: " + (enabled ? "✅ Aktif" : "❌ Nonaktif"),
-    "Autosave: " + (collectStatus ? "✅ Aktif" : "❌ Nonaktif"),
+    "AI Vision autosave: " + (autosaveStatus ? "✅ Aktif" : "❌ Nonaktif"),
+    "Saveall (raw): " + (saveallStatus ? "✅ Aktif" : "❌ Nonaktif"),
     "Random pool: " + collection.length + " sticker",
     "Trigger-based: " + triggers.length + " trigger",
     "Jeda Private: " + (privMs / 1000).toFixed(1) + " detik",
@@ -500,16 +612,17 @@ async function handler(m, { sock, args }) {
     "",
     "Perintah:",
     "1. " + m.prefix + "autoreactsticker on/off",
-    "2. " + m.prefix + ".autoreactsticker autosave on/off",
-    "3. " + m.prefix + "autoreactsticker add (reply sticker → random pool)",
-    "4. " + m.prefix + "autoreactsticker set <trigger> (reply sticker)",
-    "5. " + m.prefix + "autoreactsticker del <nomor>",
-    "6. " + m.prefix + "autoreactsticker deltrigger <kata>",
-    "7. " + m.prefix + "autoreactsticker list",
-    "8. " + m.prefix + "autoreactsticker jeda <detik>",
-    "9. " + m.prefix + "autoreactsticker jedagrup <detik>",
-    "10. " + m.prefix + "autoreactsticker clear",
+    "2. " + m.prefix + "autoreactsticker set <trigger> (reply sticker)",
+    "3. " + m.prefix + "autoreactsticker autosave on/off (AI Vision)",
+    "4. " + m.prefix + "autoreactsticker saveall on/off (raw collect)",
+    "5. " + m.prefix + "autoreactsticker add (reply sticker → random pool)",
+    "6. " + m.prefix + "autoreactsticker del <nomor>",
+    "7. " + m.prefix + "autoreactsticker deltrigger <kata>",
+    "8. " + m.prefix + "autoreactsticker list",
+    "9. " + m.prefix + "autoreactsticker jeda <detik>",
+    "10. " + m.prefix + "autoreactsticker jedagrup <detik>",
+    "11. " + m.prefix + "autoreactsticker clear",
   ].join("\n")));
 }
 
-export { pluginConfig as config, handler };
+export { pluginConfig as config, handler, aiVisionTagSticker };
