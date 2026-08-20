@@ -10,7 +10,7 @@ const pluginConfig = {
   description: "Mode Chat Lintas Waktu — AI roleplay dari masa depan/lalu",
   usage: ".timewarp <tahun/era> | .timewarp off | .timewarp status",
   example: ".timewarp 2035",
-  isOwner: false,
+  isOwner: true,
   isPremium: false,
   isGroup: false,
   isPrivate: false,
