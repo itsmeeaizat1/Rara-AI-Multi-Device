@@ -5,7 +5,7 @@ import { getDatabase } from "./nova-database.js";
 /**
  * Broadcast ke Saluran WA - Sistem terpusat
  * Kirim notifikasi ke saluran resmi untuk berbagai event.
- * Toggle on/off per event via .togglesaluran
+ * Toggle on/off per event via .autobroadcastchannel
  */
 
 // Event types yang bisa di-toggle
@@ -30,7 +30,7 @@ function isNotifyEnabled(eventType) {
     const db = getDatabase();
     const key = "saluranNotify_" + eventType;
     const val = db.setting(key);
-    // Default: OFF — owner harus manual toggle on via .togglesaluran
+    // Default: OFF — owner harus manual toggle on via .autobroadcastchannel
     return val === true;
   } catch {
     return false;
