@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { logger } from "./nova-logger.js";
 const RSS_LIMIT = 1024 * 1024 * 1024;
 const CHECK_INTERVAL = 5 * 60 * 1000;

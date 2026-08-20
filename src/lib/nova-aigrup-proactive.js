@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════
 // Nova AI Grup - Proactive messaging (ANTI-BAN)
 // Bot ngomong sendiri dengan jeda aman & random

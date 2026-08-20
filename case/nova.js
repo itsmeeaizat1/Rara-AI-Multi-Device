@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { performance } from "perf_hooks";
 import { getDatabase } from "../src/lib/nova-database.js";
 import {

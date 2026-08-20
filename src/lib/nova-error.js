@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
 function te(prefix, command, pushName) {
     const tpl = config.errorTemplate || `☢ *Error*\n\n> Terjadi kesalahan pada command \`{prefix}{command}\`\n> Silahkan coba lagi nanti, {pushName}\n\n_Jika masalah berlanjut, hubungi owner_`

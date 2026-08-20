@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import QRCode from "qrcode";
 import path from "path";
 import fs from "fs";

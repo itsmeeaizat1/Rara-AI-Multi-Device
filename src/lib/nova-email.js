@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import nodemailer from "nodemailer";
 import config from "../../config.js";
 

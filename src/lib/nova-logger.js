@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import chalk from "chalk";
 import * as timeHelper from "./nova-time.js";
 import { getCachedJid, isLidConverted } from "./nova-lid.js";

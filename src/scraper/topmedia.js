@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import https from 'https'
 const API_KEY = "dac23a9006fc4039ae6aac98ae7c7b46"
 

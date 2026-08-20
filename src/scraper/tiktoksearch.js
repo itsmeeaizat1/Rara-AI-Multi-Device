@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 
 const TTSEARCH_API = 'https://api.azbry.com/api/search/ttsearch?q='

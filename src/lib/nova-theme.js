@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const THEME = {
   botName: "Nova AI",
   ownerName: "Owner",

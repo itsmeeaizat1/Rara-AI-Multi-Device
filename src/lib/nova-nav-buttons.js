@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * nova-nav-buttons.js
  * Helper untuk kirim pesan dengan tombol Kembali + Tanya AI

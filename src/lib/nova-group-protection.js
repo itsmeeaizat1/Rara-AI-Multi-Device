@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { downloadMediaMessage } from "nova";
 import { isLid, lidToJid, lidToJidSafe } from "./nova-lid.js";
 import config from "../../config.js";

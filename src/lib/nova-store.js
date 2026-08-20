@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * nova-store.js
  * Sistem toko untuk Nova AI WhatsApp Bot.
