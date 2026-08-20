@@ -350,6 +350,19 @@ async function messageHandler(msg, sock) {
     }
   }
 
+  // AI Auto VN Interaction: real-time VN detection, AI balas pakai suara neural (Gemini Live style)
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+    try {
+      const { handleAiAutoVnInteraction, isAiAutoVnEnabled } = await import("../plugins/owner/aiautointeractionvn.js");
+      if (typeof isAiAutoVnEnabled === "function" && isAiAutoVnEnabled(m, sock)) {
+        const vnAiResult = await handleAiAutoVnInteraction(m, sock);
+        if (vnAiResult) return;
+      }
+    } catch (e) {
+      console.error("[AiAutoVn] Hook error:", e.message);
+    }
+  }
+
   // Auto-AI: if not a command, check if auto-AI should respond
   if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
     try {
