@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // menu.js — Menu utama dengan 6 variant tampilan
-// Thumbnail: assets/image/nova-thumbnail.jpg (via getStaticThumbnail)
+// Thumbnail: assets/image/nova-thumbnail-menu.jpg (via getStaticThumbnail)
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import {
   prepareWAMessageMedia,
@@ -292,7 +292,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   let thumbBuffer = null;
   try {
     imageBuffer = await getMenuImage("nova");
-    thumbBuffer = await getStaticThumbnail("nova-thumbnail");
+    thumbBuffer = await getStaticThumbnail("nova-thumbnail-menu");
   } catch (e) { console.error("Gagal load assets:", e.message); }
 
   try {
@@ -351,7 +351,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
       // ── V2: Location thumbnail header ──
       case 2: {
-        const thumbV2 = await getStaticThumbnail("nova-thumbnail");
+        const thumbV2 = await getStaticThumbnail("nova-thumbnail-menu");
         await sock.relayMessage(m.chat, {
           viewOnceMessage: { message: {
             messageContextInfo: {},
@@ -386,7 +386,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
       // ── V3: Location thumbnail + single_select kategori (default) ──
       case 3: {
-        const thumbV3 = await getStaticThumbnail("nova-thumbnail");
+        const thumbV3 = await getStaticThumbnail("nova-thumbnail-menu");
         const catRows = buildCategoryRows(prefix, m);
         const msg3 = generateWAMessageFromContent(m.chat, {
           viewOnceMessage: {
@@ -443,7 +443,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
       // ── V5: Location thumbnail (verified quoted) ──
       case 5: {
-        const thumbV5 = await getStaticThumbnail("nova-thumbnail");
+        const thumbV5 = await getStaticThumbnail("nova-thumbnail-menu");
         const msg5 = generateWAMessageFromContent(m.chat, {
           viewOnceMessage: { message: {
             messageContextInfo: {},
@@ -465,7 +465,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
       // ── V6: Weather address header ──
       case 6: {
-        const thumbV6 = await getStaticThumbnail("nova-thumbnail");
+        const thumbV6 = await getStaticThumbnail("nova-thumbnail-menu");
         let weatherStr = "Cuaca tidak tersedia";
         try {
           const geo = await axios.get("https://geocoding-api.open-meteo.com/v1/search?name=Jakarta&count=1", { timeout: 5000 });

@@ -49,6 +49,8 @@ const config = {
     "nova-winner": "./assets/image/nova-winner.jpg",
     "nova": "./assets/image/nova.png",
     "nova2": "./assets/image/nova2.jpg",
+    "nova-thumbnail-menu": "./assets/image/nova-thumbnail-menu.jpg",
+    "nova-thumbnail-allmenu": "./assets/image/nova-thumbnail-allmenu.jpg",
     "nova-thumbnail": "./assets/image/nova-thumbnail.jpg",
     "nova3": "./assets/image/nova3.jpg",
     "pp-kosong": "./assets/image/pp-kosong.jpg",
