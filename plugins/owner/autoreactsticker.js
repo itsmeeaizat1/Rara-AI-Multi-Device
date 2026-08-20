@@ -423,6 +423,36 @@ async function handler(m, { sock, args }) {
     ].join("\n")));
   }
 
+  // COLLECT: auto-koleksi semua sticker di grup
+  if (action === "collect" || action === "auto_collect") {
+    const subArg = (args[1] || "").toLowerCase();
+    if (!subArg || !["on", "off"].includes(subArg)) {
+      const collectStatus = db.setting("autoreactstickerCollect") || false;
+      return m.reply(claraWrap("AutoReactSticker", [
+        "AUTO-COLLECT STICKER",
+        "",
+        "Status: " + (collectStatus ? "✅ Aktif" : "❌ Nonaktif"),
+        "Koleksi saat ini: " + collection.length + " sticker",
+        "",
+        "Saat ON, bot otomatis simpan SEMUA",
+        "sticker yang dikirim di grup",
+        "",
+        "Set:",
+        "1. " + m.prefix + "autoreactsticker collect on",
+        "2. " + m.prefix + "autoreactsticker collect off",
+      ].join("\n")));
+    }
+    db.setting("autoreactstickerCollect", subArg === "on");
+    await db.save();
+    await m.react("✅");
+    return m.reply(claraWrap("AutoReactSticker", [
+      subArg === "on" ? "✅ AUTO-COLLECT DIAKTIFKAN" : "❌ AUTO-COLLECT DINONAKTIFKAN",
+      "",
+      subArg === "on" ? "Bot otomatis simpan semua sticker di grup" : "Bot berhenti koleksi otomatis",
+      "Koleksi saat ini: " + collection.length + " sticker",
+    ].join("\n")));
+  }
+
   // CLEAR ALL
   if (action === "clear" || action === "reset") {
     for (const entry of collection) {
@@ -457,10 +487,12 @@ async function handler(m, { sock, args }) {
   const privMs = db.setting("autoreactstickerJedaPrivate") ?? 5000;
   const grpMs = db.setting("autoreactstickerJedaGrup") ?? 15000;
 
+  const collectStatus = db.setting("autoreactstickerCollect") || false;
   return m.reply(claraWrap("AutoReactSticker", [
     "AUTO REACT STICKER",
     "",
     "Status: " + (enabled ? "✅ Aktif" : "❌ Nonaktif"),
+    "Auto-collect: " + (collectStatus ? "✅ Aktif" : "❌ Nonaktif"),
     "Random pool: " + collection.length + " sticker",
     "Trigger-based: " + triggers.length + " trigger",
     "Jeda Private: " + (privMs / 1000).toFixed(1) + " detik",
@@ -468,14 +500,15 @@ async function handler(m, { sock, args }) {
     "",
     "Perintah:",
     "1. " + m.prefix + "autoreactsticker on/off",
-    "2. " + m.prefix + "autoreactsticker add (reply sticker → random pool)",
-    "3. " + m.prefix + "autoreactsticker set <trigger> (reply sticker)",
-    "4. " + m.prefix + "autoreactsticker del <nomor>",
-    "5. " + m.prefix + "autoreactsticker deltrigger <kata>",
-    "6. " + m.prefix + "autoreactsticker list",
-    "7. " + m.prefix + "autoreactsticker jeda <detik>",
-    "8. " + m.prefix + "autoreactsticker jedagrup <detik>",
-    "9. " + m.prefix + "autoreactsticker clear",
+    "2. " + m.prefix + "autoreactsticker collect on/off",
+    "3. " + m.prefix + "autoreactsticker add (reply sticker → random pool)",
+    "4. " + m.prefix + "autoreactsticker set <trigger> (reply sticker)",
+    "5. " + m.prefix + "autoreactsticker del <nomor>",
+    "6. " + m.prefix + "autoreactsticker deltrigger <kata>",
+    "7. " + m.prefix + "autoreactsticker list",
+    "8. " + m.prefix + "autoreactsticker jeda <detik>",
+    "9. " + m.prefix + "autoreactsticker jedagrup <detik>",
+    "10. " + m.prefix + "autoreactsticker clear",
   ].join("\n")));
 }
 
