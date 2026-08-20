@@ -8,9 +8,9 @@ const pluginConfig = {
   alias: ["timewarp", "twarp", "lintaswaktu", "timetravel"],
   category: "ai",
   description: "Mode Chat Lintas Waktu — AI roleplay dari masa depan/lalu",
-  usage: ".timewarp <tahun/era> | .timewarp off | .timewarp status",
-  example: ".timewarp 2035",
-  isOwner: true,
+  usage: ".timewarp <tahun/era> [pertanyaan] | .timewarp off | .timewarp status",
+  example: ".timewarp 2035 | .timewarp 2035 apa itu ikan koi?",
+  isOwner: false,
   isPremium: false,
   isGroup: false,
   isPrivate: false,
@@ -19,9 +19,13 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// ════ Session storage (per-user) ════
+// ════ Session storage (per-user, persistent mode) ════
 // Key: sender JID -> { era, label, systemPrompt, active, startedAt, messageCount }
 const warpSessions = new Map();
+
+// ════ One-shot storage (per-user, single message) ════
+// Key: sender JID -> systemPrompt string (consumed by callAI once)
+const oneShotPrompts = new Map();
 
 /**
  * Parse user input into a temporal era descriptor.
@@ -36,11 +40,7 @@ function parseEra(input) {
   if (m) {
     const years = parseInt(m[1], 10);
     const targetYear = new Date().getFullYear() + years;
-    return {
-      era: "future",
-      label: `${years} tahun ke depan (${targetYear})`,
-      targetYear,
-    };
+    return { era: "future", label: `${years} tahun ke depan (${targetYear})`, targetYear };
   }
 
   // Relative past: "10 tahun lalu", "10 tahun yang lalu"
@@ -48,11 +48,7 @@ function parseEra(input) {
   if (m) {
     const years = parseInt(m[1], 10);
     const targetYear = new Date().getFullYear() - years;
-    return {
-      era: "past",
-      label: `${years} tahun yang lalu (${targetYear})`,
-      targetYear,
-    };
+    return { era: "past", label: `${years} tahun yang lalu (${targetYear})`, targetYear };
   }
 
   // Absolute year: "2035", "1990"
@@ -60,11 +56,7 @@ function parseEra(input) {
   if (m) {
     const year = parseInt(m[1], 10);
     const currentYear = new Date().getFullYear();
-    return {
-      era: year > currentYear ? "future" : "past",
-      label: `Tahun ${year}`,
-      targetYear: year,
-    };
+    return { era: year > currentYear ? "future" : "past", label: `Tahun ${year}`, targetYear: year };
   }
 
   // Era keywords
@@ -89,12 +81,7 @@ function parseEra(input) {
     if (text.includes(key)) return val;
   }
 
-  // Default: treat as custom era description
-  return {
-    era: "custom",
-    label: input.trim(),
-    targetYear: null,
-  };
+  return { era: "custom", label: input.trim(), targetYear: null };
 }
 
 /**
@@ -154,11 +141,22 @@ function buildTemporalPrompt(session, senderName) {
 
 /**
  * Get the time-warp system prompt for a sender (called by callAI).
+ * Checks persistent session first, then one-shot.
  */
 export function getTimewarpPrompt(sender) {
+  // Check persistent session
   const session = warpSessions.get(sender);
-  if (!session || !session.active) return null;
-  return session.systemPrompt;
+  if (session && session.active) {
+    session.messageCount++;
+    return session.systemPrompt;
+  }
+  // Check one-shot
+  const oneShot = oneShotPrompts.get(sender);
+  if (oneShot) {
+    oneShotPrompts.delete(sender); // Consume one-shot
+    return oneShot;
+  }
+  return null;
 }
 
 /**
@@ -176,14 +174,27 @@ export function getTimewarpSession(sender) {
   return warpSessions.get(sender) || null;
 }
 
+/**
+ * Check if sender already has a persistent session (for non-owner gate).
+ */
+export function hasPersistentSession(sender) {
+  const session = warpSessions.get(sender);
+  return session && session.active;
+}
+
 async function handler(m, { sock, db, config: botConfig }) {
   const prefix = botConfig.command?.prefix || ".";
   const args = (m.text || "").trim().split(/\s+/);
   const sub = (args[1] || "").toLowerCase();
   const sender = m.sender;
+  const isOwner = m.isOwner;
 
-  // ════ OFF — exit time-warp mode
+  // ════ OFF — exit time-warp mode (OWNER ONLY)
   if (sub === "off" || sub === "stop" || sub === "keluar" || sub === "exit") {
+    if (!isOwner) {
+      await sendReplyWithNav(sock, m, claraWrap("Time-Warp", "Off hanya bisa dipakai owner."), "aitimewarp");
+      return { handled: true };
+    }
     const session = warpSessions.get(sender);
     if (!session || !session.active) {
       await sendReplyWithNav(sock, m, claraWrap("Time-Warp", "Kamu gak lagi dalam mode lintas waktu."), "aitimewarp");
@@ -199,7 +210,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  // ════ STATUS — check current session
+  // ════ STATUS — check current session (ALL USERS)
   if (sub === "status" || sub === "info") {
     const session = warpSessions.get(sender);
     if (!session || !session.active) {
@@ -208,10 +219,13 @@ async function handler(m, { sock, db, config: botConfig }) {
         "",
         "Kamu lagi di realitas normal.",
         "",
-        "Aktifkan: " + prefix + "timewarp <tahun/era>",
-        "Contoh: " + prefix + "timewarp 2035",
-        "         " + prefix + "timewarp 5tahun-depan",
-        "         " + prefix + "timewarp zaman-kolonial",
+        "Cara pakai:",
+        prefix + "timewarp <tahun/era> — one-shot (semua user)",
+        prefix + "timewarp <tahun/era> on — persistent (owner)",
+        "",
+        "Contoh one-shot:",
+        prefix + "timewarp 2035 apa itu ikan koi?",
+        prefix + "timewarp 1990 gimana sekolah dulu?",
       ].join("\n")), "aitimewarp");
       return { handled: true };
     }
@@ -219,7 +233,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const mins = Math.floor(duration / 60);
     const secs = duration % 60;
     await sendReplyWithNav(sock, m, claraWrap("Time-Warp", [
-      "Status: AKTIF",
+      "Status: AKTIF (persistent)",
       "",
       "Era: " + session.label,
       "Tipe: " + session.era.toUpperCase(),
@@ -231,7 +245,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  // ════ LIST — show available era presets
+  // ════ LIST — show available era presets (ALL USERS)
   if (sub === "list" || sub === "preset" || sub === "era") {
     await sendReplyWithNav(sock, m, claraWrap("Time-Warp Preset", [
       "Era yang tersedia:",
@@ -247,16 +261,22 @@ async function handler(m, { sock, db, config: botConfig }) {
       "  zaman-kolonial, era-90an, zaman-orba",
       "  zaman-reformasi, era-perang",
       "",
-      "CUSTOM:",
-      "  Ketik bebas, contoh:",
+      "CUSTOM: ketik bebas, contoh:",
       "  " + prefix + "timewarp dimensi-paralel",
       "  " + prefix + "timewarp dunia-sebelum-perang",
     ].join("\n")), "aitimewarp");
     return { handled: true };
   }
 
-  // ════ ON — activate time-warp mode
+  // ════ ON — activate persistent mode (OWNER ONLY)
+  // Format: .timewarp <era> on
+  // Detect "on" as last argument
   if (sub === "on" || sub === "start" || sub === "mulai") {
+    if (!isOwner) {
+      await sendReplyWithNav(sock, m, claraWrap("Time-Warp", "Mode persistent (on) hanya untuk owner."), "aitimewarp");
+      return { handled: true };
+    }
+    // Re-parse: args[1] is "on", era is args[2]+
     const eraInput = args.slice(2).join(" ").trim();
     if (!eraInput) {
       await sendReplyWithNav(sock, m, claraWrap("Time-Warp", [
@@ -265,79 +285,198 @@ async function handler(m, { sock, db, config: botConfig }) {
       ].join("\n")), "aitimewarp");
       return { handled: true };
     }
-    // Fall through to default handler with eraInput
-    args[1] = eraInput;
+    const parsed = parseEra(eraInput);
+    const senderName = m.pushName || m.senderNumber || "seseorang";
+    const session = {
+      era: parsed.era,
+      label: parsed.label,
+      targetYear: parsed.targetYear,
+      active: true,
+      startedAt: Date.now(),
+      messageCount: 0,
+      systemPrompt: "",
+    };
+    session.systemPrompt = buildTemporalPrompt(session, senderName);
+    warpSessions.set(sender, session);
+
+    await sendReplyWithNav(sock, m, claraWrap("Time-Warp", [
+      "Persistent mode AKTIF",
+      "",
+      "Era: " + parsed.label,
+      "Tipe: " + parsed.era.toUpperCase(),
+      "",
+      "Sekarang semua chat biasa ke bot akan",
+      "dijawab dengan persona dari era ini.",
+      "Bot tetap di karakter sampai kamu ketik",
+      prefix + "timewarp off",
+    ].join("\n")), "aitimewarp");
+    return { handled: true };
   }
 
-  // ════ DEFAULT — parse era input and activate
+  // ════ DEFAULT — parse era + optional question
+  // Owner: .timewarp 2035 (persistent), .timewarp 2035 <question> (one-shot)
+  // User: .timewarp 2035 <question> (one-shot only)
+  // If owner types just ".timewarp 2035" with no question -> persistent mode
+  // If anyone types ".timewarp 2035 <question>" -> one-shot answer
+
   const eraInput = args.slice(1).join(" ").trim();
   if (!eraInput) {
     await sendReplyWithNav(sock, m, claraWrap("Time-Warp", [
       "Mode Chat Lintas Waktu",
       "",
       "Cara pakai:",
-      prefix + "timewarp <tahun/era> — masuk mode",
-      prefix + "timewarp off — keluar mode",
+      prefix + "timewarp <tahun> <pertanyaan> — one-shot",
+      prefix + "timewarp on <tahun/era> — persistent (owner)",
+      prefix + "timewarp off — keluar mode (owner)",
       prefix + "timewarp status — lihat status",
       prefix + "timewarp list — lihat preset era",
       "",
-      "Contoh:",
-      prefix + "timewarp 2035",
-      prefix + "timewarp 5tahun-depan",
-      prefix + "timewarp zaman-kolonial",
+      "Contoh one-shot:",
+      prefix + "timewarp 2035 apa itu ikan koi?",
+      prefix + "timewarp 1990 gimana sekolah dulu?",
       "",
-      "Setelah aktif, chat biasa ke bot akan",
-      "dijawab dengan persona dari era tersebut.",
-      "Bot akan tetap di karakter sampai kamu",
-      "ketik " + prefix + "timewarp off",
+      "Contoh persistent (owner):",
+      prefix + "timewarp on 2035",
+      prefix + "timewarp on zaman-kolonial",
     ].join("\n")), "aitimewarp");
     return { handled: true };
   }
 
-  // Parse era
-  const parsed = parseEra(eraInput);
-  const senderName = m.pushName || m.senderNumber || "seseorang";
-  const session = {
-    era: parsed.era,
-    label: parsed.label,
-    targetYear: parsed.targetYear,
-    active: true,
-    startedAt: Date.now(),
-    messageCount: 0,
-    systemPrompt: "",
-  };
-  session.systemPrompt = buildTemporalPrompt(session, senderName);
-  warpSessions.set(sender, session);
+  // Try to separate era from question
+  // Known era keywords that might be followed by a question
+  const eraKeywords = [
+    "zaman batu", "zaman kolonial", "era colonial", "era perang",
+    "zaman orba", "zaman reformasi", "era 90an", "era 2000an",
+    "masa depan", "future utopia", "post apocalyptic", "post apokaliptik",
+    "mars colony", "koloni mars",
+  ];
 
-  // Generate intro message in character
-  let introText = "";
-  if (parsed.era === "future") {
-    introText = `*{Time-Warp Aktif}*\n\nMasuk ke ${parsed.label}...\n\n`;
-    const intros = [
-      `Halo? Ada yang bisa aku bantu? Aku lagi di sini, di tahun ${parsed.targetYear}. Kenapa kamu hubungi aku?`,
-      `Oh, kamu dari masa lalu? ${parsed.targetYear} di sini semuanya beda. Apa yang mau kamu tanya?`,
-      `Sinyalnya agak gangguanggara. Aku dari tahun ${parsed.targetYear}. Bicara aja, apa yang terjadi di masamu?`,
-      `Wah, kamu dari ${new Date().getFullYear()}? Aku denger tahun itu masa-masa transition. Aku di ${parsed.targetYear} sekarang, cerita aja.`,
-    ];
-    introText += intros[Math.floor(Math.random() * intros.length)];
-  } else if (parsed.era === "past") {
-    introText = `*{Time-Warp Aktif}*\n\nMasuk ke ${parsed.label}...\n\n`;
-    const intros = [
-      `Salam sejahtera. Ada apa kau memanggil aku? Aku sedang di sini, di ${parsed.label}.`,
-      `Oh, kau dari masa depan? Sungguh menarik. Apa yang ingin kau tanyakan kepadaku?`,
-      `Apa ini? Suara dari masa depan? Bicara saja, aku mendengarkan.`,
-      `Kau siapa? Dari mana datangmu? Aku di ${parsed.label} ini belum pernah melihat sepertimu.`,
-    ];
-    introText += intros[Math.floor(Math.random() * intros.length)];
+  const fullInput = eraInput;
+  let eraPart = "";
+  let questionPart = "";
+
+  // Try absolute year first: "2035 apa itu ikan?" -> era="2035", question="apa itu ikan?"
+  const yearMatch = fullInput.match(/^(\d{3,4})\s+(.+)/);
+  if (yearMatch) {
+    eraPart = yearMatch[1];
+    questionPart = yearMatch[2];
   } else {
-    introText = `*{Time-Warp Aktif}*\n\nMasuk ke ${parsed.label}...\n\n`;
-    introText += `Aku di sini. Di ${parsed.label}. Ada yang mau kamu bicarakan?`;
+    // Try relative: "5tahun-depan apa itu?" or "5 tahun depan apa itu?"
+    const relMatch = fullInput.match(/^(\d+\s*tahun\s*(?:ke\s*)?depan)\s+(.+)/i);
+    if (relMatch) {
+      eraPart = relMatch[1];
+      questionPart = relMatch[2];
+    } else {
+      const relPastMatch = fullInput.match(/^(\d+\s*tahun\s*(?:yang\s*)?lalu)\s+(.+)/i);
+      if (relPastMatch) {
+        eraPart = relPastMatch[1];
+        questionPart = relPastMatch[2];
+      } else {
+        // Try era keywords
+        let found = false;
+        for (const kw of eraKeywords) {
+          if (fullInput.toLowerCase().startsWith(kw)) {
+            eraPart = fullInput.substring(0, kw.length);
+            questionPart = fullInput.substring(kw.length).trim();
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          // Can't determine era vs question split
+          // If owner and no question detected -> persistent mode
+          // If not owner -> treat entire input as era, no question
+          eraPart = fullInput;
+          questionPart = "";
+        }
+      }
+    }
   }
 
-  introText += "\n\n_Ketik " + prefix + "timewarp off untuk kembali normal_";
+  const parsed = parseEra(eraPart);
+  const senderName = m.pushName || m.senderNumber || "seseorang";
 
-  await sendReplyWithNav(sock, m, claraWrap("Time-Warp", introText), "aitimewarp");
-  return { handled: true };
+  // If there's a question -> one-shot mode (ALL USERS)
+  if (questionPart) {
+    const session = {
+      era: parsed.era,
+      label: parsed.label,
+      targetYear: parsed.targetYear,
+      active: false,
+      startedAt: Date.now(),
+      messageCount: 0,
+      systemPrompt: "",
+    };
+    session.systemPrompt = buildTemporalPrompt(session, senderName);
+    oneShotPrompts.set(sender, session.systemPrompt);
+
+    // Set global sender for callAI to pick up
+    global.__novaMoodSender = sender;
+
+    // Use UnlimitedAI for one-shot answer
+    try {
+      const { default: UnlimitedAI } = await import("../../src/scraper/unlimitedai.js");
+      const result = await UnlimitedAI(questionPart, "nova-ai");
+      if (result) {
+        await sendReplyWithNav(sock, m, claraWrap("Time-Warp", [
+          "Era: " + parsed.label,
+          "",
+          result,
+        ].join("\n")), "aitimewarp");
+      } else {
+        await m.reply(claraWrap("Time-Warp", "Gagal dapat respon AI. Coba lagi."));
+      }
+    } catch (e) {
+      await m.reply(claraWrap("Time-Warp", "Error: " + e.message));
+    }
+    // Clean up one-shot
+    oneShotPrompts.delete(sender);
+    return { handled: true };
+  }
+
+  // No question detected:
+  // Owner -> persistent mode
+  // Non-owner -> tell them to add a question
+  if (isOwner) {
+    const session = {
+      era: parsed.era,
+      label: parsed.label,
+      targetYear: parsed.targetYear,
+      active: true,
+      startedAt: Date.now(),
+      messageCount: 0,
+      systemPrompt: "",
+    };
+    session.systemPrompt = buildTemporalPrompt(session, senderName);
+    warpSessions.set(sender, session);
+
+    await sendReplyWithNav(sock, m, claraWrap("Time-Warp", [
+      "Persistent mode AKTIF",
+      "",
+      "Era: " + parsed.label,
+      "Tipe: " + parsed.era.toUpperCase(),
+      "",
+      "Sekarang semua chat biasa ke bot akan",
+      "dijawab dengan persona dari era ini.",
+      "Bot tetap di karakter sampai kamu ketik",
+      prefix + "timewarp off",
+    ].join("\n")), "aitimewarp");
+    return { handled: true };
+  } else {
+    // Non-owner without question -> one-shot instruction
+    await sendReplyWithNav(sock, m, claraWrap("Time-Warp", [
+      "Mode persistent hanya untuk owner.",
+      "",
+      "Kamu bisa pakai one-shot:",
+      prefix + "timewarp <tahun/era> <pertanyaan>",
+      "",
+      "Contoh:",
+      prefix + "timewarp 2035 apa itu ikan koi?",
+      prefix + "timewarp 1990 gimana sekolah dulu?",
+      prefix + "timewarp zaman-kolonial apa itu telegram?",
+    ].join("\n")), "aitimewarp");
+    return { handled: true };
+  }
 }
 
 export { pluginConfig as config, handler };
