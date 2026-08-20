@@ -216,6 +216,7 @@ async function edgeTTS(text, voiceLang) {
     // Python edge-tts command
     const cmd = `python3 -c "
 import edge_tts, asyncio
+import config from "../../config.js";
 async def gen():
     comm = edge_tts.Communicate('${cleanText.replace(/'/g, "\\'")}', '${voiceLang}')
     await comm.save('${outFile}')
@@ -241,8 +242,7 @@ async function topMediaTTS(text, emotion = "Happy") {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // Voice AI API Key (x-api-key) — dipakai di: aiautointeractionvn
-        "x-api-key": "dac23a9006fc4039ae6aac98ae7c7b46",
+        "x-api-key": config.APIkey.voiceai,
       },
       body: JSON.stringify({
         text: text.slice(0, 500),

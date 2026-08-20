@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import FormData from 'form-data'
 import te from '../../src/lib/nova-error.js'
+import config from "../../config.js";
 const pluginConfig = {
     name: ['qrcustom', 'qrcode', 'qr'],
     alias: [],
@@ -27,8 +28,7 @@ async function uploadTo0x0(buffer) {
         const form = new FormData()
         form.append('file', buffer, { filename: 'logo.png', contentType: 'image/png' })
         
-// Termai Key (c.termai.cc) — dipakai di: fakecall, animeapaini, smeme, musikapaini, qrcustom, tourl
-        const response = await axios.post('https://c.termai.cc/api/upload?key=AIzaBj7z2z3xBjsk', form, {
+        const response = await axios.post('https://c.termai.cc/api/upload?key=' + config.APIkey.termai, form, {
             headers: form.getHeaders(),
             timeout: 30000
         })

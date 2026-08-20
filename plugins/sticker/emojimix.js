@@ -42,8 +42,7 @@ async function handler(m, { sock }) {
     m.react('🕐')
     
     try {
-// Tenor Google API Key — dipakai di: emojimix
-        const apiUrl = `https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`
+        const apiUrl = `https://tenor.googleapis.com/v2/featured?key=${config.APIkey.tenor}&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`
         
         const data = await f(apiUrl)
         
