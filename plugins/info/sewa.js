@@ -51,7 +51,7 @@ function buildPaymentMethods() {
   const payment = config.payment || {};
   const methods = [];
 
-  if (payment.qrisUrl || config.sewaPrice?.qrisUrl) methods.push("QRIS (lihat gambar)");
+  if (payment.qrisUrl) methods.push("QRIS (lihat gambar)");
 
   const eWallets = (payment.methods || []).filter((m) => m.number);
   for (const m of eWallets) {
@@ -251,7 +251,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, fullText, "sewa");
 
     // Auto-reply QRIS image kalau tersedia
-    const qrisUrl = config.sewaPrice?.qrisUrl || config.payment?.qrisUrl || "";
+    const qrisUrl = config.payment?.qrisUrl || "";
     if (qrisUrl) {
       try {
         let qrisBuffer;
