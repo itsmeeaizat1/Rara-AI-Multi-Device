@@ -350,7 +350,7 @@ async function messageHandler(msg, sock) {
   // Auto OCR Solve: real-time image detection for math/code
   if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
     try {
-      const { handleAutoOcrSolve, isAutoOcrEnabled } = await import("../plugins/owner/ocrsolve.js");
+      const { handleAutoOcrSolve, isAutoOcrEnabled } = await import("../plugins/ai/ocrsolve.js");
       if (typeof isAutoOcrEnabled === "function" && isAutoOcrEnabled(m, sock)) {
         const ocrResult = await handleAutoOcrSolve(m, sock);
         if (ocrResult) return;
@@ -363,7 +363,7 @@ async function messageHandler(msg, sock) {
   // Auto Meme Gen: real-time image detection for instant meme
   if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
     try {
-      const { handleAutoMemeGen, isAutoMemeEnabled } = await import("../plugins/owner/automemegenerator.js");
+      const { handleAutoMemeGen, isAutoMemeEnabled } = await import("../plugins/ai/automemegenerator.js");
       if (typeof isAutoMemeEnabled === "function" && isAutoMemeEnabled(m, sock)) {
         const memeResult = await handleAutoMemeGen(m, sock);
         if (memeResult) return;
