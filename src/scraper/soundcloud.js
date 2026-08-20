@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 
 const BASE_URL = "https://api-mobi.soundcloud.com/search";

@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { generateWAMessageFromContent, proto } from "nova";
 import fs from "fs";
 import path from "path";

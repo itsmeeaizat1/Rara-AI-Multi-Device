@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { exec } from "child_process";
 import { promisify } from "util";
 import { chat as geminiChat } from "../scraper/geminiVision.js";

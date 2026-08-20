@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import gsmarena from "gsmarena-api";
 
 async function search(query) {

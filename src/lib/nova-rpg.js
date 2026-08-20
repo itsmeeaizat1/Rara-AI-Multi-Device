@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Nova RPG System - Leveling & Economy
 const growth = Math.pow(Math.PI / Math.E, 1.618) * Math.E * 0.75;
 

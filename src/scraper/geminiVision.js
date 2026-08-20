@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import gemini from "./gemini.js";
 
 function buildMessage({ message, history = [], imageBuffer = null }) {

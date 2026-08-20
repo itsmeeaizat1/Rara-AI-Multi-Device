@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ═══════════════════════════════════════════════
 // Nova AI Grup - Auto nimbrung handler
 // Dipanggil dari src/handler.js untuk setiap pesan grup

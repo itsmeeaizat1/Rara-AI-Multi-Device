@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * nova-bmkg-scheduler.js
  * Scheduler gempa BMKG otomatis — kirim info gempa terkini ke grup/saluran.

@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { CronJob } from "cron";
 // moment-timezone removed — using native Intl.DateTimeFormat instead
 import config from "../../config.js";

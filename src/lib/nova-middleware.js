@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
 import { getDatabase } from "./nova-database.js";
 function levenshtein(a, b) {

@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * Credits & Thanks to
  * Developer = Aizat

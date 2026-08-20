@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios"
 async function scdl(url) {
     const base = 'https://convertico.com/';

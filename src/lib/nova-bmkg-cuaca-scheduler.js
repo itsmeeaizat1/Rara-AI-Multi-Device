@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * nova-bmkg-cuaca-scheduler.js
  * Scheduler cuaca rinci BMKG-style menggunakan Open-Meteo API.

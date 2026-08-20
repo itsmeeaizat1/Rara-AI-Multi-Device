@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getWeatherFooter, clearWeatherCache } from "./nova-weather-footer.js";
 
 const PATCH_KEY = "nova.weatherFooterPatched";

@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /***
   @ Base: https://chatgpt.com/
   @ Author: Shannz

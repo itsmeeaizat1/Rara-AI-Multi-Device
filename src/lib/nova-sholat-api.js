@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import NodeCache from 'node-cache'
 const BASE_URL = 'https://api.myquran.com/v2/sholat';

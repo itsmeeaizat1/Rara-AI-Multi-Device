@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";

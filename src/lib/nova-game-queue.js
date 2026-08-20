@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const gameQueue = new Map()
 const QUEUE_DELAY = 500
 const BATCH_WINDOW = 1000

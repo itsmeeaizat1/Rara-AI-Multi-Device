@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const biomes = {
   plains: {
     name: "🌿 Plains",

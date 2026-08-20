@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 #!/usr/bin/env node
 /**
  * tools/fix-unicode.js

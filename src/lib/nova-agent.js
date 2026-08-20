@@ -1,3 +1,4 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { Agent, setGlobalDispatcher } from 'undici'
 import { cpus } from 'os'
 const cpuCount = cpus().length
