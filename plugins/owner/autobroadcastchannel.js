@@ -12,7 +12,7 @@ import { claraHeader,
 
 const pluginConfig = {
   name: "autobroadcastchannel",
-  alias: ["autobcsaluran", "autobroadcastsaluran", "autosaluran", "togglesaluran", "togglasaluran", "salurantoggle", "notifsaluran", "togglenotif"],
+  alias: ["autobcsaluran", "autobc"],
   category: "owner",
   description: "Auto broadcast saluran — toggle on/off semua event notifikasi saluran",
   usage: ".autobroadcastchannel (lihat status)\n.autobroadcastchannel all on/off\n.autobroadcastchannel <event> (toggle per event)",
