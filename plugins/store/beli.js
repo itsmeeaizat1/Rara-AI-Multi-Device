@@ -3,6 +3,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import fs from "fs";
 
 const pluginConfig = {
   name: "belistore",
@@ -146,6 +147,24 @@ async function handler(m, { sock }) {
   }
 
   await m.reply(paymentTxt);
+
+  // Auto-reply QRIS image kalau tersedia
+  const qrisUrl = config.payment?.qrisUrl || "";
+  if (qrisUrl) {
+    try {
+      let qrisBuffer;
+      if (/^https?:\/\//.test(qrisUrl)) {
+        const response = await fetch(qrisUrl);
+        qrisBuffer = Buffer.from(await response.arrayBuffer());
+      } else {
+        qrisBuffer = fs.readFileSync(qrisUrl);
+      }
+      await sock.sendMessage(m.chat, {
+        image: qrisBuffer,
+        caption: "\n*Scan QRIS di atas untuk pembayaran*"
+      }, { quoted: m });
+    } catch {}
+  }
 
   if (ownerJid) {
     const buyerNum = m.sender.split("@")[0];

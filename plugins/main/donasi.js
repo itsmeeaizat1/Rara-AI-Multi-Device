@@ -91,8 +91,13 @@ async function handler(m, { sock }) {
 
   if (qrisUrl) {
     try {
-      const response = await fetch(qrisUrl);
-      const qrisBuffer = Buffer.from(await response.arrayBuffer());
+      let qrisBuffer;
+      if (/^https?:\/\//.test(qrisUrl)) {
+        const response = await fetch(qrisUrl);
+        qrisBuffer = Buffer.from(await response.arrayBuffer());
+      } else {
+        qrisBuffer = fs.readFileSync(qrisUrl);
+      }
       await sock.sendButton(m.chat, qrisBuffer, text, m, {
         buttons: copyButtons,
       });
