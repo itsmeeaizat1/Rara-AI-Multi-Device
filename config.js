@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "./src/lib/nova-database.js";
 import * as ownerPremiumDb from "./src/lib/nova-premium-db.js";
-import { payment, donasi } from "./config/payment.config.js";
+import { payment, donasi } from "./config/setpayment.js";
 
 //  utamakan baca object config sampai bawah
 const config = {
