@@ -10,7 +10,7 @@ const pluginConfig = {
   description: "Auto reaction pesan di grup",
   usage: ".autoreaction on/off",
   example: ".autoreaction on",
-  isOwner: false,
+  isOwner: true,
   isPremium: false,
   isGroup: true,
   isPrivate: false,
