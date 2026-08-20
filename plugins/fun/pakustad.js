@@ -3,6 +3,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
+import config from "../../config.js";
 const pluginConfig = {
     name: ['pakustad', 'pak-ustad', 'tanyaustad'],
     alias: [],
@@ -31,7 +32,7 @@ async function handler(m, { sock }) {
     await m.react('🕐')
     
     try {
-        const apiUrl = `https://api.cuki.biz.id/api/canvas/ustadz?apikey=cuki-x&text=${encodeURIComponent(text)}`
+        const apiUrl = `https://api.cuki.biz.id/api/canvas/ustadz?apikey=${config.APIkey.cuki}&text=${encodeURIComponent(text)}`
         const { results } = await f(apiUrl)
         await sock.sendMedia(m.chat, results.url, text, m, {
             type: 'image'

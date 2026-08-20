@@ -19,8 +19,10 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const API_BASE = "https://www.sankavollerei.web.id";
-const API_KEY = "planaai";
+const API_BASE = sankaConfig.baseUrl;
+import fs from "node:fs";
+const sankaConfig = JSON.parse(fs.readFileSync(new URL("../../config/sankavollerei-api.json", import.meta.url), "utf8"));
+const API_KEY = sankaConfig.apikey;
 
 async function handler(m, { sock }) {
   await m.react("🕐");

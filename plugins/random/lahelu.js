@@ -21,7 +21,7 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-    const api = 'https://api.cuki.biz.id/api/random/lahelu?apikey=cuki-x'
+    const api = 'https://api.cuki.biz.id/api/random/lahelu?apikey=${config.APIkey.cuki}'
     await m.react('🕐')
     
     try {

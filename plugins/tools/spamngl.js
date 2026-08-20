@@ -3,6 +3,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
+import config from "../../config.js";
 const pluginConfig = {
     name: 'spamngl',
     alias: [],
@@ -30,7 +31,7 @@ async function handler(m, { sock }) {
     
     try {
         for(let i = 0; i < jumlah; i++) {
-            axios.get(`https://api.cuki.biz.id/api/tools/sendngl?apikey=cuki-x&link=${encodeURIComponent(link)}&text=${encodeURIComponent(kata)}`, {
+            axios.get(`https://api.cuki.biz.id/api/tools/sendngl?apikey=${config.APIkey.cuki}&link=${encodeURIComponent(link)}&text=${encodeURIComponent(kata)}`, {
                 timeout: 30000
             })
             await new Promise(resolve => setTimeout(resolve, 4000))
