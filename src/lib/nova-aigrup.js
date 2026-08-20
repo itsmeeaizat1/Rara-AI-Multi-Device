@@ -211,20 +211,8 @@ export async function handleAiGrup(m, sock, botNumber) {
       `JANGAN respon ke pesan yang tidak perlu balasan. ` +
       `Kalau pesan tidak menarik atau tidak perlu respon, balas kosong.`;
 
-    // Mood-Driven Theme: inject mood context into system prompt
-    try {
-      const { getMoodSystemPrompt } = await import("../plugins/owner/moodtheme.js");
-      if (typeof getMoodSystemPrompt === "function") {
-        const moodPrompt = getMoodSystemPrompt(m.sender || m.key?.participant);
-        if (moodPrompt) systemPrompt += moodPrompt;
-      }
-    } catch (e) {
-      // Mood theme not active, continue normally
-    }
-
     // Build messages
     const messages = [];
-    messages.push({ role: "system", content: systemPrompt });
     messages.push({ role: "user", content: `${senderName}: ${userMessage}` });
 
     // Typing indicator
@@ -239,6 +227,7 @@ export async function handleAiGrup(m, sock, botNumber) {
       providerKey: fmt.providerKey,
       model: model,
       messages: messages,
+      systemPrompt,  // callAI inject mood otomatis via global.__novaMoodSender
       apiKey: apiKey,
       apiEndpoint: apiEndpoint,
       temperature: 0.8,

@@ -214,12 +214,56 @@ function normalizeMessages(messages, systemPrompt) {
   return out;
 }
 
-async function callAI({ providerKey = "openai", model, messages, systemPrompt, apiKey, apiEndpoint, temperature = 0.7, maxTokens = 1024 }) {
+async function callAI(firstArg, secondArg) {
+  // Support 2 call formats:
+  // 1. callAI({ providerKey, messages, systemPrompt, ... }) — object format
+  // 2. callAI(promptString, { systemPrompt, ... }) — string format (future plugins)
+  let providerKey, model, messages, systemPrompt, apiKey, apiEndpoint, temperature, maxTokens, senderJid;
+
+  if (typeof firstArg === "string") {
+    // String format: callAI(prompt, { options })
+    const opts = secondArg || {};
+    messages = [{ role: "user", content: firstArg }];
+    systemPrompt = opts.systemPrompt || "";
+    apiKey = opts.apiKey || "";
+    apiEndpoint = opts.apiEndpoint || "";
+    model = opts.model || "";
+    providerKey = opts.providerKey || "openai";
+    temperature = opts.temperature ?? 0.7;
+    maxTokens = opts.maxTokens ?? 1024;
+    senderJid = opts.senderJid || "";
+  } else {
+    // Object format: callAI({ providerKey, messages, ... })
+    providerKey = firstArg.providerKey || "openai";
+    model = firstArg.model;
+    messages = firstArg.messages;
+    systemPrompt = firstArg.systemPrompt;
+    apiKey = firstArg.apiKey;
+    apiEndpoint = firstArg.apiEndpoint;
+    temperature = firstArg.temperature ?? 0.7;
+    maxTokens = firstArg.maxTokens ?? 1024;
+    senderJid = firstArg.senderJid || "";
+  }
+
   // Only override chatEndpoint if apiEndpoint is provided; keep provider's authHeader and buildBody
   const provider = resolveProvider(providerKey, {
     chatEndpoint: typeof apiEndpoint === "string" && apiEndpoint ? apiEndpoint : undefined,
   });
   if (!provider) throw new Error(`Provider ${providerKey} tidak didukung.`);
+
+  // Mood-Driven Theme: inject mood context into system prompt (global, all AI plugins)
+  try {
+    const sender = senderJid || global.__novaMoodSender || "";
+    if (sender) {
+      const { getMoodSystemPrompt } = await import("../plugins/owner/moodtheme.js");
+      if (typeof getMoodSystemPrompt === "function") {
+        const moodPrompt = getMoodSystemPrompt(sender);
+        if (moodPrompt) systemPrompt = (systemPrompt || "") + moodPrompt;
+      }
+    }
+  } catch (e) {
+    // Mood theme not active, continue normally
+  }
 
   const effectiveApiKey = String(apiKey || "");
   const effectiveModel = String(model || provider.defaultModel);

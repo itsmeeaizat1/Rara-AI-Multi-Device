@@ -21,6 +21,19 @@ const pluginConfig = {
 
 async function callAI(prompt, aiConfig) {
   const { apiKey, apiEndpoint, model, systemPrompt } = aiConfig || {};
+  
+  // Mood-Driven Theme: inject mood context
+  let _systemPrompt = systemPrompt || "Kamu adalah asisten bot WhatsApp.";
+  try {
+    const sender = global.__novaMoodSender || "";
+    if (sender) {
+      const { getMoodSystemPrompt } = await import("../owner/moodtheme.js");
+      if (typeof getMoodSystemPrompt === "function") {
+        const moodPrompt = getMoodSystemPrompt(sender);
+        if (moodPrompt) _systemPrompt = _systemPrompt + moodPrompt;
+      }
+    }
+  } catch (e) {}
   if (!apiKey || !apiEndpoint || !model) {
     return "AI belum dikonfigurasi. Minta owner mengisi API key dan endpoint di config.";
   }
@@ -34,7 +47,7 @@ async function callAI(prompt, aiConfig) {
     body: JSON.stringify({
       model,
       messages: [
-        { role: "system", content: systemPrompt || "Kamu adalah asisten bot WhatsApp." },
+        { role: "system", content: _systemPrompt },
         { role: "user", content: prompt },
       ],
     }),

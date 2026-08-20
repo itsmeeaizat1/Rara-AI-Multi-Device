@@ -102,19 +102,7 @@ async function handler(m, { sock, config: botConfig }) {
     const aiConfig = botConfig.aiHelp || {};
     const systemPrompt = String(aiConfig.systemPrompt || "Kamu adalah asisten AI yang ramah dan jelas.");
 
-    // Mood-Driven Theme: inject mood context into system prompt
-    try {
-      const { getMoodSystemPrompt } = await import("../owner/moodtheme.js");
-      if (typeof getMoodSystemPrompt === "function") {
-        const moodPrompt = getMoodSystemPrompt(m.sender);
-        if (moodPrompt) systemPrompt += moodPrompt;
-      }
-    } catch (e) {
-      // Mood theme not active, continue normally
-    }
-
     const messages = [
-      { role: "system", content: systemPrompt },
       ...history.slice(-20).map((item) => ({ role: item.role, content: item.content })),
       { role: "user", content: message },
     ];
@@ -124,6 +112,7 @@ async function handler(m, { sock, config: botConfig }) {
       providerKey: "openai",
       model: "gpt-4o-mini",
       messages,
+      systemPrompt,  // callAI akan inject mood otomatis via global.__novaMoodSender
       apiKey: aiConfig.apiKey,
       apiEndpoint: aiConfig.apiEndpoint,
     });

@@ -66,6 +66,11 @@ async function messageHandler(msg, sock) {
 
   if (!m) return;
 
+  // Global sender tracking for mood-driven AI (read by callAI)
+  if (!m.fromMe) {
+    global.__novaMoodSender = m.sender || m.key?.participant || "";
+  }
+
   const db = getDatabase();
 
   // Panel message logging (group only, private never logged)
