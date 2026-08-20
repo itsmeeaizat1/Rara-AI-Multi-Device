@@ -4,6 +4,7 @@
 // .ambientmimic on/off — Toggle (default OFF saat pairing)
 // Auto aktif di grup: deteksi VN marah/sedih/debat -> respon empatik
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { exec } from "child_process";
@@ -241,7 +242,7 @@ export async function handleAmbientMimic(m, sock) {
     const mode = cfg.mode || "auto";
     const threshold = cfg.threshold || "medium";
     const botConfig = (await import("../../config.js")).default;
-    const geminiKey = String(botConfig.aiHelp?.geminiApiKey || "");
+    const geminiKey = getApiKey("gemini");
 
     if (!geminiKey) {
       // Without Gemini, can't do multimodal audio analysis

@@ -3,6 +3,7 @@
 // Toggle: .aiautointeractionvn on/off  (owner only, default OFF saat pairing pertama)
 // TTS: Microsoft Edge Neural TTS (GRATIS, suara natural seperti manusia)
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
@@ -289,7 +290,7 @@ async function convertToOgg(inputBuffer, inputExt = ".mp3") {
 // === STT: Transcribe VN ===
 async function transcribeVN(buffer, mimeType, botConfig) {
   const aiConfig = botConfig.aiHelp || {};
-  const apiKey = String(aiConfig.apiKey || aiConfig.openaiApiKey || "");
+  const apiKey = getApiKey("aiFallback") || getApiKey("openai");
   const geminiKey = String(aiConfig.geminiApiKey || "");
 
   // Try Gemini multimodal (if key available)
@@ -351,7 +352,7 @@ async function transcribeVN(buffer, mimeType, botConfig) {
 // === AI Response Generation ===
 async function generateAIResponse(transcribedText, botConfig) {
   const aiConfig = botConfig.aiHelp || {};
-  const apiKey = String(aiConfig.apiKey || aiConfig.openaiApiKey || "");
+  const apiKey = getApiKey("aiFallback") || getApiKey("openai");
   const apiEndpoint = String(aiConfig.apiEndpoint || "https://api.openai.com/v1/chat/completions");
   const model = String(aiConfig.model || aiConfig.openaiModel || "gpt-4o-mini");
   const geminiKey = String(aiConfig.geminiApiKey || "");

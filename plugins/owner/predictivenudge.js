@@ -7,6 +7,7 @@
 // .predictivenudge reset — Reset data pola
 // .predictivenudge voice on/off — Nudge pakai VN suara neural atau teks
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
@@ -297,8 +298,8 @@ function decideNudge(pattern, userData) {
 
 // === AI-ENHANCED NUDGE (with API key) ===
 async function generateAINudge(pattern, userData, botConfig) {
-  const geminiKey = String(botConfig.aiHelp?.geminiApiKey || "");
-  const apiKey = String(botConfig.aiHelp?.apiKey || botConfig.aiHelp?.openaiApiKey || "");
+  const geminiKey = getApiKey("gemini");
+  const apiKey = getApiKey("aiFallback") || getApiKey("openai");
 
   const patternSummary = `Pola user:
 - Jam aktif hari ini: ${pattern.activeHours} jam

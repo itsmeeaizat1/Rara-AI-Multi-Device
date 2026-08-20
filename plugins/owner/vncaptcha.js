@@ -6,6 +6,7 @@
 // .vncaptcha status — Cek status
 // .vncaptcha strict on/off — Strict mode (VN wajib, gagal = block)
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
@@ -264,7 +265,7 @@ export async function verifyVnCaptcha(m, sock) {
 
     const mimeType = audioMsg.mimetype || "audio/ogg; codecs=opus";
     const botConfig = (await import("../../config.js")).default;
-    const geminiKey = String(botConfig.aiHelp?.geminiApiKey || "");
+    const geminiKey = getApiKey("gemini");
 
     if (!geminiKey) {
       // No API key — can't verify, fallback to basic check
