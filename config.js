@@ -229,7 +229,7 @@ const config = {
   messages: {
     wait: "🕕 *Proses...* Mohon tunggu sebentar ya.",
     success: "✅ *Berhasil!* Permintaan kamu sudah selesai.",
-    error: "❌ *Error!* Ada masalah pada sistem, coba lagi nanti.",
+    error: "❌ *Error!* Ada masalah pada sistem fiturnya, coba lagi nanti atau hubungi owner untuk kirim feedback.",
 
     ownerOnly: "*Akses Ditolak!* Fitur ini khusus untuk Owner bot.",
     premiumOnly:
@@ -237,12 +237,12 @@ const config = {
 
     groupOnly: "👥 *Group Only!* Fitur ini hanya bisa digunakan di dalam grup.",
     privateOnly:
-      "� *Private Only!* Fitur ini hanya bisa digunakan di chat pribadi bot.",
+      "👥 *Private Only!* Fitur ini hanya bisa digunakan di chat pribadi bot.",
 
     adminOnly:
-      "�️ *Admin Only!* Kamu harus jadi Admin grup untuk pakai fitur ini.",
+      "👥 *Admin Only!* Kamu harus jadi Admin grup untuk pakai fitur ini.",
     botAdminOnly:
-      "🤖 *Bot Bukan Admin!* Jadikan bot sebagai Admin grup dulu biar bisa kerja.",
+      "❗ *Bot Bukan Admin!* Jadikan bot sebagai Admin grup dulu biar bisa kerja.",
 
     cooldown:
       "🕕 *Tunggu Dulu!* Kamu masih dalam cooldown. Tunggu %time% detik lagi ya.",
@@ -252,9 +252,9 @@ const config = {
       "🔋 Limit kau berkurang sebanyak {amount}. Sisa limit: {sisa}",
 
     banned:
-      "🚫 *Kamu Dibanned!* Kamu tidak bisa menggunakan bot ini karena telah melanggar aturan.",
+      "🚫 *Kamu diblokir!* Kamu tidak bisa menggunakan bot ini karena telah melanggar aturan, hubungi owner untuk lebih lanjut.",
 
-    rejectCall: "🚫 JANGAN TELPON NOMOR INI WEH",
+    rejectCall: "❗ Ga boleh telepon nomor bot ini.",
   },
 
   database: { path: "./database/main" },
