@@ -1239,7 +1239,7 @@ async function startConnection(options = {}) {
         }
       }
 
-      // === Auto Reaction (grup) ===
+      // === Auto Reaction Emoji (grup) ===
       try {
         if (isGroup && !msg.key.fromMe) {
           const text = messageBody || "";
@@ -1252,6 +1252,43 @@ async function startConnection(options = {}) {
               const EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🔥", "👏", "🙌", "🎉", "💯"];
               const emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
               currentSock.sendMessage(jid, { react: { text: emoji, key: msg.key } }).catch(() => {});
+            }
+          }
+        }
+      } catch {}
+
+      // === Auto React Sticker (grup + private) ===
+      try {
+        if (!msg.key.fromMe) {
+          const _arsText = messageBody || "";
+          const _arsPrefix = config.command?.prefix || ".";
+          if (!_arsText.startsWith(_arsPrefix)) {
+            const { getDatabase: _arsDb } = await import("./lib/nova-database.js");
+            const _arsDbInst = _arsDb();
+            const _arsEnabled = _arsDbInst.setting("autoreactstickerEnabled") || false;
+            if (_arsEnabled) {
+              const _arsCollection = _arsDbInst.setting("autoreactstickerCollection") || [];
+              if (_arsCollection.length > 0) {
+                // Cooldown check
+                const _arsJeda = isGroup
+                  ? (_arsDbInst.setting("autoreactstickerJedaGrup") ?? 15000)
+                  : (_arsDbInst.setting("autoreactstickerJedaPrivate") ?? 5000);
+                const _arsKey = "ars_last_" + (isGroup ? jid : senderJid);
+                const _arsLast = global[_arsKey] || 0;
+                if (Date.now() - _arsLast >= _arsJeda) {
+                  global[_arsKey] = Date.now();
+                  // 30% chance to send sticker (avoid every message)
+                  if (Math.random() < 0.3) {
+                    const _arsEntry = _arsCollection[Math.floor(Math.random() * _arsCollection.length)];
+                    const _arsPath = await import("path").then(p => p.join(process.cwd(), "assets", "stickers", _arsEntry.file));
+                    const fs = await import("fs");
+                    if (fs.existsSync(_arsPath)) {
+                      const _arsBuffer = fs.readFileSync(_arsPath);
+                      await currentSock.sendMessage(jid, { sticker: _arsBuffer }, { quoted: msg }).catch(() => {});
+                    }
+                  }
+                }
+              }
             }
           }
         }
