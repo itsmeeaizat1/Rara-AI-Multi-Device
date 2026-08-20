@@ -394,6 +394,18 @@ async function messageHandler(msg, sock) {
     }
   }
 
+  // Mood-Driven Theme: passive typing pattern tracking
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+    try {
+      const { trackMoodTheme, isMoodThemeEnabled } = await import("../plugins/owner/moodtheme.js");
+      if (typeof isMoodThemeEnabled === "function" && isMoodThemeEnabled(m)) {
+        trackMoodTheme(m, sock);
+      }
+    } catch (e) {
+      console.error("[MoodTheme] Track error:", e.message);
+    }
+  }
+
   // Predictive Life-Nudge: passive pattern tracking + proactive nudge
   if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
     try {
