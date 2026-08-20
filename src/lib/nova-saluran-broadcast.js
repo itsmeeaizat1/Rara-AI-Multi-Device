@@ -22,6 +22,8 @@ const NOTIFY_EVENTS = {
   premiumAdd: "User Baru Premium",
   dailyLimitReset: "Reset Limit Harian",
   userRegister: "User Baru Daftar",
+  spamDetected: "Spam Terdeteksi",
+  warningGiven: "Peringatan User",
 };
 
 // Cek apakah event ini enabled (default: true)
@@ -42,6 +44,7 @@ function setNotifyEnabled(eventType, enabled) {
   const db = getDatabase();
   const key = "saluranNotify_" + eventType;
   db.setting(key, enabled);
+  db.save();
   return enabled;
 }
 
@@ -222,6 +225,7 @@ async function notifyUserRegister(sock, data) {
 
 // Anti-spam detect
 async function notifySpamDetected(sock, data) {
+  if (!isNotifyEnabled("spamDetected")) return { sent: false, reason: "Toggle off" };
   let msg = `*SPAM TERDETEKSI*\n\n`;
   msg += `Nomor: ${data.phoneNumber}\n`;
   msg += `Grup: ${data.groupName || "Private"}\n`;
@@ -234,6 +238,7 @@ async function notifySpamDetected(sock, data) {
 
 // Warning diberikan
 async function notifyWarningGiven(sock, data) {
+  if (!isNotifyEnabled("warningGiven")) return { sent: false, reason: "Toggle off" };
   let msg = `*PERINGATAN USER*\n\n`;
   msg += `Nomor: ${data.phoneNumber}\n`;
   msg += `Grup: ${data.groupName || "Private"}\n`;

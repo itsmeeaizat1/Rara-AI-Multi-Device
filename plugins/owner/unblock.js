@@ -1,20 +1,19 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "unblock",
-  alias: ["unblock", "unblock2", "unban3"],
+  alias: ["unblockuser", "bukablokir", "unblokir"],
   category: "owner",
   description: "Buka blokir user",
-  usage: ".unblock <@target>",
-  example: ".unblock @username",
+  usage: ".unblock <@target / nomor>",
+  example: ".unblock @username\n.unblock 6281234567890",
   isOwner: true,
   isPremium: false,
   isGroup: true,
-  isPrivate: false,
-  cooldown: 10,
+  isPrivate: true,
+  cooldown: 5,
   energi: 0,
   isEnabled: true,
 };
@@ -26,36 +25,64 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!targetRaw) {
       const text =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}unblock <@target>*`,
-          `◦ Contoh: *${prefix}unblock @username*`].join("\n")) +
+        claraWrap("Unblock User", [
+          `Penggunaan: ${prefix}unblock <@target / nomor>`,
+          `Contoh: ${prefix}unblock @username`,
+          `Contoh: ${prefix}unblock 6281234567890`,
+        ].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "unblock");
-      return { handled: true };
+      return sendReplyWithNav(sock, m, text, "unblock");
     }
 
-    const targetName = targetRaw.replace(/^@+/, "") || targetRaw;
+    // Parse target — bisa @mention, reply, atau nomor langsung
+    let targetJid = "";
+    let targetDisplay = "";
+
+    if (m.mentionedJid && m.mentionedJid.length > 0) {
+      targetJid = m.mentionedJid[0];
+      targetDisplay = "@" + targetJid.split("@")[0];
+    } else if (m.quoted) {
+      targetJid = m.quoted.sender;
+      targetDisplay = "@" + targetJid.split("@")[0];
+    } else {
+      // Nomor langsung
+      let num = targetRaw.replace(/[^0-9]/g, "");
+      if (num.startsWith("0")) num = "62" + num.slice(1);
+      if (!num.startsWith("62")) num = "62" + num;
+      targetJid = num + "@s.whatsapp.net";
+      targetDisplay = num;
+    }
+
+    if (!targetJid) {
+      return sendReplyWithNav(sock, m, claraWrap("Unblock User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "unblock");
+    }
+
+    // Eksekusi unblock via Baileys
+    await sock.updateBlockStatus(targetJid, "unblock");
 
     const text =
-      claraWrap("Unblock", [`◦ Target: *${targetName}*`,
-        "◦ Status: *Berhasil di-unblock*"].join("\n")) +
+      claraWrap("Unblock User", [
+        `Target: ${targetDisplay}`,
+        "Status: Berhasil di-unblock",
+      ].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await m.reply(claraWrap("unblock", text));
+    return sendReplyWithNav(sock, m, text, "unblock");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [
+        `Status: Gagal`,
+        `Alasan: ${error.message}`,
+      ].join("\n")) +
       "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
+      tipText("Coba lagi nanti atau ketik .menu");
 
-    await sendReplyWithNav(sock, m, text, "unblock");
+    return sendReplyWithNav(sock, m, text, "unblock");
   }
-
-  return { handled: true };
 }
 
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler };
