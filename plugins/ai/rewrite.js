@@ -34,6 +34,18 @@ async function callAI(prompt, aiConfig) {
       }
     }
   } catch (e) {}
+
+  // Time-Warp: inject temporal persona
+  try {
+    const sender = global.__novaMoodSender || "";
+    if (sender) {
+      const { getTimewarpPrompt } = await import("./aitimewarp.js");
+      if (typeof getTimewarpPrompt === "function") {
+        const warpPrompt = getTimewarpPrompt(sender);
+        if (warpPrompt) _systemPrompt = _systemPrompt + warpPrompt;
+      }
+    }
+  } catch (e) {}
   if (!apiKey || !apiEndpoint || !model) {
     return "AI belum dikonfigurasi. Minta owner mengisi API key dan endpoint di config.";
   }
