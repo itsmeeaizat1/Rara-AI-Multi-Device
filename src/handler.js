@@ -650,7 +650,7 @@ async function messageHandler(msg, sock) {
       await sock.sendPresenceUpdate("composing", m.chat);
     }
     if (autoReadOn) {
-      await sock.readMessages([msg]);
+      await sock.readMessages([msg.key]);
     }
 
     // === PROCESSING NOTIFICATION (media/tool only) ===
