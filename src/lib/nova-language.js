@@ -1,7 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Multi-Language Engine — Auto translate AI response ke bahasa user
-// .languagemenubot — set bahasa preferensi per user
-// Inject language instruction ke systemPrompt callAI (mirip moodtheme & timewarp)
+// DEFAULT: OFF — Bahasa Indonesia murni, no translation
+// User harus explicit set .languagemenubot <code> untuk aktif
+// Owner bisa matikan seluruh fitur via db.setting("multiLangEnabled", false)
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 // Bahasa yang didukung
@@ -28,15 +29,29 @@ const SUPPORTED_LANGUAGES = {
   ur: { name: "Urdu", native: "اردو", code: "ur", flag: "PK" },
 };
 
+// Cek apakah master toggle ON (owner bisa matikan seluruh fitur)
+// Default: false (OFF) — Indonesia murni, no translation
+export function isMultiLangEnabled() {
+  try {
+    const db = getDatabase();
+    return db.setting("multiLangEnabled") === true;
+  } catch {
+    return false; // Default OFF
+  }
+}
+
 // Cek bahasa user
 export function getUserLanguage(sender) {
   try {
+    // Master toggle OFF = gak ada translation sama sekali
+    if (!isMultiLangEnabled()) return null;
+
     if (!sender) return null;
     const db = getDatabase();
     const uid = sender.replace(/@.+/g, "");
     // Simpan di settings store: key = "userLang_<uid>"
     const lang = db.setting("userLang_" + uid);
-    return lang || null;
+    return lang || null; // null = belum set = Indonesia default
   } catch {
     return null;
   }
@@ -54,7 +69,7 @@ export function isLanguageEnabled(sender) {
   }
 }
 
-// Inject language instruction ke systemPrompt
+// Inject language instruction ke systemPrompt (callAI)
 export function getLanguagePrompt(sender) {
   try {
     const lang = getUserLanguage(sender);
@@ -78,7 +93,7 @@ export function setUserLanguage(sender, langCode) {
     const key = "userLang_" + uid;
 
     if (langCode === null) {
-      // Reset ke default (Indonesia)
+      // Reset ke default (Indonesia) = hapus preference
       db.setting(key, "id");
     } else {
       db.setting(key, langCode);
