@@ -121,29 +121,29 @@ const config = {
   },
 
   groupProtection: {
-    antilink: "⚠ *Antilink* — @%user% mengirim link.\nPesan dihapus.",
-    antilinkKick: "⚠ *Antilink* — @%user% di-kick karena mengirim link.",
-    antilinkGc: "⚠ *Antilink WA* — @%user% mengirim link WA.\nPesan dihapus.",
+    antilink: "❗ *Antilink* — @%user% mengirim link.\nPesan dihapus.",
+    antilinkKick: "❗ *Antilink* — @%user% di-kick karena mengirim link.",
+    antilinkGc: "❗ *Antilink WA* — @%user% mengirim link WA.\nPesan dihapus.",
     antilinkGcKick:
-      "⚠ *Antilink WA* — @%user% di-kick karena mengirim link WA.",
-    antilinkAll: "⚠ *Antilink* — @%user% mengirim link.\nPesan dihapus.",
-    antilinkAllKick: "⚠ *Antilink* — @%user% di-kick karena mengirim link.",
-    antitagsw: "⚠ *AntiTagSW* — Tag status dari @%user% dihapus.",
+      "❗ *Antilink WA* — @%user% di-kick karena mengirim link WA.",
+    antilinkAll: "❗ *Antilink* — @%user% mengirim link.\nPesan dihapus.",
+    antilinkAllKick: "❗ *Antilink* — @%user% di-kick karena mengirim link.",
+    antitagsw: "❗ *AntiTagSW* — Tag status dari @%user% dihapus.",
     antiviewonce: "👁️ *ViewOnce* — Dari @%user%",
     antiremove: "🗑️ *AntiDelete* — @%user% menghapus pesan:",
-    antiswgc: "⚠ *AntiSWGC* — Gak ada sw grup sw grup @%user%",
-    antihidetag: "⚠ *AntiHidetag* — Hidetag dari @%user% dihapus.",
+    antiswgc: "❗ *AntiSWGC* — Gak ada sw grup sw grup @%user%",
+    antihidetag: "👀 *AntiHidetag* — Hidetag dari @%user% dihapus.",
     antitoxicWarn:
-      "⚠ @%user% berkata kasar.\nPeringatan ke %warn% dari %max%, pelanggaran berikutnya bisa di-%method%.",
-    antitoxicAction: "🚫 @%user% di-%method% karena toxic. (%warn%/%max%)",
-    antidocument: "⚠ *AntiDocument* — Dokumen dari @%user% dihapus.",
-    antisticker: "⚠ *AntiSticker* — Sticker dari @%user% dihapus.",
-    antimedia: "⚠ *AntiMedia* — Media dari @%user% dihapus.",
-    antibot: "🤖 *AntiBot* — @%user% terdeteksi sebagai bot dan di-kick.",
-    notAdmin: "⚠ Bot bukan admin, tidak bisa menghapus pesan.",
+      "❗ @%user% berkata kasar.\nPeringatan ke %warn% dari %max%, pelanggaran berikutnya bisa di-%method%.",
+    antitoxicAction: "❗ @%user% di-%method% karena toxic. (%warn%/%max%)",
+    antidocument: "❗ *AntiDocument* — Dokumen dari @%user% dihapus.",
+    antisticker: "❗ *AntiSticker* — Sticker dari @%user% dihapus.",
+    antimedia: "❗ *AntiMedia* — Media dari @%user% dihapus.",
+    antibot: "🚫 *AntiBot* — @%user% terdeteksi sebagai bot dan di-kick.",
+    notAdmin: "👥 Bot bukan admin, tidak bisa menghapus pesan.",
   },
 
-  errorTemplate: `☢ Kayaknya command \`{prefix}{command}\` lagi ada kendala\nSilahkan coba lagi nanti, {pushName}\n\n_Jika masalah berlanjut, silahkan hubungi owner bot_`,
+  errorTemplate: `❗ Kayaknya perintah atau fitur ini \`{prefix}{command}\` lagi ada kendala\nSilahkan coba lagi nanti, {pushName}\n\nJika masalah berlanjut, silahkan hubungi owner bot`,
 
   features: {
     antiCall: false, // Jika true, bot akan menolak panggilan masuk
