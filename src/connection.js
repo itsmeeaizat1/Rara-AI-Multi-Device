@@ -1257,34 +1257,60 @@ async function startConnection(options = {}) {
         }
       } catch {}
 
-      // === Auto React Sticker (grup + private) ===
+      // === Auto React Sticker (trigger-based + random pool) ===
       try {
         if (!msg.key.fromMe) {
-          const _arsText = messageBody || "";
+          const _arsText = (messageBody || "").toLowerCase();
           const _arsPrefix = config.command?.prefix || ".";
-          if (!_arsText.startsWith(_arsPrefix)) {
+          if (!_arsText.startsWith(_arsPrefix) && _arsText.trim().length > 0) {
             const { getDatabase: _arsDb } = await import("./lib/nova-database.js");
+            const fs = await import("fs");
+            const pathMod = await import("path");
             const _arsDbInst = _arsDb();
             const _arsEnabled = _arsDbInst.setting("autoreactstickerEnabled") || false;
             if (_arsEnabled) {
-              const _arsCollection = _arsDbInst.setting("autoreactstickerCollection") || [];
-              if (_arsCollection.length > 0) {
-                // Cooldown check
+              // 1. Cek trigger-based dulu
+              const _arsTriggers = _arsDbInst.setting("autoreactstickerTriggers") || [];
+              let _arsTriggerMatch = null;
+              for (const _t of _arsTriggers) {
+                if (_arsText.includes(_t.trigger.toLowerCase())) {
+                  _arsTriggerMatch = _t;
+                  break;
+                }
+              }
+              if (_arsTriggerMatch) {
+                // Trigger match → kirim sticker spesifik (cooldown singkat)
                 const _arsJeda = isGroup
                   ? (_arsDbInst.setting("autoreactstickerJedaGrup") ?? 15000)
                   : (_arsDbInst.setting("autoreactstickerJedaPrivate") ?? 5000);
-                const _arsKey = "ars_last_" + (isGroup ? jid : senderJid);
+                const _arsKey = "ars_trig_" + (isGroup ? jid : senderJid) + "_" + _arsTriggerMatch.trigger;
                 const _arsLast = global[_arsKey] || 0;
                 if (Date.now() - _arsLast >= _arsJeda) {
                   global[_arsKey] = Date.now();
-                  // 30% chance to send sticker (avoid every message)
-                  if (Math.random() < 0.3) {
-                    const _arsEntry = _arsCollection[Math.floor(Math.random() * _arsCollection.length)];
-                    const _arsPath = await import("path").then(p => p.join(process.cwd(), "assets", "stickers", _arsEntry.file));
-                    const fs = await import("fs");
-                    if (fs.existsSync(_arsPath)) {
-                      const _arsBuffer = fs.readFileSync(_arsPath);
-                      await currentSock.sendMessage(jid, { sticker: _arsBuffer }, { quoted: msg }).catch(() => {});
+                  const _arsPath = pathMod.join(process.cwd(), "assets", "stickers", _arsTriggerMatch.stickerFile);
+                  if (fs.existsSync(_arsPath)) {
+                    const _arsBuffer = fs.readFileSync(_arsPath);
+                    await currentSock.sendMessage(jid, { sticker: _arsBuffer }, { quoted: msg }).catch(() => {});
+                  }
+                }
+              } else {
+                // 2. Tidak ada trigger match → random pool (30% chance + cooldown)
+                const _arsCollection = _arsDbInst.setting("autoreactstickerCollection") || [];
+                if (_arsCollection.length > 0) {
+                  const _arsJeda = isGroup
+                    ? (_arsDbInst.setting("autoreactstickerJedaGrup") ?? 15000)
+                    : (_arsDbInst.setting("autoreactstickerJedaPrivate") ?? 5000);
+                  const _arsKey = "ars_rand_" + (isGroup ? jid : senderJid);
+                  const _arsLast = global[_arsKey] || 0;
+                  if (Date.now() - _arsLast >= _arsJeda) {
+                    global[_arsKey] = Date.now();
+                    if (Math.random() < 0.3) {
+                      const _arsEntry = _arsCollection[Math.floor(Math.random() * _arsCollection.length)];
+                      const _arsPath = pathMod.join(process.cwd(), "assets", "stickers", _arsEntry.file);
+                      if (fs.existsSync(_arsPath)) {
+                        const _arsBuffer = fs.readFileSync(_arsPath);
+                        await currentSock.sendMessage(jid, { sticker: _arsBuffer }, { quoted: msg }).catch(() => {});
+                      }
                     }
                   }
                 }
