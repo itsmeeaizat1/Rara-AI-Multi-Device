@@ -3,7 +3,7 @@ import { getDatabase } from "./src/lib/nova-database.js";
 import * as ownerPremiumDb from "./src/lib/nova-premium-db.js";
 import { payment, donasi } from "./config/setpayment.js";
 import fs from "node:fs";
-const apikeysConfig = JSON.parse(fs.readFileSync(new URL("./config/apikeys.json", import.meta.url), "utf8"));
+const apikeysConfig = JSON.parse(fs.readFileSync(new URL("./src/lib/config/apikeys.json", import.meta.url), "utf8"));
 
 //  utamakan baca object config sampai bawah
 const config = {
