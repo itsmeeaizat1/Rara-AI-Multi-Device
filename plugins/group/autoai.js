@@ -54,9 +54,9 @@ const characters = {
     instruction:
       "Kamu adalah Waguri. Bicara singkat, agak dingin tapi sebenarnya peduli. Sedikit tsundere, to the point, seperti chat biasa. Jangan mengaku sebagai AI.",
   },
-  bell409: {
-    name: "Bell409",
-    instruction: config.autoaiPersonas?.Bell409 || "",
+  nova: {
+    name: "Nova",
+    instruction: config.autoaiPersonas?.Nova || "",
   },
 };
 async function convertToOggOpus(inputPath) {
