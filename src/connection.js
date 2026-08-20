@@ -1239,6 +1239,24 @@ async function startConnection(options = {}) {
         }
       }
 
+      // === Auto Reaction (grup) ===
+      try {
+        if (isGroup && !msg.key.fromMe) {
+          const text = messageBody || "";
+          const prefix = config.command?.prefix || ".";
+          if (!text.startsWith(prefix)) {
+            const { getDatabase: _arDb } = await import("./lib/nova-database.js");
+            const _arDbInst = _arDb();
+            const _grp = _arDbInst.getGroup(jid) || {};
+            if (_grp.autoreaction === true) {
+              const EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🔥", "👏", "🙌", "🎉", "💯"];
+              const emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+              currentSock.sendMessage(jid, { react: { text: emoji, key: msg.key } }).catch(() => {});
+            }
+          }
+        }
+      } catch {}
+
       if (options.onMessage) {
         options.onMessage(msg, currentSock).catch((error) => {
           colors.logger.error("Message", error.message);
