@@ -363,6 +363,19 @@ async function messageHandler(msg, sock) {
     }
   }
 
+  // Ambient Context Mimicry: bot dengar lingkungan dari VN, deteksi emosi, respon empatik
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+    try {
+      const { handleAmbientMimic, isAmbientMimicEnabled } = await import("../plugins/owner/ambientmimic.js");
+      if (typeof isAmbientMimicEnabled === "function" && isAmbientMimicEnabled(m, sock)) {
+        const ambientResult = await handleAmbientMimic(m, sock);
+        if (ambientResult) return;
+      }
+    } catch (e) {
+      console.error("[AmbientMimic] Hook error:", e.message);
+    }
+  }
+
   // Auto-AI: if not a command, check if auto-AI should respond
   if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
     try {
