@@ -2,6 +2,8 @@
 import { getDatabase } from "./src/lib/nova-database.js";
 import * as ownerPremiumDb from "./src/lib/nova-premium-db.js";
 import { payment, donasi } from "./config/setpayment.js";
+import fs from "node:fs";
+const apikeysConfig = JSON.parse(fs.readFileSync(new URL("./config/apikeys.json", import.meta.url), "utf8"));
 
 //  utamakan baca object config sampai bawah
 const config = {
@@ -371,23 +373,8 @@ const config = {
 - Jangan mengaku sebagai AI atau bot.`,
   },
 
-  //  APIkey
-  APIkey: {
-    // kalian bisa daftar di https://api.lolhuman.xyz, lalu ambil apikeynya
-    lolhuman: "APIKey-Milik-Bot-NovaMD",
-    // kalian bisa daftar di https://api.neoxr.eu, lalu ambil apikeynya
-    neoxr: "Milik-Bot-NovaMD",
-    fgsi: "fgsiapi-20c1605c-6d",
-    google: "AIzaSyAS-KiW0SrwiYKwexeBcGPijBVHFg2R_vo",
-    groq: "", // API Key Groq untuk fitur transkrip (gratis di console.groq.com)
-    betabotz: "Btz-67YfP",
-    // kalian bisa daftar di https://covenant.sbs, dan ambil apikeynya
-    covenant: "cov_live_bb660c9e5f735e46d808b7ae362914cfe35c2936739ee2b2",
-    onlym: "ONLym-783d29",
-    obscura: "obs-byOn9RVGMzvPXZQTsP9W",
-    firefly: "NovaNextGen",
-    cuki: "cuki-x"
-  },
+  //  APIkey — managed via config/apikeys.json
+  APIkey: apikeysConfig,
 
   // Alight Motion Premium API (api.znn.my.id)
   // Dapatkan token dari admin x-znn: wa.me/6285348284121
