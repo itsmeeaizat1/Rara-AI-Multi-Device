@@ -33,6 +33,7 @@ import {
 import fsc from "fs";
 import axios from "axios";
 import { getDatabase } from "./nova-database.js";
+import { translateUI, needsTranslation } from "./nova-i18n.js";
 import { getWeatherAddress } from "./nova-weather-footer.js";
 
 import { saluranCtx } from "./nova-context.js";
@@ -783,6 +784,13 @@ async function serialize(sock, msg, store = {}) {
    */
   m.reply = async (text, options = {}) => {
     if (!text && text !== 0) return null;
+
+    // Multi-language: auto-translate UI text ke bahasa user (Google Translate)
+    try {
+      if (typeof text === "string" && needsTranslation(m.sender)) {
+        text = await translateUI(text, m.sender);
+      }
+    } catch {}
 
     const formatUptime = (uptime) => {
       const hours = Math.floor((uptime % 86400) / 3600);
