@@ -376,6 +376,20 @@ async function messageHandler(msg, sock) {
     }
   }
 
+  // Predictive Life-Nudge: passive pattern tracking + proactive nudge
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+    try {
+      const { trackPredictiveNudge, checkAndSendNudge, isPredictiveNudgeEnabled } = await import("../plugins/owner/predictivenudge.js");
+      if (typeof isPredictiveNudgeEnabled === "function" && isPredictiveNudgeEnabled(m, sock)) {
+        trackPredictiveNudge(m, sock);
+        const nudgeSent = await checkAndSendNudge(m, sock);
+        // Nudge is proactive — don't return, let other processing continue
+      }
+    } catch (e) {
+      console.error("[PredictiveNudge] Hook error:", e.message);
+    }
+  }
+
   // Auto-AI: if not a command, check if auto-AI should respond
   if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
     try {
