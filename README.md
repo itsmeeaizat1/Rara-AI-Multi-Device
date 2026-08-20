@@ -287,7 +287,7 @@ Tolak: .tolakgabung 628xxx https://chat.whatsapp.com/xxxxx
 ### 🌍 Multi-Language System (.languagemenubot)
 Sistem multi-bahasa terintegrasi — bot support 20 bahasa dengan Google Translate API:
 * .languagemenubot — Lihat daftar 20 bahasa yang didukung
-* .languagemenubot <code> — Set bahasa (contoh: .languagemenubot en)
+* .languagemenubot `<kode_bahasa>` — Set bahasa (contoh: .languagemenubot en)
 * .languagemenubot reset — Kembali ke Indonesia (default)
 * .languagemenubot on/off — Owner: aktifkan/matikan fitur (master toggle)
 * Default: OFF — Indonesia murni, zero translation
