@@ -279,6 +279,20 @@ async function callAI(firstArg, secondArg) {
     // Time-warp not active, continue normally
   }
 
+  // Multi-Language: inject language preference into system prompt (per-user)
+  try {
+    const sender = senderJid || global.__novaMoodSender || "";
+    if (sender) {
+      const { getLanguagePrompt } = await import("./nova-language.js");
+      if (typeof getLanguagePrompt === "function") {
+        const langPrompt = getLanguagePrompt(sender);
+        if (langPrompt) systemPrompt = (systemPrompt || "") + langPrompt;
+      }
+    }
+  } catch (e) {
+    // Language preference not set, continue normally
+  }
+
   const effectiveApiKey = String(apiKey || "");
   const effectiveModel = String(model || provider.defaultModel);
   const normalizedMessages = normalizeMessages(messages, systemPrompt && provider.supportsSystem ? systemPrompt : undefined);
