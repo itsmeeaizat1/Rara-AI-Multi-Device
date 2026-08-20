@@ -265,6 +265,20 @@ async function callAI(firstArg, secondArg) {
     // Mood theme not active, continue normally
   }
 
+  // Time-Warp: inject temporal persona into system prompt (per-user, when active)
+  try {
+    const sender = senderJid || global.__novaMoodSender || "";
+    if (sender) {
+      const { getTimewarpPrompt } = await import("../plugins/ai/aitimewarp.js");
+      if (typeof getTimewarpPrompt === "function") {
+        const warpPrompt = getTimewarpPrompt(sender);
+        if (warpPrompt) systemPrompt = (systemPrompt || "") + warpPrompt;
+      }
+    }
+  } catch (e) {
+    // Time-warp not active, continue normally
+  }
+
   const effectiveApiKey = String(apiKey || "");
   const effectiveModel = String(model || provider.defaultModel);
   const normalizedMessages = normalizeMessages(messages, systemPrompt && provider.supportsSystem ? systemPrompt : undefined);
