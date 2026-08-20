@@ -1244,7 +1244,7 @@ async function startConnection(options = {}) {
         if (isGroup && !msg.key.fromMe && msgType === "stickerMessage") {
           const { getDatabase: _acDb } = await import("./lib/nova-database.js");
           const _acDbInst = _acDb();
-          const _acCollect = _acDbInst.setting("autoreactstickerCollect") || false;
+          const _acCollect = _acDbInst.setting("autoreactstickerAutosave") || false;
           if (_acCollect) {
             const fs_ac = await import("fs");
             const path_ac = await import("path");
