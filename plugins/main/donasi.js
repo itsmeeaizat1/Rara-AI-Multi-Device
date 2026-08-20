@@ -26,8 +26,8 @@ async function handler(m, { sock }) {
   const saluranName = config.saluran?.name || botName;
 
   const donasiConfig = config.donasi || {};
-  const payments = donasiConfig.payment || [];
-  const links = donasiConfig.links || [];
+  const payments = (donasiConfig.payment || []).filter((p) => p.number);
+  const links = (donasiConfig.links || []).filter((l) => l.url);
   const qrisUrl = donasiConfig.qris || "";
   const benefits = donasiConfig.benefits || [
     "Mendukung development",
