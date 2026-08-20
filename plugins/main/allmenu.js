@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // allmenu.js — Semua command lengkap per kategori dengan variant tampilan
-// Thumbnail: assets/image/nova-thumbnail.jpg (via getStaticThumbnail)
+// Thumbnail: assets/image/nova-thumbnail-allmenu.jpg (via getStaticThumbnail)
 import * as botmodePlugin from "../group/botmode.js";
 import { generateWAMessageFromContent, prepareWAMessageMedia } from "nova";
 import sharp from "sharp";
@@ -381,7 +381,7 @@ ${readMore}
 
       // ── V2: Location thumbnail header ──
       case 2: {
-        const thumbV2All = await getStaticThumbnail("nova-thumbnail");
+        const thumbV2All = await getStaticThumbnail("nova-thumbnail-allmenu");
         await sock.relayMessage(m.chat, {
           viewOnceMessage: { message: {
             messageContextInfo: {},
@@ -416,7 +416,7 @@ ${readMore}
 
       // ── V3: Location thumbnail + single_select kategori (default) ──
       case 3: {
-        const thumbnail = await getStaticThumbnail("nova-thumbnail");
+        const thumbnail = await getStaticThumbnail("nova-thumbnail-allmenu");
         const catRowsAll = buildCategoryRows(prefix, m);
         const msg3 = generateWAMessageFromContent(m.chat, {
           viewOnceMessage: {
@@ -454,7 +454,7 @@ ${readMore}
     console.error("[AllMenu] Error:", error.message);
     let fallbackThumbAll = null;
     try {
-      fallbackThumbAll = await getStaticThumbnail("nova-thumbnail");
+      fallbackThumbAll = await getStaticThumbnail("nova-thumbnail-allmenu");
     } catch (e) {
       fallbackThumbAll = imageBuffer || null;
     }
