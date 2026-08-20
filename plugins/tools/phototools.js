@@ -30,6 +30,7 @@ const COMMANDS = {
   grayscale: { desc: "Convert ke hitam putih", usage: ".phototools grayscale", extra: "No extra args" },
   invert: { desc: "Invert/negatif warna", usage: ".phototools invert", extra: "No extra args" },
   tint: { desc: "Tint warna", usage: ".phototools tint <warna>", extra: "Contoh: tint red | tint #ff0000" },
+  extend: { desc: "Extend aspect ratio (square to landscape)", usage: ".phototools extend <ratio> [mode]", extra: "Ratio: 16:9, 4:3, 3:2 | Mode: blur (default), solid <warna>" },
 };
 
 const COLOR_MAP = {
@@ -221,6 +222,74 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         const tintColor = resolveColor(args[1] || "red");
         result = await sharp(imgBuffer, { failOn: "none" }).tint(tintColor).png().toBuffer();
         caption += " -> Tint: " + tintColor;
+        break;
+      }
+
+      case "extend": {
+        const ratioInput = (args[1] || "16:9").trim();
+        const [erw, erh] = ratioInput.split(":").map(Number);
+        if (!erw || !erh) throw new Error("Format ratio salah. Contoh: 16:9, 4:3, 3:2");
+        const mode = (args[2] || "blur").toLowerCase().trim();
+
+        const meta = await sharp(imgBuffer).metadata();
+        const srcW = meta.width;
+        const srcH = meta.height;
+
+        // Target canvas size based on ratio
+        let canvasW, canvasH;
+        if (erw >= erh) {
+          // Landscape — width based
+          canvasW = srcW;
+          canvasH = Math.round((srcW * erh) / erw);
+          if (canvasH > srcH) {
+            canvasH = srcH;
+            canvasW = Math.round((srcH * erw) / erh);
+          }
+        } else {
+          // Portrait — height based
+          canvasH = srcH;
+          canvasW = Math.round((srcH * erw) / erh);
+          if (canvasW > srcW) {
+            canvasW = srcW;
+            canvasH = Math.round((srcW * erh) / erw);
+          }
+        }
+
+        // Scale up the source image to fill the canvas, then blur
+        const blurred = await sharp(imgBuffer, { failOn: "none" })
+          .resize(canvasW, canvasH, { fit: "cover", position: "center" })
+          .modulate({ brightness: 0.6, saturation: 1.3 })
+          .blur(30)
+          .png()
+          .toBuffer();
+
+        // Resize original to fit inside canvas (contain)
+        const inner = await sharp(imgBuffer, { failOn: "none" })
+          .resize(canvasW, canvasH, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+          .png()
+          .toBuffer();
+
+        if (mode === "solid") {
+          const solidColor = resolveColor(args[3] || "black");
+          result = await sharp({
+            create: {
+              width: canvasW,
+              height: canvasH,
+              channels: 4,
+              background: solidColor,
+            }
+          })
+          .composite([{ input: inner, blend: "over" }])
+          .png()
+          .toBuffer();
+          caption += " -> Extend: " + ratioInput + " (" + canvasW + "x" + canvasH + "px) solid:" + solidColor;
+        } else {
+          result = await sharp(blurred)
+            .composite([{ input: inner, blend: "over" }])
+            .png()
+            .toBuffer();
+          caption += " -> Extend: " + ratioInput + " (" + canvasW + "x" + canvasH + "px) blur";
+        }
         break;
       }
 
