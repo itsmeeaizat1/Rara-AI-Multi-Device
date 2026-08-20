@@ -27,7 +27,6 @@ async function handler(m, { sock }) {
 
   const donasiConfig = config.donasi || {};
   const payments = (donasiConfig.payment || []).filter((p) => p.number);
-  const links = (donasiConfig.links || []).filter((l) => l.url);
   const qrisUrl = donasiConfig.qris || "";
   const benefits = donasiConfig.benefits || [
     "Mendukung development",
@@ -42,20 +41,13 @@ async function handler(m, { sock }) {
 ╚┈┈┈┈┈┈┈┈┈❖
 `;
 
-  if (payments.length > 0 || links.length > 0) {
+  if (payments.length > 0) {
     text += `\n╔┈┈「 *Pembayaran* 」\n╎\n`;
     for (const pay of payments) {
       text += `╎❏ *${pay.name}*\n╎   ${pay.number} (a/n ${pay.holder})\n`;
     }
     text += `╚┈┈┈┈┈┈┈┈┈❖\n`;
 
-    if (links.length > 0) {
-      text += `\n╔┈┈「 *Link Donasi* 」\n╎\n`;
-      for (const link of links) {
-        text += `╎❏ *${link.name}*\n╎   ${link.url}\n`;
-      }
-      text += `╚┈┈┈┈┈┈┈┈┈❖\n`;
-    }
   } else {
     text += `\n╔┈┈「 *Pembayaran* 」\n╎\n╎❏ Belum dikonfigurasi\n╎❏ Edit config.donasi\n╚┈┈┈┈┈┈┈┈┈❖\n`;
   }

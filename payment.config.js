@@ -50,13 +50,6 @@ export const donasi = {
     { name: "LinkAja", number: "", holder: "" },
   ],
 
-  // Link donasi online
-  links: [
-    { name: "Saweria", url: "" },
-    { name: "Trakteer", url: "" },
-    { name: "Sociabuzz", url: "" },
-  ],
-
   benefits: [
     "Mendukung development",
     "Server lebih stabil",
