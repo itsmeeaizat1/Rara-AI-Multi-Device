@@ -250,6 +250,10 @@ async function handler(m, { sock, config: botConfig }) {
 
     // ═══ spam toggle (proactive messaging on/off) ═══
     if (subcmd === "spam" || subcmd === "proactive") {
+      if (!m.isOwner) {
+        await m.reply(claraWrap("Ditolak", ["Hanya owner yang bisa toggle proactive AI Grup."].join("\n")));
+        return { handled: true };
+      }
       if (await blockFromGroup("Toggle proactive")) return { handled: true };
       const action = (args[1] || "").toLowerCase();
 
@@ -357,6 +361,10 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
 
     // ═══ on (simple, pakai format saat ini) ═══
     if (subcmd === "on") {
+      if (!m.isOwner) {
+        await m.reply(claraWrap("Ditolak", ["Hanya owner yang bisa toggle AI Grup."].join("\n")));
+        return { handled: true };
+      }
       if (await blockFromGroup("Toggle AI Grup")) return { handled: true };
       if (!currentKey) {
         await m.reply(
@@ -380,6 +388,10 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
 
     // ═══ off ═══
     if (subcmd === "off") {
+      if (!m.isOwner) {
+        await m.reply(claraWrap("Ditolak", ["Hanya owner yang bisa toggle AI Grup."].join("\n")));
+        return { handled: true };
+      }
       if (await blockFromGroup("Toggle AI Grup")) return { handled: true };
       aigrup.enabled = false;
       db.save();

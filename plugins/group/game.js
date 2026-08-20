@@ -10,7 +10,7 @@ const pluginConfig = {
   description: "Mengaktifkan atau menonaktifkan fitur game di grup",
   usage: ".game <on/off>",
   example: ".game on",
-  isOwner: false,
+  isOwner: true,
   isPremium: false,
   isGroup: true,
   isPrivate: false,
