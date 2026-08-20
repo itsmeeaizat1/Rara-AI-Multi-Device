@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// AlightMotionV3 — Auto register AM premium via RyezenStore + CatchMail
+// AlightMotionV1 — Auto register AM premium via RyezenStore + CatchMail
 // Source: https://api.andaraz.com/snippets/ai1/alightmotionv3
 // © 2026 All Rights Reserved.
 import https from "https";
@@ -13,7 +13,7 @@ const pluginConfig = {
   name: "amprem",
   alias: ["alightmotion", "alight", "am"],
   category: "tools",
-  description: "Alight Motion Premium Creator V3 — auto register via RyezenStore + CatchMail",
+  description: "Alight Motion Premium Creator V1 — auto register via RyezenStore + CatchMail",
   usage: ".amprem create <jumlah>\n.amprem login <user> <pass>\n.amprem list",
   example: ".amprem create 1\n.amprem create 5\n.amprem login user pass",
   isOwner: true,
@@ -33,7 +33,7 @@ const USER_AGENTS = [
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
 ];
 
-class AlightMotionV3 {
+class AlightMotionV1 {
   constructor() {
     this.uaIndex = Math.floor(Math.random() * USER_AGENTS.length);
     this.cookie = null;
@@ -267,7 +267,7 @@ async function saveSession(session) {
     await fs.mkdir(path.dirname(SESSION_FILE), { recursive: true });
     await fs.writeFile(SESSION_FILE, JSON.stringify(session, null, 2), "utf8");
   } catch (e) {
-    console.error("[AM V3] saveSession error:", e);
+    console.error("[AM V1] saveSession error:", e);
   }
 }
 
@@ -284,9 +284,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const session = await loadSession();
       const accounts = session.accounts || [];
       if (accounts.length === 0) {
-        return m.reply(claraWrap("AM Premium V3", "Belum ada akun dibuat. Ketik .amprem create 1"));
+        return m.reply(claraWrap("AM Premium V1", "Belum ada akun dibuat. Ketik .amprem create 1"));
       }
-      let lines = ["DAFTAR AKUN AM PREMIUM V3", "Total: " + accounts.length + " akun", ""];
+      let lines = ["DAFTAR AKUN AM PREMIUM V1", "Total: " + accounts.length + " akun", ""];
       accounts.slice(-20).forEach((acc, i) => {
         lines.push((i + 1) + ". Email: " + acc.email);
         lines.push("   Password: " + acc.password);
@@ -295,7 +295,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (accounts.length > 20) {
         lines.push("", "... dan " + (accounts.length - 20) + " akun lainnya");
       }
-      return m.reply(claraWrap("AM Premium V3", lines));
+      return m.reply(claraWrap("AM Premium V1", lines));
     }
 
     // LOGIN (manual dengan user/pass yang udah ada)
@@ -303,13 +303,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const username = args[1] || "";
       const password = args[2] || "";
       if (!username || !password) {
-        return m.reply(claraWrap("AM Premium V3", "Format: .amprem login <username> <password>"));
+        return m.reply(claraWrap("AM Premium V1", "Format: .amprem login <username> <password>"));
       }
-      m.reply(claraWrap("AM Premium V3", "Login ke RyezenStore..."));
-      const am = new AlightMotionV3();
+      m.reply(claraWrap("AM Premium V1", "Login ke RyezenStore..."));
+      const am = new AlightMotionV1();
       try {
         const loginRes = await am.login(username, password);
-        return m.reply(claraWrap("AM Premium V3", [
+        return m.reply(claraWrap("AM Premium V1", [
           "LOGIN BERHASIL",
           "",
           "Username: " + username,
@@ -319,7 +319,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           "Ketik: .amprem create 1",
         ], "success"));
       } catch (e) {
-        return m.reply(claraWrap("AM Premium V3", "Login gagal: " + e.message));
+        return m.reply(claraWrap("AM Premium V1", "Login gagal: " + e.message));
       }
     }
 
@@ -329,9 +329,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (limit < 1) limit = 1;
       if (limit > 10) limit = 10;
 
-      m.reply(claraWrap("AM Premium V3", "Membuat " + limit + " akun AM Premium V3...\nProses mungkin butuh 1-2 menit per akun."));
+      m.reply(claraWrap("AM Premium V1", "Membuat " + limit + " akun AM Premium V1...\nProses mungkin butuh 1-2 menit per akun."));
 
-      const am = new AlightMotionV3();
+      const am = new AlightMotionV1();
       let successCount = 0;
       let failedCount = 0;
       let errorMsgs = [];
@@ -431,7 +431,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
 
       let lines = [
-        "HASIL CREATE AM PREMIUM V3",
+        "HASIL CREATE AM PREMIUM V1",
         "",
         "Berhasil: " + successCount + "/" + limit,
         "Gagal: " + failedCount,
@@ -452,12 +452,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       lines.push("", "Total akun tersimpan: .amprem list");
       lines.push("Source: RyezenStore + CatchMail");
 
-      return m.reply(claraWrap("AM Premium V3", lines, successCount > 0 ? "success" : "warn"));
+      return m.reply(claraWrap("AM Premium V1", lines, successCount > 0 ? "success" : "warn"));
     }
 
     // HELP
-    return m.reply(claraWrap("AM Premium V3", [
-      "Alight Motion Premium Creator V3",
+    return m.reply(claraWrap("AM Premium V1", [
+      "Alight Motion Premium Creator V1",
       "Auto register via RyezenStore + CatchMail",
       "",
       "CARA PAKAI:",
@@ -469,8 +469,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "Source: Andaraz API (api.andaraz.com/snippets/ai1/alightmotionv3)",
     ]));
   } catch (e) {
-    console.error("[AM Premium V3]", e);
-    m.reply(claraWrap("AM Premium V3", "Error: " + e.message));
+    console.error("[AM Premium V1]", e);
+    m.reply(claraWrap("AM Premium V1", "Error: " + e.message));
   }
 }
 
