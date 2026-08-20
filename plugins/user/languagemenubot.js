@@ -1,8 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Multi-Language Menu Bot — User set bahasa preferensi
+// DEFAULT: OFF — Indonesia murni, no translation
+// Owner aktifkan dulu via .languagemenubot on (owner only)
+// Setelah aktif, user bisa set bahasa mereka sendiri
 // .languagemenubot — lihat & set bahasa
 // .languagemenubot <code> — set bahasa (contoh: .languagemenubot en)
 // .languagemenubot reset — kembali ke default (Indonesia)
+// .languagemenubot on/off — owner toggle master switch
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, separator, tipText } from "../../src/lib/nova-menu-style.js";
@@ -11,14 +15,15 @@ import {
   getUserLanguage,
   setUserLanguage,
   getUserLanguageInfo,
+  isMultiLangEnabled,
 } from "../../src/lib/nova-language.js";
 
 const pluginConfig = {
   name: "languagemenubot",
   alias: ["langmenu", "setlanguage", "setlang", "botlanguage", "bahasabot"],
   category: "user",
-  description: "Set bahasa preferensi bot — auto translate semua response AI ke bahasa kamu",
-  usage: ".languagemenubot (lihat daftar bahasa)\n.languagemenubot <code> (set bahasa)\n.languagemenubot reset (kembali ke Indonesia)",
+  description: "Set bahasa preferensi bot — auto translate semua response ke bahasa kamu",
+  usage: ".languagemenubot (lihat daftar bahasa)\n.languagemenubot <code> (set bahasa)\n.languagemenubot reset (kembali ke Indonesia)\n.languagemenubot on/off (owner: aktifkan/matikan fitur)",
   example: ".languagemenubot en\n.languagemenubot ja\n.languagemenubot reset",
   isOwner: false,
   isPremium: false,
@@ -34,6 +39,37 @@ async function handler(m, { sock, config: botConfig }) {
   const args = m.args || [];
   const subCmd = args[0]?.toLowerCase();
   const sender = m.sender || m.key?.participant || m.key?.remoteJid || "";
+  const db = getDatabase();
+
+  // OWNER: on/off master toggle
+  if ((subCmd === "on" || subCmd === "off") && m.isOwner) {
+    db.setting("multiLangEnabled", subCmd === "on");
+    await db.save();
+    await m.react(subCmd === "on" ? "✅" : "❌");
+
+    const statusText = subCmd === "on"
+      ? "MULTI-LANGUAGE DIAKTIFKAN\n\nUser sekarang bisa set bahasa mereka\nDefault tetap Indonesia (no translate)\n\nSet bahasa: " + prefix + "languagemenubot <code>"
+      : "MULTI-LANGUAGE DINONAKTIFKAN\n\nSemua teks kembali ke Bahasa Indonesia murni\nTranslation dimatikan sepenuhnya";
+
+    return sendReplyWithNav(sock, m, claraWrap("Language Menu Bot", statusText), "languagemenubot");
+  }
+
+  // Cek master toggle — kalo OFF, tolak user
+  if (!isMultiLangEnabled()) {
+    let offText = claraWrap("Language Menu Bot", [
+      "Status: *MULTI-LANGUAGE OFF*",
+      "Default: *Bahasa Indonesia (murni)*",
+      "",
+      "Fitur ini sedang dimatikan oleh owner",
+      "Semua response bot menggunakan Bahasa Indonesia",
+    ].join("\n"));
+
+    if (m.isOwner) {
+      offText += "\n\nAktifkan: " + prefix + "languagemenubot on";
+    }
+
+    return sendReplyWithNav(sock, m, offText, "languagemenubot");
+  }
 
   // No args — show language menu
   if (!subCmd || subCmd === "list" || subCmd === "cek" || subCmd === "status") {
