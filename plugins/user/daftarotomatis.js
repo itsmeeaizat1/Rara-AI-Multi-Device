@@ -538,6 +538,26 @@ async function captchaAnswerHandler(m, sock) {
       return true
     }
 
+    // Captcha correct! Check if VN captcha interrogation is enabled
+    try {
+      const { isVnCaptchaEnabled, startVnCaptchaChallenge } = await import("./../owner/vncaptcha.js");
+      if (typeof isVnCaptchaEnabled === "function" && isVnCaptchaEnabled()) {
+        var vnResult = await startVnCaptchaChallenge(m, sock, {
+          sender: m.sender,
+          chatJid: m.chat,
+          name: session.name,
+          age: session.age,
+          gender: session.gender || "Tidak disebutkan",
+        });
+        if (!vnResult.skip) {
+          clearCaptchaSession(m.sender);
+          return true;
+        }
+      }
+    } catch (e) {
+      console.error("[DaftarOtomatis] VN captcha hook error:", e.message);
+    }
+
     // Captcha correct! Check preset data
     if (session.name && session.age) {
       var db = getDatabase()
@@ -634,6 +654,26 @@ async function captchaAnswerHandler(m, sock) {
       return true
     }
 
+    // Check VN captcha interrogation before completing registration
+    try {
+      const { isVnCaptchaEnabled, startVnCaptchaChallenge } = await import("./../owner/vncaptcha.js");
+      if (typeof isVnCaptchaEnabled === "function" && isVnCaptchaEnabled()) {
+        var vnResult2 = await startVnCaptchaChallenge(m, sock, {
+          sender: m.sender,
+          chatJid: m.chat,
+          name: session.name,
+          age: session.age,
+          gender: gender,
+        });
+        if (!vnResult2.skip) {
+          clearCaptchaSession(m.sender);
+          return true;
+        }
+      }
+    } catch (e) {
+      console.error("[DaftarOtomatis] VN captcha hook error (gender path):", e.message);
+    }
+
     var db = getDatabase()
     var currentUser = db.getUser(m.sender) || {}
     var rewards = getRewards()
@@ -676,6 +716,56 @@ async function captchaAnswerHandler(m, sock) {
   }
 
   return false
+}
+
+
+// === COMPLETE REGISTRATION AFTER VN CAPTCHA PASS ===
+// Called from vncaptcha.js when voice note verification succeeds
+export async function completeRegistrationAfterVn(m, sock, regData) {
+  try {
+    var db = getDatabase()
+    var currentUser = db.getUser(regData.sender) || {}
+    var rewards = getRewards()
+    var alreadyClaimed = Boolean(currentUser.hasClaimedRegisterReward)
+    var now = new Date().toISOString()
+    var regCount = Number(currentUser.registrationCount || 0) + 1
+    var serial = currentUser.regSerial || generateSerialNumber()
+
+    db.setUser(regData.sender, {
+      isRegistered: true,
+      regName: regData.name,
+      regAge: regData.age,
+      regGender: regData.gender || "Tidak disebutkan",
+      regSerial: serial,
+      registeredAt: currentUser.registeredAt || now,
+      lastRegisteredAt: now,
+      registrationCount: regCount,
+      hasClaimedRegisterReward: true,
+      unregisteredAt: null,
+    })
+
+    var randomBonus = null
+    if (!alreadyClaimed) {
+      randomBonus = generateRandomBonus()
+      db.updateKoin(regData.sender, rewards.koin + randomBonus.koin)
+      db.updateEnergi(regData.sender, rewards.energi + randomBonus.energi)
+      db.updateExp(regData.sender, rewards.exp + randomBonus.exp)
+    }
+    await db.save()
+
+    notifyUserRegister(sock, { name: regData.name, age: regData.age, gender: regData.gender || "Tidak disebutkan", phoneNumber: regData.sender.split("@")[0], serial: serial }).catch(() => {})
+
+    await sock.sendMessage(regData.chatJid, {
+      text: "\U0001F389 *Pendaftaran Berhasil!*\n\nSelamat datang, *" + regData.name + "!*\n\n" +
+        buildUserDataBlock(regData.name, regData.age, regData.gender || "Tidak disebutkan", serial) +
+        "\n\n" + buildSuccessRewardBlock(alreadyClaimed, randomBonus) + "\n\n\U0001F680 Sekarang kamu sudah siap menggunakan bot!",
+      contextInfo: getRegistrationContextInfo(),
+    })
+    return true
+  } catch (e) {
+    console.error("[DaftarOtomatis] VN complete error:", e.message)
+    return false
+  }
 }
 
 export { pluginConfig as config, handler, captchaAnswerHandler, clearCaptchaSession }
