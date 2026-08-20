@@ -1239,6 +1239,64 @@ async function startConnection(options = {}) {
         }
       }
 
+      // === Auto-Collect Stiker (simpan stiker yang lewat di grup) ===
+      try {
+        if (isGroup && !msg.key.fromMe && msgType === "stickerMessage") {
+          const { getDatabase: _acDb } = await import("./lib/nova-database.js");
+          const _acDbInst = _acDb();
+          const _acCollect = _acDbInst.setting("autoreactstickerCollect") || false;
+          if (_acCollect) {
+            const fs_ac = await import("fs");
+            const path_ac = await import("path");
+            const _acDir = path_ac.join(process.cwd(), "assets", "stickers");
+            if (!fs_ac.existsSync(_acDir)) fs_ac.mkdirSync(_acDir, { recursive: true });
+
+            // Download stiker
+            const _acBuffer = await currentSock.downloadMediaMessage(msg).catch(() => null);
+            if (_acBuffer && _acBuffer.length > 0 && _acBuffer.length < 500 * 1024) {
+              // Hash sederhana untuk dedup (cegah stiker duplikat)
+              const crypto_ac = await import("crypto");
+              const _acHash = crypto_ac.createHash("md5").update(_acBuffer).digest("hex");
+
+              // Cek duplikat
+              const _acExisting = _acDbInst.setting("autoreactstickerCollection") || [];
+              const _acAlreadyExists = _acExisting.some((s) => s.hash === _acHash);
+              if (!_acAlreadyExists) {
+                // Max 500 stiker — buang yang lama kalau penuh
+                let _acCollection = [..._acExisting];
+                if (_acCollection.length >= 500) {
+                  // Hapus 50 stiker tertua
+                  const _toRemove = _acCollection.splice(0, 50);
+                  for (const _old of _toRemove) {
+                    const _oldPath = path_ac.join(_acDir, _old.file);
+                    if (fs_ac.existsSync(_oldPath)) {
+                      try { fs_ac.unlinkSync(_oldPath); } catch {}
+                    }
+                  }
+                }
+
+                const _acFileName = "sticker_auto_" + Date.now() + "_" + _acHash.slice(0, 8) + ".webp";
+                const _acFilePath = path_ac.join(_acDir, _acFileName);
+                fs_ac.writeFileSync(_acFilePath, _acBuffer);
+
+                _acCollection.push({
+                  file: _acFileName,
+                  size: _acBuffer.length,
+                  hash: _acHash,
+                  added: Date.now(),
+                  source: "auto-collect",
+                });
+
+                _acDbInst.setting("autoreactstickerCollection", _acCollection);
+                _acDbInst.save().catch(() => {});
+              }
+            }
+          }
+        }
+      } catch (e) {
+        if (config.dev?.debugLog) colors.logger.debug("sticker-collect", e.message);
+      }
+
       // === Auto Reaction Emoji (grup) ===
       try {
         if (isGroup && !msg.key.fromMe) {
