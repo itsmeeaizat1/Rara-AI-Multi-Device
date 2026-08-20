@@ -23,7 +23,7 @@ import {
   isLidConverted,
 } from "./lib/nova-lid.js";
 import { initAutoBackup } from "./lib/nova-auto-backup.js";
-import { getAuthKey, verifyAuth, getOwnerContact } from "./lib/auth/index.js";
+import { getAuthKey, verifyAuth, getOwnerContact } from "./lib/auth/auth.js";
 import { trackMessage as pulseTrack } from "../plugins/future/autopulse.js";
 const groupCache = new NodeCache({ stdTTL: 5 * 60, useClones: false });
 const processedMessages = new NodeCache({ stdTTL: 30, useClones: false });
