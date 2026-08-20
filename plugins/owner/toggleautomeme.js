@@ -7,7 +7,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "toggleautomeme",
+  name: "automemegenerator",
   alias: ["toggleautomeme", "automemetoggle", "autoinstantmeme", "toggleinstantmeme"],
   category: "owner",
   description: "Toggle on/off instant meme generator dari foto (real-time AI Vision)",
