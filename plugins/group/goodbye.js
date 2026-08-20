@@ -71,7 +71,7 @@ export default {
     description: "Pesan goodbye saat member keluar grup",
     usage: ".goodbye on/off",
     example: ".goodbye on",
-    isOwner: false,
+    isOwner: true,
     isPremium: false,
     isGroup: true,
     isPrivate: false,

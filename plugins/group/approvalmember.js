@@ -10,7 +10,7 @@ const pluginConfig = {
   description: "Aktifkan/matikan persetujuan member di grup (admin only)",
   usage: ".approvalmember on / .approvalmember off",
   example: ".approvalmember on",
-  isOwner: false,
+  isOwner: true,
   isPremium: false,
   isGroup: true,
   isPrivate: false,

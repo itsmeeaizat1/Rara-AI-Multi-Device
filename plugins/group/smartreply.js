@@ -33,7 +33,7 @@ const pluginConfig = {
   description: "Smart Auto Reply dengan AI untuk FAQ grup",
   usage: ".smartreply on/off/add/del/list/model/reset",
   example: ".smartreply add jam buka|Toko buka jam 8-21, tutup Minggu",
-  isOwner: false,
+  isOwner: true,
   isPremium: false,
   isGroup: true,
   isPrivate: false,

@@ -71,7 +71,7 @@ export default {
     description: "Pesan welcome saat member join grup",
     usage: ".welcome on/off",
     example: ".welcome on",
-    isOwner: false,
+    isOwner: true,
     isPremium: false,
     isGroup: true,
     isPrivate: false,
