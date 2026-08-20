@@ -4,8 +4,8 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
-  name: "autoreaction",
-  alias: ["autoreaction", "autoreact", "reactionv2"],
+  name: "autoreactionemoji",
+  alias: ["autoreaction", "autoreact", "reactionv2", "autoreactionemoji"],
   category: "group",
   description: "Auto reaction pesan di grup",
   usage: ".autoreaction on/off",
