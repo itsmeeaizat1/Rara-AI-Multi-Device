@@ -1,5 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { getBackupStatus } from "../../src/lib/nova-auto-backup.js";
+import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
@@ -31,31 +33,33 @@ async function handler(m, { sock }) {
   ];
 
   // Bot mode
-  const isSelf = db.data?.settings?.selfMode || false;
-  lines.push("Bot Mode: " + (isSelf ? "*SELF (Aman)* " : "*PUBLIC* — semua orang bisa pakai"));
-  const isPublic = db.data?.settings?.publicMode || !isSelf;
+  const isSelf = db.setting("selfMode") ?? false;
+  lines.push("Bot Mode: " + (isSelf ? "*SELF (Aman)*" : "*PUBLIC* — semua orang bisa pakai"));
   if (!isSelf) {
     lines.push("⚠ Mode PUBLIC — siapapun bisa kirim perintah ke bot");
   }
 
-  // Anti-call
+  // Anti-call — DB setting (camelCase) fallback ke config
   lines.push("");
   lines.push("PROTEKSI TELEPON:");
-  const antiCall = db.data?.settings?.anticall !== false;
+  const antiCall = db.setting("antiCall") ?? config.features?.antiCall ?? false;
   lines.push("Anti-Call: " + (antiCall ? "✅ Aktif" : "❌ Nonaktif"));
 
-  // Anti-spam
+  // Anti-spam DM — DB setting (antispamDM, object dgn .enabled)
   lines.push("");
   lines.push("PROTEKSI SPAM:");
-  const antiSpam = db.data?.settings?.antispam !== false;
-  lines.push("Anti-Spam: " + (antiSpam ? "✅ Aktif" : "❌ Nonaktif"));
-  const antiSpamDM = db.data?.settings?.antispamdm !== false;
+  const antispamDMSetting = db.setting("antispamDM");
+  const antiSpamDM = antispamDMSetting?.enabled === true;
   lines.push("Anti-Spam DM: " + (antiSpamDM ? "✅ Aktif" : "❌ Nonaktif"));
 
-  // Anti link/virtex
+  // Anti-spam GC — per-group, cek group context
+  const groupSettings = db.getGroup(groupId) || {};
+  const antiSpamGC = groupSettings.antispam === true;
+  lines.push("Anti-Spam GC (grup ini): " + (antiSpamGC ? "✅ Aktif" : "❌ Nonaktif"));
+
+  // Anti link/virtex — per-group
   lines.push("");
   lines.push("PROTEKSI GRUP:");
-  const groupSettings = db.data?.groups?.[groupId] || {};
   const protections = [
     { key: "antilink", name: "Anti-Link" },
     { key: "antilinkgc", name: "Anti-Link GC" },
@@ -89,43 +93,50 @@ async function handler(m, { sock }) {
   lines.push("");
   lines.push("Total proteksi grup aktif: " + activeCount + "/" + protections.length);
 
-  // Session security
+  // Session security — autobackup pake getBackupStatus()
   lines.push("");
   lines.push("SESSION & DATA:");
-  const autoBackup = db.data?.settings?.autobackup !== false;
-  lines.push("Auto-Backup: " + (autoBackup ? "✅ Aktif" : "❌ Nonaktif"));
-  const autoClearCache = db.data?.settings?.autoclearcache !== false;
-  lines.push("Auto-Clear Cache: " + (autoClearCache ? "✅ Aktif" : "❌ Nonaktif"));
+  let backupInfo;
+  try {
+    backupInfo = getBackupStatus();
+  } catch {
+    backupInfo = { enabled: false };
+  }
+  lines.push("Auto-Backup: " + (backupInfo.enabled ? "✅ Aktif" : "❌ Nonaktif"));
 
   // Owner security
   lines.push("");
   lines.push("OWNER & AKSES:");
-  const ownerCount = db.data?.settings?.owner?.length || 0;
-  lines.push("Total Owner: " + ownerCount);
-  const selfMode = db.data?.settings?.selfMode || false;
-  lines.push("Self Mode: " + (selfMode ? "✅ Aktif (aman)" : "❌ Nonaktif"));
-  const onlyAdmin = db.data?.settings?.onlyadmin || false;
+  const ownerList = db.owner || [];
+  lines.push("Total Owner: " + ownerList.length);
+  lines.push("Self Mode: " + (isSelf ? "✅ Aktif (aman)" : "❌ Nonaktif"));
+  const onlyAdmin = db.setting("onlyAdmin") ?? false;
   lines.push("Only Admin: " + (onlyAdmin ? "✅ Aktif" : "❌ Nonaktif"));
-  const onlyPC = db.data?.settings?.onlypc || false;
+  const onlyPC = db.setting("onlyPc") ?? false;
   lines.push("Only PC: " + (onlyPC ? "✅ Aktif" : "❌ Nonaktif"));
 
-  // Banned users
-  const bannedCount = db.data?.banned?.length || 0;
+  // Banned & blocked users — cek dari users data
+  const usersData = db.data?.users || {};
+  let bannedCount = 0;
+  let blockedCount = 0;
+  for (const jid of Object.keys(usersData)) {
+    if (usersData[jid]?.isBanned) bannedCount++;
+    if (usersData[jid]?.isBlocked) blockedCount++;
+  }
   lines.push("User dibanned: " + bannedCount);
-  const blockedCount = db.data?.blocked?.length || 0;
   lines.push("Nomor diblokir: " + blockedCount);
 
   // Security score
   let score = 0;
   if (isSelf) score += 25;
   if (antiCall) score += 10;
-  if (antiSpam) score += 10;
   if (antiSpamDM) score += 10;
+  if (antiSpamGC) score += 10;
   if (activeCount >= 5) score += 10;
-  if (autoBackup) score += 10;
-  if (autoClearCache) score += 5;
-  if (selfMode) score += 10;
-  if (bannedCount >= 0) score += 10; // sistem berfungsi
+  if (backupInfo.enabled) score += 10;
+  if (isSelf) score += 10;
+  if (bannedCount >= 0) score += 5; // sistem berfungsi
+  if (blockedCount >= 0) score += 5;
 
   const bar = "█".repeat(Math.floor(score / 10)) + "░".repeat(10 - Math.floor(score / 10));
 
@@ -143,8 +154,8 @@ async function handler(m, { sock }) {
   const recommendations = [];
   if (!isSelf) recommendations.push("Aktifkan Self Mode (.self) untuk batasi akses");
   if (!antiCall) recommendations.push("Aktifkan Anti-Call (.anticall on)");
-  if (!antiSpam) recommendations.push("Aktifkan Anti-Spam (.antispam on)");
-  if (!autoBackup) recommendations.push("Aktifkan Auto-Backup (.autobackup on)");
+  if (!antiSpamDM) recommendations.push("Aktifkan Anti-Spam DM (.antispamdm on)");
+  if (!backupInfo.enabled) recommendations.push("Aktifkan Auto-Backup (.autobackup on)");
   if (activeCount < 5) recommendations.push("Aktifkan lebih banyak proteksi grup");
 
   if (recommendations.length > 0) {
