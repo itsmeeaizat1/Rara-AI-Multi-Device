@@ -148,10 +148,10 @@ const config = {
   errorTemplate: `❗ Kayaknya perintah atau fitur ini \`{prefix}{command}\` lagi ada kendala\nSilahkan coba lagi nanti, {pushName}\n\nJika masalah berlanjut, silahkan hubungi owner bot`,
 
   features: {
-    antiCall: false, // Jika true, bot akan menolak panggilan masuk
+    antiCall: true, // Jika true, bot akan menolak panggilan masuk
     blockIfCall: false, // Jika true, bot akan memblokir nomor yang menelpon bot
     autoTyping: false,
-    autoRead: false,
+    autoRead: true,
     logMessage: false,
     dailyLimitReset: true,
     smartTriggers: false,
