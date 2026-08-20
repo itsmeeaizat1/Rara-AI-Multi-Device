@@ -9,7 +9,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 // ============================================================
 // PPOB - Pembayaran & Pengisian Online Terintegrasi
 // Multi-Provider: DigiFlazz, FMPedia, (mudah ditambah provider lain)
-// Payment: Integrasi payment.config.js (QRIS, Dana, Bank, dll)
+// Payment: Sistem payment sendiri (text mode atau image mode)
 // Flow: lihat produk -> pesan -> bayar (QRIS/Dana/Bank) -> owner konfirmasi -> proses
 // ============================================================
 
@@ -374,6 +374,13 @@ function loadData() {
       vocagame: { userId: "", apiKey: "" },
     },
     markup: 5,
+    // Mode payment: "text" = text only, "image" = kirim gambar QR
+    paymentMode: "image",
+    // QR images per metode (URL atau path file lokal)
+    paymentImages: {
+      qris: { url: "https://i.ibb.co.com/3mdfp8s8/qr-ID1025405090990-21-08-26-1787245670-1787245670924.jpg", enabled: true },
+      dana: { url: "https://i.ibb.co.com/QvvwkgVd/shareqr.png", enabled: true },
+    },
     orders: [],
     pendingOrders: {},
     priceCache: {},
@@ -441,7 +448,7 @@ async function getCachedPriceList(data, force = false) {
 }
 
 // ============================================================
-// PAYMENT INSTRUCTIONS (from payment.config.js)
+// PAYMENT INSTRUCTIONS (PPOB own payment config)
 // ============================================================
 
 function buildPaymentInstructions(price, ppobPayment) {
@@ -484,21 +491,21 @@ function buildPaymentInstructions(price, ppobPayment) {
   return text;
 }
 
-async function sendQrisImage(sock, m, caption, ppobPayment) {
-  const payment = ppobPayment || {};
-  if (!payment.qrisUrl) return false;
+// Kirim gambar QR dari URL atau path lokal
+async function sendQrImage(sock, chatId, imageUrl, caption, quoted) {
+  if (!imageUrl) return false;
   try {
-    let qrisBuffer;
-    if (/^https?:\/\//.test(payment.qrisUrl)) {
-      const response = await fetch(payment.qrisUrl);
-      qrisBuffer = Buffer.from(await response.arrayBuffer());
+    let buffer;
+    if (/^https?:\/\//.test(imageUrl)) {
+      const response = await fetch(imageUrl);
+      buffer = Buffer.from(await response.arrayBuffer());
     } else {
-      qrisBuffer = fs.readFileSync(payment.qrisUrl);
+      buffer = fs.readFileSync(imageUrl);
     }
     await sock.sendMessage(
-      m.chat,
-      { image: qrisBuffer, caption },
-      { quoted: m }
+      chatId,
+      { image: buffer, caption },
+      { quoted: quoted || undefined }
     );
     return true;
   } catch {
@@ -960,11 +967,36 @@ async function handler(m, { sock }) {
 
       await m.react("✅");
 
-      const sent = await sendQrisImage(
+      // Mode image: kirim gambar QR untuk setiap metode yang ada
+      if (data.paymentMode === "image" && data.paymentImages) {
+        const imgs = data.paymentImages;
+        const imgKeys = Object.keys(imgs).filter(
+          (k) => imgs[k] && imgs[k].url && imgs[k].enabled !== false
+        );
+        if (imgKeys.length > 0) {
+          // Kirim text info dulu
+          await sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+          // Kirim setiap QR image
+          for (const key of imgKeys) {
+            await sendQrImage(
+              sock,
+              m.chat,
+              imgs[key],
+              claraWrap("PPOB", "QR " + key.toUpperCase() + "\nScan untuk bayar"),
+              m
+            );
+          }
+          return;
+        }
+      }
+
+      // Mode text atau fallback
+      const sent = await sendQrImage(
         sock,
-        m,
+        m.chat,
+        data.payment?.qrisUrl || "",
         claraWrap("PPOB - QRIS", body),
-        data.payment
+        m
       );
       if (!sent) {
         return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
@@ -979,6 +1011,148 @@ async function handler(m, { sock }) {
         "ppob"
       );
     }
+  }
+
+  // === SETMODE (Owner only) ===
+  if (sub === "setmode" || sub === "paymode") {
+    if (!isOwner)
+      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+    const mode = (arg1 || "").toLowerCase();
+    if (mode !== "text" && mode !== "image") {
+      return sendReplyWithNav(
+        sock,
+        m,
+        claraWrap(
+          "PPOB",
+          "Set Mode Payment (Owner)\n\n" +
+            ".ppob setmode <text|image>\n\n" +
+            "text  = metode pembayaran sebagai teks\n" +
+            "image = kirim gambar QR (QRIS, Dana, dll)\n\n" +
+            "Mode aktif: " + (data.paymentMode || "image")
+        ),
+        "ppob"
+      );
+    }
+    data.paymentMode = mode;
+    saveData(data);
+    await m.react("✅");
+    return sendReplyWithNav(
+      sock,
+      m,
+      claraWrap(
+        "PPOB",
+        "Mode payment: " + mode + "\n\n" +
+          (mode === "image"
+            ? "Bot akan kirim gambar QR saat user order\n" +
+              "Atur gambar QR: .ppob setqrimg"
+            : "Bot akan tampilkan metode sebagai teks")
+      ),
+      "ppob"
+    );
+  }
+
+  // === SETQRIMG (Owner only) ===
+  if (sub === "setqrimg" || sub === "setqrimage") {
+    if (!isOwner)
+      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+    const key = (arg1 || "").toLowerCase();
+    const url = arg2 || "";
+    if (!data.paymentImages) data.paymentImages = {};
+    if (!key || !url) {
+      let body = "Set QR Image (Owner)\n\n";
+      body += "Mode aktif: " + (data.paymentMode || "image") + "\n\n";
+      body += "QR Images:\n";
+      const imgs = data.paymentImages || {};
+      if (Object.keys(imgs).length === 0) {
+        body += "  (kosong)\n";
+      } else {
+        for (const [k, v] of Object.entries(imgs)) {
+          const status = v.enabled ? "ON" : "OFF";
+          body += "  [" + status + "] " + k + ": " + (v.url || "kosong") + "\n";
+        }
+      }
+      body += "\nToggle: .ppob toggleqrimg <nama>\n";
+      body += "\n.ppob setqrimg <nama> <url>\n";
+      body += "Contoh:\n";
+      body += "  .ppob setqrimg qris https://i.ibb.co.com/xxx.jpg\n";
+      body += "  .ppob setqrimg dana https://i.ibb.co.com/yyy.png\n";
+      body += "  .ppob setqrimg gopay https://i.ibb.co.com/zzz.png\n\n";
+      body += "Hapus: .ppob setqrimg <nama> off";
+      return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+    }
+    if (url === "off" || url === "delete") {
+      delete data.paymentImages[key];
+      saveData(data);
+      await m.react("✅");
+      return sendReplyWithNav(
+        sock,
+        m,
+        claraWrap("PPOB", "QR image '" + key + "' dihapus"),
+        "ppob"
+      );
+    }
+    // Preserve existing enabled state or default true
+    const wasEnabled = data.paymentImages[key]?.enabled !== false;
+    data.paymentImages[key] = { url, enabled: wasEnabled };
+    saveData(data);
+    await m.react("✅");
+    // Kirim preview gambar ke owner
+    const sent = await sendQrImage(sock, m.chat, url, claraWrap("PPOB", "QR " + key + " disimpan!\nStatus: " + (wasEnabled ? "ON" : "OFF") + "\nPreview:"), m);
+    if (!sent) {
+      return sendReplyWithNav(
+        sock,
+        m,
+        claraWrap("PPOB", "QR " + key + " disimpan!\nURL: " + url + "\n\n(Gagal preview, cek URL)"),
+        "ppob"
+      );
+    }
+    return;
+  }
+
+  // === TOGGLEQRIMG (Owner only) ===
+  if (sub === "toggleqrimg" || sub === "toggleqr") {
+    if (!isOwner)
+      return m.reply(claraWrap("PPOB", "Khusus owner!"));
+    const key = (arg1 || "").toLowerCase();
+    if (!key) {
+      let body = "Toggle QR Image (Owner)\n\n";
+      const imgs = data.paymentImages || {};
+      if (Object.keys(imgs).length === 0) {
+        body += "Belum ada QR image\nTambah: .ppob setqrimg <nama> <url>";
+      } else {
+        for (const [k, v] of Object.entries(imgs)) {
+          const status = v.enabled ? "ON" : "OFF";
+          body += "[" + status + "] " + k + "\n";
+        }
+        body += "\n.ppob toggleqrimg <nama>\n";
+        body += "Contoh: .ppob toggleqrimg qris\n";
+        body += "Contoh: .ppob toggleqrimg dana";
+      }
+      return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+    }
+    if (!data.paymentImages[key]) {
+      return sendReplyWithNav(
+        sock,
+        m,
+        claraWrap("PPOB", "QR image '" + key + "' tidak ada\nTambah: .ppob setqrimg " + key + " <url>"),
+        "ppob"
+      );
+    }
+    data.paymentImages[key].enabled = !data.paymentImages[key].enabled;
+    saveData(data);
+    await m.react("✅");
+    return sendReplyWithNav(
+      sock,
+      m,
+      claraWrap(
+        "PPOB",
+        "QR " + key + ": " + (data.paymentImages[key].enabled ? "ON" : "OFF") + "\n\n" +
+          (data.paymentImages[key].enabled
+            ? "Akan dikirim ke user saat order"
+            : "Disembunyikan dari user")
+      ),
+      "ppob"
+    );
   }
 
   // === SETQRIS (Owner only) ===
@@ -1546,7 +1720,10 @@ async function handler(m, { sock }) {
     body += "Konfirmasi: .ppob konfirmasi <orderId>\n";
     body += "Refresh: .ppob refresh\n";
     body += "Set QRIS: .ppob setqris <url>\n";
-    body += "Set Payment: .ppob setpayment";
+    body += "Set Payment: .ppob setpayment\n";
+    body += "Set Mode: .ppob setmode <text|image>\n";
+    body += "Set QR Image: .ppob setqrimg <nama> <url>\n";
+    body += "Toggle QR: .ppob toggleqrimg <nama>";
   }
   return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
 }
