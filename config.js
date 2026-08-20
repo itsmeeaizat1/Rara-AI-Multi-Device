@@ -21,7 +21,7 @@ const config = {
 
   bot: {
     name: "Nova AI Whatsapp Bot", // Nama bot
-    version: "21.2.0", // Versi bot (major: 1000+ plugin, sewa, saluran, moderasi, Tio AI, RPG)
+    version: "21.4.0", // Versi bot (major: 1000+ plugin, sewa, saluran, moderasi, Tio AI, RPG)
     developer: "Aizat", // Nama developer
     menuImage: {
       mode: "asset", // "asset" = gambar dari folder lokal, "url" = gambar dari link URL

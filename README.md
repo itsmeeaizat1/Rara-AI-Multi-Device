@@ -4,7 +4,7 @@
 </div>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-21.3.0-orange?style=flat-square&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/Version-21.4.0-orange?style=flat-square&logo=git&logoColor=white">
   <img src="https://img.shields.io/badge/Total_Plugin-1533-blue?style=flat-square&logo=fire">
   <img src="https://img.shields.io/badge/Total_Command-2100%2B-blueviolet?style=flat-square&logo=terminal">
   <img src="https://img.shields.io/badge/Kategori-39-green?style=flat-square&logo=folder">
@@ -44,7 +44,7 @@ Automation:
 
 ---
 
-## ✨ Fitur Unggulan v21.3.0
+## ✨ Fitur Unggulan v21.4.0
 
 ### 🤖 AI Integration Automation (AIO)
 Integrasi AI dengan 34 model dari 3 format API berbeda:
@@ -153,7 +153,7 @@ Status: Approved
 * 10 fitur utama + fitur baru v21
 * Link ke .menu, .owner, .donasi
 
-### 🆕 Fitur Baru v21.3.0
+### 🆕 Fitur Baru v21.4.0
 
 ### 💰 Daily Claim System (V1 + V2)
 * V1: Streak 7 hari, base 200 Gold + 50 Exp
@@ -423,7 +423,7 @@ PDF/PNG generation suite dengan AI:
 * .berita — AI news summarizer dengan Google Search grounding
 * .channelnovaofficial — Info saluran WA resmi dengan CTA button
 
-## 📊 Statistik Bot v21.3.0
+## 📊 Statistik Bot v21.4.0
 
 | Metric | Count |
 |--------|-------|
