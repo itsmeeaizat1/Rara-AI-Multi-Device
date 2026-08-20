@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
 
   try {
     const res = await axios.get(
-      `https://firefly.maiku.my.id/api/pinterestvideo?apikey=NovaNextGen&q=${encodeURIComponent(query)}`,
+      `https://firefly.maiku.my.id/api/pinterestvideo?apikey=${config.APIkey.firefly}&q=${encodeURIComponent(query)}`,
       {
         timeout: 60000,
       },

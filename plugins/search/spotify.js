@@ -5,6 +5,7 @@ import { generateWAMessageFromContent } from "nova";
 import sharp from "sharp";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import config from "../../config.js";
 
 const pluginConfig = {
   name: "spotify",
@@ -30,7 +31,7 @@ async function handler(m, { sock, text }) {
   await m.react("🕐");
 
   try {
-    const res = await axios.get(`https://api.cuki.biz.id/api/search/spotify?apikey=cuki-x&query=${encodeURIComponent(text)}&limit=5`);
+    const res = await axios.get(`https://api.cuki.biz.id/api/search/spotify?apikey=${config.APIkey.cuki}&query=${encodeURIComponent(text)}&limit=5`);
     const data = res.data;
 
     if (!data.status || !data.data || !data.data.results || data.data.results.length === 0) {
