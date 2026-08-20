@@ -6,7 +6,6 @@ import { getCategories, getCommandsByCategory } from "../../src/lib/nova-plugins
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
 import config from "../../config.js";
-import fs from "fs";
 
 const pluginConfig = {
   name: "sewa",
@@ -51,7 +50,7 @@ function buildPaymentMethods() {
   const payment = config.payment || {};
   const methods = [];
 
-  if (payment.qrisUrl || config.sewaPrice?.qrisUrl) methods.push("QRIS (lihat gambar)");
+  if (payment.qrisUrl) methods.push("QRIS (scan via chat owner)");
 
   const eWallets = (payment.methods || []).filter((m) => m.number);
   for (const m of eWallets) {
@@ -249,24 +248,6 @@ async function handler(m, { sock, config: botConfig, db }) {
       tipText("Ketik " + prefix + "menu untuk kembali ke menu");
 
     await sendReplyWithNav(sock, m, fullText, "sewa");
-
-    // Auto-reply QRIS image kalau tersedia
-    const qrisUrl = config.sewaPrice?.qrisUrl || config.payment?.qrisUrl || "";
-    if (qrisUrl) {
-      try {
-        let qrisBuffer;
-        if (/^https?:\/\//.test(qrisUrl)) {
-          const response = await fetch(qrisUrl);
-          qrisBuffer = Buffer.from(await response.arrayBuffer());
-        } else {
-          qrisBuffer = fs.readFileSync(qrisUrl);
-        }
-        await sock.sendMessage(m.chat, {
-          image: qrisBuffer,
-          caption: "\n*Scan QRIS di atas untuk pembayaran sewa*"
-        }, { quoted: m });
-      } catch {}
-    }
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     await sendReplyWithNav(sock, m,

@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
-import fs from "fs";
 import fetch from "node-fetch";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -28,7 +27,6 @@ async function handler(m, { sock }) {
   const donasiConfig = config.donasi || {};
   const payments = donasiConfig.payment || [];
   const links = donasiConfig.links || [];
-  const qrisUrl = donasiConfig.qris || "";
   const benefits = donasiConfig.benefits || [
     "Mendukung development",
     "Server lebih stabil",
@@ -89,22 +87,13 @@ async function handler(m, { sock }) {
     },
   };
 
-  if (qrisUrl) {
+  if (payments.length > 0) {
     try {
-      let qrisBuffer;
-      if (/^https?:\/\//.test(qrisUrl)) {
-        const response = await fetch(qrisUrl);
-        qrisBuffer = Buffer.from(await response.arrayBuffer());
-      } else {
-        qrisBuffer = fs.readFileSync(qrisUrl);
-      }
-      await sock.sendButton(m.chat, qrisBuffer, text, m, {
-        buttons: copyButtons,
-      });
-    } catch (e) {
       await sock.sendButton(m.chat, null, text, m, {
         buttons: copyButtons,
       });
+    } catch {
+      await sock.sendMessage(m.chat, { text }, { quoted: m });
     }
   } else {
     await sock.sendMessage(

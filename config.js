@@ -100,7 +100,6 @@ const config = {
       "Fitur baru lebih cepat",
       "Priority support",
     ],
-    qris: "./assets/image/aizat-store-qris.jpg",
   },
 
   energi: {
@@ -132,9 +131,6 @@ const config = {
   },
 
   sewaPrice: {
-    // QRIS KHUSUS SEWA BOT (bisa beda sama payment & donasi)
-    qrisUrl: "./assets/image/aizat-store-qris.jpg",
-
     // HARGA SEWA BOT - Default per durasi
     // Format: Rp format Indonesia
     // Owner bisa override via .addsewa <link> <durasi> <harga>
