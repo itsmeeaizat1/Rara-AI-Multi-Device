@@ -91,15 +91,20 @@ const CATEGORY_NAMES = {
 
 // ── Build category rows for single_select ──
 function buildCategoryRows(prefix, m) {
-  const allCats = getCasesByCategory();
-  return Object.keys(allCats)
+  // Gabungkan kategori dari sistem plugin (aktif) + sistem case (legacy)
+  const pluginCats = getCategories();
+  const commandsByCategory = getCommandsByCategory();
+  const caseCats = getCasesByCategory();
+  const allCatKeys = [...new Set([...pluginCats, ...Object.keys(caseCats)])];
+  return allCatKeys
     .sort((a, b) => {
       const ia = CATEGORY_ORDER.indexOf(a), ib = CATEGORY_ORDER.indexOf(b);
       return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
     })
     .filter(cat => {
       if (cat === "owner" && !m.isOwner) return false;
-      return (allCats[cat] || []).length > 0;
+      const total = (commandsByCategory[cat] || []).length + (caseCats[cat] || []).length;
+      return total > 0;
     })
     .map(cat => ({
       title: CATEGORY_NAMES[cat] || cat.charAt(0).toUpperCase() + cat.slice(1),
