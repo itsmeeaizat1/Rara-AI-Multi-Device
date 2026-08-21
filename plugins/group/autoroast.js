@@ -96,7 +96,7 @@ export function startAutoRoast(groupId, sock, db) {
         if (eligible.length > 0) {
           target = eligible[Math.floor(Math.random() * eligible.length)];
         }
-      } catch {}
+      } catch (e) { console.error('[autoroast.js]:', e.message); }
 
       const roast = ROASTS[Math.floor(Math.random() * ROASTS.length)];
       g.lastRoast = roast;
@@ -201,7 +201,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         if (eligible.length > 0) {
           target = eligible[Math.floor(Math.random() * eligible.length)];
         }
-      } catch {}
+      } catch (e) { console.error('[autoroast.js]:', e.message); }
 
       const roast = ROASTS[Math.floor(Math.random() * ROASTS.length)];
       cfg.lastRoast = roast;

@@ -68,12 +68,12 @@ async function handler(m, { sock }) {
       try {
         mediaBuffer = await qmsg.download();
         mediaType = "image";
-      } catch {}
+      } catch (e) { console.error('[bcpc.js]:', e.message); }
     } else if (qmsg.isVideo) {
       try {
         mediaBuffer = await qmsg.download();
         mediaType = "video";
-      } catch {}
+      } catch (e) { console.error('[bcpc.js]:', e.message); }
     }
 
     const privateJids = new Set();

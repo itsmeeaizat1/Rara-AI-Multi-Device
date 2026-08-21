@@ -17,13 +17,13 @@ const NEXUS_BASE = "https://nexussmm.com";
 function loadData() {
   try {
     if (fs.existsSync(DATA_FILE)) return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
-  } catch {}
+  } catch (e) { console.error('[nokos-smm.js]:', e.message); }
   return { apiId: "", apiKey: "", orders: [], pendingPayments: {}, servicesCache: null, servicesCacheAt: 0 };
 }
 function saveData(data) {
   try {
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-  } catch {}
+  } catch (e) { console.error('[nokos-smm.js]:', e.message); }
 }
 
 async function nexusRequest(endpoint, params) {

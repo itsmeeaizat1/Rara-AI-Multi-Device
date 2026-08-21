@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
             })
             userInfo = userRes.data.attributes
             isUserAdmin = userInfo.root_admin
-        } catch (e) {}
+        } catch (e) { console.error('[delpanel.js]:', e.message); }
         
         await m.reply(`🗑️ *Menghapus Panel...*\n\n> Server: *${serverLabel}*\n> Panel: \`${server.name}\`\n> Mode: *${option === 'full' ? 'Server + User' : 'Server saja'}*`)
         

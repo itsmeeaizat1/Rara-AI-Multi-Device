@@ -58,7 +58,7 @@ async function handler(m, { sock, config: botConfig }) {
           source = baseUrl;
           break;
         }
-      } catch {}
+      } catch (e) { console.error('[cecan.js]:', e.message); }
     }
 
     if (!buffer) {

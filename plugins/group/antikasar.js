@@ -217,7 +217,7 @@ async function handleAntiKasar(m, sock, db) {
                 await sock.sendMessage(m.chat, {
                     delete: { remoteJid: m.chat, fromMe: false, id: m.key.id, participant: m.sender }
                 })
-            } catch {}
+            } catch (e) { console.error('[antikasar.js]:', e.message); }
         }
 
         if (currentWarn >= maxWarn) {

@@ -213,7 +213,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
       expiredStr: formatDate(newExpired),
       isExtend: existingIndex !== -1,
       totalPremium: db.data.premium.length,
-    }).catch(() => {});
+    }).catch((e) => { console.error('[addprem.js]:', e.message); });
 
     return m.reply(
       `✅ Berhasil ${existingIndex !== -1 ? "memperpanjang" : "menambahkan"} premium *${targetNumber}* selama *${days} hari*\nExpired: *${formatDate(newExpired)}*`,

@@ -345,7 +345,7 @@ async function handleAntiNSFW(m, sock, db) {
                         participant: m.sender,
                     },
                 })
-            } catch {}
+            } catch (e) { console.error('[anti18plus.js]:', e.message); }
         }
 
         // Check if warn limit reached

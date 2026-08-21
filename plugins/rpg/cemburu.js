@@ -128,7 +128,7 @@ async function handler(m, { sock, config: botConfig }) {
         text: notifText,
         mentions: [partnerJid],
       });
-    } catch {}
+    } catch (e) { console.error('[cemburu.js]:', e.message); }
 
     return { handled: true };
   } catch (error) {

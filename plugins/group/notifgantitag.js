@@ -140,13 +140,13 @@ async function handleLabelChange(msg, sock) {
           );
           return true;
         }
-      } catch {}
+      } catch (e) { console.error('[notifgantitag.js]:', e.message); }
     }
     if (groupData.notifLabelChange !== true) return false;
     let groupMeta = null;
     try {
       groupMeta = await sock.groupMetadata(groupJid);
-    } catch {}
+    } catch (e) { console.error('[notifgantitag.js]:', e.message); }
     let notifText = "";
     if (label && label.trim()) {
       notifText = `🎉 @${participant.split("@")[0]} telah mengubah label menjadi *${label}*`;

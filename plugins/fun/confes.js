@@ -136,7 +136,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await sock.sendMessage(targetJid, {
       text: anonymousText,
-    }).catch(() => {});
+    }).catch((e) => { console.error('[confes.js]:', e.message); });
 
     const modeData = modes[mode] || modes.nembak;
     const receipt =

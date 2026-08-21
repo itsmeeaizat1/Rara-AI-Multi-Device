@@ -59,7 +59,7 @@ async function handler(m, { sock, db }) {
         let ppUrl = null
         try {
             ppUrl = await sock.profilePictureUrl(m.chat)
-        } catch {}
+        } catch (e) { console.error('[groupinfo.js]:', e.message); }
 
         const isOpen = groupMeta.announce === false || !groupMeta.announce
 

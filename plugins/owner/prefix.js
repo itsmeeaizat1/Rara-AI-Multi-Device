@@ -11,7 +11,7 @@ function loadPrefixes() {
         if (fs.existsSync(PREF_DB_PATH)) {
             return JSON.parse(fs.readFileSync(PREF_DB_PATH, 'utf8'))
         }
-    } catch {}
+    } catch (e) { console.error('[prefix.js]:', e.message); }
     return { prefixes: [], noprefix: false }
 }
 

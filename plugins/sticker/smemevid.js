@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
             fs.unlinkSync(inputVideo)
             fs.unlinkSync(outputVideo)
             fs.unlinkSync(overlayImage)
-        } catch (e) {}
+        } catch (e) { console.error('[smemevid.js]:', e.message); }
 
     } catch (error) {
         m.reply(claraWrap("smemevid", `❌ *Gagal*\n\n> Terjadi kesalahan saat memproses video`))

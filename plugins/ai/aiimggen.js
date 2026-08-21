@@ -68,7 +68,7 @@ async function handler(m, { sock, config: botConfig }) {
           buffer = Buffer.from(res.data);
           break;
         }
-      } catch {}
+      } catch (e) { console.error('[aiimggen.js]:', e.message); }
     }
 
     if (!buffer) throw new Error("Gagal generate gambar dari semua endpoint.");

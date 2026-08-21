@@ -56,7 +56,7 @@ let thumbMC = null;
 try {
   const p = path.join(process.cwd(), "assets", "images", "nova-minecraft.jpg");
   if (fs.existsSync(p)) thumbMC = fs.readFileSync(p);
-} catch (e) {}
+} catch (e) { console.error('[minecraft.js]:', e.message); }
 
 function ctx() {
   const sId = config.saluran?.id || "120363400911374213@newsletter";

@@ -56,7 +56,7 @@ export function checkPollSpam(m, sock, db) {
     const action = cfg.action || "delete";
 
     if (action === "delete") {
-      try { sock.sendMessage(groupId, { delete: m.key }); } catch {}
+      try { sock.sendMessage(groupId, { delete: m.key }); } catch (e) { console.error('[antipollspam.js]:', e.message); }
     }
 
     if (action === "warn" || action === "kick") {
@@ -70,7 +70,7 @@ export function checkPollSpam(m, sock, db) {
           sock.groupParticipantsUpdate(groupId, [sender], "remove");
           delete cfg.warns[sender];
           db.save();
-        } catch {}
+        } catch (e) { console.error('[antipollspam.js]:', e.message); }
       }
 
       sock.sendMessage(groupId, {

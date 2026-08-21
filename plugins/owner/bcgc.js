@@ -135,15 +135,15 @@ async function handler(m, { sock }) {
     }
 
     if (qmsg.isImage) {
-      try { mediaBuffer = await qmsg.download(); mediaType = "image"; } catch {}
+      try { mediaBuffer = await qmsg.download(); mediaType = "image"; } catch (e) { console.error('[bcgc.js]:', e.message); }
     } else if (qmsg.isVideo) {
-      try { mediaBuffer = await qmsg.download(); mediaType = "video"; } catch {}
+      try { mediaBuffer = await qmsg.download(); mediaType = "video"; } catch (e) { console.error('[bcgc.js]:', e.message); }
     } else if (qmsg.isAudio || qmsg.mimetype?.startsWith("audio")) {
-      try { mediaBuffer = await qmsg.download(); mediaType = "audio"; } catch {}
+      try { mediaBuffer = await qmsg.download(); mediaType = "audio"; } catch (e) { console.error('[bcgc.js]:', e.message); }
     } else if (qmsg.isSticker) {
-      try { mediaBuffer = await qmsg.download(); mediaType = "sticker"; } catch {}
+      try { mediaBuffer = await qmsg.download(); mediaType = "sticker"; } catch (e) { console.error('[bcgc.js]:', e.message); }
     } else if (qmsg.isDocument || (qmsg.mimetype && !qmsg.mimetype.startsWith("text/plain"))) {
-      try { mediaBuffer = await qmsg.download(); mediaType = "document"; } catch {}
+      try { mediaBuffer = await qmsg.download(); mediaType = "document"; } catch (e) { console.error('[bcgc.js]:', e.message); }
     }
 
     if (!text && !mediaBuffer) {

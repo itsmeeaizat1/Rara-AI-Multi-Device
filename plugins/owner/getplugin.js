@@ -66,7 +66,7 @@ function searchPlugin(name, pluginsDir) {
             }
           }
         }
-      } catch { }
+      } catch (e) { console.error('[getplugin.js]:', e.message); }
     }
   }
 

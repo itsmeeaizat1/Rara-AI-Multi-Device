@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig }) {
       const res = await fetch(`https://api.dicode.xyz/api/kbbi?kata=${encodeURIComponent(word)}`);
       const json = await res.json();
       meaning = json.meaning || json.arti || meaning;
-    } catch {}
+    } catch (e) { console.error('[kbbi.js]:', e.message); }
 
     const text =
       claraWrap("KBBI", [`◦ Kata: *${word}*`,

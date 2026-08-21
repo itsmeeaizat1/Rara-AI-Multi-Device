@@ -25,7 +25,7 @@ function loadJsonData(filename) {
         if (fs.existsSync(filePath)) {
             return JSON.parse(fs.readFileSync(filePath, 'utf-8'))
         }
-    } catch {}
+    } catch (e) { console.error('[ukhty.js]:', e.message); }
     return []
 }
 

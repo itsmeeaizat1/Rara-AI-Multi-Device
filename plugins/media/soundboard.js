@@ -102,10 +102,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       caption: claraWrap("Sound Board", sound.emoji + " " + input),
     });
 
-    try { fs.unlinkSync(outPath); } catch {}
+    try { fs.unlinkSync(outPath); } catch (e) { console.error('[soundboard.js]:', e.message); }
     try {
       await conn.sendMessage(m.key.remoteJid, { delete: { remoteJid: m.key.remoteJid, id: statusMsg.key.id, fromMe: true } });
-    } catch {}
+    } catch (e) { console.error('[soundboard.js]:', e.message); }
   } catch (e) {
     console.error("soundboard error:", e.message);
     return m.reply(claraWrap("Sound Board", "Error: " + e.message));

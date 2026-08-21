@@ -364,7 +364,7 @@ function loadData() {
   try {
     if (fs.existsSync(DATA_FILE))
       return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
-  } catch {}
+  } catch (e) { console.error('[ppob.js]:', e.message); }
   return {
     activeProvider: "digiflazz",
     credentials: {
@@ -391,7 +391,7 @@ function loadData() {
 function saveData(data) {
   try {
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-  } catch {}
+  } catch (e) { console.error('[ppob.js]:', e.message); }
 }
 
 function getProvider(data) {
@@ -1352,13 +1352,13 @@ async function handler(m, { sock }) {
           await sock.sendMessage(order.sender, {
             text: claraWrap("PPOB - Sukses", successBody),
           });
-        } catch {}
+        } catch (e) { console.error('[ppob.js]:', e.message); }
       } else if (order.sender && order.sender !== sender) {
         try {
           await sock.sendMessage(order.sender, {
             text: claraWrap("PPOB", body),
           });
-        } catch {}
+        } catch (e) { console.error('[ppob.js]:', e.message); }
       }
 
       return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
@@ -1455,10 +1455,10 @@ async function handler(m, { sock }) {
                 await sock.sendMessage(order.sender, {
                   text: claraWrap("PPOB - Sukses", sucBody),
                 });
-              } catch {}
+              } catch (e) { console.error('[ppob.js]:', e.message); }
             }
           }
-        } catch {}
+        } catch (e) { console.error('[ppob.js]:', e.message); }
       }
     }
 

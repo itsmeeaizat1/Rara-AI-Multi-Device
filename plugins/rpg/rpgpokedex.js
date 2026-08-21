@@ -122,7 +122,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
             caption: claraWrap("RPG Pokedex", lines),
           });
           return;
-        } catch {}
+        } catch (e) { console.error('[rpgpokedex.js]:', e.message); }
       }
       return m.reply(claraWrap("RPG Pokedex", lines, "info"));
     }
@@ -177,7 +177,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
               caption: claraWrap("RPG Pokedex", lines, "success"),
             });
             return;
-          } catch {}
+          } catch (e) { console.error('[rpgpokedex.js]:', e.message); }
         }
         return m.reply(claraWrap("RPG Pokedex", lines, "success"));
       } else {
@@ -254,7 +254,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
             caption: claraWrap("RPG Pokedex", lines, won ? "success" : "warn"),
           });
           return;
-        } catch {}
+        } catch (e) { console.error('[rpgpokedex.js]:', e.message); }
       }
       return m.reply(claraWrap("RPG Pokedex", lines, won ? "success" : "warn"));
     }

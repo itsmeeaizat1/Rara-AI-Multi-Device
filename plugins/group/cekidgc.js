@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
           ).data,
         );
       }
-    } catch {}
+    } catch (e) { console.error('[cekidgc.js]:', e.message); }
 
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
           { image: resized },
           { upload: sock.waUploadToServer },
         );
-      } catch {}
+      } catch (e) { console.error('[cekidgc.js]:', e.message); }
 
       const msg = generateWAMessageFromContent(
         m.chat,

@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
         "Alasan: " + reason + "\n\n" +
         "Hubungi owner untuk info lebih lanjut.",
     });
-  } catch {}
+  } catch (e) { console.error('[rejectsewa.js]:', e.message); }
 
   // Broadcast ke saluran
   await notifySewaRejected(sock, {
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     groupName: regData.groupName,
     phoneNumber: phoneNum,
     reason,
-  }).catch(() => {});
+  }).catch((e) => { console.error('[rejectsewa.js]:', e.message); });
 
   return m.reply(
     "Sewa Ditolak\n\n" +

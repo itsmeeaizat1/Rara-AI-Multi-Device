@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
           buffer = Buffer.from(res.data);
           break;
         }
-      } catch {}
+      } catch (e) { console.error('[loli.js]:', e.message); }
     }
 
     if (!buffer) {

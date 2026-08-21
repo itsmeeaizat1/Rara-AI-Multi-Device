@@ -170,7 +170,7 @@ async function zaiChat(prompt, session) {
       } else if (data.message) {
         fullResponse = data.message;
       }
-    } catch {}
+    } catch (e) { console.error('[zai.js]:', e.message); }
   }
 
   return fullResponse;

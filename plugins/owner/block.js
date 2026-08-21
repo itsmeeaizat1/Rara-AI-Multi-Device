@@ -68,7 +68,7 @@ async function handler(m, { sock, config: botConfig }) {
       phoneNumber: targetJid.split("@")[0],
       reason: "Blocked by owner",
       totalBlocked: "-",
-    }).catch(() => {});
+    }).catch((e) => { console.error('[block.js]:', e.message); });
 
     const text =
       claraWrap("Block User", [

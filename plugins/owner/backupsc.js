@@ -119,10 +119,10 @@ async function handler(m, { sock }) {
         settled = true;
         try {
           output.destroy();
-        } catch { }
+        } catch (e) { console.error('[backupsc.js]:', e.message); }
         try {
           if (fs.existsSync(zipFilePath)) fs.unlinkSync(zipFilePath);
-        } catch { }
+        } catch (e) { console.error('[backupsc.js]:', e.message); }
         reject(error);
       };
       const succeed = () => {
@@ -168,9 +168,9 @@ async function handler(m, { sock }) {
                 archive.file(fullPath, { name: relativePath });
                 fileCount += 1;
               }
-            } catch { }
+            } catch (e) { console.error('[backupsc.js]:', e.message); }
           }
-        } catch { }
+        } catch (e) { console.error('[backupsc.js]:', e.message); }
       }
 
       addDirectory(projectRoot);
@@ -217,7 +217,7 @@ async function handler(m, { sock }) {
 
     try {
       fs.unlinkSync(zipFilePath);
-    } catch { }
+    } catch (e) { console.error('[backupsc.js]:', e.message); }
   } catch (error) {
     await m.reply(claraWrap("backupsc", te(m.prefix, m.command, m.pushName), "error"));
   }

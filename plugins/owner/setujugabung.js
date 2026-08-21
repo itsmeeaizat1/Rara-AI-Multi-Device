@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
       try {
         const meta = await sock.groupMetadata(groupId);
         groupName = meta.subject || "Grup";
-      } catch {}
+      } catch (e) { console.error('[setujugabung.js]:', e.message); }
     }
 
     return m.reply(claraWrap("setujugabung", "BERHASIL SETUJUI JOIN REQUEST\n\n" +

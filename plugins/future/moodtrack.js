@@ -130,7 +130,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       const prompt = "Analisis pola mood dari data berikut (bahasa Indonesia, 3-4 kalimat):\n" + moodData + "\n\nRata-rata: " + avg + "/10\nTrend: " + trendText + "\n\nBeri insight tentang: pola mood, saran self-care, dan hal yang mungkin mempengaruhi mood. Singkat dan empatik.";
       const result = await UnlimitedAI(prompt, "nova-ai");
       aiInsight = result?.success ? result.response : null;
-    } catch {}
+    } catch (e) { console.error('[moodtrack.js]:', e.message); }
 
     await m.react("✅");
     await m.reply(claraWrap("Mood Insight", [

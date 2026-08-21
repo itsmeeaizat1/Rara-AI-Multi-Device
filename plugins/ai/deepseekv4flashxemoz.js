@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
   if (text.toLowerCase() === "reset") {
     try {
       await callDeepSeekV4Flash("reset", sessionId, true);
-    } catch {}
+    } catch (e) { console.error('[deepseekv4flashxemoz.js]:', e.message); }
     return m.reply(claraWrap("DeepSeek V4 Flash", "Sesi percakapan direset. Kirim pesan baru untuk memulai."));
   }
 

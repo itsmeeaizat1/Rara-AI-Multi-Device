@@ -351,7 +351,7 @@ async function handler(m, { sock }) {
         db.updateExp(m.sender, rewards.exp + randomBonus.exp);
       }
       await db.save();
-      notifyUserRegister(sock, { name: name, age: age, gender: finalGender || "Tidak disebutkan", phoneNumber: m.sender.split("@")[0], serial: serial }).catch(() => {});
+      notifyUserRegister(sock, { name: name, age: age, gender: finalGender || "Tidak disebutkan", phoneNumber: m.sender.split("@")[0], serial: serial }).catch((e) => { console.error('[daftar.js]:', e.message); });
 
       await sock.sendMessage(m.chat, {
         text:
@@ -688,7 +688,7 @@ async function registrationAnswerHandler(m, sock) {
 
     await db.save();
     clearRegistrationSession(m.sender);
-    notifyUserRegister(sock, { name: finalName, age: finalAge, gender: finalGender, phoneNumber: m.sender.split("@")[0], serial: serial }).catch(() => {});
+    notifyUserRegister(sock, { name: finalName, age: finalAge, gender: finalGender, phoneNumber: m.sender.split("@")[0], serial: serial }).catch((e) => { console.error('[daftar.js]:', e.message); });
 
     await sock.sendMessage(
       m.chat,

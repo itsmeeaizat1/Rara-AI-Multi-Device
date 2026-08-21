@@ -55,13 +55,13 @@ export function checkFlood(m, sock, db) {
     tracker.firstMsg = now;
 
     if (action === "delete") {
-      try { sock.sendMessage(groupId, { delete: m.key }); } catch {}
+      try { sock.sendMessage(groupId, { delete: m.key }); } catch (e) { console.error('[antiflood.js]:', e.message); }
     }
 
     if (action === "kick") {
       try {
         sock.groupParticipantsUpdate(groupId, [sender], "remove");
-      } catch {}
+      } catch (e) { console.error('[antiflood.js]:', e.message); }
     }
 
     if (action === "warn" || action === "delete") {
@@ -84,7 +84,7 @@ export function checkFlood(m, sock, db) {
             ], "warn"),
             mentions: [sender],
           });
-        } catch {}
+        } catch (e) { console.error('[antiflood.js]:', e.message); }
       } else {
         sock.sendMessage(groupId, {
           text: claraWrap("Anti Flood", [

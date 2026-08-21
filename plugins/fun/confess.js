@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     if (!onWa?.exists) {
       return m.reply(`Yah kak, nomor \`${targetNumber}\` ternyata nggak terdaftar di WhatsApp! 😔`);
     }
-  } catch (e) {}
+  } catch (e) { console.error('[confess.js]:', e.message); }
 
   if (message.length < 5) {
     return m.reply(claraWrap("Confess", `Pesannya kependekan kak! Minimal 5 karakter ya biar lebih bermakna. 📝`));

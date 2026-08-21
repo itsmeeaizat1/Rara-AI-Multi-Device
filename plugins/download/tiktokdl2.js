@@ -66,7 +66,7 @@ function parseResponse(html) {
                         data.slides.push({ index: data.slides.length + 1, url })
                     })
                 }
-            } catch {}
+            } catch (e) { console.error('[tiktokdl2.js]:', e.message); }
         })
         return data
     }
@@ -91,7 +91,7 @@ function parseResponse(html) {
             if (label.includes('mp3')) {
                 data.mp3.push(...json.URL)
             }
-        } catch {}
+        } catch (e) { console.error('[tiktokdl2.js]:', e.message); }
     })
 
     return data

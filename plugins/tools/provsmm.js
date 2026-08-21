@@ -19,7 +19,7 @@ const USD_RATE = 16500;
 function loadData() {
   try {
     if (fs.existsSync(DATA_FILE)) return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
-  } catch {}
+  } catch (e) { console.error('[provsmm.js]:', e.message); }
   return {
     apiKey: "",
     markup: 20,
@@ -31,7 +31,7 @@ function loadData() {
   };
 }
 function saveData(data) {
-  try { fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2)); } catch {}
+  try { fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2)); } catch (e) { console.error('[provsmm.js]:', e.message); }
 }
 
 function getUser(data, sender) {

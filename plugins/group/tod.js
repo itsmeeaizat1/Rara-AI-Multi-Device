@@ -15,7 +15,7 @@ function loadDB() {
     if (fs.existsSync(DB_PATH)) {
       return JSON.parse(fs.readFileSync(DB_PATH, "utf-8"));
     }
-  } catch (e) {}
+  } catch (e) { console.error('[tod.js]:', e.message); }
   return { groups: {} };
 }
 

@@ -82,7 +82,7 @@ async function handler(m, { sock, db }) {
           if (val.excludeCategories) modeExcludeMap[key] = val.excludeCategories;
         }
       }
-    } catch (e) {}
+    } catch (e) { console.error('[menukategori.js]:', e.message); }
     const excludeCategories = modeExcludeMap[botMode] || modeExcludeMap.md;
 
     const categoryOrder = [

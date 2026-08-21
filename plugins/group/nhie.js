@@ -123,7 +123,7 @@ async function safeReply(m, sock, text, options = {}) {
   try {
     await sock.sendMessage(m.chat, { text, ...options }, { quoted: m });
   } catch {
-    try { await sock.sendMessage(m.chat, { text }); } catch {}
+    try { await sock.sendMessage(m.chat, { text }); } catch (e) { console.error('[nhie.js]:', e.message); }
   }
 }
 
@@ -133,7 +133,7 @@ async function safeReact(m, sock, emoji) {
     await sock.sendMessage(m.chat, {
       react: { text: emoji, key: { ...key, remoteJid: m.chat } },
     });
-  } catch {}
+  } catch (e) { console.error('[nhie.js]:', e.message); }
 }
 
 // ==================== Global State ====================
@@ -317,7 +317,7 @@ async function handler(m, { sock }) {
         text: claraWrap("Never Have I Ever - Time Up", closeText, "success"),
         mentions: Object.keys(game.answers),
       });
-    } catch {}
+    } catch (e) { console.error('[nhie.js]:', e.message); }
 
     const id = Object.keys(global.nhieGames).find(k => global.nhieGames[k] === game);
     if (id) delete global.nhieGames[id];

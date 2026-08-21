@@ -33,7 +33,7 @@ async function callAI(prompt, aiConfig) {
         if (moodPrompt) _systemPrompt = _systemPrompt + moodPrompt;
       }
     }
-  } catch (e) {}
+  } catch (e) { console.error('[rewrite.js]:', e.message); }
 
   // Time-Warp: inject temporal persona
   try {
@@ -45,7 +45,7 @@ async function callAI(prompt, aiConfig) {
         if (warpPrompt) _systemPrompt = _systemPrompt + warpPrompt;
       }
     }
-  } catch (e) {}
+  } catch (e) { console.error('[rewrite.js]:', e.message); }
   if (!apiKey || !apiEndpoint || !model) {
     return "AI belum dikonfigurasi. Minta owner mengisi API key dan endpoint di config.";
   }

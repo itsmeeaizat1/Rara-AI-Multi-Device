@@ -293,7 +293,7 @@ ${readMore}
         modeExcludeMap[k] = v.excludeCategories;
       }
     }
-  } catch (e) {}
+  } catch (e) { console.error('[allmenu.js]:', e.message); }
 
   const allowedCategories = modeAllowedMap[botMode];
   const excludeCategories = modeExcludeMap[botMode] || [];
@@ -320,7 +320,7 @@ ${readMore}
   let imageBuffer = null;
   try {
     imageBuffer = await getMenuImage("nova");
-  } catch (e) {}
+  } catch (e) { console.error('[allmenu.js]:', e.message); }
 
   const savedVariant = db.setting("allmenuVariant");
   const allmenuVariant = savedVariant || botConfig.ui?.allmenuVariant || 3;

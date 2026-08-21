@@ -59,7 +59,7 @@ try {
     cachedThumb = getAssetBuffer("nova");
   }
   cachedDoc = fs.readFileSync("./package.json");
-} catch { }
+} catch (e) { console.error('[pushkontak.js]:', e.message); }
 
 function serial(len) {
   let r = "";
@@ -177,7 +177,7 @@ async function sendVcf(sock, ownerJid, contacts, groupName) {
   });
   try {
     fs.unlinkSync(vcfPath);
-  } catch { }
+  } catch (e) { console.error('[pushkontak.js]:', e.message); }
 }
 
 async function handleStop(m) {

@@ -19,7 +19,7 @@ function loadDB() {
     if (fs.existsSync(DB_FILE)) {
       return JSON.parse(fs.readFileSync(DB_FILE, "utf-8"));
     }
-  } catch (e) {}
+  } catch (e) { console.error('[checklink.js]:', e.message); }
   return { groups: {} };
 }
 
@@ -28,7 +28,7 @@ function saveDB(db) {
     const dir = path.dirname(DB_FILE);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
-  } catch (e) {}
+  } catch (e) { console.error('[checklink.js]:', e.message); }
 }
 
 function isShieldOn(groupId) {
@@ -355,7 +355,7 @@ async function fullAnalysis(urlStr) {
         score += 25;
         reasons.push(`Redirect ke domain berbeda: ${origHost} -> ${finalHost}`);
       }
-    } catch (e) {}
+    } catch (e) { console.error('[checklink.js]:', e.message); }
   }
 
   score = Math.min(score, 100);
@@ -438,7 +438,7 @@ function autoShieldCheck(msg, sock) {
         );
         sock.sendMessage(groupId, { text: warning }, { quoted: msg });
       }
-    }).catch(() => {});
+    }).catch((e) => { console.error('[checklink.js]:', e.message); });
   } catch (e) {
     // Silent fail
   }

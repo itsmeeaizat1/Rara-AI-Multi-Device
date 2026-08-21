@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
             data = json;
             break;
           }
-        } catch {}
+        } catch (e) { console.error('[quranv3.js]:', e.message); }
       }
 
       if (!data) {
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
       if (audio?.audio) {
         try {
           await sendAudio(sock, m, audio.audio);
-        } catch {}
+        } catch (e) { console.error('[quranv3.js]:', e.message); }
       }
       return;
     }
@@ -289,7 +289,7 @@ async function handler(m, { sock }) {
       await m.reply(txt);
 
       if (audio?.audio) {
-        try { await sendAudio(sock, m, audio.audio); } catch {}
+        try { await sendAudio(sock, m, audio.audio); } catch (e) { console.error('[quranv3.js]:', e.message); }
       }
       return;
     }
@@ -342,7 +342,7 @@ async function handler(m, { sock }) {
       await m.reply(txt);
 
       // Auto kirim audio
-      try { await sendAudio(sock, m, audioUrl); } catch {}
+      try { await sendAudio(sock, m, audioUrl); } catch (e) { console.error('[quranv3.js]:', e.message); }
       return;
     } else {
       // 10 ayat pertama (Arab + Indo)

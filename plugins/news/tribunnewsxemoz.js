@@ -86,7 +86,7 @@ async function sendNewsImage(sock, m, article, index, total) {
         );
         return;
       }
-    } catch {}
+    } catch (e) { console.error('[tribunnewsxemoz.js]:', e.message); }
   }
 
   // Fallback: text only, no link preview

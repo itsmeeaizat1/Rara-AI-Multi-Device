@@ -101,7 +101,7 @@ function getFileNameFromMessage(m) {
                 return 'file_' + Date.now() + '.' + ext
             }
         }
-    } catch {}
+    } catch (e) { console.error('[uploadgdrive.js]:', e.message); }
     return 'file_' + Date.now() + '.bin'
 }
 
@@ -165,7 +165,7 @@ function getStoredFolderId() {
         if (fs.existsSync(FOLDER_ID_FILE)) {
             return fs.readFileSync(FOLDER_ID_FILE, 'utf-8').trim() || null
         }
-    } catch {}
+    } catch (e) { console.error('[uploadgdrive.js]:', e.message); }
     return null
 }
 
@@ -250,7 +250,7 @@ async function handler(m, { sock }) {
             try {
                 const creds = JSON.parse(fs.readFileSync(CREDS_PATH, 'utf-8'))
                 credsInfo = "\nEmail: `" + (creds.client_email || '?') + "`"
-            } catch {}
+            } catch (e) { console.error('[uploadgdrive.js]:', e.message); }
         }
         return m.reply(claraWrap("Upload GDrive",
             "*GDrive Status*\n\n" +
@@ -292,7 +292,7 @@ async function handler(m, { sock }) {
         const folderId = getStoredFolderId()
         const result = await uploadToDrive(filePath, fileName, folderId)
 
-        try { fs.unlinkSync(filePath) } catch {}
+        try { fs.unlinkSync(filePath) } catch (e) { console.error('[uploadgdrive.js]:', e.message); }
 
         await m.react('✅')
 

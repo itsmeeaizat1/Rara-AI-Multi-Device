@@ -88,7 +88,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         return m.reply(claraWrap("Audio Split", "Gagal split audio."));
       }
       fs.unlinkSync(inputPath);
-      try { fs.unlinkSync(probePath); } catch {}
+      try { fs.unlinkSync(probePath); } catch (e) { console.error('[audiosplit.js]:', e.message); }
     }
 
     else if (sub === "parts") {
@@ -118,7 +118,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         }
       }
       fs.unlinkSync(inputPath);
-      try { fs.unlinkSync(probePath); } catch {}
+      try { fs.unlinkSync(probePath); } catch (e) { console.error('[audiosplit.js]:', e.message); }
     }
 
     else {

@@ -70,7 +70,7 @@ async function handler(m, { sock, config: botConfig }) {
           buffer = Buffer.from(res.data);
           break;
         }
-      } catch {}
+      } catch (e) { console.error('[ai-avatar.js]:', e.message); }
     }
 
     if (!buffer) throw new Error("Gagal generate avatar dari semua endpoint.");

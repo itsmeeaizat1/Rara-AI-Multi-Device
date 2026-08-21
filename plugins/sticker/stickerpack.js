@@ -177,7 +177,7 @@ async function handler(m, { sock }) {
               author,
               emojis: ["❤"],
             });
-          } catch {}
+          } catch (e) { console.error('[stickerpack.js]:', e.message); }
           await sock.sendMessage(
             m.chat,
             {

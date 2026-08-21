@@ -32,7 +32,7 @@ function loadJsonData() {
                 const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
                 allUrls = allUrls.concat(data.map(d => d.url))
             }
-        } catch {}
+        } catch (e) { console.error('[asupan.js]:', e.message); }
     }
     
     return allUrls

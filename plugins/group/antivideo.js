@@ -45,7 +45,7 @@ async function handleAntiVideo(m, sock, db) {
 
   try {
     await sock.sendMessage(m.chat, { delete: m.key });
-  } catch {}
+  } catch (e) { console.error('[antivideo.js]:', e.message); }
 
   await sock.sendMessage(m.chat, {
     text: gpMsg("antivideo", { user: m.sender.split("@")[0] }),

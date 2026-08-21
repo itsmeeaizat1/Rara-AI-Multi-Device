@@ -88,7 +88,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       fs.unlinkSync(outputPath);
       fs.unlinkSync(listPath);
-      data.queue.forEach(q => { try { fs.unlinkSync(q.path); } catch {} });
+      data.queue.forEach(q => { try { fs.unlinkSync(q.path); } catch (e) { console.error('[audiomerge.js]:', e.message); } });
       data.queue = [];
       await db.save();
     }
@@ -108,7 +108,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "clear") {
-      data.queue.forEach(q => { try { fs.unlinkSync(q.path); } catch {} });
+      data.queue.forEach(q => { try { fs.unlinkSync(q.path); } catch (e) { console.error('[audiomerge.js]:', e.message); } });
       data.queue = [];
       await db.save();
       return m.reply(claraWrap("Audio Merge", "Queue dibersihkan."));
@@ -117,7 +117,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "remove" || sub === "del") {
       const idx = parseInt(args[1]) - 1;
       if (isNaN(idx) || idx < 0 || idx >= data.queue.length) return m.reply(`Cara: ${usedPrefix}audiomerge remove <nomor>`);
-      try { fs.unlinkSync(data.queue[idx].path); } catch {}
+      try { fs.unlinkSync(data.queue[idx].path); } catch (e) { console.error('[audiomerge.js]:', e.message); }
       data.queue.splice(idx, 1);
       await db.save();
       return m.reply(claraWrap("Audio Merge", `Audio ${idx + 1} dihapus dari queue.`));

@@ -50,7 +50,7 @@ function formatDuration(seconds) {
 }
 
 function cleanup(fp) {
-  try { if (fp && fs.existsSync(fp)) fs.unlinkSync(fp); } catch {}
+  try { if (fp && fs.existsSync(fp)) fs.unlinkSync(fp); } catch (e) { console.error('[vidcompress.js]:', e.message); }
 }
 
 // Compression presets
@@ -144,7 +144,7 @@ async function getMediaBuffer(m) {
       try {
         const buffer = await downloadFile(m.quoted.url);
         return { buffer, mime: m.quoted.mimetype || "video/mp4", fileName: m.quoted.fileName };
-      } catch {}
+      } catch (e) { console.error('[vidcompress.js]:', e.message); }
     }
   }
   if (m.buffer) return { buffer: m.buffer, mime: m.mimetype || "video/mp4", fileName: m.fileName };
@@ -152,7 +152,7 @@ async function getMediaBuffer(m) {
     try {
       const buffer = await downloadFile(m.url);
       return { buffer, mime: m.mimetype || "video/mp4", fileName: m.fileName };
-    } catch {}
+    } catch (e) { console.error('[vidcompress.js]:', e.message); }
   }
   return null;
 }

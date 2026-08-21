@@ -98,7 +98,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         "Ketik di grup: " + prefix + "secretmsg inbox",
         "Ketik di grup: " + prefix + "secretmsg read " + msgId,
       ].join("\n")) });
-    } catch {}
+    } catch (e) { console.error('[secretmsg.js]:', e.message); }
     return { handled: true };
   }
 

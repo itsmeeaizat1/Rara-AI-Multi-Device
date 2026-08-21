@@ -14,7 +14,7 @@ async function saveTemp(buffer, ext) {
   return filepath;
 }
 function cleanup(filepath) {
-  try { if (filepath && fs.existsSync(filepath)) fs.unlinkSync(filepath); } catch {}
+  try { if (filepath && fs.existsSync(filepath)) fs.unlinkSync(filepath); } catch (e) { console.error('[ttd.js]:', e.message); }
 }
 
 // ── PNG signature → transparent background overlay ──────────────

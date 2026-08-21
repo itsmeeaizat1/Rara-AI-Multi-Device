@@ -74,7 +74,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         const ppBuf = await axios.get(ppUrl, { responseType: 'arraybuffer', timeout: 5000 });
         avatarImg = await canvas.loadImage(ppBuf.data);
       }
-    } catch {}
+    } catch (e) { console.error('[profilecard.js]:', e.message); }
 
     const avX = 80, avY = 80, avR = 50;
     ctx.save();

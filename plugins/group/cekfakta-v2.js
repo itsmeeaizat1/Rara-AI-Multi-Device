@@ -17,7 +17,7 @@ function loadDB() {
     if (fs.existsSync(DB_PATH)) {
       return JSON.parse(fs.readFileSync(DB_PATH, "utf-8"));
     }
-  } catch (e) {}
+  } catch (e) { console.error('[cekfakta-v2.js]:', e.message); }
   return { groups: {} };
 }
 
@@ -152,7 +152,7 @@ async function fetchSnippet(url, timeoutMs = 5000) {
       if (text.length > 500) text = text.slice(0, 500) + "...";
       return text;
     }
-  } catch (e) {}
+  } catch (e) { console.error('[cekfakta-v2.js]:', e.message); }
   return null;
 }
 

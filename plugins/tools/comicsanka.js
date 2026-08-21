@@ -147,7 +147,7 @@ async function handler(m, { sock, args }) {
             await m.react("✅");
             return;
           }
-        } catch (e) {}
+        } catch (e) { console.error('[comicsanka.js]:', e.message); }
       }
       await m.reply(claraWrap("comicsanka", txt));
       await m.react("✅");
@@ -178,7 +178,7 @@ async function handler(m, { sock, args }) {
             const buf = Buffer.from(imgRes.data);
             await sock.sendMessage(m.chat, { image: buf, caption: `Halaman ${i + 1}/${images.length}` }, { quoted: m });
           }
-        } catch (e) {}
+        } catch (e) { console.error('[comicsanka.js]:', e.message); }
         await new Promise(r => setTimeout(r, 500));
       }
 
@@ -274,7 +274,7 @@ async function handler(m, { sock, args }) {
             await m.react("✅");
             return;
           }
-        } catch (e) {}
+        } catch (e) { console.error('[comicsanka.js]:', e.message); }
       }
       await m.reply(claraWrap("comicsanka", txt));
       await m.react("✅");

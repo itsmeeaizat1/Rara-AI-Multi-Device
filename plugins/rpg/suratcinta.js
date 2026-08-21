@@ -128,7 +128,7 @@ async function handler(m, { sock, config: botConfig }) {
           text: letterText,
           mentions: isAnonim ? [] : [partnerJid],
         });
-      } catch {}
+      } catch (e) { console.error('[suratcinta.js]:', e.message); }
     } else {
       // Kirim ke grup (publik)
       await sock.sendMessage(m.chat, {

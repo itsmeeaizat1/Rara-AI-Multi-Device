@@ -587,7 +587,7 @@ export { pluginConfig as config, handler, trackMessage, ensureTracker };
 //      if (gid && gid.endsWith("@g.us")) {
 //        pulseTrack(db, gid, msg.key?.participant || msg.key?.remoteJid, Date.now());
 //      }
-//    } catch {}
+//    } catch (e) { console.error('[autopulse.js]:', e.message); }
 //
 // 3. Set .autopulse on di grup untuk mulai tracking
 // 4. Set cron schedule: .autopulse setcron 0 8 * * 0 (Minggu 08:00)

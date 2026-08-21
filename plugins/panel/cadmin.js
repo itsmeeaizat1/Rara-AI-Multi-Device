@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
         `❌ Nomor \`${targetUser.split("@")[0]}\` tidak terdaftar di WhatsApp!`,
       );
     }
-  } catch (e) {}
+  } catch (e) { console.error('[cadmin.js]:', e.message); }
 
   const email = `${username}@gmail.com`;
   const name = capitalize(username) + " Admin";

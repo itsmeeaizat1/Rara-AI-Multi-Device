@@ -173,7 +173,7 @@ async function handler(m, { sock, config: botConfig }) {
                     if (fs.existsSync(tempVideo)) fs.unlinkSync(tempVideo)
                     return
                 }
-            } catch (e) {}
+            } catch (e) { console.error('[sticker.js]:', e.message); }
             
             if (fs.existsSync(tempVideo)) fs.unlinkSync(tempVideo)
         }
@@ -202,7 +202,7 @@ async function handler(m, { sock, config: botConfig }) {
                     await processVideo(inputPath, outputPath, options)
                 }
                 buffer = fs.readFileSync(outputPath)
-            } catch (e) {}
+            } catch (e) { console.error('[sticker.js]:', e.message); }
             
             if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath)
             if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath)

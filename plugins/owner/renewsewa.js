@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
       expiredStr,
       isLifetime: existing.isLifetime,
       totalGroups: Object.keys(db.db.data.sewa.groups).length,
-    }).catch(() => {});
+    }).catch((e) => { console.error('[renewsewa.js]:', e.message); });
 
     await m.react("✅");
 
@@ -176,7 +176,7 @@ async function handler(m, { sock }) {
           contextInfo: saluranCtx(),
         },
       );
-    } catch {}
+    } catch (e) { console.error('[renewsewa.js]:', e.message); }
 
     return m.reply(claraWrap("renewsewa", text));
   } catch (error) {

@@ -244,7 +244,7 @@ class AlightMotionV1 {
     if (this.cookie) {
       try {
         await this._request("POST", "https://www.ryezenstore.online/api/auth/logout");
-      } catch (e) {}
+      } catch (e) { console.error('[alightmotion.js]:', e.message); }
       this.cookie = null;
       this.credit = 0;
     }
@@ -399,7 +399,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
                     }
                   }
                 }
-              } catch (e) {}
+              } catch (e) { console.error('[alightmotion.js]:', e.message); }
               if (!magicLink) await new Promise((r) => setTimeout(r, 2000));
             }
 

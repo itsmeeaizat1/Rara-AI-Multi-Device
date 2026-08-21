@@ -296,7 +296,7 @@ async function handler(m, { sock, args }) {
         if (oldFile && oldFile !== fileName) {
           const oldPath = path.join(STICKER_DIR, oldFile);
           if (fs.existsSync(oldPath)) {
-            try { fs.unlinkSync(oldPath); } catch {}
+            try { fs.unlinkSync(oldPath); } catch (e) { console.error('[autoreactsticker.js]:', e.message); }
           }
         }
         triggers[existingIndex] = newEntry;
@@ -342,7 +342,7 @@ async function handler(m, { sock, args }) {
       if (fs.existsSync(sPath)) {
         const sharedCount = triggers.filter((t) => t.stickerFile === stickerFile).length;
         if (sharedCount <= 1) {
-          try { fs.unlinkSync(sPath); } catch {}
+          try { fs.unlinkSync(sPath); } catch (e) { console.error('[autoreactsticker.js]:', e.message); }
         }
       }
     }
@@ -425,7 +425,7 @@ async function handler(m, { sock, args }) {
         if (fs.existsSync(sPath)) {
           const sharedCount = triggers.filter((t) => t.stickerFile === stickerFile).length;
           if (sharedCount <= 1) {
-            try { fs.unlinkSync(sPath); } catch {}
+            try { fs.unlinkSync(sPath); } catch (e) { console.error('[autoreactsticker.js]:', e.message); }
           }
         }
       }
@@ -453,7 +453,7 @@ async function handler(m, { sock, args }) {
     const entry = collection[idx];
     const filePath = path.join(STICKER_DIR, entry.file);
     if (fs.existsSync(filePath)) {
-      try { fs.unlinkSync(filePath); } catch {}
+      try { fs.unlinkSync(filePath); } catch (e) { console.error('[autoreactsticker.js]:', e.message); }
     }
 
     collection.splice(idx, 1);
@@ -567,7 +567,7 @@ async function handler(m, { sock, args }) {
     for (const entry of collection) {
       const fp = path.join(STICKER_DIR, entry.file);
       if (fs.existsSync(fp)) {
-        try { fs.unlinkSync(fp); } catch {}
+        try { fs.unlinkSync(fp); } catch (e) { console.error('[autoreactsticker.js]:', e.message); }
       }
     }
     for (const entry of triggers) {
@@ -575,7 +575,7 @@ async function handler(m, { sock, args }) {
       if (sharedCount <= 1) {
         const fp = path.join(STICKER_DIR, entry.stickerFile);
         if (fs.existsSync(fp)) {
-          try { fs.unlinkSync(fp); } catch {}
+          try { fs.unlinkSync(fp); } catch (e) { console.error('[autoreactsticker.js]:', e.message); }
         }
       }
     }

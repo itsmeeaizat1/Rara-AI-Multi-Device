@@ -149,7 +149,7 @@ async function safeReply(m, text, options = {}) {
 
 async function safeReact(m, emoji) {
   try {
-  } catch (error) {}
+  } catch (error) { console.error('[tictactoe.js]:', error.message); }
 }
 async function handler(m, { sock }) {
   const db = getDatabase();

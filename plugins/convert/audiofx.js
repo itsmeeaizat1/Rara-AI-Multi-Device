@@ -165,8 +165,8 @@ async function handler(m, { sock }) {
     } catch (error) {
         m.reply(te(m.prefix, m.command, m.pushName))
     } finally {
-        try { fs.existsSync(inputPath) && fs.unlinkSync(inputPath) } catch {}
-        try { fs.existsSync(outputPath) && fs.unlinkSync(outputPath) } catch {}
+        try { fs.existsSync(inputPath) && fs.unlinkSync(inputPath) } catch (e) { console.error('[audiofx.js]:', e.message); }
+        try { fs.existsSync(outputPath) && fs.unlinkSync(outputPath) } catch (e) { console.error('[audiofx.js]:', e.message); }
     }
 }
 

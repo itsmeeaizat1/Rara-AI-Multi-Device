@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
       try {
         const meta = await sock.groupMetadata(groupId);
         groupName = meta.subject || "Grup";
-      } catch {}
+      } catch (e) { console.error('[tolakgabung.js]:', e.message); }
     }
 
     return m.reply(claraWrap("tolakgabung", "JOIN REQUEST DITOLAK\n\n" +

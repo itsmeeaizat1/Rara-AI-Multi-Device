@@ -43,14 +43,14 @@ async function handleAntiNomorLuar(m, sock, db) {
   // Remove the blocked foreign user
   try {
     await sock.groupParticipantsUpdate(m.chat, [m.sender], "remove");
-  } catch {}
+  } catch (e) { console.error('[antinomorluar.js]:', e.message); }
 
   try {
     await sock.sendMessage(m.chat, {
       text: `Anti Nomor Luar - @${senderNum} dikeluarkan (prefix ${blockedPrefixes.join(",")} diblokir)`,
       mentions: [m.sender],
     });
-  } catch {}
+  } catch (e) { console.error('[antinomorluar.js]:', e.message); }
 
   return true;
 }

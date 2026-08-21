@@ -38,7 +38,7 @@ async function saveTemp(buffer, ext) {
 }
 
 function cleanupTemp(filepath) {
-  try { if (filepath && fs.existsSync(filepath)) fs.unlinkSync(filepath); } catch {}
+  try { if (filepath && fs.existsSync(filepath)) fs.unlinkSync(filepath); } catch (e) { console.error('[pdftools.js]:', e.message); }
 }
 
 function formatSize(bytes) {
@@ -224,7 +224,7 @@ async function mergePdf(m, sock) {
           for (const page of extraPages) mergedPdf.addPage(page);
           extraCount++;
         }
-      } catch {}
+      } catch (e) { console.error('[pdftools.js]:', e.message); }
       current = current.quoted;
     }
 

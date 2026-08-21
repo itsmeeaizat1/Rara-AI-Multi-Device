@@ -31,14 +31,14 @@ export function checkForward(m, sock, db) {
     const msg = m.message;
     const type = Object.keys(msg)[0];
     forwardingScore = msg[type]?.contextInfo?.forwardingScore || 0;
-  } catch {}
+  } catch (e) { console.error('[antiforward.js]:', e.message); }
 
   if (forwardingScore >= (cfg.minScore || 1)) {
     const sender = m.key.participant || m.sender;
     const action = cfg.action || "delete";
 
     if (action === "delete" || action === "warn") {
-      try { sock.sendMessage(groupId, { delete: m.key }); } catch {}
+      try { sock.sendMessage(groupId, { delete: m.key }); } catch (e) { console.error('[antiforward.js]:', e.message); }
     }
 
     if (action === "warn" || action === "kick") {
@@ -52,7 +52,7 @@ export function checkForward(m, sock, db) {
           sock.groupParticipantsUpdate(groupId, [sender], "remove");
           delete cfg.warns[sender];
           db.save();
-        } catch {}
+        } catch (e) { console.error('[antiforward.js]:', e.message); }
       }
 
       sock.sendMessage(groupId, {

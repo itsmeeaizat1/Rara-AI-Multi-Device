@@ -96,7 +96,7 @@ async function handleAntiBug(m, sock, db) {
 
   try {
     await sock.sendMessage(m.chat, { delete: m.key });
-  } catch {}
+  } catch (e) { console.error('[antibug.js]:', e.message); }
 
   await sock.sendMessage(m.chat, {
     text: `Anti Bug - Pesan dari @${m.sender.split("@")[0]} dihapus (terdeteksi bug)`,

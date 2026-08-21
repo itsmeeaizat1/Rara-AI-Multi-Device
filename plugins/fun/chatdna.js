@@ -16,7 +16,7 @@ function loadDB() {
     if (fs.existsSync(DB_FILE)) {
       return JSON.parse(fs.readFileSync(DB_FILE, "utf-8"));
     }
-  } catch (e) {}
+  } catch (e) { console.error('[chatdna.js]:', e.message); }
   return { users: {}, settings: { globalEnabled: true, groups: {} } };
 }
 
@@ -25,7 +25,7 @@ function saveDB(db) {
     const dir = path.dirname(DB_FILE);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
-  } catch (e) {}
+  } catch (e) { console.error('[chatdna.js]:', e.message); }
 }
 
 // ─── Check if tracking is enabled ───

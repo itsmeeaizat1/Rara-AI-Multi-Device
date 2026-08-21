@@ -174,7 +174,7 @@ async function handler(m, { sock }) {
           null,
           { contextInfo: saluranCtx() },
         );
-      } catch {}
+      } catch (e) { console.error('[approvesewa.js]:', e.message); }
     } else {
       ownerText += "\nBot join gagal: " + joinResult.reason + "\n";
       ownerText += "Tambahkan bot manual ke grup.";
@@ -192,7 +192,7 @@ async function handler(m, { sock }) {
             ? "Bot sudah join ke grup kamu. Ketik .menu di grup untuk lihat fitur."
             : "Bot gagal join otomatis. Tambahkan bot manual ke grup."),
       });
-    } catch {}
+    } catch (e) { console.error('[approvesewa.js]:', e.message); }
 
     // Broadcast ke saluran WA - sewa approved
     await notifySewaApproved(sock, {
@@ -202,7 +202,7 @@ async function handler(m, { sock }) {
       duration: formatDuration(regData.duration),
       expiredStr,
       totalGroups: Object.keys(db.db.data.sewa.groups).length,
-    }).catch(() => {});
+    }).catch((e) => { console.error('[approvesewa.js]:', e.message); });
 
     // Broadcast ke saluran WA - user baru sewa bot (rincian lengkap)
     await notifySewaBot(sock, {
@@ -214,7 +214,7 @@ async function handler(m, { sock }) {
       expiredStr,
       isLifetime: regData.duration === "lifetime",
       totalGroups: Object.keys(db.db.data.sewa.groups).length,
-    }).catch(() => {});
+    }).catch((e) => { console.error('[approvesewa.js]:', e.message); });
 
     return m.reply(ownerText);
   } catch (error) {

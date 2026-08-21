@@ -109,7 +109,7 @@ async function scrapeGoogleNews(query) {
         time: r.temporal_stamp || "",
       }));
     }
-  } catch (_) {}
+  } catch (_) { console.error('[berita.js]:', _?.message || _); }
   return [];
 }
 

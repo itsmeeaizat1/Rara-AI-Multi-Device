@@ -143,7 +143,7 @@ async function getCookpadRecipe(recipeId) {
       try {
         const parsed = JSON.parse(m[1].trim());
         if (parsed["@type"] === "Recipe") { jsonLd = parsed; break; }
-      } catch {}
+      } catch (e) { console.error('[resep.js]:', e.message); }
     }
     if (!jsonLd) return null;
 
@@ -336,7 +336,7 @@ async function handler(m, { sock, args }) {
           await m.react("✅");
           return await sendRecipeReply(m, sock, formatMeal(dRes.data.meals[0]), dRes.data.meals[0].strMealThumb);
         }
-      } catch {}
+      } catch (e) { console.error('[resep.js]:', e.message); }
             return m.reply(`Kategori "${query}" tidak ditemukan.`);
     }
     await m.react("🕐");
@@ -349,7 +349,7 @@ async function handler(m, { sock, args }) {
           const recipe = await getCookpadRecipe(random.id);
           if (recipe) { await m.react("✅"); return await sendRecipeReply(m, sock, formatCookpadRecipe(recipe), recipe.image); }
         }
-      } catch {}
+      } catch (e) { console.error('[resep.js]:', e.message); }
     }
     try {
       const res = await axios.get(`${API}/random.php`);
@@ -384,7 +384,7 @@ async function handler(m, { sock, args }) {
     try {
       const res = await axios.get(`${API}/filter.php?c=${encodeURIComponent(query)}`);
       if (res.data.meals) intMeals = res.data.meals.slice(0, 8);
-    } catch {}
+    } catch (e) { console.error('[resep.js]:', e.message); }
     const cat = query.charAt(0).toUpperCase() + query.slice(1).toLowerCase();
     idResults = ID_RECIPES.filter(r => r.c.toLowerCase() === cat.toLowerCase()).sort((a, b) => b.l - a.l).slice(0, 8);
     if (intMeals.length === 0 && idResults.length === 0) {
@@ -527,7 +527,7 @@ async function handler(m, { sock, args }) {
       try {
         const res = await axios.get(`${API}/lookup.php?i=${sub}`);
         if (res.data.meals) { await m.react("✅"); return await sendRecipeReply(m, sock, formatMeal(res.data.meals[0]), res.data.meals[0].strMealThumb); }
-      } catch {}
+      } catch (e) { console.error('[resep.js]:', e.message); }
     }
     // Try local Indonesian dataset
     const id = parseInt(sub);

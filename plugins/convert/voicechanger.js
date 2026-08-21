@@ -405,12 +405,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         fs.unlinkSync(convertedWav);
         fs.unlinkSync(resultWav);
         fs.unlinkSync(outputOgg);
-      } catch {}
+      } catch (e) { console.error('[voicechanger.js]:', e.message); }
 
       // Delete status
       try {
         await conn.sendMessage(m.key.remoteJid, { delete: { remoteJid: m.key.remoteJid, id: statusMsg.key.id, fromMe: true } });
-      } catch {}
+      } catch (e) { console.error('[voicechanger.js]:', e.message); }
 
       return;
     }
@@ -486,10 +486,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ].join("\n")),
     });
 
-    try { fs.unlinkSync(inputPath); fs.unlinkSync(outputPath); } catch {}
+    try { fs.unlinkSync(inputPath); fs.unlinkSync(outputPath); } catch (e) { console.error('[voicechanger.js]:', e.message); }
     try {
       await conn.sendMessage(m.key.remoteJid, { delete: { remoteJid: m.key.remoteJid, id: statusMsg.key.id, fromMe: true } });
-    } catch {}
+    } catch (e) { console.error('[voicechanger.js]:', e.message); }
 
   } catch (e) {
     console.error("voicechanger error:", e.message);
