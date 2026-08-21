@@ -299,11 +299,21 @@ async function handler(m, { sock }) {
     );
   }
 
-  // Quick registration: .daftar Nama, Umur
+  // Quick registration: .daftar Nama, Umur  (support koma ATAU titik sebagai pemisah)
   const quickArgs = m.text ? m.text.trim() : "";
-  if (quickArgs && quickArgs.includes(",")) {
-    const parts = quickArgs.split(",").map(s => s.trim());
-    if (parts.length >= 2 && parts[0] && parts[1]) {
+  if (quickArgs) {
+    // Coba parse: support "Nama, Umur" dan "Nama. Umur"
+    let parts = null;
+    if (quickArgs.includes(",")) {
+      parts = quickArgs.split(",").map(s => s.trim());
+    } else if (/\w\.\s*\d/.test(quickArgs)) {
+      // Titik diikuti angka — split di titik terakhir sebelum angka
+      const lastPeriodMatch = quickArgs.match(/^(.+?)\.+\s*(\d+.*)$/);
+      if (lastPeriodMatch) {
+        parts = [lastPeriodMatch[1].trim(), lastPeriodMatch[2].trim()];
+      }
+    }
+    if (parts && parts.length >= 2 && parts[0] && parts[1]) {
       const name = normalizeRegistrationName(parts[0]);
       const age = Number(parts[1]);
 
@@ -365,6 +375,8 @@ async function handler(m, { sock }) {
       return;
     }
   }
+
+  // Jika quickArgs ada tapi ga match format, lanjut ke sesi interaktif
 
   if (getRegistrationSessionEntry(m.sender).session) {
     return m.reply(
