@@ -55,8 +55,8 @@ async function handler(m, { sock }) {
         fileName: getFileName(result),
         mimetype: result.download.mimetype,
         contextInfo: {
-          forwardingScore: 99,
-          isForwarded: true,
+          forwardingScore: 0,
+          isForwarded: false,
         },
       },
       { quoted: m },

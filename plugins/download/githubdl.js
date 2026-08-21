@@ -77,8 +77,8 @@ async function handler(m, { sock }) {
             fileName: `${repo} - Branch: ${branch}.zip`,
             mimetype: 'application/zip',
             contextInfo: {
-                forwardingScore: 99,
-                isForwarded: true
+                forwardingScore: 0,
+                isForwarded: false
             }
         })
         

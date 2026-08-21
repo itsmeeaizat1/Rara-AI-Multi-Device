@@ -171,8 +171,8 @@ Sering seringlah berinteraksi dengan bot agar level kamu bertambah!`;
 
     const contextInfo = {
       mentionedJid: [m.sender],
-      forwardingScore: 999,
-      isForwarded: true,
+      forwardingScore: 0,
+      isForwarded: false,
     };
 
     const fakeQuoted = {

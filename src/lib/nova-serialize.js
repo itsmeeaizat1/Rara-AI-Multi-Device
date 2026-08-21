@@ -451,8 +451,8 @@ async function serializeQuotedMessage(
 function createContextInfo(jid, text, title = "", body = "", thumbnail = null) {
   const contextInfo = {
     mentionedJid: [],
-    forwardingScore: 999,
-    isForwarded: true,
+    forwardingScore: 0,
+    isForwarded: false,
   };
 
   if (jid && text) {

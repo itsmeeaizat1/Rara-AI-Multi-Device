@@ -342,7 +342,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               body: { text: _weatherBlock + text },
               footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
               contextInfo: {
-                isForwarded: false, forwardingScore: 9,
+                isForwarded: false, forwardingScore: 0,
                 participant: "0@s.whatsapp.net",
                 quotedMessage: { conversation: botName },
                 mentionedJid: [m.sender],
@@ -371,7 +371,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               body: { text: _weatherBlock + text },
               footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
               contextInfo: {
-                isForwarded: false, forwardingScore: 9,
+                isForwarded: false, forwardingScore: 0,
                 participant: "0@s.whatsapp.net",
                 quotedMessage: { conversation: botName },
                 mentionedJid: [m.sender],
@@ -439,7 +439,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               header: { title: "", subtitle: "", hasMediaAttachment: true, videoMessage: media4.videoMessage },
               body: { text: _weatherBlock + text },
               footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
-              contextInfo: { isForwarded: false, forwardingScore: 9, participant: "0@s.whatsapp.net", quotedMessage: { conversation: botName }, mentionedJid: [m.sender] },
+              contextInfo: { isForwarded: false, forwardingScore: 0, participant: "0@s.whatsapp.net", quotedMessage: { conversation: botName }, mentionedJid: [m.sender] },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({}),
                 buttons: buildButtons(prefix),
@@ -470,7 +470,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               },
               body: { text: _weatherBlock + text },
               footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
-              contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
+              contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 0 },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({}),
                 buttons: buildButtons(prefix),
@@ -511,7 +511,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                 },
               },
               body: { text: _weatherBlock + text },
-              contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
+              contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 0 },
               nativeFlowMessage: {
                 buttons: [
                   { name: "quick_reply", buttonParamsJson: JSON.stringify({ display_text: "Kategori", id: `${prefix}menukategori` }) },

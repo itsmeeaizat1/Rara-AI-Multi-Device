@@ -1466,8 +1466,8 @@ class AIRich extends BaseBuilder {
     async build({ forwarded = true, notification = false, includesUnifiedResponse = true, includesSubmessages = true, quoted, quotedParticipant, ...options } = {}) {
         const forward = forwarded
             ? {
-                forwardingScore: 1,
-                isForwarded: true,
+                forwardingScore: 0,
+                isForwarded: false,
                 forwardedAiBotMessageInfo: { botJid: '0@bot' },
                 forwardOrigin: 4,
             }

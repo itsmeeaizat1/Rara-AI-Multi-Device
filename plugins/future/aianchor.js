@@ -258,8 +258,8 @@ function startAutoJob(db, sock) {
               mimetype: "audio/ogg; codecs=opus",
               ptt: false,
               contextInfo: {
-                forwardingScore: 9,
-                isForwarded: true,
+                forwardingScore: 0,
+                isForwarded: false,
                 forwardedNewsletterMessageInfo: {
                   newsletterJid: saluranId,
                   newsletterName: config.saluran?.name || "Nova AI",

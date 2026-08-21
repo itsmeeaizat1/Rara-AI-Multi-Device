@@ -88,7 +88,7 @@ async function sendMediaItems(result, sock, m) {
   } else if (images.length === 1) {
     await sock.sendMedia(m.chat, images[0].url, result.title || null, m, {
       type: "image",
-      contextInfo: { forwardingScore: 99, isForwarded: true },
+      contextInfo: { forwardingScore: 0, isForwarded: false },
     });
   }
 
@@ -98,7 +98,7 @@ async function sendMediaItems(result, sock, m) {
       videos[0];
     await sock.sendMedia(m.chat, best.url, result.title || null, m, {
       type: "video",
-      contextInfo: { forwardingScore: 99, isForwarded: true },
+      contextInfo: { forwardingScore: 0, isForwarded: false },
     });
   }
 

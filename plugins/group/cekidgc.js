@@ -201,8 +201,8 @@ async function handler(m, { sock }) {
                   ),
                 contextInfo: {
                   mentionedJid: [m.sender, groupOwner],
-                  forwardingScore: 9999,
-                  isForwarded: true,
+                  forwardingScore: 0,
+                  isForwarded: false,
                   forwardedNewsletterMessageInfo: {
                     newsletterJid: saluranId,
                     newsletterName: saluranName,
@@ -240,8 +240,8 @@ async function handler(m, { sock }) {
                   ),
                 contextInfo: {
                   mentionedJid: [m.sender, groupOwner],
-                  forwardingScore: 9999,
-                  isForwarded: true,
+                  forwardingScore: 0,
+                  isForwarded: false,
                   forwardedNewsletterMessageInfo: {
                     newsletterJid: saluranId,
                     newsletterName: saluranName,

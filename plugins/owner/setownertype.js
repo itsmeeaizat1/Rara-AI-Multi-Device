@@ -72,8 +72,8 @@ async function handler(m, { sock, db }) {
         footer: config.bot?.name || 'Nova-AI',
         contextInfo: {
             mentionedJid: [m.sender],
-            isForwarded: true,
-            forwardingScore: 999
+            isForwarded: false,
+            forwardingScore: 0
         },
         interactiveButtons: buttons
     }, { quoted: m })

@@ -182,7 +182,7 @@ async function handler(m, { sock }) {
             m.chat,
             {
               sticker: exifBuf,
-              contextInfo: { isForwarded: true, forwardingScore: 1 },
+              contextInfo: { isForwarded: false, forwardingScore: 0 },
             },
             { quoted: m },
           );

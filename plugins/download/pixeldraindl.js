@@ -66,8 +66,8 @@ async function handler(m, { sock }) {
         fileName: file.filename,
         mimetype: 'application/octet-stream',
         contextInfo: {
-          forwardingScore: 99,
-          isForwarded: true
+          forwardingScore: 0,
+          isForwarded: false
         }
       })
     } else if (sizeInMB > 100) {
