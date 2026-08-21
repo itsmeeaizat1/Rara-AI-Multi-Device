@@ -23,7 +23,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
-    if (!isImage) return m.reply(claraWrap("Ganti-pp-kosong.jpg", `🖼️ *Ganti PP-KOSONG.JPG*\n\n> Kirim/reply gambar untuk mengganti\n> File: assets/images/pp-kosong.jpg`))
+    if (!isImage) return m.reply(claraWrap("Ganti-pp-kosong.jpg", `🖼️ *Ganti PP-KOSONG.JPG*\n\n> Kirim/reply gambar untuk mengganti\n> File: assets/image/pp-kosong.jpg`))
     try {
         let buffer = m.quoted && m.quoted.isMedia ? await m.quoted.download() : await m.download()
         if (!buffer) { const __navText = claraWrap("ganti-pp-kosong.jpg", '❌ Gagal mendownload gambar'); return await m.reply(__navText); }

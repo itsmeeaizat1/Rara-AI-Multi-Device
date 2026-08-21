@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
 
     const ts = Date.now()
     const inputPath = path.join(tempDir, 'fx_in_' + ts + '.' + media.ext)
-    const outputPath = path.join(tempDir, 'fx_out_' + ts + '.mp3')
+    const outputPath = path.join(tempDir, 'fx_out_${ts}.ogg')
 
     try {
         const buffer = await media.download()

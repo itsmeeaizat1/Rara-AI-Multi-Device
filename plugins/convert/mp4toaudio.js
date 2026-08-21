@@ -61,7 +61,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (format === "opus") extraFlags = " -ar 48000";
     if (format === "ac3") extraFlags = " -ar 48000 -ac 2";
 
-    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -vn -c:a ' + fmt.codec + extraFlags + ' -q:a 2 "' + outputPath + '"');
+    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -vn -c:a ' + fmt.codec + extraFlags + ' -c:a libopus -b:a 64k "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
       return m.reply(claraWrap("MP4 to Audio", "Gagal extract audio dari video."));

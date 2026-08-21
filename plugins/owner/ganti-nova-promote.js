@@ -23,7 +23,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
-    if (!isImage) return m.reply(claraWrap("Ganti-nova-promote.jpg", `🖼️ *Ganti NOVA-PROMOTE.JPG*\n\n> Kirim/reply gambar untuk mengganti\n> File: assets/images/nova-promote.jpg`))
+    if (!isImage) return m.reply(claraWrap("Ganti-nova-promote.jpg", `🖼️ *Ganti NOVA-PROMOTE.JPG*\n\n> Kirim/reply gambar untuk mengganti\n> File: assets/image/nova-promote.jpg`))
     try {
         let buffer = m.quoted && m.quoted.isMedia ? await m.quoted.download() : await m.download()
         if (!buffer) { const __navText = claraWrap("ganti-nova-promote.jpg", '❌ Gagal mendownload gambar'); return await m.reply(__navText); }

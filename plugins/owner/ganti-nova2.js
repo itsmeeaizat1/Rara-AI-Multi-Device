@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        return m.reply(claraWrap("Ganti-nova2.jpg", `🖼️ *Ganti Ourin2.Jpg*\n\n> Kirim/reply gambar untuk mengganti\n> File: assets/images/nova2.jpg`))
+        return m.reply(claraWrap("Ganti-nova2.jpg", `🖼️ *Ganti Ourin2.Jpg*\n\n> Kirim/reply gambar untuk mengganti\n> File: assets/image/nova2.jpg`))
     }
     
     try {

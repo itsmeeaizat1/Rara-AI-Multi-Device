@@ -46,12 +46,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       const duration = endSec - startSec;
       const outputPath = path.join(tmpDir, `trimmed_${Date.now()}.mp3`);
-      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${startSec} -t ${duration} -c:a libmp3lame -q:a 2 "${outputPath}"`);
+      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${startSec} -t ${duration} -c:a libopus -c:a libopus -b:a 64k "${outputPath}"`);
 
       if (!fs.existsSync(outputPath)) return m.reply(claraWrap("Audio Split", "Gagal trim audio."));
       const buf = fs.readFileSync(outputPath);
       await conn.sendMessage(m.key.remoteJid, {
-        audio: buf, mimetype: "audio/mpeg", ptt: false,
+        audio: buf, mimetype: "audio/ogg; codecs=opus", ptt: false,
         caption: claraWrap("Audio Split", `Trimmed: ${start} - ${end} (${duration} detik)`),
       });
       fs.unlinkSync(inputPath);
@@ -70,16 +70,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const out1 = path.join(tmpDir, `split1_${Date.now()}.mp3`);
       const out2 = path.join(tmpDir, `split2_${Date.now()}.mp3`);
 
-      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -t ${halfSec} -c:a libmp3lame -q:a 2 "${out1}"`);
-      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${halfSec} -c:a libmp3lame -q:a 2 "${out2}"`);
+      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -t ${halfSec} -c:a libopus -c:a libopus -b:a 64k "${out1}"`);
+      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${halfSec} -c:a libopus -c:a libopus -b:a 64k "${out2}"`);
 
       if (fs.existsSync(out1) && fs.existsSync(out2)) {
         await conn.sendMessage(m.key.remoteJid, {
-          audio: fs.readFileSync(out1), mimetype: "audio/mpeg", ptt: false,
+          audio: fs.readFileSync(out1), mimetype: "audio/ogg; codecs=opus", ptt: false,
           caption: claraWrap("Audio Split", `Bagian 1 (0 - ${halfSec} detik)`),
         });
         await conn.sendMessage(m.key.remoteJid, {
-          audio: fs.readFileSync(out2), mimetype: "audio/mpeg", ptt: false,
+          audio: fs.readFileSync(out2), mimetype: "audio/ogg; codecs=opus", ptt: false,
           caption: claraWrap("Audio Split", `Bagian 2 (${halfSec} - ${totalSec} detik)`),
         });
         fs.unlinkSync(out1);
@@ -108,10 +108,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       for (let i = 0; i < parts; i++) {
         const start = i * partDur;
         const outPath = path.join(tmpDir, `part${i + 1}_${Date.now()}.mp3`);
-        await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${start} -t ${partDur} -c:a libmp3lame -q:a 2 "${outPath}"`);
+        await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${start} -t ${partDur} -c:a libopus -c:a libopus -b:a 64k "${outPath}"`);
         if (fs.existsSync(outPath)) {
           await conn.sendMessage(m.key.remoteJid, {
-            audio: fs.readFileSync(outPath), mimetype: "audio/mpeg", ptt: false,
+            audio: fs.readFileSync(outPath), mimetype: "audio/ogg; codecs=opus", ptt: false,
             caption: claraWrap("Audio Split", `Part ${i + 1}/${parts} (${start} - ${start + partDur} detik)`),
           });
           fs.unlinkSync(outPath);

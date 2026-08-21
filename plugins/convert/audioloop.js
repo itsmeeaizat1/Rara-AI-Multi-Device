@@ -37,8 +37,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const tmpDir = path.join(os.tmpdir(), 'nova-loop');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
-    const inputPath = path.join(tmpDir, "input_" + Date.now() + ".mp3");
-    const outputPath = path.join(tmpDir, "looped_" + Date.now() + ".mp3");
+    const inputPath = path.join(tmpDir, "input_" + Date.now() + ".ogg");
+    const outputPath = path.join(tmpDir, "looped_" + Date.now() + ".ogg");
 
     const buffer = await conn.downloadMediaMessage({ key: { remoteJid: m.key.remoteJid, id: m.quoted && m.quoted.id }, message: quoted });
     fs.writeFileSync(inputPath, buffer);
@@ -54,7 +54,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         concatInputs += "[a" + i + "]";
       }
       let filterComplex = fadeFilters.join("") + concatInputs + "concat=n=" + loopCount + ":v=0:a=1[out]";
-      cmd = 'ffmpeg -y -i "' + inputPath + '" -filter_complex "' + filterComplex + '" -map "[out]" -c:a libmp3lame -q:a 2 "' + outputPath + '"';
+      cmd = 'ffmpeg -y -i "' + inputPath + '" -filter_complex "' + filterComplex + '" -map "[out]" -c:a libopus -c:a libopus -b:a 64k "' + outputPath + '"';
     } else {
       let inputs = "";
       for (let i = 0; i < loopCount; i++) {
@@ -65,7 +65,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         concatInputs += "[" + i + ":a]";
       }
       let filterComplex = concatInputs + "concat=n=" + loopCount + ":v=0:a=1[out]";
-      cmd = 'ffmpeg -y ' + inputs + '-filter_complex "' + filterComplex + '" -map "[out]" -c:a libmp3lame -q:a 2 "' + outputPath + '"';
+      cmd = 'ffmpeg -y ' + inputs + '-filter_complex "' + filterComplex + '" -map "[out]" -c:a libopus -c:a libopus -b:a 64k "' + outputPath + '"';
     }
 
     await queueFFmpeg(cmd);
@@ -77,7 +77,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const buf = fs.readFileSync(outputPath);
     await conn.sendMessage(m.key.remoteJid, {
       audio: buf,
-      mimetype: "audio/mpeg",
+      mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
       caption: claraWrap("Audio Loop", [
         "Berhasil loop!",

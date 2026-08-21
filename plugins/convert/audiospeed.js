@@ -36,8 +36,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const tmpDir = path.join(os.tmpdir(), 'nova-speed');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
 
-    const inputPath = path.join(tmpDir, "input_" + Date.now() + ".mp3");
-    const outputPath = path.join(tmpDir, "output_" + Date.now() + ".mp3");
+    const inputPath = path.join(tmpDir, "input_" + Date.now() + ".ogg");
+    const outputPath = path.join(tmpDir, "output_" + Date.now() + ".ogg");
 
     const buffer = await conn.downloadMediaMessage({ key: { remoteJid: m.key.remoteJid, id: m.quoted && m.quoted.id }, message: quoted });
     fs.writeFileSync(inputPath, buffer);
@@ -46,7 +46,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (speed < 0.5) filter = "atempo=0.5,atempo=" + (speed / 0.5);
     if (speed > 2.0) filter = "atempo=2.0,atempo=" + (speed / 2.0);
 
-    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libmp3lame -q:a 2 "' + outputPath + '"');
+    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -c:a libopus -b:a 64k "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
       return m.reply(claraWrap("Audio Speed", "Gagal ubah kecepatan audio."));
@@ -60,7 +60,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     await conn.sendMessage(m.key.remoteJid, {
       audio: buf,
-      mimetype: "audio/mpeg",
+      mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
       caption: claraWrap("Audio Speed", [
         "Berhasil!",
