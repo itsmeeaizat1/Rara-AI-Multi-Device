@@ -1,6 +1,14 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Root bot directory (2 level up dari src/lib/)
+const BOT_ROOT = path.resolve(__dirname, '..', '..');
 
 // Memory cache for all local assets
 const assetCache = {};
@@ -14,12 +22,16 @@ export function preloadAssets(configAssets) {
   for (const [key, filepath] of Object.entries(configAssets)) {
     try {
       if (typeof filepath === 'string' && !filepath.startsWith('http')) {
-        const fullPath = path.resolve(process.cwd(), filepath);
+        // Coba dari process.cwd() dulu, fallback ke BOT_ROOT
+        let fullPath = path.resolve(process.cwd(), filepath);
+        if (!fs.existsSync(fullPath)) {
+          fullPath = path.resolve(BOT_ROOT, filepath);
+        }
         if (fs.existsSync(fullPath)) {
           assetCache[key] = fs.readFileSync(fullPath);
-          console.log(`[AssetManager] 📂 Successfully cached: ${key}`);
+          console.log(`[AssetManager] 📂 Successfully cached: ${key} (${assetCache[key].length} bytes)`);
         } else {
-          console.error(`[AssetManager] ❌ File not found: ${fullPath}`);
+          console.error(`[AssetManager] ❌ File not found: ${filepath} (tried cwd + BOT_ROOT)`);
         }
       }
     } catch (e) {
@@ -46,11 +58,18 @@ export function getAssetBuffer(key, configAssets = null) {
   const assets = configAssets || config?.assets;
   if (assets && assets[key] && !assets[key].startsWith('http')) {
     try {
-      const fullPath = path.resolve(process.cwd(), assets[key]);
+      // Coba dari process.cwd() dulu, fallback ke BOT_ROOT
+      let fullPath = path.resolve(process.cwd(), assets[key]);
+      if (!fs.existsSync(fullPath)) {
+        fullPath = path.resolve(BOT_ROOT, assets[key]);
+      }
       if (fs.existsSync(fullPath)) {
         const buf = fs.readFileSync(fullPath);
         assetCache[key] = buf; 
+        console.log(`[AssetManager] 📂 Loaded on-demand: ${key} (${buf.length} bytes)`);
         return buf;
+      } else {
+        console.error(`[AssetManager] ❌ File not found for ${key}: ${assets[key]}`);
       }
     } catch (e) {
       console.error(`[AssetManager] Failed to read ${key} from disk:`, e.message);
@@ -168,11 +187,17 @@ export async function getMenuThumbnail(fallbackKey = 'nova') {
 export async function getStaticThumbnail(assetKey = 'nova-thumbnail') {
   try {
     const img = getAssetBuffer(assetKey);
-    if (!img) return null;
+    if (!img) {
+      console.error('[AssetManager] ❌ getStaticThumbnail: asset not found:', assetKey);
+      return null;
+    }
+    // Sharp resize untuk thumbnail WhatsApp (640x360)
     return await sharp(img).resize(640, 360, { fit: 'cover' }).jpeg({ quality: 80 }).toBuffer();
   } catch (e) {
-    console.error('[AssetManager] ❌ Failed to generate static thumbnail:', e.message);
-    return null;
+    console.error('[AssetManager] ❌ Sharp failed for thumbnail, returning raw buffer:', e.message);
+    // Fallback: return raw buffer tanpa resize (lebih baik gambar gak resize daripada kosong)
+    const raw = getAssetBuffer(assetKey);
+    return raw || null;
   }
 }
 
