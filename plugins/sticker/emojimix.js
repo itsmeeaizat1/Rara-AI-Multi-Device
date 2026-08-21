@@ -1,14 +1,17 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// Emojimix — pakai emoji-mixer + Google Emoji Kitchen CDN (tanpa API key)
+// Tenor Google API sudah discontinued, ganti dengan direct Google CDN
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import config from '../../config.js'
-import { f } from './../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { toUnicode, checkSupported } from 'emoji-mixer';
+
 const pluginConfig = {
     name: 'emojimix',
     alias: ['mixemoji', 'emix'],
     category: 'sticker',
-    description: 'Gabungkan 2 emoji menjadi 1',
+    description: 'Gabungkan 2 emoji menjadi 1 (Google Emoji Kitchen)',
     usage: '.emojimix <emoji1><emoji2>',
     example: '.emojimix 😂🔥',
     isOwner: false,
@@ -18,6 +21,38 @@ const pluginConfig = {
     cooldown: 5,
     energi: 1,
     isEnabled: true
+}
+
+// Base URL Google Emoji Kitchen CDN
+const BASE_URL = "https://www.gstatic.com/android/keyboard/emojikitchen";
+
+/**
+ * Cari URL emoji kitchen untuk pasangan emoji
+ * Cek kedua arah: emoji1_emoji2 dan emoji2_emoji1
+ */
+function getEmojiKitchenUrl(emoji1, emoji2) {
+    const u1 = toUnicode(emoji1);
+    const u2 = toUnicode(emoji2);
+
+    // Cek arah 1: emoji1 sebagai left
+    const pairs1 = checkSupported(emoji1);
+    if (pairs1) {
+        const match1 = pairs1.find(p => p.rightEmoji === u2);
+        if (match1) {
+            return `${BASE_URL}/${match1.date}/u${match1.leftEmoji}/u${match1.leftEmoji}_u${match1.rightEmoji}.png`;
+        }
+    }
+
+    // Cek arah 2: emoji2 sebagai left
+    const pairs2 = checkSupported(emoji2);
+    if (pairs2) {
+        const match2 = pairs2.find(p => p.rightEmoji === u1);
+        if (match2) {
+            return `${BASE_URL}/${match2.date}/u${match2.leftEmoji}/u${match2.leftEmoji}_u${match2.rightEmoji}.png`;
+        }
+    }
+
+    return null;
 }
 
 async function handler(m, { sock }) {
@@ -33,7 +68,7 @@ async function handler(m, { sock }) {
     const emojis = text.match(emojiRegex)
     
     if (!emojis || emojis.length < 2) {
-        return sendReplyWithNav(m, sock, claraWrap("Emojimix", `❌ Masukkan minimal 2 emoji!\n\nContoh: ${m.prefix}emojimix 😂🔥`), { commandName: "emojimix" })
+        return sendReplyWithNav(sock, m, claraWrap("Emojimix", `❌ Masukkan minimal 2 emoji!\n\nContoh: ${m.prefix}emojimix 😂🔥`), { commandName: "emojimix" })
     }
     
     const emoji1 = emojis[0]
@@ -42,17 +77,31 @@ async function handler(m, { sock }) {
     m.react('🕐')
     
     try {
-        const apiUrl = `https://tenor.googleapis.com/v2/featured?key=${config.APIkey.tenor}&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`
+        // Cari URL dari Google Emoji Kitchen (tanpa API key)
+        const imageUrl = getEmojiKitchenUrl(emoji1, emoji2);
         
-        const data = await f(apiUrl)
-        
-        if (!data.results || data.results.length === 0) {
-            { const __navText = `❌ Kombinasi emoji tidak ditemukan!\n\nCoba emoji lain.`; return await m.reply(__navText); }
+        if (!imageUrl) {
+            return m.reply(claraWrap("Emojimix", [
+                `❌ Kombinasi ${emoji1} + ${emoji2} tidak tersedia di Emoji Kitchen.`,
+                "",
+                "Coba kombinasi emoji lain ya!"
+            ].join("\n")));
         }
         
-        const imageUrl = data.results[0].url
+        // Download image dari Google CDN
+        const res = await fetch(imageUrl);
+        if (!res.ok) {
+            return m.reply(claraWrap("Emojimix", [
+                `❌ Gagal mengunduh emoji mix.`,
+                "",
+                "Coba lagi nanti ya!"
+            ].join("\n")));
+        }
         
-        await sock.sendImageAsSticker(m.chat, imageUrl, m, {
+        const buffer = Buffer.from(await res.arrayBuffer());
+        
+        // Kirim sebagai sticker
+        await sock.sendImageAsSticker(m.chat, buffer, m, {
             packname: config.sticker.packname,
             author: config.sticker.author
         })
@@ -60,7 +109,8 @@ async function handler(m, { sock }) {
         m.react('✅')
         
     } catch (err) {
-        m.reply(claraWrap("emojimix", te(m.prefix, m.command, m.pushName), "error"))
+        console.error('[emojimix] Error:', err.message);
+        m.reply(claraWrap("Emojimix", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 

@@ -3,7 +3,7 @@ import { getDatabase } from "./src/lib/nova-database.js";
 import * as ownerPremiumDb from "./src/lib/nova-premium-db.js";
 import { payment, donasi } from "./config/setpayment.js";
 import fs from "node:fs";
-import { getApiKeys, getDeepAiKey, getPteroConfig } from "./src/lib/config/env-loader.js";
+import { getApiKeys, getPteroConfig } from "./src/lib/config/env-loader.js";
 const apikeysConfig = getApiKeys();
 
 //  utamakan baca object config sampai bawah
@@ -170,10 +170,7 @@ const config = {
     },
   },
 
-  // DeepAI API (torch-srgan untuk .reminiv3)
-  deepai: {
-    apiKey: getDeepAiKey(),
-  },
+  // DeepAI API dihapus — hd.js pakai sharp local upscaler
 
   // Email OTP configuration (recommended: set via environment variables)
   emailOtp: {
