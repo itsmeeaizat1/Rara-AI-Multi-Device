@@ -217,9 +217,9 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 ╚┈┈┈┈┈┈┈┈┈❖
 ${readMore}
 ╔┈「 *Menu* 」
-╎ぎ ${prefix}menu
-╎ぎ ${prefix}allmenu
-╎ぎ ${prefix}tanyaai
+╎❏ ${prefix}menu
+╎❏ ${prefix}allmenu
+╎❏ ${prefix}tanyaai
 ╚┈┈┈┈┈┈┈┈┈❖
 `;
 }
