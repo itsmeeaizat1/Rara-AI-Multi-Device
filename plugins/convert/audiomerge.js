@@ -67,9 +67,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const listPath = path.join(tmpDir, `list_${Date.now()}.txt`);
       fs.writeFileSync(listPath, listFile);
 
-      let filterCmd = `-f concat -safe 0 -i "${listPath}" -c:a libopus -c:a libopus -b:a 64k "${outputPath}"`;
+      let filterCmd = `-f concat -safe 0 -i "${listPath}" -c:a libopus -b:a 64k "${outputPath}"`;
       if (data.gap > 0) {
-        filterCmd = `-f concat -safe 0 -i "${listPath}" -af "adelay=${data.gap * 1000}|${data.gap * 1000}" -c:a libopus -c:a libopus -b:a 64k "${outputPath}"`;
+        filterCmd = `-f concat -safe 0 -i "${listPath}" -af "adelay=${data.gap * 1000}|${data.gap * 1000}" -c:a libopus -b:a 64k "${outputPath}"`;
       }
 
       await queueFFmpeg(`ffmpeg -y ${filterCmd}`);

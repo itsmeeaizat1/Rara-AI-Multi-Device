@@ -46,7 +46,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       const duration = endSec - startSec;
       const outputPath = path.join(tmpDir, `trimmed_${Date.now()}.mp3`);
-      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${startSec} -t ${duration} -c:a libopus -c:a libopus -b:a 64k "${outputPath}"`);
+      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${startSec} -t ${duration} -c:a libopus -b:a 64k "${outputPath}"`);
 
       if (!fs.existsSync(outputPath)) return m.reply(claraWrap("Audio Split", "Gagal trim audio."));
       const buf = fs.readFileSync(outputPath);
@@ -70,8 +70,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const out1 = path.join(tmpDir, `split1_${Date.now()}.mp3`);
       const out2 = path.join(tmpDir, `split2_${Date.now()}.mp3`);
 
-      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -t ${halfSec} -c:a libopus -c:a libopus -b:a 64k "${out1}"`);
-      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${halfSec} -c:a libopus -c:a libopus -b:a 64k "${out2}"`);
+      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -t ${halfSec} -c:a libopus -b:a 64k "${out1}"`);
+      await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${halfSec} -c:a libopus -b:a 64k "${out2}"`);
 
       if (fs.existsSync(out1) && fs.existsSync(out2)) {
         await conn.sendMessage(m.key.remoteJid, {
@@ -108,7 +108,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       for (let i = 0; i < parts; i++) {
         const start = i * partDur;
         const outPath = path.join(tmpDir, `part${i + 1}_${Date.now()}.mp3`);
-        await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${start} -t ${partDur} -c:a libopus -c:a libopus -b:a 64k "${outPath}"`);
+        await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${start} -t ${partDur} -c:a libopus -b:a 64k "${outPath}"`);
         if (fs.existsSync(outPath)) {
           await conn.sendMessage(m.key.remoteJid, {
             audio: fs.readFileSync(outPath), mimetype: "audio/ogg; codecs=opus", ptt: false,

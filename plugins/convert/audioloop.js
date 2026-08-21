@@ -54,7 +54,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         concatInputs += "[a" + i + "]";
       }
       let filterComplex = fadeFilters.join("") + concatInputs + "concat=n=" + loopCount + ":v=0:a=1[out]";
-      cmd = 'ffmpeg -y -i "' + inputPath + '" -filter_complex "' + filterComplex + '" -map "[out]" -c:a libopus -c:a libopus -b:a 64k "' + outputPath + '"';
+      cmd = 'ffmpeg -y -i "' + inputPath + '" -filter_complex "' + filterComplex + '" -map "[out]" -c:a libopus -b:a 64k "' + outputPath + '"';
     } else {
       let inputs = "";
       for (let i = 0; i < loopCount; i++) {
@@ -65,7 +65,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         concatInputs += "[" + i + ":a]";
       }
       let filterComplex = concatInputs + "concat=n=" + loopCount + ":v=0:a=1[out]";
-      cmd = 'ffmpeg -y ' + inputs + '-filter_complex "' + filterComplex + '" -map "[out]" -c:a libopus -c:a libopus -b:a 64k "' + outputPath + '"';
+      cmd = 'ffmpeg -y ' + inputs + '-filter_complex "' + filterComplex + '" -map "[out]" -c:a libopus -b:a 64k "' + outputPath + '"';
     }
 
     await queueFFmpeg(cmd);
