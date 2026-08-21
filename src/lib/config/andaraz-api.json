@@ -1,6 +1,0 @@
-{
-  "_note": "API key sudah dipindah ke .env (ANDARAZ_API_KEY). Lihat env-loader.js",
-  "_note_usage": "Plugin baca via getAndarazConfig() dari src/lib/config/env-loader.js",
-  "apikey": "",
-  "baseUrl": "https://api.andaraz.com"
-}

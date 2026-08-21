@@ -1,8 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Env loader — baca semua API key dari .env, bukan dari JSON hardcoded
-// File ini aman di-push ke GitHub (tidak berisi key apapun)
+// API key loader — baca dari src/lib/apikey/*.json
+// File ini aman di-push ke GitHub (tidak berisi key, cuma loader)
 
-import dotenv from "dotenv";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "url";
@@ -10,69 +9,82 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load .env dari root project
-const envPath = path.resolve(__dirname, "../../../.env");
-if (fs.existsSync(envPath)) {
-  dotenv.config({ path: envPath });
-}
+// Path ke folder apikey
+const apikeyDir = path.resolve(__dirname, "../apikey");
 
 /**
- * Ambil API key dari environment variable.
- * @param {string} envVar - Nama env variable, contoh: "ANDARAZ_API_KEY"
- * @param {string} fallback - Value default kalau env gak ada
- * @returns {string}
+ * Baca JSON file dari folder apikey
  */
-export function getEnv(envVar, fallback = "") {
-  return process.env[envVar] || fallback;
+function loadJson(filename) {
+  const filepath = path.join(apikeyDir, filename);
+  try {
+    return JSON.parse(fs.readFileSync(filepath, "utf8"));
+  } catch (e) {
+    console.error(`[env-loader] Gagal baca ${filename}:`, e.message);
+    return {};
+  }
 }
 
+// Cache — baca sekali saat startup
+const apikeysData = loadJson("apikeys.json");
+const andarazData = loadJson("andaraz.json");
+const sankaData = loadJson("sanka.json");
+const miscData = loadJson("misc.json");
+
 /**
- * Ambil semua API key dalam format object (kompatibel dengan config.APIkey lama)
+ * Ambil semua API key (kompatibel dengan config.APIkey lama)
  */
 export function getApiKeys() {
-  return {
-    lolhuman: getEnv("LOLHUMAN_API_KEY"),
-    neoxr: getEnv("NEOXR_API_KEY"),
-    fgsi: getEnv("FGSI_API_KEY"),
-    google: getEnv("GOOGLE_API_KEY"),
-    groq: getEnv("GROQ_API_KEY"),
-    betabotz: getEnv("BETABOTZ_API_KEY"),
-    covenant: getEnv("COVENANT_API_KEY"),
-    onlym: getEnv("ONLYM_API_KEY"),
-    obscura: getEnv("OBSCURA_API_KEY"),
-    firefly: getEnv("FIREFLY_API_KEY"),
-    cuki: getEnv("CUKI_API_KEY"),
-    anabot: getEnv("ANABOTZ_API_KEY"),
-    termai: getEnv("TERMAI_API_KEY"),
-    tenor: getEnv("TENOR_API_KEY"),
-    voiceai: getEnv("VOICEAI_API_KEY"),
-    fishaudio: getEnv("FISHAUDIO_API_KEY"),
-  };
+  const { _note, ...keys } = apikeysData;
+  return keys;
 }
 
 /**
- * Ambil config Andaraz dari env
+ * Ambil config Andaraz
  */
 export function getAndarazConfig() {
-  return {
-    apikey: getEnv("ANDARAZ_API_KEY"),
-    baseUrl: getEnv("ANDARAZ_BASE_URL", "https://api.andaraz.com"),
-  };
+  const { _note, ...cfg } = andarazData;
+  return cfg;
 }
 
 /**
- * Ambil config Sankavollerei dari env
+ * Ambil config Sankavollerei
  */
 export function getSankaConfig() {
+  const { _note, ...cfg } = sankaData;
+  return cfg;
+}
+
+/**
+ * Ambil DeepAI API key
+ */
+export function getDeepAiKey() {
+  return miscData.deepai || "";
+}
+
+/**
+ * Ambil Pterodactyl config
+ */
+export function getPteroConfig() {
   return {
-    apikey: getEnv("SANKA_API_KEY"),
-    baseUrl: getEnv("SANKA_BASE_URL", "https://www.sankavollerei.web.id"),
+    server1: {
+      domain: miscData.ptero_server1_domain || "",
+      apikey: miscData.ptero_server1_apikey || "",
+      capikey: miscData.ptero_server1_capikey || "",
+    },
   };
 }
 
 /**
- * Ambil DeepAI API key dari env
+ * Reload semua key (dipakai setelah .setkey update JSON)
  */
-export function getDeepAiKey() {
-  return getEnv("DEEPAI_API_KEY");
+export function reloadKeys() {
+  const newApikeys = loadJson("apikeys.json");
+  const newAndaraz = loadJson("andaraz.json");
+  const newSanka = loadJson("sanka.json");
+  const newMisc = loadJson("misc.json");
+  Object.assign(apikeysData, newApikeys);
+  Object.assign(andarazData, newAndaraz);
+  Object.assign(sankaData, newSanka);
+  Object.assign(miscData, newMisc);
 }

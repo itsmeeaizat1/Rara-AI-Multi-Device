@@ -3,7 +3,7 @@ import { getDatabase } from "./src/lib/nova-database.js";
 import * as ownerPremiumDb from "./src/lib/nova-premium-db.js";
 import { payment, donasi } from "./config/setpayment.js";
 import fs from "node:fs";
-import { getApiKeys, getDeepAiKey } from "./src/lib/config/env-loader.js";
+import { getApiKeys, getDeepAiKey, getPteroConfig } from "./src/lib/config/env-loader.js";
 const apikeysConfig = getApiKeys();
 
 //  utamakan baca object config sampai bawah
@@ -312,9 +312,9 @@ const config = {
   // bisa dikosongin
   pterodactyl: {
     server1: {
-      domain: process.env.PTERO_SERVER1_DOMAIN || "",
-      apikey: process.env.PTERO_SERVER1_APIKEY || "",
-      capikey: process.env.PTERO_SERVER1_CAPIKEY || "",
+      domain: getPteroConfig().server1.domain,
+      apikey: getPteroConfig().server1.apikey,
+      capikey: getPteroConfig().server1.capikey,
       egg: "15",
       nestid: "5",
       location: "1",

@@ -236,9 +236,9 @@ async function handler(m, { sock, config: botConfig }) {
       }
       state.fishApiKey = key;
       saveState(state);
-      // Juga save ke apikeys.json
+      // Juga save ke src/lib/apikey/apikeys.json
       try {
-        const keysPath = path.join(process.cwd(), "src/lib/config/apikeys.json");
+        const keysPath = path.join(process.cwd(), "src/lib/apikey/apikeys.json");
         const keys = JSON.parse(fs.readFileSync(keysPath, "utf-8"));
         keys.fishaudio = key;
         fs.writeFileSync(keysPath, JSON.stringify(keys, null, 2));
