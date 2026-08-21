@@ -79,10 +79,7 @@ ${input.toUpperCase()}
 Pilih 4-6 konsep utama yang paling penting, masing-masing dengan 2-3 sub-konsep. Gunakan bahasa Indonesia. Buat singkat dan padat.`;
     }
 
-    const result = await callAI({
-      prompt,
-      systemPrompt: "Kamu adalah ahli mind mapping. Buat mind map yang terstruktur, jelas, dan mudah dipahami. Gunakan format teks dengan karakter box-drawing (├─ └─) untuk hierarki.",
-    });
+    const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah ahli mind mapping. Buat mind map yang terstruktur, jelas, dan mudah dipahami. Gunakan format teks dengan karakter box-drawing (├─ └─) untuk hierarki." });
 
     // Wrap dalam code block agar monospace dan alignment rapi
     const mindmapText = "```" + result + "```";

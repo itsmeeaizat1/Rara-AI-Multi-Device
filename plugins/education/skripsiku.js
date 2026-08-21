@@ -53,7 +53,7 @@ Kriteria:
 - Variabel jelas dan terukur
 - Jangan terlalu umum, spesifik`;
 
-      const result = await callAI({ prompt, systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
+      const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
       return sendReplyWithNav(m, sock, claraWrap("Skripsiku - Ide Judul", `${input}\n\n${result}`), { commandName: "skripsiku" });
     } catch (e) {
       return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal generate: ${e.message}`), { commandName: "skripsiku" });
@@ -84,7 +84,7 @@ BAB X: [Nama Bab]
 
 Sesuaikan dengan standar skripsi Indonesia. Bab 3 harus sesuai jenis penelitian (kualitatif/kuantitatif/R&D).`;
 
-      const result = await callAI({ prompt, systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
+      const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
       return sendReplyWithNav(m, sock, claraWrap("Skripsiku - Outline", `${input}\n\n${result}`), { commandName: "skripsiku" });
     } catch (e) {
       return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal generate: ${e.message}`), { commandName: "skripsiku" });
@@ -116,7 +116,7 @@ Format:
 4. Referensi: [saran jika perlu]
 5. Revisi: [versi paragraf yang sudah diperbaiki]`;
 
-      const result = await callAI({ prompt, systemPrompt: "Kamu adalah reviewer skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
+      const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah reviewer skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
       return sendReplyWithNav(m, sock, claraWrap("Skripsiku - Review", result), { commandName: "skripsiku" });
     } catch (e) {
       return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal review: ${e.message}`), { commandName: "skripsiku" });
@@ -144,7 +144,7 @@ Format:
 
 Minimal 3 referensi jurnal internasional, sisanya bebas (buku/web akademik).`;
 
-      const result = await callAI({ prompt, systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
+      const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
       return sendReplyWithNav(m, sock, claraWrap("Skripsiku - Referensi", `${input}\n\n${result}`), { commandName: "skripsiku" });
     } catch (e) {
       return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal: ${e.message}`), { commandName: "skripsiku" });

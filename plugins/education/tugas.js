@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "tugas",
@@ -18,12 +19,17 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// In-memory store: sender -> [{ id, name, deadline, subject, status, notes }]
-const taskStore = new Map();
+// Database-backed store: sender -> [{ id, name, deadline, subject, status, notes }]
+function getStore(db) {
+  if (!db.setting("eduTasks")) db.setSetting("eduTasks", {});
+  return db.setting("eduTasks");
+}
+function saveStore(db) { db.save(); }
 
-function getTasks(sender) {
-  if (!taskStore.has(sender)) taskStore.set(sender, []);
-  return taskStore.get(sender);
+function getTasks(db, sender) {
+  const store = getStore(db);
+  if (!store[sender]) store[sender] = [];
+  return store[sender];
 }
 
 function genId() {
@@ -111,8 +117,9 @@ async function handler(m, { sock, args }) {
       const name = parts[1] || "Tanpa nama";
       const subject = parts[2] || "";
       const id = genId();
-      const tasks = getTasks(sender);
+      const tasks = getTasks(db, sender);
       tasks.push({ id, name, deadline, subject, status: "pending", notes: "", created: Date.now() });
+      saveStore(db);
 
       const days = daysUntil(deadline);
       let txt = `Tugas Ditambahkan!\n\n`;
@@ -128,7 +135,7 @@ async function handler(m, { sock, args }) {
 
     // === LIST ===
     else if (cmd === "list" || cmd === "all" || cmd === "semua") {
-      const tasks = getTasks(sender);
+      const tasks = getTasks(db, sender);
       if (tasks.length === 0) {
         return m.reply(claraWrap("tugas", "Belum ada tugas tersimpan.\n\nKetik `.tugas add` untuk menambah."));
       }
@@ -158,7 +165,7 @@ async function handler(m, { sock, args }) {
 
     // === PENDING ===
     else if (cmd === "pending" || cmd === "aktif") {
-      const tasks = getTasks(sender);
+      const tasks = getTasks(db, sender);
       const pending = tasks.filter(t => t.status === "pending");
       if (pending.length === 0) {
         return m.reply(claraWrap("Tugas", "Tidak ada tugas pending. Semua selesai!"));
@@ -186,7 +193,7 @@ async function handler(m, { sock, args }) {
     else if (cmd === "done" || cmd === "selesai") {
       const id = cmdArgs[0]?.toUpperCase();
 
-      const tasks = getTasks(sender);
+      const tasks = getTasks(db, sender);
       const task = tasks.find(t => t.id === id);
 
       task.status = "done";
@@ -198,7 +205,7 @@ async function handler(m, { sock, args }) {
     else if (cmd === "del" || cmd === "hapus") {
       const id = cmdArgs[0]?.toUpperCase();
 
-      const tasks = getTasks(sender);
+      const tasks = getTasks(db, sender);
       const idx = tasks.findIndex(t => t.id === id);
 
       const removed = tasks.splice(idx, 1)[0];
