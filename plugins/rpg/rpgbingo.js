@@ -5,7 +5,7 @@ import { getPlayer, ensurePlayer, addGold, addExp, savePlayer } from "../../src/
 
 const pluginConfig = {
   name: "rpgbingo",
-  alias: ["bingorpg", "gamebingo", "bingo", "nomorbingo"],
+  alias: ["bingorpg", "gamebingo", "nomorbingo"],
   category: "rpg",
   description: "RPG Bingo — Match nomor di kartu bingo untuk hadiah",
   usage: ".rpgbingo <biaya> — Beli kartu & mulai\n.rpgbingo <biaya> draw — Draw nomor berikutnya\n.rpgbingo info — Info",

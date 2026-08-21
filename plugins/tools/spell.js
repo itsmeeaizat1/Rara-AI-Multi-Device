@@ -4,7 +4,7 @@ import axios from "axios";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
-  name: "spell", alias: ["spelling", "ejaan"], category: "tools",
+  name: "spellcheck", alias: ["spelling", "ejaan"], category: "tools",
   description: "Cek ejaan kata", usage: ".spell <kata>",
   example: ".spell recieve", isOwner: false, isPremium: false,
   isGroup: true, isPrivate: true, cooldown: 3, energi: 0, isEnabled: true,

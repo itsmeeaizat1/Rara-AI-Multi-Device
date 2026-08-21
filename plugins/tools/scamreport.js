@@ -5,7 +5,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "scamreport",
-  alias: ["laporscam", "cekscam", "laporpenipu", "ceknomor", "scamcheck"],
+  alias: ["laporscam", "cekscam", "laporpenipu"],
   category: "tools",
   description: "Lapor nomor penipu & cek nomor sebelum transaksi (database komunitas)",
   usage: ".scamreport <nomor> <laporan> | .scamreport cek <nomor> | .scamreport list",

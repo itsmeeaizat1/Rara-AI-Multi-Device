@@ -5,7 +5,7 @@ import { getPlayer, ensurePlayer, addGold, addExp, savePlayer } from "../../src/
 
 const pluginConfig = {
   name: "rpgcontract",
-  alias: ["contractrpg", "kontrak", "tugasnpc", "misikhusus", "questnpc"],
+  alias: ["contractrpg", "tugasnpc", "misikhusus", "questnpc"],
   category: "rpg",
   description: "RPG Contract — Ambil kontrak dari NPC, selesaikan untuk hadiah besar",
   usage: ".rpgcontract — Lihat kontrak aktif\n.rpgcontract board — Papan kontrak (3 pilihan)\n.rpgcontract take <nomor> — Ambil kontrak\n.rpgcontract complete — Selesaikan kontrak (auto-check)\n.rpgcontract abandon — Buang kontrak",

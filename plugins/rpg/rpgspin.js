@@ -6,7 +6,7 @@ import { pickRandom } from "../../src/lib/nova-rpg.js";
 
 const pluginConfig = {
   name: "rpgspin",
-  alias: ["spinwheel", "rodauntung", "putarroda", "spinrpg", "roda"],
+  alias: ["rodauntung", "putarroda", "spinrpg", "roda"],
   category: "rpg",
   description: "RPG Spin Wheel — Putar roda keberuntungan untuk hadiah acak",
   usage: ".rpgspin (biaya 500 gold)",

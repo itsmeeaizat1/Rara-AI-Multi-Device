@@ -5,7 +5,7 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
   name: "fanfic",
-  alias: ["fanfic", "ceritaai", "fanfiction"],
+  alias: ["fanfic", "fanfiction"],
   category: "future",
   description: "AI Fan Fiction generator - bikin cerita lucu tentang member grup",
   usage: ".fanfic <command>",

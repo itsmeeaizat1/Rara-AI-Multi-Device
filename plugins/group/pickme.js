@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { delay } from "../../src/lib/nova-utils.js";
 
 const pluginConfig = {
-  name: "pickme",
+  name: "pickmegc",
   alias: ["pick", "randompick", "pilihaku", "acakmember", "roulettepick"],
   category: "group",
   description: "Pilih member grup secara acak untuk tugas/assignment",

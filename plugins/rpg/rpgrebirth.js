@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rpgrebirth",
-  alias: ["rebirth", "lahirlagi", "reinkarnasi", "rpgreincarnate"],
+  alias: ["lahirlagi", "reinkarnasi", "rpgreincarnate"],
   category: "rpg",
   description: "Rebirth/reinkarnasi untuk reset level tapi dapat bonus permanen",
   usage: ".rpgrebirth | .rpgrebirth status | .rpgrebirth confirm",

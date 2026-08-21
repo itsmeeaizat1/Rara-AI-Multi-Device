@@ -5,7 +5,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "truthordare",
-  alias: ["truthordare", "tod", "truthdare"],
+  alias: ["truthordare", "truthdare"],
   category: "game",
   description: "Main Truth or Dare",
   usage: ".truthordare",

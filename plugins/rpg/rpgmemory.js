@@ -5,7 +5,7 @@ import { getPlayer, ensurePlayer, addGold, addExp, savePlayer } from "../../src/
 
 const pluginConfig = {
   name: "rpgmemory",
-  alias: ["memoryrpg", "ingatan", "gamesimbol", "memorygame", "hafalsimbol"],
+  alias: ["memoryrpg", "ingatan", "gamesimbol", "hafalsimbol"],
   category: "rpg",
   description: "RPG Memory Game — Ingat urutan simbol untuk hadiah gold & exp",
   usage: ".rpgmemory (start game)\n.rpgmemory <urutan> — Jawab dengan urutan angka",

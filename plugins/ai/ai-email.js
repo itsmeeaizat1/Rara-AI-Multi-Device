@@ -5,7 +5,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "ai-email",
-  alias: ["ai-email", "emailai", "email", "surat", "mailai"],
+  alias: ["ai-email", "emailai", "email", "mailai"],
   category: "ai",
   description: "Tulis email/resmi surat dengan AI",
   usage: ".ai-email <tujuan/isi>",

@@ -9,7 +9,7 @@ function getTesseract() {
   return _tesseract;
 }
 const pluginConfig = {
-  name: "ocr",
+  name: "ocrtool",
   alias: ["ocr", "ocrextract", "imagetotext"],
   category: "tools",
   description: "Extract teks dari gambar (Offline/Local)",

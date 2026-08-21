@@ -5,7 +5,7 @@ import { getPlayer, ensurePlayer, addGold, addExp, savePlayer } from "../../src/
 
 const pluginConfig = {
   name: "rpgsoulforge",
-  alias: ["soulforgerpg", "tempa", "soulweapon", "tempa jiwa", "forgejiwa"],
+  alias: ["soulforgerpg", "soulweapon", "tempa jiwa", "forgejiwa"],
   category: "rpg",
   description: "RPG Soul Forge — Tempa senjata jiwa dari material, upgrade ke tier lebih tinggi",
   usage: ".rpgsoulforge — Lihat bengkel\n.rpgsoulforge craft <weaponId> — Tempa senjata\n.rpgsoulforge upgrade <weaponId> — Upgrade senjawa\n.rpgsoulforge list — Daftar senjata\n.rpgsoulforge dismantle <weaponId> — Bongkar senjata",

@@ -174,7 +174,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 }
 
 const pluginConfig = {
-  name: "surat",
+  name: "surattool",
   alias: ["surat", "suratresmi", "makesurat", "gensurat"],
   category: "tools",
   description: "Generator Surat Resmi → PDF (dinas, lamaran, keterangan, tugas)",

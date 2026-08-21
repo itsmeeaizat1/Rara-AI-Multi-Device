@@ -3,7 +3,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cekrezeki',
-    alias: ['rezeki', 'fortune'],
+    alias: ["rezeki"],
     category: 'cek',
     description: 'Cek tingkat rezeki kamu hari ini',
     usage: '.cekrezeki <nama>',

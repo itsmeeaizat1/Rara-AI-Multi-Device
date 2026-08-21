@@ -5,7 +5,6 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'notifmakan',
-    alias: ['jadwalmakan', 'makanreminder'],
     category: 'group',
     description: 'Atur pengingat waktu makan otomatis',
     usage: '.notifmakan on <jam1,jam2,...> [menu] / off / edit <jam1,jam2,...> [menu]',

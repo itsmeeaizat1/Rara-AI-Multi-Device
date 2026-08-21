@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "quranv3",
-  alias: ["quran3", "alquran3", "quranv3", "bacaquran3"],
+  alias: ["quran3", "quranv3", "bacaquran3"],
   category: "islamic",
   description: "Al-Quran lengkap: baca surat, ayat, audio murottal, dan random ayat (Arab + Indonesia)",
   usage: ".quranv3 [subcommand] [args]",

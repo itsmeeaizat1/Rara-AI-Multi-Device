@@ -3,8 +3,8 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { delay } from "../../src/lib/nova-utils.js";
 
 const pluginConfig = {
-  name: "nhie",
-  alias: ["neverhaveever", "neverhave", "nhiegrup"],
+  name: "nhiegc",
+  alias: ["neverhaveever", "nhiegrup"],
   category: "group",
   description: "Never Have I Ever - Bot kasih statement, member jawab pernah/belum",
   usage: ".nhie atau .nhie start atau .nhie result atau .nhie stop",

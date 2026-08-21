@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "flashcard",
@@ -18,19 +19,31 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// Store: sender -> { decks: { name: [{ q, a }] }, activeDeck, quiz: { idx, order, correct, total } }
-const userStore = new Map();
+// Database-backed store: sender -> { decks: { name: [{ q, a }] }, activeDeck, quiz: { idx, order, correct, total }, createSession }
+function getStore(db) {
+  if (!db.setting("eduFlashcards")) db.setting("eduFlashcards", {});
+  return db.setting("eduFlashcards") || {};
+}
 
-function getUser(sender) {
-  if (!userStore.has(sender)) userStore.set(sender, { decks: {}, activeDeck: null, quiz: null, createSession: null });
-  return userStore.get(sender);
+function getUser(db, sender) {
+  const store = getStore(db);
+  if (!store[sender]) {
+    store[sender] = { decks: {}, activeDeck: null, quiz: null, createSession: null };
+  }
+  if (!store[sender].decks) store[sender].decks = {};
+  return store[sender];
+}
+
+function saveStore(db) {
+  db.save();
 }
 
 async function handler(m, { sock, args }) {
   const sender = m.sender;
   const cmd = (args[0] || "").toLowerCase();
   const cmdArgs = args.slice(1);
-  const user = getUser(sender);
+  const db = getDatabase();
+  const user = getUser(db, sender);
 
   if (!cmd || cmd === "help" || cmd === "menu") {
     let txt = `Flashcard Study Tool\n\n`;
@@ -57,6 +70,7 @@ async function handler(m, { sock, args }) {
       if (!user.decks[deckName]) user.decks[deckName] = [];
       user.createSession = { deckName, count: 0 };
       user.activeDeck = deckName;
+      saveStore(db);
 
       let txt = `Deck "${deckName}" dibuat!\n\n`;
       txt += `Kirim kartu dengan format:\n`;
@@ -82,6 +96,7 @@ async function handler(m, { sock, args }) {
       if (!user.decks[deckName]) user.decks[deckName] = [];
       user.decks[deckName].push({ q, a });
       user.activeDeck = deckName;
+      saveStore(db);
 
       await m.reply(claraWrap("Flashcard", `Kartu ditambahkan ke deck "${deckName}"!\n\nQ: ${q}\nA: ${a}\n\nTotal kartu: ${user.decks[deckName].length}`));
       await m.react("✅");
@@ -125,6 +140,7 @@ async function handler(m, { sock, args }) {
       // Shuffle order
       const order = [...Array(deck.length).keys()].sort(() => Math.random() - 0.5);
       user.quiz = { deckName, order, idx: 0, correct: 0, total: deck.length, flipped: false, shown: false };
+      saveStore(db);
 
       const firstCard = deck[order[0]];
       let txt = `Quiz: ${deckName}\n\n`;
@@ -144,6 +160,7 @@ async function handler(m, { sock, args }) {
     else if (cmd === "del" || cmd === "hapus") {
       const deckName = cmdArgs.join(" ").trim().toLowerCase();
       delete user.decks[deckName];
+      saveStore(db);
       await m.reply(claraWrap("Flashcard", `Deck "${deckName}" dihapus!`));
       await m.react("✅");
     }
@@ -154,13 +171,16 @@ async function handler(m, { sock, args }) {
       const cardNum = parseInt(cmdArgs[1]);
       const deck = user.decks[deckName];
       const removed = deck.splice(cardNum - 1, 1)[0];
+      saveStore(db);
       await m.reply(claraWrap("Flashcard", `Kartu dihapus!\n\nQ: ${removed.q}`));
       await m.react("✅");
     }
 
     // === CLEAR ALL ===
     else if (cmd === "clear" || cmd === "reset") {
-      userStore.set(sender, { decks: {}, activeDeck: null, quiz: null, createSession: null });
+      const store = getStore(db);
+      store[sender] = { decks: {}, activeDeck: null, quiz: null, createSession: null };
+      saveStore(db);
       await m.reply(claraWrap("Flashcard", "Semua deck flashcard dihapus!"));
       await m.react("✅");
     }

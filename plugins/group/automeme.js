@@ -3,7 +3,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "automeme",
+  name: "automemegc",
   alias: ["memeotomatis", "memeauto", "automemes"],
   category: "group",
   description: "Kirim meme text random otomatis tiap interval (toggle on/off per grup)",

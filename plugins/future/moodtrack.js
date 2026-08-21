@@ -5,7 +5,7 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
   name: "moodtrack",
-  alias: ["moodtrack", "mooddiary", "mood"],
+  alias: ["moodtrack", "mooddiary"],
   category: "future",
   description: "Mood tracker - catat mood harian & lihat pola dengan AI insight",
   usage: ".moodtrack <command>",

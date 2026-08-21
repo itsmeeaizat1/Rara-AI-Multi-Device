@@ -7,7 +7,7 @@ import { claraHeader,
 
 const pluginConfig = {
   name: "claim",
-  alias: ["claim", "bounty", "hadiah"],
+  alias: ["claim", "hadiah"],
   category: "economy",
   description: "Klaim hadiah atau bounty",
   usage: ".claim",

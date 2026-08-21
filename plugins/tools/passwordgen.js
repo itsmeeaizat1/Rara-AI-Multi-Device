@@ -5,7 +5,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "passwordgen",
-  alias: ["genpass", "passgen", "passwordgenerator", "buatpassword"],
+  alias: ["genpass", "passwordgenerator", "buatpassword"],
   category: "tools",
   description: "Generate password kuat dengan opsi panjang & kompleksitas",
   usage: ".passwordgen [panjang] [opsi]",

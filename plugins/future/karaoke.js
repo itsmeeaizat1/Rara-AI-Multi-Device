@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "karaoke",
-  alias: ["karaoke", "nyanyi", "karoke"],
+  alias: ["karaoke", "karoke"],
   category: "future",
   description: "Karaoke mode grup - lirik dibagi per baris, bergantian",
   usage: ".karaoke <command>",

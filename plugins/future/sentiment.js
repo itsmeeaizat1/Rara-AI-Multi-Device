@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
-  name: "sentiment", alias: ["mood", "moodgrup", "sentimentanalisis"], category: "future",
+  name: "sentiment", alias: ["moodgrup", "sentimentanalisis"], category: "future",
   description: "Analisis mood grup chat", usage: ".sentiment (reply chat)",
   example: ".sentiment", isOwner: false, isPremium: true,
   isGroup: true, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,

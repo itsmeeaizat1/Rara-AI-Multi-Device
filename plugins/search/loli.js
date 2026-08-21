@@ -47,6 +47,18 @@ async function handler(m, { sock, config: botConfig }) {
     let buffer = null;
     for (const baseUrl of ENDPOINTS) {
       try {
+        if (baseUrl.includes("nekos.life")) {
+          // nekos.life returns JSON with URL, bukan image langsung
+          const res = await axios.get(baseUrl, { timeout: 15000 });
+          if (res.status === 200 && res.data?.url) {
+            const imgRes = await axios.get(res.data.url, { responseType: "arraybuffer", timeout: 15000 });
+            if (imgRes.status === 200 && imgRes.data?.length > 1000) {
+              buffer = Buffer.from(imgRes.data);
+              break;
+            }
+          }
+          continue;
+        }
         const res = await axios.get(baseUrl, {
           responseType: "arraybuffer",
           timeout: 15000,

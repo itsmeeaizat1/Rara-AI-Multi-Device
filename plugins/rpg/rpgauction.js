@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rpgauction",
-  alias: ["auction", "lelang", "rpglelang", "rpgbid"],
+  alias: ["auction", "rpglelang", "rpgbid"],
   category: "rpg",
   description: "RPG Auction — lelang item langka, bid melawan NPC, menang dapat item murah!",
   usage: ".rpgauction | .rpgauction list | .rpgauction bid <nomor> <harga>",
