@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "jadwal",
@@ -18,15 +19,20 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// Store: sender -> [{ id, day, startTime, endTime, subject, room, lecturer }]
-const scheduleStore = new Map();
+// Database-backed store: sender -> [{ id, day, startTime, endTime, subject, room, lecturer }]
+function getStore(db) {
+  if (!db.setting("eduSchedules")) db.setSetting("eduSchedules", {});
+  return db.setting("eduSchedules");
+}
+function saveStore(db) { db.save(); }
 
 const DAYS = ["senin", "selasa", "rabu", "kamis", "jumat", "sabtu", "minggu"];
 const DAY_EMOJI = { "senin": "Sen", "selasa": "Sel", "rabu": "Rab", "kamis": "Kam", "jumat": "Jum", "sabtu": "Sab", "minggu": "Min" };
 
-function getSchedule(sender) {
-  if (!scheduleStore.has(sender)) scheduleStore.set(sender, []);
-  return scheduleStore.get(sender);
+function getSchedule(db, sender) {
+  const store = getStore(db);
+  if (!store[sender]) store[sender] = [];
+  return store[sender];
 }
 
 function genId() {
@@ -112,8 +118,9 @@ async function handler(m, { sock, args }) {
       const subject = parts[3] || "Tanpa nama";
       const room = parts[4] || "";
       const id = genId();
-      const schedule = getSchedule(sender);
+      const schedule = getSchedule(db, sender);
       schedule.push({ id, day, startTime, endTime, subject, room, created: Date.now() });
+      saveStore(db);
 
       let txt = `Jadwal Ditambahkan!\n\n`;
       txt += `ID: ${id}\n`;
@@ -127,7 +134,7 @@ async function handler(m, { sock, args }) {
 
     // === LIST ALL ===
     else if (cmd === "list" || cmd === "all" || cmd === "semua") {
-      const schedule = getSchedule(sender);
+      const schedule = getSchedule(db, sender);
       if (schedule.length === 0) {
         return m.reply(claraWrap("jadwal", "Belum ada jadwal tersimpan.\n\nKetik `.jadwal add` untuk menambah."));
       }
@@ -151,7 +158,7 @@ async function handler(m, { sock, args }) {
 
     // === TODAY ===
     else if (cmd === "today" || cmd === "hariini" || cmd === "sekarang") {
-      const schedule = getSchedule(sender);
+      const schedule = getSchedule(db, sender);
       const today = getCurrentDay();
       const todayClasses = schedule.filter(s => s.day === today).sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
 
@@ -180,7 +187,7 @@ async function handler(m, { sock, args }) {
 
     // === NEXT CLASS ===
     else if (cmd === "next" || cmd === "berikutnya" || cmd === "selanjutnya") {
-      const schedule = getSchedule(sender);
+      const schedule = getSchedule(db, sender);
       const today = getCurrentDay();
       const now = new Date();
       const nowMin = now.getHours() * 60 + now.getMinutes();
@@ -234,7 +241,7 @@ async function handler(m, { sock, args }) {
         return m.reply(claraWrap("Jadwal", `Hari tidak valid!\n\nPilih: ${DAYS.join(", ")}`));
       }
 
-      const schedule = getSchedule(sender);
+      const schedule = getSchedule(db, sender);
       const dayClasses = schedule.filter(s => s.day === day).sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
 
       if (dayClasses.length === 0) {
@@ -255,7 +262,7 @@ async function handler(m, { sock, args }) {
     else if (cmd === "del" || cmd === "hapus") {
       const id = cmdArgs[0]?.toUpperCase();
 
-      const schedule = getSchedule(sender);
+      const schedule = getSchedule(db, sender);
       const idx = schedule.findIndex(s => s.id === id);
 
       const removed = schedule.splice(idx, 1)[0];

@@ -161,7 +161,7 @@ Jawab dengan format:
 
 Sesuaikan level dengan mahasiswa S1 Indonesia.`;
 
-    const result = await callAI({ prompt, systemPrompt: subject.prompt });
+    const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: subject.prompt });
     return sendReplyWithNav(m, sock, claraWrap(`Tutorku - ${subject.label}`, result), { commandName: "tutorku" });
   } catch (e) {
     return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal: ${e.message}`), { commandName: "tutorku" });
