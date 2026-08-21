@@ -280,7 +280,9 @@ async function messageHandler(msg, sock) {
   }
 
   // Registration session handler (interactive reply-based daftar)
-  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+  // Note: TIDAK exclude fromMe — biar owner bisa testing daftar via chat ke diri sendiri.
+  // Proteksi echo pesan prompt milik bot sendiri ada di dalam registrationAnswerHandler (cek session.promptId).
+  if (!m.isCommand && !m.isNewsletter) {
     try {
       const { registrationAnswerHandler } = await import("./../plugins/user/daftar.js");
       if (typeof registrationAnswerHandler === "function") {
