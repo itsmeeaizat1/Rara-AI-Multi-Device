@@ -366,13 +366,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             interactiveMessage: {
               header: {
                 title: "", subtitle: "",
-                hasMediaAttachment: true,
-                locationMessage: {
-                  degreesLatitude: 0, degreesLongitude: 0,
-                  name: botName,
-                  address: botVersion,
-                  jpegThumbnail: thumbV2,
-                },
+                hasMediaAttachment: false,
               },
               body: { text: _weatherBlock + text },
               footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
@@ -381,6 +375,12 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                 participant: "0@s.whatsapp.net",
                 quotedMessage: { conversation: botName },
                 mentionedJid: [m.sender],
+                externalAdReply: {
+                  title: botName, body: botVersion,
+                  sourceUrl: config.saluran?.link || "",
+                  previewType: "PHOTO", showAdAttribution: false,
+                  renderLargerThumbnail: true, thumbnail: thumbV2,
+                },
               },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({ limited_time_offer: { text: `${greeting}`, expiration_time: Date.now() + 1000000 } }),
@@ -402,17 +402,19 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
               messageContextInfo: {},
               interactiveMessage: {
                 header: {
-                  hasMediaAttachment: true,
-                  locationMessage: {
-                    degreesLatitude: 0, degreesLongitude: 0,
-                    name: botName,
-                    address: (await getWeatherAddress()) || botVersion,
-                    jpegThumbnail: thumbV3,
-                  },
+                  hasMediaAttachment: false,
                 },
                 body: { text: _weatherBlock + text },
                 footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
-                contextInfo: { mentionedJid: [m.sender], isForwarded: false },
+                contextInfo: {
+                  mentionedJid: [m.sender], isForwarded: false,
+                  externalAdReply: {
+                    title: botName, body: botVersion,
+                    sourceUrl: config.saluran?.link || "",
+                    previewType: "PHOTO", showAdAttribution: false,
+                    renderLargerThumbnail: true, thumbnail: thumbV3,
+                  },
+                },
                 nativeFlowMessage: {
                   buttons: buildButtons(prefix, true),
                 },
@@ -456,7 +458,16 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
           viewOnceMessage: { message: {
             messageContextInfo: {},
             interactiveMessage: {
-              header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: botName, address: botVersion, jpegThumbnail: thumbV5 } },
+              header: { hasMediaAttachment: false },
+              contextInfo: {
+                mentionedJid: [m.sender], isForwarded: false,
+                externalAdReply: {
+                  title: botName, body: botVersion,
+                  sourceUrl: config.saluran?.link || "",
+                  previewType: "PHOTO", showAdAttribution: false,
+                  renderLargerThumbnail: true, thumbnail: thumbV5,
+                },
+              },
               body: { text: _weatherBlock + text },
               footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
               contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
@@ -489,7 +500,16 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
           viewOnceMessage: { message: {
             messageContextInfo: {},
             interactiveMessage: {
-              header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: botName, address: weatherStr, jpegThumbnail: thumbV6 } },
+              header: { hasMediaAttachment: false },
+              contextInfo: {
+                mentionedJid: [m.sender], isForwarded: false,
+                externalAdReply: {
+                  title: botName, body: weatherStr,
+                  sourceUrl: config.saluran?.link || "",
+                  previewType: "PHOTO", showAdAttribution: false,
+                  renderLargerThumbnail: true, thumbnail: thumbV6,
+                },
+              },
               body: { text: _weatherBlock + text },
               contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
               nativeFlowMessage: {
