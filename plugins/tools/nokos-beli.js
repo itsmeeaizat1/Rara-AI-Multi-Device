@@ -98,7 +98,7 @@ const SERVICES = {
 function loadData() {
   try {
     if (fs.existsSync(DATA_FILE)) return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
-  } catch {}
+  } catch (e) { console.error('[nokos-beli.js]:', e.message); }
   return { provider: "5sim", apiKey: "", apiId: "", users: {}, orders: [], pendingPayments: {}, tier: "budget" };
 }
 
@@ -107,7 +107,7 @@ function saveData(data) {
     const dir = path.dirname(DATA_FILE);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-  } catch {}
+  } catch (e) { console.error('[nokos-beli.js]:', e.message); }
 }
 
 function formatRupiah(n) { return "Rp" + Math.round(n).toLocaleString("id-ID"); }
@@ -149,7 +149,7 @@ async function fivesimCancel(apiKey, orderId) {
   try { await axios.get("https://5sim.net/v1/user/cancel/" + orderId, { headers: { Authorization: "Bearer " + apiKey }, timeout: 10000 }); return { success: true }; } catch { return { success: false }; }
 }
 async function fivesimFinish(apiKey, orderId) {
-  try { await axios.get("https://5sim.net/v1/user/finish/" + orderId, { headers: { Authorization: "Bearer " + apiKey }, timeout: 10000 }); } catch {}
+  try { await axios.get("https://5sim.net/v1/user/finish/" + orderId, { headers: { Authorization: "Bearer " + apiKey }, timeout: 10000 }); } catch (e) { console.error('[nokos-beli.js]:', e.message); }
 }
 async function fivesimBalance(apiKey) {
   const res = await axios.get("https://5sim.net/v1/user/profile", { headers: { Authorization: "Bearer " + apiKey }, timeout: 10000 });
@@ -768,7 +768,7 @@ async function handler(m, { sock }) {
           if (s.text && s.text !== s.code) body += "   Pesan: " + s.text + "\n";
         });
         body += "\nGunakan kode di atas untuk verifikasi!";
-        if (data.provider === "5sim") { try { await fivesimFinish(data.apiKey, orderId); } catch {} }
+        if (data.provider === "5sim") { try { await fivesimFinish(data.apiKey, orderId); } catch (e) { console.error('[nokos-beli.js]:', e.message); } }
       } else {
         body += "\nBelum ada OTP. Cek lagi:\n.nokosbeli otp " + orderId + "\n\nBatal: .nokosbeli batal " + orderId;
       }

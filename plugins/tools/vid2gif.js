@@ -181,8 +181,8 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     // Cleanup input
-    try { fs.unlinkSync(inputPath); } catch {}
-    try { fs.unlinkSync(outputPath); } catch {}
+    try { fs.unlinkSync(inputPath); } catch (e) { console.error('[vid2gif.js]:', e.message); }
+    try { fs.unlinkSync(outputPath); } catch (e) { console.error('[vid2gif.js]:', e.message); }
 
     await m.react("✅");
 

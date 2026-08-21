@@ -90,7 +90,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
             ], "warn"), mentions: [g.currentPlayer] });
             await nextTurn(db2, groupId, conn);
           }
-        } catch {}
+        } catch (e) { console.error('[wordbomb.js]:', e.message); }
       }, TIME_LIMIT);
 
       return;
@@ -233,7 +233,7 @@ async function nextTurn(db, groupId, conn) {
           await nextTurn(db2, groupId, conn);
         }
       }
-    } catch {}
+    } catch (e) { console.error('[wordbomb.js]:', e.message); }
   }, TIME_LIMIT);
 }
 

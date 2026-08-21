@@ -29,7 +29,7 @@ try {
     "nova-games.jpg",
   );
   if (fs.existsSync(thumbPath)) thumbFun = fs.readFileSync(thumbPath);
-} catch (e) {}
+} catch (e) { console.error('[jodoh.js]:', e.message); }
 
 const loveQuotes = [
   "Cinta sejati tidak pernah mengenal jarak 💕",

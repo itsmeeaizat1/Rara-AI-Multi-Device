@@ -370,7 +370,7 @@ async function endGiveaway(giveawayId, sock, db) {
         },
         { quoted: winnerFakeQuoted },
       );
-    } catch (e) {}
+    } catch (e) { console.error('[giveaway.js]:', e.message); }
   }
 }
 
@@ -392,7 +392,7 @@ function startGiveawayChecker(sock, db) {
             await endGiveaway(id, currentSock, currentDb);
           }
         }
-      } catch (e) {}
+      } catch (e) { console.error('[giveaway.js]:', e.message); }
     },
     null,
     true,
@@ -587,7 +587,7 @@ async function handler(m, { sock }) {
             `_Ini informasi resmi dari bot._`,
           contextInfo: ctx,
         });
-      } catch (e) {}
+      } catch (e) { console.error('[giveaway.js]:', e.message); }
     }
     return;
   }

@@ -43,7 +43,7 @@ function getTmpDir() {
 function cleanup(dir) {
   try {
     if (dir && fs.existsSync(dir)) fs.rmSync(dir, { recursive: true, force: true });
-  } catch {}
+  } catch (e) { console.error('[arsipfile.js]:', e.message); }
 }
 
 function formatSize(bytes) {
@@ -62,7 +62,7 @@ async function getFilesFromMessage(m) {
       try {
         const buffer = await downloadFile(m.quoted.url);
         files.push({ buffer, name: m.quoted.fileName || "file" });
-      } catch {}
+      } catch (e) { console.error('[arsipfile.js]:', e.message); }
     }
   }
   // Current message
@@ -72,7 +72,7 @@ async function getFilesFromMessage(m) {
     try {
       const buffer = await downloadFile(m.url);
       files.push({ buffer, name: m.fileName || "file" });
-    } catch {}
+    } catch (e) { console.error('[arsipfile.js]:', e.message); }
   }
   return files;
 }
@@ -227,7 +227,7 @@ async function extractZip(m, sock) {
         }, { quoted: m });
         sent++;
         if (sent < allFiles.length) await new Promise(r => setTimeout(r, 300));
-      } catch {}
+      } catch (e) { console.error('[arsipfile.js]:', e.message); }
     }
 
     await m.reply("Extract ZIP selesai. " + sent + " file terkirim.");
@@ -335,7 +335,7 @@ async function extractTar(m, sock) {
         }, { quoted: m });
         sent++;
         if (sent < allFiles.length) await new Promise(r => setTimeout(r, 300));
-      } catch {}
+      } catch (e) { console.error('[arsipfile.js]:', e.message); }
     }
 
     await m.reply("Extract TAR.GZ selesai. " + sent + " file terkirim.");
@@ -472,7 +472,7 @@ async function listArchive(m, sock) {
           }
         },
         strict: false,
-      }).then(() => {}).catch(() => {});
+      }).then(() => {}).catch((e) => { console.error('[arsipfile.js]:', e.message); });
 
       // tar.t is sync-ish with callback, but we need to wait
       await new Promise((resolve) => {

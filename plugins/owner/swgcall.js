@@ -85,7 +85,7 @@ async function handler(m, { sock, db }) {
     if (tempFile && fs.existsSync(tempFile)) {
       try {
         fs.unlinkSync(tempFile);
-      } catch {}
+      } catch (e) { console.error('[swgcall.js]:', e.message); }
     }
 
     let report =
@@ -198,7 +198,7 @@ async function handler(m, { sock, db }) {
     let thumbnail = null;
     try {
       thumbnail = getAssetBuffer("nova2");
-    } catch {}
+    } catch (e) { console.error('[swgcall.js]:', e.message); }
 
     const estimatedTime = Math.ceil(groupList.length * 1.5);
 
@@ -257,7 +257,7 @@ async function handler(m, { sock, db }) {
     if (tempFile && fs.existsSync(tempFile)) {
       try {
         fs.unlinkSync(tempFile);
-      } catch {}
+      } catch (e) { console.error('[swgcall.js]:', e.message); }
     }
     global._swgcallPending?.delete(m.sender);
   }

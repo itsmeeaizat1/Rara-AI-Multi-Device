@@ -42,22 +42,22 @@ async function handler(m, { sock }) {
         let img = 'https://telegra.ph/file/70e8de9b1879568954f09.jpg';
         try {
             img = await sock.profilePictureUrl(num, 'image');
-        } catch (e) {}
+        } catch (e) { console.error('[wastalk.js]:', e.message); }
 
         let bio = {};
         try {
             bio = await sock.fetchStatus(num);
-        } catch (e) {}
+        } catch (e) { console.error('[wastalk.js]:', e.message); }
 
         let name = 'Unknown';
         try {
             name = await sock.getName(num) || num.split('@')[0];
-        } catch (e) {}
+        } catch (e) { console.error('[wastalk.js]:', e.message); }
 
         let business = null;
         try {
             business = await sock.getBusinessProfile(num);
-        } catch (e) {}
+        } catch (e) { console.error('[wastalk.js]:', e.message); }
 
         let format, country;
         try {

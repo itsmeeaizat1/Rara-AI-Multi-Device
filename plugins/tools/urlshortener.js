@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig }) {
       const apiUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`;
       const res = await fetch(apiUrl);
       short = (await res.text()).trim() || short;
-    } catch {}
+    } catch (e) { console.error('[urlshortener.js]:', e.message); }
 
     const text =
       claraWrap("URL Shortener", [`◦ Original: *${url}*`,

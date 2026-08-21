@@ -163,7 +163,7 @@ async function handler(m, { sock }) {
         image: qrisBuffer,
         caption: "\n*Scan QRIS di atas untuk pembayaran*"
       }, { quoted: m });
-    } catch {}
+    } catch (e) { console.error('[beli.js]:', e.message); }
   }
 
   if (ownerJid) {

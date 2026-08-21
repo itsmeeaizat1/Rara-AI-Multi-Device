@@ -121,7 +121,7 @@ export async function handleAutoVnTranslate(m, sock) {
     const botConfig = (await import("../../config.js")).default;
 
     // React processing
-    try { await sock.sendReaction(m.key.remoteJid, "👂", m.key); } catch {}
+    try { await sock.sendReaction(m.key.remoteJid, "👂", m.key); } catch (e) { console.error('[autotranslatevn.js]:', e.message); }
 
     // Download audio
     const buffer = await sock.downloadMediaMessage(m);
@@ -251,7 +251,7 @@ export async function handleAutoVnTranslate(m, sock) {
               break;
             }
           }
-        } catch {}
+        } catch (e) { console.error('[autotranslatevn.js]:', e.message); }
       }
 
       if (vnBuffer) {
@@ -286,15 +286,15 @@ export async function handleAutoVnTranslate(m, sock) {
             mimetype: "audio/mpeg",
           }, { quoted: m });
         } finally {
-          try { fs.unlinkSync(tmpMp3); } catch {}
-          try { fs.unlinkSync(tmpOgg); } catch {}
+          try { fs.unlinkSync(tmpMp3); } catch (e) { console.error('[autotranslatevn.js]:', e.message); }
+          try { fs.unlinkSync(tmpOgg); } catch (e) { console.error('[autotranslatevn.js]:', e.message); }
         }
       }
     } catch (e) {
       console.error("[AutoVnTranslate] TTS error:", e.message);
     }
 
-    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch {}
+    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch (e) { console.error('[autotranslatevn.js]:', e.message); }
     return true;
   } catch (e) {
     console.error("[AutoVnTranslate] Handler error:", e.message);

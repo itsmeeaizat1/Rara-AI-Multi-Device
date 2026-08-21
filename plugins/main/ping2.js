@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
                     }
                 }
             }
-        } catch {}
+        } catch (e) { console.error('[ping2.js]:', e.message); }
 
         const heap = process.memoryUsage()
         const net = await getNetwork()
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
                 dbGroups = Object.keys(db.data.groups || {}).length
                 dbPremium = Object.values(db.data.users || {}).filter(u => u.isPremium).length
             }
-        } catch {}
+        } catch (e) { console.error('[ping2.js]:', e.message); }
 
         const totalExec = Math.round(performance.now() - execStart)
 

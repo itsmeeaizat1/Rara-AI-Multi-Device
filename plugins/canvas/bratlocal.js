@@ -425,7 +425,7 @@ async function handler(m, { sock }) {
         author: config.sticker.author
       });
 
-      try { fs.unlinkSync(tempPath); } catch (e) { }
+      try { fs.unlinkSync(tempPath); } catch (e) { console.error('[bratlocal.js]:', e.message); }
     } else {
       const imageBuffer = await createBratImage(inputText, template);
       await sock.sendImageAsSticker(m.chat, imageBuffer, m, {

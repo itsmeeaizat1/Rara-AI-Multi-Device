@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
     let reloadResult = { success: false };
     try {
       reloadResult = (await hotReloadPlugin(filePath)) || { success: true };
-    } catch {}
+    } catch (e) { console.error('[ganticode.js]:', e.message); }
 
     await m.react("✅");
 

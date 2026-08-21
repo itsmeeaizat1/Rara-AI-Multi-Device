@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
     try {
       const result = await sock.groupInviteCode(chat);
       inviteCode = result;
-    } catch {}
+    } catch (e) { console.error('[linkgroup.js]:', e.message); }
 
     const link = inviteCode
       ? `https://chat.whatsapp.com/${inviteCode}`

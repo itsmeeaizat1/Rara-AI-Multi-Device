@@ -19,7 +19,7 @@ function getCustomProviders() {
     const db = getDatabase();
     const data = db.get("aiCustomProviders");
     if (data && typeof data === "object") return data;
-  } catch {}
+  } catch (e) { console.error('[multi-ai.js]:', e.message); }
   return {};
 }
 

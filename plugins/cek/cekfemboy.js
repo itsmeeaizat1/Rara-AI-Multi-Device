@@ -40,10 +40,10 @@ async function convertGifToMp4(buffer) {
   } finally {
     try {
       if (fs.existsSync(gifPath)) fs.unlinkSync(gifPath);
-    } catch {}
+    } catch (e) { console.error('[cekfemboy.js]:', e.message); }
     try {
       if (fs.existsSync(mp4Path)) fs.unlinkSync(mp4Path);
-    } catch {}
+    } catch (e) { console.error('[cekfemboy.js]:', e.message); }
   }
 }
 
@@ -61,13 +61,13 @@ async function handler(m, { sock }) {
     let buffer = null;
     try {
       buffer = await fetchBuffer(result.gif);
-    } catch (e) {}
+    } catch (e) { console.error('[cekfemboy.js]:', e.message); }
 
     let videoBuffer = null;
     if (buffer) {
       try {
         videoBuffer = await convertGifToMp4(buffer);
-      } catch (e) {}
+      } catch (e) { console.error('[cekfemboy.js]:', e.message); }
     }
 
     let txt =

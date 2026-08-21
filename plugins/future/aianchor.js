@@ -212,7 +212,7 @@ Jangan pakai emoji. Langsung tulis naskahnya tanpa intro.`;
     if (result && result.success && result.response) {
       return result.response.trim();
     }
-  } catch {}
+  } catch (e) { console.error('[aianchor.js]:', e.message); }
 
   // Fallback if AI fails
   return `Selamat malam para pemirsa. Berita terkini tentang ${topic}. Demikian informasi yang dapat kami sampaikan. Terima kasih telah menonton.`;
@@ -270,7 +270,7 @@ function startAutoJob(db, sock) {
           }
 
           // Clean up
-          try { fs.unlinkSync(filePath); } catch {}
+          try { fs.unlinkSync(filePath); } catch (e) { console.error('[aianchor.js]:', e.message); }
         }
       } catch (err) {
         console.error("[aianchor] Auto news error:", err.message);
@@ -444,7 +444,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         : "Google Neural TTS";
       await m.reply(claraWrap("AI Anchor", `${content}\n\nProvider: ${providerLabel}\nNada: ${voiceResult.tone}`));
 
-      try { fs.unlinkSync(filePath); } catch {}
+      try { fs.unlinkSync(filePath); } catch (e) { console.error('[aianchor.js]:', e.message); }
     } catch (err) {
       await m.react("❌");
       await m.reply(claraWrap("AI Anchor", `Error: ${err.message}`, "error"));
@@ -524,7 +524,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     await m.reply(claraWrap("AI Anchor",
       `Teks: ${text.slice(0, 80)}${text.length > 80 ? "..." : ""}\nNada: ${tone}\nProvider: ${providerLabel}`));
 
-    try { fs.unlinkSync(filePath); } catch {}
+    try { fs.unlinkSync(filePath); } catch (e) { console.error('[aianchor.js]:', e.message); }
   } catch (err) {
     await m.react("❌");
     await m.reply(claraWrap("AI Anchor", `Error: ${err.message}`, "error"));

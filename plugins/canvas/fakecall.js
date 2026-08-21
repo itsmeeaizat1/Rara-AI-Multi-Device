@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
                 if (uploadedUrl) {
                     avatar = uploadedUrl
                 }
-            } catch {}
+            } catch (e) { console.error('[fakecall.js]:', e.message); }
         } else if (m.quoted?.isImage) {
             try {
                 const buffer = await m.quoted.download()
@@ -77,11 +77,11 @@ async function handler(m, { sock }) {
                 if (uploadedUrl) {
                     avatar = uploadedUrl
                 }
-            } catch {}
+            } catch (e) { console.error('[fakecall.js]:', e.message); }
         } else {
             try {
                 avatar = await sock.profilePictureUrl(m.sender, 'image')
-            } catch {}
+            } catch (e) { console.error('[fakecall.js]:', e.message); }
         }
         
         const apiUrl = `https://api.zenzxz.my.id/maker/fakecall?nama=${encodeURIComponent(nama)}&durasi=${encodeURIComponent(durasi)}&avatar=${encodeURIComponent(avatar)}`

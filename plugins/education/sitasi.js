@@ -59,7 +59,7 @@ async function fetchPageMeta(url) {
   let domain = "";
   try {
     domain = new URL(url).hostname.replace("www.", "");
-  } catch {}
+  } catch (e) { console.error('[sitasi.js]:', e.message); }
 
   // Parse date
   let year = "", month = "", day = "";

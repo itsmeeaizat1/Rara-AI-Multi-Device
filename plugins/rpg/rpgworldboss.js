@@ -97,7 +97,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       let metadata;
       try {
         metadata = await conn.groupMetadata(groupId);
-      } catch {}
+      } catch (e) { console.error('[rpgworldboss.js]:', e.message); }
       const isAdmin = metadata?.participants?.find((p) => p.id === (m.key.participant || m.sender))?.admin;
       if (!isAdmin) {
         return m.reply(claraWrap("RPG World Boss", "Hanya admin grup yang bisa spawn World Boss!"));

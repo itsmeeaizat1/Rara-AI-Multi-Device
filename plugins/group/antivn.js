@@ -45,7 +45,7 @@ async function handleAntiVn(m, sock, db) {
 
   try {
     await sock.sendMessage(m.chat, { delete: m.key });
-  } catch {}
+  } catch (e) { console.error('[antivn.js]:', e.message); }
 
   await sock.sendMessage(m.chat, {
     text: gpMsg("antivn", { user: m.sender.split("@")[0] }),

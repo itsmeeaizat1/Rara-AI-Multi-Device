@@ -54,7 +54,7 @@ async function doOcrAnalysis(m, sock, mode) {
       return { handled: true };
     }
 
-    try { await sock.sendReaction(m.key.remoteJid, "🔍", m.key); } catch {}
+    try { await sock.sendReaction(m.key.remoteJid, "🔍", m.key); } catch (e) { console.error('[ocrsolve.js]:', e.message); }
 
     const buffer = await sock.downloadMediaMessage(m.quoted || m);
     if (!buffer || buffer.length < 500) {
@@ -151,7 +151,7 @@ async function doOcrAnalysis(m, sock, mode) {
 
     const modeLabel = mode === "math" ? "Math Solver" : mode === "code" ? "Code Fixer" : "Auto Detect";
     await m.reply(claraWrap("OCR Solve", ["Mode: " + modeLabel, "", aiResponse.slice(0, 3000)].join("\n")));
-    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch {}
+    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch (e) { console.error('[ocrsolve.js]:', e.message); }
     return { handled: true };
   } catch (e) {
     console.error("[OcrSolve] One-shot error:", e.message);
@@ -292,7 +292,7 @@ export async function handleAutoOcrSolve(m, sock) {
       return true;
     }
 
-    try { await sock.sendReaction(m.key.remoteJid, "🔍", m.key); } catch {}
+    try { await sock.sendReaction(m.key.remoteJid, "🔍", m.key); } catch (e) { console.error('[ocrsolve.js]:', e.message); }
 
     const buffer = await sock.downloadMediaMessage(m.quoted || m);
     if (!buffer || buffer.length < 500) return false;
@@ -357,7 +357,7 @@ export async function handleAutoOcrSolve(m, sock) {
 
     const modeLabel = mode === "math" ? "Math Solver" : mode === "code" ? "Code Fixer" : "Auto Detect";
     await sock.sendMessage(m.key.remoteJid, { text: claraWrap("Auto OCR Solve", ["Mode: " + modeLabel, "", aiResponse.slice(0, 3000)].join("\n")) }, { quoted: m });
-    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch {}
+    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch (e) { console.error('[ocrsolve.js]:', e.message); }
     return true;
   } catch (e) {
     console.error("[AutoOcrSolve] Handler error:", e.message);

@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
         caption: text
       }, { quoted: m })
       return
-    } catch {}
+    } catch (e) { console.error('[payment.js]:', e.message); }
   }
 
   await m.reply(claraWrap("payment", text))

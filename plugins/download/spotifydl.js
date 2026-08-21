@@ -99,7 +99,7 @@ function parseMaybeJson(buffer, contentType) {
   const text = buffer.toString("utf8");
   let json = null;
   if (contentType.includes("application/json") || text.trim().startsWith("{") || text.trim().startsWith("[")) {
-    try { json = JSON.parse(text); } catch { }
+    try { json = JSON.parse(text); } catch (e) { console.error('[spotifydl.js]:', e.message); }
   }
   return { text, json };
 }
@@ -147,7 +147,7 @@ async function requestJson(url, extraHeaders = {}, referer = `${BASE_URL}/en1`) 
   saveCookies(res.headers);
   const text = await res.text();
   let data = null;
-  try { data = JSON.parse(text); } catch { }
+  try { data = JSON.parse(text); } catch (e) { console.error('[spotifydl.js]:', e.message); }
   return { code: res.status, ok: res.ok, contentType: res.headers.get("content-type") || "", text, data };
 }
 

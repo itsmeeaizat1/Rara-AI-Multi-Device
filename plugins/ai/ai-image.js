@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig }) {
         if (!res.ok) continue;
         buffer = Buffer.from(await res.arrayBuffer());
         if (buffer && buffer.length > 1000) break;
-      } catch {}
+      } catch (e) { console.error('[ai-image.js]:', e.message); }
     }
 
     if (!buffer) throw new Error("Gagal generate gambar dari semua endpoint.");

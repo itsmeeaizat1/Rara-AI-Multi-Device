@@ -54,7 +54,7 @@ async function doMemeAnalysis(m, sock, style) {
       return { handled: true };
     }
 
-    try { await sock.sendReaction(m.key.remoteJid, "🎭", m.key); } catch {}
+    try { await sock.sendReaction(m.key.remoteJid, "🎭", m.key); } catch (e) { console.error('[automemegenerator.js]:', e.message); }
 
     const buffer = await sock.downloadMediaMessage(m.quoted || m);
     if (!buffer || buffer.length < 500) {
@@ -176,7 +176,7 @@ async function doMemeAnalysis(m, sock, style) {
       await m.reply(claraWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 300)].join("\n")));
     }
 
-    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch {}
+    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch (e) { console.error('[automemegenerator.js]:', e.message); }
     return { handled: true };
   } catch (e) {
     console.error("[AutoMeme] One-shot error:", e.message);
@@ -311,7 +311,7 @@ export async function handleAutoMemeGen(m, sock) {
       return true;
     }
 
-    try { await sock.sendReaction(m.key.remoteJid, "🎭", m.key); } catch {}
+    try { await sock.sendReaction(m.key.remoteJid, "🎭", m.key); } catch (e) { console.error('[automemegenerator.js]:', e.message); }
 
     const buffer = await sock.downloadMediaMessage(m.quoted || m);
     if (!buffer || buffer.length < 500) return false;
@@ -422,7 +422,7 @@ export async function handleAutoMemeGen(m, sock) {
       await sock.sendMessage(m.key.remoteJid, { text: claraWrap("Auto Meme", ["Style: " + style, "", memeText.slice(0, 300)].join("\n")) }, { quoted: m });
     }
 
-    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch {}
+    try { await sock.sendReaction(m.key.remoteJid, "✅", m.key); } catch (e) { console.error('[automemegenerator.js]:', e.message); }
     return true;
   } catch (e) {
     console.error("[AutoMemeGen] Handler error:", e.message);

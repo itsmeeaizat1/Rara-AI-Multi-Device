@@ -20,7 +20,7 @@ async function handler(m, { sock, config: botConfig }) {
     try {
       const { data: w } = await axios.get(`https://wttr.in/${encodeURIComponent(city)}?format=%C+%t+%h+%w`, { timeout: 8000, headers: {"User-Agent":"curl"} });
       text += claraWrap("Cuaca", `◦ ${city}: ${w}`) + "\n\n";
-    } catch {}
+    } catch (e) { console.error('[smartbriefing.js]:', e.message); }
     
     // Prayer times
     try {
@@ -29,14 +29,14 @@ async function handler(m, { sock, config: botConfig }) {
       const { data: p } = await axios.get(`https://api.myquran.com/v2/sholat/jadwal/kota/jakarta/${y}/${mo}/${d}`, { timeout: 8000 });
       const j = p?.data?.jadwal;
       if (j) text += claraWrap("Jadwal sHolat", [`◦ Subuh: *${j.subuh}*`, `◦ Dzuhur: *${j.dzuhur}*`, `◦ Ashar: *${j.ashar}*`, `◦ Maghrib: *${j.maghrib}*`, `◦ Isya: *${j.isya}*`].join("\n")) + "\n\n";
-    } catch {}
+    } catch (e) { console.error('[smartbriefing.js]:', e.message); }
     
     // News
     try {
       const { data } = await axios.get("https://news.google.com/rss?hl=id&gl=ID&ceid=ID:id", { timeout: 8000 });
       const items = (data.match(/<title>([^<]+)<\/title>/g) || []).slice(1, 6).map(t => t.replace(/<\/?title>/g, ""));
       text += claraWrap("Berita Terakhir", items.map((it,i) => `◦ ${i+1}. ${it.substring(0,60)}`)) + "\n\n";
-    } catch {}
+    } catch (e) { console.error('[smartbriefing.js]:', e.message); }
     
     text += separator("━", 22) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`);
     await m.reply(text);

@@ -145,9 +145,9 @@ async function handler(m, { sock, db, config: botConfig }) {
         "Reveal: " + prefix + "blinddate reveal",
         "Hint: pasangan kamu juga dapat icebreaker yang sama.",
       ].join("\n"));
-      try { await sock.sendMessage(match.a, { text: msgA }); } catch {}
+      try { await sock.sendMessage(match.a, { text: msgA }); } catch (e) { console.error('[blinddate.js]:', e.message); }
       if (match.a !== match.b) {
-        try { await sock.sendMessage(match.b, { text: msgA }); } catch {}
+        try { await sock.sendMessage(match.b, { text: msgA }); } catch (e) { console.error('[blinddate.js]:', e.message); }
       }
     }
 

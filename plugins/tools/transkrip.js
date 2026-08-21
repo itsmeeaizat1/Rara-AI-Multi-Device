@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
         }
         m.reply(claraWrap("transkrip", te(m.prefix, m.command, m.pushName), "error"));
     } finally {
-        [inputFile, wavFile].forEach(f => { try { fs.unlinkSync(f); } catch {} });
+        [inputFile, wavFile].forEach(f => { try { fs.unlinkSync(f); } catch (e) { console.error('[transkrip.js]:', e.message); } });
     }
 }
 export { pluginConfig as config, handler }

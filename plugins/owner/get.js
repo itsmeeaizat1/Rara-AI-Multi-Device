@@ -308,7 +308,7 @@ async function handler(m, { sock }) {
               formatSize(size) +
               ")";
           }
-        } catch {}
+        } catch (e) { console.error('[get.js]:', e.message); }
       }
       await m.reply(header + `\n\n\`\`\`${text}\`\`\``);
     } else if (category === "text" && buffer.length > MAX_CHAT_LENGTH) {

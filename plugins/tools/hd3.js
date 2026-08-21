@@ -241,7 +241,7 @@ async function getResult(taskId, uid) {
             reject(new Error("process_failed"));
             return;
           }
-        } catch {}
+        } catch (e) { console.error('[hd3.js]:', e.message); }
       }
     });
 

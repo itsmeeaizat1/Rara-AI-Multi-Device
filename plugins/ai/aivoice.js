@@ -68,7 +68,7 @@ async function handler(m, { sock, config: botConfig }) {
           buffer = Buffer.from(res.data);
           break;
         }
-      } catch {}
+      } catch (e) { console.error('[aivoice.js]:', e.message); }
     }
 
     if (!buffer) throw new Error("Gagal generate suara dari semua endpoint.");

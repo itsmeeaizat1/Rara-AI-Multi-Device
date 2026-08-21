@@ -122,8 +122,8 @@ export default {
         const transcribedText = await transcribeAudio(wavBuffer, groqKey);
 
         // Cleanup temp files
-        try { fs.unlinkSync(inputPath); } catch (e) {}
-        try { fs.unlinkSync(wavPath); } catch (e) {}
+        try { fs.unlinkSync(inputPath); } catch (e) { console.error('[slangtranslate.js]:', e.message); }
+        try { fs.unlinkSync(wavPath); } catch (e) { console.error('[slangtranslate.js]:', e.message); }
 
         if (!transcribedText || transcribedText.trim() === "") {
           await m.reply(claraWrap("Slang Translator", [
@@ -145,8 +145,8 @@ export default {
           `╎ ⏳ Menerjemahkan slang...`,
         ].join("\n")));
       } catch (error) {
-        try { fs.unlinkSync(inputPath); } catch (e) {}
-        try { fs.unlinkSync(wavPath); } catch (e) {}
+        try { fs.unlinkSync(inputPath); } catch (e) { console.error('[slangtranslate.js]:', e.message); }
+        try { fs.unlinkSync(wavPath); } catch (e) { console.error('[slangtranslate.js]:', e.message); }
         const text =
           claraWrap("Slang Translator - Error", [
             `╎ Status: *Gagal transcribe*`,

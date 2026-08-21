@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     } else if (m.quoted?.isImage) {
         try {
             imageBuffer = await m.quoted.download()
-        } catch (e) {}
+        } catch (e) { console.error('[animeapaini.js]:', e.message); }
     }
     
     if (m.isVideo || m.quoted?.isVideo) {

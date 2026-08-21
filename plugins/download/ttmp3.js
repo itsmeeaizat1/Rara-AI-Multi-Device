@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
       if (!file) continue;
       try {
         if (fs.existsSync(file)) fs.unlinkSync(file);
-      } catch {}
+      } catch (e) { console.error('[ttmp3.js]:', e.message); }
     }
     cleanupFiles = [];
   };

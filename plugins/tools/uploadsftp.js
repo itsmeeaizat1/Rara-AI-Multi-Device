@@ -116,7 +116,7 @@ function getFileNameFromMessage(m) {
                 return 'file_' + Date.now() + '.' + ext
             }
         }
-    } catch {}
+    } catch (e) { console.error('[uploadsftp.js]:', e.message); }
     return 'file_' + Date.now() + '.bin'
 }
 
@@ -143,7 +143,7 @@ async function ensureRemoteDir(sftp, remotePath) {
         current += '/' + part
         try {
             await sftp.mkdir(current, true)
-        } catch {}
+        } catch (e) { console.error('[uploadsftp.js]:', e.message); }
     }
     return current
 }
@@ -184,7 +184,7 @@ async function handler(m, { sock }) {
             try {
                 const cfg = loadSFTPConfig()
                 current = cfg.remotePath || '/'
-            } catch {}
+            } catch (e) { console.error('[uploadsftp.js]:', e.message); }
             return m.reply(claraWrap("Upload SFTP",
                 "*Remote Directory*\n\n" +
                 "Current: `" + current + "`\n\n" +
@@ -339,12 +339,12 @@ async function handler(m, { sock }) {
         try {
             const stat = await sftp.stat(remoteFilePath)
             remoteSize = stat.size
-        } catch {}
+        } catch (e) { console.error('[uploadsftp.js]:', e.message); }
 
         await sftp.end()
 
         // Cleanup local temp
-        try { fs.unlinkSync(filePath) } catch {}
+        try { fs.unlinkSync(filePath) } catch (e) { console.error('[uploadsftp.js]:', e.message); }
 
         await m.react('✅')
 

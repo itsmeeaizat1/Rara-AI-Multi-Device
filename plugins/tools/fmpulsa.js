@@ -19,7 +19,7 @@ const BASE_API = "https://fmpedia.id/api/prepaid";
 function loadData() {
   try {
     if (fs.existsSync(DATA_FILE)) return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8"));
-  } catch {}
+  } catch (e) { console.error('[fmpulsa.js]:', e.message); }
   return {
     userId: "", apiKey: "", markup: 5,
     orders: [], pendingPayments: {},
@@ -27,7 +27,7 @@ function loadData() {
   };
 }
 function saveData(data) {
-  try { fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2)); } catch {}
+  try { fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2)); } catch (e) { console.error('[fmpulsa.js]:', e.message); }
 }
 function getUser(data, sender) {
   if (!data.users[sender]) data.users[sender] = { balance: 0, totalOrders: 0, totalSpent: 0 };

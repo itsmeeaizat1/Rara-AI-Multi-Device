@@ -40,7 +40,7 @@ function setCustomProviders(providers) {
   try {
     const db = getDatabase();
     db.set("aiCustomProviders", providers);
-  } catch {}
+  } catch (e) { console.error('[ai-addprovider.js]:', e.message); }
 }
 
 async function handler(m, { sock, config: botConfig }) {

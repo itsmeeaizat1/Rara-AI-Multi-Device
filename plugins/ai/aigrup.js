@@ -265,7 +265,7 @@ async function handler(m, { sock, config: botConfig }) {
           const { getSocket } = await import("../../src/connection.js");
           const sock = getSocket();
           if (sock) restartProactiveTimer(sock);
-        } catch {}
+        } catch (e) { console.error('[aigrup.js]:', e.message); }
         await m.reply(
           claraWrap("Proactive ON", [`◦ Proactive: *ON*`,
             `◦ Interval: *${aigrup.proactiveInterval || 60} menit*`,
@@ -282,7 +282,7 @@ async function handler(m, { sock, config: botConfig }) {
         try {
           const { stopProactiveTimer } = await import("../../src/lib/nova-aigrup-proactive.js");
           stopProactiveTimer();
-        } catch {}
+        } catch (e) { console.error('[aigrup.js]:', e.message); }
         await m.reply(
           claraWrap("Proactive OFF", [`◦ Proactive: *OFF*`,
             `◦ Bot tidak ngomong sendiri`,
@@ -335,7 +335,7 @@ async function handler(m, { sock, config: botConfig }) {
           const { getSocket } = await import("../../src/connection.js");
           const sock = getSocket();
           if (sock) restartProactiveTimer(sock);
-        } catch {}
+        } catch (e) { console.error('[aigrup.js]:', e.message); }
         await m.reply(
           claraWrap("Interval Diubah", [`◦ Interval: *${minutes} menit*`,
             `◦ ⚠️ Di bawah 10 menit BERESIKO BAN WA`,
@@ -352,7 +352,7 @@ async function handler(m, { sock, config: botConfig }) {
         const { getSocket } = await import("../../src/connection.js");
         const sock = getSocket();
         if (sock) restartProactiveTimer(sock);
-      } catch {}
+      } catch (e) { console.error('[aigrup.js]:', e.message); }
       await m.reply(claraWrap("Aigrup", `✅ Proactive interval diatur ke *${minutes} menit*
 
 Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));

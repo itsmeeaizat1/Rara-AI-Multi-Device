@@ -19,7 +19,7 @@ function loadMoodDB() {
     if (fs2.existsSync(MOOD_DB)) {
       return JSON.parse(fs2.readFileSync(MOOD_DB, "utf-8"));
     }
-  } catch (e) {}
+  } catch (e) { console.error('[moodcheck.js]:', e.message); }
   return { groups: {}, users: {} };
 }
 
@@ -28,7 +28,7 @@ function saveMoodDB(db) {
     const dir = path.dirname(MOOD_DB);
     if (!fs2.existsSync(dir)) fs2.mkdirSync(dir, { recursive: true });
     fs2.writeFileSync(MOOD_DB, JSON.stringify(db, null, 2));
-  } catch (e) {}
+  } catch (e) { console.error('[moodcheck.js]:', e.message); }
 }
 
 function isMoodTrackOn(groupId) {
@@ -256,7 +256,7 @@ async function calculateZCR(wavPath) {
     );
     const match = output.match(/Zero crossings rate:\s+([0-9.]+)/i);
     if (match) return parseFloat(match[1]);
-  } catch (e) {}
+  } catch (e) { console.error('[moodcheck.js]:', e.message); }
   return 0.05; // default
 }
 
@@ -277,7 +277,7 @@ async function analyzeAudio(audioPath) {
       `ffprobe -v error -show_entries format=duration -of csv=p=0 "${wavPath}"`
     );
     duration = parseFloat(durOutput.trim()) || 0;
-  } catch (e) {}
+  } catch (e) { console.error('[moodcheck.js]:', e.message); }
 
   // Get volume stats
   let volStats = {};
@@ -286,7 +286,7 @@ async function analyzeAudio(audioPath) {
       `ffmpeg -i "${wavPath}" -af "volumedetect" -f null - 2>&1`
     );
     volStats = parseVolumeDetect(volOutput);
-  } catch (e) {}
+  } catch (e) { console.error('[moodcheck.js]:', e.message); }
 
   // Get astats (RMS, dynamic range, ZCR)
   let audioStats = {};
@@ -295,7 +295,7 @@ async function analyzeAudio(audioPath) {
       `ffmpeg -i "${wavPath}" -af "astats=metadata=1:reset=0" -f null - 2>&1`
     );
     audioStats = parseAstats(astatsOutput);
-  } catch (e) {}
+  } catch (e) { console.error('[moodcheck.js]:', e.message); }
 
   // Get silence detection
   let silenceStats = { silenceCount: 0 };
@@ -304,7 +304,7 @@ async function analyzeAudio(audioPath) {
       `ffmpeg -i "${wavPath}" -af "silencedetect=noise=-40dB:d=0.3" -f null - 2>&1`
     );
     silenceStats = parseSilenceDetect(silenceOutput);
-  } catch (e) {}
+  } catch (e) { console.error('[moodcheck.js]:', e.message); }
 
   // Get spectral flatness (proxy for tonal vs noisy)
   let spectralFlatness = 0;
@@ -314,7 +314,7 @@ async function analyzeAudio(audioPath) {
     );
     const match = flatOutput.match(/flatness[^:]*:\s+([0-9.]+)/i);
     if (match) spectralFlatness = parseFloat(match[1]);
-  } catch (e) {}
+  } catch (e) { console.error('[moodcheck.js]:', e.message); }
 
   // Calculate RMS level (from astats)
   const rmsLevel = audioStats["RMS level"] || audioStats["RMS Level"] || volStats.rmsVolume || -20;
@@ -328,7 +328,7 @@ async function analyzeAudio(audioPath) {
   const zcr = audioStats["Zero crossings rate"] || await calculateZCR(wavPath);
 
   // Cleanup temp file
-  try { fs.unlinkSync(wavPath); } catch (e) {}
+  try { fs.unlinkSync(wavPath); } catch (e) { console.error('[moodcheck.js]:', e.message); }
 
   // ─── Mood Analysis Logic ───
   // Normalize values
@@ -941,11 +941,11 @@ async function handler(m, { sock }) {
       await m.react("✅");
     } finally {
       // Cleanup
-      try { fs.unlinkSync(inputPath); } catch (e) {}
+      try { fs.unlinkSync(inputPath); } catch (e) { console.error('[moodcheck.js]:', e.message); }
     }
   } catch (error) {
     console.error("[MOODCHECK] Error:", error.message);
-    try { fs.unlinkSync(path.join(os.tmpdir(), `mood_input_${Date.now()}.ogg`)); } catch (e) {}
+    try { fs.unlinkSync(path.join(os.tmpdir(), `mood_input_${Date.now()}.ogg`)); } catch (e) { console.error('[moodcheck.js]:', e.message); }
     await m.reply(claraWrap("Mood Check", "Terjadi error saat menganalisis audio. Pastikan kamu reply ke Voice Note yang valid (bukan sticker/video)."));
   }
 }

@@ -113,7 +113,7 @@ function autoCloseExpired(db, sock) {
         sock.sendMessage(auction.chatId, {
           text: winnerText,
           contextInfo: { mentionedJid: [winner.bidder] },
-        }).catch(() => {});
+        }).catch((e) => { console.error('[lelang.js]:', e.message); });
       } else {
         sock.sendMessage(auction.chatId, {
           text:
@@ -124,7 +124,7 @@ function autoCloseExpired(db, sock) {
             "╎❏ Total Bid: 0\n" +
             "╚┈┈❖\n\n" +
             "> Lelang berakhir tanpa peserta",
-        }).catch(() => {});
+        }).catch((e) => { console.error('[lelang.js]:', e.message); });
       }
     }
   }

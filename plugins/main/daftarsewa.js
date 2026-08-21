@@ -253,10 +253,10 @@ async function handler(m, { sock }) {
 
           for (const num of ownerNumbers) {
             const jid = num.includes("@") ? num : num + "@s.whatsapp.net";
-            await sock.sendMessage(jid, { text: ownerMsg }).catch(() => {});
+            await sock.sendMessage(jid, { text: ownerMsg }).catch((e) => { console.error('[daftarsewa.js]:', e.message); });
             await new Promise((r) => setTimeout(r, 500));
           }
-        } catch {}
+        } catch (e) { console.error('[daftarsewa.js]:', e.message); }
 
         // Broadcast ke saluran WA
         await notifySewaRegister(sock, {

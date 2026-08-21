@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
             expiredStr: "30 hari",
             isExtend: false,
             totalPremium: db.data.premium.length,
-          }).catch(() => {});
+          }).catch((e) => { console.error('[addpremall.js]:', e.message); });
         }
         
         await m.reply(`💎 *Add Premium All*\n\n` +

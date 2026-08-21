@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
                 if (pn && pn.valid && pn.number && pn.number.international) {
                     return pn.number.international.replace(/-/g, ' ')
                 }
-            } catch (e) {}
+            } catch (e) { console.error('[qwa.js]:', e.message); }
             return "+" + numStr.split('@')[0]
         }
 

@@ -45,7 +45,7 @@ async function handleAntiFoto(m, sock, db) {
 
   try {
     await sock.sendMessage(m.chat, { delete: m.key });
-  } catch {}
+  } catch (e) { console.error('[antifoto.js]:', e.message); }
 
   await sock.sendMessage(m.chat, {
     text: gpMsg("antifoto", { user: m.sender.split("@")[0] }),

@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
               author,
               emojis: ["❤"],
             });
-          } catch {}
+          } catch (e) { console.error('[pinpack.js]:', e.message); }
           await sock.sendMessage(
             m.chat,
             {

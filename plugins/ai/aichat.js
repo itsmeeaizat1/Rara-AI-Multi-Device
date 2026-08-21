@@ -38,7 +38,7 @@ function appendHistory(chatId, role, content) {
     if (history.length > 50) history.splice(0, history.length - 50);
     current.aiChatHistory = history;
     db.set(chatId, current);
-  } catch {}
+  } catch (e) { console.error('[aichat.js]:', e.message); }
 }
 
 const pluginConfig = {
@@ -69,7 +69,7 @@ async function handler(m, { sock, config: botConfig }) {
         const current = db.get(chatId) || {};
         current.aiChatHistory = [];
         db.set(chatId, current);
-      } catch {}
+      } catch (e) { console.error('[aichat.js]:', e.message); }
 
       const text =
         claraWrap("AI Chat", ["◦ Status: *Dihapus*",

@@ -120,7 +120,7 @@ async function handler(m, { sock, db }) {
       try {
         const meta = await sock.groupMetadata(targetGroupId);
         groupName = meta.subject;
-      } catch (e) {}
+      } catch (e) { console.error('[swgc.js]:', e.message); }
 
       await m.react("🕐");
 
@@ -177,7 +177,7 @@ async function handler(m, { sock, db }) {
         setTimeout(() => {
           try {
             fs.unlinkSync(pendingData.tempFile);
-          } catch (e) {}
+          } catch (e) { console.error('[swgc.js]:', e.message); }
         }, 5000);
       }
     } catch (error) {
@@ -310,7 +310,7 @@ async function handler(m, { sock, db }) {
     let thumbnail = null;
     try {
       thumbnail = getAssetBuffer("nova2");
-    } catch (e) {}
+    } catch (e) { console.error('[swgc.js]:', e.message); }
 
     await sock.sendMessage(m.chat, {
       text:
@@ -372,7 +372,7 @@ async function handler(m, { sock, db }) {
     if (tempFile && fs.existsSync(tempFile)) {
       try {
         fs.unlinkSync(tempFile);
-      } catch (e) {}
+      } catch (e) { console.error('[swgc.js]:', e.message); }
     }
     pendingSwgc.delete(m.sender);
   }

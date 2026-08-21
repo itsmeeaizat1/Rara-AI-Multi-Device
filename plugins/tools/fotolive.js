@@ -135,13 +135,13 @@ async function handler(m, { sock }) {
     const srcDuration = videoInfo.duration || 0;
 
     if (srcDuration === 0) {
-      try { fs.unlinkSync(inputPath); } catch {}
+      try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(claraWrap("fotolive", "Tidak bisa membaca durasi video. Pastikan video valid."));
     }
 
     // Validasi durasi video sumber — MINIMAL
     if (srcDuration < SRC_MIN_DURATION) {
-      try { fs.unlinkSync(inputPath); } catch {}
+      try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(
         `╔┈┈「 *Video Terlalu Pendek* 」\n` +
         `╎\n` +
@@ -176,7 +176,7 @@ async function handler(m, { sock }) {
 
     // Validasi durasi output — MINIMAL
     if (duration < OUT_MIN_DURATION) {
-      try { fs.unlinkSync(inputPath); } catch {}
+      try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(
         `╔┈┈「 *Durasi Output Terlalu Pendek* 」\n` +
         `╎\n` +
@@ -189,7 +189,7 @@ async function handler(m, { sock }) {
 
     // Validasi durasi output — MAKSIMAL
     if (duration > OUT_MAX_DURATION) {
-      try { fs.unlinkSync(inputPath); } catch {}
+      try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(
         `╔┈┈「 *Durasi Output Terlalu Panjang* 」\n` +
         `╎\n` +
@@ -245,7 +245,7 @@ async function handler(m, { sock }) {
     }
 
     // Cleanup input
-    try { fs.unlinkSync(inputPath); } catch {}
+    try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
 
     await m.react("✅");
 
@@ -269,7 +269,7 @@ async function handler(m, { sock }) {
     }, { quoted: m });
 
     // Cleanup output
-    try { fs.unlinkSync(outputPath); } catch {}
+    try { fs.unlinkSync(outputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
 
     return { handled: true };
   } catch (error) {

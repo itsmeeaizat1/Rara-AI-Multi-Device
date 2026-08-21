@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, data.music, null, m, {
           type: "audio", mimetype: "audio/mpeg",
         });
-      } catch {}
+      } catch (e) { console.error('[douyinv2.js]:', e.message); }
     }
 
     m.react("✅");

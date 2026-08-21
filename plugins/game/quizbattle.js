@@ -39,7 +39,7 @@ async function safeReply(m, sock, text, options = {}) {
   try {
     await sock.sendMessage(m.chat, { text, ...options }, { quoted: m });
   } catch {
-    try { await sock.sendMessage(m.chat, { text }); } catch {}
+    try { await sock.sendMessage(m.chat, { text }); } catch (e) { console.error('[quizbattle.js]:', e.message); }
   }
 }
 
@@ -49,7 +49,7 @@ async function safeReact(m, sock, emoji) {
     await sock.sendMessage(m.chat, {
       react: { text: emoji, key: { ...key, remoteJid: m.chat } },
     });
-  } catch {}
+  } catch (e) { console.error('[quizbattle.js]:', e.message); }
 }
 
 function shuffle(arr) {

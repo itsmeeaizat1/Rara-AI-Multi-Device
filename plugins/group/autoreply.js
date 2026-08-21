@@ -299,7 +299,7 @@ async function handler(m, { sock }) {
                     if (fs.existsSync(customReplies[existingIndex].image)) {
                         fs.unlinkSync(customReplies[existingIndex].image)
                     }
-                } catch {}
+                } catch (e) { console.error('[autoreply.js]:', e.message); }
             }
             customReplies[existingIndex] = replyData
         } else {
@@ -343,7 +343,7 @@ async function handler(m, { sock }) {
                 if (fs.existsSync(customReplies[index].image)) {
                     fs.unlinkSync(customReplies[index].image)
                 }
-            } catch {}
+            } catch (e) { console.error('[autoreply.js]:', e.message); }
         }
         
         customReplies.splice(index, 1)
@@ -401,7 +401,7 @@ async function handler(m, { sock }) {
             if (r.image) {
                 try {
                     if (fs.existsSync(r.image)) fs.unlinkSync(r.image)
-                } catch {}
+                } catch (e) { console.error('[autoreply.js]:', e.message); }
             }
         }
         

@@ -98,7 +98,7 @@ async function safeReply(m, sock, text, options = {}) {
   try {
     await sock.sendMessage(m.chat, { text, ...options }, { quoted: m });
   } catch {
-    try { await sock.sendMessage(m.chat, { text }); } catch {}
+    try { await sock.sendMessage(m.chat, { text }); } catch (e) { console.error('[wyr.js]:', e.message); }
   }
 }
 
@@ -108,7 +108,7 @@ async function safeReact(m, sock, emoji) {
     await sock.sendMessage(m.chat, {
       react: { text: emoji, key: { ...key, remoteJid: m.chat } },
     });
-  } catch {}
+  } catch (e) { console.error('[wyr.js]:', e.message); }
 }
 
 // ==================== Global State ====================
@@ -287,7 +287,7 @@ async function handler(m, { sock }) {
         text: claraWrap("Would You Rather - Time Up", closeText, "success"),
         mentions: voters,
       });
-    } catch {}
+    } catch (e) { console.error('[wyr.js]:', e.message); }
 
     const id = Object.keys(global.wyrGames).find(k => global.wyrGames[k] === game);
     if (id) delete global.wyrGames[id];

@@ -215,7 +215,7 @@ async function handler(m, { sock, db }) {
   try {
     const uptimeMs = process.uptime() * 1000;
     lines.push(`╎❏ *Uptime:* ${formatUptime(uptimeMs)}`);
-  } catch (_) {}
+  } catch (_) { console.error('[channelnovaofficial.js]:', _?.message || _); }
 
   lines.push("");
   lines.push(`╎ Ikuti saluran untuk update fitur terbaru,`);

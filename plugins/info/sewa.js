@@ -265,7 +265,7 @@ async function handler(m, { sock, config: botConfig, db }) {
           image: qrisBuffer,
           caption: "\n*Scan QRIS di atas untuk pembayaran sewa*"
         }, { quoted: m });
-      } catch {}
+      } catch (e) { console.error('[sewa.js]:', e.message); }
     }
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";

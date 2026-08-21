@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
         }, { quoted: m });
         try {
             fs.unlinkSync(pathnya);
-        } catch (e) {}
+        } catch (e) { console.error('[removebg.js]:', e.message); }
     } catch (error) {
         console.error('[RemoveBG Error]', error);
         m.reply(claraWrap("removebg", te(m.prefix, m.command, m.pushName), "error"));

@@ -227,7 +227,7 @@ class AlightMotionV3 {
 
   async logout() {
     if (this.cookie) {
-      try { await this._request("POST", "https://www.ryezenstore.online/api/auth/logout"); } catch (e) {}
+      try { await this._request("POST", "https://www.ryezenstore.online/api/auth/logout"); } catch (e) { console.error('[ampremv2.js]:', e.message); }
       this.cookie = null;
       this.credit = 0;
     }
@@ -378,7 +378,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
                     }
                   }
                 }
-              } catch (e) {}
+              } catch (e) { console.error('[ampremv2.js]:', e.message); }
               if (!magicLink) await new Promise((r) => setTimeout(r, 2000));
             }
 

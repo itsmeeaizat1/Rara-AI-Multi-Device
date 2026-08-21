@@ -51,7 +51,7 @@ class MuslimAI {
             try {
                 const p = JSON.parse(l);
                 if (p.type === "text") txt += p.data;
-            } catch {}
+            } catch (e) { console.error('[muslimai.js]:', e.message); }
         }
         return txt || res;
     }

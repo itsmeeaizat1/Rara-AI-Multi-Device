@@ -53,7 +53,7 @@ function createSession(chatJid, sender, sock, m) {
             `Sesi kolase kedaluwarsa.\nFoto terkumpul: ${s.images.length}/${MIN_PHOTOS}\n\nKirim ulang \`${config.command?.prefix || "."}stikergrid\` untuk mencoba lagi.`
           ),
         });
-      } catch (_) {}
+      } catch (_) { console.error('[stikergrid.js]:', _?.message || _); }
     } else {
       sessions.delete(chatJid);
     }
@@ -256,7 +256,7 @@ async function handler(m, { sock, db }) {
       if (buffer) {
         newSession.images.push(buffer);
       }
-    } catch (_) {}
+    } catch (_) { console.error('[stikergrid.js]:', _?.message || _); }
   }
 
   const collected = newSession.images.length;
@@ -309,7 +309,7 @@ async function processCollage(session, chatJid, sock, m) {
       await sock.sendMessage(chatJid, {
         react: { text: "✅", key: m.key },
       });
-    } catch (_) {}
+    } catch (_) { console.error('[stikergrid.js]:', _?.message || _); }
   } catch (err) {
     console.log("[StikerGrid] Error:", err.message);
     clearTimeout(session?.timer);

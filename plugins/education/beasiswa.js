@@ -46,7 +46,7 @@ async function fetchBeasiswaFromWeb(level) {
         });
       }
     }
-  } catch {}
+  } catch (e) { console.error('[beasiswa.js]:', e.message); }
 
   // Source 2: Fetch from IAC.beasiswa.or.id / BeasiswaKaltim
   try {
@@ -66,7 +66,7 @@ async function fetchBeasiswaFromWeb(level) {
         });
       }
     }
-  } catch {}
+  } catch (e) { console.error('[beasiswa.js]:', e.message); }
 
   // Source 3: DuckDuckGo instant answer fallback
   if (results.length === 0) {
@@ -103,7 +103,7 @@ async function fetchBeasiswaFromWeb(level) {
           }
         }
       }
-    } catch {}
+    } catch (e) { console.error('[beasiswa.js]:', e.message); }
   }
 
   // Source 4: AI fallback via Google Search scrape
@@ -138,7 +138,7 @@ async function fetchBeasiswaFromWeb(level) {
           });
         }
       }
-    } catch {}
+    } catch (e) { console.error('[beasiswa.js]:', e.message); }
   }
 
   return results;

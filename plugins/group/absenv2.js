@@ -122,7 +122,7 @@ function autoClose(db, sock) {
 
         sock.sendMessage(gid, {
           text: claraWrap("Absensi Ditutup", lines.join("\n")),
-        }).catch(() => {});
+        }).catch((e) => { console.error('[absenv2.js]:', e.message); });
       }
     }
   }

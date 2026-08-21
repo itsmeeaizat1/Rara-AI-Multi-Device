@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
       phoneNumber: targetNumber,
       reason: 'Dibanned oleh owner',
       totalBanned: bannedList.length,
-    }).catch(() => {})
+    }).catch((e) => { console.error('[ban.js]:', e.message); })
 
     await m.reply(
         `🚫 *User Dibanned*\n\n` +

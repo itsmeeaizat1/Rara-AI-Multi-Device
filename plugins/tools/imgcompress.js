@@ -40,7 +40,7 @@ function formatSize(bytes) {
 }
 
 function cleanup(fp) {
-  try { if (fp && fs.existsSync(fp)) fs.unlinkSync(fp); } catch {}
+  try { if (fp && fs.existsSync(fp)) fs.unlinkSync(fp); } catch (e) { console.error('[imgcompress.js]:', e.message); }
 }
 
 async function getMediaBuffer(m) {
@@ -51,7 +51,7 @@ async function getMediaBuffer(m) {
       try {
         const buffer = await downloadFile(m.quoted.url);
         return { buffer, mime: m.quoted.mimetype || "image/jpeg", fileName: m.quoted.fileName };
-      } catch {}
+      } catch (e) { console.error('[imgcompress.js]:', e.message); }
     }
   }
   // Current message
@@ -60,7 +60,7 @@ async function getMediaBuffer(m) {
     try {
       const buffer = await downloadFile(m.url);
       return { buffer, mime: m.mimetype || "image/jpeg", fileName: m.fileName };
-    } catch {}
+    } catch (e) { console.error('[imgcompress.js]:', e.message); }
   }
   return null;
 }

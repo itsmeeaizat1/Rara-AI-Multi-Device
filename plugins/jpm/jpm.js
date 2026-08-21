@@ -74,7 +74,7 @@ const jpmSessions = {};
 let cachedThumb = null;
 try {
   cachedThumb = getAssetBuffer("nova2");
-} catch {}
+} catch (e) { console.error('[jpm.js]:', e.message); }
 
 function getVerifiedQuoted() {
   const botName = config.bot?.name || "Nova-AI";
@@ -214,7 +214,7 @@ async function sendInteractiveMessage(
         { image: cachedThumb },
         { upload: sock.waUploadToServer },
       );
-    } catch {}
+    } catch (e) { console.error('[jpm.js]:', e.message); }
   }
 
   const botName = config.bot?.name || "Nova-AI";
@@ -575,17 +575,17 @@ async function handleJpmMain(m, sock, db, fullInput) {
     try {
       mediaBuffer = await qmsg.download();
       mediaType = "image";
-    } catch {}
+    } catch (e) { console.error('[jpm.js]:', e.message); }
   } else if (qmsg.isVideo) {
     try {
       mediaBuffer = await qmsg.download();
       mediaType = "video";
-    } catch {}
+    } catch (e) { console.error('[jpm.js]:', e.message); }
   } else if (qmsg.isAudio || qmsg.mimetype?.startsWith("audio")) {
     try {
       mediaBuffer = await qmsg.download();
       mediaType = "audio";
-    } catch {}
+    } catch (e) { console.error('[jpm.js]:', e.message); }
   } else if (
     qmsg.isDocument ||
     (qmsg.mimetype && !qmsg.mimetype.startsWith("text/plain"))
@@ -593,7 +593,7 @@ async function handleJpmMain(m, sock, db, fullInput) {
     try {
       mediaBuffer = await qmsg.download();
       mediaType = "document";
-    } catch {}
+    } catch (e) { console.error('[jpm.js]:', e.message); }
   }
 
   const contentInfo =
@@ -738,12 +738,12 @@ async function handleJpmDirect(m, sock, db, text, mode) {
       try {
         mediaBuffer = await qmsg.download();
         mediaType = "image";
-      } catch {}
+      } catch (e) { console.error('[jpm.js]:', e.message); }
     } else if (qmsg.isVideo) {
       try {
         mediaBuffer = await qmsg.download();
         mediaType = "video";
-      } catch {}
+      } catch (e) { console.error('[jpm.js]:', e.message); }
     }
 
     const { groupIds, allGroups, blacklistedCount } = await getTargetGroups(
@@ -805,12 +805,12 @@ async function handleJpmChannelWithContent(
         try {
           mediaBuffer = await qmsg.download();
           mediaType = "image";
-        } catch {}
+        } catch (e) { console.error('[jpm.js]:', e.message); }
       } else if (qmsg.isVideo) {
         try {
           mediaBuffer = await qmsg.download();
           mediaType = "video";
-        } catch {}
+        } catch (e) { console.error('[jpm.js]:', e.message); }
       }
     }
 
@@ -1111,7 +1111,7 @@ async function completeAutoJpmSetup(m, sock, db, intervalStr) {
         ) {
           fs.unlinkSync(mediaData.path);
         }
-      } catch {}
+      } catch (e) { console.error('[jpm.js]:', e.message); }
     }
     mediaData = { type: mType, path: filePath, mimetype, fileName };
   }
@@ -1206,7 +1206,7 @@ async function handleAutoJpm(m, sock, db, input, fullInput) {
           ) {
             fs.unlinkSync(mediaData.path);
           }
-        } catch {}
+        } catch (e) { console.error('[jpm.js]:', e.message); }
       }
       mediaData = { type: mediaType, path: filePath, mimetype, fileName };
     }

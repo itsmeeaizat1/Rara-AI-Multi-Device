@@ -48,7 +48,7 @@ try {
   if (fs.existsSync(thumbPath)) {
     thumbUT = fs.readFileSync(thumbPath);
   }
-} catch (e) { }
+} catch (e) { console.error('[ulartangga.js]:', e.message); }
 
 function utCtx(mentions) {
   const saluranId = config.saluran?.id || "120363400911374213@newsletter";

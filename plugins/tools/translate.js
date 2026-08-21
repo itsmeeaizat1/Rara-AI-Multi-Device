@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
       const res = await fetch(url);
       const json = await res.json();
       translated = json?.[0]?.map((s) => s?.[0]).join("") || text;
-    } catch {}
+    } catch (e) { console.error('[translate.js]:', e.message); }
 
     const replyText =
       claraWrap("Translate", ["◦ Dari: *id*",

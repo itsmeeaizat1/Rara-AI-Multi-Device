@@ -1615,13 +1615,13 @@ async function handler(m, { sock, config: botConfig }) {
             });
           }
 
-          setTimeout(() => { try { fs.unlinkSync(imgPath); } catch (e) {} }, 60000);
+          setTimeout(() => { try { fs.unlinkSync(imgPath); } catch (e) { console.error('[txttopdf.js]:', e.message); } }, 60000);
         } catch (imgErr) {
           console.error("Image render error:", imgErr);
         }
       }
 
-      setTimeout(() => { try { fs.unlinkSync(filePath); } catch (e) {} }, 60000);
+      setTimeout(() => { try { fs.unlinkSync(filePath); } catch (e) { console.error('[txttopdf.js]:', e.message); } }, 60000);
 
     } else {
       const html = createDoc(content, format, opts);
@@ -1682,13 +1682,13 @@ async function handler(m, { sock, config: botConfig }) {
             });
           }
 
-          setTimeout(() => { try { fs.unlinkSync(imgPath); } catch (e) {} }, 60000);
+          setTimeout(() => { try { fs.unlinkSync(imgPath); } catch (e) { console.error('[txttopdf.js]:', e.message); } }, 60000);
         } catch (imgErr) {
           console.error("Image render error:", imgErr);
         }
       }
 
-      setTimeout(() => { try { fs.unlinkSync(filePath); } catch (e) {} }, 60000);
+      setTimeout(() => { try { fs.unlinkSync(filePath); } catch (e) { console.error('[txttopdf.js]:', e.message); } }, 60000);
     }
   } catch (e) {
     console.error("txttopdf error:", e);

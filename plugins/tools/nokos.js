@@ -90,7 +90,7 @@ function providerOf(number) {
 function loadSaved() {
   try {
     if (fs.existsSync(SAVE_FILE)) return JSON.parse(fs.readFileSync(SAVE_FILE, "utf-8"));
-  } catch {}
+  } catch (e) { console.error('[nokos.js]:', e.message); }
   return { numbers: [], lastUpdate: null };
 }
 
@@ -99,7 +99,7 @@ function saveSaved(data) {
     const dir = path.dirname(SAVE_FILE);
     if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(SAVE_FILE, JSON.stringify(data, null, 2));
-  } catch {}
+  } catch (e) { console.error('[nokos.js]:', e.message); }
 }
 
 // === WhatsApp Check ===

@@ -52,7 +52,7 @@ async function fetchMagang(keyword, location) {
         });
       }
     }
-  } catch {}
+  } catch (e) { console.error('[magang.js]:', e.message); }
 
   // Source 2: remotive.io - remote jobs
   if (results.length < 5) {
@@ -75,7 +75,7 @@ async function fetchMagang(keyword, location) {
           });
         }
       }
-    } catch {}
+    } catch (e) { console.error('[magang.js]:', e.message); }
   }
 
   // Source 3: DuckDuckGo fallback for Indonesia
@@ -106,7 +106,7 @@ async function fetchMagang(keyword, location) {
           }
         }
       }
-    } catch {}
+    } catch (e) { console.error('[magang.js]:', e.message); }
   }
 
   // Source 4: Google search fallback
@@ -139,7 +139,7 @@ async function fetchMagang(keyword, location) {
           });
         }
       }
-    } catch {}
+    } catch (e) { console.error('[magang.js]:', e.message); }
   }
 
   return results;

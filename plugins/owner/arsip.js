@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         try {
           await sock.chatModify({ archive: true, lastMessages: [] }, jid);
           count++;
-        } catch {}
+        } catch (e) { console.error('[arsip.js]:', e.message); }
       }
       await m.react("✅");
       return m.reply(

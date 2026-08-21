@@ -36,7 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (cpus && cpus.length > 0) {
         cpu = `${cpus.length}x ${cpus[0].model.split(" ").slice(0, 3).join(" ")}`;
       }
-    } catch {}
+    } catch (e) { console.error('[linode.js]:', e.message); }
 
     let text = `╔┈┈「 *Server Info* 」
 ╎

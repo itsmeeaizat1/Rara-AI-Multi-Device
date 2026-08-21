@@ -476,7 +476,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             const kondisi = { 0: "Cerah", 1: "Cerah Berawan", 2: "Berawan", 3: "Mendung", 45: "Berkabut", 51: "Gerimis", 61: "Hujan Ringan", 63: "Hujan", 95: "Badai Petir" }[c.weather_code] || "Tidak diketahui";
             weatherStr = `${kondisi} | ${Math.round(c.temperature_2m)}°C ${loc.name}`;
           }
-        } catch {}
+        } catch (e) { console.error('[menu.js]:', e.message); }
         const msg6 = generateWAMessageFromContent(m.chat, {
           viewOnceMessage: { message: {
             messageContextInfo: {},

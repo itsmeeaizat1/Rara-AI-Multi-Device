@@ -197,7 +197,7 @@ export async function startVnCaptchaChallenge(m, sock, registrationData) {
               "Waktu habis!",
               "Verifikasi suara gagal. Silakan coba lagi dengan .daftarotomatis",
             ].join("\n")),
-          }).catch(() => {});
+          }).catch((e) => { console.error('[vncaptcha.js]:', e.message); });
         }
       }, 120000), // 2 menit timeout
     };
@@ -257,8 +257,8 @@ export async function verifyVnCaptcha(m, sock) {
     }
 
     // Download audio
-    try { await sock.sendPresenceUpdate("typing", jid); } catch {}
-    try { await sock.sendReaction(jid, "🔍", m.key); } catch {}
+    try { await sock.sendPresenceUpdate("typing", jid); } catch (e) { console.error('[vncaptcha.js]:', e.message); }
+    try { await sock.sendReaction(jid, "🔍", m.key); } catch (e) { console.error('[vncaptcha.js]:', e.message); }
 
     const buffer = await sock.downloadMediaMessage(m);
     if (!buffer || buffer.length < 500) return false;
@@ -335,7 +335,7 @@ export async function verifyVnCaptcha(m, sock) {
       if (isPass) {
         // SUCCESS — clear session, allow registration
         clearVnCaptchaSession(jid);
-        try { await sock.sendReaction(jid, "✅", m.key); } catch {}
+        try { await sock.sendReaction(jid, "✅", m.key); } catch (e) { console.error('[vncaptcha.js]:', e.message); }
 
         await sock.sendMessage(jid, {
           text: claraWrap("VN Captcha Interrogation", [
@@ -364,7 +364,7 @@ export async function verifyVnCaptcha(m, sock) {
       } else {
         // FAIL
         session.attempts++;
-        try { await sock.sendReaction(jid, "❌", m.key); } catch {}
+        try { await sock.sendReaction(jid, "❌", m.key); } catch (e) { console.error('[vncaptcha.js]:', e.message); }
 
         const remaining = session.maxAttempts - session.attempts;
         const isStrict = isVnCaptchaStrict();
@@ -475,7 +475,7 @@ export function clearVnCaptchaSession(jid) {
       }
       delete global.vnCaptchaSessions[jid];
     }
-  } catch {}
+  } catch (e) { console.error('[vncaptcha.js]:', e.message); }
 }
 
 export { pluginConfig as config, handler };

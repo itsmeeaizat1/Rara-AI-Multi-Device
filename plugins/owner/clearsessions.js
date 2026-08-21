@@ -52,7 +52,7 @@ async function handler(m, { sock })  {
                     fs.unlinkSync(filePath)
                 }
                 deleted++
-            } catch {}
+            } catch (e) { console.error('[clearsessions.js]:', e.message); }
         }
         
         await m.react('✅')

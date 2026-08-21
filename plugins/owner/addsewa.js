@@ -187,7 +187,7 @@ async function handler(m, { sock }) {
       expiredStr,
       isLifetime,
       totalGroups: Object.keys(db.db.data.sewa.groups).length,
-    }).catch(() => {});
+    }).catch((e) => { console.error('[addsewa.js]:', e.message); });
     let text = `✅ *SEWA BERHASIL DITAMBAHKAN*\n\n`;
     text += `Grup: *${groupName}*\n`;
     text += `ID: ${groupId.split("@")[0]}\n`;
@@ -208,7 +208,7 @@ async function handler(m, { sock }) {
             contextInfo: saluranCtx(),
           },
         );
-      } catch {}
+      } catch (e) { console.error('[addsewa.js]:', e.message); }
     } else {
       text += `⚠️ Auto-join gagal: ${joinResult.reason}\nTambahkan bot ke grup secara manual.`;
     }

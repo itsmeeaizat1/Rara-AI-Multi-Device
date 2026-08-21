@@ -221,7 +221,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
             "iOS: " + iosStatus,
           ], "info"),
         });
-      } catch {}
+      } catch (e) { console.error('[webtoapk.js]:', e.message); }
     });
 
     // Build complete - extract download links

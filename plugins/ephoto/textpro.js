@@ -113,10 +113,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ].join("\n")),
     });
 
-    try { fs.unlinkSync(imgPath); } catch {}
+    try { fs.unlinkSync(imgPath); } catch (e) { console.error('[textpro.js]:', e.message); }
     try {
       await conn.sendMessage(m.key.remoteJid, { delete: { remoteJid: m.key.remoteJid, id: statusMsg.key.id, fromMe: true } });
-    } catch {}
+    } catch (e) { console.error('[textpro.js]:', e.message); }
   } catch (e) {
     console.error("textpro error:", e.message);
     return m.reply(claraWrap("Text Pro", "Error: " + e.message));

@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
       const data = response.data;
       const result = data?.result || data;
       resultText = result?.title || result?.name || result?.result || query;
-    } catch {}
+    } catch (e) { console.error('[nhentai.js]:', e.message); }
 
     const text =
       claraWrap("NHentai", [`◦ Query: *${query}*`,

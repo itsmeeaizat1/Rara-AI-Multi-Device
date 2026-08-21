@@ -51,7 +51,7 @@ async function handler(m, { sock, config: botConfig }) {
       const res = await axios.get("https://api.zeks.xyz/api/quote", { timeout: 15000 });
       quote = res.data?.result || res.data?.quote || res.data?.message || null;
       source = "API";
-    } catch {}
+    } catch (e) { console.error('[quote.js]:', e.message); }
 
     if (!quote) quote = LOCAL_QUOTES[Math.floor(Math.random() * LOCAL_QUOTES.length)];
     if (!source) source = "Local";

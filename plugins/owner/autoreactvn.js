@@ -164,7 +164,7 @@ async function handler(m, { sock, args }) {
         if (oldFile && oldFile !== fileName) {
           const oldPath = path.join(VN_DIR, oldFile);
           if (fs.existsSync(oldPath)) {
-            try { fs.unlinkSync(oldPath); } catch {}
+            try { fs.unlinkSync(oldPath); } catch (e) { console.error('[autoreactvn.js]:', e.message); }
           }
         }
         triggers[existingIndex] = newEntry;
@@ -212,7 +212,7 @@ async function handler(m, { sock, args }) {
         // Cek apakah file ini dipakai trigger lain
         const sharedCount = triggers.filter(t => t.vnFile === vnFile).length;
         if (sharedCount <= 1) {
-          try { fs.unlinkSync(vnPath); } catch {}
+          try { fs.unlinkSync(vnPath); } catch (e) { console.error('[autoreactvn.js]:', e.message); }
         }
       }
     }

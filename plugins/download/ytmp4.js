@@ -42,7 +42,7 @@ async function getVideoDownloadUrl(url) {
         throw new Error("Timeout processing video");
       }
     }
-  } catch { }
+  } catch (e) { console.error('[ytmp4.js]:', e.message); }
 
   const fallback = await ytdl(url, "mp4");
   if (fallback?.status && fallback?.dl) {

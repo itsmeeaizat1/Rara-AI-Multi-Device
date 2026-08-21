@@ -144,8 +144,8 @@ async function convertToOgg(inputBuffer, inputExt = ".mp3") {
   } catch {
     return null;
   } finally {
-    try { fs.unlinkSync(inFile); } catch {}
-    try { fs.unlinkSync(outFile); } catch {}
+    try { fs.unlinkSync(inFile); } catch (e) { console.error('[predictivenudge.js]:', e.message); }
+    try { fs.unlinkSync(outFile); } catch (e) { console.error('[predictivenudge.js]:', e.message); }
   }
 }
 
@@ -335,7 +335,7 @@ async function generateAINudge(pattern, userData, botConfig) {
         const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
         if (text && text.trim().length > 5) return text.trim();
       }
-    } catch {}
+    } catch (e) { console.error('[predictivenudge.js]:', e.message); }
   }
 
   return null;

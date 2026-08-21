@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
     try {
         fs.unlinkSync(inputPath);
         fs.unlinkSync(outputPath);
-    } catch (e) {}
+    } catch (e) { console.error('[hdvid.js]:', e.message); }
   } catch (err) {
     await m.reply(claraWrap("hdvid", `❌ Maaf kak, proses enhance videonya gagal! 😭\n\nDetail: ${err.message}`));
   }

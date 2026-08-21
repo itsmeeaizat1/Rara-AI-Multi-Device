@@ -43,7 +43,7 @@ export async function checkHotWord(m, sock, db) {
       cfg.totalDetected = (cfg.totalDetected || 0) + 1;
 
       if (action === "delete") {
-        try { sock.sendMessage(groupId, { delete: m.key }); } catch {}
+        try { sock.sendMessage(groupId, { delete: m.key }); } catch (e) { console.error('[antihotword.js]:', e.message); }
       }
 
       if (action === "alert" || action === "warn") {
@@ -53,7 +53,7 @@ export async function checkHotWord(m, sock, db) {
         try {
           metadata = await sock.groupMetadata(groupId);
           adminMentions = metadata.participants.filter((p) => p.admin).map((p) => p.id);
-        } catch {}
+        } catch (e) { console.error('[antihotword.js]:', e.message); }
 
         sock.sendMessage(groupId, {
           text: claraWrap("Anti Hot Word", [

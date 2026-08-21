@@ -16,7 +16,7 @@ function loadDB() {
     if (fs.existsSync(DB_PATH)) {
       return JSON.parse(fs.readFileSync(DB_PATH, "utf-8"));
     }
-  } catch (e) {}
+  } catch (e) { console.error('[agenda.js]:', e.message); }
   return { groups: {} };
 }
 
@@ -274,7 +274,7 @@ function startAgendaChecker() {
                 await sock.sendMessage(groupId, {
                   text: claraWrap("Agenda - Pengingat", lines.join("\n")),
                 });
-              } catch (e) {}
+              } catch (e) { console.error('[agenda.js]:', e.message); }
 
               updateEvent(groupId, event.id, (e) => { e.reminded1h = true; });
             }
@@ -295,7 +295,7 @@ function startAgendaChecker() {
                 await sock.sendMessage(groupId, {
                   text: claraWrap("Agenda - Pengingat", lines.join("\n")),
                 });
-              } catch (e) {}
+              } catch (e) { console.error('[agenda.js]:', e.message); }
 
               updateEvent(groupId, event.id, (e) => { e.reminded1d = true; });
             }
@@ -315,7 +315,7 @@ function startAgendaChecker() {
                 await sock.sendMessage(groupId, {
                   text: claraWrap("Agenda - Waktu Tiba", lines.join("\n")),
                 });
-              } catch (e) {}
+              } catch (e) { console.error('[agenda.js]:', e.message); }
 
               updateEvent(groupId, event.id, (e) => {
                 e.notified = true;

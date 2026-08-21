@@ -25,7 +25,7 @@ async function getAudioDownload(url) {
     if (download) {
       return { download, title };
     }
-  } catch {}
+  } catch (e) { console.error('[ytmp3.js]:', e.message); }
 
   const fallback = await ytdl(url, "mp3");
   if (fallback?.status && fallback?.dl) {

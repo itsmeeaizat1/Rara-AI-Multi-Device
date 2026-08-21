@@ -80,7 +80,7 @@ async function handler(m, { sock, args, config: botConfig }) {
           `Sekarang istirahat ${formatTime(s.breakMs)}`,
           `Total fokus hari ini: ${formatTime(s.totalFocusMs)}`,
         ].join("\n")),
-      }).catch(() => {});
+      }).catch((e) => { console.error('[pomodoro.js]:', e.message); });
 
       // Schedule break end
       setTimeout(async () => {
@@ -95,7 +95,7 @@ async function handler(m, { sock, args, config: botConfig }) {
             `Cycle: ${s2.cycles}x selesai`,
             `Ketik ${prefix}pomodoro stop untuk berhenti`,
           ].join("\n")),
-        }).catch(() => {});
+        }).catch((e) => { console.error('[pomodoro.js]:', e.message); });
       }, breakMin * 60 * 1000);
     }, focusMin * 60 * 1000);
 

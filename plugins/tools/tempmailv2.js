@@ -52,7 +52,7 @@ async function apiDeleteMessage(id, email) {
   const res = await fetch(url, { method: "DELETE", headers: { Accept: "application/json" } });
   if (!res.ok && res.status !== 204) {
     let errMsg = "HTTP " + res.status;
-    try { const data = await res.json(); errMsg = data?.error?.message || errMsg; } catch {}
+    try { const data = await res.json(); errMsg = data?.error?.message || errMsg; } catch (e) { console.error('[tempmailv2.js]:', e.message); }
     throw new Error(errMsg);
   }
   return true;
