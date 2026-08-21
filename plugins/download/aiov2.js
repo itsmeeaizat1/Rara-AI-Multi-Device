@@ -19,9 +19,9 @@ const pluginConfig = {
   isEnabled: true,
 };
 
+import { getSankaConfig } from "../../../src/lib/config/env-loader.js";
+const sankaConfig = getSankaConfig();
 const API_BASE = sankaConfig.baseUrl;
-import fs from "node:fs";
-const sankaConfig = JSON.parse(fs.readFileSync(new URL("../../../src/lib/config/sankavollerei-api.json", import.meta.url), "utf8"));
 const API_KEY = sankaConfig.apikey;
 
 // === RATE LIMITER (25 req/min) ===

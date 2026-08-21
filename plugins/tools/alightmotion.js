@@ -8,7 +8,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-const andarazConfig = JSON.parse(fs.readFileSync(new URL("../../../src/lib/config/andaraz-api.json", import.meta.url), "utf8"));
+import { getAndarazConfig } from "../../../src/lib/config/env-loader.js";
+const andarazConfig = getAndarazConfig();
 
 const pluginConfig = {
   name: "amprem",

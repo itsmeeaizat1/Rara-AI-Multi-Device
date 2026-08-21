@@ -3,7 +3,8 @@ import { getDatabase } from "./src/lib/nova-database.js";
 import * as ownerPremiumDb from "./src/lib/nova-premium-db.js";
 import { payment, donasi } from "./config/setpayment.js";
 import fs from "node:fs";
-const apikeysConfig = JSON.parse(fs.readFileSync(new URL("./src/lib/config/apikeys.json", import.meta.url), "utf8"));
+import { getApiKeys, getDeepAiKey } from "./src/lib/config/env-loader.js";
+const apikeysConfig = getApiKeys();
 
 //  utamakan baca object config sampai bawah
 const config = {
@@ -171,7 +172,7 @@ const config = {
 
   // DeepAI API (torch-srgan untuk .reminiv3)
   deepai: {
-    apiKey: "8da09d78-7f83-42c2-a0a3-fd69628f98bd",
+    apiKey: getDeepAiKey(),
   },
 
   // Email OTP configuration (recommended: set via environment variables)
@@ -311,9 +312,9 @@ const config = {
   // bisa dikosongin
   pterodactyl: {
     server1: {
-      domain: "https://benefit-utils-protective-nebraska.trycloudflare.com",
-      apikey: "ptla_jSBrjeEFXXCZVt1DytYqMu9TyFlGre04xATB5Ijl4YN",
-      capikey: "ptla_jSBrjeEFXXCZVt1DytYqMu9TyFlGre04xATB5Ijl4YN",
+      domain: process.env.PTERO_SERVER1_DOMAIN || "",
+      apikey: process.env.PTERO_SERVER1_APIKEY || "",
+      capikey: process.env.PTERO_SERVER1_CAPIKEY || "",
       egg: "15",
       nestid: "5",
       location: "1",
