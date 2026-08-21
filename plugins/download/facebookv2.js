@@ -19,7 +19,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-import { getSankaConfig } from "../../../src/lib/config/env-loader.js";
+import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 const sankaConfig = getSankaConfig();
 const API_BASE = sankaConfig.baseUrl;
 const API_KEY = sankaConfig.apikey;

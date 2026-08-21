@@ -135,4 +135,4 @@ function generateWAMessageInteractive(chat, body, buttons) {
   return msg;
 }
 
-export { sendReplyWithNav };
+export { sendReplyWithNav, isNavButtonsEnabled };
