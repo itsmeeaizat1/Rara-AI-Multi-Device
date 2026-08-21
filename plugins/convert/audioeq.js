@@ -96,7 +96,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "treble=g=" + trebleGain + ":f=5000:w=0.5",
     ].join(",");
 
-    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -c:a libopus -b:a 64k "' + outputPath + '"');
+    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -b:a 64k "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
       return m.reply(claraWrap("Audio EQ", "Gagal apply EQ."));

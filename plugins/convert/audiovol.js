@@ -50,7 +50,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       filter = "volume=" + volumeFactor.toFixed(2) + ",alimiter=limit=0.95:level=disabled";
     }
 
-    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -c:a libopus -b:a 64k "' + outputPath + '"');
+    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -b:a 64k "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
       return m.reply(claraWrap("Audio Volume", "Gagal ubah volume audio."));

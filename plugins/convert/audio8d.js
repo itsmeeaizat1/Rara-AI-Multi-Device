@@ -58,7 +58,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "loudnorm=I=-16:TP=-1.5:LRA=11",
     ].join(",");
 
-    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -c:a libopus -b:a 64k "' + outputPath + '"');
+    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -b:a 64k "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
       return m.reply(claraWrap("Audio 8D", "Gagal proses 8D audio."));

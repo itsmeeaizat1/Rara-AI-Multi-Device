@@ -63,7 +63,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     atempoParts.push("atempo=" + remaining.toFixed(6));
     filter = "asetrate=44100*" + pitchFactor.toFixed(6) + "," + atempoParts.join(",");
 
-    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -c:a libopus -b:a 64k "' + outputPath + '"');
+    await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + filter + '" -c:a libopus -b:a 64k "' + outputPath + '"');
 
     if (!fs.existsSync(outputPath)) {
       return m.reply(claraWrap("Audio Pitch", "Gagal ubah pitch audio."));

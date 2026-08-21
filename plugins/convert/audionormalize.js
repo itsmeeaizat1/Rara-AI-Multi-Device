@@ -48,7 +48,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     fs.writeFileSync(inputPath, buffer);
 
     const filter = MODES[mode].filter;
-    await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -af "${filter}" -c:a libopus -c:a libopus -b:a 64k "${outputPath}"`);
+    await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -af "${filter}" -c:a libopus -b:a 64k "${outputPath}"`);
 
     if (!fs.existsSync(outputPath)) {
       return m.reply(claraWrap("Audio Normalize", "Gagal normalize audio. Coba lagi."));
