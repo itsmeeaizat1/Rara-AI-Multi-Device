@@ -293,10 +293,6 @@ async function handler(m, { sock, db }) {
         `_Pilih grup dari daftar di bawah:_`,
       contextInfo: {
         ...saluranCtx(),
-        forwardedNewsletterMessageInfo: {
-          newsletterJid: botConfig?.saluran?.id,
-          newsletterName: botConfig?.saluran?.name,
-        },
       },
       footer: "NOVA MD",
       interactiveButtons: [

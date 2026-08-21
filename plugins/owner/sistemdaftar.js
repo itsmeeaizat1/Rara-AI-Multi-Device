@@ -11,11 +11,6 @@ function getRegistrationContextInfo() {
   return {
     forwardingScore: 0,
     isForwarded: false,
-    forwardedNewsletterMessageInfo: {
-      newsletterJid: saluranId,
-      newsletterName: saluranName,
-      serverMessageId: 127,
-    },
   };
 }
 

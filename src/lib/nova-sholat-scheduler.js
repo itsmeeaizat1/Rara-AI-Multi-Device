@@ -231,11 +231,6 @@ async function sendReminderNotification(sholat, reminderTime, kotaNama) {
           text: msg,
           contextInfo: {
             ...saluranCtx(),
-            forwardedNewsletterMessageInfo: {
-              newsletterJid: saluranId,
-              newsletterName: saluranName,
-              serverMessageId: 127,
-            },
           },
         });
         sent++;
@@ -279,11 +274,6 @@ async function sendIqamahNotification(sholat, iqamahTime, kotaNama) {
           text: msg,
           contextInfo: {
             ...saluranCtx(),
-            forwardedNewsletterMessageInfo: {
-              newsletterJid: saluranId,
-              newsletterName: saluranName,
-              serverMessageId: 127,
-            },
           },
         });
         sent++;
@@ -352,11 +342,6 @@ async function sendSholatNotifications(sholat, waktu) {
               ptt: false,
               contextInfo: {
                 ...saluranCtx(),
-                forwardedNewsletterMessageInfo: {
-                  newsletterJid: saluranId,
-                  newsletterName: saluranName,
-                  serverMessageId: 127,
-                },
               },
             });
           } catch (audioErr) {
@@ -368,11 +353,6 @@ async function sendSholatNotifications(sholat, waktu) {
           text: message,
           contextInfo: {
             ...saluranCtx(),
-            forwardedNewsletterMessageInfo: {
-              newsletterJid: saluranId,
-              newsletterName: saluranName,
-              serverMessageId: 127,
-            },
           },
         });
 
@@ -409,11 +389,6 @@ async function sendSholatNotifications(sholat, waktu) {
                 contextInfo: {
                   forwardingScore: 0,
                   isForwarded: false,
-                  forwardedNewsletterMessageInfo: {
-                    newsletterJid: saluranId,
-                    newsletterName: saluranName,
-                    serverMessageId: 127,
-                  },
                 },
               });
               await new Promise((r) => setTimeout(r, 600));

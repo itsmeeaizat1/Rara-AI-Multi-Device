@@ -818,13 +818,6 @@ async function startConnection(options = {}) {
             forwardingScore: 0,
             isForwarded: false,
           };
-          if (saluranId && saluranId !== "@newsletter") {
-            ctxInfo.forwardedNewsletterMessageInfo = {
-              newsletterJid: saluranId,
-              newsletterName: saluranName,
-              serverMessageId: 127,
-            };
-          }
           await sock.sendMessage(event.id, {
             text: welcomeText,
             contextInfo: ctxInfo,

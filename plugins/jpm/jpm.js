@@ -249,11 +249,6 @@ async function sendInteractiveMessage(
               mentionedJid: [m.sender],
               forwardingScore: 0,
               isForwarded: false,
-              forwardedNewsletterMessageInfo: {
-                newsletterJid: saluranId,
-                newsletterName: saluranName,
-                serverMessageId: 127,
-              },
             },
           }),
         },

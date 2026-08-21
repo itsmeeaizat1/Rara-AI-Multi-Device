@@ -141,11 +141,6 @@ async function replyHandler(m, { sock }) {
       contextInfo: {
         forwardingScore: 0,
         isForwarded: false,
-        forwardedNewsletterMessageInfo: {
-          newsletterJid: saluranId,
-          newsletterName: saluranName,
-          serverMessageId: 127,
-        },
       },
     });
 

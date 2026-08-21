@@ -212,10 +212,6 @@ async function handler(m, { sock, db }) {
         `_Tekan konfirmasi untuk melanjutkan._`,
       contextInfo: {
         ...saluranCtx(),
-        forwardedNewsletterMessageInfo: {
-          newsletterJid: botConfig?.saluran?.id,
-          newsletterName: botConfig?.saluran?.name,
-        },
       },
       footer: "NOVA MD",
       interactiveButtons: [

@@ -203,11 +203,6 @@ async function handler(m, { sock }) {
                   mentionedJid: [m.sender, groupOwner],
                   forwardingScore: 0,
                   isForwarded: false,
-                  forwardedNewsletterMessageInfo: {
-                    newsletterJid: saluranId,
-                    newsletterName: saluranName,
-                    serverMessageId: 127,
-                  },
                 },
               }),
             },
@@ -242,11 +237,6 @@ async function handler(m, { sock }) {
                   mentionedJid: [m.sender, groupOwner],
                   forwardingScore: 0,
                   isForwarded: false,
-                  forwardedNewsletterMessageInfo: {
-                    newsletterJid: saluranId,
-                    newsletterName: saluranName,
-                    serverMessageId: 127,
-                  },
                 },
               }),
             },
