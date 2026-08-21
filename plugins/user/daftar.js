@@ -362,6 +362,7 @@ async function handler(m, { sock }) {
           `🚀 Sekarang kamu sudah siap menggunakan bot!`,
         contextInfo: getRegistrationContextInfo(),
       }, { quoted: m });
+      return;
     }
   }
 
@@ -665,12 +666,14 @@ async function registrationAnswerHandler(m, sock) {
     const finalName = session.name;
     const finalAge = session.age;
     const finalGender = session.gender;
+    const serial = currentUser.regSerial || generateSerialNumber();
 
     db.setUser(m.sender, {
       isRegistered: true,
       regName: finalName,
       regAge: finalAge,
       regGender: finalGender,
+      regSerial: serial,
       registeredAt: currentUser.registeredAt || now,
       lastRegisteredAt: now,
       registrationCount,
