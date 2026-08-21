@@ -3,7 +3,7 @@ import { getDatabase } from "./src/lib/nova-database.js";
 import * as ownerPremiumDb from "./src/lib/nova-premium-db.js";
 import { payment, donasi } from "./config/setpayment.js";
 import fs from "node:fs";
-import { getApiKeys, getPteroConfig } from "./src/lib/config/env-loader.js";
+import { getApiKeys, getTioKey, getPteroConfig } from "./src/lib/config/env-loader.js";
 const apikeysConfig = getApiKeys();
 
 //  utamakan baca object config sampai bawah
@@ -209,21 +209,21 @@ const config = {
     // API KEY PER FORMAT - isi sendiri di sini
     // ═══════════════════════════════════════════
     // OpenAI format:    /v1/chat/completions
-    openaiApiKey: "",
+    openaiApiKey: getTioKey(),
     // Gemini format:   /v1beta/models/{model}:generateContent
-    geminiApiKey: "",
+    geminiApiKey: getTioKey(),
     // Anthropic format: /v1/messages
-    anthropicApiKey: "",
+    anthropicApiKey: getTioKey(),
     // ClipDrop API key untuk watermark remover (.nowm) — gratis 100 credits di clipdrop.co/apis
     clipdropApiKey: "",
     // Fallback key (kalau per-format kosong, pakai ini)
     apiKey: "",
     // ═══════════════════════════════════════════
     // Default model per format (bisa diganti via .tio model)
-    openaiModel: "deepseek-v4-flash:free",
-    geminiModel: "deepseek-v4-flash:free",
-    anthropicModel: "deepseek-v4-flash:free",
-    model: "deepseek-v4-flash:free",
+    openaiModel: "kilo-auto/free",
+    geminiModel: "kilo-auto/free",
+    anthropicModel: "kilo-auto/free",
+    model: "kilo-auto/free",
     systemPrompt: "Kamu adalah Nova AI, asisten yang ramah, cerdas, dan helpful. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia. Gunakan emoji yang sesuai dan jawab dengan singkat tapi jelas.",
     // System prompt khusus untuk AI Grup (nimbrung otomatis)
     aigrupSystemPrompt: "Kamu adalah teman dalam grup WhatsApp. Namamu Nova. Kamu sedang ikut nimbrung dalam percakapan grup. Jawab santai, singkat, dan natural seperti chat biasa. Jangan jawab terlalu panjang (maksimal 2-3 kalimat). Pakai bahasa gaul/sehari-hari. Boleh pakai emoji secukupnya, taruh di akhir kalimat saja. JANGAN mulai pesan dengan emoji. Jangan kaku. JANGAN mengaku sebagai AI/bot. Kamu teman biasa.",

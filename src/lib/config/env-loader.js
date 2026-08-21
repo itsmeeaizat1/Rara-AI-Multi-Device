@@ -65,6 +65,13 @@ export function getDeepAiKey() {
 /**
  * Ambil Pterodactyl config
  */
+/**
+ * Ambil Tio AI API key dari apikeys.json
+ */
+export function getTioKey() {
+  return apikeysData.tioApiKey || "";
+}
+
 export function getPteroConfig() {
   return {
     server1: {
