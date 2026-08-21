@@ -166,13 +166,7 @@ async function handler(m, { sock, db }) {
             interactiveMessage: {
               header: {
                 title: "", subtitle: "",
-                hasMediaAttachment: true,
-                locationMessage: {
-                  degreesLatitude: 0, degreesLongitude: 0,
-                  name: config.bot?.name || "Nova-AI",
-                  address: `v${config.bot?.version || "1.0.0"}`,
-                  jpegThumbnail: thumbCat1,
-                },
+                hasMediaAttachment: false,
               },
               body: { text: txt },
               footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
@@ -182,6 +176,15 @@ async function handler(m, { sock, db }) {
                 participant: "0@s.whatsapp.net",
                 quotedMessage: { conversation: `${config.bot?.name}` },
                 mentionedJid: [m.sender],
+                externalAdReply: {
+                  title: config.bot?.name || "Nova AI WhatsApp Bot",
+                  body: `v${config.bot?.version || "1.0.0"}`,
+                  sourceUrl: config.saluran?.link || "",
+                  previewType: "PHOTO",
+                  showAdAttribution: false,
+                  renderLargerThumbnail: true,
+                  thumbnail: thumbCat1,
+                },
               },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({
@@ -261,13 +264,7 @@ async function handler(m, { sock, db }) {
           interactiveMessage: {
             header: {
               title: "", subtitle: "",
-              hasMediaAttachment: true,
-              locationMessage: {
-                degreesLatitude: 0, degreesLongitude: 0,
-                name: config.bot?.name || "Nova-AI",
-                address: `v${config.bot?.version || "1.0.0"}`,
-                jpegThumbnail: thumbCat2,
-              },
+              hasMediaAttachment: false,
             },
             body: { text: txt },
             footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
@@ -277,6 +274,15 @@ async function handler(m, { sock, db }) {
               participant: "0@s.whatsapp.net",
               quotedMessage: { conversation: `${config.bot?.name}` },
               mentionedJid: [m.sender],
+              externalAdReply: {
+                title: config.bot?.name || "Nova AI WhatsApp Bot",
+                body: `v${config.bot?.version || "1.0.0"}`,
+                sourceUrl: config.saluran?.link || "",
+                previewType: "PHOTO",
+                showAdAttribution: false,
+                renderLargerThumbnail: true,
+                thumbnail: thumbCat2,
+              },
             },
             nativeFlowMessage: {
               messageParamsJson: JSON.stringify({

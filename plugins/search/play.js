@@ -31,27 +31,12 @@ function formatViews(n) {
 }
 
 async function getPlayAudioDownload(url) {
-  try {
-    const apiUrl = `https://api.cuki.biz.id/api/downloader/ytmp3?apikey=${config.APIkey.cuki}&url=${encodeURIComponent(url)}&quality=128`;
-    const res = await axios.get(apiUrl, { timeout: 30000 });
-    const data = res.data;
-
-    if (data.success && data.data?.audio?.download?.downloadUrl) {
-      return { 
-        download: data.data.audio.download.downloadUrl, 
-        title: data.data.metadata?.title || "Audio"
-      };
-    }
-  } catch (err) {
-    console.error("[Play API error]", err.message);
+  // Langsung pakai ytdl (ytmp3.mobi) — Cuki API CF-blocked
+  const result = await ytdl(url, "mp3");
+  if (result?.status && result?.dl) {
+    return { download: result.dl, title: result.title, isFallback: true };
   }
-
-  const fallback = await ytdl(url, "mp3");
-  if (fallback?.status && fallback?.dl) {
-    return { download: fallback.dl, title: fallback.title, isFallback: true };
-  }
-
-  throw new Error(fallback?.mess || "Gagal mendapatkan audio play URL");
+  throw new Error(result?.mess || "Gagal mendapatkan audio play URL");
 }
 
 async function handler(m, { sock, text }) {

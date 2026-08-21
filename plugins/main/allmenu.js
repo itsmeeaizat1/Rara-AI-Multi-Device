@@ -398,13 +398,7 @@ ${readMore}
             interactiveMessage: {
               header: {
                 title: "", subtitle: "",
-                hasMediaAttachment: true,
-                locationMessage: {
-                  degreesLatitude: 0, degreesLongitude: 0,
-                  name: botName,
-                  address: botVersion,
-                  jpegThumbnail: thumbV2All,
-                },
+                hasMediaAttachment: false,
               },
               body: { text: _weatherBlock + txt },
               footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
@@ -413,6 +407,12 @@ ${readMore}
                 participant: "0@s.whatsapp.net",
                 quotedMessage: { conversation: botName },
                 mentionedJid: [m.sender],
+                externalAdReply: {
+                  title: botName, body: botVersion,
+                  sourceUrl: config.saluran?.link || "",
+                  previewType: "PHOTO", showAdAttribution: false,
+                  renderLargerThumbnail: true, thumbnail: thumbV2All,
+                },
               },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({ limited_time_offer: { text: `${greeting}`, expiration_time: Date.now() + 1000000 } }),
@@ -434,17 +434,19 @@ ${readMore}
               messageContextInfo: {},
               interactiveMessage: {
                 header: {
-                  hasMediaAttachment: true,
-                  locationMessage: {
-                    degreesLatitude: 0, degreesLongitude: 0,
-                    name: botName,
-                    address: (await getWeatherAddress()) || botVersion,
-                    jpegThumbnail: thumbnail,
-                  },
+                  hasMediaAttachment: false,
                 },
                 body: { text: _weatherBlock + txt },
                 footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
-                contextInfo: { mentionedJid: [m.sender], isForwarded: false },
+                contextInfo: {
+                  mentionedJid: [m.sender], isForwarded: false,
+                  externalAdReply: {
+                    title: botName, body: botVersion,
+                    sourceUrl: config.saluran?.link || "",
+                    previewType: "PHOTO", showAdAttribution: false,
+                    renderLargerThumbnail: true, thumbnail: thumbnail,
+                  },
+                },
                 nativeFlowMessage: {
                   buttons: buildButtons(prefix, true),
                 },
