@@ -58,12 +58,12 @@ async function handler(m, { sock, config: botConfig, args }) {
     if (!player.properties) player.properties = [];
 
     if (subCmd === "list") {
-      let lines = "╎❏ Daftar Properti Tersedia:\n\n";
+      let lines = "  ┊  ➶ Daftar Properti Tersedia:\n\n";
       for (const p of PROPERTIES) {
-        lines += `╎❏ *${p.name}*\n`;
-        lines += `╎  Harga  : ${p.price.toLocaleString()} gold\n`;
-        lines += `╎  Income : ${p.income}/hari\n`;
-        lines += `╎  Max Lv : ${p.maxLevel}\n\n`;
+        lines += `  ┊  ➶ *${p.name}*\n`;
+        lines += `┊  Harga  : ${p.price.toLocaleString()} gold\n`;
+        lines += `┊  Income : ${p.income}/hari\n`;
+        lines += `┊  Max Lv : ${p.maxLevel}\n\n`;
       }
       lines += tipText(`Ketik ${prefix}property buy <nama> untuk beli`);
       return m.reply(claraWrap("Property List", lines));
@@ -97,10 +97,10 @@ async function handler(m, { sock, config: botConfig, args }) {
       savePlayer(m, { gold: player.gold, properties: player.properties });
 
       return m.reply(claraWrap("Property Bought", [
-        `╎❏ *${prop.name}* berhasil dibeli!`,
-        `╎❏ Harga: ${prop.price.toLocaleString()} gold`,
-        `╎❏ Income: ${prop.income}/hari`,
-        `╎❏ Level: 1/${prop.maxLevel}`,
+        `  ┊  ➶ *${prop.name}* berhasil dibeli!`,
+        `  ┊  ➶ Harga: ${prop.price.toLocaleString()} gold`,
+        `  ┊  ➶ Income: ${prop.income}/hari`,
+        `  ┊  ➶ Level: 1/${prop.maxLevel}`,
         "",
         tipText(`Ketik ${prefix}property collect buat klaim income harian`),
       ].join("\n")));
@@ -126,9 +126,9 @@ async function handler(m, { sock, config: botConfig, args }) {
       savePlayer(m, { properties: player.properties });
 
       return m.reply(claraWrap("Property Income", [
-        `╎❏ ${collected} properti diklaim`,
-        `╎❏ Total income: ${totalIncome.toLocaleString()} gold`,
-        `╎❏ Saldo sekarang: ${(player.gold + totalIncome).toLocaleString()} gold`,
+        `  ┊  ➶ ${collected} properti diklaim`,
+        `  ┊  ➶ Total income: ${totalIncome.toLocaleString()} gold`,
+        `  ┊  ➶ Saldo sekarang: ${(player.gold + totalIncome).toLocaleString()} gold`,
         "",
         tipText("Klaim lagi besok ya!"),
       ].join("\n")));
@@ -157,9 +157,9 @@ async function handler(m, { sock, config: botConfig, args }) {
       savePlayer(m, { gold: player.gold, properties: player.properties });
 
       return m.reply(claraWrap("Property Upgraded", [
-        `╎❏ *${owned.name}* di-upgrade ke Lv.${owned.level}!`,
-        `╎❏ Biaya: ${upgradeCost.toLocaleString()} gold`,
-        `╎❏ Income baru: ${owned.income.toLocaleString()}/hari`,
+        `  ┊  ➶ *${owned.name}* di-upgrade ke Lv.${owned.level}!`,
+        `  ┊  ➶ Biaya: ${upgradeCost.toLocaleString()} gold`,
+        `  ┊  ➶ Income baru: ${owned.income.toLocaleString()}/hari`,
         "",
         tipText(`Max level: ${propDef.maxLevel}`),
       ].join("\n")));
@@ -168,24 +168,24 @@ async function handler(m, { sock, config: botConfig, args }) {
     // info (default)
     if (player.properties.length === 0) {
       return m.reply(claraWrap("Property", [
-        "╎❏ Kamu belum punya properti",
-        `╎❏ Ketik ${prefix}property list buat lihat daftar`,
-        `╎❏ Ketik ${prefix}property buy <nama> buat beli`,
+        "  ┊  ➶ Kamu belum punya properti",
+        `  ┊  ➶ Ketik ${prefix}property list buat lihat daftar`,
+        `  ┊  ➶ Ketik ${prefix}property buy <nama> buat beli`,
       ].join("\n")));
     }
 
-    let lines = "╎❏ Properti Kamu:\n\n";
+    let lines = "  ┊  ➶ Properti Kamu:\n\n";
     let totalDaily = 0;
     for (const prop of player.properties) {
       const propDef = PROPERTIES.find((p) => p.id === prop.id);
       const income = Math.floor(prop.income * Math.pow(INCOME_PER_LEVEL, prop.level - 1));
       const canCollect = prop.lastCollect !== today;
       totalDaily += income;
-      lines += `╎❏ *${prop.name}* (Lv.${prop.level}/${propDef.maxLevel})\n`;
-      lines += `╎  Income: ${income.toLocaleString()}/hari\n`;
-      lines += `╎  Status: ${canCollect ? "Bisa klaim!" : "Sudah klaim"}\n\n`;
+      lines += `  ┊  ➶ *${prop.name}* (Lv.${prop.level}/${propDef.maxLevel})\n`;
+      lines += `┊  Income: ${income.toLocaleString()}/hari\n`;
+      lines += `┊  Status: ${canCollect ? "Bisa klaim!" : "Sudah klaim"}\n\n`;
     }
-    lines += `╎❏ Total income/hari: ${totalDaily.toLocaleString()} gold\n`;
+    lines += `  ┊  ➶ Total income/hari: ${totalDaily.toLocaleString()} gold\n`;
     lines += tipText(`Ketik ${prefix}property collect buat klaim semua`);
 
     return m.reply(claraWrap("Property Info", lines));

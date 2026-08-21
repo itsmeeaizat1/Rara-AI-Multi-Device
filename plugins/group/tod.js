@@ -277,18 +277,18 @@ export default {
     if (new RegExp(`^${prefix}todon\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Truth or Dare", [
-          `╎ Status: *Akses Ditolak*`,
+          `┊ Status: *Akses Ditolak*`,
           ``,
-          `╎ Hanya owner yang bisa mengatur fitur ini.`,
+          `┊ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Truth or Dare", [
-        `╎ Status: *AKTIF* 🟢`,
+        `┊ Status: *AKTIF* 🟢`,
         ``,
-        `╎ Truth or Dare dinyalakan di grup ini.`,
-        `╎ Ketik *${prefix}tod* untuk mulai main!`,
+        `┊ Truth or Dare dinyalakan di grup ini.`,
+        `┊ Ketik *${prefix}tod* untuk mulai main!`,
       ].join("\n")));
       await m.react("✅");
       return { handled: true };
@@ -297,16 +297,16 @@ export default {
     if (new RegExp(`^${prefix}todoff\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Truth or Dare", [
-          `╎ Status: *Akses Ditolak*`,
+          `┊ Status: *Akses Ditolak*`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Truth or Dare", [
-        `╎ Status: *NONAKTIF* 🔴`,
+        `┊ Status: *NONAKTIF* 🔴`,
         ``,
-        `╎ Truth or Dare dimatikan.`,
-        `╎ Ketik *${prefix}todon* untuk aktifkan lagi.`,
+        `┊ Truth or Dare dimatikan.`,
+        `┊ Ketik *${prefix}todon* untuk aktifkan lagi.`,
       ].join("\n")));
       await m.react("✅");
       return { handled: true };
@@ -316,13 +316,13 @@ export default {
     if (new RegExp(`^${prefix}todstats\\b`, "i").test(raw)) {
       const stats = getStats(groupId);
       const lines = [
-        `╎ Statistik Truth or Dare Grup`,
+        `┊ Statistik Truth or Dare Grup`,
         ``,
-        `╎ Total ronde: *${stats.rounds}*`,
-        `╎ Truth diberikan: *${stats.truths}*`,
-        `╎ Dare diberikan: *${stats.dares}*`,
+        `┊ Total ronde: *${stats.rounds}*`,
+        `┊ Truth diberikan: *${stats.truths}*`,
+        `┊ Dare diberikan: *${stats.dares}*`,
         ``,
-        `╎ Status: ${isTodOn(groupId) ? "*AKTIF* 🟢" : "*NONAKTIF* 🔴"}`,
+        `┊ Status: ${isTodOn(groupId) ? "*AKTIF* 🟢" : "*NONAKTIF* 🔴"}`,
       ];
       await m.reply(claraWrap("Tod - Statistik", lines.join("\n")));
       await m.react("✅");
@@ -332,9 +332,9 @@ export default {
     // ─── Check if enabled ───
     if (!isTodOn(groupId)) {
       await m.reply(claraWrap("Truth or Dare", [
-        `╎ Status: *Nonaktif di grup ini*`,
+        `┊ Status: *Nonaktif di grup ini*`,
         ``,
-        `╎ Owner: ketik *${prefix}todon* untuk mengaktifkan.`,
+        `┊ Owner: ketik *${prefix}todon* untuk mengaktifkan.`,
       ].join("\n")));
       return { handled: true };
     }
@@ -342,8 +342,8 @@ export default {
     // ─── Group only check ───
     if (!groupId.endsWith("@g.us")) {
       await m.reply(claraWrap("Truth or Dare", [
-        `╎ Fitur ini khusus untuk grup.`,
-        `╎ Ajak teman kamu main di grup!`,
+        `┊ Fitur ini khusus untuk grup.`,
+        `┊ Ajak teman kamu main di grup!`,
       ].join("\n")));
       return { handled: true };
     }
@@ -365,20 +365,20 @@ export default {
     // ─── Help ───
     if (subCmd === "help" || subCmd === "bantu") {
       await m.reply(claraWrap("Tod - Bantuan", [
-        `╎ Cara Pakai Truth or Dare:`,
+        `┊ Cara Pakai Truth or Dare:`,
         ``,
-        `╎ 1. *${prefix}tod* - Random truth atau dare`,
-        `╎ 2. *${prefix}tod truth* - Paksa dapat pertanyaan jujur`,
-        `╎ 3. *${prefix}tod dare* - Paksa dapat tantangan seru`,
-        `╎ 4. *${prefix}tod confess* - Confession random`,
-        `╎ 5. *${prefix}tod target* - Bot tunjuk member random`,
+        `┊ 1. *${prefix}tod* - Random truth atau dare`,
+        `┊ 2. *${prefix}tod truth* - Paksa dapat pertanyaan jujur`,
+        `┊ 3. *${prefix}tod dare* - Paksa dapat tantangan seru`,
+        `┊ 4. *${prefix}tod confess* - Confession random`,
+        `┊ 5. *${prefix}tod target* - Bot tunjuk member random`,
         ``,
-        `╎ Owner:`,
-        `╎    *${prefix}todon* / *${prefix}todoff* - Toggle`,
-        `╎    *${prefix}todstats* - Statistik grup`,
+        `┊ Owner:`,
+        `┊    *${prefix}todon* / *${prefix}todoff* - Toggle`,
+        `┊    *${prefix}todstats* - Statistik grup`,
         ``,
-        `╎ 📌 Mainnya jujur ya, jangan skip!`,
-        `╎ 📌 Kalau dapat dare, lakuin ya, gak boleh kabur!`,
+        `┊ 📌 Mainnya jujur ya, jangan skip!`,
+        `┊ 📌 Kalau dapat dare, lakuin ya, gak boleh kabur!`,
       ].join("\n")));
       await m.react("✅");
       return { handled: true };
@@ -395,8 +395,8 @@ export default {
     if (subCmd === "target") {
       if (members.length === 0) {
         await m.reply(claraWrap("Truth or Dare", [
-          `╎ Tidak ada member lain yang bisa ditunjuk.`,
-          `╎ Coba lagi nanti ya!`,
+          `┊ Tidak ada member lain yang bisa ditunjuk.`,
+          `┊ Coba lagi nanti ya!`,
         ].join("\n")));
         await m.react("✅");
         return { handled: true };
@@ -412,15 +412,15 @@ export default {
       incrementStat(groupId, chosen);
 
       const lines = [
-        `╎ ${emoji} ${label.toUpperCase()} - Target Acak!`,
+        `┊ ${emoji} ${label.toUpperCase()} - Target Acak!`,
         ``,
-        `╎ Ditunjuk: ${displayName(target)}`,
-        `╎ Tantangan untuk: ${displayName(sender)}`,
+        `┊ Ditunjuk: ${displayName(target)}`,
+        `┊ Tantangan untuk: ${displayName(sender)}`,
         ``,
-        `╎ Pertanyaan/Tantangan:`,
-        `╎ *${prompt}*`,
+        `┊ Pertanyaan/Tantangan:`,
+        `┊ *${prompt}*`,
         ``,
-        `╎ ${chosen === "truth" ? "Jujur ya, jangan diplomasi!" : "Lakuin ya, jangan kabur!"}`,
+        `┊ ${chosen === "truth" ? "Jujur ya, jangan diplomasi!" : "Lakuin ya, jangan kabur!"}`,
       ];
 
       const text = claraWrap("Tod - Target", lines.join("\n")) +
@@ -482,25 +482,25 @@ export default {
     }
 
     const lines = [
-      `╎ ${emoji} ${label}`,
+      `┊ ${emoji} ${label}`,
       ``,
-      `╎ Untuk: ${displayName(sender)}`,
+      `┊ Untuk: ${displayName(sender)}`,
     ];
 
     if (targetMember) {
-      lines.push(`╎ Tapi tunjuk: ${displayName(targetMember)}`);
+      lines.push(`┊ Tapi tunjuk: ${displayName(targetMember)}`);
     }
 
     lines.push(
       ``,
-      `╎ Pertanyaan/Tantangan:`,
-      `╎ *${prompt}*`,
+      `┊ Pertanyaan/Tantangan:`,
+      `┊ *${prompt}*`,
       ``,
-      `╎ ${instruction}`
+      `┊ ${instruction}`
     );
 
     if (targetMember) {
-      lines.push(`╎ ${displayName(targetMember)} wajib respon ya!`);
+      lines.push(`┊ ${displayName(targetMember)} wajib respon ya!`);
     }
 
     let text = claraWrap(`Tod - ${label}`, lines.join("\n"));

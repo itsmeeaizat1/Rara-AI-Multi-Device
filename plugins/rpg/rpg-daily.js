@@ -21,7 +21,7 @@ async function handler(m, { sock, config: botConfig }) {
     
     const remaining = COOLDOWN - (Date.now() - user.lastDaily);
     if (remaining > 0) {
-      await sendReplyWithNav(sock, m, claraWrap("Daily Reward", [`╎❏ Tunggu: *${formatTime(remaining)}*`].join("\n")), "rpgdaily");
+      await sendReplyWithNav(sock, m, claraWrap("Daily Reward", [`  ┊  ➶ Tunggu: *${formatTime(remaining)}*`].join("\n")), "rpgdaily");
       return { handled: true };
     }
     
@@ -34,9 +34,9 @@ async function handler(m, { sock, config: botConfig }) {
     addUserExp(db, m.sender, exp);
     addUserMoney(db, m.sender, money);
     
-    await sendReplyWithNav(sock, m, claraWrap("Daily Reward", [`╎❏ EXP: *+${exp}* ✨`,
-      `╎❏ Money: *+Rp${money.toLocaleString("id-ID")}* 💰`,
-      `╎❏ Potion: *+${potion}* 🧪`].join("\n")) + "\n" + tipText(`Claim lagi besok ya!`), "rpgdaily");
+    await sendReplyWithNav(sock, m, claraWrap("Daily Reward", [`  ┊  ➶ EXP: *+${exp}* ✨`,
+      `  ┊  ➶ Money: *+Rp${money.toLocaleString("id-ID")}* 💰`,
+      `  ┊  ➶ Potion: *+${potion}* 🧪`].join("\n")) + "\n" + tipText(`Claim lagi besok ya!`), "rpgdaily");
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

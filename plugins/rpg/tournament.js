@@ -133,13 +133,13 @@ async function handler(m, { sock, config: botConfig, args }) {
 
       saveTournament(tour);
 
-      let lines = `╎❏ *${player.name || m.pushName}* bergabung!\n`;
-      lines += `╎❏ Peserta: ${tour.participants.length}/${MAX_PLAYERS}\n`;
-      lines += `╎❏ Entry fee: ${ENTRY_FEE.toLocaleString()} gold\n\n`;
+      let lines = `  ┊  ➶ *${player.name || m.pushName}* bergabung!\n`;
+      lines += `  ┊  ➶ Peserta: ${tour.participants.length}/${MAX_PLAYERS}\n`;
+      lines += `  ┊  ➶ Entry fee: ${ENTRY_FEE.toLocaleString()} gold\n\n`;
       if (tour.participants.length >= MIN_PLAYERS) {
-        lines += `╎❏ Turnamen bisa dimulai! Owner ketik ${prefix}tournament start\n`;
+        lines += `  ┊  ➶ Turnamen bisa dimulai! Owner ketik ${prefix}tournament start\n`;
       } else {
-        lines += `╎❏ Butuh ${MIN_PLAYERS - tour.participants.length} peserta lagi\n`;
+        lines += `  ┊  ➶ Butuh ${MIN_PLAYERS - tour.participants.length} peserta lagi\n`;
       }
       lines += tipText("Hadiah: 50K gold (Juara 1), 25K (Juara 2), 10K (Juara 3)");
       return m.reply(claraWrap("Tournament Joined", lines));
@@ -168,13 +168,13 @@ async function handler(m, { sock, config: botConfig, args }) {
       tour.status = "ongoing";
       saveTournament(tour);
 
-      let lines = `╎❏ Turnamen Mingguan Dimulai!\n`;
-      lines += `╎❏ Minggu: ${currentWeek}\n`;
-      lines += `╎❏ Peserta: ${tour.bracket.length}\n`;
-      lines += `╎❏ Round: 1 (Penyisihan)\n\n`;
-      lines += "╎❏ Bracket:\n";
+      let lines = `  ┊  ➶ Turnamen Mingguan Dimulai!\n`;
+      lines += `  ┊  ➶ Minggu: ${currentWeek}\n`;
+      lines += `  ┊  ➶ Peserta: ${tour.bracket.length}\n`;
+      lines += `  ┊  ➶ Round: 1 (Penyisihan)\n\n`;
+      lines += "  ┊  ➶ Bracket:\n";
       for (let i = 0; i < tour.bracket.length; i++) {
-        lines += `╎  ${i + 1}. ${tour.bracket[i].name} (Lv.${tour.bracket[i].level})\n`;
+        lines += `┊  ${i + 1}. ${tour.bracket[i].name} (Lv.${tour.bracket[i].level})\n`;
       }
       lines += tipText(`Ketik ${prefix}tournament fight buat adu`);
       return m.reply(claraWrap("Tournament Started", lines));
@@ -197,9 +197,9 @@ async function handler(m, { sock, config: botConfig, args }) {
         addGold(m, PRIZE_POOL[1]);
         addExp(m, 500);
         return m.reply(claraWrap("Tournament Champion", [
-          `╎❏ *SELAMAT! ${me.name}* JUARA 1!`,
-          `╎❏ Hadiah: ${PRIZE_POOL[1].toLocaleString()} gold + 500 EXP`,
-          "╎❏ Turnamen selesai!",
+          `  ┊  ➶ *SELAMAT! ${me.name}* JUARA 1!`,
+          `  ┊  ➶ Hadiah: ${PRIZE_POOL[1].toLocaleString()} gold + 500 EXP`,
+          "  ┊  ➶ Turnamen selesai!",
         ].join("\n")));
       }
 
@@ -210,11 +210,11 @@ async function handler(m, { sock, config: botConfig, args }) {
 
       const aliveCount = tour.bracket.filter((p) => p.alive).length;
 
-      let lines = `╎❏ Battle Round ${tour.round}\n`;
-      lines += `╎❏ ${me.name} vs ${opponent.name}\n\n`;
-      lines += `╎❏ Pemenang: *${result.winner.name}*\n`;
-      lines += `╎❏ Kalah: ${result.loser.name}\n`;
-      lines += `╎❏ Sisa peserta: ${aliveCount}\n`;
+      let lines = `  ┊  ➶ Battle Round ${tour.round}\n`;
+      lines += `  ┊  ➶ ${me.name} vs ${opponent.name}\n\n`;
+      lines += `  ┊  ➶ Pemenang: *${result.winner.name}*\n`;
+      lines += `  ┊  ➶ Kalah: ${result.loser.name}\n`;
+      lines += `  ┊  ➶ Sisa peserta: ${aliveCount}\n`;
 
       if (aliveCount <= 1) {
         const champion = tour.bracket.find((p) => p.alive);
@@ -223,14 +223,14 @@ async function handler(m, { sock, config: botConfig, args }) {
         saveTournament(tour);
         addGold(m, PRIZE_POOL[1]);
         addExp(m, 500);
-        lines += `\n╎❏ *SELAMAT! ${champion.name}* JUARA 1!\n`;
-        lines += `╎❏ Hadiah: ${PRIZE_POOL[1].toLocaleString()} gold + 500 EXP\n`;
+        lines += `\n  ┊  ➶ *SELAMAT! ${champion.name}* JUARA 1!\n`;
+        lines += `  ┊  ➶ Hadiah: ${PRIZE_POOL[1].toLocaleString()} gold + 500 EXP\n`;
       } else if (aliveCount <= 3 && !tour.bracket.find((p) => p.alive && p.id !== m.sender && p.place === 0)) {
         const alive = tour.bracket.filter((p) => p.alive);
         if (alive.length === 3) {
           alive.forEach((p) => { if (p.id !== result.winner.id) { p.place = 3; } });
           saveTournament(tour);
-          lines += `\n╎❏ Semifinal selanjutnya! Sisa ${aliveCount} peserta\n`;
+          lines += `\n  ┊  ➶ Semifinal selanjutnya! Sisa ${aliveCount} peserta\n`;
         }
       }
       lines += tipText(`Ketik ${prefix}tournament fight lagi buat round selanjutnya`);
@@ -241,36 +241,36 @@ async function handler(m, { sock, config: botConfig, args }) {
       if (tour.bracket.length === 0) {
         return m.reply(claraWrap("Tournament", "Bracket belum dibuat. Ketik .tournament join dulu."));
       }
-      let lines = `╎❏ Turnamen Minggu: ${currentWeek}\n`;
-      lines += `╎❏ Status: ${tour.status}\n`;
-      lines += `╎❏ Round: ${tour.round}\n\n`;
-      lines += "╎❏ Peserta:\n";
+      let lines = `  ┊  ➶ Turnamen Minggu: ${currentWeek}\n`;
+      lines += `  ┊  ➶ Status: ${tour.status}\n`;
+      lines += `  ┊  ➶ Round: ${tour.round}\n\n`;
+      lines += "  ┊  ➶ Peserta:\n";
       for (const p of tour.bracket) {
         const status = p.alive ? "MASIH HIDUP" : "KELUAR";
-        lines += `╎  ${p.name} (Lv.${p.level}) - ${status}\n`;
+        lines += `┊  ${p.name} (Lv.${p.level}) - ${status}\n`;
       }
       lines += tipText(`Ketik ${prefix}tournament fight buat bertarung`);
       return m.reply(claraWrap("Tournament Bracket", lines));
     }
 
     // status (default)
-    let lines = `╎❏ Turnamen RPG Mingguan\n`;
-    lines += `╎❏ Minggu: ${currentWeek}\n`;
-    lines += `╎❏ Status: ${tour.status}\n`;
-    lines += `╎❏ Peserta: ${tour.participants.length}/${MAX_PLAYERS}\n\n`;
+    let lines = `  ┊  ➶ Turnamen RPG Mingguan\n`;
+    lines += `  ┊  ➶ Minggu: ${currentWeek}\n`;
+    lines += `  ┊  ➶ Status: ${tour.status}\n`;
+    lines += `  ┊  ➶ Peserta: ${tour.participants.length}/${MAX_PLAYERS}\n\n`;
     if (tour.status === "open") {
-      lines += `╎❏ Entry fee: ${ENTRY_FEE.toLocaleString()} gold\n`;
-      lines += `╎❏ Hadiah:\n`;
-      lines += `╎  Juara 1: ${PRIZE_POOL[1].toLocaleString()} gold\n`;
-      lines += `╎  Juara 2: ${PRIZE_POOL[2].toLocaleString()} gold\n`;
-      lines += `╎  Juara 3: ${PRIZE_POOL[3].toLocaleString()} gold\n\n`;
+      lines += `  ┊  ➶ Entry fee: ${ENTRY_FEE.toLocaleString()} gold\n`;
+      lines += `  ┊  ➶ Hadiah:\n`;
+      lines += `┊  Juara 1: ${PRIZE_POOL[1].toLocaleString()} gold\n`;
+      lines += `┊  Juara 2: ${PRIZE_POOL[2].toLocaleString()} gold\n`;
+      lines += `┊  Juara 3: ${PRIZE_POOL[3].toLocaleString()} gold\n\n`;
       lines += tipText(`Ketik ${prefix}tournament join buat ikut`);
     } else if (tour.status === "ongoing") {
-      lines += `╎❏ Round: ${tour.round}\n`;
-      lines += `╎❏ Sisa: ${tour.bracket.filter((p) => p.alive).length} peserta\n`;
+      lines += `  ┊  ➶ Round: ${tour.round}\n`;
+      lines += `  ┊  ➶ Sisa: ${tour.bracket.filter((p) => p.alive).length} peserta\n`;
       lines += tipText(`Ketik ${prefix}tournament fight buat bertarung`);
     } else {
-      lines += `╎❏ Turnamen sudah selesai minggu ini\n`;
+      lines += `  ┊  ➶ Turnamen sudah selesai minggu ini\n`;
       lines += tipText("Tunggu turnamen minggu depan");
     }
     return m.reply(claraWrap("Tournament", lines));

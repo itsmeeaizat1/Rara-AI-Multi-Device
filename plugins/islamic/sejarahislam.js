@@ -33,33 +33,8 @@ async function handler(m, { sock }) {
     const action = args[0];
 
     if (!action) {
-      let txt = "╔┈┈「 SEJARAH ISLAM 」╎❏\n";
-      txt += "╚┈┈❖\n";
-      txt += "Sejarah Islam & info surat dari API online.\n\n";
-      txt += "*Perintah:*\n";
-      txt += "1. .sejarahislam info <nomor surat> — Info sejarah surat\n";
-      txt += "2. .sejarahislam daftarsurat — Daftar 114 surat\n";
-      txt += "3. .sejarahislam turun <mekah/madinah> — Filter surat\n\n";
-      txt += "*Contoh:*\n";
-      txt += ".sejarahislam info 2 — Sejarah Surat Al-Baqarah\n";
-      txt += ".sejarahislam info 18 — Sejarah Surat Al-Kahfi\n";
-      txt += ".sejarahislam daftarsurat\n";
-      txt += ".sejarahislam turun mekah";
-      return await sendReplyWithNav(sock, m, txt, "sejarahislam");
-    }
-
-    // INFO SURAT - Dari equran.id
-    if (action === "info") {
-      const suratNum = parseInt(args[1]);
-      if (!suratNum || suratNum < 1 || suratNum > 114) {
-        return m.reply(claraWrap("Sejarahislam", "Nomor surat tidak valid! (1-114)\nContoh: .sejarahislam info 2"));
-      }
-
-      const surahData = await fetchJson(EQURAN_API + "/" + suratNum);
-      const s = surahData;
-
-      let txt = "╔┈┈「 SEJARAH SURAT 」╎❏\n";
-      txt += "╚┈┈❖\n";
+      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Perintah:  ┊  ➶\n";
+      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
       txt += "Surat: *" + s.nama_latin + "* (" + s.nama + ")\n";
       txt += "Arti: " + s.arti + "\n";
       txt += "Nomor: " + s.nomor + "\n";
@@ -73,8 +48,8 @@ async function handler(m, { sock }) {
     // DAFTAR SURAT
     if (action === "daftarsurat" || action === "list") {
       const allSurah = await fetchJson(EQURAN_API);
-      let txt = "╔┈┈「 DAFTAR 114 SURAT 」╎❏\n";
-      txt += "╚┈┈❖\n\n";
+      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ DAFTAR 114 SURAT  ┊  ➶\n";
+      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
 
       for (let i = 0; i < allSurah.length; i++) {
         const s = allSurah[i];
@@ -95,8 +70,8 @@ async function handler(m, { sock }) {
       const allSurah = await fetchJson(EQURAN_API);
       const filtered = allSurah.filter((s) => s.tempat_turun === tempat);
 
-      let txt = "╔┈┈「 SURAT TURUN DI " + (tempat === "mekah" ? "MEKKAH" : "MADINAH") + " 」╎❏\n";
-      txt += "╚┈┈❖\n";
+      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ SURAT TURUN DI " + (tempat === "mekah" ? "MEKKAH" : "MADINAH") + "  ┊  ➶\n";
+      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
       txt += "Total: " + filtered.length + " surat\n\n";
 
       for (const s of filtered) {

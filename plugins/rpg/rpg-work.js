@@ -31,12 +31,12 @@ async function handler(m, { sock, config: botConfig }) {
     
     const remaining = COOLDOWN - (Date.now() - user.lastWork);
     if (remaining > 0) {
-      await sendReplyWithNav(sock, m, claraWrap("Work", [`╎❏ Tunggu: *${formatTime(remaining)}*`].join("\n")), "rpgwork");
+      await sendReplyWithNav(sock, m, claraWrap("Work", [`  ┊  ➶ Tunggu: *${formatTime(remaining)}*`].join("\n")), "rpgwork");
       return { handled: true };
     }
     
     if (user.stamina < 10) {
-      await sendReplyWithNav(sock, m, claraWrap("Work", [`╎❏ Stamina: *${user.stamina}/100*`].join("\n")), "rpgwork");
+      await sendReplyWithNav(sock, m, claraWrap("Work", [`  ┊  ➶ Stamina: *${user.stamina}/100*`].join("\n")), "rpgwork");
       return { handled: true };
     }
     
@@ -46,9 +46,9 @@ async function handler(m, { sock, config: botConfig }) {
     addUserExp(db, m.sender, job.exp);
     addUserMoney(db, m.sender, job.money);
     
-    await sendReplyWithNav(sock, m, claraWrap("Work", [`╎❏ Pekerjaan: *${job.name}*`,
-      `╎❏ Stamina: *-${job.stamina}* ⚡`,
-      `╎❏ Sisa: *${user.stamina}/100*`].join("\n")) + "\n\n" + claraWrap("Gaji", [`╎❏ EXP: *+${job.exp}* ✨`, `╎❏ Money: *+Rp${job.money.toLocaleString("id-ID")}* 💰`].join("\n")) + "\n\n" + separator("━", 22) + "\n" + tipText(`Tunggu 30 menit untuk bekerja lagi`), "rpgwork");
+    await sendReplyWithNav(sock, m, claraWrap("Work", [`  ┊  ➶ Pekerjaan: *${job.name}*`,
+      `  ┊  ➶ Stamina: *-${job.stamina}* ⚡`,
+      `  ┊  ➶ Sisa: *${user.stamina}/100*`].join("\n")) + "\n\n" + claraWrap("Gaji", [`  ┊  ➶ EXP: *+${job.exp}* ✨`, `  ┊  ➶ Money: *+Rp${job.money.toLocaleString("id-ID")}* 💰`].join("\n")) + "\n\n" + separator("━", 22) + "\n" + tipText(`Tunggu 30 menit untuk bekerja lagi`), "rpgwork");
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

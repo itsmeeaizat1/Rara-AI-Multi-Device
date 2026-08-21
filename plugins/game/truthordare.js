@@ -40,8 +40,8 @@ async function handler(m, { sock, config: botConfig }) {
     const type = isTruth ? "Truth" : "Dare";
 
     const text =
-      claraWrap("Truth or Dare", [`╎❏ Tipe: *${type}*`,
-        `╎❏ Tantangan: *${question}*`].join("\n")) +
+      claraWrap("Truth or Dare", [`  ┊  ➶ Tipe: *${type}*`,
+        `  ┊  ➶ Tantangan: *${question}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}truthordare untuk main lagi`) +
       "\n" +
@@ -51,8 +51,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

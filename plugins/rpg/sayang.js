@@ -38,8 +38,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!partnerJid) {
       const text =
-        claraWrap("Sayang", [`╎❏ Status: *Belum punya pasangan*`,
-          `╎❏ Mau bilang sayang ke siapa? Ke bot?`].join("\n")) + "\n" +
+        claraWrap("Sayang", [`  ┊  ➶ Status: *Belum punya pasangan*`,
+          `  ┊  ➶ Mau bilang sayang ke siapa? Ke bot?`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk punya pasangan`);
 
       await sendReplyWithNav(sock, m, text, "sayang");
@@ -66,9 +66,9 @@ async function handler(m, { sock, config: botConfig }) {
       rpg.sayangStreak = (rpg.sayangStreak || 0) + 1;
     } else {
       const text =
-        claraWrap("Sayang", [`╎❏ Status: *Sudah ucap sayang hari ini*`,
-          `╎❏ Streak: *${rpg.sayangStreak || 1} hari*`,
-          `╎❏ Tunggu besok untuk lanjut streak`].join("\n")) + "\n" +
+        claraWrap("Sayang", [`  ┊  ➶ Status: *Sudah ucap sayang hari ini*`,
+          `  ┊  ➶ Streak: *${rpg.sayangStreak || 1} hari*`,
+          `  ┊  ➶ Tunggu besok untuk lanjut streak`].join("\n")) + "\n" +
         tipText(`Ucap lagi besok ya ${prefix}sayang`);
 
       await sendReplyWithNav(sock, m, text, "sayang");
@@ -93,18 +93,18 @@ async function handler(m, { sock, config: botConfig }) {
       .replace(/{user}/g, userName)
       .replace(/{partner}/g, partnerName);
 
-    let streakInfo = `╎❏ Streak: *${rpg.sayangStreak} hari*`;
+    let streakInfo = `  ┊  ➶ Streak: *${rpg.sayangStreak} hari*`;
     if (streakBroken) {
-      streakInfo = `╎❏ Streak: *${rpg.sayangStreak} hari* (reset!)`;
+      streakInfo = `  ┊  ➶ Streak: *${rpg.sayangStreak} hari* (reset!)`;
     } else if ((rpg.sayangStreak || 0) >= 7) {
-      streakInfo = `╎❏ Streak: *${rpg.sayangStreak} hari* (on fire!)`;
+      streakInfo = `  ┊  ➶ Streak: *${rpg.sayangStreak} hari* (on fire!)`;
     }
 
     const text =
-      claraWrap("Sayang", [`╎❏ ${msg}`,
-        `╎❏ Affection: *+${affectionGain}*`,
+      claraWrap("Sayang", [`  ┊  ➶ ${msg}`,
+        `  ┊  ➶ Affection: *+${affectionGain}*`,
         streakInfo,
-        `╎❏ Streak Bonus: *+${streakBonus}*`].join("\n")) + "\n" +
+        `  ┊  ➶ Streak Bonus: *+${streakBonus}*`].join("\n")) + "\n" +
       tipText(`Ucap lagi besok ya ${prefix}sayang biar streak nggak putus`);
 
     await sock.sendMessage(m.chat, {
@@ -115,8 +115,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("sayang", text));

@@ -14,8 +14,8 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const text = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!text) {
-      await sendReplyWithNav(sock, m, claraWrap("Sentiment", ["╎❏ Reply pesan untuk analisis mood",
-        "╎❏ Bot akan tentukan positif/negatif/netral"].join("\n")), "sentiment");
+      await sendReplyWithNav(sock, m, claraWrap("Sentiment", ["  ┊  ➶ Reply pesan untuk analisis mood",
+        "  ┊  ➶ Bot akan tentukan positif/negatif/netral"].join("\n")), "sentiment");
       return { handled: true };
     }
     const result = await callAI(`Analisis sentiment dari teks berikut. Jawab HANYA dengan: POSITIF, NEGATIF, atau NETRAL, lalu berikan alasan singkat dalam Bahasa Indonesia.\n\n${text.substring(0, 500)}`, {

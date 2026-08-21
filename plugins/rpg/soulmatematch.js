@@ -67,8 +67,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!raw) {
       const text =
-        claraWrap("Soul Match", [`╎❏ Penggunaan: *${prefix}soulmatch <nama|@tag>*`,
-          `╎❏ Contoh: *${prefix}soulmatch Adi*`].join("\n")) +
+        claraWrap("Soul Match", [`  ┊  ➶ Penggunaan: *${prefix}soulmatch <nama|@tag>*`,
+          `  ┊  ➶ Contoh: *${prefix}soulmatch Adi*`].join("\n")) +
         "\n" +
         tipText("Bisa juga dari cmd ini reply pesan orangnya") +
         "\n" +
@@ -86,8 +86,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!nameB) {
       const text =
-        claraWrap("Gagal", ["╎❏ Alasan: *Nama tujuan kosong*",
-          `╎❏ Contoh: *${prefix}soulmatch Adi*`].join("\n")) +
+        claraWrap("Gagal", ["  ┊  ➶ Alasan: *Nama tujuan kosong*",
+          `  ┊  ➶ Contoh: *${prefix}soulmatch Adi*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}soulmatch untuk coba lagi`) +
         "\n" +
@@ -106,10 +106,10 @@ async function handler(m, { sock, config: botConfig }) {
       claraWrap("Soul Match", "💘") +
       "\n\n" +
       claraWrap(tier.label, [
-        `╎❏ Dari: *${nameA}*`,
-        `╎❏ Dengan: *${nameB}*`,
-        `╎❏ Score: *${score}%*`,
-        `╎❏ Tier: *${tier.emoji} ${tier.label}*`,
+        `  ┊  ➶ Dari: *${nameA}*`,
+        `  ┊  ➶ Dengan: *${nameB}*`,
+        `  ┊  ➶ Score: *${score}%*`,
+        `  ┊  ➶ Tier: *${tier.emoji} ${tier.label}*`,
       ]) +
       "\n\n" +
       separator("━", 22) +
@@ -127,8 +127,8 @@ async function handler(m, { sock, config: botConfig }) {
     await sendReplyWithNav(sock, m, text, "soulmatematch");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

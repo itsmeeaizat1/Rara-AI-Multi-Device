@@ -72,8 +72,8 @@ async function handler(m, { sock, config: botConfig }) {
       } catch (e) { console.error('[aichat.js]:', e.message); }
 
       const text =
-        claraWrap("AI Chat", ["╎❏ Status: *Dihapus*",
-          "╎❏ Memori percakapan sudah direset."].join("\n")) +
+        claraWrap("AI Chat", ["  ┊  ➶ Status: *Dihapus*",
+          "  ┊  ➶ Memori percakapan sudah direset."].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}aichat <pesan> untuk mulai lagi`) +
         "\n" +
@@ -86,9 +86,9 @@ async function handler(m, { sock, config: botConfig }) {
     const message = raw.replace(/^\.aichat\s+/i, "").trim();
     if (!message) {
       const text =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}aichat <pesan>*`,
-          `╎❏ Reset: *${prefix}aichat clear*`,
-          `╎❏ Contoh: *${prefix}aichat halo*`].join("\n")) +
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}aichat <pesan>*`,
+          `  ┊  ➶ Reset: *${prefix}aichat clear*`,
+          `  ┊  ➶ Contoh: *${prefix}aichat halo*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -120,8 +120,8 @@ async function handler(m, { sock, config: botConfig }) {
     appendHistory(chatId, "assistant", reply);
 
     const text =
-      claraWrap("AI Chat", [`╎❏ Kamu: *${message.slice(0, 200)}${message.length > 200 ? "..." : ""}*`,
-        `╎❏ AI: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      claraWrap("AI Chat", [`  ┊  ➶ Kamu: *${message.slice(0, 200)}${message.length > 200 ? "..." : ""}*`,
+        `  ┊  ➶ AI: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aichat <pesan> untuk lanjut chat`) +
       "\n" +
@@ -132,8 +132,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

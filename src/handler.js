@@ -18,9 +18,9 @@ async function handleAntiRemoveFromUpsert(msg, sock, db) {
 // Simple inline wrapper for anti-spam DM messages
 function simpleWrap(title, lines) {
   const body = lines.join("\n");
-  return "╔┈┈「 " + title + " 」▎❟\n" +
+  return "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + title + "\n" +
     body + "\n" +
-    "╚┈┈┈┈┈┈┈┈┈┈❖";
+    "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
 }
 
 // Track cooldowns per user per command

@@ -78,8 +78,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (couples.length === 0) {
       const text =
-        claraWrap("Couple Leaderboard", [`╎❏ Status: *Belum ada pasangan terdaftar*`,
-          `╎❏ Jadilah yang pertama!`].join("\n")) + "\n" +
+        claraWrap("Couple Leaderboard", [`  ┊  ➶ Status: *Belum ada pasangan terdaftar*`,
+          `  ┊  ➶ Jadilah yang pertama!`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk mulai`);
 
       await sendReplyWithNav(sock, m, text, "couplelb");
@@ -95,7 +95,7 @@ async function handler(m, { sock, config: botConfig }) {
     const lines = top.map((c, i) => {
       const rank = i < 3 ? medals[i] : `${i + 1}.`;
       const days = Math.floor(c.duration / 86400000);
-      return `╎❏ ${rank} ${c.user1} & ${c.user2} ${c.statusEmoji}\n   Affection: *${c.affection}* | Bond: *${c.bondLevel}* | ${days}h`;
+      return `  ┊  ➶ ${rank} ${c.user1} & ${c.user2} ${c.statusEmoji}\n   Affection: *${c.affection}* | Bond: *${c.bondLevel}* | ${days}h`;
     });
 
     const text =
@@ -108,8 +108,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("couplelb", text));

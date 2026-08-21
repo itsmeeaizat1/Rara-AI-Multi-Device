@@ -60,10 +60,10 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const lines = [
-      `╎❏ Hasil: *${result}*`,
-      rewardGold > 0 ? `╎❏ Reward: *+${rewardGold} Gold*` : "",
-      penaltyGold > 0 ? `╎❏ Denda: *-${penaltyGold} Gold*` : "",
-      `╎❏ Saldo sekarang: *${updatedRpg.gold ?? rpg.gold ?? 0} Gold*`,
+      `  ┊  ➶ Hasil: *${result}*`,
+      rewardGold > 0 ? `  ┊  ➶ Reward: *+${rewardGold} Gold*` : "",
+      penaltyGold > 0 ? `  ┊  ➶ Denda: *-${penaltyGold} Gold*` : "",
+      `  ┊  ➶ Saldo sekarang: *${updatedRpg.gold ?? rpg.gold ?? 0} Gold*`,
     ].filter(Boolean);
 
     const text =
@@ -79,8 +79,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

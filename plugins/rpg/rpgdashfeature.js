@@ -191,7 +191,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 function dashAutohunt(prefix) {
   let text = claraWrap("Dashboard Autohunt", "🎯") + "\n\n";
-  text += claraWrap("INFO", ["╎❏ Command: *" + prefix + "autohunt*", "╎❏ Alias: *" + prefix + "ahunt, " + prefix + "autoburu*", "╎❏ Premium: *Wajib 💎*", "╎❏ Cooldown: *5 menit*", "╎❏ Stamina/hunt: *15*", "╎❏ Total hunt: *5x berturut*", "╎❏ Min HP: *20%* (auto heal)"].join("\n")) + "\n\n";
+  text += claraWrap("INFO", ["  ┊  ➶ Command: *" + prefix + "autohunt*", "  ┊  ➶ Alias: *" + prefix + "ahunt, " + prefix + "autoburu*", "  ┊  ➶ Premium: *Wajib 💎*", "  ┊  ➶ Cooldown: *5 menit*", "  ┊  ➶ Stamina/hunt: *15*", "  ┊  ➶ Total hunt: *5x berturut*", "  ┊  ➶ Min HP: *20%* (auto heal)"].join("\n")) + "\n\n";
   text += separator("━", 30) + "\n";
   text += "DAFTAR MONSTER\n";
   text += separator("━", 30) + "\n\n";
@@ -208,7 +208,7 @@ function dashAutohunt(prefix) {
 
 function dashKingdom(prefix) {
   let text = claraWrap("Dashboard Kingdom", "🏰") + "\n\n";
-  text += claraWrap("INFO", ["╎❏ Command: *" + prefix + "kingdom*", "╎❏ Alias: *" + prefix + "kerajaan, " + prefix + "build*", "╎❏ Premium: *Wajib 💎*", "╎❏ Cooldown: *10 detik*", "╎❏ Max level: *10 per bangunan*", "╎❏ Upgrade cost: *base x (level+1) x 1.5*"].join("\n")) + "\n\n";
+  text += claraWrap("INFO", ["  ┊  ➶ Command: *" + prefix + "kingdom*", "  ┊  ➶ Alias: *" + prefix + "kerajaan, " + prefix + "build*", "  ┊  ➶ Premium: *Wajib 💎*", "  ┊  ➶ Cooldown: *10 detik*", "  ┊  ➶ Max level: *10 per bangunan*", "  ┊  ➶ Upgrade cost: *base x (level+1) x 1.5*"].join("\n")) + "\n\n";
   text += separator("━", 30) + "\n";
   text += "DAFTAR BANGUNAN\n";
   text += separator("━", 30) + "\n\n";
@@ -231,7 +231,7 @@ function dashKingdom(prefix) {
 
 function dashDarkmarket(prefix) {
   let text = claraWrap("Dashboard Darkmarket", "🔮") + "\n\n";
-  text += claraWrap("INFO", ["╎❏ Command: *" + prefix + "darkmarket*", "╎❏ Alias: *" + prefix + "pasargelap*", "╎❏ Premium: *Wajib 💎*", "╎❏ Cooldown: *10 detik*", "╎❏ Stok: *8-10 item random*", "╎❏ Restock: *Setiap 6 jam*", "╎❏ Discount: *20%-60% lebih murah*"].join("\n")) + "\n\n";
+  text += claraWrap("INFO", ["  ┊  ➶ Command: *" + prefix + "darkmarket*", "  ┊  ➶ Alias: *" + prefix + "pasargelap*", "  ┊  ➶ Premium: *Wajib 💎*", "  ┊  ➶ Cooldown: *10 detik*", "  ┊  ➶ Stok: *8-10 item random*", "  ┊  ➶ Restock: *Setiap 6 jam*", "  ┊  ➶ Discount: *20%-60% lebih murah*"].join("\n")) + "\n\n";
   text += separator("━", 30) + "\n";
   text += "DAFTAR ITEM POOL\n";
   text += separator("━", 30) + "\n\n";
@@ -251,7 +251,7 @@ function dashDarkmarket(prefix) {
 
 function dashPetevolve(prefix) {
   let text = claraWrap("Dashboard Petevolve", "🐉") + "\n\n";
-  text += claraWrap("INFO", ["╎❏ Command: *" + prefix + "petevolve*", "╎❏ Alias: *" + prefix + "petevolusi, " + prefix + "evolvepet*", "╎❏ Premium: *Wajib 💎*", "╎❏ Cooldown: *10 detik*", "╎❏ Max tier: *Mythic (5.0x stats)*"].join("\n")) + "\n\n";
+  text += claraWrap("INFO", ["  ┊  ➶ Command: *" + prefix + "petevolve*", "  ┊  ➶ Alias: *" + prefix + "petevolusi, " + prefix + "evolvepet*", "  ┊  ➶ Premium: *Wajib 💎*", "  ┊  ➶ Cooldown: *10 detik*", "  ┊  ➶ Max tier: *Mythic (5.0x stats)*"].join("\n")) + "\n\n";
   text += separator("━", 30) + "\n";
   text += "TIER PROGRESSION\n";
   text += separator("━", 30) + "\n\n";
@@ -280,7 +280,7 @@ function dashPetevolve(prefix) {
 
 function dashExpedition(prefix) {
   let text = claraWrap("Dashboard Expedition", "🌲") + "\n\n";
-  text += claraWrap("INFO", ["╎❏ Command: *" + prefix + "expedition*", "╎❏ Alias: *" + prefix + "ekspedisi, " + prefix + "exp*", "╎❏ Premium: *Wajib 💎*", "╎❏ Cooldown: *10 detik*", "╎❏ Mode: *Passive (otomatis)*"].join("\n")) + "\n\n";
+  text += claraWrap("INFO", ["  ┊  ➶ Command: *" + prefix + "expedition*", "  ┊  ➶ Alias: *" + prefix + "ekspedisi, " + prefix + "exp*", "  ┊  ➶ Premium: *Wajib 💎*", "  ┊  ➶ Cooldown: *10 detik*", "  ┊  ➶ Mode: *Passive (otomatis)*"].join("\n")) + "\n\n";
   text += separator("━", 30) + "\n";
   text += "DAFTAR EKSPEDISI\n";
   text += separator("━", 30) + "\n\n";
@@ -302,7 +302,7 @@ function dashExpedition(prefix) {
 
 function dashDungeon(prefix) {
   let text = claraWrap("Dashboard Dungeon", "🕳️") + "\n\n";
-  text += claraWrap("INFO", ["╎❏ Command: *" + prefix + "dungeon*", "╎❏ Premium: *Wajib 💎*", "╎❏ Reward: *Loot langka (equipment)*"].join("\n")) + "\n\n";
+  text += claraWrap("INFO", ["  ┊  ➶ Command: *" + prefix + "dungeon*", "  ┊  ➶ Premium: *Wajib 💎*", "  ┊  ➶ Reward: *Loot langka (equipment)*"].join("\n")) + "\n\n";
   text += separator("━", 30) + "\n";
   text += "DAFTAR DUNGEON\n";
   text += separator("━", 30) + "\n\n";
@@ -319,7 +319,7 @@ function dashDungeon(prefix) {
 
 function dashBoss(prefix) {
   let text = claraWrap("Dashboard Boss Raid", "👹") + "\n\n";
-  text += claraWrap("INFO", ["╎❏ Command: *" + prefix + "boss*", "╎❏ Premium: *Wajib 💎*", "╎❏ Cooldown: *" + BOSS_INFO.cooldown + "*", "╎❏ Damage: *" + BOSS_INFO.damageRange + "*", "╎❏ Mode: *Grup only*", "╎❏ Reward: *" + BOSS_INFO.rewards + "*"].join("\n")) + "\n\n";
+  text += claraWrap("INFO", ["  ┊  ➶ Command: *" + prefix + "boss*", "  ┊  ➶ Premium: *Wajib 💎*", "  ┊  ➶ Cooldown: *" + BOSS_INFO.cooldown + "*", "  ┊  ➶ Damage: *" + BOSS_INFO.damageRange + "*", "  ┊  ➶ Mode: *Grup only*", "  ┊  ➶ Reward: *" + BOSS_INFO.rewards + "*"].join("\n")) + "\n\n";
   text += separator("━", 30) + "\n";
   text += "CARA KERJA\n";
   text += separator("━", 30) + "\n\n";
@@ -335,7 +335,7 @@ function dashBoss(prefix) {
 
 function dashGacha(prefix) {
   let text = claraWrap("Dashboard Gacha", "🎯") + "\n\n";
-  text += claraWrap("INFO", ["╎❏ Command: *" + prefix + "gacha*", "╎❏ Alias: *" + prefix + "pull, " + prefix + "summon*", "╎❏ Premium: *Wajib 💎*"].join("\n")) + "\n\n";
+  text += claraWrap("INFO", ["  ┊  ➶ Command: *" + prefix + "gacha*", "  ┊  ➶ Alias: *" + prefix + "pull, " + prefix + "summon*", "  ┊  ➶ Premium: *Wajib 💎*"].join("\n")) + "\n\n";
   text += separator("━", 30) + "\n";
   text += "TIER & DROP RATE\n";
   text += separator("━", 30) + "\n\n";
@@ -351,7 +351,7 @@ function dashGacha(prefix) {
 
 function dashBreeding(prefix) {
   let text = claraWrap("Dashboard Breeding", "🐾") + "\n\n";
-  text += claraWrap("INFO", ["╎❏ Command: *" + prefix + "breeding*", "╎❏ Premium: *Wajib 💎*", "╎❏ Cooldown: *1 jam*", "╎❏ Result: *Pet baru dari kombinasi 2 pet*", "╎❏ Risk: *Gagal = kehilangan 1 parent*"].join("\n")) + "\n\n";
+  text += claraWrap("INFO", ["  ┊  ➶ Command: *" + prefix + "breeding*", "  ┊  ➶ Premium: *Wajib 💎*", "  ┊  ➶ Cooldown: *1 jam*", "  ┊  ➶ Result: *Pet baru dari kombinasi 2 pet*", "  ┊  ➶ Risk: *Gagal = kehilangan 1 parent*"].join("\n")) + "\n\n";
   text += separator("━", 30) + "\n";
   text += "CARA KERJA\n";
   text += separator("━", 30) + "\n\n";
@@ -366,7 +366,7 @@ function dashBreeding(prefix) {
 
 function dashEnchant(prefix) {
   let text = claraWrap("Dashboard Enchant", "✨") + "\n\n";
-  text += claraWrap("INFO", ["╎❏ Command: *" + prefix + "enchant*", "╎❏ Premium: *Wajib 💎*", "╎❏ Cooldown: *10 detik*", "╎❏ Bonus: *+1% sampai +10% stats*", "╎❏ Cost: *Crystal + Gold*", "╎❏ Target: *Equipment (Weapon, Armor, Accessory)*"].join("\n")) + "\n\n";
+  text += claraWrap("INFO", ["  ┊  ➶ Command: *" + prefix + "enchant*", "  ┊  ➶ Premium: *Wajib 💎*", "  ┊  ➶ Cooldown: *10 detik*", "  ┊  ➶ Bonus: *+1% sampai +10% stats*", "  ┊  ➶ Cost: *Crystal + Gold*", "  ┊  ➶ Target: *Equipment (Weapon, Armor, Accessory)*"].join("\n")) + "\n\n";
   text += separator("━", 30) + "\n";
   text += "CARA KERJA\n";
   text += separator("━", 30) + "\n\n";
@@ -381,7 +381,7 @@ function dashEnchant(prefix) {
 
 function dashTreasure(prefix) {
   let text = claraWrap("Dashboard Treasure", "📜") + "\n\n";
-  text += claraWrap("INFO", ["╎❏ Command: *" + prefix + "treasure*", "╎❏ Alias: *" + prefix + "chest, " + prefix + "peti*", "╎❏ Premium: *Wajib 💎*", "╎❏ Cooldown: *30 detik*"].join("\n")) + "\n\n";
+  text += claraWrap("INFO", ["  ┊  ➶ Command: *" + prefix + "treasure*", "  ┊  ➶ Alias: *" + prefix + "chest, " + prefix + "peti*", "  ┊  ➶ Premium: *Wajib 💎*", "  ┊  ➶ Cooldown: *30 detik*"].join("\n")) + "\n\n";
   text += separator("━", 30) + "\n";
   text += "DAFTAR CHEST\n";
   text += separator("━", 30) + "\n\n";

@@ -126,43 +126,8 @@ async function handler(m, { sock }) {
   const action = args[0];
 
   if (!action) {
-    let txt = "╔┈┈「 NIAT & DOA HARIAN 」╎❏\n";
-    txt += "╚┈┈❖\n";
-    txt += "Niat sholat & kumpulan doa sehari-hari.\n\n";
-    txt += "*Niat Sholat:*\n";
-    txt += "1. .niatdoa niat subuh\n";
-    txt += "2. .niatdoa niat dzuhur\n";
-    txt += "3. .niatdoa niat ashar\n";
-    txt += "4. .niatdoa niat maghrib\n";
-    txt += "5. .niatdoa niat isya\n\n";
-    txt += "*Doa Harian:*\n";
-    txt += "6. .niatdoa bangun\n";
-    txt += "7. .niatdoa makan\n";
-    txt += "8. .niatdoa makan habis\n";
-    txt += "9. .niatdoa masuk wc\n";
-    txt += "10. .niatdoa keluar wc\n";
-    txt += "11. .niatdoa keluar rumah\n";
-    txt += "12. .niatdoa masuk rumah\n";
-    txt += "13. .niatdoa tidur\n";
-    txt += "14. .niatdoa bangun malam\n";
-    txt += "15. .niatdoa bercermin\n";
-    txt += "16. .niatdoa sakit\n";
-    txt += "17. .niatdoa bepergian";
-    return await sendReplyWithNav(sock, m, txt, "niatdoa");
-  }
-
-  // Niat sholat
-  if (action === "niat") {
-    const sholat = args[1];
-    if (!sholat) {
-      return m.reply(claraWrap("Niatdoa", "Niat sholat apa?\nContoh: .niatdoa niat subuh"));
-    }
-    const niat = NIAT_SHOLAT[sholat];
-    if (!niat) {
-      return m.reply(claraWrap("Niatdoa", "Sholat tidak valid! (subuh, dzuhur, ashar, maghrib, isya)"));
-    }
-    let txt = "╔┈┈「 NIAT SHOLAT 」╎❏\n";
-    txt += "╚┈┈❖\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Niat Sholat:  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += "*" + sholat.toUpperCase() + "*\n\n";
     txt += "Arab:\n" + niat.arab + "\n\n";
     txt += "Latin:\n" + niat.latin + "\n\n";
@@ -176,8 +141,8 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("niatdoa", "Doa tidak ditemukan!\nKetik .niatdoa buat lihat semua doa."));
   }
 
-  let txt = "╔┈┈「 " + doa.title.toUpperCase() + " 」╎❏\n";
-  txt += "╚┈┈❖\n\n";
+  let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + doa.title.toUpperCase() + "  ┊  ➶\n";
+  txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
   txt += "Arab:\n" + doa.arab + "\n\n";
   txt += "Latin:\n" + doa.latin + "\n\n";
   txt += "Arti:\n" + doa.arti;

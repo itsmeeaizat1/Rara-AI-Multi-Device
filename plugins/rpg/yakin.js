@@ -37,8 +37,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!partnerJid) {
       const text =
-        claraWrap("Yakin", [`╎❏ Status: *Belum punya pasangan*`,
-          `╎❏ Yakin sama siapa? Sama diri sendiri?`].join("\n")) + "\n" +
+        claraWrap("Yakin", [`  ┊  ➶ Status: *Belum punya pasangan*`,
+          `  ┊  ➶ Yakin sama siapa? Sama diri sendiri?`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk punya pasangan`);
 
       await sendReplyWithNav(sock, m, text, "yakin");
@@ -56,9 +56,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!isPartnerRagu) {
       const text =
-        claraWrap("Yakin", [`╎❏ Status: *Pasangan nggak sedang ragu*`,
-          `╎❏ ${partnerName} baik-baik saja`,
-          `╎❏ Tapi tidak apa-apa, ungkapkan perasaanmu`].join("\n")) + "\n" +
+        claraWrap("Yakin", [`  ┊  ➶ Status: *Pasangan nggak sedang ragu*`,
+          `  ┊  ➶ ${partnerName} baik-baik saja`,
+          `  ┊  ➶ Tapi tidak apa-apa, ungkapkan perasaanmu`].join("\n")) + "\n" +
         tipText(`Kirim surat cinta: ${prefix}suratcinta`);
 
       await sendReplyWithNav(sock, m, text, "yakin");
@@ -92,15 +92,15 @@ async function handler(m, { sock, config: botConfig }) {
 
     let extraInfo = [];
     if (pesan) {
-      extraInfo.push(`╎❏ Pesan: *"${pesan}"*`);
+      extraInfo.push(`  ┊  ➶ Pesan: *"${pesan}"*`);
     }
 
     const text =
-      claraWrap("Yakin", [`╎❏ ${line}`,
-        `╎❏ Affection: *+${affectionGain}*`,
-        `╎❏ Total Affection: *${totalAffection}*`,
-        `╎❏ Bond Level: *${bondLevel}*`,
-        `╎❏ Status: *Hubungan stabil kembali*`,
+      claraWrap("Yakin", [`  ┊  ➶ ${line}`,
+        `  ┊  ➶ Affection: *+${affectionGain}*`,
+        `  ┊  ➶ Total Affection: *${totalAffection}*`,
+        `  ┊  ➶ Bond Level: *${bondLevel}*`,
+        `  ┊  ➶ Status: *Hubungan stabil kembali*`,
         ...extraInfo].join("\n")) + "\n" +
       tipText(`Rayakan: ${prefix}cuddling | ${prefix}kiss | ${prefix}kado`);
 
@@ -112,8 +112,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("yakin", text));

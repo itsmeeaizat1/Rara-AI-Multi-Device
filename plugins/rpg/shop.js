@@ -35,11 +35,11 @@ async function handler(m, { sock, config: botConfig }) {
 
     const lines = ITEMS.map((item, index) => {
       const num = index + 1;
-      return `╎❏ ${num}. *${item.name}* — ${item.price} Gold`;
+      return `  ┊  ➶ ${num}. *${item.name}* — ${item.price} Gold`;
     });
 
     const text =
-      claraWrap("Shop", [`╎❏ Saldo: *${gold} Gold*`,
+      claraWrap("Shop", [`  ┊  ➶ Saldo: *${gold} Gold*`,
         ...lines].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}buy <no> untuk membeli`) +
@@ -50,8 +50,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

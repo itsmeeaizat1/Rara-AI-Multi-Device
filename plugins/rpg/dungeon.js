@@ -35,10 +35,10 @@ async function handler(m, { sock, config: botConfig, db }) {
     const cleared = Math.random() < 0.6;
 
     const text =
-      claraWrap("Dungeon", [`╎❏ Dungeon: *${dungeon.name}*`,
-        `╎❏ Difficulty: *${dungeon.difficulty}*`,
-        `╎❏ Loot: *${cleared ? dungeon.loot : "Tidak ada"}*`,
-        `╎❏ Status: *${cleared ? "CLEARED" : "FAILED"}*`].join("\n")) +
+      claraWrap("Dungeon", [`  ┊  ➶ Dungeon: *${dungeon.name}*`,
+        `  ┊  ➶ Difficulty: *${dungeon.difficulty}*`,
+        `  ┊  ➶ Loot: *${cleared ? dungeon.loot : "Tidak ada"}*`,
+        `  ┊  ➶ Status: *${cleared ? "CLEARED" : "FAILED"}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}dungeon untuk masuk lagi`) +
       "\n" +
@@ -47,8 +47,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "dungeon");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

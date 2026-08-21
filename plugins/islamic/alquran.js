@@ -60,33 +60,8 @@ async function handler(m, { sock }) {
 
     // MENU
     if (!subCmd || subCmd === "help" || subCmd === "menu") {
-      let txt = "╔┈┈「 AL-QURAN 」╎❏\n";
-      txt += "╚┈┈❖\n";
-      txt += "Baca & dengar Al-Quran dari API online.\n";
-      txt += "Data real-time dari alquran.cloud\n\n";
-      txt += "*Cara pakai:*\n";
-      txt += "1. .alquran <surat> — Baca surat (10 ayat)\n";
-      txt += "2. .alquran <surat> <ayat> — Baca ayat spesifik + auto audio\n";
-      txt += "3. .alquran audio <surat> <ayat> — Audio murottal saja\n";
-      txt += "4. .alquran audio <surat> — Audio 5 ayat pertama\n";
-      txt += "5. .alquran qari — Daftar qari (suara)\n";
-      txt += "6. .alquran setqari <nama> — Ganti qari default\n\n";
-      txt += "*Contoh:*\n";
-      txt += ".alquran 1 — Surat Al-Fatihah\n";
-      txt += ".alquran 2 255 — Ayat Kursi (teks + audio)\n";
-      txt += ".alquran audio 36 1 — Audio Ya-Sin ayat 1\n\n";
-      txt += "*Surat Populer:*\n";
-      txt += "1 Al-Fatihah | 2 Al-Baqarah | 18 Al-Kahfi\n";
-      txt += "36 Ya-Sin | 55 Ar-Rahman | 67 Al-Mulk\n";
-      txt += "112 Al-Ikhlas | 113 Al-Falaq | 114 An-Nas\n\n";
-      txt += "Qari default: Mishary Alafasy";
-      return await sendReplyWithNav(sock, m, txt, "alquran");
-    }
-
-    // DAFTAR QARI
-    if (subCmd === "qari" || subCmd === "qarilist") {
-      let txt = "╔┈┈「 DAFTAR QARI 」╎❏\n";
-      txt += "╚┈┈❖\n\n";
+      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Cara pakai:  ┊  ➶\n";
+      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
       let i = 1;
       for (const [key, qari] of Object.entries(QARIS)) {
         txt += i + ". *" + qari.name + "*\n";
@@ -141,23 +116,8 @@ async function handler(m, { sock }) {
         const audioUrl = audioRes.data.audio;
         const indoText = indoRes.data.text;
 
-        let txt = "╔┈┈「 AUDIO AL-QURAN 」╎❏\n";
-        txt += "╚┈┈❖\n";
-        txt += "Surat: *" + surah.englishName + "*\n";
-        txt += "Ayat: " + ayatNum + " dari " + surah.numberOfAyahs + "\n";
-        txt += "Qari: " + qari.name + "\n\n";
-        txt += "*Terjemahan:*\n" + indoText;
-        await m.reply(txt);
-
-        await sendAudio(audioUrl);
-        return;
-      } else {
-        // Audio 5 ayat pertama
-        const limit = Math.min(5, surah.numberOfAyahs);
-        const audioRes = await fetchJson(API_BASE + "/surah/" + suratNum + "/" + edition);
-
-        let txt = "╔┈┈「 AUDIO AL-QURAN 」╎❏\n";
-        txt += "╚┈┈❖\n";
+        let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + surah.englishName + "  ┊  ➶\n";
+        txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
         txt += "Surat: *" + surah.englishName + "* (" + surah.name + ")\n";
         txt += "Total Ayat: " + surah.numberOfAyahs + "\n";
         txt += "Qari: " + qari.name + "\n\n";
@@ -202,34 +162,8 @@ async function handler(m, { sock }) {
       const indoAyah = indoRes.data;
       const audioUrl = audioRes.data.audio;
 
-      let txt = "╔┈┈「 AL-QURAN 」╎❏\n";
-      txt += "╚┈┈❖\n";
-      txt += "Surat: *" + surah.englishName + "* (" + surah.name + ")\n";
-      txt += "Arti: " + surah.englishNameTranslation + "\n";
-      txt += "Ayat: " + ayatNum + " dari " + surah.numberOfAyahs + "\n";
-      txt += "Turun: " + (surah.revelationType === "Meccan" ? "Mekkah" : "Madinah") + "\n\n";
-      txt += "*Teks Arab:*\n" + arabAyah.text + "\n\n";
-      txt += "*Terjemahan Indonesia:*\n" + indoAyah.text + "\n\n";
-      txt += "Juz: " + arabAyah.juz + " | Hal: " + arabAyah.page + "\n";
-      txt += "Sumber: alquran.cloud API";
-      await m.reply(txt);
-
-      // Auto-kirim audio
-      await sendAudio(audioUrl);
-      return;
-    } else {
-      // Fetch 10 ayat pertama
-      const [arabRes, indoRes] = await Promise.all([
-        fetchJson(API_BASE + "/surah/" + suratNum + "/quran-uthmani"),
-        fetchJson(API_BASE + "/surah/" + suratNum + "/id.indonesian"),
-      ]);
-
-      const arabAyahs = arabRes.data.ayahs;
-      const indoAyahs = indoRes.data.ayahs;
-      const limit = Math.min(10, arabAyahs.length);
-
-      let txt = "╔┈┈「 AL-QURAN 」╎❏\n";
-      txt += "╚┈┈❖\n";
+      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + surah.englishName + "  ┊  ➶\n";
+      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
       txt += "Surat: *" + surah.englishName + "* (" + surah.name + ")\n";
       txt += "Arti: " + surah.englishNameTranslation + "\n";
       txt += "Ayat: " + surah.numberOfAyahs + "\n";

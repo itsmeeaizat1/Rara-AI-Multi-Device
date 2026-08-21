@@ -15,8 +15,8 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const info = m.text?.trim();
     if (!info) {
-      await sendReplyWithNav(sock, m, claraWrap("AI Gift", [`╎❏ Penggunaan: *${prefix}aigift <info orang>*`,
-        `╎❏ Contoh: *${prefix}aigift cewek 22th suka kpop*`].join("\n")), "aigift");
+      await sendReplyWithNav(sock, m, claraWrap("AI Gift", [`  ┊  ➶ Penggunaan: *${prefix}aigift <info orang>*`,
+        `  ┊  ➶ Contoh: *${prefix}aigift cewek 22th suka kpop*`].join("\n")), "aigift");
       return { handled: true };
     }
     const result = await callAI(`Berikan 5 rekomendasi kado untuk: ${info}. Format: nama kado - singkat alasan. Bahasa Indonesia.`, {

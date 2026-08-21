@@ -99,39 +99,8 @@ async function handler(m, { sock }) {
   const action = args[0];
 
   if (!action) {
-    let txt = "╔┈┈「 KEBUN KOOPERATIF GRUP 」╎❏\n";
-    txt += "╚┈┈❖\n";
-    txt += "Sistem kebun bareng untuk member grup!\n\n";
-    txt += "*Cuaca Hari Ini:* " + farm.weather.emoji + " " + farm.weather.name + "\n";
-    txt += "_" + farm.weather.desc + "_\n\n";
-    txt += "*Statistik Kebun:*\n";
-    txt += "Lahan: " + farm.plots.length + "/" + farm.maxPlots + " terpakai\n";
-    txt += "Level Kebun: " + farm.level + "\n";
-    txt += "Total Panen: " + farm.totalHarvest + "x\n";
-    txt += "Kas Kebun: Rp " + farm.treasury.toLocaleString("id-ID") + "\n";
-    txt += "Kontributor: " + Object.keys(farm.contributors).length + " orang\n\n";
-    txt += "*Perintah:*\n";
-    txt += "1. .coopfarm status — Cek kondisi kebun\n";
-    txt += "2. .coopfarm shop — Lihat daftar bibit\n";
-    txt += "3. .coopfarm plant <tanaman> — Tanam bibit\n";
-    txt += "4. .coopfarm water <nomor> — Siram tanaman\n";
-    txt += "5. .coopfarm harvest — Panen semua\n";
-    txt += "6. .coopfarm upgrade — Upgrade lahan\n";
-    txt += "7. .coopfarm leaderboard — Top kontributor\n";
-    txt += "8. .coopfarm weather — Cek cuaca\n\n";
-    txt += "*Cara Kerja:*\n";
-    txt += "1. Beli bibit pake koin sendiri\n";
-    txt += "2. Tanam di lahan grup\n";
-    txt += "3. Member lain bisa siram (speed up growth)\n";
-    txt += "4. Siapapun bisa panen, hasil dibagi rata\n";
-    txt += "5. Yang kontribusi terbanyak dapat bonus\n";
-    return await sendReplyWithNav(sock, m, txt, "coopfarm");
-  }
-
-  // STATUS
-  if (action === "status") {
-    let txt = "╔┈┈「 STATUS KEBUN GRUP 」╎❏\n";
-    txt += "╚┈┈❖\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Cuaca Hari Ini:  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += "Cuaca: " + farm.weather.emoji + " " + farm.weather.name + " (" + farm.weather.desc + ")\n";
     txt += "Lahan: " + farm.plots.length + "/" + farm.maxPlots + "\n";
     txt += "Level: " + farm.level + " | Kas: Rp " + farm.treasury.toLocaleString("id-ID") + "\n\n";
@@ -164,59 +133,8 @@ async function handler(m, { sock }) {
 
   // SHOP
   if (action === "shop") {
-    let txt = "╔┈┈「 TOKO BIBIT KEBUN 」╎❏\n";
-    txt += "╚┈┈❖\n";
-    txt += "Bibit dibeli pake koin sendiri, ditanam di kebun grup.\n\n";
-    for (const [key, crop] of Object.entries(CROPS)) {
-      const growMin = Math.floor(crop.growTime / 60000);
-      txt += crop.emoji + " *" + crop.name + "* (" + key + ")\n";
-      txt += "   Bibit: Rp " + crop.seedPrice + " | Jual: Rp " + crop.sellPrice + "\n";
-      txt += "   Tumbuh: " + growMin + "m | EXP: " + crop.exp + "\n";
-      txt += "   Bonus siram: x" + crop.waterBonus + "\n\n";
-    }
-    txt += "Tanam pake: .coopfarm plant <nama>\n";
-    txt += "Contoh: .coopfarm plant padi";
-    return await sendReplyWithNav(sock, m, txt, "coopfarm");
-  }
-
-  // PLANT
-  if (action === "plant") {
-    const cropName = args[1];
-    if (!cropName) {
-      return sendReplyWithNav(m, sock, claraWrap("Coopfarm", "Tanaman apa yang mau ditanam?\nContoh: .coopfarm plant padi\nLihat daftar: .coopfarm shop"), { commandName: "coopfarm" });
-    }
-    const crop = CROPS[cropName];
-    if (!crop) {
-      return sendReplyWithNav(sock, m, "Bibit *" + cropName + "* tidak dijual!\nLihat daftar: .coopfarm shop", "coopfarm");
-    }
-
-    const user = db.getUser(m.sender);
-    if (!user.koin || user.koin < crop.seedPrice) {
-      return sendReplyWithNav(sock, m, "Koin kamu kurang!\nBibit " + crop.name + " harga Rp " + crop.seedPrice + "\nKoin kamu: Rp " + (user.koin || 0).toLocaleString("id-ID"), "coopfarm");
-    }
-
-    if (farm.plots.length >= farm.maxPlots) {
-      return sendReplyWithNav(sock, m, "Lahan udah penuh! " + farm.plots.length + "/" + farm.maxPlots + "\nPanen dulu atau upgrade lahan: .coopfarm upgrade", "coopfarm");
-    }
-
-    user.koin -= crop.seedPrice;
-    farm.plots.push({
-      crop: cropName,
-      plantedAt: Date.now(),
-      planter: m.sender,
-      planterName: m.pushName || "Farmer",
-      waterCount: 0,
-      wateredBy: [],
-    });
-
-    if (!farm.contributors[m.sender]) {
-      farm.contributors[m.sender] = { name: m.pushName || "Farmer", plant: 0, water: 0, harvest: 0 };
-    }
-    farm.contributors[m.sender].plant++;
-
-    db.save();
-    return sendReplyWithNav(sock, m, "╔┈┈「 TANAM BERHASIL 」╎❏\n" +
-      "╚┈┈❖\n" +
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + crop.name + "  ┊  ➶\n" +
+      "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n" +
       crop.emoji + " " + crop.name + " ditanam oleh " + (m.pushName || "Farmer") + "!\n\n" +
       "Waktu tumbuh: " + Math.floor(crop.growTime / 60000) + " menit\n" +
       "Cuaca: " + farm.weather.emoji + " " + farm.weather.name + "\n" +
@@ -261,107 +179,9 @@ async function handler(m, { sock }) {
     db.save();
 
     const speedBoost = plot.waterCount * 60000;
-    return sendReplyWithNav(sock, m, "╔┈┈「 SIRAM BERHASIL 」╎❏\n" +
-      "╚┈┈❖\n" +
-      "💧 " + (m.pushName || "Farmer") + " menyiram " + crop.emoji + " " + crop.name + "!\n\n" +
-      "Total disiram: " + plot.waterCount + "x\n" +
-      "Speed up: -" + Math.floor(speedBoost / 60000) + " menit\n" +
-      "EXP menyiram: +" + waterExp + "\n\n" +
-      "Makin sering disiram, makin cepat panen!", "coopfarm");
-  }
-
-  // HARVEST
-  if (action === "harvest") {
-    if (farm.plots.length === 0) {
-      return m.reply(claraWrap("Coopfarm", "Kebun masih kosong! Tidak ada yang bisa dipanen."));
-    }
-
-    const readyPlots = [];
-    const unreadyPlots = [];
-
-    for (let i = 0; i < farm.plots.length; i++) {
-      const plot = farm.plots[i];
-      const crop = CROPS[plot.crop];
-      if (!crop) continue;
-      const elapsed = Date.now() - plot.plantedAt;
-      const growTime = crop.growTime * (farm.weather.name === "Kemarau" ? 1.5 : 1);
-      const waterReduction = plot.waterCount * 60000;
-      const adjustedGrow = Math.max(30000, growTime - waterReduction);
-      const remaining = Math.max(0, adjustedGrow - elapsed);
-
-      if (remaining <= 0) {
-        readyPlots.push({ index: i, plot, crop });
-      } else {
-        unreadyPlots.push({ index: i, crop, remaining });
-      }
-    }
-
-    if (readyPlots.length === 0) {
-      let txt = "Belum ada tanaman yang siap panen!\n\n";
-      txt += "Yang masih tumbuh:\n";
-      for (const u of unreadyPlots) {
-        txt += (u.index + 1) + ". " + u.crop.emoji + " " + u.crop.name + " — " + formatTime(u.remaining) + "\n";
-      }
-      return await sendReplyWithNav(sock, m, txt, "coopfarm");
-    }
-
-    let totalValue = 0;
-    let totalExp = 0;
-    let harvestSummary = [];
-    let allContributors = new Set();
-
-    for (const rp of readyPlots) {
-      const crop = rp.crop;
-      const plot = rp.plot;
-
-      const baseQty = Math.floor(Math.random() * 3) + 2;
-      const waterBonusQty = Math.floor(plot.waterCount * crop.waterBonus);
-      const weatherMod = farm.weather.modifier;
-      const qty = Math.max(1, Math.floor((baseQty + waterBonusQty) * weatherMod));
-      const value = qty * crop.sellPrice;
-
-      totalValue += value;
-      totalExp += crop.exp;
-      harvestSummary.push(crop.emoji + " " + crop.name + " x" + qty + " (Rp " + value.toLocaleString("id-ID") + ")");
-
-      allContributors.add(plot.planter);
-      for (const w of plot.wateredBy) {
-        allContributors.add(w.user);
-      }
-
-      if (!farm.contributors[m.sender]) {
-        farm.contributors[m.sender] = { name: m.pushName || "Farmer", plant: 0, water: 0, harvest: 0 };
-      }
-      farm.contributors[m.sender].harvest++;
-    }
-
-    farm.plots = farm.plots.filter((_, i) => !readyPlots.some((rp) => rp.index === i));
-    farm.totalHarvest += readyPlots.length;
-    farm.treasury += Math.floor(totalValue * 0.1);
-
-    const harvesterShare = Math.floor(totalValue * 0.3);
-    const contributorShare = Math.floor((totalValue * 0.7) / Math.max(1, allContributors.size));
-
-    const harvesterExp = Math.floor(totalExp * 0.4);
-    const contributorExp = Math.floor((totalExp * 0.6) / Math.max(1, allContributors.size));
-
-    const harvesterUser = db.getUser(m.sender);
-    harvesterUser.koin = (harvesterUser.koin || 0) + harvesterShare;
-    await addExpWithLevelCheck(sock, m, db, harvesterUser, harvesterExp);
-
-    let contributorList = [];
-    for (const contributorId of allContributors) {
-      if (contributorId === m.sender) continue;
-      const cUser = db.getUser(contributorId);
-      cUser.koin = (cUser.koin || 0) + contributorShare;
-      const cName = farm.contributors[contributorId]?.name || "Farmer";
-      contributorList.push(cName + ": +Rp " + contributorShare.toLocaleString("id-ID"));
-    }
-
-    db.save();
-
-    let txt = "╔┈┈「 PANEN KOOPERATIF! 」╎❏\n";
-    txt += "╚┈┈❖\n";
+    return sendReplyWithNav(sock, m, "❀°˖✧◝(⁰▿⁰)◜✧˖°❀  (farm.weather.name === "Kemarau" ? 1.5 : 1);
+      const waterReduction = plot.waterCount   ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += "Panen oleh: " + (m.pushName || "Farmer") + "\n\n";
     txt += "*Hasil Panen:*\n";
     for (const h of harvestSummary) {
@@ -399,57 +219,8 @@ async function handler(m, { sock }) {
     const user = db.getUser(m.sender);
 
     if (!args[1]) {
-      let txt = "╔┈┈「 UPGRADE LAHAN 」╎❏\n";
-      txt += "╚┈┈❖\n";
-      txt += "Lahan saat ini: " + currentMax + " plot\n";
-      txt += "Upgrade ke: " + (currentMax + 1) + " plot\n";
-      txt += "Biaya: Rp " + nextCost.toLocaleString("id-ID") + "\n\n";
-      txt += "Sumber dana:\n";
-      txt += "1. Koin sendiri: Rp " + (user.koin || 0).toLocaleString("id-ID") + "\n";
-      txt += "2. Kas kebun: Rp " + farm.treasury.toLocaleString("id-ID") + "\n\n";
-      txt += "Ketik:\n";
-      txt += ".coopfarm upgrade self — Bayar pake koin sendiri\n";
-      txt += ".coopfarm upgrade treasury — Bayar pake kas kebun";
-      return await sendReplyWithNav(sock, m, txt, "coopfarm");
-    }
-
-    if (args[1] === "self") {
-      if ((user.koin || 0) < nextCost) {
-        return sendReplyWithNav(sock, m, "Koin kamu kurang!\nButuh: Rp " + nextCost.toLocaleString("id-ID") + "\nKoin: Rp " + (user.koin || 0).toLocaleString("id-ID"), "coopfarm");
-      }
-      user.koin -= nextCost;
-      farm.maxPlots++;
-      farm.level++;
-      db.save();
-      await m.react("✅");
-      return sendReplyWithNav(sock, m, "Lahan diupgrade ke " + farm.maxPlots + " plot!\nTerima kasih " + (m.pushName || "Farmer") + "! 🚜", "coopfarm");
-    }
-
-    if (args[1] === "treasury") {
-      if (farm.treasury < nextCost) {
-        return sendReplyWithNav(sock, m, "Kas kebun kurang!\nButuh: Rp " + nextCost.toLocaleString("id-ID") + "\nKas: Rp " + farm.treasury.toLocaleString("id-ID"), "coopfarm");
-      }
-      farm.treasury -= nextCost;
-      farm.maxPlots++;
-      farm.level++;
-      db.save();
-      await m.react("✅");
-      return sendReplyWithNav(sock, m, "Lahan diupgrade ke " + farm.maxPlots + " plot pake kas kebun! 🚜🌾", "coopfarm");
-    }
-  }
-
-  // LEADERBOARD
-  if (action === "leaderboard" || action === "lb") {
-    const contributors = Object.entries(farm.contributors).sort(
-      (a, b) => (b[1].plant + b[1].water + b[1].harvest * 2) - (a[1].plant + a[1].water + a[1].harvest * 2)
-    );
-
-    if (contributors.length === 0) {
-      return m.reply(claraWrap("Coopfarm", "Belum ada kontributor! Mulai tanam dulu."));
-    }
-
-    let txt = "╔┈┈「 TOP KONTRIBUTOR KEBUN 」╎❏\n";
-    txt += "╚┈┈❖\n";
+      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀  2) - (a[1].plant + a[1].water + a[1].harvest   ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += "Total panen grup: " + farm.totalHarvest + "x\n\n";
 
     const medals = ["🥇", "🥈", "🥉"];
@@ -467,8 +238,8 @@ async function handler(m, { sock }) {
 
   // WEATHER
   if (action === "weather" || action === "cuaca") {
-    let txt = "╔┈┈「 CUACA KEBUN 」╎❏\n";
-    txt += "╚┈┈❖\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ CUACA KEBUN  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += "Cuaca hari ini: " + farm.weather.emoji + " " + farm.weather.name + "\n";
     txt += "Efek: " + farm.weather.desc + "\n";
     txt += "Modifier panen: x" + farm.weather.modifier + "\n\n";

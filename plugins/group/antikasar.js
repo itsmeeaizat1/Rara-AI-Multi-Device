@@ -228,24 +228,24 @@ async function handleAntiKasar(m, sock, db) {
                 try {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
-                        text: '╔┈┈「 🚫 *WARN LIMIT* 」╎❏\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: 🤬 Kata Kasar\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ 🔍 Terdeteksi: ' + matchesStr + '\n┃ ❌ Aksi: KICK OTOMATIS\n╚┈┈❖\n_User dikeluarkan karena kata kata kasar_',
+                        text: '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ WARN LIMIT  ┊  ➶\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: 🤬 Kata Kasar\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ 🔍 Terdeteksi: ' + matchesStr + '\n┃ ❌ Aksi: KICK OTOMATIS\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n_User dikeluarkan karena kata kata kasar_',
                         mentions: [m.sender]
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
-                        text: '╔┈┈「 🚫 *WARN LIMIT* 」╎❏\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: 🤬 Kata Kasar\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ ⚠️ Aksi: Bot bukan admin\n╚┈┈❖',
+                        text: '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ WARN LIMIT  ┊  ➶\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: 🤬 Kata Kasar\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ ⚠️ Aksi: Bot bukan admin\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀',
                         mentions: [m.sender]
                     })
                 }
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
-                    text: '╔┈┈「 ⚠️ *PERINGATAN MAX* 」╎❏\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: 🤬 Kata Kasar\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ 📌 Auto-kick: OFF\n╚┈┈❖\n_Kata kasar berlebihan tapi auto-kick dimatikan_',
+                    text: '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ PERINGATAN MAX  ┊  ➶\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: 🤬 Kata Kasar\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ 📌 Auto-kick: OFF\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n_Kata kasar berlebihan tapi auto-kick dimatikan_',
                     mentions: [m.sender]
                 })
             }
         } else {
             await sock.sendMessage(m.chat, {
-                text: '╔┈┈「 ⚠️ *PERINGATAN* 」╎❏\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: 🤬 Kata Kasar\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ 🔍 Terdeteksi: ' + matchesStr + '\n╚┈┈❖\n_Jaga perkataan! ' + (maxWarn - currentWarn) + ' lagi = kick_',
+                text: '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ PERINGATAN  ┊  ➶\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: 🤬 Kata Kasar\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ 🔍 Terdeteksi: ' + matchesStr + '\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n_Jaga perkataan! ' + (maxWarn - currentWarn) + ' lagi = kick_',
                 mentions: [m.sender]
             })
         }
@@ -273,7 +273,7 @@ async function handler(m, { sock }) {
         const del = groupData.kasarDeleteMode || 'on'
         const warnCount = groupData.kasarWarns ? Object.keys(groupData.kasarWarns).length : 0
 
-        let txt = '╔┈┈「 🤬 *ANTI KATA KASAR* 」╎❏\n'
+        let txt = '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ANTI KATA KASAR  ┊  ➶\n'
         txt += '┃\n'
         txt += '┃ ❏ Status: *' + status + '*\n'
         txt += '┃ ❏ Max Warn: *' + maxWarn + 'x*\n'
@@ -288,25 +288,25 @@ async function handler(m, { sock }) {
         txt += '┃ ❏ `' + m.prefix + 'antikasar delete on/off`\n'
         txt += '┃ ❏ `' + m.prefix + 'antikasar reset @user`\n'
         txt += '┃ ❏ `' + m.prefix + 'antikasar resetall`\n'
-        txt += '╚┈┈❖'
+        txt += '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'
         return await m.reply(claraWrap("antikasar", txt))
     }
 
     if (sub === 'on') {
         db.setGroup(m.chat, { antikasar: 'on' })
         m.react('✅')
-        return m.reply(claraWrap("Antikasar", '╔┈┈「 ✅ *ANTI KASAR AKTIF* 」╎❏\n┃ Deteksi kata kasar diaktifkan\n┃ Sistem: Warn 3x lalu kick\n╚┈┈❖'))
+        return m.reply(claraWrap("Antikasar", '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ANTI KASAR AKTIF  ┊  ➶\n┃ Deteksi kata kasar diaktifkan\n┃ Sistem: Warn 3x lalu kick\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'))
     }
     if (sub === 'off') {
         db.setGroup(m.chat, { antikasar: 'off' })
-        return m.reply(claraWrap("Antikasar", '╔┈┈「 ❌ *ANTI KASAR MATI* 」╎❏\n┃ Deteksi kata kasar dinonaktifkan\n╚┈┈❖'))
+        return m.reply(claraWrap("Antikasar", '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ANTI KASAR MATI  ┊  ➶\n┃ Deteksi kata kasar dinonaktifkan\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'))
     }
     if (sub === 'warn') {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) return m.reply(claraWrap("Antikasar", '❌ Masukkan angka 1-10'))
         db.setGroup(m.chat, { kasarMaxWarn: count })
         m.react('✅')
-        return m.reply('╔┈┈「 ✅ *MAX WARN* 」╎❏\n┃ Max peringatan: *' + count + 'x*\n╚┈┈❖')
+        return m.reply('❀°˖✧◝(⁰▿⁰)◜✧˖°❀ MAX WARN  ┊  ➶\n┃ Max peringatan: *' + count + 'x*\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀')
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
@@ -327,14 +327,14 @@ async function handler(m, { sock }) {
         if (updated.kasarWarns?.[target]) delete updated.kasarWarns[target]
         db.setGroup(m.chat, updated)
         m.react('✅')
-        return m.reply('╔┈┈「 ✅ *WARN DIRESET* 」╎❏\n┃ 👤 User: @' + target.split('@')[0] + '\n┃ Warn Kasar: Direset\n╚┈┈❖', { mentions: [target] })
+        return m.reply('❀°˖✧◝(⁰▿⁰)◜✧˖°❀ WARN DIRESET  ┊  ➶\n┃ 👤 User: @' + target.split('@')[0] + '\n┃ Warn Kasar: Direset\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀', { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
         updated.kasarWarns = {}
         db.setGroup(m.chat, updated)
         m.react('✅')
-        return m.reply(claraWrap("Antikasar", '╔┈┈「 ✅ *SEMUA WARN DIRESET* 」╎❏\n╚┈┈❖'))
+        return m.reply(claraWrap("Antikasar", '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ SEMUA WARN DIRESET  ┊  ➶\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antikasar` untuk daftar command')
 }

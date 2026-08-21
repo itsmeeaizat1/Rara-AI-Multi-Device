@@ -66,11 +66,11 @@ async function handler(m, { sock }) {
 
     const responseText =
       `✅ *PAsTEBIN BERHAsIL*\n\n` +
-      `╔┈┈「 📋 *DETAIL* 」\n` +
-      `╎❏ 📝 JUDUL: *${api_paste_name}*\n` +
-      `╎❏ 📊 UKURAN: *${text.length} chars*\n` +
-      `╎❏ 🔗 LINK: ${url}\n` +
-      `╚┈┈┈┈┈┈┈┈┈❖\n\n` +
+      `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ DETAIL\n` +
+      `  ┊  ➶ 📝 JUDUL: *${api_paste_name}*\n` +
+      `  ┊  ➶ 📊 UKURAN: *${text.length} chars*\n` +
+      `  ┊  ➶ 🔗 LINK: ${url}\n` +
+      `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
       `Paste akan expired sesuai pengaturan Pastebin.`;
     await sendToolsPreview(
       sock,

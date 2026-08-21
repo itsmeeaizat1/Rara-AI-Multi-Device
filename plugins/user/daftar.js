@@ -229,45 +229,21 @@ function generateSerialNumber() {
 
 function buildUserDataBlock(name, age, gender, serial) {
   return (
-    `╔┈┈「 📋 DATA 」\n` +
-    `╎❏ 📛 Nama: *${name || "-"}*\n` +
-    `╎❏ 🎂 Umur: *${age ? `${age} tahun` : "-"}*\n` +
-    `╎❏ 👤 Gender: *${gender || "-"}*\n` +
-    `╎❏ 🔑 SN: *${serial || "-"}*\n` +
-    `╚┈┈❖`
-  );
-}
-
-function buildWelcomeMessage(user, registrationRequired, prefix) {
-  const benefits = [
-    `🗂️ Data akun kamu tersimpan lebih rapi`,
-    `${buildRewardPreview(user)}`,
-  ];
-
-  if (registrationRequired) {
-    benefits.splice(
-      1,
-      0,
-      `🔓 Setelah daftar kamu bisa mengakses semua command`,
-    );
-  }
-
-  return (
-    `╔┈┈「 📝 DAFTAR 」\n` +
-    `╎❏ *Selamat datang di Menu Daftar!*\n\n` +
-    `╎✨ Dengan daftar, data akun kamu jadi lebih aman\n` +
-    `╎ dan pengalaman pakai bot jadi lebih lengkap.\n\n` +
-    `╎❏ *Manfaat Daftar*\n` +
-    `${benefits.map((item) => `╎❏ ${item}`).join("\n")}\n\n` +
-    `╎❏ *Pertanyaan 1/4*\n` +
-    `╎ > Siapa nama kamu?\n\n` +
-    `╎❏ *Wajib reply pesan ini ya*\n` +
-    `╎ > Untuk batal: reply \`batal\` atau ketik \`${prefix}bataldaftar\`\n\n` +
-    `╎❏ *Metode Daftar Lainnya*\n` +
-    `╎ > \`${prefix}daftar Nama, Umur\` - Daftar cepat\n` +
-    `╎ > \`${prefix}daftarotomatis\` - Daftar via captcha (DM)\n` +
-    `╎ > \`${prefix}regmail Nama, email\` - Daftar via email OTP\n` +
-    `╚┈┈❖`
+    `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${name || "-"}\n` +
+    `  ┊  ➶ *Selamat datang di Menu Daftar!*\n\n` +
+    `┊✨ Dengan daftar, data akun kamu jadi lebih aman\n` +
+    `┊ dan pengalaman pakai bot jadi lebih lengkap.\n\n` +
+    `  ┊  ➶ *Manfaat Daftar*\n` +
+    `${benefits.map((item) => `  ┊  ➶ ${item}`).join("\n")}\n\n` +
+    `  ┊  ➶ *Pertanyaan 1/4*\n` +
+    `┊ > Siapa nama kamu?\n\n` +
+    `  ┊  ➶ *Wajib reply pesan ini ya*\n` +
+    `┊ > Untuk batal: reply \`batal\` atau ketik \`${prefix}bataldaftar\`\n\n` +
+    `  ┊  ➶ *Metode Daftar Lainnya*\n` +
+    `┊ > \`${prefix}daftar Nama, Umur\` - Daftar cepat\n` +
+    `┊ > \`${prefix}daftarotomatis\` - Daftar via captcha (DM)\n` +
+    `┊ > \`${prefix}regmail Nama, email\` - Daftar via email OTP\n` +
+    `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
   );
 }
 

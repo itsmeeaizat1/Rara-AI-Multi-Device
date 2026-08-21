@@ -294,38 +294,38 @@ function generateDNA(jid) {
   const msgsPerDay = Math.round(user.totalMessages / daysActive);
 
   const body = [
-    `╎ Pengguna: @${jid.split("@")[0]}`,
-    `╎ Total Pesan: ${user.totalMessages}`,
-    `╎ Pesan/Hari: ${msgsPerDay}`,
-    `╎ Grup Aktif: ${activeGroups}`,
-    `╎ Hari Tracking: ${daysActive}`,
-    `╎`,
-    `╎ *Chat Zodiac*`,
-    `╎ ${zodiac.name}`,
-    `╎ ${zodiac.desc}`,
-    `╎ Peak: ${peakHour}:00`,
-    `╎`,
-    `╎ *Chat Type*`,
-    `╎ ${chatType}`,
-    `╎ ${typeDesc}`,
-    `╎ Words/msg: ${avgWords.toFixed(1)} | Reply: ${Math.round(replyRatio * 100)}%`,
-    `╎`,
-    `╎ *Social Battery*`,
-    `╎ ${battery}`,
-    `╎ ${batteryDesc}`,
-    `╎`,
-    `╎ *Emoji Signature*`,
-    `╎ ${topEmojis}`,
-    `╎`,
-    `╎ *Top Words*`,
-    `╎ ${topWords}`,
-    `╎`,
-    `╎ *Response Style*`,
-    `╎ ${respDesc}`,
-    `╎`,
-    `╎ *Toxicity Level*`,
-    `╎ ${toxLevel} (${toxicity.toFixed(1)}%)`,
-    `╎ ${toxDesc}`,
+    `┊ Pengguna: @${jid.split("@")[0]}`,
+    `┊ Total Pesan: ${user.totalMessages}`,
+    `┊ Pesan/Hari: ${msgsPerDay}`,
+    `┊ Grup Aktif: ${activeGroups}`,
+    `┊ Hari Tracking: ${daysActive}`,
+    `┊`,
+    `┊ *Chat Zodiac*`,
+    `┊ ${zodiac.name}`,
+    `┊ ${zodiac.desc}`,
+    `┊ Peak: ${peakHour}:00`,
+    `┊`,
+    `┊ *Chat Type*`,
+    `┊ ${chatType}`,
+    `┊ ${typeDesc}`,
+    `┊ Words/msg: ${avgWords.toFixed(1)} | Reply: ${Math.round(replyRatio * 100)}%`,
+    `┊`,
+    `┊ *Social Battery*`,
+    `┊ ${battery}`,
+    `┊ ${batteryDesc}`,
+    `┊`,
+    `┊ *Emoji Signature*`,
+    `┊ ${topEmojis}`,
+    `┊`,
+    `┊ *Top Words*`,
+    `┊ ${topWords}`,
+    `┊`,
+    `┊ *Response Style*`,
+    `┊ ${respDesc}`,
+    `┊`,
+    `┊ *Toxicity Level*`,
+    `┊ ${toxLevel} (${toxicity.toFixed(1)}%)`,
+    `┊ ${toxDesc}`,
   ].join("\n");
 
   return body;
@@ -496,18 +496,18 @@ async function handler(m, { sock }) {
       const totalMessages = Object.values(db.users).reduce((sum, u) => sum + (u.totalMessages || 0), 0);
 
       const statusBody = [
-        `╎ *Status Chat DNA*`,
-        `╎`,
-        `╎ Global: ${globalStatus}`,
-        `╎ Grup Ini: ${groupStatus}`,
-        `╎ Tracked Users: ${trackedUsers}`,
-        `╎ Total Pesan Terekam: ${totalMessages}`,
-        `╎`,
-        `╎ Perintah (Owner only):`,
-        `╎ .chatdnaon - Nyalakan tracking grup ini`,
-        `╎ .chatdnaoff - Matikan tracking grup ini`,
-        `╎ .chatdna - Lihat DNA profile kamu`,
-        `╎ .dnamatch @user1 @user2 - Match DNA`,
+        `┊ *Status Chat DNA*`,
+        `┊`,
+        `┊ Global: ${globalStatus}`,
+        `┊ Grup Ini: ${groupStatus}`,
+        `┊ Tracked Users: ${trackedUsers}`,
+        `┊ Total Pesan Terekam: ${totalMessages}`,
+        `┊`,
+        `┊ Perintah (Owner only):`,
+        `┊ .chatdnaon - Nyalakan tracking grup ini`,
+        `┊ .chatdnaoff - Matikan tracking grup ini`,
+        `┊ .chatdna - Lihat DNA profile kamu`,
+        `┊ .dnamatch @user1 @user2 - Match DNA`,
       ].join("\n");
       await m.reply(claraWrap("Chat DNA Status", statusBody));
       await m.react("✅");
@@ -581,15 +581,15 @@ async function handler(m, { sock }) {
       }
 
       const reasonsText = result.reasons
-        .map((r, i) => `╎ ${i + 1}. ${r}`)
+        .map((r, i) => `┊ ${i + 1}. ${r}`)
         .join("\n");
 
       const body = [
-        `╎ Match Score: ${result.score}%`,
-        `╎`,
-        `╎ ${result.verdict}`,
-        `╎`,
-        `╎ *Alasan Kecocokan:*`,
+        `┊ Match Score: ${result.score}%`,
+        `┊`,
+        `┊ ${result.verdict}`,
+        `┊`,
+        `┊ *Alasan Kecocokan:*`,
         reasonsText,
       ].join("\n");
 

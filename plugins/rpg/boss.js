@@ -30,10 +30,10 @@ async function handler(m, { sock, config: botConfig, db }) {
     const killed = remaining <= 0;
 
     const text =
-      claraWrap("Boss Battle", ["╎❏ Boss: *Raksasa Kegelapan*",
-        `╎❏ Damage: *-${damage}*`,
-        `╎❏ Sisa HP: *${killed ? "0" : remaining}*`,
-        `╎❏ Status: *${killed ? "Dikalahkan" : "Masih bertahan"}*`].join("\n")) +
+      claraWrap("Boss Battle", ["  ┊  ➶ Boss: *Raksasa Kegelapan*",
+        `  ┊  ➶ Damage: *-${damage}*`,
+        `  ┊  ➶ Sisa HP: *${killed ? "0" : remaining}*`,
+        `  ┊  ➶ Status: *${killed ? "Dikalahkan" : "Masih bertahan"}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}boss untuk serang lagi`) +
       "\n" +
@@ -42,8 +42,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "boss");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

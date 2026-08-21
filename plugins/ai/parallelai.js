@@ -30,8 +30,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!prompt) {
       const text = claraWrap("Cara Pakai", [
-        `╎❏ Penggunaan: *${prefix}parallelai <pertanyaan>*`,
-        `╎❏ Contoh: *${prefix}parallelai cari kan rest api gratis*`,
+        `  ┊  ➶ Penggunaan: *${prefix}parallelai <pertanyaan>*`,
+        `  ┊  ➶ Contoh: *${prefix}parallelai cari kan rest api gratis*`,
         "",
         "Parallel AI adalah reasoning model yang bisa jawab pertanyaan kompleks dengan effort adjustable (low/medium/high).",
       ].join("\n"));

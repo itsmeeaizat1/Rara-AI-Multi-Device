@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     let text = claraHeader(`Dashboard ${cat.name}`, cat.emoji) + "\n\n";
 
-    text += claraWrap("INFO", [`╎❏ Kategori: *${cat.name}*`, `╎❏ Total Command: *${cat.commands.length}*`].join("\n")) + "\n\n";
+    text += claraWrap("INFO", [`  ┊  ➶ Kategori: *${cat.name}*`, `  ┊  ➶ Total Command: *${cat.commands.length}*`].join("\n")) + "\n\n";
 
     text += separator("━", 30) + "\n";
     text += "DAFTAR COMMAND\n";
@@ -103,8 +103,8 @@ async function handler(m, { sock, config: botConfig }) {
     await sendReplyWithNav(sock, m, text, "rpgdashboard");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

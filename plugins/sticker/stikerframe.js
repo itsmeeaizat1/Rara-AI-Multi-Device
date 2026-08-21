@@ -688,25 +688,25 @@ export default {
     // ─── List frames ───
     if (frameType === "list" || (!isImage && !hasQuotedImage && frameMatch)) {
       const lines = [
-        `╎ Stiker Frame - Pilihan Bingkai`,
+        `┊ Stiker Frame - Pilihan Bingkai`,
         ``,
       ];
       let i = 1;
       for (const [key, val] of Object.entries(FRAMES)) {
-        lines.push(`╎ ${i}. *${val.name}* (.stikerframe ${key})`);
-        lines.push(`╎    ${val.desc}`);
+        lines.push(`┊ ${i}. *${val.name}* (.stikerframe ${key})`);
+        lines.push(`┊    ${val.desc}`);
         lines.push(``);
         i++;
       }
       lines.push(
-        `╎ Cara pakai:`,
-        `╎    Kirim/reply foto + caption *${prefix}stikerframe [jenis]*`,
-        `╎    Contoh: *${prefix}stikerframe polaroid*`,
+        `┊ Cara pakai:`,
+        `┊    Kirim/reply foto + caption *${prefix}stikerframe [jenis]*`,
+        `┊    Contoh: *${prefix}stikerframe polaroid*`,
         ``,
-        `╎ Neon warna: pink, blue, green, orange, purple, cyan, red, yellow`,
-        `╎    Contoh: *${prefix}stikerframe neon pink*`,
+        `┊ Neon warna: pink, blue, green, orange, purple, cyan, red, yellow`,
+        `┊    Contoh: *${prefix}stikerframe neon pink*`,
         ``,
-        `╎    *${prefix}stikerframe random* = bingkai acak`,
+        `┊    *${prefix}stikerframe random* = bingkai acak`,
       );
 
       await m.reply(claraWrap("StikerFrame", lines.join("\n")));
@@ -717,10 +717,10 @@ export default {
     // ─── Need image ───
     if (!isImage && !hasQuotedImage) {
       await m.reply(claraWrap("StikerFrame", [
-        `╎ Kirim atau reply foto dengan caption:`,
-        `╎ *${prefix}stikerframe [jenis]*`,
+        `┊ Kirim atau reply foto dengan caption:`,
+        `┊ *${prefix}stikerframe [jenis]*`,
         ``,
-        `╎ Ketik *${prefix}stikerframe list* untuk lihat semua bingkai.`,
+        `┊ Ketik *${prefix}stikerframe list* untuk lihat semua bingkai.`,
       ].join("\n")));
       await m.react("❌");
       return { handled: true };
@@ -738,8 +738,8 @@ export default {
       }
     } catch (e) {
       await m.reply(claraWrap("StikerFrame", [
-        `╎ Gagal mengunduh foto.`,
-        `╎ Coba kirim ulang ya.`,
+        `┊ Gagal mengunduh foto.`,
+        `┊ Coba kirim ulang ya.`,
       ].join("\n")));
       await m.react("❌");
       return { handled: true };
@@ -747,7 +747,7 @@ export default {
 
     if (!imgBuffer || imgBuffer.length === 0) {
       await m.reply(claraWrap("StikerFrame", [
-        `╎ Foto kosong, coba ulangi.`,
+        `┊ Foto kosong, coba ulangi.`,
       ].join("\n")));
       await m.react("❌");
       return { handled: true };
@@ -767,9 +767,9 @@ export default {
     // Validate frame
     if (!FRAMES[useFrame]) {
       await m.reply(claraWrap("StikerFrame", [
-        `╎ Jenis bingkai tidak ditemukan: *${useFrame}*`,
+        `┊ Jenis bingkai tidak ditemukan: *${useFrame}*`,
         ``,
-        `╎ Ketik *${prefix}stikerframe list* untuk lihat semua pilihan.`,
+        `┊ Ketik *${prefix}stikerframe list* untuk lihat semua pilihan.`,
       ].join("\n")));
       await m.react("❌");
       return { handled: true };
@@ -800,8 +800,8 @@ export default {
     } catch (e) {
       console.log("[StikerFrame] Error:", e.message);
       await m.reply(claraWrap("StikerFrame", [
-        `╎ Gagal memproses bingkai: ${e.message}`,
-        `╎ Coba jenis bingkai lain ya.`,
+        `┊ Gagal memproses bingkai: ${e.message}`,
+        `┊ Coba jenis bingkai lain ya.`,
       ].join("\n")));
       await m.react("❌");
     }

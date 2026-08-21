@@ -26,8 +26,8 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     if (!target) {
       const text =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}trade @member <item> <jumlah>*`,
-          `╎❏ Contoh: *${prefix}trade @628xxxx Potion 2*`].join("\n")) +
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}trade @member <item> <jumlah>*`,
+          `  ┊  ➶ Contoh: *${prefix}trade @628xxxx Potion 2*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -38,18 +38,18 @@ async function handler(m, { sock, config: botConfig, db }) {
     const item = m.text?.trim().split(/\s+/).slice(2).join(" ") || "Unknown";
 
     const text =
-      claraWrap("Trade", [`╎❏ Dari: *${m.pushName || "Player"}*`,
-        `╎❏ Kepada: *${target}*`,
-        `╎❏ Item: *${item}*`,
-        "╎❏ Status: *Menunggu konfirmasi*"].join("\n")) +
+      claraWrap("Trade", [`  ┊  ➶ Dari: *${m.pushName || "Player"}*`,
+        `  ┊  ➶ Kepada: *${target}*`,
+        `  ┊  ➶ Item: *${item}*`,
+        "  ┊  ➶ Status: *Menunggu konfirmasi*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await sendReplyWithNav(sock, m, text, "trade");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

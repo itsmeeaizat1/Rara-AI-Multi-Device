@@ -150,14 +150,14 @@ async function handler(m, { sock, config: botConfig }) {
     const buildingCount = Object.keys(kingdom.buildings || {}).length;
 
     let text =
-      claraWrap("Kingdom", [`╎❏ Pemilik: *${m.pushName || "Player"}*`,
-        `╎❏ Level: *${player?.level || 1}*`,
-        `╎❏ Bangunan: *${buildingCount}/${Object.keys(BUILDINGS).length}*`,
-        `╎❏ Treasury Bonus: *+${Math.round(treasuryBonus * 100)}% gold*`].join("\n"));
+      claraWrap("Kingdom", [`  ┊  ➶ Pemilik: *${m.pushName || "Player"}*`,
+        `  ┊  ➶ Level: *${player?.level || 1}*`,
+        `  ┊  ➶ Bangunan: *${buildingCount}/${Object.keys(BUILDINGS).length}*`,
+        `  ┊  ➶ Treasury Bonus: *+${Math.round(treasuryBonus * 100)}% gold*`].join("\n"));
 
     // Resource ready to collect
     if (accumulated.food > 0 || accumulated.wood > 0 || accumulated.army > 0 || accumulated.coin > 0) {
-      text += "\n\n" + claraWrap("RESOURCE SIAP DIKLAIM", [`╎❏ 🍞 Food: *+${accumulated.food.toLocaleString("id-ID")}*`, `╎❏ 🪵 Wood: *+${accumulated.wood.toLocaleString("id-ID")}*`, `╎❏ ⚔️ Army: *+${accumulated.army.toLocaleString("id-ID")}*`, `╎❏ 💰 Coin: *+${accumulated.coin.toLocaleString("id-ID")}*`].join("\n")) + "\n\n" + tipText(`Ketik \`${prefix}kingdom collect\` untuk klaim!`);
+      text += "\n\n" + claraWrap("RESOURCE SIAP DIKLAIM", [`  ┊  ➶ 🍞 Food: *+${accumulated.food.toLocaleString("id-ID")}*`, `  ┊  ➶ 🪵 Wood: *+${accumulated.wood.toLocaleString("id-ID")}*`, `  ┊  ➶ ⚔️ Army: *+${accumulated.army.toLocaleString("id-ID")}*`, `  ┊  ➶ 💰 Coin: *+${accumulated.coin.toLocaleString("id-ID")}*`].join("\n")) + "\n\n" + tipText(`Ketik \`${prefix}kingdom collect\` untuk klaim!`);
     }
 
     // List buildings
@@ -203,7 +203,7 @@ async function handler(m, { sock, config: botConfig }) {
       return sendReplyWithNav(
         sock,
         m,
-        claraWrap("Kingdom Build", [`╎❏ Gold kamu: *${(user.koin || 0).toLocaleString("id-ID")}*`].join("\n")) + "\n\n" + list +
+        claraWrap("Kingdom Build", [`  ┊  ➶ Gold kamu: *${(user.koin || 0).toLocaleString("id-ID")}*`].join("\n")) + "\n\n" + list +
         separator("━", 22) + "\n" +
         tipText(`Bangun: \`${prefix}kingdom build <nama>\``),
         "kingdom"
@@ -227,10 +227,10 @@ async function handler(m, { sock, config: botConfig }) {
       return sendReplyWithNav(
         sock,
         m,
-        claraWrap("Kingdom Build", [`╎❏ Bangunan: *${building.emoji} ${building.name}*`,
-          `╎❏ Biaya: *${cost.toLocaleString("id-ID")}*`,
-          `╎❏ Gold kamu: *${(user.koin || 0).toLocaleString("id-ID")}*`,
-          `╎❏ Kurang: *${(cost - (user.koin || 0)).toLocaleString("id-ID")}*`].join("\n")) + "\n\n" +
+        claraWrap("Kingdom Build", [`  ┊  ➶ Bangunan: *${building.emoji} ${building.name}*`,
+          `  ┊  ➶ Biaya: *${cost.toLocaleString("id-ID")}*`,
+          `  ┊  ➶ Gold kamu: *${(user.koin || 0).toLocaleString("id-ID")}*`,
+          `  ┊  ➶ Kurang: *${(cost - (user.koin || 0)).toLocaleString("id-ID")}*`].join("\n")) + "\n\n" +
         tipText(`Kumpulin gold lewat \`${prefix}hunt\` atau \`${prefix}daily\``),
         "kingdom"
       );
@@ -247,11 +247,11 @@ async function handler(m, { sock, config: botConfig }) {
     return sendReplyWithNav(
       sock,
       m,
-      claraWrap("Kingdom Build", [`╎❏ Bangunan: *${building.emoji} ${building.name}*`,
-        `╎❏ Level: *1*`,
-        `╎❏ Produksi: *${building.resourceEmoji} +${getProduction(building, 1)}/jam*`,
-        `╎❏ Biaya: *-${cost.toLocaleString("id-ID")}G*`,
-        `╎❏ Gold tersisa: *${user.koin.toLocaleString("id-ID")}*`].join("\n")) + "\n\n" +
+      claraWrap("Kingdom Build", [`  ┊  ➶ Bangunan: *${building.emoji} ${building.name}*`,
+        `  ┊  ➶ Level: *1*`,
+        `  ┊  ➶ Produksi: *${building.resourceEmoji} +${getProduction(building, 1)}/jam*`,
+        `  ┊  ➶ Biaya: *-${cost.toLocaleString("id-ID")}G*`,
+        `  ┊  ➶ Gold tersisa: *${user.koin.toLocaleString("id-ID")}*`].join("\n")) + "\n\n" +
       tipText(`Upgrade: \`${prefix}kingdom upgrade ${buildKey}\``) + "\n" +
       tipText(`Klaim resource: \`${prefix}kingdom collect\``),
       "kingdom"
@@ -300,10 +300,10 @@ async function handler(m, { sock, config: botConfig }) {
       return sendReplyWithNav(
         sock,
         m,
-        claraWrap("Kingdom Upgrade", [`╎❏ Bangunan: *${building.emoji} ${building.name}*`,
-          `╎❏ Upgrade Lv ${current.level} → ${current.level + 1}`,
-          `╎❏ Biaya: *${cost.toLocaleString("id-ID")}*`,
-          `╎❏ Gold kamu: *${(user.koin || 0).toLocaleString("id-ID")}*`].join("\n")) + "\n\n" +
+        claraWrap("Kingdom Upgrade", [`  ┊  ➶ Bangunan: *${building.emoji} ${building.name}*`,
+          `  ┊  ➶ Upgrade Lv ${current.level} → ${current.level + 1}`,
+          `  ┊  ➶ Biaya: *${cost.toLocaleString("id-ID")}*`,
+          `  ┊  ➶ Gold kamu: *${(user.koin || 0).toLocaleString("id-ID")}*`].join("\n")) + "\n\n" +
         tipText(`Kumpulin gold dulu!`),
         "kingdom"
       );
@@ -322,11 +322,11 @@ async function handler(m, { sock, config: botConfig }) {
     return sendReplyWithNav(
       sock,
       m,
-      claraWrap("Kingdom Upgrade", [`╎❏ Bangunan: *${building.emoji} ${building.name}*`,
-        `╎❏ Level: *${current.level} → ${current.level + 1}*`,
-        `╎❏ Produksi: *${oldProd} → ${newProd} ${building.resourceEmoji}/jam*`,
-        `╎❏ Biaya: *-${cost.toLocaleString("id-ID")}G*`,
-        `╎❏ Gold tersisa: *${user.koin.toLocaleString("id-ID")}*`].join("\n")) + "\n\n" +
+      claraWrap("Kingdom Upgrade", [`  ┊  ➶ Bangunan: *${building.emoji} ${building.name}*`,
+        `  ┊  ➶ Level: *${current.level} → ${current.level + 1}*`,
+        `  ┊  ➶ Produksi: *${oldProd} → ${newProd} ${building.resourceEmoji}/jam*`,
+        `  ┊  ➶ Biaya: *-${cost.toLocaleString("id-ID")}G*`,
+        `  ┊  ➶ Gold tersisa: *${user.koin.toLocaleString("id-ID")}*`].join("\n")) + "\n\n" +
       (current.level + 1 < building.maxLevel
         ? tipText(`Upgrade lagi: \`${prefix}kingdom upgrade ${buildKey}\``)
         : tipText("MAX LEVEL! 🔥")) + "\n" +
@@ -377,12 +377,12 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("✅");
 
     let text =
-      claraWrap("Kingdom Collect", [`╎❏ 🍞 Food: *+${totalFood.toLocaleString("id-ID")}*`,
-        `╎❏ 🪵 Wood: *+${totalWood.toLocaleString("id-ID")}*`,
-        `╎❏ ⚔️ Army: *+${totalArmy.toLocaleString("id-ID")}*`,
-        `╎❏ 💰 Coin: *+${coinWithBonus.toLocaleString("id-ID")}*` +
+      claraWrap("Kingdom Collect", [`  ┊  ➶ 🍞 Food: *+${totalFood.toLocaleString("id-ID")}*`,
+        `  ┊  ➶ 🪵 Wood: *+${totalWood.toLocaleString("id-ID")}*`,
+        `  ┊  ➶ ⚔️ Army: *+${totalArmy.toLocaleString("id-ID")}*`,
+        `  ┊  ➶ 💰 Coin: *+${coinWithBonus.toLocaleString("id-ID")}*` +
           (treasuryBonus > 0 ? ` (+${Math.round(treasuryBonus * 100)}% treasury)` : "")].join("\n")) + "\n\n" +
-      claraWrap("SIMPANAN KERAJAAN", [`╎❏ 🍞 Food: *${(kingdom.resources.food || 0).toLocaleString("id-ID")}*`, `╎❏ 🪵 Wood: *${(kingdom.resources.wood || 0).toLocaleString("id-ID")}*`, `╎❏ ⚔️ Army: *${(kingdom.resources.army || 0).toLocaleString("id-ID")}*`].join("\n")) + "\n\n" +
+      claraWrap("SIMPANAN KERAJAAN", [`  ┊  ➶ 🍞 Food: *${(kingdom.resources.food || 0).toLocaleString("id-ID")}*`, `  ┊  ➶ 🪵 Wood: *${(kingdom.resources.wood || 0).toLocaleString("id-ID")}*`, `  ┊  ➶ ⚔️ Army: *${(kingdom.resources.army || 0).toLocaleString("id-ID")}*`].join("\n")) + "\n\n" +
       separator("━", 22) + "\n" +
       tipText(`Coin langsung masuk gold!`) + "\n" +
       tipText(`Klaim lagi nanti untuk resource baru`);
@@ -394,10 +394,10 @@ async function handler(m, { sock, config: botConfig }) {
   return sendReplyWithNav(
     sock,
     m,
-    claraWrap("Kingdom", [`╎❏ \`${prefix}kingdom\` — Status kerajaan`,
-      `╎❏ \`${prefix}kingdom build <nama>\` — Bangun`,
-      `╎❏ \`${prefix}kingdom upgrade <nama>\` — Upgrade`,
-      `╎❏ \`${prefix}kingdom collect\` — Klaim resource`].join("\n")) + "\n" +
+    claraWrap("Kingdom", [`  ┊  ➶ \`${prefix}kingdom\` — Status kerajaan`,
+      `  ┊  ➶ \`${prefix}kingdom build <nama>\` — Bangun`,
+      `  ┊  ➶ \`${prefix}kingdom upgrade <nama>\` — Upgrade`,
+      `  ┊  ➶ \`${prefix}kingdom collect\` — Klaim resource`].join("\n")) + "\n" +
     tipText("Fitur Premium: idle kingdom builder"),
     "kingdom"
   );

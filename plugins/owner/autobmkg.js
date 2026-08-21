@@ -146,23 +146,8 @@ async function handler(m, { sock }) {
       // Test fetch gempa terkini
       const { fetchGempaTerkini } = await import("../../src/lib/nova-bmkg-scheduler.js");
       const g = await fetchGempaTerkini();
-      let txt = "╔┈┈「 TEST GEMPA BMKG 」╎❏\n";
-      txt += "╚┈┈❖\n\n";
-      txt += "Tanggal: *" + g.Tanggal + "*\n";
-      txt += "Jam: *" + g.Jam + "*\n";
-      txt += "Magnitude: *" + g.Magnitude + "*\n";
-      txt += "Kedalaman: *" + g.Kedalaman + "*\n";
-      txt += "Wilayah: *" + g.Wilayah + "*\n";
-      txt += "Potensi: *" + g.Potensi + "*\n\n";
-      txt += "Data live dari BMKG. Broadcast akan kirim info ini otomatis.";
-      return await m.reply(claraWrap("autobmkg", txt));
-    }
-
-    // STATUS
-    if (action === "status" || action === "list" || !action) {
-      const status = getBmkgStatus();
-      let txt = "╔┈┈「 AUTO BMKG SCHEDULER 」╎❏\n";
-      txt += "╚┈┈❖\n\n";
+      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + g.Tanggal + "  ┊  ➶\n";
+      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
       txt += "Status: *" + (status.enabled ? "ON" : "OFF") + "*\n";
       txt += "Jadwal: " + formatSchedule(status.schedules) + " WIB\n";
       txt += "Min Magnitude: M" + (status.minMagnitude || 0) + "\n";

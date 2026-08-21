@@ -54,8 +54,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!proposal) {
       const text =
-        claraWrap("Tidak Ada Lamaran", ["╎❏ Kamu tidak punya lamaran nikah yang menunggu",
-          "╎❏ Atau lamaran sudah expired (5 menit)"].join("\n")) + "\n" +
+        claraWrap("Tidak Ada Lamaran", ["  ┊  ➶ Kamu tidak punya lamaran nikah yang menunggu",
+          "  ┊  ➶ Atau lamaran sudah expired (5 menit)"].join("\n")) + "\n" +
         tipText("Tunggu seseorang melamar kamu");
 
       await sendReplyWithNav(sock, m, text, "terimanikah");
@@ -64,7 +64,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (proposal.groupId !== m.chat) {
       const text =
-        claraWrap("Salah Tempat", ["╎❏ Lamaran harus dijawab di grup yang sama"].join("\n")) + "\n" +
+        claraWrap("Salah Tempat", ["  ┊  ➶ Lamaran harus dijawab di grup yang sama"].join("\n")) + "\n" +
         tipText("Balas di grup tempat kamu dilamar");
 
       await sendReplyWithNav(sock, m, text, "terimanikah");
@@ -82,14 +82,14 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (proposerUser.rpg.spouse) {
       pendingProposals.delete(m.sender);
-      const text = claraWrap("Maaf", ["╎❏ " + proposerName + " sudah menikah dengan orang lain"].join("\n"));
+      const text = claraWrap("Maaf", ["  ┊  ➶ " + proposerName + " sudah menikah dengan orang lain"].join("\n"));
       await sendReplyWithNav(sock, m, text, "terimanikah");
       return { handled: true };
     }
 
     if (targetUser.rpg.spouse) {
       pendingProposals.delete(m.sender);
-      const text = claraWrap("Sudah Menikah", ["╎❏ Kamu sudah menikah!"].join("\n"));
+      const text = claraWrap("Sudah Menikah", ["  ┊  ➶ Kamu sudah menikah!"].join("\n"));
       await sendReplyWithNav(sock, m, text, "terimanikah");
       return { handled: true };
     }

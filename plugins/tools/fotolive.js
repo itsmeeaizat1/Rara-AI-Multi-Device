@@ -143,11 +143,11 @@ async function handler(m, { sock }) {
     if (srcDuration < SRC_MIN_DURATION) {
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(
-        `╔┈┈「 *Video Terlalu Pendek* 」\n` +
-        `╎\n` +
-        `╎❏ *Durasi video:* ${srcDuration.toFixed(1)}s\n` +
-        `╎❏ *Minimal wajib:* ${SRC_MIN_DURATION}s\n` +
-        `╚┈┈┈┈┈┈┈┈┈❖\n\n` +
+        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Video Terlalu Pendek\n` +
+        `┊\n` +
+        `  ┊  ➶ *Durasi video:* ${srcDuration.toFixed(1)}s\n` +
+        `  ┊  ➶ *Minimal wajib:* ${SRC_MIN_DURATION}s\n` +
+        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
         `Video sumber terlalu pendek! Minimal ${SRC_MIN_DURATION}s biar efek live-nya kelihatan dan pas.`
       );
     }
@@ -178,11 +178,11 @@ async function handler(m, { sock }) {
     if (duration < OUT_MIN_DURATION) {
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(
-        `╔┈┈「 *Durasi Output Terlalu Pendek* 」\n` +
-        `╎\n` +
-        `╎❏ *Diminta:* ${duration}s\n` +
-        `╎❏ *Minimal:* ${OUT_MIN_DURATION}s (wajib)\n` +
-        `╚┈┈┈┈┈┈┈┈┈❖\n\n` +
+        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Durasi Output Terlalu Pendek\n` +
+        `┊\n` +
+        `  ┊  ➶ *Diminta:* ${duration}s\n` +
+        `  ┊  ➶ *Minimal:* ${OUT_MIN_DURATION}s (wajib)\n` +
+        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
         `Durasi output minimal ${OUT_MIN_DURATION}s wajib biar efek live pas!`
       );
     }
@@ -191,11 +191,11 @@ async function handler(m, { sock }) {
     if (duration > OUT_MAX_DURATION) {
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(
-        `╔┈┈「 *Durasi Output Terlalu Panjang* 」\n` +
-        `╎\n` +
-        `╎❏ *Diminta:* ${duration}s\n` +
-        `╎❏ *Maksimal:* ${OUT_MAX_DURATION}s\n` +
-        `╚┈┈┈┈┈┈┈┈┈❖\n\n` +
+        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Durasi Output Terlalu Panjang\n` +
+        `┊\n` +
+        `  ┊  ➶ *Diminta:* ${duration}s\n` +
+        `  ┊  ➶ *Maksimal:* ${OUT_MAX_DURATION}s\n` +
+        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
         `Durasi output maksimal ${OUT_MAX_DURATION}s untuk performa optimal.`
       );
     }
@@ -258,14 +258,14 @@ async function handler(m, { sock }) {
       video: liveBuffer,
       gifPlayback: true,
       caption:
-        `╔┈┈「 *Live Photo* 」\n` +
-        `╎\n` +
-        `╎❏ *Durasi:* ${durLabel}\n` +
-        `╎❏ *Resolusi:* ${resolution}p\n` +
-        `╎❏ *FPS:* ${fps}\n` +
-        `╎❏ *Ukuran:* ${formatSize(liveSize)}\n` +
-        (wasTrimmed ? `╎❏ *Trimmed:* ${srcDuration.toFixed(1)}s → ${durLabel}\n` : '') +
-        `╚┈┈┈┈┈┈┈┈┈❖`,
+        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Live Photo\n` +
+        `┊\n` +
+        `  ┊  ➶ *Durasi:* ${durLabel}\n` +
+        `  ┊  ➶ *Resolusi:* ${resolution}p\n` +
+        `  ┊  ➶ *FPS:* ${fps}\n` +
+        `  ┊  ➶ *Ukuran:* ${formatSize(liveSize)}\n` +
+        (wasTrimmed ? `  ┊  ➶ *Trimmed:* ${srcDuration.toFixed(1)}s → ${durLabel}\n` : '') +
+        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`,
     }, { quoted: m });
 
     // Cleanup output
@@ -279,10 +279,10 @@ async function handler(m, { sock }) {
     if (errMsg.length > 150) errMsg = errMsg.slice(0, 150) + "...";
 
     await m.reply(
-      `╔┈┈「 *Live Photo Error* 」\n` +
-      `╎\n` +
-      `╎❏ *Error:* ${errMsg}\n` +
-      `╚┈┈┈┈┈┈┈┈┈❖\n\n` +
+      `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Live Photo Error\n` +
+      `┊\n` +
+      `  ┊  ➶ *Error:* ${errMsg}\n` +
+      `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
       `Coba video lain atau durasi lebih pendek.`
     );
     return { handled: true };

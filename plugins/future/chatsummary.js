@@ -17,8 +17,8 @@ async function handler(m, { sock, config: botConfig }) {
     if (!db.recentMsgs) db.recentMsgs = {};
     const msgs = db.recentMsgs[gid] || [];
     if (msgs.length < 5) {
-      await m.reply(claraWrap("Chat Summary", ["╎❏ Belum cukup pesan untuk dirangkum",
-        "╎❏ Minimal 5 pesan terakhir"].join("\n")));
+      await m.reply(claraWrap("Chat Summary", ["  ┊  ➶ Belum cukup pesan untuk dirangkum",
+        "  ┊  ➶ Minimal 5 pesan terakhir"].join("\n")));
       return { handled: true };
     }
     const chatText = msgs.slice(-30).map(m => `${m.sender.split("@")[0]}: ${m.text}`).join("\n");

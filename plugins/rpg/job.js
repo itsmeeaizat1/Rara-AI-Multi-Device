@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig, db }) {
           "4. Healer - ATK +5, DEF +8",
           "5. Assassin - ATK +18, DEF +2"].join("\n")) +
         "\n\n" +
-        claraWrap("Info", [`╎❏ Penggunaan: *${prefix}job <nama job>*`, `╎❏ Contoh: *${prefix}job Warrior*`].join("\n")) +
+        claraWrap("Info", [`  ┊  ➶ Penggunaan: *${prefix}job <nama job>*`, `  ┊  ➶ Contoh: *${prefix}job Warrior*`].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +
@@ -45,18 +45,18 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
 
     const text =
-      claraWrap("Job", [`╎❏ Job: *${query}*`,
-        "╎❏ Status: *Berhasil diganti*",
-        "╎❏ ATK Bonus: *+10*",
-        "╎❏ DEF Bonus: *+5*"].join("\n")) +
+      claraWrap("Job", [`  ┊  ➶ Job: *${query}*`,
+        "  ┊  ➶ Status: *Berhasil diganti*",
+        "  ┊  ➶ ATK Bonus: *+10*",
+        "  ┊  ➶ DEF Bonus: *+5*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await sendReplyWithNav(sock, m, text, "job");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

@@ -23,11 +23,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const botName = config.bot?.name || "Nova-AI";
 
-  const caption = `╔┈┈「 *Script Bot* 」
-╎
-╎❏ *Bot:* ${botName}
-╎❏ *User:* ${m.pushName}
-╚┈┈┈┈┈┈┈┈┈❖
+  const caption = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Script Bot
+┊
+  ┊  ➶ *Bot:* ${botName}
+  ┊  ➶ *User:* ${m.pushName}
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
 > Untuk asli dari bot ini, kamu bisa
 > dapatkan melalui link di bawah.

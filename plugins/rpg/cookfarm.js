@@ -106,78 +106,8 @@ async function handler(m, { sock }) {
   const action = args[0];
 
   if (!action || action === "menu" || action === "list") {
-    let txt = "╔┈┈「 DAPUR MASAK FARM 」╎❏\n";
-    txt += "╚┈┈❖\n";
-    txt += "Masak hasil panen jadi makanan special!\n";
-    txt += "Makanan kasih bonus stamina & EXP.\n\n";
-    txt += "*Daftar Resep:*\n\n";
-
-    for (const [key, recipe] of Object.entries(RECIPES)) {
-      txt += recipe.emoji + " *" + recipe.name + "* (" + key + ")\n";
-      txt += "   " + recipe.desc + "\n";
-      const ings = Object.entries(recipe.ingredients).map(([k, v]) => v + "x " + k);
-      txt += "   Bahan: " + ings.join(", ") + "\n";
-      txt += "   Stamina: +" + recipe.staminaBonus + " | EXP: +" + recipe.expBonus + "\n";
-      txt += "   Waktu masak: " + Math.floor(recipe.cookTime / 1000) + "s\n\n";
-    }
-
-    txt += "Masak pake: .cookfarm cook <nama_resep>\n";
-    txt += "Contoh: .cookfarm cook salad\n\n";
-
-    // Tampilkan stok bahan
-    const farmCrops = ["padi", "jagung", "tomat", "wortel", "strawberry", "melon", "labu", "anggur"];
-    const stock = farmCrops.map((c) => c + ":" + (user.inventory[c] || 0)).join(" | ");
-    txt += "*Stok Bahan Kamu:*\n" + stock;
-
-    return await sendReplyWithNav(sock, m, txt, "cookfarm");
-  }
-
-  if (action === "cook") {
-    const recipeName = args[1];
-    if (!recipeName) {
-      return sendReplyWithNav(m, sock, claraWrap("Cookfarm", "Mau masak apa?\nContoh: .cookfarm cook salad\nLihat resep: .cookfarm menu"), { commandName: "cookfarm" });
-    }
-
-    const recipe = RECIPES[recipeName];
-    if (!recipe) {
-      return sendReplyWithNav(sock, m, "Resep *" + recipeName + "* tidak ada!\nLihat daftar: .cookfarm menu", "cookfarm");
-    }
-
-    // Cek bahan
-    const missing = [];
-    for (const [ingredient, qty] of Object.entries(recipe.ingredients)) {
-      if ((user.inventory[ingredient] || 0) < qty) {
-        missing.push(ingredient + " (butuh " + qty + ", punya " + (user.inventory[ingredient] || 0) + ")");
-      }
-    }
-
-    if (missing.length > 0) {
-      return sendReplyWithNav(sock, m, "Bahan kurang!\n" + missing.join("\n") + "\n\nTanam dulu di .coopfarm plant <tanaman>", "cookfarm");
-    }
-
-    // Kurangi bahan
-    for (const [ingredient, qty] of Object.entries(recipe.ingredients)) {
-      user.inventory[ingredient] -= qty;
-      if (user.inventory[ingredient] <= 0) delete user.inventory[ingredient];
-    }
-
-    await sendReplyWithNav(sock, m, "Sedang masak " + recipe.emoji + " " + recipe.name + "...\nTunggu " + Math.floor(recipe.cookTime / 1000) + " detik ya!", "cookfarm");
-
-    await new Promise((r) => setTimeout(r, recipe.cookTime));
-
-    // Tambah stamina & exp
-    user.rpg.stamina = user.rpg.stamina ?? 100;
-    const maxStamina = 200;
-    const beforeStamina = user.rpg.stamina;
-    user.rpg.stamina = Math.min(maxStamina, user.rpg.stamina + recipe.staminaBonus);
-    const staminaGain = user.rpg.stamina - beforeStamina;
-
-    await addExpWithLevelCheck(sock, m, db, user, recipe.expBonus);
-    db.save();
-
-    await m.react("✅");
-    let txt = "╔┈┈「 MASAKAN SIAP! 」╎❏\n";
-    txt += "╚┈┈❖\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Daftar Resep:  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += recipe.emoji + " *" + recipe.name + "* berhasil dimasak!\n\n";
     txt += "Stamina: +" + staminaGain + " (sekarang: " + user.rpg.stamina + "/" + maxStamina + ")\n";
     txt += "EXP: +" + recipe.expBonus + "\n\n";

@@ -136,21 +136,21 @@ async function handler(m, { sock, db }) {
 
   // ─── Body text: Info Saluran ───
   const lines = [
-    `╎❏ *Bot:* ${botName} v${botVersion}`,
-    `╎❏ *Saluran:* ${channelName}`,
+    `  ┊  ➶ *Bot:* ${botName} v${botVersion}`,
+    `  ┊  ➶ *Saluran:* ${channelName}`,
   ];
 
   if (followerCount !== null) {
-    lines.push(`╎❏ *Pengikut:* ${Number(followerCount).toLocaleString("id-ID")}`);
+    lines.push(`  ┊  ➶ *Pengikut:* ${Number(followerCount).toLocaleString("id-ID")}`);
   }
 
   if (postsCount !== null) {
-    lines.push(`╎❏ *Total Postingan:* ${Number(postsCount).toLocaleString("id-ID")}`);
+    lines.push(`  ┊  ➶ *Total Postingan:* ${Number(postsCount).toLocaleString("id-ID")}`);
   }
 
   if (createdAt) {
     const dateStr = formatDate(createdAt);
-    if (dateStr) lines.push(`╎❏ *Dibuat:* ${dateStr}`);
+    if (dateStr) lines.push(`  ┊  ➶ *Dibuat:* ${dateStr}`);
   }
 
   if (verifiedStatus !== null) {
@@ -159,17 +159,17 @@ async function handler(m, { sock, db }) {
       : verifiedStatus === false || verifiedStatus === "UNVERIFIED"
         ? "Belum Terverifikasi"
         : String(verifiedStatus);
-    lines.push(`╎❏ *Verifikasi:* ${verifiedStr}`);
+    lines.push(`  ┊  ➶ *Verifikasi:* ${verifiedStr}`);
   }
 
   if (channelState) {
     const stateStr = typeof channelState === "string" ? channelState : String(channelState);
-    lines.push(`╎❏ *Status:* ${stateStr}`);
+    lines.push(`  ┊  ➶ *Status:* ${stateStr}`);
   }
 
   if (privacyType) {
     const privacyStr = typeof privacyType === "string" ? privacyType : String(privacyType);
-    lines.push(`╎❏ *Tipe:* ${privacyStr}`);
+    lines.push(`  ┊  ➶ *Tipe:* ${privacyStr}`);
   }
 
   if (reactionSettings !== null && reactionSettings !== undefined) {
@@ -178,48 +178,48 @@ async function handler(m, { sock, db }) {
       : typeof reactionSettings === "object"
         ? (reactionSettings?.enabled ? "Aktif" : "Nonaktif")
         : String(reactionSettings);
-    lines.push(`╎❏ *Reaction:* ${reactStr}`);
+    lines.push(`  ┊  ➶ *Reaction:* ${reactStr}`);
   }
 
   if (channelDesc) {
     const descShort = channelDesc.length > 100 ? channelDesc.slice(0, 100) + "..." : channelDesc;
-    lines.push(`╎❏ *Deskripsi:* ${descShort}`);
+    lines.push(`  ┊  ➶ *Deskripsi:* ${descShort}`);
   }
 
   lines.push("");
-  lines.push(`╎ Klik link di bawah untuk follow saluran:`);
-  lines.push(`╎ ${channelLink}`);
+  lines.push(`┊ Klik link di bawah untuk follow saluran:`);
+  lines.push(`┊ ${channelLink}`);
 
   // ─── Postingan Terakhir ───
   if (lastPostText) {
     const postShort = lastPostText.length > 150 ? lastPostText.slice(0, 150) + "..." : lastPostText;
     lines.push("");
-    lines.push(`╎❏ *Postingan Terakhir:*`);
-    lines.push(`╎ ${postShort}`);
+    lines.push(`  ┊  ➶ *Postingan Terakhir:*`);
+    lines.push(`┊ ${postShort}`);
 
     if (lastPostTime) {
       const dateStr = formatDate(lastPostTime);
-      if (dateStr) lines.push(`╎❏ *Waktu:* ${dateStr}`);
+      if (dateStr) lines.push(`  ┊  ➶ *Waktu:* ${dateStr}`);
     }
   }
 
   // ─── Info Bot ───
   lines.push("");
-  lines.push(`╎❏ *Owner:* ${ownerName}`);
+  lines.push(`  ┊  ➶ *Owner:* ${ownerName}`);
   if (ownerNumber) {
     const ownerStr = String(ownerNumber).replace(/[^0-9]/g, "");
-    lines.push(`╎❏ *Nomor Owner:* ${ownerStr}`);
+    lines.push(`  ┊  ➶ *Nomor Owner:* ${ownerStr}`);
   }
 
   // Uptime bot
   try {
     const uptimeMs = process.uptime() * 1000;
-    lines.push(`╎❏ *Uptime:* ${formatUptime(uptimeMs)}`);
+    lines.push(`  ┊  ➶ *Uptime:* ${formatUptime(uptimeMs)}`);
   } catch (_) { console.error('[channelnovaofficial.js]:', _?.message || _); }
 
   lines.push("");
-  lines.push(`╎ Ikuti saluran untuk update fitur terbaru,`);
-  lines.push(`╎ info maintenance, dan pengumuman penting`);
+  lines.push(`┊ Ikuti saluran untuk update fitur terbaru,`);
+  lines.push(`┊ info maintenance, dan pengumuman penting`);
 
   // ─── Thumbnail via externalAdReply (banner dari asset) ───
   let thumbBuffer = null;

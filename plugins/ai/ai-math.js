@@ -27,8 +27,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!prompt) {
       const text =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}ai-math <soal>*`,
-          `╎❏ Contoh: *${prefix}ai-math Integral dari x^2 dx*`].join("\n")) +
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}ai-math <soal>*`,
+          `  ┊  ➶ Contoh: *${prefix}ai-math Integral dari x^2 dx*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -49,8 +49,8 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      claraWrap("AI Math", [`╎❏ Soal: *${prompt.slice(0, 200)}${prompt.length > 200 ? "..." : ""}*`,
-        `╎❏ Jawaban: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      claraWrap("AI Math", [`  ┊  ➶ Soal: *${prompt.slice(0, 200)}${prompt.length > 200 ? "..." : ""}*`,
+        `  ┊  ➶ Jawaban: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}ai-math <soal> untuk soal lain`) +
       "\n" +
@@ -61,8 +61,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

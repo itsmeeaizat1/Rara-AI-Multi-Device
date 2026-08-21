@@ -35,9 +35,9 @@ async function handler(m, { sock, config: botConfig }) {
     const media = extractImage(m);
     if (!media) {
       const text =
-        claraWrap("Upscaler", ["╎❏ Kirim gambar + caption .upscaler",
-          "╎❏ Atau reply gambar dengan .upscaler",
-          "╎❏ Format: PNG, JPG, WEBP"].join("\n")) +
+        claraWrap("Upscaler", ["  ┊  ➶ Kirim gambar + caption .upscaler",
+          "  ┊  ➶ Atau reply gambar dengan .upscaler",
+          "  ┊  ➶ Format: PNG, JPG, WEBP"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -55,8 +55,8 @@ async function handler(m, { sock, config: botConfig }) {
     fs.writeFileSync(filePath, buffer);
 
     const text =
-      claraWrap("Upscaler", ["╎❏ Efek: *HD/2x*",
-        "╎❏ Status: *SUCCESS*"].join("\n")) +
+      claraWrap("Upscaler", ["  ┊  ➶ Efek: *HD/2x*",
+        "  ┊  ➶ Status: *SUCCESS*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -67,8 +67,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

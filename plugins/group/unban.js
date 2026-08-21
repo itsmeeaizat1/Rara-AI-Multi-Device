@@ -25,8 +25,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!targetRaw) {
       const text =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}unban <@target>*`,
-          `╎❏ Contoh: *${prefix}unban @username*`].join("\n")) +
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}unban <@target>*`,
+          `  ┊  ➶ Contoh: *${prefix}unban @username*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -37,8 +37,8 @@ async function handler(m, { sock, config: botConfig }) {
     const targetName = targetRaw.replace(/^@+/, "") || targetRaw;
 
     const text =
-      claraWrap("Unban", [`╎❏ Target: *${targetName}*`,
-        "╎❏ Status: *Berhasil di-unban*"].join("\n")) +
+      claraWrap("Unban", [`  ┊  ➶ Target: *${targetName}*`,
+        "  ┊  ➶ Status: *Berhasil di-unban*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}unban <@target> untuk unban orang lain`) +
       "\n" +
@@ -48,8 +48,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

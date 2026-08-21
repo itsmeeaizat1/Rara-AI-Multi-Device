@@ -120,19 +120,19 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!args || args.trim().length < 10) {
     const help = claraWrap("Surat", [
-      `╎❏ Generator Surat Resmi → PDF`,
+      `  ┊  ➶ Generator Surat Resmi → PDF`,
       ``,
-      `╎❏ *Cara pakai:*`,
+      `  ┊  ➶ *Cara pakai:*`,
       `  ${prefix}surat <jenis> <detail>`,
       ``,
-      `╎❏ *Jenis surat:*`,
+      `  ┊  ➶ *Jenis surat:*`,
       `  dinas, lamaran, keterangan, tugas, izin, undangan`,
       ``,
-      `╎❏ *Contoh:*`,
+      `  ┊  ➶ *Contoh:*`,
       `  ${prefix}surat dinas dari Bpk Andi kepala sekolah SDN 01 ke Dinas Pendidikan tentang permohonan bantuan dana`,
       `  ${prefix}surat lamaran Budi melamar ke PT Maju Jaya sebagai staff admin, S1 Ekonomi, pengalaman 2 tahun`,
       ``,
-      `╎❏ Hasil: PDF siap print`,
+      `  ┊  ➶ Hasil: PDF siap print`,
     ].join("\n"));
     return sendReplyWithNav(sock, m, help, "surat");
   }

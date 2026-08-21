@@ -23,8 +23,8 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const word = WORDS[Math.floor(Math.random()*WORDS.length)];
     const scrambled = scramble(word);
-    { const __navText = (claraWrap("Susun Kata", [`╎❏ Acak: *${scrambled}*`,
-      `╎❏ Hint: ${word.length} huruf`].join("\n")) + "\n" + tipText("Balas dengan jawabanmu!")); await m.reply(__navText); };
+    { const __navText = (claraWrap("Susun Kata", [`  ┊  ➶ Acak: *${scrambled}*`,
+      `  ┊  ➶ Hint: ${word.length} huruf`].join("\n")) + "\n" + tipText("Balas dengan jawabanmu!")); await m.reply(__navText); };
     if (!global.susunkataAnswer) global.susunkataAnswer = {};
     global.susunkataAnswer[m.sender] = word;
   } catch (e) {

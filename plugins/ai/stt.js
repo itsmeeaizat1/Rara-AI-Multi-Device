@@ -28,8 +28,8 @@ async function handler(m, { sock, config: botConfig }) {
     const quoted = m.quoted?.text ? m.quoted : m.msg?.text ? m : null;
     if (!quoted) {
       const text =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}stt*`,
-          `╎❏ Contoh: *Kirim/reply audio/voice*, lalu ketik *${prefix}stt*`].join("\n")) +
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}stt*`,
+          `  ┊  ➶ Contoh: *Kirim/reply audio/voice*, lalu ketik *${prefix}stt*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -44,9 +44,9 @@ async function handler(m, { sock, config: botConfig }) {
     const aiReply = await callAI(prompt, botConfig.aiHelp);
 
     const out =
-      claraWrap("Speech to Text", [`╎❏ Hasil: *${replyText.slice(0, 300)}${replyText.length > 300 ? "..." : ""}*`].join("\n")) +
+      claraWrap("Speech to Text", [`  ┊  ➶ Hasil: *${replyText.slice(0, 300)}${replyText.length > 300 ? "..." : ""}*`].join("\n")) +
       "\n\n" +
-      claraWrap("RANGKUM", `╎❏ Ringkasan: *${aiReply}*`) +
+      claraWrap("RANGKUM", `  ┊  ➶ Ringkasan: *${aiReply}*`) +
       "\n\n" +
       separator("━", 22) +
       "\n" +
@@ -58,8 +58,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

@@ -671,44 +671,7 @@ async function resolveGuildWars() {
       war.status = "draw";
       attacker.lastWarEnd = now;
       defender.lastWarEnd = now;
-      const msg = "╔┈┈「 WAR HASIL: SERI 」╎❏\n╚┈┈❖\n\n" +
-        "Perang antar *" + war.attacker + "* dan *" + war.defender + "* berakhir seri!\n\n" +
-        "ATK Power: " + war.attackerPower + "\n" +
-        "DEF Power: " + war.defenderPower + "\n\n" +
-        "Tidak ada pemenang, tapi tidak ada yang kalah juga. 🤝";
-      // Broadcast ke grup-grup yang ada member dari kedua guild
-      for (const g of [attacker, defender]) {
-        for (const member of g.members) {
-          await guildWarSock.sendMessage(member.id, { text: msg }).catch(() => {});
-          await new Promise((r) => setTimeout(r, 300));
-        }
-      }
-    } else {
-      winner.wins++;
-      loser.losses++;
-      winner.lastWarEnd = now;
-      loser.lastWarEnd = now;
-
-      // Loot: 50% treasury lawan + exp
-      const loot = Math.floor(loser.treasury * 0.5);
-      const loserPenalty = Math.floor(loser.treasury * 0.1);
-      loser.treasury = Math.max(0, loser.treasury - Math.max(loot, loserPenalty));
-      winner.treasury += loot;
-      winner.exp += 500;
-      winner.level = Math.floor(winner.exp / 1000) + 1;
-
-      const winnerName = war.winner;
-      const loserName = winnerName === war.attacker ? war.defender : war.attacker;
-
-      // MVP tracking
-      let mvpName = "Unknown";
-      let mvpDmg = 0;
-      const allContrib = { ...(war.winner === war.attacker ? war.attackerContributors : war.defenderContributors) };
-      for (const [id, c] of Object.entries(allContrib)) {
-        if (c.totalDmg > mvpDmg) { mvpDmg = c.totalDmg; mvpName = c.name; }
-      }
-
-      const msg = "╔┈┈「 WAR SELESAI! 」╎❏\n╚┈┈❖\n\n" +
+      const msg = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + war.attacker + "  ┊  ➶\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n" +
         "Pemenang: *" + winnerName + "* 🏆\n" +
         "Kalah: *" + loserName + "*\n\n" +
         "ATK Power: " + war.attackerPower + "\n" +

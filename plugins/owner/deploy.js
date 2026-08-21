@@ -122,7 +122,7 @@ Contoh:
 
         m.react('✅')
 
-        await m.reply(claraWrap("Deploy", `╔┈┈「 *DEPLOY SUCCESS* 」
+        await m.reply(claraWrap("Deploy", `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ DEPLOY SUCCESS
 │
 │ 🌐 Nama     : ${name}
 │ ☁️ Platform : Vercel
@@ -132,7 +132,7 @@ Contoh:
 │ 🔗 URL
 │ https://${domain}
 │
-╚┈┈┈┈┈┈┈┈┈❖`))
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`))
 
     } catch (error) {
 
@@ -142,11 +142,11 @@ Contoh:
             error.message
 
         m.reply(
-`╔┈┈「 *DEPLOY FAILED* 」
+`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ DEPLOY FAILED
 │
 │ ❌ ${err}
 │
-╚┈┈┈┈┈┈┈┈┈❖`
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
         )
     }
 }
