@@ -1,0 +1,64 @@
+name: Detailed Bot Error & Bug Scanner
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  scan-and-report:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    - name: Install Project Dependencies
+      run: |
+        if [ -f package.json ]; then
+          npm install
+        else
+          echo "Tidak ada package.json"
+        fi
+
+    - name: Comprehensive JS Syntax and Error Analysis
+      run: |
+        echo "===================================================="
+        echo "   MEMULAI PEMINDAIAN DETAIL SCRIPT DI BRANCH MAIN  "
+        echo "===================================================="
+        
+        ERROR_COUNT=0
+        
+        # Melakukan perulangan untuk setiap file .js di luar folder node_modules
+        while IFS= read -r file; do
+          echo "Memeriksa file: $file"
+          
+          # Menjalankan pengecekan sintaks dan menangkap detail error-nya
+          ERROR_OUTPUT=$(node -c "$file" 2>&1)
+          EXIT_CODE=$?
+          
+          if [ $EXIT_CODE -ne 0 ]; then
+            echo "--------------------------------------------------"
+            echo "❌ [ERROR TERDETEKSI]"
+            echo "File : $file"
+            echo "Detail Error:"
+            echo "$ERROR_OUTPUT"
+            echo "--------------------------------------------------"
+            ERROR_COUNT=$((ERROR_COUNT + 1))
+          fi
+        done < <(find . -path "./node_modules" -prune -o -name "*.js" -print)
+        
+        echo "===================================================="
+        echo "   PEMINDAIAN SELESAI"
+        echo "   Total file bermasalah ditemukan: $ERROR_COUNT"
+        echo "===================================================="
+        
+        # Workflow tetap sukses (exit 0) agar laporannya bisa dibaca tuntas di log
+        exit 0
