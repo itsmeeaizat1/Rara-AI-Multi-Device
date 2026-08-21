@@ -234,18 +234,18 @@ function buildFooter(normalized) {
 
   const lines = [
     "",
-    `${emoji} *Cuaca Realtime*`,
-    `📍 ${location.name || "Lokasi"}`,
-    `${emoji} ${normalized.description}`,
-    "",
-    `🌡️ Suhu: ${fmt(normalized.temperature_2m, "°C")}`,
-    `🤒 Terasa: ${fmt(normalized.apparent_temperature, "°C")}`,
-    `💧 Kelembapan: ${fmt(normalized.relative_humidity_2m, "%")}`,
-    `💨 Angin: ${fmt(normalized.wind_speed_10m, " km/jam")}`,
-    `🧭 Arah angin: ${windDirectionText(normalized.wind_direction_10m)}`,
-    `☁️ Tutupan awan: ${fmt(normalized.cloud_cover, "%")}`,
-    `☀️ UV index: ${uvText(normalized.uv_index)}`,
-    `🌧️ Curah hujan: ${fmt(normalized.precipitation, " mm")}`,
+    `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ CUACA REALTIME`,
+    `  ┊  ➶ 📍 ${location.name || "Lokasi"}`,
+    `  ┊  ➶ ${emoji} ${normalized.description}`,
+    `  ┊  ➶ 🌡️ Suhu: ${fmt(normalized.temperature_2m, "°C")}`,
+    `  ┊  ➶ 🤒 Terasa: ${fmt(normalized.apparent_temperature, "°C")}`,
+    `  ┊  ➶ 💧 Kelembapan: ${fmt(normalized.relative_humidity_2m, "%")}`,
+    `  ┊  ➶ 💨 Angin: ${fmt(normalized.wind_speed_10m, " km/jam")}`,
+    `  ┊  ➶ 🧭 Arah angin: ${windDirectionText(normalized.wind_direction_10m)}`,
+    `  ┊  ➶ ☁️ Tutupan awan: ${fmt(normalized.cloud_cover, "%")}`,
+    `  ┊  ➶ ☀️ UV index: ${uvText(normalized.uv_index)}`,
+    `  ┊  ➶ 🌧️ Curah hujan: ${fmt(normalized.precipitation, " mm")}`,
+    `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`,
   ];
 
   return lines.join("\n");
