@@ -19,7 +19,8 @@ const pluginConfig = {
 };
 
 import fs from "node:fs";
-const andarazConfig = JSON.parse(fs.readFileSync(new URL("../../../src/lib/config/andaraz-api.json", import.meta.url), "utf8"));
+import { getAndarazConfig } from "../../../src/lib/config/env-loader.js";
+const andarazConfig = getAndarazConfig();
 const API_KEY = andarazConfig.apikey;
 const API_URL = "https://api.andaraz.com/api/randomanime/couples";
 

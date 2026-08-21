@@ -1,5 +1,6 @@
 {
-  "_note": "sankavollerei - dipakai di: aiov2, douyinv2, facebookv2, spotifyplay, tiktokv2, ytmp3v2, ytmp4v2, aronasanka, comicsanka, cpsanka, quoteanimesanka, quotessanka, ttsnahidasanka",
-  "apikey": "planaai",
+  "_note": "API key sudah dipindah ke .env (SANKA_API_KEY). Lihat env-loader.js",
+  "_note_usage": "Plugin baca via getSankaConfig() dari src/lib/config/env-loader.js",
+  "apikey": "",
   "baseUrl": "https://www.sankavollerei.web.id"
 }
