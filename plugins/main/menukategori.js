@@ -40,6 +40,21 @@ const CATEGORY_EMOJIS = {
   premium: "💎", convert: "🔄", economy: "💰", cek: "📋",
 };
 
+const CATEGORY_NAMES = {
+  ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
+  canvas: "Canvas", tools: "Tools", game: "Game", rpg: "RPG",
+  media: "Media", search: "Search", group: "Group", main: "Main",
+  utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
+  economy: "Economy", user: "User", random: "Random", premium: "Premium",
+  ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
+  panel: "Panel", owner: "Owner", store: "Store",
+  anime: "Anime", asupan: "Asupan", clan: "Clan", convert: "Convert",
+  downloader: "Downloader", education: "Education", future: "Future",
+  islami: "Islami", islamic: "Islamic", menu: "Menu", maker: "Maker",
+  news: "News", linode: "Linode", primbon: "Primbon", cecan: "Cecan",
+  stalker: "Stalker", tts: "TTS", vps: "VPS",
+};
+
 function getCommandSymbols(cmdName) {
   const plugin = getPlugin(cmdName);
   if (!plugin || !plugin.config) return "";
@@ -110,15 +125,16 @@ async function handler(m, { sock, db }) {
     const _weatherFooter = await getWeatherFooter().catch(() => null);
     const _weatherBlock = _weatherFooter ? `${_weatherFooter}\n\n` : "";
     // ── Keterangan simbol ──
-    let txt = `${_weatherBlock}╔┈┈「 *Keterangan* 」
-╎
-╎❏ Ⓞ = Hanya untuk owner
-╎❏ ⓟ = Hanya untuk premium
-╎❏ Ⓛ = Membutuhkan limit
-╎❏ Ⓐ = Hanya untuk admin
-╎❏ Ⓖ = Hanya di dalam grup
-╎❏ Ⓟ = Hanya di private chat
-╚┈┈┈┈┈┈┈┈┈❖
+    let txt = `${_weatherBlock}❀°˖✧◝(⁰▿⁰)◜✧˖°❀ MENU KATEGORI
+
+  ° ✿ Keterangan ✿ °
+  ┊  ➶ Ⓞ = Hanya untuk owner
+  ┊  ➶ ⓟ = Hanya untuk premium
+  ┊  ➶ Ⓛ = Membutuhkan limit
+  ┊  ➶ Ⓐ = Hanya untuk admin
+  ┊  ➶ Ⓖ = Hanya di dalam grup
+  ┊  ╰➶ Ⓟ = Hanya di private chat
+
 `;
 
     // ── List semua kategori + command ──
@@ -127,15 +143,19 @@ async function handler(m, { sock, db }) {
       const caseCmds = casesByCategory[cat] || [];
       const allCmds = [...pluginCmds, ...caseCmds];
       if (allCmds.length === 0) continue;
-      const emoji = CATEGORY_EMOJIS[cat] || "📋";
+      const catName = CATEGORY_NAMES[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
 
-      txt += `╔┈「 ${emoji} *${cat}* 」\n`;
-      for (const cmd of allCmds) {
+      txt += `  ° ✿ ${catName} ✿ °\n`;
+      for (let i = 0; i < allCmds.length; i++) {
+        const cmd = allCmds[i];
         const symbols = getCommandSymbols(cmd);
-        txt += `╎❏ ${prefix}${cmd}${symbols}\n`;
+        const isLast = i === allCmds.length - 1;
+        txt += `  ┊  ${isLast ? '╰' : ''}➶ ${prefix}${cmd}${symbols}\n`;
       }
-      txt += `╚┈┈┈┈┈┈┈┈┈❖\n\n`;
+      txt += `\n`;
     }
+
+    txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n`;
 
     try {
       const thumbCat1 = await getMenuThumbnail("nova");
@@ -155,7 +175,7 @@ async function handler(m, { sock, db }) {
                 },
               },
               body: { text: txt },
-              footer: { text: `🌸 ${config.bot?.name} | Pilih tombol dibawah` },
+              footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
               contextInfo: {
                 isForwarded: false,
                 forwardingScore: 9,
@@ -193,13 +213,13 @@ async function handler(m, { sock, db }) {
 
   if (!matchedCat) {
     return m.reply(
-      `╔┈┈「 *Error* 」\n╎\n╎❏ Kategori \`${categoryArg}\` tidak ditemukan\n╎❏ Ketik \`${prefix}menukategori\` untuk list kategori\n╚┈┈┈┈┈┈┈┈┈❖`
+      `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ERROR\n\n  ┊  ╰➶ Kategori \`${categoryArg}\` tidak ditemukan\n  ┊  ╰➶ Ketik \`${prefix}menukategori\` untuk list kategori`
     );
   }
 
   if (matchedCat === "owner" && !m.isOwner) {
     return m.reply(
-      `╔┈┈「 *Akses Ditolak* 」\n╎\n╎❏ Kategori ini hanya untuk owner\n╚┈┈┈┈┈┈┈┈┈❖`
+      `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ AKSES DITOLAK\n\n  ┊  ╰➶ Kategori ini hanya untuk owner`
     );
   }
 
@@ -209,24 +229,28 @@ async function handler(m, { sock, db }) {
 
   if (allCommands.length === 0) {
     return m.reply(
-      `╔┈┈「 *Kosong* 」\n╎\n╎❏ Kategori \`${matchedCat}\` tidak ada command\n╚┈┈┈┈┈┈┈┈┈❖`
+      `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ KOSONG\n\n  ┊  ╰➶ Kategori \`${matchedCat}\` tidak ada command`
     );
   }
 
-  const emoji = CATEGORY_EMOJIS[matchedCat] || "📁";
+  const catName = CATEGORY_NAMES[matchedCat] || matchedCat.charAt(0).toUpperCase() + matchedCat.slice(1);
 
   const _weatherFooter2 = await getWeatherFooter().catch(() => null);
   const _weatherBlock2 = _weatherFooter2 ? `${_weatherFooter2}\n\n` : "";
-  let txt = `${_weatherBlock2}╔┈「 ${emoji} *${matchedCat}* 」\n`;
-  for (const cmd of allCommands) {
+  let txt = `${_weatherBlock2}❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${catName.toUpperCase()}\n\n`;
+  txt += `  ° ✿ ${catName} ✿ °\n`;
+  for (let i = 0; i < allCommands.length; i++) {
+    const cmd = allCommands[i];
     const symbols = getCommandSymbols(cmd);
-    txt += `╎❏ ${prefix}${cmd}${symbols}\n`;
+    const isLast = i === allCommands.length - 1;
+    txt += `  ┊  ${isLast ? '╰' : ''}➶ ${prefix}${cmd}${symbols}\n`;
   }
-  txt += `╚┈┈┈┈┈┈┈┈┈❖\n`;
+  txt += `\n`;
   txt += `Total: \`${allCommands.length}\` commands`;
   if (caseCommands.length > 0) {
     txt += `\n(${pluginCommands.length} plugin + ${caseCommands.length} case)`;
   }
+  txt += `\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
   try {
     const thumbCat2 = await getMenuThumbnail("nova");
@@ -246,7 +270,7 @@ async function handler(m, { sock, db }) {
               },
             },
             body: { text: txt },
-            footer: { text: `🌸 ${config.bot?.name} | Pilih tombol dibawah` },
+            footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
             contextInfo: {
               isForwarded: false,
               forwardingScore: 9,
