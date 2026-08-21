@@ -30,7 +30,7 @@ const TIO_FORMATS = {
     emoji: "🟢",
     providerKey: "tio_openai",
     endpoint: "https://ai.tioo.eu.org/v1/chat/completions",
-    defaultModel: "deepseek-v4-flash:free",
+    defaultModel: "kilo-auto/free",
     apiKeyField: "openaiApiKey",
     modelField: "openaiModel",
   },
@@ -39,7 +39,7 @@ const TIO_FORMATS = {
     emoji: "🔵",
     providerKey: "tio_gemini",
     endpoint: null, // dynamic per model
-    defaultModel: "deepseek-v4-flash:free",
+    defaultModel: "kilo-auto/free",
     apiKeyField: "geminiApiKey",
     modelField: "geminiModel",
   },
@@ -48,7 +48,7 @@ const TIO_FORMATS = {
     emoji: "🟣",
     providerKey: "tio_anthropic",
     endpoint: "https://ai.tioo.eu.org/v1/messages",
-    defaultModel: "deepseek-v4-flash:free",
+    defaultModel: "kilo-auto/free",
     apiKeyField: "anthropicApiKey",
     modelField: "anthropicModel",
   },
@@ -59,65 +59,48 @@ const TIO_FORMATS = {
 const TIO_MODELS = [
   // ── Auto / Router ──
   { id: "auto", label: "Auto Router", brand: "Auto", desc: "Auto-route ke model terbaik", free: false },
-  { id: "openrouter/free", label: "OpenRouter", brand: "Auto", desc: "Auto-route gratis", free: true },
-  { id: "step-router-v1", label: "Step Router V1", brand: "Auto", desc: "Router StepFun", free: false },
-  { id: "kilo-auto/free", label: "Kilo Auto", brand: "Auto", desc: "Auto + image gen", free: true },
+  { id: "openrouter/free", label: "OpenRouter Free", brand: "Auto", desc: "Auto-route gratis", free: true },
+  { id: "kilo-auto/free", label: "Kilo Auto", brand: "Auto", desc: "Auto + image gen, gratis", free: true },
+  { id: "step-3.5-flash", label: "Step 3.5 Flash", brand: "StepFun", desc: "StepFun flash", free: false },
+  { id: "step-3.7-flash", label: "Step 3.7 Flash", brand: "StepFun", desc: "StepFun flash baru", free: false },
+  { id: "stepfun/step-3.7-flash:free", label: "Step 3.7 Flash (Free)", brand: "StepFun", desc: "StepFun gratis", free: true },
 
   // ── DeepSeek ──
-  { id: "deepseek-v4-flash:free", label: "DeepSeek V4 Flash", brand: "DeepSeek", desc: "Cepat & gratis", free: true },
-  { id: "DeepSeek-V4-Flash", label: "DeepSeek V4 Flash (Pro)", brand: "DeepSeek", desc: "Versi pro", free: false },
-  { id: "deepseek-v4-flash", label: "DeepSeek V4 Flash (Alt)", brand: "DeepSeek", desc: "Endpoint alternatif", free: false },
-  { id: "DeepSeek-V4-Pro", label: "DeepSeek V4 Pro", brand: "DeepSeek", desc: "Model terkuat DeepSeek", free: false },
+  { id: "deepseek-v4-flash", label: "DeepSeek V4 Flash", brand: "DeepSeek", desc: "Cepat & murah", free: false },
+  { id: "DeepSeek-V4-Pro", label: "DeepSeek V4 Pro", brand: "DeepSeek", desc: "Model terkuat", free: false },
+  { id: "deepseek-ai/DeepSeek-V4-Flash-0731", label: "DeepSeek V4 Flash 0731", brand: "DeepSeek", desc: "Versi 0731", free: false },
+  { id: "deepseek/deepseek-v4-pro-0813-free", label: "DeepSeek V4 Pro (Free)", brand: "DeepSeek", desc: "Pro gratis (rate limit 1/min)", free: true },
 
   // ── Kimi / Moonshot ──
-  { id: "kimi-k3:free", label: "Kimi K3", brand: "Kimi", desc: "Moonshot AI gratis", free: true },
-  { id: "moonshotai/kimi-k3-free", label: "Kimi K3 (Alt)", brand: "Kimi", desc: "Endpoint alternatif", free: true },
   { id: "moonshotai/Kimi-K2.6", label: "Kimi K2.6", brand: "Kimi", desc: "Flagship Moonshot", free: false },
 
   // ── Qwen / Alibaba ──
-  { id: "Qwen3.5-397B-A17B", label: "Qwen 3.5 (397B)", brand: "Qwen", desc: "Model besar Alibaba", free: false },
-  { id: "Qwen3.6-35B-A3B", label: "Qwen 3.6 (35B)", brand: "Qwen", desc: "Efisien & cepat", free: false },
+  { id: "qwen/qwen3.8-max-free", label: "Qwen 3.8 Max (Free)", brand: "Qwen", desc: "Qwen Max gratis", free: true },
 
-  // ── GLM / Zhipu (Claude-style) ──
-  { id: "glm-5.2", label: "GLM 5.2", brand: "GLM", desc: "Zhipu AI terbaru", free: false },
-  { id: "glm-5.1", label: "GLM 5.1", brand: "GLM", desc: "Zhipu AI", free: false },
+  // ── NVIDIA ──
+  { id: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", label: "Nemotron 3 Nano", brand: "NVIDIA", desc: "Reasoning 30B, gratis", free: true },
+  { id: "nvidia/nemotron-3-super-120b-a12b:free", label: "Nemotron 3 Super", brand: "NVIDIA", desc: "120B, gratis", free: true },
+  { id: "nvidia/nemotron-3-ultra-550b-a55b:free", label: "Nemotron 3 Ultra", brand: "NVIDIA", desc: "550B terbesar, gratis", free: true },
+
+  // ── Cohere ──
+  { id: "cohere/north-mini-code:free", label: "Cohere North Mini", brand: "Cohere", desc: "Code + chat, gratis", free: true },
 
   // ── MiniMax ──
   { id: "MiniMaxAI/MiniMax-M2.7", label: "MiniMax M2.7", brand: "MiniMax", desc: "Model MiniMax", free: false },
 
-  // ── NVIDIA Nemotron ──
-  { id: "nvidia/nemotron-3-ultra-550b-a55b:free", label: "Nemotron Ultra 550B", brand: "NVIDIA", desc: "Model terbesar NVIDIA", free: true },
-  { id: "nvidia/nemotron-3-super-120b-a12b:free", label: "Nemotron Super 120B", brand: "NVIDIA", desc: "Kuat & cepat", free: true },
-  { id: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", label: "Nemotron Nano 30B", brand: "NVIDIA", desc: "Reasoning kecil", free: true },
-  { id: "nvidia/nemotron-3.5-content-safety:free", label: "Nemotron Safety", brand: "NVIDIA", desc: "Content safety", free: true },
-
-  // ── StepFun ──
-  { id: "stepfun/step-3.7-flash:free", label: "Step 3.7 Flash", brand: "StepFun", desc: "Gratis", free: true },
-  { id: "step-3.7-flash", label: "Step 3.7 Flash (Pro)", brand: "StepFun", desc: "Versi pro", free: false },
-  { id: "step-3.5-flash", label: "Step 3.5 Flash", brand: "StepFun", desc: "Versi lama", free: false },
-  { id: "step-3.5-flash-2603", label: "Step 3.5 Flash 2603", brand: "StepFun", desc: "Build 2603", free: false },
-
   // ── Tencent ──
-  { id: "tencent/hy3:free", label: "Tencent HY3", brand: "Tencent", desc: "Tencent AI gratis", free: true },
+  { id: "tencent/hy3:free", label: "Tencent HY3", brand: "Tencent", desc: "Hunyuan, gratis", free: true },
 
-  // ── Xiaomi ──
-  { id: "mimo-v2.5:free", label: "Mimo V2.5", brand: "Xiaomi", desc: "Xiaomi AI gratis", free: true },
-
-  // ── SenseTime ──
-  { id: "sensenova-6.7-flash-lite", label: "SenseNova 6.7", brand: "SenseTime", desc: "SenseTime flash", free: false },
-
-  // ── Cohere ──
-  { id: "cohere/north-mini-code:free", label: "Cohere North", brand: "Cohere", desc: "Coding model gratis", free: true },
-
-  // ── InclusionAI ──
-  { id: "inclusionai/ling-3.0-flash:free", label: "Ling 3.0 Flash", brand: "InclusionAI", desc: "Gratis", free: true },
+  // ── SenseNova ──
+  { id: "sensenova-6.7-flash-lite", label: "SenseNova 6.7", brand: "SenseNova", desc: "Lite flash", free: false },
 
   // ── Poolside ──
-  { id: "poolside/laguna-s-2.1:free", label: "Laguna S 2.1", brand: "Poolside", desc: "Gratis", free: true },
-  { id: "poolside/laguna-xs-2.1:free", label: "Laguna XS 2.1", brand: "Poolside", desc: "Gratis kecil", free: true },
+  { id: "poolside/laguna-s-2.1:free", label: "Laguna S 2.1", brand: "Poolside", desc: "Code model, gratis", free: true },
 
-  // ── Coding ──
-  { id: "kat-coder-pro-v2.5", label: "Kat Coder Pro", brand: "Coding", desc: "Coding pro", free: false },
+  // ── Kat ──
+  { id: "kat-coder-pro-v2.5", label: "Kat Coder Pro", brand: "Kat", desc: "Code specialist", free: false },
+  { id: "Qwen3.6-35B-A3B-FP8", label: "Qwen 3.6 (35B FP8)", brand: "Qwen", desc: "Efisien & cepat", free: false },
+  { id: "nvidia/nemotron-3.5-content-safety:free", label: "Nemotron Safety", brand: "NVIDIA", desc: "Content safety model", free: true },
 ];
 
 // Short alias map for formats
