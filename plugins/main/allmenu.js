@@ -311,7 +311,7 @@ ${readMore}
     txt += `╔┈「 ${emoji} *${category}* 」\n`;
     for (const cmd of allCmds) {
       const symbols = getCommandSymbols(cmd);
-      txt += `╎ぎ ${prefix}${cmd}${symbols}\n`;
+      txt += `╎❏ ${prefix}${cmd}${symbols}\n`;
     }
     txt += `╚┈┈┈┈┈┈┈┈┈❖\n\n`;
   }
