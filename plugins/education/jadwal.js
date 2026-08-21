@@ -4,8 +4,8 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "jadwal",
-  alias: ["jadwal", "jadwaledu", "scheduleedu"],
+  name: "jadwalku",
+  alias: ["jadwaledu", "jadwalkuliah", "scheduleedu"],
   category: "education",
   description: "Jadwal kuliah personal - catat dan cek jadwal kelas harian",
   usage: ".jadwal <command>",
