@@ -28,8 +28,8 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     if (!item1 || !item2) {
       const text =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}merge <item1> <item2>*`,
-          `◦ Contoh: *${prefix}merge Sword Shield*`].join("\n")) +
+        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}merge <item1> <item2>*`,
+          `╎❏ Contoh: *${prefix}merge Sword Shield*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -38,18 +38,18 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
 
     const text =
-      claraWrap("Merge", [`◦ Item 1: *${item1}*`,
-        `◦ Item 2: *${item2}*`,
-        "◦ Hasil: *Super Sword*",
-        "◦ Bonus: *+20% ATK*"].join("\n")) +
+      claraWrap("Merge", [`╎❏ Item 1: *${item1}*`,
+        `╎❏ Item 2: *${item2}*`,
+        "╎❏ Hasil: *Super Sword*",
+        "╎❏ Bonus: *+20% ATK*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await m.reply(claraWrap("merge", text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

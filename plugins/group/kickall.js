@@ -24,8 +24,8 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
 
     const text =
-      claraWrap("Kick All", ["◦ Status: *Berhasil*",
-        "◦ Semua member non-admin telah dikick."].join("\n")) +
+      claraWrap("Kick All", ["╎❏ Status: *Berhasil*",
+        "╎❏ Semua member non-admin telah dikick."].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -33,8 +33,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

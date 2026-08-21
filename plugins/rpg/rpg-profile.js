@@ -24,15 +24,15 @@ async function handler(m, { sock, config: botConfig }) {
     
     let text = claraWrap("RPG Profile", "⚔️") + "\n\n";
     text += claraWrap("Profile", [
-      `◦ Nama: *@${m.sender.split("@")[0]}*`,
-      `◦ Level: *${user.level}*`,
-      `◦ Role: *${role}*`,
-      `◦ EXP: *${currXp}/${xp}*`,
+      `╎❏ Nama: *@${m.sender.split("@")[0]}*`,
+      `╎❏ Level: *${user.level}*`,
+      `╎❏ Role: *${role}*`,
+      `╎❏ EXP: *${currXp}/${xp}*`,
     ]) + "\n\n";
-    text += claraWrap("Progres", [`◦ ${bar}`, `◦ Sisa: *${max - user.exp} EXP* ke level ${user.level + 1}`].join("\n")) + "\n\n";
-    text += claraWrap("sTatus", [`◦ HP: *${user.health}/100* ❤️`, `◦ Stamina: *${user.stamina}/100* ⚡`, `◦ Money: *Rp${user.money.toLocaleString("id-ID")}*`, `◦ Diamond: *${user.diamond}* 💎`, `◦ Emerald: *${user.emerald}* 🟢`].join("\n")) + "\n\n";
-    text += claraWrap("Inventory", [`◦ Potion: *${user.potion}* 🧪`, `◦ Iron: *${user.iron}* ⚙️`, `◦ Wood: *${user.wood}* 🪵`, `◦ Rock: *${user.rock}* 🪨`, `◦ String: *${user.string}* 🧵`, `◦ Trash: *${user.trash}* 🗑️`].join("\n")) + "\n\n";
-    text += claraWrap("Equipment", [`◦ Sword: *${user.sword > 0 ? "Lv." + user.sword : "Tidak punya"}*`, `◦ Armor: *${user.armor > 0 ? "Lv." + user.armor : "Tidak punya"}*`, `◦ Pickaxe: *${user.pickaxe > 0 ? "Lv." + user.pickaxe : "Tidak punya"}*`, `◦ Fishing Rod: *${user.fishingrod > 0 ? "Lv." + user.fishingrod : "Tidak punya"}*`].join("\n")) + "\n\n";
+    text += claraWrap("Progres", [`╎❏ ${bar}`, `╎❏ Sisa: *${max - user.exp} EXP* ke level ${user.level + 1}`].join("\n")) + "\n\n";
+    text += claraWrap("sTatus", [`╎❏ HP: *${user.health}/100* ❤️`, `╎❏ Stamina: *${user.stamina}/100* ⚡`, `╎❏ Money: *Rp${user.money.toLocaleString("id-ID")}*`, `╎❏ Diamond: *${user.diamond}* 💎`, `╎❏ Emerald: *${user.emerald}* 🟢`].join("\n")) + "\n\n";
+    text += claraWrap("Inventory", [`╎❏ Potion: *${user.potion}* 🧪`, `╎❏ Iron: *${user.iron}* ⚙️`, `╎❏ Wood: *${user.wood}* 🪵`, `╎❏ Rock: *${user.rock}* 🪨`, `╎❏ String: *${user.string}* 🧵`, `╎❏ Trash: *${user.trash}* 🗑️`].join("\n")) + "\n\n";
+    text += claraWrap("Equipment", [`╎❏ Sword: *${user.sword > 0 ? "Lv." + user.sword : "Tidak punya"}*`, `╎❏ Armor: *${user.armor > 0 ? "Lv." + user.armor : "Tidak punya"}*`, `╎❏ Pickaxe: *${user.pickaxe > 0 ? "Lv." + user.pickaxe : "Tidak punya"}*`, `╎❏ Fishing Rod: *${user.fishingrod > 0 ? "Lv." + user.fishingrod : "Tidak punya"}*`].join("\n")) + "\n\n";
     text += separator("━", 22) + "\n" + tipText(`Ketik ${prefix}rpgmenu untuk lihat semua fitur RPG`);
     await sendReplyWithNav(sock, m, text, "rpgprofile");
   } catch (e) { await m.reply("Error: " + e.message); }

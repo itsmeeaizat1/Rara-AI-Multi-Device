@@ -19,9 +19,9 @@ async function handler(m, { sock, config: botConfig }) {
     const amount = parseInt(args.find(a => /^\d+$/.test(a)) || "0");
     
     if (!mentioned.length || !amount) {
-      await sendReplyWithNav(sock, m, claraWrap("Transfer", [`◦ Penggunaan: *${prefix}rpgtransfer @user <jumlah>*`,
-        `◦ Contoh: *${prefix}rpgtransfer @628xxx 5000*`,
-        `◦ Minimal: *Rp1000*`].join("\n")), "rpgtransfer");
+      await sendReplyWithNav(sock, m, claraWrap("Transfer", [`╎❏ Penggunaan: *${prefix}rpgtransfer @user <jumlah>*`,
+        `╎❏ Contoh: *${prefix}rpgtransfer @628xxx 5000*`,
+        `╎❏ Minimal: *Rp1000*`].join("\n")), "rpgtransfer");
       return { handled: true };
     }
     
@@ -39,18 +39,18 @@ async function handler(m, { sock, config: botConfig }) {
     const db = getDatabase();
     const user = getUser(db, m.sender);
     if (user.money < amount) {
-      await sendReplyWithNav(sock, m, claraWrap("Transfer", [`◦ Butuh: *Rp${amount.toLocaleString("id-ID")}*`,
-        `◦ Punya: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")), "rpgtransfer");
+      await sendReplyWithNav(sock, m, claraWrap("Transfer", [`╎❏ Butuh: *Rp${amount.toLocaleString("id-ID")}*`,
+        `╎❏ Punya: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")), "rpgtransfer");
       return { handled: true };
     }
     
     user.money -= amount;
     addUserMoney(db, target, amount);
     
-    await sendReplyWithNav(sock, m, claraWrap("Transfer", [`◦ Dari: *@${m.sender.split("@")[0]}*`,
-      `◦ Ke: *@${target.split("@")[0]}*`,
-      `◦ Jumlah: *Rp${amount.toLocaleString("id-ID")}*`,
-      `◦ Sisa: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")), "rpgtransfer");
+    await sendReplyWithNav(sock, m, claraWrap("Transfer", [`╎❏ Dari: *@${m.sender.split("@")[0]}*`,
+      `╎❏ Ke: *@${target.split("@")[0]}*`,
+      `╎❏ Jumlah: *Rp${amount.toLocaleString("id-ID")}*`,
+      `╎❏ Sisa: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")), "rpgtransfer");
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

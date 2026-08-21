@@ -26,8 +26,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!url) {
       const text =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}urlshortener <link>*`,
-          `◦ Contoh: *${prefix}urlshortener https://example.com*`].join("\n")) +
+        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}urlshortener <link>*`,
+          `╎❏ Contoh: *${prefix}urlshortener https://example.com*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -43,9 +43,9 @@ async function handler(m, { sock, config: botConfig }) {
     } catch (e) { console.error('[urlshortener.js]:', e.message); }
 
     const text =
-      claraWrap("URL Shortener", [`◦ Original: *${url}*`,
-        `◦ Short: *${short}*`,
-        "◦ Status: *Berhasil*"].join("\n")) +
+      claraWrap("URL Shortener", [`╎❏ Original: *${url}*`,
+        `╎❏ Short: *${short}*`,
+        "╎❏ Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}urlshortener <link> untuk pendekkan lagi`) +
       "\n" +
@@ -55,8 +55,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

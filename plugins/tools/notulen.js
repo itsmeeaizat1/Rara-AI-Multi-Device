@@ -85,16 +85,16 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!input || input.trim().length < 10) {
     const help = claraWrap("Notulen", [
-      `◦ AI Notulen Meeting → Text + PDF`,
+      `╎❏ AI Notulen Meeting → Text + PDF`,
       ``,
-      `◦ *Cara pakai:*`,
+      `╎❏ *Cara pakai:*`,
       `  Reply catatan meeting, ketik: ${prefix}notulen`,
       `  Atau ketik langsung: ${prefix}notulen <catatan>`,
       ``,
-      `◦ *Contoh:*`,
+      `╎❏ *Contoh:*`,
       `  ${prefix}notulen rapat evaluasi Q1 2024. Budi: perlu upgrade server. Sari: budget 50jt. Keputusan: beli server minggu depan. Budi beli, deadline Jumat`,
       ``,
-      `◦ *Hasil:*`,
+      `╎❏ *Hasil:*`,
       `  Structured notulen: agenda, keputusan, action items`,
     ].join("\n"));
     return sendReplyWithNav(sock, m, help, "notulen");

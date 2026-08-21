@@ -14,8 +14,8 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const text = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!text) {
-      await sendReplyWithNav(sock, m, claraWrap("Auto Language", ["◦ Reply pesan asing",
-        "◦ Bot akan deteksi bahasa & translate ke Indonesia"].join("\n")), "autolanguage");
+      await sendReplyWithNav(sock, m, claraWrap("Auto Language", ["╎❏ Reply pesan asing",
+        "╎❏ Bot akan deteksi bahasa & translate ke Indonesia"].join("\n")), "autolanguage");
       return { handled: true };
     }
     const result = await callAI(`Deteksi bahasa teks berikut, lalu translate ke Bahasa Indonesia. Format: Bahasa: [nama bahasa]\nTerjemahan: [hasil]\n\n${text.substring(0, 500)}`, {

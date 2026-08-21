@@ -26,9 +26,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!input) {
       const text =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}tebak <angka>*`,
-          `◦ Contoh: *${prefix}tebak 42*`,
-          "◦ Rentang: *1 - 100*"].join("\n")) +
+        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}tebak <angka>*`,
+          `╎❏ Contoh: *${prefix}tebak 42*`,
+          "╎❏ Rentang: *1 - 100*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -39,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
     const guess = parseInt(input, 10);
     if (Number.isNaN(guess) || guess < 1 || guess > 100) {
       const text =
-        claraWrap("Tebak", ["◦ Angka harus antara *1 - 100*."].join("\n")) +
+        claraWrap("Tebak", ["╎❏ Angka harus antara *1 - 100*."].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -51,9 +51,9 @@ async function handler(m, { sock, config: botConfig }) {
     const win = guess === secret;
 
     const text =
-      claraWrap("Tebak", [`◦ Tebakan: *${guess}*`,
-        `◦ Jawaban: *${secret}*`,
-        win ? "◦ Status: *Benar!*" : "◦ Status: *Salah!*"].join("\n")) +
+      claraWrap("Tebak", [`╎❏ Tebakan: *${guess}*`,
+        `╎❏ Jawaban: *${secret}*`,
+        win ? "╎❏ Status: *Benar!*" : "╎❏ Status: *Salah!*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}tebak <angka> untuk main lagi`) +
       "\n" +
@@ -63,8 +63,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

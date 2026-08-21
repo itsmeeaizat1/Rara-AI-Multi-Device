@@ -15,8 +15,8 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const word = m.text?.trim();
     if (!word) {
-      await sendReplyWithNav(sock, m, claraWrap("Synonym", [`◦ Penggunaan: *${prefix}synonym <kata>*`,
-        `◦ Contoh: *${prefix}synonym happy*`].join("\n")), "synonym");
+      await sendReplyWithNav(sock, m, claraWrap("Synonym", [`╎❏ Penggunaan: *${prefix}synonym <kata>*`,
+        `╎❏ Contoh: *${prefix}synonym happy*`].join("\n")), "synonym");
       return { handled: true };
     }
     const { data } = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`, { timeout: 10000 });
@@ -30,11 +30,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
     if (!syns.size) {
-      await m.reply(claraWrap("Synonym", [`◦ Kata: *${word}*`, "◦ Sinonim tidak ditemukan"].join("\n")));
+      await m.reply(claraWrap("Synonym", [`╎❏ Kata: *${word}*`, "╎❏ Sinonim tidak ditemukan"].join("\n")));
       return { handled: true };
     }
     const list = [...syns].slice(0, 15).join(", ");
-    await m.reply(claraWrap("Synonym", [`◦ Kata: *${word}*`, `◦ Sinonim: ${list}`].join("\n")));
+    await m.reply(claraWrap("Synonym", [`╎❏ Kata: *${word}*`, `╎❏ Sinonim: ${list}`].join("\n")));
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

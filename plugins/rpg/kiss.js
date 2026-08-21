@@ -38,8 +38,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!partnerJid) {
       const text =
-        claraWrap("Kiss", [`◦ Status: *Belum punya pasangan*`,
-          `◦ Nyium siapa? Angin?`].join("\n")) + "\n" +
+        claraWrap("Kiss", [`╎❏ Status: *Belum punya pasangan*`,
+          `╎❏ Nyium siapa? Angin?`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk punya pasangan`);
 
       await sendReplyWithNav(sock, m, text, "kiss");
@@ -55,9 +55,9 @@ async function handler(m, { sock, config: botConfig }) {
     if (cd) {
       const mins = Math.floor(cd / 60);
       const text =
-        claraWrap("Kiss", [`◦ Status: *Masih cooldown*`,
-          `◦ Tunggu: *${mins} menit lagi*`,
-          `◦ Ciuman itu spesial, jangan buru-buru`].join("\n")) + "\n" +
+        claraWrap("Kiss", [`╎❏ Status: *Masih cooldown*`,
+          `╎❏ Tunggu: *${mins} menit lagi*`,
+          `╎❏ Ciuman itu spesial, jangan buru-buru`].join("\n")) + "\n" +
         tipText(`Sabar ya, 1 jam sekali biar spesial`);
 
       await sendReplyWithNav(sock, m, text, "kiss");
@@ -85,11 +85,11 @@ async function handler(m, { sock, config: botConfig }) {
     const bondLevel = Math.floor(totalAffection / 100) + 1;
 
     const text =
-      claraWrap("Kiss", [`◦ ${msg}`,
-        `◦ Affection: *+${affectionGain}*`,
-        `◦ Total Affection: *${totalAffection}*`,
-        `◦ Bond Level: *${bondLevel}*`,
-        `◦ Total Kiss: *${rpg.kissCount}*`].join("\n")) + "\n" +
+      claraWrap("Kiss", [`╎❏ ${msg}`,
+        `╎❏ Affection: *+${affectionGain}*`,
+        `╎❏ Total Affection: *${totalAffection}*`,
+        `╎❏ Bond Level: *${bondLevel}*`,
+        `╎❏ Total Kiss: *${rpg.kissCount}*`].join("\n")) + "\n" +
       tipText(`Cium lagi dalam 1 jam ya ${prefix}kiss`);
 
     await sock.sendMessage(m.chat, {
@@ -100,8 +100,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("kiss", text));

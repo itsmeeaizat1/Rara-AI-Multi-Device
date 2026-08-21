@@ -36,7 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
     let text = claraWrap("RPG Menu", "⚔️") + "\n\n";
 
     for (const cat of categories) {
-      const cmds = cat.commands.map((cmd) => `◦ ${prefix}${cmd}`).join("\n");
+      const cmds = cat.commands.map((cmd) => `╎❏ ${prefix}${cmd}`).join("\n");
       let boxTitle = cat.name.toUpperCase();
       if (cat.name === "Premium") {
         boxTitle = "PREMIUM 💎";
@@ -50,8 +50,8 @@ async function handler(m, { sock, config: botConfig }) {
     await sendReplyWithNav(sock, m, text, "rpgmenu");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

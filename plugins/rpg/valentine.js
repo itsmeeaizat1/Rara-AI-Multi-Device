@@ -30,8 +30,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!partnerJid) {
       const text =
-        claraWrap("Valentine", [`◦ Status: *Belum punya pasangan*`,
-          `◦ Valentine tanpa pasangan? Ikut CP dulu ya`].join("\n")) + "\n" +
+        claraWrap("Valentine", [`╎❏ Status: *Belum punya pasangan*`,
+          `╎❏ Valentine tanpa pasangan? Ikut CP dulu ya`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk punya pasangan`);
 
       await sendReplyWithNav(sock, m, text, "valentine");
@@ -46,9 +46,9 @@ async function handler(m, { sock, config: botConfig }) {
       const remaining = cooldown - (now - lastValentine);
       const daysLeft = Math.ceil(remaining / 86400000);
       const text =
-        claraWrap("Valentine", [`◦ Status: *Sudah claim Valentine*`,
-          `◦ Tunggu: *${daysLeft} hari lagi*`,
-          `◦ Valentine event 1 minggu sekali!`].join("\n")) + "\n" +
+        claraWrap("Valentine", [`╎❏ Status: *Sudah claim Valentine*`,
+          `╎❏ Tunggu: *${daysLeft} hari lagi*`,
+          `╎❏ Valentine event 1 minggu sekali!`].join("\n")) + "\n" +
         tipText(`Sambil nunggu: ${prefix}cuddling, ${prefix}kiss, ${prefix}sayang`);
 
       await sendReplyWithNav(sock, m, text, "valentine");
@@ -98,15 +98,15 @@ async function handler(m, { sock, config: botConfig }) {
     const bondLevel = Math.floor(totalAffection / 100) + 1;
 
     const text =
-      claraWrap("Valentine", [`◦ ${userName} & ${partnerName} merayakan Valentine!`,
-        `◦ Status: *${statusLabel}*`,
-        `◦ Gift: *${gift}* (berdua)`,
-        `◦ Affection: *+${affectionGain}* (DOUBLE!)`,
-        `◦ EXP: *+${expBonus}* (berdua)`,
-        `◦ Gold: *+${goldBonus}* (berdua)`,
-        `◦ Total Affection: *${totalAffection}*`,
-        `◦ Bond Level: *${bondLevel}*`,
-        `◦ Total Valentine: *${rpg.valentineCount}*`].join("\n")) + "\n" +
+      claraWrap("Valentine", [`╎❏ ${userName} & ${partnerName} merayakan Valentine!`,
+        `╎❏ Status: *${statusLabel}*`,
+        `╎❏ Gift: *${gift}* (berdua)`,
+        `╎❏ Affection: *+${affectionGain}* (DOUBLE!)`,
+        `╎❏ EXP: *+${expBonus}* (berdua)`,
+        `╎❏ Gold: *+${goldBonus}* (berdua)`,
+        `╎❏ Total Affection: *${totalAffection}*`,
+        `╎❏ Bond Level: *${bondLevel}*`,
+        `╎❏ Total Valentine: *${rpg.valentineCount}*`].join("\n")) + "\n" +
       tipText(`Valentine lagi minggu depan ${prefix}valentine`);
 
     await sock.sendMessage(m.chat, {
@@ -117,8 +117,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("valentine", text));

@@ -35,12 +35,12 @@ async function handler(m, { sock, config: botConfig, db }) {
     ];
 
     const text =
-      claraWrap("Event", [`◦ Active: *${active.length} event*`,
-        "◦ Next Reset: *Senin 00:00*"].join("\n")) +
+      claraWrap("Event", [`╎❏ Active: *${active.length} event*`,
+        "╎❏ Next Reset: *Senin 00:00*"].join("\n")) +
       "\n\n" +
-      claraWrap("Daftar Event", active.map((e) => `◦ ${e.title} - ${e.reward} (${e.end})`)) +
+      claraWrap("Daftar Event", active.map((e) => `╎❏ ${e.title} - ${e.reward} (${e.end})`)) +
       "\n\n" +
-      claraWrap("Ended", ended.map((e) => `◦ ${e.title} - ${e.status}`)) +
+      claraWrap("Ended", ended.map((e) => `╎❏ ${e.title} - ${e.status}`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +
@@ -49,8 +49,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "event");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

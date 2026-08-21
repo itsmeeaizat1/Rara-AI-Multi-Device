@@ -68,10 +68,10 @@ async function handler(m, { sock, config: botConfig }) {
         "🤖 BAWAAN:\n" + builtinLines.join("\n") +
         "\n\n➕ CUSTOM:\n" + customLines.join("\n") +
         "\n\n📋 PAKAI:\n" +
-        `◦ *${prefix}ai-addprovider list* — lihat semua provider\n` +
-        `◦ *${prefix}ai-addprovider <nama> <endpoint> <model> [apiKey]* — tambah provider\n` +
-        `◦ Contoh: *${prefix}ai-addprovider myai https://example.com/chat gpt-4o-mini sk-xxx*\n` +
-        `◦ Untuk hapus: *${prefix}ai-addprovider delete <nama>*`
+        `╎❏ *${prefix}ai-addprovider list* — lihat semua provider\n` +
+        `╎❏ *${prefix}ai-addprovider <nama> <endpoint> <model> [apiKey]* — tambah provider\n` +
+        `╎❏ Contoh: *${prefix}ai-addprovider myai https://example.com/chat gpt-4o-mini sk-xxx*\n` +
+        `╎❏ Untuk hapus: *${prefix}ai-addprovider delete <nama>*`
       );
 
       await sendReplyWithNav(sock, m, text, "ai-addprovider");
@@ -82,8 +82,8 @@ async function handler(m, { sock, config: botConfig }) {
       const key = String(parts[2] || "").trim().toLowerCase();
       if (!key) {
         const text =
-          claraWrap("Hapus Provider", [`◦ Nama provider tidak boleh kosong.`,
-            `◦ Contoh: *${prefix}ai-addprovider delete myai*`].join("\n")) +
+          claraWrap("Hapus Provider", [`╎❏ Nama provider tidak boleh kosong.`,
+            `╎❏ Contoh: *${prefix}ai-addprovider delete myai*`].join("\n")) +
           "\n" +
           tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -94,8 +94,8 @@ async function handler(m, { sock, config: botConfig }) {
       const custom = getCustomProviders();
       if (!custom[key]) {
         const text =
-          claraWrap("Tidak Ditemukan", [`◦ Provider *${key}* tidak ditemukan.`,
-            `◦ Ketik *${prefix}ai-addprovider list* untuk lihat daftar.`].join("\n")) +
+          claraWrap("Tidak Ditemukan", [`╎❏ Provider *${key}* tidak ditemukan.`,
+            `╎❏ Ketik *${prefix}ai-addprovider list* untuk lihat daftar.`].join("\n")) +
           "\n" +
           tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -107,7 +107,7 @@ async function handler(m, { sock, config: botConfig }) {
       setCustomProviders(custom);
 
       const text =
-        claraWrap("AI Providers", [`◦ Provider *${key}* sudah dihapus.`].join("\n")) +
+        claraWrap("AI Providers", [`╎❏ Provider *${key}* sudah dihapus.`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}ai-addprovider list untuk cek sisa provider`) +
         "\n" +
@@ -124,9 +124,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!name || !endpoint || !model) {
       const text =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}ai-addprovider <nama> <endpoint> <model> [apiKey]*`,
-          `◦ Contoh: *${prefix}ai-addprovider myai https://example.com/chat gpt-4o-mini sk-xxx*`,
-          `◦ Lihat daftar: *${prefix}ai-addprovider list*`].join("\n")) +
+        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}ai-addprovider <nama> <endpoint> <model> [apiKey]*`,
+          `╎❏ Contoh: *${prefix}ai-addprovider myai https://example.com/chat gpt-4o-mini sk-xxx*`,
+          `╎❏ Lihat daftar: *${prefix}ai-addprovider list*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -148,10 +148,10 @@ async function handler(m, { sock, config: botConfig }) {
     setCustomProviders(custom);
 
     const text =
-      claraWrap("AI Providers", [`◦ Nama: *${name}*`,
-        `◦ Endpoint: *${endpoint}*`,
-        `◦ Model: *${model}*`,
-        `◦ API Key: *${apiKey ? "Tersimpan" : "Kosong"}*`].join("\n")) +
+      claraWrap("AI Providers", [`╎❏ Nama: *${name}*`,
+        `╎❏ Endpoint: *${endpoint}*`,
+        `╎❏ Model: *${model}*`,
+        `╎❏ API Key: *${apiKey ? "Tersimpan" : "Kosong"}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}multi-ai ${name} <pesan> untuk mencoba`) +
       "\n" +
@@ -163,8 +163,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

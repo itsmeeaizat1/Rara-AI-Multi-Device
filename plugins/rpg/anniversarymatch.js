@@ -77,7 +77,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!partnerJid || !startDate) {
       const text =
         claraHeader("Anniversary", statusEmoji) + "\n\n" +
-        claraWrap("status", [`◦ Status: *Belum punya pasangan*`, `◦ Belum ada hari jadian atau nikah`].join("\n")) + "\n\n" +
+        claraWrap("status", [`╎❏ Status: *Belum punya pasangan*`, `╎❏ Belum ada hari jadian atau nikah`].join("\n")) + "\n\n" +
         separator("━", 22) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk mulai cerita cinta`);
 
@@ -109,9 +109,9 @@ async function handler(m, { sock, config: botConfig }) {
         year: "numeric",
       });
       const daysUntil = Math.floor(nextAnniv.msUntil / 86400000);
-      annivInfo.push(`◦ Anniversary ke: *${nextAnniv.years} tahun*`);
-      annivInfo.push(`◦ Tanggal: *${annivDate}*`);
-      annivInfo.push(`◦ Countdown: *${daysUntil} hari lagi*`);
+      annivInfo.push(`╎❏ Anniversary ke: *${nextAnniv.years} tahun*`);
+      annivInfo.push(`╎❏ Tanggal: *${annivDate}*`);
+      annivInfo.push(`╎❏ Countdown: *${daysUntil} hari lagi*`);
     }
 
     // Affection dan bond level
@@ -121,15 +121,15 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraHeader("Anniversary", statusEmoji) + "\n\n" +
       claraWrap("anniversary", [
-        `◦ Kamu: *${userName}*`,
-        `◦ Pasangan: *${partnerName}*`,
-        `◦ Status: *${statusLabel}* ${statusEmoji}`,
-        `◦ Tanggal: *${dateStr}*`,
-        `◦ Durasi: *${formatDuration(duration)}*`,
-        `◦ Hari ke: *${days}*`,
-        `◦ Milestone: *${milestone}*`,
+        `╎❏ Kamu: *${userName}*`,
+        `╎❏ Pasangan: *${partnerName}*`,
+        `╎❏ Status: *${statusLabel}* ${statusEmoji}`,
+        `╎❏ Tanggal: *${dateStr}*`,
+        `╎❏ Durasi: *${formatDuration(duration)}*`,
+        `╎❏ Hari ke: *${days}*`,
+        `╎❏ Milestone: *${milestone}*`,
       ]) + "\n\n" +
-      claraWrap("bond", [`◦ Affection: *${affection}*`, `◦ Bond Level: *${bondLevel}*`, ...annivInfo].join("\n")) + "\n\n" +
+      claraWrap("bond", [`╎❏ Affection: *${affection}*`, `╎❏ Bond Level: *${bondLevel}*`, ...annivInfo].join("\n")) + "\n\n" +
       separator("━", 22) + "\n" +
       tipText(`Tingkatkan affection: ${prefix}cuddling, ${prefix}kiss, ${prefix}sayang, ${prefix}kado`);
 
@@ -141,8 +141,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("anniversary", text));

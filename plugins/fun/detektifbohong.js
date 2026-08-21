@@ -70,17 +70,17 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!statement || statement.trim().length < 3) {
     const help = claraWrap("DetektifBohong", [
-      `◦ Simulator lie detector dramatis`,
+      `╎❏ Simulator lie detector dramatis`,
       ``,
-      `◦ *Cara pakai:*`,
+      `╎❏ *Cara pakai:*`,
       `  ${prefix}detektifbohong <pernyataan>`,
       `  Atau reply pesan: ${prefix}detektifbohong`,
       ``,
-      `◦ *Contoh:*`,
+      `╎❏ *Contoh:*`,
       `  ${prefix}detektifbohong aku gak pernah skak animes`,
       ``,
-      `◦ Hasil: persentase kebohongan + alasan lucu`,
-      `◦ Hasilnya random, jangan dipercaya ya :v`,
+      `╎❏ Hasil: persentase kebohongan + alasan lucu`,
+      `╎❏ Hasilnya random, jangan dipercaya ya :v`,
     ].join("\n"));
     return sendReplyWithNav(sock, m, help, "detektifbohong");
   }

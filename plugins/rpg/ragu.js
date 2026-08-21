@@ -37,8 +37,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!partnerJid) {
       const text =
-        claraWrap("Ragu", [`◦ Status: *Belum punya pasangan*`,
-          `◦ Ragu tentang apa? Hubungan yang nggak ada?`].join("\n")) + "\n" +
+        claraWrap("Ragu", [`╎❏ Status: *Belum punya pasangan*`,
+          `╎❏ Ragu tentang apa? Hubungan yang nggak ada?`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk mulai hubungan`);
 
       await sendReplyWithNav(sock, m, text, "ragu");
@@ -55,9 +55,9 @@ async function handler(m, { sock, config: botConfig }) {
     if (cd) {
       const mins = Math.floor(cd / 60);
       const text =
-        claraWrap("Ragu", [`◦ Status: *Masih cooldown*`,
-          `◦ Tunggu: *${mins} menit lagi*`,
-          `◦ Jangan ragu terus, nanti pasangan lelah`].join("\n")) + "\n" +
+        claraWrap("Ragu", [`╎❏ Status: *Masih cooldown*`,
+          `╎❏ Tunggu: *${mins} menit lagi*`,
+          `╎❏ Jangan ragu terus, nanti pasangan lelah`].join("\n")) + "\n" +
         tipText(`Bicara baik-baik dengan pasangan`);
 
       await sendReplyWithNav(sock, m, text, "ragu");
@@ -89,13 +89,13 @@ async function handler(m, { sock, config: botConfig }) {
     const bondLevel = Math.floor(totalAffection / 100) + 1;
 
     const text =
-      claraWrap("Ragu", [`◦ ${line}`,
-        `◦ Alasan: *${alasan}*`,
-        `◦ Pasangan: *${partnerName}*`,
-        `◦ Affection: *-${affectionLoss}*`,
-        `◦ Total Affection: *${totalAffection}*`,
-        `◦ Bond Level: *${bondLevel}*`,
-        `◦ Status: *Hubungan goyah*`].join("\n")) + "\n" +
+      claraWrap("Ragu", [`╎❏ ${line}`,
+        `╎❏ Alasan: *${alasan}*`,
+        `╎❏ Pasangan: *${partnerName}*`,
+        `╎❏ Affection: *-${affectionLoss}*`,
+        `╎❏ Total Affection: *${totalAffection}*`,
+        `╎❏ Bond Level: *${bondLevel}*`,
+        `╎❏ Status: *Hubungan goyah*`].join("\n")) + "\n" +
       tipText(`Pasangan bisa respons: ${prefix}yakin | Minta maaf: ${prefix}maaf`);
 
     await sock.sendMessage(m.chat, {
@@ -106,8 +106,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("ragu", text));

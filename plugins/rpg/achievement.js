@@ -37,13 +37,13 @@ async function handler(m, { sock, config: botConfig, db }) {
     ];
 
     const text =
-      claraWrap("Achievement", [`◦ Unlocked: *${unlocked.length}*`,
-        `◦ Locked: *${locked.length}*`,
-        `◦ Total: *${unlocked.length + locked.length}*`].join("\n")) +
+      claraWrap("Achievement", [`╎❏ Unlocked: *${unlocked.length}*`,
+        `╎❏ Locked: *${locked.length}*`,
+        `╎❏ Total: *${unlocked.length + locked.length}*`].join("\n")) +
       "\n\n" +
-      claraWrap("Unlocked", unlocked.map((a) => `◦ ${a}`)) +
+      claraWrap("Unlocked", unlocked.map((a) => `╎❏ ${a}`)) +
       "\n\n" +
-      claraWrap("Locked", locked.map((a) => `◦ ${a}`)) +
+      claraWrap("Locked", locked.map((a) => `╎❏ ${a}`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +
@@ -52,8 +52,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "achievement");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

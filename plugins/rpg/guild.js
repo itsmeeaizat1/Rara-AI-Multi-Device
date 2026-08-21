@@ -27,10 +27,10 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     if (!query) {
       const text =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}guild <nama guild>*`,
-          `◦ Contoh: *${prefix}guild Nightmare*`,
-          "◦ Harga: *500 Gold*",
-          "◦ Max Member: *20*"].join("\n")) +
+        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}guild <nama guild>*`,
+          `╎❏ Contoh: *${prefix}guild Nightmare*`,
+          "╎❏ Harga: *500 Gold*",
+          "╎❏ Max Member: *20*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -42,13 +42,13 @@ async function handler(m, { sock, config: botConfig, db }) {
     const members = ["Player1", "Player2", "Player3", "Player4", "Player5"];
 
     const text =
-      claraWrap("Guild", [`◦ Guild: *${query}*`,
-        `◦ Leader: *${m.pushName || "Player"}*`,
-        "◦ Level: *1*",
-        `◦ Members: *${members.length}/20*`,
-        "◦ Gold: *500*"].join("\n")) +
+      claraWrap("Guild", [`╎❏ Guild: *${query}*`,
+        `╎❏ Leader: *${m.pushName || "Player"}*`,
+        "╎❏ Level: *1*",
+        `╎❏ Members: *${members.length}/20*`,
+        "╎❏ Gold: *500*"].join("\n")) +
       "\n\n" +
-      claraWrap("Memberꜱ", members.map((name) => `◦ ${name}`)) +
+      claraWrap("Memberꜱ", members.map((name) => `╎❏ ${name}`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +
@@ -57,8 +57,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "guild");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

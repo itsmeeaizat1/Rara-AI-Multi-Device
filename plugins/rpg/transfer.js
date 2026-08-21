@@ -32,8 +32,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!target) {
       const text =
-        claraWrap("Transfer", [`◦ Penggunaan: *${prefix}transfer <jumlah> @member*`,
-          `◦ Contoh: *${prefix}transfer 100 @628xxxx*`].join("\n")) +
+        claraWrap("Transfer", [`╎❏ Penggunaan: *${prefix}transfer <jumlah> @member*`,
+          `╎❏ Contoh: *${prefix}transfer 100 @628xxxx*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -44,8 +44,8 @@ async function handler(m, { sock, config: botConfig }) {
     const amount = parseInt(args[0], 10);
     if (!amount || amount <= 0) {
       const text =
-        claraWrap("Gagal", ["◦ Status: *Jumlah tidak valid*",
-          `◦ Contoh: *${prefix}transfer 100 @member*`].join("\n")) +
+        claraWrap("Gagal", ["╎❏ Status: *Jumlah tidak valid*",
+          `╎❏ Contoh: *${prefix}transfer 100 @member*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (senderJid === receiverJid) {
       const text =
-        claraWrap("Gagal", ["◦ Status: *Tidak bisa transfer ke diri sendiri*"].join("\n")) +
+        claraWrap("Gagal", ["╎❏ Status: *Tidak bisa transfer ke diri sendiri*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -72,9 +72,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (senderGold < amount) {
       const text =
-        claraWrap("Gagal", [`◦ Saldo: *${senderGold} Gold*`,
-          `◦ Jumlah: *${amount} Gold*`,
-          "◦ Status: *Gold tidak cukup*"].join("\n")) +
+        claraWrap("Gagal", [`╎❏ Saldo: *${senderGold} Gold*`,
+          `╎❏ Jumlah: *${amount} Gold*`,
+          "╎❏ Status: *Gold tidak cukup*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}daily untuk klaim gold harian`) +
         "\n" +
@@ -90,10 +90,10 @@ async function handler(m, { sock, config: botConfig }) {
     const updatedSender = getPlayer(m);
 
     const text =
-      claraWrap("Transfer", [`◦ Kirim: *${amount} Gold*`,
-        `◦ Ke: *${receiver?.name || "Penerima"}*`,
-        `◦ Sisa Gold: *${updatedSender?.gold || 0}*`,
-        "◦ Status: *Berhasil*"].join("\n")) +
+      claraWrap("Transfer", [`╎❏ Kirim: *${amount} Gold*`,
+        `╎❏ Ke: *${receiver?.name || "Penerima"}*`,
+        `╎❏ Sisa Gold: *${updatedSender?.gold || 0}*`,
+        "╎❏ Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -101,8 +101,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

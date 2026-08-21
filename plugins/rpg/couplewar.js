@@ -32,8 +32,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!myPartner) {
       const text =
-        claraWrap("Couple War", [`◦ Status: *Belum punya pasangan*`,
-          `◦ Mau perang sama siapa? Jomblo kok adu pasangan?`].join("\n")) + "\n" +
+        claraWrap("Couple War", [`╎❏ Status: *Belum punya pasangan*`,
+          `╎❏ Mau perang sama siapa? Jomblo kok adu pasangan?`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk punya pasangan`);
 
       await sendReplyWithNav(sock, m, text, "couplewar");
@@ -42,11 +42,11 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!target) {
       const text =
-        claraWrap("Couple War", [`◦ Cara pakai: *${prefix}couplewar @target*`,
-          `◦ Tag salah satu pasangan lawan`,
-          `◦ Pasanganmu vs Pasangan lawan`,
-          `◦ Pemenang dapat affection + exp + gold`,
-          `◦ Kalah juga dapat consolation prize`].join("\n")) + "\n" +
+        claraWrap("Couple War", [`╎❏ Cara pakai: *${prefix}couplewar @target*`,
+          `╎❏ Tag salah satu pasangan lawan`,
+          `╎❏ Pasanganmu vs Pasangan lawan`,
+          `╎❏ Pemenang dapat affection + exp + gold`,
+          `╎❏ Kalah juga dapat consolation prize`].join("\n")) + "\n" +
         tipText(`Tag pasangan yang mau diwar`);
 
       await sendReplyWithNav(sock, m, text, "couplewar");
@@ -55,8 +55,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (target === m.sender) {
       const text =
-        claraWrap("Couple War", [`◦ Status: *War diri sendiri?*`,
-          `◦ Itu namanya skizofrenia bukan perang`].join("\n")) + "\n" +
+        claraWrap("Couple War", [`╎❏ Status: *War diri sendiri?*`,
+          `╎❏ Itu namanya skizofrenia bukan perang`].join("\n")) + "\n" +
         tipText(`Tag orang lain`);
 
       await sendReplyWithNav(sock, m, text, "couplewar");
@@ -68,9 +68,9 @@ async function handler(m, { sock, config: botConfig }) {
     if (cd) {
       const mins = Math.floor(cd / 60);
       const text =
-        claraWrap("Couple War", [`◦ Status: *Masih cooldown*`,
-          `◦ Tunggu: *${mins} menit lagi*`,
-          `◦ Jangan terlalu sering perang, capek lho`].join("\n")) + "\n" +
+        claraWrap("Couple War", [`╎❏ Status: *Masih cooldown*`,
+          `╎❏ Tunggu: *${mins} menit lagi*`,
+          `╎❏ Jangan terlalu sering perang, capek lho`].join("\n")) + "\n" +
         tipText(`Tunggu sebentar ya`);
 
       await sendReplyWithNav(sock, m, text, "couplewar");
@@ -83,9 +83,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!targetPartner) {
       const text =
-        claraWrap("Couple War", [`◦ Target: *${targetUser?.name || target.split("@")[0]}*`,
-          `◦ Status: *Jomblo! Tidak punya pasangan*`,
-          `◦ Ngga bisa war pasangan kalau lawan jomblo!`].join("\n")) + "\n" +
+        claraWrap("Couple War", [`╎❏ Target: *${targetUser?.name || target.split("@")[0]}*`,
+          `╎❏ Status: *Jomblo! Tidak punya pasangan*`,
+          `╎❏ Ngga bisa war pasangan kalau lawan jomblo!`].join("\n")) + "\n" +
         tipText(`Tag orang yang punya pasangan`);
 
       await sendReplyWithNav(sock, m, text, "couplewar");
@@ -193,11 +193,11 @@ async function handler(m, { sock, config: botConfig }) {
     const winnerGold = iWin ? winGold : winGold;
 
     const text =
-      claraWrap("Couple War", [`◦ Team 1: *${myName} & ${myPartnerName}*`,
-        `◦ Power: *${myPower}*`,
-        `◦ Team 2: *${targetName} & ${targetPartnerName}*`,
-        `◦ Power: *${targetPower}*`].join("\n")) + "\n\n" +
-      claraWrap("pemenang", [`◦ Pemenang: *${winnerTeam}*`, `◦ Affection: *+${winnerAff}*`, `◦ EXP: *+${winnerExp}*`, `◦ Gold: *+${winnerGold}*`, `◦ Power Gap: *${powerDiff}*`].join("\n")) + "\n\n" +
+      claraWrap("Couple War", [`╎❏ Team 1: *${myName} & ${myPartnerName}*`,
+        `╎❏ Power: *${myPower}*`,
+        `╎❏ Team 2: *${targetName} & ${targetPartnerName}*`,
+        `╎❏ Power: *${targetPower}*`].join("\n")) + "\n\n" +
+      claraWrap("pemenang", [`╎❏ Pemenang: *${winnerTeam}*`, `╎❏ Affection: *+${winnerAff}*`, `╎❏ EXP: *+${winnerExp}*`, `╎❏ Gold: *+${winnerGold}*`, `╎❏ Power Gap: *${powerDiff}*`].join("\n")) + "\n\n" +
       separator("━", 22) + "\n" +
       tipText(`War lagi 1 jam lagi ${prefix}couplewar @target`);
 
@@ -209,8 +209,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("couplewar", text));

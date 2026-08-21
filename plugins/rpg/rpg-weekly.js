@@ -21,7 +21,7 @@ async function handler(m, { sock, config: botConfig }) {
     
     const remaining = COOLDOWN - (Date.now() - user.lastWeekly);
     if (remaining > 0) {
-      await sendReplyWithNav(sock, m, claraWrap("Weekly Reward", [`◦ Tunggu: *${formatTime(remaining)}*`].join("\n")), "rpgweekly");
+      await sendReplyWithNav(sock, m, claraWrap("Weekly Reward", [`╎❏ Tunggu: *${formatTime(remaining)}*`].join("\n")), "rpgweekly");
       return { handled: true };
     }
     
@@ -36,10 +36,10 @@ async function handler(m, { sock, config: botConfig }) {
     addUserExp(db, m.sender, exp);
     addUserMoney(db, m.sender, money);
     
-    await sendReplyWithNav(sock, m, claraWrap("Weekly Reward", [`◦ EXP: *+${exp}* ✨`,
-      `◦ Money: *+Rp${money.toLocaleString("id-ID")}* 💰`,
-      `◦ Diamond: *+${diamond}* 💎`,
-      `◦ Potion: *+${potion}* 🧪`].join("\n")) + "\n" + tipText(`Claim lagi minggu depan!`), "rpgweekly");
+    await sendReplyWithNav(sock, m, claraWrap("Weekly Reward", [`╎❏ EXP: *+${exp}* ✨`,
+      `╎❏ Money: *+Rp${money.toLocaleString("id-ID")}* 💰`,
+      `╎❏ Diamond: *+${diamond}* 💎`,
+      `╎❏ Potion: *+${potion}* 🧪`].join("\n")) + "\n" + tipText(`Claim lagi minggu depan!`), "rpgweekly");
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

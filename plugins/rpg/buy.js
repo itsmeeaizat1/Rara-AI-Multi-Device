@@ -35,9 +35,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!itemKey) {
       const text =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}buy <item>*`,
-          `◦ Contoh: *${prefix}buy Potion*`,
-          `◦ Shop: *${prefix}shop*`].join("\n")) +
+        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}buy <item>*`,
+          `╎❏ Contoh: *${prefix}buy Potion*`,
+          `╎❏ Shop: *${prefix}shop*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -48,8 +48,8 @@ async function handler(m, { sock, config: botConfig }) {
     const item = ITEMS[itemKey];
     if (!item) {
       const text =
-        claraWrap("Gagal", ["◦ Status: *Item tidak ditemukan*",
-          `◦ Daftar: ${Object.keys(ITEMS).join(", ")}`].join("\n")) +
+        claraWrap("Gagal", ["╎❏ Status: *Item tidak ditemukan*",
+          `╎❏ Daftar: ${Object.keys(ITEMS).join(", ")}`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}shop untuk melihat daftar`) +
         "\n" +
@@ -64,10 +64,10 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (gold < item.price) {
       const text =
-        claraWrap("Gagal", [`◦ Item: *${item.name}*`,
-          `◦ Harga: *${item.price} Gold*`,
-          `◦ Saldo: *${gold} Gold*`,
-          "◦ Status: *Gold tidak cukup*"].join("\n")) +
+        claraWrap("Gagal", [`╎❏ Item: *${item.name}*`,
+          `╎❏ Harga: *${item.price} Gold*`,
+          `╎❏ Saldo: *${gold} Gold*`,
+          "╎❏ Status: *Gold tidak cukup*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}daily untuk klaim gold harian`) +
         "\n" +
@@ -92,10 +92,10 @@ async function handler(m, { sock, config: botConfig }) {
     const updatedPlayer = getPlayer(m);
 
     const text =
-      claraWrap("Buy", [`◦ Item: *${item.name}*`,
-        `◦ Harga: *${item.price} Gold*`,
-        `◦ Sisa Gold: *${updatedPlayer?.gold || 0} Gold*`,
-        "◦ Status: *Berhasil*"].join("\n")) +
+      claraWrap("Buy", [`╎❏ Item: *${item.name}*`,
+        `╎❏ Harga: *${item.price} Gold*`,
+        `╎❏ Sisa Gold: *${updatedPlayer?.gold || 0} Gold*`,
+        "╎❏ Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -103,8 +103,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

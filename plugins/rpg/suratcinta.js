@@ -40,10 +40,10 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!rawBody) {
       const text =
-        claraWrap("Surat Cinta", [`◦ Cara pakai: *${prefix}suratcinta <pesan>*`,
-          `◦ Anonim: *${prefix}suratcinta anonim <pesan>*`,
-          `◦ Contoh: *${prefix}suratcinta kamu adalah bintangku*`,
-          `◦ Kirim ke pasangan atau seseorang di grup`].join("\n")) + "\n" +
+        claraWrap("Surat Cinta", [`╎❏ Cara pakai: *${prefix}suratcinta <pesan>*`,
+          `╎❏ Anonim: *${prefix}suratcinta anonim <pesan>*`,
+          `╎❏ Contoh: *${prefix}suratcinta kamu adalah bintangku*`,
+          `╎❏ Kirim ke pasangan atau seseorang di grup`].join("\n")) + "\n" +
         tipText(`Tulis pesan cintamu sekarang`);
 
       await sendReplyWithNav(sock, m, text, "suratcinta");
@@ -58,9 +58,9 @@ async function handler(m, { sock, config: botConfig }) {
       pesan = rawBody.substring(7).trim();
     } else if (rawBody.toLowerCase() === "anonim") {
       const text =
-        claraWrap("Surat Cinta", [`◦ Mode: *Anonim*`,
-          `◦ Tapi pesannya kosong!`,
-          `◦ Contoh: *${prefix}suratcinta anonim aku suka kamu*`].join("\n")) + "\n" +
+        claraWrap("Surat Cinta", [`╎❏ Mode: *Anonim*`,
+          `╎❏ Tapi pesannya kosong!`,
+          `╎❏ Contoh: *${prefix}suratcinta anonim aku suka kamu*`].join("\n")) + "\n" +
         tipText(`Tulis pesan setelah kata 'anonim'`);
 
       await sendReplyWithNav(sock, m, text, "suratcinta");
@@ -69,8 +69,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!pesan) {
       const text =
-        claraWrap("Surat Cinta", [`◦ Status: *Pesan kosong*`,
-          `◦ Tulis pesan cintamu dulu ya`].join("\n")) + "\n" +
+        claraWrap("Surat Cinta", [`╎❏ Status: *Pesan kosong*`,
+          `╎❏ Tulis pesan cintamu dulu ya`].join("\n")) + "\n" +
         tipText(`Contoh: ${prefix}suratcinta kamu adalah duniaku`);
 
       await sendReplyWithNav(sock, m, text, "suratcinta");
@@ -152,17 +152,17 @@ async function handler(m, { sock, config: botConfig }) {
 
       // Kirim info affection (terpisah, biar suratnya tetap bersih)
       const infoText =
-        claraWrap("Surat Terkirim", [`◦ Ke: *${recipientName}*`,
-          `◦ Mode: *${isAnonim ? "Anonim" : "Langsung"}*`,
-          `◦ Affection: *+${affectionGain}*`,
-          `◦ Total Surat: *${rpg.letterCount}*`].join("\n")) + "\n" +
+        claraWrap("Surat Terkirim", [`╎❏ Ke: *${recipientName}*`,
+          `╎❏ Mode: *${isAnonim ? "Anonim" : "Langsung"}*`,
+          `╎❏ Affection: *+${affectionGain}*`,
+          `╎❏ Total Surat: *${rpg.letterCount}*`].join("\n")) + "\n" +
         tipText(`Kirim surat lagi: ${prefix}suratcinta`);
 
       await sock.sendMessage(m.chat, { text: infoText });
     } else {
       const infoText =
-        claraWrap("Surat Terkirim", [`◦ Mode: *${isAnonim ? "Anonim" : "Publik"}*`,
-          `◦ Status: *Terkirim ke grup*`].join("\n")) + "\n" +
+        claraWrap("Surat Terkirim", [`╎❏ Mode: *${isAnonim ? "Anonim" : "Publik"}*`,
+          `╎❏ Status: *Terkirim ke grup*`].join("\n")) + "\n" +
         tipText(`Punya pasangan? ${prefix}jadian @target`);
 
       await sock.sendMessage(m.chat, { text: infoText });
@@ -171,8 +171,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("suratcinta", text));

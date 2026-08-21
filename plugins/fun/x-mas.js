@@ -43,10 +43,10 @@ async function handler(m, { sock, config: botConfig }) {
     const isChristmasSeason = month === 12;
 
     const text =
-      claraWrap("Christmas", [`◦ Hai *${userName}*!`,
-        isChristmasSeason ? "◦ Musim Natal aktif! 🎅" : "◦ Khusus hari Natal!",
-        "◦ Selamat Natal! 🎄",
-        "◦ Damai dan bahagia selalu."].join("\n")) +
+      claraWrap("Christmas", [`╎❏ Hai *${userName}*!`,
+        isChristmasSeason ? "╎❏ Musim Natal aktif! 🎅" : "╎❏ Khusus hari Natal!",
+        "╎❏ Selamat Natal! 🎄",
+        "╎❏ Damai dan bahagia selalu."].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}x-mas untuk ucapan Natal`) +
       "\n" +
@@ -56,8 +56,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

@@ -15,9 +15,9 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const input = m.text?.trim();
     if (!input) {
-      await sendReplyWithNav(sock, m, claraWrap("AI Learn", [`◦ Penggunaan: *${prefix}ailearn <topik> <pertanyaan>*`,
-        `◦ Contoh: *${prefix}ailearn matematika 2+2*`,
-        `◦ Contoh: *${prefix}ailearn inggris terjemahkan*`].join("\n")), "ailearn");
+      await sendReplyWithNav(sock, m, claraWrap("AI Learn", [`╎❏ Penggunaan: *${prefix}ailearn <topik> <pertanyaan>*`,
+        `╎❏ Contoh: *${prefix}ailearn matematika 2+2*`,
+        `╎❏ Contoh: *${prefix}ailearn inggris terjemahkan*`].join("\n")), "ailearn");
       return { handled: true };
     }
     const result = await callAI(`Kamu adalah tutor. Jawab pertanyaan berikut dengan cara yang mudah dipahami, berikan penjelasan & contoh. Bahasa Indonesia.\n\n${input}`, {

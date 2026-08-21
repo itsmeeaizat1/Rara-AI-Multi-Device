@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const text =
       claraWrap("Quest", "📜") +
       "\n\n" +
-      claraWrap("MiꜱI", quests.map((q) => `◦ ${q.title}\n  Reward: *${q.reward}*\n  Progress: *${q.progress}*`)) +
+      claraWrap("MiꜱI", quests.map((q) => `╎❏ ${q.title}\n  Reward: *${q.reward}*\n  Progress: *${q.progress}*`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +
@@ -43,8 +43,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "quest");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

@@ -57,8 +57,8 @@ async function handler(m, { sock, config: botConfig }) {
     if (!source) source = "Local";
 
     const text =
-      claraWrap("Quote", [`◦ *${quote}*`,
-        `◦ Sumber: *${source}*`].join("\n")) +
+      claraWrap("Quote", [`╎❏ *${quote}*`,
+        `╎❏ Sumber: *${source}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}quote untuk quote lain`) +
       "\n" +
@@ -68,8 +68,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

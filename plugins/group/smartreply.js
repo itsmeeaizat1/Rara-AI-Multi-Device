@@ -148,22 +148,22 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!action) {
       const text =
-        claraWrap("Smart Reply", [`◦ Fitur AI auto-jawab FAQ grup`,
-          `◦ Set keyword + context, AI jawab otomatis`,
-          `◦ Beda dari autoreply: AI generate jawaban dinamis`,
+        claraWrap("Smart Reply", [`╎❏ Fitur AI auto-jawab FAQ grup`,
+          `╎❏ Set keyword + context, AI jawab otomatis`,
+          `╎❏ Beda dari autoreply: AI generate jawaban dinamis`,
           ``,
           `*Perintah:*`,
-          `◦ ${prefix}smartreply on — Aktifkan`,
-          `◦ ${prefix}smartreply off — Matikan`,
-          `◦ ${prefix}smartreply add <keyword>|<context>`,
-          `◦ ${prefix}smartreply del <keyword>`,
-          `◦ ${prefix}smartreply list — Lihat topics`,
-          `◦ ${prefix}smartreply model puter|tio`,
-          `◦ ${prefix}smartreply reset — Hapus semua`,
+          `╎❏ ${prefix}smartreply on — Aktifkan`,
+          `╎❏ ${prefix}smartreply off — Matikan`,
+          `╎❏ ${prefix}smartreply add <keyword>|<context>`,
+          `╎❏ ${prefix}smartreply del <keyword>`,
+          `╎❏ ${prefix}smartreply list — Lihat topics`,
+          `╎❏ ${prefix}smartreply model puter|tio`,
+          `╎❏ ${prefix}smartreply reset — Hapus semua`,
           ``,
           `*Contoh:*`,
-          `◦ ${prefix}smartreply add jam buka|Toko buka 8-21, tutup Minggu`,
-          `◦ ${prefix}smartreply add harga|Menu 15rb, paket 50rb`].join("\n")) + "\n" +
+          `╎❏ ${prefix}smartreply add jam buka|Toko buka 8-21, tutup Minggu`,
+          `╎❏ ${prefix}smartreply add harga|Menu 15rb, paket 50rb`].join("\n")) + "\n" +
         tipText("Hanya admin grup yang bisa mengatur");
 
       await sendReplyWithNav(sock, m, text, "smartreply");
@@ -178,10 +178,10 @@ async function handler(m, { sock, config: botConfig }) {
       db.setGroup(m.chat, { ...groupData, smartReply });
       await m.react("✅");
       const text =
-        claraWrap("Smart Reply", [`◦ Status: *Aktif*`,
-          `◦ Provider: *${smartReply.provider.toUpperCase()}*`,
-          `◦ Topics: *${smartReply.topics.length}*`,
-          `◦ Bot akan auto-jawab pertanyaan yang match keyword`].join("\n")) + "\n" +
+        claraWrap("Smart Reply", [`╎❏ Status: *Aktif*`,
+          `╎❏ Provider: *${smartReply.provider.toUpperCase()}*`,
+          `╎❏ Topics: *${smartReply.topics.length}*`,
+          `╎❏ Bot akan auto-jawab pertanyaan yang match keyword`].join("\n")) + "\n" +
         tipText(`Tambah topic: ${prefix}smartreply add <keyword>|<context>`);
 
       await m.reply(claraWrap("smartreply", text));
@@ -193,8 +193,8 @@ async function handler(m, { sock, config: botConfig }) {
       db.setGroup(m.chat, { ...groupData, smartReply });
       await m.react("✅");
       const text =
-        claraWrap("Smart Reply", [`◦ Status: *Nonaktif*`,
-          `◦ Topics tersimpan, bisa diaktifkan lagi`].join("\n")) + "\n" +
+        claraWrap("Smart Reply", [`╎❏ Status: *Nonaktif*`,
+          `╎❏ Topics tersimpan, bisa diaktifkan lagi`].join("\n")) + "\n" +
         tipText(`Aktifkan: ${prefix}smartreply on`);
 
       await m.reply(claraWrap("smartreply", text));
@@ -207,8 +207,8 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (pipeIdx === -1) {
         const text =
-          claraWrap("Smart Reply", [`◦ Format: *keyword|context*`,
-            `◦ Contoh: jam buka|Toko buka 8-21 tutup Minggu`].join("\n")) + "\n" +
+          claraWrap("Smart Reply", [`╎❏ Format: *keyword|context*`,
+            `╎❏ Contoh: jam buka|Toko buka 8-21 tutup Minggu`].join("\n")) + "\n" +
           tipText("Pisahkan keyword dan context dengan |");
 
         await m.reply(claraWrap("smartreply", text));
@@ -220,7 +220,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (!keyword || !context) {
         const text =
-          claraWrap("Smart Reply", [`◦ Keyword dan context tidak boleh kosong`].join("\n")) + "\n" +
+          claraWrap("Smart Reply", [`╎❏ Keyword dan context tidak boleh kosong`].join("\n")) + "\n" +
           tipText("Contoh: jam buka|Toko buka 8-21, tutup Minggu");
 
         await m.reply(claraWrap("smartreply", text));
@@ -242,10 +242,10 @@ async function handler(m, { sock, config: botConfig }) {
 
       await m.react("✅");
       const text =
-        claraWrap("Smart Reply", [`◦ Keyword: *${keyword}*`,
-          `◦ Context: *${context.slice(0, 80)}${context.length > 80 ? "..." : ""}*`,
-          `◦ Total topics: *${smartReply.topics.length}*`,
-          `${smartReply.enabled ? "" : `◦ Catatan: Smart Reply belum aktif, ketik ${prefix}smartreply on`}`].join("\n")) + "\n" +
+        claraWrap("Smart Reply", [`╎❏ Keyword: *${keyword}*`,
+          `╎❏ Context: *${context.slice(0, 80)}${context.length > 80 ? "..." : ""}*`,
+          `╎❏ Total topics: *${smartReply.topics.length}*`,
+          `${smartReply.enabled ? "" : `╎❏ Catatan: Smart Reply belum aktif, ketik ${prefix}smartreply on`}`].join("\n")) + "\n" +
         tipText(`Saat orang nanya "${keyword}", AI akan auto-jawab`);
 
       await m.reply(claraWrap("smartreply", text));
@@ -257,7 +257,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (!keyword) {
         const text =
-          claraWrap("Smart Reply", [`◦ Format: ${prefix}smartreply del <keyword>`].join("\n")) + "\n" +
+          claraWrap("Smart Reply", [`╎❏ Format: ${prefix}smartreply del <keyword>`].join("\n")) + "\n" +
           tipText("Masukkan keyword yang mau dihapus");
 
         await m.reply(claraWrap("smartreply", text));
@@ -270,7 +270,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (idx === -1) {
         const text =
-          claraWrap("Smart Reply", [`◦ Keyword: *${keyword}* tidak ada`].join("\n")) + "\n" +
+          claraWrap("Smart Reply", [`╎❏ Keyword: *${keyword}* tidak ada`].join("\n")) + "\n" +
           tipText(`Lihat daftar: ${prefix}smartreply list`);
 
         await m.reply(claraWrap("smartreply", text));
@@ -282,8 +282,8 @@ async function handler(m, { sock, config: botConfig }) {
 
       await m.react("✅");
       const text =
-        claraWrap("Smart Reply", [`◦ Keyword: *${keyword}*`,
-          `◦ Sisa topics: *${smartReply.topics.length}*`].join("\n")) + "\n" +
+        claraWrap("Smart Reply", [`╎❏ Keyword: *${keyword}*`,
+          `╎❏ Sisa topics: *${smartReply.topics.length}*`].join("\n")) + "\n" +
         tipText(`Lihat daftar: ${prefix}smartreply list`);
 
       await m.reply(claraWrap("smartreply", text));
@@ -293,8 +293,8 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "list") {
       if (!smartReply.topics || smartReply.topics.length === 0) {
         const text =
-          claraWrap("Smart Reply", [`◦ Belum ada topic di grup ini`,
-            `◦ Tambah: ${prefix}smartreply add <keyword>|<context>`].join("\n")) + "\n" +
+          claraWrap("Smart Reply", [`╎❏ Belum ada topic di grup ini`,
+            `╎❏ Tambah: ${prefix}smartreply add <keyword>|<context>`].join("\n")) + "\n" +
           tipText("Status: " + (smartReply.enabled ? "Aktif" : "Nonaktif"));
 
         await m.reply(claraWrap("smartreply", text));
@@ -306,9 +306,9 @@ async function handler(m, { sock, config: botConfig }) {
       );
 
       const text =
-        claraWrap("Smart Reply", [`◦ Status: *${smartReply.enabled ? "Aktif" : "Nonaktif"}*`,
-          `◦ Provider: *${smartReply.provider.toUpperCase()}*`,
-          `◦ Total: *${smartReply.topics.length}* topics`,
+        claraWrap("Smart Reply", [`╎❏ Status: *${smartReply.enabled ? "Aktif" : "Nonaktif"}*`,
+          `╎❏ Provider: *${smartReply.provider.toUpperCase()}*`,
+          `╎❏ Total: *${smartReply.topics.length}* topics`,
           ``,
           ...topicLines].join("\n")) + "\n" +
         tipText(`Hapus: ${prefix}smartreply del <keyword>`);
@@ -322,9 +322,9 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (!model || !["puter", "tio"].includes(model)) {
         const text =
-          claraWrap("Smart Reply", [`◦ ${prefix}smartreply model puter — Gratis, no key`,
-            `◦ ${prefix}smartreply model tio — Tio AI (butuh key)`,
-            `◦ Current: *${smartReply.provider.toUpperCase()}*`].join("\n")) + "\n" +
+          claraWrap("Smart Reply", [`╎❏ ${prefix}smartreply model puter — Gratis, no key`,
+            `╎❏ ${prefix}smartreply model tio — Tio AI (butuh key)`,
+            `╎❏ Current: *${smartReply.provider.toUpperCase()}*`].join("\n")) + "\n" +
           tipText("Puter = gratis unlimited, Tio = butuh API key");
 
         await m.reply(claraWrap("smartreply", text));
@@ -336,8 +336,8 @@ async function handler(m, { sock, config: botConfig }) {
 
       await m.react("✅");
       const text =
-        claraWrap("Smart Reply", [`◦ Provider: *${model.toUpperCase()}*`,
-          `${model === "tio" ? "◦ Pastikan API key Tio AI sudah di-set di config" : "◦ Free, no API key needed"}`].join("\n")) + "\n" +
+        claraWrap("Smart Reply", [`╎❏ Provider: *${model.toUpperCase()}*`,
+          `${model === "tio" ? "╎❏ Pastikan API key Tio AI sudah di-set di config" : "╎❏ Free, no API key needed"}`].join("\n")) + "\n" +
         tipText("AI akan menggunakan provider ini untuk auto-reply");
 
       await m.reply(claraWrap("smartreply", text));
@@ -350,8 +350,8 @@ async function handler(m, { sock, config: botConfig }) {
 
       await m.react("✅");
       const text =
-        claraWrap("Smart Reply", [`◦ Semua topic dihapus`,
-          `◦ Smart Reply: *${smartReply.enabled ? "Aktif" : "Nonaktif"}*`].join("\n")) + "\n" +
+        claraWrap("Smart Reply", [`╎❏ Semua topic dihapus`,
+          `╎❏ Smart Reply: *${smartReply.enabled ? "Aktif" : "Nonaktif"}*`].join("\n")) + "\n" +
         tipText(`Tambah baru: ${prefix}smartreply add <keyword>|<context>`);
 
       await m.reply(claraWrap("smartreply", text));
@@ -362,7 +362,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[SmartReply Error]", error);
     const text =
-      claraWrap("Gagal", [`◦ Alasan: *${error.message || "Unknown error"}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`╎❏ Alasan: *${error.message || "Unknown error"}*`].join("\n")) + "\n" +
       tipText("Coba lagi nanti");
 
     await m.reply(claraWrap("smartreply", text));

@@ -137,37 +137,37 @@ async function handler(m, { sock }) {
         ?.slice(0, 5)
         .map(
           (v) =>
-            `  ◦ ${v.group.name} (${v.group.memberCount} members) — ${v.role.name}`,
+            `  ╎❏ ${v.group.name} (${v.group.memberCount} members) — ${v.role.name}`,
         )
-        .join("\n") || "  ◦ Tidak ada";
+        .join("\n") || "  ╎❏ Tidak ada";
 
     const topGames =
       res.games
         ?.slice(0, 5)
         .map(
           (v) =>
-            `  ◦ ${v.name} (${(v.placeVisits || 0).toLocaleString()} visits)`,
+            `  ╎❏ ${v.name} (${(v.placeVisits || 0).toLocaleString()} visits)`,
         )
-        .join("\n") || "  ◦ Tidak ada";
+        .join("\n") || "  ╎❏ Tidak ada";
 
     const topBadges =
       res.badges
         ?.slice(0, 5)
         .map(
           (v) =>
-            `  ◦ ${v.name} (${v.statistics?.awardedCount?.toLocaleString() || 0} awarded)`,
+            `  ╎❏ ${v.name} (${v.statistics?.awardedCount?.toLocaleString() || 0} awarded)`,
         )
-        .join("\n") || "  ◦ Tidak ada";
+        .join("\n") || "  ╎❏ Tidak ada";
 
     const topInventory = Array.isArray(res.inventory)
       ? res.inventory
           .slice(0, 5)
           .map(
             (v) =>
-              `  ◦ ${v.name} (RAP: ${v.recentAveragePrice?.toLocaleString() || "-"})`,
+              `  ╎❏ ${v.name} (RAP: ${v.recentAveragePrice?.toLocaleString() || "-"})`,
           )
           .join("\n")
-      : `  ◦ ${res.inventory}`;
+      : `  ╎❏ ${res.inventory}`;
 
     const presInfo = res.presence
       ? `Status: ${presenceType[res.presence.userPresenceType] || res.presence.userPresenceType}\n  Last Location: ${res.presence.lastLocation || "-"}\n  PlaceId: ${res.presence.placeId || "-"}\n  GameId: ${res.presence.gameId || "-"}`

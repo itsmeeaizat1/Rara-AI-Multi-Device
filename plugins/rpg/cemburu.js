@@ -38,8 +38,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!partnerJid) {
       const text =
-        claraWrap("Cemburu", [`◦ Status: *Belum punya pasangan*`,
-          `◦ Jomblo nggak bisa cemburu, mau cemburu ke siapa?`].join("\n")) + "\n" +
+        claraWrap("Cemburu", [`╎❏ Status: *Belum punya pasangan*`,
+          `╎❏ Jomblo nggak bisa cemburu, mau cemburu ke siapa?`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk punya pasangan`);
 
       await sendReplyWithNav(sock, m, text, "cemburu");
@@ -48,10 +48,10 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!target) {
       const text =
-        claraWrap("Cemburu", [`◦ Cara pakai: *${prefix}cemburu @target [alasan]*`,
-          `◦ Contoh: *${prefix}cemburu @628xxx kok mesra banget*`,
-          `◦ Pasanganmu akan dapet notifikasi cemburu`,
-          `◦ Affection turun sedikit tapi drama naik!`].join("\n")) + "\n" +
+        claraWrap("Cemburu", [`╎❏ Cara pakai: *${prefix}cemburu @target [alasan]*`,
+          `╎❏ Contoh: *${prefix}cemburu @628xxx kok mesra banget*`,
+          `╎❏ Pasanganmu akan dapet notifikasi cemburu`,
+          `╎❏ Affection turun sedikit tapi drama naik!`].join("\n")) + "\n" +
         tipText(`Tag seseorang yang bikin kamu cemburu`);
 
       await sendReplyWithNav(sock, m, text, "cemburu");
@@ -60,8 +60,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (target === m.sender) {
       const text =
-        claraWrap("Cemburu", [`◦ Status: *Cemburu ke diri sendiri?*`,
-          `◦ Itu namanya insecure, bukan cemburu`].join("\n")) + "\n" +
+        claraWrap("Cemburu", [`╎❏ Status: *Cemburu ke diri sendiri?*`,
+          `╎❏ Itu namanya insecure, bukan cemburu`].join("\n")) + "\n" +
         tipText(`Tag orang lain, bukan diri sendiri`);
 
       await sendReplyWithNav(sock, m, text, "cemburu");
@@ -70,8 +70,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (target === partnerJid) {
       const text =
-        claraWrap("Cemburu", [`◦ Status: *Cemburu ke pasangan sendiri?*`,
-          `◦ Itu namanya posesif, bukan cemburu`].join("\n")) + "\n" +
+        claraWrap("Cemburu", [`╎❏ Status: *Cemburu ke pasangan sendiri?*`,
+          `╎❏ Itu namanya posesif, bukan cemburu`].join("\n")) + "\n" +
         tipText(`Tag orang lain selain pasanganmu`);
 
       await sendReplyWithNav(sock, m, text, "cemburu");
@@ -101,20 +101,20 @@ async function handler(m, { sock, config: botConfig }) {
 
     // Kirim notifikasi ke pasangan
     const notifText =
-      claraWrap("Notifikasi Cemburu", [`◦ Dari: *${userName}*`,
-        `◦ Target: *${targetName}*`,
-        `◦ Alasan: *${alasan}*`,
-        `◦ Affection: *-${affectionLoss}*`,
-        `◦ Pesan: *${line}*`].join("\n")) + "\n" +
+      claraWrap("Notifikasi Cemburu", [`╎❏ Dari: *${userName}*`,
+        `╎❏ Target: *${targetName}*`,
+        `╎❏ Alasan: *${alasan}*`,
+        `╎❏ Affection: *-${affectionLoss}*`,
+        `╎❏ Pesan: *${line}*`].join("\n")) + "\n" +
       tipText(`Tenangkan pasanganmu: ${prefix}maaf`);
 
     const text =
-      claraWrap("Cemburu", [`◦ ${line}`,
-        `◦ Target: *${targetName}*`,
-        `◦ Alasan: *${alasan}*`,
-        `◦ Pasangan: *${partnerName}*`,
-        `◦ Affection: *-${affectionLoss}*`,
-        `◦ Total Cemburu: *${rpg.cemburuCount}*`].join("\n")) + "\n" +
+      claraWrap("Cemburu", [`╎❏ ${line}`,
+        `╎❏ Target: *${targetName}*`,
+        `╎❏ Alasan: *${alasan}*`,
+        `╎❏ Pasangan: *${partnerName}*`,
+        `╎❏ Affection: *-${affectionLoss}*`,
+        `╎❏ Total Cemburu: *${rpg.cemburuCount}*`].join("\n")) + "\n" +
       tipText(`Minta maaf ke pasangan: ${prefix}maaf`);
 
     await sock.sendMessage(m.chat, {
@@ -133,8 +133,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("cemburu", text));

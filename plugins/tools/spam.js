@@ -28,9 +28,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!count || count <= 0) {
       const text =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}spam <jumlah> <pesan>*`,
-          `◦ Contoh: *${prefix}spam 5 Halo*`,
-          "◦ Maksimal: *10x*"].join("\n")) +
+        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}spam <jumlah> <pesan>*`,
+          `╎❏ Contoh: *${prefix}spam 5 Halo*`,
+          "╎❏ Maksimal: *10x*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -45,9 +45,9 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      claraWrap("Spam", [`◦ Jumlah: *${count}x*`,
-        `◦ Pesan: *${message}*`,
-        "◦ Status: *SELESAI*"].join("\n")) +
+      claraWrap("Spam", [`╎❏ Jumlah: *${count}x*`,
+        `╎❏ Pesan: *${message}*`,
+        "╎❏ Status: *SELESAI*"].join("\n")) +
       "\n" +
       tipText(`Gunakan dengan bijak, jangan spam di chat orang lain`) +
       "\n" +
@@ -57,8 +57,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

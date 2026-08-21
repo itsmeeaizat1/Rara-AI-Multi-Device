@@ -29,8 +29,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!targetRaw) {
       const text =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}rob <@target>*`,
-          `◦ Contoh: *${prefix}rob @username*`].join("\n")) +
+        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}rob <@target>*`,
+          `╎❏ Contoh: *${prefix}rob @username*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -44,8 +44,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if ((actorRpg.gold || 0) < 50) {
       const text =
-        claraWrap("Rob", ["◦ Butuh minimal *50 Gold* untuk aksi ini.",
-          `◦ Saldo kamu: *${actorRpg.gold || 0} Gold*`].join("\n")) +
+        claraWrap("Rob", ["╎❏ Butuh minimal *50 Gold* untuk aksi ini.",
+          `╎❏ Saldo kamu: *${actorRpg.gold || 0} Gold*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}daily untuk klaim gold harian`) +
         "\n" +
@@ -87,11 +87,11 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const lines = [
-      `◦ Target: *${targetName}*`,
-      `◦ Hasil: *${result}*`,
-      rewardGold > 0 ? `◦ Dapat: *+${rewardGold} Gold*` : "",
-      penaltyGold > 0 ? `◦ Kehilangan: *-${penaltyGold} Gold*` : "",
-      `◦ Saldo sekarang: *${updatedRpg.gold ?? actorRpg.gold ?? 0} Gold*`,
+      `╎❏ Target: *${targetName}*`,
+      `╎❏ Hasil: *${result}*`,
+      rewardGold > 0 ? `╎❏ Dapat: *+${rewardGold} Gold*` : "",
+      penaltyGold > 0 ? `╎❏ Kehilangan: *-${penaltyGold} Gold*` : "",
+      `╎❏ Saldo sekarang: *${updatedRpg.gold ?? actorRpg.gold ?? 0} Gold*`,
     ].filter(Boolean);
 
     const text =
@@ -107,8 +107,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

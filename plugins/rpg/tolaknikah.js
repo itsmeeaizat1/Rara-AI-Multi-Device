@@ -50,8 +50,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!proposal) {
       const text =
-        claraWrap("Tidak Ada Lamaran", ["◦ Kamu tidak punya lamaran yang menunggu",
-          "◦ Atau lamaran sudah expired (5 menit)"].join("\n")) +
+        claraWrap("Tidak Ada Lamaran", ["╎❏ Kamu tidak punya lamaran yang menunggu",
+          "╎❏ Atau lamaran sudah expired (5 menit)"].join("\n")) +
         "\n" +
         tipText("Tunggu seseorang melamar kamu");
 
