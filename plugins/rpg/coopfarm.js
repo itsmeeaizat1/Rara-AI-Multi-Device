@@ -139,7 +139,8 @@ async function handler(m, { sock }) {
       "Waktu tumbuh: " + Math.floor(crop.growTime / 60000) + " menit\n" +
       "Cuaca: " + farm.weather.emoji + " " + farm.weather.name + "\n" +
       "Biaya: Rp " + crop.seedPrice + "\n\n" +
-      "Member lain bisa siram pake:\n.coopfarm water " + farm.plots.length, "coopfarm");
+      "Member lain bisa siram pake:\n.coopfarm water " + farm.plots.length;
+    return await sendReplyWithNav(sock, m, txt, "coopfarm");
   }
 
   // WATER

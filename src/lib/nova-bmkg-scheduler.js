@@ -86,7 +86,18 @@ async function fetchGempaDirasakan() {
 // ────────────────────────────────────────────────────────────────────────────
 
 function formatGempaMessage(g, label) {
-  let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + g.Tanggal + "  ┊  ➶\n";
+  let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Info Gempa  ┊  ➶\n";
+  txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+  txt += "Jadwal: " + label + " (6 jamanan)\n\n";
+  txt += "M" + g.Magnitude + " — " + g.Wilayah + "\n";
+  txt += "Tanggal: " + g.Tanggal + " " + g.Jam + "\n";
+  txt += "Kedalaman: " + g.Kedalaman + "\n\n";
+  txt += "Sumber: BMKG (data.bmkg.go.id)";
+  return txt;
+}
+
+function formatGempaListMessage(gempaList, label) {
+  let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Info Gempa  ┊  ➶\n";
   txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
   txt += "Jadwal: " + label + " (6 jamanan)\n\n";
   txt += "Gempa terkini M 5.0+ (5 terbaru):\n\n";
