@@ -2,7 +2,7 @@
 // Voice Clone — simpan sample suara, generate TTS dengan voice hasil clone
 // Primary: Fish Audio API (real voice cloning, free 10K credits/month)
 // Fallback: edge-tts + FFmpeg pitch/formant shift (tanpa API key)
-import { getApiKeys } from "../../../src/lib/config/env-loader.js";
+import { getApiKeys } from "../../src/lib/config/env-loader.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";

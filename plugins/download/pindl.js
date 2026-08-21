@@ -2,7 +2,7 @@
 import fs from "fs";
 import { pinterestdl } from "../../src/lib/nova-pinterest.js";
 import path from "path";
-import { queueFFmpeg } from "./../../src/lib/nova-ffmpeg.js";
+import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";

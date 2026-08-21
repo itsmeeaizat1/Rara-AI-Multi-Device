@@ -20,7 +20,7 @@ const pluginConfig = {
 };
 
 import fs from "node:fs";
-import { getAndarazConfig } from "../../../src/lib/config/env-loader.js";
+import { getAndarazConfig } from "../../src/lib/config/env-loader.js";
 const andarazConfig = getAndarazConfig();
 const API_KEY = andarazConfig.apikey;
 const API_BASE = "https://api.andaraz.com/api/berita";
