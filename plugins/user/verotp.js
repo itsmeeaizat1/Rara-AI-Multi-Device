@@ -99,7 +99,7 @@ async function handler(m, { args, sock }) {
     const alreadyClaimed = user?.hasClaimedRegisterReward || false;
     const serial = user?.regSerial || generateSerialNumber();
 
-    db.updateUser(m.sender, {
+    db.setUser(m.sender, {
       isRegistered: true,
       regName: session.name,
       regEmail: session.email,
@@ -116,7 +116,7 @@ async function handler(m, { args, sock }) {
       const currentKoin = user?.koin || 0;
       const currentExp = user?.exp || 0;
 
-      db.updateUser(m.sender, {
+      db.setUser(m.sender, {
         energi: currentEnergi + rewards.energi,
         koin: currentKoin + rewards.koin,
         exp: currentExp + rewards.exp,
@@ -124,6 +124,7 @@ async function handler(m, { args, sock }) {
       });
     }
 
+    await db.save();
     clearOtpSession(m.sender);
 
     let txt = `╭┈┈⬡「 ✅ *VERIFIED* 」\n`;

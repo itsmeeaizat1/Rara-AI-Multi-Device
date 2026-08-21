@@ -94,7 +94,6 @@ async function handleSession(m, sock) {
             id: `.giveaway selectgroup ${currentGroup}`,
           }),
         },
-      ,
       {
         name: "quick_reply",
         buttonParamsJson: JSON.stringify({
