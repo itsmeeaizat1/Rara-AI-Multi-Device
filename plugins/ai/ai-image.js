@@ -36,6 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const endpoints = [
+      `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`,
       `https://api.miaou.xyz/api/txt2img?prompt=${encodeURIComponent(prompt)}`,
       `https://api.zeks.xyz/api/txt2img?prompt=${encodeURIComponent(prompt)}`,
     ];
