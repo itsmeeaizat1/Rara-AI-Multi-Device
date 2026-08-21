@@ -342,23 +342,13 @@ function clearCaptchaSession(jid) {
 
 function buildUserDataBlock(name, age, gender) {
   return (
-    "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + (name || "-") + "\n  ┊  ➶ Bonus daftar sudah pernah diklaim\n  ┊  ➶ Tidak ada reward tambahan\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀"
-  }
-  var msg =
-    "╭┈┈「 \U0001F381 REWARDS 」\n" +
-    "  ┊  ➶ \U0001F4B0 +" + rewards.koin.toLocaleString("id-ID") + " Koin\n" +
-    "  ┊  ➶ ⚡ +" + rewards.energi + " Energi\n" +
-    "  ┊  ➶ ⭐ +" + rewards.exp.toLocaleString("id-ID") + " EXP\n" +
-    "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀"
-  if (randomBonus) {
-    msg +=
-      "\n╭┈┈「 \U0001F3B2 RANDOM BONUS 」\n" +
-      "  ┊  ➶ \U0001F4B0 +" + randomBonus.koin.toLocaleString("id-ID") + " Koin\n" +
-      "  ┊  ➶ ⚡ +" + randomBonus.energi + " Energi\n" +
-      "  ┊  ➶ ⭐ +" + randomBonus.exp.toLocaleString("id-ID") + " EXP\n" +
-      "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀"
-  }
-  return msg
+    "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + (name || "-") +
+    "\n  ┊  ➶ Umur: " + (age || "-") +
+    "\n  ┊  ➶ Gender: " + (gender || "-") +
+    "\n  ┊  ➶ Bonus daftar sudah pernah diklaim" +
+    "\n  ┊  ➶ Tidak ada reward tambahan" +
+    "\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀"
+  )
 }
 
 async function handler(m, { sock }) {
@@ -375,43 +365,19 @@ async function handler(m, { sock }) {
 
   if (m.isGroup) {
     return m.reply(
-      "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Langkah:\n\n"
-    caption += "  ┊  ➶ Jawab captcha pada gambar di atas\n\n"
-    caption += "  ┊  ➶ *Reply gambar ini dengan jawaban kamu*\n"
-    caption += "  ┊  ➶ Waktu: 3 menit\n"
-    caption += "  ┊  ➶ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
-    caption += "  ┊  ➶ Batal: reply `batal`\n"
-    caption += "┊┈┈ Source: " + sourceName + "\n"
-    caption += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀"
-
-    var sent = await sock.sendMessage(m.chat, {
-      image: captcha.imageBuffer,
-      caption: caption,
-      contextInfo: getRegistrationContextInfo(),
-    }, { quoted: m })
-
-    session.promptId = sent?.key?.id || null
-  } else if (captcha.type === "text-api") {
-    // Text captcha from API
-    var msg = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Reply pesan ini dengan jawaban kamu\n\n"
-    msg2 += "  ┊  ➶ Jawab pertanyaan berikut:\n\n"
-    msg2 += "  ┊  ➶ *" + captcha.display + "*\n\n"
-    msg2 += "  ┊  ➶ " + captcha.question + "\n\n"
-    msg2 += "  ┊  ➶ *Reply pesan ini dengan jawaban kamu*\n"
-    msg2 += "  ┊  ➶ Waktu: 3 menit\n"
-    msg2 += "  ┊  ➶ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
-    msg2 += "  ┊  ➶ Batal: reply `batal`\n"
-    msg2 += "┊┈┈ Source: " + sourceName + "\n"
-    msg2 += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀"
-
-    var sent = await sock.sendMessage(m.chat, {
-      text: msg2,
-      contextInfo: getRegistrationContextInfo(),
-    }, { quoted: m })
-
-    session.promptId = sent?.key?.id || null
+      claraWrap("daftarotomatis", "Fitur ini cuma bisa dipakai lewat chat pribadi (DM) ke bot ya, bukan di grup.")
+    )
   }
 
+  // TODO: fitur captcha auto-register lagi dalam perbaikan (bug lama, bukan dari
+  // perubahan hari ini) — generate captcha & session belum lengkap di sini.
+  // Sementara arahkan ke .daftar (registrasi manual reply teks) yang udah pasti jalan.
+  return m.reply(
+    claraWrap(
+      "daftarotomatis",
+      "Fitur ini sedang diperbaiki. Silahkan pakai `" + m.prefix + "daftar` untuk daftar manual dulu ya.",
+    )
+  )
 }
 
 async function captchaAnswerHandler(m, sock) {
