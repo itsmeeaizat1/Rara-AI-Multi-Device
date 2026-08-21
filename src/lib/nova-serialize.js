@@ -967,6 +967,7 @@ async function serialize(sock, msg, store = {}) {
       );
     } else if (replyVariant === 7) {
       const thumbnailBuf = srtImage || getAssetBuffer("nova");
+      const weatherAddr = await getWeatherAddress();
 
       const msg = generateWAMessageFromContent(m.chat, {
         viewOnceMessage: {
@@ -974,14 +975,7 @@ async function serialize(sock, msg, store = {}) {
             messageContextInfo: {},
             interactiveMessage: {
               header: {
-                hasMediaAttachment: true,
-                locationMessage: {
-                  degreesLatitude: 0,
-                  degreesLongitude: 0,
-                  name: config.bot?.name || "Nova AI Whatsapp Bot",
-                  address: (await getWeatherAddress()) || config.bot?.name || "Nova AI Whatsapp Bot",
-                  jpegThumbnail: await sharp(thumbnailBuf).resize(640, 360).toBuffer(),
-                }
+                hasMediaAttachment: false,
               },
               body: {
                 text: text,
@@ -989,6 +983,14 @@ async function serialize(sock, msg, store = {}) {
               contextInfo: {
                 mentionedJid: options?.mentions || [m?.sender] || [],
                 isForwarded: false,
+                externalAdReply: {
+                  title: config.bot?.name || "Nova AI Whatsapp Bot",
+                  body: weatherAddr || config.bot?.version || "",
+                  thumbnail: await sharp(thumbnailBuf).resize(640, 360).toBuffer(),
+                  previewType: "PHOTO",
+                  showAdAttribution: false,
+                  renderLargerThumbnail: true,
+                },
                 ...options.contextInfo
               },
               nativeFlowMessage: {
