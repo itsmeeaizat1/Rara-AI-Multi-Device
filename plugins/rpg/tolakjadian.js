@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
+import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import path from "path";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { pendingConfessions, cleanExpired } from "./jadianmatch.js";
