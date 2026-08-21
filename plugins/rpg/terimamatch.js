@@ -156,8 +156,8 @@ async function handler(m, { sock, config: botConfig }) {
       if (fs.existsSync(vnPath)) {
         const vnBuffer = fs.readFileSync(vnPath);
         await sock.sendMessage(m.chat, {
-          audio: vnBuffer,
-          mimetype: "audio/mpeg",
+          audio: await toVoiceNote(vnBuffer),
+          mimetype: "audio/ogg; codecs=opus",
           ptt: true,
         });
       }

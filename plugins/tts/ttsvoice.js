@@ -1,4 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import axios from 'axios'
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
@@ -91,8 +92,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     const audioBuf = fs.readFileSync(outPath);
     await conn.sendMessage(m.key.remoteJid, {
-      audio: audioBuf,
-      mimetype: "audio/mpeg",
+      audio: await toVoiceNote(audioBuf),
+      mimetype: "audio/ogg; codecs=opus",
       ptt: true,
       caption: claraWrap("TTS Voice", [
         "Berhasil!",

@@ -515,7 +515,7 @@ async function generateVoiceResponse(text, sock, chatId, quotedMsg) {
         chatId,
         {
           audio: audioBuffer,
-          mimetype: "audio/mpeg",
+          mimetype: "audio/ogg; codecs=opus",
           ptt: true,
         },
         { quoted: quotedMsg },

@@ -1,4 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import axios from "axios";
 import fs from "fs";
 import path from "path";
@@ -253,8 +254,8 @@ function startAutoJob(db, sock) {
           const saluranId = config.saluran?.id || "";
           if (saluranId && saluranId.includes("@newsletter")) {
             await sock.sendMessage(saluranId, {
-              audio: fs.readFileSync(filePath),
-              mimetype: voiceResult.mime,
+              audio: await toVoiceNote(fs.readFileSync(filePath)),
+              mimetype: "audio/ogg; codecs=opus",
               ptt: false,
               contextInfo: {
                 forwardingScore: 9,
@@ -432,8 +433,8 @@ async function handler(m, { sock, db, config: botConfig }) {
 
       await m.react("✅");
       await sock.sendMessage(m.chat, {
-        audio: fs.readFileSync(filePath),
-        mimetype: voiceResult.mime,
+        audio: await toVoiceNote(fs.readFileSync(filePath)),
+        mimetype: "audio/ogg; codecs=opus",
         ptt: true,
       }, { quoted: m });
 
@@ -511,8 +512,8 @@ async function handler(m, { sock, db, config: botConfig }) {
 
     // Send as voice note (PTT)
     await sock.sendMessage(m.chat, {
-      audio: fs.readFileSync(filePath),
-      mimetype: voiceResult.mime,
+      audio: await toVoiceNote(fs.readFileSync(filePath)),
+      mimetype: "audio/ogg; codecs=opus",
       ptt: true,
     }, { quoted: m });
 

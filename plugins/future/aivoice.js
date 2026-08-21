@@ -1,4 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
@@ -21,7 +22,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=id&client=tw-ob`;
     const { data } = await axios.get(url, { timeout: 15000, responseType: "arraybuffer", headers: {"User-Agent":"Mozilla/5.0"} });
-    await sock.sendMessage(m.key.remoteJid, { audio: Buffer.from(data), mimetype: "audio/mp3", ptt: true }, { quoted: m });
+    await sock.sendMessage(m.key.remoteJid, { audio: await toVoiceNote(Buffer.from(data)), mimetype: "audio/ogg; codecs=opus", ptt: true }, { quoted: m });
   } catch (e) {
     await m.reply("Error: " + e.message);
   }
