@@ -47,90 +47,20 @@ async function handler(m, { sock, args }) {
   const img = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!img) {
-    let txt = `╔┈┈「 HD IMAGE 」\n`;
-    txt += `╎❏ Reply gambar untuk enhance jadi HD\n\n`;
-    txt += `╎❏ \`${m.prefix}remini\` — upscale 4x (default)\n`;
-    txt += `╎❏ \`${m.prefix}remini 2x\` — upscale 2x (cepat)\n`;
-    txt += `╎❏ \`${m.prefix}remini 8x\` — upscale 8x (max)\n`;
-    txt += `╎❏ \`${m.prefix}remini doc\` — kirim sebagai dokumen\n\n`;
-    txt += `╎❏ Contoh: \`${m.prefix}remini 8x doc\`\n`;
-    txt += `╚┈┈❖`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "remini" });
-  }
-
-  await m.react("🕐");
-
-  try {
-    let b = m.quoted?.isMedia ? await m.quoted.download() : await m.download();
-
-    if (!b || b.length === 0) {
-      throw new Error("Gagal download gambar");
-    }
-
-    // Parse argumen
-    const input = (args.join(" ") || "").trim().toLowerCase();
-    const parts = input.split(/\s+/);
-
-    let scale = 4; // default
-    let wantDoc = false;
-
-    for (const part of parts) {
-      if (part === "doc" || part === "document") {
-        wantDoc = true;
-      } else if (part === "2x" || part === "2") {
-        scale = 2;
-      } else if (part === "4x" || part === "4") {
-        scale = 4;
-      } else if (part === "8x" || part === "8") {
-        scale = 8;
-      } else if (part === "16x" || part === "16") {
-        scale = 16;
-      }
-    }
-
-    // Upscale pakai sharp (local, no API key)
-    const { buffer: resultBuffer, width: outW, height: outH } = await upscaleImage(b, scale);
-    const sizeMB = (resultBuffer.length / (1024 * 1024)).toFixed(2);
+    let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀  1024)).toFixed(2);
 
     await m.react("✅");
 
-    let caption = `╔┈┈「 HD ENHANCED 」\n`;
-    caption += `╎❏ Scale: ${scale}x (${outW}x${outH})\n`;
-    caption += `╎❏ Size: ${sizeMB}MB\n`;
-    caption += `╎❏ Engine: Sharp Lanczos3 (Local)\n`;
-    caption += `╚┈┈❖`;
+    let caption = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ HD ENHANCED\n`;
+    caption += `  ┊  ➶ Scale: ${scale}x (${outW}x${outH})\n`;
+    caption += `  ┊  ➶ Size: ${sizeMB}MB\n`;
+    caption += `  ┊  ➶ Engine: Sharp Lanczos3 (Local)\n`;
+    caption += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
-    if (wantDoc || resultBuffer.length > 5 * 1024 * 1024) {
-      // Document mode — no compress
-      const mode = wantDoc ? "Document" : "Auto-Document";
-      await sock.sendMessage(
-        m.chat,
-        {
-          document: resultBuffer,
-          mimetype: "image/jpeg",
-          fileName: `HD-${scale}x-${Date.now()}.jpg`,
-          caption,
-        },
-        { quoted: m },
-      );
-    } else {
-      // Image mode
-      await sock.sendMessage(
-        m.chat,
-        {
-          image: resultBuffer,
-          caption,
-          jpegQuality: 100,
-        },
-        { quoted: m },
-      );
-    }
-  } catch (e) {
-    console.error("[REMINI] Error:", e.message);
-    let txt = `╔┈┈「 HD ERROR 」\n`;
-    txt += `╎❏ Gagal enhance gambar!\n`;
-    txt += `╎❏ ${e.message}\n`;
-    txt += `╚┈┈❖`;
+    if (wantDoc || resultBuffer.length > 5 \n`;
+    txt += `  ┊  ➶ Gagal enhance gambar!\n`;
+    txt += `  ┊  ➶ ${e.message}\n`;
+    txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
     await m.reply(claraWrap("remini", txt));
   }
 }

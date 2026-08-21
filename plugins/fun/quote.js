@@ -70,10 +70,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (!quote) quote = LOCAL_QUOTES[Math.floor(Math.random() * LOCAL_QUOTES.length)];
     if (!source) source = "Local";
 
-    const displayQuote = author ? `${quote}\n\n╎❏ — ${author}` : quote;
+    const displayQuote = author ? `${quote}\n\n  ┊  ➶ — ${author}` : quote;
     const text =
-      claraWrap("Quote", [`╎❏ *${displayQuote}*`,
-        `╎❏ Sumber: *${source}*`].join("\n")) +
+      claraWrap("Quote", [`  ┊  ➶ *${displayQuote}*`,
+        `  ┊  ➶ Sumber: *${source}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}quote untuk quote lain`) +
       "\n" +
@@ -83,8 +83,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

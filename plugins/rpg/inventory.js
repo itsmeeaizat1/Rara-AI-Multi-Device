@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const text =
       claraWrap("Inventory", "🎒") +
       "\n\n" +
-      claraWrap("IꜱI Taꜱ", items.map((item) => `╎❏ ${item.name}: *${item.qty} pcs*`)) +
+      claraWrap("IꜱI Taꜱ", items.map((item) => `  ┊  ➶ ${item.name}: *${item.qty} pcs*`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +
@@ -43,8 +43,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "inventory");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

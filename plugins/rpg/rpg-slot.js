@@ -18,14 +18,14 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const bet = parseInt(m.text?.trim()) || 0;
     if (!bet || bet < 100) {
-      await sendReplyWithNav(sock, m, claraWrap("Slot", "") + "\n\n" + claraWrap("Info", [`╎❏ Penggunaan: *${prefix}rpgslot <jumlah>*`, `╎❏ Minimal bet: *Rp100*`, `╎❏ 3 sama = x5 | 2 sama = x2`].join("\n")) + "\n\n" + separator("━", 22), "rpgslot");
+      await sendReplyWithNav(sock, m, claraWrap("Slot", "") + "\n\n" + claraWrap("Info", [`  ┊  ➶ Penggunaan: *${prefix}rpgslot <jumlah>*`, `  ┊  ➶ Minimal bet: *Rp100*`, `  ┊  ➶ 3 sama = x5 | 2 sama = x2`].join("\n")) + "\n\n" + separator("━", 22), "rpgslot");
       return { handled: true };
     }
     const db = getDatabase();
     const user = getUser(db, m.sender);
     if (user.money < bet) {
-      await sendReplyWithNav(sock, m, claraWrap("Slot", [`╎❏ Bet: *Rp${bet.toLocaleString("id-ID")}*`,
-        `╎❏ Uang: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")), "rpgslot");
+      await sendReplyWithNav(sock, m, claraWrap("Slot", [`  ┊  ➶ Bet: *Rp${bet.toLocaleString("id-ID")}*`,
+        `  ┊  ➶ Uang: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")), "rpgslot");
       return { handled: true };
     }
     
@@ -47,10 +47,10 @@ async function handler(m, { sock, config: botConfig }) {
       winLoss = `-Rp${bet.toLocaleString("id-ID")}`;
     }
     
-    await sendReplyWithNav(sock, m, claraWrap("Slot", [`╎❏ ${slot[0]} | ${slot[1]} | ${slot[2]}`,
-      `╎❏ Hasil: *${result}*`,
-      `╎❏ ${winLoss}`,
-      `╎❏ Sisa uang: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")) + "\n" + tipText(`Tetap main, mungkin menang besok! 😄`), "rpgslot");
+    await sendReplyWithNav(sock, m, claraWrap("Slot", [`  ┊  ➶ ${slot[0]} | ${slot[1]} | ${slot[2]}`,
+      `  ┊  ➶ Hasil: *${result}*`,
+      `  ┊  ➶ ${winLoss}`,
+      `  ┊  ➶ Sisa uang: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")) + "\n" + tipText(`Tetap main, mungkin menang besok! 😄`), "rpgslot");
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

@@ -342,32 +342,21 @@ function clearCaptchaSession(jid) {
 
 function buildUserDataBlock(name, age, gender) {
   return (
-    "╔┈┈「 \U0001F4CB DATA 」\n" +
-    "╎┈❏ Nama: *" + (name || "-") + "*\n" +
-    "╎┈❏ Umur: *" + (age ? age + " tahun" : "-") + "*\n" +
-    "╎┈❏ Gender: *" + (gender || "-") + "*\n" +
-    "╚┈┈❖"
-  )
-}
-
-function buildSuccessRewardBlock(alreadyClaimed, randomBonus) {
-  var rewards = getRewards()
-  if (alreadyClaimed) {
-    return "╭┈┈「 \U0001F381 BONUS 」\n╎┈❏ Bonus daftar sudah pernah diklaim\n╎┈❏ Tidak ada reward tambahan\n╚┈┈❖"
+    "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + (name || "-") + "\n  ┊  ➶ Bonus daftar sudah pernah diklaim\n  ┊  ➶ Tidak ada reward tambahan\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀"
   }
   var msg =
     "╭┈┈「 \U0001F381 REWARDS 」\n" +
-    "╎┈❏ \U0001F4B0 +" + rewards.koin.toLocaleString("id-ID") + " Koin\n" +
-    "╎┈❏ ⚡ +" + rewards.energi + " Energi\n" +
-    "╎┈❏ ⭐ +" + rewards.exp.toLocaleString("id-ID") + " EXP\n" +
-    "╚┈┈❖"
+    "  ┊  ➶ \U0001F4B0 +" + rewards.koin.toLocaleString("id-ID") + " Koin\n" +
+    "  ┊  ➶ ⚡ +" + rewards.energi + " Energi\n" +
+    "  ┊  ➶ ⭐ +" + rewards.exp.toLocaleString("id-ID") + " EXP\n" +
+    "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀"
   if (randomBonus) {
     msg +=
       "\n╭┈┈「 \U0001F3B2 RANDOM BONUS 」\n" +
-      "╎┈❏ \U0001F4B0 +" + randomBonus.koin.toLocaleString("id-ID") + " Koin\n" +
-      "╎┈❏ ⚡ +" + randomBonus.energi + " Energi\n" +
-      "╎┈❏ ⭐ +" + randomBonus.exp.toLocaleString("id-ID") + " EXP\n" +
-      "╚┈┈❖"
+      "  ┊  ➶ \U0001F4B0 +" + randomBonus.koin.toLocaleString("id-ID") + " Koin\n" +
+      "  ┊  ➶ ⚡ +" + randomBonus.energi + " Energi\n" +
+      "  ┊  ➶ ⭐ +" + randomBonus.exp.toLocaleString("id-ID") + " EXP\n" +
+      "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀"
   }
   return msg
 }
@@ -386,68 +375,14 @@ async function handler(m, { sock }) {
 
   if (m.isGroup) {
     return m.reply(
-      "╔┈┈「 \U0001F916 DAFTAR OTOMATIS 」\n" +
-      "╎┈❏ Verifikasi captcha dilakukan via DM (private chat)\n\n" +
-      "╎┈❏ *Langkah:*\n" +
-      "╎┈ > 1. Chat langsung ke nomor bot\n" +
-      "╎┈ > 2. Ketik `" + m.prefix + "daftarotomatis`\n" +
-      "╎┈ > 3. Jawab captcha yang dikirim bot\n" +
-      "╎┈ > 4. Isi data diri (nama, umur, gender)\n\n" +
-      "╚┈┈❖"
-    )
-  }
-
-  if (getCaptchaSession(m.sender)) {
-    return m.reply(
-      "\U0001F4DD Masih ada sesi captcha aktif!\n\n" +
-      "> Reply pesan captcha bot untuk menjawab\n" +
-      "> Atau ketik: `" + m.prefix + "bataldaftar` untuk batal"
-    )
-  }
-
-  // Parse optional quick args
-  var text = m.text ? m.text.trim() : ""
-  var presetName = null, presetAge = null, presetGender = null
-
-  if (text && text.includes(",")) {
-    var parts = text.split(",").map(function(s) { return s.trim() })
-    if (parts[0] && parts[0].length >= 2) presetName = parts[0]
-    if (parts[1] && /^\d+$/.test(parts[1])) {
-      var a = Number(parts[1])
-      if (a >= 1 && a <= 100) presetAge = a
-    }
-    if (parts[2]) {
-      var g = parts[2].toLowerCase()
-      if (/^(laki[-\s]?laki|cowok?|cowo|l|male|pria)$/.test(g)) presetGender = "Laki-laki"
-      else if (/^(perempuan|cewek?|cewe|p|female|wanita)$/.test(g)) presetGender = "Perempuan"
-    }
-  }
-
-  await m.react("🕐")
-
-  // Generate captcha (API -> Canvas -> Math)
-  var captcha = await generateCaptcha()
-
-  var session = createCaptchaSession(m.sender, m.chat, presetName, presetAge, presetGender)
-  session.captcha = captcha
-
-  var sourceLabel = {
-    "canvas-local": "Canvas Lokal",
-    "math-local": "Math Lokal"
-  }
-  var sourceName = sourceLabel[captcha.source] || captcha.source
-
-  // Send captcha based on type
-  if (captcha.type === "image" && captcha.imageBuffer) {
-    // Image captcha (API or Canvas)
-    var caption = "╔┈┈「 \U0001F512 CAPTCHA VERIFICATION 」\n\n"
-    caption += "╎┈❏ Jawab captcha pada gambar di atas\n\n"
-    caption += "╎┈❏ *Reply gambar ini dengan jawaban kamu*\n"
-    caption += "╎┈❏ Waktu: 3 menit\n"
-    caption += "╎┈❏ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
-    caption += "╎┈❏ Batal: reply `batal`\n"
-    caption += "╎┈┈ Source: " + sourceName + "\n"
-    caption += "╚┈┈❖"
+      "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Langkah:\n\n"
+    caption += "  ┊  ➶ Jawab captcha pada gambar di atas\n\n"
+    caption += "  ┊  ➶ *Reply gambar ini dengan jawaban kamu*\n"
+    caption += "  ┊  ➶ Waktu: 3 menit\n"
+    caption += "  ┊  ➶ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
+    caption += "  ┊  ➶ Batal: reply `batal`\n"
+    caption += "┊┈┈ Source: " + sourceName + "\n"
+    caption += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀"
 
     var sent = await sock.sendMessage(m.chat, {
       image: captcha.imageBuffer,
@@ -458,33 +393,16 @@ async function handler(m, { sock }) {
     session.promptId = sent?.key?.id || null
   } else if (captcha.type === "text-api") {
     // Text captcha from API
-    var msg = "╔┈┈「 \U0001F512 CAPTCHA VERIFICATION 」\n\n"
-    msg += "╎┈❏ " + captcha.textCaptcha + "\n\n"
-    msg += "╎┈❏ *Reply pesan ini dengan jawaban kamu*\n"
-    msg += "╎┈❏ Waktu: 3 menit\n"
-    msg += "╎┈❏ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
-    msg += "╎┈❏ Batal: reply `batal`\n"
-    msg += "╎┈┈ Source: " + sourceName + "\n"
-    msg += "╚┈┈❖"
-
-    var sent = await sock.sendMessage(m.chat, {
-      text: msg,
-      contextInfo: getRegistrationContextInfo(),
-    }, { quoted: m })
-
-    session.promptId = sent?.key?.id || null
-  } else {
-    // Math captcha (last resort)
-    var msg2 = "╔┈┈「 \U0001F512 CAPTCHA VERIFICATION 」\n\n"
-    msg2 += "╎┈❏ Jawab pertanyaan berikut:\n\n"
-    msg2 += "╎┈❏ *" + captcha.display + "*\n\n"
-    msg2 += "╎┈❏ " + captcha.question + "\n\n"
-    msg2 += "╎┈❏ *Reply pesan ini dengan jawaban kamu*\n"
-    msg2 += "╎┈❏ Waktu: 3 menit\n"
-    msg2 += "╎┈❏ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
-    msg2 += "╎┈❏ Batal: reply `batal`\n"
-    msg2 += "╎┈┈ Source: " + sourceName + "\n"
-    msg2 += "╚┈┈❖"
+    var msg = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Reply pesan ini dengan jawaban kamu\n\n"
+    msg2 += "  ┊  ➶ Jawab pertanyaan berikut:\n\n"
+    msg2 += "  ┊  ➶ *" + captcha.display + "*\n\n"
+    msg2 += "  ┊  ➶ " + captcha.question + "\n\n"
+    msg2 += "  ┊  ➶ *Reply pesan ini dengan jawaban kamu*\n"
+    msg2 += "  ┊  ➶ Waktu: 3 menit\n"
+    msg2 += "  ┊  ➶ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
+    msg2 += "  ┊  ➶ Batal: reply `batal`\n"
+    msg2 += "┊┈┈ Source: " + sourceName + "\n"
+    msg2 += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀"
 
     var sent = await sock.sendMessage(m.chat, {
       text: msg2,
@@ -605,23 +523,7 @@ async function captchaAnswerHandler(m, sock) {
     // Ask for name
     session.step = "name"
     await sock.sendMessage(m.chat, {
-      text: "✅ *Captcha benar!*\n\n╔┈┈「 \U0001F4DD LANJUTKAN 」\n╎┈❏ *Pertanyaan 1/3*\n╎┈❏ Siapa nama kamu?\n\n╎┈❏ Reply pesan ini dengan nama kamu\n╎┈❏ Batal: reply `batal`\n╚┈┈❖",
-      contextInfo: getRegistrationContextInfo(),
-    }, { quoted: m })
-    return true
-  }
-
-  // Step: Name
-  if (session.step === "name") {
-    var name = String(text || "").replace(/\s+/g, " ").trim()
-    if (name.length < 2 || name.length > 30) {
-      await m.reply(claraWrap("daftarotomatis", "❌ Nama harus 2-30 karakter!"))
-      return true
-    }
-    session.name = name
-    session.step = "age"
-    await sock.sendMessage(m.chat, {
-      text: "╔┈┈「 \U0001F4DD LANJUTKAN 」\n╎┈❏ Halo *" + name + "* ✋\n\n╎┈❏ *Pertanyaan 2/3*\n╎┈❏ Berapa umurmu?\n\n╎┈❏ Umur: 1-100 tahun\n╎┈❏ Reply dengan angka\n╚┈┈❖",
+      text: "✅ *Captcha benar!*\n\n❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Pertanyaan 1/3\n  ┊  ➶ Halo *" + name + "* ✋\n\n  ┊  ➶ *Pertanyaan 2/3*\n  ┊  ➶ Berapa umurmu?\n\n  ┊  ➶ Umur: 1-100 tahun\n  ┊  ➶ Reply dengan angka\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
     return true
@@ -637,7 +539,7 @@ async function captchaAnswerHandler(m, sock) {
     session.age = age
     session.step = "gender"
     await sock.sendMessage(m.chat, {
-      text: "╔┈┈「 \U0001F4DD LANJUTKAN 」\n╎┈❏ *Pertanyaan 3/3*\n╎┈❏ Kamu cowo atau cewe?\n\n╎┈❏ *Cowo / Cowok / Laki-laki / L*\n╎┈❏ *Cewe / Cewek / Perempuan / P*\n\n╎┈❏ Reply pesan ini dengan jawabanmu\n╚┈┈❖",
+      text: "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ \U0001F4DD LANJUTKAN\n  ┊  ➶ *Pertanyaan 3/3*\n  ┊  ➶ Kamu cowo atau cewe?\n\n  ┊  ➶ *Cowo / Cowok / Laki-laki / L*\n  ┊  ➶ *Cewe / Cewek / Perempuan / P*\n\n  ┊  ➶ Reply pesan ini dengan jawabanmu\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
     return true

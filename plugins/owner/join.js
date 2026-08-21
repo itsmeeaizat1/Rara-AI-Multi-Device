@@ -25,8 +25,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!url) {
       const text =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}join <link grup>*`,
-          `╎❏ Contoh: *${prefix}join https://chat.whatsapp.com/xxxxx*`].join("\n")) +
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}join <link grup>*`,
+          `  ┊  ➶ Contoh: *${prefix}join https://chat.whatsapp.com/xxxxx*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -41,8 +41,8 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.groupAcceptInvite(inviteCode);
 
     const text =
-      claraWrap("Join", [`╎❏ Link: *${url}*`,
-        "╎❏ Status: *Joined*"].join("\n")) +
+      claraWrap("Join", [`  ┊  ➶ Link: *${url}*`,
+        "  ┊  ➶ Status: *Joined*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -50,8 +50,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

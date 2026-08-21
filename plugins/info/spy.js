@@ -27,8 +27,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!target) {
       const text =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}spy <@target>*`,
-          `╎❏ Contoh: *${prefix}spy @username*`].join("\n")) +
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}spy <@target>*`,
+          `  ┊  ➶ Contoh: *${prefix}spy @username*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -45,11 +45,11 @@ async function handler(m, { sock, config: botConfig }) {
     const rpg = userData?.rpg || null;
 
     const lines = [
-      `╎❏ Target: *${userName}*`,
-      rpg ? `╎❏ Level: *${rpg.level || 0}*` : "╎❏ Level: *-*",
-      rpg ? `╎❏ Gold: *${rpg.gold ?? 0}*` : "╎❏ Gold: *-*",
-      rpg ? `╎❏ Exp: *${rpg.exp || 0}*` : "╎❏ Exp: *-*",
-      "╎❏ Status: *Berhasil*",
+      `  ┊  ➶ Target: *${userName}*`,
+      rpg ? `  ┊  ➶ Level: *${rpg.level || 0}*` : "  ┊  ➶ Level: *-*",
+      rpg ? `  ┊  ➶ Gold: *${rpg.gold ?? 0}*` : "  ┊  ➶ Gold: *-*",
+      rpg ? `  ┊  ➶ Exp: *${rpg.exp || 0}*` : "  ┊  ➶ Exp: *-*",
+      "  ┊  ➶ Status: *Berhasil*",
     ];
 
     const text =
@@ -65,8 +65,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

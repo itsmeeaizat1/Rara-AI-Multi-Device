@@ -113,17 +113,17 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!isDocx && !isDocxFile) {
     const help = claraWrap("Word2Pdf", [
-      `╎❏ Converter .docx ke PDF`,
+      `  ┊  ➶ Converter .docx ke PDF`,
       ``,
-      `╎❏ *Cara pakai:*`,
+      `  ┊  ➶ *Cara pakai:*`,
       `  Reply file .docx, ketik:`,
       `  ${prefix}word2pdf`,
       ``,
-      `╎❏ Auto-detect heading, bullet, paragraf`,
-      `╎❏ Hasil: PDF siap print`,
+      `  ┊  ➶ Auto-detect heading, bullet, paragraf`,
+      `  ┊  ➶ Hasil: PDF siap print`,
       ``,
-      `╎❏ *Format didukung:* .docx (Word 2007+)`,
-      `╎❏ .doc (Word lama) belum didukung`,
+      `  ┊  ➶ *Format didukung:* .docx (Word 2007+)`,
+      `  ┊  ➶ .doc (Word lama) belum didukung`,
     ].join("\n"));
     return sendReplyWithNav(sock, m, help, "word2pdf");
   }

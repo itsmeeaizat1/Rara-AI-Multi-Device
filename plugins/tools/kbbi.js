@@ -26,8 +26,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!word) {
       const text =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}kbbi <kata>*`,
-          `╎❏ Contoh: *${prefix}kbbi mobil*`].join("\n")) +
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}kbbi <kata>*`,
+          `  ┊  ➶ Contoh: *${prefix}kbbi mobil*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -43,8 +43,8 @@ async function handler(m, { sock, config: botConfig }) {
     } catch (e) { console.error('[kbbi.js]:', e.message); }
 
     const text =
-      claraWrap("KBBI", [`╎❏ Kata: *${word}*`,
-        `╎❏ Arti: *${meaning}*`].join("\n")) +
+      claraWrap("KBBI", [`  ┊  ➶ Kata: *${word}*`,
+        `  ┊  ➶ Arti: *${meaning}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}kbbi <kata> untuk cek arti lain`) +
       "\n" +
@@ -53,8 +53,8 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(claraWrap("kbbi", text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

@@ -610,15 +610,15 @@ async function startConnection(options = {}) {
             const nodeVer = process.version;
 
             const notifText = [
-              "╔┈┈「 🔔 *Notifikasi Pairing* 」",
-              "╎❏ *Bot:* " + (config.bot?.name || "Nova-AI"),
-              "╎❏ *Versi:* " + (config.bot?.version || "v20.0.0"),
-              "╎❏ *Nomor Bot:* " + botNum,
-              "╎❏ *Waktu:* " + waktu,
-              "╎❏ *Host:* " + hostname,
-              "╎❏ *Platform:* " + platform,
-              "╎❏ *Node:* " + nodeVer,
-              "╚┈┈┈┈┈┈┈┈┈┈┈┈❖",
+              "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Notifikasi Pairing",
+              "  ┊  ➶ *Bot:* " + (config.bot?.name || "Nova-AI"),
+              "  ┊  ➶ *Versi:* " + (config.bot?.version || "v20.0.0"),
+              "  ┊  ➶ *Nomor Bot:* " + botNum,
+              "  ┊  ➶ *Waktu:* " + waktu,
+              "  ┊  ➶ *Host:* " + hostname,
+              "  ┊  ➶ *Platform:* " + platform,
+              "  ┊  ➶ *Node:* " + nodeVer,
+              "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
               "",
               "_Bot baru saja tersambung untuk pertama kali._"
             ].join("\n");

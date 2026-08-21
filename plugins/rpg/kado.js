@@ -46,8 +46,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!partnerJid) {
       const text =
-        claraWrap("Kado", [`╎❏ Status: *Belum punya pasangan*`,
-          `╎❏ Kasih kado ke siapa? Ke bot?`].join("\n")) + "\n" +
+        claraWrap("Kado", [`  ┊  ➶ Status: *Belum punya pasangan*`,
+          `  ┊  ➶ Kasih kado ke siapa? Ke bot?`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk punya pasangan`);
 
       await sendReplyWithNav(sock, m, text, "kado");
@@ -56,11 +56,11 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!args) {
       const text =
-        claraWrap("Kado", [`╎❏ Cara pakai: *${prefix}kado <nama item>*`,
-          `╎❏ Contoh: *${prefix}kado Potion*`,
-          `╎❏ Contoh: *${prefix}kado Flower*`,
-          `╎❏ Kasih item dari inventory ke pasangan`,
-          `╎❏ Dapat affection bonus sesuai item`].join("\n")) + "\n" +
+        claraWrap("Kado", [`  ┊  ➶ Cara pakai: *${prefix}kado <nama item>*`,
+          `  ┊  ➶ Contoh: *${prefix}kado Potion*`,
+          `  ┊  ➶ Contoh: *${prefix}kado Flower*`,
+          `  ┊  ➶ Kasih item dari inventory ke pasangan`,
+          `  ┊  ➶ Dapat affection bonus sesuai item`].join("\n")) + "\n" +
         tipText(`Cek inventory: ${prefix}inventory`);
 
       await sendReplyWithNav(sock, m, text, "kado");
@@ -79,9 +79,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!itemName || (inventory[itemName] || 0) <= 0) {
       const text =
-        claraWrap("Kado", [`╎❏ Status: *Item tidak ada*`,
-          `╎❏ Item: *${args}*`,
-          `╎❏ Cek inventory kamu dulu ya`].join("\n")) + "\n" +
+        claraWrap("Kado", [`  ┊  ➶ Status: *Item tidak ada*`,
+          `  ┊  ➶ Item: *${args}*`,
+          `  ┊  ➶ Cek inventory kamu dulu ya`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}inventory untuk cek item`);
 
       await sendReplyWithNav(sock, m, text, "kado");
@@ -114,13 +114,13 @@ async function handler(m, { sock, config: botConfig }) {
     const bondLevel = Math.floor(totalAffection / 100) + 1;
 
     const text =
-      claraWrap("Kado", [`╎❏ Dari: *${userName}*`,
-        `╎❏ Untuk: *${partnerName}*`,
-        `╎❏ Item: *${itemName}*`,
-        `╎❏ Affection: *+${affectionGain}*`,
-        `╎❏ Total Affection: *${totalAffection}*`,
-        `╎❏ Bond Level: *${bondLevel}*`,
-        `╎❏ Total Kado: *${rpg.giftCount}*`].join("\n")) + "\n" +
+      claraWrap("Kado", [`  ┊  ➶ Dari: *${userName}*`,
+        `  ┊  ➶ Untuk: *${partnerName}*`,
+        `  ┊  ➶ Item: *${itemName}*`,
+        `  ┊  ➶ Affection: *+${affectionGain}*`,
+        `  ┊  ➶ Total Affection: *${totalAffection}*`,
+        `  ┊  ➶ Bond Level: *${bondLevel}*`,
+        `  ┊  ➶ Total Kado: *${rpg.giftCount}*`].join("\n")) + "\n" +
       tipText(`Kasih kado lagi ${prefix}kado <item>`);
 
     await sock.sendMessage(m.chat, {
@@ -131,8 +131,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("kado", text));

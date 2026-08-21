@@ -39,9 +39,9 @@ async function handler(m, { sock, config: botConfig, db }) {
     });
 
     const text =
-      claraWrap("Arena", ["╎❏ Mode: *Sementara*",
-        "╎❏ Reset: *Minggu depan*",
-        "╎❏ Total Match: *120*"].join("\n")) +
+      claraWrap("Arena", ["  ┊  ➶ Mode: *Sementara*",
+        "  ┊  ➶ Reset: *Minggu depan*",
+        "  ┊  ➶ Total Match: *120*"].join("\n")) +
       "\n\n" +
       claraWrap("Top Player", lines) +
       "\n\n" +
@@ -52,8 +52,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "arena");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

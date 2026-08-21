@@ -71,10 +71,10 @@ async function handler(m, { sock, config: botConfig }) {
       const text = claraWrap("Multi AI",
         lines.join("\n") +
         "\n\nPAKAI:\n" +
-        `╎❏ Penggunaan: *${prefix}multi-ai <provider> [model] <pesan>*\n` +
-        `╎❏ Contoh: *${prefix}multi-ai gemini Jelaskankan quantum computing*\n` +
-        `╎❏ Contoh: *${prefix}multi-ai openai gpt-4o-mini Apa itu AI?*\n` +
-        `╎❏ Tambah AI lain: *${prefix}ai-addprovider <nama> <endpoint> <model> [apiKey]*`
+        `  ┊  ➶ Penggunaan: *${prefix}multi-ai <provider> [model] <pesan>*\n` +
+        `  ┊  ➶ Contoh: *${prefix}multi-ai gemini Jelaskankan quantum computing*\n` +
+        `  ┊  ➶ Contoh: *${prefix}multi-ai openai gpt-4o-mini Apa itu AI?*\n` +
+        `  ┊  ➶ Tambah AI lain: *${prefix}ai-addprovider <nama> <endpoint> <model> [apiKey]*`
       );
 
       await sendReplyWithNav(sock, m, text, "multi-ai");
@@ -83,9 +83,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!message) {
       const text =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}multi-ai <provider> [model] <pesan>*`,
-          `╎❏ Contoh: *${prefix}multi-ai claude Jelaskankan AI*`,
-          `╎❏ Ketik *${prefix}multi-ai list* untuk lihat daftar provider`].join("\n"));;
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}multi-ai <provider> [model] <pesan>*`,
+          `  ┊  ➶ Contoh: *${prefix}multi-ai claude Jelaskankan AI*`,
+          `  ┊  ➶ Ketik *${prefix}multi-ai list* untuk lihat daftar provider`].join("\n"));;
 
       await sendReplyWithNav(sock, m, text, "multi-ai");
       return { handled: true };
@@ -94,9 +94,9 @@ async function handler(m, { sock, config: botConfig }) {
     const resolved = resolveModel(providerArg, modelArg);
     if (!resolved) {
       const text =
-        claraWrap("Tidak Dikenal", [`╎❏ Provider *${providerArg}* tidak dikenali.`,
-          `╎❏ Lihat provider custom: *${prefix}ai-addprovider list*`,
-          `╎❏ Ketik *${prefix}multi-ai list* untuk lihat daftar.`].join("\n")) +
+        claraWrap("Tidak Dikenal", [`  ┊  ➶ Provider *${providerArg}* tidak dikenali.`,
+          `  ┊  ➶ Lihat provider custom: *${prefix}ai-addprovider list*`,
+          `  ┊  ➶ Ketik *${prefix}multi-ai list* untuk lihat daftar.`].join("\n")) +
         "\n" ;
 
       await sendReplyWithNav(sock, m, text, "multi-ai");
@@ -122,9 +122,9 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("Multi AI", "🤖") +
       claraWrap(provider.name.toUpperCase(), [
-        `╎❏ Model: *${model}*`,
-        `╎❏ Kamu: *${message.slice(0, 200)}${message.length > 200 ? "..." : ""}*`,
-        `╎❏ AI: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`,
+        `  ┊  ➶ Model: *${model}*`,
+        `  ┊  ➶ Kamu: *${message.slice(0, 200)}${message.length > 200 ? "..." : ""}*`,
+        `  ┊  ➶ AI: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`,
       ]) +
       
       "\n"  +
@@ -135,8 +135,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" ;
 
     await sendReplyWithNav(sock, m, text, "multi-ai");

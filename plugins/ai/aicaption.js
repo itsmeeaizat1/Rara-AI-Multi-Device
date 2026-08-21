@@ -136,16 +136,16 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!isImage) {
       const text =
-        claraWrap("AI Caption", [`╎❏ Reply atau kirim foto dengan caption .aicaption`,
-          `╎❏ AI akan analisis foto dan buat caption Instagram`,
+        claraWrap("AI Caption", [`  ┊  ➶ Reply atau kirim foto dengan caption .aicaption`,
+          `  ┊  ➶ AI akan analisis foto dan buat caption Instagram`,
           ``,
           `*Style tersedia:*`,
-          `╎❏ ${prefix}aicaption — Default (mix)`,
-          `╎❏ ${prefix}aicaption product — Jualan`,
-          `╎❏ ${prefix}aicaption funny — Lucu`,
-          `╎❏ ${prefix}aicaption aesthetic — Estetik`,
-          `╎❏ ${prefix}aicaption motivasi — Inspiratif`,
-          `╎❏ ${prefix}aicaption singkat — Max 5 kata`].join("\n")) + "\n" +
+          `  ┊  ➶ ${prefix}aicaption — Default (mix)`,
+          `  ┊  ➶ ${prefix}aicaption product — Jualan`,
+          `  ┊  ➶ ${prefix}aicaption funny — Lucu`,
+          `  ┊  ➶ ${prefix}aicaption aesthetic — Estetik`,
+          `  ┊  ➶ ${prefix}aicaption motivasi — Inspiratif`,
+          `  ┊  ➶ ${prefix}aicaption singkat — Max 5 kata`].join("\n")) + "\n" +
         tipText("Reply foto lalu ketik .aicaption");
 
       await sendReplyWithNav(sock, m, text, "aicaption");
@@ -165,8 +165,8 @@ async function handler(m, { sock, config: botConfig }) {
       mediaBuffer = Buffer.isBuffer(stream) ? stream : Buffer.from(stream);
     } else {
       const text =
-        claraWrap("AI Caption", [`╎❏ Status: *Gagal download gambar*`,
-          `╎❏ Coba reply foto yang valid`].join("\n")) + "\n" +
+        claraWrap("AI Caption", [`  ┊  ➶ Status: *Gagal download gambar*`,
+          `  ┊  ➶ Coba reply foto yang valid`].join("\n")) + "\n" +
         tipText("Reply foto lalu ketik .aicaption");
 
       await sendReplyWithNav(sock, m, text, "aicaption");
@@ -175,7 +175,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
       const text =
-        claraWrap("AI Caption", [`╎❏ Status: *Buffer gambar tidak valid*`].join("\n")) + "\n" +
+        claraWrap("AI Caption", [`  ┊  ➶ Status: *Buffer gambar tidak valid*`].join("\n")) + "\n" +
         tipText("Coba foto lain");
 
       await sendReplyWithNav(sock, m, text, "aicaption");
@@ -228,9 +228,9 @@ async function handler(m, { sock, config: botConfig }) {
     const styleLabel = useStyle === "default" ? "Mix" : useStyle.charAt(0).toUpperCase() + useStyle.slice(1);
 
     const result =
-      claraWrap("AI Caption", [`╎❏ Style: *${styleLabel}*`,
-        `╎❏ Provider: *${usedProvider}*`,
-        `╎❏ Hasil:`].join("\n")) + "\n\n" +
+      claraWrap("AI Caption", [`  ┊  ➶ Style: *${styleLabel}*`,
+        `  ┊  ➶ Provider: *${usedProvider}*`,
+        `  ┊  ➶ Hasil:`].join("\n")) + "\n\n" +
       `${captionResult}` + "\n\n" +
       separator("━", 22) + "\n" +
       tipText("Copy caption favoritmu untuk Instagram") + "\n" +
@@ -241,8 +241,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[AI Caption Error]", error);
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal generate caption*`,
-        `╎❏ Alasan: *${error.message || "Unknown error"}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal generate caption*`,
+        `  ┊  ➶ Alasan: *${error.message || "Unknown error"}*`].join("\n")) + "\n" +
       tipText("Coba lagi nanti atau hubungi owner");
 
     await m.reply(text);

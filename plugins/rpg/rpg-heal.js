@@ -18,14 +18,14 @@ async function handler(m, { sock, config: botConfig }) {
     const user = getUser(db, m.sender);
     
     if (user.health >= 100) {
-      await sendReplyWithNav(sock, m, claraWrap("Heal", [`╎❏ HP: *${user.health}/100*`,
-        "╎❏ HP sudah penuh!"].join("\n")), "rpgheal");
+      await sendReplyWithNav(sock, m, claraWrap("Heal", [`  ┊  ➶ HP: *${user.health}/100*`,
+        "  ┊  ➶ HP sudah penuh!"].join("\n")), "rpgheal");
       return { handled: true };
     }
     
     if (user.potion < 1) {
-      await sendReplyWithNav(sock, m, claraWrap("Heal", ["╎❏ Kamu tidak punya potion",
-        `╎❏ Beli di shop: *${prefix}rpgshop buy potion 1*`].join("\n")), "rpgheal");
+      await sendReplyWithNav(sock, m, claraWrap("Heal", ["  ┊  ➶ Kamu tidak punya potion",
+        `  ┊  ➶ Beli di shop: *${prefix}rpgshop buy potion 1*`].join("\n")), "rpgheal");
       return { handled: true };
     }
     
@@ -34,10 +34,10 @@ async function handler(m, { sock, config: botConfig }) {
     user.health = Math.min(100, user.health + healAmount);
     db.write();
     
-    { const __navText = (claraWrap("Heal", [`╎❏ Potion: *-1* 🧪`,
-      `╎❏ HP: *+${healAmount}* ❤️`,
-      `╎❏ Sisa HP: *${user.health}/100*`,
-      `╎❏ Sisa Potion: *${user.potion}*`].join("\n"))); await sendReplyWithNav(sock, m, __navText, "rpgheal"); };
+    { const __navText = (claraWrap("Heal", [`  ┊  ➶ Potion: *-1* 🧪`,
+      `  ┊  ➶ HP: *+${healAmount}* ❤️`,
+      `  ┊  ➶ Sisa HP: *${user.health}/100*`,
+      `  ┊  ➶ Sisa Potion: *${user.potion}*`].join("\n"))); await sendReplyWithNav(sock, m, __navText, "rpgheal"); };
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

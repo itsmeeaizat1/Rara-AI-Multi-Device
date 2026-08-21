@@ -43,8 +43,8 @@ async function handler(m, { sock, config: botConfig }) {
     // Harus married
     if (!rpg.spouse) {
       const text =
-        claraWrap("Honeymoon", [`╎❏ Status: *Belum menikah*`,
-          `╎❏ Bulan madu cuma buat yang udah nikah!`].join("\n")) + "\n" +
+        claraWrap("Honeymoon", [`  ┊  ➶ Status: *Belum menikah*`,
+          `  ┊  ➶ Bulan madu cuma buat yang udah nikah!`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}marry @target untuk menikah dulu`);
 
       await sendReplyWithNav(sock, m, text, "honeymoon");
@@ -60,9 +60,9 @@ async function handler(m, { sock, config: botConfig }) {
       const remaining = oneMonth - elapsed;
       const daysLeft = Math.ceil(remaining / 86400000);
       const text =
-        claraWrap("Honeymoon", [`╎❏ Status: *Sudah bulan madu bulan ini*`,
-          `╎❏ Tunggu: *${daysLeft} hari lagi*`,
-          `╎❏ Bulan madu cuma sekali sebulan!`].join("\n")) + "\n" +
+        claraWrap("Honeymoon", [`  ┊  ➶ Status: *Sudah bulan madu bulan ini*`,
+          `  ┊  ➶ Tunggu: *${daysLeft} hari lagi*`,
+          `  ┊  ➶ Bulan madu cuma sekali sebulan!`].join("\n")) + "\n" +
         tipText(`Sambil nunggu, tingkatkan affection: ${prefix}cuddling, ${prefix}kiss`);
 
       await sendReplyWithNav(sock, m, text, "honeymoon");
@@ -100,14 +100,14 @@ async function handler(m, { sock, config: botConfig }) {
     const bondLevel = Math.floor(totalAffection / 100) + 1;
 
     const text =
-      claraWrap("Honeymoon", [`╎❏ ${userName} & ${partnerName} pergi bulan madu!`,
-        `╎❏ Lokasi: *${spot}*`,
-        `╎❏ EXP: *+${expBonus}* (berdua)`,
-        `╎❏ Gold: *+${goldBonus}* (berdua)`,
-        `╎❏ Affection: *+${affectionBonus}*`,
-        `╎❏ Total Affection: *${totalAffection}*`,
-        `╎❏ Bond Level: *${bondLevel}*`,
-        `╎❏ Total Honeymoon: *${rpg.honeymoonCount}*`].join("\n")) + "\n" +
+      claraWrap("Honeymoon", [`  ┊  ➶ ${userName} & ${partnerName} pergi bulan madu!`,
+        `  ┊  ➶ Lokasi: *${spot}*`,
+        `  ┊  ➶ EXP: *+${expBonus}* (berdua)`,
+        `  ┊  ➶ Gold: *+${goldBonus}* (berdua)`,
+        `  ┊  ➶ Affection: *+${affectionBonus}*`,
+        `  ┊  ➶ Total Affection: *${totalAffection}*`,
+        `  ┊  ➶ Bond Level: *${bondLevel}*`,
+        `  ┊  ➶ Total Honeymoon: *${rpg.honeymoonCount}*`].join("\n")) + "\n" +
       tipText(`Bulan madu lagi bulan depan ${prefix}honeymoon`);
 
     await sock.sendMessage(m.chat, {
@@ -118,8 +118,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("honeymoon", text));

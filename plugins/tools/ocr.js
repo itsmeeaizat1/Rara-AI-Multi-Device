@@ -54,10 +54,10 @@ async function handler(m, { sock }) {
     await m.react("✅");
     const responseText =
       `📖 *OCR REsULT*\n\n` +
-      `╔┈┈「 📝 *TEKs* 」\n` +
+      `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ TEKs\n` +
       `${extractedText
         .split("\n")
-        .map((l) => `╎❏ ${l}`)
+        .map((l) => `  ┊  ➶ ${l}`)
         .join("\n")}\n` +
       `╰┈┈┈┈┈┈┈┈❖\n\n` +
       `Total: ${extractedText.length} karakter`;

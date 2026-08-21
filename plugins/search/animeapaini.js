@@ -118,8 +118,8 @@ async function handler(m, { sock }) {
             `📺 *Episode:* ${d.episode || 'Movie/OVA'}\n` +
             `🆔 *AniList ID:* ${d.anilist || '-'}\n\n` +
             `⏱️ *Timestamp:*\n` +
-            `  ╎❏ From: \`${formatTime(d.from)}\`\n` +
-            `  ╎❏ To: \`${formatTime(d.to)}\`\n\n` +
+            `    ┊  ➶ From: \`${formatTime(d.from)}\`\n` +
+            `    ┊  ➶ To: \`${formatTime(d.to)}\`\n\n` +
             `📊 *Similarity:* ${similarity}%\n\n` +
             `🔗 https://anilist.co/anime/${d.anilist || ''}`
         

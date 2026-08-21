@@ -222,51 +222,51 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   const footerText = `${botName} | Nova Ai WhatsApp Bot`;
 
   // ── before section (Info User / Waktu / Bot / Server) ──
-  let txt = `╔┈┈「 *Info User* 」
-╎
-╎❏ *Nama:*  ${m.pushName || "User"}
-╎❏ *Nomor:* @${m.sender.split("@")[0]}
-╎❏ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
-╎❏ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
-╎❏ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
-╎❏ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
-╎❏ *Role:* ${roleEmoji} ${userRole}
-╎❏ *Level:* ${userLevel}
-╎❏ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
-╎❏ *Total Xp:* ${userExp.toLocaleString()}
-╎❏ *Status:* ${user?.banned ? "Banned" : "Aktif"}
+  let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Info User
+┊
+  ┊  ➶ *Nama:*  ${m.pushName || "User"}
+  ┊  ➶ *Nomor:* @${m.sender.split("@")[0]}
+  ┊  ➶ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
+  ┊  ➶ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
+  ┊  ➶ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
+  ┊  ➶ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
+  ┊  ➶ *Role:* ${roleEmoji} ${userRole}
+  ┊  ➶ *Level:* ${userLevel}
+  ┊  ➶ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
+  ┊  ➶ *Total Xp:* ${userExp.toLocaleString()}
+  ┊  ➶ *Status:* ${user?.banned ? "Banned" : "Aktif"}
 ╠┈┈「 *Info Waktu* 」
-╎❏ *Waktu:* ${timeStr} WIB
-╎❏ *Hari:* ${dayName} ${weton}
-╎❏ *Tanggal:* ${dateStr}
-╎❏ *Tanggal Islam:* ${islamicDate}
-╎❏ *Zona:* Asia/Jakarta
-╎❏ *Hari Penting:* ${importantDay}
+  ┊  ➶ *Waktu:* ${timeStr} WIB
+  ┊  ➶ *Hari:* ${dayName} ${weton}
+  ┊  ➶ *Tanggal:* ${dateStr}
+  ┊  ➶ *Tanggal Islam:* ${islamicDate}
+  ┊  ➶ *Zona:* Asia/Jakarta
+  ┊  ➶ *Hari Penting:* ${importantDay}
 ╠┈┈「 *Info Bot* 」
-╎❏ *Bot Name:* ${botConfig.bot?.name || botName}
-╎❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
-╎❏ *Version:* ${botConfig.bot?.version || "-"}
-╎❏ *Developer:* ${botConfig.bot?.developer || "-"}
-╎❏ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
-╎❏ *Prefix:* [ *${prefix}* ]
-╎❏ *Uptime:* ${runtimeStr}
-╎❏ *Total User:* ${totalUsers}
-╎❏ *Total Registrasi:* ${totalRegistered}
-╎❏ *Premium User:* ${totalPremium}
-╎❏ *Total Fitur:* ${totalFeatures}
+  ┊  ➶ *Bot Name:* ${botConfig.bot?.name || botName}
+  ┊  ➶ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
+  ┊  ➶ *Version:* ${botConfig.bot?.version || "-"}
+  ┊  ➶ *Developer:* ${botConfig.bot?.developer || "-"}
+  ┊  ➶ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
+  ┊  ➶ *Prefix:* [ *${prefix}* ]
+  ┊  ➶ *Uptime:* ${runtimeStr}
+  ┊  ➶ *Total User:* ${totalUsers}
+  ┊  ➶ *Total Registrasi:* ${totalRegistered}
+  ┊  ➶ *Premium User:* ${totalPremium}
+  ┊  ➶ *Total Fitur:* ${totalFeatures}
 ╠┈┈「 *Info Server* 」
-╎❏ *Platform:* ${platform}
-╎❏ *Hostname:* ${hostname}
-╎❏ *Type:* Node.Js
-╎❏ *Baileys:* Multi Device
-╎❏ *Node.js:* ${process.version}
-╎❏ *Server Uptime:* ${serverUptime}
-╎❏ *CPU:* ${cpuModel}
-╎❏ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
-╎❏ *Load Avg:* ${loadAvg}
-╎❏ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
-╎❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
-╚┈┈┈┈┈┈┈┈┈❖
+  ┊  ➶ *Platform:* ${platform}
+  ┊  ➶ *Hostname:* ${hostname}
+  ┊  ➶ *Type:* Node.Js
+  ┊  ➶ *Baileys:* Multi Device
+  ┊  ➶ *Node.js:* ${process.version}
+  ┊  ➶ *Server Uptime:* ${serverUptime}
+  ┊  ➶ *CPU:* ${cpuModel}
+  ┊  ➶ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
+  ┊  ➶ *Load Avg:* ${loadAvg}
+  ┊  ➶ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
+  ┊  ➶ *RAM Bot:* ${formatBytes(memUsage.rss)}
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${readMore}
 `;
 

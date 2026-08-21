@@ -64,8 +64,8 @@ async function handler(m, { sock, config: botConfig }) {
     if (!target) {
       const text =
         claraWrap("Cara Pakai", [
-          "╎❏ Penggunaan: *" + prefix + "nikah @member*",
-          "╎❏ Contoh: *" + prefix + "nikah @628xxxx*",
+          "  ┊  ➶ Penggunaan: *" + prefix + "nikah @member*",
+          "  ┊  ➶ Contoh: *" + prefix + "nikah @628xxxx*",
           "❏ Target harus ketik *" + prefix + "terimanikah* untuk terima",
           "❏ Target harus ketik *" + prefix + "tolaknikah* untuk tolak",
         ].join("\n")) + "\n" +
@@ -78,7 +78,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (target === m.sender) {
       const text =
         claraWrap("Gabisa", [
-          "╎❏ Nggak bisa nikah sama diri sendiri!",
+          "  ┊  ➶ Nggak bisa nikah sama diri sendiri!",
         ].join("\n")) + "\n" +
         tipText("Tag orang lain, bukan diri sendiri");
 
@@ -95,8 +95,8 @@ async function handler(m, { sock, config: botConfig }) {
       const partnerName = db.getUser(user.rpg.spouse)?.name || user.rpg.spouse;
       const text =
         claraWrap("Sudah Menikah", [
-          "╎❏ Kamu sudah menikah dengan *" + partnerName + "*",
-          "╎❏ Nggak bisa nikah lagi!",
+          "  ┊  ➶ Kamu sudah menikah dengan *" + partnerName + "*",
+          "  ┊  ➶ Nggak bisa nikah lagi!",
         ].join("\n")) + "\n" +
         tipText("Ketik " + prefix + "putusmatch untuk cerai dulu");
 
@@ -126,7 +126,7 @@ async function handler(m, { sock, config: botConfig }) {
       const text =
         claraWrap("Sibuk", [
           "❏ Target lagi dilamar orang lain",
-          "╎❏ Tunggu dia jawab dulu",
+          "  ┊  ➶ Tunggu dia jawab dulu",
         ].join("\n")) + "\n" +
         tipText("Coba lagi nanti");
 

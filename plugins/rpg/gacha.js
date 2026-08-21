@@ -53,10 +53,10 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      claraWrap("Gacha", [`╎❏ Item: *${item.name}*`,
-        `╎❏ Rarity: *${item.rarity}*`,
-        `╎❏ Chance: *${item.chance}%*`,
-        `╎❏ Jumlah: *${currentCount + 1}*`].join("\n")) +
+      claraWrap("Gacha", [`  ┊  ➶ Item: *${item.name}*`,
+        `  ┊  ➶ Rarity: *${item.rarity}*`,
+        `  ┊  ➶ Chance: *${item.chance}%*`,
+        `  ┊  ➶ Jumlah: *${currentCount + 1}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}gacha untuk coba lagi`) +
       "\n" +
@@ -66,8 +66,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

@@ -126,21 +126,21 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!isPdf && !pdfMime.includes("pdf")) {
     const help = claraWrap("Kop", [
-      `╎❏ Tambah Kop Surat ke PDF`,
+      `  ┊  ➶ Tambah Kop Surat ke PDF`,
       ``,
-      `╎❏ *Cara pakai:*`,
+      `  ┊  ➶ *Cara pakai:*`,
       `  Reply PDF, ketik:`,
       `  ${prefix}kop instansi=PT Maju Jaya alamat=Jl. Merdeka 1 Jakarta telepon=021123456 email=info@ptmaju.com`,
       ``,
-      `╎❏ *Parameter:*`,
+      `  ┊  ➶ *Parameter:*`,
       `  instansi= (nama instansi/perusahaan)`,
       `  alamat= (alamat lengkap)`,
       `  telepon= (nomor telepon)`,
       `  email= (alamat email)`,
       `  website= (situs web, opsional)`,
       ``,
-      `╎❏ Kop surat ditambah di setiap halaman`,
-      `╎❏ Double border line (standar surat resmi)`,
+      `  ┊  ➶ Kop surat ditambah di setiap halaman`,
+      `  ┊  ➶ Double border line (standar surat resmi)`,
     ].join("\n"));
     return sendReplyWithNav(sock, m, help, "kop");
   }

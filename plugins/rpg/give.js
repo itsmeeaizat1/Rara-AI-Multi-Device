@@ -28,8 +28,8 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     if (!target || !amount || amount <= 0) {
       const text =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}give @member <jumlah>*`,
-          `╎❏ Contoh: *${prefix}give @628xxxx 1000*`].join("\n")) +
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}give @member <jumlah>*`,
+          `  ┊  ➶ Contoh: *${prefix}give @628xxxx 1000*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -38,18 +38,18 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
 
     const text =
-      claraWrap("Give", [`╎❏ Dari: *${m.pushName || "Player"}*`,
-        `╎❏ Kepada: *${target}*`,
-        `╎❏ Jumlah: *${amount} Gold*`,
-        "╎❏ Status: *Berhasil*"].join("\n")) +
+      claraWrap("Give", [`  ┊  ➶ Dari: *${m.pushName || "Player"}*`,
+        `  ┊  ➶ Kepada: *${target}*`,
+        `  ┊  ➶ Jumlah: *${amount} Gold*`,
+        "  ┊  ➶ Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await sendReplyWithNav(sock, m, text, "give");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

@@ -45,10 +45,10 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
 
     const text =
-      claraWrap("Mining", [`╎❏ Item: *${reward.name}*`,
-        `╎❏ Gold: *+${reward.gold}*`,
-        `╎❏ Exp: *+${reward.exp}*`,
-        `╎❏ Luck: *${reward.chance}%*`].join("\n")) +
+      claraWrap("Mining", [`  ┊  ➶ Item: *${reward.name}*`,
+        `  ┊  ➶ Gold: *+${reward.gold}*`,
+        `  ┊  ➶ Exp: *+${reward.exp}*`,
+        `  ┊  ➶ Luck: *${reward.chance}%*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}mine untuk tambang lagi`) +
       "\n" +
@@ -57,8 +57,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "mine");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

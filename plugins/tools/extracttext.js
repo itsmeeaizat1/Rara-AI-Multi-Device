@@ -241,7 +241,7 @@ function formatStructuredText(raw) {
     prevWasEmpty = false;
 
     // Detect bullet points
-    const bulletMatch = trimmed.match(/^[•●▪◆○╎❏\-*▪]\s*(.+)/);
+    const bulletMatch = trimmed.match(/^[•●▪◆○  ┊  ➶\-*▪]\s*(.+)/);
     if (bulletMatch) {
       result.push(`- ${bulletMatch[1].trim()}`);
       prevWasHeader = false;
@@ -261,7 +261,7 @@ function formatStructuredText(raw) {
     const isShort = trimmed.length < 60 && !trimmed.endsWith(".") && !trimmed.endsWith(",") && !trimmed.endsWith(";");
     const prevLine = result.length > 0 ? result[result.length - 1] : "";
     const nextLine = i + 1 < lines.length ? lines[i + 1].trim() : "";
-    const isHeader = (isAllCaps || (isShort && (prevLine === "" || prevWasHeader) && nextLine !== "" && !nextLine.match(/^[-•●▪◆○╎❏]/))) && !trimmed.match(/^[\d\-\•]/);
+    const isHeader = (isAllCaps || (isShort && (prevLine === "" || prevWasHeader) && nextLine !== "" && !nextLine.match(/^[-•●▪◆○  ┊  ➶]/))) && !trimmed.match(/^[\d\-\•]/);
 
     if (isHeader && trimmed.length > 3) {
       if (result.length > 0 && result[result.length - 1] !== "") result.push("");
@@ -331,17 +331,17 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!isImage && !isPdf) {
     const helpText = claraWrap("Extract Text", [
-      `╎❏ Ekstrak teks dari *PDF* atau *Gambar* dengan format rapi`,
+      `  ┊  ➶ Ekstrak teks dari *PDF* atau *Gambar* dengan format rapi`,
       ``,
-      `╎❏ *Cara pakai:*`,
+      `  ┊  ➶ *Cara pakai:*`,
       `  Reply PDF/Gambar lalu ketik:`,
       `  ${prefix}extracttext (mode standar)`,
       `  ${prefix}extracttext ai (mode AI untuk gambar)`,
       ``,
-      `╎❏ *Media yang didukung:*`,
+      `  ┊  ➶ *Media yang didukung:*`,
       `  PDF (.pdf), JPG, PNG, WEBP`,
       ``,
-      `╎❏ *Mode:*`,
+      `  ┊  ➶ *Mode:*`,
       `  Standar - pdf-parse (PDF) / AI vision (gambar)`,
       `  ai - AI vision untuk hasil lebih akurat (PDF & gambar)`,
       `  Maks 5 halaman untuk AI mode PDF`,

@@ -15,18 +15,18 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const prompt = m.text?.trim();
     if (!prompt) {
-      await sendReplyWithNav(sock, m, claraWrap("AI Image", [`╎❏ Penggunaan: *${prefix}aiimage <deskripsi>*`,
-        `╎❏ Contoh: *${prefix}aiimage kucing astronaut*`,
-        "╎❏ AI akan generate gambar dari teks"].join("\n")), "aiimage");
+      await sendReplyWithNav(sock, m, claraWrap("AI Image", [`  ┊  ➶ Penggunaan: *${prefix}aiimage <deskripsi>*`,
+        `  ┊  ➶ Contoh: *${prefix}aiimage kucing astronaut*`,
+        "  ┊  ➶ AI akan generate gambar dari teks"].join("\n")), "aiimage");
       return { handled: true };
     }
     { const __navText = "_🎨 Generating gambar... mohon tunggu_"; await m.reply(__navText); };
     const { data } = await axios.get("https://image.pollinations.ai/prompt/" + encodeURIComponent(prompt), {
       timeout: 60000, responseType: "arraybuffer",
     });
-    await sock.sendMessage(m.key.remoteJid, { image: Buffer.from(data), caption: claraWrap("AI Image", [`╎❏ Prompt: *${prompt.substring(0,60)}*`].join("\n")) }, { quoted: m });
+    await sock.sendMessage(m.key.remoteJid, { image: Buffer.from(data), caption: claraWrap("AI Image", [`  ┊  ➶ Prompt: *${prompt.substring(0,60)}*`].join("\n")) }, { quoted: m });
   } catch (e) {
-    await m.reply(claraWrap("Gagal", [`╎❏ ${e.message}`].join("\n")));
+    await m.reply(claraWrap("Gagal", [`  ┊  ➶ ${e.message}`].join("\n")));
   }
   return { handled: true };
 }

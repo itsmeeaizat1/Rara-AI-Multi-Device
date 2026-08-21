@@ -102,12 +102,12 @@ function autoCloseExpired(db, sock) {
         const winnerText =
           "🏆 *LELANG BERAKHIR*\n\n" +
           "╭┈┈「 📋 *Info* 」\n" +
-          "╎❏ Item: *" + auction.title + "*\n" +
-          "╎❏ ID: `" + id + "`\n" +
-          "╎❏ Pemenang: @" + winner.bidder.split("@")[0] + "\n" +
-          "╎❏ Bid Terakhir: *" + formatRupiah(winner.amount) + "*\n" +
-          "╎❏ Total Bid: " + auction.bids.length + "\n" +
-          "╚┈┈❖\n\n" +
+          "  ┊  ➶ Item: *" + auction.title + "*\n" +
+          "  ┊  ➶ ID: `" + id + "`\n" +
+          "  ┊  ➶ Pemenang: @" + winner.bidder.split("@")[0] + "\n" +
+          "  ┊  ➶ Bid Terakhir: *" + formatRupiah(winner.amount) + "*\n" +
+          "  ┊  ➶ Total Bid: " + auction.bids.length + "\n" +
+          "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n" +
           "> Hubungi penjual untuk penyerahan barang";
 
         sock.sendMessage(auction.chatId, {
@@ -119,10 +119,10 @@ function autoCloseExpired(db, sock) {
           text:
             "😔 *LELANG BERAKHIR*\n\n" +
             "╭┈┈「 📋 *Info* 」\n" +
-            "╎❏ Item: *" + auction.title + "*\n" +
-            "╎❏ ID: `" + id + "`\n" +
-            "╎❏ Total Bid: 0\n" +
-            "╚┈┈❖\n\n" +
+            "  ┊  ➶ Item: *" + auction.title + "*\n" +
+            "  ┊  ➶ ID: `" + id + "`\n" +
+            "  ┊  ➶ Total Bid: 0\n" +
+            "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n" +
             "> Lelang berakhir tanpa peserta",
         }).catch((e) => { console.error('[lelang.js]:', e.message); });
       }

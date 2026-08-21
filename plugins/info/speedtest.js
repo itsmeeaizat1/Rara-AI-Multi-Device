@@ -151,36 +151,36 @@ async function handler(m, { sock }) {
     // Jalankan speedtest
     const result = await runSpeedtest();
 
-    let text = `╔┈┈「 *Speedtest* 」
-╎
-╎❏ *Host:* ${hostname}
-╎❏ *Platform:* ${platform} (${arch})
-╎❏ *Uptime:* ${uptime}
-╚┈┈┈┈┈┈┈┈┈❖
+    let text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Speedtest
+┊
+  ┊  ➶ *Host:* ${hostname}
+  ┊  ➶ *Platform:* ${platform} (${arch})
+  ┊  ➶ *Uptime:* ${uptime}
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
-╔┈┈「 *CPU & RAM* 」
-╎
-╎❏ *CPU:* ${cpuModel}
-╎❏ *Cores:* ${cpuCores}
-╎❏ *RAM:* ${(usedMem / 1000000).toFixed(0)} / ${(totalMem / 1000000).toFixed(0)} MB (${memUsage}%)
-╚┈┈┈┈┈┈┈┈┈❖
+❀°˖✧◝(⁰▿⁰)◜✧˖°❀ CPU & RAM
+┊
+  ┊  ➶ *CPU:* ${cpuModel}
+  ┊  ➶ *Cores:* ${cpuCores}
+  ┊  ➶ *RAM:* ${(usedMem / 1000000).toFixed(0)} / ${(totalMem / 1000000).toFixed(0)} MB (${memUsage}%)
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
-╔┈┈「 *Network* 」
-╎
-╎❏ *Ping:* ${result.ping}
-╎❏ *Download:* ${result.download}
-╎❏ *Upload:* ${result.upload}
-╚┈┈┈┈┈┈┈┈┈❖
+❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Network
+┊
+  ┊  ➶ *Ping:* ${result.ping}
+  ┊  ➶ *Download:* ${result.download}
+  ┊  ➶ *Upload:* ${result.upload}
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
 > Metode: ${result.method}`;
 
     await m.react("✅");
     await m.reply(claraWrap("speedtest", text));
   } catch (err) {
-    await m.reply(`╔┈┈「 *Speedtest Error* 」
-╎
-╎❏ ${err.message || "Unknown error"}
-╚┈┈┈┈┈┈┈┈┈❖`);
+    await m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Speedtest Error
+┊
+  ┊  ➶ ${err.message || "Unknown error"}
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`);
   }
 }
 

@@ -243,8 +243,8 @@ async function handler(m, { sock }) {
     const banks = (data.banks || []).filter((b) => b.number);
     const cash = data.cash || { enabled: false, info: "" };
 
-    let txt = "╔┈┈「 PAYMENT INFO 」╎❏\n";
-    txt += "╚┈┈❖\n\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ PAYMENT INFO  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
 
     // Cash
     txt += "CASH: " + (cash.enabled ? "ON" : "OFF") + "\n";

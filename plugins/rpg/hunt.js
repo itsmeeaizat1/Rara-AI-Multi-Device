@@ -44,11 +44,11 @@ async function handler(m, { sock, config: botConfig, db }) {
       claraWrap("Hunt", "⚔️") +
       "\n\n" +
       claraWrap("HaꜱIl", [
-        `╎❏ Monster: *${monster.name}*`,
-        `╎❏ HP: *${monster.hp}*`,
-        `╎❏ Gold: *${killed ? "+" + monster.gold : "0"}*`,
-        `╎❏ Exp: *${killed ? "+" + monster.exp : "0"}*`,
-        `╎❏ Status: *${killed ? "DIBUNUH" : "LARIIIII"}*`,
+        `  ┊  ➶ Monster: *${monster.name}*`,
+        `  ┊  ➶ HP: *${monster.hp}*`,
+        `  ┊  ➶ Gold: *${killed ? "+" + monster.gold : "0"}*`,
+        `  ┊  ➶ Exp: *${killed ? "+" + monster.exp : "0"}*`,
+        `  ┊  ➶ Status: *${killed ? "DIBUNUH" : "LARIIIII"}*`,
       ]) +
       "\n\n" +
       separator("━", 22) +
@@ -60,8 +60,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "hunt");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

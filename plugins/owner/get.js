@@ -105,13 +105,13 @@ async function handler(m, { sock }) {
   if (!input) {
     return sendReplyWithNav(sock, m, `🌐 *HTTP REQUEST TOOL*\n\n` +
         `╭┈┈⬡「 📋 OPTIONS 」\n` +
-        `┃ ╎❏ \`--method <GET|POST|PUT|PATCH|DELETE>\`\n` +
-        `┃ ╎❏ \`--json <body>\` — JSON body\n` +
-        `┃ ╎❏ \`--header \"Key: Value\"\` — Custom header\n` +
-        `┃ ╎❏ \`--auth user:pass\` — Basic auth\n` +
-        `┃ ╎❏ \`--verbose\` / \`-v\` — Show response headers\n` +
-        `┃ ╎❏ \`--timeout <ms>\` — Request timeout\n` +
-        `┃ ╎❏ \`--post\` — Shortcut for --method POST\n` +
+        `┃   ┊  ➶ \`--method <GET|POST|PUT|PATCH|DELETE>\`\n` +
+        `┃   ┊  ➶ \`--json <body>\` — JSON body\n` +
+        `┃   ┊  ➶ \`--header \"Key: Value\"\` — Custom header\n` +
+        `┃   ┊  ➶ \`--auth user:pass\` — Basic auth\n` +
+        `┃   ┊  ➶ \`--verbose\` / \`-v\` — Show response headers\n` +
+        `┃   ┊  ➶ \`--timeout <ms>\` — Request timeout\n` +
+        `┃   ┊  ➶ \`--post\` — Shortcut for --method POST\n` +
         `╰┈┈⬡\n\n` +
         `\`Examples:\`\n` +
         `.get https://api.example.com\n` +

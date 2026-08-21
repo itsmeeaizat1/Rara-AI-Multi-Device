@@ -26,8 +26,8 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     if (!amount || amount <= 0) {
       const text =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}withdraw <jumlah>*`,
-          `╎❏ Contoh: *${prefix}withdraw 1000*`].join("\n")) +
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}withdraw <jumlah>*`,
+          `  ┊  ➶ Contoh: *${prefix}withdraw 1000*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -36,18 +36,18 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
 
     const text =
-      claraWrap("Withdraw", [`╎❏ Jumlah: *${amount} Gold*`,
-        "╎❏ Dari: *Bank*",
-        "╎❏ Ke: *Dompet*",
-        "╎❏ Status: *Berhasil*"].join("\n")) +
+      claraWrap("Withdraw", [`  ┊  ➶ Jumlah: *${amount} Gold*`,
+        "  ┊  ➶ Dari: *Bank*",
+        "  ┊  ➶ Ke: *Dompet*",
+        "  ┊  ➶ Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await sendReplyWithNav(sock, m, text, "withdraw");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

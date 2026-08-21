@@ -26,9 +26,9 @@ async function handler(m, { sock, config: botConfig }) {
     
     if (!action || (action !== "buy" && action !== "sell" && action !== "list")) {
       let text = claraWrap("RPG Shop", "🏪") + "\n\n";
-      text += claraWrap("Cara Pakai", [`╎❏ Beli: *${prefix}rpgshop buy <item> <jumlah>*`, `╎❏ Jual: *${prefix}rpgshop sell <item> <jumlah>*`, `╎❏ List: *${prefix}rpgshop list*`].join("\n")) + "\n\n";
-      text += claraWrap("Harga Beli", Object.entries(BUY).map(([k,v]) => `╎❏ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
-      text += claraWrap("Harga Jual", Object.entries(SELL).map(([k,v]) => `╎❏ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
+      text += claraWrap("Cara Pakai", [`  ┊  ➶ Beli: *${prefix}rpgshop buy <item> <jumlah>*`, `  ┊  ➶ Jual: *${prefix}rpgshop sell <item> <jumlah>*`, `  ┊  ➶ List: *${prefix}rpgshop list*`].join("\n")) + "\n\n";
+      text += claraWrap("Harga Beli", Object.entries(BUY).map(([k,v]) => `  ┊  ➶ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
+      text += claraWrap("Harga Jual", Object.entries(SELL).map(([k,v]) => `  ┊  ➶ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
       text += separator("━", 22);
       await sendReplyWithNav(sock, m, text, "rpgshop");
       return { handled: true };
@@ -36,45 +36,45 @@ async function handler(m, { sock, config: botConfig }) {
     
     if (action === "list") {
       let text = claraWrap("RPG Shop List", "🏪") + "\n\n";
-      text += claraWrap("Beli", Object.entries(BUY).map(([k,v]) => `╎❏ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
-      text += claraWrap("Jual", Object.entries(SELL).map(([k,v]) => `╎❏ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
+      text += claraWrap("Beli", Object.entries(BUY).map(([k,v]) => `  ┊  ➶ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
+      text += claraWrap("Jual", Object.entries(SELL).map(([k,v]) => `  ┊  ➶ ${k}: Rp${v.toLocaleString("id-ID")}`)) + "\n\n";
       text += separator("━", 22);
       await sendReplyWithNav(sock, m, text, "rpgshop");
       return { handled: true };
     }
     
     if (!item || !BUY[item]) {
-      await sendReplyWithNav(sock, m, claraWrap("RPG Shop", [`╎❏ Item: *${item || "kosong"}*`,
-        `╎❏ Tersedia: ${Object.keys(BUY).join(", ")}`].join("\n")), "rpgshop");
+      await sendReplyWithNav(sock, m, claraWrap("RPG Shop", [`  ┊  ➶ Item: *${item || "kosong"}*`,
+        `  ┊  ➶ Tersedia: ${Object.keys(BUY).join(", ")}`].join("\n")), "rpgshop");
       return { handled: true };
     }
     
     if (action === "buy") {
       const total = BUY[item] * count;
       if (user.money < total) {
-        await sendReplyWithNav(sock, m, claraWrap("RPG Shop", [`╎❏ Butuh: *Rp${total.toLocaleString("id-ID")}*`,
-          `╎❏ Punya: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")), "rpgshop");
+        await sendReplyWithNav(sock, m, claraWrap("RPG Shop", [`  ┊  ➶ Butuh: *Rp${total.toLocaleString("id-ID")}*`,
+          `  ┊  ➶ Punya: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")), "rpgshop");
         return { handled: true };
       }
       user.money -= total;
       user[item] = (user[item] || 0) + count;
       db.write();
-      await sendReplyWithNav(sock, m, claraWrap("RPG Shop", [`╎❏ Item: *${item}* x${count}`,
-        `╎❏ Harga: *Rp${total.toLocaleString("id-ID")}*`,
-        `╎❏ Sisa uang: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")), "rpgshop");
+      await sendReplyWithNav(sock, m, claraWrap("RPG Shop", [`  ┊  ➶ Item: *${item}* x${count}`,
+        `  ┊  ➶ Harga: *Rp${total.toLocaleString("id-ID")}*`,
+        `  ┊  ➶ Sisa uang: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")), "rpgshop");
     } else if (action === "sell") {
       if ((user[item] || 0) < count) {
-        await sendReplyWithNav(sock, m, claraWrap("RPG Shop", [`╎❏ ${item}: *${user[item] || 0}*`,
-          `╎❏ Butuh: *${count}*`].join("\n")), "rpgshop");
+        await sendReplyWithNav(sock, m, claraWrap("RPG Shop", [`  ┊  ➶ ${item}: *${user[item] || 0}*`,
+          `  ┊  ➶ Butuh: *${count}*`].join("\n")), "rpgshop");
         return { handled: true };
       }
       const total = SELL[item] * count;
       user[item] -= count;
       user.money += total;
       db.write();
-      await sendReplyWithNav(sock, m, claraWrap("RPG Shop", [`╎❏ Item: *${item}* x${count}`,
-        `╎❏ Dapat: *Rp${total.toLocaleString("id-ID")}*`,
-        `╎❏ Total uang: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")), "rpgshop");
+      await sendReplyWithNav(sock, m, claraWrap("RPG Shop", [`  ┊  ➶ Item: *${item}* x${count}`,
+        `  ┊  ➶ Dapat: *Rp${total.toLocaleString("id-ID")}*`,
+        `  ┊  ➶ Total uang: *Rp${user.money.toLocaleString("id-ID")}*`].join("\n")), "rpgshop");
     }
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };

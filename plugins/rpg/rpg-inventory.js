@@ -20,13 +20,13 @@ async function handler(m, { sock, config: botConfig }) {
     
     let text = claraWrap("Inventory", "🎒") + "\n\n";
     text += claraWrap("Info", [
-      `╎❏ Player: *@${m.sender.split("@")[0]}*`,
-      `╎❏ Level: *${user.level}* (${role})`,
-      `╎❏ Money: *Rp${user.money.toLocaleString("id-ID")}*`,
+      `  ┊  ➶ Player: *@${m.sender.split("@")[0]}*`,
+      `  ┊  ➶ Level: *${user.level}* (${role})`,
+      `  ┊  ➶ Money: *Rp${user.money.toLocaleString("id-ID")}*`,
     ]) + "\n\n";
-    text += claraWrap("Item", [`╎❏ Potion: *${user.potion}* 🧪`, `╎❏ Diamond: *${user.diamond}* 💎`, `╎❏ Emerald: *${user.emerald}* 🟢`, `╎❏ Iron: *${user.iron}* ⚙️`, `╎❏ Wood: *${user.wood}* 🪵`, `╎❏ Rock: *${user.rock}* 🪨`, `╎❏ String: *${user.string}* 🧵`, `╎❏ Trash: *${user.trash}* 🗑️`].join("\n")) + "\n\n";
-    text += claraWrap("Equipment", [`╎❏ Sword: *${user.sword > 0 ? "Lv." + user.sword : "Tidak punya"}*`, `╎❏ Armor: *${user.armor > 0 ? "Lv." + user.armor : "Tidak punya"}*`, `╎❏ Pickaxe: *${user.pickaxe > 0 ? "Lv." + user.pickaxe : "Tidak punya"}*`, `╎❏ Fishing Rod: *${user.fishingrod > 0 ? "Lv." + user.fishingrod : "Tidak punya"}*`].join("\n")) + "\n\n";
-    text += claraWrap("Pet", [`╎❏ Kucing: *${user.kucing > 0 ? "Lv." + user.kucing : "Tidak punya"}*`, `╎❏ Kuda: *${user.kuda > 0 ? "Lv." + user.kuda : "Tidak punya"}*`, `╎❏ Naga: *${user.naga > 0 ? "Lv." + user.naga : "Tidak punya"}*`, `╎❏ Rubah: *${user.rubah > 0 ? "Lv." + user.rubah : "Tidak punya"}*`, `╎❏ Serigala: *${user.serigala > 0 ? "Lv." + user.serigala : "Tidak punya"}*`].join("\n")) + "\n\n";
+    text += claraWrap("Item", [`  ┊  ➶ Potion: *${user.potion}* 🧪`, `  ┊  ➶ Diamond: *${user.diamond}* 💎`, `  ┊  ➶ Emerald: *${user.emerald}* 🟢`, `  ┊  ➶ Iron: *${user.iron}* ⚙️`, `  ┊  ➶ Wood: *${user.wood}* 🪵`, `  ┊  ➶ Rock: *${user.rock}* 🪨`, `  ┊  ➶ String: *${user.string}* 🧵`, `  ┊  ➶ Trash: *${user.trash}* 🗑️`].join("\n")) + "\n\n";
+    text += claraWrap("Equipment", [`  ┊  ➶ Sword: *${user.sword > 0 ? "Lv." + user.sword : "Tidak punya"}*`, `  ┊  ➶ Armor: *${user.armor > 0 ? "Lv." + user.armor : "Tidak punya"}*`, `  ┊  ➶ Pickaxe: *${user.pickaxe > 0 ? "Lv." + user.pickaxe : "Tidak punya"}*`, `  ┊  ➶ Fishing Rod: *${user.fishingrod > 0 ? "Lv." + user.fishingrod : "Tidak punya"}*`].join("\n")) + "\n\n";
+    text += claraWrap("Pet", [`  ┊  ➶ Kucing: *${user.kucing > 0 ? "Lv." + user.kucing : "Tidak punya"}*`, `  ┊  ➶ Kuda: *${user.kuda > 0 ? "Lv." + user.kuda : "Tidak punya"}*`, `  ┊  ➶ Naga: *${user.naga > 0 ? "Lv." + user.naga : "Tidak punya"}*`, `  ┊  ➶ Rubah: *${user.rubah > 0 ? "Lv." + user.rubah : "Tidak punya"}*`, `  ┊  ➶ Serigala: *${user.serigala > 0 ? "Lv." + user.serigala : "Tidak punya"}*`].join("\n")) + "\n\n";
     text += separator("━", 22) + "\n" + tipText(`Ketik ${prefix}rpgshop untuk beli/jual item`);
     await sendReplyWithNav(sock, m, text, "inventory");
   } catch (e) { await m.reply("Error: " + e.message); }

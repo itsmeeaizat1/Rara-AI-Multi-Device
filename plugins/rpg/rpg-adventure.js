@@ -20,16 +20,16 @@ async function handler(m, { sock, config: botConfig }) {
     const user = getUser(db, m.sender);
     
     if (user.health < 80) {
-      await sendReplyWithNav(sock, m, claraWrap("Adventure", [`╎❏ HP: *${user.health}/100*`,
-        "╎❏ Minimal 80 HP untuk berpetualang",
-        `╎❏ Ketik *${prefix}heal* untuk menggunakan potion`].join("\n")), "adventure");
+      await sendReplyWithNav(sock, m, claraWrap("Adventure", [`  ┊  ➶ HP: *${user.health}/100*`,
+        "  ┊  ➶ Minimal 80 HP untuk berpetualang",
+        `  ┊  ➶ Ketik *${prefix}heal* untuk menggunakan potion`].join("\n")), "adventure");
       return { handled: true };
     }
     
     const remaining = COOLDOWN - (Date.now() - user.lastAdventure);
     if (remaining > 0) {
-      await sendReplyWithNav(sock, m, claraWrap("Adventure", ["╎❏ Kamu sudah berpetualang hari ini",
-        `╎❏ Tunggu: *${formatTime(remaining)}*`].join("\n")), "adventure");
+      await sendReplyWithNav(sock, m, claraWrap("Adventure", ["  ┊  ➶ Kamu sudah berpetualang hari ini",
+        `  ┊  ➶ Tunggu: *${formatTime(remaining)}*`].join("\n")), "adventure");
       return { handled: true };
     }
     
@@ -51,17 +51,17 @@ async function handler(m, { sock, config: botConfig }) {
     addUserMoney(db, m.sender, money);
     
     let text = claraWrap("Adventure", "⚔️") + "\n\n";
-    text += claraWrap("Petualang", [`╎❏ Musuh: *${enemy}*`, `╎❏ HP Berkurang: *-${hpLoss}* ❤️`, `╎❏ Sisa HP: *${user.health}/100*`].join("\n")) + "\n\n";
+    text += claraWrap("Petualang", [`  ┊  ➶ Musuh: *${enemy}*`, `  ┊  ➶ HP Berkurang: *-${hpLoss}* ❤️`, `  ┊  ➶ Sisa HP: *${user.health}/100*`].join("\n")) + "\n\n";
     text += claraWrap("Hasil", [
-      `╎❏ EXP: *+${exp}* ✨`,
-      `╎❏ Money: *+Rp${money.toLocaleString("id-ID")}* 💰`,
-      `╎❏ Iron: *+${iron}* ⚙️`,
-      `╎❏ Wood: *+${wood}* 🪵`,
-      diamond > 0 ? `╎❏ Diamond: *+${diamond}* 💎` : "",
+      `  ┊  ➶ EXP: *+${exp}* ✨`,
+      `  ┊  ➶ Money: *+Rp${money.toLocaleString("id-ID")}* 💰`,
+      `  ┊  ➶ Iron: *+${iron}* ⚙️`,
+      `  ┊  ➶ Wood: *+${wood}* 🪵`,
+      diamond > 0 ? `  ┊  ➶ Diamond: *+${diamond}* 💎` : "",
     ].filter(Boolean)) + "\n\n";
     
     if (leveledUp) {
-      text += claraWrap("Level Up!", [`╎❏ Level: *${oldLevel} → ${newLevel}*`, `╎❏ Congrats! 🔥`].join("\n")) + "\n\n";
+      text += claraWrap("Level Up!", [`  ┊  ➶ Level: *${oldLevel} → ${newLevel}*`, `  ┊  ➶ Congrats! 🔥`].join("\n")) + "\n\n";
     }
     
     text += separator("━", 22) + "\n" + tipText(`Tunggu 1 jam untuk petualang lagi`);

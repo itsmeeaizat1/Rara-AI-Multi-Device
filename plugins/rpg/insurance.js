@@ -54,12 +54,12 @@ async function handler(m, { sock, config: botConfig, args }) {
       const target = (args[1] || "").toLowerCase();
       const plan = PLANS.find((p) => p.id === target || p.name.toLowerCase().includes(target));
       if (!plan) {
-        let lines = "╎❏ Daftar Paket Asuransi:\n\n";
+        let lines = "  ┊  ➶ Daftar Paket Asuransi:\n\n";
         for (const p of PLANS) {
-          lines += `╎❏ *${p.name}*\n`;
-          lines += `╎  Harga   : ${p.price.toLocaleString()} gold\n`;
-          lines += `╎  Cover   : ${p.coverage.toLocaleString()} gold\n`;
-          lines += `╎  Durasi  : ${p.duration} hari\n\n`;
+          lines += `  ┊  ➶ *${p.name}*\n`;
+          lines += `┊  Harga   : ${p.price.toLocaleString()} gold\n`;
+          lines += `┊  Cover   : ${p.coverage.toLocaleString()} gold\n`;
+          lines += `┊  Durasi  : ${p.duration} hari\n\n`;
         }
         lines += tipText(`Ketik ${prefix}insurance buy <nama> untuk beli`);
         return m.reply(claraWrap("Insurance Plans", lines));
@@ -68,8 +68,8 @@ async function handler(m, { sock, config: botConfig, args }) {
       if (insurance && !isExpired(insurance)) {
         const currentPlan = PLANS.find((p) => p.id === insurance.planId);
         return m.reply(claraWrap("Insurance", [
-          `╎❏ Kamu sudah punya asuransi aktif: *${currentPlan?.name || insurance.planId}*`,
-          `╎❏ Tungu sampai expired buat beli baru`,
+          `  ┊  ➶ Kamu sudah punya asuransi aktif: *${currentPlan?.name || insurance.planId}*`,
+          `  ┊  ➶ Tungu sampai expired buat beli baru`,
         ].join("\n")));
       }
 
@@ -90,10 +90,10 @@ async function handler(m, { sock, config: botConfig, args }) {
       savePlayer(m, { gold: player.gold, insurance: newInsurance });
 
       return m.reply(claraWrap("Insurance Bought", [
-        `╎❏ *${plan.name}* berhasil dibeli!`,
-        `╎❏ Coverage: ${plan.coverage.toLocaleString()} gold`,
-        `╎❏ Durasi: ${plan.duration} hari`,
-        `╎❏ Berlaku dari: ${newInsurance.buyDate}`,
+        `  ┊  ➶ *${plan.name}* berhasil dibeli!`,
+        `  ┊  ➶ Coverage: ${plan.coverage.toLocaleString()} gold`,
+        `  ┊  ➶ Durasi: ${plan.duration} hari`,
+        `  ┊  ➶ Berlaku dari: ${newInsurance.buyDate}`,
         "",
         tipText("Kalau kena steal/rob, ketik .insurance claim"),
       ].join("\n")));
@@ -107,8 +107,8 @@ async function handler(m, { sock, config: botConfig, args }) {
       const lostAmount = player.lastLost || 0;
       if (lostAmount <= 0) {
         return m.reply(claraWrap("Insurance", [
-          "╎❏ Tidak ada kerugian yang bisa diklaim",
-          "╎❏ Klaim hanya bisa dipakai kalau kamu kena steal/rob",
+          "  ┊  ➶ Tidak ada kerugian yang bisa diklaim",
+          "  ┊  ➶ Klaim hanya bisa dipakai kalau kamu kena steal/rob",
         ].join("\n")));
       }
 
@@ -124,17 +124,17 @@ async function handler(m, { sock, config: botConfig, args }) {
       savePlayer(m, { insurance, lastLost: 0 });
 
       return m.reply(claraWrap("Insurance Claim", [
-        `╎❏ Klaim berhasil!`,
-        `╎❏ Refund: ${claimAmount.toLocaleString()} gold`,
-        `╎❏ Sisa coverage: ${insurance.remaining.toLocaleString()} gold`,
-        `╎❏ Total klaim: ${insurance.claims}x`,
+        `  ┊  ➶ Klaim berhasil!`,
+        `  ┊  ➶ Refund: ${claimAmount.toLocaleString()} gold`,
+        `  ┊  ➶ Sisa coverage: ${insurance.remaining.toLocaleString()} gold`,
+        `  ┊  ➶ Total klaim: ${insurance.claims}x`,
       ].join("\n")));
     }
 
     // status (default)
     if (!insurance || isExpired(insurance)) {
-      let lines = "╎❏ Tidak ada asuransi aktif\n\n";
-      lines += "╎❏ Asuransi lindungin gold kamu dari steal/rob\n";
+      let lines = "  ┊  ➶ Tidak ada asuransi aktif\n\n";
+      lines += "  ┊  ➶ Asuransi lindungin gold kamu dari steal/rob\n";
       lines += tipText(`Ketik ${prefix}insurance buy buat lihat paket`);
       return m.reply(claraWrap("Insurance", lines));
     }
@@ -145,13 +145,13 @@ async function handler(m, { sock, config: botConfig, args }) {
     expireDate.setDate(expireDate.getDate() + insurance.duration);
     const daysLeft = Math.ceil((expireDate - new Date()) / (1000 * 60 * 60 * 24));
 
-    let lines = `╎❏ *${insurance.planName}*\n`;
-    lines += `╎❏ Coverage: ${insurance.remaining.toLocaleString()}/${insurance.coverage.toLocaleString()} gold\n`;
-    lines += `╎❏ Durasi: ${daysLeft} hari lagi\n`;
-    lines += `╎❏ Klaim: ${insurance.claims}x\n`;
-    lines += `╎❏ Berlaku: ${insurance.buyDate} sampai ${expireDate.toISOString().slice(0, 10)}\n`;
+    let lines = `  ┊  ➶ *${insurance.planName}*\n`;
+    lines += `  ┊  ➶ Coverage: ${insurance.remaining.toLocaleString()}/${insurance.coverage.toLocaleString()} gold\n`;
+    lines += `  ┊  ➶ Durasi: ${daysLeft} hari lagi\n`;
+    lines += `  ┊  ➶ Klaim: ${insurance.claims}x\n`;
+    lines += `  ┊  ➶ Berlaku: ${insurance.buyDate} sampai ${expireDate.toISOString().slice(0, 10)}\n`;
     if (player.lastLost && player.lastLost > 0) {
-      lines += `\n╎❏ Kerugian belum diklaim: ${player.lastLost.toLocaleString()} gold\n`;
+      lines += `\n  ┊  ➶ Kerugian belum diklaim: ${player.lastLost.toLocaleString()} gold\n`;
       lines += tipText(`Ketik ${prefix}insurance claim buat refund`);
     } else {
       lines += tipText("Asuransi aktif, kamu terlindungi!");

@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig }) {
     const item = ITEMS[Math.floor(Math.random() * ITEMS.length)];
 
     const text =
-      claraWrap("Trivia", [`╎❏ Soal: *${item.q}*`].join("\n")) +
+      claraWrap("Trivia", [`  ┊  ➶ Soal: *${item.q}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}trivia untuk soal lain`) +
       "\n" +
@@ -58,8 +58,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

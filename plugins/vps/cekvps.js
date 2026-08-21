@@ -61,23 +61,23 @@ async function handler(m, { sock }) {
     const ipv6 = droplet.networks?.v6?.[0]?.ip_address || "-";
     const status = droplet.status === "active" ? "Active" : droplet.status;
 
-    let txt = `╔┈┈「 *Detail VPS* 」
-╎
-╎❏ *ID:* ${droplet.id}
-╎❏ *Name:* ${droplet.name}
-╎❏ *Status:* ${status}
-╎❏ *IPv4:* ${ip}
-╎❏ *IPv6:* ${ipv6}
-╚┈┈┈┈┈┈┈┈┈❖
+    let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Detail VPS
+┊
+  ┊  ➶ *ID:* ${droplet.id}
+  ┊  ➶ *Name:* ${droplet.name}
+  ┊  ➶ *Status:* ${status}
+  ┊  ➶ *IPv4:* ${ip}
+  ┊  ➶ *IPv6:* ${ipv6}
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
-╔┈┈「 *Spec* 」
-╎
-╎❏ *RAM:* ${droplet.memory} MB
-╎❏ *CPU:* ${droplet.vcpus} vCPU
-╎❏ *Disk:* ${droplet.disk} GB
-╎❏ *Region:* ${droplet.region?.name || droplet.region?.slug}
-╎❏ *OS:* ${droplet.image?.distribution} ${droplet.image?.name}
-╚┈┈┈┈┈┈┈┈┈❖
+❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Spec
+┊
+  ┊  ➶ *RAM:* ${droplet.memory} MB
+  ┊  ➶ *CPU:* ${droplet.vcpus} vCPU
+  ┊  ➶ *Disk:* ${droplet.disk} GB
+  ┊  ➶ *Region:* ${droplet.region?.name || droplet.region?.slug}
+  ┊  ➶ *OS:* ${droplet.image?.distribution} ${droplet.image?.name}
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
 Created: ${timeHelper.fromTimestamp(droplet.created_at, "DD MMMM YYYY HH:mm:ss")}`;
 

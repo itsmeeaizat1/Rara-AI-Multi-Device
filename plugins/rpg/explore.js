@@ -35,9 +35,9 @@ async function handler(m, { sock, config: botConfig, db }) {
     const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
 
     const text =
-      claraWrap("Explore", [`╎❏ Hasil: *${outcome.text}*`,
-        `╎❏ Gold: *${outcome.gold >= 0 ? "+" : ""}${outcome.gold}*`,
-        `╎❏ Exp: *+${outcome.exp}*`].join("\n")) +
+      claraWrap("Explore", [`  ┊  ➶ Hasil: *${outcome.text}*`,
+        `  ┊  ➶ Gold: *${outcome.gold >= 0 ? "+" : ""}${outcome.gold}*`,
+        `  ┊  ➶ Exp: *+${outcome.exp}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}explore untuk jelajahi lagi`) +
       "\n" +
@@ -46,8 +46,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "explore");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

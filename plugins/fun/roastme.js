@@ -43,18 +43,18 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!args && !m.quoted) {
     const help = claraWrap("RoastMe", [
-      `╎❏ AI roasting pedas tapi lucu`,
+      `  ┊  ➶ AI roasting pedas tapi lucu`,
       ``,
-      `╎❏ *Cara pakai:*`,
+      `  ┊  ➶ *Cara pakai:*`,
       `  ${prefix}roastme [mode]`,
       `  Reply orang: ${prefix}roastme savage`,
       ``,
-      `╎❏ *Mode:*`,
+      `  ┊  ➶ *Mode:*`,
       `  1. mild (santai)`,
       `  2. savage (pedas)`,
       `  3. nuclear (gak ada ampun)`,
       ``,
-      `╎❏ Reply pesan seseorang buat roast dia`,
+      `  ┊  ➶ Reply pesan seseorang buat roast dia`,
     ].join("\n"));
     return sendReplyWithNav(sock, m, help, "roastme");
   }

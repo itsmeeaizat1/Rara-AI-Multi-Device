@@ -22,7 +22,7 @@ const ITEMS = [
 async function handler(m, { sock, config: botConfig }) {
   try {
     const item = ITEMS[Math.floor(Math.random()*ITEMS.length)];
-    { const __navText = (claraWrap("Cak Lontong", [`╎❏ ${item.q}`].join("\n")) + "\n" + tipText("Balas dengan jawabanmu!")); await m.reply(__navText); };
+    { const __navText = (claraWrap("Cak Lontong", [`  ┊  ➶ ${item.q}`].join("\n")) + "\n" + tipText("Balas dengan jawabanmu!")); await m.reply(__navText); };
     if (!global.caklontongAnswer) global.caklontongAnswer = {};
     global.caklontongAnswer[m.sender] = item.a?.toLowerCase() || item.q.toLowerCase();
   } catch (e) {

@@ -37,8 +37,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!partnerJid) {
       const text =
-        claraWrap("Maaf", [`╎❏ Status: *Belum punya pasangan*`,
-          `╎❏ Minta maaf ke siapa? Ke Tuhan?`].join("\n")) + "\n" +
+        claraWrap("Maaf", [`  ┊  ➶ Status: *Belum punya pasangan*`,
+          `  ┊  ➶ Minta maaf ke siapa? Ke Tuhan?`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}jadian @target untuk punya pasangan`);
 
       await sendReplyWithNav(sock, m, text, "maaf");
@@ -55,9 +55,9 @@ async function handler(m, { sock, config: botConfig }) {
     if (cd) {
       const mins = Math.floor(cd / 60);
       const text =
-        claraWrap("Maaf", [`╎❏ Status: *Masih cooldown*`,
-          `╎❏ Tunggu: *${mins} menit lagi*`,
-          `╎❏ Jangan minta maaf terus-terusan, nggak tulus`].join("\n")) + "\n" +
+        claraWrap("Maaf", [`  ┊  ➶ Status: *Masih cooldown*`,
+          `  ┊  ➶ Tunggu: *${mins} menit lagi*`,
+          `  ┊  ➶ Jangan minta maaf terus-terusan, nggak tulus`].join("\n")) + "\n" +
         tipText(`Tunggu sebentar ya`);
 
       await sendReplyWithNav(sock, m, text, "maaf");
@@ -98,18 +98,18 @@ async function handler(m, { sock, config: botConfig }) {
 
     let extraInfo = [];
     if (pesan) {
-      extraInfo.push(`╎❏ Pesan: *"${pesan}"*`);
+      extraInfo.push(`  ┊  ➶ Pesan: *"${pesan}"*`);
     }
     if (hasRecentConflict) {
-      extraInfo.push(`╎❏ Bonus: *Konflik selesai!* (+${affectionGain - 5} extra)`);
+      extraInfo.push(`  ┊  ➶ Bonus: *Konflik selesai!* (+${affectionGain - 5} extra)`);
     }
 
     const text =
-      claraWrap("Maaf", [`╎❏ ${line}`,
-        `╎❏ Affection: *+${affectionGain}*`,
-        `╎❏ Total Affection: *${totalAffection}*`,
-        `╎❏ Bond Level: *${bondLevel}*`,
-        `╎❏ Total Minta Maaf: *${rpg.maafCount}*`,
+      claraWrap("Maaf", [`  ┊  ➶ ${line}`,
+        `  ┊  ➶ Affection: *+${affectionGain}*`,
+        `  ┊  ➶ Total Affection: *${totalAffection}*`,
+        `  ┊  ➶ Bond Level: *${bondLevel}*`,
+        `  ┊  ➶ Total Minta Maaf: *${rpg.maafCount}*`,
         ...extraInfo].join("\n")) + "\n" +
       tipText(`Beri peluk: ${prefix}cuddling | Kasih kado: ${prefix}kado`);
 
@@ -121,8 +121,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("maaf", text));

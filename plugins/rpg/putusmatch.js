@@ -43,8 +43,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!user.rpg.dating) {
       const text =
-        claraWrap("Belum Jadian", ["╎❏ Kamu belum jadian sama siapapun!",
-          "╎❏ Ketik *" + prefix + "jadian @member* untuk mulai"].join("\n")) + "\n" +
+        claraWrap("Belum Jadian", ["  ┊  ➶ Kamu belum jadian sama siapapun!",
+          "  ┊  ➶ Ketik *" + prefix + "jadian @member* untuk mulai"].join("\n")) + "\n" +
         tipText("Belum pacaran, mau putus sama siapa? 😂");
 
       await sendReplyWithNav(sock, m, text, "putusmatch");

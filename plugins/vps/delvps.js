@@ -54,11 +54,11 @@ async function handler(m, { sock }) {
         })
         
         m.react('✅')
-        await m.reply(`╔┈┈「 *VPS Dihapus* 」
-╎
-╎❏ *ID:* ${dropletId}
-╎❏ *Status:* Berhasil dihapus
-╚┈┈┈┈┈┈┈┈┈❖`)
+        await m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ VPS Dihapus
+┊
+  ┊  ➶ *ID:* ${dropletId}
+  ┊  ➶ *Status:* Berhasil dihapus
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`)
         
     } catch (err) {
         return m.reply(te(m.prefix, m.command, m.pushName))

@@ -55,10 +55,10 @@ export default {
     if (!aiConfig.apiKey) {
       const text =
         claraWrap("Slang Translator", [
-          `╎ Status: *Belum dikonfigurasi*`,
+          `┊ Status: *Belum dikonfigurasi*`,
           ``,
-          `╎ Bot butuh AI API untuk menerjemahkan slang.`,
-          `╎ Owner: ketik *${prefix}aihelp* untuk set API key.`,
+          `┊ Bot butuh AI API untuk menerjemahkan slang.`,
+          `┊ Owner: ketik *${prefix}aihelp* untuk set API key.`,
         ].join("\n")) +
         "\n" +
         tipText(`Setup AI dulu dengan ${prefix}aihelp`);
@@ -82,13 +82,13 @@ export default {
       if (!groqKey) {
         const text =
           claraWrap("Slang Translator", [
-            `╎ Status: *Groq API belum dikonfigurasi*`,
+            `┊ Status: *Groq API belum dikonfigurasi*`,
             ``,
-            `╎ Untuk transcribe voice note, bot butuh Groq API key.`,
-            `╎ Owner: set di config.js → APIkey.groq`,
-            `╎ Gratis di https://console.groq.com`,
+            `┊ Untuk transcribe voice note, bot butuh Groq API key.`,
+            `┊ Owner: set di config.js → APIkey.groq`,
+            `┊ Gratis di https://console.groq.com`,
             ``,
-            `╎ Atau reply *teks* biasa untuk terjemahkan tanpa Groq.`,
+            `┊ Atau reply *teks* biasa untuk terjemahkan tanpa Groq.`,
           ].join("\n"));
         await m.reply(text);
         return { handled: true };
@@ -105,8 +105,8 @@ export default {
         const buffer = await quoted.download();
         if (!buffer || buffer.length < 1000) {
           await m.reply(claraWrap("Slang Translator", [
-            `╎ Status: *Gagal*`,
-            `╎ Audio terlalu kecil atau gagal diunduh.`,
+            `┊ Status: *Gagal*`,
+            `┊ Audio terlalu kecil atau gagal diunduh.`,
           ].join("\n")));
           await m.react("❌");
           return { handled: true };
@@ -127,9 +127,9 @@ export default {
 
         if (!transcribedText || transcribedText.trim() === "") {
           await m.reply(claraWrap("Slang Translator", [
-            `╎ Status: *Gagal transcribe*`,
-            `╎ Tidak dapat mendeteksi suara dari voice note.`,
-            `╎ Pastikan audio jelas dan tidak terlalu pendek.`,
+            `┊ Status: *Gagal transcribe*`,
+            `┊ Tidak dapat mendeteksi suara dari voice note.`,
+            `┊ Pastikan audio jelas dan tidak terlalu pendek.`,
           ].join("\n")));
           await m.react("❌");
           return { handled: true };
@@ -139,20 +139,20 @@ export default {
 
         // Kirim info transcribe dulu
         await m.reply(claraWrap("Transcribe VN", [
-          `╎ 🎙️ Hasil transcribe:`,
-          `╎ "${inputText.length > 200 ? inputText.slice(0, 200) + "..." : inputText}"`,
+          `┊ 🎙️ Hasil transcribe:`,
+          `┊ "${inputText.length > 200 ? inputText.slice(0, 200) + "..." : inputText}"`,
           ``,
-          `╎ ⏳ Menerjemahkan slang...`,
+          `┊ ⏳ Menerjemahkan slang...`,
         ].join("\n")));
       } catch (error) {
         try { fs.unlinkSync(inputPath); } catch (e) { console.error('[slangtranslate.js]:', e.message); }
         try { fs.unlinkSync(wavPath); } catch (e) { console.error('[slangtranslate.js]:', e.message); }
         const text =
           claraWrap("Slang Translator - Error", [
-            `╎ Status: *Gagal transcribe*`,
-            `╎ Alasan: *${error.message}*`,
+            `┊ Status: *Gagal transcribe*`,
+            `┊ Alasan: *${error.message}*`,
             ``,
-            `╎ Cek Groq API key di config.js.`,
+            `┊ Cek Groq API key di config.js.`,
           ].join("\n"));
         await m.reply(text);
         await m.react("❌");
@@ -166,10 +166,10 @@ export default {
       } else {
         const text =
           claraWrap("Slang Translator", [
-            `╎ Status: *Format tidak didukung*`,
+            `┊ Status: *Format tidak didukung*`,
             ``,
-            `╎ Reply *teks* atau *voice note* yang ingin diterjemahkan.`,
-            `╎ Atau ketik langsung: *${prefix}slangtranslate <teks>*`,
+            `┊ Reply *teks* atau *voice note* yang ingin diterjemahkan.`,
+            `┊ Atau ketik langsung: *${prefix}slangtranslate <teks>*`,
           ].join("\n"));
         await m.reply(text);
         return { handled: true };
@@ -189,18 +189,18 @@ export default {
     if (!inputText || inputText.length < 2) {
       const text =
         claraWrap("Slang Translator", [
-          `╎ Cara Pakai:`,
+          `┊ Cara Pakai:`,
           ``,
-          `╎ 1. Reply pesan teks/VN yang mau diterjemahkan`,
-          `╎    lalu ketik *${prefix}slangtranslate*`,
+          `┊ 1. Reply pesan teks/VN yang mau diterjemahkan`,
+          `┊    lalu ketik *${prefix}slangtranslate*`,
           ``,
-          `╎ 2. Atau ketik langsung:`,
-          `╎    *${prefix}slangtranslate <teks>*`,
+          `┊ 2. Atau ketik langsung:`,
+          `┊    *${prefix}slangtranslate <teks>*`,
           ``,
-          `╎ Contoh:`,
-          `╎    *${prefix}slangtranslate that's cap fr fr*`,
-          `╎    *${prefix}slangtranslate ngap sih lo*`,
-          `╎    Reply VN bahasa Sunda → *.slangtranslate*`,
+          `┊ Contoh:`,
+          `┊    *${prefix}slangtranslate that's cap fr fr*`,
+          `┊    *${prefix}slangtranslate ngap sih lo*`,
+          `┊    Reply VN bahasa Sunda → *.slangtranslate*`,
         ].join("\n"));
       await m.reply(text);
       return { handled: true };
@@ -295,26 +295,26 @@ Aturan:
 
       const text =
         claraWrap("Slang Translator", [
-          `╎ ${langFlag} Teks Asli ${sourceLabel}:`,
-          `╎ "${displayInput}"`,
+          `┊ ${langFlag} Teks Asli ${sourceLabel}:`,
+          `┊ "${displayInput}"`,
           ``,
-          `╎ 📖 Arti Harfiah:`,
-          `╎ ${sections["ARTI HARFIAH"]}`,
+          `┊ 📖 Arti Harfiah:`,
+          `┊ ${sections["ARTI HARFIAH"]}`,
           ``,
-          `╎ 🎯 Arti Sebenarnya:`,
-          `╎ ${sections["ARTI SEBENARNYA"]}`,
+          `┊ 🎯 Arti Sebenarnya:`,
+          `┊ ${sections["ARTI SEBENARNYA"]}`,
           ``,
-          `╎ 🏛️ Konteks Budaya:`,
-          `╎ ${sections["KONTEKS BUDAYA"]}`,
+          `┊ 🏛️ Konteks Budaya:`,
+          `┊ ${sections["KONTEKS BUDAYA"]}`,
           ``,
-          `╎ 🔤 Bahasa Asal:`,
-          `╎ ${sections["BAHASA ASAL"]}`,
+          `┊ 🔤 Bahasa Asal:`,
+          `┊ ${sections["BAHASA ASAL"]}`,
           ``,
-          `╎ ${formalEmoji} Tingkat Formalitas:`,
-          `╎ ${sections["TINGKAT FORMALITAS"]}`,
+          `┊ ${formalEmoji} Tingkat Formalitas:`,
+          `┊ ${sections["TINGKAT FORMALITAS"]}`,
           ``,
-          `╎ ✍️ Contoh Pemakaian:`,
-          `╎ ${sections["CONTOH PEMAKAIAN"]}`,
+          `┊ ✍️ Contoh Pemakaian:`,
+          `┊ ${sections["CONTOH PEMAKAIAN"]}`,
         ].join("\n")) +
         "\n" +
         tipText(`Reply teks/VN lain + ${prefix}slangtranslate untuk terjemahkan lagi`);
@@ -324,11 +324,11 @@ Aturan:
     } catch (error) {
       const text =
         claraWrap("Slang Translator - Error", [
-          `╎ Status: *Gagal*`,
-          `╎ Alasan: *${error.message}*`,
+          `┊ Status: *Gagal*`,
+          `┊ Alasan: *${error.message}*`,
           ``,
-          `╎ Cek apakah AI API key masih valid.`,
-          `╎ Owner: *${prefix}aihelp* untuk cek konfigurasi.`,
+          `┊ Cek apakah AI API key masih valid.`,
+          `┊ Owner: *${prefix}aihelp* untuk cek konfigurasi.`,
         ].join("\n"));
       await m.reply(text);
       await m.react("❌");

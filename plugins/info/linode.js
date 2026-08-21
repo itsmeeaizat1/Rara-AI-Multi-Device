@@ -38,25 +38,25 @@ async function handler(m, { sock, config: botConfig }) {
       }
     } catch (e) { console.error('[linode.js]:', e.message); }
 
-    let text = `╔┈┈「 *Server Info* 」
-╎
-╎❏ *OS:* ${osName}
-╎❏ *Host:* ${hostname}
-╎❏ *Uptime:* ${uptime}
-╎❏ *CPU:* ${cpu}
-╎❏ *RAM:* ${ram}
-╚┈┈┈┈┈┈┈┈┈❖
+    let text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Server Info
+┊
+  ┊  ➶ *OS:* ${osName}
+  ┊  ➶ *Host:* ${hostname}
+  ┊  ➶ *Uptime:* ${uptime}
+  ┊  ➶ *CPU:* ${cpu}
+  ┊  ➶ *RAM:* ${ram}
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
 Ketik ${prefix}menu untuk kembali`;
 
     await m.reply(claraWrap("linode", text));
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
-    let text = `╔┈┈「 *Server Error* 」
-╎
-╎❏ *Status:* Gagal
-╎❏ *Alasan:* ${error.message}
-╚┈┈┈┈┈┈┈┈┈❖
+    let text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Server Error
+┊
+  ┊  ➶ *Status:* Gagal
+  ┊  ➶ *Alasan:* ${error.message}
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
 Coba lagi nanti atau hubungi owner`;
 

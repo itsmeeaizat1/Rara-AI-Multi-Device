@@ -27,13 +27,13 @@ async function handler(m, { sock, config: botConfig }) {
     const player = ensurePlayer(m, userName);
 
     const text =
-      claraWrap("Karakter", [`╎❏ Nama: *${player.name}*`,
-        `╎❏ Level: *${player.level || 1}*`,
-        `╎❏ HP: *${player.hp || 100}/${player.maxHp || 100}*`,
-        `╎❏ ATK: *${player.atk || 10}*`,
-        `╎❏ DEF: *${player.def || 5}*`,
-        `╎❏ Exp: *${player.exp || 0}/${player.maxExp || 100}*`,
-        `╎❏ Gold: *${player.gold || 0}*`].join("\n")) +
+      claraWrap("Karakter", [`  ┊  ➶ Nama: *${player.name}*`,
+        `  ┊  ➶ Level: *${player.level || 1}*`,
+        `  ┊  ➶ HP: *${player.hp || 100}/${player.maxHp || 100}*`,
+        `  ┊  ➶ ATK: *${player.atk || 10}*`,
+        `  ┊  ➶ DEF: *${player.def || 5}*`,
+        `  ┊  ➶ Exp: *${player.exp || 0}/${player.maxExp || 100}*`,
+        `  ┊  ➶ Gold: *${player.gold || 0}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}profile untuk melihat profil kamu`) +
       "\n" +
@@ -43,8 +43,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

@@ -51,8 +51,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       const out =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}aivoice <teks>*`,
-          `╎❏ Contoh: *${prefix}aivoice Halo dunia*`].join("\n")) +
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}aivoice <teks>*`,
+          `  ┊  ➶ Contoh: *${prefix}aivoice Halo dunia*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -103,8 +103,8 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const out =
-      claraWrap("AI Voice", [`╎❏ Teks: *${text.slice(0, 100)}${text.length > 100 ? "..." : ""}*`,
-        "╎❏ Status: *Berhasil*"].join("\n")) +
+      claraWrap("AI Voice", [`  ┊  ➶ Teks: *${text.slice(0, 100)}${text.length > 100 ? "..." : ""}*`,
+        "  ┊  ➶ Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aivoice <teks> untuk suara lain`) +
       "\n" +
@@ -114,8 +114,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

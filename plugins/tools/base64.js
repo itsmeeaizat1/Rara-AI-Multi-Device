@@ -16,8 +16,8 @@ async function handler(m, { sock, config: botConfig }) {
     const action = args[0]?.toLowerCase();
     const text = args.slice(1).join(" ");
     if (!action || !text) {
-      { const __navText = (claraWrap("Base64", [`╎❏ Encode: *${prefix}base64 enc <text>*`,
-        `╎❏ Decode: *${prefix}base64 dec <base64>*`].join("\n"))); await sendReplyWithNav(sock, m, __navText, "base64"); };
+      { const __navText = (claraWrap("Base64", [`  ┊  ➶ Encode: *${prefix}base64 enc <text>*`,
+        `  ┊  ➶ Decode: *${prefix}base64 dec <base64>*`].join("\n"))); await sendReplyWithNav(sock, m, __navText, "base64"); };
       return { handled: true };
     }
     let result;
@@ -26,8 +26,8 @@ async function handler(m, { sock, config: botConfig }) {
     } else if (action === "dec" || action === "decode") {
       result = Buffer.from(text, "base64").toString("utf-8");
     } else { throw new Error("Pilih enc atau dec"); }
-    await m.reply(claraWrap("Base64", [`╎❏ Input: *${text.substring(0,50)}*`,
-      `╎❏ Output: \`${result}\``].join("\n")));
+    await m.reply(claraWrap("Base64", [`  ┊  ➶ Input: *${text.substring(0,50)}*`,
+      `  ┊  ➶ Output: \`${result}\``].join("\n")));
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

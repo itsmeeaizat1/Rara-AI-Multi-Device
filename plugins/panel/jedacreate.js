@@ -57,8 +57,8 @@ function handler(m, { sock }) {
         const currentJeda = db.setting('panelCreateJeda') ?? DEFAULT_JEDA
         return sendReplyWithNav(sock, m, `⏱️ *Jeda Panel Create*\n\n` +
             `╭┈┈⬡「 📋 *Info* 」\n` +
-            `┃ ╎❏ Jeda saat ini: *${formatTime(currentJeda)}*\n` +
-            `┃ ╎❏ Default: *5 menit*\n` +
+            `┃   ┊  ➶ Jeda saat ini: *${formatTime(currentJeda)}*\n` +
+            `┃   ┊  ➶ Default: *5 menit*\n` +
             `╰┈┈⬡\n\n` +
             `Gunakan: \`${m.prefix}jedacreate <waktu>\`\n` +
             `Contoh: \`${m.prefix}jedacreate 5m\` (5 menit)\n` +
@@ -87,7 +87,7 @@ function handler(m, { sock }) {
     
     return m.reply(claraWrap("jedacreate", `✅ *Jeda Diset*\n\n` +
         `╭┈┈⬡「 ⏱️ *Konfig* 」\n` +
-        `┃ ╎❏ Jeda: *${formatTime(jedaMs)}*\n` +
+        `┃   ┊  ➶ Jeda: *${formatTime(jedaMs)}*\n` +
         `╰┈┈⬡\n\n` +
         `Setelah panel dibuat, SEMUA user harus menunggu ${formatTime(jedaMs)} sebelum bisa create lagi.`))
 }

@@ -63,11 +63,11 @@ async function handler(m, { sock }) {
     db.setUser(targetJid, userData);
     db.save();
 
-    return sendReplyWithNav(sock, m, `╔┈┈「 ✅ *TOPUP LIMIT* 」\n` +
-      `╎❏ User: *${targetJid.split("@")[0]}*\n` +
-      `╎❏ Sebelum: *${formatNumber(beforeEnergi)}*\n` +
-      `╎❏ Sesudah: *∞ Unlimited*\n` +
-      `╚┈┈┈┈┈┈┈┈┈┈┈┈❖`, "topuplimit");
+    return sendReplyWithNav(sock, m, `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ TOPUP LIMIT\n` +
+      `  ┊  ➶ User: *${targetJid.split("@")[0]}*\n` +
+      `  ┊  ➶ Sebelum: *${formatNumber(beforeEnergi)}*\n` +
+      `  ┊  ➶ Sesudah: *∞ Unlimited*\n` +
+      `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`, "topuplimit");
   }
 
   // Tambah limit
@@ -75,12 +75,12 @@ async function handler(m, { sock }) {
   db.save();
 
   const targetName = targetJid.split("@")[0];
-  let msg = `╔┈┈「 ✅ *TOPUP LIMIT* 」\n`;
-  msg += `╎❏ User: *${targetName}*\n`;
-  msg += `╎❏ Sebelum: *${formatNumber(beforeEnergi)}*\n`;
-  msg += `╎❏ Tambah: *+${formatNumber(amount)}*\n`;
-  msg += `╎❏ Sesudah: *${formatNumber(afterEnergi)}*\n`;
-  msg += `╚┈┈┈┈┈┈┈┈┈┈┈┈❖`;
+  let msg = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ TOPUP LIMIT\n`;
+  msg += `  ┊  ➶ User: *${targetName}*\n`;
+  msg += `  ┊  ➶ Sebelum: *${formatNumber(beforeEnergi)}*\n`;
+  msg += `  ┊  ➶ Tambah: *+${formatNumber(amount)}*\n`;
+  msg += `  ┊  ➶ Sesudah: *${formatNumber(afterEnergi)}*\n`;
+  msg += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
   return sendReplyWithNav(sock, m, msg, "topuplimit");
 }

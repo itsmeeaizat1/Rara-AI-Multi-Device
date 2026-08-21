@@ -49,9 +49,9 @@ async function handler(m, { sock, config: botConfig }) {
     const streakData = player.streak || { count: 0, lastClaim: null, bestStreak: 0 };
 
     if (streakData.lastClaim === today) {
-      let lines = "╎❏ Kamu sudah klaim streak hari ini!\n";
-      lines += `╎❏ Streak sekarang: ${streakData.count} hari\n`;
-      lines += `╎❏ Best streak: ${streakData.bestStreak} hari\n`;
+      let lines = "  ┊  ➶ Kamu sudah klaim streak hari ini!\n";
+      lines += `  ┊  ➶ Streak sekarang: ${streakData.count} hari\n`;
+      lines += `  ┊  ➶ Best streak: ${streakData.bestStreak} hari\n`;
       lines += tipText("Kembali besok untuk lanjut streak");
       return m.reply(claraWrap("Daily Streak", lines));
     }
@@ -79,7 +79,7 @@ async function handler(m, { sock, config: botConfig }) {
     let bonusText = "";
     if (milestone) {
       goldReward += milestone;
-      bonusText = `\n╎❏ *MILESTONE ${streakData.count} HARI!* Bonus +${milestone.toLocaleString()} gold`;
+      bonusText = `\n  ┊  ➶ *MILESTONE ${streakData.count} HARI!* Bonus +${milestone.toLocaleString()} gold`;
     }
 
     addGold(m, goldReward);
@@ -88,18 +88,18 @@ async function handler(m, { sock, config: botConfig }) {
     streakData.lastClaim = today;
     savePlayer(m, { streak: streakData });
 
-    let lines = `╎❏ *Daily Streak Claimed!*\n`;
-    lines += `╎❏ Streak: ${streakData.count} hari\n`;
-    lines += `╎❏ Best streak: ${streakData.bestStreak} hari\n`;
-    lines += `╎❏ Multiplier: ${multipler.toFixed(2)}x\n\n`;
-    lines += `╎❏ Gold: +${goldReward.toLocaleString()}\n`;
-    lines += `╎❏ EXP: +${expReward.toLocaleString()}`;
+    let lines = `  ┊  ➶ *Daily Streak Claimed!*\n`;
+    lines += `  ┊  ➶ Streak: ${streakData.count} hari\n`;
+    lines += `  ┊  ➶ Best streak: ${streakData.bestStreak} hari\n`;
+    lines += `  ┊  ➶ Multiplier: ${multipler.toFixed(2)}x\n\n`;
+    lines += `  ┊  ➶ Gold: +${goldReward.toLocaleString()}\n`;
+    lines += `  ┊  ➶ EXP: +${expReward.toLocaleString()}`;
     if (bonusText) lines += bonusText;
 
     lines += "\n\n";
     if (streakData.count < MAX_STREAK) {
       const nextMult = 1 + streakData.count * STREAK_MULT;
-      lines += `╎❏ Besok: ${(BASE_GOLD * nextMult).toFixed(0)} gold + ${(BASE_EXP * nextMult).toFixed(0)} exp\n`;
+      lines += `  ┊  ➶ Besok: ${(BASE_GOLD * nextMult).toFixed(0)} gold + ${(BASE_EXP * nextMult).toFixed(0)} exp\n`;
       lines += tipText("Jangan skip hari ya, streak bisa reset!");
     } else {
       lines += tipText("Streak maksimal! Pertahankan terus!");

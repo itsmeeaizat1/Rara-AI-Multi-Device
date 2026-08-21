@@ -41,9 +41,9 @@ async function handler(m, { sock, config: botConfig, db }) {
     const text =
       claraWrap("Equipment", "🛡️") +
       "\n\n" +
-      claraWrap("Equipped", equipped.map((e) => `╎❏ ${e.slot}: *${e.name}* (ATK:${e.atk ?? 0} DEF:${e.def ?? 0} ${e.bonus ?? ""})`.trim())) +
+      claraWrap("Equipped", equipped.map((e) => `  ┊  ➶ ${e.slot}: *${e.name}* (ATK:${e.atk ?? 0} DEF:${e.def ?? 0} ${e.bonus ?? ""})`.trim())) +
       "\n\n" +
-      claraWrap("Inventory", inventory.map((item) => `╎❏ ${item}`)) +
+      claraWrap("Inventory", inventory.map((item) => `  ┊  ➶ ${item}`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +
@@ -52,8 +52,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "equipment");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

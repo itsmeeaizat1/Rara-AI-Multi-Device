@@ -48,8 +48,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!prompt) {
       const text =
-        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}aiimggen <prompt>*`,
-          `╎❏ Contoh: *${prefix}aiimggen sunset over mountains*`].join("\n")) +
+        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}aiimggen <prompt>*`,
+          `  ┊  ➶ Contoh: *${prefix}aiimggen sunset over mountains*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -83,8 +83,8 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const text =
-      claraWrap("AI Image", [`╎❏ Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
-        "╎❏ Status: *Berhasil*"].join("\n")) +
+      claraWrap("AI Image", [`  ┊  ➶ Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
+        "  ┊  ➶ Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aiimggen <prompt> untuk gambar lain`) +
       "\n" +
@@ -94,8 +94,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

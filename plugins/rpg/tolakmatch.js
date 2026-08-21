@@ -51,8 +51,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!confession) {
       const text =
-        claraWrap("Tidak Ada Confession", ["╎❏ Nggak ada yang nembak kamu saat ini",
-          "╎❏ Atau confession sudah expired (5 menit)"].join("\n")) + "\n" +
+        claraWrap("Tidak Ada Confession", ["  ┊  ➶ Nggak ada yang nembak kamu saat ini",
+          "  ┊  ➶ Atau confession sudah expired (5 menit)"].join("\n")) + "\n" +
         tipText("Sabar ya, jodong nggak kemana");
 
       await sendReplyWithNav(sock, m, text, "tolakmatch");

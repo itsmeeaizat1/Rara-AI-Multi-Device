@@ -32,8 +32,8 @@ async function handler(m, { sock }) {
         ? (global ? "*ON*" : "*OFF*")
         : "*ON (default)*";
 
-      let txt = "╔┈┈「 MENU NAV 」╎❏\n";
-      txt += "╚┈┈❖\n\n";
+      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ MENU NAV  ┊  ➶\n";
+      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
       txt += "*Status Global:* " + globalText + "\n";
 
       if (isGroup) {

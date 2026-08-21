@@ -52,16 +52,16 @@ async function handler(m, { sock }) {
         const droplets = response.data.droplets || []
         
         if (droplets.length === 0) {
-            return m.reply(`╔┈┈「 *List VPS* 」
-╎
-╎❏ Tidak ada VPS yang tersedia
-╚┈┈┈┈┈┈┈┈┈❖`)
+            return m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ List VPS
+┊
+  ┊  ➶ Tidak ada VPS yang tersedia
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`)
         }
         
-        let txt = `╔┈┈「 *List VPS* 」
-╎
-╎❏ Total: ${droplets.length} droplet
-╚┈┈┈┈┈┈┈┈┈❖
+        let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ List VPS
+┊
+  ┊  ➶ Total: ${droplets.length} droplet
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 `
         
         for (const droplet of droplets) {
@@ -69,16 +69,16 @@ async function handler(m, { sock }) {
             const status = droplet.status === 'active' ? 'Active' : 'Off'
             
             txt += `
-╔┈┈「 *${droplet.name}* 」
-╎
-╎❏ *Status:* ${status}
-╎❏ *ID:* ${droplet.id}
-╎❏ *IP:* ${ip}
-╎❏ *RAM:* ${droplet.memory} MB
-╎❏ *CPU:* ${droplet.vcpus} vCPU
-╎❏ *Disk:* ${droplet.disk} GB
-╎❏ *Region:* ${droplet.region?.slug || '-'}
-╚┈┈┈┈┈┈┈┈┈❖
+❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${droplet.name}
+┊
+  ┊  ➶ *Status:* ${status}
+  ┊  ➶ *ID:* ${droplet.id}
+  ┊  ➶ *IP:* ${ip}
+  ┊  ➶ *RAM:* ${droplet.memory} MB
+  ┊  ➶ *CPU:* ${droplet.vcpus} vCPU
+  ┊  ➶ *Disk:* ${droplet.disk} GB
+  ┊  ➶ *Region:* ${droplet.region?.slug || '-'}
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 `
         }
         

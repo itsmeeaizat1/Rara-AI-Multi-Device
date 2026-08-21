@@ -42,30 +42,8 @@ async function handler(m, { sock }) {
     const bookKey = args[0];
 
     if (!bookKey) {
-      let txt = "╔┈┈「 HADIS NABI 」╎❏\n";
-      txt += "╚┈┈❖\n";
-      txt += "Hadis Nabi dari 7 perawi (API online)\n";
-      txt += "Data real-time dari fawazahmed0/hadith-api\n\n";
-      txt += "*Cara pakai:*\n";
-      txt += "1. .hadisnabi <perawi> — Random hadis dari perawi\n";
-      txt += "2. .hadisnabi <perawi> <nomor> — Hadis spesifik\n";
-      txt += "3. .hadisnabi list — Daftar semua perawi\n\n";
-      txt += "*Perawi:*\n";
-      let i = 1;
-      for (const [key, book] of Object.entries(BOOKS)) {
-        txt += i + ". " + key + " — " + book.name + "\n";
-        i++;
-      }
-      txt += "\n*Contoh:*\n";
-      txt += ".hadisnabi bukhari\n";
-      txt += ".hadisnabi muslim 1\n";
-      txt += ".hadisnabi abudawud";
-      return await sendReplyWithNav(sock, m, txt, "hadisnabi");
-    }
-
-    if (bookKey === "list") {
-      let txt = "╔┈┈「 DAFTAR PERAWI HADIS 」╎❏\n";
-      txt += "╚┈┈❖\n\n";
+      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Cara pakai:  ┊  ➶\n";
+      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
       let i = 1;
       for (const [key, book] of Object.entries(BOOKS)) {
         txt += i + ". *" + book.name + "*\n";
@@ -107,8 +85,8 @@ async function handler(m, { sock }) {
     // Nama section
     const sectionName = indoData.metadata?.section?.[sectionNum] || "Unknown";
 
-    let txt = "╔┈┈「 HADIS NABI 」╎❏\n";
-    txt += "╚┈┈❖\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ HADIS NABI  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += "Kitab: *" + book.name + "*\n";
     txt += "Bab: " + sectionName + "\n";
     txt += "No. Hadis: " + hadis.hadithnumber + "\n\n";

@@ -35,9 +35,9 @@ async function handler(m, { sock, config: botConfig }) {
     const media = extractImage(m);
     if (!media) {
       const text =
-        claraWrap("Set PP Bot", ["╎❏ Cara 1: *Kirim gambar + caption .setppbot*",
-          "╎❏ Cara 2: *Reply gambar dengan .setppbot*",
-          "╎❏ Format: *JPG, PNG, WEBP*"].join("\n")) +
+        claraWrap("Set PP Bot", ["  ┊  ➶ Cara 1: *Kirim gambar + caption .setppbot*",
+          "  ┊  ➶ Cara 2: *Reply gambar dengan .setppbot*",
+          "  ┊  ➶ Format: *JPG, PNG, WEBP*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -53,7 +53,7 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.updateProfilePicture(buffer);
 
     const text =
-      claraWrap("Set PP Bot", ["╎❏ Status: *SUCCESS*"].join("\n")) +
+      claraWrap("Set PP Bot", ["  ┊  ➶ Status: *SUCCESS*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -61,8 +61,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
-        `╎❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

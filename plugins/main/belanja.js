@@ -60,71 +60,8 @@ async function handler(m, { sock }) {
     if (products.length === 0) return m.reply(claraWrap("belanja", "Maaf, toko belum punya produk."));
 
     const config = getStoreConfig();
-    let txt = "╔┈┈「 " + (config.storeName || "NOVA STORE") + " 」╎❏\n";
-    txt += "╚┈┈❖\n";
-    if (config.storeDesc) txt += config.storeDesc + "\n\n";
-
-    for (const p of products) {
-      txt += p.id + " — " + p.name + "\n";
-      txt += "  " + formatRupiah(p.price) + " | Stok: " + stockText(p.stock) + " | " + p.category + "\n";
-      if (p.desc) txt += "  " + p.desc + "\n";
-      txt += "\n";
-    }
-    txt += "Cara pesan: .belanja pesan <id> [qty] [catatan]\n";
-    txt += "Cari: .belanja cari <kata kunci>";
-    return await m.reply(claraWrap("belanja", txt));
-  }
-
-  // ── DETAIL PRODUK ───────────────────────────────────────────────────────
-
-  if (action === "detail" || action === "produk") {
-    const id = args[1];
-    if (!id) return m.reply(claraWrap("Belanja", "Format: .belanja detail <id produk>"));
-
-    const product = getProduct(id);
-    if (!product) return m.reply("Produk tidak ditemukan: " + id);
-
-    let txt = "╔┈┈「 DETAIL PRODUK 」╎❏\n";
-    txt += "╚┈┈❖\n\n";
-    txt += "ID: " + product.id + "\n";
-    txt += "Nama: *" + product.name + "*\n";
-    txt += "Harga: *" + formatRupiah(product.price) + "*\n";
-    txt += "Kategori: " + product.category + "\n";
-    txt += "Stok: " + stockText(product.stock) + "\n";
-    txt += "Terjual: " + (product.sold || 0) + "\n";
-    if (product.desc) txt += "Deskripsi: " + product.desc + "\n";
-    txt += "\nPesan: .belanja pesan " + product.id;
-    return await m.reply(claraWrap("belanja", txt));
-  }
-
-  // ── CARI ────────────────────────────────────────────────────────────────
-
-  if (action === "cari" || action === "search") {
-    const query = args.slice(1).join(" ").trim();
-    if (!query) return m.reply(claraWrap("Belanja", "Format: .belanja cari <kata kunci>"));
-
-    const results = listProducts().filter(
-      (p) => p.name.toLowerCase().includes(query.toLowerCase()) || p.desc.toLowerCase().includes(query.toLowerCase())
-    );
-
-    if (results.length === 0) return m.reply("Tidak ditemukan produk untuk: " + query);
-
-    let txt = "Hasil pencarian: " + query + "\n\n";
-    for (const p of results) {
-      txt += p.id + " — " + p.name + " (" + formatRupiah(p.price) + ")\n";
-    }
-    txt += "\nPesan: .belanja pesan <id>";
-    return await m.reply(claraWrap("belanja", txt));
-  }
-
-  // ── KATEGORI ────────────────────────────────────────────────────────────
-
-  if (action === "kategori") {
-    const cats = listCategories();
-    const products = listProducts();
-
-    let txt = "╔┈┈「 KATEGORI 」╎❏\n";
-    txt += "╚┈┈❖\n\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + product.name + "  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
     for (const cat of cats) {
       const count = products.filter((p) => p.category === cat).length;
       txt += cat + " (" + count + " produk)\n";
@@ -156,32 +93,8 @@ async function handler(m, { sock }) {
     if (result.error) return m.reply(result.error);
 
     const order = result.order;
-    let txt = "╔┈┈「 PESANAN DIBUAT 」╎❏\n";
-    txt += "╚┈┈❖\n\n";
-    txt += "ID Pesanan: " + order.id + "\n";
-    txt += "Produk: " + order.productName + "\n";
-    txt += "Jumlah: " + order.qty + "x\n";
-    txt += "Total: *" + formatRupiah(order.total) + "*\n";
-    txt += "Status: Menunggu konfirmasi\n";
-    if (note) txt += "Catatan: " + note + "\n";
-    txt += "\nPesanan akan dikonfirmasi oleh penjual.\n";
-    txt += "Cek status: .belanja cek " + order.id;
-    return await m.reply(claraWrap("belanja", txt));
-  }
-
-  // ── CEK PESANAN ──────────────────────────────────────────────────────────
-
-  if (action === "cek" || action === "pesanan") {
-    const id = args[1];
-
-    if (id) {
-      // cek spesifik
-      const orders = getOrdersByBuyer(jid);
-      const order = orders.find((o) => o.id.toLowerCase() === id.toLowerCase());
-      if (!order) return m.reply("Pesanan tidak ditemukan: " + id);
-
-      let txt = "╔┈┈「 DETAIL PESANAN 」╎❏\n";
-      txt += "╚┈┈❖\n\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + formatRupiah(order.total) + "  ┊  ➶\n";
+      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
       txt += "ID: " + order.id + "\n";
       txt += "Produk: " + order.productName + "\n";
       txt += "Jumlah: " + order.qty + "x\n";
@@ -197,8 +110,8 @@ async function handler(m, { sock }) {
     const orders = getOrdersByBuyer(jid);
     if (orders.length === 0) return m.reply(claraWrap("belanja", "Kamu belum punya pesanan. Ketik .belanja katalog untuk lihat produk."));
 
-    let txt = "╔┈┈「 PESANANKU 」╎❏\n";
-    txt += "╚┈┈❖\n\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ PESANANKU  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
     for (const o of orders) {
       txt += o.id + "\n";
       txt += "  " + o.productName + " (" + o.qty + "x) = " + formatRupiah(o.total) + "\n";

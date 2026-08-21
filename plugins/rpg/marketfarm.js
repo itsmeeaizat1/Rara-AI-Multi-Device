@@ -94,39 +94,8 @@ async function handler(m, { sock }) {
   const action = args[0];
 
   if (!action || action === "status" || action === "price") {
-    let txt = "╔┈┈「 PASAR HASIL PANEN 」╎❏\n";
-    txt += "╚┈┈❖\n";
-    txt += "Harga pasar berubah setiap hari!\n";
-    txt += "Jual pas harga tinggi buat untung maksimal.\n\n";
-
-    txt += "*Harga Hari Ini:*\n";
-    txt += "(Base -> Sekarang | Event)\n\n";
-
-    for (const [key, crop] of Object.entries(BASE_PRICES)) {
-      const event = market.cropEvents?.[key];
-      if (!event) continue;
-      const currentPrice = Math.floor(crop.base * event.event.modifier);
-      const arrow = event.event.modifier > 1 ? "📈" : event.event.modifier < 1 ? "📉" : "➖";
-      const trendIcon = event.trend === "naik" ? "↑" : "↓";
-
-      txt += crop.emoji + " *" + crop.name + "*\n";
-      txt += "   Rp " + crop.base.toLocaleString("id-ID") + " -> Rp " + currentPrice.toLocaleString("id-ID") + " " + arrow + "\n";
-      txt += "   " + event.event.name + " (x" + event.event.modifier + ") " + trendIcon + "\n";
-      if (event.event.modifier >= 2.0) {
-        txt += "   *** WAKTUNYA JUAL! ***\n";
-      }
-      txt += "\n";
-    }
-
-    txt += "Jual: .marketfarm sell <tanaman> <jumlah>\n";
-    txt += "Contoh: .marketfarm sell padi 10\n";
-    txt += "Jual semua: .marketfarm sellall";
-    return await sendReplyWithNav(sock, m, txt, "marketfarm");
-  }
-
-  if (action === "trend" || action === "ramalan") {
-    let txt = "╔┈┈「 RAMALAN PASAR 」╎❏\n";
-    txt += "╚┈┈❖\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Harga Hari Ini:  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += "Trend harga tiap tanaman:\n\n";
 
     for (const [key, crop] of Object.entries(BASE_PRICES)) {
@@ -169,53 +138,10 @@ async function handler(m, { sock }) {
     db.save();
 
 
-    let txt = "╔┈┈「 JUAL BERHASIL 」╎❏\n";
-    txt += "╚┈┈❖\n";
-    txt += crop.emoji + " " + crop.name + " x" + qty + "\n\n";
-    txt += "Harga pasar: Rp " + currentPrice.toLocaleString("id-ID") + "/pcs\n";
-    if (event && event.event.modifier > 1) {
-      txt += "Event: " + event.event.name + " (x" + event.event.modifier + ")\n";
-      txt += "Bonus: +" + Math.floor((event.event.modifier - 1) * 100) + "%\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀  100) + "%\n";
     }
-    txt += "\nTotal diterima: *Rp " + totalEarned.toLocaleString("id-ID") + "*\n";
-    txt += "Koin sekarang: Rp " + (user.koin || 0).toLocaleString("id-ID") + "\n\n";
-
-    if (event && event.event.modifier >= 2.0) {
-      txt += "Kamu jual pas harga lagi tinggi! Pinter! 🎉\n\n";
-    } else if (event && event.event.modifier < 0.7) {
-      txt += "Harga lagi mur nih, sayang... Tapi lumayan lah!\n\n";
-    }
-
-    txt += "Cek harga: .marketfarm price";
-    return await sendReplyWithNav(sock, m, txt, "marketfarm");
-  }
-
-  if (action === "sellall") {
-    const user = db.getUser(m.sender);
-    let totalEarned = 0;
-    let soldItems = [];
-
-    for (const [cropName, crop] of Object.entries(BASE_PRICES)) {
-      const stock = user.inventory[cropName] || 0;
-      if (stock > 0) {
-        const event = market.cropEvents?.[cropName];
-        const currentPrice = Math.floor(crop.base * (event ? event.event.modifier : 1.0));
-        const earned = currentPrice * stock;
-        totalEarned += earned;
-        soldItems.push(crop.emoji + " " + crop.name + " x" + stock + " = Rp " + earned.toLocaleString("id-ID"));
-        delete user.inventory[cropName];
-      }
-    }
-
-    if (totalEarned === 0) {
-      return m.reply(claraWrap("Marketfarm", "Ga ada hasil panen buat dijual!\nTanam dulu: .coopfarm plant <tanaman>"));
-    }
-
-    user.koin = (user.koin || 0) + totalEarned;
-    db.save();
-
-    let txt = "╔┈┈「 JUAL SEMUA HASIL PANEN 」╎❏\n";
-    txt += "╚┈┈❖\n";
+    txt += "\nTotal diterima:   ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += "*Daftar terjual:*\n";
     for (const s of soldItems) {
       txt += s + "\n";
