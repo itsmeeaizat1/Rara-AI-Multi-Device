@@ -236,13 +236,13 @@ function buildUserDataBlock(name, age, gender, serial) {
     `  ┊  ➶ *Manfaat Daftar*\n` +
     `${benefits.map((item) => `  ┊  ➶ ${item}`).join("\n")}\n\n` +
     `  ┊  ➶ *Pertanyaan 1/4*\n` +
-    `┊ > Siapa nama kamu?\n\n` +
+    `┊  ➶ Siapa nama kamu?\n\n` +
     `  ┊  ➶ *Wajib reply pesan ini ya*\n` +
-    `┊ > Untuk batal: reply \`batal\` atau ketik \`${prefix}bataldaftar\`\n\n` +
+    `┊  ➶ Untuk batal: reply \`batal\` atau ketik \`${prefix}bataldaftar\`\n\n` +
     `  ┊  ➶ *Metode Daftar Lainnya*\n` +
-    `┊ > \`${prefix}daftar Nama, Umur\` - Daftar cepat\n` +
-    `┊ > \`${prefix}daftarotomatis\` - Daftar via captcha (DM)\n` +
-    `┊ > \`${prefix}regmail Nama, email\` - Daftar via email OTP\n` +
+    `┊  ➶ \`${prefix}daftar Nama, Umur\` - Daftar cepat\n` +
+    `┊  ➶ \`${prefix}daftarotomatis\` - Daftar via captcha (DM)\n` +
+    `┊  ➶ \`${prefix}regmail Nama, email\` - Daftar via email OTP\n` +
     `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
   );
 }

@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
   ┊  ➶ Energi Teratas: ${formatNumber(maxEnergiUser.energi)} (@${maxEnergiUser.jid.split('@')[0]})
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
-> Pilih tombol di bawah untuk melihat ranking!`
+  ┊  ➶ Pilih tombol di bawah untuk melihat ranking!`
             try {
                 await sock.sendButton(m.chat, fs.readFileSync(path.join(process.cwd(), 'assets', 'images', 'nova.jpg')), overviewText, m, {
                     buttons: [

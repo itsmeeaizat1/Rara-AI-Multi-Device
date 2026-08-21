@@ -447,7 +447,7 @@ async function captchaAnswerHandler(m, sock) {
         clearCaptchaSession(m.sender)
         await m.reply(
           "❌ *Captcha salah " + MAX_ATTEMPTS + "x!*\n\n" +
-          "> Sesi dibatalkan.\n> Coba lagi: `" + m.prefix + "daftarotomatis`"
+          "  ┊  ➶ Sesi dibatalkan.\n> Coba lagi: `" + m.prefix + "daftarotomatis`"
         )
         return true
       }

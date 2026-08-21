@@ -101,7 +101,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   }
 
   await m.react("🕐");
-  m.reply(claraWrap("Notulen", "> AI lagi nyusun notulen meeting..."));
+  m.reply(claraWrap("Notulen", "  ┊  ➶ AI lagi nyusun notulen meeting..."));
 
   try {
     const result = await UnlimitedAI(NOTULEN_PROMPT.replace("__INPUT__", input), "nova-ai");
@@ -118,7 +118,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     await m.reply(claraWrap("Notulen Meeting", preview));
 
     // Also generate PDF
-    m.reply(claraWrap("Notulen", "> Render notulen ke PDF..."));
+    m.reply(claraWrap("Notulen", "  ┊  ➶ Render notulen ke PDF..."));
     const pdfBuffer = await renderNotulenPDF(text);
     await sock.sendMessage(m.chat, {
       document: pdfBuffer,

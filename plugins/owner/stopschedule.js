@@ -61,8 +61,8 @@ async function handler(m, { sock, args }) {
             
             await m.reply(`🛑 *sCheduler Dihentikan*
 
-> Scheduler: *Sholat Scheduler*
-> Status: ❌ Dihentikan
+  ┊  ➶ Scheduler: *Sholat Scheduler*
+  ┊  ➶ Status: ❌ Dihentikan
 
 _Gunakan \`.startschedule sholat\` untuk mengaktifkan kembali_`);
             return;
@@ -79,8 +79,8 @@ _Gunakan \`.startschedule sholat\` untuk mengaktifkan kembali_`);
         if (result.stopped) {
             { const __navText = `🛑 *sCheduler Dihentikan*
 
-> Scheduler: *${result.name}*
-> Status: ❌ Dihentikan
+  ┊  ➶ Scheduler: *${result.name}*
+  ┊  ➶ Status: ❌ Dihentikan
 
 _Gunakan \`.startschedule ${target}\` untuk mengaktifkan kembali_`; await m.reply(__navText); };
         } else {

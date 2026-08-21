@@ -129,7 +129,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   }
 
   await m.react("🕐");
-  m.reply(claraWrap("Word2Pdf", "> Konversi .docx ke PDF..."));
+  m.reply(claraWrap("Word2Pdf", "  ┊  ➶ Konversi .docx ke PDF..."));
 
   try {
     let buffer;

@@ -29,9 +29,9 @@ async function handler(m, { sock }) {
   ┊  ➶ *User:* ${m.pushName}
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
-> Untuk asli dari bot ini, kamu bisa
-> dapatkan melalui link di bawah.
-> Cari kata kunci *NOVA MD*`;
+  ┊  ➶ Untuk asli dari bot ini, kamu bisa
+  ┊  ➶ dapatkan melalui link di bawah.
+  ┊  ➶ Cari kata kunci *NOVA MD*`;
 
   return await sock.sendMessage(m.chat, {
     image: getAssetBuffer("nova"),

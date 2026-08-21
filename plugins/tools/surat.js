@@ -138,7 +138,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   }
 
   await m.react("🕐");
-  m.reply(claraWrap("Surat", "> AI lagi nyusun surat resmi..."));
+  m.reply(claraWrap("Surat", "  ┊  ➶ AI lagi nyusun surat resmi..."));
 
   try {
     const aiResult = await UnlimitedAI(SURAT_PROMPT.replace("__INPUT__", args), "nova-ai");
@@ -147,7 +147,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       return m.reply(claraWrap("Surat", "❌ Gagal generate surat. Coba dengan detail yang lebih lengkap."));
     }
 
-    m.reply(claraWrap("Surat", "> Surat selesai, lagi render ke PDF..."));
+    m.reply(claraWrap("Surat", "  ┊  ➶ Surat selesai, lagi render ke PDF..."));
 
     const pdfBuffer = await renderSuratPDF(aiResult.trim());
     const filename = `surat_${Date.now()}.pdf`;
