@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// RPG Dream — Eksplorasi alam mimpi, high-risk high-reward神秘
+// RPG Dream — Eksplorasi alam mimpi, high-risk high-reward, mysterious
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getPlayer, ensurePlayer, addGold, addExp, savePlayer } from "../../src/lib/nova-rpg-service.js";
 

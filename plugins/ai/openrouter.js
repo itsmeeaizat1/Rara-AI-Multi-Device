@@ -268,7 +268,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // Hint untuk error umum
     if (errMsg.includes("rate limit") || errMsg.includes("429")) {
-      errMsg += "\n\nModel ini已达 limit harian. Coba model lain: .openrouter list";
+      errMsg += "\n\nModel ini udah mencapai limit harian. Coba model lain: .openrouter list";
     }
     if (errMsg.includes("No auth") || errMsg.includes("401")) {
       errMsg += "\n\nAPI key tidak valid. Set ulang: .openrouter setkey <key>";
