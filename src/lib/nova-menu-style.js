@@ -1,38 +1,44 @@
-// === Nova AI Menu Style ===
-// Clean Clara-MD bracket formatting system
-// Format: ╔┈┈「 emoji *Title* 」╎❏ ╚┈┈❖
+// === Nova AI Menu Style (v2 — Kaomoji) ===
+// Format: ❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Title, ┊ ➶ bullets, ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀ footer
+// Semua fungsi lama (claraWrap, bracketBox, claraHeader, dll) tetap export
+// dengan nama yang sama untuk backward compat — tinggal output-nya berubah.
 
 function claraHeader(title, emoji = "🌸") {
-  return `╔┈┈「 ${emoji} *${title}* 」`;
+  // emoji param tetap diterima untuk compat, tapi gak dipakai di header baru
+  return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${title}`;
 }
 
 function bracketBox(emoji, label, lines = []) {
-  const header = `╔┈┈「 ${emoji} *${label}* 」\n╎`;
-  const body = lines.map((line) => `╎❏ ${line}`);
-  const footer = `╚┈┈┈┈┈┈┈┈┈┈┈┈❖`;
+  // emoji param tetap diterima untuk compat, tapi header baru gak pakai emoji
+  const header = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${label}\n`;
+  const body = lines.map((line) => {
+    // Strip prefix lama (╎❏, ╎, ┊ ➶) kalau ada — hindari double prefix
+    const clean = String(line)
+      .replace(/^╎❏\s*/, '')
+      .replace(/^╎\s*$/, '')
+      .replace(/^┊\s+➶\s*/, '');
+    return `  ┊  ➶ ${clean}`;
+  });
+  const footer = `\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
   return [header, ...body, footer].join("\n");
 }
 
 function separator(char = "┈", repeat = 22) {
-  return `╚┈${char.repeat(repeat)}❖`;
+  return `❀${"˖".repeat(Math.min(repeat, 22))}❀`;
 }
 
 function tipText(text) {
-  return `🌸 *Tip:* ${text}`;
+  return `❀ *Tip:* ${text}`;
 }
 
-// === Clara-MD Auto Formatter ===
-// Wraps any plain text into Clara-MD box style automatically
+// === Nova Auto Formatter (v2) ===
+// Wraps any plain text into Kaomoji style automatically
 // Usage: claraWrap("Title", "body text") → styled output
 
 function claraWrap(title, body, type = "info") {
-  const tag = type === "error" ? "x" : type === "success" ? "v" : type === "warn" ? "!" : "i";
-  
-  // Split body into lines for bracketBox
+  const typeLabel = type === "error" ? " ERROR" : type === "success" ? " SUCCESS" : type === "warn" ? " WARNING" : "";
   const lines = String(body).split("\n").filter(l => l.trim());
-  
-  // bracketBox already includes the header, so just use it directly
-  return bracketBox(tag, title, lines);
+  return bracketBox(type, title + typeLabel, lines);
 }
 
 // Quick format for single-line responses
@@ -48,21 +54,7 @@ function formatNumber(num) {
   return String(num).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-export {
-  claraHeader,
-  alyaHeader, // backward compat
-  bracketBox,
-  claraWrap,
-  claraLine,
-  separator,
-  tipText,
-  formatNumber,
-  broadcastFormat,
-};
-
-
 // === Broadcast Message Formatter ===
-// Wraps broadcast content with consistent header info for recipients
 function broadcastFormat({ botName = "Nova AI", senderName = "Owner", message, type = "group" }) {
   const now = new Date()
   const tanggal = now.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })
@@ -82,3 +74,15 @@ function broadcastFormat({ botName = "Nova AI", senderName = "Owner", message, t
   
   return bracketBox("📢", "BROADCAST INFO", lines.filter(l => l !== undefined))
 }
+
+export {
+  claraHeader,
+  alyaHeader,
+  bracketBox,
+  claraWrap,
+  claraLine,
+  separator,
+  tipText,
+  formatNumber,
+  broadcastFormat,
+};
