@@ -24,7 +24,7 @@ const QUESTIONS = [
 async function handler(m, { sock, config: botConfig }) {
   try {
     const q = QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)];
-    { const __navText = (claraWrap("Asah Otak", [`◦ ${q.q}`].join("\n")) + "\n" + tipText("Balas dengan jawabanmu!")); await m.reply(__navText); };
+    { const __navText = (claraWrap("Asah Otak", [`╎❏ ${q.q}`].join("\n")) + "\n" + tipText("Balas dengan jawabanmu!")); await m.reply(__navText); };
     // Simpan jawaban untuk verifikasi
     if (!global.asahotakAnswer) global.asahotakAnswer = {};
     global.asahotakAnswer[m.sender] = q.a.toLowerCase();

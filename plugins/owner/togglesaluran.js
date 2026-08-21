@@ -37,8 +37,8 @@ async function handler(m, { sock, config: botConfig }) {
     let offCount = 0;
 
     let text =
-      claraWrap("Toggle Saluran", [`◦ Saluran: *${botConfig.saluran?.name || "-"}*`,
-        `◦ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`].join("\n")) +
+      claraWrap("Toggle Saluran", [`╎❏ Saluran: *${botConfig.saluran?.name || "-"}*`,
+        `╎❏ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`].join("\n")) +
       "\nSTATUS TOGGLE:\n\n";
 
     for (const [key, info] of Object.entries(statuses)) {
@@ -83,8 +83,8 @@ async function handler(m, { sock, config: botConfig }) {
       m,
       claraWrap("Toggle Saluran", "🔔") + "\n\n" +
       claraWrap("SEMUA EVENT", [
-        `◦ Status: *${enabled ? "ALL ON" : "ALL OFF"}*`,
-        `◦ Total: *${count} event*`,
+        `╎❏ Status: *${enabled ? "ALL ON" : "ALL OFF"}*`,
+        `╎❏ Total: *${count} event*`,
       ]) + "\n\n" +
       tipText(`Cek status: \`${prefix}togglesaluran\``),
       "togglesaluran"
@@ -104,8 +104,8 @@ async function handler(m, { sock, config: botConfig }) {
       m,
       claraWrap("Toggle Saluran", "🔔") + "\n\n" +
       claraWrap("TOGGLE BERHASIL", [
-        `◦ Event: *${NOTIFY_EVENTS[subCmd]}*`,
-        `◦ Status: *${newVal ? "ON" : "OFF"}*`,
+        `╎❏ Event: *${NOTIFY_EVENTS[subCmd]}*`,
+        `╎❏ Status: *${newVal ? "ON" : "OFF"}*`,
       ]) + "\n\n" +
       tipText(`${newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan"}`) + "\n" +
       tipText(`Cek semua: \`${prefix}togglesaluran\``),

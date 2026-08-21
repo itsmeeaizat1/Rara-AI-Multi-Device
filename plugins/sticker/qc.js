@@ -87,8 +87,8 @@ async function handler(m, { sock }) {
         return m.reply(
             `💬 *Quote sTicker*\n\n` +
             `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
-            `┃ ◦ \`${m.prefix}qc <warna> <text>\`\n` +
-            `┃ ◦ Reply pesan + \`${m.prefix}qc <warna>\`\n` +
+            `┃ ╎❏ \`${m.prefix}qc <warna> <text>\`\n` +
+            `┃ ╎❏ Reply pesan + \`${m.prefix}qc <warna>\`\n` +
             `╰┈┈⬡\n\n` +
             `Contoh: \`${m.prefix}qc pink Hai semuanya!\`\n\n` +
             `╭┈┈⬡「 🎨 *Warna* 」\n` +

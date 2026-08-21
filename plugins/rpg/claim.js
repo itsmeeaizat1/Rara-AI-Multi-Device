@@ -35,8 +35,8 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     if (available.length === 0) {
       const text =
-        claraWrap("Claim", ["◦ Tidak ada bounty tersedia saat ini.",
-          "◦ Saran: *Selesaikan quest untuk unlock bounty*"].join("\n")) +
+        claraWrap("Claim", ["╎❏ Tidak ada bounty tersedia saat ini.",
+          "╎❏ Saran: *Selesaikan quest untuk unlock bounty*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -47,7 +47,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     const text =
       claraWrap("Bounty", "🏆") +
       "\n\n" +
-      claraWrap("TerꜱEdia", available.map((b) => `◦ ${b.title} - *${b.reward}*`)) +
+      claraWrap("TerꜱEdia", available.map((b) => `╎❏ ${b.title} - *${b.reward}*`)) +
       "\n\n" +
       separator("━", 22) +
       "\n" +
@@ -56,8 +56,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "claim");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

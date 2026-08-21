@@ -24,8 +24,8 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
 
     const text =
-      claraWrap("Tebak Gambar", ["◦ Status: *Gambar baru!*",
-        "◦ Tebak apa ini?"].join("\n")) +
+      claraWrap("Tebak Gambar", ["╎❏ Status: *Gambar baru!*",
+        "╎❏ Tebak apa ini?"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}tebakgambar untuk soal lain`) +
       "\n" +
@@ -35,8 +35,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

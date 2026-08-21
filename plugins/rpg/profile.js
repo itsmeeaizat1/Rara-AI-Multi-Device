@@ -27,18 +27,18 @@ async function handler(m, { sock, config: botConfig }) {
     const player = ensurePlayer(m, userName);
 
     const text =
-      claraWrap("Profile", [`◦ Nama: *${player.name}*`,
-        `◦ Level: *${player.level || 1}*`,
-        `◦ Rank: *${player.rank || "E"}*`,
-        `◦ Job: *${player.job || "Pemburu"}*`,
-        `◦ HP: *${player.hp || 100}/${player.maxHp || 100}*`,
-        `◦ ATK: *${player.atk || 10}*`,
-        `◦ DEF: *${player.def || 5}*`,
-        `◦ Exp: *${player.exp || 0}/${player.maxExp || 100}*`,
-        `◦ Gold: *${player.gold || 0}*`,
-        `◦ W/L: *${player.wins || 0}/${player.losses || 0}*`,
-        `◦ Pet: *${player.pet || "Tidak ada"}*`,
-        `◦ Partner: *${player.partner || "Tidak ada"}*`].join("\n")) +
+      claraWrap("Profile", [`╎❏ Nama: *${player.name}*`,
+        `╎❏ Level: *${player.level || 1}*`,
+        `╎❏ Rank: *${player.rank || "E"}*`,
+        `╎❏ Job: *${player.job || "Pemburu"}*`,
+        `╎❏ HP: *${player.hp || 100}/${player.maxHp || 100}*`,
+        `╎❏ ATK: *${player.atk || 10}*`,
+        `╎❏ DEF: *${player.def || 5}*`,
+        `╎❏ Exp: *${player.exp || 0}/${player.maxExp || 100}*`,
+        `╎❏ Gold: *${player.gold || 0}*`,
+        `╎❏ W/L: *${player.wins || 0}/${player.losses || 0}*`,
+        `╎❏ Pet: *${player.pet || "Tidak ada"}*`,
+        `╎❏ Partner: *${player.partner || "Tidak ada"}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -46,8 +46,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

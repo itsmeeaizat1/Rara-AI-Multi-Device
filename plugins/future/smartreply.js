@@ -18,14 +18,14 @@ async function handler(m, { sock, config: botConfig }) {
     const gid = m.key?.remoteJid || "";
     if (arg === "on") {
       db.smartReply[gid] = true; db.write();
-      await m.reply(claraWrap("Smart Reply", ["◦ AI akan bales chat otomatis di grup ini",
-        "◦ Hanya chat yang mention bot atau reply"].join("\n")));
+      await m.reply(claraWrap("Smart Reply", ["╎❏ AI akan bales chat otomatis di grup ini",
+        "╎❏ Hanya chat yang mention bot atau reply"].join("\n")));
     } else if (arg === "off") {
       delete db.smartReply[gid]; db.write();
-      await m.reply(claraWrap("Smart Reply", ["◦ Smart reply dimatikan"].join("\n")));
+      await m.reply(claraWrap("Smart Reply", ["╎❏ Smart reply dimatikan"].join("\n")));
     } else {
-      await m.reply(claraWrap("Smart Reply", [`◦ Status: *${db.smartReply[gid] ? "ON" : "OFF"}*`,
-        `◦ Ketik: *${prefix}smartreply on/off*`].join("\n")));
+      await m.reply(claraWrap("Smart Reply", [`╎❏ Status: *${db.smartReply[gid] ? "ON" : "OFF"}*`,
+        `╎❏ Ketik: *${prefix}smartreply on/off*`].join("\n")));
     }
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };

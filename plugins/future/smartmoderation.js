@@ -20,14 +20,14 @@ async function handler(m, { sock, config: botConfig }) {
     const gid = m.key?.remoteJid || "";
     if (arg === "on") {
       db.smartMod[gid] = true; db.write();
-      await m.reply(claraWrap("Smart Moderation", ["◦ AI akan deteksi kata toxic otomatis",
-        "◦ Pesan toxic akan diberi peringatan"].join("\n")));
+      await m.reply(claraWrap("Smart Moderation", ["╎❏ AI akan deteksi kata toxic otomatis",
+        "╎❏ Pesan toxic akan diberi peringatan"].join("\n")));
     } else if (arg === "off") {
       delete db.smartMod[gid]; db.write();
-      await m.reply(claraWrap("Smart Moderation", ["◦ Moderation dimatikan"].join("\n")));
+      await m.reply(claraWrap("Smart Moderation", ["╎❏ Moderation dimatikan"].join("\n")));
     } else {
-      await m.reply(claraWrap("Smart Moderation", [`◦ Status: *${db.smartMod[gid] ? "ON" : "OFF"}*`,
-        `◦ Ketik: *${prefix}smartmoderation on/off*`].join("\n")));
+      await m.reply(claraWrap("Smart Moderation", [`╎❏ Status: *${db.smartMod[gid] ? "ON" : "OFF"}*`,
+        `╎❏ Ketik: *${prefix}smartmoderation on/off*`].join("\n")));
     }
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };

@@ -14,8 +14,8 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const input = m.text?.trim();
     if (!input) {
-      await sendReplyWithNav(sock, m, claraWrap("Countdown", [`◦ Penggunaan: *${prefix}countdown <DD-MM-YYYY>*`,
-        `◦ Contoh: *${prefix}countdown 25-12-2026*`].join("\n")), "countdown");
+      await sendReplyWithNav(sock, m, claraWrap("Countdown", [`╎❏ Penggunaan: *${prefix}countdown <DD-MM-YYYY>*`,
+        `╎❏ Contoh: *${prefix}countdown 25-12-2026*`].join("\n")), "countdown");
       return { handled: true };
     }
     const parts = input.split(/[-/]/).map(Number);
@@ -24,18 +24,18 @@ async function handler(m, { sock, config: botConfig }) {
     const now = new Date();
     const diff = target - now;
     if (diff < 0) {
-      await m.reply(claraWrap("Countdown", [`◦ Target: *${target.toLocaleDateString("id-ID")}*`,
-        "◦ Tanggal sudah lewat!"].join("\n")));
+      await m.reply(claraWrap("Countdown", [`╎❏ Target: *${target.toLocaleDateString("id-ID")}*`,
+        "╎❏ Tanggal sudah lewat!"].join("\n")));
       return { handled: true };
     }
     const days = Math.floor(diff / 86400000);
     const hours = Math.floor((diff % 86400000) / 3600000);
     const mins = Math.floor((diff % 3600000) / 60000);
     const secs = Math.floor((diff % 60000) / 1000);
-    await m.reply(claraWrap("Countdown", [`◦ Target: *${target.toLocaleDateString("id-ID")}*`,
-      `◦ Sisa: *${days} hari, ${hours} jam, ${mins} menit, ${secs} detik*`].join("\n")) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`));
+    await m.reply(claraWrap("Countdown", [`╎❏ Target: *${target.toLocaleDateString("id-ID")}*`,
+      `╎❏ Sisa: *${days} hari, ${hours} jam, ${mins} menit, ${secs} detik*`].join("\n")) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`));
   } catch (e) {
-    await m.reply(claraWrap("Gagal", [`◦ ${e.message}`].join("\n")));
+    await m.reply(claraWrap("Gagal", [`╎❏ ${e.message}`].join("\n")));
   }
   return { handled: true };
 }

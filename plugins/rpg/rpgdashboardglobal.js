@@ -200,7 +200,7 @@ async function handler(m, { sock, config: botConfig }) {
     let text = claraWrap("RPG Dashboard", "⚔️") + "\n\n";
 
     // Summary section (visible before readmore)
-    text += claraWrap("STATS", [`◦ Total Kategori: *${RPG_CATEGORIES.length}*`, `◦ Total Command: *${RPG_CATEGORIES.reduce((a, c) => a + c.commands.length, 0)}*`].join("\n")) + "\n\n";
+    text += claraWrap("STATS", [`╎❏ Total Kategori: *${RPG_CATEGORIES.length}*`, `╎❏ Total Command: *${RPG_CATEGORIES.reduce((a, c) => a + c.commands.length, 0)}*`].join("\n")) + "\n\n";
 
     text += "Dashboard per kategori:\n\n";
 
@@ -242,8 +242,8 @@ async function handler(m, { sock, config: botConfig }) {
     await sendReplyWithNav(sock, m, text, "rpgdashboardglobal");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

@@ -36,20 +36,20 @@ async function handler(m, { sock, config: botConfig, db }) {
     };
 
     const text =
-      claraWrap("Rank", [`◦ Nama: *${player.name || userName}*`,
-        `◦ Level: *${player.level || 1}*`,
-        `◦ Rank: *${player.rank || "E"}*`,
-        `◦ Next Rank: *${player.nextRank || "D"}*`,
-        `◦ Exp: *${player.exp || 0}/${player.maxExp || 100}*`,
-        `◦ Gold: *${player.gold || 0}*`].join("\n")) +
+      claraWrap("Rank", [`╎❏ Nama: *${player.name || userName}*`,
+        `╎❏ Level: *${player.level || 1}*`,
+        `╎❏ Rank: *${player.rank || "E"}*`,
+        `╎❏ Next Rank: *${player.nextRank || "D"}*`,
+        `╎❏ Exp: *${player.exp || 0}/${player.maxExp || 100}*`,
+        `╎❏ Gold: *${player.gold || 0}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await sendReplyWithNav(sock, m, text, "rank");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

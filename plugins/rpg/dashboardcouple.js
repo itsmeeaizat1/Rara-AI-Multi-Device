@@ -82,7 +82,7 @@ async function handler(m, { sock, config: botConfig }) {
     let text = claraWrap("Dashboard Couple", "💑") + "\n\n";
 
     // Stats
-    text += claraWrap("raʅarh", ["◦ Total pasangan: *" + totalCouples + "*", "◦ Bonus married: *+5% EXP*", "◦ Biaya cerai: *25.000 koin*"].join("\n")) + "\n\n";
+    text += claraWrap("raʅarh", ["╎❏ Total pasangan: *" + totalCouples + "*", "╎❏ Bonus married: *+5% EXP*", "╎❏ Biaya cerai: *25.000 koin*"].join("\n")) + "\n\n";
 
     // My couple status
     if (myCouple) {
@@ -90,16 +90,16 @@ async function handler(m, { sock, config: botConfig }) {
       text += separator("━", 30) + "\n";
       text += "PASANGAN KAMU\n";
       text += separator("━", 30) + "\n\n";
-      text += "◦ Pasangan: *" + (myCouple.jid1 === m.sender ? myCouple.name2 : myCouple.name1) + "*\n";
-      text += "◦ Durasi: *" + formatDuration(myCouple.duration) + "*\n";
-      text += "◦ Tanggal nikah: *" + myCouple.dateStr + "*\n";
-      text += "◦ Ranking: *#" + myRank + " dari " + totalCouples + "*\n\n";
+      text += "╎❏ Pasangan: *" + (myCouple.jid1 === m.sender ? myCouple.name2 : myCouple.name1) + "*\n";
+      text += "╎❏ Durasi: *" + formatDuration(myCouple.duration) + "*\n";
+      text += "╎❏ Tanggal nikah: *" + myCouple.dateStr + "*\n";
+      text += "╎❏ Ranking: *#" + myRank + " dari " + totalCouples + "*\n\n";
     } else {
       text += separator("━", 30) + "\n";
       text += "PASANGAN KAMU\n";
       text += separator("━", 30) + "\n\n";
-      text += "◦ Kamu belum punya pasangan\n";
-      text += "◦ Ketik *" + prefix + "marry @member* untuk nikah\n\n";
+      text += "╎❏ Kamu belum punya pasangan\n";
+      text += "╎❏ Ketik *" + prefix + "marry @member* untuk nikah\n\n";
     }
 
     // Leaderboard

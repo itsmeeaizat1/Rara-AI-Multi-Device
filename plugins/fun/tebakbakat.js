@@ -30,15 +30,15 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!args && !m.quoted) {
     const help = claraWrap("TebakBakat", [
-      `◦ AI tebak bakat tersembunyi lucu`,
+      `╎❏ AI tebak bakat tersembunyi lucu`,
       ``,
-      `◦ *Cara pakai:*`,
+      `╎❏ *Cara pakai:*`,
       `  ${prefix}tebakbakat <nama> [tgl lahir]`,
       `  ${prefix}tebakbakat Budi 17-08-2000`,
       `  Reply orang: ${prefix}tebakbakat`,
       ``,
-      `◦ Hasil: bakat tersembunyi + career prediction`,
-      `◦ Lucu, random, jangan dipercaya serious :v`,
+      `╎❏ Hasil: bakat tersembunyi + career prediction`,
+      `╎❏ Lucu, random, jangan dipercaya serious :v`,
     ].join("\n"));
     return sendReplyWithNav(sock, m, help, "tebakbakat");
   }

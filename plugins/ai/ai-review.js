@@ -27,9 +27,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!code) {
       const out =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}ai-review <code>*`,
-          `◦ Atau reply pesan berisi code dengan *${prefix}ai-review*`,
-          `◦ Contoh: *${prefix}ai-review function test(){}*`].join("\n")) +
+        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}ai-review <code>*`,
+          `╎❏ Atau reply pesan berisi code dengan *${prefix}ai-review*`,
+          `╎❏ Contoh: *${prefix}ai-review function test(){}*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const out =
-      claraWrap("AI Review", [`◦ Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      claraWrap("AI Review", [`╎❏ Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}ai-review <code> untuk review lagi`) +
       "\n" +
@@ -59,8 +59,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

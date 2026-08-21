@@ -35,9 +35,9 @@ async function handler(m, { sock, config: botConfig }) {
       : "https://chat.whatsapp.com/xxxxx";
 
     const text =
-      claraWrap("Link Group", [`◦ Group: *${m.chatName || chat}*`,
-        `◦ Link: *${link}*`,
-        "◦ Status: *Active*"].join("\n")) +
+      claraWrap("Link Group", [`╎❏ Group: *${m.chatName || chat}*`,
+        `╎❏ Link: *${link}*`,
+        "╎❏ Status: *Active*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -45,8 +45,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

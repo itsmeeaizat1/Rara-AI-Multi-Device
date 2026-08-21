@@ -57,7 +57,7 @@ async function handler(m, { sock, config: botConfig }) {
       .join("\n");
 
     const text =
-      claraWrap("Kuis", [`◦ Soal: *${item.q}*`,
+      claraWrap("Kuis", [`╎❏ Soal: *${item.q}*`,
         ``,
         optionsText].join("\n")) +
       "\n" +
@@ -69,8 +69,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const reply =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

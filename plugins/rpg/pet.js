@@ -28,12 +28,12 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     if (!query) {
       const text =
-        claraWrap("Cara Pakai", ["◦ 1. *Kucing* - 100 Gold",
-          "◦ 2. *Anjing* - 150 Gold",
-          "◦ 3. *Naga* - 500 Gold",
-          "◦ 4. *Phoenix* - 1000 Gold"].join("\n")) +
+        claraWrap("Cara Pakai", ["╎❏ 1. *Kucing* - 100 Gold",
+          "╎❏ 2. *Anjing* - 150 Gold",
+          "╎❏ 3. *Naga* - 500 Gold",
+          "╎❏ 4. *Phoenix* - 1000 Gold"].join("\n")) +
         "\n\n" +
-        claraWrap("Info", [`◦ Penggunaan: *${prefix}pet <nama>*`, `◦ Contoh: *${prefix}pet Kucing*`].join("\n")) +
+        claraWrap("Info", [`╎❏ Penggunaan: *${prefix}pet <nama>*`, `╎❏ Contoh: *${prefix}pet Kucing*`].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +
@@ -44,19 +44,19 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
 
     const text =
-      claraWrap("Pet", [`◦ Nama: *${query}*`,
-        "◦ Tipe: *Kucing*",
-        "◦ Level: *1*",
-        "◦ HP: *50/50*",
-        "◦ ATK: *5*"].join("\n")) +
+      claraWrap("Pet", [`╎❏ Nama: *${query}*`,
+        "╎❏ Tipe: *Kucing*",
+        "╎❏ Level: *1*",
+        "╎❏ HP: *50/50*",
+        "╎❏ ATK: *5*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await sendReplyWithNav(sock, m, text, "pet");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

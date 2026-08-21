@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
       const text =
         claraWrap("Tidak Ada Confession", [
           "❏ Nggak ada yang nembak kamu saat ini",
-          "◦ Atau confession sudah expired (5 menit)",
+          "╎❏ Atau confession sudah expired (5 menit)",
         ].join("\n")) + "\n" +
         tipText("Sabar ya, jodong nggak kemana");
 
@@ -107,7 +107,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (confessorUser.rpg.spouse || targetUser.rpg.spouse) {
       pendingConfessions.delete(m.sender);
       const text = claraWrap("Sudah Menikah", [
-        "◦ Ada salah satu pihak yang sudah menikah!",
+        "╎❏ Ada salah satu pihak yang sudah menikah!",
       ].join("\n"));
       await sendReplyWithNav(sock, m, text, "terimamatch");
       return { handled: true };

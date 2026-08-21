@@ -26,8 +26,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       const out =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}qrcode <teks/link>*`,
-          `◦ Contoh: *${prefix}qrcode https://wa.me/628xxxx*`].join("\n")) +
+        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}qrcode <teks/link>*`,
+          `╎❏ Contoh: *${prefix}qrcode https://wa.me/628xxxx*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -47,9 +47,9 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const out =
-      claraWrap("QR Code", [`◦ Text: *${text}*`,
-        "◦ Format: *PNG*",
-        "◦ Status: *Berhasil*"].join("\n")) +
+      claraWrap("QR Code", [`╎❏ Text: *${text}*`,
+        "╎❏ Format: *PNG*",
+        "╎❏ Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}qrcode <teks> untuk buat QR lagi`) +
       "\n" +
@@ -59,8 +59,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

@@ -112,15 +112,15 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!args || args.trim().length < 10) {
     const help = claraWrap("SPPD", [
-      `◦ Generator Surat Perintah Perjalanan Dinas → PDF`,
+      `╎❏ Generator Surat Perintah Perjalanan Dinas → PDF`,
       ``,
-      `◦ *Cara pakai:*`,
+      `╎❏ *Cara pakai:*`,
       `  ${prefix}sppd <detail perjalanan dinas>`,
       ``,
-      `◦ *Contoh:*`,
+      `╎❏ *Contoh:*`,
       `  ${prefix}sppd Budi Santoso NIP 198701012015041001 staf Dinas Kominfo, ke Jakarta untuk rapat koordinasi, 15-17 Jan 2024, transport pesawat, transport 2jt, hotel 500rb/hari, uang harian 300rb/hari, diperintahkan oleh Kepala Dinas Hadi NIP 196501011990021001`,
       ``,
-      `◦ *Hasil:* PDF SPPD siap print`,
+      `╎❏ *Hasil:* PDF SPPD siap print`,
     ].join("\n"));
     return sendReplyWithNav(sock, m, help, "sppd");
   }

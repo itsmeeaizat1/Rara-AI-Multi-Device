@@ -26,8 +26,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!url) {
       const text =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}videy <link>*`,
-          `◦ Contoh: *${prefix}videy https://videy.co/video/xxxx*`].join("\n")) +
+        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}videy <link>*`,
+          `╎❏ Contoh: *${prefix}videy https://videy.co/video/xxxx*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -42,9 +42,9 @@ async function handler(m, { sock, config: botConfig }) {
     const videoUrl = result?.url || result?.link || url;
 
     const text =
-      claraWrap("Videy", [`◦ Link: *${url}*`,
-        `◦ Result: *${videoUrl}*`,
-        "◦ Status: *Berhasil*"].join("\n")) +
+      claraWrap("Videy", [`╎❏ Link: *${url}*`,
+        `╎❏ Result: *${videoUrl}*`,
+        "╎❏ Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}videy <link> untuk download video lain`) +
       "\n" +
@@ -54,8 +54,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

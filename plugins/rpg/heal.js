@@ -29,10 +29,10 @@ async function handler(m, { sock, config: botConfig, db }) {
     const newHp = Math.min(maxHp, currentHp + healAmount);
 
     const text =
-      claraWrap("Heal", [`◦ Heal: *+${healAmount}*`,
-        `◦ HP: *${newHp}/${maxHp}*`,
-        "◦ Item: *Potion*",
-        "◦ Status: *Berhasil*"].join("\n")) +
+      claraWrap("Heal", [`╎❏ Heal: *+${healAmount}*`,
+        `╎❏ HP: *${newHp}/${maxHp}*`,
+        "╎❏ Item: *Potion*",
+        "╎❏ Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}heal untuk sembuh lagi`) +
       "\n" +
@@ -41,8 +41,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "heal");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

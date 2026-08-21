@@ -31,10 +31,10 @@ async function handler(m, { sock, config: botConfig }) {
     const text = claraWrap("AI Providers",
       lines.join("\n") +
       "\n\nPAKAI:\n" +
-      `◦ *${prefix}multi-ai <provider> <pesan>* — chat dengan provider tertentu\n` +
-      `◦ *${prefix}ai-set provider <nama>* — ganti provider default\n` +
-      `◦ *${prefix}ai-addprovider list* — lihat provider custom\n` +
-      `◦ *${prefix}menu* — kembali ke menu utama`
+      `╎❏ *${prefix}multi-ai <provider> <pesan>* — chat dengan provider tertentu\n` +
+      `╎❏ *${prefix}ai-set provider <nama>* — ganti provider default\n` +
+      `╎❏ *${prefix}ai-addprovider list* — lihat provider custom\n` +
+      `╎❏ *${prefix}menu* — kembali ke menu utama`
     );
 
     await m.reply(text);

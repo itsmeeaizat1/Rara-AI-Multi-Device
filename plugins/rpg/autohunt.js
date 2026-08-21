@@ -170,14 +170,14 @@ async function handler(m, { sock, config: botConfig }) {
     const finalGold = finalPlayer.gold ?? 0;
 
     let text =
-      claraWrap("Auto Hunt", [`◦ Total Round: *${huntsDone}/${MAX_HUNTS}*`,
-        `◦ Monster Dibunuh: *${totalKills}*`,
-        `◦ Monster Kabur: *${totalEscapes}*`,
-        `◦ Total Gold: *+${totalGold.toLocaleString("id-ID")}*`,
-        `◦ Total EXP: *+${totalExp.toLocaleString("id-ID")}*`,
-        `◦ Total Damage: *-${totalDamage} HP*`].join("\n")) +
+      claraWrap("Auto Hunt", [`╎❏ Total Round: *${huntsDone}/${MAX_HUNTS}*`,
+        `╎❏ Monster Dibunuh: *${totalKills}*`,
+        `╎❏ Monster Kabur: *${totalEscapes}*`,
+        `╎❏ Total Gold: *+${totalGold.toLocaleString("id-ID")}*`,
+        `╎❏ Total EXP: *+${totalExp.toLocaleString("id-ID")}*`,
+        `╎❏ Total Damage: *-${totalDamage} HP*`].join("\n")) +
       "\n\n" +
-      claraWrap("STATUS", [`◦ Level: *${finalLevel}*`, `◦ HP: *${finalHp}/${finalMaxHp}*`, `◦ Stamina: *${finalStamina}*`, `◦ Gold: *${finalGold.toLocaleString("id-ID")}*`].join("\n")) +
+      claraWrap("STATUS", [`╎❏ Level: *${finalLevel}*`, `╎❏ HP: *${finalHp}/${finalMaxHp}*`, `╎❏ Stamina: *${finalStamina}*`, `╎❏ Gold: *${finalGold.toLocaleString("id-ID")}*`].join("\n")) +
       "\n\n" +
       separator("━", 22) +
       "\n" +

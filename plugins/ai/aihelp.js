@@ -92,20 +92,20 @@ function buildPluginInstructionCard(plugin, prefix) {
   const cooldown = cfg.cooldown ?? 0;
 
   const steps = [];
-  steps.push(`◦ Buka chat grup atau private`);
-  steps.push(`◦ Ketik: *${usage}*`);
+  steps.push(`╎❏ Buka chat grup atau private`);
+  steps.push(`╎❏ Ketik: *${usage}*`);
   if (example && example !== "-") {
-    steps.push(`◦ Contoh: *${example}*`);
+    steps.push(`╎❏ Contoh: *${example}*`);
   }
-  steps.push(`◦ Tunggu bot memproses...`);
+  steps.push(`╎❏ Tunggu bot memproses...`);
 
   return claraWrap([
-    `◦ Kategori: *${category}*`, `◦ Alias: *${alias}*`,
-    `◦ Deskripsi: *${description}*`,
+    `╎❏ Kategori: *${category}*`, `╎❏ Alias: *${alias}*`,
+    `╎❏ Deskripsi: *${description}*`,
     ...steps,
-    `◦ Owner only: *${owner}*`,
-    `◦ Premium: *${premium}*`,
-    `◦ Cooldown: *${cooldown}s*`,
+    `╎❏ Owner only: *${owner}*`,
+    `╎❏ Premium: *${premium}*`,
+    `╎❏ Cooldown: *${cooldown}s*`,
   ]);
 }
 
@@ -209,8 +209,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!enabled && !m.isOwner) {
       const text =
-        claraWrap("AI Help", ["◦ Status: *Nonaktif*",
-          "◦ Info: *AI Help sedang dimatikan oleh owner.*"].join("\n")) +
+        claraWrap("AI Help", ["╎❏ Status: *Nonaktif*",
+          "╎❏ Info: *AI Help sedang dimatikan oleh owner.*"].join("\n")) +
         "\n" ;
 
       await m.reply(text);
@@ -221,8 +221,8 @@ async function handler(m, { sock, config: botConfig }) {
     if (toggleArgs === "on" || toggleArgs === "off") {
       if (!m.isOwner) {
         const text =
-          claraWrap("Ditolak", ["◦ Status: *Ditolak*",
-            "◦ Alasan: *Hanya owner yang bisa menyalakan/mematikan AI Help.*"].join("\n")) +
+          claraWrap("Ditolak", ["╎❏ Status: *Ditolak*",
+            "╎❏ Alasan: *Hanya owner yang bisa menyalakan/mematikan AI Help.*"].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -235,9 +235,9 @@ async function handler(m, { sock, config: botConfig }) {
       if (!botConfig.aiHelp.mode) botConfig.aiHelp.mode = "offline";
 
       const text =
-        claraWrap("AI Help", [`◦ Mode: *${String(botConfig.aiHelp.mode || "offline").toUpperCase()}*`,
-          `◦ Status: *${newState ? "ON" : "OFF"}*`,
-          `◦ Pengaturan: *${prefix}aihelp mode online|offline*`].join("\n")) +
+        claraWrap("AI Help", [`╎❏ Mode: *${String(botConfig.aiHelp.mode || "offline").toUpperCase()}*`,
+          `╎❏ Status: *${newState ? "ON" : "OFF"}*`,
+          `╎❏ Pengaturan: *${prefix}aihelp mode online|offline*`].join("\n")) +
         "\n" ;
 
       await m.reply(text);
@@ -248,8 +248,8 @@ async function handler(m, { sock, config: botConfig }) {
     if (modeArgs === "mode online" || modeArgs === "mode offline") {
       if (!m.isOwner) {
         const text =
-          claraWrap("Ditolak", ["◦ Status: *Ditolak*",
-            "◦ Alasan: *Hanya owner yang bisa mengganti mode AI Help.*"].join("\n")) +
+          claraWrap("Ditolak", ["╎❏ Status: *Ditolak*",
+            "╎❏ Alasan: *Hanya owner yang bisa mengganti mode AI Help.*"].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -261,10 +261,10 @@ async function handler(m, { sock, config: botConfig }) {
       botConfig.aiHelp.mode = newMode;
 
       const text =
-        claraWrap("Mode AI Help", [`◦ Mode: *${newMode.toUpperCase()}*`,
-          `◦ API Key: *${apiKey ? "Terpasang" : "Kosong"}*`,
-          `◦ Endpoint: *${apiEndpoint || DEFAULT_ENDPOINT}*`,
-          `◦ Model: *${model}*`].join("\n")) +
+        claraWrap("Mode AI Help", [`╎❏ Mode: *${newMode.toUpperCase()}*`,
+          `╎❏ API Key: *${apiKey ? "Terpasang" : "Kosong"}*`,
+          `╎❏ Endpoint: *${apiEndpoint || DEFAULT_ENDPOINT}*`,
+          `╎❏ Model: *${model}*`].join("\n")) +
         "\n" ;
 
       await m.reply(text);
@@ -272,7 +272,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!query) {
-      const helpCard = claraWrap("Ai Help", [`◦ Mode: *${mode.toUpperCase()}*`, `◦ Status: *${enabled ? "ON" : "OFF"}*`, `◦ Ketik ${prefix}aihelp <pertanyaan>`, `◦ Contoh: ${prefix}aihelp cara download tiktok`, `◦ Owner: ${prefix}aihelp on/off`, `◦ Owner: ${prefix}aihelp mode online/offline`].join("\n"));
+      const helpCard = claraWrap("Ai Help", [`╎❏ Mode: *${mode.toUpperCase()}*`, `╎❏ Status: *${enabled ? "ON" : "OFF"}*`, `╎❏ Ketik ${prefix}aihelp <pertanyaan>`, `╎❏ Contoh: ${prefix}aihelp cara download tiktok`, `╎❏ Owner: ${prefix}aihelp on/off`, `╎❏ Owner: ${prefix}aihelp mode online/offline`].join("\n"));
 
       const text = claraWrap("Asisten Fitur", "🤖") + helpCard;
 
@@ -290,7 +290,7 @@ async function handler(m, { sock, config: botConfig }) {
       });
 
       if (onlineResult.ok) {
-        const card = claraWrap("Online", [`◦ Pertanyaan: *${query}*`, ``, ...onlineResult.text.split("\n").map((line) => `┃ ${line}`)].join("\n"));
+        const card = claraWrap("Online", [`╎❏ Pertanyaan: *${query}*`, ``, ...onlineResult.text.split("\n").map((line) => `┃ ${line}`)].join("\n"));
 
         const text = claraWrap("Online AI", "🤖") + card + "\n";
 
@@ -298,7 +298,7 @@ async function handler(m, { sock, config: botConfig }) {
         return { handled: true };
       }
 
-      const text = claraWrap("Fallback", [`◦ Alasan: *${onlineResult.reason || "unknown"}*`, "◦ Status: *Menggunakan offline match*"].join("\n")) + "\nMaaf, AI online sedang tidak dapat diakses. Saya bantu pakai mode offline dulu ya.";
+      const text = claraWrap("Fallback", [`╎❏ Alasan: *${onlineResult.reason || "unknown"}*`, "╎❏ Status: *Menggunakan offline match*"].join("\n")) + "\nMaaf, AI online sedang tidak dapat diakses. Saya bantu pakai mode offline dulu ya.";
 
       await m.reply(text);
     }
@@ -307,7 +307,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (matchedIntent) {
       const intentText = matchedIntent.response(prefix);
-      const card = claraWrap("InꜱTrukꜱI", [`◦ Pertanyaan: *${query}*`, `◦ Kategori: *${("intent match")}*`, ``, ...intentText.split("\n").map((line) => `┃ ${line}`)].join("\n"));
+      const card = claraWrap("InꜱTrukꜱI", [`╎❏ Pertanyaan: *${query}*`, `╎❏ Kategori: *${("intent match")}*`, ``, ...intentText.split("\n").map((line) => `┃ ${line}`)].join("\n"));
 
       const text = claraWrap("Instruksi", "📋") + card + "\n";
 
@@ -335,8 +335,8 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(claraWrap(`Hasil: ${query}`, text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n"),
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n"),
       "error"
     );
 

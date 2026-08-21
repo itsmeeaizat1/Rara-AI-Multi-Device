@@ -80,8 +80,8 @@ async function handler(m, { sock, config: botConfig }) {
         .join(", ");
 
       const text =
-        claraWrap("Confes", [`◦ Penggunaan: *${prefix}confes <nomor>|<mode>|<pesan>*`,
-          `◦ Contoh: *${prefix}confes 6281234567890|nembak|Aku suka kamu*`].join("\n")) +
+        claraWrap("Confes", [`╎❏ Penggunaan: *${prefix}confes <nomor>|<mode>|<pesan>*`,
+          `╎❏ Contoh: *${prefix}confes 6281234567890|nembak|Aku suka kamu*`].join("\n")) +
         "\n" +
         claraWrap("Mode", ["🫣 nembak", "🤙 kenalan", "🍭 ndate", "💘 pcr", "🗝️ lowkey", "📩 dm"].join("\n")) +
         "\n\n" +
@@ -98,8 +98,8 @@ async function handler(m, { sock, config: botConfig }) {
     const parts = raw.split("|").map((item) => item.trim()).filter(Boolean);
     if (parts.length < 3) {
       const text =
-        claraWrap("Gagal", ["◦ Alasan: *Format salah*",
-          `◦ Contoh: *${prefix}confes 6281234567890|nembak|Aku suka kamu*`].join("\n")) +
+        claraWrap("Gagal", ["╎❏ Alasan: *Format salah*",
+          `╎❏ Contoh: *${prefix}confes 6281234567890|nembak|Aku suka kamu*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -114,8 +114,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!number || !modes[mode] || !pesan) {
       const text =
-        claraWrap("Gagal", ["◦ Alasan: *Mode tidak valid atau pesan kosong*",
-          `◦ Contoh: *${prefix}confes 6281234567890|nembak|Aku suka kamu*`].join("\n")) +
+        claraWrap("Gagal", ["╎❏ Alasan: *Mode tidak valid atau pesan kosong*",
+          `╎❏ Contoh: *${prefix}confes 6281234567890|nembak|Aku suka kamu*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -143,9 +143,9 @@ async function handler(m, { sock, config: botConfig }) {
       claraWrap("Terkirim", "💘") +
       "\n\n" +
       claraWrap(modeData.label, [
-        `◦ Ke: *${targetJid}*`,
-        `◦ Mode: *${modeData.label}*`,
-        `◦ Status: *Terkirim*`,
+        `╎❏ Ke: *${targetJid}*`,
+        `╎❏ Mode: *${modeData.label}*`,
+        `╎❏ Status: *Terkirim*`,
       ]) +
       "\n\n" +
       separator("━", 22) +
@@ -159,8 +159,8 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(receipt);
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

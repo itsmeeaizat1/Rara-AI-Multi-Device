@@ -28,10 +28,10 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     if (!amount || amount <= 0) {
       const text =
-        claraWrap("Cara Pakai", [`◦ Penggunaan: *${prefix}gamble <jumlah gold>*`,
-          `◦ Contoh: *${prefix}gamble 100*`,
-          "◦ Minimal: *10 Gold*",
-          "◦ Maksimal: *10000 Gold*"].join("\n")) +
+        claraWrap("Cara Pakai", [`╎❏ Penggunaan: *${prefix}gamble <jumlah gold>*`,
+          `╎❏ Contoh: *${prefix}gamble 100*`,
+          "╎❏ Minimal: *10 Gold*",
+          "╎❏ Maksimal: *10000 Gold*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -50,10 +50,10 @@ async function handler(m, { sock, config: botConfig, db }) {
       claraWrap("Gamble", "🎰") +
       "\n\n" +
       claraWrap("HaꜱIl", [
-        `◦ Taruhan: *${amount} Gold*`,
-        `◦ Hasil: *${result} Gold*`,
-        `◦ Multiplier: *${win ? "x" + multiplier : "x0"}*`,
-        `◦ Status: *${status}*`,
+        `╎❏ Taruhan: *${amount} Gold*`,
+        `╎❏ Hasil: *${result} Gold*`,
+        `╎❏ Multiplier: *${win ? "x" + multiplier : "x0"}*`,
+        `╎❏ Status: *${status}*`,
       ]) +
       "\n\n" +
       separator("━", 22) +
@@ -65,8 +65,8 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendReplyWithNav(sock, m, text, "gamble");
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

@@ -59,14 +59,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!question || question.trim().length < 3) {
     const help = claraWrap("YesNo", [
-      `◦ Decision maker dramatis`,
+      `╎❏ Decision maker dramatis`,
       ``,
-      `◦ *Cara pakai:*`,
+      `╎❏ *Cara pakai:*`,
       `  ${prefix}yesno <pertanyaan>`,
       `  ${prefix}yesno harus aku terima tawaran kerja ini?`,
       ``,
-      `◦ Hasil: YES / NO / MAYBE + alasan random`,
-      `◦ 20+ jawaban variatif, dramatis, kadang absurd`,
+      `╎❏ Hasil: YES / NO / MAYBE + alasan random`,
+      `╎❏ 20+ jawaban variatif, dramatis, kadang absurd`,
     ].join("\n"));
     return sendReplyWithNav(sock, m, help, "yesno");
   }

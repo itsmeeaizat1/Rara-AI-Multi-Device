@@ -191,13 +191,13 @@ async function handler(m, { sock, config: botConfig }) {
     return sendReplyWithNav(
       sock,
       m,
-      claraWrap("Dark Market", [`◦ Item: *${item.emoji} ${item.name}*`,
-        `◦ Jumlah: *${qty} pcs*`,
-        `◦ Harga/pcs: *${item.price.toLocaleString("id-ID")}*`,
-        `◦ Total: *-${totalPrice.toLocaleString("id-ID")}*`,
-        `◦ Discount: *${item.discount}% off*`,
-        `◦ Sisa stok: *${stock[itemKey].stockQty} pcs*`,
-        `◦ Gold tersisa: *${user.koin.toLocaleString("id-ID")}*`].join("\n")) + "\n" +
+      claraWrap("Dark Market", [`╎❏ Item: *${item.emoji} ${item.name}*`,
+        `╎❏ Jumlah: *${qty} pcs*`,
+        `╎❏ Harga/pcs: *${item.price.toLocaleString("id-ID")}*`,
+        `╎❏ Total: *-${totalPrice.toLocaleString("id-ID")}*`,
+        `╎❏ Discount: *${item.discount}% off*`,
+        `╎❏ Sisa stok: *${stock[itemKey].stockQty} pcs*`,
+        `╎❏ Gold tersisa: *${user.koin.toLocaleString("id-ID")}*`].join("\n")) + "\n" +
       tipText(`Item masuk inventory. Cek \`${prefix}inventory\``) + "\n" +
       tipText(`Restock dalam: ${timeUntilRestock(market.restockAt)}`),
       "darkmarket"
@@ -206,10 +206,10 @@ async function handler(m, { sock, config: botConfig }) {
 
   // Show market
   let text =
-    claraWrap("Dark Market", [`◦ Eksklusif: *Premium only*`,
-      `◦ Stok random tiap: *6 jam*`,
-      `◦ Restock dalam: *${timeUntilRestock(market.restockAt)}*`,
-      `◦ Gold kamu: *${(user.koin || 0).toLocaleString("id-ID")}*`].join("\n")) + "\n" +
+    claraWrap("Dark Market", [`╎❏ Eksklusif: *Premium only*`,
+      `╎❏ Stok random tiap: *6 jam*`,
+      `╎❏ Restock dalam: *${timeUntilRestock(market.restockAt)}*`,
+      `╎❏ Gold kamu: *${(user.koin || 0).toLocaleString("id-ID")}*`].join("\n")) + "\n" +
     "STOK HARI INI:\n\n";
 
   const stockList = Object.values(stock);

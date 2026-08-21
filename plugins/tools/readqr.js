@@ -15,8 +15,8 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!quoted) {
-      { const __navText = (claraWrap("Read QR", [`◦ Reply gambar QR code dengan *${prefix}readqr*`,
-        "◦ Bot akan membaca isi QR code"].join("\n"))); await sendReplyWithNav(sock, m, __navText, "readqr"); };
+      { const __navText = (claraWrap("Read QR", [`╎❏ Reply gambar QR code dengan *${prefix}readqr*`,
+        "╎❏ Bot akan membaca isi QR code"].join("\n"))); await sendReplyWithNav(sock, m, __navText, "readqr"); };
       return { handled: true };
     }
     const buffer = await m.download();
@@ -26,9 +26,9 @@ async function handler(m, { sock, config: botConfig }) {
       `filebase64=${base64}`, { headers: {"Content-Type":"application/x-www-form-urlencoded"}, timeout: 15000 });
     const result = Array.isArray(data) ? data[0]?.symbol?.[0]?.data : data;
     if (!result) throw new Error("QR tidak terbaca");
-    await m.reply(claraWrap("Read QR", [`◦ Isi QR: *${result}*`].join("\n")));
+    await m.reply(claraWrap("Read QR", [`╎❏ Isi QR: *${result}*`].join("\n")));
   } catch (e) {
-    await m.reply(claraWrap("Gagal", [`◦ ${e.message}`].join("\n")));
+    await m.reply(claraWrap("Gagal", [`╎❏ ${e.message}`].join("\n")));
   }
   return { handled: true };
 }

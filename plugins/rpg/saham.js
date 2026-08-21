@@ -178,11 +178,11 @@ async function handler(m, { sock, config: botConfig }) {
   // === HELP / MAIN ===
   if (!sub || sub === "help" || sub === "menu") {
     const txt =
-      claraWrap("Saham", [`◦ Harga update tiap 1 menit`,
-        `◦ Event pasar berubah tiap 1-3 jam`,
-        `◦ Minimal beli: 1 lot (1 saham)`,
-        `◦ Fee beli: 0.5% | Fee jual: 1%`,
-        `◦ Dividen: 2% dari nilai portofolio per minggu`].join("\n")) +
+      claraWrap("Saham", [`╎❏ Harga update tiap 1 menit`,
+        `╎❏ Event pasar berubah tiap 1-3 jam`,
+        `╎❏ Minimal beli: 1 lot (1 saham)`,
+        `╎❏ Fee beli: 0.5% | Fee jual: 1%`,
+        `╎❏ Dividen: 2% dari nilai portofolio per minggu`].join("\n")) +
       "\n\n" +
       "Perintah tersedia:\n" +
       `1. \`${prefix}saham list\` - Lihat daftar harga saham\n` +
@@ -237,7 +237,7 @@ async function handler(m, { sock, config: botConfig }) {
       const hours = Math.floor(timeLeft / 60);
       const mins = timeLeft % 60;
       
-      txt += claraWrap("Event Aktif", [`◦ Event: *${market.currentEvent.name}*`, `◦ Efek: ${market.currentEvent.multiplier > 1 ? "Naik" : market.currentEvent.multiplier < 1 ? "Turun" : "Netral"} ${Math.abs(Math.round((market.currentEvent.multiplier - 1) * 100))}%`, `◦ Sisa waktu: ${hours > 0 ? `${hours}j ` : ""}${mins}m`, `◦ Info: ${market.currentEvent.msg}`].join("\n"));
+      txt += claraWrap("Event Aktif", [`╎❏ Event: *${market.currentEvent.name}*`, `╎❏ Efek: ${market.currentEvent.multiplier > 1 ? "Naik" : market.currentEvent.multiplier < 1 ? "Turun" : "Netral"} ${Math.abs(Math.round((market.currentEvent.multiplier - 1) * 100))}%`, `╎❏ Sisa waktu: ${hours > 0 ? `${hours}j ` : ""}${mins}m`, `╎❏ Info: ${market.currentEvent.msg}`].join("\n"));
       
       txt += "\n" + tipText(
         market.currentEvent.multiplier > 1
@@ -307,14 +307,14 @@ async function handler(m, { sock, config: botConfig }) {
     const newGold = getPlayer(m)?.gold || 0;
     
     const txt =
-      claraWrap("Beli Saham", [`◦ Saham: *${stock.code}* - ${stock.name}`,
-        `◦ Harga/lot: ${formatNumber(stock.price)} gold`,
-        `◦ Jumlah: ${formatNumber(arg2)} lot`,
-        `◦ Subtotal: ${formatNumber(cost)} gold`,
-        `◦ Fee (0.5%): ${formatNumber(fee)} gold`,
-        `◦ Total: ${formatNumber(totalCost)} gold`,
-        `◦ Sisa gold: ${formatNumber(newGold)}`,
-        `◦ Avg price: ${formatNumber(holding.avgPrice)}`].join("\n")) +
+      claraWrap("Beli Saham", [`╎❏ Saham: *${stock.code}* - ${stock.name}`,
+        `╎❏ Harga/lot: ${formatNumber(stock.price)} gold`,
+        `╎❏ Jumlah: ${formatNumber(arg2)} lot`,
+        `╎❏ Subtotal: ${formatNumber(cost)} gold`,
+        `╎❏ Fee (0.5%): ${formatNumber(fee)} gold`,
+        `╎❏ Total: ${formatNumber(totalCost)} gold`,
+        `╎❏ Sisa gold: ${formatNumber(newGold)}`,
+        `╎❏ Avg price: ${formatNumber(holding.avgPrice)}`].join("\n")) +
       "\n\n" +
       tipText("Pantau harga di .saham list, jual saat harga naik!");
     
@@ -376,15 +376,15 @@ async function handler(m, { sock, config: botConfig }) {
       : `Rugi: ${formatNumber(pnl)} gold (${pnlPercent}%)`;
     
     const txt =
-      claraWrap("Jual Saham", [`◦ Saham: *${stock.code}* - ${stock.name}`,
-        `◦ Harga/lot: ${formatNumber(stock.price)} gold`,
-        `◦ Jumlah: ${formatNumber(arg2)} lot`,
-        `◦ Revenue: ${formatNumber(revenue)} gold`,
-        `◦ Fee (1%): ${formatNumber(fee)} gold`,
-        `◦ Net: ${formatNumber(netRevenue)} gold`,
-        `◦ Avg buy: ${formatNumber(holding.avgPrice || 0)}`,
-        `◦ ${pnlText}`,
-        `◦ Sisa gold: ${formatNumber(newGold)}`].join("\n")) +
+      claraWrap("Jual Saham", [`╎❏ Saham: *${stock.code}* - ${stock.name}`,
+        `╎❏ Harga/lot: ${formatNumber(stock.price)} gold`,
+        `╎❏ Jumlah: ${formatNumber(arg2)} lot`,
+        `╎❏ Revenue: ${formatNumber(revenue)} gold`,
+        `╎❏ Fee (1%): ${formatNumber(fee)} gold`,
+        `╎❏ Net: ${formatNumber(netRevenue)} gold`,
+        `╎❏ Avg buy: ${formatNumber(holding.avgPrice || 0)}`,
+        `╎❏ ${pnlText}`,
+        `╎❏ Sisa gold: ${formatNumber(newGold)}`].join("\n")) +
       "\n\n" +
       (pnl >= 0
         ? tipText("Mantap! Investasi kamu untung!")
@@ -429,8 +429,8 @@ async function handler(m, { sock, config: botConfig }) {
       
       lines.push(
         `*${code}* (${formatNumber(holding.shares)} lot)\n` +
-        `  ◦ Harga: ${formatNumber(stock.price)} | Avg: ${formatNumber(holding.avgPrice)}\n` +
-        `  ◦ Nilai: ${formatNumber(value)} | P/L: ${pnlStr} (${pnlPctStr})`
+        `  ╎❏ Harga: ${formatNumber(stock.price)} | Avg: ${formatNumber(holding.avgPrice)}\n` +
+        `  ╎❏ Nilai: ${formatNumber(value)} | P/L: ${pnlStr} (${pnlPctStr})`
       );
     }
     
@@ -545,10 +545,10 @@ async function handler(m, { sock, config: botConfig }) {
     const newGold = getPlayer(m)?.gold || 0;
     
     const txt =
-      claraWrap("Dividen", [`◦ Total nilai portofolio: ${formatNumber(totalValue)} gold`,
-        `◦ Rate dividen: 2% per minggu`,
-        `◦ Dividen diterima: ${formatNumber(dividend)} gold`,
-        `◦ Sisa gold: ${formatNumber(newGold)} gold`].join("\n")) +
+      claraWrap("Dividen", [`╎❏ Total nilai portofolio: ${formatNumber(totalValue)} gold`,
+        `╎❏ Rate dividen: 2% per minggu`,
+        `╎❏ Dividen diterima: ${formatNumber(dividend)} gold`,
+        `╎❏ Sisa gold: ${formatNumber(newGold)} gold`].join("\n")) +
       "\n\n" +
       tipText("Claim lagi minggu depan! Investasi lebih banyak = dividen lebih besar.");
     

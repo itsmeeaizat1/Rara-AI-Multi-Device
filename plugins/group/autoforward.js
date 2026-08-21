@@ -29,7 +29,7 @@ function handler(m, { sock }) {
         const status = group.autoforward ? '✅ ON' : '❌ OFF'
         return sendReplyWithNav(sock, m, `🔄 *Auto Forward*\n\n` +
             `╭┈┈⬡「 📋 *Info* 」\n` +
-            `┃ ◦ Status: *${status}*\n` +
+            `┃ ╎❏ Status: *${status}*\n` +
             `╰┈┈⬡\n\n` +
             `Gunakan: \`${m.prefix}autoforward on/off\`\n\n` +
             `_Fitur ini akan meneruskan semua pesan ke grup ini_`, "autoforward")
@@ -40,7 +40,7 @@ function handler(m, { sock }) {
         m.react('✅')
         return m.reply(claraWrap("autoforward", `🔄 *Auto Forward*\n\n` +
             `╭┈┈⬡「 ✅ *Aktif* 」\n` +
-            `┃ ◦ Status: *ON*\n` +
+            `┃ ╎❏ Status: *ON*\n` +
             `╰┈┈⬡\n\n` +
             `_Semua pesan akan di-forward_`))
     }
@@ -50,7 +50,7 @@ function handler(m, { sock }) {
         return m.reply(
             `🔄 *Auto Forward*\n\n` +
             `╭┈┈⬡「 ❌ *Nonaktif* 」\n` +
-            `┃ ◦ Status: *OFF*\n` +
+            `┃ ╎❏ Status: *OFF*\n` +
             `╰┈┈⬡`
         )
     }

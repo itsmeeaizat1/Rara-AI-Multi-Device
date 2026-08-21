@@ -128,12 +128,12 @@ async function handler(m, { sock, config: botConfig }) {
   if (!subCmd || subCmd === "info" || subCmd === "cek") {
     const stats = getPetStats(pet);
     let text =
-      claraWrap("Pet Evolve", [`◦ Nama: *${pet.name || PET_NAMES[pet.type] || "Pet"}*`,
-        `◦ Tipe: *${PET_EMOJIS[pet.type] || "🐾"} ${PET_NAMES[pet.type] || pet.type}*`,
-        `◦ Tier: *${currentTier.emoji} ${currentTier.name}*`,
-        `◦ Level: *${pet.level || 1}*`,
-        `◦ EXP: *${pet.exp || 0}/${(pet.level || 1) * 100}*`].join("\n")) + "\n\n" +
-      claraWrap("STATS", [`◦ HP: *${stats.hp}*`, `◦ ATK: *${stats.atk}*`, `◦ DEF: *${stats.def}*`, `◦ SPD: *${stats.spd}*`, `◦ LUCK: *${stats.luck}*`].join("\n"));
+      claraWrap("Pet Evolve", [`╎❏ Nama: *${pet.name || PET_NAMES[pet.type] || "Pet"}*`,
+        `╎❏ Tipe: *${PET_EMOJIS[pet.type] || "🐾"} ${PET_NAMES[pet.type] || pet.type}*`,
+        `╎❏ Tier: *${currentTier.emoji} ${currentTier.name}*`,
+        `╎❏ Level: *${pet.level || 1}*`,
+        `╎❏ EXP: *${pet.exp || 0}/${(pet.level || 1) * 100}*`].join("\n")) + "\n\n" +
+      claraWrap("STATS", [`╎❏ HP: *${stats.hp}*`, `╎❏ ATK: *${stats.atk}*`, `╎❏ DEF: *${stats.def}*`, `╎❏ SPD: *${stats.spd}*`, `╎❏ LUCK: *${stats.luck}*`].join("\n"));
 
     if (tierIdx < maxTier) {
       const req = EVO_REQUIREMENTS[tierIdx];
@@ -143,9 +143,9 @@ async function handler(m, { sock, config: botConfig }) {
       const itemsOk = hasItems(user.inventory, req.items);
 
       text += "\n\n" + claraWrap("EVOLUSI SELANJUTNYA", [
-        `◦ Target: *${nextTier.emoji} ${nextTier.name}*`,
-        `◦ Level pet: *${pet.level || 1}/${req.petLevel}* ${levelOk ? "✅" : "❌"}`,
-        `◦ Gold: *${(user.koin || 0).toLocaleString("id-ID")}/${req.gold.toLocaleString("id-ID")}* ${goldOk ? "✅" : "❌"}`,
+        `╎❏ Target: *${nextTier.emoji} ${nextTier.name}*`,
+        `╎❏ Level pet: *${pet.level || 1}/${req.petLevel}* ${levelOk ? "✅" : "❌"}`,
+        `╎❏ Gold: *${(user.koin || 0).toLocaleString("id-ID")}/${req.gold.toLocaleString("id-ID")}* ${goldOk ? "✅" : "❌"}`,
       ]);
 
       text += "\n" + "MATERIAL DIBUTUHKAN:\n";
@@ -249,9 +249,9 @@ async function handler(m, { sock, config: botConfig }) {
     await m.react("✅");
 
     let text =
-      claraWrap("Pet Evolve", [`◦ Pet: *${PET_EMOJIS[pet.type] || "🐾"} ${pet.name || PET_NAMES[pet.type]}*`,
-        `◦ ${currentTier.emoji} ${oldTierName} → *${nextTier.emoji} ${nextTier.name}*`].join("\n")) + "\n\n" +
-      claraWrap("STATS BARU", [`◦ HP: *${newStats.hp}*`, `◦ ATK: *${newStats.atk}*`, `◦ DEF: *${newStats.def}*`, `◦ SPD: *${newStats.spd}*`, `◦ LUCK: *${newStats.luck}*`].join("\n")) + "\n\n" +
+      claraWrap("Pet Evolve", [`╎❏ Pet: *${PET_EMOJIS[pet.type] || "🐾"} ${pet.name || PET_NAMES[pet.type]}*`,
+        `╎❏ ${currentTier.emoji} ${oldTierName} → *${nextTier.emoji} ${nextTier.name}*`].join("\n")) + "\n\n" +
+      claraWrap("STATS BARU", [`╎❏ HP: *${newStats.hp}*`, `╎❏ ATK: *${newStats.atk}*`, `╎❏ DEF: *${newStats.def}*`, `╎❏ SPD: *${newStats.spd}*`, `╎❏ LUCK: *${newStats.luck}*`].join("\n")) + "\n\n" +
       separator("━", 22) + "\n" +
       tipText(`Selamat! Petmu udah naik ke tier ${nextTier.name}!`);
 
@@ -268,8 +268,8 @@ async function handler(m, { sock, config: botConfig }) {
   return sendReplyWithNav(
     sock,
     m,
-    claraWrap("Pet Evolve", [`◦ \`${prefix}petevolve\` — Cek status & syarat evolusi`,
-      `◦ \`${prefix}petevolve go\` — Lakukan evolusi`].join("\n")) + "\n\n" +
+    claraWrap("Pet Evolve", [`╎❏ \`${prefix}petevolve\` — Cek status & syarat evolusi`,
+      `╎❏ \`${prefix}petevolve go\` — Lakukan evolusi`].join("\n")) + "\n\n" +
     tipText("Fitur Premium: evolusi pet Normal → Mythic"),
     "petevolve"
   );

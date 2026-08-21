@@ -40,8 +40,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!rpg.spouse) {
       const text =
-        claraWrap("Babymoon", [`◦ Status: *Belum menikah*`,
-          `◦ Babymoon khusus pasangan yang udah nikah lama!`].join("\n")) + "\n" +
+        claraWrap("Babymoon", [`╎❏ Status: *Belum menikah*`,
+          `╎❏ Babymoon khusus pasangan yang udah nikah lama!`].join("\n")) + "\n" +
         tipText(`Ketik ${prefix}marry @target untuk menikah dulu`);
 
       await sendReplyWithNav(sock, m, text, "babymoon");
@@ -55,9 +55,9 @@ async function handler(m, { sock, config: botConfig }) {
     if (marriedDuration < minDuration) {
       const daysLeft = Math.ceil((minDuration - marriedDuration) / 86400000);
       const text =
-        claraWrap("Babymoon", [`◦ Status: *Baru menikah*`,
-          `◦ Babymoon butuh nikah minimal 30 hari`,
-          `◦ Tunggu: *${daysLeft} hari lagi*`].join("\n")) + "\n" +
+        claraWrap("Babymoon", [`╎❏ Status: *Baru menikah*`,
+          `╎❏ Babymoon butuh nikah minimal 30 hari`,
+          `╎❏ Tunggu: *${daysLeft} hari lagi*`].join("\n")) + "\n" +
         tipText(`Sambil nunggu: ${prefix}honeymoon, ${prefix}valentine`);
 
       await sendReplyWithNav(sock, m, text, "babymoon");
@@ -71,9 +71,9 @@ async function handler(m, { sock, config: botConfig }) {
     if (lastBabymoon > 0 && (now - lastBabymoon) < cooldown) {
       const daysLeft = Math.ceil((cooldown - (now - lastBabymoon)) / 86400000);
       const text =
-        claraWrap("Babymoon", [`◦ Status: *Sudah babymoon*`,
-          `◦ Tunggu: *${daysLeft} hari lagi*`,
-          `◦ Babymoon 2 minggu sekali!`].join("\n")) + "\n" +
+        claraWrap("Babymoon", [`╎❏ Status: *Sudah babymoon*`,
+          `╎❏ Tunggu: *${daysLeft} hari lagi*`,
+          `╎❏ Babymoon 2 minggu sekali!`].join("\n")) + "\n" +
         tipText(`Sambil nunggu: ${prefix}cuddling, ${prefix}kiss`);
 
       await sendReplyWithNav(sock, m, text, "babymoon");
@@ -110,15 +110,15 @@ async function handler(m, { sock, config: botConfig }) {
     const marriedDays = Math.floor(marriedDuration / 86400000);
 
     const text =
-      claraWrap("Babymoon", [`◦ ${userName} & ${partnerName} pergi babymoon!`,
-        `◦ Lokasi: *${spot}*`,
-        `◦ Udah nikah: *${marriedDays} hari*`,
-        `◦ Affection: *+${affectionGain}* (MEGA BONUS)`,
-        `◦ EXP: *+${expBonus}* (berdua)`,
-        `◦ Gold: *+${goldBonus}* (berdua)`,
-        `◦ Total Affection: *${totalAffection}*`,
-        `◦ Bond Level: *${bondLevel}*`,
-        `◦ Total Babymoon: *${rpg.babymoonCount}*`].join("\n")) + "\n" +
+      claraWrap("Babymoon", [`╎❏ ${userName} & ${partnerName} pergi babymoon!`,
+        `╎❏ Lokasi: *${spot}*`,
+        `╎❏ Udah nikah: *${marriedDays} hari*`,
+        `╎❏ Affection: *+${affectionGain}* (MEGA BONUS)`,
+        `╎❏ EXP: *+${expBonus}* (berdua)`,
+        `╎❏ Gold: *+${goldBonus}* (berdua)`,
+        `╎❏ Total Affection: *${totalAffection}*`,
+        `╎❏ Bond Level: *${bondLevel}*`,
+        `╎❏ Total Babymoon: *${rpg.babymoonCount}*`].join("\n")) + "\n" +
       tipText(`Babymoon lagi 2 minggu ${prefix}babymoon`);
 
     await sock.sendMessage(m.chat, {
@@ -129,8 +129,8 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`◦ Status: *Gagal*`,
-        `◦ Alasan: *${error.message}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`╎❏ Status: *Gagal*`,
+        `╎❏ Alasan: *${error.message}*`].join("\n")) + "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
     await m.reply(claraWrap("babymoon", text));
