@@ -260,11 +260,6 @@ function startAutoJob(db, sock) {
               contextInfo: {
                 forwardingScore: 0,
                 isForwarded: false,
-                forwardedNewsletterMessageInfo: {
-                  newsletterJid: saluranId,
-                  newsletterName: config.saluran?.name || "Nova AI",
-                  serverMessageId: 127,
-                },
               },
             });
           }

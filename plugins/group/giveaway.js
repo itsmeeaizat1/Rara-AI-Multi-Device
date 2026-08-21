@@ -36,13 +36,6 @@ function getCtx() {
   const saluranId = config.saluran?.id || "";
   const saluranName = config.saluran?.name || config.bot?.name || "";
   const ctx = { forwardingScore: 0, isForwarded: false };
-  if (saluranId && saluranId !== "-@newsletter") {
-    ctx.forwardedNewsletterMessageInfo = {
-      newsletterJid: saluranId,
-      newsletterName: saluranName,
-      serverMessageId: Math.floor(Math.random() * 1000) + 1,
-    };
-  }
   return ctx;
 }
 

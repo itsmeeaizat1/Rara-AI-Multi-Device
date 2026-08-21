@@ -64,11 +64,6 @@ function ctx() {
   return {
     forwardingScore: 0,
     isForwarded: false,
-    forwardedNewsletterMessageInfo: {
-      newsletterJid: sId,
-      newsletterName: sName,
-      serverMessageId: 127,
-    },
   };
 }
 

@@ -252,11 +252,6 @@ async function generateAndPostReport(db, groupId, sock) {
         contextInfo: {
           forwardingScore: 0,
           isForwarded: false,
-          forwardedNewsletterMessageInfo: {
-            newsletterJid: saluranId,
-            newsletterName: config.saluran?.name || "Nova AI",
-            serverMessageId: 127,
-          },
         },
       });
       console.log("[autopulse] Report posted to saluran:", saluranId);

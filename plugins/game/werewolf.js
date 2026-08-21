@@ -100,11 +100,6 @@ function wwCtx(mentions) {
     forwardingScore: 0,
     isForwarded: false,
     mentionedJid: mentions,
-    forwardedNewsletterMessageInfo: {
-      newsletterJid: saluranId,
-      newsletterName: saluranName,
-      serverMessageId: 127,
-    },
   };
 }
 

@@ -58,11 +58,6 @@ function utCtx(mentions) {
     forwardingScore: 0,
     isForwarded: false,
     mentionedJid: normalizedMentions.length ? normalizedMentions : undefined,
-    forwardedNewsletterMessageInfo: {
-      newsletterJid: saluranId,
-      newsletterName: saluranName,
-      serverMessageId: 127,
-    },
   };
 }
 

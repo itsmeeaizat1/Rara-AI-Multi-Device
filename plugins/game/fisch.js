@@ -57,11 +57,6 @@ function ctx(title, body) {
   const c = {
     forwardingScore: 0,
     isForwarded: false,
-    forwardedNewsletterMessageInfo: {
-      newsletterJid: sId,
-      newsletterName: sName,
-      serverMessageId: 127,
-    },
   };
   return c;
 }
