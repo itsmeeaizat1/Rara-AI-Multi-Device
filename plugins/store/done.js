@@ -170,8 +170,8 @@ async function handler(m, { sock }) {
     await sock.sendMessage(buyerJid, {
       text: invoiceTxt,
       contextInfo: {
-        forwardingScore: 9999,
-        isForwarded: true,
+        forwardingScore: 0,
+        isForwarded: false,
         forwardedNewsletterMessageInfo: {
           newsletterJid: saluranId,
           newsletterName: saluranName,

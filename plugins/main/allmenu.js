@@ -374,7 +374,7 @@ ${readMore}
               body: { text: _weatherBlock + txt },
               footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
               contextInfo: {
-                isForwarded: false, forwardingScore: 9,
+                isForwarded: false, forwardingScore: 0,
                 participant: "0@s.whatsapp.net",
                 quotedMessage: { conversation: botName },
                 mentionedJid: [m.sender],

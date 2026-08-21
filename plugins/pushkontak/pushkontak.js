@@ -133,8 +133,8 @@ function nativeFlowMsg(m, title, buttons) {
       image: cachedThumb,
       contextInfo: {
         mentionedJid: [m.sender],
-        forwardingScore: 7,
-        isForwarded: true,
+        forwardingScore: 0,
+        isForwarded: false,
       },
       nativeFlowMessage: {
         messageParamsJson: JSON.stringify({

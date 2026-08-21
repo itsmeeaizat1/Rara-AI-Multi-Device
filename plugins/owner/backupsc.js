@@ -201,8 +201,8 @@ async function handler(m, { sock }) {
           `┃ 📅 Tanggal: \`${moment().tz("Asia/Jakarta").format("DD/MM/YYYY")}\`\n` +
           `╰┈┈⬡`,
         contextInfo: {
-          forwardingScore: 9999,
-          isForwarded: true,
+          forwardingScore: 0,
+          isForwarded: false,
           forwardedNewsletterMessageInfo: {
             newsletterJid: saluranId,
             newsletterName: saluranName,

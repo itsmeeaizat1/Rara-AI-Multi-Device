@@ -85,8 +85,8 @@ async function handler(m, { sock }) {
       {
         text: txt,
         contextInfo: {
-          forwardingScore: 9999,
-          isForwarded: true,
+          forwardingScore: 0,
+          isForwarded: false,
           forwardedNewsletterMessageInfo: {
             newsletterJid: saluranId,
             newsletterName: saluranName,

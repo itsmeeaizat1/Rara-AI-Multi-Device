@@ -250,8 +250,8 @@ async function generateAndPostReport(db, groupId, sock) {
       await sock.sendMessage(saluranId, {
         text: wrappedReport,
         contextInfo: {
-          forwardingScore: 9,
-          isForwarded: true,
+          forwardingScore: 0,
+          isForwarded: false,
           forwardedNewsletterMessageInfo: {
             newsletterJid: saluranId,
             newsletterName: config.saluran?.name || "Nova AI",

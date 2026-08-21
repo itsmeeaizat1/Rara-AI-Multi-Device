@@ -53,8 +53,8 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, videoUrl, null, m, {
             type: 'video',
             contextInfo: {
-                forwardingScore: 99,
-                isForwarded: true
+                forwardingScore: 0,
+                isForwarded: false
             }
         })
         

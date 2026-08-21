@@ -59,8 +59,8 @@ async function handler(m, { sock }) {
           fileName: file.filename || `${app.name}.apk`,
           mimetype: "application/vnd.android.package-archive",
           contextInfo: {
-            forwardingScore: 99,
-            isForwarded: true,
+            forwardingScore: 0,
+            isForwarded: false,
           },
         },
         { quoted: m },
@@ -74,8 +74,8 @@ async function handler(m, { sock }) {
         {
           text: caption,
           contextInfo: {
-            forwardingScore: 9999,
-            isForwarded: true,
+            forwardingScore: 0,
+            isForwarded: false,
             forwardedNewsletterMessageInfo: {
               newsletterJid: saluranId,
               newsletterName: saluranName,

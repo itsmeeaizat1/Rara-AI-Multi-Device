@@ -57,8 +57,8 @@ async function handler(m, { sock }) {
       type: "video",
       mimetype: "video/mp4",
       contextInfo: {
-        forwardingScore: 99,
-        isForwarded: true,
+        forwardingScore: 0,
+        isForwarded: false,
       },
     });
 

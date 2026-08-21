@@ -86,8 +86,8 @@ async function handler(m, { sock }) {
     const sentMsg = await sock.sendMessage(targetJid, {
       text: confessText,
       contextInfo: {
-        forwardingScore: 99,
-        isForwarded: true,
+        forwardingScore: 0,
+        isForwarded: false,
       },
     });
 
@@ -139,8 +139,8 @@ async function replyHandler(m, { sock }) {
     await sock.sendMessage(confessInfo.senderChat, {
       text: replyText,
       contextInfo: {
-        forwardingScore: 9999,
-        isForwarded: true,
+        forwardingScore: 0,
+        isForwarded: false,
         forwardedNewsletterMessageInfo: {
           newsletterJid: saluranId,
           newsletterName: saluranName,

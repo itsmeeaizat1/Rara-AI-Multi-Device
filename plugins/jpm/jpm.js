@@ -247,8 +247,8 @@ async function sendInteractiveMessage(
               }),
             contextInfo: {
               mentionedJid: [m.sender],
-              forwardingScore: 9,
-              isForwarded: true,
+              forwardingScore: 0,
+              isForwarded: false,
               forwardedNewsletterMessageInfo: {
                 newsletterJid: saluranId,
                 newsletterName: saluranName,
@@ -464,11 +464,11 @@ async function runBroadcast(
       } else if (mediaBuffer) {
         await sock.sendMedia(targetId, mediaBuffer, broadcastText, null, {
           type: mediaType,
-          contextInfo: { forwardingScore: 99, isForwarded: true },
+          contextInfo: { forwardingScore: 0, isForwarded: false },
         });
       } else {
         await sock.sendText(targetId, broadcastText, null, {
-          contextInfo: { forwardingScore: 99, isForwarded: true },
+          contextInfo: { forwardingScore: 0, isForwarded: false },
         });
       }
       successCount++;

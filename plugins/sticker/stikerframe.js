@@ -793,7 +793,7 @@ export default {
         sticker,
         isAiSticker: true,
         isAvatar: true,
-        contextInfo: { isForwarded: true, forwardingScore: 1, premium: 1 },
+        contextInfo: { isForwarded: false, forwardingScore: 0, premium: 1 },
       }, { quoted: m });
 
       await m.react("✅");

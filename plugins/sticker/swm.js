@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig }) {
             const stickerBuffer = await addExifToWebp(buffer, exifOpts)
             await sock.sendMessage(m.chat, {
                 sticker: stickerBuffer,
-                contextInfo: { isForwarded: true, forwardingScore: 1 }
+                contextInfo: { isForwarded: false, forwardingScore: 0 }
             }, { quoted: m })
         } else {
             const isVideo = buffer.slice(0, 3).toString('hex') === '000000' ||

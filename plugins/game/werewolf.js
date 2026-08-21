@@ -97,8 +97,8 @@ function wwCtx(mentions) {
   const saluranId = config.saluran?.id || "120363400911374213@newsletter";
   const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
   return {
-    forwardingScore: 9999,
-    isForwarded: true,
+    forwardingScore: 0,
+    isForwarded: false,
     mentionedJid: mentions,
     forwardedNewsletterMessageInfo: {
       newsletterJid: saluranId,

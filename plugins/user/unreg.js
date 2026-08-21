@@ -51,8 +51,8 @@ async function handler(m, { sock }) {
         `Data pendaftaran kamu sudah dihapus.\n\n` +
         `Untuk daftar ulang: \`${m.prefix}daftar\``,
       contextInfo: {
-        forwardingScore: 9999,
-        isForwarded: true,
+        forwardingScore: 0,
+        isForwarded: false,
         forwardedNewsletterMessageInfo: {
           newsletterJid: saluranId,
           newsletterName: saluranName,

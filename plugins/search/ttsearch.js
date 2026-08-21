@@ -58,8 +58,8 @@ async function handler(m, { sock }) {
 👀 ${video.stats?.plays || 0} views
 ❤️ ${video.stats?.likes || 0} likes`,
       contextInfo: {
-        forwardingScore: 99,
-        isForwarded: true,
+        forwardingScore: 0,
+        isForwarded: false,
       },
     }));
 

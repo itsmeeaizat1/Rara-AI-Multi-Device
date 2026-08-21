@@ -24,8 +24,8 @@ function getBcContextInfo() {
   const saluranId = config.saluran?.id || "";
   const saluranName = config.saluran?.name || config.bot?.name || "";
   const ctx = {
-    forwardingScore: 1,
-    isForwarded: true,
+    forwardingScore: 0,
+    isForwarded: false,
   };
   if (saluranId && saluranId !== "-@newsletter") {
     ctx.forwardedNewsletterMessageInfo = {

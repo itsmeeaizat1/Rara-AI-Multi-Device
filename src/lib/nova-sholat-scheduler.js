@@ -407,8 +407,8 @@ async function sendSholatNotifications(sholat, waktu) {
               await sock.sendMessage(groupId, {
                 text: `✅ Grup dibuka kembali setelah sholat ${sholat}.\n\n> Semoga sholat kita diterima. Aamiin 🤲`,
                 contextInfo: {
-                  forwardingScore: 9999,
-                  isForwarded: true,
+                  forwardingScore: 0,
+                  isForwarded: false,
                   forwardedNewsletterMessageInfo: {
                     newsletterJid: saluranId,
                     newsletterName: saluranName,

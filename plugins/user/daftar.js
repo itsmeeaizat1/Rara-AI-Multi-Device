@@ -55,8 +55,8 @@ function getRegistrationContextInfo() {
   const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
   return {
-    forwardingScore: 9999,
-    isForwarded: true,
+    forwardingScore: 0,
+    isForwarded: false,
     forwardedNewsletterMessageInfo: {
       newsletterJid: saluranId,
       newsletterName: saluranName,
@@ -175,15 +175,38 @@ function isReplyToSessionPrompt(m, session) {
 async function sendRegistrationPrompt(sock, m, text, options = {}) {
   const image = options.useImage ? await getRegistrationImage() : null;
   if (image) {
-    return await sock.sendMessage(
-      m.chat,
-      {
-        image,
-        caption: text,
-        contextInfo: getRegistrationContextInfo(),
+    // Preview pakai externalAdReply (thumbnail kecil ter-sync), bukan kirim
+    // gambar full-res mentah — konsisten sama pola preview di m.reply().
+    const { default: sharp } = await import("sharp");
+    const { generateWAMessageFromContent } = await import("baileys");
+    const thumbnail = await sharp(image).resize(640, 360).toBuffer();
+
+    const msg = generateWAMessageFromContent(m.chat, {
+      viewOnceMessage: {
+        message: {
+          messageContextInfo: {},
+          interactiveMessage: {
+            header: { hasMediaAttachment: false },
+            body: { text },
+            contextInfo: {
+              ...getRegistrationContextInfo(),
+              externalAdReply: {
+                title: config.bot?.name || "Nova AI Whatsapp Bot",
+                body: "Menu Daftar",
+                thumbnail,
+                previewType: "PHOTO",
+                showAdAttribution: false,
+                renderLargerThumbnail: true,
+              },
+            },
+            nativeFlowMessage: { buttons: [] },
+          },
+        },
       },
-      { quoted: m },
-    );
+    }, { quoted: m, userJid: sock.user.jid });
+
+    await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+    return msg;
   } else {
     return await m.reply(claraWrap("daftar", text));
   }

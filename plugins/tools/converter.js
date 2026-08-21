@@ -108,8 +108,8 @@ async function handler(m, { sock }) {
         fileName: `converted_${Date.now()}.${targetFormat}`,
         mimetype: `application/${targetFormat}`,
         contextInfo: {
-          forwardingScore: 9999,
-          isForwarded: true,
+          forwardingScore: 0,
+          isForwarded: false,
           forwardedNewsletterMessageInfo: {
             newsletterJid: saluranId,
             newsletterName: saluranName,

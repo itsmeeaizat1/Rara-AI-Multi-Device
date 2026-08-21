@@ -45,8 +45,8 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, media.url, null, m, {
           type: "video",
           contextInfo: {
-            forwardingScore: 99,
-            isForwarded: true,
+            forwardingScore: 0,
+            isForwarded: false,
           },
         });
       } else if (media.type === "image") {
@@ -69,15 +69,15 @@ async function handler(m, { sock }) {
               type: "video",
               gifPlayback: true,
               contextInfo: {
-                forwardingScore: 99,
-                isForwarded: true,
+                forwardingScore: 0,
+                isForwarded: false,
               },
             });
           } catch (gifErr) {
             console.error("[PinDL] GIF convert error:", gifErr.message);
             await sock.sendMedia(m.chat, media.url, null, m, {
               type: "image",
-              contextInfo: { forwardingScore: 99, isForwarded: true },
+              contextInfo: { forwardingScore: 0, isForwarded: false },
             });
           } finally {
             if (fs.existsSync(gifPath)) fs.unlinkSync(gifPath);
@@ -87,8 +87,8 @@ async function handler(m, { sock }) {
           await sock.sendMedia(m.chat, media.url, null, m, {
             type: "image",
             contextInfo: {
-              forwardingScore: 99,
-              isForwarded: true,
+              forwardingScore: 0,
+              isForwarded: false,
             },
           });
         }

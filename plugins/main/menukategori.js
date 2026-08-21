@@ -172,7 +172,7 @@ async function handler(m, { sock, db }) {
               footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
               contextInfo: {
                 isForwarded: false,
-                forwardingScore: 9,
+                forwardingScore: 0,
                 participant: "0@s.whatsapp.net",
                 quotedMessage: { conversation: `${config.bot?.name}` },
                 mentionedJid: [m.sender],
@@ -270,7 +270,7 @@ async function handler(m, { sock, db }) {
             footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
             contextInfo: {
               isForwarded: false,
-              forwardingScore: 9,
+              forwardingScore: 0,
               participant: "0@s.whatsapp.net",
               quotedMessage: { conversation: `${config.bot?.name}` },
               mentionedJid: [m.sender],
