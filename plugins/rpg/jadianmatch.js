@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
       const text =
         claraWrap("Cara Pakai", ["◦ Penggunaan: *" + prefix + "jadian @member*",
           "◦ Contoh: *" + prefix + "jadian @628xxxx*",
-          "◦ Target harus ketik *" + prefix + "terimamatch* untuk terima, .engga* untuk tolak"].join("\n")) +
+          "❏ Target harus ketik *" + prefix + "terimajadian* untuk terima, .tolakjadian* untuk tolak"].join("\n")) +
         "\n" +
         tipText("Tembak orang yang kamu suka!");
 
@@ -96,7 +96,7 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("Sudah Menikah", ["◦ Kamu sudah menikah dengan *" + partnerName + "*",
           "◦ Nggak bisa jadian lagi!"].join("\n")) +
         "\n" +
-        tipText("Ketik " + prefix + "divorce untuk cerai dulu");
+        tipText("Ketik " + prefix + "putusmatch untuk cerai dulu");
 
       await sendReplyWithNav(sock, m, text, "jadian");
       return { handled: true };
@@ -107,9 +107,9 @@ async function handler(m, { sock, config: botConfig }) {
       const partnerName = db.getUser(user.rpg.dating)?.name || user.rpg.dating;
       const text =
         claraWrap("Sudah Jadian", ["◦ Kamu sudah jadian dengan *" + partnerName + "*",
-          "◦ Putus dulu dengan *" + prefix + "putus* baru bisa jadian lagi"].join("\n")) +
+          "❏ Putus dulu dengan *" + prefix + "putusmatch* baru bisa jadian lagi"].join("\n")) +
         "\n" +
-        tipText("Ketik " + prefix + "putus untuk putus");
+        tipText("Ketik " + prefix + "putusmatch untuk putus");
 
       await sendReplyWithNav(sock, m, text, "jadian");
       return { handled: true };
@@ -121,7 +121,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (targetUser.rpg.spouse) {
       const text =
-        claraWrap("Maaf", ["◦ Target sudah menikah!"].join("\n")) +
+        claraWrap("Maaf", ["❏ Target sudah menikah!"].join("\n")) +
         "\n" +
         tipText("Cari pasangan lain");
 
@@ -131,7 +131,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (targetUser.rpg.dating) {
       const text =
-        claraWrap("Sudah Jadian", ["◦ Target sudah jadian dengan orang lain!"].join("\n")) +
+        claraWrap("Sudah Jadian", ["❏ Target sudah jadian dengan orang lain!"].join("\n")) +
         "\n" +
         tipText("Cari pasangan lain");
 
@@ -144,7 +144,7 @@ async function handler(m, { sock, config: botConfig }) {
     const existing = pendingConfessions.get(target);
     if (existing && existing.confessor !== m.sender) {
       const text =
-        claraWrap("Sibuk", ["◦ Target lagi ditembak orang lain",
+        claraWrap("Sibuk", ["❏ Target lagi ditembak orang lain",
           "◦ Tunggu dia jawab dulu"].join("\n")) +
         "\n" +
         tipText("Coba lagi nanti");
@@ -192,8 +192,8 @@ async function handler(m, { sock, config: botConfig }) {
     text += separator("─", 28) + "\n\n";
     text += "💕 *" + targetName + "*, " + confessorName + " nembak kamu!\n\n";
     text += "⏳ Kamu punya *5 menit* buat jawab:\n\n";
-    text += "✅ Ketik *" + prefix + "terimamatch* — Mau jadian!\n";
-    text += "❌ Ketik *" + prefix + "tolakmatch* — Nggak mau\n\n";
+    text += "✅ Ketik *" + prefix + "terimajadian* — Mau jadian!\n";
+    text += "❌ Ketik *" + prefix + "tolakjadian* — Nggak mau\n\n";
     text += decor + "\n";
     text += tipText("Jangan buat dia deg-degan terlalu lama...");
 

@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { pendingConfessions, cleanExpired } from "./jadianmatch.js";
+import { pendingConfessions, cleanExpired } from "./confessmatch.js";
 import { separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // VN files (put files in assets/vn/)
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!confession) {
       const text =
         claraWrap("Tidak Ada Confession", [
-          "◦ Nggak ada yang nembak kamu saat ini",
+          "❏ Nggak ada yang nembak kamu saat ini",
           "◦ Atau confession sudah expired (5 menit)",
         ].join("\n")) + "\n" +
         tipText("Sabar ya, jodong nggak kemana");
@@ -66,7 +66,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (confession.groupId !== m.chat) {
       const text =
         claraWrap("Salah Tempat", [
-          "◦ Confession harus dijawab di grup yang sama",
+          "❏ Confession harus dijawab di grup yang sama",
         ].join("\n")) + "\n" +
         tipText("Balas di grup tempat kamu ditembak");
 
@@ -96,8 +96,8 @@ async function handler(m, { sock, config: botConfig }) {
     if (targetUser.rpg.dating) {
       pendingConfessions.delete(m.sender);
       const text = claraWrap("Sudah Jadian", [
-        "◦ Kamu sudah jadian dengan orang lain!",
-        "◦ Putus dulu dengan *" + prefix + "putus*",
+        "❏ Kamu sudah jadian dengan orang lain!",
+        "❏ Putus dulu dengan *" + prefix + "putusmatch*",
       ].join("\n"));
       await sendReplyWithNav(sock, m, text, "terimamatch");
       return { handled: true };
@@ -146,7 +146,7 @@ async function handler(m, { sock, config: botConfig }) {
     text += "🌹 Selamat jadian! Semoga langgeng! 🌹\n\n";
     text += decor + "\n";
     text += tipText("Ketik " + prefix + "couple untuk cek status");
-    text += "\n" + tipText("Ketik " + prefix + "putus untuk putus");
+    text += "\n" + tipText("Ketik " + prefix + "putusmatch untuk putus");
 
     await sock.sendMessage(m.chat, { text: text, mentions: [confessorJid, m.sender] });
 

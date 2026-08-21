@@ -15,8 +15,8 @@ const pluginConfig = {
   alias: ["tolaknikah"],
   category: "game",
   description: "Tolak lamaran nikah",
-  usage: ".tolaknikahmatch",
-  example: ".tolaknikahmatch",
+  usage: ".tolaknikah",
+  example: ".tolaknikah",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText("Tunggu seseorang melamar kamu");
 
-      await sendReplyWithNav(sock, m, text, "tolaknikahmatch");
+      await sendReplyWithNav(sock, m, text, "tolaknikah");
       return { handled: true };
     }
 
