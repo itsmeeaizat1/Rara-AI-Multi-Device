@@ -392,12 +392,31 @@ async function handler(m, { sock }) {
 }
 
 async function registrationAnswerHandler(m, sock) {
-  if (!m.body) return false;
   if (shouldBypassRegistrationAnswer(m)) return false;
 
   const { session } = getRegistrationSessionEntry(m.sender);
   if (!session) return false;
   if (m.chat !== session.chatJid) return false;
+
+  // Kalau gak ada text body (misal reply pakai VN/gambar/sticker), kasih tau
+  // user wajib jawab pakai TEKS — jangan diemin aja biar gak bingung.
+  if (!m.body || !m.body.trim()) {
+    if (m.fromMe && m.key?.id && session.promptId && m.key.id === session.promptId) {
+      return false;
+    }
+    await m.reply(
+      `❗ Pertanyaan pendaftaran cuma bisa dijawab pakai *teks*, bukan voice note/gambar/sticker.\n\n` +
+      `Reply pesan pertanyaan ini dengan teks ya.`,
+    );
+    return true;
+  }
+
+  // Proteksi echo: kalau ini pesan yang BOT SENDIRI kirim (prompt pertanyaan),
+  // JANGAN diproses sebagai jawaban. Penting karena kita udah izinkan fromMe
+  // lewat (biar owner bisa testing daftar via chat ke diri sendiri sendiri).
+  if (m.fromMe && m.key?.id && session.promptId && m.key.id === session.promptId) {
+    return false;
+  }
 
   const text = m.body.trim();
   const lowText = normalizeSessionText(text);
