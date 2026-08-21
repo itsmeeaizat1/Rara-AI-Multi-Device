@@ -343,9 +343,9 @@ function clearCaptchaSession(jid) {
 function buildUserDataBlock(name, age, gender) {
   return (
     "╔┈┈「 \U0001F4CB DATA 」\n" +
-    "╜┈❏ Nama: *" + (name || "-") + "*\n" +
-    "╜┈❏ Umur: *" + (age ? age + " tahun" : "-") + "*\n" +
-    "╜┈❏ Gender: *" + (gender || "-") + "*\n" +
+    "╎┈❏ Nama: *" + (name || "-") + "*\n" +
+    "╎┈❏ Umur: *" + (age ? age + " tahun" : "-") + "*\n" +
+    "╎┈❏ Gender: *" + (gender || "-") + "*\n" +
     "╚┈┈❖"
   )
 }
@@ -353,21 +353,21 @@ function buildUserDataBlock(name, age, gender) {
 function buildSuccessRewardBlock(alreadyClaimed, randomBonus) {
   var rewards = getRewards()
   if (alreadyClaimed) {
-    return "╭┈┈「 \U0001F381 BONUS 」\n╜┈❏ Bonus daftar sudah pernah diklaim\n╜┈❏ Tidak ada reward tambahan\n╚┈┈❕"
+    return "╭┈┈「 \U0001F381 BONUS 」\n╎┈❏ Bonus daftar sudah pernah diklaim\n╎┈❏ Tidak ada reward tambahan\n╚┈┈❖"
   }
   var msg =
     "╭┈┈「 \U0001F381 REWARDS 」\n" +
-    "╜┈❏ \U0001F4B0 +" + rewards.koin.toLocaleString("id-ID") + " Koin\n" +
-    "╜┈❏ ⚡ +" + rewards.energi + " Energi\n" +
-    "╜┈❏ ⭐ +" + rewards.exp.toLocaleString("id-ID") + " EXP\n" +
-    "╚┈┈❕"
+    "╎┈❏ \U0001F4B0 +" + rewards.koin.toLocaleString("id-ID") + " Koin\n" +
+    "╎┈❏ ⚡ +" + rewards.energi + " Energi\n" +
+    "╎┈❏ ⭐ +" + rewards.exp.toLocaleString("id-ID") + " EXP\n" +
+    "╚┈┈❖"
   if (randomBonus) {
     msg +=
       "\n╭┈┈「 \U0001F3B2 RANDOM BONUS 」\n" +
-      "╜┈❏ \U0001F4B0 +" + randomBonus.koin.toLocaleString("id-ID") + " Koin\n" +
-      "╜┈❏ ⚡ +" + randomBonus.energi + " Energi\n" +
-      "╜┈❏ ⭐ +" + randomBonus.exp.toLocaleString("id-ID") + " EXP\n" +
-      "╚┈┈❕"
+      "╎┈❏ \U0001F4B0 +" + randomBonus.koin.toLocaleString("id-ID") + " Koin\n" +
+      "╎┈❏ ⚡ +" + randomBonus.energi + " Energi\n" +
+      "╎┈❏ ⭐ +" + randomBonus.exp.toLocaleString("id-ID") + " EXP\n" +
+      "╚┈┈❖"
   }
   return msg
 }
@@ -387,12 +387,12 @@ async function handler(m, { sock }) {
   if (m.isGroup) {
     return m.reply(
       "╔┈┈「 \U0001F916 DAFTAR OTOMATIS 」\n" +
-      "╜┈❏ Verifikasi captcha dilakukan via DM (private chat)\n\n" +
-      "╜┈❏ *Langkah:*\n" +
-      "╜┈ > 1. Chat langsung ke nomor bot\n" +
-      "╜┈ > 2. Ketik `" + m.prefix + "daftarotomatis`\n" +
-      "╜┈ > 3. Jawab captcha yang dikirim bot\n" +
-      "╜┈ > 4. Isi data diri (nama, umur, gender)\n\n" +
+      "╎┈❏ Verifikasi captcha dilakukan via DM (private chat)\n\n" +
+      "╎┈❏ *Langkah:*\n" +
+      "╎┈ > 1. Chat langsung ke nomor bot\n" +
+      "╎┈ > 2. Ketik `" + m.prefix + "daftarotomatis`\n" +
+      "╎┈ > 3. Jawab captcha yang dikirim bot\n" +
+      "╎┈ > 4. Isi data diri (nama, umur, gender)\n\n" +
       "╚┈┈❖"
     )
   }
@@ -441,12 +441,12 @@ async function handler(m, { sock }) {
   if (captcha.type === "image" && captcha.imageBuffer) {
     // Image captcha (API or Canvas)
     var caption = "╔┈┈「 \U0001F512 CAPTCHA VERIFICATION 」\n\n"
-    caption += "╜┈❏ Jawab captcha pada gambar di atas\n\n"
-    caption += "╜┈❏ *Reply gambar ini dengan jawaban kamu*\n"
-    caption += "╜┈❏ Waktu: 3 menit\n"
-    caption += "╜┈❏ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
-    caption += "╜┈❏ Batal: reply `batal`\n"
-    caption += "╜┈┈ Source: " + sourceName + "\n"
+    caption += "╎┈❏ Jawab captcha pada gambar di atas\n\n"
+    caption += "╎┈❏ *Reply gambar ini dengan jawaban kamu*\n"
+    caption += "╎┈❏ Waktu: 3 menit\n"
+    caption += "╎┈❏ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
+    caption += "╎┈❏ Batal: reply `batal`\n"
+    caption += "╎┈┈ Source: " + sourceName + "\n"
     caption += "╚┈┈❖"
 
     var sent = await sock.sendMessage(m.chat, {
@@ -459,12 +459,12 @@ async function handler(m, { sock }) {
   } else if (captcha.type === "text-api") {
     // Text captcha from API
     var msg = "╔┈┈「 \U0001F512 CAPTCHA VERIFICATION 」\n\n"
-    msg += "╜┈❏ " + captcha.textCaptcha + "\n\n"
-    msg += "╜┈❏ *Reply pesan ini dengan jawaban kamu*\n"
-    msg += "╜┈❏ Waktu: 3 menit\n"
-    msg += "╜┈❏ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
-    msg += "╜┈❏ Batal: reply `batal`\n"
-    msg += "╜┈┈ Source: " + sourceName + "\n"
+    msg += "╎┈❏ " + captcha.textCaptcha + "\n\n"
+    msg += "╎┈❏ *Reply pesan ini dengan jawaban kamu*\n"
+    msg += "╎┈❏ Waktu: 3 menit\n"
+    msg += "╎┈❏ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
+    msg += "╎┈❏ Batal: reply `batal`\n"
+    msg += "╎┈┈ Source: " + sourceName + "\n"
     msg += "╚┈┈❖"
 
     var sent = await sock.sendMessage(m.chat, {
@@ -476,14 +476,14 @@ async function handler(m, { sock }) {
   } else {
     // Math captcha (last resort)
     var msg2 = "╔┈┈「 \U0001F512 CAPTCHA VERIFICATION 」\n\n"
-    msg2 += "╜┈❏ Jawab pertanyaan berikut:\n\n"
-    msg2 += "╜┈❏ *" + captcha.display + "*\n\n"
-    msg2 += "╜┈❏ " + captcha.question + "\n\n"
-    msg2 += "╜┈❏ *Reply pesan ini dengan jawaban kamu*\n"
-    msg2 += "╜┈❏ Waktu: 3 menit\n"
-    msg2 += "╜┈❏ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
-    msg2 += "╜┈❏ Batal: reply `batal`\n"
-    msg2 += "╜┈┈ Source: " + sourceName + "\n"
+    msg2 += "╎┈❏ Jawab pertanyaan berikut:\n\n"
+    msg2 += "╎┈❏ *" + captcha.display + "*\n\n"
+    msg2 += "╎┈❏ " + captcha.question + "\n\n"
+    msg2 += "╎┈❏ *Reply pesan ini dengan jawaban kamu*\n"
+    msg2 += "╎┈❏ Waktu: 3 menit\n"
+    msg2 += "╎┈❏ Maksimal salah: " + MAX_ATTEMPTS + "x\n"
+    msg2 += "╎┈❏ Batal: reply `batal`\n"
+    msg2 += "╎┈┈ Source: " + sourceName + "\n"
     msg2 += "╚┈┈❖"
 
     var sent = await sock.sendMessage(m.chat, {
@@ -605,7 +605,7 @@ async function captchaAnswerHandler(m, sock) {
     // Ask for name
     session.step = "name"
     await sock.sendMessage(m.chat, {
-      text: "✅ *Captcha benar!*\n\n╔┈┈「 \U0001F4DD LANJUTKAN 」\n╜┈❏ *Pertanyaan 1/3*\n╜┈❏ Siapa nama kamu?\n\n╜┈❏ Reply pesan ini dengan nama kamu\n╜┈❏ Batal: reply `batal`\n╚┈┈❖",
+      text: "✅ *Captcha benar!*\n\n╔┈┈「 \U0001F4DD LANJUTKAN 」\n╎┈❏ *Pertanyaan 1/3*\n╎┈❏ Siapa nama kamu?\n\n╎┈❏ Reply pesan ini dengan nama kamu\n╎┈❏ Batal: reply `batal`\n╚┈┈❖",
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
     return true
@@ -621,7 +621,7 @@ async function captchaAnswerHandler(m, sock) {
     session.name = name
     session.step = "age"
     await sock.sendMessage(m.chat, {
-      text: "╔┈┈「 \U0001F4DD LANJUTKAN 」\n╜┈❏ Halo *" + name + "* ✋\n\n╜┈❏ *Pertanyaan 2/3*\n╜┈❏ Berapa umurmu?\n\n╜┈❏ Umur: 1-100 tahun\n╜┈❏ Reply dengan angka\n╚┈┈❖",
+      text: "╔┈┈「 \U0001F4DD LANJUTKAN 」\n╎┈❏ Halo *" + name + "* ✋\n\n╎┈❏ *Pertanyaan 2/3*\n╎┈❏ Berapa umurmu?\n\n╎┈❏ Umur: 1-100 tahun\n╎┈❏ Reply dengan angka\n╚┈┈❖",
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
     return true
@@ -637,7 +637,7 @@ async function captchaAnswerHandler(m, sock) {
     session.age = age
     session.step = "gender"
     await sock.sendMessage(m.chat, {
-      text: "╔┈┈「 \U0001F4DD LANJUTKAN 」\n╜┈❏ *Pertanyaan 3/3*\n╜┈❏ Kamu cowo atau cewe?\n\n╜┈❏ *Cowo / Cowok / Laki-laki / L*\n╜┈❏ *Cewe / Cewek / Perempuan / P*\n\n╜┈❏ Reply pesan ini dengan jawabanmu\n╚┈┈❖",
+      text: "╔┈┈「 \U0001F4DD LANJUTKAN 」\n╎┈❏ *Pertanyaan 3/3*\n╎┈❏ Kamu cowo atau cewe?\n\n╎┈❏ *Cowo / Cowok / Laki-laki / L*\n╎┈❏ *Cewe / Cewek / Perempuan / P*\n\n╎┈❏ Reply pesan ini dengan jawabanmu\n╚┈┈❖",
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
     return true

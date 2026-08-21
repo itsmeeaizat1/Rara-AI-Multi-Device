@@ -21,7 +21,7 @@ const MEMES = [
   "Pacar: 'Kamu berubah.'\nAku: 'Bukan aku yang berubah, tapi kamu yang bikin aku malas.'",
   "Saya bukan malas, saya sedang charging energi. Tunggu sampe 100%.",
   "Mantra jomblo: 'Sendiri itu bukan kalah, tapi sedang menunggu waktu yang tepat untuk menang.'",
-  "Niatnya mau diet, tapi nasinya 3 porsi. 'Ini最后一次 makan' katanya setiap hari.",
+  "Niatnya mau diet, tapi nasinya 3 porsi. 'Ini terakhir kalinya makan' katanya setiap hari.",
   "Ketika kamu ngerasa pinter, tiba-tiba anak SD nanya soal matematika dan kamu: 'Eh, bentar ya aku cek kalkulator.'",
   "Saya: 'Aku gak punya uang.'\nTeman: 'Yuk nongkrong.'\nSaya: 'Tapi aku bisa temenin kamu duduk.'",
   "Ketika kamu buka WhatsApp dan lihat chat kelompok: 'Apa yang terjadi? Kenapa 999+ pesan?'",

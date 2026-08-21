@@ -47,7 +47,7 @@ const pluginConfig = {
   category: "ai",
   description: "Chat AI dengan memori percakapan per chat",
   usage: ".aichat <pesan> | .aichat clear",
-  example: ".aichat Jelaskan量子 computing",
+  example: ".aichat Jelaskan kuantum computing",
   isOwner: false,
   isPremium: false,
   isGroup: true,

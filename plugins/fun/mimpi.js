@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
     
     const dream = generateDream(name)
     
-    let txt = `╭═══❯ *🌙 DREAM WORLD* ❮═══\n`
+    let txt = `╔┈┈「 *🌙 DREAM WORLD* 」\n`
     txt += `│ 👤 *Explorer:* ${name}\n`
     txt += `│ ⭐ *Level:* ${dream.level}\n`
     txt += `│ 💫 *Quality:* ${dream.quality}\n`
@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
     }
     txt += `│ 🔮 *Message:*\n`
     txt += `│ ${dream.message}\n`
-    txt += `╰════════════════════`
+    txt += `╚┈┈┈┈┈┈┈┈┈❖`
     
     await m.reply(claraWrap("mimpi", txt))
 }

@@ -464,10 +464,10 @@ async function registrationAnswerHandler(m, sock) {
     const sent = await sendRegistrationPrompt(
       sock,
       m,
-      `� *Pertanyaan 3/4*\n\n` +
+      `❓ *Pertanyaan 3/4*\n\n` +
       `Kamu cowo atau cewe?\n\n` +
-      `┃ � *Cowo* / *Cowok* / *Laki-laki* / *L*\n` +
-      `┃ � *Cewe* / *Cewek* / *Perempuan* / *P*\n\n` +
+      `┃ 👦 *Cowo* / *Cowok* / *Laki-laki* / *L*\n` +
+      `┃ 👧 *Cewe* / *Cewek* / *Perempuan* / *P*\n\n` +
       `📩 Reply pesan ini dengan jawabanmu`,
     );
 
@@ -631,7 +631,7 @@ async function registrationAnswerHandler(m, sock) {
         m,
         `👤 *Revisi Gender*\n\n` +
         `Pilih gender yang benar ya.\n\n` +
-        `┃ � *Cowo* / *Cowok* / *Laki-laki* / *L*\n` +
+        `┃ 👦 *Cowo* / *Cowok* / *Laki-laki* / *L*\n` +
         `┃ 👧 *Cewe* / *Cewek* / *Perempuan* / *P*\n\n` +
         `📩 Reply pesan ini dengan jawabanmu`,
       );

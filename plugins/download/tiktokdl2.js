@@ -142,7 +142,7 @@ async function handler(m, { sock }) {
             `✅ *Done kak*\n\n` +
             `👤 *${result.username || '-'}*\n` +
             `👁️ Views: ${result.views || '-'} | ❤️ Likes: ${result.likes || '-'}\n` +
-            `� Comments: ${result.comments || '-'} | 🔗 Shares: ${result.shares || '-'}\n` +
+            `💬 Comments: ${result.comments || '-'} | 🔗 Shares: ${result.shares || '-'}\n` +
             `⏱️ Duration: ${result.duration || '-'}`
 
         if (result.type === 'video' && result.downloads.nowm.length > 0) {

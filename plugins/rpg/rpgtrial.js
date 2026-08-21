@@ -55,7 +55,7 @@ const TRIALS = [
     type: "battle",
     questions: [
       { q: "Musuh bertahan kuat. Strategi terbaik?", a: "serang sisi lemah", opts: ["Serang sisi lemah", "Serang langsung", "Kabur", "Diam"] },
-      { q: "Musuh punya serangan cepat. Apa yang kamu lakukan?", a: "tunggu时机counter", opts: ["Tunggu dan counter", "Serang duluan", "Kabur", "Diam"] },
+      { q: "Musuh punya serangan cepat. Apa yang kamu lakukan?", a: "tunggu timing counter", opts: ["Tunggu dan counter", "Serang duluan", "Kabur", "Diam"] },
       { q: "Kamu terluka parah. Pilihan terbaik?", a: "minum ramuan", opts: ["Minum ramuan", "Serang terus", "Kabur", "Diam"] },
       { q: "Musuh menggunakan sihir. Cara terbaik?", a: "gunakan tamu sihir", opts: ["Gunakan tameng sihir", "Serang fisik", "Kabur", "Diam"] },
       { q: "Musuh hampir kalah. Strategi akhir?", a: "serangan khusus", opts: ["Serangan khusus", "Serang biasa", "Kabur", "Diam"] },
