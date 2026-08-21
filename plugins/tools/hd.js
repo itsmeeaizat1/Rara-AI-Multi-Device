@@ -1,45 +1,60 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import axios from "axios";
+// HD Upscaler — pakai sharp local (Lanczos3 + sharpen) sebagai primary
+// DeepAI key expired, Azbry/Snowping down. Sharp local = gratis, no API, no rate limit
+import sharp from "sharp";
 import te from "../../src/lib/nova-error.js";
 import cfg from "../../config.js";
-import { ImageUploadService } from "node-upload-images";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
-const config = {
+const pluginConfig = {
   name: "remini",
   alias: ["hd", "enhance", "hd4k"],
   category: "tools",
-  description: "Enhance gambar jadi HD (full quality, no compress)",
-  usage: ".remini (reply gambar)\n.remini doc — kirim sebagai dokumen (full HD tanpa compress)",
-  example: ".remini\n.remini 4x\n.remini 8x doc",
+  description: "Enhance gambar jadi HD (Sharp Lanczos3 upscaler, no API key)",
+  usage: ".remini (reply gambar)\n.remini doc — kirim sebagai dokumen\n.remini 2x / 4x / 8x",
+  example: ".remini\n.remini 4x doc",
   cooldown: 15,
   energi: 1,
   isEnabled: true,
 };
 
-async function ul(buf) {
-  const service = new ImageUploadService("new.fastpic.org");
-  const { directLink } = await service.uploadFromBinary(buf, "img.png");
-  return directLink;
+/**
+ * Upscale gambar pakai sharp (local, no API)
+ * Kernel: Lanczos3 (best quality untuk upscaling)
+ * + Sharpen untuk clarity
+ * + Modulate untuk enhance warna
+ */
+async function upscaleImage(buffer, scale) {
+  const meta = await sharp(buffer).metadata();
+  const newWidth = meta.width * scale;
+  const newHeight = meta.height * scale;
+
+  const result = await sharp(buffer)
+    .resize(newWidth, newHeight, {
+      kernel: sharp.kernel.lanczos3,
+      fit: "fill",
+    })
+    .sharpen({ sigma: 1.2, flat: 1.0, jagged: 0.8 })
+    .modulate({ brightness: 1.03, saturation: 1.08 })
+    .jpeg({ quality: 95, mozjpeg: true })
+    .toBuffer();
+
+  return { buffer: result, width: newWidth, height: newHeight };
 }
 
 async function handler(m, { sock, args }) {
   const img = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!img) {
-    let txt = `*HD IMAGE*\n> Reply gambar untuk enhance jadi HD\n\n`;
-    txt += `\`\`\`${m.prefix}remini\`\`\`\n\n`;
-    txt += `*Opsi Scale:*\n`;
-    txt += `1. \`${m.prefix}remini 2x\` — upscale 2x (cepat)\n`;
-    txt += `2. \`${m.prefix}remini 4x\` — upscale 4x (default)\n`;
-    txt += `3. \`${m.prefix}remini 8x\` — upscale 8x (HD maximum)\n`;
-    txt += `4. \`${m.prefix}remini 16x\` — upscale 16x (ultra HD)\n\n`;
-    txt += `*Mode kirim:*\n`;
-    txt += `1. \`${m.prefix}remini\` — auto (gambar < 5MB, dokumen > 5MB)\n`;
-    txt += `2. \`${m.prefix}remini doc\` — force dokumen (full HD, no compress, max 16MB)\n\n`;
-    txt += `*Contoh kombinasi:*\n`;
-    txt += `\`${m.prefix}remini 8x doc\` — 8x upscale, kirim sebagai dokumen`;
+    let txt = `╔┈┈「 HD IMAGE 」\n`;
+    txt += `╎❏ Reply gambar untuk enhance jadi HD\n\n`;
+    txt += `╎❏ \`${m.prefix}remini\` — upscale 4x (default)\n`;
+    txt += `╎❏ \`${m.prefix}remini 2x\` — upscale 2x (cepat)\n`;
+    txt += `╎❏ \`${m.prefix}remini 8x\` — upscale 8x (max)\n`;
+    txt += `╎❏ \`${m.prefix}remini doc\` — kirim sebagai dokumen\n\n`;
+    txt += `╎❏ Contoh: \`${m.prefix}remini 8x doc\`\n`;
+    txt += `╚┈┈❖`;
     return await sendReplyWithNav(m, sock, txt, { commandName: "remini" });
   }
 
@@ -52,7 +67,7 @@ async function handler(m, { sock, args }) {
       throw new Error("Gagal download gambar");
     }
 
-    // Parse argumen: scale (2x/4x/8x/16x) dan mode (doc)
+    // Parse argumen
     const input = (args.join(" ") || "").trim().toLowerCase();
     const parts = input.split(/\s+/);
 
@@ -73,78 +88,21 @@ async function handler(m, { sock, args }) {
       }
     }
 
-    const u = await ul(b);
-    let resultUrl = null;
-
-    try {
-      // Primary: API Azbry
-      const azbryRes = await axios.get(`https://api.azbry.com/api/tools/hdimage?url=${encodeURIComponent(u)}`, {
-        timeout: 30000,
-        validateStatus: () => true,
-      });
-      if (azbryRes.data.status && azbryRes.data.result?.url) {
-        resultUrl = azbryRes.data.result.url;
-      } else {
-        throw new Error("Azbry API response invalid");
-      }
-    } catch (err) {
-      // Fallback: Snowping
-      const res = await axios.get(`https://apis.snowping.eu.cc/api/imagehd/upscale?url=${encodeURIComponent(u)}`, {
-        timeout: 30000,
-        validateStatus: () => true,
-      });
-      if (res.data.status === 200 && res.data.result?.url) {
-        resultUrl = res.data.result.url;
-      } else {
-        throw new Error("Gagal melakukan upscale, coba lagi.");
-      }
-    }
-
-    if (!resultUrl) {
-      throw new Error("Gagal melakukan upscale, coba lagi.");
-    }
-
-    // Download hasil sebagai buffer biar bisa control quality
-    const dlRes = await axios.get(resultUrl, {
-      responseType: "arraybuffer",
-      timeout: 60000,
-      validateStatus: () => true,
-      maxContentLength: 20 * 1024 * 1024, // max 20MB download
-    });
-
-    if (dlRes.status !== 200 || !dlRes.data) {
-      // Fallback: kirim via URL langsung
-      await m.react("✅");
-      return await sock.sendMedia(m.chat, resultUrl, null, m, { type: "image" });
-    }
-
-    const resultBuffer = Buffer.from(dlRes.data);
+    // Upscale pakai sharp (local, no API key)
+    const { buffer: resultBuffer, width: outW, height: outH } = await upscaleImage(b, scale);
     const sizeMB = (resultBuffer.length / (1024 * 1024)).toFixed(2);
 
     await m.react("✅");
 
-    let caption = `*HD ENHANCED*\n`;
-    caption += `Scale: ${scale}x\n`;
-    caption += `Size: ${sizeMB}MB\n`;
+    let caption = `╔┈┈「 HD ENHANCED 」\n`;
+    caption += `╎❏ Scale: ${scale}x (${outW}x${outH})\n`;
+    caption += `╎❏ Size: ${sizeMB}MB\n`;
+    caption += `╎❏ Engine: Sharp Lanczos3 (Local)\n`;
+    caption += `╚┈┈❖`;
 
-    if (wantDoc) {
-      // Force document mode — no compress, full quality
-      caption += `Mode: Document (no compress)\n`;
-      caption += `Quality: Full HD`;
-      await sock.sendMessage(
-        m.chat,
-        {
-          document: resultBuffer,
-          mimetype: "image/jpeg",
-          fileName: `HD-${scale}x-${Date.now()}.jpg`,
-          caption,
-        },
-        { quoted: m },
-      );
-    } else if (resultBuffer.length > 5 * 1024 * 1024) {
-      // Auto document mode kalau > 5MB (WhatsApp compress image > 5MB)
-      caption += `Mode: Auto-Document (size > 5MB)\n`;
-      caption += `Quality: Full HD`;
+    if (wantDoc || resultBuffer.length > 5 * 1024 * 1024) {
+      // Document mode — no compress
+      const mode = wantDoc ? "Document" : "Auto-Document";
       await sock.sendMessage(
         m.chat,
         {
@@ -156,8 +114,7 @@ async function handler(m, { sock, args }) {
         { quoted: m },
       );
     } else {
-      // Image mode dengan jpegQuality 100
-      caption += `Quality: Full HD`;
+      // Image mode
       await sock.sendMessage(
         m.chat,
         {
@@ -170,11 +127,12 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[REMINI] Error:", e.message);
-    let txt = `❌ Gagal enhance gambar!\n\n`;
-    txt += `Error: ${e.message}\n\n`;
-    txt += `Coba lagi atau gunakan \`${m.prefix}hd3\` / \`${m.prefix}reminiv2\``;
+    let txt = `╔┈┈「 HD ERROR 」\n`;
+    txt += `╎❏ Gagal enhance gambar!\n`;
+    txt += `╎❏ ${e.message}\n`;
+    txt += `╚┈┈❖`;
     await m.reply(claraWrap("remini", txt));
   }
 }
 
-export { config, handler };
+export { pluginConfig as config, handler };
