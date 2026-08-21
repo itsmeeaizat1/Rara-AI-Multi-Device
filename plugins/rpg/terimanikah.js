@@ -16,8 +16,8 @@ const pluginConfig = {
   alias: ["terimanikah"],
   category: "game",
   description: "Terima lamaran nikah",
-  usage: ".terimanikahmatch",
-  example: ".terimanikahmatch",
+  usage: ".terimanikah",
+  example: ".terimanikah",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -57,7 +57,7 @@ async function handler(m, { sock, config: botConfig }) {
           "◦ Atau lamaran sudah expired (5 menit)"].join("\n")) + "\n" +
         tipText("Tunggu seseorang melamar kamu");
 
-      await sendReplyWithNav(sock, m, text, "terimanikahmatch");
+      await sendReplyWithNav(sock, m, text, "terimanikah");
       return { handled: true };
     }
 
@@ -66,7 +66,7 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("Salah Tempat", ["◦ Lamaran harus dijawab di grup yang sama"].join("\n")) + "\n" +
         tipText("Balas di grup tempat kamu dilamar");
 
-      await sendReplyWithNav(sock, m, text, "terimanikahmatch");
+      await sendReplyWithNav(sock, m, text, "terimanikah");
       return { handled: true };
     }
 
@@ -82,14 +82,14 @@ async function handler(m, { sock, config: botConfig }) {
     if (proposerUser.rpg.spouse) {
       pendingProposals.delete(m.sender);
       const text = claraWrap("Maaf", ["◦ " + proposerName + " sudah menikah dengan orang lain"].join("\n"));
-      await sendReplyWithNav(sock, m, text, "terimanikahmatch");
+      await sendReplyWithNav(sock, m, text, "terimanikah");
       return { handled: true };
     }
 
     if (targetUser.rpg.spouse) {
       pendingProposals.delete(m.sender);
       const text = claraWrap("Sudah Menikah", ["◦ Kamu sudah menikah!"].join("\n"));
-      await sendReplyWithNav(sock, m, text, "terimanikahmatch");
+      await sendReplyWithNav(sock, m, text, "terimanikah");
       return { handled: true };
     }
 

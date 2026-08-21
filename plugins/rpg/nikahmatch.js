@@ -65,8 +65,8 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("Cara Pakai", [
           "◦ Penggunaan: *" + prefix + "nikah @member*",
           "◦ Contoh: *" + prefix + "nikah @628xxxx*",
-          "◦ Target harus ketik *" + prefix + "terimanikahmatch* untuk terima",
-          "◦ Target harus ketik *" + prefix + "tolaknikahmatch* untuk tolak",
+          "❏ Target harus ketik *" + prefix + "terimanikah* untuk terima",
+          "❏ Target harus ketik *" + prefix + "tolaknikah* untuk tolak",
         ].join("\n")) + "\n" +
         tipText("Lamar orang yang kamu cintai!");
 
@@ -97,7 +97,7 @@ async function handler(m, { sock, config: botConfig }) {
           "◦ Kamu sudah menikah dengan *" + partnerName + "*",
           "◦ Nggak bisa nikah lagi!",
         ].join("\n")) + "\n" +
-        tipText("Ketik " + prefix + "divorce untuk cerai dulu");
+        tipText("Ketik " + prefix + "putusmatch untuk cerai dulu");
 
       await sendReplyWithNav(sock, m, text, "nikah");
       return { handled: true };
@@ -110,7 +110,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (targetUser.rpg.spouse) {
       const text =
         claraWrap("Maaf", [
-          "◦ Target sudah menikah!",
+          "❏ Target sudah menikah!",
         ].join("\n")) + "\n" +
         tipText("Cari pasangan lain");
 
@@ -124,7 +124,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (existing && existing.proposer !== m.sender) {
       const text =
         claraWrap("Sibuk", [
-          "◦ Target lagi dilamar orang lain",
+          "❏ Target lagi dilamar orang lain",
           "◦ Tunggu dia jawab dulu",
         ].join("\n")) + "\n" +
         tipText("Coba lagi nanti");
@@ -172,8 +172,8 @@ async function handler(m, { sock, config: botConfig }) {
     text += separator("─", 28) + "\n\n";
     text += "💍 *" + targetName + "*, " + proposerName + " melamar kamu!\n\n";
     text += "⏳ Kamu punya *5 menit* buat jawab:\n\n";
-    text += "✅ Ketik *" + prefix + "terimanikahmatch* — Mau nikah!\n";
-    text += "❌ Ketik *" + prefix + "tolaknikahmatch* — Nggak mau\n\n";
+    text += "✅ Ketik *" + prefix + "terimanikah* — Mau nikah!\n";
+    text += "❌ Ketik *" + prefix + "tolaknikah* — Nggak mau\n\n";
     text += decor + "\n";
     text += tipText("Jangan buat dia deg-degan terlalu lama...");
 

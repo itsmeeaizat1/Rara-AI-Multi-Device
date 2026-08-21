@@ -2,21 +2,20 @@
 import fs from "fs";
 import path from "path";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { pendingConfessions, cleanExpired } from "./confessmatch.js";
-import { separator,
-  tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { pendingConfessions, cleanExpired } from "./jadianmatch.js";
+import { separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
-// VN files (put files in assets/vn/)
+// VN files
 const VN_DIR = path.join(process.cwd(), "assets", "audio");
-const VN_TOLAK_JADIAN = "vn_tolak_jadian.mp3"; // VN saat jadian ditolak
+const VN_TOLAK_JADIAN = "vn_tolak_jadian.mp3";
 
 const pluginConfig = {
-  name: "tolakmatch",
-  alias: ["tolakmatch"],
+  name: "tolakjadian",
+  alias: ["tolakjadian", "nogak", "nolakjadian", "gamau"],
   category: "game",
   description: "Tolak confession jadian (pacaran)",
-  usage: ".tolakmatch",
-  example: ".tolakmatch",
+  usage: ".tolakjadian",
+  example: ".tolakjadian",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -36,9 +35,9 @@ const TOLAK_QUOTES = [
 ];
 
 const TOLAK_DECOR = [
-  "💔😔💔😔💔",
-  "❌🚫❌🚫❌",
-  "🖔😢🖔😢🖔",
+  "\u{1F494}\u{1F614}\u{1F494}\u{1F614}\u{1F494}",
+  "\u274C\U0001F6AB\u274C\U0001F6AB\u274C",
+  "\u{1F590}\u{1F622}\u{1F590}\u{1F622}\u{1F590}",
 ];
 
 async function handler(m, { sock, config: botConfig }) {
@@ -50,11 +49,11 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!confession) {
       const text =
-        claraWrap("Tidak Ada Confession", ["◦ Nggak ada yang nembak kamu saat ini",
-          "◦ Atau confession sudah expired (5 menit)"].join("\n")) + "\n" +
+        claraWrap("Tidak Ada Confession", ["\u274F Nggak ada yang nembak kamu saat ini",
+          "\u274F Atau confession sudah expired (5 menit)"].join("\n")) + "\n" +
         tipText("Sabar ya, jodong nggak kemana");
 
-      await sendReplyWithNav(sock, m, text, "tolakmatch");
+      await sendReplyWithNav(sock, m, text, "tolakjadian");
       return { handled: true };
     }
 
@@ -70,22 +69,21 @@ async function handler(m, { sock, config: botConfig }) {
 
     let text = "";
     text += decor + "\n";
-    text += "💔 *DITOLAK* 💔\n";
+    text += "\u{1F494} *DITOLAK* \u{1F494}\n";
     text += decor + "\n\n";
-    text += "“" + quote + "”\n\n";
-    text += separator("─", 28) + "\n";
-    text += "👤 Dari     : *" + confessorName + "*\n";
-    text += "👥 Untuk    : *" + targetName + "*\n";
-    text += "📅 Tanggal  : " + time + "\n";
-    text += "🚫 Status   : *Ditolak*\n";
-    text += separator("─", 28) + "\n\n";
-    text += "💔 *" + targetName + "* nolak confession *" + confessorName + "*\n\n";
+    text += "\u201C" + quote + "\u201D\n\n";
+    text += separator("\u2500", 28) + "\n";
+    text += "\u{1F464} Dari     : *" + confessorName + "*\n";
+    text += "\u{1F465} Untuk    : *" + targetName + "*\n";
+    text += "\u{1F4C5} Tanggal  : " + time + "\n";
+    text += "\u{1F6AB} Status   : *Ditolak*\n";
+    text += separator("\u2500", 28) + "\n\n";
+    text += "\u{1F494} *" + targetName + "* nolak confession *" + confessorName + "*\n\n";
     text += decor + "\n";
     text += tipText("Jangan menyerah, jodong masih banyak!");
 
     await sock.sendMessage(m.chat, { text: text, mentions: [confessorJid, m.sender] });
 
-    // Kirim VN (jika file ada)
     try {
       const vnPath = path.join(VN_DIR, VN_TOLAK_JADIAN);
       if (fs.existsSync(vnPath)) {
@@ -97,7 +95,7 @@ async function handler(m, { sock, config: botConfig }) {
         });
       }
     } catch (e) {
-      console.log("[engga.js] VN error:", e.message);
+      console.log("[tolakjadian.js] VN error:", e.message);
     }
 
     return { handled: true };
