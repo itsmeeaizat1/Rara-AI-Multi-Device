@@ -173,7 +173,7 @@ async function sendRegistrationPrompt(sock, m, text, options = {}) {
     // Preview pakai externalAdReply (thumbnail kecil ter-sync), bukan kirim
     // gambar full-res mentah — konsisten sama pola preview di m.reply().
     const { default: sharp } = await import("sharp");
-    const { generateWAMessageFromContent } = await import("baileys");
+    const { generateWAMessageFromContent } = await import("nova");
     const thumbnail = await sharp(image).resize(640, 360).toBuffer();
 
     const msg = generateWAMessageFromContent(m.chat, {
