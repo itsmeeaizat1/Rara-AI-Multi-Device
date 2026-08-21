@@ -99,7 +99,7 @@ export async function handleAntiRvo(m, sock, db) {
     } else if (mediaType === "audio") {
       await sock.sendMessage(m.chat, {
         audio: buffer,
-        mimetype: content?.mimetype || "audio/mpeg",
+        mimetype: content?.mimetype || "audio/ogg; codecs=opus",
         ptt: true,
       });
       await sock.sendMessage(m.chat, {

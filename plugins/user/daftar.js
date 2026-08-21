@@ -1,4 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import fs from "fs";
 import path from "path";
 import { getDatabase } from "../../src/lib/nova-database.js";
@@ -390,7 +391,7 @@ async function handler(m, { sock }) {
       if (vnBuffer && vnBuffer.length > 0) {
         await sock.sendMessage(
           m.chat,
-          { audio: vnBuffer, mimetype: "audio/mpeg", ptt: true },
+          { audio: await toVoiceNote(vnBuffer), mimetype: "audio/ogg; codecs=opus", ptt: true },
           { quoted: sent }
         );
       }

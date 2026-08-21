@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
         const vnBuffer = fs.readFileSync(outputPath)
 
         await sock.sendMedia(m.chat, vnBuffer, null, m, {
-            type: 'audio',
+            type: 'audio', mimetype: 'audio/ogg; codecs=opus',
             ptt: true
         })
 
