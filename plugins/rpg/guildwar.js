@@ -64,22 +64,112 @@ function findActiveWar(guildData, guildName) {
   );
 }
 
+// Selesaikan war yang udah lewat WAR_DURATION — bagi treasury, catat wins/losses
+function resolveExpiredWars(guildData, db) {
+  const now = Date.now();
+  let changed = false;
+  for (const war of guildData.wars) {
+    if (war.status !== "active" || now < war.endTime) continue;
+
+    const attackerGuild = guildData.guilds[war.attacker];
+    const defenderGuild = guildData.guilds[war.defender];
+    war.status = "ended";
+    changed = true;
+
+    if (!attackerGuild || !defenderGuild) continue;
+
+    if (war.attackerPower === war.defenderPower) {
+      war.winner = null;
+    } else if (war.attackerPower > war.defenderPower) {
+      war.winner = war.attacker;
+      const loot = Math.floor((defenderGuild.treasury || 0) * 0.5);
+      const penalty = Math.floor((defenderGuild.treasury || 0) * 0.1);
+      attackerGuild.treasury = (attackerGuild.treasury || 0) + loot;
+      defenderGuild.treasury = Math.max(0, (defenderGuild.treasury || 0) - loot - penalty);
+      attackerGuild.wins = (attackerGuild.wins || 0) + 1;
+      defenderGuild.losses = (defenderGuild.losses || 0) + 1;
+    } else {
+      war.winner = war.defender;
+      const loot = Math.floor((attackerGuild.treasury || 0) * 0.5);
+      const penalty = Math.floor((attackerGuild.treasury || 0) * 0.1);
+      defenderGuild.treasury = (defenderGuild.treasury || 0) + loot;
+      attackerGuild.treasury = Math.max(0, (attackerGuild.treasury || 0) - loot - penalty);
+      defenderGuild.wins = (defenderGuild.wins || 0) + 1;
+      attackerGuild.losses = (attackerGuild.losses || 0) + 1;
+    }
+
+    if (attackerGuild) attackerGuild.warCooldownUntil = now + WAR_COOLDOWN;
+    if (defenderGuild) defenderGuild.warCooldownUntil = now + WAR_COOLDOWN;
+  }
+  if (changed) db.db.write();
+}
+
 async function handler(m, { sock }) {
   const db = getDatabase();
   const guildData = ensureGuildData(db);
+  resolveExpiredWars(guildData, db);
   const args = (m.args || []).map((a) => a.toLowerCase());
   const action = args[0];
 
   if (!action || action === "help") {
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Perintah:  ┊  ➶\n" +
-      "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n" +
-      "Guild: *" + guildName + "*\n" +
-      "Leader: " + (m.pushName || "Player") + "\n" +
-      "Members: 1/" + MAX_MEMBERS + "\n" +
-      "Treasury: Rp 100\n" +
-      "Power: 10\n\n" +
-      "Ajak temen join: .guildwar join " + guildName + "\n" +
-      "Declare war: .guildwar declare <guild musuh>";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Guild War  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+    txt += "┊ ➶ .guildwar create <nama> — Buat guild baru\n";
+    txt += "┊ ➶ .guildwar join <nama> — Gabung guild\n";
+    txt += "┊ ➶ .guildwar leave — Keluar guild\n";
+    txt += "┊ ➶ .guildwar status — Lihat status guild kamu\n";
+    txt += "┊ ➶ .guildwar list — Daftar semua guild\n";
+    txt += "┊ ➶ .guildwar declare <guild musuh> — Deklarasi perang\n";
+    txt += "┊ ➶ .guildwar attack — Serang (kalau attacker)\n";
+    txt += "┊ ➶ .guildwar defend — Bertahan (kalau defender)\n";
+    txt += "┊ ➶ .guildwar wars — Lihat perang aktif\n";
+    txt += "┊ ➶ .guildwar leaderboard — Ranking guild\n\n";
+    txt += "Biaya bikin guild: Rp " + GUILD_CREATE_COST.toLocaleString("id-ID");
+    return await sendReplyWithNav(sock, m, txt, "guildwar");
+  }
+
+  // CREATE
+  if (action === "create") {
+    const guildName = m.args?.[1];
+    if (!guildName) {
+      return m.reply(claraWrap("Guildwar", "Nama guild mana?\nContoh: .guildwar create Nightmare"));
+    }
+    if (guildData.guilds[guildName]) {
+      return m.reply(claraWrap("Guildwar", "Guild *" + guildName + "* udah ada! Pilih nama lain."));
+    }
+
+    const existing = getGuildByMember(guildData, m.sender);
+    if (existing) {
+      return sendReplyWithNav(sock, m, "Kamu udah di guild *" + existing.name + "*!\nKeluar dulu: .guildwar leave", "guildwar");
+    }
+
+    const user = db.getUser(m.sender);
+    if ((user.koin || 0) < GUILD_CREATE_COST) {
+      return m.reply(claraWrap("Guildwar", "Koin gak cukup! Butuh Rp " + GUILD_CREATE_COST.toLocaleString("id-ID") + ", kamu punya Rp " + (user.koin || 0).toLocaleString("id-ID")));
+    }
+
+    user.koin -= GUILD_CREATE_COST;
+    guildData.guilds[guildName] = {
+      leaderName: m.pushName || "Player",
+      members: [{ id: m.sender, name: m.pushName || "Player", role: "leader" }],
+      level: 1,
+      power: 10,
+      treasury: 100,
+      wins: 0,
+      losses: 0,
+      createdAt: Date.now(),
+    };
+    db.save();
+
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ GUILD DIBUAT!  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+    txt += "Guild: *" + guildName + "*\n";
+    txt += "Leader: " + (m.pushName || "Player") + "\n";
+    txt += "Members: 1/" + MAX_MEMBERS + "\n";
+    txt += "Treasury: Rp 100\n";
+    txt += "Power: 10\n\n";
+    txt += "Ajak temen join: .guildwar join " + guildName + "\n";
+    txt += "Declare war: .guildwar declare <guild musuh>";
     return await sendReplyWithNav(sock, m, txt, "guildwar");
   }
 
@@ -109,7 +199,57 @@ async function handler(m, { sock }) {
     db.save();
 
     await m.react("✅");
-    return sendReplyWithNav(sock, m, "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + guildName + "  ┊  ➶\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ JOIN GUILD!  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+    txt += (m.pushName || "Player") + " join guild *" + guildName + "*!\n\n";
+    txt += "Members: " + guild.members.length + "/" + MAX_MEMBERS + "\n";
+    txt += "Power guild: " + guild.power + "\n\n";
+    txt += "Cek status: .guildwar status";
+    return await sendReplyWithNav(sock, m, txt, "guildwar");
+  }
+
+  // LEAVE
+  if (action === "leave") {
+    const existing = getGuildByMember(guildData, m.sender);
+    if (!existing) {
+      return m.reply(claraWrap("Guildwar", "Kamu belum join guild manapun!"));
+    }
+
+    const guild = guildData.guilds[existing.name];
+    const activeWar = findActiveWar(guildData, existing.name);
+    if (activeWar) {
+      return m.reply(claraWrap("Guildwar", "Gak bisa keluar guild lagi perang! Tunggu perang selesai dulu."));
+    }
+
+    guild.members = guild.members.filter((mem) => mem.id !== m.sender);
+    guild.power = Math.max(10, guild.power - 5);
+
+    if (guild.members.length === 0) {
+      delete guildData.guilds[existing.name];
+      db.save();
+      return m.reply(claraWrap("Guildwar", "Kamu keluar dari *" + existing.name + "*.\nGuild dibubarkan karena gak ada member lagi."));
+    }
+
+    // Kalau leader keluar, angkat member pertama jadi leader baru
+    if (existing.members.find((mem) => mem.id === m.sender)?.role === "leader") {
+      guild.members[0].role = "leader";
+      guild.leaderName = guild.members[0].name;
+    }
+
+    db.save();
+    return m.reply(claraWrap("Guildwar", "Kamu keluar dari guild *" + existing.name + "*."));
+  }
+
+  // STATUS
+  if (action === "status") {
+    const existing = getGuildByMember(guildData, m.sender);
+    if (!existing) {
+      return m.reply(claraWrap("Guildwar", "Kamu belum join guild manapun!\nBuat: .guildwar create <nama>\nAtau join: .guildwar join <nama>"));
+    }
+
+    const activeWar = findActiveWar(guildData, existing.name);
+
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + existing.name + "  ┊  ➶\n";
     txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += "Guild: *" + existing.name + "*\n";
     txt += "Leader: " + existing.leaderName + "\n";
@@ -155,7 +295,67 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Guildwar", "Belum ada guild! Buat pertama: .guildwar create <nama>"));
     }
 
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + name + "  ┊  ➶\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ DAFTAR GUILD  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+    for (const [name, g] of guilds.slice(0, 15)) {
+      txt += "\n🏰 *" + name + "*\n";
+      txt += "   Leader: " + g.leaderName + "\n";
+      txt += "   Members: " + g.members.length + "/" + MAX_MEMBERS + " | Power: " + g.power + "\n";
+      txt += "   W/L: " + g.wins + "/" + g.losses + "\n";
+    }
+    txt += "\nJoin: .guildwar join <nama>";
+    return await sendReplyWithNav(sock, m, txt, "guildwar");
+  }
+
+  // DECLARE
+  if (action === "declare") {
+    const existing = getGuildByMember(guildData, m.sender);
+    if (!existing) {
+      return m.reply(claraWrap("Guildwar", "Kamu belum join guild manapun!"));
+    }
+    if (existing.members.find((mem) => mem.id === m.sender)?.role !== "leader") {
+      return m.reply(claraWrap("Guildwar", "Cuma leader guild yang bisa declare war!"));
+    }
+
+    const targetName = m.args?.[1];
+    if (!targetName) {
+      return m.reply(claraWrap("Guildwar", "Declare war ke guild mana?\nContoh: .guildwar declare Nightmare"));
+    }
+    if (targetName === existing.name) {
+      return m.reply(claraWrap("Guildwar", "Gak bisa declare war ke guild sendiri!"));
+    }
+
+    const target = guildData.guilds[targetName];
+    if (!target) {
+      return m.reply(claraWrap("Guildwar", "Guild *" + targetName + "* tidak ditemukan!"));
+    }
+
+    if (findActiveWar(guildData, existing.name)) {
+      return m.reply(claraWrap("Guildwar", "Guild kamu udah lagi perang! Selesaikan dulu."));
+    }
+    if (findActiveWar(guildData, targetName)) {
+      return m.reply(claraWrap("Guildwar", "Guild *" + targetName + "* udah lagi perang sama guild lain!"));
+    }
+    if (existing.warCooldownUntil && Date.now() < existing.warCooldownUntil) {
+      const wait = Math.ceil((existing.warCooldownUntil - Date.now()) / 3600000);
+      return m.reply(claraWrap("Guildwar", "Guild kamu masih cooldown! Tunggu " + wait + " jam lagi."));
+    }
+
+    guildData.wars.push({
+      attacker: existing.name,
+      defender: targetName,
+      attackerPower: existing.power,
+      defenderPower: target.power,
+      attackerContributors: {},
+      defenderContributors: {},
+      startTime: Date.now(),
+      endTime: Date.now() + WAR_DURATION,
+      status: "active",
+      rounds: 0,
+    });
+    db.save();
+
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ WAR DIMULAI!  ┊  ➶\n";
     txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += "ATTACKER: *" + existing.name + "* (Power: " + existing.power + ")\n";
     txt += "DEFENDER: *" + targetName + "* (Power: " + target.power + ")\n\n";
@@ -185,14 +385,12 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Guildwar", "Guild kamu DEFENDER! Pake: .guildwar defend"));
     }
 
-    // Cek cooldown member
     const lastAttack = war.attackerContributors[m.sender]?.lastAction || 0;
     if (Date.now() - lastAttack < ATTACK_COOLDOWN) {
       const remaining = Math.ceil((ATTACK_COOLDOWN - (Date.now() - lastAttack)) / 60000);
       return sendReplyWithNav(sock, m, "Cooldown attack! Tunggu " + remaining + " menit lagi.", "guildwar");
     }
 
-    // Hitung damage berdasarkan level user
     const user = db.getUser(m.sender);
     const userLevel = Math.floor((user.rpg?.exp || 0) / 10000) + 1;
     const baseDmg = 10 + userLevel * 3;
@@ -210,10 +408,74 @@ async function handler(m, { sock }) {
     war.attackerContributors[m.sender].lastAction = Date.now();
     war.attackerContributors[m.sender].totalDmg += finalDmg;
 
-    // Exp kecil buat attacker
     await addExpWithLevelCheck(sock, m, db, user, 20);
     db.save();
 
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + existing.name + "  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+    txt += (m.pushName || "Player") + " menyerang untuk *" + existing.name + "*!\n\n";
+    txt += "Damage: " + finalDmg + (crit > 1 ? " (CRITICAL HIT! ⚔️)" : "") + "\n";
+    txt += "Level bonus: +" + (userLevel * 3) + "\n";
+    txt += "EXP: +20\n\n";
+    txt += "*Power Skor:*\n";
+    txt += war.attacker + " (ATK): " + war.attackerPower + "\n";
+    txt += war.defender + " (DEF): " + war.defenderPower + "\n\n";
+
+    const lead = war.attackerPower - war.defenderPower;
+    if (lead > 0) {
+      txt += "Guild kamu unggul +" + lead + "!\n";
+    } else if (lead < 0) {
+      txt += "Guild lawan unggul +" + Math.abs(lead) + "!\n";
+    } else {
+      txt += "Skor imbang!\n";
+    }
+
+    const remaining = Math.max(0, Math.ceil((war.endTime - Date.now()) / 3600000));
+    txt += "Sisa war: " + remaining + " jam\n\n";
+    txt += "Serang lagi dalam 30 menit!";
+    return await sendReplyWithNav(sock, m, txt, "guildwar");
+  }
+
+  // DEFEND
+  if (action === "defend") {
+    const existing = getGuildByMember(guildData, m.sender);
+    if (!existing) {
+      return m.reply(claraWrap("Guildwar", "Kamu belum join guild!"));
+    }
+
+    const war = findActiveWar(guildData, existing.name);
+    if (!war) {
+      return m.reply(claraWrap("Guildwar", "Guild kamu lagi ga perang!"));
+    }
+    if (war.defender !== existing.name) {
+      return m.reply(claraWrap("Guildwar", "Guild kamu ATTACKER! Pake: .guildwar attack"));
+    }
+
+    const lastDefend = war.defenderContributors[m.sender]?.lastAction || 0;
+    if (Date.now() - lastDefend < ATTACK_COOLDOWN) {
+      const remaining = Math.ceil((ATTACK_COOLDOWN - (Date.now() - lastDefend)) / 60000);
+      return sendReplyWithNav(sock, m, "Cooldown defend! Tunggu " + remaining + " menit lagi.", "guildwar");
+    }
+
+    const user = db.getUser(m.sender);
+    const userLevel = Math.floor((user.rpg?.exp || 0) / 10000) + 1;
+    const baseDef = 10 + userLevel * 3;
+    const randomDef = Math.floor(Math.random() * baseDef) + Math.floor(baseDef / 2);
+    const crit = Math.random() < 0.15 ? 2 : 1;
+    const finalDef = randomDef * crit;
+
+    war.defenderPower += finalDef;
+    war.rounds++;
+
+    if (!war.defenderContributors[m.sender]) {
+      war.defenderContributors[m.sender] = { name: m.pushName || "Player", attacks: 0, defends: 0, totalDmg: 0 };
+    }
+    war.defenderContributors[m.sender].defends++;
+    war.defenderContributors[m.sender].lastAction = Date.now();
+    war.defenderContributors[m.sender].totalDmg += finalDef;
+
+    await addExpWithLevelCheck(sock, m, db, user, 20);
+    db.save();
 
     let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + existing.name + "  ┊  ➶\n";
     txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
@@ -223,7 +485,7 @@ async function handler(m, { sock }) {
     txt += "EXP: +20\n\n";
     txt += "*Power Skor:*\n";
     txt += war.attacker + " (ATK): " + war.attackerPower + "\n";
-    txt += existing.name + " (DEF): " + war.defenderPower + "\n\n";
+    txt += war.defender + " (DEF): " + war.defenderPower + "\n\n";
 
     const lead = war.defenderPower - war.attackerPower;
     if (lead > 0) {
@@ -248,7 +510,28 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Guildwar", "Tidak ada perang aktif sekarang."));
     }
 
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + war.attacker + "  ┊  ➶\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ PERANG AKTIF  ┊  ➶\n";
+    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+    for (const war of activeWars) {
+      const remaining = Math.max(0, Math.ceil((war.endTime - Date.now()) / 3600000));
+      txt += "\n⚔️ *" + war.attacker + "* vs *" + war.defender + "*\n";
+      txt += "   ATK: " + war.attackerPower + " | DEF: " + war.defenderPower + "\n";
+      txt += "   Sisa: " + remaining + " jam\n";
+    }
+    return await sendReplyWithNav(sock, m, txt, "guildwar");
+  }
+
+  // LEADERBOARD
+  if (action === "leaderboard" || action === "lb") {
+    const guilds = Object.entries(guildData.guilds).sort(
+      (a, b) => (b[1].wins * 3 - b[1].losses) - (a[1].wins * 3 - a[1].losses)
+    );
+
+    if (guilds.length === 0) {
+      return m.reply(claraWrap("Guildwar", "Belum ada guild sama sekali!"));
+    }
+
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ LEADERBOARD GUILD  ┊  ➶\n";
     txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
 
     const medals = ["🥇", "🥈", "🥉"];

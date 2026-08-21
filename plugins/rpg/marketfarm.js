@@ -138,14 +138,11 @@ async function handler(m, { sock }) {
     db.save();
 
 
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀  100) + "%\n";
-    }
-    txt += "\nTotal diterima:   ┊  ➶\n";
+    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Berhasil Jual!  ┊  ➶\n";
     txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
-    txt += "*Daftar terjual:*\n";
-    for (const s of soldItems) {
-      txt += s + "\n";
-    }
+    txt += crop.emoji + " " + crop.name + " x" + qty + "\n";
+    txt += "Harga satuan: Rp " + currentPrice.toLocaleString("id-ID") + "\n";
+    if (event) txt += "Event pasar: " + event.event.name + " (x" + event.event.modifier + ")\n";
     txt += "\n*Total diterima: Rp " + totalEarned.toLocaleString("id-ID") + "*\n";
     txt += "Koin sekarang: Rp " + (user.koin || 0).toLocaleString("id-ID");
     return await sendReplyWithNav(sock, m, txt, "marketfarm");

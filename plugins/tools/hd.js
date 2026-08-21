@@ -47,7 +47,32 @@ async function handler(m, { sock, args }) {
   const img = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!img) {
-    let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀  1024)).toFixed(2);
+    let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ HD ENHANCE\n`;
+    txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n`;
+    txt += `  ┊  ➶ Kirim/reply gambar dulu ya!\n`;
+    txt += `  ┊  ➶ Contoh: .remini (reply gambar)\n`;
+    txt += `  ┊  ➶ Custom scale: .remini 4x\n`;
+    txt += `  ┊  ➶ Kirim sebagai dokumen: .remini doc\n`;
+    txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    return await sendReplyWithNav(sock, m, txt, "remini");
+  }
+
+  try {
+    const argList = (args || []).map((a) => String(a).toLowerCase());
+    const wantDoc = argList.includes("doc");
+    const scaleArg = argList.find((a) => /^\d+x$/.test(a));
+    let scale = scaleArg ? parseInt(scaleArg.replace("x", "")) : 2;
+    scale = Math.max(2, Math.min(8, scale || 2));
+
+    await m.react("⏳");
+
+    const buffer = await m.download();
+    if (!buffer) {
+      return await m.reply(claraWrap("remini", "Gagal download gambar! Coba lagi."));
+    }
+
+    const { buffer: resultBuffer, width: outW, height: outH } = await upscaleImage(buffer, scale);
+    const sizeMB = (resultBuffer.length / (1024 * 1024)).toFixed(2);
 
     await m.react("✅");
 
@@ -57,7 +82,31 @@ async function handler(m, { sock, args }) {
     caption += `  ┊  ➶ Engine: Sharp Lanczos3 (Local)\n`;
     caption += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
-    if (wantDoc || resultBuffer.length > 5 \n`;
+    if (wantDoc || resultBuffer.length > 5 * 1024 * 1024) {
+      await sock.sendMessage(
+        m.chat,
+        {
+          document: resultBuffer,
+          mimetype: "image/jpeg",
+          fileName: `hd-enhanced-${scale}x.jpg`,
+          caption,
+        },
+        { quoted: m }
+      );
+    } else {
+      await sock.sendMessage(
+        m.chat,
+        {
+          image: resultBuffer,
+          caption,
+        },
+        { quoted: m }
+      );
+    }
+  } catch (e) {
+    console.error("[HD/Remini] Error:", e.message);
+    await m.react("❌");
+    let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ERROR\n`;
     txt += `  ┊  ➶ Gagal enhance gambar!\n`;
     txt += `  ┊  ➶ ${e.message}\n`;
     txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
