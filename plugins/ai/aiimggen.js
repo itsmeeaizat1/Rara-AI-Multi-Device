@@ -20,6 +20,7 @@ function tempPath(ext) {
 }
 
 const ENDPOINTS = [
+  "https://image.pollinations.ai/prompt/",
   "https://api.miaou.xyz/api/txt2img",
   "https://api.zeks.xyz/api/txt2img",
 ];

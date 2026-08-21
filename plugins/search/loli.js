@@ -20,6 +20,7 @@ function tempPath(ext) {
 }
 
 const ENDPOINTS = [
+  "https://nekos.life/api/v2/img/neko",
   "https://api.zeks.xyz/api/loli",
 ];
 

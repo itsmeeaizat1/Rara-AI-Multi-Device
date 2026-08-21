@@ -3,6 +3,10 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
+import { exec } from "child_process";
+import { promisify } from "util";
+import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
+const execAsync = promisify(exec);
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -71,7 +75,23 @@ async function handler(m, { sock, config: botConfig }) {
       } catch (e) { console.error('[aivoice.js]:', e.message); }
     }
 
-    if (!buffer) throw new Error("Gagal generate suara dari semua endpoint.");
+    // Fallback: edge-tts (free, local, verified working)
+    if (!buffer) {
+      try {
+        const tmpPath = path.join(process.cwd(), "tmp", `aivoice_${Date.now()}.mp3`);
+        const tmpDir = path.dirname(tmpPath);
+        if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
+        await execAsync(`edge-tts --voice "id-ID-GadisNeural" --text "${text.replace(/"/g, '\"')}" --write-media "${tmpPath}"`, { timeout: 30000 });
+        const fs2 = await import("fs");
+        const audioBuf = fs2.readFileSync(tmpPath);
+        buffer = await toVoiceNote(audioBuf);
+        try { fs2.unlinkSync(tmpPath); } catch {}
+      } catch (e) {
+        console.error('[aivoice.js] edge-tts fallback:', e.message);
+      }
+    }
+
+    if (!buffer) throw new Error("Gagal generate suara dari semua endpoint (Zeks/Miaou/edge-tts semua gagal).");
 
     const filePath = tempPath(".mp3");
     fs.writeFileSync(filePath, buffer);

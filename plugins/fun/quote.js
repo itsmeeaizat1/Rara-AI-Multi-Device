@@ -45,19 +45,34 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const prefix = botConfig.command?.prefix || ".";
     let quote = null;
+    let author = "";
     let source = "";
 
+    // Source 1: zenquotes.io (free, no key, verified alive)
     try {
-      const res = await axios.get("https://api.zeks.xyz/api/quote", { timeout: 15000 });
-      quote = res.data?.result || res.data?.quote || res.data?.message || null;
-      source = "API";
+      const res = await axios.get("https://zenquotes.io/api/random", { timeout: 15000 });
+      if (res.data?.[0]?.q) {
+        quote = res.data[0].q;
+        author = res.data[0].a || "";
+        source = "ZenQuotes";
+      }
     } catch (e) { console.error('[quote.js]:', e.message); }
+
+    // Source 2: Zeks API (DEAD - keep as fallback attempt)
+    if (!quote) {
+      try {
+        const res = await axios.get("https://api.zeks.xyz/api/quote", { timeout: 8000 });
+        quote = res.data?.result || res.data?.quote || res.data?.message || null;
+        source = "Zeks";
+      } catch (e) { /* dead API, skip */ }
+    }
 
     if (!quote) quote = LOCAL_QUOTES[Math.floor(Math.random() * LOCAL_QUOTES.length)];
     if (!source) source = "Local";
 
+    const displayQuote = author ? `${quote}\n\n╎❏ — ${author}` : quote;
     const text =
-      claraWrap("Quote", [`╎❏ *${quote}*`,
+      claraWrap("Quote", [`╎❏ *${displayQuote}*`,
         `╎❏ Sumber: *${source}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}quote untuk quote lain`) +

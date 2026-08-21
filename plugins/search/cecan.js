@@ -20,6 +20,7 @@ function tempPath(ext) {
 }
 
 const ENDPOINTS = [
+  "https://nekos.life/api/v2/img/neko",
   "https://api.zeks.xyz/api/cecan",
   "https://api.zeks.xyz/api/cecanindo",
 ];
@@ -49,6 +50,19 @@ async function handler(m, { sock, config: botConfig }) {
 
     for (const baseUrl of ENDPOINTS) {
       try {
+        if (baseUrl.includes("nekos.life")) {
+          // nekos.life returns JSON with URL
+          const res = await axios.get(baseUrl, { timeout: 15000 });
+          if (res.status === 200 && res.data?.url) {
+            const imgRes = await axios.get(res.data.url, { responseType: "arraybuffer", timeout: 15000 });
+            if (imgRes.status === 200 && imgRes.data?.length > 1000) {
+              buffer = Buffer.from(imgRes.data);
+              source = baseUrl;
+              break;
+            }
+          }
+          continue;
+        }
         const res = await axios.get(baseUrl, {
           responseType: "arraybuffer",
           timeout: 15000,
