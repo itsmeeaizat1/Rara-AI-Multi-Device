@@ -9,7 +9,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "nutrisi",
-  alias: ["nutrition", "kalori", "calorie", "cekcalori"],
+  alias: ["nutrition", "calorie", "cekcalori"],
   category: "tools",
   desc: "Analisis kalori & gizi makanan dari foto dengan AI Vision",
   usage: ".nutrisi (kirim/reply foto makanan)",

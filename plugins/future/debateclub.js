@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "debateclub",
-  alias: ["debateclub", "debate", "debat"],
+  alias: ["debateclub"],
   category: "future",
   description: "Debate club - random topic, tim pro vs kontra, voting",
   usage: ".debateclub <command>",

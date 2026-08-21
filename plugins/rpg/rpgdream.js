@@ -5,7 +5,7 @@ import { getPlayer, ensurePlayer, addGold, addExp, savePlayer } from "../../src/
 
 const pluginConfig = {
   name: "rpgdream",
-  alias: ["dreamrpg", "alamimpi", "mimpi", "eksplorasimimpi", "dreamrealm"],
+  alias: ["dreamrpg", "alamimpi", "eksplorasimimpi", "dreamrealm"],
   category: "rpg",
   description: "RPG Dream — Eksplorasi alam mimpi, high-risk high-reward",
   usage: ".rpgdream sleep — Tidur & masuk alam mimpi\n.rpgdream <pilih 1-4> — Pilih jalan mimpi\n.rpgdream wake — Bangun (tarik hasil)\n.rpgdream info — Statistik",

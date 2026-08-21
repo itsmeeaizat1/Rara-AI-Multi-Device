@@ -158,7 +158,7 @@ async function fetchSnippet(url, timeoutMs = 5000) {
 
 export default {
   name: "cekfakta-v2",
-  alias: ["cekfakta", "cekhoax", "factcheck"],
+  alias: ["cekhoax"],
   category: "group",
   desc: "Group Fact-Check & Hoax Detector v2 - AI + Web Search real-time verification dengan toggle per-grup",
   usage: ".cekfakta (reply pesan/klaim)\n.cekfakta <teks klaim>\n.cekfaktaon - Aktifkan (owner)\n.cekfaktaoff - Matikan (owner)\n.cekfaktastatus - Statistik",

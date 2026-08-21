@@ -5,7 +5,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "autoreactionemoji",
-  alias: ["autoreaction", "autoreact", "reactionv2", "autoreactionemoji"],
+  alias: ["autoreactionemoji"],
   category: "group",
   description: "Auto reaction pesan di grup",
   usage: ".autoreaction on/off",

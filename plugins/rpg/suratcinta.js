@@ -7,7 +7,7 @@ import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "suratcinta",
-  alias: ["suratcinta", "suratcinta2", "loveletter"],
+  alias: ["suratcinta", "suratcinta2"],
   category: "rpg",
   description: "Kirim surat cinta anonim atau langsung ke pasangan",
   usage: ".suratcinta <pesan> | .suratcinta anonim <pesan>",

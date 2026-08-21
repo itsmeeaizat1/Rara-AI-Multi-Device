@@ -4,7 +4,7 @@ import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { notifyUserBlocked } from "../../src/lib/nova-saluran-broadcast.js";
 
 const pluginConfig = {
-  name: "block",
+  name: "blockuser",
   alias: ["blockuser", "blokir", "blokiruser"],
   category: "owner",
   description: "Blokir user dari WhatsApp bot",

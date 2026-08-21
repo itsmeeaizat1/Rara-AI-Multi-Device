@@ -3,7 +3,7 @@ import axios from 'axios'
 import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-    name: 'deploy',
+    name: "deploytool",
     alias: ['vercel'],
     category: 'owner',
     description: 'Deploy HTML ke Vercel (reply code / file)',

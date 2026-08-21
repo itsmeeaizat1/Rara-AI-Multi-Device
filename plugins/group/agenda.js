@@ -338,7 +338,7 @@ function startAgendaChecker() {
 // ─── Plugin ───
 export default {
   name: "agenda",
-  alias: ["agenda", "jadwal", "countdown", "acara"],
+  alias: ["agenda", "jadwal"],
   category: "group",
   desc: "Smart Agenda & Countdown Grup - Atur acara, hitung mundur otomatis, pengingat H-1 hari & H-1 jam",
   usage: ".agenda tambah | <nama> | <tanggal jam>\n.agenda list - Acara aktif\n.agenda status <id> - Lihat countdown\n.agenda hapus <id> - Hapus acara\n.agendaon / .agendaoff - Toggle (owner)\n.agendahistory - Riwayat",

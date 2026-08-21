@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rpgcerdas",
-  alias: ["rpgcc", "cerdascermat", "rpgcermat", "rpgpintar"],
+  alias: ["rpgcc", "cerdascermat", "rpgcermat"],
   category: "rpg",
   description: "Cerdas Cermat RPG — quiz buzzer cepat dengan soal campuran (IPA, IPS, Bahasa, Matematika)",
   usage: ".rpgcerdas | .rpgcerdas status | .rpgcerdas category <ipa/ips/bahasa/matematika/campuran>",

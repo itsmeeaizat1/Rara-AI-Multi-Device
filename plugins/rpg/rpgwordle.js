@@ -5,7 +5,7 @@ import { getPlayer, ensurePlayer, addGold, addExp, savePlayer } from "../../src/
 
 const pluginConfig = {
   name: "rpgwordle",
-  alias: ["wordlerpg", "tebakkata5", "wordle", "kata5", "katagame"],
+  alias: ["wordlerpg", "tebakkata5", "kata5", "katagame"],
   category: "rpg",
   description: "RPG Wordle — Tebak kata 5 huruf dalam 6 kesempatan",
   usage: ".rpgwordle <biaya> — Mulai game\n.rpgwordle <biaya> <kata5> — Tebak kata\n.rpgwordle info — Statistik",

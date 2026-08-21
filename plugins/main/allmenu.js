@@ -271,15 +271,16 @@ ${readMore}
 `;
 
   // ── Keterangan simbol ──
-  txt += `╔┈┈「 *Keterangan* 」
-╎
-╎❏ Ⓞ = Hanya untuk owner
-╎❏ ⓟ = Hanya untuk premium
-╎❏ Ⓛ = Membutuhkan limit
-╎❏ Ⓐ = Hanya untuk admin
-╎❏ Ⓖ = Hanya di dalam grup
-╎❏ Ⓟ = Hanya di private chat
-╚┈┈┈┈┈┈┈┈┈❖
+  txt += `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ALLMENU
+
+  ° ✿ Keterangan ✿ °
+  ┊  ➶ Ⓞ = Hanya untuk owner
+  ┊  ➶ ⓟ = Hanya untuk premium
+  ┊  ➶ Ⓛ = Membutuhkan limit
+  ┊  ➶ Ⓐ = Hanya untuk admin
+  ┊  ➶ Ⓖ = Hanya di dalam grup
+  ┊  ╰➶ Ⓟ = Hanya di private chat
+
 `;
 
   // ── Category commands (all) ──
@@ -311,15 +312,19 @@ ${readMore}
     const caseCmds = casesByCategory[category] || [];
     const allCmds = [...pluginCmds, ...caseCmds];
     if (allCmds.length === 0) continue;
-    const emoji = CATEGORY_EMOJIS[category] || "📋";
+    const catName = CATEGORY_NAMES[category] || category.charAt(0).toUpperCase() + category.slice(1);
 
-    txt += `╔┈「 ${emoji} *${category}* 」\n`;
-    for (const cmd of allCmds) {
+    txt += `  ° ✿ ${catName} ✿ °\n`;
+    for (let i = 0; i < allCmds.length; i++) {
+      const cmd = allCmds[i];
       const symbols = getCommandSymbols(cmd);
-      txt += `╎❏ ${prefix}${cmd}${symbols}\n`;
+      const isLast = i === allCmds.length - 1;
+      txt += `  ┊  ${isLast ? '╰' : ''}➶ ${prefix}${cmd}${symbols}\n`;
     }
-    txt += `╚┈┈┈┈┈┈┈┈┈❖\n\n`;
+    txt += `\n`;
   }
+
+  txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n`;
 
   // ── Send ──
   let imageBuffer = null;
@@ -367,7 +372,7 @@ ${readMore}
                 videoMessage: mediaV1.videoMessage,
               },
               body: { text: _weatherBlock + txt },
-              footer: { text: `${greeting} | ${footerText}` },
+              footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
               contextInfo: {
                 isForwarded: false, forwardingScore: 9,
                 participant: "0@s.whatsapp.net",
@@ -402,7 +407,7 @@ ${readMore}
                 },
               },
               body: { text: _weatherBlock + txt },
-              footer: { text: "Silahkan pilih tombol dibawah untuk kembali ke menu" },
+              footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
               contextInfo: {
                 isForwarded: false,
                 participant: "0@s.whatsapp.net",
@@ -438,7 +443,7 @@ ${readMore}
                   },
                 },
                 body: { text: _weatherBlock + txt },
-                footer: { text: footerText },
+                footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
                 contextInfo: { mentionedJid: [m.sender], isForwarded: false },
                 nativeFlowMessage: {
                   buttons: buildButtons(prefix, true),

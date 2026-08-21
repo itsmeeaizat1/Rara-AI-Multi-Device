@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wordle",
-  alias: ["wordle", "tebakkata5"],
+  alias: ["wordle"],
   category: "future",
   description: "Wordle harian - tebak kata 5 huruf, 6 kesempatan",
   usage: ".wordle <command>",

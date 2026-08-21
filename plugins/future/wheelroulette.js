@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wheelroulette",
-  alias: ["wheelroulette", "wheel", "roulette"],
+  alias: ["wheelroulette", "wheel"],
   category: "future",
   description: "Wheel roulette - spin wheel untuk dapat hadiah acak",
   usage: ".wheelroulette <command>",

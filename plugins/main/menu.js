@@ -221,11 +221,14 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 ╎❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
 ╚┈┈┈┈┈┈┈┈┈❖
 ${readMore}
-╔┈「 *Menu* 」
-╎❏ ${prefix}menu
-╎❏ ${prefix}allmenu
-╎❏ ${prefix}tanyaai
-╚┈┈┈┈┈┈┈┈┈❖
+❀°˖✧◝(⁰▿⁰)◜✧˖°❀ NOVA MENU
+
+  ° ✿ Menu ✿ °
+  ┊  ➶ ${prefix}menu
+  ┊  ➶ ${prefix}allmenu
+  ┊  ╰➶ ${prefix}tanyaai
+
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 `;
 }
 
@@ -337,7 +340,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                 videoMessage: mediaV1.videoMessage,
               },
               body: { text: _weatherBlock + text },
-              footer: { text: `${greeting} | ${footerText}` },
+              footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
               contextInfo: {
                 isForwarded: false, forwardingScore: 9,
                 participant: "0@s.whatsapp.net",
@@ -372,7 +375,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                 },
               },
               body: { text: _weatherBlock + text },
-              footer: { text: `${greeting} | ${footerText}` },
+              footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
               contextInfo: {
                 isForwarded: false, forwardingScore: 9,
                 participant: "0@s.whatsapp.net",
@@ -408,7 +411,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
                   },
                 },
                 body: { text: _weatherBlock + text },
-                footer: { text: "Silahkan pilih dari salah satu tombol di bawah" },
+                footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
                 contextInfo: { mentionedJid: [m.sender], isForwarded: false },
                 nativeFlowMessage: {
                   buttons: buildButtons(prefix, true),
@@ -433,7 +436,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             interactiveMessage: {
               header: { title: "", subtitle: "", hasMediaAttachment: true, videoMessage: media4.videoMessage },
               body: { text: _weatherBlock + text },
-              footer: { text: footerText },
+              footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
               contextInfo: { isForwarded: false, forwardingScore: 9, participant: "0@s.whatsapp.net", quotedMessage: { conversation: botName }, mentionedJid: [m.sender] },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({}),
@@ -455,7 +458,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
             interactiveMessage: {
               header: { hasMediaAttachment: true, locationMessage: { degreesLatitude: 0, degreesLongitude: 0, name: botName, address: botVersion, jpegThumbnail: thumbV5 } },
               body: { text: _weatherBlock + text },
-              footer: { text: footerText },
+              footer: { text: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀" },
               contextInfo: { mentionedJid: [m.sender], isForwarded: false, forwardingScore: 9 },
               nativeFlowMessage: {
                 messageParamsJson: JSON.stringify({}),
