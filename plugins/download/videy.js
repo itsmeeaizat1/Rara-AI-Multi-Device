@@ -36,7 +36,12 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const apiUrl = `https://api.zeks.xyz/api/videy?url=${encodeURIComponent(url)}`;
-    const response = await axios.get(apiUrl, { timeout: 10000 });
+    let response;
+    try {
+      response = await axios.get(apiUrl, { timeout: 10000 });
+    } catch (apiErr) {
+      throw new Error("API Videy sedang down. Coba lagi nanti atau gunakan .tiktok / .igdl untuk download.");
+    }
     const data = response.data;
     const result = data?.result || data;
     const videoUrl = result?.url || result?.link || url;
