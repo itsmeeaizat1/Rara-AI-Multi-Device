@@ -153,7 +153,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   }
 
   await m.react("🕐");
-  m.reply(claraWrap("Kop", "> Tambah kop surat ke PDF..."));
+  m.reply(claraWrap("Kop", "  ┊  ➶ Tambah kop surat ke PDF..."));
 
   try {
     const pdfBuffer = await m.quoted.download();

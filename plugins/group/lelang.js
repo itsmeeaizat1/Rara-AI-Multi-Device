@@ -108,7 +108,7 @@ function autoCloseExpired(db, sock) {
           "  ┊  ➶ Bid Terakhir: *" + formatRupiah(winner.amount) + "*\n" +
           "  ┊  ➶ Total Bid: " + auction.bids.length + "\n" +
           "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n" +
-          "> Hubungi penjual untuk penyerahan barang";
+          "  ┊  ➶ Hubungi penjual untuk penyerahan barang";
 
         sock.sendMessage(auction.chatId, {
           text: winnerText,
@@ -123,7 +123,7 @@ function autoCloseExpired(db, sock) {
             "  ┊  ➶ ID: `" + id + "`\n" +
             "  ┊  ➶ Total Bid: 0\n" +
             "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n" +
-            "> Lelang berakhir tanpa peserta",
+            "  ┊  ➶ Lelang berakhir tanpa peserta",
         }).catch((e) => { console.error('[lelang.js]:', e.message); });
       }
     }

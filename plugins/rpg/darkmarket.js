@@ -214,7 +214,7 @@ async function handler(m, { sock, config: botConfig }) {
 
   const stockList = Object.values(stock);
   if (stockList.length === 0) {
-    text += "> Stok kosong. Tunggu restock.\n";
+    text += "  ┊  ➶ Stok kosong. Tunggu restock.\n";
   } else {
     for (const item of stockList) {
       const stockBar = item.stockQty > 0

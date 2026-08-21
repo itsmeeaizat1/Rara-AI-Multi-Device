@@ -148,7 +148,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
     if (isImageMode) {
       // Image signature mode
-      m.reply(claraWrap("Ttd", "> Stamp tanda tangan gambar ke PDF..."));
+      m.reply(claraWrap("Ttd", "  ┊  ➶ Stamp tanda tangan gambar ke PDF..."));
       let sigBuffer;
       if (m.quoted && m.quoted.isMedia && m.quoted.type === "imageMessage") {
         // Signature is the quoted image, PDF is the quoted-of-quoted (not possible in WA)
@@ -184,7 +184,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       }
     } else if (cleanArgs.length > 0) {
       // Text signature mode
-      m.reply(claraWrap("Ttd", "> Tambah tanda tangan teks ke PDF..."));
+      m.reply(claraWrap("Ttd", "  ┊  ➶ Tambah tanda tangan teks ke PDF..."));
       resultBuffer = await addTextSignaturePDF(pdfBuffer, cleanArgs, opts);
     } else {
       return m.reply(claraWrap("Ttd", `❌ Kirim gambar ttd atau ketik nama. Contoh: ${prefix}ttd Budi Santoso`));

@@ -126,7 +126,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   }
 
   await m.react("🕐");
-  m.reply(claraWrap("SPPD", "> AI lagi menyusun SPPD..."));
+  m.reply(claraWrap("SPPD", "  ┊  ➶ AI lagi menyusun SPPD..."));
 
   try {
     const result = await UnlimitedAI(SPPD_PROMPT.replace("__INPUT__", args), "nova-ai");
@@ -143,7 +143,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     await m.reply(claraWrap("SPPD — Preview", preview));
 
     // PDF
-    m.reply(claraWrap("SPPD", "> Render SPPD ke PDF..."));
+    m.reply(claraWrap("SPPD", "  ┊  ➶ Render SPPD ke PDF..."));
     const pdfBuffer = await renderSppdPDF(text);
     await sock.sendMessage(m.chat, {
       document: pdfBuffer,

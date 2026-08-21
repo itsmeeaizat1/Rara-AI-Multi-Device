@@ -53,25 +53,23 @@ async function handler(m, { sock }) {
   const jid = m.key.remoteJid;
   const sender = m.key.participant || jid;
 
-  // ── KATALOG ─────────────────────────────────────────────────────────────
-
+  // ── KATALOG ──
   if (action === "katalog" || action === "list" || action === "all" || !action) {
     const products = listProducts();
     if (products.length === 0) return m.reply(claraWrap("belanja", "Maaf, toko belum punya produk."));
 
-    const config = getStoreConfig();
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + product.name + "  ┊  ➶\n";
-    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
+    const storeConfig = getStoreConfig();
+    const cats = listCategories();
+    let txt = `KATALOG ${storeConfig.name || "Toko Nova"}\n\n`;
     for (const cat of cats) {
       const count = products.filter((p) => p.category === cat).length;
-      txt += cat + " (" + count + " produk)\n";
+      txt += `${cat} (${count} produk)\n`;
     }
     txt += "\nLihat: .belanja katalog <nama kategori>";
     return await m.reply(claraWrap("belanja", txt));
   }
 
-  // ── PESAN ───────────────────────────────────────────────────────────────
-
+  // ── PESAN ──
   if (action === "pesan" || action === "order" || action === "beli") {
     const id = args[1];
     if (!id) return m.reply(claraWrap("Belanja", "Format: .belanja pesan <id produk> [qty] [catatan]"));
@@ -93,43 +91,42 @@ async function handler(m, { sock }) {
     if (result.error) return m.reply(result.error);
 
     const order = result.order;
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + formatRupiah(order.total) + "  ┊  ➶\n";
-      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
-      txt += "ID: " + order.id + "\n";
-      txt += "Produk: " + order.productName + "\n";
-      txt += "Jumlah: " + order.qty + "x\n";
-      txt += "Total: " + formatRupiah(order.total) + "\n";
-      txt += "Status: " + statusText(order.status) + "\n";
-      txt += "Tanggal: " + formatDate(order.createdAt) + "\n";
-      if (order.note) txt += "Catatan: " + order.note + "\n";
-      if (order.sellerNote) txt += "Catatan penjual: " + order.sellerNote + "\n";
-      return await m.reply(claraWrap("belanja", txt));
-    }
+    let txt = `PESANAN BARU\n\n`;
+    txt += `ID: ${order.id}\n`;
+    txt += `Produk: ${order.productName}\n`;
+    txt += `Jumlah: ${order.qty}x\n`;
+    txt += `Total: ${formatRupiah(order.total)}\n`;
+    txt += `Status: ${statusText(order.status)}\n`;
+    txt += `Tanggal: ${formatDate(order.createdAt)}\n`;
+    if (order.note) txt += `Catatan: ${order.note}\n`;
+    if (order.sellerNote) txt += `Catatan penjual: ${order.sellerNote}\n`;
+    return await m.reply(claraWrap("belanja", txt));
+  }
 
-    // cek semua pesanan buyer
+  // ── CEK PESANAN ──
+  if (action === "cek" || action === "pesanan") {
     const orders = getOrdersByBuyer(jid);
     if (orders.length === 0) return m.reply(claraWrap("belanja", "Kamu belum punya pesanan. Ketik .belanja katalog untuk lihat produk."));
 
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ PESANANKU  ┊  ➶\n";
-    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
+    let txt = `PESANANKU\n\n`;
     for (const o of orders) {
-      txt += o.id + "\n";
-      txt += "  " + o.productName + " (" + o.qty + "x) = " + formatRupiah(o.total) + "\n";
-      txt += "  Status: " + statusText(o.status) + "\n\n";
+      txt += `${o.id}\n`;
+      txt += `  ${o.productName} (${o.qty}x) = ${formatRupiah(o.total)}\n`;
+      txt += `  Status: ${statusText(o.status)}\n\n`;
     }
     txt += "Detail: .belanja cek <id pesanan>";
     return await m.reply(claraWrap("belanja", txt));
   }
 
-  return m.reply(
-    "Perintah toko:\n\n" +
-    "1. .belanja — Lihat katalog\n" +
-    "2. .belanja detail <id> — Detail produk\n" +
-    "3. .belanja cari <kata> — Cari produk\n" +
-    "4. .belanja kategori — Lihat kategori\n" +
-    "5. .belanja pesan <id> [qty] [catatan] — Pesan produk\n" +
-    "6. .belanja cek [id] — Cek pesanan"
-  );
+  // ── HELP ──
+  return m.reply(claraWrap("belanja", [
+    "1. .belanja — Lihat katalog",
+    "2. .belanja detail <id> — Detail produk",
+    "3. .belanja cari <kata> — Cari produk",
+    "4. .belanja kategori — Lihat kategori",
+    "5. .belanja pesan <id> [qty] [catatan] — Pesan produk",
+    "6. .belanja cek [id] — Cek pesanan",
+  ].join("\n")));
 }
 
 export { pluginConfig as config, handler };

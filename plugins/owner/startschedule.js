@@ -61,8 +61,8 @@ async function handler(m, { sock, args }) {
             
             await m.reply(claraWrap("Startschedule", `▶️ *sCheduler Dimulai*
 
-> Scheduler: *Sholat Scheduler*
-> Status: ✅ Aktif
+  ┊  ➶ Scheduler: *Sholat Scheduler*
+  ┊  ➶ Status: ✅ Aktif
 
 _Notifikasi waktu sholat akan dikirim ke grup yang mengaktifkan fitur ini_`));
             return;
@@ -79,8 +79,8 @@ _Notifikasi waktu sholat akan dikirim ke grup yang mengaktifkan fitur ini_`));
         if (result.started) {
             await m.reply(claraWrap("Startschedule", `▶️ *sCheduler Dimulai*
 
-> Scheduler: *${result.name}*
-> Status: ✅ Aktif
+  ┊  ➶ Scheduler: *${result.name}*
+  ┊  ➶ Status: ✅ Aktif
 
 _Scheduler telah dimulai kembali_`));
         } else {

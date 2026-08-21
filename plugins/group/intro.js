@@ -31,7 +31,7 @@ Kenalan dulu yukk
 
 Semoga betah yahh, di grup @group
 
-> Untuk Owner:
+  ┊  ➶ Untuk Owner:
 ganti intro bawaan dengan .setintro <text>`
  function parsePlaceholders(text, m, groupMeta) {
     const now = moment().tz('Asia/Jakarta')

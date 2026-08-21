@@ -369,23 +369,23 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
     if (isImage) {
       modeLabel = "AI Vision";
-      m.reply(claraWrap("Extract Text", "> Memproses gambar dengan AI vision..."));
+      m.reply(claraWrap("Extract Text", "  ┊  ➶ Memproses gambar dengan AI vision..."));
       extractedText = await extractImageText(buffer, botConfig);
     } else if (isPdf || pdfMime.includes("pdf")) {
       if (useAI) {
         modeLabel = "AI Vision";
-        m.reply(claraWrap("Extract Text", "> Rendering halaman PDF & ekstrak dengan AI vision..."));
+        m.reply(claraWrap("Extract Text", "  ┊  ➶ Rendering halaman PDF & ekstrak dengan AI vision..."));
         try {
           extractedText = await extractPdfViaAI(buffer, botConfig);
         } catch (aiErr) {
           // Fallback to pdf-parse if AI mode fails
-          m.reply(claraWrap("Extract Text", "> AI mode gagal, fallback ke pdf-parse..."));
+          m.reply(claraWrap("Extract Text", "  ┊  ➶ AI mode gagal, fallback ke pdf-parse..."));
           extractedText = await extractPdfText(buffer);
           modeLabel = "PDF Parse (fallback)";
         }
       } else {
         modeLabel = "PDF Parse";
-        m.reply(claraWrap("Extract Text", "> Mengekstrak teks dari PDF dengan struktur..."));
+        m.reply(claraWrap("Extract Text", "  ┊  ➶ Mengekstrak teks dari PDF dengan struktur..."));
         extractedText = await extractPdfText(buffer);
       }
     } else {

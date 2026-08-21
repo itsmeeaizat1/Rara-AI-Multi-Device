@@ -172,7 +172,7 @@ async function handler(m, { sock }) {
   ┊  ➶ *Upload:* ${result.upload}
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
-> Metode: ${result.method}`;
+  ┊  ➶ Metode: ${result.method}`;
 
     await m.react("✅");
     await m.reply(claraWrap("speedtest", text));
