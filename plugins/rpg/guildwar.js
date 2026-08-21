@@ -79,7 +79,8 @@ async function handler(m, { sock }) {
       "Treasury: Rp 100\n" +
       "Power: 10\n\n" +
       "Ajak temen join: .guildwar join " + guildName + "\n" +
-      "Declare war: .guildwar declare <guild musuh>", "guildwar");
+      "Declare war: .guildwar declare <guild musuh>";
+    return await sendReplyWithNav(sock, m, txt, "guildwar");
   }
 
   // JOIN
