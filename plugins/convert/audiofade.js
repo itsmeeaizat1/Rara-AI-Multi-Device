@@ -81,7 +81,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       desc = `Duck + compress + fade`;
     }
 
-    await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -af "${filter}" -c:a libmp3lame -q:a 2 "${outputPath}"`);
+    await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -af "${filter}" -c:a libopus -c:a libopus -b:a 64k "${outputPath}"`);
 
     if (!fs.existsSync(outputPath)) {
       return m.reply(claraWrap("Audio Fade", "Gagal apply fade."));
@@ -90,7 +90,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const buf = fs.readFileSync(outputPath);
     await conn.sendMessage(m.key.remoteJid, {
       audio: buf,
-      mimetype: "audio/mpeg",
+      mimetype: "audio/ogg; codecs=opus",
       ptt: isPtt,
       caption: claraWrap("Audio Fade", `Berhasil!\nMode: ${mode}\n${desc}`),
     });
