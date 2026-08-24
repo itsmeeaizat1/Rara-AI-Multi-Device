@@ -8,7 +8,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "profileuser",
-  alias: ["profileuser", "profuser", "userprofile"],
+  alias: ["profil", "profileuser", "profuser", "userprofile", "myprofile", "prof"],
   category: "user",
   description: "Melihat profil user dengan RPG stats",
   usage: ".profile [@user]",
@@ -142,6 +142,19 @@ async function handler(m, { sock }) {
   caption += `- *Tag / Mention:* @${target.split("@")[0]}\n`;
   caption += `- *Status Akun:* ${isOwnerUser ? "👑 Owner" : isPremiumUser ? "💎 Premium" : "🆓 Free User"}\n`;
   if (user.isBanned) caption += `- *Banned:* 🚫 Ya (Tidak bisa akses fitur bot)\n`;
+  caption += `- *Level:* ${userLevel}\n`;
+  caption += `- *Total Exp:* ${formatNumber(userExp)} XP\n`;
+  caption += `- *Koin:* 🪙 ${formatNumber(user.koin || 0)}\n`;
+  if (user.rpg) {
+    caption += `- *Gold:* 💰 ${formatNumber(user.rpg.gold || 0)}\n`;
+    caption += `- *Gems:* 💎 ${formatNumber(user.rpg.gems || 0)}\n`;
+    caption += `- *Tokens:* 🎟️ ${formatNumber(user.rpg.tokens || 0)}\n`;
+    caption += `- *Energy:* ⚡ ${formatNumber(user.rpg.energy || 0)}/${formatNumber(user.rpg.maxEnergy || 100)}\n`;
+    caption += `- *Mana:* 💧 ${formatNumber(user.rpg.mana || 0)}/${formatNumber(user.rpg.maxMana || 50)}\n`;
+    caption += `- *HP:* ❤️ ${formatNumber(user.rpg.hp || 0)}/${formatNumber(user.rpg.maxHp || 100)}\n`;
+    caption += `- *Stamina:* 🏃 ${formatNumber(user.rpg.stamina || 0)}/${formatNumber(user.rpg.maxStamina || 100)}\n`;
+  }
+  caption += `- *Sisa Energi Bot:* ${isOwnerUser || isPremiumUser ? "∞ Unlimited" : (user.energi ?? 25)}\n`;
   if (user.registeredAt) {
       caption += `- *Tanggal Terdaftar:* ${new Date(user.registeredAt).toLocaleDateString("id-ID")}\n`;
   }
@@ -150,19 +163,73 @@ async function handler(m, { sock }) {
       caption += `- *Pasangan (Spouse):* @${user.rpg.spouse.split("@")[0]}\n`;
   }
 
-  caption += `\n*〔 ⚔️ RPG STATS & LEVEL 〕*\n`;
+  caption += `\n*〔 ⚔️ RPG STATS 〕*\n`;
   caption += `- *Role / Pangkat:* ${role}\n`;
-  caption += `- *Level Saat Ini:* ${user.rpg.level}\n`;
+  caption += `- *Level:* ${user.rpg.level}\n`;
   caption += `- *Total Exp:* ${formatNumber(userExp)} XP\n`;
-  caption += `- *Kesehatan (Health):* ❤️ ${user.rpg.health} / ${user.rpg.maxHealth}\n`;
-  caption += `- *Mana (Magic):* 💧 ${user.rpg.mana} / ${user.rpg.maxMana}\n`;
-  caption += `- *Stamina:* ⚡ ${user.rpg.stamina} / ${user.rpg.maxStamina}\n`;
-  caption += `- *Progress Ke Level ${user.rpg.level + 1}:*\n  ${getLevelBar(expInLevel, expNeeded)}\n  _${formatNumber(expInLevel)} / ${formatNumber(expNeeded)} XP_\n`;
+  caption += `- *Progress:* ${getLevelBar(expInLevel, expNeeded)}\n  _${formatNumber(expInLevel)} / ${formatNumber(expNeeded)} XP_\n`;
+  if (user.rpg) {
+    caption += `\n*〔 ❤️ VITAL 〕*\n`;
+    caption += `- *HP:* ${formatNumber(user.rpg.hp || 0)} / ${formatNumber(user.rpg.maxHp || 100)}\n`;
+    caption += `- *Mana:* ${formatNumber(user.rpg.mana || 0)} / ${formatNumber(user.rpg.maxMana || 50)}\n`;
+    caption += `- *Energy:* ${formatNumber(user.rpg.energy || 0)} / ${formatNumber(user.rpg.maxEnergy || 100)}\n`;
+    caption += `- *Stamina:* ${formatNumber(user.rpg.stamina || 0)} / ${formatNumber(user.rpg.maxStamina || 100)}\n`;
+    caption += `\n*〔 💪 COMBAT 〕*\n`;
+    caption += `- *ATK:* ${formatNumber(user.rpg.atk || 10)}\n`;
+    caption += `- *DEF:* ${formatNumber(user.rpg.def || 5)}\n`;
+    caption += `- *SPD:* ${formatNumber(user.rpg.spd || 10)}\n`;
+    caption += `- *Crit Rate:* ${user.rpg.critRate || 5}%\n`;
+    caption += `- *Crit DMG:* ${user.rpg.critDmg || 50}%\n`;
+    caption += `- *Evasion:* ${user.rpg.evasion || 3}%\n`;
+    caption += `- *Accuracy:* ${user.rpg.accuracy || 95}%\n`;
+    caption += `- *Lifesteal:* ${user.rpg.lifesteal || 0}%\n`;
+    caption += `- *Penetration:* ${user.rpg.penetration || 0}%\n`;
+    caption += `\n*〔 🎲 LUCK & BONUS 〕*\n`;
+    caption += `- *Luck:* ${formatNumber(user.rpg.luck || 0)}\n`;
+    caption += `- *Drop Bonus:* ${user.rpg.dropBonus || 0}%\n`;
+    caption += `- *Gold Find:* ${user.rpg.goldFind || 0}%\n`;
+    caption += `- *EXP Bonus:* ${user.rpg.expBonus || 0}%\n`;
+    caption += `\n*〔 🛡️ EQUIPMENT 〕*\n`;
+    caption += `- *Weapon:* ${user.rpg.equipWeapon ? user.rpg.equipWeapon.name + " +" + (user.rpg.equipWeapon.enchant || 0) : "Kosong"}\n`;
+    caption += `- *Armor:* ${user.rpg.equipArmor ? user.rpg.equipArmor.name + " +" + (user.rpg.equipArmor.enchant || 0) : "Kosong"}\n`;
+    caption += `- *Helmet:* ${user.rpg.equipHelmet ? user.rpg.equipHelmet.name + " +" + (user.rpg.equipHelmet.enchant || 0) : "Kosong"}\n`;
+    caption += `- *Boots:* ${user.rpg.equipBoots ? user.rpg.equipBoots.name + " +" + (user.rpg.equipBoots.enchant || 0) : "Kosong"}\n`;
+    caption += `- *Accessory:* ${user.rpg.equipAccessory ? user.rpg.equipAccessory.name + " +" + (user.rpg.equipAccessory.enchant || 0) : "Kosong"}\n`;
+    caption += `- *Ring:* ${user.rpg.equipRing ? user.rpg.equipRing.name + " +" + (user.rpg.equipRing.enchant || 0) : "Kosong"}\n`;
+    caption += `- *Shield:* ${user.rpg.equipShield ? user.rpg.equipShield.name + " +" + (user.rpg.equipShield.enchant || 0) : "Kosong"}\n`;
+    caption += `\n*〔 🎓 PROFESSION 〕*\n`;
+    caption += `- *Job:* ${user.rpg.job || "novice"}\n`;
+    caption += `- *Job Level:* ${formatNumber(user.rpg.jobLevel || 1)}\n`;
+    caption += `- *Skill Points:* ${formatNumber(user.rpg.skillPoints || 0)}\n`;
+    caption += `- *Skills:* ${formatNumber((user.rpg.skills || []).length)}\n`;
+    caption += `\n*〔 🏆 RECORDS 〕*\n`;
+    caption += `- *PvP:* ${formatNumber(user.rpg.pvpWins || 0)}W / ${formatNumber(user.rpg.pvpLosses || 0)}L\n`;
+    caption += `- *PvP Rating:* ${formatNumber(user.rpg.pvpRating || 1000)}\n`;
+    caption += `- *PvP Streak:* ${formatNumber(user.rpg.pvpStreak || 0)} (Best: ${formatNumber(user.rpg.pvpBestStreak || 0)})\n`;
+    caption += `- *Total Kills:* ${formatNumber(user.rpg.totalKills || 0)}\n`;
+    caption += `- *Boss Kills:* ${formatNumber(user.rpg.bossKills || 0)}\n`;
+    caption += `- *Dungeon Clears:* ${formatNumber(user.rpg.dungeonClears || 0)}\n`;
+    caption += `\n*〔 🎯 MISC 〕*\n`;
+    caption += `- *Daily Streak:* ${formatNumber(user.rpg.dailyStreak || 0)} hari\n`;
+    caption += `- *Achievements:* ${formatNumber((user.rpg.achievements || []).length)} (Points: ${formatNumber(user.rpg.achievementPoints || 0)})\n`;
+    caption += `- *Inventory:* ${formatNumber(Object.keys(user.rpg.inventory || {}).length)} jenis item\n`;
+    if (user.rpg.rebirthCount) {
+      caption += `- *Rebirth:* ${formatNumber(user.rpg.rebirthCount)}x (Bonus: ${user.rpg.permBonus || 0}%)\n`;
+    }
+    if (user.rpg.title) {
+      caption += `- *Title:* ${user.rpg.title}\n`;
+    }
+  }
 
   caption += `\n*〔 💰 ASET & KEUANGAN 〕*\n`;
-  caption += `- *Koin Tunai:* 🪙 Rp ${user.koin?.toLocaleString("id-ID") || 0} _(Digunakan untuk fitur RPG)_\n`;
-  caption += `- *Uang di Bank:* 🏦 Rp ${user.rpg?.bank?.toLocaleString("id-ID") || 0} _(Aman dari resiko perampokan)_\n`;
-  caption += `- *Sisa Energi:* ⚡ ${isOwnerUser || isPremiumUser ? "∞ Tak Terbatas" : user.energi} _(Dibutuhkan setiap kali memakai command)_\n`;
+  caption += `- *Koin:* 🪙 ${formatNumber(user.koin || 0)} _(Digunakan untuk fitur bot)_\n`;
+  caption += `- *Saldo:* 💵 ${formatNumber(user.saldo || 0)}\n`;
+  if (user.rpg) {
+    caption += `- *Gold RPG:* 💰 ${formatNumber(user.rpg.gold || 0)}\n`;
+    caption += `- *Gems:* 💎 ${formatNumber(user.rpg.gems || 0)}\n`;
+    caption += `- *Tokens:* 🎟️ ${formatNumber(user.rpg.tokens || 0)}\n`;
+  }
+  caption += `- *Energi Bot:* ⚡ ${isOwnerUser || isPremiumUser ? "∞ Unlimited" : (user.energi ?? 25)}\n`;
 
   caption += `\n*〔 📱 WHATSAPP INFO 〕*\n`;
   caption += `- *Nomor:* +${phone}\n`;
