@@ -407,6 +407,32 @@ async function messageHandler(msg, sock) {
     }
   }
 
+  // Confess reply handler (balasan ke pesan confess anonim/non-anonim)
+  if (!m.isCommand && !m.isNewsletter && m.quoted) {
+    try {
+      const { replyHandler: confessReply } = await import("../plugins/fun/confess.js");
+      if (typeof confessReply === "function") {
+        const handled = await confessReply(m, { sock });
+        if (handled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("confess-reply", e.message);
+    }
+  }
+
+  // ConfessViral reply handler (balasan ke pesan confess viral)
+  if (!m.isCommand && !m.isNewsletter && m.quoted) {
+    try {
+      const { replyHandler: viralReply } = await import("../plugins/fun/confessviral.js");
+      if (typeof viralReply === "function") {
+        const handled = await viralReply(m, { sock });
+        if (handled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("confessviral-reply", e.message);
+    }
+  }
+
   // Auto React VN: jalan walau fromMe (owner testing di self-chat), asal bukan command/newsletter
   if (!m.isCommand && !m.isNewsletter) {
     try {
