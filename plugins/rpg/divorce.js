@@ -1,64 +1,32 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { ensurePlayer, getPlayer, removeCouple } from "../../src/lib/nova-rpg-service.js";
 
-const pluginConfig = {
+export default {
   name: "divorce",
-  alias: ["divorce", "cerai", "divorcerpg"],
+  alias: ["divorcematch", "putus", "cerai"],
   category: "rpg",
-  description: "Bercerai dari pasangan",
+  description: "Putus hubungan dengan pasangan",
   usage: ".divorce",
-  example: ".divorce",
-  isOwner: false,
-  isPremium: false,
-  isGroup: false,
-  isPrivate: false,
-  cooldown: 60,
-  energi: 0,
-  isEnabled: true,
+  async handler(m, { sock }) {
+    try {
+      ensurePlayer(m, m.pushName || "Player");
+      const player = getPlayer(m);
+      if (!player?.coupleId && !player?.marriedId) {
+        return await sendReplyWithNav(sock, m, "❌ Kamu tidak punya pasangan!", "divorce");
+      }
+      const partnerName = player.marriedName || player.coupleName || "Unknown";
+      removeCouple(m);
+      let text = `❀°˖ 𝗣𝘂𝘁𝘂𝘀 𝗛𝘂𝗯𝘂𝗻𝗴𝗮𝗻 ˖°❀
+
+┊ ➶ ${m.pushName} & ${partnerName}
+┊ ➶ Status: Lajang lagi
+┊ ➶ Semoga temukan yang lebih baik 💔
+
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      return await sendReplyWithNav(sock, m, text, "divorce");
+    } catch (e) {
+      return await m.reply(`❌ Error: ${e.message}`);
+    }
+  }
 };
-
-async function handler(m, { sock }) {
-  const db = getDatabase();
-  const user = db.getUser(m.sender);
-
-  if (!user.rpg) user.rpg = {};
-
-  if (!user.rpg.spouse) {
-    return sendReplyWithNav(sock, m, `Halu tingkat tinggi... Nikah aja belum masa udah mau cerai? 😂💔\nCari pasangan dulu gih pake \`.marry @user\``, "divorce");
-  }
-
-  const spouseJid = user.rpg.spouse;
-  const partner = db.getUser(spouseJid);
-
-  const divorceCost = 25000;
-  if ((user.koin || 0) < divorceCost) {
-    { const __navText = claraWrap("Rp 25.000", `Aduh, biaya pengacara buat cerai mahal bos! 😭\nButuh *Rp 25.000* buat tanda tangan surat cerai, duit lu cuma *Rp ${(user.koin || 0).toLocaleString("id-ID")}*.\nTahan dulu aja berantemnya!`); return await m.reply(__navText); };
-  }
-
-  user.koin -= divorceCost;
-  user.rpg.spouse = null;
-  user.rpg.marriedAt = null;
-
-  if (partner && partner.rpg) {
-    partner.rpg.spouse = null;
-    partner.rpg.marriedAt = null;
-  }
-
-  db.save();
-
-
-  let txt = `⛈️ *SIDANG PERCERAIAN SELESAI* ⛈️\n\n`;
-  txt += `Palu telah diketuk. Dengan berat hati, hubungan antara:\n`;
-  txt += `💔 @${m.sender.split("@")[0]}\n`;
-  txt += `         -- PUTUS DENGAN --\n`;
-  txt += `💔 @${spouseJid.split("@")[0]}\n\n`;
-  txt += `😭 *RESMI BERAKHIR! KINI KALIAN KEMBALI JOMBLO!* 😭\n\n`;
-  txt += `💸 Biaya Pengacara/Sidang: *Rp -${divorceCost.toLocaleString("id-ID")}*\n\n`;
-  txt += `_"Sudah sudah... nangisnya di pojokan aja. Life must go on..." - Hakim Bot_ 🥀🚬`;
-
-  await sendReplyWithNav(sock, m, txt, "divorce");
-}
-
-export { pluginConfig as config, handler };

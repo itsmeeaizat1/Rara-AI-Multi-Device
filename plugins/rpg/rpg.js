@@ -1,57 +1,42 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
-import { ensurePlayer } from "../../src/lib/nova-rpg-service.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { getPlayer } from "../../src/lib/nova-rpg-service.js";
 
-const pluginConfig = {
+export default {
   name: "rpg",
-  alias: ["rpg", "rpgstart", "startplay"],
-  category: "game",
-  description: "Mulai petualangan RPG kamu",
+  alias: ["rpgmenu", "rpgstart"],
+  category: "rpg",
+  description: "Menu RPG Nova AI",
   usage: ".rpg",
-  example: ".rpg",
-  isOwner: false,
-  isPremium: false,
-  isGroup: true,
-  isPrivate: false,
-  cooldown: 5,
-  energi: 0,
-  isEnabled: true,
-};
+  async handler(m, { sock }) {
+    try {
+      const player = getPlayer(m);
+      const text = `❀°˖ 𝗥𝗣𝗚 𝗡𝗼𝘃𝗮 𝗔𝗜 ˖°❀
 
-async function handler(m, { sock, config: botConfig }) {
-  try {
-    const prefix = botConfig.command?.prefix || ".";
-    const userName = m.pushName || "Player";
+┊ ➶ 𝗦𝘁𝗮𝘁𝘂𝘀: ${player ? `Level ${player.level}` : "Belum terdaftar"}
 
-    const player = ensurePlayer(m, userName);
+❀°˖ 𝗖𝗼𝗿𝗲 ˖°❀
+┊ ➶ .profile — Lihat profil RPG
+┊ ➶ .daily — Klaim hadiah harian
+┊ ➶ .work — Kerja untuk gold
+┊ ➶ .inventory — Lihat inventaris
+┊ ➶ .leaderboard — Ranking player
 
-    const text =
-      claraWrap("Karakter", [`  ┊  ➶ Nama: *${player.name}*`,
-        `  ┊  ➶ Level: *${player.level || 1}*`,
-        `  ┊  ➶ HP: *${player.hp || 100}/${player.maxHp || 100}*`,
-        `  ┊  ➶ ATK: *${player.atk || 10}*`,
-        `  ┊  ➶ DEF: *${player.def || 5}*`,
-        `  ┊  ➶ Exp: *${player.exp || 0}/${player.maxExp || 100}*`,
-        `  ┊  ➶ Gold: *${player.gold || 0}*`].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}profile untuk melihat profil kamu`) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali`);
+❀°˖ 𝗖𝗶𝗻𝘁𝗮 ˖°❀
+┊ ➶ .couple @tag — Ajak pacaran
+┊ ➶ .terimajadian — Terima ajakan
+┊ ➶ .tolakjadian — Tolak ajakan
+┊ ➶ .nikah — Lamar pasangan
+┊ ➶ .terimanikah — Terima lamaran
+┊ ➶ .tolaknikah — Tolak lamaran
+┊ ➶ .divorce — Putus hubungan
+┊ ➶ .couplelb — Ranking couple
 
-    await sendReplyWithNav(sock, m, text, "rpg");
-  } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply(claraWrap("rpg", text));
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      return await sendReplyWithNav(sock, m, text, "rpg");
+    } catch (e) {
+      return await m.reply(`❌ Error: ${e.message}`);
+    }
   }
-
-  return { handled: true };
-}
-
-export { pluginConfig as config, handler }
+};

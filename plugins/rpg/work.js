@@ -1,70 +1,51 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from "../../src/lib/nova-database.js";
-import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { ensurePlayer, addGold, addExp, useStamina, checkCooldown, setCooldown } from "../../src/lib/nova-rpg-service.js";
 
-const pluginConfig = {
-  name: "workv2",
-  alias: ["kerjav2", "jobv2", "bekerja"],
+const jobs = [
+  { name: "Berkeluh kesah", gold: [20, 50], exp: [10, 20] },
+  { name: "Nongkrong di warung", gold: [15, 40], exp: [5, 15] },
+  { name: "Jualan gorengan", gold: [30, 80], exp: [15, 30] },
+  { name: "Kurir gojek", gold: [40, 100], exp: [20, 35] },
+  { name: "Bantu tetangga", gold: [25, 60], exp: [10, 25] },
+  { name: "Ngetik di warnet", gold: [20, 55], exp: [10, 20] },
+  { name: "Jualan pulsa", gold: [35, 90], exp: [15, 30] },
+  { name: "Ngantor santai", gold: [50, 120], exp: [20, 40] }
+];
+
+export default {
+  name: "work",
+  alias: ["kerja", "nkerja"],
   category: "rpg",
-  description: "Bekerja untuk mendapatkan uang",
+  description: "Kerja untuk dapat gold dan exp",
   usage: ".work",
-  example: ".work",
-  isOwner: false,
-  isPremium: false,
-  isGroup: false,
-  isPrivate: false,
-  cooldown: 180,
-  energi: 0,
-  isEnabled: true,
-};
+  async handler(m, { sock }) {
+    try {
+      ensurePlayer(m, m.pushName || "Player");
+      const cd = checkCooldown(m, "lastWork", 3600000);
+      if (!cd.ready) {
+        return await sendReplyWithNav(sock, m, `⏰ Kamu baru saja kerja!\nTunggu ${cd.mins}m ${cd.secs}s lagi.`, "work");
+      }
+      if (!useStamina(m, 10)) {
+        return await sendReplyWithNav(sock, m, "😴 Stamina tidak cukup! Istirahat dulu.", "work");
+      }
+      const job = jobs[Math.floor(Math.random() * jobs.length)];
+      const gold = Math.floor(Math.random() * (job.gold[1] - job.gold[0] + 1)) + job.gold[0];
+      const exp = Math.floor(Math.random() * (job.exp[1] - job.exp[0] + 1)) + job.exp[0];
+      addGold(m, gold);
+      const expResult = addExp(m, exp);
+      setCooldown(m, "lastWork");
+      let text = `❀°˖ 𝗞𝗲𝗿𝗷𝗮 ˖°❀
 
-async function handler(m, { sock }) {
-  const db = getDatabase();
-  const user = db.getUser(m.sender);
+┊ ➶ 𝗣𝗲𝗸𝗲𝗿𝗷𝗮𝗮𝗻: ${job.name}
+┊ ➶ 𝗛𝗮𝘀𝗶𝗹: +${gold} gold, +${exp} exp
+${expResult.leveledUp ? `\n🎉 𝗟𝗲𝘃𝗲𝗹 𝗨𝗽! Sekarang Level ${expResult.newLevel}!\n` : ""}
+┊ ➶ Stamina berkurang 10
 
-  if (!user.rpg) user.rpg = {};
-
-  const staminaCost = 10;
-  user.rpg.stamina = user.rpg.stamina || 100;
-
-  if (user.rpg.stamina < staminaCost) {
-    return m.reply(claraWrap("Work", `Hadeh kak, badan kamu udah loyo banget! 🥵💦\n\nKerja butuh *${staminaCost} Stamina*, tapi sisa *${user.rpg.stamina}* doang.\nIstirahat dulu kek, jangan diforsir ntar tepar! 🛌💤`));
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      return await sendReplyWithNav(sock, m, text, "work");
+    } catch (e) {
+      return await m.reply(`❌ Error: ${e.message}`);
+    }
   }
-
-  user.rpg.stamina -= staminaCost;
-
-  const jobs = [
-    { name: "👨‍🌾 Petani", min: 1000, max: 3000 },
-    { name: "🧹 Cleaning Service", min: 2000, max: 5000 },
-    { name: "📦 Kurir", min: 3000, max: 7000 },
-    { name: "👨‍🍳 Koki", min: 4000, max: 10000 },
-    { name: "👨‍💻 Programmer", min: 8000, max: 20000 },
-    { name: "👨‍⚕️ Dokter", min: 15000, max: 30000 },
-  ];
-
-  const job = jobs[Math.floor(Math.random() * jobs.length)];
-  const salary = Math.floor(Math.random() * (job.max - job.min + 1)) + job.min;
-  const expGain = Math.floor(salary / 10);
-
-  m.reply(claraWrap("Work", `Otw berangkat kerja jadi *${job.name.substring(3)}* dulu kak! 🏃💼💨`));
-  await new Promise((r) => setTimeout(r, 3000));
-
-  user.koin = (user.koin || 0) + salary;
-  const levelResult = await addExpWithLevelCheck(sock, m, db, user, expGain);
-
-  db.save();
-
-  let txt = `CIE YANG ABIS KERJA! 💸✨\n\n`;
-  txt += `Gila, gajinya lumayan banget nih:\n`;
-  txt += `💼 Profesi: *${job.name}*\n`;
-  txt += `💵 Gaji Bersih: *+Rp ${salary.toLocaleString("id-ID")}*\n`;
-  txt += `📈 EXP: *+${expGain}*\n`;
-  txt += `⚡ Stamina: *-${staminaCost}*\n\n`;
-  txt += `Kerja keras bagai quda membuahkan hasil kak! Lanjutkan! 🐴🔥`;
-
-  await sendReplyWithNav(sock, m, txt, "work");
-}
-
-export { pluginConfig as config, handler };
+};

@@ -1,64 +1,29 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { getLeaderboard } from "../../src/lib/nova-rpg-service.js";
 
-import { claraHeader,
-    separator,
-  tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
-
-const pluginConfig = {
-  name: "leaderboards",
-  alias: ["lb", "peringkat", "toprpg", "lb3"],
-  category: "game",
-  description: "Lihat peringkat player RPG",
-  usage: ".leaderboards",
-  example: ".leaderboards",
-  isOwner: false,
-  isPremium: false,
-  isGroup: true,
-  isPrivate: false,
-  cooldown: 10,
-  energi: 0,
-  isEnabled: true,
-};
-
-async function handler(m, { sock, config: botConfig, db }) {
-  try {
-    const prefix = botConfig.command?.prefix || ".";
-
-    const top = [
-      { name: "Player1", level: 50, gold: 99999, wins: 120 },
-      { name: "Player2", level: 45, gold: 75000, wins: 95 },
-      { name: "Player3", level: 40, gold: 50000, wins: 80 },
-      { name: "Player4", level: 35, gold: 30000, wins: 60 },
-      { name: "Player5", level: 30, gold: 15000, wins: 45 },
-    ];
-
-    const lines = top.map((p, i) => {
-      const medal = i === 0 ? "👑" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}.`;
-      return `${medal} ${p.name} - Lv.${p.level} - ${p.gold} Gold - W:${p.wins}`;
-    });
-
-    const text =
-      claraWrap("Leaderboards", "🏆") +
-      "\n\n" +
-      claraWrap("Top Player", lines) +
-      "\n\n" +
-      separator("━", 22) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali`);
-
-    await sendReplyWithNav(sock, m, text, "leaderboards");
-  } catch (error) {
-    const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply(claraWrap("leaderboards", text));
+export default {
+  name: "leaderboard",
+  alias: ["rpglb", "rpleaderboard", "toprpg"],
+  category: "rpg",
+  description: "Ranking player RPG",
+  usage: ".leaderboard",
+  async handler(m, { sock }) {
+    try {
+      const players = getLeaderboard("level", 10);
+      if (players.length === 0) {
+        return await sendReplyWithNav(sock, m, "❀°˖ 𝗥𝗮𝗻𝗸𝗶𝗻𝗴 𝗣𝗹𝗮𝘆𝗲𝗿 ˖°❀\n\n┊ ➶ Belum ada player terdaftar\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀", "leaderboard");
+      }
+      const medals = ["🥇", "🥈", "🥉"];
+      let text = "❀°˖ 𝗥𝗮𝗻𝗸𝗶𝗻𝗴 𝗣𝗹𝗮𝘆𝗲𝗿 ˖°❀\n\n";
+      players.forEach((p, i) => {
+        const rank = i < 3 ? medals[i] : `${i + 1}.`;
+        text += `┊ ➶ ${rank} ${p.name} — Lv.${p.level} (${p.exp} exp)\n`;
+      });
+      text += "\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
+      return await sendReplyWithNav(sock, m, text, "leaderboard");
+    } catch (e) {
+      return await m.reply(`❌ Error: ${e.message}`);
+    }
   }
-
-  return { handled: true };
-}
-
-export { pluginConfig as config, handler }
+};
