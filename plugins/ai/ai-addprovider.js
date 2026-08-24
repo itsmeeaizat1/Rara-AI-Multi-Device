@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { DEFAULT_PROVIDERS } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -74,7 +74,7 @@ async function handler(m, { sock, config: botConfig }) {
         `  ┊  ➶ Untuk hapus: *${prefix}ai-addprovider delete <nama>*`
       );
 
-      await sendReplyWithNav(sock, m, text, "ai-addprovider");
+      await m.reply(text);
       return { handled: true };
     }
 
@@ -87,7 +87,7 @@ async function handler(m, { sock, config: botConfig }) {
           "\n" +
           tipText(`Ketik ${prefix}menu untuk kembali`);
 
-        await sendReplyWithNav(sock, m, text, "ai-addprovider");
+        await m.reply(text);
         return { handled: true };
       }
 
@@ -130,7 +130,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "ai-addprovider");
+      await m.reply(text);
       return { handled: true };
     }
 
@@ -168,7 +168,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
-    await sendReplyWithNav(sock, m, text, "ai-addprovider");
+    await m.reply(text);
   }
 
   return { handled: true };
