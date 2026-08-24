@@ -128,17 +128,17 @@ ssh_pwauth: True`,
         const detailTxt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ VPS Berhasil Dibuat
 ┊
   ┊  ➶ *ID:* ${dropletId}
-  ┊  ➶ *Hostname:* ${hostname}
+  ┊  ➶ *ʜᴏꜱᴛɴᴀᴍᴇ:* ${hostname}
   ┊  ➶ *IP:* ${ip}
-  ┊  ➶ *User:* root
-  ┊  ➶ *Password:* ${password}
+  ┊  ➶ *ᴜꜱᴇʀ:* root
+  ┊  ➶ *ᴘᴀꜱꜱᴡᴏʀᴅ:* ${password}
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
 ❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Spec
 ┊
-  ┊  ➶ *RAM:* ${spec.ram}
-  ┊  ➶ *CPU:* ${spec.cpu}
-  ┊  ➶ *Region:* ${region}
+  ┊  ➶ *ʀᴀᴍ:* ${spec.ram}
+  ┊  ➶ *ᴄᴘᴜ:* ${spec.cpu}
+  ┊  ➶ *ʀᴇɢɪᴏɴ:* ${region}
   ┊  ➶ *OS:* Ubuntu 22.04
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 

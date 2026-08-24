@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     return m.reply( "❌ Gagal generate cerita isekai. Coba lagi nanti.", "isekai");
   }
 
-  const header = "⚔️ *ISEKAI STORY*\n\nKarakter: " + names.join(", ") + "\n\n";
+  const header = "⚔️ *ɪꜱᴇᴋᴀɪ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";
   const footer = "\n\n_Dibuat oleh Nova AI_";
 
   await m.react("🐣");

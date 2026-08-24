@@ -76,9 +76,9 @@ async function handler(m, { sock }) {
         m.react('✅')
         await m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Aksi Berhasil
 ┊
-  ┊  ➶ *VPS:* ${dropletId}
-  ┊  ➶ *Aksi:* ${action.text}
-  ┊  ➶ *Status:* ${actionResult.status}
+  ┊  ➶ *ᴠᴘꜱ:* ${dropletId}
+  ┊  ➶ *ᴀᴋꜱɪ:* ${action.text}
+  ┊  ➶ *ꜱᴛᴀᴛᴜꜱ:* ${actionResult.status}
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`)
         
     } catch (err) {

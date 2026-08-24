@@ -48,15 +48,15 @@ async function handler(m, { sock }) {
 
     const d = res.data.data;
     let text = "🐦 *TWITTER/X STALK*\n\n";
-    text += `*Nama:* ${d.name || d.fullName || "-"}\n`;
-    text += `*Username:* @${d.username || username}\n`;
-    if (d.bio || d.description) text += `*Bio:* ${d.bio || d.description}\n`;
-    if (d.followers !== undefined) text += `*Followers:* ${shortNum(d.followers)}\n`;
-    if (d.following !== undefined) text += `*Following:* ${shortNum(d.following)}\n`;
+    text += `*ɴᴀᴍᴀ:* ${d.name || d.fullName || "-"}\n`;
+    text += `*ᴜꜱᴇʀɴᴀᴍᴇ:* @${d.username || username}\n`;
+    if (d.bio || d.description) text += `*ʙɪᴏ:* ${d.bio || d.description}\n`;
+    if (d.followers !== undefined) text += `*ꜰᴏʟʟᴏᴡᴇʀꜱ:* ${shortNum(d.followers)}\n`;
+    if (d.following !== undefined) text += `*ꜰᴏʟʟᴏᴡɪɴɢ:* ${shortNum(d.following)}\n`;
     if (d.tweets !== undefined || d.statuses_count !== undefined)
-      text += `*Tweets:* ${shortNum(d.tweets || d.statuses_count)}\n`;
-    if (d.verified) text += `*Verified:* ✅\n`;
-    if (d.createdAt || d.created_at) text += `*Joined:* ${d.createdAt || d.created_at}\n`;
+      text += `*ᴛᴡᴇᴇᴛꜱ:* ${shortNum(d.tweets || d.statuses_count)}\n`;
+    if (d.verified) text += `*ᴠᴇʀɪꜰɪᴇᴅ:* ✅\n`;
+    if (d.createdAt || d.created_at) text += `*ᴊᴏɪɴᴇᴅ:* ${d.createdAt || d.created_at}\n`;
     if (d.profilePicture || d.avatar) {
       try {
         const ppRes = await axios.get(d.profilePicture || d.avatar, {

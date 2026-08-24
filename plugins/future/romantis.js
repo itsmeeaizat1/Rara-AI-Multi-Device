@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     return m.reply( "❌ Gagal generate cerita romantis. Coba lagi nanti.", "romantis");
   }
 
-  const header = "💕 *ROMANCE STORY*\n\nKarakter: " + names.join(", ") + "\n\n";
+  const header = "💕 *ʀᴏᴍᴀɴᴄᴇ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";
   const footer = "\n\n_Dibuat oleh Nova AI_";
 
   await m.react("🐣");

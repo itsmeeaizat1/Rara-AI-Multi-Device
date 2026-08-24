@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]?.replace('@', '')
     
     if (!username) {
-        { const __navText = `🎵 *Tiktok sTalk*\n\nMasukkan username TikTok\n\n\`Contoh: ${m.prefix}tiktokstalk mrbeast\``; return await m.reply( __navText, "tiktokstalk"); }
+        { const __navText = `🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴛᴀʟᴋ*\n\nMasukkan username TikTok\n\n\`Contoh: ${m.prefix}tiktokstalk mrbeast\``; return await m.reply( __navText, "tiktokstalk"); }
     }
     
     m.react('🕐')
@@ -50,16 +50,16 @@ async function handler(m, { sock }) {
         const d = res.data.data
         const s = d.stats
         
-        const caption = `🎵 *Tiktok sTalk*\n\n` +
-            `👤 *Username:* @${d.username}\n` +
-            `📛 *Nama:* ${d.nickname}\n` +
-            `✅ *Verified:* ${d.verified ? 'Ya' : 'Tidak'}\n` +
-            `🔒 *Private:* ${d.private ? 'Ya' : 'Tidak'}\n\n` +
-            `👥 *Followers:* ${shortNum(s.followers)}\n` +
-            `👤 *Following:* ${shortNum(s.following)}\n` +
-            `❤️ *Likes:* ${shortNum(s.hearts)}\n` +
-            `🎬 *Videos:* ${shortNum(s.videos)}\n\n` +
-            `📝 *Bio:*\n${d.signature || '-'}\n\n` +
+        const caption = `🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴛᴀʟᴋ*\n\n` +
+            `👤 *ᴜꜱᴇʀɴᴀᴍᴇ:* @${d.username}\n` +
+            `📛 *ɴᴀᴍᴀ:* ${d.nickname}\n` +
+            `✅ *ᴠᴇʀɪꜰɪᴇᴅ:* ${d.verified ? 'Ya' : 'Tidak'}\n` +
+            `🔒 *ᴘʀɪᴠᴀᴛᴇ:* ${d.private ? 'Ya' : 'Tidak'}\n\n` +
+            `👥 *ꜰᴏʟʟᴏᴡᴇʀꜱ:* ${shortNum(s.followers)}\n` +
+            `👤 *ꜰᴏʟʟᴏᴡɪɴɢ:* ${shortNum(s.following)}\n` +
+            `❤️ *ʟɪᴋᴇꜱ:* ${shortNum(s.hearts)}\n` +
+            `🎬 *ᴠɪᴅᴇᴏꜱ:* ${shortNum(s.videos)}\n\n` +
+            `📝 *ʙɪᴏ:*\n${d.signature || '-'}\n\n` +
             `🔗 https://tiktok.com/@${d.username}`
         
         m.react('✅')

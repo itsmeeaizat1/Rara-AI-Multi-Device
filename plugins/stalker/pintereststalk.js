@@ -44,23 +44,23 @@ async function handler(m, { sock }) {
 
     const r = data.result;
     
-    let caption = `📌 *PINTEREST STALK - PROFILE INFO* 📌\n\n`;
+    let caption = `📌 *ᴘɪɴᴛᴇʀᴇꜱᴛ ꜱᴛᴀʟᴋ - ᴘʀᴏꜰɪʟᴇ ɪɴꜰᴏ* 📌\n\n`;
     caption += `Halo! Ini dia hasil pencarian profil untuk username *@${r.username}*:\n\n`;
     
-    caption += `👤 *INFO PROFIL*\n`;
+    caption += `👤 *ɪɴꜰᴏ ᴘʀᴏꜰɪʟ*\n`;
     caption += `  - Nama Lengkap: *${r.full_name || "-"}*\n`;
     caption += `  - Username: @${r.username}\n`;
     caption += `  - Bio: ${r.bio || "-"}\n`;
     caption += `  - Tipe Akun: ${r.account_type || "-"}\n`;
     caption += `  - Akun Dibuat: ${r.created_at || "-"}\n\n`;
     
-    caption += `📊 *STATISTIK*\n`;
+    caption += `📊 *ꜱᴛᴀᴛɪꜱᴛɪᴋ*\n`;
     caption += `  - Pengikut (Followers): ${r.stats?.followers || 0}\n`;
     caption += `  - Diikuti (Following): ${r.stats?.following || 0}\n`;
     caption += `  - Total Pin: ${r.stats?.pins || 0}\n`;
     caption += `  - Total Board: ${r.stats?.boards || 0}\n\n`;
     
-    caption += `🔗 *LINK PROFIL*\n`;
+    caption += `🔗 *ʟɪɴᴋ ᴘʀᴏꜰɪʟ*\n`;
     caption += `  - ${r.profile_url}\n\n`;
 
     caption += `Suka mengumpulkan inspirasi dari Pinterest ya? Pamerin ke temanmu yuk! 🚀`;
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
 
   } catch (error) {
     console.error("[Pinterest Stalk]", error.message);
-    m.reply(claraWrap("pintereststalk", "😔 *Terjadi masalah di sistem kami.* \n\nSistem gagal menarik data dari server Pinterest. Silakan coba beberapa saat lagi ya."));
+    m.reply(claraWrap("pintereststalk", "😔 *ᴛᴇʀᴊᴀᴅɪ ᴍᴀꜱᴀʟᴀʜ ᴅɪ ꜱɪꜱᴛᴇᴍ ᴋᴀᴍɪ.* \n\nSistem gagal menarik data dari server Pinterest. Silakan coba beberapa saat lagi ya."));
   }
 }
 

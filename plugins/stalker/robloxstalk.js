@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
 
   if (!username) {
     return m.reply(
-      `🎮 *Roblox sTalk*\n\n` +
+      `🎮 *ʀᴏʙʟᴏx ꜱᴛᴀʟᴋ*\n\n` +
         `Masukkan username Roblox\n\n` +
         `\`Contoh: ${m.prefix}robloxstalk Linkmon99\``,
     );
@@ -173,27 +173,27 @@ async function handler(m, { sock }) {
       : "tidak tersedia";
 
     const caption =
-      `🎮 *Roblox sTalk*\n\n` +
-      `*PROFILE*\n` +
+      `🎮 *ʀᴏʙʟᴏx ꜱᴛᴀʟᴋ*\n\n` +
+      `*ᴘʀᴏꜰɪʟᴇ*\n` +
       `🆔 *ID*: ${res.id}\n` +
-      `🎄 *Username*: ${res.username}\n` +
-      `📛 *Display*: ${res.displayName}\n` +
-      `✅ *Verified*: ${res.verified ? "Ya" : "Tidak"}\n` +
-      `📅 *Created*: ${res.created ? new Date(res.created).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }) : "-"}\n` +
+      `🎄 *ᴜꜱᴇʀɴᴀᴍᴇ*: ${res.username}\n` +
+      `📛 *ᴅɪꜱᴘʟᴀʏ*: ${res.displayName}\n` +
+      `✅ *ᴠᴇʀɪꜰɪᴇᴅ*: ${res.verified ? "Ya" : "Tidak"}\n` +
+      `📅 *ᴄʀᴇᴀᴛᴇᴅ*: ${res.created ? new Date(res.created).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" }) : "-"}\n` +
       `\n` +
-      `*SOCIAL*\n` +
-      `👥 *Friends*: ${res.social.friends?.toLocaleString()}\n` +
-      `👤 *Followers*: ${res.social.followers?.toLocaleString()}\n` +
-      `➕ *Following*: ${res.social.following?.toLocaleString()}\n` +
+      `*ꜱᴏᴄɪᴀʟ*\n` +
+      `👥 *ꜰʀɪᴇɴᴅꜱ*: ${res.social.friends?.toLocaleString()}\n` +
+      `👤 *ꜰᴏʟʟᴏᴡᴇʀꜱ*: ${res.social.followers?.toLocaleString()}\n` +
+      `➕ *ꜰᴏʟʟᴏᴡɪɴɢ*: ${res.social.following?.toLocaleString()}\n` +
       `\n` +
-      `*PRESENCE*\n` +
+      `*ᴘʀᴇꜱᴇɴᴄᴇ*\n` +
       `${presInfo}\n` +
       `\n\n` +
-      `📝 *Bio:*\n${res.description?.substring(0, 300) || "-"}\n` +
-      `👥 *Groups* (${res.groups?.length || 0}):\n${topGroups}\n` +
-      `🎮 *Games* (${res.games?.length || 0}):\n${topGames}\n` +
-      `🏆 *Badges* (${res.badges?.length || 0}):\n${topBadges}\n` +
-      `🎒 *Inventory*:\n${topInventory}\n` +
+      `📝 *ʙɪᴏ:*\n${res.description?.substring(0, 300) || "-"}\n` +
+      `👥 *ɢʀᴏᴜᴘꜱ* (${res.groups?.length || 0}):\n${topGroups}\n` +
+      `🎮 *ɢᴀᴍᴇꜱ* (${res.games?.length || 0}):\n${topGames}\n` +
+      `🏆 *ʙᴀᴅɢᴇꜱ* (${res.badges?.length || 0}):\n${topBadges}\n` +
+      `🎒 *ɪɴᴠᴇɴᴛᴏʀʏ*:\n${topInventory}\n` +
       `🔗 https://roblox.com/users/${res.id}/profile`;
 
     m.react("🐣");
