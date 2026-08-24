@@ -801,17 +801,23 @@ async function startConnection(options = {}) {
             config.saluran?.name || config.bot?.name || "Nova-AI";
 
           const welcomeText =
-            `👋 *Hai, Salam Kenal!*\n\n` +
-            `Aku *${config.bot?.name || "Nova-AI"}* 🤖\n\n` +
-            `Terima kasih sudah mengundang aku ke *${groupName}*!\n` +
-            `Aku diundang oleh ${inviterMention} ✨\n\n` +
-            `╭┈┈⬡「 📋 *Info* 」\n` +
-            `┃ 🔧 Developer: *${config.bot?.developer || "Aizat"}*\n` +
-            `┃ 📢 Prefix: \`${prefix}\`\n` +
-            `┃ 📩 Support: ${config.bot?.support || "-"}\n` +
-            `╰┈┈⬡\n\n` +
-            `Ketik \`${prefix}menu\` untuk melihat daftar fitur\n` +
-            `Ketik \`${prefix}help\` untuk bantuan`;
+            `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Wᴇʟᴄᴏᴍᴇ\n` +
+            `┊\n` +
+            `  ┊  ➶ *Hai, Salam Kenal!*\n` +
+            `  ┊  ➶ Aku *${config.bot?.name || "Nova-AI"}* 🤖\n` +
+            `  ┊  ➶ Terima kasih sudah undang aku ke *${groupName}*!\n` +
+            `  ┊  ➶ Diundang oleh ${inviterMention} ✨\n` +
+            `┊\n` +
+            `₊˚ʚ ᗢ₊˚✧ ﾟ. 📋 Iɴғᴏ ｡ﾟ\n` +
+            `  ┊  ➶ *Developer:* ${config.bot?.developer || "Aizat"}\n` +
+            `  ┊  ➶ *Prefix:* ${prefix}\n` +
+            `  ┊  ➶ *Support:* ${config.bot?.support || "-"}\n` +
+            `₊˚ʚ ᗢ₊˚✧ ﾟ.\n` +
+            `┊\n` +
+            `  ┊  ➶ Ketik *${prefix}menu* untuk lihat fitur\n` +
+            `  ┊  ➶ Ketik *${prefix}help* untuk bantuan\n` +
+            `┊\n` +
+            `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
           const ctxInfo = {
             mentionedJid: inviter ? [inviter] : [],
