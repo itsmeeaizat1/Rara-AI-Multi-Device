@@ -87,7 +87,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text = claraWrap("Gagal",
-      `Status: *Gagal*\n` +
+      `Status: *ɢᴀɢᴀʟ*\n` +
       `Alasan: *${error.message}*`,
       "error"
     );

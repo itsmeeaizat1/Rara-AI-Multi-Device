@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("Text To Image", `📿 *Text To Image*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}text2img Buat gambar dari teks\``), "text2img");
+    return m.reply(claraWrap("Text To Image", `📿 *ᴛᴇxᴛ ᴛᴏ ɪᴍᴀɢᴇ*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}text2img Buat gambar dari teks\``), "text2img");
   }
 
   m.react("🕒");

@@ -163,7 +163,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const keyLabel = fmtKey ? fmtKey.charAt(0).toUpperCase() + fmtKey.slice(1) + " API Key" : "API Key";
       const text =
-        claraWrap("AI Settings", [`  ┊  ➶ ${keyLabel}: *Disembunyikan*`,
+        claraWrap("AI Settings", [`  ┊  ➶ ${keyLabel}: *ᴅɪꜱᴇᴍʙᴜɴʏɪᴋᴀɴ*`,
           "  ┊  ➶ Perubahan akan berlaku setelah config reload."].join("\n")) +
         "\n"  +
         "\n" ;
@@ -225,7 +225,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "on" || action === "off") {
       if (!m.isOwner) {
         const text =
-          claraWrap("Ditolak", ["  ┊  ➶ Status: *Ditolak*",
+          claraWrap("Ditolak", ["  ┊  ➶ Status: *ᴅɪᴛᴏʟᴀᴋ*",
             "  ┊  ➶ Alasan: *Hanya owner yang bisa menyalakan/mematikan AI.*"].join("\n")) +
           "\n" ;
 
@@ -249,8 +249,8 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "mode") {
       if (!m.isOwner) {
         const text =
-          claraWrap("Ditolak", ["  ┊  ➶ Status: *Ditolak*",
-            "  ┊  ➶ Alasan: *Hanya owner yang bisa mengganti mode AI.*"].join("\n")) +
+          claraWrap("Ditolak", ["  ┊  ➶ Status: *ᴅɪᴛᴏʟᴀᴋ*",
+            "  ┊  ➶ Alasan: *ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇ ᴀɪ.*"].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -260,7 +260,7 @@ async function handler(m, { sock, config: botConfig }) {
       const newMode = String(value || "").toLowerCase();
       if (!["offline", "online"].includes(newMode)) {
         const text =
-          claraWrap("Mode Tidak Valid", ["  ┊  ➶ Mode yang tersedia: *offline* atau *online*.",
+          claraWrap("Mode Tidak Valid", ["  ┊  ➶ Mode yang tersedia: *ᴏꜰꜰʟɪɴᴇ* atau *ᴏɴʟɪɴᴇ*.",
             `  ┊  ➶ Contoh: *${prefix}ai-set mode online*`].join("\n")) +
           "\n" ;
 
@@ -290,7 +290,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" ;
 

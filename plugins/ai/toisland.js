@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === 'imageMessage'))
     
     if (!isImage) {
-        return m.reply( `🏝️ *To Island*\n\n` +
+        return m.reply( `🏝️ *ᴛᴏ ɪꜱʟᴀɴᴅ*\n\n` +
             `Kirim/reply gambar untuk suasana pulau\n\n` +
             `\`${m.prefix}toisland\``, "toisland")
     }

@@ -25,9 +25,9 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply( `🤍 *Claude Haiku 4.5*\n\n` +
         `Tanya apa aja ke AI Claude Haiku — cepat dan ringan, cocok buat pertanyaan sehari-hari.\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}claudehaiku <pertanyaan>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}claudehaiku Jelaskan teori relativitas*\n` +
         `*${m.prefix}claudehaiku Tips biar produktif*\n\n` +
         `_Respons cepat, tapi tetap cerdas_`, "claudehaiku");
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const result = await ClaudeHaiku(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("Claude Haiku Gagal", `❌ *Claude Haiku Gagal*\n\n${result.error || "Gagal mendapatkan respons"}`));
+      return m.reply(claraWrap("Claude Haiku Gagal", `❌ *ᴄʟᴀᴜᴅᴇ ʜᴀɪᴋᴜ ɢᴀɢᴀʟ*\n\n${result.error || "Gagal mendapatkan respons"}`));
     }
 
     await m.react("🐣");

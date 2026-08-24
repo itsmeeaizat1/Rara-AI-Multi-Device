@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === 'imageMessage'))
     
     if (!isImage) {
-        return m.reply( `🎬 *To Cartoon*\n\n` +
+        return m.reply( `🎬 *ᴛᴏ ᴄᴀʀᴛᴏᴏɴ*\n\n` +
             `Kirim/reply gambar untuk diubah ke gaya kartun\n\n` +
             `\`${m.prefix}tocartoon\``, "tocartoon")
     }

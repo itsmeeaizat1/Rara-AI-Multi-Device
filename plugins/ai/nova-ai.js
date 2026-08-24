@@ -22,11 +22,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `🤖 *Nova AI*\n\n` +
+    return m.reply( `🤖 *ɴᴏᴠᴀ ᴀɪ*\n\n` +
         `Asisten cerdas siap membantu\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}nova-ai <pertanyaan>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}nova-ai Apa itu Node.js?*`, "nova-ai");
   }
 
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const result = await UnlimitedAI(text, "nova-ai");
 
     if (!result.status) {
-      return m.reply(claraWrap("Nova AI Error", `❌ *Nova AI Error*\n\n${result.error || "Gagal mendapatkan respons"}`));
+      return m.reply(claraWrap("Nova AI Error", `❌ *ɴᴏᴠᴀ ᴀɪ ᴇʀʀᴏʀ*\n\n${result.error || "Gagal mendapatkan respons"}`));
     }
 
     await m.react("🐣");

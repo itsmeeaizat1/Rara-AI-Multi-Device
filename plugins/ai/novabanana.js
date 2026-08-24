@@ -20,7 +20,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const prompt = m.args.join(" ");
   if (!prompt) {
-    return m.reply( `🍌 *NOVA BANANA SUPER*\n\n` +
+    return m.reply( `🍌 *ɴᴏᴠᴀ ʙᴀɴᴀɴᴀ ꜱᴜᴘᴇʀ*\n\n` +
         `Edit gambar dengan AI\n\n` +
         `\`Contoh: ${m.prefix}novabanana make it anime style\`\n\n` +
         `Reply atau kirim gambar dengan caption`, "novabanana");
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
   const isImage = m.isImage || (m.quoted && m.quoted.isImage);
   if (!isImage) {
-    return m.reply( claraWrap("Novabanana", `🍌 *Nano Banana*\n\nReply atau kirim gambar dengan caption`), { commandName: "novabanana" });
+    return m.reply( claraWrap("Novabanana", `🍌 *ɴᴀɴᴏ ʙᴀɴᴀɴᴀ*\n\nReply atau kirim gambar dengan caption`), { commandName: "novabanana" });
   }
 
   m.react("🕒");
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     }
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
-      return m.reply(claraWrap("Gagal", `❌ *Gagal*\n\nGagal mengunduh gambar`));
+      return m.reply(claraWrap("Gagal", `❌ *ɢᴀɢᴀʟ*\n\nGagal mengunduh gambar`));
     }
 
     const resultBuffer = await live3d(mediaBuffer, prompt).then(
