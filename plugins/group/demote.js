@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     }
 
     if (!target) {
-        await m.reply( `❌ *Target Tidak Ditemukan*\n\n` +
+        await m.reply( `❌ *ᴛᴀʀɢᴇᴛ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n` +
             `Reply pesan user atau mention!\n` +
             `Contoh: \`${m.prefix}demote @user\``, "demote")
         return
@@ -41,17 +41,17 @@ async function handler(m, { sock }) {
         const participant = groupMeta.participants.find(p => getParticipantJid(p) === target)
 
         if (!participant) {
-            m.reply(claraWrap("Demote", `❌ *Gagal*\n\nUser tidak ditemukan di grup!`))
+            m.reply(claraWrap("Demote", `❌ *ɢᴀɢᴀʟ*\n\nUser tidak ditemukan di grup!`))
             return
         }
 
         if (!participant.admin) {
-            await m.reply(claraWrap("Demote", `❌ *Gagal*\n\nUser bukan admin!`))
+            await m.reply(claraWrap("Demote", `❌ *ɢᴀɢᴀʟ*\n\nUser bukan admin!`))
             return
         }
 
         if (participant.admin === 'superadmin') {
-            await m.reply(claraWrap("demote", `❌ *Gagal*\n\nTidak bisa demote owner grup!`))
+            await m.reply(claraWrap("demote", `❌ *ɢᴀɢᴀʟ*\n\nTidak bisa demote owner grup!`))
             return
         }
 

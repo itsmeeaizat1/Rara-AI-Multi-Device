@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const quoted = m.quoted
 
     if (!quoted) {
-        await m.reply( `❌ *Gagal*\n\n` +
+        await m.reply( `❌ *ɢᴀɢᴀʟ*\n\n` +
             `Balas pesan 1x lihat dengan perintah ini!\n` +
             `Gunakan: \`${m.prefix}openvo\` (reply pesan 1x lihat)`, "rvo")
         return
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
 
     const quotedMsg = quoted.message
     if (!quotedMsg) {
-        await m.reply( `❌ *Pesan Tidak Ditemukan*\n\n` +
+        await m.reply( `❌ *ᴘᴇꜱᴀɴ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n` +
             `Tidak dapat membaca pesan yang di-reply.`, "rvo")
         return
     }
@@ -39,13 +39,13 @@ async function handler(m, { sock }) {
     const content = quotedMsg[type]
 
     if (!content) {
-        await m.reply( `❌ *Konten Tidak Ditemukan*\n\n` +
+        await m.reply( `❌ *ᴋᴏɴᴛᴇɴ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n` +
             `Konten pesan tidak dapat dibaca.`, "rvo")
         return
     }
 
     if (!content.viewOnce) {
-        await m.reply(claraWrap("openvo", `❌ *Bukan Viewonce*\n\n` +
+        await m.reply(claraWrap("openvo", `❌ *ʙᴜᴋᴀɴ ᴠɪᴇᴡᴏɴᴄᴇ*\n\n` +
             `Pesan yang di-reply bukan pesan 1x lihat!\n` +
             `Balas pesan dengan ikon 1x lihat (👁️).`))
         return
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
         }
 
         if (!buffer || buffer.length < 100) {
-            await m.reply( `❌ *Gagal Mengunduh*\n\n` +
+            await m.reply( `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴᴅᴜʜ*\n\n` +
                 `Tidak dapat mengunduh media.\n` +
                 `Media mungkin sudah kadaluarsa.`, "rvo")
             return
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
 
     } catch (error) {
         await m.reply(
-            `❌ *Error*\n\n` +
+            `❌ *ᴇʀʀᴏʀ*\n\n` +
             `Gagal membuka pesan 1x lihat.\n` +
             `_${error.message}_`
         )

@@ -70,7 +70,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(claraWrap("groupmemory", text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

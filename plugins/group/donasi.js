@@ -170,7 +170,7 @@ export default {
     if (new RegExp(`^${prefix}donasion\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Donasi", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
@@ -178,7 +178,7 @@ export default {
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Donasi", [
-        `┊ Status: *AKTIF* 🟢`,
+        `┊ Status: *ᴀᴋᴛɪꜰ* 🟢`,
         ``,
         `┊ Fitur Donasi & Sedekah dinyalakan.`,
         `┊ Ketik *${prefix}donasi <target> | <keterangan>* untuk mulai.`,
@@ -190,7 +190,7 @@ export default {
     if (new RegExp(`^${prefix}donasioff\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Donasi", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
@@ -198,7 +198,7 @@ export default {
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Donasi", [
-        `┊ Status: *NONAKTIF* 🔴`,
+        `┊ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
         ``,
         `┊ Fitur Donasi dimatikan.`,
         `┊ Ketik *${prefix}donasion* untuk aktifkan lagi.`,
@@ -237,7 +237,7 @@ export default {
     // Check if enabled
     if (!isDonasiOn(groupId)) {
       await m.reply(claraWrap("Donasi", [
-        `┊ Status: *Nonaktif di grup ini*`,
+        `┊ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
         ``,
         `┊ Owner: ketik *${prefix}donasion* untuk mengaktifkan.`,
       ].join("\n")));
@@ -504,7 +504,7 @@ export default {
     if (subCmd && (subCmd[1] === "terima")) {
       if (!isOwner) {
         await m.reply(claraWrap("Donasi", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa mencatat donasi orang lain.`,
           `┊ Kalau kamu yang mau donasi, ketik *${prefix}donasi beri <id> <jumlah>*`,
@@ -604,7 +604,7 @@ export default {
     if (subCmd && (subCmd[1] === "close" || subCmd[1] === "tutup")) {
       if (!isOwner) {
         await m.reply(claraWrap("Donasi", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa menutup kampanye.`,
         ].join("\n")));

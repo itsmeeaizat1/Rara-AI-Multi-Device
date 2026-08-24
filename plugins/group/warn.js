@@ -29,15 +29,15 @@ async function handler(m, { sock }) {
 
     const args = m.args
     if (!args[0] && !m.quoted && (!m.mentionedJid || m.mentionedJid.length === 0)) {
-        return m.reply(claraWrap("warn", `⚠️ *SISTEM WARNING GRUP*\n\n` +
+        return m.reply(claraWrap("warn", `⚠️ *ꜱɪꜱᴛᴇᴍ ᴡᴀʀɴɪɴɢ ɢʀᴜᴘ*\n\n` +
             `Sistem manajemen pelanggaran untuk member grup.\n` +
             `Batas Warning: *${maxWarns} kali* (Otomatis Kick)\n\n` +
-            `*Cara Pakai:*\n` +
+            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
             `*${m.prefix}warn @user <alasan>* — Memberi warning\n` +
             `*${m.prefix}warn max <angka>* — Mengubah batas maksimal warning\n` +
             `*${m.prefix}listwarn* — Melihat daftar member bermasalah\n` +
             `*${m.prefix}resetwarn @user* — Menghapus semua warning member\n\n` +
-            `*Alur Pakai:*\n` +
+            `*ᴀʟᴜʀ ᴘᴀᴋᴀɪ:*\n` +
             `1. Saat member melakukan pelanggaran pertama, beri mereka SP1: *${m.prefix}warn @user Spam pesan*\n` +
             `2. Bot akan mencatat "Spam pesan" sebagai warning ke-1 mereka.\n` +
             `3. Jika melanggar lagi, beri peringatan kedua dengan alasan baru: *${m.prefix}warn @user Berkata kasar*\n` +
@@ -47,11 +47,11 @@ async function handler(m, { sock }) {
     if (args[0]?.toLowerCase() === 'max') {
         const newMax = parseInt(args[1])
         if (isNaN(newMax) || newMax < 1 || newMax > 20) {
-            return m.reply(claraWrap("warn", `❌ *GAGAL*\n\nBatas referensi warning harus berupa angka 1-20.\nContoh: *${m.prefix}warn max 5*`))
+            return m.reply(claraWrap("warn", `❌ *ɢᴀɢᴀʟ*\n\nBatas referensi warning harus berupa angka 1-20.\nContoh: *${m.prefix}warn max 5*`))
         }
         groupData.maxWarnings = newMax
         db.setGroup(m.chat, groupData)
-        return m.reply(claraWrap("Warn", `✅ *BATAS WARNING DIUBAH*\n\nMaksimal warning grup ini telah diupdate menjadi *${newMax} kali*.`))
+        return m.reply(claraWrap("Warn", `✅ *ʙᴀᴛᴀꜱ ᴡᴀʀɴɪɴɢ ᴅɪᴜʙᴀʜ*\n\nMaksimal warning grup ini telah diupdate menjadi *${newMax} kali*.`))
     }
 
     let targetUser = null
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     }
     
     if (!targetUser) {
-        await m.reply( `⚠️ *CARA PAKAI*\n\n` +
+        await m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `Reply pesan user + \`${m.prefix}warn alasan\`\n` +
             `Atau: \`${m.prefix}warn @user alasan\``, "warn")
         return
@@ -101,9 +101,9 @@ async function handler(m, { sock }) {
     if (warnCount >= maxWarns) {
         try {
             await sock.groupParticipantsUpdate(m.chat, [targetUser], 'remove')
-            await m.reply(claraWrap("warn", `🚨 *MAX WARNING TERCAPAI*\n\n` +
+            await m.reply(claraWrap("warn", `🚨 *ᴍᴀx ᴡᴀʀɴɪɴɢ ᴛᴇʀᴄᴀᴘᴀɪ*\n\n` +
                 `@${targetName} telah dikeluarkan dari grup karena mencapai batas pelanggaran!\n\n` +
-                `*Rincian:*\n` +
+                `*ʀɪɴᴄɪᴀɴ:*\n` +
                 `Warning: *${warnCount}/${maxWarns}*\n` +
                 `Alasan Terakhir: *${reason}*`))
             delete warnings[targetUser]
@@ -113,9 +113,9 @@ async function handler(m, { sock }) {
         }
     } else {
         await m.reply(
-            `⚠️ *PERINGATAN DIBERIKAN*\n\n` +
+            `⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ ᴅɪʙᴇʀɪᴋᴀɴ*\n\n` +
             `@${targetName} telah menerima Surat Peringatan (SP${warnCount})!\n\n` +
-            `*Rincian:*\n` +
+            `*ʀɪɴᴄɪᴀɴ:*\n` +
             `Warning ke: *${warnCount}/${maxWarns}*\n` +
             `Alasan: *${reason}*\n\n` +
             `_${maxWarns - warnCount} warning lagi = KICK OTOMATIS_`,

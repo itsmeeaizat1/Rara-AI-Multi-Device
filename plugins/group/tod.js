@@ -277,7 +277,7 @@ export default {
     if (new RegExp(`^${prefix}todon\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Truth or Dare", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
@@ -285,7 +285,7 @@ export default {
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Truth or Dare", [
-        `┊ Status: *AKTIF* 🟢`,
+        `┊ Status: *ᴀᴋᴛɪꜰ* 🟢`,
         ``,
         `┊ Truth or Dare dinyalakan di grup ini.`,
         `┊ Ketik *${prefix}tod* untuk mulai main!`,
@@ -297,13 +297,13 @@ export default {
     if (new RegExp(`^${prefix}todoff\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Truth or Dare", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Truth or Dare", [
-        `┊ Status: *NONAKTIF* 🔴`,
+        `┊ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
         ``,
         `┊ Truth or Dare dimatikan.`,
         `┊ Ketik *${prefix}todon* untuk aktifkan lagi.`,
@@ -322,7 +322,7 @@ export default {
         `┊ Truth diberikan: *${stats.truths}*`,
         `┊ Dare diberikan: *${stats.dares}*`,
         ``,
-        `┊ Status: ${isTodOn(groupId) ? "*AKTIF* 🟢" : "*NONAKTIF* 🔴"}`,
+        `┊ Status: ${isTodOn(groupId) ? "*ᴀᴋᴛɪꜰ* 🟢" : "*ɴᴏɴᴀᴋᴛɪꜰ* 🔴"}`,
       ];
       await m.reply(claraWrap("Tod - Statistik", lines.join("\n")));
       await m.react("🐣");
@@ -332,7 +332,7 @@ export default {
     // ─── Check if enabled ───
     if (!isTodOn(groupId)) {
       await m.reply(claraWrap("Truth or Dare", [
-        `┊ Status: *Nonaktif di grup ini*`,
+        `┊ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
         ``,
         `┊ Owner: ketik *${prefix}todon* untuk mengaktifkan.`,
       ].join("\n")));

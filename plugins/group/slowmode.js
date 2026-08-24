@@ -48,23 +48,23 @@ async function handler(m, { sock }) {
             .map(([name, sec]) => `  *.slowmode ${name}* — ${sec}s`)
             .join('\n')
 
-        return m.reply( `🐢 *SLOWMODE*\n\n` +
+        return m.reply( `🐢 *ꜱʟᴏᴡᴍᴏᴅᴇ*\n\n` +
             `Status: ${enabled ? `✅ ON (${delay}s)` : '❌ OFF'}\n` +
             `Mode: *${mode}*\n\n` +
-            `*Penggunaan:*\n` +
+            `*ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n` +
             `*.slowmode on 30* — semua pesan + command\n` +
             `*.slowmode onlycommand 30* — command only\n` +
             `*.slowmode off* — nonaktifkan\n\n` +
-            `*Preset:*\n${presetList}\n\n` +
-            `*Mode:*\n` +
-            `  *all* — hapus semua pesan saat delay\n` +
-            `  *onlycommand* — silent command, chat bebas\n\n` +
+            `*ᴘʀᴇꜱᴇᴛ:*\n${presetList}\n\n` +
+            `*ᴍᴏᴅᴇ:*\n` +
+            `  *ᴀʟʟ* — hapus semua pesan saat delay\n` +
+            `  *ᴏɴʟʏᴄᴏᴍᴍᴀɴᴅ* — silent command, chat bebas\n\n` +
             `_Admin & owner tidak terpengaruh_`, "slowmode")
     }
 
     if (subCmd === 'off') {
         db.setGroup(m.chat, { ...groupData, slowmode: { enabled: false } })
-        return m.reply(claraWrap("Slowmode", `✅ Slowmode *dinonaktifkan*`))
+        return m.reply(claraWrap("Slowmode", `✅ Slowmode *ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`))
     }
 
     let mode = 'all'
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
     const modeDesc = MODES[mode]
 
     await m.reply(
-        `✅ Slowmode *aktif*\n\n` +
+        `✅ Slowmode *ᴀᴋᴛɪꜰ*\n\n` +
         `Delay: *${delay} detik*${label}\n` +
         `Mode: *${mode}*\n` +
         `${modeDesc}\n\n` +

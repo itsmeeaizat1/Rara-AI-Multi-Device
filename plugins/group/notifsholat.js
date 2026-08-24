@@ -33,14 +33,14 @@ function handler(m, { sock, db }) {
         const statusGrup = group.notifSholat !== false ? '✅ AKTIF' : '❌ NONAKTIF';
         
         return m.reply(
-            `🕌 *PENGINGAT WAKTU SHOLAT*\n\n` +
+            `🕌 *ᴘᴇɴɢɪɴɢᴀᴛ ᴡᴀᴋᴛᴜ ꜱʜᴏʟᴀᴛ*\n\n` +
             `Status Global: *${statusGlobal}* (Dari Owner)\n` +
             `Status Grup: *${statusGrup}*\n` +
             `Lokasi: *${kotaSetting.nama}*\n\n` +
-            `*PENGATURAN GRUP:*\n` +
+            `*ᴘᴇɴɢᴀᴛᴜʀᴀɴ ɢʀᴜᴘ:*\n` +
             `*${m.prefix}notifsholat on* — Aktifkan notif di grup ini\n` +
             `*${m.prefix}notifsholat off* — Nonaktifkan notif di grup ini\n\n` +
-            `*CARA KERJA:*\n` +
+            `*ᴄᴀʀᴀ ᴋᴇʀᴊᴀ:*\n` +
             `1. Mengirimkan mp3 adzan & gambar jadwal saat masuk waktu sholat\n` +
             `2. Mengikuti jadwal real-time dari myquran.com\n` +
             `3. Jika Status Global NONAKTIF, grup tidak akan dikirim adzan meskipun Status Grup AKTIF.\n` +
@@ -51,13 +51,13 @@ function handler(m, { sock, db }) {
     if (args === 'on') {
         group.notifSholat = true;
         db.setGroup(m.chat, group);
-        return m.reply(claraWrap("Notifsholat", `✅ *Notif sHolat Diaktifkan*\n\nGrup ini akan menerima pengingat waktu sholat\nLokasi: ${kotaSetting.nama}`));
+        return m.reply(claraWrap("Notifsholat", `✅ *ɴᴏᴛɪꜰ ꜱʜᴏʟᴀᴛ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*\n\nGrup ini akan menerima pengingat waktu sholat\nLokasi: ${kotaSetting.nama}`));
     }
 
     if (args === 'off') {
         group.notifSholat = false;
         db.setGroup(m.chat, group);
-        return m.reply(claraWrap("Notifsholat", `❌ *Notif sHolat Dinonaktifkan*`));
+        return m.reply(claraWrap("Notifsholat", `❌ *ɴᴏᴛɪꜰ ꜱʜᴏʟᴀᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`));
     }
 }
 

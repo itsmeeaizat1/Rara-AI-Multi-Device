@@ -22,13 +22,13 @@ async function handler(m, { sock }) {
     const newName = m.text?.trim()
     
     if (!newName) {
-        await m.reply( `⚠️ *Cara Pakai*\n\n` +
+        await m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `\`${m.prefix}setnamegc Nama Grup Baru\``, "setnamegc")
         return
     }
     
     if (newName.length < 1 || newName.length > 100) {
-        await m.reply(claraWrap("setnamegc", `⚠️ *Validasi*\n\n` +
+        await m.reply(claraWrap("setnamegc", `⚠️ *ᴠᴀʟɪᴅᴀꜱɪ*\n\n` +
             `Nama grup harus 1-100 karakter.`))
         return
     }
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("Setnamegc", `✅ Berhasil mengubah nama grup menjadi *${newName}*`))
     } catch (error) {
         await m.reply(
-            `❌ *Gagal*\n\n` +
+            `❌ *ɢᴀɢᴀʟ*\n\n` +
             `Tidak dapat mengubah nama grup.\n` +
             `_${error.message}_`
         )

@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
             const finalText = text || quotedText
 
             if (!finalText) {
-                return m.reply(claraWrap("Ht", '❌ *Pesan kosong*'))
+                return m.reply(claraWrap("Ht", '❌ *ᴘᴇꜱᴀɴ ᴋᴏꜱᴏɴɢ*'))
             }
 
             return sock.sendMessage(m.chat, {
@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
             })
         }
         if (!text) {
-            return m.reply( `📢 *HIDETAG*\n\n` +
+            return m.reply( `📢 *ʜɪᴅᴇᴛᴀɢ*\n\n` +
                 `Reply pesan lalu ketik \`${m.prefix}ht\`\n` +
                 `Atau ketik \`${m.prefix}ht <pesan>\`\n\n` +
                 `Support: teks, gambar, video, sticker, audio, dokumen`, "ht")

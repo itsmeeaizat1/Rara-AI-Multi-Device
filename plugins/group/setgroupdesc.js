@@ -39,14 +39,14 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("Set Group Desc", [`  ┊  ➶ Deskripsi Baru: *${desc}*`,
         `  ┊  ➶ Group: *${m.chat}*`,
-        "  ┊  ➶ Status: *SUCCESS*"].join("\n")) +
+        "  ┊  ➶ Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await m.reply(claraWrap("setgroupdesc", text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

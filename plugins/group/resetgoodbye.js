@@ -23,14 +23,14 @@ async function handler(m, { sock }) {
     const groupData = db.getGroup(m.chat)
     
     if (!groupData?.goodbyeMsg) {
-        return m.reply(claraWrap("Resetgoodbye", `❌ *Gagal*\n\nGoodbye message sudah default`))
+        return m.reply(claraWrap("Resetgoodbye", `❌ *ɢᴀɢᴀʟ*\n\nGoodbye message sudah default`))
     }
     
     db.setGroup(m.chat, { goodbyeMsg: null })
     
     m.react('✅')
     
-    { const __navText = claraWrap("Goodbye Direset", `✅ *Goodbye Direset*\nKembali ke pesan default`); await m.reply(__navText); }
+    { const __navText = claraWrap("Goodbye Direset", `✅ *ɢᴏᴏᴅʙʏᴇ ᴅɪʀᴇꜱᴇᴛ*\nKembali ke pesan default`); await m.reply(__navText); }
 }
 
 export { pluginConfig as config, handler }

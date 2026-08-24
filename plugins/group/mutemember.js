@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     const targetJid = resolveTarget(m)
 
     if (!targetJid) {
-        return m.reply( `🔇 *MUTE MEMBER*\n\n` +
+        return m.reply( `🔇 *ᴍᴜᴛᴇ ᴍᴇᴍʙᴇʀ*\n\n` +
             `Bisukan member tertentu di grup ini\n` +
             `Pesan member yang dimute akan dihapus oleh bot\n\n` +
             `\`Contoh:\`\n` +
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
             return pJid === targetNumber && (p.admin === 'admin' || p.admin === 'superadmin')
         })
         if (isTargetAdmin) {
-            return m.reply(claraWrap("Mutemember", `❌ *Gagal*\n\nTidak dapat mute admin grup`))
+            return m.reply(claraWrap("Mutemember", `❌ *ɢᴀɢᴀʟ*\n\nTidak dapat mute admin grup`))
         }
     }
 
@@ -75,14 +75,14 @@ async function handler(m, { sock }) {
     })
 
     if (alreadyMuted) {
-        return m.reply(claraWrap("Mutemember", `❌ *Gagal*\n\nMember @${targetNumber} sudah dimute`))
+        return m.reply(claraWrap("Mutemember", `❌ *ɢᴀɢᴀʟ*\n\nMember @${targetNumber} sudah dimute`))
     }
 
     mutedMembers.push(targetJid)
     db.setGroup(m.chat, { ...groupData, mutedMembers })
 
-    await m.reply(`🔇 *MEMBER DIMUTE*\n\n` +
-        `╭┈┈⬡「 📋 *Detail* 」\n` +
+    await m.reply(`🔇 *ᴍᴇᴍʙᴇʀ ᴅɪᴍᴜᴛᴇ*\n\n` +
+        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `┃ 👤 Member: @${targetNumber}\n` +
         `┃ 🔇 sTatus: \`Muted\`\n` +
         `┃ 📊 Total Mute: \`${mutedMembers.length}\` Member\n` +

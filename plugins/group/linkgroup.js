@@ -36,7 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("Link Group", [`  ┊  ➶ Group: *${m.chatName || chat}*`,
         `  ┊  ➶ Link: *${link}*`,
-        "  ┊  ➶ Status: *Active*"].join("\n")) +
+        "  ┊  ➶ Status: *ᴀᴄᴛɪᴠᴇ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -44,7 +44,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
