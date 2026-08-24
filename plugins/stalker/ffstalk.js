@@ -44,10 +44,10 @@ async function handler(m, { sock }) {
 
     const r = data.result;
     
-    let caption = `🔥 *FREE FIRE STALK - PROFILE INFO* 🔥\n\n`;
+    let caption = `🔥 *ꜰʀᴇᴇ ꜰɪʀᴇ ꜱᴛᴀʟᴋ - ᴘʀᴏꜰɪʟᴇ ɪɴꜰᴏ* 🔥\n\n`;
     caption += `Halo! Ini dia hasil pencarian profil untuk UID *${r.uid}*:\n\n`;
     
-    caption += `👤 *INFO DASAR*\n`;
+    caption += `👤 *ɪɴꜰᴏ ᴅᴀꜱᴀʀ*\n`;
     caption += `  - Nama: *${r.name || "-"}*\n`;
     caption += `  - Level: ${r.level || "-"} (EXP: ${r.exp || "-"})\n`;
     caption += `  - Region: ${r.region || "-"}\n`;
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     caption += `  - Akun Dibuat: ${r.created_at || "-"}\n`;
     caption += `  - Terakhir Login: ${r.last_login || "-"}\n\n`;
     
-    caption += `🛡️ *GUILD INFO*\n`;
+    caption += `🛡️ *ɢᴜɪʟᴅ ɪɴꜰᴏ*\n`;
     caption += `  - Nama Guild: ${r.guild_name && r.guild_name !== "None" ? r.guild_name : "Tidak ada guild"}\n`;
     if (r.guild_name && r.guild_name !== "None") {
       caption += `  - Level Guild: ${r.guild_level || "-"}\n`;
@@ -71,11 +71,11 @@ async function handler(m, { sock }) {
     }
     caption += `\n`;
     
-    caption += `🐾 *PET INFO*\n`;
+    caption += `🐾 *ᴘᴇᴛ ɪɴꜰᴏ*\n`;
     caption += `  - Pet Level: ${r.pet_level || "-"}\n`;
     caption += `  - Pet EXP: ${r.pet_exp || "-"}\n\n`;
     
-    caption += `🔧 *LAINNYA*\n`;
+    caption += `🔧 *ʟᴀɪɴɴʏᴀ*\n`;
     caption += `  - Bahasa: ${r.language ? r.language.replace("Language_", "") : "-"}\n`;
     caption += `  - Mode Favorit: ${r.mode_prefer ? r.mode_prefer.replace("ModePrefer_", "") : "-"}\n\n`;
 
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
 
   } catch (error) {
     console.error("[FFStalk]", error.message);
-    m.reply(claraWrap("ffstalk", "😔 *Terjadi masalah di sistem kami.* \n\nSistem gagal menarik data dari server Free Fire. Silakan coba beberapa saat lagi ya."));
+    m.reply(claraWrap("ffstalk", "😔 *ᴛᴇʀᴊᴀᴅɪ ᴍᴀꜱᴀʟᴀʜ ᴅɪ ꜱɪꜱᴛᴇᴍ ᴋᴀᴍɪ.* \n\nSistem gagal menarik data dari server Free Fire. Silakan coba beberapa saat lagi ya."));
   }
 }
 

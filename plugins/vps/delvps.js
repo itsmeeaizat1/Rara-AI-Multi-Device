@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
         await m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ VPS Dihapus
 ┊
   ┊  ➶ *ID:* ${dropletId}
-  ┊  ➶ *Status:* Berhasil dihapus
+  ┊  ➶ *ꜱᴛᴀᴛᴜꜱ:* Berhasil dihapus
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`)
         
     } catch (err) {

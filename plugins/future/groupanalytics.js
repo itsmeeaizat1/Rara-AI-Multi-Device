@@ -22,11 +22,11 @@ async function handler(m, { sock, config: botConfig }) {
     let text = claraWrap("Group Analytics", "📊") + "\n\n";
     text += claraWrap("sTats", [`  ┊  ➶ Total pesan: *${stats.total || 0}*`, `  ┊  ➶ Member aktif: *${Object.keys(stats.users || {}).length}*`].join("\n")) + "\n\n";
     if (topUsers.length) {
-      text += "*Top Members:*\n";
+      text += "*ᴛᴏᴘ ᴍᴇᴍʙᴇʀꜱ:*\n";
       topUsers.forEach(([u, c], i) => { text += `${i+1}. @${u.split("@")[0]} - ${c} pesan\n`; });
     }
     if (topHours.length) {
-      text += "\n*Jam tersibuk:*\n";
+      text += "\n*ᴊᴀᴍ ᴛᴇʀꜱɪʙᴜᴋ:*\n";
       topHours.forEach(([h, c]) => { text += `  ┊  ➶ ${h}:00 - ${c} pesan\n`; });
     }
     text += "\n" + separator("━", 22) + "\n" + tipText("Stats direset setiap hari");

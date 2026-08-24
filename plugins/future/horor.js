@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
     return m.reply( "❌ Gagal generate cerita horor. Coba lagi nanti.", "horor");
   }
 
-  const header = "👻 *HORROR STORY*\n\nKarakter: " + names.join(", ") + "\n\n";
+  const header = "👻 *ʜᴏʀʀᴏʀ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";
   const footer = "\n\n_Dibuat oleh Nova AI_";
 
   await m.react("🐣");

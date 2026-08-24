@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     return m.reply( "❌ Gagal generate cerita komedi. Coba lagi nanti.", "komedi");
   }
 
-  const header = "😂 *COMEDY STORY*\n\nKarakter: " + names.join(", ") + "\n\n";
+  const header = "😂 *ᴄᴏᴍᴇᴅʏ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";
   const footer = "\n\n_Dibuat oleh Nova AI_";
 
   await m.react("🐣");

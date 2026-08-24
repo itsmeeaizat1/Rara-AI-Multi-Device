@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
   if (!userId) {
     return m.reply(
-      `🎮 *Discord sTalk*\n\n` +
+      `🎮 *ᴅɪꜱᴄᴏʀᴅ ꜱᴛᴀʟᴋ*\n\n` +
         `Masukkan Discord User ID\n\n` +
         `\`Contoh: ${m.prefix}discordstalk 297574907510784000\``,
     );
@@ -59,12 +59,12 @@ async function handler(m, { sock }) {
       : "-";
 
     const caption =
-      `🎮 *Discord sTalk*\n\n` +
-      `👤 *Username:* ${d.username || "-"}\n` +
-      `📛 *Display Name:* ${d.global_name || "-"}\n` +
-      `🔢 *Discriminator:* #${d.discriminator || "0"}\n` +
-      `🆔 *User ID:* ${d.id}\n\n` +
-      `📅 *Dibuat:* ${createdDate}\n\n` +
+      `🎮 *ᴅɪꜱᴄᴏʀᴅ ꜱᴛᴀʟᴋ*\n\n` +
+      `👤 *ᴜꜱᴇʀɴᴀᴍᴇ:* ${d.username || "-"}\n` +
+      `📛 *ᴅɪꜱᴘʟᴀʏ ɴᴀᴍᴇ:* ${d.global_name || "-"}\n` +
+      `🔢 *ᴅɪꜱᴄʀɪᴍɪɴᴀᴛᴏʀ:* #${d.discriminator || "0"}\n` +
+      `🆔 *ᴜꜱᴇʀ ɪᴅ:* ${d.id}\n\n` +
+      `📅 *ᴅɪʙᴜᴀᴛ:* ${createdDate}\n\n` +
       `_Discord User Lookup_`;
 
     m.react("🐣");

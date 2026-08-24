@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     return m.reply( "❌ Gagal generate cerita aksi. Coba lagi nanti.", "aksi");
   }
 
-  const header = "🔥 *ACTION STORY*\n\nKarakter: " + names.join(", ") + "\n\n";
+  const header = "🔥 *ᴀᴄᴛɪᴏɴ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";
   const footer = "\n\n_Dibuat oleh Nova AI_";
 
   await m.react("🐣");

@@ -59,9 +59,9 @@ async function handler(m, { sock }) {
         
         let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Kuota DigitalOcean
 ┊
-  ┊  ➶ *Limit:* ${dropletLimit} droplet
-  ┊  ➶ *Terpakai:* ${dropletsUsed} droplet
-  ┊  ➶ *Sisa:* ${dropletsRemaining} droplet
+  ┊  ➶ *ʟɪᴍɪᴛ:* ${dropletLimit} droplet
+  ┊  ➶ *ᴛᴇʀᴘᴀᴋᴀɪ:* ${dropletsUsed} droplet
+  ┊  ➶ *ꜱɪꜱᴀ:* ${dropletsRemaining} droplet
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
 Email: ${account.email}

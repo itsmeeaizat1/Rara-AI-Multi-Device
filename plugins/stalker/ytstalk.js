@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]
     
     if (!username) {
-        { const __navText = `📺 *Youtube sTalk*\n\nMasukkan username YouTube\n\n\`Contoh: ${m.prefix}ytstalk mrbeast\``; return await m.reply( __navText, "ytstalk"); }
+        { const __navText = `📺 *ʏᴏᴜᴛᴜʙᴇ ꜱᴛᴀʟᴋ*\n\nMasukkan username YouTube\n\n\`Contoh: ${m.prefix}ytstalk mrbeast\``; return await m.reply( __navText, "ytstalk"); }
     }
     
     m.react('🕐')
@@ -40,13 +40,13 @@ async function handler(m, { sock }) {
         
         const c = res.data.data
         
-        let caption = `📺 *Youtube sTalk*\n\n` +
-            `👤 *Nama:* ${c.name}\n` +
-            `🔗 *Username:* @${username}\n` +
-            `✅ *Verified:* ${c.verified ? 'Ya' : 'Tidak'}\n\n` +
-            `👥 *Subscribers:* ${c.subscribers}\n` +
-            `🎬 *Total Video:* ${c.video_count}\n\n` +
-            `📝 *Deskripsi:*\n${c.about || '-'}\n\n` +
+        let caption = `📺 *ʏᴏᴜᴛᴜʙᴇ ꜱᴛᴀʟᴋ*\n\n` +
+            `👤 *ɴᴀᴍᴀ:* ${c.name}\n` +
+            `🔗 *ᴜꜱᴇʀɴᴀᴍᴇ:* @${username}\n` +
+            `✅ *ᴠᴇʀɪꜰɪᴇᴅ:* ${c.verified ? 'Ya' : 'Tidak'}\n\n` +
+            `👥 *ꜱᴜʙꜱᴄʀɪʙᴇʀꜱ:* ${c.subscribers}\n` +
+            `🎬 *ᴛᴏᴛᴀʟ ᴠɪᴅᴇᴏ:* ${c.video_count}\n\n` +
+            `📝 *ᴅᴇꜱᴋʀɪᴘꜱɪ:*\n${c.about || '-'}\n\n` +
             `🔗 ${c.url}`
             
         m.react('✅')
