@@ -126,15 +126,14 @@ async function sendStoreBackup(sock) {
             : `${sizeInKB} KB`
         
         const caption = 
-            `🗃️ *ꜱTore Backup*\n\n` +
-            `╭┈┈⬡「 📋 *Info* 」\n` +
-            `┃ 📅 Waktu: ${timeHelper.formatDateTime('DD MMMM YYYY HH:mm:ss')} WIB\n` +
-            `┃ 📦 Size: ${sizeDisplay}\n` +
-            `┃ 📁 Files: ${backupInfo.fileCount}\n` +
-            `┃ 🔖 Schema: v${SCHEMA_VERSION}\n` +
-            `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-            `Type-safe backup. Kompatibel dengan versi mendatang.\n` +
-            `${config.bot?.name || 'Nova-AI'} Store Backup System`
+            `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Sᴛᴏʀᴇ Bᴀᴄᴋᴜᴘ\n` +
+            `┊\n` +
+            `  ┊  ➶ *Waktu:* ${timeHelper.formatDateTime('DD MMMM YYYY HH:mm:ss')} WIB\n` +
+            `  ┊  ➶ *Size:* ${sizeDisplay}\n` +
+            `  ┊  ➶ *Files:* ${backupInfo.fileCount}\n` +
+            `  ┊  ➶ *Schema:* v${SCHEMA_VERSION}\n` +
+            `┊\n` +
+            `❀⋆｡˚ ${config.bot?.name || 'Nova-AI'} ˚｡⋆❀`
         
         await sock.sendMessage(ownerJid, {
             document: { url: backupInfo.path },
