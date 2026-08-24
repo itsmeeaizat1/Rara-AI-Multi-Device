@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
         }
       }
       text += `\n┊ ➶ Total slot: ${itemList.length}/50\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
-      return await sendReplyWithNav(sock, m, text, "inventory");
+      return await m.reply(text);
     } catch (e) {
       return await m.reply(`❌ Error: ${e.message}`);
     }

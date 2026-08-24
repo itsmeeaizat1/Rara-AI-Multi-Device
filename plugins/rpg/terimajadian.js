@@ -16,7 +16,7 @@ async function handler(m, { sock }) {
         return r.target === m.sender && r.type === "couple" && (Date.now() - r.time) < 300000;
       });
       if (!requesterId) {
-        return await sendReplyWithNav(sock, m, "❌ Tidak ada ajakan pacaran yang menunggu!\nAjakan expired setelah 5 menit.", "terimajadian");
+        return await m.reply("❌ Tidak ada ajakan pacaran yang menunggu!\nAjakan expired setelah 5 menit.");
       }
       const requesterName = global.rpgMatch[requesterId].requesterName || requesterId.split("@")[0];
       setCouple({ sender: requesterId, key: { remoteJid: m.key?.remoteJid } }, m.sender, m.pushName || "Player");
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
 ┊ ➶ Bonus: +50 exp untuk kalian berdua!
 
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
-      return await sendReplyWithNav(sock, m, text, "terimajadian");
+      return await m.reply(text);
     } catch (e) {
       return await m.reply(`❌ Error: ${e.message}`);
     }

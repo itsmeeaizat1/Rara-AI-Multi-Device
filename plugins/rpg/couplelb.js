@@ -12,7 +12,7 @@ async function handler(m, { sock }) {
     try {
       const couples = getLeaderboard("couple", 10);
       if (couples.length === 0) {
-        return await sendReplyWithNav(sock, m, "❀°˖ 𝗥𝗮𝗻𝗸𝗶𝗻𝗴 𝗖𝗼𝘂𝗽𝗹𝗲 ˖°❀\n\n┊ ➶ Belum ada couple terdaftar\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀", "couplelb");
+        return await m.reply("❀°˖ 𝗥𝗮𝗻𝗸𝗶𝗻𝗴 𝗖𝗼𝘂𝗽𝗹𝗲 ˖°❀\n\n┊ ➶ Belum ada couple terdaftar\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀");
       }
       const medals = ["🥇", "🥈", "🥉"];
       let text = "❀°˖ 𝗥𝗮𝗻𝗸𝗶𝗻𝗴 𝗖𝗼𝘂𝗽𝗹𝗲 ˖°❀\n\n";
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
         text += `┊ ➶ ${rank} ${c.name} & ${c.coupleName} ${status} (${c.score} pts)\n`;
       });
       text += "\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
-      return await sendReplyWithNav(sock, m, text, "couplelb");
+      return await m.reply(text);
     } catch (e) {
       return await m.reply(`❌ Error: ${e.message}`);
     }

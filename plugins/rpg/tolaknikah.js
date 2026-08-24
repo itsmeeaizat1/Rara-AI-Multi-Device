@@ -15,7 +15,7 @@ async function handler(m, { sock }) {
         return r.target === m.sender;
       });
       if (!proposerId) {
-        return await sendReplyWithNav(sock, m, "❌ Tidak ada lamaran yang menunggu!", "tolaknikah");
+        return await m.reply("❌ Tidak ada lamaran yang menunggu!");
       }
       const proposerName = proposerId.split("@")[0];
       delete global.rpgMarriage[proposerId];
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
 ┊ ➶ Tetap berpacaran ❤️
 
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
-      return await sendReplyWithNav(sock, m, text, "tolaknikah");
+      return await m.reply(text);
     } catch (e) {
       return await m.reply(`❌ Error: ${e.message}`);
     }

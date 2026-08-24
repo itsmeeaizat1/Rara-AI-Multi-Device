@@ -12,7 +12,7 @@ async function handler(m, { sock }) {
     try {
       ensurePlayer(m, m.pushName || "Player");
       const text = getPlayerInfo(m);
-      return await sendReplyWithNav(sock, m, text, "profile");
+      return await m.reply(text);
     } catch (e) {
       return await m.reply(`❌ Error: ${e.message}`);
     }

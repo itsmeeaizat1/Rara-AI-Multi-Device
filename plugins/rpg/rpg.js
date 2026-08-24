@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
 ┊ ➶ .couplelb — Ranking couple
 
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
-      return await sendReplyWithNav(sock, m, text, "rpg");
+      return await m.reply(text);
     } catch (e) {
       return await m.reply(`❌ Error: ${e.message}`);
     }

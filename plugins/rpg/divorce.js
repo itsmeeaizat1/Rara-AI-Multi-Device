@@ -13,7 +13,7 @@ async function handler(m, { sock }) {
       ensurePlayer(m, m.pushName || "Player");
       const player = getPlayer(m);
       if (!player?.coupleId && !player?.marriedId) {
-        return await sendReplyWithNav(sock, m, "❌ Kamu tidak punya pasangan!", "divorce");
+        return await m.reply("❌ Kamu tidak punya pasangan!");
       }
       const partnerName = player.marriedName || player.coupleName || "Unknown";
       removeCouple(m);
@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
 ┊ ➶ Semoga temukan yang lebih baik 💔
 
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
-      return await sendReplyWithNav(sock, m, text, "divorce");
+      return await m.reply(text);
     } catch (e) {
       return await m.reply(`❌ Error: ${e.message}`);
     }
