@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
   ┊  ➶ *Version:* ${version}
   ┊  ➶ *Developer:* ${toSC(developer)}
   ┊  ➶ *Platform:* WhatsApp Multi Device
-  ┊  ➶ *Library:* Baileys (ourin-baileys)
+  ┊  ➶ *Library:* Baileys (nova-baileys)
   ┊  ➶ *Runtime:* Node.js ${process.version}
 ┊
 ₊˚ʚ ᗢ₊˚✧ ﾟ. 🏠 Mᴀɪɴ Cᴏᴍᴍᴀɴᴅs ｡ﾟ

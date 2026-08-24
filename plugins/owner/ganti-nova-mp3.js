@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const isAudio = m.type === 'audioMessage' || (m.quoted && m.quoted.type === 'audioMessage')
     
     if (!isAudio) {
-        return m.reply( claraWrap("Ganti-nova.mp3", `🎵 *Ganti Ourin.Mp3*\n\nKirim/reply audio untuk mengganti\nFile: assets/audio/nova.mp3`), { commandName: "ganti-nova.mp3" })
+        return m.reply( claraWrap("Ganti-nova.mp3", `🎵 *Ganti Nova.Mp3*\n\nKirim/reply audio untuk mengganti\nFile: assets/audio/nova.mp3`), { commandName: "ganti-nova.mp3" })
     }
     
     try {
