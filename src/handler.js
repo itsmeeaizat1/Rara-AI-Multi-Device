@@ -323,6 +323,19 @@ async function messageHandler(msg, sock) {
     }
   }
 
+  // Family 100 game answer handler (non-command reply to game message)
+  if (!m.isCommand && !m.isNewsletter) {
+    try {
+      const { answerHandler: fam100Handler } = await import("../plugins/game/family100.js");
+      if (typeof fam100Handler === "function") {
+        const famHandled = await fam100Handler(m, sock);
+        if (famHandled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("family100", e.message);
+    }
+  }
+
   // Auto React VN: jalan walau fromMe (owner testing di self-chat), asal bukan command/newsletter
   if (!m.isCommand && !m.isNewsletter) {
     try {
