@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const products = db.setting('storeProducts') || []
 
     if (products.length === 0) {
-        return m.reply( `📭 *Belum ada produk.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`, "hapusstok")
+        return m.reply( `📭 *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`, "hapusstok")
     }
 
     const args = m.text?.trim().split(/\s+/) || []
@@ -31,15 +31,15 @@ async function handler(m, { sock }) {
     const itemNo = parseInt(args[1]) - 1
 
     if (args.length < 2 || isNaN(productNo) || isNaN(itemNo)) {
-        return m.reply( `🗑️ *HAPUS STOK*\n\n` +
+        return m.reply( `🗑️ *ʜᴀᴘᴜꜱ ꜱᴛᴏᴋ*\n\n` +
             `Format: \`${m.prefix}hapusstok <nomor_produk> <nomor_item>\`\n\n` +
-            `📝 *Contoh:*\n` +
+            `📝 *ᴄᴏɴᴛᴏʜ:*\n` +
             `\`${m.prefix}hapusstok 1 3\` — Hapus item ke-3 dari produk ke-1\n\n` +
             `📋 Lihat nomor item: \`${m.prefix}liststok <nomor_produk>\``, "hapusstok")
     }
 
     if (productNo < 0 || productNo >= products.length) {
-        return m.reply(claraWrap("Nomor produk tidak valid.", `❌ *Nomor produk tidak valid.*\n\nRentang: 1-${products.length} 📋`))
+        return m.reply(claraWrap("Nomor produk tidak valid.", `❌ *ɴᴏᴍᴏʀ ᴘʀᴏᴅᴜᴋ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.*\n\nRentang: 1-${products.length} 📋`))
     }
 
     const product = products[productNo]
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     if (product.type === 'fisik') {
         const reduceCount = parseInt(args[1])
         if (isNaN(reduceCount) || reduceCount <= 0) {
-            return m.reply( `📦 *Produk Fisik*\n\n` +
+            return m.reply( `📦 *ᴘʀᴏᴅᴜᴋ ꜰɪꜱɪᴋ*\n\n` +
                 `Untuk mengurangi stok fisik, gunakan:\n` +
                 `\`${m.prefix}editproduk ${productNo + 1} stok <jumlah_baru>\`\n\n` +
                 `Stok saat ini: *${product.stock === -1 ? '♾️ Unlimited' : product.stock + ' pcs'}*`, "hapusstok")
@@ -56,18 +56,18 @@ async function handler(m, { sock }) {
             product.stock = Math.max(0, product.stock - reduceCount)
             db.setting('storeProducts', products)
             await m.react('✅')
-            return m.reply( `📦 *STOK FISIK DIKURANGI*\n\n` +
+            return m.reply( `📦 *ꜱᴛᴏᴋ ꜰɪꜱɪᴋ ᴅɪᴋᴜʀᴀɴɢɪ*\n\n` +
                 `🏷️ Produk: *${product.name}*\n` +
                 `➖ Dikurangi: *${reduceCount} pcs*\n` +
                 `📊 Sisa stok: *${product.stock} pcs*`, "hapusstok")
         }
-        return m.reply( `♾️ *Stok unlimited tidak bisa dikurangi.*\n\nUbah tipe stok terlebih dahulu: \`${m.prefix}editproduk ${productNo + 1} stok <jumlah>\``, "hapusstok")
+        return m.reply( `♾️ *ꜱᴛᴏᴋ ᴜɴʟɪᴍɪᴛᴇᴅ ᴛɪᴅᴀᴋ ʙɪꜱᴀ ᴅɪᴋᴜʀᴀɴɢɪ.*\n\nUbah tipe stok terlebih dahulu: \`${m.prefix}editproduk ${productNo + 1} stok <jumlah>\``, "hapusstok")
     }
 
     const stockItems = product.stockItems || []
 
     if (itemNo < 0 || itemNo >= stockItems.length) {
-        return m.reply( `❌ *Nomor item tidak valid.*\n\nRentang: 1-${stockItems.length}\n\n📋 Lihat daftar: \`${m.prefix}liststok ${productNo + 1}\``, "hapusstok")
+        return m.reply( `❌ *ɴᴏᴍᴏʀ ɪᴛᴇᴍ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.*\n\nRentang: 1-${stockItems.length}\n\n📋 Lihat daftar: \`${m.prefix}liststok ${productNo + 1}\``, "hapusstok")
     }
 
     const deleted = stockItems.splice(itemNo, 1)[0]
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     db.setting('storeProducts', products)
 
     await m.react('✅')
-    return m.reply( `🗑️ *STOK DIHAPUS*\n\n` +
+    return m.reply( `🗑️ *ꜱᴛᴏᴋ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
         `🏷️ Produk: *${product.name}*\n` +
         `🔑 Item: \`${deleted.detail.replace(/\n/g, ' ').substring(0, 50)}\`\n` +
         `📊 Sisa stok: *${stockItems.length}* akun`, "hapusstok")

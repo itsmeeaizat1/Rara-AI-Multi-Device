@@ -29,14 +29,14 @@ async function handler(m, { sock }) {
 
   if (products.length === 0) {
     return m.reply(
-      `🏪 *Produk Belum Tersedia*\n\n` +
+      `🏪 *ᴘʀᴏᴅᴜᴋ ʙᴇʟᴜᴍ ᴛᴇʀꜱᴇᴅɪᴀ*\n\n` +
         `Saat ini belum ada produk yang ditambahkan oleh admin 😔\n\n` +
         `Silakan cek kembali nanti atau hubungi admin untuk informasi lebih lanjut.\n\n` +
         `_Terima kasih atas ketertarikan Anda_ 🙏`,
     );
   }
 
-  let txt = `🛍️ *DAFTAR PRODUK*\n\n`;
+  let txt = `🛍️ *ᴅᴀꜰᴛᴀʀ ᴘʀᴏᴅᴜᴋ*\n\n`;
   txt += `Berikut adalah produk yang tersedia saat ini 🎉\n`;
   txt += `Untuk pembelian, ketik \`${m.prefix}beli <nomor>\`\n\n`;
 

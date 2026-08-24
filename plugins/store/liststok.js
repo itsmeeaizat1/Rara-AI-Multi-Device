@@ -24,13 +24,13 @@ async function handler(m, { sock }) {
     const products = db.setting('storeProducts') || []
 
     if (products.length === 0) {
-        return m.reply(`📭 *Belum ada produk.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`)
+        return m.reply(`📭 *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`)
     }
 
     const idx = parseInt(m.text?.trim()) - 1
 
     if (isNaN(idx) || idx < 0 || idx >= products.length) {
-        let txt = `📋 *DAFTAR STOK PRODUK*\n\nPilih produk untuk melihat stok:\n\n`
+        let txt = `📋 *ᴅᴀꜰᴛᴀʀ ꜱᴛᴏᴋ ᴘʀᴏᴅᴜᴋ*\n\nPilih produk untuk melihat stok:\n\n`
         for (let i = 0; i < products.length; i++) {
             const p = products[i]
             const typeIcon = p.type === 'fisik' ? '📦' : '🔑'
@@ -50,9 +50,9 @@ async function handler(m, { sock }) {
     if (product.type === 'fisik') {
         return m.reply(
             `📦 *STOK: ${product.name}*\n\n` +
-            `📊 Tipe: *Fisik*\n` +
+            `📊 Tipe: *ꜰɪꜱɪᴋ*\n` +
             `📦 Total: *${product.stock === -1 ? '♾️ Unlimited' : product.stock + ' pcs'}*\n\n` +
-            `*Kelola stok:*\n` +
+            `*ᴋᴇʟᴏʟᴀ ꜱᴛᴏᴋ:*\n` +
             `Tambah: \`${m.prefix}addstok ${idx + 1} <jumlah>\`\n` +
             `Edit: \`${m.prefix}editproduk ${idx + 1} stok <jumlah>\`\n\n` +
             `_Stok fisik diatur berdasarkan jumlah, bukan per-item_ 📦`
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
         return m.reply(
             `🔑 *Stok: ${product.name}*\n\n` +
             `📭 Belum ada stok item yang ditambahkan.\n\n` +
-            `*Tambah stok:*\n` +
+            `*ᴛᴀᴍʙᴀʜ ꜱᴛᴏᴋ:*\n` +
             `Manual: \`${m.prefix}addstok ${idx + 1}|<detail>\`\n` +
             `Import: \`${m.prefix}addstok ${idx + 1}\` (reply file .txt 📄)\n\n` +
             `_Stok item bersifat rahasia 🔒 dan hanya dikirim ke pembeli setelah pembayaran dikonfirmasi_`
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
         txt += `\n_dan ${stockItems.length - 30} item lainnya..._ 📋`
     }
 
-    txt += `\n\n🛠️ *Kelola stok:*\n`
+    txt += `\n\n🛠️ *ᴋᴇʟᴏʟᴀ ꜱᴛᴏᴋ:*\n`
     txt += `🗑️ Hapus: \`${m.prefix}hapusstok ${idx + 1} <nomor_item>\`\n`
     txt += `✏️ Edit: \`${m.prefix}editstok ${idx + 1} <nomor_item>|<detail_baru>\`\n`
     txt += `➕ Tambah: \`${m.prefix}addstok ${idx + 1}|<detail>\``

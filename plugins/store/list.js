@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
 
   if (lists.length === 0) {
     return m.reply(
-      `📋 *Belum Ada Informasi Toko*\n\n` +
+      `📋 *ʙᴇʟᴜᴍ ᴀᴅᴀ ɪɴꜰᴏʀᴍᴀꜱɪ ᴛᴏᴋᴏ*\n\n` +
         `Saat ini belum ada informasi yang ditambahkan oleh admin 😔\n\n` +
         `Silakan cek kembali nanti atau hubungi admin untuk informasi lebih lanjut.\n\n` +
         `_Terima kasih atas ketertarikan Anda_ 🙏`,
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     return await m.reply(claraWrap("list", txt));
   }
 
-  let txt = `📋 *DAFTAR INFORMASI TOKO*\n\n`;
+  let txt = `📋 *ᴅᴀꜰᴛᴀʀ ɪɴꜰᴏʀᴍᴀꜱɪ ᴛᴏᴋᴏ*\n\n`;
   txt += `Berikut informasi yang tersedia saat ini 📝\n`;
   txt += `Ketik \`${m.prefix}list <nomor>\` untuk melihat detail.\n\n`;
 

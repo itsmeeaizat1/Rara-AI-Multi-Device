@@ -20,8 +20,8 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (m.isGroup) {
-        return m.reply(claraWrap("editstok", `🚫 *Akses Ditolak*\n\n` +
-            `Untuk menjaga privasi 🛡️, pengeditan stok hanya dapat dilakukan di *private chat*.\n\n` +
+        return m.reply(claraWrap("editstok", `🚫 *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
+            `Untuk menjaga privasi 🛡️, pengeditan stok hanya dapat dilakukan di *ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ*.\n\n` +
             `Silakan chat bot secara langsung 📱`))
     }
 
@@ -29,16 +29,16 @@ async function handler(m, { sock }) {
     const products = db.setting('storeProducts') || []
 
     if (products.length === 0) {
-        return m.reply(`📭 *Belum ada produk.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`)
+        return m.reply(`📭 *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`)
     }
 
     const text = m.text?.trim() || ''
     const firstPipe = text.indexOf('|')
 
     if (firstPipe === -1) {
-        return m.reply(`✏️ *EDIT STOK*\n\n` +
+        return m.reply(`✏️ *ᴇᴅɪᴛ ꜱᴛᴏᴋ*\n\n` +
             `📋 Format: \`${m.prefix}editstok <nomor_produk> <nomor_item>|<detail_baru>\`\n\n` +
-            `📝 *Contoh:*\n` +
+            `📝 *ᴄᴏɴᴛᴏʜ:*\n` +
             `\`${m.prefix}editstok 1 3|Email: baru@mail.com;;Password: newpass\`\n\n` +
             `Gunakan \`;;\` untuk baris baru dalam detail 🔑\n` +
             `📋 Lihat nomor item: \`${m.prefix}liststok <nomor_produk>\`\n\n` +
@@ -53,13 +53,13 @@ async function handler(m, { sock }) {
     const itemNo = parseInt(parts[1]) - 1
 
     if (isNaN(productNo) || productNo < 0 || productNo >= products.length) {
-        return m.reply(claraWrap("editstok", `❌ *Nomor produk tidak valid.*\n\nRentang: 1-${products.length} 📋`))
+        return m.reply(claraWrap("editstok", `❌ *ɴᴏᴍᴏʀ ᴘʀᴏᴅᴜᴋ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.*\n\nRentang: 1-${products.length} 📋`))
     }
 
     const product = products[productNo]
 
     if (product.type === 'fisik') {
-        return m.reply(`📦 *Produk Fisik*\n\n` +
+        return m.reply(`📦 *ᴘʀᴏᴅᴜᴋ ꜰɪꜱɪᴋ*\n\n` +
             `Produk fisik tidak memiliki data per-item 🔑\n` +
             `Untuk mengubah stok, gunakan:\n` +
             `\`${m.prefix}editproduk ${productNo + 1} stok <jumlah>\``)
@@ -68,11 +68,11 @@ async function handler(m, { sock }) {
     const stockItems = product.stockItems || []
 
     if (isNaN(itemNo) || itemNo < 0 || itemNo >= stockItems.length) {
-        return m.reply(`❌ *Nomor item tidak valid.*\n\nRentang: 1-${stockItems.length}\n\n📋 Lihat daftar: \`${m.prefix}liststok ${productNo + 1}\``)
+        return m.reply(`❌ *ɴᴏᴍᴏʀ ɪᴛᴇᴍ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.*\n\nRentang: 1-${stockItems.length}\n\n📋 Lihat daftar: \`${m.prefix}liststok ${productNo + 1}\``)
     }
 
     if (!newDetail || newDetail.length < 3) {
-        return m.reply(claraWrap("Detail terlalu pendek.", `❌ *Detail terlalu pendek.*\n\nMinimal 3 karakter diperlukan 🔑`))
+        return m.reply(claraWrap("Detail terlalu pendek.", `❌ *ᴅᴇᴛᴀɪʟ ᴛᴇʀʟᴀʟᴜ ᴘᴇɴᴅᴇᴋ.*\n\nMinimal 3 karakter diperlukan 🔑`))
     }
 
     const oldDetail = stockItems[itemNo].detail
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
     db.setting('storeProducts', products)
     await m.react('✅')
 
-    return m.reply(`✅ *STOK DIPERBARUI*\n\n` +
+    return m.reply(`✅ *ꜱᴛᴏᴋ ᴅɪᴘᴇʀʙᴀʀᴜɪ*\n\n` +
         `🏷️ Produk: *${product.name}*\n` +
         `🔑 Item #${itemNo + 1}\n\n` +
         `❌ Sebelum:\n\`${oldDetail.replace(/\n/g, ' ').substring(0, 50)}\`\n\n` +
