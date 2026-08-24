@@ -5,7 +5,7 @@ import { ensureRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { getCintaData, startDating, DATING_MIN_LEVEL, formatDurasi } from "../../src/lib/nova-rpg-cinta.js";
 
 const pluginConfig = {
-  name: "rpgcouple",
+  name: "jadianmatch",
   alias: ["rpgjadian", "rpgpacaran"],
   category: "rpg",
   description: "Ajak seseorang berpacaran di RPG",

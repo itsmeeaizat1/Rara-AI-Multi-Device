@@ -8,7 +8,7 @@ import {
 } from "../../src/lib/nova-rpg-cinta.js";
 
 const pluginConfig = {
-  name: "rpgkencan",
+  name: "kencanmatch",
   alias: ["kencan", "date", "datingrpg"],
   category: "rpg",
   description: "Ajak pasangan kencan untuk tambah affection",
