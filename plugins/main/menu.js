@@ -229,7 +229,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
           body: "WhatsApp Multi Device",
           thumbnail: thumbBuffer,
           sourceUrl: saluranLink,
-          mediaType: 1,
+          mediaType: 2,
           showAdAttribution: false,
           renderLargerThumbnail: true,
         },
