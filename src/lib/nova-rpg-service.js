@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Core Service — rebuilt from scratch
-import { getDatabase, saveDatabase } from "./nova-database.js";
+import { getDatabase } from "./nova-database.js";
 
 // ═══════════════════════════════════════
 // PLAYER MANAGEMENT
@@ -58,7 +58,7 @@ export function ensurePlayer(m, pushName = "Player") {
         wins: 0,
         losses: 0
       };
-      saveDatabase(db);
+      db.markDirty("users");
     }
     return db.users[sender].rpg;
   } catch {
@@ -72,7 +72,7 @@ export function savePlayer(m, data) {
     const sender = m.sender || (m.key?.participant || m.key?.remoteJid || "");
     if (!sender || !db.users || !db.users[sender]) return false;
     db.users[sender].rpg = { ...db.users[sender].rpg, ...data };
-    saveDatabase(db);
+    db.markDirty("users");
     return true;
   } catch {
     return false;
@@ -104,7 +104,7 @@ export function addExp(m, amount) {
       leveledUp = true;
     }
     db.users[sender].rpg = player;
-    saveDatabase(db);
+    db.markDirty("users");
     return { leveledUp, newLevel: player.level };
   } catch {
     return { leveledUp: false };
@@ -119,7 +119,7 @@ export function addGold(m, amount) {
     const sender = m.sender || (m.key?.participant || m.key?.remoteJid || "");
     player.gold = Math.max(0, player.gold + amount);
     db.users[sender].rpg = player;
-    saveDatabase(db);
+    db.markDirty("users");
     return true;
   } catch {
     return false;
@@ -139,7 +139,7 @@ export function useStamina(m, amount) {
     const sender = m.sender || (m.key?.participant || m.key?.remoteJid || "");
     player.stamina -= amount;
     db.users[sender].rpg = player;
-    saveDatabase(db);
+    db.markDirty("users");
     return true;
   } catch {
     return false;
@@ -154,7 +154,7 @@ export function regenStamina(m, amount = 10) {
     const sender = m.sender || (m.key?.participant || m.key?.remoteJid || "");
     player.stamina = Math.min(player.maxStamina, player.stamina + amount);
     db.users[sender].rpg = player;
-    saveDatabase(db);
+    db.markDirty("users");
   } catch {}
 }
 
@@ -187,7 +187,7 @@ export function setCooldown(m, field) {
     const sender = m.sender || (m.key?.participant || m.key?.remoteJid || "");
     player[field] = Date.now();
     db.users[sender].rpg = player;
-    saveDatabase(db);
+    db.markDirty("users");
   } catch {}
 }
 
@@ -204,7 +204,7 @@ export function addItem(m, itemId, quantity = 1) {
     if (!player.inventory) player.inventory = {};
     player.inventory[itemId] = (player.inventory[itemId] || 0) + quantity;
     db.users[sender].rpg = player;
-    saveDatabase(db);
+    db.markDirty("users");
     return true;
   } catch {
     return false;
@@ -221,7 +221,7 @@ export function removeItem(m, itemId, quantity = 1) {
     player.inventory[itemId] -= quantity;
     if (player.inventory[itemId] <= 0) delete player.inventory[itemId];
     db.users[sender].rpg = player;
-    saveDatabase(db);
+    db.markDirty("users");
     return true;
   } catch {
     return false;
@@ -245,7 +245,7 @@ export function setCouple(m, targetSender, targetName) {
       db.users[targetSender].rpg.coupleId = sender;
       db.users[targetSender].rpg.coupleName = db.users[sender].name || "Player";
     }
-    saveDatabase(db);
+    db.markDirty("users");
     return true;
   } catch {
     return false;
@@ -270,7 +270,7 @@ export function removeCouple(m) {
       db.users[partnerId].rpg.marriedId = null;
       db.users[partnerId].rpg.marriedName = null;
     }
-    saveDatabase(db);
+    db.markDirty("users");
     return true;
   } catch {
     return false;
@@ -294,7 +294,7 @@ export function setMarriage(m, targetSender, targetName) {
       db.users[targetSender].rpg.marriedName = db.users[sender].name || "Player";
       db.users[targetSender].rpg.marriedDate = new Date().toISOString();
     }
-    saveDatabase(db);
+    db.markDirty("users");
     return true;
   } catch {
     return false;

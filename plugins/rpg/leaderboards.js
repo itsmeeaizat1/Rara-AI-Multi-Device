@@ -1,14 +1,14 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { getLeaderboard } from "../../src/lib/nova-rpg-service.js";
+const pluginConfig = {
 
-export default {
   name: "leaderboard",
   alias: ["rpglb", "rpleaderboard", "toprpg"],
   category: "rpg",
   description: "Ranking player RPG",
-  usage: ".leaderboard",
-  async handler(m, { sock }) {
+  usage: ".leaderboard"
+};
+
+async function handler(m, { sock }) {
     try {
       const players = getLeaderboard("level", 10);
       if (players.length === 0) {
@@ -26,4 +26,5 @@ export default {
       return await m.reply(`❌ Error: ${e.message}`);
     }
   }
-};
+
+export { pluginConfig as config, handler };
