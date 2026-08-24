@@ -1,0 +1,190 @@
+# 📋 FEATURES.md — Nova-Ai WhatsApp Bot
+
+> Daftar lengkap fitur per kategori. Update file ini setiap kali ada perubahan fitur.
+
+## Statistik
+- **Total Plugin:** 1.573
+- **Total Command:** 2.100+
+- **Total Kategori:** 39
+- **Versi:** 21.4.0
+
+---
+
+## 📂 Daftar Kategori & Command
+
+### 🤖 AI (103 plugin)
+nova-ai, nova-ai-addprovider, nova-ai-blog, nova-ai-code, nova-ai-copilot, nova-ai-detector, nova-ai-email, nova-ai-essay, nova-ai-explainer, nova-ai-image, nova-ai-ocr, nova-ai-prompt, nova-ai-providers, nova-ai-review, nova-ai-set, nova-ai-social, nova-ai-story, nova-ai-translate, nova-ai-web, nova-ai4chat, aianalyze, aiavatar, aibrowse, aicaption, aichat, aichat-history, aichat-model, aigrup, aihelp, aiidea, aiimggen, aimath, aiseo, aiset, aitimewarp, aivoice, anime-gen, audio.wav, automemegenerator, claudehaiku, deepai, deepaixemoz, deepseek, deepseekv2, deepseekv2xemoz, deepseekv4flash, deepseekv4flashxemoz, dolphin, enhance, feelbetter, gita, gpt4o, gpt5, gpt5v2xemoz, gpt5xemoz, jokowi-nova-ai, kobo-nova-ai, matematika, multi-nova-ai, musicmaker, muslimai, nova-nova-ai, novabanana, novabanana2, ocrsolve, openrouter, parallelai, prabowo-nova-ai, puter, paraphrase, qwen3, rewrite, simi, slangtranslate, sologo, stt, summarize, tanyadokter, text2img2, text2img, to3d, toanime, toblack, tocartoon, tocermin, tochibi, toemotebatu, tofigure, tofigurev2, toghibli, tohijab, toisland, tojapanese, tomanga, tomekah, tooilpainting, txt2img2, vision, waguri-nova-ai, zai
+
+### 🌸 Anime (14 plugin)
+animechar, animecouple, animegenre, animemanga, animemoments, animepowerlevel, animequote, animerec, animestudio, animetop, animevillain, autoanimewinbu, otakudict, wallpaperanime
+
+### 📹 Asupan (4 plugin)
+asupan, asupantiktok, bocil, ukhty
+
+### 🎨 Canvas (22 plugin)
+avatar.jpg, balogo, bratlocal, fakebankjago, fakedana, fakedev, fakedev2, fakedev3, fakeff, fakeff2, fakeffduo, fakeml, fakestory, fakestory2, fakestory3, fakestory4, gura, image.jpg, iqc, musiccard, topixel, wanted
+
+### 🔍 Cek (49 plugin)
+blacklist, cekbaik, cekberat, .cekbucin, cekcantik, cekcreative, cekcupu, cekfemboy, cekgabut, cekgacha, cekgamer, cekganteng, cekgila, cekhoki, cekimut, cekintrovert, cekjahat, cekjodoh, cekjomblo, cekkarma, cekkaya, cekkece, cekkepribadian, cekkpopers, ceklapar, cekmalas, cekmesum, cekngantuk, cekotaku, cekoverpower, cekowner, cekpartner, cekpelit, cekpintar, cekprem, cekprocastinator, cekpsikopat, cekrezeki, ceksabar, ceksetia, ceksexy, ceksial, ceksisaumur, ceksocmed, cektinggi, cektsundere, cekumur, cekwibu, cekyandere
+
+### ⚔️ Clan (9 plugin)
+clancreate, claninfo, claninvite, clanjoin, clankick, clanleaderboard, clanleave, clanmembers, clanwar
+
+### 🔄 Convert (44 plugin)
+voicechanger, audio.wav, audio8d, audioconvert, audioeq, audiofade, audiofx, audioloop, audiomerge, audionormalize, audiopitch, audiospeed, audiosplit, audiovol, mp4toaudio, videoconvert
+
+### 📥 Download (30 plugin)
+aio, aiov2, capcutdl, cocofundl, dailymotiondl, douyindl, douyinv2, facebookdl, facebookv2, githubdl, instagramdl, likeedl, mediafiredl, mp4, pindl, pixeldraindl, rednotedl, sfiledl, shopeedl, snackvideodl, spotifydl, spotifyplay, terabox, threaddl, tiktokv2, videy, ytmp3, ytmp3v2, ytmp4, ytmp4v2
+
+### 📚 Education (25 plugin)
+beasiswa, carijurnal, daftarsiswa, eduleaderboard, faktaunik, flashcard, ipk, jadwalku, kalkulatornilai, kampuskampus, katabijak, konversinilai, magang, mindmap, paraphrase, pengingatukt, pomodoro, ringkasan, sitasi, skripsiku, soalessay, soalujian, tipsharian, tugas, tutorku
+
+### 🎭 Ephoto (1 plugin)
+textpro
+
+### 🍔 Food (5 plugin)
+dibalikdapur, foodfact, foodtrivia, resep, resepid
+
+### 🎮 Fun (71+ plugin)
+akankah, anniversary, apakah, asahotak, bagaimana, berapa, bisakah, bucin, bucinv2, caklontong, cekkhodam, cekpacar, chatdna, cintagram, cintaquiz, cintatips, coba, confes, confess, dare, detektifbohong, dimana, fakechat, fuckmylife, gay, gombal, happyemoji, haruskah, jadian, jodoh, kapan, kerangajaib, lovecalc, luckynumber, mbti, mengapa, mimpi, moodcheck, moodmeter, namavibes, neverhave, nyindir, pantun, pepatah, pohon, puisi, putus, quote, ramalancinta, rate, renungan, roastme, santet, senja, siapaaku, soulmate, spinwheel, sulap, susunkata, tebakbakat, terima, timecapsule, tolak, fun, truth, voodoodoll, wouldyourather, x-mas, yesno
+
+### 🔮 Future (90+ plugin)
+aianchor, aiarisan, aibookclub, aicode, aicrowdfund, aidebate, aidescribe, aidiet, aidoc, aiemergency, aiexpense, aifatwa, aigift, aigrouppet, aihabit, aihadith, aiimage, ailearn, aimeeting, aimentor, aipoll, aiquran, aitimemachine, aivoice, aivoicenote, aksi, astrologi, auracheck, autoabsen, autobirthday, autocountdown, autodigest, autoevent, autofactcheck, autoholiday, autolanguage, automilestone, autopulse, autoquote, autorekap, autostreak, autosurvey, autotodo, autotranslate, autoweather, barista, blinddate, breathing, bucketlist, chatsummary, chord, cipher, compliment, confesswall, dailyquest, debateclub, detective, drama, ecocalendar, escape, expensetrack, fanfic, fortunecookie, futureme, gachapull, gkarma, groupanalytics, guessnum, hallfame, horor, hotseat, isekai, karaoke, komedi, lostfound, memorygame, moodtrack, mysterybox, osint, personacard, podcast, rizzmeter, romantis, secretmsg, sentiment, shipname, sleepcoach, smartbriefing, smartmoderation, smartreply, sudoku, topicdetector, tribe, wheelroulette, wordchain, wordle
+
+### 🎲 Game (45+ plugin)
+werewolf, dungeon, family100, fishing, kuis, kyubigame, mathquiz, merge, ppcouple, quizbattle, suitpvp, tebak, tebakangka, tebakgambar, tictactoe, trivia, truthordare, ulartangga, wwkill, wwprotect, wwsee, wwsorcerer
+
+### 👥 Group (182+ plugin)
+absen, absenv2, acc, add, addantilink, addcmdsticker, addtoxic, afk, agenda, anti18plus, antibucin, antibug, anticaps, anticulik, anticustom, antidocument, antiflood, antiforward, antifoto, antighost, antihotword, antijudol, antikasar, antilinkall, antilinkgc, antimedia, antinomorluar, antiphising, antipollspam, antipromote, antiremove, antiribut, antirvo, antispam, antisticker, antiswgc, antitagsw, antitoxic, antivideo, antivn, approvalmember, autoai, autochatsummary, automeme, automute, autoreaction, autoreply, autosticker, autotips, banchat, bingo, botmode, bounty, cekabsen, cekfakta-v2, cekidgc, cekonline, checklink, checksewa, close, delantilink, delete, delppgc, delstickercmd, deltoxic, demote, donasi, emojiguess, eventrsvp, game, getpp, goodbye, groupinfo, groupmemory, grupdashboard, grupshop, hapusabsen, hidetag, hidetag2, intro, jadwalgroup, kick, kickall, lelang, linkgc, linkgroup, listadmin, listantilink, listtoxic, listwarn, mostlikely, motw, mulaiabsen, mute, mutegc, mutemember, nhie, notifclosegroup, notifdemote, notifgantitag, notifmakan, notifopengroup, notifpromote, notifsholat, notiftidur, open, openvo, pickme, pin, poll, promote, ptg, publicthisgc, rapbattle, rateuser, reaction, reactionrole, report, resetgoodbye, resetintro, resetlinkgc, resetrulesgrup, resetwarn, resetwelcome, roastbattle, rpg, rulesgrup, selfthisgc, setdeskgc, setgoodbye, setgroupdesc, setgroupicon, setgroupname, setgrouppp, setgrouptitle, setintro, setnamegc, setppgc, setrulesgrup, setwelcome, sewainfo, slowmode, smartremind, smartreply, spinbottle, statscard, storybuild, storyrelay, tagall, tam, tod, topchat, totag, truth, typingrace, unban, unmute, unmutegc, unmutemember, warn, welcome, wordbomb, wyr
+
+### ℹ️ Info (20 plugin)
+ayokerja, benefitpartner, berita, beritalengkap, bluearchive-char, bugreport, cekcuaca, cuacabmkg, gag, gag2, gcbot, gempa, harilibur, infotourney, jadwalbola, jobstreet, linode, sewa, speedtest, spy
+
+### 🕌 Islami (18 plugin)
+aiislam, dailyayat, doaharian, dzikir, hajat, istikhara, kalimatthoyyibah, kisahnabi, kisahrasul, malaikat, mengaji, niatpuasa, panduansholat, panduanwudhu, ramadhan, sholatjenazah, sholawat, taubat
+
+### 📖 Islamic (11+ plugin)
+alquran, hadisnabi, hafalan, motivasiislam, murrotal, niatdoa, quran, quranv3, sejarahislam, sunnah, ummah
+
+### 📝 JPM (1 plugin)
+jpm
+
+### 🏠 Main (27+ plugin)
+aboutnova, allmenu, autoreaction, belanja, benefitowner, benefitpremium, block, carifitur, channelnovaofficial, daftarsewa, fun, infov2, jadibot, leaderboard, menu, menu2, menukategori, owner, ping, ping2, rules, sc, stats, stopjadibot, system, totalfitur, tqto
+
+### 🛠️ Maker (7 plugin)
+captionig, certmaker, image.jpg, lyricscard, mask.png, nowm, profilecard, quotemaker, watermark
+
+### 🎵 Media (2 plugin)
+music, soundboard
+
+### 📰 News (4 plugin)
+cnnnews, detiknews, kompasnews, tribunnewsxemoz
+
+### 👑 Owner (190+ plugin)
+addenergi, addexp, addkoin, addlevel, addowner, addpartner, addplugin, addprem, addpremall, addsewa, akses, anticall, approvesewa, autobackup, autobackupdrive, autobmkg, autobroadcastchannel, autocleancache, autocuaca, autojoingc, autoreactsticker, autoreactsw, autoreactvn, autoread, autoreadsw, autosambut, autosholat, autostatusview, autotranslatevn, autotyping, backupdb, backupsc, ban, bcgc, bcpc, bcpcjeda, block, botafk, botmode, broadcast, cekschedule, checkban, clearsessions, clone, cmdvn, colongpp, custompayment, dashboardpremium, delenergi, delexp, delkoin, dellevel, delplugin, delpremall, delsewa, deploy, disable, disableplugin, enable, enableplugin, eval, exec, ganti-asset, ganti-namadev, ganti-namaowner, ganticode, gantinamabot, gantiscraper, get, getplugin, goodbyeall, hapusdata, join, leave, listban, listjadibot, listjadibotaktif, listsewa, loker, tombol, setmenu, moodtheme, notiflimit, onlyadmin, onlygc, onlypc, onlythisgrup, payment, procnotif, ptvch, public, q, rejectsewa, remote, renewsewa, resetdb, resetlimitdefault, resetrules, restart, safemode, sampah, savedb, savekontak, schedule, searchplugin, securityaudit, self, setallmenu, setaudioallmenu, setclipdrop, setemail, setgoodbyetype, setjadibot, setkey, setlimitdefault, setmenucat, setmenuimage, setmenuvideo, setownertype, setpanel, setpayment, setppbot, setreply, setrules, setsaluran, setujugabung, setwelcometype, sewabot, similarity, sistemdaftar, srt, startschedule, stop, stopalljadibot, stopbcpc, stopdandeletejadibot, stopschedule, swgc, swgcall, swgcv2, swgcv2all, templateplugin, cpanel, togglejoinreq, togglesaluran, toko, tolakgabung, topuplimit, unban, unblock, upch, vncaptcha, weather, welcomeall
+
+### 🖥️ Panel (18 plugin)
+addseller, cekjeda, cekserver, cp, cpanel, delpanel, installtemabilling, installtemaenigma, installtemanebula, installtemastellar, jedacreate, restartserver, root, seller, startserver, stopserver
+
+### 🔮 Primbon (13 plugin)
+angkanaas, artinama, haribaik, kecocokannamapasangan, kepribadianwarna, nomerhoki, potensipenyakit, ramalanjodoh, shio, sifatusahabisnis, tafsirmimpi, weton, zodiak
+
+### 📤 Push Kontak (1 plugin)
+pushkontak
+
+### 🎲 Random (13 plugin)
+barandom, cecanchina, cecanindo, cecanjepang, cecankorea, cecanthai, cecanvietnam, ppcouple, husbu, lahelu, meme, quotesimage, waifu
+
+### 🛐 Religi (6 plugin)
+asmaulhusna, audioquran, hadith, islami, jadwalsholat, sholat
+
+### ⚔️ RPG (237 plugin)
+Sistem RPG lengkap dengan mining, farming, hunting, cooking, economy, jobs, mini-games, clans, bosses, dungeons, items, pets, dan lebih banyak lagi. Lihat folder `plugins/rpg/` untuk detail.
+
+### 🔎 Search (41 plugin)
+android1, android1-get, animeapaini, apkmod, apkmod-get, chords, film, filmget, lyrics, nerdfont, pap, pixiv, pins, shopeedl, xnxx, xnxx2, yts, dan lainnya
+
+### 🕵️ Stalker (12 plugin)
+discordstalk, robloxplayer, githubstalk, igstalk, tiktokstalk, twitterstalk, dan lainnya
+
+### 🎨 Sticker (26 plugin)
+attp, bratlocal, emojimix, linesticker, meme, s, sticker, stickerfilter, stickerpack, toimg, dll
+
+### 🏪 Store (16 plugin)
+list, add, delete, buy, sell, payment, transaction, dll
+
+### 🛠️ Tools (176 plugin)
+emojitoanimasi, emojitoimage, invoicemaker, musikapaini, dan ratusan tool lainnya (audio editor, image editor, text tools, QR, dll)
+
+### 🔊 TTS (4 plugin)
+tts, voicemaker, voiceclone
+
+### 👤 User (22 plugin)
+profile, register, login, level, energi, koin, limit, inventory, quest, daily, weekly, dll
+
+### 🔧 Utility (11 plugin)
+calc, currency, txt2qr, barcode, shortlink, translate, dll
+
+### 🖥️ VPS (6 plugin)
+vps-create, vps-delete, vps-restart, vps-stats, dll
+
+---
+
+## 🔧 API Dependencies
+
+### API yang butuh key (set via `.setkey`):
+- OpenAI (GPT-4, GPT-5) — `config.APIkey.openai`
+- Google Gemini — `config.APIkey.gemini`
+- Anthropic (Claude) — `config.APIkey.anthropic`
+- DeepSeek — `config.APIkey.deepseek`
+- OpenRouter — `config.APIkey.openrouter`
+- Clipdrop — `config.APIkey.clipdrop`
+- Termai (file upload) — `config.APIkey.termai`
+
+### API gratis tanpa key (sudah diimplementasi):
+- **pollinations.nova-ai** — AI image generation (anime-gen, txt2img, quotesimage)
+- **trace.moe** — Anime search by image (animeapaini)
+- **Reddit** — Random meme (meme)
+- **Twemoji/emojikitchen** — Emoji to image/sticker
+- **Discord API** — Discord user lookup (discordstalk)
+- **Roblox API** — Roblox player search (robloxplayer)
+- **LINE CDN** — Line sticker download (linesticker)
+- **tikwm.com** — TikTok video download (asupantiktok)
+- **Pixeldrain API** — File download (pixeldraindl)
+- **OMDb/TMDB** — Movie search (film, filmget)
+- **Jikan.moe** — Anime info
+- **Gelbooru** — Artwork search (pixiv)
+- **chordindonesia.com** — Chord search (chords)
+- **an1.com** — APK download (android1)
+- **apkmod.net** — APK MOD (apkmod)
+- **openfootball** — Football schedule (jadwalbola)
+- **AuDD.io** — Music recognition (musikapaini)
+### API yang sudah dihapus (mati):
+- ~~api.neoxr.eu~~ → Diganti semua dengan API gratis alternatif
+- ~~nativeFlowMessage/interactiveMessage~~ → Diganti dengan template buttons (type: 1) + externalAdReply
+- ~~firefly.maiku.my.id~~ (pinvid) → Diganti dengan api.siputzx.my.id (free, no key)
+- ~~neoxr apikey di bingimage~~ → Diganti dengan api-faa.my.id (free, no key)
+
+---
+
+## ✅ Status Audit (Update Terakhir)
+
+- **Total Plugin:** 1.573 (12 plugin dibikin ulang setelah dihapus AI agent lain)
+- **Syntax Check:** 0 error
+- **Broken Import:** 0
+- **api.neoxr.eu:** 0 (semua diganti)
+- **interactiveButtons/nativeFlowMessage:** 0 (semua dikonversi ke template buttons)
+- **nativeFlow button creation (quick_reply/single_select):** 0 (semua dikonversi ke template buttons type: 1)
+- **Dead API plugin:** 0 (semua diperbaiki, termasuk bingimage & pinvid)
+- **generateWAMessageFromContent:** 6 file masih pakai (tiktokdl2, tam, sprem, srt, pap, pins) — BUKAN nativeFlow, untuk format khusus (album, location, dll)
+- **Plugin Rebuilt:** 12 plugin yang dihapus AI agent lain sudah dibikin ulang:
+  - Future: drama, horor, isekai, komedi, romantis, aksi (AI story generator, pakai UnlimitedAI)
+  - Education: jadwalku (jadwal pribadi, DB-backed)
+  - Stalker: twitterstalk (siputzx API)
+  - TTS: voicemaker (multi-voice TTS, siputzx API)
+  - Sticker: stickerfilter (filter sticker: blur, grayscale, invert, sepia, circle)
+  - NSFW: xnxx, xnxx2 (disabled by default, premium only)
+- **Plugin Renamed:** 47 plugin diganti nama (goodbye2→goodbye, ai→nova-ai, dll) — FEATURES.md sudah diupdate
+- **Plugin Merged:** 23 Genshin voice convert di-merge ke voicechanger.js
+- **Exception:** `AIRich` class di `nova-builder.js` tetap pakai `interactiveMessage` untuk carousel cards (batasan teknis WhatsApp)

@@ -1,57 +1,36 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+import { ensurePlayer } from "../../src/lib/nova-rpg-service.js";
 
-import { claraHeader,
-    separator,
-  tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
-
-const pluginConfig = {
+export default {
   name: "inventory",
-  alias: ["inv", "tas", "backpack", "items"],
-  category: "game",
-  description: "Cek inventory RPG kamu",
+  alias: ["inv", "rpginv", "tas"],
+  category: "rpg",
+  description: "Lihat inventaris RPG",
   usage: ".inventory",
-  example: ".inventory",
-  isOwner: false,
-  isPremium: false,
-  isGroup: true,
-  isPrivate: false,
-  cooldown: 5,
-  energi: 0,
-  isEnabled: true,
-};
+  async handler(m, { sock }) {
+    try {
+      const player = ensurePlayer(m, m.pushName || "Player");
+      if (!player) return await m.reply("❌ Gagal load player");
+      const items = player.inventory || {};
+      const itemList = Object.keys(items);
+      let text = `❀°˖ 𝗜𝗻𝘃𝗲𝗻𝘁𝗮𝗿𝗶𝘀 ˖°❀
 
-async function handler(m, { sock, config: botConfig, db }) {
-  try {
-    const prefix = botConfig.command?.prefix || ".";
+┊ ➶ 𝗘𝗺𝗽𝘁𝘆 — belum ada item
 
-    const items = [
-      { name: "Potion", qty: 3 },
-      { name: "Sword", qty: 1 },
-      { name: "Shield", qty: 1 },
-    ];
+`;
+      if (itemList.length > 0) {
+        text = `❀°˖ 𝗜𝗻𝘃𝗲𝗻𝘁𝗮𝗿𝗶𝘀 ˖°❀
 
-    const text =
-      claraWrap("Inventory", "🎒") +
-      "\n\n" +
-      claraWrap("IꜱI Taꜱ", items.map((item) => `  ┊  ➶ ${item.name}: *${item.qty} pcs*`)) +
-      "\n\n" +
-      separator("━", 22) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali`);
-
-    await sendReplyWithNav(sock, m, text, "inventory");
-  } catch (error) {
-    const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply(claraWrap("inventory", text));
+`;
+        for (const [itemId, qty] of Object.entries(items)) {
+          text += `┊ ➶ ${itemId}: ${qty}\n`;
+        }
+      }
+      text += `\n┊ ➶ Total slot: ${itemList.length}/50\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      return await sendReplyWithNav(sock, m, text, "inventory");
+    } catch (e) {
+      return await m.reply(`❌ Error: ${e.message}`);
+    }
   }
-
-  return { handled: true };
-}
-
-export { pluginConfig as config, handler }
+};
