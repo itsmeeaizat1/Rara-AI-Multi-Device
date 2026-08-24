@@ -309,7 +309,6 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.reply(claraWrap("sholat", `⏳ *Mengambil jadwal sholat untuk ${city}...*`));
 
     let timings;
     try {

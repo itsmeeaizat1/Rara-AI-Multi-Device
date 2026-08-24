@@ -37,7 +37,7 @@ async function handler(m, { sock, args }) {
             return m.reply(claraWrap("Savekontak", "❌ Bot tidak berada di grup mana pun."));
         }
 
-        m.reply(claraWrap("Savekontak", `⏳ Sedang mengekstrak kontak dari ${groups.length} grup...`));
+        
 
         let vcards = "";
         let count = 0;

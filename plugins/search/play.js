@@ -64,7 +64,7 @@ async function handler(m, { sock, text }) {
       info += `*Deskripsi:*\n_${desc}${video.description.length > 150 ? "..." : ""}_\n\n`;
     }
     info += `🔗 ${video.url}\n\n`;
-    info += `_⏳ mengirim audio, harap tunggu..._`;
+    
 
     await sock.sendPreview(
       m.chat,

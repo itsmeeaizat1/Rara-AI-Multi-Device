@@ -85,7 +85,6 @@ async function handler(m, { sock }) {
     const isDirectMedia = m.isMedia && (m.isImage || m.isVideo)
 
     if (hasQuotedMedia || isDirectMedia) {
-        await m.reply(claraWrap("addlist", `⏳ _Mengunggah media..._`))
         try {
             const buffer = hasQuotedMedia ? await m.quoted.download() : await m.download()
             if (buffer) {

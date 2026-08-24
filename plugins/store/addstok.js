@@ -74,7 +74,6 @@ async function handler(m, { sock }) {
           "";
 
         if (isDocument && fileName.toLowerCase().endsWith(".txt")) {
-          await m.reply(claraWrap("addstok", `⏳ _Memproses file..._`));
           let fileBuffer;
           try {
             fileBuffer = await m.quoted.download();
