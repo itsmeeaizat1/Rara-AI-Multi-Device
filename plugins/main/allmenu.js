@@ -85,6 +85,12 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
     if (m.isOwner) { userRole = "Owner"; roleEmoji = "👑"; }
     else if (m.isPremium) { userRole = "Premium"; roleEmoji = "💎"; }
 
+    const userExp = user?.exp || 0;
+    const userLevel = Math.floor(userExp / 20000) + 1;
+    const expMin = (userLevel - 1) * 20000;
+    const expMax = userLevel * 20000;
+    const expCurr = userExp - expMin;
+
     const totalUsers = db.getUserCount();
     const runtimeStr = formatUptime(uptime);
     const timeStr = new Intl.DateTimeFormat("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }).format(now);
@@ -139,8 +145,13 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
   ┊  ➶ *Nomor:* @${m.sender.split("@")[0]}
   ┊  ➶ *Role:* ${roleEmoji} ${userRole}
   ┊  ➶ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
-  ┊  ➶ *Energi:* ${m.isOwner || m.isPremium ? "∞" : (user?.energi ?? 25)}
-  ┊  ➶ *Limit:* ${m.isOwner || m.isPremium ? "∞" : (user?.limit ?? "-")}
+  ┊  ➶ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
+  ┊  ➶ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
+  ┊  ➶ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
+  ┊  ➶ *Level:* ${userLevel}
+  ┊  ➶ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
+  ┊  ➶ *Total Xp:* ${userExp.toLocaleString()}
+  ┊  ➶ *Status:* ${user?.isBanned ? "Banned" : "Aktif"}
 ╠┈┈「 *Iɴғᴏ Bᴏᴛ* 」
   ┊  ➶ *Bot:* ${botConfig.bot?.name || "Nova AI"}
   ┊  ➶ *Version:* ${botConfig.bot?.version || "-"}
