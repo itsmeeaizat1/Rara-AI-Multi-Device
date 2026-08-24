@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     { const __navText = "❌ Mau ngobrol apa sama Simi?\n\nContoh: `.simi Halo Simi!`"; return await m.reply(__navText, "simi"); };
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const apiUrl = `https://api.nexray.eu.cc/ai/simisimi?text=${encodeURIComponent(text)}`;
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     }
 
     await m.reply(data.result);
-    await m.react("✅");
+    await m.react("🐣");
 
   } catch (error) {
     console.error("[SimiSimi]", error.message);

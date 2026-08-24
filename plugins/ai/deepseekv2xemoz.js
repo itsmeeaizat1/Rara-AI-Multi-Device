@@ -56,14 +56,14 @@ async function handler(m, { sock }) {
     return m.reply( claraWrap("DeepSeek v3.2", help));
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const reply = await callDeepSeekV2(text);
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("DeepSeek v3.2", reply));
   } catch (error) {
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("DeepSeek v3.2 Error", error.message || "Gagal menghubungi AI."));
   }
 }

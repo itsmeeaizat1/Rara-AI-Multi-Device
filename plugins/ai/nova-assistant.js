@@ -371,7 +371,7 @@ async function handler(m, { sock }) {
       `Tinggal ketik apa yang kamu mau, aku yang eksekusi!`, "ai");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   // Step 1: Try local intent matching (fast, no API)
   const intent = matchIntent(userInput);
@@ -420,7 +420,7 @@ async function handler(m, { sock }) {
       m.args = originalArgs;
       m.text = originalText;
 
-      await m.react("✅");
+      await m.react("🐣");
     } catch (error) {
       // Restore original m properties
       m.command = originalCommand;
@@ -447,7 +447,7 @@ async function handler(m, { sock }) {
       { const __navText = `❌ AI lagi bermasalah. Coba lagi nanti ya.`; return await m.reply(__navText); };
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     const reply = result.answer;
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {

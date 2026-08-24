@@ -101,7 +101,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("Biner", validation.error));
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // If target specified, convert only to that
     if (toKey) {
@@ -119,7 +119,7 @@ async function handler(m, { sock, config: botConfig }) {
         return m.reply(claraWrap("Biner", conv.error));
       }
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Base Convert", [
         "Input: " + value + " (" + fromBase.name + ")",
         "Hasil: " + conv.result + " (" + toBase.name + ")",
@@ -144,7 +144,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Base Convert (All)", lines.join("\n")));
   } catch (e) {
     console.error("biner error:", e);

@@ -43,7 +43,7 @@ async function handler(m, { sock, text }) {
   if (!query)
     { const __navText = `🎵 *Play*\n\n> Contoh:\n\`${m.prefix}play komang\``; return await m.reply(claraWrap("play", __navText)); };
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const search = await yts(query);
@@ -101,7 +101,7 @@ async function handler(m, { sock, text }) {
       });
     }
 
-    m.react("✅");
+    m.react("🐣");
   } catch (err) {
     console.error("[Play]", err);
     m.reply(

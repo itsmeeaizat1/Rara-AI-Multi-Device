@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
 
   if (!media) { const __navText = "❌ Gagal membaca media gambar, coba lagi!"; return await m.reply(__navText, "topixel"); };
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const pixelatedBuffer = await pixelArt(media, level);
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
       { quoted: m }
     );
     
-    await m.react("✅");
+    await m.react("🐣");
   } catch (err) {
     m.reply(claraWrap("topixel", te(m.prefix, m.command, m.pushName), "error"));
   }

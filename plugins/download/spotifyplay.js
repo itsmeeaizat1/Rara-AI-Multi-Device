@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     let data;
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
       fileName: `${safeTitle} - ${safeArtist}.mp3`,
     });
 
-    m.react("✅");
+    m.react("🐣");
   } catch (e) {
     console.error("[SPOTIFYPLAY] Error:", e.message);
     m.reply(

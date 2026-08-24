@@ -67,14 +67,14 @@ async function handler(m, { sock }) {
 
   if (action === "on") {
     db.setGroup(m.chat, { antivn: true });
-    m.react("✅");
+    m.react("🐣");
     await m.reply(claraWrap("Antivn", `Anti VN diaktifkan`));
     return;
   }
 
   if (action === "off") {
     db.setGroup(m.chat, { antivn: false });
-    m.react("✅");
+    m.react("🐣");
     await m.reply(claraWrap("Antivn", `Anti VN dinonaktifkan`));
     return;
   }

@@ -152,7 +152,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     cfg.current.puzzle[row][col] = num;
     saveConfig(db, gid, cfg);
-    await m.react("✅");
+    await m.react("🐣");
 
     // Check if solved
     let solved = true;

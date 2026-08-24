@@ -135,7 +135,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "kampuskampus" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     if (query === "list" || query === "daftar" || query === "all") {
@@ -146,7 +146,7 @@ async function handler(m, { sock, args }) {
       }
       txt += `\nKetik \`${m.prefix}kamus <istilah>\` untuk lihat arti.`;
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
@@ -155,7 +155,7 @@ async function handler(m, { sock, args }) {
       let txt = `${query.toUpperCase()}\n\n`;
       txt += `${GLOSSARY[query]}`;
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
@@ -169,7 +169,7 @@ async function handler(m, { sock, args }) {
       let txt = `${matches[0].toUpperCase()}\n\n`;
       txt += `${GLOSSARY[matches[0]]}`;
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
@@ -180,7 +180,7 @@ async function handler(m, { sock, args }) {
       }
       txt += `\nKetik \`${m.prefix}kamus <istilah>\` untuk lihat arti.`;
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 

@@ -21,7 +21,7 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const res = await axios.get("https://api.nexray.eu.cc/information/growagarden", {
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
     }
 
     { const __navText = claraWrap(caption.trim().split("\n").filter(l => l.trim())); await m.reply(__navText); };
-    await m.react("✅");
+    await m.react("🐣");
 
   } catch (error) {
     console.error("[GAG Info]", error.message);

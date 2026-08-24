@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     return m.reply( `Cara pakai:\n${m.prefix}cekvps <droplet_id>\n\nGunakan ${m.prefix}listvps untuk melihat ID`, "cekvps");
   }
 
-  m.react("🐣")
+  m.react("🕒")
   try {
     const response = await axios.get(
       `https://api.digitalocean.com/v2/droplets/${dropletId}`,
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
 
 Created: ${timeHelper.fromTimestamp(droplet.created_at, "DD MMMM YYYY HH:mm:ss")}`;
 
-    m.react("✅")
+    m.react("🐣")
     await m.reply(txt);
   } catch (err) {
     return m.reply(te(m.prefix, m.command, m.pushName));

@@ -91,7 +91,7 @@ async function handler(m, { sock, config: botConfig }) {
     return m.reply( claraWrap("Wallhaven", help));
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     let query = text;
@@ -124,7 +124,7 @@ async function handler(m, { sock, config: botConfig }) {
     const data = await searchWallhaven(query, category, minRes);
 
     if (!data || data.data.length === 0) {
-      await m.react("✅");
+      await m.react("🐣");
       const catLabel = category === "010" ? "anime" : category === "100" ? "general" : "semua";
       return m.reply(claraWrap("Wallhaven", `Tidak ada wallpaper untuk "${query || "random"}" (kategori: ${catLabel}).\n\nCoba kata kunci lain.`));
     }
@@ -146,9 +146,9 @@ async function handler(m, { sock, config: botConfig }) {
       caption: claraWrap("Wallhaven Wallpaper", caption),
     }, { quoted: m });
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Wallhaven Error", error.message || "Gagal mencari wallpaper."));
   }
 }

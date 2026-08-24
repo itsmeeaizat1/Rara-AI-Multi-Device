@@ -137,7 +137,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       db.setUser(m.sender, user);
       delConfig(db, gid);
       db.save();
-      await m.react("✅");
+      await m.react("🐣");
       await m.reply(claraWrap("Guess Number - MENANG!", [
         "@" + m.sender.split("@")[0],
         "",

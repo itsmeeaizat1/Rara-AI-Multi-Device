@@ -36,14 +36,14 @@ async function handler(m, { sock }) {
   if (action === "on") {
     db.setting("autoReadSW", { enabled: true });
     db.save();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Auto Read Story", "Auto read story diaktifkan!", "success"));
   }
 
   if (action === "off") {
     db.setting("autoReadSW", { enabled: false });
     db.save();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Auto Read Story", "Auto read story dimatikan!", "info"));
   }
 

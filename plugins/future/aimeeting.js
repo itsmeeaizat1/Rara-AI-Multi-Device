@@ -79,7 +79,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
     await m.reply(claraWrap("AI Meeting", "Menggenerate notulen dari " + meeting.messages.length + " pesan..."));
 
     try {
@@ -100,7 +100,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       meeting.endTime = Date.now();
       saveMeeting(db, gid, meeting);
 
-      await m.react("✅");
+      await m.react("🐣");
       await m.reply(claraWrap("AI Meeting Notulen", "Topik: " + meeting.topic + "\nPesan: " + meeting.messages.length + "\n\n" + notulen));
     } catch {
       await m.react("❌");

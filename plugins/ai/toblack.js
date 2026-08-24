@@ -42,11 +42,11 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("toblack", `❌ Gagal mendownload gambar`));
     }
 
-    m.react("🐣");
+    m.react("🕒");
 
     const result = await live3d(buffer, PROMPT);
 
-    m.react("✅");
+    m.react("🐣");
 
     await sock.sendMedia(m.chat, result.image, null, m, {
       type: "image",

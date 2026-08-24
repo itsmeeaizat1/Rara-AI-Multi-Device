@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `_Respons cepat, tapi tetap cerdas_`, "claudehaiku");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const result = await ClaudeHaiku(text);
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Claude Haiku Gagal", `❌ *Claude Haiku Gagal*\n\n> ${result.error || "Gagal mendapatkan respons"}`));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
 
     const reply = `${result.answer}`;
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);

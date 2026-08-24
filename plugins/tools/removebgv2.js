@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // Download gambar
     let mediaBuffer;
@@ -108,7 +108,7 @@ async function handler(m, { sock, config: botConfig }) {
     const resultMB = resultSize / 1024 / 1024;
     const useDoc = wantDoc || resultMB > 5;
 
-    await m.react("✅");
+    await m.react("🐣");
 
     // Kirim hasil
     if (useDoc) {

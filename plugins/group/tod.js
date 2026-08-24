@@ -290,7 +290,7 @@ export default {
         `┊ Truth or Dare dinyalakan di grup ini.`,
         `┊ Ketik *${prefix}tod* untuk mulai main!`,
       ].join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -308,7 +308,7 @@ export default {
         `┊ Truth or Dare dimatikan.`,
         `┊ Ketik *${prefix}todon* untuk aktifkan lagi.`,
       ].join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -325,7 +325,7 @@ export default {
         `┊ Status: ${isTodOn(groupId) ? "*AKTIF* 🟢" : "*NONAKTIF* 🔴"}`,
       ];
       await m.reply(claraWrap("Tod - Statistik", lines.join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -348,7 +348,7 @@ export default {
       return { handled: true };
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // ─── Parse sub-command ───
     const subMatch = raw.toLowerCase().match(
@@ -380,7 +380,7 @@ export default {
         `┊ 📌 Mainnya jujur ya, jangan skip!`,
         `┊ 📌 Kalau dapat dare, lakuin ya, gak boleh kabur!`,
       ].join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -398,7 +398,7 @@ export default {
           `┊ Tidak ada member lain yang bisa ditunjuk.`,
           `┊ Coba lagi nanti ya!`,
         ].join("\n")));
-        await m.react("✅");
+        await m.react("🐣");
         return { handled: true };
       }
 
@@ -435,7 +435,7 @@ export default {
       } catch (e) {
         await m.reply(text);
       }
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -525,7 +525,7 @@ export default {
     } else {
       await m.reply(text);
     }
-    await m.react("✅");
+    await m.react("🐣");
     return { handled: true };
   },
 };

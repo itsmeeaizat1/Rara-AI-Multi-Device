@@ -38,7 +38,7 @@ ${prefix}aihelp sticker
 ${prefix}aihelp group
 
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`);
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
@@ -85,7 +85,7 @@ Tidak ada command untuk "${keyword}".
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
     await m.reply(text);
-    await m.react("✅");
+    await m.react("🐣");
   } catch (e) {
     console.error("[aihelp] handler error:", e.message);
     try { await m.reply("❌ Error: " + e.message); } catch {}

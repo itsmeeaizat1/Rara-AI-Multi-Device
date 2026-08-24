@@ -92,7 +92,7 @@ async function handler(m, { sock, config: botConfig }) {
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
       await m.reply(text);
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -141,7 +141,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     // Panggil AI
-    await m.react("🐣");
+    await m.react("🕒");
 
     const aiConfig = botConfig.aiHelp || {};
     const apiKey = String(aiConfig.apiKey || "");
@@ -191,7 +191,7 @@ async function handler(m, { sock, config: botConfig }) {
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
     await m.reply(text);
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
     console.error('[multi-ai.js]:', error.message);
     const prefix = botConfig.command?.prefix || ".";

@@ -37,7 +37,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     ].join("\n")) + "\n" + tipText("Mind map ditampilkan dalam format teks visual"), { commandName: "mindmap" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
   try {
     const isLongText = input.length > 200;
 

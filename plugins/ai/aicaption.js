@@ -151,7 +151,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // Download gambar
     let mediaBuffer;
@@ -222,7 +222,7 @@ async function handler(m, { sock, config: botConfig }) {
       throw new Error("AI tidak menghasilkan caption. Coba foto lain.");
     }
 
-    await m.react("✅");
+    await m.react("🐣");
 
     const styleLabel = useStyle === "default" ? "Mix" : useStyle.charAt(0).toUpperCase() + useStyle.slice(1);
 

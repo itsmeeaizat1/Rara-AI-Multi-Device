@@ -82,7 +82,7 @@ async function handler(m, { sock, config: botConfig }) {
     const url1 = parts[0];
     const url2 = parts[1];
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const [r1, r2] = await Promise.all([fetchUrl(url1), fetchUrl(url2)]);
 
@@ -158,7 +158,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("  Bigger body: " + (bigger === "TIE" ? "TIE" : bigger));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("URL Diff: " + url1.replace(/^https?:\/\//, "") + " vs " + url2.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     console.error("urldiff error:", e);

@@ -97,7 +97,7 @@ function getBackupOutputDir(projectRoot) {
 }
 
 async function handler(m, { sock }) {
-  await m.react("🐣");
+  await m.react("🕒");
   await m.reply(claraWrap("Backupsc", `📦 *Backup sCript*\n\n> Memproses backup...\n> Mohon tunggu sebentar...`));
   try {
     const projectRoot = process.cwd();
@@ -208,7 +208,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
 
-    await m.react("✅");
+    await m.react("🐣");
 
     try {
       fs.unlinkSync(zipFilePath);

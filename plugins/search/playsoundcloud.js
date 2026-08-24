@@ -31,7 +31,7 @@ async function handler(m, { args, sock }) {
     return await m.reply(claraWrap("playsoundcloud", txt));
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const searchResults = await scSearch(args.join(" "));
@@ -56,7 +56,7 @@ async function handler(m, { args, sock }) {
     await sock.sendMedia(m.chat, downloadInfo.thumbnail || track.artwork, txt.trim(), m, { type: "image" });
     await sock.sendMedia(m.chat, downloadInfo.download_url, downloadInfo.title, m, { type: "audio" });
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (e) {
     m.reply(claraWrap("playsoundcloud", `❌ Gagal mendownload lagu kak! 😭\nError: ${e.message}`));
   }

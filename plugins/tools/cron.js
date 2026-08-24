@@ -265,7 +265,7 @@ async function handler(m, { sock, config: botConfig }) {
           "every <day>"));
       }
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Cron Build", [
         "Input: " + input,
         "Expression: " + result.expr,
@@ -279,7 +279,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("Cron", result.error));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Cron Explain: " + text, result.lines.join("\n")));
   } catch (e) {
     console.error("cron error:", e);

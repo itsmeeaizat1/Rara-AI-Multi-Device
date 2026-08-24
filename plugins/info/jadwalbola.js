@@ -48,7 +48,7 @@ function getLeagueEmoji(league) {
 async function handler(m, { sock }) {
   const filter = m.args.join(" ").toLowerCase().trim();
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const data = await f(
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
 
     text += `Total: *${matches.length}* pertandingan`;
 
-    m.react("✅");
+    m.react("🐣");
 
     await m.reply(claraWrap(text.split("\n").filter(l => l.trim())));
   } catch (err) {

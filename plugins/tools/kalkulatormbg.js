@@ -99,7 +99,7 @@ async function handler(m, { sock,  args }) {
     return await m.reply(claraWrap("kalkulatormbg", txt));
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const uang = Number(args[0].replace(/[^0-9]/g, ''));
@@ -134,7 +134,7 @@ async function handler(m, { sock,  args }) {
     txt += contentTxt.trim().split("\n").map(line => line.trim() ? `${line}` : ``).join("\n");
 
     await m.reply(claraWrap("kalkulatormbg", txt));
-    await m.react("✅");
+    await m.react("🐣");
   } catch (e) {
     m.reply(claraWrap("kalkulatormbg", `❌ Maaf kak, terjadi kesalahan saat menghitung! 😭\nError: ${e.message}`));
   }

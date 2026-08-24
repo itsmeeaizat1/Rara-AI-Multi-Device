@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
     builder.addText(serverDetails)
 
     await builder.send(m.chat, { quoted: m })
-    await m.react("✅")
+    await m.react("🐣")
   } catch (error) {
     console.log(error)
     m.reply(claraWrap("ping", te(m.prefix, m.command, m.pushName), "error"))}

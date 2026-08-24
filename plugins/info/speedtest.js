@@ -131,7 +131,7 @@ async function runSpeedtest() {
 }
 
 async function handler(m, { sock }) {
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     // Info sistem dasar
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
 
   ┊  ➶ Metode: ${result.method}`;
 
-    await m.react("✅");
+    await m.react("🐣");
     await m.reply(claraWrap("speedtest", text));
   } catch (err) {
     await m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Speedtest Error

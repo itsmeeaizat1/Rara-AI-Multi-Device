@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
         `.☘︎ ݁˖`, "pinpack");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const data = await f(`https://api.siputzx.my.id/api/s/pinterest?query=${query}`);
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
         description: `Sticker pack dari Pinterest: ${query}`,
         emojis: ["❤"],
       });
-      await m.react("✅");
+      await m.react("🐣");
     } catch (packErr) {
       console.error("[PinPack] Pack send failed:", packErr.message);
       await m.reply(
@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
       }
 
       if (sent > 0) {
-        await m.react("✅");
+        await m.react("🐣");
         await m.reply(
           `── .✦ ──\n\n> Berhasil kirim *${sent}* sticker dari *${packname}* .☘︎ ݁˖`,
         );

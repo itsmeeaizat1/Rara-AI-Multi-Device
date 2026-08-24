@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
       );
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // Download video
     let mediaBuffer;
@@ -246,7 +246,7 @@ async function handler(m, { sock }) {
     // Cleanup input
     try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
 
-    await m.react("✅");
+    await m.react("🐣");
 
     const durLabel = actualDuration.toFixed(1) + "s";
     const wasTrimmed = srcDuration > actualDuration;

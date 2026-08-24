@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     return m.reply( `🔞 *XNXX Downloader*\n\nKirim URL video XNXX/XVideos\n\nContoh: \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\``, "xnxx2");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const res = await axios.get(
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
       const buf = Buffer.from(vidRes.data);
       if (buf.length > 1000) {
         await sock.sendMessage(m.chat, { video: buf, caption: d.title || "" }, { quoted: m });
-        await m.react("✅");
+        await m.react("🐣");
         return;
       }
     }

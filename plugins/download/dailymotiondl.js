@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
         `_Proses konversi mungkin agak lama_`, "dailymotiondl");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const result = await DailymotionDL(text);
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
       );
     }
 
-    m.react("✅");
+    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply(claraWrap("dailymotiondl", "❌ Gagal mengambil data Dailymotion, coba lagi nanti"));

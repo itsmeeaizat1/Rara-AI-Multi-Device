@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `_Model 80B, jadi agak lama tapi jawabannya mantap_`, "qwen3");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const result = await Qwen3(text);
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Qwen3 Gagal", `❌ *Qwen3 Gagal*\n\n> ${result.error || "Gagal mendapatkan respons"}`));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
 
     const reply = `${result.answer}`;
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);

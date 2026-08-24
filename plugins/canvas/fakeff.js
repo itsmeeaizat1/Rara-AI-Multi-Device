@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   if (!nama) {
     { const __navText = claraWrap("FAKE FF", `*FAKE FF*\n\n> Contoh: ${m.prefix}fakeff nama1`); return await m.reply(__navText, "fakeff"); };
   }
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     await sock.sendMedia(
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
       },
     );
 
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("fakeff", te(m.prefix, m.command, m.pushName), "error"));
   }

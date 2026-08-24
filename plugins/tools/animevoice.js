@@ -203,7 +203,7 @@ async function handler(m, { sock, args }) {
     lang = "Mix";
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const speaker = CHARACTERS[speakerKey];
@@ -281,7 +281,7 @@ async function handler(m, { sock, args }) {
 
     const audioBuffer = Buffer.from(audioRes.data);
 
-    await m.react("✅");
+    await m.react("🐣");
 
     let caption = `Anime Voice TTS\n`;
     caption += `Karakter: ${speaker.split("(")[0].trim()}\n`;

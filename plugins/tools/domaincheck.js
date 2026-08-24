@@ -100,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("DomainCheck", "Domain tidak valid!\nContoh: " + prefix + "domaincheck example.com"));
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const result = await checkDomain(domain);
     const tld = domain.split(".").pop();
@@ -167,7 +167,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Domain Check: " + domain, lines.join("\n")));
   } catch (e) {
     console.error("domaincheck error:", e);

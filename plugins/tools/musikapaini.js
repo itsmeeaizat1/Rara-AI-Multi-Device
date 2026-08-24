@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         `Atau kirim audio + caption command`, "musikapaini");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     await m.reply(claraWrap("Musikapaini", "🕕 *MENGUPLOAD...*\n\n> Mengupload audio..."));
@@ -156,7 +156,7 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(m.chat, msgContent, { quoted: m });
 
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("musikapaini", te(m.prefix, m.command, m.pushName), "error"));
   }

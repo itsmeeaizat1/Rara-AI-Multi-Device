@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
   }
   if (names.length < 2) names.push("Teman");
 
-  await m.react("🐣");
+  await m.react("🕒");
   const story = await generateAksi(names);
 
   if (!story) {
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
   const header = "🔥 *ACTION STORY*\n\nKarakter: " + names.join(", ") + "\n\n";
   const footer = "\n\n_Dibuat oleh Nova AI_";
 
-  await m.react("✅");
+  await m.react("🐣");
   return m.reply( header + story + footer, "aksi");
 }
 

@@ -38,7 +38,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "ttsnahidasanka" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const url = `${API_BASE}/anime/ttsnahida?apikey=${API_KEY}&text=${encodeURIComponent(text)}`;
@@ -77,7 +77,7 @@ async function handler(m, { sock, args }) {
       { quoted: m },
     );
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (e) {
     console.error("[TTSNAHIDASANKA] Error:", e.message);
     let txt = `Gagal generate voice Nahida!\n\n`;

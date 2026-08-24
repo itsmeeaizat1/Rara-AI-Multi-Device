@@ -97,7 +97,7 @@ async function handler(m, { sock, config: botConfig }) {
       );
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const result = await measureLoad(text);
 
@@ -134,7 +134,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("Cache-Control: " + (result.cacheControl.length > 40 ? result.cacheControl.substring(0, 40) + "..." : result.cacheControl));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("SpeedURL: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     console.error("speedurl error:", e);

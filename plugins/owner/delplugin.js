@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}delplugin bliblidl\``, "delplugin");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
 
     fs.unlinkSync(found.path);
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(
       `✅ *PLUGIN DIHAPUS*\n\n` +
         `╭─〔 *DETAIL* 〕───⬣\n` +

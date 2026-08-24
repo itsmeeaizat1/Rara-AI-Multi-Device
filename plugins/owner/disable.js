@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
   }
 
   db.setGroup(m.chat, { [feature.dbKey]: feature.off });
-  await m.react("✅");
+  await m.react("🐣");
 
   let txt = `DISABLE - ${feature.label}\n`;
   txt += `Status: OFF`;

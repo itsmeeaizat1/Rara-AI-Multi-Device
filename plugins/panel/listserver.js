@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
     }
     
     try {
-        m.react("🐣")
+        m.react("🕒")
         
         const servers = await fetchAllServers(serverConfig)
         

@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     { const __navText = `❌ *ғORMAT TIDAK VALID*\n\n> Contoh: \`google.com\``; return await m.reply(__navText); };
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
   await m.reply(claraWrap("Lookup", `🕕 *MENCARI INFO DOMAIN...*`));
 
   try {
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
       text += `╰┈┈┈┈┈┈┈┈❖`;
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     await sendToolsPreview(sock, m.chat, text, "🔍 *DNs LOOKUP*", domain, {
       quoted: m,
     });

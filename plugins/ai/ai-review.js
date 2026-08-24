@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const prompt = `Review code berikut dalam bahasa Indonesia:\n- Sebutkan potensi bug\n- Berikan sphinx perbaikan\n- Berikan versi yang lebih bersih jika bisa\n\n\`\`\`\n${code.slice(0, 4000)}\n\`\`\``;
-    m.react("🐣");
+    m.react("🕒");
     const reply = await callAI({
       providerKey: "openai",
       model: "gpt-4o-mini",
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
     await m.reply(out);
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

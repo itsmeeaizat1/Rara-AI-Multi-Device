@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}douyindl https://v.douyin.com/xxx*`, "douyindl");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const data = await douyinFetch(text);
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
       });
     }
 
-    m.react("✅");
+    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply(claraWrap("Douyindl", "❌ Gagal mengambil data Douyin, coba lagi nanti"));

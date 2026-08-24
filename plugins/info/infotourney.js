@@ -68,7 +68,7 @@ async function getInfoTourney() {
 }
 
 async function handler(m, { sock }) {
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const tournaments = await getInfoTourney();
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
       await m.reply(claraWrap(text.split("\n").filter(l => l.trim())));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("infotourney", te(m.prefix, m.command, m.pushName), "error"));
   }

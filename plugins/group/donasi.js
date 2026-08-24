@@ -183,7 +183,7 @@ export default {
         `┊ Fitur Donasi & Sedekah dinyalakan.`,
         `┊ Ketik *${prefix}donasi <target> | <keterangan>* untuk mulai.`,
       ].join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -203,7 +203,7 @@ export default {
         `┊ Fitur Donasi dimatikan.`,
         `┊ Ketik *${prefix}donasion* untuk aktifkan lagi.`,
       ].join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -230,7 +230,7 @@ export default {
       });
 
       await m.reply(claraWrap("Donasi - Riwayat", lines.join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -276,7 +276,7 @@ export default {
       });
 
       await m.reply(claraWrap("Donasi - Daftar Aktif", lines.join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -360,7 +360,7 @@ export default {
             text,
             mentions: nonDonatorJids.slice(0, 15),
           });
-          await m.react("✅");
+          await m.react("🐣");
           return { handled: true };
         }
       }
@@ -387,7 +387,7 @@ export default {
       } else {
         await m.reply(statusCaption);
       }
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -457,7 +457,7 @@ export default {
         }
 
         await m.reply(claraWrap("Donasi - Tambah", lines.join("\n")));
-        await m.react("✅");
+        await m.react("🐣");
         return { handled: true };
       }
 
@@ -496,7 +496,7 @@ export default {
       lines.push(``, `┊ Jazakallah khair! Semoga berkat.`, `┊ Ketik *${prefix}donasi status ${campaign.shortId}* untuk lihat progress.`);
 
       await m.reply(claraWrap("Donasi - Terima", lines.join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -596,7 +596,7 @@ export default {
         text: claraWrap("Donasi - Terima (Owner)", lines.join("\n")),
         mentions: mentionedJids,
       });
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -661,7 +661,7 @@ export default {
       }
 
       await m.reply(claraWrap("Donasi - Tutup", lines.join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -694,7 +694,7 @@ export default {
         `┊ 8. Toggle (owner):`,
         `┊    *${prefix}donasion* / *${prefix}donasioff*`,
       ].join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -752,7 +752,7 @@ export default {
       return { handled: true };
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const campaignId = genId();
     const dateStr = new Date().toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
@@ -832,7 +832,7 @@ export default {
     } else {
       await m.reply(caption);
     }
-    await m.react("✅");
+    await m.react("🐣");
     return { handled: true };
   },
 };

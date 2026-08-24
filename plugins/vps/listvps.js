@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
         return m.reply(`Akses ditolak. Fitur ini hanya untuk Owner/Seller.`)
     }
     
-    await m.react("🐣")
+    await m.react("🕒")
     await m.reply(`Mengambil data VPS...`)
     
     try {
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
 `
         }
         
-        m.react("✅")
+        m.react("🐣")
         await m.reply(txt)
         
     } catch (err) {

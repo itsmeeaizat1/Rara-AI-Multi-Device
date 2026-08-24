@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         `Media yang didukung:\n` +
         `JPG, PNG, GIF, WEBP`, "ocr");
   }
-  await m.react("🐣");
+  await m.react("🕒");
   { const __navText = `🕕 *MEMPROsEs...*\n\n> Mengekstrak teks dari gambar...`; await m.reply(__navText); };
   try {
     let buffer;
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
     if (!extractedText || extractedText.length === 0) {
       return m.reply(claraWrap("Ocr", `❌ *TIDAK ADA TEKs*\n\n> Tidak ada teks yang terdeteksi di gambar`));
     }
-    await m.react("✅");
+    await m.react("🐣");
     const responseText =
       `📖 *OCR REsULT*\n\n` +
       `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ TEKs\n` +

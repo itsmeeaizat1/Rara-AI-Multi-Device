@@ -106,7 +106,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Clean domain
     domain = domain.replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/^www\./, "");
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const { data, provider: provName } = await dohQuery(domain, type, provider);
 
@@ -140,7 +140,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("Note: " + data.Comment);
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("DoH Query: " + domain, lines.join("\n")));
   } catch (e) {
     console.error("doh error:", e);

@@ -195,7 +195,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "paraphrase" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     let intensity = 0.5;
@@ -226,7 +226,7 @@ async function handler(m, { sock, args }) {
     txt += `_Tip: baca ulang hasil parafrase, sesuaikan konteks kalimat jika perlu_`;
 
     await m.reply(txt);
-    await m.react("✅");
+    await m.react("🐣");
   } catch (e) {
     console.error("[PARAPHRASE] Error:", e.message);
     await m.reply(claraWrap("paraphrase", `Gagal memparafrase!\n\nError: ${e.message}`));

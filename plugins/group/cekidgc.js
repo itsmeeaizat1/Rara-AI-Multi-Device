@@ -35,7 +35,7 @@ function formatDate(timestamp) {
 }
 
 async function handler(m, { sock }) {
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const input = m.text?.trim();
@@ -247,7 +247,7 @@ async function handler(m, { sock }) {
       await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
     }
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
     console.error("[CekIdGc] Error:", error.message);
     m.reply(claraWrap("cekidgc", te(m.prefix, m.command, m.pushName), "error"));

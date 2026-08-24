@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     nama = parts[1].trim() || m.pushName;
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
 
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
       caption: `✨ *MUSIC CARD BERHASIL DIBUAT!* ✨\n\n🎧 *Judul*: ${judul}\n🎤 *Artis*: ${nama}\n\nKeren banget kan hasilnya? Pamerin ke teman-temanmu yuk! 🚀`
     }, { quoted: m });
 
-    await m.react("✅");
+    await m.react("🐣");
 
   } catch (err) {
     console.error("[Music Card]", err.message);

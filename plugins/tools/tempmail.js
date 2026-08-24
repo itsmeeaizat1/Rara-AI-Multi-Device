@@ -602,11 +602,11 @@ async function handler(m, { sock }) {
 
     // TempMail.io doesn't support custom name
     if (PROVIDERS[providerKey].customName === false) {
-      await m.react("🐣");
+      await m.react("🕒");
       try {
         const result = await providerCreate(providerKey);
         sessions.set(m.sender, { ...result, createdAt: Date.now() });
-        await m.react("✅");
+        await m.react("🐣");
         const body = `Berhasil dibuat!\n\n❏ Provider: ${PROVIDERS[result.provider].name}\n❏ Email: ${result.address}\n❏ Status: Aktif\n\nKirim email ke alamat di atas, lalu cek:\n${m.prefix}tempmail inbox\n\nNote: ${PROVIDERS[result.provider].name} auto-generate email, tidak support custom name.`;
         return m.reply( claraWrap("Temp Email", body), "tempmail");
       } catch (err) {
@@ -621,7 +621,7 @@ async function handler(m, { sock }) {
         ));
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     try {
       const result = await providerCreate(providerKey, name);
@@ -636,7 +636,7 @@ async function handler(m, { sock }) {
       }
 
       sessions.set(m.sender, { ...result, createdAt: Date.now() });
-      await m.react("✅");
+      await m.react("🐣");
 
       const providerName = PROVIDERS[result.provider].name;
       const pwdLine = result.password !== "-" ? `\n❏ Password: ${result.password}` : "";
@@ -657,13 +657,13 @@ async function handler(m, { sock }) {
       );
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     try {
       const messages = await providerGetInbox(session);
 
       if (messages.length === 0) {
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply(
           claraWrap(
             "Temp Email",
@@ -680,7 +680,7 @@ async function handler(m, { sock }) {
       list += `Baca pesan: ${m.prefix}tempmail read <nomor>`;
       list += `\nBaca semua: ${m.prefix}tempmail read all`;
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply( claraWrap("Temp Email Inbox", list), "tempmail");
     } catch (err) {
       if (err.response?.status === 401) {
@@ -711,13 +711,13 @@ async function handler(m, { sock }) {
       );
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     try {
       const messages = await providerGetInbox(session);
 
       if (messages.length === 0) {
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply(claraWrap("Temp Email", `Tidak ada pesan untuk dibaca.`));
       }
 
@@ -736,7 +736,7 @@ async function handler(m, { sock }) {
           if (body.length > 800) body = body.slice(0, 800) + "\n\n... (dipotong)";
           content += `❏ Isi:\n${body}\n\n`;
         }
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply( claraWrap("Temp Email - Semua Pesan", content), "tempmail");
       }
 
@@ -776,7 +776,7 @@ async function handler(m, { sock }) {
         }
       }
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply( claraWrap("Temp Email - Pesan", content), "tempmail");
     } catch (err) {
       if (err.response?.status === 401) {
@@ -796,11 +796,11 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Temp Email", `Tidak ada email aktif untuk dihapus.`));
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
     await providerDelete(session);
     sessions.delete(m.sender);
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(
       claraWrap("Temp Email", `Email ${session.address} berhasil dihapus!\nSemua pesan terkait juga terhapus.`)
     );
@@ -820,7 +820,7 @@ async function handler(m, { sock }) {
     const mins = Math.floor((age % 3600000) / 60000);
     const providerName = PROVIDERS[session.provider].name;
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(
       claraWrap(
         "Temp Email Status",
@@ -840,7 +840,7 @@ async function handler(m, { sock }) {
     }
     list += `\nDefault: mailtm\n\nCara pakai:\n${m.prefix}tempmail create <nama> <provider>\n\nContoh:\n${m.prefix}tempmail create aizat mailtm\n${m.prefix}tempmail create aizat mailporary\n${m.prefix}tempmail create - tempmailio`;
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply( claraWrap("Temp Email", list), "tempmail");
   }
 

@@ -59,7 +59,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "flashcard" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     // === CREATE (interactive) ===
@@ -78,7 +78,7 @@ async function handler(m, { sock, args }) {
       txt += `Ketik *done* untuk selesai\n`;
       txt += `Ketik *cancel* untuk batal`;
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === ADD (one-liner) ===
@@ -98,7 +98,7 @@ async function handler(m, { sock, args }) {
       saveStore(db);
 
       await m.reply(claraWrap("Flashcard", `Kartu ditambahkan ke deck "${deckName}"!\n\nQ: ${q}\nA: ${a}\n\nTotal kartu: ${user.decks[deckName].length}`));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === LIST DECKS ===
@@ -115,7 +115,7 @@ async function handler(m, { sock, args }) {
       }
       txt += `\nKetik \`${m.prefix}flashcard quiz <nama deck>\` untuk mulai quiz`;
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === SHOW DECK ===
@@ -128,7 +128,7 @@ async function handler(m, { sock, args }) {
         txt += `${i + 1}. Q: ${deck[i].q}\n   A: ${deck[i].a}\n\n`;
       }
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === QUIZ ===
@@ -152,7 +152,7 @@ async function handler(m, { sock, args }) {
       txt += `*salah* - aku tidak tahu\n`;
       txt += `*stop* - berhenti quiz`;
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === DELETE DECK ===
@@ -161,7 +161,7 @@ async function handler(m, { sock, args }) {
       delete user.decks[deckName];
       saveStore(db);
       await m.reply(claraWrap("Flashcard", `Deck "${deckName}" dihapus!`));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === DELETE CARD ===
@@ -172,7 +172,7 @@ async function handler(m, { sock, args }) {
       const removed = deck.splice(cardNum - 1, 1)[0];
       saveStore(db);
       await m.reply(claraWrap("Flashcard", `Kartu dihapus!\n\nQ: ${removed.q}`));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === CLEAR ALL ===
@@ -181,7 +181,7 @@ async function handler(m, { sock, args }) {
       store[sender] = { decks: {}, activeDeck: null, quiz: null, createSession: null };
       saveStore(db);
       await m.reply(claraWrap("Flashcard", "Semua deck flashcard dihapus!"));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     else {

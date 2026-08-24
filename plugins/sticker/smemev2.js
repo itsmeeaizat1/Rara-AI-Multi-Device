@@ -175,7 +175,7 @@ async function handler(m, { sock }) {
       return;
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // Download media
     let mediaBuffer;
@@ -222,7 +222,7 @@ async function handler(m, { sock }) {
     } catch (e) {
       console.error("[SMEMEV2] Sticker resize failed:", e.message);
       await sock.sendMessage(m.chat, { image: memeBuffer, caption: "Meme (fallback mode)" }, { quoted: m });
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
@@ -232,7 +232,7 @@ async function handler(m, { sock }) {
       author: config.sticker?.author || "Bot",
     });
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
     console.error("[SMEMEV2] Error:", error.message);
     await m.reply(claraWrap("smemev2", te(m.prefix, m.command, m.pushName), "error"));

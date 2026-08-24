@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Ttmp3", "❌ URL tidak valid. Gunakan link TikTok."));
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const result = await ttdown(url);
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
       fileName: `TikTok_Audio_${Date.now()}.mp3`,
     });
 
-    m.react("✅");
+    m.react("🐣");
 
     // cleanup
     cleanupTempFiles();

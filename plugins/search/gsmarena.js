@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
         `\`Contoh: ${m.prefix}gsmarena samsung galaxy s25\``, "gsmarena");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const results = await gsmarena.search.search(text);
@@ -38,11 +38,11 @@ async function handler(m, { sock }) {
 
     if (results.length === 1) {
       const device = await gsmarena.catalog.getDevice(results[0].id);
-      m.react("✅");
+      m.react("🐣");
       return m.reply(formatDetail(device));
     }
 
-    m.react("✅");
+    m.react("🐣");
     return m.reply(formatList(results, text, m.prefix));
   } catch (error) {
     console.log(error);

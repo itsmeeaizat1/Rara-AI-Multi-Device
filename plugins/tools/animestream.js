@@ -205,7 +205,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "animestream" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     // Determine source
@@ -262,7 +262,7 @@ async function handler(m, { sock, args }) {
 
       if (list.length > 10) txt += `Dan ${list.length - 10} lainnya...`;
       await m.reply(claraWrap("animestream2", txt));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === DETAIL ===
@@ -321,7 +321,7 @@ async function handler(m, { sock, args }) {
       }
 
       await m.reply(claraWrap("animestream2", txt));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === EPISODE ===
@@ -378,7 +378,7 @@ async function handler(m, { sock, args }) {
       }
 
       await m.reply(claraWrap("animestream2", txt));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === HOME ===
@@ -418,7 +418,7 @@ async function handler(m, { sock, args }) {
       }
 
       await m.reply(claraWrap("animestream2", txt));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === ONGOING ===
@@ -449,7 +449,7 @@ async function handler(m, { sock, args }) {
       }
 
       await m.reply(claraWrap("animestream2", txt));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === COMPLETED ===
@@ -478,7 +478,7 @@ async function handler(m, { sock, args }) {
       }
 
       await m.reply(claraWrap("animestream2", txt));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === SCHEDULE ===
@@ -519,7 +519,7 @@ async function handler(m, { sock, args }) {
       }
 
       await m.reply(claraWrap("animestream2", txt));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === POPULAR (Samehadaku only) ===
@@ -549,7 +549,7 @@ async function handler(m, { sock, args }) {
       }
 
       await m.reply(claraWrap("animestream2", txt));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
 
@@ -589,7 +589,7 @@ async function handler(m, { sock, args }) {
         txt += `Contoh: \`${m.prefix}animestream genre ${genreSlug} ${page + 1}${source !== "otakudesu" ? " " + source : ""}\``;
 
         await m.reply(claraWrap("animestream2", txt));
-        await m.react("✅");
+        await m.react("🐣");
       } else {
         // List all genres
         const endpoint = cfg.genre();
@@ -622,7 +622,7 @@ async function handler(m, { sock, args }) {
         }
 
         await m.reply(claraWrap("animestream2", txt));
-        await m.react("✅");
+        await m.react("🐣");
       }
     }
 

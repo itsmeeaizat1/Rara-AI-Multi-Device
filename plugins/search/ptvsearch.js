@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
   ┊  ➶ \`Contoh: ${m.prefix}ptvsearch anime\``, "ptvsearch");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const videos = await tiktokSearchVideo(query);
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
       ptv: true,
     });
 
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("ptvsearch", te(m.prefix, m.command, m.pushName), "error"));
   }

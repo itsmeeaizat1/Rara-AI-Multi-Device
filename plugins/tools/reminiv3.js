@@ -34,7 +34,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "reminiv3" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const buffer = m.quoted?.isMedia
@@ -81,7 +81,7 @@ async function handler(m, { sock, args }) {
 
     const resultBuffer = Buffer.from(res.data);
 
-    await m.react("✅");
+    await m.react("🐣");
 
     let caption = `HD V3 - Done\n`;
     caption += `Engine: Pollinations AI (flux)\n`;

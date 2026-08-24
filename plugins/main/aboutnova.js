@@ -52,7 +52,7 @@ async function handler(m, { sock, config: botConfig }) {
 ${prefix}menu untuk melihat semua fitur`;
 
     await m.reply(text);
-    await m.react("✅");
+    await m.react("🐣");
   } catch (e) {
     console.error("[aboutnova] handler error:", e.message);
     try { await m.reply("❌ Error: " + e.message); } catch {}

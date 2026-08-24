@@ -26,7 +26,7 @@ async function handler(m, { sock, text }) {
     return m.reply( claraWrap("Yts", "❌ *Waduh, kata kuncinya kosong!*\n\nKamu harus memasukkan kata kunci judul video yang ingin dicari ya. \n\nContoh penggunaan: `.yts lagu galau indonesia`"), { commandName: "yts" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const searchResults = await yts(text);
@@ -102,7 +102,7 @@ Pilih salah satu tombol di bawah ini untuk langsung mengunduh hasil video atau a
     });
 
     await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
-    await m.react("✅");
+    await m.react("🐣");
 
   } catch (error) {
     console.error(error);

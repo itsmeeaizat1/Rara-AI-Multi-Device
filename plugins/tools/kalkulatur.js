@@ -134,7 +134,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return m.reply( help, "kalkulatur");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     let result = "";
@@ -241,10 +241,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     }
 
     await m.reply(result);
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("Kalkulatur", `❌ Error: ${error.message}`));
-    await m.react("✅");
+    await m.react("🐣");
   }
 
   return { handled: true };

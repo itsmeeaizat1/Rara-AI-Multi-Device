@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
       return m.reply( claraWrap("Pixiv", `❌ *Masukkan kata kunci pencarian!*\n\n> Contoh: .pixiv rem`), { commandName: "pixiv" });
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const apikey = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
     const url = `https://api.neoxr.eu/api/pixiv-search?q=${encodeURIComponent(query)}&apikey=${apikey}`;

@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         `\`Contoh: ${m.prefix}murrotal ar rahman\``, "murrotal");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
 
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("murrotal", `❌ Surah *${query}* tidak ditemukan`));
     }
 
-    m.react("✅");
+    m.react("🐣");
 
     await sock.sendMedia(m.chat, find.audio, null, m, {
       type: "audio",

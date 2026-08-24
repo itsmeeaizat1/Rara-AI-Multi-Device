@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     return m.reply(`❌ *ғORMAT TIDAK VALID*\n\n> Contoh: \`8.8.8.8\``);
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
   await m.reply(claraWrap("Ipwho", `🕕 *MENCARI INFO IP...*`));
 
   try {
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
       `  ┊  ➶ 🤖 Tor: ${data.security?.tor ? "✅ Yes" : "❌ No"}\n` +
       `╰┈┈┈┈┈┈┈┈❖`;
 
-    await m.react("✅");
+    await m.react("🐣");
     await sendToolsPreview(sock, m.chat, text, "🌐 *IP LOOKUP*", data.country, {
       quoted: m,
     });

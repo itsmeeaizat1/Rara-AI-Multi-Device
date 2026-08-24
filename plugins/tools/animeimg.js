@@ -55,7 +55,7 @@ async function handler(m, { sock, args }) {
     return m.reply(claraWrap("animeimg", txt));
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const res = await axios.get(`${API_URL}/${category.tag}`, {
@@ -87,7 +87,7 @@ async function handler(m, { sock, args }) {
     // Check if it's a gif (content-type or url extension)
     const isGif = imageUrl.endsWith(".gif") || imageUrl.includes(".gif");
 
-    await m.react("✅");
+    await m.react("🐣");
 
     let caption = `Anime Image\n`;
     caption += `Kategori: ${category.label}\n`;

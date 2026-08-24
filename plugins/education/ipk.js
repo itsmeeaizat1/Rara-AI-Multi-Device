@@ -46,7 +46,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "ipk" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     if (cmd === "quick" || cmd === "cepat") {
@@ -73,7 +73,7 @@ async function handler(m, { sock, args }) {
       txt += `IPK: *${ipk.toFixed(2)}*\nPredikat: *${getPredicate(ipk)}*\n\n`;
       txt += `_Konversi: A=4, AB=3.5, B=3, BC=2.5, C=2, CD=1.5, D=1, E=0_`;
       await m.reply(claraWrap("IPK", txt));
-      await m.react("✅");
+      await m.react("🐣");
     }
     else if (cmd === "add" || cmd === "input" || cmd === "tambah") {
       sessions.set(sender, { courses: [], active: true });
@@ -81,12 +81,12 @@ async function handler(m, { sock, args }) {
       txt += `Contoh: \`A 4 Kalkulus\`\nAtau: \`A 4\` (tanpa nama)\n\n`;
       txt += `Ketik *done* untuk menghitung\nKetik *cancel* untuk batal`;
       await m.reply(claraWrap("IPK", txt));
-      await m.react("✅");
+      await m.react("🐣");
     }
     else if (cmd === "cancel" || cmd === "batal") {
       sessions.delete(sender);
       await m.reply(claraWrap("Ipk", "Sesi input IPK dibatalkan."));
-      await m.react("✅");
+      await m.react("🐣");
     }
     else if (cmd === "calc" || cmd === "hitung" || cmd === "done") {
       const session = sessions.get(sender);
@@ -108,7 +108,7 @@ async function handler(m, { sock, args }) {
       txt += `\nTotal SKS: ${totalSKS}\nTotal Bobot: ${totalBobot.toFixed(1)}\n`;
       txt += `IPK: *${ipk.toFixed(2)}*\nPredikat: *${getPredicate(ipk)}*`;
       await m.reply(claraWrap("IPK", txt));
-      await m.react("✅");
+      await m.react("🐣");
       sessions.delete(sender);
     }
     else {

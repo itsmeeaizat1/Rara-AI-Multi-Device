@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   if (args === "off") {
     db.db.data.sewa.enabled = false;
     db.db.write();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Sewabot", `✅ Sistem sewa dinonaktifkan\n\nBot tidak akan meninggalkan grup manapun.`));
   }
   if (args === "on") {
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
     pendingConfirmations.delete(m.sender);
     db.db.data.sewa.enabled = true;
     db.db.write();
-    await m.react("🐣");
+    await m.react("🕒");
     await m.reply(claraWrap("Sewabot", `🕕 Sistem sewa diaktifkan, memproses auto-leave...`));
     try {
       global.isFetchingGroups = true;
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
           failedCount++;
         }
       }
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(
         `✅ *SEWA BOT AKTIF*\n\n` +
           `Grup whitelist: *${sewaGroups.length}*\n` +
@@ -131,14 +131,14 @@ async function handler(m, { sock }) {
           `Gagal: *${failedCount}* grup`,
       );
     } catch (e) {
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("sewabot", te(m.prefix, m.command, m.pushName), "error"));
     }
   }
   if (args === "leave") {
     if (!currentStatus)
       return m.reply(claraWrap("Sewabot", `❌ Aktifkan sewabot dulu dengan *${m.prefix}sewabot on*`));
-    await m.react("🐣");
+    await m.react("🕒");
     await m.reply(claraWrap("Sewabot", `🕕 Mengambil daftar grup...`));
     global.sewaLeaving = true;
     try {
@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
       );
       if (unlistedGroups.length === 0) {
         delete global.sewaLeaving;
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply(claraWrap("Sewabot", `✅ Tidak ada grup yang perlu ditinggalkan`));
       }
       await m.reply(claraWrap("Sewabot", `📊 Total: ${allGroupIds.length} grup\nWhitelist: ${sewaGroups.length}\nAkan keluar dari: ${unlistedGroups.length} grup`));
@@ -176,7 +176,7 @@ async function handler(m, { sock }) {
         }
       }
       delete global.sewaLeaving;
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(
         `✅ Selesai\n\nBerhasil keluar: *${leftCount}* grup\nGagal: *${failedCount}* grup`,
       );

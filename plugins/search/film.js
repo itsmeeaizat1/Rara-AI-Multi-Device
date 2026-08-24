@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
       },
     );
 
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("film", te(m.prefix, m.command, m.pushName), "error"));
   }

@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
   const args = (m.args || []).map((a) => String(a).trim()).filter(Boolean);
   const { keywords, category } = parseArgs(args);
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const settings = getLokerStatus();
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Ayokerja", "Tidak ada loker yang bisa ditampilkan."));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return await m.reply(claraWrap("ayokerja", msg));
   } catch (e) {
     return m.reply(claraWrap("ayokerja", `❌ Terjadi kesalahan: ${e?.message || String(e)}`));

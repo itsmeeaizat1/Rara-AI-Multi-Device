@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     { const __navText = "❌ API key covenant tidak dikonfigurasi!"; return await m.reply(__navText); };
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const result = await fetchMelolo(category);
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
       await m.reply(caption.trim());
     }
 
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     const message = error?.response?.data?.message || error?.message;
     if (message) {

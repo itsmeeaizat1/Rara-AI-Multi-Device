@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     return m.reply( `😂 *Meme sTicker*\n\n> Format: top|bottom\n\n\`Contoh: ${m.prefix}smeme Ketika|Kamu Lupa\``, "smeme");
   }
   const [top, bottom] = input.split("|").map((s) => s.trim());
-  m.react("🐣");
+  m.react("🕒");
   try {
     let mediaBuffer;
     if (m.quoted) {
@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
       packname: config.sticker?.packname || "Nova-AI",
       author: config.sticker?.author || "Bot",
     });
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     console.log("[SMEME] Error:", error.message);
     m.reply(claraWrap("smeme", te(m.prefix, m.command, m.pushName), "error"));

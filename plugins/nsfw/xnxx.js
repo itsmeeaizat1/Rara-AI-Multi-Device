@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     return m.reply( `🔞 *XNXX Search*\n\nMasukkan query pencarian\n\nContoh: \`${m.prefix}xnxx amateur\``, "xnxx");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const res = await axios.get(
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     }
     text += `_NSFW content - 18+ only_`;
     await m.reply( text, "xnxx");
-    await m.react("✅");
+    await m.react("🐣");
   } catch (err) {
     console.error("[XNXX] Error:", err.message);
     await m.react("❌");

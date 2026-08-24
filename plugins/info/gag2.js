@@ -120,7 +120,7 @@ async function modeWatch(watchItems, m, sock) {
 }
 
 async function handler(m, { sock, args }) {
-  m.react("🐣");
+  m.react("🕒");
   try {
     const isWatch = args[0]?.toLowerCase() === "watch";
     if (isWatch) {
@@ -128,11 +128,11 @@ async function handler(m, { sock, args }) {
       if (items.length === 0) {
         { const __navText = "❌ Masukkan nama item yang ingin dipantau. Contoh: `.gag2 watch seed apple`"; return await m.reply(__navText); };
       }
-      m.react("✅");
+      m.react("🐣");
       await modeWatch(items, m, sock);
     } else {
       await modeStock(m);
-      m.react("✅");
+      m.react("🐣");
     }
   } catch (err) {
     console.error("[Gag2]", err.message);

@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
         { const __navText = `❌ Nomor yang kamu masukkan tidak valid, pastikan nomor tersebut merupakan nomor XL atau Axis yang benar ya`; return await m.reply(__navText); }
     }
 
-    m.react("🐣")
+    m.react("🕒")
 
     try {
         const { data } = await axios.get(
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
             }
         }
 
-        m.react("✅")
+        m.react("🐣")
         await m.reply(txt.trim())
 
     } catch (error) {

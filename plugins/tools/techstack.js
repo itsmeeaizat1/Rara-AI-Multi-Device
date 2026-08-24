@@ -104,12 +104,12 @@ async function handler(m, { sock, config: botConfig }) {
       );
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const result = await detectTech(text);
 
     if (result.detected.length === 0) {
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("TechStack: " + text.replace(/^https?:\/\//, ""), [
         "Status: " + result.status,
         "Tidak ada teknologi terdeteksi",
@@ -147,7 +147,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("TechStack: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     console.error("techstack error:", e);

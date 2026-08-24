@@ -36,7 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const prompt = `Analisis apakah teks berikut tampak ditulis oleh AI atau manusia. Berikan skor kemiripan AI (0-100) dan alasan singkat dalam bahasa Indonesia:\n\n${text.slice(0, 4000)}`;
-    m.react("🐣");
+    m.react("🕒");
     const reply = await callAI({
       providerKey: "openai",
       model: "gpt-4o-mini",
@@ -53,7 +53,7 @@ async function handler(m, { sock, config: botConfig }) {
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
     await m.reply(out);
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

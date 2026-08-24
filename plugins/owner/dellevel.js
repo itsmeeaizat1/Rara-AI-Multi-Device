@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
   const newLevel = calculateLevel(user.exp);
 
   db.save();
-  await m.react("✅");
+  await m.react("🐣");
 
   await m.reply(claraWrap("dellevel", `✅ *Level Dikurangi*\n\n` +
       `╭┈┈⬡「 📋 *Detail* 」\n` +

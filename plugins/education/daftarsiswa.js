@@ -86,7 +86,7 @@ async function handler(m, { sock, args }) {
     }
     db.write();
     await m.reply(claraWrap("daftarsiswa", `Nama diubah!\n\nSebelumnya: ${oldName}\nSekarang: *${newName}*\n\nLeaderboard akan tampil nama barumu.`));
-    await m.react("✅");
+    await m.react("🐣");
     return;
   }
 
@@ -98,7 +98,7 @@ async function handler(m, { sock, args }) {
     delete db.db.data.eduRegistered[sender];
     db.write();
     await m.reply(claraWrap("daftarsiswa", "Pendaftaran dihapus. Kamu tidak bisa main game belajar sampai daftar lagi.\n\nDaftar: `.daftarsiswa <nama>`"));
-    await m.react("✅");
+    await m.react("🐣");
     return;
   }
 
@@ -160,7 +160,7 @@ async function handler(m, { sock, args }) {
   txt += `Skor tersimpan otomatis & muncul di leaderboard.\n`;
   txt += `Ketik \`${m.prefix}edulb\` untuk lihat ranking!`;
   await m.reply(txt);
-  await m.react("✅");
+  await m.react("🐣");
 }
 
 export { pluginConfig as config, handler };

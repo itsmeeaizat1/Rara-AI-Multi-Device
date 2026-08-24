@@ -117,13 +117,13 @@ async function handler(m, { sock }) {
 
   if (action === "on") {
     db.setGroup(m.chat, { antibug: true });
-    m.react("✅");
+    m.react("🐣");
     return m.reply(claraWrap("Antibug", `Anti Bug diaktifkan`));
   }
 
   if (action === "off") {
     db.setGroup(m.chat, { antibug: false });
-    m.react("✅");
+    m.react("🐣");
     return m.reply(claraWrap("Antibug", `Anti Bug dinonaktifkan`));
   }
 

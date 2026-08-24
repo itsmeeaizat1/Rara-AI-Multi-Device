@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}kobo-ai Kobo lagi apa?*`, "kobo-ai");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const result = await UnlimitedAI(text, "kobo-ai");
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
       { const __navText = `❌ *Kobo AI Error*\n\n> ${result.error || "Gagal mendapatkan respons"}`; return await m.reply(__navText); };
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     const reply = result.answer;
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {

@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
   delete db.db.data.sewa.groups[groupId];
   db.db.write();
 
-  await m.react("✅");
+  await m.react("🐣");
   await m.reply(claraWrap("Delsewa", `✅ *SEWA DIHAPUS*\n\nGrup: *${groupName}*\nID: ${groupId.split("@")[0]}`));
 
   if (db.db.data.sewa.enabled) {

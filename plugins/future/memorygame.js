@@ -115,7 +115,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
     if (correct) {
       game.score += game.level * 10;
-      await m.react("✅");
+      await m.react("🐣");
 
       // Next round - add 1 more symbol
       if (game.round >= game.maxRound) {

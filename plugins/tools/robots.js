@@ -123,7 +123,7 @@ async function handler(m, { sock, config: botConfig }) {
       ? text.replace(/\/$/, "") + "/robots.txt"
       : "https://" + text.replace(/\/$/, "") + "/robots.txt";
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const res = await fetch(robotsUrl, {
       headers: { "User-Agent": "Mozilla/5.0 (Nova Bot)" },
@@ -133,7 +133,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!res.ok) {
       if (res.status === 404) {
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply(claraWrap("Robots.txt: " + baseDomain, [
           "Status: 404 Not Found",
           "Tidak ada robots.txt",
@@ -197,7 +197,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Robots.txt: " + baseDomain, lines.join("\n")));
   } catch (e) {
     console.error("robots error:", e);

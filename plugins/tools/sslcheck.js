@@ -92,7 +92,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("SSL", "Domain tidak boleh kosong!"));
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const result = await checkSSL(domain);
 
@@ -114,7 +114,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (sanList.length > 100) sanList = sanList.substring(0, 100) + "...";
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("SSL Check: " + domain, [
       "Status: " + status,
       "Subject: " + result.subject,

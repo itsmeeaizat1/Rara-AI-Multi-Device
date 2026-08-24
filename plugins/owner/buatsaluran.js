@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const result = await sock.newsletterCreate(name, description || undefined);
     const saluranId = result?.id || result?.thread_metadata?.id || "unknown";
     const saluranName = result?.name || name;
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(`📢 *sAluran Dibuat*\n\n` +
         `Nama: ${saluranName}\n` +
         (description ? `Deskripsi: ${description}\n` : "") +

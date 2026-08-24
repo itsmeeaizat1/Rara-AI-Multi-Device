@@ -185,7 +185,7 @@ async function sendWithButtons(sock, m, text, botConfig, catName) {
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   try {
-    await m.react("🐣");
+    await m.react("🕒");
     const prefix = botConfig.command?.prefix || ".";
     const args = m.text?.slice(prefix.length).trim().split(/\s+/).slice(1) || [];
     const inputCat = args[0] || "";
@@ -213,7 +213,7 @@ ${catList}┊
 Ketik *${prefix}menukategori <nama kategori>*`;
 
       await sendWithButtons(sock, m, text, botConfig, null);
-      await m.react("✅");
+      await m.react("🐣");
       // Kirim musik menu (jika audioMenu aktif)
       try { await sendMenuAudio(sock, m, db, false); } catch {}
       return;
@@ -235,7 +235,7 @@ Ketik *${prefix}menukategori <nama kategori>*`;
     const text = await buildCategoryText(m, botConfig, db, matchedCat);
     const catName = CATEGORY_NAMES[matchedCat] || matchedCat;
     await sendWithButtons(sock, m, text, botConfig, catName);
-    await m.react("✅");
+    await m.react("🐣");
     // Kirim musik menu (jika audioMenu aktif)
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {

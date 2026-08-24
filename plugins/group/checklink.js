@@ -456,14 +456,14 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🐣");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoShield = true;
       db.groups[groupId].enabledAt = Date.now();
       saveDB(db);
       await m.reply(claraWrap("Link Shield", "Auto-Shield untuk grup ini sudah DINYALAKAN.\n\nBot otomatis scan setiap link yang dikirim anggota grup dan memberi peringatan kalau link berbahaya."));
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
@@ -473,13 +473,13 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🐣");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoShield = false;
       saveDB(db);
       await m.reply(claraWrap("Link Shield", "Auto-Shield untuk grup ini sudah DIMATIKAN.\n\nBot berhenti auto-scan link. Manual check dengan .checklink tetap bisa dipakai."));
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
@@ -489,14 +489,14 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🐣");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoDelete = true;
       db.groups[groupId].deleteEnabledAt = Date.now();
       saveDB(db);
       await m.reply(claraWrap("Link Shield - Auto Delete", "Auto-Delete untuk grup ini sudah DINYALAKAN.\n\nBot otomatis hapus pesan yang berisi link berbahaya (skor 60%+) dan beri peringatan ke pengirim.\n\nPastikan bot adalah admin grup agar bisa hapus pesan."));
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
@@ -506,19 +506,19 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🐣");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoDelete = false;
       saveDB(db);
       await m.reply(claraWrap("Link Shield - Auto Delete", "Auto-Delete untuk grup ini sudah DIMATIKAN.\n\nBot berhenti menghapus link berbahaya. Auto-Shield (warning) tetap aktif kalau dinyalakan."));
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
     // ─── Status ───
     if (command === "checklinkstatus") {
-      await m.react("🐣");
+      await m.react("🕒");
       const db = loadDB();
       const groupData = db.groups[groupId] || {};
       const shieldStatus = groupData.autoShield ? "ON" : "OFF";
@@ -545,13 +545,13 @@ async function handler(m, { sock }) {
         `┊ 6. .checklinkstatus - Lihat status`,
       ].join("\n");
       await m.reply(claraWrap("Link Shield Status", statusBody));
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
     // ─── Manual .checklink <url> ───
     if (command === "checklink" || command === "checkurl" || command === "scanlink") {
-      await m.react("🐣");
+      await m.react("🕒");
 
       const input = m.args?.join(" ").trim() || "";
       let urlToCheck = input;
@@ -591,7 +591,7 @@ async function handler(m, { sock }) {
           ].join("\n")
         );
         await m.reply( help, { commandName: "checklink" });
-        await m.react("✅");
+        await m.react("🐣");
         return;
       }
 
@@ -623,7 +623,7 @@ async function handler(m, { sock }) {
       ].join("\n");
 
       await m.reply(claraWrap(`Link Shield - ${result.level}`, body));
-      await m.react("✅");
+      await m.react("🐣");
     }
   } catch (e) {
     console.error("Checklink error:", e.message);

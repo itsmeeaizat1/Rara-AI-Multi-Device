@@ -83,11 +83,11 @@ async function handler(m, { sock, db, config: botConfig }) {
       return num.slice(-4);
     });
 
-    await m.react("🐣");
+    await m.react("🕒");
     await m.reply(claraWrap("Fanfic", "Generating cerita...\nKarakter: " + names.join(", ") + "\nGenre: " + genre));
 
     const story = await generateFanfic(names, genre);
-    await m.react("✅");
+    await m.react("🐣");
 
     if (!story) {
       await m.reply(claraWrap("Fanfic", "Gagal generate. Coba lagi nanti."));

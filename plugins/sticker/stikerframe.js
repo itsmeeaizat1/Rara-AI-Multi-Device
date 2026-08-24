@@ -710,7 +710,7 @@ export default {
       );
 
       await m.reply(claraWrap("StikerFrame", lines.join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -726,7 +726,7 @@ export default {
       return { handled: true };
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // ─── Download image ───
     let imgBuffer;
@@ -796,7 +796,7 @@ export default {
         contextInfo: { isForwarded: false, forwardingScore: 0, premium: 1 },
       }, { quoted: m });
 
-      await m.react("✅");
+      await m.react("🐣");
     } catch (e) {
       console.log("[StikerFrame] Error:", e.message);
       await m.reply(claraWrap("StikerFrame", [

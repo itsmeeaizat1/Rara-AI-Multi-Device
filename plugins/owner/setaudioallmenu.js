@@ -31,10 +31,10 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("setaudioallmenu", `❌ *GAGAL*\n\nPilihan varian audio harus berupa angka 1 sampai 4.\nContoh: *${m.prefix}setaudioallmenu 2*`));
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
     db.setting("allmenuAudioStyle", newStyle);
     await m.reply(claraWrap("Setaudioallmenu", `✅ *BERHASIL*\n\nGaya audio All Menu telah sukses diubah menjadi *Varian ${newStyle}*. Silakan tes dengan mengetik *${m.prefix}allmenu*.`));
-    await m.react("✅");
+    await m.react("🐣");
 }
 
 export { pluginConfig as config, handler };

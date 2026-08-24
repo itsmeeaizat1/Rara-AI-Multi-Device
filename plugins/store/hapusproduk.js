@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
 
   const typeIcon = deleted.type === "fisik" ? "📦" : "🔑";
 
-  await m.react("✅");
+  await m.react("🐣");
   return m.reply(
     `🗑️ *PRODUK DIHAPUS*\n\n` +
       `${typeIcon} Nama: *${deleted.name}*\n` +

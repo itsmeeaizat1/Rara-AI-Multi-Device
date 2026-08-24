@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
     }
 
     delete global.statusBcpc;
-    m.react("✅");
+    m.react("🐣");
 
     // Hasil ke owner (claraWrap style, no typo)
     await sock.sendMessage(

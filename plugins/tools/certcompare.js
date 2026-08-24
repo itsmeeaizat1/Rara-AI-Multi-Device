@@ -82,7 +82,7 @@ async function handler(m, { sock, config: botConfig }) {
     const domain1 = parts[0].replace(/^https?:\/\//, "").replace(/\/.*$/, "");
     const domain2 = parts[1].replace(/^https?:\/\//, "").replace(/\/.*$/, "");
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const [cert1, cert2] = await Promise.all([checkSSL(domain1), checkSSL(domain2)]);
 
@@ -150,7 +150,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!sameSelfSigned) diffs.push("self-signed");
     lines.push(diffs.length === 0 ? "Summary: Identical certificate properties" : "Differences: " + diffs.join(", "));
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("CertCompare: " + domain1 + " vs " + domain2, lines.join("\n")));
   } catch (e) {
     console.error("certcompare error:", e);

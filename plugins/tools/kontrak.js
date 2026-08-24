@@ -122,7 +122,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return m.reply( help, "kontrak");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
   m.reply(claraWrap("Kontrak", "  ┊  ➶ AI lagi menyusun draft kontrak..."));
 
   try {
@@ -148,11 +148,11 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       fileName: `kontrak_${Date.now()}.pdf`,
     }, { quoted: m });
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
     console.error("kontrak error:", error);
     m.reply(claraWrap("Kontrak", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
-    await m.react("✅");
+    await m.react("🐣");
   }
 
   return { handled: true };

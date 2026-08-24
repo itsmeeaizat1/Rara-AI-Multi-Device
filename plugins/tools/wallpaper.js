@@ -105,7 +105,7 @@ async function handler(m, { sock, config: botConfig }) {
     return m.reply( claraWrap("Wallpaper", help));
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     // Parse input: cek ada keyword resolusi atau tidak
@@ -134,7 +134,7 @@ async function handler(m, { sock, config: botConfig }) {
     const wallpapers = data.data;
 
     if (wallpapers.length === 0) {
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Wallpaper", `Tidak ada wallpaper untuk "${query}".\n\nCoba kata kunci lain:\nmosque, nature, space, anime, city`));
     }
 
@@ -154,9 +154,9 @@ async function handler(m, { sock, config: botConfig }) {
       caption: claraWrap("Wallpaper HD", caption),
     }, { quoted: m });
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
-    await m.react("✅");
+    await m.react("🐣");
     let errMsg = error.message || "Gagal mencari wallpaper.";
 
     if (errMsg.includes("Tidak ada wallpaper")) {

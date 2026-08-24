@@ -349,7 +349,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return { handled: true };
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     let buffer;
@@ -408,7 +408,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       await m.reply(header + footer);
     }
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
     console.error("extracttext error:", error);
     await m.reply(claraWrap("Extract Text", [
@@ -416,7 +416,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       ``,
       `${error.message || "Terjadi kesalahan"}`,
     ].join("\n")));
-    await m.react("✅");
+    await m.react("🐣");
   }
 
   return { handled: true };

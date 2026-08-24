@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     { const __navText = `❌ Format: \`${m.prefix}apkmod-get <no> <query>\``; return await m.reply( __navText, "apkmod-get"); };
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const { data } = await axios.get(
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
         { quoted: m },
       );
 
-      m.react("✅");
+      m.react("🐣");
     } else {
       let caption = `⚠️ Download URL tidak tersedia`;
       await sock.sendMessage(

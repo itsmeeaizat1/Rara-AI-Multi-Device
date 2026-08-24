@@ -73,7 +73,7 @@ async function handler(m, { sock, args }) {
     const { buffer: resultBuffer, width: outW, height: outH } = await upscaleImage(buffer, scale);
     const sizeMB = (resultBuffer.length / (1024 * 1024)).toFixed(2);
 
-    await m.react("✅");
+    await m.react("🐣");
 
     let caption = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ HD ENHANCED\n`;
     caption += `  ┊  ➶ Scale: ${scale}x (${outW}x${outH})\n`;

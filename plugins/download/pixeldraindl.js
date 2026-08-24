@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}pixeldraindl https://pixeldrain.com/u/xxxxx\``, "pixeldraindl");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const apiUrl = `https://api.neoxr.eu/api/pixeldrain?url=${encodeURIComponent(url)}&apikey=${NEOXR_APIKEY}`;
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
       await m.reply(claraWrap("Pixeldraindl", `⚠️ *File Terlalu Besar*\n\n> File ${file.size} terlalu besar untuk dikirim\n> Gunakan link download di atas`));
     }
 
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("pixeldraindl", te(m.prefix, m.command, m.pushName), "error"));
   }

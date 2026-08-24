@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     const botJid = sock.user?.id;
     await sock.updateProfilePicture(botJid, processed);
     const targetNumber = targetJid.split("@")[0];
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("colongpp", `✅ *Pp Berhasil Dicolong!*\n\n` +
         `🎯 Target: @${targetNumber}\n` +
         `📸 Sumber: ${source}`));

@@ -39,7 +39,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "text2img" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     // Parse options from prompt
@@ -104,7 +104,7 @@ async function handler(m, { sock, args }) {
 
     const resultBuffer = Buffer.from(res.data);
 
-    await m.react("✅");
+    await m.react("🐣");
 
     let caption = `Text2Img - Pollinations AI\n`;
     caption += `Prompt: ${cleanPrompt}\n`;

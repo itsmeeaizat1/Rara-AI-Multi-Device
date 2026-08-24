@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
     { const __navText = claraWrap("GAGAL", `❌ *GAGAL*\n\nNama file tidak valid`); return await m.reply(__navText); };
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");
@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
       reloadResult = (await hotReloadPlugin(filePath)) || { success: true };
     } catch (e) { console.error('[ganticode.js]:', e.message); }
 
-    await m.react("✅");
+    await m.react("🐣");
 
     let replyText =
       `✅ *CODE ${isNewFile ? "DITAMBAH" : "DIGANTI"}*\n\n` +

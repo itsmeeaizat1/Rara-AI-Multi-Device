@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `_Bot akan mikir dulu, baru jawab — jadi agak lama sedikit_`));
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const result = await DeepSeekThinking(text);
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("DeepSeek Gagal", `❌ *DeepSeek Gagal*\n\n> Gagal mendapatkan respons`));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
 
     let reply = ``;
 

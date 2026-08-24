@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("discordstalk", `❌ User ID harus berupa angka. Contoh: 297574907510784000`));
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const res = await axios.get(
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
       `📅 *Dibuat:* ${createdDate}\n\n` +
       `_Discord User Lookup_`;
 
-    m.react("✅");
+    m.react("🐣");
 
     if (d.avatar_url) {
       await sock.sendMessage(
