@@ -375,6 +375,7 @@ games.register("tebakprofesi", { emoji: "👷", title: "TEBAK PROFESI", descript
 games.register("tebaktebakan", { emoji: "❓", title: "TEBAK TEBAKAN", description: "Tebak tebakan seru", timeout: 60000, alias: [] });
 games.register("tekateki", { emoji: "🧩", title: "TEKA TEKI", description: "Teka teki rumit", timeout: 60000, alias: [] });
 games.register("trivia", { emoji: "💡", title: "TRIVIA", description: "Pertanyaan trivia umum", dataFile: "trivia2.json", timeout: 60000, alias: [] });
+games.register("tebakasmaulhusna", { emoji: "📿", title: "TEBAK ASMAUL HUSNA", description: "Tebak 99 nama Allah", questionField: "translation_id", answerField: "latin", timeout: 60000, alias: ["tebakasma"] });
 
 // ─── IMAGE-BASED GAMES ───
 games.register("tebakbendera", { emoji: "🚩", title: "TEBAK BENDERA", description: "Tebak negara dari bendera", hasImage: true, imageField: "img", answerField: "name", questionField: null, timeout: 60000, alias: [] });
