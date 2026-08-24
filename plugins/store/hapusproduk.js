@@ -24,14 +24,14 @@ async function handler(m, { sock }) {
 
   if (products.length === 0) {
     return m.reply(
-      `📭 *Belum ada produk.*\n\nTambahkan produk terlebih dahulu dengan \`${m.prefix}addproduk\` ➕`,
+      `📭 *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ.*\n\nTambahkan produk terlebih dahulu dengan \`${m.prefix}addproduk\` ➕`,
     );
   }
 
   const idx = parseInt(m.text?.trim()) - 1;
 
   if (isNaN(idx) || idx < 0 || idx >= products.length) {
-    let txt = `🗑️ *Pilih Produk yang Dihapus*\n\nKetik \`${m.prefix}hapusproduk <nomor>\`\n\n`;
+    let txt = `🗑️ *ᴘɪʟɪʜ ᴘʀᴏᴅᴜᴋ ʏᴀɴɢ ᴅɪʜᴀᴘᴜꜱ*\n\nKetik \`${m.prefix}hapusproduk <nomor>\`\n\n`;
     for (let i = 0; i < products.length; i++) {
       const p = products[i];
       const typeIcon = p.type === "fisik" ? "📦" : "🔑";
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
 
   await m.react("🐣");
   return m.reply(
-    `🗑️ *PRODUK DIHAPUS*\n\n` +
+    `🗑️ *ᴘʀᴏᴅᴜᴋ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
       `${typeIcon} Nama: *${deleted.name}*\n` +
       `💰 Harga: *Rp ${deleted.price.toLocaleString("id-ID")}*\n` +
       `📊 Stok terhapus: *${deleted.type === "fisik" ? deleted.stock + " pcs" : (deleted.stockItems?.length || 0) + " akun"}*\n\n` +

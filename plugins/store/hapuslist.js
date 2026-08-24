@@ -24,13 +24,13 @@ async function handler(m, { sock }) {
     const lists = db.setting('storeLists') || []
 
     if (lists.length === 0) {
-        return m.reply(`📭 *Belum ada informasi.*\n\nTambahkan informasi terlebih dahulu: \`${m.prefix}addlist\` ➕`)
+        return m.reply(`📭 *ʙᴇʟᴜᴍ ᴀᴅᴀ ɪɴꜰᴏʀᴍᴀꜱɪ.*\n\nTambahkan informasi terlebih dahulu: \`${m.prefix}addlist\` ➕`)
     }
 
     const idx = parseInt(m.text?.trim()) - 1
 
     if (isNaN(idx) || idx < 0 || idx >= lists.length) {
-        let txt = `🗑️ *Pilih Informasi yang Dihapus*\n\nKetik \`${m.prefix}hapuslist <nomor>\`\n\n`
+        let txt = `🗑️ *ᴘɪʟɪʜ ɪɴꜰᴏʀᴍᴀꜱɪ ʏᴀɴɢ ᴅɪʜᴀᴘᴜꜱ*\n\nKetik \`${m.prefix}hapuslist <nomor>\`\n\n`
         for (let i = 0; i < lists.length; i++) {
             const l = lists[i]
             const mediaIcon = l.image ? '🖼️' : l.video ? '🎬' : '📝'
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
 
     await m.react('✅')
     return m.reply(
-        `🗑️ *INFORMASI DIHAPUS*\n\n` +
+        `🗑️ *ɪɴꜰᴏʀᴍᴀꜱɪ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
         `🏷️ Nama: *${deleted.name}*\n\n` +
         `⚠️ _Informasi telah dihapus secara permanen dan tidak dapat dikembalikan._`
     )
