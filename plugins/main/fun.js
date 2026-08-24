@@ -1,67 +1,53 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-
-import { claraHeader,
-    separator,
-  tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
-
-const COMMANDS = [
-  { cmd: ".truth", desc: "Tantangan truth" },
-  { cmd: ".tebak", desc: "Tebak angka" },
-  { cmd: ".trivia", desc: "Fakta umum" },
-  { cmd: ".mathquiz", desc: "Soal matematika" },
-  { cmd: ".tebakgambar", desc: "Tebak gambar" },
-  { cmd: ".happyemoji", desc: "Emoji ceria" },
-];
+// fun.js — List command kategori fun
+import { getCommandsByCategory } from "../../src/lib/nova-plugins.js";
 
 const pluginConfig = {
   name: "fun",
-  alias: ["fun", "funmenu", "games", "main"],
-  category: "menu",
-  description: "Menu game seru",
+  alias: ["funmenu", "menufun"],
+  category: "main",
+  description: "List command kategori fun",
   usage: ".fun",
-  example: ".fun",
   isOwner: false,
   isPremium: false,
-  isGroup: true,
+  isGroup: false,
   isPrivate: false,
-  cooldown: 5,
+  cooldown: 3,
   energi: 0,
   isEnabled: true,
 };
 
+const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c);
+
 async function handler(m, { sock, config: botConfig }) {
   try {
     const prefix = botConfig.command?.prefix || ".";
+    const cmds = getCommandsByCategory();
+    const funCmds = (cmds["fun"] || []).map(c => c.command || c).sort();
 
-    const lines = COMMANDS.map(
-      (item) => `${item.cmd} — *${item.desc}*`
-    );
+    let cmdLines = "";
+    for (let i = 0; i < funCmds.length; i++) {
+      const end = i === funCmds.length - 1 ? "  ╰" : "  ┊";
+      cmdLines += `${end}  ➶ ${prefix}${funCmds[i]}\n`;
+    }
 
-    const text =
-      claraWrap("Fun", "🎮") +
-      "\n\n" +
-      claraWrap("Game", lines) +
-      "\n\n" +
-      separator("━", 22) +
-      "\n" +
-      tipText(`Ketik ${prefix}fun untuk lihat menu`) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali`);
+    const text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Fᴜɴ
+┊
+₊˚ʚ ᗢ₊˚✧ ﾟ. 🎮 Fᴜɴ ｡ﾟ
+┊${cmdLines}₊˚ʚ ᗢ₊˚✧ ﾟ.
+┊
+  ┊  ➶ *Total: ${funCmds.length} Fitur*
+┊
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
-    await m.reply(claraWrap("fun", text));
-  } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await sendReplyWithNav(sock, m, text, "fun");
+    await m.reply(text);
+    await m.react("✅");
+  } catch (e) {
+    console.error("[fun] handler error:", e.message);
+    try { await m.reply("❌ Error: " + e.message); } catch {}
+    await m.react("❌");
   }
-
-  return { handled: true };
 }
 
-export { pluginConfig as config, handler }
+export { pluginConfig, handler };
