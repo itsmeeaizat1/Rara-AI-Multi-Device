@@ -3,14 +3,9 @@
 // DEFAULT: OFF — Indonesia murni, no translation
 // Owner aktifkan dulu via .languagemenubot on (owner only)
 // Setelah aktif, user bisa set bahasa mereka sendiri
-// .languagemenubot — lihat & set bahasa
-// .languagemenubot <code> — set bahasa (contoh: .languagemenubot en)
-// .languagemenubot reset — kembali ke default (Indonesia)
-// .languagemenubot on/off — owner toggle master switch
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { separator, tipText } from "../../src/lib/nova-menu-style.js";
 import {
-
   SUPPORTED_LANGUAGES,
   getUserLanguage,
   setUserLanguage,
@@ -18,32 +13,33 @@ import {
   isMultiLangEnabled,
 } from "../../src/lib/nova-language.js";
 
-// Local Nova AI format — replaces claraWrap + sendReplyWithNav
+const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+const toSC = (s) => String(s || "").replace(/[a-z]/g, c => SC_MAP[c] || c);
+
 function claraWrap(title, text) {
-  const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-  const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   const body = Array.isArray(text) ? text.join("\n") : text;
-  // Convert body to small caps tapi skip baris command (.xxx) dan preserve *bold*
   const scBody = body.split("\n").map(line => {
     if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:")) return line;
     return toSC(line);
   }).join("\n");
   return `❀°˖ ${toSC(title)} ˖°❀\n\n${scBody}`;
 }
-async function sendReplyWithNav(sock, m, text, cmdName) {
-  const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-  const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
-  // Convert all text to small caps, skip command lines
-  text = text.split("\n").map(line => {
-    if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:") || line.includes("❀°˖") || line.includes("❀⋆｡˚")) return line;
-    return toSC(line);
-  }).join("\n");
-  if (!text.includes("❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀")) {
-    text = text + "\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
-  }
-  return await m.reply(text);
-}
 
+async function formatAndReply(m, text, cmdName) {
+  try {
+    text = text.split("\n").map(line => {
+      if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:") || line.includes("❀°˖") || line.includes("❀⋆｡˚")) return line;
+      return toSC(line);
+    }).join("\n");
+    if (!text.includes("❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀")) {
+      text = text + "\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
+    }
+    return await m.reply(text);
+  } catch (e) {
+    console.error('[languagemenubot.js]:', e.message);
+    return await m.reply(text);
+  }
+}
 
 const pluginConfig = {
   name: "languagemenubot",
@@ -62,123 +58,97 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  const prefix = botConfig.command?.prefix || ".";
-  const args = m.args || [];
-  const subCmd = args[0]?.toLowerCase();
-  const sender = m.sender || m.key?.participant || m.key?.remoteJid || "";
-  const db = getDatabase();
+  try {
+    const prefix = botConfig.command?.prefix || ".";
+    const args = m.args || [];
+    const subCmd = args[0]?.toLowerCase();
+    const sender = m.sender || m.key?.participant || m.key?.remoteJid || "";
+    const db = getDatabase();
 
-  // OWNER: on/off master toggle
-  if ((subCmd === "on" || subCmd === "off") && m.isOwner) {
-    db.setting("multiLangEnabled", subCmd === "on");
-    await db.save();
-    await m.react(subCmd === "on" ? "✅" : "❌");
-
-    const statusText = subCmd === "on"
-      ? "MULTI-LANGUAGE DIAKTIFKAN\n\nUser sekarang bisa set bahasa mereka\nDefault tetap Indonesia (no translate)\n\nSet bahasa: " + prefix + "languagemenubot <code>"
-      : "MULTI-LANGUAGE DINONAKTIFKAN\n\nSemua teks kembali ke Bahasa Indonesia murni\nTranslation dimatikan sepenuhnya";
-
-    return sendReplyWithNav(sock, m, claraWrap("Language Menu Bot", statusText), "languagemenubot");
-  }
-
-  // Cek master toggle — kalo OFF, tolak user
-  if (!isMultiLangEnabled()) {
-    let offText = claraWrap("Language Menu Bot", [
-      "Status: *MULTI-LANGUAGE OFF*",
-      "Default: *Bahasa Indonesia (murni)*",
-      "",
-      "Fitur ini sedang dimatikan oleh owner",
-      "Semua response bot menggunakan Bahasa Indonesia",
-    ].join("\n"));
-
-    if (m.isOwner) {
-      offText += "\n\nAktifkan: " + prefix + "languagemenubot on";
+    // OWNER: on/off master toggle
+    if ((subCmd === "on" || subCmd === "off") && m.isOwner) {
+      db.setting("multiLangEnabled", subCmd === "on");
+      await db.save();
+      await m.react(subCmd === "on" ? "✅" : "❌");
+      const statusText = subCmd === "on"
+        ? "MULTI-LANGUAGE DIAKTIFKAN\n\nUser sekarang bisa set bahasa mereka\nDefault tetap Indonesia (no translate)\n\nSet bahasa: " + prefix + "languagemenubot <code>"
+        : "MULTI-LANGUAGE DINONAKTIFKAN\n\nSemua teks kembali ke Bahasa Indonesia murni\nTranslation dimatikan sepenuhnya";
+      return formatAndReply(m, claraWrap("Language Menu Bot", statusText), "languagemenubot");
     }
 
-    return sendReplyWithNav(sock, m, offText, "languagemenubot");
-  }
-
-  // No args — show language menu
-  if (!subCmd || subCmd === "list" || subCmd === "cek" || subCmd === "status") {
-    const currentLang = getUserLanguage(sender);
-    const currentInfo = currentLang ? SUPPORTED_LANGUAGES[currentLang] : null;
-
-    let text = claraWrap("Language Menu Bot", [
-      `Bahasa saat ini: *${currentInfo ? currentInfo.native + " (" + currentInfo.name + ")" : "Indonesia (default)"}*`,
-      `Total bahasa: *${Object.keys(SUPPORTED_LANGUAGES).length}*`,
-    ].join("\n")) + "\n\nDAFTAR BAHASA:\n\n";
-
-    let num = 1;
-    for (const [code, info] of Object.entries(SUPPORTED_LANGUAGES)) {
-      const active = currentLang === code ? " [AKTIF]" : "";
-      text += `${num}. ${info.native} (${info.name})\n`;
-      text += `   Set: ${prefix}languagemenubot ${code}${active}\n\n`;
-      num++;
+    // Cek master toggle — kalo OFF, tolak user
+    if (!isMultiLangEnabled()) {
+      let offText = claraWrap("Language Menu Bot", [
+        "Status: *MULTI-LANGUAGE OFF*",
+        "Default: *Bahasa Indonesia (murni)*",
+        "",
+        "Fitur ini sedang dimatikan oleh owner",
+        "Semua response bot menggunakan Bahasa Indonesia",
+      ].join("\n"));
+      if (m.isOwner) {
+        offText += "\n\nAktifkan: " + prefix + "languagemenubot on";
+      }
+      return formatAndReply(m, offText, "languagemenubot");
     }
 
-    text += separator("-", 24) + "\n" +
-      `Reset ke default: ${prefix}languagemenubot reset`;
-
-    return sendReplyWithNav(sock, m, text, "languagemenubot");
-  }
-
-  // Reset bahasa
-  if (subCmd === "reset" || subCmd === "default" || subCmd === "id") {
-    const ok = setUserLanguage(sender, subCmd === "id" ? "id" : null);
-    if (ok) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("Language Menu Bot", [
-          `Status: *Reset ke Indonesia (default)*`,
-          `Semua response AI akan kembali ke Bahasa Indonesia`,
-        ].join("\n")) + "\n\n" +
-        `Set bahasa lain: ${prefix}languagemenubot <code>`,
-        "languagemenubot"
-      );
+    // No args — show language menu
+    if (!subCmd || subCmd === "list" || subCmd === "cek" || subCmd === "status") {
+      const currentLang = getUserLanguage(sender);
+      const currentInfo = currentLang ? SUPPORTED_LANGUAGES[currentLang] : null;
+      let text = claraWrap("Language Menu Bot", [
+        `Bahasa saat ini: *${currentInfo ? currentInfo.native + " (" + currentInfo.name + ")" : "Indonesia (default)"}*`,
+        `Total bahasa: *${Object.keys(SUPPORTED_LANGUAGES).length}*`,
+      ].join("\n")) + "\n\nDAFTAR BAHASA:\n\n";
+      let num = 1;
+      for (const [code, info] of Object.entries(SUPPORTED_LANGUAGES)) {
+        const active = currentLang === code ? " [AKTIF]" : "";
+        text += `${num}. ${info.native} (${info.name})\n`;
+        text += `   Set: ${prefix}languagemenubot ${code}${active}\n\n`;
+        num++;
+      }
+      text += separator("-", 24) + "\n" + `Reset ke default: ${prefix}languagemenubot reset`;
+      return formatAndReply(m, text, "languagemenubot");
     }
-    return sendReplyWithNav(sock, m, "Gagal reset bahasa. Coba lagi.", "languagemenubot");
-  }
 
-  // Set bahasa
-  if (SUPPORTED_LANGUAGES[subCmd]) {
-    const langInfo = SUPPORTED_LANGUAGES[subCmd];
-    const ok = setUserLanguage(sender, subCmd);
-    if (ok) {
-      const responseMsg =
-        subCmd === "id"
-          ? `Status: *Indonesia (default)*\nBot akan merespons dalam Bahasa Indonesia`
+    // Reset bahasa
+    if (subCmd === "reset" || subCmd === "default" || subCmd === "id") {
+      const ok = setUserLanguage(sender, subCmd === "id" ? "id" : null);
+      if (ok) {
+        return formatAndReply(m, claraWrap("Language Menu Bot", [
+          "Status: *Reset ke Indonesia (default)*",
+          "Semua response AI akan kembali ke Bahasa Indonesia",
+        ].join("\n")) + "\n\n" + `Set bahasa lain: ${prefix}languagemenubot <code>`, "languagemenubot");
+      }
+      return formatAndReply(m, "Gagal reset bahasa. Coba lagi.", "languagemenubot");
+    }
+
+    // Set bahasa
+    if (SUPPORTED_LANGUAGES[subCmd]) {
+      const langInfo = SUPPORTED_LANGUAGES[subCmd];
+      const ok = setUserLanguage(sender, subCmd);
+      if (ok) {
+        const responseMsg = subCmd === "id"
+          ? "Status: *Indonesia (default)*\nBot akan merespons dalam Bahasa Indonesia"
           : `Status: *${langInfo.native} (${langInfo.name})*\nBot akan merespons dalam ${langInfo.name}`;
-
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("Language Menu Bot", responseMsg) + "\n\n" +
-        `Reset: ${prefix}languagemenubot reset\n` +
-        `Ganti bahasa: ${prefix}languagemenubot <code>`,
-        "languagemenubot"
-      );
+        return formatAndReply(m, claraWrap("Language Menu Bot", responseMsg) + "\n\n" + `Reset: ${prefix}languagemenubot reset\n` + `Ganti bahasa: ${prefix}languagemenubot <code>`, "languagemenubot");
+      }
+      return formatAndReply(m, "Gagal set bahasa. Coba lagi.", "languagemenubot");
     }
-    return sendReplyWithNav(sock, m, "Gagal set bahasa. Coba lagi.", "languagemenubot");
-  }
 
-  // Unknown language
-  let availableList = "";
-  for (const [code, info] of Object.entries(SUPPORTED_LANGUAGES)) {
-    availableList += `${code} - ${info.native} (${info.name})\n`;
-  }
-
-  return sendReplyWithNav(
-    sock,
-    m,
-    claraWrap("Language Menu Bot", [
+    // Unknown language
+    let availableList = "";
+    for (const [code, info] of Object.entries(SUPPORTED_LANGUAGES)) {
+      availableList += `${code} - ${info.native} (${info.name})\n`;
+    }
+    return formatAndReply(m, claraWrap("Language Menu Bot", [
       `Kode bahasa: *${subCmd}*`,
-      `Tidak ada dalam daftar`,
-    ].join("\n")) + "\nBAHASA TERSEDIA:\n\n" +
-    availableList +
-    "\nContoh: " + prefix + "languagemenubot en",
-    "languagemenubot"
-  );
+      "Tidak ada dalam daftar",
+    ].join("\n")) + "\nBAHASA TERSEDIA:\n\n" + availableList + "\nContoh: " + prefix + "languagemenubot en", "languagemenubot");
+  } catch (error) {
+    console.error('[languagemenubot.js]:', error.message);
+    await m.reply("❀°˖ Language Menu Bot ˖°❀\n\n  ┊ ➶ Terjadi error: " + error.message + "\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀");
+    return { handled: true };
+  }
 }
 
 export { pluginConfig as config, handler };

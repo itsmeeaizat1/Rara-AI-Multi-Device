@@ -3,7 +3,6 @@ import axios from "axios";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // ============================================================
@@ -589,7 +588,7 @@ async function handler(m, { sock }) {
     });
     body += "Switch: .ppob setprovider <nama>\n";
     body += "Set key: .ppob setkey <user>:<key>";
-    return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+    return m.reply( claraWrap("PPOB", body), "ppob");
   }
 
   // === SET PROVIDER ===
@@ -603,15 +602,12 @@ async function handler(m, { sock }) {
         (k) => (body += "  " + PROVIDERS[k].name + " (" + k + ")\n")
       );
       body += "\nContoh: .ppob setprovider digiflazz";
-      return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+      return m.reply( claraWrap("PPOB", body), "ppob");
     }
     data.activeProvider = target;
     saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(
-      sock,
-      m,
-      claraWrap(
+    await m.reply(claraWrap(
         "PPOB",
         "Provider aktif: " +
           PROVIDERS[target].name +
@@ -620,9 +616,7 @@ async function handler(m, { sock }) {
             ? "Status: Terhubung\nCek saldo: .ppob saldo"
             : "Belum di-setup!\nSet key: .ppob setkey <user>:<key>\n\n" +
               PROVIDERS[target].setupHint)
-      ),
-      "ppob"
-    );
+      ));
   }
 
   // === SETKEY ===
@@ -631,10 +625,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("PPOB", "Khusus owner!"));
     const credInput = arg1;
     if (!credInput || !credInput.includes(":")) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap(
+    await m.reply(claraWrap(
           "PPOB",
           "Set API - Provider: " +
             provider.name +
@@ -643,35 +634,23 @@ async function handler(m, { sock }) {
             "Contoh:\n" +
             ".ppob setkey user123:abc123def456\n\n" +
             provider.setupHint
-        ),
-        "ppob"
-      );
+        ));
     }
     const parsed = provider.parseKey(credInput);
     if (!parsed) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Format salah! Gunakan: <user>:<apiKey>"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Format salah! Gunakan: <user>:<apiKey>"));
     }
     data.credentials[data.activeProvider] = parsed;
     data.priceCache[data.activeProvider] = null;
     saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(
-      sock,
-      m,
-      claraWrap(
+    await m.reply(claraWrap(
         "PPOB",
         "Credentials tersimpan!\n" +
           "Provider: " + provider.name + "\n" +
           provider.credLabel(parsed) +
           "\n\nCek saldo: .ppob saldo\nLihat produk: .ppob kategori"
-      ),
-      "ppob"
-    );
+      ));
   }
 
   // === SETMARKUP ===
@@ -680,10 +659,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("PPOB", "Khusus owner!"));
     const pct = parseInt(arg1);
     if (isNaN(pct) || pct < 0 || pct > 100) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap(
+    await m.reply(claraWrap(
           "PPOB",
           "Set Markup (Owner)\n\n" +
             ".ppob setmarkup <persen>\n\n" +
@@ -691,77 +667,50 @@ async function handler(m, { sock }) {
             ".ppob setmarkup 5 (tambah 5%)\n" +
             ".ppob setmarkup 0 (harga pas)\n\n" +
             "Markup aktif: " + markup + "%"
-        ),
-        "ppob"
-      );
+        ));
     }
     data.markup = pct;
     saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(
-      sock,
-      m,
-      claraWrap(
+    await m.reply(claraWrap(
         "PPOB",
         "Markup: " + pct + "%\n\n" +
           "Contoh: Pulsa 50k harga API Rp49.000\n" +
           "Harga jual: " + formatRupiah(49000 * (1 + pct / 100))
-      ),
-      "ppob"
-    );
+      ));
   }
 
   // === SALDO ===
   if (sub === "saldo" || sub === "balance") {
     if (!provider.isSetup(cred))
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap(
+    await m.reply(claraWrap(
           "PPOB",
           "Provider belum setup!\nOwner: .ppob setkey <user>:<key>\n\n" +
             provider.setupHint
-        ),
-        "ppob"
-      );
+        ));
     await m.react("🕐");
     try {
       const saldo = await provider.cekSaldo(cred);
       await m.react("✅");
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap(
+    await m.reply(claraWrap(
           "PPOB",
           "Saldo " + provider.name + "\n\n" +
             "Saldo: " + formatRupiah(saldo) + "\n" +
             "Markup: " + markup + "%"
-        ),
-        "ppob"
-      );
+        ));
     } catch (err) {
       await m.react("❌");
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Error: " + err.message),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Error: " + err.message));
     }
   }
 
   // === KATEGORI ===
   if (sub === "kategori" || sub === "category" || sub === "menu") {
     if (!provider.isSetup(cred))
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap(
+    await m.reply(claraWrap(
           "PPOB",
           "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"
-        ),
-        "ppob"
-      );
+        ));
     await m.react("🕐");
     try {
       const products = await getCachedPriceList(data);
@@ -788,33 +737,20 @@ async function handler(m, { sock }) {
       body += "  .ppob cari dana\n";
       body += "  .ppob cari wifi";
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+      return m.reply( claraWrap("PPOB", body), "ppob");
     } catch (err) {
       await m.react("❌");
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Error: " + err.message),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Error: " + err.message));
     }
   }
 
   // === CARI ===
   if (sub === "cari" || sub === "search") {
     if (!provider.isSetup(cred))
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
     const keyword = (arg1 || "").toLowerCase();
     if (!keyword) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap(
+    await m.reply(claraWrap(
           "PPOB",
           "Cari Produk\n\n" +
             ".ppob cari <keyword>\n\n" +
@@ -827,9 +763,7 @@ async function handler(m, { sock }) {
             ".ppob cari dana\n" +
             ".ppob cari wifi\n\n" +
             "Lihat kategori: .ppob kategori"
-        ),
-        "ppob"
-      );
+        ));
     }
     await m.react("🕐");
     try {
@@ -848,19 +782,14 @@ async function handler(m, { sock }) {
 
       if (filtered.length === 0) {
         await m.react("❌");
-        return sendReplyWithNav(
-          sock,
-          m,
-          claraWrap(
+    await m.reply(claraWrap(
             "PPOB",
             "Tidak ada produk: " + keyword + "\n\nCoba:\n" +
               ".ppob cari telkomsel\n" +
               ".ppob cari pln\n" +
               ".ppob cari mobile legend\n" +
               ".ppob cari dana"
-          ),
-          "ppob"
-        );
+          ));
       }
 
       let body = "PPOB - " + keyword + "\n";
@@ -874,34 +803,21 @@ async function handler(m, { sock }) {
       body += "\nBeli: .ppob beli <sku> <nomor>\n";
       body += "Contoh: .ppob beli " + filtered[0].sku + " 08123456789";
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+      return m.reply( claraWrap("PPOB", body), "ppob");
     } catch (err) {
       await m.react("❌");
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Error: " + err.message),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Error: " + err.message));
     }
   }
 
   // === BELI ===
   if (sub === "beli" || sub === "buy" || sub === "pesan") {
     if (!provider.isSetup(cred))
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
     const sku = (arg1 || "").toUpperCase();
     const customerNo = (arg2 || "").replace(/[^0-9]/g, "");
     if (!sku || !customerNo) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap(
+    await m.reply(claraWrap(
           "PPOB",
           "Format Beli\n\n" +
             ".ppob beli <sku_code> <nomor_tujuan>\n\n" +
@@ -911,9 +827,7 @@ async function handler(m, { sock }) {
             ".ppob beli ML5 123456789 (ML Diamond 5)\n" +
             ".ppob beli DANA5000 08123456789 (Topup DANA 5k)\n\n" +
             "Cari SKU: .ppob cari <keyword>"
-        ),
-        "ppob"
-      );
+        ));
     }
     await m.react("🕐");
     try {
@@ -921,21 +835,11 @@ async function handler(m, { sock }) {
       const prod = products.find((p) => p.sku === sku);
       if (!prod) {
         await m.react("❌");
-        return sendReplyWithNav(
-          sock,
-          m,
-          claraWrap("PPOB", "SKU tidak ditemukan: " + sku + "\nCari: .ppob cari <keyword>"),
-          "ppob"
-        );
+    await m.reply(claraWrap("PPOB", "SKU tidak ditemukan: " + sku + "\nCari: .ppob cari <keyword>"));
       }
       if (!prod.buyerStatus || !prod.sellerStatus) {
         await m.react("❌");
-        return sendReplyWithNav(
-          sock,
-          m,
-          claraWrap("PPOB", "Produk sedang gangguan/tidak tersedia: " + prod.name),
-          "ppob"
-        );
+    await m.reply(claraWrap("PPOB", "Produk sedang gangguan/tidak tersedia: " + prod.name));
       }
 
       const price = calcPrice(prod.price, markup);
@@ -975,7 +879,7 @@ async function handler(m, { sock }) {
         );
         if (imgKeys.length > 0) {
           // Kirim text info dulu
-          await sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+          await m.reply( claraWrap("PPOB", body), "ppob");
           // Kirim setiap QR image
           for (const key of imgKeys) {
             await sendQrImage(
@@ -999,17 +903,12 @@ async function handler(m, { sock }) {
         m
       );
       if (!sent) {
-        return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+        return m.reply( claraWrap("PPOB", body), "ppob");
       }
       return;
     } catch (err) {
       await m.react("❌");
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Error: " + err.message),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Error: " + err.message));
     }
   }
 
@@ -1019,36 +918,26 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("PPOB", "Khusus owner!"));
     const mode = (arg1 || "").toLowerCase();
     if (mode !== "text" && mode !== "image") {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap(
+    await m.reply(claraWrap(
           "PPOB",
           "Set Mode Payment (Owner)\n\n" +
             ".ppob setmode <text|image>\n\n" +
             "text  = metode pembayaran sebagai teks\n" +
             "image = kirim gambar QR (QRIS, Dana, dll)\n\n" +
             "Mode aktif: " + (data.paymentMode || "image")
-        ),
-        "ppob"
-      );
+        ));
     }
     data.paymentMode = mode;
     saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(
-      sock,
-      m,
-      claraWrap(
+    await m.reply(claraWrap(
         "PPOB",
         "Mode payment: " + mode + "\n\n" +
           (mode === "image"
             ? "Bot akan kirim gambar QR saat user order\n" +
               "Atur gambar QR: .ppob setqrimg"
             : "Bot akan tampilkan metode sebagai teks")
-      ),
-      "ppob"
-    );
+      ));
   }
 
   // === SETQRIMG (Owner only) ===
@@ -1078,18 +967,13 @@ async function handler(m, { sock }) {
       body += "  .ppob setqrimg dana https://i.ibb.co.com/yyy.png\n";
       body += "  .ppob setqrimg gopay https://i.ibb.co.com/zzz.png\n\n";
       body += "Hapus: .ppob setqrimg <nama> off";
-      return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+      return m.reply( claraWrap("PPOB", body), "ppob");
     }
     if (url === "off" || url === "delete") {
       delete data.paymentImages[key];
       saveData(data);
       await m.react("✅");
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "QR image '" + key + "' dihapus"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "QR image '" + key + "' dihapus"));
     }
     // Preserve existing enabled state or default true
     const wasEnabled = data.paymentImages[key]?.enabled !== false;
@@ -1099,12 +983,7 @@ async function handler(m, { sock }) {
     // Kirim preview gambar ke owner
     const sent = await sendQrImage(sock, m.chat, url, claraWrap("PPOB", "QR " + key + " disimpan!\nStatus: " + (wasEnabled ? "ON" : "OFF") + "\nPreview:"), m);
     if (!sent) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "QR " + key + " disimpan!\nURL: " + url + "\n\n(Gagal preview, cek URL)"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "QR " + key + " disimpan!\nURL: " + url + "\n\n(Gagal preview, cek URL)"));
     }
     return;
   }
@@ -1128,31 +1007,21 @@ async function handler(m, { sock }) {
         body += "Contoh: .ppob toggleqrimg qris\n";
         body += "Contoh: .ppob toggleqrimg dana";
       }
-      return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+      return m.reply( claraWrap("PPOB", body), "ppob");
     }
     if (!data.paymentImages[key]) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "QR image '" + key + "' tidak ada\nTambah: .ppob setqrimg " + key + " <url>"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "QR image '" + key + "' tidak ada\nTambah: .ppob setqrimg " + key + " <url>"));
     }
     data.paymentImages[key].enabled = !data.paymentImages[key].enabled;
     saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(
-      sock,
-      m,
-      claraWrap(
+    await m.reply(claraWrap(
         "PPOB",
         "QR " + key + ": " + (data.paymentImages[key].enabled ? "ON" : "OFF") + "\n\n" +
           (data.paymentImages[key].enabled
             ? "Akan dikirim ke user saat order"
             : "Disembunyikan dari user")
-      ),
-      "ppob"
-    );
+      ));
   }
 
   // === SETQRIS (Owner only) ===
@@ -1161,10 +1030,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("PPOB", "Khusus owner!"));
     const qrisUrl = arg1 || "";
     if (!qrisUrl) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap(
+    await m.reply(claraWrap(
           "PPOB",
           "Set QRIS untuk PPOB (Owner)\n\n" +
             ".ppob setqris <path atau URL>\n\n" +
@@ -1174,24 +1040,17 @@ async function handler(m, { sock }) {
             "Kosongin untuk nonaktif:\n" +
             ".ppob setqris off\n\n" +
             "QRIS aktif: " + (data.payment?.qrisUrl ? "Ya" : "Tidak")
-        ),
-        "ppob"
-      );
+        ));
     }
     if (!data.payment) data.payment = {};
     data.payment.qrisUrl = (qrisUrl === "off" || qrisUrl === "false") ? "" : qrisUrl;
     saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(
-      sock,
-      m,
-      claraWrap(
+    await m.reply(claraWrap(
         "PPOB",
         "QRIS PPOB: " +
           (data.payment.qrisUrl ? "Diatur (" + data.payment.qrisUrl + ")" : "Nonaktif")
-      ),
-      "ppob"
-    );
+      ));
   }
 
   // === SETPAYMENT (Owner only) ===
@@ -1210,7 +1069,7 @@ async function handler(m, { sock }) {
         });
         body += "\n.ppob setwallet <nomor> <number> <holder>\n";
         body += "Contoh: .ppob setwallet 1 08123456789 Aizat";
-        return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+        return m.reply( claraWrap("PPOB", body), "ppob");
       }
       const number = arg2 || "";
       const holder = args.slice(3).join(" ") || "";
@@ -1218,12 +1077,7 @@ async function handler(m, { sock }) {
       data.payment.methods[idx].holder = holder;
       saveData(data);
       await m.react("✅");
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", data.payment.methods[idx].name + ": " + number + (holder ? " a/n " + holder : "") + "\n\nKosongin number untuk nonaktif"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", data.payment.methods[idx].name + ": " + number + (holder ? " a/n " + holder : "") + "\n\nKosongin number untuk nonaktif"));
     }
     
     // .ppob setbank <index> <number> <holder>
@@ -1236,7 +1090,7 @@ async function handler(m, { sock }) {
         });
         body += "\n.ppob setbank <nomor> <number> <holder>\n";
         body += "Contoh: .ppob setbank 1 1234567890 Aizat";
-        return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+        return m.reply( claraWrap("PPOB", body), "ppob");
       }
       const number = arg2 || "";
       const holder = args.slice(3).join(" ") || "";
@@ -1244,12 +1098,7 @@ async function handler(m, { sock }) {
       data.payment.banks[idx].holder = holder;
       saveData(data);
       await m.react("✅");
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", data.payment.banks[idx].name + ": " + number + (holder ? " a/n " + holder : "") + "\n\nKosongin number untuk nonaktif"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", data.payment.banks[idx].name + ": " + number + (holder ? " a/n " + holder : "") + "\n\nKosongin number untuk nonaktif"));
     }
     
     // .ppob setpayment (show all)
@@ -1266,7 +1115,7 @@ async function handler(m, { sock }) {
       body += (i + 1) + ". " + b.name + ": " + (b.number || "-") + (b.holder ? " a/n " + b.holder : "") + "\n";
     });
     body += "\nSet: .ppob setbank <no> <number> <holder>";
-    return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+    return m.reply( claraWrap("PPOB", body), "ppob");
   }
 
   // === KONFIRMASI (Owner only) ===
@@ -1275,34 +1124,19 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("PPOB", "Khusus owner!"));
     const orderId = (arg1 || "").toUpperCase();
     if (!orderId) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap(
+    await m.reply(claraWrap(
           "PPOB",
           "Konfirmasi Pembayaran (Owner)\n\n" +
             ".ppob konfirmasi <orderId>\n\n" +
             "Cek pending: .ppob pending"
-        ),
-        "ppob"
-      );
+        ));
     }
     const order = data.pendingOrders[orderId];
     if (!order) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Order tidak ditemukan: " + orderId),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Order tidak ditemukan: " + orderId));
     }
     if (order.status !== "menunggu_pembayaran") {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Status: " + order.status + "\nTidak bisa dikonfirmasi"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Status: " + order.status + "\nTidak bisa dikonfirmasi"));
     }
 
     await m.react("🕐");
@@ -1361,18 +1195,13 @@ async function handler(m, { sock }) {
         } catch (e) { console.error('[ppob.js]:', e.message); }
       }
 
-      return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+      return m.reply( claraWrap("PPOB", body), "ppob");
     } catch (err) {
       await m.react("❌");
       order.status = "error";
       order.error = err.message;
       saveData(data);
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Error proses: " + err.message),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Error proses: " + err.message));
     }
   }
 
@@ -1380,12 +1209,7 @@ async function handler(m, { sock }) {
   if (sub === "cek" || sub === "status") {
     const orderId = (arg1 || "").toUpperCase();
     if (!orderId) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Cek Status Order\n\n.ppob cek <orderId>"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Cek Status Order\n\n.ppob cek <orderId>"));
     }
 
     let order = data.pendingOrders[orderId];
@@ -1395,12 +1219,7 @@ async function handler(m, { sock }) {
       isPending = false;
     }
     if (!order) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Order tidak ditemukan: " + orderId),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Order tidak ditemukan: " + orderId));
     }
 
     let body = "Status Order\n\n";
@@ -1462,7 +1281,7 @@ async function handler(m, { sock }) {
       }
     }
 
-    return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+    return m.reply( claraWrap("PPOB", body), "ppob");
   }
 
   // === PENDING (Owner only) ===
@@ -1473,12 +1292,7 @@ async function handler(m, { sock }) {
       ([, o]) => o.status === "menunggu_pembayaran"
     );
     if (pending.length === 0) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Tidak ada order pending"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Tidak ada order pending"));
     }
     let body = "Order Pending (" + pending.length + ")\n\n";
     pending.forEach(([id, o], i) => {
@@ -1492,49 +1306,29 @@ async function handler(m, { sock }) {
       body += "   Sisa: " + remaining + " menit\n";
       body += "   Konfirmasi: .ppob konfirmasi " + id + "\n";
     });
-    return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+    return m.reply( claraWrap("PPOB", body), "ppob");
   }
 
   // === BATAL ===
   if (sub === "batal" || sub === "cancel") {
     const orderId = (arg1 || "").toUpperCase();
     if (!orderId) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Batalkan Order\n\n.ppob batal <orderId>"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Batalkan Order\n\n.ppob batal <orderId>"));
     }
     const order = data.pendingOrders[orderId];
     if (!order) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Order tidak ditemukan atau sudah diproses"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Order tidak ditemukan atau sudah diproses"));
     }
     if (!isOwner && order.sender !== sender) {
       return m.reply(claraWrap("PPOB", "Bukan order kamu!"));
     }
     if (order.status !== "menunggu_pembayaran") {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Status: " + order.status + "\nTidak bisa dibatalkan"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Status: " + order.status + "\nTidak bisa dibatalkan"));
     }
     delete data.pendingOrders[orderId];
     saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(
-      sock,
-      m,
-      claraWrap("PPOB", "Order dibatalkan: " + orderId),
-      "ppob"
-    );
+    await m.reply(claraWrap("PPOB", "Order dibatalkan: " + orderId));
   }
 
   // === REFRESH ===
@@ -1542,49 +1336,29 @@ async function handler(m, { sock }) {
     if (!isOwner)
       return m.reply(claraWrap("PPOB", "Khusus owner!"));
     if (!provider.isSetup(cred))
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
     await m.react("🕐");
     try {
       data.priceCache[data.activeProvider] = null;
       const products = await getCachedPriceList(data, true);
       await m.react("✅");
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap(
+    await m.reply(claraWrap(
           "PPOB",
           "Daftar harga di-refresh!\n" +
             "Provider: " + provider.name + "\n" +
             "Total: " + products.length + " produk\n\n" +
             "Cari: .ppob cari <keyword>"
-        ),
-        "ppob"
-      );
+        ));
     } catch (err) {
       await m.react("❌");
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Error: " + err.message),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Error: " + err.message));
     }
   }
 
   // === PREMIUM (curated app premium listings) ===
   if (sub === "premium" || sub === "apppremium" || sub === "langganan") {
     if (!provider.isSetup(cred))
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
     await m.react("🕐");
     try {
       const products = await getCachedPriceList(data);
@@ -1612,12 +1386,7 @@ async function handler(m, { sock }) {
 
       if (filtered.length === 0) {
         await m.react("❌");
-        return sendReplyWithNav(
-          sock,
-          m,
-          claraWrap("PPOB", "Tidak ada produk premium di katalog " + provider.name + "\n\nCoba cari manual:\n.ppob cari netflix\n.ppob cari spotify\n.ppob cari disney"),
-          "ppob"
-        );
+    await m.reply(claraWrap("PPOB", "Tidak ada produk premium di katalog " + provider.name + "\n\nCoba cari manual:\n.ppob cari netflix\n.ppob cari spotify\n.ppob cari disney"));
       }
 
       // Group by brand/app
@@ -1647,15 +1416,10 @@ async function handler(m, { sock }) {
       body += "Beli: .ppob beli <sku> <nomor/email>\n";
       body += "Cari: .ppob cari <keyword>";
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+      return m.reply( claraWrap("PPOB", body), "ppob");
     } catch (err) {
       await m.react("❌");
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Error: " + err.message),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Error: " + err.message));
     }
   }
 
@@ -1663,12 +1427,7 @@ async function handler(m, { sock }) {
   if (sub === "riwayat" || sub === "history" || sub === "list") {
     const userOrders = data.orders.filter((o) => o.sender === sender);
     if (userOrders.length === 0) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("PPOB", "Belum ada riwayat order"),
-        "ppob"
-      );
+    await m.reply(claraWrap("PPOB", "Belum ada riwayat order"));
     }
     let body = "Riwayat Order (" + userOrders.length + ")\n\n";
     userOrders
@@ -1681,24 +1440,19 @@ async function handler(m, { sock }) {
         if (o.digiflazzRef)
           body += "   ID: " + o.digiflazzRef + "\n";
       });
-    return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+    return m.reply( claraWrap("PPOB", body), "ppob");
   }
 
   // === HELP / DEFAULT ===
   if (!provider.isSetup(cred)) {
-    return sendReplyWithNav(
-      sock,
-      m,
-      claraWrap(
+    await m.reply(claraWrap(
         "PPOB",
         "Belum setup!\n\n" +
           "Provider aktif: " + provider.name + "\n" +
           "Owner: .ppob setkey <user>:<key>\n\n" +
           provider.setupHint + "\n\n" +
           "Lihat provider lain: .ppob providers"
-      ),
-      "ppob"
-    );
+      ));
   }
 
   let body = "PPOB - " + provider.name + "\n\n";
@@ -1725,7 +1479,7 @@ async function handler(m, { sock }) {
     body += "Set QR Image: .ppob setqrimg <nama> <url>\n";
     body += "Toggle QR: .ppob toggleqrimg <nama>";
   }
-  return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
+  return m.reply( claraWrap("PPOB", body), "ppob");
 }
 
 export { pluginConfig as config, handler };

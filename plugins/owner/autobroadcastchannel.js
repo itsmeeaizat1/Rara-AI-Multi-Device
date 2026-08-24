@@ -10,7 +10,6 @@ import { claraHeader,
     separator,
   tipText } from "../../src/lib/nova-menu-style.js";
 
-// Local Nova AI format — replaces claraWrap + sendReplyWithNav
 function claraWrap(title, text) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
@@ -22,7 +21,7 @@ function claraWrap(title, text) {
   }).join("\n");
   return `❀°˖ ${toSC(title)} ˖°❀\n\n${scBody}`;
 }
-async function sendReplyWithNav(sock, m, text, cmdName) {
+async function formatAndReply( text, cmdName) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   // Convert all text to small caps, skip command lines
@@ -83,19 +82,14 @@ async function handler(m, { sock, config: botConfig }) {
       `ON: ${onCount} | OFF: ${offCount}` + "\n" +
       `All toggle: ${prefix}autobroadcastchannel all on/off`;
 
-    return sendReplyWithNav(sock, m, text, "autobroadcastchannel");
+    return formatAndReply( text, "autobroadcastchannel");
   }
 
   // Toggle all
   if (subCmd === "all") {
     const action = args[1]?.toLowerCase();
     if (action !== "on" && action !== "off") {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("AutoBroadcastChannel", `Gunakan: ${prefix}autobroadcastchannel all on atau ${prefix}autobroadcastchannel all off`),
-        "autobroadcastchannel"
-      );
+      return await m.reply(claraWrap("AutoBroadcastChannel", `Gunakan: ${prefix}autobroadcastchannel all on atau ${prefix}autobroadcastchannel all off`));
     }
 
     const enabled = action === "on";
@@ -105,16 +99,7 @@ async function handler(m, { sock, config: botConfig }) {
       count++;
     }
 
-    return sendReplyWithNav(
-      sock,
-      m,
-      claraWrap("AutoBroadcastChannel", [
-        `Status: *${enabled ? "ALL ON" : "ALL OFF"}*`,
-        `Total: *${count} event*`,
-      ].join("\n")) + "\n\n" +
-      `Cek status: ${prefix}autobroadcastchannel`,
-      "autobroadcastchannel"
-    );
+    return await m.reply(claraWrap("AutoBroadcastChannel", [`Status: *${enabled ? "ALL ON" : "ALL OFF"}*`, `Total: *${count} event*`].join("\n")) + "\n\n" + `Cek status: ${prefix}autobroadcastchannel`);
   }
 
   // Toggle specific event — support explicit on/off ATAU flip
@@ -135,18 +120,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     setNotifyEnabled(subCmd, newVal);
-
-    return sendReplyWithNav(
-      sock,
-      m,
-      claraWrap("AutoBroadcastChannel", [
-        `Event: *${NOTIFY_EVENTS[subCmd]}*`,
-        `Status: *${newVal ? "ON" : "OFF"}*`,
-      ].join("\n")) + "\n\n" +
-      (newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan") + "\n" +
-      `Cek semua: ${prefix}autobroadcastchannel`,
-      "autobroadcastchannel"
-    );
+    return await m.reply(claraWrap("AutoBroadcastChannel", [`Event: *${NOTIFY_EVENTS[subCmd]}*`, `Status: *${newVal ? "ON" : "OFF"}*`].join("\n")) + "\n\n" + (newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan") + "\n" + `Cek semua: ${prefix}autobroadcastchannel`);
   }
 
   // Unknown event
@@ -155,17 +129,7 @@ async function handler(m, { sock, config: botConfig }) {
     availableList += `${key} - ${label}\n`;
   }
 
-  return sendReplyWithNav(
-    sock,
-    m,
-    claraWrap("AutoBroadcastChannel", [
-      `Event: *${subCmd}*`,
-      `Tidak ada dalam daftar`,
-    ].join("\n")) + "\nEVENT TERSEDIA:\n\n" +
-    availableList +
-    "\nContoh: " + prefix + "autobroadcastchannel userBanned on",
-    "autobroadcastchannel"
-  );
+  return await m.reply(claraWrap("AutoBroadcastChannel", [`Event: *${subCmd}*`, `Tidak ada dalam daftar`].join("\n")) + "\nEVENT TERSEDIA:\n\n" + availableList + "\nContoh: " + prefix + "autobroadcastchannel userBanned on");
 }
 
 export { pluginConfig as config, handler };

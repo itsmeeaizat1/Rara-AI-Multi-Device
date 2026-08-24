@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // ============================================================
@@ -609,22 +608,17 @@ async function handler(m, { sock }) {
         sessions.set(m.sender, { ...result, createdAt: Date.now() });
         await m.react("✅");
         const body = `Berhasil dibuat!\n\n❏ Provider: ${PROVIDERS[result.provider].name}\n❏ Email: ${result.address}\n❏ Status: Aktif\n\nKirim email ke alamat di atas, lalu cek:\n${m.prefix}tempmail inbox\n\nNote: ${PROVIDERS[result.provider].name} auto-generate email, tidak support custom name.`;
-        return sendReplyWithNav(sock, m, claraWrap("Temp Email", body), "tempmail");
+        return m.reply( claraWrap("Temp Email", body), "tempmail");
       } catch (err) {
         return m.reply(claraWrap("Mail.tm", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 
     if (!name || name.length < 3) {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap(
+    await m.reply(claraWrap(
           "Temp Email",
           `Cara pakai:\n${m.prefix}tempmail create <nama> [provider]\n\nContoh:\n${m.prefix}tempmail create aizat\n${m.prefix}tempmail create aizat mailgw\n${m.prefix}tempmail create aizat guerrilla\n${m.prefix}tempmail create aizat mailporary\n\nNama: min 3 karakter (huruf, angka, . _ -)\n\nProvider:\n1. mailtm (default)\n2. mailgw\n3. guerrilla\n4. mailporary\n5. tempmailio (auto-generate)`
-        ),
-        "tempmail"
-      );
+        ));
     }
 
     await m.react("🕐");
@@ -648,7 +642,7 @@ async function handler(m, { sock }) {
       const pwdLine = result.password !== "-" ? `\n❏ Password: ${result.password}` : "";
       const body = `Berhasil dibuat!\n\n❏ Provider: ${providerName}\n❏ Email: ${result.address}${pwdLine}\n❏ Status: Aktif\n\nKirim email ke alamat di atas, lalu cek:\n${m.prefix}tempmail inbox`;
 
-      return sendReplyWithNav(sock, m, claraWrap("Temp Email", body), "tempmail");
+      return m.reply( claraWrap("Temp Email", body), "tempmail");
     } catch (err) {
       return m.reply(claraWrap("Mail.tm", te(m.prefix, m.command, m.pushName), "error"));
     }
@@ -687,7 +681,7 @@ async function handler(m, { sock }) {
       list += `\nBaca semua: ${m.prefix}tempmail read all`;
 
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("Temp Email Inbox", list), "tempmail");
+      return m.reply( claraWrap("Temp Email Inbox", list), "tempmail");
     } catch (err) {
       if (err.response?.status === 401) {
         sessions.delete(m.sender);
@@ -743,7 +737,7 @@ async function handler(m, { sock }) {
           content += `❏ Isi:\n${body}\n\n`;
         }
         await m.react("✅");
-        return sendReplyWithNav(sock, m, claraWrap("Temp Email - Semua Pesan", content), "tempmail");
+        return m.reply( claraWrap("Temp Email - Semua Pesan", content), "tempmail");
       }
 
       // Read by number
@@ -783,7 +777,7 @@ async function handler(m, { sock }) {
       }
 
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("Temp Email - Pesan", content), "tempmail");
+      return m.reply( claraWrap("Temp Email - Pesan", content), "tempmail");
     } catch (err) {
       if (err.response?.status === 401) {
         sessions.delete(m.sender);
@@ -847,14 +841,14 @@ async function handler(m, { sock }) {
     list += `\nDefault: mailtm\n\nCara pakai:\n${m.prefix}tempmail create <nama> <provider>\n\nContoh:\n${m.prefix}tempmail create aizat mailtm\n${m.prefix}tempmail create aizat mailporary\n${m.prefix}tempmail create - tempmailio`;
 
     await m.react("✅");
-    return sendReplyWithNav(sock, m, claraWrap("Temp Email", list), "tempmail");
+    return m.reply( claraWrap("Temp Email", list), "tempmail");
   }
 
   // === HELP / DEFAULT ===
   const help = `Email Sementara - 6 Provider\n\nProvider:\n1. mailtm (Mail.tm) - custom name\n2. mailgw (Mail.gw) - custom name\n3. guerrilla (Guerrilla Mail) - custom name\n4. mailporary (Mailporary) - custom name\n5. tempmailio (TempMail.io) - auto-generate
 6. anonymmail (AnonymMail) - custom name\n\nPerintah:\n1. ${m.prefix}tempmail create <nama> [provider]\n   Buat email custom name\n2. ${m.prefix}tempmail inbox\n   Cek kotak masuk\n3. ${m.prefix}tempmail read <nomor>\n   Baca pesan (atau "all")\n4. ${m.prefix}tempmail status\n   Info email aktif\n5. ${m.prefix}tempmail delete\n   Hapus email\n6. ${m.prefix}tempmail list\n   Lihat daftar provider\n\nContoh:\n${m.prefix}tempmail create aizat\n${m.prefix}tempmail create aizat mailporary\n${m.prefix}tempmail inbox\n${m.prefix}tempmail read 1\n\nNote: Email expired otomatis oleh server provider.`;
 
-  return sendReplyWithNav(sock, m, claraWrap("Temp Email", help), "tempmail");
+  return m.reply( claraWrap("Temp Email", help), "tempmail");
 }
 
 export { pluginConfig as config, handler };
