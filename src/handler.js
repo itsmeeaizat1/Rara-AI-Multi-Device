@@ -355,6 +355,32 @@ async function messageHandler(msg, sock) {
     }
   }
 
+  // Pacaran answer handler (reply terima/tolak to tembakan)
+  if (!m.isCommand && !m.isNewsletter) {
+    try {
+      const { answerHandler: pacaranHandler } = await import("../plugins/fun/pacaran.js");
+      if (typeof pacaranHandler === "function") {
+        const handled = await pacaranHandler(m, sock);
+        if (handled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("pacaran-answer", e.message);
+    }
+  }
+
+  // Nikah answer handler (reply terima/tolak to lamaran)
+  if (!m.isCommand && !m.isNewsletter) {
+    try {
+      const { answerHandler: nikahHandler } = await import("../plugins/fun/nikah.js");
+      if (typeof nikahHandler === "function") {
+        const handled = await nikahHandler(m, sock);
+        if (handled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("nikah-answer", e.message);
+    }
+  }
+
   // Auto React VN: jalan walau fromMe (owner testing di self-chat), asal bukan command/newsletter
   if (!m.isCommand && !m.isNewsletter) {
     try {

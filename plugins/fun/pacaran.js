@@ -5,8 +5,8 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "jadian",
-  alias: ["tembak", "tembakjadian"],
+  name: "pacaran",
+  alias: ["jadian", "tembak", "tembakjadian"],
   category: "fun",
   description: "Menembak seseorang untuk pacaran",
   usage: ".jadian @tag",
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
     );
     await m.react("💘");
   } catch (e) {
-    console.error("[jadian] Error:", e.message);
+    console.error("[pacaran] Error:", e.message);
     try { await m.react("❌"); } catch {}
   }
 }
@@ -206,7 +206,7 @@ async function answerHandler(m, sock) {
     }
     return false;
   } catch (e) {
-    console.error("[jadian-answer] Error:", e.message);
+    console.error("[pacaran-answer] Error:", e.message);
     return false;
   }
 }
