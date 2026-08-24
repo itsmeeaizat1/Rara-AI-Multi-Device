@@ -1,18 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+// multi-ai.js — OpenRouter-style: pilih provider + model lewat chat
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI, DEFAULT_PROVIDERS } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-function getDatabase() {
-  const { getDatabase: getDb } = require("../../src/lib/nova-database.js");
-  return getDb();
-}
+import { getDatabase } from "../../src/lib/nova-database.js";
 
 function getCustomProviders() {
   try {
@@ -24,8 +14,12 @@ function getCustomProviders() {
 }
 
 function getAllProviders() {
-  const custom = getCustomProviders();
-  return { ...DEFAULT_PROVIDERS, ...custom };
+  try {
+    const custom = getCustomProviders();
+    return { ...DEFAULT_PROVIDERS, ...custom };
+  } catch {
+    return { ...DEFAULT_PROVIDERS };
+  }
 }
 
 function resolveModel(providerKey, modelArg) {
@@ -33,17 +27,20 @@ function resolveModel(providerKey, modelArg) {
   const provider = providers[providerKey];
   if (!provider) return null;
   const models = Array.isArray(provider.models) ? provider.models : [];
-  const model = modelArg && models.includes(modelArg) ? modelArg : provider.defaultModel || provider.model || modelArg;
+  const model = modelArg && models.includes(modelArg) ? modelArg : (provider.defaultModel || provider.model || modelArg);
   return { provider, model };
 }
 
+const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+const toSC = (s) => String(s || "").replace(/[a-z]/g, c => SC_MAP[c] || c);
+
 const pluginConfig = {
   name: "multi-ai",
-  alias: ["multiai", "aimulti", "aichatv2", "aimodels"],
+  alias: ["multiai", "aimulti", "aichatv2", "aimodels", "routerai", "airouter"],
   category: "ai",
-  description: "Chat dengan berbagai AI (OpenAI, Gemini, Claude, Groq, Together, Blackbox, Mistral, DeepSeek, GitHub Models, Llama + custom)",
-  usage: ".multi-ai <provider> <pesan> | .multi-ai list",
-  example: ".multi-ai gemini Jelaskankan quantum computing",
+  description: "Chat dengan berbagai AI — pilih provider & model kayak OpenRouter",
+  usage: ".multi-ai <provider> [model] <pesan>",
+  example: ".multi-ai gemini apa itu AI\n.multi-ai openai gpt-4o-mini jelaskan kuantum\n.multi-ai list",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -56,93 +53,160 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
   try {
     const prefix = botConfig.command?.prefix || ".";
-    const args = (m.text || "").trim().split(/\s+/).filter(Boolean);
-    const providerArg = (args[0] || "").toLowerCase();
-    const modelArg = (args[1] || "").trim();
-    const message = args.slice(2).join(" ").trim();
+    const raw = (m.text || "").trim();
+    const parts = raw.split(/[ \t]+/).filter(Boolean);
+    // parts[0] = .multi-ai, parts[1] = provider, parts[2] = model/pesan, parts[3+] = pesan
+    const providerArg = (parts[1] || "").toLowerCase();
+    const modelArg = (parts[2] || "").trim();
+    const message = parts.slice(2).join(" ").trim();
 
+    // LIST — tampilkan semua provider + model
     if (!providerArg || providerArg === "list" || providerArg === "daftar") {
       const providers = getAllProviders();
-      const lines = Object.entries(providers).map(([key, provider]) => {
-        const models = (provider.models || [provider.model || "-"]).map((model) => `• ${model}`).join("\n");
-        return `${provider.name || key} (${key})\nDefault: ${provider.defaultModel || provider.model || "-"}\n${models}`;
-      });
+      let lines = "";
+      let idx = 0;
+      for (const [key, provider] of Object.entries(providers)) {
+        const models = Array.isArray(provider.models) ? provider.models : [provider.model || "-"];
+        const modelList = models.map(mo => `  ┊    ➶ ${mo}`).join("\n");
+        const end = idx === Object.keys(providers).length - 1 ? "  ╰" : "  ┊";
+        lines += `${end}  ➶ ${provider.name || key} (${key})\n${modelList}\n`;
+        idx++;
+      }
 
-      const text = claraWrap("Multi AI",
-        lines.join("\n") +
-        "\n\nPAKAI:\n" +
-        `  ┊  ➶ Penggunaan: *${prefix}multi-ai <provider> [model] <pesan>*\n` +
-        `  ┊  ➶ Contoh: *${prefix}multi-ai gemini Jelaskankan quantum computing*\n` +
-        `  ┊  ➶ Contoh: *${prefix}multi-ai openai gpt-4o-mini Apa itu AI?*\n` +
-        `  ┊  ➶ Tambah AI lain: *${prefix}ai-addprovider <nama> <endpoint> <model> [apiKey]*`
-      );
+      const text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Mᴜʟᴛɪ AI
+┊
+  ┊  ➶ *Router AI — Pilih Provider & Model*
+  ┊
+₊˚ʚ ᗢ₊˚✧ ﾟ. 🤖 Pʀᴏᴠɪᴅᴇʀs ｡ﾟ
+┊${lines}₊˚ʚ ᗢ₊˚✧ ﾟ.
+┊
+  ┊  ➶ *Cara pakai:*
+  ┊    ➶ ${prefix}multi-ai <provider> <pesan>
+  ┊    ➶ ${prefix}multi-ai <provider> <model> <pesan>
+  ┊
+  ┊  ➶ *Contoh:*
+  ┊    ➶ ${prefix}multi-ai gemini apa itu AI
+  ┊    ➶ ${prefix}multi-ai openai gpt-4o-mini jelaskan kuantum
+  ┊    ➶ ${prefix}multi-ai groq buat puisi
+  ┊
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
-      await sendReplyWithNav(sock, m, text, "multi-ai");
+      await m.reply(text);
+      await m.react("✅");
       return { handled: true };
     }
 
-    if (!message) {
-      const text =
-        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}multi-ai <provider> [model] <pesan>*`,
-          `  ┊  ➶ Contoh: *${prefix}multi-ai claude Jelaskankan AI*`,
-          `  ┊  ➶ Ketik *${prefix}multi-ai list* untuk lihat daftar provider`].join("\n"));;
-
-      await sendReplyWithNav(sock, m, text, "multi-ai");
+    // Cek apakah parts[2] adalah model atau pesan
+    const providers = getAllProviders();
+    const provider = providers[providerArg];
+    if (!provider) {
+      const text = `❀°˖ Aɪ Rᴏᴜᴛᴇʀ ˖°❀
+┊
+  ┊  ➶ Provider *${providerArg}* tidak ditemukan
+  ┊  ➶ Ketik *${prefix}multi-ai list* untuk lihat daftar
+┊
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      await m.reply(text);
+      await m.react("❌");
       return { handled: true };
     }
 
-    const resolved = resolveModel(providerArg, modelArg);
-    if (!resolved) {
-      const text =
-        claraWrap("Tidak Dikenal", [`  ┊  ➶ Provider *${providerArg}* tidak dikenali.`,
-          `  ┊  ➶ Lihat provider custom: *${prefix}ai-addprovider list*`,
-          `  ┊  ➶ Ketik *${prefix}multi-ai list* untuk lihat daftar.`].join("\n")) +
-        "\n" ;
+    // Tentukan apakah argumen kedua adalah model
+    const providerModels = Array.isArray(provider.models) ? provider.models : [];
+    let model = provider.defaultModel || provider.model || "";
+    let userMessage = "";
 
-      await sendReplyWithNav(sock, m, text, "multi-ai");
+    if (providerModels.includes(modelArg)) {
+      // parts[2] = model, parts[3+] = pesan
+      model = modelArg;
+      userMessage = parts.slice(3).join(" ").trim();
+    } else {
+      // parts[2] bukan model, jadi semua dari parts[2] adalah pesan
+      userMessage = parts.slice(2).join(" ").trim();
+    }
+
+    if (!userMessage) {
+      const text = `❀°˖ Aɪ Rᴏᴜᴛᴇʀ ˖°❀
+┊
+  ┊  ➶ *Provider:* ${toSC(provider.name || providerArg)}
+  ┊  ➶ *Model:* ${model}
+  ┊
+  ┊  ➶ Penggunaan: *${prefix}multi-ai ${providerArg} [model] <pesan>*
+  ┊  ➶ Contoh: *${prefix}multi-ai ${providerArg} ${model} apa itu AI*
+  ┊
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      await m.reply(text);
+      await m.react("❌");
       return { handled: true };
     }
 
-    const { provider, model } = resolved;
+    // Panggil AI
+    await m.react("🕐");
+
     const aiConfig = botConfig.aiHelp || {};
     const apiKey = String(aiConfig.apiKey || "");
-    const apiEndpoint = String(typeof provider.chatEndpoint === "function" ? provider.chatEndpoint(model || providerArg) : provider.chatEndpoint || aiConfig.apiEndpoint || "");
+    const apiEndpoint = String(
+      typeof provider.chatEndpoint === "function"
+        ? provider.chatEndpoint(model || providerArg)
+        : provider.chatEndpoint || aiConfig.apiEndpoint || ""
+    );
     const systemPrompt = String(aiConfig.systemPrompt || "Kamu adalah asisten AI yang membantu.");
 
-    m.react("🕐");
     const reply = await callAI({
       providerKey: providerArg,
       model,
-      messages: [{ role: "user", content: message }],
+      messages: [{ role: "user", content: userMessage }],
       systemPrompt,
       apiKey,
       apiEndpoint,
     });
 
-    const text =
-      claraWrap("Multi AI", "🤖") +
-      claraWrap(provider.name.toUpperCase(), [
-        `  ┊  ➶ Model: *${model}*`,
-        `  ┊  ➶ Kamu: *${message.slice(0, 200)}${message.length > 200 ? "..." : ""}*`,
-        `  ┊  ➶ AI: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`,
-      ]) +
-      
-      "\n"  +
-      "\n" ;
+    if (!reply || reply.trim() === "") {
+      const text = `❀°˖ Aɪ Rᴏᴜᴛᴇʀ ˖°❀
+┊
+  ┊  ➶ *Status:* Gagal
+  ┊  ➶ *Alasan:* AI tidak memberikan respons
+  ┊  ➶ Cek API key di *${prefix}ai-set apiKey <key>*
+┊
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      await m.reply(text);
+      await m.react("❌");
+      return { handled: true };
+    }
+
+    const trimmedMsg = userMessage.length > 200 ? userMessage.slice(0, 200) + "..." : userMessage;
+    const trimmedReply = reply.length > 3000 ? reply.slice(0, 3000) + "..." : reply;
+
+    const text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Aɪ Rᴏᴜᴛᴇʀ
+┊
+  ┊  ➶ *Provider:* ${toSC(provider.name || providerArg)}
+  ┊  ➶ *Model:* ${model}
+  ┊  ➶ *Kamu:* ${trimmedMsg}
+┊
+₊˚ʚ ᗢ₊˚✧ ﾟ. 🤖 Rᴇsᴘᴏɴs ｡ﾟ
+┊  ┊  ➶ ${trimmedReply}
+┊
+₊˚ʚ ᗢ₊˚✧ ﾟ.
+┊
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
     await m.reply(text);
-    m.react("✅");
+    await m.react("✅");
   } catch (error) {
+    console.error('[multi-ai.js]:', error.message);
     const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
-      "\n" ;
-
-    await sendReplyWithNav(sock, m, text, "multi-ai");
+    const text = `❀°˖ Aɪ Rᴏᴜᴛᴇʀ ˖°❀
+┊
+  ┊  ➶ *Status:* Gagal
+  ┊  ➶ *Alasan:* ${error.message}
+  ┊  ➶ Cek API key: *${prefix}ai-set apiKey <key>*
+┊
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    await m.reply(text);
+    await m.react("❌");
   }
 
   return { handled: true };
 }
 
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler };
