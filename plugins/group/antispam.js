@@ -1,7 +1,20 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import te from "../../src/lib/nova-error.js"
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraLine } from "../../src/lib/nova-menu-style.js";
+
+// Local Nova AI format — replaces claraWrap + sendReplyWithNav
+function claraWrap(title, text) {
+  const body = Array.isArray(text) ? text.join("\n") : text;
+  return `❀°˖ ${title} ˖°❀\n\n${body}`;
+}
+async function sendReplyWithNav(sock, m, text, cmdName) {
+  if (!text.includes("❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀")) {
+    text = text + "\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
+  }
+  return await m.reply(text);
+}
+
+
 
 const pluginConfig = {
     name: "antispam",

@@ -12,9 +12,22 @@ import {
   IQAMAH_DELAY,
 } from "../../src/lib/nova-sholat-scheduler.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraLine } from "../../src/lib/nova-menu-style.js";
 import { initSholatScheduler, stopSholatScheduler } from "../../src/lib/nova-sholat-scheduler.js";
+
+// Local Nova AI format — replaces claraWrap + sendReplyWithNav
+function claraWrap(title, text) {
+  const body = Array.isArray(text) ? text.join("\n") : text;
+  return `❀°˖ ${title} ˖°❀\n\n${body}`;
+}
+async function sendReplyWithNav(sock, m, text, cmdName) {
+  if (!text.includes("❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀")) {
+    text = text + "\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
+  }
+  return await m.reply(text);
+}
+
+
 
 const pluginConfig = {
   name: "autosholat",
