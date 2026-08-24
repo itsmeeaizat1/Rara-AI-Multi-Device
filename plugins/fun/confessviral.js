@@ -5,8 +5,8 @@ import { claraHeader,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "confes",
-  alias: ["confes", "confessionv2", "confesv2"],
+  name: "confessviral",
+  alias: ["confesviral", "confes", "confesv2"],
   category: "fun",
   description: "Confes anonymous ala viral TikTok: nembak, kenalan, ndate, pcr",
   usage: ".confes <nomor>|<mode>|<pesan>",
