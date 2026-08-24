@@ -151,7 +151,7 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ Set keyword + context, AI jawab otomatis`,
           `  ┊  ➶ Beda dari autoreply: AI generate jawaban dinamis`,
           ``,
-          `*Perintah:*`,
+          `*ᴘᴇʀɪɴᴛᴀʜ:*`,
           `  ┊  ➶ ${prefix}smartreply on — Aktifkan`,
           `  ┊  ➶ ${prefix}smartreply off — Matikan`,
           `  ┊  ➶ ${prefix}smartreply add <keyword>|<context>`,
@@ -160,7 +160,7 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ ${prefix}smartreply model puter|tio`,
           `  ┊  ➶ ${prefix}smartreply reset — Hapus semua`,
           ``,
-          `*Contoh:*`,
+          `*ᴄᴏɴᴛᴏʜ:*`,
           `  ┊  ➶ ${prefix}smartreply add jam buka|Toko buka 8-21, tutup Minggu`,
           `  ┊  ➶ ${prefix}smartreply add harga|Menu 15rb, paket 50rb`].join("\n")) + "\n" +
         tipText("Hanya admin grup yang bisa mengatur");
@@ -177,7 +177,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.setGroup(m.chat, { ...groupData, smartReply });
       await m.react("🐣");
       const text =
-        claraWrap("Smart Reply", [`  ┊  ➶ Status: *Aktif*`,
+        claraWrap("Smart Reply", [`  ┊  ➶ Status: *ᴀᴋᴛɪꜰ*`,
           `  ┊  ➶ Provider: *${smartReply.provider.toUpperCase()}*`,
           `  ┊  ➶ Topics: *${smartReply.topics.length}*`,
           `  ┊  ➶ Bot akan auto-jawab pertanyaan yang match keyword`].join("\n")) + "\n" +
@@ -192,7 +192,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.setGroup(m.chat, { ...groupData, smartReply });
       await m.react("🐣");
       const text =
-        claraWrap("Smart Reply", [`  ┊  ➶ Status: *Nonaktif*`,
+        claraWrap("Smart Reply", [`  ┊  ➶ Status: *ɴᴏɴᴀᴋᴛɪꜰ*`,
           `  ┊  ➶ Topics tersimpan, bisa diaktifkan lagi`].join("\n")) + "\n" +
         tipText(`Aktifkan: ${prefix}smartreply on`);
 

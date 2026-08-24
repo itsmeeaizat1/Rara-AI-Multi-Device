@@ -20,7 +20,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const DEFAULT_GROUP_RULES = `📜 *Aturan Grup*
+const DEFAULT_GROUP_RULES = `📜 *ᴀᴛᴜʀᴀɴ ɢʀᴜᴘ*
 
 ┃ 1️⃣ Dilarang spam/flood chat
 ┃ 2️⃣ Dilarang promosi tanpa izin

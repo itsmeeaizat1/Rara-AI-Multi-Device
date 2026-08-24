@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
         }
     }
     if (!buffer) {
-        await m.reply( `⚠️ *Cara Pakai*\n\n` +
+        await m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `Reply gambar + \`${m.prefix}setppgc\`\n` +
             `Kirim gambar + caption \`${m.prefix}setppgc\``, "setppgc")
         return

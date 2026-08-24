@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
   const groupData = db.getGroup(m.chat) || {};
 
   if (!groupData.mutegc) {
-    return m.reply(claraWrap("Mute GC Tidak Aktif", `🔊 *Mute GC Tidak Aktif*\n\n` +
+    return m.reply(claraWrap("Mute GC Tidak Aktif", `🔊 *ᴍᴜᴛᴇ ɢᴄ ᴛɪᴅᴀᴋ ᴀᴋᴛɪꜰ*\n\n` +
         `Member sudah bisa menggunakan command bot di grup ini`));
   }
 
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
   const ctx = saluranCtx();
   const groupName = m.groupMetadata?.subject || "grup ini";
 
-  return m.reply(claraWrap("Mute GC Nonaktif", `🔊 *Mute GC Nonaktif*\n\n` +
+  return m.reply(claraWrap("Mute GC Nonaktif", `🔊 *ᴍᴜᴛᴇ ɢᴄ ɴᴏɴᴀᴋᴛɪꜰ*\n\n` +
       `Grup: *${groupName}*\n` +
       `Member sekarang bisa menggunakan command bot lagi\n\n` +
       `_Ketik *${m.prefix}mutegc* untuk memblokir kembali_`));

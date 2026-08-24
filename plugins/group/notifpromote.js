@@ -26,19 +26,19 @@ function handler(m, { sock, db }) {
     
     if (!['on', 'off'].includes(args)) {
         const status = group.notifPromote === true ? '✅ Aktif' : '❌ Nonaktif'
-        return m.reply(`👑 *Notif Promote*\n\nStatus: ${status}\n\n*Penggunaan:*\n\`${m.prefix}notifpromote on\` - Aktifkan\n\`${m.prefix}notifpromote off\` - Nonaktifkan`)
+        return m.reply(`👑 *ɴᴏᴛɪꜰ ᴘʀᴏᴍᴏᴛᴇ*\n\nStatus: ${status}\n\n*ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n\`${m.prefix}notifpromote on\` - Aktifkan\n\`${m.prefix}notifpromote off\` - Nonaktifkan`)
     }
     
     if (args === 'on') {
         group.notifPromote = true
         db.setGroup(m.chat, group)
-        return m.reply(claraWrap("Notifpromote", `✅ *Notif Promote Diaktifkan*`))
+        return m.reply(claraWrap("Notifpromote", `✅ *ɴᴏᴛɪꜰ ᴘʀᴏᴍᴏᴛᴇ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`))
     }
     
     if (args === 'off') {
         group.notifPromote = false
         db.setGroup(m.chat, group)
-        return m.reply(claraWrap("Notifpromote", `❌ *Notif Promote Dinonaktifkan*`))
+        return m.reply(claraWrap("Notifpromote", `❌ *ɴᴏᴛɪꜰ ᴘʀᴏᴍᴏᴛᴇ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`))
     }
 }
 

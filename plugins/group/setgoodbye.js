@@ -23,8 +23,8 @@ async function handler(m, { sock }) {
   const text = m.text || m.args.join(" ");
 
   if (!text) {
-    return m.reply( `📝 *sEt Goodbye*\n\n` +
-        `╭┈┈⬡「 📋 *Placeholder* 」\n` +
+    return m.reply( `📝 *ꜱᴇᴛ ɢᴏᴏᴅʙʏᴇ*\n\n` +
+        `╭┈┈⬡「 📋 *ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀ* 」\n` +
         `┃   ┊  ➶ \`{user}\` - Nama member\n` +
         `┃   ┊  ➶ \`{number}\` - Nomor member\n` +
         `┃   ┊  ➶ \`{group}\` - Nama grup\n` +

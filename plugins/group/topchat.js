@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
   if (sorted.length === 0) {
     return m.reply(claraWrap("Chat Statistics", ["Belum ada data chat di grup ini.", "Data akan tercatat otomatis setelah member aktif chat."].join("\n")));
   }
-  let txt = `📊 *TOTAL CHAT*\nBerikut ini adalah jumlah pesan yang dikirim oleh member di grup ini:\n\n`;
+  let txt = `📊 *ᴛᴏᴛᴀʟ ᴄʜᴀᴛ*\nBerikut ini adalah jumlah pesan yang dikirim oleh member di grup ini:\n\n`;
   for (let i = 0; i < sorted.length; i++) {
     const { jid, count } = sorted[i];
     const name = group.chatStats[jid]?.name || jid.split("@")[0];

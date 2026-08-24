@@ -99,8 +99,8 @@ function autoCloseExpired(db, sock) {
         const winner = auction.bids[auction.bids.length - 1];
         auction.winner = winner;
         const winnerText =
-          "🏆 *LELANG BERAKHIR*\n\n" +
-          "╭┈┈「 📋 *Info* 」\n" +
+          "🏆 *ʟᴇʟᴀɴɢ ʙᴇʀᴀᴋʜɪʀ*\n\n" +
+          "╭┈┈「 📋 *ɪɴꜰᴏ* 」\n" +
           "  ┊  ➶ Item: *" + auction.title + "*\n" +
           "  ┊  ➶ ID: `" + id + "`\n" +
           "  ┊  ➶ Pemenang: @" + winner.bidder.split("@")[0] + "\n" +
@@ -116,8 +116,8 @@ function autoCloseExpired(db, sock) {
       } else {
         sock.sendMessage(auction.chatId, {
           text:
-            "😔 *LELANG BERAKHIR*\n\n" +
-            "╭┈┈「 📋 *Info* 」\n" +
+            "😔 *ʟᴇʟᴀɴɢ ʙᴇʀᴀᴋʜɪʀ*\n\n" +
+            "╭┈┈「 📋 *ɪɴꜰᴏ* 」\n" +
             "  ┊  ➶ Item: *" + auction.title + "*\n" +
             "  ┊  ➶ ID: `" + id + "`\n" +
             "  ┊  ➶ Total Bid: 0\n" +

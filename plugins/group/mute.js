@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text =
       claraWrap("Mute", [`  ┊  ➶ Target: *${targetName}*`,
-        "  ┊  ➶ Status: *Berhasil dimute*"].join("\n")) +
+        "  ┊  ➶ Status: *ʙᴇʀʜᴀꜱɪʟ ᴅɪᴍᴜᴛᴇ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}mute <@target> untuk mute orang lain`) +
       "\n" +
@@ -47,7 +47,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

@@ -153,7 +153,7 @@ export default {
     if (new RegExp(`^${prefix}ptgon\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Patungan", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
@@ -161,7 +161,7 @@ export default {
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Patungan", [
-        `┊ Status: *AKTIF* 🟢`,
+        `┊ Status: *ᴀᴋᴛɪꜰ* 🟢`,
         ``,
         `┊ Fitur Split Bill & Patungan dinyalakan.`,
         `┊ Ketik *${prefix}ptg <total> | <orang> | <keterangan>*`,
@@ -174,7 +174,7 @@ export default {
     if (new RegExp(`^${prefix}ptgoff\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Patungan", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
@@ -182,7 +182,7 @@ export default {
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Patungan", [
-        `┊ Status: *NONAKTIF* 🔴`,
+        `┊ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
         ``,
         `┊ Fitur Patungan dimatikan.`,
         `┊ Ketik *${prefix}ptgon* untuk aktifkan lagi.`,
@@ -221,7 +221,7 @@ export default {
     // Check if feature is enabled
     if (!isPtgOn(groupId)) {
       await m.reply(claraWrap("Patungan", [
-        `┊ Status: *Nonaktif di grup ini*`,
+        `┊ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
         ``,
         `┊ Owner: ketik *${prefix}ptgon* untuk mengaktifkan.`,
       ].join("\n")));
@@ -427,7 +427,7 @@ export default {
     if (subCmd && subCmd[1] === "lunas") {
       if (!isOwner) {
         await m.reply(claraWrap("Patungan", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa menandai orang lain sebagai lunas.`,
           `┊ Kalau kamu yang mau bayar, ketik *${prefix}ptg bayar <id>*`,
@@ -518,7 +518,7 @@ export default {
     if (subCmd && subCmd[1] === "close") {
       if (!isOwner) {
         await m.reply(claraWrap("Patungan", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa menutup patungan.`,
         ].join("\n")));

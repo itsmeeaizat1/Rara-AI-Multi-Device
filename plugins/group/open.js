@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
         
         if (!groupMeta.announce) {
             await m.reply(
-                `⚠️ *Validasi Gagal*\n\n` +
+                `⚠️ *ᴠᴀʟɪᴅᴀꜱɪ ɢᴀɢᴀʟ*\n\n` +
                 `Grup sudah dalam keadaan \`terbuka\`.\n` +
                 `Semua member sudah bisa mengirim pesan.`
             );

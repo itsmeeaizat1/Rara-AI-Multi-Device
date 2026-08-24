@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   const chatId = m.chat;
 
   if (global.absensi[chatId]) {
-    return m.reply(claraWrap("Masih Ada Absen", `❌ *Masih Ada Absen*\n\n` +
+    return m.reply(claraWrap("Masih Ada Absen", `❌ *ᴍᴀꜱɪʜ ᴀᴅᴀ ᴀʙꜱᴇɴ*\n\n` +
         `Masih ada sesi absen di grup ini!\n\n` +
         `Ketik *.hapusabsen* untuk menghapus\n` +
         `atau *.cekabsen* untuk melihat daftar`));
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
   const saluranId = config.saluran?.id || "120363400911374213@newsletter";
   const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
-  await m.reply(claraWrap("ABSEN UDAH JALAN NIHH", `📋 *ABSEN UDAH JALAN NIHH*\n\n` +
+  await m.reply(claraWrap("ABSEN UDAH JALAN NIHH", `📋 *ᴀʙꜱᴇɴ ᴜᴅᴀʜ ᴊᴀʟᴀɴ ɴɪʜʜ*\n\n` +
       `「 📋 *InғO* 」\n` +
       `📝 ${keterangan}\n` +
       `👑 Dibuat oleh: @${m.sender.split("@")[0]}\n` +

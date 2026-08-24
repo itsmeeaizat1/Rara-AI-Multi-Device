@@ -26,19 +26,19 @@ function handler(m, { sock, db }) {
     
     if (!['on', 'off'].includes(args)) {
         const status = group.notifOpenGroup === true ? '✅ Aktif' : '❌ Nonaktif'
-        return m.reply(`🔓 *Notif Open Group*\n\nStatus: ${status}\n\n*Penggunaan:*\n\`${m.prefix}notifopengroup on\` - Aktifkan\n\`${m.prefix}notifopengroup off\` - Nonaktifkan`)
+        return m.reply(`🔓 *ɴᴏᴛɪꜰ ᴏᴘᴇɴ ɢʀᴏᴜᴘ*\n\nStatus: ${status}\n\n*ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n\`${m.prefix}notifopengroup on\` - Aktifkan\n\`${m.prefix}notifopengroup off\` - Nonaktifkan`)
     }
     
     if (args === 'on') {
         group.notifOpenGroup = true
         db.setGroup(m.chat, group)
-        return m.reply(claraWrap("Notifopengroup", `✅ *Notif Open Group Diaktifkan*`))
+        return m.reply(claraWrap("Notifopengroup", `✅ *ɴᴏᴛɪꜰ ᴏᴘᴇɴ ɢʀᴏᴜᴘ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`))
     }
     
     if (args === 'off') {
         group.notifOpenGroup = false
         db.setGroup(m.chat, group)
-        return m.reply(claraWrap("Notifopengroup", `❌ *Notif Open Group Dinonaktifkan*`))
+        return m.reply(claraWrap("Notifopengroup", `❌ *ɴᴏᴛɪꜰ ᴏᴘᴇɴ ɢʀᴏᴜᴘ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`))
     }
 }
 

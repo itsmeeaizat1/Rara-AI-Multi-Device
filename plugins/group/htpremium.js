@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
             const finalText = text || quotedText
 
             if (!finalText) {
-                return m.reply(claraWrap("Htpremium", '❌ *Pesan kosong*'))
+                return m.reply(claraWrap("Htpremium", '❌ *ᴘᴇꜱᴀɴ ᴋᴏꜱᴏɴɢ*'))
             }
 
             return sock.sendMessage(m.chat, {
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
             })
         }
         if (!text) {
-            return m.reply( `📢 *HIDETAG PREMIUM*\n\n` +
+            return m.reply( `📢 *ʜɪᴅᴇᴛᴀɢ ᴘʀᴇᴍɪᴜᴍ*\n\n` +
                 `Reply pesan lalu ketik \`${m.prefix}ht\`\n` +
                 `Atau ketik \`${m.prefix}ht <custom tag> | <pesan>\`\n\n` +
                 `Contoh: \`${m.prefix}ht everyone | hai semua\`\n\n` +

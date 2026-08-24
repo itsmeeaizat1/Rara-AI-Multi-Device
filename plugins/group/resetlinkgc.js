@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
         await sock.groupRevokeInvite(m.chat)
         
         m.react('✅')
-        { const __navText = `✅ *Link Grup Direset*\nLink grup lama sudah tidak berlaku.\nGunakan \`${m.prefix}linkgc\` untuk mendapatkan link baru.`; await m.reply(__navText); }
+        { const __navText = `✅ *ʟɪɴᴋ ɢʀᴜᴘ ᴅɪʀᴇꜱᴇᴛ*\nLink grup lama sudah tidak berlaku.\nGunakan \`${m.prefix}linkgc\` untuk mendapatkan link baru.`; await m.reply(__navText); }
         
     } catch (err) {
         m.reply(claraWrap("resetlinkgc", te(m.prefix, m.command, m.pushName), "error"))

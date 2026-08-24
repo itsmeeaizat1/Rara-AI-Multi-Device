@@ -47,10 +47,10 @@ async function handler(m, { sock }) {
 
     if (m.command === 'listmutemember' || m.command === 'listmute') {
         if (mutedMembers.length === 0) {
-            return m.reply(claraWrap("Unmutemember", `🔇 *LIST MUTED MEMBERS*\n\nTidak ada member yang dimute di grup ini`))
+            return m.reply(claraWrap("Unmutemember", `🔇 *ʟɪꜱᴛ ᴍᴜᴛᴇᴅ ᴍᴇᴍʙᴇʀꜱ*\n\nTidak ada member yang dimute di grup ini`))
         }
 
-        let txt = `🔇 *LIST MUTED MEMBERS*\n\n╭┈┈⬡「 📋 *Daftar* 」\n`
+        let txt = `🔇 *ʟɪꜱᴛ ᴍᴜᴛᴇᴅ ᴍᴇᴍʙᴇʀꜱ*\n\n╭┈┈⬡「 📋 *ᴅᴀꜰᴛᴀʀ* 」\n`
         mutedMembers.forEach((jid, i) => {
             const num = jid.replace(/@.+/g, '')
             txt += `┃ ${i + 1}. @${num}\n`
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     const targetJid = resolveTarget(m)
 
     if (!targetJid) {
-        return m.reply( `🔊 *UNMUTE MEMBER*\n\n` +
+        return m.reply( `🔊 *ᴜɴᴍᴜᴛᴇ ᴍᴇᴍʙᴇʀ*\n\n` +
             `Membuka mute member tertentu\n\n` +
             `\`Contoh:\`\n` +
             `${m.prefix}unmutemember @user\n` +
@@ -79,14 +79,14 @@ async function handler(m, { sock }) {
     })
 
     if (index === -1) {
-        return m.reply(claraWrap("Unmutemember", `❌ *Gagal*\n\nMember @${targetNumber} tidak sedang dimute`))
+        return m.reply(claraWrap("Unmutemember", `❌ *ɢᴀɢᴀʟ*\n\nMember @${targetNumber} tidak sedang dimute`))
     }
 
     mutedMembers.splice(index, 1)
     db.setGroup(m.chat, { ...groupData, mutedMembers })
 
-    await m.reply(`🔊 *MEMBER DIUNMUTE*\n\n` +
-        `╭┈┈⬡「 📋 *Detail* 」\n` +
+    await m.reply(`🔊 *ᴍᴇᴍʙᴇʀ ᴅɪᴜɴᴍᴜᴛᴇ*\n\n` +
+        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `┃ 👤 Member: @${targetNumber}\n` +
         `┃ 🔊 sTatus: \`Unmuted\`\n` +
         `┃ 📊 sIsa Mute: \`${mutedMembers.length}\` Member\n` +
