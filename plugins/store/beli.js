@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
 
   if (products.length === 0) {
     return m.reply(
-      `📭 *Belum ada produk tersedia.*\n\nKetik \`${m.prefix}listproduk\` untuk melihat daftar produk 🛍️`,
+      `📭 *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ ᴛᴇʀꜱᴇᴅɪᴀ.*\n\nKetik \`${m.prefix}listproduk\` untuk melihat daftar produk 🛍️`,
     );
   }
 
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
   const idx = parseInt(args[0]) - 1;
 
   if (isNaN(idx) || idx < 0 || idx >= products.length) {
-    let txt = `🛒 *Pilih Produk*\n\nKetik \`${m.prefix}beli <nomor>\` untuk memesan.\n\n`;
+    let txt = `🛒 *ᴘɪʟɪʜ ᴘʀᴏᴅᴜᴋ*\n\nKetik \`${m.prefix}beli <nomor>\` untuk memesan.\n\n`;
     for (let i = 0; i < products.length; i++) {
       const p = products[i];
       const typeIcon = p.type === "fisik" ? "📦" : "🔑";
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
 
   if (!isAvailable) {
     return m.reply(
-      `❌ *Stok Habis*\n\n` +
+      `❌ *ꜱᴛᴏᴋ ʜᴀʙɪꜱ*\n\n` +
         `${typeIcon} Produk *${product.name}* saat ini sedang tidak tersedia 😔\n\n` +
         `Silakan hubungi admin atau cek kembali nanti.\n\n` +
         `_Kami akan segera mengisi ulang stok_ 🙏`,
@@ -97,9 +97,9 @@ async function handler(m, { sock }) {
       ? `${String(ownerNumbers[0]).replace(/[^0-9]/g, "")}@s.whatsapp.net`
       : null;
 
-  let txt = `🛒 *PESANAN DIBUAT*\n\n`;
+  let txt = `🛒 *ᴘᴇꜱᴀɴᴀɴ ᴅɪʙᴜᴀᴛ*\n\n`;
   txt += `🧾 Nomor Transaksi: \`${trxId}\`\n\n`;
-  txt += `📦 *Detail Pesanan:*\n`;
+  txt += `📦 *ᴅᴇᴛᴀɪʟ ᴘᴇꜱᴀɴᴀɴ:*\n`;
   txt += `${typeIcon} Produk: *${product.name}*\n`;
   txt += `🏷️ Tipe: *${typeLabel}*\n`;
   txt += `💰 Harga: *${formatPrice(product.price)}*\n`;
@@ -124,7 +124,7 @@ async function handler(m, { sock }) {
     await m.reply(claraWrap("belistore", txt));
   }
 
-  let paymentTxt = `💳 *INSTRUKSI PEMBAYARAN*\n\n`;
+  let paymentTxt = `💳 *ɪɴꜱᴛʀᴜᴋꜱɪ ᴘᴇᴍʙᴀʏᴀʀᴀɴ*\n\n`;
   paymentTxt += `1️⃣ Transfer sebesar *${formatPrice(product.price)}* ke nomor admin 💰\n`;
 
   if (config.store?.payment?.length) {
@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
     paymentTxt += `   📱 QRIS: Tersedia\n`;
   }
 
-  paymentTxt += `\n2️⃣ Setelah transfer, kirim *bukti pembayaran* ke admin 📸\n`;
+  paymentTxt += `\n2️⃣ Setelah transfer, kirim *ʙᴜᴋᴛɪ ᴘᴇᴍʙᴀʏᴀʀᴀɴ* ke admin 📸\n`;
   paymentTxt += `3️⃣ Admin akan memverifikasi dan mengirim data produk ke Anda ✅\n\n`;
   paymentTxt += `🧾 Nomor Transaksi Anda: \`${trxId}\`\n`;
   paymentTxt += `_Simpan nomor ini untuk referensi_ 📌`;
@@ -160,7 +160,7 @@ async function handler(m, { sock }) {
       }
       await sock.sendMessage(m.chat, {
         image: qrisBuffer,
-        caption: "\n*Scan QRIS di atas untuk pembayaran*"
+        caption: "\n*ꜱᴄᴀɴ qʀɪꜱ ᴅɪ ᴀᴛᴀꜱ ᴜɴᴛᴜᴋ ᴘᴇᴍʙᴀʏᴀʀᴀɴ*"
       }, { quoted: m });
     } catch (e) { console.error('[beli.js]:', e.message); }
   }
@@ -169,7 +169,7 @@ async function handler(m, { sock }) {
     const buyerNum = m.sender.split("@")[0];
     await sock.sendMessage(ownerJid, {
       text:
-        `🛒 *PESANAN BARU*\n\n` +
+        `🛒 *ᴘᴇꜱᴀɴᴀɴ ʙᴀʀᴜ*\n\n` +
         `🧾 TRX: \`${trxId}\`\n` +
         `👤 Pembeli: *${m.pushName || buyerNum}*\n` +
         `📱 Nomor: \`${buyerNum}\`\n` +
