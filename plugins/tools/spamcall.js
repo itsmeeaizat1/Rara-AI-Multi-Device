@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
     const targetClean = String(target).replace(/@.+$/, "");
 
     for (let i = 0; i < count; i++) {
-      const body = `📞 *SPAM CALL*\n┃   ┊  ➶ Target: *@${targetClean}*\n┃   ┊  ➶ Call #${i + 1}/${count}`;
+      const body = `📞 *ꜱᴘᴀᴍ ᴄᴀʟʟ*\n┃   ┊  ➶ Target: *@${targetClean}*\n┃   ┊  ➶ Call #${i + 1}/${count}`;
       mentions.push(targetClean);
       await sock.sendMessage(chat, { text: body, mentions });
     }
@@ -51,7 +51,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("Spam Call", [`  ┊  ➶ Target: *@${targetClean}*`,
         `  ┊  ➶ Jumlah: *${count}x*`,
-        "  ┊  ➶ Status: *SELESAI*"].join("\n")) +
+        "  ┊  ➶ Status: *ꜱᴇʟᴇꜱᴀɪ*"].join("\n")) +
       "\n" +
       tipText(`Gunakan dengan bijak`) +
       "\n" +
@@ -61,7 +61,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

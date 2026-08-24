@@ -41,19 +41,19 @@ async function handler(m, { sock, text }) {
     const imageResponse = await axios.get(firstVideo.thumbnail, { responseType: "arraybuffer" });
     const thumbnailBuffer = await sharp(imageResponse.data).resize(300, 170).jpeg().toBuffer();
 
-    const contentText = `✨ *HASIL PENCARIAN YOUTUBE* ✨
+    const contentText = `✨ *ʜᴀꜱɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ ʏᴏᴜᴛᴜʙᴇ* ✨
 
 Halo! Ini dia hasil pencarian teratas yang aku temukan berdasarkan kata kunci yang kamu berikan. 
 
-🔎 *Kata Kunci Pencarian*: ${text}
-🎬 *Judul Video*: ${firstVideo.title}
-📺 *Nama Channel*: ${firstVideo.author.name}
-⏱️ *Durasi Video*: ${firstVideo.timestamp}
-👁️ *Jumlah Penonton*: ${firstVideo.views} views
-📅 *Waktu Diunggah*: ${firstVideo.ago}
-🔗 *Tautan Video*: ${firstVideo.url}
+🔎 *ᴋᴀᴛᴀ ᴋᴜɴᴄɪ ᴘᴇɴᴄᴀʀɪᴀɴ*: ${text}
+🎬 *ᴊᴜᴅᴜʟ ᴠɪᴅᴇᴏ*: ${firstVideo.title}
+📺 *ɴᴀᴍᴀ ᴄʜᴀɴɴᴇʟ*: ${firstVideo.author.name}
+⏱️ *ᴅᴜʀᴀꜱɪ ᴠɪᴅᴇᴏ*: ${firstVideo.timestamp}
+👁️ *ᴊᴜᴍʟᴀʜ ᴘᴇɴᴏɴᴛᴏɴ*: ${firstVideo.views} views
+📅 *ᴡᴀᴋᴛᴜ ᴅɪᴜɴɢɢᴀʜ*: ${firstVideo.ago}
+🔗 *ᴛᴀᴜᴛᴀɴ ᴠɪᴅᴇᴏ*: ${firstVideo.url}
 
-*Catatan Tambahan*: Thumbnail dari video ini sudah aku sematkan di bagian atas pesan (peta lokasi) sesuai permintaanmu. Keren kan? 😎
+*ᴄᴀᴛᴀᴛᴀɴ ᴛᴀᴍʙᴀʜᴀɴ*: Thumbnail dari video ini sudah aku sematkan di bagian atas pesan (peta lokasi) sesuai permintaanmu. Keren kan? 😎
 
 Pilih salah satu tombol di bawah ini untuk langsung mengunduh hasil video atau audio-nya!`;
 

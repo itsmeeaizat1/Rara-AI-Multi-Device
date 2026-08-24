@@ -62,7 +62,7 @@ async function handler(m, { args, sock }) {
   }
 
   if (!args[0]) {
-    let txt = `🔑 *VERIFIKASI OTP*\n\n`;
+    let txt = `🔑 *ᴠᴇʀɪꜰɪᴋᴀꜱɪ ᴏᴛᴘ*\n\n`;
     txt += `Masukkan kode OTP yang dikirim ke email:\n`;
     txt += `\`${m.prefix}verotp <kode>\`\n\n`;
     txt += `Contoh: \`${m.prefix}verotp 123456\``;
@@ -126,14 +126,14 @@ async function handler(m, { args, sock }) {
     await db.save();
     clearOtpSession(m.sender);
 
-    let txt = `╭┈┈⬡「 ✅ *VERIFIED* 」\n`;
+    let txt = `╭┈┈⬡「 ✅ *ᴠᴇʀɪꜰɪᴇᴅ* 」\n`;
     txt += `┃ 📛 Nama: *${session.name}*\n`;
     txt += `┃ 📧 Email: *${session.email}*\n`;
     txt += `┃ 🔑 SN: *${serial}*\n`;
     txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
 
     if (!alreadyClaimed) {
-      txt += `╭┈┈⬡「 🎁 *REWARDS* 」\n`;
+      txt += `╭┈┈⬡「 🎁 *ʀᴇᴡᴀʀᴅꜱ* 」\n`;
       txt += `┃ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n`;
       txt += `┃ ⚡ +${rewards.energi} Energi\n`;
       txt += `┃ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n`;

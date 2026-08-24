@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     );
 
     if (!data) {
-      return m.reply(claraWrap("Asupantiktok", `🚩 *Username Tidak Ditemukan*\n\nUsername: ${query}`));
+      return m.reply(claraWrap("Asupantiktok", `🚩 *ᴜꜱᴇʀɴᴀᴍᴇ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\nUsername: ${query}`));
     }
 
     const video = data;
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
       contextInfo: saluranCtx(),
     });
   } catch (error) {
-    m.reply(claraWrap("Username Tidak Ditemukan", `🚩 *Username Tidak Ditemukan*\n\nUsername: ${query}`));
+    m.reply(claraWrap("Username Tidak Ditemukan", `🚩 *ᴜꜱᴇʀɴᴀᴍᴇ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\nUsername: ${query}`));
   }
 }
 

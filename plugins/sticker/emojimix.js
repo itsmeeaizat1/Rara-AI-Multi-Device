@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (!text) {
-        return m.reply( `🎭 *Emoji Mix*\n\n` +
+        return m.reply( `🎭 *ᴇᴍᴏᴊɪ ᴍɪx*\n\n` +
             `Gabungkan 2 emoji menjadi 1\n\n` +
             `Contoh: \`${m.prefix}emojimix 😂🔥\``, "emojimix")
     }

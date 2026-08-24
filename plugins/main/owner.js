@@ -47,9 +47,9 @@ async function handler(m, { sock, config: botConfig }) {
   } else {
     const ownerText = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Owner Information
 ┊
-  ┊  ➶ *Nama:* ${ownerNames}
-  ┊  ➶ *Bot:* ${botName}
-  ┊  ➶ *Status:* Online
+  ┊  ➶ *ɴᴀᴍᴀ:* ${ownerNames}
+  ┊  ➶ *ʙᴏᴛ:* ${botName}
+  ┊  ➶ *ꜱᴛᴀᴛᴜꜱ:* Online
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
 Jika ada pertanyaan atau kendala,

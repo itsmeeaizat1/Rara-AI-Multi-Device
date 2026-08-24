@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   const text = args.join(" ");
 
   if (!text || !text.includes("|")) {
-    return m.reply( `🧾 *INVOICE MAKER*\n\n` +
+    return m.reply( `🧾 *ɪɴᴠᴏɪᴄᴇ ᴍᴀᴋᴇʀ*\n\n` +
         `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ FORMAT\n` +
         `  ┊  ➶ \`${m.prefix}invoicemaker <toko>|<invoice>|<tanggal>|<status>|<items>|<total>\`\n` +
         `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
-    let caption = `🧾 *INVOICE GENERATED*\n\n`;
+    let caption = `🧾 *ɪɴᴠᴏɪᴄᴇ ɢᴇɴᴇʀᴀᴛᴇᴅ*\n\n`;
     caption += `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ DETAIL\n`;
     caption += `  ┊  ➶ 🏪 Toko: *${data.store}*\n`;
     caption += `  ┊  ➶ 🔢 Invoice: *${data.invoice}*\n`;

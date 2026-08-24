@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
     
     if (!text) {
         return m.reply(
-            `🎸 *Chords sEarch*\n\n` +
+            `🎸 *ᴄʜᴏʀᴅꜱ ꜱᴇᴀʀᴄʜ*\n\n` +
             `Cari chord/kunci gitar lagu\n\n` +
             `Contoh:\n` +
             `\`${m.prefix}chords komang\`\n` +

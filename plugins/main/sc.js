@@ -25,13 +25,13 @@ async function handler(m, { sock }) {
 
   const caption = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Script Bot
 ┊
-  ┊  ➶ *Bot:* ${botName}
-  ┊  ➶ *User:* ${m.pushName}
+  ┊  ➶ *ʙᴏᴛ:* ${botName}
+  ┊  ➶ *ᴜꜱᴇʀ:* ${m.pushName}
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
   ┊  ➶ Untuk asli dari bot ini, kamu bisa
   ┊  ➶ dapatkan melalui link di bawah.
-  ┊  ➶ Cari kata kunci *NOVA MD*`;
+  ┊  ➶ Cari kata kunci *ɴᴏᴠᴀ ᴍᴅ*`;
 
   return await sock.sendMessage(m.chat, {
     image: getAssetBuffer("nova"),

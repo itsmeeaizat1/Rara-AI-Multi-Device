@@ -44,10 +44,10 @@ async function handler(m, { sock }) {
     const text = m.text
     
     if (!text || !text.includes('|')) {
-        return m.reply( `⚠️ *Cara Pakai*\n\n` +
+        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `\`${m.prefix}fakecall <nama> | <durasi>\`\n\n` +
             `Contoh: \`${m.prefix}fakecall Marin | 19.00\`\n\n` +
-            `💡 *Tips:* Reply gambar untuk custom avatar`, "fakecall")
+            `💡 *ᴛɪᴘꜱ:* Reply gambar untuk custom avatar`, "fakecall")
     }
     
     const [nama, durasi] = text.split('|').map(s => s.trim())

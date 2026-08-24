@@ -72,7 +72,7 @@ function handler(m, { sock }) {
     const pteroConfig = config.pterodactyl
     
     if (!hasAccess(m.sender, m.isOwner, pteroConfig)) {
-        return m.reply(claraWrap("addseller", `❌ *Akses Ditolak*\n\nFitur ini hanya untuk Owner atau Owner Panel.`))
+        return m.reply(claraWrap("addseller", `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\nFitur ini hanya untuk Owner atau Owner Panel.`))
     }
     
     if (!pteroConfig) {
@@ -113,7 +113,7 @@ function handler(m, { sock }) {
     }
     
     if (!targetUser) {
-        return m.reply( `⚠️ *Cara Pakai*\n\n` +
+        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `\`${m.prefix}${cmd} @user\`\n` +
             `\`${m.prefix}${cmd} 628xxx\`\n` +
             `Reply pesan user`, "addseller")
@@ -135,8 +135,8 @@ function handler(m, { sock }) {
         
         if (saveConfig()) {
             m.react('✅')
-            return m.reply(`✅ *sEller Ditambahkan*\n\n` +
-                `╭┈┈⬡「 📋 *Detail* 」\n` +
+            return m.reply(`✅ *ꜱᴇʟʟᴇʀ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
+                `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
                 `┃ 📱 Nomor: \`${targetUser}\`\n` +
                 `┃ 🏷️ sTatus: \`Seller/Reseller\`\n` +
                 `┃ 🔓 Akses: \`Create Server (1gb-10gb v1-v3)\`\n` +
@@ -157,7 +157,7 @@ function handler(m, { sock }) {
         
         if (saveConfig()) {
             m.react('✅')
-            return m.reply(`✅ *sEller Dihapus*\n\n` +
+            return m.reply(`✅ *ꜱᴇʟʟᴇʀ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
                 `Nomor: \`${targetUser}\`\n` +
                 `Total: *${pteroConfig.sellers.length}* seller`)
         } else {

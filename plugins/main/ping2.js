@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
             tableData,
             m,
             {
-                headerText: `${config.bot?.name || 'Nova-AI'} *STATUS*\n\n- 🎄 Dibawah ini adalah statistik bot kita`,
+                headerText: `${config.bot?.name || 'Nova-AI'} *ꜱᴛᴀᴛᴜꜱ*\n\n- 🎄 Dibawah ini adalah statistik bot kita`,
                 footer: '🍃 Realtime Monitoring'
             }
         )

@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     
     const message = 
         `👑 *Apa Itu Owner?*\n\n` +
-        `Owner adalah *pemilik bot* yang memiliki akses penuh ke semua fitur dan kontrol sistem.\n\n` +
+        `Owner adalah *ᴘᴇᴍɪʟɪᴋ ʙᴏᴛ* yang memiliki akses penuh ke semua fitur dan kontrol sistem.\n\n` +
         `╭┈┈⬡「 🔐 *KeiꜱTimewaan Owner* 」\n` +
         `┃ ✦ \`\`\`Akses semua command tanpa batasan\`\`\`\n` +
         `┃ ✦ \`\`\`Limit tidak terbatas (-1)\`\`\`\n` +
@@ -42,12 +42,12 @@ async function handler(m, { sock }) {
         `┃ ✦ \`\`\`Manajemen user & group\`\`\`\n` +
         `┃ ✦ \`\`\`Akses panel & server\`\`\`\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `╭┈┈⬡「 ⚙️ *Cara Kerja* 」\n` +
+        `╭┈┈⬡「 ⚙️ *ᴄᴀʀᴀ ᴋᴇʀᴊᴀ* 」\n` +
         `┃ \`Owner ditambahkan melalui:\`\n` +
         `┃ • \`\`\`${config.command?.prefix || '.'}addowner <nomor>\`\`\`\n` +
         `┃ • Atau langsung di config.js\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `╭┈┈⬡「 📋 *Daftar Command Owner* 」\n` +
+        `╭┈┈⬡「 📋 *ᴅᴀꜰᴛᴀʀ ᴄᴏᴍᴍᴀɴᴅ ᴏᴡɴᴇʀ* 」\n` +
         `┃ \`Total: ${totalCommands} command\`\n` +
         `┃\n` +
         commandList.map(cmd => `┃ ${cmd}`).join('\n') +

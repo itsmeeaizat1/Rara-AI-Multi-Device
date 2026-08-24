@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     return m.reply(
       `🎮 *Fake Developer 2*\n\n` +
         `Masukkan nama untuk profile\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `1. Kirim foto + caption \`${m.prefix}fakedev2 <nama>\`\n` +
         `2. Reply foto dengan \`${m.prefix}fakedev2 <nama>\``,
     );

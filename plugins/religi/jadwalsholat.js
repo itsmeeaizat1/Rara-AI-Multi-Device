@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
   try {
     const kota = await searchKota(city);
     if (!kota) {
-      return m.reply(claraWrap("Gagal", `❌ *Gagal*\n\nKota "${city}" tidak ditemukan\nCoba nama kabupaten/kota lain`));
+      return m.reply(claraWrap("Gagal", `❌ *ɢᴀɢᴀʟ*\n\nKota "${city}" tidak ditemukan\nCoba nama kabupaten/kota lain`));
     }
     const jadwalData = await getTodaySchedule(kota.id);
     const times = extractPrayerTimes(jadwalData);
@@ -40,12 +40,12 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
-    const caption = `🕌 *Jadwal sHolat*
+    const caption = `🕌 *ᴊᴀᴅᴡᴀʟ ꜱʜᴏʟᴀᴛ*
 ╭┈┈⬡「 📍 *${lokasi}* 」
 ┃ 📅 ${today}
 ┃ 🗺️ ${daerah}
 ╰┈┈⬡
-╭┈┈⬡「 ⏰ *Waktu sHolat* 」
+╭┈┈⬡「 ⏰ *ᴡᴀᴋᴛᴜ ꜱʜᴏʟᴀᴛ* 」
 ┃ 🌙 Imsak: \`${times.imsak}\`
 ┃ 🌅 sUbuh: \`${times.subuh}\`
 ┃ ☀️ Terbit: \`${times.terbit}\`

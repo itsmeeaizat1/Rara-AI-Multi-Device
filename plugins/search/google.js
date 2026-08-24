@@ -22,11 +22,11 @@ async function handler(m, { sock }) {
   const query = m.text?.trim();
 
   if (!query) {
-    return m.reply( `🔍 *Google News*\n\n` +
+    return m.reply( `🔍 *ɢᴏᴏɢʟᴇ ɴᴇᴡꜱ*\n\n` +
         `Cari berita terbaru dari Google News.\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}google <topik>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}google gempa hari ini*\n` +
         `*${m.prefix}google teknologi terbaru*`, "google");
   }
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     const result = await GoogleSearch(query);
 
     if (!result.status) {
-      return m.reply(claraWrap("google", `❌ *Google Gagal*\n\n${result.error}`));
+      return m.reply(claraWrap("google", `❌ *ɢᴏᴏɢʟᴇ ɢᴀɢᴀʟ*\n\n${result.error}`));
     }
 
     const items = result.results.slice(0, 10);
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       { const __navText = `❌ Nggak nemu hasil buat: *${query}*`; return await m.reply(__navText); };
     }
 
-    let txt = `🔍 *Google News*\n\n`;
+    let txt = `🔍 *ɢᴏᴏɢʟᴇ ɴᴇᴡꜱ*\n\n`;
     txt += `Pencarian: *${query}*\n\n`;
 
     items.forEach((item) => {

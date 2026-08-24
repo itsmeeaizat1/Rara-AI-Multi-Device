@@ -60,7 +60,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("YesNo", [
       `  ┊  ➶ Decision maker dramatis`,
       ``,
-      `  ┊  ➶ *Cara pakai:*`,
+      `  ┊  ➶ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  ${prefix}yesno <pertanyaan>`,
       `  ${prefix}yesno harus aku terima tawaran kerja ini?`,
       ``,

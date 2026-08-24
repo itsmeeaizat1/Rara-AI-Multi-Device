@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
   if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
     const userRole = getUserRole(m.sender, serverVersion);
     return m.reply(
-      `❌ *Akses Ditolak*\n\n` +
+      `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
         `Kamu tidak punya akses ke *${serverLabel}*\n` +
         `Role kamu: *${userRole || "Tidak ada"}*`,
     );
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
   if (!username) {
     const available = getAvailableServers(pteroConfig);
     return m.reply(
-      `⚠️ *Cara Pakai*\n\n` +
+      `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `\`${m.prefix}${m.command} username\`\n` +
         `\`${m.prefix}${m.command} username,628xxx\`\n` +
         `Reply/mention user\n\n` +
@@ -163,7 +163,7 @@ async function handler(m, { sock }) {
   const password = username + crypto.randomBytes(3).toString("hex");
 
   await m.reply(
-    `🛠️ *Membuat Admin Panel...*\n\nServer: *${serverLabel}*\nUsername: \`${username}\`\nTarget: \`${targetUser.split("@")[0]}\``,
+    `🛠️ *ᴍᴇᴍʙᴜᴀᴛ ᴀᴅᴍɪɴ ᴘᴀɴᴇʟ...*\n\nServer: *${serverLabel}*\nUsername: \`${username}\`\nTarget: \`${targetUser.split("@")[0]}\``,
   );
 
   try {
@@ -194,7 +194,7 @@ async function handler(m, { sock }) {
     detailTxt += `User ID: *${user.id}*\n`;
     detailTxt += `Username: *${user.username}*\n`;
     detailTxt += `Password: *${password}*\n`;
-    detailTxt += `Status: *Root Admin*\n`;
+    detailTxt += `Status: *ʀᴏᴏᴛ ᴀᴅᴍɪɴ*\n`;
     detailTxt += `Tanggal: *${formatDate()}*\n\n`;
     detailTxt += `Login Panel: ${serverConfig.domain}\n\n`;
     detailTxt += `Akun ini memiliki akses penuh!\nJangan bagikan ke siapapun!`;

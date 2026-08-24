@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("serverinfo", `❌ *Akses Ditolak*\n\n` +
+        return m.reply(claraWrap("serverinfo", `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
             `Kamu tidak punya akses ke *${serverLabel}*\n` +
             `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
     }
     
     if (!serverId || isNaN(serverId)) {
-        return m.reply( `⚠️ *Cara Pakai*\n\n` +
+        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `\`${m.prefix}${m.command} serverid\`\n\n` +
             `Lihat ID dengan \`${m.prefix}listserver${serverVersion}\``, "serverinfo")
     }
@@ -110,20 +110,20 @@ async function handler(m, { sock }) {
         const features = s.feature_limits || {}
         
         let txt = `📊 *Info sErver [${serverLabel}]*\n\n`
-        txt += `╭─「 📋 *Detail* 」\n`
+        txt += `╭─「 📋 *ᴅᴇᴛᴀɪʟ* 」\n`
         txt += `┃ 🆔 \`Id\`: *${s.id}*\n`
         txt += `┃ 📛 \`Nama\`: *${s.name}*\n`
         txt += `┃ 👤 \`Owner Id\`: *${s.user}*\n`
         txt += `┃ 📝 \`Deskripsi\`: *${s.description || '-'}*\n`
         txt += `┃ 📊 \`sTatus\`: *${s.suspended ? '⛔ Suspended' : '✅ Active'}*\n`
         txt += `╰───────────────\n\n`
-        txt += `╭─「 🧠 *sPesifikasi* 」\n`
+        txt += `╭─「 🧠 *ꜱᴘᴇꜱɪꜰɪᴋᴀꜱɪ* 」\n`
         txt += `┃ 💾 \`Ram\`: *${formatBytes(limits.memory)}*\n`
         txt += `┃ ⚡ \`Cpu\`: *${limits.cpu === 0 ? 'Unlimited' : limits.cpu + '%'}*\n`
         txt += `┃ 📦 \`Disk\`: *${formatBytes(limits.disk)}*\n`
         txt += `┃ 🔄 \`sWap\`: *${limits.swap} MB*\n`
         txt += `╰───────────────\n\n`
-        txt += `╭─「 📦 *Feature Limits* 」\n`
+        txt += `╭─「 📦 *ꜰᴇᴀᴛᴜʀᴇ ʟɪᴍɪᴛꜱ* 」\n`
         txt += `┃ 🗄️ \`Database\`: *${features.databases}*\n`
         txt += `┃ 💾 \`Backup\`: *${features.backups}*\n`
         txt += `┃ 🔌 \`Allocations\`: *${features.allocations}*\n`

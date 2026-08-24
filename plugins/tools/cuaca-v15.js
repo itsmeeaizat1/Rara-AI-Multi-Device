@@ -175,7 +175,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
 
     if (sub === "now") {
-      await m.reply(claraWrap("Cuaca", "⏳ *Mengambil cuaca realtime...*"));
+      await m.reply(claraWrap("Cuaca", "⏳ *ᴍᴇɴɢᴀᴍʙɪʟ ᴄᴜᴀᴄᴀ ʀᴇᴀʟᴛɪᴍᴇ...*"));
       const { getWeatherFooter } = await import("../../src/lib/nova-weather-footer.js");
       const footer = await getWeatherFooter(true);
       if (!footer) {
@@ -202,7 +202,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     );
   } catch (error) {
     await m.reply(
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
           `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
         "\n" +
         tipText(`Coba lagi nanti atau hubungi owner`)

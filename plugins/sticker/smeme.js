@@ -32,11 +32,11 @@ async function handler(m, { sock }) {
     m.isSticker ||
     (m.quoted && (m.quoted.isSticker || m.quoted.type === "stickerMessage"));
   if (!isImage && !isSticker) {
-    return m.reply(`😂 *Meme sTicker*\n\nReply atau kirim gambar/sticker dengan caption\n\n\`Contoh: ${m.prefix}smeme Top|Bottom\``);
+    return m.reply(`😂 *ᴍᴇᴍᴇ ꜱᴛɪᴄᴋᴇʀ*\n\nReply atau kirim gambar/sticker dengan caption\n\n\`Contoh: ${m.prefix}smeme Top|Bottom\``);
   }
   const input = m.args.join(" ");
   if (!input || !input.includes("|")) {
-    return m.reply( `😂 *Meme sTicker*\n\nFormat: top|bottom\n\n\`Contoh: ${m.prefix}smeme Ketika|Kamu Lupa\``, "smeme");
+    return m.reply( `😂 *ᴍᴇᴍᴇ ꜱᴛɪᴄᴋᴇʀ*\n\nFormat: top|bottom\n\n\`Contoh: ${m.prefix}smeme Ketika|Kamu Lupa\``, "smeme");
   }
   const [top, bottom] = input.split("|").map((s) => s.trim());
   m.react("🕒");
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
       mediaBuffer = await m.download();
     }
     if (!mediaBuffer) {
-      return m.reply(claraWrap("smeme", `❌ *Gagal*\n\nGagal mengunduh media`));
+      return m.reply(claraWrap("smeme", `❌ *ɢᴀɢᴀʟ*\n\nGagal mengunduh media`));
     }
     let imageBuffer;
     try {
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
       }
     }
     if (!imageUrl) {
-      return m.reply(claraWrap("smeme", `❌ *Gagal*\n\nGagal upload gambar, coba lagi nanti`));
+      return m.reply(claraWrap("smeme", `❌ *ɢᴀɢᴀʟ*\n\nGagal upload gambar, coba lagi nanti`));
     }
     console.log("[SMEME] Image uploaded:", imageUrl);
     const encodeText = (text) => {

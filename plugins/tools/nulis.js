@@ -46,20 +46,20 @@ function wrapText(ctx, text, maxWidth) {
 async function handler(m, { sock }) {
   const text = m.args?.join(" ");
   if (!text) {
-    return m.reply( `⚠️ *CARA PAKAI*\n\n` +
+    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `\`${m.prefix}nulis <teks>\`\n\n` +
         `Contoh:\n` +
         `\`${m.prefix}nulis Aku cinta kamu selamanya\``, "nulis");
   }
   if (text.length > 500) {
-    { const __navText = `❌ *TEKs TERLALU PANJANG*\n\nMaksimal 500 karakter`; return await m.reply(__navText); };
+    { const __navText = `❌ *ᴛᴇᴋꜱ ᴛᴇʀʟᴀʟᴜ ᴘᴀɴᴊᴀɴɢ*\n\nMaksimal 500 karakter`; return await m.reply(__navText); };
   }
   const inputUrl = getAssetBuffer("nova-kertas");
   if (!inputUrl) {
-    return m.reply(claraWrap("Nulis", `❌ *TEMPLATE TIDAK ADA*\n\nFile template kertas tidak ditemukan di config.assets`));
+    return m.reply(claraWrap("Nulis", `❌ *ᴛᴇᴍᴘʟᴀᴛᴇ ᴛɪᴅᴀᴋ ᴀᴅᴀ*\n\nFile template kertas tidak ditemukan di config.assets`));
   }
   await m.react("🕒");
-  await m.reply(claraWrap("Nulis", `🕕 *MEMPROsEs...*\n\nMembuat tulisan tangan...`));
+  await m.reply(claraWrap("Nulis", `🕕 *ᴍᴇᴍᴘʀᴏꜱᴇꜱ...*\n\nMembuat tulisan tangan...`));
   try {
     const { createCanvas, loadImage, GlobalFonts } = _canvas;
     if (!_fontRegistered) {
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
     await sock.sendMedia(
       m.chat,
       buffer,
-      `✅ *LULIsAN TANGAN*\n\nHatihati ketahuan! 📖`,
+      `✅ *ʟᴜʟɪꜱᴀɴ ᴛᴀɴɢᴀɴ*\n\nHatihati ketahuan! 📖`,
       m,
       { type: "image", contextInfo: saluranCtx() },
     );

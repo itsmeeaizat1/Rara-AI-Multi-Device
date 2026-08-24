@@ -25,11 +25,11 @@ async function handler(m, { sock }) {
   const input = m.fullArgs?.trim() || m.text?.trim();
 
   if (!input || !input.includes("|")) {
-    let txt = `💌 *LAYANAN MENFESS ANONIM* 💌\n\n`;
+    let txt = `💌 *ʟᴀʏᴀɴᴀɴ ᴍᴇɴꜰᴇꜱꜱ ᴀɴᴏɴɪᴍ* 💌\n\n`;
     txt += `Mau ngirim pesan rahasia ke gebetan atau teman tanpa ketahuan? Bisa banget kak!\n\n`;
-    txt += `*Cara Pakai:*\n`;
+    txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
     txt += `👉 \`${m.prefix}confess nomor|pesan\`\n\n`;
-    txt += `*Contoh:*\n`;
+    txt += `*ᴄᴏɴᴛᴏʜ:*\n`;
     txt += `\`${m.prefix}confess 6281234567890|Hai kak, aku suka deh liat senyum kamu!\`\n\n`;
     txt += `🤫 _Tenang aja, identitas kamu 100% aman dan dirahasiakan!_`;
     return await m.reply(claraWrap("confess", txt));
@@ -76,10 +76,10 @@ async function handler(m, { sock }) {
 
   const confessText = `💌 *ADA PESAN RAHASIA BUAT KAMU KAK!* 💌\n\n` +
     `Sstt.. Ada seseorang yang diam-diam ngirim pesan buat kamu nih:\n\n` +
-    `💬 *Isi Pesan:*\n` +
+    `💬 *ɪꜱɪ ᴘᴇꜱᴀɴ:*\n` +
     `\`\`\`${message}\`\`\`\n\n` +
     `🔒 _Pesan ini dikirim secara anonim (identitas pengirim dirahasiakan)._\n` +
-    `✉️ _Kamu bisa balas pesan ini kok! Tinggal *REPLY* aja pesannya ya!_`;
+    `✉️ _Kamu bisa balas pesan ini kok! Tinggal *ʀᴇᴘʟʏ* aja pesannya ya!_`;
 
   try {
     const sentMsg = await sock.sendMessage(targetJid, {
@@ -130,7 +130,7 @@ async function replyHandler(m, { sock }) {
 
   const replyText = `💌 *ADA BALASAN MENFESS NIH KAK!* 💌\n\n` +
     `Orang yang kamu kirimin menfess tadi barusan balas pesanmu:\n\n` +
-    `💬 *Isi Balasan:*\n` +
+    `💬 *ɪꜱɪ ʙᴀʟᴀꜱᴀɴ:*\n` +
     `\`\`\`${replyMessage}\`\`\`\n\n` +
     `🔒 _Tenang, identitas kamu masih aman!_`;
 

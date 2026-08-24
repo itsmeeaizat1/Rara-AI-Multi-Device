@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
     const totalDays = info.addedAt ? Math.ceil((info.expired - info.addedAt) / (1000 * 60 * 60 * 24)) : '?'
     const user = db.getUser(jid)
 
-    let txt = `🤝 *DETAIL PARTNER*\n\n`
+    let txt = `🤝 *ᴅᴇᴛᴀɪʟ ᴘᴀʀᴛɴᴇʀ*\n\n`
     txt += `👤 User: @${targetNumber}\n`
     txt += `📛 Nama: *${info.name || 'Unknown'}*\n`
     txt += `📅 Mulai: *${info.addedAt ? formatDate(info.addedAt) : 'Unknown'}*\n`

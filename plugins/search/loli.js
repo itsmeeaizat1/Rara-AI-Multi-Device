@@ -71,8 +71,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!buffer) {
       const text =
-        claraWrap("Gagal", ["  ┊  ➶ Status: *Gagal*",
-          "  ┊  ➶ Alasan: *Endpoint saat ini tidak merespons.*"].join("\n")) +
+        claraWrap("Gagal", ["  ┊  ➶ Status: *ɢᴀɢᴀʟ*",
+          "  ┊  ➶ Alasan: *ᴇɴᴅᴘᴏɪɴᴛ ꜱᴀᴀᴛ ɪɴɪ ᴛɪᴅᴀᴋ ᴍᴇʀᴇꜱᴘᴏɴꜱ.*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -85,11 +85,11 @@ async function handler(m, { sock, config: botConfig }) {
 
     await sock.sendMessage(m.chat, {
       image: fs.readFileSync(filePath),
-      caption: "  ┊  ➶ Status: *Berhasil*",
+      caption: "  ┊  ➶ Status: *ʙᴇʀʜᴀꜱɪʟ*",
     }, { quoted: m });
 
     const text =
-      claraWrap("Foto", ["  ┊  ➶ Status: *Berhasil*"].join("\n")) +
+      claraWrap("Foto", ["  ┊  ➶ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}loli untuk hasil lain`) +
       "\n" +
@@ -99,7 +99,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

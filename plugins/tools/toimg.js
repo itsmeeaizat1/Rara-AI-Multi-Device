@@ -38,9 +38,9 @@ async function handler(m, { sock }) {
     }
     
     if (!mediaSource) {
-        await m.reply( `❌ *GAGAL*\n\n` +
+        await m.reply( `❌ *ɢᴀɢᴀʟ*\n\n` +
             `Tidak ada sticker yang terdeteksi!\n\n` +
-            `*Cara penggunaan:*\n` +
+            `*ᴄᴀʀᴀ ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n` +
             `1. Kirim sticker + caption \`${m.prefix}toimg\`\n` +
             `2. Reply sticker dengan \`${m.prefix}toimg\``, "toimg")
         return
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
     const isAnimated = stickerMsg?.isAnimated
 
     if (isAnimated) {
-        await m.reply(`⚠️ *sTICKER ANIMAsI*\n\n` +
+        await m.reply(`⚠️ *ꜱᴛɪᴄᴋᴇʀ ᴀɴɪᴍᴀꜱɪ*\n\n` +
             `Sticker ini adalah sticker animasi (GIF).\n` +
             `Gunakan \`${m.prefix}tovideo\` untuk mengubahnya.`)
         return
@@ -64,14 +64,14 @@ async function handler(m, { sock }) {
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
-            await m.reply( `❌ *GAGAL*\n\n` +
+            await m.reply( `❌ *ɢᴀɢᴀʟ*\n\n` +
                 `Tidak dapat mengunduh sticker.\n` +
                 `Sticker mungkin sudah tidak tersedia.`, "toimg")
             return
         }
 
         if (buffer.length < 100) {
-            await m.reply(claraWrap("toimg", `❌ *FILE KORUP*\n\n` +
+            await m.reply(claraWrap("toimg", `❌ *ꜰɪʟᴇ ᴋᴏʀᴜᴘ*\n\n` +
                 `File sticker tidak valid atau rusak.\n` +
                 `Coba kirim ulang stickernya.`))
             return
@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
 
     } catch (error) {
         await m.reply(
-            `❌ *ERROR*\n\n` +
+            `❌ *ᴇʀʀᴏʀ*\n\n` +
             `Terjadi kesalahan saat memproses.\n` +
             `_${error.message}_`
         )

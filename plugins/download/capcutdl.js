@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
 
     if (!url) {
-        return m.reply( `⚠️ *Cara Pakai*\n\n` +
+        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `\`${m.prefix}ccdl <url>\`\n\n` +
             `Contoh:\n` +
             `\`${m.prefix}ccdl https://www.capcut.com/t/xxx\``, "capcutdl")

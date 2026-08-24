@@ -26,11 +26,11 @@ async function handler(m, { sock }) {
   const query = args.join(" ").trim();
 
   if (!query) {
-    return m.reply( `🎬 *Film sEarch*\n\n` +
+    return m.reply( `🎬 *ꜰɪʟᴍ ꜱᴇᴀʀᴄʜ*\n\n` +
         `Cari dan nonton film online\n\n` +
-        `*Format:*\n` +
+        `*ꜰᴏʀᴍᴀᴛ:*\n` +
         `\`${m.prefix}film <judul>\`\n\n` +
-        `*Contoh:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `\`${m.prefix}film civil war\``, "film");
   }
 
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
 
     if (!data?.status || !data?.data?.length) {
       return m.reply(
-        `❌ *Tidak Ditemukan*\n\nFilm "${query}" tidak ditemukan`,
+        `❌ *ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\nFilm "${query}" tidak ditemukan`,
       );
     }
 
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
       filmSessions.delete(m.sender);
     }, 300000);
 
-    let text = `🎬 *Hasil Pencarian*\n\n`;
+    let text = `🎬 *ʜᴀꜱɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ*\n\n`;
     text += `Ditemukan *${films.length}* film untuk "${query}"\n\n`;
 
     films.forEach((f, i) => {

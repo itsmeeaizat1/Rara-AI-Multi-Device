@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const text = m.text || m.quoted?.text
     
     if (!text) {
-        return m.reply( `⚠️ *Cara Pakai*\n\n` +
+        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `\`${m.prefix}pakustad <pertanyaan>\`\n\n` +
             `Contoh: \`${m.prefix}pakustad kenapa aku ganteng\``, "pakustad")
     }

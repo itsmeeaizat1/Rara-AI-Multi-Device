@@ -40,7 +40,7 @@ function handler(m, { sock }) {
   );
 
   if (!hasAccess && !m.isOwner) {
-    return m.reply(claraWrap("Gagal", `❌ *Gagal*\n\nKamu tidak memiliki akses ke CPanel!`));
+    return m.reply(claraWrap("Gagal", `❌ *ɢᴀɢᴀʟ*\n\nKamu tidak memiliki akses ke CPanel!`));
   }
 
   const db = getDatabase();
@@ -50,24 +50,24 @@ function handler(m, { sock }) {
   const elapsed = now - lastUsed;
   const remaining = Math.max(0, jedaMs - elapsed);
 
-  let status = "✅ *READY*";
+  let status = "✅ *ʀᴇᴀᴅʏ*";
   let statusDesc = "Bisa create panel sekarang!";
 
   if (jedaMs === 0) {
-    status = "⚡ *NO JEDA*";
+    status = "⚡ *ɴᴏ ᴊᴇᴅᴀ*";
     statusDesc = "Jeda dinonaktifkan, bebas create!";
   } else if (remaining > 0) {
-    status = "🕕 *COOLDOWN*";
+    status = "🕕 *ᴄᴏᴏʟᴅᴏᴡɴ*";
     statusDesc = `Tunggu ${formatTime(remaining)} lagi`;
   }
 
-  let text = `⏱️ *sTatus Jeda Panel*\n\n`;
-  text += `╭┈┈⬡「 📊 *sTatus* 」\n`;
+  let text = `⏱️ *ꜱᴛᴀᴛᴜꜱ ᴊᴇᴅᴀ ᴘᴀɴᴇʟ*\n\n`;
+  text += `╭┈┈⬡「 📊 *ꜱᴛᴀᴛᴜꜱ* 」\n`;
   text += `┃ ${status}\n`;
   text += `┃ ${statusDesc}\n`;
   text += `╰┈┈⬡\n\n`;
 
-  text += `╭┈┈⬡「 ⚙️ *Konfig* 」\n`;
+  text += `╭┈┈⬡「 ⚙️ *ᴋᴏɴꜰɪɢ* 」\n`;
   text += `┃   ┊  ➶ Jeda: *${jedaMs === 0 ? "OFF" : formatTime(jedaMs)}*\n`;
   text += `┃   ┊  ➶ Default: *5 menit*\n`;
 

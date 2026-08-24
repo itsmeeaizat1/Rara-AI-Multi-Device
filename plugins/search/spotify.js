@@ -40,7 +40,7 @@ async function handler(m, { sock, text }) {
     const results = data.data.results;
     const firstResult = results[0];
 
-    let contentText = `✨ *HASIL PENCARIAN SPOTIFY* ✨\n\nHalo! Aku berhasil menemukan beberapa lagu berdasarkan kata kunci *${text}*. Berikut adalah daftar teratasnya:\n\n`;
+    let contentText = `✨ *ʜᴀꜱɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ ꜱᴘᴏᴛɪꜰʏ* ✨\n\nHalo! Aku berhasil menemukan beberapa lagu berdasarkan kata kunci *${text}*. Berikut adalah daftar teratasnya:\n\n`;
 
     results.forEach((t, i) => {
       contentText += `*${i + 1}. ${t.title}*\n`;
@@ -49,7 +49,7 @@ async function handler(m, { sock, text }) {
       contentText += `   🔗 Link: ${t.url}\n\n`;
     });
 
-    contentText += `*Catatan*: Kamu bisa menyalin link lagu di atas dan menggunakan perintah \`.spdl <link>\` untuk mengunduhnya secara langsung! Atau tekan tombol di bawah ini untuk lagu pertama. 🚀`;
+    contentText += `*ᴄᴀᴛᴀᴛᴀɴ*: Kamu bisa menyalin link lagu di atas dan menggunakan perintah \`.spdl <link>\` untuk mengunduhnya secara langsung! Atau tekan tombol di bawah ini untuk lagu pertama. 🚀`;
 
     let thumbnailBuffer = null;
     try {

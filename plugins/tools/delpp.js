@@ -27,12 +27,12 @@ async function handler(m, { sock }) {
         await sock.removeProfilePicture(botJid)
         
         await m.reply(
-            `✅ *PP BOT DIHAPUs*\n\n` +
+            `✅ *ᴘᴘ ʙᴏᴛ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
             `Foto profil bot berhasil dihapus!`
         )
     } catch (error) {
         await m.reply(
-            `❌ *GAGAL*\n\n` +
+            `❌ *ɢᴀɢᴀʟ*\n\n` +
             `Tidak dapat menghapus foto bot.\n` +
             `_${error.message}_`
         )

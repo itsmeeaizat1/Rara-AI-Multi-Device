@@ -54,15 +54,15 @@ function handler(m, { sock }) {
     
     if (!input) {
         const currentJeda = db.setting('panelCreateJeda') ?? DEFAULT_JEDA
-        return m.reply( `⏱️ *Jeda Panel Create*\n\n` +
-            `╭┈┈⬡「 📋 *Info* 」\n` +
+        return m.reply( `⏱️ *ᴊᴇᴅᴀ ᴘᴀɴᴇʟ ᴄʀᴇᴀᴛᴇ*\n\n` +
+            `╭┈┈⬡「 📋 *ɪɴꜰᴏ* 」\n` +
             `┃   ┊  ➶ Jeda saat ini: *${formatTime(currentJeda)}*\n` +
             `┃   ┊  ➶ Default: *5 menit*\n` +
             `╰┈┈⬡\n\n` +
             `Gunakan: \`${m.prefix}jedacreate <waktu>\`\n` +
             `Contoh: \`${m.prefix}jedacreate 5m\` (5 menit)\n` +
             `Untuk nonaktifkan: \`${m.prefix}jedacreate 0\`\n\n` +
-            `*Format waktu:*\n` +
+            `*ꜰᴏʀᴍᴀᴛ ᴡᴀᴋᴛᴜ:*\n` +
             `\`30s\` = 30 detik\n` +
             `\`5m\` = 5 menit\n` +
             `\`1h\` = 1 jam`, "jedacreate")
@@ -80,12 +80,12 @@ function handler(m, { sock }) {
     m.react('✅')
     
     if (jedaMs === 0) {
-        return m.reply(claraWrap("jedacreate", `✅ *Jeda Dinonaktifkan*\n\n` +
+        return m.reply(claraWrap("jedacreate", `✅ *ᴊᴇᴅᴀ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*\n\n` +
             `Panel create sekarang tanpa jeda`))
     }
     
-    return m.reply(claraWrap("jedacreate", `✅ *Jeda Diset*\n\n` +
-        `╭┈┈⬡「 ⏱️ *Konfig* 」\n` +
+    return m.reply(claraWrap("jedacreate", `✅ *ᴊᴇᴅᴀ ᴅɪꜱᴇᴛ*\n\n` +
+        `╭┈┈⬡「 ⏱️ *ᴋᴏɴꜰɪɢ* 」\n` +
         `┃   ┊  ➶ Jeda: *${formatTime(jedaMs)}*\n` +
         `╰┈┈⬡\n\n` +
         `Setelah panel dibuat, SEMUA user harus menunggu ${formatTime(jedaMs)} sebelum bisa create lagi.`))

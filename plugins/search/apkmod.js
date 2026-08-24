@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
 
   if (!text) {
-    return m.reply( `📱 *Apk Mod sEarch*\n\n` +
+    return m.reply( `📱 *ᴀᴘᴋ ᴍᴏᴅ ꜱᴇᴀʀᴄʜ*\n\n` +
         `Cari APK MOD Premium\n\n` +
         `Contoh:\n` +
         `\`${m.prefix}apkmod vpn\``, "apkmod");

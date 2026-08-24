@@ -22,9 +22,9 @@ async function handler(m, { sock }) {
   const emoji = m.text?.trim();
 
   if (!emoji) {
-    return m.reply( `🎭 *EMOJI TO ANIMAsI*\n\n` +
+    return m.reply( `🎭 *ᴇᴍᴏᴊɪ ᴛᴏ ᴀɴɪᴍᴀꜱɪ*\n\n` +
         `Konversi emoji ke sticker animasi\n\n` +
-        `*Contoh:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `\`${m.prefix}emojitoanimasi 😳\``, "emojitoanimasi");
   }
 
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     const { data } = await axios.get(apiUrl, { timeout: 15000 });
 
     if (!data?.status || !data?.data?.url) {
-      return m.reply(claraWrap("emojitoanimasi", "❌ *GAGAL*\n\nEmoji tidak ditemukan atau API error"));
+      return m.reply(claraWrap("emojitoanimasi", "❌ *ɢᴀɢᴀʟ*\n\nEmoji tidak ditemukan atau API error"));
     }
 
     const webpUrl = data.data.url;

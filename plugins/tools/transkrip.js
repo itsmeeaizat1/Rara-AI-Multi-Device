@@ -51,13 +51,13 @@ async function handler(m, { sock }) {
     const quoted = m.quoted || m;
     const isAudio = quoted.type === 'audioMessage' || /audio/.test(quoted.mimetype || '');
     if (!isAudio) {
-        return m.reply( `🎤 *TRANsKRIP*\n\n` +
+        return m.reply( `🎤 *ᴛʀᴀɴꜱᴋʀɪᴘ*\n\n` +
             `Reply voice note atau audio untuk mengonversi ke teks\n` +
             `Contoh: reply VN → ketik \`${m.prefix}transkrip\``, "transkrip");
     }
     const groqKey = config.APIkey?.groq;
     if (!groqKey) {
-        return m.reply( `❌ *GAGAL*\n\n` +
+        return m.reply( `❌ *ɢᴀɢᴀʟ*\n\n` +
             `API Key Groq belum diatur\n` +
             `Set di config.js → APIkey.groq\n` +
             `Gratis di https://console.groq.com`, "transkrip");
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
         }
         const duration = Math.ceil(buffer.length / 4000);
         await m.reply(
-            `🎤 *TRANsKRIP*\n\n` +
+            `🎤 *ᴛʀᴀɴꜱᴋʀɪᴘ*\n\n` +
             `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ HAsIL\n` +
             `  ┊  ➶ \n` +
             `  ┊  ➶ ${text}\n` +

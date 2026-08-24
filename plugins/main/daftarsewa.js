@@ -228,7 +228,7 @@ async function handler(m, { sock }) {
         replyText += "Link: " + linkInput + "\n";
         replyText += "Durasi: *" + expiredPreview + "*\n";
         replyText += "Estimasi Harga: *" + calculateSewaPrice(durationStr) + "*\n\n";
-        replyText += "Status: *Menunggu Approve Owner*\n\n";
+        replyText += "Status: *ᴍᴇɴᴜɴɢɢᴜ ᴀᴘᴘʀᴏᴠᴇ ᴏᴡɴᴇʀ*\n\n";
         replyText += "Owner akan terima notifikasi dan approve.\n";
         replyText += "Bot auto-join ke grup kalau disetujui.\n\n";
         replyText += "Ketik *.daftarsewa batal* untuk batalkan.";

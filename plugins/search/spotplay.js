@@ -18,7 +18,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const query = m.text?.trim();
   if (!query)
-    { const __navText = `⚠️ *Cara Pakai*\n\n\`${m.prefix}spotplay <query>\``; return await m.reply( __navText, "spotplay"); };
+    { const __navText = `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n\`${m.prefix}spotplay <query>\``; return await m.reply( __navText, "spotplay"); };
 
   m.react("🕒");
 

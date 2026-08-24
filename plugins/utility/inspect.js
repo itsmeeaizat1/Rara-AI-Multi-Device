@@ -23,9 +23,9 @@ async function handler(m, { sock }) {
 
     if (!text) {
         return m.reply(
-            `🔍 *Inspect*\n\n` +
+            `🔍 *ɪɴꜱᴘᴇᴄᴛ*\n\n` +
             `Cek info grup atau saluran via link\n\n` +
-            `*Contoh:*\n` +
+            `*ᴄᴏɴᴛᴏʜ:*\n` +
             `\`${m.prefix}inspect https://chat.whatsapp.com/xxx\`\n` +
             `\`${m.prefix}inspect https://whatsapp.com/channel/xxx\``
         )
@@ -43,8 +43,8 @@ async function handler(m, { sock }) {
             const groupInfo = await sock.groupGetInviteInfo(inviteCode)
             
             let teks = 
-                `📋 *Information Group*\n\n` +
-                `╭┈┈⬡「 📊 *Detail* 」\n` +
+                `📋 *ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ ɢʀᴏᴜᴘ*\n\n` +
+                `╭┈┈⬡「 📊 *ᴅᴇᴛᴀɪʟ* 」\n` +
                 `┃ 📝 Name: *${groupInfo.subject}*\n` +
                 `┃ 🆔 Id: \`${groupInfo.id}\`\n` +
                 `┃ 📅 Created: ${new Date(groupInfo.creation * 1000).toLocaleString('id-ID')}\n`
@@ -65,13 +65,13 @@ async function handler(m, { sock }) {
                 `╰┈┈⬡\n\n`
 
             if (groupInfo.desc) {
-                teks += `📝 *Description:*\n${groupInfo.desc}\n\n`
+                teks += `📝 *ᴅᴇꜱᴄʀɪᴘᴛɪᴏɴ:*\n${groupInfo.desc}\n\n`
             }
 
             if (groupInfo.participants?.length > 0) {
                 const admins = groupInfo.participants.filter(p => p.admin)
                 if (admins.length > 0) {
-                    teks += `👑 *Admins:*\n`
+                    teks += `👑 *ᴀᴅᴍɪɴꜱ:*\n`
                     admins.forEach(a => {
                         teks += `├ @${a.id.split('@')[0]} [${a.admin}]\n`
                     })
@@ -94,8 +94,8 @@ async function handler(m, { sock }) {
             const channelInfo = await sock.newsletterMsg(channelId)
             
             const teks = 
-                `📺 *Information Channel*\n\n` +
-                `╭┈┈⬡「 📊 *Detail* 」\n` +
+                `📺 *ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ ᴄʜᴀɴɴᴇʟ*\n\n` +
+                `╭┈┈⬡「 📊 *ᴅᴇᴛᴀɪʟ* 」\n` +
                 `┃ 🆔 Id: \`${channelInfo.id}\`\n` +
                 `┃ 📌 sTate: ${channelInfo.state?.type || '-'}\n` +
                 `┃ 📝 Name: *${channelInfo.thread_metadata?.name?.text || '-'}*\n` +
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
                 `┃ 👥 sUbscribers: ${channelInfo.thread_metadata?.subscribers_count || 0}\n` +
                 `┃ ✅ Verification: ${channelInfo.thread_metadata?.verification || '-'}\n` +
                 `╰┈┈⬡\n\n` +
-                `📝 *Description:*\n${channelInfo.thread_metadata?.description?.text || 'No description'}`
+                `📝 *ᴅᴇꜱᴄʀɪᴘᴛɪᴏɴ:*\n${channelInfo.thread_metadata?.description?.text || 'No description'}`
 
             m.react('✅')
             return await m.reply(teks)

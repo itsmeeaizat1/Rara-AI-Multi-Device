@@ -54,8 +54,8 @@ async function handler(m, { sock, config: botConfig }) {
     fs.writeFileSync(filePath, buffer);
 
     const text =
-      claraWrap("Wanted", ["  ┊  ➶ Efek: *Wanted Poster*",
-        "  ┊  ➶ Status: *SUCCESS*"].join("\n")) +
+      claraWrap("Wanted", ["  ┊  ➶ Efek: *ᴡᴀɴᴛᴇᴅ ᴘᴏꜱᴛᴇʀ*",
+        "  ┊  ➶ Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -66,7 +66,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

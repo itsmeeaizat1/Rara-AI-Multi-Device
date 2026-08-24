@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("hd2tool", `❌ Gagal mendownload gambar`));
     }
     await m.reply(
-      `🕕 *MEMPROsEs GAMBAR...*\n\nEstimasi waktu: ±1 menit\nMohon tunggu...`,
+      `🕕 *ᴍᴇᴍᴘʀᴏꜱᴇꜱ ɢᴀᴍʙᴀʀ...*\n\nEstimasi waktu: ±1 menit\nMohon tunggu...`,
     );
     const temp = path.join(process.cwd(), "temp", "hd.jpg");
     fs.writeFileSync(temp, buffer);

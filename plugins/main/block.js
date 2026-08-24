@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text =
       claraWrap("Block", [`  ┊  ➶ Target: *${targetName}*`,
-        "  ┊  ➶ Status: *Berhasil diblokir*"].join("\n")) +
+        "  ┊  ➶ Status: *ʙᴇʀʜᴀꜱɪʟ ᴅɪʙʟᴏᴋɪʀ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

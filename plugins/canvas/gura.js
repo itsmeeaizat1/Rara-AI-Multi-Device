@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
   } else if (m.message) {
     const type = getContentType(m.message);
     if (!type || type !== "imageMessage") {
-      return m.reply(`🦈 *GURA CANVAS*\n\nKirim atau reply foto dengan perintah \`${m.prefix}gura\` untuk memberikan efek Gura!`);
+      return m.reply(`🦈 *ɢᴜʀᴀ ᴄᴀɴᴠᴀꜱ*\n\nKirim atau reply foto dengan perintah \`${m.prefix}gura\` untuk memberikan efek Gura!`);
     }
     media = await downloadMediaMessage(m, "buffer", {});
   }

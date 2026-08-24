@@ -141,8 +141,8 @@ async function loadAllPlugins() {
 async function handler(m, { sock }) {
   const keyword = m.text;
   if (!keyword) {
-    return m.reply( `🔍 *Cari Fitur*\n\n` +
-      `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
+    return m.reply( `🔍 *ᴄᴀʀɪ ꜰɪᴛᴜʀ*\n\n` +
+      `╭┈┈⬡「 📋 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
       `┃ \`${m.prefix}carifitur <keyword>\`\n` +
       `╰┈┈⬡\n\n` +
       `Contoh:\n` +
@@ -200,7 +200,7 @@ async function handler(m, { sock }) {
     matches.sort((a, b) => b.score - a.score);
     if (matches.length === 0) {
       return m.reply(
-        `🔍 *Hasil Pencarian*\n\nTidak ditemukan fitur dengan keyword \`${keyword}\``,
+        `🔍 *ʜᴀꜱɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ*\n\nTidak ditemukan fitur dengan keyword \`${keyword}\``,
       );
     }
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";

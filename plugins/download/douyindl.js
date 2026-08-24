@@ -36,11 +36,11 @@ async function douyinFetch(url, retries = 3) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply( `🎵 *Douyin Downloader*\n\n` +
+    return m.reply( `🎵 *ᴅᴏᴜʏɪɴ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\n` +
         `Download video atau audio dari Douyin (TikTok China).\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}douyindl <link>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}douyindl https://v.douyin.com/xxx*`, "douyindl");
   }
 

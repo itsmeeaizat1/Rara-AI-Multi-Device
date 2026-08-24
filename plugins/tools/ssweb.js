@@ -34,9 +34,9 @@ async function handler(m, { sock }) {
   let text = m.text?.trim();
 
   if (!text) {
-    return m.reply( `📸 *sCREENsHOT WEB*\n\n` +
+    return m.reply( `📸 *ꜱᴄʀᴇᴇɴꜱʜᴏᴛ ᴡᴇʙ*\n\n` +
         `Screenshot halaman website\n\n` +
-        `*Contoh:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `${m.prefix}ssweb https://google.com\n` +
         `${m.prefix}ss https://github.com --mobile`, "ssweb");
   }

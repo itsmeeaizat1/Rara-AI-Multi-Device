@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
         m.chat,
         {
           image: { url: "https://api.nexray.web.id/random/loli" },
-          caption: `👧 *Random Loli*`,
+          caption: `👧 *ʀᴀɴᴅᴏᴍ ʟᴏʟɪ*`,
         },
         { quoted: m },
       );

@@ -54,8 +54,8 @@ async function handler(m, { sock, args }) {
     txt += `5. \`${m.prefix}flashcard quiz <nama deck>\` - Mulai quiz\n`;
     txt += `6. \`${m.prefix}flashcard del <nama deck>\` - Hapus deck\n`;
     txt += `7. \`${m.prefix}flashcard delcard <nama deck> <nomor>\` - Hapus 1 kartu\n\n`;
-    txt += `Saat quiz: balas *A*, *B*, *C*, dst atau ketik *flip* untuk lihat jawaban\n`;
-    txt += `Ketik *stop* untuk berhenti quiz`;
+    txt += `Saat quiz: balas *A*, *B*, *C*, dst atau ketik *ꜰʟɪᴘ* untuk lihat jawaban\n`;
+    txt += `Ketik *ꜱᴛᴏᴘ* untuk berhenti quiz`;
     return await m.reply( txt, { commandName: "flashcard" });
   }
 
@@ -75,8 +75,8 @@ async function handler(m, { sock, args }) {
       txt += `Kirim kartu dengan format:\n`;
       txt += `<pertanyaan> | <jawaban>\n\n`;
       txt += `Contoh: \`Apa ibukota Indonesia? | Jakarta\`\n\n`;
-      txt += `Ketik *done* untuk selesai\n`;
-      txt += `Ketik *cancel* untuk batal`;
+      txt += `Ketik *ᴅᴏɴᴇ* untuk selesai\n`;
+      txt += `Ketik *ᴄᴀɴᴄᴇʟ* untuk batal`;
       await m.reply(txt);
       await m.react("🐣");
     }
@@ -143,14 +143,14 @@ async function handler(m, { sock, args }) {
 
       const firstCard = deck[order[0]];
       let txt = `Quiz: ${deckName}\n\n`;
-      txt += `${deck.length} kartu - ketik *flip* untuk jawaban\n\n`;
+      txt += `${deck.length} kartu - ketik *ꜰʟɪᴘ* untuk jawaban\n\n`;
       txt += `Kartu 1/${deck.length}\n\n`;
       txt += `Q: ${firstCard.q}\n\n`;
       txt += `Balas:\n`;
-      txt += `*flip* - lihat jawaban\n`;
-      txt += `*benar* - aku tahu jawabannya\n`;
-      txt += `*salah* - aku tidak tahu\n`;
-      txt += `*stop* - berhenti quiz`;
+      txt += `*ꜰʟɪᴘ* - lihat jawaban\n`;
+      txt += `*ʙᴇɴᴀʀ* - aku tahu jawabannya\n`;
+      txt += `*ꜱᴀʟᴀʜ* - aku tidak tahu\n`;
+      txt += `*ꜱᴛᴏᴘ* - berhenti quiz`;
       await m.reply(txt);
       await m.react("🐣");
     }

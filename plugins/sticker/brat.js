@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
   }
 
   if (!text) {
-    return m.reply( `🖼️ *Brat Image*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratimg Hai semua\``, "brat");
+    return m.reply( `🖼️ *ʙʀᴀᴛ ɪᴍᴀɢᴇ*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratimg Hai semua\``, "brat");
   }
 
   m.react("🕒");

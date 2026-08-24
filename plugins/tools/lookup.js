@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   let domain = m.args?.[0];
 
   if (!domain) {
-    return m.reply( `⚠️ *CARA PAKAI*\n\n` +
+    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `\`${m.prefix}lookup <domain>\`\n\n` +
         `Contoh:\n` +
         `\`${m.prefix}lookup google.com\``, "lookup");
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
   }
 
   await m.react("🕒");
-  await m.reply(claraWrap("Lookup", `🕕 *MENCARI INFO DOMAIN...*`));
+  await m.reply(claraWrap("Lookup", `🕕 *ᴍᴇɴᴄᴀʀɪ ɪɴꜰᴏ ᴅᴏᴍᴀɪɴ...*`));
 
   try {
     const [dnsRes, whoisRes] = await Promise.allSettled([
@@ -54,10 +54,10 @@ async function handler(m, { sock }) {
     const whoisData = whoisRes.status === "fulfilled" ? whoisRes.value : null;
 
     if (!dnsData && !whoisData) {
-      return m.reply(claraWrap("Lookup", `❌ *GAGAL*\n\nTidak dapat memproses domain`));
+      return m.reply(claraWrap("Lookup", `❌ *ɢᴀɢᴀʟ*\n\nTidak dapat memproses domain`));
     }
 
-    let text = `🔍 *DNs LOOKUP*\n\n`;
+    let text = `🔍 *ᴅɴꜱ ʟᴏᴏᴋᴜᴘ*\n\n`;
     text += `Domain: \`${domain}\`\n\n`;
 
     if (dnsData && !dnsData.includes("error")) {
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    await sendToolsPreview(sock, m.chat, text, "🔍 *DNs LOOKUP*", domain, {
+    await sendToolsPreview(sock, m.chat, text, "🔍 *ᴅɴꜱ ʟᴏᴏᴋᴜᴘ*", domain, {
       quoted: m,
     });
   } catch (e) {

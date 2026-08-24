@@ -35,12 +35,12 @@ async function handler(m, { sock }) {
     }
     
     if (!video) {
-        return m.reply( `⚠️ *CARA PAKAI*\n\n` +
-            `Kirim *video* atau *balas video* lalu ketik:\n` +
+        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+            `Kirim *ᴠɪᴅᴇᴏ* atau *ʙᴀʟᴀꜱ ᴠɪᴅᴇᴏ* lalu ketik:\n` +
             `\`${m.prefix}ptv\``, "ptv")
     }
     
-    { const __navText = `🕕 *MEMBUAT PTV...*`; await m.reply(__navText); }
+    { const __navText = `🕕 *ᴍᴇᴍʙᴜᴀᴛ ᴘᴛᴠ...*`; await m.reply(__navText); }
     
     try {
         await sock.sendMessage(m.chat, {

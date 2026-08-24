@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
         if (userServers.length === 0) {
             return m.reply(claraWrap("cpanel",
                 "Akses Ditolak\n\n" +
-                "Hanya *Bot Owner* atau *Reseller/CEO Panel* yang bisa akses menu ini\n\n" +
+                "Hanya *ʙᴏᴛ ᴏᴡɴᴇʀ* atau *Reseller/CEO Panel* yang bisa akses menu ini\n\n" +
                 "Minta owner untuk add kamu sebagai reseller:\n" +
                 ".addreseller v1 @tag"
             ))
@@ -57,51 +57,51 @@ async function handler(m, { sock }) {
     const isResellerOnly = !m.isOwner && userServers.every(s => s.role === 'reseller')
     
     if (!isResellerOnly) {
-        txt += `╭─「 *Owner Management* 」\n`
+        txt += `╭─「 *ᴏᴡɴᴇʀ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
         for (const ver of VALID_SERVERS) {
             txt += `┃ \`${prefix}addowner${ver}\` | \`${prefix}delowner${ver}\` | \`${prefix}listowner${ver}\`\n`
         }
         txt += `╰───────────────\n\n`
         
-        txt += `╭─「 *Ceo Management* 」\n`
+        txt += `╭─「 *ᴄᴇᴏ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
         for (const ver of VALID_SERVERS) {
             txt += `┃ \`${prefix}addceo${ver}\` | \`${prefix}delceo${ver}\` | \`${prefix}listceo${ver}\`\n`
         }
         txt += `╰───────────────\n\n`
         
-        txt += `╭─「 *Reseller Management* 」\n`
+        txt += `╭─「 *ʀᴇꜱᴇʟʟᴇʀ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
         for (const ver of VALID_SERVERS) {
             txt += `┃ \`${prefix}addreseller${ver}\` | \`${prefix}delreseller${ver}\` | \`${prefix}listreseller${ver}\`\n`
         }
         txt += `╰───────────────\n\n`
     }
     
-    txt += `╭─「 *Create Server* 」\n`
+    txt += `╭─「 *ᴄʀᴇᴀᴛᴇ ꜱᴇʀᴠᴇʀ* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}1gb${ver}\` - \`${prefix}10gb${ver}\` | \`${prefix}unli${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 *Admin Panel* 」\n`
+    txt += `╭─「 *ᴀᴅᴍɪɴ ᴘᴀɴᴇʟ* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}cadmin${ver}\` | \`${prefix}deladmin${ver}\` | \`${prefix}listadmin${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 *Server Management* 」\n`
+    txt += `╭─「 *ꜱᴇʀᴠᴇʀ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}listserver${ver}\` | \`${prefix}delserver${ver}\` | \`${prefix}serverinfo${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
-    txt += `╭─「 *User Management* 」\n`
+    txt += `╭─「 *ᴜꜱᴇʀ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `┃ \`${prefix}listuser${ver}\`\n`
     }
     txt += `╰───────────────\n\n`
     
     if (!isResellerOnly) {
-        txt += `╭─「 *Gc Seller Panel* 」\n`
+        txt += `╭─「 *ɢᴄ ꜱᴇʟʟᴇʀ ᴘᴀɴᴇʟ* 」\n`
         for (const ver of VALID_SERVERS) {
             txt += `┃ \`${prefix}addgcseller${ver}\` | \`${prefix}resetgcseller${ver}\`\n`
         }
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
         const doConfig = config.digitalocean || {}
         const doHasToken = doConfig.token ? '✅' : '❌'
         
-        txt += `╭─「 *Digitalocean Vps* 」\n`
+        txt += `╭─「 *ᴅɪɢɪᴛᴀʟᴏᴄᴇᴀɴ ᴠᴘꜱ* 」\n`
         txt += `┃ Status: ${doHasToken} Token\n`
         txt += `┃\n`
         txt += `┃ Create Vps:\n`

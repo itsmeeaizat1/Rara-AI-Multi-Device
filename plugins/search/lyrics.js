@@ -54,8 +54,8 @@ async function handler(m, { sock }) {
         const lyricsText = data.lyrics.plain_lyrics
         
         const texts = `Ketemu nih liriknya! 🎉\n\n` +
-                      `🎵 *Judul:* ${title}\n` +
-                      `🎤 *Artis:* ${artist}\n\n` +
+                      `🎵 *ᴊᴜᴅᴜʟ:* ${title}\n` +
+                      `🎤 *ᴀʀᴛɪꜱ:* ${artist}\n\n` +
                       `Ini dia lirik lengkapnya buat kamu:\n\n` +
                       `${lyricsText}\n\n` +
                       `Selamat bernyanyi ria, kak! 🎧💖`

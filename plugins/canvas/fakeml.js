@@ -29,9 +29,9 @@ async function handler(m, { sock }) {
   const name = m.text?.trim();
   if (!name) {
     return m.reply(
-      `🎮 *Fake Ml Profile*\n\n` +
+      `🎮 *ꜰᴀᴋᴇ ᴍʟ ᴘʀᴏꜰɪʟᴇ*\n\n` +
         `Masukkan nama untuk profile\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `1. Kirim foto + caption \`${m.prefix}fakeml <nama>\`\n` +
         `2. Reply foto dengan \`${m.prefix}fakeml <nama>\``,
     );

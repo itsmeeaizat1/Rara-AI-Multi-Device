@@ -47,8 +47,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     const out =
       claraWrap("QR Code", [`  ┊  ➶ Text: *${text}*`,
-        "  ┊  ➶ Format: *PNG*",
-        "  ┊  ➶ Status: *Berhasil*"].join("\n")) +
+        "  ┊  ➶ Format: *ᴘɴɢ*",
+        "  ┊  ➶ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}qrcode <teks> untuk buat QR lagi`) +
       "\n" +
@@ -58,7 +58,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

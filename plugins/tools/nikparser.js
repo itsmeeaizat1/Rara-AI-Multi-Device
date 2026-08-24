@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
   const nik = m.text?.replace(/\D/g, "");
 
   if (!nik || nik.length !== 16) {
-    return m.reply( `🪪 *NIK PARsER*\n\n` +
+    return m.reply( `🪪 *ɴɪᴋ ᴘᴀʀꜱᴇʀ*\n\n` +
         `- Parse dan validasi NIK KTP 🇮🇩\n` +
         `- Masukkan 16 digit angka NIK\n\n` +
         `\`${m.prefix}nikparser 3517072109020003\``, "nikparser");
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
 
     if (!data?.valid) {
       return m.reply(
-        `🪪 *NIK TIDAK VALID*\n\n` +
+        `🪪 *ɴɪᴋ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\n` +
           `- NIK yang kamu masukkan tidak valid\n` +
           `- Pastikan 16 digit angka benar`,
       );
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
     const genderEmoji = data.gender === "pria" ? "♂️" : "♀️";
     const provNama = PROVINSI[data.provinceId] || data.province || "-";
 
-    m.reply(claraWrap("NIK Parser", [`*NIK* → \`${data.raw}\``, `*Valid* → ✅ Valid`, `*Tanggal Lahir* → ${bFormatted}`, `*Jenis Kelamin* → ${genderEmoji} ${data.gender?.charAt(0).toUpperCase() + data.gender?.slice(1)}`, `*Provinsi* → ${provNama}`, `*Kab/Kota* → Kode \`${data.kabupatenKotaId}\``, `*Kecamatan* → Kode \`${data.kecamatanId}\``, `*Kode Unik* → \`${data.uniqcode}\``].join("\n")));
+    m.reply(claraWrap("NIK Parser", [`*ɴɪᴋ* → \`${data.raw}\``, `*ᴠᴀʟɪᴅ* → ✅ Valid`, `*ᴛᴀɴɢɢᴀʟ ʟᴀʜɪʀ* → ${bFormatted}`, `*ᴊᴇɴɪꜱ ᴋᴇʟᴀᴍɪɴ* → ${genderEmoji} ${data.gender?.charAt(0).toUpperCase() + data.gender?.slice(1)}`, `*ᴘʀᴏᴠɪɴꜱɪ* → ${provNama}`, `*Kab/Kota* → Kode \`${data.kabupatenKotaId}\``, `*ᴋᴇᴄᴀᴍᴀᴛᴀɴ* → Kode \`${data.kecamatanId}\``, `*ᴋᴏᴅᴇ ᴜɴɪᴋ* → \`${data.uniqcode}\``].join("\n")));
   } catch (e) {
     console.log(e);
     m.reply(claraWrap("nikparser", te(m.prefix, m.command, m.pushName), "error"));

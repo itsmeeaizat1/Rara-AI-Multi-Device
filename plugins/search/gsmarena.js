@@ -22,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `📱 *Gsmarena*\n\n` +
+    return m.reply( `📱 *ɢꜱᴍᴀʀᴇɴᴀ*\n\n` +
         `Cari spesifikasi HP lengkap\n\n` +
         `\`Contoh: ${m.prefix}gsmarena samsung galaxy s25\``, "gsmarena");
   }
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
 }
 
 function formatList(results, query, prefix) {
-  let txt = `📱 *Hasil Pencarian*\n`;
+  let txt = `📱 *ʜᴀꜱɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ*\n`;
   txt += `*${query}*\n\n`;
 
   results.slice(0, 10).forEach((d, i) => {
@@ -73,7 +73,7 @@ function formatDetail(device) {
   let txt = `📱 *${device.name}*\n\n`;
 
   if (device.quickSpec && device.quickSpec.length > 0) {
-    txt += `📋 *Ringkasan:*\n`;
+    txt += `📋 *ʀɪɴɢᴋᴀꜱᴀɴ:*\n`;
     for (const s of device.quickSpec) {
       txt += `🔹 *${s.name}:* ${s.value}\n`;
     }

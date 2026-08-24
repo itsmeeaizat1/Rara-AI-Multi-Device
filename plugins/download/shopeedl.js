@@ -62,9 +62,9 @@ async function handler(m, { sock }) {
     const best = bestStream(data.streams_array);
     const videoUrl = best.stream_url;
 
-    let caption = `🛍️ *SHOPEE VIDEO DOWNLOADER* 🛍️\n\n`;
-    if (data.username) caption += `*Username:* ${data.username}\n`;
-    caption += `*Kualitas:* ${best.quality}\n`;
+    let caption = `🛍️ *ꜱʜᴏᴘᴇᴇ ᴠɪᴅᴇᴏ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ* 🛍️\n\n`;
+    if (data.username) caption += `*ᴜꜱᴇʀɴᴀᴍᴇ:* ${data.username}\n`;
+    caption += `*ᴋᴜᴀʟɪᴛᴀꜱ:* ${best.quality}\n`;
     caption += `\nDibuat oleh bot kesayanganmu`;
 
     await sock.sendMessage(m.chat, {

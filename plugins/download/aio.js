@@ -25,9 +25,9 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return m.reply( `📥 *All In One Downloader*\n\n` +
+    return m.reply( `📥 *ᴀʟʟ ɪɴ ᴏɴᴇ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\n` +
         `Download dari berbagai platform!\n\n` +
-        `╭┈┈⬡「 🌐 *Platform* 」\n` +
+        `╭┈┈⬡「 🌐 *ᴘʟᴀᴛꜰᴏʀᴍ* 」\n` +
         `┃ • Instagram\n` +
         `┃ • TikTok\n` +
         `┃ • Facebook\n` +
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
         `┃ • CapCut\n` +
         `┃ • Threads / Reddit\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `*Contoh:* ${m.prefix}aio https://instagram.com/p/xxx`, "aio");
+        `*ᴄᴏɴᴛᴏʜ:* ${m.prefix}aio https://instagram.com/p/xxx`, "aio");
   }
 
   if (!url.startsWith("http")) {

@@ -79,7 +79,7 @@ async function handler(m, { sock, args }) {
       sessions.set(sender, { courses: [], active: true });
       let txt = `Input Mata Kuliah\n\nKirim format:\n<nilai> <sks> <nama matkul (opsional)>\n\n`;
       txt += `Contoh: \`A 4 Kalkulus\`\nAtau: \`A 4\` (tanpa nama)\n\n`;
-      txt += `Ketik *done* untuk menghitung\nKetik *cancel* untuk batal`;
+      txt += `Ketik *ᴅᴏɴᴇ* untuk menghitung\nKetik *ᴄᴀɴᴄᴇʟ* untuk batal`;
       await m.reply(claraWrap("IPK", txt));
       await m.react("🐣");
     }

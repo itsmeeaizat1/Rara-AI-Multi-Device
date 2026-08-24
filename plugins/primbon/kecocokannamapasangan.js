@@ -20,7 +20,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (m.args.length < 2) {
-        { const __navText = `💕 *Kecocokan Nama*\n\nFormat: nama1 nama2\n\n\`Contoh: ${m.prefix}kecocokannamapasangan putu keyla\``; return await m.reply(__navText); }
+        { const __navText = `💕 *ᴋᴇᴄᴏᴄᴏᴋᴀɴ ɴᴀᴍᴀ*\n\nFormat: nama1 nama2\n\n\`Contoh: ${m.prefix}kecocokannamapasangan putu keyla\``; return await m.reply(__navText); }
     }
     
     const [nama1, nama2] = m.args
@@ -31,11 +31,11 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(claraWrap("kecocokannamapasangan", `❌ *Gagal*\n\nGagal menganalisa`))
+            return m.reply(claraWrap("kecocokannamapasangan", `❌ *ɢᴀɢᴀʟ*\n\nGagal menganalisa`))
         }
         
         const result = data.data
-        const response = `💕 *Kecocokan Nama Pasangan*\n\n` +
+        const response = `💕 *ᴋᴇᴄᴏᴄᴏᴋᴀɴ ɴᴀᴍᴀ ᴘᴀꜱᴀɴɢᴀɴ*\n\n` +
             `👤 ${result.nama_anda}\n` +
             `💑 ${result.nama_pasangan}\n\n` +
             `✅ *ꜱIꜱI PoꜱItif:*\n${result.sisi_positif}\n\n` +

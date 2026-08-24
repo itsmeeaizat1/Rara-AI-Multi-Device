@@ -86,14 +86,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("Notulen", [
       `  ┊  ➶ AI Notulen Meeting → Text + PDF`,
       ``,
-      `  ┊  ➶ *Cara pakai:*`,
+      `  ┊  ➶ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  Reply catatan meeting, ketik: ${prefix}notulen`,
       `  Atau ketik langsung: ${prefix}notulen <catatan>`,
       ``,
-      `  ┊  ➶ *Contoh:*`,
+      `  ┊  ➶ *ᴄᴏɴᴛᴏʜ:*`,
       `  ${prefix}notulen rapat evaluasi Q1 2024. Budi: perlu upgrade server. Sari: budget 50jt. Keputusan: beli server minggu depan. Budi beli, deadline Jumat`,
       ``,
-      `  ┊  ➶ *Hasil:*`,
+      `  ┊  ➶ *ʜᴀꜱɪʟ:*`,
       `  Structured notulen: agenda, keputusan, action items`,
     ].join("\n"));
     return m.reply( help, "notulen");

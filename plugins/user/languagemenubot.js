@@ -79,7 +79,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Cek master toggle — kalo OFF, tolak user
     if (!isMultiLangEnabled()) {
       let offText = claraWrap("Language Menu Bot", [
-        "Status: *MULTI-LANGUAGE OFF*",
+        "Status: *ᴍᴜʟᴛɪ-ʟᴀɴɢᴜᴀɢᴇ ᴏꜰꜰ*",
         "Default: *Bahasa Indonesia (murni)*",
         "",
         "Fitur ini sedang dimatikan oleh owner",

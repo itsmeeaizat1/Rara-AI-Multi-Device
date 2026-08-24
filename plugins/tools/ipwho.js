@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const ip = m.args?.[0];
 
   if (!ip) {
-    return m.reply( `⚠️ *CARA PAKAI*\n\n` +
+    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `\`${m.prefix}ipwho <ip>\`\n\n` +
         `Contoh:\n` +
         `\`${m.prefix}ipwho 8.8.8.8\``, "ipwho");
@@ -35,14 +35,14 @@ async function handler(m, { sock }) {
   }
 
   await m.react("🕒");
-  await m.reply(claraWrap("Ipwho", `🕕 *MENCARI INFO IP...*`));
+  await m.reply(claraWrap("Ipwho", `🕕 *ᴍᴇɴᴄᴀʀɪ ɪɴꜰᴏ ɪᴘ...*`));
 
   try {
     const res = await fetch(`https://ipwho.is/${ip}`);
     const data = await res.json();
 
     if (!data.success) {
-      return m.reply(claraWrap("Ipwho", `❌ *IP TIDAK DITEMUKAN*\n\nIP ${ip} tidak valid`));
+      return m.reply(claraWrap("Ipwho", `❌ *ɪᴘ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\nIP ${ip} tidak valid`));
     }
 
     if (data.latitude && data.longitude) {
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     }
 
     const text =
-      `🌐 *IP LOOKUP*\n\n` +
+      `🌐 *ɪᴘ ʟᴏᴏᴋᴜᴘ*\n\n` +
       `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ LOKAsI\n` +
       `  ┊  ➶ 🔢 IP: ${data.ip}\n` +
       `  ┊  ➶ 🌍 Country: ${data.country} ${data.country_code}\n` +
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
       `╰┈┈┈┈┈┈┈┈❖`;
 
     await m.react("🐣");
-    await sendToolsPreview(sock, m.chat, text, "🌐 *IP LOOKUP*", data.country, {
+    await sendToolsPreview(sock, m.chat, text, "🌐 *ɪᴘ ʟᴏᴏᴋᴜᴘ*", data.country, {
       quoted: m,
     });
   } catch (e) {

@@ -21,7 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     let nomor = m.args.join('').replace(/[^0-9]/g, '')
     if (!nomor) {
-        { const __navText = `🍀 *Nomor Hoki*\n\nMasukkan nomor HP\n\n\`Contoh: ${m.prefix}nomerhoki 6281234567890\``; return await m.reply( __navText, "nomerhoki"); }
+        { const __navText = `🍀 *ɴᴏᴍᴏʀ ʜᴏᴋɪ*\n\nMasukkan nomor HP\n\n\`Contoh: ${m.prefix}nomerhoki 6281234567890\``; return await m.reply( __navText, "nomerhoki"); }
     }
     
     
@@ -30,22 +30,22 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(claraWrap("nomerhoki", `❌ *Gagal*\n\nGagal menganalisa nomor`))
+            return m.reply(claraWrap("nomerhoki", `❌ *ɢᴀɢᴀʟ*\n\nGagal menganalisa nomor`))
         }
         
         const r = data.data
         const ep = r.energi_positif.details
         const en = r.energi_negatif.details
         
-        const response = `🍀 *Nomor Hoki*\n\n` +
+        const response = `🍀 *ɴᴏᴍᴏʀ ʜᴏᴋɪ*\n\n` +
             `Nomor: *${r.nomor}*\n\n` +
-            `📊 *Angka Bagua:* ${r.angka_bagua_shuzi.value}%\n\n` +
+            `📊 *ᴀɴɢᴋᴀ ʙᴀɢᴜᴀ:* ${r.angka_bagua_shuzi.value}%\n\n` +
             `✅ *Energi PoꜱItif:* ${r.energi_positif.total}%\n` +
             `├ Kekayaan: ${ep.kekayaan}\n` +
             `├ Kesehatan: ${ep.kesehatan}\n` +
             `├ Cinta: ${ep.cinta}\n` +
             `└ Kestabilan: ${ep.kestabilan}\n\n` +
-            `❌ *Energi Negatif:* ${r.energi_negatif.total}%\n` +
+            `❌ *ᴇɴᴇʀɢɪ ɴᴇɢᴀᴛɪꜰ:* ${r.energi_negatif.total}%\n` +
             `├ Perselisihan: ${en.perselisihan}\n` +
             `├ Kehilangan: ${en.kehilangan}\n` +
             `├ Malapetaka: ${en.malapetaka}\n` +

@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
 
     if (!url) {
-        return m.reply( `╭┈┈⬡「 🎵 *Tiktok Download* 」\n` +
+        return m.reply( `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ᴅᴏᴡɴʟᴏᴀᴅ* 」\n` +
             `┃ ㊗ Usage: \`${m.prefix}tiktok2 <url>\`\n` +
             `╰┈┈⬡\n\n` +
             `Contoh: ${m.prefix}tiktok2 https://vt.tiktok.com/xxx`, "tiktok2")
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
         const result = await savett(url)
 
         const caption =
-            `✅ *Done kak*\n\n` +
+            `✅ *ᴅᴏɴᴇ ᴋᴀᴋ*\n\n` +
             `👤 *${result.username || '-'}*\n` +
             `👁️ Views: ${result.views || '-'} | ❤️ Likes: ${result.likes || '-'}\n` +
             `💬 Comments: ${result.comments || '-'} | 🔗 Shares: ${result.shares || '-'}\n` +
@@ -250,7 +250,7 @@ async function handler(m, { sock }) {
         }
 
         if (result.mp3.length > 0) {
-            m.reply(claraWrap("Tiktokdl2", `🍀 *NOTE*\nKonten ini tidak memiliki video/slide, mengirim audio saja...`))
+            m.reply(claraWrap("Tiktokdl2", `🍀 *ɴᴏᴛᴇ*\nKonten ini tidak memiliki video/slide, mengirim audio saja...`))
             await sock.sendMessage(
                 m.chat,
                 {

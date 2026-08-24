@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const query = m.text?.trim();
 
   if (!query) {
-    return m.reply( `🔞 *XNXX Search*\n\nMasukkan query pencarian\n\nContoh: \`${m.prefix}xnxx amateur\``, "xnxx");
+    return m.reply( `🔞 *xɴxx ꜱᴇᴀʀᴄʜ*\n\nMasukkan query pencarian\n\nContoh: \`${m.prefix}xnxx amateur\``, "xnxx");
   }
 
   await m.react("🕒");
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     }
 
     const results = res.data.data.slice(0, 5);
-    let text = `🔞 *XNXX SEARCH*\n\nQuery: ${query}\n\n`;
+    let text = `🔞 *xɴxx ꜱᴇᴀʀᴄʜ*\n\nQuery: ${query}\n\n`;
     for (let i = 0; i < results.length; i++) {
       const r = results[i];
       text += `${i + 1}. ${r.title}\n`;

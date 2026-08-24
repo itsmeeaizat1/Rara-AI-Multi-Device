@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     const ownerList = db.data.owner || []
     const isInOwnerDb = ownerList.includes(targetNumber)
 
-    let txt = `📋 *CEK USER INFO*\n\n`
+    let txt = `📋 *ᴄᴇᴋ ᴜꜱᴇʀ ɪɴꜰᴏ*\n\n`
     txt += `👤 User: @${targetNumber}\n`
     txt += `🏷️ Role: *${roles.join(' • ')}*\n`
     txt += `📊 Owner DB: *${isInOwnerDb ? 'Ya' : 'Tidak'}*\n`

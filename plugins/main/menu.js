@@ -126,47 +126,47 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 
     return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Iɴғᴏ Usᴇʀ
 ┊
-  ┊  ➶ *Nama:* ${m.pushName || "User"}
-  ┊  ➶ *Nomor:* @${m.sender.split("@")[0]}
-  ┊  ➶ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
-  ┊  ➶ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
-  ┊  ➶ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
-  ┊  ➶ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
-  ┊  ➶ *Role:* ${roleEmoji} ${userRole}
-  ┊  ➶ *Level:* ${userLevel}
+  ┊  ➶ *ɴᴀᴍᴀ:* ${m.pushName || "User"}
+  ┊  ➶ *ɴᴏᴍᴏʀ:* @${m.sender.split("@")[0]}
+  ┊  ➶ *ᴘʀᴇᴍɪᴜᴍ:* ${m.isPremium ? "Aktif" : "Free"}
+  ┊  ➶ *ᴇɴᴇʀɢɪ:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
+  ┊  ➶ *ᴋᴏɪɴ:* ${(user?.koin ?? 0).toLocaleString()}
+  ┊  ➶ *ʟɪᴍɪᴛ:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
+  ┊  ➶ *ʀᴏʟᴇ:* ${roleEmoji} ${userRole}
+  ┊  ➶ *ʟᴇᴠᴇʟ:* ${userLevel}
   ┊  ➶ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
-  ┊  ➶ *Total Xp:* ${userExp.toLocaleString()}
-  ┊  ➶ *Status:* ${user?.banned ? "Banned" : "Aktif"}
+  ┊  ➶ *ᴛᴏᴛᴀʟ xᴘ:* ${userExp.toLocaleString()}
+  ┊  ➶ *ꜱᴛᴀᴛᴜꜱ:* ${user?.banned ? "Banned" : "Aktif"}
 ╠┈┈「 *Iɴғᴏ Wᴀᴋᴛᴜ* 」
-  ┊  ➶ *Waktu:* ${timeStr} WIB
-  ┊  ➶ *Hari:* ${dayName} ${weton}
-  ┊  ➶ *Tanggal:* ${dateStr}
-  ┊  ➶ *Tanggal Islam:* ${islamicDate}
-  ┊  ➶ *Zona:* Asia/Jakarta
-  ┊  ➶ *Hari Penting:* ${importantDay}
+  ┊  ➶ *ᴡᴀᴋᴛᴜ:* ${timeStr} WIB
+  ┊  ➶ *ʜᴀʀɪ:* ${dayName} ${weton}
+  ┊  ➶ *ᴛᴀɴɢɢᴀʟ:* ${dateStr}
+  ┊  ➶ *ᴛᴀɴɢɢᴀʟ ɪꜱʟᴀᴍ:* ${islamicDate}
+  ┊  ➶ *ᴢᴏɴᴀ:* Asia/Jakarta
+  ┊  ➶ *ʜᴀʀɪ ᴘᴇɴᴛɪɴɢ:* ${importantDay}
 ╠┈┈「 *Iɴғᴏ Bᴏᴛ* 」
-  ┊  ➶ *Bot Name:* ${botConfig.bot?.name || "Nova AI Whatsapp Bot"}
-  ┊  ➶ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
-  ┊  ➶ *Version:* ${botConfig.bot?.version || "-"}
-  ┊  ➶ *Developer:* ${botConfig.bot?.developer || "-"}
-  ┊  ➶ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
-  ┊  ➶ *Prefix:* [ *${prefix}* ]
-  ┊  ➶ *Uptime:* ${runtimeStr}
-  ┊  ➶ *Total User:* ${totalUsers}
-  ┊  ➶ *Total Registrasi:* ${totalRegistered}
-  ┊  ➶ *Premium User:* ${totalPremium}
+  ┊  ➶ *ʙᴏᴛ ɴᴀᴍᴇ:* ${botConfig.bot?.name || "Nova AI Whatsapp Bot"}
+  ┊  ➶ *ʙᴏᴛ ɴᴏᴍᴏʀ:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
+  ┊  ➶ *ᴠᴇʀꜱɪᴏɴ:* ${botConfig.bot?.version || "-"}
+  ┊  ➶ *ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${botConfig.bot?.developer || "-"}
+  ┊  ➶ *ᴍᴏᴅᴇ:* ${(botConfig.mode || "public").toUpperCase()}
+  ┊  ➶ *ᴘʀᴇꜰɪx:* [ *${prefix}* ]
+  ┊  ➶ *ᴜᴘᴛɪᴍᴇ:* ${runtimeStr}
+  ┊  ➶ *ᴛᴏᴛᴀʟ ᴜꜱᴇʀ:* ${totalUsers}
+  ┊  ➶ *ᴛᴏᴛᴀʟ ʀᴇɢɪꜱᴛʀᴀꜱɪ:* ${totalRegistered}
+  ┊  ➶ *ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ:* ${totalPremium}
 ╠┈┈「 *Iɴғᴏ Sᴇʀᴠᴇʀ* 」
-  ┊  ➶ *Platform:* ${platform}
-  ┊  ➶ *Hostname:* ${hostname}
-  ┊  ➶ *Type:* Node.Js
-  ┊  ➶ *Baileys:* Multi Device
-  ┊  ➶ *Node.js:* ${process.version}
-  ┊  ➶ *Server Uptime:* ${serverUptime}
-  ┊  ➶ *CPU:* ${cpuModel}
-  ┊  ➶ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
-  ┊  ➶ *Load Avg:* ${loadAvg}
-  ┊  ➶ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
-  ┊  ➶ *RAM Bot:* ${formatBytes(memUsage.rss)}
+  ┊  ➶ *ᴘʟᴀᴛꜰᴏʀᴍ:* ${platform}
+  ┊  ➶ *ʜᴏꜱᴛɴᴀᴍᴇ:* ${hostname}
+  ┊  ➶ *ᴛʏᴘᴇ:* Node.Js
+  ┊  ➶ *ʙᴀɪʟᴇʏꜱ:* Multi Device
+  ┊  ➶ *ɴᴏᴅᴇ.ᴊꜱ:* ${process.version}
+  ┊  ➶ *ꜱᴇʀᴠᴇʀ ᴜᴘᴛɪᴍᴇ:* ${serverUptime}
+  ┊  ➶ *ᴄᴘᴜ:* ${cpuModel}
+  ┊  ➶ *ᴄᴏʀᴇꜱ:* ${cpuCores} threads @ ${cpuSpeed} MHz
+  ┊  ➶ *ʟᴏᴀᴅ ᴀᴠɢ:* ${loadAvg}
+  ┊  ➶ *ʀᴀᴍ:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
+  ┊  ➶ *ʀᴀᴍ ʙᴏᴛ:* ${formatBytes(memUsage.rss)}
 ${weatherBlock ? weatherBlock : ""}❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${readMore}
 ❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Nᴏᴠᴀ Mᴇɴᴜ

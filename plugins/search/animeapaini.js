@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     }
     
     if (m.isVideo || m.quoted?.isVideo) {
-        return m.reply(`❌ *Tidak Didukung*\n\nHanya gambar/screenshot yang didukung\nVideo tidak bisa diproses\n\n\`Reply atau kirim gambar dengan caption ${m.prefix}animeapaini\``)
+        return m.reply(`❌ *ᴛɪᴅᴀᴋ ᴅɪᴅᴜᴋᴜɴɢ*\n\nHanya gambar/screenshot yang didukung\nVideo tidak bisa diproses\n\n\`Reply atau kirim gambar dengan caption ${m.prefix}animeapaini\``)
     }
     
     if (!imageMsg && !imageBuffer) {
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
             `\`${m.prefix}animeapaini\`\n\n` +
             `Atau reply gambar dengan:\n` +
             `\`${m.prefix}animeapaini\`\n\n` +
-            `⚠️ *Catatan:* Video tidak didukung, hanya gambar/screenshot`
+            `⚠️ *ᴄᴀᴛᴀᴛᴀɴ:* Video tidak didukung, hanya gambar/screenshot`
         )
     }
     
@@ -113,13 +113,13 @@ async function handler(m, { sock }) {
         const animeName = filename.replace(/\[.*?\]/g, '').replace(/\(.*?\)/g, '').replace(/\.mp4|\.mkv|\.avi/gi, '').trim() || 'Unknown Anime'
         
         const caption = `🔍 *Anime Apa Ini?*\n\n` +
-            `🎬 *Anime:* ${animeName}\n` +
-            `📺 *Episode:* ${d.episode || 'Movie/OVA'}\n` +
-            `🆔 *AniList ID:* ${d.anilist || '-'}\n\n` +
-            `⏱️ *Timestamp:*\n` +
+            `🎬 *ᴀɴɪᴍᴇ:* ${animeName}\n` +
+            `📺 *ᴇᴘɪꜱᴏᴅᴇ:* ${d.episode || 'Movie/OVA'}\n` +
+            `🆔 *ᴀɴɪʟɪꜱᴛ ɪᴅ:* ${d.anilist || '-'}\n\n` +
+            `⏱️ *ᴛɪᴍᴇꜱᴛᴀᴍᴘ:*\n` +
             `    ┊  ➶ From: \`${formatTime(d.from)}\`\n` +
             `    ┊  ➶ To: \`${formatTime(d.to)}\`\n\n` +
-            `📊 *Similarity:* ${similarity}%\n\n` +
+            `📊 *ꜱɪᴍɪʟᴀʀɪᴛʏ:* ${similarity}%\n\n` +
             `🔗 https://anilist.co/anime/${d.anilist || ''}`
         
         m.react('✅')

@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `🎵 *PLAY TIKTOK*\n\nContoh:\n\`${m.prefix}playtiktok cewe tiktok\``, "playtiktok");
+    return m.reply( `🎵 *ᴘʟᴀʏ ᴛɪᴋᴛᴏᴋ*\n\nContoh:\n\`${m.prefix}playtiktok cewe tiktok\``, "playtiktok");
   }
 
   m.react("🕒");
@@ -42,15 +42,15 @@ async function handler(m, { sock }) {
     }
 
     const video = videos[0];
-    let caption = "🎵 *PLAY TIKTOK*\n\n";
-    caption += `📌 *Judul:* ${video.title || "-"}\n`;
-    caption += `👤 *Author:* ${video.author?.nickname || "-"}\n`;
-    caption += `👀 *Views:* ${formatNumber(video.stats?.plays)}\n`;
-    caption += `❤️ *Likes:* ${formatNumber(video.stats?.likes)}\n`;
-    caption += `💬 *Comments:* ${formatNumber(video.stats?.comments)}\n`;
-    caption += `🔁 *Shares:* ${formatNumber(video.stats?.shares)}\n`;
-    caption += `🎧 *Music:* ${video.music || "-"}\n`;
-    caption += `🔗 *Link:* ${video.link}`;
+    let caption = "🎵 *ᴘʟᴀʏ ᴛɪᴋᴛᴏᴋ*\n\n";
+    caption += `📌 *ᴊᴜᴅᴜʟ:* ${video.title || "-"}\n`;
+    caption += `👤 *ᴀᴜᴛʜᴏʀ:* ${video.author?.nickname || "-"}\n`;
+    caption += `👀 *ᴠɪᴇᴡꜱ:* ${formatNumber(video.stats?.plays)}\n`;
+    caption += `❤️ *ʟɪᴋᴇꜱ:* ${formatNumber(video.stats?.likes)}\n`;
+    caption += `💬 *ᴄᴏᴍᴍᴇɴᴛꜱ:* ${formatNumber(video.stats?.comments)}\n`;
+    caption += `🔁 *ꜱʜᴀʀᴇꜱ:* ${formatNumber(video.stats?.shares)}\n`;
+    caption += `🎧 *ᴍᴜꜱɪᴄ:* ${video.music || "-"}\n`;
+    caption += `🔗 *ʟɪɴᴋ:* ${video.link}`;
 
     await sock.sendMedia(m.chat, video.link, caption, m, {
       type: "video",

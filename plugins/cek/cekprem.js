@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     const user = db.getUser(jid)
     const now = Date.now()
 
-    let txt = `💎 *DETAIL PREMIUM*\n\n`
+    let txt = `💎 *ᴅᴇᴛᴀɪʟ ᴘʀᴇᴍɪᴜᴍ*\n\n`
     txt += `👤 User: @${targetNumber}\n`
 
     if (isConfigOwner) {

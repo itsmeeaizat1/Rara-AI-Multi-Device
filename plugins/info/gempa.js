@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
     let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ INFO GEMPA — BMKG  ┊  ➶\n";
     txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += "Data gempa langsung dari BMKG Indonesia.\n\n";
-    txt += "*Perintah:*\n";
+    txt += "*ᴘᴇʀɪɴᴛᴀʜ:*\n";
     txt += "1. .gempa — Gempa terkini (1 terbaru + shakemap)\n";
     txt += "2. .gempa dirasakan — 10 gempa dirasakan terbaru\n";
     txt += "3. .gempa list — 15 gempa M 5.0+ terbaru\n\n";

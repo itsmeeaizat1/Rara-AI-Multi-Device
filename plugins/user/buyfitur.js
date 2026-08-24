@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     
     if (user.isPremium || config.isPremium(m.sender)) {
         return m.reply(
-            `✨ *Premium User*\n\n` +
+            `✨ *ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ*\n\n` +
             `Kamu sudah premium!\n` +
             `Semua fitur sudah ter-unlock!`
         )
@@ -50,13 +50,13 @@ async function handler(m, { sock }) {
         const unlockedFeatures = user.unlockedFeatures || []
         
         let text = `╭━━━━━━━━━━━━━━━━━╮\n`
-        text += `┃  🛒 *Buy Fitur*\n`
+        text += `┃  🛒 *ʙᴜʏ ꜰɪᴛᴜʀ*\n`
         text += `╰━━━━━━━━━━━━━━━━━╯\n\n`
         
         text += `Harga: *${formatNumber(PRICE_PER_FEATURE)}* bal/fitur\n`
         text += `Koin: *${formatNumber(user.koin || 0)}*\n\n`
         
-        text += `╭┈┈⬡「 📋 *Fitur* 」\n`
+        text += `╭┈┈⬡「 📋 *ꜰɪᴛᴜʀ* 」\n`
         
         for (const feature of PREMIUM_FEATURES) {
             const isUnlocked = unlockedFeatures.includes(feature.id)
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
         
         text += `╰┈┈┈┈┈┈┈┈⬡\n\n`
         text += `Gunakan: \`.buyfitur <id>\`\n`
-        text += `Atau jadi *Premium* unlock semua!`
+        text += `Atau jadi *ᴘʀᴇᴍɪᴜᴍ* unlock semua!`
         
         await m.reply(claraWrap("buyfitur", text))
         return
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
     
     if (!feature) {
         return m.reply(
-            `❌ *Gagal*\n\n` +
+            `❌ *ɢᴀɢᴀʟ*\n\n` +
             `Fitur \`${featureName}\` tidak ditemukan\n` +
             `Ketik \`.buyfitur\` untuk lihat daftar`
         )
@@ -88,12 +88,12 @@ async function handler(m, { sock }) {
     const unlockedFeatures = user.unlockedFeatures || []
     
     if (unlockedFeatures.includes(feature.id)) {
-        return m.reply(`❌ *Gagal*\n\nFitur \`${feature.name}\` sudah ter-unlock!`)
+        return m.reply(`❌ *ɢᴀɢᴀʟ*\n\nFitur \`${feature.name}\` sudah ter-unlock!`)
     }
     
     if ((user.koin || 0) < PRICE_PER_FEATURE) {
         return m.reply(
-            `❌ *Gagal*\n\n` +
+            `❌ *ɢᴀɢᴀʟ*\n\n` +
             `Koin tidak cukup!\n` +
             `Butuh: *${formatNumber(PRICE_PER_FEATURE)}*\n` +
             `Kamu punya: *${formatNumber(user.koin || 0)}*`
@@ -109,14 +109,14 @@ async function handler(m, { sock }) {
     m.react('✅')
     
     await m.reply(
-        `✅ *Fitur Di-Unlock*\n\n` +
-        `╭┈┈⬡「 📋 *Detail* 」\n` +
+        `✅ *ꜰɪᴛᴜʀ ᴅɪ-ᴜɴʟᴏᴄᴋ*\n\n` +
+        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `┃ 🎁 Fitur: *${feature.name}*\n` +
         `┃ 💵 Harga: *-${formatNumber(PRICE_PER_FEATURE)}* bal\n` +
         `┃ 💰 sIsa: *${formatNumber(newKoin)}*\n` +
         `╰┈┈⬡\n\n` +
         `_${feature.desc}_\n\n` +
-        `💡 Tip: Jadi *Premium* untuk unlock SEMUA!`
+        `💡 Tip: Jadi *ᴘʀᴇᴍɪᴜᴍ* untuk unlock SEMUA!`
     )
 }
 

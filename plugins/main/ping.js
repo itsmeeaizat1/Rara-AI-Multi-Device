@@ -97,33 +97,33 @@ async function handler(m, { sock }) {
       `🏓 *PONG!* (${execTime}ms)\n\n` +
       `Berikut adalah detail spesifikasi dan performa server secara lengkap:\n\n` +
 
-      `🖥️ *INFORMASI SISTEM*\n` +
+      `🖥️ *ɪɴꜰᴏʀᴍᴀꜱɪ ꜱɪꜱᴛᴇᴍ*\n` +
       `  ┊  ➶ *OS:* ${os.type()} (${os.release()})\n` +
-      `  ┊  ➶ *Platform:* ${os.platform()} (${os.arch()})\n` +
-      `  ┊  ➶ *Hostname:* ${os.hostname()}\n` +
-      `  ┊  ➶ *NodeJS:* ${process.version}\n` +
+      `  ┊  ➶ *ᴘʟᴀᴛꜰᴏʀᴍ:* ${os.platform()} (${os.arch()})\n` +
+      `  ┊  ➶ *ʜᴏꜱᴛɴᴀᴍᴇ:* ${os.hostname()}\n` +
+      `  ┊  ➶ *ɴᴏᴅᴇᴊꜱ:* ${process.version}\n` +
       `  ┊  ➶ *Engine V8:* ${process.versions.v8}\n\n` +
 
-      `💻 *INFORMASI CPU*\n` +
-      `  ┊  ➶ *Model:* ${cpuModel.trim()}\n` +
-      `  ┊  ➶ *Cores:* ${cpuCores} Core(s)\n` +
-      `  ┊  ➶ *Speed:* ${cpuSpeed} MHz\n` +
-      `  ┊  ➶ *Load Avg:* ${load1m} (1m), ${load5m} (5m), ${load15m} (15m)\n\n` +
+      `💻 *ɪɴꜰᴏʀᴍᴀꜱɪ ᴄᴘᴜ*\n` +
+      `  ┊  ➶ *ᴍᴏᴅᴇʟ:* ${cpuModel.trim()}\n` +
+      `  ┊  ➶ *ᴄᴏʀᴇꜱ:* ${cpuCores} Core(s)\n` +
+      `  ┊  ➶ *ꜱᴘᴇᴇᴅ:* ${cpuSpeed} MHz\n` +
+      `  ┊  ➶ *ʟᴏᴀᴅ ᴀᴠɢ:* ${load1m} (1m), ${load5m} (5m), ${load15m} (15m)\n\n` +
 
-      `🧠 *Cara Pakai Memori*\n` +
-      `  ┊  ➶ *Total RAM:* ${fmtSize(totalMem)}\n` +
-      `  ┊  ➶ *Dipakai:* ${fmtSize(usedMem)} (${memPct}%)\n` +
-      `  ┊  ➶ *Sisa Bebas:* ${fmtSize(freeMem)}\n\n` +
+      `🧠 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ ᴍᴇᴍᴏʀɪ*\n` +
+      `  ┊  ➶ *ᴛᴏᴛᴀʟ ʀᴀᴍ:* ${fmtSize(totalMem)}\n` +
+      `  ┊  ➶ *ᴅɪᴘᴀᴋᴀɪ:* ${fmtSize(usedMem)} (${memPct}%)\n` +
+      `  ┊  ➶ *ꜱɪꜱᴀ ʙᴇʙᴀꜱ:* ${fmtSize(freeMem)}\n\n` +
 
-      `📦 *MEMORI NODEJS*\n` +
-      `  ┊  ➶ *RSS:* ${fmtSize(memoryUsage.rss)}\n` +
-      `  ┊  ➶ *Heap Total:* ${fmtSize(memoryUsage.heapTotal)}\n` +
-      `  ┊  ➶ *Heap Used:* ${fmtSize(memoryUsage.heapUsed)}\n` +
-      `  ┊  ➶ *External:* ${fmtSize(memoryUsage.external)}\n\n` +
+      `📦 *ᴍᴇᴍᴏʀɪ ɴᴏᴅᴇᴊꜱ*\n` +
+      `  ┊  ➶ *ʀꜱꜱ:* ${fmtSize(memoryUsage.rss)}\n` +
+      `  ┊  ➶ *ʜᴇᴀᴘ ᴛᴏᴛᴀʟ:* ${fmtSize(memoryUsage.heapTotal)}\n` +
+      `  ┊  ➶ *ʜᴇᴀᴘ ᴜꜱᴇᴅ:* ${fmtSize(memoryUsage.heapUsed)}\n` +
+      `  ┊  ➶ *ᴇxᴛᴇʀɴᴀʟ:* ${fmtSize(memoryUsage.external)}\n\n` +
 
       `⏱️ *WAKTU AKTIF (UPTIME)*\n` +
-      `  ┊  ➶ *Uptime Server:* ${uptimeOS}\n` +
-      `  ┊  ➶ *Uptime Bot:* ${uptimeBot}\n\n` +
+      `  ┊  ➶ *ᴜᴘᴛɪᴍᴇ ꜱᴇʀᴠᴇʀ:* ${uptimeOS}\n` +
+      `  ┊  ➶ *ᴜᴘᴛɪᴍᴇ ʙᴏᴛ:* ${uptimeBot}\n\n` +
 
       `Sistem berjalan stabil dan menyelesaikan kalkulasi dalam waktu eksekusi *${execTime}ms*.`
 

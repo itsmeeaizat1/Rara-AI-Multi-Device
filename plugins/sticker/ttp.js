@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
 
   } catch (err) {
     console.error("[TTP Maker]", err.message);
-    m.reply(claraWrap("ttp", "😔 *Terjadi masalah di sistem kami.* \n\nSistem gagal menghubungi server pembuat stiker. Silakan coba beberapa saat lagi ya."));
+    m.reply(claraWrap("ttp", "😔 *ᴛᴇʀᴊᴀᴅɪ ᴍᴀꜱᴀʟᴀʜ ᴅɪ ꜱɪꜱᴛᴇᴍ ᴋᴀᴍɪ.* \n\nSistem gagal menghubungi server pembuat stiker. Silakan coba beberapa saat lagi ya."));
   }
 }
 

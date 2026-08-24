@@ -305,7 +305,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    const caption = `*HD ENHANCED*\nSize: ${sizeMB}MB\nSource: BeautyPlus\nQuality: Full HD`;
+    const caption = `*ʜᴅ ᴇɴʜᴀɴᴄᴇᴅ*\nSize: ${sizeMB}MB\nSource: BeautyPlus\nQuality: Full HD`;
 
     if (resultBuffer.length > 5 * 1024 * 1024) {
       // Auto document mode kalau > 5MB (no compress)

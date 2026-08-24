@@ -30,12 +30,12 @@ function handler(m, { sock }) {
             ? (existing.enabled ? '✅ Aktif' : '❌ Nonaktif')
             : '⚪ Belum diatur'
 
-        let info = `🍽️ *PENGINGAT MAKAN*\n\n`
-        info += `📌 *Status:* ${status}\n`
+        let info = `🍽️ *ᴘᴇɴɢɪɴɢᴀᴛ ᴍᴀᴋᴀɴ*\n\n`
+        info += `📌 *ꜱᴛᴀᴛᴜꜱ:* ${status}\n`
 
         if (existing) {
-            info += `⏰ *Jadwal:* ${existing.jadwal.map(j => `*${j}* WIB`).join(', ')}\n`
-            if (existing.menu) info += `🍴 *Menu:* _${existing.menu}_\n`
+            info += `⏰ *ᴊᴀᴅᴡᴀʟ:* ${existing.jadwal.map(j => `*${j}* WIB`).join(', ')}\n`
+            if (existing.menu) info += `🍴 *ᴍᴇɴᴜ:* _${existing.menu}_\n`
         }
 
         info += `\n*📋 Cara Pakai:*\n`
@@ -51,10 +51,10 @@ function handler(m, { sock }) {
 
     if (sub === 'off') {
         if (!existing) {
-            return m.reply(claraWrap("Notifmakan", `❌ *Belum ada pengingat makan* yang aktif di chat ini`))
+            return m.reply(claraWrap("Notifmakan", `❌ *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘᴇɴɢɪɴɢᴀᴛ ᴍᴀᴋᴀɴ* yang aktif di chat ini`))
         }
         toggleNotif('makan', sender, chatJid, false)
-        return m.reply(`✅ *Pengingat makan dinonaktifkan* 🔕\n\nKetik \`${m.prefix}notifmakan on\` untuk mengaktifkan kembali`)
+        return m.reply(`✅ *ᴘᴇɴɢɪɴɢᴀᴛ ᴍᴀᴋᴀɴ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ* 🔕\n\nKetik \`${m.prefix}notifmakan on\` untuk mengaktifkan kembali`)
     }
 
     if (sub === 'on') {
@@ -74,19 +74,19 @@ function handler(m, { sock }) {
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\nContoh: \`07.00,12.30,19.00\``)
+            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\nContoh: \`07.00,12.30,19.00\``)
         }
 
         const menu = args.slice(2).join(' ').trim()
         setNotifMakan(sender, chatJid, jadwal, menu)
 
         let reply = `✅ *Pengingat makan aktif!* 🔔\n\n`
-        reply += `⏰ *Jadwal:*\n`
+        reply += `⏰ *ᴊᴀᴅᴡᴀʟ:*\n`
         for (const j of jadwal) {
             const label = getMealLabel(j)
             reply += `  ┊  ➶ 🕐 *${j}* WIB _(${label})_\n`
         }
-        if (menu) reply += `\n🍴 *Menu:* _${menu}_`
+        if (menu) reply += `\n🍴 *ᴍᴇɴᴜ:* _${menu}_`
         reply += `\n\n💡 _Notifikasi akan dikirim ke chat ini setiap hari_`
 
         return m.reply(reply)
@@ -104,19 +104,19 @@ function handler(m, { sock }) {
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\nContoh: \`08.00,13.00,20.00\``)
+            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\nContoh: \`08.00,13.00,20.00\``)
         }
 
         const menu = args.slice(2).join(' ').trim() || existing.menu || ''
         setNotifMakan(sender, chatJid, jadwal, menu)
 
         let reply = `✅ *Jadwal makan diperbarui!* ✏️\n\n`
-        reply += `⏰ *Jadwal baru:*\n`
+        reply += `⏰ *ᴊᴀᴅᴡᴀʟ ʙᴀʀᴜ:*\n`
         for (const j of jadwal) {
             const label = getMealLabel(j)
             reply += `  ┊  ➶ 🕐 *${j}* WIB _(${label})_\n`
         }
-        if (menu) reply += `\n🍴 *Menu:* _${menu}_`
+        if (menu) reply += `\n🍴 *ᴍᴇɴᴜ:* _${menu}_`
 
         return m.reply(reply)
     }

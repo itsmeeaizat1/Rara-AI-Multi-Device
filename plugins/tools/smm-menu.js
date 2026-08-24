@@ -22,15 +22,15 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   let body = "SMM Services - All Providers\n\n";
   body += "Pilih provider sesuai kebutuhan:\n\n";
-  body += "1. *NexusSMM* (.smm)\n";
+  body += "1. *ɴᴇxᴜꜱꜱᴍᴍ* (.smm)\n";
   body += "   100+ layanan global\n";
   body += "   Platform: IG, Telegram, TikTok, YouTube, FB, Twitter\n";
   body += "   Command: .smm\n\n";
-  body += "2. *UndrCtrl* (.undr)\n";
+  body += "2. *ᴜɴᴅʀᴄᴛʀʟ* (.undr)\n";
   body += "   Ratusan layanan (TikTok, IG, YouTube, Shopee, ML)\n";
   body += "   Harga USD, auto convert IDR\n";
   body += "   Command: .undr\n\n";
-  body += "3. *ProviderSMM* (.prov)\n";
+  body += "3. *ᴘʀᴏᴠɪᴅᴇʀꜱᴍᴍ* (.prov)\n";
   body += "   98 kategori, fokus Indonesia\n";
   body += "   IG/TikTok/FB/Threads/X Indonesia + Roblox\n";
   body += "   Command: .prov\n\n";
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
   body += "5. Refill: .undr/.prov refill <order_id>\n";
   body += "6. Batal: .undr/.prov batal <order_id>\n";
   body += "7. Riwayat: .smm/.undr/.prov list\n\n";
-  body += "*Owner setup:*\n";
+  body += "*ᴏᴡɴᴇʀ ꜱᴇᴛᴜᴘ:*\n";
   body += ".smm setkey <api_id>:<api_key>\n";
   body += ".undr setkey <key>\n";
   body += ".prov setkey <key>\n";

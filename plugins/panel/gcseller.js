@@ -88,7 +88,7 @@ function handler(m, { sock }) {
     if (!parsed) return m.reply( '❌ Command tidak valid.', "gcseller")
 
     if (!hasAccess(m.sender, m.isOwner)) {
-        return m.reply( '❌ *Akses Ditolak*\n\nFitur ini hanya untuk Owner atau Owner Panel.', "gcseller")
+        return m.reply( '❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\nFitur ini hanya untuk Owner atau Owner Panel.', "gcseller")
     }
 
     const { action, version } = parsed
@@ -104,7 +104,7 @@ function handler(m, { sock }) {
         m.react('✅')
 
         let txt = `✅ *Gc sEller ${serverLabel} Ditambahkan*\n\n`
-        txt += `╭┈┈⬡「 📋 *Detail* 」\n`
+        txt += `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n`
         txt += `┃ 🖥️ sErver: \`${serverLabel}\`\n`
         txt += `┃ 👥 Grup: \`${m.groupName || m.chat}\`\n`
         txt += `┃ 🔓 Akses: \`1gb${version}\` - \`10gb${version}\`, \`unli${version}\`\n`

@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("listserver", `❌ *Akses Ditolak*\n\n` +
+        return m.reply(claraWrap("listserver", `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
             `Maaf ya, kamu tidak memiliki izin akses penuh ke panel *${serverLabel}* ini.\n` +
             `Status peran kamu saat ini: *${userRole || 'Tidak ada'}*`))
     }

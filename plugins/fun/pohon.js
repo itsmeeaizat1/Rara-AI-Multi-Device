@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("Pohon", [
       `  ┊  ➶ Generator silsilah keluarga lucu`,
       ``,
-      `  ┊  ➶ *Cara pakai:*`,
+      `  ┊  ➶ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  ${prefix}pohon <nama>`,
       `  ${prefix}pohon Budi`,
       `  Reply orang: ${prefix}pohon`,

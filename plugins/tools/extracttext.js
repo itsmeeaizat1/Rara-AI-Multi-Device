@@ -330,17 +330,17 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!isImage && !isPdf) {
     const helpText = claraWrap("Extract Text", [
-      `  ┊  ➶ Ekstrak teks dari *PDF* atau *Gambar* dengan format rapi`,
+      `  ┊  ➶ Ekstrak teks dari *ᴘᴅꜰ* atau *ɢᴀᴍʙᴀʀ* dengan format rapi`,
       ``,
-      `  ┊  ➶ *Cara pakai:*`,
+      `  ┊  ➶ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  Reply PDF/Gambar lalu ketik:`,
       `  ${prefix}extracttext (mode standar)`,
       `  ${prefix}extracttext ai (mode AI untuk gambar)`,
       ``,
-      `  ┊  ➶ *Media yang didukung:*`,
+      `  ┊  ➶ *ᴍᴇᴅɪᴀ ʏᴀɴɢ ᴅɪᴅᴜᴋᴜɴɢ:*`,
       `  PDF (.pdf), JPG, PNG, WEBP`,
       ``,
-      `  ┊  ➶ *Mode:*`,
+      `  ┊  ➶ *ᴍᴏᴅᴇ:*`,
       `  Standar - pdf-parse (PDF) / AI vision (gambar)`,
       `  ai - AI vision untuk hasil lebih akurat (PDF & gambar)`,
       `  Maks 5 halaman untuk AI mode PDF`,
@@ -412,7 +412,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   } catch (error) {
     console.error("extracttext error:", error);
     await m.reply(claraWrap("Extract Text", [
-      `❌ *GAGAL*`,
+      `❌ *ɢᴀɢᴀʟ*`,
       ``,
       `${error.message || "Terjadi kesalahan"}`,
     ].join("\n")));

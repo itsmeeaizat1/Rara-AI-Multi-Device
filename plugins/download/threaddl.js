@@ -95,13 +95,13 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("threaddl", `⚠️ *Aduh, gagal mengambil data dari Threads!*\n\nMungkin postingan ini bersifat privat, sudah dihapus, atau link yang kamu berikan kurang tepat.\n\nAlasan sistem: ${data.message || data.error || "Tidak diketahui"}`));
     }
 
-    const captionText = `✨ *THREADS DOWNLOADER* ✨
+    const captionText = `✨ *ᴛʜʀᴇᴀᴅꜱ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ* ✨
 
 Halo! Ini hasil unduhan Threads yang kamu minta:
 
-👤 *Pembuat*: ${info.author || "Unknown"}
-📝 *Teks Postingan*: ${cleanText(info.title) || cleanText(info.description) || "Tidak ada deskripsi."}
-📊 *Jumlah File Media*: ${result.length} file
+👤 *ᴘᴇᴍʙᴜᴀᴛ*: ${info.author || "Unknown"}
+📝 *ᴛᴇᴋꜱ ᴘᴏꜱᴛɪɴɢᴀɴ*: ${cleanText(info.title) || cleanText(info.description) || "Tidak ada deskripsi."}
+📊 *ᴊᴜᴍʟᴀʜ ꜰɪʟᴇ ᴍᴇᴅɪᴀ*: ${result.length} file
 
 *Semoga bermanfaat ya!* Jangan lupa mampir lagi kalau mau download yang lain. 🚀`;
 
@@ -127,7 +127,7 @@ Halo! Ini hasil unduhan Threads yang kamu minta:
 
   } catch (err) {
     console.error("[ThreadsDL]", err.message);
-    m.reply(claraWrap("threaddl", "😔 *Sepertinya ada gangguan di sistemku.* \n\nTerjadi kesalahan fatal saat mencoba memproses link Threads tersebut. Silakan coba lagi nanti ya!"));
+    m.reply(claraWrap("threaddl", "😔 *ꜱᴇᴘᴇʀᴛɪɴʏᴀ ᴀᴅᴀ ɢᴀɴɢɢᴜᴀɴ ᴅɪ ꜱɪꜱᴛᴇᴍᴋᴜ.* \n\nTerjadi kesalahan fatal saat mencoba memproses link Threads tersebut. Silakan coba lagi nanti ya!"));
   }
 }
 

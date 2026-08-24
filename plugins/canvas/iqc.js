@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("Iqc Chat", `📱 *Iqc Chat*\n\nMasukkan teks untuk chat\n\n\`Contoh: ${m.prefix}iqc Hai cantik\``), "iqc");
+    return m.reply(claraWrap("Iqc Chat", `📱 *ɪqᴄ ᴄʜᴀᴛ*\n\nMasukkan teks untuk chat\n\n\`Contoh: ${m.prefix}iqc Hai cantik\``), "iqc");
   }
 
   m.react("🕒");
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     await sock.sendMessage(m.chat, { image: cardBuffer, caption: "" }, { quoted: m });
   } catch (error) {
     console.error("[IQC]", error.message);
-    m.reply(claraWrap("Gagal membuat gambar chat.", "😔 *Gagal membuat gambar chat.* \n\nSistem gagal menghubungi server pembuat chat. Silakan coba beberapa saat lagi ya."));
+    m.reply(claraWrap("Gagal membuat gambar chat.", "😔 *ɢᴀɢᴀʟ ᴍᴇᴍʙᴜᴀᴛ ɢᴀᴍʙᴀʀ ᴄʜᴀᴛ.* \n\nSistem gagal menghubungi server pembuat chat. Silakan coba beberapa saat lagi ya."));
   }
 }
 
