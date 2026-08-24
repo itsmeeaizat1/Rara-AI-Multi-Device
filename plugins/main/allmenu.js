@@ -1,15 +1,13 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenu.js — Semua command lengkap per kategori (rebuild: raw buffer thumbnail + buttons)
+// allmenu.js — Semua command per kategori (root sendMessage + preview card + type 1 buttons)
 import config from "../../config.js";
 import {
   getTimeGreeting,
   formatUptime,
-  getImportantDay,
 } from "../../src/lib/nova-formatter.js";
 import {
   getCommandsByCategory,
   getCategories,
-  getPluginCount,
 } from "../../src/lib/nova-plugins.js";
 import { getCasesByCategory, getCaseCount } from "../../case/nova.js";
 import fs from "fs";
@@ -33,11 +31,9 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// ── Small caps helper ──
 const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
 const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c);
 
-// ── Category ordering ──
 const CATEGORY_ORDER = [
   "ai", "sticker", "download", "fun", "canvas", "tools",
   "game", "rpg", "media", "search", "group", "main",
@@ -66,7 +62,6 @@ const CATEGORY_EMOJIS = {
   panel: "🖥️", owner: "👑", store: "🛒",
 };
 
-// ── Load thumbnail raw buffer (NO sharp) ──
 let _thumbCache = null;
 function getThumb() {
   if (_thumbCache) return _thumbCache;
@@ -76,13 +71,10 @@ function getThumb() {
       _thumbCache = fs.readFileSync(p);
       console.log("[allmenu] ✅ Thumbnail loaded: " + _thumbCache.length + " bytes");
     }
-  } catch (e) {
-    console.error("[allmenu] ❌ Thumbnail load failed:", e.message);
-  }
+  } catch (e) { console.error("[allmenu] ❌ Thumbnail load failed:", e.message); }
   return _thumbCache;
 }
 
-// ── Build allmenu text ──
 async function buildAllMenuText(m, botConfig, db, uptime, sock) {
   try {
     const prefix = botConfig.command?.prefix || ".";
@@ -98,14 +90,12 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
     const timeStr = new Intl.DateTimeFormat("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }).format(now);
     const dateStr = new Intl.DateTimeFormat("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" }).format(now);
 
-    // Weather
     let weatherBlock = "";
     try {
       const wf = await getWeatherFooter();
       if (wf) weatherBlock = `${wf}\n`;
     } catch {}
 
-    // Get all commands by category
     const pluginCats = getCategories();
     const commandsByCategory = getCommandsByCategory();
     const caseCats = getCasesByCategory();
@@ -131,9 +121,8 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
 
       let cmdLines = "";
       for (let i = 0; i < allCmds.length; i++) {
-        const cmd = allCmds[i];
         const end = i === allCmds.length - 1 ? "  ╰" : "  ┊";
-        cmdLines += `${end}  ➶ ${prefix}${cmd}\n`;
+        cmdLines += `${end}  ➶ ${prefix}${allCmds[i]}\n`;
       }
 
       categoryBlocks += `₊˚ʚ ᗢ₊˚✧ ﾟ. ${catEmoji} ${toSC(catName)} ｡ﾟ\n`;
@@ -185,7 +174,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const saluranLink = botConfig.saluran?.link || "";
     const footerText = `${botName} | Nova AI WhatsApp Bot`;
 
-    // Tombol navigasi (type 1)
+    // Type 1 buttons + externalAdReply preview card (thumbnail TIDAK kesimpen galeri)
     const buttons = [
       { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
       { buttonId: `${prefix}menukategori`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
@@ -232,9 +221,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     await m.react("✅");
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);
-    try {
-      await m.reply("❌ Gagal menampilkan allmenu: " + e.message);
-    } catch {}
+    try { await m.reply("❌ Gagal menampilkan allmenu: " + e.message); } catch {}
     await m.react("❌");
   }
 }

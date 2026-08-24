@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menu.js — Menu utama bot (rebuild: raw buffer thumbnail, externalAdReply + buttons)
+// menu.js — Menu utama (root sendMessage + externalAdReply preview card + type 1 buttons)
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import config from "../../config.js";
 import {
@@ -33,11 +33,9 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// ── Small caps helper ──
 const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
 const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c);
 
-// ── Weton (Javanese 5-day cycle) ──
 function getWeton(date = new Date()) {
   const days = ["Pahing", "Pon", "Wage", "Kliwon", "Legi"];
   const ref = new Date(1900, 0, 1);
@@ -45,7 +43,6 @@ function getWeton(date = new Date()) {
   return days[((diff % 5) + 5) % 5];
 }
 
-// ── Hijri date ──
 function getIslamicDate(date = new Date()) {
   try {
     return new Intl.DateTimeFormat("id-ID-u-ca-islamic", {
@@ -58,7 +55,7 @@ function formatBytes(b) {
   return (b / 1024 / 1024 / 1024).toFixed(2) + " GB";
 }
 
-// ── Load thumbnail raw buffer (NO sharp) ──
+// ── Load thumbnail raw buffer (NO sharp, cached) ──
 let _thumbCache = null;
 function getThumb() {
   if (_thumbCache) return _thumbCache;
@@ -68,13 +65,10 @@ function getThumb() {
       _thumbCache = fs.readFileSync(p);
       console.log("[menu] ✅ Thumbnail loaded: " + _thumbCache.length + " bytes");
     }
-  } catch (e) {
-    console.error("[menu] ❌ Thumbnail load failed:", e.message);
-  }
+  } catch (e) { console.error("[menu] ❌ Thumbnail load failed:", e.message); }
   return _thumbCache;
 }
 
-// ── Build menu text ──
 async function buildMenuText(m, botConfig, db, uptime, sock) {
   try {
     const prefix = botConfig.command?.prefix || ".";
@@ -113,24 +107,18 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const runtimeStr = formatUptime(uptime);
     const platform = process.platform;
 
-    // Weather
     let weatherBlock = "";
     try {
       const wf = await getWeatherFooter();
       if (wf) weatherBlock = `\n${wf}\n`;
     } catch {}
 
-    // Total fitur
     const pluginCats = getCategories();
     const commandsByCategory = getCommandsByCategory();
     const caseCats = getCasesByCategory();
     let totalFitur = 0;
-    for (const cat of pluginCats) {
-      totalFitur += (commandsByCategory[cat] || []).length;
-    }
-    for (const cat of Object.keys(caseCats)) {
-      totalFitur += (caseCats[cat] || []).length;
-    }
+    for (const cat of pluginCats) totalFitur += (commandsByCategory[cat] || []).length;
+    for (const cat of Object.keys(caseCats)) totalFitur += (caseCats[cat] || []).length;
 
     const more = String.fromCharCode(8206);
     const readMore = more.repeat(4001);
@@ -203,8 +191,7 @@ ${readMore}
 ┊
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${getTimeGreeting()} *${m.pushName || "User"}* 👋
-Ketik *${prefix}allmenu* untuk melihat semua fitur
-Ketik *${prefix}menukategori <nama>* untuk kategori spesifik`;
+Ketik *${prefix}allmenu* untuk melihat semua fitur`;
   } catch (e) {
     console.error("[menu] buildMenuText error:", e.message);
     return "❀°˖ Menu ˖°❀\n\nError: " + e.message + "\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
@@ -221,7 +208,8 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const saluranLink = botConfig.saluran?.link || "";
     const footerText = `${botName} | Nova AI WhatsApp Bot`;
 
-    // Tombol navigasi (type 1 — support externalAdReply thumbnail)
+    // Tombol navigasi type 1 (support externalAdReply preview card)
+    // Thumbnail sebagai preview card = TIDAK tersimpan ke galeri HP
     const buttons = [
       { buttonId: `${prefix}allmenu`, buttonText: { displayText: "📋 All Menu" }, type: 1 },
       { buttonId: `${prefix}menukategori`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
@@ -248,7 +236,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         },
       }, { quoted: m });
     } catch (btnErr) {
-      console.error("[menu] buttons gagal, fallback tanpa buttons:", btnErr.message);
+      console.error("[menu] buttons gagal, fallback:", btnErr.message);
       await sock.sendMessage(m.chat, {
         text: text,
         contextInfo: {
@@ -269,9 +257,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     await m.react("✅");
   } catch (e) {
     console.error("[menu] handler error:", e.message);
-    try {
-      await m.reply("❌ Gagal menampilkan menu: " + e.message);
-    } catch {}
+    try { await m.reply("❌ Gagal menampilkan menu: " + e.message); } catch {}
     await m.react("❌");
   }
 }
