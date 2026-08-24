@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import axios from 'axios'
 import { getParticipantJid, resolveAnyLidToJid } from '../../src/lib/nova-lid.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
@@ -77,7 +76,7 @@ async function handler(m, { sock, db }) {
                     mentions
                 }, { quoted: m })
             } catch {
-                await sendReplyWithNav(sock, m, text, "groupinfo")
+                await m.reply( text, "groupinfo")
             }
         } else {
             await m.reply(claraWrap("groupinfo", text))

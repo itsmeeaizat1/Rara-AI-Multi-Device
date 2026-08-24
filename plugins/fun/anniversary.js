@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import moment from "moment-timezone";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
@@ -306,7 +305,7 @@ async function handler(m, { sock }) {
   }
 
   // === HELP ===
-  return sendReplyWithNav(sock, m, [
+  return m.reply( [
     "ANNIVERSARY TRACKER",
     "",
     "1. .anniversary — Cek anniversary kamu",

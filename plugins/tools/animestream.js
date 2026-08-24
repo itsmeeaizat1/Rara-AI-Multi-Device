@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -203,10 +202,10 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}animestream search one piece samehadaku\`\n`;
     txt += `\`${m.prefix}animestream detail borot-sub-indo\`\n`;
     txt += `\`${m.prefix}animestream ongoing donghua\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "animestream" });
+    return await m.reply( txt, { commandName: "animestream" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     // Determine source

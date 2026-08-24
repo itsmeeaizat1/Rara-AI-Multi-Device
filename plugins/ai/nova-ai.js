@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -23,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return sendReplyWithNav(sock, m, `🤖 *Nova AI*\n\n` +
+    return m.reply( `🤖 *Nova AI*\n\n` +
         `Asisten cerdas siap membantu\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}nova-ai <pertanyaan>*\n\n` +
@@ -31,7 +30,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}nova-ai Apa itu Node.js?*`, "nova-ai");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await UnlimitedAI(text, "nova-ai");

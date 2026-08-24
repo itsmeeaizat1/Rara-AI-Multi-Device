@@ -6,7 +6,6 @@
 // .autobackupdrive status — cek status
 // .autobackupdrive now — trigger backup manual ke Drive
 // .autobackupdrive folder <id> — set Google Drive folder ID
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { createBackup, parseInterval, formatInterval } from "../../src/lib/nova-auto-backup.js";
 import fs from "fs";
@@ -205,7 +204,7 @@ async function handler(m, { sock }) {
     txt += `Contoh:\n`;
     txt += `${m.prefix}autobackupdrive on 6h - backup tiap 6 jam\n`;
     txt += `${m.prefix}autobackupdrive on 1d - backup tiap 1 hari`;
-    return await sendReplyWithNav(sock, m, txt, "autobackupdrive");
+    return await m.reply( txt, "autobackupdrive");
   }
 
   switch (action) {

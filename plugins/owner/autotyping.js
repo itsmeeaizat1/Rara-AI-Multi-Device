@@ -2,7 +2,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -27,7 +26,7 @@ async function handler(m, { sock }) {
 
   if (!option) {
     const current = db.setting("autoTyping") ?? config.features?.autoTyping ?? false;
-    return sendReplyWithNav(sock, m, `⌨️ *Auto Typing*\n\n` +
+    return m.reply( `⌨️ *Auto Typing*\n\n` +
         `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}autotyping on* — Aktifkan\n` +

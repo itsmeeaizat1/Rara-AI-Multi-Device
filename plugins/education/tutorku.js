@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
@@ -102,7 +101,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   // .tutorku list - show available subjects
   if ((args[0] || "").toLowerCase() === "list" || (args[0] || "").toLowerCase() === "daftar") {
     const subjectList = Object.values(SUBJECTS).map((s, i) => `${i + 1}. ${s.label}`).join("\n");
-    return sendReplyWithNav(m, sock, claraWrap("Tutorku - Mata Kuliah", [
+    return m.reply( claraWrap("Tutorku - Mata Kuliah", [
       `${Object.keys(SUBJECTS).length} mata kuliah tersedia:`,
       ``,
       subjectList,
@@ -114,7 +113,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
   if (!fullInput) {
     const subjectList = Object.values(SUBJECTS).map((s, i) => `${i + 1}. ${s.label}`).join("\n");
-    return sendReplyWithNav(m, sock, claraWrap("Tutorku - AI Tutor", [
+    return m.reply( claraWrap("Tutorku - AI Tutor", [
       `AI tutor untuk bantu belajar mata kuliah.`,
       ``,
       `Cara pakai: ${prefix}tutorku <mata kuliah> <pertanyaan>`,
@@ -130,7 +129,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   const subject = findSubject(args[0]);
   if (!subject) {
     const subjectList = Object.values(SUBJECTS).map(s => s.label).join(", ");
-    return sendReplyWithNav(m, sock, claraWrap("Tutorku", [
+    return m.reply( claraWrap("Tutorku", [
       `Mata kuliah "${args[0]}" tidak ditemukan.`,
       ``,
       `Tersedia: ${subjectList}`,
@@ -141,7 +140,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
   const question = args.slice(1).join(" ").trim();
   if (!question) {
-    return sendReplyWithNav(m, sock, claraWrap("Tutorku", [
+    return m.reply( claraWrap("Tutorku", [
       `Mata kuliah: ${subject.label}`,
       `Tulis pertanyaan kamu setelah nama mata kuliah.`,
       ``,
@@ -149,7 +148,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     ].join("\n")), { commandName: "tutorku" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
   try {
     const prompt = `Pertanyaan mahasiswa: "${question}"
 
@@ -162,9 +161,9 @@ Jawab dengan format:
 Sesuaikan level dengan mahasiswa S1 Indonesia.`;
 
     const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: subject.prompt });
-    return sendReplyWithNav(m, sock, claraWrap(`Tutorku - ${subject.label}`, result), { commandName: "tutorku" });
+    return m.reply( claraWrap(`Tutorku - ${subject.label}`, result), { commandName: "tutorku" });
   } catch (e) {
-    return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal: ${e.message}`), { commandName: "tutorku" });
+    return m.reply( claraWrap("Error", `Gagal: ${e.message}`), { commandName: "tutorku" });
   }
 }
 

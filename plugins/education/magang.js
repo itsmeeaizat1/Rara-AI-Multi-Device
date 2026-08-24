@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -166,10 +165,10 @@ async function handler(m, { sock, args, config: botConfig }) {
       `${prefix}magang remote`,
       `${prefix}magang marketing remote`,
     ].join("\n")) + "\n" + tipText("Hasil dari arbeitnow + remotive + DuckDuckGo");
-    return sendReplyWithNav(m, sock, txt, { commandName: "magang" });
+    return m.reply( txt, { commandName: "magang" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
   try {
     // Parse: bisa keyword + location
     let keyword = "";
@@ -194,7 +193,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
     const results = await fetchMagang(keyword, location);
     if (results.length === 0) {
-      return sendReplyWithNav(m, sock, claraWrap("Magang", [
+      return m.reply( claraWrap("Magang", [
         "Tidak ada hasil ditemukan.",
         "Coba kata kunci lain atau cek:",
         "https://www.magang.id",
@@ -216,9 +215,9 @@ async function handler(m, { sock, args, config: botConfig }) {
     }
 
     txt += tipText("Cek link untuk detail & cara apply");
-    return sendReplyWithNav(m, sock, txt, { commandName: "magang" });
+    return m.reply( txt, { commandName: "magang" });
   } catch (e) {
-    return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal mencari: ${e.message}`), { commandName: "magang" });
+    return m.reply( claraWrap("Error", `Gagal mencari: ${e.message}`), { commandName: "magang" });
   }
 }
 

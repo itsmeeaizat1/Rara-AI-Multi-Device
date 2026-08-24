@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ytmp3",
@@ -38,11 +37,11 @@ async function getAudioDownload(url) {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url)
-    return sendReplyWithNav(m, sock, claraWrap("Ytmp3", `Contoh: ${m.prefix}ytmp4 https://youtube.com/watch?v=xxx`), { commandName: "ytmp3" });
+    return m.reply( claraWrap("Ytmp3", `Contoh: ${m.prefix}ytmp4 https://youtube.com/watch?v=xxx`), { commandName: "ytmp3" });
   if (!url.includes("youtube.com") && !url.includes("youtu.be"))
     { const __navText = "❌ URL harus YouTube"; return await m.reply(__navText); };
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const result = await getAudioDownload(url);

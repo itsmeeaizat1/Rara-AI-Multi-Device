@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import {  claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import axios from 'axios'
 import * as timeHelper from '../../src/lib/nova-time.js'
 import te from '../../src/lib/nova-error.js'
@@ -48,12 +47,12 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
 
   if (!text || !text.includes("pastebin.com")) {
-    return sendReplyWithNav(sock, m, `📋 *GET PAsTEBIN*\n\n` +
+    return m.reply( `📋 *GET PAsTEBIN*\n\n` +
       `Masukkan link Pastebin yang valid\n\n` +
       `Contoh: \`${m.prefix}getpaste https://pastebin.com/Gu8RZaqv\``, "getpaste");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const data = await new GetPastebin().fetch(text);

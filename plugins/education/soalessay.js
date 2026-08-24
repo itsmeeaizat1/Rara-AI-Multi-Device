@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
@@ -326,7 +325,7 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}essay sma fisika 5\`\n`;
     txt += `\`${m.prefix}essay smk rpl 2\`\n\n`;
     txt += `_Skor berdasarkan kata kunci dalam jawabanmu_`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "soalessay" });
+    return await m.reply( txt, { commandName: "soalessay" });
   }
 
   // Validate jenjang
@@ -344,7 +343,7 @@ async function handler(m, { sock, args }) {
     return m.reply("Kamu belum terdaftar sebagai siswa!\n\nDaftar dulu: " + m.prefix + "daftarsiswa <nama>\n\nContoh: " + m.prefix + "daftarsiswa Andi Pratama");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const bank = ESSAY_BANK[jenjang]?.[mapel];

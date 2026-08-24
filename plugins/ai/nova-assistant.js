@@ -3,7 +3,6 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { getPlugin } from "../../src/lib/nova-plugins.js";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -350,7 +349,7 @@ async function handler(m, { sock }) {
   const userInput = m.args.join(" ").trim();
 
   if (!userInput) {
-    return sendReplyWithNav(sock, m, `🤖 *Nova Assistant*\n\n` +
+    return m.reply( `🤖 *Nova Assistant*\n\n` +
       `Aku bisa bantu kamu ngendaliin bot pakai bahasa natural.\n\n` +
       `*GRUP:*\n` +
       `.ai tutup grup / buka grup\n` +
@@ -372,7 +371,7 @@ async function handler(m, { sock }) {
       `Tinggal ketik apa yang kamu mau, aku yang eksekusi!`, "ai");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   // Step 1: Try local intent matching (fast, no API)
   const intent = matchIntent(userInput);

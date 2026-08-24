@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // ============================================================
@@ -49,7 +48,6 @@ async function handler(m, { sock }) {
   body += ".prov setkey <key>\n";
   body += ".undr/.prov setmarkup <persen>\n";
   body += ".undr/.prov topup <nomor> <jumlah>";
-  return sendReplyWithNav(sock, m, claraWrap("SMM Menu", body), "smmmenu");
 }
 
 export { pluginConfig as config, handler };

@@ -2,7 +2,6 @@
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ytmp4",
@@ -55,11 +54,11 @@ async function getVideoDownloadUrl(url) {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url)
-    return sendReplyWithNav(m, sock, claraWrap("Ytmp4", `Contoh: ${m.prefix}ytmp4 https://youtube.com/watch?v=xxx`), { commandName: "ytmp4" });
+    return m.reply( claraWrap("Ytmp4", `Contoh: ${m.prefix}ytmp4 https://youtube.com/watch?v=xxx`), { commandName: "ytmp4" });
   if (!url.includes("youtube.com") && !url.includes("youtu.be"))
     { const __navText = "❌ URL harus YouTube"; return await m.reply(__navText); };
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const downloadUrl = await getVideoDownloadUrl(url);

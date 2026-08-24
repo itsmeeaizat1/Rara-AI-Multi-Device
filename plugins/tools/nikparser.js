@@ -2,7 +2,6 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "nikparser",
@@ -60,13 +59,13 @@ async function handler(m, { sock }) {
   const nik = m.text?.replace(/\D/g, "");
 
   if (!nik || nik.length !== 16) {
-    return sendReplyWithNav(sock, m, `🪪 *NIK PARsER*\n\n` +
+    return m.reply( `🪪 *NIK PARsER*\n\n` +
         `- Parse dan validasi NIK KTP 🇮🇩\n` +
         `- Masukkan 16 digit angka NIK\n\n` +
         `\`${m.prefix}nikparser 3517072109020003\``, "nikparser");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const r = await fetch(`${API}?nik=${nik}`, {

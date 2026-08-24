@@ -2,7 +2,6 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -86,7 +85,7 @@ async function handler(m, { sock, args }) {
     txt += `Sumber: Cookpad Indonesia (Kaggle dataset)`;
     txt += `\nResep internasional? Gunakan: ${m.prefix}resep (792+ resep, 170+ negara)`;
 
-    return await sendReplyWithNav(m, sock, txt, { commandName: "resepid" });
+    return await m.reply( txt, { commandName: "resepid" });
   }
 
   // === RANDOM ===
@@ -100,7 +99,7 @@ async function handler(m, { sock, args }) {
       }
     }
     const recipe = pool[Math.floor(Math.random() * pool.length)];
-    return await sendReplyWithNav(m, sock, formatRecipe(recipe), { commandName: "resepid" });
+    return await m.reply( formatRecipe(recipe), { commandName: "resepid" });
   }
 
   // === CATEGORIES LIST ===
@@ -113,7 +112,7 @@ async function handler(m, { sock, args }) {
     txt += `\nTotal: ${RECIPES.length} resep\n\n`;
     txt += `Gunakan: \`${m.prefix}resepid kategori <nama>\`\n`;
     txt += `Contoh: \`${m.prefix}resepid kategori ayam\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "resepid" });
+    return await m.reply( txt, { commandName: "resepid" });
   }
 
   // === FILTER BY CATEGORY ===
@@ -137,7 +136,7 @@ async function handler(m, { sock, args }) {
     txt += `\nTotal: ${filtered.length} resep (menampilkan 15 terpopuler)\n\n`;
     txt += `Lihat detail: \`${m.prefix}resepid <id>\`\n`;
     txt += `Contoh: \`${m.prefix}resepid ${limited[0].id}\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "resepid" });
+    return await m.reply( txt, { commandName: "resepid" });
   }
 
   // === POPULER ===
@@ -152,7 +151,7 @@ async function handler(m, { sock, args }) {
     });
     txt += `\nLihat detail: \`${m.prefix}resepid <id>\`\n`;
     txt += `Contoh: \`${m.prefix}resepid ${top[0].id}\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "resepid" });
+    return await m.reply( txt, { commandName: "resepid" });
   }
 
   // === BY ID (numeric) ===
@@ -164,7 +163,7 @@ async function handler(m, { sock, args }) {
       return m.reply(`Resep ID ${id} tidak ditemukan.\n\nTotal resep: ${RECIPES.length}\nRange ID: 1-${RECIPES.length}`);
     }
     
-    return await sendReplyWithNav(m, sock, formatRecipe(recipe), { commandName: "resepid" });
+    return await m.reply( formatRecipe(recipe), { commandName: "resepid" });
   }
 
   // === SEARCH BY NAME (default) ===
@@ -179,7 +178,7 @@ async function handler(m, { sock, args }) {
   results.sort((a, b) => b.l - a.l);
   
   if (results.length === 1) {
-    return await sendReplyWithNav(m, sock, formatRecipe(results[0]), { commandName: "resepid" });
+    return await m.reply( formatRecipe(results[0]), { commandName: "resepid" });
   }
   
   // Multiple results
@@ -193,7 +192,7 @@ async function handler(m, { sock, args }) {
   if (results.length > 10) txt += `\n(dan ${results.length - 10} lainnya)\n`;
   txt += `\nLihat detail: \`${m.prefix}resepid <id>\`\n`;
   txt += `Contoh: \`${m.prefix}resepid ${limited[0].id}\``;
-  return await sendReplyWithNav(m, sock, txt, { commandName: "resepid" });
+  return await m.reply( txt, { commandName: "resepid" });
 }
 
 export { pluginConfig, handler };

@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const NOTULEN_PROMPT = `Kamu adalah asisten notulen meeting profesional. Susun ulang catatan meeting kasar menjadi notulen yang rapi dan terstruktur.
@@ -97,10 +96,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `  ┊  ➶ *Hasil:*`,
       `  Structured notulen: agenda, keputusan, action items`,
     ].join("\n"));
-    return sendReplyWithNav(sock, m, help, "notulen");
+    return m.reply( help, "notulen");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
   m.reply(claraWrap("Notulen", "  ┊  ➶ AI lagi nyusun notulen meeting..."));
 
   try {

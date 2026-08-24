@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { live3d } from "../../src/scraper/seaart.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "novabanana",
@@ -21,7 +20,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const prompt = m.args.join(" ");
   if (!prompt) {
-    return sendReplyWithNav(sock, m, `🍌 *NOVA BANANA SUPER*\n\n` +
+    return m.reply( `🍌 *NOVA BANANA SUPER*\n\n` +
         `Edit gambar dengan AI\n\n` +
         `\`Contoh: ${m.prefix}novabanana make it anime style\`\n\n` +
         `Reply atau kirim gambar dengan caption`, "novabanana");
@@ -29,10 +28,10 @@ async function handler(m, { sock }) {
 
   const isImage = m.isImage || (m.quoted && m.quoted.isImage);
   if (!isImage) {
-    return sendReplyWithNav(m, sock, claraWrap("Novabanana", `🍌 *Nano Banana*\n\n> Reply atau kirim gambar dengan caption`), { commandName: "novabanana" });
+    return m.reply( claraWrap("Novabanana", `🍌 *Nano Banana*\n\n> Reply atau kirim gambar dengan caption`), { commandName: "novabanana" });
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     let mediaBuffer;

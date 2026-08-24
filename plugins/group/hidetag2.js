@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 import { getParticipantJids } from '../../src/lib/nova-lid.js'
@@ -26,7 +25,7 @@ async function handler(m, { sock }) {
     const text = m.fullArgs?.trim()
 
     if (!text && !m.quoted) {
-        return sendReplyWithNav(sock, m, `📢 *HIDETAG 2*\n\n` +
+        return m.reply( `📢 *HIDETAG 2*\n\n` +
             `• \`${m.prefix}h2 <text>\`\n` +
             `• Reply pesan + \`${m.prefix}h2\``, "hidetag2")
     }

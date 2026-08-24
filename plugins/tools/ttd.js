@@ -3,7 +3,6 @@ import { PDFDocument, rgb } from "pdf-lib";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 async function saveTemp(buffer, ext) {
@@ -132,10 +131,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `  ${prefix}ttd Budi Santoso`,
       `  ${prefix}ttd Budi Santoso page=1 x=100 y=150`,
     ].join("\n"));
-    return sendReplyWithNav(sock, m, help, "ttd");
+    return m.reply( help, "ttd");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     // Download the PDF from replied message

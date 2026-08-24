@@ -4,7 +4,6 @@ import { fetchGroupsSafe } from "../../src/lib/nova-jpm-helper.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine, broadcastFormat } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -92,7 +91,7 @@ async function handler(m, { sock }) {
   if (!input && !m.quoted) {
     const enabled = db.setting("bcgcEnabled");
     const jeda = db.setting("jedaBcgc") || 5000;
-    return sendReplyWithNav(sock, m, claraWrap("Broadcast Grup", [
+    return m.reply( claraWrap("Broadcast Grup", [
       "Kirim pesan ke seluruh grup sekaligus dalam satu perintah.",
       "",
       "STATUS:",
@@ -147,7 +146,7 @@ async function handler(m, { sock }) {
     }
 
     if (!text && !mediaBuffer) {
-      return sendReplyWithNav(sock, m, claraWrap("Broadcast Grup", [
+      return m.reply( claraWrap("Broadcast Grup", [
         "Tidak ada konten terdeteksi.",
         "",
         "Cara yang benar:",
@@ -266,7 +265,7 @@ async function handleSetDelay(m, db, input) {
   const current = db.setting("jedaBcgc") || 5000;
 
   if (!input) {
-    return sendReplyWithNav(sock, m, claraWrap("Jeda Broadcast Grup", [
+    return m.reply( claraWrap("Jeda Broadcast Grup", [
       "Atur jeda waktu antar pengiriman pesan ke setiap grup.",
       "Semakin lama jeda, semakin aman dari spam detection.",
       "",

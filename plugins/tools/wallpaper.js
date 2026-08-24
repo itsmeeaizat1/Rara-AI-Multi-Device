@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
@@ -103,10 +102,10 @@ async function handler(m, { sock, config: botConfig }) {
   // Validasi input
   if (!text) {
     const help = `Unduh Wallpaper HD\n\nCara pakai:\n.wallpaper <kata kunci> — Cari wallpaper\n.wallpaper random — Wallpaper acak\n.wallpaper <kata kunci> hd — HD 1920x1080+\n.wallpaper <kata kunci> 2k — 2K 2560x1440+\n.wallpaper <kata kunci> 4k — 4K 3840x2160+\n.wallpaper <kata kunci> mobile — Untuk HP (portrait)\n\nContoh:\n.wallpaper mekkah hd\n.wallpaper mosque\n.wallpaper nature 4k\n.wallpaper anime mobile\n\nKata kunci populer:\nmosque, mecca, islamic, nature, mountain, space, galaxy, ocean, city, sunset, anime, gaming, cyberpunk, minimalist, flowers, ramadan, masjid, kaaba`;
-    return sendReplyWithNav(m, sock, claraWrap("Wallpaper", help));
+    return m.reply( claraWrap("Wallpaper", help));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     // Parse input: cek ada keyword resolusi atau tidak

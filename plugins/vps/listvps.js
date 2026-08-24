@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
@@ -34,14 +33,14 @@ async function handler(m, { sock }) {
     const token = config.digitalocean?.token
     
     if (!token) {
-        return sendReplyWithNav(sock, m, `DigitalOcean belum disetup. Isi digitalocean.token di config.js`, "listvps")
+        return m.reply( `DigitalOcean belum disetup. Isi digitalocean.token di config.js`, "listvps")
     }
     
     if (!hasAccess(m.sender, m.isOwner)) {
         return m.reply(`Akses ditolak. Fitur ini hanya untuk Owner/Seller.`)
     }
     
-    await m.react("🕐")
+    await m.react("🕒")
     await m.reply(`Mengambil data VPS...`)
     
     try {

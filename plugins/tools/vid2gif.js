@@ -1,5 +1,4 @@
 import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
@@ -83,11 +82,11 @@ async function handler(m, { sock, config: botConfig }) {
           "  ┊  ➶ FPS: 10, 15, 20, 30 (default 15)"].join("\n")) + "\n" +
         tipText("Reply video lalu ketik .vid2gif");
 
-      await sendReplyWithNav(sock, m, text, "vid2gif");
+      await m.reply( text, "vid2gif");
       return { handled: true };
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // Download video
     let mediaBuffer;
@@ -101,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
           "  ┊  ➶ Coba reply video yang valid"].join("\n")) + "\n" +
         tipText("Reply video lalu ketik .vid2gif");
 
-      await sendReplyWithNav(sock, m, text, "vid2gif");
+      await m.reply( text, "vid2gif");
       return { handled: true };
     }
 
@@ -110,7 +109,7 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("Video to GIF", ["  ┊  ➶ Status: *Buffer video tidak valid*"].join("\n")) + "\n" +
         tipText("Coba video lain");
 
-      await sendReplyWithNav(sock, m, text, "vid2gif");
+      await m.reply( text, "vid2gif");
       return { handled: true };
     }
 
@@ -122,7 +121,7 @@ async function handler(m, { sock, config: botConfig }) {
           "  ┊  ➶ Compress video dulu atau gunakan video lebih kecil"].join("\n")) + "\n" +
         tipText("Gunakan video di bawah 20MB");
 
-      await sendReplyWithNav(sock, m, text, "vid2gif");
+      await m.reply( text, "vid2gif");
       return { handled: true };
     }
 

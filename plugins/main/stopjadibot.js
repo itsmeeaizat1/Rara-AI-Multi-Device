@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { stopJadibot, isJadibotActive, getJadibotStatus } from '../../src/lib/nova-jadibot-manager.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 

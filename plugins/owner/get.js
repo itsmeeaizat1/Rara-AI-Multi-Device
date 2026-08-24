@@ -4,7 +4,6 @@ import axios from "axios";
 import fs from "fs";
 import path from "path";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "get",
@@ -103,7 +102,7 @@ async function handler(m, { sock }) {
 
   let input = m.fullArgs?.trim() || m.text?.trim();
   if (!input) {
-    return sendReplyWithNav(sock, m, `🌐 *HTTP REQUEST TOOL*\n\n` +
+    return m.reply( `🌐 *HTTP REQUEST TOOL*\n\n` +
         `╭┈┈⬡「 📋 OPTIONS 」\n` +
         `┃   ┊  ➶ \`--method <GET|POST|PUT|PATCH|DELETE>\`\n` +
         `┃   ┊  ➶ \`--json <body>\` — JSON body\n` +

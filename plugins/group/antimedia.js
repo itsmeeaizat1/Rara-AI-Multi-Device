@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "antimedia",
@@ -62,7 +61,7 @@ async function handler(m, { sock }) {
 
   if (!action) {
     const status = groupData.antimedia ? "✅ ON" : "❌ OFF";
-    await sendReplyWithNav(sock, m, `🖼️ *AntiMedia*\n\n> Status: *${status}*\n\n> \`.antimedia on/off\``, "antimedia");
+    await m.reply( `🖼️ *AntiMedia*\n\n> Status: *${status}*\n\n> \`.antimedia on/off\``, "antimedia");
     return;
   }
 

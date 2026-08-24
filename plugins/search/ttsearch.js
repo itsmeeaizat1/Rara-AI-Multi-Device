@@ -7,7 +7,6 @@ import {
 } from "nova";
 import te from "../../src/lib/nova-error.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ttsearch",
@@ -29,7 +28,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎵 *Tiktok sEarch* 」
+    return m.reply( `╭┈┈⬡「 🎵 *Tiktok sEarch* 」
 ┃
 ㊗ Usage: \`${m.prefix}ttsearch <query>\`
 ┃
@@ -38,7 +37,7 @@ async function handler(m, { sock }) {
   ┊  ➶ \`Contoh: ${m.prefix}ttsearch anime\``, "ttsearch");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const videos = await tiktokSearchVideo(query);

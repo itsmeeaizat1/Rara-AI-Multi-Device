@@ -2,7 +2,6 @@
 import { load } from 'cheerio'
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -25,13 +24,13 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return sendReplyWithNav(sock, m, `🎧 *MURROTTAL*\n\n` +
+    return m.reply( `🎧 *MURROTTAL*\n\n` +
         `Masukkan nama surah\n\n` +
         `\`Contoh: ${m.prefix}murrotal al fatihah\`\n` +
         `\`Contoh: ${m.prefix}murrotal ar rahman\``, "murrotal");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
 

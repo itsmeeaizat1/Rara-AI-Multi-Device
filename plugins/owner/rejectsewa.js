@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { notifySewaRejected } from "../../src/lib/nova-saluran-broadcast.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -33,7 +32,7 @@ async function handler(m, { sock }) {
 
   const input = m.text?.trim();
   if (!input) {
-    return sendReplyWithNav(m, sock, claraWrap("Rejectsewa", "Format: *.rejectsewa <nomor> <alasan>*\n\nContoh: .rejectsewa 628xxx grup penuh"), { commandName: "rejectsewa" });
+    return m.reply( claraWrap("Rejectsewa", "Format: *.rejectsewa <nomor> <alasan>*\n\nContoh: .rejectsewa 628xxx grup penuh"), { commandName: "rejectsewa" });
   }
 
   const parts = input.split(/\s+/);

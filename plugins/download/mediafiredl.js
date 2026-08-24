@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
 import mediafire from "../../src/scraper/mediafire.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -35,7 +34,7 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
+    return m.reply( `⚠️ *Cara Pakai*\n\n` +
         `\`${m.prefix}mfdl <url>\`\n\n` +
         `Contoh:\n` +
         `\`${m.prefix}mfdl https://www.mediafire.com/file/xxx\``, "mediafiredl");
@@ -44,7 +43,7 @@ async function handler(m, { sock }) {
   if (!url.match(/mediafire\.com/i)) {
     return m.reply(claraWrap("Mediafiredl", `❌ *URL tidak valid. Gunakan link MediaFire.*`));
   }
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await mediafire(url);

@@ -5,7 +5,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import { exec } from "child_process";
 import { promisify } from "util";
@@ -101,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
         "",
         "Default OFF. Fitur ini tidak aktif otomatis saat pairing.",
       ].join("\n")) + "\n" + tipText("Ketik " + prefix + "aiautointeractionvn off untuk matikan");
-      await sendReplyWithNav(sock, m, text, "aiautointeractionvn");
+      await m.reply( text, "aiautointeractionvn");
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
@@ -109,7 +108,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Status: OFF",
         "AI VN interaction dimatikan di chat ini",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "aiautointeractionvn");
+      await m.reply( text, "aiautointeractionvn");
     } else if (args[0] === "mode") {
       const mode = args[1] || "free";
       if (!["free", "api"].includes(mode)) {
@@ -118,7 +117,7 @@ async function handler(m, { sock, config: botConfig }) {
           "free = Edge Neural TTS (GRATIS, suara natural, tanpa API key)",
           "api = Gemini multimodal (butuh geminiApiKey di config)",
         ].join("\n"));
-        await sendReplyWithNav(sock, m, text, "aiautointeractionvn");
+        await m.reply( text, "aiautointeractionvn");
         return { handled: true };
       }
       if (!cfg[gid]) cfg[gid] = {};
@@ -134,7 +133,7 @@ async function handler(m, { sock, config: botConfig }) {
         modeDesc[mode],
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "aiautointeractionvn");
+      await m.reply( text, "aiautointeractionvn");
     } else if (args[0] === "voice") {
       if (!args[1]) {
         let list = "Neural voices tersedia:\n\n";
@@ -143,14 +142,14 @@ async function handler(m, { sock, config: botConfig }) {
         });
         list += "\nKetik: " + prefix + "aiautointeractionvn voice <id>";
         const text = claraWrap("AI Auto VN Interaction", list);
-        await sendReplyWithNav(sock, m, text, "aiautointeractionvn");
+        await m.reply( text, "aiautointeractionvn");
         return { handled: true };
       }
       const voiceId = args[1];
       const voice = VOICE_OPTIONS.find(v => v.id === voiceId);
       if (!voice) {
         const text = claraWrap("AI Auto VN Interaction", "Voice tidak ditemukan! Ketik " + prefix + "aiautointeractionvn voice untuk list");
-        await sendReplyWithNav(sock, m, text, "aiautointeractionvn");
+        await m.reply( text, "aiautointeractionvn");
         return { handled: true };
       }
       if (!cfg[gid]) cfg[gid] = {};
@@ -162,13 +161,13 @@ async function handler(m, { sock, config: botConfig }) {
         "Nama: " + voice.name,
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "aiautointeractionvn");
+      await m.reply( text, "aiautointeractionvn");
     } else if (args[0] === "lang") {
       const lang = args[1] || "id";
       const supported = ["id", "en", "su", "jv", "ar", "ja", "ko", "zh"];
       if (!supported.includes(lang)) {
         const text = claraWrap("AI Auto VN Interaction", "Bahasa tidak didukung! Tersedia: " + supported.join(", "));
-        await sendReplyWithNav(sock, m, text, "aiautointeractionvn");
+        await m.reply( text, "aiautointeractionvn");
         return { handled: true };
       }
       if (!cfg[gid]) cfg[gid] = {};
@@ -179,7 +178,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Bahasa diubah: " + lang,
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "aiautointeractionvn");
+      await m.reply( text, "aiautointeractionvn");
     } else {
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
       const mode = cfg[gid]?.mode || "free";
@@ -199,7 +198,7 @@ async function handler(m, { sock, config: botConfig }) {
         prefix + "aiautointeractionvn voice <id> — Pilih neural voice",
         prefix + "aiautointeractionvn lang <kode> — Set bahasa",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "aiautointeractionvn");
+      await m.reply( text, "aiautointeractionvn");
     }
   } catch (e) {
     await m.reply("Error: " + e.message);

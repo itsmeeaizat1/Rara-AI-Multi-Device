@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "linkscanner",
@@ -132,7 +131,7 @@ async function handler(m, { sock }) {
   const url = m.args.join(" ").trim();
 
   if (!url) {
-    return sendReplyWithNav(sock, m, claraWrap("Link Scanner", [
+    return m.reply( claraWrap("Link Scanner", [
       "Scan URL untuk cek keamanan (phishing/malware/scam)",
       "",
       "CARA PAKAI:",

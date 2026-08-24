@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import { unloadPlugin } from "../../src/lib/nova-plugins.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -47,13 +46,13 @@ async function handler(m, { sock }) {
   const name = m.fullArgs?.trim() || m.args?.[0];
 
   if (!name) {
-    return sendReplyWithNav(sock, m, `🗑️ *DEL PLUGIN*\n\n` +
+    return m.reply( `🗑️ *DEL PLUGIN*\n\n` +
         `Hapus plugin berdasarkan nama\n\n` +
         `*Contoh:*\n` +
         `\`${m.prefix}delplugin bliblidl\``, "delplugin");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");

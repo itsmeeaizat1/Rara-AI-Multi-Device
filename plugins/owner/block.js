@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { notifyUserBlocked } from "../../src/lib/nova-saluran-broadcast.js";
 
@@ -34,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      return sendReplyWithNav(sock, m, text, "block");
+      return m.reply( text, "block");
     }
 
     // Parse target — bisa @mention, reply, atau nomor langsung
@@ -57,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!targetJid) {
-      return sendReplyWithNav(sock, m, claraWrap("Block User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "block");
+      return m.reply( claraWrap("Block User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "block");
     }
 
     // Eksekusi block via Baileys
@@ -78,7 +77,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}unblock <target> untuk membuka blokir`);
 
-    return sendReplyWithNav(sock, m, text, "block");
+    return m.reply( text, "block");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
@@ -89,7 +88,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText("Coba lagi nanti atau ketik .menu");
 
-    return sendReplyWithNav(sock, m, text, "block");
+    return m.reply( text, "block");
   }
 }
 

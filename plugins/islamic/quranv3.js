@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -71,12 +70,12 @@ async function handler(m, { sock }) {
         "36 Ya-Sin | 55 Ar-Rahman | 67 Al-Mulk",
         "112 Al-Ikhlas | 113 Al-Falaq | 114 An-Nas",
       ]);
-      return await sendReplyWithNav(sock, m, txt, "quranv3");
+      return await m.reply( txt, "quranv3");
     }
 
     // ===== RANDOM AYAH =====
     if (subCmd === "random") {
-      await m.react("🕐");
+      await m.react("🕒");
       let data = null;
       for (let i = 0; i < 5; i++) {
         const surah = Math.floor(Math.random() * 114) + 1;
@@ -139,7 +138,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Quran V3", "Format: .quranv3 audio <surat> [ayat]\nContoh: .quranv3 audio 1\n.quranv3 audio 36 1"));
       }
 
-      await m.react("🕐");
+      await m.react("🕒");
 
       const surahRes = await fetchJson(API_BASE + "/surah/" + suratNum);
       const surah = surahRes.data;
@@ -208,7 +207,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Quran V3", "Format: .quranv3 surah <nomor>\nContoh: .quranv3 surah 1"));
       }
 
-      await m.react("🕐");
+      await m.react("🕒");
       const json = await fetchJson(API_BASE + "/surah/" + suratNum + "/editions/quran-uthmani,id.indonesian");
       const surahData = json.data[0];
       const indoData = json.data[1];
@@ -257,7 +256,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Quran V3", "Nomor surat harus 1-114."));
       }
 
-      await m.react("🕐");
+      await m.react("🕒");
       const json = await fetchJson(API_BASE + "/ayah/" + suratNum + ":" + ayatNum + "/editions/quran-uthmani,id.indonesian,ar.alafasy");
 
       if (json.code !== 200) {
@@ -302,7 +301,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Quran V3", "Format tidak valid!\n\nKetik .quranv3 help buat lihat cara pakai."));
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
     const surahRes = await fetchJson(API_BASE + "/surah/" + suratNum);
     const surah = surahRes.data;
 

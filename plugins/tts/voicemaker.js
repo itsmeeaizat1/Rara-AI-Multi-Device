@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 
@@ -39,7 +38,7 @@ async function handler(m, { sock }) {
     for (const v of VOICES) {
       help += `${v.id} - ${v.name}\n`;
     }
-    return sendReplyWithNav(sock, m, help, "voicemaker");
+    return m.reply( help, "voicemaker");
   }
 
   let voice = "id-ID-ArdiNeural";
@@ -56,10 +55,10 @@ async function handler(m, { sock }) {
   }
 
   if (!ttsText || ttsText.length > 500) {
-    return sendReplyWithNav(sock, m, "❌ Teks kosong atau terlalu panjang (max 500 karakter).", "voicemaker");
+    return m.reply( "❌ Teks kosong atau terlalu panjang (max 500 karakter).", "voicemaker");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const res = await axios.get(
@@ -69,7 +68,7 @@ async function handler(m, { sock }) {
 
     const buf = Buffer.from(res.data);
     if (buf.length < 100) {
-      return sendReplyWithNav(sock, m, "❌ Gagal generate voice. Coba lagi.", "voicemaker");
+      return m.reply( "❌ Gagal generate voice. Coba lagi.", "voicemaker");
     }
 
     await sock.sendMessage(
@@ -81,7 +80,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[VoiceMaker] Error:", err.message);
     await m.react("❌");
-    return sendReplyWithNav(sock, m, te(m.prefix, m.command, m.pushName), "voicemaker");
+    return m.reply( te(m.prefix, m.command, m.pushName), "voicemaker");
   }
 }
 

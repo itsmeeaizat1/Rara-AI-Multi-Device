@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import config from "../../config.js";
@@ -24,10 +23,10 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url || (!url.includes("xnxx") && !url.includes("xvideos"))) {
-    return sendReplyWithNav(sock, m, `🔞 *XNXX Downloader*\n\nKirim URL video XNXX/XVideos\n\nContoh: \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\``, "xnxx2");
+    return m.reply( `🔞 *XNXX Downloader*\n\nKirim URL video XNXX/XVideos\n\nContoh: \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\``, "xnxx2");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const res = await axios.get(
@@ -36,7 +35,7 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data) {
-      return sendReplyWithNav(sock, m, "❌ Gagal download. URL mungkin tidak valid.", "xnxx2");
+      return m.reply( "❌ Gagal download. URL mungkin tidak valid.", "xnxx2");
     }
 
     const d = res.data.data;
@@ -46,7 +45,7 @@ async function handler(m, { sock }) {
     text += `*Quality:* ${d.quality || "-"}\n`;
     text += `\nSedang mengirim video...`;
 
-    await sendReplyWithNav(sock, m, text, "xnxx2");
+    await m.reply( text, "xnxx2");
 
     if (d.url || d.downloadUrl) {
       const vidRes = await axios.get(d.url || d.downloadUrl, {
@@ -61,11 +60,11 @@ async function handler(m, { sock }) {
       }
     }
 
-    return sendReplyWithNav(sock, m, "❌ File video gagal diunduh. Coba lagi nanti.", "xnxx2");
+    return m.reply( "❌ File video gagal diunduh. Coba lagi nanti.", "xnxx2");
   } catch (err) {
     console.error("[XNXX2] Error:", err.message);
     await m.react("❌");
-    return sendReplyWithNav(sock, m, te(m.prefix, m.command, m.pushName), "xnxx2");
+    return m.reply( te(m.prefix, m.command, m.pushName), "xnxx2");
   }
 }
 

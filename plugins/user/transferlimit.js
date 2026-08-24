@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
@@ -39,7 +38,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetJid) {
-    return sendReplyWithNav(sock, m, claraWrap("Transfer Limit",
+    return m.reply( claraWrap("Transfer Limit",
       `Tag atau reply user yang mau dikasih limit.\n\n` +
       `Usage: \`.transferlimit @tag <jumlah>\`\n` +
       `Contoh: \`.transferlimit @user 50\`\n\n` +
@@ -51,7 +50,7 @@ async function handler(m, { sock }) {
   const amount = parseInt(m.args?.find(a => !isNaN(a) && !a.startsWith("@")) || 0);
 
   if (!amount || amount < MIN_TRANSFER) {
-    return sendReplyWithNav(sock, m, claraWrap("Transfer Limit",
+    return m.reply( claraWrap("Transfer Limit",
       `Jumlah minimal transfer: *${MIN_TRANSFER} limit*\n\n` +
       `Contoh: \`.transferlimit @user 50\``, "warn"), "transferlimit");
   }
@@ -61,12 +60,12 @@ async function handler(m, { sock }) {
   const senderEnergi = sender?.energi ?? config.energi?.default ?? 300;
 
   if (senderEnergi === -1) {
-    return sendReplyWithNav(sock, m, claraWrap("Transfer Limit",
+    return m.reply( claraWrap("Transfer Limit",
       "Owner/Premium unlimited tidak bisa transfer limit.", "warn"), "transferlimit");
   }
 
   if (senderEnergi < amount) {
-    return sendReplyWithNav(sock, m, claraWrap("Transfer Limit",
+    return m.reply( claraWrap("Transfer Limit",
       `Limit kamu tidak cukup!\n\n` +
       `Sisa limit: *${formatNumber(senderEnergi)}*\n` +
       `Butuh: *${formatNumber(amount)}*`, "warn"), "transferlimit");
@@ -74,7 +73,7 @@ async function handler(m, { sock }) {
 
   // Cek target == sender
   if (targetJid === m.sender) {
-    return sendReplyWithNav(sock, m, claraWrap("Transfer Limit",
+    return m.reply( claraWrap("Transfer Limit",
       "Tidak bisa transfer ke diri sendiri.", "warn"), "transferlimit");
   }
 
@@ -85,7 +84,7 @@ async function handler(m, { sock }) {
 
   // Potong sender
   if (senderEnergi < totalDeduct) {
-    return sendReplyWithNav(sock, m, claraWrap("Transfer Limit",
+    return m.reply( claraWrap("Transfer Limit",
       `Limit kamu tidak cukup untuk transfer + biaya admin!\n\n` +
       `Butuh: *${formatNumber(totalDeduct)}* (${formatNumber(amount)} + ${formatNumber(fee)} admin)\n` +
       `Sisa limit: *${formatNumber(senderEnergi)}*`, "warn"), "transferlimit");
@@ -107,7 +106,7 @@ async function handler(m, { sock }) {
   msg += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n`;
   msg += `Sisa limit kamu: ${formatNumber(senderEnergi - totalDeduct)}`;
 
-  return sendReplyWithNav(sock, m, msg, "transferlimit");
+  return m.reply( msg, "transferlimit");
 }
 
 export { pluginConfig as config, handler };

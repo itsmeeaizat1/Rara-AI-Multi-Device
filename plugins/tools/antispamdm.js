@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
@@ -26,7 +25,7 @@ async function handler(m, { sock }) {
 
   // === HELP ===
   if (!action || action === "help" || action === "bantuan") {
-    return sendReplyWithNav(sock, m, claraWrap("Anti-Spam DM", [
+    return m.reply( claraWrap("Anti-Spam DM", [
       "Sistem perlindungan bot dari spam di private chat",
       "",
       "Perintah tersedia:",

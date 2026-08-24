@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -64,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "add") {
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
       if (parts.length < 2) {
-        return sendReplyWithNav(sock, m,
+        return m.reply(
           prefix + "blacklist add <nomor> | <alasan> | <bukti>\n\n" +
           "Contoh:\n" +
           prefix + "blacklist add 08123456789 | judi online | link grup judi\n" +
@@ -318,7 +317,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     // --- HELP / default ---
-    return sendReplyWithNav(sock, m,
+    return m.reply(
       prefix + "blacklist add <nomor> | <alasan> | <bukti>\n" +
       prefix + "blacklist cek <nomor>\n" +
       prefix + "blacklist list\n" +

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import sharp from 'sharp'
 import fs from 'fs'
 import path from 'path'
@@ -115,7 +114,7 @@ async function handler(m, { sock }) {
     }
 
     if (!downloadFn) {
-        return sendReplyWithNav(sock, m, `❌ *GAGAL*\n\n` +
+        return m.reply( `❌ *GAGAL*\n\n` +
             `Tidak ada sticker yang terdeteksi!\n\n` +
             `*Cara penggunaan:*\n` +
             `1. Kirim sticker + caption \`${m.prefix}tovideo\`\n` +

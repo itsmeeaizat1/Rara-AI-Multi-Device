@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
@@ -55,7 +54,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid || (!isUnlimited && amount <= 0)) {
-        return sendReplyWithNav(sock, m, `⚡ *Add Energi*\n\n` +
+        return m.reply( `⚡ *Add Energi*\n\n` +
             `\`.addenergi <jumlah>\` - ke diri sendiri\n` +
             `\`.addenergi <jumlah> @user\` - ke user\n` +
             `\`.addenergi --unlimited\` - unlimited\n\n` +
@@ -69,7 +68,7 @@ async function handler(m, { sock }) {
         (config.isPremium(targetJid) && (config.energi?.premium ?? -1) === -1)
 
     if (!isUnlimited && effectiveUnlimited) {
-        return sendReplyWithNav(sock, m, `⚡ *INFORMASI*\n` +
+        return m.reply( `⚡ *INFORMASI*\n` +
             `@${targetJid.split('@')[0]} sudah memiliki energi *∞ Unlimited*\n` +
             `Tidak perlu menambahkan energi lagi`, "addenergi")
     }

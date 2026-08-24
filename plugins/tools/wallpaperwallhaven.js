@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
@@ -89,10 +88,10 @@ async function handler(m, { sock, config: botConfig }) {
 
   if (!text) {
     const help = `Wallhaven Wallpaper\n\nCara pakai:\n.wh <kata kunci> — Cari wallpaper\n.wh anime <karakter> — Wallpaper anime\n.wh <kata kunci> hd — HD 1920x1080+\n.wh <kata kunci> 2k — 2K 2560x1440+\n.wh <kata kunci> 4k — 4K 3840x2160+\n.wh <kata kunci> mobile — Portrait HP\n.wh random — Wallpaper acak\n.wh anime random — Anime acak\n\nContoh:\n.wh mekkah hd\n.wh anime miku\n.wh nature 4k\n.wh anime gojo mobile\n.wh mosque\n.wh space 2k`;
-    return sendReplyWithNav(m, sock, claraWrap("Wallhaven", help));
+    return m.reply( claraWrap("Wallhaven", help));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     let query = text;

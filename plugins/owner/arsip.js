@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: ["arsip", "archive"],
@@ -31,7 +30,7 @@ async function handler(m, { sock }) {
     }
   } else if (action === "semua") {
     try {
-      await m.react("🕐");
+      await m.react("🕒");
       global.isFetchingGroups = true;
       const groups = await sock.groupFetchAllParticipating();
       global.isFetchingGroups = false;
@@ -65,7 +64,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetJid) {
-    return sendReplyWithNav(sock, m, "📁 *Arsip Chat*\n\n" +
+    return m.reply( "📁 *Arsip Chat*\n\n" +
         "  ┊  ➶ `.arsip 628xxx` — Arsipkan chat\n" +
         "  ┊  ➶ `.arsip` (di private chat) — Arsipkan chat ini\n" +
         "  ┊  ➶ `.arsip` (reply pesan) — Arsipkan chat pengirim\n" +

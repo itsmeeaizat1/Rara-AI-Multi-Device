@@ -6,7 +6,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { CronJob } from "cron";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 
@@ -410,7 +409,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
     await m.reply(claraWrap("AI Anchor", "Generating berita: " + topic));
 
     try {
@@ -466,7 +465,6 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (!text || text.length < 2) {
-    const { sendReplyWithNav: navReply } = await import("../../src/lib/nova-nav-buttons.js");
     await navReply(sock, m,
       claraWrap("AI Anchor",
         [`Penggunaan: *${prefix}aianchor <text>*`,
@@ -489,7 +487,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const voiceResult = await generateVoice(text, { tone, voice });

@@ -4,7 +4,6 @@ import path from "path";
 import { pathToFileURL } from "url";
 import { hotReloadPlugin } from "../../src/lib/nova-plugins.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -200,7 +199,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("gantiscraper", `❌ *GAGAL*\n\nNama file tidak valid`));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     if (!fs.existsSync(SCRAPER_DIR)) {

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
@@ -67,7 +66,7 @@ async function handler(m, { sock }) {
     const isMedia = isImage || isVideo || isAudio
 
     if (!isMedia && !caption) {
-        return sendReplyWithNav(sock, m, `📤 *UPLOAD SALURAN*\n\n` +
+        return m.reply( `📤 *UPLOAD SALURAN*\n\n` +
             `Kirim/reply media dengan caption:\n` +
             `  \`${m.prefix}upch 12xxx@newsletter <teks opsional>\`\n\n` +
             `*Support:*\n` +
@@ -77,7 +76,7 @@ async function handler(m, { sock }) {
             `  📝 Teks (tanpa media)`, "upch")
     }
 
-    await m.react("🕐")
+    await m.react("🕒")
 
     try {
         if (!isMedia && caption) {

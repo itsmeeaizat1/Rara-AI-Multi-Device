@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "delsewa",
@@ -45,7 +44,7 @@ async function handler(m, { sock }) {
 
   if (!input) {
     if (!m.isGroup) {
-      return sendReplyWithNav(sock, m, `📝 *HAPUS SEWA*\n\n` +
+      return m.reply( `📝 *HAPUS SEWA*\n\n` +
           `Dari private: *${m.prefix}delsewa <link/id>*\n` +
           `Dari grup: ketik *${m.prefix}delsewa* langsung di grup\n\n` +
           `Contoh:\n` +

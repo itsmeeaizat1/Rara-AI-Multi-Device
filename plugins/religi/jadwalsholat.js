@@ -9,7 +9,6 @@ import {
 } from "../../src/lib/nova-sholat-api.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "jadwalsholat2",

@@ -3,7 +3,6 @@ import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
@@ -35,7 +34,7 @@ async function handler(m, { sock }) {
   const style = args[1]?.toLowerCase() || "apple";
 
   if (!emoji) {
-    return sendReplyWithNav(sock, m, `🖼️ *EMOJI TO IMAGE*\n\n` +
+    return m.reply( `🖼️ *EMOJI TO IMAGE*\n\n` +
         `Konversi emoji ke gambar HD\n\n` +
         `*Format:*\n` +
         `\`${m.prefix}emojitoimage <emoji> [style]\`\n\n` +
@@ -47,7 +46,7 @@ async function handler(m, { sock }) {
 
   const validStyle = STYLES.includes(style) ? style : "apple";
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const apiUrl = `https://api.neoxr.eu/api/emoimg?q=${encodeURIComponent(emoji)}&style=${validStyle}&apikey=${NEOXR_APIKEY}`;

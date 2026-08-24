@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { Canvas, loadImage, FontLibrary } from 'skia-canvas'
 import te from '../../src/lib/nova-error.js'
@@ -54,7 +53,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const nominal = m.text
     if (!nominal) {
-        return sendReplyWithNav(sock, m, claraWrap("FAKE DANA", `*FAKE DANA*\n\n\`Contoh: ${m.prefix}fakedana 10000\``), "fakedana")
+        return m.reply(claraWrap("FAKE DANA", `*FAKE DANA*\n\n\`Contoh: ${m.prefix}fakedana 10000\``), "fakedana")
     }
     if(isNaN(nominal)) { const __navText = `*HARAP MASUKKAN ANGKA*`; return await m.reply(__navText); }
     m.react('🕐')

@@ -2,7 +2,6 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);

@@ -4,7 +4,6 @@ import fetch from "node-fetch";
 import mime from "mime-types";
 import { downloadMediaMessage, getContentType } from "nova";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -61,9 +60,9 @@ async function handler(m, { sock }) {
     media = await downloadMediaMessage(m, "buffer", {});
   }
 
-  if (!media) { const __navText = "❌ Gagal membaca media, coba lagi!"; return await sendReplyWithNav(sock, m, __navText, "gura"); };
+  if (!media) { const __navText = "❌ Gagal membaca media, coba lagi!"; return await m.reply(__navText, "gura"); };
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const imgUrl = await uploadToCatbox(media);

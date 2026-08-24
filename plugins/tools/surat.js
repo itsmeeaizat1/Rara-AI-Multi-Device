@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const SURAT_PROMPT = `Kamu adalah asisten pembuat surat resmi Indonesia. Buatkan surat resmi yang profesional dan sesuai format standar Indonesia berdasarkan informasi user.
@@ -134,10 +133,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       ``,
       `  ┊  ➶ Hasil: PDF siap print`,
     ].join("\n"));
-    return sendReplyWithNav(sock, m, help, "surat");
+    return m.reply( help, "surat");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
   m.reply(claraWrap("Surat", "  ┊  ➶ AI lagi nyusun surat resmi..."));
 
   try {

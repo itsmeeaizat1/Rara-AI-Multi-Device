@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "sentiment", alias: ["moodgrup", "sentimentanalisis"], category: "future",
@@ -14,7 +13,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const text = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!text) {
-      await sendReplyWithNav(sock, m, claraWrap("Sentiment", ["  ┊  ➶ Reply pesan untuk analisis mood",
+      await m.reply( claraWrap("Sentiment", ["  ┊  ➶ Reply pesan untuk analisis mood",
         "  ┊  ➶ Bot akan tentukan positif/negatif/netral"].join("\n")), "sentiment");
       return { handled: true };
     }

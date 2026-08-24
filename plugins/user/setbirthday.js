@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 import { getDatabase } from '../../src/lib/nova-database.js'
@@ -43,7 +42,7 @@ async function handler(m, { sock }) {
         text += `${m.prefix}setbirthday 25-12\n`
         text += `${m.prefix}setbirthday 01-01`
         
-        return await sendReplyWithNav(sock, m, text, "setbirthday")
+        return await m.reply( text, "setbirthday")
     }
     
     const dateRegex = /^(\d{1,2})[-\/](\d{1,2})$/

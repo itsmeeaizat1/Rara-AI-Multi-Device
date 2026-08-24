@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
@@ -23,7 +22,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim()
     
     if (!query) {
-        return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
+        return m.reply( `⚠️ *Cara Pakai*\n\n` +
             `\`${m.prefix}applemusic <query>\`\n\n` +
             `Contoh:\n` +
             `\`${m.prefix}applemusic Best Friend\``, "applemusic")

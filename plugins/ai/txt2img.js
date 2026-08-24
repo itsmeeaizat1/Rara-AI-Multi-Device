@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 import { f } from '../../src/lib/nova-http.js'
@@ -25,7 +24,7 @@ const STYLES = ['photorealistic', 'digital-art', 'impressionist', 'anime', 'fant
 async function handler(m, { sock }) {
     const input = m.args.join(' ')
     if (!input) {
-        return sendReplyWithNav(sock, m, `🎨 *Text To Image*\n\n` +
+        return m.reply( `🎨 *Text To Image*\n\n` +
             `Generate gambar dari teks dengan AI\n\n` +
             `\`Contoh: ${m.prefix}txt2img beautiful sunset | anime\`\n\n` +
             `🎭 *sTyles*\n` +

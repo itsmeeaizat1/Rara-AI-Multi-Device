@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "morse",
@@ -75,7 +74,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "morse <teks>\n" +
         prefix + "morse decode <morse>\n\n" +
         "Encode: teks ke morse code\n" +

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
@@ -156,7 +155,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (text.toLowerCase() === "list" || text.toLowerCase() === "models") {
     const currentModel = MODELS[session.model]?.label || session.model;
     const body = `Model aktif: ${currentModel}\n\n${formatModelList()}\nGanti model: .puter model <id>`;
-    return sendReplyWithNav(m, sock, claraWrap("Puter Models", body));
+    return m.reply( claraWrap("Puter Models", body));
   }
 
   // Sub-command: model <nama>
@@ -194,17 +193,17 @@ async function handler(m, { sock, config: botConfig }) {
   // Validasi token sebelum chat
   if (!token) {
     const help = `Token Puter belum diatur.\n\nDaftar gratis di https://puter.com/dashboard lalu klik Create token\n\nSet token (owner only):\n.puter setkey <token>\n\nAtau set di config.js:\nAPIkey: { puter: "token-anda" }`;
-    return sendReplyWithNav(m, sock, claraWrap("Puter Setup", help));
+    return m.reply( claraWrap("Puter Setup", help));
   }
 
   // Validasi pesan
   if (!text) {
     const currentModel = MODELS[session.model]?.label || session.model;
     const help = `Model aktif: ${currentModel}\n\nCara pakai:\n.puter <pesan> — Chat dengan model aktif\n.puter model <id> — Ganti model\n.puter list — Lihat semua model\n.puter reset — Reset sesi`;
-    return sendReplyWithNav(m, sock, claraWrap("Puter", help));
+    return m.reply( claraWrap("Puter", help));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const modelId = session.model;

@@ -3,7 +3,6 @@ import axios from "axios";
 import config from "../../config.js";
 import { uploadTo0x0 } from "../../src/lib/nova-tmpfiles.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakeffduo",
@@ -24,9 +23,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const nama = m.text?.split("|");
   if (!nama || nama.length < 2) {
-    return sendReplyWithNav(m, sock, claraWrap("Fakeffduo", `*FAKE FF DUO*\n\n> Contoh: ${m.prefix}fakeffduo nama1|nama2`), { commandName: "fakeffduo" });
+    return m.reply( claraWrap("Fakeffduo", `*FAKE FF DUO*\n\n> Contoh: ${m.prefix}fakeffduo nama1|nama2`), { commandName: "fakeffduo" });
   }
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     await sock.sendMedia(

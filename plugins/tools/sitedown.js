@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "sitedown",
@@ -57,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "sitedown <url>\n\n" +
         "Cek apakah website online atau down\n" +
         "Info: status code, response time, server, redirect\n\n" +
@@ -69,7 +68,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const url = text.trim();
-    await m.react("🕐");
+    await m.react("🕒");
 
     const result = await checkSite(url);
 

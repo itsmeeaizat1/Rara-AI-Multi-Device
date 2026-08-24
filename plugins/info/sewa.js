@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, tipText, bracketBox } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getCategories, getCommandsByCategory } from "../../src/lib/nova-plugins.js";
@@ -248,7 +247,7 @@ async function handler(m, { sock, config: botConfig, db }) {
       tipText("Ketik " + prefix + "daftarsewa untuk daftar sekarang!") + "\n" +
       tipText("Ketik " + prefix + "menu untuk kembali ke menu");
 
-    await sendReplyWithNav(sock, m, fullText, "sewa");
+    await m.reply( fullText, "sewa");
 
     // Auto-reply QRIS image kalau tersedia
     const qrisUrl = config.payment?.qrisUrl || "";
@@ -269,7 +268,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
-    await sendReplyWithNav(sock, m,
+    await m.reply(
       claraWrap("Gagal", [
         "Status: *Gagal*",
         "Alasan: *" + error.message + "*",

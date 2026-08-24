@@ -2,7 +2,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { sendOtpEmail, isEmailConfigured, getEmailUser, setEmailDb } from "../../src/lib/nova-email.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -91,7 +90,7 @@ async function handler(m, { args, sock }) {
     txt += `📧 Email: *${user.regEmail || "-"}*\n`;
     txt += `🔑 SN: *${user.regSerial || "-"}*\n\n`;
     txt += `Untuk unregister: \`${m.prefix}unreg\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "regmail" });
+    return await m.reply( txt, { commandName: "regmail" });
   }
 
   if (!isEmailConfigured()) {
@@ -106,7 +105,7 @@ async function handler(m, { args, sock }) {
     let txt = `📝 Kamu masih punya sesi OTP aktif!\n\n`;
     txt += `Ketik \`${m.prefix}verotp <kode>\` untuk verifikasi\n`;
     txt += `Atau tunggu ${Math.round(OTP_TTL / 60000)} menit sampai kedaluwarsa`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "regmail" });
+    return await m.reply( txt, { commandName: "regmail" });
   }
 
   if (!args[0]) {
@@ -118,7 +117,7 @@ async function handler(m, { args, sock }) {
     txt += `\`${m.prefix}regmail Aizat, aizat@gmail.com\`\n\n`;
     txt += `Setelah itu, kode OTP akan dikirim ke email kamu.\n`;
     txt += `Verifikasi dengan: \`${m.prefix}verotp <kode>\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "regmail" });
+    return await m.reply( txt, { commandName: "regmail" });
   }
 
   const input = args.join(" ").split(",");
@@ -126,7 +125,7 @@ async function handler(m, { args, sock }) {
     let txt = `❌ Format salah!\n\n`;
     txt += `\`${m.prefix}regmail <nama>, <email>\`\n`;
     txt += `Contoh: \`${m.prefix}regmail Aizat, aizat@gmail.com\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "regmail" });
+    return await m.reply( txt, { commandName: "regmail" });
   }
 
   const name = input[0].trim();
@@ -147,7 +146,7 @@ async function handler(m, { args, sock }) {
     }
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const botName = config.bot?.name || "Nova AI";
@@ -163,7 +162,7 @@ async function handler(m, { args, sock }) {
     txt += `Ketik: \`${m.prefix}verotp <kode>\`\n`;
     txt += `Contoh: \`${m.prefix}verotp 123456\``;
 
-    await sendReplyWithNav(m, sock, txt, { commandName: "regmail" });
+    await m.reply( txt, { commandName: "regmail" });
     await m.react("✅");
   } catch (e) {
     console.error("[Regmail] Error:", e.message);

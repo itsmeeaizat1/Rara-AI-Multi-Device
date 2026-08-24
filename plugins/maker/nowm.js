@@ -2,7 +2,6 @@
 import sharp from "sharp";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -225,7 +224,7 @@ async function handler(m, { sock }) {
     qmsg.mimetype?.includes("image");
 
   if (!isImage) {
-    return sendReplyWithNav(sock, m, claraWrap("Watermark Remover", [
+    return m.reply( claraWrap("Watermark Remover", [
       "Hapus watermark, logo, teks, atau object dari gambar.",
       "",
       "CARA PAKAI:",
@@ -248,7 +247,7 @@ async function handler(m, { sock }) {
   const position = POSITIONS[input] ? input : null;
   const apiKey = config.ai?.clipdropApiKey || config.clipdropApiKey || "";
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const imageBuffer = await qmsg.download();

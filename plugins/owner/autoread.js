@@ -2,7 +2,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -27,7 +26,7 @@ async function handler(m, { sock }) {
 
   if (!option) {
     const current = db.setting("autoRead") ?? config.features?.autoRead ?? false;
-    return sendReplyWithNav(sock, m, `📖 *Auto Read*\n\n` +
+    return m.reply( `📖 *Auto Read*\n\n` +
         `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}autoread on* — Aktifkan\n` +

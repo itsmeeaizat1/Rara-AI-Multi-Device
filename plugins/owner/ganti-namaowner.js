@@ -4,7 +4,6 @@ import path from "path";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getOwnerName } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ganti-namaowner",
@@ -49,7 +48,7 @@ async function handler(m, { sock, config }) {
   if (input[0].toLowerCase() === "main") {
     const newName = input.slice(1).join(" ").trim();
     if (!newName) {
-      return sendReplyWithNav(sock, m, `👤 *Ganti Nama Owner Utama*\n\n> Nama saat ini: *${config.owner?.name || "-"}*\n\n\`${m.prefix}ganti-namaowner main <nama baru>\``, "ganti-namaowner");
+      return m.reply( `👤 *Ganti Nama Owner Utama*\n\n> Nama saat ini: *${config.owner?.name || "-"}*\n\n\`${m.prefix}ganti-namaowner main <nama baru>\``, "ganti-namaowner");
     }
     try {
       const configPath = path.join(process.cwd(), "config.js");
@@ -73,12 +72,12 @@ async function handler(m, { sock, config }) {
   const newName = input.slice(1).join(" ").trim();
 
   if (!targetNumber || targetNumber.length < 10) {
-    return sendReplyWithNav(sock, m, `❌ *Gagal*\n\n> Nomor tidak valid\n\n\`${m.prefix}ganti-namaowner 628xxx NamaOwner\``, "ganti-namaowner");
+    return m.reply( `❌ *Gagal*\n\n> Nomor tidak valid\n\n\`${m.prefix}ganti-namaowner 628xxx NamaOwner\``, "ganti-namaowner");
   }
 
   if (!newName) {
     const currentName = getOwnerName(targetNumber);
-    return sendReplyWithNav(sock, m, `👤 *Nama Owner*\n\n> ${targetNumber}: *${currentName}*\n\n\`${m.prefix}ganti-namaowner ${targetNumber} <nama baru>\``, "ganti-namaowner");
+    return m.reply( `👤 *Nama Owner*\n\n> ${targetNumber}: *${currentName}*\n\n\`${m.prefix}ganti-namaowner ${targetNumber} <nama baru>\``, "ganti-namaowner");
   }
 
   const nameMap = db.setting("ownerNames") || {};

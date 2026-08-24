@@ -2,7 +2,6 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "android1-get",
@@ -29,7 +28,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Android1-get", `❌ URL tidak valid! Harus URL dari an1.com`));
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const { data } = await axios.get(

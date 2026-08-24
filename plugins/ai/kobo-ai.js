@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -23,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return sendReplyWithNav(sock, m, `🌬️ *Kobo Kanaeru*\n\n` +
+    return m.reply( `🌬️ *Kobo Kanaeru*\n\n` +
         `VTuber Hololive Indonesia Gen 3\n> Wind Shaman yang cheerfull dan suka prank!\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}kobo-ai <pertanyaan>*\n\n` +
@@ -31,7 +30,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}kobo-ai Kobo lagi apa?*`, "kobo-ai");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await UnlimitedAI(text, "kobo-ai");

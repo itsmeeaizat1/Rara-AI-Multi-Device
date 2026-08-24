@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
@@ -39,7 +38,7 @@ async function handler(m, { sock, args }) {
     txt += `Contoh:\n`;
     txt += `\`${m.prefix}daftarsiswa Andi Pratama\`\n\n`;
     txt += `Nama akan tampil di leaderboard`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "daftarsiswa" });
+    return await m.reply( txt, { commandName: "daftarsiswa" });
   }
 
   const cmd = name.toLowerCase();

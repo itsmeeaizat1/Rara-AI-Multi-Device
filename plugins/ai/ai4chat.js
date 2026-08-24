@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
@@ -24,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.text
     if (!text) {
-        return sendReplyWithNav(sock, m, claraWrap("Aichat", `🤖 *Aichat*\n\n> Masukkan pertanyaan\n\n\`Contoh: ${m.prefix}ai4chat Apa itu JavaScript?\``), "ai4chat")
+        return m.reply(claraWrap("Aichat", `🤖 *Aichat*\n\n> Masukkan pertanyaan\n\n\`Contoh: ${m.prefix}ai4chat Apa itu JavaScript?\``), "ai4chat")
     }
     m.react('🕐')
     try {

@@ -2,7 +2,6 @@
 import { downloadMediaMessage, getContentType } from "nova";
 import { ImageUploadService } from "node-upload-images";
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -60,7 +59,7 @@ async function handler(m, { sock }) {
   }
 
   if (!mediaBuffer) {
-    { const __navText = "❌ *Gambar tidak terdeteksi!* Pastikan kamu mengirim gambar dengan benar."; return await sendReplyWithNav(sock, m, __navText, "musiccard"); };
+    { const __navText = "❌ *Gambar tidak terdeteksi!* Pastikan kamu mengirim gambar dengan benar."; return await m.reply(__navText, "musiccard"); };
   }
 
   if (!text) {
@@ -76,7 +75,7 @@ async function handler(m, { sock }) {
     nama = parts[1].trim() || m.pushName;
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
 

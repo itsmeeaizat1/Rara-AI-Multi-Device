@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
@@ -31,7 +30,7 @@ async function handler(m, { sock }) {
     if (amount <= 0) {
         const user = db.getUser(m.sender) || db.setUser(m.sender)
         
-        return sendReplyWithNav(sock, m, claraWrap("Buy Energi", `🛒 *Buy Energi*\n\n` +
+        return m.reply( claraWrap("Buy Energi", `🛒 *Buy Energi*\n\n` +
             `╭┈┈⬡「 💰 *Info* 」\n` +
             `┃ 💵 Harga: *${PRICE_PER_ENERGI}* koin/energi\n` +
             `┃ 💰 Koin Kamu: *${formatNumber(user.koin || 0)}*\n` +
@@ -44,7 +43,7 @@ async function handler(m, { sock }) {
     const user = db.getUser(m.sender) || db.setUser(m.sender)
     
     if ((user.koin || 0) < totalPrice) {
-        return sendReplyWithNav(sock, m, claraWrap("Gagal", `❌ *Gagal*\n\n` +
+        return m.reply( claraWrap("Gagal", `❌ *Gagal*\n\n` +
             `Koin tidak cukup!\n` +
             `Butuh: *${formatNumber(totalPrice)}*\n` +
             `Kamu punya: *${formatNumber(user.koin || 0)}*`), "buyenergi")
@@ -64,7 +63,7 @@ async function handler(m, { sock }) {
     
     m.react('✅')
     
-    await sendReplyWithNav(sock, m, claraWrap("Pembelian Berhasil", `✅ *Pembelian Berhasil*\n\n` +
+    await m.reply( claraWrap("Pembelian Berhasil", `✅ *Pembelian Berhasil*\n\n` +
         `╭┈┈⬡「 📋 *Detail* 」\n` +
         `┃ ⚡ Energi: *+${formatNumber(amount)}*\n` +
         `┃ 💵 Harga: *-${formatNumber(totalPrice)}* koin\n` +

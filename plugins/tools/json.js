@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "json",
@@ -26,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "json <mode> <json>\n" +
         prefix + "json <json> (auto beautify)\n\n" +
         "Mode:\n" +
@@ -58,7 +57,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("JSON", "Input JSON tidak boleh kosong!"));
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // Parse JSON
     let parsed;

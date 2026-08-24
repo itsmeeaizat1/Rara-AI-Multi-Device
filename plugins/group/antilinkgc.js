@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
@@ -32,7 +31,7 @@ function handler(m, { sock }) {
         const status = groupData.antilinkgc || 'off'
         const mode = groupData.antilinkgcMode || 'remove'
         
-        return sendReplyWithNav(sock, m, `🔗 *Antilink Wa*\n\n` +
+        return m.reply( `🔗 *Antilink Wa*\n\n` +
             `╭┈┈⬡「 📋 *sTatus* 」\n` +
             `┃   ┊  ➶ Status: *${status.toUpperCase()}*\n` +
             `┃   ┊  ➶ Mode: *${mode.toUpperCase()}*\n` +

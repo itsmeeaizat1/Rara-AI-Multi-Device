@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
@@ -28,7 +27,7 @@ function handler(m, { sock }) {
     const current = groupData?.autodl || false
     
     if (!args || args === 'status') {
-        return sendReplyWithNav(sock, m, `🔗 *Auto Download*\n\n` +
+        return m.reply( `🔗 *Auto Download*\n\n` +
             `Status: ${current ? '✅ Aktif' : '❌ Nonaktif'}\n\n` +
             `*Platform Support:*\n` +
             `TikTok, Instagram, Facebook\n` +

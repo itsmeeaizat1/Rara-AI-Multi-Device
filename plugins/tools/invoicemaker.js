@@ -2,7 +2,6 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "invoicemaker",
@@ -28,7 +27,7 @@ async function handler(m, { sock }) {
   const text = args.join(" ");
 
   if (!text || !text.includes("|")) {
-    return sendReplyWithNav(sock, m, `🧾 *INVOICE MAKER*\n\n` +
+    return m.reply( `🧾 *INVOICE MAKER*\n\n` +
         `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ FORMAT\n` +
         `  ┊  ➶ \`${m.prefix}invoicemaker <toko>|<invoice>|<tanggal>|<status>|<items>|<total>\`\n` +
         `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
@@ -72,7 +71,7 @@ async function handler(m, { sock }) {
   const total =
     parseInt(totalRaw) || itemsArr.reduce((sum, i) => sum + i.price, 0);
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const qrImage = "https://i.ibb.co.com/kt5fyrg/qr.jpg";

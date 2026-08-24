@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "aidiet", alias: ["dietai", "kalori", "hitungkalori"], category: "future",
@@ -14,7 +13,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!quoted) {
-      await sendReplyWithNav(sock, m, claraWrap("AI Diet", ["  ┊  ➶ Reply foto makanan dengan command ini",
+      await m.reply( claraWrap("AI Diet", ["  ┊  ➶ Reply foto makanan dengan command ini",
         "  ┊  ➶ AI akan estimasi kalori & gizi"].join("\n")), "aidiet");
       return { handled: true };
     }

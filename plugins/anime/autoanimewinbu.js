@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { loadSent, saveSent, loadState, saveState, getOngoingAnimeList, startAutoCheck, stopAutoCheck, runCheck, isRunning } from '../../src/lib/nova-auto-anime.js'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
@@ -164,7 +163,7 @@ async function handler(m, { sock, args }) {
             }
 
             if (!grupId || !grupId.includes('@g.us')) {
-                return sendReplyWithNav(sock, m, `❌ ID grup tidak valid\n\n` +
+                return m.reply( `❌ ID grup tidak valid\n\n` +
                     `Gunakan di dalam grup, atau:\n` +
                     `\`${m.prefix}autoanimewinbu addgrup 120363xxx@g.us\``, "autoanimewinbu")
             }
@@ -203,7 +202,7 @@ async function handler(m, { sock, args }) {
             const rest = (typeof args === 'string' ? args : '').replace(/^interval\s*/i, '').trim()
             const mins = parseInt(rest)
             if (!mins || mins < 1 || mins > 60) {
-                return sendReplyWithNav(sock, m, claraWrap("autoanimewinbu", `❌ Interval harus 1-60 menit\n\n> Contoh: \`${m.prefix}autoanimewinbu interval 10\``), "autoanimewinbu")
+                return m.reply(claraWrap("autoanimewinbu", `❌ Interval harus 1-60 menit\n\n> Contoh: \`${m.prefix}autoanimewinbu interval 10\``), "autoanimewinbu")
             }
 
             saveState({ ...state, interval: mins })

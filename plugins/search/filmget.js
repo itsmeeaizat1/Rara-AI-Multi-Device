@@ -3,7 +3,6 @@ import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
@@ -25,7 +24,7 @@ async function handler(m, { sock }) {
   const url = args[0]?.trim();
 
   if (!url || !url.includes("neoxr.eu")) {
-    return sendReplyWithNav(sock, m, `🎬 *Film Detail*\n\n` +
+    return m.reply( `🎬 *Film Detail*\n\n` +
         `Ambil detail film dari URL\n\n` +
         `*Format:*\n` +
         `\`${m.prefix}filmget <url>\`\n\n` +

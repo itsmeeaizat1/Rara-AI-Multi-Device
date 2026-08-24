@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
@@ -38,7 +37,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return sendReplyWithNav(sock, m, `── .✦ 𝗖𝗘𝗞 𝗜𝗗 𝗖𝗛𝗔𝗡𝗡𝗘𝗟 ✦. ── 𝜗ৎ\n\n` +
+        return m.reply( `── .✦ 𝗖𝗘𝗞 𝗜𝗗 𝗖𝗛𝗔𝗡𝗡𝗘𝗟 ✦. ── 𝜗ৎ\n\n` +
             `Masukkan link channel WhatsApp\n\n` +
             `\`${m.prefix}cekidch https://whatsapp.com/channel/xxxxx\``, "cekidch")
     }

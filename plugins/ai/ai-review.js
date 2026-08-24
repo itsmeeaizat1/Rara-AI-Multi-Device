@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "ai-review",
@@ -38,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const prompt = `Review code berikut dalam bahasa Indonesia:\n- Sebutkan potensi bug\n- Berikan sphinx perbaikan\n- Berikan versi yang lebih bersih jika bisa\n\n\`\`\`\n${code.slice(0, 4000)}\n\`\`\``;
-    m.react("🕐");
+    m.react("🕒");
     const reply = await callAI({
       providerKey: "openai",
       model: "gpt-4o-mini",
@@ -64,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
-    await sendReplyWithNav(sock, m, text, "ai-review");
+    await m.reply(text, "ai-review");
   }
 
   return { handled: true };

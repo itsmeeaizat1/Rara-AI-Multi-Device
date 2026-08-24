@@ -3,7 +3,6 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { generateWAMessageFromContent } from "nova";
 import config from "../../config.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {

@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 
@@ -166,7 +165,7 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ ${prefix}smartreply add harga|Menu 15rb, paket 50rb`].join("\n")) + "\n" +
         tipText("Hanya admin grup yang bisa mengatur");
 
-      await sendReplyWithNav(sock, m, text, "smartreply");
+      await m.reply( text, "smartreply");
       return { handled: true };
     }
 

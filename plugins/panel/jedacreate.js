@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
@@ -55,7 +54,7 @@ function handler(m, { sock }) {
     
     if (!input) {
         const currentJeda = db.setting('panelCreateJeda') ?? DEFAULT_JEDA
-        return sendReplyWithNav(sock, m, `⏱️ *Jeda Panel Create*\n\n` +
+        return m.reply( `⏱️ *Jeda Panel Create*\n\n` +
             `╭┈┈⬡「 📋 *Info* 」\n` +
             `┃   ┊  ➶ Jeda saat ini: *${formatTime(currentJeda)}*\n` +
             `┃   ┊  ➶ Default: *5 menit*\n` +

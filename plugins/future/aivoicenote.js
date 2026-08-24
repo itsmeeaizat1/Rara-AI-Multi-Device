@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "aivoicenote", alias: ["aivoicenote", "aivoicenote2", "transcribe2"], category: "future",
@@ -14,7 +13,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!quoted) {
-      await sendReplyWithNav(sock, m, claraWrap("AI Voice Note", ["  ┊  ➶ Reply voice note/audio dengan command ini",
+      await m.reply( claraWrap("AI Voice Note", ["  ┊  ➶ Reply voice note/audio dengan command ini",
         "  ┊  ➶ Bot akan transcribe jadi text"].join("\n")), "aivoicenote");
       return { handled: true };
     }

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
@@ -34,7 +33,7 @@ async function handler(m, { sock }) {
     const token = config.digitalocean?.token
     
     if (!token) {
-        return sendReplyWithNav(sock, m, `DigitalOcean belum disetup. Isi digitalocean.token di config.js`, "delvps")
+        return m.reply( `DigitalOcean belum disetup. Isi digitalocean.token di config.js`, "delvps")
     }
     
     if (!hasAccess(m.sender, m.isOwner)) {
@@ -43,7 +42,7 @@ async function handler(m, { sock }) {
     
     const dropletId = m.text?.trim()
     if (!dropletId) {
-        return sendReplyWithNav(sock, m, `Cara pakai:\n${m.prefix}delvps <droplet_id>\n\nGunakan ${m.prefix}listvps untuk melihat ID`, "delvps")
+        return m.reply( `Cara pakai:\n${m.prefix}delvps <droplet_id>\n\nGunakan ${m.prefix}listvps untuk melihat ID`, "delvps")
     }
     
     await m.reply(`Menghapus VPS...\nID: ${dropletId}`)

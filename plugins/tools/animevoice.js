@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -129,7 +128,7 @@ async function handler(m, { sock, args }) {
     txt += `Karakter populer:\n`;
     txt += `paimon, raiden, hutao, ganyu, nahida, keqing, ayaka, zhongli, xiao, venti, klee, mona, yae, kokomi, yoimiya, shenhe, specialweek, suzuka, teio, goldship, nene\n\n`;
     txt += `Ketik \`${m.prefix}animevoice list\` untuk semua karakter`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "animevoice" });
+    return await m.reply( txt, { commandName: "animevoice" });
   }
 
   // Show full character list
@@ -151,7 +150,7 @@ async function handler(m, { sock, args }) {
     for (let i = 0; i < sanoba.length; i++) {
       txt += `${i + 1}. \`${sanoba[i][0]}\` - ${sanoba[i][1].split("(")[0].trim()}\n`;
     }
-    return await sendReplyWithNav(m, sock, txt, { commandName: "animevoice" });
+    return await m.reply( txt, { commandName: "animevoice" });
   }
 
   // Check if first arg is a character name
@@ -204,7 +203,7 @@ async function handler(m, { sock, args }) {
     lang = "Mix";
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const speaker = CHARACTERS[speakerKey];

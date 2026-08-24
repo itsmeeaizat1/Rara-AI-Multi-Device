@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'setnamegc',
@@ -23,7 +22,7 @@ async function handler(m, { sock }) {
     const newName = m.text?.trim()
     
     if (!newName) {
-        await sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
+        await m.reply( `⚠️ *Cara Pakai*\n\n` +
             `\`${m.prefix}setnamegc Nama Grup Baru\``, "setnamegc")
         return
     }

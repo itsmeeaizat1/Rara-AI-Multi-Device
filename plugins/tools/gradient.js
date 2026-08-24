@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "gradient", alias: ["colorgradient", "cssgradient"], category: "tools",
@@ -16,7 +15,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!input || !input.includes("#")) {
       const colors = ["#"+Math.random().toString(16).slice(2,8), "#"+Math.random().toString(16).slice(2,8)];
       const css = `background: linear-gradient(135deg, ${colors[0]}, ${colors[1]});`;
-      await sendReplyWithNav(sock, m, claraWrap("Gradient CSS", [`  ┊  ➶ Warna 1: *${colors[0]}*`, `  ┊  ➶ Warna 2: *${colors[1]}*`,
+      await m.reply( claraWrap("Gradient CSS", [`  ┊  ➶ Warna 1: *${colors[0]}*`, `  ┊  ➶ Warna 2: *${colors[1]}*`,
         `  ┊  ➶ CSS: \`${css}\``].join("\n")) + "\n" + tipText(`Atau ketik ${prefix}gradient #ff0000 #0000ff`), "gradient");
       return { handled: true };
     }

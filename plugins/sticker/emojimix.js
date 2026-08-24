@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Emojimix — pakai emoji-mixer + Google Emoji Kitchen CDN (tanpa API key)
 // Tenor Google API sudah discontinued, ganti dengan direct Google CDN
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
@@ -59,7 +58,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (!text) {
-        return sendReplyWithNav(sock, m, `🎭 *Emoji Mix*\n\n` +
+        return m.reply( `🎭 *Emoji Mix*\n\n` +
             `Gabungkan 2 emoji menjadi 1\n\n` +
             `Contoh: \`${m.prefix}emojimix 😂🔥\``, "emojimix")
     }
@@ -68,7 +67,7 @@ async function handler(m, { sock }) {
     const emojis = text.match(emojiRegex)
     
     if (!emojis || emojis.length < 2) {
-        return sendReplyWithNav(sock, m, claraWrap("Emojimix", `❌ Masukkan minimal 2 emoji!\n\nContoh: ${m.prefix}emojimix 😂🔥`), { commandName: "emojimix" })
+        return m.reply( claraWrap("Emojimix", `❌ Masukkan minimal 2 emoji!\n\nContoh: ${m.prefix}emojimix 😂🔥`), { commandName: "emojimix" })
     }
     
     const emoji1 = emojis[0]

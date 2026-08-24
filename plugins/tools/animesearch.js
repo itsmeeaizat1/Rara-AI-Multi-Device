@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -217,10 +216,10 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}animesearch manga One Piece\`\n`;
     txt += `\`${m.prefix}animesearch character Luffy\`\n\n`;
     txt += `Alias: .mal, .carianime, .animefind`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "animesearch" });
+    return await m.reply( txt, { commandName: "animesearch" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     if (type === "anime" || type === "a") {

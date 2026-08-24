@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['hapussaluran', 'deletesaluran', 'deletenewsletter'],
@@ -19,7 +18,7 @@ async function handler(m, { sock }) {
     let targetJid = text
 
     if (!targetJid) {
-        return sendReplyWithNav(sock, m, '🗑️ *Hapus sAluran*\n\n' +
+        return m.reply( '🗑️ *Hapus sAluran*\n\n' +
             '> `.hapussaluran <id_saluran>` — Hapus saluran\n\n' +
             '📝 Contoh:\n' +
             '> `.hapussaluran 120363xxx@newsletter`\n\n' +

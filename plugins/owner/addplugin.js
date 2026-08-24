@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import { hotReloadPlugin } from "../../src/lib/nova-plugins.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -35,7 +34,7 @@ async function handler(m, { sock }) {
   const quoted = m.quoted;
 
   if (!quoted) {
-    return sendReplyWithNav(sock, m, `📦 *ADD PLUGIN*\n\n` +
+    return m.reply( `📦 *ADD PLUGIN*\n\n` +
         `Reply code plugin dengan caption:\n` +
         `\`${m.prefix}addplugin\` - Auto detect\n` +
         `\`${m.prefix}addplugin namafile\` - Custom nama\n` +
@@ -72,7 +71,7 @@ async function handler(m, { sock }) {
   let folderName = args[1] || extracted.category;
 
   if (!fileName) {
-    return sendReplyWithNav(sock, m, `❌ *GAGAL*\n\nTidak bisa mendeteksi nama plugin\nGunakan \`${m.prefix}addplugin <namafile>\``, "addplugin");
+    return m.reply( `❌ *GAGAL*\n\nTidak bisa mendeteksi nama plugin\nGunakan \`${m.prefix}addplugin <namafile>\``, "addplugin");
   }
 
   if (!folderName) folderName = "other";
@@ -84,7 +83,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Addplugin", `❌ *GAGAL*\n\nNama file tidak valid`));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");

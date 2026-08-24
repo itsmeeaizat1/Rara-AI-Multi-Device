@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraHeader,
   separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
@@ -114,7 +113,7 @@ async function handler(m, { sock, config: botConfig }) {
     text += "🟢 Aktif  ⚫ Expired\n\n";
     text += tipText(`Ketik ${prefix}listprem untuk list premium aktif`);
 
-    await sendReplyWithNav(sock, m, text, "dashboardpremium");
+    await m.reply( text, "dashboardpremium");
   } catch (error) {
     const text =
       claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,

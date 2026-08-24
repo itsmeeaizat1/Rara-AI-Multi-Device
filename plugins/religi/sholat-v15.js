@@ -3,7 +3,6 @@ import { claraHeader,
     separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { fetchPrayerTimes, buildPrayerMessage, PRAYER_LABELS, PRAYER_EMOJIS, ADVANCE_REMINDER_MINUTES } from "../../src/lib/nova-sholat-scheduler.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "sholat",
@@ -204,7 +203,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "sholat");
+      await m.reply( text, "sholat");
       return { handled: true };
     }
 
@@ -322,7 +321,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText("Pastikan nama kota benar dan coba lagi");
 
-      await sendReplyWithNav(sock, m, text, "sholat");
+      await m.reply( text, "sholat");
       return { handled: true };
     }
 
@@ -376,7 +375,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
-    await sendReplyWithNav(sock, m, text, "sholat");
+    await m.reply( text, "sholat");
   }
 
   return { handled: true };

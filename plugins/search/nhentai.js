@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -31,7 +30,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "nhentai");
+      await m.reply( text, "nhentai");
       return { handled: true };
     }
 

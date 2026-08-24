@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "metatag",
@@ -78,7 +77,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "metatag <url>\n\n" +
         "Extract meta tags dari website\n" +
         "Info: title, description, OG tags, Twitter cards, favicon, canonical\n\n" +
@@ -90,7 +89,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const url = text.startsWith("http") ? text : "https://" + text;
-    await m.react("🕐");
+    await m.react("🕒");
 
     const res = await fetch(url, {
       headers: { "User-Agent": "Mozilla/5.0 (Nova Bot)" },

@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "subdomain",
@@ -55,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "subdomain <domain>\n\n" +
         "Enumerasi subdomain via Certificate Transparency (crt.sh)\n" +
         "No active scanning, 100% passive lookup\n\n" +
@@ -71,7 +70,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("Subdomain", "Domain tidak boleh kosong!"));
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     const subdomains = await getSubdomains(domain);
 

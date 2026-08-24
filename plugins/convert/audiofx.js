@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
@@ -111,12 +110,12 @@ async function handler(m, { sock }) {
 
     // Kalau gak ada efek atau minta list
     if (!effectName || effectName === 'list' || effectName === 'menu') {
-        return sendReplyWithNav(sock, m, buildEffectList('audiofun'), "audiofun")
+        return m.reply(buildEffectList('audiofun'), "audiofun")
     }
 
     const fx = EFFECTS[effectName]
     if (!fx) {
-        return sendReplyWithNav(sock, m,
+        return m.reply(
             claraWrap("Audiofun",
                 'Efek *' + effectName + '* tidak ditemukan\n\n' +
                 'Ketik *' + prefix + 'audiofun list* untuk daftar efek'),
@@ -125,7 +124,7 @@ async function handler(m, { sock }) {
 
     const media = getMediaSource(m)
     if (!media) {
-        return sendReplyWithNav(sock, m,
+        return m.reply(
             claraWrap("Audiofun",
                 fx.emoji + ' *' + effectName.toUpperCase() + '*\n\n' +
                 'Reply audio/video dengan command ini\n' +

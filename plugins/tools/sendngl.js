@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "sendngl",
@@ -23,10 +22,10 @@ async function handler(m, { sock }) {
   const text = m.text?.split("|");
   const [link, kata] = text;
   if (!link)
-    return sendReplyWithNav(sock, m, `*LINK NGL NYA MANA ??*\nContoh: \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
+    return m.reply( `*LINK NGL NYA MANA ??*\nContoh: \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
   if (!kata)
-    return sendReplyWithNav(sock, m, `*KATA KATA NYA MANA ??*\n\nContoh: \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
-  m.react("🕐");
+    return m.reply( `*KATA KATA NYA MANA ??*\n\nContoh: \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
+  m.react("🕒");
 
   try {
     await novaApi.cuki.sendNgl(

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
@@ -34,7 +33,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]
     
     if (!username) {
-        { const __navText = `📦 *Npm sTalk*\n\n> Masukkan username NPM\n\n\`Contoh: ${m.prefix}npmstalk aizat\``; return await sendReplyWithNav(sock, m, __navText, "npmstalk"); }
+        { const __navText = `📦 *Npm sTalk*\n\n> Masukkan username NPM\n\n\`Contoh: ${m.prefix}npmstalk aizat\``; return await m.reply( __navText, "npmstalk"); }
     }
     
     m.react('🕐')

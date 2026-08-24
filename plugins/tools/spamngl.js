@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
@@ -23,9 +22,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.text?.split('|')
     const [ link, kata, jumlah ] = text
-    if(!link) return sendReplyWithNav(sock, m, `*LINK NGL NYA MANA ??*\nContoh: \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
-    if(!kata) return sendReplyWithNav(sock, m, `*KATA KATA NYA MANA ??*\n\nContoh: \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
-    if(!jumlah) return sendReplyWithNav(sock, m, `*JUMLAH NYA MANA ??*\n\nContoh: \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
+    if(!link) return m.reply( `*LINK NGL NYA MANA ??*\nContoh: \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
+    if(!kata) return m.reply( `*KATA KATA NYA MANA ??*\n\nContoh: \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
+    if(!jumlah) return m.reply( `*JUMLAH NYA MANA ??*\n\nContoh: \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
     if(isNaN(jumlah)) { const __navText = `*JUMLAH NYA HARUS ANGKA*\n\nContoh: \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`; return await m.reply(__navText); }
     m.react('🕐')
     

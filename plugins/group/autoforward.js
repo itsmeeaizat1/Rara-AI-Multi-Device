@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
@@ -27,7 +26,7 @@ function handler(m, { sock }) {
     
     if (!option) {
         const status = group.autoforward ? '✅ ON' : '❌ OFF'
-        return sendReplyWithNav(sock, m, `🔄 *Auto Forward*\n\n` +
+        return m.reply( `🔄 *Auto Forward*\n\n` +
             `╭┈┈⬡「 📋 *Info* 」\n` +
             `┃   ┊  ➶ Status: *${status}*\n` +
             `╰┈┈⬡\n\n` +

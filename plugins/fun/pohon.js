@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -40,10 +39,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `  ┊  ➶ Hasil: silsilah keluarga absurd + warisan lucu`,
       `  ┊  ➶ Pure fun, jangan dipakai beneran ya :v`,
     ].join("\n"));
-    return sendReplyWithNav(sock, m, help, "pohon");
+    return m.reply(help, "pohon");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const prompt = `Kamu adalah generator silsilah keluarga komedi Indonesia. Buat silsilah keluarga absurd dan lucu untuk "${name}".

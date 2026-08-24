@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -58,7 +57,7 @@ async function handler(m, { sock, config: botConfig }) {
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" ;
 
-    await sendReplyWithNav(sock, m, text, "aichat-history");
+    await m.reply(text, "aichat-history");
   }
 
   return { handled: true };

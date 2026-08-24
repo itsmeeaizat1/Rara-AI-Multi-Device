@@ -24,7 +24,6 @@ import axios from "axios";
 import path from "path";
 import fs from "fs";
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, broadcastFormat } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -656,7 +655,7 @@ async function executeJpmWithSession(m, sock, db, mode) {
   const mediaType = session?.mediaType || null;
 
   if (!text && !mediaBuffer) {
-    return sendReplyWithNav(sock, m, `❌ *Tidak Ada Konten*\n\n` +
+    return m.reply( `❌ *Tidak Ada Konten*\n\n` +
         `Kirim pesan, foto, audio, atau video terlebih dahulu, lalu reply dengan *${m.prefix}jpm* dan pilih mode pengiriman.\n\n` +
         `*Cara yang benar:*\n` +
         `1. Kirim teks/foto/video/audio\n` +
@@ -711,7 +710,7 @@ async function handleJpmDirect(m, sock, db, text, mode) {
 
   if (!text) {
     const modeLabel = mode === "hidetag" ? "Hidetag" : "Basic";
-    return sendReplyWithNav(sock, m, `📢 *JPM ${modeLabel}*\n\n` +
+    return m.reply( `📢 *JPM ${modeLabel}*\n\n` +
         `Kirim pesan broadcast ke seluruh grup${mode === "hidetag" ? " dengan tag semua member secara tersembunyi" : ""}.\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}${mode === "hidetag" ? "jpmht" : "jpm"} <pesan>*\n` +
@@ -769,7 +768,7 @@ async function handleJpmChannel(m, sock, db, text) {
   }
 
   if (!text) {
-    return sendReplyWithNav(sock, m, `📢 *JPM Channel*\n\n` +
+    return m.reply( `📢 *JPM Channel*\n\n` +
         `Kirim pesan ke semua channel WhatsApp yang di-subscribe bot.\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}jpmch <pesan>*\n` +
@@ -867,7 +866,7 @@ async function handleJpmUpdate(m, sock, db, input) {
   }
 
   if (!input) {
-    return sendReplyWithNav(sock, m, `📢 *JPM Update*\n\n` +
+    return m.reply( `📢 *JPM Update*\n\n` +
         `Kirim informasi update / changelog ke seluruh grup!\n\n` +
         `*FORMAT:*\n` +
         `*${m.prefix}jpmupdate <versi> | <isi changelog>*\n\n` +
@@ -889,14 +888,14 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
     version = parts[0].trim();
     changelog = parts.slice(1).join("|").trim();
   }
-  if (!changelog) return sendReplyWithNav(sock, m, `❌ Changelog tidak boleh kosong!`, "jpm");
+  if (!changelog) return m.reply( `❌ Changelog tidak boleh kosong!`, "jpm");
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const { groupIds, blacklistedCount } = await getTargetGroups(sock, db);
     if (groupIds.length === 0) {
-      return sendReplyWithNav(sock, m, `❌ *Tidak Ada Grup*\n\n> Bot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`, "jpm");
+      return m.reply( `❌ *Tidak Ada Grup*\n\n> Bot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`, "jpm");
     }
 
     const botName = config.bot?.name || "Nova-AI";
@@ -911,7 +910,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
 
     const jedaJpm = db.setting("jedaJpm") || 5000;
 
-    await sendReplyWithNav(sock, m, `📢 *JPM Update Dimulai*\n\n` +
+    await m.reply( `📢 *JPM Update Dimulai*\n\n` +
         `🏷️ Versi: *${version}*\n` +
         `👥 Target: *${groupIds.length}* grup\n` +
         `⏱️ Jeda: *${(jedaJpm / 1000).toFixed(1)} detik*\n\n` +
@@ -925,7 +924,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
       if (global.stopjpm) {
         delete global.stopjpm;
         delete global.statusjpm;
-        await sendReplyWithNav(sock, m, `⏹️ *JPM Update Dihentikan*\n\n` +
+        await m.reply( `⏹️ *JPM Update Dihentikan*\n\n` +
             `✅ Berhasil: *${successCount}*\n` +
             `❌ Gagal: *${failedCount}*\n` +
             `⏸️ Sisa: *${groupIds.length - successCount - failedCount}*`, "jpm");
@@ -945,7 +944,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
 
     delete global.statusjpm;
     m.react("✅");
-    await sendReplyWithNav(sock, m, `✅ *JPM Update Selesai!*\n\n` +
+    await m.reply( `✅ *JPM Update Selesai!*\n\n` +
         `✅ Sukses: *${successCount}*\n` +
         `❌ Gagal: *${failedCount}*\n` +
         `📊 Total: *${groupIds.length}*`, "jpm");
@@ -1117,7 +1116,7 @@ async function completeAutoJpmSetup(m, sock, db, intervalStr) {
     !existing?.message?.text &&
     !existing?.message?.media
   ) {
-    return sendReplyWithNav(sock, m, `❌ *Pesan atau Media Wajib Diisi*\n\n> Kirim konten terlebih dahulu, lalu ketik *${m.prefix}jpm* dan pilih Auto JPM.`, "jpm");
+    return m.reply( `❌ *Pesan atau Media Wajib Diisi*\n\n> Kirim konten terlebih dahulu, lalu ketik *${m.prefix}jpm* dan pilih Auto JPM.`, "jpm");
   }
 
   const updatedConfig = {
@@ -1149,10 +1148,10 @@ async function handleAutoJpm(m, sock, db, input, fullInput) {
 
   if (["off", "stop", "disable"].includes(action)) {
     const current = getAutoJpmConfig();
-    if (!current.enabled) return sendReplyWithNav(sock, m, `ℹ️ AutoJPM sudah nonaktif.`, "jpm");
+    if (!current.enabled) return m.reply( `ℹ️ AutoJPM sudah nonaktif.`, "jpm");
     setAutoJpmConfig({ ...current, enabled: false });
     stopAutoJpmScheduler();
-    return sendReplyWithNav(sock, m, `✅ *AutoJPM Dinonaktifkan*\n\n> Jadwal siaran otomatis telah dimatikan.`, "jpm");
+    return m.reply( `✅ *AutoJPM Dinonaktifkan*\n\n> Jadwal siaran otomatis telah dimatikan.`, "jpm");
   }
 
   if (["status", "info"].includes(action)) return showAutoJpmStatus(m);
@@ -1213,7 +1212,7 @@ async function handleAutoJpm(m, sock, db, input, fullInput) {
     !existing?.message?.text &&
     !existing?.message?.media
   ) {
-    return sendReplyWithNav(sock, m, `❌ Pesan atau media wajib diisi.`, "jpm");
+    return m.reply( `❌ Pesan atau media wajib diisi.`, "jpm");
   }
 
   const updatedConfig = {

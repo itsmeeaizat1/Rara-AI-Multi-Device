@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import sharp from "sharp";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
@@ -80,7 +79,7 @@ async function handler(m, { sock }) {
     txt += "Level 1-100 (semakin rendah = semakin kecil ukuran)\n";
     txt += "Default: 70% | Max: 20%\n";
     txt += "Format: JPG, PNG, WebP";
-    return sendReplyWithNav(sock, m, txt, "imgcompress");
+    return m.reply( txt, "imgcompress");
   }
 
   const isImage = (media.mime || "").startsWith("image/");
@@ -107,7 +106,7 @@ async function handler(m, { sock }) {
       const ratio = Math.round((1 - compressed.length / media.buffer.length) * 100);
       txt += "\nEstimasi kompresi (70%): " + formatSize(compressed.length) + " (-" + (ratio > 0 ? ratio : 0) + "%)";
 
-      return sendReplyWithNav(sock, m, txt, "imgcompress");
+      return m.reply( txt, "imgcompress");
     } catch (e) {
       return m.reply("Gagal membaca info gambar: " + e.message);
     }

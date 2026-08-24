@@ -4,7 +4,6 @@ import * as cheerio from "cheerio";
 import moment from "moment-timezone";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "infotourney",
@@ -69,7 +68,7 @@ async function getInfoTourney() {
 }
 
 async function handler(m, { sock }) {
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const tournaments = await getInfoTourney();

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
@@ -27,7 +26,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   // .skripsiku ide <bidang>
   if (sub === "ide" || sub === "judul") {
     if (!input) {
-      return sendReplyWithNav(m, sock, claraWrap("Skripsiku - Ide Judul", [
+      return m.reply( claraWrap("Skripsiku - Ide Judul", [
         `Generate ide judul skripsi berdasarkan bidang.`,
         ``,
         `Contoh:`,
@@ -37,7 +36,7 @@ async function handler(m, { sock, args, config: botConfig }) {
       ].join("\n")), { commandName: "skripsiku" });
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const prompt = `Kamu adalah dosen pembimbing skripsi berpengalaman di Indonesia. 
 Generate 7 ide judul skripsi untuk bidang: "${input}".
@@ -54,16 +53,16 @@ Kriteria:
 - Jangan terlalu umum, spesifik`;
 
       const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
-      return sendReplyWithNav(m, sock, claraWrap("Skripsiku - Ide Judul", `${input}\n\n${result}`), { commandName: "skripsiku" });
+      return m.reply( claraWrap("Skripsiku - Ide Judul", `${input}\n\n${result}`), { commandName: "skripsiku" });
     } catch (e) {
-      return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal generate: ${e.message}`), { commandName: "skripsiku" });
+      return m.reply( claraWrap("Error", `Gagal generate: ${e.message}`), { commandName: "skripsiku" });
     }
   }
 
   // .skripsiku outline <topik>
   if (sub === "outline" || sub === "struktur") {
     if (!input) {
-      return sendReplyWithNav(m, sock, claraWrap("Skripsiku - Outline", [
+      return m.reply( claraWrap("Skripsiku - Outline", [
         `Generate outline bab 1-5 berdasarkan topik.`,
         ``,
         `Contoh:`,
@@ -72,7 +71,7 @@ Kriteria:
       ].join("\n")), { commandName: "skripsiku" });
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const prompt = `Buat outline skripsi lengkap (Bab 1-5) untuk topik: "${input}".
 
@@ -85,16 +84,16 @@ BAB X: [Nama Bab]
 Sesuaikan dengan standar skripsi Indonesia. Bab 3 harus sesuai jenis penelitian (kualitatif/kuantitatif/R&D).`;
 
       const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
-      return sendReplyWithNav(m, sock, claraWrap("Skripsiku - Outline", `${input}\n\n${result}`), { commandName: "skripsiku" });
+      return m.reply( claraWrap("Skripsiku - Outline", `${input}\n\n${result}`), { commandName: "skripsiku" });
     } catch (e) {
-      return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal generate: ${e.message}`), { commandName: "skripsiku" });
+      return m.reply( claraWrap("Error", `Gagal generate: ${e.message}`), { commandName: "skripsiku" });
     }
   }
 
   // .skripsiku review <teks paragraf>
   if (sub === "review" || sub === "cek") {
     if (!input) {
-      return sendReplyWithNav(m, sock, claraWrap("Skripsiku - Review", [
+      return m.reply( claraWrap("Skripsiku - Review", [
         `Review paragraf skripsi (struktur, bahasa, logika).`,
         ``,
         `Contoh:`,
@@ -102,7 +101,7 @@ Sesuaikan dengan standar skripsi Indonesia. Bab 3 harus sesuai jenis penelitian 
       ].join("\n")), { commandName: "skripsiku" });
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const prompt = `Review paragraf skripsi berikut. Beri penilaian dan saran perbaikan.
 
@@ -117,16 +116,16 @@ Format:
 5. Revisi: [versi paragraf yang sudah diperbaiki]`;
 
       const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah reviewer skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
-      return sendReplyWithNav(m, sock, claraWrap("Skripsiku - Review", result), { commandName: "skripsiku" });
+      return m.reply( claraWrap("Skripsiku - Review", result), { commandName: "skripsiku" });
     } catch (e) {
-      return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal review: ${e.message}`), { commandName: "skripsiku" });
+      return m.reply( claraWrap("Error", `Gagal review: ${e.message}`), { commandName: "skripsiku" });
     }
   }
 
   // .skripsiku referensi <topik>
   if (sub === "referensi" || sub === "sumber") {
     if (!input) {
-      return sendReplyWithNav(m, sock, claraWrap("Skripsiku - Referensi", [
+      return m.reply( claraWrap("Skripsiku - Referensi", [
         `Saran referensi pendukung untuk topik.`,
         ``,
         `Contoh:`,
@@ -134,7 +133,7 @@ Format:
       ].join("\n")), { commandName: "skripsiku" });
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const prompt = `Beri 7 saran referensi (jurnal, buku, atau website) untuk topik: "${input}".
 
@@ -145,9 +144,9 @@ Format:
 Minimal 3 referensi jurnal internasional, sisanya bebas (buku/web akademik).`;
 
       const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
-      return sendReplyWithNav(m, sock, claraWrap("Skripsiku - Referensi", `${input}\n\n${result}`), { commandName: "skripsiku" });
+      return m.reply( claraWrap("Skripsiku - Referensi", `${input}\n\n${result}`), { commandName: "skripsiku" });
     } catch (e) {
-      return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal: ${e.message}`), { commandName: "skripsiku" });
+      return m.reply( claraWrap("Error", `Gagal: ${e.message}`), { commandName: "skripsiku" });
     }
   }
 
@@ -161,7 +160,7 @@ Minimal 3 referensi jurnal internasional, sisanya bebas (buku/web akademik).`;
     `3. ${prefix}skripsiku review <paragraf> - Review paragraf`,
     `4. ${prefix}skripsiku referensi <topik> - Saran referensi`,
   ].join("\n")) + "\n" + tipText(`Contoh: ${prefix}skripsiku ide Teknik Informatika`);
-  return sendReplyWithNav(m, sock, txt, { commandName: "skripsiku" });
+  return m.reply( txt, { commandName: "skripsiku" });
 }
 
 export { pluginConfig as config, handler };

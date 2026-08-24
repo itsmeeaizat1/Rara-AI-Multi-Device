@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from '../../src/lib/nova-error.js'
 import axios from 'axios'
@@ -25,7 +24,7 @@ async function handler(m, { sock }) {
     const text = m.args.join(' ')
 
     if (!text) {
-        return sendReplyWithNav(sock, m, claraWrap("Math Gpt", `📐 *Math Gpt*\n\n> Masukkan soal matematika\n\n\`Contoh: ${m.prefix}matematika 2+2 berapa?\``), "matematika")
+        return m.reply(claraWrap("Math Gpt", `📐 *Math Gpt*\n\n> Masukkan soal matematika\n\n\`Contoh: ${m.prefix}matematika 2+2 berapa?\``), "matematika")
     }
 
     m.react('🕐')

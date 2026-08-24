@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "antiremove",
@@ -25,7 +24,7 @@ async function handler(m, { sock, db }) {
 
     if (!action) {
         const status = group.antiremove || 'off'
-        await sendReplyWithNav(sock, m, `🗑️ *AntiRemove*\n\n` +
+        await m.reply( `🗑️ *AntiRemove*\n\n` +
             `Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*\n\n` +
             `\`.antiremove on/off\``, "antiremove")
         return

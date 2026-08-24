@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "aidoc", alias: ["docai", "dokumenai", "summarizedoc"], category: "future",
@@ -15,7 +14,7 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const text = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!text || text.length < 50) {
-      await sendReplyWithNav(sock, m, claraWrap("AI Doc", [`  ┊  ➶ Reply teks panjang dengan *${prefix}aidoc*`,
+      await m.reply( claraWrap("AI Doc", [`  ┊  ➶ Reply teks panjang dengan *${prefix}aidoc*`,
         "  ┊  ➶ AI akan rangkum poin-poin penting",
         "  ┊  ➶ Minimal 50 karakter"].join("\n")), "aidoc");
       return { handled: true };

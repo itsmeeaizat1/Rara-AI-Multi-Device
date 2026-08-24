@@ -5,7 +5,6 @@
 import { getApiKeys } from "../../src/lib/config/env-loader.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
 import fs from "fs";

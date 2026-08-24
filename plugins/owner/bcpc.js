@@ -2,7 +2,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { decodeAndNormalize } from "../../src/lib/nova-lid.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, broadcastFormat } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -36,7 +35,7 @@ async function handler(m, { sock }) {
 
   if (!input) {
     const jeda = db.setting("jedaBcpc") || 5000;
-    return sendReplyWithNav(sock, m, claraWrap("Broadcast Private Chat", [
+    return m.reply( claraWrap("Broadcast Private Chat", [
       `Jeda: ${jeda}ms (${(jeda / 1000).toFixed(1)}s)`,
       "",
       "PENGGUNAAN:",

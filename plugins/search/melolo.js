@@ -2,7 +2,6 @@
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -66,14 +65,14 @@ async function handler(m, { sock }) {
   const category = m.text?.trim();
 
   if (!category) {
-    return sendReplyWithNav(sock, m, `🎭 *MELOLO DRAMA*\n\n> Contoh:\n\`${m.prefix}melolo fantasy\``, "melolo");
+    return m.reply( `🎭 *MELOLO DRAMA*\n\n> Contoh:\n\`${m.prefix}melolo fantasy\``, "melolo");
   }
 
   if (!config.APIkey?.covenant) {
     { const __navText = "❌ API key covenant tidak dikonfigurasi!"; return await m.reply(__navText); };
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const result = await fetchMelolo(category);

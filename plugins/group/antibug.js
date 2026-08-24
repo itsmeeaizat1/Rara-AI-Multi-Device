@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -113,7 +112,7 @@ async function handler(m, { sock }) {
 
   if (!action) {
     const status = groupData.antibug ? "ON" : "OFF";
-    return sendReplyWithNav(m, sock, `Anti Bug\n\n> Status: ${status}\n\n> \`${m.prefix}antibug on/off\``, { commandName: "antibug" });
+    return m.reply( `Anti Bug\n\n> Status: ${status}\n\n> \`${m.prefix}antibug on/off\``, { commandName: "antibug" });
   }
 
   if (action === "on") {

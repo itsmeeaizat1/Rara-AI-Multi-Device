@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -24,10 +23,10 @@ async function handler(m, { sock }) {
   const prompt = m.text?.trim() || m.args.join(" ");
 
   if (!prompt) {
-    { const __navText = "❌ Masukkan deskripsi lagu yang ingin dibuat.\n\nContoh: `.musicmaker Lagu pop romantis yang ceria`"; return await sendReplyWithNav(sock, m, __navText, "musicmaker"); };
+    { const __navText = "❌ Masukkan deskripsi lagu yang ingin dibuat.\n\nContoh: `.musicmaker Lagu pop romantis yang ceria`"; return await m.reply(__navText, "musicmaker"); };
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const apiUrl = `https://api.nexray.eu.cc/ai/suno?prompt=${encodeURIComponent(prompt)}`;

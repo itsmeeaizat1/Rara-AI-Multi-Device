@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -100,7 +99,7 @@ async function handler(m, { sock,  args }) {
     return await m.reply(claraWrap("kalkulatormbg", txt));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const uang = Number(args[0].replace(/[^0-9]/g, ''));

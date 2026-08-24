@@ -5,7 +5,6 @@ import { mconverter } from "../../src/scraper/mconverter.js";
 import { downloadContentFromMessage } from "nova";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "converter",
@@ -43,7 +42,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetFormat) {
-    return sendReplyWithNav(sock, m, `❌ Masukkan format tujuan!\n\n> Contoh: \`${m.prefix}converter mp3\``, "converter");
+    return m.reply( `❌ Masukkan format tujuan!\n\n> Contoh: \`${m.prefix}converter mp3\``, "converter");
   }
 
   const quoted = m.quoted;
@@ -62,7 +61,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Converter", `❌ Reply file yang mau diconvert!`));
   }
 
-  m.react("🕐");
+  m.react("🕒");
   await m.reply(claraWrap("Converter", `🕕 *MENGUNDUH ғILE...*`));
 
   try {

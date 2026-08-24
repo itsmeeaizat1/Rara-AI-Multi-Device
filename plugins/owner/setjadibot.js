@@ -6,7 +6,6 @@
  */
 
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -97,7 +96,7 @@ async function handler(m, { sock }) {
   if (action === "add" || action === "tambah") {
     const target = args[0] || (m.mentionedJid?.[0] || "");
     if (!target) {
-      return sendReplyWithNav(sock, m, `Tag atau ketik nomor yang mau diizinkan.\n\n` +
+      return m.reply( `Tag atau ketik nomor yang mau diizinkan.\n\n` +
         `Contoh: ${m.prefix}setjadibot add @user\n` +
         `Atau: ${m.prefix}setjadibot add 628xxx`, "setjadibot");
     }
@@ -120,7 +119,7 @@ async function handler(m, { sock }) {
   if (action === "remove" || action === "del" || action === "hapus") {
     const target = args[0] || (m.mentionedJid?.[0] || "");
     if (!target) {
-      return sendReplyWithNav(sock, m, `Tag atau ketik nomor yang mau dihapus.\n\n` +
+      return m.reply( `Tag atau ketik nomor yang mau dihapus.\n\n` +
         `Contoh: ${m.prefix}setjadibot remove @user`, "setjadibot");
     }
 

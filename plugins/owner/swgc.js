@@ -7,7 +7,6 @@ import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { handleAntiSwGc } from "../../src/lib/nova-group-protection.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const botConfig = config;
 
@@ -122,7 +121,7 @@ async function handler(m, { sock, db }) {
         groupName = meta.subject;
       } catch (e) { console.error('[swgc.js]:', e.message); }
 
-      await m.react("🕐");
+      await m.react("🕒");
 
       const rawContent = pendingData.rawContent;
       let content = {};

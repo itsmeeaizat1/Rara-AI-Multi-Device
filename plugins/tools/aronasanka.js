@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -35,10 +34,10 @@ async function handler(m, { sock, args }) {
     txt += `1. \`${m.prefix}arona hai arona\`\n`;
     txt += `2. \`${m.prefix}arona cerita dong\`\n`;
     txt += `3. \`${m.prefix}arona sensei lagi sibuk\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "aronasanka" });
+    return await m.reply( txt, { commandName: "aronasanka" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const url = `${API_BASE}/ai/arona?apikey=${API_KEY}&text=${encodeURIComponent(text)}`;
@@ -62,7 +61,7 @@ async function handler(m, { sock, args }) {
     let txt = `Arona\n\n`;
     txt += `${reply}`;
 
-    await sendReplyWithNav(m, sock, txt, { commandName: "aronasanka" });
+    await m.reply( txt, { commandName: "aronasanka" });
     await m.react("✅");
   } catch (e) {
     console.error("[ARONASANKA] Error:", e.message);

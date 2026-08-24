@@ -2,7 +2,6 @@
 import te from "../../src/lib/nova-error.js"
 import { claraLine } from "../../src/lib/nova-menu-style.js";
 
-// Local Nova AI format — replaces claraWrap + sendReplyWithNav
 function claraWrap(title, text) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
@@ -14,7 +13,7 @@ function claraWrap(title, text) {
   }).join("\n");
   return `❀°˖ ${toSC(title)} ˖°❀\n\n${scBody}`;
 }
-async function sendReplyWithNav(sock, m, text, cmdName) {
+async function formatAndReply( text, cmdName) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   // Convert all text to small caps, skip command lines
@@ -54,7 +53,7 @@ async function handler(m, { sock, db }) {
     const delayMatch = action?.match(/^(\d+)(s|ms)?$/)
     
     if (!action || (!["on", "off", "warning", "kick", "delete"].includes(action) && !delayMatch)) {
-        return sendReplyWithNav(sock, m, `🛡️ *ANTI SPAM GROUP*\n\n` +
+        return m.reply( `🛡️ *ANTI SPAM GROUP*\n\n` +
             `Fitur ini melindungi grup dari member yang mengirim pesan berulang-ulang dengan sangat cepat dan brutal sehingga mengganggu kenyamanan member lain\n\n` +
             `*Cara pakai:*\n` +
             `\`${m.prefix}antispam on\` (Aktifkan fitur antispam)\n` +

@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'addantilink',
@@ -24,7 +23,7 @@ function handler(m, { sock }) {
     const link = m.text?.toLowerCase()
     
     if (!link) {
-        return sendReplyWithNav(sock, m, `🔗 *Add Antilink*\n\n` +
+        return m.reply( `🔗 *Add Antilink*\n\n` +
             `Masukkan domain/pattern link yang ingin diblokir\n\n` +
             `\`Contoh:\`\n` +
             `\`${m.prefix}addantilink tiktok.com\`\n` +

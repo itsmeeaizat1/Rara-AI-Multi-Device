@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "techstack",
@@ -94,7 +93,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "techstack <url>\n\n" +
         "Detect teknologi website (40+ signatures)\n" +
         "Deteksi: CMS, Framework, JS lib, CDN, Analytics, Web Server\n\n" +
@@ -105,7 +104,7 @@ async function handler(m, { sock, config: botConfig }) {
       );
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     const result = await detectTech(text);
 

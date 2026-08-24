@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -24,7 +23,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎵 *Tiktok sEarch* 」
+    return m.reply( `╭┈┈⬡「 🎵 *Tiktok sEarch* 」
 ┃
 ┃ ㊗ Usage: \`${m.prefix}ptvsearch <query>\`
 ┃
@@ -33,7 +32,7 @@ async function handler(m, { sock }) {
   ┊  ➶ \`Contoh: ${m.prefix}ptvsearch anime\``, "ptvsearch");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const videos = await tiktokSearchVideo(query);

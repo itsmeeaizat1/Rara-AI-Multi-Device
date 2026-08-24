@@ -3,7 +3,6 @@ import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import fs from "fs";
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "setmenu",

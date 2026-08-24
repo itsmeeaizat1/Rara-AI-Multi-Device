@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegPath from "@ffmpeg-installer/ffmpeg";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
@@ -177,7 +176,7 @@ async function handler(m, { sock }) {
     txt += "3 = Max (360p, ukuran terkecil)\n\n";
     txt += "Format: MP4, MOV, MKV, AVI, WEBM\n";
     txt += "Max durasi: 5 menit | Max ukuran: 100 MB";
-    return sendReplyWithNav(sock, m, txt, "vidcompress");
+    return m.reply( txt, "vidcompress");
   }
 
   const media = await getMediaBuffer(m);
@@ -230,7 +229,7 @@ async function handler(m, { sock }) {
 
       cleanup(inputPath);
       cleanup(outputPath);
-      return sendReplyWithNav(sock, m, txt, "vidcompress");
+      return m.reply( txt, "vidcompress");
     }
 
     // === AUDIO EXTRACT ===

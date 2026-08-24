@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { tipText, claraWrap, broadcastFormat } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -34,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "broadcast");
+      await m.reply( text, "broadcast");
       return { handled: true };
     }
 
@@ -98,7 +97,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
-    await sendReplyWithNav(sock, m, text, "broadcast");
+    await m.reply( text, "broadcast");
   }
 
   return { handled: true };

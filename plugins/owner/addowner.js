@@ -15,7 +15,6 @@ import {
   isLidConverted,
 } from "../../src/lib/nova-lid.js";
 import { getGroupMode } from "../group/botmode.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "addowner",
@@ -210,7 +209,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     : "";
 
   if (!targetNumber) {
-    return sendReplyWithNav(sock, m, `👑 *${isAdd ? "ADD" : "DEL"} OWNER*\n\n` +
+    return m.reply( `👑 *${isAdd ? "ADD" : "DEL"} OWNER*\n\n` +
         `Reply/tag/ketik nomor user\n` +
         `\`Contoh: ${m.prefix}${cmd} 6281234567890\`\n` +
         `\`Dengan nama: ${m.prefix}${cmd} 6281234567890 NamaOwner\``, "addowner");
@@ -264,7 +263,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
         (o) => String(o).trim() === String(targetNumber).trim(),
       );
       if (!found) {
-        return sendReplyWithNav(sock, m, `❌ \`${targetNumber}\` bukan owner panel.\n\n> Current list: ${ownerList.join(", ") || "empty"}`, "addowner");
+        return m.reply( `❌ \`${targetNumber}\` bukan owner panel.\n\n> Current list: ${ownerList.join(", ") || "empty"}`, "addowner");
       }
       config.pterodactyl.ownerPanels = ownerList.filter(
         (s) => String(s).trim() !== String(targetNumber).trim(),

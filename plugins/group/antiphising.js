@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
@@ -29,7 +28,7 @@ function handler(m, { sock }) {
     if (!option) {
         const status = groupData.antiphising || 'off'
         const mode = groupData.antiphisingMode || 'remove'
-        return sendReplyWithNav(sock, m, `🎣 *Antiphising*\n\n` +
+        return m.reply( `🎣 *Antiphising*\n\n` +
             `Status: *${status.toUpperCase()}*\n` +
             `Mode: *${mode.toUpperCase()}*\n\n` +
             `Deteksi pesan phising seperti klik link, verifikasi akun, login palsu, shortener mencurigakan, URL IP, punycode, dan pola sejenis.\n\n` +

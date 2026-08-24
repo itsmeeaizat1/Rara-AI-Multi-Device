@@ -5,7 +5,6 @@ import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "nutrisi",
@@ -164,7 +163,7 @@ async function handler(m, { sock, config: botConfig }) {
       `❏ Tingkat kesehatan makanan`,
       `❏ Tips kesehatan singkat`,
     ].join("\n"));
-    await sendReplyWithNav(sock, m, text, "nutrisi");
+    await m.reply( text, "nutrisi");
     return;
   }
 
@@ -180,7 +179,7 @@ async function handler(m, { sock, config: botConfig }) {
     return;
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     // Download image

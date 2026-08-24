@@ -2,7 +2,6 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -21,10 +20,10 @@ async function handler(m, { sock,  args }) {
   let code = m.quoted?.text || args.join(" ");
 
   if (!code) {
-    return sendReplyWithNav(sock, m, `*🐛 CARI BUG*\n\nKirim kode atau reply pesa{ const __navText = (ug.\n\nContoh:\n\`${m.prefix}caribug function test() {}\``, "caribug");
+    return m.reply( `*🐛 CARI BUG*\n\nKirim kode atau reply pesa{ const __navText = (ug.\n\nContoh:\n\`${m.prefix}caribug function test() {}\``, "caribug");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const apiUrl = `); return await m.reply(__navText); }ttps://api.cuki.biz.id/api/aicode/caribug`;

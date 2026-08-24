@@ -7,7 +7,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 import { updateAssetUrl } from "../../src/lib/nova-uploader.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {

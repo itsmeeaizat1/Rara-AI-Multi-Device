@@ -7,7 +7,6 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 const execAsync = promisify(exec);
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);

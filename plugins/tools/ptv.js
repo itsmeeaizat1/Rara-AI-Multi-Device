@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
@@ -36,7 +35,7 @@ async function handler(m, { sock }) {
     }
     
     if (!video) {
-        return sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
+        return m.reply( `⚠️ *CARA PAKAI*\n\n` +
             `Kirim *video* atau *balas video* lalu ketik:\n` +
             `\`${m.prefix}ptv\``, "ptv")
     }

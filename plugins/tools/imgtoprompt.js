@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 /**
  * @file plugins/tools/imgtoprompt.js
  * @description Plugin untuk mengubah gambar menjadi prompt AI

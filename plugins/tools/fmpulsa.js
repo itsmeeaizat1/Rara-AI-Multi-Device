@@ -3,7 +3,6 @@ import axios from "axios";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // ============================================================
@@ -108,13 +107,13 @@ async function handler(m, { sock }) {
     if (!isOwner) return m.reply(claraWrap("fmpulsa", "Khusus owner!"));
     const cred = arg1;
     if (!cred || !cred.includes(":")) {
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Set API (Owner)\n\n.fm setkey <user_id>:<api_key>\n\nContoh:\n.fm setkey 12345:abc123def456\n\nDaftar: https://fmpedia.id\nAPI Key di: Profile > API"), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Set API (Owner)\n\n.fm setkey <user_id>:<api_key>\n\nContoh:\n.fm setkey 12345:abc123def456\n\nDaftar: https://fmpedia.id\nAPI Key di: Profile > API"), "fmpulsa");
     }
     const [userId, apiKey] = cred.split(":");
     data.userId = userId; data.apiKey = apiKey; data.serviceCache = null;
     saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Credentials tersimpan!\nUser ID: " + userId + "\nAPI Key: " + apiKey.slice(0,6) + "..." + apiKey.slice(-4) + "\n\nCek saldo: .fm saldo"), "fmpulsa");
+    return m.reply( claraWrap("FMPulsa", "Credentials tersimpan!\nUser ID: " + userId + "\nAPI Key: " + apiKey.slice(0,6) + "..." + apiKey.slice(-4) + "\n\nCek saldo: .fm saldo"), "fmpulsa");
   }
 
   // SETMARKUP
@@ -122,11 +121,11 @@ async function handler(m, { sock }) {
     if (!isOwner) return m.reply(claraWrap("fmpulsa", "Khusus owner!"));
     const pct = parseInt(arg1);
     if (isNaN(pct) || pct < 0 || pct > 100) {
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Set Markup (Owner)\n\n.fm setmarkup <persen>\n\nContoh:\n.fm setmarkup 5 (tambah 5%)\n.fm setmarkup 0 (harga pas)\n\nMarkup aktif: " + markup + "%"), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Set Markup (Owner)\n\n.fm setmarkup <persen>\n\nContoh:\n.fm setmarkup 5 (tambah 5%)\n.fm setmarkup 0 (harga pas)\n\nMarkup aktif: " + markup + "%"), "fmpulsa");
     }
     data.markup = pct; saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Markup: " + pct + "%\n\nContoh: Pulsa 50k harga API Rp49.000\nHarga jual: " + formatRupiah(49000 * (1 + pct/100))), "fmpulsa");
+    return m.reply( claraWrap("FMPulsa", "Markup: " + pct + "%\n\nContoh: Pulsa 50k harga API Rp49.000\nHarga jual: " + formatRupiah(49000 * (1 + pct/100))), "fmpulsa");
   }
 
   // TOPUP
@@ -135,18 +134,18 @@ async function handler(m, { sock }) {
     const target = (arg1 || "").replace(/[^0-9]/g, "");
     const amount = parseInt(arg2) || 0;
     if (!target || amount < 100) {
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Topup Saldo (Owner)\n\n.fm topup <nomor> <jumlah>\nContoh: .fm topup 628123456789 50000\nMin: Rp100"), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Topup Saldo (Owner)\n\n.fm topup <nomor> <jumlah>\nContoh: .fm topup 628123456789 50000\nMin: Rp100"), "fmpulsa");
     }
     const targetUser = getUser(data, target + "@s.whatsapp.net");
     targetUser.balance += amount; saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Topup Berhasil!\nUser: " + target + "\nJumlah: " + formatRupiah(amount) + "\nSaldo: " + formatRupiah(targetUser.balance)), "fmpulsa");
+    return m.reply( claraWrap("FMPulsa", "Topup Berhasil!\nUser: " + target + "\nJumlah: " + formatRupiah(amount) + "\nSaldo: " + formatRupiah(targetUser.balance)), "fmpulsa");
   }
 
   // SALDO
   if (sub === "saldo" || sub === "balance") {
-    if (!data.userId || !data.apiKey) return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Belum setup!\nOwner: .fm setkey <user_id>:<api_key>"), "fmpulsa");
-    await m.react("🕐");
+    if (!data.userId || !data.apiKey) return m.reply( claraWrap("FMPulsa", "Belum setup!\nOwner: .fm setkey <user_id>:<api_key>"), "fmpulsa");
+    await m.react("🕒");
     try {
       // FMPedia profile endpoint - cek via profile API
       const result = await fmPost({ key: data.apiKey, sign: sign(data), type: "profile" });
@@ -159,17 +158,17 @@ async function handler(m, { sock }) {
       }
       body += "Saldo Bot: " + formatRupiah(user.balance) + "\n";
       body += "Markup: " + markup + "%";
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", body), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", body), "fmpulsa");
     } catch (err) {
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Saldo Bot: " + formatRupiah(user.balance) + "\nSaldo API: cek di https://fmpedia.id\nMarkup: " + markup + "%\n\nError: " + err.message), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Saldo Bot: " + formatRupiah(user.balance) + "\nSaldo API: cek di https://fmpedia.id\nMarkup: " + markup + "%\n\nError: " + err.message), "fmpulsa");
     }
   }
 
   // KATEGORI
   if (sub === "kategori" || sub === "category") {
-    if (!data.userId || !data.apiKey) return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Belum setup!\nOwner: .fm setkey <user_id>:<api_key>"), "fmpulsa");
-    await m.react("🕐");
+    if (!data.userId || !data.apiKey) return m.reply( claraWrap("FMPulsa", "Belum setup!\nOwner: .fm setkey <user_id>:<api_key>"), "fmpulsa");
+    await m.react("🕒");
     try {
       const services = await getServices(data);
       const cats = {};
@@ -185,21 +184,21 @@ async function handler(m, { sock }) {
       });
       body += "\nCari layanan:\n.fm cari <keyword>";
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", body), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", body), "fmpulsa");
     } catch (err) {
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Error: " + err.message), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Error: " + err.message), "fmpulsa");
     }
   }
 
   // CARI
   if (sub === "cari" || sub === "search") {
-    if (!data.userId || !data.apiKey) return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Belum setup!\nOwner: .fm setkey <user_id>:<api_key>"), "fmpulsa");
+    if (!data.userId || !data.apiKey) return m.reply( claraWrap("FMPulsa", "Belum setup!\nOwner: .fm setkey <user_id>:<api_key>"), "fmpulsa");
     const keyword = (arg1 || "").toLowerCase();
     if (!keyword) {
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Cari Produk\n\n.fm cari <keyword>\n\nContoh:\n.fm cari telkomsel\n.fm cari pln\n.fm cari mobile legend\n.fm cari free fire\n.fm cari genshin\n.fm cari dana\n.fm cari wuthering\n\nLihat kategori: .fm kategori"), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Cari Produk\n\n.fm cari <keyword>\n\nContoh:\n.fm cari telkomsel\n.fm cari pln\n.fm cari mobile legend\n.fm cari free fire\n.fm cari genshin\n.fm cari dana\n.fm cari wuthering\n\nLihat kategori: .fm kategori"), "fmpulsa");
     }
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const services = await getServices(data);
       let filtered = services.filter(s =>
@@ -213,7 +212,7 @@ async function handler(m, { sock }) {
       );
       if (filtered.length === 0) {
         await m.react("✅");
-        return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Tidak ada: " + keyword + "\n\nCoba:\n.fm cari telkomsel\n.fm cari pln\n.fm cari mobile legend\n.fm cari dana"), "fmpulsa");
+        return m.reply( claraWrap("FMPulsa", "Tidak ada: " + keyword + "\n\nCoba:\n.fm cari telkomsel\n.fm cari pln\n.fm cari mobile legend\n.fm cari dana"), "fmpulsa");
       }
       filtered.sort((a, b) => (a.price?.current || 0) - (b.price?.current || 0));
       let body = "FMPulsa - " + keyword + "\n" + filtered.length + " produk\n\n";
@@ -233,37 +232,37 @@ async function handler(m, { sock }) {
       if (filtered.length > 15) body += "... dan " + (filtered.length - 15) + " produk lain\n";
       body += "\nBeli: .fm beli <code> <nomor>\nContoh: .fm beli " + filtered[0].code + " 08123456789";
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", body), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", body), "fmpulsa");
     } catch (err) {
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Error: " + err.message), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Error: " + err.message), "fmpulsa");
     }
   }
 
   // BELI
   if (sub === "beli" || sub === "buy" || sub === "pesan") {
-    if (!data.userId || !data.apiKey) return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Belum setup!\nOwner: .fm setkey <user_id>:<api_key>"), "fmpulsa");
+    if (!data.userId || !data.apiKey) return m.reply( claraWrap("FMPulsa", "Belum setup!\nOwner: .fm setkey <user_id>:<api_key>"), "fmpulsa");
     const serviceCode = arg1, dataNo = arg2;
     if (!serviceCode || !dataNo) {
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Format Beli\n\n.fm beli <service_code> <nomor_tujuan>\n\nContoh:\n.fm beli SL5 08123456789 (Pulsa Tsel 5k)\n.fm beli PLN20 12345678901 (Token PLN 20k)\n.fm beli ML5 123456789 (ML Diamond 5)\n\nCari code:\n.fm cari <keyword>"), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Format Beli\n\n.fm beli <service_code> <nomor_tujuan>\n\nContoh:\n.fm beli SL5 08123456789 (Pulsa Tsel 5k)\n.fm beli PLN20 12345678901 (Token PLN 20k)\n.fm beli ML5 123456789 (ML Diamond 5)\n\nCari code:\n.fm cari <keyword>"), "fmpulsa");
     }
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const services = await getServices(data);
       const svc = services.find(s => s.code === serviceCode);
       if (!svc) {
         await m.react("✅");
-        return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Code tidak ditemukan: " + serviceCode + "\n\nCari: .fm cari <keyword>"), "fmpulsa");
+        return m.reply( claraWrap("FMPulsa", "Code tidak ditemukan: " + serviceCode + "\n\nCari: .fm cari <keyword>"), "fmpulsa");
       }
       if (svc.status !== "ready") {
         await m.react("✅");
-        return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Layanan sedang gangguan!\n\nLayanan: " + svc.name + "\nStatus: " + svc.status), "fmpulsa");
+        return m.reply( claraWrap("FMPulsa", "Layanan sedang gangguan!\n\nLayanan: " + svc.name + "\nStatus: " + svc.status), "fmpulsa");
       }
       const basePrice = svc.price?.current || svc.price?.list?.basic || 0;
       const price = calcPrice(basePrice, markup);
       if (user.balance < price) {
         await m.react("✅");
-        return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Saldo tidak cukup!\n\nHarga: " + formatRupiah(price) + "\nSaldo: " + formatRupiah(user.balance) + "\nKurang: " + formatRupiah(price - user.balance) + "\n\nMinta topup:\n.fm topup " + sender.split("@")[0] + " <jumlah>"), "fmpulsa");
+        return m.reply( claraWrap("FMPulsa", "Saldo tidak cukup!\n\nHarga: " + formatRupiah(price) + "\nSaldo: " + formatRupiah(user.balance) + "\nKurang: " + formatRupiah(price - user.balance) + "\n\nMinta topup:\n.fm topup " + sender.split("@")[0] + " <jumlah>"), "fmpulsa");
       }
       const token = genToken();
       data.pendingPayments[token] = {
@@ -285,24 +284,24 @@ async function handler(m, { sock }) {
       body += "Saldo: " + formatRupiah(user.balance) + "\n";
       body += "Sisa: " + formatRupiah(user.balance - price) + "\n";
       body += "\nToken: " + token + "\n\nBayar: .fm bayar " + token + "\nExpired: 5 menit";
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", body), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", body), "fmpulsa");
     } catch (err) {
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Error: " + err.message), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Error: " + err.message), "fmpulsa");
     }
   }
 
   // BAYAR - Execute order, send to API
   if (sub === "bayar" || sub === "pay" || sub === "confirm") {
     const token = arg1 ? arg1.toUpperCase() : "";
-    if (!token) return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Masukkan token!\nContoh: .fm bayar ABC123"), "fmpulsa");
+    if (!token) return m.reply( claraWrap("FMPulsa", "Masukkan token!\nContoh: .fm bayar ABC123"), "fmpulsa");
     const pending = data.pendingPayments[token];
-    if (!pending) return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Token tidak ditemukan!"), "fmpulsa");
-    if (pending.sender !== sender) return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Bukan token kamu!"), "fmpulsa");
-    if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Token expired!"), "fmpulsa"); }
+    if (!pending) return m.reply( claraWrap("FMPulsa", "Token tidak ditemukan!"), "fmpulsa");
+    if (pending.sender !== sender) return m.reply( claraWrap("FMPulsa", "Bukan token kamu!"), "fmpulsa");
+    if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("FMPulsa", "Token expired!"), "fmpulsa"); }
     const u = getUser(data, sender);
-    if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Saldo tidak cukup!"), "fmpulsa"); }
-    await m.react("🕐");
+    if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("FMPulsa", "Saldo tidak cukup!"), "fmpulsa"); }
+    await m.react("🕒");
     try {
       u.balance -= pending.price;
       u.totalSpent += pending.price;
@@ -342,24 +341,24 @@ async function handler(m, { sock }) {
         saveData(data);
         body += "\n\nGagal. Saldo di-refund.";
       }
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", body), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", body), "fmpulsa");
     } catch (err) {
       u.balance += pending.price;
       u.totalSpent -= pending.price;
       delete data.pendingPayments[token];
       saveData(data);
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Gagal order! Saldo di-refund.\n\nError: " + err.message), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Gagal order! Saldo di-refund.\n\nError: " + err.message), "fmpulsa");
     }
   }
 
   // CEK
   if (sub === "cek" || sub === "check" || sub === "status") {
     const refId = arg1;
-    if (!refId) return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Masukkan Ref ID!\nContoh: .fm cek FM1234ABC"), "fmpulsa");
+    if (!refId) return m.reply( claraWrap("FMPulsa", "Masukkan Ref ID!\nContoh: .fm cek FM1234ABC"), "fmpulsa");
     const order = data.orders.find(o => o.refId === refId && o.sender === sender);
-    if (!order && !isOwner) return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Order tidak ditemukan!"), "fmpulsa");
-    await m.react("🕐");
+    if (!order && !isOwner) return m.reply( claraWrap("FMPulsa", "Order tidak ditemukan!"), "fmpulsa");
+    await m.react("🕒");
     try {
       const result = await checkStatus(data, refId);
       const statusData = Array.isArray(result) ? result[0] : result;
@@ -386,17 +385,17 @@ async function handler(m, { sock }) {
       if (statusData.status === "success" && statusData.voucher) body += "\n*Transaksi Berhasil!*";
       else if (statusData.status === "waiting") body += "\nMasih pending... cek lagi nanti";
       else if (statusData.status === "failed" || statusData.status === "error") body += "\nGagal. Saldo di-refund.";
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", body), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", body), "fmpulsa");
     } catch (err) {
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Error: " + err.message), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Error: " + err.message), "fmpulsa");
     }
   }
 
   // LIST
   if (sub === "list" || sub === "riwayat" || sub === "history") {
     const myOrders = data.orders.filter(o => o.sender === sender);
-    if (myOrders.length === 0) return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Belum ada order.\nCari: .fm cari <keyword>\nBeli: .fm beli <code> <nomor>"), "fmpulsa");
+    if (myOrders.length === 0) return m.reply( claraWrap("FMPulsa", "Belum ada order.\nCari: .fm cari <keyword>\nBeli: .fm beli <code> <nomor>"), "fmpulsa");
     let body = "Riwayat Order (" + myOrders.length + ")\n\n";
     myOrders.slice(-10).reverse().forEach((o, i) => {
       body += (i+1) + ". " + o.refId + "\n   " + (o.serviceName || "?").substring(0, 50) + "\n   " + o.dataNo + " | " + formatRupiah(o.price) + "\n   " + o.status;
@@ -404,21 +403,21 @@ async function handler(m, { sock }) {
       body += "\n";
     });
     body += "\n.fm cek <ref_id> - cek status";
-    return sendReplyWithNav(sock, m, claraWrap("FMPulsa", body), "fmpulsa");
+    return m.reply( claraWrap("FMPulsa", body), "fmpulsa");
   }
 
   // REFRESH
   if (sub === "refresh" || sub === "sync") {
     if (!isOwner) return m.reply(claraWrap("fmpulsa", "Khusus owner!"));
-    if (!data.userId || !data.apiKey) return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Belum setup!"), "fmpulsa");
-    await m.react("🕐");
+    if (!data.userId || !data.apiKey) return m.reply( claraWrap("FMPulsa", "Belum setup!"), "fmpulsa");
+    await m.react("🕒");
     try {
       const services = await getServices(data, true);
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Cache di-refresh!\nTotal layanan: " + services.length), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Cache di-refresh!\nTotal layanan: " + services.length), "fmpulsa");
     } catch (err) {
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("FMPulsa", "Error: " + err.message), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Error: " + err.message), "fmpulsa");
     }
   }
 
@@ -439,7 +438,7 @@ async function handler(m, { sock }) {
   if (isOwner) {
     body += "\n\n--- Owner ---\n.fm setkey <user_id>:<api_key>\n.fm setmarkup <persen>\n.fm topup <nomor> <jumlah>\n.fm refresh\nAPI: https://fmpedia.id/api/prepaid\nDaftar: https://fmpedia.id";
   }
-  return sendReplyWithNav(sock, m, claraWrap("FMPulsa", body), "fmpulsa");
+  return m.reply( claraWrap("FMPulsa", body), "fmpulsa");
 }
 
 export { pluginConfig as config, handler };

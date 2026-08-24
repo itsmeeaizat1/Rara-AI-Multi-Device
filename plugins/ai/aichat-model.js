@@ -3,7 +3,6 @@ import {
   separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { DEFAULT_PROVIDERS, resolveProvider } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "aichat-model",
@@ -45,7 +44,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "aichat-model");
+      await m.reply(text, "aichat-model");
       return { handled: true };
     }
 
@@ -57,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "aichat-model");
+      await m.reply(text, "aichat-model");
       return { handled: true };
     }
 
@@ -73,7 +72,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
-      await sendReplyWithNav(sock, m, text, "aichat-model");
+      await m.reply(text, "aichat-model");
       return { handled: true };
     }
 
@@ -108,7 +107,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
-    await sendReplyWithNav(sock, m, text, "aichat-model");
+    await m.reply(text, "aichat-model");
   }
 
   return { handled: true };

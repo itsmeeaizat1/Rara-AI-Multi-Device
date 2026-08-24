@@ -3,7 +3,6 @@
 // Toggle: .toggleautovn on/off  (owner only)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, tipText, separator } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -46,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
         "3. Translate ke bahasa target",
         "4. Balas dengan VN suara natural",
       ].join("\n")) + "\n" + tipText("Ketik " + prefix + "toggleautovn off untuk matikan");
-      await sendReplyWithNav(sock, m, text, "toggleautovn");
+      await m.reply( text, "toggleautovn");
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
@@ -54,7 +53,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Status: OFF",
         "Auto VN translate dimatikan di chat ini",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "toggleautovn");
+      await m.reply( text, "toggleautovn");
     } else if (args[0] === "lang") {
       const lang = args[1] || "id";
       const supported = ["id", "en", "su", "jv", "ar", "ja", "ko", "zh"];
@@ -63,7 +62,7 @@ async function handler(m, { sock, config: botConfig }) {
           "Bahasa tidak didukung!",
           "Tersedia: " + supported.join(", "),
         ].join("\n"));
-        await sendReplyWithNav(sock, m, text, "toggleautovn");
+        await m.reply( text, "toggleautovn");
         return { handled: true };
       }
       if (!cfg[gid]) cfg[gid] = {};
@@ -75,7 +74,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Bahasa target diubah: " + (langNames[lang] || lang),
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "toggleautovn");
+      await m.reply( text, "toggleautovn");
     } else {
       // Status
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
@@ -88,7 +87,7 @@ async function handler(m, { sock, config: botConfig }) {
         prefix + "toggleautovn on/off — Toggle",
         prefix + "toggleautovn lang <kode> — Set bahasa",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "toggleautovn");
+      await m.reply( text, "toggleautovn");
     }
   } catch (e) {
     await m.reply("Error: " + e.message);

@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "aihadith", alias: ["hadithai", "carihadis"], category: "future",
@@ -15,7 +14,7 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const query = m.text?.trim();
     if (!query) {
-      await sendReplyWithNav(sock, m, claraWrap("AI Hadith", [`  ┊  ➶ Penggunaan: *${prefix}aihadith <topik>*`,
+      await m.reply( claraWrap("AI Hadith", [`  ┊  ➶ Penggunaan: *${prefix}aihadith <topik>*`,
         `  ┊  ➶ Contoh: *${prefix}aihadith hadis tentang sabar*`].join("\n")), "aihadith");
       return { handled: true };
     }

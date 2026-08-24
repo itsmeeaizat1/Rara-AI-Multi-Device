@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
@@ -188,7 +187,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (text.toLowerCase() === "list" || text.toLowerCase() === "models") {
     const currentModel = FREE_MODELS[session.model]?.label || session.model;
     const body = `Model aktif: ${currentModel}\n\n${formatModelList()}\nGanti model: .openrouter model <nama>`;
-    return sendReplyWithNav(m, sock, claraWrap("OpenRouter Models", body));
+    return m.reply( claraWrap("OpenRouter Models", body));
   }
 
   // Sub-command: model <nama>
@@ -225,17 +224,17 @@ async function handler(m, { sock, config: botConfig }) {
   // Validasi API key sebelum chat
   if (!apiKey) {
     const help = `API key OpenRouter belum diatur.\n\nDaftar gratis di https://openrouter.ai/keys\n\nSet key (owner only):\n.openrouter setkey sk-or-v1-xxxxx\n\nAtau set di config.js:\nAPIkey: { openrouter: "sk-or-v1-xxxxx" }`;
-    return sendReplyWithNav(m, sock, claraWrap("OpenRouter Setup", help));
+    return m.reply( claraWrap("OpenRouter Setup", help));
   }
 
   // Validasi pesan
   if (!text) {
     const currentModel = FREE_MODELS[session.model]?.label || session.model;
     const help = `Model aktif: ${currentModel}\n\nCara pakai:\n.openrouter <pesan> — Chat dengan model aktif\n.openrouter model <nama> — Ganti model\n.openrouter list — Lihat semua model\n.openrouter reset — Reset sesi`;
-    return sendReplyWithNav(m, sock, claraWrap("OpenRouter", help));
+    return m.reply( claraWrap("OpenRouter", help));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     // Resolve model ID

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import axios from 'axios'
 import * as cheerio from 'cheerio'
 import crypto from 'crypto'
@@ -123,7 +122,7 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
 
     if (!url) {
-        return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎵 *Tiktok Download* 」\n` +
+        return m.reply( `╭┈┈⬡「 🎵 *Tiktok Download* 」\n` +
             `┃ ㊗ Usage: \`${m.prefix}tiktok2 <url>\`\n` +
             `╰┈┈⬡\n\n` +
             `Contoh: ${m.prefix}tiktok2 https://vt.tiktok.com/xxx`, "tiktok2")

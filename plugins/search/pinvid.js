@@ -12,7 +12,6 @@ import {
 } from "nova";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const execAsync = promisify(exec);
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
@@ -43,12 +42,12 @@ async function handler(m, { sock }) {
   const query = m.text?.trim();
 
   if (!query) {
-    return sendReplyWithNav(sock, m, `📌 *Pinterest Video sEarch*\n\n` +
+    return m.reply( `📌 *Pinterest Video sEarch*\n\n` +
         `Masukkan query pencarian\n\n` +
         `\`${m.prefix}pinvid anime\``, "pinvid");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const res = await axios.get(
@@ -64,7 +63,7 @@ async function handler(m, { sock }) {
 
     const videos = res.data.data.slice(0, 5);
 
-    m.react("🕐");
+    m.react("🕒");
 
     const tempDir = path.join(process.cwd(), "temp");
     if (!fs.existsSync(tempDir)) {

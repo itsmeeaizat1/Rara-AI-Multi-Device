@@ -2,7 +2,6 @@
 import { FeelBetter } from "../../src/scraper/feeb.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -24,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return sendReplyWithNav(sock, m, `💚 *FeelBetterBot*\n\n` +
+    return m.reply( `💚 *FeelBetterBot*\n\n` +
         `AI yang siap mendengarkan curhatan kamu — tanpa menghakimi, dengan hangat dan empatik.\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}feelbetter <curhatan>*\n\n` +
@@ -34,7 +33,7 @@ async function handler(m, { sock }) {
         `_Bot ini bukan pengganti profesional, tapi bisa jadi tempat curhat yang aman_`, "feelbetter");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await FeelBetter(text);

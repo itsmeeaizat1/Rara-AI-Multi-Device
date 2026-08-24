@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import config from "../../config.js";
@@ -24,10 +23,10 @@ async function handler(m, { sock }) {
   const query = m.text?.trim();
 
   if (!query) {
-    return sendReplyWithNav(sock, m, `🔞 *XNXX Search*\n\nMasukkan query pencarian\n\nContoh: \`${m.prefix}xnxx amateur\``, "xnxx");
+    return m.reply( `🔞 *XNXX Search*\n\nMasukkan query pencarian\n\nContoh: \`${m.prefix}xnxx amateur\``, "xnxx");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const res = await axios.get(
@@ -36,7 +35,7 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data || res.data.data.length === 0) {
-      return sendReplyWithNav(sock, m, `❌ Tidak ditemukan hasil untuk: ${query}`, "xnxx");
+      return m.reply( `❌ Tidak ditemukan hasil untuk: ${query}`, "xnxx");
     }
 
     const results = res.data.data.slice(0, 5);
@@ -49,12 +48,12 @@ async function handler(m, { sock }) {
       text += `   Link: ${r.url || r.link || "-"}\n\n`;
     }
     text += `_NSFW content - 18+ only_`;
-    await sendReplyWithNav(sock, m, text, "xnxx");
+    await m.reply( text, "xnxx");
     await m.react("✅");
   } catch (err) {
     console.error("[XNXX] Error:", err.message);
     await m.react("❌");
-    return sendReplyWithNav(sock, m, te(m.prefix, m.command, m.pushName), "xnxx");
+    return m.reply( te(m.prefix, m.command, m.pushName), "xnxx");
   }
 }
 

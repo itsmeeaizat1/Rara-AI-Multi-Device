@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -32,10 +31,10 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}carijurnal machine learning\`\n`;
     txt += `\`${m.prefix}carijurnal deep learning 10\`\n\n`;
     txt += `_OpenAlex: 250M+ paper, free, no API key_`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "carijurnal" });
+    return await m.reply( txt, { commandName: "carijurnal" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     let limit = 5;

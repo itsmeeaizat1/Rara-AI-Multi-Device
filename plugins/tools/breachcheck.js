@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import crypto from "crypto";
 
 const pluginConfig = {
@@ -92,7 +91,7 @@ async function handler(m, { sock }) {
 
   // ===== HELP =====
   if (!sub || sub === "help" || sub === "menu") {
-    return sendReplyWithNav(sock, m, claraWrap("Breach Check", [
+    return m.reply( claraWrap("Breach Check", [
       "Cek apakah password/email pernah bocor di data breach",
       "",
       "CARA PAKAI:",
@@ -223,7 +222,7 @@ async function handler(m, { sock }) {
   }
 
   // DEFAULT - help
-  return sendReplyWithNav(sock, m, claraWrap("Breach Check", [
+  return m.reply( claraWrap("Breach Check", [
     "Pilih mode cek:",
     "",
     m.prefix + "breachcheck pass <password> — Cek password di HIBP",

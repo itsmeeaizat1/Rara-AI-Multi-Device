@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 import { enableAutoBackup, disableAutoBackup, getBackupStatus, triggerManualBackup, formatInterval } from '../../src/lib/nova-auto-backup.js'
@@ -54,7 +53,7 @@ async function handler(m, { sock }) {
     txt += `*Contoh:*\n`;
     txt += `\`${m.prefix}autobackup on 6h\` - backup setiap 6 jam`;
 
-    return await sendReplyWithNav(sock, m, txt, "autobackup");
+    return await m.reply( txt, "autobackup");
   }
 
   switch (action) {
@@ -128,7 +127,7 @@ async function handler(m, { sock }) {
     case "now":
     case "manual":
     case "trigger": {
-      await m.react("🕐");
+      await m.react("🕒");
       await m.reply(
         `🕕 *Membuat Backup...*\n\n> Mohon tunggu, sedang membuat backup...`,
       );

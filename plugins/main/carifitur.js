@@ -6,7 +6,6 @@ import path from "path";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { fileURLToPath } from "url";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -142,7 +141,7 @@ async function loadAllPlugins() {
 async function handler(m, { sock }) {
   const keyword = m.text;
   if (!keyword) {
-    return sendReplyWithNav(sock, m, `🔍 *Cari Fitur*\n\n` +
+    return m.reply( `🔍 *Cari Fitur*\n\n` +
       `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
       `┃ \`${m.prefix}carifitur <keyword>\`\n` +
       `╰┈┈⬡\n\n` +
@@ -151,7 +150,7 @@ async function handler(m, { sock }) {
       `\`${m.prefix}carifitur download\`\n` +
       `\`${m.prefix}carifitur game\``, "carifitur");
   }
-  m.react("🕐");
+  m.react("🕒");
   try {
     const allPlugins = await loadAllPlugins();
     const matches = [];

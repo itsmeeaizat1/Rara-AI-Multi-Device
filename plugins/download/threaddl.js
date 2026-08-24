@@ -2,7 +2,6 @@
 import axios from "axios";
 import he from "he";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const BASE_URL = "https://workers-playground-cool-wood-c008.accoutydusra.workers.dev";
@@ -61,10 +60,10 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
   
   if (!url || !/threads/i.test(url)) {
-    { const __navText = "❌ *Waduh, Link Threads-nya mana nih?*\n\nKamu harus memasukkan tautan (link) dari postingan Threads yang ingin diunduh. Pastikan linknya benar ya! \n\nContoh: `.tdl https://www.threads.net/@zuck/post/xxx`"; return await sendReplyWithNav(sock, m, __navText, "threaddl"); };
+    { const __navText = "❌ *Waduh, Link Threads-nya mana nih?*\n\nKamu harus memasukkan tautan (link) dari postingan Threads yang ingin diunduh. Pastikan linknya benar ya! \n\nContoh: `.tdl https://www.threads.net/@zuck/post/xxx`"; return await m.reply( __navText, "threaddl"); };
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const res = await axios.get(BASE_URL, {

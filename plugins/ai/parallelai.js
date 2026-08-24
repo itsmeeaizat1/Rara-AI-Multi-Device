@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { parallelAI } from "../../src/scraper/parallelai.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -35,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
         "",
         "Parallel AI adalah reasoning model yang bisa jawab pertanyaan kompleks dengan effort adjustable (low/medium/high).",
       ].join("\n"));
-      return await sendReplyWithNav(sock, m, text, "parallelai");
+      return await m.reply(text, "parallelai");
     }
 
     // Detect effort level from prompt: !high, !medium, !low
@@ -56,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     if (!response || !response.trim()) {
-      return await sendReplyWithNav(sock, m, claraWrap("Error", ["Parallel AI tidak memberikan respons. Coba lagi nanti."].join("\n")), "parallelai");
+      return await m.reply(claraWrap("Error", ["Parallel AI tidak memberikan respons. Coba lagi nanti."].join("\n")), "parallelai");
     }
 
     // Clean markdown for WhatsApp
@@ -70,7 +69,7 @@ async function handler(m, { sock, config: botConfig }) {
     const header = effort !== "low" ? `Parallel AI (effort: ${effort})` : "Parallel AI";
     const text = claraWrap(header, cleanRes);
 
-    return await sendReplyWithNav(sock, m, text, "parallelai");
+    return await m.reply(text, "parallelai");
   } catch (err) {
     te.error("parallelai", err);
     const errMsg = err?.message?.includes("API key")
@@ -78,7 +77,7 @@ async function handler(m, { sock, config: botConfig }) {
       : err?.message?.includes("401") || err?.message?.includes("403")
         ? "API key tidak valid atau expired."
         : `Error: ${err?.message || "Terjadi kesalahan"}`;
-    return await sendReplyWithNav(sock, m, claraWrap("Error", [errMsg].join("\n")), "parallelai");
+    return await m.reply(claraWrap("Error", [errMsg].join("\n")), "parallelai");
   }
 }
 

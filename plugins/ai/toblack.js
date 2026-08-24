@@ -4,7 +4,6 @@ import { uploadImage } from "../../src/lib/nova-uploader.js";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
 import { live3d } from "../../src/scraper/seaart.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "toblack",
@@ -26,7 +25,7 @@ async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!isImage) {
-    return sendReplyWithNav(sock, m, claraWrap("Black sTyle", `🖤 *Black sTyle*\n\n> Kirim/reply gambar\n\n\`${m.prefix}toblack\``), "toblack");
+    return m.reply(claraWrap("Black sTyle", `🖤 *Black sTyle*\n\n> Kirim/reply gambar\n\n\`${m.prefix}toblack\``), "toblack");
   }
 
   const PROMPT = `Transform skin tone to a darker complexion, maintain facial features, realistic shadows, high detail, natural skin texture, no distortion`;
@@ -43,7 +42,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("toblack", `❌ Gagal mendownload gambar`));
     }
 
-    m.react("🕐");
+    m.react("🕒");
 
     const result = await live3d(buffer, PROMPT);
 

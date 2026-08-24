@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "antiflood",
@@ -192,7 +191,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // HELP
-    return sendReplyWithNav(sock, m, claraWrap("Anti Flood", [
+    return m.reply( claraWrap("Anti Flood", [
       "Deteksi banjir pesan (flood) di grup",
       "",
       "Bedanya sama antispam: antiflood fokus ke KECEPATAN pesan",

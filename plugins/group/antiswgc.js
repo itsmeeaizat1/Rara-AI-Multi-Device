@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
@@ -27,7 +26,7 @@ async function handler(m, { sock,  db }) {
 
     if (!action) {
         const status = group.antiswgc || 'off'
-        await sendReplyWithNav(sock, m, `📡 *Antiswgc*\n\n` +
+        await m.reply( `📡 *Antiswgc*\n\n` +
             `Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*\n\n` +
             `Fitur ini mendeteksi tipe SW group mention seperti:\n` +
             `• groupStatusMentionMessage\n` +

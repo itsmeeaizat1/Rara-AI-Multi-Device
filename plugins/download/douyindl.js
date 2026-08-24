@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -37,7 +36,7 @@ async function douyinFetch(url, retries = 3) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return sendReplyWithNav(sock, m, `🎵 *Douyin Downloader*\n\n` +
+    return m.reply( `🎵 *Douyin Downloader*\n\n` +
         `Download video atau audio dari Douyin (TikTok China).\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}douyindl <link>*\n\n` +
@@ -45,7 +44,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}douyindl https://v.douyin.com/xxx*`, "douyindl");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const data = await douyinFetch(text);

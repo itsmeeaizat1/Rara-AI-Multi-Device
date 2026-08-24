@@ -4,7 +4,6 @@ import fs from "fs";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "brat",
@@ -144,10 +143,10 @@ async function handler(m, { sock }) {
   }
 
   if (!text) {
-    return sendReplyWithNav(sock, m, `🖼️ *Brat Image*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratimg Hai semua\``, "brat");
+    return m.reply( `🖼️ *Brat Image*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratimg Hai semua\``, "brat");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const url = novaApi.yupra.url("/api/image/brat", { text });

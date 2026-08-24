@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import { uploadImage } from '../../src/lib/nova-uploader.js'
@@ -57,7 +56,7 @@ async function handler(m, { sock }) {
         }
 
         if (!textToQuote && !mainMsg.isMedia) {
-            { const __navText = `❌ *FORMAT SALAH*\n\nKirim perintah \`.qwa <teks>\` atau reply pesan orang lain dengan \`.qwa\`.`; return await sendReplyWithNav(sock, m, __navText, "qwa"); }
+            { const __navText = `❌ *FORMAT SALAH*\n\nKirim perintah \`.qwa <teks>\` atau reply pesan orang lain dengan \`.qwa\`.`; return await m.reply( __navText, "qwa"); }
         }
         await m.react('🕐')
         const msgTime = mainMsg.messageTimestamp ? new Date(mainMsg.messageTimestamp * 1000) : new Date()

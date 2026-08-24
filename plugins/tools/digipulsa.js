@@ -3,7 +3,6 @@ import axios from "axios";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // ============================================================
@@ -101,13 +100,13 @@ async function handler(m, { sock }) {
     if (!isOwner) return m.reply(claraWrap(" + username + ", "Khusus owner!"));
     const cred = arg1;
     if (!cred || !cred.includes(":")) {
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Set API (Owner)\n\n.dg setkey <username>:<apiKey>\n\nContoh:\n.dg setkey user123:abc123def456\n\nDaftar: https://digiflazz.com\nAPI settings: Profile > Koneksi API"), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Set API (Owner)\n\n.dg setkey <username>:<apiKey>\n\nContoh:\n.dg setkey user123:abc123def456\n\nDaftar: https://digiflazz.com\nAPI settings: Profile > Koneksi API"), "digipulsa");
     }
     const [username, apiKey] = cred.split(":");
     data.username = username; data.apiKey = apiKey; data.priceCache = null;
     saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Credentials tersimpan!\nUsername: " + username + "\nAPI Key: " + apiKey.slice(0,6) + "..." + apiKey.slice(-4) + "\n\nCek saldo: .dg saldo"), "digipulsa");
+    return m.reply( claraWrap("DigiPulsa", "Credentials tersimpan!\nUsername: " + username + "\nAPI Key: " + apiKey.slice(0,6) + "..." + apiKey.slice(-4) + "\n\nCek saldo: .dg saldo"), "digipulsa");
   }
 
   // SETMARKUP
@@ -115,11 +114,11 @@ async function handler(m, { sock }) {
     if (!isOwner) return m.reply(claraWrap(" + username + ", "Khusus owner!"));
     const pct = parseInt(arg1);
     if (isNaN(pct) || pct < 0 || pct > 100) {
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Set Markup (Owner)\n\n.dg setmarkup <persen>\n\nContoh:\n.dg setmarkup 5 (tambah 5%)\n.dg setmarkup 0 (harga pas)\n\nMarkup aktif: " + markup + "%"), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Set Markup (Owner)\n\n.dg setmarkup <persen>\n\nContoh:\n.dg setmarkup 5 (tambah 5%)\n.dg setmarkup 0 (harga pas)\n\nMarkup aktif: " + markup + "%"), "digipulsa");
     }
     data.markup = pct; saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Markup: " + pct + "%\n\nContoh: Pulsa 50k harga API Rp49.000\nHarga jual: " + formatRupiah(49000 * (1 + pct/100))), "digipulsa");
+    return m.reply( claraWrap("DigiPulsa", "Markup: " + pct + "%\n\nContoh: Pulsa 50k harga API Rp49.000\nHarga jual: " + formatRupiah(49000 * (1 + pct/100))), "digipulsa");
   }
 
   // TOPUP
@@ -128,18 +127,18 @@ async function handler(m, { sock }) {
     const target = (arg1 || "").replace(/[^0-9]/g, "");
     const amount = parseInt(arg2) || 0;
     if (!target || amount < 100) {
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Topup Saldo (Owner)\n\n.dg topup <nomor> <jumlah>\nContoh: .dg topup 628123456789 50000\nMin: Rp100"), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Topup Saldo (Owner)\n\n.dg topup <nomor> <jumlah>\nContoh: .dg topup 628123456789 50000\nMin: Rp100"), "digipulsa");
     }
     const targetUser = getUser(data, target + "@s.whatsapp.net");
     targetUser.balance += amount; saveData(data);
     await m.react("✅");
-    return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Topup Berhasil!\nUser: " + target + "\nJumlah: " + formatRupiah(amount) + "\nSaldo: " + formatRupiah(targetUser.balance)), "digipulsa");
+    return m.reply( claraWrap("DigiPulsa", "Topup Berhasil!\nUser: " + target + "\nJumlah: " + formatRupiah(amount) + "\nSaldo: " + formatRupiah(targetUser.balance)), "digipulsa");
   }
 
   // SALDO
   if (sub === "saldo" || sub === "balance") {
-    if (!data.username || !data.apiKey) return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Belum setup!\nOwner: .dg setkey <username>:<apiKey>"), "digipulsa");
-    await m.react("🕐");
+    if (!data.username || !data.apiKey) return m.reply( claraWrap("DigiPulsa", "Belum setup!\nOwner: .dg setkey <username>:<apiKey>"), "digipulsa");
+    await m.react("🕒");
     try {
       const saldo = await cekSaldo(data);
       await m.react("✅");
@@ -147,17 +146,17 @@ async function handler(m, { sock }) {
       body += "Saldo API: " + formatRupiah(saldo) + "\n";
       body += "Saldo Bot: " + formatRupiah(user.balance) + "\n";
       body += "Markup: " + markup + "%";
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", body), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
     }
   }
 
   // KATEGORI
   if (sub === "kategori" || sub === "category") {
-    if (!data.username || !data.apiKey) return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Belum setup!\nOwner: .dg setkey <username>:<apiKey>"), "digipulsa");
-    await m.react("🕐");
+    if (!data.username || !data.apiKey) return m.reply( claraWrap("DigiPulsa", "Belum setup!\nOwner: .dg setkey <username>:<apiKey>"), "digipulsa");
+    await m.react("🕒");
     try {
       const products = await getPriceList(data);
       const cats = {};
@@ -173,21 +172,21 @@ async function handler(m, { sock }) {
       });
       body += "\nCari produk:\n.dg cari <keyword>";
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", body), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
     }
   }
 
   // CARI
   if (sub === "cari" || sub === "search" || sub === "carijasa") {
-    if (!data.username || !data.apiKey) return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Belum setup!\nOwner: .dg setkey <username>:<apiKey>"), "digipulsa");
+    if (!data.username || !data.apiKey) return m.reply( claraWrap("DigiPulsa", "Belum setup!\nOwner: .dg setkey <username>:<apiKey>"), "digipulsa");
     const keyword = (arg1 || "").toLowerCase();
     if (!keyword) {
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Cari Produk\n\n.dg cari <keyword>\n\nContoh:\n.dg cari telkomsel\n.dg cari pln\n.dg cari mobile legend\n.dg cari free fire\n.dg cari genshin\n.dg cari dana\n.dg cari wifi\n\nLihat kategori: .dg kategori"), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Cari Produk\n\n.dg cari <keyword>\n\nContoh:\n.dg cari telkomsel\n.dg cari pln\n.dg cari mobile legend\n.dg cari free fire\n.dg cari genshin\n.dg cari dana\n.dg cari wifi\n\nLihat kategori: .dg kategori"), "digipulsa");
     }
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const products = await getPriceList(data);
       let filtered = products.filter(p =>
@@ -201,7 +200,7 @@ async function handler(m, { sock }) {
       );
       if (filtered.length === 0) {
         await m.react("✅");
-        return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Tidak ada: " + keyword + "\n\nCoba:\n.dg cari telkomsel\n.dg cari pln\n.dg cari mobile legend\n.dg cari dana"), "digipulsa");
+        return m.reply( claraWrap("DigiPulsa", "Tidak ada: " + keyword + "\n\nCoba:\n.dg cari telkomsel\n.dg cari pln\n.dg cari mobile legend\n.dg cari dana"), "digipulsa");
       }
       filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
       let body = "DigiPulsa - " + keyword + "\n" + filtered.length + " produk\n\n";
@@ -219,36 +218,36 @@ async function handler(m, { sock }) {
       if (filtered.length > 15) body += "... dan " + (filtered.length - 15) + " produk lain\n";
       body += "\nBeli: .dg beli <sku_code> <nomor>\nContoh: .dg beli " + filtered[0].buyer_sku_code + " 08123456789";
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", body), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
     }
   }
 
   // BELI
   if (sub === "beli" || sub === "buy" || sub === "pesan") {
-    if (!data.username || !data.apiKey) return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Belum setup!\nOwner: .dg setkey <username>:<apiKey>"), "digipulsa");
+    if (!data.username || !data.apiKey) return m.reply( claraWrap("DigiPulsa", "Belum setup!\nOwner: .dg setkey <username>:<apiKey>"), "digipulsa");
     const sku = arg1, customerNo = arg2;
     if (!sku || !customerNo) {
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Format Beli\n\n.dg beli <sku_code> <nomor_tujuan>\n\nContoh:\n.dg beli S5 08123456789 (Pulsa Tsel 5k)\n.dg beli PLN20 12345678901 (Token PLN 20k)\n.dg beli ML5 123456789 (ML Diamond 5)\n.dg beli DANA5000 08123456789 (Topup DANA 5k)\n\nCari SKU:\n.dg cari <keyword>"), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Format Beli\n\n.dg beli <sku_code> <nomor_tujuan>\n\nContoh:\n.dg beli S5 08123456789 (Pulsa Tsel 5k)\n.dg beli PLN20 12345678901 (Token PLN 20k)\n.dg beli ML5 123456789 (ML Diamond 5)\n.dg beli DANA5000 08123456789 (Topup DANA 5k)\n\nCari SKU:\n.dg cari <keyword>"), "digipulsa");
     }
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const products = await getPriceList(data);
       const prod = products.find(p => p.buyer_sku_code === sku);
       if (!prod) {
         await m.react("✅");
-        return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "SKU tidak ditemukan: " + sku + "\n\nCari: .dg cari <keyword>"), "digipulsa");
+        return m.reply( claraWrap("DigiPulsa", "SKU tidak ditemukan: " + sku + "\n\nCari: .dg cari <keyword>"), "digipulsa");
       }
       if (!prod.buyer_product_status || !prod.seller_product_status) {
         await m.react("✅");
-        return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Produk sedang gangguan!\n\nProduk: " + prod.product_name), "digipulsa");
+        return m.reply( claraWrap("DigiPulsa", "Produk sedang gangguan!\n\nProduk: " + prod.product_name), "digipulsa");
       }
       const price = calcPrice(prod.price, markup);
       if (user.balance < price) {
         await m.react("✅");
-        return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Saldo tidak cukup!\n\nHarga: " + formatRupiah(price) + "\nSaldo: " + formatRupiah(user.balance) + "\nKurang: " + formatRupiah(price - user.balance) + "\n\nMinta topup:\n.dg topup " + sender.split("@")[0] + " <jumlah>"), "digipulsa");
+        return m.reply( claraWrap("DigiPulsa", "Saldo tidak cukup!\n\nHarga: " + formatRupiah(price) + "\nSaldo: " + formatRupiah(user.balance) + "\nKurang: " + formatRupiah(price - user.balance) + "\n\nMinta topup:\n.dg topup " + sender.split("@")[0] + " <jumlah>"), "digipulsa");
       }
       const token = genToken();
       data.pendingPayments[token] = {
@@ -268,24 +267,24 @@ async function handler(m, { sock }) {
       body += "Saldo: " + formatRupiah(user.balance) + "\n";
       body += "Sisa: " + formatRupiah(user.balance - price) + "\n";
       body += "\nToken: " + token + "\n\nBayar: .dg bayar " + token + "\nExpired: 5 menit";
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", body), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
     }
   }
 
   // BAYAR - Execute order, send to API
   if (sub === "bayar" || sub === "pay" || sub === "confirm") {
     const token = arg1 ? arg1.toUpperCase() : "";
-    if (!token) return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Masukkan token!\nContoh: .dg bayar ABC123"), "digipulsa");
+    if (!token) return m.reply( claraWrap("DigiPulsa", "Masukkan token!\nContoh: .dg bayar ABC123"), "digipulsa");
     const pending = data.pendingPayments[token];
-    if (!pending) return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Token tidak ditemukan!"), "digipulsa");
-    if (pending.sender !== sender) return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Bukan token kamu!"), "digipulsa");
-    if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Token expired!"), "digipulsa"); }
+    if (!pending) return m.reply( claraWrap("DigiPulsa", "Token tidak ditemukan!"), "digipulsa");
+    if (pending.sender !== sender) return m.reply( claraWrap("DigiPulsa", "Bukan token kamu!"), "digipulsa");
+    if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("DigiPulsa", "Token expired!"), "digipulsa"); }
     const u = getUser(data, sender);
-    if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Saldo tidak cukup!"), "digipulsa"); }
-    await m.react("🕐");
+    if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("DigiPulsa", "Saldo tidak cukup!"), "digipulsa"); }
+    await m.react("🕒");
     try {
       u.balance -= pending.price;
       u.totalSpent += pending.price;
@@ -322,24 +321,24 @@ async function handler(m, { sock }) {
         saveData(data);
         body += "\n\nGagal. Saldo di-refund.";
       }
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", body), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
       u.balance += pending.price;
       u.totalSpent -= pending.price;
       delete data.pendingPayments[token];
       saveData(data);
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Gagal order! Saldo di-refund.\n\nError: " + err.message), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Gagal order! Saldo di-refund.\n\nError: " + err.message), "digipulsa");
     }
   }
 
   // CEK
   if (sub === "cek" || sub === "check" || sub === "status") {
     const refId = arg1;
-    if (!refId) return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Masukkan Ref ID!\nContoh: .dg cek DG1234ABC"), "digipulsa");
+    if (!refId) return m.reply( claraWrap("DigiPulsa", "Masukkan Ref ID!\nContoh: .dg cek DG1234ABC"), "digipulsa");
     const order = data.orders.find(o => o.refId === refId && o.sender === sender);
-    if (!order && !isOwner) return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Order tidak ditemukan!"), "digipulsa");
-    await m.react("🕐");
+    if (!order && !isOwner) return m.reply( claraWrap("DigiPulsa", "Order tidak ditemukan!"), "digipulsa");
+    await m.react("🕒");
     try {
       const result = await topup(data, order ? order.sku : "", order ? order.customerNo : "", refId);
       if (order) {
@@ -366,17 +365,17 @@ async function handler(m, { sock }) {
       if (result.status === "Sukses" && result.sn) body += "\n*Transaksi Berhasil!*";
       else if (result.status === "Pending") body += "\nMasih pending... cek lagi nanti";
       else if (result.status === "Gagal") body += "\nGagal. Saldo di-refund.";
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", body), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
     }
   }
 
   // LIST
   if (sub === "list" || sub === "riwayat" || sub === "history") {
     const myOrders = data.orders.filter(o => o.sender === sender);
-    if (myOrders.length === 0) return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Belum ada order.\nCari: .dg cari <keyword>\nBeli: .dg beli <sku> <nomor>"), "digipulsa");
+    if (myOrders.length === 0) return m.reply( claraWrap("DigiPulsa", "Belum ada order.\nCari: .dg cari <keyword>\nBeli: .dg beli <sku> <nomor>"), "digipulsa");
     let body = "Riwayat Order (" + myOrders.length + ")\n\n";
     myOrders.slice(-10).reverse().forEach((o, i) => {
       body += (i+1) + ". " + o.refId + "\n   " + (o.productName || "?").substring(0, 50) + "\n   " + o.customerNo + " | " + formatRupiah(o.price) + "\n   " + o.status;
@@ -384,21 +383,21 @@ async function handler(m, { sock }) {
       body += "\n";
     });
     body += "\n.dg cek <ref_id> - cek status";
-    return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", body), "digipulsa");
+    return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
   }
 
   // REFRESH
   if (sub === "refresh" || sub === "sync") {
     if (!isOwner) return m.reply(claraWrap(" + username + ", "Khusus owner!"));
-    if (!data.username || !data.apiKey) return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Belum setup!"), "digipulsa");
-    await m.react("🕐");
+    if (!data.username || !data.apiKey) return m.reply( claraWrap("DigiPulsa", "Belum setup!"), "digipulsa");
+    await m.react("🕒");
     try {
       const products = await getPriceList(data, true);
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Cache di-refresh!\nTotal produk: " + products.length), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Cache di-refresh!\nTotal produk: " + products.length), "digipulsa");
     } catch (err) {
       await m.react("✅");
-      return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
     }
   }
 
@@ -419,7 +418,7 @@ async function handler(m, { sock }) {
   if (isOwner) {
     body += "\n\n--- Owner ---\n.dg setkey <username>:<apiKey>\n.dg setmarkup <persen>\n.dg topup <nomor> <jumlah>\n.dg refresh\nAPI: https://api.digiflazz.com/v1\nDaftar: https://digiflazz.com";
   }
-  return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", body), "digipulsa");
+  return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
 }
 
 export { pluginConfig as config, handler };

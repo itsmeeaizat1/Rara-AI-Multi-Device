@@ -4,7 +4,6 @@ import axios from "axios";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
@@ -83,7 +82,7 @@ async function handler(m, { sock }) {
   };
 
   if (!url) {
-    return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎵 *Tiktok Download* 」
+    return m.reply( `╭┈┈⬡「 🎵 *Tiktok Download* 」
 ┃ ㊗ Usage: \`${m.prefix}ttmp3 <url>\`
 ╰┈┈⬡
 
@@ -94,7 +93,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Ttmp3", "❌ URL tidak valid. Gunakan link TikTok."));
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const result = await ttdown(url);

@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -76,7 +75,7 @@ async function handler(m, { sock, args }) {
         return m.reply(claraWrap("Mbti", "MBTI test hanya bisa dijalankan di private chat (DM) karena membutuhkan sesi interaktif.\n\nChat gw langsung untuk mulai test MBTI!"));
       }
 
-      await m.react("🕐");
+      await m.react("🕒");
       try {
         const res = await apiGet("/questions?locale=en");
         if (res.status !== 200 || !res.data?.questions) throw new Error("Gagal mengambil pertanyaan");
@@ -134,7 +133,7 @@ async function handler(m, { sock, args }) {
 
   // Check if test complete
   if (session.current >= session.questions.length) {
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const res = await apiPost("/calculate", {
         answers: session.answers,

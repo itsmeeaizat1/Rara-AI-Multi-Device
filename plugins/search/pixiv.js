@@ -2,7 +2,6 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "pixiv",
@@ -25,10 +24,10 @@ async function handler(m, { sock }) {
     const query = m.args?.join(" ")?.trim();
 
     if (!query) {
-      return sendReplyWithNav(m, sock, claraWrap("Pixiv", `❌ *Masukkan kata kunci pencarian!*\n\n> Contoh: .pixiv rem`), { commandName: "pixiv" });
+      return m.reply( claraWrap("Pixiv", `❌ *Masukkan kata kunci pencarian!*\n\n> Contoh: .pixiv rem`), { commandName: "pixiv" });
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     const apikey = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
     const url = `https://api.neoxr.eu/api/pixiv-search?q=${encodeURIComponent(query)}&apikey=${apikey}`;

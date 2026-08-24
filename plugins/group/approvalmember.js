@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 
-// Local Nova AI format — replaces claraWrap + sendReplyWithNav
 function claraWrap(title, text) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
@@ -13,7 +12,7 @@ function claraWrap(title, text) {
   }).join("\n");
   return `❀°˖ ${toSC(title)} ˖°❀\n\n${scBody}`;
 }
-async function sendReplyWithNav(sock, m, text, cmdName) {
+async function formatAndReply( text, cmdName) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   // Convert all text to small caps, skip command lines
@@ -58,7 +57,7 @@ async function handler(m, { sock }) {
     text += m.prefix + "approvalmember on — aktifkan\n";
     text += m.prefix + "approvalmember off — matikan\n\n";
     text += "Note: Bot harus jadi admin grup untuk fitur ini.";
-    return await sendReplyWithNav(sock, m, text, "approvalmember");
+    return await formatAndReply( text, "approvalmember");
   }
 
   try {
@@ -73,10 +72,10 @@ async function handler(m, { sock }) {
     });
 
     if (!botParticipant || !botParticipant.admin) {
-      return m.reply(claraWrap("approvalmember", "Bot bukan admin di grup ini.\n\nJadikan bot admin dulu untuk menggunakan fitur ini."));
+      return formatAndReply(claraWrap("approvalmember", "Bot bukan admin di grup ini.\n\nJadikan bot admin dulu untuk menggunakan fitur ini."));
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // WhatsApp group setting: membership_approval_mode
     // Baileys: groupSettingUpdate with memberApprovalMode
@@ -106,7 +105,7 @@ async function handler(m, { sock }) {
       text += "Member sekarang bisa langsung gabung tanpa persetujuan.";
     }
 
-    return await sendReplyWithNav(sock, m, text, "approvalmember");
+    return await formatAndReply( text, "approvalmember");
   } catch (error) {
     return m.reply(
       "Gagal mengubah pengaturan persetujuan member.\n\n" +

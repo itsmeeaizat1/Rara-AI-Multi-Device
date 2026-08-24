@@ -5,7 +5,6 @@ import * as timeHelper from "../../src/lib/nova-time.js";
 import fs from "fs";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
 import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
@@ -152,7 +151,7 @@ async function handler(m, { sock }) {
       `❌ Format durasi tidak valid\n\nContoh: 7d, 1m, 1y, lifetime`,
     );
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await resolveGroupId(sock, input);
@@ -214,7 +213,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("✅");
-    return await sendReplyWithNav(sock, m, text, "addsewa");
+    return await m.reply( text, "addsewa");
   } catch (error) {
     await m.reply(claraWrap("addsewa", te(m.prefix, m.command, m.pushName), "error"));
   }

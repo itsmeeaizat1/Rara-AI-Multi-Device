@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "direction", alias: ["rute", "arah", "navigate"], category: "tools",
@@ -24,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const input = m.text?.trim();
     if (!input || !input.includes("->")) {
-      await sendReplyWithNav(sock, m, claraWrap("Rute & Arah", [`  ┊  ➶ Penggunaan: *${prefix}direction <dari> -> <ke>*`,
+      await m.reply( claraWrap("Rute & Arah", [`  ┊  ➶ Penggunaan: *${prefix}direction <dari> -> <ke>*`,
         `  ┊  ➶ Contoh: *${prefix}direction Jakarta -> Bandung*`].join("\n")), "direction");
       return { handled: true };
     }

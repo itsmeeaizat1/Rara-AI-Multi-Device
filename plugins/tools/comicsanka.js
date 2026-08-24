@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -77,10 +76,10 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}comicsanka search naruto\`\n`;
     txt += `\`${m.prefix}comicsanka detail naruto-manga\`\n`;
     txt += `\`${m.prefix}comicsanka berwarna 1\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "comicsanka" });
+    return await m.reply( txt, { commandName: "comicsanka" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     // === SEARCH ===

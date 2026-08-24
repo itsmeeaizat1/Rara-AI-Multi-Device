@@ -726,7 +726,7 @@ export default {
       return { handled: true };
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // ─── Download image ───
     let imgBuffer;

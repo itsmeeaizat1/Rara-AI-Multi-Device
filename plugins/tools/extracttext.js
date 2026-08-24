@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "node:fs";
 import path from "node:path";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 // pdf-parse lazy loader (avoid crash if not installed)
@@ -346,11 +345,11 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `  ai - AI vision untuk hasil lebih akurat (PDF & gambar)`,
       `  Maks 5 halaman untuk AI mode PDF`,
     ].join("\n"));
-    await sendReplyWithNav(sock, m, helpText, "extracttext");
+    await m.reply( helpText, "extracttext");
     return { handled: true };
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     let buffer;

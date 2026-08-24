@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
@@ -53,18 +52,18 @@ async function handler(m, { sock }) {
   }
   if (names.length < 2) names.push("Teman");
 
-  await m.react("🕐");
+  await m.react("🕒");
   const story = await generateRomantis(names);
 
   if (!story) {
-    return sendReplyWithNav(sock, m, "❌ Gagal generate cerita romantis. Coba lagi nanti.", "romantis");
+    return m.reply( "❌ Gagal generate cerita romantis. Coba lagi nanti.", "romantis");
   }
 
   const header = "💕 *ROMANCE STORY*\n\nKarakter: " + names.join(", ") + "\n\n";
   const footer = "\n\n_Dibuat oleh Nova AI_";
 
   await m.react("✅");
-  return sendReplyWithNav(sock, m, header + story + footer, "romantis");
+  return m.reply( header + story + footer, "romantis");
 }
 
 export { pluginConfig as config, handler };

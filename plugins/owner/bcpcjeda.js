@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 
@@ -46,7 +45,7 @@ async function handler(m, { sock }) {
   const current = db.setting('jedaBcpc') || 5000
 
   if (!input) {
-    return sendReplyWithNav(sock, m, claraWrap("Jeda Broadcast Private", [
+    return m.reply( claraWrap("Jeda Broadcast Private", [
       `Jeda saat ini: ${formatDelay(current)} (${current}ms)`,
       "",
       "CARA PAKAI:",

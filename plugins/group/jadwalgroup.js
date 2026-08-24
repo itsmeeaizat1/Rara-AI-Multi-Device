@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
@@ -67,7 +66,7 @@ async function handler(m, { sock, db }) {
 \`.jadwalgroup hapus open\`
 \`.jadwalgroup hapus close\``;
         
-        await sendReplyWithNav(sock, m, scheduleInfo, "jadwalgroup");
+        await m.reply( scheduleInfo, "jadwalgroup");
         return;
     }
     
@@ -109,7 +108,7 @@ async function handler(m, { sock, db }) {
     }
     
     if (!time) {
-        await sendReplyWithNav(sock, m, `⚠️ *Validasi Gagal*\n\n` +
+        await m.reply( `⚠️ *Validasi Gagal*\n\n` +
             `Waktu harus diisi!\n\n` +
             `*Format:* \`HH:MM\` (24 jam)\n` +
             `*Contoh:* \`.jadwalgroup ${action} 08:00\``, "jadwalgroup");
@@ -118,7 +117,7 @@ async function handler(m, { sock, db }) {
     
     const parsed = parseTime(time);
     if (!parsed) {
-        await sendReplyWithNav(sock, m, `⚠️ *Validasi Gagal*\n\n` +
+        await m.reply( `⚠️ *Validasi Gagal*\n\n` +
             `Format waktu tidak valid!\n\n` +
             `*Format:* \`HH:MM\` (24 jam)\n` +
             `*Contoh:* \`06:00\`, \`22:30\`, \`08:15\``, "jadwalgroup");

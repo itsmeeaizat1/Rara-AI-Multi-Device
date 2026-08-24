@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { Client } from 'ssh2'
 import te from '../../src/lib/nova-error.js'
@@ -67,7 +66,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return sendReplyWithNav(sock, m, `╭┈┈⬡「 🎨 *Install Tema Billing* 」\n┃ ㊗ Usage: \`${m.prefix}installtemabilling <ip>|<password>\`\n╰┈┈⬡\n\n> \`Contoh: ${m.prefix}installtemabilling 192.168.1.1|secretpass\``, "installtemabilling")
+        return m.reply( `╭┈┈⬡「 🎨 *Install Tema Billing* 」\n┃ ㊗ Usage: \`${m.prefix}installtemabilling <ip>|<password>\`\n╰┈┈⬡\n\n> \`Contoh: ${m.prefix}installtemabilling 192.168.1.1|secretpass\``, "installtemabilling")
     }
 
     const parts = text.split('|')

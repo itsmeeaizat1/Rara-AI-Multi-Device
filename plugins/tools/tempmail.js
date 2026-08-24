@@ -602,7 +602,7 @@ async function handler(m, { sock }) {
 
     // TempMail.io doesn't support custom name
     if (PROVIDERS[providerKey].customName === false) {
-      await m.react("🕐");
+      await m.react("🕒");
       try {
         const result = await providerCreate(providerKey);
         sessions.set(m.sender, { ...result, createdAt: Date.now() });
@@ -621,7 +621,7 @@ async function handler(m, { sock }) {
         ));
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     try {
       const result = await providerCreate(providerKey, name);
@@ -657,7 +657,7 @@ async function handler(m, { sock }) {
       );
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     try {
       const messages = await providerGetInbox(session);
@@ -711,7 +711,7 @@ async function handler(m, { sock }) {
       );
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     try {
       const messages = await providerGetInbox(session);
@@ -796,7 +796,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Temp Email", `Tidak ada email aktif untuk dihapus.`));
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
     await providerDelete(session);
     sessions.delete(m.sender);
 

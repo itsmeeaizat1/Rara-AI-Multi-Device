@@ -9,7 +9,6 @@ import os from "os";
 import { exec } from "child_process";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 import fs2 from "fs";
 const MOOD_DB = path.join(process.cwd(), "database", "moodtrack.json");
@@ -553,7 +552,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].tracking = true;
@@ -570,7 +569,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].tracking = false;
@@ -586,7 +585,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodSuggest = true;
@@ -603,7 +602,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodSuggest = false;
@@ -619,7 +618,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodAI = true;
@@ -636,7 +635,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodAI = false;
@@ -660,7 +659,7 @@ async function handler(m, { sock }) {
         return;
       }
 
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
 
@@ -682,7 +681,7 @@ async function handler(m, { sock }) {
 
     // ─── Tracking Status ───
     if (command === "moodtrackstatus") {
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadMoodDB();
       const groupData = db.groups[groupId] || {};
       const trackStatus = groupData.tracking ? "ON" : "OFF";
@@ -738,7 +737,7 @@ async function handler(m, { sock }) {
 
     // ─── Mood History ───
     if (command === "moodhistory") {
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadMoodDB();
 
       // Determine target user
@@ -854,11 +853,11 @@ async function handler(m, { sock }) {
           ".moodhistory - Lihat riwayat mood kamu",
         ].join("\n")
       );
-      await sendReplyWithNav(m, sock, help, { commandName: "moodcheck" });
+      await m.reply( help, { commandName: "moodcheck" });
       return;
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // Download voice note
     let mediaBuffer;

@@ -2,7 +2,6 @@
 import { ClaudeHaiku } from "../../src/scraper/claudehaiku.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -24,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return sendReplyWithNav(sock, m, `🤍 *Claude Haiku 4.5*\n\n` +
+    return m.reply( `🤍 *Claude Haiku 4.5*\n\n` +
         `Tanya apa aja ke AI Claude Haiku — cepat dan ringan, cocok buat pertanyaan sehari-hari.\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}claudehaiku <pertanyaan>*\n\n` +
@@ -34,7 +33,7 @@ async function handler(m, { sock }) {
         `_Respons cepat, tapi tetap cerdas_`, "claudehaiku");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await ClaudeHaiku(text);

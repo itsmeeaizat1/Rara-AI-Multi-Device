@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
@@ -54,10 +53,10 @@ async function handler(m, { sock }) {
 
   if (!text) {
     const help = `Kirim pertanyaan setelah command.\nContoh: .deepseekv2xemoz jelaskan black hole`;
-    return sendReplyWithNav(m, sock, claraWrap("DeepSeek v3.2", help));
+    return m.reply( claraWrap("DeepSeek v3.2", help));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const reply = await callDeepSeekV2(text);

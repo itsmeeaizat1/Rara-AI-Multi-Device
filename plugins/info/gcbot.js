@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { claraHeader,  separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -71,7 +70,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
-    await sendReplyWithNav(sock, m, text, "gcbot");
+    await m.reply( text, "gcbot");
   }
 
   return { handled: true };

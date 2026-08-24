@@ -6,7 +6,6 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
 import path from "path";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const execAsync = promisify(exec);
 
@@ -338,7 +337,7 @@ async function handler(m, { sock }) {
     txt += `.autoai on --novamode=custom --logic=kamu adalah nexa ai\n`;
     txt += `.autoai tambahpersona nexa | kamu adalah nexa ai\n`;
     txt += `.autoai global on --novamode=furina`;
-    return await sendReplyWithNav(sock, m, txt, "autoai");
+    return await m.reply( txt, "autoai");
   }
 
   if (mode === "off") {

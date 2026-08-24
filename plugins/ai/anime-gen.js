@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { f } from '../../src/lib/nova-http.js'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
@@ -24,7 +23,7 @@ async function handler(m, { sock }) {
     const prompt = m.text
     
     if (!prompt) {
-        return sendReplyWithNav(sock, m, `🎨 *Anime Art Generator*\n\n` +
+        return m.reply( `🎨 *Anime Art Generator*\n\n` +
             `Generate gambar anime AI dari prompt!\n\n` +
             `*Cara Pakai:*\n` +
             `\`${m.prefix}anime-gen <deskripsi>\`\n\n` +

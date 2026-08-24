@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "whoishistory",
@@ -136,7 +135,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "whoishistory <domain>\n\n" +
         "Riwayat WHOIS domain (via RDAP)\n" +
         "Info: registrar, NS, created/updated/expiry date, status\n\n" +
@@ -152,7 +151,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("WhoisHistory", "Domain tidak boleh kosong!"));
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     const raw = await getWhois(domain);
 

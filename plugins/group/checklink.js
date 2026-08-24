@@ -9,7 +9,6 @@ import https from "https";
 import http from "http";
 import { URL } from "url";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const DB_FILE = path.join(process.cwd(), "database", "checklink.json");
 
@@ -457,7 +456,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoShield = true;
@@ -474,7 +473,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoShield = false;
@@ -490,7 +489,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoDelete = true;
@@ -507,7 +506,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoDelete = false;
@@ -519,7 +518,7 @@ async function handler(m, { sock }) {
 
     // ─── Status ───
     if (command === "checklinkstatus") {
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadDB();
       const groupData = db.groups[groupId] || {};
       const shieldStatus = groupData.autoShield ? "ON" : "OFF";
@@ -552,7 +551,7 @@ async function handler(m, { sock }) {
 
     // ─── Manual .checklink <url> ───
     if (command === "checklink" || command === "checkurl" || command === "scanlink") {
-      await m.react("🕐");
+      await m.react("🕒");
 
       const input = m.args?.join(" ").trim() || "";
       let urlToCheck = input;
@@ -591,7 +590,7 @@ async function handler(m, { sock }) {
             "Contoh: .checklink https://example.com",
           ].join("\n")
         );
-        await sendReplyWithNav(m, sock, help, { commandName: "checklink" });
+        await m.reply( help, { commandName: "checklink" });
         await m.react("✅");
         return;
       }

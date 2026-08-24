@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "urldiff",
@@ -64,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "urldiff <url1> <url2>\n\n" +
         "Bandingin response 2 URL\n" +
         "Info: status, TTFB, body size, server, content-type, headers\n\n" +
@@ -83,7 +82,7 @@ async function handler(m, { sock, config: botConfig }) {
     const url1 = parts[0];
     const url2 = parts[1];
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     const [r1, r2] = await Promise.all([fetchUrl(url1), fetchUrl(url2)]);
 

@@ -733,7 +733,7 @@ export default {
       return { handled: true };
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // Parse people: could be a number or @tags
     let members = [];

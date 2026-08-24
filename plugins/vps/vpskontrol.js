@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
@@ -34,7 +33,7 @@ async function handler(m, { sock }) {
     const token = config.digitalocean?.token
     
     if (!token) {
-        return sendReplyWithNav(sock, m, `DigitalOcean belum disetup. Isi digitalocean.token di config.js`, "turnon")
+        return m.reply( `DigitalOcean belum disetup. Isi digitalocean.token di config.js`, "turnon")
     }
     
     if (!hasAccess(m.sender, m.isOwner)) {
@@ -43,7 +42,7 @@ async function handler(m, { sock }) {
     
     const dropletId = m.text?.trim()
     if (!dropletId) {
-        return sendReplyWithNav(sock, m, `Cara pakai:\n${m.prefix}${m.command} <droplet_id>`, "turnon")
+        return m.reply( `Cara pakai:\n${m.prefix}${m.command} <droplet_id>`, "turnon")
     }
     
     const actions = {
@@ -55,7 +54,7 @@ async function handler(m, { sock }) {
     
     const action = actions[m.command]
     if (!action) {
-        return sendReplyWithNav(sock, m, `Aksi tidak dikenali.`, "turnon")
+        return m.reply( `Aksi tidak dikenali.`, "turnon")
     }
     
     await m.reply(`Sedang ${action.text} VPS...\nID: ${dropletId}`)

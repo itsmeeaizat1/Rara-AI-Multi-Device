@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { fluxImage } from "../../src/scraper/seaart.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -22,12 +21,12 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const prompt = m.text;
   if (!prompt) {
-    return sendReplyWithNav(sock, m, `🍌 *NOVA BANANA SUPER 2*\n\n` +
+    return m.reply( `🍌 *NOVA BANANA SUPER 2*\n\n` +
         `Buat gambar dengan AI\n\n` +
         `\`Contoh: ${m.prefix}novabanana2 make a cat\``, "novabanana2");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const result = await fluxImage(prompt, "1:1");

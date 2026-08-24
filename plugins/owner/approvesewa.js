@@ -4,7 +4,6 @@ import * as timeHelper from "../../src/lib/nova-time.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { notifySewaApproved, notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
 import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -96,7 +95,7 @@ async function handler(m, { sock }) {
       text += "   Harga: " + (r.price || "N/A") + "\n";
       text += "   Approve: .approvesewa " + r.phoneNumber + "\n\n";
     });
-    return await sendReplyWithNav(sock, m, text, "approvesewa");
+    return await m.reply( text, "approvesewa");
   }
 
   // Parse input: .approvesewa <nomor> [harga]

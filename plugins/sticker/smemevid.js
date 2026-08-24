@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import fs from 'fs'
 import path from 'path'
@@ -35,7 +34,7 @@ async function handler(m, { sock }) {
 
     const input = m.args.join(' ')
     if (!input || !input.includes('|')) {
-        { const __navText = `🎬 *Meme Video*\n\n> Format: top|bottom\n\n\`Contoh: ${m.prefix}smemevid WIDTH OR HEIGHT|WHY NOT BOTH?\``; return await sendReplyWithNav(sock, m, __navText, "smemevid"); }
+        { const __navText = `🎬 *Meme Video*\n\n> Format: top|bottom\n\n\`Contoh: ${m.prefix}smemevid WIDTH OR HEIGHT|WHY NOT BOTH?\``; return await m.reply( __navText, "smemevid"); }
     }
 
     const [top, bottom] = input.split('|').map(s => s.trim().toUpperCase())

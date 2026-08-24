@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "ai-tio",
@@ -154,7 +153,7 @@ async function handler(m, { sock, config: botConfig }) {
         
         "\n" ;
 
-      await sendReplyWithNav(sock, m, text, "ai-tio");
+      await m.reply(text, "ai-tio");
       return { handled: true };
     }
 
@@ -219,7 +218,7 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ Set API key di config.js:`,
           `    aiHelp.openaiApiKey / geminiApiKey / anthropicApiKey`,
             `  ┊  ➶ *${prefix}tio list* — lihat semua model`].join("\n"));
-        await sendReplyWithNav(sock, m, text, "ai-tio");
+        await m.reply(text, "ai-tio");
         return { handled: true };
       }
 
@@ -228,7 +227,7 @@ async function handler(m, { sock, config: botConfig }) {
         const text =
           claraWrap("Format Tidak Valid", [`  ┊  ➶ Format *${fmtArg}* tidak dikenal`,
             `  ┊  ➶ Pilih: openai / gemini / anthropic`].join("\n"));
-        await sendReplyWithNav(sock, m, text, "ai-tio");
+        await m.reply(text, "ai-tio");
         return { handled: true };
       }
 
@@ -241,7 +240,7 @@ async function handler(m, { sock, config: botConfig }) {
         const text =
           claraWrap("Model Tidak Ditemukan", [`  ┊  ➶ Model *${modelArg}* tidak ada`,
             `  ┊  ➶ Ketik *${prefix}tio list* untuk lihat semua model`].join("\n"));
-        await sendReplyWithNav(sock, m, text, "ai-tio");
+        await m.reply(text, "ai-tio");
         return { handled: true };
       }
 
@@ -268,7 +267,7 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ Pilih: *openai* / *gemini* / *anthropic*`,
           `  ┊  ➶ Contoh: *${prefix}tio openai halo*`].join("\n")) +
         "\n" ;
-      await sendReplyWithNav(sock, m, text, "ai-tio");
+      await m.reply(text, "ai-tio");
       return { handled: true };
     }
 
@@ -281,7 +280,7 @@ async function handler(m, { sock, config: botConfig }) {
         `  ┊  ➶ Contoh: *${prefix}tio ${fmtKey} halo*`,
         "error"
       );
-      await sendReplyWithNav(sock, m, text, "ai-tio");
+      await m.reply(text, "ai-tio");
       return { handled: true };
     }
 
@@ -292,7 +291,7 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("API Key Belum Diisi", [`  ┊  ➶ API Key untuk format *${fmt.label}* belum di-set`,
           `  ┊  ➶ Set di config.js: aiHelp.${fmt.apiKeyField}`,
           `  ┊  ➶ Atau pakai fallback: aiHelp.apiKey`].join("\n"));
-      await sendReplyWithNav(sock, m, text, "ai-tio");
+      await m.reply(text, "ai-tio");
       return { handled: true };
     }
 
@@ -313,7 +312,7 @@ async function handler(m, { sock, config: botConfig }) {
       : fmt.endpoint;
 
     // Call AI
-    m.react("🕐");
+    m.react("🕒");
     const reply = await callAI({
       providerKey: fmt.providerKey,
       model: model,
@@ -345,7 +344,7 @@ async function handler(m, { sock, config: botConfig }) {
       claraWrap("Tio AI Error", [`  ┊  ➶ Status: *Gagal*`,
         `  ┊  ➶ Error: *${error.message || "Unknown error"}*`].join("\n")) +
       "\n" ;
-    await sendReplyWithNav(sock, m, text, "ai-tio");
+    await m.reply(text, "ai-tio");
   }
 
   return { handled: true };

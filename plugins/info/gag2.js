@@ -120,7 +120,7 @@ async function modeWatch(watchItems, m, sock) {
 }
 
 async function handler(m, { sock, args }) {
-  m.react("🕐");
+  m.react("🕒");
   try {
     const isWatch = args[0]?.toLowerCase() === "watch";
     if (isWatch) {

@@ -4,7 +4,6 @@ import axios from "axios";
 import config from "../../config.js";
 import fs from "fs";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
@@ -27,7 +26,7 @@ async function handler(m, { sock }) {
   const query = args.join(" ").trim();
 
   if (!query) {
-    return sendReplyWithNav(sock, m, `🎬 *Film sEarch*\n\n` +
+    return m.reply( `🎬 *Film sEarch*\n\n` +
         `Cari dan nonton film online\n\n` +
         `*Format:*\n` +
         `\`${m.prefix}film <judul>\`\n\n` +

@@ -5,7 +5,6 @@
 //   Persistent (owner): .toggleocrsolve on/off — auto detect tiap foto masuk
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -183,7 +182,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (isToggleAlias || (isToggleCmd && ["toggleocr", "toggleocrsolve", "toggleautomath", "automath", "autocodefix"].includes(cmdName))) {
       // Owner-only toggle section
       if (!isOwner) {
-        await sendReplyWithNav(sock, m, claraWrap("OCR Solve", [
+        await m.reply( claraWrap("OCR Solve", [
           "Toggle persistent hanya untuk owner.",
           "",
           "Kamu bisa pakai one-shot:",
@@ -204,17 +203,17 @@ async function handler(m, { sock, config: botConfig }) {
           "Bot akan otomatis deteksi & analisis",
           "setiap foto yang masuk di chat ini.",
         ].join("\n")) + "\n" + tipText("Ketik " + prefix + "toggleocrsolve off untuk matikan");
-        await sendReplyWithNav(sock, m, text, "ocrsolve");
+        await m.reply(text, "ocrsolve");
         return { handled: true };
       } else if (args[0] === "off") {
         if (cfg[gid]) cfg[gid].enabled = false;
         db.db.write();
-        await sendReplyWithNav(sock, m, claraWrap("Auto OCR Solve", "Status: OFF. Persistent mode dimatikan."), "ocrsolve");
+        await m.reply(claraWrap("Auto OCR Solve", "Status: OFF. Persistent mode dimatikan."), "ocrsolve");
         return { handled: true };
       } else if (args[0] === "mode") {
         const mode = args[1] || "auto";
         if (!["math", "code", "auto"].includes(mode)) {
-          await sendReplyWithNav(sock, m, claraWrap("Auto OCR Solve", "Mode tidak valid. Tersedia: math, code, auto"), "ocrsolve");
+          await m.reply(claraWrap("Auto OCR Solve", "Mode tidak valid. Tersedia: math, code, auto"), "ocrsolve");
           return { handled: true };
         }
         if (!cfg[gid]) cfg[gid] = {};
@@ -222,12 +221,12 @@ async function handler(m, { sock, config: botConfig }) {
         cfg[gid].enabled = cfg[gid].enabled ?? true;
         db.db.write();
         const modeDesc = { math: "Khusus soal matematika", code: "Khusus kode error/debugging", auto: "Deteksi otomatis" };
-        await sendReplyWithNav(sock, m, claraWrap("Auto OCR Solve", ["Mode: " + mode, "Desc: " + modeDesc[mode], "Status: " + (cfg[gid].enabled ? "ON" : "OFF")].join("\n")), "ocrsolve");
+        await m.reply(claraWrap("Auto OCR Solve", ["Mode: " + mode, "Desc: " + modeDesc[mode], "Status: " + (cfg[gid].enabled ? "ON" : "OFF")].join("\n")), "ocrsolve");
         return { handled: true };
       } else if (args[0] === "status") {
         const status = cfg[gid]?.enabled ? "ON" : "OFF";
         const mode = cfg[gid]?.mode || "auto";
-        await sendReplyWithNav(sock, m, claraWrap("Auto OCR Solve", ["Status: " + status, "Mode: " + mode, "", "Persistent: " + prefix + "toggleocrsolve on/off", "One-shot: " + prefix + "ocrsolve (reply foto)"].join("\n")), "ocrsolve");
+        await m.reply(claraWrap("Auto OCR Solve", ["Status: " + status, "Mode: " + mode, "", "Persistent: " + prefix + "toggleocrsolve on/off", "One-shot: " + prefix + "ocrsolve (reply foto)"].join("\n")), "ocrsolve");
         return { handled: true };
       }
     }

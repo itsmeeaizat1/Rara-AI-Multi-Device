@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { AIRich } from "../../src/lib/nova-builder.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 async function tiktokDl(url) {
@@ -127,9 +126,9 @@ async function handler(m, { sock }) {
   const prefix = m.prefix;
   const command = m?.command;
   if (!text) {
-    return sendReplyWithNav(m, sock, claraWrap("Quick_reply", `📌 Contoh: *${prefix + command} https://vt.tiktok.com/...*`), { commandName: "tiktok" });
+    return m.reply( claraWrap("Quick_reply", `📌 Contoh: *${prefix + command} https://vt.tiktok.com/...*`), { commandName: "tiktok" });
   }
-  m.react("🕐");
+  m.react("🕒");
   try {
     const result = await tiktokDl(text);
     const builder = new AIRich(sock);

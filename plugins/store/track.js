@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -117,7 +116,7 @@ async function handler(m, { sock }) {
   // === .track <trxId> — lacak pesanan ===
   const trxId = (args[0] || m.text?.trim() || "").toUpperCase().replace(/\s+/g, "");
   if (!trxId || trxId === "") {
-    return sendReplyWithNav(sock, m,
+    return m.reply(
       "LACAK PESANAN\n\n" +
       "Cek status pesanan kamu dengan nomor transaksi.\n\n" +
       "Cara pakai:\n" +
@@ -237,7 +236,7 @@ async function trackOrder(m, sock, db, trxId) {
     txt += "Pesanan dibatalkan.";
   }
 
-  return sendReplyWithNav(sock, m, txt, "track");
+  return m.reply( txt, "track");
 }
 
 // === Lihat semua pesanan (owner) ===

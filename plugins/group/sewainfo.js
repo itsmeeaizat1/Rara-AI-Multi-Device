@@ -2,7 +2,6 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "sewainfo",
@@ -45,17 +44,17 @@ function handler(m, { sock }) {
     const groupName = sewaData.name || m.chat.split("@")[0];
 
     if (sewaData.isLifetime) {
-      return sendReplyWithNav(sock, m, claraWrap("Sewa Bot", ["Grup: *" + groupName + "*", "Status: *Permanent* ♾️", "Bot aktif selamanya di grup ini.", "", "Untuk sewa bot di grup lain, hubungi owner."].join("\n")), "sewainfo");
+      return m.reply( claraWrap("Sewa Bot", ["Grup: *" + groupName + "*", "Status: *Permanent* ♾️", "Bot aktif selamanya di grup ini.", "", "Untuk sewa bot di grup lain, hubungi owner."].join("\n")), "sewainfo");
     }
 
     const countdown = formatCountdown(sewaData.expiredAt);
     const expiredStr = timeHelper.fromTimestamp(sewaData.expiredAt, "D MMMM YYYY HH:mm");
 
-    return sendReplyWithNav(sock, m, claraWrap("Sewa Bot", ["Grup: *" + groupName + "*", "Sisa waktu: *" + countdown + "*", "Berakhir: *" + expiredStr + "*", "", "Untuk perpanjang sewa, hubungi owner bot."].join("\n")), "sewainfo");
+    return m.reply( claraWrap("Sewa Bot", ["Grup: *" + groupName + "*", "Sisa waktu: *" + countdown + "*", "Berakhir: *" + expiredStr + "*", "", "Untuk perpanjang sewa, hubungi owner bot."].join("\n")), "sewainfo");
   }
 
   // Grup tidak terdaftar - tampilkan info cara sewa
-  return sendReplyWithNav(sock, m, "📝 *CARA SEWA BOT*\n\n" +
+  return m.reply( "📝 *CARA SEWA BOT*\n\n" +
     "Mau pakai bot ini di grup kamu?\n\n" +
     "*CARA SEWA:*\n" +
     "1. Hubungi owner bot\n" +

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
@@ -117,7 +116,7 @@ async function handler(m, { sock }) {
     let code = m.quotedBody || m.text?.trim()
 
     if (!code) {
-        return sendReplyWithNav(sock, m, `🔄 *CJs TO EsM CONVERTER*\n\n` +
+        return m.reply( `🔄 *CJs TO EsM CONVERTER*\n\n` +
             `Convert CommonJS ke ES Modules\n\n` +
             `*Cara pakai:*\n` +
             `Reply kode CJS dengan ${m.prefix}cjstoesm\n\n` +

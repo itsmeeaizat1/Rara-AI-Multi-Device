@@ -13,7 +13,6 @@ import {
   stopBmkgJobs,
 } from "../../src/lib/nova-bmkg-scheduler.js";
 
-// Local Nova AI format — replaces claraWrap + sendReplyWithNav
 function claraWrap(title, text) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
@@ -25,7 +24,7 @@ function claraWrap(title, text) {
   }).join("\n");
   return `❀°˖ ${toSC(title)} ˖°❀\n\n${scBody}`;
 }
-async function sendReplyWithNav(sock, m, text, cmdName) {
+async function formatAndReply( text, cmdName) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   // Convert all text to small caps, skip command lines
@@ -100,7 +99,7 @@ async function handler(m, { sock }) {
     if (action === "off") {
       const settings = updateBmkgSettings((cur) => ({ ...cur, enabled: false }));
       stopBmkgJobs();
-      return m.reply(claraWrap("Autobmkg", "Auto-broadcast BMKG: *OFF*"));
+      return formatAndReply(claraWrap("Autobmkg", "Auto-broadcast BMKG: *OFF*"));
     }
 
     if (action === "add") {

@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 // === KONVERSI UKURAN DAPUR ===
@@ -169,7 +168,7 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}dapur simpan beras\`\n`;
     txt += `\`${m.prefix}dapur pasangan ayam\`\n`;
     txt += `\`${m.prefix}dapur scan 3017620422003\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+    return await m.reply( txt, { commandName: "dibalikdapur" });
   }
 
   // === TIPS RANDOM ===
@@ -178,7 +177,7 @@ async function handler(m, { sock, args }) {
     let txt = `Tips Dapur\n\n`;
     txt += `${tip}\n\n`;
     txt += `Ketik \`${m.prefix}dapur tips\` untuk tips lainnya`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+    return await m.reply( txt, { commandName: "dibalikdapur" });
   }
 
   // === KONVERSI UKURAN ===
@@ -196,7 +195,7 @@ async function handler(m, { sock, args }) {
       txt += `\`${m.prefix}dapur konversi 500 gram oz\`\n`;
       txt += `\`${m.prefix}dapur konversi 2 cup gram_air\`\n\n`;
       txt += `Catatan: gram_air, gram_gula, gram_tepung, gram_beras, gram_minyak untuk konversi cup/tbsp/tsp ke gram berdasarkan bahan.`;
-      return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+      return await m.reply( txt, { commandName: "dibalikdapur" });
     }
 
     const parts = query.toLowerCase().split(/\s+/);
@@ -230,7 +229,7 @@ async function handler(m, { sock, args }) {
       }
     }
 
-    return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+    return await m.reply( txt, { commandName: "dibalikdapur" });
   }
 
   // === SUBSTITUSI BAHAN ===
@@ -242,7 +241,7 @@ async function handler(m, { sock, args }) {
       txt += `Bahan tersedia:\n`;
       txt += `telur, mentega, susu, buttermilk, krim, gula, tepung, baking powder, vanila, cokelat, kecap, saus tiram, tomat, bawang putih, jahe, santan, maizena, ragi, garam\n\n`;
       txt += `Contoh: \`${m.prefix}dapur sub telur\``;
-      return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+      return await m.reply( txt, { commandName: "dibalikdapur" });
     }
 
     const key = query.toLowerCase().replace(/\s+/g, "_");
@@ -257,7 +256,7 @@ async function handler(m, { sock, args }) {
       txt += `${i + 1}. ${s}\n`;
     });
     txt += `\n> Tips: gunakan substitusi yang paling mirip tekstur dan rasa`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+    return await m.reply( txt, { commandName: "dibalikdapur" });
   }
 
   // === SUHU MASAK ===
@@ -269,7 +268,7 @@ async function handler(m, { sock, args }) {
       txt += `Bahan tersedia:\n`;
       txt += `ayam, daging_sapi_rare, daging_sapi_medium, daging_sapi_welldone, babi, ikan, udang, kalkun, telur, domba\n\n`;
       txt += `Contoh: \`${m.prefix}dapur suhu ayam\``;
-      return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+      return await m.reply( txt, { commandName: "dibalikdapur" });
     }
 
     const key = query.toLowerCase().replace(/\s+/g, "_");
@@ -283,7 +282,7 @@ async function handler(m, { sock, args }) {
     txt += `Suhu internal aman: ${temp.temp}C (${Math.round(temp.temp * 9/5 + 32)}F)\n`;
     txt += `Catatan: ${temp.note}\n\n`;
     txt += `Gunakan termometer dapur untuk akurasi`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+    return await m.reply( txt, { commandName: "dibalikdapur" });
   }
 
   // === PENYIMPANAN MAKANAN ===
@@ -295,7 +294,7 @@ async function handler(m, { sock, args }) {
       txt += `Bahan tersedia:\n`;
       txt += `beras, telur, daging_seg_fris, daging_be_ku, ikan_segar, sayur_hijau, tomat, pisang, bawang_putih, kentang, cabai, kecap, saus_sambal, minyak_goreng, madu, tepung, jahe, daun_bawang, santan\n\n`;
       txt += `Contoh: \`${m.prefix}dapur simpan tomat\``;
-      return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+      return await m.reply( txt, { commandName: "dibalikdapur" });
     }
 
     const key = query.toLowerCase().replace(/\s+/g, "_");
@@ -310,7 +309,7 @@ async function handler(m, { sock, args }) {
     txt += `Daya tahan: ${guide.lama}\n`;
     txt += `Catatan: ${guide.catatan}\n\n`;
     txt += `Simpan dengan benar agar makanan tetap segar dan aman`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+    return await m.reply( txt, { commandName: "dibalikdapur" });
   }
 
   // === PASANGAN BAHAN ===
@@ -322,7 +321,7 @@ async function handler(m, { sock, args }) {
       txt += `Bahan tersedia:\n`;
       txt += `ayam, daging_sapi, ikan, udang, sayuran, nasi, mie, tahu, tempe, telur\n\n`;
       txt += `Contoh: \`${m.prefix}dapur pasangan ayam\``;
-      return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+      return await m.reply( txt, { commandName: "dibalikdapur" });
     }
 
     const key = query.toLowerCase().replace(/\s+/g, "_");
@@ -336,7 +335,7 @@ async function handler(m, { sock, args }) {
     pair.forEach((p) => {
       txt += `${p}\n\n`;
     });
-    return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+    return await m.reply( txt, { commandName: "dibalikdapur" });
   }
 
   // === SCAN BARCODE ===
@@ -345,7 +344,7 @@ async function handler(m, { sock, args }) {
       return m.reply(`Format: \`${m.prefix}dapur scan <barcode>\`\n\nContoh: \`${m.prefix}dapur scan 3017620422003\`\n\nSumber: Open Food Facts (gratis, jutaan produk)`);
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const res = await axios.get(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(query)}?fields=product_name,brands,nutriscore_grade,nutriments,ingredients_text,quantity,allergens,image_url,quantity,countries`);
 
@@ -395,7 +394,7 @@ async function handler(m, { sock, args }) {
 
       txt += `\n> Sumber: Open Food Facts`;
       await m.react("✅");
-      return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+      return await m.reply( txt, { commandName: "dibalikdapur" });
     } catch (e) {
       return m.reply("Error scan barcode: " + e.message);
     }
@@ -420,7 +419,7 @@ async function handler(m, { sock, args }) {
     txt += `1 batang mentega = 113g = 8 sdm = 1/2 cup\n`;
     txt += `1 siung bawang putih = 1 sdt bubuk\n`;
     txt += `1 ruas jahe (2.5cm) = 1 sdt bubuk\n`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "dibalikdapur" });
+    return await m.reply( txt, { commandName: "dibalikdapur" });
   }
 
   // Unknown subcommand

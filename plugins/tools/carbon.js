@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import mql from "@microlink/mql"
 import te from "../../src/lib/nova-error.js"
@@ -64,7 +63,7 @@ async function handler(m, { sock }) {
     const text = m.text || m.quoted?.text
 
     if (!text) {
-        return sendReplyWithNav(sock, m, `🖥️ *CARBON CODE*\n\n` +
+        return m.reply( `🖥️ *CARBON CODE*\n\n` +
             `Fitur ini mengubah teks kode program kamu menjadi gambar cantik ala Carbon\n\n` +
             `*Cara pakai:*\n` +
             `\`${m.prefix}carbon <kode>\`\n` +
@@ -73,7 +72,7 @@ async function handler(m, { sock }) {
             `\`${m.prefix}carbon console.log("Halo")\``, "carbon")
     }
 
-    await m.react("🕐")
+    await m.react("🕒")
 
     try {
         const config = {

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['pinchat', 'pin'],
@@ -39,7 +38,7 @@ async function handler(m, { sock }) {
     }
 
     if (!targetJid) {
-        return sendReplyWithNav(sock, m, '📌 *Pin Chat*\n\n' +
+        return m.reply( '📌 *Pin Chat*\n\n' +
             '> `.pinchat 628xxx` — Pin chat\n' +
             '> `.pinchat` (di private chat) — Pin chat ini\n' +
             '> `.pinchat buka 628xxx` — Unpin chat', "pinchat")

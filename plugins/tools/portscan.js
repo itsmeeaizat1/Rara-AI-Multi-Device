@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import net from "net";
 
 const pluginConfig = {
@@ -77,7 +76,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "portscan <host>\n" +
         prefix + "portscan <host> <port1,port2,...>\n\n" +
         "Default: scan 19 common ports\n" +
@@ -133,7 +132,7 @@ async function handler(m, { sock, config: botConfig }) {
       portsToScan = COMMON_PORTS.map((p) => p.port);
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // Scan all ports concurrently
     const results = await Promise.all(

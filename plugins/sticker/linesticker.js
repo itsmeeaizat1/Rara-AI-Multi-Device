@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import axios from 'axios'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
@@ -24,7 +23,7 @@ async function handler(m, { sock }) {
     const url = m.args?.[0]?.trim()
     
     if (!url || !url.includes('store.line.me')) {
-        return sendReplyWithNav(sock, m, `🎨 *Line sTicker Pack*\n\n` +
+        return m.reply( `🎨 *Line sTicker Pack*\n\n` +
             `Download LINE sticker pack\n\n` +
             `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
             `┃ ${m.prefix}linesticker <url>\n` +

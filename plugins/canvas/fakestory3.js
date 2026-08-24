@@ -7,7 +7,6 @@ import * as _canvas from '@napi-rs/canvas'
 
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakestory3",
@@ -248,7 +247,7 @@ async function getAvatarBuffer(sock, jid) {
 async function handler(m, { sock }) {
   const input = m.args.join(" ");
   if (!input || !input.includes("|")) {
-    return sendReplyWithNav(sock, m, `📷 *Fake sTory 3*\n\n` +
+    return m.reply( `📷 *Fake sTory 3*\n\n` +
         `Reply gambar dengan format:\n` +
         `\`${m.prefix}fakestory3 nama|text1|text2\`\n\n` +
         `Contoh:\n` +
@@ -258,7 +257,7 @@ async function handler(m, { sock }) {
   const username = parts[0] || m.pushName || "User";
   const text1 = parts[1] || "";
   const text2 = parts[2] || "";
-  m.react("🕐");
+  m.react("🕒");
   try {
     const avatarBuffer = await getAvatarBuffer(sock, m.sender);
     const isImage = m.isImage || (m.quoted && m.quoted.isImage);

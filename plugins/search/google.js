@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { GoogleSearch } from "../../src/scraper/google.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -23,7 +22,7 @@ async function handler(m, { sock }) {
   const query = m.text?.trim();
 
   if (!query) {
-    return sendReplyWithNav(sock, m, `🔍 *Google News*\n\n` +
+    return m.reply( `🔍 *Google News*\n\n` +
         `Cari berita terbaru dari Google News.\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}google <topik>*\n\n` +
@@ -32,7 +31,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}google teknologi terbaru*`, "google");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const result = await GoogleSearch(query);

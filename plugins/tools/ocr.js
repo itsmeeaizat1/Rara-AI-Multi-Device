@@ -2,7 +2,6 @@
 import * as _tesseract from "tesseract.js";
 import te from "../../src/lib/nova-error.js";
 import { sendToolsPreview } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 function getTesseract() {
@@ -26,12 +25,12 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
   if (!isImage) {
-    return sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
+    return m.reply( `⚠️ *CARA PAKAI*\n\n` +
         `Reply gambar dengan \`${m.prefix}ocr\`\n\n` +
         `Media yang didukung:\n` +
         `JPG, PNG, GIF, WEBP`, "ocr");
   }
-  await m.react("🕐");
+  await m.react("🕒");
   { const __navText = `🕕 *MEMPROsEs...*\n\n> Mengekstrak teks dari gambar...`; await m.reply(__navText); };
   try {
     let buffer;

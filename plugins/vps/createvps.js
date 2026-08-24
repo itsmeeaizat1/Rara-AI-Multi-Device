@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
@@ -55,7 +54,7 @@ async function handler(m, { sock }) {
     const token = doConfig.token
     
     if (!token) {
-        return sendReplyWithNav(sock, m, `DigitalOcean belum disetup. Isi digitalocean.token di config.js`, "createvps")
+        return m.reply( `DigitalOcean belum disetup. Isi digitalocean.token di config.js`, "createvps")
     }
     
     if (!hasAccess(m.sender, m.isOwner)) {
@@ -68,7 +67,7 @@ async function handler(m, { sock }) {
         for (const [cmd, spec] of Object.entries(VPS_SPECS)) {
             paketTxt += `${m.prefix}${cmd} - ${spec.ram} RAM, ${spec.cpu}\n`
         }
-        return sendReplyWithNav(sock, m, paketTxt, "createvps")
+        return m.reply( paketTxt, "createvps")
     }
     
     if (!/^[a-zA-Z0-9-]+$/.test(hostname)) {
@@ -77,7 +76,7 @@ async function handler(m, { sock }) {
     
     const spec = VPS_SPECS[m.command]
     if (!spec) {
-        return sendReplyWithNav(sock, m, `Paket VPS tidak ditemukan.`, "createvps")
+        return m.reply( `Paket VPS tidak ditemukan.`, "createvps")
     }
     
     const password = generatePassword()
@@ -100,7 +99,7 @@ ssh_pwauth: True`,
         tags: ['nova-bot']
     }
     
-    await m.react("🕐")
+    await m.react("🕒")
     await m.reply(`Membuat VPS...\nHostname: ${hostname}\nSpec: ${spec.ram} RAM, ${spec.cpu}\nRegion: ${region}`)
     
     try {

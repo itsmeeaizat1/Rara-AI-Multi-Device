@@ -2,7 +2,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { isEmailConfigured, getEmailUser, setEmailDb } from "../../src/lib/nova-email.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -50,7 +49,7 @@ async function handler(m, { args, sock, isOwner }) {
       txt += `4. Gunakan 16-karakter password tersebut`;
     }
 
-    return await sendReplyWithNav(m, sock, txt, { commandName: "setemail" });
+    return await m.reply( txt, { commandName: "setemail" });
   }
 
   const input = args.join(" ").trim();
@@ -78,7 +77,7 @@ async function handler(m, { args, sock, isOwner }) {
       txt += `❌ Status: *Belum dikonfigurasi*\n\n`;
       txt += `Set dengan: \`${m.prefix}setemail <email> <app-password>\``;
     }
-    return await sendReplyWithNav(m, sock, txt, { commandName: "setemail" });
+    return await m.reply( txt, { commandName: "setemail" });
   }
 
   if (input.toLowerCase() === "test") {
@@ -129,7 +128,7 @@ async function handler(m, { args, sock, isOwner }) {
   txt += `Sekarang user bisa daftar dengan:\n`;
   txt += `\`${m.prefix}regmail <nama>, <email>\``;
 
-  await sendReplyWithNav(m, sock, txt, { commandName: "setemail" });
+  await m.reply( txt, { commandName: "setemail" });
 }
 
 export { pluginConfig as config, handler };

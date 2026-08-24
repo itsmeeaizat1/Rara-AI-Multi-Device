@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "webarchive",
@@ -68,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "webarchive <url> (latest snapshot)\n" +
         prefix + "webarchive list <url> (20 recent snapshots)\n\n" +
         "Cek snapshot Wayback Machine dari website\n" +
@@ -92,7 +91,7 @@ async function handler(m, { sock, config: botConfig }) {
     url = url.startsWith("http") ? url : "https://" + url;
     const baseDomain = url.replace(/^https?:\/\//, "").replace(/\/.*$/, "");
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     if (mode === "latest") {
       const data = await checkArchive(url);

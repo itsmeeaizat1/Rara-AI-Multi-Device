@@ -5,7 +5,6 @@ import path from "path"
 import axios from "axios"
 import { getDatabase } from "../../src/lib/nova-database.js"
 import config from "../../config.js"
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js"
 import {
   getCachedJid,
   isLid,

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
@@ -27,7 +26,7 @@ function handler(m, { sock }) {
 
     if (!subCmd || subCmd === 'status') {
         const status = current ? '✅ ON' : '❌ OFF'
-        return sendReplyWithNav(sock, m, `🎤 *Cmd Voice Note*\n\n` +
+        return m.reply( `🎤 *Cmd Voice Note*\n\n` +
             `Status: *${status}*\n\n` +
             `\`${m.prefix}cmdvn on\` — Command via VN\n` +
             `\`${m.prefix}cmdvn off\` — Command via text (default)\n\n` +

@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -208,10 +207,10 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}sitasi apa https://example.com/article\`\n`;
     txt += `\`${m.prefix}sitasi ieee https://ieeexplore.ieee.org/document/12345\`\n\n`;
     txt += `_Otomatis ambil metadata dari halaman web_`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "sitasi" });
+    return await m.reply( txt, { commandName: "sitasi" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     let targetStyle = STYLES.includes(style) ? style : "apa";

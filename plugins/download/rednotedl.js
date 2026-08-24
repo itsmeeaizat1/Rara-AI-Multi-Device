@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { RedNoteDL } from "../../src/scraper/rednote.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -22,7 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return sendReplyWithNav(sock, m, `📕 *RedNote Downloader*\n\n` +
+    return m.reply( `📕 *RedNote Downloader*\n\n` +
         `Download video atau foto dari XiaoHongShu (RedNote).\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}rednotedl <link>*\n\n` +
@@ -30,7 +29,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}rednotedl https://www.xiaohongshu.com/xxx*`, "rednotedl");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const result = await RedNoteDL(text);

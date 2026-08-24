@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 const pluginConfig = {
     name: 'antitagsw',
     alias: ['antitag', 'antistatustag'],
@@ -28,7 +27,7 @@ async function handler(m, { sock, db }) {
     if (!action) {
         const status = group.antitagsw || 'off'
 
-        await sendReplyWithNav(sock, m, claraWrap("AntitagSW Settings", [`Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*`, "", `Fitur ini menghapus pesan tag status`, `(groupStatusMentionMessage)`, "", `━━━ Pilihan ━━━`, `\`${m.prefix}antitagsw on\` → Aktifkan`, `\`${m.prefix}antitagsw off\` → Nonaktifkan`].join("\n")), "antitagsw")
+        await m.reply( claraWrap("AntitagSW Settings", [`Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*`, "", `Fitur ini menghapus pesan tag status`, `(groupStatusMentionMessage)`, "", `━━━ Pilihan ━━━`, `\`${m.prefix}antitagsw on\` → Aktifkan`, `\`${m.prefix}antitagsw off\` → Nonaktifkan`].join("\n")), "antitagsw")
         return
     }
 

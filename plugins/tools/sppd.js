@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const SPPD_PROMPT = `Kamu adalah asisten pembuat Surat Perintah Perjalanan Dinas (SPPD) resmi Indonesia. Buatkan SPPD berdasarkan informasi user.
@@ -122,10 +121,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       ``,
       `  ┊  ➶ *Hasil:* PDF SPPD siap print`,
     ].join("\n"));
-    return sendReplyWithNav(sock, m, help, "sppd");
+    return m.reply( help, "sppd");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
   m.reply(claraWrap("SPPD", "  ┊  ➶ AI lagi menyusun SPPD..."));
 
   try {

@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { Txt2Img2 } from "../../src/scraper/txt2img2.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -22,7 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return sendReplyWithNav(sock, m, `🎨 *Text to Image (Flux)*\n\n` +
+    return m.reply(`🎨 *Text to Image (Flux)*\n\n` +
       `Buat gambar dari deskripsi teks pakai AI Flux Klein 4B.\n\n` +
       `*PENGGUNAAN:*\n` +
       `*${m.prefix}txt2img2 <deskripsi>*\n\n` +
@@ -32,7 +31,7 @@ async function handler(m, { sock }) {
       `_Proses generate agak lama, sekitar 30-60 detik_`, "text2img4");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const result = await Txt2Img2(text);

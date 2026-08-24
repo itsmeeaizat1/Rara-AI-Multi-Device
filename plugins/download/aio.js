@@ -2,7 +2,6 @@
 import { aiodl } from "../../src/scraper/aio.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -26,7 +25,7 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return sendReplyWithNav(sock, m, `📥 *All In One Downloader*\n\n` +
+    return m.reply( `📥 *All In One Downloader*\n\n` +
         `Download dari berbagai platform!\n\n` +
         `╭┈┈⬡「 🌐 *Platform* 」\n` +
         `┃ • Instagram\n` +
@@ -45,7 +44,7 @@ async function handler(m, { sock }) {
     { const __navText = `❌ URL tidak valid! Harus dimulai dengan http/https`; return await m.reply(__navText); };
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await aiodl(url);

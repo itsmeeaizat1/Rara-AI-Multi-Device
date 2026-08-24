@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import moment from 'moment-timezone'
 import PhoneNum from 'awesome-phonenumber'
@@ -36,7 +35,7 @@ async function handler(m, { sock }) {
     try {
         const onWa = await sock.onWhatsApp(num);
         if (!onWa || !onWa[0]?.exists) {
-            { const __navText = '❌ User not exists on WhatsApp'; return await sendReplyWithNav(sock, m, __navText, "wastalk"); };
+            { const __navText = '❌ User not exists on WhatsApp'; return await m.reply( __navText, "wastalk"); };
         }
 
         let img = 'https://telegra.ph/file/70e8de9b1879568954f09.jpg';

@@ -6,7 +6,6 @@ import {
 } from "nova";
 import te from "../../src/lib/nova-error.js";
 import { f } from "../../src/lib/nova-http.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -30,10 +29,10 @@ async function handler(m, { sock }) {
   const validTypes = ["cewe", "cowo", "femboy"];
 
   if (!arg || !validTypes.includes(arg)) {
-    return sendReplyWithNav(m, sock, claraWrap("Pap", "❌ Pilih salah satu tipe pap yang tersedia: `cewe`, `cowo`, atau `femboy`.\n\nContoh: `.pap cewe`"), { commandName: "pap" });
+    return m.reply( claraWrap("Pap", "❌ Pilih salah satu tipe pap yang tersedia: `cewe`, `cowo`, atau `femboy`.\n\nContoh: `.pap cewe`"), { commandName: "pap" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const query = arg;

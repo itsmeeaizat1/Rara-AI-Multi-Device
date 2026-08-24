@@ -2,7 +2,6 @@
 import te from "../../src/lib/nova-error.js";
 import moment from "moment-timezone";
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -24,10 +23,10 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return sendReplyWithNav(sock, m, claraWrap("Iqc Chat", `📱 *Iqc Chat*\n\n> Masukkan teks untuk chat\n\n\`Contoh: ${m.prefix}iqc Hai cantik\``), "iqc");
+    return m.reply(claraWrap("Iqc Chat", `📱 *Iqc Chat*\n\n> Masukkan teks untuk chat\n\n\`Contoh: ${m.prefix}iqc Hai cantik\``), "iqc");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const now = new Date();

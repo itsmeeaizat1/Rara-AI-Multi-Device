@@ -3,7 +3,6 @@ import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js"
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js"
 
 const pluginConfig = {
     name: 'uploadsftp',
@@ -295,7 +294,7 @@ async function handler(m, { sock }) {
     const hasMedia = m.isMedia || (m.quoted && m.quoted.isMedia)
 
     if (!hasMedia) {
-        return sendReplyWithNav(sock, m,
+        return m.reply(
             "GAGAL\n\n" +
             "  ┊  ➶ Reply media/berkas dengan `" + m.prefix + "uploadsftp`\n\n" +
             "*Sub-commands:*\n" +

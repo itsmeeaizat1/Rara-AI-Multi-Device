@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -24,7 +23,7 @@ async function handler(m, { sock }) {
   const args = m.text?.trim()?.toLowerCase();
 
   if (args !== "on" && args !== "off") {
-    return sendReplyWithNav(sock, m, `🎮 *FITUR GAME GRUP*\n\n` +
+    return m.reply( `🎮 *FITUR GAME GRUP*\n\n` +
         `Gunakan perintah ini untuk mengatur akses member ke fitur game.\n\n` +
         `• *${m.prefix}game on* - Member bisa main game\n` +
         `• *${m.prefix}game off* - Member tidak bisa main game\n\n` +
@@ -44,7 +43,7 @@ async function handler(m, { sock }) {
   db.setGroup(m.chat, group);
 
   await m.react("✅");
-  return sendReplyWithNav(sock, m, `✅ Berhasil *${isEnable ? "MENGAKTIFKAN" : "MENONAKTIFKAN"}* fitur game di grup ini!\n\n` +
+  return m.reply( `✅ Berhasil *${isEnable ? "MENGAKTIFKAN" : "MENONAKTIFKAN"}* fitur game di grup ini!\n\n` +
     (isEnable
       ? `Member sekarang bisa menggunakan semua perintah di menu game.`
       : `Member tidak akan bisa menggunakan perintah game lagi.`), "game");
