@@ -500,4 +500,4 @@ async function handler(m, { sock }) {
   return sendReplyWithNav(sock, m, claraWrap("ProviderSMM", body), "provsmm");
 }
 
-export default { pluginConfig, handler };
+export { pluginConfig as config, handler };

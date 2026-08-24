@@ -316,4 +316,4 @@ function initAutoBackupDrive(sock) {
   if (state.enabled) startCron(sock);
 }
 
-export default { pluginConfig, handler, initAutoBackupDrive };
+export { pluginConfig as config, handler, initAutoBackupDrive };

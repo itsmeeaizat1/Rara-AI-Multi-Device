@@ -1728,4 +1728,4 @@ async function handler(m, { sock }) {
   return sendReplyWithNav(sock, m, claraWrap("PPOB", body), "ppob");
 }
 
-export default { pluginConfig, handler };
+export { pluginConfig as config, handler };

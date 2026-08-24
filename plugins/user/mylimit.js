@@ -75,4 +75,4 @@ async function handler(m, { sock }) {
   return sendReplyWithNav(sock, m, msg, "mylimit");
 }
 
-export default { pluginConfig, handler };
+export { pluginConfig as config, handler };

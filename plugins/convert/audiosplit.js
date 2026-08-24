@@ -150,4 +150,4 @@ function parseTime(t) {
   return parseInt(t) || 0;
 }
 
-export default { pluginConfig, handler };
+export { pluginConfig as config, handler };

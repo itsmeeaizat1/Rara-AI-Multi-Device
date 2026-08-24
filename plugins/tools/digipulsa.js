@@ -422,4 +422,4 @@ async function handler(m, { sock }) {
   return sendReplyWithNav(sock, m, claraWrap("DigiPulsa", body), "digipulsa");
 }
 
-export default { pluginConfig, handler };
+export { pluginConfig as config, handler };

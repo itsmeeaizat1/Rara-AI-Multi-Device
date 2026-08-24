@@ -90,4 +90,4 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
   }
 }
 
-export default { pluginConfig, handler }
+export { pluginConfig as config, handler };

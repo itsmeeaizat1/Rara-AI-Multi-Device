@@ -513,4 +513,4 @@ async function handler(m, { sock }) {
   return sendReplyWithNav(sock, m, claraWrap("UndrCtrl SMM", body), "undrsmm");
 }
 
-export default { pluginConfig, handler };
+export { pluginConfig as config, handler };
