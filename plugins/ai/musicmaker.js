@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     { const __navText = "❌ Masukkan deskripsi lagu yang ingin dibuat.\n\nContoh: `.musicmaker Lagu pop romantis yang ceria`"; return await m.reply(__navText, "musicmaker"); };
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const apiUrl = `https://api.nexray.eu.cc/ai/suno?prompt=${encodeURIComponent(prompt)}`;

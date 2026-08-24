@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       `${m.prefix}facebookv2 https://www.facebook.com/watch?v=xxx`,
       "facebookv2");
   }
-  m.react("🕒");
+  m.react("🐣");
   try {
     const res = await rlGet(`${API_BASE}/download/facebook?apikey=${API_KEY}&url=${encodeURIComponent(text)}`);
     const r = res.data?.result || res.data?.data;

@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("DeepSeek V4 Flash", "Sesi percakapan direset. Kirim pesan baru untuk memulai."));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const result = await callWithRetry(text, sessionId, false);

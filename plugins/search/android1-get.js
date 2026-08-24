@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Android1-get", `❌ URL tidak valid! Harus URL dari an1.com`));
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const { data } = await axios.get(

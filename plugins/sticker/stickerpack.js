@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
         `.☘︎ ݁˖`, "stickerpack");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const api = new StickerAPI();

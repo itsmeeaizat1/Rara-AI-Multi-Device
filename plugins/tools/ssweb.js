@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
     text = "https://" + text;
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const imageBuffer = await ssweb(text, mode);

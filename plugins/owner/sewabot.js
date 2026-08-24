@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
     pendingConfirmations.delete(m.sender);
     db.db.data.sewa.enabled = true;
     db.db.write();
-    await m.react("🕒");
+    await m.react("🐣");
     await m.reply(claraWrap("Sewabot", `🕕 Sistem sewa diaktifkan, memproses auto-leave...`));
     try {
       global.isFetchingGroups = true;
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
   if (args === "leave") {
     if (!currentStatus)
       return m.reply(claraWrap("Sewabot", `❌ Aktifkan sewabot dulu dengan *${m.prefix}sewabot on*`));
-    await m.react("🕒");
+    await m.react("🐣");
     await m.reply(claraWrap("Sewabot", `🕕 Mengambil daftar grup...`));
     global.sewaLeaving = true;
     try {

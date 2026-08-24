@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     { const __navText = "❌ *Waduh, Link Threads-nya mana nih?*\n\nKamu harus memasukkan tautan (link) dari postingan Threads yang ingin diunduh. Pastikan linknya benar ya! \n\nContoh: `.tdl https://www.threads.net/@zuck/post/xxx`"; return await m.reply( __navText, "threaddl"); };
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const res = await axios.get(BASE_URL, {

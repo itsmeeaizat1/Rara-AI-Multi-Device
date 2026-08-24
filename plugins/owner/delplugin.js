@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}delplugin bliblidl\``, "delplugin");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");

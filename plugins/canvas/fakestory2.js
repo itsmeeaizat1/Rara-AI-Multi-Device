@@ -176,7 +176,7 @@ async function getAvatarBuffer(sock, jid) {
 }
 async function handler(m, { sock }) {
   const username = m.args.join(" ").trim() || m.pushName || "User";
-  m.react("🕒");
+  m.react("🐣");
   try {
     const avatarBuffer = await getAvatarBuffer(sock, m.sender);
     const isImage = m.isImage || (m.quoted && m.quoted.isImage);

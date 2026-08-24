@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
       "douyinv2");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     let data;

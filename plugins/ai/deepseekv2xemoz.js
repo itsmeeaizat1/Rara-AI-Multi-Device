@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     return m.reply( claraWrap("DeepSeek v3.2", help));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const reply = await callDeepSeekV2(text);

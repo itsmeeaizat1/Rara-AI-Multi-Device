@@ -232,7 +232,7 @@ async function handler(m, { sock, config: botConfig }) {
 
   // Sub-command: list
   if (text.toLowerCase() === "list" || text.toLowerCase() === "surahlist") {
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const surahs = await fetchSurahList();
       await m.react("✅");
@@ -250,7 +250,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!num || num < 1 || num > 114) {
       return m.reply(claraWrap("AI Islam", "Nomor surat tidak valid.\nKetik .aiislam list untuk daftar surat."));
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const surah = await fetchSurahDetail(num);
       await m.react("✅");
@@ -271,7 +271,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!surahNum || surahNum < 1 || surahNum > 114 || !ayahNum) {
       return m.reply(claraWrap("AI Islam", "Format tidak valid. Contoh: .aiislam ayah 2:255"));
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const surah = await fetchSurahDetail(surahNum);
       const formatted = formatAyahContent(surah, ayahNum);
@@ -297,7 +297,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!surahNum || !ayahNum) {
       return m.reply(claraWrap("AI Islam", "Format tidak valid. Contoh: .aiislam tafsir 1:1"));
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const tafsirData = await fetchTafsir(surahNum);
       const formatted = formatTafsirContent(tafsirData, ayahNum);
@@ -326,7 +326,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!token) {
       return m.reply(claraWrap("AI Islam", "AI butuh token Puter. Set: .puter setkey <token>"));
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       // Ambil ayat + tafsir Kemenag
       const [surah, tafsirData] = await Promise.all([
@@ -361,7 +361,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!surahNum || surahNum < 1 || surahNum > 114) {
       return m.reply(claraWrap("AI Islam", "Format: .aiislam audio <surah> <qari>\nQari: 01-06\nContoh: .aiislam audio 1 05"));
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const surah = await fetchSurahDetail(surahNum);
       const qariName = QARI_LIST[qariId] || QARI_LIST["05"];
@@ -409,7 +409,7 @@ async function handler(m, { sock, config: botConfig }) {
   }
 
   // Chat AI
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     session.messages.push({ role: "user", content: text });

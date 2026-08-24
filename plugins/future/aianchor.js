@@ -409,7 +409,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
     await m.reply(claraWrap("AI Anchor", "Generating berita: " + topic));
 
     try {
@@ -487,7 +487,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const voiceResult = await generateVoice(text, { tone, voice });

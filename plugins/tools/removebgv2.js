@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     // Download gambar
     let mediaBuffer;

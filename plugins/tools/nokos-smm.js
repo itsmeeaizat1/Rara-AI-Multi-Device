@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
   // SALDO
   if (sub === "saldo" || sub === "balance") {
     if (!data.apiId) return m.reply( claraWrap("NexusSMM", "Belum setup!\nOwner: .smm setkey <api_id>:<api_key>"), "smm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const profile = await getProfile(data);
       await m.react("✅");
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
     const keyword = (arg1 || "").toLowerCase();
     const categoryFilter = arg2 ? arg2.toLowerCase() : "";
     if (!keyword) return m.reply( claraWrap("NexusSMM", "Cari Layanan SMM\n\n.smm cari <keyword> [kategori]\n\nContoh:\n.smm cari instagram follower\n.smm cari telegram views\n.smm cari tiktok likes\n.smm cari youtube\n\nKategori populer: Instagram, Telegram, TikTok, YouTube, Facebook, Twitter"), "smm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data);
       let filtered = services.filter(s =>
@@ -165,7 +165,7 @@ async function handler(m, { sock }) {
     if (!serviceId || !target || !quantity) {
       return m.reply( claraWrap("NexusSMM", "Format beli SMM\n\n.smm beli <service_id> <target> <qty>\n\nContoh:\n.smm beli 11010 https://t.me/test 100\n.smm beli 5320448 @username 500\n\nCari service_id:\n.smm cari instagram follower"), "smm");
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data);
       const svc = services.find(s => String(s.service_id) === String(serviceId));
@@ -200,7 +200,7 @@ async function handler(m, { sock }) {
     if (!pending) return m.reply( claraWrap("NexusSMM", "Token tidak ditemukan!"), "smm");
     if (pending.sender !== sender) return m.reply( claraWrap("NexusSMM", "Bukan token kamu!"), "smm");
     if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("NexusSMM", "Token expired!"), "smm"); }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const order = await createOrder(data, pending.serviceId, pending.target, pending.quantity);
       data.orders.push({ id: String(order.id), serviceId: pending.serviceId, serviceName: pending.serviceName, category: pending.category, target: pending.target, quantity: pending.quantity, price: pending.price, sender, status: "PENDING", createdAt: new Date().toISOString() });
@@ -221,7 +221,7 @@ async function handler(m, { sock }) {
     if (!orderId) return m.reply( claraWrap("NexusSMM", "Masukkan Order ID!\nContoh: .smm cek 12345"), "smm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("NexusSMM", "Order tidak ditemukan!"), "smm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await checkStatus(data, orderId);
       await m.react("✅");
@@ -256,7 +256,7 @@ async function handler(m, { sock }) {
   // KATEGORI - Show available categories
   if (sub === "kategori" || sub === "category") {
     if (!data.apiId) return m.reply( claraWrap("NexusSMM", "Belum setup!\nOwner: .smm setkey <api_id>:<api_key>"), "smm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data);
       const categories = {};

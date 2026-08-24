@@ -203,7 +203,7 @@ async function handler(m, { sock, args }) {
     lang = "Mix";
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const speaker = CHARACTERS[speakerKey];

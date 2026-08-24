@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
   if (!buffer) {
     { const __navText = claraWrap("fakeml", `❌ Kirim/reply gambar untuk dijadikan avatar!`); return await m.reply(__navText, "fakeml"); };
   }
-  m.react("🕒");
+  m.react("🐣");
   try {
     const gmbr = await uploadTo0x0(buffer, {
       filename: "image.jpg",

@@ -100,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
       );
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     const hops = await traceRedirects(text);
 

@@ -61,7 +61,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "konversinilai" });
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     // === TABLE 8-tier ===

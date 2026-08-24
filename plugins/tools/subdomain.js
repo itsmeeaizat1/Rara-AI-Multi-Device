@@ -70,7 +70,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("Subdomain", "Domain tidak boleh kosong!"));
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     const subdomains = await getSubdomains(domain);
 

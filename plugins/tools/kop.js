@@ -151,7 +151,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return m.reply(claraWrap("Kop", `❌ Minimal isi instansi= \n\nContoh: ${prefix}kop instansi=PT Maju Jaya alamat=Jl. Merdeka 1 Jakarta`));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
   m.reply(claraWrap("Kop", "  ┊  ➶ Tambah kop surat ke PDF..."));
 
   try {

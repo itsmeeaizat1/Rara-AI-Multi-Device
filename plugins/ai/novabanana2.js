@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
         `\`Contoh: ${m.prefix}novabanana2 make a cat\``, "novabanana2");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const result = await fluxImage(prompt, "1:1");

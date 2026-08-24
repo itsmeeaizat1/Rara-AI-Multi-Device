@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Instagramdl", `❌ URL tidak valid. Gunakan link Instagram (reel/post/story).`));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const result = await instagramDownloader(url);

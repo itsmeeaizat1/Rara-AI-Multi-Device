@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return m.reply(help, "pohon");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const prompt = `Kamu adalah generator silsilah keluarga komedi Indonesia. Buat silsilah keluarga absurd dan lucu untuk "${name}".

@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("genshinstalk", "❌ *UID Genshin-nya mana nih?*\n\nKamu harus memasukkan UID pemain Genshin Impact yang ingin di-stalk. \n\nContoh: `.genshinstalk 856012067`"));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const res = await axios.get(`https://api.nexray.eu.cc/stalker/genshin?id=${uid}`, {

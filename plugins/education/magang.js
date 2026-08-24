@@ -168,7 +168,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     return m.reply( txt, { commandName: "magang" });
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
   try {
     // Parse: bisa keyword + location
     let keyword = "";

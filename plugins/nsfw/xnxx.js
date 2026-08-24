@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     return m.reply( `🔞 *XNXX Search*\n\nMasukkan query pencarian\n\nContoh: \`${m.prefix}xnxx amateur\``, "xnxx");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const res = await axios.get(

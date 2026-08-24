@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     return m.reply( `🎵 *PLAY TIKTOK*\n\n> Contoh:\n\`${m.prefix}playtiktok cewe tiktok\``, "playtiktok");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const videos = await tiktokSearchVideo(query);

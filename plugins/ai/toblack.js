@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("toblack", `❌ Gagal mendownload gambar`));
     }
 
-    m.react("🕒");
+    m.react("🐣");
 
     const result = await live3d(buffer, PROMPT);
 

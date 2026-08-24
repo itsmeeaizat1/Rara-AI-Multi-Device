@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}pixeldraindl https://pixeldrain.com/u/xxxxx\``, "pixeldraindl");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const apiUrl = `https://api.neoxr.eu/api/pixeldrain?url=${encodeURIComponent(url)}&apikey=${NEOXR_APIKEY}`;

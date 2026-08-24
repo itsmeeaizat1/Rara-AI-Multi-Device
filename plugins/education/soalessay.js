@@ -343,7 +343,7 @@ async function handler(m, { sock, args }) {
     return m.reply("Kamu belum terdaftar sebagai siswa!\n\nDaftar dulu: " + m.prefix + "daftarsiswa <nama>\n\nContoh: " + m.prefix + "daftarsiswa Andi Pratama");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const bank = ESSAY_BANK[jenjang]?.[mapel];

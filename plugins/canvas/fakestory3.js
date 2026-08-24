@@ -257,7 +257,7 @@ async function handler(m, { sock }) {
   const username = parts[0] || m.pushName || "User";
   const text1 = parts[1] || "";
   const text2 = parts[2] || "";
-  m.react("🕒");
+  m.react("🐣");
   try {
     const avatarBuffer = await getAvatarBuffer(sock, m.sender);
     const isImage = m.isImage || (m.quoted && m.quoted.isImage);

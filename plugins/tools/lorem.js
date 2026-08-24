@@ -165,7 +165,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!isNaN(num) && num > 0) count = num;
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     let result;
     let label;

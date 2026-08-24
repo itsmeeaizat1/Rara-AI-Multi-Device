@@ -151,7 +151,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("WhoisHistory", "Domain tidak boleh kosong!"));
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     const raw = await getWhois(domain);
 

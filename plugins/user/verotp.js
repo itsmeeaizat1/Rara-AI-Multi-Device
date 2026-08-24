@@ -71,7 +71,7 @@ async function handler(m, { args, sock }) {
 
   const inputOtp = args[0].trim();
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   if (inputOtp !== session.otp) {
     session.attempts++;

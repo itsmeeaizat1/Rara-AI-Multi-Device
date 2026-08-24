@@ -20,7 +20,7 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, db }) {
-  await m.react("🕒");
+  await m.react("🐣");
   const prefix = config.command?.prefix || ".";
   const args = m.args || [];
   const mode = args[0]?.toLowerCase();

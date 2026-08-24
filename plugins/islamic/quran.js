@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
         `\`Contoh: ${m.prefix}quran al baqarah\``, "quran");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const data = await quran(query);

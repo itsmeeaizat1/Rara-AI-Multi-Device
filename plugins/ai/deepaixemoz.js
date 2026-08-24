@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("DeepAI Chat", "Tidak ada sesi aktif untuk direset."));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const key = sessionKey(m);

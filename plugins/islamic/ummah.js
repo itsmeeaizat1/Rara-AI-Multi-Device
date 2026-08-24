@@ -77,7 +77,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "ummah" });
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     // === DAILY HADITH ===

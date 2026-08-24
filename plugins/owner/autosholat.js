@@ -159,7 +159,7 @@ async function handler(m, { sock, db }) {
       return m.reply(claraWrap("Autosholat", `Tolong masukkan angka antara 1 sampai 60 untuk durasi penutupan grup (dalam menit).`));
     }
     database.setting("autoSholatDuration", duration);
-    await m.react("🕒");
+    await m.react("🐣");
     return m.reply(
       `⏱️ *Durasi Penutupan Grup Telah Diperbarui!*\n\n` +
       `Nantinya, akses obrolan di grup akan dikunci selama ${duration} menit berturut-turut pada setiap jadwal sholat sebelum kubuka kembali secara otomatis.`
@@ -171,7 +171,7 @@ async function handler(m, { sock, db }) {
     if (!kotaName) {
       return m.reply( `Tolong sebutkan nama kotanya juga! Misalnya, \`${m.prefix}autosholat kota Surabaya\`.`, "autosholat");
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await searchKota(kotaName);
       if (!result) {

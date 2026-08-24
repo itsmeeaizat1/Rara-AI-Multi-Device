@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
   if (!url.includes("pinterest") && !url.includes("pin.it")) {
     { const __navText = "❌ URL tidak valid. Gunakan link Pinterest."; return await m.reply(__navText); };
   }
-  m.react("🕒");
+  m.react("🐣");
   try {
     const result = await pinterestdl(url);
     if (!result || !result.media || result.media.length === 0) {

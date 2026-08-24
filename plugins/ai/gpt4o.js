@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Gpt-4O", `🧠 *Gpt-4O*\n\n> Masukkan pertanyaan\n\n\`Contoh: ${m.prefix}gpt4o Hai apa kabar?\``), "gpt4o");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const data = `https://api.cuki.biz.id/api/ai/gpt?apikey=${config.APIkey.cuki}&question=${encodeURIComponent(text)}`

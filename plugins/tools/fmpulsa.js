@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
   // SALDO
   if (sub === "saldo" || sub === "balance") {
     if (!data.userId || !data.apiKey) return m.reply( claraWrap("FMPulsa", "Belum setup!\nOwner: .fm setkey <user_id>:<api_key>"), "fmpulsa");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       // FMPedia profile endpoint - cek via profile API
       const result = await fmPost({ key: data.apiKey, sign: sign(data), type: "profile" });
@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
   // KATEGORI
   if (sub === "kategori" || sub === "category") {
     if (!data.userId || !data.apiKey) return m.reply( claraWrap("FMPulsa", "Belum setup!\nOwner: .fm setkey <user_id>:<api_key>"), "fmpulsa");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data);
       const cats = {};
@@ -198,7 +198,7 @@ async function handler(m, { sock }) {
     if (!keyword) {
       return m.reply( claraWrap("FMPulsa", "Cari Produk\n\n.fm cari <keyword>\n\nContoh:\n.fm cari telkomsel\n.fm cari pln\n.fm cari mobile legend\n.fm cari free fire\n.fm cari genshin\n.fm cari dana\n.fm cari wuthering\n\nLihat kategori: .fm kategori"), "fmpulsa");
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data);
       let filtered = services.filter(s =>
@@ -246,7 +246,7 @@ async function handler(m, { sock }) {
     if (!serviceCode || !dataNo) {
       return m.reply( claraWrap("FMPulsa", "Format Beli\n\n.fm beli <service_code> <nomor_tujuan>\n\nContoh:\n.fm beli SL5 08123456789 (Pulsa Tsel 5k)\n.fm beli PLN20 12345678901 (Token PLN 20k)\n.fm beli ML5 123456789 (ML Diamond 5)\n\nCari code:\n.fm cari <keyword>"), "fmpulsa");
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data);
       const svc = services.find(s => s.code === serviceCode);
@@ -301,7 +301,7 @@ async function handler(m, { sock }) {
     if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("FMPulsa", "Token expired!"), "fmpulsa"); }
     const u = getUser(data, sender);
     if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("FMPulsa", "Saldo tidak cukup!"), "fmpulsa"); }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       u.balance -= pending.price;
       u.totalSpent += pending.price;
@@ -358,7 +358,7 @@ async function handler(m, { sock }) {
     if (!refId) return m.reply( claraWrap("FMPulsa", "Masukkan Ref ID!\nContoh: .fm cek FM1234ABC"), "fmpulsa");
     const order = data.orders.find(o => o.refId === refId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("FMPulsa", "Order tidak ditemukan!"), "fmpulsa");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await checkStatus(data, refId);
       const statusData = Array.isArray(result) ? result[0] : result;
@@ -410,7 +410,7 @@ async function handler(m, { sock }) {
   if (sub === "refresh" || sub === "sync") {
     if (!isOwner) return m.reply(claraWrap("fmpulsa", "Khusus owner!"));
     if (!data.userId || !data.apiKey) return m.reply( claraWrap("FMPulsa", "Belum setup!"), "fmpulsa");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data, true);
       await m.react("✅");

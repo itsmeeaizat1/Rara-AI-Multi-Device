@@ -99,7 +99,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return m.reply( help, "notulen");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
   m.reply(claraWrap("Notulen", "  ┊  ➶ AI lagi nyusun notulen meeting..."));
 
   try {

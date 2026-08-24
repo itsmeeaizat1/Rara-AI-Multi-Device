@@ -199,7 +199,7 @@ async function getAvatarBuffer(sock, jid) {
 }
 async function handler(m, { sock }) {
   const username = m.args.join(" ").trim() || m.pushName || "User";
-  m.react("🕒");
+  m.react("🐣");
   try {
     const avatarBuffer = await getAvatarBuffer(sock, m.sender);
     let imageTopBuffer = null;

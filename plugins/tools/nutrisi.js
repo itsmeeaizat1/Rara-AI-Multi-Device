@@ -179,7 +179,7 @@ async function handler(m, { sock, config: botConfig }) {
     return;
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     // Download image

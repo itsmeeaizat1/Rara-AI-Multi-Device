@@ -890,7 +890,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
   }
   if (!changelog) return m.reply( `❌ Changelog tidak boleh kosong!`, "jpm");
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const { groupIds, blacklistedCount } = await getTargetGroups(sock, db);

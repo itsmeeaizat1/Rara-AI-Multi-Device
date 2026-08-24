@@ -82,7 +82,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("Barcode", "Data tidak valid untuk type " + typeInfo.name + "!\n" + typeInfo.desc));
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     // Generate barcode via QuickChart API
     const apiUrl = "https://quickchart.io/barcode?type=" + type +

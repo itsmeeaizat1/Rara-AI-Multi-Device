@@ -31,7 +31,7 @@ async function handler(m, { args, sock }) {
     return await m.reply(claraWrap("izen", txt));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
   
   try {
     const res = await fetch(`https://anabot.my.id/api/tools/izenLOL?url=${encodeURIComponent(args[0])}&apikey=${config.APIkey.anabot || 'freeApikey'}`);

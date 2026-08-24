@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
             `\`${m.prefix}carbon console.log("Halo")\``, "carbon")
     }
 
-    await m.react("🕒")
+    await m.react("🐣")
 
     try {
         const config = {

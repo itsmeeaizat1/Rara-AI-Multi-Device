@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
       `❌ Format durasi tidak valid\n\nContoh: 7d, 1m, 1y, lifetime`,
     );
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const result = await resolveGroupId(sock, input);

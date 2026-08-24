@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     return await m.reply( txt, "hdvid");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const videoBuffer = (await m?.quoted?.download?.()) || (await m.download?.());

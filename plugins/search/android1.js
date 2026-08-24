@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}android1 Subway Surfer\``, "android1");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const { data } = await axios.get(

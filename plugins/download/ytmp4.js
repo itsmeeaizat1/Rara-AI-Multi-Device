@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   if (!url.includes("youtube.com") && !url.includes("youtu.be"))
     { const __navText = "❌ URL harus YouTube"; return await m.reply(__navText); };
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const downloadUrl = await getVideoDownloadUrl(url);

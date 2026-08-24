@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
       return m.reply( claraWrap("ProviderSMM", "Set API Key (Owner)\n\n.prov setkey <api_key>\n\nDaftar & dapatkan API key:\nhttps://providersmm.id"), "provsmm");
     }
     data.apiKey = key; saveData(data);
-    await m.react("🕒");
+    await m.react("🐣");
     await m.react("✅");
     return m.reply( claraWrap("ProviderSMM", "API Key tersimpan!\nKey: " + key.slice(0,6) + "..." + key.slice(-4)), "provsmm");
   }
@@ -177,7 +177,7 @@ async function handler(m, { sock }) {
   // SALDO
   if (sub === "saldo" || sub === "balance") {
     if (!data.apiKey) return m.reply( claraWrap("ProviderSMM", "Belum setup!\nOwner: .prov setkey <api_key>\n\nDaftar: https://providersmm.id"), "provsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const bal = await getBalance(data);
       await m.react("✅");
@@ -195,7 +195,7 @@ async function handler(m, { sock }) {
   // KATEGORI
   if (sub === "kategori" || sub === "category") {
     if (!data.apiKey) return m.reply( claraWrap("ProviderSMM", "Belum setup!\nOwner: .prov setkey <api_key>"), "provsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data);
       const categories = {};
@@ -221,7 +221,7 @@ async function handler(m, { sock }) {
     if (!keyword) {
       return m.reply( claraWrap("ProviderSMM", "Cari Layanan SMM\n\n.prov cari <keyword> [kategori]\n\nContoh:\n.prov cari instagram indonesia\n.prov cari tiktok followers\n.prov cari facebook\n.prov cari threads\n.prov cari twitter\n.prov cari roblox\n\nLihat semua: .prov kategori"), "provsmm");
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data);
       let filtered = services.filter(s =>
@@ -266,7 +266,7 @@ async function handler(m, { sock }) {
     if (!serviceId || !link || !quantity) {
       return m.reply( claraWrap("ProviderSMM", "Format Beli\n\n.prov beli <service_id> <link> <qty>\n\nContoh:\n.prov beli 87 https://instagram.com/p/xxx 100\n.prov beli 116 https://tiktok.com/@xxx 500\n.prov beli 60 https://facebook.com/xxx 200\n\nCari service_id:\n.prov cari instagram"), "provsmm");
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data);
       const svc = services.find(s => String(s.service) === String(serviceId));
@@ -324,7 +324,7 @@ async function handler(m, { sock }) {
     if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("ProviderSMM", "Token expired!"), "provsmm"); }
     const u = getUser(data, sender);
     if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("ProviderSMM", "Saldo tidak cukup!"), "provsmm"); }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       u.balance -= pending.price;
       u.totalSpent += pending.price;
@@ -367,7 +367,7 @@ async function handler(m, { sock }) {
     if (!orderId) return m.reply( claraWrap("ProviderSMM", "Masukkan Order ID!\nContoh: .prov cek 23501"), "provsmm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("ProviderSMM", "Order tidak ditemukan!"), "provsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await orderStatus(data, orderId);
       await m.react("✅");
@@ -397,7 +397,7 @@ async function handler(m, { sock }) {
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("ProviderSMM", "Order tidak ditemukan!"), "provsmm");
     if (order && !order.refill) return m.reply( claraWrap("ProviderSMM", "Layanan ini tidak support refill!"), "provsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await createRefill(data, orderId);
       await m.react("✅");
@@ -412,7 +412,7 @@ async function handler(m, { sock }) {
   if (sub === "refillstatus" || sub === "cekrefill") {
     const refillId = arg1;
     if (!refillId) return m.reply( claraWrap("ProviderSMM", "Masukkan Refill ID!\nContoh: .prov refillstatus 123"), "provsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await refillStatus(data, refillId);
       await m.react("✅");
@@ -429,7 +429,7 @@ async function handler(m, { sock }) {
     if (!orderId) return m.reply( claraWrap("ProviderSMM", "Masukkan Order ID!\nContoh: .prov batal 23501"), "provsmm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("ProviderSMM", "Order tidak ditemukan!"), "provsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await cancelOrders(data, [orderId]);
       await m.react("✅");
@@ -467,7 +467,7 @@ async function handler(m, { sock }) {
   if (sub === "refresh" || sub === "sync") {
     if (!isOwner) return m.reply(claraWrap("provsmm", "Khusus owner!"));
     if (!data.apiKey) return m.reply( claraWrap("ProviderSMM", "Belum setup!"), "provsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data, true);
       await m.react("✅");

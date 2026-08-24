@@ -97,7 +97,7 @@ async function handler(m, { sock, config: botConfig }) {
       );
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     const result = await measureLoad(text);
 

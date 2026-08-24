@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `_Model 80B, jadi agak lama tapi jawabannya mantap_`, "qwen3");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const result = await Qwen3(text);

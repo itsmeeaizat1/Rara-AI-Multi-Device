@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     return m.reply( claraWrap("GPT-5.5", help));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const reply = await callGPT5(text);

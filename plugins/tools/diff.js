@@ -188,7 +188,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("Diff", "Kedua teks tidak boleh kosong!"));
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     let diffs;
 

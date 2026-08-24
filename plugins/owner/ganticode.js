@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
     { const __navText = claraWrap("GAGAL", `❌ *GAGAL*\n\nNama file tidak valid`); return await m.reply(__navText); };
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");

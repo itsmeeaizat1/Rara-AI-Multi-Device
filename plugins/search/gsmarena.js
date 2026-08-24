@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
         `\`Contoh: ${m.prefix}gsmarena samsung galaxy s25\``, "gsmarena");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const results = await gsmarena.search.search(text);

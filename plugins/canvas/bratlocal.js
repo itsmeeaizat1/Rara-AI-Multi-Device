@@ -391,7 +391,7 @@ async function handler(m, { sock }) {
     { const __navText = `⚠️ Harap masukkan teksnya!\nContoh: \`${m.prefix}${m.command} Halo semuanya\``; return await m.reply(__navText, "bratlocal"); };
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const cmd = m.command.toLowerCase();

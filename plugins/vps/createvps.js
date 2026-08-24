@@ -99,7 +99,7 @@ ssh_pwauth: True`,
         tags: ['nova-bot']
     }
     
-    await m.react("🕒")
+    await m.react("🐣")
     await m.reply(`Membuat VPS...\nHostname: ${hostname}\nSpec: ${spec.ram} RAM, ${spec.cpu}\nRegion: ${region}`)
     
     try {

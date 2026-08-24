@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
             `  📝 Teks (tanpa media)`, "upch")
     }
 
-    await m.react("🕒")
+    await m.react("🐣")
 
     try {
         if (!isMedia && caption) {

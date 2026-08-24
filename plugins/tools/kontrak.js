@@ -122,7 +122,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return m.reply( help, "kontrak");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
   m.reply(claraWrap("Kontrak", "  ┊  ➶ AI lagi menyusun draft kontrak..."));
 
   try {

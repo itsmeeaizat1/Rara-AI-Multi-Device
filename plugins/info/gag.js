@@ -21,7 +21,7 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const res = await axios.get("https://api.nexray.eu.cc/information/growagarden", {

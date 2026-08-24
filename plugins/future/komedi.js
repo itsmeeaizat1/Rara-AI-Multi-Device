@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
   }
   if (names.length < 2) names.push("Teman");
 
-  await m.react("🕒");
+  await m.react("🐣");
   const story = await generateKomedi(names);
 
   if (!story) {

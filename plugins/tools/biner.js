@@ -101,7 +101,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("Biner", validation.error));
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     // If target specified, convert only to that
     if (toKey) {

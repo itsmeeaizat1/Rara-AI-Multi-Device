@@ -23,7 +23,7 @@ async function handler(m, { sock,  args }) {
     return m.reply( `*🐛 CARI BUG*\n\nKirim kode atau reply pesa{ const __navText = (ug.\n\nContoh:\n\`${m.prefix}caribug function test() {}\``, "caribug");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const apiUrl = `); return await m.reply(__navText); }ttps://api.cuki.biz.id/api/aicode/caribug`;

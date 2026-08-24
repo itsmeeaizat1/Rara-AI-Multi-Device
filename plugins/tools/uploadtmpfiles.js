@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("UploadTmpFiles", "Media tidak terbaca. Coba kirim ulang."));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const result = await uploadToXemoz(media, filename);

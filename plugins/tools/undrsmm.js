@@ -170,7 +170,7 @@ async function handler(m, { sock }) {
   // SALDO
   if (sub === "saldo" || sub === "balance") {
     if (!data.apiKey) return m.reply( claraWrap("UndrCtrl SMM", "Belum setup!\nOwner: .undr setkey <api_key>\n\nDaftar: https://undrctrl.id"), "undrsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const bal = await getBalance(data);
       await m.react("✅");
@@ -201,7 +201,7 @@ async function handler(m, { sock }) {
   // KATEGORI - List all categories
   if (sub === "kategori" || sub === "category") {
     if (!data.apiKey) return m.reply( claraWrap("UndrCtrl SMM", "Belum setup!\nOwner: .undr setkey <api_key>"), "undrsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data);
       const categories = {};
@@ -227,7 +227,7 @@ async function handler(m, { sock }) {
     if (!keyword) {
       return m.reply( claraWrap("UndrCtrl SMM", "Cari Layanan SMM\n\n.undr cari <keyword> [kategori]\n\nContoh:\n.undr cari tiktok follower\n.undr cari instagram likes\n.undr cari youtube views\n.undr cari shopee live\n.undr cari mobile legend\n\nLihat semua kategori: .undr kategori"), "undrsmm");
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data);
       let filtered = services.filter(s =>
@@ -272,7 +272,7 @@ async function handler(m, { sock }) {
     if (!serviceId || !link || !quantity) {
       return m.reply( claraWrap("UndrCtrl SMM", "Format Beli\n\n.undr beli <service_id> <link> <qty>\n\nContoh:\n.undr beli 1002 https://www.tiktok.com/video/xxx 1000\n.undr beli 1010 https://instagram.com/p/xxx 500\n.undr beli 1018 https://youtube.com/watch?v=xxx 5000\n\nCari service_id:\n.undr cari tiktok\n.undr cari instagram"), "undrsmm");
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data);
       const svc = services.find(s => String(s.service) === String(serviceId));
@@ -330,7 +330,7 @@ async function handler(m, { sock }) {
     if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("UndrCtrl SMM", "Token expired!"), "undrsmm"); }
     const u = getUser(data, sender);
     if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("UndrCtrl SMM", "Saldo tidak cukup!"), "undrsmm"); }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       u.balance -= pending.price;
       u.totalSpent += pending.price;
@@ -380,7 +380,7 @@ async function handler(m, { sock }) {
     if (!orderId) return m.reply( claraWrap("UndrCtrl SMM", "Masukkan Order ID!\nContoh: .undr cek 23501"), "undrsmm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("UndrCtrl SMM", "Order tidak ditemukan!"), "undrsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await orderStatus(data, orderId);
       await m.react("✅");
@@ -411,7 +411,7 @@ async function handler(m, { sock }) {
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("UndrCtrl SMM", "Order tidak ditemukan!"), "undrsmm");
     if (order && !order.refill) return m.reply( claraWrap("UndrCtrl SMM", "Layanan ini tidak support refill!"), "undrsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await createRefill(data, orderId);
       await m.react("✅");
@@ -426,7 +426,7 @@ async function handler(m, { sock }) {
   if (sub === "refillstatus" || sub === "cekrefill") {
     const refillId = arg1;
     if (!refillId) return m.reply( claraWrap("UndrCtrl SMM", "Masukkan Refill ID!\nContoh: .undr refillstatus 123"), "undrsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await refillStatus(data, refillId);
       await m.react("✅");
@@ -443,7 +443,7 @@ async function handler(m, { sock }) {
     if (!orderId) return m.reply( claraWrap("UndrCtrl SMM", "Masukkan Order ID!\nContoh: .undr batal 23501"), "undrsmm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("UndrCtrl SMM", "Order tidak ditemukan!"), "undrsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await cancelOrders(data, [orderId]);
       await m.react("✅");
@@ -481,7 +481,7 @@ async function handler(m, { sock }) {
   if (sub === "refresh" || sub === "sync") {
     if (!isOwner) return m.reply(claraWrap("undrsmm", "Khusus owner!"));
     if (!data.apiKey) return m.reply( claraWrap("UndrCtrl SMM", "Belum setup!"), "undrsmm");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await getServices(data, true);
       await m.react("✅");

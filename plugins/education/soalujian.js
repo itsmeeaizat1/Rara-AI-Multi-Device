@@ -645,7 +645,7 @@ async function handler(m, { sock, args }) {
   if (!dailyCheck.allowed) {
     return m.reply("Kamu sudah main " + MAX_QUIZ_PER_DAY + " quiz hari ini!\n\nKembali besok untuk lanjut belajar.\n\n> Ketik .edulb untuk lihat ranking");
   }
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     let questions = [];

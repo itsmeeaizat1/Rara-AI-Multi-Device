@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}waguri-ai Waguri-san, halo!*`, "waguri-ai");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const result = await UnlimitedAI(text, "waguri-ai");

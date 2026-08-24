@@ -205,7 +205,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "animestream" });
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     // Determine source

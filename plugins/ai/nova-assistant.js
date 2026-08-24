@@ -371,7 +371,7 @@ async function handler(m, { sock }) {
       `Tinggal ketik apa yang kamu mau, aku yang eksekusi!`, "ai");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   // Step 1: Try local intent matching (fast, no API)
   const intent = matchIntent(userInput);

@@ -83,7 +83,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
   await m.reply(claraWrap("OSINT", "Cek @" + username + " di " + PLATFORMS.length + " platform...\nMungkin perlu 10-20 detik."));
 
   const results = await checkUsername(username);

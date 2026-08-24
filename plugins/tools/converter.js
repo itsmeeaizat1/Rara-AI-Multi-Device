@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Converter", `❌ Reply file yang mau diconvert!`));
   }
 
-  m.react("🕒");
+  m.react("🐣");
   await m.reply(claraWrap("Converter", `🕕 *MENGUNDUH ғILE...*`));
 
   try {

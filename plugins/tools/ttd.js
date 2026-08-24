@@ -134,7 +134,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return m.reply( help, "ttd");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     // Download the PDF from replied message

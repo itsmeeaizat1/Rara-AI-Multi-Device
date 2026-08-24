@@ -580,7 +580,7 @@ async function handler(m, { sock }) {
     }
     const service = (arg1 || "wa").toLowerCase();
     const country = arg2 || "6";
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       if (data.provider === "wn1") {
         const sCode = WN_SERVICES_S1[service];
@@ -646,7 +646,7 @@ async function handler(m, { sock }) {
     }
     const keyword = (arg1 || "whatsapp").toLowerCase();
     const countryFilter = arg2 ? arg2.toLowerCase() : "";
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await nexusServices(data);
       let filtered = services.filter(s => (s.product || "").toLowerCase().includes(keyword));
@@ -679,7 +679,7 @@ async function handler(m, { sock }) {
     }
     const serviceId = arg1;
     if (!serviceId) return m.reply( claraWrap("Nokos Beli", "Masukkan Service ID!\nContoh: .nokosbeli nexusbuy 5320448\n\nCari ID: .nokosbeli nexusharga whatsapp indonesia"), "nokosbeli");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const services = await nexusServices(data);
       const svc = services.find(s => String(s.id) === String(serviceId));
@@ -732,7 +732,7 @@ async function handler(m, { sock }) {
     if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("Nokos Beli", "Token expired!\nBeli: .nokosbeli buy " + pending.country + " " + pending.service), "nokosbeli"); }
     const u = getUser(data, sender);
     if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("Nokos Beli", "Saldo tidak cukup!"), "nokosbeli"); }
-    await m.react("🕒");
+    await m.react("🐣");
     u.balance -= pending.price; u.totalSpent += pending.price;
     try {
       const order = pending.type === "rent" ? await rentNumber(data, pending.country, pending.service, pending.tier) : await buyNumber(data, pending.country, pending.service, pending.tier);
@@ -755,7 +755,7 @@ async function handler(m, { sock }) {
     const orderId = arg1;
     if (!orderId) return m.reply( claraWrap("Nokos Beli", "Masukkan Order ID!\nContoh: .nokosbeli otp 12345\nLihat: .nokosbeli list"), "nokosbeli");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await checkOrder(data, orderId);
       await m.react("✅");
@@ -784,7 +784,7 @@ async function handler(m, { sock }) {
     if (!orderId) return m.reply( claraWrap("Nokos Beli", "Masukkan Order ID!\nContoh: .nokosbeli retry 12345"), "nokosbeli");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("Nokos Beli", "Order tidak ditemukan!"), "nokosbeli");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await retryOrder(data, orderId);
       await m.react("✅");
@@ -824,7 +824,7 @@ async function handler(m, { sock }) {
     if (!orderId) return m.reply( claraWrap("Nokos Beli", "Masukkan Order ID!\nContoh: .nokosbeli batal 12345"), "nokosbeli");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("Nokos Beli", "Order tidak ditemukan!"), "nokosbeli");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await cancelOrderApi(data, orderId);
       await m.react("✅");

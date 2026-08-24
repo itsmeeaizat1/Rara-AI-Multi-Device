@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         `\`Contoh: ${m.prefix}murrotal ar rahman\``, "murrotal");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
 

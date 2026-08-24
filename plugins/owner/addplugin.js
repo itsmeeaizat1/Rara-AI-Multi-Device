@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Addplugin", `❌ *GAGAL*\n\nNama file tidak valid`));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");

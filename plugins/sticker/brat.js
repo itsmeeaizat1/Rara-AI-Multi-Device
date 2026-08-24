@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
     return m.reply( `🖼️ *Brat Image*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratimg Hai semua\``, "brat");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const url = novaApi.yupra.url("/api/image/brat", { text });

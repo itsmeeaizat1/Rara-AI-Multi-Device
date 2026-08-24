@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}splugin menu\``, "searchplugin");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     let info = findPluginInfo(name);

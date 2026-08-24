@@ -456,7 +456,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoShield = true;
@@ -473,7 +473,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoShield = false;
@@ -489,7 +489,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoDelete = true;
@@ -506,7 +506,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].autoDelete = false;
@@ -518,7 +518,7 @@ async function handler(m, { sock }) {
 
     // ─── Status ───
     if (command === "checklinkstatus") {
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadDB();
       const groupData = db.groups[groupId] || {};
       const shieldStatus = groupData.autoShield ? "ON" : "OFF";
@@ -551,7 +551,7 @@ async function handler(m, { sock }) {
 
     // ─── Manual .checklink <url> ───
     if (command === "checklink" || command === "checkurl" || command === "scanlink") {
-      await m.react("🕒");
+      await m.react("🐣");
 
       const input = m.args?.join(" ").trim() || "";
       let urlToCheck = input;

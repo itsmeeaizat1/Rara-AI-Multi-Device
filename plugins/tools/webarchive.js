@@ -91,7 +91,7 @@ async function handler(m, { sock, config: botConfig }) {
     url = url.startsWith("http") ? url : "https://" + url;
     const baseDomain = url.replace(/^https?:\/\//, "").replace(/\/.*$/, "");
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     if (mode === "latest") {
       const data = await checkArchive(url);

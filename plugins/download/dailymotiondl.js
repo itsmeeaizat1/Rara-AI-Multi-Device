@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
         `_Proses konversi mungkin agak lama_`, "dailymotiondl");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const result = await DailymotionDL(text);

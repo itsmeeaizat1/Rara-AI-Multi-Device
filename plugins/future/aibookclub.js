@@ -104,7 +104,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     const bab = args.slice(2).join(" ").trim() || "Bab 1";
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const prompt = "Buku: " + club.title + "\nBuat 3 pertanyaan diskusi menarik untuk " + bab + ". Singkat, provoking, dalam bahasa Indonesia. Hanya 3 pertanyaan dengan nomor.";
       const result = await UnlimitedAI(prompt, "nova-ai");

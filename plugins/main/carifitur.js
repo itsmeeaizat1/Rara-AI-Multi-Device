@@ -150,7 +150,7 @@ async function handler(m, { sock }) {
       `\`${m.prefix}carifitur download\`\n` +
       `\`${m.prefix}carifitur game\``, "carifitur");
   }
-  m.react("🕒");
+  m.react("🐣");
   try {
     const allPlugins = await loadAllPlugins();
     const matches = [];

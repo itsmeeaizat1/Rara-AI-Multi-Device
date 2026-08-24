@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         `Atau kirim audio + caption command`, "musikapaini");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     await m.reply(claraWrap("Musikapaini", "🕕 *MENGUPLOAD...*\n\n> Mengupload audio..."));

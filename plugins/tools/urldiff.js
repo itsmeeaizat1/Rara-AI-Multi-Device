@@ -82,7 +82,7 @@ async function handler(m, { sock, config: botConfig }) {
     const url1 = parts[0];
     const url2 = parts[1];
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     const [r1, r2] = await Promise.all([fetchUrl(url1), fetchUrl(url2)]);
 

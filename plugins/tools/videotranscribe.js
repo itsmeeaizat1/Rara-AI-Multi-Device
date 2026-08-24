@@ -107,7 +107,7 @@ async function handler(m, { sock,  args }) {
     );
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const result = await transcriber(url, lang);

@@ -170,7 +170,7 @@ async function handler(m, { sock, db }) {
 
   // ─── Mode: koleksi foto sedang aktif ───
   if (session && isImage && !m.text?.toLowerCase().includes("stikergrid")) {
-    await m.react("🕒");
+    await m.react("🐣");
 
     try {
       let buffer;
@@ -239,7 +239,7 @@ async function handler(m, { sock, db }) {
   }
 
   // ─── Mulai sesi baru ───
-  await m.react("🕒");
+  await m.react("🐣");
 
   const newSession = createSession(chatJid, m.sender, sock, m);
 

@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
   ┊  ➶ \`Contoh: ${m.prefix}ttsearch anime\``, "ttsearch");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const videos = await tiktokSearchVideo(query);

@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
 
   if (!media) { const __navText = "❌ Gagal membaca media, coba lagi!"; return await m.reply(__navText, "gura"); };
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const imgUrl = await uploadToCatbox(media);

@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}nova-ai Apa itu Node.js?*`, "nova-ai");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const result = await UnlimitedAI(text, "nova-ai");

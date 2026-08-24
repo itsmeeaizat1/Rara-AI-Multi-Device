@@ -120,7 +120,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "ringkasan" });
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     // Check for custom number of points

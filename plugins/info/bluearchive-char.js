@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const ba = new BluArchive();

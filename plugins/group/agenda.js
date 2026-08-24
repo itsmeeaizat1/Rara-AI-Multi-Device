@@ -675,7 +675,7 @@ export default {
       return { handled: true };
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     const eventId = genId();
     const dateStr = new Date().toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });

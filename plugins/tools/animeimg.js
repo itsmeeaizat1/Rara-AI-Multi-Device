@@ -55,7 +55,7 @@ async function handler(m, { sock, args }) {
     return m.reply(claraWrap("animeimg", txt));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const res = await axios.get(`${API_URL}/${category.tag}`, {

@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}douyindl https://v.douyin.com/xxx*`, "douyindl");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const data = await douyinFetch(text);
