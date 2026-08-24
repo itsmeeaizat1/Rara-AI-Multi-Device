@@ -25,9 +25,9 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply( `🔵 *Qwen3 80B*\n\n` +
         `Tanya apa aja ke AI Qwen3 — model besar dari Alibaba yang jago bahasa apa aja.\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}qwen3 <pertanyaan>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}qwen3 Apa itu machine learning?*\n` +
         `*${m.prefix}qwen3 Buat resep masakan Indonesia*\n\n` +
         `_Model 80B, jadi agak lama tapi jawabannya mantap_`, "qwen3");

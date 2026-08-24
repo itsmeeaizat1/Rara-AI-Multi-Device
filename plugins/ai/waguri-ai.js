@@ -22,11 +22,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `👓 *Waguri-san*\n\n` +
+    return m.reply( `👓 *ᴡᴀɢᴜʀɪ-ꜱᴀɴ*\n\n` +
         `Gadis pemalu dari "The Girl I Like Forgot Her Glasses"\nManis, perhatian, dan sering salah tingkah~\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}waguri-ai <pertanyaan>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}waguri-ai Waguri-san, halo!*`, "waguri-ai");
   }
 
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const result = await UnlimitedAI(text, "waguri-ai");
 
     if (!result.status) {
-      { const __navText = `❌ *Waguri AI Error*\n\n${result.error || "Gagal mendapatkan respons"}`; return await m.reply(__navText); };
+      { const __navText = `❌ *ᴡᴀɢᴜʀɪ ᴀɪ ᴇʀʀᴏʀ*\n\n${result.error || "Gagal mendapatkan respons"}`; return await m.reply(__navText); };
     }
 
     await m.react("🐣");

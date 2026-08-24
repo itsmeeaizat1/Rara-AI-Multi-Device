@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.text
     if (!text) {
-        return m.reply(claraWrap("Aichat", `🤖 *Aichat*\n\nMasukkan pertanyaan\n\n\`Contoh: ${m.prefix}ai4chat Apa itu JavaScript?\``), "ai4chat")
+        return m.reply(claraWrap("Aichat", `🤖 *ᴀɪᴄʜᴀᴛ*\n\nMasukkan pertanyaan\n\n\`Contoh: ${m.prefix}ai4chat Apa itu JavaScript?\``), "ai4chat")
     }
     m.react('🕐')
     try {

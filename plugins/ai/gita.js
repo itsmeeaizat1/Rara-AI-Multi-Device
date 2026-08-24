@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.args.join(' ')
     if (!text) {
-        return m.reply(claraWrap("Gita Gpt", `📿 *Gita Gpt*\n\nMasukkan pertanyaan\n\n\`Contoh: ${m.prefix}gita What is dharma?\``), "gita")
+        return m.reply(claraWrap("Gita Gpt", `📿 *ɢɪᴛᴀ ɢᴘᴛ*\n\nMasukkan pertanyaan\n\n\`Contoh: ${m.prefix}gita What is dharma?\``), "gita")
     }
 
     m.react('🕐')

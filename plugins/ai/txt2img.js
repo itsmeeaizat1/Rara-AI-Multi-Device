@@ -24,10 +24,10 @@ const STYLES = ['photorealistic', 'digital-art', 'impressionist', 'anime', 'fant
 async function handler(m, { sock }) {
     const input = m.args.join(' ')
     if (!input) {
-        return m.reply( `🎨 *Text To Image*\n\n` +
+        return m.reply( `🎨 *ᴛᴇxᴛ ᴛᴏ ɪᴍᴀɢᴇ*\n\n` +
             `Generate gambar dari teks dengan AI\n\n` +
             `\`Contoh: ${m.prefix}txt2img beautiful sunset | anime\`\n\n` +
-            `🎭 *sTyles*\n` +
+            `🎭 *ꜱᴛʏʟᴇꜱ*\n` +
             `\`${STYLES.join(', ')}\``, "text2img3")
     }
 

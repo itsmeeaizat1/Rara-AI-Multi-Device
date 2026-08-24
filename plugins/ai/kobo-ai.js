@@ -22,11 +22,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `🌬️ *Kobo Kanaeru*\n\n` +
+    return m.reply( `🌬️ *ᴋᴏʙᴏ ᴋᴀɴᴀᴇʀᴜ*\n\n` +
         `VTuber Hololive Indonesia Gen 3\nWind Shaman yang cheerfull dan suka prank!\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}kobo-ai <pertanyaan>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}kobo-ai Kobo lagi apa?*`, "kobo-ai");
   }
 
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const result = await UnlimitedAI(text, "kobo-ai");
 
     if (!result.status) {
-      { const __navText = `❌ *Kobo AI Error*\n\n${result.error || "Gagal mendapatkan respons"}`; return await m.reply(__navText); };
+      { const __navText = `❌ *ᴋᴏʙᴏ ᴀɪ ᴇʀʀᴏʀ*\n\n${result.error || "Gagal mendapatkan respons"}`; return await m.reply(__navText); };
     }
 
     await m.react("🐣");

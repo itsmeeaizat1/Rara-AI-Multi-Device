@@ -78,8 +78,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!m.isOwner) {
       const text =
-        claraWrap("Ditolak", ["  ┊  ➶ Status: *Ditolak*",
-          "  ┊  ➶ Alasan: *Hanya owner yang bisa mengganti model AI.*"].join("\n")) +
+        claraWrap("Ditolak", ["  ┊  ➶ Status: *ᴅɪᴛᴏʟᴀᴋ*",
+          "  ┊  ➶ Alasan: *ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇʟ ᴀɪ.*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -102,7 +102,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

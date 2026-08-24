@@ -23,11 +23,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `💚 *FeelBetterBot*\n\n` +
+    return m.reply( `💚 *ꜰᴇᴇʟʙᴇᴛᴛᴇʀʙᴏᴛ*\n\n` +
         `AI yang siap mendengarkan curhatan kamu — tanpa menghakimi, dengan hangat dan empatik.\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}feelbetter <curhatan>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}feelbetter lagi sedih nih*\n` +
         `*${m.prefix}feelbetter aku capek banget belakangan*\n\n` +
         `_Bot ini bukan pengganti profesional, tapi bisa jadi tempat curhat yang aman_`, "feelbetter");
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const result = await FeelBetter(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("FeelBetter Gagal", `❌ *FeelBetter Gagal*\n\n${result.error || "Gagal mendapatkan respons"}`));
+      return m.reply(claraWrap("FeelBetter Gagal", `❌ *ꜰᴇᴇʟʙᴇᴛᴛᴇʀ ɢᴀɢᴀʟ*\n\n${result.error || "Gagal mendapatkan respons"}`));
     }
 
     await m.react("🐣");

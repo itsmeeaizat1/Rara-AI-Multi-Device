@@ -22,11 +22,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `🇮🇩 *Pak Prabowo*\n\n` +
+    return m.reply( `🇮🇩 *ᴘᴀᴋ ᴘʀᴀʙᴏᴡᴏ*\n\n` +
         `Pria Sawit — Presiden RI\nTegas, patriotik, dan karismatik\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}prabowo-ai <pertanyaan>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}prabowo-ai Saudara, kita harus berdaulat!*`, "prabowo-ai");
   }
 
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const result = await UnlimitedAI(text, "prabowo-ai");
 
     if (!result.status) {
-      { const __navText = `❌ *Prabowo AI Error*\n\n${result.error || "Gagal mendapatkan respons"}`; return await m.reply(__navText); };
+      { const __navText = `❌ *ᴘʀᴀʙᴏᴡᴏ ᴀɪ ᴇʀʀᴏʀ*\n\n${result.error || "Gagal mendapatkan respons"}`; return await m.reply(__navText); };
     }
 
     await m.react("🐣");

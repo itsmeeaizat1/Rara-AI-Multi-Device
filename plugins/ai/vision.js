@@ -47,8 +47,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!apiKey) {
       const text =
-        claraWrap("Gagal", ["  ┊  ➶ Status: *Gagal*",
-          "  ┊  ➶ Alasan: *API key AI belum diisi.*"].join("\n")) +
+        claraWrap("Gagal", ["  ┊  ➶ Status: *ɢᴀɢᴀʟ*",
+          "  ┊  ➶ Alasan: *ᴀᴘɪ ᴋᴇʏ ᴀɪ ʙᴇʟᴜᴍ ᴅɪɪꜱɪ.*"].join("\n")) +
         "\n" +
         tipText("Isi `botConfig.aiHelp.apiKey` dulu, lalu coba lagi.");
 
@@ -97,7 +97,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
