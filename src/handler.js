@@ -323,8 +323,10 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Family 100 game answer handler (non-command reply to game message)
+  // Game answer handler (non-command reply to game message)
+  // Checks all registered game sessions via nova-games + family100
   if (!m.isCommand && !m.isNewsletter) {
+    // Family 100 (separate plugin, own session system)
     try {
       const { answerHandler: fam100Handler } = await import("../plugins/game/family100.js");
       if (typeof fam100Handler === "function") {
@@ -333,6 +335,23 @@ async function messageHandler(msg, sock) {
       }
     } catch (e) {
       if (config.dev?.debugLog) logger.error("family100", e.message);
+    }
+
+    // All other games (via nova-games factory — shared session map)
+    try {
+      const { games } = await import("./lib/nova-games.js");
+      const { getSession } = await import("./lib/nova-game-data.js");
+      const session = getSession(m.chat);
+      if (session && session.gameType) {
+        const cfg = games.get(session.gameType);
+        if (cfg) {
+          const { answerHandler } = games.createHandler(session.gameType);
+          const handled = await answerHandler(m, sock);
+          if (handled) return;
+        }
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("game-answer", e.message);
     }
   }
 
