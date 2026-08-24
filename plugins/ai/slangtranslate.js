@@ -142,7 +142,7 @@ export default {
           `┊ 🎙️ Hasil transcribe:`,
           `┊ "${inputText.length > 200 ? inputText.slice(0, 200) + "..." : inputText}"`,
           ``,
-          `┊ ⏳ Menerjemahkan slang...`,
+          
         ].join("\n")));
       } catch (error) {
         try { fs.unlinkSync(inputPath); } catch (e) { console.error('[slangtranslate.js]:', e.message); }

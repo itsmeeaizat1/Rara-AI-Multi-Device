@@ -26,7 +26,6 @@ async function handler(m, { sock }) {
     try {
         let buffer = m.quoted && m.quoted.isMedia ? await m.quoted.download() : await m.download()
         if (!buffer) { const __navText = claraWrap("ganti-nova-demote.jpg", '❌ Gagal mendownload gambar'); return await m.reply(__navText); }
-        await m.reply(claraWrap("Ganti-nova-demote.jpg", `⏳ Sedang mengupload gambar...`))
         try {
             const newUrl = await updateAssetUrl('nova-demote', buffer, 'nova-demote.jpg')
             m.reply(claraWrap("Ganti-nova-demote.jpg", `✅ *Berhasil*\n\n> Gambar nova-demote.jpg telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`))

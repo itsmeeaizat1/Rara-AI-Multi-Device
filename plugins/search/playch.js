@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
     }
     info += `📡 Saluran: \`${chId}\`\n`;
     info += `🔗 ${video.url}\n\n`;
-    info += `_⏳ mengirim audio ke saluran, harap tunggu..._`;
+    
 
     await sock.sendMedia(m.chat, video.thumbnail, info, m, { type: "image" });
 

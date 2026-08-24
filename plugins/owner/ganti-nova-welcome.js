@@ -39,7 +39,6 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("Ganti-nova-welcome.jpg", `❌ Gagal mendownload gambar`))
         }
         
-        await m.reply(claraWrap("Ganti-nova-welcome.jpg", `⏳ Sedang mengupload gambar...`))
         try {
             const newUrl = await updateAssetUrl('nova-welcome', buffer, 'nova-welcome.jpg')
             { const __navText = `✅ *Berhasil*\n\n> Gambar nova-welcome.jpg telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`; await m.reply(__navText); }

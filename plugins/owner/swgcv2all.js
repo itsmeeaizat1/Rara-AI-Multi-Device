@@ -99,7 +99,6 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Swgcv2all", "❌ Bot tidak berada di grup manapun."));
     }
 
-    await m.reply(claraWrap("Swgcv2all", `⏳ *Memulai Broadcast Status Grup V2 ke ${groupIds.length} Grup...*\n\n> Proses ini mungkin memakan waktu beberapa saat.`));
 
     let successCount = 0;
     let failCount = 0;

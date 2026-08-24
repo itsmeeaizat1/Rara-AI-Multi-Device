@@ -39,7 +39,6 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("Ganti-nova.mp3", `❌ Gagal mendownload audio`))
         }
         
-        await m.reply(claraWrap("Ganti-nova.mp3", `⏳ Sedang mengupload gambar...`))
         try {
             const newUrl = await updateAssetUrl('nova-mp3', buffer, 'nova.mp3')
             { const __navText = `✅ *Berhasil*\n\n> File nova.mp3 telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`; await m.reply(__navText); }
