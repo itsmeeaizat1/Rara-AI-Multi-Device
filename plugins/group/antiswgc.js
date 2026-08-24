@@ -26,7 +26,7 @@ async function handler(m, { sock,  db }) {
 
     if (!action) {
         const status = group.antiswgc || 'off'
-        await m.reply( `📡 *Antiswgc*\n\n` +
+        await m.reply( `📡 *ᴀɴᴛɪꜱᴡɢᴄ*\n\n` +
             `Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*\n\n` +
             `Fitur ini mendeteksi tipe SW group mention seperti:\n` +
             `groupStatusMentionMessage\n` +
@@ -40,13 +40,13 @@ async function handler(m, { sock,  db }) {
 
     if (action === 'on') {
         db.setGroup(m.chat, { ...group, antiswgc: 'on' })
-        await m.reply(claraWrap("Antiswgc", '✅ *AntiSWGC aktif*\n\nTipe SW group mention akan dihapus otomatis.'))
+        await m.reply(claraWrap("Antiswgc", '✅ *ᴀɴᴛɪꜱᴡɢᴄ ᴀᴋᴛɪꜰ*\n\nTipe SW group mention akan dihapus otomatis.'))
         return
     }
 
     if (action === 'off') {
         db.setGroup(m.chat, { ...group, antiswgc: 'off' })
-        { const __navText = '❌ *AntiSWGC nonaktif*'; await m.reply(__navText); }
+        { const __navText = '❌ *ᴀɴᴛɪꜱᴡɢᴄ ɴᴏɴᴀᴋᴛɪꜰ*'; await m.reply(__navText); }
         return
     }
 

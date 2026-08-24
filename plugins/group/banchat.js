@@ -30,15 +30,15 @@ async function handler(m, { sock }) {
         
         if (isUnban) {
             if (!groupData.isBanned) {
-                return mm.reply(claraWrap("banchat", `⚠️ *Grup Tidak Diban*\n\n` +
+                return mm.reply(claraWrap("banchat", `⚠️ *ɢʀᴜᴘ ᴛɪᴅᴀᴋ ᴅɪʙᴀɴ*\n\n` +
                     `Grup ini tidak dalam status banned.\n` +
                     `Semua user bisa menggunakan bot.`))            }
             
             db.setGroup(m.chat, { ...groupData, isBanned: false })
             
             return sock.sendMessage(m.chat, {
-                text: `✅ *Grup Di-Unban*\n\n` +
-                    `╭┈┈⬡「 📋 *Detail* 」\n` +
+                text: `✅ *ɢʀᴜᴘ ᴅɪ-ᴜɴʙᴀɴ*\n\n` +
+                    `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
                     `┃ 📛 Grup: *${groupName}*\n` +
                     `┃ 📊 sTatus: *✅ AKTIF*\n` +
                     `┃ 👤 Unban Oleh: @${m.sender.split('@')[0]}\n` +
@@ -49,14 +49,14 @@ async function handler(m, { sock }) {
         }
         
         if (groupData.isBanned) {
-            return m.m.reply(`⚠️ *Grup sUdah Diban*\n\n` +
+            return m.m.reply(`⚠️ *ɢʀᴜᴘ ꜱᴜᴅᴀʜ ᴅɪʙᴀɴ*\n\n` +
                 `Grup ini sudah dalam status banned.\n` +
                 `Gunakan \`.unbanchat\` untuk membuka akses.`)       }
         
         db.setGroup(m.chat, { ...groupData, isBanned: true })
         
-        await m.reply(claraWrap("banchat", `🚫 *Grup Diban*\n\n` +
-                `╭┈┈⬡「 📋 *Detail* 」\n` +
+        await m.reply(claraWrap("banchat", `🚫 *ɢʀᴜᴘ ᴅɪʙᴀɴ*\n\n` +
+                `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
                 `┃ 📛 Grup: *${groupName}*\n` +
                 `┃ 📊 sTatus: *🔴 BANNED*\n` +
                 `┃ 👤 Ban Oleh: @${m.sender.split('@')[0]}\n` +

@@ -22,7 +22,7 @@ const pluginConfig = {
 
 function gpMsg(key, replacements = {}) {
     const defaults = {
-        antisticker: '⚠ *AntiSticker* — Sticker dari @%user% dihapus.',
+        antisticker: '⚠ *ᴀɴᴛɪꜱᴛɪᴄᴋᴇʀ* — Sticker dari @%user% dihapus.',
     }
     let text = config.groupProtection?.[key] || defaults[key] || ''
     for (const [k, v] of Object.entries(replacements)) {
@@ -60,20 +60,20 @@ async function handler(m, { sock }) {
 
     if (!action) {
         const status = groupData.antisticker ? '✅ ON' : '❌ OFF'
-        await m.reply( `🎭 *AntiSticker*\n\nStatus: *${status}*\n\n\`.antisticker on/off\``, "antisticker")
+        await m.reply( `🎭 *ᴀɴᴛɪꜱᴛɪᴄᴋᴇʀ*\n\nStatus: *${status}*\n\n\`.antisticker on/off\``, "antisticker")
         return
     }
 
     if (action === 'on') {
         db.setGroup(m.chat, { antisticker: true })
         m.react('✅')
-        { const __navText = `✅ *AntiSticker diaktifkan*`; await m.reply(__navText); }
+        { const __navText = `✅ *ᴀɴᴛɪꜱᴛɪᴄᴋᴇʀ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`; await m.reply(__navText); }
         return
     }
 
     if (action === 'off') {
         db.setGroup(m.chat, { antisticker: false })
-        await m.reply(claraWrap("Antisticker", `❌ *AntiSticker dinonaktifkan*`))
+        await m.reply(claraWrap("Antisticker", `❌ *ᴀɴᴛɪꜱᴛɪᴄᴋᴇʀ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`))
         return
     }
 

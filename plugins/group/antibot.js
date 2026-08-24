@@ -26,7 +26,7 @@ const pluginConfig = {
 
 function gpMsg(key, replacements = {}) {
   const defaults = {
-    antibot: "🤖 *AntiBot* — @%user% terdeteksi sebagai bot dan di-kick.",
+    antibot: "🤖 *ᴀɴᴛɪʙᴏᴛ* — @%user% terdeteksi sebagai bot dan di-kick.",
   };
   let text = config.groupProtection?.[key] || defaults[key] || "";
   for (const [k, v] of Object.entries(replacements)) {
@@ -154,9 +154,9 @@ function handler(m, { sock }) {
   const current = groupData.antibot || false;
 
   if (!args || args === "status") {
-    return m.reply( `🤖 *AntiBot*\n\n` +
+    return m.reply( `🤖 *ᴀɴᴛɪʙᴏᴛ*\n\n` +
       `Status: ${current ? "✅ Aktif" : "❌ Nonaktif"}\n\n` +
-      `Deteksi: *Smart Heuristic*\n\n` +
+      `Deteksi: *ꜱᴍᴀʀᴛ ʜᴇᴜʀɪꜱᴛɪᴄ*\n\n` +
       `\`.antibot on/off\``, "antibot");
   }
 
@@ -164,13 +164,13 @@ function handler(m, { sock }) {
     db.setGroup(m.chat, { ...groupData, antibot: true });
     db.save();
     m.react("🐣");
-    return m.reply(claraWrap("Antibot", `✅ *AntiBot diaktifkan*`));
+    return m.reply(claraWrap("Antibot", `✅ *ᴀɴᴛɪʙᴏᴛ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`));
   }
 
   if (args === "off") {
     db.setGroup(m.chat, { ...groupData, antibot: false });
     db.save();
-    return m.reply(claraWrap("Antibot", `❌ *AntiBot dinonaktifkan*`));
+    return m.reply(claraWrap("Antibot", `❌ *ᴀɴᴛɪʙᴏᴛ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`));
   }
 
   return m.reply(`❌ Gunakan \`.antibot on\` atau \`.antibot off\``);

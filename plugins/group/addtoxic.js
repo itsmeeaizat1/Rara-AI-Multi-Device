@@ -23,13 +23,13 @@ async function handler(m, { sock }) {
     const word = m.args.join(' ').trim().toLowerCase()
     
     if (!word) {
-        return m.reply( `📝 *Add Toxic*\n\n` +
+        return m.reply( `📝 *ᴀᴅᴅ ᴛᴏxɪᴄ*\n\n` +
             `Gunak{ const __navText = ` +
             `\`Contoh: ${m.prefix}addtoxic katakasar\``, "addtoxic")
     }
     
     if (word.length < 2) {
-        return m.reply(claraWrap("Addtoxic", `❌ *Gagal*\n\nKata terlalu pendek (min 2 huruf)`))
+        return m.reply(claraWrap("Addtoxic", `❌ *ɢᴀɢᴀʟ*\n\nKata terlalu pendek (min 2 huruf)`))
     }
     
     if (word.length > 30) {
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     const toxicWords = groupData.toxicWords || []
     
     if (toxicWords.includes(word)) {
-        { const __navText = `❌ *Gagal*\n\nKata \`${word}\` sudah ada di daftar`; return await m.reply(__navText); }
+        { const __navText = `❌ *ɢᴀɢᴀʟ*\n\nKata \`${word}\` sudah ada di daftar`; return await m.reply(__navText); }
     }
     
     toxicWords.push(word)
@@ -49,8 +49,8 @@ async function handler(m, { sock }) {
     m.react('✅')
     
     await m.reply(
-        `✅ *Kata Toxic Ditambah*\n\n` +
-        `╭┈┈⬡「 📋 *Detail* 」\n` +
+        `✅ *ᴋᴀᴛᴀ ᴛᴏxɪᴄ ᴅɪᴛᴀᴍʙᴀʜ*\n\n` +
+        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `┃ 📝 Kata: \`${word}\`\n` +
         `┃ 📊 Total: \`${toxicWords.length}\` kata\n` +
         `╰┈┈⬡`

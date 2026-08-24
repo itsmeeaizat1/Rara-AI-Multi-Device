@@ -27,13 +27,13 @@ function handler(m, { sock }) {
     const current = groupData?.autodl || false
     
     if (!args || args === 'status') {
-        return m.reply( `🔗 *Auto Download*\n\n` +
+        return m.reply( `🔗 *ᴀᴜᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ*\n\n` +
             `Status: ${current ? '✅ Aktif' : '❌ Nonaktif'}\n\n` +
-            `*Platform Support:*\n` +
+            `*ᴘʟᴀᴛꜰᴏʀᴍ ꜱᴜᴘᴘᴏʀᴛ:*\n` +
             `TikTok, Instagram, Facebook\n` +
             `YouTube, Twitter/X\n` +
             `Telegram, Discord\n\n` +
-            `*Penggunaan:*\n` +
+            `*ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n` +
             `\`${m.prefix}autodl on\` - Aktifkan\n` +
             `\`${m.prefix}autodl off\` - Nonaktifkan`, "autodl")
     }
@@ -41,17 +41,17 @@ function handler(m, { sock }) {
     if (args === 'on') {
         db.setGroup(m.chat, { ...groupData, autodl: true })
         m.react('✅')
-        return m.reply(claraWrap("autodl", `✅ *Auto Download Aktif*\n\n` +
+        return m.reply(claraWrap("autodl", `✅ *ᴀᴜᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ᴀᴋᴛɪꜰ*\n\n` +
             `Kirim link sosmed dan bot akan auto download!\n` +
             `Support: TikTok, IG, FB, YouTube, Twitter/X`))
     }
     
     if (args === 'off') {
         db.setGroup(m.chat, { ...groupData, autodl: false })
-        return m.reply(claraWrap("Autodl", `❌ *Auto Download Nonaktif*`))
+        return m.reply(claraWrap("Autodl", `❌ *ᴀᴜᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ɴᴏɴᴀᴋᴛɪꜰ*`))
     }
     
-    return m.reply(`❌ *Argumen Tidak Valid*\n\nGunakan: \`on\` atau \`off\``)
+    return m.reply(`❌ *ᴀʀɢᴜᴍᴇɴ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\nGunakan: \`on\` atau \`off\``)
 }
 
 export { pluginConfig as config, handler }

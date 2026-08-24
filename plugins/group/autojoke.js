@@ -162,7 +162,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const lastSentStr = cfg.lastSent ? new Date(cfg.lastSent).toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) : "Belum pernah";
 
       return m.reply(claraWrap("Auto Joke", [
-        "Status: " + (cfg.enabled ? "*AKTIF*" : "Nonaktif"),
+        "Status: " + (cfg.enabled ? "*ᴀᴋᴛɪꜰ*" : "Nonaktif"),
         "Interval: " + (cfg.interval || DEFAULT_INTERVAL) + " menit",
         "Total terkirim: " + (cfg.totalSent || 0),
         "Terakhir kirim: " + lastSentStr,

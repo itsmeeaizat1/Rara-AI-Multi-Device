@@ -22,7 +22,7 @@ const pluginConfig = {
 
 function gpMsg(key, replacements = {}) {
   const defaults = {
-    antimedia: "⚠ *AntiMedia* — Media dari @%user% dihapus.",
+    antimedia: "⚠ *ᴀɴᴛɪᴍᴇᴅɪᴀ* — Media dari @%user% dihapus.",
   };
   let text = config.groupProtection?.[key] || defaults[key] || "";
   for (const [k, v] of Object.entries(replacements)) {
@@ -61,20 +61,20 @@ async function handler(m, { sock }) {
 
   if (!action) {
     const status = groupData.antimedia ? "✅ ON" : "❌ OFF";
-    await m.reply( `🖼️ *AntiMedia*\n\nStatus: *${status}*\n\n\`.antimedia on/off\``, "antimedia");
+    await m.reply( `🖼️ *ᴀɴᴛɪᴍᴇᴅɪᴀ*\n\nStatus: *${status}*\n\n\`.antimedia on/off\``, "antimedia");
     return;
   }
 
   if (action === "on") {
     db.setGroup(m.chat, { antimedia: true });
     m.react("🐣");
-    { const __navText = `✅ *AntiMedia diaktifkan*`; await m.reply(__navText); };
+    { const __navText = `✅ *ᴀɴᴛɪᴍᴇᴅɪᴀ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`; await m.reply(__navText); };
     return;
   }
 
   if (action === "off") {
     db.setGroup(m.chat, { antimedia: false });
-    await m.reply(claraWrap("Antimedia", `❌ *AntiMedia dinonaktifkan*`));
+    await m.reply(claraWrap("Antimedia", `❌ *ᴀɴᴛɪᴍᴇᴅɪᴀ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`));
     return;
   }
 

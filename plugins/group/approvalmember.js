@@ -5,7 +5,7 @@ function claraWrap(title, text) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   const body = Array.isArray(text) ? text.join("\n") : text;
-  // Convert body to small caps tapi skip baris command (.xxx) dan preserve *bold*
+  // Convert body to small caps tapi skip baris command (.xxx) dan preserve *ʙᴏʟᴅ*
   const scBody = body.split("\n").map(line => {
     if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:")) return line;
     return toSC(line);
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let text = "PERSETUJUAN MEMBER: " + (isOn ? "*AKTIF*" : "*NONAKTIF*") + "\n\n";
+    let text = "PERSETUJUAN MEMBER: " + (isOn ? "*ᴀᴋᴛɪꜰ*" : "*ɴᴏɴᴀᴋᴛɪꜰ*") + "\n\n";
     if (isOn) {
       text += "Sekarang member yang mau gabung harus di-approve admin dulu.\n\n";
       text += "Approve: " + m.prefix + "approvejoin <nomor> <groupId>\n";

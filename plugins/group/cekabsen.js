@@ -39,8 +39,8 @@ async function handler(m, { sock }) {
   }
   const saluranId = config.saluran?.id || "120363400911374213@newsletter";
   const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
-  await m.reply(claraWrap("DAFTAR YANG UDAH ABSEN", `📋 *DAFTAR YANG UDAH ABSEN*\n\n` +
-      `╭┈┈⬡「 📋 *INFO* 」\n` +
+  await m.reply(claraWrap("DAFTAR YANG UDAH ABSEN", `📋 *ᴅᴀꜰᴛᴀʀ ʏᴀɴɢ ᴜᴅᴀʜ ᴀʙꜱᴇɴ*\n\n` +
+      `╭┈┈⬡「 📋 *ɪɴꜰᴏ* 」\n` +
       `┃ 📝 ${absen.keterangan}\n` +
       `┃ 📅 ${dateStr}\n` +
       `┃ ⏰ Dimulai: ${timeStr}\n` +

@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const args = m.args || []
     
     if (args.length === 0) {
-        return m.reply(`👥 *Add Member*\n\n` +
+        return m.reply(`👥 *ᴀᴅᴅ ᴍᴇᴍʙᴇʀ*\n\n` +
             `Cara pakai:\n` +
             `1. Di grup: \`${m.prefix}add <nomor>\`\n` +
             `2. Multiple: \`${m.prefix}add <nomor1> <nomor2> ...\`\n` +
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
                 const groupInfo = await sock.groupGetInviteInfo(linkMatch[1])
                 targetGroup = groupInfo.id
             } catch (e) {
-                return m.reply(claraWrap("Add", `❌ *Gagal*\n\nLink grup tidak valid atau sudah expired!`))
+                return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nLink grup tidak valid atau sudah expired!`))
             }
         } else if (arg.includes('@g.us')) {
             targetGroup = arg
@@ -63,11 +63,11 @@ async function handler(m, { sock }) {
     }
     
     if (targetNumbers.length === 0) {
-        return m.reply(claraWrap("Add", `❌ *Gagal*\n\nMasukkan nomor yang valid!`))
+        return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nMasukkan nomor yang valid!`))
     }
     
     if (!targetGroup) {
-        return m.reply(`❌ *Gagal*\n\nJalankan di grup atau sertakan link grup!\n\n\`${m.prefix}add <nomor> <link_grup>\``)
+        return m.reply(`❌ *ɢᴀɢᴀʟ*\n\nJalankan di grup atau sertakan link grup!\n\n\`${m.prefix}add <nomor> <link_grup>\``)
     }
     
     try {
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         )
         
         if (!botParticipant || !['admin', 'superadmin'].includes(botParticipant.admin)) {
-            return m.reply(claraWrap("Add", `❌ *Gagal*\n\nBot bukan admin di grup *${groupMeta.subject}*!`))
+            return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nBot bukan admin di grup *${groupMeta.subject}*!`))
         }
         
         if (!m.isGroup) {
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
             )
             
             if (!senderParticipant || !['admin', 'superadmin'].includes(senderParticipant.admin)) {
-                return m.reply(claraWrap("Add", `❌ *Gagal*\n\nKamu bukan admin di grup *${groupMeta.subject}*!`))
+                return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nKamu bukan admin di grup *${groupMeta.subject}*!`))
             }
         }
         
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
         }
         
         if (validNumbers.length === 0) {
-            return m.reply(claraWrap("Add", `❌ *Gagal*\n\nSemua nomor sudah ada di grup!`))
+            return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nSemua nomor sudah ada di grup!`))
         }
         
         m.react('🕐')
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
         }
         
         if (invitedList.length > 0) {
-            resultText += `📨 *Dan ada juga *${invitedList.length}* member yang diundang:*\n`
+            resultText += `📨 *ᴅᴀɴ ᴀᴅᴀ ᴊᴜɢᴀ *${invitedList.length}* member yang diundang:*\n`
             invitedList.forEach(n => resultText += `@${n}\n`)
             resultText += `\n`
         }
@@ -161,9 +161,9 @@ async function handler(m, { sock }) {
     } catch (error) {
         
         if (error.message?.includes('not-authorized')) {
-            await m.reply(claraWrap("Add", `❌ *Gagal*\n\nBot tidak memiliki izin untuk menambah member!`))
+            await m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nBot tidak memiliki izin untuk menambah member!`))
         } else if (error.message?.includes('forbidden')) {
-            await m.reply(claraWrap("Add", `❌ *Gagal*\n\nBot tidak memiliki akses ke grup ini!`))
+            await m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nBot tidak memiliki akses ke grup ini!`))
         } else {
             m.reply(claraWrap("add", te(m.prefix, m.command, m.pushName), "error"))
         }

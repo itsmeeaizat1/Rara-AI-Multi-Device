@@ -26,11 +26,11 @@ async function handler(m, { sock }) {
   if (!option) {
     const status = db.setting("anticulik") || "off";
 
-    return m.reply(claraWrap("Anti Culik", `🛡️ *Anti Culik*\n\n` +
+    return m.reply(claraWrap("Anti Culik", `🛡️ *ᴀɴᴛɪ ᴄᴜʟɪᴋ*\n\n` +
         `Bot akan otomatis keluar dari grup jika ditambah oleh orang yang tidak dikenal tanpa izin.\n\n` +
-        `*STATUS:*\n` +
+        `*ꜱᴛᴀᴛᴜꜱ:*\n` +
         `Mode: *${status === "on" ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}anticulik on* — Aktifkan\n` +
         `*${m.prefix}anticulik off* — Nonaktifkan\n\n` +
         `_Jika aktif, bot hanya bisa join via *${m.prefix}join* atau ditambah oleh owner_`));
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
   if (option === "on") {
     db.setting("anticulik", "on");
     const ctx = saluranCtx();
-    return m.reply(claraWrap("anticulik", `🛡️ *Anti Culik Aktif*\n\n` +
+    return m.reply(claraWrap("anticulik", `🛡️ *ᴀɴᴛɪ ᴄᴜʟɪᴋ ᴀᴋᴛɪꜰ*\n\n` +
         `Bot akan keluar otomatis jika ditambah tanpa izin\n` +
         `Satu-satunya cara bot bisa join: *${m.prefix}join* oleh owner\n\n` +
         `_Member yang menambah bot akan diberi peringatan_`));
@@ -47,12 +47,12 @@ async function handler(m, { sock }) {
 
   if (option === "off") {
     db.setting("anticulik", "off");
-    return m.reply(claraWrap("anticulik", `🛡️ *Anti Culik Nonaktif*\n\n` +
+    return m.reply(claraWrap("anticulik", `🛡️ *ᴀɴᴛɪ ᴄᴜʟɪᴋ ɴᴏɴᴀᴋᴛɪꜰ*\n\n` +
         `Bot tidak akan keluar otomatis jika ditambah ke grup\n` +
         `Siapapun bisa menambahkan bot ke grup`));
   }
 
-  return m.reply(claraWrap("Anticulik", `❌ *Opsi Tidak Valid*\n\nGunakan *${m.prefix}anticulik on* atau *${m.prefix}anticulik off*`));
+  return m.reply(claraWrap("Anticulik", `❌ *ᴏᴘꜱɪ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\nGunakan *${m.prefix}anticulik on* atau *${m.prefix}anticulik off*`));
 }
 
 async function handleAntiCulik(event, sock, db) {
@@ -97,7 +97,7 @@ async function handleAntiCulik(event, sock, db) {
 
   await sock.sendMessage(event.id, {
     text:
-      `🛡️ *Anti Culik*\n\n` +
+      `🛡️ *ᴀɴᴛɪ ᴄᴜʟɪᴋ*\n\n` +
       `Minimal izin dulu ya bang, jangan asal culik 🗿\n\n` +
       `Bot ditambah oleh ${inviterMention} tanpa izin\n` +
       `Bot akan keluar dari grup ini\n\n` +
