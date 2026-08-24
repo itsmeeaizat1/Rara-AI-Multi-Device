@@ -1,14 +1,14 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
-import { ensurePlayer, addGold, addExp, checkCooldown, setCooldown } from "../../src/lib/nova-rpg-service.js";
+const pluginConfig = {
 
-export default {
   name: "daily",
   alias: ["dailyreward", "hadiahharian", "claimharian"],
   category: "rpg",
   description: "Klaim hadiah harian RPG",
-  usage: ".daily",
-  async handler(m, { sock }) {
+  usage: ".daily"
+};
+
+async function handler(m, { sock }) {
     try {
       ensurePlayer(m, m.pushName || "Player");
       const cd = checkCooldown(m, "lastDaily", 86400000);
@@ -35,4 +35,5 @@ ${expResult.leveledUp ? `\n🎉 𝗟𝗲𝘃𝗲𝗹 𝗨𝗽! Sekarang Level ${
       return await m.reply(`❌ Error: ${e.message}`);
     }
   }
-};
+
+export { pluginConfig as config, handler };
