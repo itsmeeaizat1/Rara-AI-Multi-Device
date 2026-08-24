@@ -12,7 +12,7 @@ async function handler(m, { sock }) {
     try {
       const players = getLeaderboard("level", 10);
       if (players.length === 0) {
-        return await sendReplyWithNav(sock, m, "❀°˖ 𝗥𝗮𝗻𝗸𝗶𝗻𝗴 𝗣𝗹𝗮𝘆𝗲𝗿 ˖°❀\n\n┊ ➶ Belum ada player terdaftar\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀", "leaderboard");
+        return await m.reply("❀°˖ 𝗥𝗮𝗻𝗸𝗶𝗻𝗴 𝗣𝗹𝗮𝘆𝗲𝗿 ˖°❀\n\n┊ ➶ Belum ada player terdaftar\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀");
       }
       const medals = ["🥇", "🥈", "🥉"];
       let text = "❀°˖ 𝗥𝗮𝗻𝗸𝗶𝗻𝗴 𝗣𝗹𝗮𝘆𝗲𝗿 ˖°❀\n\n";
@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
         text += `┊ ➶ ${rank} ${p.name} — Lv.${p.level} (${p.exp} exp)\n`;
       });
       text += "\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
-      return await sendReplyWithNav(sock, m, text, "leaderboard");
+      return await m.reply(text);
     } catch (e) {
       return await m.reply(`❌ Error: ${e.message}`);
     }

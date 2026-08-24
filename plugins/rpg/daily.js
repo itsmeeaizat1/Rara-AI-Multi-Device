@@ -13,7 +13,7 @@ async function handler(m, { sock }) {
       ensurePlayer(m, m.pushName || "Player");
       const cd = checkCooldown(m, "lastDaily", 86400000);
       if (!cd.ready) {
-        return await sendReplyWithNav(sock, m, `⏰ Hadiah harian sudah diklaim!\nTunggu ${cd.mins}m ${cd.secs}s lagi.`, "daily");
+        return await m.reply(`⏰ Hadiah harian sudah diklaim!\nTunggu ${cd.mins}m ${cd.secs}s lagi.`);
       }
       const player = ensurePlayer(m);
       const goldReward = 50 + (player.level * 10);
@@ -30,7 +30,7 @@ ${expResult.leveledUp ? `\n🎉 𝗟𝗲𝘃𝗲𝗹 𝗨𝗽! Sekarang Level ${
 ┊ ➶ Total Exp: ${(player.exp + expReward).toLocaleString()}
 
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
-      return await sendReplyWithNav(sock, m, text, "daily");
+      return await m.reply(text);
     } catch (e) {
       return await m.reply(`❌ Error: ${e.message}`);
     }

@@ -13,10 +13,10 @@ async function handler(m, { sock }) {
       ensurePlayer(m, m.pushName || "Player");
       const player = getPlayer(m);
       if (!player?.coupleId) {
-        return await sendReplyWithNav(sock, m, "❌ Kamu belum berpacaran!\nGunakan .couple @tag dulu.", "nikah");
+        return await m.reply("❌ Kamu belum berpacaran!\nGunakan .couple @tag dulu.");
       }
       if (player?.married) {
-        return await sendReplyWithNav(sock, m, `💍 Kamu sudah menikah dengan ${player.marriedName}!`, "nikah");
+        return await m.reply(`💍 Kamu sudah menikah dengan ${player.marriedName}!`);
       }
       global.rpgMarriage[m.sender] = { target: player.coupleId, time: Date.now() };
       let text = `❀°˖ 𝗟𝗮𝗺𝗮𝗿𝗮𝗻 ˖°❀
@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
 ┊ ➶ Ketik .tolaknikah untuk tolak
 
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
-      return await sendReplyWithNav(sock, m, text, "nikah");
+      return await m.reply(text);
     } catch (e) {
       return await m.reply(`❌ Error: ${e.message}`);
     }

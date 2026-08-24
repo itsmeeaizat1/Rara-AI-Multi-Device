@@ -16,7 +16,7 @@ async function handler(m, { sock }) {
         return r.target === m.sender && (Date.now() - r.time) < 600000;
       });
       if (!proposerId) {
-        return await sendReplyWithNav(sock, m, "❌ Tidak ada lamaran yang menunggu!\nLamaran expired setelah 10 menit.", "terimanikah");
+        return await m.reply("❌ Tidak ada lamaran yang menunggu!\nLamaran expired setelah 10 menit.");
       }
       const proposerName = global.rpgMarriage[proposerId].proposerName || proposerId.split("@")[0];
       setMarriage({ sender: proposerId, key: { remoteJid: m.key?.remoteJid } }, m.sender, m.pushName || "Player");
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
 ┊ ➶ Bonus: +100 exp untuk kalian berdua!
 
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
-      return await sendReplyWithNav(sock, m, text, "terimanikah");
+      return await m.reply(text);
     } catch (e) {
       return await m.reply(`❌ Error: ${e.message}`);
     }

@@ -13,10 +13,10 @@ async function handler(m, { sock }) {
       ensurePlayer(m, m.pushName || "Player");
       const cd = checkCooldown(m, "lastWork", 3600000);
       if (!cd.ready) {
-        return await sendReplyWithNav(sock, m, `⏰ Kamu baru saja kerja!\nTunggu ${cd.mins}m ${cd.secs}s lagi.`, "work");
+        return await m.reply(`⏰ Kamu baru saja kerja!\nTunggu ${cd.mins}m ${cd.secs}s lagi.`);
       }
       if (!useStamina(m, 10)) {
-        return await sendReplyWithNav(sock, m, "😴 Stamina tidak cukup! Istirahat dulu.", "work");
+        return await m.reply("😴 Stamina tidak cukup! Istirahat dulu.");
       }
       const job = jobs[Math.floor(Math.random() * jobs.length)];
       const gold = Math.floor(Math.random() * (job.gold[1] - job.gold[0] + 1)) + job.gold[0];
@@ -32,7 +32,7 @@ ${expResult.leveledUp ? `\n🎉 𝗟𝗲𝘃𝗲𝗹 𝗨𝗽! Sekarang Level ${
 ┊ ➶ Stamina berkurang 10
 
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
-      return await sendReplyWithNav(sock, m, text, "work");
+      return await m.reply(text);
     } catch (e) {
       return await m.reply(`❌ Error: ${e.message}`);
     }
