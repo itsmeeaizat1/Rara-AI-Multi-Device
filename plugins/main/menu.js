@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menu.js — Menu utama bot (rebuild: raw buffer thumbnail, externalAdReply langsung)
+// menu.js — Menu utama bot (rebuild: raw buffer thumbnail, externalAdReply + buttons)
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import config from "../../config.js";
 import {
@@ -219,22 +219,52 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const thumbBuffer = getThumb();
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
     const saluranLink = botConfig.saluran?.link || "";
+    const footerText = `${botName} | Nova AI WhatsApp Bot`;
 
-    await sock.sendMessage(m.chat, {
-      text: text,
-      contextInfo: {
-        mentionedJid: [m.sender],
-        externalAdReply: {
-          title: toSC(botName),
-          body: "WhatsApp Multi Device",
-          thumbnail: thumbBuffer,
-          sourceUrl: saluranLink,
-          mediaType: 2,
-          showAdAttribution: false,
-          renderLargerThumbnail: true,
+    // Tombol navigasi (type 1 — support externalAdReply thumbnail)
+    const buttons = [
+      { buttonId: `${prefix}allmenu`, buttonText: { displayText: "📋 All Menu" }, type: 1 },
+      { buttonId: `${prefix}menukategori`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
+      { buttonId: `${prefix}tanyaai`, buttonText: { displayText: "🤖 Tanya AI" }, type: 1 },
+      { buttonId: `${prefix}owner`, buttonText: { displayText: "👑 Owner" }, type: 1 },
+    ];
+
+    try {
+      await sock.sendMessage(m.chat, {
+        text: text,
+        footer: footerText,
+        buttons: buttons,
+        contextInfo: {
+          mentionedJid: [m.sender],
+          externalAdReply: {
+            title: toSC(botName),
+            body: "WhatsApp Multi Device",
+            thumbnail: thumbBuffer,
+            sourceUrl: saluranLink,
+            mediaType: 2,
+            showAdAttribution: false,
+            renderLargerThumbnail: true,
+          },
         },
-      },
-    }, { quoted: m });
+      }, { quoted: m });
+    } catch (btnErr) {
+      console.error("[menu] buttons gagal, fallback tanpa buttons:", btnErr.message);
+      await sock.sendMessage(m.chat, {
+        text: text,
+        contextInfo: {
+          mentionedJid: [m.sender],
+          externalAdReply: {
+            title: toSC(botName),
+            body: "WhatsApp Multi Device",
+            thumbnail: thumbBuffer,
+            sourceUrl: saluranLink,
+            mediaType: 2,
+            showAdAttribution: false,
+            renderLargerThumbnail: true,
+          },
+        },
+      }, { quoted: m });
+    }
 
     await m.react("✅");
   } catch (e) {

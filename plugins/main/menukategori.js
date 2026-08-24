@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menukategori.js — Menu per kategori (rebuild: raw buffer thumbnail)
+// menukategori.js — Menu per kategori (rebuild: raw buffer thumbnail + buttons)
 import config from "../../config.js";
 import {
   getCommandsByCategory,
@@ -73,13 +73,10 @@ function getThumb() {
 function findCategory(input) {
   if (!input) return null;
   const lower = input.toLowerCase().trim();
-  // Direct match
   if (CATEGORY_NAMES[lower]) return lower;
-  // Match by display name (case insensitive)
   for (const [key, name] of Object.entries(CATEGORY_NAMES)) {
     if (name.toLowerCase() === lower) return key;
   }
-  // Partial match
   for (const [key, name] of Object.entries(CATEGORY_NAMES)) {
     if (key.includes(lower) || name.toLowerCase().includes(lower)) return key;
   }
@@ -93,7 +90,6 @@ async function buildCategoryText(m, botConfig, db, category) {
     const catName = CATEGORY_NAMES[category] || (category.charAt(0).toUpperCase() + category.slice(1));
     const catEmoji = CATEGORY_EMOJIS[category] || "📂";
 
-    // Get commands for this category
     const commandsByCategory = getCommandsByCategory();
     const caseCats = getCasesByCategory();
     const pluginCmds = (commandsByCategory[category] || []).map(c => ({
@@ -105,7 +101,6 @@ async function buildCategoryText(m, botConfig, db, category) {
       return { command: c.command || c, description: c.description || "" };
     });
 
-    // Merge & dedupe
     const seen = new Set();
     const allCmds = [];
     for (const cmd of [...pluginCmds, ...caseCmds]) {
@@ -123,7 +118,6 @@ Tidak ada command di kategori ini.
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
     }
 
-    // Build command list
     let cmdLines = "";
     for (let i = 0; i < allCmds.length; i++) {
       const cmd = allCmds[i];
@@ -147,6 +141,57 @@ ${getTimeGreeting()} *${m.pushName || "User"}* 👋`;
   }
 }
 
+// ── Send with buttons + thumbnail ──
+async function sendWithButtons(sock, m, text, botConfig, catName) {
+  const prefix = botConfig.command?.prefix || ".";
+  const thumbBuffer = getThumb();
+  const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
+  const saluranLink = botConfig.saluran?.link || "";
+  const footerText = `${botName} | Nova AI WhatsApp Bot`;
+
+  const buttons = [
+    { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
+    { buttonId: `${prefix}allmenu`, buttonText: { displayText: "📋 All Menu" }, type: 1 },
+  ];
+
+  try {
+    await sock.sendMessage(m.chat, {
+      text: text,
+      footer: footerText,
+      buttons: buttons,
+      contextInfo: {
+        mentionedJid: [m.sender],
+        externalAdReply: {
+          title: toSC(botName),
+          body: catName ? toSC(catName) + " Category" : "Pilih Kategori",
+          thumbnail: thumbBuffer,
+          sourceUrl: saluranLink,
+          mediaType: 2,
+          showAdAttribution: false,
+          renderLargerThumbnail: true,
+        },
+      },
+    }, { quoted: m });
+  } catch (btnErr) {
+    console.error("[menukategori] buttons gagal, fallback:", btnErr.message);
+    await sock.sendMessage(m.chat, {
+      text: text,
+      contextInfo: {
+        mentionedJid: [m.sender],
+        externalAdReply: {
+          title: toSC(botName),
+          body: catName ? toSC(catName) + " Category" : "Pilih Kategori",
+          thumbnail: thumbBuffer,
+          sourceUrl: saluranLink,
+          mediaType: 2,
+          showAdAttribution: false,
+          renderLargerThumbnail: true,
+        },
+      },
+    }, { quoted: m });
+  }
+}
+
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   try {
     await m.react("🕐");
@@ -154,7 +199,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const args = m.text?.slice(prefix.length).trim().split(/\s+/).slice(1) || [];
     const inputCat = args[0] || "";
 
-    // If no category specified, list all categories
+    // No category = list all categories
     if (!inputCat) {
       const pluginCats = getCategories();
       const commandsByCategory = getCommandsByCategory();
@@ -177,26 +222,7 @@ ${catList}┊
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 Ketik *${prefix}menukategori <nama kategori>*`;
 
-      const thumbBuffer = getThumb();
-      const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
-      const saluranLink = botConfig.saluran?.link || "";
-
-      await sock.sendMessage(m.chat, {
-        text: text,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          externalAdReply: {
-            title: toSC(botName),
-            body: "Pilih Kategori",
-            thumbnail: thumbBuffer,
-            sourceUrl: saluranLink,
-            mediaType: 2,
-            showAdAttribution: false,
-            renderLargerThumbnail: true,
-          },
-        },
-      }, { quoted: m });
-
+      await sendWithButtons(sock, m, text, botConfig, null);
       await m.react("✅");
       return;
     }
@@ -217,27 +243,8 @@ Ketik *${prefix}menukategori <nama kategori>*`;
     }
 
     const text = await buildCategoryText(m, botConfig, db, matchedCat);
-    const thumbBuffer = getThumb();
-    const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
     const catName = CATEGORY_NAMES[matchedCat] || matchedCat;
-    const saluranLink = botConfig.saluran?.link || "";
-
-    await sock.sendMessage(m.chat, {
-      text: text,
-      contextInfo: {
-        mentionedJid: [m.sender],
-        externalAdReply: {
-          title: toSC(botName),
-          body: toSC(catName) + " Category",
-          thumbnail: thumbBuffer,
-          sourceUrl: saluranLink,
-          mediaType: 2,
-          showAdAttribution: false,
-          renderLargerThumbnail: true,
-        },
-      },
-    }, { quoted: m });
-
+    await sendWithButtons(sock, m, text, botConfig, catName);
     await m.react("✅");
   } catch (e) {
     console.error("[menukategori] handler error:", e.message);
