@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
     if (subCommand === 'warn') {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) {
-            return m.reply(`❌ Masukkan angka 1-10\n> Contoh: \`.antitoxic warn 5\``)
+            return m.reply(`❌ Masukkan angka 1-10\nContoh: \`.antitoxic warn 5\``)
         }
         db.setGroup(m.chat, { toxicMaxWarn: count })
         m.react('✅')
@@ -169,7 +169,7 @@ async function handler(m, { sock }) {
     if (subCommand === 'metode' || subCommand === 'method' || subCommand === 'mode') {
         const method = args[1]?.toLowerCase()
         if (!method || !['kick', 'delete'].includes(method)) {
-            return m.reply(`❌ Pilih metode: *kick* atau *delete*\n> Contoh: \`.antitoxic metode kick\``)
+            return m.reply(`❌ Pilih metode: *kick* atau *delete*\nContoh: \`.antitoxic metode kick\``)
         }
         db.setGroup(m.chat, { toxicMethod: method })
         m.react('✅')
@@ -177,7 +177,7 @@ async function handler(m, { sock }) {
         return
     }
 
-    await m.reply(`❌ Sub-command tidak dikenal.\n> Ketik \`.antitoxic\` untuk melihat daftar command.`)
+    await m.reply(`❌ Sub-command tidak dikenal.\nKetik \`.antitoxic\` untuk melihat daftar command.`)
 }
 
 export { pluginConfig as config, handler, isToxic, handleToxicMessage, DEFAULT_TOXIC_WORDS }

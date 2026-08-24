@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
         `JPG, PNG, GIF, WEBP`, "ocr");
   }
   await m.react("🕒");
-  { const __navText = `🕕 *MEMPROsEs...*\n\n> Mengekstrak teks dari gambar...`; await m.reply(__navText); };
+  { const __navText = `🕕 *MEMPROsEs...*\n\nMengekstrak teks dari gambar...`; await m.reply(__navText); };
   try {
     let buffer;
     if (m.quoted && m.quoted.isMedia) {
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
       buffer = await m.download();
     }
     if (!buffer || buffer.length === 0) {
-      return m.reply(claraWrap("Ocr", `❌ *GAGAL*\n\n> Tidak dapat download gambar`));
+      return m.reply(claraWrap("Ocr", `❌ *GAGAL*\n\nTidak dapat download gambar`));
     }
     const Tesseract = await getTesseract();
     const {
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     } = await Tesseract.recognize(buffer, "eng", {});
     const extractedText = text ? text.trim() : "";
     if (!extractedText || extractedText.length === 0) {
-      return m.reply(claraWrap("Ocr", `❌ *TIDAK ADA TEKs*\n\n> Tidak ada teks yang terdeteksi di gambar`));
+      return m.reply(claraWrap("Ocr", `❌ *TIDAK ADA TEKs*\n\nTidak ada teks yang terdeteksi di gambar`));
     }
     await m.react("🐣");
     const responseText =

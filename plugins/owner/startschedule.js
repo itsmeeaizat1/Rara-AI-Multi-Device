@@ -31,12 +31,12 @@ async function handler(m, { sock, args }) {
 \`.startschedule <nama>\`
 
 *Available schedulers:*
-• \`limitreset\` - Daily Limit Reset
-• \`groupschedule\` - Group Schedule
-• \`sewa\` - Sewa Checker
-• \`messages\` - Scheduled Messages
-• \`sholat\` - Sholat Scheduler
-• \`all\` - Semua scheduler
+  \`limitreset\` - Daily Limit Reset
+  \`groupschedule\` - Group Schedule
+  \`sewa\` - Sewa Checker
+  \`messages\` - Scheduled Messages
+  \`sholat\` - Sholat Scheduler
+  \`all\` - Semua scheduler
 
 *Example:*
 \`.startschedule sholat\`

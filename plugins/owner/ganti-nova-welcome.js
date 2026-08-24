@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        return m.reply(claraWrap("Ganti-nova-welcome.jpg", `🖼️ *Ganti Ourin-Welcome.Jpg*\n\n> Kirim/reply gambar untuk mengganti\n> File: assets/image/nova-welcome.jpg`))
+        return m.reply(claraWrap("Ganti-nova-welcome.jpg", `🖼️ *Ganti Ourin-Welcome.Jpg*\n\nKirim/reply gambar untuk mengganti\nFile: assets/image/nova-welcome.jpg`))
     }
     
     try {
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         
         try {
             const newUrl = await updateAssetUrl('nova-welcome', buffer, 'nova-welcome.jpg')
-            { const __navText = `✅ *Berhasil*\n\n> Gambar nova-welcome.jpg telah diganti ke URL baru:\n> ${newUrl}\n> Config telah diupdate secara realtime!`; await m.reply(__navText); }
+            { const __navText = `✅ *Berhasil*\n\nGambar nova-welcome.jpg telah diganti ke URL baru:\n${newUrl}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); }
         } catch (e) {
             m.reply(claraWrap("ganti-nova-welcome.jpg", `❌ Gagal mengupload gambar: ${e.message}`))
         }

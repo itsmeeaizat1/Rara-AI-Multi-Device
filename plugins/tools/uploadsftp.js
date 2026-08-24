@@ -197,11 +197,11 @@ async function handler(m, { sock }) {
             cfg.remotePath = sanitizeRemotePath(remotePath)
             fs.writeFileSync(SFTP_CONFIG_PATH, JSON.stringify(cfg, null, 2))
             return m.reply(claraWrap("Upload SFTP",
-                "BERHASIL\n\n> Remote path: `" + cfg.remotePath + "`"
+                "BERHASIL\n\nRemote path: `" + cfg.remotePath + "`"
             ))
         } catch (err) {
             return m.reply(claraWrap("Upload SFTP",
-                "GAGAL\n\n> " + err.message
+                "GAGAL\n\n" + err.message
             ))
         }
     }
@@ -219,7 +219,7 @@ async function handler(m, { sock }) {
                 await sftp.end()
                 await m.react('✅')
                 return m.reply(claraWrap("Upload SFTP",
-                    "*SFTP Files*\n\n> Folder `" + remotePath + "` kosong."
+                    "*SFTP Files*\n\nFolder `" + remotePath + "` kosong."
                 ))
             }
 
@@ -234,7 +234,7 @@ async function handler(m, { sock }) {
             await m.react('✅')
             return m.reply(claraWrap("Upload SFTP", body))
         } catch (err) {
-            return m.reply(claraWrap("Upload SFTP", "GAGAL\n\n> " + err.message))
+            return m.reply(claraWrap("Upload SFTP", "GAGAL\n\n" + err.message))
         }
     }
 
@@ -243,7 +243,7 @@ async function handler(m, { sock }) {
         const dirName = args[1]
         if (!dirName) {
             return m.reply(claraWrap("Upload SFTP",
-                "*Create Remote Directory*\n\n> Usage: `.uploadsftp mkdir /path/to/dir`"
+                "*Create Remote Directory*\n\nUsage: `.uploadsftp mkdir /path/to/dir`"
             ))
         }
         await m.react('🕐')
@@ -257,10 +257,10 @@ async function handler(m, { sock }) {
             await sftp.end()
             await m.react('✅')
             return m.reply(claraWrap("Upload SFTP",
-                "BERHASIL\n\n> Directory dibuat: `" + fullPath + "`"
+                "BERHASIL\n\nDirectory dibuat: `" + fullPath + "`"
             ))
         } catch (err) {
-            return m.reply(claraWrap("Upload SFTP", "GAGAL\n\n> " + err.message))
+            return m.reply(claraWrap("Upload SFTP", "GAGAL\n\n" + err.message))
         }
     }
 
@@ -269,7 +269,7 @@ async function handler(m, { sock }) {
         const fileName = args[1]
         if (!fileName) {
             return m.reply(claraWrap("Upload SFTP",
-                "*Delete Remote File*\n\n> Usage: `.uploadsftp delete <filename>`"
+                "*Delete Remote File*\n\nUsage: `.uploadsftp delete <filename>`"
             ))
         }
         await m.react('🕐')
@@ -283,10 +283,10 @@ async function handler(m, { sock }) {
             await sftp.end()
             await m.react('✅')
             return m.reply(claraWrap("Upload SFTP",
-                "BERHASIL\n\n> File `" + fileName + "` dihapus."
+                "BERHASIL\n\nFile `" + fileName + "` dihapus."
             ))
         } catch (err) {
-            return m.reply(claraWrap("Upload SFTP", "GAGAL\n\n> " + err.message))
+            return m.reply(claraWrap("Upload SFTP", "GAGAL\n\n" + err.message))
         }
     }
 
@@ -312,7 +312,7 @@ async function handler(m, { sock }) {
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
-            return m.reply(claraWrap("Upload SFTP", "GAGAL\n\n> Tidak dapat mengunduh media."))
+            return m.reply(claraWrap("Upload SFTP", "GAGAL\n\nTidak dapat mengunduh media."))
         }
 
         const fileName = getFileNameFromMessage(m)
@@ -391,13 +391,13 @@ async function handler(m, { sock }) {
 
         if (error.message === 'INVALID_CONFIG') {
             return m.reply(claraWrap("Upload SFTP",
-                "GAGAL\n\n> File config tidak valid. Pastikan format JSON benar."
+                "GAGAL\n\nFile config tidak valid. Pastikan format JSON benar."
             ))
         }
 
         if (error.message === 'NO_AUTH') {
             return m.reply(claraWrap("Upload SFTP",
-                "GAGAL\n\n> Tidak ada metode auth. Isi `password` atau `privateKey` di config."
+                "GAGAL\n\nTidak ada metode auth. Isi `password` atau `privateKey` di config."
             ))
         }
 

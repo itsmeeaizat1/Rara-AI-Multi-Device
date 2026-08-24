@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const args = m.text?.trim();
 
     if (!args) {
-        return await m.reply(claraWrap("setaudioallmenu", `Sistem manajemen gaya audio khusus untuk tampilan All Menu.\n\n*PENGGUNAAN:*\n• *${m.prefix}setaudioallmenu 1* — PTT Voice Note dengan reply pesan asli\n• *${m.prefix}setaudioallmenu 2* — PTT Voice Note dengan reply fake polling\n• *${m.prefix}setaudioallmenu 3* — Audio musik biasa dengan reply fake text\n• *${m.prefix}setaudioallmenu 4* — Audio musik biasa dengan reply fake troli order\n\n*PENJELASAN VARIAN:*\n- *Varian 1 & 2* akan secara otomatis mengkonversi file MP3 menjadi Opus (Voice Note) murni menggunakan ffmpeg.\n- *Varian 3 & 4* mengirimkan file dalam format MP3 biasa tanpa konversi.\n\nSaat ini All Menu menggunakan varian: *${db.setting("allmenuAudioStyle") || 1}*`));
+        return await m.reply(claraWrap("setaudioallmenu", `Sistem manajemen gaya audio khusus untuk tampilan All Menu.\n\n*Cara Pakai:*\n• *${m.prefix}setaudioallmenu 1* — PTT Voice Note dengan reply pesan asli\n• *${m.prefix}setaudioallmenu 2* — PTT Voice Note dengan reply fake polling\n• *${m.prefix}setaudioallmenu 3* — Audio musik biasa dengan reply fake text\n• *${m.prefix}setaudioallmenu 4* — Audio musik biasa dengan reply fake troli order\n\n*PENJELASAN VARIAN:*\n- *Varian 1 & 2* akan secara otomatis mengkonversi file MP3 menjadi Opus (Voice Note) murni menggunakan ffmpeg.\n- *Varian 3 & 4* mengirimkan file dalam format MP3 biasa tanpa konversi.\n\nSaat ini All Menu menggunakan varian: *${db.setting("allmenuAudioStyle") || 1}*`));
     }
 
     const newStyle = parseInt(args);

@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const nama = m.text?.split("|");
   if (!nama || nama.length < 2) {
-    return m.reply( claraWrap("Fakeffduo", `*FAKE FF DUO*\n\n> Contoh: ${m.prefix}fakeffduo nama1|nama2`), { commandName: "fakeffduo" });
+    return m.reply( claraWrap("Fakeffduo", `*FAKE FF DUO*\n\nContoh: ${m.prefix}fakeffduo nama1|nama2`), { commandName: "fakeffduo" });
   }
   m.react("🕒");
 

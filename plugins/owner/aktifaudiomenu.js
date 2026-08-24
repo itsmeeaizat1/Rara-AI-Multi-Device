@@ -35,7 +35,7 @@ async function handler(m, { sock, db }) {
             db.setting('audioMenu', true)
             await db.save()
             await m.react('✅')
-            return m.reply(`✅ Audio menu *diaktifkan*!\n\n> Sekarang ketika ada yang ketik \`.menu\`, audio akan muncul.`)
+            return m.reply(`✅ Audio menu *diaktifkan*!\n\nSekarang ketika ada yang ketik \`.menu\`, audio akan muncul.`)
         }
 
         if (option === 'gak' || option === 'off' || option === '0' || option === 'nonaktif') {
@@ -45,7 +45,7 @@ async function handler(m, { sock, db }) {
             db.setting('audioMenu', false)
             await db.save()
             await m.react('✅')
-            return m.reply(`❌ Audio menu *dinonaktifkan*!\n\n> Sekarang \`.menu\` tidak akan ada audio.`)
+            return m.reply(`❌ Audio menu *dinonaktifkan*!\n\nSekarang \`.menu\` tidak akan ada audio.`)
         }
 
         return m.reply(`❌ Opsi tidak valid!\n\nGunakan: \`ya\` atau \`gak\``)

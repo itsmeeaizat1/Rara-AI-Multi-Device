@@ -369,7 +369,7 @@ async function handler(m, { sock }) {
       );
     }
   } catch (e) {
-    await m.reply(claraWrap("get", `❌ *REQUEST FAILED*\n\n> ${e.message}`));
+    await m.reply(claraWrap("get", `❌ *REQUEST FAILED*\n\n${e.message}`));
   }
 }
 

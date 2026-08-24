@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const nama = m.text
     if(!nama) {
-        { const __navText = claraWrap("FAKE FF 2", `*FAKE FF 2*\n\n> Contoh: ${m.prefix}fakeff nama1`); return await m.reply(__navText, "fakeff2"); }
+        { const __navText = claraWrap("FAKE FF 2", `*FAKE FF 2*\n\nContoh: ${m.prefix}fakeff nama1`); return await m.reply(__navText, "fakeff2"); }
     }
     m.react('🕐')
     

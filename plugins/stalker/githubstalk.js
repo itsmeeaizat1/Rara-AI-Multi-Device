@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]
     
     if (!username) {
-        { const __navText = `🐙 *Github sTalk*\n\n> Masukkan username GitHub\n\n\`Contoh: ${m.prefix}githubstalk torvalds\``; return await m.reply( __navText, "githubstalk"); }
+        { const __navText = `🐙 *Github sTalk*\n\nMasukkan username GitHub\n\n\`Contoh: ${m.prefix}githubstalk torvalds\``; return await m.reply( __navText, "githubstalk"); }
     }
     
     m.react('🕐')

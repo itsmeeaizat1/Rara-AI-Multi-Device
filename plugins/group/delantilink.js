@@ -34,7 +34,7 @@ function handler(m, { sock }) {
         antilinkList.forEach((l, i) => {
             txt += `${i + 1}. \`${l}\`\n`
         })
-        txt += `\n> Total: *${antilinkList.length}* link`
+        txt += `\nTotal: *${antilinkList.length}* link`
         txt += `\n\n\`${m.prefix}delantilink <domain>\` untuk hapus`
         
         return m.reply( txt, "delantilink")

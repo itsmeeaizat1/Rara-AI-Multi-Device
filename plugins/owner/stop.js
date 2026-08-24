@@ -17,7 +17,7 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-    { const __navText = claraWrap("Stopping Bot...", '🛑 *Stopping Bot...*\n\n> Bot dimatikan. Harus dinyalakan manual dari terminal.'); await m.reply(__navText); }
+    { const __navText = claraWrap("Stopping Bot...", '🛑 *Stopping Bot...*\n\nBot dimatikan. Harus dinyalakan manual dari terminal.'); await m.reply(__navText); }
     console.log('Stopping via command...')
     
     // Allow message to send before exit

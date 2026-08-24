@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
   try {
     const kota = await searchKota(city);
     if (!kota) {
-      return m.reply(claraWrap("Gagal", `❌ *Gagal*\n\n> Kota "${city}" tidak ditemukan\n> Coba nama kabupaten/kota lain`));
+      return m.reply(claraWrap("Gagal", `❌ *Gagal*\n\nKota "${city}" tidak ditemukan\nCoba nama kabupaten/kota lain`));
     }
     const jadwalData = await getTodaySchedule(kota.id);
     const times = extractPrayerTimes(jadwalData);

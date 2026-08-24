@@ -53,8 +53,8 @@ async function handler(m, { sock }) {
             `📊 Tipe: *Fisik*\n` +
             `📦 Total: *${product.stock === -1 ? '♾️ Unlimited' : product.stock + ' pcs'}*\n\n` +
             `*Kelola stok:*\n` +
-            `• Tambah: \`${m.prefix}addstok ${idx + 1} <jumlah>\`\n` +
-            `• Edit: \`${m.prefix}editproduk ${idx + 1} stok <jumlah>\`\n\n` +
+            `Tambah: \`${m.prefix}addstok ${idx + 1} <jumlah>\`\n` +
+            `Edit: \`${m.prefix}editproduk ${idx + 1} stok <jumlah>\`\n\n` +
             `_Stok fisik diatur berdasarkan jumlah, bukan per-item_ 📦`
         )
     }
@@ -66,8 +66,8 @@ async function handler(m, { sock }) {
             `🔑 *Stok: ${product.name}*\n\n` +
             `📭 Belum ada stok item yang ditambahkan.\n\n` +
             `*Tambah stok:*\n` +
-            `• Manual: \`${m.prefix}addstok ${idx + 1}|<detail>\`\n` +
-            `• Import: \`${m.prefix}addstok ${idx + 1}\` (reply file .txt 📄)\n\n` +
+            `Manual: \`${m.prefix}addstok ${idx + 1}|<detail>\`\n` +
+            `Import: \`${m.prefix}addstok ${idx + 1}\` (reply file .txt 📄)\n\n` +
             `_Stok item bersifat rahasia 🔒 dan hanya dikirim ke pembeli setelah pembayaran dikonfirmasi_`
         )
     }

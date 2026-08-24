@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply( `🎵 *Douyin Downloader*\n\n` +
         `Download video atau audio dari Douyin (TikTok China).\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}douyindl <link>*\n\n` +
         `*CONTOH:*\n` +
         `*${m.prefix}douyindl https://v.douyin.com/xxx*`, "douyindl");

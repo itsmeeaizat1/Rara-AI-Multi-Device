@@ -244,7 +244,7 @@ async function handler(m, { sock, args }) {
       else if (avgScore >= 60) txt += `Predikat: *C - Cukup*\n`;
       else if (avgScore >= 50) txt += `Predikat: *D - Belajar lagi*\n`;
       else txt += `Predikat: *E - Wajib ulang!*\n`;
-      txt += `\n> _Skor berdasarkan kata kunci dalam jawabanmu. Tetap pelajari kunci jawaban untuk jawaban yang lebih lengkap._`;
+      txt += `\n_Skor berdasarkan kata kunci dalam jawabanmu. Tetap pelajari kunci jawaban untuk jawaban yang lebih lengkap._`;
       essaySessions.delete(sender);
       await m.reply(txt);
       await m.react("🐣");

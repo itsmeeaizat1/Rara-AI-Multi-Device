@@ -86,3 +86,44 @@ export {
   formatNumber,
   broadcastFormat,
 };
+
+// === Nova Usage Formatter ===
+// Format pesan usage yang konsisten & khas Nova AI
+// Pattern: header kaomoji → cara pakai → contoh → catatan → footer
+// Semua rata kiri, pakai ┊ ➶ bullets, no box-drawing
+
+function novaUsage(commandName, { steps = [], example = "", note = "", emoji = "" }) {
+  const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+  const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c).replace(/[A-Z]/g, c => SC_MAP[c.toLowerCase()]?.toUpperCase() || c);
+
+  let lines = [];
+
+  // Cara pakai
+  if (steps.length > 0) {
+    lines.push(`*Cara Pakai:*`);
+    for (const step of steps) {
+      // Strip leading bullets/karakter lama, pastikan rata kiri
+      const clean = String(step)
+        .replace(/^[•┊╎❏➶]\s*/g, '')
+        .replace(/^\s+/g, '');
+      lines.push(clean);
+    }
+  }
+
+  // Contoh
+  if (example) {
+    lines.push('');
+    lines.push(`*Contoh:* ${example}`);
+  }
+
+  // Catatan
+  if (note) {
+    lines.push('');
+    lines.push(`_${note}_`);
+  }
+
+  const title = emoji ? `${emoji} ${toSC(commandName)}` : toSC(commandName);
+  return bracketBox('i', title, lines);
+}
+
+export { novaUsage };

@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
 
     const newStatus = db.setting("notiflimit") ? "AKTIF ✅" : "MATI ❌";
 
-    await m.reply(claraWrap("NOTIFIKASI LIMIT (GLOBAL)", `*NOTIFIKASI LIMIT (GLOBAL)*\n\nStatus saat ini: *${newStatus}*\n\n> Ketika aktif, bot akan selalu memberitahu sisa limit SEMUA PENGGUNA setiap kali ada pemotongan saat menggunakan fitur bot.`));
+    await m.reply(claraWrap("NOTIFIKASI LIMIT (GLOBAL)", `*NOTIFIKASI LIMIT (GLOBAL)*\n\nStatus saat ini: *${newStatus}*\n\nKetika aktif, bot akan selalu memberitahu sisa limit SEMUA PENGGUNA setiap kali ada pemotongan saat menggunakan fitur bot.`));
 }
 
 export { pluginConfig as config, handler };

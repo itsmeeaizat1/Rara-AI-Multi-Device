@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
 
     let extraInfo = ''
     if (mode === 'store' && m.isGroup) {
-        extraInfo = `\n\n📋 *Manual mode*\n> Admin perlu confirm order manual`
+        extraInfo = `\n\n📋 *Manual mode*\nAdmin perlu confirm order manual`
     }
 
     await m.reply(

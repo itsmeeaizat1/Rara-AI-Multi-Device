@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
     const lines = Object.entries(DEFAULT_PROVIDERS).map(([key, provider]) => {
       const models = (provider.models || []).slice(0, 5).join(", ");
       const vision = provider.supportsVision ? "Ya" : "Tidak";
-      return `• ${provider.name} (${key})\n  Model: ${models}\n  Vision: ${vision}\n  Default: ${provider.defaultModel}`;
+      return `${provider.name} (${key})\n  Model: ${models}\n  Vision: ${vision}\n  Default: ${provider.defaultModel}`;
     });
 
     const text = claraWrap("AI Providers",

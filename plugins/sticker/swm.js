@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
     
     const isSticker = quoted.type === 'stickerMessage' || quoted.isSticker
     if (!isSticker) {
-        return m.reply(claraWrap("Swm", `❌ *Gagal*\n\n> Reply pesan sticker, bukan ${quoted.type?.replace('Message', '') || 'media lain'}`))
+        return m.reply(claraWrap("Swm", `❌ *Gagal*\n\nReply pesan sticker, bukan ${quoted.type?.replace('Message', '') || 'media lain'}`))
     }
     
     const input = m.text?.trim()
@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
         const buffer = await quoted.download()
         
         if (!buffer || buffer.length === 0) {
-            return m.reply(claraWrap("Swm", `❌ *Gagal*\n\n> Gagal mendownload sticker`))
+            return m.reply(claraWrap("Swm", `❌ *Gagal*\n\nGagal mendownload sticker`))
         }
         
         const exifOpts = { packname, author, emojis: ['🤖'] }

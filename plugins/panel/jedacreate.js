@@ -63,15 +63,15 @@ function handler(m, { sock }) {
             `Contoh: \`${m.prefix}jedacreate 5m\` (5 menit)\n` +
             `Untuk nonaktifkan: \`${m.prefix}jedacreate 0\`\n\n` +
             `*Format waktu:*\n` +
-            `• \`30s\` = 30 detik\n` +
-            `• \`5m\` = 5 menit\n` +
-            `• \`1h\` = 1 jam`, "jedacreate")
+            `\`30s\` = 30 detik\n` +
+            `\`5m\` = 5 menit\n` +
+            `\`1h\` = 1 jam`, "jedacreate")
     }
     
     const jedaMs = parseTime(input)
     
     if (jedaMs === null) {
-        return m.reply(claraWrap("jedacreate", `❌ Format waktu tidak valid!\n\n> Contoh: 30s, 5m, 1h`))
+        return m.reply(claraWrap("jedacreate", `❌ Format waktu tidak valid!\n\nContoh: 30s, 5m, 1h`))
     }
     
     db.setting('panelCreateJeda', jedaMs)

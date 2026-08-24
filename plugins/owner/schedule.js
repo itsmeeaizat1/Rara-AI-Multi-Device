@@ -308,14 +308,14 @@ Pesan yang dikirim akan mengikuti *text custom* buatan owner.
 \`.schedule preset kerja 09:00 | standup pagi | masuk room meeting | here | repeat\`
 
 *Target opsional:*
-• \`here\` = kirim ke chat ini
-• \`me\` = kirim ke chat owner sendiri
-• \`628xxx@s.whatsapp.net\` = kirim ke nomor tertentu
+  \`here\` = kirim ke chat ini
+  \`me\` = kirim ke chat owner sendiri
+  \`628xxx@s.whatsapp.net\` = kirim ke nomor tertentu
 
 *Mode repeat opsional:*
-• \`repeat\`
-• \`daily\`
-• \`harian\`
+  \`repeat\`
+  \`daily\`
+  \`harian\`
 
 *Contoh:*
 \`.schedule add 06:30 | sekolah | berangkat sekolah | mandi, sarapan, cek buku | me | repeat\`
@@ -324,13 +324,13 @@ Pesan yang dikirim akan mengikuti *text custom* buatan owner.
 \`.schedule add 20:00 | turnamen | scrim malam | room dibuka 15 menit sebelum mulai | here\`
 
 *Subcommand:*
-• \`.schedule list\`
-• \`.schedule kategori <nama>\`
-• \`.schedule preset <nama> <HH:MM>\`
-• \`.schedule edit <id> ...\`
-• \`.schedule detail <id>\`
-• \`.schedule del <id>\`
-• \`.schedule status\`
+  \`.schedule list\`
+  \`.schedule kategori <nama>\`
+  \`.schedule preset <nama> <HH:MM>\`
+  \`.schedule edit <id> ...\`
+  \`.schedule detail <id>\`
+  \`.schedule del <id>\`
+  \`.schedule status\`
 
 *Format lama masih didukung:*
 \`.schedule add 08:00 628xxx repeat Selamat pagi tim\``;
@@ -584,7 +584,7 @@ function buildCategoryListText(tasks) {
   let text = "🏷️ *KATEGORI JADWAL AKTIF*\n\n";
 
   for (const [category, total] of entries) {
-    text += `• ${category} (${total})\n`;
+    text += `${category} (${total})\n`;
   }
 
   text += "\nGunakan `.schedule kategori <nama>` untuk filter list jadwal.";
@@ -595,7 +595,7 @@ function buildPresetListText() {
   let text = "⚡ *QUICK PRESET SCHEDULE*\n\n";
 
   for (const [name, preset] of Object.entries(presetTemplates)) {
-    text += `• *${name}*\n`;
+    text += `*${name}*\n`;
     text += `  📝 ${preset.title}\n`;
     text += `  🔄 ${preset.repeat ? "Harian" : "Sekali"}\n`;
     text += `  📍 Default target: ${preset.target}\n`;
@@ -617,7 +617,7 @@ function buildListText(tasks, header = null) {
 
   for (const task of sorted) {
     const msUntil = getMsUntilTime(task.hour, task.minute);
-    text += `• *${getTaskTitle(task)}*\n`;
+    text += `*${getTaskTitle(task)}*\n`;
     text += `  🆔 ${task.id}\n`;
     text += `  🏷️ ${getTaskCategory(task)}\n`;
     text += `  ⏰ ${formatClock(task.hour, task.minute)} WIB\n`;

@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
 
   if (!action) {
     const status = groupData.antifoto ? "ON" : "OFF";
-    await m.reply( `Anti Foto\n\n> Status: ${status}\n\n> \`${m.prefix}antifoto on/off\``, { commandName: "antifoto" });
+    await m.reply( `Anti Foto\n\nStatus: ${status}\n\n\`${m.prefix}antifoto on/off\``, { commandName: "antifoto" });
     return;
   }
 

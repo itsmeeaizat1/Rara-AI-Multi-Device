@@ -95,7 +95,7 @@ async function handler(m, { sock, db }) {
 
     if (failedGroups.length > 0) {
       report +=
-        `\n\n*Grup gagal:*\n` + failedGroups.map((g) => `• ${g}`).join("\n");
+        `\n\n*Grup gagal:*\n` + failedGroups.map((g) => `${g}`).join("\n");
     }
 
     await m.reply(report);
@@ -247,7 +247,7 @@ async function handler(m, { sock, db }) {
     });
   } catch (error) {
     await m.reply(
-      `❌ *Error*\n\n> Gagal mengambil daftar grup.\n> _${error.message}_`,
+      `❌ *Error*\n\nGagal mengambil daftar grup.\n_${error.message}_`,
     );
     if (tempFile && fs.existsSync(tempFile)) {
       try {

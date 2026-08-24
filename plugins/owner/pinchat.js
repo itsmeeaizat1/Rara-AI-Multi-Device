@@ -49,8 +49,8 @@ async function handler(m, { sock }) {
         await m.react('✅')
         const target = targetJid.split('@')[0]
         return m.reply(pin
-                ? `📌 *Chat Dipin*\n\n> Target: ${target}`
-                : `📍 *Pin Dihapus*\n\n> Target: ${target}`)
+                ? `📌 *Chat Dipin*\n\nTarget: ${target}`
+                : `📍 *Pin Dihapus*\n\nTarget: ${target}`)
     } catch (err) {
         return m.reply(claraWrap("pinchat", `❌ Gagal: ${err.message}`))
     }

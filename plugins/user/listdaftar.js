@@ -184,7 +184,7 @@ async function handler(m, { sock }) {
   });
 
   if (totalPages > 1) {
-    text += `\n> Gunakan \`${m.prefix}listdaftar page ${page + 1 > totalPages ? totalPages : page + 1}\` untuk halaman lain`;
+    text += `\nGunakan \`${m.prefix}listdaftar page ${page + 1 > totalPages ? totalPages : page + 1}\` untuk halaman lain`;
   }
 
   const mentions = displayUsers.map((u) => u.jid + "@s.whatsapp.net");

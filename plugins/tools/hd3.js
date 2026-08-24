@@ -266,7 +266,7 @@ async function handler(m, { sock }) {
   const img = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!img) {
-    return m.reply( `*🪄 BEAUTYPLUS ENHANCER*\n> Reply gambar untuk di-HD-kan\n\n\`\`\`${m.prefix}hd3\`\`\``, "hd3");
+    return m.reply( `*🪄 BEAUTYPLUS ENHANCER*\nReply gambar untuk di-HD-kan\n\n\`\`\`${m.prefix}hd3\`\`\``, "hd3");
   }
 
   m.react("🕒");
@@ -305,7 +305,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    const caption = `*HD ENHANCED*\n> Size: ${sizeMB}MB\n> Source: BeautyPlus\n> Quality: Full HD`;
+    const caption = `*HD ENHANCED*\nSize: ${sizeMB}MB\nSource: BeautyPlus\nQuality: Full HD`;
 
     if (resultBuffer.length > 5 * 1024 * 1024) {
       // Auto document mode kalau > 5MB (no compress)

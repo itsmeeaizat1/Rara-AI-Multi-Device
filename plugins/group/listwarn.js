@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
       txt += `*${i + 1}.* @${name} - *${count}/${maxWarns}* warning\n`;
     });
 
-    txt += `\n> Ketik \`${m.prefix}listwarn @user\` untuk detail`;
+    txt += `\nKetik \`${m.prefix}listwarn @user\` untuk detail`;
 
     await m.reply(txt, { mentions: usersWithWarnings });
   }

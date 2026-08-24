@@ -262,7 +262,7 @@ async function handler(m, { sock }) {
     const avatarBuffer = await getAvatarBuffer(sock, m.sender);
     const isImage = m.isImage || (m.quoted && m.quoted.isImage);
     if (!isImage) {
-      return m.reply(claraWrap("Fakestory3", `❌ *Gagal*\n\n> Reply gambar untuk membuat fake story!`));
+      return m.reply(claraWrap("Fakestory3", `❌ *Gagal*\n\nReply gambar untuk membuat fake story!`));
     }
     let imageBuffer;
     if (m.isImage && m.download) {
@@ -271,7 +271,7 @@ async function handler(m, { sock }) {
       imageBuffer = await m.quoted.download();
     }
     if (!imageBuffer) {
-      return m.reply(claraWrap("Fakestory3", `❌ *Gagal*\n\n> Tidak bisa download gambar`));
+      return m.reply(claraWrap("Fakestory3", `❌ *Gagal*\n\nTidak bisa download gambar`));
     }
     const resultBuffer = await createFakeStory(
       username,
@@ -285,7 +285,7 @@ async function handler(m, { sock }) {
       m.chat,
       {
         image: resultBuffer,
-        caption: `📷 *Fake sTory*\n\n> Username: \`${username}\``,
+        caption: `📷 *Fake sTory*\n\nUsername: \`${username}\``,
       },
       { quoted: m },
     );

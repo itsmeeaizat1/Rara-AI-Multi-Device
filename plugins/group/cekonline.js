@@ -25,10 +25,10 @@ async function handler(m, { sock }) {
         const participants = m.groupMembers
         
         if (participants.length === 0) {
-            return m.reply(claraWrap("cekonline", `❌ *Gagal*\n\n> Tidak bisa mendapatkan data member grup`))
+            return m.reply(claraWrap("cekonline", `❌ *Gagal*\n\nTidak bisa mendapatkan data member grup`))
         }
         
-        await m.reply(claraWrap("Cekonline", `🔍 *Mencari Member Online...*\n\n> Menunggu response dari ${participants.length} member\n> Estimasi: 5-10 detik`))
+        await m.reply(claraWrap("Cekonline", `🔍 *Mencari Member Online...*\n\nMenunggu response dari ${participants.length} member\nEstimasi: 5-10 detik`))
         
         const presences = {}
         

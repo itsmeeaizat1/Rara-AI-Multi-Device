@@ -34,7 +34,7 @@ function formatRule(rule, index) {
   const type = rule.type === "regex" ? "regex" : "contains";
   const action = rule.action || "remove";
   const title = rule.groupName || rule.name || "-";
-  return `${index + 1}. *${title}*\n> pattern: \`${rule.pattern}\`\n> type: *${type}*\n> action: *${action}*`;
+  return `${index + 1}. *${title}*\npattern: \`${rule.pattern}\`\ntype: *${type}*\naction: *${action}*`;
 }
 
 function getSessionKey(m) {

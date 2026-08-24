@@ -66,7 +66,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply( `╭┈┈⬡「 🎨 *Install Tema Billing* 」\n┃ ㊗ Usage: \`${m.prefix}installtemabilling <ip>|<password>\`\n╰┈┈⬡\n\n> \`Contoh: ${m.prefix}installtemabilling 192.168.1.1|secretpass\``, "installtemabilling")
+        return m.reply( `╭┈┈⬡「 🎨 *Install Tema Billing* 」\n┃ ㊗ Usage: \`${m.prefix}installtemabilling <ip>|<password>\`\n╰┈┈⬡\n\n\`Contoh: ${m.prefix}installtemabilling 192.168.1.1|secretpass\``, "installtemabilling")
     }
 
     const parts = text.split('|')
@@ -91,28 +91,28 @@ function handler(m, { sock }) {
 
     conn.on('ready', async () => {
         try {
-            await m.reply(claraWrap("installtemabilling", `🕕 *[1/3] Install Dependencies...*\n\n> Menginstall Node.js, Yarn, Composer...`))
+            await m.reply(claraWrap("installtemabilling", `🕕 *[1/3] Install Dependencies...*\n\nMenginstall Node.js, Yarn, Composer...`))
             await execSSH(conn, DEPS_CMD)
 
-            await m.reply(claraWrap("installtemabilling", `🕕 *[2/3] Install Tema...*\n\n> Mendownload & install tema Billing...`))
+            await m.reply(claraWrap("installtemabilling", `🕕 *[2/3] Install Tema...*\n\nMendownload & install tema Billing...`))
             await execSSHInteractive(conn, THEME_CMD, [
                 { trigger: 'AKSES TOKEN', value: 'skyzodev' },
                 { trigger: 'Masukkan pilihan', value: '1' },
                 { trigger: 'Masukkan pilihan', value: '2' }
             ])
 
-            await m.reply(claraWrap("installtemabilling", `🕕 *[3/3] Build Assets...*\n\n> Compiling panel assets...`))
+            await m.reply(claraWrap("installtemabilling", `🕕 *[3/3] Build Assets...*\n\nCompiling panel assets...`))
             await execSSH(conn, BUILD_CMD)
 
             m.react('✅')
-            await m.reply(claraWrap("installtemabilling", `╭┈┈⬡「 ✅ *Tema Billing* 」\n┃ ㊗ sTatus: *Terinstall*\n┃ ㊗ Ip: ${ipvps}\n╰┈┈⬡\n\n> _Tema Billing + dependencies berhasil diinstall!_`))
+            await m.reply(claraWrap("installtemabilling", `╭┈┈⬡「 ✅ *Tema Billing* 」\n┃ ㊗ sTatus: *Terinstall*\n┃ ㊗ Ip: ${ipvps}\n╰┈┈⬡\n\n_Tema Billing + dependencies berhasil diinstall!_`))
         } catch (err) {
             m.reply(claraWrap("installtemabilling", te(m.prefix, m.command, m.pushName), "error"))
         } finally {
             conn.end()
         }
     }).on('error', (err) => {
-        m.reply(claraWrap("installtemabilling", `❌ Koneksi gagal!\n\n> IP atau Password tidak valid.`))
+        m.reply(claraWrap("installtemabilling", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
     }).connect(connSettings)
 }
 

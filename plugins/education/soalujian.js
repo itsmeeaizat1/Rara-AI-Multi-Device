@@ -534,11 +534,11 @@ async function handler(m, { sock, args }) {
       for (let i = 0; i < nextQ.options.length; i++) {
         txt += `${String.fromCharCode(65 + i)}. ${nextQ.options[i]}\n`;
       }
-      txt += `\n> Balas A/B/C/D`;
+      txt += `\nBalas A/B/C/D`;
     } else {
       txt += `Tulis jawabanmu (min 5 karakter)`;
     }
-    txt += `\n> Ketik *skip* untuk lewati, *stop* untuk berhenti`;
+    txt += `\nKetik *skip* untuk lewati, *stop* untuk berhenti`;
 
     await m.reply(txt);
     await m.react("🐣");
@@ -574,11 +574,11 @@ async function handler(m, { sock, args }) {
       for (let i = 0; i < nextQ.options.length; i++) {
         txt += `${String.fromCharCode(65 + i)}. ${nextQ.options[i]}\n`;
       }
-      txt += `\n> Balas A/B/C/D`;
+      txt += `\nBalas A/B/C/D`;
     } else {
       txt += `Tulis jawabanmu`;
     }
-    txt += `\n> skip / stop`;
+    txt += `\nskip / stop`;
     await m.reply(txt);
     await m.react("🐣");
     return;
@@ -643,7 +643,7 @@ async function handler(m, { sock, args }) {
   // Check daily quiz limit
   const dailyCheck = checkDailyLimit(sender);
   if (!dailyCheck.allowed) {
-    return m.reply("Kamu sudah main " + MAX_QUIZ_PER_DAY + " quiz hari ini!\n\nKembali besok untuk lanjut belajar.\n\n> Ketik .edulb untuk lihat ranking");
+    return m.reply("Kamu sudah main " + MAX_QUIZ_PER_DAY + " quiz hari ini!\n\nKembali besok untuk lanjut belajar.\n\nKetik .edulb untuk lihat ranking");
   }
   await m.react("🕒");
 
@@ -730,11 +730,11 @@ async function handler(m, { sock, args }) {
       for (let i = 0; i < q.options.length; i++) {
         txt += `${String.fromCharCode(65 + i)}. ${q.options[i]}\n`;
       }
-      txt += `\n> Balas A/B/C/D`;
+      txt += `\nBalas A/B/C/D`;
     } else {
       txt += `Tulis jawabanmu (min 5 karakter)`;
     }
-    txt += `\n> Ketik *skip* / *stop*`;
+    txt += `\nKetik *skip* / *stop*`;
 
     await m.reply(txt);
     await m.react("🐣");

@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     const current = db.setting("autoTyping") ?? config.features?.autoTyping ?? false;
     return m.reply( `⌨️ *Auto Typing*\n\n` +
         `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}autotyping on* — Aktifkan\n` +
         `*${m.prefix}autotyping off* — Nonaktifkan\n\n` +
         `_Bot akan menampilkan indikator typing saat menerima pesan_`, "autotyping");
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
         `Bot tidak akan menampilkan indikator typing`));
   }
 
-  return m.reply(claraWrap("Autotyping", `❌ *Opsi Tidak Valid*\n\n> Gunakan *${m.prefix}autotyping on* atau *${m.prefix}autotyping off*`));
+  return m.reply(claraWrap("Autotyping", `❌ *Opsi Tidak Valid*\n\nGunakan *${m.prefix}autotyping on* atau *${m.prefix}autotyping off*`));
 }
 
 export { pluginConfig as config, handler };

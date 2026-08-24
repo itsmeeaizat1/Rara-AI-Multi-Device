@@ -48,8 +48,8 @@ async function handler(m, { sock }) {
           `Dari private: *${m.prefix}delsewa <link/id>*\n` +
           `Dari grup: ketik *${m.prefix}delsewa* langsung di grup\n\n` +
           `Contoh:\n` +
-          `• ${m.prefix}delsewa https://chat.whatsapp.com/xxx\n` +
-          `• ${m.prefix}delsewa 120363xxx\n\n` +
+          `${m.prefix}delsewa https://chat.whatsapp.com/xxx\n` +
+          `${m.prefix}delsewa 120363xxx\n\n` +
           `⚠️ Jika sewabot aktif, bot akan otomatis keluar dari grup yang dihapus`, "delsewa");
     }
     groupId = m.chat;

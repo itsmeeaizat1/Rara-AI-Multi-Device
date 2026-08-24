@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
       `Broadcast: ${enabled ? "Aktif" : "Nonaktif"}`,
       `Jeda: ${formatDelay(jeda)} (${jeda}ms)`,
       "",
-      "PENGGUNAAN:",
+      "Cara Pakai:",
       `${m.prefix}bcgc on — Aktifkan broadcast`,
       `${m.prefix}bcgc off — Nonaktifkan broadcast`,
       `${m.prefix}bcgc <pesan> — Kirim broadcast teks`,

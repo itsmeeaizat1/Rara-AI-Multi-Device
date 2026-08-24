@@ -232,7 +232,7 @@ async function handler(m, { sock }) {
       m.chat,
       {
         image: resultBuffer,
-        caption: `📷 *Fake sTory*\n\n> Username: \`${username}\``,
+        caption: `📷 *Fake sTory*\n\nUsername: \`${username}\``,
       },
       { quoted: m },
     );

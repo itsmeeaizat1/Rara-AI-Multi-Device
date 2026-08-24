@@ -65,7 +65,7 @@ function formatList(results, query, prefix) {
     }
   });
 
-  txt += `\n> Ketik \`${prefix}gsmarena <nama lengkap>\` untuk detail`;
+  txt += `\nKetik \`${prefix}gsmarena <nama lengkap>\` untuk detail`;
   return txt;
 }
 
@@ -84,7 +84,7 @@ function formatDetail(device) {
     for (const cat of device.detailSpec.slice(0, 8)) {
       txt += `📌 *${cat.category}:*\n`;
       for (const s of cat.specifications.slice(0, 5)) {
-        txt += `• *${s.name}:* ${s.value}\n`;
+        txt += `*${s.name}:* ${s.value}\n`;
       }
       txt += "\n";
     }

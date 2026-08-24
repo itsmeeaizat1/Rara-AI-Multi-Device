@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
     if (cmd === 'listpartner') {
         const partners = db.data.partner
         if (!partners.length) {
-            return m.reply(claraWrap("addpartner", `🤝 *Daftar Partner*\n\n> Belum ada partner.`))
+            return m.reply(claraWrap("addpartner", `🤝 *Daftar Partner*\n\nBelum ada partner.`))
         }
 
         let txt = `🤝 *DAFTAR PARTNER*\n\n`

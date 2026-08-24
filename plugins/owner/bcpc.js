@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     return m.reply( claraWrap("Broadcast Private Chat", [
       `Jeda: ${jeda}ms (${(jeda / 1000).toFixed(1)}s)`,
       "",
-      "PENGGUNAAN:",
+      "Cara Pakai:",
       `${m.prefix}bcpc <pesan> — Kirim ke semua kontak`,
       `${m.prefix}bcpc (reply media) — Kirim dengan media`,
       "",

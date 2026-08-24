@@ -24,8 +24,8 @@ async function handler(m, { sock }) {
     db.save()
 
     return m.reply(claraWrap("sIstem Energi Diaktifkan", isEnable
-            ? '⚡ *sIstem Energi Diaktifkan*\n\n> Setiap command sekarang memerlukan energi.'
-            : '🔌 *sIstem Energi Dinonaktifkan*\n\n> Command tidak lagi membutuhkan energi.'))
+            ? '⚡ *sIstem Energi Diaktifkan*\n\nSetiap command sekarang memerlukan energi.'
+            : '🔌 *sIstem Energi Dinonaktifkan*\n\nCommand tidak lagi membutuhkan energi.'))
 }
 
 export { pluginConfig as config, handler }

@@ -21,7 +21,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (m.args.length < 8) {
-        return m.reply(`💑 *Ramalan Jodoh*\n\n> Format:\nrama1 tgl1 bln1 thn1 nama2 tgl2 bln2 thn2\n\n\`Contoh:\n${m.prefix}ramalanjodoh putu 16 11 2007 keyla 1 1 2008\``)
+        return m.reply(`💑 *Ramalan Jodoh*\n\nFormat:\nrama1 tgl1 bln1 thn1 nama2 tgl2 bln2 thn2\n\n\`Contoh:\n${m.prefix}ramalanjodoh putu 16 11 2007 keyla 1 1 2008\``)
     }
     
     const [nama1, tgl1, bln1, thn1, nama2, tgl2, bln2, thn2] = m.args
@@ -32,13 +32,13 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data?.result) {
-            return m.reply(claraWrap("ramalanjodoh", `❌ *Gagal*\n\n> Gagal meramal`))
+            return m.reply(claraWrap("ramalanjodoh", `❌ *Gagal*\n\nGagal meramal`))
         }
         
         const r = data.data.result
         let response = `💑 *Ramalan Jodoh*\n\n`
-        response += `👤 *${r.orang_pertama.nama}*\n> ${r.orang_pertama.tanggal_lahir}\n\n`
-        response += `👤 *${r.orang_kedua.nama}*\n> ${r.orang_kedua.tanggal_lahir}\n\n`
+        response += `👤 *${r.orang_pertama.nama}*\n${r.orang_pertama.tanggal_lahir}\n\n`
+        response += `👤 *${r.orang_kedua.nama}*\n${r.orang_kedua.tanggal_lahir}\n\n`
         response += `📜 *HaꜱIl Ramalan:*\n`
         
         r.hasil_ramalan.forEach((h, i) => {

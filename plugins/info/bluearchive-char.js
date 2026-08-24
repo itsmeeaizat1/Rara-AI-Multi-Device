@@ -57,7 +57,7 @@ class BluArchive {
         .filter((u) => u.includes(name.toLowerCase().split(" ")[0]))
         .slice(0, 5);
       throw new Error(
-        `Character "${name}" tidak ditemukan.\n\n> Mungkin maksud: ${suggestions.join(", ") || "tidak ada"}`,
+        `Character "${name}" tidak ditemukan.\n\nMungkin maksud: ${suggestions.join(", ") || "tidak ada"}`,
       );
     }
 

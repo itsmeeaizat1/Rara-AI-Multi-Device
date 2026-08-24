@@ -41,12 +41,12 @@ async function handler(m, { sock }) {
         const participant = groupMeta.participants.find(p => getParticipantJid(p) === target)
 
         if (!participant) {
-            m.reply(claraWrap("Promote", `❌ *Gagal*\n\n> User tidak ditemukan di grup!`))
+            m.reply(claraWrap("Promote", `❌ *Gagal*\n\nUser tidak ditemukan di grup!`))
             return
         }
 
         if (participant.admin) {
-            await m.reply(claraWrap("Promote", `❌ *Gagal*\n\n> User sudah menjadi admin!`))
+            await m.reply(claraWrap("Promote", `❌ *Gagal*\n\nUser sudah menjadi admin!`))
             return
         }
 

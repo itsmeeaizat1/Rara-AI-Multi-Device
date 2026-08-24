@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     }
     
     if (m.isVideo || m.quoted?.isVideo) {
-        return m.reply(`❌ *Tidak Didukung*\n\n> Hanya gambar/screenshot yang didukung\n> Video tidak bisa diproses\n\n\`Reply atau kirim gambar dengan caption ${m.prefix}animeapaini\``)
+        return m.reply(`❌ *Tidak Didukung*\n\nHanya gambar/screenshot yang didukung\nVideo tidak bisa diproses\n\n\`Reply atau kirim gambar dengan caption ${m.prefix}animeapaini\``)
     }
     
     if (!imageMsg && !imageBuffer) {

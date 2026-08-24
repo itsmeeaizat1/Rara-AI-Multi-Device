@@ -26,7 +26,7 @@ function handler(m, { sock, db }) {
     
     if (!['on', 'off'].includes(args)) {
         const status = group.notifCloseGroup === true ? '✅ Aktif' : '❌ Nonaktif'
-        return m.reply(`🔒 *Notif Close Group*\n\n> Status: ${status}\n\n*Penggunaan:*\n\`${m.prefix}notifclosegroup on\` - Aktifkan\n\`${m.prefix}notifclosegroup off\` - Nonaktifkan`)
+        return m.reply(`🔒 *Notif Close Group*\n\nStatus: ${status}\n\n*Penggunaan:*\n\`${m.prefix}notifclosegroup on\` - Aktifkan\n\`${m.prefix}notifclosegroup off\` - Nonaktifkan`)
     }
     
     if (args === 'on') {

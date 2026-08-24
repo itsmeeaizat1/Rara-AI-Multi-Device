@@ -51,7 +51,7 @@ function handler(m, { sock }) {
         return m.reply(claraWrap("Autodl", `❌ *Auto Download Nonaktif*`))
     }
     
-    return m.reply(`❌ *Argumen Tidak Valid*\n\n> Gunakan: \`on\` atau \`off\``)
+    return m.reply(`❌ *Argumen Tidak Valid*\n\nGunakan: \`on\` atau \`off\``)
 }
 
 export { pluginConfig as config, handler }

@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
 
   if (!action) {
     const status = groupData.antivn ? "ON" : "OFF";
-    await m.reply( `Anti VN\n\n> Status: ${status}\n\n> \`${m.prefix}antivn on/off\``, { commandName: "antivn" });
+    await m.reply( `Anti VN\n\nStatus: ${status}\n\n\`${m.prefix}antivn on/off\``, { commandName: "antivn" });
     return;
   }
 

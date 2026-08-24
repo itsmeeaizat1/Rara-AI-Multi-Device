@@ -102,9 +102,9 @@ async function handler(m, { sock }) {
       `\`${m.prefix}notifgantitag on all\` → Global ON (owner)\n` +
       `\`${m.prefix}notifgantitag off all\` → Global OFF (owner)\n\n` +
       `📋 *Fitur ini akan memberitahu saat:*\n` +
-      `• Admin menambahkan label ke member\n` +
-      `• Admin menghapus label dari member\n` +
-      `• Label member berubah`,
+      `Admin menambahkan label ke member\n` +
+      `Admin menghapus label dari member\n` +
+      `Label member berubah`,
   );
 }
 async function handleLabelChange(msg, sock) {

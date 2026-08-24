@@ -149,7 +149,7 @@ async function handler(m, { sock }) {
     return;
   }
 
-  return m.reply(claraWrap("sistemdaftar", `❌ Option tidak valid!\n\n> Gunakan: \`on\`, \`off\`, atau \`stats\``,));
+  return m.reply(claraWrap("sistemdaftar", `❌ Option tidak valid!\n\nGunakan: \`on\`, \`off\`, atau \`stats\``,));
 }
 
 export { pluginConfig as config, handler };

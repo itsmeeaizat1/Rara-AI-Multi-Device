@@ -196,10 +196,10 @@ async function handler(m, { sock }) {
         }
         if (folderId.toLowerCase() === 'reset') {
             setStoredFolderId(null)
-            return m.reply(claraWrap("Upload GDrive", "BERHASIL\n\n> Folder ID di-reset ke root."))
+            return m.reply(claraWrap("Upload GDrive", "BERHASIL\n\nFolder ID di-reset ke root."))
         }
         setStoredFolderId(folderId)
-        return m.reply(claraWrap("Upload GDrive", "BERHASIL\n\n> Folder ID: `" + folderId + "`\n> Upload selanjutnya akan masuk ke folder ini."))
+        return m.reply(claraWrap("Upload GDrive", "BERHASIL\n\nFolder ID: `" + folderId + "`\nUpload selanjutnya akan masuk ke folder ini."))
     }
 
     if (subCmd === 'list') {
@@ -208,7 +208,7 @@ async function handler(m, { sock }) {
             const files = await listDriveFiles(10)
             if (files.length === 0) {
                 await m.react('✅')
-                return m.reply(claraWrap("Upload GDrive", "*GDrive Files*\n\n> Belum ada file di Drive."))
+                return m.reply(claraWrap("Upload GDrive", "*GDrive Files*\n\nBelum ada file di Drive."))
             }
             let body = "*GDrive Files (" + files.length + ")*\n\n"
             files.forEach(function(f, i) {
@@ -219,7 +219,7 @@ async function handler(m, { sock }) {
             await m.react('✅')
             return m.reply(claraWrap("Upload GDrive", body))
         } catch (err) {
-            return m.reply(claraWrap("Upload GDrive", "GAGAL\n\n> " + err.message))
+            return m.reply(claraWrap("Upload GDrive", "GAGAL\n\n" + err.message))
         }
     }
 
@@ -236,9 +236,9 @@ async function handler(m, { sock }) {
         try {
             await deleteDriveFile(fileId)
             await m.react('✅')
-            return m.reply(claraWrap("Upload GDrive", "BERHASIL\n\n> File `" + fileId + "` berhasil dihapus."))
+            return m.reply(claraWrap("Upload GDrive", "BERHASIL\n\nFile `" + fileId + "` berhasil dihapus."))
         } catch (err) {
-            return m.reply(claraWrap("Upload GDrive", "GAGAL\n\n> " + err.message))
+            return m.reply(claraWrap("Upload GDrive", "GAGAL\n\n" + err.message))
         }
     }
 
@@ -280,7 +280,7 @@ async function handler(m, { sock }) {
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
-            return m.reply(claraWrap("Upload GDrive", "GAGAL\n\n> Tidak dapat mengunduh media."))
+            return m.reply(claraWrap("Upload GDrive", "GAGAL\n\nTidak dapat mengunduh media."))
         }
 
         const fileName = getFileNameFromMessage(m)
@@ -323,7 +323,7 @@ async function handler(m, { sock }) {
 
         if (error.message === 'INVALID_CREDENTIALS') {
             return m.reply(claraWrap("Upload GDrive",
-                "GAGAL\n\n> File JSON tidak valid. Pastikan format Service Account benar."
+                "GAGAL\n\nFile JSON tidak valid. Pastikan format Service Account benar."
             ))
         }
 

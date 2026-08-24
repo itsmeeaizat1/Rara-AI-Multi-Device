@@ -226,7 +226,7 @@ async function handler(m, { sock }) {
       imageBottomBuffer = imageTopBuffer;
     }
     if (!imageTopBuffer) {
-      return m.reply(claraWrap("Fakestory", `❌ *Gagal*\n\n> Tidak bisa download gambar`));
+      return m.reply(claraWrap("Fakestory", `❌ *Gagal*\n\nTidak bisa download gambar`));
     }
     const resultBuffer = await createFakeStory(
       username,

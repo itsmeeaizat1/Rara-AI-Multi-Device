@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     const current = db.setting("autoRead") ?? config.features?.autoRead ?? false;
     return m.reply( `📖 *Auto Read*\n\n` +
         `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}autoread on* — Aktifkan\n` +
         `*${m.prefix}autoread off* — Nonaktifkan\n\n` +
         `_Bot akan otomatis membaca pesan masuk_`, "autoread");
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
         `Bot tidak akan otomatis membaca pesan`));
   }
 
-  return m.reply(claraWrap("Autoread", `❌ *Opsi Tidak Valid*\n\n> Gunakan *${m.prefix}autoread on* atau *${m.prefix}autoread off*`));
+  return m.reply(claraWrap("Autoread", `❌ *Opsi Tidak Valid*\n\nGunakan *${m.prefix}autoread on* atau *${m.prefix}autoread off*`));
 }
 
 export { pluginConfig as config, handler };

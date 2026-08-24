@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
         })
         
         await m.react('✅')
-        { const __navText = `✅ *sUkses*\n\n> Video berhasil dikirim ke channel sebagai PTV.`; return await m.reply(__navText); }
+        { const __navText = `✅ *sUkses*\n\nVideo berhasil dikirim ke channel sebagai PTV.`; return await m.reply(__navText); }
         
     } catch (err) {
         return m.reply(claraWrap("ptvch", te(m.prefix, m.command, m.pushName), "error"))

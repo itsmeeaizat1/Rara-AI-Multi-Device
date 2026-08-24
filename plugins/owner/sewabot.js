@@ -37,15 +37,15 @@ async function handler(m, { sock }) {
         `Status: *${currentStatus ? "✅ AKTIF" : "❌ NONAKTIF"}*\n` +
         `Grup terdaftar: *${sewaGroups.length}*\n` + `Pendaftaran pending: *${pendingRegs}*\n\n` +
         `*PERINTAH TERSEDIA:*\n` +
-        `• *${m.prefix}sewabot on* — Aktifkan sistem sewa\n` +
-        `• *${m.prefix}sewabot off* — Nonaktifkan sistem sewa\n` +
-        `• *${m.prefix}sewabot leave* — Keluar dari semua grup non-whitelist\n\n` +
+        `*${m.prefix}sewabot on* — Aktifkan sistem sewa\n` +
+        `*${m.prefix}sewabot off* — Nonaktifkan sistem sewa\n` +
+        `*${m.prefix}sewabot leave* — Keluar dari semua grup non-whitelist\n\n` +
         `*KELOLA SEWA:*\n` +
-        `• *${m.prefix}addsewa <link> <durasi>* — Tambah grup + auto join\n` +
-        `• *${m.prefix}delsewa <link/id>* — Hapus grup dari whitelist\n` +
-        `• *${m.prefix}renewsewa <link/id> <durasi>* — Perpanjang sewa\n` +
-        `• *${m.prefix}listsewa* — Lihat semua grup terdaftar\n` +
-        `• *${m.prefix}checksewa* — Cek sisa sewa (di grup)\n\n` + `*PENDAFTARAN SEWA:*\n` + `• *${m.prefix}daftarsewa* — User daftar sewa (private)\n` + `• *${m.prefix}approvesewa* — Owner approve pendaftaran\n` + `• *${m.prefix}rejectsewa* — Owner tolak pendaftaran\n\n` +
+        `*${m.prefix}addsewa <link> <durasi>* — Tambah grup + auto join\n` +
+        `*${m.prefix}delsewa <link/id>* — Hapus grup dari whitelist\n` +
+        `*${m.prefix}renewsewa <link/id> <durasi>* — Perpanjang sewa\n` +
+        `*${m.prefix}listsewa* — Lihat semua grup terdaftar\n` +
+        `*${m.prefix}checksewa* — Cek sisa sewa (di grup)\n\n` + `*PENDAFTARAN SEWA:*\n` + `*${m.prefix}daftarsewa* — User daftar sewa (private)\n` + `*${m.prefix}approvesewa* — Owner approve pendaftaran\n` + `*${m.prefix}rejectsewa* — Owner tolak pendaftaran\n\n` +
         `*FORMAT DURASI:*\n` +
         `30i (menit) • 12h (jam) • 7d (hari) • 1m (bulan) • 1y (tahun) • lifetime\n\n` +
         `*CARA KERJA:*\n` +
@@ -80,8 +80,8 @@ async function handler(m, { sock }) {
     }, 60000);
     return m.reply(claraWrap("sewabot", `⚠️ *KONFIRMASI AKTIVASI SEWA*\n\n` +
         `Jika diaktifkan:\n` +
-        `• ✅ ${sewaGroups.length} grup ter-whitelist tetap aman\n` +
-        `• ❌ Semua grup lain akan ditinggalkan!\n\n` +
+        `✅ ${sewaGroups.length} grup ter-whitelist tetap aman\n` +
+        `❌ Semua grup lain akan ditinggalkan!\n\n` +
         `Ketik *${m.prefix}sewabot confirm* untuk lanjut\nKetik *${m.prefix}sewabot cancel* untuk batal\n\n` +
         `💡 Pastikan sudah whitelist grup penting dengan:\n*${m.prefix}addsewa <link grup> <durasi>*`));
   }

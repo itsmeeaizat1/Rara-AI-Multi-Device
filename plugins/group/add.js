@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
                 const groupInfo = await sock.groupGetInviteInfo(linkMatch[1])
                 targetGroup = groupInfo.id
             } catch (e) {
-                return m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Link grup tidak valid atau sudah expired!`))
+                return m.reply(claraWrap("Add", `❌ *Gagal*\n\nLink grup tidak valid atau sudah expired!`))
             }
         } else if (arg.includes('@g.us')) {
             targetGroup = arg
@@ -63,11 +63,11 @@ async function handler(m, { sock }) {
     }
     
     if (targetNumbers.length === 0) {
-        return m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Masukkan nomor yang valid!`))
+        return m.reply(claraWrap("Add", `❌ *Gagal*\n\nMasukkan nomor yang valid!`))
     }
     
     if (!targetGroup) {
-        return m.reply(`❌ *Gagal*\n\n> Jalankan di grup atau sertakan link grup!\n\n\`${m.prefix}add <nomor> <link_grup>\``)
+        return m.reply(`❌ *Gagal*\n\nJalankan di grup atau sertakan link grup!\n\n\`${m.prefix}add <nomor> <link_grup>\``)
     }
     
     try {
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         )
         
         if (!botParticipant || !['admin', 'superadmin'].includes(botParticipant.admin)) {
-            return m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Bot bukan admin di grup *${groupMeta.subject}*!`))
+            return m.reply(claraWrap("Add", `❌ *Gagal*\n\nBot bukan admin di grup *${groupMeta.subject}*!`))
         }
         
         if (!m.isGroup) {
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
             )
             
             if (!senderParticipant || !['admin', 'superadmin'].includes(senderParticipant.admin)) {
-                return m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Kamu bukan admin di grup *${groupMeta.subject}*!`))
+                return m.reply(claraWrap("Add", `❌ *Gagal*\n\nKamu bukan admin di grup *${groupMeta.subject}*!`))
             }
         }
         
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
         }
         
         if (validNumbers.length === 0) {
-            return m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Semua nomor sudah ada di grup!`))
+            return m.reply(claraWrap("Add", `❌ *Gagal*\n\nSemua nomor sudah ada di grup!`))
         }
         
         m.react('🕐')
@@ -135,25 +135,25 @@ async function handler(m, { sock }) {
         
         if (successList.length > 0) {
             resultText += `Ada *${successList.length}* member yang berhasil ditambahkan:\n`
-            successList.forEach(n => resultText += `• @${n}\n`)
+            successList.forEach(n => resultText += `@${n}\n`)
             resultText += `\n`
         }
         
         if (invitedList.length > 0) {
             resultText += `📨 *Dan ada juga *${invitedList.length}* member yang diundang:*\n`
-            invitedList.forEach(n => resultText += `• @${n}\n`)
+            invitedList.forEach(n => resultText += `@${n}\n`)
             resultText += `\n`
         }
         
         if (failedList.length > 0) {
             resultText += `❌ *Gagal (${failedList.length}):*\n`
-            failedList.forEach(f => resultText += `• @${f.num} (${f.status})\n`)
+            failedList.forEach(f => resultText += `@${f.num} (${f.status})\n`)
             resultText += `\n`
         }
         
         if (alreadyInGroup.length > 0) {
             resultText += `⏭️ *sUdah Di Grup (${alreadyInGroup.length}):*\n`
-            alreadyInGroup.forEach(n => resultText += `• @${n}\n`)
+            alreadyInGroup.forEach(n => resultText += `@${n}\n`)
         }
         
         await m.reply(resultText, { mentions: [ ...successList.map(n => n + '@s.whatsapp.net'), ...invitedList.map(n => n + '@s.whatsapp.net'), ...failedList.map(f => f.num + '@s.whatsapp.net'), ...alreadyInGroup.map(n => n + '@s.whatsapp.net'), m.sender ] })
@@ -161,9 +161,9 @@ async function handler(m, { sock }) {
     } catch (error) {
         
         if (error.message?.includes('not-authorized')) {
-            await m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Bot tidak memiliki izin untuk menambah member!`))
+            await m.reply(claraWrap("Add", `❌ *Gagal*\n\nBot tidak memiliki izin untuk menambah member!`))
         } else if (error.message?.includes('forbidden')) {
-            await m.reply(claraWrap("Add", `❌ *Gagal*\n\n> Bot tidak memiliki akses ke grup ini!`))
+            await m.reply(claraWrap("Add", `❌ *Gagal*\n\nBot tidak memiliki akses ke grup ini!`))
         } else {
             m.reply(claraWrap("add", te(m.prefix, m.command, m.pushName), "error"))
         }

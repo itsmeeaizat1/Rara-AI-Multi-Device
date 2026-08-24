@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     if (cmd === 'selfadmin') {
         if (current) {
             db.setting('onlyAdmin', false)
-            return m.reply(claraWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\n> Bot bisa diakses semua orang'))
+            return m.reply(claraWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\nBot bisa diakses semua orang'))
         }
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     if (cmd === 'publicadmin') {
         if (current) {
             db.setting('onlyAdmin', false)
-            return m.reply(claraWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\n> Bot bisa diakses semua orang'))
+            return m.reply(claraWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\nBot bisa diakses semua orang'))
         }
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     if (args === 'off') {
         if (!current) return m.reply(claraWrap("Onlyadmin", '⚠️ OnlyAdmin sudah nonaktif.'))
         db.setting('onlyAdmin', false)
-        return m.reply(claraWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\n> Bot bisa diakses semua orang'))
+        return m.reply(claraWrap("Onlyadmin", '❌ *Onlyadmin Nonaktif*\n\nBot bisa diakses semua orang'))
     }
 
     return m.reply(claraWrap("Onlyadmin", '❌ Argumen tidak valid. Gunakan: `on` atau `off`'))

@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetFormat) {
-    return m.reply( `❌ Masukkan format tujuan!\n\n> Contoh: \`${m.prefix}converter mp3\``, "converter");
+    return m.reply( `❌ Masukkan format tujuan!\n\nContoh: \`${m.prefix}converter mp3\``, "converter");
   }
 
   const quoted = m.quoted;
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
     const tempFile = path.join(tempDir, `convert_${Date.now()}.${ext}`);
     fs.writeFileSync(tempFile, buffer);
 
-    { const __navText = `🔄 *CONVERTING...*\n\n> ${ext} → ${targetFormat}`; await m.reply(__navText); };
+    { const __navText = `🔄 *CONVERTING...*\n\n${ext} → ${targetFormat}`; await m.reply(__navText); };
 
     const result = await mconverter.convert(tempFile, targetFormat);
 
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     }
 
     if (result.error) {
-      return m.reply(claraWrap("converter", `❌ *GAGAL CONVERT*\n\n> ${result.error}`));
+      return m.reply(claraWrap("converter", `❌ *GAGAL CONVERT*\n\n${result.error}`));
     }
 
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";

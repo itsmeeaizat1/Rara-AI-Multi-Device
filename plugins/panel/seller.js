@@ -72,7 +72,7 @@ function handler(m, { sock }) {
     const pteroConfig = config.pterodactyl
     
     if (!hasAccess(m.sender, m.isOwner, pteroConfig)) {
-        return m.reply(claraWrap("seller", `❌ *Akses Ditolak*\n\n> Fitur ini hanya untuk Owner atau Owner Panel.`))
+        return m.reply(claraWrap("seller", `❌ *Akses Ditolak*\n\nFitur ini hanya untuk Owner atau Owner Panel.`))
     }
     
     if (!pteroConfig) {
@@ -89,7 +89,7 @@ function handler(m, { sock }) {
     
     if (isList) {
         if (pteroConfig.sellers.length === 0) {
-            return m.reply(claraWrap("seller", `📋 *Daftar sEller/Reseller*\n\n> Belum ada seller terdaftar.`))
+            return m.reply(claraWrap("seller", `📋 *Daftar sEller/Reseller*\n\nBelum ada seller terdaftar.`))
         }
         
         let txt = `📋 *Daftar sEller/Reseller*\n\n`
@@ -97,7 +97,7 @@ function handler(m, { sock }) {
         pteroConfig.sellers.forEach((s, i) => {
             txt += `${i + 1}. \`${s}\`\n`
         })
-        txt += `\n> _Seller bisa create server (1gb-10gb v1/v2/v3)_`
+        txt += `\n_Seller bisa create server (1gb-10gb v1/v2/v3)_`
         return m.reply(claraWrap("seller", txt))
     }
     
@@ -128,7 +128,7 @@ function handler(m, { sock }) {
         const ownerIdx = (pteroConfig.ownerPanels || []).indexOf(targetUser)
         if (ownerIdx !== -1) {
             pteroConfig.ownerPanels.splice(ownerIdx, 1)
-            roleChanged = `\n> ⚡ Auto-downgrade dari Owner Panel ke Seller`
+            roleChanged = `\n⚡ Auto-downgrade dari Owner Panel ke Seller`
         }
         
         pteroConfig.sellers.push(targetUser)

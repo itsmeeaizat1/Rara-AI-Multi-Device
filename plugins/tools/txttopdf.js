@@ -220,7 +220,7 @@ async function createPDF(rawText, format, opts) {
       const trimmed = line.trim();
       if (trimmed === "") { y -= lineH * 0.5; continue; }
       const isHeader = trimmed.startsWith("#") || (/^[A-Z][A-Z\s]{2,30}$/.test(trimmed) && trimmed.length < 40);
-      const isBullet = trimmed.startsWith("- ") || trimmed.startsWith("• ") || trimmed.startsWith("* ");
+      const isBullet = trimmed.startsWith("- ") || trimmed.startsWith("") || trimmed.startsWith("* ");
       let drawText = trimmed;
       let useFont = font;
       let useSize = bodySize;
@@ -232,7 +232,7 @@ async function createPDF(rawText, format, opts) {
         useColor = headerColor;
         y -= 5;
       } else if (isBullet) {
-        drawText = "  " + drawText.replace(/^[-•*]\s*/, "• ");
+        drawText = "  " + drawText.replace(/^[-•*]\s*/, "");
       }
       const wrapped = wrapText(drawText, useFont, useSize, MAX_W);
       for (const wl of wrapped) {
@@ -276,7 +276,7 @@ function parseCVContent(rawText) {
       if (currentSection) cv.sections.push(currentSection);
       currentSection = { header: line.replace(/^#\s*/, ""), items: [] };
     } else if (currentSection) {
-      if (line.startsWith("- ") || line.startsWith("• ")) {
+      if (line.startsWith("- ") || line.startsWith("")) {
         currentSection.items.push({ type: "bullet", text: line.replace(/^[-•*]\s*/, "") });
       } else {
         // Continuation/description line after a bullet (or standalone paragraph) —
@@ -501,7 +501,7 @@ async function renderCV_PNG(cv, tpl, opts, scale) {
       ctx.font = Math.round(10 * scale) + "px " + font;
       for (const item of skillSec.items) {
         if (item.type === "bullet") {
-          const skillWrapped = wrap("• " + item.text, Math.round(10 * scale) + "px " + font, sideW - sideMargin * 2);
+          const skillWrapped = wrap("" + item.text, Math.round(10 * scale) + "px " + font, sideW - sideMargin * 2);
           for (const w of skillWrapped) { ctx.fillText(w, sideMargin, sy); sy += Math.round(14 * scale); }
           sy += Math.round(3 * scale);
         }
@@ -906,7 +906,7 @@ async function renderCV_PDF(rawText, tpl, opts, pdfDoc, font, boldFont) {
       sy -= 14;
       for (const item of skillSec.items) {
         if (item.type === "bullet") {
-          page.drawText("• " + item.text, { x: sideMargin, y: sy, size: 8, font, color: rgb(accentLight[0], accentLight[1], accentLight[2]) });
+          page.drawText("" + item.text, { x: sideMargin, y: sy, size: 8, font, color: rgb(accentLight[0], accentLight[1], accentLight[2]) });
           sy -= 13;
         }
       }
@@ -1140,7 +1140,7 @@ async function renderImage(rawText, format, opts, upscale) {
       const trimmed = line.trim();
       if (trimmed === "") { totalH += Math.round(lineH * 0.5); continue; }
       const isHeader = trimmed.startsWith("#") || (/^[A-Z][A-Z\s]{2,30}$/.test(trimmed) && trimmed.length < 40);
-      const isBullet = trimmed.startsWith("- ") || trimmed.startsWith("• ") || trimmed.startsWith("* ");
+      const isBullet = trimmed.startsWith("- ") || trimmed.startsWith("") || trimmed.startsWith("* ");
       let drawText = trimmed;
       let useFontStr = fontSize + "px " + fontSet.css;
       let useFontSize = fontSize;
@@ -1150,7 +1150,7 @@ async function renderImage(rawText, format, opts, upscale) {
         useFontSize = headerFontSize;
         totalH += Math.round(5 * scale);
       } else if (isBullet) {
-        drawText = "  " + drawText.replace(/^[-•*]\s*/, "• ");
+        drawText = "  " + drawText.replace(/^[-•*]\s*/, "");
       }
       const wrapped = wrapTextCanvas({ measureText: (t) => ({ width: 0 }) }, drawText, useFontStr, maxTextW);
       // We need a real context for measureText, so use a temp canvas
@@ -1209,7 +1209,7 @@ async function renderImage(rawText, format, opts, upscale) {
       const trimmed = line.trim();
       if (trimmed === "") { y += Math.round(lineH * 0.5); continue; }
       const isHeader = trimmed.startsWith("#") || (/^[A-Z][A-Z\s]{2,30}$/.test(trimmed) && trimmed.length < 40);
-      const isBullet = trimmed.startsWith("- ") || trimmed.startsWith("• ") || trimmed.startsWith("* ");
+      const isBullet = trimmed.startsWith("- ") || trimmed.startsWith("") || trimmed.startsWith("* ");
       let drawText = trimmed;
       let useFontStr = fontSize + "px " + fontSet.css;
       let useFontSize = fontSize;
@@ -1220,7 +1220,7 @@ async function renderImage(rawText, format, opts, upscale) {
         useColor = headerHex;
         y += Math.round(5 * scale);
       } else if (isBullet) {
-        drawText = "  " + drawText.replace(/^[-•*]\s*/, "• ");
+        drawText = "  " + drawText.replace(/^[-•*]\s*/, "");
       }
       ctx.font = useFontStr;
       const wrapped = wrapTextCanvas(ctx, drawText, useFontStr, maxTextW);
@@ -1269,7 +1269,7 @@ function createDoc(rawText, format, opts) {
     const trimmed = line.trim();
     if (trimmed === "") { bodyHtml += "<br/>"; continue; }
     const isHeader = trimmed.startsWith("#") || (/^[A-Z][A-Z\s]{2,30}$/.test(trimmed) && trimmed.length < 40);
-    const isBullet = trimmed.startsWith("- ") || trimmed.startsWith("• ") || trimmed.startsWith("* ");
+    const isBullet = trimmed.startsWith("- ") || trimmed.startsWith("") || trimmed.startsWith("* ");
     if (isHeader) {
       bodyHtml += '<h3 style="margin:12px 0 4px 0;color:' + titleHex + ';">' + escapeHtml(trimmed.replace(/^#\s*/, "")) + "</h3>";
     } else if (isBullet) {

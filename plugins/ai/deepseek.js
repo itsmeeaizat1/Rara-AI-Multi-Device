@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply(claraWrap("DeepSeek V4", `🧠 *DeepSeek V4*\n\n` +
         `AI yang bisa mikir dulu sebelum jawab — cocok buat pertanyaan yang butuh penalaran.\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}deepseek <pertanyaan>*\n\n` +
         `*CONTOH:*\n` +
         `*${m.prefix}deepseek Jelaskan black hole*\n` +
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const result = await DeepSeekThinking(text);
 
     if (!result.success) {
-      return m.reply(claraWrap("DeepSeek Gagal", `❌ *DeepSeek Gagal*\n\n> Gagal mendapatkan respons`));
+      return m.reply(claraWrap("DeepSeek Gagal", `❌ *DeepSeek Gagal*\n\nGagal mendapatkan respons`));
     }
 
     await m.react("🐣");
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
         result.reasoning.length > 800
           ? result.reasoning.slice(0, 800) + "..."
           : result.reasoning;
-      reply += `💭 *Proses Berpikir:*\n${reasoningPreview.replace(/\n/g, "\n> ")}\n\n`;
+      reply += `💭 *Proses Berpikir:*\n${reasoningPreview.replace(/\n/g, "\n")}\n\n`;
     }
 
     if (result.answer) {

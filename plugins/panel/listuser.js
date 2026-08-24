@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
         const users = res.data.data || []
         
         if (users.length === 0) {
-            return m.reply(claraWrap("listuser", `📋 *Daftar User [${serverLabel}]*\n\n> Tidak ada user terdaftar.`))
+            return m.reply(claraWrap("listuser", `📋 *Daftar User [${serverLabel}]*\n\nTidak ada user terdaftar.`))
         }
         
         let txt = `📋 *Daftar User [${serverLabel}]*\n\n`
@@ -114,12 +114,12 @@ async function handler(m, { sock }) {
         })
         
         if (users.length > 20) {
-            txt += `\n> ... dan ${users.length - 20} user lainnya`
+            txt += `\n... dan ${users.length - 20} user lainnya`
         }
         
         const available = getAvailableServers(pteroConfig)
         if (available.length > 1) {
-            txt += `\n\n> Server lain: *${available.filter(s => s !== serverVersion).join(', ')}*`
+            txt += `\n\nServer lain: *${available.filter(s => s !== serverVersion).join(', ')}*`
         }
         
         return m.reply(claraWrap("listuser", txt))

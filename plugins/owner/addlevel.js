@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     }
     
     if (levels <= 0) {
-        return m.reply(claraWrap("Addlevel", `❌ *Gagal*\n\n> Jumlah level harus lebih dari 0`))
+        return m.reply(claraWrap("Addlevel", `❌ *Gagal*\n\nJumlah level harus lebih dari 0`))
     }
     
     const user = db.getUser(targetJid) || db.setUser(targetJid)

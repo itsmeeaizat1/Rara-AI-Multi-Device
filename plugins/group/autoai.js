@@ -101,13 +101,13 @@ async function handler(m, { sock }) {
       .map((s) => s.trim());
     if (personaArgs.length < 2 || !personaArgs[0] || !personaArgs[1])
       return m.reply(
-        `❌ Format salah!\n\n> .autoai tambahpersona nama | instruction\n\n> Contoh: .autoai tambahpersona nexa | kamu adalah nexa ai, ...`,
+        `❌ Format salah!\n\n.autoai tambahpersona nama | instruction\n\nContoh: .autoai tambahpersona nexa | kamu adalah nexa ai, ...`,
       );
     const pName = personaArgs[0].toLowerCase().replace(/\s+/g, "_");
     const pInstruction = personaArgs.slice(1).join("|").trim();
     if (characters[pName])
       return m.reply(
-        `❌ Nama "${pName}" sudah dipakai persona bawaan!\n\n> Pilih nama lain`,
+        `❌ Nama "${pName}" sudah dipakai persona bawaan!\n\nPilih nama lain`,
       );
     db.db.data.autoai_personas[pName] = {
       name: personaArgs[0],
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
     };
     db.save();
     return m.reply(
-      `✅ *Persona ditambahkan*\n\n> Nama: ${personaArgs[0]}\n> Key: ${pName}\n> Logic: ${pInstruction.substring(0, 80)}${pInstruction.length > 80 ? "..." : ""}\n\n> Gunakan: .autoai on --novamode=${pName}`,
+      `✅ *Persona ditambahkan*\n\nNama: ${personaArgs[0]}\nKey: ${pName}\nLogic: ${pInstruction.substring(0, 80)}${pInstruction.length > 80 ? "..." : ""}\n\nGunakan: .autoai on --novamode=${pName}`,
     );
   }
 
@@ -127,11 +127,11 @@ async function handler(m, { sock }) {
     const pKey = (args[1] || "").toLowerCase().trim();
     if (!pKey)
       return m.reply(
-        `❌ Format salah!\n\n> .autoai hapuspersona <nama>\n\n> Contoh: .autoai hapuspersona nexa`,
+        `❌ Format salah!\n\n.autoai hapuspersona <nama>\n\nContoh: .autoai hapuspersona nexa`,
       );
     if (!db.db.data.autoai_personas[pKey])
       return m.reply(
-        `❌ Persona "${pKey}" tidak ditemukan!\n\n> Ketik .autoai listpersona untuk melihat daftar`,
+        `❌ Persona "${pKey}" tidak ditemukan!\n\nKetik .autoai listpersona untuk melihat daftar`,
       );
     delete db.db.data.autoai_personas[pKey];
     db.save();
@@ -215,7 +215,7 @@ async function handler(m, { sock }) {
     const globalMode = (args[1] || "").toLowerCase();
     if (!["on", "off"].includes(globalMode))
       return m.reply(
-        `❌ Format salah!\n\n> .autoai global on/off\n\n> Global saat ini: ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}`,
+        `❌ Format salah!\n\n.autoai global on/off\n\nGlobal saat ini: ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}`,
       );
     if (globalMode === "on") {
       const modeMatch = fullArgs.match(/--novamode=(\w+)/i);
@@ -253,7 +253,7 @@ async function handler(m, { sock }) {
           characterName = existingGlobal.characterName || "Global";
         } else {
           return m.reply(
-            `❌ Belum ada persona global yang diset!\n\n> .autoai global on --novamode=furina\n> .autoai global on --novamode=custom --logic=...`,
+            `❌ Belum ada persona global yang diset!\n\n.autoai global on --novamode=furina\n.autoai global on --novamode=custom --logic=...`,
           );
         }
       } else {
@@ -262,7 +262,7 @@ async function handler(m, { sock }) {
           ...Object.keys(db.db.data.autoai_personas),
           "custom",
         ].join(", ");
-        return m.reply(claraWrap("Autoai", `❌ Karakter tidak valid!\n\n> Tersedia: ${charList}`));
+        return m.reply(claraWrap("Autoai", `❌ Karakter tidak valid!\n\nTersedia: ${charList}`));
       }
 
       db.db.data.autoai_global = {
@@ -288,7 +288,7 @@ async function handler(m, { sock }) {
       db.db.data.autoai_global.enabled = false;
       db.save();
       return m.reply(
-        `🌐 *Auto Ai Global DinonaktiғKan*\n\n> AutoAI hanya aktif di grup yang sudah di-set`,
+        `🌐 *Auto Ai Global DinonaktiғKan*\n\nAutoAI hanya aktif di grup yang sudah di-set`,
       );
     }
   }
@@ -344,10 +344,10 @@ async function handler(m, { sock }) {
     db.db.data.autoai[m.chat] = { enabled: false };
     db.save();
     const globalStatus = db.db.data.autoai_global?.enabled
-      ? `\n\n> ℹ️ Global masih aktif, tapi grup ini opted-out\n> ℹ️ Ketik *.autoai global off* untuk matikan global`
+      ? `\n\nℹ️ Global masih aktif, tapi grup ini opted-out\nℹ️ Ketik *.autoai global off* untuk matikan global`
       : "";
     return m.reply(
-      `🤖 *Auto Ai DinonaktiғKan*\n\n> Auto AI untuk grup ini telah dimatikan\n> Semua command kembali aktif${globalStatus}`,
+      `🤖 *Auto Ai DinonaktiғKan*\n\nAuto AI untuk grup ini telah dimatikan\nSemua command kembali aktif${globalStatus}`,
     );
   }
 
@@ -358,14 +358,14 @@ async function handler(m, { sock }) {
       "custom",
     ].join(", ");
     return m.reply(
-      `❌ Karakter tidak valid!\n\n> Karakter tersedia: ${charList}\n\n> Contoh: .autoai on --novamode=furina --type=voice\n> Custom: .autoai on --novamode=custom --logic=kamu adalah nexa ai`,
+      `❌ Karakter tidak valid!\n\nKarakter tersedia: ${charList}\n\nContoh: .autoai on --novamode=furina --type=voice\nCustom: .autoai on --novamode=custom --logic=kamu adalah nexa ai`,
     );
   }
 
   if (charKey === "custom") {
     if (!customLogic) {
       return m.reply(
-        `❌ Mode custom membutuhkan --logic!\n\n> Contoh: .autoai on --novamode=custom --logic=kamu adalah nexa ai, ...`,
+        `❌ Mode custom membutuhkan --logic!\n\nContoh: .autoai on --novamode=custom --logic=kamu adalah nexa ai, ...`,
       );
     }
     db.db.data.autoai[m.chat] = {
@@ -432,7 +432,7 @@ async function handler(m, { sock }) {
       "custom",
     ].join(", ");
     return m.reply(
-      `❌ Karakter tidak valid!\n\n> Karakter tersedia: ${charList}\n\n> Contoh: .autoai on --novamode=furina --type=voice`,
+      `❌ Karakter tidak valid!\n\nKarakter tersedia: ${charList}\n\nContoh: .autoai on --novamode=furina --type=voice`,
     );
   }
 

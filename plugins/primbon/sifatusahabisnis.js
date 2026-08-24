@@ -21,7 +21,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (m.args.length < 3) {
-        return m.reply(`💼 *sIfat Usaha/Bisnis*\n\n> Format: tgl bln thn\n\n\`Contoh: ${m.prefix}sifatusahabisnis 1 1 2000\``)
+        return m.reply(`💼 *sIfat Usaha/Bisnis*\n\nFormat: tgl bln thn\n\n\`Contoh: ${m.prefix}sifatusahabisnis 1 1 2000\``)
     }
     
     const [tgl, bln, thn] = m.args
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(claraWrap("sifatusahabisnis", `❌ *Gagal*\n\n> Gagal menganalisa`))
+            return m.reply(claraWrap("sifatusahabisnis", `❌ *Gagal*\n\nGagal menganalisa`))
         }
         
         const r = data.data

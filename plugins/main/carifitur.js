@@ -200,7 +200,7 @@ async function handler(m, { sock }) {
     matches.sort((a, b) => b.score - a.score);
     if (matches.length === 0) {
       return m.reply(
-        `🔍 *Hasil Pencarian*\n\n> Tidak ditemukan fitur dengan keyword \`${keyword}\``,
+        `🔍 *Hasil Pencarian*\n\nTidak ditemukan fitur dengan keyword \`${keyword}\``,
       );
     }
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";

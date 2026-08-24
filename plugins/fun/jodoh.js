@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
   try {
     groupMeta = m.groupMetadata;
   } catch (e) {
-    return m.reply(claraWrap("jodoh", "❌ *Gagal*\n\n> Tidak bisa mengambil data grup!"));
+    return m.reply(claraWrap("jodoh", "❌ *Gagal*\n\nTidak bisa mengambil data grup!"));
   }
 
   const participants = groupMeta.participants || [];
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
     .filter((jid) => jid && jid !== botNumber);
 
   if (memberJids.length < 2) {
-    return m.reply(claraWrap("Jodoh", "❌ *Gagal*\n\n> Minimal ada 2 member untuk dijodohkan!"));
+    return m.reply(claraWrap("Jodoh", "❌ *Gagal*\n\nMinimal ada 2 member untuk dijodohkan!"));
   }
 
   const allUsers = db.getAllUsers();
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
 
   if (registrationRequired && registeredMembers.length < 2) {
     return m.reply(
-      "❌ *Gagal*\n\n> Mode wajib daftar aktif. Minimal harus ada 2 member yang sudah terdaftar di grup ini!",
+      "❌ *Gagal*\n\nMode wajib daftar aktif. Minimal harus ada 2 member yang sudah terdaftar di grup ini!",
     );
   }
 

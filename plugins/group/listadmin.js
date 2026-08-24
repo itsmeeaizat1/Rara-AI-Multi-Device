@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
         const admins = participants.filter(p => p.admin)
 
         if (admins.length === 0) {
-            { const __navText = `❌ *Gagal*\n\n> Tidak ada admin di grup ini.`; await m.reply(__navText); }
+            { const __navText = `❌ *Gagal*\n\nTidak ada admin di grup ini.`; await m.reply(__navText); }
             return
         }
 

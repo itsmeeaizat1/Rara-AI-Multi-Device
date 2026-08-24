@@ -358,7 +358,7 @@ async function handler(m, { sock, args }) {
       }
     }
 
-    txt += `\n> Ketik .soal untuk lanjut belajar!`;
+    txt += `\nKetik .soal untuk lanjut belajar!`;
     return await m.reply(txt);
   }
 

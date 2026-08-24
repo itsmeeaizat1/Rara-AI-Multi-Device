@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(claraWrap("Iqc Chat", `📱 *Iqc Chat*\n\n> Masukkan teks untuk chat\n\n\`Contoh: ${m.prefix}iqc Hai cantik\``), "iqc");
+    return m.reply(claraWrap("Iqc Chat", `📱 *Iqc Chat*\n\nMasukkan teks untuk chat\n\n\`Contoh: ${m.prefix}iqc Hai cantik\``), "iqc");
   }
 
   m.react("🕒");

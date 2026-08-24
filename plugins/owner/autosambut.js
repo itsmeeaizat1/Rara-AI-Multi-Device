@@ -75,13 +75,13 @@ async function handler(m, { sock, db }) {
       `Status: *${status}*\n` +
       `Batas Waktu Idle: *${formatTime(delayMs)}*\n` +
       `Jumlah Pesan Acak: *${totalPesan} Sapaan*\n\n` +
-      `*PENGGUNAAN UTAMA:*\n` +
-      `• *${m.prefix}autosambut on/off* — Menghidupkan/mematikan fitur di grup ini\n` +
-      `• *${m.prefix}autosambut delay <waktu>* — Mengubah batas waktu idle\n\n` +
+      `*Cara Pakai:*\n` +
+      `*${m.prefix}autosambut on/off* — Menghidupkan/mematikan fitur di grup ini\n` +
+      `*${m.prefix}autosambut delay <waktu>* — Mengubah batas waktu idle\n\n` +
       `*PENGATURAN PESAN ACAK (LIST):*\n` +
-      `• *${m.prefix}autosambut list* — Melihat semua sapaan yang telah didaftarkan\n` +
-      `• *${m.prefix}autosambut add <teks>* — Menambah teks sambutan baru ke daftar\n` +
-      `• *${m.prefix}autosambut del <angka>* — Menghapus pesan pada nomor urutan tertentu\n\n` +
+      `*${m.prefix}autosambut list* — Melihat semua sapaan yang telah didaftarkan\n` +
+      `*${m.prefix}autosambut add <teks>* — Menambah teks sambutan baru ke daftar\n` +
+      `*${m.prefix}autosambut del <angka>* — Menghapus pesan pada nomor urutan tertentu\n\n` +
       `*PENJELASAN KHUSUS:*\n` +
       `1. Gunakan format waktu: *s* (detik), *m* (menit), *h* (jam), *d* (hari). Contoh: *${m.prefix}autosambut delay 30m*\n` +
       `2. Gunakan *{name}* untuk menyebut pushname owner, dan *{user}* untuk me-mention owner.\n` +

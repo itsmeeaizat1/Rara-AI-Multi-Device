@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     const current = db.setting("onlyPc") || false;
     return m.reply( `💬 *Only Private*\n\n` +
         `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}onlypc on* — Bot hanya bisa diakses di private chat\n` +
         `*${m.prefix}onlypc off* — Bot bisa diakses di mana saja\n\n` +
         `_Jika aktif, mode Only Group akan otomatis nonaktif_`, "onlypc");
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  return m.reply(claraWrap("Onlypc", `❌ *Opsi Tidak Valid*\n\n> Gunakan *${m.prefix}onlypc on* atau *${m.prefix}onlypc off*`));
+  return m.reply(claraWrap("Onlypc", `❌ *Opsi Tidak Valid*\n\nGunakan *${m.prefix}onlypc on* atau *${m.prefix}onlypc off*`));
 }
 
 export { pluginConfig as config, handler };

@@ -25,8 +25,8 @@ async function handler(m, { sock }) {
   if (args !== "on" && args !== "off") {
     return m.reply( `🎮 *FITUR GAME GRUP*\n\n` +
         `Gunakan perintah ini untuk mengatur akses member ke fitur game.\n\n` +
-        `• *${m.prefix}game on* - Member bisa main game\n` +
-        `• *${m.prefix}game off* - Member tidak bisa main game\n\n` +
+        `*${m.prefix}game on* - Member bisa main game\n` +
+        `*${m.prefix}game off* - Member tidak bisa main game\n\n` +
         `*Catatan:* Admin tetap bisa mengakses game meskipun dimatikan.`, "game");
   }
 

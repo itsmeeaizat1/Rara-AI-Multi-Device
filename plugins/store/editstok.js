@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
             `📋 Format: \`${m.prefix}editstok <nomor_produk> <nomor_item>|<detail_baru>\`\n\n` +
             `📝 *Contoh:*\n` +
             `\`${m.prefix}editstok 1 3|Email: baru@mail.com;;Password: newpass\`\n\n` +
-            `• Gunakan \`;;\` untuk baris baru dalam detail 🔑\n` +
+            `Gunakan \`;;\` untuk baris baru dalam detail 🔑\n` +
             `📋 Lihat nomor item: \`${m.prefix}liststok <nomor_produk>\`\n\n` +
             `⚠️ _Stok yang sudah terkirim ke pembeli tidak akan berubah_ 🔒`)
     }

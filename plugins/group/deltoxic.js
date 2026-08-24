@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     const index = toxicWords.indexOf(word)
     
     if (index === -1) {
-        { const __navText = `❌ *Gagal*\n\n> Kata \`${word}\` tidak ada di daftar`; return await m.reply(claraWrap("deltoxic", __navText)); }
+        { const __navText = `❌ *Gagal*\n\nKata \`${word}\` tidak ada di daftar`; return await m.reply(claraWrap("deltoxic", __navText)); }
     }
     
     toxicWords.splice(index, 1)

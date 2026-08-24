@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply( `💚 *FeelBetterBot*\n\n` +
         `AI yang siap mendengarkan curhatan kamu — tanpa menghakimi, dengan hangat dan empatik.\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}feelbetter <curhatan>*\n\n` +
         `*CONTOH:*\n` +
         `*${m.prefix}feelbetter lagi sedih nih*\n` +
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const result = await FeelBetter(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("FeelBetter Gagal", `❌ *FeelBetter Gagal*\n\n> ${result.error || "Gagal mendapatkan respons"}`));
+      return m.reply(claraWrap("FeelBetter Gagal", `❌ *FeelBetter Gagal*\n\n${result.error || "Gagal mendapatkan respons"}`));
     }
 
     await m.react("🐣");

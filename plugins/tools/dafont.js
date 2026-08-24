@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     return m.reply(
       `🔤 *DaFont Search*\n\n` +
         `Cari font dari DaFont, lalu reply nomor buat download.\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}dafont <nama font>*\n\n` +
         `*CONTOH:*\n` +
         `*${m.prefix}dafont arial*\n` +
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     const result = await DaFont(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("dafont", `❌ *DaFont Gagal*\n\n> ${result.error}`));
+      return m.reply(claraWrap("dafont", `❌ *DaFont Gagal*\n\n${result.error}`));
     }
 
     const items = result.results.slice(0, 10);

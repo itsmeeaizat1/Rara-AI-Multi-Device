@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     const current = db.setting("onlyGc") || false;
     return m.reply( `🏘️ *Only Group*\n\n` +
         `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}onlygc on* — Bot hanya bisa diakses di grup\n` +
         `*${m.prefix}onlygc off* — Bot bisa diakses di mana saja\n\n` +
         `_Jika aktif, mode Only Private akan otomatis nonaktif_`, "onlygc");
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  return m.reply(claraWrap("Onlygc", `❌ *Opsi Tidak Valid*\n\n> Gunakan *${m.prefix}onlygc on* atau *${m.prefix}onlygc off*`));
+  return m.reply(claraWrap("Onlygc", `❌ *Opsi Tidak Valid*\n\nGunakan *${m.prefix}onlygc on* atau *${m.prefix}onlygc off*`));
 }
 
 export { pluginConfig as config, handler };

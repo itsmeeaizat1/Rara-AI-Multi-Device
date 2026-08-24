@@ -86,8 +86,8 @@ function handler(m, { sock }) {
     }
 
     text += `*AKSI:*\n`
-    text += `• *${m.prefix}renewsewa <id> <durasi>* — Perpanjang\n`
-    text += `• *${m.prefix}delsewa <id>* — Hapus dari whitelist`
+    text += `*${m.prefix}renewsewa <id> <durasi>* — Perpanjang\n`
+    text += `*${m.prefix}delsewa <id>* — Hapus dari whitelist`
 
     return m.reply(claraWrap("listsewa", text))
 }

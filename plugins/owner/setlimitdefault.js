@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     }
     
     if (newLimit < 1 || newLimit > 1000) {
-        { const __navText = `❌ *Gagal*\n\n> Limit harus antara 1 - 1000`; return await m.reply(claraWrap("setlimitdefault", __navText)); }
+        { const __navText = `❌ *Gagal*\n\nLimit harus antara 1 - 1000`; return await m.reply(claraWrap("setlimitdefault", __navText)); }
     }
     
     const db = getDatabase()

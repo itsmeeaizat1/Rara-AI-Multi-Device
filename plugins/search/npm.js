@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
 
     if (!data.objects || data.objects.length === 0) {
       return m.reply(
-        `❌ *Tidak Ditemukan*\n\n> Package "${query}" tidak ditemukan`,
+        `❌ *Tidak Ditemukan*\n\nPackage "${query}" tidak ditemukan`,
       );
     }
 

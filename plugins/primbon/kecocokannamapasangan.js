@@ -20,7 +20,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (m.args.length < 2) {
-        { const __navText = `💕 *Kecocokan Nama*\n\n> Format: nama1 nama2\n\n\`Contoh: ${m.prefix}kecocokannamapasangan putu keyla\``; return await m.reply(__navText); }
+        { const __navText = `💕 *Kecocokan Nama*\n\nFormat: nama1 nama2\n\n\`Contoh: ${m.prefix}kecocokannamapasangan putu keyla\``; return await m.reply(__navText); }
     }
     
     const [nama1, nama2] = m.args
@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(claraWrap("kecocokannamapasangan", `❌ *Gagal*\n\n> Gagal menganalisa`))
+            return m.reply(claraWrap("kecocokannamapasangan", `❌ *Gagal*\n\nGagal menganalisa`))
         }
         
         const result = data.data

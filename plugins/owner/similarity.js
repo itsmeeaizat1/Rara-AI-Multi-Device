@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const args = m.args
     
     if (!args[0]) {
-        return m.reply(`⚠️ *Cara Pakai*\n\n> \`.similarity on\` - Aktifkan\n> \`.similarity off\` - Matikan`)
+        return m.reply(`⚠️ *Cara Pakai*\n\n\`.similarity on\` - Aktifkan\n\`.similarity off\` - Matikan`)
     }
     
     const mode = args[0].toLowerCase()
@@ -30,13 +30,13 @@ async function handler(m, { sock }) {
     if (mode === 'on') {
         db.setting('similarity', true)
         await m.react('✅')
-        await m.reply(claraWrap("Similarity", `✅ *sUkses*\n\n> Fitur similarity command *DIAKTIFKAN*`))
+        await m.reply(claraWrap("Similarity", `✅ *sUkses*\n\nFitur similarity command *DIAKTIFKAN*`))
     } else if (mode === 'off') {
         db.setting('similarity', false)
         await m.react('✅')
-        await m.reply(claraWrap("Similarity", `✅ *sUkses*\n\n> Fitur similarity command *DIMATIKAN*`))
+        await m.reply(claraWrap("Similarity", `✅ *sUkses*\n\nFitur similarity command *DIMATIKAN*`))
     } else {
-        { const __navText = `⚠️ *Cara Pakai*\n\n> \`.similarity on\` - Aktifkan\n> \`.similarity off\` - Matikan`; return await m.reply(__navText); }
+        { const __navText = `⚠️ *Cara Pakai*\n\n\`.similarity on\` - Aktifkan\n\`.similarity off\` - Matikan`; return await m.reply(__navText); }
     }
     
     await db.save()

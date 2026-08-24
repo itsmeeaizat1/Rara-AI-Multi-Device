@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
 
     if (m.command === 'listmutemember' || m.command === 'listmute') {
         if (mutedMembers.length === 0) {
-            return m.reply(claraWrap("Unmutemember", `🔇 *LIST MUTED MEMBERS*\n\n> Tidak ada member yang dimute di grup ini`))
+            return m.reply(claraWrap("Unmutemember", `🔇 *LIST MUTED MEMBERS*\n\nTidak ada member yang dimute di grup ini`))
         }
 
         let txt = `🔇 *LIST MUTED MEMBERS*\n\n╭┈┈⬡「 📋 *Daftar* 」\n`
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
             const num = jid.replace(/@.+/g, '')
             txt += `┃ ${i + 1}. @${num}\n`
         })
-        txt += `╰┈┈⬡\n\n> Total: \`${mutedMembers.length}\` member dimute`
+        txt += `╰┈┈⬡\n\nTotal: \`${mutedMembers.length}\` member dimute`
 
         return m.reply(claraWrap("unmutemember", txt))
     }
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
     })
 
     if (index === -1) {
-        return m.reply(claraWrap("Unmutemember", `❌ *Gagal*\n\n> Member @${targetNumber} tidak sedang dimute`))
+        return m.reply(claraWrap("Unmutemember", `❌ *Gagal*\n\nMember @${targetNumber} tidak sedang dimute`))
     }
 
     mutedMembers.splice(index, 1)

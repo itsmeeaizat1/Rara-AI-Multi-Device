@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
 
   if (!action) {
     const status = groupData.antibug ? "ON" : "OFF";
-    return m.reply( `Anti Bug\n\n> Status: ${status}\n\n> \`${m.prefix}antibug on/off\``, { commandName: "antibug" });
+    return m.reply( `Anti Bug\n\nStatus: ${status}\n\n\`${m.prefix}antibug on/off\``, { commandName: "antibug" });
   }
 
   if (action === "on") {

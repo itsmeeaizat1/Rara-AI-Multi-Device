@@ -210,10 +210,10 @@ function buildRewardPreview(user) {
   const rewards = getRegistrationRewards();
 
   if (user?.hasClaimedRegisterReward) {
-    return `🎁 *Status Bonus*\n> Bonus daftar pertama sudah pernah kamu klaim\n> Daftar ulang tidak mendapat reward lagi`;
+    return `🎁 *Status Bonus*\nBonus daftar pertama sudah pernah kamu klaim\nDaftar ulang tidak mendapat reward lagi`;
   }
 
-  return `🎁 *Bonus Daftar Pertama*\n> 💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n> ⚡ +${rewards.energi} Energi\n> ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n> 🎲 Plus random bonus limit/koin/exp!`;
+  return `🎁 *Bonus Daftar Pertama*\n💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n⚡ +${rewards.energi} Energi\n⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n🎲 Plus random bonus limit/koin/exp!`;
 }
 
 function buildConfirmationRewardBlock(user) {
@@ -466,7 +466,7 @@ async function registrationAnswerHandler(m, sock) {
   if (["batal", "cancel", "batalkan"].includes(lowText)) {
     clearRegistrationSession(m.sender);
     await m.reply(
-      `❌ Pendaftaran dibatalkan.\n\n> Mulai lagi dengan: \`${m.prefix}daftar\``,
+      `❌ Pendaftaran dibatalkan.\n\nMulai lagi dengan: \`${m.prefix}daftar\``,
     );
     return true;
   }
@@ -502,7 +502,7 @@ async function registrationAnswerHandler(m, sock) {
 
     if (!/^\d+$/.test(text) || Number.isNaN(age) || age < 1 || age > 100) {
       await m.reply(
-        `❌ Umur tidak valid!\n\n> Masukkan angka umur dari *1 - 100* tahun`,
+        `❌ Umur tidak valid!\n\nMasukkan angka umur dari *1 - 100* tahun`,
       );
       return true;
     }
@@ -583,7 +583,7 @@ async function registrationAnswerHandler(m, sock) {
 
     if (!/^\d+$/.test(text) || Number.isNaN(age) || age < 1 || age > 100) {
       await m.reply(
-        `❌ Umur tidak valid!\n\n> Masukkan angka umur dari *1 - 100* tahun`,
+        `❌ Umur tidak valid!\n\nMasukkan angka umur dari *1 - 100* tahun`,
       );
       return true;
     }
@@ -701,7 +701,7 @@ async function registrationAnswerHandler(m, sock) {
 
     if (!["ya", "y", "iya", "yes", "lanjut", "confirm"].includes(lowText)) {
       await m.reply(
-        `❌ Balasan tidak valid!\n\n> Reply: \`ya\`, \`revisi nama\`, \`revisi umur\`, \`revisi gender\`, atau \`batal\``,
+        `❌ Balasan tidak valid!\n\nReply: \`ya\`, \`revisi nama\`, \`revisi umur\`, \`revisi gender\`, atau \`batal\``,
       );
       return true;
     }

@@ -65,7 +65,7 @@ class MuslimAI {
 async function handler(m, { sock }) {
     const text = m.args.join(' ')
     if (!text) {
-        return m.reply(`☪️ *Muslim Ai*\n\n> Masukkan pertanyaan tentang Islam\n\n\`Contoh: ${m.prefix}muslimai Apa itu sholat?\``)
+        return m.reply(`☪️ *Muslim Ai*\n\nMasukkan pertanyaan tentang Islam\n\n\`Contoh: ${m.prefix}muslimai Apa itu sholat?\``)
     }
 
     m.react('🕐')

@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
         const admins = users.filter(u => u.attributes.root_admin)
         
         if (admins.length === 0) {
-            return m.reply(claraWrap("listadmin", `📋 *Daftar Admin [${serverLabel}]*\n\n> Tidak ada admin terdaftar.`))
+            return m.reply(claraWrap("listadmin", `📋 *Daftar Admin [${serverLabel}]*\n\nTidak ada admin terdaftar.`))
         }
         
         let txt = `📋 *Daftar Admin [${serverLabel}]*\n\n`

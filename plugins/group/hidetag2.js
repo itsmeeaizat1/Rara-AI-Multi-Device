@@ -26,8 +26,8 @@ async function handler(m, { sock }) {
 
     if (!text && !m.quoted) {
         return m.reply( `📢 *HIDETAG 2*\n\n` +
-            `• \`${m.prefix}h2 <text>\`\n` +
-            `• Reply pesan + \`${m.prefix}h2\``, "hidetag2")
+            `\`${m.prefix}h2 <text>\`\n` +
+            `Reply pesan + \`${m.prefix}h2\``, "hidetag2")
     }
     try {
         const groupMeta = m.groupMetadata

@@ -168,7 +168,7 @@ async function handler(m, { sock, config: botConfig }) {
                 const duration = parseFloat(stdout.trim())
                 
                 if (duration > 10) {
-                    await m.reply(claraWrap("Sticker", `❌ Video terlalu panjang!\n\n> Durasi: ${duration.toFixed(1)} detik\n> Maksimal: 10 detik`))
+                    await m.reply(claraWrap("Sticker", `❌ Video terlalu panjang!\n\nDurasi: ${duration.toFixed(1)} detik\nMaksimal: 10 detik`))
                     if (fs.existsSync(tempVideo)) fs.unlinkSync(tempVideo)
                     return
                 }

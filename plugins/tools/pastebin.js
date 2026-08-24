@@ -30,8 +30,8 @@ async function handler(m, { sock }) {
     return m.reply( `📋 *PAsTEBIN UPLOAD*\n\n` +
         `Kirim teks untuk di-upload ke Pastebin.\n\n` +
         `*Cara pakai:*\n` +
-        `• \`${m.prefix}pastebin <text>\`\n` +
-        `• Reply teks dengan \`${m.prefix}pastebin\`\n\n` +
+        `\`${m.prefix}pastebin <text>\`\n` +
+        `Reply teks dengan \`${m.prefix}pastebin\`\n\n` +
         `Contoh: \`${m.prefix}pastebin console.log("Hello")\``, "pastebin");
   }
 
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
     const url = res.data;
 
     if (url.startsWith("Bad API request")) {
-      { const __navText = `❌ *GAGAL*\n\n> ${url}`; return await m.reply(__navText); };
+      { const __navText = `❌ *GAGAL*\n\n${url}`; return await m.reply(__navText); };
     }
 
     const responseText =

@@ -33,11 +33,11 @@ function handler(m, { sock }) {
         `Status: *${status === "on" ? "Aktif ✅" : "Nonaktif ❌"}*\n` +
         `Mode: *${mode.toUpperCase()}*\n\n` +
         `*DETEKSI:*\n` +
-        `• https:// / http:// (dengan protokol)\n` +
-        `• www. (subdomain)\n` +
-        `• Domain extension (.com, .id, .io, .net, dll)\n` +
-        `• Shortlink (bit.ly, t.me, tinyurl, dll)\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `https:// / http:// (dengan protokol)\n` +
+        `www. (subdomain)\n` +
+        `Domain extension (.com, .id, .io, .net, dll)\n` +
+        `Shortlink (bit.ly, t.me, tinyurl, dll)\n\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}antilinkall on* — Aktifkan\n` +
         `*${m.prefix}antilinkall off* — Nonaktifkan\n` +
         `*${m.prefix}antilinkall metode kick* — Mode kick user\n` +
@@ -47,38 +47,38 @@ function handler(m, { sock }) {
   if (option === "on") {
     db.setGroup(m.chat, { antilinkall: "on" });
     return m.reply(claraWrap("antilinkall", `✅ *Antilink All Aktif*\n\n` +
-        `Semua link akan dideteksi otomatis\n> Mendeteksi domain extension, bukan hanya http/https`));
+        `Semua link akan dideteksi otomatis\nMendeteksi domain extension, bukan hanya http/https`));
   }
 
   if (option === "off") {
     db.setGroup(m.chat, { antilinkall: "off" });
-    return m.reply(claraWrap("Antilinkall", `❌ *Antilink All Nonaktif*\n\n> Link tidak akan difilter lagi`));
+    return m.reply(claraWrap("Antilinkall", `❌ *Antilink All Nonaktif*\n\nLink tidak akan difilter lagi`));
   }
 
   if (option.startsWith("metode")) {
     const method = m.args?.[1]?.toLowerCase();
     if (method === "kick") {
       db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "kick" });
-      return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Kick*\n\n> User yang kirim link akan di-kick`));
+      return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Kick*\n\nUser yang kirim link akan di-kick`));
     } else if (method === "remove" || method === "delete") {
       db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "remove" });
-      return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Delete*\n\n> Pesan dengan link akan dihapus`));
+      return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Delete*\n\nPesan dengan link akan dihapus`));
     } else {
-      return m.reply(claraWrap("Antilinkall", `❌ *Metode Tidak Valid*\n\n> Gunakan *kick* atau *remove*\n> Contoh: *${m.prefix}antilinkall metode kick*`));
+      return m.reply(claraWrap("Antilinkall", `❌ *Metode Tidak Valid*\n\nGunakan *kick* atau *remove*\nContoh: *${m.prefix}antilinkall metode kick*`));
     }
   }
 
   if (option === "kick") {
     db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "kick" });
-    return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Kick*\n\n> User yang kirim link akan di-kick`));
+    return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Kick*\n\nUser yang kirim link akan di-kick`));
   }
 
   if (option === "remove" || option === "delete") {
     db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "remove" });
-    return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Delete*\n\n> Pesan dengan link akan dihapus`));
+    return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Delete*\n\nPesan dengan link akan dihapus`));
   }
 
-  return m.reply(claraWrap("Antilinkall", `❌ *Opsi Tidak Valid*\n\n> Gunakan *on*, *off*, *metode kick*, atau *metode remove*`));
+  return m.reply(claraWrap("Antilinkall", `❌ *Opsi Tidak Valid*\n\nGunakan *on*, *off*, *metode kick*, atau *metode remove*`));
 }
 
 export { pluginConfig as config, handler };

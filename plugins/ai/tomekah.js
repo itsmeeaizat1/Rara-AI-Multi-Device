@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        { const __navText = claraWrap("Mekah sTyle", `🕋 *Mekah sTyle*\n\n> Kirim/reply gambar\n\n\`${m.prefix}tomekah\``); return await m.reply(__navText, "tomekah"); }
+        { const __navText = claraWrap("Mekah sTyle", `🕋 *Mekah sTyle*\n\nKirim/reply gambar\n\n\`${m.prefix}tomekah\``); return await m.reply(__navText, "tomekah"); }
     }
     
     m.react('🕐')

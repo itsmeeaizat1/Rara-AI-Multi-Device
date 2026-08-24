@@ -51,13 +51,13 @@ async function handler(m, { sock }) {
     }
     
     if (amount <= 0) {
-        return m.reply(claraWrap("Delexp", `❌ *Gagal*\n\n> Jumlah harus lebih dari 0`))
+        return m.reply(claraWrap("Delexp", `❌ *Gagal*\n\nJumlah harus lebih dari 0`))
     }
     
     const user = db.getUser(targetJid)
     
     if (!user) {
-        return m.reply(claraWrap("Delexp", `❌ *Gagal*\n\n> User tidak ditemukan di database`))
+        return m.reply(claraWrap("Delexp", `❌ *Gagal*\n\nUser tidak ditemukan di database`))
     }
     
     const newExp = db.updateExp(targetJid, -amount)

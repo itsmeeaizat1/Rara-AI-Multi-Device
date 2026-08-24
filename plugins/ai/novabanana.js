@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
   const isImage = m.isImage || (m.quoted && m.quoted.isImage);
   if (!isImage) {
-    return m.reply( claraWrap("Novabanana", `🍌 *Nano Banana*\n\n> Reply atau kirim gambar dengan caption`), { commandName: "novabanana" });
+    return m.reply( claraWrap("Novabanana", `🍌 *Nano Banana*\n\nReply atau kirim gambar dengan caption`), { commandName: "novabanana" });
   }
 
   m.react("🕒");
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     }
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
-      return m.reply(claraWrap("Gagal", `❌ *Gagal*\n\n> Gagal mengunduh gambar`));
+      return m.reply(claraWrap("Gagal", `❌ *Gagal*\n\nGagal mengunduh gambar`));
     }
 
     const resultBuffer = await live3d(mediaBuffer, prompt).then(

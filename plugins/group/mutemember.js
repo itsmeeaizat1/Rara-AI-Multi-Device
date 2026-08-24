@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
             return pJid === targetNumber && (p.admin === 'admin' || p.admin === 'superadmin')
         })
         if (isTargetAdmin) {
-            return m.reply(claraWrap("Mutemember", `❌ *Gagal*\n\n> Tidak dapat mute admin grup`))
+            return m.reply(claraWrap("Mutemember", `❌ *Gagal*\n\nTidak dapat mute admin grup`))
         }
     }
 
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     })
 
     if (alreadyMuted) {
-        return m.reply(claraWrap("Mutemember", `❌ *Gagal*\n\n> Member @${targetNumber} sudah dimute`))
+        return m.reply(claraWrap("Mutemember", `❌ *Gagal*\n\nMember @${targetNumber} sudah dimute`))
     }
 
     mutedMembers.push(targetJid)

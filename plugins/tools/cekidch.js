@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     }
 
     if (!text.includes('https://whatsapp.com/channel/')) {
-        return m.reply(claraWrap("Cekidch", `── .✦ ──\n\n> Link channel tidak valid .☘︎ ݁˖`))
+        return m.reply(claraWrap("Cekidch", `── .✦ ──\n\nLink channel tidak valid .☘︎ ݁˖`))
     }
 
     m.react('🕐')
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
         const metadata = await sock.cekIDSaluran(text)
  
         if (!metadata?.id) {
-            { const __navText = `── .✦ ──\n\n> Channel tidak ditemukan .☘︎ ݁˖`; return await m.reply(__navText); }
+            { const __navText = `── .✦ ──\n\nChannel tidak ditemukan .☘︎ ݁˖`; return await m.reply(__navText); }
         }
 
         const chName = metadata.name || 'Unknown'

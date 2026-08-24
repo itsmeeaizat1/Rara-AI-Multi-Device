@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]
     
     if (!username) {
-        { const __navText = `📦 *Npm sTalk*\n\n> Masukkan username NPM\n\n\`Contoh: ${m.prefix}npmstalk aizat\``; return await m.reply( __navText, "npmstalk"); }
+        { const __navText = `📦 *Npm sTalk*\n\nMasukkan username NPM\n\n\`Contoh: ${m.prefix}npmstalk aizat\``; return await m.reply( __navText, "npmstalk"); }
     }
     
     m.react('🕐')

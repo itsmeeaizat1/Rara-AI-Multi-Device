@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
 
   const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
   if (!ipRegex.test(ip)) {
-    return m.reply(`❌ *ғORMAT TIDAK VALID*\n\n> Contoh: \`8.8.8.8\``);
+    return m.reply(`❌ *ғORMAT TIDAK VALID*\n\nContoh: \`8.8.8.8\``);
   }
 
   await m.react("🕒");
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     const data = await res.json();
 
     if (!data.success) {
-      return m.reply(claraWrap("Ipwho", `❌ *IP TIDAK DITEMUKAN*\n\n> IP ${ip} tidak valid`));
+      return m.reply(claraWrap("Ipwho", `❌ *IP TIDAK DITEMUKAN*\n\nIP ${ip} tidak valid`));
     }
 
     if (data.latitude && data.longitude) {

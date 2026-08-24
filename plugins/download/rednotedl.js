@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply( `📕 *RedNote Downloader*\n\n` +
         `Download video atau foto dari XiaoHongShu (RedNote).\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}rednotedl <link>*\n\n` +
         `*CONTOH:*\n` +
         `*${m.prefix}rednotedl https://www.xiaohongshu.com/xxx*`, "rednotedl");
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     const result = await RedNoteDL(text);
 
     if (!result.status) {
-      { const __navText = `❌ *RedNote Gagal*\n\n> ${result.error}`; return await m.reply(__navText); };
+      { const __navText = `❌ *RedNote Gagal*\n\n${result.error}`; return await m.reply(__navText); };
     }
 
     if (result.type === "video" && result.results?.[0]) {

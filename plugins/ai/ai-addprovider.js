@@ -54,15 +54,15 @@ async function handler(m, { sock, config: botConfig }) {
       const custom = getCustomProviders();
       const builtinLines = Object.entries(DEFAULT_PROVIDERS).map(([key, provider]) => {
         const models = (provider.models || []).slice(0, 3).join(", ");
-        return `• ${provider.name} (${key})\n  Model: ${models}\n  Default: ${provider.defaultModel}`;
+        return `${provider.name} (${key})\n  Model: ${models}\n  Default: ${provider.defaultModel}`;
       });
 
       const customLines = Object.keys(custom).length
         ? Object.entries(custom).map(([key, provider]) => {
             const models = Array.isArray(provider.models) ? provider.models.slice(0, 3).join(", ") : provider.model || "-";
-            return `• ${provider.name || key} (${key})\n  Model: ${models}\n  Default: ${provider.defaultModel || provider.model || "-"}`;
+            return `${provider.name || key} (${key})\n  Model: ${models}\n  Default: ${provider.defaultModel || provider.model || "-"}`;
           })
-        : ["• (belum ada provider custom)"];
+        : ["(belum ada provider custom)"];
 
       const text = claraWrap("AI Providers",
         "🤖 BAWAAN:\n" + builtinLines.join("\n") +

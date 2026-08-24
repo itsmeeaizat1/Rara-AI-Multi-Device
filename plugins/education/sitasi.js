@@ -253,7 +253,7 @@ async function handler(m, { sock, args }) {
     if (meta.site) txt += `Site: ${meta.site}\n`;
     txt += `Year: ${meta.year || "n.d."}\n`;
     if (isURL) txt += `URL: ${meta.url}\n`;
-    txt += `\n> _Salin sitasi di atas ke daftar pustaka_`;
+    txt += `\n_Salin sitasi di atas ke daftar pustaka_`;
 
     await m.reply(txt);
     await m.react("🐣");

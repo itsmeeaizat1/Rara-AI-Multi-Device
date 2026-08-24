@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     })
 
     if (index === -1) {
-        { const __navText = `❌ *Gagal*\n\n> Nomor \`${targetNumber}\` tidak dalam daftar banned`; return await m.reply(claraWrap("unban", __navText)); }
+        { const __navText = `❌ *Gagal*\n\nNomor \`${targetNumber}\` tidak dalam daftar banned`; return await m.reply(claraWrap("unban", __navText)); }
     }
 
     bannedList.splice(index, 1)

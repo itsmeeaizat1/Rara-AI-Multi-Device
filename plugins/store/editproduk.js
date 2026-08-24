@@ -60,15 +60,15 @@ async function handler(m, { sock }) {
             `✏️ *EDIT PRODUK*\n\n` +
             `📋 Format: \`${m.prefix}editproduk <nomor> <field> <nilai>\`\n\n` +
             `📌 *Field yang bisa diedit:*\n` +
-            `• *nama* 🏷️ — Nama produk\n` +
-            `• *harga* 💰 — Harga jual (angka)\n` +
-            `• *diskon* 🏷️ — Harga asli/coret (angka, 0 untuk hapus)\n` +
-            `• *stok* 📊 — Jumlah stok atau \`unlimited\`\n` +
-            `• *tipe* 🔑📦 — \`digital\` atau \`fisik\`\n` +
-            `• *deskripsi* 📝 — Deskripsi produk\n` +
-            `• *detail* 🔒 — Info rahasia (dikirim setelah beli)\n` +
-            `• *gambar* 🖼️ — Upload gambar baru (reply gambar)\n` +
-            `• *video* 🎬 — Upload video baru (reply video)\n\n` +
+            `*nama* 🏷️ — Nama produk\n` +
+            `*harga* 💰 — Harga jual (angka)\n` +
+            `*diskon* 🏷️ — Harga asli/coret (angka, 0 untuk hapus)\n` +
+            `*stok* 📊 — Jumlah stok atau \`unlimited\`\n` +
+            `*tipe* 🔑📦 — \`digital\` atau \`fisik\`\n` +
+            `*deskripsi* 📝 — Deskripsi produk\n` +
+            `*detail* 🔒 — Info rahasia (dikirim setelah beli)\n` +
+            `*gambar* 🖼️ — Upload gambar baru (reply gambar)\n` +
+            `*video* 🎬 — Upload video baru (reply video)\n\n` +
             `📝 *Contoh:*\n` +
             `\`${m.prefix}editproduk 1 harga 30000\`\n` +
             `\`${m.prefix}editproduk 1 diskon 40000\`\n` +

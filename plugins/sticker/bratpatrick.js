@@ -22,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply( `🖼️ *BRAT PATRICK*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratpatrick Hai semua\``, "bratpatrick");
+    return m.reply( `🖼️ *BRAT PATRICK*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratpatrick Hai semua\``, "bratpatrick");
   }
 
   m.react("🕒");

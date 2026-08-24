@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply(`🎨 *Text to Image (Flux)*\n\n` +
       `Buat gambar dari deskripsi teks pakai AI Flux Klein 4B.\n\n` +
-      `*PENGGUNAAN:*\n` +
+      `*Cara Pakai:*\n` +
       `*${m.prefix}txt2img2 <deskripsi>*\n\n` +
       `*CONTOH:*\n` +
       `*${m.prefix}txt2img2 Mobil Lamborghini revuelto*\n` +
@@ -37,10 +37,10 @@ async function handler(m, { sock }) {
     const result = await Txt2Img2(text);
 
     if (!result.status) {
-      { const __navText = `❌ *Generate Gagal*\n\n> ${result.error}`; return await m.reply(__navText); };
+      { const __navText = `❌ *Generate Gagal*\n\n${result.error}`; return await m.reply(__navText); };
     }
 
-    await sock.sendMedia(m.chat, result.url, `🎨 *Flux Klein 4B*\n\n> Prompt: *${result.prompt}*`, m, {
+    await sock.sendMedia(m.chat, result.url, `🎨 *Flux Klein 4B*\n\nPrompt: *${result.prompt}*`, m, {
       type: "image",
     });
 

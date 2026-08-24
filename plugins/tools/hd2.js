@@ -30,7 +30,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
   if (!isImage) {
-    return m.reply( `✨ *HD ENHANCE V2*\n\n> Kirim/reply gambar untuk di-enhance\n\n\`${m.prefix}hd2\`\n\n> 🕕 Proses membutuhkan waktu ±1 menit`, "hd2");
+    return m.reply( `✨ *HD ENHANCE V2*\n\nKirim/reply gambar untuk di-enhance\n\n\`${m.prefix}hd2\`\n\n🕕 Proses membutuhkan waktu ±1 menit`, "hd2");
   }
   m.react("🕒");
   try {
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("hd2tool", `❌ Gagal mendownload gambar`));
     }
     await m.reply(
-      `🕕 *MEMPROsEs GAMBAR...*\n\n> Estimasi waktu: ±1 menit\n> Mohon tunggu...`,
+      `🕕 *MEMPROsEs GAMBAR...*\n\nEstimasi waktu: ±1 menit\nMohon tunggu...`,
     );
     const temp = path.join(process.cwd(), "temp", "hd.jpg");
     fs.writeFileSync(temp, buffer);

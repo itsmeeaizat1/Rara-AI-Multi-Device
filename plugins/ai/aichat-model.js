@@ -30,7 +30,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!providerArg || providerArg === "list" || providerArg === "daftar") {
       const lines = Object.entries(DEFAULT_PROVIDERS).map(([key, provider]) => {
-        const models = (provider.models || []).map((model) => `• ${model}`).join("\n");
+        const models = (provider.models || []).map((model) => `${model}`).join("\n");
         return `${provider.name} (${key})\nDefault: ${provider.defaultModel}\n${models}`;
       });
 

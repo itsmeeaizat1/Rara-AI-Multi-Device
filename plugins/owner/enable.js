@@ -147,7 +147,7 @@ async function handler(m, { sock }) {
   txt += `Status: ON`;
   if (feature.modes) {
     const newMode = mode && feature.modes.includes(mode) ? mode : (groupData[feature.modeKey] || feature.modes[0]);
-    txt += `\n> Mode: ${newMode}`;
+    txt += `\nMode: ${newMode}`;
   }
 
   return await m.reply( txt, { commandName: "enable" });

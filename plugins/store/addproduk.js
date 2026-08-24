@@ -56,11 +56,11 @@ async function handler(m, { sock }) {
             `📋 Format:\n` +
             `\`${m.prefix}addproduk <nama>|<harga>|<tipe>|<stok>|<deskripsi>\`\n\n` +
             `📌 *Parameter:*\n` +
-            `• *nama* — Nama produk (min. 2 karakter)\n` +
-            `• *harga* — Harga dalam Rupiah (min. 1.000)\n` +
-            `• *tipe* — \`digital\` 🔑 atau \`fisik\` 📦 (opsional, default: digital)\n` +
-            `• *stok* — Jumlah stok atau \`unlimited\` (opsional, default: 999)\n` +
-            `• *deskripsi* — Deskripsi singkat (opsional)\n\n` +
+            `*nama* — Nama produk (min. 2 karakter)\n` +
+            `*harga* — Harga dalam Rupiah (min. 1.000)\n` +
+            `*tipe* — \`digital\` 🔑 atau \`fisik\` 📦 (opsional, default: digital)\n` +
+            `*stok* — Jumlah stok atau \`unlimited\` (opsional, default: 999)\n` +
+            `*deskripsi* — Deskripsi singkat (opsional)\n\n` +
             `🔑 *Digital* = Produk berupa akun/key/data unik per item\n` +
             `📦 *Fisik* = Produk berupa barang, stok berupa jumlah\n\n` +
             `📝 *Contoh:*\n` +
@@ -68,10 +68,10 @@ async function handler(m, { sock }) {
             `\`${m.prefix}addproduk Baju Kaos|65000|fisik|8|Kaos Polos Cotton 30s\`\n` +
             `\`${m.prefix}addproduk Netflix|35000|digital|unlimited|Sharing Account\`\n\n` +
             `🖼️ *Tips:*\n` +
-            `• Kirim gambar/video terlebih dahulu, lalu reply media tersebut dengan command di atas untuk menambahkan thumbnail 📸\n` +
-            `• Untuk produk *digital*, gunakan \`${m.prefix}addstok\` setelah produk dibuat untuk menambahkan data akun/key 🔑\n` +
-            `• Untuk produk *fisik*, stok otomatis diatur dari angka yang dimasukkan 📦\n` +
-            `• Harga diskon bisa diatur nanti dengan \`${m.prefix}editproduk\` 🏷️`
+            `Kirim gambar/video terlebih dahulu, lalu reply media tersebut dengan command di atas untuk menambahkan thumbnail 📸\n` +
+            `Untuk produk *digital*, gunakan \`${m.prefix}addstok\` setelah produk dibuat untuk menambahkan data akun/key 🔑\n` +
+            `Untuk produk *fisik*, stok otomatis diatur dari angka yang dimasukkan 📦\n` +
+            `Harga diskon bisa diatur nanti dengan \`${m.prefix}editproduk\` 🏷️`
         )
     }
 
