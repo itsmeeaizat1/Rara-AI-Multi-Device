@@ -1,33 +1,79 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getRandomItem } from '../../src/lib/nova-game-data.js'
-import { fetchBuffer } from '../../src/lib/nova-utils.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
-const pluginConfig = {
-    name: 'renungan',
-    alias: ['motivasi', 'mutiara'],
-    category: 'fun',
-    description: 'Random gambar renungan/motivasi',
-    usage: '.renungan',
-    example: '.renungan',
-    isOwner: false,
-    isPremium: false,
-    isGroup: false,
-    isPrivate: false,
-    cooldown: 5,
-    energi: 0,
-    isEnabled: true
-};
+// Random renungan images
 
-async function handler(m, { sock }) {
-    m.react('🕐')
-    try {
-        await sock.sendMedia(m.chat, getRandomItem('renungan.json'), null, m, {
-            type: 'image'
-        })
-        m.react('✅')
-    } catch (error) {
-        m.reply(claraWrap("Renungan", '❌ Gagal mengambil gambar. Coba lagi!'));
-    }
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+let fetchBuffer;
+try {
+  fetchBuffer = (await import("../../src/lib/nova-utils.js")).fetchBuffer;
+} catch {}
+
+function getRandomRenungan() {
+  try {
+    const data = JSON.parse(
+      fs.readFileSync(path.join(__dirname, "../../src/data/renungan.json"), "utf8")
+    );
+    if (!Array.isArray(data) || data.length === 0) return null;
+    return data[Math.floor(Math.random() * data.length)];
+  } catch {
+    return null;
+  }
 }
 
-export { pluginConfig as config, handler }
+export const config = {
+  name: "renungan",
+  alias: ["quotesrenungan"],
+  category: "fun",
+  description: "Random gambar renungan",
+  usage: ".renungan",
+  example: ".renungan",
+  isOwner: false,
+  isPremium: false,
+  isRegister: true,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 5,
+  energi: 1,
+  isEnabled: true,
+};
+
+export async function handler(m, { sock }) {
+  try {
+    const imgUrl = getRandomRenungan();
+    if (!imgUrl) {
+      await m.reply("❌ *Data renungan tidak tersedia!*");
+      return;
+    }
+
+    if (!fetchBuffer) {
+      await m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *RENUNGAN*\n\n${imgUrl}\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`);
+      return;
+    }
+
+    let buffer;
+    try {
+      buffer = await fetchBuffer(imgUrl);
+    } catch {
+      await m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *RENUNGAN*\n\n${imgUrl}\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`);
+      return;
+    }
+
+    let caption = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *RENUNGAN*\n\n`;
+    caption += `_Semoga renungan hari ini bermanfaat_\n\n`;
+    caption += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+
+    await sock.sendMessage(m.chat, { image: buffer, caption }, { quoted: m });
+    await m.react("🤲");
+  } catch (e) {
+    console.error("[renungan] Error:", e.message);
+    try {
+      await m.react("❌");
+      await m.reply("❌ *Terjadi error!*");
+    } catch {}
+  }
+}
