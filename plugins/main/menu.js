@@ -173,7 +173,7 @@ ${readMore}
   ° ✿ Menu ✿ °
   ┊  ➶ ${prefix}menu
   ┊  ➶ ${prefix}allmenu
-  ┊  ➶ ${prefix}menukategori <kategori>
+  ┊  ➶ ${prefix}allmenucategory <kategori>
   ┊  ➶ ${prefix}tanyaai
 ┊
   ° ✿ Info ✿ °
@@ -212,7 +212,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     // Thumbnail sebagai preview card = TIDAK tersimpan ke galeri HP
     const buttons = [
       { buttonId: `${prefix}allmenu`, buttonText: { displayText: "📋 All Menu" }, type: 1 },
-      { buttonId: `${prefix}menukategori`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
+      { buttonId: `${prefix}allmenucategory`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
       { buttonId: `${prefix}tanyaai`, buttonText: { displayText: "🤖 Tanya AI" }, type: 1 },
       { buttonId: `${prefix}owner`, buttonText: { displayText: "👑 Owner" }, type: 1 },
     ];
