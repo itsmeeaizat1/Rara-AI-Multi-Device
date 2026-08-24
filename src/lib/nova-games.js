@@ -1,4 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// Generic Game Factory — text & image based games
+// Uses m.reply (no buttons), Nova AI signature style, reply-to-game enforcement
+
 import {
   getRandomItem,
   createSession,
@@ -6,30 +9,23 @@ import {
   endSession,
   checkAnswerAdvanced,
   getHint,
+  isSurrender,
   hasActiveSession,
   setSessionTimer,
   getRemainingTime,
   formatRemainingTime,
-  isSurrender,
   isReplyToGame,
   getRandomReward,
   getProgressiveHint,
 } from "./nova-game-data.js";
 import { getDatabase } from "./nova-database.js";
 import { addExpWithLevelCheck } from "./nova-level.js";
-import {
-  getGameContextInfo,
-  sendGamePreview,
-  checkFastAnswer,
-} from "./nova-context.js";
-import config from "../../config.js";
 import fs from "fs";
-import sharp from "sharp";
-import { sendReplyWithNav } from "./nova-nav-buttons.js";
+
 let fetchBuffer;
 try {
   fetchBuffer = (await import("./nova-utils.js")).fetchBuffer;
-} catch { }
+} catch {}
 
 const WIN_MESSAGES = [
   "🌟 *GG WP! Otakmu encer!*",
@@ -72,7 +68,6 @@ class NovaGames {
       timeout: 60000,
       cooldown: 5,
       hasImage: false,
-      usePreview: false,
       imageField: "img",
       alias: [],
       hintCount: 2,
@@ -89,226 +84,236 @@ class NovaGames {
     if (!cfg) throw new Error(`Game "${gameType}" not registered`);
 
     const handler = async (m, { sock }) => {
-      const chatId = m.chat;
+      try {
+        const chatId = m.chat;
 
-      if (hasActiveSession(chatId)) {
-        const session = getSession(chatId);
-        if (session && session.gameType === gameType) {
-          const remaining = getRemainingTime(chatId);
-          const answer = session.question[cfg.answerField];
-          let text = `⚠️ *Eh ada game jalan nih, jawab dulu!*\n\n`;
-          if (cfg.questionField && session.question[cfg.questionField]) {
-            text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
+        if (hasActiveSession(chatId)) {
+          const session = getSession(chatId);
+          if (session && session.gameType === gameType) {
+            const remaining = getRemainingTime(chatId);
+            const answer = session.question[cfg.answerField];
+            let text = `❀°˖ *${cfg.title} — GAME BERJALAN* ˖°❀\n\n`;
+            if (cfg.questionField && session.question[cfg.questionField]) {
+              text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
+            }
+            text += `┊ ➶ Hint: *${getHint(answer, cfg.hintCount)}*\n`;
+            text += `┊ ➶ Sisa waktu: *${formatRemainingTime(remaining)}*\n\n`;
+            text += `_Reply pesan game ini untuk jawab atau ketik "nyerah"_`;
+            text += `\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+            await m.reply(text);
+            return;
           }
-          text += `💡 Hint: *${getHint(answer, cfg.hintCount)}*\n`;
-          text += `⏱️ Sisa: *${formatRemainingTime(remaining)}*\n\n`;
-          text += `_Jawab langsung atau ketik "nyerah"\nSetiap salah, hint akan bertambah_`;
-          await sock.sendPreview(
-            m.chat,
-            {
-              caption: `${config.info.website}\n\n${text}`,
-              url: `${config.info.website}`,
-              title: cfg.title,
-              description: cfg.description,
-              jpegThumbnail: await sharp(fs.readFileSync(config.assets["nova2"])).resize(300, 300).toBuffer(),
-              previewType: 0,
-            },
-          );
-          return;
         }
-      }
 
-      const question = getRandomItem(cfg.dataFile);
-      if (!question) {
-        await m.reply("❌ *Data Tidak Tersedia*\n\n> Data game tidak tersedia!");
-        return;
-      }
-
-      const answer = question[cfg.answerField];
-      let sentMsg;
-
-      if (cfg.hasImage && fetchBuffer) {
-        let imageBuffer;
-        try {
-          imageBuffer = await fetchBuffer(question[cfg.imageField]);
-        } catch {
-          await m.reply("❌ *Gagal Memuat Gambar*\n\n> Coba lagi nanti!");
+        const question = getRandomItem(cfg.dataFile);
+        if (!question) {
+          await m.reply("❌ *Data game tidak tersedia!*");
           return;
         }
 
-        let caption = `${cfg.emoji} *${cfg.title}*\n\n`;
-        if (cfg.questionField && question[cfg.questionField]) {
-          caption += `${question[cfg.questionField]}\n`;
+        const answer = question[cfg.answerField];
+        if (!answer) {
+          await m.reply("❌ *Soal rusak, coba lagi!*");
+          return;
         }
-        caption += `💡 Hint: *${getHint(answer, cfg.hintCount)}*\n`;
-        caption += `⏱️ Waktu: *${cfg.timeout / 1000} detik*\n`;
-        caption += `🎁 Hadiah: *Limit, Koin, EXP (random)*\n\n`;
-        caption += `_Jawab langsung atau ketik "nyerah"\nSetiap salah, hint akan bertambah_`;
 
-        if (cfg.usePreview) {
-          sentMsg = await sock.sendPreview(
-            chatId,
-            {
-              caption,
-              url: config.info?.website || "https://github.com",
-              title: cfg.title,
-              description: cfg.description,
-              image: imageBuffer,
-              previewType: 0,
-            },
-            {
-              quoted: m,
-              contextInfo: getGameContextInfo(),
-            },
-          );
-        } else {
+        let sentMsg;
+
+        if (cfg.hasImage && fetchBuffer && question[cfg.imageField]) {
+          let imageBuffer;
+          try {
+            imageBuffer = await fetchBuffer(question[cfg.imageField]);
+          } catch {
+            await m.reply("❌ *Gagal memuat gambar, coba lagi!*");
+            return;
+          }
+
+          let caption = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *${cfg.title}*\n\n`;
+          if (cfg.questionField && question[cfg.questionField]) {
+            caption += `\`\`\`${question[cfg.questionField]}\`\`\`\n`;
+          }
+          if (cfg.hintEnabled !== false) {
+            caption += `┊ ➶ Hint: *${getHint(answer, cfg.hintCount)}*\n`;
+          }
+          caption += `┊ ➶ Waktu: *${cfg.timeout / 1000} detik*\n`;
+          caption += `┊ ➶ Hadiah: *Limit, Koin, EXP (random)*\n\n`;
+          caption += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
+          caption += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+
           sentMsg = await sock.sendMessage(
             chatId,
-            {
-              image: imageBuffer,
-              caption,
-              contextInfo: getGameContextInfo(),
-            },
-            { quoted: m },
+            { image: imageBuffer, caption },
+            { quoted: m }
           );
-        }
-      } else {
-        let text = `${cfg.emoji} *${cfg.title}*\n\n`;
-        if (cfg.questionField && question[cfg.questionField]) {
-          text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
-        }
-        text += `💡 Hint: *${getHint(answer, cfg.hintCount)}*\n`;
-        text += `⏱️ Waktu: *${cfg.timeout / 1000} detik*\n`;
-        text += `🎁 Hadiah: *Limit, Koin, EXP (random)*\n\n`;
-        text += `_Jawab langsung atau ketik "nyerah"\nSetiap salah, hint akan bertambah_`;
+        } else {
+          let text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *${cfg.title}*\n\n`;
+          if (cfg.questionField && question[cfg.questionField]) {
+            text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
+          }
+          if (cfg.hintEnabled !== false) {
+            text += `┊ ➶ Hint: *${getHint(answer, cfg.hintCount)}*\n`;
+          }
+          text += `┊ ➶ Waktu: *${cfg.timeout / 1000} detik*\n`;
+          text += `┊ ➶ Hadiah: *Limit, Koin, EXP (random)*\n\n`;
+          text += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
+          text += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
-        sentMsg = await sendGamePreview(
-          sock,
-          chatId,
-          text,
-          `${cfg.emoji} ${cfg.title}`,
-          "Jawab pertanyaan!",
-          { quoted: m },
-        );
+          sentMsg = await m.reply(text);
+        }
+
+        await m.react("🐣");
+
+        createSession(chatId, gameType, question, sentMsg?.key || m.key, cfg.timeout);
+
+        setSessionTimer(chatId, async () => {
+          try {
+            let text = `${pick(TIMEOUT_MESSAGES)}\n\n`;
+            text += `❀°˖ *${cfg.title}* ˖°❀\n\n`;
+            if (cfg.questionField && question[cfg.questionField]) {
+              text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
+            }
+            text += `┊ ➶ Jawaban: *${answer}*\n`;
+            if (question.deskripsi) {
+              text += `┊ ➶ Info: ${question.deskripsi}\n`;
+            }
+            text += `\n_Gak ada yang bisa jawab nih~_\n`;
+            text += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+            await sock.sendMessage(chatId, { text });
+          } catch (e) {
+            console.error(`[${gameType}] Timeout error:`, e.message);
+          }
+        });
+      } catch (e) {
+        console.error(`[${gameType}] Handler error:`, e.message);
+        try {
+          await m.react("❌");
+          await m.reply("❌ *Terjadi error saat memulai game!*");
+        } catch {}
       }
-
-      createSession(chatId, gameType, question, sentMsg.key, cfg.timeout);
-
-      setSessionTimer(chatId, async () => {
-        let text = `${pick(TIMEOUT_MESSAGES)}\n\n`;
-        text += `Jawaban: *${answer}*\n\n`;
-        text += `_Gak ada yang bisa jawab nih~_`;
-        await sendReplyWithNav(sock, m, text, "game");
-      });
     };
 
     const answerHandler = async (m, sock) => {
-      const chatId = m.chat;
-      const session = getSession(chatId);
+      try {
+        const chatId = m.chat;
+        const session = getSession(chatId);
 
-      if (!session || session.gameType !== gameType) return false;
+        if (!session || session.gameType !== gameType) return false;
 
-      const userAnswer = (m.body || "").trim();
-      if (!userAnswer || userAnswer.startsWith(".")) return false;
+        const userAnswer = (m.body || "").trim();
+        if (!userAnswer || userAnswer.startsWith(".")) return false;
 
-      if (isSurrender(userAnswer)) {
-        endSession(chatId);
+        // WAJIB reply pesan game
+        if (!isReplyToGame(m, session)) return false;
+
         const answer = session.question[cfg.answerField];
-        let text = `${pick(SURRENDER_MESSAGES)}\n\n`;
-        text += `Jawaban: *${answer}*\n\n`;
-        text += `_@${m.sender.split("@")[0]} menyerah_`;
-        await sendReplyWithNav(sock, m, text, "game");
-        return true;
-      }
 
-      if (!isReplyToGame(m, session)) return false;
+        // SURRENDER
+        if (isSurrender(userAnswer)) {
+          endSession(chatId);
+          let text = `${pick(SURRENDER_MESSAGES)}\n\n`;
+          text += `❀°˖ *${cfg.title}* ˖°❀\n\n`;
+          if (cfg.questionField && session.question[cfg.questionField]) {
+            text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
+          }
+          text += `┊ ➶ Jawaban: *${answer}*\n`;
+          if (session.question.deskripsi) {
+            text += `┊ ➶ Info: ${session.question.deskripsi}\n`;
+          }
+          text += `\n_@${m.sender.split("@")[0]} menyerah_\n`;
+          text += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+          try {
+            await sock.sendMessage(chatId, {
+              text,
+              mentions: [m.sender],
+            });
+          } catch {}
+          return true;
+        }
 
-      session.attempts++;
+        session.attempts++;
 
-      const answer = session.question[cfg.answerField];
-      const result = checkAnswerAdvanced(answer, userAnswer);
+        const result = checkAnswerAdvanced(answer, userAnswer);
 
-      if (result.status === "correct") {
-        await m.react("✅");
-        endSession(chatId);
+        if (result.status === "correct") {
+          await m.react("✅");
+          endSession(chatId);
 
-        const db = getDatabase();
-        const user = db.getUser(m.sender);
+          const db = getDatabase();
+          const user = db.getUser(m.sender);
 
-        let totalLimit = 0;
-        let totalBalance = 0;
-        let totalExp = 0;
+          let totalLimit = 0;
+          let totalBalance = 0;
+          let totalExp = 0;
 
-        if (cfg.rewards === false || cfg.rewards === null) {
-          // umm, maaf yak, kalau sc ini banyak kurangnya
-        } else if (cfg.rewards) {
-          totalLimit = cfg.rewards.limit || cfg.rewards.energi || 0;
-          totalBalance = cfg.rewards.koin || cfg.rewards.balance || 0;
-          totalExp = cfg.rewards.exp || 0;
-        } else {
           const reward = getRandomReward();
           totalLimit = reward.limit;
           totalBalance = reward.koin;
           totalExp = reward.exp;
-        }
 
-        let bonusText = "";
+          if (totalLimit > 0) db.updateEnergi(m.sender, totalLimit);
+          if (totalBalance > 0) db.updateKoin(m.sender, totalBalance);
+          if (totalExp > 0) {
+            if (!user.rpg) user.rpg = {};
+            try {
+              await addExpWithLevelCheck(sock, m, db, user, totalExp);
+            } catch {}
+          }
+          db.save();
 
-        const fastResult = checkFastAnswer(session);
-        if (
-          fastResult.isFast &&
-          cfg.rewards !== false &&
-          cfg.rewards !== null
-        ) {
-          totalLimit += fastResult.bonus.limit;
-          totalBalance += fastResult.bonus.koin;
-          totalExp += fastResult.bonus.exp;
-          bonusText = `\n\n${fastResult.praise}\n⚡ *BONUS KILAT:* +${fastResult.bonus.limit} Limit, +${fastResult.bonus.koin} Koin\n⏱️ Waktu: *${(fastResult.elapsed / 1000).toFixed(1)}s*`;
-        }
+          let text = `${pick(WIN_MESSAGES)}\n\n`;
+          text += `❀°˖ *${cfg.title}* ˖°❀\n\n`;
+          text += `┊ ➶ Jawaban: *${answer}*\n`;
+          text += `┊ ➶ Pemenang: *@${m.sender.split("@")[0]}*\n`;
+          text += `┊ ➶ Percobaan: *${session.attempts}x*\n\n`;
 
-        if (totalLimit > 0) db.updateEnergi(m.sender, totalLimit);
-        if (totalBalance > 0) db.updateKoin(m.sender, totalBalance);
-
-        if (totalExp > 0) {
-          if (!user.rpg) user.rpg = {};
-          await addExpWithLevelCheck(sock, m, db, user, totalExp);
-        }
-        db.save();
-
-        let text = `${pick(WIN_MESSAGES)}\n\n`;
-        text += `Jawaban: *${answer}*\n`;
-        text += `Pemenang: *@${m.sender.split("@")[0]}*\n`;
-        text += `Percobaan: *${session.attempts}x*\n\n`;
-
-        if (totalLimit > 0 || totalBalance > 0 || totalExp > 0) {
           let parts = [];
           if (totalLimit > 0) parts.push(`+${totalLimit} Limit`);
           if (totalBalance > 0) parts.push(`+${totalBalance} Koin`);
           if (totalExp > 0) parts.push(`+${totalExp} EXP`);
-          text += `🎁 ${parts.join(", ")}`;
+          if (parts.length > 0) {
+            text += `🎁 *Hadiah:* ${parts.join(", ")}\n`;
+          }
+
+          if (session.question.deskripsi) {
+            text += `\n┊ ➶ Info: ${session.question.deskripsi}\n`;
+          }
+
+          text += `\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+
+          try {
+            await sock.sendMessage(chatId, {
+              text,
+              mentions: [m.sender],
+            });
+          } catch {}
+          return true;
         }
-        text += bonusText;
 
-        await sendReplyWithNav(sock, m, text, "game");
-        return true;
-      }
+        if (result.status === "close") {
+          const remaining = getRemainingTime(chatId);
+          const percent = Math.round(result.similarity * 100);
+          await m.react("🔥");
+          try {
+            await m.reply(`🔥 *Hampir!* Jawabanmu *${percent}%* mirip!\n_Sisa waktu: *${formatRemainingTime(remaining)}*_`);
+          } catch {}
+          return false;
+        }
 
-      if (result.status === "close") {
+        // WRONG — give progressive hint
         const remaining = getRemainingTime(chatId);
-        const percent = Math.round(result.similarity * 100);
-        await m.react("🔥");
-        await m.reply(`🔥 *Hampir!* Jawabanmu *${percent}%* mirip!\n_Sisa waktu: *${formatRemainingTime(remaining)}*_`);
+        if (remaining > 0 && session.attempts < 10) {
+          await m.react("❌");
+          const hint = getProgressiveHint(answer, session.attempts);
+          try {
+            await m.reply(`❌ Belum bener! Hint: *${hint}*\n_Sisa: *${formatRemainingTime(remaining)}*_`);
+          } catch {}
+        }
+
+        return false;
+      } catch (e) {
+        console.error(`[${gameType}] AnswerHandler error:`, e.message);
         return false;
       }
-
-      const remaining = getRemainingTime(chatId);
-      if (remaining > 0 && session.attempts < 10) {
-        await m.react("❌");
-        const hint = getProgressiveHint(answer, session.attempts);
-        await m.reply(`❌ Belum bener! Hint: *${hint}*\n_Sisa: *${formatRemainingTime(remaining)}*_`);
-      }
-
-      return false;
     };
 
     return { handler, answerHandler };
@@ -323,16 +328,17 @@ class NovaGames {
     return {
       config: {
         name: gameType,
-        alias: cfg.alias,
+        alias: cfg.alias || [],
         category: "game",
         description: cfg.description,
         usage: `.${gameType}`,
         example: `.${gameType}`,
         isOwner: false,
-        isPremium: false,
+        isPremium: true,
+        isRegister: true,
         isGroup: false,
         isPrivate: false,
-        cooldown: cfg.cooldown,
+        cooldown: cfg.cooldown || 5,
         energi: cfg.energi || 1,
         isEnabled: true,
         ...overrides,
@@ -344,5 +350,42 @@ class NovaGames {
 }
 
 const games = new NovaGames();
+
+// ═══════════════════════════════════════════════
+// REGISTER ALL GAMES
+// ═══════════════════════════════════════════════
+
+// ─── TEXT-BASED GAMES ───
+games.register("asahotak", { emoji: "🧠", title: "ASAH OTAK", description: "Tebak tebakan asah otak", timeout: 60000, alias: [] });
+games.register("caklontong", { emoji: "🤔", title: "CAKLONTONG", description: "Tebak caklontong lucu", timeout: 60000, alias: [] });
+games.register("kataacak", { emoji: "🔤", title: "KATA ACAK", description: "Tebak kata yang diacak", timeout: 60000, alias: [] });
+games.register("kuis", { emoji: "📝", title: "KUIS", description: "Kuis pilihan ganda", timeout: 60000, alias: [] });
+games.register("riddle", { emoji: "🔮", title: "RIDDLE", description: "Tebak teka-teki bahasa Inggris", timeout: 60000, alias: [] });
+games.register("siapakahaku", { emoji: "🎭", title: "SIAPAKAH AKU", description: "Tebak siapa diriku", timeout: 60000, alias: ["siapakah"] });
+games.register("susunkata", { emoji: "🧩", title: "SUSUN KATA", description: "Susun huruf jadi kata", timeout: 60000, alias: [] });
+games.register("tebakfilm", { emoji: "🎬", title: "TEBAK FILM", description: "Tebak judul film", timeout: 60000, alias: [] });
+games.register("tebakhewan", { emoji: "🐾", title: "TEBAK HEWAN", description: "Tebak nama hewan", timeout: 60000, alias: [] });
+games.register("tebakkalimat", { emoji: "📝", title: "TEBAK KALIMAT", description: "Lengkapi kalimat yang kosong", timeout: 60000, alias: [] });
+games.register("tebakkata", { emoji: "💬", title: "TEBAK KATA", description: "Tebak kata dari clue", timeout: 60000, alias: [] });
+games.register("tebakkimia", { emoji: "⚗️", title: "TEBAK KIMIA", description: "Tebak lambang unsur kimia", questionField: "unsur", answerField: "lambang", timeout: 60000, alias: [] });
+games.register("tebaklagu", { emoji: "🎵", title: "TEBAK LAGU", description: "Tebak judul lagu dari lirik", timeout: 60000, alias: [] });
+games.register("tebaklirik", { emoji: "🎶", title: "TEBAK LIRIK", description: "Lengkapi lirik lagu", timeout: 60000, alias: [] });
+games.register("tebaknegara", { emoji: "🌍", title: "TEBAK NEGARA", description: "Tebak nama negara", timeout: 60000, alias: [] });
+games.register("tebakprofesi", { emoji: "👷", title: "TEBAK PROFESI", description: "Tebak profesi dari deskripsi", timeout: 60000, alias: [] });
+games.register("tebaktebakan", { emoji: "❓", title: "TEBAK TEBAKAN", description: "Tebak tebakan seru", timeout: 60000, alias: [] });
+games.register("tekateki", { emoji: "🧩", title: "TEKA TEKI", description: "Teka teki rumit", timeout: 60000, alias: [] });
+games.register("trivia", { emoji: "💡", title: "TRIVIA", description: "Pertanyaan trivia umum", dataFile: "trivia2.json", timeout: 60000, alias: [] });
+
+// ─── IMAGE-BASED GAMES ───
+games.register("tebakbendera", { emoji: "🚩", title: "TEBAK BENDERA", description: "Tebak negara dari bendera", hasImage: true, imageField: "img", answerField: "name", questionField: null, timeout: 60000, alias: [] });
+games.register("tebakbendera2", { emoji: "🏁", title: "TEBAK BENDERA V2", description: "Tebak bendera versi 2", hasImage: true, imageField: "img", answerField: "name", questionField: null, timeout: 60000, alias: [] });
+games.register("tebakdrakor", { emoji: "🇰🇷", title: "TEBAK DRAKOR", description: "Tebak judul drama Korea", hasImage: true, imageField: "img", answerField: "jawaban", questionField: null, timeout: 60000, alias: [] });
+games.register("tebakepep", { emoji: "🎮", title: "TEBAK EPEP", description: "Tebak karakter Free Fire", hasImage: true, imageField: "img", answerField: "jawaban", questionField: null, timeout: 60000, alias: [] });
+games.register("tebakgambar", { emoji: "🖼️", title: "TEBAK GAMBAR", description: "Tebak gambar piktogram", hasImage: true, imageField: "img", answerField: "jawaban", questionField: null, timeout: 60000, alias: [] });
+games.register("tebakgambarv2", { emoji: "🖼️", title: "TEBAK GAMBAR V2", description: "Tebak gambar versi 2", hasImage: true, imageField: "img", answerField: "name", questionField: null, timeout: 60000, alias: [] });
+games.register("tebakjkt48", { emoji: "🎤", title: "TEBAK JKT48", description: "Tebak member JKT48", hasImage: true, imageField: "img", answerField: "jawaban", questionField: null, timeout: 60000, alias: [] });
+games.register("tebakkabupaten", { emoji: "📍", title: "TEBAK KABUPATEN", description: "Tebak kabupaten Indonesia", hasImage: true, imageField: "url", answerField: "title", questionField: null, timeout: 60000, alias: [] });
+games.register("tebaklogo", { emoji: "🏢", title: "TEBAK LOGO", description: "Tebak logo perusahaan", hasImage: true, imageField: "img", answerField: "name", questionField: null, timeout: 60000, alias: [] });
+games.register("tebakmakanan", { emoji: "🍜", title: "TEBAK MAKANAN", description: "Tebak makanan Indonesia", hasImage: true, imageField: "img", answerField: "jawaban", questionField: null, timeout: 60000, alias: [] });
 
 export { NovaGames, games };
