@@ -16,6 +16,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
+import { sendMenuAudio } from "../../src/lib/send-menu.js";
 
 const pluginConfig = {
   name: "menu",
@@ -255,6 +256,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     }
 
     await m.react("✅");
+
+    // Kirim musik menu (jika audioMenu aktif)
+    try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[menu] handler error:", e.message);
     try { await m.reply("❌ Gagal menampilkan menu: " + e.message); } catch {}

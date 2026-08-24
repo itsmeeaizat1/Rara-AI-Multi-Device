@@ -142,3 +142,114 @@ export async function sendMenuCard(sock, m, {
     buttons: [],
   });
 }
+
+// === MENU AUDIO SENDER ===
+// Kirim musik menu setelah tampilan menu (jika audioMenu aktif)
+// allmenuAudioStyle: 1=PTT reply asli, 2=PTT reply fake polling, 3=MP3 reply fake text, 4=MP3 reply fake troli
+
+
+let _menuAudioCache = null;
+let _menuAudioLoaded = false;
+
+function getMenuAudio() {
+  if (_menuAudioLoaded) return _menuAudioCache;
+  _menuAudioLoaded = true;
+  try {
+    _menuAudioCache = getAssetBuffer('nova-mp3');
+    if (_menuAudioCache) {
+      console.log('[send-menu] ✅ Menu audio loaded: ' + _menuAudioCache.length + ' bytes');
+    } else {
+      // Fallback: direct fs
+      const p = path.join(process.cwd(), 'assets', 'audio', 'cinta-terbaik-cassandra.mp3');
+      if (fs.existsSync(p)) {
+        _menuAudioCache = fs.readFileSync(p);
+        console.log('[send-menu] ✅ Menu audio loaded (fallback fs): ' + _menuAudioCache.length + ' bytes');
+      } else {
+        console.warn('[send-menu] ⚠️ Menu audio not found (nova-mp3 / cinta-terbaik-cassandra.mp3)');
+      }
+    }
+  } catch (e) {
+    console.error('[send-menu] ❌ Menu audio load failed:', e.message);
+  }
+  return _menuAudioCache;
+}
+
+/**
+ * Kirim audio menu setelah menampilkan menu.
+ * @param {Object} sock - Baileys socket
+ * @param {Object} m - Message object
+ * @param {Object} db - Database instance
+ * @param {boolean} isAllMenu - Jika true, gunakan allmenuAudioStyle (varian 1-4)
+ */
+export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
+  try {
+    // Cek setting audioMenu (default: true jika belum diset)
+    const audioEnabled = db?.setting ? (db.setting('audioMenu') !== false) : true;
+    if (!audioEnabled) return;
+
+    const audioBuffer = getMenuAudio();
+    if (!audioBuffer) return;
+
+    if (isAllMenu) {
+      // All Menu: pakai varian allmenuAudioStyle (1-4)
+      const style = (db?.setting ? db.setting('allmenuAudioStyle') : null) || 1;
+
+      if (style === 1) {
+        // PTT Voice Note + reply pesan asli
+        await sock.sendMessage(m.chat, {
+          audio: audioBuffer,
+          ptt: true,
+          mimetype: 'audio/mpeg',
+        }, { quoted: m });
+      } else if (style === 2) {
+        // PTT Voice Note + reply fake polling
+        const fakeKey = {
+          remoteJid: m.chat,
+          fromMe: false,
+          id: 'FAKE_POLL_' + Date.now(),
+          participant: '0@s.whatsapp.net',
+        };
+        await sock.sendMessage(m.chat, {
+          audio: audioBuffer,
+          ptt: true,
+          mimetype: 'audio/mpeg',
+        }, { quoted: { key: fakeKey, message: { pollCreationMessage: { name: 'Nova AI Menu', options: [], selectableOptionsCount: 0 } } } });
+      } else if (style === 3) {
+        // MP3 biasa + reply fake text
+        const fakeKey = {
+          remoteJid: m.chat,
+          fromMe: false,
+          id: 'FAKE_TEXT_' + Date.now(),
+          participant: '0@s.whatsapp.net',
+        };
+        await sock.sendMessage(m.chat, {
+          audio: audioBuffer,
+          ptt: false,
+          mimetype: 'audio/mpeg',
+        }, { quoted: { key: fakeKey, message: { conversation: '🎵 Nova AI WhatsApp Bot - Menu Audio' } } });
+      } else if (style === 4) {
+        // MP3 biasa + reply fake troli order
+        const fakeKey = {
+          remoteJid: m.chat,
+          fromMe: false,
+          id: 'FAKE_TROLI_' + Date.now(),
+          participant: '0@s.whatsapp.net',
+        };
+        await sock.sendMessage(m.chat, {
+          audio: audioBuffer,
+          ptt: false,
+          mimetype: 'audio/mpeg',
+        }, { quoted: { key: fakeKey, message: { orderMessage: { orderId: 'NOVA-' + Date.now(), thumbnail: null, itemCount: 1, status: 1, surface: 1, message: 'Nova AI WhatsApp Bot', sellerJid: '0@s.whatsapp.net', token: 'nova' } } } });
+      }
+    } else {
+      // Menu biasa & menukategori: PTT sederhana
+      await sock.sendMessage(m.chat, {
+        audio: audioBuffer,
+        ptt: true,
+        mimetype: 'audio/mpeg',
+      }, { quoted: m });
+    }
+  } catch (e) {
+    console.error('[send-menu] ❌ sendMenuAudio error:', e.message);
+  }
+}
