@@ -85,5 +85,13 @@
   "storeAutoProducts": [],
   "allmenuAudioStyle": 3,
   "sitagrup": {},
-  "srtEnabled": true
+  "srtEnabled": true,
+  "autoweather": {
+    "628123456789@s.whatsapp.net": {
+      "enabled": false,
+      "region": "all",
+      "lastAlert": 0,
+      "alertCount": 0
+    }
+  }
 }
