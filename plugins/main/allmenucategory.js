@@ -9,6 +9,7 @@ import { getCasesByCategory, getCaseCount } from "../../case/nova.js";
 import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
 import fs from "fs";
 import path from "path";
+import { sendMenuAudio } from "../../src/lib/send-menu.js";
 
 const pluginConfig = {
   name: "allmenucategory",
@@ -213,6 +214,8 @@ Ketik *${prefix}menukategori <nama kategori>*`;
 
       await sendWithButtons(sock, m, text, botConfig, null);
       await m.react("✅");
+      // Kirim musik menu (jika audioMenu aktif)
+      try { await sendMenuAudio(sock, m, db, false); } catch {}
       return;
     }
 
@@ -233,6 +236,8 @@ Ketik *${prefix}menukategori <nama kategori>*`;
     const catName = CATEGORY_NAMES[matchedCat] || matchedCat;
     await sendWithButtons(sock, m, text, botConfig, catName);
     await m.react("✅");
+    // Kirim musik menu (jika audioMenu aktif)
+    try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[menukategori] handler error:", e.message);
     try { await m.reply("❌ Gagal menampilkan kategori: " + e.message); } catch {}
