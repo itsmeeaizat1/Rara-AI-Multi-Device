@@ -223,8 +223,8 @@ async function handler(m, { sock, config: botConfig }) {
         db.setUser?.(chatTarget.id, { sholat: { enabled: false, city: null } });
       }
       const text =
-        claraWrap("Auto Sholat", ["  ┊  ➶ Fitur: *Auto Sholat*",
-          "  ┊  ➶ Status: *OFF*",
+        claraWrap("Auto Sholat", ["  ┊  ➶ Fitur: *ᴀᴜᴛᴏ ꜱʜᴏʟᴀᴛ*",
+          "  ┊  ➶ Status: *ᴏꜰꜰ*",
           `  ┊  ➶ Chat: *${m.chatName || chatTarget.id}*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}jadwalsholat aktif <kota> untuk aktifkan`);
@@ -255,7 +255,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       const modeText = chatTarget.type === "group" ? "👥 Grup" : "💬 Chat Pribadi";
       const text =
-        claraWrap("Auto Sholat", ["  ┊  ➶ Fitur: *Auto Sholat*",
+        claraWrap("Auto Sholat", ["  ┊  ➶ Fitur: *ᴀᴜᴛᴏ ꜱʜᴏʟᴀᴛ*",
           "  ┊  ➶ Status: *ON*",
           `  ┊  ➶ Mode: *${modeText}*`,
           `  ┊  ➶ Kota: *${city}*`,
@@ -291,7 +291,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.setGroup?.(m.chat, { sholat: { enabled: groupData?.sholat?.enabled ?? false, city: groupData?.sholat?.city || null, permission: permissionRaw } });
       const label = SHOLAT_PERMISSION_LABELS[permissionRaw] || permissionRaw;
       const text =
-        claraWrap("Auto Sholat", ["  ┊  ➶ Fitur: *Auto Sholat*",
+        claraWrap("Auto Sholat", ["  ┊  ➶ Fitur: *ᴀᴜᴛᴏ ꜱʜᴏʟᴀᴛ*",
           `  ┊  ➶ Izin: *${label}*`,
           `  ┊  ➶ Chat: *${m.chatName || m.chat}*`].join("\n")) +
         "\n" +
@@ -315,7 +315,7 @@ async function handler(m, { sock, config: botConfig }) {
       timings = await fetchPrayerTimes(city);
     } catch (apiError) {
       const text =
-        claraWrap("Gagal", ["  ┊  ➶ Status: *Gagal mengambil data*",
+        claraWrap("Gagal", ["  ┊  ➶ Status: *ɢᴀɢᴀʟ ᴍᴇɴɢᴀᴍʙɪʟ ᴅᴀᴛᴀ*",
           `  ┊  ➶ Alasan: *${apiError.message}*`].join("\n")) +
         "\n" +
         tipText("Pastikan nama kota benar dan coba lagi");
@@ -326,8 +326,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     const next = findNextPrayer(timings);
     const reminderText = next.remainingMinutes <= ADVANCE_REMINDER_MINUTES
-      ? `⏰ *WAKTU SHOLAT SUDAH TIBA*\n\nAyo sholat *${next.emoji} ${next.label}* sekarang!\nJangan sampai tertunda.`
-      : `🔔 *PENGINGAT SHOLAT*\n\n${next.emoji} *${next.label}* tinggal *${next.remainingMinutes} menit* lagi.\nSiap-siap wudhu dan sholat tepat waktu.`;
+      ? `⏰ *ᴡᴀᴋᴛᴜ ꜱʜᴏʟᴀᴛ ꜱᴜᴅᴀʜ ᴛɪʙᴀ*\n\nAyo sholat *${next.emoji} ${next.label}* sekarang!\nJangan sampai tertunda.`
+      : `🔔 *ᴘᴇɴɢɪɴɢᴀᴛ ꜱʜᴏʟᴀᴛ*\n\n${next.emoji} *${next.label}* tinggal *${next.remainingMinutes} menit* lagi.\nSiap-siap wudhu dan sholat tepat waktu.`;
 
     const prayerLines = Object.entries(PRAYER_LABELS).map(([key, label]) => {
       const emoji = PRAYER_EMOJIS[key] || "🕌";
@@ -369,7 +369,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(claraWrap("sholat", text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

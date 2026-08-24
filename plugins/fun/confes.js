@@ -97,7 +97,7 @@ async function handler(m, { sock, config: botConfig }) {
     const parts = raw.split("|").map((item) => item.trim()).filter(Boolean);
     if (parts.length < 3) {
       const text =
-        claraWrap("Gagal", ["  ┊  ➶ Alasan: *Format salah*",
+        claraWrap("Gagal", ["  ┊  ➶ Alasan: *ꜰᴏʀᴍᴀᴛ ꜱᴀʟᴀʜ*",
           `  ┊  ➶ Contoh: *${prefix}confes 6281234567890|nembak|Aku suka kamu*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -113,7 +113,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!number || !modes[mode] || !pesan) {
       const text =
-        claraWrap("Gagal", ["  ┊  ➶ Alasan: *Mode tidak valid atau pesan kosong*",
+        claraWrap("Gagal", ["  ┊  ➶ Alasan: *ᴍᴏᴅᴇ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ ᴀᴛᴀᴜ ᴘᴇꜱᴀɴ ᴋᴏꜱᴏɴɢ*",
           `  ┊  ➶ Contoh: *${prefix}confes 6281234567890|nembak|Aku suka kamu*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -144,7 +144,7 @@ async function handler(m, { sock, config: botConfig }) {
       claraWrap(modeData.label, [
         `  ┊  ➶ Ke: *${targetJid}*`,
         `  ┊  ➶ Mode: *${modeData.label}*`,
-        `  ┊  ➶ Status: *Terkirim*`,
+        `  ┊  ➶ Status: *ᴛᴇʀᴋɪʀɪᴍ*`,
       ]) +
       "\n\n" +
       separator("━", 22) +
@@ -158,7 +158,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(receipt);
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

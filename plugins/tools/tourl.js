@@ -566,9 +566,9 @@ async function handler(m, { sock }) {
   } else if (m.message) {
     const type = getContentType(m.message);
     if (!type || type === "conversation" || type === "extendedTextMessage") {
-      let txt = `📤 *MEDIA UPLOADER* 📤\n\n`;
+      let txt = `📤 *ᴍᴇᴅɪᴀ ᴜᴘʟᴏᴀᴅᴇʀ* 📤\n\n`;
       txt += `Halo kak! Butuh link untuk media kamu? Aku bisa bantu uploadin ke berbagai server gratisan loh!\n\n`;
-      txt += `*Cara Pakai:*\n`;
+      txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
       txt += `👉 Kirim media dengan caption \`${m.prefix}tourl\`\n`;
       txt += `👉 Atau reply media yang udah ada dengan \`${m.prefix}tourl\``;
       return m.reply( txt, "tourl");
@@ -616,9 +616,9 @@ async function handler(m, { sock }) {
   let contentTxt = "";
   results.forEach((r, i) => {
     const status = r.expires === "Permanent" ? "∞ Permanen" : r.expires;
-    contentTxt += `☁️ *Server :* ${r.host}\n`;
-    contentTxt += `⏳ *Expired :* ${status}\n`;
-    contentTxt += `🔗 *Link :*\n`;
+    contentTxt += `☁️ *ꜱᴇʀᴠᴇʀ :* ${r.host}\n`;
+    contentTxt += `⏳ *ᴇxᴘɪʀᴇᴅ :* ${status}\n`;
+    contentTxt += `🔗 *ʟɪɴᴋ :*\n`;
     contentTxt += `${r.url}`;
     if (i < results.length - 1) contentTxt += `\n\n`;
   });

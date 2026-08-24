@@ -265,7 +265,7 @@ async function handler(m, { sock }) {
     const dl = await requestDownload(dlUrl, body, realReferer);
 
     if (!dl.ok || !dl.contentType.includes("audio")) {
-      return m.reply(claraWrap("spotifydl", "😔 *Gagal mengunduh audio.* \n\nMungkin ada batasan dari server atau lagu tidak tersedia untuk diunduh."));
+      return m.reply(claraWrap("spotifydl", "😔 *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴᴅᴜʜ ᴀᴜᴅɪᴏ.* \n\nMungkin ada batasan dari server atau lagu tidak tersedia untuk diunduh."));
     }
 
     const headerName = getFilenameFromDisposition(dl.disposition);

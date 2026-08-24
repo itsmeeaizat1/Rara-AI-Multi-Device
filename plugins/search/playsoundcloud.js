@@ -22,11 +22,11 @@ const pluginConfig = {
 
 async function handler(m, { args, sock }) {
   if (!args[0]) {
-    let txt = `🎶 *PLAY SOUNDCLOUD* 🎶\n\n`;
+    let txt = `🎶 *ᴘʟᴀʏ ꜱᴏᴜɴᴅᴄʟᴏᴜᴅ* 🎶\n\n`;
     txt += `Halo kak! Pengen dengerin lagu dari SoundCloud? Aku bisa cariin sekalian downloadin format MP3-nya buat kamu!\n\n`;
-    txt += `*Cara Pakai:*\n`;
+    txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
     txt += `👉 \`${m.prefix}playsc <judul lagu>\`\n\n`;
-    txt += `*Contoh:*\n`;
+    txt += `*ᴄᴏɴᴛᴏʜ:*\n`;
     txt += `\`${m.prefix}playsc Only We Know\``;
     return await m.reply(claraWrap("playsoundcloud", txt));
   }
@@ -41,12 +41,12 @@ async function handler(m, { args, sock }) {
 
     const track = searchResults[0];
     const downloadInfo = await scdl(track.url);
-    let contentTxt = `🎵 *Judul :* ${downloadInfo.title}\n`;
-    contentTxt += `👤 *Uploader :* ${downloadInfo.uploader}\n`;
-    contentTxt += `⏱️ *Durasi :* ${downloadInfo.duration}\n`;
-    contentTxt += `👁️ *Views :* ${downloadInfo.views}\n`;
-    contentTxt += `❤️ *Likes :* ${downloadInfo.likes}\n`;
-    contentTxt += `📦 *Ukuran :* ${downloadInfo.size}`;
+    let contentTxt = `🎵 *ᴊᴜᴅᴜʟ :* ${downloadInfo.title}\n`;
+    contentTxt += `👤 *ᴜᴘʟᴏᴀᴅᴇʀ :* ${downloadInfo.uploader}\n`;
+    contentTxt += `⏱️ *ᴅᴜʀᴀꜱɪ :* ${downloadInfo.duration}\n`;
+    contentTxt += `👁️ *ᴠɪᴇᴡꜱ :* ${downloadInfo.views}\n`;
+    contentTxt += `❤️ *ʟɪᴋᴇꜱ :* ${downloadInfo.likes}\n`;
+    contentTxt += `📦 *ᴜᴋᴜʀᴀɴ :* ${downloadInfo.size}`;
 
     let txt = `🎉 *BERHASIL DOWNLOAD LAGU!* 🎉\n\n`;
     txt += contentTxt.trim().split("\n").map(line => `${line}`).join("\n");

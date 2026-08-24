@@ -108,13 +108,13 @@ async function handler(m, { sock }) {
     txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
     txt += "Tema: *" + topic.tag + "*\n";
     txt += "QS. " + surah.englishName + ":" + topic.ayat + "\n\n";
-    txt += "*Teks Arab:*\n" + arabText + "\n\n";
-    txt += "*Terjemahan:*\n" + indoText + "\n\n";
+    txt += "*ᴛᴇᴋꜱ ᴀʀᴀʙ:*\n" + arabText + "\n\n";
+    txt += "*ᴛᴇʀᴊᴇᴍᴀʜᴀɴ:*\n" + indoText + "\n\n";
 
     if (tafsirText) {
       // Potong tafsir jika terlalu panjang
       const tafsirShort = tafsirText.length > 500 ? tafsirText.substring(0, 500) + "..." : tafsirText;
-      txt += "*Tafsir:*\n" + tafsirShort + "\n\n";
+      txt += "*ᴛᴀꜰꜱɪʀ:*\n" + tafsirShort + "\n\n";
     }
 
     txt += "Sumber: alquran.cloud API\n";

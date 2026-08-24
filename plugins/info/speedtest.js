@@ -152,23 +152,23 @@ async function handler(m, { sock }) {
 
     let text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Speedtest
 ┊
-  ┊  ➶ *Host:* ${hostname}
-  ┊  ➶ *Platform:* ${platform} (${arch})
-  ┊  ➶ *Uptime:* ${uptime}
+  ┊  ➶ *ʜᴏꜱᴛ:* ${hostname}
+  ┊  ➶ *ᴘʟᴀᴛꜰᴏʀᴍ:* ${platform} (${arch})
+  ┊  ➶ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
 ❀°˖✧◝(⁰▿⁰)◜✧˖°❀ CPU & RAM
 ┊
-  ┊  ➶ *CPU:* ${cpuModel}
-  ┊  ➶ *Cores:* ${cpuCores}
-  ┊  ➶ *RAM:* ${(usedMem / 1000000).toFixed(0)} / ${(totalMem / 1000000).toFixed(0)} MB (${memUsage}%)
+  ┊  ➶ *ᴄᴘᴜ:* ${cpuModel}
+  ┊  ➶ *ᴄᴏʀᴇꜱ:* ${cpuCores}
+  ┊  ➶ *ʀᴀᴍ:* ${(usedMem / 1000000).toFixed(0)} / ${(totalMem / 1000000).toFixed(0)} MB (${memUsage}%)
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
 ❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Network
 ┊
-  ┊  ➶ *Ping:* ${result.ping}
-  ┊  ➶ *Download:* ${result.download}
-  ┊  ➶ *Upload:* ${result.upload}
+  ┊  ➶ *ᴘɪɴɢ:* ${result.ping}
+  ┊  ➶ *ᴅᴏᴡɴʟᴏᴀᴅ:* ${result.download}
+  ┊  ➶ *ᴜᴘʟᴏᴀᴅ:* ${result.upload}
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
   ┊  ➶ Metode: ${result.method}`;

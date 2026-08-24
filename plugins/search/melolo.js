@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
   const category = m.text?.trim();
 
   if (!category) {
-    return m.reply( `🎭 *MELOLO DRAMA*\n\nContoh:\n\`${m.prefix}melolo fantasy\``, "melolo");
+    return m.reply( `🎭 *ᴍᴇʟᴏʟᴏ ᴅʀᴀᴍᴀ*\n\nContoh:\n\`${m.prefix}melolo fantasy\``, "melolo");
   }
 
   if (!config.APIkey?.covenant) {
@@ -84,11 +84,11 @@ async function handler(m, { sock }) {
       );
     }
 
-    let caption = "🎭 *MELOLO DRAMA*\n\n";
-    caption += `🌿 *Category:* ${category}\n`;
-    caption += `📦 *Total:* ${items.length}\n`;
-    caption += `💳 *Cost:* ${result?.usage?.cost ?? "-"}\n`;
-    caption += `🔋 *Sisa Credit:* ${result?.usage?.remaining ?? "-"}\n\n`;
+    let caption = "🎭 *ᴍᴇʟᴏʟᴏ ᴅʀᴀᴍᴀ*\n\n";
+    caption += `🌿 *ᴄᴀᴛᴇɢᴏʀʏ:* ${category}\n`;
+    caption += `📦 *ᴛᴏᴛᴀʟ:* ${items.length}\n`;
+    caption += `💳 *ᴄᴏꜱᴛ:* ${result?.usage?.cost ?? "-"}\n`;
+    caption += `🔋 *ꜱɪꜱᴀ ᴄʀᴇᴅɪᴛ:* ${result?.usage?.remaining ?? "-"}\n\n`;
 
     items.forEach((item, index) => {
       caption += `*${index + 1}.* ${trimText(item.title, 70)}\n`;

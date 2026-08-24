@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim()
 
     if (!query) {
-        { const __navText = `🧱 *MCPEDL SEARCH*\n\nContoh:\n\`${m.prefix}mcpe survival\``; return await m.reply( __navText, "mcpedl"); }
+        { const __navText = `🧱 *ᴍᴄᴘᴇᴅʟ ꜱᴇᴀʀᴄʜ*\n\nContoh:\n\`${m.prefix}mcpe survival\``; return await m.reply( __navText, "mcpedl"); }
     }
 
     m.react('🕐')
@@ -62,10 +62,10 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("mcpedl", `❌ Tidak ditemukan hasil MCPEDL untuk: ${query}`))
         }
 
-        let caption = '🧱 *MCPEDL SEARCH*\n\n'
-        caption += `🔎 *Query:* ${result.query || query}\n`
-        caption += `📦 *Total:* ${result.total || items.length}\n`
-        caption += `🌐 *Source:* ${result.source || 'mcpedl.org'}\n\n`
+        let caption = '🧱 *ᴍᴄᴘᴇᴅʟ ꜱᴇᴀʀᴄʜ*\n\n'
+        caption += `🔎 *qᴜᴇʀʏ:* ${result.query || query}\n`
+        caption += `📦 *ᴛᴏᴛᴀʟ:* ${result.total || items.length}\n`
+        caption += `🌐 *ꜱᴏᴜʀᴄᴇ:* ${result.source || 'mcpedl.org'}\n\n`
 
         items.forEach((item, index) => {
             caption += `*${index + 1}.* ${trimText(item.title)}\n`

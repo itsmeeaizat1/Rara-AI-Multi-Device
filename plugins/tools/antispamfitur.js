@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
     const f = settings.group.fitur;
     const d = settings.dm.fitur;
     return m.reply(claraWrap("Anti-Spam Fitur Status", [
-      "*Grup*",
+      "*ɢʀᴜᴘ*",
       `  Status: ${f.enabled ? "AKTIF" : "MATI"}`,
       `  Limit: ${f.limit}x per ${f.windowMs / 1000}s`,
       `  Cooldown: ${f.cooldownMs / 1000}s`,

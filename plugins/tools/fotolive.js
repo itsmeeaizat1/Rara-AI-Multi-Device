@@ -144,8 +144,8 @@ async function handler(m, { sock }) {
       return m.reply(
         `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Video Terlalu Pendek\n` +
         `┊\n` +
-        `  ┊  ➶ *Durasi video:* ${srcDuration.toFixed(1)}s\n` +
-        `  ┊  ➶ *Minimal wajib:* ${SRC_MIN_DURATION}s\n` +
+        `  ┊  ➶ *ᴅᴜʀᴀꜱɪ ᴠɪᴅᴇᴏ:* ${srcDuration.toFixed(1)}s\n` +
+        `  ┊  ➶ *ᴍɪɴɪᴍᴀʟ ᴡᴀᴊɪʙ:* ${SRC_MIN_DURATION}s\n` +
         `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
         `Video sumber terlalu pendek! Minimal ${SRC_MIN_DURATION}s biar efek live-nya kelihatan dan pas.`
       );
@@ -179,8 +179,8 @@ async function handler(m, { sock }) {
       return m.reply(
         `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Durasi Output Terlalu Pendek\n` +
         `┊\n` +
-        `  ┊  ➶ *Diminta:* ${duration}s\n` +
-        `  ┊  ➶ *Minimal:* ${OUT_MIN_DURATION}s (wajib)\n` +
+        `  ┊  ➶ *ᴅɪᴍɪɴᴛᴀ:* ${duration}s\n` +
+        `  ┊  ➶ *ᴍɪɴɪᴍᴀʟ:* ${OUT_MIN_DURATION}s (wajib)\n` +
         `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
         `Durasi output minimal ${OUT_MIN_DURATION}s wajib biar efek live pas!`
       );
@@ -192,8 +192,8 @@ async function handler(m, { sock }) {
       return m.reply(
         `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Durasi Output Terlalu Panjang\n` +
         `┊\n` +
-        `  ┊  ➶ *Diminta:* ${duration}s\n` +
-        `  ┊  ➶ *Maksimal:* ${OUT_MAX_DURATION}s\n` +
+        `  ┊  ➶ *ᴅɪᴍɪɴᴛᴀ:* ${duration}s\n` +
+        `  ┊  ➶ *ᴍᴀᴋꜱɪᴍᴀʟ:* ${OUT_MAX_DURATION}s\n` +
         `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
         `Durasi output maksimal ${OUT_MAX_DURATION}s untuk performa optimal.`
       );
@@ -259,11 +259,11 @@ async function handler(m, { sock }) {
       caption:
         `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Live Photo\n` +
         `┊\n` +
-        `  ┊  ➶ *Durasi:* ${durLabel}\n` +
-        `  ┊  ➶ *Resolusi:* ${resolution}p\n` +
-        `  ┊  ➶ *FPS:* ${fps}\n` +
-        `  ┊  ➶ *Ukuran:* ${formatSize(liveSize)}\n` +
-        (wasTrimmed ? `  ┊  ➶ *Trimmed:* ${srcDuration.toFixed(1)}s → ${durLabel}\n` : '') +
+        `  ┊  ➶ *ᴅᴜʀᴀꜱɪ:* ${durLabel}\n` +
+        `  ┊  ➶ *ʀᴇꜱᴏʟᴜꜱɪ:* ${resolution}p\n` +
+        `  ┊  ➶ *ꜰᴘꜱ:* ${fps}\n` +
+        `  ┊  ➶ *ᴜᴋᴜʀᴀɴ:* ${formatSize(liveSize)}\n` +
+        (wasTrimmed ? `  ┊  ➶ *ᴛʀɪᴍᴍᴇᴅ:* ${srcDuration.toFixed(1)}s → ${durLabel}\n` : '') +
         `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`,
     }, { quoted: m });
 
@@ -280,7 +280,7 @@ async function handler(m, { sock }) {
     await m.reply(
       `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Live Photo Error\n` +
       `┊\n` +
-      `  ┊  ➶ *Error:* ${errMsg}\n` +
+      `  ┊  ➶ *ᴇʀʀᴏʀ:* ${errMsg}\n` +
       `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
       `Coba video lain atau durasi lebih pendek.`
     );

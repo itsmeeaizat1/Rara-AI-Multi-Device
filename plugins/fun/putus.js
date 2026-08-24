@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
     if (!senderData.fun) senderData.fun = {}
     if (!senderData.fun.pasangan) {
         return m.reply(
-            `❌ *Kamu gak ada pacar wehh*\n\n` +
+            `❌ *ᴋᴀᴍᴜ ɢᴀᴋ ᴀᴅᴀ ᴘᴀᴄᴀʀ ᴡᴇʜʜ*\n\n` +
             `Cari dulu dengan \`${m.prefix}tembak @tag\``
         )
     }

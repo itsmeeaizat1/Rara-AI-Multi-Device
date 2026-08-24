@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     
     if (birthdays.length === 0) {
         return m.reply(
-            `❌ *Tidak Ada Data*\n\n` +
+            `❌ *ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴅᴀᴛᴀ*\n\n` +
             `Belum ada member yang set birthday\n\n` +
             `Gunakan: .setbirthday DD-MM`
         )

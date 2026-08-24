@@ -169,7 +169,7 @@ async function handler(m, { sock }) {
             }
         }
         return m.reply(claraWrap("Upload SFTP",
-            "*SFTP Status*\n\n" +
+            "*ꜱꜰᴛᴘ ꜱᴛᴀᴛᴜꜱ*\n\n" +
             "Config: " + (hasConfig ? 'Terpasang' : 'Belum ada') + configInfo + "\n\n" +
             "  ┊  ➶ Setup: Taruh `sftp-config.json` di folder `config/`"
         ))
@@ -185,7 +185,7 @@ async function handler(m, { sock }) {
                 current = cfg.remotePath || '/'
             } catch (e) { console.error('[uploadsftp.js]:', e.message); }
             return m.reply(claraWrap("Upload SFTP",
-                "*Remote Directory*\n\n" +
+                "*ʀᴇᴍᴏᴛᴇ ᴅɪʀᴇᴄᴛᴏʀʏ*\n\n" +
                 "Current: `" + current + "`\n\n" +
                 "  ┊  ➶ Set path: `.uploadsftp setpath /remote/folder`\n" +
                 "  ┊  ➶ Reset: `.uploadsftp setpath /`"
@@ -219,7 +219,7 @@ async function handler(m, { sock }) {
                 await sftp.end()
                 await m.react('✅')
                 return m.reply(claraWrap("Upload SFTP",
-                    "*SFTP Files*\n\nFolder `" + remotePath + "` kosong."
+                    "*ꜱꜰᴛᴘ ꜰɪʟᴇꜱ*\n\nFolder `" + remotePath + "` kosong."
                 ))
             }
 
@@ -243,7 +243,7 @@ async function handler(m, { sock }) {
         const dirName = args[1]
         if (!dirName) {
             return m.reply(claraWrap("Upload SFTP",
-                "*Create Remote Directory*\n\nUsage: `.uploadsftp mkdir /path/to/dir`"
+                "*ᴄʀᴇᴀᴛᴇ ʀᴇᴍᴏᴛᴇ ᴅɪʀᴇᴄᴛᴏʀʏ*\n\nUsage: `.uploadsftp mkdir /path/to/dir`"
             ))
         }
         await m.react('🕐')
@@ -269,7 +269,7 @@ async function handler(m, { sock }) {
         const fileName = args[1]
         if (!fileName) {
             return m.reply(claraWrap("Upload SFTP",
-                "*Delete Remote File*\n\nUsage: `.uploadsftp delete <filename>`"
+                "*ᴅᴇʟᴇᴛᴇ ʀᴇᴍᴏᴛᴇ ꜰɪʟᴇ*\n\nUsage: `.uploadsftp delete <filename>`"
             ))
         }
         await m.react('🕐')
@@ -297,7 +297,7 @@ async function handler(m, { sock }) {
         return m.reply(
             "GAGAL\n\n" +
             "  ┊  ➶ Reply media/berkas dengan `" + m.prefix + "uploadsftp`\n\n" +
-            "*Sub-commands:*\n" +
+            "*ꜱᴜʙ-ᴄᴏᴍᴍᴀɴᴅꜱ:*\n" +
             "  ┊  ➶ `" + m.prefix + "uploadsftp status` - Cek status koneksi\n" +
             "  ┊  ➶ `" + m.prefix + "uploadsftp list` - List file di remote dir\n" +
             "  ┊  ➶ `" + m.prefix + "uploadsftp setpath <path>` - Set remote directory\n" +
@@ -348,7 +348,7 @@ async function handler(m, { sock }) {
         await m.react('✅')
 
         let body = "BERHASIL UPLOAD\n\n"
-        body += "*SFTP Upload*\n\n"
+        body += "*ꜱꜰᴛᴘ ᴜᴘʟᴏᴀᴅ*\n\n"
         body += "Nama: " + fileName + "\n"
         body += "Size: " + formatBytes(buffer.length) + "\n"
         body += "Remote: " + remoteFilePath + "\n"
@@ -362,7 +362,7 @@ async function handler(m, { sock }) {
         if (error.message === 'NO_CONFIG') {
             return m.reply(claraWrap("Upload SFTP",
                 "GAGAL - Config belum di-setup\n\n" +
-                "*Cara setup:*\n" +
+                "*ᴄᴀʀᴀ ꜱᴇᴛᴜᴘ:*\n" +
                 "1. Buat file `sftp-config.json` di folder `config/`\n" +
                 "2. Isi format:\n\n" +
                 "```json\n" +

@@ -24,9 +24,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply( `📌 *Pinterest Download*\n\n` +
+    return m.reply( `📌 *ᴘɪɴᴛᴇʀᴇꜱᴛ ᴅᴏᴡɴʟᴏᴀᴅ*\n\n` +
         `Download gambar/video dari Pinterest\n\n` +
-        `*Contoh:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `\`${m.prefix}pindl https://pin.it/xxx\`\n` +
         `\`${m.prefix}pindl https://pinterest.com/pin/xxx\``, "pindl");
   }

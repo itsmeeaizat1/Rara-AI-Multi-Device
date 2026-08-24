@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim()
 
     if (!query) {
-        return m.reply(`📸 *TIKTOK FOTO SEARCH*\n\nContoh:\n\`${m.prefix}tiktokfoto cosplay\``)
+        return m.reply(`📸 *ᴛɪᴋᴛᴏᴋ ꜰᴏᴛᴏ ꜱᴇᴀʀᴄʜ*\n\nContoh:\n\`${m.prefix}tiktokfoto cosplay\``)
     }
 
     m.react('🕐')
@@ -73,15 +73,15 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("tiktokfoto", `❌ Tidak ditemukan foto TikTok untuk: ${query}`))
         }
 
-        let caption = '📸 *TIKTOK FOTO SEARCH*\n\n'
-        caption += `🔎 *Query:* ${result.query || query}\n`
-        caption += `📌 *Judul:* ${trimText(post.title || post.description)}\n`
-        caption += `👤 *Author:* ${post.author?.nickname || '-'}\n`
-        caption += `🌍 *Region:* ${post.region || '-'}\n`
-        caption += `🖼️ *Foto:* ${post.image_count || images.length}\n`
-        caption += `❤️ *Like:* ${formatNumber(post.stats?.like)}\n`
-        caption += `💬 *Comment:* ${formatNumber(post.stats?.comment)}\n`
-        caption += `🔁 *Share:* ${formatNumber(post.stats?.share)}\n`
+        let caption = '📸 *ᴛɪᴋᴛᴏᴋ ꜰᴏᴛᴏ ꜱᴇᴀʀᴄʜ*\n\n'
+        caption += `🔎 *qᴜᴇʀʏ:* ${result.query || query}\n`
+        caption += `📌 *ᴊᴜᴅᴜʟ:* ${trimText(post.title || post.description)}\n`
+        caption += `👤 *ᴀᴜᴛʜᴏʀ:* ${post.author?.nickname || '-'}\n`
+        caption += `🌍 *ʀᴇɢɪᴏɴ:* ${post.region || '-'}\n`
+        caption += `🖼️ *ꜰᴏᴛᴏ:* ${post.image_count || images.length}\n`
+        caption += `❤️ *ʟɪᴋᴇ:* ${formatNumber(post.stats?.like)}\n`
+        caption += `💬 *ᴄᴏᴍᴍᴇɴᴛ:* ${formatNumber(post.stats?.comment)}\n`
+        caption += `🔁 *ꜱʜᴀʀᴇ:* ${formatNumber(post.stats?.share)}\n`
         caption += `🆔 *ID:* ${post.id || '-'}\n\n`
         caption += `📝 ${trimText(post.description || post.title, 220)}`
 

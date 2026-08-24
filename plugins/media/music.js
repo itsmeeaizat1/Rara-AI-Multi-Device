@@ -26,7 +26,7 @@ async function handler(m, { sock, command }) {
     const num = parseInt(musicNum)
     
     if (isNaN(num) || num < 1 || num > 65) {
-        { const __navText = `🎵 *Music Collection*\n\nTersedia: .music1 - .music65`; return await m.reply(__navText); }
+        { const __navText = `🎵 *ᴍᴜꜱɪᴄ ᴄᴏʟʟᴇᴄᴛɪᴏɴ*\n\nTersedia: .music1 - .music65`; return await m.reply(__navText); }
     }
     
     m.react('🕐')
@@ -42,7 +42,7 @@ async function handler(m, { sock, command }) {
         m.react('✅')
         
     } catch (err) {
-        m.reply(claraWrap("music", `❌ *Error*\n\nMusik tidak ditemukan atau gagal diambil.`))
+        m.reply(claraWrap("music", `❌ *ᴇʀʀᴏʀ*\n\nMusik tidak ditemukan atau gagal diambil.`))
     }
 }
 

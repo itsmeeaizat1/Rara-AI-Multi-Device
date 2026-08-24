@@ -81,15 +81,15 @@ async function handler(m, { sock }) {
   const progress = getLevelBar(expInLevel, expNeeded);
 
   let txt = `╭━━━━━━━━━━━━━━━━━╮\n`;
-  txt += `┃ 📊 *Level Info*\n`;
+  txt += `┃ 📊 *ʟᴇᴠᴇʟ ɪɴꜰᴏ*\n`;
   txt += `╰━━━━━━━━━━━━━━━━━╯\n\n`;
 
-  txt += `╭┈┈⬡「 👤 *User* 」\n`;
+  txt += `╭┈┈⬡「 👤 *ᴜꜱᴇʀ* 」\n`;
   txt += `┃ 🏷️ Name: *${targetName}*\n`;
   txt += `┃ 🆔 Tag: @${targetJid.split("@")[0]}\n`;
   txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
 
-  txt += `╭┈┈⬡「 📈 *sTats* 」\n`;
+  txt += `╭┈┈⬡「 📈 *ꜱᴛᴀᴛꜱ* 」\n`;
   txt += `┃ 📊 Level: *${level}*\n`;
   txt += `┃ ${role}\n`;
   txt += `┃ 🚄 Exp: *${exp.toLocaleString("id-ID")}*\n`;

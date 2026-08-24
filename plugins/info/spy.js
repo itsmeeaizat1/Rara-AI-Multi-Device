@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig }) {
       rpg ? `  ┊  ➶ Level: *${rpg.level || 0}*` : "  ┊  ➶ Level: *-*",
       rpg ? `  ┊  ➶ Gold: *${rpg.gold ?? 0}*` : "  ┊  ➶ Gold: *-*",
       rpg ? `  ┊  ➶ Exp: *${rpg.exp || 0}*` : "  ┊  ➶ Exp: *-*",
-      "  ┊  ➶ Status: *Berhasil*",
+      "  ┊  ➶ Status: *ʙᴇʀʜᴀꜱɪʟ*",
     ];
 
     const text =
@@ -64,7 +64,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

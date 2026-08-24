@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
         }
 
         if (!textToQuote && !mainMsg.isMedia) {
-            { const __navText = `❌ *FORMAT SALAH*\n\nKirim perintah \`.qwa <teks>\` atau reply pesan orang lain dengan \`.qwa\`.`; return await m.reply( __navText, "qwa"); }
+            { const __navText = `❌ *ꜰᴏʀᴍᴀᴛ ꜱᴀʟᴀʜ*\n\nKirim perintah \`.qwa <teks>\` atau reply pesan orang lain dengan \`.qwa\`.`; return await m.reply( __navText, "qwa"); }
         }
         await m.react('🕐')
         const msgTime = mainMsg.messageTimestamp ? new Date(mainMsg.messageTimestamp * 1000) : new Date()
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
         await m.react('✅')
     } catch (error) {
         console.error("Error QWA:", error)
-        m.reply(claraWrap("qwa", `❌ *GAGAL MEMBUAT QUOTE*\n\nTerjadi kesalahan atau API sedang bermasalah.`))
+        m.reply(claraWrap("qwa", `❌ *ɢᴀɢᴀʟ ᴍᴇᴍʙᴜᴀᴛ qᴜᴏᴛᴇ*\n\nTerjadi kesalahan atau API sedang bermasalah.`))
     }
 }
 

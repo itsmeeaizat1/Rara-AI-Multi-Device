@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     let caption = `📅 *HARI LIBUR & NASIONAL MENDATANG* 📅\n\n`;
 
     if (r.mendatang.hari_libur && r.mendatang.hari_libur.length > 0) {
-      caption += `*Hari Libur Mendatang*\n`;
+      caption += `*ʜᴀʀɪ ʟɪʙᴜʀ ᴍᴇɴᴅᴀᴛᴀɴɢ*\n`;
       r.mendatang.hari_libur.slice(0, 5).forEach(item => {
         caption += `- ${item.date}: ${item.event} (${item.daysUntil} hari lagi)\n`;
       });
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     }
 
     if (r.mendatang.event_nasional && r.mendatang.event_nasional.length > 0) {
-      caption += `*Hari Nasional Mendatang*\n`;
+      caption += `*ʜᴀʀɪ ɴᴀꜱɪᴏɴᴀʟ ᴍᴇɴᴅᴀᴛᴀɴɢ*\n`;
       r.mendatang.event_nasional.slice(0, 5).forEach(item => {
         caption += `- ${item.date}: ${item.event} (${item.daysUntil} hari lagi)\n`;
       });

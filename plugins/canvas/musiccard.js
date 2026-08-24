@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
   if (m.quoted?.message) {
     const type = getContentType(m.quoted.message);
     if (type !== "imageMessage") {
-      return m.reply(claraWrap("Musiccard", "❌ *Waduh, itu bukan gambar!*\n\nKamu harus me-reply (membalas) pesan berupa *gambar* dengan format `.musiccard <judul>|<nama>`.\n\nContoh: \nBalas gambar temanmu, lalu ketik: `.musiccard Perfect|Ed Sheeran`"));
+      return m.reply(claraWrap("Musiccard", "❌ *Waduh, itu bukan gambar!*\n\nKamu harus me-reply (membalas) pesan berupa *ɢᴀᴍʙᴀʀ* dengan format `.musiccard <judul>|<nama>`.\n\nContoh: \nBalas gambar temanmu, lalu ketik: `.musiccard Perfect|Ed Sheeran`"));
     }
     try {
       mediaBuffer = await downloadMediaMessage(
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
       );
       mimetype = m.quoted.message[type]?.mimetype;
     } catch (e) {
-      return m.reply(claraWrap("Gagal mendownload gambar.", "😔 *Gagal mendownload gambar.* Coba kirim ulang gambarnya ya."));
+      return m.reply(claraWrap("Gagal mendownload gambar.", "😔 *ɢᴀɢᴀʟ ᴍᴇɴᴅᴏᴡɴʟᴏᴀᴅ ɢᴀᴍʙᴀʀ.* Coba kirim ulang gambarnya ya."));
     }
   } else if (m.message) {
     const type = getContentType(m.message);
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
       );
       mimetype = m.message[type]?.mimetype;
     } catch (e) {
-      return m.reply(claraWrap("Gagal mendownload gambar.", "😔 *Gagal mendownload gambar.* Coba kirim ulang gambarnya ya."));
+      return m.reply(claraWrap("Gagal mendownload gambar.", "😔 *ɢᴀɢᴀʟ ᴍᴇɴᴅᴏᴡɴʟᴏᴀᴅ ɢᴀᴍʙᴀʀ.* Coba kirim ulang gambarnya ya."));
     }
   }
 
@@ -94,21 +94,21 @@ async function handler(m, { sock }) {
     });
 
     if (res.headers["content-type"] && !res.headers["content-type"].includes("image")) {
-      return m.reply(claraWrap("Gagal membuat Music Card.", "⚠️ *Gagal membuat Music Card.* Server merespon dengan format yang salah."));
+      return m.reply(claraWrap("Gagal membuat Music Card.", "⚠️ *ɢᴀɢᴀʟ ᴍᴇᴍʙᴜᴀᴛ ᴍᴜꜱɪᴄ ᴄᴀʀᴅ.* Server merespon dengan format yang salah."));
     }
 
     const cardBuffer = Buffer.from(res.data);
 
     await sock.sendMessage(m.chat, {
       image: cardBuffer,
-      caption: `✨ *MUSIC CARD BERHASIL DIBUAT!* ✨\n\n🎧 *Judul*: ${judul}\n🎤 *Artis*: ${nama}\n\nKeren banget kan hasilnya? Pamerin ke teman-temanmu yuk! 🚀`
+      caption: `✨ *MUSIC CARD BERHASIL DIBUAT!* ✨\n\n🎧 *ᴊᴜᴅᴜʟ*: ${judul}\n🎤 *ᴀʀᴛɪꜱ*: ${nama}\n\nKeren banget kan hasilnya? Pamerin ke teman-temanmu yuk! 🚀`
     }, { quoted: m });
 
     await m.react("🐣");
 
   } catch (err) {
     console.error("[Music Card]", err.message);
-    m.reply(claraWrap("Terjadi masalah di sistem kami.", "😔 *Terjadi masalah di sistem kami.* \n\nSistem gagal menghubungi server pembuat kartu. Silakan coba beberapa saat lagi ya."));
+    m.reply(claraWrap("Terjadi masalah di sistem kami.", "😔 *ᴛᴇʀᴊᴀᴅɪ ᴍᴀꜱᴀʟᴀʜ ᴅɪ ꜱɪꜱᴛᴇᴍ ᴋᴀᴍɪ.* \n\nSistem gagal menghubungi server pembuat kartu. Silakan coba beberapa saat lagi ya."));
   }
 }
 

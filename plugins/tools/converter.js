@@ -27,15 +27,15 @@ async function handler(m, { sock }) {
 
   if (!m.quoted && !m.isMedia) {
     return m.reply(
-      `🔄 *CONVERTER*\n\n` +
+      `🔄 *ᴄᴏɴᴠᴇʀᴛᴇʀ*\n\n` +
         `Reply file dengan format tujuan\n\n` +
-        `*Format:*\n` +
+        `*ꜰᴏʀᴍᴀᴛ:*\n` +
         `\`${m.prefix}converter <format>\`\n\n` +
-        `*Contoh:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `\`${m.prefix}converter mp3\`\n` +
         `\`${m.prefix}converter mp4\`\n` +
         `\`${m.prefix}converter png\`\n\n` +
-        `*Cara pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `1. Reply file yang mau diconvert\n` +
         `2. Ketik \`${m.prefix}converter <format>\``,
     );
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
     const tempFile = path.join(tempDir, `convert_${Date.now()}.${ext}`);
     fs.writeFileSync(tempFile, buffer);
 
-    { const __navText = `🔄 *CONVERTING...*\n\n${ext} → ${targetFormat}`; await m.reply(__navText); };
+    { const __navText = `🔄 *ᴄᴏɴᴠᴇʀᴛɪɴɢ...*\n\n${ext} → ${targetFormat}`; await m.reply(__navText); };
 
     const result = await mconverter.convert(tempFile, targetFormat);
 
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     }
 
     if (result.error) {
-      return m.reply(claraWrap("converter", `❌ *GAGAL CONVERT*\n\n${result.error}`));
+      return m.reply(claraWrap("converter", `❌ *ɢᴀɢᴀʟ ᴄᴏɴᴠᴇʀᴛ*\n\n${result.error}`));
     }
 
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";

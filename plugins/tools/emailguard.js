@@ -170,7 +170,7 @@ async function handler(m, { sock }) {
       await m.react("❌");
       return m.reply(claraWrap("Email Guard", [
         "Email: " + email,
-        "Status: *TIDAK VALID*",
+        "Status: *ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*",
         "",
         result.errors.join("\n"),
       ], "warn"));

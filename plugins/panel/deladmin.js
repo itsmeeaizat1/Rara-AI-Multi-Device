@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
     
     if (!hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
         const userRole = getUserRole(m.sender, serverVersion)
-        return m.reply(claraWrap("deladmin", `❌ *Akses Ditolak*\n\n` +
+        return m.reply(claraWrap("deladmin", `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
             `Kamu tidak punya akses ke *${serverLabel}*\n` +
             `Role kamu: *${userRole || 'Tidak ada'}*`))
     }
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
     const userId = m.text?.trim()
     
     if (!userId || isNaN(userId)) {
-        return m.reply( `⚠️ *Cara Pakai*\n\n` +
+        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `\`${m.prefix}${m.command} userid\`\n\n` +
             `Lihat user ID dengan \`${m.prefix}listadmin${serverVersion}\``, "deladmin")
     }

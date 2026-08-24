@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url || (!url.includes("xnxx") && !url.includes("xvideos"))) {
-    return m.reply( `🔞 *XNXX Downloader*\n\nKirim URL video XNXX/XVideos\n\nContoh: \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\``, "xnxx2");
+    return m.reply( `🔞 *xɴxx ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\nKirim URL video XNXX/XVideos\n\nContoh: \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\``, "xnxx2");
   }
 
   await m.react("🕒");
@@ -39,10 +39,10 @@ async function handler(m, { sock }) {
     }
 
     const d = res.data.data;
-    let text = `🔞 *XNXX DOWNLOAD*\n\n`;
-    text += `*Title:* ${d.title || "-"}\n`;
-    text += `*Duration:* ${d.duration || "-"}\n`;
-    text += `*Quality:* ${d.quality || "-"}\n`;
+    let text = `🔞 *xɴxx ᴅᴏᴡɴʟᴏᴀᴅ*\n\n`;
+    text += `*ᴛɪᴛʟᴇ:* ${d.title || "-"}\n`;
+    text += `*ᴅᴜʀᴀᴛɪᴏɴ:* ${d.duration || "-"}\n`;
+    text += `*qᴜᴀʟɪᴛʏ:* ${d.quality || "-"}\n`;
     text += `\nSedang mengirim video...`;
 
     await m.reply( text, "xnxx2");

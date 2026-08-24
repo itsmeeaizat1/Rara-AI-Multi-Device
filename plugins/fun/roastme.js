@@ -44,11 +44,11 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("RoastMe", [
       `  ┊  ➶ AI roasting pedas tapi lucu`,
       ``,
-      `  ┊  ➶ *Cara pakai:*`,
+      `  ┊  ➶ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  ${prefix}roastme [mode]`,
       `  Reply orang: ${prefix}roastme savage`,
       ``,
-      `  ┊  ➶ *Mode:*`,
+      `  ┊  ➶ *ᴍᴏᴅᴇ:*`,
       `  1. mild (santai)`,
       `  2. savage (pedas)`,
       `  3. nuclear (gak ada ampun)`,

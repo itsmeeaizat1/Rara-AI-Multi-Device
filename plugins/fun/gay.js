@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const member = participants.map(u => u.jid);
     const orang1 = member[Math.floor(Math.random() * member.length)];
     const orang2 = member[Math.floor(Math.random() * member.length)];
-    const text = `@${orang1.split('@')[0]} *Nge gay sama* @${orang2.split('@')[0]}`;
+    const text = `@${orang1.split('@')[0]} *ɴɢᴇ ɢᴀʏ ꜱᴀᴍᴀ* @${orang2.split('@')[0]}`;
     await m.reply(claraWrap("gay", text))
 }
 

@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `╭┈┈⬡「 🎵 *Tiktok sEarch* 」
+    return m.reply( `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴇᴀʀᴄʜ* 」
 ┃
 ┃ ㊗ Usage: \`${m.prefix}ptvsearch <query>\`
 ┃

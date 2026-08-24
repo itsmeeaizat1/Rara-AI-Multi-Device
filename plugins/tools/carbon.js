@@ -63,12 +63,12 @@ async function handler(m, { sock }) {
     const text = m.text || m.quoted?.text
 
     if (!text) {
-        return m.reply( `🖥️ *CARBON CODE*\n\n` +
+        return m.reply( `🖥️ *ᴄᴀʀʙᴏɴ ᴄᴏᴅᴇ*\n\n` +
             `Fitur ini mengubah teks kode program kamu menjadi gambar cantik ala Carbon\n\n` +
-            `*Cara pakai:*\n` +
+            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
             `\`${m.prefix}carbon <kode>\`\n` +
             `Atau kamu bisa reply pesan yang berisi kode\n\n` +
-            `*Contoh:*\n` +
+            `*ᴄᴏɴᴛᴏʜ:*\n` +
             `\`${m.prefix}carbon console.log("Halo")\``, "carbon")
     }
 

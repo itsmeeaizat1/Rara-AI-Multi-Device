@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text =
       claraWrap("Case", [`  ┊  ➶ Deskripsi: *${desc}*`,
         `  ┊  ➶ Pelapor: *${m.pushName || m.sender}*`,
-        "  ┊  ➶ Status: *TERKIRIM*"].join("\n")) +
+        "  ┊  ➶ Status: *ᴛᴇʀᴋɪʀɪᴍ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}case <deskripsi> untuk buat laporan lain`) +
       "\n" +
@@ -47,7 +47,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

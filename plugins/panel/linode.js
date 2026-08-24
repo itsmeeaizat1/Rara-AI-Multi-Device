@@ -289,7 +289,7 @@ async function handler(m, { sock, command, args }) {
             const balance = (data.koin || 0) / 100
             const credit = (data.credit_remaining || 0) / 100
             
-            const msg = `💰 *sAldo Akun Linode*\n\n` +
+            const msg = `💰 *ꜱᴀʟᴅᴏ ᴀᴋᴜɴ ʟɪɴᴏᴅᴇ*\n\n` +
                 `💵 Balance: $${balance.toFixed(2)}\n` +
                 `🎁 Credit: $${credit.toFixed(2)}`
             
@@ -337,7 +337,7 @@ async function handler(m, { sock, command, args }) {
             
             if (!res.ok) throw new Error('Gagal mendapatkan detail')
             
-            const msg = `🔍 *Detail Linode*\n\n` +
+            const msg = `🔍 *ᴅᴇᴛᴀɪʟ ʟɪɴᴏᴅᴇ*\n\n` +
                 `🆔 ID: \`${l.id}\`\n` +
                 `🏷️ Label: \`${l.label}\`\n` +
                 `📊 Status: ${l.status}\n` +
@@ -350,7 +350,7 @@ async function handler(m, { sock, command, args }) {
             return
         }
         
-        await m.reply(claraWrap("linode", `☁️ *Linode Commands*\n\n` +
+        await m.reply(claraWrap("linode", `☁️ *ʟɪɴᴏᴅᴇ ᴄᴏᴍᴍᴀɴᴅꜱ*\n\n` +
             `.linode2gb <label> - Buat VPS 2GB\n` +
             `.linode4gb <label> - Buat VPS 4GB\n` +
             `.linode8gb <label> - Buat VPS 8GB\n` +

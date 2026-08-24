@@ -24,9 +24,9 @@ async function handler(m, { sock }) {
   const url = args[0]?.trim();
 
   if (!url || !url.includes("neoxr.eu")) {
-    return m.reply( `🎬 *Film Detail*\n\n` +
+    return m.reply( `🎬 *ꜰɪʟᴍ ᴅᴇᴛᴀɪʟ*\n\n` +
         `Ambil detail film dari URL\n\n` +
-        `*Format:*\n` +
+        `*ꜰᴏʀᴍᴀᴛ:*\n` +
         `\`${m.prefix}filmget <url>\`\n\n` +
         `Gunakan \`${m.prefix}film <judul>\` untuk cari film dulu`, "filmget");
   }
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     const { data } = await axios.get(apiUrl, { timeout: 30000 });
 
     if (!data?.status || !data?.data) {
-      return m.reply(claraWrap("filmget", "❌ *Gagal*\n\nFilm tidak ditemukan"));
+      return m.reply(claraWrap("filmget", "❌ *ɢᴀɢᴀʟ*\n\nFilm tidak ditemukan"));
     }
 
     const film = data.data;
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     }
 
     let text = `🎬 *${film.title || "Film"}*\n\n`;
-    text += `╭┈┈⬡「 📋 *Info* 」\n`;
+    text += `╭┈┈⬡「 📋 *ɪɴꜰᴏ* 」\n`;
     text += `┃ ⭐ Rating: ${film.rating || "-"}\n`;
     text += `┃ 📺 Quality: ${film.quality || "-"}\n`;
     text += `┃ ⏱️ Duration: ${film.duration || "-"}\n`;
@@ -66,11 +66,11 @@ async function handler(m, { sock }) {
     text += `┃ 👥 Actors: ${film.actors || "-"}\n`;
     text += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
 
-    text += `📝 *Synopsis:*\n`;
+    text += `📝 *ꜱʏɴᴏᴘꜱɪꜱ:*\n`;
     text += `${film.synopsis || "-"}\n\n`;
 
     if (streams.length > 0) {
-      text += `▶️ *Streaming:*\n`;
+      text += `▶️ *ꜱᴛʀᴇᴀᴍɪɴɢ:*\n`;
       streams.forEach((s, i) => {
         text += `${i + 1}. ${s.server}\n`;
       });
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     }
 
     if (downloads.length > 0) {
-      text += `📥 *Download:*\n`;
+      text += `📥 *ᴅᴏᴡɴʟᴏᴀᴅ:*\n`;
       downloads.forEach((d, i) => {
         text += `${i + 1}. ${d.provider}\n`;
       });

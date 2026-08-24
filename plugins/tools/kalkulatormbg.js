@@ -92,9 +92,9 @@ async function handler(m, { sock,  args }) {
   if (!args[0]) {
     let txt = `🧮 *KALKULATOR MBG (Makan Bergizi Gratis)* 🧮\n\n`;
     txt += `Halo kak! Penasaran berapa lama uang kamu bisa nyuplai program Makan Bergizi Gratis se-Indonesia?\n\n`;
-    txt += `*Cara Pakai:*\n`;
+    txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
     txt += `👉 \`${m.prefix}kkmbg <nominal uang>\`\n\n`;
-    txt += `*Contoh:*\n`;
+    txt += `*ᴄᴏɴᴛᴏʜ:*\n`;
     txt += `\`${m.prefix}kkmbg 1000000000\``;
     return await m.reply(claraWrap("kalkulatormbg", txt));
   }
@@ -109,28 +109,28 @@ async function handler(m, { sock,  args }) {
 
     const data = hitungMBG(uang);
 
-    let contentTxt = `💰 *Dana :* ${formatRupiah(uang)}\n\n`;
-    contentTxt += `⏳ *Durasi MBG:*\n`;
+    let contentTxt = `💰 *ᴅᴀɴᴀ :* ${formatRupiah(uang)}\n\n`;
+    contentTxt += `⏳ *ᴅᴜʀᴀꜱɪ ᴍʙɢ:*\n`;
     contentTxt += `${data.durasi.tahun} TAHUN, ${data.durasi.bulan} BULAN, ${data.durasi.hari} HARI\n`;
     contentTxt += `${data.durasi.jam} JAM, ${data.durasi.menit} MENIT, ${data.durasi.detik} DETIK\n`;
     contentTxt += `_(Berdasarkan pengeluaran ~Rp ${(data.pengeluaran / 1000000000).toFixed(1)} Miliar/hari)_\n\n`;
     
-    contentTxt += `🍱 *Setara Porsi Makan:*\n`;
+    contentTxt += `🍱 *ꜱᴇᴛᴀʀᴀ ᴘᴏʀꜱɪ ᴍᴀᴋᴀɴ:*\n`;
     contentTxt += `${data.porsi.toLocaleString('id-ID')} porsi (@ Rp 15.000/porsi)\n\n`;
 
-    contentTxt += `📊 *Perbandingan Gaji Indonesia:*\n`;
+    contentTxt += `📊 *ᴘᴇʀʙᴀɴᴅɪɴɢᴀɴ ɢᴀᴊɪ ɪɴᴅᴏɴᴇꜱɪᴀ:*\n`;
     contentTxt += `🏢 UMR DKI Jakarta (Rp 5,4 Jt/bulan): ${data.gajiIndonesia.dki}\n`;
     contentTxt += `🏭 UMR Jawa Tengah (Rp 2,04 Jt/bulan): ${data.gajiIndonesia.jateng}\n`;
     contentTxt += `👨‍🏫 Gaji Guru Honorer (Rp 300rb/bulan): ${data.gajiIndonesia.guru}\n\n`;
 
-    contentTxt += `⚽ *Perbandingan Gaji Pesepakbola:*\n`;
+    contentTxt += `⚽ *ᴘᴇʀʙᴀɴᴅɪɴɢᴀɴ ɢᴀᴊɪ ᴘᴇꜱᴇᴘᴀᴋʙᴏʟᴀ:*\n`;
     for (let p of data.pemain) {
       contentTxt += `🏆 ${p.nama}\n`;
       contentTxt += `💵 ${formatRupiah(p.gaji)}/tahun\n`;
       contentTxt += `📈 Persentase: ${p.persen}\n\n`;
     }
 
-    let txt = `🍽️ *HASIL HITUNG KALKULATOR MBG* 🍽️\n\n`;
+    let txt = `🍽️ *ʜᴀꜱɪʟ ʜɪᴛᴜɴɢ ᴋᴀʟᴋᴜʟᴀᴛᴏʀ ᴍʙɢ* 🍽️\n\n`;
     txt += contentTxt.trim().split("\n").map(line => line.trim() ? `${line}` : ``).join("\n");
 
     await m.reply(claraWrap("kalkulatormbg", txt));

@@ -80,9 +80,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const [nama,nominal] = m.text?.split(',')
     if (!nama || !nominal) {
-        return m.reply(claraWrap("FAKE BANK", `*FAKE BANK*\n\nMasukkan teks untuk chat\n\n\`Contoh: ${m.prefix}fakebank Aizat,10000\``), "fakebankjago")
+        return m.reply(claraWrap("FAKE BANK", `*ꜰᴀᴋᴇ ʙᴀɴᴋ*\n\nMasukkan teks untuk chat\n\n\`Contoh: ${m.prefix}fakebank Aizat,10000\``), "fakebankjago")
     }
-    if(isNaN(nominal)) { const __navText = `*HARAP MASUKKAN ANGKA*`; return await m.reply(__navText); }
+    if(isNaN(nominal)) { const __navText = `*ʜᴀʀᴀᴘ ᴍᴀꜱᴜᴋᴋᴀɴ ᴀɴɢᴋᴀ*`; return await m.reply(__navText); }
     m.react('🕐')
     
     try {

@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     
     if (!url) {
         return m.reply(
-            `⚠️ *Cara Pakai*\n\n` +
+            `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `\`${m.prefix}lkdl <url>\`\n\n` +
             `Contoh:\n` +
             `\`${m.prefix}lkdl https://likee.video/@xxx\``

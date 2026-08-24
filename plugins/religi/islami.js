@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
                 let jir = await fetchJson('https://islamic-api-zhirrr.vercel.app/api/asmaulhusna')
                 let ye = jir.data
 
-                let tks = '☪️ *ASMAUL HUSNA*\n\n' + ye.map((item) => {
+                let tks = '☪️ *ᴀꜱᴍᴀᴜʟ ʜᴜꜱɴᴀ*\n\n' + ye.map((item) => {
                     return `Urutan: ${item.index}\nLatin: ${item.latin}\nArab: ${item.arabic}\nTerjemahan ID: ${item.translation_id}\nTerjemahan EN: ${item.translation_en}\n`
                 }).join('\n')
                 m.reply(tks)
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
                 let niatSholat = jir
 
                 if (!text) {
-                    let daftarNiat = '📋 *DAFTAR NIAT SHOLAT*\n\n' + niatSholat.map((item) => `- ${item.name}`).join('\n')
+                    let daftarNiat = '📋 *ᴅᴀꜰᴛᴀʀ ɴɪᴀᴛ ꜱʜᴏʟᴀᴛ*\n\n' + niatSholat.map((item) => `- ${item.name}`).join('\n')
                     daftarNiat += `\n\n📌 Ketik \`${m.prefix}niatsholat [nama sholat]\` untuk melihat niat\nContoh: \`${m.prefix}niatsholat subuh\``
                     m.reply( daftarNiat, "islami")
                 } else {
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
                 let daftarDoa = jir
 
                 if (!text) {
-                    let listDoa = '🤲 *DAFTAR DOA*\n\n' + daftarDoa.map((item) => `- ${item.doa}`).join('\n')
+                    let listDoa = '🤲 *ᴅᴀꜰᴛᴀʀ ᴅᴏᴀ*\n\n' + daftarDoa.map((item) => `- ${item.doa}`).join('\n')
                      listDoa += `\n\n📌 Ketik \`${m.prefix}doa [nama doa]\` untuk melihat doa\nContoh: \`${m.prefix}doa doa sebelum tidur\``
                     m.reply( listDoa, "islami")
                 } else {

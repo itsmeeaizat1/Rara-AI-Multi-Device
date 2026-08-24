@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
         })
         
     } catch (error) {
-        m.reply(claraWrap("Error", `❌ *Error*\n\nVideo asupan tidak ditemukan`))
+        m.reply(claraWrap("Error", `❌ *ᴇʀʀᴏʀ*\n\nVideo asupan tidak ditemukan`))
     }
 }
 

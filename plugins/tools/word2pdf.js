@@ -114,14 +114,14 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("Word2Pdf", [
       `  ┊  ➶ Converter .docx ke PDF`,
       ``,
-      `  ┊  ➶ *Cara pakai:*`,
+      `  ┊  ➶ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  Reply file .docx, ketik:`,
       `  ${prefix}word2pdf`,
       ``,
       `  ┊  ➶ Auto-detect heading, bullet, paragraf`,
       `  ┊  ➶ Hasil: PDF siap print`,
       ``,
-      `  ┊  ➶ *Format didukung:* .docx (Word 2007+)`,
+      `  ┊  ➶ *ꜰᴏʀᴍᴀᴛ ᴅɪᴅᴜᴋᴜɴɢ:* .docx (Word 2007+)`,
       `  ┊  ➶ .doc (Word lama) belum didukung`,
     ].join("\n"));
     return m.reply( help, "word2pdf");

@@ -45,14 +45,14 @@ async function handler(m, { sock }) {
     const data = m.text?.trim()
     
     if (!data) {
-        return m.reply( `⚠️ *CARA PAKAI*\n\n` +
+        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `\`${m.prefix}qrcustom <url/text>\`\n\n` +
-            `*Contoh:*\n` +
+            `*ᴄᴏɴᴛᴏʜ:*\n` +
             `\`${m.prefix}qrcustom https://wa.me/628xxx\`\n\n` +
             `💡 Reply gambar untuk custom logo di tengah QR`, "qrcustom")
     }
     
-    { const __navText = `🕕 *Generating QR code...*`; await m.reply(__navText); }
+    { const __navText = `🕕 *ɢᴇɴᴇʀᴀᴛɪɴɢ qʀ ᴄᴏᴅᴇ...*`; await m.reply(__navText); }
     
     try {
         let imageUrl = ''
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
         
         await sock.sendMessage(m.chat, {
             image: { url: apiUrl },
-            caption: `📱 *QR Code*\n${data.substring(0, 50)}${data.length > 50 ? '...' : ''}`
+            caption: `📱 *qʀ ᴄᴏᴅᴇ*\n${data.substring(0, 50)}${data.length > 50 ? '...' : ''}`
         }, { quoted: m })
         
         m.react('🕐')

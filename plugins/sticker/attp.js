@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
         text = m.quoted.text.trim()
     }
     if (!text) {
-        return m.reply( `🎨 *Animated Text sTicker*\n\n` +
+        return m.reply( `🎨 *ᴀɴɪᴍᴀᴛᴇᴅ ᴛᴇxᴛ ꜱᴛɪᴄᴋᴇʀ*\n\n` +
             `Masukkan teks untuk sticker\n\n` +
             `Contoh: \`${m.prefix}attp Hello World\``, "attp")
     }

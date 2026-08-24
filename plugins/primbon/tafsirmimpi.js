@@ -22,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const keyword = m.args.join(' ')
     if (!keyword) {
-        return m.reply(`🌙 *Tafsir Mimpi*\n\nMasukkan kata kunci mimpi\n\n\`Contoh: ${m.prefix}tafsirmimpi bertemu\``)
+        return m.reply(`🌙 *ᴛᴀꜰꜱɪʀ ᴍɪᴍᴘɪ*\n\nMasukkan kata kunci mimpi\n\n\`Contoh: ${m.prefix}tafsirmimpi bertemu\``)
     }
     
     
@@ -31,11 +31,11 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data?.hasil?.length) {
-            return m.reply(claraWrap("tafsirmimpi", `❌ *Gagal*\n\nTidak ditemukan tafsir untuk: ${keyword}`))
+            return m.reply(claraWrap("tafsirmimpi", `❌ *ɢᴀɢᴀʟ*\n\nTidak ditemukan tafsir untuk: ${keyword}`))
         }
         
         const r = data.data
-        let response = `🌙 *Tafsir Mimpi*\n\n`
+        let response = `🌙 *ᴛᴀꜰꜱɪʀ ᴍɪᴍᴘɪ*\n\n`
         response += `Kata kunci: *${r.keyword}*\n`
         response += `Ditemukan: *${r.total} hasil*\n\n`
         

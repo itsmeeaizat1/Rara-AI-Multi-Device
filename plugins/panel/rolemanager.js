@@ -81,7 +81,7 @@ function handler(m, { sock }) {
     
     if (!canManageRole(m.sender, server, role, m.isOwner)) {
         const userRole = getUserRole(m.sender, server)
-        return m.reply(claraWrap("rolemanager", `❌ *Akses Ditolak*\n\n` +
+        return m.reply(claraWrap("rolemanager", `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
             `Kamu tidak bisa mengelola *${roleLabel}* di *${serverLabel}*\n` +
             `Role kamu: *${userRole ? capitalize(userRole) : 'Tidak ada'}*\n\n` +
             `Hirarki: Owner > CEO > Reseller`))
@@ -97,7 +97,7 @@ function handler(m, { sock }) {
     }
     
     if (!targetUser) {
-        return m.reply( `⚠️ *Cara Pakai*\n\n` +
+        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `\`${m.prefix}${m.command} @user\`\n` +
             `\`${m.prefix}${m.command} 628xxx\`\n` +
             `Reply pesan user`, "rolemanager")
@@ -106,12 +106,12 @@ function handler(m, { sock }) {
     if (action === 'add') {
         const result = addRole(targetUser, server, role)
         if (!result.success) {
-            return m.reply(claraWrap("rolemanager", `❌ *Gagal*\n\n${result.error}`))
+            return m.reply(claraWrap("rolemanager", `❌ *ɢᴀɢᴀʟ*\n\n${result.error}`))
         }
         
         m.react('✅')
         return m.reply(`✅ *${roleLabel.toUpperCase()} Ditambahkan*\n\n` +
-            `╭┈┈⬡「 📋 *Detail* 」\n` +
+            `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
             `┃ 📱 Nomor: \`${targetUser}\`\n` +
             `┃ 🏷️ Role: \`${roleLabel}\`\n` +
             `┃ 🖥️ sErver: \`${serverLabel}\`\n` +
@@ -122,7 +122,7 @@ function handler(m, { sock }) {
     if (action === 'del') {
         const result = removeRole(targetUser, server, role)
         if (!result.success) {
-            return m.reply(claraWrap("rolemanager", `❌ *Gagal*\n\n${result.error}`))
+            return m.reply(claraWrap("rolemanager", `❌ *ɢᴀɢᴀʟ*\n\n${result.error}`))
         }
         
         m.react('✅')

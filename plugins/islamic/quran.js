@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `📖 *QURAN*\n\n` +
+    return m.reply( `📖 *qᴜʀᴀɴ*\n\n` +
         `Masukkan nama surah\n\n` +
         `\`Contoh: ${m.prefix}quran al fatihah\`\n` +
         `\`Contoh: ${m.prefix}quran al baqarah\``, "quran");

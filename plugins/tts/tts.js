@@ -18,7 +18,7 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
 
   if (!text) {
-    { const __navText = `🎤 *Google TTS*\n\nGunakan:\n${m.prefix}tts halo dunia`; return await m.reply( __navText, "tts"); };
+    { const __navText = `🎤 *ɢᴏᴏɢʟᴇ ᴛᴛꜱ*\n\nGunakan:\n${m.prefix}tts halo dunia`; return await m.reply( __navText, "tts"); };
   }
 
 

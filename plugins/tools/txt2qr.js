@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const text = m.args.join(' ')
     
     if (!text) {
-        { const __navText = `📱 *TExT TO QR*\n\nMasukkan teks/URL\n\n\`Contoh: ${m.prefix}txt2qr https://google.com\``; return await m.reply( __navText, "txt2qr"); }
+        { const __navText = `📱 *ᴛᴇxᴛ ᴛᴏ qʀ*\n\nMasukkan teks/URL\n\n\`Contoh: ${m.prefix}txt2qr https://google.com\``; return await m.reply( __navText, "txt2qr"); }
     }
     
     m.react('🕐')
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
         
         await sock.sendMessage(m.chat, {
             image: Buffer.from(res.data),
-            caption: `📱 *QR CODE*\n\n${text.substring(0, 100)}${text.length > 100 ? '...' : ''}`
+            caption: `📱 *qʀ ᴄᴏᴅᴇ*\n\n${text.substring(0, 100)}${text.length > 100 ? '...' : ''}`
         }, { quoted: m })
         
     } catch (error) {

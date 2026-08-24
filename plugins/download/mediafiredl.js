@@ -34,14 +34,14 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return m.reply( `⚠️ *Cara Pakai*\n\n` +
+    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `\`${m.prefix}mfdl <url>\`\n\n` +
         `Contoh:\n` +
         `\`${m.prefix}mfdl https://www.mediafire.com/file/xxx\``, "mediafiredl");
   }
 
   if (!url.match(/mediafire\.com/i)) {
-    return m.reply(claraWrap("Mediafiredl", `❌ *URL tidak valid. Gunakan link MediaFire.*`));
+    return m.reply(claraWrap("Mediafiredl", `❌ *ᴜʀʟ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ. ɢᴜɴᴀᴋᴀɴ ʟɪɴᴋ ᴍᴇᴅɪᴀꜰɪʀᴇ.*`));
   }
   await m.react("🕒");
 

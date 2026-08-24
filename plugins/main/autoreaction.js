@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig }) {
     db.setGroup(m.chat, { autoreaction: args === "on" });
 
     const text =
-      claraWrap("Autoreaction", ["  ┊  ➶ Fitur: *Auto Reaction*",
+      claraWrap("Autoreaction", ["  ┊  ➶ Fitur: *ᴀᴜᴛᴏ ʀᴇᴀᴄᴛɪᴏɴ*",
         `  ┊  ➶ Status: *${args === "on" ? "ON" : "OFF"}*`,
         `  ┊  ➶ Group: *${m.chat}*`].join("\n")) +
       "\n" +
@@ -53,7 +53,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

@@ -23,9 +23,9 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return m.reply( `📸 *Instagram Downloader*\n\n` +
+    return m.reply( `📸 *ɪɴꜱᴛᴀɢʀᴀᴍ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\n` +
         `\`${m.prefix}igdl <url>\`\n\n` +
-        `*Contoh:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `\`${m.prefix}igdl https://www.instagram.com/reel/xxx\`\n` +
         `\`${m.prefix}igdl https://www.instagram.com/p/xxx\``, "instagramdl");
   }
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
   } catch (err) {
-    return m.reply(claraWrap("Instagramdl", `❌ *Gagal Mengunduh*\n\n${err.message}`));
+    return m.reply(claraWrap("Instagramdl", `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴᴅᴜʜ*\n\n${err.message}`));
   }
 }
 

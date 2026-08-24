@@ -41,7 +41,7 @@ async function getPlayAudioDownload(url) {
 async function handler(m, { sock, text }) {
   const query = m.text?.trim();
   if (!query)
-    { const __navText = `🎵 *Play*\n\nContoh:\n\`${m.prefix}play komang\``; return await m.reply(claraWrap("play", __navText)); };
+    { const __navText = `🎵 *ᴘʟᴀʏ*\n\nContoh:\n\`${m.prefix}play komang\``; return await m.reply(claraWrap("play", __navText)); };
 
   m.react("🕒");
 
@@ -51,9 +51,9 @@ async function handler(m, { sock, text }) {
 
     const video = search.videos[0];
 
-    let info = `🎵 *NOW PLAYING*\n\n`;
-    info += `📌 *Judul:* ${video.title}\n\n`;
-    info += `*DETAIL*\n`;
+    let info = `🎵 *ɴᴏᴡ ᴘʟᴀʏɪɴɢ*\n\n`;
+    info += `📌 *ᴊᴜᴅᴜʟ:* ${video.title}\n\n`;
+    info += `*ᴅᴇᴛᴀɪʟ*\n`;
     info += `👤 Channel: *${video.author.name}*\n`;
     info += `⏱️ Durasi: *${video.duration.timestamp}*\n`;
     info += `👀 Views: *${formatViews(video.views)}*\n`;
@@ -61,7 +61,7 @@ async function handler(m, { sock, text }) {
     info += `🆔 ID: \`${video.videoId}\`\n\n`;
     if (video.description) {
       const desc = video.description.substring(0, 150).replace(/\n/g, " ");
-      info += `*Deskripsi:*\n_${desc}${video.description.length > 150 ? "..." : ""}_\n\n`;
+      info += `*ᴅᴇꜱᴋʀɪᴘꜱɪ:*\n_${desc}${video.description.length > 150 ? "..." : ""}_\n\n`;
     }
     info += `🔗 ${video.url}\n\n`;
     

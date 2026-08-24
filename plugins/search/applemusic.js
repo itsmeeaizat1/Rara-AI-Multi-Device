@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim()
     
     if (!query) {
-        return m.reply( `⚠️ *Cara Pakai*\n\n` +
+        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `\`${m.prefix}applemusic <query>\`\n\n` +
             `Contoh:\n` +
             `\`${m.prefix}applemusic Best Friend\``, "applemusic")
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
         
         const tracks = res.data.result.slice(0, 5)
         
-        let txt = `🍎 *Apple Music sEarch*\n\n`
+        let txt = `🍎 *ᴀᴘᴘʟᴇ ᴍᴜꜱɪᴄ ꜱᴇᴀʀᴄʜ*\n\n`
         txt += `Query: *${query}*\n\n`                                                                                    
         
         tracks.forEach((t, i) => {

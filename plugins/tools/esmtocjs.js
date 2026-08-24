@@ -127,11 +127,11 @@ async function handler(m, { sock }) {
     let code = m.quotedBody || m.text?.trim()
 
     if (!code) {
-        return m.reply( `🔄 *EsM TO CJs CONVERTER*\n\n` +
+        return m.reply( `🔄 *ᴇꜱᴍ ᴛᴏ ᴄᴊꜱ ᴄᴏɴᴠᴇʀᴛᴇʀ*\n\n` +
             `Convert ES Modules ke CommonJS\n\n` +
-            `*Cara pakai:*\n` +
+            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
             `Reply kode ESM dengan ${m.prefix}esmtocjs\n\n` +
-            `*Contoh ESM:*\n` +
+            `*ᴄᴏɴᴛᴏʜ ᴇꜱᴍ:*\n` +
             `\`import axios from 'axios'\`\n` +
             `\`export default function() {}\``, "esmtocjs")
     }

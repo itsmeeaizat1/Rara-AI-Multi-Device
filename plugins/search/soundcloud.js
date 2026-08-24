@@ -59,11 +59,11 @@ async function scSearch(q) {
 
 async function handler(m, { args, sock }) {
   if (!args[0]) {
-    let txt = `🎵 *SOUNDCLOUD SEARCH* 🎵\n\n`;
+    let txt = `🎵 *ꜱᴏᴜɴᴅᴄʟᴏᴜᴅ ꜱᴇᴀʀᴄʜ* 🎵\n\n`;
     txt += `Halo kak! Mau cari lagu apa hari ini?\n\n`;
-    txt += `*Cara Pakai:*\n`;
+    txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
     txt += `👉 \`${m.prefix}soundcloud <judul lagu>\`\n\n`;
-    txt += `*Contoh:*\n`;
+    txt += `*ᴄᴏɴᴛᴏʜ:*\n`;
     txt += `\`${m.prefix}soundcloud Only We Know\``;
     return await m.reply(claraWrap("soundcloud", txt));
   }
@@ -76,16 +76,16 @@ async function handler(m, { args, sock }) {
       return m.reply(claraWrap("Soundcloud", `❌ Aduh kak, lagunya nggak ketemu nih! Coba cari dengan judul yang beda ya. 😭`));
     }
     let thumb = data.find((v) => v.artwork)?.artwork || null;
-    let txt = `🎧 *HASIL PENCARIAN SOUNDCLOUD* 🎧\n\n`;
+    let txt = `🎧 *ʜᴀꜱɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ ꜱᴏᴜɴᴅᴄʟᴏᴜᴅ* 🎧\n\n`;
     let contentTxt = "";
     const limit = Math.min(data.length, 5);
     for (let i = 0; i < limit; i++) {
-      contentTxt += `🎵 *Title :* ${data[i].title}\n`;
-      contentTxt += `🔗 *Url :* ${data[i].url}\n`;
-      contentTxt += `👁️ *Views :* ${data[i].plays}\n`;
-      contentTxt += `❤️ *Likes :* ${data[i].likes}\n`;
-      contentTxt += `💬 *Comments :* ${data[i].comments}\n`;
-      contentTxt += `🔁 *Reposts :* ${data[i].reposts}`;
+      contentTxt += `🎵 *ᴛɪᴛʟᴇ :* ${data[i].title}\n`;
+      contentTxt += `🔗 *ᴜʀʟ :* ${data[i].url}\n`;
+      contentTxt += `👁️ *ᴠɪᴇᴡꜱ :* ${data[i].plays}\n`;
+      contentTxt += `❤️ *ʟɪᴋᴇꜱ :* ${data[i].likes}\n`;
+      contentTxt += `💬 *ᴄᴏᴍᴍᴇɴᴛꜱ :* ${data[i].comments}\n`;
+      contentTxt += `🔁 *ʀᴇᴘᴏꜱᴛꜱ :* ${data[i].reposts}`;
       if (i < limit - 1) contentTxt += `\n\n`;
     }
     txt += contentTxt.trim().split("\n").map(line => line.trim() ? `${line}` : ``).join("\n");

@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     }
     if (!buffer) {
         await m.reply(
-            `⚠️ *CARA PAKAI*\n\n` +
+            `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `Reply gambar + \`${m.prefix}setpp\`\n` +
             `Kirim gambar + caption \`${m.prefix}setpp\``
         )
@@ -52,12 +52,12 @@ async function handler(m, { sock }) {
         await sock.updateProfilePicture(botJid, buffer)
         
         await m.reply(
-            `✅ *PP BOT DIUBAH*\n\n` +
+            `✅ *ᴘᴘ ʙᴏᴛ ᴅɪᴜʙᴀʜ*\n\n` +
             `Foto profil bot berhasil diperbarui!`
         )
     } catch (error) {
         await m.reply(
-            `❌ *GAGAL*\n\n` +
+            `❌ *ɢᴀɢᴀʟ*\n\n` +
             `Tidak dapat mengubah foto bot.\n` +
             `_${error.message}_`
         )

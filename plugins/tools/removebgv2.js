@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ AI lokal, hasil bersih, gratis tanpa API`,
           `  ┊  ➶ Output: PNG transparan (full quality)`,
           ``,
-          `*Opsi:*`,
+          `*ᴏᴘꜱɪ:*`,
           `  ┊  ➶ ${prefix}removebgv2 — kirim sebagai gambar`,
           `  ┊  ➶ ${prefix}removebgv2 doc — kirim sebagai dokumen (no compress)`].join("\n")) + "\n" +
         tipText("Reply gambar lalu ketik .removebgv2");
@@ -52,7 +52,7 @@ async function handler(m, { sock, config: botConfig }) {
       mediaBuffer = await m.quoted.download();
     } else {
       const text =
-        claraWrap("RemoveBG V2", [`  ┊  ➶ Status: *Gagal download gambar*`,
+        claraWrap("RemoveBG V2", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ ᴅᴏᴡɴʟᴏᴀᴅ ɢᴀᴍʙᴀʀ*`,
           `  ┊  ➶ Coba reply gambar yang valid`].join("\n")) + "\n" +
         tipText("Reply gambar lalu ketik .removebgv2");
 
@@ -62,7 +62,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
       const text =
-        claraWrap("RemoveBG V2", [`  ┊  ➶ Status: *Buffer gambar tidak valid*`,
+        claraWrap("RemoveBG V2", [`  ┊  ➶ Status: *ʙᴜꜰꜰᴇʀ ɢᴀᴍʙᴀʀ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*`,
           `  ┊  ➶ Coba gambar lain`].join("\n")) + "\n" +
         tipText("Reply gambar lalu ketik .removebgv2");
 
@@ -74,7 +74,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (mediaBuffer.length > MAX_FILE_SIZE) {
       const sizeMB = (mediaBuffer.length / 1024 / 1024).toFixed(1);
       const text =
-        claraWrap("RemoveBG V2", [`  ┊  ➶ Status: *File terlalu besar*`,
+        claraWrap("RemoveBG V2", [`  ┊  ➶ Status: *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*`,
           `  ┊  ➶ Ukuran: *${sizeMB} MB*`,
           `  ┊  ➶ Maksimal: *10 MB*`,
           `  ┊  ➶ Compress gambar dulu atau gunakan resolusi lebih kecil`].join("\n")) + "\n" +
@@ -96,7 +96,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!resultBuffer || resultBuffer.length === 0) {
       const text =
-        claraWrap("RemoveBG V2", [`  ┊  ➶ Status: *Gagal hapus background*`,
+        claraWrap("RemoveBG V2", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ ʜᴀᴘᴜꜱ ʙᴀᴄᴋɢʀᴏᴜɴᴅ*`,
           `  ┊  ➶ Mungkin gambar tidak support, coba gambar lain`].join("\n")) + "\n" +
         tipText("Coba gambar dengan subjek yang jelas");
 
@@ -117,22 +117,22 @@ async function handler(m, { sock, config: botConfig }) {
         fileName: "removebg_result.png",
         mimetype: "image/png",
         caption:
-          claraWrap("RemoveBG V2", [`  ┊  ➶ Status: *Background dihapus*`,
+          claraWrap("RemoveBG V2", [`  ┊  ➶ Status: *ʙᴀᴄᴋɢʀᴏᴜɴᴅ ᴅɪʜᴀᴘᴜꜱ*`,
             `  ┊  ➶ Mode: *Dokumen (no compress)*`,
             `  ┊  ➶ Ukuran: *${(resultSize / 1024).toFixed(0)} KB*`,
-            `  ┊  ➶ Format: *PNG transparan*`,
-            `  ┊  ➶ Engine: *AI ONNX lokal*`].join("\n")) + "\n" +
+            `  ┊  ➶ Format: *ᴘɴɢ ᴛʀᴀɴꜱᴘᴀʀᴀɴ*`,
+            `  ┊  ➶ Engine: *ᴀɪ ᴏɴɴx ʟᴏᴋᴀʟ*`].join("\n")) + "\n" +
           tipText("Hasil full quality tanpa kompresi"),
       }, { quoted: m });
     } else {
       await sock.sendMessage(m.chat, {
         image: resultBuffer,
         caption:
-          claraWrap("RemoveBG V2", [`  ┊  ➶ Status: *Background dihapus*`,
-            `  ┊  ➶ Mode: *Gambar*`,
+          claraWrap("RemoveBG V2", [`  ┊  ➶ Status: *ʙᴀᴄᴋɢʀᴏᴜɴᴅ ᴅɪʜᴀᴘᴜꜱ*`,
+            `  ┊  ➶ Mode: *ɢᴀᴍʙᴀʀ*`,
             `  ┊  ➶ Ukuran: *${(resultSize / 1024).toFixed(0)} KB*`,
-            `  ┊  ➶ Format: *PNG transparan*`,
-            `  ┊  ➶ Engine: *AI ONNX lokal*`].join("\n")) + "\n" +
+            `  ┊  ➶ Format: *ᴘɴɢ ᴛʀᴀɴꜱᴘᴀʀᴀɴ*`,
+            `  ┊  ➶ Engine: *ᴀɪ ᴏɴɴx ʟᴏᴋᴀʟ*`].join("\n")) + "\n" +
           tipText(`Untuk no compress: ${prefix}removebgv2 doc`),
       }, { quoted: m });
     }
@@ -141,7 +141,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[RemoveBG V2 Error]", error);
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message || "Unknown error"}*`].join("\n")) + "\n" +
       tipText("Coba lagi nanti atau hubungi owner");
 

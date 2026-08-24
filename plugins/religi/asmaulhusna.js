@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
         name = getItemByIndex('asmaulhusna.json', index);
     } else if (query.toLowerCase() === 'all' || query.toLowerCase() === 'semua') {
         const allNames = getAllData('asmaulhusna.json');
-        let text = `☪️ *ASMAUL HUSNA*\n`;
+        let text = `☪️ *ᴀꜱᴍᴀᴜʟ ʜᴜꜱɴᴀ*\n`;
         text += `99 Nama Allah SWT\n\n`;
         text += `\`\`\``;
         
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
         return;
     }
     
-    let text = `☪️ *ASMAUL HUSNA*\n\n`;
+    let text = `☪️ *ᴀꜱᴍᴀᴜʟ ʜᴜꜱɴᴀ*\n\n`;
     text += `\`\`\``;
     text += `📍 Nomor : ${name.index}\n`;
     text += `🔤 Latin : ${name.latin}\n`;

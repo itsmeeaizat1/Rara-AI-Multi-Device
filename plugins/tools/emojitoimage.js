@@ -34,13 +34,13 @@ async function handler(m, { sock }) {
   const style = args[1]?.toLowerCase() || "apple";
 
   if (!emoji) {
-    return m.reply( `🖼️ *EMOJI TO IMAGE*\n\n` +
+    return m.reply( `🖼️ *ᴇᴍᴏᴊɪ ᴛᴏ ɪᴍᴀɢᴇ*\n\n` +
         `Konversi emoji ke gambar HD\n\n` +
-        `*Format:*\n` +
+        `*ꜰᴏʀᴍᴀᴛ:*\n` +
         `\`${m.prefix}emojitoimage <emoji> [style]\`\n\n` +
-        `*Contoh:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `\`${m.prefix}emojitoimage 😳 apple\`\n\n` +
-        `*Style tersedia:*\n` +
+        `*ꜱᴛʏʟᴇ ᴛᴇʀꜱᴇᴅɪᴀ:*\n` +
         `${STYLES.join(", ")}`, "emojitoimage");
   }
 
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     const { data } = await axios.get(apiUrl, { timeout: 15000 });
 
     if (!data?.status || !data?.data?.url) {
-      return m.reply(claraWrap("emojitoimage", "❌ *GAGAL*\n\nEmoji tidak ditemukan atau API error"));
+      return m.reply(claraWrap("emojitoimage", "❌ *ɢᴀɢᴀʟ*\n\nEmoji tidak ditemukan atau API error"));
     }
 
     const imgUrl = data.data.url;
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
     await sock.sendMedia(
       m.chat,
       imgUrl,
-      `🖼️ *EMOJI TO IMAGE*\n\nEmoji: ${emoji}\nStyle: ${validStyle}\nCode: ${data.data.code || "-"}`,
+      `🖼️ *ᴇᴍᴏᴊɪ ᴛᴏ ɪᴍᴀɢᴇ*\n\nEmoji: ${emoji}\nStyle: ${validStyle}\nCode: ${data.data.code || "-"}`,
       m,
       { type: "image", contextInfo: saluranCtx() },
     );

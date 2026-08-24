@@ -56,11 +56,11 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
     return m.reply(
-      `🔤 *DaFont Search*\n\n` +
+      `🔤 *ᴅᴀꜰᴏɴᴛ ꜱᴇᴀʀᴄʜ*\n\n` +
         `Cari font dari DaFont, lalu reply nomor buat download.\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}dafont <nama font>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}dafont arial*\n` +
         `*${m.prefix}dafont horror*\n\n` +
         `_Setelah daftar muncul, reply pesan bot dengan nomor font buat download_`
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     const result = await DaFont(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("dafont", `❌ *DaFont Gagal*\n\n${result.error}`));
+      return m.reply(claraWrap("dafont", `❌ *ᴅᴀꜰᴏɴᴛ ɢᴀɢᴀʟ*\n\n${result.error}`));
     }
 
     const items = result.results.slice(0, 10);

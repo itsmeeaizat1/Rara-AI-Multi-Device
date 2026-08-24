@@ -53,9 +53,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const nominal = m.text
     if (!nominal) {
-        return m.reply(claraWrap("FAKE DANA", `*FAKE DANA*\n\n\`Contoh: ${m.prefix}fakedana 10000\``), "fakedana")
+        return m.reply(claraWrap("FAKE DANA", `*ꜰᴀᴋᴇ ᴅᴀɴᴀ*\n\n\`Contoh: ${m.prefix}fakedana 10000\``), "fakedana")
     }
-    if(isNaN(nominal)) { const __navText = `*HARAP MASUKKAN ANGKA*`; return await m.reply(__navText); }
+    if(isNaN(nominal)) { const __navText = `*ʜᴀʀᴀᴘ ᴍᴀꜱᴜᴋᴋᴀɴ ᴀɴɢᴋᴀ*`; return await m.reply(__navText); }
     m.react('🕐')
     
     try {

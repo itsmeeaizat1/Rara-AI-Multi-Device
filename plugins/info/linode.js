@@ -40,10 +40,10 @@ async function handler(m, { sock, config: botConfig }) {
     let text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Server Info
 ┊
   ┊  ➶ *OS:* ${osName}
-  ┊  ➶ *Host:* ${hostname}
-  ┊  ➶ *Uptime:* ${uptime}
-  ┊  ➶ *CPU:* ${cpu}
-  ┊  ➶ *RAM:* ${ram}
+  ┊  ➶ *ʜᴏꜱᴛ:* ${hostname}
+  ┊  ➶ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
+  ┊  ➶ *ᴄᴘᴜ:* ${cpu}
+  ┊  ➶ *ʀᴀᴍ:* ${ram}
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
 Ketik ${prefix}menu untuk kembali`;
@@ -53,8 +53,8 @@ Ketik ${prefix}menu untuk kembali`;
     const prefix = botConfig.command?.prefix || ".";
     let text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Server Error
 ┊
-  ┊  ➶ *Status:* Gagal
-  ┊  ➶ *Alasan:* ${error.message}
+  ┊  ➶ *ꜱᴛᴀᴛᴜꜱ:* Gagal
+  ┊  ➶ *ᴀʟᴀꜱᴀɴ:* ${error.message}
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 
 Coba lagi nanti atau hubungi owner`;

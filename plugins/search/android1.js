@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
 
   if (!text) {
     return m.reply( `📱 *Android1 sEarch*\n\n` +
-        `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
+        `╭┈┈⬡「 📋 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
         `┃ 🔍 \`${m.prefix}android1 <query>\` - Cari APK\n` +
         `╰┈┈⬡\n\n` +
         `Contoh:\n` +

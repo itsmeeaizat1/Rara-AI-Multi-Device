@@ -71,11 +71,11 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     const help = claraWrap("DetektifBohong", [
       `  ┊  ➶ Simulator lie detector dramatis`,
       ``,
-      `  ┊  ➶ *Cara pakai:*`,
+      `  ┊  ➶ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  ${prefix}detektifbohong <pernyataan>`,
       `  Atau reply pesan: ${prefix}detektifbohong`,
       ``,
-      `  ┊  ➶ *Contoh:*`,
+      `  ┊  ➶ *ᴄᴏɴᴛᴏʜ:*`,
       `  ${prefix}detektifbohong aku gak pernah skak animes`,
       ``,
       `  ┊  ➶ Hasil: persentase kebohongan + alasan lucu`,

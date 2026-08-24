@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim()
 
     if (!query) {
-        { const __navText = `📚 *MANGATOON SEARCH*\n\nContoh:\n\`${m.prefix}mangatoon love\``; return await m.reply( __navText, "mangatoon"); }
+        { const __navText = `📚 *ᴍᴀɴɢᴀᴛᴏᴏɴ ꜱᴇᴀʀᴄʜ*\n\nContoh:\n\`${m.prefix}mangatoon love\``; return await m.reply( __navText, "mangatoon"); }
     }
 
     m.react('🕐')
@@ -63,10 +63,10 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("mangatoon", `❌ Tidak ditemukan komik Mangatoon untuk: ${query}`))
         }
 
-        let caption = '📚 *MANGATOON SEARCH*\n\n'
-        caption += `🔎 *Query:* ${result.query || query}\n`
-        caption += `📦 *Total:* ${result.total || items.length}\n`
-        caption += `🌐 *Source:* ${result.source || 'mangatoon.mobi'}\n\n`
+        let caption = '📚 *ᴍᴀɴɢᴀᴛᴏᴏɴ ꜱᴇᴀʀᴄʜ*\n\n'
+        caption += `🔎 *qᴜᴇʀʏ:* ${result.query || query}\n`
+        caption += `📦 *ᴛᴏᴛᴀʟ:* ${result.total || items.length}\n`
+        caption += `🌐 *ꜱᴏᴜʀᴄᴇ:* ${result.source || 'mangatoon.mobi'}\n\n`
 
         items.forEach((item, index) => {
             caption += `*${index + 1}.* ${trimText(item.title)}\n`

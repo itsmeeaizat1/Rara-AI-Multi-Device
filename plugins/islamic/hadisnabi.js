@@ -91,10 +91,10 @@ async function handler(m, { sock }) {
     txt += "No. Hadis: " + hadis.hadithnumber + "\n\n";
 
     if (arabicText) {
-      txt += "*Teks Arab:*\n" + arabicText + "\n\n";
+      txt += "*ᴛᴇᴋꜱ ᴀʀᴀʙ:*\n" + arabicText + "\n\n";
     }
 
-    txt += "*Terjemahan Indonesia:*\n" + hadis.text + "\n\n";
+    txt += "*ᴛᴇʀᴊᴇᴍᴀʜᴀɴ ɪɴᴅᴏɴᴇꜱɪᴀ:*\n" + hadis.text + "\n\n";
 
     if (hadis.grades && hadis.grades.length > 0) {
       txt += "Status: " + (hadis.grades[0].grade || "N/A") + "\n";

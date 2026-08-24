@@ -28,11 +28,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply( `🎬 *Dailymotion Downloader*\n\n` +
+    return m.reply( `🎬 *ᴅᴀɪʟʏᴍᴏᴛɪᴏɴ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\n` +
         `Download video dari Dailymotion, otomatis dikonversi ke MP4.\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}dailymotiondl <link>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}dailymotiondl https://www.dailymotion.com/video/xxx*\n\n` +
         `_Proses konversi mungkin agak lama_`, "dailymotiondl");
   }
@@ -43,11 +43,11 @@ async function handler(m, { sock }) {
     const result = await DailymotionDL(text);
 
     if (!result.status) {
-      { const __navText = `❌ *Dailymotion Gagal*\n\n${result.error}`; return await m.reply(__navText); };
+      { const __navText = `❌ *ᴅᴀɪʟʏᴍᴏᴛɪᴏɴ ɢᴀɢᴀʟ*\n\n${result.error}`; return await m.reply(__navText); };
     }
 
     let caption =
-      `🎬 *Dailymotion*\n\n` +
+      `🎬 *ᴅᴀɪʟʏᴍᴏᴛɪᴏɴ*\n\n` +
       `📌 ${result.title}\n` +
       `⏱️ Durasi: ${result.duration}\n` +
       `📺 Kualitas: ${result.quality}`;

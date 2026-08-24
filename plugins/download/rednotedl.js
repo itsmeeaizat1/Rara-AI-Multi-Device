@@ -21,11 +21,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply( `📕 *RedNote Downloader*\n\n` +
+    return m.reply( `📕 *ʀᴇᴅɴᴏᴛᴇ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\n` +
         `Download video atau foto dari XiaoHongShu (RedNote).\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}rednotedl <link>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}rednotedl https://www.xiaohongshu.com/xxx*`, "rednotedl");
   }
 
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     const result = await RedNoteDL(text);
 
     if (!result.status) {
-      { const __navText = `❌ *RedNote Gagal*\n\n${result.error}`; return await m.reply(__navText); };
+      { const __navText = `❌ *ʀᴇᴅɴᴏᴛᴇ ɢᴀɢᴀʟ*\n\n${result.error}`; return await m.reply(__navText); };
     }
 
     if (result.type === "video" && result.results?.[0]) {

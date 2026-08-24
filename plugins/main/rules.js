@@ -59,7 +59,7 @@ async function handler(m, { sock, config: botConfig }) {
             tableData,
             m,
             {
-                headerText: `${botConfig.bot?.name || 'Nova-AI'} *RULES*`,
+                headerText: `${botConfig.bot?.name || 'Nova-AI'} *ʀᴜʟᴇꜱ*`,
                 footer: 'Pelanggaran dapat mengakibatkan banned / kick!'
             }
         )

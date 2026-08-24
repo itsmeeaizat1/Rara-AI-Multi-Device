@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `╭┈┈⬡「 🎵 *Tiktok sEarch* 」
+    return m.reply( `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴇᴀʀᴄʜ* 」
 ┃
 ㊗ Usage: \`${m.prefix}ttsearch <query>\`
 ┃
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
     const mediaList = videos.slice(0, maxShow).map((video) => ({
       video: { url: video.link },
       mimetype: "video/mp4",
-      caption: `🎵 *TIKTOK SEARCH*
+      caption: `🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴇᴀʀᴄʜ*
 
 📌 ${video.title || "-"}
 👤 ${video.author?.nickname || "-"}

@@ -52,17 +52,17 @@ async function handler(m, { sock }) {
   }
 
   if (!shooterJid) {
-    return m.reply( `⚠️ *Cara Pakai*\n\n` +
+    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `Reply pesan tembakan + \`${m.prefix}tolak\`\n` +
         `Atau \`${m.prefix}tolak @tag\``, "tolak");
   }
 
   if (shooterJid === m.sender) {
-    return m.reply(claraWrap("tolak", `❌ *Gagal*\n\nTidak bisa menolak diri sendiri!`));
+    return m.reply(claraWrap("tolak", `❌ *ɢᴀɢᴀʟ*\n\nTidak bisa menolak diri sendiri!`));
   }
 
   if (shooterJid === m.botNumber) {
-    return m.reply(claraWrap("Tolak", `❌ *Gagal*\n\nBot tidak punya hati untuk ditolak!`));
+    return m.reply(claraWrap("Tolak", `❌ *ɢᴀɢᴀʟ*\n\nBot tidak punya hati untuk ditolak!`));
   }
 
   let shooterData = db.getUser(shooterJid) || {};
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     shooterData.fun.pasangan !== m.sender &&
     shooterData.fun.tembakTarget !== m.sender
   ) {
-    return m.reply(claraWrap("tolak", `❌ *Tidak Menembak*\n\n` +
+    return m.reply(claraWrap("tolak", `❌ *ᴛɪᴅᴀᴋ ᴍᴇɴᴇᴍʙᴀᴋ*\n\n` +
         `@${shooterJid.split("@")[0]} tidak sedang menembakmu`));
   }
 

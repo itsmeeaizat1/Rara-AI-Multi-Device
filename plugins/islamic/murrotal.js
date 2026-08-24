@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `🎧 *MURROTTAL*\n\n` +
+    return m.reply( `🎧 *ᴍᴜʀʀᴏᴛᴛᴀʟ*\n\n` +
         `Masukkan nama surah\n\n` +
         `\`Contoh: ${m.prefix}murrotal al fatihah\`\n` +
         `\`Contoh: ${m.prefix}murrotal ar rahman\``, "murrotal");

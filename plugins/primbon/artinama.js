@@ -22,7 +22,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const nama = m.args.join(' ')
     if (!nama) {
-        return m.reply(`📛 *Arti Nama*\n\nMasukkan nama\n\n\`Contoh: ${m.prefix}artinama putu\``)
+        return m.reply(`📛 *ᴀʀᴛɪ ɴᴀᴍᴀ*\n\nMasukkan nama\n\n\`Contoh: ${m.prefix}artinama putu\``)
     }
     
     
@@ -31,11 +31,11 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(claraWrap("Artinama", `❌ *Gagal*\n\nTidak dapat menganalisa nama`))
+            return m.reply(claraWrap("Artinama", `❌ *ɢᴀɢᴀʟ*\n\nTidak dapat menganalisa nama`))
         }
         
         const result = data.data
-        const response = `📛 *Arti Nama*\n\n` +
+        const response = `📛 *ᴀʀᴛɪ ɴᴀᴍᴀ*\n\n` +
             `Nama: *${result.nama}*\n\n` +
             `${result.arti}\n\n` +
             `_${result.catatan}_`

@@ -65,11 +65,11 @@ async function handler(m, { sock }) {
     
     if (!text || !text.includes('|')) {
         return m.reply(
-            `💫 *sOul Match*\n\n` +
+            `💫 *ꜱᴏᴜʟ ᴍᴀᴛᴄʜ*\n\n` +
             `Cek kecocokan jiwa 2 orang!\n\n` +
-            `*Format:*\n` +
+            `*ꜰᴏʀᴍᴀᴛ:*\n` +
             `\`.soulmatch nama1|nama2\`\n\n` +
-            `*Contoh:*\n` +
+            `*ᴄᴏɴᴛᴏʜ:*\n` +
             `\`.soulmatch Raiden|Mei\``
         )
     }
@@ -101,11 +101,11 @@ async function handler(m, { sock }) {
     txt += `│ ├ 🌟 Element: ${soul2.element}\n`
     txt += `│ └ 🎯 Zodiac: ${soul2.zodiac}\n`
     txt += `│\n`
-    txt += `│ 💕 *COMPATIBILITY*\n`
+    txt += `│ 💕 *ᴄᴏᴍᴘᴀᴛɪʙɪʟɪᴛʏ*\n`
     txt += `│ ├ 📊 Score: *${compatibility}%*\n`
     txt += `│ └ 🎭 Status: ${getMatchDescription(compatibility)}\n`
     txt += `│\n`
-    txt += `│ 🔮 *Reading:*\n`
+    txt += `│ 🔮 *ʀᴇᴀᴅɪɴɢ:*\n`
     txt += `│ ${getReading(compatibility)}\n`
     txt += `│\n`
     txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`

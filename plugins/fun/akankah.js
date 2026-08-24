@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim();
     
     if (!text) {
-        return m.reply(claraWrap("Akankah", `🔮 *Akankah*\n\nMasukkan pertanyaan!\n\n*Contoh:*\n.akankah aku sukses?`));
+        return m.reply(claraWrap("Akankah", `🔮 *ᴀᴋᴀɴᴋᴀʜ*\n\nMasukkan pertanyaan!\n\n*ᴄᴏɴᴛᴏʜ:*\n.akankah aku sukses?`));
     }
     
     const answer = answers[Math.floor(Math.random() * answers.length)];

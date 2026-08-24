@@ -39,9 +39,9 @@ async function handler(m, { sock }) {
     if (!input) {
         return m.reply( `📱 *CEK XL/AXIS*\n\n` +
             `Fitur ini digunakan untuk mengecek informasi paket dan kuota yang tersedia pada nomor XL atau Axis kamu secara lengkap dan detail\n\n` +
-            `*Cara pakai:*\n` +
+            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
             `\`${m.prefix}cekxl <nomor hp>\`\n\n` +
-            `*Contoh:*\n` +
+            `*ᴄᴏɴᴛᴏʜ:*\n` +
             `\`${m.prefix}cekxl 083150850721\`\n` +
             `\`${m.prefix}cekxl 6281234567890\`\n\n` +
             `_Format nomor bisa pakai 08xx, 628xx, atau tanpa awalan_`, "cekxl")
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
         if (data.graceDate) txt += `⚠️ Masa Tenggang: *${data.graceDate}*\n`
 
         if (data.packages && Array.isArray(data.packages) && data.packages.length > 0) {
-            txt += `\n📦 *DAFTAR PAKET AKTIF*\n\n`
+            txt += `\n📦 *ᴅᴀꜰᴛᴀʀ ᴘᴀᴋᴇᴛ ᴀᴋᴛɪꜰ*\n\n`
             for (const pkg of data.packages) {
                 txt += `- *${pkg.name || pkg.packageName || "Paket"}*\n`
                 if (pkg.quota || pkg.remainingQuota) txt += `  ┊  ➶ Sisa Kuota: *${pkg.remainingQuota || pkg.quota}*\n`
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
         }
 
         if (data.balance || data.pulsa) {
-            txt += `💰 *SALDO*\n`
+            txt += `💰 *ꜱᴀʟᴅᴏ*\n`
             txt += `Pulsa: *${data.balance || data.pulsa}*\n\n`
         }
 
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
             const skipKeys = ["error", "status", "msisdn", "activeDate", "expireDate", "graceDate", "balance", "pulsa"]
             const extraKeys = Object.keys(data).filter(k => !skipKeys.includes(k))
             if (extraKeys.length > 0) {
-                txt += `\n📋 *DETAIL LAINNYA*\n\n`
+                txt += `\n📋 *ᴅᴇᴛᴀɪʟ ʟᴀɪɴɴʏᴀ*\n\n`
                 for (const key of extraKeys) {
                     const val = data[key]
                     if (typeof val === "string" || typeof val === "number") {

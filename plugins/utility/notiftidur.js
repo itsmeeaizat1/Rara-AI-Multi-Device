@@ -30,11 +30,11 @@ function handler(m, { sock }) {
             ? (existing.enabled ? '✅ Aktif' : '❌ Nonaktif')
             : '⚪ Belum diatur'
 
-        let info = `🌙 *PENGINGAT TIDUR*\n\n`
-        info += `📌 *Status:* ${status}\n`
+        let info = `🌙 *ᴘᴇɴɢɪɴɢᴀᴛ ᴛɪᴅᴜʀ*\n\n`
+        info += `📌 *ꜱᴛᴀᴛᴜꜱ:* ${status}\n`
 
         if (existing) {
-            info += `⏰ *Jadwal:* ${existing.jadwal.map(j => `*${j}* WIB`).join(', ')}\n`
+            info += `⏰ *ᴊᴀᴅᴡᴀʟ:* ${existing.jadwal.map(j => `*${j}* WIB`).join(', ')}\n`
         }
 
         info += `\n*📋 Cara Pakai:*\n`
@@ -50,10 +50,10 @@ function handler(m, { sock }) {
 
     if (sub === 'off') {
         if (!existing) {
-            return m.reply(claraWrap("Notiftidur", `❌ *Belum ada pengingat tidur* yang aktif di chat ini`))
+            return m.reply(claraWrap("Notiftidur", `❌ *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘᴇɴɢɪɴɢᴀᴛ ᴛɪᴅᴜʀ* yang aktif di chat ini`))
         }
         toggleNotif('tidur', sender, chatJid, false)
-        return m.reply(`✅ *Pengingat tidur dinonaktifkan* 🔕\n\nKetik \`${m.prefix}notiftidur on\` untuk mengaktifkan kembali`)
+        return m.reply(`✅ *ᴘᴇɴɢɪɴɢᴀᴛ ᴛɪᴅᴜʀ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ* 🔕\n\nKetik \`${m.prefix}notiftidur on\` untuk mengaktifkan kembali`)
     }
 
     if (sub === 'on') {
@@ -73,13 +73,13 @@ function handler(m, { sock }) {
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\nContoh: \`22.00\` atau \`23.30\``)
+            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\nContoh: \`22.00\` atau \`23.30\``)
         }
 
         setNotifTidur(sender, chatJid, jadwal)
 
         let reply = `✅ *Pengingat tidur aktif!* 🔔\n\n`
-        reply += `⏰ *Jadwal:*\n`
+        reply += `⏰ *ᴊᴀᴅᴡᴀʟ:*\n`
         for (const j of jadwal) {
             reply += `  ┊  ➶ 🕐 *${j}* WIB\n`
         }
@@ -100,13 +100,13 @@ function handler(m, { sock }) {
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\nContoh: \`23.00\` atau \`22.30\``)
+            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\nContoh: \`23.00\` atau \`22.30\``)
         }
 
         setNotifTidur(sender, chatJid, jadwal)
 
         let reply = `✅ *Jadwal tidur diperbarui!* ✏️\n\n`
-        reply += `⏰ *Jadwal baru:*\n`
+        reply += `⏰ *ᴊᴀᴅᴡᴀʟ ʙᴀʀᴜ:*\n`
         for (const j of jadwal) {
             reply += `  ┊  ➶ 🕐 *${j}* WIB\n`
         }

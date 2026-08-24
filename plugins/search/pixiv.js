@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const data = response.data;
 
     if (!data.status || !data.data || data.data.length === 0) {
-      return m.reply(claraWrap("pixiv", `❌ *Tidak ditemukan hasil untuk:* ${query}`));
+      return m.reply(claraWrap("pixiv", `❌ *ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ ʜᴀꜱɪʟ ᴜɴᴛᴜᴋ:* ${query}`));
     }
 
     const results = data.data.slice(0, 10);
@@ -44,9 +44,9 @@ async function handler(m, { sock }) {
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
-    let caption = `🎨 *Pixiv sEarch*\n`;
-    caption += `📝 *Kuery:* ${query}\n`;
-    caption += `📊 *Hasil:* ${results.length} artwork\n\n`;
+    let caption = `🎨 *ᴘɪxɪᴠ ꜱᴇᴀʀᴄʜ*\n`;
+    caption += `📝 *ᴋᴜᴇʀʏ:* ${query}\n`;
+    caption += `📊 *ʜᴀꜱɪʟ:* ${results.length} artwork\n\n`;
 
     results.forEach((art, i) => {
       const aiLabel = art.aiType === 2 ? " 🤖" : "";
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
     );
   } catch (error) {
     if (error.response?.status === 403) {
-      return m.reply(claraWrap("Pixiv", `❌ *API Key tidak valid atau limit tercapai*`));
+      return m.reply(claraWrap("Pixiv", `❌ *ᴀᴘɪ ᴋᴇʏ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ ᴀᴛᴀᴜ ʟɪᴍɪᴛ ᴛᴇʀᴄᴀᴘᴀɪ*`));
     }
     m.reply(claraWrap("pixiv", te(m.prefix, m.command, m.pushName), "error"));
   }

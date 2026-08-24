@@ -135,28 +135,28 @@ async function handler(m, { sock }) {
   caption += `Ini adalah rincian lengkap dari profil, status, dan seluruh aset yang kakak miliki saat ini di dalam sistem bot:\n\n`;
   
   caption += `*〔 👤 INFORMASI PRIBADI 〕*\n`;
-  caption += `- *Nama Asli:* ${user.name || m.pushName || "User"}\n`;
+  caption += `- *ɴᴀᴍᴀ ᴀꜱʟɪ:* ${user.name || m.pushName || "User"}\n`;
   if (user.isRegistered) {
-      caption += `- *Nama Daftar:* ${user.regName} (${user.regAge} tahun, ${user.regGender})\n`;
+      caption += `- *ɴᴀᴍᴀ ᴅᴀꜰᴛᴀʀ:* ${user.regName} (${user.regAge} tahun, ${user.regGender})\n`;
   }
   caption += `- *Tag / Mention:* @${target.split("@")[0]}\n`;
-  caption += `- *Status Akun:* ${isOwnerUser ? "👑 Owner" : isPremiumUser ? "💎 Premium" : "🆓 Free User"}\n`;
-  if (user.isBanned) caption += `- *Banned:* 🚫 Ya (Tidak bisa akses fitur bot)\n`;
-  caption += `- *Level:* ${userLevel}\n`;
-  caption += `- *Total Exp:* ${formatNumber(userExp)} XP\n`;
-  caption += `- *Koin:* 🪙 ${formatNumber(user.koin || 0)}\n`;
+  caption += `- *ꜱᴛᴀᴛᴜꜱ ᴀᴋᴜɴ:* ${isOwnerUser ? "👑 Owner" : isPremiumUser ? "💎 Premium" : "🆓 Free User"}\n`;
+  if (user.isBanned) caption += `- *ʙᴀɴɴᴇᴅ:* 🚫 Ya (Tidak bisa akses fitur bot)\n`;
+  caption += `- *ʟᴇᴠᴇʟ:* ${userLevel}\n`;
+  caption += `- *ᴛᴏᴛᴀʟ ᴇxᴘ:* ${formatNumber(userExp)} XP\n`;
+  caption += `- *ᴋᴏɪɴ:* 🪙 ${formatNumber(user.koin || 0)}\n`;
   if (user.rpg) {
-    caption += `- *Gold:* 💰 ${formatNumber(user.rpg.gold || 0)}\n`;
-    caption += `- *Gems:* 💎 ${formatNumber(user.rpg.gems || 0)}\n`;
-    caption += `- *Tokens:* 🎟️ ${formatNumber(user.rpg.tokens || 0)}\n`;
-    caption += `- *Energy:* ⚡ ${formatNumber(user.rpg.energy || 0)}/${formatNumber(user.rpg.maxEnergy || 100)}\n`;
-    caption += `- *Mana:* 💧 ${formatNumber(user.rpg.mana || 0)}/${formatNumber(user.rpg.maxMana || 50)}\n`;
+    caption += `- *ɢᴏʟᴅ:* 💰 ${formatNumber(user.rpg.gold || 0)}\n`;
+    caption += `- *ɢᴇᴍꜱ:* 💎 ${formatNumber(user.rpg.gems || 0)}\n`;
+    caption += `- *ᴛᴏᴋᴇɴꜱ:* 🎟️ ${formatNumber(user.rpg.tokens || 0)}\n`;
+    caption += `- *ᴇɴᴇʀɢʏ:* ⚡ ${formatNumber(user.rpg.energy || 0)}/${formatNumber(user.rpg.maxEnergy || 100)}\n`;
+    caption += `- *ᴍᴀɴᴀ:* 💧 ${formatNumber(user.rpg.mana || 0)}/${formatNumber(user.rpg.maxMana || 50)}\n`;
     caption += `- *HP:* ❤️ ${formatNumber(user.rpg.hp || 0)}/${formatNumber(user.rpg.maxHp || 100)}\n`;
-    caption += `- *Stamina:* 🏃 ${formatNumber(user.rpg.stamina || 0)}/${formatNumber(user.rpg.maxStamina || 100)}\n`;
+    caption += `- *ꜱᴛᴀᴍɪɴᴀ:* 🏃 ${formatNumber(user.rpg.stamina || 0)}/${formatNumber(user.rpg.maxStamina || 100)}\n`;
   }
-  caption += `- *Sisa Energi Bot:* ${isOwnerUser || isPremiumUser ? "∞ Unlimited" : (user.energi ?? 25)}\n`;
+  caption += `- *ꜱɪꜱᴀ ᴇɴᴇʀɢɪ ʙᴏᴛ:* ${isOwnerUser || isPremiumUser ? "∞ Unlimited" : (user.energi ?? 25)}\n`;
   if (user.registeredAt) {
-      caption += `- *Tanggal Terdaftar:* ${new Date(user.registeredAt).toLocaleDateString("id-ID")}\n`;
+      caption += `- *ᴛᴀɴɢɢᴀʟ ᴛᴇʀᴅᴀꜰᴛᴀʀ:* ${new Date(user.registeredAt).toLocaleDateString("id-ID")}\n`;
   }
   if (user.clanId) caption += `- *Klan / Guild:* ${user.clanId}\n`;
   if (user.rpg && user.rpg.spouse) {
@@ -165,107 +165,107 @@ async function handler(m, { sock }) {
 
   caption += `\n*〔 ⚔️ RPG STATS 〕*\n`;
   caption += `- *Role / Pangkat:* ${role}\n`;
-  caption += `- *Level:* ${user.rpg.level}\n`;
-  caption += `- *Total Exp:* ${formatNumber(userExp)} XP\n`;
-  caption += `- *Progress:* ${getLevelBar(expInLevel, expNeeded)}\n  _${formatNumber(expInLevel)} / ${formatNumber(expNeeded)} XP_\n`;
+  caption += `- *ʟᴇᴠᴇʟ:* ${user.rpg.level}\n`;
+  caption += `- *ᴛᴏᴛᴀʟ ᴇxᴘ:* ${formatNumber(userExp)} XP\n`;
+  caption += `- *ᴘʀᴏɢʀᴇꜱꜱ:* ${getLevelBar(expInLevel, expNeeded)}\n  _${formatNumber(expInLevel)} / ${formatNumber(expNeeded)} XP_\n`;
   if (user.rpg) {
     caption += `\n*〔 ❤️ VITAL 〕*\n`;
     caption += `- *HP:* ${formatNumber(user.rpg.hp || 0)} / ${formatNumber(user.rpg.maxHp || 100)}\n`;
-    caption += `- *Mana:* ${formatNumber(user.rpg.mana || 0)} / ${formatNumber(user.rpg.maxMana || 50)}\n`;
-    caption += `- *Energy:* ${formatNumber(user.rpg.energy || 0)} / ${formatNumber(user.rpg.maxEnergy || 100)}\n`;
-    caption += `- *Stamina:* ${formatNumber(user.rpg.stamina || 0)} / ${formatNumber(user.rpg.maxStamina || 100)}\n`;
+    caption += `- *ᴍᴀɴᴀ:* ${formatNumber(user.rpg.mana || 0)} / ${formatNumber(user.rpg.maxMana || 50)}\n`;
+    caption += `- *ᴇɴᴇʀɢʏ:* ${formatNumber(user.rpg.energy || 0)} / ${formatNumber(user.rpg.maxEnergy || 100)}\n`;
+    caption += `- *ꜱᴛᴀᴍɪɴᴀ:* ${formatNumber(user.rpg.stamina || 0)} / ${formatNumber(user.rpg.maxStamina || 100)}\n`;
     caption += `\n*〔 💪 COMBAT 〕*\n`;
-    caption += `- *ATK:* ${formatNumber(user.rpg.atk || 10)}\n`;
-    caption += `- *DEF:* ${formatNumber(user.rpg.def || 5)}\n`;
-    caption += `- *SPD:* ${formatNumber(user.rpg.spd || 10)}\n`;
-    caption += `- *Crit Rate:* ${user.rpg.critRate || 5}%\n`;
-    caption += `- *Crit DMG:* ${user.rpg.critDmg || 50}%\n`;
-    caption += `- *Evasion:* ${user.rpg.evasion || 3}%\n`;
-    caption += `- *Accuracy:* ${user.rpg.accuracy || 95}%\n`;
-    caption += `- *Lifesteal:* ${user.rpg.lifesteal || 0}%\n`;
-    caption += `- *Penetration:* ${user.rpg.penetration || 0}%\n`;
+    caption += `- *ᴀᴛᴋ:* ${formatNumber(user.rpg.atk || 10)}\n`;
+    caption += `- *ᴅᴇꜰ:* ${formatNumber(user.rpg.def || 5)}\n`;
+    caption += `- *ꜱᴘᴅ:* ${formatNumber(user.rpg.spd || 10)}\n`;
+    caption += `- *ᴄʀɪᴛ ʀᴀᴛᴇ:* ${user.rpg.critRate || 5}%\n`;
+    caption += `- *ᴄʀɪᴛ ᴅᴍɢ:* ${user.rpg.critDmg || 50}%\n`;
+    caption += `- *ᴇᴠᴀꜱɪᴏɴ:* ${user.rpg.evasion || 3}%\n`;
+    caption += `- *ᴀᴄᴄᴜʀᴀᴄʏ:* ${user.rpg.accuracy || 95}%\n`;
+    caption += `- *ʟɪꜰᴇꜱᴛᴇᴀʟ:* ${user.rpg.lifesteal || 0}%\n`;
+    caption += `- *ᴘᴇɴᴇᴛʀᴀᴛɪᴏɴ:* ${user.rpg.penetration || 0}%\n`;
     caption += `\n*〔 🎲 LUCK & BONUS 〕*\n`;
-    caption += `- *Luck:* ${formatNumber(user.rpg.luck || 0)}\n`;
-    caption += `- *Drop Bonus:* ${user.rpg.dropBonus || 0}%\n`;
-    caption += `- *Gold Find:* ${user.rpg.goldFind || 0}%\n`;
-    caption += `- *EXP Bonus:* ${user.rpg.expBonus || 0}%\n`;
+    caption += `- *ʟᴜᴄᴋ:* ${formatNumber(user.rpg.luck || 0)}\n`;
+    caption += `- *ᴅʀᴏᴘ ʙᴏɴᴜꜱ:* ${user.rpg.dropBonus || 0}%\n`;
+    caption += `- *ɢᴏʟᴅ ꜰɪɴᴅ:* ${user.rpg.goldFind || 0}%\n`;
+    caption += `- *ᴇxᴘ ʙᴏɴᴜꜱ:* ${user.rpg.expBonus || 0}%\n`;
     caption += `\n*〔 🛡️ EQUIPMENT 〕*\n`;
-    caption += `- *Weapon:* ${user.rpg.equipWeapon ? user.rpg.equipWeapon.name + " +" + (user.rpg.equipWeapon.enchant || 0) : "Kosong"}\n`;
-    caption += `- *Armor:* ${user.rpg.equipArmor ? user.rpg.equipArmor.name + " +" + (user.rpg.equipArmor.enchant || 0) : "Kosong"}\n`;
-    caption += `- *Helmet:* ${user.rpg.equipHelmet ? user.rpg.equipHelmet.name + " +" + (user.rpg.equipHelmet.enchant || 0) : "Kosong"}\n`;
-    caption += `- *Boots:* ${user.rpg.equipBoots ? user.rpg.equipBoots.name + " +" + (user.rpg.equipBoots.enchant || 0) : "Kosong"}\n`;
-    caption += `- *Accessory:* ${user.rpg.equipAccessory ? user.rpg.equipAccessory.name + " +" + (user.rpg.equipAccessory.enchant || 0) : "Kosong"}\n`;
-    caption += `- *Ring:* ${user.rpg.equipRing ? user.rpg.equipRing.name + " +" + (user.rpg.equipRing.enchant || 0) : "Kosong"}\n`;
-    caption += `- *Shield:* ${user.rpg.equipShield ? user.rpg.equipShield.name + " +" + (user.rpg.equipShield.enchant || 0) : "Kosong"}\n`;
+    caption += `- *ᴡᴇᴀᴘᴏɴ:* ${user.rpg.equipWeapon ? user.rpg.equipWeapon.name + " +" + (user.rpg.equipWeapon.enchant || 0) : "Kosong"}\n`;
+    caption += `- *ᴀʀᴍᴏʀ:* ${user.rpg.equipArmor ? user.rpg.equipArmor.name + " +" + (user.rpg.equipArmor.enchant || 0) : "Kosong"}\n`;
+    caption += `- *ʜᴇʟᴍᴇᴛ:* ${user.rpg.equipHelmet ? user.rpg.equipHelmet.name + " +" + (user.rpg.equipHelmet.enchant || 0) : "Kosong"}\n`;
+    caption += `- *ʙᴏᴏᴛꜱ:* ${user.rpg.equipBoots ? user.rpg.equipBoots.name + " +" + (user.rpg.equipBoots.enchant || 0) : "Kosong"}\n`;
+    caption += `- *ᴀᴄᴄᴇꜱꜱᴏʀʏ:* ${user.rpg.equipAccessory ? user.rpg.equipAccessory.name + " +" + (user.rpg.equipAccessory.enchant || 0) : "Kosong"}\n`;
+    caption += `- *ʀɪɴɢ:* ${user.rpg.equipRing ? user.rpg.equipRing.name + " +" + (user.rpg.equipRing.enchant || 0) : "Kosong"}\n`;
+    caption += `- *ꜱʜɪᴇʟᴅ:* ${user.rpg.equipShield ? user.rpg.equipShield.name + " +" + (user.rpg.equipShield.enchant || 0) : "Kosong"}\n`;
     caption += `\n*〔 🎓 PROFESSION 〕*\n`;
-    caption += `- *Job:* ${user.rpg.job || "novice"}\n`;
-    caption += `- *Job Level:* ${formatNumber(user.rpg.jobLevel || 1)}\n`;
-    caption += `- *Skill Points:* ${formatNumber(user.rpg.skillPoints || 0)}\n`;
-    caption += `- *Skills:* ${formatNumber((user.rpg.skills || []).length)}\n`;
+    caption += `- *ᴊᴏʙ:* ${user.rpg.job || "novice"}\n`;
+    caption += `- *ᴊᴏʙ ʟᴇᴠᴇʟ:* ${formatNumber(user.rpg.jobLevel || 1)}\n`;
+    caption += `- *ꜱᴋɪʟʟ ᴘᴏɪɴᴛꜱ:* ${formatNumber(user.rpg.skillPoints || 0)}\n`;
+    caption += `- *ꜱᴋɪʟʟꜱ:* ${formatNumber((user.rpg.skills || []).length)}\n`;
     caption += `\n*〔 🏆 RECORDS 〕*\n`;
-    caption += `- *PvP:* ${formatNumber(user.rpg.pvpWins || 0)}W / ${formatNumber(user.rpg.pvpLosses || 0)}L\n`;
-    caption += `- *PvP Rating:* ${formatNumber(user.rpg.pvpRating || 1000)}\n`;
-    caption += `- *PvP Streak:* ${formatNumber(user.rpg.pvpStreak || 0)} (Best: ${formatNumber(user.rpg.pvpBestStreak || 0)})\n`;
-    caption += `- *Total Kills:* ${formatNumber(user.rpg.totalKills || 0)}\n`;
-    caption += `- *Boss Kills:* ${formatNumber(user.rpg.bossKills || 0)}\n`;
-    caption += `- *Dungeon Clears:* ${formatNumber(user.rpg.dungeonClears || 0)}\n`;
+    caption += `- *ᴘᴠᴘ:* ${formatNumber(user.rpg.pvpWins || 0)}W / ${formatNumber(user.rpg.pvpLosses || 0)}L\n`;
+    caption += `- *ᴘᴠᴘ ʀᴀᴛɪɴɢ:* ${formatNumber(user.rpg.pvpRating || 1000)}\n`;
+    caption += `- *ᴘᴠᴘ ꜱᴛʀᴇᴀᴋ:* ${formatNumber(user.rpg.pvpStreak || 0)} (Best: ${formatNumber(user.rpg.pvpBestStreak || 0)})\n`;
+    caption += `- *ᴛᴏᴛᴀʟ ᴋɪʟʟꜱ:* ${formatNumber(user.rpg.totalKills || 0)}\n`;
+    caption += `- *ʙᴏꜱꜱ ᴋɪʟʟꜱ:* ${formatNumber(user.rpg.bossKills || 0)}\n`;
+    caption += `- *ᴅᴜɴɢᴇᴏɴ ᴄʟᴇᴀʀꜱ:* ${formatNumber(user.rpg.dungeonClears || 0)}\n`;
     caption += `\n*〔 🎯 MISC 〕*\n`;
-    caption += `- *Daily Streak:* ${formatNumber(user.rpg.dailyStreak || 0)} hari\n`;
-    caption += `- *Achievements:* ${formatNumber((user.rpg.achievements || []).length)} (Points: ${formatNumber(user.rpg.achievementPoints || 0)})\n`;
-    caption += `- *Inventory:* ${formatNumber(Object.keys(user.rpg.inventory || {}).length)} jenis item\n`;
+    caption += `- *ᴅᴀɪʟʏ ꜱᴛʀᴇᴀᴋ:* ${formatNumber(user.rpg.dailyStreak || 0)} hari\n`;
+    caption += `- *ᴀᴄʜɪᴇᴠᴇᴍᴇɴᴛꜱ:* ${formatNumber((user.rpg.achievements || []).length)} (Points: ${formatNumber(user.rpg.achievementPoints || 0)})\n`;
+    caption += `- *ɪɴᴠᴇɴᴛᴏʀʏ:* ${formatNumber(Object.keys(user.rpg.inventory || {}).length)} jenis item\n`;
     if (user.rpg.rebirthCount) {
-      caption += `- *Rebirth:* ${formatNumber(user.rpg.rebirthCount)}x (Bonus: ${user.rpg.permBonus || 0}%)\n`;
+      caption += `- *ʀᴇʙɪʀᴛʜ:* ${formatNumber(user.rpg.rebirthCount)}x (Bonus: ${user.rpg.permBonus || 0}%)\n`;
     }
     if (user.rpg.title) {
-      caption += `- *Title:* ${user.rpg.title}\n`;
+      caption += `- *ᴛɪᴛʟᴇ:* ${user.rpg.title}\n`;
     }
   }
 
   caption += `\n*〔 💰 ASET & KEUANGAN 〕*\n`;
-  caption += `- *Koin:* 🪙 ${formatNumber(user.koin || 0)} _(Digunakan untuk fitur bot)_\n`;
-  caption += `- *Saldo:* 💵 ${formatNumber(user.saldo || 0)}\n`;
+  caption += `- *ᴋᴏɪɴ:* 🪙 ${formatNumber(user.koin || 0)} _(Digunakan untuk fitur bot)_\n`;
+  caption += `- *ꜱᴀʟᴅᴏ:* 💵 ${formatNumber(user.saldo || 0)}\n`;
   if (user.rpg) {
-    caption += `- *Gold RPG:* 💰 ${formatNumber(user.rpg.gold || 0)}\n`;
-    caption += `- *Gems:* 💎 ${formatNumber(user.rpg.gems || 0)}\n`;
-    caption += `- *Tokens:* 🎟️ ${formatNumber(user.rpg.tokens || 0)}\n`;
+    caption += `- *ɢᴏʟᴅ ʀᴘɢ:* 💰 ${formatNumber(user.rpg.gold || 0)}\n`;
+    caption += `- *ɢᴇᴍꜱ:* 💎 ${formatNumber(user.rpg.gems || 0)}\n`;
+    caption += `- *ᴛᴏᴋᴇɴꜱ:* 🎟️ ${formatNumber(user.rpg.tokens || 0)}\n`;
   }
-  caption += `- *Energi Bot:* ⚡ ${isOwnerUser || isPremiumUser ? "∞ Unlimited" : (user.energi ?? 25)}\n`;
+  caption += `- *ᴇɴᴇʀɢɪ ʙᴏᴛ:* ⚡ ${isOwnerUser || isPremiumUser ? "∞ Unlimited" : (user.energi ?? 25)}\n`;
 
   caption += `\n*〔 📱 WHATSAPP INFO 〕*\n`;
-  caption += `- *Nomor:* +${phone}\n`;
-  caption += `- *Eksistensi WA:* ${exists ? 'Ya' : 'Tidak'}\n`;
-  caption += `- *JID:* ${canonicalJid}\n`;
-  caption += `- *LID:* ${lid || '-'}\n`;
-  caption += `- *Tipe:* ${isGroup ? 'Group' : (isLid ? 'LID' : 'S.WhatsApp.Net')}\n`;
-  caption += `- *Bot WhatsApp:* ${isBot ? 'Ya' : 'Bukan'}\n`;
-  caption += `- *Device ID:* ${deviceId || '-'}\n`;
+  caption += `- *ɴᴏᴍᴏʀ:* +${phone}\n`;
+  caption += `- *ᴇᴋꜱɪꜱᴛᴇɴꜱɪ ᴡᴀ:* ${exists ? 'Ya' : 'Tidak'}\n`;
+  caption += `- *ᴊɪᴅ:* ${canonicalJid}\n`;
+  caption += `- *ʟɪᴅ:* ${lid || '-'}\n`;
+  caption += `- *ᴛɪᴘᴇ:* ${isGroup ? 'Group' : (isLid ? 'LID' : 'S.WhatsApp.Net')}\n`;
+  caption += `- *ʙᴏᴛ ᴡʜᴀᴛꜱᴀᴘᴘ:* ${isBot ? 'Ya' : 'Bukan'}\n`;
+  caption += `- *ᴅᴇᴠɪᴄᴇ ɪᴅ:* ${deviceId || '-'}\n`;
 
   caption += `\n*〔 ℹ️ BIO & PROFILE 〕*\n`;
-  caption += `- *Avatar:* ${ppUrl ? 'Ada' : 'Tidak Ada'}\n`;
-  caption += `- *Bio:* ${status || '-'}\n`;
-  caption += `- *Bio Set:* ${fmtDate(statusTs) || '-'}\n`;
+  caption += `- *ᴀᴠᴀᴛᴀʀ:* ${ppUrl ? 'Ada' : 'Tidak Ada'}\n`;
+  caption += `- *ʙɪᴏ:* ${status || '-'}\n`;
+  caption += `- *ʙɪᴏ ꜱᴇᴛ:* ${fmtDate(statusTs) || '-'}\n`;
 
   caption += `\n*〔 🏢 BUSINESS INFO 〕*\n`;
-  caption += `- *Tipe Akun:* ${isBiz ? 'WhatsApp Business' : 'WhatsApp Biasa'}\n`;
+  caption += `- *ᴛɪᴘᴇ ᴀᴋᴜɴ:* ${isBiz ? 'WhatsApp Business' : 'WhatsApp Biasa'}\n`;
   if (isBiz) {
-    caption += `- *Deskripsi:* ${bizProfile.description || '-'}\n`;
-    caption += `- *Website:* ${(bizProfile.website || []).join(', ') || '-'}\n`;
-    caption += `- *Email:* ${bizProfile.email || '-'}\n`;
-    caption += `- *Alamat:* ${bizProfile.address || '-'}\n`;
-    caption += `- *Kategori:* ${(bizProfile.categories || []).map(c => c.name || c).join(', ') || '-'}\n`;
-    caption += `- *Verified:* ${bizProfile.isProfileLinked ? 'Ya' : 'Tidak'}\n`;
+    caption += `- *ᴅᴇꜱᴋʀɪᴘꜱɪ:* ${bizProfile.description || '-'}\n`;
+    caption += `- *ᴡᴇʙꜱɪᴛᴇ:* ${(bizProfile.website || []).join(', ') || '-'}\n`;
+    caption += `- *ᴇᴍᴀɪʟ:* ${bizProfile.email || '-'}\n`;
+    caption += `- *ᴀʟᴀᴍᴀᴛ:* ${bizProfile.address || '-'}\n`;
+    caption += `- *ᴋᴀᴛᴇɢᴏʀɪ:* ${(bizProfile.categories || []).map(c => c.name || c).join(', ') || '-'}\n`;
+    caption += `- *ᴠᴇʀɪꜰɪᴇᴅ:* ${bizProfile.isProfileLinked ? 'Ya' : 'Tidak'}\n`;
     
     if (products > 0 || collectionsCount > 0) {
       caption += `\n*〔 🛍️ CATALOG 〕*\n`;
-      caption += `- *Total Produk:* ${products}\n`;
-      caption += `- *Koleksi:* ${collectionsCount}\n`;
+      caption += `- *ᴛᴏᴛᴀʟ ᴘʀᴏᴅᴜᴋ:* ${products}\n`;
+      caption += `- *ᴋᴏʟᴇᴋꜱɪ:* ${collectionsCount}\n`;
     }
   }
 
   caption += `\n*〔 🤖 BOT VIEWPOINT 〕*\n`;
-  caption += `- *Bot JID:* ${sock.user?.id || '-'}\n`;
-  caption += `- *Bot Platform:* ${sock.authState?.creds?.platform || process.platform || '-'}\n`;
-  caption += `- *Runtime:* Node ${process.version}\n`;
+  caption += `- *ʙᴏᴛ ᴊɪᴅ:* ${sock.user?.id || '-'}\n`;
+  caption += `- *ʙᴏᴛ ᴘʟᴀᴛꜰᴏʀᴍ:* ${sock.authState?.creds?.platform || process.platform || '-'}\n`;
+  caption += `- *ʀᴜɴᴛɪᴍᴇ:* Node ${process.version}\n`;
 
   if (user.inventory && Object.keys(user.inventory).length > 0) {
       const invItems = Object.entries(user.inventory).filter(([_, qty]) => qty > 0);

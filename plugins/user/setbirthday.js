@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
         const user = db.getUser(userJid)
         const currentBday = user?.birthday
         
-        let text = `🎂 *sEt Birthday*\n\n`
+        let text = `🎂 *ꜱᴇᴛ ʙɪʀᴛʜᴅᴀʏ*\n\n`
         
         if (currentBday) {
             text += `Birthday kamu: *${currentBday}*\n\n`
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
         text += `╭┈┈⬡「 📋 *ғOrmat* 」\n`
         text += `┃ ${m.prefix}setbirthday DD-MM\n`
         text += `╰┈┈┈┈┈┈┈┈⬡\n\n`
-        text += `*Contoh:*\n`
+        text += `*ᴄᴏɴᴛᴏʜ:*\n`
         text += `${m.prefix}setbirthday 25-12\n`
         text += `${m.prefix}setbirthday 01-01`
         
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     
     await m.reply(
         `✅ *Birthday Disimpan!*\n\n` +
-        `╭┈┈⬡「 🎂 *Detail* 」\n` +
+        `╭┈┈⬡「 🎂 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `┃ 📅 Tanggal: *${day} ${months[month - 1]}*\n` +
         `┃ 👤 User: @${cleanJid}\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +

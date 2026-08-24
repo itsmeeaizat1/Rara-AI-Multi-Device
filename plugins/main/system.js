@@ -48,7 +48,7 @@ async function getDiskUsage() {
             const { stdout } = await execAsync('df -h /');
             const lines = stdout.trim().split('\n');
             const parts = lines[1].replace(/\s+/g, ' ').split(' ');
-            return `💿 *Disk Usage*\nTotal: ${parts[1]}\nUsed: ${parts[2]}\nFree: ${parts[3]}\nUse%: ${parts[4]}`;
+            return `💿 *ᴅɪꜱᴋ ᴜꜱᴀɢᴇ*\nTotal: ${parts[1]}\nUsed: ${parts[2]}\nFree: ${parts[3]}\nUse%: ${parts[4]}`;
         }
     } catch (e) {
         return '❌ Gagal mengambil info disk';
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
                 const freeMem = os.freemem();
                 const usedMem = totalMem - freeMem;
                 
-                const text = `💻 *RAM USAGE*\n\n` +
+                const text = `💻 *ʀᴀᴍ ᴜꜱᴀɢᴇ*\n\n` +
                              `Total: ${formatSize(totalMem)}\n` +
                              `Used: ${formatSize(usedMem)}\n` +
                              `Free: ${formatSize(freeMem)}\n` +
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
                 const speed = cpus[0].speed;
                 const cores = cpus.length;
                 
-                const text = `🖥️ *CPU INFO*\n\n` +
+                const text = `🖥️ *ᴄᴘᴜ ɪɴꜰᴏ*\n\n` +
                              `Model: ${model}\n` +
                              `Speed: ${speed} MHz\n` +
                              `Cores: ${cores} Core(s)\n` +
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
                 const minutes = Math.floor((uptime % 3600) / 60);
                 const seconds = Math.floor(uptime % 60);
                 const uptimeStr = `${hours}h ${minutes}m ${seconds}s`;
-                m.reply(claraWrap("System", `🖥️ *CPU INFO*\n\nModel: ${model}\nSpeed: ${speed} MHz\nCores: ${cores}\nServer Uptime: ${uptimeStr}`));
+                m.reply(claraWrap("System", `🖥️ *ᴄᴘᴜ ɪɴꜰᴏ*\n\nModel: ${model}\nSpeed: ${speed} MHz\nCores: ${cores}\nServer Uptime: ${uptimeStr}`));
             }
             break;
 

@@ -143,7 +143,7 @@ async function pddikti(input) {
 async function handler(m, { sock,  args }) {
   if (args.length === 0) {
     return m.reply(
-      `🎓 *PDDIKTI SEARCH*\n\n` +
+      `🎓 *ᴘᴅᴅɪᴋᴛɪ ꜱᴇᴀʀᴄʜ*\n\n` +
       `Mode pencarian:\n` +
       `- \`.pddikti all <query>\`\n` +
       `- \`.pddikti mhs <nama/NIM>\`\n` +
@@ -151,7 +151,7 @@ async function handler(m, { sock,  args }) {
       `- \`.pddikti pt <nama_kampus>\`\n` +
       `- \`.pddikti prodi <nama_prodi>\`\n` +
       `- \`.pddikti detail <id_mahasiswa>\`\n\n` +
-      `*Contoh:* \`.pddikti mhs Gibran Rakabuming\``
+      `*ᴄᴏɴᴛᴏʜ:* \`.pddikti mhs Gibran Rakabuming\``
     );
   }
 
@@ -170,7 +170,7 @@ async function handler(m, { sock,  args }) {
       }
       
       const r = res.Result;
-      let txt = `🎓 *DETAIL MAHASISWA*\n\n`;
+      let txt = `🎓 *ᴅᴇᴛᴀɪʟ ᴍᴀʜᴀꜱɪꜱᴡᴀ*\n\n`;
       txt += `- 📝 Nama          : *${r.nama}*\n`;
       txt += `- 🆔 NIM           : *${r.nim}*\n`;
       txt += `- 👤 Jenis Kelamin : *${r.jenisKelamin ?? "-"}*\n`;

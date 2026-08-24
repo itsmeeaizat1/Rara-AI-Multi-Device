@@ -22,11 +22,11 @@ const pluginConfig = {
 
 async function handler(m, { args, sock }) {
   if (!args[0]) {
-    let txt = `🔗 *SKIPLINK BYPASS* 🔗\n\n`;
+    let txt = `🔗 *ꜱᴋɪᴘʟɪɴᴋ ʙʏᴘᴀꜱꜱ* 🔗\n\n`;
     txt += `Halo kak! Punya link yang ribet ngelewatin iklan? Sini aku bantu lewatin biar langsung ke tujuan akhir!\n\n`;
-    txt += `*Cara Pakai:*\n`;
+    txt += `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
     txt += `👉 \`${m.prefix}izen <link>\`\n\n`;
-    txt += `*Contoh:*\n`;
+    txt += `*ᴄᴏɴᴛᴏʜ:*\n`;
     txt += `👉 \`${m.prefix}izen https://sfl.gl/xxxxx\``;
     return await m.reply(claraWrap("izen", txt));
   }
@@ -42,9 +42,9 @@ async function handler(m, { args, sock }) {
     }
     
     const txt = claraWrap("Bypass Link", [
-      `*Link Asli:*`,
+      `*ʟɪɴᴋ ᴀꜱʟɪ:*`,
       `🔗 ${args[0]}`,
-      `*Hasil Bypass:*`,
+      `*ʜᴀꜱɪʟ ʙʏᴘᴀꜱꜱ:*`,
       `🚀 ${json.data.result.result}`,
     ]);
     

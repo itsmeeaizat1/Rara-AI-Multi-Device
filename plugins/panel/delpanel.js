@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
     
     if (!serverId) {
         return m.reply(
-            `⚠️ *Cara Pakai*\n\n` +
+            `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
             `\`${m.prefix}delpanel ID\` - Hapus server saja\n` +
             `\`${m.prefix}delpanel ID full\` - Hapus server + user\n` +
             `\`${m.prefix}delpanel s2 ID\` - Dari server 2\n\n` +
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
             isUserAdmin = userInfo.root_admin
         } catch (e) { console.error('[delpanel.js]:', e.message); }
         
-        await m.reply(`🗑️ *Menghapus Panel...*\n\nServer: *${serverLabel}*\nPanel: \`${server.name}\`\nMode: *${option === 'full' ? 'Server + User' : 'Server saja'}*`)
+        await m.reply(`🗑️ *ᴍᴇɴɢʜᴀᴘᴜꜱ ᴘᴀɴᴇʟ...*\n\nServer: *${serverLabel}*\nPanel: \`${server.name}\`\nMode: *${option === 'full' ? 'Server + User' : 'Server saja'}*`)
         
         await axios.delete(`${serverConfig.domain}/api/application/servers/${serverId}`, {
             headers: {
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
                         'Accept': 'Application/vnd.pterodactyl.v1+json'
                     }
                 })
-                result += `\n✅ *User Dihapus*\n`
+                result += `\n✅ *ᴜꜱᴇʀ ᴅɪʜᴀᴘᴜꜱ*\n`
                 result += `Username: \`${userInfo.username}\`\n`
                 result += `ID: \`${userId}\``
             } catch (userErr) {

@@ -27,9 +27,9 @@ async function handler(m, { sock }) {
   }
 
   if (!text) {
-    return m.reply( `📋 *PAsTEBIN UPLOAD*\n\n` +
+    return m.reply( `📋 *ᴘᴀꜱᴛᴇʙɪɴ ᴜᴘʟᴏᴀᴅ*\n\n` +
         `Kirim teks untuk di-upload ke Pastebin.\n\n` +
-        `*Cara pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `\`${m.prefix}pastebin <text>\`\n` +
         `Reply teks dengan \`${m.prefix}pastebin\`\n\n` +
         `Contoh: \`${m.prefix}pastebin console.log("Hello")\``, "pastebin");
@@ -60,11 +60,11 @@ async function handler(m, { sock }) {
     const url = res.data;
 
     if (url.startsWith("Bad API request")) {
-      { const __navText = `❌ *GAGAL*\n\n${url}`; return await m.reply(__navText); };
+      { const __navText = `❌ *ɢᴀɢᴀʟ*\n\n${url}`; return await m.reply(__navText); };
     }
 
     const responseText =
-      `✅ *PAsTEBIN BERHAsIL*\n\n` +
+      `✅ *ᴘᴀꜱᴛᴇʙɪɴ ʙᴇʀʜᴀꜱɪʟ*\n\n` +
       `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ DETAIL\n` +
       `  ┊  ➶ 📝 JUDUL: *${api_paste_name}*\n` +
       `  ┊  ➶ 📊 UKURAN: *${text.length} chars*\n` +

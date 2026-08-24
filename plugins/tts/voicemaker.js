@@ -30,11 +30,11 @@ const VOICES = [
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    let help = "🎙️ *VoiceMaker TTS*\n\n";
+    let help = "🎙️ *ᴠᴏɪᴄᴇᴍᴀᴋᴇʀ ᴛᴛꜱ*\n\n";
     help += "Gunakan:\n";
     help += `\`${m.prefix}voicemaker <teks>\` - Default (Ardi)\n`;
     help += `\`${m.prefix}voicemaker <voice>|<teks>\` - Pilih voice\n\n`;
-    help += "*Voice tersedia:*\n";
+    help += "*ᴠᴏɪᴄᴇ ᴛᴇʀꜱᴇᴅɪᴀ:*\n";
     for (const v of VOICES) {
       help += `${v.id} - ${v.name}\n`;
     }

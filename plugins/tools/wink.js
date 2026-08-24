@@ -24,9 +24,9 @@ async function handler(m, { sock }) {
   let isDocumentMessage = (m.type === "documentMessage" && m.message?.documentMessage?.mimetype?.startsWith("video")) || (m.quoted && m.quoted.type === "documentMessage" && m.quoted.message?.documentMessage?.mimetype?.startsWith("video"));
 
   if (!isVideoMessage && !isDocumentMessage) {
-    return m.reply( `✨ *WINK VIDEO ENHANCER*\n\n` +
-        `Bikin video buram jadi *Ultra HD* pakai AI Wink!\n\n` +
-        `*Cara pakai:*\n` +
+    return m.reply( `✨ *ᴡɪɴᴋ ᴠɪᴅᴇᴏ ᴇɴʜᴀɴᴄᴇʀ*\n\n` +
+        `Bikin video buram jadi *ᴜʟᴛʀᴀ ʜᴅ* pakai AI Wink!\n\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `Kirim/reply video lalu caption \`${m.prefix}wink\`\n\n` +
         `⚠️ _Fitur Premium, proses estimasi 1-5 menit tergantung durasi video_`, "wink");
   }
@@ -37,16 +37,16 @@ async function handler(m, { sock }) {
     const videoBuffer = (await m?.quoted?.download?.()) || (await m.download?.());
 
     if (!videoBuffer || videoBuffer.length === 0) {
-      return m.reply(claraWrap("wink", `❌ *GAGAL*\n\nVideonya gagal diunduh, coba kirim ulang ya!`));
+      return m.reply(claraWrap("wink", `❌ *ɢᴀɢᴀʟ*\n\nVideonya gagal diunduh, coba kirim ulang ya!`));
     }
 
     if (videoBuffer.length > 50 * 1024 * 1024) {
-      return m.reply(claraWrap("Wink", `❌ *FILE TERLALU BESAR*\n\nMaksimal ukuran video cuma *50MB* ya!`));
+      return m.reply(claraWrap("Wink", `❌ *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*\n\nMaksimal ukuran video cuma *50MB* ya!`));
     }
 
     await m.reply(
-      `🎬 *PROsEs WINK ENHANCE DIMULAI*\n\n` +
-        `Video lagi diproses AI Wink biar jadi *Ultra HD* ✨\n` +
+      `🎬 *ᴘʀᴏꜱᴇꜱ ᴡɪɴᴋ ᴇɴʜᴀɴᴄᴇ ᴅɪᴍᴜʟᴀɪ*\n\n` +
+        `Video lagi diproses AI Wink biar jadi *ᴜʟᴛʀᴀ ʜᴅ* ✨\n` +
         `Estimasi *1-5 menit*, mohon sabar ya!`,
     );
 
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
       filename: `wink-${Date.now()}.mp4`,
     });
 
-    await sock.sendMedia(m.chat, result.resultUrl, `✨ *WINK ENHANCE sELEsAI!*\n\nIni dia hasilnya, udah jadi *Ultra HD* kan? 😍`, m, {
+    await sock.sendMedia(m.chat, result.resultUrl, `✨ *WINK ENHANCE sELEsAI!*\n\nIni dia hasilnya, udah jadi *ᴜʟᴛʀᴀ ʜᴅ* kan? 😍`, m, {
       type: "video",
       mimetype: "video/mp4",
       fileName: `WINK-HD-${Date.now()}.mp4`,

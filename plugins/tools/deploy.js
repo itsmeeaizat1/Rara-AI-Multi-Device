@@ -20,7 +20,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const name = m.args[0]
     if (!name) {
-        return m.reply(claraWrap("Deploy", `🚀 *DEPLOY*
+        return m.reply(claraWrap("Deploy", `🚀 *ᴅᴇᴘʟᴏʏ*
 
   ┊  ➶ Masukkan nama website
   ┊  ➶ Reply kode HTML atau file .html
@@ -31,7 +31,7 @@ Contoh:
 
     if (!m.quoted) {
         return m.reply(
-`❌ *HTML TIDAK DITEMUKAN*
+`❌ *ʜᴛᴍʟ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*
 
   ┊  ➶ Reply pesan berisi HTML
   ┊  ➶ atau reply file .html`
@@ -40,7 +40,7 @@ Contoh:
 
     const token = config.vercel?.token
     if (!token) {
-        { const __navText = claraWrap("Vercel token belum diset", '❌ *Vercel token belum diset*'); return await m.reply(__navText); }
+        { const __navText = claraWrap("Vercel token belum diset", '❌ *ᴠᴇʀᴄᴇʟ ᴛᴏᴋᴇɴ ʙᴇʟᴜᴍ ᴅɪꜱᴇᴛ*'); return await m.reply(__navText); }
     }
 
     m.react('🕐')
@@ -57,14 +57,14 @@ Contoh:
             const buffer = await m.quoted.download()
             htmlContent = buffer.toString()
         } else {
-            return m.reply(claraWrap("Deploy", `❌ *FORMAT TIDAK DIDUKUNG*
+            return m.reply(claraWrap("Deploy", `❌ *ꜰᴏʀᴍᴀᴛ ᴛɪᴅᴀᴋ ᴅɪᴅᴜᴋᴜɴɢ*
 
   ┊  ➶ Reply teks HTML
   ┊  ➶ atau file .html`))
         }
 
         if (!/<html|<!doctype html|<head|<body/i.test(htmlContent)) {
-            return m.reply(claraWrap("Deploy", `❌ *BUKAN HTML VALID*
+            return m.reply(claraWrap("Deploy", `❌ *ʙᴜᴋᴀɴ ʜᴛᴍʟ ᴠᴀʟɪᴅ*
 
   ┊  ➶ Pastikan berisi struktur HTML`))
         }

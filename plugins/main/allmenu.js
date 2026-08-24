@@ -142,25 +142,25 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
 
     return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Aʟʟ Mᴇɴᴜ
 ┊
-  ┊  ➶ *Nama:* ${m.pushName || "User"}
-  ┊  ➶ *Nomor:* @${m.sender.split("@")[0]}
-  ┊  ➶ *Role:* ${roleEmoji} ${userRole}
-  ┊  ➶ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
-  ┊  ➶ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
-  ┊  ➶ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
-  ┊  ➶ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
-  ┊  ➶ *Level:* ${userLevel}
+  ┊  ➶ *ɴᴀᴍᴀ:* ${m.pushName || "User"}
+  ┊  ➶ *ɴᴏᴍᴏʀ:* @${m.sender.split("@")[0]}
+  ┊  ➶ *ʀᴏʟᴇ:* ${roleEmoji} ${userRole}
+  ┊  ➶ *ᴘʀᴇᴍɪᴜᴍ:* ${m.isPremium ? "Aktif" : "Free"}
+  ┊  ➶ *ᴇɴᴇʀɢɪ:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
+  ┊  ➶ *ᴋᴏɪɴ:* ${(user?.koin ?? 0).toLocaleString()}
+  ┊  ➶ *ʟɪᴍɪᴛ:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
+  ┊  ➶ *ʟᴇᴠᴇʟ:* ${userLevel}
   ┊  ➶ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
-  ┊  ➶ *Total Xp:* ${userExp.toLocaleString()}
-  ┊  ➶ *Status:* ${user?.isBanned ? "Banned" : "Aktif"}
+  ┊  ➶ *ᴛᴏᴛᴀʟ xᴘ:* ${userExp.toLocaleString()}
+  ┊  ➶ *ꜱᴛᴀᴛᴜꜱ:* ${user?.isBanned ? "Banned" : "Aktif"}
 ╠┈┈「 *Iɴғᴏ Bᴏᴛ* 」
-  ┊  ➶ *Bot:* ${botConfig.bot?.name || "Nova AI"}
-  ┊  ➶ *Version:* ${botConfig.bot?.version || "-"}
-  ┊  ➶ *Prefix:* [ *${prefix}* ]
-  ┊  ➶ *Uptime:* ${runtimeStr}
-  ┊  ➶ *Total User:* ${totalUsers}
-  ┊  ➶ *Waktu:* ${timeStr} WIB
-  ┊  ➶ *Tanggal:* ${dateStr}
+  ┊  ➶ *ʙᴏᴛ:* ${botConfig.bot?.name || "Nova AI"}
+  ┊  ➶ *ᴠᴇʀꜱɪᴏɴ:* ${botConfig.bot?.version || "-"}
+  ┊  ➶ *ᴘʀᴇꜰɪx:* [ *${prefix}* ]
+  ┊  ➶ *ᴜᴘᴛɪᴍᴇ:* ${runtimeStr}
+  ┊  ➶ *ᴛᴏᴛᴀʟ ᴜꜱᴇʀ:* ${totalUsers}
+  ┊  ➶ *ᴡᴀᴋᴛᴜ:* ${timeStr} WIB
+  ┊  ➶ *ᴛᴀɴɢɢᴀʟ:* ${dateStr}
 ${weatherBlock ? weatherBlock : ""}❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${readMore}
 ${categoryBlocks}

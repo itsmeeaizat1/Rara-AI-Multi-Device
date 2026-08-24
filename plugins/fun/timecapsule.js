@@ -29,7 +29,7 @@ const PRESETS = [
 
 function buildMenu(prefix) {
   return (
-    claraWrap("Time Capsule", ["  ┊  ➶ Fitur: *Time Capsule*",
+    claraWrap("Time Capsule", ["  ┊  ➶ Fitur: *ᴛɪᴍᴇ ᴄᴀᴘꜱᴜʟᴇ*",
       "  ┊  ➶ Konsep: *Pesan dikunci, terbuka nanti*",
       "  ┊  ➶ Cooldown: *10 detik*"].join("\n")) +
     "\n" +
@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!Number.isInteger(days) || days <= 0 || !message) {
       const text =
-        claraWrap("Time Capsule", ["  ┊  ➶ Alasan: *Format salah*",
+        claraWrap("Time Capsule", ["  ┊  ➶ Alasan: *ꜰᴏʀᴍᴀᴛ ꜱᴀʟᴀʜ*",
           `  ┊  ➶ Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}timecapsule untuk melihat menu`);
@@ -89,7 +89,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(claraWrap("timecapsule", text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
+      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

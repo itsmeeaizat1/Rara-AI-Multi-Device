@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetJid) {
-    return m.reply( `⚠️ *Cara Pakai*\n\n` +
+    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `\`${m.prefix}jadian @tag\`\n\n` +
         `Contoh:\n` +
         `\`${m.prefix}jadian @628xxx\`\n` +
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
   if (senderData.fun.pasangan) {
     const partnerData = db.getUser(senderData.fun.pasangan);
     if (partnerData?.fun?.pasangan === m.sender) {
-      return m.reply(`❌ *sUdah Punya Pasangan*\n\n` +
+      return m.reply(`❌ *ꜱᴜᴅᴀʜ ᴘᴜɴʏᴀ ᴘᴀꜱᴀɴɢᴀɴ*\n\n` +
           `Pasanganmu: @${senderData.fun.pasangan.split("@")[0]}\n` +
           `Putus dulu sama ${partnerData.name} dengan cara: \`${m.prefix}putus\``);
     }
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
   if (targetData.fun.pasangan && targetData.fun.pasangan !== m.sender) {
     const targetPartner = db.getUser(targetData.fun.pasangan);
     if (targetPartner?.fun?.pasangan === targetJid) {
-      return m.reply(claraWrap("jadian", `💔 *Dia sUdah Pacaran*\n\n` +
+      return m.reply(claraWrap("jadian", `💔 *ᴅɪᴀ ꜱᴜᴅᴀʜ ᴘᴀᴄᴀʀᴀɴ*\n\n` +
           `Pasangannya: @${targetData.fun.pasangan.split("@")[0]}`));
     }
   }
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
 
   const ctx = saluranCtx();
   ctx.mentionedJid = [targetJid, m.sender];
-  const sentMsg = await m.reply(`💘 *ADA YANG NEMBAK NIHH*\n\n` +
+  const sentMsg = await m.reply(`💘 *ᴀᴅᴀ ʏᴀɴɢ ɴᴇᴍʙᴀᴋ ɴɪʜʜ*\n\n` +
       `Hei @${targetJid.split("@")[0]} , kamu ditembak oleh @${m.sender.split("@")[0]} nichh\n\n` +
       `⏱️ Berlaku *1 jam* dari sekarang\n` +
       `gunakan: \`${m.prefix}terima\` / \`${m.prefix}tolak\``);

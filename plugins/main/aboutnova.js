@@ -38,12 +38,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Aʙᴏᴜᴛ Nᴏᴠᴀ
 ┊
-  ┊  ➶ *Nama:* ${toSC(botName)}
-  ┊  ➶ *Version:* ${version}
-  ┊  ➶ *Developer:* ${toSC(developer)}
-  ┊  ➶ *Platform:* WhatsApp Multi Device
-  ┊  ➶ *Library:* Baileys (nova-baileys)
-  ┊  ➶ *Runtime:* Node.js ${process.version}
+  ┊  ➶ *ɴᴀᴍᴀ:* ${toSC(botName)}
+  ┊  ➶ *ᴠᴇʀꜱɪᴏɴ:* ${version}
+  ┊  ➶ *ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${toSC(developer)}
+  ┊  ➶ *ᴘʟᴀᴛꜰᴏʀᴍ:* WhatsApp Multi Device
+  ┊  ➶ *ʟɪʙʀᴀʀʏ:* Baileys (nova-baileys)
+  ┊  ➶ *ʀᴜɴᴛɪᴍᴇ:* Node.js ${process.version}
 ┊
 ₊˚ʚ ᗢ₊˚✧ ﾟ. 🏠 Mᴀɪɴ Cᴏᴍᴍᴀɴᴅs ｡ﾟ
 ┊${cmdLines}₊˚ʚ ᗢ₊˚✧ ﾟ.

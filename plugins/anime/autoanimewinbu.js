@@ -45,7 +45,7 @@ async function handler(m, { sock, args }) {
             saveState({ ...state, enabled: true })
 
             return sock.sendMessage(m.chat, {
-                text: `✅ *Auto Anime sTarted*\n\n` +
+                text: `✅ *ᴀᴜᴛᴏ ᴀɴɪᴍᴇ ꜱᴛᴀʀᴛᴇᴅ*\n\n` +
                     `📲 Grup target: *${groups.length}*\n` +
                     `⏱️ Interval: *${interval} menit*\n` +
                     `🎞️ Filter: *Pixeldrain 720p+*\n` +
@@ -88,7 +88,7 @@ async function handler(m, { sock, args }) {
         case 'stop': {
             stopAutoCheck()
             saveState({ ...state, enabled: false })
-            return m.reply(claraWrap("Autoanimewinbu", `🛑 *AutoAnime dihentikan*`))
+            return m.reply(claraWrap("Autoanimewinbu", `🛑 *ᴀᴜᴛᴏᴀɴɪᴍᴇ ᴅɪʜᴇɴᴛɪᴋᴀɴ*`))
         }
 
         case 'status': {
@@ -96,7 +96,7 @@ async function handler(m, { sock, args }) {
             const running = isRunning()
             const groups = state.groups || []
 
-            let txt = `📊 *Auto Anime sTatus*\n\n`
+            let txt = `📊 *ᴀᴜᴛᴏ ᴀɴɪᴍᴇ ꜱᴛᴀᴛᴜꜱ*\n\n`
             txt += `🔄 Status: *${running ? '🟢 ON' : '🔴 OFF'}*\n`
             txt += `💾 Auto-start: *${state.enabled ? 'Ya' : 'Tidak'}*\n`
             txt += `📋 Sudah terkirim: *${sent.size}* episode\n`
@@ -104,7 +104,7 @@ async function handler(m, { sock, args }) {
             txt += `📲 Grup target: *${groups.length}*\n`
 
             if (groups.length > 0) {
-                txt += `\n*Grup:*\n`
+                txt += `\n*ɢʀᴜᴘ:*\n`
                 groups.forEach((g, i) => {
                     txt += `${i + 1}. \`${g}\`\n`
                 })
@@ -133,7 +133,7 @@ async function handler(m, { sock, args }) {
                 const list = await getOngoingAnimeList()
                 if (list.length === 0) return m.reply(claraWrap("Autoanimewinbu", '❌ Tidak ada anime ditemukan'))
 
-                let txt = `📺 *Daftar Anime Terbaru*\n\n`
+                let txt = `📺 *ᴅᴀꜰᴛᴀʀ ᴀɴɪᴍᴇ ᴛᴇʀʙᴀʀᴜ*\n\n`
                 txt += `Total: *${list.length}* anime\n\n`
                 list.slice(0, 15).forEach((a, i) => {
                     txt += `*${i + 1}.* ${a.title}\n`
@@ -218,9 +218,9 @@ async function handler(m, { sock, args }) {
         default: {
             const running = isRunning()
             return sock.sendMessage(m.chat, {
-                text: `🎬 *Auto Anime Winbu*\n\n` +
+                text: `🎬 *ᴀᴜᴛᴏ ᴀɴɪᴍᴇ ᴡɪɴʙᴜ*\n\n` +
                     `Status: *${running ? '🟢 ON' : '🔴 OFF'}*\n\n` +
-                    `*Commands:*\n` +
+                    `*ᴄᴏᴍᴍᴀɴᴅꜱ:*\n` +
                     `\`${m.prefix}aaw start\` — Mulai auto-check\n` +
                     `\`${m.prefix}aaw stop\` — Hentikan\n` +
                     `\`${m.prefix}aaw status\` — Lihat status\n` +
