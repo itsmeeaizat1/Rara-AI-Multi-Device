@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "autolanguage", alias: ["langdetect", "deteksiBahasa"], category: "future",
@@ -14,7 +13,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const text = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!text) {
-      await sendReplyWithNav(sock, m, claraWrap("Auto Language", ["  ┊  ➶ Reply pesan asing",
+      await m.reply( claraWrap("Auto Language", ["  ┊  ➶ Reply pesan asing",
         "  ┊  ➶ Bot akan deteksi bahasa & translate ke Indonesia"].join("\n")), "autolanguage");
       return { handled: true };
     }

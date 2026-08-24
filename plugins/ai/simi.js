@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -24,10 +23,10 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ") || m.text?.trim();
 
   if (!text) {
-    { const __navText = "❌ Mau ngobrol apa sama Simi?\n\nContoh: `.simi Halo Simi!`"; return await sendReplyWithNav(sock, m, __navText, "simi"); };
+    { const __navText = "❌ Mau ngobrol apa sama Simi?\n\nContoh: `.simi Halo Simi!`"; return await m.reply(__navText, "simi"); };
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const apiUrl = `https://api.nexray.eu.cc/ai/simisimi?text=${encodeURIComponent(text)}`;

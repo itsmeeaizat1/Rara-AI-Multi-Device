@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import te from "../../src/lib/nova-error.js";
 
 /**
@@ -148,11 +147,11 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ ${prefix}aicaption singkat — Max 5 kata`].join("\n")) + "\n" +
         tipText("Reply foto lalu ketik .aicaption");
 
-      await sendReplyWithNav(sock, m, text, "aicaption");
+      await m.reply(text, "aicaption");
       return { handled: true };
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // Download gambar
     let mediaBuffer;
@@ -169,7 +168,7 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ Coba reply foto yang valid`].join("\n")) + "\n" +
         tipText("Reply foto lalu ketik .aicaption");
 
-      await sendReplyWithNav(sock, m, text, "aicaption");
+      await m.reply(text, "aicaption");
       return { handled: true };
     }
 
@@ -178,7 +177,7 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("AI Caption", [`  ┊  ➶ Status: *Buffer gambar tidak valid*`].join("\n")) + "\n" +
         tipText("Coba foto lain");
 
-      await sendReplyWithNav(sock, m, text, "aicaption");
+      await m.reply(text, "aicaption");
       return { handled: true };
     }
 

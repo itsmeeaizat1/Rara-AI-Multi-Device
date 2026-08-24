@@ -9,7 +9,6 @@ import crypto from "crypto";
 import te from "../../src/lib/nova-error.js";
 import { f } from "../../src/lib/nova-http.js";
 import { AIRich } from "../../src/lib/nova-builder.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -31,11 +30,11 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const query = m.text?.trim();
   if (!query) {
-    return sendReplyWithNav(sock, m, `🔍 *Pinterest sEarch*\n\n` +
+    return m.reply( `🔍 *Pinterest sEarch*\n\n` +
       `Contoh:\n` +
       `\`${m.prefix}pins Zhao Lusi\``, "pins");
   }
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const data = await f(

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
@@ -24,7 +23,7 @@ async function handler(m, { sock, config }) {
     const newName = m.args.join(' ')
     
     if (!newName) {
-        return sendReplyWithNav(sock, m, `👨‍💻 *Ganti Nama Developer*\n\n> Nama saat ini: *${config.bot?.developer || '-'}*\n\n*Penggunaan:*\n\`${m.prefix}ganti-namadev <nama baru>\``, "ganti-namadev")
+        return m.reply( `👨‍💻 *Ganti Nama Developer*\n\n> Nama saat ini: *${config.bot?.developer || '-'}*\n\n*Penggunaan:*\n\`${m.prefix}ganti-namadev <nama baru>\``, "ganti-namadev")
     }
     
     try {

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
@@ -53,10 +52,10 @@ async function handler(m, { sock }) {
 
   if (!text) {
     const help = `Kirim pertanyaan setelah command.\nContoh: .gpt5xemoz jelaskan kuantum computing`;
-    return sendReplyWithNav(m, sock, claraWrap("GPT-5.3", help));
+    return m.reply( claraWrap("GPT-5.3", help));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const reply = await callGPT5(text);

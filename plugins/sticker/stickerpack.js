@@ -9,7 +9,6 @@ function getSharp() {
 }
 import te from "../../src/lib/nova-error.js";
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -96,7 +95,7 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return sendReplyWithNav(sock, m, `── .✦ 𝗦𝗧𝗜𝗖𝗞𝗘𝗥 𝗣𝗔𝗖𝗞 ✦. ── 𝜗ৎ\n\n` +
+    return m.reply( `── .✦ 𝗦𝗧𝗜𝗖𝗞𝗘𝗥 𝗣𝗔𝗖𝗞 ✦. ── 𝜗ৎ\n\n` +
         `Cari dan kirim sticker pack!\n\n` +
         `╭─〔 Cara Pakai 〕───⬣\n` +
         `│  ✦ ${m.prefix}stickerpack <query>\n` +
@@ -106,7 +105,7 @@ async function handler(m, { sock }) {
         `.☘︎ ݁˖`, "stickerpack");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const api = new StickerAPI();

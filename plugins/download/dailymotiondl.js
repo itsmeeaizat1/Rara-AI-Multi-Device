@@ -5,7 +5,6 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { DailymotionDL } from "../../src/scraper/dailymotion.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const exec = promisify(execFile);
@@ -29,7 +28,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return sendReplyWithNav(sock, m, `🎬 *Dailymotion Downloader*\n\n` +
+    return m.reply( `🎬 *Dailymotion Downloader*\n\n` +
         `Download video dari Dailymotion, otomatis dikonversi ke MP4.\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}dailymotiondl <link>*\n\n` +
@@ -38,7 +37,7 @@ async function handler(m, { sock }) {
         `_Proses konversi mungkin agak lama_`, "dailymotiondl");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const result = await DailymotionDL(text);

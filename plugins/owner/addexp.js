@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import * as levelHelper from '../../src/lib/nova-level.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
@@ -48,7 +47,7 @@ async function handler(m, { sock }) {
     }
     
     if (!targetJid || amount <= 0) {
-        return sendReplyWithNav(sock, m, `⭐ *Add Exp*\n\n` +
+        return m.reply( `⭐ *Add Exp*\n\n` +
             `\`.addexp <jumlah>\` - ke diri sendiri\n` +
             `\`.addexp <jumlah> @user\` - ke user\n` +
             `Max: 9.000.000.000 (9B)\n\n` +

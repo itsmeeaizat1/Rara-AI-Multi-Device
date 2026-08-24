@@ -5,7 +5,6 @@ import path from "path";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "pindl",
@@ -25,7 +24,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return sendReplyWithNav(sock, m, `📌 *Pinterest Download*\n\n` +
+    return m.reply( `📌 *Pinterest Download*\n\n` +
         `Download gambar/video dari Pinterest\n\n` +
         `*Contoh:*\n` +
         `\`${m.prefix}pindl https://pin.it/xxx\`\n` +
@@ -34,7 +33,7 @@ async function handler(m, { sock }) {
   if (!url.includes("pinterest") && !url.includes("pin.it")) {
     { const __navText = "❌ URL tidak valid. Gunakan link Pinterest."; return await m.reply(__navText); };
   }
-  m.react("🕐");
+  m.react("🕒");
   try {
     const result = await pinterestdl(url);
     if (!result || !result.media || result.media.length === 0) {

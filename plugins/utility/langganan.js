@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -101,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "add") {
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
       if (parts.length < 3) {
-        return sendReplyWithNav(sock, m,
+        return m.reply(
           prefix + "langganan add <nama> | <harga> | <cycle> | <tgl_jatuh_tempo>\n\n" +
           "Cycle: weekly / monthly / yearly\n" +
           "tgl_jatuh_tempo: tanggal 1-31 (untuk monthly) atau DD-MM (untuk yearly)\n\n" +
@@ -433,7 +432,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     // --- HELP / default ---
-    return sendReplyWithNav(sock, m,
+    return m.reply(
       prefix + "langganan add <nama> | <harga> | <cycle> | <tgl>\n" +
       prefix + "langganan list\n" +
       prefix + "langganan info <ID>\n" +

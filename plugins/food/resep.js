@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -260,7 +259,7 @@ async function sendRecipeReply(m, sock, text, imageUrl) {
     }
   }
   // Fallback: text only
-  return await sendReplyWithNav(m, sock, text, { commandName: "resep" });
+  return await m.reply( text, { commandName: "resep" });
 }
 
 // Search fallback static dataset
@@ -315,7 +314,7 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}resep nasi padang\`\n`;
     txt += `\`${m.prefix}resep masakan ayam goreng\`\n`;
     txt += `\`${m.prefix}resep acak\`\n`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "resep" });
+    return await m.reply( txt, { commandName: "resep" });
   }
 
   // === RANDOM ===
@@ -325,8 +324,8 @@ async function handler(m, { sock, args }) {
       const cat = query.charAt(0).toUpperCase() + query.slice(1).toLowerCase();
       const idF = ID_RECIPES.filter(r => r.c.toLowerCase() === cat.toLowerCase());
       if (idF.length > 0) {
-        await m.react("🕐"); await m.react("✅");
-        return await sendReplyWithNav(m, sock, formatIDRecipe(idF[Math.floor(Math.random() * idF.length)]), { commandName: "resep" });
+        await m.react("🕒"); await m.react("✅");
+        return await m.reply( formatIDRecipe(idF[Math.floor(Math.random() * idF.length)]), { commandName: "resep" });
       }
       try {
         const fRes = await axios.get(`${API}/filter.php?c=${encodeURIComponent(query)}`);
@@ -339,7 +338,7 @@ async function handler(m, { sock, args }) {
       } catch (e) { console.error('[resep.js]:', e.message); }
             return m.reply(`Kategori "${query}" tidak ditemukan.`);
     }
-    await m.react("🕐");
+    await m.react("🕒");
     // 70% Cookpad live, 30% TheMealDB
     if (Math.random() < 0.7) {
       try {
@@ -358,7 +357,7 @@ async function handler(m, { sock, args }) {
     } catch {
       if (ID_RECIPES.length > 0) {
         await m.react("✅");
-        return await sendReplyWithNav(m, sock, formatIDRecipe(ID_RECIPES[Math.floor(Math.random() * ID_RECIPES.length)]), { commandName: "resep" });
+        return await m.reply( formatIDRecipe(ID_RECIPES[Math.floor(Math.random() * ID_RECIPES.length)]), { commandName: "resep" });
       }
             return m.reply("Gagal mengambil resep acak.");
     }
@@ -375,11 +374,11 @@ async function handler(m, { sock, args }) {
     txt += `\nIndonesia (Cookpad - cari langsung):\n`;
     txt += `  Ayam, Ikan, Kambing, Sapi, Tahu, Telur, Tempe, Udang\n`;
     txt += `\nGunakan: \`${m.prefix}resep kategori <nama>\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "resep" });
+    return await m.reply( txt, { commandName: "resep" });
   }
 
   if (sub === "kategori" && query) {
-    await m.react("🕐");
+    await m.react("🕒");
     let intMeals = [], idResults = [];
     try {
       const res = await axios.get(`${API}/filter.php?c=${encodeURIComponent(query)}`);
@@ -395,24 +394,24 @@ async function handler(m, { sock, args }) {
     if (idResults.length > 0) { txt += `Indonesia:\n`; idResults.forEach((r, i) => txt += `${i + 1}. ${r.t} (Suka: ${r.l})\n`); }
     txt += `\nInternasional: \`${m.prefix}resep <id>\` | Indonesia: \`${m.prefix}resepid <id>\``;
     await m.react("✅");
-    return await sendReplyWithNav(m, sock, txt, { commandName: "resep" });
+    return await m.reply( txt, { commandName: "resep" });
   }
 
   // === AREAS ===
   if (sub === "negara" && !query) {
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const { areas } = await getCachedLists();
       let txt = `Negara/Asal Resep\n\n`;
       for (let i = 0; i < areas.length; i += 3) txt += `${areas.slice(i, i + 3).join(" | ")}\n`;
       txt += `\nTotal: ${areas.length} negara\n\nGunakan: \`${m.prefix}resep negara <nama>\``;
       await m.react("✅");
-      return await sendReplyWithNav(m, sock, txt, { commandName: "resep" });
+      return await m.reply( txt, { commandName: "resep" });
     } catch { return m.reply("Error mengambil daftar negara."); }
   }
 
   if (sub === "negara" && query) {
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const res = await axios.get(`${API}/filter.php?a=${encodeURIComponent(query)}`);
       if (!res.data.meals) { return m.reply(`Negara "${query}" tidak ditemukan.`); }
@@ -421,13 +420,13 @@ async function handler(m, { sock, args }) {
       meals.forEach((meal, i) => txt += `${i + 1}. ${meal.strMeal} (ID: ${meal.idMeal})\n`);
       txt += `\nTotal: ${res.data.meals.length} resep\nLihat detail: \`${m.prefix}resep <id>\``;
       await m.react("✅");
-      return await sendReplyWithNav(m, sock, txt, { commandName: "resep" });
+      return await m.reply( txt, { commandName: "resep" });
     } catch { return m.reply("Error: " + e.message); }
   }
 
   // === INGREDIENTS ===
   if (sub === "listbahan" || sub === "bahanlist") {
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const { ingredients } = await getCachedLists();
       if (!ingredients.length) { return m.reply("Gagal mengambil daftar bahan."); }
@@ -438,12 +437,12 @@ async function handler(m, { sock, args }) {
       items.forEach((ing, i) => txt += `${start + i + 1}. ${ing}\n`);
       if (page < total) txt += `\nHalaman selanjutnya: \`${m.prefix}resep listbahan ${page + 1}\``;
       await m.react("✅");
-      return await sendReplyWithNav(m, sock, txt, { commandName: "resep" });
+      return await m.reply( txt, { commandName: "resep" });
     } catch { return m.reply("Error."); }
   }
 
   if (sub === "bahan" && query) {
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const res = await axios.get(`${API}/filter.php?i=${encodeURIComponent(query)}`);
       if (!res.data.meals) { return m.reply(claraWrap("Resep", `Tidak ada resep dengan bahan "${query}".`)); }
@@ -452,7 +451,7 @@ async function handler(m, { sock, args }) {
       meals.forEach((meal, i) => txt += `${i + 1}. ${meal.strMeal} (ID: ${meal.idMeal})\n`);
       txt += `\nLihat detail: \`${m.prefix}resep <id>\``;
       await m.react("✅");
-      return await sendReplyWithNav(m, sock, txt, { commandName: "resep" });
+      return await m.reply( txt, { commandName: "resep" });
     } catch { return m.reply("Error."); }
   }
 
@@ -462,7 +461,7 @@ async function handler(m, { sock, args }) {
     let txt = `Resep Terpopuler Indonesia\n\n`;
     sorted.forEach((r, i) => txt += `${i + 1}. ${r.t}\n   ${r.c} | Suka: ${r.l} | ID: ${r.id}\n`);
     txt += `\nLihat detail: \`${m.prefix}resepid <id>\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "resep" });
+    return await m.reply( txt, { commandName: "resep" });
   }
 
   // === RESEPLB - list all search results ===
@@ -472,7 +471,7 @@ async function handler(m, { sock, args }) {
     if (!lbCleaned) {
             return m.reply(`Masukkan nama resep.\nContoh: \`${m.prefix}reseplb nasi goreng\``);
     }
-    await m.react("🕐");
+    await m.react("🕒");
     const [cpRes, tmRes] = await Promise.all([
       searchCookpad(lbCleaned),
       axios.get(`${API}/search.php?s=${encodeURIComponent(lbCleaned)}`).then(r => r.data.meals || []).catch(() => []),
@@ -510,12 +509,12 @@ async function handler(m, { sock, args }) {
     }
     txt += `\nLihat detail: \`${m.prefix}resep <id>\``;
     await m.react("✅");
-    return await sendReplyWithNav(m, sock, txt, { commandName: "resep" });
+    return await m.reply( txt, { commandName: "resep" });
   }
 
   // === BY ID ===
   if (/^\d+$/.test(sub)) {
-    await m.react("🕐");
+    await m.react("🕒");
     // Cookpad IDs are 7+ digits, TheMealDB are 5 digits
     if (sub.length >= 7) {
       const recipe = await getCookpadRecipe(sub);
@@ -532,12 +531,12 @@ async function handler(m, { sock, args }) {
     // Try local Indonesian dataset
     const id = parseInt(sub);
     const recipe = ID_RECIPES.find(r => r.id === id);
-    if (recipe) { await m.react("✅"); return await sendReplyWithNav(m, sock, formatIDRecipe(recipe), { commandName: "resep" }); }
+    if (recipe) { await m.react("✅"); return await m.reply( formatIDRecipe(recipe), { commandName: "resep" }); }
         return m.reply(`Resep ID ${sub} tidak ditemukan.`);
   }
 
   // === UNIFIED SEARCH (default) ===
-  await m.react("🕐");
+  await m.react("🕒");
   const rawQuery = args.join(" ").trim();
   const cleaned = cleanQuery(rawQuery);
   if (!cleaned) {
@@ -591,7 +590,7 @@ async function handler(m, { sock, args }) {
       txt += `\n\nAda ${idFallback.length - 1} resep lainnya untuk "${cleaned}"\nKetik \`${m.prefix}reseplb ${cleaned}\` untuk lihat daftar`;
     }
     await m.react("✅");
-    return await sendReplyWithNav(m, sock, txt, { commandName: "resep" });
+    return await m.reply( txt, { commandName: "resep" });
   }
 
 }

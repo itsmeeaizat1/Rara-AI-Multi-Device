@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import tls from "tls";
 
 const pluginConfig = {
@@ -64,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "certcompare <domain1> <domain2>\n\n" +
         "Bandingin SSL certificate 2 domain\n" +
         "Info: issuer, expiry, days left, self-signed, key size, SAN\n\n" +
@@ -83,7 +82,7 @@ async function handler(m, { sock, config: botConfig }) {
     const domain1 = parts[0].replace(/^https?:\/\//, "").replace(/\/.*$/, "");
     const domain2 = parts[1].replace(/^https?:\/\//, "").replace(/\/.*$/, "");
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     const [cert1, cert2] = await Promise.all([checkSSL(domain1), checkSSL(domain2)]);
 

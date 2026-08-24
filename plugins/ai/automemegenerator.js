@@ -5,7 +5,6 @@
 //   Persistent (owner): .toggleautomeme on/off — auto generate tiap foto masuk (default ON)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -204,7 +203,7 @@ async function handler(m, { sock, config: botConfig }) {
     // ════ TOGGLE COMMANDS (OWNER ONLY) ════
     if (isToggleAlias || (isToggleSubCmd && ["toggleautomeme", "automemetoggle"].includes(cmdName))) {
       if (!isOwner) {
-        await sendReplyWithNav(sock, m, claraWrap("Auto Meme", [
+        await m.reply( claraWrap("Auto Meme", [
           "Toggle persistent hanya untuk owner.",
           "",
           "Kamu bisa pakai one-shot:",
@@ -224,18 +223,18 @@ async function handler(m, { sock, config: botConfig }) {
           "Bot akan otomatis generate meme",
           "dari setiap foto yang masuk di chat ini.",
         ].join("\n")) + "\n" + tipText("Ketik " + prefix + "toggleautomeme off untuk matikan");
-        await sendReplyWithNav(sock, m, text, "automemegenerator");
+        await m.reply(text, "automemegenerator");
         return { handled: true };
       } else if (args[0] === "off") {
         if (!cfg[gid]) cfg[gid] = {};
         cfg[gid].enabled = false;
         db.db.write();
-        await sendReplyWithNav(sock, m, claraWrap("Auto Meme Generator", "Status: OFF. Persistent mode dimatikan."), "automemegenerator");
+        await m.reply(claraWrap("Auto Meme Generator", "Status: OFF. Persistent mode dimatikan."), "automemegenerator");
         return { handled: true };
       } else if (args[0] === "style") {
         const style = args[1] || "auto";
         if (!["top", "bottom", "full", "auto"].includes(style)) {
-          await sendReplyWithNav(sock, m, claraWrap("Auto Meme Generator", "Style tidak valid. Tersedia: top, bottom, full, auto"), "automemegenerator");
+          await m.reply(claraWrap("Auto Meme Generator", "Style tidak valid. Tersedia: top, bottom, full, auto"), "automemegenerator");
           return { handled: true };
         }
         if (!cfg[gid]) cfg[gid] = {};
@@ -243,12 +242,12 @@ async function handler(m, { sock, config: botConfig }) {
         cfg[gid].enabled = cfg[gid].enabled !== false; // keep current or default ON
         db.db.write();
         const styleDesc = { top: "Teks meme di atas foto", bottom: "Teks meme di bawah foto (classic)", full: "Caption panjang lucu", auto: "AI pilih style terbaik" };
-        await sendReplyWithNav(sock, m, claraWrap("Auto Meme Generator", ["Style: " + style, "Desc: " + styleDesc[style], "Status: " + (cfg[gid].enabled !== false ? "ON" : "OFF")].join("\n")), "automemegenerator");
+        await m.reply(claraWrap("Auto Meme Generator", ["Style: " + style, "Desc: " + styleDesc[style], "Status: " + (cfg[gid].enabled !== false ? "ON" : "OFF")].join("\n")), "automemegenerator");
         return { handled: true };
       } else if (args[0] === "status") {
         const enabled = cfg[gid]?.enabled !== false;
         const style = cfg[gid]?.style || "auto";
-        await sendReplyWithNav(sock, m, claraWrap("Auto Meme Generator", ["Status: " + (enabled ? "ON" : "OFF"), "Style: " + style, "", "Persistent: " + prefix + "toggleautomeme on/off", "One-shot: " + prefix + "automeme (reply foto)"].join("\n")), "automemegenerator");
+        await m.reply(claraWrap("Auto Meme Generator", ["Status: " + (enabled ? "ON" : "OFF"), "Style: " + style, "", "Persistent: " + prefix + "toggleautomeme on/off", "One-shot: " + prefix + "automeme (reply foto)"].join("\n")), "automemegenerator");
         return { handled: true };
       }
     }

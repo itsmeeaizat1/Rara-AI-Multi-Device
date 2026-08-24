@@ -7,7 +7,6 @@ import * as _canvas from '@napi-rs/canvas'
 
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakestory2",
@@ -177,12 +176,12 @@ async function getAvatarBuffer(sock, jid) {
 }
 async function handler(m, { sock }) {
   const username = m.args.join(" ").trim() || m.pushName || "User";
-  m.react("🕐");
+  m.react("🕒");
   try {
     const avatarBuffer = await getAvatarBuffer(sock, m.sender);
     const isImage = m.isImage || (m.quoted && m.quoted.isImage);
     if (!isImage) {
-      return sendReplyWithNav(sock, m, `📷 *Fake sTory 2*\n\n` +
+      return m.reply( `📷 *Fake sTory 2*\n\n` +
           `Reply gambar!\n\n` +
           `Format: \`${m.prefix}fakestory2 <nama>\`\n` +
           `Contoh: \`${m.prefix}fakestory2 Misaki\``, "fakestory2");

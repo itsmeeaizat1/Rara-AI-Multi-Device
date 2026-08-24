@@ -3,7 +3,6 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import fs from "fs";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "sewabot",
@@ -34,7 +33,7 @@ async function handler(m, { sock }) {
     ? Object.values(db.db.data.sewa.registrations).filter((r) => r.status === "pending").length
     : 0;
   if (!args || args === "status") {
-    return sendReplyWithNav(sock, m, `🔧 *SISTEM SEWA BOT*\n\n` +
+    return m.reply( `🔧 *SISTEM SEWA BOT*\n\n` +
         `Status: *${currentStatus ? "✅ AKTIF" : "❌ NONAKTIF"}*\n` +
         `Grup terdaftar: *${sewaGroups.length}*\n` + `Pendaftaran pending: *${pendingRegs}*\n\n` +
         `*PERINTAH TERSEDIA:*\n` +
@@ -94,7 +93,7 @@ async function handler(m, { sock }) {
     pendingConfirmations.delete(m.sender);
     db.db.data.sewa.enabled = true;
     db.db.write();
-    await m.react("🕐");
+    await m.react("🕒");
     await m.reply(claraWrap("Sewabot", `🕕 Sistem sewa diaktifkan, memproses auto-leave...`));
     try {
       global.isFetchingGroups = true;
@@ -139,7 +138,7 @@ async function handler(m, { sock }) {
   if (args === "leave") {
     if (!currentStatus)
       return m.reply(claraWrap("Sewabot", `❌ Aktifkan sewabot dulu dengan *${m.prefix}sewabot on*`));
-    await m.react("🕐");
+    await m.react("🕒");
     await m.reply(claraWrap("Sewabot", `🕕 Mengambil daftar grup...`));
     global.sewaLeaving = true;
     try {

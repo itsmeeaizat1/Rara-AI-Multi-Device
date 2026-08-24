@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "setclipdrop",
@@ -55,7 +54,7 @@ async function handler(m, { sock }) {
   const input = m.text?.trim() || "";
 
   if (!input) {
-    return sendReplyWithNav(sock, m, claraWrap("Set ClipDrop API", [
+    return m.reply( claraWrap("Set ClipDrop API", [
       "Atur ClipDrop API key untuk fitur .nowm (watermark remover).",
       "",
       "CARA PAKAI:",

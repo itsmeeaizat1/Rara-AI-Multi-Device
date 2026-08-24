@@ -3,7 +3,6 @@ import axios from "axios";
 import config from "../../config.js";
 import { f } from "../../src/lib/nova-http.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "asupantiktok",
@@ -87,7 +86,7 @@ async function handler(m, { sock }) {
   const query =
     m.text?.trim() || usernames[Math.floor(Math.random() * usernames.length)];
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const { data } = await f(

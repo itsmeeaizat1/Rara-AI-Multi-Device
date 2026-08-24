@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import axios from "axios"
 import te from "../../src/lib/nova-error.js"
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
@@ -38,7 +37,7 @@ async function handler(m, { sock }) {
     const input = m.args[0] || m.text?.trim()
 
     if (!input) {
-        return sendReplyWithNav(sock, m, `📱 *CEK XL/AXIS*\n\n` +
+        return m.reply( `📱 *CEK XL/AXIS*\n\n` +
             `Fitur ini digunakan untuk mengecek informasi paket dan kuota yang tersedia pada nomor XL atau Axis kamu secara lengkap dan detail\n\n` +
             `*Cara pakai:*\n` +
             `\`${m.prefix}cekxl <nomor hp>\`\n\n` +
@@ -54,7 +53,7 @@ async function handler(m, { sock }) {
         { const __navText = `❌ Nomor yang kamu masukkan tidak valid, pastikan nomor tersebut merupakan nomor XL atau Axis yang benar ya`; return await m.reply(__navText); }
     }
 
-    m.react("🕐")
+    m.react("🕒")
 
     try {
         const { data } = await axios.get(

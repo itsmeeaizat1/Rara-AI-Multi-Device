@@ -2,7 +2,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "terima",
@@ -54,7 +53,7 @@ async function handler(m, { sock }) {
   }
 
   if (!shooterJid) {
-    return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
+    return m.reply( `⚠️ *Cara Pakai*\n\n` +
         `Reply pesan tembakan + \`${m.prefix}terima\`\n` +
         `Atau \`${m.prefix}terima @tag\``, "terima");
   }

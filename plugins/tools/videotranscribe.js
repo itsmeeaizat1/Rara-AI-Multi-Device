@@ -2,7 +2,6 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import crypto from "crypto";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "videotranscribe",
@@ -108,7 +107,7 @@ async function handler(m, { sock,  args }) {
     );
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const result = await transcriber(url, lang);

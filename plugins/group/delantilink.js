@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
@@ -38,7 +37,7 @@ function handler(m, { sock }) {
         txt += `\n> Total: *${antilinkList.length}* link`
         txt += `\n\n\`${m.prefix}delantilink <domain>\` untuk hapus`
         
-        return sendReplyWithNav(sock, m, txt, "delantilink")
+        return m.reply( txt, "delantilink")
     }
     
     const groupData = db.getGroup(m.chat) || {}

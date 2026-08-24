@@ -10,7 +10,6 @@ import fs from "fs";
 import path from "path";
 import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "smeme",
@@ -37,10 +36,10 @@ async function handler(m, { sock }) {
   }
   const input = m.args.join(" ");
   if (!input || !input.includes("|")) {
-    return sendReplyWithNav(sock, m, `😂 *Meme sTicker*\n\n> Format: top|bottom\n\n\`Contoh: ${m.prefix}smeme Ketika|Kamu Lupa\``, "smeme");
+    return m.reply( `😂 *Meme sTicker*\n\n> Format: top|bottom\n\n\`Contoh: ${m.prefix}smeme Ketika|Kamu Lupa\``, "smeme");
   }
   const [top, bottom] = input.split("|").map((s) => s.trim());
-  m.react("🕐");
+  m.react("🕒");
   try {
     let mediaBuffer;
     if (m.quoted) {

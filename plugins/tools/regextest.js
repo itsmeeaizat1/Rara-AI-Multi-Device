@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "regextest",
@@ -24,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "regex <pattern> | <teks>\n" +
         prefix + "regex flags <flags> <pattern> | <teks>\n\n" +
         "Pemisah: tanda |\n" +
@@ -72,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("Regex", "Teks tidak boleh kosong!"));
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // Compile regex
     let regex;

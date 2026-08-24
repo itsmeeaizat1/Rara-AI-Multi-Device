@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "barcode",
@@ -40,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
       const typeList = Object.entries(SUPPORTED_TYPES)
         .map(([k, v]) => k + " (" + v.desc + ")")
         .join("\n");
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "barcode <data>\n" +
         prefix + "barcode <type> <data>\n\n" +
         "Type tersedia:\n" + typeList + "\n\n" +
@@ -83,7 +82,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("Barcode", "Data tidak valid untuk type " + typeInfo.name + "!\n" + typeInfo.desc));
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // Generate barcode via QuickChart API
     const apiUrl = "https://quickchart.io/barcode?type=" + type +

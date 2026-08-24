@@ -2,7 +2,6 @@
 import { DeepSeekThinking } from "../../src/scraper/deepseek.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -34,7 +33,7 @@ async function handler(m, { sock }) {
         `_Bot akan mikir dulu, baru jawab — jadi agak lama sedikit_`));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await DeepSeekThinking(text);

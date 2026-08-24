@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
@@ -27,7 +26,7 @@ async function handler(m, { sock }) {
   const current = db.setting("autoReactSW") || { enabled: false, emoji: "🔥" };
 
   if (!action) {
-    return sendReplyWithNav(sock, m, claraWrap("Auto React Story", [
+    return m.reply( claraWrap("Auto React Story", [
       `Status: ${current.enabled ? "AKTIF" : "MATI"}`,
       `Emoji: ${current.emoji}`,
       "",

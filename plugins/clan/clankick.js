@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
@@ -31,7 +30,7 @@ async function handler(m, { sock }) {
 
     const target = m.mentionedJid?.[0] || m.quoted?.sender
     if (!target) {
-        return sendReplyWithNav(sock, m, `👢 *CLAN KICK*\n\n` +
+        return m.reply( `👢 *CLAN KICK*\n\n` +
             `Tag atau reply member yang mau dikeluarkan\n\n` +
             `Contoh: *.clankick @user*`, "clankick")
     }

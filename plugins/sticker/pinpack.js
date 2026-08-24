@@ -5,7 +5,6 @@ import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { f } from "../../src/lib/nova-http.js";
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 function getSharp() {
@@ -54,7 +53,7 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return sendReplyWithNav(sock, m, `── .✦ 𝗣𝗜𝗡 𝗣𝗔𝗖𝗞 ✦. ── 𝜗ৎ\n\n` +
+    return m.reply( `── .✦ 𝗣𝗜𝗡 𝗣𝗔𝗖𝗞 ✦. ── 𝜗ৎ\n\n` +
         `Cari gambar Pinterest → jadikan sticker pack!\n\n` +
         `╭─〔 Cara Pakai 〕───⬣\n` +
         `│  ✦ ${m.prefix}pinpack <query>\n` +
@@ -64,7 +63,7 @@ async function handler(m, { sock }) {
         `.☘︎ ݁˖`, "pinpack");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const data = await f(`https://api.siputzx.my.id/api/s/pinterest?query=${query}`);

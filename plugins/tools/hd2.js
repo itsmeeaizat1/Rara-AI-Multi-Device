@@ -11,7 +11,6 @@ import FormData from "form-data";
 import path from "path";
 import fs from "fs";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "hd2tool",
@@ -31,9 +30,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
   if (!isImage) {
-    return sendReplyWithNav(sock, m, `✨ *HD ENHANCE V2*\n\n> Kirim/reply gambar untuk di-enhance\n\n\`${m.prefix}hd2\`\n\n> 🕕 Proses membutuhkan waktu ±1 menit`, "hd2");
+    return m.reply( `✨ *HD ENHANCE V2*\n\n> Kirim/reply gambar untuk di-enhance\n\n\`${m.prefix}hd2\`\n\n> 🕕 Proses membutuhkan waktu ±1 menit`, "hd2");
   }
-  m.react("🕐");
+  m.react("🕒");
   try {
     let buffer;
     if (m.quoted && m.quoted.isMedia) {

@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "lorem",
@@ -123,7 +122,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "lorem <jumlah> <unit>\n\n" +
         "Unit:\n" +
         "paragraf = blok paragraf\n" +
@@ -166,7 +165,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!isNaN(num) && num > 0) count = num;
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     let result;
     let label;

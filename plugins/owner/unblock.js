@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -33,7 +32,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      return sendReplyWithNav(sock, m, text, "unblock");
+      return m.reply( text, "unblock");
     }
 
     // Parse target — bisa @mention, reply, atau nomor langsung
@@ -56,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!targetJid) {
-      return sendReplyWithNav(sock, m, claraWrap("Unblock User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "unblock");
+      return m.reply( claraWrap("Unblock User", "Target tidak valid. Gunakan @mention, reply pesan, atau nomor."), "unblock");
     }
 
     // Eksekusi unblock via Baileys
@@ -70,7 +69,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    return sendReplyWithNav(sock, m, text, "unblock");
+    return m.reply( text, "unblock");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
@@ -81,7 +80,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText("Coba lagi nanti atau ketik .menu");
 
-    return sendReplyWithNav(sock, m, text, "unblock");
+    return m.reply( text, "unblock");
   }
 }
 

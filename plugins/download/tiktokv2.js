@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -40,14 +39,14 @@ async function rlGet(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return sendReplyWithNav(sock, m,
+    return m.reply(
       `╭┈┈⬡「 TIKTOK V2 」\n` +
       `┃ Usage: ${m.prefix}tiktokv2 <url>\n` +
       `╰┈┈⬡\n\n` +
       `${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`,
       "tiktokv2");
   }
-  m.react("🕐");
+  m.react("🕒");
   try {
     const res = await rlGet(`${API_BASE}/download/tiktok?apikey=${API_KEY}&url=${encodeURIComponent(text)}`);
     const r = res.data?.result || res.data?.data;

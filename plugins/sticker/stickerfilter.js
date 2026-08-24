@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
@@ -33,23 +32,23 @@ async function handler(m, { sock }) {
       help += `- ${f}\n`;
     }
     help += `\nContoh: \`${m.prefix}stickerfilter blur\` (reply sticker)`;
-    return sendReplyWithNav(sock, m, help, "stickerfilter");
+    return m.reply( help, "stickerfilter");
   }
 
   if (!FILTERS.includes(filter)) {
-    return sendReplyWithNav(sock, m, `❌ Filter tidak valid. Pilih: ${FILTERS.join(", ")}`, "stickerfilter");
+    return m.reply( `❌ Filter tidak valid. Pilih: ${FILTERS.join(", ")}`, "stickerfilter");
   }
 
   if (!m.quoted || !m.quoted.sticker) {
-    return sendReplyWithNav(sock, m, "❌ Reply sticker yang mau difilter.", "stickerfilter");
+    return m.reply( "❌ Reply sticker yang mau difilter.", "stickerfilter");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const stickerBuffer = await m.quoted.download();
     if (!stickerBuffer || stickerBuffer.length < 100) {
-      return sendReplyWithNav(sock, m, "❌ Gagal download sticker.", "stickerfilter");
+      return m.reply( "❌ Gagal download sticker.", "stickerfilter");
     }
 
     const apiUrl = `https://api.siputzx.my.id/api/canvas/${filter}?image`;
@@ -64,7 +63,7 @@ async function handler(m, { sock }) {
 
     const buf = Buffer.from(res.data);
     if (buf.length < 100) {
-      return sendReplyWithNav(sock, m, "❌ Gagal apply filter. Coba lagi.", "stickerfilter");
+      return m.reply( "❌ Gagal apply filter. Coba lagi.", "stickerfilter");
     }
 
     const exifBuf = await addExifToWebp(buf, "Nova AI", "Sticker Filter");
@@ -73,7 +72,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[StickerFilter] Error:", err.message);
     await m.react("❌");
-    return sendReplyWithNav(sock, m, te(m.prefix, m.command, m.pushName), "stickerfilter");
+    return m.reply( te(m.prefix, m.command, m.pushName), "stickerfilter");
   }
 }
 

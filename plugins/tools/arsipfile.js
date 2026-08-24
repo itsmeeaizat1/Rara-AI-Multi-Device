@@ -2,7 +2,6 @@
 import AdmZip from "adm-zip";
 import archiver from "archiver";
 import * as tar from "tar";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
@@ -100,7 +99,7 @@ async function handler(m, { sock }) {
     txt += "   .arsipfile info\n\n";
     txt += "Format didukung: ZIP, TAR, TAR.GZ, GZ\n";
     txt += "Max ukuran file: 100 MB";
-    return sendReplyWithNav(sock, m, txt, "arsipfile");
+    return m.reply( txt, "arsipfile");
   }
 
   // === ZIP ===
@@ -505,7 +504,7 @@ async function listArchive(m, sock) {
       txt = txt.split("\n").slice(0, 55).join("\n") + "\n\n... (dipotong, terlalu banyak file)";
     }
 
-    return sendReplyWithNav(sock, m, txt, "arsipfile");
+    return m.reply( txt, "arsipfile");
   } catch (e) {
     return m.reply("Gagal membaca arsip: " + e.message);
   }
@@ -578,7 +577,7 @@ async function archiveInfo(m, sock) {
       txt += "Rasio kompresi: " + (ratio > 0 ? ratio + "%" : "0%");
     }
 
-    return sendReplyWithNav(sock, m, txt, "arsipfile");
+    return m.reply( txt, "arsipfile");
   } catch (e) {
     return m.reply("Gagal membaca info arsip: " + e.message);
   }

@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "readqr", alias: ["scanqr", "qrdecode"], category: "tools",
@@ -16,7 +15,7 @@ async function handler(m, { sock, config: botConfig }) {
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!quoted) {
       { const __navText = (claraWrap("Read QR", [`  ┊  ➶ Reply gambar QR code dengan *${prefix}readqr*`,
-        "  ┊  ➶ Bot akan membaca isi QR code"].join("\n"))); await sendReplyWithNav(sock, m, __navText, "readqr"); };
+        "  ┊  ➶ Bot akan membaca isi QR code"].join("\n"))); await m.reply( __navText, "readqr"); };
       return { handled: true };
     }
     const buffer = await m.download();

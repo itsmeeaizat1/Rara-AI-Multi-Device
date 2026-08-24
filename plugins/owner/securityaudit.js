@@ -3,7 +3,6 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { getBackupStatus } from "../../src/lib/nova-auto-backup.js";
 import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "securityaudit",

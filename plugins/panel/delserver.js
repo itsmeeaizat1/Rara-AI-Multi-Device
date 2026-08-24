@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
@@ -89,7 +88,7 @@ async function handler(m, { sock }) {
     
     if (!serverId || isNaN(serverId)) {
         const available = getAvailableServers(pteroConfig)
-        return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
+        return m.reply( `⚠️ *Cara Pakai*\n\n` +
             `\`${m.prefix}${m.command} serverid\`\n\n` +
             `Server tersedia: *${available.join(', ') || 'none'}*\n` +
             `Lihat ID dengan \`${m.prefix}listserver${serverVersion}\``, "delserver")

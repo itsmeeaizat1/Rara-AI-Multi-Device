@@ -2,7 +2,6 @@
 import { Qwen3 } from "../../src/scraper/qwen3.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -24,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return sendReplyWithNav(sock, m, `🔵 *Qwen3 80B*\n\n` +
+    return m.reply( `🔵 *Qwen3 80B*\n\n` +
         `Tanya apa aja ke AI Qwen3 — model besar dari Alibaba yang jago bahasa apa aja.\n\n` +
         `*PENGGUNAAN:*\n` +
         `*${m.prefix}qwen3 <pertanyaan>*\n\n` +
@@ -34,7 +33,7 @@ async function handler(m, { sock }) {
         `_Model 80B, jadi agak lama tapi jawabannya mantap_`, "qwen3");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await Qwen3(text);

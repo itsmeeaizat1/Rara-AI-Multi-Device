@@ -2,7 +2,6 @@
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { sendToolsPreview } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "pastebin",
@@ -28,7 +27,7 @@ async function handler(m, { sock }) {
   }
 
   if (!text) {
-    return sendReplyWithNav(sock, m, `📋 *PAsTEBIN UPLOAD*\n\n` +
+    return m.reply( `📋 *PAsTEBIN UPLOAD*\n\n` +
         `Kirim teks untuk di-upload ke Pastebin.\n\n` +
         `*Cara pakai:*\n` +
         `• \`${m.prefix}pastebin <text>\`\n` +

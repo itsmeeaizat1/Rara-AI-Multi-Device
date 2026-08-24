@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import axios from 'axios'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
@@ -111,7 +110,7 @@ async function handler(m, { sock }) {
     }
     
     if (!message) {
-        { const __navText = `❌ *Error*\n\n> Masukkan text untuk quote!`; return await sendReplyWithNav(sock, m, __navText, "qc"); }
+        { const __navText = `❌ *Error*\n\n> Masukkan text untuk quote!`; return await m.reply( __navText, "qc"); }
     }
     
     if (message.length > 80) {

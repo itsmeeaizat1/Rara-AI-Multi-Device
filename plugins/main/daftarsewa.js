@@ -2,7 +2,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
 import { broadcastToSaluran, notifySewaRegister } from "../../src/lib/nova-saluran-broadcast.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
 
@@ -70,7 +69,7 @@ async function handler(m, { sock }) {
     regSessions.delete(sender); // clear old session
     regSessions.set(sender, { step: "nama", data: {}, startedAt: Date.now() });
     setTimeout(() => regSessions.delete(sender), SESSION_TIMEOUT);
-    return sendReplyWithNav(sock, m, "PENDAFTARAN SEWA BOT\n\n" +
+    return m.reply( "PENDAFTARAN SEWA BOT\n\n" +
       "Isi data diri kamu dulu ya!\n\n" +
       "Step 1/4: *Nama kamu?*\n\n" +
       "Ketik nama kamu sekarang.\n" +
@@ -156,7 +155,7 @@ async function handler(m, { sock }) {
           "Pilihan: 30i, 12h, 7d, 1m, 1y, lifetime");
       }
 
-      await m.react("🕐");
+      await m.react("🕒");
 
       try {
         const inviteCode = linkInput.split("chat.whatsapp.com/")[1]?.split(/[\s?]/)[0];
@@ -270,7 +269,7 @@ async function handler(m, { sock }) {
         });
 
       } catch (error) {
-        await m.react("🕐");
+        await m.react("🕒");
         return m.reply(
           "Gagal mendaftar. Coba lagi atau hubungi owner.\n\n" +
           "Error: " + (error.message || "Unknown error")

@@ -2,7 +2,6 @@
 import http from "http";
 import https from "https";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -118,10 +117,10 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ") || m.text?.trim();
 
   if (!query) {
-    { const __navText = "❌ Masukkan potongan lirik atau nama lagu yang ingin dicari.\n\nContoh: `.sts ku menangis membayangkan`"; return await sendReplyWithNav(sock, m, __navText, "searchthatsong"); };
+    { const __navText = "❌ Masukkan potongan lirik atau nama lagu yang ingin dicari.\n\nContoh: `.sts ku menangis membayangkan`"; return await m.reply( __navText, "searchthatsong"); };
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await search(query);

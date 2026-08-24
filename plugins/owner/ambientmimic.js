@@ -6,7 +6,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
@@ -107,7 +106,7 @@ async function handler(m, { sock, config: botConfig }) {
         "",
         "Default OFF. Tidak aktif saat pairing.",
       ].join("\n")) + "\n" + tipText("Ketik " + prefix + "ambientmimic off untuk matikan");
-      await sendReplyWithNav(sock, m, text, "ambientmimic");
+      await m.reply( text, "ambientmimic");
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
@@ -115,7 +114,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Status: OFF",
         "Ambient detection dimatikan di chat ini",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "ambientmimic");
+      await m.reply( text, "ambientmimic");
     } else if (args[0] === "mode") {
       const mode = args[1] || "auto";
       if (!["auto", "manual"].includes(mode)) {
@@ -124,7 +123,7 @@ async function handler(m, { sock, config: botConfig }) {
           "auto = auto-detect setiap VN di grup (rekomendasi)",
           "manual = hanya saat VN memenukan threshold emosi",
         ].join("\n"));
-        await sendReplyWithNav(sock, m, text, "ambientmimic");
+        await m.reply( text, "ambientmimic");
         return { handled: true };
       }
       if (!cfg[gid]) cfg[gid] = {};
@@ -140,12 +139,12 @@ async function handler(m, { sock, config: botConfig }) {
         modeDesc[mode],
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "ambientmimic");
+      await m.reply( text, "ambientmimic");
     } else if (args[0] === "threshold") {
       const threshold = args[1] || "medium";
       if (!["low", "medium", "high"].includes(threshold)) {
         const text = claraWrap("Ambient Context Mimicry", "Threshold tidak valid! Tersedia: low, medium, high");
-        await sendReplyWithNav(sock, m, text, "ambientmimic");
+        await m.reply( text, "ambientmimic");
         return { handled: true };
       }
       if (!cfg[gid]) cfg[gid] = {};
@@ -162,7 +161,7 @@ async function handler(m, { sock, config: botConfig }) {
         threshDesc[threshold],
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "ambientmimic");
+      await m.reply( text, "ambientmimic");
     } else {
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
       const mode = cfg[gid]?.mode || "auto";
@@ -180,7 +179,7 @@ async function handler(m, { sock, config: botConfig }) {
         "",
         "Butuh: geminiApiKey di config untuk analisis audio multimodal",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "ambientmimic");
+      await m.reply( text, "ambientmimic");
     }
   } catch (e) {
     await m.reply("Error: " + e.message);

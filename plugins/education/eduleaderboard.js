@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
@@ -106,7 +105,7 @@ async function handler(m, { sock, args }) {
     txt += `Ketik .edulb essay untuk detail essay\n`;
     txt += `Ketik .edulb profil untuk profil kamu`;
 
-    return await sendReplyWithNav(m, sock, txt, { commandName: "eduleaderboard" });
+    return await m.reply( txt, { commandName: "eduleaderboard" });
   }
 
   // === PG LEADERBOARD (detailed) ===
@@ -440,7 +439,7 @@ async function handler(m, { sock, args }) {
   txt += `Skor otomatis tersimpan tiap main .soal
 
 Daftar dulu: .daftarsiswa <nama>`;
-  return await sendReplyWithNav(m, sock, txt, { commandName: "eduleaderboard" });
+  return await m.reply( txt, { commandName: "eduleaderboard" });
 }
 
 export { pluginConfig as config, handler };

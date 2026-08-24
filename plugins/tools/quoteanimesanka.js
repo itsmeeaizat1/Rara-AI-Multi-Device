@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -25,7 +24,7 @@ const API_BASE = sankaConfig.baseUrl;
 const API_KEY = sankaConfig.apikey;
 
 async function handler(m, { sock }) {
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const url = `${API_BASE}/anime/quote?apikey=${API_KEY}`;
@@ -77,7 +76,7 @@ async function handler(m, { sock }) {
     }
 
     // Tanpa image, kirim text saja
-    await sendReplyWithNav(m, sock, txt, { commandName: "quoteanimesanka" });
+    await m.reply( txt, { commandName: "quoteanimesanka" });
     await m.react("✅");
   } catch (e) {
     console.error("[QUOTEANIMESANKA] Error:", e.message);

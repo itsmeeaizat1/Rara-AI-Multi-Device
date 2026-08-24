@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { stopSchedulerByName, getFullSchedulerStatus } from '../../src/lib/nova-scheduler.js'
 import { stopSholatScheduler } from '../../src/lib/nova-sholat-scheduler.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
@@ -43,7 +42,7 @@ async function handler(m, { sock, args }) {
 \`.stopschedule sholat\`
 \`.stopschedule all\``;
             
-            await sendReplyWithNav(sock, m, helpText, "stopschedule");
+            await m.reply( helpText, "stopschedule");
             return;
         }
         

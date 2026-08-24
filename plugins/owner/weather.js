@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 /**
  * plugins/owner/weather.js
  * Command .weather — konfigurasi scheduler cuaca otomatis (owner only).
@@ -126,7 +125,7 @@ async function handler(m, { sock }) {
   // KOTA
   if (action === "kota" || action === "lokasi" || action === "location") {
     const city = args.join(" ").trim();
-    if (!city) return sendReplyWithNav(m, sock, claraWrap("Weather", "❌ Masukkan nama kota. Contoh: .weather kota Bandung"), { commandName: "weather" });
+    if (!city) return m.reply( claraWrap("Weather", "❌ Masukkan nama kota. Contoh: .weather kota Bandung"), { commandName: "weather" });
     try {
       const location = await resolveWeatherLocation(city);
       const settings = updateWeatherSettings((cur) => ({ ...cur, location }));
@@ -143,7 +142,7 @@ async function handler(m, { sock }) {
   // JADWAL
   if (action === "jadwal" || action === "schedule") {
     const schedules = buildSchedules(args);
-    if (!schedules) return sendReplyWithNav(m, sock, claraWrap("Weather", "❌ Format jadwal salah. Contoh: .weather jadwal 07:00 12:00 17:00"), { commandName: "weather" });
+    if (!schedules) return m.reply( claraWrap("Weather", "❌ Format jadwal salah. Contoh: .weather jadwal 07:00 12:00 17:00"), { commandName: "weather" });
     const settings = updateWeatherSettings((cur) => ({ ...cur, schedules }));
     refreshWeatherScheduler();
     return m.reply("✅ Jadwal cuaca disimpan: " + formatSchedule(schedules) + " WIB");

@@ -4,7 +4,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -60,13 +59,13 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "ai-copilot");
+      await m.reply(text, "ai-copilot");
       return { handled: true };
     }
 
     const selectedMode = COPILOT_PROMPTS[mode] ? mode : "continue";
     const systemPrompt = COPILOT_PROMPTS[selectedMode];
-    m.react("🕐");
+    m.react("🕒");
     const reply = await callAI({
       providerKey: "openai",
       model: "gpt-4o-mini",
@@ -93,7 +92,7 @@ async function handler(m, { sock, config: botConfig }) {
       "error"
     );
 
-    await sendReplyWithNav(sock, m, text, "ai-copilot");
+    await m.reply(text, "ai-copilot");
   }
 
   return { handled: true };

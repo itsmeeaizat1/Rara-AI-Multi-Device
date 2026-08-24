@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
@@ -57,10 +56,10 @@ async function handler(m, { sock, args }) {
     txt += `7. \`${m.prefix}flashcard delcard <nama deck> <nomor>\` - Hapus 1 kartu\n\n`;
     txt += `Saat quiz: balas *A*, *B*, *C*, dst atau ketik *flip* untuk lihat jawaban\n`;
     txt += `Ketik *stop* untuk berhenti quiz`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "flashcard" });
+    return await m.reply( txt, { commandName: "flashcard" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     // === CREATE (interactive) ===

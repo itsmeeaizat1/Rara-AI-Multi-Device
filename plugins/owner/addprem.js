@@ -2,7 +2,6 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { notifyPremiumAdd } from "../../src/lib/nova-saluran-broadcast.js";
 import {
   addJadibotPremium,
@@ -117,7 +116,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
   let targetNumber = await extractTarget(m);
 
   if (!targetNumber) {
-    return sendReplyWithNav(sock, m, `💎 *${isAdd ? "ADD" : "DEL"} PREMIUM*\n\nMasukkan nomor atau tag user\n\`Contoh: ${m.prefix}${cmd} 6281234567890\``, "addprem");
+    return m.reply( `💎 *${isAdd ? "ADD" : "DEL"} PREMIUM*\n\nMasukkan nomor atau tag user\n\`Contoh: ${m.prefix}${cmd} 6281234567890\``, "addprem");
   }
 
   if (targetNumber.startsWith("0")) {

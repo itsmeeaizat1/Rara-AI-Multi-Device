@@ -6,7 +6,6 @@
 import fs from "fs";
 import path from "path";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const DB_FILE = path.join(process.cwd(), "database", "chat_dna.json");
 
@@ -455,7 +454,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.settings) db.settings = { globalEnabled: true, groups: {} };
       db.settings.groups[groupId] = true;
@@ -471,7 +470,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.settings) db.settings = { globalEnabled: true, groups: {} };
       db.settings.groups[groupId] = false;
@@ -482,7 +481,7 @@ async function handler(m, { sock }) {
     }
 
     if (command === "chatdnastatus") {
-      await m.react("🕐");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.settings) db.settings = { globalEnabled: true, groups: {} };
       const globalStatus = db.settings.globalEnabled ? "ON" : "OFF";
@@ -520,7 +519,7 @@ async function handler(m, { sock }) {
       return;
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     const mentioned =
       m.message?.extendedTextMessage?.contextInfo?.mentionedJid || [];
@@ -540,7 +539,7 @@ async function handler(m, { sock }) {
           "Chat DNA",
           `Data belum cukup untuk ${targetName}. Minimal 5 pesan di grup untuk mulai tracking DNA. Tetap aktif chat!`
         );
-        await sendReplyWithNav(m, sock, msg, { commandName: "chatdna" });
+        await m.reply( msg, { commandName: "chatdna" });
         await m.react("✅");
         return;
       }
@@ -564,7 +563,7 @@ async function handler(m, { sock }) {
             "Minimal 5 pesan tiap user untuk hasil akurat.",
           ].join("\n")
         );
-        await sendReplyWithNav(m, sock, help, { commandName: "dnamatch" });
+        await m.reply( help, { commandName: "dnamatch" });
         await m.react("✅");
         return;
       }
@@ -575,7 +574,7 @@ async function handler(m, { sock }) {
           "DNA Match",
           "Salah satu user belum cukup data chat (minimal 5 pesan). Coba lagi nanti setelah mereka lebih aktif."
         );
-        await sendReplyWithNav(m, sock, fail, { commandName: "dnamatch" });
+        await m.reply( fail, { commandName: "dnamatch" });
         await m.react("✅");
         return;
       }

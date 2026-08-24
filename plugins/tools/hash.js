@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import crypto from "node:crypto";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "hash", alias: ["md5", "sha256", "sha1", "checksum"], category: "tools",
@@ -18,7 +17,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = args.slice(1).join(" ");
     if (!text) {
       { const __navText = (claraWrap("Hash", [`  ┊  ➶ Penggunaan: *${prefix}hash <algo> <text>*`,
-        `  ┊  ➶ Algoritma: md5, sha1, sha256, sha512`].join("\n"))); await sendReplyWithNav(sock, m, __navText, "hash"); };
+        `  ┊  ➶ Algoritma: md5, sha1, sha256, sha512`].join("\n"))); await m.reply( __navText, "hash"); };
       return { handled: true };
     }
     const valid = ["md5","sha1","sha256","sha512"];

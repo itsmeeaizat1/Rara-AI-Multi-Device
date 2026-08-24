@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "antighost",
@@ -212,7 +211,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // HELP
-    return sendReplyWithNav(sock, m, claraWrap("Anti Ghost", [
+    return m.reply( claraWrap("Anti Ghost", [
       "Deteksi member ghost/lurker yang gak pernah chat",
       "",
       "CARA PAKAI:",

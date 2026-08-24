@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'setppgc',
@@ -37,7 +36,7 @@ async function handler(m, { sock }) {
         }
     }
     if (!buffer) {
-        await sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
+        await m.reply( `⚠️ *Cara Pakai*\n\n` +
             `Reply gambar + \`${m.prefix}setppgc\`\n` +
             `Kirim gambar + caption \`${m.prefix}setppgc\``, "setppgc")
         return

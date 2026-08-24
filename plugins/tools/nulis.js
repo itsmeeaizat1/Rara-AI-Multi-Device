@@ -8,7 +8,6 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import axios from "axios";
 import config from "../../config.js";
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "nulis",
@@ -47,7 +46,7 @@ function wrapText(ctx, text, maxWidth) {
 async function handler(m, { sock }) {
   const text = m.args?.join(" ");
   if (!text) {
-    return sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
+    return m.reply( `⚠️ *CARA PAKAI*\n\n` +
         `\`${m.prefix}nulis <teks>\`\n\n` +
         `Contoh:\n` +
         `\`${m.prefix}nulis Aku cinta kamu selamanya\``, "nulis");
@@ -59,7 +58,7 @@ async function handler(m, { sock }) {
   if (!inputUrl) {
     return m.reply(claraWrap("Nulis", `❌ *TEMPLATE TIDAK ADA*\n\n> File template kertas tidak ditemukan di config.assets`));
   }
-  await m.react("🕐");
+  await m.react("🕒");
   await m.reply(claraWrap("Nulis", `🕕 *MEMPROsEs...*\n\n> Membuat tulisan tangan...`));
   try {
     const { createCanvas, loadImage, GlobalFonts } = _canvas;

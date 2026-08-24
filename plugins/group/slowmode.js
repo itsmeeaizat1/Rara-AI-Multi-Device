@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
@@ -49,7 +48,7 @@ async function handler(m, { sock }) {
             .map(([name, sec]) => `  *.slowmode ${name}* — ${sec}s`)
             .join('\n')
 
-        return sendReplyWithNav(sock, m, `🐢 *SLOWMODE*\n\n` +
+        return m.reply( `🐢 *SLOWMODE*\n\n` +
             `Status: ${enabled ? `✅ ON (${delay}s)` : '❌ OFF'}\n` +
             `Mode: *${mode}*\n\n` +
             `*Penggunaan:*\n` +

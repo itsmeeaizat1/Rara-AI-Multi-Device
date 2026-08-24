@@ -4,7 +4,6 @@ import * as timeHelper from "../../src/lib/nova-time.js";
 import { CronJob } from "cron";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { fetchGroupsSafe } from "../../src/lib/nova-jpm-helper.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 function generateGiveawayId() {

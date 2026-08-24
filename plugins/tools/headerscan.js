@@ -2,7 +2,6 @@
 import { claraHeader,  separator, claraWrap } from "../../src/lib/nova-menu-style.js";
 import https from "node:https";
 import http from "node:http";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "headerscan", alias: ["httpheaders", "headercheck"], category: "tools",
@@ -16,7 +15,7 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const url = m.text?.trim();
     if (!url || !url.startsWith("http")) {
-      await sendReplyWithNav(sock, m, claraWrap("Header Scan", [`  ┊  ➶ Penggunaan: *${prefix}headerscan <url>*`,
+      await m.reply( claraWrap("Header Scan", [`  ┊  ➶ Penggunaan: *${prefix}headerscan <url>*`,
         `  ┊  ➶ Contoh: *${prefix}headerscan https://google.com*`].join("\n")), "headerscan");
       return { handled: true };
     }

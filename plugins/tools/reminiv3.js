@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -32,10 +31,10 @@ async function handler(m, { sock, args }) {
     txt += `1. \`${m.prefix}reminiv3 2\` (2x upscale)\n`;
     txt += `2. \`${m.prefix}reminiv3 4\` (4x upscale)\n`;
     txt += `3. \`${m.prefix}reminiv3 enhance\` (enhance + upscale)`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "reminiv3" });
+    return await m.reply( txt, { commandName: "reminiv3" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const buffer = m.quoted?.isMedia

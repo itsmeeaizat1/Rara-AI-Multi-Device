@@ -4,7 +4,6 @@ import fetch from "node-fetch";
 import mime from "mime-types";
 import { downloadMediaMessage, getContentType } from "nova";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
@@ -94,7 +93,7 @@ async function handler(m, { sock }) {
     const type = getContentType(m.message);
     if (!type || type === "conversation" || type === "extendedTextMessage") {
       const help = `Cara pakai:\n1. Kirim media dengan caption ${m.prefix}uploadtmpfiles\n2. Atau reply media dengan ${m.prefix}uploadtmpfiles`;
-      return sendReplyWithNav(m, sock, claraWrap("UploadTmpFiles", help));
+      return m.reply( claraWrap("UploadTmpFiles", help));
     }
 
     try {
@@ -115,7 +114,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("UploadTmpFiles", "Media tidak terbaca. Coba kirim ulang."));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await uploadToXemoz(media, filename);

@@ -141,7 +141,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     // Panggil AI
-    await m.react("🕐");
+    await m.react("🕒");
 
     const aiConfig = botConfig.aiHelp || {};
     const apiKey = String(aiConfig.apiKey || "");

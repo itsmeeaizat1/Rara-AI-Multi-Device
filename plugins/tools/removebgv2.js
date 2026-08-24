@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { removeBgLocal } from "../../src/scraper/removebg-v2.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -39,11 +38,11 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ ${prefix}removebgv2 doc — kirim sebagai dokumen (no compress)`].join("\n")) + "\n" +
         tipText("Reply gambar lalu ketik .removebgv2");
 
-      await sendReplyWithNav(sock, m, text, "removebgv2");
+      await m.reply( text, "removebgv2");
       return { handled: true };
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // Download gambar
     let mediaBuffer;
@@ -57,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ Coba reply gambar yang valid`].join("\n")) + "\n" +
         tipText("Reply gambar lalu ketik .removebgv2");
 
-      await sendReplyWithNav(sock, m, text, "removebgv2");
+      await m.reply( text, "removebgv2");
       return { handled: true };
     }
 
@@ -67,7 +66,7 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ Coba gambar lain`].join("\n")) + "\n" +
         tipText("Reply gambar lalu ketik .removebgv2");
 
-      await sendReplyWithNav(sock, m, text, "removebgv2");
+      await m.reply( text, "removebgv2");
       return { handled: true };
     }
 
@@ -81,7 +80,7 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ Compress gambar dulu atau gunakan resolusi lebih kecil`].join("\n")) + "\n" +
         tipText("Gunakan gambar di bawah 10MB");
 
-      await sendReplyWithNav(sock, m, text, "removebgv2");
+      await m.reply( text, "removebgv2");
       return { handled: true };
     }
 
@@ -101,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
           `  ┊  ➶ Mungkin gambar tidak support, coba gambar lain`].join("\n")) + "\n" +
         tipText("Coba gambar dengan subjek yang jelas");
 
-      await sendReplyWithNav(sock, m, text, "removebgv2");
+      await m.reply( text, "removebgv2");
       return { handled: true };
     }
 

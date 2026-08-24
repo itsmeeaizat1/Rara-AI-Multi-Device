@@ -78,7 +78,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (sub === "cek" || sub === "check") {
-    await m.react("🕐");
+    await m.react("🕒");
     const data = await checkBMKG();
     await m.react("✅");
     if (!data) {

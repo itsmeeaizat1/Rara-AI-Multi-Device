@@ -1,4 +1,3 @@
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { setNotifTidur, toggleNotif, getNotif, deleteNotif, parseJadwal } from '../../src/lib/nova-notif-scheduler.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
@@ -46,7 +45,7 @@ function handler(m, { sock }) {
         info += `\n> 💡 _Jam bisa pakai titik atau titik dua (22.00 / 22:00)_\n`
         info += `  ┊  ➶ 💡 _Bisa multiple jam, pisahkan pakai koma_`
 
-        return sendReplyWithNav(sock, m, info, "notiftidur")
+        return m.reply( info, "notiftidur")
     }
 
     if (sub === 'off') {
@@ -69,7 +68,7 @@ function handler(m, { sock }) {
 
         const timeInput = args[1]
         if (!timeInput) {
-            return sendReplyWithNav(sock, m, `❌ *Masukkan jadwal tidur!*\n\n> Contoh: \`${m.prefix}notiftidur on 22.00\``, "notiftidur")
+            return m.reply( `❌ *Masukkan jadwal tidur!*\n\n> Contoh: \`${m.prefix}notiftidur on 22.00\``, "notiftidur")
         }
 
         const jadwal = parseJadwal(timeInput)
@@ -91,7 +90,7 @@ function handler(m, { sock }) {
 
     if (sub === 'edit') {
         if (!existing) {
-            return sendReplyWithNav(sock, m, `❌ *Belum ada pengingat tidur!*\n\n> Aktifkan dulu: \`${m.prefix}notiftidur on 22.00\``, "notiftidur")
+            return m.reply( `❌ *Belum ada pengingat tidur!*\n\n> Aktifkan dulu: \`${m.prefix}notiftidur on 22.00\``, "notiftidur")
         }
 
         const timeInput = args[1]

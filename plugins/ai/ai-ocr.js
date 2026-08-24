@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -31,7 +30,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "ai-ocr");
+      await m.reply(text, "ai-ocr");
       return { handled: true };
     }
 
@@ -51,11 +50,11 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText("Isi `botConfig.aiHelp.apiKey` dulu, lalu coba lagi.");
 
-      await sendReplyWithNav(sock, m, text, "ai-ocr");
+      await m.reply(text, "ai-ocr");
       return { handled: true };
     }
 
-    m.react("🕐");
+    m.react("🕒");
     const response = await fetch(apiEndpoint, {
       method: "POST",
       headers: {
@@ -102,7 +101,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
-    await sendReplyWithNav(sock, m, text, "ai-ocr");
+    await m.reply(text, "ai-ocr");
   }
 
   return { handled: true };

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 
@@ -32,10 +31,10 @@ async function handler(m, { sock }) {
   const username = m.args[0]?.replace("@", "")?.trim();
 
   if (!username) {
-    return sendReplyWithNav(sock, m, `🐦 *Twitter/X Stalker*\n\nMasukkan username Twitter/X\n\nContoh: \`${m.prefix}twitterstalk elonmusk\``, "twitterstalk");
+    return m.reply( `🐦 *Twitter/X Stalker*\n\nMasukkan username Twitter/X\n\nContoh: \`${m.prefix}twitterstalk elonmusk\``, "twitterstalk");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const res = await axios.get(
@@ -44,7 +43,7 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data) {
-      return sendReplyWithNav(sock, m, `❌ Akun @${username} tidak ditemukan.`, "twitterstalk");
+      return m.reply( `❌ Akun @${username} tidak ditemukan.`, "twitterstalk");
     }
 
     const d = res.data.data;
@@ -73,12 +72,12 @@ async function handler(m, { sock }) {
       }
     }
     text += `\n_Link: https://x.com/${d.username || username}_`;
-    await sendReplyWithNav(sock, m, text, "twitterstalk");
+    await m.reply( text, "twitterstalk");
     await m.react("✅");
   } catch (err) {
     console.error("[TwitterStalk] Error:", err.message);
     await m.react("❌");
-    return sendReplyWithNav(sock, m, te(m.prefix, m.command, m.pushName), "twitterstalk");
+    return m.reply( te(m.prefix, m.command, m.pushName), "twitterstalk");
   }
 }
 

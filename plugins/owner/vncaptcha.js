@@ -8,7 +8,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "vncaptcha",
@@ -104,17 +103,17 @@ async function handler(m, { sock, config: botConfig }) {
         "",
         "Default OFF. Tidak aktif saat pairing.",
       ].join("\n")) + "\n" + tipText("Ketik " + prefix + "vncaptcha off untuk matikan");
-      await sendReplyWithNav(sock, m, text, "vncaptcha");
+      await m.reply( text, "vncaptcha");
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
       const text = claraWrap("VN Captcha Interrogation", ["Status: OFF", "Verifikasi suara dimatikan, kembali ke captcha teks saja"].join("\n"));
-      await sendReplyWithNav(sock, m, text, "vncaptcha");
+      await m.reply( text, "vncaptcha");
     } else if (args[0] === "strict") {
       const strictOpt = args[1];
       if (strictOpt !== "on" && strictOpt !== "off") {
         const text = claraWrap("VN Captcha Interrogation", "Pilih: on (gagal = block 24jam) atau off (gagal = retry 3x)");
-        await sendReplyWithNav(sock, m, text, "vncaptcha");
+        await m.reply( text, "vncaptcha");
         return { handled: true };
       }
       if (!cfg[gid]) cfg[gid] = {};
@@ -125,7 +124,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Strict: " + (cfg[gid].strict ? "ON (gagal VN = block 24jam)" : "OFF (gagal VN = retry 3x)"),
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "vncaptcha");
+      await m.reply( text, "vncaptcha");
     } else {
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
       const strict = cfg[gid]?.strict ? "ON (block 24jam)" : "OFF (retry 3x)";
@@ -140,7 +139,7 @@ async function handler(m, { sock, config: botConfig }) {
         "",
         "Butuh: geminiApiKey di config untuk analisis audio",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "vncaptcha");
+      await m.reply( text, "vncaptcha");
     }
   } catch (e) {
     await m.reply("Error: " + e.message);

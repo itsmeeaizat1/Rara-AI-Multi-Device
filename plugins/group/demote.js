@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getParticipantJid } from '../../src/lib/nova-lid.js'
 import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
@@ -31,7 +30,7 @@ async function handler(m, { sock }) {
     }
 
     if (!target) {
-        await sendReplyWithNav(sock, m, `❌ *Target Tidak Ditemukan*\n\n` +
+        await m.reply( `❌ *Target Tidak Ditemukan*\n\n` +
             `Reply pesan user atau mention!\n` +
             `Contoh: \`${m.prefix}demote @user\``, "demote")
         return

@@ -4,7 +4,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -66,7 +65,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    m.react("🕐");
+    m.react("🕒");
     const response = await fetch(apiEndpoint, {
       method: "POST",
       headers: {
@@ -113,7 +112,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
-    await sendReplyWithNav(sock, m, text, "aianalyze");
+    await m.reply(text, "aianalyze");
   }
 
   return { handled: true };

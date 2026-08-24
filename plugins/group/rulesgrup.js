@@ -3,7 +3,6 @@ import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import fs from "fs";
 import path from "path";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "rulesgrup",

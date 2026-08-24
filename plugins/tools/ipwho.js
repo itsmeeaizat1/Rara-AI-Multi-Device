@@ -2,7 +2,6 @@
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { sendToolsPreview, saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ipwho",
@@ -24,7 +23,7 @@ async function handler(m, { sock }) {
   const ip = m.args?.[0];
 
   if (!ip) {
-    return sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
+    return m.reply( `⚠️ *CARA PAKAI*\n\n` +
         `\`${m.prefix}ipwho <ip>\`\n\n` +
         `Contoh:\n` +
         `\`${m.prefix}ipwho 8.8.8.8\``, "ipwho");
@@ -35,7 +34,7 @@ async function handler(m, { sock }) {
     return m.reply(`❌ *ғORMAT TIDAK VALID*\n\n> Contoh: \`8.8.8.8\``);
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
   await m.reply(claraWrap("Ipwho", `🕕 *MENCARI INFO IP...*`));
 
   try {

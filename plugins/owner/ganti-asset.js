@@ -2,7 +2,6 @@
 import config from '../../config.js';
 import { updateAssetUrl } from '../../src/lib/nova-uploader.js';
 import te from '../../src/lib/nova-error.js';
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -35,7 +34,7 @@ async function handler(m, { sock }) {
         const isMedia = isImage || isVideo || isAudio || isDocument;
 
         if (!isMedia) {
-            return sendReplyWithNav(sock, m, `🖼️ *Ganti Asset*\n\n> Silakan reply media (gambar/video/audio/document) dengan pesan \`${m.prefix}ganti-asset\``, "ganti-asset");
+            return m.reply( `🖼️ *Ganti Asset*\n\n> Silakan reply media (gambar/video/audio/document) dengan pesan \`${m.prefix}ganti-asset\``, "ganti-asset");
         }
 
         m.react('🕐');

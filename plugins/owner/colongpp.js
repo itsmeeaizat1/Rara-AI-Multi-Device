@@ -5,7 +5,6 @@ import axios from "axios";
 
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "colongpp",
@@ -36,7 +35,7 @@ async function handler(m, { sock }) {
   const targetJid = m.quoted?.sender || m.mentions?.[0];
   console.log(targetJid);
   if (!targetJid) {
-    return sendReplyWithNav(sock, m, `🕵️ *Colong Pp*\n\n` +
+    return m.reply( `🕵️ *Colong Pp*\n\n` +
         `Reply pesan seseorang untuk mencuri PP-nya\n\n` +
         `*Cara:*\n` +
         `Reply pesan target → \`${m.prefix}colongpp\``, "colongpp");

@@ -5,7 +5,6 @@ import fs from "fs";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "renewsewa",
@@ -104,7 +103,7 @@ async function handler(m, { sock }) {
   if (!durationMs)
     return m.reply(claraWrap("Renewsewa", `❌ Format durasi tidak valid\nContoh: 7d, 1m, 1y, lifetime`));
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await resolveGroupId(sock, input);

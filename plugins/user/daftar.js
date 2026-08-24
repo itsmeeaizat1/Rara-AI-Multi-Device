@@ -11,7 +11,6 @@ import {
   lidToJid,
 } from "../../src/lib/nova-lid.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { notifyUserRegister } from "../../src/lib/nova-saluran-broadcast.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 

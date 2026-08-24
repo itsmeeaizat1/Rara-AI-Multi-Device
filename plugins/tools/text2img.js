@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -37,10 +36,10 @@ async function handler(m, { sock, args }) {
     txt += `2. \`${m.prefix}text2img <text> --width 1024 --height 1024\`\n`;
     txt += `3. \`${m.prefix}text2img <text> --nologo\`\n`;
     txt += `4. \`${m.prefix}text2img <text> --enhance\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "text2img" });
+    return await m.reply( txt, { commandName: "text2img" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     // Parse options from prompt

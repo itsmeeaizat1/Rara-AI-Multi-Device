@@ -5,7 +5,6 @@ import { fileURLToPath } from "url";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -92,7 +91,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "aichat");
+      await m.reply(text, "aichat");
       return { handled: true };
     }
 
@@ -107,7 +106,7 @@ async function handler(m, { sock, config: botConfig }) {
       { role: "user", content: message },
     ];
 
-    m.react("🕐");
+    m.react("🕒");
     const reply = await callAI({
       providerKey: "openai",
       model: "gpt-4o-mini",
@@ -137,7 +136,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
-    await sendReplyWithNav(sock, m, text, "aichat");
+    await m.reply(text, "aichat");
   }
 
   return { handled: true };

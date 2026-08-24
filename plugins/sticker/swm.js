@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 import { addExifToWebp, isAnimatedWebp, DEFAULT_METADATA } from '../../src/lib/nova-exif.js'
@@ -25,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     const quoted = m.quoted
     
     if (!quoted) {
-        return sendReplyWithNav(sock, m, `🖼️ *sTicker Watermark*\n\n` +
+        return m.reply( `🖼️ *sTicker Watermark*\n\n` +
             `Reply sticker dengan caption:\n` +
             `\`${m.prefix}swm packname\`\n\n` +
             `*Contoh:*\n` +
@@ -40,7 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
     
     const input = m.text?.trim()
     if (!input) {
-        return sendReplyWithNav(sock, m, `❌ *Gagal*\n\n` +
+        return m.reply( `❌ *Gagal*\n\n` +
             `Masukkan packname\n\n` +
             `*Contoh:*\n` +
             `\`${m.prefix}swm Nova-AI\`\n` +

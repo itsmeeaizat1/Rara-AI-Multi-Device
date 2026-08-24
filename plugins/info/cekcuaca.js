@@ -25,7 +25,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   const city = (m.args || []).join(" ").trim();
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const settings = getWeatherStatus();

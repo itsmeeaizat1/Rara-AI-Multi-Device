@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Pengingat UKT/SPP — set deadline + reminder otomatis ke user
 // Fix: pakai database (bukan Map), ada setInterval untuk cek deadline
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
@@ -145,7 +144,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     const amount = parseInt(args[2]) || 0;
 
     if (!dateStr) {
-      return sendReplyWithNav(m, sock, claraWrap("Pengingat UKT", [
+      return m.reply( claraWrap("Pengingat UKT", [
         `Format: ${prefix}pengingatukt set <DD/MM/YYYY> [jumlah]`,
         ``,
         `Contoh:`,
@@ -156,7 +155,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
     const deadline = parseDate(dateStr);
     if (!deadline) {
-      return sendReplyWithNav(m, sock, claraWrap("Error", "Format tanggal salah. Gunakan DD/MM/YYYY"), { commandName: "pengingatukt" });
+      return m.reply( claraWrap("Error", "Format tanggal salah. Gunakan DD/MM/YYYY"), { commandName: "pengingatukt" });
     }
 
     const record = {
@@ -176,7 +175,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     else if (days === 0) status = "HARI INI";
     else status = `${days} hari lagi`;
 
-    return sendReplyWithNav(m, sock, claraWrap("Pengingat UKT - Terpasang", [
+    return m.reply( claraWrap("Pengingat UKT - Terpasang", [
       `Deadline: ${formatDate(deadline)}`,
       `Jumlah: ${formatRupiah(amount)}`,
       `Status: ${status}`,
@@ -189,7 +188,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   if (sub === "cek" || sub === "status" || sub === "lihat") {
     const record = store[sender];
     if (!record) {
-      return sendReplyWithNav(m, sock, claraWrap("Pengingat UKT", [
+      return m.reply( claraWrap("Pengingat UKT", [
         `Belum ada pengingat UKT terpasang.`,
         `Ketik ${prefix}pengingatukt set <tanggal> untuk mulai`,
       ].join("\n")), { commandName: "pengingatukt" });
@@ -203,7 +202,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     else if (days <= 7) status = `${days} hari lagi - SEGERA BAYAR`;
     else status = `${days} hari lagi`;
 
-    return sendReplyWithNav(m, sock, claraWrap("Pengingat UKT - Status", [
+    return m.reply( claraWrap("Pengingat UKT - Status", [
       `Deadline: ${formatDate(deadline)}`,
       `Jumlah: ${formatRupiah(record.amount)}`,
       `Status: ${status}`,
@@ -215,11 +214,11 @@ async function handler(m, { sock, args, config: botConfig }) {
   // .pengingatukt hapus
   if (sub === "hapus" || sub === "stop" || sub === "cancel") {
     if (!store[sender]) {
-      return sendReplyWithNav(m, sock, claraWrap("Pengingat UKT", "Tidak ada pengingat aktif."), { commandName: "pengingatukt" });
+      return m.reply( claraWrap("Pengingat UKT", "Tidak ada pengingat aktif."), { commandName: "pengingatukt" });
     }
     delete store[sender];
     saveUktStore(db, store);
-    return sendReplyWithNav(m, sock, claraWrap("Pengingat UKT", "Pengingat dihapus."), { commandName: "pengingatukt" });
+    return m.reply( claraWrap("Pengingat UKT", "Pengingat dihapus."), { commandName: "pengingatukt" });
   }
 
   // Default: help
@@ -233,7 +232,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     ``,
     `Bot otomatis kirim pengingat di H-7, H-3, H-1, dan H-0.`,
   ].join("\n")) + "\n" + tipText(`Contoh: ${prefix}pengingatukt set 25/08/2026 5000000`);
-  return sendReplyWithNav(m, sock, txt, { commandName: "pengingatukt" });
+  return m.reply( txt, { commandName: "pengingatukt" });
 }
 
 export { pluginConfig as config, handler };

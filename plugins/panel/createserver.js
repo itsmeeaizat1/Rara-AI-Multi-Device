@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import { prepareWAMessageMedia, generateWAMessageFromContent, proto } from "nova";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import crypto from 'crypto'
@@ -171,7 +170,7 @@ async function handler(m, { sock }) {
 
   const parsed = parseCommand(m.command);
   if (!parsed) {
-    return sendReplyWithNav(sock, m, claraWrap("Panel", `❌ Format command tidak valid.`), "Panel");
+    return m.reply( claraWrap("Panel", `❌ Format command tidak valid.`), "Panel");
   }
 
   const { ram, server: serverVersion, serverKey } = parsed;
@@ -179,7 +178,7 @@ async function handler(m, { sock }) {
   const gcSellerAccess = isGcSeller(m.chat, serverVersion)
   if (!gcSellerAccess && !hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
     const userRole = getUserRole(m.sender, serverVersion);
-    return sendReplyWithNav(sock, m, `❌ *Akses Ditolak*\n\n` +
+    return m.reply( `❌ *Akses Ditolak*\n\n` +
       `Kamu tidak punya akses ke *${serverVersion.toUpperCase()}*\n` +
       `Role kamu di ${serverVersion.toUpperCase()}: *${userRole || "Tidak ada"}*\n\n` +
       `Hubungi admin untuk mendapat akses.`, "Panel");
@@ -221,7 +220,7 @@ async function handler(m, { sock }) {
   if (!username) {
     const available = getAvailableServers(pteroConfig);
     const userRole = getUserRole(m.sender, serverVersion) || "Guest";
-    return sendReplyWithNav(sock, m, `⚠️ *Cara Pakai*\n\n` +
+    return m.reply( `⚠️ *Cara Pakai*\n\n` +
       `\`${m.prefix}${m.command} username\`\n` +
       `\`${m.prefix}${m.command} username,628xxx\`\n` +
       `Reply/tag pesan user\n\n` +

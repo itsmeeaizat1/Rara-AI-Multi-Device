@@ -8,7 +8,6 @@ import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "notifgantitag",
@@ -34,7 +33,7 @@ async function handler(m, { sock }) {
     if (!m.isOwner) {
       return m.reply(claraWrap("Notifgantitag", `❌ Hanya owner yang bisa menggunakan fitur ini!`));
     }
-    m.react("🕐");
+    m.react("🕒");
     try {
       const groups = await sock.groupFetchAllParticipating();
       const groupIds = Object.keys(groups);
@@ -54,7 +53,7 @@ async function handler(m, { sock }) {
     if (!m.isOwner) {
       return m.reply(claraWrap("Notifgantitag", `❌ Hanya owner yang bisa menggunakan fitur ini!`));
     }
-    m.react("🕐");
+    m.react("🕒");
     try {
       const groups = await sock.groupFetchAllParticipating();
       const groupIds = Object.keys(groups);
@@ -85,7 +84,7 @@ async function handler(m, { sock }) {
   }
   if (sub === "off") {
     if (!currentStatus) {
-      return sendReplyWithNav(sock, m, `⚠️ *Notif Label Already Inactive*\n\n` +
+      return m.reply( `⚠️ *Notif Label Already Inactive*\n\n` +
           `Status: *❌ OFF*\n` +
           `Notifikasi ganti label sudah nonaktif di grup ini.\n\n` +
           `_Gunakan \`${m.prefix}notifgantitag on\` untuk mengaktifkan._`, "notifgantitag");

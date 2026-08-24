@@ -4,7 +4,6 @@ import axios from "axios";
 import config from "../../config.js";
 import fs from "fs";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "apkmod",
@@ -28,13 +27,13 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
 
   if (!text) {
-    return sendReplyWithNav(sock, m, `📱 *Apk Mod sEarch*\n\n` +
+    return m.reply( `📱 *Apk Mod sEarch*\n\n` +
         `Cari APK MOD Premium\n\n` +
         `Contoh:\n` +
         `\`${m.prefix}apkmod vpn\``, "apkmod");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const { data } = await axios.get(

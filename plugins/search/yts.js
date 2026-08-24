@@ -3,7 +3,6 @@ import yts from "yt-search";
 import { generateWAMessageFromContent, proto } from "nova";
 import axios from "axios";
 import sharp from "sharp";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -24,10 +23,10 @@ const pluginConfig = {
 
 async function handler(m, { sock, text }) {
   if (!text) {
-    return sendReplyWithNav(m, sock, claraWrap("Yts", "❌ *Waduh, kata kuncinya kosong!*\n\nKamu harus memasukkan kata kunci judul video yang ingin dicari ya. \n\nContoh penggunaan: `.yts lagu galau indonesia`"), { commandName: "yts" });
+    return m.reply( claraWrap("Yts", "❌ *Waduh, kata kuncinya kosong!*\n\nKamu harus memasukkan kata kunci judul video yang ingin dicari ya. \n\nContoh penggunaan: `.yts lagu galau indonesia`"), { commandName: "yts" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const searchResults = await yts(text);

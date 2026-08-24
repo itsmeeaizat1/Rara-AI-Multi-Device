@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
@@ -25,7 +24,7 @@ async function handler(m, { sock }) {
     const isAudio = m.type === 'audioMessage' || (m.quoted && m.quoted.type === 'audioMessage')
     
     if (!isAudio) {
-        return sendReplyWithNav(m, sock, claraWrap("Ganti-nova.mp3", `🎵 *Ganti Ourin.Mp3*\n\n> Kirim/reply audio untuk mengganti\n> File: assets/audio/nova.mp3`), { commandName: "ganti-nova.mp3" })
+        return m.reply( claraWrap("Ganti-nova.mp3", `🎵 *Ganti Ourin.Mp3*\n\n> Kirim/reply audio untuk mengganti\n> File: assets/audio/nova.mp3`), { commandName: "ganti-nova.mp3" })
     }
     
     try {

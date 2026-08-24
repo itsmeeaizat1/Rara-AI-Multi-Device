@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "domaincheck",
@@ -84,7 +83,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "domaincheck <domain>\n\n" +
         "Cek ketersediaan domain via RDAP\n" +
         "Support: com, net, org, io, id, dev, app, xyz, dll\n\n" +
@@ -101,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("DomainCheck", "Domain tidak valid!\nContoh: " + prefix + "domaincheck example.com"));
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     const result = await checkDomain(domain);
     const tld = domain.split(".").pop();

@@ -15,7 +15,6 @@ import te from "../../src/lib/nova-error.js";
 import { claraLine } from "../../src/lib/nova-menu-style.js";
 import { initSholatScheduler, stopSholatScheduler } from "../../src/lib/nova-sholat-scheduler.js";
 
-// Local Nova AI format — replaces claraWrap + sendReplyWithNav
 function claraWrap(title, text) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
@@ -27,7 +26,7 @@ function claraWrap(title, text) {
   }).join("\n");
   return `❀°˖ ${toSC(title)} ˖°❀\n\n${scBody}`;
 }
-async function sendReplyWithNav(sock, m, text, cmdName) {
+async function formatAndReply( text, cmdName) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   // Convert all text to small caps, skip command lines
@@ -82,7 +81,7 @@ async function handler(m, { sock, db }) {
       jadwalText = "- Gagal memuat jadwal dari MyQuran\n";
     }
 
-    return sendReplyWithNav(sock, m, `🕌 *Auto Sholat - Sistem Pengingat Waktu Beribadah*\n\n` +
+    return m.reply( `🕌 *Auto Sholat - Sistem Pengingat Waktu Beribadah*\n\n` +
       `Sistem saat ini telah diatur untuk membantu kamu dan para anggota grup mengingat waktu beribadah secara otomatis. Berikut adalah pengaturan yang sedang berjalan:\n\n` +
       `- Status Pengingat: ${status}\n` +
       `- Penutupan Grup Otomatis: ${closeGroup}\n` +
@@ -160,7 +159,7 @@ async function handler(m, { sock, db }) {
       return m.reply(claraWrap("Autosholat", `Tolong masukkan angka antara 1 sampai 60 untuk durasi penutupan grup (dalam menit).`));
     }
     database.setting("autoSholatDuration", duration);
-    await m.react("🕐");
+    await m.react("🕒");
     return m.reply(
       `⏱️ *Durasi Penutupan Grup Telah Diperbarui!*\n\n` +
       `Nantinya, akses obrolan di grup akan dikunci selama ${duration} menit berturut-turut pada setiap jadwal sholat sebelum kubuka kembali secara otomatis.`
@@ -170,9 +169,9 @@ async function handler(m, { sock, db }) {
   if (args === "kota") {
     const kotaName = m.args.slice(1).join(" ").trim();
     if (!kotaName) {
-      return sendReplyWithNav(sock, m, `Tolong sebutkan nama kotanya juga! Misalnya, \`${m.prefix}autosholat kota Surabaya\`.`, "autosholat");
+      return m.reply( `Tolong sebutkan nama kotanya juga! Misalnya, \`${m.prefix}autosholat kota Surabaya\`.`, "autosholat");
     }
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const result = await searchKota(kotaName);
       if (!result) {

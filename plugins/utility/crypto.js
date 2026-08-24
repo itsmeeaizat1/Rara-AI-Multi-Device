@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
@@ -56,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // === HELP ===
     if (!sub || sub === "help" || sub === "bantuan") {
-      return sendReplyWithNav(sock, m, claraWrap("Crypto Tracker", [
+      return m.reply( claraWrap("Crypto Tracker", [
         "Track harga crypto real-time dari CoinGecko",
         "",
         "Perintah:",
@@ -72,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
       ]), { commandName: "crypto" });
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // === TOP 10 ===
     if (sub === "top") {

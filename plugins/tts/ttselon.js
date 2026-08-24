@@ -5,7 +5,6 @@ import fs from "fs";
 import path from "path";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ttselon",
@@ -49,7 +48,7 @@ function convertToOpus(inputPath, outputPath) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text)
-    return sendReplyWithNav(sock, m, `🚀 *Elon Musk Tts*\n\n> Gunakan: \`${m.prefix}ttselon <text>\``, "ttselon");
+    return m.reply( `🚀 *Elon Musk Tts*\n\n> Gunakan: \`${m.prefix}ttselon <text>\``, "ttselon");
 
 
   try {

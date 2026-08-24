@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import { prepareWAMessageMedia, generateWAMessageFromContent, proto } from "nova";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import crypto from 'crypto'
@@ -133,7 +132,7 @@ async function handler(m, { sock }) {
   const text = (m.text || '').trim()
 
   if (!text) {
-    return sendReplyWithNav(sock, m,
+    return m.reply(
       `CARA PAKAI CUSTOM PANEL\n\n` +
       `Format:\n` +
       `${prefix}cp <ram> <disk> <cpu> <nomor>\n\n` +
@@ -223,7 +222,7 @@ async function handler(m, { sock }) {
   const gcSellerAccess = isGcSeller(m.chat, serverVersion)
   if (!gcSellerAccess && !hasAccessToServer(m.sender, serverVersion, m.isOwner)) {
     const userRole = getUserRole(m.sender, serverVersion)
-    return sendReplyWithNav(sock, m,
+    return m.reply(
       `AKSES DITOLAK\n\n` +
       `Kamu tidak punya akses ke ${serverVersion.toUpperCase()}\n` +
       `Role kamu: ${userRole || "Tidak ada"}\n\n` +

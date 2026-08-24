@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -75,10 +74,10 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}ummah daily\`\n`;
     txt += `\`${m.prefix}ummah topic zakat\`\n`;
     txt += `\`${m.prefix}ummah bukhari 1\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "ummah" });
+    return await m.reply( txt, { commandName: "ummah" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     // === DAILY HADITH ===

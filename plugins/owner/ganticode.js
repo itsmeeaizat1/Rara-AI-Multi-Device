@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import { hotReloadPlugin } from "../../src/lib/nova-plugins.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -109,7 +108,7 @@ async function handler(m, { sock }) {
     { const __navText = claraWrap("GAGAL", `❌ *GAGAL*\n\nNama file tidak valid`); return await m.reply(__navText); };
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");

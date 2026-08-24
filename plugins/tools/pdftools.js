@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, degrees, rgb, StandardFonts } from "pdf-lib";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
@@ -70,7 +69,7 @@ async function handler(m, { sock }) {
     txt += "8. compress — Kompres ukuran PDF (reply PDF)\n";
     txt += "   .pdftools compress\n\n";
     txt += "Cara pakai: Reply file PDF/gambar dengan command di atas";
-    return sendReplyWithNav(sock, m, txt, "pdftools");
+    return m.reply( txt, "pdftools");
   }
 
   // === img2pdf ===
@@ -287,7 +286,7 @@ async function pdfInfo(m, sock) {
       txt += "Orientasi: " + (size.width > size.height ? "Landscape" : "Portrait");
     }
 
-    return sendReplyWithNav(sock, m, txt, "pdftools");
+    return m.reply( txt, "pdftools");
   } catch (e) {
     return m.reply("Gagal membaca PDF: " + e.message);
   }

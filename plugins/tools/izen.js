@@ -2,7 +2,6 @@
 import {  claraWrap } from "../../src/lib/nova-menu-style.js";
 import fetch from "node-fetch";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -32,7 +31,7 @@ async function handler(m, { args, sock }) {
     return await m.reply(claraWrap("izen", txt));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
   
   try {
     const res = await fetch(`https://anabot.my.id/api/tools/izenLOL?url=${encodeURIComponent(args[0])}&apikey=${config.APIkey.anabot || 'freeApikey'}`);

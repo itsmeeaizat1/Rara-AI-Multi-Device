@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "css", alias: ["csstemplate", "cssgen"], category: "tools",
@@ -24,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
     const tpl = m.text?.trim()?.toLowerCase();
     if (!tpl) {
       { const __navText = (claraWrap("CSS Generator", [`  ┊  ➶ Tersedia: ${Object.keys(TEMPLATES).join(", ")}`,
-        `  ┊  ➶ Penggunaan: *${prefix}css <template>*`].join("\n"))); await sendReplyWithNav(sock, m, __navText, "css"); };
+        `  ┊  ➶ Penggunaan: *${prefix}css <template>*`].join("\n"))); await m.reply( __navText, "css"); };
       return { handled: true };
     }
     if (!TEMPLATES[tpl]) throw new Error(`Template "${tpl}" tidak ada. Pilih: ${Object.keys(TEMPLATES).join(", ")}`);

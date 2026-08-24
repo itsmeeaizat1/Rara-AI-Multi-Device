@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -76,7 +75,7 @@ async function douyinAzbry(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return sendReplyWithNav(sock, m,
+    return m.reply(
       `╭┈┈⬡「 DOUYIN V2 」\n` +
       `┃ Usage: ${m.prefix}douyinv2 <url>\n` +
       `╰┈┈⬡\n\n` +
@@ -84,7 +83,7 @@ async function handler(m, { sock }) {
       "douyinv2");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     let data;

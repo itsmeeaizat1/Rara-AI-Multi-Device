@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import axios from 'axios'
 import config from '../../config.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
@@ -27,7 +26,7 @@ async function handler(m, { sock }) {
   const url = args[0]?.trim();
 
   if (!url || !url.includes("pixeldrain.com")) {
-    return sendReplyWithNav(sock, m, `📥 *Pixeldrain Download*\n\n` +
+    return m.reply( `📥 *Pixeldrain Download*\n\n` +
         `Download file dari Pixeldrain\n\n` +
         `*Format:*\n` +
         `\`${m.prefix}pixeldraindl <url>\`\n\n` +
@@ -35,7 +34,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}pixeldraindl https://pixeldrain.com/u/xxxxx\``, "pixeldraindl");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const apiUrl = `https://api.neoxr.eu/api/pixeldrain?url=${encodeURIComponent(url)}&apikey=${NEOXR_APIKEY}`;

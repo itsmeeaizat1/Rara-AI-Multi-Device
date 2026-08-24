@@ -6,7 +6,6 @@
 // .setkey list — Sama dengan .setkey (lihat semua)
 import { API_KEYS, getApiKey, hasApiKey, setApiKey, getAllKeyStatus, getMaskedKey } from "../../src/lib/nova-api-keys.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "setkey",
@@ -70,7 +69,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push(tipText(prefix + "setkey <nama> <value> untuk set key"));
 
       const text = claraWrap("API Keys", lines.join("\n"));
-      await sendReplyWithNav(sock, m, text, "setkey");
+      await m.reply( text, "setkey");
       return { handled: true };
     }
 
@@ -85,7 +84,7 @@ async function handler(m, { sock, config: botConfig }) {
         "",
         "Ketik " + prefix + "setkey untuk lihat semua status",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "setkey");
+      await m.reply( text, "setkey");
       return { handled: true };
     }
 
@@ -100,7 +99,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Key " + keyName + " berhasil dihapus dari runtime DB",
         "Untuk set ulang: " + prefix + "setkey " + keyName + " <value>",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "setkey");
+      await m.reply( text, "setkey");
       return { handled: true };
     }
 
@@ -121,7 +120,7 @@ async function handler(m, { sock, config: botConfig }) {
       keyDef.getLink() ? "Daftar key: " + keyDef.getLink() : "",
     ].filter(Boolean).join("\n"));
 
-    await sendReplyWithNav(sock, m, text, "setkey");
+    await m.reply( text, "setkey");
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

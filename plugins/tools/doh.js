@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "doh",
@@ -65,7 +64,7 @@ async function handler(m, { sock, config: botConfig }) {
     const text = (m.text || "").trim();
 
     if (!text) {
-      return sendReplyWithNav(sock, m,
+      return m.reply(
         prefix + "doh <domain>\n" +
         prefix + "doh <type> <domain>\n" +
         prefix + "doh <provider> <domain>\n\n" +
@@ -107,7 +106,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Clean domain
     domain = domain.replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/^www\./, "");
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     const { data, provider: provName } = await dohQuery(domain, type, provider);
 

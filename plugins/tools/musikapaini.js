@@ -6,7 +6,6 @@ import { downloadMediaMessage } from "nova";
 import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -72,14 +71,14 @@ async function handler(m, { sock }) {
   }
 
   if (!audioBuffer) {
-    return sendReplyWithNav(sock, m, `🎵 *MUsIK APA INI?*\n\n` +
+    return m.reply( `🎵 *MUsIK APA INI?*\n\n` +
         `Identifikasi lagu dari audio\n\n` +
         `*Cara pakai:*\n` +
         `Reply audio dengan \`${m.prefix}musikapaini\`\n` +
         `Atau kirim audio + caption command`, "musikapaini");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     await m.reply(claraWrap("Musikapaini", "🕕 *MENGUPLOAD...*\n\n> Mengupload audio..."));

@@ -4,7 +4,6 @@
 import sharp from "sharp";
 import te from "../../src/lib/nova-error.js";
 import cfg from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -54,7 +53,7 @@ async function handler(m, { sock, args }) {
     txt += `  ┊  ➶ Custom scale: .remini 4x\n`;
     txt += `  ┊  ➶ Kirim sebagai dokumen: .remini doc\n`;
     txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
-    return await sendReplyWithNav(sock, m, txt, "remini");
+    return await m.reply( txt, "remini");
   }
 
   try {

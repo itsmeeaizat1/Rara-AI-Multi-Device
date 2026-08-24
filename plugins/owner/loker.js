@@ -17,7 +17,6 @@ import {
 } from "../../src/lib/nova-loker-scheduler.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -276,7 +275,7 @@ async function handler(m, { sock }) {
       if (!jobs || !jobs.length) return m.reply(claraWrap("Loker", "Tidak ada loker baru ditemukan saat ini."));
       const msg = formatLokerMessage(jobs, { label: "Preview", keywords: settings.keywords });
       if (!msg) return m.reply(claraWrap("Loker", "Tidak ada loker yang bisa ditampilkan."));
-      return await sendReplyWithNav(sock, m, msg, "loker");
+      return await m.reply( msg, "loker");
     } catch (e) {
       return m.reply(claraWrap("loker", `❌ Gagal kirim preview: ${e.message}`));
     }
@@ -297,7 +296,7 @@ async function handler(m, { sock }) {
       }
       txt += "\nToggle: .loker sumber <nama>\n";
       txt += "Reset semua: .loker sumber reset";
-      return await sendReplyWithNav(sock, m, txt, "loker");
+      return await m.reply( txt, "loker");
     }
 
     if (choice === "reset" || choice === "all") {

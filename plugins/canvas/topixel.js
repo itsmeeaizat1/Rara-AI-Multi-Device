@@ -2,7 +2,6 @@
 import sharp from "sharp";
 import { downloadMediaMessage, getContentType } from "nova";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -101,9 +100,9 @@ async function handler(m, { sock }) {
     media = await downloadMediaMessage(m, "buffer", {});
   }
 
-  if (!media) { const __navText = "❌ Gagal membaca media gambar, coba lagi!"; return await sendReplyWithNav(sock, m, __navText, "topixel"); };
+  if (!media) { const __navText = "❌ Gagal membaca media gambar, coba lagi!"; return await m.reply(__navText, "topixel"); };
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const pixelatedBuffer = await pixelArt(media, level);

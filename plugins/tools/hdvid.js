@@ -4,7 +4,6 @@ import os from "os";
 import path from "path";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
@@ -36,10 +35,10 @@ async function handler(m, { sock }) {
     txt += `👉 Kirim video (atau document video) dengan caption \`${m.prefix}hdvid\`\n`;
     txt += `👉 Atau reply video (atau document video) dengan \`${m.prefix}hdvid\`\n\n`;
     txt += `⚠️ _Fitur Premium, proses bisa memakan waktu tergantung ukuran ya kak!_`;
-    return await sendReplyWithNav(sock, m, txt, "hdvid");
+    return await m.reply( txt, "hdvid");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const videoBuffer = (await m?.quoted?.download?.()) || (await m.download?.());

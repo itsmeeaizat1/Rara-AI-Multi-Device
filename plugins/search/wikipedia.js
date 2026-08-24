@@ -2,7 +2,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -195,7 +194,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Wikipedia", "❌ Masukkan kata kunci pencarian Wikipedia.\n\nContoh: `.wikipedia Indonesia`"));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const search = await searchWikipedia(query);

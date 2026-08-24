@@ -1,5 +1,4 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -71,7 +70,7 @@ async function handler(m, { sock, db }) {
     const delayMs = groupData.autoSambut.delayMs || 7200000;
     const totalPesan = groupData.autoSambut.pesanList.length;
 
-    return sendReplyWithNav(sock, m, `⚠️ *SISTEM AUTO SAMBUT*\n\n` +
+    return m.reply( `⚠️ *SISTEM AUTO SAMBUT*\n\n` +
       `Sistem otomatis menyambut owner di grup secara acak ketika owner muncul setelah lama idle.\n` +
       `Status: *${status}*\n` +
       `Batas Waktu Idle: *${formatTime(delayMs)}*\n` +
@@ -115,11 +114,11 @@ async function handler(m, { sock, db }) {
 
   if (action === "delay") {
     const timeInput = args[1];
-    if (!timeInput) return sendReplyWithNav(sock, m, `Tolong berikan waktu! Contoh: \`${m.prefix}autosambut delay 2h\``, "autosambut");
+    if (!timeInput) return m.reply( `Tolong berikan waktu! Contoh: \`${m.prefix}autosambut delay 2h\``, "autosambut");
 
     const parsedMs = parseTime(timeInput);
     if (!parsedMs) {
-      return sendReplyWithNav(sock, m, `Format waktu tidak dikenali. Gunakan angka dan akhiran s, m, h, d, w, y. Contoh: \`2h\` (2 jam), \`30m\` (30 menit).`, "autosambut");
+      return m.reply( `Format waktu tidak dikenali. Gunakan angka dan akhiran s, m, h, d, w, y. Contoh: \`2h\` (2 jam), \`30m\` (30 menit).`, "autosambut");
     }
 
     if (isGlobal) {
@@ -156,7 +155,7 @@ async function handler(m, { sock, db }) {
   if (action === "add") {
     const newMsg = args.slice(1).filter(v => v !== '--global').join(" ").trim();
     if (!newMsg) {
-      return sendReplyWithNav(sock, m, `Tolong masukkan teks sambutannya.\nContoh: \`${m.prefix}autosambut add Halo bosku {user}!\``, "autosambut");
+      return m.reply( `Tolong masukkan teks sambutannya.\nContoh: \`${m.prefix}autosambut add Halo bosku {user}!\``, "autosambut");
     }
 
     groupData.autoSambut.pesanList.push(newMsg);

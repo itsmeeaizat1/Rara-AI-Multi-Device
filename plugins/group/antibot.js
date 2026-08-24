@@ -5,7 +5,6 @@ import {
   getParticipantJid,
 } from "../../src/lib/nova-lid.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: ["antibot", "botdetect"],
@@ -155,7 +154,7 @@ function handler(m, { sock }) {
   const current = groupData.antibot || false;
 
   if (!args || args === "status") {
-    return sendReplyWithNav(sock, m, `🤖 *AntiBot*\n\n` +
+    return m.reply( `🤖 *AntiBot*\n\n` +
       `Status: ${current ? "✅ Aktif" : "❌ Nonaktif"}\n\n` +
       `Deteksi: *Smart Heuristic*\n\n` +
       `\`.antibot on/off\``, "antibot");

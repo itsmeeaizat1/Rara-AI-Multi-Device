@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -59,7 +58,7 @@ async function handler(m, { args, sock }) {
   if (!session) {
     let txt = `❌ Tidak ada sesi OTP aktif!\n\n`;
     txt += `Daftar dulu dengan: \`${m.prefix}regmail <nama>, <email>\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "verotp" });
+    return await m.reply( txt, { commandName: "verotp" });
   }
 
   if (!args[0]) {
@@ -67,12 +66,12 @@ async function handler(m, { args, sock }) {
     txt += `Masukkan kode OTP yang dikirim ke email:\n`;
     txt += `\`${m.prefix}verotp <kode>\`\n\n`;
     txt += `Contoh: \`${m.prefix}verotp 123456\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "verotp" });
+    return await m.reply( txt, { commandName: "verotp" });
   }
 
   const inputOtp = args[0].trim();
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   if (inputOtp !== session.otp) {
     session.attempts++;
@@ -144,7 +143,7 @@ async function handler(m, { args, sock }) {
     txt += `Selamat datang di ${config.bot?.name || "Nova AI"}!\n`;
     txt += `Ketik \`${m.prefix}menu\` untuk melihat fitur`;
 
-    await sendReplyWithNav(m, sock, txt, { commandName: "verotp" });
+    await m.reply( txt, { commandName: "verotp" });
     await m.react("✅");
   } catch (e) {
     console.error("[VerOTP] Error:", e.message);

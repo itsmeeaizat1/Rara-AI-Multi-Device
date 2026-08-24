@@ -7,7 +7,6 @@ function getSharp() {
   return _sharp;
 }
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 async function nerdfonts() {
   try {

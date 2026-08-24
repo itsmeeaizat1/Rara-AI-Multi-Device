@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -82,7 +81,7 @@ async function handler(m, { sock }) {
   const prefix = m.prefix;
 
   if (!text) {
-    return sendReplyWithNav(sock, m,
+    return m.reply(
       `╭┈┈⬡「 SPOTIFY PLAY 」\n` +
       `┃ Usage: ${prefix}spotifyplay <judul lagu>\n` +
       `┃ Atau: ${prefix}spotifyplay <spotify url>\n` +
@@ -94,7 +93,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     let data;
@@ -158,7 +157,7 @@ async function handler(m, { sock }) {
     m.react("✅");
   } catch (e) {
     console.error("[SPOTIFYPLAY] Error:", e.message);
-    sendReplyWithNav(sock, m,
+    m.reply(
       `Gagal mengambil data Spotify.\n>${e.message || "Coba lagi nanti"}`,
       "spotifyplay"
     );

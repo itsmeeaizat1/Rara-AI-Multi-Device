@@ -8,7 +8,6 @@ import fs from "fs";
 
 import { uploadTo0x0 } from "../../src/lib/nova-tmpfiles.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakedev",
@@ -29,7 +28,7 @@ let fontRegistered = false;
 async function handler(m, { sock }) {
   const name = m.text?.trim();
   if (!name) {
-    return sendReplyWithNav(sock, m, `🎮 *Fake Developer*\n\n` +
+    return m.reply( `🎮 *Fake Developer*\n\n` +
         `Masukkan nama untuk profile\n\n` +
         `*Cara Pakai:*\n` +
         `1. Kirim foto + caption \`${m.prefix}fakedev <nama>\`\n` +
@@ -64,7 +63,7 @@ async function handler(m, { sock }) {
   if (!buffer) {
     return m.reply(claraWrap("Fakedev", `❌ Kirim/reply gambar untuk dijadikan avatar!`));
   }
-  m.react("🕐");
+  m.react("🕒");
   try {
     const gmbr = await uploadTo0x0(buffer, {
       filename: "image.jpg",

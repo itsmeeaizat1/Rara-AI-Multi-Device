@@ -348,7 +348,7 @@ export default {
       return { handled: true };
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // ─── Parse sub-command ───
     const subMatch = raw.toLowerCase().match(

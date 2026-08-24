@@ -2,7 +2,6 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -35,7 +34,7 @@ async function handler(m, { sock }) {
   let text = m.text?.trim();
 
   if (!text) {
-    return sendReplyWithNav(sock, m, `📸 *sCREENsHOT WEB*\n\n` +
+    return m.reply( `📸 *sCREENsHOT WEB*\n\n` +
         `Screenshot halaman website\n\n` +
         `*Contoh:*\n` +
         `${m.prefix}ssweb https://google.com\n` +
@@ -52,7 +51,7 @@ async function handler(m, { sock }) {
     text = "https://" + text;
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const imageBuffer = await ssweb(text, mode);

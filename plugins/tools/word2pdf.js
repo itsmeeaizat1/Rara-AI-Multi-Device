@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import mammoth from "mammoth";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 function wrapText(text, font, size, maxWidth) {
@@ -125,10 +124,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `  ┊  ➶ *Format didukung:* .docx (Word 2007+)`,
       `  ┊  ➶ .doc (Word lama) belum didukung`,
     ].join("\n"));
-    return sendReplyWithNav(sock, m, help, "word2pdf");
+    return m.reply( help, "word2pdf");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
   m.reply(claraWrap("Word2Pdf", "  ┊  ➶ Konversi .docx ke PDF..."));
 
   try {

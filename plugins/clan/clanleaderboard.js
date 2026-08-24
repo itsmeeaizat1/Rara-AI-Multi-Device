@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 import { getDatabase } from '../../src/lib/nova-database.js'
@@ -63,7 +62,7 @@ async function handler(m, { sock }) {
 
     txt += `Total *${clans.length}* clan terdaftar`
 
-    await sendReplyWithNav(sock, m, txt, "clanleaderboard")
+    await m.reply( txt, "clanleaderboard")
 }
 
 export { pluginConfig as config, handler }

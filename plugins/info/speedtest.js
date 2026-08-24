@@ -2,7 +2,6 @@
 import { execSync } from "child_process";
 import os from "os";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -132,7 +131,7 @@ async function runSpeedtest() {
 }
 
 async function handler(m, { sock }) {
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     // Info sistem dasar

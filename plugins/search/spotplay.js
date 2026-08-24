@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -19,9 +18,9 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const query = m.text?.trim();
   if (!query)
-    { const __navText = `⚠️ *Cara Pakai*\n\n> \`${m.prefix}spotplay <query>\``; return await sendReplyWithNav(sock, m, __navText, "spotplay"); };
+    { const __navText = `⚠️ *Cara Pakai*\n\n> \`${m.prefix}spotplay <query>\``; return await m.reply( __navText, "spotplay"); };
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const data = await novaApi.azbry.spotplay(query, {

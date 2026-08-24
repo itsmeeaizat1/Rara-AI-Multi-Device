@@ -2,7 +2,6 @@
 import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "aiquran2", alias: ["aiquran2", "quranai", "aiquranfuture"], category: "future",
@@ -16,7 +15,7 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const query = m.text?.trim();
     if (!query) {
-      await sendReplyWithNav(sock, m, claraWrap("AI Quran", [`  ┊  ➶ Penggunaan: *${prefix}aiquran <topik>*`,
+      await m.reply( claraWrap("AI Quran", [`  ┊  ➶ Penggunaan: *${prefix}aiquran <topik>*`,
         `  ┊  ➶ Contoh: *${prefix}aiquran ayat tentang sabar*`].join("\n")), "aiquran");
       return { handled: true };
     }

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
@@ -24,7 +23,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   const input = args.join(" ").trim();
 
   if (!input) {
-    return sendReplyWithNav(m, sock, claraWrap("Mindmap - Peta Pikiran", [
+    return m.reply( claraWrap("Mindmap - Peta Pikiran", [
       `Generate mind map dari topik atau teks menggunakan AI.`,
       ``,
       `Cara pakai:`,
@@ -38,7 +37,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     ].join("\n")) + "\n" + tipText("Mind map ditampilkan dalam format teks visual"), { commandName: "mindmap" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
   try {
     const isLongText = input.length > 200;
 
@@ -84,9 +83,9 @@ Pilih 4-6 konsep utama yang paling penting, masing-masing dengan 2-3 sub-konsep.
     // Wrap dalam code block agar monospace dan alignment rapi
     const mindmapText = "```" + result + "```";
 
-    return sendReplyWithNav(m, sock, claraWrap("Mindmap", `${input.substring(0, 50)}${input.length > 50 ? "..." : ""}\n\n${mindmapText}`), { commandName: "mindmap" });
+    return m.reply( claraWrap("Mindmap", `${input.substring(0, 50)}${input.length > 50 ? "..." : ""}\n\n${mindmapText}`), { commandName: "mindmap" });
   } catch (e) {
-    return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal generate: ${e.message}`), { commandName: "mindmap" });
+    return m.reply( claraWrap("Error", `Gagal generate: ${e.message}`), { commandName: "mindmap" });
   }
 }
 

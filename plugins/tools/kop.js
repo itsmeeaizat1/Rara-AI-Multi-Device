@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 function wrapText(text, font, size, maxWidth) {
@@ -142,7 +141,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `  ┊  ➶ Kop surat ditambah di setiap halaman`,
       `  ┊  ➶ Double border line (standar surat resmi)`,
     ].join("\n"));
-    return sendReplyWithNav(sock, m, help, "kop");
+    return m.reply( help, "kop");
   }
 
   // Parse kop data
@@ -152,7 +151,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return m.reply(claraWrap("Kop", `❌ Minimal isi instansi= \n\nContoh: ${prefix}kop instansi=PT Maju Jaya alamat=Jl. Merdeka 1 Jakarta`));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
   m.reply(claraWrap("Kop", "  ┊  ➶ Tambah kop surat ke PDF..."));
 
   try {

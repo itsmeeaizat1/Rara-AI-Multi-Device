@@ -7,7 +7,6 @@
 // .moodtheme sensitivity <low/medium/high> — Sensitivitas deteksi
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
 
 const pluginConfig = {
@@ -353,17 +352,17 @@ async function handler(m, { sock, config: botConfig }) {
         "",
         "Default OFF. Tidak aktif saat pairing.",
       ].join("\n")) + "\n" + tipText("Ketik " + prefix + "moodtheme off untuk matikan");
-      await sendReplyWithNav(sock, m, text, "moodtheme");
+      await m.reply( text, "moodtheme");
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
       const text = claraWrap("Mood-Driven Theme Switcher", ["Status: OFF", "Bot kembali ke gaya jawaban standar"].join("\n"));
-      await sendReplyWithNav(sock, m, text, "moodtheme");
+      await m.reply( text, "moodtheme");
     } else if (args[0] === "sensitivity") {
       const sens = args[1] || "medium";
       if (!["low", "medium", "high"].includes(sens)) {
         const text = claraWrap("Mood-Driven Theme Switcher", "Pilih: low (kalem), medium (seimbang), high (sensitif)");
-        await sendReplyWithNav(sock, m, text, "moodtheme");
+        await m.reply( text, "moodtheme");
         return { handled: true };
       }
       if (!cfg[gid]) cfg[gid] = {};
@@ -380,7 +379,7 @@ async function handler(m, { sock, config: botConfig }) {
         sensDesc[sens],
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "moodtheme");
+      await m.reply( text, "moodtheme");
     } else if (args[0] === "status") {
       const uid = m.sender || gid;
       const allData = db.db.data.moodThemeData || {};
@@ -425,7 +424,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       const text = claraWrap("Mood-Driven Theme Switcher", lines.join("\n"));
-      await sendReplyWithNav(sock, m, text, "moodtheme");
+      await m.reply( text, "moodtheme");
     } else {
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
       const sens = cfg[gid]?.sensitivity || "medium";
@@ -442,7 +441,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Bot baca mood dari gaya ngetik,",
         "lalu ubah gaya jawaban AI otomatis",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "moodtheme");
+      await m.reply( text, "moodtheme");
     }
   } catch (e) {
     await m.reply("Error: " + e.message);

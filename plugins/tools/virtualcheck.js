@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "virtualcheck",
@@ -201,7 +200,7 @@ async function handler(m, { sock }) {
   const input = m.args.join(" ").trim();
 
   if (!input) {
-    return sendReplyWithNav(sock, m, claraWrap("Virtual Check", [
+    return m.reply( claraWrap("Virtual Check", [
       "Deteksi nomor virtual/VOIP/disposable vs nomor reguler",
       "",
       "CARA PAKAI:",

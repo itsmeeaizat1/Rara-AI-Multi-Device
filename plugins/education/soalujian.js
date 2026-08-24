@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -612,7 +611,7 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}soal sma fisika 10 mc\` (PG only)\n`;
     txt += `\`${m.prefix}soal smk rpl 3 essay\` (essay only)\n\n`;
     txt += `Saat quiz: balas A/B/C/D (PG) atau tulis jawaban (essay)\nKetik *skip* / *stop*\n\nAnti-Spam:\n  - Max 20 quiz/hari\n  - Min 10 detik per jawaban\n  - 3x spam = quiz dibatalkan`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "soalujian" });
+    return await m.reply( txt, { commandName: "soalujian" });
   }
 
   // List
@@ -646,7 +645,7 @@ async function handler(m, { sock, args }) {
   if (!dailyCheck.allowed) {
     return m.reply("Kamu sudah main " + MAX_QUIZ_PER_DAY + " quiz hari ini!\n\nKembali besok untuk lanjut belajar.\n\n> Ketik .edulb untuk lihat ranking");
   }
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     let questions = [];

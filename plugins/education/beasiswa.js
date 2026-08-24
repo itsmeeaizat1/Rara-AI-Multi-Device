@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -163,11 +162,11 @@ async function handler(m, { sock, args, config: botConfig }) {
 
   // .beasiswa list / .beasiswa (level)
   if (sub === "" || level || sortByDeadline) {
-    await m.react("🕐");
+    await m.react("🕒");
     try {
       const results = await fetchBeasiswaFromWeb(level);
       if (results.length === 0) {
-        return sendReplyWithNav(m, sock, claraWrap("Beasiswa", [
+        return m.reply( claraWrap("Beasiswa", [
           "Maaf, tidak ada hasil saat ini.",
           "Coba lagi nanti atau cari manual di:",
           "https://beasiswaindonesia.com",
@@ -187,9 +186,9 @@ async function handler(m, { sock, args, config: botConfig }) {
       }
 
       txt += tipText("Info dapat berubah, cek link resmi untuk konfirmasi");
-      return sendReplyWithNav(m, sock, txt, { commandName: "beasiswa" });
+      return m.reply( txt, { commandName: "beasiswa" });
     } catch (e) {
-      return sendReplyWithNav(m, sock, claraWrap("Error", `Gagal mencari: ${e.message}`), { commandName: "beasiswa" });
+      return m.reply( claraWrap("Error", `Gagal mencari: ${e.message}`), { commandName: "beasiswa" });
     }
   }
 
@@ -205,7 +204,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     `5. ${prefix}beasiswa deadline - Urut deadline terdekat`,
     `6. ${prefix}beasiswa deadline s1 - Deadline S1 terdekat`,
   ].join("\n")) + "\n" + tipText(`Contoh: ${prefix}beasiswa s1`);
-  return sendReplyWithNav(m, sock, txt, { commandName: "beasiswa" });
+  return m.reply( txt, { commandName: "beasiswa" });
 }
 
 export { pluginConfig as config, handler };

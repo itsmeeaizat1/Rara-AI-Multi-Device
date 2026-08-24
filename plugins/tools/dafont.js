@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { DaFont } from "../../src/scraper/dafont.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 if (!global.dafontSessions) global.dafontSessions = {};
@@ -68,7 +67,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const result = await DaFont(text);

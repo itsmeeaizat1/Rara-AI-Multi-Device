@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "emailguard",
@@ -147,7 +146,7 @@ async function handler(m, { sock }) {
   const email = m.args.join(" ").trim();
 
   if (!email) {
-    return sendReplyWithNav(sock, m, claraWrap("Email Guard", [
+    return m.reply( claraWrap("Email Guard", [
       "Validasi email + deteksi disposable/temp mail",
       "",
       "CARA PAKAI:",

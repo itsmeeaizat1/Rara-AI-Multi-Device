@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -89,7 +88,7 @@ async function handler(m, { sock }) {
     txt += `2. ${m.prefix}disable antilinkgc\n`;
     txt += `3. ${m.prefix}disable antisticker\n\n`;
     txt += `Ketik \`${m.prefix}enable\` untuk melihat semua fitur`;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "disable" });
+    return await m.reply( txt, { commandName: "disable" });
   }
 
   const resolvedName = ALIASES[featureName] || featureName;
@@ -107,7 +106,7 @@ async function handler(m, { sock }) {
   let txt = `DISABLE - ${feature.label}\n`;
   txt += `Status: OFF`;
 
-  return await sendReplyWithNav(m, sock, txt, { commandName: "disable" });
+  return await m.reply( txt, { commandName: "disable" });
 }
 
 export { pluginConfig as config, handler };

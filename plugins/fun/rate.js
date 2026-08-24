@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "rate",
@@ -44,7 +43,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim();
     
     if (!text) {
-        return sendReplyWithNav(m, sock, claraWrap("Rate", `⭐ *Rate*\n\n> Masukkan sesuatu untuk dinilai!\n\n*Contoh:*\n> .rate wajahku`), { commandName: "rate" });
+        return m.reply( claraWrap("Rate", `⭐ *Rate*\n\n> Masukkan sesuatu untuk dinilai!\n\n*Contoh:*\n> .rate wajahku`), { commandName: "rate" });
     }
     
     const rating = ratings[Math.floor(Math.random() * ratings.length)];

@@ -4,7 +4,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await sendReplyWithNav(sock, m, text, "ppcouple");
+      await m.reply(text, "ppcouple");
       return { handled: true };
     }
 
@@ -54,7 +53,7 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 
-    await sendReplyWithNav(sock, m, text, "ppcouple");
+    await m.reply(text, "ppcouple");
   }
 
   return { handled: true };

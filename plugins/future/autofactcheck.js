@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "autofactcheck", alias: ["factcheck", "cekfakta", "factai"], category: "future",
@@ -14,7 +13,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const claim = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!claim) {
-      await sendReplyWithNav(sock, m, claraWrap("Fact Check", ["  ┊  ➶ Reply pesan berisi claim",
+      await m.reply( claraWrap("Fact Check", ["  ┊  ➶ Reply pesan berisi claim",
         "  ┊  ➶ AI akan cek kebenarannya"].join("\n")), "autofactcheck");
       return { handled: true };
     }

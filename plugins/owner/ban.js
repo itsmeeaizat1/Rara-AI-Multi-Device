@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import config from '../../config.js'
 import { notifyUserBanned } from '../../src/lib/nova-saluran-broadcast.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
@@ -47,7 +46,7 @@ async function handler(m, { sock }) {
     const targetNumber = resolveTarget(m)
 
     if (!targetNumber || targetNumber.length < 10 || targetNumber.length > 15) {
-        return sendReplyWithNav(sock, m, `🚫 *Ban User*\n\n` +
+        return m.reply( `🚫 *Ban User*\n\n` +
             `Masukkan nomor atau tag user\n\n` +
             `\`Contoh: ${m.prefix}ban 6281234567890\``, "ban")
     }

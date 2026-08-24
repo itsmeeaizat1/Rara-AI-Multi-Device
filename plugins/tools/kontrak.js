@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const KONTRAK_PROMPT = `Kamu adalah ahli hukum Indonesia. Buatkan draft kontrak/perjanjian resmi berdasarkan informasi user.
@@ -120,10 +119,10 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       ``,
       `  ┊  ➶ *Hasil:* PDF dengan klausa standar, siap edit`,
     ].join("\n"));
-    return sendReplyWithNav(sock, m, help, "kontrak");
+    return m.reply( help, "kontrak");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
   m.reply(claraWrap("Kontrak", "  ┊  ➶ AI lagi menyusun draft kontrak..."));
 
   try {

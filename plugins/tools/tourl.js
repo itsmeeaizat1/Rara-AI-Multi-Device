@@ -7,7 +7,6 @@ import { downloadMediaMessage, getContentType, generateWAMessageFromContent, pro
 import te from "../../src/lib/nova-error.js";
 import uploadImage from "../../src/scraper/imgdrop.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -572,7 +571,7 @@ async function handler(m, { sock }) {
       txt += `*Cara Pakai:*\n`;
       txt += `👉 Kirim media dengan caption \`${m.prefix}tourl\`\n`;
       txt += `👉 Atau reply media yang udah ada dengan \`${m.prefix}tourl\``;
-      return sendReplyWithNav(sock, m, txt, "tourl");
+      return m.reply( txt, "tourl");
     }
 
     try {
@@ -593,7 +592,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Tourl", "❌ Waduh kak, medianya nggak kebaca. Coba kirim ulang deh!"));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   const results = [];
   const failed = [];

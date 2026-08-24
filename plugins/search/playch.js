@@ -11,7 +11,6 @@ import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const run = promisify(exec);
 const pluginConfig = {
@@ -108,11 +107,11 @@ async function handler(m, { sock }) {
   }
 
   if (!q)
-    return sendReplyWithNav(sock, m, `🎵 *PLAY SALURAN*\n\n\`${m.prefix}playch <judul lagu>\`\n\`${m.prefix}playch --idch <id_saluran> <judul lagu>\``, "playch");
+    return m.reply( `🎵 *PLAY SALURAN*\n\n\`${m.prefix}playch <judul lagu>\`\n\`${m.prefix}playch --idch <id_saluran> <judul lagu>\``, "playch");
   if (!chId)
-    return sendReplyWithNav(sock, m, `❌ Saluran belum diatur. Gunakan \`--idch <id>\` atau atur di config.js`, "playch");
+    return m.reply( `❌ Saluran belum diatur. Gunakan \`--idch <id>\` atau atur di config.js`, "playch");
 
-  m.react("🕐");
+  m.react("🕒");
   try {
     const { videos } = await yts(q);
     const video = pickVideo({ videos });
@@ -163,7 +162,7 @@ async function handler(m, { sock }) {
       waveform: Array.from(waveform),
     });
     m.react("✅");
-    { const __navText = claraWrap("${title}", `✅ *${title}* berhasil dikirim ke saluran`); await sendReplyWithNav(sock, m, __navText, "playch"); };
+    { const __navText = claraWrap("${title}", `✅ *${title}* berhasil dikirim ke saluran`); await m.reply( __navText, "playch"); };
   } catch (e) {
     console.error("[PlayCh]", e);
     m.reply(claraWrap("playch", te(m.prefix, m.command, m.pushName), "error"));

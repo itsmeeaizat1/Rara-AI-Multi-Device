@@ -3,7 +3,6 @@ import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "bingimage",
@@ -26,10 +25,10 @@ async function handler(m, { sock }) {
     const query = m.text;
 
     if (!query) {
-      return sendReplyWithNav(m, sock, claraWrap("Bingimage", `❌ *Masukkan kata kunci pencarian!*\n\n> Contoh: ${m.prefix}carigambar rem`), { commandName: "bingimage" });
+      return m.reply( claraWrap("Bingimage", `❌ *Masukkan kata kunci pencarian!*\n\n> Contoh: ${m.prefix}carigambar rem`), { commandName: "bingimage" });
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     const apikey = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
     const data = await novaApi.apiFaa.get(

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -142,7 +141,7 @@ async function handler(m, { sock }) {
       ".poll create 30m Siapa hadir meetup? | Ya, Tidak, Mungkin",
       ".poll create multi Pilih hobi! | Game, Musik, Olahraga, Baca",
     ].join("\n"));
-    return sendReplyWithNav(sock, m, helpText, { commandName: "poll" });
+    return m.reply( helpText, { commandName: "poll" });
   }
 
   // === CREATE ===
@@ -232,7 +231,7 @@ async function handler(m, { sock }) {
       `Tutup manual: .poll close ${pollId}`,
     ]);
 
-    await sendReplyWithNav(sock, m, display, { commandName: "poll" });
+    await m.reply( display, { commandName: "poll" });
 
     // Send native WA poll too for convenience
     try {

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
@@ -29,7 +28,7 @@ function handler(m, { sock }) {
     if (!option) {
         const status = groupData.antijudol || 'off'
         const mode = groupData.antijudolMode || 'remove'
-        return sendReplyWithNav(sock, m, `🎰 *Antijudol*\n\n` +
+        return m.reply( `🎰 *Antijudol*\n\n` +
             `Status: *${status.toUpperCase()}*\n` +
             `Mode: *${mode.toUpperCase()}*\n\n` +
             `Deteksi konten judol seperti judi, slot, gacor, maxwin, togel, bonus member, link alternatif, dan pola sejenis.\n\n` +

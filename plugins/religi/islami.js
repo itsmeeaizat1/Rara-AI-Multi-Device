@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
@@ -51,7 +50,7 @@ async function handler(m, { sock }) {
                 if (!text) {
                     let daftarNiat = '📋 *DAFTAR NIAT SHOLAT*\n\n' + niatSholat.map((item) => `- ${item.name}`).join('\n')
                     daftarNiat += `\n\n📌 Ketik \`${m.prefix}niatsholat [nama sholat]\` untuk melihat niat\nContoh: \`${m.prefix}niatsholat subuh\``
-                    sendReplyWithNav(sock, m, daftarNiat, "islami")
+                    m.reply( daftarNiat, "islami")
                 } else {
                     let hasil = niatSholat.find((item) => item.name.toLowerCase().includes(text.toLowerCase()))
 
@@ -70,7 +69,7 @@ async function handler(m, { sock }) {
 
             case 'surah': {
                 if (!text) {
-                    sendReplyWithNav(sock, m, `⚠️ Ketik nomor surahnya!\nContoh: \`${m.prefix}surah 1\` buat ambil ayat-ayat dari Al-Fatihah`, "islami")
+                    m.reply( `⚠️ Ketik nomor surahnya!\nContoh: \`${m.prefix}surah 1\` buat ambil ayat-ayat dari Al-Fatihah`, "islami")
                     return
                 }
 
@@ -104,7 +103,7 @@ async function handler(m, { sock }) {
                 if (!text) {
                     let listDoa = '🤲 *DAFTAR DOA*\n\n' + daftarDoa.map((item) => `- ${item.doa}`).join('\n')
                      listDoa += `\n\n📌 Ketik \`${m.prefix}doa [nama doa]\` untuk melihat doa\nContoh: \`${m.prefix}doa doa sebelum tidur\``
-                    sendReplyWithNav(sock, m, listDoa, "islami")
+                    m.reply( listDoa, "islami")
                 } else {
                     let hasil = daftarDoa.find((item) => item.doa.toLowerCase().includes(text.toLowerCase()))
 
@@ -122,7 +121,7 @@ async function handler(m, { sock }) {
             break
 
             case 'gislam': {
-                if (!text) return sendReplyWithNav(sock, m, `❓ Mau cari artikel tentang apa?\nContoh: \`${m.prefix}gislam puasa\``, "islami")
+                if (!text) return m.reply( `❓ Mau cari artikel tentang apa?\nContoh: \`${m.prefix}gislam puasa\``, "islami")
                 
                 try {
                     const response = await fetchJson(`https://artikel-islam.netlify.app/.netlify/functions/api/ms?page=1&s=${text}`)

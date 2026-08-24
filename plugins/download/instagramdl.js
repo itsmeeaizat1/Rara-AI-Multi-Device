@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import instagramDownloader from "../../src/scraper/ig.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "instagramdl",
@@ -24,7 +23,7 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return sendReplyWithNav(sock, m, `📸 *Instagram Downloader*\n\n` +
+    return m.reply( `📸 *Instagram Downloader*\n\n` +
         `\`${m.prefix}igdl <url>\`\n\n` +
         `*Contoh:*\n` +
         `\`${m.prefix}igdl https://www.instagram.com/reel/xxx\`\n` +
@@ -35,7 +34,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Instagramdl", `❌ URL tidak valid. Gunakan link Instagram (reel/post/story).`));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const result = await instagramDownloader(url);

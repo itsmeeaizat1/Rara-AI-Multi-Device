@@ -9,7 +9,6 @@ import yts from "yt-search";
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "play",
@@ -44,7 +43,7 @@ async function handler(m, { sock, text }) {
   if (!query)
     { const __navText = `🎵 *Play*\n\n> Contoh:\n\`${m.prefix}play komang\``; return await m.reply(claraWrap("play", __navText)); };
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const search = await yts(query);

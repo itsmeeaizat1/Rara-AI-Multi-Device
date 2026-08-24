@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
@@ -66,7 +65,7 @@ async function handler(m, { sock }) {
 
   if (!input) {
     const help = `Kirim pesan setelah command.\nContoh: .deepaixemoz halo, siapa kamu?\n\n.deepaixemoz reset — Reset sesi percakapan`;
-    return sendReplyWithNav(m, sock, claraWrap("DeepAI Chat", help));
+    return m.reply( claraWrap("DeepAI Chat", help));
   }
 
   if (input.toLowerCase() === "reset") {
@@ -78,7 +77,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("DeepAI Chat", "Tidak ada sesi aktif untuk direset."));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const key = sessionKey(m);

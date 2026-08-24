@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -43,7 +42,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   // .pomodoro start [focus_min] [break_min]
   if (sub === "start" || sub === "mulai") {
     if (getSession(sender)) {
-      return sendReplyWithNav(m, sock, claraWrap("Pomodoro", [
+      return m.reply( claraWrap("Pomodoro", [
         "Sesi sedang berjalan!",
         `Ketik ${prefix}pomodoro status untuk cek`,
         `Ketik ${prefix}pomodoro stop untuk berhenti`,
@@ -99,7 +98,7 @@ async function handler(m, { sock, args, config: botConfig }) {
       }, breakMin * 60 * 1000);
     }, focusMin * 60 * 1000);
 
-    return sendReplyWithNav(m, sock, claraWrap("Pomodoro - Fokus", [
+    return m.reply( claraWrap("Pomodoro - Fokus", [
       `Sesi dimulai!`,
       `Fokus: ${focusMin} menit`,
       `Istirahat: ${breakMin} menit`,
@@ -113,7 +112,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   if (sub === "status" || sub === "cek") {
     const s = getSession(sender);
     if (!s) {
-      return sendReplyWithNav(m, sock, claraWrap("Pomodoro", [
+      return m.reply( claraWrap("Pomodoro", [
         `Belum ada sesi aktif.`,
         `Ketik ${prefix}pomodoro start untuk mulai`,
       ].join("\n")), { commandName: "pomodoro" });
@@ -121,7 +120,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     const elapsed = Date.now() - s.startTime;
     const total = s.phase === "focus" ? s.focusMs : s.breakMs;
     const remaining = Math.max(0, total - elapsed);
-    return sendReplyWithNav(m, sock, claraWrap("Pomodoro - Status", [
+    return m.reply( claraWrap("Pomodoro - Status", [
       `Phase: ${s.phase === "focus" ? "Fokus" : "Istirahat"}`,
       `Sisa waktu: ${formatTime(remaining)}`,
       `Cycle selesai: ${s.cycles}x`,
@@ -133,7 +132,7 @@ async function handler(m, { sock, args, config: botConfig }) {
   if (sub === "stop" || sub === "berhenti") {
     const s = getSession(sender);
     if (!s) {
-      return sendReplyWithNav(m, sock, claraWrap("Pomodoro", [
+      return m.reply( claraWrap("Pomodoro", [
         `Tidak ada sesi aktif.`,
       ].join("\n")), { commandName: "pomodoro" });
     }
@@ -143,7 +142,7 @@ async function handler(m, { sock, args, config: botConfig }) {
       totalFocus += elapsed;
     }
     sessions.delete(sender);
-    return sendReplyWithNav(m, sock, claraWrap("Pomodoro - Selesai", [
+    return m.reply( claraWrap("Pomodoro - Selesai", [
       `Sesi dihentikan.`,
       `Cycle: ${s.cycles}x`,
       `Total fokus: ${formatTime(totalFocus)}`,
@@ -161,7 +160,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     `3. ${prefix}pomodoro status - Cek sisa waktu`,
     `4. ${prefix}pomodoro stop - Berhenti`,
   ].join("\n")) + "\n" + tipText(`Ketik ${prefix}pomodoro start untuk mulai`);
-  return sendReplyWithNav(m, sock, txt, { commandName: "pomodoro" });
+  return m.reply( txt, { commandName: "pomodoro" });
 }
 
 export { pluginConfig as config, handler };

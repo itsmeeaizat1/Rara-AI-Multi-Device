@@ -2,7 +2,6 @@
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { sendToolsPreview } from "../../src/lib/nova-context.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "lookup",
@@ -24,7 +23,7 @@ async function handler(m, { sock }) {
   let domain = m.args?.[0];
 
   if (!domain) {
-    return sendReplyWithNav(sock, m, `⚠️ *CARA PAKAI*\n\n` +
+    return m.reply( `⚠️ *CARA PAKAI*\n\n` +
         `\`${m.prefix}lookup <domain>\`\n\n` +
         `Contoh:\n` +
         `\`${m.prefix}lookup google.com\``, "lookup");
@@ -38,7 +37,7 @@ async function handler(m, { sock }) {
     { const __navText = `❌ *ғORMAT TIDAK VALID*\n\n> Contoh: \`google.com\``; return await m.reply(__navText); };
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
   await m.reply(claraWrap("Lookup", `🕕 *MENCARI INFO DOMAIN...*`));
 
   try {

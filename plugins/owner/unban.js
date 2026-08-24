@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
@@ -46,7 +45,7 @@ async function handler(m, { sock }) {
     const targetNumber = resolveTarget(m)
 
     if (!targetNumber || targetNumber.length < 10 || targetNumber.length > 15) {
-        return sendReplyWithNav(sock, m, claraWrap("Unban User", `✅ *Unban User*\n\n` +
+        return m.reply( claraWrap("Unban User", `✅ *Unban User*\n\n` +
             `Masukkan nomor atau tag user\n\n` +
             `\`Contoh: ${m.prefix}unban 6281234567890\``), "unban")
     }

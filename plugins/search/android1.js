@@ -5,7 +5,6 @@ import config from "../../config.js";
 import fs from "fs";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "android1",
@@ -31,7 +30,7 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
 
   if (!text) {
-    return sendReplyWithNav(sock, m, `📱 *Android1 sEarch*\n\n` +
+    return m.reply( `📱 *Android1 sEarch*\n\n` +
         `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
         `┃ 🔍 \`${m.prefix}android1 <query>\` - Cari APK\n` +
         `╰┈┈⬡\n\n` +
@@ -39,7 +38,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}android1 Subway Surfer\``, "android1");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     const { data } = await axios.get(

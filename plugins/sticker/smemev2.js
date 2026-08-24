@@ -9,7 +9,6 @@ import { Canvas, loadImage, FontLibrary } from "skia-canvas";
 import sharp from "sharp";
 import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // Register Anton font (Impact-like, free Google Font)
@@ -146,7 +145,7 @@ async function handler(m, { sock }) {
           "100% diproses di server, gak kirim gambar ke API mana pun.",
         ].join("\n")
       );
-      await sendReplyWithNav(m, sock, help, { commandName: "smemev2" });
+      await m.reply( help, { commandName: "smemev2" });
       return;
     }
 
@@ -172,11 +171,11 @@ async function handler(m, { sock }) {
           "Contoh: .smemev2 |Bottom text saja",
         ].join("\n")
       );
-      await sendReplyWithNav(m, sock, help, { commandName: "smemev2" });
+      await m.reply( help, { commandName: "smemev2" });
       return;
     }
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // Download media
     let mediaBuffer;

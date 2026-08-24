@@ -2,7 +2,6 @@
 import { scSearch } from "./soundcloud.js";
 import scdl from "../../src/scraper/soundclouddl.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -32,7 +31,7 @@ async function handler(m, { args, sock }) {
     return await m.reply(claraWrap("playsoundcloud", txt));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const searchResults = await scSearch(args.join(" "));

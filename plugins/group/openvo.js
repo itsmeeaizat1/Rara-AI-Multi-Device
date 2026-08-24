@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { downloadContentFromMessage } from 'nova'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
@@ -23,7 +22,7 @@ async function handler(m, { sock }) {
     const quoted = m.quoted
 
     if (!quoted) {
-        await sendReplyWithNav(sock, m, `❌ *Gagal*\n\n` +
+        await m.reply( `❌ *Gagal*\n\n` +
             `Balas pesan 1x lihat dengan perintah ini!\n` +
             `Gunakan: \`${m.prefix}openvo\` (reply pesan 1x lihat)`, "rvo")
         return
@@ -31,7 +30,7 @@ async function handler(m, { sock }) {
 
     const quotedMsg = quoted.message
     if (!quotedMsg) {
-        await sendReplyWithNav(sock, m, `❌ *Pesan Tidak Ditemukan*\n\n` +
+        await m.reply( `❌ *Pesan Tidak Ditemukan*\n\n` +
             `Tidak dapat membaca pesan yang di-reply.`, "rvo")
         return
     }
@@ -40,7 +39,7 @@ async function handler(m, { sock }) {
     const content = quotedMsg[type]
 
     if (!content) {
-        await sendReplyWithNav(sock, m, `❌ *Konten Tidak Ditemukan*\n\n` +
+        await m.reply( `❌ *Konten Tidak Ditemukan*\n\n` +
             `Konten pesan tidak dapat dibaca.`, "rvo")
         return
     }
@@ -77,7 +76,7 @@ async function handler(m, { sock }) {
         }
 
         if (!buffer || buffer.length < 100) {
-            await sendReplyWithNav(sock, m, `❌ *Gagal Mengunduh*\n\n` +
+            await m.reply( `❌ *Gagal Mengunduh*\n\n` +
                 `Tidak dapat mengunduh media.\n` +
                 `Media mungkin sudah kadaluarsa.`, "rvo")
             return

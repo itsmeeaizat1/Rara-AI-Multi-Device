@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "shortlink",
@@ -230,7 +229,7 @@ async function handler(m, { sock }) {
     txt += "Contoh: .shortlink tinyurl https://google.com\n\n";
     txt += "Untuk provider berbayar, set API key di config.js:\n";
     txt += "shortlink: { bitlyKey: \"xxx\", cuttlyKey: \"xxx\", dst }";
-    return sendReplyWithNav(sock, m, txt, "shortlink");
+    return m.reply( txt, "shortlink");
   }
 
   // Parse: .shortlink <provider> <url>
@@ -247,7 +246,7 @@ async function handler(m, { sock }) {
     txt += "2. .shortlink isgd https://example.com\n";
     txt += "3. .shortlink bitly https://github.com\n\n";
     txt += "Ketik .shortlink list buat lihat semua provider";
-    return sendReplyWithNav(sock, m, txt, "shortlink");
+    return m.reply( txt, "shortlink");
   }
 
   const provider = PROVIDERS[providerName];
@@ -268,7 +267,7 @@ async function handler(m, { sock }) {
     const shortUrl = await provider.shorten(cleanUrl, m);
 
     const txt = claraWrap("Shortlink", ["SHORTLINK BERHASIL", "Provider: " + provider.name, "URL asli: " + cleanUrl, "URL pendek: " + shortUrl].join("\n"));
-    return sendReplyWithNav(sock, m, txt, "shortlink");
+    return m.reply( txt, "shortlink");
   } catch (e) {
     let txt = "Gagal memperpendek URL\n\n";
     txt += "Provider: " + provider.name + "\n";

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -83,7 +82,7 @@ async function handler(m, { sock }) {
 
   // === HELP ===
   if (!text || subCmd === "help" || subCmd === "bantuan") {
-    return sendReplyWithNav(sock, m, claraWrap("Reminder", [
+    return m.reply( claraWrap("Reminder", [
       "Sistem pengingat pribadi - bot nge-tag kamu pas waktunya tiba",
       "",
       "Perintah tersedia:",

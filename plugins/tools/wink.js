@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
 import winkEnhance from "../../src/scraper/wink.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -25,14 +24,14 @@ async function handler(m, { sock }) {
   let isDocumentMessage = (m.type === "documentMessage" && m.message?.documentMessage?.mimetype?.startsWith("video")) || (m.quoted && m.quoted.type === "documentMessage" && m.quoted.message?.documentMessage?.mimetype?.startsWith("video"));
 
   if (!isVideoMessage && !isDocumentMessage) {
-    return sendReplyWithNav(sock, m, `✨ *WINK VIDEO ENHANCER*\n\n` +
+    return m.reply( `✨ *WINK VIDEO ENHANCER*\n\n` +
         `Bikin video buram jadi *Ultra HD* pakai AI Wink!\n\n` +
         `*Cara pakai:*\n` +
         `Kirim/reply video lalu caption \`${m.prefix}wink\`\n\n` +
         `⚠️ _Fitur Premium, proses estimasi 1-5 menit tergantung durasi video_`, "wink");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const videoBuffer = (await m?.quoted?.download?.()) || (await m.download?.());

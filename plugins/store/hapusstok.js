@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 
@@ -24,7 +23,7 @@ async function handler(m, { sock }) {
     const products = db.setting('storeProducts') || []
 
     if (products.length === 0) {
-        return sendReplyWithNav(sock, m, `📭 *Belum ada produk.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`, "hapusstok")
+        return m.reply( `📭 *Belum ada produk.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`, "hapusstok")
     }
 
     const args = m.text?.trim().split(/\s+/) || []
@@ -32,7 +31,7 @@ async function handler(m, { sock }) {
     const itemNo = parseInt(args[1]) - 1
 
     if (args.length < 2 || isNaN(productNo) || isNaN(itemNo)) {
-        return sendReplyWithNav(sock, m, `🗑️ *HAPUS STOK*\n\n` +
+        return m.reply( `🗑️ *HAPUS STOK*\n\n` +
             `Format: \`${m.prefix}hapusstok <nomor_produk> <nomor_item>\`\n\n` +
             `📝 *Contoh:*\n` +
             `\`${m.prefix}hapusstok 1 3\` — Hapus item ke-3 dari produk ke-1\n\n` +
@@ -48,7 +47,7 @@ async function handler(m, { sock }) {
     if (product.type === 'fisik') {
         const reduceCount = parseInt(args[1])
         if (isNaN(reduceCount) || reduceCount <= 0) {
-            return sendReplyWithNav(sock, m, `📦 *Produk Fisik*\n\n` +
+            return m.reply( `📦 *Produk Fisik*\n\n` +
                 `Untuk mengurangi stok fisik, gunakan:\n` +
                 `\`${m.prefix}editproduk ${productNo + 1} stok <jumlah_baru>\`\n\n` +
                 `Stok saat ini: *${product.stock === -1 ? '♾️ Unlimited' : product.stock + ' pcs'}*`, "hapusstok")
@@ -57,18 +56,18 @@ async function handler(m, { sock }) {
             product.stock = Math.max(0, product.stock - reduceCount)
             db.setting('storeProducts', products)
             await m.react('✅')
-            return sendReplyWithNav(sock, m, `📦 *STOK FISIK DIKURANGI*\n\n` +
+            return m.reply( `📦 *STOK FISIK DIKURANGI*\n\n` +
                 `🏷️ Produk: *${product.name}*\n` +
                 `➖ Dikurangi: *${reduceCount} pcs*\n` +
                 `📊 Sisa stok: *${product.stock} pcs*`, "hapusstok")
         }
-        return sendReplyWithNav(sock, m, `♾️ *Stok unlimited tidak bisa dikurangi.*\n\nUbah tipe stok terlebih dahulu: \`${m.prefix}editproduk ${productNo + 1} stok <jumlah>\``, "hapusstok")
+        return m.reply( `♾️ *Stok unlimited tidak bisa dikurangi.*\n\nUbah tipe stok terlebih dahulu: \`${m.prefix}editproduk ${productNo + 1} stok <jumlah>\``, "hapusstok")
     }
 
     const stockItems = product.stockItems || []
 
     if (itemNo < 0 || itemNo >= stockItems.length) {
-        return sendReplyWithNav(sock, m, `❌ *Nomor item tidak valid.*\n\nRentang: 1-${stockItems.length}\n\n📋 Lihat daftar: \`${m.prefix}liststok ${productNo + 1}\``, "hapusstok")
+        return m.reply( `❌ *Nomor item tidak valid.*\n\nRentang: 1-${stockItems.length}\n\n📋 Lihat daftar: \`${m.prefix}liststok ${productNo + 1}\``, "hapusstok")
     }
 
     const deleted = stockItems.splice(itemNo, 1)[0]
@@ -76,7 +75,7 @@ async function handler(m, { sock }) {
     db.setting('storeProducts', products)
 
     await m.react('✅')
-    return sendReplyWithNav(sock, m, `🗑️ *STOK DIHAPUS*\n\n` +
+    return m.reply( `🗑️ *STOK DIHAPUS*\n\n` +
         `🏷️ Produk: *${product.name}*\n` +
         `🔑 Item: \`${deleted.detail.replace(/\n/g, ' ').substring(0, 50)}\`\n` +
         `📊 Sisa stok: *${stockItems.length}* akun`, "hapusstok")

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'toimg',
@@ -39,7 +38,7 @@ async function handler(m, { sock }) {
     }
     
     if (!mediaSource) {
-        await sendReplyWithNav(sock, m, `❌ *GAGAL*\n\n` +
+        await m.reply( `❌ *GAGAL*\n\n` +
             `Tidak ada sticker yang terdeteksi!\n\n` +
             `*Cara penggunaan:*\n` +
             `1. Kirim sticker + caption \`${m.prefix}toimg\`\n` +
@@ -65,7 +64,7 @@ async function handler(m, { sock }) {
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
-            await sendReplyWithNav(sock, m, `❌ *GAGAL*\n\n` +
+            await m.reply( `❌ *GAGAL*\n\n` +
                 `Tidak dapat mengunduh sticker.\n` +
                 `Sticker mungkin sudah tidak tersedia.`, "toimg")
             return

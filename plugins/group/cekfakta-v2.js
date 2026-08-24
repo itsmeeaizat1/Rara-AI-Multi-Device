@@ -304,7 +304,7 @@ export default {
 
     if (claimText.length > 3000) claimText = claimText.slice(0, 3000);
 
-    await m.react("🕐");
+    await m.react("🕒");
 
     // ─── Step 1: Local pattern quick-check ───
     const localCheck = quickLocalCheck(claimText);

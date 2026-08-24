@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import FormData from 'form-data'
 import axios from 'axios'
 import fs from 'fs'
@@ -52,13 +51,13 @@ async function handler(m, { sock }) {
     const quoted = m.quoted || m;
     const isAudio = quoted.type === 'audioMessage' || /audio/.test(quoted.mimetype || '');
     if (!isAudio) {
-        return sendReplyWithNav(sock, m, `🎤 *TRANsKRIP*\n\n` +
+        return m.reply( `🎤 *TRANsKRIP*\n\n` +
             `Reply voice note atau audio untuk mengonversi ke teks\n` +
             `Contoh: reply VN → ketik \`${m.prefix}transkrip\``, "transkrip");
     }
     const groqKey = config.APIkey?.groq;
     if (!groqKey) {
-        return sendReplyWithNav(sock, m, `❌ *GAGAL*\n\n` +
+        return m.reply( `❌ *GAGAL*\n\n` +
             `API Key Groq belum diatur\n` +
             `Set di config.js → APIkey.groq\n` +
             `Gratis di https://console.groq.com`, "transkrip");

@@ -5,7 +5,6 @@ import axios from "axios";
 import FormData from "form-data";
 import sharp from "sharp";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -148,7 +147,7 @@ async function handler(m, { sock, args }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!isImage) {
-    return sendReplyWithNav(sock, m, claraWrap("Remini V2", [
+    return m.reply( claraWrap("Remini V2", [
       "All-in-one image enhancer: remini, recolor, unblur, upscale.",
       "",
       "CARA PAKAI (reply gambar):",
@@ -168,7 +167,7 @@ async function handler(m, { sock, args }) {
     ].join("\n")), "reminiv2");
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const buffer = m.quoted?.isMedia

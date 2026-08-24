@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { live3d } from '../../src/scraper/seaart.js'
 import te from '../../src/lib/nova-error.js'
@@ -28,7 +27,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === 'imageMessage'))
     
     if (!isImage) {
-        return sendReplyWithNav(sock, m, `🖼️ *To Oil Painting*\n\n` +
+        return m.reply( `🖼️ *To Oil Painting*\n\n` +
             `Kirim/reply gambar untuk diubah ke gaya lukisan minyak\n\n` +
             `\`${m.prefix}tooilpainting\``, "tooilpainting")
     }

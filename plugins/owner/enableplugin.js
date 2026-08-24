@@ -2,7 +2,6 @@
 import fs from "fs";
 import path from "path";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "enableplugin",
@@ -58,7 +57,7 @@ async function handler(m, { sock }) {
   const pluginName = args[0]?.toLowerCase();
 
   if (!pluginName) {
-    return sendReplyWithNav(sock, m, `🔌 *Enable Plugin*\n\n` +
+    return m.reply( `🔌 *Enable Plugin*\n\n` +
         `Masukkan nama plugin yang ingin diaktifkan\n\n` +
         `*Contoh:*\n` +
         `\`${m.prefix}enableplugin sticker\`\n` +

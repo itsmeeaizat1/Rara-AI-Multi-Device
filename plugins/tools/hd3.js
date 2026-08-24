@@ -5,7 +5,6 @@ import crypto from "crypto";
 import axios from "axios";
 import FormData from "form-data";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const config = {
@@ -267,10 +266,10 @@ async function handler(m, { sock }) {
   const img = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!img) {
-    return sendReplyWithNav(sock, m, `*🪄 BEAUTYPLUS ENHANCER*\n> Reply gambar untuk di-HD-kan\n\n\`\`\`${m.prefix}hd3\`\`\``, "hd3");
+    return m.reply( `*🪄 BEAUTYPLUS ENHANCER*\n> Reply gambar untuk di-HD-kan\n\n\`\`\`${m.prefix}hd3\`\`\``, "hd3");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     let buffer = m.quoted?.isMedia ? await m.quoted.download() : await m.download();

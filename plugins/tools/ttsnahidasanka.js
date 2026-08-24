@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -36,10 +35,10 @@ async function handler(m, { sock, args }) {
     txt += `1. \`${m.prefix}ttsnahida hello everyone\`\n`;
     txt += `2. \`${m.prefix}ttsnahida こんにちは\`\n`;
     txt += `3. \`${m.prefix}ttsnahida welcome to my world\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "ttsnahidasanka" });
+    return await m.reply( txt, { commandName: "ttsnahidasanka" });
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const url = `${API_BASE}/anime/ttsnahida?apikey=${API_KEY}&text=${encodeURIComponent(text)}`;

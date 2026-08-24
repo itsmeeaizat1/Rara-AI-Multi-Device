@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
@@ -128,16 +127,16 @@ async function handler(m, { sock, config: botConfig }) {
       list += POPULAR_ANIME.slice(i, i + 4).join(", ") + "\n";
     }
     list += "\nCari: .wallpaperanime <nama> hd";
-    return sendReplyWithNav(m, sock, claraWrap("Wallpaper Anime", list));
+    return m.reply( claraWrap("Wallpaper Anime", list));
   }
 
   // Validasi input
   if (!text) {
     const help = `Unduh Wallpaper Anime HD\n\nCara pakai:\n.wallpaperanime <karakter> — Cari wallpaper\n.wallpaperanime random — Anime acak\n.wallpaperanime <karakter> hd — HD 1920x1080+\n.wallpaperanime <karakter> 4k — 4K 3840x2160+\n.wallpaperanime <karakter> mobile — Portrait HP\n.wallpaperanime list — Karakter populer\n\nContoh:\n.wallpaperanime naruto hd\n.wallpaperanime zero two\n.wallpaperanime rem mobile\n.wallpaperanime genshin impact 4k\n\nSource: Wallhaven (99rb+ anime) + Konachan (Jepang)`;
-    return sendReplyWithNav(m, sock, claraWrap("Wallpaper Anime", help));
+    return m.reply( claraWrap("Wallpaper Anime", help));
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     // Parse input: cek keyword resolusi

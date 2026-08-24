@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
@@ -61,7 +60,7 @@ async function handler(m, { sock }) {
     }
     
     if (!mediaSource) {
-        await sendReplyWithNav(sock, m, `❌ *GAGAL*\n\n` +
+        await m.reply( `❌ *GAGAL*\n\n` +
             `Tidak ada video/voice note yang terdeteksi!\n\n` +
             `*Cara penggunaan:*\n` +
             `1. Kirim video + caption \`${m.prefix}toaudio\`\n` +
@@ -69,7 +68,7 @@ async function handler(m, { sock }) {
         return
     }
     if (!isVideo && !isPtt) {
-        await sendReplyWithNav(sock, m, `⚠️ *sUDAH AUDIO*\n\n` +
+        await m.reply( `⚠️ *sUDAH AUDIO*\n\n` +
             `Media ini sudah dalam format audio.\n` +
             `Gunakan \`${m.prefix}tovn\` jika ingin mengubah ke voice note.`, "toaudio")
         return
@@ -88,7 +87,7 @@ async function handler(m, { sock }) {
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
-            await sendReplyWithNav(sock, m, `❌ *GAGAL*\n\n` +
+            await m.reply( `❌ *GAGAL*\n\n` +
                 `Tidak dapat mengunduh media.\n` +
                 `Media mungkin sudah tidak tersedia.`, "toaudio")
             return

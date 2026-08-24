@@ -9,7 +9,6 @@ import { promisify } from "util";
 import fetch from "node-fetch";
 import te from "../../src/lib/nova-error.js";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const execFileAsync = promisify(execFile);
@@ -389,10 +388,10 @@ async function createBratVideo(text, template) {
 async function handler(m, { sock }) {
   const text = m.text;
   if (!text) {
-    { const __navText = `⚠️ Harap masukkan teksnya!\nContoh: \`${m.prefix}${m.command} Halo semuanya\``; return await sendReplyWithNav(sock, m, __navText, "bratlocal"); };
+    { const __navText = `⚠️ Harap masukkan teksnya!\nContoh: \`${m.prefix}${m.command} Halo semuanya\``; return await m.reply(__navText, "bratlocal"); };
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const cmd = m.command.toLowerCase();

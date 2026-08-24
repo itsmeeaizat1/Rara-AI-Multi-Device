@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -166,7 +165,7 @@ async function handler(m, { sock, config: botConfig }) {
       const ayatRange = args[2];
 
       if (!surahInput) {
-        return sendReplyWithNav(sock, m,
+        return m.reply(
           prefix + "hafalan add <surah> <ayat_mulai-ayat_akhir>\n\n" +
           "Contoh:\n" +
           prefix + "hafalan add Al-Fatihah 1-7\n" +
@@ -464,7 +463,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     // --- HELP / default ---
-    return sendReplyWithNav(sock, m,
+    return m.reply(
       prefix + "hafalan add <surah> <ayat_mulai-ayat_akhir>\n" +
       prefix + "hafalan list\n" +
       prefix + "hafalan review [ID] [ok/ulang]\n" +

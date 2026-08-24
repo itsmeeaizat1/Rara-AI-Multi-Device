@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -73,7 +72,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "add" || action === "baru") {
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
       if (parts.length < 2) {
-        return sendReplyWithNav(sock, m,
+        return m.reply(
           prefix + "hutang add <nama> | <jumlah> | <keterangan> | <jatuh_tempo>\n\n" +
           "Jatuh tempo format: DD-MM-YYYY (opsional)\n\n" +
           "Contoh:\n" +
@@ -134,7 +133,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "piutang" || action === "tagih") {
       const parts = args.slice(1).join(" ").split("|").map((s) => s.trim());
       if (parts.length < 2) {
-        return sendReplyWithNav(sock, m,
+        return m.reply(
           prefix + "hutang piutang <nama> | <jumlah> | <keterangan> | <jatuh_tempo>\n\n" +
           "Contoh:\n" +
           prefix + "hutang piutang Andi | 100000 | pinjam紧急\n" +
@@ -398,7 +397,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     // --- HELP / default ---
-    return sendReplyWithNav(sock, m,
+    return m.reply(
       prefix + "hutang add <nama> | <jumlah> | <keterangan> | <tgl>\n" +
       prefix + "hutang piutang <nama> | <jumlah> | <keterangan> | <tgl>\n" +
       prefix + "hutang list\n" +

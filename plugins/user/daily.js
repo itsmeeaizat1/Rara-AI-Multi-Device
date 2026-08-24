@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "dailyuser",
@@ -61,7 +60,7 @@ async function handler(m, { sock }) {
   txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
   txt += `Jangan lupa claim lagi besok!`;
 
-  await sendReplyWithNav(sock, m, txt, "daily");
+  await m.reply( txt, "daily");
 }
 
 export { pluginConfig as config, handler };

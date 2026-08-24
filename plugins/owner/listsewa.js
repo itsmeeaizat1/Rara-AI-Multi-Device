@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
@@ -52,7 +51,7 @@ function handler(m, { sock }) {
     const groupIds = Object.keys(sewaGroups)
 
     if (groupIds.length === 0) {
-        return sendReplyWithNav(sock, m, `📋 *DAFTAR SEWA*\n\n` +
+        return m.reply( `📋 *DAFTAR SEWA*\n\n` +
             `Status: *${db.db.data.sewa.enabled ? '✅ AKTIF' : '❌ NONAKTIF'}*\n` +
             `Belum ada grup terdaftar\n\n` +
             `Tambah dengan: *${m.prefix}addsewa <link> <durasi>*`, "listsewa")

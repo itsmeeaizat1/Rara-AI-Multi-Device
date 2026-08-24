@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
@@ -37,7 +36,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetJid) {
-    return sendReplyWithNav(sock, m, claraWrap("Topup Limit",
+    return m.reply( claraWrap("Topup Limit",
       `Tag atau reply user yang mau ditambah limitnya.\n\n` +
       `Usage: \`.topuplimit @tag <jumlah>\`\n` +
       `Contoh: \`.topuplimit @user 500\``, "warn"), "topuplimit");
@@ -47,7 +46,7 @@ async function handler(m, { sock }) {
   const amount = parseInt(m.args?.find(a => !isNaN(a) && !a.startsWith("@")) || 0);
 
   if (!amount || amount <= 0) {
-    return sendReplyWithNav(sock, m, claraWrap("Topup Limit",
+    return m.reply( claraWrap("Topup Limit",
       `Jumlah tidak valid!\n\n` +
       `Contoh: \`.topuplimit @user 500\``, "warn"), "topuplimit");
   }
@@ -63,7 +62,7 @@ async function handler(m, { sock }) {
     db.setUser(targetJid, userData);
     db.save();
 
-    return sendReplyWithNav(sock, m, `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ TOPUP LIMIT\n` +
+    return m.reply( `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ TOPUP LIMIT\n` +
       `  ┊  ➶ User: *${targetJid.split("@")[0]}*\n` +
       `  ┊  ➶ Sebelum: *${formatNumber(beforeEnergi)}*\n` +
       `  ┊  ➶ Sesudah: *∞ Unlimited*\n` +
@@ -82,7 +81,7 @@ async function handler(m, { sock }) {
   msg += `  ┊  ➶ Sesudah: *${formatNumber(afterEnergi)}*\n`;
   msg += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 
-  return sendReplyWithNav(sock, m, msg, "topuplimit");
+  return m.reply( msg, "topuplimit");
 }
 
 export { pluginConfig as config, handler };

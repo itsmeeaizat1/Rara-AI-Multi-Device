@@ -2,7 +2,6 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import https from "node:https";
 import http from "node:http";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 
 const pluginConfig = {
   name: "expandurl", alias: ["unshorten", "urlexpand"], category: "tools",
@@ -31,7 +30,7 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const url = m.text?.trim();
     if (!url || !url.startsWith("http")) {
-      await sendReplyWithNav(sock, m, claraWrap("Expand URL", [`  ┊  ➶ Penggunaan: *${prefix}expandurl <url>*`,
+      await m.reply( claraWrap("Expand URL", [`  ┊  ➶ Penggunaan: *${prefix}expandurl <url>*`,
         `  ┊  ➶ Contoh: *${prefix}expandurl https://bit.ly/xxx*`].join("\n")), "expandurl");
       return { handled: true };
     }

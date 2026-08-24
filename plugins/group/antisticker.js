@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
@@ -61,7 +60,7 @@ async function handler(m, { sock }) {
 
     if (!action) {
         const status = groupData.antisticker ? '✅ ON' : '❌ OFF'
-        await sendReplyWithNav(sock, m, `🎭 *AntiSticker*\n\n> Status: *${status}*\n\n> \`.antisticker on/off\``, "antisticker")
+        await m.reply( `🎭 *AntiSticker*\n\n> Status: *${status}*\n\n> \`.antisticker on/off\``, "antisticker")
         return
     }
 

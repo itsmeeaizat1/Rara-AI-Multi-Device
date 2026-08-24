@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import { getAllPlugins } from "../../src/lib/nova-plugins.js";
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "searchplugin",
@@ -87,14 +86,14 @@ async function handler(m, { sock }) {
   const name = m.text?.trim();
 
   if (!name) {
-    return sendReplyWithNav(sock, m, `🔍 *sEarch Plugin*\n\n` +
+    return m.reply( `🔍 *sEarch Plugin*\n\n` +
         `Cari dan tampilkan info plugin\n\n` +
         `*Contoh:*\n` +
         `\`${m.prefix}splugin sticker\`\n` +
         `\`${m.prefix}splugin menu\``, "searchplugin");
   }
 
-  m.react("🕐");
+  m.react("🕒");
 
   try {
     let info = findPluginInfo(name);

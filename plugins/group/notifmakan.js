@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { setNotifMakan, toggleNotif, getNotif, deleteNotif, parseJadwal } from '../../src/lib/nova-notif-scheduler.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
@@ -47,7 +46,7 @@ function handler(m, { sock }) {
         info += `\n> 💡 _Jam bisa pakai titik atau titik dua (07.00 / 07:00)_\n`
         info += `💡 _Bisa multiple jam, pisahkan pakai koma_`
 
-        return sendReplyWithNav(sock, m, info, "notifmakan")
+        return m.reply( info, "notifmakan")
     }
 
     if (sub === 'off') {
@@ -70,7 +69,7 @@ function handler(m, { sock }) {
 
         const timeInput = args[1]
         if (!timeInput) {
-            return sendReplyWithNav(sock, m, `❌ *Masukkan jadwal makan!*\n\n> Contoh: \`${m.prefix}notifmakan on 07.00,12.00,19.00\``, "notifmakan")
+            return m.reply( `❌ *Masukkan jadwal makan!*\n\n> Contoh: \`${m.prefix}notifmakan on 07.00,12.00,19.00\``, "notifmakan")
         }
 
         const jadwal = parseJadwal(timeInput)
@@ -95,7 +94,7 @@ function handler(m, { sock }) {
 
     if (sub === 'edit') {
         if (!existing) {
-            return sendReplyWithNav(sock, m, `❌ *Belum ada pengingat makan!*\n\n> Aktifkan dulu: \`${m.prefix}notifmakan on 07.00,12.00,19.00\``, "notifmakan")
+            return m.reply( `❌ *Belum ada pengingat makan!*\n\n> Aktifkan dulu: \`${m.prefix}notifmakan on 07.00,12.00,19.00\``, "notifmakan")
         }
 
         const timeInput = args[1]

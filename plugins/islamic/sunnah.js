@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -61,14 +60,14 @@ async function handler(m, { sock, args }) {
     txt += `Contoh:\n`;
     txt += `\`${m.prefix}sunnah books bukhari\`\n`;
     txt += `\`${m.prefix}sunnah hadith bukhari 1\``;
-    return await sendReplyWithNav(m, sock, txt, { commandName: "sunnah" });
+    return await m.reply( txt, { commandName: "sunnah" });
   }
 
   if (!hasKey()) {
     return m.reply(`Sunnah.com API butuh API key!\n\nRequest di: https://github.com/sunnah-com/api/issues\n\nAtau gunakan \`${m.prefix}ummah\` (UmmahAPI, free, no key) untuk 36,000+ hadiths.`);
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     // === SET API KEY (owner only) ===

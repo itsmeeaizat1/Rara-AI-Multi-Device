@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -63,7 +62,7 @@ async function handler(m, { sock, config: botConfig }) {
     text += prefix + "togglejoinreq all on — nyalain semua\n";
     text += prefix + "togglejoinreq all off — matikan semua";
 
-    return await sendReplyWithNav(sock, m, text, "togglejoinreq");
+    return await m.reply( text, "togglejoinreq");
   }
 
   if (subCmd === "all") {

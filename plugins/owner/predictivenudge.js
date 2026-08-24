@@ -9,7 +9,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
 import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import { exec } from "child_process";
 import { promisify } from "util";
@@ -506,12 +505,12 @@ async function handler(m, { sock, config: botConfig }) {
         "",
         "Default OFF. Tidak aktif saat pairing.",
       ].join("\n")) + "\n" + tipText("Ketik " + prefix + "predictivenudge off untuk matikan");
-      await sendReplyWithNav(sock, m, text, "predictivenudge");
+      await m.reply( text, "predictivenudge");
     } else if (args[0] === "off") {
       if (cfg[gid]) cfg[gid].enabled = false;
       db.db.write();
       const text = claraWrap("Predictive Life-Nudge", ["Status: OFF", "Pengingat proaktif dimatikan"].join("\n"));
-      await sendReplyWithNav(sock, m, text, "predictivenudge");
+      await m.reply( text, "predictivenudge");
     } else if (args[0] === "voice") {
       const voiceOpt = args[1];
       if (!cfg[gid]) cfg[gid] = {};
@@ -522,7 +521,7 @@ async function handler(m, { sock, config: botConfig }) {
         cfg[gid].voice = false;
       } else {
         const text = claraWrap("Predictive Life-Nudge", "Pilih: on (VN neural) atau off (teks)");
-        await sendReplyWithNav(sock, m, text, "predictivenudge");
+        await m.reply( text, "predictivenudge");
         return { handled: true };
       }
       cfg[gid].enabled = cfg[gid].enabled ?? true;
@@ -531,7 +530,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Voice: " + (cfg[gid].voice ? "ON (Gadis neural VN)" : "OFF (teks)"),
         "Status: " + (cfg[gid].enabled ? "ON" : "OFF"),
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "predictivenudge");
+      await m.reply( text, "predictivenudge");
     } else if (args[0] === "status") {
       const uid = m.sender || gid;
       const allData = db.db.data.predictiveNudgeData || {};
@@ -560,7 +559,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push(prefix + "predictivenudge nudge now — Test nudge");
 
       const text = claraWrap("Predictive Life-Nudge", lines.join("\n"));
-      await sendReplyWithNav(sock, m, text, "predictivenudge");
+      await m.reply( text, "predictivenudge");
     } else if (args[0] === "nudge" && args[1] === "now") {
       // Manual test nudge
       const uid = m.sender || gid;
@@ -604,7 +603,7 @@ async function handler(m, { sock, config: botConfig }) {
         db.db.write();
       }
       const text = claraWrap("Predictive Life-Nudge", ["Data pola direset", "Bot akan belajar ulang dari awal"].join("\n"));
-      await sendReplyWithNav(sock, m, text, "predictivenudge");
+      await m.reply( text, "predictivenudge");
     } else {
       const status = cfg[gid]?.enabled ? "ON" : "OFF";
       const text = claraWrap("Predictive Life-Nudge", [
@@ -619,7 +618,7 @@ async function handler(m, { sock, config: botConfig }) {
         prefix + "predictivenudge reset — Reset data",
         prefix + "predictivenudge voice on/off — VN atau teks",
       ].join("\n"));
-      await sendReplyWithNav(sock, m, text, "predictivenudge");
+      await m.reply( text, "predictivenudge");
     }
   } catch (e) {
     await m.reply("Error: " + e.message);

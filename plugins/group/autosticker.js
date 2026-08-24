@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
@@ -29,7 +28,7 @@ async function handler(m, { sock }) {
     
     if (!arg) {
         const status = current ? '✅ Aktif' : '❌ Nonaktif'
-        return sendReplyWithNav(sock, m, `🖼️ *Autosticker*\n\n` +
+        return m.reply( `🖼️ *Autosticker*\n\n` +
             `Status: ${status}\n\n` +
             `Gunakan:\n` +
             `\`${m.prefix}autosticker on\` - aktifkan\n` +

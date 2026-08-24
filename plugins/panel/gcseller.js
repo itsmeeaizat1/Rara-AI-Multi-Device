@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import fs from 'fs'
 import path from 'path'
@@ -86,10 +85,10 @@ function parseCommand(cmd) {
 
 function handler(m, { sock }) {
     const parsed = parseCommand(m.command)
-    if (!parsed) return sendReplyWithNav(sock, m, '❌ Command tidak valid.', "gcseller")
+    if (!parsed) return m.reply( '❌ Command tidak valid.', "gcseller")
 
     if (!hasAccess(m.sender, m.isOwner)) {
-        return sendReplyWithNav(sock, m, '❌ *Akses Ditolak*\n\n> Fitur ini hanya untuk Owner atau Owner Panel.', "gcseller")
+        return m.reply( '❌ *Akses Ditolak*\n\n> Fitur ini hanya untuk Owner atau Owner Panel.', "gcseller")
     }
 
     const { action, version } = parsed

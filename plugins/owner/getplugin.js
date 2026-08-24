@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 import config from "../../config.js";
 import { AIRich } from "../../src/lib/nova-builder.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "getplugin",
@@ -105,7 +104,7 @@ async function handler(m, { sock }) {
   const pluginName = m.args?.[0]?.trim();
 
   if (!pluginName) {
-    return sendReplyWithNav(sock, m, `📦 *Get Plugin*\n\n` +
+    return m.reply( `📦 *Get Plugin*\n\n` +
       `Dapatkan source code plugin\n\n` +
       `╭┈┈⬡「 📋 *ғOrmat* 」\n` +
       `┃ .getplugin <nama>\n` +
@@ -150,7 +149,7 @@ async function handler(m, { sock }) {
       });
     }
 
-    return sendReplyWithNav(sock, m, text, "getplugin");
+    return m.reply( text, "getplugin");
   }
 
   const code = fs.readFileSync(pluginInfo.path);

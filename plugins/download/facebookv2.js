@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -40,14 +39,14 @@ async function rlGet(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return sendReplyWithNav(sock, m,
+    return m.reply(
       `╭┈┈⬡「 FACEBOOK V2 」\n` +
       `┃ Usage: ${m.prefix}facebookv2 <url>\n` +
       `╰┈┈⬡\n\n` +
       `${m.prefix}facebookv2 https://www.facebook.com/watch?v=xxx`,
       "facebookv2");
   }
-  m.react("🕐");
+  m.react("🕒");
   try {
     const res = await rlGet(`${API_BASE}/download/facebook?apikey=${API_KEY}&url=${encodeURIComponent(text)}`);
     const r = res.data?.result || res.data?.data;

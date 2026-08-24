@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -49,10 +48,10 @@ async function handler(m, { sock }) {
   const url = m.args[0] || m.text?.trim();
 
   if (!url || !url.includes("shopee")) {
-    { const __navText = "❌ Masukkan link video Shopee yang valid.\n\nContoh: `.shopeedl https://shopee.co.id/...`"; return await sendReplyWithNav(sock, m, __navText, "shopeedl"); };
+    { const __navText = "❌ Masukkan link video Shopee yang valid.\n\nContoh: `.shopeedl https://shopee.co.id/...`"; return await m.reply( __navText, "shopeedl"); };
   }
 
-  await m.react("🕐");
+  await m.react("🕒");
 
   try {
     const data = await extract(url);
