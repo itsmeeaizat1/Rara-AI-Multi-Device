@@ -192,7 +192,7 @@ export default {
     if (command === "cekfaktaon") {
       if (!isOwner) {
         await m.reply(claraWrap("Cek Fakta", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
@@ -200,7 +200,7 @@ export default {
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Cek Fakta", [
-        `┊ Status: *AKTIF* 🟢`,
+        `┊ Status: *ᴀᴋᴛɪꜰ* 🟢`,
         ``,
         `┊ Fitur Cek Fakta & Hoax Detector v2 dinyalakan.`,
         `┊ AI + Web Search aktif untuk verifikasi real-time.`,
@@ -215,7 +215,7 @@ export default {
     if (command === "cekfaktaoff") {
       if (!isOwner) {
         await m.reply(claraWrap("Cek Fakta", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
@@ -223,7 +223,7 @@ export default {
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Cek Fakta", [
-        `┊ Status: *NONAKTIF* 🔴`,
+        `┊ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
         ``,
         `┊ Fitur Cek Fakta dimatikan.`,
         `┊ Ketik *${prefix}cekfaktaon* untuk aktifkan lagi.`,
@@ -256,7 +256,7 @@ export default {
     // ─── Main: .cekfakta (fact-check) ───
     if (!isCekFaktaOn(groupId)) {
       await m.reply(claraWrap("Cek Fakta", [
-        `┊ Status: *Nonaktif di grup ini*`,
+        `┊ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
         ``,
         `┊ Owner: ketik *${prefix}cekfaktaon* untuk mengaktifkan.`,
       ].join("\n")));
@@ -265,7 +265,7 @@ export default {
 
     if (!aiConfig.apiKey) {
       await m.reply(claraWrap("Cek Fakta", [
-        `┊ Status: *AI belum dikonfigurasi*`,
+        `┊ Status: *ᴀɪ ʙᴇʟᴜᴍ ᴅɪᴋᴏɴꜰɪɢᴜʀᴀꜱɪ*`,
         ``,
         `┊ Owner: ketik *${prefix}aihelp* untuk set API key.`,
       ].join("\n")));
@@ -491,7 +491,7 @@ Aturan:
     } catch (error) {
       const text =
         claraWrap("Cek Fakta - Error", [
-          `┊ Status: *Gagal*`,
+          `┊ Status: *ɢᴀɢᴀʟ*`,
           `┊ Alasan: *${error.message}*`,
           ``,
           `┊ Cek AI API key: *${prefix}aihelp*`,

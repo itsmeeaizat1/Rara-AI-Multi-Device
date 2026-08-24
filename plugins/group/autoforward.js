@@ -26,8 +26,8 @@ function handler(m, { sock }) {
     
     if (!option) {
         const status = group.autoforward ? '✅ ON' : '❌ OFF'
-        return m.reply( `🔄 *Auto Forward*\n\n` +
-            `╭┈┈⬡「 📋 *Info* 」\n` +
+        return m.reply( `🔄 *ᴀᴜᴛᴏ ꜰᴏʀᴡᴀʀᴅ*\n\n` +
+            `╭┈┈⬡「 📋 *ɪɴꜰᴏ* 」\n` +
             `┃   ┊  ➶ Status: *${status}*\n` +
             `╰┈┈⬡\n\n` +
             `Gunakan: \`${m.prefix}autoforward on/off\`\n\n` +
@@ -37,8 +37,8 @@ function handler(m, { sock }) {
     if (option === 'on') {
         db.setGroup(groupId, { ...group, autoforward: true })
         m.react('✅')
-        return m.reply(claraWrap("autoforward", `🔄 *Auto Forward*\n\n` +
-            `╭┈┈⬡「 ✅ *Aktif* 」\n` +
+        return m.reply(claraWrap("autoforward", `🔄 *ᴀᴜᴛᴏ ꜰᴏʀᴡᴀʀᴅ*\n\n` +
+            `╭┈┈⬡「 ✅ *ᴀᴋᴛɪꜰ* 」\n` +
             `┃   ┊  ➶ Status: *ON*\n` +
             `╰┈┈⬡\n\n` +
             `_Semua pesan akan di-forward_`))
@@ -47,9 +47,9 @@ function handler(m, { sock }) {
     if (option === 'off') {
         db.setGroup(groupId, { ...group, autoforward: false })
         return m.reply(
-            `🔄 *Auto Forward*\n\n` +
-            `╭┈┈⬡「 ❌ *Nonaktif* 」\n` +
-            `┃   ┊  ➶ Status: *OFF*\n` +
+            `🔄 *ᴀᴜᴛᴏ ꜰᴏʀᴡᴀʀᴅ*\n\n` +
+            `╭┈┈⬡「 ❌ *ɴᴏɴᴀᴋᴛɪꜰ* 」\n` +
+            `┃   ┊  ➶ Status: *ᴏꜰꜰ*\n` +
             `╰┈┈⬡`
         )
     }

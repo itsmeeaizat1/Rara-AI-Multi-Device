@@ -151,14 +151,14 @@ async function startWizard(m, sock, mode, isFirstSetup = false) {
   refreshSessionTimeout(sessionKey);
 
   const intro = isFirstSetup
-    ? `🛡️ *Selamat datang di setup AntiCustom*\n\n` +
+    ? `🛡️ *ꜱᴇʟᴀᴍᴀᴛ ᴅᴀᴛᴀɴɢ ᴅɪ ꜱᴇᴛᴜᴘ ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ*\n\n` +
       `Aku akan bantu bikin AntiCustom per sesi, langkah demi langkah.\n\n` +
-      `*Alurnya:*\n` +
+      `*ᴀʟᴜʀɴʏᴀ:*\n` +
       `1. Tentukan judul rule\n` +
       `2. Isi kata atau pattern yang ingin dideteksi\n` +
       `3. Pilih action saat terdeteksi\n` +
       `4. Konfirmasi detail akhir\n\n`
-    : `🛡️ *Yuk tambah rule AntiCustom baru*\n\n`;
+    : `🛡️ *ʏᴜᴋ ᴛᴀᴍʙᴀʜ ʀᴜʟᴇ ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ ʙᴀʀᴜ*\n\n`;
 
   session.promptId = await sendPrompt(
     sock,
@@ -173,7 +173,7 @@ async function startWizard(m, sock, mode, isFirstSetup = false) {
 
 function buildGuideMessage(m, status, mode, rules) {
   return (
-    `🛡️ *Anticustom*\n\n` +
+    `🛡️ *ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ*\n\n` +
     `Status: *${status.toUpperCase()}*\n` +
     `Mode default: *${normalizeAction(mode).toUpperCase()}*\n` +
     `Total rule: *${rules.length}*\n\n` +
@@ -228,13 +228,13 @@ async function handler(m, { sock }) {
 
   if (sub === "on") {
     db.setGroup(m.chat, { anticustom: "on" });
-    await m.reply(claraWrap("Anticustom", "✅ *AntiCustom diaktifkan*"));
+    await m.reply(claraWrap("Anticustom", "✅ *ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*"));
     return;
   }
 
   if (sub === "off") {
     db.setGroup(m.chat, { anticustom: "off" });
-    await m.reply(claraWrap("Anticustom", "❌ *AntiCustom dinonaktifkan*"));
+    await m.reply(claraWrap("Anticustom", "❌ *ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*"));
     return;
   }
 
@@ -256,7 +256,7 @@ async function handler(m, { sock }) {
       await m.reply(claraWrap("anticustom", "📋 Belum ada rule AntiCustom di grup ini."));
       return;
     }
-    await m.reply(claraWrap("Anticustom", `📋 *List Anticustom*\n\n${rules.map(formatRule).join("\n\n")}`));
+    await m.reply(claraWrap("Anticustom", `📋 *ʟɪꜱᴛ ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ*\n\n${rules.map(formatRule).join("\n\n")}`));
     return;
   }
 
@@ -322,13 +322,13 @@ async function replyHandler(m, { sock }) {
         `Oke, judulnya *${session.title}*.\n\n` +
         `Sekarang, berikan kata-kata yang ingin dideteksi oleh aku.\n\n` +
         `Kamu bisa pilih salah satu format:\n` +
-        `*Contains*: kirim kata dipisah koma atau baris baru\n` +
-        `*Regex*: awali jawaban dengan \`regex:\`\n\n` +
+        `*ᴄᴏɴᴛᴀɪɴꜱ*: kirim kata dipisah koma atau baris baru\n` +
+        `*ʀᴇɢᴇx*: awali jawaban dengan \`regex:\`\n\n` +
         `Contoh contains:\n` +
         `\`anjing, goblok, tolol\`\n\n` +
         `Contoh regex:\n` +
         `\`regex: (anj|anjing|a+n+j+)\`\n\n` +
-        `*Reply pesan ini dengan jawabanmu*`,
+        `*ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ᴅᴇɴɢᴀɴ ᴊᴀᴡᴀʙᴀɴᴍᴜ*`,
     );
     return true;
   }
@@ -350,8 +350,8 @@ async function replyHandler(m, { sock }) {
         `Berarti kamu mau ini ya:\n` +
         `${session.patterns.map((item, index) => `${index + 1}. \`${item}\``).join("\n")}\n\n` +
         `Tipe deteksi: *${session.type}*\n\n` +
-        `Oke siap, kalau pesan member mengandung kata-kata itu, kamu ingin aku *hapus pesan* atau langsung *kick*?\n\n` +
-        `*Reply pesan ini dengan:* \`hapus\` atau \`kick\``,
+        `Oke siap, kalau pesan member mengandung kata-kata itu, kamu ingin aku *ʜᴀᴘᴜꜱ ᴘᴇꜱᴀɴ* atau langsung *ᴋɪᴄᴋ*?\n\n` +
+        `*ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ᴅᴇɴɢᴀɴ:* \`hapus\` atau \`kick\``,
     );
     return true;
   }
@@ -372,7 +372,7 @@ async function replyHandler(m, { sock }) {
         `Oke siap, berikut detail yang kamu mau:\n\n` +
         `${buildSummary(session)}\n\n` +
         `Apakah sudah sesuai?\n\n` +
-        `*Reply pesan ini dengan:* \`ya\` untuk simpan atau \`batal\` untuk membatalkan`,
+        `*ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ᴅᴇɴɢᴀɴ:* \`ya\` untuk simpan atau \`batal\` untuk membatalkan`,
     );
     return true;
   }
@@ -429,7 +429,7 @@ async function replyHandler(m, { sock }) {
       m.chat,
       {
         text:
-          `✅ *AntiCustom berhasil dibuat*\n\n` +
+          `✅ *ᴀɴᴛɪᴄᴜꜱᴛᴏᴍ ʙᴇʀʜᴀꜱɪʟ ᴅɪʙᴜᴀᴛ*\n\n` +
           `${buildSummary(session)}\n\n` +
           `Status otomatis: *ON*\n` +
           `Total rule baru: *${generatedRules.length}*\n\n` +

@@ -37,8 +37,8 @@ async function handler(m, { sock }) {
     const option = args.slice(1).join(' ')?.trim()
 
     if (!sub || !['list', 'approve', 'reject'].includes(sub)) {
-        return m.reply(claraWrap("Join ReQUest Manager", `📋 *Join ReQUest Manager*\n\n` +
-            `╭┈┈⬡「 📌 *Command* 」\n` +
+        return m.reply(claraWrap("Join ReQUest Manager", `📋 *ᴊᴏɪɴ ʀᴇqᴜᴇꜱᴛ ᴍᴀɴᴀɢᴇʀ*\n\n` +
+            `╭┈┈⬡「 📌 *ᴄᴏᴍᴍᴀɴᴅ* 」\n` +
             `┃ ${m.prefix}acc list\n` +
             `┃ ${m.prefix}acc approve all\n` +
             `┃ ${m.prefix}acc reject all\n` +
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
         }
 
         if (sub === 'list') {
-            let text = `📋 *Daftar Permintaan Masuk*\n\n`
+            let text = `📋 *ᴅᴀꜰᴛᴀʀ ᴘᴇʀᴍɪɴᴛᴀᴀɴ ᴍᴀꜱᴜᴋ*\n\n`
             text += `Total: ${pendingList.length} permintaan\n\n`
 
             for (let i = 0; i < pendingList.length; i++) {

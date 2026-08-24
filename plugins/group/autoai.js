@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
     };
     db.save();
     return m.reply(
-      `✅ *Persona ditambahkan*\n\nNama: ${personaArgs[0]}\nKey: ${pName}\nLogic: ${pInstruction.substring(0, 80)}${pInstruction.length > 80 ? "..." : ""}\n\nGunakan: .autoai on --novamode=${pName}`,
+      `✅ *ᴘᴇʀꜱᴏɴᴀ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\nNama: ${personaArgs[0]}\nKey: ${pName}\nLogic: ${pInstruction.substring(0, 80)}${pInstruction.length > 80 ? "..." : ""}\n\nGunakan: .autoai on --novamode=${pName}`,
     );
   }
 
@@ -144,13 +144,13 @@ async function handler(m, { sock }) {
     const cfg = db.db.data.autoai[m.chat];
     if (!cfg?.enabled) return m.reply(claraWrap("autoai", `❌ AutoAI belum aktif di grup ini!`));
     if (cfg.enableCommands)
-      return m.reply(claraWrap("Autoai", `ℹ️ *Command sudah di-enable*
+      return m.reply(claraWrap("Autoai", `ℹ️ *ᴄᴏᴍᴍᴀɴᴅ ꜱᴜᴅᴀʜ ᴅɪ-ᴇɴᴀʙʟᴇ*
 
   ┊  ➶ User tetap bisa pakai command walau AutoAI aktif`));
     cfg.enableCommands = true;
     db.save();
     return m.reply(
-      `✅ *Enable Command*
+      `✅ *ᴇɴᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅ*
 
 ` +
         `User sekarang bisa menggunakan command walau AutoAI aktif
@@ -168,13 +168,13 @@ async function handler(m, { sock }) {
     const cfg = db.db.data.autoai[m.chat];
     if (!cfg?.enabled) return m.reply(claraWrap("autoai", `❌ AutoAI belum aktif di grup ini!`));
     if (!cfg.enableCommands)
-      return m.reply(claraWrap("Autoai", `ℹ️ *Command sudah di-disable*
+      return m.reply(claraWrap("Autoai", `ℹ️ *ᴄᴏᴍᴍᴀɴᴅ ꜱᴜᴅᴀʜ ᴅɪ-ᴅɪꜱᴀʙʟᴇ*
 
   ┊  ➶ Semua command (kecuali owner) diblokir saat AutoAI aktif`));
     cfg.enableCommands = false;
     db.save();
     return m.reply(
-      `🔒 *Disable Command*
+      `🔒 *ᴅɪꜱᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅ*
 
 ` +
         `Semua command (kecuali owner) diblokir saat AutoAI aktif
@@ -200,9 +200,9 @@ async function handler(m, { sock }) {
           .join("\n")
       : "  ▸ (belum ada custom persona)";
     let txt = `🤖 *DaғTar Persona*\n\n`;
-    txt += `*Bawaan:*\n${builtIn}\n\n`;
-    txt += `*Custom:*\n${custom}\n\n`;
-    txt += `*Global:* ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}\n\n`;
+    txt += `*ʙᴀᴡᴀᴀɴ:*\n${builtIn}\n\n`;
+    txt += `*ᴄᴜꜱᴛᴏᴍ:*\n${custom}\n\n`;
+    txt += `*ɢʟᴏʙᴀʟ:* ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}\n\n`;
     txt += `.autoai on --novamode=<key>\n`;
     txt += `.autoai tambahpersona nama | logic\n`;
     txt += `.autoai hapuspersona nama\n`;
@@ -313,9 +313,9 @@ async function handler(m, { sock }) {
     const customList = customP.length
       ? customP.map(([k, v]) => `${k} - ${v.name} (custom)`).join("\n")
       : "";
-    let txt = `🤖 *Auto Ai*\n\n`;
+    let txt = `🤖 *ᴀᴜᴛᴏ ᴀɪ*\n\n`;
     txt += `Mengaktifkan/menonaktifkan auto AI response\n\n`;
-    txt += `*Penggunaan:*\n`;
+    txt += `*ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n`;
     txt += `.autoai on --novamode=<karakter|custom> --type=<text|voice> --mode=<onlychat|assistant>\n`;
     txt += `.autoai off\n`;
     txt += `.autoai tambahpersona nama | logic\n`;
@@ -323,16 +323,16 @@ async function handler(m, { sock }) {
     txt += `.autoai listpersona\n`;
     txt += `.autoai global on/off\n`;
     txt += `.autoai enablecommand / disablecommand\n\n`;
-    txt += `*Karakter bawaan:*\n${charList}\n`;
-    if (customList) txt += `\n*Karakter custom:*\n${customList}\n`;
-    txt += `\n*Global:* ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}\n\n`;
-    txt += `*Response Type:*\n`;
+    txt += `*ᴋᴀʀᴀᴋᴛᴇʀ ʙᴀᴡᴀᴀɴ:*\n${charList}\n`;
+    if (customList) txt += `\n*ᴋᴀʀᴀᴋᴛᴇʀ ᴄᴜꜱᴛᴏᴍ:*\n${customList}\n`;
+    txt += `\n*ɢʟᴏʙᴀʟ:* ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}\n\n`;
+    txt += `*ʀᴇꜱᴘᴏɴꜱᴇ ᴛʏᴘᴇ:*\n`;
     txt += `text - Reply dengan text biasa\n`;
     txt += `voice - Reply dengan voice note (TTS)\n\n`;
-    txt += `*Mode AutoAI:*\n`;
+    txt += `*ᴍᴏᴅᴇ ᴀᴜᴛᴏᴀɪ:*\n`;
     txt += `assistant - Bot bisa jalankan aksi (buka tutup grup, kick, rich message)\n`;
     txt += `onlychat - Bot hanya murni chat santai biasa\n\n`;
-    txt += `*Contoh:*\n`;
+    txt += `*ᴄᴏɴᴛᴏʜ:*\n`;
     txt += `.autoai on --novamode=furina --type=text\n`;
     txt += `.autoai on --novamode=custom --logic=kamu adalah nexa ai\n`;
     txt += `.autoai tambahpersona nexa | kamu adalah nexa ai\n`;
@@ -383,7 +383,7 @@ async function handler(m, { sock }) {
     db.save();
     let txt = `🤖 *Auto Ai DiaktiғKan*\n\n`;
     txt += `╭┈┈⬡「 📋 *InғO* 」\n`;
-    txt += `┃ 🎭 Karakter: *Custom*\n`;
+    txt += `┃ 🎭 Karakter: *ᴄᴜꜱᴛᴏᴍ*\n`;
     txt += `┃ 🧠 Logic: ${customLogic.substring(0, 100)}${customLogic.length > 100 ? "..." : ""}\n`;
     txt += `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
     txt += `┃ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;

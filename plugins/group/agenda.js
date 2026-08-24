@@ -358,7 +358,7 @@ export default {
     if (new RegExp(`^${prefix}agendaon\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Agenda", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
@@ -366,7 +366,7 @@ export default {
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Agenda", [
-        `┊ Status: *AKTIF* 🟢`,
+        `┊ Status: *ᴀᴋᴛɪꜰ* 🟢`,
         ``,
         `┊ Fitur Smart Agenda dinyalakan.`,
         `┊ Ketik *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
@@ -378,13 +378,13 @@ export default {
     if (new RegExp(`^${prefix}agendaoff\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Agenda", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Agenda", [
-        `┊ Status: *NONAKTIF* 🔴`,
+        `┊ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
         ``,
         `┊ Fitur Agenda dimatikan.`,
         `┊ Ketik *${prefix}agendaon* untuk aktifkan lagi.`,
@@ -422,7 +422,7 @@ export default {
     // Check if enabled
     if (!isAgendaOn(groupId)) {
       await m.reply(claraWrap("Agenda", [
-        `┊ Status: *Nonaktif di grup ini*`,
+        `┊ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
         ``,
         `┊ Owner: ketik *${prefix}agendaon* untuk mengaktifkan.`,
       ].join("\n")));
@@ -504,14 +504,14 @@ export default {
       ];
 
       if (event.status === "done") {
-        lines.push(``, `┊ Status: *SELESAI* ✅`);
+        lines.push(``, `┊ Status: *ꜱᴇʟᴇꜱᴀɪ* ✅`);
         if (event.notifiedAt) {
           lines.push(`┊ Notifikasi terkirim: ${formatDate(event.notifiedAt)}`);
         }
       } else if (diff <= 0) {
         lines.push(``, `┊ Status: *Waktunya tiba!* 🔔`);
       } else {
-        lines.push(``, `┊ Status: *Aktif* 🟢`);
+        lines.push(``, `┊ Status: *ᴀᴋᴛɪꜰ* 🟢`);
         if (event.reminded1d) lines.push(`┊ Pengingat H-1 hari: ✅ terkirim`);
         if (event.reminded1h) lines.push(`┊ Pengingat H-1 jam: ✅ terkirim`);
       }
@@ -529,7 +529,7 @@ export default {
     if (subCmd && subCmd[1] === "hapus") {
       if (!isOwner) {
         await m.reply(claraWrap("Agenda", [
-          `┊ Status: *Akses Ditolak*`,
+          `┊ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
           `┊ Hanya owner yang bisa menghapus acara.`,
         ].join("\n")));

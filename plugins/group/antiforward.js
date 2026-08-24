@@ -128,7 +128,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
 
       return m.reply(claraWrap("Anti Forward", [
-        "Status: " + (cfg.enabled ? "*AKTIF*" : "Nonaktif"),
+        "Status: " + (cfg.enabled ? "*ᴀᴋᴛɪꜰ*" : "Nonaktif"),
         "Min forwarding score: " + cfg.minScore,
         "Action: " + (cfg.action || "delete").toUpperCase(),
         "Max warning: " + (cfg.maxWarn || 3),

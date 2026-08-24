@@ -24,7 +24,7 @@ async function handler(m, { sock, db }) {
 
     if (!action) {
         const status = group.antiremove || 'off'
-        await m.reply( `🗑️ *AntiRemove*\n\n` +
+        await m.reply( `🗑️ *ᴀɴᴛɪʀᴇᴍᴏᴠᴇ*\n\n` +
             `Status: *${status === 'on' ? '✅ Aktif' : '❌ Nonaktif'}*\n\n` +
             `\`.antiremove on/off\``, "antiremove")
         return
@@ -33,13 +33,13 @@ async function handler(m, { sock, db }) {
     if (action === 'on') {
         db.setGroup(m.chat, { ...group, antiremove: 'on' })
         m.react('✅')
-        { const __navText = `✅ *AntiRemove diaktifkan*\nPesan yang dihapus akan di-forward ulang.`; await m.reply(__navText); }
+        { const __navText = `✅ *ᴀɴᴛɪʀᴇᴍᴏᴠᴇ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*\nPesan yang dihapus akan di-forward ulang.`; await m.reply(__navText); }
         return
     }
 
     if (action === 'off') {
         db.setGroup(m.chat, { ...group, antiremove: 'off' })
-        await m.reply(claraWrap("Antiremove", `❌ *AntiRemove dinonaktifkan*`))
+        await m.reply(claraWrap("Antiremove", `❌ *ᴀɴᴛɪʀᴇᴍᴏᴠᴇ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`))
         return
     }
 

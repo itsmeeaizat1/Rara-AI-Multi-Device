@@ -6,7 +6,7 @@ function claraWrap(title, text) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   const body = Array.isArray(text) ? text.join("\n") : text;
-  // Convert body to small caps tapi skip baris command (.xxx) dan preserve *bold*
+  // Convert body to small caps tapi skip baris command (.xxx) dan preserve *ʙᴏʟᴅ*
   const scBody = body.split("\n").map(line => {
     if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:")) return line;
     return toSC(line);
@@ -53,12 +53,12 @@ async function handler(m, { sock, db }) {
     const delayMatch = action?.match(/^(\d+)(s|ms)?$/)
     
     if (!action || (!["on", "off", "warning", "kick", "delete"].includes(action) && !delayMatch)) {
-        return m.reply( `🛡️ *ANTI SPAM GROUP*\n\n` +
+        return m.reply( `🛡️ *ᴀɴᴛɪ ꜱᴘᴀᴍ ɢʀᴏᴜᴘ*\n\n` +
             `Fitur ini melindungi grup dari member yang mengirim pesan berulang-ulang dengan sangat cepat dan brutal sehingga mengganggu kenyamanan member lain\n\n` +
-            `*Cara pakai:*\n` +
+            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
             `\`${m.prefix}antispam on\` (Aktifkan fitur antispam)\n` +
             `\`${m.prefix}antispam off\` (Matikan fitur antispam)\n\n` +
-            `*Pilih Metode Hukuman:*\n` +
+            `*ᴘɪʟɪʜ ᴍᴇᴛᴏᴅᴇ ʜᴜᴋᴜᴍᴀɴ:*\n` +
             `\`${m.prefix}antispam warning\` (Beri teguran keras hingga 3 kali peringatan)\n` +
             `\`${m.prefix}antispam kick\` (Otomatis tendang spammer langsung tanpa ampun)\n` +
             `\`${m.prefix}antispam delete\` (Hapus seluruh pesan spam yang dikirimkan)\n\n` +
@@ -81,7 +81,7 @@ async function handler(m, { sock, db }) {
         groupData.antispamDelay = delayMs
         db.setGroup(m.chat, groupData)
         
-        return m.reply(claraWrap("antispam", `🛡️ *SENSITIVITAS ANTI SPAM DIPERBARUI*\n\n` +
+        return m.reply(claraWrap("antispam", `🛡️ *ꜱᴇɴꜱɪᴛɪᴠɪᴛᴀꜱ ᴀɴᴛɪ ꜱᴘᴀᴍ ᴅɪᴘᴇʀʙᴀʀᴜɪ*\n\n` +
             `Jeda Maksimal: *${delayMs} ms* (${(delayMs/1000).toFixed(1)} detik)\n\n` +
             `Sistem kini akan menganggap pesan sebagai spam jika anggota mengirim beberapa pesan dengan jeda di bawah *${(delayMs/1000).toFixed(1)} detik* antar pesannya`))
     }
@@ -95,7 +95,7 @@ async function handler(m, { sock, db }) {
         groupData.antispam = isEnable
         db.setGroup(m.chat, groupData)
         
-        await m.reply(claraWrap("antispam", `🛡️ *ANTI SPAM DIPERBARUI*\n\n` +
+        await m.reply(claraWrap("antispam", `🛡️ *ᴀɴᴛɪ ꜱᴘᴀᴍ ᴅɪᴘᴇʀʙᴀʀᴜɪ*\n\n` +
             `Status: *${isEnable ? "AKTIF ✅" : "NONAKTIF ❌"}*\n\n` +
             `Sistem bot kini akan ${isEnable ? "mengawasi secara ketat" : "berhenti mengawasi"} setiap aktivitas spam atau flood pesan yang dilakukan oleh member di dalam grup ini`))
     } else {
@@ -107,7 +107,7 @@ async function handler(m, { sock, db }) {
         if (action === "kick") textAction = "Menendang member yang membandel secara otomatis"
         if (action === "delete") textAction = "Menghapus pesan spam yang mengganggu"
         
-        await m.reply(claraWrap("antispam", `🛡️ *AKSI ANTI SPAM DIPERBARUI*\n\n` +
+        await m.reply(claraWrap("antispam", `🛡️ *ᴀᴋꜱɪ ᴀɴᴛɪ ꜱᴘᴀᴍ ᴅɪᴘᴇʀʙᴀʀᴜɪ*\n\n` +
             `Metode Hukuman: *${action.toUpperCase()}*\n\n` +
             `Sistem bot akan langsung mengambil tindakan berupa *${textAction}* apabila ada member yang terdeteksi melakukan pelanggaran berupa tindakan spam brutal`))
     }
@@ -158,14 +158,14 @@ async function handleSpamAction(m, sock, db) {
         spamTracker.set(chatKey, userData)
         
         if (userData.warnings >= 3) {
-            await m.reply(claraWrap("antispam", `⚠️ *PERINGATAN SPAM MAKSIMAL*\n\n` +
+            await m.reply(claraWrap("antispam", `⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ ꜱᴘᴀᴍ ᴍᴀᴋꜱɪᴍᴀʟ*\n\n` +
                 `Teruntuk: @${senderId.split("@")[0]}\n\n` +
                 `Kamu telah mendapatkan 3 kali teguran peringatan karena mengirim pesan spam secara berkelanjutan. Harap segera berhenti melakukan spam atau jajaran admin grup dapat mengambil tindakan tegas terhadap pelanggaran ini!`))
             userData.warnings = 0 
             userData.count = 0
             spamTracker.set(chatKey, userData)
         } else {
-            await m.reply(claraWrap("antispam", `⚠️ *TEGURAN SPAM TERDETEKSI*\n\n` +
+            await m.reply(claraWrap("antispam", `⚠️ *ᴛᴇɢᴜʀᴀɴ ꜱᴘᴀᴍ ᴛᴇʀᴅᴇᴛᴇᴋꜱɪ*\n\n` +
                 `Peringatan ke-${userData.warnings} dari maksimal 3 peringatan\n\n` +
                 `Halo @${senderId.split("@")[0]}, tolong jangan melakukan pengiriman pesan berulang-ulang di grup ini secara cepat! Sistem kami mendeteksi aktivitasmu sebagai spam. Mohon hargai kenyamanan member lainnya`))
             userData.count = 0 
@@ -173,12 +173,12 @@ async function handleSpamAction(m, sock, db) {
         }
     } else if (action === "kick") {
         if (m.isBotAdmin) {
-            await m.reply(claraWrap("antispam", `🛑 *SPAMMER DIKELUARKAN*\n\n` +
+            await m.reply(claraWrap("antispam", `🛑 *ꜱᴘᴀᴍᴍᴇʀ ᴅɪᴋᴇʟᴜᴀʀᴋᴀɴ*\n\n` +
                 `Maaf sekali @${senderId.split("@")[0]}, kamu akan dikeluarkan secara paksa oleh sistem karena kamu terdeteksi melakukan aksi spam brutal di grup ini!`))
             await sock.groupParticipantsUpdate(m.chat, [senderId], "remove")
             spamTracker.delete(chatKey)
         } else {
-            await m.reply(claraWrap("antispam", `⚠️ *SPAM TERDETEKSI*\n\n` +
+            await m.reply(claraWrap("antispam", `⚠️ *ꜱᴘᴀᴍ ᴛᴇʀᴅᴇᴛᴇᴋꜱɪ*\n\n` +
                 `Telah terdeteksi aktivitas spam brutal dari @${senderId.split("@")[0]}, namun sistem bot sayangnya tidak dapat menendang member tersebut karena bot saat ini tidak memiliki akses sebagai admin grup. Tolong jadikan bot admin agar fitur ini bekerja maksimal`))
             userData.count = 0
             spamTracker.set(chatKey, userData)

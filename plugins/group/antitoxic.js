@@ -125,12 +125,12 @@ async function handler(m, { sock }) {
         const maxWarn = groupData.toxicMaxWarn || 3
         const method = groupData.toxicMethod || 'kick'
 
-        let txt = `🛡️ *Antitoxic*\n\n`
+        let txt = `🛡️ *ᴀɴᴛɪᴛᴏxɪᴄ*\n\n`
         txt += `Status: *${status}*\n`
         txt += `Kata: *${toxicCount}*\n`
         txt += `Max Warn: *${maxWarn}*\n`
         txt += `Metode: *${method}*\n\n`
-        txt += `*Command:*\n`
+        txt += `*ᴄᴏᴍᴍᴀɴᴅ:*\n`
         txt += `\`.antitoxic on/off\`\n`
         txt += `\`.antitoxic warn <1-10>\`\n`
         txt += `\`.antitoxic metode kick/delete\`\n`
@@ -145,13 +145,13 @@ async function handler(m, { sock }) {
     if (subCommand === 'on') {
         db.setGroup(m.chat, { antitoxic: true })
         m.react('✅')
-        await m.reply(claraWrap("Antitoxic", `✅ *Antitoxic diaktifkan*`))
+        await m.reply(claraWrap("Antitoxic", `✅ *ᴀɴᴛɪᴛᴏxɪᴄ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`))
         return
     }
 
     if (subCommand === 'off') {
         db.setGroup(m.chat, { antitoxic: false })
-        await m.reply(claraWrap("Antitoxic", `❌ *Antitoxic dinonaktifkan*`))
+        await m.reply(claraWrap("Antitoxic", `❌ *ᴀɴᴛɪᴛᴏxɪᴄ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*`))
         return
     }
 
@@ -169,7 +169,7 @@ async function handler(m, { sock }) {
     if (subCommand === 'metode' || subCommand === 'method' || subCommand === 'mode') {
         const method = args[1]?.toLowerCase()
         if (!method || !['kick', 'delete'].includes(method)) {
-            return m.reply(`❌ Pilih metode: *kick* atau *delete*\nContoh: \`.antitoxic metode kick\``)
+            return m.reply(`❌ Pilih metode: *ᴋɪᴄᴋ* atau *ᴅᴇʟᴇᴛᴇ*\nContoh: \`.antitoxic metode kick\``)
         }
         db.setGroup(m.chat, { toxicMethod: method })
         m.react('✅')

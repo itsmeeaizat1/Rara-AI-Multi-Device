@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("Delppgc", `✅ PP Grup sekarang sudah botak`))
     } catch (error) {
         await m.reply(
-            `❌ *Gagal*\n\n` +
+            `❌ *ɢᴀɢᴀʟ*\n\n` +
             `Tidak dapat menghapus foto grup.\n` +
             `_${error.message}_`
         )

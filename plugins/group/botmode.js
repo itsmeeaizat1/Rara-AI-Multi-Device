@@ -79,7 +79,7 @@ function handler(m, { sock }) {
             "━━━ Pilihan ━━━",
             ...modeLines,
             "",
-            `*Flag store:*`,
+            `*ꜰʟᴀɢ ꜱᴛᴏʀᴇ:*`,
             `\`${m.prefix}botmode store\` - Manual order`,
             "",
             `_Pengaturan per-grup_`,].join("\n")))
@@ -111,15 +111,15 @@ function handler(m, { sock }) {
     let extraInfo = ''
     if (mode === 'store') {
         const products = newGroupData.storeConfig?.products || []
-        extraInfo = `\n\n📋 *Manual mode*\n` +
+        extraInfo = `\n\n📋 *ᴍᴀɴᴜᴀʟ ᴍᴏᴅᴇ*\n` +
             `Admin perlu confirm order manual\n` +
             `Product: \`${products.length}\` item\n\n` +
-            `*Panduan:*\n` +
+            `*ᴘᴀɴᴅᴜᴀɴ:*\n` +
             `\`${m.prefix}addprod <kode> <harga> <nama>\`\n` +
             `\`${m.prefix}listprod\` - Lihat produk`
     }
 
-    return m.reply(claraWrap("Mode Diubah", `✅ *Mode Diubah*\n\n` +
+    return m.reply(claraWrap("Mode Diubah", `✅ *ᴍᴏᴅᴇ ᴅɪᴜʙᴀʜ*\n\n` +
         `Mode: *${mode.toUpperCase()}* (${MODES[mode].name})\n` +
         `Grup: *${m.chat.split('@')[0]}*\n` +
         extraInfo +

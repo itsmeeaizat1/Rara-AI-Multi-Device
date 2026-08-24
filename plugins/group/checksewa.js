@@ -53,9 +53,9 @@ function handler(m, { sock }) {
     const addedDate = sewaData.addedAt ? timeHelper.fromTimestamp(sewaData.addedAt, 'D MMMM YYYY') : '-'
 
     if (sewaData.isLifetime) {
-        return m.reply(claraWrap("checksewa", `♾️ *STATUS SEWA*\n\n` +
+        return m.reply(claraWrap("checksewa", `♾️ *ꜱᴛᴀᴛᴜꜱ ꜱᴇᴡᴀ*\n\n` +
             `Grup: *${groupName}*\n` +
-            `Status: *Permanent* ♾️\n` +
+            `Status: *ᴘᴇʀᴍᴀɴᴇɴᴛ* ♾️\n` +
             `Terdaftar sejak: *${addedDate}*\n\n` +
             `Bot akan aktif selamanya di grup ini.`))
     }
@@ -64,7 +64,7 @@ function handler(m, { sock }) {
     const expiredStr = timeHelper.fromTimestamp(sewaData.expiredAt, 'D MMMM YYYY HH:mm')
 
     if (countdown.expired) {
-        return m.reply(claraWrap("checksewa", `❌ *SEWA EXPIRED*\n\n` +
+        return m.reply(claraWrap("checksewa", `❌ *ꜱᴇᴡᴀ ᴇxᴘɪʀᴇᴅ*\n\n` +
             `Grup: *${groupName}*\n` +
             `Berakhir: *${expiredStr}*\n\n` +
             `Hubungi owner bot untuk perpanjang sewa.`))
@@ -73,7 +73,7 @@ function handler(m, { sock }) {
     const diff = sewaData.expiredAt - Date.now()
     const isAlmostExpired = diff <= 259200000
 
-    let text = `⏱️ *STATUS SEWA*\n\n`
+    let text = `⏱️ *ꜱᴛᴀᴛᴜꜱ ꜱᴇᴡᴀ*\n\n`
     text += `Grup: *${groupName}*\n`
     text += `Sisa waktu: *${countdown.text}*\n`
     text += `Berakhir: *${expiredStr}*\n`

@@ -25,10 +25,10 @@ async function handler(m, { sock }) {
         const participants = m.groupMembers
         
         if (participants.length === 0) {
-            return m.reply(claraWrap("cekonline", `❌ *Gagal*\n\nTidak bisa mendapatkan data member grup`))
+            return m.reply(claraWrap("cekonline", `❌ *ɢᴀɢᴀʟ*\n\nTidak bisa mendapatkan data member grup`))
         }
         
-        await m.reply(claraWrap("Cekonline", `🔍 *Mencari Member Online...*\n\nMenunggu response dari ${participants.length} member\nEstimasi: 5-10 detik`))
+        await m.reply(claraWrap("Cekonline", `🔍 *ᴍᴇɴᴄᴀʀɪ ᴍᴇᴍʙᴇʀ ᴏɴʟɪɴᴇ...*\n\nMenunggu response dari ${participants.length} member\nEstimasi: 5-10 detik`))
         
         const presences = {}
         
@@ -62,8 +62,8 @@ async function handler(m, { sock }) {
         const onlineMembers = Object.keys(presences)
         const mentions = onlineMembers
         
-        let text = `📊 *Cek Online*\n\n`
-        text += `╭┈┈⬡「 📋 *Info Grup* 」\n`
+        let text = `📊 *ᴄᴇᴋ ᴏɴʟɪɴᴇ*\n\n`
+        text += `╭┈┈⬡「 📋 *ɪɴꜰᴏ ɢʀᴜᴘ* 」\n`
         text += `┃ 👥 Nama: *${groupMetadata.subject}*\n`
         text += `┃ 👤 Total: \`${participants.length}\` member\n`
         text += `┃ 🟢 Online: \`${onlineMembers.length}\` member\n`
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
             text += `_Tidak ada member yang terdeteksi online_\n`
             text += `_Pastikan member telah membuka WA_`
         } else {
-            text += `╭┈┈⬡「 🟢 *Member Online* 」\n`
+            text += `╭┈┈⬡「 🟢 *ᴍᴇᴍʙᴇʀ ᴏɴʟɪɴᴇ* 」\n`
             
             let count = 0
             for (const jid of onlineMembers) {
