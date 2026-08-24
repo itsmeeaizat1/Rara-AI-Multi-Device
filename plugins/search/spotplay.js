@@ -20,7 +20,7 @@ async function handler(m, { sock }) {
   if (!query)
     { const __navText = `⚠️ *Cara Pakai*\n\n> \`${m.prefix}spotplay <query>\``; return await m.reply( __navText, "spotplay"); };
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const data = await novaApi.azbry.spotplay(query, {
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
       fileName: `${result.artist || "Spotify"} - ${result.title || "audio"}.mp3`,
     });
 
-    m.react("✅");
+    m.react("🐣");
   } catch (e) {
     console.log(e);
     m.reply(claraWrap("spotplay", te(m.prefix, m.command, m.pushName), "error"));

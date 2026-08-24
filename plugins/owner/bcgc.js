@@ -249,7 +249,7 @@ async function handler(m, { sock }) {
     }
 
     delete global.statusBcgc;
-    m.react("✅");
+    m.react("🐣");
     await m.reply(claraWrap("Broadcast Grup Selesai", [
       `Berhasil: ${success}`,
       `Gagal: ${failed}`,

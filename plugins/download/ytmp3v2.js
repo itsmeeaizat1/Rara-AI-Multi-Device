@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       `${m.prefix}ytmp3v2 https://youtu.be/xxx`,
       "ytmp3v2");
   }
-  m.react("🐣");
+  m.react("🕒");
   try {
     const res = await rlGet(`${API_BASE}/download/ytmp3?apikey=${API_KEY}&url=${encodeURIComponent(text)}`);
     const r = res.data?.result || res.data?.data;
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
       type: "audio", mimetype: "audio/mpeg",
       fileName: `${(r.title || "YouTube").replace(/[^\w\s-]/g, "").trim()}.mp3`
     });
-    m.react("✅");
+    m.react("🐣");
   } catch (e) {
     console.error("[YTMP3V2]", e.message);
     m.reply(claraWrap("Ytmp3v2", `Gagal mengambil audio.\n>${e.message}`));

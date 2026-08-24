@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
   const query =
     m.text?.trim() || usernames[Math.floor(Math.random() * usernames.length)];
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const { data } = await f(
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
 
     const video = data;
 
-    m.react("✅");
+    m.react("🐣");
 
     const videoUrl = video.video.url;
 

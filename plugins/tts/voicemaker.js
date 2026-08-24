@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     return m.reply( "❌ Teks kosong atau terlalu panjang (max 500 karakter).", "voicemaker");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const res = await axios.get(
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
       { audio: buf, mimetype: "audio/mpeg", ptt: true },
       { quoted: m }
     );
-    await m.react("✅");
+    await m.react("🐣");
   } catch (err) {
     console.error("[VoiceMaker] Error:", err.message);
     await m.react("❌");

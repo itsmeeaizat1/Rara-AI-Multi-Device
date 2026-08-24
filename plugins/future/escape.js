@@ -112,7 +112,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       puzzle.solved = true;
       if (!game.players[m.sender]) game.players[m.sender] = 0;
       game.players[m.sender]++;
-      await m.react("✅");
+      await m.react("🐣");
 
       if (game.current + 1 >= game.puzzles.length) {
         // Game complete

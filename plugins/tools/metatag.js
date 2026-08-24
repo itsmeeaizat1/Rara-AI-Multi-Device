@@ -89,7 +89,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const url = text.startsWith("http") ? text : "https://" + text;
-    await m.react("🐣");
+    await m.react("🕒");
 
     const res = await fetch(url, {
       headers: { "User-Agent": "Mozilla/5.0 (Nova Bot)" },
@@ -178,7 +178,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.splice(40, lines.length - 40, "... (output dipotong)");
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Meta Tags: " + url.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     console.error("metatag error:", e);

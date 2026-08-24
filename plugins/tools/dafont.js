@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const result = await DaFont(text);
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     session.chat = m.chat;
 
     await m.reply(claraWrap("dafont", txt));
-    m.react("✅");
+    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply(claraWrap("dafont", "❌ Gagal mencari font, coba lagi nanti"));

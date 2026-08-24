@@ -210,7 +210,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "sitasi" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     let targetStyle = STYLES.includes(style) ? style : "apa";
@@ -256,7 +256,7 @@ async function handler(m, { sock, args }) {
     txt += `\n> _Salin sitasi di atas ke daftar pustaka_`;
 
     await m.reply(txt);
-    await m.react("✅");
+    await m.react("🐣");
   } catch (e) {
     console.error("[SITASI] Error:", e.message);
     await m.reply(claraWrap("sitasi", `Gagal membuat sitasi!\n\nError: ${e.message}`));

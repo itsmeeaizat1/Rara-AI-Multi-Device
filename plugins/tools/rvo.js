@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Rvo", "❌ Reply pesan view once (sekali lihat) untuk membukanya."));
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     let originalCaption = "";
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
       );
     }
 
-    m.react("✅");
+    m.react("🐣");
   } catch (e) {
     let msg = e.message;
     if (

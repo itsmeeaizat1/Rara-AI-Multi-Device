@@ -212,7 +212,7 @@ async function handler(m, { sock, config: botConfig }) {
         "Dibuat oleh: @" + m.sender.split("@")[0] + "\n\n" +
         "Ketik: " + prefix + "lelang bid " + auctionId + " <harga>";
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Lelang", text));
     }
 
@@ -285,7 +285,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.save();
 
       const newRemaining = formatCountdown(auction.endTime - Date.now());
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Lelang",
         "Bid diterima!\n" +
         "Item: *" + auction.title + "*\n" +
@@ -403,7 +403,7 @@ async function handler(m, { sock, config: botConfig }) {
         db.setting("auctions", all);
         db.save();
 
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply(claraWrap("Lelang Ditutup",
           "Lelang *" + auction.title + "* ditutup!\n" +
           "Pemenang: @" + winner.bidder.split("@")[0] + "\n" +
@@ -415,7 +415,7 @@ async function handler(m, { sock, config: botConfig }) {
         db.setting("auctions", all);
         db.save();
 
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply(claraWrap("Lelang Ditutup",
           "Lelang *" + auction.title + "* ditutup tanpa pemenang (0 bid)"
         ));
@@ -453,7 +453,7 @@ async function handler(m, { sock, config: botConfig }) {
       db.setting("auctions", all);
       db.save();
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Lelang", "Lelang *" + auction.title + "* (`" + auctionId + "`) dibatalkan"));
     }
 

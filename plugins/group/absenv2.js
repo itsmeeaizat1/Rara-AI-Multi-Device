@@ -233,7 +233,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push(prefix + "absenv2 tidak " + evId);
       lines.push(prefix + "absenv2 mungkin " + evId);
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Event Absensi Dibuat", lines.join("\n")));
     }
 
@@ -280,7 +280,7 @@ async function handler(m, { sock, config: botConfig }) {
       const tidak = ev.responses.filter((r) => r.status === "tidak").length;
       const mungkin = ev.responses.filter((r) => r.status === "mungkin").length;
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Respon Tercatat",
         "Status: *" + status.toUpperCase() + "*\n" +
         "Event: " + ev.title + "\n\n" +
@@ -430,7 +430,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("Tidak ada");
       }
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Absensi Ditutup", lines.join("\n")));
     }
 
@@ -459,7 +459,7 @@ async function handler(m, { sock, config: botConfig }) {
       ev.cancelled = true;
       saveEvents(db, gid, events);
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Absen v2", "Event *" + ev.title + "* dibatalkan"));
     }
 

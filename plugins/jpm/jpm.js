@@ -474,7 +474,7 @@ async function runBroadcast(
   }
 
   delete global.statusjpm;
-  m.react("✅");
+  m.react("🐣");
   await m.reply(claraWrap(`JPM ${modeLabel} Selesai`, `✅ Berhasil: ${successCount}\n❌ Gagal: ${failedCount}\n📊 Total: ${groupIds.length}`));
 }
 
@@ -852,7 +852,7 @@ async function handleJpmChannelWithContent(
     }
 
     delete global.statusjpm;
-    m.react("✅");
+    m.react("🐣");
     await m.reply(claraWrap("JPM Channel Selesai", `✅ Berhasil: ${successCount}\n❌ Gagal: ${failedCount}\n📊 Total: ${channelIds.length}`));
   } catch (error) {
     delete global.statusjpm;
@@ -890,7 +890,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
   }
   if (!changelog) return m.reply( `❌ Changelog tidak boleh kosong!`, "jpm");
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const { groupIds, blacklistedCount } = await getTargetGroups(sock, db);
@@ -943,7 +943,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
     }
 
     delete global.statusjpm;
-    m.react("✅");
+    m.react("🐣");
     await m.reply( `✅ *JPM Update Selesai!*\n\n` +
         `✅ Sukses: *${successCount}*\n` +
         `❌ Gagal: *${failedCount}*\n` +
@@ -1382,7 +1382,7 @@ async function handleBlacklist(m, sock, db, settingKey, label) {
   }
 
   db.setting(settingKey, blacklist);
-  m.react("✅");
+  m.react("🐣");
   return m.reply(claraWrap("jpm", `📢 *${label} Blacklist Diperbarui*\n\n${toggled.join("\n")}`));
 }
 

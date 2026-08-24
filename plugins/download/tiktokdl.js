@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply( claraWrap("Quick_reply", `📌 Contoh: *${prefix + command} https://vt.tiktok.com/...*`), { commandName: "tiktok" });
   }
-  m.react("🐣");
+  m.react("🕒");
   try {
     const result = await tiktokDl(text);
     const builder = new AIRich(sock);
@@ -198,7 +198,7 @@ async function handler(m, { sock }) {
         { quoted: m },
       );
     }
-    m.react("✅");
+    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply("Coba lagi nanti, atau bisa coba " + m.prefix + "tt2");

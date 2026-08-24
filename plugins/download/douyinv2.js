@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
       "douyinv2");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     let data;
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
       } catch (e) { console.error('[douyinv2.js]:', e.message); }
     }
 
-    m.react("✅");
+    m.react("🐣");
   } catch (e) {
     console.error("[DOUYINV2] Error:", e.message);
     m.reply(claraWrap("Douyinv2", `Gagal mengambil data Douyin.\n>${e.message || "Coba lagi nanti"}`));

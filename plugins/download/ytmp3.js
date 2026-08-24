@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
   if (!url.includes("youtube.com") && !url.includes("youtu.be"))
     { const __navText = "❌ URL harus YouTube"; return await m.reply(__navText); };
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const result = await getAudioDownload(url);
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
         fileName: result.title || "audio.mp3",
       });
     }
-    m.react("✅");
+    m.react("🐣");
   } catch (err) {
     console.error("[YTMP4]", err);
     m.reply(claraWrap("ytmp3", "Gagal mengunduh video."));

@@ -471,7 +471,7 @@ async function handler(m, { sock }) {
     giveaway.participants.push(m.sender);
     db.setting("giveaways", giveaways);
 
-    await m.react("✅");
+    await m.react("🐣");
     await m.reply(
       `✅ @${m.sender.split("@")[0]} berhasil join giveaway! (${giveaway.participants.length} peserta)`,
     );

@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     { quoted: m },
   );
 
-  m.react("✅");
+  m.react("🐣");
 }
 
 export { pluginConfig as config, handler };

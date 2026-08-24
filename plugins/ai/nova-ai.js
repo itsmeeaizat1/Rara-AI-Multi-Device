@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}nova-ai Apa itu Node.js?*`, "nova-ai");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const result = await UnlimitedAI(text, "nova-ai");
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Nova AI Error", `❌ *Nova AI Error*\n\n> ${result.error || "Gagal mendapatkan respons"}`));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     const reply = result.answer;
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {

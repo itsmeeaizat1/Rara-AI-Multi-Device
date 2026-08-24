@@ -409,7 +409,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
     await m.reply(claraWrap("AI Anchor", "Generating berita: " + topic));
 
     try {
@@ -425,7 +425,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       const filePath = tempPath(voiceResult.ext);
       fs.writeFileSync(filePath, voiceResult.buffer);
 
-      await m.react("✅");
+      await m.react("🐣");
       await sock.sendMessage(m.chat, {
         audio: await toVoiceNote(fs.readFileSync(filePath)),
         mimetype: "audio/ogg; codecs=opus",
@@ -487,7 +487,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const voiceResult = await generateVoice(text, { tone, voice });
@@ -501,7 +501,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const filePath = tempPath(voiceResult.ext);
     fs.writeFileSync(filePath, voiceResult.buffer);
 
-    await m.react("✅");
+    await m.react("🐣");
 
     // Send as voice note (PTT)
     await sock.sendMessage(m.chat, {

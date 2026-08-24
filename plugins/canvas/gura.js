@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
 
   if (!media) { const __navText = "❌ Gagal membaca media, coba lagi!"; return await m.reply(__navText, "gura"); };
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const imgUrl = await uploadToCatbox(media);
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
     const buffer = Buffer.from(await res.arrayBuffer());
 
     await sock.sendMessage(m.chat, { image: buffer, caption: "🦈 *RAWWRR! Gura is here!*" }, { quoted: m });
-    await m.react("✅");
+    await m.react("🐣");
 
   } catch (err) {
     m.reply(claraWrap("gura", te(m.prefix, m.command, m.pushName), "error"));

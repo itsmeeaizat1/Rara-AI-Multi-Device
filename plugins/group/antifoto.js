@@ -67,14 +67,14 @@ async function handler(m, { sock }) {
 
   if (action === "on") {
     db.setGroup(m.chat, { antifoto: true });
-    m.react("✅");
+    m.react("🐣");
     await m.reply(claraWrap("Antifoto", `Anti Foto diaktifkan`));
     return;
   }
 
   if (action === "off") {
     db.setGroup(m.chat, { antifoto: false });
-    m.react("✅");
+    m.react("🐣");
     await m.reply(claraWrap("Antifoto", `Anti Foto dinonaktifkan`));
     return;
   }

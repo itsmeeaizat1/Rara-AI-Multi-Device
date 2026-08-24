@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
       `❌ Format durasi tidak valid\n\nContoh: 7d, 1m, 1y, lifetime`,
     );
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const result = await resolveGroupId(sock, input);
@@ -212,7 +212,7 @@ async function handler(m, { sock }) {
       text += `⚠️ Auto-join gagal: ${joinResult.reason}\nTambahkan bot ke grup secara manual.`;
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return await m.reply( text, "addsewa");
   } catch (error) {
     await m.reply(claraWrap("addsewa", te(m.prefix, m.command, m.pushName), "error"));

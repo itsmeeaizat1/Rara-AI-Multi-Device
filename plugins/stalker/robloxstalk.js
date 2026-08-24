@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const res = await Roblox(username);
@@ -196,7 +196,7 @@ async function handler(m, { sock }) {
       `🎒 *Inventory*:\n${topInventory}\n` +
       `🔗 https://roblox.com/users/${res.id}/profile`;
 
-    m.react("✅");
+    m.react("🐣");
 
     if (res.avatar) {
       await sock.sendMessage(

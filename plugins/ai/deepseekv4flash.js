@@ -115,20 +115,20 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("DeepSeek V4 Flash", "Sesi percakapan direset. Kirim pesan baru untuk memulai."));
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const result = await callWithRetry(text, sessionId, false);
 
     if (!result.answer || !result.answer.trim()) {
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("DeepSeek V4 Flash", "AI sedang sibuk, coba kirim ulang pertanyaan kamu."));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("DeepSeek V4 Flash", result.answer));
   } catch (error) {
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("DeepSeek V4 Flash Error", error.message || "Gagal menghubungi AI."));
   }
 }

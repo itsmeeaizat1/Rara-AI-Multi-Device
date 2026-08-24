@@ -68,7 +68,7 @@ async function handler(m, { args, sock }) {
     return await m.reply(claraWrap("soundcloud", txt));
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const data = await scSearch(args.join(" "));
@@ -96,7 +96,7 @@ async function handler(m, { args, sock }) {
     } else {
       await m.reply(txt.trim());
     }
-    await m.react("✅");
+    await m.react("🐣");
   } catch (e) {
     m.reply(claraWrap("soundcloud", `❌ Maaf kak, terjadi kesalahan sistem!\nError: ${e.message}`));
   }

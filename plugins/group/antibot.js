@@ -163,7 +163,7 @@ function handler(m, { sock }) {
   if (args === "on") {
     db.setGroup(m.chat, { ...groupData, antibot: true });
     db.save();
-    m.react("✅");
+    m.react("🐣");
     return m.reply(claraWrap("Antibot", `✅ *AntiBot diaktifkan*`));
   }
 

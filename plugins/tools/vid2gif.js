@@ -86,7 +86,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // Download video
     let mediaBuffer;
@@ -183,7 +183,7 @@ async function handler(m, { sock, config: botConfig }) {
     try { fs.unlinkSync(inputPath); } catch (e) { console.error('[vid2gif.js]:', e.message); }
     try { fs.unlinkSync(outputPath); } catch (e) { console.error('[vid2gif.js]:', e.message); }
 
-    await m.react("✅");
+    await m.react("🐣");
 
     const durLabel = duration === 0 ? "Full video" : actualDuration + "s";
 

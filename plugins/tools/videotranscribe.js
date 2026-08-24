@@ -107,7 +107,7 @@ async function handler(m, { sock,  args }) {
     );
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const result = await transcriber(url, lang);
@@ -119,7 +119,7 @@ async function handler(m, { sock,  args }) {
 
     const info = claraWrap("Video Transcribe", [`*Title:* ${result.title}`, `*Language:* ${lang.toUpperCase()}`, `*Segments:* ${result.total}`, ``, `*Transcript:*`, transcript].join("\n"));
 
-    m.react("✅");
+    m.react("🐣");
     await m.reply(info);
   } catch (err) {
     console.error("[VideoTranscribe]", err.message);

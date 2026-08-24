@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
     { const __navText = "❌ Masukkan potongan lirik atau nama lagu yang ingin dicari.\n\nContoh: `.sts ku menangis membayangkan`"; return await m.reply( __navText, "searchthatsong"); };
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const result = await search(query);
@@ -159,7 +159,7 @@ async function handler(m, { sock }) {
       }, { quoted: m });
     }
 
-    await m.react("✅");
+    await m.react("🐣");
 
   } catch (error) {
     console.error("[SearchThatSong]", error.message);

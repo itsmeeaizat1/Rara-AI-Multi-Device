@@ -67,14 +67,14 @@ async function handler(m, { sock }) {
 
   if (action === "on") {
     db.setGroup(m.chat, { antivideo: true });
-    m.react("✅");
+    m.react("🐣");
     await m.reply(claraWrap("Antivideo", `Anti Video diaktifkan`));
     return;
   }
 
   if (action === "off") {
     db.setGroup(m.chat, { antivideo: false });
-    m.react("✅");
+    m.react("🐣");
     await m.reply(claraWrap("Antivideo", `Anti Video dinonaktifkan`));
     return;
   }

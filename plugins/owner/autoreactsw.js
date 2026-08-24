@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
   if (action === "on") {
     db.setting("autoReactSW", { enabled: true, emoji });
     db.save();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Auto React Story", [
       "Auto react story diaktifkan!",
       `Emoji: ${emoji}`,
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
   if (action === "off") {
     db.setting("autoReactSW", { enabled: false, emoji: current.emoji });
     db.save();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Auto React Story", "Auto react story dimatikan!", "info"));
   }
 
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     }
     db.setting("autoReactSW", { enabled: current.enabled, emoji: newEmoji });
     db.save();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Auto React Story", `Emoji diatur ke ${newEmoji}`, "success"));
   }
 

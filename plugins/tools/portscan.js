@@ -132,7 +132,7 @@ async function handler(m, { sock, config: botConfig }) {
       portsToScan = COMMON_PORTS.map((p) => p.port);
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // Scan all ports concurrently
     const results = await Promise.all(
@@ -166,7 +166,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Port Scan: " + host, lines.join("\n")));
   } catch (e) {
     console.error("portscan error:", e);

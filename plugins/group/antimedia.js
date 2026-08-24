@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
 
   if (action === "on") {
     db.setGroup(m.chat, { antimedia: true });
-    m.react("✅");
+    m.react("🐣");
     { const __navText = `✅ *AntiMedia diaktifkan*`; await m.reply(__navText); };
     return;
   }

@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
       if (!config.antirvo) config.antirvo = {};
       config.antirvo.private = true;
     }
-    await m.react("✅");
+    await m.react("🐣");
     await m.reply(claraWrap("AntiRvo", "AntiRvo diaktifkan. Setiap pesan sekali lihat akan otomatis ditampilkan."));
     return;
   }

@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const res = await fetch(
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
       text += `⭐ Score: ${score}%`;
     });
 
-    await m.react("✅");
+    await m.react("🐣");
     await m.reply(claraWrap("npm", text));
   } catch (e) {
     m.reply(claraWrap("npm", te(m.prefix, m.command, m.pushName), "error"));

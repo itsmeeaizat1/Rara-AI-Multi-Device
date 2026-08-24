@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
   }
 
   db.setGroup(m.chat, update);
-  await m.react("✅");
+  await m.react("🐣");
 
   let txt = `ENABLE - ${feature.label}\n`;
   txt += `Status: ON`;

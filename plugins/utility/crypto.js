@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
       ]), { commandName: "crypto" });
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // === TOP 10 ===
     if (sub === "top") {
@@ -100,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("");
       lines.push(`Market cap total: ${fmtNum(coins.reduce((s, c) => s + (c.market_cap || 0), 0))}`);
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Top 10 Crypto", lines));
     }
 
@@ -123,7 +123,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("");
       lines.push("Trending berdasarkan pencarian CoinGecko");
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Trending Crypto", lines));
     }
 
@@ -156,7 +156,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push(`Cari lebih spesifik: .crypto list ${query} btc`);
       }
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Crypto List", lines));
     }
 
@@ -253,7 +253,7 @@ async function handler(m, { sock, config: botConfig }) {
         `Diputar: ${coin.description?.en ? coin.description.en.replace(/<[^>]+>/g, "").substring(0, 200) + "..." : "Tidak ada"}`,
       ];
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap(`Crypto Detail - ${symbol}`, lines));
     }
 
@@ -271,7 +271,7 @@ async function handler(m, { sock, config: botConfig }) {
       `Low 24h: ${fmtPrice(low24h)}`,
     ];
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap(`Crypto - ${symbol}`, lines));
   } catch (error) {
     if (error.response?.status === 404) {

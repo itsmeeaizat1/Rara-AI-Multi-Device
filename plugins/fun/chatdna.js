@@ -454,14 +454,14 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🐣");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.settings) db.settings = { globalEnabled: true, groups: {} };
       db.settings.groups[groupId] = true;
       db.settings.globalEnabled = true;
       saveDB(db);
       await m.reply(claraWrap("Chat DNA", "Tracking Chat DNA untuk grup ini sudah DINYALAKAN.\n\nBot akan mulai merekam pola chat di grup ini."));
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
@@ -470,18 +470,18 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🐣");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.settings) db.settings = { globalEnabled: true, groups: {} };
       db.settings.groups[groupId] = false;
       saveDB(db);
       await m.reply(claraWrap("Chat DNA", "Tracking Chat DNA untuk grup ini sudah DIMATIKAN.\n\nBot berhenti merekam pola chat di grup ini. Data yang sudah terkumpul tetap tersimpan."));
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
     if (command === "chatdnastatus") {
-      await m.react("🐣");
+      await m.react("🕒");
       const db = loadDB();
       if (!db.settings) db.settings = { globalEnabled: true, groups: {} };
       const globalStatus = db.settings.globalEnabled ? "ON" : "OFF";
@@ -509,7 +509,7 @@ async function handler(m, { sock }) {
         `┊ .dnamatch @user1 @user2 - Match DNA`,
       ].join("\n");
       await m.reply(claraWrap("Chat DNA Status", statusBody));
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
@@ -519,7 +519,7 @@ async function handler(m, { sock }) {
       return;
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const mentioned =
       m.message?.extendedTextMessage?.contextInfo?.mentionedJid || [];
@@ -540,13 +540,13 @@ async function handler(m, { sock }) {
           `Data belum cukup untuk ${targetName}. Minimal 5 pesan di grup untuk mulai tracking DNA. Tetap aktif chat!`
         );
         await m.reply( msg, { commandName: "chatdna" });
-        await m.react("✅");
+        await m.react("🐣");
         return;
       }
 
       const result = claraWrap(`Chat DNA - ${targetName}`, profile);
       await m.reply(result);
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // ─── .dnamatch command ───
@@ -564,7 +564,7 @@ async function handler(m, { sock }) {
           ].join("\n")
         );
         await m.reply( help, { commandName: "dnamatch" });
-        await m.react("✅");
+        await m.react("🐣");
         return;
       }
 
@@ -575,7 +575,7 @@ async function handler(m, { sock }) {
           "Salah satu user belum cukup data chat (minimal 5 pesan). Coba lagi nanti setelah mereka lebih aktif."
         );
         await m.reply( fail, { commandName: "dnamatch" });
-        await m.react("✅");
+        await m.react("🐣");
         return;
       }
 
@@ -593,7 +593,7 @@ async function handler(m, { sock }) {
       ].join("\n");
 
       await m.reply(claraWrap("DNA Match", body));
-      await m.react("✅");
+      await m.react("🐣");
     }
   } catch (e) {
     console.error("Chat DNA error:", e.message);

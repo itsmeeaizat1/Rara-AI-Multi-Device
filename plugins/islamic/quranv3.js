@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
 
     // ===== RANDOM AYAH =====
     if (subCmd === "random") {
-      await m.react("🐣");
+      await m.react("🕒");
       let data = null;
       for (let i = 0; i < 5; i++) {
         const surah = Math.floor(Math.random() * 114) + 1;
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
         "Sumber: alquran.cloud API",
       ]);
 
-      await m.react("✅");
+      await m.react("🐣");
       await m.reply(txt);
 
       // Auto kirim audio
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Quran V3", "Format: .quranv3 audio <surat> [ayat]\nContoh: .quranv3 audio 1\n.quranv3 audio 36 1"));
       }
 
-      await m.react("🐣");
+      await m.react("🕒");
 
       const surahRes = await fetchJson(API_BASE + "/surah/" + suratNum);
       const surah = surahRes.data;
@@ -164,7 +164,7 @@ async function handler(m, { sock }) {
         ]);
 
         await m.reply(txt);
-        await m.react("✅");
+        await m.react("🐣");
         await sendAudio(sock, m, audioRes.data.audio);
       } else {
         // Full surah audio via CDN
@@ -178,7 +178,7 @@ async function handler(m, { sock }) {
         ]);
 
         await m.reply(txt);
-        await m.react("✅");
+        await m.react("🐣");
 
         // Download dari CDN (full surah 1 file)
         const cdnUrl = AUDIO_CDN + "/" + suratNum + ".mp3";
@@ -207,7 +207,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Quran V3", "Format: .quranv3 surah <nomor>\nContoh: .quranv3 surah 1"));
       }
 
-      await m.react("🐣");
+      await m.react("🕒");
       const json = await fetchJson(API_BASE + "/surah/" + suratNum + "/editions/quran-uthmani,id.indonesian");
       const surahData = json.data[0];
       const indoData = json.data[1];
@@ -238,7 +238,7 @@ async function handler(m, { sock }) {
       lines.push("Audio: .quranv3 audio " + suratNum);
       lines.push("Sumber: alquran.cloud API");
 
-      await m.react("✅");
+      await m.react("🐣");
       return await m.reply(claraWrap("Al-Quran V3", lines));
     }
 
@@ -256,7 +256,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Quran V3", "Nomor surat harus 1-114."));
       }
 
-      await m.react("🐣");
+      await m.react("🕒");
       const json = await fetchJson(API_BASE + "/ayah/" + suratNum + ":" + ayatNum + "/editions/quran-uthmani,id.indonesian,ar.alafasy");
 
       if (json.code !== 200) {
@@ -284,7 +284,7 @@ async function handler(m, { sock }) {
         "Sumber: alquran.cloud API",
       ]);
 
-      await m.react("✅");
+      await m.react("🐣");
       await m.reply(txt);
 
       if (audio?.audio) {
@@ -301,7 +301,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Quran V3", "Format tidak valid!\n\nKetik .quranv3 help buat lihat cara pakai."));
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
     const surahRes = await fetchJson(API_BASE + "/surah/" + suratNum);
     const surah = surahRes.data;
 
@@ -337,7 +337,7 @@ async function handler(m, { sock }) {
         "Sumber: alquran.cloud API",
       ]);
 
-      await m.react("✅");
+      await m.react("🐣");
       await m.reply(txt);
 
       // Auto kirim audio
@@ -378,7 +378,7 @@ async function handler(m, { sock }) {
       lines.push("Audio: .quranv3 audio " + suratNum);
       lines.push("Sumber: alquran.cloud API");
 
-      await m.react("✅");
+      await m.react("🐣");
       return await m.reply(claraWrap("Al-Quran V3", lines));
     }
   } catch (error) {

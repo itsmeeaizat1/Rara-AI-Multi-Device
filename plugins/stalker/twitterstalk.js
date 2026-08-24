@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     return m.reply( `🐦 *Twitter/X Stalker*\n\nMasukkan username Twitter/X\n\nContoh: \`${m.prefix}twitterstalk elonmusk\``, "twitterstalk");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const res = await axios.get(
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
         });
         const ppBuf = Buffer.from(ppRes.data);
         await sock.sendMessage(m.chat, { image: ppBuf, caption: text }, { quoted: m });
-        await m.react("✅");
+        await m.react("🐣");
         return;
       } catch {
         text += `\n_PP gagal dimuat_`;
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     }
     text += `\n_Link: https://x.com/${d.username || username}_`;
     await m.reply( text, "twitterstalk");
-    await m.react("✅");
+    await m.react("🐣");
   } catch (err) {
     console.error("[TwitterStalk] Error:", err.message);
     await m.react("❌");

@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     }
   } else if (action === "semua") {
     try {
-      await m.react("🐣");
+      await m.react("🕒");
       global.isFetchingGroups = true;
       const groups = await sock.groupFetchAllParticipating();
       global.isFetchingGroups = false;
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
           count++;
         } catch (e) { console.error('[arsip.js]:', e.message); }
       }
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(
         `📁 *${count} grup diarsipkan*\n\n> Private chat tidak bisa diarsipkan sekaligus (tidak ada daftar chat)`,
       );
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
 
   try {
     await sock.chatModify({ archive, lastMessages: [] }, targetJid);
-    await m.react("✅");
+    await m.react("🐣");
     const target = targetJid.split("@")[0];
     return m.reply(archive
         ? `📁 *Chat Diarsipkan*\n\n> Target: ${target}\n> Gunakan \`.arsip buka ${target}\` untuk membuka`

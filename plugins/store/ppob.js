@@ -606,7 +606,7 @@ async function handler(m, { sock }) {
     }
     data.activeProvider = target;
     saveData(data);
-    await m.react("✅");
+    await m.react("🐣");
     await m.reply(claraWrap(
         "PPOB",
         "Provider aktif: " +
@@ -643,7 +643,7 @@ async function handler(m, { sock }) {
     data.credentials[data.activeProvider] = parsed;
     data.priceCache[data.activeProvider] = null;
     saveData(data);
-    await m.react("✅");
+    await m.react("🐣");
     await m.reply(claraWrap(
         "PPOB",
         "Credentials tersimpan!\n" +
@@ -671,7 +671,7 @@ async function handler(m, { sock }) {
     }
     data.markup = pct;
     saveData(data);
-    await m.react("✅");
+    await m.react("🐣");
     await m.reply(claraWrap(
         "PPOB",
         "Markup: " + pct + "%\n\n" +
@@ -688,10 +688,10 @@ async function handler(m, { sock }) {
           "Provider belum setup!\nOwner: .ppob setkey <user>:<key>\n\n" +
             provider.setupHint
         ));
-    await m.react("🐣");
+    await m.react("🕒");
     try {
       const saldo = await provider.cekSaldo(cred);
-      await m.react("✅");
+      await m.react("🐣");
     await m.reply(claraWrap(
           "PPOB",
           "Saldo " + provider.name + "\n\n" +
@@ -711,7 +711,7 @@ async function handler(m, { sock }) {
           "PPOB",
           "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"
         ));
-    await m.react("🐣");
+    await m.react("🕒");
     try {
       const products = await getCachedPriceList(data);
       const cats = {};
@@ -736,7 +736,7 @@ async function handler(m, { sock }) {
       body += "  .ppob cari mobile legend\n";
       body += "  .ppob cari dana\n";
       body += "  .ppob cari wifi";
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply( claraWrap("PPOB", body), "ppob");
     } catch (err) {
       await m.react("❌");
@@ -765,7 +765,7 @@ async function handler(m, { sock }) {
             "Lihat kategori: .ppob kategori"
         ));
     }
-    await m.react("🐣");
+    await m.react("🕒");
     try {
       const products = await getCachedPriceList(data);
       const filtered = products
@@ -802,7 +802,7 @@ async function handler(m, { sock }) {
       });
       body += "\nBeli: .ppob beli <sku> <nomor>\n";
       body += "Contoh: .ppob beli " + filtered[0].sku + " 08123456789";
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply( claraWrap("PPOB", body), "ppob");
     } catch (err) {
       await m.react("❌");
@@ -829,7 +829,7 @@ async function handler(m, { sock }) {
             "Cari SKU: .ppob cari <keyword>"
         ));
     }
-    await m.react("🐣");
+    await m.react("🕒");
     try {
       const products = await getCachedPriceList(data);
       const prod = products.find((p) => p.sku === sku);
@@ -869,7 +869,7 @@ async function handler(m, { sock }) {
       body += "Nomor: " + customerNo + "\n";
       body += "\n" + payText;
 
-      await m.react("✅");
+      await m.react("🐣");
 
       // Mode image: kirim gambar QR untuk setiap metode yang ada
       if (data.paymentMode === "image" && data.paymentImages) {
@@ -929,7 +929,7 @@ async function handler(m, { sock }) {
     }
     data.paymentMode = mode;
     saveData(data);
-    await m.react("✅");
+    await m.react("🐣");
     await m.reply(claraWrap(
         "PPOB",
         "Mode payment: " + mode + "\n\n" +
@@ -972,14 +972,14 @@ async function handler(m, { sock }) {
     if (url === "off" || url === "delete") {
       delete data.paymentImages[key];
       saveData(data);
-      await m.react("✅");
+      await m.react("🐣");
     await m.reply(claraWrap("PPOB", "QR image '" + key + "' dihapus"));
     }
     // Preserve existing enabled state or default true
     const wasEnabled = data.paymentImages[key]?.enabled !== false;
     data.paymentImages[key] = { url, enabled: wasEnabled };
     saveData(data);
-    await m.react("✅");
+    await m.react("🐣");
     // Kirim preview gambar ke owner
     const sent = await sendQrImage(sock, m.chat, url, claraWrap("PPOB", "QR " + key + " disimpan!\nStatus: " + (wasEnabled ? "ON" : "OFF") + "\nPreview:"), m);
     if (!sent) {
@@ -1014,7 +1014,7 @@ async function handler(m, { sock }) {
     }
     data.paymentImages[key].enabled = !data.paymentImages[key].enabled;
     saveData(data);
-    await m.react("✅");
+    await m.react("🐣");
     await m.reply(claraWrap(
         "PPOB",
         "QR " + key + ": " + (data.paymentImages[key].enabled ? "ON" : "OFF") + "\n\n" +
@@ -1045,7 +1045,7 @@ async function handler(m, { sock }) {
     if (!data.payment) data.payment = {};
     data.payment.qrisUrl = (qrisUrl === "off" || qrisUrl === "false") ? "" : qrisUrl;
     saveData(data);
-    await m.react("✅");
+    await m.react("🐣");
     await m.reply(claraWrap(
         "PPOB",
         "QRIS PPOB: " +
@@ -1076,7 +1076,7 @@ async function handler(m, { sock }) {
       data.payment.methods[idx].number = number;
       data.payment.methods[idx].holder = holder;
       saveData(data);
-      await m.react("✅");
+      await m.react("🐣");
     await m.reply(claraWrap("PPOB", data.payment.methods[idx].name + ": " + number + (holder ? " a/n " + holder : "") + "\n\nKosongin number untuk nonaktif"));
     }
     
@@ -1097,7 +1097,7 @@ async function handler(m, { sock }) {
       data.payment.banks[idx].number = number;
       data.payment.banks[idx].holder = holder;
       saveData(data);
-      await m.react("✅");
+      await m.react("🐣");
     await m.reply(claraWrap("PPOB", data.payment.banks[idx].name + ": " + number + (holder ? " a/n " + holder : "") + "\n\nKosongin number untuk nonaktif"));
     }
     
@@ -1139,7 +1139,7 @@ async function handler(m, { sock }) {
     await m.reply(claraWrap("PPOB", "Status: " + order.status + "\nTidak bisa dikonfirmasi"));
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
     try {
       const orderProvider = PROVIDERS[order.provider] || provider;
       const orderCred = data.credentials[order.provider] || cred;
@@ -1160,7 +1160,7 @@ async function handler(m, { sock }) {
       delete data.pendingOrders[orderId];
       saveData(data);
 
-      await m.react("✅");
+      await m.react("🐣");
       let body = "Pembayaran Dikonfirmasi!\n\n";
       body += "Order ID: " + orderId + "\n";
       body += "Provider: " + orderProvider.name + "\n";
@@ -1327,7 +1327,7 @@ async function handler(m, { sock }) {
     }
     delete data.pendingOrders[orderId];
     saveData(data);
-    await m.react("✅");
+    await m.react("🐣");
     await m.reply(claraWrap("PPOB", "Order dibatalkan: " + orderId));
   }
 
@@ -1337,11 +1337,11 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("PPOB", "Khusus owner!"));
     if (!provider.isSetup(cred))
     await m.reply(claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
-    await m.react("🐣");
+    await m.react("🕒");
     try {
       data.priceCache[data.activeProvider] = null;
       const products = await getCachedPriceList(data, true);
-      await m.react("✅");
+      await m.react("🐣");
     await m.reply(claraWrap(
           "PPOB",
           "Daftar harga di-refresh!\n" +
@@ -1359,7 +1359,7 @@ async function handler(m, { sock }) {
   if (sub === "premium" || sub === "apppremium" || sub === "langganan") {
     if (!provider.isSetup(cred))
     await m.reply(claraWrap("PPOB", "Provider belum setup!\nOwner: .ppob setkey <user>:<key>"));
-    await m.react("🐣");
+    await m.react("🕒");
     try {
       const products = await getCachedPriceList(data);
       // Keyword filter untuk app premium populer
@@ -1415,7 +1415,7 @@ async function handler(m, { sock }) {
         });
       body += "Beli: .ppob beli <sku> <nomor/email>\n";
       body += "Cari: .ppob cari <keyword>";
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply( claraWrap("PPOB", body), "ppob");
     } catch (err) {
       await m.react("❌");

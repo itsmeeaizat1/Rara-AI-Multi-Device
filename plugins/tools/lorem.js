@@ -165,7 +165,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!isNaN(num) && num > 0) count = num;
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     let result;
     let label;
@@ -197,7 +197,7 @@ async function handler(m, { sock, config: botConfig }) {
       result = result.substring(0, 2000) + "\n... (dipotong)";
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Lorem Ipsum (" + label + ")", result));
   } catch (e) {
     console.error("lorem error:", e);

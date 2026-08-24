@@ -146,7 +146,7 @@ async function handler(m, { args, sock }) {
     }
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const botName = config.bot?.name || "Nova AI";
@@ -163,7 +163,7 @@ async function handler(m, { args, sock }) {
     txt += `Contoh: \`${m.prefix}verotp 123456\``;
 
     await m.reply( txt, { commandName: "regmail" });
-    await m.react("✅");
+    await m.react("🐣");
   } catch (e) {
     console.error("[Regmail] Error:", e.message);
     clearOtpSession(m.sender);

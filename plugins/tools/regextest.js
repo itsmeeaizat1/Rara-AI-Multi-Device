@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("Regex", "Teks tidak boleh kosong!"));
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // Compile regex
     let regex;
@@ -100,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (matches.length === 0) {
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Regex Result", [
         "Pattern: /" + patternStr + "/" + flags,
         "Teks: " + (testText.length > 60 ? testText.substring(0, 60) + "..." : testText),
@@ -196,7 +196,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("... (output dipotong)");
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Regex Result", lines.join("\n")));
   } catch (e) {
     console.error("regextest error:", e);

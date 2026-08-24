@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
         `⚠️ _Fitur Premium, proses estimasi 1-5 menit tergantung durasi video_`, "wink");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const videoBuffer = (await m?.quoted?.download?.()) || (await m.download?.());
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
       fileName: `WINK-HD-${Date.now()}.mp4`,
     });
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (err) {
     console.log(err);
     await m.reply(claraWrap("wink", `❌ Proses Wink enhance gagal! Coba lagi nanti ya 😭`));

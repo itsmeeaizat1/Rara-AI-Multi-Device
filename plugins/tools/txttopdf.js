@@ -1480,7 +1480,7 @@ async function handler(m, { sock, config: botConfig }) {
         await m.react("❌");
         return m.reply(claraWrap("TxtToPDF AI", "Kasih info buat CV!\nContoh: .txttopdf aicv buatkan cv lamaran ke restoran. Nama Andi, pengalaman cafe 2 thn, skill: masak, pelayanan pelanggan"));
       }
-      await m.react("🐣");
+      await m.react("🕒");
       await m.reply(claraWrap("Joki CV AI", "AI lagi nulis CV kamu...\n\nInfo: " + userInput.substring(0, 100) + "..."));
       try {
         const aiResult = await UnlimitedAI(CV_PROMPT.replace("__INPUT__", userInput), "nova-ai");
@@ -1505,7 +1505,7 @@ async function handler(m, { sock, config: botConfig }) {
         await m.react("❌");
         return m.reply(claraWrap("TxtToPDF AI", "Kasih info buat portofolio!\nContoh: .txttopdf aiporto buatkan portofolio web dev. Nama Sari, proyek: website company, app laundry, design poster"));
       }
-      await m.react("🐣");
+      await m.react("🕒");
       await m.reply(claraWrap("Joki Portofolio AI", "AI lagi nulis portofolio kamu...\n\nInfo: " + userInput.substring(0, 100) + "..."));
       try {
         const aiResult = await UnlimitedAI(PORTO_PROMPT.replace("__INPUT__", userInput), "nova-ai");
@@ -1539,7 +1539,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("TxtToPDF", "Teks terlalu panjang!\nMaksimal 8000 karakter."));
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const timestamp = Date.now();
     const tmpDir = "/tmp";
@@ -1564,7 +1564,7 @@ async function handler(m, { sock, config: botConfig }) {
       const formatLabel = (aiGenerated ? "AI Generated " : "") + (format === "cv" ? "CV Template" + tplName : format === "surat" ? "Surat Template" : "Standard PDF");
       const imgLabel = opts.img > 0 ? "\nUpscale: " + opts.img + "x HD image" : "";
 
-      await m.react("✅");
+      await m.react("🐣");
       await sock.sendMessage(m.chat, {
         document: { url: filePath },
         fileName: "dokumen_" + timestamp + ".pdf",
@@ -1632,7 +1632,7 @@ async function handler(m, { sock, config: botConfig }) {
       const sizeKB = (stats.size / 1024).toFixed(1);
       const wordCount = content.split(/\s+/).length;
 
-      await m.react("✅");
+      await m.react("🐣");
       await sock.sendMessage(m.chat, {
         document: { url: filePath },
         fileName: "dokumen_" + timestamp + ".doc",

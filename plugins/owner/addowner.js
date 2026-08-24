@@ -228,7 +228,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
       }
     } else if (isDel) {
       if (removeJadibotOwner(jadibotId, targetNumber)) {
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply(claraWrap("Addowner", `✅ Berhasil menghapus *${targetNumber}* dari owner jadibot`));
       } else {
         return m.reply(`❌ \`${targetNumber}\` bukan owner Jadibot ini.`);
@@ -269,7 +269,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
         (s) => String(s).trim() !== String(targetNumber).trim(),
       );
       if (savePanelConfig()) {
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply(claraWrap("Addowner", `✅ Berhasil menghapus *${targetNumber}* dari owner panel`));
       } else {
         return m.reply(claraWrap("addowner", `❌ Gagal menyimpan ke config.js`));
@@ -313,7 +313,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
       db.setting("ownerNames", nameMap);
       db.save();
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Addowner", `✅ Berhasil menghapus *${targetNumber}* dari full owner`));
     }
   }

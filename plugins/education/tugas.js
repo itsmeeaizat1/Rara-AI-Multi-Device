@@ -97,7 +97,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "tugas" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     // === ADD ===
@@ -129,7 +129,7 @@ async function handler(m, { sock, args }) {
       txt += `Status: ${days < 0 ? "TERLEWAT" : days === 0 ? "HARI INI" : days + " hari lagi"}\n\n`;
       txt += `_Ketik \`${m.prefix}tugas done ${id}\` jika sudah selesai_`;
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === LIST ===
@@ -159,7 +159,7 @@ async function handler(m, { sock, args }) {
       const done = tasks.filter(t => t.status === "done").length;
       txt += `Total: ${tasks.length} | Pending: ${pending} | Done: ${done}`;
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === PENDING ===
@@ -185,7 +185,7 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === DONE ===
@@ -197,7 +197,7 @@ async function handler(m, { sock, args }) {
 
       task.status = "done";
       await m.reply(claraWrap("Tugas", `Tugas selesai!\n\n${task.id} - ${task.name}\n> Good job! 🎉`));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === DELETE ===
@@ -209,14 +209,14 @@ async function handler(m, { sock, args }) {
 
       const removed = tasks.splice(idx, 1)[0];
       await m.reply(claraWrap("Tugas", `Tugas dihapus!\n\n${removed.id} - ${removed.name}`));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     // === CLEAR ===
     else if (cmd === "clear" || cmd === "reset") {
       taskStore.set(sender, []);
       await m.reply(claraWrap("Tugas", "Semua tugas dihapus!"));
-      await m.react("✅");
+      await m.react("🐣");
     }
 
     else {

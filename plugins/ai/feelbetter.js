@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `_Bot ini bukan pengganti profesional, tapi bisa jadi tempat curhat yang aman_`, "feelbetter");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const result = await FeelBetter(text);
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("FeelBetter Gagal", `❌ *FeelBetter Gagal*\n\n> ${result.error || "Gagal mendapatkan respons"}`));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
 
     const reply = `${result.answer}`;
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);

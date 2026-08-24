@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
       "aiov2");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const res = await rlGet(
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
       await sock.sendMedia(m.chat, mediaUrl, caption, m, { type: "video" });
     }
 
-    m.react("✅");
+    m.react("🐣");
   } catch (e) {
     console.error("[AIOV2] Error:", e.message);
     m.reply(claraWrap("Aiov2", `Gagal mengambil media.\n>${e.message || "Coba lagi nanti"}`));

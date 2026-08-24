@@ -166,7 +166,7 @@ export default {
         `┊ Fitur Split Bill & Patungan dinyalakan.`,
         `┊ Ketik *${prefix}ptg <total> | <orang> | <keterangan>*`,
       ].join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -187,7 +187,7 @@ export default {
         `┊ Fitur Patungan dimatikan.`,
         `┊ Ketik *${prefix}ptgon* untuk aktifkan lagi.`,
       ].join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -214,7 +214,7 @@ export default {
       });
 
       await m.reply(claraWrap("Patungan - Riwayat", lines.join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -254,7 +254,7 @@ export default {
       });
 
       await m.reply(claraWrap("Patungan - Daftar Aktif", lines.join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -336,7 +336,7 @@ export default {
         await m.reply(text);
       }
 
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -419,7 +419,7 @@ export default {
       }
 
       await m.reply(claraWrap("Patungan - Bayar", lines.join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -510,7 +510,7 @@ export default {
         text: claraWrap("Patungan - Lunas (Owner)", lines.join("\n")),
         mentions: mentionedJids,
       });
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -565,7 +565,7 @@ export default {
       ];
 
       await m.reply(claraWrap("Patungan - Tutup", lines.join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -633,7 +633,7 @@ export default {
         ``,
         `┊ Ketik *${prefix}ptg bayar ${billId}* untuk tandai bayar`,
       ].join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -669,7 +669,7 @@ export default {
         `┊ 9. Toggle (owner):`,
         `┊    *${prefix}ptgon* / *${prefix}ptgoff*`,
       ].join("\n")));
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -733,7 +733,7 @@ export default {
       return { handled: true };
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // Parse people: could be a number or @tags
     let members = [];
@@ -870,7 +870,7 @@ export default {
         text,
         mentions: unpaidJids,
       });
-      await m.react("✅");
+      await m.react("🐣");
       return { handled: true };
     }
 
@@ -879,7 +879,7 @@ export default {
       tipText(`${prefix}ptg status ${billId} untuk cek siapa belum bayar`);
 
     await m.reply(text);
-    await m.react("✅");
+    await m.react("🐣");
     return { handled: true };
   },
 };

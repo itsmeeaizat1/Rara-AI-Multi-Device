@@ -65,7 +65,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const selectedMode = COPILOT_PROMPTS[mode] ? mode : "continue";
     const systemPrompt = COPILOT_PROMPTS[selectedMode];
-    m.react("🐣");
+    m.react("🕒");
     const reply = await callAI({
       providerKey: "openai",
       model: "gpt-4o-mini",
@@ -83,7 +83,7 @@ async function handler(m, { sock, config: botConfig }) {
     );
 
     await m.reply(text);
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text = claraWrap("Gagal",

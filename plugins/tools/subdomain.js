@@ -70,12 +70,12 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("Subdomain", "Domain tidak boleh kosong!"));
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     const subdomains = await getSubdomains(domain);
 
     if (subdomains.length === 0) {
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Subdomain: " + domain, "Tidak ada subdomain ditemukan"));
     }
 
@@ -95,7 +95,7 @@ async function handler(m, { sock, config: botConfig }) {
       lines.push("... +" + (subdomains.length - 40) + " lagi");
     }
 
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Subdomain: " + domain, lines.join("\n")));
   } catch (e) {
     console.error("subdomain error:", e);

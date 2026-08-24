@@ -120,7 +120,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "ringkasan" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     // Check for custom number of points
@@ -157,7 +157,7 @@ async function handler(m, { sock, args }) {
     txt += `_Ringkas dengan ${numPoints} poin_`;
 
     await m.reply(txt);
-    await m.react("✅");
+    await m.react("🐣");
   } catch (e) {
     console.error("[RINGKASAN] Error:", e.message);
     await m.reply(claraWrap("ringkasan", `Gagal merangkum teks!\n\nError: ${e.message}`));

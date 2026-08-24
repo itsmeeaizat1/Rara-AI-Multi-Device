@@ -94,7 +94,7 @@ export default {
         return { handled: true };
       }
 
-      await m.react("🐣");
+      await m.react("🕒");
 
       const tmpDir = os.tmpdir();
       const inputPath = path.join(tmpDir, `slangtr_${Date.now()}.ogg`);
@@ -211,7 +211,7 @@ export default {
       inputText = inputText.slice(0, 2000);
     }
 
-    if (!isAudio) await m.react("🐣");
+    if (!isAudio) await m.react("🕒");
 
     // ─── AI Slang Translation ───
     const systemPrompt = `Kamu adalah ahli linguistik budaya dan penerjemah slang. Tugasmu menganalisis teks yang mengandung slang, idiom, bahasa gaul, atau dialek daerah, lalu memberikan terjemahan beserta konteks budayanya.
@@ -320,7 +320,7 @@ Aturan:
         tipText(`Reply teks/VN lain + ${prefix}slangtranslate untuk terjemahkan lagi`);
 
       await m.reply(text);
-      await m.react("✅");
+      await m.react("🐣");
     } catch (error) {
       const text =
         claraWrap("Slang Translator - Error", [

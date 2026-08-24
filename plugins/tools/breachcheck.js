@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
           "Saran: Pakai .passwordgen untuk generate password baru.",
         ], "warn"));
       } else {
-        await m.react("✅");
+        await m.react("🐣");
         // Strength check
         let strength = 0;
         if (password.length >= 8) strength += 25;
@@ -217,7 +217,7 @@ async function handler(m, { sock }) {
     lines.push("Tidak ada breach yang diketahui untuk domain ini");
     lines.push("");
     lines.push("Tetap aktifkan 2FA untuk keamanan ekstra.");
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Breach Check", lines, "success"));
   }
 

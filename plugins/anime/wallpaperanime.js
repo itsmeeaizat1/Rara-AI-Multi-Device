@@ -136,7 +136,7 @@ async function handler(m, { sock, config: botConfig }) {
     return m.reply( claraWrap("Wallpaper Anime", help));
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     // Parse input: cek keyword resolusi
@@ -179,7 +179,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // 3. Kalau semua kosong
     if (!results || results.length === 0) {
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Wallpaper Anime", `Tidak ada wallpaper anime untuk "${query}".\n\nCoba kata kunci lain:\nnaruto, one piece, demon slayer, gojo, rem\n\nAtau lihat: .wallpaperanime list`));
     }
 
@@ -199,9 +199,9 @@ async function handler(m, { sock, config: botConfig }) {
       caption: claraWrap("Wallpaper Anime", caption),
     }, { quoted: m });
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
-    await m.react("✅");
+    await m.react("🐣");
     let errMsg = error.message || "Gagal mencari wallpaper anime.";
     return m.reply(claraWrap("Wallpaper Anime Error", errMsg));
   }

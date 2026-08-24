@@ -230,7 +230,7 @@ async function handler(m, { sock, config: botConfig }) {
       updateStreak(data);
       saveHafalan(db, sender, data);
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Hafalan",
         "Hafalan ditambahkan!\n" +
         "Surah: *" + surah.name + "* (" + surah.num + ")\n" +
@@ -320,7 +320,7 @@ async function handler(m, { sock, config: botConfig }) {
         updateStreak(data);
         saveHafalan(db, sender, data);
 
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply(claraWrap("Review Selesai",
           "MasyaAllah! Review tercatat.\n" +
           "Surah: *" + item.surahName + "* " + item.ayatStart + "-" + item.ayatEnd + "\n" +
@@ -339,7 +339,7 @@ async function handler(m, { sock, config: botConfig }) {
 
         saveHafalan(db, sender, data);
 
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply(claraWrap("Review Diulang",
           "Tidak apa-apa, tetap semangat!\n" +
           "Surah: *" + item.surahName + "* " + item.ayatStart + "-" + item.ayatEnd + "\n" +
@@ -425,7 +425,7 @@ async function handler(m, { sock, config: botConfig }) {
       data.items.splice(idx, 1);
       saveHafalan(db, sender, data);
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Hafalan", "Hafalan *" + removed.surahName + " " + removed.ayatStart + "-" + removed.ayatEnd + "* dihapus"));
     }
 

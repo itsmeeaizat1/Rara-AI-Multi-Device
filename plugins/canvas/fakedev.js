@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
   if (!buffer) {
     return m.reply(claraWrap("Fakedev", `❌ Kirim/reply gambar untuk dijadikan avatar!`));
   }
-  m.react("🐣");
+  m.react("🕒");
   try {
     const gmbr = await uploadTo0x0(buffer, {
       filename: "image.jpg",
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         type: "image",
       },
     );
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("fakedev", `Coba lagi`));
   }

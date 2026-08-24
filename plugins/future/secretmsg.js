@@ -169,7 +169,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     if (mentioned === msg.from) {
       msg.guessed = true;
       saveConfig(db, gid, cfg);
-      await m.react("✅");
+      await m.react("🐣");
       await m.reply(claraWrap("SecretMsg - BENAR!", "Pengirim pesan #" + id + " adalah @" + msg.from.split("@")[0] + "!\nIdentitas terbongkar!"), { mentions: [msg.from] });
     } else {
       await m.react("❌");

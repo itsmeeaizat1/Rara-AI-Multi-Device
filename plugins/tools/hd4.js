@@ -167,7 +167,7 @@ async function handler(m, { sock, args }) {
     ].join("\n")), "reminiv2");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const buffer = m.quoted?.isMedia
@@ -270,7 +270,7 @@ async function handler(m, { sock, args }) {
       }
     }
 
-    m.react("✅");
+    m.react("🐣");
 
     const sizeKB = (processedBuffer.length / 1024).toFixed(0);
     const sizeMB = (processedBuffer.length / (1024 * 1024)).toFixed(2);

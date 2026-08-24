@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
 
       const ownerNum = config.owner?.number?.[0] || "Owner #1";
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(
         `✅ *Auto Backup Diaktifkan*\n\n` +
           `╭┈┈⬡「 ⚙️ *sEttings* 」\n` +
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
     case "stop": {
       disableAutoBackup();
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(
         `❌ *Auto Backup Dinonaktifkan*\n\n` +
           `Backup otomatis sudah dihentikan.\n` +
@@ -127,14 +127,14 @@ async function handler(m, { sock }) {
     case "now":
     case "manual":
     case "trigger": {
-      await m.react("🐣");
+      await m.react("🕒");
       await m.reply(
         `🕕 *Membuat Backup...*\n\n> Mohon tunggu, sedang membuat backup...`,
       );
 
       try {
         await triggerManualBackup(sock);
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply(
           `✅ *Backup sElesai*\n\n> Backup telah dikirim ke owner!`,
         );

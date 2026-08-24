@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
       `_Proses generate agak lama, sekitar 30-60 detik_`, "text2img4");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const result = await Txt2Img2(text);
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
       type: "image",
     });
 
-    m.react("✅");
+    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply(claraWrap("txt2img2", "❌ Gagal generate gambar, coba lagi nanti"));

@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
   const participantJid = targetNumber + "@s.whatsapp.net";
 
   try {
-    await m.react("🐣");
+    await m.react("🕒");
 
     await sock.groupParticipantsUpdate(
       groupId,
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
       "approve"
     );
 
-    await m.react("✅");
+    await m.react("🐣");
 
     if (groupName === "Grup") {
       try {

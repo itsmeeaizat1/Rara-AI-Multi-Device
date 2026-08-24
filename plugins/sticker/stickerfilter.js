@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     return m.reply( "❌ Reply sticker yang mau difilter.", "stickerfilter");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const stickerBuffer = await m.quoted.download();
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
 
     const exifBuf = await addExifToWebp(buf, "Nova AI", "Sticker Filter");
     await sock.sendMessage(m.chat, { sticker: exifBuf }, { quoted: m });
-    await m.react("✅");
+    await m.react("🐣");
   } catch (err) {
     console.error("[StickerFilter] Error:", err.message);
     await m.react("❌");

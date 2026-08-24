@@ -305,7 +305,7 @@ async function handler(m, { sock, args }) {
     );
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const mode = args[0].toLowerCase();
@@ -344,7 +344,7 @@ async function handler(m, { sock, args }) {
         ptt: false,
       }, { quoted: m });
       
-      m.react("✅");
+      m.react("🐣");
       return;
     }
     
@@ -378,7 +378,7 @@ async function handler(m, { sock, args }) {
       }
     }
     
-    m.react("✅");
+    m.react("🐣");
     return await m.reply(claraWrap("audioquran", txt));
     
   } catch (err) {

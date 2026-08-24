@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
         if (!isNaN(addCount) && addCount > 0) {
           product.stock = (product.stock === -1 ? 0 : product.stock) + addCount;
           db.setting("storeProducts", products);
-          await m.react("✅");
+          await m.react("🐣");
           return m.reply(`📦 *STOK FISIK DITAMBAHKAN*\n\n` +
               `🏷️ Produk: *${product.name}*\n` +
               `➕ Ditambahkan: *${addCount} pcs*\n` +
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
 
           product.stock = product.stockItems.length;
           db.setting("storeProducts", products);
-          await m.react("✅");
+          await m.react("🐣");
           return m.reply(`✅ *IMPORT STOK SELESAI*\n\n` +
               `🏷️ Produk: *${product.name}*\n` +
               `➕ Ditambahkan: *${added}* akun 🔑\n` +
@@ -189,7 +189,7 @@ async function handler(m, { sock }) {
     }
     product.stock = (product.stock === -1 ? 0 : product.stock) + addCount;
     db.setting("storeProducts", products);
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("addstok", `📦 *STOK FISIK DITAMBAHKAN*\n\n` +
         `🏷️ Produk: *${product.name}*\n` +
         `➕ Ditambahkan: *${addCount} pcs*\n` +
@@ -215,7 +215,7 @@ async function handler(m, { sock }) {
   product.stock = product.stockItems.length;
   db.setting("storeProducts", products);
 
-  await m.react("✅");
+  await m.react("🐣");
   return m.reply(`✅ *STOK DITAMBAHKAN*\n\n` +
       `🏷️ Produk: *${product.name}*\n` +
       `🔑 Total stok saat ini: *${product.stockItems.length}* akun\n\n` +

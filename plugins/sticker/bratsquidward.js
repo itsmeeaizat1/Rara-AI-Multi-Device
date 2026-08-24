@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     return m.reply( `🖼️ *BRAT SQUIDWARD*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratsquidward Hai semua\``, "bratsquidward");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const url = `https://api.nova.my.id/api/bratsquidward?text=${encodeURIComponent(text)}`;
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
       packname: config.sticker.packname,
       author: config.sticker.author,
     });
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("bratsquidward", te(m.prefix, m.command, m.pushName), "error"));
   }

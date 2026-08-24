@@ -520,7 +520,7 @@ async function handler(m, { sock, args }) {
       if (xpGain > 0) { const _eduDb = getDatabase(); const _eduU = _eduDb.db.data.eduScores?.[sender]; txt += `\n+${xpGain} XP | Lv.${_eduU?.level || 1} | Streak ${_eduU?.streak || 1}x`; }
       quizSessions.delete(sender);
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
@@ -541,7 +541,7 @@ async function handler(m, { sock, args }) {
     txt += `\n> Ketik *skip* untuk lewati, *stop* untuk berhenti`;
 
     await m.reply(txt);
-    await m.react("✅");
+    await m.react("🐣");
     return;
   }
 
@@ -562,7 +562,7 @@ async function handler(m, { sock, args }) {
       txt += `\n\nQuiz selesai! Total: ${session.questions.length} soal`;
       quizSessions.delete(sender);
       await m.reply(txt);
-      await m.react("✅");
+      await m.react("🐣");
       return;
     }
 
@@ -580,7 +580,7 @@ async function handler(m, { sock, args }) {
     }
     txt += `\n> skip / stop`;
     await m.reply(txt);
-    await m.react("✅");
+    await m.react("🐣");
     return;
   }
 
@@ -588,7 +588,7 @@ async function handler(m, { sock, args }) {
   if (["stop", "batal", "cancel"].includes(jenjang)) {
     if (session) {
       quizSessions.delete(sender);
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Soalujian", "Quiz dibatalkan."));
     }
     return m.reply(claraWrap("Soalujian", "Tidak ada quiz berjalan."));
@@ -621,7 +621,7 @@ async function handler(m, { sock, args }) {
       txt += `${name}: ${getAvailableSubjects(k).join(", ")}\n`;
     }
     await m.reply(txt);
-    await m.react("✅");
+    await m.react("🐣");
     return;
   }
 
@@ -645,7 +645,7 @@ async function handler(m, { sock, args }) {
   if (!dailyCheck.allowed) {
     return m.reply("Kamu sudah main " + MAX_QUIZ_PER_DAY + " quiz hari ini!\n\nKembali besok untuk lanjut belajar.\n\n> Ketik .edulb untuk lihat ranking");
   }
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     let questions = [];
@@ -737,7 +737,7 @@ async function handler(m, { sock, args }) {
     txt += `\n> Ketik *skip* / *stop*`;
 
     await m.reply(txt);
-    await m.react("✅");
+    await m.react("🐣");
   } catch (e) {
     console.error("[SOALUJIAN] Error:", e.message);
     await m.reply(claraWrap("soalujian", `Gagal membuat soal!\n\nError: ${e.message}`));

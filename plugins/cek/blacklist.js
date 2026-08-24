@@ -122,7 +122,7 @@ async function handler(m, { sock, config: botConfig }) {
       const reportCount = blacklist[number].reports.length;
       const verifiedTag = blacklist[number].verified ? " [VERIFIED]" : "";
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Blacklist" + verifiedTag,
         "Report tercatat!\n" +
         "Nomor: " + formatPhone(number) + "\n" +
@@ -145,7 +145,7 @@ async function handler(m, { sock, config: botConfig }) {
       const entry = blacklist[number];
 
       if (!entry) {
-        await m.react("✅");
+        await m.react("🐣");
         return m.reply(claraWrap("Aman", "Nomor " + formatPhone(number) + " tidak ada di blacklist.\nBelum ada laporan penipuan."));
       }
 
@@ -271,7 +271,7 @@ async function handler(m, { sock, config: botConfig }) {
       delete blacklist[number];
       saveBlacklist(db, blacklist);
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Blacklist", "Nomor " + formatPhone(number) + " dihapus dari blacklist"));
     }
 

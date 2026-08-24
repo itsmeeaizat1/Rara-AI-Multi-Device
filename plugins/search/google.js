@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}google teknologi terbaru*`, "google");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const result = await GoogleSearch(query);
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     });
 
     m.reply(txt.trim());
-    m.react("✅");
+    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply(claraWrap("google", "❌ Gagal mencari di Google, coba lagi nanti"));

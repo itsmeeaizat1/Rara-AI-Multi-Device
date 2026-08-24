@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Text To Image", `📿 *Text To Image*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}text2img Buat gambar dari teks\``), "text2img");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const url = `https://firefly.maiku.my.id/api/deepai?apikey=${config.APIkey.firefly}&prompt=${encodeURIComponent(text)}`;
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
 
     const content = data.data.data.output_url;
 
-    m.react("✅");
+    m.react("🐣");
     await sock.sendMedia(m.chat, content, text, m, {
       type: "image",
     });

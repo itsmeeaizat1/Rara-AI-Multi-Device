@@ -162,7 +162,7 @@ async function handler(m, { sock, args, config: botConfig }) {
 
   // .beasiswa list / .beasiswa (level)
   if (sub === "" || level || sortByDeadline) {
-    await m.react("🐣");
+    await m.react("🕒");
     try {
       const results = await fetchBeasiswaFromWeb(level);
       if (results.length === 0) {

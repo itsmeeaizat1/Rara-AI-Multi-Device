@@ -58,7 +58,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return m.reply(help, "roastme");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const prompt = `Kamu adalah master roaster Indonesia. Roast seseorang bernama "${targetName}" dengan mode ${mode}: ${MODES[mode]}. Buat roasting lucu, kreatif, pakai bahasa Indonesia santai. Maksimal 4 paragraf pendek. JANGAN pakai kata-kata SARA, jangan terlalu toxic, tetap dalam batas lucu. Format plain text, bukan markdown.`;
@@ -74,7 +74,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     if (m.quoted) header += ` - Target: ${targetName}`;
 
     await m.reply(claraWrap(header, result.trim()));
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
     console.error("roastme error:", error);
     m.reply(claraWrap("RoastMe", `Gagal: ${error.message || "error"}`));

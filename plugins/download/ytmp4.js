@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   if (!url.includes("youtube.com") && !url.includes("youtu.be"))
     { const __navText = "❌ URL harus YouTube"; return await m.reply(__navText); };
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const downloadUrl = await getVideoDownloadUrl(url);
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     await sock.sendMedia(m.chat, downloadUrl, null, m, {
       type: "video",
     });
-    m.react("✅");
+    m.react("🐣");
   } catch (err) {
     console.error("[YTMP4]", err);
     m.reply(claraWrap("ytmp4", "Gagal mengunduh video."));

@@ -78,9 +78,9 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (sub === "cek" || sub === "check") {
-    await m.react("🐣");
+    await m.react("🕒");
     const data = await checkBMKG();
-    await m.react("✅");
+    await m.react("🐣");
     if (!data) {
       await m.reply(claraWrap("Auto Weather", "Gagal fetch BMKG. Coba lagi nanti."));
       return { handled: true };

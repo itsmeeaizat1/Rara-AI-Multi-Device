@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}apkmod vpn\``, "apkmod");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const { data } = await axios.get(
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
       timestamp: Date.now(),
     };
 
-    m.react("✅");
+    m.react("🐣");
 
     await sock.sendButton(
       m.chat,

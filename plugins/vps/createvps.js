@@ -99,7 +99,7 @@ ssh_pwauth: True`,
         tags: ['nova-bot']
     }
     
-    await m.react("🐣")
+    await m.react("🕒")
     await m.reply(`Membuat VPS...\nHostname: ${hostname}\nSpec: ${spec.ram} RAM, ${spec.cpu}\nRegion: ${region}`)
     
     try {
@@ -145,7 +145,7 @@ ssh_pwauth: True`,
 Simpan data ini baik-baik!`
         
         await sock.sendMessage(m.sender, { text: detailTxt })
-        await m.react("✅")
+        await m.react("🐣")
         await m.reply(`VPS berhasil dibuat. Data dikirim ke private chat.`)
         
     } catch (err) {

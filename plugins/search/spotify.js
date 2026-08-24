@@ -27,7 +27,7 @@ async function handler(m, { sock, text }) {
     return m.reply( claraWrap("Spotify", "❌ *Waduh, kata kuncinya mana nih?*\n\nKamu harus memasukkan judul lagu atau nama artis yang ingin dicari di Spotify. \n\nContoh penggunaan: `.spotify bruno mars`"), { commandName: "spotify" });
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const res = await axios.get(`https://api.cuki.biz.id/api/search/spotify?apikey=${config.APIkey.cuki}&query=${encodeURIComponent(text)}&limit=5`);
@@ -100,7 +100,7 @@ async function handler(m, { sock, text }) {
       await m.reply(contentText);
     }
 
-    await m.react("✅");
+    await m.react("🐣");
 
   } catch (err) {
     console.error("[Spotify Search]", err.message);

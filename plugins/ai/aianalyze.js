@@ -65,7 +65,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    m.react("🐣");
+    m.react("🕒");
     const response = await fetch(apiEndpoint, {
       method: "POST",
       headers: {
@@ -103,7 +103,7 @@ async function handler(m, { sock, config: botConfig }) {
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
     await m.reply(out);
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

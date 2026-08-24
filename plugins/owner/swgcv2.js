@@ -68,7 +68,7 @@ async function handler(m, { sock, db }) {
         groupName = meta.subject;
       } catch (e) { console.error('[swgcv2.js]:', e.message); }
 
-      await m.react("🐣");
+      await m.react("🕒");
 
       const rawContent = pendingData.rawContent;
 

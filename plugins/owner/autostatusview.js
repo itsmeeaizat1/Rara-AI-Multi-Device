@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
       // Also update old key for backward compat with connection.js
       db.setting("autoReadSW", { enabled: true });
       db.save();
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Auto Status View", "Auto read story diaktifkan!", "success"));
     }
     if (sub === "off") {
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
       db.save();
       db.setting("autoReadSW", { enabled: false });
       db.save();
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Auto Status View", "Auto read story dimatikan!", "info"));
     }
     return m.reply(claraWrap("Auto Status View", "Gunakan: .autostatusview read on/off", "warn"));
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
       db.save();
       db.setting("autoReactSW", { enabled: true, emoji });
       db.save();
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Auto Status View", [
         "Auto react story diaktifkan!",
         `Emoji: ${emoji}`,
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
       db.save();
       db.setting("autoReactSW", { enabled: false, emoji: settings.react.emoji });
       db.save();
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Auto Status View", "Auto react story dimatikan!", "info"));
     }
     return m.reply(claraWrap("Auto Status View", "Gunakan: .autostatusview react on/off [emoji]", "warn"));
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
     db.save();
     db.setting("autoReactSW", { enabled: settings.react.enabled, emoji });
     db.save();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Auto Status View", `Emoji react diatur ke ${emoji}`, "success"));
   }
 
@@ -153,7 +153,7 @@ async function handler(m, { sock }) {
       db.setting("autoReadSW", { enabled: true });
       db.setting("autoReactSW", { enabled: true, emoji: settings.react.emoji });
       db.save();
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Auto Status View", [
         "Auto read + react diaktifkan!",
         `Emoji: ${settings.react.emoji}`,
@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
       db.setting("autoReadSW", { enabled: false });
       db.setting("autoReactSW", { enabled: false, emoji: settings.react.emoji });
       db.save();
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Auto Status View", "Auto read + react dimatikan!", "info"));
     }
     return m.reply(claraWrap("Auto Status View", "Gunakan: .autostatusview all on/off", "warn"));
@@ -182,7 +182,7 @@ async function handler(m, { sock }) {
     db.setting("autoReadSW", { enabled: true });
     db.setting("autoReactSW", { enabled: true, emoji: settings.react.emoji });
     db.save();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Auto Status View", [
       "Auto read + react diaktifkan!",
       `Emoji: ${settings.react.emoji}`,
@@ -198,7 +198,7 @@ async function handler(m, { sock }) {
     db.setting("autoReadSW", { enabled: false });
     db.setting("autoReactSW", { enabled: false, emoji: settings.react.emoji });
     db.save();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("Auto Status View", "Auto read + react dimatikan!", "info"));
   }
 

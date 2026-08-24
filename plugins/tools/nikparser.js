@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}nikparser 3517072109020003\``, "nikparser");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const r = await fetch(`${API}?nik=${nik}`, {
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
       );
     }
 
-    m.react("✅");
+    m.react("🐣");
 
     const bDay = new Date(data.birthISO);
     const bFormatted = bDay.toLocaleDateString("id-ID", {

@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
 
-    await m.react("🐣");
+    await m.react("🕒");
     return;
   }
 
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
 
-    await m.react("✅");
+    await m.react("🐣");
     return;
   }
 

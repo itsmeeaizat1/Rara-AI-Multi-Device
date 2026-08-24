@@ -137,7 +137,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     if (!game.scores[m.sender]) game.scores[m.sender] = 0;
     game.scores[m.sender]++;
     saveConfig(db, gid, game);
-    await m.react("✅");
+    await m.react("🐣");
 
     const nextChar = getLastChar(word).toUpperCase();
     await m.reply(claraWrap("Word Chain", [

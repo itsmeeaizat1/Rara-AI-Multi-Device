@@ -179,7 +179,7 @@ async function handler(m, { sock, config: botConfig }) {
     return;
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     // Download image
@@ -230,7 +230,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // Send result
     await m.reply(claraWrap("Nutrisi Scanner", result.trim()));
-    await m.react("✅");
+    await m.react("🐣");
   } catch (err) {
     console.log("[Nutrisi] Error:", err.message);
     await m.reply(claraWrap("Nutrisi Scanner", [

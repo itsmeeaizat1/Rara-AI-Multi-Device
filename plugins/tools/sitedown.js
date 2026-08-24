@@ -68,7 +68,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const url = text.trim();
-    await m.react("🐣");
+    await m.react("🕒");
 
     const result = await checkSite(url);
 
@@ -93,7 +93,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("Final URL: " + (result.finalUrl.length > 60 ? result.finalUrl.substring(0, 60) + "..." : result.finalUrl));
       }
 
-      await m.react("✅");
+      await m.react("🐣");
       return m.reply(claraWrap("Site Check: " + url.replace(/^https?:\/\//, ""), lines.join("\n")));
     } else {
       await m.react("❌");

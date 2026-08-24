@@ -26,13 +26,13 @@ async function handler(m, { sock }) {
         `\`Contoh: ${m.prefix}novabanana2 make a cat\``, "novabanana2");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const result = await fluxImage(prompt, "1:1");
     const imageUrl = result.url;
 
-    m.react("✅");
+    m.react("🐣");
 
     await sock.sendMedia(m.chat, imageUrl, null, m, {
       type: "image",

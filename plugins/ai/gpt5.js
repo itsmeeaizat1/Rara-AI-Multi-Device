@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `_Jawaban bisa agak lama, sabar ya_`, "gpt5");
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const result = await GPT5(text);
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("GPT-5 Gagal", `❌ *GPT-5 Gagal*\n\n> ${result.error || "Gagal mendapatkan respons"}`));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
 
     const reply = `${result.answer}`;
 

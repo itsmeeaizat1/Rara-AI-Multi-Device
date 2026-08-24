@@ -20,7 +20,7 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, db }) {
-  await m.react("🐣");
+  await m.react("🕒");
   const prefix = config.command?.prefix || ".";
   const args = m.args || [];
   const mode = args[0]?.toLowerCase();
@@ -39,7 +39,7 @@ async function handler(m, { sock, db }) {
 ┊  3. \`${prefix}setmenuimage url https://link-gambar.jpg\` → pakai URL
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
     await m.reply(claraWrap("setmenuimage", txt));
-    await m.react("✅");
+    await m.react("🐣");
     return;
   }
 
@@ -59,7 +59,7 @@ async function handler(m, { sock, db }) {
     await m.reply(
       `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Berhasil\n┊\n  ┊  ➶ Mode: *asset*\n  ┊  ➶ Asset: *${assetKey}*\n  ┊  ➶ Path: \`${config.assets[assetKey]}\`\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
     );
-    await m.react("✅");
+    await m.react("🐣");
     return;
   }
 
@@ -83,7 +83,7 @@ async function handler(m, { sock, db }) {
       await m.reply(
         `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Berhasil\n┊\n  ┊  ➶ Mode: *url*\n  ┊  ➶ URL: ${url}\n  ┊  ➶ Gambar akan di-cache otomatis\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
       );
-      await m.react("✅");
+      await m.react("🐣");
     } catch (e) {
       await m.reply(
         `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Error\n┊\n  ┊  ➶ Gagal fetch URL: ${e.message}\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`

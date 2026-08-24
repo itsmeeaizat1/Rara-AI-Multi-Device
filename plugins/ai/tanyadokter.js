@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const key = sessionKey(m);
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
       sessions.set(key, result.sessionUuid);
     }
 
-    await m.react("✅");
+    await m.react("🐣");
 
     let reply = result.response || "Maaf, tidak ada response dari dokter AI.";
 

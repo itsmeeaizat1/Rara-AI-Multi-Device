@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const ba = new BluArchive();
@@ -153,7 +153,7 @@ async function handler(m, { sock }) {
       await m.reply(claraWrap("bluearchive-char", caption));
     }
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("bluearchive-char", te(m.prefix, m.command, m.pushName), "error"));
   }

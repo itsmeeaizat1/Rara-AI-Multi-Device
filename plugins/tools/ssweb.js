@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
     text = "https://" + text;
   }
 
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const imageBuffer = await ssweb(text, mode);
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
       type: "image",
     });
 
-    await m.react("✅");
+    await m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("ssweb", te(m.prefix, m.command, m.pushName), "error"));
   }

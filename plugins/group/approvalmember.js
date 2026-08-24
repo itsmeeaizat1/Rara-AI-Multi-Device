@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
       return formatAndReply(claraWrap("approvalmember", "Bot bukan admin di grup ini.\n\nJadikan bot admin dulu untuk menggunakan fitur ini."));
     }
 
-    await m.react("🐣");
+    await m.react("🕒");
 
     // WhatsApp group setting: membership_approval_mode
     // Baileys: groupSettingUpdate with memberApprovalMode
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
 
     await sock.groupSettingUpdate(m.chat, patch);
 
-    await m.react("✅");
+    await m.react("🐣");
 
     let text = "PERSETUJUAN MEMBER: " + (isOn ? "*AKTIF*" : "*NONAKTIF*") + "\n\n";
     if (isOn) {

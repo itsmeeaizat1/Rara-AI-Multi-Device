@@ -104,7 +104,7 @@ async function handler(m, { sock, args }) {
   if (action === "on") {
     db.setting("autoreactstickerEnabled", true);
     await db.save();
-    await m.react("✅");
+    await m.react("🐣");
 
     const autosave = db.setting("autoreactstickerAutosave") || false;
     const saveall = db.setting("autoreactstickerSaveall") || false;
@@ -172,7 +172,7 @@ async function handler(m, { sock, args }) {
       db.setting("autoreactstickerSaveall", false);
     }
     await db.save();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("AutoReactSticker", [
       subArg === "on"
         ? "✅ AUTOSAVE AI VISION DIAKTIFKAN"
@@ -212,7 +212,7 @@ async function handler(m, { sock, args }) {
       db.setting("autoreactstickerAutosave", false);
     }
     await db.save();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("AutoReactSticker", [
       subArg === "on"
         ? "✅ SAVEALL DIAKTIFKAN"
@@ -308,7 +308,7 @@ async function handler(m, { sock, args }) {
 
     db.setting("autoreactstickerTriggers", triggers);
     await db.save();
-    await m.react("✅");
+    await m.react("🐣");
 
     let resultTxt = "✅ STICKER TRIGGER DISET\n\n";
     resultTxt += "Sticker: " + fileName + "\n";
@@ -397,7 +397,7 @@ async function handler(m, { sock, args }) {
 
     db.setting("autoreactstickerCollection", collection);
     await db.save();
-    await m.react("✅");
+    await m.react("🐣");
 
     return m.reply(claraWrap("AutoReactSticker", [
       "✅ STICKER DITAMBAHKAN KE RANDOM POOL",
@@ -523,7 +523,7 @@ async function handler(m, { sock, args }) {
 
     db.setting("autoreactstickerJedaPrivate", seconds * 1000);
     await db.save();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("AutoReactSticker", [
       "✅ JEDA PRIVATE DISET",
       "",
@@ -552,7 +552,7 @@ async function handler(m, { sock, args }) {
 
     db.setting("autoreactstickerJedaGrup", seconds * 1000);
     await db.save();
-    await m.react("✅");
+    await m.react("🐣");
     return m.reply(claraWrap("AutoReactSticker", [
       "✅ JEDA GRUP DISET",
       "",

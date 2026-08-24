@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
   ┊  ➶ \`Contoh: ${m.prefix}ttsearch anime\``, "ttsearch");
   }
 
-  m.react("🐣");
+  m.react("🕒");
 
   try {
     const videos = await tiktokSearchVideo(query);
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
       }
     }
 
-    m.react("✅");
+    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("ttsearch", te(m.prefix, m.command, m.pushName), "error"));
   }

@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
   if (!url.match(/mediafire\.com/i)) {
     return m.reply(claraWrap("Mediafiredl", `❌ *URL tidak valid. Gunakan link MediaFire.*`));
   }
-  await m.react("🐣");
+  await m.react("🕒");
 
   try {
     const result = await mediafire(url);

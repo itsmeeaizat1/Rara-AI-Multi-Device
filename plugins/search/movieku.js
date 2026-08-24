@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
         )
     }
 
-    m.react("🐣")
+    m.react("🕒")
 
     try {
         const movies = await searchMovies(query)
@@ -147,7 +147,7 @@ async function handler(m, { sock }) {
 
         txt += `🔗 ${movie.post_link}`
 
-        m.react("✅")
+        m.react("🐣")
 
         const poster = detail.poster || movie.post_image
         if (poster) {
