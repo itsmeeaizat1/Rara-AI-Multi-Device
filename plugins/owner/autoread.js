@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     const current = db.setting("autoRead") ?? config.features?.autoRead ?? false;
     return m.reply( `📖 *Auto Read*\n\n` +
         `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}autoread on* — Aktifkan\n` +
         `*${m.prefix}autoread off* — Nonaktifkan\n\n` +
         `_Bot akan otomatis membaca pesan masuk_`, "autoread");

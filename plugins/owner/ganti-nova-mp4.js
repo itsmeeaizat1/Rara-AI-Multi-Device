@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         
         try {
             const newUrl = await updateAssetUrl('nova-mp4', buffer, 'nova.mp4')
-            { const __navText = `✅ *Berhasil*\n\nFile nova.mp4 telah diganti ke URL baru:\n${newUrl}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); }
+            { const __navText = `✅ *ʙᴇʀʜᴀꜱɪʟ*\n\nFile nova.mp4 telah diganti ke URL baru:\n${newUrl}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); }
         } catch (e) {
             m.reply(claraWrap("ganti-nova.mp4", `❌ Gagal mengupload file: ${e.message}`))
         }

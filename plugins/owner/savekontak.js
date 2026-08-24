@@ -105,11 +105,11 @@ async function handler(m, { sock, args }) {
         text: `📇 *SISTEM SAVE KONTAK (VCF)*\n\n` +
             `Sistem ekstraksi kontak otomatis dari grup yang diikuti bot.\n` +
             `Nama Base: *${baseName}*\n\n` +
-            `*Cara Pakai:*\n` +
+            `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
             `*${m.prefix || "."}savekontak <nama>* — Menyimpan dengan nama kustom\n` +
             `*${m.prefix || "."}savekontak* — Menyimpan dengan nama default "User"\n\n` +
-            `*Alur Pakai:*\n` +
-            `1. Pilih grup spesifik dari tombol *Pilih Grup* di bawah, atau klik *Semua Grup* untuk mengekstrak kontak secara global.\n` +
+            `*ᴀʟᴜʀ ᴘᴀᴋᴀɪ:*\n` +
+            `1. Pilih grup spesifik dari tombol *ᴘɪʟɪʜ ɢʀᴜᴘ* di bawah, atau klik *ꜱᴇᴍᴜᴀ ɢʀᴜᴘ* untuk mengekstrak kontak secara global.\n` +
             `2. Bot akan mengumpulkan nomor peserta dan mengabaikan nomor bot sendiri.\n` +
             `3. Hasil akan dikirim berupa file dokumen (*.vcf*) beserta list kontak WhatsApp agar bisa langsung disave.`,
         footer: "Powered by ReviewBot",

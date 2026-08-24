@@ -53,7 +53,7 @@ function help(m) {
   // Build help text using concatenation to avoid nested template literal issues
   const p = m.prefix || ".";
   const lines = [
-    "*PENGATURAN INFO LOKER OTOMATIS*",
+    "*ᴘᴇɴɢᴀᴛᴜʀᴀɴ ɪɴꜰᴏ ʟᴏᴋᴇʀ ᴏᴛᴏᴍᴀᴛɪꜱ*",
     "",
     "`" + p + "loker aktif`",
     "  Aktifkan broadcast loker di grup ini (akan meminta pilihan mode).",
@@ -289,7 +289,7 @@ async function handler(m, { sock }) {
     if (!choice) {
       const current = getLokerStatus();
       const active = current?.sources || [];
-      let txt = "*Sumber Loker Aktif:*\n\n";
+      let txt = "*ꜱᴜᴍʙᴇʀ ʟᴏᴋᴇʀ ᴀᴋᴛɪꜰ:*\n\n";
       for (const src of AVAILABLE) {
         const isActive = active.includes(src);
         txt += `${isActive ? "[x]" : "[ ]"} ${src}\n`;
@@ -336,7 +336,7 @@ Sumber aktif: ${settings.sources.join(", ") || "(kosong)"}`));
     const sources = Array.isArray(status?.sources) && status.sources.length ? status.sources.join(", ") : "(default)";
 
     const out = [
-      "*Status Loker*",
+      "*ꜱᴛᴀᴛᴜꜱ ʟᴏᴋᴇʀ*",
       "",
       `Enabled: ${enabled}`,
       `Targets: ${targets}`,

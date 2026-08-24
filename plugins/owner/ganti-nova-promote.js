@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
         if (!buffer) { const __navText = claraWrap("ganti-nova-promote.jpg", '❌ Gagal mendownload gambar'); return await m.reply(__navText); }
         try {
             const newUrl = await updateAssetUrl('nova-promote', buffer, 'nova-promote.jpg')
-            m.reply(claraWrap("Ganti-nova-promote.jpg", `✅ *Berhasil*\n\nGambar nova-promote.jpg telah diganti ke URL baru:\n${newUrl}\nConfig telah diupdate secara realtime!`))
+            m.reply(claraWrap("Ganti-nova-promote.jpg", `✅ *ʙᴇʀʜᴀꜱɪʟ*\n\nGambar nova-promote.jpg telah diganti ke URL baru:\n${newUrl}\nConfig telah diupdate secara realtime!`))
         } catch (e) {
             m.reply(claraWrap("ganti-nova-promote.jpg", `❌ Gagal mengupload gambar: ${e.message}`))
         }

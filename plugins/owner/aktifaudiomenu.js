@@ -25,7 +25,7 @@ async function handler(m, { sock, db }) {
         const current = db.setting('audioMenu') !== false
 
         if (!option) {
-            return await m.reply(claraWrap("Aktifaudiomenu", `Status: *${current ? '✅ Aktif' : '❌ Nonaktif'}*\n\n*Cara pakai:*\n\`${m.prefix}aktifaudiomenu ya\` - Aktifkan audio\n\`${m.prefix}aktifaudiomenu gak\` - Nonaktifkan audio`))
+            return await m.reply(claraWrap("Aktifaudiomenu", `Status: *${current ? '✅ Aktif' : '❌ Nonaktif'}*\n\n*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n\`${m.prefix}aktifaudiomenu ya\` - Aktifkan audio\n\`${m.prefix}aktifaudiomenu gak\` - Nonaktifkan audio`))
         }
 
         if (option === 'ya' || option === 'on' || option === '1' || option === 'aktif') {
@@ -35,7 +35,7 @@ async function handler(m, { sock, db }) {
             db.setting('audioMenu', true)
             await db.save()
             await m.react('✅')
-            return m.reply(`✅ Audio menu *diaktifkan*!\n\nSekarang ketika ada yang ketik \`.menu\`, audio akan muncul.`)
+            return m.reply(`✅ Audio menu *ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*!\n\nSekarang ketika ada yang ketik \`.menu\`, audio akan muncul.`)
         }
 
         if (option === 'gak' || option === 'off' || option === '0' || option === 'nonaktif') {
@@ -45,7 +45,7 @@ async function handler(m, { sock, db }) {
             db.setting('audioMenu', false)
             await db.save()
             await m.react('✅')
-            return m.reply(`❌ Audio menu *dinonaktifkan*!\n\nSekarang \`.menu\` tidak akan ada audio.`)
+            return m.reply(`❌ Audio menu *ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*!\n\nSekarang \`.menu\` tidak akan ada audio.`)
         }
 
         return m.reply(`❌ Opsi tidak valid!\n\nGunakan: \`ya\` atau \`gak\``)
