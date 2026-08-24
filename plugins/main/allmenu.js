@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenu.js — Semua command lengkap per kategori (rebuild: raw buffer thumbnail)
+// allmenu.js — Semua command lengkap per kategori (rebuild: raw buffer thumbnail + buttons)
 import config from "../../config.js";
 import {
   getTimeGreeting,
@@ -178,26 +178,56 @@ ${getTimeGreeting()} *${m.pushName || "User"}* 👋`;
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   try {
     await m.react("🕐");
+    const prefix = botConfig.command?.prefix || ".";
     const text = await buildAllMenuText(m, botConfig, db, uptime, sock);
     const thumbBuffer = getThumb();
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
     const saluranLink = botConfig.saluran?.link || "";
+    const footerText = `${botName} | Nova AI WhatsApp Bot`;
 
-    await sock.sendMessage(m.chat, {
-      text: text,
-      contextInfo: {
-        mentionedJid: [m.sender],
-        externalAdReply: {
-          title: toSC(botName),
-          body: "All Menu - Complete List",
-          thumbnail: thumbBuffer,
-          sourceUrl: saluranLink,
-          mediaType: 2,
-          showAdAttribution: false,
-          renderLargerThumbnail: true,
+    // Tombol navigasi (type 1)
+    const buttons = [
+      { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
+      { buttonId: `${prefix}menukategori`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
+      { buttonId: `${prefix}tanyaai`, buttonText: { displayText: "🤖 Tanya AI" }, type: 1 },
+    ];
+
+    try {
+      await sock.sendMessage(m.chat, {
+        text: text,
+        footer: footerText,
+        buttons: buttons,
+        contextInfo: {
+          mentionedJid: [m.sender],
+          externalAdReply: {
+            title: toSC(botName),
+            body: "All Menu - Complete List",
+            thumbnail: thumbBuffer,
+            sourceUrl: saluranLink,
+            mediaType: 2,
+            showAdAttribution: false,
+            renderLargerThumbnail: true,
+          },
         },
-      },
-    }, { quoted: m });
+      }, { quoted: m });
+    } catch (btnErr) {
+      console.error("[allmenu] buttons gagal, fallback:", btnErr.message);
+      await sock.sendMessage(m.chat, {
+        text: text,
+        contextInfo: {
+          mentionedJid: [m.sender],
+          externalAdReply: {
+            title: toSC(botName),
+            body: "All Menu - Complete List",
+            thumbnail: thumbBuffer,
+            sourceUrl: saluranLink,
+            mediaType: 2,
+            showAdAttribution: false,
+            renderLargerThumbnail: true,
+          },
+        },
+      }, { quoted: m });
+    }
 
     await m.react("✅");
   } catch (e) {
