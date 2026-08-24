@@ -3,7 +3,7 @@ import {
   separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { DEFAULT_PROVIDERS, resolveProvider } from "../../src/lib/nova-ai-service.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
+
 
 const pluginConfig = {
   name: "ai-set",
@@ -72,7 +72,7 @@ async function handler(m, { sock, config: botConfig }) {
         
         "\n" ;
 
-      await sendReplyWithNav(sock, m, text, "ai-set");
+      await m.reply(text);
       return { handled: true };
     }
 
@@ -88,7 +88,7 @@ async function handler(m, { sock, config: botConfig }) {
             `  ┊  ➶ Atau tambah provider custom dengan *${prefix}ai-addprovider*.`].join("\n")) +
           "\n" ;
 
-        await sendReplyWithNav(sock, m, text, "ai-set");
+        await m.reply(text);
         return { handled: true };
       }
 
@@ -115,7 +115,7 @@ async function handler(m, { sock, config: botConfig }) {
             `  ┊  ➶ Contoh: *${prefix}ai-set model gpt-4o-mini*`].join("\n")) +
           "\n" ;
 
-        await sendReplyWithNav(sock, m, text, "ai-set");
+        await m.reply(text);
         return { handled: true };
       }
 
@@ -150,7 +150,7 @@ async function handler(m, { sock, config: botConfig }) {
             `  ┊  ➶ Per format: *${prefix}ai-set apiKey openai sk-xxx*`].join("\n")) +
           "\n" ;
 
-        await sendReplyWithNav(sock, m, text, "ai-set");
+        await m.reply(text);
         return { handled: true };
       }
 
@@ -180,7 +180,7 @@ async function handler(m, { sock, config: botConfig }) {
             `  ┊  ➶ Contoh: *${prefix}ai-set endpoint https://api.openai.com/v1/chat/completions*`].join("\n")) +
           "\n" ;
 
-        await sendReplyWithNav(sock, m, text, "ai-set");
+        await m.reply(text);
         return { handled: true };
       }
 
@@ -205,7 +205,7 @@ async function handler(m, { sock, config: botConfig }) {
             `  ┊  ➶ Contoh: *${prefix}ai-set prompt Kamu adalah asisten yang membantu.*`].join("\n")) +
           "\n" ;
 
-        await sendReplyWithNav(sock, m, text, "ai-set");
+        await m.reply(text);
         return { handled: true };
       }
 
@@ -294,7 +294,7 @@ async function handler(m, { sock, config: botConfig }) {
         `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
       "\n" ;
 
-    await sendReplyWithNav(sock, m, text, "ai-set");
+    await m.reply(text);
   }
 
   return { handled: true };
