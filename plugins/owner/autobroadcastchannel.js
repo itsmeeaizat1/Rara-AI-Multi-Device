@@ -12,11 +12,24 @@ import { claraHeader,
 
 // Local Nova AI format — replaces claraWrap + sendReplyWithNav
 function claraWrap(title, text) {
+  const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+  const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   const body = Array.isArray(text) ? text.join("\n") : text;
-  const sc = title.replace(/[a-z]/g, c => ({a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'})[c] || c);
-  return `❀°˖ ${sc} ˖°❀\n\n${body}`;
+  // Convert body to small caps tapi skip baris command (.xxx) dan preserve *bold*
+  const scBody = body.split("\n").map(line => {
+    if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:")) return line;
+    return toSC(line);
+  }).join("\n");
+  return `❀°˖ ${toSC(title)} ˖°❀\n\n${scBody}`;
 }
 async function sendReplyWithNav(sock, m, text, cmdName) {
+  const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+  const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
+  // Convert all text to small caps, skip command lines
+  text = text.split("\n").map(line => {
+    if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:") || line.includes("❀°˖") || line.includes("❀⋆｡˚")) return line;
+    return toSC(line);
+  }).join("\n");
   if (!text.includes("❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀")) {
     text = text + "\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
   }
