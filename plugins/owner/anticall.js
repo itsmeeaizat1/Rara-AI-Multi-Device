@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     const current = db.setting("antiCall") ?? config.features?.antiCall ?? true;
     return m.reply( `📞 *Anti Call*\n\n` +
         `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}anticall on* — Aktifkan\n` +
         `*${m.prefix}anticall off* — Nonaktifkan\n\n` +
         `_Bot akan otomatis menolak panggilan masuk_`, "anticall");

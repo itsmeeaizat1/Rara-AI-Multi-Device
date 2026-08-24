@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         
         try {
             const newUrl = await updateAssetUrl('nova-rules', buffer, 'nova-rules.jpg')
-            { const __navText = `✅ *Berhasil*\n\nGambar nova-rules.jpg telah diganti ke URL baru:\n${newUrl}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); }
+            { const __navText = `✅ *ʙᴇʀʜᴀꜱɪʟ*\n\nGambar nova-rules.jpg telah diganti ke URL baru:\n${newUrl}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); }
         } catch (e) {
             m.reply(claraWrap("ganti-nova-rules.jpg", `❌ Gagal mengupload gambar: ${e.message}`))
         }

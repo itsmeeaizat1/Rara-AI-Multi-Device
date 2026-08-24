@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     const current = db.setting("autoTyping") ?? config.features?.autoTyping ?? false;
     return m.reply( `⌨️ *Auto Typing*\n\n` +
         `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}autotyping on* — Aktifkan\n` +
         `*${m.prefix}autotyping off* — Nonaktifkan\n\n` +
         `_Bot akan menampilkan indikator typing saat menerima pesan_`, "autotyping");
