@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
 
     const target = m.mentionedJid?.[0] || m.quoted?.sender
     if (!target) {
-        return m.reply( `👢 *CLAN KICK*\n\n` +
+        return m.reply( `👢 *ᴄʟᴀɴ ᴋɪᴄᴋ*\n\n` +
             `Tag atau reply member yang mau dikeluarkan\n\n` +
             `Contoh: *.clankick @user*`, "clankick")
     }
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
 
     const emblem = clan.emblem || '🏰'
 
-    await m.reply(`${emblem} *KICKED*\n\n` +
+    await m.reply(`${emblem} *ᴋɪᴄᴋᴇᴅ*\n\n` +
         `@${target.split('@')[0]} dikeluarkan dari *${clan.name}*\n` +
         `Sisa members: ${clan.members.length}/50`)
 }

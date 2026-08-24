@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const clanId = m.text?.trim()
 
     if (!clanId) {
-        return m.reply( `🏰 *JOIN CLAN*\n\n` +
+        return m.reply( `🏰 *ᴊᴏɪɴ ᴄʟᴀɴ*\n\n` +
             `Masukkan ID clan!\n\n` +
             `Contoh: *.clanjoin clan_123456*\n` +
             `Cek ID: *.clanleaderboard*`, "clanjoin")
