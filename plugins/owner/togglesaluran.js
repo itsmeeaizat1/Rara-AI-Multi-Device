@@ -1,5 +1,4 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import {
   NOTIFY_EVENTS,
   getAllNotifyStatus,
@@ -56,20 +55,15 @@ async function handler(m, { sock, config: botConfig }) {
       tipText(`ON: ${onCount} | OFF: ${offCount}`) + "\n" +
       tipText(`Toggle semua: \`${prefix}togglesaluran all on/off\``);
 
-    return sendReplyWithNav(sock, m, text, "togglesaluran");
+    return m.reply( text, "togglesaluran");
   }
 
   // Toggle all
   if (subCmd === "all") {
     const action = args[1]?.toLowerCase();
     if (action !== "on" && action !== "off") {
-      return sendReplyWithNav(
-        sock,
-        m,
-        claraWrap("Toggle Saluran", [`Gunakan: \`${prefix}togglesaluran all on\` atau \`${prefix}togglesaluran all off\``].join("\n")),
-        "togglesaluran"
-      );
-    }
+      return await m.reply(claraWrap("Toggle Saluran", `Gunakan: \`${prefix}togglesaluran all on\` atau \`${prefix}togglesaluran all off\``));
+      }
 
     const enabled = action === "on";
     let count = 0;
@@ -78,17 +72,7 @@ async function handler(m, { sock, config: botConfig }) {
       count++;
     }
 
-    return sendReplyWithNav(
-      sock,
-      m,
-      claraWrap("Toggle Saluran", "🔔") + "\n\n" +
-      claraWrap("SEMUA EVENT", [
-        `  ┊  ➶ Status: *${enabled ? "ALL ON" : "ALL OFF"}*`,
-        `  ┊  ➶ Total: *${count} event*`,
-      ]) + "\n\n" +
-      tipText(`Cek status: \`${prefix}togglesaluran\``),
-      "togglesaluran"
-    );
+    await m.reply(claraWrap("Toggle Saluran", "🔔") + "\n\n" + claraWrap("SEMUA EVENT", [`  ┊  ➶ Status: *${enabled ? "ALL ON" : "ALL OFF"}*`, `  ┊  ➶ Total: *${count} event*`]) + "\n\n" + tipText(`Cek status: \`${prefix}togglesaluran\``));
   }
 
   // Toggle specific event
@@ -99,18 +83,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     setNotifyEnabled(subCmd, newVal);
 
-    return sendReplyWithNav(
-      sock,
-      m,
-      claraWrap("Toggle Saluran", "🔔") + "\n\n" +
-      claraWrap("TOGGLE BERHASIL", [
-        `  ┊  ➶ Event: *${NOTIFY_EVENTS[subCmd]}*`,
-        `  ┊  ➶ Status: *${newVal ? "ON" : "OFF"}*`,
-      ]) + "\n\n" +
-      tipText(`${newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan"}`) + "\n" +
-      tipText(`Cek semua: \`${prefix}togglesaluran\``),
-      "togglesaluran"
-    );
+    await m.reply(claraWrap("Toggle Saluran", "🔔") + "\n\n" + claraWrap("TOGGLE BERHASIL", [`  ┊  ➶ Event: *${NOTIFY_EVENTS[subCmd]}*`, `  ┊  ➶ Status: *${newVal ? "ON" : "OFF"}*`]) + "\n\n" + tipText(`${newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan"}`) + "\n" + tipText(`Cek semua: \`${prefix}togglesaluran\``));
   }
 
   // Unknown event
@@ -119,15 +92,7 @@ async function handler(m, { sock, config: botConfig }) {
     availableList += `\`${key}\` — ${label}\n`;
   }
 
-  return sendReplyWithNav(
-    sock,
-    m,
-    claraWrap("Toggle Saluran", [`Event: *${subCmd}*`,
-      `Tidak ada dalam daftar toggle`].join("\n")) + "\nEVENT TERSEDIA:\n\n" +
-    availableList +
-    "\n" + tipText(`Contoh: \`${prefix}togglesaluran sewaRegister\``),
-    "togglesaluran"
-  );
+  return await m.reply(claraWrap("Toggle Saluran", [`Event: *${subCmd}*`, `Tidak ada dalam daftar toggle`].join("\n")) + "\nEVENT TERSEDIA:\n\n" + availableList + "\n" + tipText(`Contoh: \`${prefix}togglesaluran sewaRegister\``));
 }
 
 export { pluginConfig as config, handler };

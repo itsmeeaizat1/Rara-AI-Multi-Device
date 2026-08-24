@@ -2,7 +2,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { downloadContentFromMessage } from "nova";
 import config from "../../config.js";
-import { sendReplyWithNav } from "../../src/lib/nova-nav-buttons.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -128,20 +127,7 @@ async function handler(m, { sock }) {
   if (!action) {
     const status = currentStatus ? "ON" : "OFF";
     const scope = isGroup ? "Grup ini" : "Private chat";
-    await sendReplyWithNav(
-      sock,
-      m,
-      claraWrap("AntiRvo", [
-        `Status ${scope}: ${status}`,
-        ``,
-        `Ketik:`,
-        `${m.prefix}antirvo on  - Aktifkan`,
-        `${m.prefix}antirvo off - Nonaktifkan`,
-        ``,
-        `Saat aktif, setiap pesan sekali lihat (view once) akan otomatis ditampilkan sebagai media biasa.`,
-      ].join("\n")),
-      "antirvo"
-    );
+    await m.reply(claraWrap("AntiRvo", [`Status ${scope}: ${status}`, ``, `Ketik:`, `${m.prefix}antirvo on  - Aktifkan`, `${m.prefix}antirvo off - Nonaktifkan`, ``, `Saat aktif, setiap pesan sekali lihat (view once) akan otomatis ditampilkan sebagai media biasa.`].join("\n")));
     return;
   }
 
