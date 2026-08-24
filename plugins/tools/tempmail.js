@@ -857,4 +857,4 @@ async function handler(m, { sock }) {
   return sendReplyWithNav(sock, m, claraWrap("Temp Email", help), "tempmail");
 }
 
-export default { pluginConfig, handler };
+export { pluginConfig as config, handler };

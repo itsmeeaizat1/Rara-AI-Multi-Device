@@ -175,4 +175,4 @@ function wrapText(ctx, text, maxWidth) {
   return lines;
 }
 
-export default { pluginConfig, handler };
+export { pluginConfig as config, handler };

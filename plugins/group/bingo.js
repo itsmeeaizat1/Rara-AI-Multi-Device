@@ -201,4 +201,4 @@ function formatCard(card) {
   return lines.join("\n");
 }
 
-export default { pluginConfig, handler };
+export { pluginConfig as config, handler };

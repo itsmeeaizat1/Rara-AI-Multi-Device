@@ -52,4 +52,4 @@ async function handler(m, { sock }) {
   return sendReplyWithNav(sock, m, claraWrap("SMM Menu", body), "smmmenu");
 }
 
-export default { pluginConfig, handler };
+export { pluginConfig as config, handler };

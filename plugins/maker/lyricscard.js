@@ -145,4 +145,4 @@ async function handler(m, { conn, text, usedPrefix, command }) {
   }
 }
 
-export default { pluginConfig, handler };
+export { pluginConfig as config, handler };
