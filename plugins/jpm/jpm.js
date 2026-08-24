@@ -275,7 +275,7 @@ async function sendInteractiveJpm(m, sock, db, contentInfo) {
   let body =
     `📢 *JPM — Sistem Broadcast Massal*\n\n` +
     `Kirim pesan ke seluruh grup, channel, atau target tertentu secara otomatis maupun manual.\n\n` +
-    `*Status saat ini:*\n` +
+    `*ꜱᴛᴀᴛᴜꜱ ꜱᴀᴀᴛ ɪɴɪ:*\n` +
     `⏱️ Delay: *${(currentDelay / 1000).toFixed(1)} detik*\n` +
     `🔄 AutoJPM: *${autoJpmStatus}*\n` +
     `🚫 Blacklist JPM: *${blCount} grup*\n` +
@@ -284,13 +284,13 @@ async function sendInteractiveJpm(m, sock, db, contentInfo) {
 
   if (hasContent) {
     body +=
-      `\n\n📝 *Konten yang siap dikirim:*\n` +
+      `\n\n📝 *ᴋᴏɴᴛᴇɴ ʏᴀɴɢ ꜱɪᴀᴘ ᴅɪᴋɪʀɪᴍ:*\n` +
       `Teks: *${contentInfo?.text ? previewText(contentInfo.text) : "Tidak ada"}*\n` +
       `Media: *${contentInfo?.mediaBuffer ? contentInfo.mediaType : "Tidak ada"}*\n\n` +
       `_Pilih mode pengiriman di bawah untuk mulai broadcast_`;
   } else {
     body +=
-      `\n\n💡 *Cara pakai:*\n` +
+      `\n\n💡 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
       `1. Kirim teks, foto, audio, atau video\n` +
       `2. Reply pesan tersebut dengan *${prefix}jpm*\n` +
       `3. Pilih mode pengiriman dari tombol di bawah\n\n` +
@@ -493,7 +493,7 @@ async function handler(m, { sock }) {
     if (!global.statusjpm)
       return m.reply(claraWrap("jpm", `❌ Tidak ada JPM yang sedang berjalan.`));
     global.stopjpm = true;
-    return m.reply(claraWrap("jpm", `⏹️ *JPM Dihentikan*\n\nProses JPM sedang dihentikan...`));
+    return m.reply(claraWrap("jpm", `⏹️ *ᴊᴘᴍ ᴅɪʜᴇɴᴛɪᴋᴀɴ*\n\nProses JPM sedang dihentikan...`));
   }
 
   if (
@@ -628,7 +628,7 @@ async function handleInternalCommand(m, sock, db, fullInput) {
     if (!global.statusjpm)
       return m.reply(claraWrap("jpm", `❌ Tidak ada JPM yang sedang berjalan.`));
     global.stopjpm = true;
-    return m.reply(claraWrap("jpm", `⏹️ *JPM Dihentikan*\n\nProses JPM sedang dihentikan...`));
+    return m.reply(claraWrap("jpm", `⏹️ *ᴊᴘᴍ ᴅɪʜᴇɴᴛɪᴋᴀɴ*\n\nProses JPM sedang dihentikan...`));
   }
 
   if (cmd === "_help") return showHelp(m);
@@ -655,9 +655,9 @@ async function executeJpmWithSession(m, sock, db, mode) {
   const mediaType = session?.mediaType || null;
 
   if (!text && !mediaBuffer) {
-    return m.reply( `❌ *Tidak Ada Konten*\n\n` +
+    return m.reply( `❌ *ᴛɪᴅᴀᴋ ᴀᴅᴀ ᴋᴏɴᴛᴇɴ*\n\n` +
         `Kirim pesan, foto, audio, atau video terlebih dahulu, lalu reply dengan *${m.prefix}jpm* dan pilih mode pengiriman.\n\n` +
-        `*Cara yang benar:*\n` +
+        `*ᴄᴀʀᴀ ʏᴀɴɢ ʙᴇɴᴀʀ:*\n` +
         `1. Kirim teks/foto/video/audio\n` +
         `2. Reply pesan tersebut dengan *${m.prefix}jpm*\n` +
         `3. Pilih mode dari tombol yang muncul`, "jpm");
@@ -712,10 +712,10 @@ async function handleJpmDirect(m, sock, db, text, mode) {
     const modeLabel = mode === "hidetag" ? "Hidetag" : "Basic";
     return m.reply( `📢 *JPM ${modeLabel}*\n\n` +
         `Kirim pesan broadcast ke seluruh grup${mode === "hidetag" ? " dengan tag semua member secara tersembunyi" : ""}.\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}${mode === "hidetag" ? "jpmht" : "jpm"} <pesan>*\n` +
         `*${m.prefix}${mode === "hidetag" ? "jpmht" : "jpm"}* (reply foto/video)\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}${mode === "hidetag" ? "jpmht" : "jpm"} Halo semuanya! Jangan lupa event besok.*`, "jpm");
   }
 
@@ -768,12 +768,12 @@ async function handleJpmChannel(m, sock, db, text) {
   }
 
   if (!text) {
-    return m.reply( `📢 *JPM Channel*\n\n` +
+    return m.reply( `📢 *ᴊᴘᴍ ᴄʜᴀɴɴᴇʟ*\n\n` +
         `Kirim pesan ke semua channel WhatsApp yang di-subscribe bot.\n\n` +
-        `*Cara Pakai:*\n` +
+        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `*${m.prefix}jpmch <pesan>*\n` +
         `*${m.prefix}jpmch* (reply foto/video)\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}jpmch Halo semua, ikuti update terbaru kami!*`, "jpm");
   }
   return handleJpmChannelWithContent(m, sock, db, text, null, null);
@@ -866,11 +866,11 @@ async function handleJpmUpdate(m, sock, db, input) {
   }
 
   if (!input) {
-    return m.reply( `📢 *JPM Update*\n\n` +
+    return m.reply( `📢 *ᴊᴘᴍ ᴜᴘᴅᴀᴛᴇ*\n\n` +
         `Kirim informasi update / changelog ke seluruh grup!\n\n` +
-        `*FORMAT:*\n` +
+        `*ꜰᴏʀᴍᴀᴛ:*\n` +
         `*${m.prefix}jpmupdate <versi> | <isi changelog>*\n\n` +
-        `*CONTOH:*\n` +
+        `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}jpmupdate v3.0 | Fitur Baru: - JPM Hidetag - Sistem AFK*`, "jpm");
   }
   return handleJpmUpdateWithContent(m, sock, db, input);
@@ -895,7 +895,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
   try {
     const { groupIds, blacklistedCount } = await getTargetGroups(sock, db);
     if (groupIds.length === 0) {
-      return m.reply( `❌ *Tidak Ada Grup*\n\nBot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`, "jpm");
+      return m.reply( `❌ *ᴛɪᴅᴀᴋ ᴀᴅᴀ ɢʀᴜᴘ*\n\nBot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`, "jpm");
     }
 
     const botName = config.bot?.name || "Nova-AI";
@@ -910,7 +910,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
 
     const jedaJpm = db.setting("jedaJpm") || 5000;
 
-    await m.reply( `📢 *JPM Update Dimulai*\n\n` +
+    await m.reply( `📢 *ᴊᴘᴍ ᴜᴘᴅᴀᴛᴇ ᴅɪᴍᴜʟᴀɪ*\n\n` +
         `🏷️ Versi: *${version}*\n` +
         `👥 Target: *${groupIds.length}* grup\n` +
         `⏱️ Jeda: *${(jedaJpm / 1000).toFixed(1)} detik*\n\n` +
@@ -924,7 +924,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
       if (global.stopjpm) {
         delete global.stopjpm;
         delete global.statusjpm;
-        await m.reply( `⏹️ *JPM Update Dihentikan*\n\n` +
+        await m.reply( `⏹️ *ᴊᴘᴍ ᴜᴘᴅᴀᴛᴇ ᴅɪʜᴇɴᴛɪᴋᴀɴ*\n\n` +
             `✅ Berhasil: *${successCount}*\n` +
             `❌ Gagal: *${failedCount}*\n` +
             `⏸️ Sisa: *${groupIds.length - successCount - failedCount}*`, "jpm");
@@ -965,13 +965,13 @@ async function startAutoJpmSession(m, sock, db) {
 
   if (hasContent) {
     body +=
-      `📝 *Konten yang akan dikirim:*\n` +
+      `📝 *ᴋᴏɴᴛᴇɴ ʏᴀɴɢ ᴀᴋᴀɴ ᴅɪᴋɪʀɪᴍ:*\n` +
       `Teks: *${session.text ? previewText(session.text) : "Tidak ada"}*\n` +
       `Media: *${session.mediaBuffer ? session.mediaType : "Tidak ada"}*\n\n`;
   }
 
   body +=
-    `*Pilih interval di bawah:*\n` +
+    `*ᴘɪʟɪʜ ɪɴᴛᴇʀᴠᴀʟ ᴅɪ ʙᴀᴡᴀʜ:*\n` +
     `Semakin lama interval, semakin aman dari spam detection.\n` +
     `Minimal: *15 menit*`;
 
@@ -1116,7 +1116,7 @@ async function completeAutoJpmSetup(m, sock, db, intervalStr) {
     !existing?.message?.text &&
     !existing?.message?.media
   ) {
-    return m.reply( `❌ *Pesan atau Media Wajib Diisi*\n\nKirim konten terlebih dahulu, lalu ketik *${m.prefix}jpm* dan pilih Auto JPM.`, "jpm");
+    return m.reply( `❌ *ᴘᴇꜱᴀɴ ᴀᴛᴀᴜ ᴍᴇᴅɪᴀ ᴡᴀᴊɪʙ ᴅɪɪꜱɪ*\n\nKirim konten terlebih dahulu, lalu ketik *${m.prefix}jpm* dan pilih Auto JPM.`, "jpm");
   }
 
   const updatedConfig = {
@@ -1151,7 +1151,7 @@ async function handleAutoJpm(m, sock, db, input, fullInput) {
     if (!current.enabled) return m.reply( `ℹ️ AutoJPM sudah nonaktif.`, "jpm");
     setAutoJpmConfig({ ...current, enabled: false });
     stopAutoJpmScheduler();
-    return m.reply( `✅ *AutoJPM Dinonaktifkan*\n\nJadwal siaran otomatis telah dimatikan.`, "jpm");
+    return m.reply( `✅ *ᴀᴜᴛᴏᴊᴘᴍ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*\n\nJadwal siaran otomatis telah dimatikan.`, "jpm");
   }
 
   if (["status", "info"].includes(action)) return showAutoJpmStatus(m);
@@ -1356,7 +1356,7 @@ async function handleBlacklist(m, sock, db, settingKey, label) {
     listText +=
       `\n*CARA BLACKLIST / UN-BLACKLIST:*\n` +
       `Ketik command diikuti nomor grup (bisa lebih dari satu, pisahkan spasi).\n\n` +
-      `*Contoh:*\n` +
+      `*ᴄᴏɴᴛᴏʜ:*\n` +
       `*${m.prefix}${settingKey === "autoJpmBlacklist" ? "blautojpm" : "bljpm"} 2 3 7*`;
     return m.reply(claraWrap("JPM Blacklist", listText));
   }

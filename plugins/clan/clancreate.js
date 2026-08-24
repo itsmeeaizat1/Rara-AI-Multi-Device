@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     const clanName = m.text?.trim()
 
     if (!clanName) {
-        return m.reply( `⚔️ *CREATE CLAN*\n\n` +
+        return m.reply( `⚔️ *ᴄʀᴇᴀᴛᴇ ᴄʟᴀɴ*\n\n` +
             `Buat clan dan kumpulkan member!\n\n` +
             `Biaya: *Rp ${CLAN_CREATE_COST.toLocaleString('id-ID')}*\n` +
             `Max nama: *${MAX_CLAN_NAME} karakter*\n\n` +
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     db.setUser(m.sender, { clanId })
     await db.save()
 
-    await m.reply(claraWrap("CLAN CREATED", `${emblem} *CLAN CREATED*\n\n` +
+    await m.reply(claraWrap("CLAN CREATED", `${emblem} *ᴄʟᴀɴ ᴄʀᴇᴀᴛᴇᴅ*\n\n` +
         `*${clanName}*\n` +
         `Leader: @${m.sender.split('@')[0]}\n` +
         `Status: Open · 1/50 members\n\n` +
