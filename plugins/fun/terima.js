@@ -1,11 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// Sistem Pacaran — Terima tembakan
+
 import { getDatabase } from "../../src/lib/nova-database.js";
-import * as timeHelper from "../../src/lib/nova-time.js";
-import { saluranCtx } from "../../src/lib/nova-context.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
   name: "terima",
-  alias: ["terima"],
+  alias: ["terimajadian", "acceptjadian"],
   category: "fun",
   description: "Menerima tembakan dari seseorang",
   usage: ".terima @tag",
@@ -19,95 +20,115 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const celebrationQuotes = [
-  "Semoga langgeng sampai ke pelaminan! 💍",
-  "Dari teman jadi cinta, indahnya! 💕",
-  "Love is in the air! 💖",
-  "Couple goals detected! 💑",
-  "Jangan lupa undang pas nikah ya! 💒",
-  "Selamat menempuh hidup berduaan! 🥰",
-  "Chemistry-nya kuat banget! 🔥",
-  "Match made in heaven! ✨",
-];
-
 async function handler(m, { sock }) {
-  const db = getDatabase();
+  try {
+    const db = getDatabase();
 
-  let shooterJid = null;
-
-  if (m.quoted) {
-    shooterJid = m.quoted.sender;
-  } else if (m.mentionedJid?.[0]) {
-    shooterJid = m.mentionedJid[0];
-  }
-
-  if (!shooterJid) {
-    const sessions = global.jadianSessions || {};
-    const mySession = Object.entries(sessions).find(
-      ([key, val]) => val.target === m.sender && val.chat === m.chat,
-    );
-
-    if (mySession) {
-      shooterJid = mySession[1].shooter;
+    let shooterJid = null;
+    if (m.quoted) {
+      shooterJid = m.quoted.sender;
+    } else if (m.mentionedJid?.[0]) {
+      shooterJid = m.mentionedJid[0];
     }
+
+    // Fallback: cari session aktif
+    if (!shooterJid) {
+      const sessions = global.jadianSessions || {};
+      const mySession = Object.entries(sessions).find(
+        ([key, val]) => val.target === m.sender && val.chat === m.chat
+      );
+      if (mySession) shooterJid = mySession[1].shooter;
+    }
+
+    if (!shooterJid) {
+      return m.reply(
+        `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        `  ┊ ➶ Reply pesan tembakan + \`${m.prefix}terima\`\n` +
+        `  ┊ ➶ Atau \`${m.prefix}terima @tag\`\n\n` +
+        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+      );
+    }
+
+    if (shooterJid === m.sender) {
+      return m.reply(claraWrap("terima", "Tidak bisa menerima diri sendiri! 😅"));
+    }
+    if (shooterJid === m.botNumber) {
+      return m.reply(claraWrap("terima", "Bot tidak bisa pacaran! 🤖"));
+    }
+
+    let shooterData = db.getUser(shooterJid) || {};
+    let myData = db.getUser(m.sender) || {};
+    if (!shooterData.fun) shooterData.fun = {};
+    if (!myData.fun) myData.fun = {};
+
+    // Validasi: shooter harus sedang nembak saya
+    if (shooterData.fun.tembakTarget !== m.sender && shooterData.fun.pasangan !== m.sender) {
+      return m.reply(
+        claraWrap("terima",
+          `@${shooterJid.split("@")[0]} tidak sedang menembakmu`
+        )
+      );
+    }
+
+    // Cek sender udah punya pacar
+    if (myData.fun.pasangan && myData.fun.pasangan !== shooterJid) {
+      const myPartner = db.getUser(myData.fun.pasangan);
+      if (myPartner?.fun?.pasangan === m.sender) {
+        return m.reply(
+          claraWrap("terima",
+            `Kamu sudah punya pasangan: @${myData.fun.pasangan.split("@")[0]}\n` +
+            `Putus dulu dengan \`${m.prefix}putus\``
+          )
+        );
+      }
+    }
+
+    // Terima: set pasangan
+    const now = Date.now();
+    shooterData.fun.pasangan = m.sender;
+    shooterData.fun.jadiPacar = now;
+    delete shooterData.fun.tembakTarget;
+    if (!shooterData.fun.terimaCount) shooterData.fun.terimaCount = 0;
+    shooterData.fun.terimaCount++;
+
+    myData.fun.pasangan = shooterJid;
+    myData.fun.jadiPacar = now;
+    if (!myData.fun.terimaCount) myData.fun.terimaCount = 0;
+    myData.fun.terimaCount++;
+
+    // Tracking history
+    if (!shooterData.fun.pacaranHistory) shooterData.fun.pacaranHistory = [];
+    shooterData.fun.pacaranHistory.push({
+      partner: m.sender,
+      action: "jadian",
+      date: now,
+    });
+    if (!myData.fun.pacaranHistory) myData.fun.pacaranHistory = [];
+    myData.fun.pacaranHistory.push({
+      partner: shooterJid,
+      action: "jadian",
+      date: now,
+    });
+
+    db.setUser(shooterJid, shooterData);
+    db.setUser(m.sender, myData);
+    db.save();
+
+    // Hapus session
+    const sessionKey = `${m.chat}_${m.sender}`;
+    if (global.jadianSessions?.[sessionKey]) delete global.jadianSessions[sessionKey];
+
+    await m.reply(
+      claraWrap("CIE CIE 💕",
+        `@${m.sender.split("@")[0]} dan @${shooterJid.split("@")[0]} resmi jadian!\n` +
+        `Semoga langgeng dan bahagia 💍`
+      )
+    );
+    await m.react("💕");
+  } catch (e) {
+    console.error("[terima] Error:", e.message);
+    try { await m.react("❌"); } catch {}
   }
-
-  if (!shooterJid) {
-    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `Reply pesan tembakan + \`${m.prefix}terima\`\n` +
-        `Atau \`${m.prefix}terima @tag\``, "terima");
-  }
-
-  if (shooterJid === m.sender) {
-    return m.reply(claraWrap("terima", `❌ *ɢᴀɢᴀʟ*\n\nTidak bisa menerima diri sendiri!`));
-  }
-
-  if (shooterJid === m.botNumber) {
-    return m.reply(claraWrap("terima", `❌ *ɢᴀɢᴀʟ*\n\nBot tidak bisa pacaran!`));
-  }
-
-  let shooterData = db.getUser(shooterJid) || {};
-  let myData = db.getUser(m.sender) || {};
-
-  if (!shooterData.fun) shooterData.fun = {};
-  if (!myData.fun) myData.fun = {};
-
-  if (
-    shooterData.fun.pasangan !== m.sender &&
-    shooterData.fun.tembakTarget !== m.sender
-  ) {
-    return m.reply(claraWrap("terima", `❌ *ᴛɪᴅᴀᴋ ᴍᴇɴᴇᴍʙᴀᴋ*\n\n` +
-        `@${shooterJid.split("@")[0]} tidak sedang menembakmu`));
-  }
-
-  shooterData.fun.pasangan = m.sender;
-  shooterData.fun.jadiPacar = Date.now();
-  delete shooterData.fun.tembakTarget;
-  myData.fun.pasangan = shooterJid;
-  myData.fun.jadiPacar = Date.now();
-
-  if (!shooterData.fun.terimaCount) shooterData.fun.terimaCount = 0;
-  shooterData.fun.terimaCount++;
-
-  db.setUser(shooterJid, shooterData);
-  db.setUser(m.sender, myData);
-  db.save();
-
-  const sessionKey = `${m.chat}_${m.sender}`;
-  if (global.jadianSessions?.[sessionKey]) {
-    delete global.jadianSessions[sessionKey];
-  }
-
-  const quote =
-    celebrationQuotes[Math.floor(Math.random() * celebrationQuotes.length)];
-  const dateStr = timeHelper.formatFull("dddd, DD MMMM YYYY");
-
-  const ctx = saluranCtx();
-  ctx.mentionedJid = [m.sender, shooterJid];
-
-  await m.reply(claraWrap("terima", `💕 *WIDIHHHH, CIE CIE DITERIMA* @${shooterJid.split("@")[0]}\n\n` +
-      `@${m.sender.split("@")[0]} dan @${shooterJid.split("@")[0]} resmi pacaran\n\n` +
-      `Semoga langgeng dan bahagia 💍`));
 }
 
 export { pluginConfig as config, handler };
