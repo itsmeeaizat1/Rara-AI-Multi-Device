@@ -4,7 +4,8 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 // Local Nova AI format — replaces claraWrap + sendReplyWithNav
 function claraWrap(title, text) {
   const body = Array.isArray(text) ? text.join("\n") : text;
-  return `❀°˖ ${title} ˖°❀\n\n${body}`;
+  const sc = title.replace(/[a-z]/g, c => ({a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'})[c] || c);
+  return `❀°˖ ${sc} ˖°❀\n\n${body}`;
 }
 async function sendReplyWithNav(sock, m, text, cmdName) {
   if (!text.includes("❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀")) {
