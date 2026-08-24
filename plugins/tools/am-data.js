@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const r = await fetch(API, {

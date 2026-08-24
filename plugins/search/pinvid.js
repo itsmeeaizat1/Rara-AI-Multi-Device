@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}pinvid anime\``, "pinvid");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const res = await axios.get(
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
 
     const videos = res.data.data.slice(0, 5);
 
-    m.react("🕒");
+    m.react("🐣");
 
     const tempDir = path.join(process.cwd(), "temp");
     if (!fs.existsSync(tempDir)) {

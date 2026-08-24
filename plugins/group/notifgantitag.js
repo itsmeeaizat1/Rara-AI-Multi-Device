@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     if (!m.isOwner) {
       return m.reply(claraWrap("Notifgantitag", `❌ Hanya owner yang bisa menggunakan fitur ini!`));
     }
-    m.react("🕒");
+    m.react("🐣");
     try {
       const groups = await sock.groupFetchAllParticipating();
       const groupIds = Object.keys(groups);
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     if (!m.isOwner) {
       return m.reply(claraWrap("Notifgantitag", `❌ Hanya owner yang bisa menggunakan fitur ini!`));
     }
-    m.react("🕒");
+    m.react("🐣");
     try {
       const groups = await sock.groupFetchAllParticipating();
       const groupIds = Object.keys(groups);

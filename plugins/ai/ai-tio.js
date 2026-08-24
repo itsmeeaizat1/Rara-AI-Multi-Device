@@ -312,7 +312,7 @@ async function handler(m, { sock, config: botConfig }) {
       : fmt.endpoint;
 
     // Call AI
-    m.react("🕒");
+    m.react("🐣");
     const reply = await callAI({
       providerKey: fmt.providerKey,
       model: model,

@@ -20,7 +20,7 @@ async function handler(m, { sock }) {
   if (!query)
     { const __navText = `⚠️ *Cara Pakai*\n\n> \`${m.prefix}spotplay <query>\``; return await m.reply( __navText, "spotplay"); };
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const data = await novaApi.azbry.spotplay(query, {

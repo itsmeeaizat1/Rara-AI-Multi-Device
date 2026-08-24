@@ -68,7 +68,7 @@ async function getInfoTourney() {
 }
 
 async function handler(m, { sock }) {
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const tournaments = await getInfoTourney();

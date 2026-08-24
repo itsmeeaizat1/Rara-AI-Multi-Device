@@ -91,7 +91,7 @@ async function handler(m, { sock, config: botConfig }) {
     return m.reply( claraWrap("Wallhaven", help));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     let query = text;

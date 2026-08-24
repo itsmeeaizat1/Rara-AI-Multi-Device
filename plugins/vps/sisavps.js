@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
         return m.reply(`Akses ditolak. Fitur ini hanya untuk Owner/Seller.`)
     }
     
-    await m.react("🕒")
+    await m.react("🐣")
     try {
         const [accountRes, dropletsRes] = await Promise.all([
             axios.get('https://api.digitalocean.com/v2/account', {

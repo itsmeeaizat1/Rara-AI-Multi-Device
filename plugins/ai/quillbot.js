@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     { const __navText = "❌ Masukkan teks yang ingin disempurnakan.\n\nContoh: `.quilbot Saya sedang makan nasi di rumah`"; return await m.reply(__navText, "quilbot"); };
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const apiUrl = `https://api.nexray.eu.cc/ai/quillbot?text=${encodeURIComponent(text)}`;

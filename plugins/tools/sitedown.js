@@ -68,7 +68,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const url = text.trim();
-    await m.react("🕒");
+    await m.react("🐣");
 
     const result = await checkSite(url);
 

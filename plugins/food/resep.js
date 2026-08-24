@@ -324,7 +324,7 @@ async function handler(m, { sock, args }) {
       const cat = query.charAt(0).toUpperCase() + query.slice(1).toLowerCase();
       const idF = ID_RECIPES.filter(r => r.c.toLowerCase() === cat.toLowerCase());
       if (idF.length > 0) {
-        await m.react("🕒"); await m.react("✅");
+        await m.react("🐣"); await m.react("✅");
         return await m.reply( formatIDRecipe(idF[Math.floor(Math.random() * idF.length)]), { commandName: "resep" });
       }
       try {
@@ -338,7 +338,7 @@ async function handler(m, { sock, args }) {
       } catch (e) { console.error('[resep.js]:', e.message); }
             return m.reply(`Kategori "${query}" tidak ditemukan.`);
     }
-    await m.react("🕒");
+    await m.react("🐣");
     // 70% Cookpad live, 30% TheMealDB
     if (Math.random() < 0.7) {
       try {
@@ -378,7 +378,7 @@ async function handler(m, { sock, args }) {
   }
 
   if (sub === "kategori" && query) {
-    await m.react("🕒");
+    await m.react("🐣");
     let intMeals = [], idResults = [];
     try {
       const res = await axios.get(`${API}/filter.php?c=${encodeURIComponent(query)}`);
@@ -399,7 +399,7 @@ async function handler(m, { sock, args }) {
 
   // === AREAS ===
   if (sub === "negara" && !query) {
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const { areas } = await getCachedLists();
       let txt = `Negara/Asal Resep\n\n`;
@@ -411,7 +411,7 @@ async function handler(m, { sock, args }) {
   }
 
   if (sub === "negara" && query) {
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const res = await axios.get(`${API}/filter.php?a=${encodeURIComponent(query)}`);
       if (!res.data.meals) { return m.reply(`Negara "${query}" tidak ditemukan.`); }
@@ -426,7 +426,7 @@ async function handler(m, { sock, args }) {
 
   // === INGREDIENTS ===
   if (sub === "listbahan" || sub === "bahanlist") {
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const { ingredients } = await getCachedLists();
       if (!ingredients.length) { return m.reply("Gagal mengambil daftar bahan."); }
@@ -442,7 +442,7 @@ async function handler(m, { sock, args }) {
   }
 
   if (sub === "bahan" && query) {
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const res = await axios.get(`${API}/filter.php?i=${encodeURIComponent(query)}`);
       if (!res.data.meals) { return m.reply(claraWrap("Resep", `Tidak ada resep dengan bahan "${query}".`)); }
@@ -471,7 +471,7 @@ async function handler(m, { sock, args }) {
     if (!lbCleaned) {
             return m.reply(`Masukkan nama resep.\nContoh: \`${m.prefix}reseplb nasi goreng\``);
     }
-    await m.react("🕒");
+    await m.react("🐣");
     const [cpRes, tmRes] = await Promise.all([
       searchCookpad(lbCleaned),
       axios.get(`${API}/search.php?s=${encodeURIComponent(lbCleaned)}`).then(r => r.data.meals || []).catch(() => []),
@@ -514,7 +514,7 @@ async function handler(m, { sock, args }) {
 
   // === BY ID ===
   if (/^\d+$/.test(sub)) {
-    await m.react("🕒");
+    await m.react("🐣");
     // Cookpad IDs are 7+ digits, TheMealDB are 5 digits
     if (sub.length >= 7) {
       const recipe = await getCookpadRecipe(sub);
@@ -536,7 +536,7 @@ async function handler(m, { sock, args }) {
   }
 
   // === UNIFIED SEARCH (default) ===
-  await m.react("🕒");
+  await m.react("🐣");
   const rawQuery = args.join(" ").trim();
   const cleaned = cleanQuery(rawQuery);
   if (!cleaned) {

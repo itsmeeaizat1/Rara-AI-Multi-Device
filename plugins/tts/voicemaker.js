@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     return m.reply( "❌ Teks kosong atau terlalu panjang (max 500 karakter).", "voicemaker");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const res = await axios.get(

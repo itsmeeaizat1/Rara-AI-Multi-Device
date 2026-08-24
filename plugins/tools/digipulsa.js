@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
   // SALDO
   if (sub === "saldo" || sub === "balance") {
     if (!data.username || !data.apiKey) return m.reply( claraWrap("DigiPulsa", "Belum setup!\nOwner: .dg setkey <username>:<apiKey>"), "digipulsa");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const saldo = await cekSaldo(data);
       await m.react("✅");
@@ -156,7 +156,7 @@ async function handler(m, { sock }) {
   // KATEGORI
   if (sub === "kategori" || sub === "category") {
     if (!data.username || !data.apiKey) return m.reply( claraWrap("DigiPulsa", "Belum setup!\nOwner: .dg setkey <username>:<apiKey>"), "digipulsa");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const products = await getPriceList(data);
       const cats = {};
@@ -186,7 +186,7 @@ async function handler(m, { sock }) {
     if (!keyword) {
       return m.reply( claraWrap("DigiPulsa", "Cari Produk\n\n.dg cari <keyword>\n\nContoh:\n.dg cari telkomsel\n.dg cari pln\n.dg cari mobile legend\n.dg cari free fire\n.dg cari genshin\n.dg cari dana\n.dg cari wifi\n\nLihat kategori: .dg kategori"), "digipulsa");
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const products = await getPriceList(data);
       let filtered = products.filter(p =>
@@ -232,7 +232,7 @@ async function handler(m, { sock }) {
     if (!sku || !customerNo) {
       return m.reply( claraWrap("DigiPulsa", "Format Beli\n\n.dg beli <sku_code> <nomor_tujuan>\n\nContoh:\n.dg beli S5 08123456789 (Pulsa Tsel 5k)\n.dg beli PLN20 12345678901 (Token PLN 20k)\n.dg beli ML5 123456789 (ML Diamond 5)\n.dg beli DANA5000 08123456789 (Topup DANA 5k)\n\nCari SKU:\n.dg cari <keyword>"), "digipulsa");
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const products = await getPriceList(data);
       const prod = products.find(p => p.buyer_sku_code === sku);
@@ -284,7 +284,7 @@ async function handler(m, { sock }) {
     if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("DigiPulsa", "Token expired!"), "digipulsa"); }
     const u = getUser(data, sender);
     if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("DigiPulsa", "Saldo tidak cukup!"), "digipulsa"); }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       u.balance -= pending.price;
       u.totalSpent += pending.price;
@@ -338,7 +338,7 @@ async function handler(m, { sock }) {
     if (!refId) return m.reply( claraWrap("DigiPulsa", "Masukkan Ref ID!\nContoh: .dg cek DG1234ABC"), "digipulsa");
     const order = data.orders.find(o => o.refId === refId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("DigiPulsa", "Order tidak ditemukan!"), "digipulsa");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const result = await topup(data, order ? order.sku : "", order ? order.customerNo : "", refId);
       if (order) {
@@ -390,7 +390,7 @@ async function handler(m, { sock }) {
   if (sub === "refresh" || sub === "sync") {
     if (!isOwner) return m.reply(claraWrap(" + username + ", "Khusus owner!"));
     if (!data.username || !data.apiKey) return m.reply( claraWrap("DigiPulsa", "Belum setup!"), "digipulsa");
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const products = await getPriceList(data, true);
       await m.react("✅");

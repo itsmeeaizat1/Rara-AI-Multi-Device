@@ -234,7 +234,7 @@ async function handler(m, { sock, config: botConfig }) {
     return m.reply( claraWrap("OpenRouter", help));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     // Resolve model ID

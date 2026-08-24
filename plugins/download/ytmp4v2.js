@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       `${m.prefix}ytmp4v2 https://youtu.be/xxx`,
       "ytmp4v2");
   }
-  m.react("🕒");
+  m.react("🐣");
   try {
     const res = await rlGet(`${API_BASE}/download/ytmp4?apikey=${API_KEY}&url=${encodeURIComponent(text)}`);
     const r = res.data?.result || res.data?.data;

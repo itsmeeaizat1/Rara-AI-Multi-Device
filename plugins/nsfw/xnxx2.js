@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     return m.reply( `🔞 *XNXX Downloader*\n\nKirim URL video XNXX/XVideos\n\nContoh: \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\``, "xnxx2");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const res = await axios.get(

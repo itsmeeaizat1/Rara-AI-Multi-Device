@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     { const __navText = "❌ *Waduh, teksnya mana nih?*\n\nKamu harus memasukkan teks yang ingin dijadikan stiker.\n\nContoh: `.ttp Hai Cantik`"; return await m.reply( __navText, "ttp"); };
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const apiUrl = `https://api.nexray.eu.cc/maker/ttp?text=${encodeURIComponent(text)}`;

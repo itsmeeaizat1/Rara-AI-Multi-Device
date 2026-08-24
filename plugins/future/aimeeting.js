@@ -79,7 +79,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
     await m.reply(claraWrap("AI Meeting", "Menggenerate notulen dari " + meeting.messages.length + " pesan..."));
 
     try {

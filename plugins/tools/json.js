@@ -57,7 +57,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("JSON", "Input JSON tidak boleh kosong!"));
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     // Parse JSON
     let parsed;

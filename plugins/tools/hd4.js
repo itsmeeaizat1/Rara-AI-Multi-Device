@@ -167,7 +167,7 @@ async function handler(m, { sock, args }) {
     ].join("\n")), "reminiv2");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const buffer = m.quoted?.isMedia

@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     return m.reply( `🖼️ *BRAT WHITE*\n\n> Masukkan teks\n\n\`Contoh: ${m.prefix}bratwhite Hai semua\``, "bratwhite");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const url = `https://api.nova.my.id/api/bratwhite?text=${encodeURIComponent(text)}`;

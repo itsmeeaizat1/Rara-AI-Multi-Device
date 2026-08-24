@@ -34,7 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    m.react("🕒");
+    m.react("🐣");
     const reply = await callAI({
       providerKey: "openai",
       model: "gpt-4o-mini",

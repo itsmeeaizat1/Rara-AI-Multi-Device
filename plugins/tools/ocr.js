@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         `Media yang didukung:\n` +
         `JPG, PNG, GIF, WEBP`, "ocr");
   }
-  await m.react("🕒");
+  await m.react("🐣");
   { const __navText = `🕕 *MEMPROsEs...*\n\n> Mengekstrak teks dari gambar...`; await m.reply(__navText); };
   try {
     let buffer;

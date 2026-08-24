@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
     { const __navText = "❌ Masukkan link video Shopee yang valid.\n\nContoh: `.shopeedl https://shopee.co.id/...`"; return await m.reply( __navText, "shopeedl"); };
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const data = await extract(url);

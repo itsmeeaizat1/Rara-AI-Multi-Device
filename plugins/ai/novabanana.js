@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     return m.reply( claraWrap("Novabanana", `🍌 *Nano Banana*\n\n> Reply atau kirim gambar dengan caption`), { commandName: "novabanana" });
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     let mediaBuffer;

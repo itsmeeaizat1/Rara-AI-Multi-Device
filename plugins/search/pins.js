@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
       `Contoh:\n` +
       `\`${m.prefix}pins Zhao Lusi\``, "pins");
   }
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const data = await f(

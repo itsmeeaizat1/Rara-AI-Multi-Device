@@ -305,7 +305,7 @@ async function handler(m, { sock, args }) {
     );
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const mode = args[0].toLowerCase();

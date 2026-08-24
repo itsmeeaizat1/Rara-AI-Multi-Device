@@ -48,7 +48,7 @@ function formatUptime(ms) {
 }
 
 async function handler(m, { sock, db }) {
-  await m.react("🕒");
+  await m.react("🐣");
   const prefix = config.command?.prefix || ".";
   const saluran = config.saluran || {};
   const channelId = saluran?.id || "@newsletter";

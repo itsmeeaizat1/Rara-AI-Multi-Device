@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
       ]), { commandName: "crypto" });
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     // === TOP 10 ===
     if (sub === "top") {

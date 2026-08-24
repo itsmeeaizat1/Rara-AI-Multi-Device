@@ -148,7 +148,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     ].join("\n")), { commandName: "tutorku" });
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
   try {
     const prompt = `Pertanyaan mahasiswa: "${question}"
 

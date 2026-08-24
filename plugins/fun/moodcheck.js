@@ -552,7 +552,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].tracking = true;
@@ -569,7 +569,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].tracking = false;
@@ -585,7 +585,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodSuggest = true;
@@ -602,7 +602,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodSuggest = false;
@@ -618,7 +618,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodAI = true;
@@ -635,7 +635,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodAI = false;
@@ -659,7 +659,7 @@ async function handler(m, { sock }) {
         return;
       }
 
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
 
@@ -681,7 +681,7 @@ async function handler(m, { sock }) {
 
     // ─── Tracking Status ───
     if (command === "moodtrackstatus") {
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadMoodDB();
       const groupData = db.groups[groupId] || {};
       const trackStatus = groupData.tracking ? "ON" : "OFF";
@@ -737,7 +737,7 @@ async function handler(m, { sock }) {
 
     // ─── Mood History ───
     if (command === "moodhistory") {
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadMoodDB();
 
       // Determine target user
@@ -857,7 +857,7 @@ async function handler(m, { sock }) {
       return;
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     // Download voice note
     let mediaBuffer;

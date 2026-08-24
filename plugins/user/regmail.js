@@ -146,7 +146,7 @@ async function handler(m, { args, sock }) {
     }
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const botName = config.bot?.name || "Nova AI";

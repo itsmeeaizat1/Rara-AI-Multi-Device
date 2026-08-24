@@ -113,7 +113,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       await m.reply(claraWrap("Mood Track", "Butuh minimal 3 hari data untuk analisis. Kamu baru: " + udata.entries.length + " hari."));
       return { handled: true };
     }
-    await m.react("🕒");
+    await m.react("🐣");
 
     // Calculate stats
     const avg = (udata.entries.reduce((s, e) => s + e.score, 0) / udata.entries.length).toFixed(1);

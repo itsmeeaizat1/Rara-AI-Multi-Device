@@ -219,7 +219,7 @@ async function handler(m, { sock }) {
     { const __navText = "❌ *Waduh, link Spotify-nya mana nih atau kurang tepat!*\n\nKamu harus memasukkan tautan (link) lagu dari Spotify yang valid. Pastikan itu adalah link ke track/lagu ya! \n\nContoh: `.spdl https://open.spotify.com/track/3RY0NyQQXxuAiyk5eAS4fC`"; return await m.reply( __navText, "spotifydl"); };
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const parsed = parseSpotify(text);

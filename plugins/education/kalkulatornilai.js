@@ -65,7 +65,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "kalkulatornilai" });
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     // === FINAL GRADE ===

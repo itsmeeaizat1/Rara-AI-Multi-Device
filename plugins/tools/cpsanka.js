@@ -24,7 +24,7 @@ const API_BASE = sankaConfig.baseUrl;
 const API_KEY = sankaConfig.apikey;
 
 async function handler(m, { sock }) {
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const url = `${API_BASE}/anime/cp?apikey=${API_KEY}`;

@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
     case "now":
     case "manual":
     case "trigger": {
-      await m.react("🕒");
+      await m.react("🐣");
       await m.reply(
         `🕕 *Membuat Backup...*\n\n> Mohon tunggu, sedang membuat backup...`,
       );

@@ -123,7 +123,7 @@ async function handler(m, { sock, config: botConfig }) {
       ? text.replace(/\/$/, "") + "/robots.txt"
       : "https://" + text.replace(/\/$/, "") + "/robots.txt";
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     const res = await fetch(robotsUrl, {
       headers: { "User-Agent": "Mozilla/5.0 (Nova Bot)" },

@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Iqc Chat", `📱 *Iqc Chat*\n\n> Masukkan teks untuk chat\n\n\`Contoh: ${m.prefix}iqc Hai cantik\``), "iqc");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const now = new Date();

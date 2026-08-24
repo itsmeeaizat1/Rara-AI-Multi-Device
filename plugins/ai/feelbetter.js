@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `_Bot ini bukan pengganti profesional, tapi bisa jadi tempat curhat yang aman_`, "feelbetter");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const result = await FeelBetter(text);

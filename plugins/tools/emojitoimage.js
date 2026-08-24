@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
 
   const validStyle = STYLES.includes(style) ? style : "apple";
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const apiUrl = `https://api.neoxr.eu/api/emoimg?q=${encodeURIComponent(emoji)}&style=${validStyle}&apikey=${NEOXR_APIKEY}`;

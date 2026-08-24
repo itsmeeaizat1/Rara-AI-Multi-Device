@@ -185,7 +185,7 @@ async function sendWithButtons(sock, m, text, botConfig, catName) {
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   try {
-    await m.react("🕒");
+    await m.react("🐣");
     const prefix = botConfig.command?.prefix || ".";
     const args = m.text?.slice(prefix.length).trim().split(/\s+/).slice(1) || [];
     const inputCat = args[0] || "";

@@ -31,7 +31,7 @@ async function handler(m, { args, sock }) {
     return await m.reply(claraWrap("playsoundcloud", txt));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const searchResults = await scSearch(args.join(" "));

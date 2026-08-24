@@ -37,7 +37,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "aronasanka" });
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const url = `${API_BASE}/ai/arona?apikey=${API_KEY}&text=${encodeURIComponent(text)}`;

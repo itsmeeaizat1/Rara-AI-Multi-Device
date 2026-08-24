@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `_Jawaban bisa agak lama, sabar ya_`, "gpt5");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const result = await GPT5(text);

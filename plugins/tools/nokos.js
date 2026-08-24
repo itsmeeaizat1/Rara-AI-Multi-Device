@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
         `Masukkan nomor yang ingin dicek!\n\nContoh:\n.nokos cek 08123456789\n.nokos cek 628123456789`
       ), "nokos");
     }
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const [res] = await sock.onWhatsApp(toJID(num));
       await m.react("✅");
@@ -194,7 +194,7 @@ async function handler(m, { sock }) {
     let count = parseInt(arg2) || 10;
     if (count > 30) count = 30;
     if (count < 1) count = 1;
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const nums = [];
       for (let i = 0; i < count; i++) nums.push(genNumber(prefix));
@@ -222,7 +222,7 @@ async function handler(m, { sock }) {
 
   // --- SAVE ---
   if (sub === "save") {
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const count = parseInt(arg1) || 10;
       const prov = arg2?.toLowerCase() || "all";
@@ -250,7 +250,7 @@ async function handler(m, { sock }) {
 
   // --- LIST ---
   if (sub === "list") {
-    await m.react("🕒");
+    await m.react("🐣");
     const data = loadSaved();
     if (data.numbers.length === 0) {
       await m.react("✅");
@@ -281,7 +281,7 @@ async function handler(m, { sock }) {
 
   // --- EXPORT ---
   if (sub === "export") {
-    await m.react("🕒");
+    await m.react("🐣");
     const data = loadSaved();
     if (data.numbers.length === 0) {
       await m.react("✅");
@@ -332,7 +332,7 @@ async function handler(m, { sock }) {
   if (count > 30) count = 30;
   if (count < 1) count = 1;
   const prefixes = PROVIDERS[prov] || Object.values(PROVIDERS).flat();
-  await m.react("🕒");
+  await m.react("🐣");
   try {
     const nums = [];
     for (let i = 0; i < count; i++) {

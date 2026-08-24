@@ -454,7 +454,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadDB();
       if (!db.settings) db.settings = { globalEnabled: true, groups: {} };
       db.settings.groups[groupId] = true;
@@ -470,7 +470,7 @@ async function handler(m, { sock }) {
         await m.reply("Perintah ini khusus Owner bot.");
         return;
       }
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadDB();
       if (!db.settings) db.settings = { globalEnabled: true, groups: {} };
       db.settings.groups[groupId] = false;
@@ -481,7 +481,7 @@ async function handler(m, { sock }) {
     }
 
     if (command === "chatdnastatus") {
-      await m.react("🕒");
+      await m.react("🐣");
       const db = loadDB();
       if (!db.settings) db.settings = { globalEnabled: true, groups: {} };
       const globalStatus = db.settings.globalEnabled ? "ON" : "OFF";
@@ -519,7 +519,7 @@ async function handler(m, { sock }) {
       return;
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     const mentioned =
       m.message?.extendedTextMessage?.contextInfo?.mentionedJid || [];

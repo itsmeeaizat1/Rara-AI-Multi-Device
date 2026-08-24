@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}nikparser 3517072109020003\``, "nikparser");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const r = await fetch(`${API}?nik=${nik}`, {

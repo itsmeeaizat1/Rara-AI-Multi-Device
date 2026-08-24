@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}rednotedl https://www.xiaohongshu.com/xxx*`, "rednotedl");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const result = await RedNoteDL(text);

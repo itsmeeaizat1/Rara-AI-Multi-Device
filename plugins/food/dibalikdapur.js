@@ -344,7 +344,7 @@ async function handler(m, { sock, args }) {
       return m.reply(`Format: \`${m.prefix}dapur scan <barcode>\`\n\nContoh: \`${m.prefix}dapur scan 3017620422003\`\n\nSumber: Open Food Facts (gratis, jutaan produk)`);
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
     try {
       const res = await axios.get(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(query)}?fields=product_name,brands,nutriscore_grade,nutriments,ingredients_text,quantity,allergens,image_url,quantity,countries`);
 

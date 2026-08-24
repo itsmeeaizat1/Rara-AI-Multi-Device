@@ -269,7 +269,7 @@ async function handler(m, { sock }) {
     return m.reply( `*🪄 BEAUTYPLUS ENHANCER*\n> Reply gambar untuk di-HD-kan\n\n\`\`\`${m.prefix}hd3\`\`\``, "hd3");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     let buffer = m.quoted?.isMedia ? await m.quoted.download() : await m.download();

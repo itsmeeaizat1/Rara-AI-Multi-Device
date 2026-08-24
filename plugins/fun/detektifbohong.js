@@ -84,7 +84,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return m.reply(help, "detektifbohong");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   const percent = randomPercent();
   const verdict = getVerdict(percent);

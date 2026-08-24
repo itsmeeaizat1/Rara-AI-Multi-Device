@@ -67,7 +67,7 @@ async function handler(m, { sock, args }) {
     return m.reply(`Sunnah.com API butuh API key!\n\nRequest di: https://github.com/sunnah-com/api/issues\n\nAtau gunakan \`${m.prefix}ummah\` (UmmahAPI, free, no key) untuk 36,000+ hadiths.`);
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     // === SET API KEY (owner only) ===

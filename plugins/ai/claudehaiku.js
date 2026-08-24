@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `_Respons cepat, tapi tetap cerdas_`, "claudehaiku");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const result = await ClaudeHaiku(text);

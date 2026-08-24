@@ -199,7 +199,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("gantiscraper", `❌ *GAGAL*\n\nNama file tidak valid`));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     if (!fs.existsSync(SCRAPER_DIR)) {

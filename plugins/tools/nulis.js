@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   if (!inputUrl) {
     return m.reply(claraWrap("Nulis", `❌ *TEMPLATE TIDAK ADA*\n\n> File template kertas tidak ditemukan di config.assets`));
   }
-  await m.react("🕒");
+  await m.react("🐣");
   await m.reply(claraWrap("Nulis", `🕕 *MEMPROsEs...*\n\n> Membuat tulisan tangan...`));
   try {
     const { createCanvas, loadImage, GlobalFonts } = _canvas;

@@ -201,7 +201,7 @@ Ketik *${prefix}allmenu* untuk melihat semua fitur`;
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   try {
-    await m.react("🕒");
+    await m.react("🐣");
     const prefix = botConfig.command?.prefix || ".";
     const text = await buildMenuText(m, botConfig, db, uptime, sock);
     const thumbBuffer = getThumb();

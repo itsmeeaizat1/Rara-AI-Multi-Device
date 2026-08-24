@@ -70,7 +70,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return m.reply(help, "yesno");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   await new Promise(r => setTimeout(r, 1200));
 

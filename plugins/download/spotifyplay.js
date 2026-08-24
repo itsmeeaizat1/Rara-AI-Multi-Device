@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
     );
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     let data;

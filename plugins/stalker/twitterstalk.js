@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     return m.reply( `🐦 *Twitter/X Stalker*\n\nMasukkan username Twitter/X\n\nContoh: \`${m.prefix}twitterstalk elonmusk\``, "twitterstalk");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const res = await axios.get(

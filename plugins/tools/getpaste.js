@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
       `Contoh: \`${m.prefix}getpaste https://pastebin.com/Gu8RZaqv\``, "getpaste");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const data = await new GetPastebin().fetch(text);

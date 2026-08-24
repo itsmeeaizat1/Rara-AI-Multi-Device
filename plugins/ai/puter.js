@@ -203,7 +203,7 @@ async function handler(m, { sock, config: botConfig }) {
     return m.reply( claraWrap("Puter", help));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const modelId = session.model;

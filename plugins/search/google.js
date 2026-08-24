@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
         `*${m.prefix}google teknologi terbaru*`, "google");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const result = await GoogleSearch(query);

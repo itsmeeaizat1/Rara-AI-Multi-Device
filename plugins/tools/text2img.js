@@ -39,7 +39,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "text2img" });
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     // Parse options from prompt

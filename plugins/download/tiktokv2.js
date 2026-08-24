@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       `${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`,
       "tiktokv2");
   }
-  m.react("🕒");
+  m.react("🐣");
   try {
     const res = await rlGet(`${API_BASE}/download/tiktok?apikey=${API_KEY}&url=${encodeURIComponent(text)}`);
     const r = res.data?.result || res.data?.data;

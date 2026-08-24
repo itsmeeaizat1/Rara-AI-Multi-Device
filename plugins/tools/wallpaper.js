@@ -105,7 +105,7 @@ async function handler(m, { sock, config: botConfig }) {
     return m.reply( claraWrap("Wallpaper", help));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     // Parse input: cek ada keyword resolusi atau tidak

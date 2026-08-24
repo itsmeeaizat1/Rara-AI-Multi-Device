@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     }
   } else if (action === "semua") {
     try {
-      await m.react("🕒");
+      await m.react("🐣");
       global.isFetchingGroups = true;
       const groups = await sock.groupFetchAllParticipating();
       global.isFetchingGroups = false;

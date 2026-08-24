@@ -197,7 +197,7 @@ async function handler(m, { sock, text: args }) {
     const picked = randomPick(pool, actualCount);
 
     // Suspense animation
-    await m.react("🕒");
+    await m.react("🐣");
 
     const suspenseMsgs = [
       "Memilih secara acak...",

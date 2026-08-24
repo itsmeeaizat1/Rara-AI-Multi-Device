@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
 
-    m.react("🕒");
+    m.react("🐣");
     const response = await fetch(apiEndpoint, {
       method: "POST",
       headers: {

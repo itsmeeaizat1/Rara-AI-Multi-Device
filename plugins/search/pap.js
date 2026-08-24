@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
     return m.reply( claraWrap("Pap", "❌ Pilih salah satu tipe pap yang tersedia: `cewe`, `cowo`, atau `femboy`.\n\nContoh: `.pap cewe`"), { commandName: "pap" });
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const query = arg;

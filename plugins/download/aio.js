@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     { const __navText = `❌ URL tidak valid! Harus dimulai dengan http/https`; return await m.reply(__navText); };
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const result = await aiodl(url);

@@ -195,7 +195,7 @@ async function handler(m, { sock, args }) {
     return await m.reply( txt, { commandName: "paraphrase" });
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     let intensity = 0.5;

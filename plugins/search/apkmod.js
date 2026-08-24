@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `\`${m.prefix}apkmod vpn\``, "apkmod");
   }
 
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     const { data } = await axios.get(

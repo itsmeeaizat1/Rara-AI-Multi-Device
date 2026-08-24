@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
       );
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     // Download video
     let mediaBuffer;

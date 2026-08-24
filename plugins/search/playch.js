@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
   if (!chId)
     return m.reply( `❌ Saluran belum diatur. Gunakan \`--idch <id>\` atau atur di config.js`, "playch");
 
-  m.react("🕒");
+  m.react("🐣");
   try {
     const { videos } = await yts(q);
     const video = pickVideo({ videos });

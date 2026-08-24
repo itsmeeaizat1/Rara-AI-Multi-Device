@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
   const search = text || "";
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const result = await fetchTribunNews(search);

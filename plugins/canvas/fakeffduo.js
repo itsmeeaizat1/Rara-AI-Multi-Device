@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   if (!nama || nama.length < 2) {
     return m.reply( claraWrap("Fakeffduo", `*FAKE FF DUO*\n\n> Contoh: ${m.prefix}fakeffduo nama1|nama2`), { commandName: "fakeffduo" });
   }
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     await sock.sendMedia(

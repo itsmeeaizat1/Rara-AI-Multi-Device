@@ -106,7 +106,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Clean domain
     domain = domain.replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/^www\./, "");
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     const { data, provider: provName } = await dohQuery(domain, type, provider);
 

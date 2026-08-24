@@ -194,7 +194,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Wikipedia", "❌ Masukkan kata kunci pencarian Wikipedia.\n\nContoh: `.wikipedia Indonesia`"));
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const search = await searchWikipedia(query);

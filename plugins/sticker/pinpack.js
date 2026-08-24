@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
         `.☘︎ ݁˖`, "pinpack");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const data = await f(`https://api.siputzx.my.id/api/s/pinterest?query=${query}`);

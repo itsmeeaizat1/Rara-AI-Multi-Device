@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
 
     // Clean now (manual one-time)
     if (action === "now") {
-      await m.react("🕒");
+      await m.react("🐣");
       const result = runCleanup();
       if (result.totalCleaned > 0) {
         let txt = "Cache dibersihkan!\n\n";

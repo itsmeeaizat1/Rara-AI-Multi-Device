@@ -349,7 +349,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return { handled: true };
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     let buffer;

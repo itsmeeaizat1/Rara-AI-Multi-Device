@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     return m.reply( "❌ Reply sticker yang mau difilter.", "stickerfilter");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
 
   try {
     const stickerBuffer = await m.quoted.download();

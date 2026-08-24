@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
       return m.reply(claraWrap("Regex", "Teks tidak boleh kosong!"));
     }
 
-    await m.react("🕒");
+    await m.react("🐣");
 
     // Compile regex
     let regex;

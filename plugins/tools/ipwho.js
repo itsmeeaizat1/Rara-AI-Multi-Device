@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     return m.reply(`❌ *ғORMAT TIDAK VALID*\n\n> Contoh: \`8.8.8.8\``);
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
   await m.reply(claraWrap("Ipwho", `🕕 *MENCARI INFO IP...*`));
 
   try {

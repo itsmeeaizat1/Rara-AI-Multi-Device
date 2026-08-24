@@ -178,7 +178,7 @@ ${getTimeGreeting()} *${m.pushName || "User"}* 👋`;
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   try {
-    await m.react("🕒");
+    await m.react("🐣");
     const prefix = botConfig.command?.prefix || ".";
     const text = await buildAllMenuText(m, botConfig, db, uptime, sock);
     const thumbBuffer = getThumb();

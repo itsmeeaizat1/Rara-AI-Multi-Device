@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
     let buffer = null;
     for (const apiUrl of endpoints) {
       try {
-        m.react("🕒");
+        m.react("🐣");
         const res = await fetch(apiUrl);
         if (!res.ok) continue;
         buffer = Buffer.from(await res.arrayBuffer());

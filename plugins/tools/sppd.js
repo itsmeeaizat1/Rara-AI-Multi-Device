@@ -124,7 +124,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     return m.reply( help, "sppd");
   }
 
-  await m.react("🕒");
+  await m.react("🐣");
   m.reply(claraWrap("SPPD", "  ┊  ➶ AI lagi menyusun SPPD..."));
 
   try {

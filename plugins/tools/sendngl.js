@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     return m.reply( `*LINK NGL NYA MANA ??*\nContoh: \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
   if (!kata)
     return m.reply( `*KATA KATA NYA MANA ??*\n\nContoh: \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
-  m.react("🕒");
+  m.react("🐣");
 
   try {
     await novaApi.cuki.sendNgl(
