@@ -381,6 +381,32 @@ async function messageHandler(msg, sock) {
     }
   }
 
+  // RPG Cinta answer handler (reply terima/tolak to jadianmatch)
+  if (!m.isCommand && !m.isNewsletter) {
+    try {
+      const { answerHandler: jadianMatchHandler } = await import("../plugins/rpg/jadianmatch.js");
+      if (typeof jadianMatchHandler === "function") {
+        const handled = await jadianMatchHandler(m, sock);
+        if (handled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("jadianmatch-answer", e.message);
+    }
+  }
+
+  // RPG Cinta nikah answer handler (reply terima/tolak to nikahmatch)
+  if (!m.isCommand && !m.isNewsletter) {
+    try {
+      const { answerHandler: nikahMatchHandler } = await import("../plugins/rpg/nikahmatch.js");
+      if (typeof nikahMatchHandler === "function") {
+        const handled = await nikahMatchHandler(m, sock);
+        if (handled) return;
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("nikahmatch-answer", e.message);
+    }
+  }
+
   // Auto React VN: jalan walau fromMe (owner testing di self-chat), asal bukan command/newsletter
   if (!m.isCommand && !m.isNewsletter) {
     try {
