@@ -44,20 +44,20 @@ import * as timeHelper from './nova-time.js'
  * @constant
  */
 const CHARS = {
-  cornerTopLeft: "╭",
-  cornerTopRight: "╮",
-  cornerBottomLeft: "╰",
-  cornerBottomRight: "╯",
-  horizontal: "─",
-  vertical: "│",
-  arrow: "➣",
-  bullet: "◦",
+  cornerTopLeft: "❀",
+  cornerTopRight: "❀",
+  cornerBottomLeft: "❀",
+  cornerBottomRight: "❀",
+  horizontal: "˖",
+  vertical: "┊",
+  arrow: "➶",
+  bullet: "➶",
   star: "✦",
   diamond: "◇",
   dot: "•",
   check: "",
   cross: "✗",
-  line: "━",
+  line: "˖",
 };
 
 /**
@@ -189,9 +189,7 @@ function createLine(length = 20, char = CHARS.horizontal) {
  * // "╭─「 DASHBOARD 」─────╮"
  */
 function createHeader(title, width = 20) {
-  const titlePart = `${CHARS.horizontal}「 ${title} 」`;
-  const remainingWidth = Math.max(0, width - titlePart.length - 2);
-  return `${CHARS.cornerTopLeft}${titlePart}${createLine(remainingWidth)}${CHARS.cornerTopRight}`;
+  return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${title}`;
 }
 
 /**
@@ -202,7 +200,7 @@ function createHeader(title, width = 20) {
  * createFooter(); // "╰────────────────────╯"
  */
 function createFooter(width = 20) {
-  return `${CHARS.cornerBottomLeft}${createLine(width)}${CHARS.cornerBottomRight}`;
+  return `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 }
 
 /**
@@ -213,7 +211,7 @@ function createFooter(width = 20) {
  * @returns {string} Formatted body line
  */
 function createBodyLine(text, prefix = CHARS.vertical, bullet = CHARS.bullet) {
-  return `${prefix} ${bullet} ${text}`;
+  return `  ${prefix}  ${bullet} ${text}`;
 }
 
 /**
@@ -225,7 +223,7 @@ function createBodyLine(text, prefix = CHARS.vertical, bullet = CHARS.bullet) {
  * createArrowLine('Nama', 'Nova-AI'); // "│ ➣ Nama: Nova-AI"
  */
 function createArrowLine(label, value) {
-  return `${CHARS.vertical} ${CHARS.arrow} ${label}: ${value}`;
+  return `  ${CHARS.vertical}  ${CHARS.arrow} *${label}:* ${value}`;
 }
 
 /**
@@ -243,7 +241,7 @@ function createDashboard(data) {
   } = data;
 
   const lines = [
-    `${CHARS.cornerTopLeft}${CHARS.horizontal}「 ${EMOJIS.dashboard} DASHBOARD 」${CHARS.horizontal}`,
+    createHeader("Dashboard"),
     `${CHARS.vertical}`,
     createArrowLine("Nama", userName),
     createArrowLine("Status User", userStatus),
@@ -251,7 +249,7 @@ function createDashboard(data) {
     createArrowLine("Pengguna", totalUsers.toString()),
     createArrowLine("Limit", userLimit.toString()),
     `${CHARS.vertical}`,
-    `${CHARS.cornerBottomLeft}${createLine(24)}`,
+    createFooter(),
   ];
 
   return lines.join("\n");

@@ -156,13 +156,13 @@ function checkMode(m, getActiveJadibots) {
       allowed: false,
       isAfk: true,
       afkMessage:
-        `💤 *Bot sEdang Afk*\n\n` +
-        `╭┈┈⬡「 📋 *Info* 」\n` +
-        `┃ 📝 Alasan: \`${botAfk.reason || "AFK"}\`\n` +
-        `┃ ⏱️ sEjak: \`${duration}\` yang lalu\n` +
-        `╰┈┈⬡\n\n` +
-        `Bot tidak bisa menerima perintah saat ini\n` +
-        `Mohon tunggu sampai owner mengaktifkan kembali`,
+        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Aꜰᴋ\n` +
+        `┊\n` +
+        `  ┊  ➶ 💤 Bot sedang AFK\n` +
+        `  ┊  ➶ *Alasan:* ${botAfk.reason || "AFK"}\n` +
+        `  ┊  ➶ *Sejak:* ${duration} yang lalu\n` +
+        `┊\n` +
+        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`,
     };
   }
 
@@ -207,20 +207,20 @@ function checkMode(m, getActiveJadibots) {
     if (activeJadibots.length > 0) {
       let jadibotList = "";
       activeJadibots.forEach((jb, i) => {
-        jadibotList += `┃ ${i + 1}. @${jb.id}\n`;
+        jadibotList += `  ┊  ➶ ${i + 1}. @${jb.id}\n`;
       });
       const mentions = activeJadibots.map((jb) => jb.id + "@s.whatsapp.net");
       return {
         allowed: false,
         hasJadibots: true,
         jadibotMessage:
-          `🤖 *Mode Private*\n\n` +
-          `Bot utama sedang dalam mode private.\n` +
-          `Kamu bisa menggunakan bot turunan kami:\n\n` +
-          `╭┈┈⬡「 📱 *Bot Tersedia* 」\n` +
+          `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Mᴏᴅᴇ Pʀɪᴠᴀᴛᴇ\n` +
+          `┊\n` +
+          `  ┊  ➶ 🤖 Bot utama dalam mode private\n` +
+          `  ┊  ➶ Bot turunan yang tersedia:\n` +
           `${jadibotList}` +
-          `╰┈┈⬡\n\n` +
-          `Pilih salah satu bot di atas untuk akses fitur.`,
+          `┊\n` +
+          `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`,
         jadibotMentions: mentions,
       };
     }

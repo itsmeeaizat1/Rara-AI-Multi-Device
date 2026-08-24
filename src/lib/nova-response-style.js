@@ -6,17 +6,12 @@ const SMALL_CAPS = {
   y: "Y", z: "Z",
 };
 
-
 function formatNumber(num) {
   return String(num).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function separator(char = "━", repeat = 22) {
-  return `*${char.repeat(repeat)}*`;
-}
-
 function tipText(text) {
-  return `💡 *Tip:* ${text}`;
+  return `  ┊  ➶ 💡 *Tip:* ${text}`;
 }
 
 function smartGreeting(prefix = ".", userName = "") {
@@ -27,47 +22,43 @@ function smartGreeting(prefix = ".", userName = "") {
   else if (hour >= 14 && hour < 18) timeGreeting = "Selamat sore";
 
   const namePart = userName ? `, ${userName}` : "";
-  return `💬 *${"Sapaan"}*\n┃ ◦ ${timeGreeting}${namePart}! Ada yang bisa aku bantu?`;
+  return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀\n┊\n  ┊  ➶ ${timeGreeting}${namePart}! Ada yang bisa aku bantu?\n┊\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 }
 
 function previewBlock(items = [], title = "Preview") {
   const lines = items.map(([label, value]) => {
     const val = typeof value === "undefined" || value === null ? "tidak diketahui" : value;
-    return `┃ ◦ ${label}: *${val}*`;
+    return `  ┊  ➶ *${label}:* ${val}`;
   });
-  return `╭┈┈⬡「 🎵 *${title}* 」\n` + lines.join("\n") + `\n╰┈┈⬡`;
+  return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${title}\n┊\n${lines.join("\n")}\n┊\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
 }
 
 function resultBlock(title, items = [], prefix = ".") {
-  const header = `╭┈┈⬡「 📦 *${title}* 」`;
   const body = items.map((item, i) => {
     if (typeof item === "string") {
-      return `┃ ${i + 1}. ${prefix}${item}`;
+      return `  ┊  ➶ ${i + 1}. ${prefix}${item}`;
     }
     const name = item.name || item.command || "unknown";
     const alias = Array.isArray(item.alias) && item.alias.length ? ` (${item.alias.slice(0, 2).join(", ")})` : "";
-    return `┃ ${i + 1}. ${prefix}${name}${alias}`;
+    return `  ┊  ➶ ${i + 1}. ${prefix}${name}${alias}`;
   });
-  const footer = `╰┈┈⬡`;
-  return [header, ...body, footer].join("\n");
+  return [`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${title}`, `┊`, ...body, `┊`, `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`].join("\n");
 }
 
 function aiChatBlock(role, text) {
-  const prefix = role === "user" ? "👤" : "🤖";
-  const label = role === "user" ? "kamu" : "bot";
-  return `${prefix} *${label}:* ${text}`;
+  const emoji = role === "user" ? "👤" : "🤖";
+  const label = role === "user" ? "Kamu" : "Bot";
+  return `${emoji} *${label}:* ${text}`;
 }
 
 function chatBubble(role, text) {
-  const prefix = role === "user" ? "👤" : "🤖";
-  return `${prefix} ${text}`;
+  const emoji = role === "user" ? "👤" : "🤖";
+  return `${emoji} ${text}`;
 }
 
 function infoBlock(title, lines = []) {
-  const header = `╭┈┈⬡「 ℹ️ *${title}* 」`;
-  const body = lines.map((line) => `┃ ◦ ${line}`);
-  const footer = `╰┈┈⬡`;
-  return [header, ...body, footer].join("\n");
+  const body = lines.map((line) => `  ┊  ➶ ${line}`);
+  return [`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${title}`, `┊`, ...body, `┊`, `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`].join("\n");
 }
 
 function userInfoBlock(name, id, role = "User") {
@@ -88,7 +79,6 @@ function botInfoBlock(name, version = "1.0", status = "Online") {
 
 export {
   formatNumber,
-  separator,
   tipText,
   smartGreeting,
   previewBlock,
