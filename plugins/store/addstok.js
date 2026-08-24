@@ -161,9 +161,9 @@ async function handler(m, { sock }) {
         `\`${m.prefix}addstok 1|Email: user@mail.com;;Password: pass123\`\n\n` +
         `📝 *Contoh fisik:*\n` +
         `\`${m.prefix}addstok 2 8\` — Tambah 8 pcs untuk produk #2\n\n` +
-        `• Gunakan \`;;\` untuk baris baru dalam detail 🔑\n` +
-        `• Setiap baris di file .txt = 1 stok item 📄\n` +
-        `• Maksimal 1.000 item per import 📊\n\n` +
+        `Gunakan \`;;\` untuk baris baru dalam detail 🔑\n` +
+        `Setiap baris di file .txt = 1 stok item 📄\n` +
+        `Maksimal 1.000 item per import 📊\n\n` +
         `_Data stok digital bersifat rahasia 🔒 dan hanya dikirim ke pembeli setelah pembayaran dikonfirmasi_`);
   }
 

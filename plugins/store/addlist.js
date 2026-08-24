@@ -56,15 +56,15 @@ async function handler(m, { sock }) {
             `📋 Format:\n` +
             `\`${m.prefix}addlist <nama>|<isi>\`\n\n` +
             `📌 *Parameter:*\n` +
-            `• *nama* — Judul informasi (min. 2 karakter)\n` +
-            `• *isi* — Konten informasi (gunakan \`;;\` untuk baris baru)\n\n` +
+            `*nama* — Judul informasi (min. 2 karakter)\n` +
+            `*isi* — Konten informasi (gunakan \`;;\` untuk baris baru)\n\n` +
             `📝 *Contoh:*\n` +
             `\`${m.prefix}addlist Syarat & Ketentuan|1. Pembelian tidak bisa dibatalkan;;2. Garansi 7 hari;;3. Hubungi admin untuk klaim\`\n` +
             `\`${m.prefix}addlist Cara Order|1. Ketik .listproduk;;2. Pilih produk;;3. Ketik .beli <nomor>\`\n\n` +
             `🖼️ *Tips:*\n` +
-            `• Kirim gambar/video terlebih dahulu, lalu reply media tersebut dengan command di atas untuk menambahkan media 📸\n` +
-            `• Gunakan \`;;\` untuk membuat baris baru dalam isi informasi ✍️\n` +
-            `• Informasi ini bisa dilihat semua orang melalui \`${m.prefix}list\` 👥`
+            `Kirim gambar/video terlebih dahulu, lalu reply media tersebut dengan command di atas untuk menambahkan media 📸\n` +
+            `Gunakan \`;;\` untuk membuat baris baru dalam isi informasi ✍️\n` +
+            `Informasi ini bisa dilihat semua orang melalui \`${m.prefix}list\` 👥`
         )
     }
 

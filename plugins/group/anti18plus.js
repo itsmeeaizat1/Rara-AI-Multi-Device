@@ -521,7 +521,7 @@ async function handler(m, { sock }) {
     if (sub === 'warn') {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) {
-            return m.reply('❌ Masukkan angka 1-10\n> Contoh: `' + m.prefix + 'anti18plus warn 5`')
+            return m.reply('❌ Masukkan angka 1-10\nContoh: `' + m.prefix + 'anti18plus warn 5`')
         }
         db.setGroup(m.chat, { nsfwMaxWarn: count, judiMaxWarn: count })
         m.react('✅')
@@ -586,7 +586,7 @@ async function handler(m, { sock }) {
     if (sub === 'reset') {
         const target = m.mentionedJid?.[0] || (args[1]?.replace(/[^0-9]/g, '') + '@s.whatsapp.net')
         if (!target || target === 'undefined@s.whatsapp.net') {
-            return m.reply('❌ Tag user atau masukkan nomor\n> Contoh: `' + m.prefix + 'anti18plus reset @user`')
+            return m.reply('❌ Tag user atau masukkan nomor\nContoh: `' + m.prefix + 'anti18plus reset @user`')
         }
 
         const updated = groupData
@@ -619,7 +619,7 @@ async function handler(m, { sock }) {
         )
     }
 
-    return m.reply('❌ Sub-command tidak dikenal.\n> Ketik `' + m.prefix + 'anti18plus` untuk melihat daftar command.')
+    return m.reply('❌ Sub-command tidak dikenal.\nKetik `' + m.prefix + 'anti18plus` untuk melihat daftar command.')
 }
 
 export { pluginConfig as config, handler, handleAntiNSFW, detectNSFW, detectJudi }

@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     const match = input.match(dateRegex)
     
     if (!match) {
-        return m.reply(claraWrap("setbirthday", `❌ Format salah! Gunakan: DD-MM\n\n> Contoh: ${m.prefix}setbirthday 25-12`))
+        return m.reply(claraWrap("setbirthday", `❌ Format salah! Gunakan: DD-MM\n\nContoh: ${m.prefix}setbirthday 25-12`))
     }
     
     const day = parseInt(match[1])

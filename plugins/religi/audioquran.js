@@ -363,7 +363,7 @@ async function handler(m, { sock, args }) {
       for (const q of r.reciters.slice(0, 50)) {
         txt += `- #${q.id} *${q.name}* (${q.moshafCount} riwayat)\n`;
       }
-      if (r.reciters.length > 50) txt += `\n> ... +${r.reciters.length - 50} qari lainnya.`;
+      if (r.reciters.length > 50) txt += `\n... +${r.reciters.length - 50} qari lainnya.`;
     } else if (mode === "suwar") {
       for (const s of r.suwar) {
         txt += `- #${s.id} *${s.name}* (${s.type})\n`;

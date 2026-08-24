@@ -138,7 +138,7 @@ async function handler(m, { sock, args }) {
                 list.slice(0, 15).forEach((a, i) => {
                     txt += `*${i + 1}.* ${a.title}\n`
                 })
-                if (list.length > 15) txt += `\n> ...dan ${list.length - 15} lainnya`
+                if (list.length > 15) txt += `\n...dan ${list.length - 15} lainnya`
 
                 return sock.sendMessage(m.chat, { text: txt }, { quoted: m })
             } catch (e) {
@@ -150,7 +150,7 @@ async function handler(m, { sock, args }) {
             const sent = loadSent()
             const count = sent.size
             saveSent(new Set())
-            return m.reply(claraWrap("Autoanimewinbu", `✅ Reset! *${count}* episode dihapus dari riwayat.\n> Semua episode bisa terkirim ulang.`))
+            return m.reply(claraWrap("Autoanimewinbu", `✅ Reset! *${count}* episode dihapus dari riwayat.\nSemua episode bisa terkirim ulang.`))
         }
 
         case 'addgrup':
@@ -175,7 +175,7 @@ async function handler(m, { sock, args }) {
 
             groups.push(grupId)
             saveState({ ...state, groups })
-            return m.reply(`✅ Grup \`${grupId}\` ditambahkan ke target\n> Total: *${groups.length}* grup`)
+            return m.reply(`✅ Grup \`${grupId}\` ditambahkan ke target\nTotal: *${groups.length}* grup`)
         }
 
         case 'delgrup':
@@ -195,14 +195,14 @@ async function handler(m, { sock, args }) {
 
             groups.splice(idx, 1)
             saveState({ ...state, groups })
-            return m.reply(`✅ Grup \`${grupId}\` dihapus dari target\n> Sisa: *${groups.length}* grup`)
+            return m.reply(`✅ Grup \`${grupId}\` dihapus dari target\nSisa: *${groups.length}* grup`)
         }
 
         case 'interval': {
             const rest = (typeof args === 'string' ? args : '').replace(/^interval\s*/i, '').trim()
             const mins = parseInt(rest)
             if (!mins || mins < 1 || mins > 60) {
-                return m.reply(claraWrap("autoanimewinbu", `❌ Interval harus 1-60 menit\n\n> Contoh: \`${m.prefix}autoanimewinbu interval 10\``), "autoanimewinbu")
+                return m.reply(claraWrap("autoanimewinbu", `❌ Interval harus 1-60 menit\n\nContoh: \`${m.prefix}autoanimewinbu interval 10\``), "autoanimewinbu")
             }
 
             saveState({ ...state, interval: mins })

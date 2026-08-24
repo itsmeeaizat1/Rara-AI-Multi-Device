@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]
     
     if (!username) {
-        { const __navText = `📺 *Youtube sTalk*\n\n> Masukkan username YouTube\n\n\`Contoh: ${m.prefix}ytstalk mrbeast\``; return await m.reply( __navText, "ytstalk"); }
+        { const __navText = `📺 *Youtube sTalk*\n\nMasukkan username YouTube\n\n\`Contoh: ${m.prefix}ytstalk mrbeast\``; return await m.reply( __navText, "ytstalk"); }
     }
     
     m.react('🕐')

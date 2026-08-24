@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const query = m.args?.join(" ")?.trim();
 
     if (!query) {
-      return m.reply( claraWrap("Pixiv", `❌ *Masukkan kata kunci pencarian!*\n\n> Contoh: .pixiv rem`), { commandName: "pixiv" });
+      return m.reply( claraWrap("Pixiv", `❌ *Masukkan kata kunci pencarian!*\n\nContoh: .pixiv rem`), { commandName: "pixiv" });
     }
 
     await m.react("🕒");

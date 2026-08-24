@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
       `  ┊  ➶ *Speed:* ${cpuSpeed} MHz\n` +
       `  ┊  ➶ *Load Avg:* ${load1m} (1m), ${load5m} (5m), ${load15m} (15m)\n\n` +
 
-      `🧠 *PENGGUNAAN MEMORI*\n` +
+      `🧠 *Cara Pakai Memori*\n` +
       `  ┊  ➶ *Total RAM:* ${fmtSize(totalMem)}\n` +
       `  ┊  ➶ *Dipakai:* ${fmtSize(usedMem)} (${memPct}%)\n` +
       `  ┊  ➶ *Sisa Bebas:* ${fmtSize(freeMem)}\n\n` +

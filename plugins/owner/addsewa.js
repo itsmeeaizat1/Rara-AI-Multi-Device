@@ -124,19 +124,19 @@ async function handler(m, { sock }) {
       `📝 *TAMBAH SEWA*\n\n` +
         `Format: *${m.prefix}addsewa <link/id> <durasi> [harga]*\n\n` +
         `*FORMAT DURASI:*\n` +
-        `• 30i = 30 menit\n` +
-        `• 12h = 12 jam\n` +
-        `• 7d = 7 hari\n` +
-        `• 1m = 1 bulan (30 hari)\n` +
-        `• 1y = 1 tahun\n` +
-        `• lifetime = Permanent\n\n` +
+        `30i = 30 menit\n` +
+        `12h = 12 jam\n` +
+        `7d = 7 hari\n` +
+        `1m = 1 bulan (30 hari)\n` +
+        `1y = 1 tahun\n` +
+        `lifetime = Permanent\n\n` +
         `*INPUT GRUP:*\n` +
-        `• Link: https://chat.whatsapp.com/xxx\n` +
-        `• ID: 120363xxx@g.us\n\n` +
+        `Link: https://chat.whatsapp.com/xxx\n` +
+        `ID: 120363xxx@g.us\n\n` +
         `*CONTOH:*\n` +
-        `• ${m.prefix}addsewa https://chat.whatsapp.com/xxx 30d
-• ${m.prefix}addsewa https://chat.whatsapp.com/xxx 7d "Rp 20.000"\n` +
-        `• ${m.prefix}addsewa 120363xxx 1m\n\n` +
+        `${m.prefix}addsewa https://chat.whatsapp.com/xxx 30d
+  ${m.prefix}addsewa https://chat.whatsapp.com/xxx 7d "Rp 20.000"\n` +
+        `${m.prefix}addsewa 120363xxx 1m\n\n` +
         `💡 Jika pakai link, bot akan otomatis join ke grup tersebut!`,
     );
   }

@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
             }] 
         }, m.chat)
         
-        await m.reply(claraWrap("Clearchat", `✅ *Chat Dibersihkan*\n\n> Chat grup telah dibersihkan oleh @${m.sender.split('@')[0]}`))
+        await m.reply(claraWrap("Clearchat", `✅ *Chat Dibersihkan*\n\nChat grup telah dibersihkan oleh @${m.sender.split('@')[0]}`))
         
     } catch (error) {
         try {

@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim()
 
     if (!query) {
-        return m.reply(`📸 *TIKTOK FOTO SEARCH*\n\n> Contoh:\n\`${m.prefix}tiktokfoto cosplay\``)
+        return m.reply(`📸 *TIKTOK FOTO SEARCH*\n\nContoh:\n\`${m.prefix}tiktokfoto cosplay\``)
     }
 
     m.react('🕐')

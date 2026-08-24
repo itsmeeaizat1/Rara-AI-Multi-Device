@@ -70,11 +70,11 @@ async function handler(m, { sock }) {
     const results = data?.data?.slice(0, MAX_STICKERS);
 
     if (!results || results.length === 0) {
-      return m.reply(claraWrap("Pinpack", `── .✦ ──\n\n> Tidak ditemukan hasil untuk: *${query}* .☘︎ ݁˖`));
+      return m.reply(claraWrap("Pinpack", `── .✦ ──\n\nTidak ditemukan hasil untuk: *${query}* .☘︎ ݁˖`));
     }
 
     await m.reply(
-      `── .✦ ──\n\n> Mengunduh *${results.length}* gambar dari Pinterest\n> Lalu dikonversi ke sticker pack... .☘︎ ݁˖`,
+      `── .✦ ──\n\nMengunduh *${results.length}* gambar dari Pinterest\nLalu dikonversi ke sticker pack... .☘︎ ݁˖`,
     );
 
     const stickerBuffers = [];
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
     }
 
     if (!stickerBuffers.length) {
-      return m.reply(claraWrap("pinpack", `── .✦ ──\n\n> Gagal mendownload gambar .☘︎ ݁˖`));
+      return m.reply(claraWrap("pinpack", `── .✦ ──\n\nGagal mendownload gambar .☘︎ ݁˖`));
     }
 
     const packname = `Pinterest: ${query}`;
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
     } catch (packErr) {
       console.error("[PinPack] Pack send failed:", packErr.message);
       await m.reply(
-        `── .✦ ──\n\n> Pack gagal, mengirim satu per satu... .☘︎ ݁˖`,
+        `── .✦ ──\n\nPack gagal, mengirim satu per satu... .☘︎ ݁˖`,
       );
 
       let sent = 0;
@@ -145,10 +145,10 @@ async function handler(m, { sock }) {
       if (sent > 0) {
         await m.react("🐣");
         await m.reply(
-          `── .✦ ──\n\n> Berhasil kirim *${sent}* sticker dari *${packname}* .☘︎ ݁˖`,
+          `── .✦ ──\n\nBerhasil kirim *${sent}* sticker dari *${packname}* .☘︎ ݁˖`,
         );
       } else {
-        { const __navText = `── .✦ ──\n\n> Gagal mengirim sticker .☘︎ ݁˖`; await m.reply(__navText); };
+        { const __navText = `── .✦ ──\n\nGagal mengirim sticker .☘︎ ݁˖`; await m.reply(__navText); };
       }
     }
   } catch (error) {

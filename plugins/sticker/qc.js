@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
     const backgroundColor = COLORS[color]
     
     if (!backgroundColor) {
-        return m.reply(`❌ *Error*\n\n> Warna \`${color}\` tidak ditemukan!\n> Gunakan salah satu warna yang tersedia.`)
+        return m.reply(`❌ *Error*\n\nWarna \`${color}\` tidak ditemukan!\nGunakan salah satu warna yang tersedia.`)
     }
     
     let message = args.slice(1).join(' ')
@@ -110,11 +110,11 @@ async function handler(m, { sock }) {
     }
     
     if (!message) {
-        { const __navText = `❌ *Error*\n\n> Masukkan text untuk quote!`; return await m.reply( __navText, "qc"); }
+        { const __navText = `❌ *Error*\n\nMasukkan text untuk quote!`; return await m.reply( __navText, "qc"); }
     }
     
     if (message.length > 80) {
-        return m.reply(claraWrap("Qc", `❌ *Error*\n\n> Maksimal 80 karakter! (Saat ini: ${message.length})`))
+        return m.reply(claraWrap("Qc", `❌ *Error*\n\nMaksimal 80 karakter! (Saat ini: ${message.length})`))
     }
     
     m.react('🕐')

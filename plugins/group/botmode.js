@@ -123,7 +123,7 @@ function handler(m, { sock }) {
         `Mode: *${mode.toUpperCase()}* (${MODES[mode].name})\n` +
         `Grup: *${m.chat.split('@')[0]}*\n` +
         extraInfo +
-        `\n\n> Ketik \`${m.prefix}menu\` untuk melihat menu.`))
+        `\n\nKetik \`${m.prefix}menu\` untuk melihat menu.`))
 }
 
 function getGroupMode(chatJid, db) {

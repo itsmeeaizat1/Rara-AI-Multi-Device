@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
 
     if (!info) {
       return m.reply(
-        `❌ *Tidak Ditemukan*\n\n> Plugin \`${name}\` tidak ditemukan`,
+        `❌ *Tidak Ditemukan*\n\nPlugin \`${name}\` tidak ditemukan`,
       );
     }
 

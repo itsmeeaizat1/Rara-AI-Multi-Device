@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
 
     } catch (err) {
         if (err.message?.includes('not found') || err.message?.includes('forbidden')) {
-            await m.reply('❌ *Gagal menghapus!*\n> Pesan mungkin sudah dihapus atau terlalu lama.')
+            await m.reply('❌ *Gagal menghapus!*\nPesan mungkin sudah dihapus atau terlalu lama.')
         } else {
         }
     }

@@ -493,7 +493,7 @@ async function handler(m, { sock }) {
     if (!global.statusjpm)
       return m.reply(claraWrap("jpm", `❌ Tidak ada JPM yang sedang berjalan.`));
     global.stopjpm = true;
-    return m.reply(claraWrap("jpm", `⏹️ *JPM Dihentikan*\n\n> Proses JPM sedang dihentikan...`));
+    return m.reply(claraWrap("jpm", `⏹️ *JPM Dihentikan*\n\nProses JPM sedang dihentikan...`));
   }
 
   if (
@@ -628,7 +628,7 @@ async function handleInternalCommand(m, sock, db, fullInput) {
     if (!global.statusjpm)
       return m.reply(claraWrap("jpm", `❌ Tidak ada JPM yang sedang berjalan.`));
     global.stopjpm = true;
-    return m.reply(claraWrap("jpm", `⏹️ *JPM Dihentikan*\n\n> Proses JPM sedang dihentikan...`));
+    return m.reply(claraWrap("jpm", `⏹️ *JPM Dihentikan*\n\nProses JPM sedang dihentikan...`));
   }
 
   if (cmd === "_help") return showHelp(m);
@@ -712,7 +712,7 @@ async function handleJpmDirect(m, sock, db, text, mode) {
     const modeLabel = mode === "hidetag" ? "Hidetag" : "Basic";
     return m.reply( `📢 *JPM ${modeLabel}*\n\n` +
         `Kirim pesan broadcast ke seluruh grup${mode === "hidetag" ? " dengan tag semua member secara tersembunyi" : ""}.\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}${mode === "hidetag" ? "jpmht" : "jpm"} <pesan>*\n` +
         `*${m.prefix}${mode === "hidetag" ? "jpmht" : "jpm"}* (reply foto/video)\n\n` +
         `*CONTOH:*\n` +
@@ -770,7 +770,7 @@ async function handleJpmChannel(m, sock, db, text) {
   if (!text) {
     return m.reply( `📢 *JPM Channel*\n\n` +
         `Kirim pesan ke semua channel WhatsApp yang di-subscribe bot.\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}jpmch <pesan>*\n` +
         `*${m.prefix}jpmch* (reply foto/video)\n\n` +
         `*CONTOH:*\n` +
@@ -895,7 +895,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
   try {
     const { groupIds, blacklistedCount } = await getTargetGroups(sock, db);
     if (groupIds.length === 0) {
-      return m.reply( `❌ *Tidak Ada Grup*\n\n> Bot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`, "jpm");
+      return m.reply( `❌ *Tidak Ada Grup*\n\nBot tidak menemukan grup yang bisa dituju${blacklistedCount > 0 ? ` (${blacklistedCount} grup di-blacklist)` : ""}`, "jpm");
     }
 
     const botName = config.bot?.name || "Nova-AI";
@@ -1116,7 +1116,7 @@ async function completeAutoJpmSetup(m, sock, db, intervalStr) {
     !existing?.message?.text &&
     !existing?.message?.media
   ) {
-    return m.reply( `❌ *Pesan atau Media Wajib Diisi*\n\n> Kirim konten terlebih dahulu, lalu ketik *${m.prefix}jpm* dan pilih Auto JPM.`, "jpm");
+    return m.reply( `❌ *Pesan atau Media Wajib Diisi*\n\nKirim konten terlebih dahulu, lalu ketik *${m.prefix}jpm* dan pilih Auto JPM.`, "jpm");
   }
 
   const updatedConfig = {
@@ -1151,7 +1151,7 @@ async function handleAutoJpm(m, sock, db, input, fullInput) {
     if (!current.enabled) return m.reply( `ℹ️ AutoJPM sudah nonaktif.`, "jpm");
     setAutoJpmConfig({ ...current, enabled: false });
     stopAutoJpmScheduler();
-    return m.reply( `✅ *AutoJPM Dinonaktifkan*\n\n> Jadwal siaran otomatis telah dimatikan.`, "jpm");
+    return m.reply( `✅ *AutoJPM Dinonaktifkan*\n\nJadwal siaran otomatis telah dimatikan.`, "jpm");
   }
 
   if (["status", "info"].includes(action)) return showAutoJpmStatus(m);

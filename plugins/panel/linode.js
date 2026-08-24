@@ -133,7 +133,7 @@ async function handler(m, { sock, command, args }) {
             if (!res.ok) throw new Error('Gagal mendapatkan daftar Linode')
             
             if (!data.data || data.data.length === 0) {
-                return m.reply(claraWrap("linode", `📋 *DaғTar Linode*\n\n> Tidak ada VPS aktif.`))
+                return m.reply(claraWrap("linode", `📋 *DaғTar Linode*\n\nTidak ada VPS aktif.`))
             }
             
             let msg = `📋 *DaғTar Linode Vps*\n\n`
@@ -240,7 +240,7 @@ async function handler(m, { sock, command, args }) {
             })
             
             if (res.ok) {
-                await m.reply(`✅ Linode ID \`${linodeId}\` berhasil di-rebuild!\n\n> 🔑 Password baru: \`${rootPass}\`\n> 🖼️ Image: ${image}`)
+                await m.reply(`✅ Linode ID \`${linodeId}\` berhasil di-rebuild!\n\n🔑 Password baru: \`${rootPass}\`\n🖼️ Image: ${image}`)
                 m.react('✅')
             } else {
                 const data = await res.json()
@@ -314,7 +314,7 @@ async function handler(m, { sock, command, args }) {
             if (!res.ok) throw new Error('Gagal mendapatkan data')
             
             const total = data.data?.length || 0
-            await m.reply(claraWrap("linode", `📊 *Total Linode Aktiғ*\n\n> ${total} VPS`))
+            await m.reply(claraWrap("linode", `📊 *Total Linode Aktiғ*\n\n${total} VPS`))
             m.react('✅')
             return
         }

@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     try {
         const isImage = m.isImage || (m.quoted && m.quoted.isImage);
         if (!isImage) {
-            return m.reply(claraWrap("Removebg", '❌ *GAMBAR DIBUTUHKAN*\n\n> Reply atau kirim gambar dengan caption .removebg'));
+            return m.reply(claraWrap("Removebg", '❌ *GAMBAR DIBUTUHKAN*\n\nReply atau kirim gambar dengan caption .removebg'));
         }
         
         await m.react('🕐')
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
         
         await sock.sendMessage(m.chat, {
             image: result,
-            caption: `✅ *BACKGROUND DIHAPUs*\n\n> Background gambar berhasil dihapus`
+            caption: `✅ *BACKGROUND DIHAPUs*\n\nBackground gambar berhasil dihapus`
         }, { quoted: m });
         try {
             fs.unlinkSync(pathnya);

@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     const buffer = await quoted.download();
     if (!buffer) throw new Error("Gagal download media");
 
-    const caption = originalCaption ? `\`Pesan :\`\n> ${originalCaption}` : "";
+    const caption = originalCaption ? `\`Pesan :\`\n${originalCaption}` : "";
 
     if (quoted.isImage) {
       await sock.sendMessage(
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
       msg =
         "Media sudah kadaluarsa atau sudah dihapus dari server WhatsApp.\n\n_Pesan View Once yang terlalu lama atau sering dibuka biasanya akan otomatis hangus dari sistem WhatsApp dan tidak bisa diunduh lagi._";
     }
-    { const __navText = claraWrap("Gagal Membuka View Once", `❌ *Gagal Membuka View Once*\n\n> ${msg}`); await m.reply(__navText); };
+    { const __navText = claraWrap("Gagal Membuka View Once", `❌ *Gagal Membuka View Once*\n\n${msg}`); await m.reply(__navText); };
   }
 }
 

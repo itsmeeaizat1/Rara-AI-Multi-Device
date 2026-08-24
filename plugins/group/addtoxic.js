@@ -29,18 +29,18 @@ async function handler(m, { sock }) {
     }
     
     if (word.length < 2) {
-        return m.reply(claraWrap("Addtoxic", `❌ *Gagal*\n\n> Kata terlalu pendek (min 2 huruf)`))
+        return m.reply(claraWrap("Addtoxic", `❌ *Gagal*\n\nKata terlalu pendek (min 2 huruf)`))
     }
     
     if (word.length > 30) {
-        return m.reply(claraWrap("Addtoxic", `❌ *; return await m.reply(__navText); }Agal*\n\n> Kata terlalu panjang (max 30 huruf)`))
+        return m.reply(claraWrap("Addtoxic", `❌ *; return await m.reply(__navText); }Agal*\n\nKata terlalu panjang (max 30 huruf)`))
     }
     
     const groupData = db.getGroup(m.chat) || {}
     const toxicWords = groupData.toxicWords || []
     
     if (toxicWords.includes(word)) {
-        { const __navText = `❌ *Gagal*\n\n> Kata \`${word}\` sudah ada di daftar`; return await m.reply(__navText); }
+        { const __navText = `❌ *Gagal*\n\nKata \`${word}\` sudah ada di daftar`; return await m.reply(__navText); }
     }
     
     toxicWords.push(word)

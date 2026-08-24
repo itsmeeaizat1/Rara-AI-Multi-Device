@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply( `🔵 *Qwen3 80B*\n\n` +
         `Tanya apa aja ke AI Qwen3 — model besar dari Alibaba yang jago bahasa apa aja.\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}qwen3 <pertanyaan>*\n\n` +
         `*CONTOH:*\n` +
         `*${m.prefix}qwen3 Apa itu machine learning?*\n` +
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const result = await Qwen3(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("Qwen3 Gagal", `❌ *Qwen3 Gagal*\n\n> ${result.error || "Gagal mendapatkan respons"}`));
+      return m.reply(claraWrap("Qwen3 Gagal", `❌ *Qwen3 Gagal*\n\n${result.error || "Gagal mendapatkan respons"}`));
     }
 
     await m.react("🐣");

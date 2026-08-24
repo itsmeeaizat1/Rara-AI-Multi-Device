@@ -141,7 +141,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     if (isJadibot && jadibotId) {
       const jbOwners = getJadibotOwners(jadibotId);
       if (jbOwners.length === 0) {
-        return m.reply(`📋 *Daftar Owner Jadibot*\n\n> Belum ada owner terdaftar.\n> Gunakan \`${m.prefix}addowner\` untuk menambah.`);
+        return m.reply(`📋 *Daftar Owner Jadibot*\n\nBelum ada owner terdaftar.\nGunakan \`${m.prefix}addowner\` untuk menambah.`);
       }
       let txt = `📋 *DAFTAR OWNER JADIBOT* — ${jadibotId}\n\n`;
       const mentions = jbOwners.map(toMentionJid).filter(Boolean);
@@ -158,7 +158,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
       const allOwners = [...new Set([...panelOwners, ...fullOwners])];
 
       if (allOwners.length === 0) {
-        return m.reply(claraWrap("addowner", `📋 *Daftar Owner Panel*\n\n> Belum ada owner panel terdaftar.`));
+        return m.reply(claraWrap("addowner", `📋 *Daftar Owner Panel*\n\nBelum ada owner panel terdaftar.`));
       }
       let txt = `📋 *DAFTAR OWNER PANEL*\n\n`;
       const mentions = allOwners.map(toMentionJid).filter(Boolean);
@@ -181,7 +181,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
       const allOwners = [...new Set([...configOwners, ...dbOwners])];
 
       if (allOwners.length === 0) {
-        return m.reply(claraWrap("addowner", `📋 *Daftar Owner*\n\n> Belum ada owner terdaftar.`));
+        return m.reply(claraWrap("addowner", `📋 *Daftar Owner*\n\nBelum ada owner terdaftar.`));
       }
       let txt = `📋 *DAFTAR OWNER*\n\n`;
       const mentions = allOwners.map(toMentionJid).filter(Boolean);
@@ -216,7 +216,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
   }
 
   if (targetNumber.length < 10 || targetNumber.length > 15) {
-    return m.reply(claraWrap("Addowner", `❌ *Gagal*\n\n> Format nomor tidak valid`));
+    return m.reply(claraWrap("Addowner", `❌ *Gagal*\n\nFormat nomor tidak valid`));
   }
 
   if (isJadibot && jadibotId) {
@@ -245,7 +245,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
 
       let roleChanged = "";
       if (removeFromSellers(targetNumber)) {
-        roleChanged = `\n> ⚡ Auto-upgrade dari Seller ke Owner Panel`;
+        roleChanged = `\n⚡ Auto-upgrade dari Seller ke Owner Panel`;
       }
 
       config.pterodactyl.ownerPanels.push(targetNumber);
@@ -263,7 +263,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
         (o) => String(o).trim() === String(targetNumber).trim(),
       );
       if (!found) {
-        return m.reply( `❌ \`${targetNumber}\` bukan owner panel.\n\n> Current list: ${ownerList.join(", ") || "empty"}`, "addowner");
+        return m.reply( `❌ \`${targetNumber}\` bukan owner panel.\n\nCurrent list: ${ownerList.join(", ") || "empty"}`, "addowner");
       }
       config.pterodactyl.ownerPanels = ownerList.filter(
         (s) => String(s).trim() !== String(targetNumber).trim(),
@@ -283,11 +283,11 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
 
       let roleChanged = "";
       if (removeFromSellers(targetNumber)) {
-        roleChanged = `\n> ⚡ Auto-upgrade dari Seller`;
+        roleChanged = `\n⚡ Auto-upgrade dari Seller`;
         savePanelConfig();
       }
       if (removeFromOwnerPanels(targetNumber)) {
-        roleChanged = `\n> ⚡ Auto-upgrade dari Panel Owner`;
+        roleChanged = `\n⚡ Auto-upgrade dari Panel Owner`;
         savePanelConfig();
       }
 

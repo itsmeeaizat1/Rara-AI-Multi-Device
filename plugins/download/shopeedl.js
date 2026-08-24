@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     let caption = `🛍️ *SHOPEE VIDEO DOWNLOADER* 🛍️\n\n`;
     if (data.username) caption += `*Username:* ${data.username}\n`;
     caption += `*Kualitas:* ${best.quality}\n`;
-    caption += `\n> Dibuat oleh bot kesayanganmu`;
+    caption += `\nDibuat oleh bot kesayanganmu`;
 
     await sock.sendMessage(m.chat, {
       video: { url: videoUrl },

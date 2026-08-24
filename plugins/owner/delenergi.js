@@ -49,13 +49,13 @@ async function handler(m, { sock }) {
     }
     
     if (amount <= 0) {
-        return m.reply(claraWrap("Delenergi", `❌ *Gagal*\n\n> Jumlah harus lebih dari 0`))
+        return m.reply(claraWrap("Delenergi", `❌ *Gagal*\n\nJumlah harus lebih dari 0`))
     }
     
     const user = db.getUser(targetJid)
     
     if (!user) {
-        return m.reply(claraWrap("Delenergi", `❌ *Gagal*\n\n> User tidak ditemukan di database`))
+        return m.reply(claraWrap("Delenergi", `❌ *Gagal*\n\nUser tidak ditemukan di database`))
     }
     
     if (user.energi === -1) {

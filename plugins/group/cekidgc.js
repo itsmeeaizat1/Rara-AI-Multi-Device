@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
         ?.split(/[\s?]/)[0];
 
       if (!inviteCode) {
-        return m.reply(claraWrap("Cekidgc", `── .✦ ──\n\n> Link grup tidak valid .☘︎ ݁˖`));
+        return m.reply(claraWrap("Cekidgc", `── .✦ ──\n\nLink grup tidak valid .☘︎ ݁˖`));
       }
 
       try {
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
         groupJid = groupMeta?.id;
       } catch {
         return m.reply(
-          `── .✦ ──\n\n> Link grup tidak valid atau sudah expired .☘︎ ݁˖`,
+          `── .✦ ──\n\nLink grup tidak valid atau sudah expired .☘︎ ݁˖`,
         );
       }
     } else if (input && input.endsWith("@g.us")) {
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
         groupMeta = await sock.groupMetadata(groupJid);
       } catch {
         return m.reply(
-          `── .✦ ──\n\n> Tidak bisa mengakses grup tersebut .☘︎ ݁˖`,
+          `── .✦ ──\n\nTidak bisa mengakses grup tersebut .☘︎ ݁˖`,
         );
       }
     } else if (m.isGroup) {
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
     }
 
     if (!groupMeta || !groupJid) {
-      return m.reply(claraWrap("Cekidgc", `── .✦ ──\n\n> Tidak dapat menemukan info grup .☘︎ ݁˖`));
+      return m.reply(claraWrap("Cekidgc", `── .✦ ──\n\nTidak dapat menemukan info grup .☘︎ ݁˖`));
     }
 
     const groupName = groupMeta.subject || "Unknown";

@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const groupData = db.getGroup(m.chat)
     
     if (!groupData?.goodbyeMsg) {
-        return m.reply(claraWrap("Resetgoodbye", `❌ *Gagal*\n\n> Goodbye message sudah default`))
+        return m.reply(claraWrap("Resetgoodbye", `❌ *Gagal*\n\nGoodbye message sudah default`))
     }
     
     db.setGroup(m.chat, { goodbyeMsg: null })

@@ -49,8 +49,8 @@ async function handler(m, { sock }) {
         await m.react('✅')
         const target = targetJid.split('@')[0]
         return m.reply(mute
-                ? `🔇 *Chat Dimute*\n\n> Target: ${target}`
-                : `🔊 *Chat Diunmute*\n\n> Target: ${target}`)
+                ? `🔇 *Chat Dimute*\n\nTarget: ${target}`
+                : `🔊 *Chat Diunmute*\n\nTarget: ${target}`)
     } catch (err) {
         return m.reply(claraWrap("mutechat", `❌ Gagal: ${err.message}`))
     }

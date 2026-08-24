@@ -353,7 +353,7 @@ async function handler(m, { sock }) {
     return m.reply(
       "✅ Kamu sudah terdaftar!\n\n" +
       buildUserDataBlock(user.regName, user.regAge, user.regGender, user.regSerial) +
-      "\n\n> Untuk unregister: `" + m.prefix + "unreg`"
+      "\n\nUntuk unregister: `" + m.prefix + "unreg`"
     )
   }
 
@@ -391,7 +391,7 @@ async function captchaAnswerHandler(m, sock) {
   // Cancel
   if (["batal", "cancel", "batalkan"].includes(lowText)) {
     clearCaptchaSession(m.sender)
-    await m.reply("❌ Pendaftaran dibatalkan.\n\n> Mulai lagi dengan: `" + m.prefix + "daftarotomatis`")
+    await m.reply("❌ Pendaftaran dibatalkan.\n\nMulai lagi dengan: `" + m.prefix + "daftarotomatis`")
     return true
   }
 
@@ -407,13 +407,13 @@ async function captchaAnswerHandler(m, sock) {
         clearCaptchaSession(m.sender)
         await m.reply(
           "❌ *Captcha salah " + MAX_ATTEMPTS + "x!*\n\n" +
-          "  ┊  ➶ Sesi dibatalkan.\n> Coba lagi: `" + m.prefix + "daftarotomatis`"
+          "  ┊  ➶ Sesi dibatalkan.\nCoba lagi: `" + m.prefix + "daftarotomatis`"
         )
         return true
       }
 
       var remaining = MAX_ATTEMPTS - session.attempts
-      await m.reply("❌ *Jawaban salah!*\n\n> Sisa percobaan: " + remaining + "x\n> Reply pesan captcha untuk mencoba lagi")
+      await m.reply("❌ *Jawaban salah!*\n\nSisa percobaan: " + remaining + "x\nReply pesan captcha untuk mencoba lagi")
       return true
     }
 
@@ -513,7 +513,7 @@ async function captchaAnswerHandler(m, sock) {
     else if (/^(perempuan|cewek?|cewe|p|female|wanita)$/.test(low)) gender = "Perempuan"
 
     if (!gender) {
-      await m.reply(claraWrap("daftarotomatis", "❌ Gender tidak valid!\n\n> *Cowo / Cowok / Laki-laki / L*\n> *Cewe / Cewek / Perempuan / P*"))
+      await m.reply(claraWrap("daftarotomatis", "❌ Gender tidak valid!\n\n*Cowo / Cowok / Laki-laki / L*\n*Cewe / Cewek / Perempuan / P*"))
       return true
     }
 

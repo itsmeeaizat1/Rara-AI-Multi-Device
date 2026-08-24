@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
         await m.react('✅')
     } catch (error) {
         console.error("Error QWA:", error)
-        m.reply(claraWrap("qwa", `❌ *GAGAL MEMBUAT QUOTE*\n\n> Terjadi kesalahan atau API sedang bermasalah.`))
+        m.reply(claraWrap("qwa", `❌ *GAGAL MEMBUAT QUOTE*\n\nTerjadi kesalahan atau API sedang bermasalah.`))
     }
 }
 

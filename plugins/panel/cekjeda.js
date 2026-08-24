@@ -40,7 +40,7 @@ function handler(m, { sock }) {
   );
 
   if (!hasAccess && !m.isOwner) {
-    return m.reply(claraWrap("Gagal", `❌ *Gagal*\n\n> Kamu tidak memiliki akses ke CPanel!`));
+    return m.reply(claraWrap("Gagal", `❌ *Gagal*\n\nKamu tidak memiliki akses ke CPanel!`));
   }
 
   const db = getDatabase();

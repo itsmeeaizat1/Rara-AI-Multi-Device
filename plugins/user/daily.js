@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
     const remaining = lastDaily + DAILY_COOLDOWN - now;
     const hours = Math.floor(remaining / (1000 * 60 * 60));
     const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    return mm.reply(claraWrap("Cooldown", `🕕 *Cooldown*\n\n> Kamu sudah klaim hari ini.\n> Tunggu: *${hours} jam ${minutes} menit* lagi.`))
+    return mm.reply(claraWrap("Cooldown", `🕕 *Cooldown*\n\nKamu sudah klaim hari ini.\nTunggu: *${hours} jam ${minutes} menit* lagi.`))
   }
 
   const expReward = Math.floor(Math.random() * 5000) + 1000;

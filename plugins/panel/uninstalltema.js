@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
     const ress = new Client()
     
     m.react('🕐')
-    await m.reply(claraWrap("root", `🕕 *Memproses Uninstall Tema...*\n\n> Tunggu 1-10 menit hingga proses selesai`))
+    await m.reply(claraWrap("root", `🕕 *Memproses Uninstall Tema...*\n\nTunggu 1-10 menit hingga proses selesai`))
     
     ress.on('ready', () => {
         ress.exec(command, (err, stream) => {
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
         })
     }).on('error', (err) => {
         console.log('[SSH Error]', err)
-        m.reply(claraWrap("root", `❌ Koneksi gagal!\n\n> IP atau Password tidak valid.`))
+        m.reply(claraWrap("root", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
     }).connect(connSettings)
 }
 

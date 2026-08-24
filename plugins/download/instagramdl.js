@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
   } catch (err) {
-    return m.reply(claraWrap("Instagramdl", `❌ *Gagal Mengunduh*\n\n> ${err.message}`));
+    return m.reply(claraWrap("Instagramdl", `❌ *Gagal Mengunduh*\n\n${err.message}`));
   }
 }
 

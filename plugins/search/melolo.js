@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
   const category = m.text?.trim();
 
   if (!category) {
-    return m.reply( `🎭 *MELOLO DRAMA*\n\n> Contoh:\n\`${m.prefix}melolo fantasy\``, "melolo");
+    return m.reply( `🎭 *MELOLO DRAMA*\n\nContoh:\n\`${m.prefix}melolo fantasy\``, "melolo");
   }
 
   if (!config.APIkey?.covenant) {

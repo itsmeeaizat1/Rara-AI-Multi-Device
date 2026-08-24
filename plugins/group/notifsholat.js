@@ -38,8 +38,8 @@ function handler(m, { sock, db }) {
             `Status Grup: *${statusGrup}*\n` +
             `Lokasi: *${kotaSetting.nama}*\n\n` +
             `*PENGATURAN GRUP:*\n` +
-            `• *${m.prefix}notifsholat on* — Aktifkan notif di grup ini\n` +
-            `• *${m.prefix}notifsholat off* — Nonaktifkan notif di grup ini\n\n` +
+            `*${m.prefix}notifsholat on* — Aktifkan notif di grup ini\n` +
+            `*${m.prefix}notifsholat off* — Nonaktifkan notif di grup ini\n\n` +
             `*CARA KERJA:*\n` +
             `1. Mengirimkan mp3 adzan & gambar jadwal saat masuk waktu sholat\n` +
             `2. Mengikuti jadwal real-time dari myquran.com\n` +
@@ -51,7 +51,7 @@ function handler(m, { sock, db }) {
     if (args === 'on') {
         group.notifSholat = true;
         db.setGroup(m.chat, group);
-        return m.reply(claraWrap("Notifsholat", `✅ *Notif sHolat Diaktifkan*\n\n> Grup ini akan menerima pengingat waktu sholat\n> Lokasi: ${kotaSetting.nama}`));
+        return m.reply(claraWrap("Notifsholat", `✅ *Notif sHolat Diaktifkan*\n\nGrup ini akan menerima pengingat waktu sholat\nLokasi: ${kotaSetting.nama}`));
     }
 
     if (args === 'off') {

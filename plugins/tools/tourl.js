@@ -607,7 +607,7 @@ async function handler(m, { sock }) {
   }
 
   if (results.length === 0) {
-    return m.reply(claraWrap("tourl", `❌ Aduh kak, semuanya pada error pas upload!\n\n> Gagal di server: ${failed.join(", ")}`));
+    return m.reply(claraWrap("tourl", `❌ Aduh kak, semuanya pada error pas upload!\n\nGagal di server: ${failed.join(", ")}`));
   }
 
   let text = `🚀 *UPLOAD BERHASIL!* 🚀\n\n`;

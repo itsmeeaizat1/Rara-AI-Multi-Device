@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     cleanupTempFiles();
     console.error("[TikTokDL] Error:", err);
-    m.reply(claraWrap("Ttmp3", `❌ *Gagal Mengunduh*\n\n> ${err.message}`));
+    m.reply(claraWrap("Ttmp3", `❌ *Gagal Mengunduh*\n\n${err.message}`));
   }
 }
 

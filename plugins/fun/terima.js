@@ -59,11 +59,11 @@ async function handler(m, { sock }) {
   }
 
   if (shooterJid === m.sender) {
-    return m.reply(claraWrap("terima", `❌ *Gagal*\n\n> Tidak bisa menerima diri sendiri!`));
+    return m.reply(claraWrap("terima", `❌ *Gagal*\n\nTidak bisa menerima diri sendiri!`));
   }
 
   if (shooterJid === m.botNumber) {
-    return m.reply(claraWrap("terima", `❌ *Gagal*\n\n> Bot tidak bisa pacaran!`));
+    return m.reply(claraWrap("terima", `❌ *Gagal*\n\nBot tidak bisa pacaran!`));
   }
 
   let shooterData = db.getUser(shooterJid) || {};

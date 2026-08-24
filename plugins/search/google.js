@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   if (!query) {
     return m.reply( `🔍 *Google News*\n\n` +
         `Cari berita terbaru dari Google News.\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}google <topik>*\n\n` +
         `*CONTOH:*\n` +
         `*${m.prefix}google gempa hari ini*\n` +
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     const result = await GoogleSearch(query);
 
     if (!result.status) {
-      return m.reply(claraWrap("google", `❌ *Google Gagal*\n\n> ${result.error}`));
+      return m.reply(claraWrap("google", `❌ *Google Gagal*\n\n${result.error}`));
     }
 
     const items = result.results.slice(0, 10);

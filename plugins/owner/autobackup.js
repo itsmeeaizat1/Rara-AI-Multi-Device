@@ -45,10 +45,10 @@ async function handler(m, { sock }) {
     txt += `\`${m.prefix}autobackup now\`\n\n`;
 
     txt += `*Format Interval:*\n`;
-    txt += `• \`5m\` = 5 menit\n`;
-    txt += `• \`1h\` = 1 jam\n`;
-    txt += `• \`6h\` = 6 jam\n`;
-    txt += `• \`1d\` = 1 hari\n\n`;
+    txt += `\`5m\` = 5 menit\n`;
+    txt += `\`1h\` = 1 jam\n`;
+    txt += `\`6h\` = 6 jam\n`;
+    txt += `\`1d\` = 1 hari\n\n`;
 
     txt += `*Contoh:*\n`;
     txt += `\`${m.prefix}autobackup on 6h\` - backup setiap 6 jam`;
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
       const result = enableAutoBackup(interval, sock);
 
       if (!result.success) {
-        return m.reply(claraWrap("autobackup", `❌ *Gagal*\n\n> ${result.error}`));
+        return m.reply(claraWrap("autobackup", `❌ *Gagal*\n\n${result.error}`));
       }
 
       const ownerNum = config.owner?.number?.[0] || "Owner #1";
@@ -129,14 +129,14 @@ async function handler(m, { sock }) {
     case "trigger": {
       await m.react("🕒");
       await m.reply(
-        `🕕 *Membuat Backup...*\n\n> Mohon tunggu, sedang membuat backup...`,
+        `🕕 *Membuat Backup...*\n\nMohon tunggu, sedang membuat backup...`,
       );
 
       try {
         await triggerManualBackup(sock);
         await m.react("🐣");
         return m.reply(
-          `✅ *Backup sElesai*\n\n> Backup telah dikirim ke owner!`,
+          `✅ *Backup sElesai*\n\nBackup telah dikirim ke owner!`,
         );
       } catch (error) {
         await m.reply(claraWrap("autobackup", te(m.prefix, m.command, m.pushName), "error"));

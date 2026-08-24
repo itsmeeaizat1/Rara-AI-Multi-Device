@@ -67,7 +67,7 @@ function handler(m, { sock }) {
     if (action === 'list') {
         const list = listByRole(server, role)
         if (list.length === 0) {
-            return m.reply(claraWrap("rolemanager", `📋 *Daftar ${roleLabel.toUpperCase()} ${serverLabel}*\n\n> Belum ada ${role} terdaftar.`))
+            return m.reply(claraWrap("rolemanager", `📋 *Daftar ${roleLabel.toUpperCase()} ${serverLabel}*\n\nBelum ada ${role} terdaftar.`))
         }
         
         let txt = `📋 *Daftar ${roleLabel.toUpperCase()} ${serverLabel}*\n\n`
@@ -75,7 +75,7 @@ function handler(m, { sock }) {
         list.forEach((num, i) => {
             txt += `${i + 1}. \`${num}\`\n`
         })
-        txt += `\n> _Role: ${roleLabel} | Server: ${serverLabel}_`
+        txt += `\n_Role: ${roleLabel} | Server: ${serverLabel}_`
         return m.reply(claraWrap("rolemanager", txt))
     }
     
@@ -106,7 +106,7 @@ function handler(m, { sock }) {
     if (action === 'add') {
         const result = addRole(targetUser, server, role)
         if (!result.success) {
-            return m.reply(claraWrap("rolemanager", `❌ *Gagal*\n\n> ${result.error}`))
+            return m.reply(claraWrap("rolemanager", `❌ *Gagal*\n\n${result.error}`))
         }
         
         m.react('✅')
@@ -122,7 +122,7 @@ function handler(m, { sock }) {
     if (action === 'del') {
         const result = removeRole(targetUser, server, role)
         if (!result.success) {
-            return m.reply(claraWrap("rolemanager", `❌ *Gagal*\n\n> ${result.error}`))
+            return m.reply(claraWrap("rolemanager", `❌ *Gagal*\n\n${result.error}`))
         }
         
         m.react('✅')

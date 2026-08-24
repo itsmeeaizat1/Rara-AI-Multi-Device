@@ -88,7 +88,7 @@ function handler(m, { sock }) {
     if (!parsed) return m.reply( '❌ Command tidak valid.', "gcseller")
 
     if (!hasAccess(m.sender, m.isOwner)) {
-        return m.reply( '❌ *Akses Ditolak*\n\n> Fitur ini hanya untuk Owner atau Owner Panel.', "gcseller")
+        return m.reply( '❌ *Akses Ditolak*\n\nFitur ini hanya untuk Owner atau Owner Panel.', "gcseller")
     }
 
     const { action, version } = parsed

@@ -40,12 +40,12 @@ async function handler(m, { sock }) {
     const targetNumber = targetJid.replace(/@.*$/, '')
 
     if (targetJid === botNumber || targetNumber === botNumber.replace(/@.*$/, '')) {
-        await m.reply(claraWrap("kick", `❌ *Gagal*\n\n> Tidak bisa kick bot sendiri!`))
+        await m.reply(claraWrap("kick", `❌ *Gagal*\n\nTidak bisa kick bot sendiri!`))
         return
     }
 
     if (targetJid === m.sender) {
-        await m.reply(claraWrap("kick", `❌ *Gagal*\n\n> Tidak bisa kick diri sendiri!`))
+        await m.reply(claraWrap("kick", `❌ *Gagal*\n\nTidak bisa kick diri sendiri!`))
         return
     }
 
@@ -54,12 +54,12 @@ async function handler(m, { sock }) {
         const targetParticipant = findParticipantByNumber(groupMeta.participants, targetJid)
         
         if (!targetParticipant) {
-            m.reply(claraWrap("Kick", `❌ *Gagal*\n\n> User tidak ditemukan dalam grup!`))
+            m.reply(claraWrap("Kick", `❌ *Gagal*\n\nUser tidak ditemukan dalam grup!`))
             return
         }
         
         if (targetParticipant.admin) {
-            await m.reply(claraWrap("kick", `❌ *Gagal*\n\n> Tidak bisa kick admin grup!`))
+            await m.reply(claraWrap("kick", `❌ *Gagal*\n\nTidak bisa kick admin grup!`))
             return
         }
         

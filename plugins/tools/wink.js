@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
       filename: `wink-${Date.now()}.mp4`,
     });
 
-    await sock.sendMedia(m.chat, result.resultUrl, `✨ *WINK ENHANCE sELEsAI!*\n\n> Ini dia hasilnya, udah jadi *Ultra HD* kan? 😍`, m, {
+    await sock.sendMedia(m.chat, result.resultUrl, `✨ *WINK ENHANCE sELEsAI!*\n\nIni dia hasilnya, udah jadi *Ultra HD* kan? 😍`, m, {
       type: "video",
       mimetype: "video/mp4",
       fileName: `WINK-HD-${Date.now()}.mp4`,

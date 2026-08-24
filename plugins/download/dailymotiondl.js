@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply( `🎬 *Dailymotion Downloader*\n\n` +
         `Download video dari Dailymotion, otomatis dikonversi ke MP4.\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}dailymotiondl <link>*\n\n` +
         `*CONTOH:*\n` +
         `*${m.prefix}dailymotiondl https://www.dailymotion.com/video/xxx*\n\n` +
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     const result = await DailymotionDL(text);
 
     if (!result.status) {
-      { const __navText = `❌ *Dailymotion Gagal*\n\n> ${result.error}`; return await m.reply(__navText); };
+      { const __navText = `❌ *Dailymotion Gagal*\n\n${result.error}`; return await m.reply(__navText); };
     }
 
     let caption =

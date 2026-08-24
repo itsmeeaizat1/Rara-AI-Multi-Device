@@ -28,7 +28,7 @@ function getAIHelpConfig(botConfig) {
 function buildProviderList(prefix) {
   const lines = Object.entries(DEFAULT_PROVIDERS).map(([key, provider]) => {
     const models = (provider.models || []).slice(0, 3).join(", ");
-    return `• ${provider.name} (${key})\n  Model: ${models}\n  Default: ${provider.defaultModel}`;
+    return `${provider.name} (${key})\n  Model: ${models}\n  Default: ${provider.defaultModel}`;
   });
 
   return [

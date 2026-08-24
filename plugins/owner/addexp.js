@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
     }
     
     if (amount <= 0) {
-        return m.reply(claraWrap("Addexp", `❌ *Gagal*\n\n> Jumlah exp harus lebih dari 0`))
+        return m.reply(claraWrap("Addexp", `❌ *Gagal*\n\nJumlah exp harus lebih dari 0`))
     }
     
     if (amount > MAX_EXP) {

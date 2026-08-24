@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
 
     if (!search.status || !search.data?.length) {
       return m.reply(
-        `── .✦ ──\n\n> Tidak ada sticker pack untuk: *${query}* .☘︎ ݁˖`,
+        `── .✦ ──\n\nTidak ada sticker pack untuk: *${query}* .☘︎ ݁˖`,
       );
     }
 
@@ -122,11 +122,11 @@ async function handler(m, { sock }) {
     const detail = await api.detail(randPick.url);
 
     if (!detail.status || !detail.stickers?.length) {
-      return m.reply(claraWrap("stickerpack", `── .✦ ──\n\n> Gagal mengambil detail sticker pack .☘︎ ݁˖`));
+      return m.reply(claraWrap("stickerpack", `── .✦ ──\n\nGagal mengambil detail sticker pack .☘︎ ݁˖`));
     }
 
     await m.reply(
-      `── .✦ ──\n\n> Mengunduh *${randPick.name}*\n> ${Math.min(detail.stickers.length, MAX_STICKERS)} sticker .☘︎ ݁˖`,
+      `── .✦ ──\n\nMengunduh *${randPick.name}*\n${Math.min(detail.stickers.length, MAX_STICKERS)} sticker .☘︎ ݁˖`,
     );
 
     const limited = detail.stickers.slice(0, MAX_STICKERS);
@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
     }
 
     if (!stickerBuffers.length) {
-      return m.reply(claraWrap("stickerpack", `── .✦ ──\n\n> Gagal mendownload sticker .☘︎ ݁˖`));
+      return m.reply(claraWrap("stickerpack", `── .✦ ──\n\nGagal mendownload sticker .☘︎ ݁˖`));
     }
 
     const packname = randPick.name || config.sticker?.packname || "Nova-AI";
@@ -163,7 +163,7 @@ async function handler(m, { sock }) {
     } catch (packErr) {
       console.error("[StickerPack] Pack send failed:", packErr.message);
       await m.reply(
-        `── .✦ ──\n\n> Pack gagal, mengirim satu per satu... .☘︎ ݁˖`,
+        `── .✦ ──\n\nPack gagal, mengirim satu per satu... .☘︎ ݁˖`,
       );
 
       let sent = 0;
@@ -195,10 +195,10 @@ async function handler(m, { sock }) {
       if (sent > 0) {
         await m.react("🐣");
         await m.reply(
-          `── .✦ ──\n\n> Berhasil kirim *${sent}* sticker dari *${packname}* .☘︎ ݁˖`,
+          `── .✦ ──\n\nBerhasil kirim *${sent}* sticker dari *${packname}* .☘︎ ݁˖`,
         );
       } else {
-        { const __navText = `── .✦ ──\n\n> Gagal mengirim sticker .☘︎ ݁˖`; await m.reply(__navText); };
+        { const __navText = `── .✦ ──\n\nGagal mengirim sticker .☘︎ ݁˖`; await m.reply(__navText); };
       }
     }
   } catch (error) {

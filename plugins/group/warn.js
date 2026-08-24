@@ -32,12 +32,12 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("warn", `⚠️ *SISTEM WARNING GRUP*\n\n` +
             `Sistem manajemen pelanggaran untuk member grup.\n` +
             `Batas Warning: *${maxWarns} kali* (Otomatis Kick)\n\n` +
-            `*PENGGUNAAN:*\n` +
-            `• *${m.prefix}warn @user <alasan>* — Memberi warning\n` +
-            `• *${m.prefix}warn max <angka>* — Mengubah batas maksimal warning\n` +
-            `• *${m.prefix}listwarn* — Melihat daftar member bermasalah\n` +
-            `• *${m.prefix}resetwarn @user* — Menghapus semua warning member\n\n` +
-            `*PENJELASAN ALUR PENGGUNAAN:*\n` +
+            `*Cara Pakai:*\n` +
+            `*${m.prefix}warn @user <alasan>* — Memberi warning\n` +
+            `*${m.prefix}warn max <angka>* — Mengubah batas maksimal warning\n` +
+            `*${m.prefix}listwarn* — Melihat daftar member bermasalah\n` +
+            `*${m.prefix}resetwarn @user* — Menghapus semua warning member\n\n` +
+            `*Alur Pakai:*\n` +
             `1. Saat member melakukan pelanggaran pertama, beri mereka SP1: *${m.prefix}warn @user Spam pesan*\n` +
             `2. Bot akan mencatat "Spam pesan" sebagai warning ke-1 mereka.\n` +
             `3. Jika melanggar lagi, beri peringatan kedua dengan alasan baru: *${m.prefix}warn @user Berkata kasar*\n` +

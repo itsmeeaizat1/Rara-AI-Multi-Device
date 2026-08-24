@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     // No args - show usage
     if (!subCmd) {
-      return await m.reply(claraWrap("Switch", "⚙️") + "\n\n" + claraWrap("PENGGUNAAN", [
+      return await m.reply(claraWrap("Switch", "⚙️") + "\n\n" + claraWrap("Cara Pakai", [
         `  ┊  ➶ \`${prefix}switch saluran\` — Lihat status saluran`,
         `  ┊  ➶ \`${prefix}switch saluran <event>\` — Toggle event`,
         `  ┊  ➶ \`${prefix}switch saluran all on\` — Aktifkan semua`,

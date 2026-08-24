@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
     const current = db.setting("antiCall") ?? config.features?.antiCall ?? true;
     return m.reply( `📞 *Anti Call*\n\n` +
         `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}anticall on* — Aktifkan\n` +
         `*${m.prefix}anticall off* — Nonaktifkan\n\n` +
         `_Bot akan otomatis menolak panggilan masuk_`, "anticall");
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
         `Bot tidak akan menolak panggilan masuk`));
   }
 
-  return m.reply(claraWrap("Anticall", `❌ *Opsi Tidak Valid*\n\n> Gunakan *${m.prefix}anticall on* atau *${m.prefix}anticall off*`));
+  return m.reply(claraWrap("Anticall", `❌ *Opsi Tidak Valid*\n\nGunakan *${m.prefix}anticall on* atau *${m.prefix}anticall off*`));
 }
 
 export { pluginConfig as config, handler };

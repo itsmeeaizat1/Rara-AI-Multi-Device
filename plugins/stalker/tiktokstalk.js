@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     const username = m.args[0]?.replace('@', '')
     
     if (!username) {
-        { const __navText = `🎵 *Tiktok sTalk*\n\n> Masukkan username TikTok\n\n\`Contoh: ${m.prefix}tiktokstalk mrbeast\``; return await m.reply( __navText, "tiktokstalk"); }
+        { const __navText = `🎵 *Tiktok sTalk*\n\nMasukkan username TikTok\n\n\`Contoh: ${m.prefix}tiktokstalk mrbeast\``; return await m.reply( __navText, "tiktokstalk"); }
     }
     
     m.react('🕐')

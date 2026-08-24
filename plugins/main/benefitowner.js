@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
         for (const name of names) {
             if (!name || seen.has(name)) continue
             seen.add(name)
-            commandList.push(`• *${config.command?.prefix || '.'}${name}*`)
+            commandList.push(`*${config.command?.prefix || '.'}${name}*`)
         }
     }
     commandList.sort()

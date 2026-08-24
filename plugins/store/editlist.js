@@ -60,11 +60,11 @@ async function handler(m, { sock }) {
             `✏️ *EDIT INFORMASI TOKO*\n\n` +
             `📋 Format: \`${m.prefix}editlist <nomor> <field> <nilai>\`\n\n` +
             `📌 *Field yang bisa diedit:*\n` +
-            `• *nama* 🏷️ — Judul informasi\n` +
-            `• *isi* 📝 — Konten informasi (gunakan \`;;\` untuk baris baru)\n` +
-            `• *deskripsi* 📋 — Deskripsi singkat (preview di daftar)\n` +
-            `• *gambar* 🖼️ — Upload gambar baru (reply gambar)\n` +
-            `• *video* 🎬 — Upload video baru (reply video)\n\n` +
+            `*nama* 🏷️ — Judul informasi\n` +
+            `*isi* 📝 — Konten informasi (gunakan \`;;\` untuk baris baru)\n` +
+            `*deskripsi* 📋 — Deskripsi singkat (preview di daftar)\n` +
+            `*gambar* 🖼️ — Upload gambar baru (reply gambar)\n` +
+            `*video* 🎬 — Upload video baru (reply video)\n\n` +
             `📝 *Contoh:*\n` +
             `\`${m.prefix}editlist 1 isi Syarat baru: blablabla;;Ketentuan: blablabla\`\n` +
             `\`${m.prefix}editlist 1 nama FAQ Pembayaran\`\n` +

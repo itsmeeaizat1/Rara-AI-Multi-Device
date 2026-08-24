@@ -38,7 +38,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply( `╭┈┈⬡「 🎨 *Install Tema sTellar* 」\n┃ ㊗ Usage: \`${m.prefix}installtemastellar <ip>|<password>\`\n╰┈┈⬡\n\n> \`Contoh: ${m.prefix}installtemastellar 192.168.1.1|secretpass\``, "installtemastellar")
+        return m.reply( `╭┈┈⬡「 🎨 *Install Tema sTellar* 」\n┃ ㊗ Usage: \`${m.prefix}installtemastellar <ip>|<password>\`\n╰┈┈⬡\n\n\`Contoh: ${m.prefix}installtemastellar 192.168.1.1|secretpass\``, "installtemastellar")
     }
 
     const parts = text.split('|')
@@ -63,24 +63,24 @@ function handler(m, { sock }) {
 
     conn.on('ready', async () => {
         try {
-            await m.reply(claraWrap("installtemastellar", `🕕 *[1/3] Install Dependencies...*\n\n> Menginstall Node.js, Yarn, Composer...`))
+            await m.reply(claraWrap("installtemastellar", `🕕 *[1/3] Install Dependencies...*\n\nMenginstall Node.js, Yarn, Composer...`))
             await execSSH(conn, DEPS_CMD)
 
-            await m.reply(claraWrap("installtemastellar", `🕕 *[2/3] Install Tema...*\n\n> Mendownload & install tema Stellar...`))
+            await m.reply(claraWrap("installtemastellar", `🕕 *[2/3] Install Tema...*\n\nMendownload & install tema Stellar...`))
             await execSSH(conn, THEME_CMD)
 
-            await m.reply(claraWrap("installtemastellar", `🕕 *[3/3] Build Assets...*\n\n> Compiling panel assets...`))
+            await m.reply(claraWrap("installtemastellar", `🕕 *[3/3] Build Assets...*\n\nCompiling panel assets...`))
             await execSSH(conn, BUILD_CMD)
 
             m.react('✅')
-            await m.reply(claraWrap("installtemastellar", `╭┈┈⬡「 ✅ *Tema sTellar* 」\n┃ ㊗ sTatus: *Terinstall*\n┃ ㊗ Ip: ${ipvps}\n╰┈┈⬡\n\n> _Tema Stellar + dependencies berhasil diinstall!_`))
+            await m.reply(claraWrap("installtemastellar", `╭┈┈⬡「 ✅ *Tema sTellar* 」\n┃ ㊗ sTatus: *Terinstall*\n┃ ㊗ Ip: ${ipvps}\n╰┈┈⬡\n\n_Tema Stellar + dependencies berhasil diinstall!_`))
         } catch (err) {
             m.reply(claraWrap("installtemastellar", te(m.prefix, m.command, m.pushName), "error"))
         } finally {
             conn.end()
         }
     }).on('error', (err) => {
-        m.reply(claraWrap("installtemastellar", `❌ Koneksi gagal!\n\n> IP atau Password tidak valid.`))
+        m.reply(claraWrap("installtemastellar", `❌ Koneksi gagal!\n\nIP atau Password tidak valid.`))
     }).connect(connSettings)
 }
 

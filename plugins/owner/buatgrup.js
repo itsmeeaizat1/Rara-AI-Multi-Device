@@ -23,10 +23,10 @@ async function handler(m, { sock }) {
         txt += `*Cara Pakai:*\n`
         txt += `👉 \`${m.prefix}buatgrup Nama Grup | 628xxx,628yyy | Durasi(menit)\`\n\n`
         txt += `*Detail:*\n`
-        txt += `• Gunakan \`|\` untuk memisahkan nama, peserta, dan durasi\n`
-        txt += `• Pisahkan nomor peserta dengan koma\n`
-        txt += `• Jika durasi diisi, bot akan menendang semua member dan menghapus grup saat waktu habis!\n`
-        txt += `• Bot otomatis menjadi admin\n\n`
+        txt += `Gunakan \`|\` untuk memisahkan nama, peserta, dan durasi\n`
+        txt += `Pisahkan nomor peserta dengan koma\n`
+        txt += `Jika durasi diisi, bot akan menendang semua member dan menghapus grup saat waktu habis!\n`
+        txt += `Bot otomatis menjadi admin\n\n`
         txt += `*Contoh Tanpa Durasi:*\n`
         txt += `\`${m.prefix}buatgrup Tim Alpha | 628123,628456\`\n\n`
         txt += `*Contoh Dengan Durasi (Masa Aktif 60 Menit):*\n`

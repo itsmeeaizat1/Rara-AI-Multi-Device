@@ -31,9 +31,9 @@ async function handler(m, { sock }) {
             `\`${m.prefix}anime-gen girl, vibrant color, smilling, yellow pink gradient hair\`\n` +
             `\`${m.prefix}anime-gen boy, dark aesthetic, silver hair, red eyes\`\n\n` +
             `*Tips:*\n` +
-            `• Gunakan bahasa Inggris\n` +
-            `• Makin detail prompt, makin bagus hasil\n` +
-            `• Tambahkan style: vibrant, dark, pastel, etc`, "anime-gen")
+            `Gunakan bahasa Inggris\n` +
+            `Makin detail prompt, makin bagus hasil\n` +
+            `Tambahkan style: vibrant, dark, pastel, etc`, "anime-gen")
     }
     
     m.react('🕐')
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
         const data = await f(apiUrl)
         
         if (!data?.status || !data?.data?.url) {
-            return m.reply('❌ *Gagal*\n\n> Gagal generate gambar. Coba lagi nanti!')
+            return m.reply('❌ *Gagal*\n\nGagal generate gambar. Coba lagi nanti!')
         }
         
         const result = data.data  
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
         m.react('✅')
     } catch (error) {
         if (error.code === 'ECONNABORTED') {
-            m.reply(claraWrap("Anime-gen", '⏱️ *Timeout*\n\n> Request terlalu lama. Coba lagi!'))
+            m.reply(claraWrap("Anime-gen", '⏱️ *Timeout*\n\nRequest terlalu lama. Coba lagi!'))
         } else {
             m.reply(claraWrap("anime-gen", te(m.prefix, m.command, m.pushName), "error"))
         }

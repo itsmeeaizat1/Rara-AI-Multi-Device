@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const bannedUsers = config.bannedUsers && config.bannedUsers.length > 0 ? config.bannedUsers : (db.setting('bannedUsers') || [])
     
     if (bannedUsers.length === 0) {
-        return m.reply(`🚫 *List Banned*\n\n> Tidak ada user yang dibanned\n\n\`Gunakan: ${m.prefix}ban <nomor>\``)
+        return m.reply(`🚫 *List Banned*\n\nTidak ada user yang dibanned\n\n\`Gunakan: ${m.prefix}ban <nomor>\``)
     }
     
     let caption = `🚫 *List Banned*\n\n`

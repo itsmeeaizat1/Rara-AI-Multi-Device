@@ -255,7 +255,7 @@ async function handler(m, { sock, args }) {
     subs.forEach((s, i) => {
       txt += `${i + 1}. ${s}\n`;
     });
-    txt += `\n> Tips: gunakan substitusi yang paling mirip tekstur dan rasa`;
+    txt += `\nTips: gunakan substitusi yang paling mirip tekstur dan rasa`;
     return await m.reply( txt, { commandName: "dibalikdapur" });
   }
 
@@ -392,7 +392,7 @@ async function handler(m, { sock, args }) {
         txt += `\nBahan: ${ingredients}${p.ingredients_text.length > 300 ? "..." : ""}\n`;
       }
 
-      txt += `\n> Sumber: Open Food Facts`;
+      txt += `\nSumber: Open Food Facts`;
       await m.react("🐣");
       return await m.reply( txt, { commandName: "dibalikdapur" });
     } catch (e) {

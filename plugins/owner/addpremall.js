@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
         const participants = groupMeta.participants || []
         
         if (participants.length === 0) {
-            return m.reply(claraWrap("Addpremall", `❌ *Gagal*\n\n> Tidak ada member di grup ini`))
+            return m.reply(claraWrap("Addpremall", `❌ *Gagal*\n\nTidak ada member di grup ini`))
         }
         
         await m.react('🕐')

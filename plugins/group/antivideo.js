@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
 
   if (!action) {
     const status = groupData.antivideo ? "ON" : "OFF";
-    await m.reply( `Anti Video\n\n> Status: ${status}\n\n> \`${m.prefix}antivideo on/off\``, { commandName: "antivideo" });
+    await m.reply( `Anti Video\n\nStatus: ${status}\n\n\`${m.prefix}antivideo on/off\``, { commandName: "antivideo" });
     return;
   }
 

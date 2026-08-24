@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `🎵 *PLAY TIKTOK*\n\n> Contoh:\n\`${m.prefix}playtiktok cewe tiktok\``, "playtiktok");
+    return m.reply( `🎵 *PLAY TIKTOK*\n\nContoh:\n\`${m.prefix}playtiktok cewe tiktok\``, "playtiktok");
   }
 
   m.react("🕒");

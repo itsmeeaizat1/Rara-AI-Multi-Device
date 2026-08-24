@@ -52,13 +52,13 @@ async function handler(m, { sock }) {
     }
     
     if (amount <= 0) {
-        return m.reply(claraWrap("Delkoin", `❌ *Gagal*\n\n> Jumlah harus lebih dari 0`))
+        return m.reply(claraWrap("Delkoin", `❌ *Gagal*\n\nJumlah harus lebih dari 0`))
     }
     
     const user = db.getUser(targetJid)
     
     if (!user) {
-        return m.reply(claraWrap("Delkoin", `❌ *Gagal*\n\n> User tidak ditemukan di database`))
+        return m.reply(claraWrap("Delkoin", `❌ *Gagal*\n\nUser tidak ditemukan di database`))
     }
     
     const newKoin = db.updateKoin(targetJid, -amount)

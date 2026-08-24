@@ -23,8 +23,8 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
     return m.reply( `🌬️ *Kobo Kanaeru*\n\n` +
-        `VTuber Hololive Indonesia Gen 3\n> Wind Shaman yang cheerfull dan suka prank!\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `VTuber Hololive Indonesia Gen 3\nWind Shaman yang cheerfull dan suka prank!\n\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}kobo-ai <pertanyaan>*\n\n` +
         `*CONTOH:*\n` +
         `*${m.prefix}kobo-ai Kobo lagi apa?*`, "kobo-ai");
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const result = await UnlimitedAI(text, "kobo-ai");
 
     if (!result.status) {
-      { const __navText = `❌ *Kobo AI Error*\n\n> ${result.error || "Gagal mendapatkan respons"}`; return await m.reply(__navText); };
+      { const __navText = `❌ *Kobo AI Error*\n\n${result.error || "Gagal mendapatkan respons"}`; return await m.reply(__navText); };
     }
 
     await m.react("🐣");

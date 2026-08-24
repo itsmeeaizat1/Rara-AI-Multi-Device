@@ -96,7 +96,7 @@ function handler(m, { sock }) {
                 `Added: \`${newPrefixes.join('` `')}\`\n\n` +
                 `*Semua prefix aktif:*\n` +
                 `\`${getAllPrefixes().join('` `')}\`` +
-                `${data.noprefix ? '\n> + *noprefix* aktif' : ''}`)
+                `${data.noprefix ? '\n+ *noprefix* aktif' : ''}`)
             break
         }
         
@@ -138,7 +138,7 @@ function handler(m, { sock }) {
             
             replyText += `\n*Semua prefix aktif:*\n`
             replyText += `\`${getAllPrefixes().join('` `')}\``
-            if (data.noprefix) replyText += `\n> + *noprefix* aktif`
+            if (data.noprefix) replyText += `\n+ *noprefix* aktif`
             
             m.reply(replyText)
             break
@@ -178,7 +178,7 @@ function handler(m, { sock }) {
                 `Deleted: \`${deleted.length > 0 ? deleted.join('` `') : 'None'}\`\n\n` +
                 `*Semua prefix aktif:*\n` +
                 `\`${getAllPrefixes().join('` `')}\`` +
-                `${data.noprefix ? '\n> + *noprefix* aktif' : ''}`)
+                `${data.noprefix ? '\n+ *noprefix* aktif' : ''}`)
             break
         }
         
@@ -202,7 +202,7 @@ function handler(m, { sock }) {
             
             text += `*Total prefix aktif:* ${all.length}`
             if (data.noprefix) text += ` + noprefix`
-            text += `\n> \`${all.join('` `')}\``
+            text += `\n\`${all.join('` `')}\``
             
             m.reply(claraWrap("prefix", text))
             break

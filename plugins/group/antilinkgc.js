@@ -37,9 +37,9 @@ function handler(m, { sock }) {
             `┃   ┊  ➶ Mode: *${mode.toUpperCase()}*\n` +
             `╰┈┈⬡\n\n` +
             `*Deteksi:*\n` +
-            `• chat.whatsapp.com (grup)\n` +
-            `• wa.me (kontak)\n` +
-            `• whatsapp.com/channel (saluran)\n\n` +
+            `chat.whatsapp.com (grup)\n` +
+            `wa.me (kontak)\n` +
+            `whatsapp.com/channel (saluran)\n\n` +
             `*Cara Pakai:*\n` +
             `\`${m.prefix}antilinkgc on\` - Aktifkan\n` +
             `\`${m.prefix}antilinkgc off\` - Nonaktifkan\n` +
@@ -49,7 +49,7 @@ function handler(m, { sock }) {
     
     if (option === 'on') {
         db.setGroup(m.chat, { antilinkgc: 'on' })
-        return m.reply(claraWrap("Antilinkgc", `✅ *Antilink Wa* diaktifkan!\n\n> Link WA akan dihapus otomatis.`))
+        return m.reply(claraWrap("Antilinkgc", `✅ *Antilink Wa* diaktifkan!\n\nLink WA akan dihapus otomatis.`))
     }
     
     if (option === 'off') {
@@ -61,23 +61,23 @@ function handler(m, { sock }) {
         const method = m.args?.[1]?.toLowerCase()
         if (method === 'kick') {
             db.setGroup(m.chat, { antilinkgc: 'on', antilinkgcMode: 'kick' })
-            return m.reply(claraWrap("Antilinkgc", `✅ *Antilink Wa* mode KICK diaktifkan!\n\n> User yang kirim link WA akan di-kick.`))
+            return m.reply(claraWrap("Antilinkgc", `✅ *Antilink Wa* mode KICK diaktifkan!\n\nUser yang kirim link WA akan di-kick.`))
         } else if (method === 'remove' || method === 'delete') {
             db.setGroup(m.chat, { antilinkgc: 'on', antilinkgcMode: 'remove' })
-            return m.reply(claraWrap("Antilinkgc", `✅ *Antilink Wa* mode DELETE diaktifkan!\n\n> Pesan dengan link WA akan dihapus.`))
+            return m.reply(claraWrap("Antilinkgc", `✅ *Antilink Wa* mode DELETE diaktifkan!\n\nPesan dengan link WA akan dihapus.`))
         } else {
-            return m.reply(`❌ Metode tidak valid! Gunakan: \`kick\` atau \`remove\`\n\n> Contoh: \`${m.prefix}antilinkgc metode kick\``)
+            return m.reply(`❌ Metode tidak valid! Gunakan: \`kick\` atau \`remove\`\n\nContoh: \`${m.prefix}antilinkgc metode kick\``)
         }
     }
     
     if (option === 'kick') {
         db.setGroup(m.chat, { antilinkgc: 'on', antilinkgcMode: 'kick' })
-        return m.reply(claraWrap("Antilinkgc", `✅ *Antilink Wa* mode KICK diaktifkan!\n\n> User yang kirim link WA akan di-kick.`))
+        return m.reply(claraWrap("Antilinkgc", `✅ *Antilink Wa* mode KICK diaktifkan!\n\nUser yang kirim link WA akan di-kick.`))
     }
     
     if (option === 'remove' || option === 'delete') {
         db.setGroup(m.chat, { antilinkgc: 'on', antilinkgcMode: 'remove' })
-        return m.reply(claraWrap("Antilinkgc", `✅ *Antilink Wa* mode DELETE diaktifkan!\n\n> Pesan dengan link WA akan dihapus.`))
+        return m.reply(claraWrap("Antilinkgc", `✅ *Antilink Wa* mode DELETE diaktifkan!\n\nPesan dengan link WA akan dihapus.`))
     }
     
     return m.reply(`❌ Opsi tidak valid! Gunakan: \`on\`, \`off\`, \`metode kick\`, \`metode remove\``)

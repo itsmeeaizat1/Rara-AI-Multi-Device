@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
 
     if (!data?.status || !data?.data) {
       return m.reply(
-        "❌ *Gagal*\n\n> File tidak ditemukan atau link tidak valid",
+        "❌ *Gagal*\n\nFile tidak ditemukan atau link tidak valid",
       );
     }
 
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
         }
       })
     } else if (sizeInMB > 100) {
-      await m.reply(claraWrap("Pixeldraindl", `⚠️ *File Terlalu Besar*\n\n> File ${file.size} terlalu besar untuk dikirim\n> Gunakan link download di atas`));
+      await m.reply(claraWrap("Pixeldraindl", `⚠️ *File Terlalu Besar*\n\nFile ${file.size} terlalu besar untuk dikirim\nGunakan link download di atas`));
     }
 
     m.react("🐣");

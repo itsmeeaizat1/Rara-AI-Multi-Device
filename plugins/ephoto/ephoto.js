@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (command === 'ephoto') {
-        const effectList = Object.keys(EFFECT_URLS).map(e => `• \`${m.prefix}${e}\``).join('\n')
+        const effectList = Object.keys(EFFECT_URLS).map(e => `\`${m.prefix}${e}\``).join('\n')
         return m.reply(`🎨 *Ephoto Effects*\n\n` +
             `Buat efek text keren!\n\n` +
             `╭┈┈⬡「 📋 *Daftar Efek* 」\n${effectList}\n╰┈┈┈┈┈┈┈┈⬡\n\n` +
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
     }
     
     if (!text) {
-        return m.reply( `❌ *Error*\n\n> Masukkan text!\n> *Contoh:* ${m.prefix}${command} Nova-AI`, "glitchtext")
+        return m.reply( `❌ *Error*\n\nMasukkan text!\n*Contoh:* ${m.prefix}${command} Nova-AI`, "glitchtext")
     }
     
     const effectUrl = EFFECT_URLS[command]

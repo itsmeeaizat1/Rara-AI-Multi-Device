@@ -74,7 +74,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "Match Score: " + matchScore + "/100",
       "",
       "Kepribadian:",
-      ...personality.map(p => "• " + p),
+      ...personality.map(p => "" + p),
       "",
       "Vibes Message:",
       message,

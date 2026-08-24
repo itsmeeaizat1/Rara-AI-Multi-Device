@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
 
     if (!data?.status || !data?.data?.length) {
       return m.reply(
-        `❌ *Tidak Ditemukan*\n\n> Film "${query}" tidak ditemukan`,
+        `❌ *Tidak Ditemukan*\n\nFilm "${query}" tidak ditemukan`,
       );
     }
 

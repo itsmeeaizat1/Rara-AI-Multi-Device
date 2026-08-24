@@ -21,7 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     let nomor = m.args.join('').replace(/[^0-9]/g, '')
     if (!nomor) {
-        { const __navText = `🍀 *Nomor Hoki*\n\n> Masukkan nomor HP\n\n\`Contoh: ${m.prefix}nomerhoki 6281234567890\``; return await m.reply( __navText, "nomerhoki"); }
+        { const __navText = `🍀 *Nomor Hoki*\n\nMasukkan nomor HP\n\n\`Contoh: ${m.prefix}nomerhoki 6281234567890\``; return await m.reply( __navText, "nomerhoki"); }
     }
     
     
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(claraWrap("nomerhoki", `❌ *Gagal*\n\n> Gagal menganalisa nomor`))
+            return m.reply(claraWrap("nomerhoki", `❌ *Gagal*\n\nGagal menganalisa nomor`))
         }
         
         const r = data.data

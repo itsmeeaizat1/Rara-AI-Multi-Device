@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
     try {
         const isRealOwner = validateOwner(m);
         if (!isRealOwner) {
-            return m.reply(claraWrap("Public", '🚫 *Akses Ditolak*\n\n> Hanya owner yang bisa mengubah mode bot!'));
+            return m.reply(claraWrap("Public", '🚫 *Akses Ditolak*\n\nHanya owner yang bisa mengubah mode bot!'));
         }
         const currentMode = config.mode;
         if (currentMode === 'public') {

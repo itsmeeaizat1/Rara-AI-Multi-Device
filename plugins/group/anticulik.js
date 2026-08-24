@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         `Bot akan otomatis keluar dari grup jika ditambah oleh orang yang tidak dikenal tanpa izin.\n\n` +
         `*STATUS:*\n` +
         `Mode: *${status === "on" ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}anticulik on* — Aktifkan\n` +
         `*${m.prefix}anticulik off* — Nonaktifkan\n\n` +
         `_Jika aktif, bot hanya bisa join via *${m.prefix}join* atau ditambah oleh owner_`));
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
         `Siapapun bisa menambahkan bot ke grup`));
   }
 
-  return m.reply(claraWrap("Anticulik", `❌ *Opsi Tidak Valid*\n\n> Gunakan *${m.prefix}anticulik on* atau *${m.prefix}anticulik off*`));
+  return m.reply(claraWrap("Anticulik", `❌ *Opsi Tidak Valid*\n\nGunakan *${m.prefix}anticulik on* atau *${m.prefix}anticulik off*`));
 }
 
 async function handleAntiCulik(event, sock, db) {

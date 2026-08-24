@@ -97,7 +97,7 @@ async function handler(m, { sock, args }) {
       if (h.grade) txt += `Grade: ${h.grade}\n\n`;
       if (h.arabic) txt += `${h.arabic}\n\n`;
       if (h.english) txt += `${h.english}\n`;
-      txt += `\n> _Hadith ini dipilih otomatis setiap hari_`;
+      txt += `\n_Hadith ini dipilih otomatis setiap hari_`;
 
       await m.reply(txt);
       await m.react("🐣");

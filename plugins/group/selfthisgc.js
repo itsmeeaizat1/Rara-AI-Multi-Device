@@ -42,8 +42,8 @@ async function handler(m, { sock }) {
 
   return m.reply(claraWrap("Mode sElf Aktif", `🔒 *Mode sElf Aktif*\n\n` +
       `Bot di grup ini sekarang hanya merespon:\n` +
-      `• Owner bot\n` +
-      `• Bot sendiri (fromMe)\n\n` +
+      `Owner bot\n` +
+      `Bot sendiri (fromMe)\n\n` +
       `📋 *Grup lain tidak terpengaruh*\n\n` +
       `_Gunakan ${m.prefix}publicthisgc untuk membuka akses_`));
 }

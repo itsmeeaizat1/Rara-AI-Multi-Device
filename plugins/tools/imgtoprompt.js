@@ -29,10 +29,10 @@ async function handler(m, { sock }) {
     try {
         const isImage = m.isImage || (m.quoted && m.quoted.isImage);
         if (!isImage) {
-            return m.reply(claraWrap("Imgtoprompt", '❌ *GAMBAR DIBUTUHKAN*\n\n> Reply atau kirim gambar dengan caption .imgtoprompt'));
+            return m.reply(claraWrap("Imgtoprompt", '❌ *GAMBAR DIBUTUHKAN*\n\nReply atau kirim gambar dengan caption .imgtoprompt'));
         }
         
-        await m.reply(claraWrap("Imgtoprompt", '🕕 *MEMPROsEs GAMBAR...*\n\n> Menganalisis gambar untuk menghasilkan prompt'));
+        await m.reply(claraWrap("Imgtoprompt", '🕕 *MEMPROsEs GAMBAR...*\n\nMenganalisis gambar untuk menghasilkan prompt'));
         let mediaBuffer;
         if (m.isImage && m.download) {
             mediaBuffer = await m.download();
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
             fs.unlinkSync(tmpFile);
         } catch (e) { console.error('[imgtoprompt.js]:', e.message); }
         if (result.status === 'eror' || !result.prompt) {
-            return await m.reply(claraWrap("Imgtoprompt", `❌ *GAGAL*\n\n> ${result.msg || 'Tidak dapat menghasilkan prompt dari gambar ini'}`));
+            return await m.reply(claraWrap("Imgtoprompt", `❌ *GAGAL*\n\n${result.msg || 'Tidak dapat menghasilkan prompt dari gambar ini'}`));
         }
         const responseText = `🎨 *IMAGE TO PROMPT*\n\n` +
             `\`\`\`${result.prompt}\`\`\`\n\n` +

@@ -163,7 +163,7 @@ async function handler(m, { sock }) {
   const password = username + crypto.randomBytes(3).toString("hex");
 
   await m.reply(
-    `🛠️ *Membuat Admin Panel...*\n\n> Server: *${serverLabel}*\n> Username: \`${username}\`\n> Target: \`${targetUser.split("@")[0]}\``,
+    `🛠️ *Membuat Admin Panel...*\n\nServer: *${serverLabel}*\nUsername: \`${username}\`\nTarget: \`${targetUser.split("@")[0]}\``,
   );
 
   try {

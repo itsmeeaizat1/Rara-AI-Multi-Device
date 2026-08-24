@@ -70,7 +70,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply( `╭┈┈⬡「 🌌 *Install Tema Nebula* 」\n┃ ㊗ Usage: \`${m.prefix}installtemanebula <ip>|<password>\`\n╰┈┈⬡\n\n> \`Contoh: ${m.prefix}installtemanebula 192.168.1.1|secretpass\``, "installtemanebula")
+        return m.reply( `╭┈┈⬡「 🌌 *Install Tema Nebula* 」\n┃ ㊗ Usage: \`${m.prefix}installtemanebula <ip>|<password>\`\n╰┈┈⬡\n\n\`Contoh: ${m.prefix}installtemanebula 192.168.1.1|secretpass\``, "installtemanebula")
     }
 
     const parts = text.split('|')
@@ -95,17 +95,17 @@ function handler(m, { sock }) {
 
     conn.on('ready', async () => {
         try {
-            await m.reply(claraWrap("installtemanebula", `🕕 *[1/3] Preparing Environment...*\n\n> Menginstall Node.js 22, Yarn, dan dependencies...`))
+            await m.reply(claraWrap("installtemanebula", `🕕 *[1/3] Preparing Environment...*\n\nMenginstall Node.js 22, Yarn, dan dependencies...`))
             await execSSH(conn, CMD_DEPS)
 
-            await m.reply(claraWrap("installtemanebula", `🕕 *[2/3] Install Blueprint...*\n\n> Mendownload & konfigurasi Blueprint Framework...`))
+            await m.reply(claraWrap("installtemanebula", `🕕 *[2/3] Install Blueprint...*\n\nMendownload & konfigurasi Blueprint Framework...`))
             await execSSH(conn, CMD_BLUEPRINT)
 
-            await m.reply(claraWrap("installtemanebula", `🕕 *[3/3] Install Nebula...*\n\n> Menginstall tema Nebula (Auto-Confirm)...`))
+            await m.reply(claraWrap("installtemanebula", `🕕 *[3/3] Install Nebula...*\n\nMenginstall tema Nebula (Auto-Confirm)...`))
             await execSSH(conn, CMD_NEBULA)
 
             m.react('✅')
-            await m.reply(claraWrap("installtemanebula", `╭┈┈⬡「 ✅ *Tema Nebula* 」\n┃ ㊗ sTatus: *Terinstall*\n┃ ㊗ Ip: ${ipvps}\n╰┈┈⬡\n\n> _Tema Nebula berhasil diinstall!_`))
+            await m.reply(claraWrap("installtemanebula", `╭┈┈⬡「 ✅ *Tema Nebula* 」\n┃ ㊗ sTatus: *Terinstall*\n┃ ㊗ Ip: ${ipvps}\n╰┈┈⬡\n\n_Tema Nebula berhasil diinstall!_`))
         } catch (err) {
             console.error('[Nebula Install Error]', err)
             m.reply(claraWrap("installtemanebula", te(m.prefix, m.command, m.pushName), "error"))
@@ -114,7 +114,7 @@ function handler(m, { sock }) {
         }
     }).on('error', (err) => {
         console.error('[SSH Error]', err)
-        m.reply(claraWrap("installtemanebula", `❌ Koneksi gagal!\n\n> IP atau Password tidak valid / VPS down.`))
+        m.reply(claraWrap("installtemanebula", `❌ Koneksi gagal!\n\nIP atau Password tidak valid / VPS down.`))
     }).connect(connSettings)
 }
 

@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
         const pending = pendingReset.get(m.sender)
         if (!pending || Date.now() - pending > 60000) {
             pendingReset.delete(m.sender)
-            return m.reply( `❌ Tidak ada permintaan reset yang aktif.\n\n> Ketik \`${m.prefix}hapusdata\` terlebih dahulu`, "hapusdata")
+            return m.reply( `❌ Tidak ada permintaan reset yang aktif.\n\nKetik \`${m.prefix}hapusdata\` terlebih dahulu`, "hapusdata")
         }
 
         pendingReset.delete(m.sender)
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
         txt += `${label}: *${entries}* data (${size})\n`
     }
 
-    txt += `\n> 📦 Total: *${(totalSize / 1024).toFixed(1)} KB*\n`
+    txt += `\n📦 Total: *${(totalSize / 1024).toFixed(1)} KB*\n`
     txt += `💾 Backup otomatis dibuat sebelum reset\n\n`
     txt += `Ketik \`${m.prefix}hapusdata ya\` dalam 60 detik untuk melanjutkan.`
 

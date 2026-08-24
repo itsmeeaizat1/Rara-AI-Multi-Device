@@ -196,7 +196,7 @@ async function handler(m, { sock, args }) {
       const task = tasks.find(t => t.id === id);
 
       task.status = "done";
-      await m.reply(claraWrap("Tugas", `Tugas selesai!\n\n${task.id} - ${task.name}\n> Good job! 🎉`));
+      await m.reply(claraWrap("Tugas", `Tugas selesai!\n\n${task.id} - ${task.name}\nGood job! 🎉`));
       await m.react("🐣");
     }
 

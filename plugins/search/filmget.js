@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     const { data } = await axios.get(apiUrl, { timeout: 30000 });
 
     if (!data?.status || !data?.data) {
-      return m.reply(claraWrap("filmget", "❌ *Gagal*\n\n> Film tidak ditemukan"));
+      return m.reply(claraWrap("filmget", "❌ *Gagal*\n\nFilm tidak ditemukan"));
     }
 
     const film = data.data;

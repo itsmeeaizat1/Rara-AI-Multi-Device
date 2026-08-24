@@ -41,17 +41,17 @@ async function handler(m, { sock }) {
         const participant = groupMeta.participants.find(p => getParticipantJid(p) === target)
 
         if (!participant) {
-            m.reply(claraWrap("Demote", `❌ *Gagal*\n\n> User tidak ditemukan di grup!`))
+            m.reply(claraWrap("Demote", `❌ *Gagal*\n\nUser tidak ditemukan di grup!`))
             return
         }
 
         if (!participant.admin) {
-            await m.reply(claraWrap("Demote", `❌ *Gagal*\n\n> User bukan admin!`))
+            await m.reply(claraWrap("Demote", `❌ *Gagal*\n\nUser bukan admin!`))
             return
         }
 
         if (participant.admin === 'superadmin') {
-            await m.reply(claraWrap("demote", `❌ *Gagal*\n\n> Tidak bisa demote owner grup!`))
+            await m.reply(claraWrap("demote", `❌ *Gagal*\n\nTidak bisa demote owner grup!`))
             return
         }
 

@@ -84,15 +84,15 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("renewsewa", `📝 *PERPANJANG SEWA*\n\n` +
         `Format: *${m.prefix}renewsewa <link/id> <durasi>*\n\n` +
         `*FORMAT DURASI:*\n` +
-        `• 30i = 30 menit\n` +
-        `• 12h = 12 jam\n` +
-        `• 7d = 7 hari\n` +
-        `• 1m = 1 bulan\n` +
-        `• 1y = 1 tahun\n` +
-        `• lifetime = Permanent\n\n` +
+        `30i = 30 menit\n` +
+        `12h = 12 jam\n` +
+        `7d = 7 hari\n` +
+        `1m = 1 bulan\n` +
+        `1y = 1 tahun\n` +
+        `lifetime = Permanent\n\n` +
         `*CONTOH:*\n` +
-        `• ${m.prefix}renewsewa https://chat.whatsapp.com/xxx 30d\n` +
-        `• ${m.prefix}renewsewa 120363xxx 1m\n\n` +
+        `${m.prefix}renewsewa https://chat.whatsapp.com/xxx 30d\n` +
+        `${m.prefix}renewsewa 120363xxx 1m\n\n` +
         `💡 Durasi ditambahkan ke sisa waktu yang ada, bukan di-reset`));
   }
 

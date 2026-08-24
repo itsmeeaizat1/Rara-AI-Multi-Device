@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
         const isMedia = isImage || isVideo || isAudio || isDocument;
 
         if (!isMedia) {
-            return m.reply( `🖼️ *Ganti Asset*\n\n> Silakan reply media (gambar/video/audio/document) dengan pesan \`${m.prefix}ganti-asset\``, "ganti-asset");
+            return m.reply( `🖼️ *Ganti Asset*\n\nSilakan reply media (gambar/video/audio/document) dengan pesan \`${m.prefix}ganti-asset\``, "ganti-asset");
         }
 
         m.react('🕐');
@@ -163,19 +163,19 @@ async function gantiAssetAnswerHandler(m, sock) {
     const isFontUpload = session.isFontUpload;
 
     if (session.imageKeys && session.imageKeys.includes(selectedKey) && !isImageUpload) {
-        await m.reply(claraWrap("Ganti-asset", `❌ Format tidak sesuai!\n> Asset *${selectedKey}* membutuhkan file gambar (Image).`));
+        await m.reply(claraWrap("Ganti-asset", `❌ Format tidak sesuai!\nAsset *${selectedKey}* membutuhkan file gambar (Image).`));
         return true;
     }
     if (session.videoKeys && session.videoKeys.includes(selectedKey) && !isVideoUpload) {
-        await m.reply(claraWrap("Ganti-asset", `❌ Format tidak sesuai!\n> Asset *${selectedKey}* membutuhkan file video.`));
+        await m.reply(claraWrap("Ganti-asset", `❌ Format tidak sesuai!\nAsset *${selectedKey}* membutuhkan file video.`));
         return true;
     }
     if (session.audioKeys && session.audioKeys.includes(selectedKey) && !isAudioUpload) {
-        await m.reply(claraWrap("Ganti-asset", `❌ Format tidak sesuai!\n> Asset *${selectedKey}* membutuhkan file audio.`));
+        await m.reply(claraWrap("Ganti-asset", `❌ Format tidak sesuai!\nAsset *${selectedKey}* membutuhkan file audio.`));
         return true;
     }
     if (session.fontKeys && session.fontKeys.includes(selectedKey) && !isFontUpload) {
-        await m.reply(claraWrap("Ganti-asset", `❌ Format tidak sesuai!\n> Asset *${selectedKey}* membutuhkan file dokumen font (.ttf/.otf).`));
+        await m.reply(claraWrap("Ganti-asset", `❌ Format tidak sesuai!\nAsset *${selectedKey}* membutuhkan file dokumen font (.ttf/.otf).`));
         return true;
     }
 
@@ -190,7 +190,7 @@ async function gantiAssetAnswerHandler(m, sock) {
 
     try {
         const newPath = await updateAssetUrl(selectedKey, session.buffer, filename);
-        { const __navText = `✅ *BERHASIL*\n\n> Asset *${selectedKey}* telah diganti ke:\n> ${newPath}\n> Config telah diupdate secara realtime!`; await m.reply(__navText); };
+        { const __navText = `✅ *BERHASIL*\n\nAsset *${selectedKey}* telah diganti ke:\n${newPath}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); };
         delete global.gantiAssetSessions[m.chat];
         await m.react('✅');
     } catch (e) {

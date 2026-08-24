@@ -39,20 +39,20 @@ async function handler(m, { sock }) {
     
     if (arg === 'on' || arg === '1' || arg === 'aktif') {
         if (current) {
-            return m.reply(claraWrap("Automedia", `🎬 *Automedia*\n\n> Sudah aktif!`))
+            return m.reply(claraWrap("Automedia", `🎬 *Automedia*\n\nSudah aktif!`))
         }
         db.setGroup(m.chat, { automedia: true })
         await db.save()
-        return m.reply(claraWrap("Automedia", `🎬 *Automedia*\n\n> ✅ Berhasil diaktifkan!\n> Sticker akan otomatis jadi gambar/video`))
+        return m.reply(claraWrap("Automedia", `🎬 *Automedia*\n\n✅ Berhasil diaktifkan!\nSticker akan otomatis jadi gambar/video`))
     }
     
     if (arg === 'off' || arg === '0' || arg === 'nonaktif') {
         if (!current) {
-            return m.reply(claraWrap("Automedia", `🎬 *Automedia*\n\n> Sudah nonaktif!`))
+            return m.reply(claraWrap("Automedia", `🎬 *Automedia*\n\nSudah nonaktif!`))
         }
         db.setGroup(m.chat, { automedia: false })
         await db.save()
-        { const __navText = `🎬 *Automedia*\n\n> ❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
+        { const __navText = `🎬 *Automedia*\n\n❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
     }
     
     return m.reply(`❌ Gunakan: \`${m.prefix}automedia on/off\``)

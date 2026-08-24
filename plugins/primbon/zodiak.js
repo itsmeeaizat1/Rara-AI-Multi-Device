@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const zodiac = m.args[0]?.toLowerCase()
     
     if (!zodiac || !validZodiacs.includes(zodiac)) {
-        return m.reply(`⭐ *Zodiak*\n\n> Masukkan nama zodiak:\n\n${validZodiacs.map(z => `• ${z}`).join('\n')}\n\n\`Contoh: ${m.prefix}zodiak aries\``)
+        return m.reply(`⭐ *Zodiak*\n\nMasukkan nama zodiak:\n\n${validZodiacs.map(z => `${z}`).join('\n')}\n\n\`Contoh: ${m.prefix}zodiak aries\``)
     }
     
     m.react('🕐')
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(claraWrap("zodiak", `❌ *Gagal*\n\n> Gagal mendapatkan ramalan`))
+            return m.reply(claraWrap("zodiak", `❌ *Gagal*\n\nGagal mendapatkan ramalan`))
         }
         
         const r = data.data

@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
         const buffer = await downloadFn()
 
         if (!buffer || buffer.length === 0) {
-            return m.reply(claraWrap("Tovideo", `❌ *GAGAL*\n\n> Tidak dapat mengunduh sticker.`))
+            return m.reply(claraWrap("Tovideo", `❌ *GAGAL*\n\nTidak dapat mengunduh sticker.`))
         }
 
         const animated = isAnimatedWebp(buffer)
@@ -137,20 +137,20 @@ async function handler(m, { sock }) {
             const pngBuffer = await sharp(buffer).png().toBuffer()
             await sock.sendMessage(m.chat, {
                 image: pngBuffer,
-                caption: `✅ *BERHAsIL*\n\n> Sticker statis → gambar`
+                caption: `✅ *BERHAsIL*\n\nSticker statis → gambar`
             }, { quoted: m })
             await m.react('✅')
             return
         }
         const gifBuffer = await webpToGif(buffer)
         if (!gifBuffer) {
-            return m.reply(claraWrap("tovideo", `❌ *GAGAL*\n\n> Sticker tidak bisa dikonversi (tidak animated)`))
+            return m.reply(claraWrap("tovideo", `❌ *GAGAL*\n\nSticker tidak bisa dikonversi (tidak animated)`))
         }
 
         const mp4Buffer = await gifToMp4(gifBuffer)
 
         if (!mp4Buffer || mp4Buffer.length < 100) {
-            return m.reply(claraWrap("Tovideo", `❌ *GAGAL*\n\n> Video output kosong`))
+            return m.reply(claraWrap("Tovideo", `❌ *GAGAL*\n\nVideo output kosong`))
         }
 
         await sock.sendMedia(m.chat, mp4Buffer, null, m, {

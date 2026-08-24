@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim()
 
     if (!query) {
-        { const __navText = `📚 *MANGATOON SEARCH*\n\n> Contoh:\n\`${m.prefix}mangatoon love\``; return await m.reply( __navText, "mangatoon"); }
+        { const __navText = `📚 *MANGATOON SEARCH*\n\nContoh:\n\`${m.prefix}mangatoon love\``; return await m.reply( __navText, "mangatoon"); }
     }
 
     m.react('🕐')

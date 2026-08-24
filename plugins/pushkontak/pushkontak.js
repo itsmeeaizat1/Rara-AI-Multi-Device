@@ -402,7 +402,7 @@ async function handleSetJeda(m, sock) {
         `⏱️ *SET JEDA PUSH KONTAK*\n\n` +
         `📋 *Mengatur interval antar pengiriman pesan*\n\n` +
         `⏱️ *Jeda saat ini:* ${current}ms (${(current / 1000).toFixed(1)} detik)\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `📝 *${m.prefix}setjedapush <milidetik>* — Mengubah jeda push\n\n` +
         `*PENJELASAN:*\n` +
         `1. Jeda adalah waktu tunggu antar pengiriman pesan ke setiap member\n` +
@@ -528,12 +528,12 @@ async function handlePush(m, sock) {
       m,
       `📢 *PUSH KONTAK*\n\n` +
       `📋 *Kirim pesan ke semua member grup secara otomatis + simpan kontak ke file VCF*\n\n` +
-      `*PENGGUNAAN:*\n` +
+      `*Cara Pakai:*\n` +
       `📝 *${m.prefix}pushkontak <pesan>* — Push langsung dengan pesan\n` +
       `📢 *${m.prefix}pushkontak* — Buka menu interaktif\n` +
       `⏹️ *${m.prefix}stoppush* — Hentikan push yang sedang berjalan\n` +
       `⏱️ *${m.prefix}setjedapush <ms>* — Atur jeda antar pengiriman\n\n` +
-      `*PENJELASAN ALUR PENGGUNAAN:*\n` +
+      `*Alur Pakai:*\n` +
       `1. Pastikan grup dalam mode pushkontak: *${m.prefix}botmode pushkontak*\n` +
       `2. Ketik *${m.prefix}pushkontak* lalu pilih "Mulai Push" dari menu\n` +
       `3. Bot akan meminta kamu menginput pesan yang ingin dikirim via reply\n` +

@@ -36,9 +36,9 @@ async function handler(m, { sock }) {
         `1️⃣ Reply pesan dari pembeli (yang sudah membayar 💰)\n` +
         `2️⃣ Ketik \`${m.prefix}done TRX-001\`\n\n` +
         `🤖 Bot akan otomatis:\n` +
-        `• Mengirim data produk ke nomor pembeli 📤\n` +
-        `• Menandai transaksi sebagai selesai ✅\n` +
-        `• Mengirim notifikasi ke pembeli 🔔\n\n` +
+        `Mengirim data produk ke nomor pembeli 📤\n` +
+        `Menandai transaksi sebagai selesai ✅\n` +
+        `Mengirim notifikasi ke pembeli 🔔\n\n` +
         `🧾 *Nomor transaksi* didapat ketika pembeli melakukan \`${m.prefix}beli <nomor_produk>\`\n\n` +
         `⚠️ _Pastikan Anda sudah menerima bukti pembayaran sebelum konfirmasi_ 📸`,
     );
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
         const time = new Date(t.createdAt).toLocaleString("id-ID", {
           timeZone: "Asia/Jakarta",
         });
-        txt += `• 🧾 \`${t.trxId}\` — ${typeIcon} ${t.productName} (${formatPrice(t.price)}) oleh ${t.buyerName}\n`;
+        txt += `🧾 \`${t.trxId}\` — ${typeIcon} ${t.productName} (${formatPrice(t.price)}) oleh ${t.buyerName}\n`;
         txt += `  🕐 _${time}_\n\n`;
       }
       txt += `📌 Reply pesan pembeli lalu ketik: \`${m.prefix}done <nomor_trx>\``;

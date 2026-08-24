@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
         txt += `${status} *${i + 1}.* @${s.id} — _${label}_\n`
     })
 
-    txt += `\n> \`${m.prefix}listjadibotaktif\` — Detail aktif\n`
+    txt += `\n\`${m.prefix}listjadibotaktif\` — Detail aktif\n`
     txt += `\`${m.prefix}stopalljadibot\` — Stop semua\n`
     txt += `\`${m.prefix}stopdandeletejadibot @user\` — Hapus session`
 

@@ -39,20 +39,20 @@ async function handler(m, { sock }) {
     
     if (arg === 'on' || arg === '1' || arg === 'aktif') {
         if (current) {
-            return m.reply(claraWrap("Autosticker", `🖼️ *Autosticker*\n\n> Sudah aktif!`))
+            return m.reply(claraWrap("Autosticker", `🖼️ *Autosticker*\n\nSudah aktif!`))
         }
         db.setGroup(m.chat, { autosticker: true })
         await db.save()
-        return m.reply(claraWrap("Autosticker", `🖼️ *Autosticker*\n\n> ✅ Berhasil diaktifkan!\n> Gambar/video akan otomatis jadi sticker`))
+        return m.reply(claraWrap("Autosticker", `🖼️ *Autosticker*\n\n✅ Berhasil diaktifkan!\nGambar/video akan otomatis jadi sticker`))
     }
     
     if (arg === 'off' || arg === '0' || arg === 'nonaktif') {
         if (!current) {
-            return m.reply(claraWrap("Autosticker", `🖼️ *Autosticker*\n\n> Sudah nonaktif!`))
+            return m.reply(claraWrap("Autosticker", `🖼️ *Autosticker*\n\nSudah nonaktif!`))
         }
         db.setGroup(m.chat, { autosticker: false })
         await db.save()
-        { const __navText = `🖼️ *Autosticker*\n\n> ❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
+        { const __navText = `🖼️ *Autosticker*\n\n❌ Berhasil dinonaktifkan!`; return await m.reply(__navText); }
     }
     
     return m.reply(`❌ Gunakan: \`${m.prefix}autosticker on/off\``)

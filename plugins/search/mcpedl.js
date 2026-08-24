@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim()
 
     if (!query) {
-        { const __navText = `🧱 *MCPEDL SEARCH*\n\n> Contoh:\n\`${m.prefix}mcpe survival\``; return await m.reply( __navText, "mcpedl"); }
+        { const __navText = `🧱 *MCPEDL SEARCH*\n\nContoh:\n\`${m.prefix}mcpe survival\``; return await m.reply( __navText, "mcpedl"); }
     }
 
     m.react('🕐')

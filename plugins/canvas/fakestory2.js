@@ -193,7 +193,7 @@ async function handler(m, { sock }) {
       imageBuffer = await m.quoted.download();
     }
     if (!imageBuffer) {
-      return m.reply(claraWrap("Fakestory2", `❌ *Gagal*\n\n> Tidak bisa download gambar`));
+      return m.reply(claraWrap("Fakestory2", `❌ *Gagal*\n\nTidak bisa download gambar`));
     }
     const resultBuffer = await createFakeStory(
       username,

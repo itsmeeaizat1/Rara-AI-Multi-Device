@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply( `🤖 *GPT-4.1 Nano*\n\n` +
         `Tanya apa aja ke AI, nanti dijawab pakai model GPT-4.1 Nano.\n\n` +
-        `*PENGGUNAAN:*\n` +
+        `*Cara Pakai:*\n` +
         `*${m.prefix}gpt5 <pertanyaan>*\n\n` +
         `*CONTOH:*\n` +
         `*${m.prefix}gpt5 Apa itu quantum computing?*\n` +
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const result = await GPT5(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("GPT-5 Gagal", `❌ *GPT-5 Gagal*\n\n> ${result.error || "Gagal mendapatkan respons"}`));
+      return m.reply(claraWrap("GPT-5 Gagal", `❌ *GPT-5 Gagal*\n\n${result.error || "Gagal mendapatkan respons"}`));
     }
 
     await m.react("🐣");

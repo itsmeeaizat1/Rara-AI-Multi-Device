@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
   if (
     !/^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?(\.[a-zA-Z]{2,})+$/.test(domain)
   ) {
-    { const __navText = `❌ *ғORMAT TIDAK VALID*\n\n> Contoh: \`google.com\``; return await m.reply(__navText); };
+    { const __navText = `❌ *ғORMAT TIDAK VALID*\n\nContoh: \`google.com\``; return await m.reply(__navText); };
   }
 
   await m.react("🕒");
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
     const whoisData = whoisRes.status === "fulfilled" ? whoisRes.value : null;
 
     if (!dnsData && !whoisData) {
-      return m.reply(claraWrap("Lookup", `❌ *GAGAL*\n\n> Tidak dapat memproses domain`));
+      return m.reply(claraWrap("Lookup", `❌ *GAGAL*\n\nTidak dapat memproses domain`));
     }
 
     let text = `🔍 *DNs LOOKUP*\n\n`;

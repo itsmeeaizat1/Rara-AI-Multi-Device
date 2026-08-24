@@ -35,10 +35,10 @@ async function handler(m, { sock }) {
         
         return m.reply(claraWrap("resetdb", `⚠️ *Peringatan!*\n\n` +
             `Ini akan menghapus SEMUA data:\n` +
-            `• Data user\n` +
-            `• Data group\n` +
-            `• Data clan\n` +
-            `• Semua statistik\n\n` +
+            `Data user\n` +
+            `Data group\n` +
+            `Data clan\n` +
+            `Semua statistik\n\n` +
             `╭┈┈⬡「 ⚠️ *KonғIrmasi* 」\n` +
             `┃ Ketik: *.resetdb confirm*\n` +
             `┃ dalam 60 detik\n` +

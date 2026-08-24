@@ -37,7 +37,7 @@ async function handler(m, { sock, config }) {
         list += `👤 ${num}: *${name}*\n`;
       });
     } else {
-      list += `\n> Belum ada nama custom untuk owner tambahan`;
+      list += `\nBelum ada nama custom untuk owner tambahan`;
     }
     list += `\n\n*Penggunaan:*\n`;
     list += `\`${m.prefix}ganti-namaowner <nomor> <nama>\`\n`;
@@ -48,7 +48,7 @@ async function handler(m, { sock, config }) {
   if (input[0].toLowerCase() === "main") {
     const newName = input.slice(1).join(" ").trim();
     if (!newName) {
-      return m.reply( `👤 *Ganti Nama Owner Utama*\n\n> Nama saat ini: *${config.owner?.name || "-"}*\n\n\`${m.prefix}ganti-namaowner main <nama baru>\``, "ganti-namaowner");
+      return m.reply( `👤 *Ganti Nama Owner Utama*\n\nNama saat ini: *${config.owner?.name || "-"}*\n\n\`${m.prefix}ganti-namaowner main <nama baru>\``, "ganti-namaowner");
     }
     try {
       const configPath = path.join(process.cwd(), "config.js");
@@ -62,7 +62,7 @@ async function handler(m, { sock, config }) {
       );
       fs.writeFileSync(configPath, configContent);
       config.owner.name = newName;
-      return m.reply(claraWrap("Ganti-namaowner", `✅ *Berhasil*\n\n> Nama owner utama diganti ke: *${newName}*`));
+      return m.reply(claraWrap("Ganti-namaowner", `✅ *Berhasil*\n\nNama owner utama diganti ke: *${newName}*`));
     } catch (error) {
       return m.reply(claraWrap("ganti-namaowner", te(m.prefix, m.command, m.pushName), "error"));
     }
@@ -72,19 +72,19 @@ async function handler(m, { sock, config }) {
   const newName = input.slice(1).join(" ").trim();
 
   if (!targetNumber || targetNumber.length < 10) {
-    return m.reply( `❌ *Gagal*\n\n> Nomor tidak valid\n\n\`${m.prefix}ganti-namaowner 628xxx NamaOwner\``, "ganti-namaowner");
+    return m.reply( `❌ *Gagal*\n\nNomor tidak valid\n\n\`${m.prefix}ganti-namaowner 628xxx NamaOwner\``, "ganti-namaowner");
   }
 
   if (!newName) {
     const currentName = getOwnerName(targetNumber);
-    return m.reply( `👤 *Nama Owner*\n\n> ${targetNumber}: *${currentName}*\n\n\`${m.prefix}ganti-namaowner ${targetNumber} <nama baru>\``, "ganti-namaowner");
+    return m.reply( `👤 *Nama Owner*\n\n${targetNumber}: *${currentName}*\n\n\`${m.prefix}ganti-namaowner ${targetNumber} <nama baru>\``, "ganti-namaowner");
   }
 
   const nameMap = db.setting("ownerNames") || {};
   nameMap[targetNumber] = newName;
   db.setting("ownerNames", nameMap);
 
-  return m.reply(claraWrap("Ganti-namaowner", `✅ *Berhasil*\n\n> Nama owner *${targetNumber}* diganti ke: *${newName}*`));
+  return m.reply(claraWrap("Ganti-namaowner", `✅ *Berhasil*\n\nNama owner *${targetNumber}* diganti ke: *${newName}*`));
 }
 
 export { pluginConfig as config, handler };

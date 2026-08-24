@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
         
         await sock.sendMessage(m.chat, {
             image: { url: apiUrl },
-            caption: `📱 *QR Code*\n> ${data.substring(0, 50)}${data.length > 50 ? '...' : ''}`
+            caption: `📱 *QR Code*\n${data.substring(0, 50)}${data.length > 50 ? '...' : ''}`
         }, { quoted: m })
         
         m.react('🕐')
