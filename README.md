@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-Merge%20branch%20'main'%20of%20https%3A%2F-success?style=for-the-badge)
-> *Commit: "Merge branch 'main' of https://github.com/itsmeeaizat/Nova-AI-Whatsapp-Bot-Multi-Device"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20redesign%20menu%20futuristik-success?style=for-the-badge)
+> *Commit: "feat: redesign menu futuristik v4 + update semua output plugin"*
 <!--END_SECTION:latest-update-->
 
 
