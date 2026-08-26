@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20redesign%20menu%20elegan-success?style=for-the-badge)
-> *Commit: "refactor: redesign menu elegant — bot name cuma di footer akhir"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20menu%20style%20%E2%97%88%2F%E2%94%8A%20untuk-success?style=for-the-badge)
+> *Commit: "refactor: menu style ◈/┊ untuk info+list command (sesuai referensi user)"*
 <!--END_SECTION:latest-update-->
 
 
