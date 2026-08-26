@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20simplify%20alias%20%E2%80%94%20han-success?style=for-the-badge)
-> *Commit: "refactor: simplify alias — hanya nama cmd, buang alias acak"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20hapus%20sisa%20loading%20teks%20(-success?style=for-the-badge)
+> *Commit: "fix: hapus sisa loading teks (⏳/Tunggu sebentar) & fix header 」 yang missing di 16 file"*
 <!--END_SECTION:latest-update-->
 
 
