@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-style%3A%20purge%20semua%20style%20lama%20-success?style=for-the-badge)
-> *Commit: "style: purge semua style lama — ❀°˖✧, ┊ ➶, ❀⋆｡˚ → Clara-MD box (╭── │ ❏ ╰──❀)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20loading%20text%20%E2%8F%B3-success?style=for-the-badge)
+> *Commit: "refactor: hapus loading text ⏳, ganti dengan react 🕒→🐣"*
 <!--END_SECTION:latest-update-->
 
 
