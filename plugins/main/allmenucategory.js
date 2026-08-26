@@ -139,7 +139,7 @@ async function handler(m, { sock, db }) {
 │ ❏ Ⓐ = Hanya untuk admin
 │ ❏ Ⓖ = Hanya di dalam grup
 │ ❏ Ⓟ = Hanya di private chat
-╰──────────◈
+╰──────────❀
 `;
 
       for (const cat of visibleCats) {
@@ -157,7 +157,7 @@ async function handler(m, { sock, db }) {
         }
       }
 
-      txt += `╰──────────◈\n`;
+      txt += `╰──────────❀\n`;
 
       const buttons = [
         { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
@@ -210,7 +210,7 @@ async function handler(m, { sock, db }) {
 
     if (!matchedCat) {
       await m.reply(
-        `╭──「 *Error* 」\n╎\n│ ❏ Kategori \`${categoryArg}\` tidak ditemukan\n│ ❏ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰──────────◈`
+        `╭──「 *Error* 」\n╎\n│ ❏ Kategori \`${categoryArg}\` tidak ditemukan\n│ ❏ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰──────────❀`
       );
       await m.react("❌");
       return;
@@ -218,7 +218,7 @@ async function handler(m, { sock, db }) {
 
     if (matchedCat === "owner" && !m.isOwner) {
       await m.reply(
-        `╭──「 *Akses Ditolak* 」\n╎\n│ ❏ Kategori ini hanya untuk owner\n╰──────────◈`
+        `╭──「 *Akses Ditolak* 」\n╎\n│ ❏ Kategori ini hanya untuk owner\n╰──────────❀`
       );
       await m.react("❌");
       return;
@@ -230,7 +230,7 @@ async function handler(m, { sock, db }) {
 
     if (allCommands.length === 0) {
       await m.reply(
-        `╭──「 *Kosong* 」\n╎\n│ ❏ Kategori \`${matchedCat}\` tidak ada command\n╰──────────◈`
+        `╭──「 *Kosong* 」\n╎\n│ ❏ Kategori \`${matchedCat}\` tidak ada command\n╰──────────❀`
       );
       await m.react("❌");
       return;
@@ -256,7 +256,7 @@ async function handler(m, { sock, db }) {
       txt += `│ ❏ ${prefix}${cmd}${symbols}\n`;
     }
 
-    txt += `╰──────────◈\n`;
+    txt += `╰──────────❀\n`;
 
     const buttons2 = [
       { buttonId: `${prefix}allmenucategory`, buttonText: { displayText: "📂 Kategori Lain" }, type: 1 },

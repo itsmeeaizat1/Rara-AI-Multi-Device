@@ -164,7 +164,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ ❏ *Load Avg:* ${loadAvg}
 │ ❏ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
 │ ❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
-╰──────────◈
+╰──────────❀
 ${weatherBlock}${readMore}
 ╭──「 *Menu* 」
 │ ❏ ${prefix}menu
@@ -180,7 +180,7 @@ ${weatherBlock}${readMore}
 │ ❏ ${prefix}sewa
 │ ❏ ${prefix}payment
 │ ❏ ${prefix}listban
-╰──────────◈
+╰──────────❀
 
 *Total: ${totalFitur} Fitur*
 

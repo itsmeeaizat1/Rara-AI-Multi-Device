@@ -205,7 +205,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ ❏ *Load Avg:* ${loadAvg}
 │ ❏ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
 │ ❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
-╰──────────◈
+╰──────────❀
 ${weatherBlock}${readMore}
 ╭──「 *Keterangan* 」
 │ ❏ Ⓞ = Hanya untuk owner
@@ -214,7 +214,7 @@ ${weatherBlock}${readMore}
 │ ❏ Ⓐ = Hanya untuk admin
 │ ❏ Ⓖ = Hanya di dalam grup
 │ ❏ Ⓟ = Hanya di private chat
-╰──────────◈
+╰──────────❀
 `;
 
     // ── Category commands (Clara-MD box style) ──
@@ -252,7 +252,7 @@ ${weatherBlock}${readMore}
       }
     }
 
-    txt += `╰──────────◈\n`;
+    txt += `╰──────────❀\n`;
 
     // ── Send: type 1 buttons + externalAdReply di ROOT ──
     const menuThumb = getThumb();
