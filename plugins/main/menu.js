@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menu.js — Menu utama (elegant, ringkas, tombol navigasi)
+// menu.js — Menu utama (elegant, style ◈/┊ untuk info + list command)
 import { getCasesByCategory } from "../../case/nova.js";
-import config from "../../config.js";
 import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
 import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/nova-time.js";
 import {
@@ -12,7 +11,7 @@ import path from "path";
 import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { bracketBox } from "../../src/lib/nova-menu-style.js";
+import { infoBox, listBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "menu",
@@ -47,10 +46,9 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const expMax = userLevel * 20000;
     const expCurr = userExp - expMin;
 
-    let weatherLine = "";
+    let weatherLine = null;
     try {
-      const addr = await getWeatherAddress();
-      if (addr) weatherLine = addr;
+      weatherLine = await getWeatherAddress();
     } catch {}
 
     const pluginCats = getCategories();
@@ -62,27 +60,45 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
-    const profileBox = bracketBox("👋", "User Profile", [
-      `${getTimeGreeting()}, *${m.pushName || "User"}*`,
-      `Role: ${roleEmoji} ${userRole}`,
-      `Energi: ${m.isOwner || m.isPremium ? "∞" : (user?.energi ?? 25)}`,
-      `Limit: ${m.isOwner || m.isPremium ? "∞" : (user?.limit ?? "-")}`,
-      `Level: ${userLevel} · ${expCurr.toLocaleString()}/${(expMax - expMin).toLocaleString()} XP`,
-      `Waktu: ${timeStr} WIB · ${dateStr}`,
-      ...(weatherLine ? [`Cuaca: ${weatherLine}`] : []),
-    ]);
+    const infoText = infoBox(botName, {
+      intro: `${getTimeGreeting()} *${m.pushName || "User"}* 👋`,
+      sections: [
+        {
+          heading: "User",
+          lines: [
+            `Nama: ${m.pushName || "User"}`,
+            `Nomor: @${m.sender.split("@")[0]}`,
+            `Role: ${roleEmoji} ${userRole}`,
+            `Premium: ${m.isPremium ? "Aktif" : "Free"}`,
+            `Energi: ${m.isOwner || m.isPremium ? "∞" : (user?.energi ?? 25)}`,
+            `Limit: ${m.isOwner || m.isPremium ? "∞" : (user?.limit ?? "-")}`,
+            `Level: ${userLevel} · ${expCurr.toLocaleString()}/${(expMax - expMin).toLocaleString()} XP`,
+          ],
+        },
+        {
+          heading: "Bot",
+          lines: [
+            `Nama: ${botName}`,
+            `Version: ${botConfig.bot?.version || "-"}`,
+            `Prefix: [ ${prefix} ]`,
+            `Waktu: ${timeStr} WIB · ${dateStr}`,
+            ...(weatherLine ? [`Cuaca: ${weatherLine}`] : []),
+          ],
+        },
+      ],
+    });
 
-    const quickMenuBox = bracketBox("📋", "Quick Menu", [
+    const quickMenuText = listBox("Quick Menu", [
       `${prefix}allmenu — semua fitur`,
       `${prefix}allmenucategory — fitur per kategori`,
       `${prefix}tanyaai — tanya AI`,
       `${prefix}owner — kontak owner`,
     ]);
 
-    return `${profileBox}\n\n${quickMenuBox}\n\nTotal ${totalFitur} fitur · prefix [ ${prefix} ]\n${botName}`;
+    return `${infoText}\n\n${quickMenuText}\n\nTotal ${totalFitur} fitur · prefix [ ${prefix} ]\n${botName}`;
   } catch (e) {
     console.error("[menu] buildMenuText error:", e.message);
-    return `╭─「 Menu 」\n│ Error: ${e.message}\n╰─`;
+    return `╭─「 Menu 」\n│ Error: ${e.message}\n╰──────────────`;
   }
 }
 

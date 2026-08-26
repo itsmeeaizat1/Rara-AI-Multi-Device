@@ -1,9 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenu.js — Semua fitur (elegant, ringkas, tombol navigasi)
+// allmenu.js — Semua fitur (elegant, style ◈ untuk list command)
 import { getCasesByCategory } from "../../case/nova.js";
-import config from "../../config.js";
 import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
-import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/nova-time.js";
 import {
   getCommandsByCategory,
   getCategories,
@@ -11,7 +9,7 @@ import {
 import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { bracketBox } from "../../src/lib/nova-menu-style.js";
+import { listBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "allmenu",
@@ -84,16 +82,17 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
       const catName = CATEGORY_NAMES[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
       const catEmoji = CATEGORY_EMOJIS[cat] || "📂";
 
-      const cmdList = allCmds.map(cmd => `${prefix}${cmd}`);
-      categorySections.push(bracketBox(catEmoji, catName, cmdList));
+      const items = allCmds.map(cmd => `${prefix}${cmd}`);
+      categorySections.push(listBox(`${catEmoji} ${catName}`, items));
     }
 
-    const header = `${getTimeGreeting()}, *${m.pushName || "User"}* 👋 — daftar lengkap semua fitur`;
+    const header = `${getTimeGreeting()} *${m.pushName || "User"}* 👋 — daftar lengkap semua fitur`;
+    const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
-    return `${header}\n\n${categorySections.join("\n\n")}\n\nTotal ${totalFitur} fitur · prefix [ ${prefix} ]\n${botConfig.bot?.name || "Nova AI Whatsapp Bot"}`;
+    return `${header}\n\n${categorySections.join("\n\n")}\n\nTotal ${totalFitur} fitur · prefix [ ${prefix} ]\n${botName}`;
   } catch (e) {
     console.error("[allmenu] buildAllMenuText error:", e.message);
-    return `╭─「 All Menu 」\n│ Error: ${e.message}\n╰─`;
+    return `╭─「 All Menu 」\n│ Error: ${e.message}\n╰──────────────`;
   }
 }
 

@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menu2.js — Quick menu shortcut (elegant, ringkas, tombol navigasi)
-import config from "../../config.js";
+// menu2.js — Quick menu shortcut (elegant, style ◈ untuk list command)
 import {
   getCommandsByCategory,
   getCategories,
@@ -8,7 +7,7 @@ import {
 import { getCasesByCategory } from "../../case/nova.js";
 import path from "path";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { bracketBox } from "../../src/lib/nova-menu-style.js";
+import { listBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "menu2",
@@ -43,8 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
-    const linkLines = QUICK_LINKS
-      .map((q) => `${q.emoji} ${prefix}${q.cmd} — ${q.label}`);
+    const items = QUICK_LINKS.map((q) => `${q.emoji} ${prefix}${q.cmd} — ${q.label}`);
 
     const totalFitur = (() => {
       const pluginCats = getCategories();
@@ -56,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
       return total;
     })();
 
-    const text = `${bracketBox("📋", "Quick Menu", linkLines)}\n\nTotal ${totalFitur} fitur\n${botName}`;
+    const text = `${listBox("Quick Menu", items)}\n\nTotal ${totalFitur} fitur\n${botName}`;
 
     const navButtons = [
       { id: `${prefix}menu`, text: "🏠 Menu" },
