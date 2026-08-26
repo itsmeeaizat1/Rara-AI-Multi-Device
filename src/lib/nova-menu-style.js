@@ -310,7 +310,7 @@ function buildNavButtons(prefix, isAllMenuCtx, allCatKeys, commandsByCategory, c
 export {
   // Indo Dev Style v5
   botHeader, botSignature, sectionBox, progressBar, statusDot,
-  kv, categoryBox, CATEGORY_ORDER,
+  kv, categoryBox, CATEGORY_ORDER, CATEGORY_NAMES, CATEGORY_EMOJIS,
   // Backward compat (Indo Dev Style output, same signature)
   buildNavButtons,
   claraHeader, alyaHeader, bracketBox, claraWrap, claraLine,
