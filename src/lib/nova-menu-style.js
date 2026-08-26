@@ -23,10 +23,10 @@ function botHeader(botName) {
 }
 
 /**
- * Bot signature footer — ❀°˖✧ BotName ✧˖°❀
+ * Bot signature footer — ╰──────────❀
  */
 function botSignature(botName) {
-  return `❀°˖✧ ${toSC(botName)} ✧˖°❀`;
+  return `╰──────────❀`;
 }
 
 /**

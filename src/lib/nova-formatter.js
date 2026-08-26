@@ -44,20 +44,20 @@ import * as timeHelper from './nova-time.js'
  * @constant
  */
 const CHARS = {
-  cornerTopLeft: "❀",
-  cornerTopRight: "❀",
-  cornerBottomLeft: "❀",
+  cornerTopLeft: "╭",
+  cornerTopRight: "─",
+  cornerBottomLeft: "╰",
   cornerBottomRight: "❀",
-  horizontal: "˖",
-  vertical: "┊",
-  arrow: "➶",
-  bullet: "➶",
+  horizontal: "─",
+  vertical: "│",
+  arrow: "❏",
+  bullet: "❏",
   star: "✦",
   diamond: "◇",
   dot: "•",
   check: "",
   cross: "✗",
-  line: "˖",
+  line: "─",
 };
 
 /**
@@ -189,7 +189,7 @@ function createLine(length = 20, char = CHARS.horizontal) {
  * // "╭─「 DASHBOARD 」─────╮"
  */
 function createHeader(title, width = 20) {
-  return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${title}`;
+  return `╭──「 ${title} 」`;
 }
 
 /**
@@ -200,7 +200,7 @@ function createHeader(title, width = 20) {
  * createFooter(); // "╰────────────────────╯"
  */
 function createFooter(width = 20) {
-  return `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+  return `╰──────────❀`;
 }
 
 /**

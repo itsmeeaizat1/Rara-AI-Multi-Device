@@ -11,7 +11,7 @@ function formatNumber(num) {
 }
 
 function tipText(text) {
-  return `  ┊  ➶ 💡 *Tip:* ${text}`;
+  return `  │ ❏ 💡 *Tip:* ${text}`;
 }
 
 function smartGreeting(prefix = ".", userName = "") {
@@ -22,27 +22,27 @@ function smartGreeting(prefix = ".", userName = "") {
   else if (hour >= 14 && hour < 18) timeGreeting = "Selamat sore";
 
   const namePart = userName ? `, ${userName}` : "";
-  return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀\n┊\n  ┊  ➶ ${timeGreeting}${namePart}! Ada yang bisa aku bantu?\n┊\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+  return `╭──「\n│\n  │ ❏ ${timeGreeting}${namePart}! Ada yang bisa aku bantu?\n│\n╰──────────❀`;
 }
 
 function previewBlock(items = [], title = "Preview") {
   const lines = items.map(([label, value]) => {
     const val = typeof value === "undefined" || value === null ? "tidak diketahui" : value;
-    return `  ┊  ➶ *${label}:* ${val}`;
+    return `  │ ❏ *${label}:* ${val}`;
   });
-  return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${title}\n┊\n${lines.join("\n")}\n┊\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+  return `╭──「 ${title}\n│\n${lines.join("\n")}\n│\n╰──────────❀`;
 }
 
 function resultBlock(title, items = [], prefix = ".") {
   const body = items.map((item, i) => {
     if (typeof item === "string") {
-      return `  ┊  ➶ ${i + 1}. ${prefix}${item}`;
+      return `  │ ❏ ${i + 1}. ${prefix}${item}`;
     }
     const name = item.name || item.command || "unknown";
     const alias = Array.isArray(item.alias) && item.alias.length ? ` (${item.alias.slice(0, 2).join(", ")})` : "";
-    return `  ┊  ➶ ${i + 1}. ${prefix}${name}${alias}`;
+    return `  │ ❏ ${i + 1}. ${prefix}${name}${alias}`;
   });
-  return [`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${title}`, `┊`, ...body, `┊`, `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`].join("\n");
+  return [`╭──「 ${title} 」`, `│`, ...body, `│`, `╰──────────❀`].join("\n");
 }
 
 function aiChatBlock(role, text) {
@@ -57,8 +57,8 @@ function chatBubble(role, text) {
 }
 
 function infoBlock(title, lines = []) {
-  const body = lines.map((line) => `  ┊  ➶ ${line}`);
-  return [`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${title}`, `┊`, ...body, `┊`, `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`].join("\n");
+  const body = lines.map((line) => `  │ ❏ ${line}`);
+  return [`╭──「 ${title} 」`, `│`, ...body, `│`, `╰──────────❀`].join("\n");
 }
 
 function userInfoBlock(name, id, role = "User") {

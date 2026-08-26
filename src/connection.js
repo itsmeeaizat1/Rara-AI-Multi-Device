@@ -610,15 +610,15 @@ async function startConnection(options = {}) {
             const nodeVer = process.version;
 
             const notifText = [
-              "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Notifikasi Pairing",
-              "  ┊  ➶ *Bot:* " + (config.bot?.name || "Nova-AI"),
-              "  ┊  ➶ *Versi:* " + (config.bot?.version || "v20.0.0"),
-              "  ┊  ➶ *Nomor Bot:* " + botNum,
-              "  ┊  ➶ *Waktu:* " + waktu,
-              "  ┊  ➶ *Host:* " + hostname,
-              "  ┊  ➶ *Platform:* " + platform,
-              "  ┊  ➶ *Node:* " + nodeVer,
-              "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
+              "╭──「 Notifikasi Pairing 」",
+              "  │ ❏ *Bot:* " + (config.bot?.name || "Nova-AI"),
+              "  │ ❏ *Versi:* " + (config.bot?.version || "v20.0.0"),
+              "  │ ❏ *Nomor Bot:* " + botNum,
+              "  │ ❏ *Waktu:* " + waktu,
+              "  │ ❏ *Host:* " + hostname,
+              "  │ ❏ *Platform:* " + platform,
+              "  │ ❏ *Node:* " + nodeVer,
+              "╰──────────❀",
               "",
               "_Bot baru saja tersambung untuk pertama kali._"
             ].join("\n");
@@ -801,23 +801,22 @@ async function startConnection(options = {}) {
             config.saluran?.name || config.bot?.name || "Nova-AI";
 
           const welcomeText =
-            `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Wᴇʟᴄᴏᴍᴇ\n` +
-            `┊\n` +
-            `  ┊  ➶ *Hai, Salam Kenal!*\n` +
-            `  ┊  ➶ Aku *${config.bot?.name || "Nova-AI"}* 🤖\n` +
-            `  ┊  ➶ Terima kasih sudah undang aku ke *${groupName}*!\n` +
-            `  ┊  ➶ Diundang oleh ${inviterMention} ✨\n` +
-            `┊\n` +
+            `╭──「 Wᴇʟᴄᴏᴍᴇ 」\n│\n` + +
+            `  │ ❏ *Hai, Salam Kenal!*\n` +
+            `  │ ❏ Aku *${config.bot?.name || "Nova-AI"}* 🤖\n` +
+            `  │ ❏ Terima kasih sudah undang aku ke *${groupName}*!\n` +
+            `  │ ❏ Diundang oleh ${inviterMention} ✨\n` +
+            `│\n` +
             `₊˚ʚ ᗢ₊˚✧ ﾟ. 📋 Iɴғᴏ ｡ﾟ\n` +
-            `  ┊  ➶ *Developer:* ${config.bot?.developer || "Aizat"}\n` +
-            `  ┊  ➶ *Prefix:* ${prefix}\n` +
-            `  ┊  ➶ *Support:* ${config.bot?.support || "-"}\n` +
+            `  │ ❏ *Developer:* ${config.bot?.developer || "Aizat"}\n` +
+            `  │ ❏ *Prefix:* ${prefix}\n` +
+            `  │ ❏ *Support:* ${config.bot?.support || "-"}\n` +
             `₊˚ʚ ᗢ₊˚✧ ﾟ.\n` +
-            `┊\n` +
-            `  ┊  ➶ Ketik *${prefix}menu* untuk lihat fitur\n` +
-            `  ┊  ➶ Ketik *${prefix}help* untuk bantuan\n` +
-            `┊\n` +
-            `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+            `│\n` +
+            `  │ ❏ Ketik *${prefix}menu* untuk lihat fitur\n` +
+            `  │ ❏ Ketik *${prefix}help* untuk bantuan\n` +
+            `│\n` +
+            `╰──────────❀`;
 
           const ctxInfo = {
             mentionedJid: inviter ? [inviter] : [],
