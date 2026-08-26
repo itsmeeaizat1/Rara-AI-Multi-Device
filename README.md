@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-style%3A%20apply%20Clara-MD%20box%20styl-success?style=for-the-badge)
-> *Commit: "style: apply Clara-MD box style (╭── │ ❏ ╰──❀) ke semua plugin"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-style%3A%20purge%20semua%20style%20lama%20-success?style=for-the-badge)
+> *Commit: "style: purge semua style lama — ❀°˖✧, ┊ ➶, ❀⋆｡˚ → Clara-MD box (╭── │ ❏ ╰──❀)"*
 <!--END_SECTION:latest-update-->
 
 
