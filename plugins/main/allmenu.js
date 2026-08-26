@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenu.js — Semua command lengkap per kategori
-// Thumbnail: menu.jpg (cewek pantai) + externalAdReply di ROOT contextInfo
+// allmenu.js — Semua command per kategori (Clara-MD box style + thumbnail menu.jpg)
 import * as botmodePlugin from "../group/botmode.js";
 import { getCasesByCategory, getCaseCount } from "../../case/nova.js";
 import config from "../../config.js";
@@ -35,9 +34,6 @@ const pluginConfig = {
   energi: 0,
   isEnabled: true,
 };
-
-const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c);
 
 function getWeton(date = new Date()) {
   const days = ["Pahing", "Pon", "Wage", "Kliwon", "Legi"];
@@ -89,7 +85,6 @@ function getCommandSymbols(cmdName) {
   return symbols.length > 0 ? " " + symbols.join(" ") : "";
 }
 
-// Thumbnail: menu.jpg (cewek pantai) — cached once
 let _thumbCache = null;
 function getThumb() {
   if (_thumbCache) return _thumbCache;
@@ -110,7 +105,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const user = db.getUser(m.sender);
     const now = new Date();
 
-    // Import time helpers
     const timeHelper = await import("../../src/lib/nova-time.js");
     const timeStr = timeHelper.formatTime("HH:mm");
     const dayName = timeHelper.formatFull("dddd");
@@ -133,7 +127,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     if (m.isOwner) { userRole = "Owner"; roleEmoji = "👑"; }
     else if (m.isPremium) { userRole = "Premium"; roleEmoji = "💎"; }
 
-    const greeting = getTimeGreeting();
     let weatherBlock = "";
     try {
       const wf = await getWeatherFooter();
@@ -167,69 +160,64 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
-    // ── Info section ──
-    let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Iɴғᴏ Usᴇʀ
-┊
-  ┊  ➶ *ɴᴀᴍᴀ:* ${m.pushName || "User"}
-  ┊  ➶ *ɴᴏᴍᴏʀ:* @${m.sender.split("@")[0]}
-  ┊  ➶ *ᴘʀᴇᴍɪᴜᴍ:* ${m.isPremium ? "Aktif" : "Free"}
-  ┊  ➶ *ᴇɴᴇʀɢɪ:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
-  ┊  ➶ *ᴋᴏɪɴ:* ${(user?.koin ?? 0).toLocaleString()}
-  ┊  ➶ *ʟɪᴍɪᴛ:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
-  ┊  ➶ *ʀᴏʟᴇ:* ${roleEmoji} ${userRole}
-  ┊  ➶ *ʟᴇᴠᴇʟ:* ${userLevel}
-  ┊  ➶ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
-  ┊  ➶ *ᴛᴏᴛᴀʟ xᴘ:* ${userExp.toLocaleString()}
-  ┊  ➶ *ꜱᴛᴀᴛᴜꜱ:* ${user?.banned ? "Banned" : "Aktif"}
-╠┈┈「 *Iɴғᴏ Wᴀᴋᴛᴜ* 」
-  ┊  ➶ *ᴡᴀᴋᴛᴜ:* ${timeStr} WIB
-  ┊  ➶ *ʜᴀʀɪ:* ${dayName} ${weton}
-  ┊  ➶ *ᴛᴀɴɢɢᴀʟ:* ${dateStr}
-  ┊  ➶ *ᴛᴀɴɢɢᴀʟ ɪꜱʟᴀᴍ:* ${islamicDate}
-  ┊  ➶ *ᴢᴏɴᴀ:* Asia/Jakarta
-  ┊  ➶ *ʜᴀʀɪ ᴘᴇɴᴛɪɴɢ:* ${importantDay}
-╠┈┈「 *Iɴғᴏ Bᴏᴛ* 」
-  ┊  ➶ *ʙᴏᴛ ɴᴀᴍᴇ:* ${botConfig.bot?.name || botName}
-  ┊  ➶ *ʙᴏᴛ ɴᴏᴍᴏʀ:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
-  ┊  ➶ *ᴠᴇʀꜱɪᴏɴ:* ${botConfig.bot?.version || "-"}
-  ┊  ➶ *ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${botConfig.bot?.developer || "-"}
-  ┊  ➶ *ᴍᴏᴅᴇ:* ${(botConfig.mode || "public").toUpperCase()}
-  ┊  ➶ *ᴘʀᴇꜰɪx:* [ *${prefix}* ]
-  ┊  ➶ *ᴜᴘᴛɪᴍᴇ:* ${runtimeStr}
-  ┊  ➶ *ᴛᴏᴛᴀʟ ᴜꜱᴇʀ:* ${totalUsers}
-  ┊  ➶ *ᴛᴏᴛᴀʟ ʀᴇɢɪꜱᴛʀᴀꜱɪ:* ${totalRegistered}
-  ┊  ➶ *ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ:* ${totalPremium}
-  ┊  ➶ *ᴛᴏᴛᴀʟ ꜰɪᴛᴜʀ:* ${totalFeatures}
-╠┈┈「 *Iɴғᴏ Sᴇʀᴠᴇʀ* 」
-  ┊  ➶ *ᴘʟᴀᴛꜰᴏʀᴍ:* ${platform}
-  ┊  ➶ *ʜᴏꜱᴛɴᴀᴍᴇ:* ${hostname}
-  ┊  ➶ *ᴛʏᴘᴇ:* Node.Js
-  ┊  ➶ *ʙᴀɪʟᴇʏꜱ:* Multi Device
-  ┊  ➶ *ɴᴏᴅᴇ.ᴊꜱ:* ${process.version}
-  ┊  ➶ *ꜱᴇʀᴠᴇʀ ᴜᴘᴛɪᴍᴇ:* ${serverUptime}
-  ┊  ➶ *ᴄᴘᴜ:* ${cpuModel}
-  ┊  ➶ *ᴄᴏʀᴇꜱ:* ${cpuCores} threads @ ${cpuSpeed} MHz
-  ┊  ➶ *ʟᴏᴀᴅ ᴀᴠɢ:* ${loadAvg}
-  ┊  ➶ *ʀᴀᴍ:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
-  ┊  ➶ *ʀᴀᴍ ʙᴏᴛ:* ${formatBytes(memUsage.rss)}
-${weatherBlock}❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
-${readMore}
+    // ── Info section (Clara-MD box style) ──
+    let txt = `╔┈┈「 *Info User* 」
+╎
+╎❏ *Nama:*  ${m.pushName || "User"}
+╎❏ *Nomor:* @${m.sender.split("@")[0]}
+╎❏ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
+╎❏ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
+╎❏ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
+╎❏ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
+╎❏ *Role:* ${roleEmoji} ${userRole}
+╎❏ *Level:* ${userLevel}
+╎❏ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
+╎❏ *Total Xp:* ${userExp.toLocaleString()}
+╎❏ *Status:* ${user?.banned ? "Banned" : "Aktif"}
+╠┈┈「 *Info Waktu* 」
+╎❏ *Waktu:* ${timeStr} WIB
+╎❏ *Hari:* ${dayName} ${weton}
+╎❏ *Tanggal:* ${dateStr}
+╎❏ *Tanggal Islam:* ${islamicDate}
+╎❏ *Zona:* Asia/Jakarta
+╎❏ *Hari Penting:* ${importantDay}
+╠┈┈「 *Info Bot* 」
+╎❏ *Bot Name:* ${botConfig.bot?.name || botName}
+╎❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
+╎❏ *Version:* ${botConfig.bot?.version || "-"}
+╎❏ *Developer:* ${botConfig.bot?.developer || "-"}
+╎❏ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
+╎❏ *Prefix:* [ *${prefix}* ]
+╎❏ *Uptime:* ${runtimeStr}
+╎❏ *Total User:* ${totalUsers}
+╎❏ *Total Registrasi:* ${totalRegistered}
+╎❏ *Premium User:* ${totalPremium}
+╎❏ *Total Fitur:* ${totalFeatures}
+╠┈┈「 *Info Server* 」
+╎❏ *Platform:* ${platform}
+╎❏ *Hostname:* ${hostname}
+╎❏ *Type:* Node.Js
+╎❏ *Baileys:* Multi Device
+╎❏ *Node.js:* ${process.version}
+╎❏ *Server Uptime:* ${serverUptime}
+╎❏ *CPU:* ${cpuModel}
+╎❏ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
+╎❏ *Load Avg:* ${loadAvg}
+╎❏ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
+╎❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
+╚┈┈┈┈┈┈┈┈┈❖
+${weatherBlock}${readMore}
+╔┈┈「 *Keterangan* 」
+╎❏ Ⓞ = Hanya untuk owner
+╎❏ ⓟ = Hanya untuk premium
+╎❏ Ⓛ = Membutuhkan limit
+╎❏ Ⓐ = Hanya untuk admin
+╎❏ Ⓖ = Hanya di dalam grup
+╎❏ Ⓟ = Hanya di private chat
+╚┈┈┈┈┈┈┈┈┈❖
 `;
 
-    // ── Keterangan simbol ──
-    txt += `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ALLMENU
-
-  ° ✿ Keterangan ✿ °
-  ┊  ➶ Ⓞ = Hanya untuk owner
-  ┊  ➶ ⓟ = Hanya untuk premium
-  ┊  ➶ Ⓛ = Membutuhkan limit
-  ┊  ➶ Ⓐ = Hanya untuk admin
-  ┊  ➶ Ⓖ = Hanya di dalam grup
-  ┊  ╰➶ Ⓟ = Hanya di private chat
-
-`;
-
-    // ── Category commands ──
+    // ── Category commands (Clara-MD box style) ──
     const sortedCategories = [...categories].sort((a, b) => {
       const ia = CATEGORY_ORDER.indexOf(a); const ib = CATEGORY_ORDER.indexOf(b);
       return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
@@ -256,21 +244,18 @@ ${readMore}
       if (allCmds.length === 0) continue;
       const catName = CATEGORY_NAMES[category] || category.charAt(0).toUpperCase() + category.slice(1);
 
-      txt += `  ° ✿ ${catName} ✿ °\n`;
+      txt += `╠┈┈「 *${catName}* 」\n`;
       for (let i = 0; i < allCmds.length; i++) {
         const cmd = allCmds[i];
         const symbols = getCommandSymbols(cmd);
-        const isLast = i === allCmds.length - 1;
-        txt += `  ┊  ${isLast ? '╰' : ''}➶ ${prefix}${cmd}${symbols}\n`;
+        txt += `╎❏ ${prefix}${cmd}${symbols}\n`;
       }
-      txt += `\n`;
     }
 
-    txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n`;
+    txt += `╚┈┈┈┈┈┈┈┈┈❖\n`;
 
-    // ── Send: text + type 1 buttons + externalAdReply di ROOT contextInfo ──
+    // ── Send: type 1 buttons + externalAdReply di ROOT ──
     const menuThumb = getThumb();
-    const botVersion = `v${config.bot?.version || "1.0.0"}`;
     const buttons = [
       { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
       { buttonId: `${prefix}allmenucategory`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
@@ -280,12 +265,12 @@ ${readMore}
     try {
       await sock.sendMessage(m.chat, {
         text: txt,
-        footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
+        footer: "Nova AI WhatsApp Bot",
         buttons: buttons,
         contextInfo: {
           mentionedJid: [m.sender],
           externalAdReply: {
-            title: toSC(botName),
+            title: botName,
             body: "WhatsApp Multi Device",
             thumbnail: menuThumb,
             sourceUrl: botConfig.saluran?.link || "",
@@ -301,7 +286,7 @@ ${readMore}
         contextInfo: {
           mentionedJid: [m.sender],
           externalAdReply: {
-            title: toSC(botName),
+            title: botName,
             body: "WhatsApp Multi Device",
             thumbnail: menuThumb,
             sourceUrl: botConfig.saluran?.link || "",
@@ -313,8 +298,6 @@ ${readMore}
     }
 
     await m.react("🐣");
-
-    // Kirim musik menu (jika audioMenu aktif)
     try { await sendMenuAudio(sock, m, db, true); } catch {}
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);

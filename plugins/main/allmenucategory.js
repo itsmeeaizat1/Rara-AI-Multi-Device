@@ -1,6 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenucategory.js — Tampilkan commands per kategori
-// Thumbnail: menu.jpg (cewek pantai) + externalAdReply di ROOT contextInfo
+// allmenucategory.js — Commands per kategori (Clara-MD box style + thumbnail menu.jpg)
 import * as botmodePlugin from "../group/botmode.js";
 import { getCasesByCategory, getCaseCount } from "../../case/nova.js";
 import config from "../../config.js";
@@ -30,9 +29,6 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c);
-
 const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
   canvas: "Canvas", tools: "Tools", game: "Game", rpg: "RPG",
@@ -61,7 +57,6 @@ function getCommandSymbols(cmdName) {
   return symbols.length > 0 ? " " + symbols.join(" ") : "";
 }
 
-// Thumbnail: menu.jpg (cewek pantai) — cached once
 let _thumbCache = null;
 function getThumb() {
   if (_thumbCache) return _thumbCache;
@@ -84,11 +79,10 @@ async function handler(m, { sock, db }) {
     const categories = getCategories();
     const commandsByCategory = getCommandsByCategory();
     const casesByCategory = getCasesByCategory();
-    const greeting = getTimeGreeting();
     const menuThumb = getThumb();
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
-    // ── Mode 1: Tanpa argumen → tampilkan semua kategori ──
+    // ── Mode 1: Tanpa argumen → semua kategori ──
     if (!categoryArg) {
       const groupData = m.isGroup ? db.getGroup(m.chat) || {} : {};
       const botMode = groupData.botMode || "md";
@@ -137,16 +131,15 @@ async function handler(m, { sock, db }) {
         if (wf) weatherBlock = `${wf}\n\n`;
       } catch {}
 
-      let txt = `${weatherBlock}❀°˖✧◝(⁰▿⁰)◜✧˖°❀ MENU KATEGORI
-
-  ° ✿ Keterangan ✿ °
-  ┊  ➶ Ⓞ = Hanya untuk owner
-  ┊  ➶ ⓟ = Hanya untuk premium
-  ┊  ➶ Ⓛ = Membutuhkan limit
-  ┊  ➶ Ⓐ = Hanya untuk admin
-  ┊  ➶ Ⓖ = Hanya di dalam grup
-  ┊  ╰➶ Ⓟ = Hanya di private chat
-
+      let txt = `${weatherBlock}╔┈┈「 *Keterangan* 」
+╎
+╎❏ Ⓞ = Hanya untuk owner
+╎❏ ⓟ = Hanya untuk premium
+╎❏ Ⓛ = Membutuhkan limit
+╎❏ Ⓐ = Hanya untuk admin
+╎❏ Ⓖ = Hanya di dalam grup
+╎❏ Ⓟ = Hanya di private chat
+╚┈┈┈┈┈┈┈┈┈❖
 `;
 
       for (const cat of visibleCats) {
@@ -156,17 +149,15 @@ async function handler(m, { sock, db }) {
         if (allCmds.length === 0) continue;
         const catName = CATEGORY_NAMES[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
 
-        txt += `  ° ✿ ${catName} ✿ °\n`;
+        txt += `╠┈┈「 *${catName}* 」\n`;
         for (let i = 0; i < allCmds.length; i++) {
           const cmd = allCmds[i];
           const symbols = getCommandSymbols(cmd);
-          const isLast = i === allCmds.length - 1;
-          txt += `  ┊  ${isLast ? '╰' : ''}➶ ${prefix}${cmd}${symbols}\n`;
+          txt += `╎❏ ${prefix}${cmd}${symbols}\n`;
         }
-        txt += `\n`;
       }
 
-      txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n`;
+      txt += `╚┈┈┈┈┈┈┈┈┈❖\n`;
 
       const buttons = [
         { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
@@ -177,12 +168,12 @@ async function handler(m, { sock, db }) {
       try {
         await sock.sendMessage(m.chat, {
           text: txt,
-          footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
+          footer: "Nova AI WhatsApp Bot",
           buttons: buttons,
           contextInfo: {
             mentionedJid: [m.sender],
             externalAdReply: {
-              title: toSC(botName),
+              title: botName,
               body: "WhatsApp Multi Device",
               thumbnail: menuThumb,
               sourceUrl: config.saluran?.link || "",
@@ -198,7 +189,7 @@ async function handler(m, { sock, db }) {
           contextInfo: {
             mentionedJid: [m.sender],
             externalAdReply: {
-              title: toSC(botName),
+              title: botName,
               body: "WhatsApp Multi Device",
               thumbnail: menuThumb,
               sourceUrl: config.saluran?.link || "",
@@ -213,13 +204,13 @@ async function handler(m, { sock, db }) {
       return;
     }
 
-    // ── Mode 2: Dengan argumen → tampilkan kategori spesifik ──
+    // ── Mode 2: Kategori spesifik ──
     const allCategories = [...new Set([...categories, ...Object.keys(casesByCategory)])];
     const matchedCat = allCategories.find((c) => c.toLowerCase() === categoryArg);
 
     if (!matchedCat) {
       await m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ERROR\n\n  ┊  ╰➶ Kategori \`${categoryArg}\` tidak ditemukan\n  ┊  ╰➶ Ketik \`${prefix}allmenucategory\` untuk list kategori`
+        `╔┈┈「 *Error* 」\n╎\n╎❏ Kategori \`${categoryArg}\` tidak ditemukan\n╎❏ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╚┈┈┈┈┈┈┈┈┈❖`
       );
       await m.react("❌");
       return;
@@ -227,7 +218,7 @@ async function handler(m, { sock, db }) {
 
     if (matchedCat === "owner" && !m.isOwner) {
       await m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ AKSES DITOLAK\n\n  ┊  ╰➶ Kategori ini hanya untuk owner`
+        `╔┈┈「 *Akses Ditolak* 」\n╎\n╎❏ Kategori ini hanya untuk owner\n╚┈┈┈┈┈┈┈┈┈❖`
       );
       await m.react("❌");
       return;
@@ -239,7 +230,7 @@ async function handler(m, { sock, db }) {
 
     if (allCommands.length === 0) {
       await m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ KOSONG\n\n  ┊  ╰➶ Kategori \`${matchedCat}\` tidak ada command`
+        `╔┈┈「 *Kosong* 」\n╎\n╎❏ Kategori \`${matchedCat}\` tidak ada command\n╚┈┈┈┈┈┈┈┈┈❖`
       );
       await m.react("❌");
       return;
@@ -254,20 +245,18 @@ async function handler(m, { sock, db }) {
       if (wf2) weatherBlock2 = `${wf2}\n\n`;
     } catch {}
 
-    let txt = `${weatherBlock2}❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${catName.toUpperCase()}
-┊
-  *Total: ${totalFitur} Fitur*
-┊
-  ° ✿ ${catName} ✿ °
+    let txt = `${weatherBlock2}╔┈┈「 *${catName}* 」
+╎
+╎❏ *Total: ${totalFitur} Fitur*
+╎
 `;
     for (let i = 0; i < allCommands.length; i++) {
       const cmd = allCommands[i];
       const symbols = getCommandSymbols(cmd);
-      const isLast = i === allCommands.length - 1;
-      txt += `  ┊  ${isLast ? '╰' : ''}➶ ${prefix}${cmd}${symbols}\n`;
+      txt += `╎❏ ${prefix}${cmd}${symbols}\n`;
     }
 
-    txt += `\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n`;
+    txt += `╚┈┈┈┈┈┈┈┈┈❖\n`;
 
     const buttons2 = [
       { buttonId: `${prefix}allmenucategory`, buttonText: { displayText: "📂 Kategori Lain" }, type: 1 },
@@ -278,12 +267,12 @@ async function handler(m, { sock, db }) {
     try {
       await sock.sendMessage(m.chat, {
         text: txt,
-        footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
+        footer: "Nova AI WhatsApp Bot",
         buttons: buttons2,
         contextInfo: {
           mentionedJid: [m.sender],
           externalAdReply: {
-            title: toSC(botName),
+            title: botName,
             body: `Kategori: ${catName}`,
             thumbnail: menuThumb,
             sourceUrl: config.saluran?.link || "",
@@ -299,7 +288,7 @@ async function handler(m, { sock, db }) {
         contextInfo: {
           mentionedJid: [m.sender],
           externalAdReply: {
-            title: toSC(botName),
+            title: botName,
             body: `Kategori: ${catName}`,
             thumbnail: menuThumb,
             sourceUrl: config.saluran?.link || "",
