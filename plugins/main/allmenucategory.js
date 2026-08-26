@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenucategory.js — Menu per kategori (text + externalAdReply preview card + type 1 buttons)
+// allmenucategory.js — Menu per kategori (text + externalAdReply + type 1 buttons)
 import config from "../../config.js";
 import {
   getCommandsByCategory,
@@ -50,7 +50,6 @@ const CATEGORY_EMOJIS = {
   panel: "🖥️", owner: "👑", store: "🛒",
 };
 
-// Thumbnail: SATU file untuk semua menu
 let _thumbCache = null;
 function getThumb() {
   if (_thumbCache) return _thumbCache;
@@ -100,32 +99,25 @@ async function buildCategoryText(m, botConfig, db, category) {
     }
 
     if (allCmds.length === 0) {
-      return `❀°˖ ${toSC(catName)} ˖°❀
-
-Tidak ada command di kategori ini.
-
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      return `╭─「 *${catEmoji} ${toSC(catName)}* 」\n│  ➥ Tidak ada command di kategori ini\n╰─`;
     }
 
     let cmdLines = "";
     for (let i = 0; i < allCmds.length; i++) {
-      const end = i === allCmds.length - 1 ? "  ╰" : "  ┊";
       const desc = allCmds[i].description ? ` — ${allCmds[i].description}` : "";
-      cmdLines += `${end}  ➶ ${prefix}${allCmds[i].command}${desc}\n`;
+      cmdLines += `│  ➥ ${prefix}${allCmds[i].command}${desc}\n`;
     }
 
-    return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${toSC(catName)}
-┊
-₊˚ʚ ᗢ₊˚✧ ﾟ. ${catEmoji} ${toSC(catName)} ｡ﾟ
-┊${cmdLines}₊˚ʚ ᗢ₊˚✧ ﾟ.
-┊
-  ┊  ➶ *Total: ${allCmds.length} Fitur*
-┊
+    return `╭─「 *${catEmoji} ${toSC(catName)}* 」
+${cmdLines}│
+│  ➥ *Total: ${allCmds.length} Fitur*
+╰─
+
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${getTimeGreeting()} *${m.pushName || "User"}* 👋`;
   } catch (e) {
     console.error("[menukategori] buildCategoryText error:", e.message);
-    return "❀°˖ Menu Kategori ˖°❀\n\nError: " + e.message + "\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
+    return `╭─「 *Menu Kategori* 」\n│  ➥ Error: ${e.message}\n╰─`;
   }
 }
 
@@ -152,16 +144,15 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         if (total === 0) continue;
         const name = CATEGORY_NAMES[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
         const emoji = CATEGORY_EMOJIS[cat] || "📂";
-        catList += `  ┊  ➶ ${emoji} ${prefix}menukategori ${cat} — ${toSC(name)} (${total})\n`;
+        catList += `│  ➥ ${emoji} ${prefix}menukategori ${cat} — ${toSC(name)} (${total})\n`;
       }
 
-      const text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Kᴀᴛᴇɢᴏʀɪ
-┊
-${catList}┊
+      const text = `╭─「 *${toSC("Kategori")}* 」
+${catList}╰─
+
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 Ketik *${prefix}menukategori <nama kategori>*`;
 
-      // Template: text + footer + type 1 buttons + externalAdReply di level ROOT
       const buttons = [
         { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
         { buttonId: `${prefix}allmenu`, buttonText: { displayText: "📋 All Menu" }, type: 1 },
@@ -210,25 +201,25 @@ Ketik *${prefix}menukategori <nama kategori>*`;
 
     const matchedCat = findCategory(inputCat);
     if (!matchedCat) {
-      await m.reply(`❀°˖ Kategori ˖°❀\n\nKategori "${inputCat}" tidak ditemukan.\n\nKetik *${prefix}menukategori* untuk melihat daftar kategori.\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`);
+      await m.reply(`╭─「 *Kategori* 」\n│  ➥ Kategori "${inputCat}" tidak ditemukan\n│  ➥ Ketik *${prefix}menukategori* untuk daftar\n╰─`);
       await m.react("❌");
       return;
     }
 
     if (matchedCat === "owner" && !m.isOwner) {
-      await m.reply("❀°˖ Owner ˖°❀\n\nKategori ini khusus owner saja.\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀");
+      await m.reply(`╭─「 *Owner* 」\n│  ➥ Kategori ini khusus owner\n╰─`);
       await m.react("❌");
       return;
     }
 
     const text = await buildCategoryText(m, botConfig, db, matchedCat);
     const catName = CATEGORY_NAMES[matchedCat] || matchedCat;
+    const catEmoji = CATEGORY_EMOJIS[matchedCat] || "📂";
 
-    // Template: text + footer + type 1 buttons + externalAdReply di level ROOT
     const buttons = [
       { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
       { buttonId: `${prefix}allmenu`, buttonText: { displayText: "📋 All Menu" }, type: 1 },
-      { buttonId: `${prefix}owner`, buttonText: { displayText: "👑 Owner" }, type: 1 },
+      { buttonId: `${prefix}allmenucategory`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
     ];
 
     try {
@@ -240,7 +231,7 @@ Ketik *${prefix}menukategori <nama kategori>*`;
           mentionedJid: [m.sender],
           externalAdReply: {
             title: toSC(botName),
-            body: toSC(catName) + " Category",
+            body: `${catEmoji} ${catName}`,
             thumbnail: menuThumb,
             sourceUrl: saluranLink,
             mediaType: 1,
@@ -256,7 +247,7 @@ Ketik *${prefix}menukategori <nama kategori>*`;
           mentionedJid: [m.sender],
           externalAdReply: {
             title: toSC(botName),
-            body: toSC(catName) + " Category",
+            body: `${catEmoji} ${catName}`,
             thumbnail: menuThumb,
             sourceUrl: saluranLink,
             mediaType: 1,
