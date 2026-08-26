@@ -51,8 +51,38 @@ akankah, anniversary, apakah, asahotak, bagaimana, berapa, bisakah, bucin, bucin
 ### 🔮 Future (90+ plugin)
 aianchor, aiarisan, aibookclub, aicode, aicrowdfund, aidebate, aidescribe, aidiet, aidoc, aiemergency, aiexpense, aifatwa, aigift, aigrouppet, aihabit, aihadith, aiimage, ailearn, aimeeting, aimentor, aipoll, aiquran, aitimemachine, aivoice, aivoicenote, aksi, astrologi, auracheck, autoabsen, autobirthday, autocountdown, autodigest, autoevent, autofactcheck, autoholiday, autolanguage, automilestone, autopulse, autoquote, autorekap, autostreak, autosurvey, autotodo, autotranslate, autoweather, barista, blinddate, breathing, bucketlist, chatsummary, chord, cipher, compliment, confesswall, dailyquest, debateclub, detective, drama, ecocalendar, escape, expensetrack, fanfic, fortunecookie, futureme, gachapull, gkarma, groupanalytics, guessnum, hallfame, horor, hotseat, isekai, karaoke, komedi, lostfound, memorygame, moodtrack, mysterybox, osint, personacard, podcast, rizzmeter, romantis, secretmsg, sentiment, shipname, sleepcoach, smartbriefing, smartmoderation, smartreply, sudoku, topicdetector, tribe, wheelroulette, wordchain, wordle
 
-### 🎲 Game (45+ plugin)
-werewolf, dungeon, family100, fishing, kuis, kyubigame, mathquiz, merge, ppcouple, quizbattle, suitpvp, tebak, tebakangka, tebakgambar, tictactoe, trivia, truthordare, ulartangga, wwkill, wwprotect, wwsee, wwsorcerer
+### 🎲 Game (70+ plugin)
+asahotak, caklontong, family100, fishing, kataacak, kuis, kyubigame, mathquiz, merge, ppcouple, quizbattle, riddle, siapakahaku, suitpvp, susunkata, tebak, tebakangka, tebakasmaulhusna, tebakbendera, tebakbendera2, tebakdrakor, tebakepep, tebakfilm, tebakgambar, tebakgambarv2, tebakhewan, tebakjkt48, tebakkabupaten, tebakkalimat, tebakkata, tebakkimia, tebaklagu, tebaklirik, tebaklogo, tebakmakanan, tebaknegara, tebakprofesi, tebaktebakan, tekateki, tictactoe, trivia, truthordare, ulartangga, werewolf, wwkill, wwprotect, wwsee, wwsorcerer
+- .asahotak - game - Tebak tebakan asah otak
+- .caklontong - game - Tebak caklontong lucu
+- .kataacak - game - Tebak kata yang diacak
+- .kuis - game - Kuis pilihan ganda
+- .riddle - game - Tebak teka-teki bahasa Inggris
+- .siapakahaku - game - Tebak siapa diriku
+- .susunkata - game - Susun huruf jadi kata
+- .tebakasmaulhusna - game - Tebak 99 nama Allah
+- .tebakbendera - game - Tebak negara dari bendera
+- .tebakbendera2 - game - Tebak bendera versi 2
+- .tebakdrakor - game - Tebak judul drama Korea
+- .tebakepep - game - Tebak karakter Free Fire
+- .tebakfilm - game - Tebak judul film
+- .tebakgambar - game - Tebak gambar piktogram
+- .tebakgambarv2 - game - Tebak gambar versi 2
+- .tebakhewan - game - Tebak nama hewan
+- .tebakjkt48 - game - Tebak member JKT48
+- .tebakkabupaten - game - Tebak kabupaten Indonesia
+- .tebakkalimat - game - Lengkapi kalimat yang kosong
+- .tebakkata - game - Tebak kata dari clue
+- .tebakkimia - game - Tebak lambang unsur kimia
+- .tebaklagu - game - Tebak judul lagu dari lirik
+- .tebaklirik - game - Lengkapi lirik lagu
+- .tebaklogo - game - Tebak logo perusahaan
+- .tebakmakanan - game - Tebak makanan Indonesia
+- .tebaknegara - game - Tebak nama negara
+- .tebakprofesi - game - Tebak profesi dari deskripsi
+- .tebaktebakan - game - Tebak tebakan seru
+- .tekateki - game - Teka teki rumit
+- .trivia - game - Pertanyaan trivia umum
 
 ### 👥 Group (182+ plugin)
 absen, absenv2, acc, add, addantilink, addcmdsticker, addtoxic, afk, agenda, anti18plus, antibucin, antibug, anticaps, anticulik, anticustom, antidocument, antiflood, antiforward, antifoto, antighost, antihotword, antijudol, antikasar, antilinkall, antilinkgc, antimedia, antinomorluar, antiphising, antipollspam, antipromote, antiremove, antiribut, antirvo, antispam, antisticker, antiswgc, antitagsw, antitoxic, antivideo, antivn, approvalmember, autoai, autochatsummary, automeme, automute, autoreaction, autoreply, autosticker, autotips, banchat, bingo, botmode, bounty, cekabsen, cekfakta-v2, cekidgc, cekonline, checklink, checksewa, close, delantilink, delete, delppgc, delstickercmd, deltoxic, demote, donasi, emojiguess, eventrsvp, game, getpp, goodbye, groupinfo, groupmemory, grupdashboard, grupshop, hapusabsen, hidetag, hidetag2, intro, jadwalgroup, kick, kickall, lelang, linkgc, linkgroup, listadmin, listantilink, listtoxic, listwarn, mostlikely, motw, mulaiabsen, mute, mutegc, mutemember, nhie, notifclosegroup, notifdemote, notifgantitag, notifmakan, notifopengroup, notifpromote, notifsholat, notiftidur, open, openvo, pickme, pin, poll, promote, ptg, publicthisgc, rapbattle, rateuser, reaction, reactionrole, report, resetgoodbye, resetintro, resetlinkgc, resetrulesgrup, resetwarn, resetwelcome, roastbattle, rpg, rulesgrup, selfthisgc, setdeskgc, setgoodbye, setgroupdesc, setgroupicon, setgroupname, setgrouppp, setgrouptitle, setintro, setnamegc, setppgc, setrulesgrup, setwelcome, sewainfo, slowmode, smartremind, smartreply, spinbottle, statscard, storybuild, storyrelay, tagall, tam, tod, topchat, totag, truth, typingrace, unban, unmute, unmutegc, unmutemember, warn, welcome, wordbomb, wyr
