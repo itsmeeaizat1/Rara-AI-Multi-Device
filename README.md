@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20fitur%20tanya%20%26%20cek%20sekara-success?style=for-the-badge)
-> *Commit: "feat: fitur tanya & cek sekarang pakai AI (fallback ke template)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20bersihkan%20sisa%20gaya%20-success?style=for-the-badge)
+> *Commit: "refactor: bersihkan sisa gaya lama di core files ke Modern Box"*
 <!--END_SECTION:latest-update-->
 
 
