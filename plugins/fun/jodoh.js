@@ -186,7 +186,7 @@ async function handler(m, { sock }) {
   }
   text += `_"${quote}"_`;
 
-  { const __navText = (text, { mentions: [person1, person2] }); await m.reply(__navText); };
+  await m.reply(text, { mentions: [person1, person2] });
 }
 
 export { pluginConfig as config, handler };

@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
         txt += `📊 Level: *${user.level ?? 1}*\n`
     }
 
-    { const __navText = (txt, { mentions: [jid] }); await m.reply(__navText); }
+    await m.reply(txt, { mentions: [jid] });
 }
 
 export { pluginConfig as config, handler }

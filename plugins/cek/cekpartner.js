@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
         txt += `💰 Koin: *${user.koin === -1 ? '∞' : (user.koin ?? 0).toLocaleString('id-ID')}*\n`
     }
 
-    { const __navText = (txt, { mentions: [jid] }); await m.reply(__navText); }
+    await m.reply(txt, { mentions: [jid] });
 }
 
 export { pluginConfig as config, handler }

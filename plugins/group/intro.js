@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
     const introText = groupData.intro || DEFAULT_INTRO
     const parsed = parsePlaceholders(introText, m, groupMeta)
     
-    { const __navText = (parsed, { mentions: [m.sender] }); await m.reply(claraWrap("intro", __navText)); }
+    await m.reply(claraWrap("intro", parsed), { mentions: [m.sender] });
 }
 
 export { pluginConfig as config, handler, parsePlaceholders, DEFAULT_INTRO }

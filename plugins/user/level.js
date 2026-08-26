@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
 
   txt += `Next level: *${expToNextLevel(exp).toLocaleString("id-ID")} exp* lagi!`;
 
-  { const __navText = (txt, { mentions: [targetJid] }); await m.reply(claraWrap("level", __navText)); };
+  await m.reply(claraWrap("level", txt), { mentions: [targetJid] });
 }
 
 export {

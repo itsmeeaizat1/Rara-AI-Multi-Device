@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
         
         const successMsg = `✅ @${senderNum} telah membuka grup ini\n_Sekarang kalian bisa mengirim pesan_`;
         
-        { const __navText = (successMsg, { mentions: [m.sender] }); await m.reply(__navText); };
+        await m.reply(successMsg, { mentions: [m.sender] });
         
     } catch (error) {
         await m.reply(claraWrap("Error", ["Gagal membuka grup.", `_${error.message}_`].join("\n")));

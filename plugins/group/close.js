@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         
         const successMsg = `✅ @${senderNum} telah menutup grup ini`;
         
-        { const __navText = (successMsg, {mentions: [m.sender]}); await m.reply(__navText); }
+        await m.reply(successMsg, { mentions: [m.sender] });
         
     } catch (error) {
         await m.reply(claraWrap("Error", ["Gagal menutup grup.", `_${error.message}_`].join("\n")));

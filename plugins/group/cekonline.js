@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
         }
         
         m.react('✅')
-        { const __navText = (text, { mentions: mentions }); await m.reply(__navText); }
+        await m.reply(text, { mentions });
         
     } catch (error) {
         m.reply(claraWrap("cekonline", te(m.prefix, m.command, m.pushName), "error"))
