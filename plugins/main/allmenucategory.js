@@ -102,7 +102,7 @@ async function buildCategoryText(m, botConfig, db, uptime, category) {
     parts.push(`│`);
 
     // User info
-    parts.push(sectionBox("👤", "User", [
+    parts.push(sectionBox("👤", "Info User", [
       kv("Nama", m.pushName || "User"),
       kv("Status", `${roleEmoji} ${userRole}`),
       kv("Level", `${userLevel} ${expBar}`),
@@ -188,7 +188,7 @@ async function buildCategoryListText(m, botConfig, db, uptime) {
     parts.push(`┊ ${getTimeGreeting()} *${m.pushName || "User"}* 👋`);
     parts.push(`│`);
 
-    parts.push(sectionBox("👤", "User", [
+    parts.push(sectionBox("👤", "Info User", [
       kv("Nama", m.pushName || "User"),
       kv("Status", `${roleEmoji} ${userRole}`),
       kv("Level", `${userLevel} ${expBar}`),
@@ -196,7 +196,7 @@ async function buildCategoryListText(m, botConfig, db, uptime) {
 
     parts.push("");
 
-    parts.push(sectionBox("🤖", "Bot", [
+    parts.push(sectionBox("🤖", "Info Bot", [
       kv("Status", `${statusDot("online")} Online`),
       kv("Prefix", `[ ${prefix} ]`),
       kv("Uptime", uptimeStr),
