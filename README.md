@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-merge%3A%20menu%2Fallmenu%2Fallmenucat-success?style=for-the-badge)
-> *Commit: "merge: menu/allmenu/allmenucategory — info lengkap + 4 tombol + bracket box"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-Merge%20branch%20'main'%20of%20https%3A%2F-success?style=for-the-badge)
+> *Commit: "Merge branch 'main' of https://github.com/itsmeeaizat/Nova-AI-Whatsapp-Bot-Multi-Device"*
 <!--END_SECTION:latest-update-->
 
 
