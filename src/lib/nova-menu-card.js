@@ -1,41 +1,24 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 /**
  * nova-menu-card.js
- * Helper untuk kirim menu dengan GAMBAR HEADER + TOMBOL NAVIGASI
- * yang benar-benar render di WhatsApp Android.
+ * Helper untuk kirim menu dengan TOMBOL NAVIGASI yang render di WhatsApp Android.
  *
- * KENAPA TIDAK PAKAI legacy `buttons` (type 1) + `contextInfo.externalAdReply`:
- * - WhatsApp Android sudah BLOKIR legacy template buttons (type 1) sejak
- *   pertengahan 2025. Cuma masih render di Web/iOS (bug/legacy behavior),
- *   TIDAK di Android — mayoritas user. Baileys/library lain sudah
- *   deprecate fitur ini karena WA sendiri yang matiin.
- * - `externalAdReply` diabaikan WhatsApp kalau ditaruh di dalam
- *   `interactiveMessage` (yang dipakai nativeFlowMessage/tombol modern).
+ * MODE 1 (default): Tanpa gambar header → tombol muncul, gak simpan ke galeri
+ * MODE 2 (opsional): Dengan gambar header → tombol muncul, tapi gambar kesave ke galeri
  *
- * SOLUSI YANG BENAR-BENAR JALAN DI SEMUA PLATFORM (Android/iOS/Web):
- * - Gambar ditaruh di `interactiveMessage.header` sebagai media attachment
- *   ASLI (bukan link-preview card externalAdReply).
- * - Tombol pakai `nativeFlowMessage` dengan tipe `quick_reply` — ini
- *   format tombol yang MASIH didukung WhatsApp saat ini (dipakai juga di
- *   nova-nav-buttons.js untuk tombol Kembali/Tanya AI).
- * - Dikirim via `sock.relayMessage()`, bukan `sock.sendMessage()`.
+ * nativeFlowMessage dengan quick_reply buttons jalan di Android/iOS/Web.
+ * Tanpa media attachment = gak ada yang tersimpan ke galeri HP penerima.
  */
 
 import fs from "fs";
 
 let _mediaCache = new Map();
 
-/**
- * Siapkan media header dari file gambar (dengan cache biar gak upload ulang tiap panggil)
- */
 async function prepareHeaderMedia(sock, imagePath) {
   const cacheKey = imagePath;
   if (_mediaCache.has(cacheKey)) {
     const cached = _mediaCache.get(cacheKey);
-    // Cache valid 10 menit (URL upload WA ada masa berlaku)
-    if (Date.now() - cached.ts < 10 * 60 * 1000) {
-      return cached.media;
-    }
+    if (Date.now() - cached.ts < 10 * 60 * 1000) return cached.media;
     _mediaCache.delete(cacheKey);
   }
 
@@ -56,22 +39,33 @@ async function prepareHeaderMedia(sock, imagePath) {
 }
 
 /**
- * Kirim menu card: gambar header + teks + tombol navigasi (max 3)
+ * Kirim menu card dengan tombol navigasi.
  *
  * @param {object} sock - WhatsApp socket
  * @param {object} m - Message object
  * @param {object} opts
  * @param {string} opts.text - Isi teks menu
  * @param {string} opts.footer - Footer text
- * @param {string} opts.thumbnailPath - Path absolut ke file gambar thumbnail
- * @param {Array<{id: string, text: string}>} opts.buttons - Max 3 tombol { id: buttonId/command, text: label }
- * @param {string} opts.title - Judul header (opsional)
+ * @param {string} [opts.thumbnailPath] - Path gambar (opsional, kalau mau pakai gambar)
+ * @param {boolean} [opts.useImage] - Set true untuk pakai gambar header (default: false = tanpa gambar)
+ * @param {Array<{id: string, text: string}>} opts.buttons - Max 3 tombol
+ * @param {string} [opts.title] - Judul header text
  */
-async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = [], title = "" }) {
+async function sendMenuCard(sock, m, { text, footer, thumbnailPath, useImage = false, buttons = [], title = "" }) {
   const { generateWAMessageFromContent } = await import("nova");
 
   try {
-    const media = await prepareHeaderMedia(sock, thumbnailPath);
+    let media = null;
+
+    // Hanya upload gambar kalau useImage=true DAN thumbnailPath valid
+    if (useImage && thumbnailPath) {
+      try {
+        media = await prepareHeaderMedia(sock, thumbnailPath);
+      } catch (e) {
+        console.error("[nova-menu-card] Gagal upload gambar, lanjut tanpa gambar:", e.message);
+        media = null;
+      }
+    }
 
     const nativeButtons = buttons.slice(0, 3).map((btn) => ({
       name: "quick_reply",
