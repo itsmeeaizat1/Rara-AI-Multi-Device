@@ -162,8 +162,69 @@ function listBox(title, items = []) {
 }
 
 export {
+  buildNavButtons,
   claraHeader, alyaHeader, bracketBox, claraWrap, claraLine,
   separator, tipText, formatNumber, broadcastFormat, novaUsage,
   toSC, sectionHeader, sectionItem, sectionClose, sectionSpacer, buildSection,
   infoBox, listBox,
 };
+
+// === Tombol navigasi untuk menu (single_select untuk Kategori) ===
+const CATEGORY_NAMES = {
+  ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
+  canvas: "Canvas", tools: "Tools", game: "Games", rpg: "RPG",
+  media: "Media", search: "Search", group: "Group", main: "Main",
+  utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
+  economy: "Economy", user: "User", random: "Random", premium: "Premium",
+  ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
+  panel: "Panel", owner: "Owner", store: "Store",
+};
+
+const CATEGORY_EMOJIS = {
+  ai: "🤖", sticker: "🖼️", download: "📥", fun: "🎮",
+  canvas: "🎨", tools: "🛠️", game: "🎯", rpg: "🗡️",
+  media: "🎬", search: "🔍", group: "👥", main: "🏠",
+  utility: "🔧", religi: "☪️", info: "ℹ️", cek: "📋",
+  economy: "💰", user: "📊", random: "🎲", premium: "💎",
+  ephoto: "🎨", jpm: "📢", pushkontak: "📱",
+  panel: "🖥️", owner: "👑", store: "🛒",
+};
+
+/**
+ * Build 4 tombol navigasi: Kategori (single_select popup), Info Lainnya, All Menu/Menu, Tanya AI.
+ * @param {string} prefix - Command prefix
+ * @param {boolean} isAllMenuCtx - kalau true, tombol ke-3 jadi "🏠 Menu", kalau false jadi "📋 All Menu"
+ * @param {Array} allCatKeys - semua key kategori yang tersedia
+ * @param {object} commandsByCategory - map cat → commands
+ * @param {object} caseCats - map cat → case commands
+ * @param {boolean} isOwner - kalau true, tampilkan kategori owner
+ * @returns {Array} buttons array untuk sendMenuCard
+ */
+function buildNavButtons(prefix, isAllMenuCtx, allCatKeys, commandsByCategory, caseCats, isOwner) {
+  const rows = [];
+  for (const cat of allCatKeys.sort()) {
+    if (cat === "owner" && !isOwner) continue;
+    const total = (commandsByCategory[cat] || []).length + (caseCats[cat] || []).length;
+    if (total === 0) continue;
+    const name = CATEGORY_NAMES[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
+    const emoji = CATEGORY_EMOJIS[cat] || "📂";
+    rows.push({
+      title: `${emoji} ${name}`,
+      description: `${total} fitur`,
+      id: `${prefix}menukategori ${cat}`,
+    });
+  }
+
+  return [
+    {
+      type: "single_select",
+      text: "📂 Kategori",
+      sections: [{ title: "Pilih Kategori", rows }],
+    },
+    { id: `${prefix}owner`, text: "ℹ️ Info Lainnya" },
+    isAllMenuCtx
+      ? { id: `${prefix}menu`, text: "🏠 Menu" }
+      : { id: `${prefix}allmenu`, text: "📋 All Menu" },
+    { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
+  ];
+}

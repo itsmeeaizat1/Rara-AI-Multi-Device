@@ -10,7 +10,7 @@ import {
 import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { infoBox, listBox } from "../../src/lib/nova-menu-style.js";
+import { infoBox, listBox, buildNavButtons } from "../../src/lib/nova-menu-style.js";
 import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 
 const pluginConfig = {
@@ -28,14 +28,6 @@ const pluginConfig = {
   energi: 0,
   isEnabled: true,
 };
-
-// 4 tombol navigasi standar (sama di menu, allmenu, allmenucategory)
-const NAV_BUTTONS = (prefix) => [
-  { id: `${prefix}allmenucategory`, text: "📂 Kategori" },
-  { id: `${prefix}owner`, text: "ℹ️ Info Lainnya" },
-  { id: `${prefix}allmenu`, text: "📋 All Menu" },
-  { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
-];
 
 async function buildMenuText(m, botConfig, db, uptime, sock) {
   try {
@@ -145,12 +137,22 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const text = await buildMenuText(m, botConfig, db, uptime, sock);
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
+    // Build tombol: Kategori = single_select popup, sisanya quick_reply
+    const pluginCats = getCategories();
+    const commandsByCategory = getCommandsByCategory();
+    const caseCats = getCasesByCategory();
+    const allCatKeys = [...new Set([...pluginCats, ...Object.keys(caseCats)])];
+
+    const buttons = buildNavButtons(
+      prefix, false, allCatKeys, commandsByCategory, caseCats, m.isOwner
+    );
+
     await m.react("🐣");
     await sendMenuCard(sock, m, {
       text,
       footer: botName,
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
-      buttons: NAV_BUTTONS(prefix),
+      buttons,
       title: botName,
     });
 
