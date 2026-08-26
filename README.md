@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-style%3A%20modern%20box%20lines%20%E2%80%94%20roun-success?style=for-the-badge)
-> *Commit: "style: modern box lines — rounded corner (╭─├─╰) + solid line, bukan dotted ┈"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-style%3A%20aesthetic%20line%20upgrade%20-success?style=for-the-badge)
+> *Commit: "style: aesthetic line upgrade — double dash (──) + ◈ diamond modern, ganti ❖"*
 <!--END_SECTION:latest-update-->
 
 
