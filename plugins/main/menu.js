@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menu.js — Menu utama (Futuristic Dashboard v4)
+// menu.js — Menu utama (Indo Dev Bot Style v5)
 import { getCasesByCategory } from "../../case/nova.js";
 import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
 import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/nova-time.js";
@@ -11,9 +11,8 @@ import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import {
-  futuristicHeader, futuristicSection, progressBar, statusDot,
-  futuristicDivider, futuristicFooter, kv, buildNavButtons,
-  CATEGORY_NAMES, CATEGORY_EMOJIS,
+  botHeader, botSignature, sectionBox, progressBar, statusDot,
+  kv, buildNavButtons,
 } from "../../src/lib/nova-menu-style.js";
 import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 
@@ -56,7 +55,6 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const uptimeStr = formatUptime(uptime);
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
-    // User info
     let userRole = "Free", roleEmoji = "👤";
     if (m.isOwner) { userRole = "Owner"; roleEmoji = "👑"; }
     else if (m.isPremium) { userRole = "Premium"; roleEmoji = "💎"; }
@@ -64,25 +62,16 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const userExp = user?.exp || 0;
     const userLevel = Math.floor(userExp / 20000) + 1;
     const expMin = (userLevel - 1) * 20000;
-    const expMax = userLevel * 20000;
     const expCurr = userExp - expMin;
     const expBar = progressBar(expCurr, 20000, 8);
     const expPct = Math.round((expCurr / 20000) * 100);
 
-    // Energi bar
-    const energiVal = m.isOwner || m.isPremium ? 100 : (user?.energi ?? 25);
-    const energiMax = 100;
-    const energiBar = m.isOwner || m.isPremium ? "▰▰▰▰▰▰▰▰ ∞" : progressBar(energiVal, energiMax, 8);
+    const energiBar = m.isOwner || m.isPremium ? "▰▰▰▰▰▰▰▰ ∞" : progressBar(user?.energi ?? 25, 100, 8);
+    const limitBar = m.isOwner || m.isPremium ? "▰▰▰▰▰▰▰▰ ∞" : progressBar(user?.limit ?? 50, 100, 8);
 
-    // Limit bar
-    const limitVal = m.isOwner || m.isPremium ? 100 : (user?.limit ?? 50);
-    const limitBar = m.isOwner || m.isPremium ? "▰▰▰▰▰▰▰▰ ∞" : progressBar(limitVal, 100, 8);
-
-    // Cuaca
-    let weatherLine = "Cuaca tidak tersedia";
+    let weatherLine = "Tidak tersedia";
     try { const w = await getWeatherAddress(); if (w) weatherLine = w; } catch {}
 
-    // Hitung total fitur & kategori
     const pluginCats = getCategories();
     const commandsByCategory = getCommandsByCategory();
     const caseCats = getCasesByCategory();
@@ -97,75 +86,68 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
       totalFitur += count;
     }
 
-    // Runtime info
     const memUsage = process.memoryUsage();
     const ramMB = Math.round(memUsage.rss / 1024 / 1024);
-    const cpuUsage = process.cpuUsage();
-    const cpuSec = ((cpuUsage.user + cpuUsage.system) / 1e6).toFixed(1);
     const nodeVer = process.version;
 
-    // Build futuristic dashboard
-    const header = futuristicHeader("Nova AI Logic Core");
+    // Build Indo Dev Bot Style menu
+    const parts = [];
 
-    const greeting = `${getTimeGreeting()} *${m.pushName || "User"}* — selamat datang di sistem.`;
+    parts.push(botHeader(botName));
+    parts.push(`│`);
+    parts.push(`┊ ${getTimeGreeting()} *${m.pushName || "User"}* 👋`);
+    parts.push(`│`);
 
-    const userProfile = futuristicSection("User Profile", [
+    // User info section
+    parts.push(sectionBox("👤", "User Info", [
       kv("Nama", m.pushName || "User"),
       kv("Status", `${roleEmoji} ${userRole}`),
-      kv("Level", `${userLevel}  ${expBar}  ${expPct}%`),
+      kv("Level", `${userLevel} ${expBar} ${expPct}%`),
       kv("Energi", energiBar),
       kv("Limit", limitBar),
       kv("Koin", `🪙 ${(user?.koin || 0).toLocaleString("id-ID")}`),
-      kv("XP", `${(expCurr).toLocaleString("id-ID")} / 20.000`),
-    ]);
+      kv("XP", `${expCurr.toLocaleString("id-ID")} / 20.000`),
+    ]));
 
-    const systemInfo = futuristicSection("System Info", [
+    parts.push("");
+
+    // Bot info section
+    parts.push(sectionBox("🤖", "Bot Info", [
       kv("Status", `${statusDot("online")} Online`),
-      kv("Bot", botName),
-      kv("Version", botConfig.bot?.version || "v4.0.0"),
+      kv("Versi", botConfig.bot?.version || "v4.0.0"),
       kv("Prefix", `[ ${prefix} ]`),
       kv("Mode", botConfig.mode || "public"),
       kv("Uptime", uptimeStr),
-      kv("Runtime", `Node ${nodeVer} · ${ramMB}MB RAM`),
+      kv("Runtime", `Node ${nodeVer} · ${ramMB}MB`),
       kv("Waktu", `${timeStr} WIB · ${dateStr}`),
-    ]);
+    ]));
 
-    const envInfo = futuristicSection("Lingkungan", [
+    parts.push("");
+
+    // Environment section
+    parts.push(sectionBox("🌐", "Lingkungan", [
       kv("Cuaca", weatherLine),
-      kv("Total Fitur", `${totalFitur} tersedia`),
+      kv("Fitur", `${totalFitur} tersedia`),
       kv("Kategori", `${totalKategori} aktif`),
-    ]);
+    ]));
 
-    const quickAccess = futuristicSection("Quick Access", [
-      `${prefix}allmenu       — semua fitur`,
-      `${prefix}menukategori  — per kategori`,
-      `${prefix}tanyaai       — tanya AI`,
-      `${prefix}owner         — kontak owner`,
-    ]);
+    parts.push("");
 
-    const footer = futuristicFooter(
-      `${totalFitur} fitur · ${totalKategori} kategori · ${prefix} prefix`,
-      botName
-    );
+    // Quick access section
+    parts.push(sectionBox("⚡", "Menu Cepat", [
+      `${prefix}allmenu — semua fitur`,
+      `${prefix}menukategori — per kategori`,
+      `${prefix}tanyaai — tanya AI`,
+      `${prefix}owner — kontak owner`,
+    ]));
 
-    return [
-      header,
-      "",
-      greeting,
-      "",
-      userProfile,
-      "",
-      systemInfo,
-      "",
-      envInfo,
-      "",
-      quickAccess,
-      "",
-      footer,
-    ].join("\n");
+    parts.push("");
+    parts.push(botSignature(botName));
+
+    return parts.join("\n");
   } catch (e) {
     console.error("[menu] buildMenuText error:", e.message);
-    return `◆ ◇ ◆ Error ◆ ◇ ◆\n\n┊ ${e.message}`;
+    return `╭─「 *Error* 」\n│ ❏ ${e.message}\n╰──────────`;
   }
 }
 
