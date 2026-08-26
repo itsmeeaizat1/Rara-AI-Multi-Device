@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20Multi%20Language%20System%20(20%20Bahasa)-success?style=for-the-badge)
-> *Commit: "feat: multi-language system (.languagemenubot) — Google Translate API, 20 bahasa, default OFF"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20reset%20ke%20commit%20rebuild%20c-success?style=for-the-badge)
+> *Commit: "fix: reset ke commit rebuild confesswall (053d892)"*
 <!--END_SECTION:latest-update-->
 
 
