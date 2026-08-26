@@ -3,7 +3,8 @@ name: Create Release Zip
 on:
   push:
     tags:
-      - 'v*' # Berjalan otomatis saat membuat tag versi baru (contoh: v3.0.1)
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
   release:
@@ -11,9 +12,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-    - name: Zip repository
+    - name: Zip repository (exclude .git & node_modules)
       run: |
-        zip -r bot-source.zip . -x "*.git*"
+        zip -r bot-source.zip . -x ".git/*" "node_modules/*" ".github/*"
     - name: Upload Release
       uses: softprops/action-gh-release@v2
       with:
