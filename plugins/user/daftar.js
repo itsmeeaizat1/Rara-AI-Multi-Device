@@ -246,7 +246,7 @@ function generateSerialNumber() {
 
 function buildUserDataBlock(name, age, gender, serial) {
   return (
-    `╭──「 *DATA REGISTRASI\n」` +
+    `╭──「 *DATA REGISTRASI* 」\n` +
     `│ ❏ 📛 Nama: *${name || "-"}*\n` +
     `│ ❏ 🎂 Umur: *${age ? `${age} tahun` : "-"}*\n` +
     `│ ❏ 👤 Gender: *${gender || "-"}*\n` +
@@ -270,20 +270,20 @@ function buildWelcomeMessage(user, registrationRequired, prefix) {
   }
 
   return (
-    `╭──「 *MENU DAFTAR\n」` +
+    `╭──「 *Menu Daftar* 」` +
     `│ ❏ *Selamat datang di Menu Daftar!*\n\n` +
-    `┊ ✨ Dengan daftar, data akun kamu jadi lebih aman\n` +
-    `┊ dan pengalaman pakai bot jadi lebih lengkap.\n\n` +
+    `│ ❏ ✨ Dengan daftar, data akun kamu jadi lebih aman\n` +
+    `│ ❏ dan pengalaman pakai bot jadi lebih lengkap.\n\n` +
     `│ ❏ *ᴍᴀɴꜰᴀᴀᴛ ᴅᴀꜰᴛᴀʀ*\n` +
     `${benefits.map((item) => `│ ❏ ${item}`).join("\n")}\n\n` +
     `│ ❏ *Pertanyaan 1/4*\n` +
-    `┊ ➶ Siapa nama kamu?\n\n` +
+    `│ ❏ Siapa nama kamu?\n\n` +
     `│ ❏ *ᴡᴀᴊɪʙ ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ʏᴀ*\n` +
-    `┊ ➶ Untuk batal: reply \`batal\` atau ketik \`${prefix}bataldaftar\`\n\n` +
+    `│ ❏ Untuk batal: reply \`batal\` atau ketik \`${prefix}bataldaftar\`\n\n` +
     `│ ❏ *ᴍᴇᴛᴏᴅᴇ ᴅᴀꜰᴛᴀʀ ʟᴀɪɴɴʏᴀ*\n` +
-    `┊ ➶ \`${prefix}daftar Nama, Umur\` - Daftar cepat\n` +
-    `┊ ➶ \`${prefix}daftarotomatis\` - Daftar via captcha (DM)\n` +
-    `┊ ➶ \`${prefix}regmail Nama, email\` - Daftar via email OTP\n` +
+    `│ ❏ \`${prefix}daftar Nama, Umur\` - Daftar cepat\n` +
+    `│ ❏ \`${prefix}daftarotomatis\` - Daftar via captcha (DM)\n` +
+    `│ ❏ \`${prefix}regmail Nama, email\` - Daftar via email OTP\n` +
     `╰──────────❀`
   );
 }

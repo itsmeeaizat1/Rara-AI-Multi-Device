@@ -336,8 +336,7 @@ function clearCaptchaSession(jid) {
 
 function buildUserDataBlock(name, age, gender) {
   return (
-    "╭──「 *" + (name || "-") +
-    "\n│ ❏ Umur: " + (age || "-") +
+    "╭──「 *" + (name || "-") + "* 」\n│ ❏ Umur: " + (age || "-") +
     "\n│ ❏ Gender: " + (gender || "-") +
     "\n│ ❏ Bonus daftar sudah pernah diklaim" +
     "\n│ ❏ Tidak ada reward tambahan" +
@@ -483,7 +482,7 @@ async function captchaAnswerHandler(m, sock) {
     // Ask for name
     session.step = "name"
     await sock.sendMessage(m.chat, {
-      text: "✅ *Captcha benar!*\n\n╭──「 *Pertanyaan 1/3\n│ ❏ Halo *" + name + "* ✋\n\n│ ❏ *Pertanyaan 2/3*\n│ ❏ Berapa umurmu?\n\n│ ❏ Umur: 1-100 tahun\n│ ❏ Reply dengan angka\n╰──────────❀",
+      text: "✅ *Captcha benar!*\n\n╭──「 *Pertanyaan 1/3* 」\n\n│ ❏ Halo *" + name + "* ✋\n\n│ ❏ *Pertanyaan 2/3*\n│ ❏ Berapa umurmu?\n\n│ ❏ Umur: 1-100 tahun\n│ ❏ Reply dengan angka\n╰──────────❀",
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
     return true
@@ -499,7 +498,7 @@ async function captchaAnswerHandler(m, sock) {
     session.age = age
     session.step = "gender"
     await sock.sendMessage(m.chat, {
-      text: "╭──「 *\U0001F4DD LANJUTKAN\n│ ❏ *Pertanyaan 3/3*\n│ ❏ Kamu cowo atau cewe?\n\n│ ❏ *Cowo / Cowok / Laki-laki / L*\n│ ❏ *Cewe / Cewek / Perempuan / P*\n\n│ ❏ Reply pesan ini dengan jawabanmu\n╰──────────❀",
+      text: "╭──「 *\U0001F4DD LANJUTKAN* 」\n│ ❏ *Pertanyaan 3/3*\n│ ❏ Kamu cowo atau cewe?\n\n│ ❏ *Cowo / Cowok / Laki-laki / L*\n│ ❏ *Cewe / Cewek / Perempuan / P*\n\n│ ❏ Reply pesan ini dengan jawabanmu\n╰──────────❀",
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
     return true

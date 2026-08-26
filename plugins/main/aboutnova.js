@@ -32,23 +32,17 @@ async function handler(m, { sock, config: botConfig }) {
 
     let cmdLines = "";
     for (let i = 0; i < mainCmds.length; i++) {
-      const end = i === mainCmds.length - 1 ? "  ╰" : "  ┊";
-      cmdLines += `${end}  ➶ ${prefix}${mainCmds[i]}\n`;
+      cmdLines += `│ ❏ ${prefix}${mainCmds[i]}\n`;
     }
 
-    const text = `╭──「 *Aʙᴏᴜᴛ Nᴏᴠᴀ
-┊
-│ ❏ *ɴᴀᴍᴀ:* ${toSC(botName)}
+    const text = `╭──「 *Aʙᴏᴜᴛ Nᴏᴠᴀ* 」\n│ ❏ *ɴᴀᴍᴀ:* ${toSC(botName)}
 │ ❏ *ᴠᴇʀꜱɪᴏɴ:* ${version}
 │ ❏ *ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${toSC(developer)}
 │ ❏ *ᴘʟᴀᴛꜰᴏʀᴍ:* WhatsApp Multi Device
 │ ❏ *ʟɪʙʀᴀʀʏ:* Baileys (nova-baileys)
 │ ❏ *ʀᴜɴᴛɪᴍᴇ:* Node.js ${process.version}
-┊
-₊˚ʚ ᗢ₊˚✧ ﾟ. 🏠 Mᴀɪɴ Cᴏᴍᴍᴀɴᴅs ｡ﾟ
-┊${cmdLines}₊˚ʚ ᗢ₊˚✧ ﾟ.
-┊
-╰──────────❀
+├──「 *Mᴀɪɴ Cᴏᴍᴍᴀɴᴅs
+${cmdLines}╰──────────❀
 ${prefix}menu untuk melihat semua fitur`;
 
     await m.reply(text);

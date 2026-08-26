@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
     const keyword = args.join(" ").toLowerCase().trim();
 
     if (!keyword) {
-      await m.reply(`╭──「 *Aɪ Hᴇʟᴘ*
+      await m.reply(`╭──「 *Aɪ Hᴇʟᴘ* 」
 
 Ketik *${prefix}aihelp <keyword>* untuk cari command.
 
@@ -58,7 +58,7 @@ ${prefix}aihelp group
     }
 
     if (matches.length === 0) {
-      await m.reply(`╭──「 *Aɪ Hᴇʟᴘ*
+      await m.reply(`╭──「 *Aɪ Hᴇʟᴘ* 」
 
 Tidak ada command untuk "${keyword}".
 
@@ -69,20 +69,14 @@ Tidak ada command untuk "${keyword}".
 
     let cmdLines = "";
     for (let i = 0; i < matches.length; i++) {
-      const end = i === matches.length - 1 ? "  ╰" : "  ┊";
       const desc = matches[i].description ? ` — ${toSC(matches[i].description)}` : "";
-      cmdLines += `${end}  ➶ ${prefix}${matches[i].name}${desc}\n`;
+      cmdLines += `│ ❏ ${prefix}${matches[i].name}${desc}\n`;
     }
 
-    const text = `╭──「 *Aɪ Hᴇʟᴘ
-┊
-│ ❏ *Keyword:* ${keyword}
+    const text = `╭──「 *Aɪ Hᴇʟᴘ* 」\n│ ❏ *Keyword:* ${keyword}
 │ ❏ *Ditemukan:* ${matches.length} command
-┊
-₊˚ʚ ᗢ₊˚✧ ﾟ. 🔍 Hᴀsɪʟ ｡ﾟ
-┊${cmdLines}₊˚ʚ ᗢ₊˚✧ ﾟ.
-┊
-╰──────────❀`;
+├──「 Hasil 」
+${cmdLines}╰──────────❀`;
 
     await m.reply(text);
     await m.react("🐣");

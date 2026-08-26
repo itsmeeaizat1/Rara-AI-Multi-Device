@@ -131,7 +131,7 @@ async function handler(m, { sock, db }) {
         if (wf) weatherBlock = `${wf}\n\n`;
       } catch {}
 
-      let txt = `${weatherBlock}╭──「 *Keterangan*
+      let txt = `${weatherBlock}╭──「 *Keterangan* 」
 │
 │ ❏ Ⓞ = Hanya untuk owner
 │ ❏ ⓟ = Hanya untuk premium
@@ -210,7 +210,7 @@ async function handler(m, { sock, db }) {
 
     if (!matchedCat) {
       await m.reply(
-        `╭──「 *Error* 」\n╎\n│ ❏ Kategori \`${categoryArg}\` tidak ditemukan\n│ ❏ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰──────────❀`
+        `╭──「 *Error* 」\n│ ❏ Kategori \`${categoryArg}\` tidak ditemukan\n│ ❏ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰──────────❀`
       );
       await m.react("❌");
       return;
@@ -218,7 +218,7 @@ async function handler(m, { sock, db }) {
 
     if (matchedCat === "owner" && !m.isOwner) {
       await m.reply(
-        `╭──「 *Akses Ditolak* 」\n╎\n│ ❏ Kategori ini hanya untuk owner\n╰──────────❀`
+        `╭──「 *Akses Ditolak* 」\n│ ❏ Kategori ini hanya untuk owner\n╰──────────❀`
       );
       await m.react("❌");
       return;
@@ -230,7 +230,7 @@ async function handler(m, { sock, db }) {
 
     if (allCommands.length === 0) {
       await m.reply(
-        `╭──「 *Kosong* 」\n╎\n│ ❏ Kategori \`${matchedCat}\` tidak ada command\n╰──────────❀`
+        `╭──「 *Kosong* 」\n│ ❏ Kategori \`${matchedCat}\` tidak ada command\n╰──────────❀`
       );
       await m.react("❌");
       return;
@@ -245,7 +245,7 @@ async function handler(m, { sock, db }) {
       if (wf2) weatherBlock2 = `${wf2}\n\n`;
     } catch {}
 
-    let txt = `${weatherBlock2}╭──「 *${catName}*
+    let txt = `${weatherBlock2}╭──「 *${catName}* 」
 │
 │ ❏ *Total: ${totalFitur} Fitur*
 │

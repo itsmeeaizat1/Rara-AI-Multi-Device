@@ -28,17 +28,11 @@ async function handler(m, { sock, config: botConfig }) {
 
     let cmdLines = "";
     for (let i = 0; i < funCmds.length; i++) {
-      const end = i === funCmds.length - 1 ? "  ╰" : "  ┊";
-      cmdLines += `${end}  ➶ ${prefix}${funCmds[i]}\n`;
+      cmdLines += `│ ❏ ${prefix}${funCmds[i]}\n`;
     }
 
     const text = `╭──「 *Fᴜɴ
-┊
-₊˚ʚ ᗢ₊˚✧ ﾟ. 🎮 Fᴜɴ ｡ﾟ
-┊${cmdLines}₊˚ʚ ᗢ₊˚✧ ﾟ.
-┊
-│ ❏ *Total: ${funCmds.length} Fitur*
-┊
+${cmdLines}│ ❏ *Total: ${funCmds.length} Fitur*
 ╰──────────❀`;
 
     await m.reply(text);

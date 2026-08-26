@@ -60,18 +60,14 @@ async function handler(m, { sock }) {
     const ipv6 = droplet.networks?.v6?.[0]?.ip_address || "-";
     const status = droplet.status === "active" ? "Active" : droplet.status;
 
-    let txt = `╭──「 *Detail VPS
-┊
-│ ❏ *ID:* ${droplet.id}
+    let txt = `╭──「 *Detail VPS* 」\n│ ❏ *ID:* ${droplet.id}
 │ ❏ *ɴᴀᴍᴇ:* ${droplet.name}
 │ ❏ *ꜱᴛᴀᴛᴜꜱ:* ${status}
 │ ❏ *IPv4:* ${ip}
 │ ❏ *IPv6:* ${ipv6}
 ╰──────────❀
 
-╭──「 *Spec
-┊
-│ ❏ *ʀᴀᴍ:* ${droplet.memory} MB
+╭──「 *Spec* 」\n│ ❏ *ʀᴀᴍ:* ${droplet.memory} MB
 │ ❏ *ᴄᴘᴜ:* ${droplet.vcpus} vCPU
 │ ❏ *ᴅɪꜱᴋ:* ${droplet.disk} GB
 │ ❏ *ʀᴇɢɪᴏɴ:* ${droplet.region?.name || droplet.region?.slug}

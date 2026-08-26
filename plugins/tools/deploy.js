@@ -121,7 +121,7 @@ Contoh:
 
         m.react('✅')
 
-        await m.reply(claraWrap("Deploy", `╭──「 *DEPLOY SUCCESS
+        await m.reply(claraWrap("Deploy", `╭──「 *DEPLOY SUCCESS* 」
 │
 │ 🌐 Nama     : ${name}
 │ ☁️ Platform : Vercel
@@ -141,7 +141,7 @@ Contoh:
             error.message
 
         m.reply(
-`╭──「 *DEPLOY FAILED
+`╭──「 *DEPLOY FAILED* 」
 │
 │ ❌ ${err}
 │

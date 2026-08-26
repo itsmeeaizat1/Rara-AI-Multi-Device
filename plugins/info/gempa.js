@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
         ? API_BASE + "/" + g.Shakemap
         : null;
 
-      let txt = "╭──「 *" + g.Tanggal + "│ ❏\n";
+      let txt = "╭──「 *" + g.Tanggal + "* 」\n│ ❏\n";
       txt += "╰──────────❀\n";
       txt += "10 gempa dirasakan terbaru\n\n";
 
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
       const gempaList = data.Infogempa.gempa;
       const limit = Math.min(15, gempaList.length);
 
-      let txt = "╭──「 *GEMA TERKINI M5.0+ — BMKG│ ❏\n";
+      let txt = "╭──「 *GEMA TERKINI M5.0+ — BMKG* 」\n│ ❏\n";
       txt += "╰──────────❀\n";
       txt += "15 gempa M 5.0+ terbaru\n\n";
 
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     }
 
     // HELP
-    let txt = "╭──「 *INFO GEMPA — BMKG│ ❏\n";
+    let txt = "╭──「 *INFO GEMPA — BMKG* 」\n│ ❏\n";
     txt += "╰──────────❀\n";
     txt += "Data gempa langsung dari BMKG Indonesia.\n\n";
     txt += "*ᴘᴇʀɪɴᴛᴀʜ:*\n";

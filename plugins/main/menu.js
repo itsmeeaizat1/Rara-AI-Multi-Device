@@ -121,7 +121,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const more = String.fromCharCode(8206);
     const readMore = more.repeat(4001);
 
-    return `╭──「 *Info User*
+    return `╭──「 *Info User* 」
 │
 │ ❏ *Nama:*  ${m.pushName || "User"}
 │ ❏ *Nomor:* @${m.sender.split("@")[0]}
@@ -166,8 +166,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ ❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
 ╰──────────❀
 ${weatherBlock}${readMore}
-╭──「 *Menu*
-│ ❏ ${prefix}menu
+╭──「 *Menu* 」\n│ ❏ ${prefix}menu
 │ ❏ ${prefix}allmenu
 │ ❏ ${prefix}allmenucategory <kategori>
 │ ❏ ${prefix}tanyaai

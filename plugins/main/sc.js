@@ -23,9 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const botName = config.bot?.name || "Nova-AI";
 
-  const caption = `╭──「 *Script Bot
-┊
-│ ❏ *ʙᴏᴛ:* ${botName}
+  const caption = `╭──「 *Script Bot* 」\n│ ❏ *ʙᴏᴛ:* ${botName}
 │ ❏ *ᴜꜱᴇʀ:* ${m.pushName}
 ╰──────────❀
 

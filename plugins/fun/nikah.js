@@ -40,8 +40,8 @@ async function handler(m, { sock }) {
     if (!targetJid) {
       return m.reply(
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `  ┊ ➶ \`${m.prefix}nikah @tag\`\n` +
-        `  ┊ ➶ Reply pesan pasangan + \`${m.prefix}nikah\`\n\n` +
+        `│ ❏ \`${m.prefix}nikah @tag\`\n` +
+        `│ ❏ Reply pesan pasangan + \`${m.prefix}nikah\`\n\n` +
         `╰──────────❀`
       );
     }
@@ -126,8 +126,8 @@ async function handler(m, { sock }) {
 
     await m.reply(
       `💍 *ᴀᴅᴀ ʏᴀɴɢ ᴍᴇʟᴀᴍᴀʀ ɴɪʜʜ*\n\n` +
-      `  ┊ ➶ 💒 @${m.sender.split("@")[0]} melamar @${targetJid.split("@")[0]}\n` +
-      `  ┊ ➶ ⏱️ Berlaku *1 jam*\n\n` +
+      `│ ❏ 💒 @${m.sender.split("@")[0]} melamar @${targetJid.split("@")[0]}\n` +
+      `│ ❏ ⏱️ Berlaku *1 jam*\n\n` +
       `_Balas pesan ini dengan *terima* atau *tolak*_\n` +
       `Atau gunakan \`${m.prefix}terimanikah\` / \`${m.prefix}tolaknikah\`\n\n` +
       `╰──────────❀`

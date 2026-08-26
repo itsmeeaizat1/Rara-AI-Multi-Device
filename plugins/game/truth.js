@@ -45,8 +45,8 @@ export async function handler(m, { sock }) {
       return;
     }
 
-    let text = `╭──「 *TRUTH OR DARE*\n\n」`;
-    text += `┊ ➶ 🎭 Mode: *TRUTH*\n\n`;
+    let text = `╭──「 *TRUTH OR DARE* 」\n\n」`;
+    text += `│ ❏ 🎭 Mode: *TRUTH*\n\n`;
     text += `\`\`\`${truth}\`\`\`\n\n`;
     text += `_Jawab jujur ya, atau ketik .dare buat ganti tantangan_\n`;
     text += `╰──────────❀`;

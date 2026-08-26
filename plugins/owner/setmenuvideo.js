@@ -32,23 +32,23 @@ async function handler(m, { sock, db }) {
     const localExists = fs.existsSync(localPath);
 
     const lines = [
-      `┊ Sumber Video Menu V1`,
+      `│ ❏ Sumber Video Menu V1`,
       ``,
-      `┊ Menu:`,
+      `│ ❏ Menu:`,
       menuUrl
-        ? `┊    URL: ${menuUrl}`
-        : `┊    Local: ${localPath} ${localExists ? "✅" : "❌"}`,
+        ? `│ ❏ URL: ${menuUrl}`
+        : `│ ❏ Local: ${localPath} ${localExists ? "✅" : "❌"}`,
       ``,
-      `┊ AllMenu:`,
+      `│ ❏ AllMenu:`,
       allmenuUrl
-        ? `┊    URL: ${allmenuUrl}`
-        : `┊    Local: ${localPath} ${localExists ? "✅" : "❌"}`,
+        ? `│ ❏ URL: ${allmenuUrl}`
+        : `│ ❏ Local: ${localPath} ${localExists ? "✅" : "❌"}`,
       ``,
-      `┊ Cara ubah:`,
-      `┊    ${prefix}setmenuvideo <url> - Set URL video menu`,
-      `┊    ${prefix}setmenuvideo local - Menu pakai file local`,
-      `┊    ${prefix}setmenuvideo allmenu <url> - Set URL allmenu`,
-      `┊    ${prefix}setmenuvideo allmenu local - Allmenu pakai local`,
+      `│ ❏ Cara ubah:`,
+      `│ ❏ ${prefix}setmenuvideo <url> - Set URL video menu`,
+      `│ ❏ ${prefix}setmenuvideo local - Menu pakai file local`,
+      `│ ❏ ${prefix}setmenuvideo allmenu <url> - Set URL allmenu`,
+      `│ ❏ ${prefix}setmenuvideo allmenu local - Allmenu pakai local`,
     ];
 
     await m.reply(claraWrap("SetMenuVideo", lines.join("\n")));
