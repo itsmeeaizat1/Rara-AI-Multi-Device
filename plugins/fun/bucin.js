@@ -45,7 +45,7 @@ export async function handler(m, { sock }) {
       return;
     }
 
-    let text = `╭──「 *QUOTES BUCIN*\n\n」`;
+    let text = `╭──「 *QUOTES BUCIN* 」\n\n」`;
     text += `\`\`\`${quote}\`\`\`\n\n`;
     text += `╰──────────❀`;
 

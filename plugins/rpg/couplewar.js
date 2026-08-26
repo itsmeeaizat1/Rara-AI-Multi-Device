@@ -33,9 +33,9 @@ async function handler(m, { sock }) {
 
     if (!myCinta.spouse) {
       return m.reply(
-        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n」` +
-        `  ┊ ➶ 💔 Kamu belum punya pasangan!\n` +
-        `  ┊ ➶ Jomblo mau war sama siapa? 😂\n\n` +
+        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ* 」\n\n」` +
+        `│ ❏ 💔 Kamu belum punya pasangan!\n` +
+        `│ ❏ Jomblo mau war sama siapa? 😂\n\n` +
         `╰──────────❀`
       );
     }
@@ -44,24 +44,24 @@ async function handler(m, { sock }) {
     if (!targetJid) {
       return m.reply(
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `  ┊ ➶ \`${m.prefix}couplewar @target\`\n` +
-        `  ┊ ➶ Tag salah satu pasangan lawan\n\n` +
+        `│ ❏ \`${m.prefix}couplewar @target\`\n` +
+        `│ ❏ Tag salah satu pasangan lawan\n\n` +
         `╰──────────❀`
       );
     }
 
     if (targetJid === m.sender) {
       return m.reply(
-        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n」` +
-        `  ┊ ➶ ❌ War sama diri sendiri? Itu skizofrenia 😂\n\n` +
+        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ* 」\n\n」` +
+        `│ ❏ ❌ War sama diri sendiri? Itu skizofrenia 😂\n\n` +
         `╰──────────❀`
       );
     }
 
     if (targetJid === myCinta.spouse) {
       return m.reply(
-        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n」` +
-        `  ┊ ➶ ❌ Nggak bisa war sama pasangan sendiri! 😅\n\n` +
+        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ* 」\n\n」` +
+        `│ ❏ ❌ Nggak bisa war sama pasangan sendiri! 😅\n\n` +
         `╰──────────❀`
       );
     }
@@ -71,9 +71,9 @@ async function handler(m, { sock }) {
 
     if (!targetCinta.spouse) {
       return m.reply(
-        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n」` +
-        `  ┊ ➶ 💔 @${targetJid.split("@")[0]} belum punya pasangan!\n` +
-        `  ┊ ➶ Jomblo vs jomblo namanya duel bukan couple war 😂\n\n` +
+        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ* 」\n\n」` +
+        `│ ❏ 💔 @${targetJid.split("@")[0]} belum punya pasangan!\n` +
+        `│ ❏ Jomblo vs jomblo namanya duel bukan couple war 😂\n\n` +
         `╰──────────❀`
       );
     }
@@ -82,8 +82,8 @@ async function handler(m, { sock }) {
     const cd = checkCooldown(m, "couplewar");
     if (cd) {
       return m.reply(
-        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n」` +
-        `  ┊ ➶ ⏳ Cooldown: *${formatDurasi(cd)}* lagi\n\n` +
+        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ* 」\n\n」` +
+        `│ ❏ ⏳ Cooldown: *${formatDurasi(cd)}* lagi\n\n` +
         `╰──────────❀`
       );
     }
@@ -170,24 +170,24 @@ async function handler(m, { sock }) {
     const winnerTeam = iWin ? `${myName} & ${myPartnerName}` : `${targetName} & ${targetPartnerName}`;
     const loserTeam = iWin ? `${targetName} & ${targetPartnerName}` : `${myName} & ${myPartnerName}`;
 
-    let msg = `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ ⚔️*\n\n」`;
+    let msg = `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ ⚔️* 」\n\n」`;
     msg += `  🏠 *Team 1: ${myName} & ${myPartnerName}*\n`;
-    msg += `  ┊ ➶ ⚔️ Couple Power: *${myCouplePower}*\n`;
-    msg += `  ┊ ➶ 🎲 Roll: *+${myRoll}*\n`;
-    msg += `  ┊ ➶ 💥 Final Power: *${myFinalPower}*\n\n`;
+    msg += `│ ❏ ⚔️ Couple Power: *${myCouplePower}*\n`;
+    msg += `│ ❏ 🎲 Roll: *+${myRoll}*\n`;
+    msg += `│ ❏ 💥 Final Power: *${myFinalPower}*\n\n`;
     msg += `  🏠 *Team 2: ${targetName} & ${targetPartnerName}*\n`;
-    msg += `  ┊ ➶ ⚔️ Couple Power: *${targetCouplePower}*\n`;
-    msg += `  ┊ ➶ 🎲 Roll: *+${targetRoll}*\n`;
-    msg += `  ┊ ➶ 💥 Final Power: *${targetFinalPower}*\n\n`;
+    msg += `│ ❏ ⚔️ Couple Power: *${targetCouplePower}*\n`;
+    msg += `│ ❏ 🎲 Roll: *+${targetRoll}*\n`;
+    msg += `│ ❏ 💥 Final Power: *${targetFinalPower}*\n\n`;
     msg += `  🏆 *Pemenang: ${winnerTeam}*\n`;
-    msg += `  ┊ ➶ 💕 Affection: *+${winAff}*\n`;
-    msg += `  ┊ ➶ ✨ EXP: *+${winExp}*\n`;
-    msg += `  ┊ ➶ 💰 Gold: *+${winGold}*\n`;
-    msg += `  ┊ ➶ 📊 Power Gap: *${powerDiff}*\n\n`;
+    msg += `│ ❏ 💕 Affection: *+${winAff}*\n`;
+    msg += `│ ❏ ✨ EXP: *+${winExp}*\n`;
+    msg += `│ ❏ 💰 Gold: *+${winGold}*\n`;
+    msg += `│ ❏ 📊 Power Gap: *${powerDiff}*\n\n`;
     msg += `  💀 *Kalah: ${loserTeam}*\n`;
-    msg += `  ┊ ➶ 💕 Affection: *${lossAff}*\n`;
-    msg += `  ┊ ➶ ✨ EXP: *+${lossExp}*\n`;
-    msg += `  ┊ ➶ 💰 Gold: *+${lossGold}*\n\n`;
+    msg += `│ ❏ 💕 Affection: *${lossAff}*\n`;
+    msg += `│ ❏ ✨ EXP: *+${lossExp}*\n`;
+    msg += `│ ❏ 💰 Gold: *+${lossGold}*\n\n`;
     msg += `╰──────────❀`;
 
     await m.reply(msg);

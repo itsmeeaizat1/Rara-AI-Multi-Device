@@ -45,9 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
       text: "Jika kamu memiliki pertanyaan, jangan ragu untuk bertanya, owner ramah kok",
     }, { quoted: zanne });
   } else {
-    const ownerText = `╭──「 *Owner Information
-┊
-│ ❏ *ɴᴀᴍᴀ:* ${ownerNames}
+    const ownerText = `╭──「 *Owner Information* 」\n│ ❏ *ɴᴀᴍᴀ:* ${ownerNames}
 │ ❏ *ʙᴏᴛ:* ${botName}
 │ ❏ *ꜱᴛᴀᴛᴜꜱ:* Online
 ╰──────────❀

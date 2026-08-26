@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
 
     const responseText =
       `✅ *ᴘᴀꜱᴛᴇʙɪɴ ʙᴇʀʜᴀꜱɪʟ*\n\n` +
-      `╭──「 *DETAIL\n」` +
+      `╭──「 *DETAIL* 」\n` +
       `│ ❏ 📝 JUDUL: *${api_paste_name}*\n` +
       `│ ❏ 📊 UKURAN: *${text.length} chars*\n` +
       `│ ❏ 🔗 LINK: ${url}\n` +

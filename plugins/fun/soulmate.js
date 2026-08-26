@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     const combined = nama1.toLowerCase() + nama2.toLowerCase()
     const baseScore = Array.from(combined).reduce((a, c) => a + c.charCodeAt(0), 0)
     const compatibility = (baseScore % 51) + 50 
-    let txt = `╭──「 *💫 SOUL MATCH\n」`
+    let txt = `╭──「 *💫 SOUL MATCH* 」\n`
     txt += `│\n`
     txt += `│ 👤 *${nama1}*\n`
     txt += `│ ├ 🔮 Soul: ${soul1.soulType}\n`

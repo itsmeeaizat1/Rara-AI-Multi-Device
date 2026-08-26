@@ -66,9 +66,9 @@ async function handler(m, { sock }) {
     db.save();
 
     let msg = `💔 *ᴄᴇʀᴀɪ*\n\n`;
-    msg += `  ┊ ➶ @${m.sender.split("@")[0]} cerai dengan @${partnerJid.split("@")[0]}\n`;
+    msg += `│ ❏ @${m.sender.split("@")[0]} cerai dengan @${partnerJid.split("@")[0]}\n`;
     if (durasiNikah > 0) {
-      msg += `  ┊ ➶ Durasi nikah: *${durasiNikah} hari*\n`;
+      msg += `│ ❏ Durasi nikah: *${durasiNikah} hari*\n`;
     }
     msg += `\n  _Tetap berpacaran, tapi tidak lagi menikah_ 💔\n\n`;
     msg += `╰──────────❀`;

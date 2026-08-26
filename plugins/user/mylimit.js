@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     status = "Free";
   }
 
-  let msg = `╭──「 *MY LIMIT\n」`;
+  let msg = `╭──「 *MY LIMIT* 」\n`;
   msg += `│ ❏ Status: *${status}*\n`;
   msg += `│ ❏ Sisa limit: *${formatNumber(currentEnergi)}*\n`;
   if (!isOwner && currentEnergi !== -1) {

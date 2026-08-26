@@ -158,9 +158,9 @@ function renderBoard(session) {
     const ans = session.answers[i];
     if (ans.revealed) {
       const finder = ans.foundBy ? ` _(@${ans.foundBy.split("@")[0]})_ ` : " ";
-      lines.push(`┊ ➶ ${i + 1}. *${ans.text.toUpperCase()}*${finder}✅`);
+      lines.push(`│ ❏ ${i + 1}. *${ans.text.toUpperCase()}*${finder}✅`);
     } else {
-      lines.push(`┊ ➶ ${i + 1}. _???????????_`);
+      lines.push(`│ ❏ ${i + 1}. _???????????_`);
     }
   }
   return lines.join("\n");
@@ -259,8 +259,8 @@ async function handler(m, { sock }) {
         let text = `⚠️ *Game Family 100 masih berjalan!*\n\n`;
         text += `╭──「 *${session.question}* 」\n\n`;
         text += renderBoard(session);
-        text += `\n\n┊ ➶ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n`;
-        text += `┊ ➶ Sisa waktu: *${formatTime(remaining)}*\n\n`;
+        text += `\n\n│ ❏ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n`;
+        text += `│ ❏ Sisa waktu: *${formatTime(remaining)}*\n\n`;
         text += `_Ketik "nyerah" untuk menyerah dan lihat semua jawaban_`;
         await m.reply(text);
         return;
@@ -292,9 +292,9 @@ async function handler(m, { sock }) {
       })),
       totalAnswers: questionData.jawaban.length,
     });
-    text += `\n\n┊ ➶ Total jawaban: *${questionData.jawaban.length}*\n`;
-    text += `┊ ➶ Waktu: *${formatTime(120000)}*\n`;
-    text += `┊ ➶ Hadiah: *Limit, Koin, EXP (random per jawaban)*\n\n`;
+    text += `\n\n│ ❏ Total jawaban: *${questionData.jawaban.length}*\n`;
+    text += `│ ❏ Waktu: *${formatTime(120000)}*\n`;
+    text += `│ ❏ Hadiah: *Limit, Koin, EXP (random per jawaban)*\n\n`;
     text += `_Balas pesan ini atau ketik jawaban langsung_\n_Ketik "nyerah" untuk menyerah_\n`;
     text += `╰─`;
 
@@ -316,12 +316,12 @@ async function handler(m, { sock }) {
         for (let i = 0; i < session.answers.length; i++) {
           const ans = session.answers[i];
           if (ans.revealed) {
-            endText += `┊ ➶ ${i + 1}. *${ans.text.toUpperCase()}* ✅\n`;
+            endText += `│ ❏ ${i + 1}. *${ans.text.toUpperCase()}* ✅\n`;
           } else {
-            endText += `┊ ➶ ${i + 1}. *${ans.text.toUpperCase()}* ❌\n`;
+            endText += `│ ❏ ${i + 1}. *${ans.text.toUpperCase()}* ❌\n`;
           }
         }
-        endText += `\n┊ ➶ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
+        endText += `\n│ ❏ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
         const scores = renderScores(session);
         if (scores) {
           endText += `🏆 *SKOR AKHIR:*\n${scores}\n\n`;
@@ -369,12 +369,12 @@ async function answerHandler(m, sock) {
       for (let i = 0; i < session.answers.length; i++) {
         const ans = session.answers[i];
         if (ans.revealed) {
-          text += `┊ ➶ ${i + 1}. *${ans.text.toUpperCase()}* ✅\n`;
+          text += `│ ❏ ${i + 1}. *${ans.text.toUpperCase()}* ✅\n`;
         } else {
-          text += `┊ ➶ ${i + 1}. *${ans.text.toUpperCase()}* ❌\n`;
+          text += `│ ❏ ${i + 1}. *${ans.text.toUpperCase()}* ❌\n`;
         }
       }
-      text += `\n┊ ➶ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
+      text += `\n│ ❏ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
       const scores = renderScores(session);
       if (scores) {
         text += `🏆 *SKOR AKHIR:*\n${scores}\n\n`;
@@ -422,11 +422,11 @@ async function answerHandler(m, sock) {
 
       let replyText = `✅ *BENAR!*\n`;
       replyText += `*@${sender.split("@")[0]}* menebak: *${result.answer.text.toUpperCase()}*\n`;
-      replyText += `┊ ➶ Dapat *${points} poin*\n`;
-      replyText += `┊ ➶ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
+      replyText += `│ ❏ Dapat *${points} poin*\n`;
+      replyText += `│ ❏ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
       replyText += `╭──「 *${session.question}* 」\n\n`;
       replyText += renderBoard(session);
-      replyText += `\n\n┊ ➶ Sisa waktu: *${formatTime(getRemainingTime(chatId))}*\n`;
+      replyText += `\n\n│ ❏ Sisa waktu: *${formatTime(getRemainingTime(chatId))}*\n`;
       const scores = renderScores(session);
       if (scores) {
         replyText += `\n🏆 *SKOR:*\n${scores}\n`;
@@ -469,12 +469,12 @@ async function answerHandler(m, sock) {
           }
 
           winText += `🥇 *Juara:* @${topJid.split("@")[0]}\n`;
-          winText += `┊ ➶ ${topScore.correct} jawaban benar\n`;
-          winText += `┊ ➶ ${topScore.points} total poin\n\n`;
+          winText += `│ ❏ ${topScore.correct} jawaban benar\n`;
+          winText += `│ ❏ ${topScore.points} total poin\n\n`;
           winText += `🎁 *Hadiah:*\n`;
-          if (reward.limit > 0) winText += `┊ ➶ +${reward.limit} Limit\n`;
-          if (reward.koin > 0) winText += `┊ ➶ +${reward.koin} Koin\n`;
-          if (reward.exp > 0) winText += `┊ ➶ +${reward.exp} EXP\n`;
+          if (reward.limit > 0) winText += `│ ❏ +${reward.limit} Limit\n`;
+          if (reward.koin > 0) winText += `│ ❏ +${reward.koin} Koin\n`;
+          if (reward.exp > 0) winText += `│ ❏ +${reward.exp} EXP\n`;
         }
 
         winText += `\n╰─`;

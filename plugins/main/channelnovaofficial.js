@@ -187,15 +187,15 @@ async function handler(m, { sock, db }) {
   }
 
   lines.push("");
-  lines.push(`┊ Klik link di bawah untuk follow saluran:`);
-  lines.push(`┊ ${channelLink}`);
+  lines.push(`│ ❏ Klik link di bawah untuk follow saluran:`);
+  lines.push(`│ ❏ ${channelLink}`);
 
   // ─── Postingan Terakhir ───
   if (lastPostText) {
     const postShort = lastPostText.length > 150 ? lastPostText.slice(0, 150) + "..." : lastPostText;
     lines.push("");
     lines.push(`│ ❏ *ᴘᴏꜱᴛɪɴɢᴀɴ ᴛᴇʀᴀᴋʜɪʀ:*`);
-    lines.push(`┊ ${postShort}`);
+    lines.push(`│ ❏ ${postShort}`);
 
     if (lastPostTime) {
       const dateStr = formatDate(lastPostTime);
@@ -218,8 +218,8 @@ async function handler(m, { sock, db }) {
   } catch (_) { console.error('[channelnovaofficial.js]:', _?.message || _); }
 
   lines.push("");
-  lines.push(`┊ Ikuti saluran untuk update fitur terbaru,`);
-  lines.push(`┊ info maintenance, dan pengumuman penting`);
+  lines.push(`│ ❏ Ikuti saluran untuk update fitur terbaru,`);
+  lines.push(`│ ❏ info maintenance, dan pengumuman penting`);
 
   // ─── Thumbnail via externalAdReply (banner dari asset) ───
   let thumbBuffer = null;

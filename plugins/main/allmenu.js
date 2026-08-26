@@ -161,7 +161,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
     // ── Info section (Clara-MD box style) ──
-    let txt = `╭──「 *Info User*
+    let txt = `╭──「 *Info User* 」
 │
 │ ❏ *Nama:*  ${m.pushName || "User"}
 │ ❏ *Nomor:* @${m.sender.split("@")[0]}
@@ -207,8 +207,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ ❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
 ╰──────────❀
 ${weatherBlock}${readMore}
-╭──「 *Keterangan*
-│ ❏ Ⓞ = Hanya untuk owner
+╭──「 *Keterangan* 」\n│ ❏ Ⓞ = Hanya untuk owner
 │ ❏ ⓟ = Hanya untuk premium
 │ ❏ Ⓛ = Membutuhkan limit
 │ ❏ Ⓐ = Hanya untuk admin

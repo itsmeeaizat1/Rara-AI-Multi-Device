@@ -51,16 +51,16 @@ async function handler(m, { sock }) {
   const input = m.fullArgs?.trim() || m.text?.trim();
 
   if (!input || !input.includes("|")) {
-    let txt = `╭──「 *ᴄᴏɴꜰᴇss*\n\n`
-    txt += `  ┊ ➶ Kirim pesan rahasia ke seseorang\n`;
-    txt += `  ┊ ➶ 2 mode: *anonim* & *non-anonim*\n\n`;
+    let txt = `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n`
+    txt += `│ ❏ Kirim pesan rahasia ke seseorang\n`;
+    txt += `│ ❏ 2 mode: *anonim* & *non-anonim*\n\n`;
     txt += `  *ᴍᴏᴅᴇ ᴀɴᴏɴɪᴍ (ʀᴀʜᴀsɪᴀ):*\n`;
-    txt += `  ┊ ➶ \`${m.prefix}confess nomor|pesan\`\n\n`;
+    txt += `│ ❏ \`${m.prefix}confess nomor|pesan\`\n\n`;
     txt += `  *ᴍᴏᴅᴇ ɴᴏɴ-ᴀɴᴏɴɪᴍ (ɴᴀᴍᴀ ᴛᴇʀᴜɴɢᴋᴀᴘ):*\n`;
-    txt += `  ┊ ➶ \`${m.prefix}confess nomor|pesan|nama\`\n\n`;
+    txt += `│ ❏ \`${m.prefix}confess nomor|pesan|nama\`\n\n`;
     txt += `  *ᴄᴏɴᴛᴏʜ:*\n`;
-    txt += `  ┊ ➶ \`${m.prefix}confess 6281234567890|Hai kak, aku suka kamu!\`\n`;
-    txt += `  ┊ ➶ \`${m.prefix}confess 6281234567890|Hai! Aku Budi|Budi\`\n\n`;
+    txt += `│ ❏ \`${m.prefix}confess 6281234567890|Hai kak, aku suka kamu!\`\n`;
+    txt += `│ ❏ \`${m.prefix}confess 6281234567890|Hai! Aku Budi|Budi\`\n\n`;
     txt += `  🤫 _Mode anonim: identitas 100% aman_\n`;
     txt += `  📝 _Mode non-anonim: nama kamu ditampilkan_\n\n`;
     txt += `╰──────────❀`;
@@ -76,10 +76,10 @@ async function handler(m, { sock }) {
 
   if (!rawNumber || !message) {
     return m.reply(
-      `╭──「 *ᴄᴏɴꜰᴇss*\n\n` +
-      `  ┊ ➶ ❌ Format salah!\n\n` +
-      `  *ᴀɴᴏɴɪᴍ:*\n  ┊ ➶ \`${m.prefix}confess nomor|pesan\`\n` +
-      `  *ɴᴏɴ-ᴀɴᴏɴɪᴍ:*\n  ┊ ➶ \`${m.prefix}confess nomor|pesan|nama\`\n\n` +
+      `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `│ ❏ ❌ Format salah!\n\n` +
+      `  *ᴀɴᴏɴɪᴍ:*\n│ ❏ \`${m.prefix}confess nomor|pesan\`\n` +
+      `  *ɴᴏɴ-ᴀɴᴏɴɪᴍ:*\n│ ❏ \`${m.prefix}confess nomor|pesan|nama\`\n\n` +
       `╰──────────❀`
     );
   }
@@ -92,8 +92,8 @@ async function handler(m, { sock }) {
 
   if (targetNumber.length < 10 || targetNumber.length > 15) {
     return m.reply(
-      `╭──「 *ᴄᴏɴꜰᴇss*\n\n` +
-      `  ┊ ➶ ❌ Nomor tujuan nggak valid!\n\n` +
+      `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `│ ❏ ❌ Nomor tujuan nggak valid!\n\n` +
       `╰──────────❀`
     );
   }
@@ -103,8 +103,8 @@ async function handler(m, { sock }) {
 
   if (targetNumber === senderNumber) {
     return m.reply(
-      `╭──「 *ᴄᴏɴꜰᴇss*\n\n` +
-      `  ┊ ➶ 😂 Nggak bisa confess ke diri sendiri!\n\n` +
+      `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `│ ❏ 😂 Nggak bisa confess ke diri sendiri!\n\n` +
       `╰──────────❀`
     );
   }
@@ -113,8 +113,8 @@ async function handler(m, { sock }) {
     const [onWa] = await sock.onWhatsApp(targetNumber);
     if (!onWa?.exists) {
       return m.reply(
-        `╭──「 *ᴄᴏɴꜰᴇss*\n\n` +
-        `  ┊ ➶ ❌ Nomor \`${targetNumber}\` nggak terdaftar di WhatsApp!\n\n` +
+        `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+        `│ ❏ ❌ Nomor \`${targetNumber}\` nggak terdaftar di WhatsApp!\n\n` +
         `╰──────────❀`
       );
     }
@@ -124,16 +124,16 @@ async function handler(m, { sock }) {
 
   if (message.length < 5) {
     return m.reply(
-      `╭──「 *ᴄᴏɴꜰᴇss*\n\n` +
-      `  ┊ ➶ ❌ Pesan kependekan! Minimal 5 karakter.\n\n` +
+      `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `│ ❏ ❌ Pesan kependekan! Minimal 5 karakter.\n\n` +
       `╰──────────❀`
     );
   }
 
   if (message.length > 1000) {
     return m.reply(
-      `╭──「 *ᴄᴏɴꜰᴇss*\n\n` +
-      `  ┊ ➶ ❌ Pesan kepanjangan! Maksimal 1000 karakter.\n\n` +
+      `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `│ ❏ ❌ Pesan kepanjangan! Maksimal 1000 karakter.\n\n` +
       `╰──────────❀`
     );
   }
@@ -142,22 +142,22 @@ async function handler(m, { sock }) {
   let confessText;
   if (isAnonim) {
     confessText =
-      `╭──「 *ᴘᴇssᴀɴ ʀᴀʜᴀsɪᴀ*\n\n` +
-      `  ┊ ➶ 💌 Ada seseorang yang ngirim pesan buat kamu\n\n` +
+      `╭──「 *ᴘᴇssᴀɴ ʀᴀʜᴀsɪᴀ* 」\n\n` +
+      `│ ❏ 💌 Ada seseorang yang ngirim pesan buat kamu\n\n` +
       `  💬 *ɪsɪ ᴘᴇsᴀɴ:*\n` +
       `  \`\`\`${message}\`\`\`\n\n` +
       `  🔒 _Pesan ini dikirim secara *ANONIM*_\n` +
-      `  ┊ ➶ Identitas pengirim dirahasiakan\n` +
+      `│ ❏ Identitas pengirim dirahasiakan\n` +
       `  ✉️ _Balas pesan ini untuk membalas pengirim_\n\n` +
       `╰──────────❀`;
   } else {
     confessText =
-      `╭──「 *ᴘᴇsᴀɴ ᴄᴏɴꜰᴇss*\n\n` +
-      `  ┊ ➶ 💌 *${senderName}* ngirim pesan buat kamu\n\n` +
+      `╭──「 *ᴘᴇsᴀɴ ᴄᴏɴꜰᴇss* 」\n\n` +
+      `│ ❏ 💌 *${senderName}* ngirim pesan buat kamu\n\n` +
       `  💬 *ɪsɪ ᴘᴇsᴀɴ:*\n` +
       `  \`\`\`${message}\`\`\`\n\n` +
       `  📝 _Pesan ini dikirim secara *NON-ANONIM*_\n` +
-      `  ┊ ➶ Pengirim: *${senderName}*\n` +
+      `│ ❏ Pengirim: *${senderName}*\n` +
       `  ✉️ _Balas pesan ini untuk membalas pengirim_\n\n` +
       `╰──────────❀`;
   }
@@ -188,13 +188,13 @@ async function handler(m, { sock }) {
     }, 24 * 60 * 60 * 1000);
 
     let successTxt =
-      `╭──「 *ᴄᴏɴꜰᴇss*\n\n` +
-      `  ┊ ➶ ✅ Pesan terkirim!\n` +
-      `  ┊ ➶ 📱 Ke: \`${targetNumber}\`\n`;
+      `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `│ ❏ ✅ Pesan terkirim!\n` +
+      `│ ❏ 📱 Ke: \`${targetNumber}\`\n`;
     if (isAnonim) {
-      successTxt += `  ┊ ➶ 🔒 Mode: *Anonim* (identitas aman)\n`;
+      successTxt += `│ ❏ 🔒 Mode: *Anonim* (identitas aman)\n`;
     } else {
-      successTxt += `  ┊ ➶ 📝 Mode: *Non-Anonim* (nama: ${senderName})\n`;
+      successTxt += `│ ❏ 📝 Mode: *Non-Anonim* (nama: ${senderName})\n`;
     }
     successTxt += `\n  _Kalau dia balas, otomatis diterusin ke sini_\n\n`;
     successTxt += `╰──────────❀`;
@@ -204,8 +204,8 @@ async function handler(m, { sock }) {
   } catch (error) {
     console.error("[confess.js] Send error:", error.message);
     await m.reply(
-      `╭──「 *ᴄᴏɴꜰᴇss*\n\n` +
-      `  ┊ ➶ ❌ Gagal kirim pesan!\n  ┊ ➶ ${error.message}\n\n` +
+      `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `│ ❏ ❌ Gagal kirim pesan!\n│ ❏ ${error.message}\n\n` +
       `╰──────────❀`
     );
     try { await m.react("❌"); } catch {}
@@ -230,16 +230,16 @@ async function replyHandler(m, { sock }) {
     let replyText;
     if (confessInfo.isAnonim) {
       replyText =
-        `╭──「 *ʙᴀʟᴀsᴀɴ ᴄᴏɴꜰᴇss*\n\n` +
-        `  ┊ ➶ 💕 Orang yang kamu confess balas pesanmu!\n\n` +
+        `╭──「 *ʙᴀʟᴀsᴀɴ ᴄᴏɴꜰᴇss* 」\n\n` +
+        `│ ❏ 💕 Orang yang kamu confess balas pesanmu!\n\n` +
         `  💬 *ɪsɪ ʙᴀʟᴀsᴀɴ:*\n` +
         `  \`\`\`${replyMessage}\`\`\`\n\n` +
         `  🔒 _Identitas kamu tetap aman (anonim)_\n\n` +
         `╰──────────❀`;
     } else {
       replyText =
-        `╭──「 *ʙᴀʟᴀsᴀɴ ᴄᴏɴꜰᴇss*\n\n` +
-        `  ┊ ➶ 💕 *${confessInfo.senderName}* — orang yang kamu confess balas!\n\n` +
+        `╭──「 *ʙᴀʟᴀsᴀɴ ᴄᴏɴꜰᴇss* 」\n\n` +
+        `│ ❏ 💕 *${confessInfo.senderName}* — orang yang kamu confess balas!\n\n` +
         `  💬 *ɪsɪ ʙᴀʟᴀsᴀɴ:*\n` +
         `  \`\`\`${replyMessage}\`\`\`\n\n` +
         `  📝 _Balasan untuk confess non-anonim kamu_\n\n` +
@@ -256,8 +256,8 @@ async function replyHandler(m, { sock }) {
 
     await sock.sendMessage(m.chat, {
       text:
-        `╭──「 *ᴄᴏɴꜰᴇss*\n\n` +
-        `  ┊ ➶ ✅ Balasan terkirim ke pengirim!\n\n` +
+        `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+        `│ ❏ ✅ Balasan terkirim ke pengirim!\n\n` +
         `╰──────────❀`,
     });
 

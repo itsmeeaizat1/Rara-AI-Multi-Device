@@ -527,22 +527,22 @@ async function handler(m, { sock }) {
       const delEnabledAt = groupData.deleteEnabledAt ? new Date(groupData.deleteEnabledAt).toLocaleString("id-ID") : "-";
 
       const statusBody = [
-        `┊ *ꜱᴛᴀᴛᴜꜱ ʟɪɴᴋ ꜱʜɪᴇʟᴅ*`,
-        `┊`,
-        `┊ Auto-Shield (Warning): ${shieldStatus}`,
-        `┊ Aktif Sejak: ${shieldEnabledAt}`,
-        `┊`,
-        `┊ Auto-Delete (Hapus): ${delStatus}`,
-        `┊ Aktif Sejak: ${delEnabledAt}`,
-        `┊ Grup: ${groupId.split("@")[0]}`,
-        `┊`,
-        `┊ Perintah tersedia:`,
-        `┊ 1. .checklink <url> - Cek manual`,
-        `┊ 2. .checklinkon - Auto-shield on (owner)`,
-        `┊ 3. .checklinkoff - Auto-shield off (owner)`,
-        `┊ 4. .checklinkdelon - Auto-delete on (owner)`,
-        `┊ 5. .checklinkdeloff - Auto-delete off (owner)`,
-        `┊ 6. .checklinkstatus - Lihat status`,
+        `│ ❏ *ꜱᴛᴀᴛᴜꜱ ʟɪɴᴋ ꜱʜɪᴇʟᴅ*`,
+        ` `,
+        `│ ❏ Auto-Shield (Warning): ${shieldStatus}`,
+        `│ ❏ Aktif Sejak: ${shieldEnabledAt}`,
+        ` `,
+        `│ ❏ Auto-Delete (Hapus): ${delStatus}`,
+        `│ ❏ Aktif Sejak: ${delEnabledAt}`,
+        `│ ❏ Grup: ${groupId.split("@")[0]}`,
+        ` `,
+        `│ ❏ Perintah tersedia:`,
+        `│ ❏ 1. .checklink <url> - Cek manual`,
+        `│ ❏ 2. .checklinkon - Auto-shield on (owner)`,
+        `│ ❏ 3. .checklinkoff - Auto-shield off (owner)`,
+        `│ ❏ 4. .checklinkdelon - Auto-delete on (owner)`,
+        `│ ❏ 5. .checklinkdeloff - Auto-delete off (owner)`,
+        `│ ❏ 6. .checklinkstatus - Lihat status`,
       ].join("\n");
       await m.reply(claraWrap("Link Shield Status", statusBody));
       await m.react("🐣");
@@ -604,21 +604,21 @@ async function handler(m, { sock }) {
       const result = await fullAnalysis(urlToCheck);
 
       const reasonsText = result.reasons.length > 0
-        ? result.reasons.map((r, i) => `┊ ${i + 1}. ${r}`).join("\n")
-        : "┊ Tidak ada indikasi mencurigakan";
+        ? result.reasons.map((r, i) => `│ ❏ ${i + 1}. ${r}`).join("\n")
+        : "│ ❏ Tidak ada indikasi mencurigakan";
 
       const redirectInfo = result.redirects > 0
-        ? `┊ Redirect: ${result.redirects}x -> ${result.finalUrl.substring(0, 60)}${result.finalUrl.length > 60 ? "..." : ""}`
-        : "┊ Redirect: Tidak ada";
+        ? `│ ❏ Redirect: ${result.redirects}x -> ${result.finalUrl.substring(0, 60)}${result.finalUrl.length > 60 ? "..." : ""}`
+        : "│ ❏ Redirect: Tidak ada";
 
       const body = [
-        `┊ URL: ${urlToCheck.substring(0, 80)}${urlToCheck.length > 80 ? "..." : ""}`,
-        `┊ Status: ${result.emoji} ${result.level}`,
-        `┊ Skor Bahaya: ${result.score}%`,
-        `┊`,
-        `┊ ${redirectInfo}`,
-        `┊`,
-        `┊ *ʜᴀꜱɪʟ ᴀɴᴀʟɪꜱɪꜱ:*`,
+        `│ ❏ URL: ${urlToCheck.substring(0, 80)}${urlToCheck.length > 80 ? "..." : ""}`,
+        `│ ❏ Status: ${result.emoji} ${result.level}`,
+        `│ ❏ Skor Bahaya: ${result.score}%`,
+        ` `,
+        `│ ❏ ${redirectInfo}`,
+        ` `,
+        `│ ❏ *ʜᴀꜱɪʟ ᴀɴᴀʟɪꜱɪꜱ:*`,
         reasonsText,
       ].join("\n");
 

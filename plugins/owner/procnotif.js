@@ -24,11 +24,8 @@ async function handler(m, { sock, db }) {
 
   if (args === "status") {
     const status = db.setting("procNotif") ?? true;
-    const txt = `╭──「 *Proc Notif
-┊
-│ ❏ Status: ${status ? "Aktif" : "Nonaktif"}
+    const txt = `╭──「 *Proc Notif* 」\n│ ❏ Status: ${status ? "Aktif" : "Nonaktif"}
 │ ❏ Kategori: ai, canvas, image, maker, sticker, convert, tools, download, tts, anime
-┊
 │ ❏ \`${prefix}procnotif on\` → aktifkan
 │ ❏ \`${prefix}procnotif off\` → nonaktifkan
 ╰──────────❀`;
