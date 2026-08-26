@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%209%20tools%20plugins%20missing%20'-success?style=for-the-badge)
-> *Commit: "fix: 9 tools plugins missing 'as config' export"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-Merge%20branch%20'fix%2Fmenu-redesig-success?style=for-the-badge)
+> *Commit: "Merge branch 'fix/menu-redesign'"*
 <!--END_SECTION:latest-update-->
 
 
