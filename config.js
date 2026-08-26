@@ -214,6 +214,10 @@ const config = {
     geminiApiKey: getTioKey(),
     // Anthropic format: /v1/messages
     anthropicApiKey: getTioKey(),
+    // Endpoint Tio AI (AIO — support OpenAI/Gemini/Anthropic format)
+    apiEndpoint: "https://ai.tioo.eu.org/v1/chat/completions",
+    apiEndpointAnthropic: "https://ai.tioo.eu.org/v1/messages",
+    apiEndpointGemini: "https://ai.tioo.eu.org/v1beta/models",
     // ClipDrop API key untuk watermark remover (.nowm) — gratis 100 credits di clipdrop.co/apis
     clipdropApiKey: "",
     // Fallback key (kalau per-format kosong, pakai ini)
