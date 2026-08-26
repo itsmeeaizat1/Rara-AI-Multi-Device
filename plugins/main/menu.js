@@ -13,6 +13,7 @@ import {
   getCategories,
 } from "../../src/lib/nova-plugins.js";
 import fs from "fs";
+import os from "os";
 import path from "path";
 import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
@@ -55,7 +56,6 @@ function formatBytes(b) {
   return (b / 1024 / 1024 / 1024).toFixed(2) + " GB";
 }
 
-// Thumbnail: SATU file untuk semua menu
 let _thumbCache = null;
 function getThumb() {
   if (_thumbCache) return _thumbCache;
@@ -110,7 +110,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     let weatherBlock = "";
     try {
       const wf = await getWeatherFooter();
-      if (wf) weatherBlock = `\n${wf}\n`;
+      if (wf) weatherBlock = `\n│\n${wf}\n`;
     } catch {}
 
     const pluginCats = getCategories();
@@ -123,78 +123,79 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const more = String.fromCharCode(8206);
     const readMore = more.repeat(4001);
 
-    return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Iɴғᴏ Usᴇʀ
-┊
-  ┊  ➶ *ɴᴀᴍᴀ:* ${m.pushName || "User"}
-  ┊  ➶ *ɴᴏᴍᴏʀ:* @${m.sender.split("@")[0]}
-  ┊  ➶ *ᴘʀᴇᴍɪᴜᴍ:* ${m.isPremium ? "Aktif" : "Free"}
-  ┊  ➶ *ᴇɴᴇʀɢɪ:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
-  ┊  ➶ *ᴋᴏɪɴ:* ${(user?.koin ?? 0).toLocaleString()}
-  ┊  ➶ *ʟɪᴍɪᴛ:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
-  ┊  ➶ *ʀᴏʟᴇ:* ${roleEmoji} ${userRole}
-  ┊  ➶ *ʟᴇᴠᴇʟ:* ${userLevel}
-  ┊  ➶ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
-  ┊  ➶ *ᴛᴏᴛᴀʟ xᴘ:* ${userExp.toLocaleString()}
-  ┊  ➶ *ꜱᴛᴀᴛᴜꜱ:* ${user?.banned ? "Banned" : "Aktif"}
-╠┈┈「 *Iɴғᴏ Wᴀᴋᴛᴜ* 」
-  ┊  ➶ *ᴡᴀᴋᴛᴜ:* ${timeStr} WIB
-  ┊  ➶ *ʜᴀʀɪ:* ${dayName} ${weton}
-  ┊  ➶ *ᴛᴀɴɢɢᴀʟ:* ${dateStr}
-  ┊  ➶ *ᴛᴀɴɢɢᴀʟ ɪꜱʟᴀᴍ:* ${islamicDate}
-  ┊  ➶ *ᴢᴏɴᴀ:* Asia/Jakarta
-  ┊  ➶ *ʜᴀʀɪ ᴘᴇɴᴛɪɴɢ:* ${importantDay}
-╠┈┈「 *Iɴғᴏ Bᴏᴛ* 」
-  ┊  ➶ *ʙᴏᴛ ɴᴀᴍᴇ:* ${botConfig.bot?.name || "Nova AI Whatsapp Bot"}
-  ┊  ➶ *ʙᴏᴛ ɴᴏᴍᴏʀ:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
-  ┊  ➶ *ᴠᴇʀꜱɪᴏɴ:* ${botConfig.bot?.version || "-"}
-  ┊  ➶ *ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${botConfig.bot?.developer || "-"}
-  ┊  ➶ *ᴍᴏᴅᴇ:* ${(botConfig.mode || "public").toUpperCase()}
-  ┊  ➶ *ᴘʀᴇꜰɪx:* [ *${prefix}* ]
-  ┊  ➶ *ᴜᴘᴛɪᴍᴇ:* ${runtimeStr}
-  ┊  ➶ *ᴛᴏᴛᴀʟ ᴜꜱᴇʀ:* ${totalUsers}
-  ┊  ➶ *ᴛᴏᴛᴀʟ ʀᴇɢɪꜱᴛʀᴀꜱɪ:* ${totalRegistered}
-  ┊  ➶ *ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ:* ${totalPremium}
-╠┈┈「 *Iɴғᴏ Sᴇʀᴠᴇʀ* 」
-  ┊  ➶ *ᴘʟᴀᴛꜰᴏʀᴍ:* ${platform}
-  ┊  ➶ *ʜᴏꜱᴛɴᴀᴍᴇ:* ${hostname}
-  ┊  ➶ *ᴛʏᴘᴇ:* Node.Js
-  ┊  ➶ *ʙᴀɪʟᴇʏꜱ:* Multi Device
-  ┊  ➶ *ɴᴏᴅᴇ.ᴊꜱ:* ${process.version}
-  ┊  ➶ *ꜱᴇʀᴠᴇʀ ᴜᴘᴛɪᴍᴇ:* ${serverUptime}
-  ┊  ➶ *ᴄᴘᴜ:* ${cpuModel}
-  ┊  ➶ *ᴄᴏʀᴇꜱ:* ${cpuCores} threads @ ${cpuSpeed} MHz
-  ┊  ➶ *ʟᴏᴀᴅ ᴀᴠɢ:* ${loadAvg}
-  ┊  ➶ *ʀᴀᴍ:* ${totalMem ? formatBytes(usedMem) + " / " + formatBytes(totalMem) + " (" + memPercent + "%)" : "-"}
-  ┊  ➶ *ʀᴀᴍ ʙᴏᴛ:* ${formatBytes(memUsage.rss)}
-${weatherBlock ? weatherBlock : ""}❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+    return `╭─「 *${toSC("Info User")}* 」
+│  ➥ *ɴᴀᴍᴀ:* ${m.pushName || "User"}
+│  ➥ *ɴᴏᴍᴏʀ:* @${m.sender.split("@")[0]}
+│  ➥ *ᴘʀᴇᴍɪᴜᴍ:* ${m.isPremium ? "Aktif" : "Free"}
+│  ➥ *ᴇɴᴇʀɢɪ:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
+│  ➥ *ᴋᴏɪɴ:* ${(user?.koin ?? 0).toLocaleString()}
+│  ➥ *ʟɪᴍɪᴛ:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
+│  ➥ *ʀᴏʟᴇ:* ${roleEmoji} ${userRole}
+│  ➥ *ʟᴇᴠᴇʟ:* ${userLevel}
+│  ➥ *xᴘ:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
+│  ➥ *ᴛᴏᴛᴀʟ xᴘ:* ${userExp.toLocaleString()}
+│  ➥ *sᴛᴀᴛᴜs:* ${user?.banned ? "Banned" : "Aktif"}
+╰─
+╭─「 *${toSC("Info Waktu")}* 」
+│  ➥ *ᴡᴀᴋᴛᴜ:* ${timeStr} WIB
+│  ➥ *ʜᴀʀɪ:* ${dayName} ${weton}
+│  ➥ *ᴛᴀɴɢɢᴀʟ:* ${dateStr}
+│  ➥ *ᴛᴀɴɢɢᴀʟ ɪsʟᴀᴍ:* ${islamicDate}
+│  ➥ *ᴢᴏɴᴀ:* Asia/Jakarta
+│  ➥ *ʜᴀʀɪ ᴘᴇɴᴛɪɴɢ:* ${importantDay}
+╰─
+╭─「 *${toSC("Info Bot")}* 」
+│  ➥ *ʙᴏᴛ ɴᴀᴍᴇ:* ${botConfig.bot?.name || "Nova AI Whatsapp Bot"}
+│  ➥ *ʙᴏᴛ ɴᴏᴍᴏʀ:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
+│  ➥ *ᴠᴇʀsɪᴏɴ:* ${botConfig.bot?.version || "-"}
+│  ➥ *ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${botConfig.bot?.developer || "-"}
+│  ➥ *ᴍᴏᴅᴇ:* ${(botConfig.mode || "public").toUpperCase()}
+│  ➥ *ᴘʀᴇꜰɪx:* [ *${prefix}* ]
+│  ➥ *ᴜᴘᴛɪᴍᴇ:* ${runtimeStr}
+│  ➥ *ᴛᴏᴛᴀʟ ᴜsᴇʀ:* ${totalUsers}
+│  ➥ *ʀᴇɢɪsᴛʀᴀsɪ:* ${totalRegistered}
+│  ➥ *ᴘʀᴇᴍɪᴜᴍ:* ${totalPremium}
+╰─
+╭─「 *${toSC("Info Server")}* 」
+│  ➥ *ᴘʟᴀᴛꜰᴏʀᴍ:* ${platform}
+│  ➥ *ʜᴏsᴛɴᴀᴍᴇ:* ${hostname}
+│  ➥ *ɴᴏᴅᴇ.ᴊs:* ${process.version}
+│  ➥ *ʙᴀɪʟᴇʏs:* Multi Device
+│  ➥ *sᴇʀᴠᴇʀ ᴜᴘᴛɪᴍᴇ:* ${serverUptime}
+│  ➥ *ᴄᴘᴜ:* ${cpuModel}
+│  ➥ *ᴄᴏʀᴇs:* ${cpuCores} @ ${cpuSpeed} MHz
+│  ➥ *ʟᴏᴀᴅ:* ${loadAvg}
+│  ➥ *ʀᴀᴍ:* ${totalMem ? formatBytes(usedMem) + " / " + formatBytes(totalMem) + " (" + memPercent + "%)" : "-"}
+│  ➥ *ʀᴀᴍ ʙᴏᴛ:* ${formatBytes(memUsage.rss)}
+╰─${weatherBlock}
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${readMore}
-❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Nᴏᴠᴀ Mᴇɴᴜ
-┊
-  ° ✿ Menu ✿ °
-  ┊  ➶ ${prefix}menu
-  ┊  ➶ ${prefix}allmenu
-  ┊  ➶ ${prefix}allmenucategory <kategori>
-  ┊  ➶ ${prefix}tanyaai
-┊
-  ° ✿ Info ✿ °
-  ┊  ➶ ${prefix}info
-  ┊  ➶ ${prefix}owner
-  ┊  ➶ ${prefix}rules
-  ┊  ➶ ${prefix}donasi
-┊
-  ° ✿ Store ✿ °
-  ┊  ➶ ${prefix}sewa
-  ┊  ➶ ${prefix}payment
-  ┊  ➶ ${prefix}listban
-┊
-  *Total: ${totalFitur} Fitur*
-┊
+╭─「 *${toSC("Nova Menu")}* 」
+│  ➥ ${prefix}menu
+│  ➥ ${prefix}allmenu
+│  ➥ ${prefix}allmenucategory <kategori>
+│  ➥ ${prefix}tanyaai
+╰─
+╭─「 *${toSC("Info")}* 」
+│  ➥ ${prefix}info
+│  ➥ ${prefix}owner
+│  ➥ ${prefix}rules
+│  ➥ ${prefix}donasi
+╰─
+╭─「 *${toSC("Store")}* 」
+│  ➥ ${prefix}sewa
+│  ➥ ${prefix}payment
+│  ➥ ${prefix}listban
+╰─
+
+*Total: ${totalFitur} Fitur*
+
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${getTimeGreeting()} *${m.pushName || "User"}* 👋
 Ketik *${prefix}allmenu* untuk melihat semua fitur`;
   } catch (e) {
     console.error("[menu] buildMenuText error:", e.message);
-    return "❀°˖ Menu ˖°❀\n\nError: " + e.message + "\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
+    return `╭─「 *Menu* 」\n│  ➥ Error: ${e.message}\n╰─`;
   }
 }
 
@@ -207,7 +208,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
     const saluranLink = botConfig.saluran?.link || "";
 
-    // Template: text + footer + type 1 buttons + externalAdReply di level ROOT
     const buttons = [
       { buttonId: `${prefix}allmenu`, buttonText: { displayText: "📋 All Menu" }, type: 1 },
       { buttonId: `${prefix}allmenucategory`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
@@ -250,8 +250,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     }
 
     await m.react("🐣");
-
-    // Kirim musik menu (jika audioMenu aktif)
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[menu] handler error:", e.message);
