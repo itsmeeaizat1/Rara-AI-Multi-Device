@@ -3,6 +3,7 @@ import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-m
 
 const pluginConfig = {
   name: "alarm", alias: ["alarm2", "setalarm", "alarmutil"], category: "utility",
+  alias: ["alarm"],
   description: "Alarm pengingat pribadi", usage: ".alarm <HH:MM> <pesan>",
   example: ".alarm 07:30 bangun sekolah", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

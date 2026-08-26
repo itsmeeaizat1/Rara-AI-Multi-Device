@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "simi",
-  alias: ["simisimi"],
+  alias: ["simi", "simisimi"],
   category: "ai",
   description: "Ngobrol santai bareng SimiSimi",
   usage: ".simi <pesan>",

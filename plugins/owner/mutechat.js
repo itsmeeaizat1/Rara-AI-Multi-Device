@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['mutechat', 'mute'],
-    alias: [],
+    alias: ["mutechat", "mute"],
     category: 'owner',
     description: 'Mute/unmute chat',
     usage: '.mutechat <nomor/reply> atau .mutechat buka <nomor>',

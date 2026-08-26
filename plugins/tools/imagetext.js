@@ -4,6 +4,7 @@ import { spawn } from "node:child_process";
 
 const pluginConfig = {
   name: "imagetext", alias: ["textonimage", "captionimage"], category: "tools",
+  alias: ["imagetext"],
   description: "Tulis teks di atas gambar", usage: ".imagetext <text> (reply gambar)",
   example: ".imagetext Halo", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,

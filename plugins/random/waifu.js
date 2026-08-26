@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "waifu", alias: ["waifu", "waifurandom", "waifu2"], category: "random",
+  alias: ["waifu"],
   description: "Random waifu image", usage: ".waifu",
   example: ".waifu", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

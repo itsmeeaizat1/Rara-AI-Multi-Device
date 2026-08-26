@@ -4,6 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ailearn", alias: ["aitutor", "tutorai", "belajarai"], category: "future",
+  alias: ["ailearn"],
   description: "AI tutor bahasa & pelajaran", usage: ".ailearn <topik> <pertanyaan>",
   example: ".ailearn inggris apa arti determination", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,

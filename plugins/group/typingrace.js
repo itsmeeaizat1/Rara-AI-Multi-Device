@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "typingrace",
+  alias: ["typingrace"],
   aliases: ["typingrace", "typerace", "ketikcepat"],
   category: "group",
   description: "Race ketik cepat - siapa pertama ketik persis sama menang",

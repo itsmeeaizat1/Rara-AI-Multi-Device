@@ -9,7 +9,7 @@ ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const pluginConfig = {
   name: ["ttmp3"],
-  alias: ["ttmusic", "tiktokmusic"],
+  alias: ["ttmp3", "ttmusic", "tiktokmusic"],
   category: "download",
   description: "Download audio TikTok",
   usage: ".ttmp3 <url>",
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
   };
 
   if (!url) {
-    return m.reply( `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ᴅᴏᴡɴʟᴏᴀᴅ* 」
+    return m.reply( `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ᴅᴏᴡɴʟᴏᴀᴅ*
 ┃ ㊗ Usage: \`${m.prefix}ttmp3 <url>\`
 ╰┈┈⬡
 

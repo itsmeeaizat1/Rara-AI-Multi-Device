@@ -4,7 +4,7 @@ import * as levelHelper from '../../src/lib/nova-level.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addexp',
-    alias: ['tambahexp', 'giveexp', 'addxp'],
+    alias: ["addexp", 'tambahexp', 'giveexp', 'addxp'],
     category: 'owner',
     description: 'Tambah exp user (max 9 Miliar)',
     usage: '.addexp <jumlah> @user',

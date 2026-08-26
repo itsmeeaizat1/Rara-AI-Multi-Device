@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autohoroscope",
-  alias: ["horoscopeotomatis", "horoscopeauto", "zodiakauto", "autozodiak"],
+  alias: ["autohoroscope", "horoscopeotomatis", "horoscopeauto", "zodiakauto", "autozodiak"],
   category: "group",
   description: "Kirim ramalan zodiak random otomatis tiap interval (toggle on/off per grup)",
   usage: ".autohoroscope on [menit] | .autohoroscope off | .autohoroscope status | .autohoroscope now",

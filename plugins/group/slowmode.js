@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'slowmode',
-    alias: ['slow', 'setslowmode'],
+    alias: ["slowmode", 'slow', 'setslowmode'],
     category: 'group',
     description: 'Slowmode grup — batasi kecepatan pesan member',
     usage: '.slowmode <on/off/onlycommand> [detik]',

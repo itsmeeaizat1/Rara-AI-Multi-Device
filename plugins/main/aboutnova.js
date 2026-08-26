@@ -4,7 +4,7 @@ import { getCommandsByCategory } from "../../src/lib/nova-plugins.js";
 
 const pluginConfig = {
   name: "aboutnova",
-  alias: ["about", "tentang", "tentangbot"],
+  alias: ["aboutnova", "about", "tentang", "tentangbot"],
   category: "main",
   description: "Info singkat tentang Nova AI Bot",
   usage: ".aboutnova",
@@ -36,7 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
       cmdLines += `${end}  ➶ ${prefix}${mainCmds[i]}\n`;
     }
 
-    const text = `╭──「 *Aʙᴏᴜᴛ Nᴏᴠᴀ 」
+    const text = `╭──「 *Aʙᴏᴜᴛ Nᴏᴠᴀ
 ┊
 │ ❏ *ɴᴀᴍᴀ:* ${toSC(botName)}
 │ ❏ *ᴠᴇʀꜱɪᴏɴ:* ${version}

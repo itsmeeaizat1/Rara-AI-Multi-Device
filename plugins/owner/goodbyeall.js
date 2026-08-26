@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'goodbyeall',
-    alias: ['gball', 'globalgoodbye', 'leaveall'],
+    alias: ["goodbyeall", 'gball', 'globalgoodbye', 'leaveall'],
     category: 'owner',
     description: 'Aktifkan/nonaktifkan goodbye di semua grup',
     usage: '.goodbyeall <on/off>',

@@ -11,7 +11,7 @@ import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "vncaptcha",
-  alias: ["voicecaptcha", "vncaptchainterrogation", "humanverify", "vnhumancheck"],
+  alias: ["vncaptcha", "voicecaptcha", "vncaptchainterrogation", "humanverify", "vnhumancheck"],
   category: "owner",
   description: "Toggle Voice Note Captcha — ujian suara untuk bukti manusia asli saat daftar",
   usage: ".vncaptcha on/off — Toggle\n.vncaptcha status — Cek status\n.vncaptcha strict on/off — Strict (gagal VN = block)",

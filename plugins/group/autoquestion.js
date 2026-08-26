@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoquestion",
-  alias: ["questionotomatis", "questionauto", "autopertanyaan", "autotanya"],
+  alias: ["autoquestion", "questionotomatis", "questionauto", "autopertanyaan", "autotanya"],
   category: "group",
   description: "Kirim pertanyaan seru random otomatis untuk bikin grup aktif (toggle on/off)",
   usage: ".autoquestion on [menit] | .autoquestion off | .autoquestion status | .autoquestion now",

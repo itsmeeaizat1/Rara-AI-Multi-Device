@@ -4,7 +4,7 @@ import config from "../../config.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "setallmenu",
-  alias: ["allmenuvariant", "allmenustyle"],
+  alias: ["ALLMENU NATIVEFLOW", "allmenuvariant", "allmenustyle"],
   category: "owner",
   description: "Mengatur variant tampilan allmenu",
   usage: ".setallmenu <v1-v5>",

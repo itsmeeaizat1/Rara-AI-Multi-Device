@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'stopalljadibot',
-    alias: ['stopsemuajadibot', 'killalljadibots'],
+    alias: ["stopalljadibot", 'stopsemuajadibot', 'killalljadibots'],
     category: 'owner',
     description: 'Hentikan semua jadibot yang aktif',
     usage: '.stopalljadibot',

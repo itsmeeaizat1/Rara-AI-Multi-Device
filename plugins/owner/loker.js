@@ -21,7 +21,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "loker",
-  alias: ["loker2", "lokerowner", "jobowner"],
+  alias: ["loker", "loker2", "lokerowner", "jobowner"],
   category: "owner",
   description: "Atur pengiriman info lowongan kerja otomatis ke grup",
   usage: ".loker <aksi>",

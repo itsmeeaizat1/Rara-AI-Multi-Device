@@ -9,7 +9,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ocrsolve",
-  alias: ["toggleocr", "toggleocrsolve", "automath", "autocodefix", "toggleautomath", "solve"],
+  alias: ["ocrsolve", "toggleocr", "toggleocrsolve", "automath", "autocodefix", "toggleautomath", "solve"],
   category: "ai",
   description: "OCR Solver — analisis foto soal/kode via AI Vision\nOne-shot: .ocrsolve (reply foto)\nToggle: .toggleocrsolve on/off (owner)",
   usage: ".ocrsolve — One-shot analisis foto (reply foto)\n.ocrsolve math/code/auto — One-shot mode spesifik\n.toggleocrsolve on/off — Persistent (owner)\n.toggleocrsolve mode math/code/auto — Set mode\n.toggleocrsolve status — Cek status",

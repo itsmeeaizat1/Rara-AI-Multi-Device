@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setemail",
-  alias: ["setsmtp", "setmail"],
+  alias: ["setemail", "setsmtp", "setmail"],
   category: "owner",
   description: "Set email SMTP untuk fitur registrasi OTP",
   usage: ".setemail <email> <app-password>",

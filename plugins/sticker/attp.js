@@ -8,7 +8,7 @@ import te from '../../src/lib/nova-error.js'
 const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
 const pluginConfig = {
     name: 'attp',
-    alias: ['attp2', 'attp3'],
+    alias: ["attp", 'attp2', 'attp3'],
     category: 'sticker',
     description: 'Membuat sticker animated text',
     usage: '.attp <teks>',

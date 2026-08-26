@@ -6,7 +6,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "searchplugin",
-  alias: ["splugin", "findplugin", "infoplugin"],
+  alias: ["searchplugin", "splugin", "findplugin", "infoplugin"],
   category: "owner",
   description: "Cari dan tampilkan info plugin",
   usage: ".splugin <nama>",

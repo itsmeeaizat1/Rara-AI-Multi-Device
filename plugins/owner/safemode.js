@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "safemode",
-  alias: ["modedaran", "emergencylock", "lockdown", "panicmode"],
+  alias: ["safemode", "modedaran", "emergencylock", "lockdown", "panicmode"],
   category: "owner",
   description: "Mode darurat — aktifkan SEMUA proteksi grup sekaligus dalam 1 perintah",
   usage: ".safemode <on|off|status>",

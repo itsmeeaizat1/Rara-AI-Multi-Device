@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'sampah',
-    alias: ['clearsampah', 'cleartemp', 'deltemp'],
+    alias: ["sampah", 'clearsampah', 'cleartemp', 'deltemp'],
     category: 'owner',
     description: 'Menghapus semua sampah di temp',
     usage: '.sampah',

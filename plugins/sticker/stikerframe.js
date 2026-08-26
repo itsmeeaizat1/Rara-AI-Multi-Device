@@ -37,6 +37,7 @@ const FRAMES = {
   },
   blur: {
     name: "Blur Border",
+    alias: ["Blur Border"],
     desc: "Versi blur dari foto sebagai background border",
     emoji: "🌫️",
   },

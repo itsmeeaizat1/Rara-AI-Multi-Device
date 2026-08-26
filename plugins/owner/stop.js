@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'stop',
-    alias: ['shutdown', 'kill'],
+    alias: ["stop", 'shutdown', 'kill'],
     category: 'owner',
     description: 'Stop bot process',
     usage: '.stop',

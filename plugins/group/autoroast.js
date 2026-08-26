@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoroast",
-  alias: ["roastotomatis", "roastauto", "autoroasting"],
+  alias: ["autoroast", "roastotomatis", "roastauto", "autoroasting"],
   category: "group",
   description: "Bot roast member grup acak secara otomatis tiap interval (toggle on/off)",
   usage: ".autoroast on [menit] | .autoroast off | .autoroast status | .autoroast now",

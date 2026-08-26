@@ -8,7 +8,7 @@ const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
 
 const pluginConfig = {
     name: 'robloxplayer',
-    alias: ['robloxsearch', 'searchroblox', 'robloxfind'],
+    alias: ["robloxplayer", 'robloxsearch', 'searchroblox', 'robloxfind'],
     category: 'stalker',
     description: 'Search Roblox player by username',
     usage: '.robloxplayer <username>',

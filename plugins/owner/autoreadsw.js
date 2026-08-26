@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "autoreadsw",
-  alias: ["autoreadstory", "readstory", "bacasw", "viewsw"],
+  alias: ["autoreadsw", "autoreadstory", "readstory", "bacasw", "viewsw"],
   category: "owner",
   description: "Auto read semua status/story WA",
   usage: ".autoreadsw on/off",

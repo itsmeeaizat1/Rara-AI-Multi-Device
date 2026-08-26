@@ -5,7 +5,7 @@ import config from '../../config.js'
 import moment from 'moment-timezone'
 const pluginConfig = {
     name: 'intro',
-    alias: ['perkenalan', 'selamatdatang'],
+    alias: ["intro", 'perkenalan', 'selamatdatang'],
     category: 'group',
     description: 'Tampilkan pesan intro grup',
     usage: '.intro',

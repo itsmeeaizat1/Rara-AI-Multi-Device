@@ -21,6 +21,7 @@ const DATA_FILE = path.join(process.cwd(), "database", "ppob.json");
 const PROVIDERS = {
   digiflazz: {
     name: "DigiFlazz",
+    alias: ["ppob", "DigiFlazz"],
     baseApi: "https://api.digiflazz.com/v1",
     label: "digiflazz",
     setupHint: "Daftar gratis: https://digiflazz.com\nAPI: Profile > Koneksi API",

@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animemanga",
+  alias: ["animemanga"],
   aliases: ["animemanga", "mangainfo", "mangasearch", "mangadatabase"],
   category: "anime",
   description: "Database manga terbaik & rekomendasi berdasarkan genre",

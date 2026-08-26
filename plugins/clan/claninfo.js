@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'claninfo',
-    alias: ['infoclan', 'myclan', 'guildinfo'],
+    alias: ["claninfo", 'infoclan', 'myclan', 'guildinfo'],
     category: 'clan',
     description: 'Lihat info clan',
     usage: '.claninfo [clan_id]',

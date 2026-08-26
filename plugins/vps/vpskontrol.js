@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 
 const pluginConfig = {
     name: ['turnon', 'turnoff', 'restartvps', 'rebootvps'],
-    alias: [],
+    alias: ["turnon", "turnoff", "restartvps", "rebootvps"],
     category: 'vps',
     description: 'Kontrol VPS (on/off/restart)',
     usage: '.turnon <id>',
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
         const actionResult = response.data.action
         
         m.react('✅')
-        await m.reply(`╭──「 *Aksi Berhasil 」
+        await m.reply(`╭──「 *Aksi Berhasil
 ┊
 │ ❏ *ᴠᴘꜱ:* ${dropletId}
 │ ❏ *ᴀᴋꜱɪ:* ${action.text}

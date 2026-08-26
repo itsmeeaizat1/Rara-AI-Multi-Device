@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cekoverpower',
-    alias: ['overpower', 'op'],
+    alias: ["cekoverpower", 'overpower', 'op'],
     category: 'cek',
     description: 'Cek tingkat overpower kamu',
     usage: '.cekoverpower <nama>',

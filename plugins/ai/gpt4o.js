@@ -5,7 +5,7 @@ import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "gpt4o",
-  alias: ["gpt4"],
+  alias: ["gpt4o", "gpt4"],
   category: "ai",
   description: "Chat dengan GPT-4o",
   usage: ".gpt4o <pertanyaan>",

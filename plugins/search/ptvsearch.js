@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ptvsearch",
-  alias: ["ptvs"],
+  alias: ["ptvsearch", "ptvs"],
   category: "search",
   description: "Cari video TikTok",
   usage: ".ptvsearch <query>",
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴇᴀʀᴄʜ* 」
+    return m.reply( `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴇᴀʀᴄʜ*
 ┃
 ┃ ㊗ Usage: \`${m.prefix}ptvsearch <query>\`
 ┃

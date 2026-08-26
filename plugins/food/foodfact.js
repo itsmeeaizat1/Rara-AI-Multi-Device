@@ -4,6 +4,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "foodfact",
+  alias: ["foodfact"],
   aliases: ["foodfact", "faktafood", "foodinfo", "nutrifood"],
   category: "food",
   description: "Fakta nutrisi makanan + random food fact (TheMealDB API gratis)",

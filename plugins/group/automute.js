@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "automute",
+  alias: ["automute"],
   aliases: ["automute", "autoclose"],
   category: "group",
   description: "Auto mute/unmute grup berdasarkan jadwal",

@@ -8,7 +8,7 @@ import config from "../../config.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: ["antibot", "botdetect"],
-  alias: [],
+  alias: ["antibot", "botdetect"],
   category: "group",
   description: "Deteksi dan kick bot WhatsApp (baileys) dari grup",
   usage: ".antibot <on/off>",

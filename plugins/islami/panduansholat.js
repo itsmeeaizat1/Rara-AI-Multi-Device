@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "panduansholat",
+  alias: ["panduansholat"],
   aliases: ["panduansholat", "carasolat", "tatasolat", "sholatguide", "bacaansholat"],
   category: "islami",
   description: "Panduan lengkap tata cara sholat (gerakan, bacaan, urutan)",

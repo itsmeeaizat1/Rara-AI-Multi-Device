@@ -3,7 +3,7 @@ import instagramDownloader from "../../src/scraper/ig.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "instagramdl",
-  alias: ["igdl", "ig", "instagram"],
+  alias: ["instagramdl", "igdl", "ig", "instagram"],
   category: "download",
   description: "Download video/foto Instagram",
   usage: ".instagramdl <url>",

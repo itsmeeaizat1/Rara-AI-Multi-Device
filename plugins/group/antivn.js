@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antivn",
-  alias: ["antivoice", "antiaudio", "novn", "avn"],
+  alias: ["antivn", "antivoice", "antiaudio", "novn", "avn"],
   category: "group",
   description: "Blokir voice note / audio di grup",
   usage: ".antivn <on/off>",

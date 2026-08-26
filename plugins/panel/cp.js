@@ -14,7 +14,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 
 const pluginConfig = {
   name: 'cp',
-  alias: ['createpanel', 'makepanel', 'custompanel'],
+  alias: ["cp", 'createpanel', 'makepanel', 'custompanel'],
   category: 'panel',
   description: 'Create panel custom (RAM, disk, CPU, nomor target)',
   usage: '.cp <ram> <disk> <cpu> <nomor>\n.contoh: .cp 1gb 1gb 100 628xxx',

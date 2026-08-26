@@ -4,6 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "aifatwa", alias: ["aifatwa", "tanyaislam2", "fatwaai"], category: "future",
+  alias: ["aifatwa"],
   description: "Tanya hukum Islam, AI cari referensi", usage: ".aifatwa <pertanyaan>",
   example: ".aifatwa hukum trading forex", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,

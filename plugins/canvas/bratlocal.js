@@ -15,7 +15,7 @@ const execFileAsync = promisify(execFile);
 
 const pluginConfig = {
   name: "bratlocal",
-  alias: ["bratgojo", "bratgojovid", "bratvermeil", "bratvermeilvid"],
+  alias: ["bratlocal", "bratgojo", "bratgojovid", "bratvermeil", "bratvermeilvid"],
   category: "canvas",
   description: "Bikin brat versi lokal (Gojo & Vermeil)",
   usage: ".bratgojo <teks>",

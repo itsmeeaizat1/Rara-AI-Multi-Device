@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { live3d } from '../../src/scraper/seaart.js'
 const pluginConfig = {
     name: 'tomanga',
-    alias: ['manga', 'mangafy', 'mangastyle'],
+    alias: ["tomanga", 'manga', 'mangafy', 'mangastyle'],
     category: 'ai',
     description: 'Ubah foto menjadi gaya manga Jepang',
     usage: '.tomanga (reply/kirim gambar)',

@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "istikhara",
+  alias: ["istikhara"],
   aliases: ["istikhara", "doaistikhara", "doaistikharah", "istikharah", "sholatistikhara"],
   category: "islami",
   description: "Panduan sholat & doa Istikhara (mohon petunjuk Allah saat bingung memilih)",

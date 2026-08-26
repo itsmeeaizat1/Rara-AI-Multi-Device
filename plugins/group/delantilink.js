@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'delantilink',
-    alias: ['delalink', 'delblocklink', 'remantilink'],
+    alias: ["delantilink", 'delalink', 'delblocklink', 'remantilink'],
     category: 'group',
     description: 'Menghapus link dari daftar antilink',
     usage: '.delantilink <domain/pattern>',

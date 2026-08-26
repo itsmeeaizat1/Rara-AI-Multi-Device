@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'delenergi',
-    alias: ['kurangenergi', 'removeenergi', 'hapusenergi', 'delenergy'],
+    alias: ["delenergi", 'kurangenergi', 'removeenergi', 'hapusenergi', 'delenergy'],
     category: 'owner',
     description: 'Kurangi energi user',
     usage: '.delenergi <jumlah> @user',

@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "metatag",
-  alias: ["metacheck", "metaextract", "ogcheck", "metascan"],
+  alias: ["metatag", "metacheck", "metaextract", "ogcheck", "metascan"],
   category: "tools",
   description: "Extract meta tags website (title, description, OG, Twitter, favicon)",
   usage: ".metatag <url>",

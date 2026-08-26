@@ -22,7 +22,7 @@ let activeCronJob = null;
 
 const pluginConfig = {
   name: "autobackupdrive",
-  alias: ["backupdrive", "gdrivebackup", "drivebackup", "autogdrive"],
+  alias: ["autobackupdrive", "backupdrive", "gdrivebackup", "drivebackup", "autogdrive"],
   category: "owner",
   description: "Auto backup project ke Google Drive secara berkala",
   usage: ".autobackupdrive on <interval> | .autobackupdrive off | .autobackupdrive status | .autobackupdrive now | .autobackupdrive folder <id>",

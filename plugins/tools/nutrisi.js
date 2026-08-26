@@ -8,7 +8,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "nutrisi",
-  alias: ["nutrition", "calorie", "cekcalori"],
+  alias: ["nutrisi", "nutrition", "calorie", "cekcalori"],
   category: "tools",
   desc: "Analisis kalori & gizi makanan dari foto dengan AI Vision",
   usage: ".nutrisi (kirim/reply foto makanan)",

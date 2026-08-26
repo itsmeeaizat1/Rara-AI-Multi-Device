@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "malaikat",
+  alias: ["malaikat"],
   aliases: ["malaikat", "doamalaikat", "10malaikat", "sifatmalaikat"],
   category: "islami",
   description: "10 Malaikat Allah - tugas, sifat, dan keutamaan",

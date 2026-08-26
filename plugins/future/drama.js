@@ -3,7 +3,7 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
   name: "drama",
-  alias: ["dramastory", "ceritadrama"],
+  alias: ["drama", "dramastory", "ceritadrama"],
   category: "future",
   description: "AI Drama generator - bikin cerita drama pendek tentang member grup",
   usage: ".drama @user1 @user2",

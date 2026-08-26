@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addenergi',
-    alias: ['tambahenergi', 'giveenergi', 'addenergy'],
+    alias: ["addenergi", 'tambahenergi', 'giveenergi', 'addenergy'],
     category: 'owner',
     description: 'Tambah energi user',
     usage: '.addenergi <jumlah> @user',

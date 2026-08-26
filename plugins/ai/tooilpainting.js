@@ -4,7 +4,7 @@ import { live3d } from '../../src/scraper/seaart.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'tooilpainting',
-    alias: ['oilpainting', 'tooil', 'oil'],
+    alias: ["tooilpainting", 'oilpainting', 'tooil', 'oil'],
     category: 'ai',
     description: 'Ubah foto menjadi gaya lukisan minyak (oil painting)',
     usage: '.tooilpainting (reply/kirim gambar)',

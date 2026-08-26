@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'delpp',
-    alias: ['delprofilebot', 'delppbot', 'hapusppbot'],
+    alias: ["delpp", 'delprofilebot', 'delppbot', 'hapusppbot'],
     category: 'tools',
     description: 'Menghapus foto profil bot',
     usage: '.delpp',

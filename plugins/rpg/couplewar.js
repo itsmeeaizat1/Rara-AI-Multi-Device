@@ -11,7 +11,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "couplewar",
-  alias: ["cwar", "couplewarmatch", "duelpasangan"],
+  alias: ["couplewar", "cwar", "couplewarmatch", "duelpasangan"],
   category: "rpg",
   description: "Duel couple vs couple lain di grup",
   usage: ".couplewar @target",
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
 
     if (!myCinta.spouse) {
       return m.reply(
-        `╭──「 **ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` + 」
+        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n」` +
         `  ┊ ➶ 💔 Kamu belum punya pasangan!\n` +
         `  ┊ ➶ Jomblo mau war sama siapa? 😂\n\n` +
         `╰──────────❀`
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
 
     if (targetJid === m.sender) {
       return m.reply(
-        `╭──「 **ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` + 」
+        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n」` +
         `  ┊ ➶ ❌ War sama diri sendiri? Itu skizofrenia 😂\n\n` +
         `╰──────────❀`
       );
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
 
     if (targetJid === myCinta.spouse) {
       return m.reply(
-        `╭──「 **ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` + 」
+        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n」` +
         `  ┊ ➶ ❌ Nggak bisa war sama pasangan sendiri! 😅\n\n` +
         `╰──────────❀`
       );
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
 
     if (!targetCinta.spouse) {
       return m.reply(
-        `╭──「 **ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` + 」
+        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n」` +
         `  ┊ ➶ 💔 @${targetJid.split("@")[0]} belum punya pasangan!\n` +
         `  ┊ ➶ Jomblo vs jomblo namanya duel bukan couple war 😂\n\n` +
         `╰──────────❀`
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
     const cd = checkCooldown(m, "couplewar");
     if (cd) {
       return m.reply(
-        `╭──「 **ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` + 」
+        `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n」` +
         `  ┊ ➶ ⏳ Cooldown: *${formatDurasi(cd)}* lagi\n\n` +
         `╰──────────❀`
       );
@@ -170,7 +170,7 @@ async function handler(m, { sock }) {
     const winnerTeam = iWin ? `${myName} & ${myPartnerName}` : `${targetName} & ${targetPartnerName}`;
     const loserTeam = iWin ? `${targetName} & ${targetPartnerName}` : `${myName} & ${myPartnerName}`;
 
-    let msg = `╭──「 **ᴄᴏᴜᴘʟᴇ ᴡᴀʀ ⚔️*\n\n`; 」
+    let msg = `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ ⚔️*\n\n」`;
     msg += `  🏠 *Team 1: ${myName} & ${myPartnerName}*\n`;
     msg += `  ┊ ➶ ⚔️ Couple Power: *${myCouplePower}*\n`;
     msg += `  ┊ ➶ 🎲 Roll: *+${myRoll}*\n`;

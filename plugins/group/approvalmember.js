@@ -30,7 +30,7 @@ async function formatAndReply( text, cmdName) {
 
 const pluginConfig = {
   name: "approvalmember",
-  alias: ["persetujuanmember", "memberapproval", "reqmember", "setapproval"],
+  alias: ["approvalmember", "persetujuanmember", "memberapproval", "reqmember", "setapproval"],
   category: "group",
   description: "Aktifkan/matikan persetujuan member di grup (admin only)",
   usage: ".approvalmember on / .approvalmember off",

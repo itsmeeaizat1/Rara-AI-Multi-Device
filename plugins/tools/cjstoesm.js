@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename)
 
 const pluginConfig = {
     name: 'cjstoesm',
-    alias: ['cjs2esm', 'cjsconvert'],
+    alias: ["cjstoesm", 'cjs2esm', 'cjsconvert'],
     category: 'tools',
     description: 'Convert CommonJS ke ESM (ES Modules)',
     usage: '.cjstoesm <reply kode>',

@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "hadith", alias: ["hadisreligi", "hadithreligi", "hadis3"], category: "religi",
+  alias: ["hadith"],
   description: "Cari hadis Bukhari & Muslim", usage: ".hadith <kata kunci>",
   example: ".hadith sabar", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,

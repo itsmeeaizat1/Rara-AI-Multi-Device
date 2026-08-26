@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'qc',
-    alias: ['qcstc', 'stcqc', 'qcstic', 'qcstick', 'quotesticker'],
+    alias: ["qc", 'qcstc', 'stcqc', 'qcstic', 'qcstick', 'quotesticker'],
     category: 'sticker',
     description: 'Membuat sticker quote chat dengan warna custom',
     usage: '.qc <warna> <text>',

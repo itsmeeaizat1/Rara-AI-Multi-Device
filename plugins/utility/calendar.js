@@ -4,6 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "calendar", alias: ["kalender", "eventcalendar"], category: "utility",
+  alias: ["calendar"],
   description: "Kalender event grup", usage: ".calendar <add/list/del>",
   example: ".calendar add 25-12-2026 Natal", isOwner: false, isPremium: false,
   isGroup: true, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

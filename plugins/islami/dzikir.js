@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "dzikir",
+  alias: ["dzikir"],
   aliases: ["dzikir", "zikir", "dhikr", "dzikirpagi", "dzikirpetang"],
   category: "islami",
   description: "Dzikir pagi & petang lengkap (Arab, Latin, Arti)",

@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antifoto",
-  alias: ["antiimage", "antiphoto", "nofoto", "noimage", "afoto"],
+  alias: ["antifoto", "antiimage", "antiphoto", "nofoto", "noimage", "afoto"],
   category: "group",
   description: "Blokir foto / gambar di grup",
   usage: ".antifoto <on/off>",

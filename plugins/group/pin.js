@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'pin',
-    alias: ['pinmsg', 'pinpesan'],
+    alias: ["pin", 'pinmsg', 'pinpesan'],
     category: 'group',
     description: 'Pin pesan penting di grup',
     usage: '.pin (reply pesan)',

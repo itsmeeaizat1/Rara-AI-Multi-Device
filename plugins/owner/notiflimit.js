@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "notiflimit",
-    alias: ["notifenergi"],
+    alias: ["notiflimit", "notifenergi"],
     category: "owner",
     description: "Mengaktifkan atau mematikan notifikasi potong limit secara global.",
     usage: ".notiflimit",

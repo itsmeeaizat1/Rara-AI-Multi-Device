@@ -4,7 +4,7 @@ import { Client } from 'ssh2'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'installtemastellar',
-    alias: ['installthemastellar', 'temastellar'],
+    alias: ["installtemastellar", 'installthemastellar', 'temastellar'],
     category: 'panel',
     description: 'Install tema Stellar untuk panel Pterodactyl via SSH',
     usage: '.installtemastellar <ip>|<password>',

@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "antispamfitur",
-  alias: ["aspcmd", "antispamcmd", "aspfitur"],
+  alias: ["antispamfitur", "aspcmd", "antispamcmd", "aspfitur"],
   category: "tools",
   description: "Anti-spam khusus command fitur (bukan menu) - toggle & config",
   usage: ".antispamfitur <command>",

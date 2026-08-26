@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: ["arsip", "archive"],
-  alias: [],
+  alias: ["arsip", "archive"],
   category: "owner",
   description: "Arsipkan/buka arsip chat",
   usage: ".arsip <nomor/reply> atau .arsip buka <nomor>",

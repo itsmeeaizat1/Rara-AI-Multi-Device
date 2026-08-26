@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "grupdashboard",
+  alias: ["grupdashboard"],
   aliases: ["grupdashboard", "gdashboard", "gdash"],
   category: "group",
   description: "Ringkasan aktivitas grup harian/mingguan",

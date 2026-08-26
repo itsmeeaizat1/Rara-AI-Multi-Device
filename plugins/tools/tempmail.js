@@ -31,6 +31,7 @@ const PROVIDERS = {
   },
   mailporary: {
     name: "Mailporary",
+    alias: ["tempmail", "mailtmp", "tmpmail", "mailtemp", "Mailporary"],
     api: "https://web.mailporary.com/api/v1",
     type: "mailporary",
     customName: true,

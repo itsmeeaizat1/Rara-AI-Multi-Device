@@ -8,7 +8,7 @@ import { notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "renewsewa",
-  alias: ["perpanjangsewa", "extendsewa"],
+  alias: ["renewsewa", "perpanjangsewa", "extendsewa"],
   category: "owner",
   description: "Perpanjang durasi sewa grup",
   usage: ".renewsewa <link/id grup> <durasi>",

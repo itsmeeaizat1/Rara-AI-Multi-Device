@@ -4,6 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "aipoll", alias: ["aivote", "smartpoll"], category: "future",
+  alias: ["aipoll"],
   description: "AI bikin polling dari topik", usage: ".aipoll <topik>",
   example: ".aipoll makan malam apa", isOwner: false, isPremium: true,
   isGroup: true, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,

@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photocaption",
-  alias: ["fotocaption", "captionfoto", "capfoto", "textonphoto", "tambahcaption"],
+  alias: ["photocaption", "fotocaption", "captionfoto", "capfoto", "textonphoto", "tambahcaption"],
   category: "tools",
   description: "Photo Caption — Tambah caption text di atas/bawah gambar (local, no API)",
   usage: ".photocaption <posisi> | <text> (reply gambar)\n.photocaption list — Lihat posisi",

@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'stopjadibot',
-    alias: ['berhentijadibot', 'stopbot', 'unjadibot'],
+    alias: ["stopjadibot", 'berhentijadibot', 'stopbot', 'unjadibot'],
     category: 'main',
     description: 'Hentikan sesi jadibot kamu',
     usage: '.stopjadibot',

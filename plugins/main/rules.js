@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'rules',
-    alias: ['aturanbot', 'botrules'],
+    alias: ["rules", 'aturanbot', 'botrules'],
     category: 'main',
     description: 'Menampilkan rules/aturan bot',
     usage: '.rules',

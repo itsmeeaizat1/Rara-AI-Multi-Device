@@ -4,6 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "autotranslate", alias: ["autotr", "realtranslate"], category: "future",
+  alias: ["autotranslate"],
   description: "Toggle auto-translate pesan grup", usage: ".autotranslate <on/off>",
   example: ".autotranslate on", isOwner: true, isPremium: false,
   isGroup: true, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

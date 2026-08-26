@@ -333,7 +333,7 @@ class GameFactory {
     return {
       config: {
         name: gameType,
-        alias: cfg.alias || [],
+        alias: [gameType, ...(cfg.alias || [])],
         category: 'game',
         description: cfg.description,
         usage: `.${gameType}`,

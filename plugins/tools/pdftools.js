@@ -8,7 +8,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pdftools",
-  alias: ["pdf", "pdftool"],
+  alias: ["pdftools", "pdf", "pdftool"],
   category: "tools",
   description: "Tools PDF: image to PDF, merge PDF, extract text, info PDF, split PDF, compress PDF",
   usage:

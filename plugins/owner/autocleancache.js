@@ -12,7 +12,7 @@ import {
 
 const pluginConfig = {
   name: "autocleancache",
-  alias: ["cleancache", "cacheauto", "autoclean", "bersihcache"],
+  alias: ["autocleancache", "cleancache", "cacheauto", "autoclean", "bersihcache"],
   category: "owner",
   description: "Auto bersihkan cache & file temp yang gak kepakai",
   usage: ".autocleancache [on/off/status/now/1 hour/30 minutes]",

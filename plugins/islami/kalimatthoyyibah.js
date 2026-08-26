@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "kalimatthoyyibah",
+  alias: ["kalimatthoyyibah"],
   aliases: ["kalimatthoyyibah", "kalimatsuci", "kalimah", "dzikirpendek"],
   category: "islami",
   description: "Kalimat-kalimat thayyibah (dzikir pendek yang penuh pahala)",

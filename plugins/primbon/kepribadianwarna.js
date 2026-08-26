@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "kepribadianwarna",
+  alias: ["kepribadianwarna"],
   aliases: ["kepribadianwarna", "warnakepribadian", "warna", "psikologilwarna"],
   category: "primbon",
   description: "Kepribadian berdasarkan warna favorit (color psychology)",

@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'antijudol',
-    alias: ['antijudi', 'nojudi', 'antislot'],
+    alias: ["antijudol", 'antijudi', 'nojudi', 'antislot'],
     category: 'group',
     description: 'Deteksi konten judol di grup',
     usage: '.antijudol <on/off/metode> [kick/remove]',

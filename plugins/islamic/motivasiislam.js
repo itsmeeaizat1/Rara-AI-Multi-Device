@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "motivasiislam",
-  alias: ["motivasiislami", "motivasimuslim", "kataislam", "kataislaami"],
+  alias: ["motivasiislam", "motivasiislami", "motivasimuslim", "kataislam", "kataislaami"],
   category: "islamic",
   description: "Motivasi Islami dari ayat Al-Quran random + tafsir (API online)",
   usage: ".motivasiislam",
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
     const indoText = indoRes.data.text;
     const tafsirText = tafsirRes?.data?.text || "";
 
-    let txt = "╭──「 *MOTIVASI ISLAMI│ ❏\n"; 」
+    let txt = "╭──「 *MOTIVASI ISLAMI│ ❏\n";
     txt += "╰──────────❀\n";
     txt += "Tema: *" + topic.tag + "*\n";
     txt += "QS. " + surah.englishName + ":" + topic.ayat + "\n\n";

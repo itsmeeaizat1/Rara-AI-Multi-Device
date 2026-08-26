@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "regmail",
-  alias: ["registeremail", "regemail"],
+  alias: ["regmail", "registeremail", "regemail"],
   category: "user",
   description: "Daftar bot dengan verifikasi email OTP",
   usage: ".regmail <nama>, <email>",

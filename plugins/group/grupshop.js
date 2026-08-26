@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "grupshop",
+  alias: ["grupshop"],
   aliases: ["grupshop", "gshop", "grupstore"],
   category: "group",
   description: "Mini economy grup: koin dari aktivitas, tukar badge/privilege",

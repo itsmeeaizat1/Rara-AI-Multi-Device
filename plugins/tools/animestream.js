@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "animestream2",
-  alias: ["animestream", "animeinfo", "streamanime"],
+  alias: ["animestream2", "animestream", "animeinfo", "streamanime"],
   category: "tools",
   description: "Cari & streaming anime dari 14+ situs (Otakudesu, Samehadaku, dll)",
   usage: ".animestream <command> [args]",

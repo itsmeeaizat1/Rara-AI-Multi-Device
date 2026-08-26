@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sitedown",
-  alias: ["isitdown", "downcheck", "siteup", "cekdown"],
+  alias: ["sitedown", "isitdown", "downcheck", "siteup", "cekdown"],
   category: "tools",
   description: "Cek apakah website online atau down (status code + response time)",
   usage: ".sitedown <url>",

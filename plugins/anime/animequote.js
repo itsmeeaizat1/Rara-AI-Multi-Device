@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animequote",
+  alias: ["animequote"],
   aliases: ["animequote", "quotesanime", "quotanime", "kataanime"],
   category: "anime",
   description: "Kumpulan quote anime terkenar - Naruto, One Piece, AoT, dll",

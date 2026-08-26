@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autogreet",
+  alias: ["autogreet"],
   aliases: ["autogreet", "autogreeting", "autosapa"],
   category: "group",
   description: "Auto sapa grup sesuai waktu (pagi/siang/sore/malam)",

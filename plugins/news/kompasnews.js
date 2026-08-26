@@ -4,6 +4,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "kompasnews",
+  alias: ["kompasnews"],
   aliases: ["kompasnews", "kompas", "kompascom"],
   category: "news",
   description: "Berita terbaru Kompas.com (RSS scraping, no API key)",

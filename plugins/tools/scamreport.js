@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "scamreport",
-  alias: ["laporscam", "cekscam", "laporpenipu"],
+  alias: ["scamreport", "laporscam", "cekscam", "laporpenipu"],
   category: "tools",
   description: "Lapor nomor penipu & cek nomor sebelum transaksi (database komunitas)",
   usage: ".scamreport <nomor> <laporan> | .scamreport cek <nomor> | .scamreport list",

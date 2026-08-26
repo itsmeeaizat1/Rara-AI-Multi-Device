@@ -3,6 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sleepcoach", alias: ["sleepcoach", "sleeptips", "tidurcoach"], category: "future",
+  alias: ["sleepcoach"],
   description: "AI analisis pola tidur dari chat", usage: ".sleepcoach",
   example: ".sleepcoach", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 30, energi: 3, isEnabled: true,

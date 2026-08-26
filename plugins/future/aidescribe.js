@@ -4,6 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "aidescribe", alias: ["describeai", "deskripsiai", "apaini"], category: "future",
+  alias: ["aidescribe"],
   description: "AI deskripsikan isi foto", usage: ".aidescribe (reply gambar)",
   example: ".aidescribe", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 5, isEnabled: true,

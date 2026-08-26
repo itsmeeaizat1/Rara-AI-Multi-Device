@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "twotruths",
+  alias: ["twotruths"],
   aliases: ["twotruths", "ttol", "duakebenaran"],
   category: "group",
   description: "Two Truths One Lie - 3 statement, tebak mana yang bohong",

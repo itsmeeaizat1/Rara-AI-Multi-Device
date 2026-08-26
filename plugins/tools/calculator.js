@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "calculator",
-  alias: ["calc", "kalkulator", "hitung", "calculator"],
+  alias: ["calculator", "calc", "kalkulator", "hitung", "calculator"],
   category: "tools",
   description: "Kalkulator matematika",
   usage: ".calc <ekspresi>",

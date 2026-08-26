@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 
 const pluginConfig = {
     name: ['listvps', 'listdroplet', 'vpslist'],
-    alias: [],
+    alias: ["listvps", "listdroplet", "vpslist"],
     category: 'vps',
     description: 'List semua VPS DigitalOcean',
     usage: '.listvps',
@@ -51,13 +51,13 @@ async function handler(m, { sock }) {
         const droplets = response.data.droplets || []
         
         if (droplets.length === 0) {
-            return m.reply(`╭──「 *List VPS 」
+            return m.reply(`╭──「 *List VPS
 ┊
 │ ❏ Tidak ada VPS yang tersedia
 ╰──────────❀`)
         }
         
-        let txt = `╭──「 *List VPS 」
+        let txt = `╭──「 *List VPS
 ┊
 │ ❏ Total: ${droplets.length} droplet
 ╰──────────❀
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
             const status = droplet.status === 'active' ? 'Active' : 'Off'
             
             txt += `
-╭──「 *${droplet.name} 」
+╭──「 *${droplet.name}
 ┊
 │ ❏ *ꜱᴛᴀᴛᴜꜱ:* ${status}
 │ ❏ *ID:* ${droplet.id}

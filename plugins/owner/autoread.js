@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoread",
-  alias: ["readchat", "autobaca"],
+  alias: ["autoread", "readchat", "autobaca"],
   category: "owner",
   description: "Auto read pesan masuk",
   usage: ".autoread on/off",

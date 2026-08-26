@@ -3,7 +3,7 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
   name: "komedi",
-  alias: ["komedistory", "ceritalucu"],
+  alias: ["komedi", "komedistory", "ceritalucu"],
   category: "future",
   description: "AI Comedy generator - bikin cerita komedi absurd tentang member grup",
   usage: ".komedi @user1 @user2",

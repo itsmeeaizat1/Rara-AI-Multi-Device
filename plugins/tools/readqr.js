@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "readqr", alias: ["scanqr", "qrdecode"], category: "tools",
+  alias: ["readqr"],
   description: "Baca QR code dari gambar", usage: ".readqr (reply gambar QR)",
   example: ".readqr", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,

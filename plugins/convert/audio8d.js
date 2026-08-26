@@ -7,6 +7,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "audio8d",
+  alias: ["audio8d"],
   aliases: ["audio8d", "8daudio", "spatial", "surround"],
   category: "convert",
   description: "Efek 8D spatial audio - suara mutar kiri kanan seperti surround",

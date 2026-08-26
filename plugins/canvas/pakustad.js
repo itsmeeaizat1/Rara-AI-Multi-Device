@@ -3,7 +3,7 @@ import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: ['pakustad', 'pak-ustad', 'tanyaustad'],
-    alias: [],
+    alias: ["pakustad", "pak-ustad", "tanyaustad"],
     category: 'fun',
     description: 'Tanya pak ustad (gambar)',
     usage: '.pakustad <pertanyaan>',

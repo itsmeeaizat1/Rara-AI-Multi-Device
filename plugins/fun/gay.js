@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 const pluginConfig = {
     name: 'gay',
-    alias: ['howgay'],
+    alias: ["gay", 'howgay'],
     category: 'fun',
     description: 'Menunjuk member paling gay di grup',
     usage: '.gay',

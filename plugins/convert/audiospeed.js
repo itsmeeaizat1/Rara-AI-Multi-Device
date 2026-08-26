@@ -7,6 +7,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "audiospeed",
+  alias: ["audiospeed"],
   aliases: ["audiospeed", "speedaudio", "audiotempo", "ubahcepat"],
   category: "convert",
   description: "Custom tempo audio 0.25x - 4x (percepat/perlambat bebas)",

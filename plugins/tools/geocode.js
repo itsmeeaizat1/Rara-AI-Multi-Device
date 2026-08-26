@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "geocode", alias: ["koordinat", "lokasi"], category: "tools",
+  alias: ["geocode"],
   description: "Alamat ke koordinat GPS", usage: ".geocode <nama tempat>",
   example: ".geocode Monas Jakarta", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

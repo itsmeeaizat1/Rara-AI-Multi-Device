@@ -3,7 +3,7 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
   name: "isekai",
-  alias: ["isekaistory", "ceritaisekai"],
+  alias: ["isekai", "isekaistory", "ceritaisekai"],
   category: "future",
   description: "AI Isekai generator - cerita terlempar ke dunia lain ala anime",
   usage: ".isekai @user1 @user2",

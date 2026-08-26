@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: ["sprem", "stickerpremium", "premiumsticker"],
-  alias: [],
+  alias: ["sprem", "stickerpremium", "premiumsticker"],
   category: "owner",
   description: "Kirim ulang sticker sebagai premium (Lottie/AI)",
   usage: ".sprem (reply sticker)",

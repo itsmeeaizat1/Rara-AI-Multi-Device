@@ -4,6 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['ht', 'hidetag'],
+    alias: ["ht", "hidetag"],
     category: 'group',
     description: 'Hidetag dengan support reply pesan (teks/media)',
     usage: '.ht [pesan] atau reply pesan',

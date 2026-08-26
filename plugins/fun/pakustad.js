@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import config from "../../config.js";
 const pluginConfig = {
     name: ['pakustad', 'pak-ustad', 'tanyaustad'],
-    alias: [],
+    alias: ["pakustad", "pak-ustad", "tanyaustad"],
     category: 'fun',
     description: 'Tanya pak ustad (gambar)',
     usage: '.pakustad <pertanyaan>',

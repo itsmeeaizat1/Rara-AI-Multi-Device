@@ -5,7 +5,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 const pluginConfig = {
     name: 'setbirthday',
-    alias: ['setbday', 'setultah', 'settgl'],
+    alias: ["setbirthday", 'setbday', 'setultah', 'settgl'],
     category: 'user',
     description: 'Set tanggal ulang tahun',
     usage: '.setbirthday <DD-MM>',

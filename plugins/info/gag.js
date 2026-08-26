@@ -6,7 +6,7 @@ import {  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gag",
-  alias: ["growagarden", "gaginfo"],
+  alias: ["gag", "growagarden", "gaginfo"],
   category: "info",
   description: "Menampilkan informasi stok Grow a Garden",
   usage: ".gag",

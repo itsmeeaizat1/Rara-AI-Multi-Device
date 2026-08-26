@@ -7,6 +7,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "audioloop",
+  alias: ["audioloop"],
   aliases: ["audioloop", "loopaudio", "ulangaudio", "audiorepeat"],
   category: "convert",
   description: "Loop audio X kali jadi 1 file dengan fade antar loop",

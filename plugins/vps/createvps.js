@@ -125,7 +125,7 @@ ssh_pwauth: True`,
         const ipv4 = dropletInfo.networks?.v4?.find(n => n.type === 'public')
         const ip = ipv4?.ip_address || 'Tidak tersedia'
         
-        const detailTxt = `╭──「 *VPS Berhasil Dibuat 」
+        const detailTxt = `╭──「 *VPS Berhasil Dibuat
 ┊
 │ ❏ *ID:* ${dropletId}
 │ ❏ *ʜᴏꜱᴛɴᴀᴍᴇ:* ${hostname}
@@ -134,7 +134,7 @@ ssh_pwauth: True`,
 │ ❏ *ᴘᴀꜱꜱᴡᴏʀᴅ:* ${password}
 ╰──────────❀
 
-╭──「 *Spec 」
+╭──「 *Spec
 ┊
 │ ❏ *ʀᴀᴍ:* ${spec.ram}
 │ ❏ *ᴄᴘᴜ:* ${spec.cpu}

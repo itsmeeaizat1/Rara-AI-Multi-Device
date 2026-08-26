@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aronasanka",
-  alias: ["aronachatsanka", "chataronasanka"],
+  alias: ["aronasanka", "aronachatsanka", "chataronasanka"],
   category: "tools",
   description: "Chat dengan Arona (Blue Archive) via Sanka AI",
   usage: ".aronasanka <text>",

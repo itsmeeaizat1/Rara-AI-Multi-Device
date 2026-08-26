@@ -3,7 +3,7 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
   name: "horor",
-  alias: ["horrorstory", "ceritahoror", "ceritaseram"],
+  alias: ["horor", "horrorstory", "ceritahoror", "ceritaseram"],
   category: "future",
   description: "AI Horror generator - bikin cerita horor pendek tentang member grup",
   usage: ".horor @user1 @user2",

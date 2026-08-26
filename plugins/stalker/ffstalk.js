@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ffstalk",
-  alias: ["freefireid", "stalkff", "ff"],
+  alias: ["ffstalk", "freefireid", "stalkff", "ff"],
   category: "stalker",
   description: "Melihat informasi lengkap akun Free Fire berdasarkan ID.",
   usage: ".ffstalk <id>",

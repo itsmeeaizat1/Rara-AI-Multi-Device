@@ -10,7 +10,7 @@ ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const pluginConfig = {
   name: "hdvid",
-  alias: ["hdvideo", "enhancevid", "hdv"],
+  alias: ["hdvid", "hdvideo", "enhancevid", "hdv"],
   category: "tools",
   description: "Meningkatkan kualitas video menjadi HD dengan pure FFMPEG",
   usage: ".hdvid (reply video)",

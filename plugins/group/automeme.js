@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "automemegc",
-  alias: ["memeotomatis", "memeauto", "automemes"],
+  alias: ["automemegc", "memeotomatis", "memeauto", "automemes"],
   category: "group",
   description: "Kirim meme text random otomatis tiap interval (toggle on/off per grup)",
   usage: ".automeme on [menit] | .automeme off | .automeme status | .automeme now",

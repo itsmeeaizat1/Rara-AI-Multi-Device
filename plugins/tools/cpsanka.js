@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "cpsanka",
-  alias: ["couplesanka", "cpanimesanka"],
+  alias: ["cpsanka", "couplesanka", "cpanimesanka"],
   category: "tools",
   description: "Random anime couple (cowo & cwe) image",
   usage: ".cpsanka",

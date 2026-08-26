@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animemoments",
+  alias: ["animemoments"],
   aliases: ["animemoments", "animebestmoments", "topmoments", "momentsanime"],
   category: "anime",
   description: "Momen paling epik & ikonik dalam sejarah anime",

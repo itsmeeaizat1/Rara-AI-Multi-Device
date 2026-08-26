@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'claninvite',
-    alias: ['inviteclan'],
+    alias: ["claninvite", 'inviteclan'],
     category: 'clan',
     description: 'Invite & langsung tambahkan user ke clan',
     usage: '.claninvite @user',

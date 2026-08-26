@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 
 const pluginConfig = {
   name: "uuid", alias: ["guid", "uniqueid"], category: "tools",
+  alias: ["uuid"],
   description: "Generate UUID v4", usage: ".uuid",
   example: ".uuid", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 2, energi: 0, isEnabled: true,

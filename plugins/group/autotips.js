@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autotips",
-  alias: ["tipsotomatis", "tipsauto", "autotipsharian"],
+  alias: ["autotips", "tipsotomatis", "tipsauto", "autotipsharian"],
   category: "group",
   description: "Kirim tips harian random otomatis tiap interval (toggle on/off per grup)",
   usage: ".autotips on [menit] | .autotips off | .autotips status | .autotips now",

@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bounty",
-  alias: ["bountyboard", "bounti", "tugasgrup", "freelancegrup"],
+  alias: ["bounty", "bountyboard", "bounti", "tugasgrup", "freelancegrup"],
   category: "group",
   description: "Bounty Board - Post tugas dengan reward, member claim & selesaikan",
   usage: ".bounty <command>",

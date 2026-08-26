@@ -19,7 +19,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "openrouter",
-  alias: ["orai", "orrouter", "openrouterai"],
+  alias: ["openrouter", "orai", "orrouter", "openrouterai"],
   category: "ai",
   description: "Multi-model AI via OpenRouter (DeepSeek, Llama, Gemini, Mistral, Qwen)",
   usage: ".openrouter <pesan>\n.openrouter model <nama>\n.openrouter list\n.openrouter reset\n.openrouter setkey <key>",

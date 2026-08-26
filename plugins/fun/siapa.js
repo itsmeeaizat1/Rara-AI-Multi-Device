@@ -11,7 +11,7 @@ const pluginConfig = {
         'setan', 'iblis', 'cacat', 'yatim', 'piatu', 'ganteng', 'cantik',
         'jelek', 'keren', 'cupu', 'noob', 'pro', 'sultan', 'miskin', 'kaya', 'siapa'
     ],
-    alias: [],
+    alias: ["bego", "goblok", "janda", "perawan", "babi", "tolol", "pekok", "jancok", "pinter", "pintar", "asu", "bodoh", "gay", "lesby", "bajingan", "anjing", "anjg", "anjj", "anj", "ngentod", "ngentot", "monyet", "mastah", "newbie", "bangsat", "bangke", "sange", "sangean", "dakjal", "horny", "wibu", "puki", "puqi", "peak", "pantex", "pantek", "setan", "iblis", "cacat", "yatim", "piatu", "ganteng", "cantik", "jelek", "keren", "cupu", "noob", "pro", "sultan", "miskin", "kaya", "siapa"],
     category: 'fun',
     description: 'Random pilih member untuk kategori tertentu',
     usage: '.<kategori>',

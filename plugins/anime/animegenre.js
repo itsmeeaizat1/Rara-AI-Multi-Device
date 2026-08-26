@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animegenre",
+  alias: ["animegenre"],
   aliases: ["animegenre", "genremanga", "animekategorinfo", "daftargenre"],
   category: "anime",
   description: "Panduan genre anime & manga - penjelasan & rekomendasi",

@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 
 const pluginConfig = {
     name: ['sisavps', 'sisadroplet', 'vpsquota'],
-    alias: [],
+    alias: ["sisavps", "sisadroplet", "vpsquota"],
     category: 'vps',
     description: 'Cek sisa kuota VPS',
     usage: '.sisavps',
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
         const dropletsUsed = droplets.length
         const dropletsRemaining = dropletLimit - dropletsUsed
         
-        let txt = `╭──「 *Kuota DigitalOcean 」
+        let txt = `╭──「 *Kuota DigitalOcean
 ┊
 │ ❏ *ʟɪᴍɪᴛ:* ${dropletLimit} droplet
 │ ❏ *ᴛᴇʀᴘᴀᴋᴀɪ:* ${dropletsUsed} droplet

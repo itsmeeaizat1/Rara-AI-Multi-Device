@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "synonym", alias: ["sinonim", "thesaurus"], category: "tools",
+  alias: ["synonym"],
   description: "Cari sinonim kata", usage: ".synonym <kata>",
   example: ".synonym happy", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

@@ -11,7 +11,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tourl",
-  alias: ["upload", "catbox", "url"],
+  alias: ["tourl", "upload", "catbox", "url"],
   category: "tools",
   description: "Upload media ke multiple host dan dapatkan URL",
   usage: ".tourl (reply/kirim media)",

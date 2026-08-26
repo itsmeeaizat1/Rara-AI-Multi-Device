@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ttp",
-  alias: ["texttopicture"],
+  alias: ["ttp", "texttopicture"],
   category: "maker",
   description: "Membuat stiker keren dari teks",
   usage: ".ttp <teks>",

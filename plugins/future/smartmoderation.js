@@ -4,6 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "smartmoderation", alias: ["aimod", "antitoxicai"], category: "future",
+  alias: ["smartmoderation"],
   description: "Toggle AI moderation anti-toxic", usage: ".smartmoderation <on/off>",
   example: ".smartmoderation on", isOwner: true, isPremium: false,
   isGroup: true, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

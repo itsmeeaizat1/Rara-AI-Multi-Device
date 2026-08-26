@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "facebookv2",
-  alias: ["fbv2", "fbdlv2"],
+  alias: ["facebookv2", "fbv2", "fbdlv2"],
   category: "download",
   description: "Download video Facebook via (V2)",
   usage: ".facebookv2 <url>",

@@ -6,7 +6,7 @@ import path from 'path'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'setownertype',
-    alias: ['ownertype', 'ownervariant', 'ownerstyle'],
+    alias: ["setownertype", 'ownertype', 'ownervariant', 'ownerstyle'],
     category: 'owner',
     description: 'Mengatur variant tampilan owner message',
     usage: '.setownertype',

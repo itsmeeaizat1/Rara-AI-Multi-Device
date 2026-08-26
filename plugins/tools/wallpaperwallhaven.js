@@ -20,7 +20,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wallpaperwallhaven",
-  alias: ["wh", "wallhaven", "whwall"],
+  alias: ["wallpaperwallhaven", "wh", "wallhaven", "whwall"],
   category: "tools",
   description: "Unduh wallpaper HD/4K dari Wallhaven (general + anime)",
   usage: ".wh <kata kunci>\n.wh anime <karakter>\n.wh <kata kunci> hd\n.wh <kata kunci> 4k\n.wh <kata kunci> mobile\n.wh random\n.wh anime random",

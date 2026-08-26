@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autochatsummary",
+  alias: ["autochatsummary"],
   aliases: ["autochatsummary", "autoringkasan", "autochatsum"],
   category: "group",
   description: "Auto rangkum chat grup tiap X jam pakai AI",

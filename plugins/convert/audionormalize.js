@@ -7,6 +7,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "audionormalize",
+  alias: ["audionormalize"],
   aliases: ["audionormalize", "normalisasi", "audiovolume", "boostvolume"],
   category: "convert",
   description: "Auto normalize volume audio biar suara konsisten",

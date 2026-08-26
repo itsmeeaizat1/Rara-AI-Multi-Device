@@ -9,7 +9,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gpt5xemoz",
-  alias: ["gpt53xemoz", "gpt5xemz"],
+  alias: ["gpt5xemoz", "gpt53xemoz", "gpt5xemz"],
   category: "ai",
   description: "GPT-5.3 via API xemoz",
   usage: ".gpt5xemoz <pertanyaan>",

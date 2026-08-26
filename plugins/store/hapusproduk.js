@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "hapusproduk",
-  alias: ["delproduk", "delproduct", "deleteproduk"],
+  alias: ["hapusproduk", "delproduk", "delproduct", "deleteproduk"],
   category: "store",
   description: "🗑️ Hapus produk dari toko",
   usage: ".hapusproduk <nomor>",

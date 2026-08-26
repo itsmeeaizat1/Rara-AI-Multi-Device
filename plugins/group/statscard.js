@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "statscard",
+  alias: ["statscard"],
   aliases: ["statscard", "groupcard", "grupcard"],
   category: "group",
   description: "Generate image card statistik grup",

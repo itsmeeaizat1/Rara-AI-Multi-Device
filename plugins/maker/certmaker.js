@@ -12,6 +12,7 @@ async function getCanvas() {
 
 const pluginConfig = {
   name: "certmaker",
+  alias: ["certmaker"],
   aliases: ["certmaker", "certificate", "buatsertifikat", "sertifikat"],
   category: "maker",
   description: "Buat sertifikat custom - nama, judul, tanggal, pemberi",

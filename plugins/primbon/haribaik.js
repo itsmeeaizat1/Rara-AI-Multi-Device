@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "haribaik",
+  alias: ["haribaik"],
   aliases: ["haribaik", "harinaas", "harilarangan", "harilanggan", "haripentingjawa"],
   category: "primbon",
   description: "Cek hari baik, hari naas, & hari larangan dalam kalender Jawa",

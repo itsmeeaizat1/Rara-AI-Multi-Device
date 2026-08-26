@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "trending", alias: ["trend", "viral", "populer"], category: "tools",
+  alias: ["trending"],
   description: "Trending topic Google", usage: ".trending",
   example: ".trending", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 30, energi: 0, isEnabled: true,

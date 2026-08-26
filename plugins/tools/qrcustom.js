@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 import config from "../../config.js";
 const pluginConfig = {
     name: ['qrcustom', 'qrcode', 'qr'],
-    alias: [],
+    alias: ["qrcustom", "qrcode", "qr"],
     category: 'tools',
     description: 'Generate QR code custom dengan logo',
     usage: '.qrcustom <url>',

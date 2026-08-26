@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "bluearchive-char",
-  alias: ["bachar"],
+  alias: ["bluearchive-char", "bachar"],
   category: "info",
   description: "Lihat info character Blue Archive",
   usage: ".bluearchive-char <nama>",

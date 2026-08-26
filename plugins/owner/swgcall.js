@@ -12,7 +12,7 @@ const botConfig = config;
 
 const pluginConfig = {
   name: "swgcall",
-  alias: ["swgcsemua", "swgcbroadcast", "swgcbc", "groupstoryall"],
+  alias: ["swgcall", "swgcsemua", "swgcbroadcast", "swgcbc", "groupstoryall"],
   category: "owner",
   description: "Post Group Status/Story ke SEMUA grup sekaligus (border hijau)",
   usage: ".swgcall <teks> atau reply media",

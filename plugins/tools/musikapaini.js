@@ -10,7 +10,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "musikapaini",
-  alias: ["whatmusic", "shazam", "recognizemusic", "mai"],
+  alias: ["musikapaini", "whatmusic", "shazam", "recognizemusic", "mai"],
   category: "tools",
   description: "Identifikasi lagu dari audio",
   usage: ".musikapaini (reply audio)",
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
     const links = music.links || {};
 
     let text = `🎵 *LAGU DITEMUKAN!*\n\n`;
-    text += `╭──「 *INFO\n`; 」
+    text += `╭──「 *INFO\n」`;
     text += `│ ❏ 🎶 Title: ${music.title || "-"}\n`;
     text += `│ ❏ 👤 Artist: ${music.artist || "-"}\n`;
     text += `│ ❏ 💿 Album: ${music.album || "-"}\n`;

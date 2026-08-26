@@ -11,7 +11,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "aigrup",
-  alias: ["aig", "aigroup"],
+  alias: ["aigrup", "aig", "aigroup"],
   category: "ai",
   description: "AI grup - bot nimbrung otomatis (atur format, model, on/off dari DM)",
   usage: ".aigrup <format> <model> on/off/status",

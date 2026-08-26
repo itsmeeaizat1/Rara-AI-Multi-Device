@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autocompress",
+  alias: ["autocompress"],
   aliases: ["autocompress", "autoresize", "autokompres"],
   category: "group",
   description: "Auto compress image di grup (resize + quality)",

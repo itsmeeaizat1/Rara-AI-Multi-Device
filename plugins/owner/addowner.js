@@ -18,7 +18,7 @@ import { getGroupMode } from "../group/botmode.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "addowner",
-  alias: ["addown", "setowner", "delowner", "dedown", "ownerlist", "listowner"],
+  alias: ["addowner", "addown", "setowner", "delowner", "dedown", "ownerlist", "listowner"],
   category: "owner",
   description: "Kelola owner bot (mode-aware)",
   usage: ".addowner <nomor/@tag/reply>",

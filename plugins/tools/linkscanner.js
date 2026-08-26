@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "linkscanner",
-  alias: ["cekbahaya", "scanurl", "scanlink", "linkcheck", "linkaman"],
+  alias: ["linkscanner", "cekbahaya", "scanurl", "scanlink", "linkcheck", "linkaman"],
   category: "tools",
   description: "Scan URL/link untuk cek apakah aman atau berbahaya (phishing/malware/scam)",
   usage: ".linkscanner <url>",

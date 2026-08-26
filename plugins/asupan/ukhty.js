@@ -5,7 +5,7 @@ import path from 'path'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ukhty',
-    alias: ['ukht'],
+    alias: ["ukhty", 'ukht'],
     category: 'asupan',
     description: 'Video ukhty',
     usage: '.ukhty',

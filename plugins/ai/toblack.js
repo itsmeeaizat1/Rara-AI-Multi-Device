@@ -7,7 +7,7 @@ import { live3d } from "../../src/scraper/seaart.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "toblack",
-  alias: ["black", "hitamkan", "hitam", "tohitam"],
+  alias: ["toblack", "black", "hitamkan", "hitam", "tohitam"],
   category: "ai",
   description: "Ubah gambar ke skin tone lebih gelap",
   usage: ".toblack (reply gambar)",

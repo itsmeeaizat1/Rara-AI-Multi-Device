@@ -4,6 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "smartreplyfuture", alias: ["smartreply2", "smartreplyfuture", "aireply2"], category: "future",
+  alias: ["smartreplyfuture"],
   description: "Toggle AI auto-reply kontekstual", usage: ".smartreply <on/off>",
   example: ".smartreply on", isOwner: true, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

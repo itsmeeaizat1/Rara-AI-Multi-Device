@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autofact",
-  alias: ["faktotomatis", "autofakta", "factauto", "faktaauto"],
+  alias: ["autofact", "faktotomatis", "autofakta", "factauto", "faktaauto"],
   category: "group",
   description: "Kirim fakta unik random otomatis tiap interval (toggle on/off per grup)",
   usage: ".autofact on [menit] | .autofact off | .autofact status | .autofact now",

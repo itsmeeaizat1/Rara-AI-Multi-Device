@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cocofundl',
-    alias: ['cfdl', 'cocofun', 'cf'],
+    alias: ["cocofundl", 'cfdl', 'cocofun', 'cf'],
     category: 'download',
     description: 'Download video CocoFun',
     usage: '.cfdl <url>',

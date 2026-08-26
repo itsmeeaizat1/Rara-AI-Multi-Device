@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "antispammenuv2",
-  alias: ["antispammenu", "aspmenu", "aspmenuv2"],
+  alias: ["antispammenuv2", "antispammenu", "aspmenu", "aspmenuv2"],
   category: "tools",
   description: "Anti-spam menu & fitur (.menu/.allmenu + command fitur) - V2 standalone",
   usage: ".antispammenuv2 <command>",

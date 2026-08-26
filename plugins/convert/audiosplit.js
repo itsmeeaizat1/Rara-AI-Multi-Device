@@ -7,6 +7,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "audiosplit",
+  alias: ["audiosplit"],
   aliases: ["audiosplit", "splitaudio", "audiotrim", "potongaudio"],
   category: "convert",
   description: "Potong/trim audio dari detik X ke Y, atau split jadi 2 bagian",

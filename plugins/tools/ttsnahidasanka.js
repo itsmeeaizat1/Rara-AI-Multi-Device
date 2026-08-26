@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ttsnahidasanka",
-  alias: ["nahidasanka", "voicenahidasanka"],
+  alias: ["ttsnahidasanka", "nahidasanka", "voicenahidasanka"],
   category: "tools",
   description: "TTS suara Nahida (Genshin Impact) via API",
   usage: ".ttsnahidasanka <text>",

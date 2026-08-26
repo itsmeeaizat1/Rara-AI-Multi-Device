@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['hapussaluran', 'deletesaluran', 'deletenewsletter'],
-    alias: [],
+    alias: ["hapussaluran", "deletesaluran", "deletenewsletter"],
     category: 'owner',
     description: 'Hapus saluran/newsletter',
     usage: '.hapussaluran <id_saluran>',

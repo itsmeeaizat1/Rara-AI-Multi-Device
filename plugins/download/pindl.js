@@ -8,7 +8,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "pindl",
-  alias: ["pinterestdl", "pindownload", "pintdl"],
+  alias: ["pindl", "pinterestdl", "pindownload", "pintdl"],
   category: "download",
   description: "Download gambar/video dari Pinterest",
   usage: ".pindl <url>",

@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'anime-gen',
-    alias: ['animegen', 'aianimegen', 'genai-anime'],
+    alias: ["anime-gen", 'animegen', 'aianimegen', 'genai-anime'],
     category: 'ai',
     description: 'Generate AI anime art dari prompt',
     usage: '.anime-gen <prompt>',

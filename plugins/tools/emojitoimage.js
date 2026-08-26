@@ -8,7 +8,7 @@ const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
 const pluginConfig = {
   name: "emojitoimage",
-  alias: ["emoji2img", "emojiimg", "e2i"],
+  alias: ["emojitoimage", "emoji2img", "emojiimg", "e2i"],
   category: "tools",
   description: "Konversi emoji ke gambar HD (style Apple)",
   usage: ".emojitoimage <emoji> [style]",

@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 import config from "../../config.js";
 const pluginConfig = {
     name: ['fakecall', 'fakecallwa'],
-    alias: [],
+    alias: ["fakecall", "fakecallwa"],
     category: 'canvas',
     description: 'Membuat gambar fake call WhatsApp',
     usage: '.fakecall <nama> | <durasi>',

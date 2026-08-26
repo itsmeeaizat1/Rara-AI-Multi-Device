@@ -12,6 +12,7 @@ async function getCanvas() {
 
 const pluginConfig = {
   name: "lyricscard",
+  alias: ["lyricscard"],
   aliases: ["lyricscard", "lirikcard", "lirikmaker", "lyricsmaker"],
   category: "maker",
   description: "Buat card lirik lagu estetik - teks + judul + artis + background gradient",

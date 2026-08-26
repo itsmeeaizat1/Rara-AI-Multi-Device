@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'jadwalgroup',
-    alias: ['schedulegroup', 'jdwlgrup', 'autoopenclose'],
+    alias: ["jadwalgroup", 'schedulegroup', 'jdwlgrup', 'autoopenclose'],
     category: 'group',
     description: 'Jadwal buka/tutup grup otomatis',
     usage: '.jadwalgroup <open/close> <HH:MM>',
@@ -56,7 +56,7 @@ async function handler(m, { sock, db }) {
         
         let scheduleInfo = `⏰ *ᴊᴀᴅᴡᴀʟ ɢʀᴜᴘ*
 
-「 📋 *ꜱᴛᴀᴛᴜꜱ* 」
+「 📋 *ꜱᴛᴀᴛᴜꜱ*
 🔓 Open: *${openTime || 'Tidak aktif'}*
 🔒 Close: *${closeTime || 'Tidak aktif'}*
 
@@ -140,7 +140,7 @@ async function handler(m, { sock, db }) {
     
     const successMsg = `✅ *ᴊᴀᴅᴡᴀʟ ᴅɪꜱɪᴍᴘᴀɴ*
 
-╭┈┈⬡「 ⏰ *ꜱᴇᴛᴛɪɴɢ* 」
+╭┈┈⬡「 ⏰ *ꜱᴇᴛᴛɪɴɢ*
 ┃ ㊗ ${emoji} Aksi: *${actionText}*
 ┃ ㊗ ⏱️ Waktu: *${formattedTime} WIB*
 ┃ ㊗ 📡 sTatus: *🟢 Aktif*

@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animestudio",
+  alias: ["animestudio"],
   aliases: ["animestudio", "studioanime", "studiodatabase", "studioinfo"],
   category: "anime",
   description: "Database studio anime & karya-karya terbaiknya",

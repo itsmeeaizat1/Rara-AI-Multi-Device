@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getQuotedStickerHash, deleteStickerCommand, listStickerCommands, findByCommand } from '../../src/lib/nova-sticker-command.js'
 const pluginConfig = {
     name: 'delstickercmd',
-    alias: ['delcmdsticker', 'removesticker', 'unsticker'],
+    alias: ["delstickercmd", 'delcmdsticker', 'removesticker', 'unsticker'],
     category: 'group',
     description: 'Hapus sticker command',
     usage: '.delstickercmd <command> atau reply sticker',

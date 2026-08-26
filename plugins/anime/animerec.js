@@ -4,6 +4,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animerec",
+  alias: ["animerec"],
   aliases: ["animerec", "animeinfo", "animewiki", "animesearch2", "malinfo"],
   category: "anime",
   description: "Cari & rekomendasi anime dari MyAnimeList (Jikan API, gratis)",

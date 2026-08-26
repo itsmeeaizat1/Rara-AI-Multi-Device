@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "autostatusview",
-  alias: ["autosw", "autostatus", "statusview", "autoviewsw"],
+  alias: ["autostatusview", "autosw", "autostatus", "statusview", "autoviewsw"],
   category: "owner",
   description: "Auto view (read) & react status/story WA - gabungan autoreadsw + autoreactsw",
   usage: ".autostatusview <command>",

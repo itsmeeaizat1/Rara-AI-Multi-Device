@@ -4,6 +4,7 @@ import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'deploy',
+    alias: ["deploy"],
     category: 'owner',
     description: 'Deploy HTML ke Vercel (reply code / file)',
     usage: '.deploy <namawebsite>',
@@ -121,7 +122,7 @@ Contoh:
 
         m.react('✅')
 
-        await m.reply(claraWrap("Deploy", `╭──「 *DEPLOY SUCCESS 」
+        await m.reply(claraWrap("Deploy", `╭──「 *DEPLOY SUCCESS
 │
 │ 🌐 Nama     : ${name}
 │ ☁️ Platform : Vercel
@@ -141,7 +142,7 @@ Contoh:
             error.message
 
         m.reply(
-`╭──「 *DEPLOY FAILED 」
+`╭──「 *DEPLOY FAILED
 │
 │ ❌ ${err}
 │

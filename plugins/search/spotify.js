@@ -8,7 +8,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "spotify",
-  alias: ["spotifysearch", "spsearch"],
+  alias: ["spotify", "spotifysearch", "spsearch"],
   category: "search",
   description: "Mencari daftar lagu di Spotify berdasarkan judul atau artis",
   usage: ".spotify <query>",

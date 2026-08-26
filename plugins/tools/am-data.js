@@ -5,7 +5,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "am-data",
-  alias: ["alightmotion-data"],
+  alias: ["am-data", "alightmotion-data"],
   category: "tools",
   description: "Lihat data project Alight Motion dari link share",
   usage: ".am-data <url>",

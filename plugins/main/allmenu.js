@@ -161,7 +161,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
     // ── Info section (Clara-MD box style) ──
-    let txt = `╭──「 *Info User* 」
+    let txt = `╭──「 *Info User*
 │
 │ ❏ *Nama:*  ${m.pushName || "User"}
 │ ❏ *Nomor:* @${m.sender.split("@")[0]}
@@ -174,14 +174,14 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ ❏ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
 │ ❏ *Total Xp:* ${userExp.toLocaleString()}
 │ ❏ *Status:* ${user?.banned ? "Banned" : "Aktif"}
-├──「 *Info Waktu* 」
+├──「 *Info Waktu*
 │ ❏ *Waktu:* ${timeStr} WIB
 │ ❏ *Hari:* ${dayName} ${weton}
 │ ❏ *Tanggal:* ${dateStr}
 │ ❏ *Tanggal Islam:* ${islamicDate}
 │ ❏ *Zona:* Asia/Jakarta
 │ ❏ *Hari Penting:* ${importantDay}
-├──「 *Info Bot* 」
+├──「 *Info Bot*
 │ ❏ *Bot Name:* ${botConfig.bot?.name || botName}
 │ ❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
 │ ❏ *Version:* ${botConfig.bot?.version || "-"}
@@ -193,7 +193,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ ❏ *Total Registrasi:* ${totalRegistered}
 │ ❏ *Premium User:* ${totalPremium}
 │ ❏ *Total Fitur:* ${totalFeatures}
-├──「 *Info Server* 」
+├──「 *Info Server*
 │ ❏ *Platform:* ${platform}
 │ ❏ *Hostname:* ${hostname}
 │ ❏ *Type:* Node.Js
@@ -207,7 +207,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ ❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
 ╰──────────❀
 ${weatherBlock}${readMore}
-╭──「 *Keterangan* 」
+╭──「 *Keterangan*
 │ ❏ Ⓞ = Hanya untuk owner
 │ ❏ ⓟ = Hanya untuk premium
 │ ❏ Ⓛ = Membutuhkan limit

@@ -10,7 +10,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pap",
-  alias: ["papcewe", "papcowo", "papfemboy"],
+  alias: ["pap", "papcewe", "papcowo", "papfemboy"],
   category: "search",
   description: "Minta pap cewe, cowo, atau femboy dari Pinterest",
   usage: ".pap <cewe/cowo/femboy>",

@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "imgupscale",
-  alias: ["imgupscaleai", "upscaleimg", "hdupscaler", "imgupscaler"],
+  alias: ["imgupscale", "imgupscaleai", "upscaleimg", "hdupscaler", "imgupscaler"],
   category: "tools",
   description: "ImgUpscaler — upscale & enhance gambar via imgupscaler.com API, gratis tanpa token",
   usage: ".imgupscale (reply gambar)\n.imgupscale 2 (reply gambar)\n.imgupscale 4 (reply gambar)",

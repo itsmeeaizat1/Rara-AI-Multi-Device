@@ -8,7 +8,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "approvesewa",
-  alias: ["sewaapprove", "accsewa"],
+  alias: ["approvesewa", "sewaapprove", "accsewa"],
   category: "owner",
   description: "Approve pendaftaran sewa dari user",
   usage: ".approvesewa <nomor>",

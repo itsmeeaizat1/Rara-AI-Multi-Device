@@ -6,7 +6,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "confesswall",
-  alias: ["wallconfess", "tembokcurhat"],
+  alias: ["confesswall", "wallconfess", "tembokcurhat"],
   category: "fun",
   description: "Confession wall grup - post anonim dengan thread & react",
   usage: ".confesswall post <teks>\n.confesswall list\n.confesswall read <id>\n.confesswall react <id> <type>\n.confesswall reply <id> <teks>\n.confesswall stats",

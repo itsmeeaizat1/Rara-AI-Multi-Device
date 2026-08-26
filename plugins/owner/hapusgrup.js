@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['hapusgrup', 'deletegrup', 'delgrup'],
-    alias: [],
+    alias: ["hapusgrup", "deletegrup", "delgrup"],
     category: 'owner',
     description: 'Keluar dari grup / hapus grup',
     usage: '.hapusgrup (di dalam grup) atau .hapusgrup <jid>',

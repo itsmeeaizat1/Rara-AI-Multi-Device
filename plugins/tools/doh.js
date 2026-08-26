@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "doh",
-  alias: ["dnsoverhttps", "dnsresolve", "dnsquery", "dohlookup"],
+  alias: ["doh", "dnsoverhttps", "dnsresolve", "dnsquery", "dohlookup"],
   category: "tools",
   description: "DNS over HTTPS query (resolve domain via Cloudflare/Google DoH)",
   usage: ".doh <domain>  atau  .doh <type> <domain>  atau  .doh <provider> <domain>",

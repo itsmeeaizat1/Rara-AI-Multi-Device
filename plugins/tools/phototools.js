@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "phototools",
-  alias: ["fototools", "photocompress", "photoconvert", "photoresize", "photocrop", "photoborder", "photomirror"],
+  alias: ["phototools", "fototools", "photocompress", "photoconvert", "photoresize", "photocrop", "photoborder", "photomirror"],
   category: "tools",
   description: "Photo Tools — kompres, konversi, resize, crop, border, mirror foto (local, no API)",
   usage: ".phototools <command> (reply gambar)\n.phototools list — Lihat semua command",

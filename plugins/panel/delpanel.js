@@ -6,7 +6,7 @@ import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'delpanel',
-    alias: ['hapuspanel', 'deletepanel'],
+    alias: ["delpanel", 'hapuspanel', 'deletepanel'],
     category: 'panel',
     description: 'Hapus panel (server + user)',
     usage: '.delpanel [s1/s2/s3] serverid [full]',

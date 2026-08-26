@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'autoanimewinbu',
-    alias: ["autoanime", "autoanimewibu", "animewibu"],
+    alias: ["autoanimewinbu", "autoanime", "autoanimewibu", "animewibu"],
     category: 'anime',
     description: 'Auto upload ongoing anime & donghua dari winbu.net (720p Pixeldrain)',
     usage: '.autoanimewinbu <start|stop|status|cek|list|reset|addgrup|delgrup>',

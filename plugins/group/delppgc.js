@@ -2,7 +2,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: 'delppgc',
-    alias: ['delprofilegc', 'delppgroup', 'hapusppgc'],
+    alias: ["delppgc", 'delprofilegc', 'delppgroup', 'hapusppgc'],
     category: 'group',
     description: 'Menghapus foto profil grup',
     usage: '.delppgc',

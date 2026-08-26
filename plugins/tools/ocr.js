@@ -9,7 +9,7 @@ function getTesseract() {
 }
 const pluginConfig = {
   name: "ocrtool",
-  alias: ["ocr", "ocrextract", "imagetotext"],
+  alias: ["ocrtool", "ocr", "ocrextract", "imagetotext"],
   category: "tools",
   description: "Extract teks dari gambar (Offline/Local)",
   usage: ".ocr (reply gambar)",
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     const responseText =
       `📖 *ᴏᴄʀ ʀᴇꜱᴜʟᴛ*\n\n` +
-      `╭──「 *TEKs\n` + 」
+      `╭──「 *TEKs\n」` +
       `${extractedText
         .split("\n")
         .map((l) => `│ ❏ ${l}`)

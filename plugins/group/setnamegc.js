@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'setnamegc',
-    alias: ['setnamegrup', 'setgcname', 'setnamegroup', 'setnamagrup'],
+    alias: ["setnamegc", 'setnamegrup', 'setgcname', 'setnamegroup', 'setnamagrup'],
     category: 'group',
     description: 'Mengubah nama grup',
     usage: '.setnamegc <nama baru>',

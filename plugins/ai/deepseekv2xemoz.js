@@ -10,7 +10,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "deepseekv2xemoz",
-  alias: ["dsv2xemoz", "ds32xemoz"],
+  alias: ["deepseekv2xemoz", "dsv2xemoz", "ds32xemoz"],
   category: "ai",
   description: "DeepSeek v3.2 Thinking via API xemoz",
   usage: ".deepseekv2xemoz <pertanyaan>",

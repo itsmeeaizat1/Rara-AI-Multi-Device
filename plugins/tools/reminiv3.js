@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "reminiv3",
-  alias: ["enhancev3", "upscalev3", "hdv3", "srgan"],
+  alias: ["reminiv3", "enhancev3", "upscalev3", "hdv3", "srgan"],
   category: "tools",
   description: "Enhance gambar jadi HD v3 (Pollinations AI upscaler - gratis)",
   usage: ".reminiv3 (reply gambar)",

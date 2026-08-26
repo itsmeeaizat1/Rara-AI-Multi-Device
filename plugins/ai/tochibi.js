@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 import { live3d } from '../../src/scraper/seaart.js'
 const pluginConfig = {
     name: 'tochibi',
-    alias: ['chibi', 'chibistyle'],
+    alias: ["tochibi", 'chibi', 'chibistyle'],
     category: 'ai',
     description: 'Ubah gambar ke style Chibi',
     usage: '.tochibi (reply gambar)',

@@ -4,7 +4,7 @@ import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "unreg",
-  alias: ["unregister", "hapusdaftar"],
+  alias: ["unreg", "unregister", "hapusdaftar"],
   category: "user",
   description: "Hapus data pendaftaran kamu dari bot",
   usage: ".unreg",

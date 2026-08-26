@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "menunav",
-  alias: ["navtoggle", "buttontoggle", "tombolnav"],
+  alias: ["menunav", "navtoggle", "buttontoggle", "tombolnav"],
   category: "owner",
   description: "Toggle tombol Kembali & Tanya AI on/off (global atau per-grup)",
   usage: ".menunav on/off / .menunav status / .menunav group on/off",
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
         ? (global ? "*ON*" : "*OFF*")
         : "*ON (default)*";
 
-      let txt = "╭──「 *MENU NAV│ ❏\n"; 」
+      let txt = "╭──「 *MENU NAV│ ❏\n";
       txt += "╰──────────❀\n\n";
       txt += "*Status Global:* " + globalText + "\n";
 

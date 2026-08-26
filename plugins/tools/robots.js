@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "robots",
-  alias: ["robotstxt", "robotscheck", "robotparse", "robotsparser"],
+  alias: ["robots", "robotstxt", "robotscheck", "robotparse", "robotsparser"],
   category: "tools",
   description: "Parse robots.txt website (allowed, disallowed, sitemap, crawl-delay)",
   usage: ".robots <url>",

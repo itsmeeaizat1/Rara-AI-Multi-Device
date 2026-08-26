@@ -27,7 +27,7 @@ import {
 
 const pluginConfig = {
   name: "tokobase3",
-  alias: ["tokoowner3", "storebase3", "tokobase3"],
+  alias: ["tokobase3", "tokoowner3", "storebase3", "tokobase3"],
   category: "owner",
   description: "Kelola toko: produk, pesanan, kategori, pengaturan",
   usage: ".toko <perintah> [args]",
@@ -148,7 +148,7 @@ async function handler(m, { sock }) {
 
     if (products.length === 0) return m.reply("Belum ada produk" + (cat ? " di kategori " + cat : ""));
 
-    let txt = "╭──「 *DAFTAR PRODUK│ ❏\n"; 」
+    let txt = "╭──「 *DAFTAR PRODUK│ ❏\n";
     txt += "╰──────────❀\n\n";
     for (const p of products) {
       txt += p.id + "\n";
@@ -181,7 +181,7 @@ async function handler(m, { sock }) {
 
     if (orders.length === 0) return m.reply("Tidak ada pesanan" + (filter !== "all" ? " dengan status " + filter : ""));
 
-    let txt = "╭──「 *PESANAN — " + filter.toUpperCase() + "│ ❏\n"; 」
+    let txt = "╭──「 *PESANAN — " + filter.toUpperCase() + "│ ❏\n";
     txt += "╰──────────❀\n\n";
     for (const o of orders) {
       txt += o.id + "\n";
@@ -266,7 +266,7 @@ async function handler(m, { sock }) {
     }
     // list
     const cats = listCategories();
-    let txt = "╭──「 *KATEGORI│ ❏\n"; 」
+    let txt = "╭──「 *KATEGORI│ ❏\n";
     txt += "╰──────────❀\n\n";
     cats.forEach((c, i) => { txt += (i + 1) + ". " + c + "\n"; });
     txt += "\nTambah: .toko kategori add <nama>\nHapus: .toko kategori del <nama>";
@@ -310,7 +310,7 @@ async function handler(m, { sock }) {
     const confirmedCount = data.orders.filter((o) => o.status === "confirmed").length;
     const doneCount = data.orders.filter((o) => o.status === "done").length;
 
-    let txt = "╭──「 *NOVA STORE│ ❏\n"; 」
+    let txt = "╭──「 *NOVA STORE│ ❏\n";
     txt += "╰──────────❀\n\n";
     txt += "Nama: " + (config.storeName || "Nova Store") + "\n";
     txt += "Deskripsi: " + (config.storeDesc || "-") + "\n";

@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "motw",
+  alias: ["motw"],
   aliases: ["motw", "memberoftheweek"],
   category: "group",
   description: "Pilih member paling aktif minggu ini + badge",

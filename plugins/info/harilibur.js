@@ -6,7 +6,7 @@ import {  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "harilibur",
-  alias: ["libur", "harinasional"],
+  alias: ["harilibur", "libur", "harinasional"],
   category: "info",
   description: "Menampilkan informasi hari libur dan hari nasional mendatang",
   usage: ".harilibur",

@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animevillain",
+  alias: ["animevillain"],
   aliases: ["animevillain", "animeantagonist", "topvillain", "villainanime"],
   category: "anime",
   description: "Database villain/antagonist anime terbaik",

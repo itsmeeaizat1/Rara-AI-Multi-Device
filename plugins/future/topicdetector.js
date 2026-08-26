@@ -5,6 +5,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "topicdetector", alias: ["topic", "topikgrup"], category: "future",
+  alias: ["topicdetector"],
   description: "Deteksi topik yang lagi rame", usage: ".topicdetector",
   example: ".topicdetector", isOwner: false, isPremium: true,
   isGroup: true, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,

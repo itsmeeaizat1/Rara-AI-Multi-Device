@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ummah",
-  alias: ["ummahv2", "ummahhadith"],
+  alias: ["ummah", "ummahv2", "ummahhadith"],
   category: "islamic",
   description: "Ummah Hadith - 36,000+ hadiths dari 10 collections (UmmahAPI, free)",
   usage: ".ummah <command> [args]",

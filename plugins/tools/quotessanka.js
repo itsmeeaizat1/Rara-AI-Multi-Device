@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "quotessanka",
-  alias: ["quotesanka", "motivasisanka"],
+  alias: ["quotessanka", "quotesanka", "motivasisanka"],
   category: "tools",
   description: "Random quotes motivasi via Sanka API",
   usage: ".quotessanka",

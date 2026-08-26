@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "google",
-  alias: ["gsearch", "googlenews"],
+  alias: ["google", "gsearch", "googlenews"],
   category: "search",
   description: "Cari berita di Google News",
   usage: ".google <query>",

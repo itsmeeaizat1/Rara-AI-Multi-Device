@@ -13,6 +13,7 @@ async function getCanvas() {
 
 const pluginConfig = {
   name: "profilecard",
+  alias: ["profilecard"],
   aliases: ["profilecard", "kartuprofil", "usercard", "statcard"],
   category: "maker",
   description: "Buat profile card dengan stats, level, XP, rank dari database bot",

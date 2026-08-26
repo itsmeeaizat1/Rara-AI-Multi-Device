@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "taubat",
+  alias: ["taubat"],
   aliases: ["taubat", "doataubat", "doaistighfar", "istighfar", "taubatnasuha"],
   category: "islami",
   description: "Doa taubat & istighfar lengkap (taubat nasuha, sayyidul istighfar, doa ampun)",

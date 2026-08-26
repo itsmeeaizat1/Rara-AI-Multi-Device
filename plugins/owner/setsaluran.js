@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename)
 
 const pluginConfig = {
   name: "setsaluran",
-  alias: ["setsaluranid", "saluranset", "setchannel"],
+  alias: ["setsaluran", "setsaluranid", "saluranset", "setchannel"],
   category: "owner",
   description: "Set ID & link saluran WA untuk broadcast",
   usage: ".setsaluran <link saluran>",

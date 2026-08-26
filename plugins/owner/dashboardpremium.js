@@ -5,7 +5,7 @@ import { claraHeader,
 
 const pluginConfig = {
   name: "dashboardpremium",
-  alias: ["dashboardprem", "dbpremium", "dbprem", "topprem"],
+  alias: ["dashboardpremium", "dashboardprem", "dbpremium", "dbprem", "topprem"],
   category: "owner",
   description: "Leaderboard user yang paling banyak beli premium",
   usage: ".dashboardpremium",

@@ -8,6 +8,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "textpro",
+  alias: ["textpro"],
   aliases: ["textpro", "texteffect", "tp", "texmaker"],
   category: "ephoto",
   description: "Text effect maker dengan 30+ style (TextPro API gratis)",

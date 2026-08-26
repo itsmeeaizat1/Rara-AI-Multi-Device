@@ -13,7 +13,7 @@ const run = promisify(exec)
 
 const pluginConfig = {
     name: "upch",
-    alias: ["uploadch", "uploadsaluran", "uch"],
+    alias: ["upch", "uploadch", "uploadsaluran", "uch"],
     category: "owner",
     description: "Upload gambar, audio, video, atau teks ke saluran",
     usage: ".upch <id saluran> <teks opsional>",

@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { live3d } from '../../src/scraper/seaart.js'
 const pluginConfig = {
     name: 'tocartoon',
-    alias: ['cartoon', 'cartoonify', 'tooncartoon'],
+    alias: ["tocartoon", 'cartoon', 'cartoonify', 'tooncartoon'],
     category: 'ai',
     description: 'Ubah foto menjadi gaya kartun',
     usage: '.tocartoon (reply/kirim gambar)',

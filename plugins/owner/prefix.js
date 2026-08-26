@@ -36,7 +36,7 @@ function isNoPrefix() {
 
 const pluginConfig = {
     name: ['addprefix', 'gantiprefix', 'setprefix', 'delprefix', 'listprefix', 'resetprefix'],
-    alias: [],
+    alias: ["addprefix", "gantiprefix", "setprefix", "delprefix", "listprefix", "resetprefix"],
     category: 'owner',
     description: 'Manajemen prefix bot',
     usage: '.addprefix <prefix1> <prefix2>...',

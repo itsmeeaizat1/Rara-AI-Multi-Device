@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "sholawat",
+  alias: ["sholawat"],
   aliases: ["sholawat", "selawat", "sholawatnabi", "shalawat"],
   category: "islami",
   description: "Kumpulan sholawat nabi (Arab, latin, arti, keutamaan)",

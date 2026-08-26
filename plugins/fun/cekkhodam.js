@@ -5,7 +5,7 @@ import gtts from 'gtts'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cekkhodam',
-    alias: ['khodam', 'cekhodam'],
+    alias: ["cekkhodam", 'khodam', 'cekhodam'],
     category: 'fun',
     description: 'Cek khodam diri sendiri atau orang lain',
     usage: '.cekkhodam atau reply pesan seseorang',

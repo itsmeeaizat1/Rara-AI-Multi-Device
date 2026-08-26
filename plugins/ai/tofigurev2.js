@@ -6,7 +6,7 @@ import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'tofigurev2',
-    alias: ['figurev2', 'figure2'],
+    alias: ["tofigurev2", 'figurev2', 'figure2'],
     category: 'ai',
     description: 'Ubah gambar ke style Figure v2',
     usage: '.tofigurev2 (reply gambar)',
