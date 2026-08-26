@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20tombol%20menu%20gak%20muncul%20%E2%80%94%20-success?style=for-the-badge)
-> *Commit: "fix: tombol menu gak muncul — ganti dari legacy type:1 ke nativeFlowMessage"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20fitur%20tanya%20%26%20cek%20sekara-success?style=for-the-badge)
+> *Commit: "feat: fitur tanya & cek sekarang pakai AI (fallback ke template)"*
 <!--END_SECTION:latest-update-->
 
 
