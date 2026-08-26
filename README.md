@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-docs%3A%20update%20FEATURES.md%20with%20-success?style=for-the-badge)
-> *Commit: "docs: update FEATURES.md with 30 rebuilt game plugins"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20null-safe%20database%20access-success?style=for-the-badge)
+> *Commit: "fix: null-safe database access in game reward handler"*
 <!--END_SECTION:latest-update-->
 
 
