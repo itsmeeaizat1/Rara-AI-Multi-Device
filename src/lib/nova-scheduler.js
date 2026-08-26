@@ -671,7 +671,7 @@ async function resolveGuildWars() {
       war.status = "draw";
       attacker.lastWarEnd = now;
       defender.lastWarEnd = now;
-      const msg = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + war.attacker + "  ┊  ➶\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n" +
+      const msg = "╭──「 " + war.attacker + " 」\n│ ❏ Hasil War\n╰──────────❀\n\n" +
         "Pemenang: *" + winnerName + "* 🏆\n" +
         "Kalah: *" + loserName + "*\n\n" +
         "ATK Power: " + war.attackerPower + "\n" +

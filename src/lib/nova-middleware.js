@@ -156,13 +156,12 @@ function checkMode(m, getActiveJadibots) {
       allowed: false,
       isAfk: true,
       afkMessage:
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Aꜰᴋ\n` +
-        `┊\n` +
-        `  ┊  ➶ 💤 Bot sedang AFK\n` +
-        `  ┊  ➶ *Alasan:* ${botAfk.reason || "AFK"}\n` +
-        `  ┊  ➶ *Sejak:* ${duration} yang lalu\n` +
-        `┊\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`,
+        `╭──「 Aꜰᴋ 」\n│\n` + +
+        `  │ ❏ 💤 Bot sedang AFK\n` +
+        `  │ ❏ *Alasan:* ${botAfk.reason || "AFK"}\n` +
+        `  │ ❏ *Sejak:* ${duration} yang lalu\n` +
+        `│\n` +
+        `╰──────────❀`,
     };
   }
 
@@ -207,20 +206,19 @@ function checkMode(m, getActiveJadibots) {
     if (activeJadibots.length > 0) {
       let jadibotList = "";
       activeJadibots.forEach((jb, i) => {
-        jadibotList += `  ┊  ➶ ${i + 1}. @${jb.id}\n`;
+        jadibotList += `  │ ❏ ${i + 1}. @${jb.id}\n`;
       });
       const mentions = activeJadibots.map((jb) => jb.id + "@s.whatsapp.net");
       return {
         allowed: false,
         hasJadibots: true,
         jadibotMessage:
-          `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Mᴏᴅᴇ Pʀɪᴠᴀᴛᴇ\n` +
-          `┊\n` +
-          `  ┊  ➶ 🤖 Bot utama dalam mode private\n` +
-          `  ┊  ➶ Bot turunan yang tersedia:\n` +
+          `╭──「 Mᴏᴅᴇ Pʀɪᴠᴀᴛᴇ 」\n│\n` + +
+          `  │ ❏ 🤖 Bot utama dalam mode private\n` +
+          `  │ ❏ Bot turunan yang tersedia:\n` +
           `${jadibotList}` +
-          `┊\n` +
-          `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`,
+          `│\n` +
+          `╰──────────❀`,
         jadibotMentions: mentions,
       };
     }
