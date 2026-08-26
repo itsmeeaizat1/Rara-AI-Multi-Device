@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenu.js — Semua command per kategori (text + externalAdReply preview card + type 1 buttons)
+// allmenu.js — Semua command per kategori (text + externalAdReply + type 1 buttons)
 import config from "../../config.js";
 import {
   getTimeGreeting,
@@ -63,7 +63,6 @@ const CATEGORY_EMOJIS = {
   panel: "🖥️", owner: "👑", store: "🛒",
 };
 
-// Thumbnail: SATU file untuk semua menu
 let _thumbCache = null;
 function getThumb() {
   if (_thumbCache) return _thumbCache;
@@ -129,51 +128,50 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
 
       let cmdLines = "";
       for (let i = 0; i < allCmds.length; i++) {
-        const end = i === allCmds.length - 1 ? "  ╰" : "  ┊";
-        cmdLines += `${end}  ➶ ${prefix}${allCmds[i]}\n`;
+        cmdLines += `│  ➥ ${prefix}${allCmds[i]}\n`;
       }
 
-      categoryBlocks += `₊˚ʚ ᗢ₊˚✧ ﾟ. ${catEmoji} ${toSC(catName)} ｡ﾟ\n`;
-      categoryBlocks += `┊${cmdLines}`;
-      categoryBlocks += `₊˚ʚ ᗢ₊˚✧ ﾟ.\n\n`;
+      categoryBlocks += `╭─「 *${catEmoji} ${toSC(catName)}* 」\n`;
+      categoryBlocks += cmdLines;
+      categoryBlocks += `╰─\n\n`;
     }
 
     const more = String.fromCharCode(8206);
     const readMore = more.repeat(4001);
 
-    return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Aʟʟ Mᴇɴᴜ
-┊
-  ┊  ➶ *ɴᴀᴍᴀ:* ${m.pushName || "User"}
-  ┊  ➶ *ɴᴏᴍᴏʀ:* @${m.sender.split("@")[0]}
-  ┊  ➶ *ʀᴏʟᴇ:* ${roleEmoji} ${userRole}
-  ┊  ➶ *ᴘʀᴇᴍɪᴜᴍ:* ${m.isPremium ? "Aktif" : "Free"}
-  ┊  ➶ *ᴇɴᴇʀɢɪ:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
-  ┊  ➶ *ᴋᴏɪɴ:* ${(user?.koin ?? 0).toLocaleString()}
-  ┊  ➶ *ʟɪᴍɪᴛ:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
-  ┊  ➶ *ʟᴇᴠᴇʟ:* ${userLevel}
-  ┊  ➶ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
-  ┊  ➶ *ᴛᴏᴛᴀʟ xᴘ:* ${userExp.toLocaleString()}
-  ┊  ➶ *ꜱᴛᴀᴛᴜꜱ:* ${user?.isBanned ? "Banned" : "Aktif"}
-╠┈┈「 *Iɴғᴏ Bᴏᴛ* 」
-  ┊  ➶ *ʙᴏᴛ:* ${botConfig.bot?.name || "Nova AI"}
-  ┊  ➶ *ᴠᴇʀꜱɪᴏɴ:* ${botConfig.bot?.version || "-"}
-  ┊  ➶ *ᴘʀᴇꜰɪx:* [ *${prefix}* ]
-  ┊  ➶ *ᴜᴘᴛɪᴍᴇ:* ${runtimeStr}
-  ┊  ➶ *ᴛᴏᴛᴀʟ ᴜꜱᴇʀ:* ${totalUsers}
-  ┊  ➶ *ᴡᴀᴋᴛᴜ:* ${timeStr} WIB
-  ┊  ➶ *ᴛᴀɴɢɢᴀʟ:* ${dateStr}
-${weatherBlock ? weatherBlock : ""}❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+    return `╭─「 *${toSC("Info User")}* 」
+│  ➥ *ɴᴀᴍᴀ:* ${m.pushName || "User"}
+│  ➥ *ɴᴏᴍᴏʀ:* @${m.sender.split("@")[0]}
+│  ➥ *ʀᴏʟᴇ:* ${roleEmoji} ${userRole}
+│  ➥ *ᴘʀᴇᴍɪᴜᴍ:* ${m.isPremium ? "Aktif" : "Free"}
+│  ➥ *ᴇɴᴇʀɢɪ:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
+│  ➥ *ᴋᴏɪɴ:* ${(user?.koin ?? 0).toLocaleString()}
+│  ➥ *ʟɪᴍɪᴛ:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
+│  ➥ *ʟᴇᴠᴇʟ:* ${userLevel}
+│  ➥ *xᴘ:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
+│  ➥ *sᴛᴀᴛᴜs:* ${user?.isBanned ? "Banned" : "Aktif"}
+╰─
+╭─「 *${toSC("Info Bot")}* 」
+│  ➥ *ʙᴏᴛ:* ${botConfig.bot?.name || "Nova AI"}
+│  ➥ *ᴠᴇʀsɪᴏɴ:* ${botConfig.bot?.version || "-"}
+│  ➥ *ᴘʀᴇꜰɪx:* [ *${prefix}* ]
+│  ➥ *ᴜᴘᴛɪᴍᴇ:* ${runtimeStr}
+│  ➥ *ᴛᴏᴛᴀʟ ᴜsᴇʀ:* ${totalUsers}
+│  ➥ *ᴡᴀᴋᴛᴜ:* ${timeStr} WIB
+│  ➥ *ᴛᴀɴɢɢᴀʟ:* ${dateStr}
+╰─${weatherBlock ? "\n" + weatherBlock : ""}
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${readMore}
 ${categoryBlocks}
-❀°˖✧◝(⁰▿⁰)◜✧˖°❀
-┊
-  ┊  ➶ *Total: ${totalFitur} Fitur*
-┊
+╭─「 *${toSC("Total")}* 」
+│  ➥ *Total: ${totalFitur} Fitur*
+╰─
+
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${getTimeGreeting()} *${m.pushName || "User"}* 👋`;
   } catch (e) {
     console.error("[allmenu] buildAllMenuText error:", e.message);
-    return "❀°˖ All Menu ˖°❀\n\nError: " + e.message + "\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
+    return `╭─「 *All Menu* 」\n│  ➥ Error: ${e.message}\n╰─`;
   }
 }
 
@@ -186,7 +184,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
     const saluranLink = botConfig.saluran?.link || "";
 
-    // Template: text + footer + type 1 buttons + externalAdReply di level ROOT
     const buttons = [
       { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
       { buttonId: `${prefix}allmenucategory`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
@@ -229,8 +226,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     }
 
     await m.react("🐣");
-
-    // Kirim musik menu (jika audioMenu aktif, pakai allmenuAudioStyle)
     try { await sendMenuAudio(sock, m, db, true); } catch {}
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);
