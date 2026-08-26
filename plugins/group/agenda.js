@@ -337,6 +337,7 @@ function startAgendaChecker() {
 
 // ─── Plugin ───
 export default {
+  config: {
   name: "agenda",
   alias: ["agenda", "jadwal"],
   category: "group",
@@ -346,6 +347,7 @@ export default {
   wait: "🕐",
   error: "❌",
 
+  },
   async handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const groupId = m.key?.remoteJid || m.chat || "";

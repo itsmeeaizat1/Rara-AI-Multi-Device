@@ -165,4 +165,4 @@ async function handler(m, { sock }) {
   }
 }
 
-export { pluginConfig, handler };
+export { pluginConfig as config, handler };

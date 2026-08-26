@@ -157,6 +157,7 @@ async function fetchSnippet(url, timeoutMs = 5000) {
 }
 
 export default {
+  config: {
   name: "cekfakta-v2",
   alias: ["cekhoax"],
   category: "group",
@@ -166,6 +167,7 @@ export default {
   wait: "🕐",
   error: "❌",
 
+  },
   async handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const aiConfig = botConfig.aiHelp || {};

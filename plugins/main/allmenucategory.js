@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menukategori.js — Menu per kategori (root sendMessage + preview card + type 1 buttons)
+// allmenucategory.js — Menu per kategori (text + externalAdReply preview card + type 1 buttons)
 import config from "../../config.js";
 import {
   getCommandsByCategory,
@@ -50,11 +50,12 @@ const CATEGORY_EMOJIS = {
   panel: "🖥️", owner: "👑", store: "🛒",
 };
 
+// Thumbnail: SATU file untuk semua menu
 let _thumbCache = null;
 function getThumb() {
   if (_thumbCache) return _thumbCache;
   try {
-    const p = path.join(process.cwd(), "assets", "image", "nova-thumbnail-menu.jpg");
+    const p = path.join(process.cwd(), "assets", "image", "menu.jpg");
     if (fs.existsSync(p)) {
       _thumbCache = fs.readFileSync(p);
       console.log("[menukategori] ✅ Thumbnail loaded: " + _thumbCache.length + " bytes");
@@ -128,67 +129,15 @@ ${getTimeGreeting()} *${m.pushName || "User"}* 👋`;
   }
 }
 
-async function sendWithButtons(sock, m, text, botConfig, catName) {
-  try {
-    const prefix = botConfig.command?.prefix || ".";
-    const thumbBuffer = getThumb();
-    const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
-    const saluranLink = botConfig.saluran?.link || "";
-    const footerText = `${botName} | Nova AI WhatsApp Bot`;
-
-    const buttons = [
-      { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
-      { buttonId: `${prefix}allmenu`, buttonText: { displayText: "📋 All Menu" }, type: 1 },
-    ];
-
-    try {
-      await sock.sendMessage(m.chat, {
-        text: text,
-        footer: footerText,
-        buttons: buttons,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          externalAdReply: {
-            title: toSC(botName),
-            body: catName ? toSC(catName) + " Category" : "Pilih Kategori",
-            thumbnail: thumbBuffer,
-            sourceUrl: saluranLink,
-            mediaType: 2,
-            showAdAttribution: false,
-            renderLargerThumbnail: true,
-          },
-        },
-      }, { quoted: m });
-    } catch (btnErr) {
-      console.error("[menukategori] buttons gagal, fallback:", btnErr.message);
-      await sock.sendMessage(m.chat, {
-        text: text,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          externalAdReply: {
-            title: toSC(botName),
-            body: catName ? toSC(catName) + " Category" : "Pilih Kategori",
-            thumbnail: thumbBuffer,
-            sourceUrl: saluranLink,
-            mediaType: 2,
-            showAdAttribution: false,
-            renderLargerThumbnail: true,
-          },
-        },
-      }, { quoted: m });
-    }
-  } catch (e) {
-    console.error("[menukategori] sendWithButtons error:", e.message);
-    await m.reply(text);
-  }
-}
-
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   try {
     await m.react("🕒");
     const prefix = botConfig.command?.prefix || ".";
     const args = m.text?.slice(prefix.length).trim().split(/\s+/).slice(1) || [];
     const inputCat = args[0] || "";
+    const menuThumb = getThumb();
+    const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
+    const saluranLink = botConfig.saluran?.link || "";
 
     if (!inputCat) {
       const pluginCats = getCategories();
@@ -212,9 +161,49 @@ ${catList}┊
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 Ketik *${prefix}menukategori <nama kategori>*`;
 
-      await sendWithButtons(sock, m, text, botConfig, null);
+      // Template: text + footer + type 1 buttons + externalAdReply di level ROOT
+      const buttons = [
+        { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
+        { buttonId: `${prefix}allmenu`, buttonText: { displayText: "📋 All Menu" }, type: 1 },
+        { buttonId: `${prefix}owner`, buttonText: { displayText: "👑 Owner" }, type: 1 },
+      ];
+
+      try {
+        await sock.sendMessage(m.chat, {
+          text: text,
+          footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
+          buttons: buttons,
+          contextInfo: {
+            mentionedJid: [m.sender],
+            externalAdReply: {
+              title: toSC(botName),
+              body: "Pilih Kategori",
+              thumbnail: menuThumb,
+              sourceUrl: saluranLink,
+              mediaType: 1,
+              renderLargerThumbnail: true,
+            },
+          },
+        }, { quoted: m });
+      } catch (btnErr) {
+        console.error("[menukategori] buttons gagal, fallback:", btnErr.message);
+        await sock.sendMessage(m.chat, {
+          text: text,
+          contextInfo: {
+            mentionedJid: [m.sender],
+            externalAdReply: {
+              title: toSC(botName),
+              body: "Pilih Kategori",
+              thumbnail: menuThumb,
+              sourceUrl: saluranLink,
+              mediaType: 1,
+              renderLargerThumbnail: true,
+            },
+          },
+        }, { quoted: m });
+      }
+
       await m.react("🐣");
-      // Kirim musik menu (jika audioMenu aktif)
       try { await sendMenuAudio(sock, m, db, false); } catch {}
       return;
     }
@@ -234,9 +223,50 @@ Ketik *${prefix}menukategori <nama kategori>*`;
 
     const text = await buildCategoryText(m, botConfig, db, matchedCat);
     const catName = CATEGORY_NAMES[matchedCat] || matchedCat;
-    await sendWithButtons(sock, m, text, botConfig, catName);
+
+    // Template: text + footer + type 1 buttons + externalAdReply di level ROOT
+    const buttons = [
+      { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
+      { buttonId: `${prefix}allmenu`, buttonText: { displayText: "📋 All Menu" }, type: 1 },
+      { buttonId: `${prefix}owner`, buttonText: { displayText: "👑 Owner" }, type: 1 },
+    ];
+
+    try {
+      await sock.sendMessage(m.chat, {
+        text: text,
+        footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
+        buttons: buttons,
+        contextInfo: {
+          mentionedJid: [m.sender],
+          externalAdReply: {
+            title: toSC(botName),
+            body: toSC(catName) + " Category",
+            thumbnail: menuThumb,
+            sourceUrl: saluranLink,
+            mediaType: 1,
+            renderLargerThumbnail: true,
+          },
+        },
+      }, { quoted: m });
+    } catch (btnErr) {
+      console.error("[menukategori] buttons gagal, fallback:", btnErr.message);
+      await sock.sendMessage(m.chat, {
+        text: text,
+        contextInfo: {
+          mentionedJid: [m.sender],
+          externalAdReply: {
+            title: toSC(botName),
+            body: toSC(catName) + " Category",
+            thumbnail: menuThumb,
+            sourceUrl: saluranLink,
+            mediaType: 1,
+            renderLargerThumbnail: true,
+          },
+        },
+      }, { quoted: m });
+    }
+
     await m.react("🐣");
-    // Kirim musik menu (jika audioMenu aktif)
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[menukategori] handler error:", e.message);
@@ -245,4 +275,4 @@ Ketik *${prefix}menukategori <nama kategori>*`;
   }
 }
 
-export { pluginConfig, handler };
+export { pluginConfig as config, handler };

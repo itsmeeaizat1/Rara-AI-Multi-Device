@@ -50,4 +50,4 @@ async function handler(m, { sock, config: botConfig }) {
   }
 }
 
-export { pluginConfig, handler };
+export { pluginConfig as config, handler };

@@ -148,6 +148,7 @@ async function getGroupMembers(sock, groupId) {
 }
 
 export default {
+  config: {
   name: "donasi",
   alias: ["donasi", "sedekah", "donate"],
   category: "group",
@@ -157,6 +158,7 @@ export default {
   wait: "🕐",
   error: "❌",
 
+  },
   async handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const groupId = m.key?.remoteJid || m.chat || "";

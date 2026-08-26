@@ -93,4 +93,4 @@ Tidak ada command untuk "${keyword}".
   }
 }
 
-export { pluginConfig, handler };
+export { pluginConfig as config, handler };

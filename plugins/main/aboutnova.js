@@ -60,4 +60,4 @@ ${prefix}menu untuk melihat semua fitur`;
   }
 }
 
-export { pluginConfig, handler };
+export { pluginConfig as config, handler };

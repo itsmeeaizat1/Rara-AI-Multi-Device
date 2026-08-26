@@ -195,4 +195,4 @@ async function handler(m, { sock, args }) {
   return await m.reply( txt, { commandName: "resepid" });
 }
 
-export { pluginConfig, handler };
+export { pluginConfig as config, handler };
