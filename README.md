@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20handler.js%20loading%20t-success?style=for-the-badge)
-> *Commit: "refactor: handler.js loading text → react 🕒→🐣"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20alias%20pertama%20%3D%20nama%20cmd-success?style=for-the-badge)
+> *Commit: "feat: alias pertama = nama cmd di semua plugin + fix syntax 」"*
 <!--END_SECTION:latest-update-->
 
 
