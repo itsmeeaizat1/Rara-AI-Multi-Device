@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menu.js — Menu utama (elegant, style ◈/┊ untuk info + list command)
+// menu.js — Menu utama (bracket box, info lengkap + cuaca + tombol)
 import { getCasesByCategory } from "../../case/nova.js";
 import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
 import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/nova-time.js";
@@ -8,10 +8,10 @@ import {
   getCategories,
 } from "../../src/lib/nova-plugins.js";
 import path from "path";
-import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { infoBox, listBox } from "../../src/lib/nova-menu-style.js";
+import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 
 const pluginConfig = {
   name: "menu",
@@ -29,28 +29,40 @@ const pluginConfig = {
   isEnabled: true,
 };
 
+// 4 tombol navigasi standar (sama di menu, allmenu, allmenucategory)
+const NAV_BUTTONS = (prefix) => [
+  { id: `${prefix}allmenucategory`, text: "📂 Kategori" },
+  { id: `${prefix}owner`, text: "ℹ️ Info Lainnya" },
+  { id: `${prefix}allmenu`, text: "📋 All Menu" },
+  { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
+];
+
 async function buildMenuText(m, botConfig, db, uptime, sock) {
   try {
     const prefix = botConfig.command?.prefix || ".";
     const user = db.getUser(m.sender);
     const timeStr = fmtTime("HH:mm");
     const dateStr = fmtFull("DD MMMM YYYY");
+    const uptimeStr = formatUptime(uptime);
 
     let userRole = "User", roleEmoji = "👤";
     if (m.isOwner) { userRole = "Owner"; roleEmoji = "👑"; }
     else if (m.isPremium) { userRole = "Premium"; roleEmoji = "💎"; }
 
+    // Hitung level/XP
     const userExp = user?.exp || 0;
     const userLevel = Math.floor(userExp / 20000) + 1;
     const expMin = (userLevel - 1) * 20000;
     const expMax = userLevel * 20000;
     const expCurr = userExp - expMin;
 
+    // Cuaca (1-line compact)
     let weatherLine = null;
     try {
       weatherLine = await getWeatherAddress();
     } catch {}
 
+    // Hitung total fitur
     const pluginCats = getCategories();
     const commandsByCategory = getCommandsByCategory();
     const caseCats = getCasesByCategory();
@@ -60,6 +72,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
+    // Info lengkap: User + Bot + Cuaca
     const infoText = infoBox(botName, {
       intro: `${getTimeGreeting()} *${m.pushName || "User"}* 👋`,
       sections: [
@@ -72,6 +85,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
             `Premium: ${m.isPremium ? "Aktif" : "Free"}`,
             `Energi: ${m.isOwner || m.isPremium ? "∞" : (user?.energi ?? 25)}`,
             `Limit: ${m.isOwner || m.isPremium ? "∞" : (user?.limit ?? "-")}`,
+            `Koin: 🪙 ${(user?.koin || 0).toLocaleString("id-ID")}`,
             `Level: ${userLevel} · ${expCurr.toLocaleString()}/${(expMax - expMin).toLocaleString()} XP`,
           ],
         },
@@ -81,13 +95,21 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
             `Nama: ${botName}`,
             `Version: ${botConfig.bot?.version || "-"}`,
             `Prefix: [ ${prefix} ]`,
+            `Mode: ${botConfig.mode || "public"}`,
+            `Uptime: ${uptimeStr}`,
             `Waktu: ${timeStr} WIB · ${dateStr}`,
-            ...(weatherLine ? [`Cuaca: ${weatherLine}`] : []),
           ],
+        },
+        {
+          heading: "Cuaca",
+          lines: weatherLine
+            ? [weatherLine]
+            : ["Cuaca tidak tersedia"],
         },
       ],
     });
 
+    // Quick menu
     const quickMenuText = listBox("Quick Menu", [
       `${prefix}allmenu — semua fitur`,
       `${prefix}allmenucategory — fitur per kategori`,
@@ -102,6 +124,20 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
   }
 }
 
+function formatUptime(ms) {
+  if (!ms || ms < 0) return "0s";
+  const s = Math.floor((ms / 1000) % 60);
+  const m = Math.floor((ms / (1000 * 60)) % 60);
+  const h = Math.floor((ms / (1000 * 60 * 60)) % 24);
+  const d = Math.floor(ms / (1000 * 60 * 60 * 24));
+  const parts = [];
+  if (d > 0) parts.push(`${d}d`);
+  if (h > 0) parts.push(`${h}h`);
+  if (m > 0) parts.push(`${m}m`);
+  if (s > 0 || parts.length === 0) parts.push(`${s}s`);
+  return parts.join(" ");
+}
+
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   try {
     await m.react("🕒");
@@ -109,18 +145,12 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const text = await buildMenuText(m, botConfig, db, uptime, sock);
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
-    const navButtons = [
-      { id: `${prefix}allmenu`, text: "📋 All Menu" },
-      { id: `${prefix}allmenucategory`, text: "📂 Kategori" },
-      { id: `${prefix}owner`, text: "👑 Owner" },
-    ];
-
     await m.react("🐣");
     await sendMenuCard(sock, m, {
       text,
       footer: botName,
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
-      buttons: navButtons,
+      buttons: NAV_BUTTONS(prefix),
       title: botName,
     });
 

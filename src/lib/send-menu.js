@@ -61,7 +61,7 @@ export async function sendMenuPreview(sock, m, {
   // Pastikan thumbnail 100x100 sudah di-load
   await ensureThumbLoaded();
 
-  const footerText = footer || '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀';
+  const footerText = footer || '╰─';
 
   const templateButtons = buttons.map((b) => ({
     buttonId: b.id,
