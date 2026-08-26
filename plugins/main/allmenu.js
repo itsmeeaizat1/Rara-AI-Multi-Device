@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenu.js — Semua fitur (Futuristic Command Catalog v4)
+// allmenu.js — Semua fitur (Indo Dev Bot Style v5)
 import { getCasesByCategory } from "../../case/nova.js";
 import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
 import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/nova-time.js";
@@ -11,9 +11,9 @@ import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import {
-  futuristicHeader, futuristicSection, progressBar, statusDot,
-  futuristicDivider, futuristicFooter, kv, futuristicCategory,
-  buildNavButtons, CATEGORY_NAMES, CATEGORY_EMOJIS, CATEGORY_ORDER,
+  botHeader, botSignature, sectionBox, progressBar, statusDot,
+  kv, categoryBox, buildNavButtons,
+  CATEGORY_NAMES, CATEGORY_EMOJIS, CATEGORY_ORDER,
 } from "../../src/lib/nova-menu-style.js";
 import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 
@@ -68,14 +68,14 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
     let weatherLine = "—";
     try { const w = await getWeatherAddress(); if (w) weatherLine = w; } catch {}
 
-    // Collect all commands per category
+    // Collect commands
     const pluginCats = getCategories();
     const commandsByCategory = getCommandsByCategory();
     const caseCats = getCasesByCategory();
     const allCatKeys = [...new Set([...pluginCats, ...Object.keys(caseCats)])];
 
     let totalFitur = 0, totalKategori = 0;
-    const categorySections = [];
+    const categoryBoxes = [];
 
     for (const cat of allCatKeys.sort((a, b) => {
       const ia = CATEGORY_ORDER.indexOf(a), ib = CATEGORY_ORDER.indexOf(b);
@@ -94,45 +94,51 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
       const catName = CATEGORY_NAMES[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
       const catEmoji = CATEGORY_EMOJIS[cat] || "📂";
 
-      categorySections.push(futuristicCategory(catEmoji, catName, allCmds, prefix, 3));
+      categoryBoxes.push(categoryBox(catEmoji, catName, allCmds, prefix, 3));
     }
 
-    const header = futuristicHeader("Command Catalog");
+    // Build menu
+    const parts = [];
 
-    const userProfile = futuristicSection("User", [
+    parts.push(botHeader(botName));
+    parts.push(`│`);
+    parts.push(`┊ ${getTimeGreeting()} *${m.pushName || "User"}* 👋`);
+    parts.push(`│`);
+
+    // User info
+    parts.push(sectionBox("👤", "User", [
       kv("Nama", m.pushName || "User"),
       kv("Status", `${roleEmoji} ${userRole}`),
       kv("Level", `${userLevel} ${expBar}`),
-    ]);
+    ]));
 
-    const systemStatus = futuristicSection("System", [
+    parts.push("");
+
+    // Bot info
+    parts.push(sectionBox("🤖", "Bot", [
       kv("Status", `${statusDot("online")} Online`),
-      kv("Version", botConfig.bot?.version || "v4.0.0"),
+      kv("Versi", botConfig.bot?.version || "v4.0.0"),
       kv("Prefix", `[ ${prefix} ]`),
       kv("Uptime", uptimeStr),
       kv("Waktu", `${timeStr} WIB · ${dateStr}`),
       kv("Cuaca", weatherLine),
-    ]);
+    ]));
 
-    const footer = futuristicFooter(
-      `${totalFitur} fitur · ${totalKategori} kategori · ${prefix} prefix`,
-      botName
-    );
+    parts.push("");
 
-    return [
-      header,
-      "",
-      userProfile,
-      "",
-      systemStatus,
-      "",
-      ...categorySections.map((s, i) => i === 0 ? s : "\n" + s),
-      "",
-      footer,
-    ].join("\n");
+    // All category boxes
+    for (const box of categoryBoxes) {
+      parts.push(box);
+      parts.push("");
+    }
+
+    parts.push(`❀°˖✧ ${totalFitur} fitur · ${totalKategori} kategori ✧˖°❀`);
+    parts.push(botSignature(botName));
+
+    return parts.join("\n");
   } catch (e) {
     console.error("[allmenu] buildAllMenuText error:", e.message);
-    return `◆ ◇ ◆ Error ◆ ◇ ◆\n\n┊ ${e.message}`;
+    return `╭─「 *Error* 」\n│ ❏ ${e.message}\n╰──────────`;
   }
 }
 
