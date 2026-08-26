@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20menu%20card%20tanpa%20gambar%20he-success?style=for-the-badge)
-> *Commit: "fix: menu card tanpa gambar header agar gak tersimpan ke galeri"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20thumbnail%20preview%20via%20ex-success?style=for-the-badge)
+> *Commit: "feat: thumbnail preview via externalAdReply + tombol via nativeFlowMessage"*
 <!--END_SECTION:latest-update-->
 
 
