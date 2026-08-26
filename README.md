@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20reset%20ke%20commit%20rebuild%20c-success?style=for-the-badge)
-> *Commit: "fix: reset ke commit rebuild confesswall (053d892)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20menu%20thumbnail%2Bbuttons%20%26%20-success?style=for-the-badge)
+> *Commit: "fix: menu thumbnail+buttons & 20 plugin load failures"*
 <!--END_SECTION:latest-update-->
 
 
