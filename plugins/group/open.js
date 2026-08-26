@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-    name: "opengc",
-    alias: ["opengc"],
+    name: "open",
+    alias: ["open", "opengc"],
     category: 'group',
     description: 'Membuka grup agar semua member bisa chat',
     usage: '.open',
