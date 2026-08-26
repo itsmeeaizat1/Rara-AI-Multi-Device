@@ -176,7 +176,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
 
     if (sub === "now") {
-      await m.reply(claraWrap("Cuaca", "⏳ *ᴍᴇɴɢᴀᴍʙɪʟ ᴄᴜᴀᴄᴀ ʀᴇᴀʟᴛɪᴍᴇ...*"));
+      await m.react("🕒");
       const { getWeatherFooter } = await import("../../src/lib/nova-weather-footer.js");
       const footer = await getWeatherFooter(true);
       if (!footer) {

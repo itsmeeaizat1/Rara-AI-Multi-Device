@@ -38,7 +38,7 @@ async function handler(m, { sock, db }) {
   if (args === "on") {
     db.setting("procNotif", true);
     await db.save();
-    return m.reply(claraWrap("procnotif", "Notifikasi proses media/tool diaktifkan. Saat fitur media/tool dijalankan, bot akan kirim pesan \"Tunggu sebentar ya kak, lagi diproses!\" lalu menghapusnya setelah selesai."));
+    return m.reply(claraWrap("procnotif", "Notifikasi proses media/tool diaktifkan. Saat fitur media/tool dijalankan, bot akan kirim react 🕒 saat proses dimulai dan 🐣 saat selesai."));
   }
 
   if (args === "off") {
