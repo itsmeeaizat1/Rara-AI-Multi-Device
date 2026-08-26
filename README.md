@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-style%3A%20ganti%20%E2%97%88%20%E2%86%92%20%E2%9D%80%20(khas%20Nova%20-success?style=for-the-badge)
-> *Commit: "style: ganti ◈ → ❀ (khas Nova AI)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-style%3A%20apply%20Clara-MD%20box%20styl-success?style=for-the-badge)
+> *Commit: "style: apply Clara-MD box style (╭── │ ❏ ╰──❀) ke semua plugin"*
 <!--END_SECTION:latest-update-->
 
 
