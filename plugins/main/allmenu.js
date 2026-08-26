@@ -109,6 +109,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       { id: `${prefix}owner`, text: "👑 Owner" },
     ];
 
+    await m.react("🐣");
     await sendMenuCard(sock, m, {
       text,
       footer: botName,
@@ -117,7 +118,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       title: botName,
     });
 
-    await m.react("🐣");
     try { await sendMenuAudio(sock, m, db, true); } catch {}
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);

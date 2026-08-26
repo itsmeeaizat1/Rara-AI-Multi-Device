@@ -128,6 +128,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         { id: `${prefix}owner`, text: "👑 Owner" },
       ];
 
+      await m.react("🐣");
       await sendMenuCard(sock, m, {
         text,
         footer: botName,
@@ -136,7 +137,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         title: "Menu Kategori",
       });
 
-      await m.react("🐣");
       try { await sendMenuAudio(sock, m, db, false); } catch {}
       return;
     }
@@ -164,6 +164,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       { id: `${prefix}allmenucategory`, text: "📂 Kategori" },
     ];
 
+    await m.react("🐣");
     await sendMenuCard(sock, m, {
       text,
       footer: botName,
@@ -172,7 +173,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       title: `${catEmoji} ${catName}`,
     });
 
-    await m.react("🐣");
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[menukategori] handler error:", e.message);
