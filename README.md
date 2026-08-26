@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20redesign%20menu%20layout%20%2B%20fi-success?style=for-the-badge)
-> *Commit: "fix: redesign menu layout + fix nyerah bug + nativeFlow buttons"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20resolve%20isGroup%2BisPrivate-success?style=for-the-badge)
+> *Commit: "fix: resolve isGroup+isPrivate contradiction in 125 plugins"*
 <!--END_SECTION:latest-update-->
 
 
