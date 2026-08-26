@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20thumbnail%20preview%20via%20ex-success?style=for-the-badge)
-> *Commit: "feat: thumbnail preview via externalAdReply + tombol via nativeFlowMessage"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20single%20message%20-%20thumbna-success?style=for-the-badge)
+> *Commit: "feat: single message - thumbnail + tombol dalam 1 interactiveMessage"*
 <!--END_SECTION:latest-update-->
 
 
