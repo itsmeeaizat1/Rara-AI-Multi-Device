@@ -257,7 +257,7 @@ async function handler(m, { sock }) {
       if (session) {
         const remaining = getRemainingTime(chatId);
         let text = `⚠️ *Game Family 100 masih berjalan!*\n\n`;
-        text += `❀°˖ *${session.question}* ˖°❀\n\n`;
+        text += `╭─「 *${session.question}* 」\n\n`;
         text += renderBoard(session);
         text += `\n\n┊ ➶ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n`;
         text += `┊ ➶ Sisa waktu: *${formatTime(remaining)}*\n\n`;
@@ -281,8 +281,9 @@ async function handler(m, { sock }) {
 
     await m.react("🕒");
 
-    let text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *FAMILY 100*\n\n`;
-    text += `❀°˖ *${questionData.soal}* ˖°❀\n\n`;
+    let text = `╭─「 *FAMILY 100* 」\n`;
+    text += `│  ➥ *${questionData.soal}*\n`;
+    text += `│\n`;
     text += renderBoard({
       answers: questionData.jawaban.map((j, i) => ({
         text: j,
@@ -295,7 +296,7 @@ async function handler(m, { sock }) {
     text += `┊ ➶ Waktu: *${formatTime(120000)}*\n`;
     text += `┊ ➶ Hadiah: *Limit, Koin, EXP (random per jawaban)*\n\n`;
     text += `_Balas pesan ini atau ketik jawaban langsung_\n_Ketik "nyerah" untuk menyerah_\n`;
-    text += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    text += `╰─`;
 
     const sentMsg = await m.reply(text);
     await m.react("🐣");
@@ -310,7 +311,7 @@ async function handler(m, { sock }) {
     setSessionTimer(chatId, async () => {
       try {
         let endText = `${pick(TIMEOUT_MSGS)}\n\n`;
-        endText += `❀°˖ *${session.question}* ˖°❀\n\n`;
+        endText += `╭─「 *${session.question}* 」\n\n`;
         endText += `📊 *JAWABAN LENGKAP:*\n\n`;
         for (let i = 0; i < session.answers.length; i++) {
           const ans = session.answers[i];
@@ -325,7 +326,7 @@ async function handler(m, { sock }) {
         if (scores) {
           endText += `🏆 *SKOR AKHIR:*\n${scores}\n\n`;
         }
-        endText += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+        endText += `╰─`;
         await sock.sendMessage(chatId, { text: endText });
       } catch (e) {
         console.error("[family100] Timeout handler error:", e.message);
@@ -363,7 +364,7 @@ async function answerHandler(m, sock) {
     if (isSurrender(userAnswer)) {
       // Build reveal text BEFORE ending session
       let text = `${pick(SURRENDER_MSGS)}\n\n`;
-      text += `❀°˖ *${session.question}* ˖°❀\n\n`;
+      text += `╭─「 *${session.question}* 」\n\n`;
       text += `📊 *JAWABAN LENGKAP:*\n\n`;
       for (let i = 0; i < session.answers.length; i++) {
         const ans = session.answers[i];
@@ -378,7 +379,7 @@ async function answerHandler(m, sock) {
       if (scores) {
         text += `🏆 *SKOR AKHIR:*\n${scores}\n\n`;
       }
-      text += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      text += `╰─`;
 
       const mentionJids = Object.keys(session.scores).length > 0
         ? Object.keys(session.scores)
@@ -423,14 +424,14 @@ async function answerHandler(m, sock) {
       replyText += `*@${sender.split("@")[0]}* menebak: *${result.answer.text.toUpperCase()}*\n`;
       replyText += `┊ ➶ Dapat *${points} poin*\n`;
       replyText += `┊ ➶ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
-      replyText += `❀°˖ *${session.question}* ˖°❀\n\n`;
+      replyText += `╭─「 *${session.question}* 」\n\n`;
       replyText += renderBoard(session);
       replyText += `\n\n┊ ➶ Sisa waktu: *${formatTime(getRemainingTime(chatId))}*\n`;
       const scores = renderScores(session);
       if (scores) {
         replyText += `\n🏆 *SKOR:*\n${scores}\n`;
       }
-      replyText += `\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      replyText += `\n╰─`;
 
       try {
         await sock.sendMessage(chatId, {
@@ -476,7 +477,7 @@ async function answerHandler(m, sock) {
           if (reward.exp > 0) winText += `┊ ➶ +${reward.exp} EXP\n`;
         }
 
-        winText += `\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+        winText += `\n╰─`;
 
         // End session FIRST, then send
         endSession(chatId);
