@@ -131,15 +131,15 @@ async function handler(m, { sock, db }) {
         if (wf) weatherBlock = `${wf}\n\n`;
       } catch {}
 
-      let txt = `${weatherBlock}╔┈┈「 *Keterangan* 」
-╎
-╎❏ Ⓞ = Hanya untuk owner
-╎❏ ⓟ = Hanya untuk premium
-╎❏ Ⓛ = Membutuhkan limit
-╎❏ Ⓐ = Hanya untuk admin
-╎❏ Ⓖ = Hanya di dalam grup
-╎❏ Ⓟ = Hanya di private chat
-╚┈┈┈┈┈┈┈┈┈❖
+      let txt = `${weatherBlock}╭─「 *Keterangan* 」
+│
+│ ❏ Ⓞ = Hanya untuk owner
+│ ❏ ⓟ = Hanya untuk premium
+│ ❏ Ⓛ = Membutuhkan limit
+│ ❏ Ⓐ = Hanya untuk admin
+│ ❏ Ⓖ = Hanya di dalam grup
+│ ❏ Ⓟ = Hanya di private chat
+╰────────❖
 `;
 
       for (const cat of visibleCats) {
@@ -149,15 +149,15 @@ async function handler(m, { sock, db }) {
         if (allCmds.length === 0) continue;
         const catName = CATEGORY_NAMES[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
 
-        txt += `╠┈┈「 *${catName}* 」\n`;
+        txt += `├─「 *${catName}* 」\n`;
         for (let i = 0; i < allCmds.length; i++) {
           const cmd = allCmds[i];
           const symbols = getCommandSymbols(cmd);
-          txt += `╎❏ ${prefix}${cmd}${symbols}\n`;
+          txt += `│ ❏ ${prefix}${cmd}${symbols}\n`;
         }
       }
 
-      txt += `╚┈┈┈┈┈┈┈┈┈❖\n`;
+      txt += `╰────────❖\n`;
 
       const buttons = [
         { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
@@ -210,7 +210,7 @@ async function handler(m, { sock, db }) {
 
     if (!matchedCat) {
       await m.reply(
-        `╔┈┈「 *Error* 」\n╎\n╎❏ Kategori \`${categoryArg}\` tidak ditemukan\n╎❏ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╚┈┈┈┈┈┈┈┈┈❖`
+        `╭─「 *Error* 」\n╎\n│ ❏ Kategori \`${categoryArg}\` tidak ditemukan\n│ ❏ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰────────❖`
       );
       await m.react("❌");
       return;
@@ -218,7 +218,7 @@ async function handler(m, { sock, db }) {
 
     if (matchedCat === "owner" && !m.isOwner) {
       await m.reply(
-        `╔┈┈「 *Akses Ditolak* 」\n╎\n╎❏ Kategori ini hanya untuk owner\n╚┈┈┈┈┈┈┈┈┈❖`
+        `╭─「 *Akses Ditolak* 」\n╎\n│ ❏ Kategori ini hanya untuk owner\n╰────────❖`
       );
       await m.react("❌");
       return;
@@ -230,7 +230,7 @@ async function handler(m, { sock, db }) {
 
     if (allCommands.length === 0) {
       await m.reply(
-        `╔┈┈「 *Kosong* 」\n╎\n╎❏ Kategori \`${matchedCat}\` tidak ada command\n╚┈┈┈┈┈┈┈┈┈❖`
+        `╭─「 *Kosong* 」\n╎\n│ ❏ Kategori \`${matchedCat}\` tidak ada command\n╰────────❖`
       );
       await m.react("❌");
       return;
@@ -245,18 +245,18 @@ async function handler(m, { sock, db }) {
       if (wf2) weatherBlock2 = `${wf2}\n\n`;
     } catch {}
 
-    let txt = `${weatherBlock2}╔┈┈「 *${catName}* 」
-╎
-╎❏ *Total: ${totalFitur} Fitur*
-╎
+    let txt = `${weatherBlock2}╭─「 *${catName}* 」
+│
+│ ❏ *Total: ${totalFitur} Fitur*
+│
 `;
     for (let i = 0; i < allCommands.length; i++) {
       const cmd = allCommands[i];
       const symbols = getCommandSymbols(cmd);
-      txt += `╎❏ ${prefix}${cmd}${symbols}\n`;
+      txt += `│ ❏ ${prefix}${cmd}${symbols}\n`;
     }
 
-    txt += `╚┈┈┈┈┈┈┈┈┈❖\n`;
+    txt += `╰────────❖\n`;
 
     const buttons2 = [
       { buttonId: `${prefix}allmenucategory`, buttonText: { displayText: "📂 Kategori Lain" }, type: 1 },

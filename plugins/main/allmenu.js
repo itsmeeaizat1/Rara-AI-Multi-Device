@@ -161,60 +161,60 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
     // ── Info section (Clara-MD box style) ──
-    let txt = `╔┈┈「 *Info User* 」
-╎
-╎❏ *Nama:*  ${m.pushName || "User"}
-╎❏ *Nomor:* @${m.sender.split("@")[0]}
-╎❏ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
-╎❏ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
-╎❏ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
-╎❏ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
-╎❏ *Role:* ${roleEmoji} ${userRole}
-╎❏ *Level:* ${userLevel}
-╎❏ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
-╎❏ *Total Xp:* ${userExp.toLocaleString()}
-╎❏ *Status:* ${user?.banned ? "Banned" : "Aktif"}
-╠┈┈「 *Info Waktu* 」
-╎❏ *Waktu:* ${timeStr} WIB
-╎❏ *Hari:* ${dayName} ${weton}
-╎❏ *Tanggal:* ${dateStr}
-╎❏ *Tanggal Islam:* ${islamicDate}
-╎❏ *Zona:* Asia/Jakarta
-╎❏ *Hari Penting:* ${importantDay}
-╠┈┈「 *Info Bot* 」
-╎❏ *Bot Name:* ${botConfig.bot?.name || botName}
-╎❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
-╎❏ *Version:* ${botConfig.bot?.version || "-"}
-╎❏ *Developer:* ${botConfig.bot?.developer || "-"}
-╎❏ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
-╎❏ *Prefix:* [ *${prefix}* ]
-╎❏ *Uptime:* ${runtimeStr}
-╎❏ *Total User:* ${totalUsers}
-╎❏ *Total Registrasi:* ${totalRegistered}
-╎❏ *Premium User:* ${totalPremium}
-╎❏ *Total Fitur:* ${totalFeatures}
-╠┈┈「 *Info Server* 」
-╎❏ *Platform:* ${platform}
-╎❏ *Hostname:* ${hostname}
-╎❏ *Type:* Node.Js
-╎❏ *Baileys:* Multi Device
-╎❏ *Node.js:* ${process.version}
-╎❏ *Server Uptime:* ${serverUptime}
-╎❏ *CPU:* ${cpuModel}
-╎❏ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
-╎❏ *Load Avg:* ${loadAvg}
-╎❏ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
-╎❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
-╚┈┈┈┈┈┈┈┈┈❖
+    let txt = `╭─「 *Info User* 」
+│
+│ ❏ *Nama:*  ${m.pushName || "User"}
+│ ❏ *Nomor:* @${m.sender.split("@")[0]}
+│ ❏ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
+│ ❏ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
+│ ❏ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
+│ ❏ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
+│ ❏ *Role:* ${roleEmoji} ${userRole}
+│ ❏ *Level:* ${userLevel}
+│ ❏ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
+│ ❏ *Total Xp:* ${userExp.toLocaleString()}
+│ ❏ *Status:* ${user?.banned ? "Banned" : "Aktif"}
+├─「 *Info Waktu* 」
+│ ❏ *Waktu:* ${timeStr} WIB
+│ ❏ *Hari:* ${dayName} ${weton}
+│ ❏ *Tanggal:* ${dateStr}
+│ ❏ *Tanggal Islam:* ${islamicDate}
+│ ❏ *Zona:* Asia/Jakarta
+│ ❏ *Hari Penting:* ${importantDay}
+├─「 *Info Bot* 」
+│ ❏ *Bot Name:* ${botConfig.bot?.name || botName}
+│ ❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
+│ ❏ *Version:* ${botConfig.bot?.version || "-"}
+│ ❏ *Developer:* ${botConfig.bot?.developer || "-"}
+│ ❏ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
+│ ❏ *Prefix:* [ *${prefix}* ]
+│ ❏ *Uptime:* ${runtimeStr}
+│ ❏ *Total User:* ${totalUsers}
+│ ❏ *Total Registrasi:* ${totalRegistered}
+│ ❏ *Premium User:* ${totalPremium}
+│ ❏ *Total Fitur:* ${totalFeatures}
+├─「 *Info Server* 」
+│ ❏ *Platform:* ${platform}
+│ ❏ *Hostname:* ${hostname}
+│ ❏ *Type:* Node.Js
+│ ❏ *Baileys:* Multi Device
+│ ❏ *Node.js:* ${process.version}
+│ ❏ *Server Uptime:* ${serverUptime}
+│ ❏ *CPU:* ${cpuModel}
+│ ❏ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
+│ ❏ *Load Avg:* ${loadAvg}
+│ ❏ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
+│ ❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
+╰────────❖
 ${weatherBlock}${readMore}
-╔┈┈「 *Keterangan* 」
-╎❏ Ⓞ = Hanya untuk owner
-╎❏ ⓟ = Hanya untuk premium
-╎❏ Ⓛ = Membutuhkan limit
-╎❏ Ⓐ = Hanya untuk admin
-╎❏ Ⓖ = Hanya di dalam grup
-╎❏ Ⓟ = Hanya di private chat
-╚┈┈┈┈┈┈┈┈┈❖
+╭─「 *Keterangan* 」
+│ ❏ Ⓞ = Hanya untuk owner
+│ ❏ ⓟ = Hanya untuk premium
+│ ❏ Ⓛ = Membutuhkan limit
+│ ❏ Ⓐ = Hanya untuk admin
+│ ❏ Ⓖ = Hanya di dalam grup
+│ ❏ Ⓟ = Hanya di private chat
+╰────────❖
 `;
 
     // ── Category commands (Clara-MD box style) ──
@@ -244,15 +244,15 @@ ${weatherBlock}${readMore}
       if (allCmds.length === 0) continue;
       const catName = CATEGORY_NAMES[category] || category.charAt(0).toUpperCase() + category.slice(1);
 
-      txt += `╠┈┈「 *${catName}* 」\n`;
+      txt += `├─「 *${catName}* 」\n`;
       for (let i = 0; i < allCmds.length; i++) {
         const cmd = allCmds[i];
         const symbols = getCommandSymbols(cmd);
-        txt += `╎❏ ${prefix}${cmd}${symbols}\n`;
+        txt += `│ ❏ ${prefix}${cmd}${symbols}\n`;
       }
     }
 
-    txt += `╚┈┈┈┈┈┈┈┈┈❖\n`;
+    txt += `╰────────❖\n`;
 
     // ── Send: type 1 buttons + externalAdReply di ROOT ──
     const menuThumb = getThumb();
