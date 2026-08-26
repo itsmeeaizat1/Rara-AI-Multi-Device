@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menu2.js — Quick menu (interactive header image + nativeFlow buttons)
+// menu2.js — Quick menu shortcut (elegant, ringkas, tombol navigasi)
 import config from "../../config.js";
 import {
   getCommandsByCategory,
@@ -8,6 +8,7 @@ import {
 import { getCasesByCategory } from "../../case/nova.js";
 import path from "path";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
+import { bracketBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "menu2",
@@ -24,9 +25,6 @@ const pluginConfig = {
   energi: 0,
   isEnabled: true,
 };
-
-const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c).replace(/[A-Z]/g, c => (SC_MAP[c.toLowerCase()] || c).toUpperCase());
 
 const QUICK_LINKS = [
   { label: "Menu Utama", cmd: "menu", emoji: "🏠" },
@@ -45,11 +43,8 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
-    let linkLines = "";
-    for (const i = 0; i < QUICK_LINKS.length; i++) {
-      const q = QUICK_LINKS[i];
-      linkLines += `│  ◈ ${q.emoji} ${prefix}${q.cmd} — ${q.label}\n`;
-    }
+    const linkLines = QUICK_LINKS
+      .map((q) => `${q.emoji} ${prefix}${q.cmd} — ${q.label}`);
 
     const totalFitur = (() => {
       const pluginCats = getCategories();
@@ -61,12 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
       return total;
     })();
 
-    const text = `╭─「 *Quick Menu* 」
-${linkLines}│
-│  *Total: ${totalFitur} Fitur*
-╰──────────────
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
-${m.pushName || "User"} 👋`;
+    const text = `${bracketBox("📋", "Quick Menu", linkLines)}\n\nTotal ${totalFitur} fitur\n${botName}`;
 
     const navButtons = [
       { id: `${prefix}menu`, text: "🏠 Menu" },
@@ -76,10 +66,10 @@ ${m.pushName || "User"} 👋`;
 
     await sendMenuCard(sock, m, {
       text,
-      footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
+      footer: botName,
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
       buttons: navButtons,
-      title: toSC(botName),
+      title: "Quick Menu",
     });
 
     await m.react("🐣");

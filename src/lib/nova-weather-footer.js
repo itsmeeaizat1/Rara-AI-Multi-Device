@@ -229,23 +229,21 @@ async function fetchWeather() {
 }
 
 function buildFooter(normalized) {
+  // Cuma DATA cuaca, TANPA signature bot sendiri — biar gak dobel kalau
+  // dipanggil dari menu/plugin lain yang udah punya signature-nya sendiri.
   const { location } = getWeatherConfig();
   const emoji = symbolFor(normalized.weather_code);
 
   const lines = [
-    "",
-    `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ CUACA REALTIME`,
-    `  ┊  ➶ 📍 ${location.name || "Lokasi"}`,
-    `  ┊  ➶ ${emoji} ${normalized.description}`,
-    `  ┊  ➶ 🌡️ Suhu: ${fmt(normalized.temperature_2m, "°C")}`,
-    `  ┊  ➶ 🤒 Terasa: ${fmt(normalized.apparent_temperature, "°C")}`,
-    `  ┊  ➶ 💧 Kelembapan: ${fmt(normalized.relative_humidity_2m, "%")}`,
-    `  ┊  ➶ 💨 Angin: ${fmt(normalized.wind_speed_10m, " km/jam")}`,
-    `  ┊  ➶ 🧭 Arah angin: ${windDirectionText(normalized.wind_direction_10m)}`,
-    `  ┊  ➶ ☁️ Tutupan awan: ${fmt(normalized.cloud_cover, "%")}`,
-    `  ┊  ➶ ☀️ UV index: ${uvText(normalized.uv_index)}`,
-    `  ┊  ➶ 🌧️ Curah hujan: ${fmt(normalized.precipitation, " mm")}`,
-    `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`,
+    `╭─「 Cuaca Realtime 」`,
+    `│ 📍 ${location.name || "Lokasi"}`,
+    `│ ${emoji} ${normalized.description}`,
+    `│ Suhu      ${fmt(normalized.temperature_2m, "°C")} (terasa ${fmt(normalized.apparent_temperature, "°C")})`,
+    `│ Kelembapan ${fmt(normalized.relative_humidity_2m, "%")}`,
+    `│ Angin     ${fmt(normalized.wind_speed_10m, " km/jam")} · ${windDirectionText(normalized.wind_direction_10m)}`,
+    `│ UV index  ${uvText(normalized.uv_index)}`,
+    `│ Hujan     ${fmt(normalized.precipitation, " mm")} · awan ${fmt(normalized.cloud_cover, "%")}`,
+    `╰────────────────`,
   ];
 
   return lines.join("\n");
