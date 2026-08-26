@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20label%20info%20kembali%20ke%20bah-success?style=for-the-badge)
-> *Commit: "fix: label info kembali ke bahasa Inggris (User Info, Bot Info)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-style%3A%20modern%20box%20lines%20%E2%80%94%20roun-success?style=for-the-badge)
+> *Commit: "style: modern box lines — rounded corner (╭─├─╰) + solid line, bukan dotted ┈"*
 <!--END_SECTION:latest-update-->
 
 
