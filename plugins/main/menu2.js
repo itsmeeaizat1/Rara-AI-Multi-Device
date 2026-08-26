@@ -62,6 +62,7 @@ async function handler(m, { sock, config: botConfig }) {
       { id: `${prefix}owner`, text: "👑 Owner" },
     ];
 
+    await m.react("🐣");
     await sendMenuCard(sock, m, {
       text,
       footer: botName,
@@ -70,7 +71,6 @@ async function handler(m, { sock, config: botConfig }) {
       title: "Quick Menu",
     });
 
-    await m.react("🐣");
   } catch (e) {
     console.error("[menu2] handler error:", e.message);
     try { await m.reply("❌ Gagal menampilkan menu2: " + e.message); } catch {}
