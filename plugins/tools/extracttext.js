@@ -438,4 +438,4 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-export { handler, pluginConfig, pluginConfig as default };
+export { handler, pluginConfig as config, pluginConfig as default };
