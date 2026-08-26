@@ -1,16 +1,14 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenucategory.js — Menu per kategori (elegant, ringkas, tombol navigasi)
-import config from "../../config.js";
+// allmenucategory.js — Menu per kategori (elegant, style ◈ untuk list command)
 import {
   getCommandsByCategory,
   getCategories,
 } from "../../src/lib/nova-plugins.js";
-import { getCasesByCategory, getCaseCount } from "../../case/nova.js";
-import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
+import { getCasesByCategory } from "../../case/nova.js";
 import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { bracketBox } from "../../src/lib/nova-menu-style.js";
+import { listBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "allmenucategory",
@@ -66,6 +64,7 @@ async function buildCategoryText(m, botConfig, db, category) {
     const prefix = botConfig.command?.prefix || ".";
     const catName = CATEGORY_NAMES[category] || (category.charAt(0).toUpperCase() + category.slice(1));
     const catEmoji = CATEGORY_EMOJIS[category] || "📂";
+    const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
     const commandsByCategory = getCommandsByCategory();
     const caseCats = getCasesByCategory();
@@ -84,16 +83,15 @@ async function buildCategoryText(m, botConfig, db, category) {
     }
 
     if (allCmds.length === 0) {
-      return `${bracketBox(catEmoji, catName, ["Tidak ada command di kategori ini"])}\n\n${botConfig.bot?.name || "Nova AI Whatsapp Bot"}`;
+      return `${listBox(`${catEmoji} ${catName}`, ["Tidak ada command di kategori ini"])}\n\n${botName}`;
     }
 
-    const cmdLines = allCmds
-      .map((c) => `${prefix}${c.command}${c.description ? ` — ${c.description}` : ""}`);
+    const items = allCmds.map((c) => `${prefix}${c.command}${c.description ? ` — ${c.description}` : ""}`);
 
-    return `${bracketBox(catEmoji, catName, cmdLines)}\n\nTotal ${allCmds.length} fitur\n${botConfig.bot?.name || "Nova AI Whatsapp Bot"}`;
+    return `${listBox(`${catEmoji} ${catName}`, items)}\n\nTotal ${allCmds.length} fitur\n${botName}`;
   } catch (e) {
     console.error("[menukategori] buildCategoryText error:", e.message);
-    return `╭─「 Menu Kategori 」\n│ Error: ${e.message}\n╰─`;
+    return `╭─「 Menu Kategori 」\n│ Error: ${e.message}\n╰──────────────`;
   }
 }
 
@@ -122,7 +120,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         rows.push(`${emoji} ${prefix}menukategori ${cat} — ${name} (${total})`);
       }
 
-      const text = `${bracketBox("📂", "Kategori", rows)}\n\nTotal ${rows.length} kategori · ketik *${prefix}menukategori <nama>*\n${botConfig.bot?.name || "Nova AI Whatsapp Bot"}`;
+      const text = `${listBox("Kategori", rows)}\n\nTotal ${rows.length} kategori · ketik *${prefix}menukategori <nama>*\n${botName}`;
 
       const navButtons = [
         { id: `${prefix}menu`, text: "🏠 Menu" },
@@ -145,13 +143,13 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     const matchedCat = findCategory(inputCat);
     if (!matchedCat) {
-      await m.reply(`${bracketBox("📂", "Kategori", [`Kategori "${inputCat}" tidak ditemukan`])}\n\nKetik *${prefix}menukategori* untuk daftar kategori`);
+      await m.reply(`${listBox("Kategori", [`Kategori "${inputCat}" tidak ditemukan`])}\n\nKetik *${prefix}menukategori* untuk daftar kategori`);
       await m.react("❌");
       return;
     }
 
     if (matchedCat === "owner" && !m.isOwner) {
-      await m.reply(bracketBox("👑", "Owner", ["Kategori ini khusus owner"]));
+      await m.reply(listBox("👑 Owner", ["Kategori ini khusus owner"]));
       await m.react("❌");
       return;
     }

@@ -122,8 +122,48 @@ function novaUsage(commandName, { steps = [], example = "", note = "", emoji = "
   return bracketBox('i', title, lines);
 }
 
+
+// === Info-style box (◈ subsection + ┊ detail) ===
+// Dipakai KHUSUS untuk info/profile (.menu) dan daftar command (.allmenu,
+// .allmenucategory, .menu2) — beda dari bracketBox (➥) yang dipakai untuk
+// caption/petunjuk cara pakai di tiap plugin (JANGAN diganti, sudah benar).
+//
+// Struktur:
+//   ╭─「 Title 」
+//   │ intro (opsional, baris bebas di bawah judul)
+//   │
+//   │  ◈ *Heading Subsection* (opsional)
+//   │  ┊ Key: value
+//   ╰──────────────
+function infoBox(title, { intro, sections = [] } = {}) {
+  const out = [`╭─「 ${toSC(title)} 」`];
+  if (intro) out.push(`│ ${intro}`);
+  for (const sec of sections) {
+    out.push(`│`);
+    if (sec.heading) out.push(`│  ◈ *${toSC(sec.heading)}*`);
+    for (const line of sec.lines || []) {
+      out.push(`│  ┊ ${line}`);
+    }
+  }
+  out.push(`╰──────────────`);
+  return out.join("\n");
+}
+
+// Daftar command polos (tanpa subsection), tiap item pakai bullet ◈.
+//   ╭─「 Title 」
+//   │  ◈ item1
+//   │  ◈ item2
+//   ╰──────────────
+function listBox(title, items = []) {
+  const out = [`╭─「 ${toSC(title)} 」`];
+  for (const item of items) out.push(`│  ◈ ${item}`);
+  out.push(`╰──────────────`);
+  return out.join("\n");
+}
+
 export {
   claraHeader, alyaHeader, bracketBox, claraWrap, claraLine,
   separator, tipText, formatNumber, broadcastFormat, novaUsage,
   toSC, sectionHeader, sectionItem, sectionClose, sectionSpacer, buildSection,
+  infoBox, listBox,
 };
