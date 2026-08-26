@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-Merge%20branch%20'fix%2Fworkflow-cle-success?style=for-the-badge)
-> *Commit: "Merge branch 'fix/workflow-cleanup'"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20redesign%20menu%20layout%20%2B%20fi-success?style=for-the-badge)
+> *Commit: "fix: redesign menu layout + fix nyerah bug + nativeFlow buttons"*
 <!--END_SECTION:latest-update-->
 
 
