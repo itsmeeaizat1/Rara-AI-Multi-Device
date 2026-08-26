@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { cekFunAI } from "../../src/lib/nova-fun-ai.js";
 const pluginConfig = {
     name: "cekjodoh",
     alias: ["cekjodoh"],
@@ -16,7 +17,7 @@ const pluginConfig = {
     isEnabled: true
 }
 
-async function handler(m, { sock }) {
+async function handler(m, { sock, config: botConfig }) {
     const input = m.text?.trim() || ''
     const parts = input.split(/[&,]/).map(s => s.trim()).filter(s => s)
     
@@ -40,6 +41,18 @@ async function handler(m, { sock }) {
         desc = 'Mungkin cari yang lain? 😅'
     }
     
+
+    // Coba AI buat deskripsi yang lebih lucu, fallback ke desc di atas
+    try {
+        const aiResult = await cekFunAI({
+            botConfig: botConfig || {},
+            cekType: "jodoh",
+            percent: percent,
+            fallbackDesc: desc,
+        });
+        if (aiResult.text) desc = aiResult.text;
+    } catch {}
+
     let txt = mentioned === m.sender ? `Hai @${mentioned.split('@')[0]}
     
 Tingkat kejodohan kamu *${percent}%*
