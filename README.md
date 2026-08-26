@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-Merge%20branch%20'fix%2Fmenu-redesig-success?style=for-the-badge)
-> *Commit: "Merge branch 'fix/menu-redesign'"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20menu%20command%20list%20pa-success?style=for-the-badge)
+> *Commit: "refactor: menu command list pakai style ° ✿ 」 ✿ ° + ┊ ➶/╰➶"*
 <!--END_SECTION:latest-update-->
 
 
