@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     text += `╰┈┈┈┈┈┈┈┈⬡\n\n`
     text += `Set birthday: .setbirthday DD-MM`
     
-    { const __navText = (text, { mentions }); await m.reply(claraWrap("birthdaylist", __navText)); }
+    await m.reply(claraWrap("birthdaylist", text), { mentions });
 }
 
 export { pluginConfig as config, handler }
