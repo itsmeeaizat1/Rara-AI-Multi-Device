@@ -226,19 +226,26 @@ class GameFactory {
           await m.react('✅');
           endSession(chatId);
 
-          const db = getDatabase();
-          const user = db.getUser(m.sender);
-
           const reward = getRandomReward();
-          if (reward.limit > 0) db.updateEnergi(m.sender, reward.limit);
-          if (reward.koin > 0) db.updateKoin(m.sender, reward.koin);
-          if (reward.exp > 0) {
-            if (!user.rpg) user.rpg = {};
-            try {
-              await addExpWithLevelCheck(sock, m, db, user, reward.exp);
-            } catch {}
+          let rewardGiven = false;
+          try {
+            const db = getDatabase();
+            if (db) {
+              const user = db.getUser(m.sender);
+              if (reward.limit > 0) db.updateEnergi(m.sender, reward.limit);
+              if (reward.koin > 0) db.updateKoin(m.sender, reward.koin);
+              if (reward.exp > 0 && user) {
+                if (!user.rpg) user.rpg = {};
+                try {
+                  await addExpWithLevelCheck(sock, m, db, user, reward.exp);
+                } catch {}
+              }
+              db.save();
+              rewardGiven = true;
+            }
+          } catch (e) {
+            console.error(`[${gameType}] Reward error:`, e.message);
           }
-          db.save();
 
           let text = `${pick(WIN_MSGS)}\n\n`;
           text += `❀°˖ *${cfg.title}* ˖°❀\n\n`;
