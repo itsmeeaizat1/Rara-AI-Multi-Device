@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20desain%20family100%20%26%2030%20gam-success?style=for-the-badge)
-> *Commit: "fix: desain family100 & 30 game plugin - hapus header/footer '❀' ganti bracket box konsisten"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-merge%3A%20menu%2Fallmenu%2Fallmenucat-success?style=for-the-badge)
+> *Commit: "merge: menu/allmenu/allmenucategory — info lengkap + 4 tombol + bracket box"*
 <!--END_SECTION:latest-update-->
 
 
