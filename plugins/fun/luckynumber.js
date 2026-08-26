@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "luckynumber",
-  alias: ["luckynumber", "nomorhoki", "nomorsial", "angkahoki", "hokinomor"],
+  alias: ["luckynumber"],
   category: "fun",
   description: "Nomor hoki harian — 4D/3D/2D, lucky color, direction, vibes",
   usage: ".luckynumber — Dapat nomor hoki + ramalan harian\n.luckynumber 4d — Hanya 4 digit\n.luckynumber info — Statistik",

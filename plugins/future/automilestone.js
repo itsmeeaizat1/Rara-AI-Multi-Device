@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "automilestone",
-  alias: ["automilestone", "milestoneauto", "milestonegrup"],
+  alias: ["automilestone"],
   category: "future",
   description: "Auto announce milestone grup (member, pesan, online)",
   usage: ".automilestone <command>",

@@ -5,7 +5,7 @@ import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'bratvid2',
-    alias: ["bratvid2", 'bratv2'],
+    alias: ["bratvid2"],
     category: 'sticker',
     description: 'Generate brat video v2',
     usage: '.bratvid2 <text>',

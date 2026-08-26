@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'resetwarn',
-    alias: ["resetwarn", 'clearwarn', 'hapuswarn', 'delwarn'],
+    alias: ["resetwarn"],
     category: 'group',
     description: 'Reset warning member',
     usage: '.resetwarn @user',

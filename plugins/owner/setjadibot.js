@@ -10,7 +10,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setjadibot",
-  alias: ["setjadibot", "jadibotaccess", "jadibotmode", "aturjadibot"],
+  alias: ["setjadibot"],
   category: "owner",
   description: "Atur akses fitur jadibot untuk user",
   usage: ".setjadibot <aksi>",

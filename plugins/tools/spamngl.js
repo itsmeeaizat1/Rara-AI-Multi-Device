@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import config from "../../config.js";
 const pluginConfig = {
     name: 'spamngl',
-    alias: [],
+    alias: ["spamngl"],
     category: 'tools',
     description: 'Send NGL Spam',
     usage: '.spamngl <url> | <text> | <jumlah>',

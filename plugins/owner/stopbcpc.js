@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: 'stopbcpc',
-  alias: ["stopbcpc", 'stopbroadcastpc'],
+  alias: ["stopbcpc"],
   category: 'owner',
   description: 'Hentikan broadcast private yang sedang berjalan',
   usage: '.stopbcpc',

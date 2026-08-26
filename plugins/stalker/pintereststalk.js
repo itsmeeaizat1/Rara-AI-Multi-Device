@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pintereststalk",
-  alias: ["pintereststalk", "pinterestid", "stalkpinterest", "stalkpin"],
+  alias: ["pintereststalk"],
   category: "stalker",
   description: "Melihat informasi lengkap akun Pinterest berdasarkan username.",
   usage: ".pintereststalk <username>",

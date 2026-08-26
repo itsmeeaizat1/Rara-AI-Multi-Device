@@ -4,7 +4,7 @@ import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "applemusic",
-    alias: ["applemusic", "am3", "apple"],
+    alias: ["applemusic"],
     category: 'search',
     description: 'Cari lagu di Apple Music',
     usage: '.applemusic <query>',

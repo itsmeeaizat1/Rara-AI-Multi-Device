@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 
 const pluginConfig = {
     name: 'mangatoon',
-    alias: ["mangatoon", 'mtoon', 'mangatoonsearch', 'searchmangatoon'],
+    alias: ["mangatoon"],
     category: 'search',
     description: 'Cari komik di Mangatoon',
     usage: '.mangatoon <query>',

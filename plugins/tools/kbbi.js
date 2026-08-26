@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kbbi",
-  alias: ["kbbi", "kamus2", "kbbi5"],
+  alias: ["kbbi"],
   category: "tools",
   description: "Cek arti kata di KBBI",
   usage: ".kbbi <kata>",

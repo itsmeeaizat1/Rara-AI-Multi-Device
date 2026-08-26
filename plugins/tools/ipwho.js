@@ -5,7 +5,7 @@ import { sendToolsPreview, saluranCtx } from "../../src/lib/nova-context.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ipwho",
-  alias: ["ipwho", "ip", "iplookup", "ipinfo"],
+  alias: ["ipwho"],
   category: "tools",
   description: "Lookup informasi IP address",
   usage: ".ipwho <ip>",

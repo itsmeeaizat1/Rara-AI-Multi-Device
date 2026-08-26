@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "regextest",
-  alias: ["regextest", "regex", "testregex", "regexcheck", "patterntest"],
+  alias: ["regextest"],
   category: "tools",
   description: "Test regex pattern terhadap teks, highlight match & capture groups",
   usage: ".regex <pattern> | <teks>  atau  .regex flags <flags> <pattern> | <teks>",

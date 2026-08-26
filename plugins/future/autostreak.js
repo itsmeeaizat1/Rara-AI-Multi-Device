@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autostreak",
-  alias: ["autostreak", "streakauto", "streakalert"],
+  alias: ["autostreak"],
   category: "future",
   description: "Auto alert member yang streak hampir putus",
   usage: ".autostreak <command>",

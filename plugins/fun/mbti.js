@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "mbti",
-  alias: ["mbti", "kepribadian", "personality"],
+  alias: ["mbti"],
   category: "fun",
   description: "MBTI Personality Test - 32 questions via OpenJung API (free, no key)",
   usage: ".mbti",

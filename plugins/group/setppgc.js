@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'setppgc',
-    alias: ["setppgc", 'setprofilegc', 'setppgroup', 'setppgrup'],
+    alias: ["setppgc"],
     category: 'group',
     description: 'Mengubah foto profil grup',
     usage: '.setppgc (reply gambar)',

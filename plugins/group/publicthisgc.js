@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "publicthisgc",
-  alias: ["publicthisgc", "publicgc", "publicgroup", "publicthisgroup"],
+  alias: ["publicthisgc"],
   category: "group",
   description: "Aktifkan mode public hanya di grup ini",
   usage: ".publicthisgc",

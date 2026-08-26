@@ -6,7 +6,7 @@ import axios from 'axios'
 import config from '../../config.js'
 const pluginConfig = {
     name: 'ai4chat',
-    alias: ['ai4chat'],
+    alias: ["ai4chat"],
     category: 'ai',
     description: 'Chat dengan AI4Chat',
     usage: '.ai4chat <pertanyaan>',

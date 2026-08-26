@@ -15,7 +15,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "aicaption",
-  alias: ["aicaption", "aicap", "capgen", "igcaption", "captionai"],
+  alias: ["aicaption"],
   category: "ai",
   description: "AI Caption Generator untuk Instagram dari foto",
   usage: ".aicaption (reply foto)\n.aicaption product\n.aicaption funny\n.aicaption aesthetic\n.aicaption motivasi\n.aicaption singkat",

@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "txt2img2",
-  alias: ["txt2img2", "txt2imgv2", "texttoimg2"],
+  alias: ["txt2img2"],
   category: "ai",
   description: "Buat gambar dari teks pakai Flux Klein 4B",
   usage: ".txt2img2 <deskripsi gambar>",

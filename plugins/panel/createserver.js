@@ -36,7 +36,7 @@ RAM_OPTIONS.forEach((ram) => {
 
 const pluginConfig = {
   name: allCommands,
-  alias: ["unlimited"],
+  alias: ["Panel"],
   category: "panel",
   description: "Create server panel dengan spesifikasi RAM (v1-v5)",
   usage: ".1gbv1 username atau .1gbv2 username,628xxx",

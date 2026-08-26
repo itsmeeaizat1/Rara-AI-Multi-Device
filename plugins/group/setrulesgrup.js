@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'setrulesgrup',
-    alias: ["setrulesgrup", 'setgrouprules', 'setaturangrup'],
+    alias: ["setrulesgrup"],
     category: 'group',
     description: 'Set rules/aturan grup custom (admin only)',
     usage: '.setrulesgrup <text>',

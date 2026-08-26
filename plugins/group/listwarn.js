@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
 const pluginConfig = {
   name: "listwarn",
-  alias: ["listwarn", "warnings", "cekwarn", "warnlist"],
+  alias: ["listwarn"],
   category: "group",
   description: "Melihat daftar warning member",
   usage: ".listwarn atau .listwarn @user",

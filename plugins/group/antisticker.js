@@ -4,7 +4,7 @@ import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "antisticker",
-    alias: ["antisticker", "as", "antistick"],
+    alias: ["antisticker"],
     category: 'group',
     description: 'Mengatur antisticker di grup',
     usage: '.antisticker <on/off>',

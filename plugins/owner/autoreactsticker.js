@@ -7,7 +7,7 @@ import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
 
 const pluginConfig = {
   name: "autoreactsticker",
-  alias: ["autoreactsticker", "ars", "autostickerreply", "stickerreact", "setautostiker"],
+  alias: ["autoreactsticker"],
   category: "owner",
   description: "Auto reply pesan dengan sticker — manual trigger, AI Vision auto-tag, & saveall",
   usage:

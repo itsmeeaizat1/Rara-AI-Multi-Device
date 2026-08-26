@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "smartmoderation", alias: ["aimod", "antitoxicai"], category: "future",
+  name: "smartmoderation", alias: ["smartmoderation"], category: "future",
   alias: ["smartmoderation"],
   description: "Toggle AI moderation anti-toxic", usage: ".smartmoderation <on/off>",
   example: ".smartmoderation on", isOwner: true, isPremium: false,

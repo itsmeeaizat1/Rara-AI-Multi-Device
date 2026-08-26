@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js"
 
 const pluginConfig = {
     name: 'setpanel',
-    alias: ["setpanel", 'setdomainpanel', 'panelset', 'updatepanel'],
+    alias: ["setpanel"],
     category: 'owner',
     description: 'Update domain & key panel pterodactyl (untuk Cloudflare tunnel dinamis)',
     usage: '.setpanel <v1-v5> <domain> atau .setpanel <v1-v5> apikey <key> atau .setpanel <v1-v5> capikey <key>',

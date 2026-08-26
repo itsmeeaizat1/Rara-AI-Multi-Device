@@ -8,7 +8,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "profileuser",
-  alias: ["profileuser", "profil", "profileuser", "profuser", "userprofile", "myprofile", "prof"],
+  alias: ["profileuser"],
   category: "user",
   description: "Melihat profil user dengan RPG stats",
   usage: ".profile [@user]",

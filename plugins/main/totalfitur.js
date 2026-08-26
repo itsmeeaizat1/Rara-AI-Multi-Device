@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 
 const pluginConfig = {
     name: 'totalfitur',
-    alias: ["totalfitur", 'totalfeature', 'totalcmd', 'countplugin', 'distribusi'],
+    alias: ["totalfitur"],
     category: 'main',
     description: 'Lihat total fitur/command bot',
     usage: '.totalfitur',

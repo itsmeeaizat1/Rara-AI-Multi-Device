@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aiarisan",
-  alias: ["aiarisan", "arisan", "arisanai"],
+  alias: ["aiarisan"],
   category: "future",
   description: "Arisan digital otomatis di grup",
   usage: ".aiarisan <command>",

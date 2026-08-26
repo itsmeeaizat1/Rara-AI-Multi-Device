@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'antiswgc',
-    alias: ["antiswgc", 'antiswgroup', 'antiswmentiongc', 'antiswtaggc'],
+    alias: ["antiswgc"],
     category: 'group',
     description: 'Deteksi tipe SW group mention atau status mention yang masuk ke grup',
     usage: '.antiswgc <on/off>',

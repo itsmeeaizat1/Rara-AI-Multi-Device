@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'welcomeall',
-    alias: ["welcomeall", 'wcall', 'globalwelcome'],
+    alias: ["welcomeall"],
     category: 'owner',
     description: 'Aktifkan/nonaktifkan welcome di semua grup',
     usage: '.welcomeall <on/off>',

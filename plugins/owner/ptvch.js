@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ptvch',
-    alias: ["ptvch", 'ptvchanel', 'ptvstory'],
+    alias: ["ptvch"],
     category: 'owner',
     description: 'Kirim video sebagai PTV ke channel',
     usage: '.ptvch (reply video)',

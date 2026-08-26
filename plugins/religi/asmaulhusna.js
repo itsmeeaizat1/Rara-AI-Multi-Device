@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getRandomItem, getItemByIndex, searchItem, getAllData } from '../../src/lib/nova-game-engine.js'
 const pluginConfig = {
     name: "asmaulhusna",
-    alias: ["asmaulhusna", "nama99", "99nama"],
+    alias: ["asmaulhusna"],
     category: 'religi',
     description: '99 Nama Allah (Asmaul Husna)',
     usage: '.asmaulhusna [nomor/nama]',

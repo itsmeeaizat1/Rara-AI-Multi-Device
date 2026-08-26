@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "android1-get",
-  alias: ["android1-get", "an1get", "an1dl"],
+  alias: ["android1-get"],
   category: "search",
   description: "Download APK dari Android1",
   usage: ".android1-get <url>",

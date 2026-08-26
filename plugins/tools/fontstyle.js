@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "fontstyle",
-  alias: ["fontstyle", "font", "fonts", "fonttext", "textfont", "fancytext", "textstyle", "aesthetictext"],
+  alias: ["fontstyle"],
   category: "tools",
   description: "Konversi teks ke berbagai font aesthetic Unicode",
   usage: ".font <style> <teks>\n.font list — lihat semua style tersedia",

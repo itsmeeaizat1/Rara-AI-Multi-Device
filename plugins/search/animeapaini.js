@@ -10,7 +10,7 @@ const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
 
 const pluginConfig = {
     name: "animeapaini",
-    alias: ["animeapaini", "animesearch2", "animeaini"],
+    alias: ["animeapaini"],
     category: 'search',
     description: 'Identifikasi anime dari gambar/screenshot',
     usage: '.animeapaini (reply gambar)',

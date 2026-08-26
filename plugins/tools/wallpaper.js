@@ -16,7 +16,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wallpaper",
-  alias: ["wallpaper", "wp", "wall", "wallhd", "hdwall"],
+  alias: ["wallpaper"],
   category: "tools",
   description: "Unduh wallpaper HD/4K dari Wallhaven",
   usage: ".wallpaper <kata kunci>\n.wallpaper random\n.wallpaper <kata kunci> hd\n.wallpaper <kata kunci> 4k",

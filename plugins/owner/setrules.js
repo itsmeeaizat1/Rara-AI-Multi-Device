@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'setrules',
-    alias: ["setrules", 'setbotrules', 'setaturanbot'],
+    alias: ["setrules"],
     category: 'owner',
     description: 'Set rules/aturan bot custom',
     usage: '.setrules <text>',

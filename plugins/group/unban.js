@@ -61,7 +61,7 @@ async function handler(m, { sock, config: botConfig }) {
 export default {
   config: {
     name: "unban2",
-    alias: ["unban2", "unbanmain2", "unblockmain2"],
+    alias: ["unban2"],
     category: "group",
     description: "Unban member grup",
     usage: ".unban <@target>",

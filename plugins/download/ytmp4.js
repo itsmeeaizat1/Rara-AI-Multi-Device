@@ -5,7 +5,7 @@ import config from "../../config.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ytmp4",
-  alias: ["ytmp4", "youtubemp4", "ytvideo"],
+  alias: ["ytmp4"],
   category: "download",
   description: "Download video YouTube",
   usage: ".ytmp4 <url>",

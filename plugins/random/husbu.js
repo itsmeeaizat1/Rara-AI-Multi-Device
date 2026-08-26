@@ -3,7 +3,7 @@ import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-m
 import axios from "axios";
 
 const pluginConfig = {
-  name: "husbu", alias: ["husband"], category: "random",
+  name: "husbu", alias: ["husbu"], category: "random",
   alias: ["husbu"],
   description: "Random husbu image", usage: ".husbu",
   example: ".husbu", isOwner: false, isPremium: false,

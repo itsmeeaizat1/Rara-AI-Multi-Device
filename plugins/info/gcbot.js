@@ -19,7 +19,7 @@ function tempPath(ext) {
 
 const pluginConfig = {
   name: "gcbot",
-  alias: ["gcbot", "gcbot2", "groupbot"],
+  alias: ["gcbot"],
   category: "info",
   description: "Lihat daftar grup bot",
   usage: ".gcbot",

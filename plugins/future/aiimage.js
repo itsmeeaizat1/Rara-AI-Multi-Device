@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
-  name: "aiimagev2", alias: ["aigen", "texttoimage", "generateimage"], category: "future",
+  name: "aiimagev2", alias: ["aiimagev2"], category: "future",
   alias: ["aiimagev2"],
   description: "Generate gambar dari teks dengan AI", usage: ".aiimage <deskripsi>",
   example: ".aiimage kucing astronaut di bulan", isOwner: false, isPremium: true,

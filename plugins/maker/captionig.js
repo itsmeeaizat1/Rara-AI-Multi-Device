@@ -3,7 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "captionig",
-  alias: ["captionig", "captionrandom", "captionhariini", "captions"],
+  alias: ["captionig"],
   category: 'maker',
   description: 'Generator caption Instagram/medsos berdasarkan mood',
   usage: '.captionig | .captionig <mood>',

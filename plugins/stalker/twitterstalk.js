@@ -4,7 +4,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "twitterstalk",
-  alias: ["twitterstalk", "twstalk", "xstalk", "twitterstalker"],
+  alias: ["twitterstalk"],
   category: "stalker",
   description: "Stalk akun Twitter/X",
   usage: ".twitterstalk <username>",

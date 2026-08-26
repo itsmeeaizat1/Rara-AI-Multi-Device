@@ -3,7 +3,7 @@ import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
-  name: "pricetrack", alias: ["trackprice", "hargatracker"], category: "utility",
+  name: "pricetrack", alias: ["pricetrack"], category: "utility",
   alias: ["pricetrack"],
   description: "Cek harga produk online", usage: ".pricetrack <url produk>",
   example: ".pricetrack https://shopee.co.id/...", isOwner: false, isPremium: false,

@@ -11,7 +11,7 @@ import {
 
 const pluginConfig = {
   name: "cuaca",
-  alias: ["cuaca", "cuacav15", "weather15"],
+  alias: ["cuaca"],
   category: "tools",
   description: "Cek cuaca realtime dan pilih provider API cuaca",
   usage: ".cuaca <provider|set|lokasi|on|off|now|help>",

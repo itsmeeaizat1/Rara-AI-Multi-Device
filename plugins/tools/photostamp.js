@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photostamp",
-  alias: ["photostamp", "fotostamp", "timestamp", "tandatanggal", "datestamp", "stempelwaktu"],
+  alias: ["photostamp"],
   category: "tools",
   description: "Photo Stamp — Tambah timestamp/tanggal ke foto (local, no API)",
   usage: ".photostamp (reply gambar)\n.photostamp <posisi> (reply gambar)\n.photostamp custom <text> (reply gambar)",

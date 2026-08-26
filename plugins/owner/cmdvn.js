@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cmdvn',
-    alias: ["cmdvn", 'voicecommand', 'vncmd'],
+    alias: ["cmdvn"],
     category: 'owner',
     description: 'Aktifkan command via voice note',
     usage: '.cmdvn <on/off>',

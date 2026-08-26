@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "summarize",
-  alias: ["summarize", "ringkas", "tl", "summary"],
+  alias: ["summarize"],
   category: "ai",
   description: "Ringkas teks panjang menjadi inti",
   usage: ".summarize <teks> | reply teks",

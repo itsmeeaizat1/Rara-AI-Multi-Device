@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "videy2",
-  alias: ["videy2", "videymain", "videy2dl"],
+  alias: ["videy2"],
   category: "download",
   description: "Download video dari Videy",
   usage: ".videy <link>",

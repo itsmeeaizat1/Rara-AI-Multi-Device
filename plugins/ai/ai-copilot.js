@@ -15,7 +15,7 @@ function ensureTmp() {
 
 const pluginConfig = {
   name: "ai-copilot",
-  alias: ["ai-copilot", "copilot", "ghcopilot", "codecomplete", "autocomplete"],
+  alias: ["ai-copilot"],
   category: "ai",
   description: "Mode copilot: lanjutkan, refactor, atau jelaskan code",
   usage: ".ai-copilot <perintah> <code> | reply code",

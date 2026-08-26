@@ -4,7 +4,7 @@ import { getCommandsByCategory } from "../../src/lib/nova-plugins.js";
 
 const pluginConfig = {
   name: "aboutnova",
-  alias: ["aboutnova", "about", "tentang", "tentangbot"],
+  alias: ["aboutnova"],
   category: "main",
   description: "Info singkat tentang Nova AI Bot",
   usage: ".aboutnova",

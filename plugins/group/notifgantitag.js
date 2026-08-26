@@ -11,7 +11,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "notifgantitag",
-  alias: ["notifgantitag", "notiflabel", "notiftag", "labeltag"],
+  alias: ["notifgantitag"],
   category: "group",
   description: "Mengatur notifikasi perubahan label/tag member",
   usage: ".notifgantitag <on/off>",

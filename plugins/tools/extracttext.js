@@ -423,7 +423,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
 const pluginConfig = {
   name: "extracttext",
-  alias: ["extracttext", "pdftotext", "doc2text", "imgtotext"],
+  alias: ["extracttext"],
   category: "tools",
   description: "Ekstrak teks dari PDF/Gambar dengan format rapih",
   usage: ".extracttext (reply PDF/Gambar)\n.extracttext ai (mode AI untuk gambar)",

@@ -43,7 +43,7 @@ async function formatAndReply(m, text, cmdName) {
 
 const pluginConfig = {
   name: "languagemenubot",
-  alias: ["langmenu", "setlanguage", "setlang", "botlanguage", "bahasabot"],
+  alias: ["languagemenubot"],
   category: "user",
   description: "Set bahasa preferensi bot — auto translate semua response ke bahasa kamu",
   usage: ".languagemenubot (lihat daftar bahasa)\n.languagemenubot <code> (set bahasa)\n.languagemenubot reset (kembali ke Indonesia)\n.languagemenubot on/off (owner: aktifkan/matikan fitur)",

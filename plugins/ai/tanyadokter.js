@@ -19,7 +19,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tanyadokter",
-  alias: ["tanyadokter", "dokter", "konsultasi", "kesehatan", "dokterai", "tanyadok", "aikesehatan", "aidokter", "healthai"],
+  alias: ["tanyadokter"],
   category: "ai",
   description: "Konsultasi kesehatan dengan AI Dokter (gejala, penyakit, gizi, obat)",
   usage: ".tanyadokter <pertanyaan>\n.tanyadokter reset — Reset sesi",

@@ -5,7 +5,7 @@ import config from '../../config.js'
 import { getRoles, getUserRole, getAccessibleServers, hasAccessToServer, VALID_SERVERS } from '../../src/lib/nova-roles-cpanel.js'
 const pluginConfig = {
     name: 'cpanel',
-    alias: ["cpanel", 'panelmenu', 'menupanel'],
+    alias: ["cpanel"],
     category: 'panel',
     description: 'Menu panel pterodactyl (v1-v5)',
     usage: '.cpanel',

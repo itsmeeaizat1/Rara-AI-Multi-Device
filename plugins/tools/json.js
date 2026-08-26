@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "json",
-  alias: ["json", "jsonformat", "jsonbeautify", "jsonminify", "jsoncheck", "jsonvalidate"],
+  alias: ["json"],
   category: "tools",
   description: "JSON formatter & validator (beautify, minify, validate, extract keys)",
   usage: ".json <mode> <json>  atau  .json <json> (auto beautify)",

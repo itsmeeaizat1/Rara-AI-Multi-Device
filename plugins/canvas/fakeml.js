@@ -11,7 +11,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakeml",
-  alias: ["fakeml", "mlbbfake", "mlcard", "mlfake"],
+  alias: ["fakeml"],
   category: "canvas",
   description: "Membuat fake ML profile card",
   usage: ".fakeml <nama> (reply/kirim foto)",

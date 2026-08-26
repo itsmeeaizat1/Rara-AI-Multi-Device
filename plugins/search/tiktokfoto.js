@@ -9,7 +9,7 @@ import te from '../../src/lib/nova-error.js'
 
 const pluginConfig = {
     name: 'tiktokfoto',
-    alias: ["tiktokfoto", 'ttfoto', 'ttphotosearch', 'searchtiktokfoto'],
+    alias: ["tiktokfoto"],
     category: 'search',
     description: 'Cari foto TikTok dan kirim album gambar',
     usage: '.tiktokfoto <query>',

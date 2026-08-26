@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'antitagsw',
-    alias: ["antitagsw", 'antitag', 'antistatustag'],
+    alias: ["antitagsw"],
     category: 'group',
     description: 'Mengaktifkan/menonaktifkan anti tag status di grup',
     usage: '.antitagsw <on/off>',

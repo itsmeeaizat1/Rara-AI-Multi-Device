@@ -3,7 +3,7 @@ import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
-  name: "direction", alias: ["rute", "arah", "navigate"], category: "tools",
+  name: "direction", alias: ["direction"], category: "tools",
   alias: ["direction"],
   description: "Rute & arah GPS", usage: ".direction <dari> -> <ke>",
   example: ".direction Jakarta -> Bandung", isOwner: false, isPremium: false,

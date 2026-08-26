@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "webclone",
-  alias: ["webclone", "websiteclone", "cloneweb", "clonesite", "copyweb", "webcopy"],
+  alias: ["webclone"],
   category: "tools",
   description: "WebsiteCloner — clone website & dapatkan template via smartdom API, gratis tanpa token",
   usage: ".webclone <url>",

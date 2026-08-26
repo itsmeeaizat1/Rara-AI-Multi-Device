@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'onlyadmin',
-    alias: ["onlyadmin", 'selfadmin', 'publicadmin', 'adminonly'],
+    alias: ["onlyadmin"],
     category: 'owner',
     description: 'Hanya admin grup yang bisa akses command bot',
     usage: '.onlyadmin on/off',

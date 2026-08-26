@@ -25,7 +25,7 @@ function tempPath(prefix, ext) {
 
 const pluginConfig = {
   name: "ambientmimic",
-  alias: ["ambientmimic", "ambient", "vncontext", "audioccontext"],
+  alias: ["ambientmimic"],
   category: "owner",
   description: "Toggle Ambient Context Mimicry — Bot dengar lingkungan dari VN, respon sesuai situasi",
   usage: ".ambientmimic on/off — Toggle\n.ambientmimic status — Cek status\n.ambientmimic mode <auto/manual> — Auto=grup auto-detect, Manual=per VN\n.ambientmimic threshold <low/medium/high> — Sensitivitas deteksi emosi",

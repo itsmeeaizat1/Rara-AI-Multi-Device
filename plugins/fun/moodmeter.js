@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "moodmeter",
-  alias: ["moodmeter", "cekmood", "moodhari", "moodharian"],
+  alias: ["moodmeter"],
   category: "fun",
   description: "Mood meter harian — cek mood kamu atau orang lain",
   usage: ".moodmeter — Cek mood kamu\n.moodmeter @target — Prediksi mood target",

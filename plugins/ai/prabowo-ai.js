@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "prabowo-ai",
-  alias: ["prabowo-ai", "prabowoi", "prabowo", "pakprabowo"],
+  alias: ["prabowo-ai"],
   category: "ai",
   description: "Chat dengan Pak Prabowo — Pria Sawit",
   usage: ".prabowo-ai <pertanyaan>",

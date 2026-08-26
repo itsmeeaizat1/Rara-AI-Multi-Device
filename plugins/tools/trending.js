@@ -3,7 +3,7 @@ import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-m
 import axios from "axios";
 
 const pluginConfig = {
-  name: "trending", alias: ["trend", "viral", "populer"], category: "tools",
+  name: "trending", alias: ["trending"], category: "tools",
   alias: ["trending"],
   description: "Trending topic Google", usage: ".trending",
   example: ".trending", isOwner: false, isPremium: false,

@@ -5,7 +5,7 @@ import path from 'path'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'restart',
-    alias: ["restart", 'reset', 'reboot', 'restartbot'],
+    alias: ["restart"],
     category: 'owner',
     description: 'Restart bot process (real restart)',
     usage: '.restart',

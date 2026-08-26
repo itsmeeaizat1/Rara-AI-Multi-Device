@@ -5,7 +5,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 const pluginConfig = {
     name: "energi",
-    alias: ["energi", "energyuser", "energiuser"],
+    alias: ["energi"],
     category: 'user',
     description: 'Cek energi user',
     usage: '.energi [@user]',

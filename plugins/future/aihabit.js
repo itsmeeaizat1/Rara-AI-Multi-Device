@@ -3,7 +3,7 @@ import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-m
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "aihabit", alias: ["habitcoach", "habittracker", "habit"], category: "future",
+  name: "aihabit", alias: ["aihabit"], category: "future",
   alias: ["aihabit"],
   description: "AI habit coach & tracker", usage: ".aihabit <add/list/streak>",
   example: ".aihabit add olahraga 30 hari", isOwner: false, isPremium: false,

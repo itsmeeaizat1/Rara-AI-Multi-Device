@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ganti-namadev',
-    alias: ["ganti-namadev", 'setnamadev', 'setnamedev', 'gantideveloper'],
+    alias: ["ganti-namadev"],
     category: 'owner',
     description: 'Ganti nama developer di config.js',
     usage: '.ganti-namadev <nama baru>',

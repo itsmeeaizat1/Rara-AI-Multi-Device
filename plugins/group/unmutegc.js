@@ -5,7 +5,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 
 const pluginConfig = {
   name: "unmutegc",
-  alias: ["unmutegc", "unmutegrup", "unmutebot", "unblockbot", "unlockbot"],
+  alias: ["unmutegc"],
   category: "group",
   description: "Buka blokir command bot untuk member di grup",
   usage: ".unmutegc",

@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "beritalengkap",
-  alias: ["beritalengkap", "sumberberita", "news5", "berita5", "news10", "berita10"],
+  alias: ["beritalengkap"],
   category: "info",
   description: "Berita Lengkap — 10 sumber berita Indonesia via Andaraz API",
   usage: ".beritalengkap <source> — Lihat berita\n.beritalengkap list — Lihat semua sumber\n.beritalengkap — Info plugin",

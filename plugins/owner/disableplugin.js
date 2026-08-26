@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "disableplugin",
-  alias: ["disableplugin", "dplugin", "plugindisable", "offplugin"],
+  alias: ["disableplugin"],
   category: "owner",
   description: "Menonaktifkan plugin tertentu",
   usage: ".disableplugin <nama_plugin>",

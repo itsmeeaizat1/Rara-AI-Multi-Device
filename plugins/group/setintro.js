@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'setintro',
-    alias: ["setintro", 'setperkenalan', 'introset'],
+    alias: ["setintro"],
     category: 'group',
     description: 'Set pesan intro grup (admin only)',
     usage: '.setintro <pesan>',

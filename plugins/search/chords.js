@@ -6,7 +6,7 @@ import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'chords',
-    alias: ["chords", "kunci", "kuncigitar"],
+    alias: ["chords"],
     category: 'search',
     description: 'Cari chord/kunci gitar lagu',
     usage: '.chords <judul lagu>',

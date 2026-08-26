@@ -5,7 +5,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "xnxx",
-  alias: ["xnxx", "xnxxsearch", "xnxxs"],
+  alias: ["xnxx"],
   category: "nsfw",
   description: "Search video dari XVideos/XNXX (NSFW)",
   usage: ".xnxx <query>",

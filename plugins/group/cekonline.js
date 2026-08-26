@@ -3,7 +3,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cekonline',
-    alias: ["cekonline", 'checkonline', 'online', 'siapayangonline', 'whosonline'],
+    alias: ["cekonline"],
     category: 'group',
     description: 'Cek member yang online di grup',
     usage: '.cekonline',

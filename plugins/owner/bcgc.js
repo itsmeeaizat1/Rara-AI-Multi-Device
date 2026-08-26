@@ -8,15 +8,7 @@ import { claraWrap, claraLine, broadcastFormat } from "../../src/lib/nova-menu-s
 
 const pluginConfig = {
   name: "bcgc",
-  alias: [
-    "broadcastgc",
-    "bcgroup",
-    "jedabcgc",
-    "delaybcgc",
-    "setjedabcgc",
-    "stopbcgc",
-    "stopbroadcastgc",
-  ],
+  alias: ["bcgc"],
   category: "owner",
   description:
     "Broadcast pesan ke semua grup dengan dukungan semua jenis media",

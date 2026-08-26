@@ -3,7 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "lovecalc",
-  alias: ["lovecalc", "lovecalculator", "persentasecinta", "hitungcinta", "cekcinta", "nilaicinta"],
+  alias: ["lovecalc"],
   category: 'fun',
   description: 'Kalkulator cinta - hitung persentase kecocokan cinta 2 nama',
   usage: '.lovecalc <nama1> & <nama2>',

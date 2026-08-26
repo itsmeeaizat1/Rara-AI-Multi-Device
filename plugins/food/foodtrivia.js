@@ -3,7 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "foodtrivia",
-  alias: ["foodtrivia", "foodrandom", "triviamakanan", "faktamakanan"],
+  alias: ["foodtrivia"],
   category: 'food',
   description: 'Trivia & fakta unik tentang makanan dari seluruh dunia',
   usage: '.foodtrivia | .foodtrivia <nomor>',

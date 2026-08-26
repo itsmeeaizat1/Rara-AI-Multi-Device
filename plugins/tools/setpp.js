@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "setpp",
-    alias: ["setpp", "setppbot3", "setpp2"],
+    alias: ["setpp"],
     category: 'tools',
     description: 'Mengubah foto profil bot',
     usage: '.setpp (reply gambar)',

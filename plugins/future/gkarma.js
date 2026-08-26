@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gkarma",
-  alias: ["gkarma", "groupkarma", "karmagrup"],
+  alias: ["gkarma"],
   category: "future",
   description: "Group Karma - earn karma dari kontribusi grup",
   usage: ".gkarma <command>",

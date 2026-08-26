@@ -10,7 +10,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "musikapaini",
-  alias: ["musikapaini", "whatmusic", "shazam", "recognizemusic", "mai"],
+  alias: ["musikapaini"],
   category: "tools",
   description: "Identifikasi lagu dari audio",
   usage: ".musikapaini (reply audio)",

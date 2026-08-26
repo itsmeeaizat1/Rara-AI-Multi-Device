@@ -122,7 +122,7 @@ function calcPrice(ratePer1000, quantity, markup) {
 
 const pluginConfig = {
   name: ["undrsmm", "undr", "suntikundr"],
-  alias: ["undrsmm", "undr", "suntikundr", "undrctrl", "ctrlsmm", "beliundr"],
+  alias: ["undrsmm", "undr", "suntikundr"],
   category: "tools",
   description: "Beli SMM services via UndrCtrl (TikTok, IG, YouTube, Shopee, ML)",
   usage: ".undr\n.undr setkey <key>\n.undr saldo\n.undr cari <keyword>\n.undr kategori\n.undr beli <service_id> <link> <qty>\n.undr bayar <token>\n.undr cek <order_id>\n.undr refill <order_id>\n.undr batal <order_id>\n.undr setmarkup <persen>\n.undr list",

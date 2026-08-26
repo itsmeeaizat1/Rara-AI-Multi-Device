@@ -19,7 +19,7 @@ import {
 
 const pluginConfig = {
   name: "ayokerja",
-  alias: ["ayokerja", "lokerinfo", "jobinfo"],
+  alias: ["ayokerja"],
   category: "info",
   description: "Cek informasi lowongan kerja terbaru",
   usage: ".ayokerja [kata kunci]",

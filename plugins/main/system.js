@@ -8,7 +8,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const execAsync = promisify(exec);
 const pluginConfig = {
     name: "system",
-    alias: ["system", "sysinfo", "botinfo2"],
+    alias: ["system"],
     category: 'main',
     description: 'Menampilkan informasi sistem (RAM, CPU, Disk, Latency)',
     usage: '.ram | .cpu | .disk | .ping',

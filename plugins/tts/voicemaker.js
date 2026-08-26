@@ -4,7 +4,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "voicemaker",
-  alias: ["voicemaker", "vmaker", "vmake"],
+  alias: ["voicemaker"],
   category: "tts",
   description: "Text to Speech dengan berbagai suara (voicemaker)",
   usage: ".voicemaker <text>",

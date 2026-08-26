@@ -6,7 +6,7 @@ import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'tomekah',
-    alias: ["tomekah", 'mekah', 'mecca', 'tomecca'],
+    alias: ["tomekah"],
     category: 'ai',
     description: 'Ubah background gambar ke Mekah',
     usage: '.tomekah (reply gambar)',

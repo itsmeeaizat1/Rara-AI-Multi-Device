@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autorekap",
-  alias: ["autorekap", "rekapotomatis", "rekapgrup"],
+  alias: ["autorekap"],
   category: "future",
   description: "Auto ringkasan aktivitas grup jam tertentu",
   usage: ".autorekap <command>",

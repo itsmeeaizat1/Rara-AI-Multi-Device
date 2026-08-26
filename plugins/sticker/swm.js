@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'swm',
-    alias: ["swm", 'wm', 'stickerwm', 'stickermark', 'colong'],
+    alias: ["swm"],
     category: 'sticker',
     description: 'Mengganti packname dan author pada sticker',
     usage: '.swm <packname> atau .swm <packname>|<author>',

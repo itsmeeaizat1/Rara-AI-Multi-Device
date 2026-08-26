@@ -21,7 +21,7 @@ import { sendMenuAudio } from "../../src/lib/send-menu.js";
 
 const pluginConfig = {
   name: "allmenu",
-  alias: ["allmenu", "menuall", "fullmenu"],
+  alias: ["allmenu"],
   category: "main",
   description: "Menampilkan semua command lengkap per kategori",
   usage: ".allmenu",

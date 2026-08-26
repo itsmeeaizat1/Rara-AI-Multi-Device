@@ -4,7 +4,7 @@ import { getAllPlugins, getPluginInfo } from "../../src/lib/nova-plugins.js";
 
 const pluginConfig = {
   name: "aihelp",
-  alias: ["aihelp", "helpai", "bantuanai", "tanyaaihelp"],
+  alias: ["aihelp"],
   category: "ai",
   description: "Bantuan AI untuk menemukan command yang tersedia",
   usage: ".aihelp <keyword>",

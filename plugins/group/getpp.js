@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: "getpp",
-    alias: ["getpp", "avatar", "ppuser"],
+    alias: ["getpp"],
     category: 'group',
     description: 'Ambil foto profil target (mention/reply)',
     usage: '.getpp @user',

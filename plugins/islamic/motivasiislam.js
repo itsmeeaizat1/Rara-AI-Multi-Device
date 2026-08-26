@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "motivasiislam",
-  alias: ["motivasiislam", "motivasiislami", "motivasimuslim", "kataislam", "kataislaami"],
+  alias: ["motivasiislam"],
   category: "islamic",
   description: "Motivasi Islami dari ayat Al-Quran random + tafsir (API online)",
   usage: ".motivasiislam",

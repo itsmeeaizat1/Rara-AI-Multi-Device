@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "animeimg",
-  alias: ["animeimg", "waifupic", "animepic"],
+  alias: ["animeimg"],
   category: "tools",
   description: "Cari gambar anime (SFW) - neko, waifu, wallpaper, dll",
   usage: ".animeimg <kategori>",

@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "topicdetector", alias: ["topic", "topikgrup"], category: "future",
+  name: "topicdetector", alias: ["topicdetector"], category: "future",
   alias: ["topicdetector"],
   description: "Deteksi topik yang lagi rame", usage: ".topicdetector",
   example: ".topicdetector", isOwner: false, isPremium: true,

@@ -8,7 +8,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "remini",
-  alias: ["remini", "hd", "enhance", "hd4k"],
+  alias: ["remini"],
   category: "tools",
   description: "Enhance gambar jadi HD (Sharp Lanczos3 upscaler, no API key)",
   usage: ".remini (reply gambar)\n.remini doc — kirim sebagai dokumen\n.remini 2x / 4x / 8x",

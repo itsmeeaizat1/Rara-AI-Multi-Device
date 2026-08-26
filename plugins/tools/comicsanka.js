@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "comicsanka",
-  alias: ["comicsanka", "komiksanka", "komiksankavollerei"],
+  alias: ["comicsanka"],
   category: "tools",
   description: "Comic Sanka - baca & cari komik (Sanka API)",
   usage: ".comicsanka <command> [args]",

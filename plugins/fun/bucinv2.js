@@ -2,7 +2,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getRandomItem } from '../../src/lib/nova-game-engine.js'
 const pluginConfig = {
     name: "bucinv2",
-    alias: ["bucinv2", "bucinlevel2", "bucincekv2"],
+    alias: ["bucinv2"],
     category: 'fun',
     description: 'Random kata-kata bucin/romantis',
     usage: '.bucin',

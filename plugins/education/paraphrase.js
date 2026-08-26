@@ -3,7 +3,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "paraphrase",
-  alias: ["paraphrase", "paraphrase2", "parafraseedu"],
+  alias: ["paraphrase"],
   category: "education",
   description: "Parafrase teks untuk menghindari plagiarisme (synonym replacement)",
   usage: ".paraphrase <teks>",

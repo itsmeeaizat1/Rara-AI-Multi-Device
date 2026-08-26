@@ -11,7 +11,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakedev3",
-  alias: [],
+  alias: ["fakedev3"],
   category: "canvas",
   description: "Membuat fake developer profile card",
   usage: ".fakedev3 <nama> (reply/kirim foto)",

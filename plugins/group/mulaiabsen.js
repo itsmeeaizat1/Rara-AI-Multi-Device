@@ -3,7 +3,7 @@ import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "mulaiabsen",
-  alias: ["mulaiabsen", "startabsen", "bukaabsen", "openabsen"],
+  alias: ["mulaiabsen"],
   category: "group",
   description: "Mulai sesi absen di grup (admin only)",
   usage: ".mulaiabsen [keterangan]",

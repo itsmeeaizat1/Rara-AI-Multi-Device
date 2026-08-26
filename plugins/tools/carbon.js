@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js"
 
 const pluginConfig = {
     name: "carbon",
-    alias: ["carbon", "carbonify", "carboncode"],
+    alias: ["carbon"],
     category: "tools",
     description: "Membuat gambar kode dengan tampilan carbon style",
     usage: ".carbon <kode>",

@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gombal",
-  alias: ["gombal", "gombalan", "pickupline", "nembak", "gombalgaul"],
+  alias: ["gombal"],
   category: "fun",
   description: "Generator gombal/random pickup line buat nembak crush",
   usage: ".gombal — Gombal acak\n.gombal <kategori> — Kategori: halus, gaul, cringe, gokil\n.gombal @target — Kirim gombal ke target",

@@ -8,7 +8,7 @@ const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
 
 const pluginConfig = {
     name: 'senja',
-    alias: ['senja'],
+    alias: ["senja"],
     category: 'fun',
     description: 'Random kata-kata senja/romantis',
     usage: '.senja',

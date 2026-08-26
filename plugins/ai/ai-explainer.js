@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-explainer",
-  alias: ["ai-explainer", "explain", "jelaskan", "mengerti", "belajar"],
+  alias: ["ai-explainer"],
   category: "ai",
   description: "Jelaskan topik apapun dengan AI",
   usage: ".ai-explainer <topik>",

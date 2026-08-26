@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autodigest",
-  alias: ["autodigest", "digestauto", "ringkasanmingguan"],
+  alias: ["autodigest"],
   category: "future",
   description: "Auto ringkasan mingguan grup tiap Minggu malam",
   usage: ".autodigest <command>",

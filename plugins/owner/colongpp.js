@@ -8,7 +8,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "colongpp",
-  alias: ["colongpp", "stealpp", "malingpp", "ambilpp"],
+  alias: ["colongpp"],
   category: "owner",
   description: "Ambil & pakai foto profil target sebagai PP bot",
   usage: ".colongpp (reply pesan target)",

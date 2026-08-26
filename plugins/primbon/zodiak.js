@@ -5,7 +5,7 @@ import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'zodiak',
-    alias: ["zodiak", "ramalanzodiak", "zodiac"],
+    alias: ["zodiak"],
     category: 'primbon',
     description: 'Ramalan zodiak',
     usage: '.zodiak <nama zodiak>',

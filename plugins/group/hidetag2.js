@@ -5,7 +5,7 @@ import { getParticipantJids } from '../../src/lib/nova-lid.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'hidetag2',
-    alias: ["hidetag2", 'h2', 'ht2'],
+    alias: ["hidetag2"],
     category: 'group',
     description: 'Hidetag dengan fakeQuoted styling',
     usage: '.h2 <text> atau reply pesan',

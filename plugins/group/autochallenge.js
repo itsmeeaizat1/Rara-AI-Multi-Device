@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autochallenge",
-  alias: ["autochallenge", "challengeotomatis", "challengeauto", "autochallange"],
+  alias: ["autochallenge"],
   category: "group",
   description: "Bot kasih challenge random ke grup otomatis (tebak, truth/dare, mini game)",
   usage: ".autochallenge on [menit] | .autochallenge off | .autochallenge status | .autochallenge now",

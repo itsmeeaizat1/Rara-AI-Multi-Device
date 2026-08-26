@@ -37,8 +37,7 @@ const EFFECT_NAMES = Object.keys(EFFECTS)
 
 const pluginConfig = {
     name: "audiofun",
-    alias: ["audiofx", "fx", "audioeffect", "voicefx", "voiceeffect",
-            ...EFFECT_NAMES],
+    alias: ["audiofun"],
     category: 'convert',
     description: 'Audio effects & voice changer (25 efek)',
     usage: '.audiofun <efek> atau .audiofun list',

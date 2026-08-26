@@ -3,7 +3,7 @@ import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-m
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "aidiet", alias: ["dietai", "kalori", "hitungkalori"], category: "future",
+  name: "aidiet", alias: ["aidiet"], category: "future",
   alias: ["aidiet"],
   description: "Foto makanan → AI hitung kalori", usage: ".aidiet (reply foto makanan)",
   example: ".aidiet", isOwner: false, isPremium: true,

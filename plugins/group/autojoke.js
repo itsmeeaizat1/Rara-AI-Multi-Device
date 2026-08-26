@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autojoke",
-  alias: ["autojoke", "jokeotomatis", "autolucu", "jokeauto"],
+  alias: ["autojoke"],
   category: "group",
   description: "Kirim joke random otomatis tiap interval (toggle on/off per grup)",
   usage: ".autojoke on [menit] | .autojoke off | .autojoke status | .autojoke now",

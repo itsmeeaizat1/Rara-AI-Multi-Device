@@ -5,7 +5,7 @@ import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "muslimai",
-    alias: ["muslimai", "islamchat", "quranai2"],
+    alias: ["muslimai"],
     category: 'ai',
     description: 'AI untuk bertanya tentang Islam dan Al-Quran',
     usage: '.muslimai <pertanyaan>',

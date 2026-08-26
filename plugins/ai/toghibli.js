@@ -6,7 +6,7 @@ import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "toghibli",
-    alias: ["toghibli", "ghibli", "ghiblistyle"],
+    alias: ["toghibli"],
     category: 'ai',
     description: 'Ubah gambar ke style Ghibli',
     usage: '.toghibli (reply gambar)',

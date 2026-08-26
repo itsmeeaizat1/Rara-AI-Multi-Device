@@ -11,7 +11,7 @@ import { getApiKey } from "../../src/lib/nova-api-keys.js";
 
 const pluginConfig = {
   name: "moodtheme",
-  alias: ["moodtheme", "moodswitch", "mooddriven", "moodadaptive", "typemood"],
+  alias: ["moodtheme"],
   category: "owner",
   description: "Toggle Mood-Driven Theme — bot baca mood dari gaya ngetik, ubah gaya jawaban",
   usage: ".moodtheme on/off — Toggle\n.moodtheme status — Lihat mood & analisis\n.moodtheme sensitivity <low/medium/high> — Sensitivitas",

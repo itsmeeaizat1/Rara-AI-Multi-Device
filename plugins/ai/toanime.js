@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { live3d } from '../../src/scraper/seaart.js'
 const pluginConfig = {
     name: "toanime",
-    alias: ["toanime", "animeconvert", "ghibli2"],
+    alias: ["toanime"],
     category: 'ai',
     description: 'Ubah foto menjadi gaya anime/Ghibli Studio',
     usage: '.toanime (reply/kirim gambar)',

@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autotyping",
-  alias: ["autotyping", "typing", "autoketik"],
+  alias: ["autotyping"],
   category: "owner",
   description: "Auto typing indicator saat menerima pesan",
   usage: ".autotyping on/off",

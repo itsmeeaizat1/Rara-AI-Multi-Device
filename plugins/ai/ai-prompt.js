@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-prompt",
-  alias: ["ai-prompt", "promptai", "prompt", "optiprompt", "improveprompt"],
+  alias: ["ai-prompt"],
   category: "ai",
   description: "Buat atau optimalkan prompt AI",
   usage: ".ai-prompt <ide>",

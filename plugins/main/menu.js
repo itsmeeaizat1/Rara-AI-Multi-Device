@@ -20,7 +20,7 @@ import { sendMenuAudio } from "../../src/lib/send-menu.js";
 
 const pluginConfig = {
   name: "menu",
-  alias: ["menu", "help", "bantuan", "commands", "m"],
+  alias: ["menu"],
   category: "main",
   description: "Menampilkan menu utama bot",
   usage: ".menu",

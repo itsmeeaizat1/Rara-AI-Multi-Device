@@ -23,7 +23,7 @@ const execAsync = promisify(exec);
 
 const pluginConfig = {
   name: "vid2gif",
-  alias: ["vid2gif", "vtogif", "togif", "videogif", "v2gif", "vgif"],
+  alias: ["vid2gif"],
   category: "convert",
   description: "Convert video ke GIF dengan ukuran custom",
   usage: ".vid2gif (reply video)\n.vid2gif <detik> (reply video)\n.vid2gif <detik> <resolusi> (reply video)\n.vid2gif <detik> <resolusi> <fps> (reply video)",

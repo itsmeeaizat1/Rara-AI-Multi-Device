@@ -6,7 +6,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "setmenu",
-  alias: ["PREMIUM", "menuvariant", "menustyle"],
+  alias: ["setmenu"],
   category: "owner",
   description: "Mengatur variant tampilan menu",
   usage: ".setmenu <v1-v16>",

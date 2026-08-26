@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "stickerfilter",
-  alias: ["stickerfilter", "stikerfilter", "filtersticker", "stikerfx"],
+  alias: ["stickerfilter"],
   category: "sticker",
   description: "Tambah filter ke sticker (blur, grayscale, invert, sepia, circle)",
   usage: ".stickerfilter <filter>",

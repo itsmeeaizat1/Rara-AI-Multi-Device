@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "animesearch",
-  alias: ["animesearch", "animefind", "searchanime"],
+  alias: ["animesearch"],
   category: "tools",
   description: "Cari anime, manga, dan karakter dari MyAnimeList",
   usage: ".animesearch <type> <judul>",

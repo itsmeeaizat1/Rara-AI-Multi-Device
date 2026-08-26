@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'readmore',
-    alias: ["readmore", 'selengkapnya', 'spoiler'],
+    alias: ["readmore"],
     category: 'tools',
     description: 'Membuat teks baca selengkapnya (spoiler)',
     usage: '.readmore <text_awal>|<text_akhir>',

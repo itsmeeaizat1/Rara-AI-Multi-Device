@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wouldyourather",
-  alias: ["wouldyourather", "wyrather", "pilihmana", "lebihpilih"],
+  alias: ["wouldyourather"],
   category: "fun",
   description: "Would You Rather — Pilih salah satu dari dua skenario absurd",
   usage: ".wouldyourather — Dapat skenario acak\n.wouldyourather a — Pilih opsi A\n.wouldyourather b — Pilih opsi B",

@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rvo",
-  alias: ["rvo", "readvo", "readviewonce", "readview"],
+  alias: ["rvo"],
   category: "tools",
   description: "Baca pesan sekali lihat (view once)",
   usage: ".rvo (reply pesan view once)",

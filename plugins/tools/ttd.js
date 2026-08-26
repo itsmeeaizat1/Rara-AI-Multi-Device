@@ -211,7 +211,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
 const pluginConfig = {
   name: "ttd",
-  alias: ["ttd", "tandatangan", "signature", "signpdf", "stamppdf"],
+  alias: ["ttd"],
   category: "tools",
   description: "Tanda tangan digital di PDF (gambar atau teks nama)",
   usage: ".ttd Nama Lengkap (reply PDF)\n.ttd (kirim gambar ttd, reply PDF)",

@@ -3,7 +3,7 @@ import { claraHeader,  separator, tipText, claraWrap } from "../../src/lib/nova-
 import axios from "axios";
 
 const pluginConfig = {
-  name: "geocode", alias: ["koordinat", "lokasi"], category: "tools",
+  name: "geocode", alias: ["geocode"], category: "tools",
   alias: ["geocode"],
   description: "Alamat ke koordinat GPS", usage: ".geocode <nama tempat>",
   example: ".geocode Monas Jakarta", isOwner: false, isPremium: false,

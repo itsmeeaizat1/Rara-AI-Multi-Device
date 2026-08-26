@@ -4,7 +4,7 @@ import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'absen',
-    alias: ["absen", 'hadir', 'present'],
+    alias: ["absen"],
     category: 'group',
     description: 'Tandai kehadiran di sesi absen',
     usage: '.absen',

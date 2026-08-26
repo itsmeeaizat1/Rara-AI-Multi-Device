@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antiflood",
-  alias: ["antiflood", "antifloodgc", "floodprotect", "antibanjir"],
+  alias: ["antiflood"],
   category: "group",
   description: "Deteksi banjir pesan (flood) — kirim pesan terus-menerus dalam waktu singkat",
   usage: ".antiflood on [limit] [detik] | .antiflood off | .antiflood status | .antiflood action <warn/kick/delete>",

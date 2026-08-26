@@ -83,7 +83,7 @@ function calcPrice(basePrice, markup) {
 
 const pluginConfig = {
   name: ["fmpulsa", "fm", "fmppulsa"],
-  alias: ["fmpulsa", "fm", "fmppulsa", "fmpedia", "belifm", "fmp"],
+  alias: ["fmpulsa", "fm", "fmppulsa"],
   category: "tools",
   description: "Beli pulsa, paket data, token PLN, topup game via FMPedia",
   usage: ".fm\n.fm setkey <user_id>:<api_key>\n.fm saldo\n.fm kategori\n.fm cari <keyword>\n.fm beli <service_code> <nomor>\n.fm bayar <token>\n.fm cek <ref_id>\n.fm setmarkup <persen>\n.fm list",

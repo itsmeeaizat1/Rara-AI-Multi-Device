@@ -5,7 +5,7 @@ import { sendToolsPreview } from "../../src/lib/nova-context.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "lookup",
-  alias: ["lookup", "dnslookup", "dns", "whois"],
+  alias: ["lookup"],
   category: "tools",
   description: "DNS Lookup untuk domain",
   usage: ".lookup <domain>",

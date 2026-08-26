@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "clanwar",
-    alias: ["clanwar", "war2", "guildwar2"],
+    alias: ["clanwar"],
     category: 'clan',
     description: 'War melawan clan lain',
     usage: '.clanwar <clan_id>',

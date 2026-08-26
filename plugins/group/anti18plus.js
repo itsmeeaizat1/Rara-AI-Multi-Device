@@ -5,7 +5,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 
 const pluginConfig = {
     name: 'anti18plus',
-    alias: ["anti18plus", 'antinsfw', 'antiporno', 'antibokep', 'anti18'],
+    alias: ["anti18plus"],
     category: 'group',
     description: 'Deteksi konten 18+ di grup dengan sistem warn',
     usage: '.anti18plus <on/off/metode/warn/reset>',

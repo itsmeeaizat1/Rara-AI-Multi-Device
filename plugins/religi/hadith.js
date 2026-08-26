@@ -3,7 +3,7 @@ import { claraHeader,  separator, tipText, claraWrap } from "../../src/lib/nova-
 import axios from "axios";
 
 const pluginConfig = {
-  name: "hadith", alias: ["hadisreligi", "hadithreligi", "hadis3"], category: "religi",
+  name: "hadith", alias: ["hadith"], category: "religi",
   alias: ["hadith"],
   description: "Cari hadis Bukhari & Muslim", usage: ".hadith <kata kunci>",
   example: ".hadith sabar", isOwner: false, isPremium: false,

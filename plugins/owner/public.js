@@ -9,7 +9,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "public",
-    alias: ["public", "publik", "botpublik"],
+    alias: ["public"],
     category: 'owner',
     description: 'Mengaktifkan mode public (semua user bisa akses)',
     usage: '.public',

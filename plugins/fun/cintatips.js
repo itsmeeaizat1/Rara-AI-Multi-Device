@@ -3,7 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "cintatips",
-  alias: ["cintatips", "tipscinta", "tipsjadian", "tipspacaran", "cintaadvice", "saranpacaran"],
+  alias: ["cintatips"],
   category: 'fun',
   description: 'Tips & saran cinta untuk setiap situasi - jadian, PDKT, masalah, dll',
   usage: '.cintatips | .cintatips <kategori>',

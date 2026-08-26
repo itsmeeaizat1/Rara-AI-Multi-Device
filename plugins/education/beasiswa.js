@@ -4,7 +4,7 @@ import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "beasiswa",
-  alias: ["beasiswa", "caribeamasiswa", "infobeamasiswa", "scholarship"],
+  alias: ["beasiswa"],
   category: "education",
   description: "Cari info beasiswa S1/S2/S3 dari berbagai sumber (API + scrape)",
   usage: ".beasiswa <command>",

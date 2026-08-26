@@ -4,7 +4,7 @@ import config from '../../config.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'setlimitdefault',
-    alias: ["setlimitdefault", 'setdefaultlimit', 'limitdefault'],
+    alias: ["setlimitdefault"],
     category: 'owner',
     description: 'Set default limit untuk user baru',
     usage: '.setlimitdefault <jumlah>',

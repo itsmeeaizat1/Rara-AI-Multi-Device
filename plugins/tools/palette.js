@@ -2,7 +2,7 @@
 import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "palette", alias: ["colorpalette", "warna"], category: "tools",
+  name: "palette", alias: ["palette"], category: "tools",
   alias: ["palette"],
   description: "Generate color palette dari hex", usage: ".palette <#hex>",
   example: ".palette #ff6600", isOwner: false, isPremium: false,

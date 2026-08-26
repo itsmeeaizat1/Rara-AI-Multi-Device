@@ -8,7 +8,7 @@ const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
 
 const pluginConfig = {
     name: "meme",
-    alias: ["meme", "randommeme", "memes2"],
+    alias: ["meme"],
     category: 'random',
     description: 'Random meme Indonesia',
     usage: '.meme',

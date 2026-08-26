@@ -31,7 +31,7 @@ const execAsync = promisify(exec);
 
 const pluginConfig = {
   name: "fotolive",
-  alias: ["fotolive", "vidlive", "tolive", "livephoto", "v2live", "vidtoimage", "videolive"],
+  alias: ["fotolive"],
   category: "tools",
   description: "Convert video jadi foto live (animated looping image)",
   usage: ".fotolive (reply video)\n.fotolive <durasi>\n.fotolive <durasi> <resolusi>\n.fotolive <durasi> <resolusi> <fps>",

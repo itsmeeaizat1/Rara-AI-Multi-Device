@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'autoforward',
-    alias: ["autoforward", 'autofw', 'autofwd'],
+    alias: ["autoforward"],
     category: 'group',
     description: 'Auto forward pesan yang masuk ke grup ke grup ini',
     usage: '.autoforward <on/off>',

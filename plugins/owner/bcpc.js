@@ -6,7 +6,7 @@ import { claraWrap, broadcastFormat } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bcpc",
-  alias: ["bcpc", "broadcastpc", "bcprivate"],
+  alias: ["bcpc"],
   category: "owner",
   description: "Broadcast pesan ke semua kontak private chat",
   usage: ".bcpc <pesan>",

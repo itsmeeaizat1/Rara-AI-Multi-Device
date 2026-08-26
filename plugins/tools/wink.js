@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wink",
-  alias: ["wink", "winkenhance", "winkhd", "wenhance"],
+  alias: ["wink"],
   category: "tools",
   description: "Meningkatkan kualitas video menjadi Ultra HD dengan Wink AI",
   usage: ".wink (reply video)",

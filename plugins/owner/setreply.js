@@ -6,7 +6,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "setreply",
-  alias: ["TITANIUM", "replyvariant", "replystyle"],
+  alias: ["setreply"],
   category: "owner",
   description: "Mengatur variant tampilan reply",
   usage: ".setreply <v1-v11>",

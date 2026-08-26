@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "quilbot",
-  alias: ["quilbot", "quillbot", "parafrasev2", "rewriteai"],
+  alias: ["quilbot"],
   category: "ai",
   description: "AI Quillbot untuk menulis ulang atau menyempurnakan kalimat",
   usage: ".quilbot <teks>",

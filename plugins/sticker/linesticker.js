@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'linesticker',
-    alias: ["linesticker", 'linepack', 'line'],
+    alias: ["linesticker"],
     category: 'sticker',
     description: 'Download sticker pack LINE',
     usage: '.linesticker <url>',

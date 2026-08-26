@@ -7,7 +7,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "addplugin",
-  alias: ["addplugin", "addpl", "tambahplugin"],
+  alias: ["addplugin"],
   category: "owner",
   description: "Tambah plugin baru dari code yang di-reply",
   usage: ".addplugin [namafile] [folder]",

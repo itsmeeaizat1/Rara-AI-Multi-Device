@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setmenuimage",
-  alias: ["setmenuimage", "setimgmenu", "setimg"],
+  alias: ["setmenuimage"],
   category: "owner",
   description: "Set gambar preview menu: mode asset atau URL",
   usage: ".setmenuimage <asset|url> [url/link]",

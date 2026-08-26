@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antipollspam",
-  alias: ["antipollspam", "antipoll", "pollprotect", "antipolling"],
+  alias: ["antipollspam"],
   category: "group",
   description: "Blokir spam poll di grup — batasi jumlah poll per member dalam waktu tertentu",
   usage: ".antipollspam on [limit] [menit] | .antipollspam off | .antipollspam status",

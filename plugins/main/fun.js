@@ -4,7 +4,7 @@ import { getCommandsByCategory } from "../../src/lib/nova-plugins.js";
 
 const pluginConfig = {
   name: "fun",
-  alias: ["fun", "funmenu", "menufun"],
+  alias: ["fun"],
   category: "main",
   description: "List command kategori fun",
   usage: ".fun",

@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tribe",
-  alias: ["tribe", "tribewar", "suku"],
+  alias: ["tribe"],
   category: "future",
   description: "Tribe war - mini strategy game, bentuk tribe & serang",
   usage: ".tribe <command>",

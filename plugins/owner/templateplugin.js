@@ -3,7 +3,7 @@ import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'templateplugin',
-    alias: ['tplplugin', 'plugin-template'],
+    alias: ["templateplugin"],
     category: 'owner',
     description: 'Generate plugin template (Owner Only)',
     usage: '.templateplugin',

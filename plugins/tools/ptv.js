@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'ptv',
-    alias: ["ptv", 'pvideo', 'circlevideo'],
+    alias: ["ptv"],
     category: 'tools',
     description: 'Kirim video sebagai PTV (circle video)',
     usage: '.ptv (reply video)',

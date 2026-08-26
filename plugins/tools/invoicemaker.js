@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "invoicemaker",
-  alias: ["invoicemaker", "invoice", "faktur", "nota"],
+  alias: ["invoicemaker"],
   category: "tools",
   description: "Membuat invoice/nota penjualan",
   usage: ".invoicemaker <toko>|<invoice>|<tanggal>|<status>|<items>|<total>",

@@ -7,7 +7,7 @@ import novaApi from "../../src/lib/nova-apimanager.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "brat",
-  alias: ["brat", "bratmenu", "bratimg", "brattext"],
+  alias: ["brat"],
   category: "sticker",
   description: "Menu variant brat dan generator sticker brat",
   usage: ".brat | .bratimg <text>",

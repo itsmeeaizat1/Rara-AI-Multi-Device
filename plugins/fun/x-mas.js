@@ -20,7 +20,7 @@ function tempPath(ext) {
 
 const pluginConfig = {
   name: "x-mas",
-  alias: ["x-mas", "xmas", "christmas", "natal", "xmasevent", "x-mas"],
+  alias: ["x-mas"],
   category: "fun",
   description: "Fitur spesial Natal",
   usage: ".x-mas",

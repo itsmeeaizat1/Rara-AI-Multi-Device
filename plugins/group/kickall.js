@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kickall",
-  alias: ["kickall", "kickall", "bersihkan", "clear"],
+  alias: ["kickall"],
   category: "group",
   description: "Kick semua member grup kecuali admin",
   usage: ".kickall",

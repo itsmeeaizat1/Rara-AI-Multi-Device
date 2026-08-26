@@ -202,7 +202,7 @@ async function getSignature(action, ctxPayload, referer) {
 
 const pluginConfig = {
   name: "spotifydl",
-  alias: ["spdl", "spotify-dl", "spotdl"],
+  alias: ["spotifydl"],
   category: "download",
   description: "Unduh lagu favoritmu langsung dari Spotify tanpa ribet!",
   usage: ".spdl <link>",

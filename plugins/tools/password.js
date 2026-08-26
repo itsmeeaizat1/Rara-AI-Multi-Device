@@ -3,7 +3,7 @@ import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import crypto from "node:crypto";
 
 const pluginConfig = {
-  name: "password", alias: ["passgen", "generatepassword", "randpass"], category: "tools",
+  name: "password", alias: ["password"], category: "tools",
   alias: ["password"],
   description: "Generate password acak", usage: ".password <panjang>",
   example: ".password 16", isOwner: false, isPremium: false,

@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "cekidch",
-    alias: ["cekidch", "cekidchannel", "channelid"],
+    alias: ["cekidch"],
     category: 'tools',
     description: 'Cek ID dan info lengkap channel dari link',
     usage: '.cekidch <link channel>',

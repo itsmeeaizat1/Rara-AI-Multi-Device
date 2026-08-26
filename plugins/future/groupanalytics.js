@@ -3,7 +3,7 @@ import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-m
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "groupanalytics", alias: ["analytics", "statgrup", "grupstats"], category: "future",
+  name: "groupanalytics", alias: ["groupanalytics"], category: "future",
   alias: ["groupanalytics"],
   description: "Analisis statistik grup", usage: ".groupanalytics",
   example: ".groupanalytics", isOwner: true, isPremium: false,

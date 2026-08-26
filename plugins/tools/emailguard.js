@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "emailguard",
-  alias: ["emailguard", "cekemail", "emailcheck", "validatemail", "emailvalidator"],
+  alias: ["emailguard"],
   category: "tools",
   description: "Validasi email + deteksi disposable/temp mail + cek domain reputation",
   usage: ".emailguard <email>",

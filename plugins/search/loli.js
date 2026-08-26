@@ -25,7 +25,7 @@ const ENDPOINTS = [
 
 const pluginConfig = {
   name: "loli",
-  alias: ["loli", "loliphoto", "loliimg"],
+  alias: ["loli"],
   category: "search",
   description: "Cari gambar",
   usage: ".loli",

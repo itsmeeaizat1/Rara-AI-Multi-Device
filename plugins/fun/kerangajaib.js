@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kerangajaib",
-  alias: ["kerangajaib", "kerangajaib2", "magicconch", "magicshell", "kerang"],
+  alias: ["kerangajaib"],
   category: "fun",
   description: "Kerang ajaib (Magic Conch Shell) — Tanya apa pun, kerang menjawab",
   usage: ".kerangajaib <pertanyaan> — Tanya kerang ajaib",

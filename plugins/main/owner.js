@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "owner",
-  alias: ["owner", "creator2", "ownerinfo"],
+  alias: ["owner"],
   category: "main",
   description: "Menampilkan kontak owner bot",
   usage: ".owner",

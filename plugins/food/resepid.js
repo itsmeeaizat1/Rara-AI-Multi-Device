@@ -20,7 +20,7 @@ const CATEGORIES = ["Ayam", "Ikan", "Kambing", "Sapi", "Tahu", "Telur", "Tempe",
 
 const pluginConfig = {
   name: "resepid",
-  alias: ["resepid", "resepindonesia", "resepindo", "masakindo", "masakanindo"],
+  alias: ["resepid"],
   category: "food",
   description: "Resep masakan Indonesia (1200+ resep: ayam, ikan, sapi, tahu, tempe, dll)",
   usage: ".resepid <nama> | .resepid acak | .resepid kategori <nama> | .resepid <id>",

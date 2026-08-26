@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "stats",
-  alias: ["stats", "stat", "botstats"],
+  alias: ["stats"],
   category: "main",
   description: "Menampilkan statistik bot",
   usage: ".stats",

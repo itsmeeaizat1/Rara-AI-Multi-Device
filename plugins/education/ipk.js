@@ -3,7 +3,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ipk",
-  alias: ["ipk", "gpa", "ips", "ipkcalc"],
+  alias: ["ipk"],
   category: "education",
   description: "Kalkulator IPK/IPS - hitung IPK semester atau kumulatif",
   usage: ".ipk <command>",

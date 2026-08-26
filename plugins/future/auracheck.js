@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "auracheck",
-  alias: ["auracheck", "aura", "cekaura"],
+  alias: ["auracheck"],
   category: "future",
   description: "Aura reading - analisis aura kamu berdasarkan aktivitas",
   usage: ".auracheck",

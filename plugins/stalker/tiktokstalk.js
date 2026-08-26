@@ -6,7 +6,7 @@ import config from '../../config.js'
 
 const pluginConfig = {
     name: 'tiktokstalk',
-    alias: ["tiktokstalk", 'ttstalk', 'stalktt'],
+    alias: ["tiktokstalk"],
     category: 'stalker',
     description: 'Stalk akun TikTok',
     usage: '.tiktokstalk <username>',

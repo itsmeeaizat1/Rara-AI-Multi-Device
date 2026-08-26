@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 
 const pluginConfig = {
     name: 'mcpedl',
-    alias: ["mcpedl", 'mcpe', 'mcpesearch', 'searchmcpe'],
+    alias: ["mcpedl"],
     category: 'search',
     description: 'Cari map dan addon Minecraft PE dari MCPEDL',
     usage: '.mcpe <query>',

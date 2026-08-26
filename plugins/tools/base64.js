@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "base64", alias: ["b64", "encode", "decode"], category: "tools",
+  name: "base64", alias: ["base64"], category: "tools",
   alias: ["base64"],
   description: "Encode/decode Base64", usage: ".base64 <enc/dec> <text>",
   example: ".base64 enc halo dunia", isOwner: false, isPremium: false,

@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "channelnovaofficial",
-  alias: ["channelnovaofficial", "channel", "saluran", "ch", "saluranresmi"],
+  alias: ["channelnovaofficial"],
   category: "main",
   desc: "Info & link saluran WhatsApp resmi bot",
   usage: ".channelnovaofficial",

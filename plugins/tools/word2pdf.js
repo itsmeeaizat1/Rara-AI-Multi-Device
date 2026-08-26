@@ -165,7 +165,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
 const pluginConfig = {
   name: "word2pdf",
-  alias: ["word2pdf", "docx2pdf", "doctopdf", "wordtopdf"],
+  alias: ["word2pdf"],
   category: "tools",
   description: "Converter file .docx (Word) ke PDF dengan formatting",
   usage: ".word2pdf (reply file .docx)",

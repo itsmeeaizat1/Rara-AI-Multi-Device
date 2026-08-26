@@ -4,7 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "osint",
-  alias: ["osint", "usercheck", "usernamecheck"],
+  alias: ["osint"],
   category: "future",
   description: "OSINT username checker - cari username di 20+ platform",
   usage: ".osint <username>",

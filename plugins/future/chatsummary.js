@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "chatsummary", alias: ["summarizechat", "rangkumchat"], category: "future",
+  name: "chatsummary", alias: ["chatsummary"], category: "future",
   alias: ["chatsummary"],
   description: "Rangkuman chat yang kelewat", usage: ".chatsummary",
   example: ".chatsummary", isOwner: false, isPremium: true,

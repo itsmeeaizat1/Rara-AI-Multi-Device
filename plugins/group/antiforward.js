@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antiforward",
-  alias: ["antiforward", "antiforwardgc", "antiteruskan", "forwardblock"],
+  alias: ["antiforward"],
   category: "group",
   description: "Blokir pesan forwarded (diteruskan) di grup untuk cegah penyebaran info hoax",
   usage: ".antiforward on | .antiforward off | .antiforward status",

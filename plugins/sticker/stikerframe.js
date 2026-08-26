@@ -7,6 +7,7 @@ import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 const FRAMES = {
   polaroid: {
     name: "Polaroid",
+    alias: ["Polaroid"],
     desc: "Bingkai putih klasik ala foto polaroid dengan ruang teks di bawah",
     emoji: "📸",
   },
@@ -37,7 +38,7 @@ const FRAMES = {
   },
   blur: {
     name: "Blur Border",
-    alias: ["Blur Border"],
+    alias: ["Polaroid"],
     desc: "Versi blur dari foto sebagai background border",
     emoji: "🌫️",
   },

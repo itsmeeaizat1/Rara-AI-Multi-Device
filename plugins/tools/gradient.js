@@ -2,7 +2,7 @@
 import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "gradient", alias: ["colorgradient", "cssgradient"], category: "tools",
+  name: "gradient", alias: ["gradient"], category: "tools",
   alias: ["gradient"],
   description: "Generate gradient CSS", usage: ".gradient <warna1> <warna2>",
   example: ".gradient #ff0000 #0000ff", isOwner: false, isPremium: false,

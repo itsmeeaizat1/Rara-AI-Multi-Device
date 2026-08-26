@@ -8,7 +8,7 @@ import { toUnicode, checkSupported } from 'emoji-mixer';
 
 const pluginConfig = {
     name: 'emojimix',
-    alias: ["emojimix", 'mixemoji', 'emix'],
+    alias: ["emojimix"],
     category: 'sticker',
     description: 'Gabungkan 2 emoji menjadi 1 (Google Emoji Kitchen)',
     usage: '.emojimix <emoji1><emoji2>',

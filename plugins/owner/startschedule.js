@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'startschedule',
-    alias: ["startschedule", 'startscheduler', 'schedstart', 'resumeschedule'],
+    alias: ["startschedule"],
     category: 'owner',
     description: 'Memulai ulang scheduler tertentu atau semua',
     usage: '.startschedule <nama|all>',

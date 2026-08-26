@@ -9,7 +9,7 @@ import util from 'util'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'eval',
-    alias: ["eval", '$', 'ev', 'evaluate', '=>'],
+    alias: ["eval"],
     category: 'owner',
     description: 'Jalankan kode JavaScript (Owner Only)',
     usage: '=> <code> atau .$ <code>',

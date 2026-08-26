@@ -7,7 +7,7 @@ import path from 'path'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "autoreply",
-    alias: ["autoreply", "ar", "autoreply2"],
+    alias: ["autoreply"],
     category: 'group',
     description: 'Mengatur autoreply/smart triggers per grup',
     usage: '.autoreply on/off/add/del/list/private',

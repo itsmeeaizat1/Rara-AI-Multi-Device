@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tempmailv2",
-  alias: ["tempmailv2", "tempmail2", "catchmail", "mailtmp2", "tmpmail2", "emailtmp2"],
+  alias: ["tempmailv2"],
   category: "tools",
   description: "Temp Email V2 — CatchMail.io API, gratis tanpa auth, custom domain support",
   usage: ".tempmailv2 new <username>\n.tempmailv2 inbox [email]\n.tempmailv2 read <id> [email]\n.tempmailv2 delete <id> <email>\n.tempmailv2 gen",

@@ -252,7 +252,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
 const pluginConfig = {
   name: "kalkulatur",
-  alias: ["kalkulatur", "kalkantor", "hitunggaji"],
+  alias: ["kalkulatur"],
   category: "tools",
   description: "Kalkulator kantoran: PPh21, THR, BPJS, lembur, take-home pay",
   usage: ".kalkulatur <mode> <args>",

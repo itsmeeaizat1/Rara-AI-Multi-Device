@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antirvo",
-  alias: ["antirvo", "antiviewonce", "antivo", "antireadviewonce"],
+  alias: ["antirvo"],
   category: "group",
   description: "Auto-capture pesan sekali lihat (view once) menjadi media biasa",
   usage: ".antirvo <on/off>",

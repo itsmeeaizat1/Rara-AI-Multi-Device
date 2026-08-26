@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sitasi",
-  alias: ["sitasi", "citation", "cite", "sitasiapi"],
+  alias: ["sitasi"],
   category: "education",
   description: "Generator sitasi APA/MLA/IEEE/Harvard dari URL atau judul paper",
   usage: ".sitasi <style> <url/judul>",

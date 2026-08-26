@@ -5,7 +5,7 @@ import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'text2img3',
-    alias: [],
+    alias: ["text2img3"],
     category: 'ai',
     description: 'Generate gambar dari teks dengan AI',
     usage: '.txt2img <prompt> | <style>',

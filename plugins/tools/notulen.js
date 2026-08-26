@@ -137,7 +137,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
 const pluginConfig = {
   name: "notulen",
-  alias: ["notulen", "minutes", "notulenmeeting"],
+  alias: ["notulen"],
   category: "tools",
   description: "AI Notulen Meeting dari catatan kasar → text + PDF rapi",
   usage: ".notulen (reply catatan)\n.notulen <catatan meeting>",

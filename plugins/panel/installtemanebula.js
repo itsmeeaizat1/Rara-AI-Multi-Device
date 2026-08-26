@@ -4,7 +4,7 @@ import { Client } from 'ssh2'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'installtemanebula',
-    alias: ["installtemanebula", 'installthemanebula', 'temanebula', 'nebulatheme'],
+    alias: ["installtemanebula"],
     category: 'panel',
     description: 'Install tema Nebula (AtasBawahCantik) untuk panel Pterodactyl via SSH',
     usage: '.installtemanebula <ip>|<password>',

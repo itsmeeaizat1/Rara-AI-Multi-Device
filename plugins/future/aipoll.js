@@ -3,7 +3,7 @@ import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-m
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "aipoll", alias: ["aivote", "smartpoll"], category: "future",
+  name: "aipoll", alias: ["aipoll"], category: "future",
   alias: ["aipoll"],
   description: "AI bikin polling dari topik", usage: ".aipoll <topik>",
   example: ".aipoll makan malam apa", isOwner: false, isPremium: true,

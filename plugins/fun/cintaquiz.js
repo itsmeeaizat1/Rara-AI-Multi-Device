@@ -3,7 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "cintaquiz",
-  alias: ["cintaquiz", "ujiancinta", "cintatest", "lovetest", "quizcinta"],
+  alias: ["cintaquiz"],
   category: 'fun',
   description: 'Kuis cinta - 10 pertanyaan untuk menguji seberapa dalam kamu mencintai',
   usage: '.cintaquiz',

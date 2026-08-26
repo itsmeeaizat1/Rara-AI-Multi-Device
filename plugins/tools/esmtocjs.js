@@ -5,7 +5,7 @@ import config from '../../config.js'
 
 const pluginConfig = {
     name: 'esmtocjs',
-    alias: ["esmtocjs", 'esm2cjs', 'esmconvert'],
+    alias: ["esmtocjs"],
     category: 'tools',
     description: 'Convert ESM (ES Modules) ke CommonJS',
     usage: '.esmtocjs <reply kode>',

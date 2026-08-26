@@ -8,7 +8,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "mimpi",
-    alias: ["mimpi", "mimpifun", "dream"],
+    alias: ["mimpi"],
     category: 'fun',
     description: 'Jelajahi dunia mimpimu berdasarkan nama',
     usage: '.mimpi <nama>',

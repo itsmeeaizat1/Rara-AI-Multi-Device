@@ -10,7 +10,7 @@ const MODES = {
 
 const pluginConfig = {
   name: "roastme",
-  alias: ["roastme", "roast", "roastme"],
+  alias: ["roastme"],
   category: "fun",
   description: "AI roasting diri sendiri atau orang lain",
   usage: ".roastme [mild/savage/nuclear] (opsional reply target)",

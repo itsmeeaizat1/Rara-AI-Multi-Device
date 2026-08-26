@@ -18,7 +18,7 @@ import {
 
 const pluginConfig = {
   name: "belanja",
-  alias: ["belanja", "shopmain", "toko3"],
+  alias: ["belanja"],
   category: "main",
   description: "Lihat katalog dan pesan produk dari toko",
   usage: ".belanja <perintah> [args]",

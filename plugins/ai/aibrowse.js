@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "aibrowse",
-  alias: ["aibrowse", "browseai", "aibrowsing"],
+  alias: ["aibrowse"],
   category: "ai",
   description: "Telusuri topik dan buat ringkasan riset singkat",
   usage: ".aibrowse <pertanyaan>",

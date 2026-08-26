@@ -15,7 +15,7 @@ import { notifyUserRegister } from "../../src/lib/nova-saluran-broadcast.js"
 
 const pluginConfig = {
   name: "daftarotomatis",
-  alias: ["daftarotomatis", "daftarcaptcha", "daftarauto", "autodaftar"],
+  alias: ["daftarotomatis"],
   category: "user",
   description: "Daftar otomatis dengan verifikasi captcha (API online / canvas lokal)",
   usage: ".daftarotomatis",

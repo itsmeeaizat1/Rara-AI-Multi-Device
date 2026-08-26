@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "yesno",
-  alias: ["yesno", "pickme"],
+  alias: ["yesno"],
   category: "fun",
   description: "Decision maker dramatis dengan animasi suspense",
   usage: ".yesno <pertanyaan>",

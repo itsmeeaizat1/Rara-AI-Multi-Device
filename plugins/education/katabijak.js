@@ -3,7 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "katabijak",
-  alias: ["katabijak", "katabijakharini", "quotesmotivasi", "quotesharian", "motivasiharian", "kisahmotivasi"],
+  alias: ["katabijak"],
   category: 'education',
   description: 'Kata bijak & motivasi harian dari tokoh dunia',
   usage: '.katabijak | .katabijak <kategori>',

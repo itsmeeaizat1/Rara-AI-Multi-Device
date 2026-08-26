@@ -7,7 +7,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "infotourney",
-  alias: ["infotourney", "tourney", "mltourney"],
+  alias: ["infotourney"],
   category: "info",
   description: "Info turnamen Mobile Legends terbaru",
   usage: ".infotourney",

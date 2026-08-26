@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "futureme",
-  alias: ["futureme", "suratmasadepan", "letterfuture"],
+  alias: ["futureme"],
   category: "future",
   description: "Letter to future self - tulis surat untuk diri di masa depan",
   usage: ".futureme <command>",

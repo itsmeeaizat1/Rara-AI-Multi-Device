@@ -5,7 +5,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "transferlimit",
-  alias: ["transferlimit", "kirimlimit", "kasihlimit", "giftlimit"],
+  alias: ["transferlimit"],
   category: "user",
   description: "Transfer limit ke user lain (biaya admin 5%)",
   usage: ".transferlimit @tag <jumlah>",

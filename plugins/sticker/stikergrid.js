@@ -8,7 +8,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "stikergrid",
-  alias: ["stikergrid", "stickergrid", "sgrid", "gridstiker"],
+  alias: ["stikergrid"],
   category: "sticker",
   desc: "Menggabungkan 2-4 foto menjadi satu stiker kolase/grid",
   usage: ".stikergrid (lalu kirim 2-4 foto)",

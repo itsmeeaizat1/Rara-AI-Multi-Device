@@ -10,14 +10,7 @@ import {
 } from "../../src/lib/nova-jadibot-database.js";
 const pluginConfig = {
   name: "addprem",
-  alias: [
-    "addpremium",
-    "setprem",
-    "delprem",
-    "delpremium",
-    "listprem",
-    "premlist",
-  ],
+  alias: ["addprem"],
   category: "owner",
   description: "Kelola premium users",
   usage:

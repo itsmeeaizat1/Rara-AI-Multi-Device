@@ -3,7 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "autoevent", alias: ["eventai", "detectevent"], category: "future",
+  name: "autoevent", alias: ["autoevent"], category: "future",
   alias: ["autoevent"],
   description: "AI deteksi event dari chat", usage: ".autoevent (reply chat)",
   example: ".autoevent", isOwner: false, isPremium: true,

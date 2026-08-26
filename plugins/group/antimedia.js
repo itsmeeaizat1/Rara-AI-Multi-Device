@@ -4,7 +4,7 @@ import config from "../../config.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "antimedia",
-  alias: ["antimedia", "antimed", "antivideo"],
+  alias: ["antimedia"],
   category: "group",
   description: "Mengatur antimedia di grup (blokir gambar/video/audio/dokumen)",
   usage: ".antimedia <on/off>",

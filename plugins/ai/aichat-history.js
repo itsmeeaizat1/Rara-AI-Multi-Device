@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aichat-history",
-  alias: ["aichat-history", "chathistory", "historyai", "aichathist"],
+  alias: ["aichat-history"],
   category: "ai",
   description: "Lihat riwayat percakapan AI di chat ini",
   usage: ".aichat-history",

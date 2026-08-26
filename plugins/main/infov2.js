@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "infov2",
-  alias: ["infov2", "about", "botinfo"],
+  alias: ["infov2"],
   category: "main",
   description: "Tampilkan info bot versi 2",
   usage: ".infov2",

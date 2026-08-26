@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "checkban",
-  alias: [],
+  alias: ["checkban"],
   category: "owner",
   description: "Check actual ban state",
   usage: ".checkban",

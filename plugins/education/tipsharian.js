@@ -3,7 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "tipsharian",
-  alias: ["tipsharian", "tipshariini", "tipsdaily", "infografis", "tips"],
+  alias: ["tipsharian"],
   category: 'education',
   description: 'Tips harian berguna untuk kehidupan sehari-hari',
   usage: '.tipsharian | .tipsharian <kategori>',

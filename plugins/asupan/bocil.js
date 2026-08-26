@@ -6,7 +6,7 @@ import { f } from '../../src/lib/nova-http.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'bocil',
-    alias: ["bocil", 'bocilvid'],
+    alias: ["bocil"],
     category: 'asupan',
     description: 'Video bocil',
     usage: '.bocil',

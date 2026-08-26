@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setclipdrop",
-  alias: ["setclipdrop", "clipdropkey", "setclipdropkey", "clipdropapi"],
+  alias: ["setclipdrop"],
   category: "owner",
   description: "Set ClipDrop API key untuk fitur watermark remover (.nowm)",
   usage: ".setclipdrop <key> | .setclipdrop status | .setclipdrop reset",

@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "onlygc",
-  alias: ["onlygc", "onlygroup", "grouponly"],
+  alias: ["onlygc"],
   category: "owner",
   description: "Toggle mode bot hanya di grup",
   usage: ".onlygc on/off",

@@ -11,7 +11,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "couplewar",
-  alias: ["couplewar", "cwar", "couplewarmatch", "duelpasangan"],
+  alias: ["couplewar"],
   category: "rpg",
   description: "Duel couple vs couple lain di grup",
   usage: ".couplewar @target",

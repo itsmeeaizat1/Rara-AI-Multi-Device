@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "soundcloud",
-  alias: ["soundcloud", "scsearch", "scs"],
+  alias: ["soundcloud"],
   category: "search",
   description: "Cari lagu di SoundCloud",
   usage: ".soundcloud judul",

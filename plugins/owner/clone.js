@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "clone",
-  alias: ["clone", "ganti", "clonepp", "gantipp"],
+  alias: ["clone"],
   category: "owner",
   description: "Clone foto profil grup (owner only)",
   usage: ".clone",

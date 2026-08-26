@@ -10,7 +10,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: ["smmmenu", "menusmm", "smmall"],
-  alias: ["smmmenu", "menusmm", "smmall", "allsmm", "smmlist", "layanansmm"],
+  alias: ["smmmenu", "menusmm", "smmall"],
   category: "tools",
   description: "Menu gabungan semua SMM provider",
   usage: ".smmmenu",

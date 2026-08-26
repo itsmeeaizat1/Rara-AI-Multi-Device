@@ -107,7 +107,7 @@ function parseListOptions(input) {
 
 const pluginConfig = {
   name: "listdaftar",
-  alias: ["listuser", "registeredusers", "daftarlist"],
+  alias: ["listdaftar"],
   category: "user",
   description:
     "Lihat daftar user yang sudah terdaftar dengan filter dan pagination",

@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wordbomb",
-  alias: ["wordbomb", "bomkata", "bombword", "passbom"],
+  alias: ["wordbomb"],
   category: "group",
   description: "Bom kata! Ketik kata sesuai tema sebelum waktu habis",
   usage: ".wordbomb start | .wordbomb join | .wordbomb stop | .wordbomb stats",

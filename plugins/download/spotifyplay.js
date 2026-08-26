@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spotifyplay",
-  alias: ["spotifyplay", "sptplay", "spotifyplay", "playspotify"],
+  alias: ["spotifyplay"],
   category: "download",
   description: "Cari & download lagu dari Spotify berdasarkan judul/artist",
   usage: ".spotifyplay <judul lagu>",

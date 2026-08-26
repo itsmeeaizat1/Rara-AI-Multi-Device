@@ -6,7 +6,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "izen",
-  alias: ["izen", "skiplink", "izen"],
+  alias: ["izen"],
   category: "tools",
   description: "Bypass shortlink / skiplink menggunakan izen",
   usage: ".izen link",

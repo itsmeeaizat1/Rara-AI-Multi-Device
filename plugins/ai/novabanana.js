@@ -3,7 +3,7 @@ import { live3d } from "../../src/scraper/seaart.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "novabanana",
-  alias: [],
+  alias: ["novabanana"],
   category: "ai",
   description: "Edit gambar dengan AI menggunakan prompt",
   usage: ".novabanana <prompt>",

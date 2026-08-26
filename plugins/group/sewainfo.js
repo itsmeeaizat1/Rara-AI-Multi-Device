@@ -5,7 +5,7 @@ import * as timeHelper from "../../src/lib/nova-time.js";
 
 const pluginConfig = {
   name: "sewainfo",
-  alias: ["sewainfo", "infosewa", "carasewa"],
+  alias: ["sewainfo"],
   category: "group",
   description: "Info cara sewa bot",
   usage: ".sewainfo",

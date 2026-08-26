@@ -2,7 +2,7 @@
 import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "countdown", alias: ["hitungmundur", "mundur"], category: "utility",
+  name: "countdown", alias: ["countdown"], category: "utility",
   alias: ["countdown"],
   description: "Hitung mundur ke tanggal tertentu", usage: ".countdown <DD-MM-YYYY>",
   example: ".countdown 25-12-2026", isOwner: false, isPremium: false,

@@ -35,7 +35,7 @@ async function toWebpSticker(buffer) {
 
 const pluginConfig = {
   name: "pinpack",
-  alias: ["pinpack", "ppack", "pinsticker", "pinsearchpack"],
+  alias: ["pinpack"],
   category: "sticker",
   description: "Cari gambar Pinterest lalu jadikan sticker pack",
   usage: ".pinpack <query>",

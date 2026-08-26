@@ -3,7 +3,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sejarahislam",
-  alias: ["sejarahislam", "sejarah", "historiislam", "kisahislam", "infosurat"],
+  alias: ["sejarahislam"],
   category: "islamic",
   description: "Sejarah Islam & info surat Al-Quran dari API online",
   usage: ".sejarahislam <topik>",

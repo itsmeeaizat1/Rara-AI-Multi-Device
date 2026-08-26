@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sologo",
-  alias: ["sologo", "ailogo", "bikinlogo"],
+  alias: ["sologo"],
   category: "ai",
   description: "Membuat logo menggunakan AI dari teks (prompt)",
   usage: ".sologo <prompt>",

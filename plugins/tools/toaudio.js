@@ -5,7 +5,7 @@ import path from 'path'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'toaudio',
-    alias: ["toaudio", 'tomp3', 'videotoaudio', 'extractaudio'],
+    alias: ["toaudio"],
     category: 'tools',
     description: 'Mengubah video/voice note menjadi audio MP3',
     usage: '.toaudio (reply/caption video/vn)',

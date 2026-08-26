@@ -125,7 +125,7 @@ async function getGroupMembers(sock, groupId) {
 export default {
   config: {
   name: "ptg",
-  alias: ["ptg", "splitbill"],
+  alias: ["ptg"],
   category: "group",
   desc: "Split Bill & Patungan Pintar Grup - Bagi tagihan otomatis, tracking siapa belum bayar, rekap lengkap",
   usage: ".ptg <total> | <orang> | <keterangan>\n.ptg list - Lihat patungan aktif\n.ptg status <id> - Cek siapa belum bayar\n.ptg bayar <id> - Tandai sudah bayar\n.ptg lunas <id> @tag - (owner) Tandai orang sudah bayar\n.ptg close <id> - (owner) Tutup patungan\n.ptgon / .ptgoff - Toggle (owner)\n.ptghistory - Riwayat patungan",

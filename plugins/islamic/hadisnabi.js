@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "hadisnabi",
-  alias: ["hadisnabi", "hadis2", "hadits2"],
+  alias: ["hadisnabi"],
   category: "islamic",
   description: "Hadis Nabi dari 9 perawi (API online, terjemahan Indonesia)",
   usage: ".hadisnabi <perawi> [range/random]",

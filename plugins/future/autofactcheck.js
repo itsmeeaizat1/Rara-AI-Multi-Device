@@ -3,7 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "autofactcheck", alias: ["factcheck", "cekfakta", "factai"], category: "future",
+  name: "autofactcheck", alias: ["autofactcheck"], category: "future",
   alias: ["autofactcheck"],
   description: "AI cek fakta dari claim", usage: ".autofactcheck (reply claim)",
   example: ".autofactcheck", isOwner: false, isPremium: true,

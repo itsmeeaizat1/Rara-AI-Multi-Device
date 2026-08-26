@@ -9,7 +9,7 @@ const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
 const pluginConfig = {
   name: "film",
-  alias: ["film", "moviefilm", "filmsearch"],
+  alias: ["film"],
   category: "search",
   description: "Cari film dan nonton online",
   usage: ".film <judul>",

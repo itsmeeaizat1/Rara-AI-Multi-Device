@@ -7,7 +7,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "delplugin",
-  alias: ["delplugin", "delpl", "hapusplugin", "removeplugin"],
+  alias: ["delplugin"],
   category: "owner",
   description: "Hapus plugin berdasarkan nama",
   usage: ".delplugin <nama>",

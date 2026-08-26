@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pacaran",
-  alias: ["pacaran", "jadian", "tembak", "tembakjadian"],
+  alias: ["pacaran"],
   category: "fun",
   description: "Menembak seseorang untuk pacaran",
   usage: ".jadian @tag",

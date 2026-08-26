@@ -3,7 +3,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kalkulatornilai",
-  alias: ["kalkulatornilai", "hitungnilai", "nilaikalkulator"],
+  alias: ["kalkulatornilai"],
   category: "education",
   description: "Kalkulator nilai - hitung nilai akhir & nilai minimal untuk lulus",
   usage: ".kalkulatornilai <command>",

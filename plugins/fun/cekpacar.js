@@ -5,7 +5,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "cekpacar",
-  alias: ["cekpacar", "cekpasangan", "statuspacar", "statusjadian"],
+  alias: ["cekpacar"],
   category: "fun",
   description: "Cek status hubungan seseorang",
   usage: ".cekpacar atau .cekpacar @tag",

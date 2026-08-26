@@ -3,7 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "ramalancinta",
-  alias: ["ramalancinta", "prediksipacar", "masa depan", "ramalancinta2", "prediksijodoh", "futurelove"],
+  alias: ["ramalancinta"],
   category: 'fun',
   description: 'Ramalan masa depan hubungan cintamu berdasarkan nama pasangan',
   usage: '.ramalancinta <nama1> & <nama2>',

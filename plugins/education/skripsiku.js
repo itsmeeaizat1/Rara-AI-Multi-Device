@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "skripsiku",
-  alias: ["skripsiku", "skripsi", "thesis", "judulkripsi", "ideasripsi"],
+  alias: ["skripsiku"],
   category: "education",
   description: "Asisten skripsi AI - ide judul, outline bab, review struktur",
   usage: ".skripsiku <command> <input>",

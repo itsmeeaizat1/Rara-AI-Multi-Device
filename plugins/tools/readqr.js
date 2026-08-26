@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
-  name: "readqr", alias: ["scanqr", "qrdecode"], category: "tools",
+  name: "readqr", alias: ["readqr"], category: "tools",
   alias: ["readqr"],
   description: "Baca QR code dari gambar", usage: ".readqr (reply gambar QR)",
   example: ".readqr", isOwner: false, isPremium: false,

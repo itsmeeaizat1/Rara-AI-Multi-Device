@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "shipname",
-  alias: ["shipname", "ship", "couplename"],
+  alias: ["shipname"],
   category: "future",
   description: "Ship name - combine 2 nama jadi couple name + compatibility",
   usage: ".shipname @user1 @user2",

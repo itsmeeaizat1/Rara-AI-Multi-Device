@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "namavibes",
-  alias: ["namavibes", "cekvibes", "vibesnama", "auranama", "energinama"],
+  alias: ["namavibes"],
   category: "fun",
   description: "Cek vibes nama kamu — random personality fun",
   usage: ".namavibes — Cek vibes kamu\n.namavibes <nama> — Cek vibes nama lain",

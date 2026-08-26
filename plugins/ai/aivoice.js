@@ -29,7 +29,7 @@ const ENDPOINTS = [
 
 const pluginConfig = {
   name: "aivoice",
-  alias: ["aivoice", "ttsai", "aiVOICE"],
+  alias: ["aivoice"],
   category: "ai",
   description: "Ubah teks menjadi suara dengan AI/TTS",
   usage: ".aivoice <teks>",

@@ -10,7 +10,7 @@ import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ttsearch",
-  alias: ["ttsearch", "tiktoksearch", "tts2"],
+  alias: ["ttsearch"],
   category: "search",
   description: "Cari video TikTok",
   usage: ".ttsearch <query>",

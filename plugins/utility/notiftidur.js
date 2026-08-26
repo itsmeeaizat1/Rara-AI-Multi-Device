@@ -3,7 +3,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "notiftidurutil",
-    alias: ["notiftidurutil", 'jadwaltidur', 'tidurreminder', 'sleepreminder'],
+    alias: ["notiftidurutil"],
     category: 'group',
     description: 'Atur pengingat waktu tidur otomatis',
     usage: '.notiftidur on <jam1,jam2,...> / off / edit <jam1,jam2,...>',

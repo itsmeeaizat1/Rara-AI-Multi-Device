@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "rate",
-    alias: ["rate", "nilai2", "rating"],
+    alias: ["rate"],
     category: 'fun',
     description: 'Minta bot memberi rating sesuatu',
     usage: '.rate <sesuatu>',

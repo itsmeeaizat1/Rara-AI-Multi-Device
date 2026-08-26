@@ -10,7 +10,7 @@ const andarazConfig = getAndarazConfig();
 
 const pluginConfig = {
   name: "ampremv2",
-  alias: ["ampremv2", "alightmotionv2", "alightv2", "amv2", "amprem2"],
+  alias: ["ampremv2"],
   category: "tools",
   description: "Alight Motion Premium Creator V2 — auto register via RyezenStore + TempMail",
   usage: ".ampremv2 create <jumlah>\n.ampremv2 login <user> <pass>\n.ampremv2 list",

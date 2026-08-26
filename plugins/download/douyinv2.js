@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "douyinv2",
-  alias: ["douyinv2", "douyin2"],
+  alias: ["douyinv2"],
   category: "download",
   description: "Download video Douyin (V2)",
   usage: ".douyinv2 <url>",

@@ -3,7 +3,7 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
   name: "romantis",
-  alias: ["romantis", "romantisstory", "ceritaromantis", "lovestory"],
+  alias: ["romantis"],
   category: "future",
   description: "AI Romance generator - bikin cerita romantis pendek tentang member grup",
   usage: ".romantis @user1 @user2",

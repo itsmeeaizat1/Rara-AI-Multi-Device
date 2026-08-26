@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addkoin',
-    alias: ["addkoin", 'tambahkoin', 'givekoin', 'addcoin', 'adddcoin'],
+    alias: ["addkoin"],
     category: 'owner',
     description: 'Tambah koin user (max 9 Triliun)',
     usage: '.addkoin <jumlah> @user',

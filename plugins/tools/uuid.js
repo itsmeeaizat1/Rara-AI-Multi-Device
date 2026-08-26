@@ -3,7 +3,7 @@ import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import crypto from "node:crypto";
 
 const pluginConfig = {
-  name: "uuid", alias: ["guid", "uniqueid"], category: "tools",
+  name: "uuid", alias: ["uuid"], category: "tools",
   alias: ["uuid"],
   description: "Generate UUID v4", usage: ".uuid",
   example: ".uuid", isOwner: false, isPremium: false,

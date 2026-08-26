@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "mostlikely",
-  alias: ["mostlikely", "palingmungkin", "mostlikelyto", "mlt"],
+  alias: ["mostlikely"],
   category: "group",
   description: "Siapa paling mungkin... — voting member grup secara seru",
   usage: ".mostlikely start | .mostlikely vote @user | .mostlikely result | .mostlikely stop",

@@ -6,7 +6,7 @@ import config from '../../config.js'
 
 const pluginConfig = {
     name: 'githubstalk',
-    alias: ["githubstalk", 'ghstalk', 'stalkgh'],
+    alias: ["githubstalk"],
     category: 'stalker',
     description: 'Stalk akun GitHub',
     usage: '.githubstalk <username>',

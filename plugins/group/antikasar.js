@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'antikasar',
-    alias: ["antikasar", 'antikutuk', 'antitoxickasar', 'antijorok'],
+    alias: ["antikasar"],
     category: 'group',
     description: 'Deteksi kata kata kasar/kotor/jorok di grup',
     usage: '.antikasar <on/off/kick/delete/warn/reset/resetall>',

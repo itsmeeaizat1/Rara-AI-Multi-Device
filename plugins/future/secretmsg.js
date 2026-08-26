@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "secretmsg",
-  alias: ["secretmsg", "whisper", "pesanrahasia"],
+  alias: ["secretmsg"],
   category: "future",
   description: "Anonymous whisper - kirim pesan anonim ke seseorang di grup",
   usage: ".secretmsg <command>",

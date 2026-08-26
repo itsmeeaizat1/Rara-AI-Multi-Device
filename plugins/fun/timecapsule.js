@@ -5,7 +5,7 @@ import {   separator,
 
 const pluginConfig = {
   name: "timecapsule",
-  alias: ["timecapsule", "ultah2", "capsule"],
+  alias: ["timecapsule"],
   category: "fun",
   description: "Buat pesan time capsule terbuka di masa depan",
   usage: ".timecapsule <hari>|<pesan>",

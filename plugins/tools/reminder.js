@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "reminder",
-  alias: ["reminder", "ingatkan", "remind"],
+  alias: ["reminder"],
   category: "tools",
   description: "Reminder pribadi - bot nge-tag kamu pas waktunya tiba",
   usage: ".remind <durasi> <pesan>",

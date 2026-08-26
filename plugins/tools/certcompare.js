@@ -4,7 +4,7 @@ import tls from "tls";
 
 const pluginConfig = {
   name: "certcompare",
-  alias: ["certcompare", "sslcompare", "certdiff", "sslcomp", "certcomp"],
+  alias: ["certcompare"],
   category: "tools",
   description: "Bandingin SSL certificate 2 domain (issuer, expiry, SAN, self-signed)",
   usage: ".certcompare <domain1> <domain2>",

@@ -4,7 +4,7 @@ import { Client } from 'ssh2'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'installtemabilling',
-    alias: ["installtemabilling", 'installthemabilling', 'temabilling'],
+    alias: ["installtemabilling"],
     category: 'panel',
     description: 'Install tema Billing untuk panel Pterodactyl via SSH',
     usage: '.installtemabilling <ip>|<password>',

@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'addantilink',
-    alias: ["addantilink", 'addalink', 'addblocklink'],
+    alias: ["addantilink"],
     category: 'group',
     description: 'Menambah link ke daftar antilink',
     usage: '.addantilink <domain/pattern>',

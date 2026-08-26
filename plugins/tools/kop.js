@@ -180,7 +180,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
 const pluginConfig = {
   name: "kop",
-  alias: ["kop", "kopsurat", "addkop", "kopletter"],
+  alias: ["kop"],
   category: "tools",
   description: "Tambah kop surat instansi/perusahaan ke PDF yang sudah ada",
   usage: ".kop instansi=Nama alamat=Alamat telepon=Nomor email=Email (reply PDF)",

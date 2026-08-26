@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'bisakah',
-    alias: ["bisakah", 'bisa'],
+    alias: ["bisakah"],
     category: 'fun',
     description: 'Tanya bot bisakah sesuatu',
     usage: '.bisakah <pertanyaan>',

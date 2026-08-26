@@ -6,7 +6,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "sewabot",
-  alias: ["sewabot", "sewaowner", "sewabotv2"],
+  alias: ["sewabot"],
   category: "owner",
   description: "Toggle dan kelola sistem sewa bot",
   usage: ".sewabot <on/off/leave/status>",

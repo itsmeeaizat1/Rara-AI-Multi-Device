@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "dailyquest",
-  alias: ["dailyquest", "questharian", "dquest"],
+  alias: ["dailyquest"],
   category: "future",
   description: "Daily quest - misi harian untuk coin & exp bonus",
   usage: ".dailyquest <command>",

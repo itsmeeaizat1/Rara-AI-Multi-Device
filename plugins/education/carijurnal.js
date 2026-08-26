@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "carijurnal",
-  alias: ["carijurnal", "jurnal", "paper", "caripaper", "scholar"],
+  alias: ["carijurnal"],
   category: "education",
   description: "Cari jurnal/paper akademik via OpenAlex API (free, jutaan paper)",
   usage: ".carijurnal <kata kunci>",

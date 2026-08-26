@@ -3,7 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "sentiment", alias: ["moodgrup", "sentimentanalisis"], category: "future",
+  name: "sentiment", alias: ["sentiment"], category: "future",
   alias: ["sentiment"],
   description: "Analisis mood grup chat", usage: ".sentiment (reply chat)",
   example: ".sentiment", isOwner: false, isPremium: true,

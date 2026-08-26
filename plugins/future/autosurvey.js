@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autosurvey",
-  alias: ["autosurvey", "surveyauto", "surveyotomatis"],
+  alias: ["autosurvey"],
   category: "future",
   description: "Auto survey/poll mingguan ke grup",
   usage: ".autosurvey <command>",

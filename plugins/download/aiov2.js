@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aiov2",
-  alias: ["aiov2", "aio2", "allinone2"],
+  alias: ["aiov2"],
   category: "download",
   description: "AIO Downloader all-in-one sosmed via V2 API (V2)",
   usage: ".aiov2 <url>",

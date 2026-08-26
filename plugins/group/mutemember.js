@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'mutemember',
-    alias: ["mutemember", 'mutmember', 'silentmember', 'bisukanmember'],
+    alias: ["mutemember"],
     category: 'group',
     description: 'Bisukan member tertentu (pesan akan dihapus bot)',
     usage: '.mutemember <@tag/reply/nomor>',

@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "hotseat",
-  alias: ["hotseat", "hotseatgrup", "interogasi"],
+  alias: ["hotseat"],
   category: "future",
   description: "Hot seat - 1 orang diinterogasi grup dengan pertanyaan acak",
   usage: ".hotseat <command>",

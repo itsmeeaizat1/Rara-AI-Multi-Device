@@ -6,7 +6,7 @@ import { isLid, lidToJid } from '../../src/lib/nova-lid.js'
 
 const pluginConfig = {
     name: "unban",
-    alias: ["unban", "unbanuser", "unbanowner"],
+    alias: ["unban"],
     category: 'owner',
     description: 'Menghapus user dari daftar banned',
     usage: '.unban <nomor/@tag>',

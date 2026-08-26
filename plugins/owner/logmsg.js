@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "logmsg",
-  alias: ["logmsg", "logpesan"],
+  alias: ["logmsg"],
   category: "owner",
   description: "Toggle panel message logging (group only, private never logged)",
   usage: ".logmsg on/off",

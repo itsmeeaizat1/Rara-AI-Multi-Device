@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'antiribut',
-    alias: ['antiribut', 'antiaibut', 'antikonten', 'antigado'],
+    alias: ["antiribut"],
     category: 'group',
     description: 'Deteksi keributan/perkelahian di grup',
     usage: '.antiribut <on/off/kick/delete/warn/reset/resetall>',

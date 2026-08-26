@@ -3,7 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "autobirthday", alias: ["autobirthday", "autoulta", "ultahauto"], category: "future",
+  name: "autobirthday", alias: ["autobirthday"], category: "future",
   alias: ["autobirthday"],
   description: "Catat & reminder ulang tahun", usage: ".autobirthday <add/list>",
   example: ".autobirthday add Budi 17-08", isOwner: false, isPremium: false,

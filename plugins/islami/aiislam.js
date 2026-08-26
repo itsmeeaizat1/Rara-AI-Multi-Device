@@ -21,7 +21,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aiislam",
-  alias: ["aiislam", "islamai2", "aiislam2"],
+  alias: ["aiislam"],
   category: "islami",
   description: "AI Islamic Scholar + Quran reader (eQuran.id API Kemenag)",
   usage: ".aiislam <pertanyaan>\n.aiislam surah <nomor>\n.aiislam ayah <surah>:<ayah>\n.aiislam tafsir <surah>:<ayah>\n.aiislam asktafsir <surah>:<ayah>\n.aiislam list\n.aiislam reset",

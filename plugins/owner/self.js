@@ -9,7 +9,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'self',
-    alias: ["self", 'selfmode', 'private-mode'],
+    alias: ["self"],
     category: 'owner',
     description: 'Mengaktifkan mode self (hanya owner & bot yang bisa akses)',
     usage: '.self',

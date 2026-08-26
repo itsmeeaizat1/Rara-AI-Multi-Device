@@ -27,7 +27,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "smartreply",
-  alias: ["smartreply", "aireply", "smartreplygrp"],
+  alias: ["smartreply"],
   category: "group",
   description: "Smart Auto Reply dengan AI untuk FAQ grup",
   usage: ".smartreply on/off/add/del/list/model/reset",

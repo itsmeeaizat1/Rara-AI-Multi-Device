@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 
 const pluginConfig = {
   name: 'bcpcjeda',
-  alias: ["bcpcjeda", 'delaybcpc', 'jedabcpc', 'setjedabcpc'],
+  alias: ["bcpcjeda"],
   category: 'owner',
   description: 'Atur jeda broadcast private chat',
   usage: '.bcpcjeda <waktu> (contoh: 5s, 2m, 1h)',

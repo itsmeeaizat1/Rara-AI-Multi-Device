@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rizzmeter",
-  alias: ["rizzmeter", "rizz", "gantengmeter"],
+  alias: ["rizzmeter"],
   category: "future",
   description: "Rizz meter - ukur level karisma/rizz kamu (Gen Z viral)",
   usage: ".rizzmeter [@target]",

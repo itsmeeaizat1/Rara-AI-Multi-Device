@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "novabanana2",
-  alias: [],
+  alias: ["novabanana2"],
   category: "ai",
   description: "Buat gambar dengan AI menggunakan prompt",
   usage: ".novabanana2 <prompt>",

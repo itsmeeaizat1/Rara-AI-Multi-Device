@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'removebg',
-    alias: ["removebg", 'rmbg', 'nobg', 'hapusbg'],
+    alias: ["removebg"],
     category: 'tools',
     description: 'Menghapus background gambar',
     usage: '.removebg (reply gambar)',

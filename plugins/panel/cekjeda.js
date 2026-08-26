@@ -7,7 +7,7 @@ const DEFAULT_JEDA = 5 * 60 * 1000;
 
 const pluginConfig = {
   name: "cekjeda",
-  alias: ["cekjeda", "jedastatus", "statusjeda"],
+  alias: ["cekjeda"],
   category: "panel",
   description: "Cek status jeda panel create",
   usage: ".cekjeda",

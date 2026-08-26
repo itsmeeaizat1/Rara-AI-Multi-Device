@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cekpartner',
-    alias: ["cekpartner", 'partnerinfo'],
+    alias: ["cekpartner"],
     category: 'cek',
     description: 'Cek detail status partner user',
     usage: '.cekpartner @user',

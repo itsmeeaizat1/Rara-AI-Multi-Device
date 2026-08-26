@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "nowm",
-  alias: ["nowm", "nowatermark", "rmwm", "hapuswm", "unwatermark"],
+  alias: ["nowm"],
   category: "maker",
   description: "Hapus watermark/logo/teks dari gambar (AI inpainting via ClipDrop)",
   usage: ".nowm (reply gambar) | .nowm <posisi> (reply gambar)",

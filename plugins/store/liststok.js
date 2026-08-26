@@ -5,7 +5,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 
 const pluginConfig = {
     name: "liststok",
-    alias: ["liststok", "stock2", "stoklist"],
+    alias: ["liststok"],
     category: 'store',
     description: '📋 Lihat daftar stok item produk',
     usage: '.liststok <nomor_produk>',

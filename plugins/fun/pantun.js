@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pantun",
-  alias: ["pantun", "pantunrandom", "pantunacak", "pantunfess", "karanganpantun"],
+  alias: ["pantun"],
   category: "fun",
   description: "Generator pantun acak (pembuka, teka-teki, galau, gaul, lucu)",
   usage: ".pantun — Pantun acak\n.pantun <tema> — Tema: pembuka, teka-teki, galau, gaul, lucu, cinta",

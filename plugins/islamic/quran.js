@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "quran",
-  alias: ["quran", "alquran3", "bacaquran2"],
+  alias: ["quran"],
   category: "islamic",
   description: "Baca ayat Al-Quran berdasarkan nama surah",
   usage: ".quran <nama surah>",

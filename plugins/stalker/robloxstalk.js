@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "robloxstalk",
-  alias: ["robloxstalk", "rblxstalk", "rbxstalk", "stalkroblox", "stalkrbx"],
+  alias: ["robloxstalk"],
   category: "stalker",
   description: "Stalk akun Roblox berdasarkan username",
   usage: ".robloxstalk <username>",

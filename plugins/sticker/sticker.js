@@ -10,7 +10,7 @@ const execAsync = promisify(exec)
 
 const pluginConfig = {
     name: 'sticker',
-    alias: ["sticker", 's', 'stiker', 'stickergif'],
+    alias: ["sticker"],
     category: 'sticker',
     description: 'Membuat sticker dari gambar/video dengan opsi crop/resize',
     usage: '.s [--crop] [--resize WxH] [--circle] [--rounded]',

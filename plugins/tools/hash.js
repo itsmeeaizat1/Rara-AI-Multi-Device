@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import crypto from "node:crypto";
 
 const pluginConfig = {
-  name: "hash", alias: ["md5", "sha256", "sha1", "checksum"], category: "tools",
+  name: "hash", alias: ["hash"], category: "tools",
   alias: ["hash"],
   description: "Hash text md5/sha256/sha1", usage: ".hash <algo> <text>",
   example: ".hash sha256 halo", isOwner: false, isPremium: false,

@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import * as timeHelper from '../../src/lib/nova-time.js'
 const pluginConfig = {
     name: "listsewa",
-    alias: ["listsewa", "daftarsewa", "sewalist"],
+    alias: ["listsewa"],
     category: 'owner',
     description: 'Lihat daftar grup yang terdaftar sewa',
     usage: '.listsewa',

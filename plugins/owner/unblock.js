@@ -3,7 +3,7 @@ import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "unblock",
-  alias: ["unblock", "unblockuser", "bukablokir", "unblokir"],
+  alias: ["unblock"],
   category: "owner",
   description: "Buka blokir user",
   usage: ".unblock <@target / nomor>",

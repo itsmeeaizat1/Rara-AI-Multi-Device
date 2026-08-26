@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 
 const pluginConfig = {
     name: 'brathd',
-    alias: ["brathd", 'brathdsticker', 'brathds'],
+    alias: ["brathd"],
     category: 'sticker',
     description: 'Membuat sticker brat HD',
     usage: '.brathd <text>',

@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'buyenergi',
-    alias: ["buyenergi", 'belienergi', 'purchaseenergi', 'buyenergy'],
+    alias: ["buyenergi"],
     category: 'user',
     description: 'Beli energi dengan koin (1 energi = 100 koin)',
     usage: '.buyenergi <jumlah>',

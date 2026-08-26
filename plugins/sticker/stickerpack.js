@@ -13,7 +13,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "stickerpack",
-  alias: ["stickerpack", "stickerpack2", "sp2"],
+  alias: ["stickerpack"],
   category: "sticker",
   description: "Cari dan kirim sticker pack",
   usage: ".stickerpack <query>",

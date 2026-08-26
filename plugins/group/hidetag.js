@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "hidetag",
-  alias: ["hidetag", "hiddentag", "ht"],
+  alias: ["hidetag"],
   category: "group",
   description: "Tag semua member grup",
   usage: ".hidetag <teks>",

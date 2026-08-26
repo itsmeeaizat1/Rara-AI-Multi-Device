@@ -9,7 +9,7 @@ import {
 
 const pluginConfig = {
   name: "kencanmatch",
-  alias: ["kencanmatch", "kencan", "date", "datingrpg"],
+  alias: ["kencanmatch"],
   category: "rpg",
   description: "Ajak pasangan kencan untuk tambah affection",
   usage: ".rpgkencan atau .rpgkencan pilih",

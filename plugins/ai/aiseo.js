@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "aiseo",
-  alias: ["aiseo", "seo", "seowriter", "contentseo", "artikelseo"],
+  alias: ["aiseo"],
   category: "ai",
   description: "Tulis konten SEO-friendly dengan AI",
   usage: ".aiseo <topik>",

@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "antispamdm",
-  alias: ["antispamdm", "antispampc", "antispampriv", "antispambot"],
+  alias: ["antispamdm"],
   category: "tools",
   description: "Anti-spam untuk DM/Pribadi - cegah user nyepam command di private chat",
   usage: ".antispamdm <command>",

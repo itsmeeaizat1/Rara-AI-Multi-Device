@@ -6,7 +6,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 
 const pluginConfig = {
     name: "botmode",
-    alias: ["botmode", "setmode", "mode"],
+    alias: ["botmode"],
     category: 'owner',
     description: 'Mengatur mode bot (md/cpanel/store/pushkontak/all)',
     usage: '.botmode <mode>',

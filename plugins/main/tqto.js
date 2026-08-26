@@ -4,7 +4,7 @@ import config from '../../config.js'
 
 const pluginConfig = {
     name: 'tqto',
-    alias: ["tqto", 'thanksto', 'credits', 'kredit'],
+    alias: ["tqto"],
     category: 'main',
     description: 'Menampilkan daftar kontributor bot',
     usage: '.tqto',

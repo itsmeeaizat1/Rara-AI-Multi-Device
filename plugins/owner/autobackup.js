@@ -7,7 +7,7 @@ import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
   name: "autobackup",
-  alias: ["autobackup", "backup2", "autobackup2"],
+  alias: ["autobackup"],
   category: "owner",
   description: "Kelola sistem auto backup",
   usage: ".autobackup <on/off/status/now> [interval]",

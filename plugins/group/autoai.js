@@ -11,7 +11,7 @@ const execAsync = promisify(exec);
 
 const pluginConfig = {
   name: "autoai",
-  alias: ["Zeta", "aai"],
+  alias: ["autoai"],
   category: "group",
   description:
     "Toggle auto AI response untuk grup dengan pilihan text atau voice",

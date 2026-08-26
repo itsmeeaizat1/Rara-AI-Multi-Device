@@ -7,7 +7,7 @@ import config from '../../config.js'
 
 const pluginConfig = {
     name: 'igstalk',
-    alias: ["igstalk", 'instagramstalk', 'stalking'],
+    alias: ["igstalk"],
     category: 'stalker',
     description: 'Stalk akun Instagram',
     usage: '.igstalk <username>',

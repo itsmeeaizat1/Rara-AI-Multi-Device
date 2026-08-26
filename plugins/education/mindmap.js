@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "mindmap",
-  alias: ["mindmap", "peta pikiran", "petafikiran", "mindmapku", "conceptmap"],
+  alias: ["mindmap"],
   category: "education",
   description: "Generate mind map dari teks/topik - AI ekstrak konsep utama + sub-topik",
   usage: ".mindmap <topik/teks>",

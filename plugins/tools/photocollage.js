@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photocollage",
-  alias: ["photocollage", "fotocollage", "collagefoto", "fotogrid", "gridfoto", "combinefoto"],
+  alias: ["photocollage"],
   category: "tools",
   description: "Photo Collage — Gabung 2-4 foto jadi satu grid foto (local, no API)",
   usage: ".photocollage <layout> (reply 2-4 gambar)\n.photocollage list — Lihat semua layout",

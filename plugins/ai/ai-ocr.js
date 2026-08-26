@@ -109,7 +109,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "ai-ocr",
-  alias: ["aiocr", "ocrv2", "ocrAI"],
+  alias: ["ai-ocr"],
   category: "ai",
   description: "Ekstrak teks dari gambar",
   usage: ".ai-ocr (reply foto)",

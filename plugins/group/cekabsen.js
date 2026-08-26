@@ -4,7 +4,7 @@ import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "cekabsen",
-  alias: ["cekabsen", "listabsen", "daftarabsen", "lihathadir"],
+  alias: ["cekabsen"],
   category: "group",
   description: "Lihat daftar peserta yang sudah absen",
   usage: ".cekabsen",

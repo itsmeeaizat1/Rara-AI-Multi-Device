@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "redirect",
-  alias: ["redirect", "redirecttrace", "redirectchain", "urlredirect", "redirectcheck"],
+  alias: ["redirect"],
   category: "tools",
   description: "Trace redirect chain URL (lihat semua hop + status code)",
   usage: ".redirect <url>",

@@ -4,7 +4,7 @@ import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "totag",
-    alias: ["totag", "tagall2", "hidetagall"],
+    alias: ["totag"],
     category: 'group',
     description: 'Tag semua member dengan reply pesan',
     usage: '.totag (reply pesan)',

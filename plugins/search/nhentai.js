@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "nhentai",
-  alias: ["nhentai", "nh", "manga2"],
+  alias: ["nhentai"],
   category: "search",
   description: "Cari info manga/doujin",
   usage: ".nhentai <kode/nama>",

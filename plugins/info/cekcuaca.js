@@ -9,7 +9,7 @@ import {  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "cekcuaca",
-  alias: ["cekcuaca", "weathercheck", "cuacasekarang"],
+  alias: ["cekcuaca"],
   category: "info",
   description: "Cek informasi cuaca saat ini",
   usage: ".cekcuaca [nama kota]",

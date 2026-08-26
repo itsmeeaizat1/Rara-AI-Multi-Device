@@ -3,7 +3,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "autoreaction",
-  alias: ["autoreaction", "autoreact", "reactionv2"],
+  alias: ["autoreaction"],
   category: "group",
   description: "Auto reaction pesan di grup",
   usage: ".autoreaction on/off",

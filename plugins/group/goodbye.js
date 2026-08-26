@@ -65,7 +65,7 @@ async function handler(m, { sock, config: botConfig }) {
 export default {
   config: {
     name: "goodbye2",
-    alias: ["goodbye2", "goodbyemain", "farewell"],
+    alias: ["goodbye2"],
     category: "group",
     description: "Pesan goodbye saat member keluar grup",
     usage: ".goodbye on/off",

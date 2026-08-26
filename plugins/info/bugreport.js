@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "bugreport",
-  alias: ["bugreport", "bug", "reportbug", "laporbug"],
+  alias: ["bugreport"],
   category: "info",
   description: "Laporkan bug ke owner/admin bot",
   usage: ".bugreport <pesan>",

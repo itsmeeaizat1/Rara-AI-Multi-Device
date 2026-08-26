@@ -6,7 +6,7 @@ import { getCintaData } from "../../src/lib/nova-rpg-cinta.js";
 
 const pluginConfig = {
   name: "soulmatematch",
-  alias: ["soulmatematch", "soulmatch", "soulmate", "compatibilitymatch"],
+  alias: ["soulmatematch"],
   category: "rpg",
   description: "Cek soul score / compatibility berdasarkan RPG stats",
   usage: ".soulmatematch @tag",

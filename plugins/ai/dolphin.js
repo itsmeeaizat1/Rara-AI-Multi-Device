@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'dolphin',
-    alias: ["dolphin", 'dolphinai', 'dphn'],
+    alias: ["dolphin"],
     category: 'ai',
     description: 'Chat dengan Dolphin AI (24B Model)',
     usage: '.dolphin <pertanyaan> atau .dolphin --<template> <pertanyaan>',

@@ -5,7 +5,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "mylimit",
-  alias: ["mylimit", "limitku", "sisalimit", "infolimit"],
+  alias: ["mylimit"],
   category: "user",
   description: "Cek sisa limit harian, total dipakai, dan jam reset",
   usage: ".mylimit",

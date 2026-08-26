@@ -16,7 +16,7 @@ import {
 
 const pluginConfig = {
   name: "cuacav2",
-  alias: ["cuacav2", "cuacabmkg", "bmkginfo", "bmkgcuaca"],
+  alias: ["cuacav2"],
   category: "info",
   description: "Cek cuaca rinci v2 (BMKG-style (suhu, angin, tekanan, UV, prakiraan 3 hari)",
   usage: ".cuacav2 [nama kota]",

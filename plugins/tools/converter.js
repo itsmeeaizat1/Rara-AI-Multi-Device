@@ -8,7 +8,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "converter",
-  alias: ["converter", "konversi", "convert"],
+  alias: ["converter"],
   category: "tools",
   description: "Convert file ke format lain",
   usage: ".converter <format> (reply file)",

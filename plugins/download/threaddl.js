@@ -46,7 +46,7 @@ function normalizeResult(data = {}) {
 
 const pluginConfig = {
   name: "threaddl",
-  alias: ["tdl", "threads", "threadsdl"],
+  alias: ["threaddl"],
   category: "download",
   description: "Download foto dan video dari postingan Threads tanpa repot!",
   usage: ".tdl <url>",

@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "anticulik",
-  alias: ["anticulik", "antikidnap", "antiileng", "anticulikgc"],
+  alias: ["anticulik"],
   category: "group",
   description: "Bot otomatis keluar grup jika ditambah tanpa izin",
   usage: ".anticulik on/off",

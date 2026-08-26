@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'unmutemember',
-    alias: ["unmutemember", 'unmutmember', 'unsilentmember', 'unbisukanmember', 'listmutemember', 'listmute'],
+    alias: ["unmutemember"],
     category: 'group',
     description: 'Membuka mute member tertentu',
     usage: '.unmutemember <@tag/reply/nomor>',
