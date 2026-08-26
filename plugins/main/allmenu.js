@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenu.js — Semua command per kategori (text + externalAdReply + type 1 buttons)
+// allmenu.js — Semua command per kategori (text + externalAdReply + buttons)
 import config from "../../config.js";
 import {
   getTimeGreeting,
@@ -33,7 +33,7 @@ const pluginConfig = {
 };
 
 const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c);
+const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c).replace(/[A-Z]/g, c => (SC_MAP[c.toLowerCase()] || c).toUpperCase());
 
 const CATEGORY_ORDER = [
   "ai", "sticker", "download", "fun", "canvas", "tools",
@@ -45,7 +45,7 @@ const CATEGORY_ORDER = [
 
 const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
-  canvas: "Canvas", tools: "Tools", game: "Game", rpg: "RPG",
+  canvas: "Canvas", tools: "Tools", game: "Games", rpg: "RPG",
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
@@ -128,12 +128,14 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
 
       let cmdLines = "";
       for (let i = 0; i < allCmds.length; i++) {
-        cmdLines += `│  ➥ ${prefix}${allCmds[i]}\n`;
+        const isLast = i === allCmds.length - 1;
+        const bullet = isLast ? "╰" : "➶";
+        cmdLines += `  ┊  ${bullet}➶ ${prefix}${allCmds[i]}\n`;
       }
 
-      categoryBlocks += `╭─「 *${catEmoji} ${toSC(catName)}* 」\n`;
+      categoryBlocks += `  ° ✿  ${catEmoji} ${catName} ✿ °\n`;
       categoryBlocks += cmdLines;
-      categoryBlocks += `╰─\n\n`;
+      categoryBlocks += `\n`;
     }
 
     const more = String.fromCharCode(8206);
@@ -163,11 +165,9 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${readMore}
 ${categoryBlocks}
-╭─「 *${toSC("Total")}* 」
-│  ➥ *Total: ${totalFitur} Fitur*
-╰─
+  *Total: ${totalFitur} Fitur*
 
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+  ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${getTimeGreeting()} *${m.pushName || "User"}* 👋`;
   } catch (e) {
     console.error("[allmenu] buildAllMenuText error:", e.message);

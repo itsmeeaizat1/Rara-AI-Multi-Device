@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menu.js — Menu utama (text + externalAdReply preview card + type 1 buttons)
+// menu.js — Menu utama (text + externalAdReply + type 1 buttons)
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import config from "../../config.js";
 import {
@@ -35,7 +35,7 @@ const pluginConfig = {
 };
 
 const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c);
+const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c).replace(/[A-Z]/g, c => (SC_MAP[c.toLowerCase()] || c).toUpperCase());
 
 function getWeton(date = new Date()) {
   const days = ["Pahing", "Pon", "Wage", "Kliwon", "Legi"];
@@ -110,7 +110,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     let weatherBlock = "";
     try {
       const wf = await getWeatherFooter();
-      if (wf) weatherBlock = `\n│\n${wf}\n`;
+      if (wf) weatherBlock = `\n${wf}\n`;
     } catch {}
 
     const pluginCats = getCategories();
@@ -170,27 +170,27 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 ╰─${weatherBlock}
 ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${readMore}
-╭─「 *${toSC("Nova Menu")}* 」
-│  ➥ ${prefix}menu
-│  ➥ ${prefix}allmenu
-│  ➥ ${prefix}allmenucategory <kategori>
-│  ➥ ${prefix}tanyaai
-╰─
-╭─「 *${toSC("Info")}* 」
-│  ➥ ${prefix}info
-│  ➥ ${prefix}owner
-│  ➥ ${prefix}rules
-│  ➥ ${prefix}donasi
-╰─
-╭─「 *${toSC("Store")}* 」
-│  ➥ ${prefix}sewa
-│  ➥ ${prefix}payment
-│  ➥ ${prefix}listban
-╰─
 
-*Total: ${totalFitur} Fitur*
+  ° ✿  Menu ✿ °
+  ┊  ➶ ${prefix}menu
+  ┊  ➶ ${prefix}allmenu
+  ┊  ➶ ${prefix}allmenucategory <kategori>
+  ┊  ╰➶ ${prefix}tanyaai
 
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+  ° ✿  Info ✿ °
+  ┊  ➶ ${prefix}info
+  ┊  ➶ ${prefix}owner
+  ┊  ➶ ${prefix}rules
+  ┊  ╰➶ ${prefix}donasi
+
+  ° ✿  Store ✿ °
+  ┊  ➶ ${prefix}sewa
+  ┊  ➶ ${prefix}payment
+  ┊  ╰➶ ${prefix}listban
+
+  *Total: ${totalFitur} Fitur*
+
+  ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${getTimeGreeting()} *${m.pushName || "User"}* 👋
 Ketik *${prefix}allmenu* untuk melihat semua fitur`;
   } catch (e) {
