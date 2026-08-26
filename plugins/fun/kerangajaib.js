@@ -36,7 +36,6 @@ const RESPONSES = [
   "Nggak yah.",
   "Aku bilang iya.",
   "Aku bilang tidak.",
-  "Tunggu sebentar... ya.",
   "Hmm, tidak.",
   "Bisa jadi.",
   "Kayaknya iya deh.",

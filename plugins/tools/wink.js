@@ -44,11 +44,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Wink", `❌ *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*\n\nMaksimal ukuran video cuma *50MB* ya!`));
     }
 
-    await m.reply(
-      `🎬 *ᴘʀᴏꜱᴇꜱ ᴡɪɴᴋ ᴇɴʜᴀɴᴄᴇ ᴅɪᴍᴜʟᴀɪ*\n\n` +
-        `Video lagi diproses AI Wink biar jadi *ᴜʟᴛʀᴀ ʜᴅ* ✨\n` +
-        `Estimasi *1-5 menit*, mohon sabar ya!`,
-    );
+    await m.react("🕒");
 
     const result = await winkEnhance(videoBuffer, {
       filename: `wink-${Date.now()}.mp4`,

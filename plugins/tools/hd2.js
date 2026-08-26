@@ -43,9 +43,7 @@ async function handler(m, { sock }) {
     if (!buffer) {
       return m.reply(claraWrap("hd2tool", `❌ Gagal mendownload gambar`));
     }
-    await m.reply(
-      `🕕 *ᴍᴇᴍᴘʀᴏꜱᴇꜱ ɢᴀᴍʙᴀʀ...*\n\nEstimasi waktu: ±1 menit\nMohon tunggu...`,
-    );
+    await m.react("🕒");
     const temp = path.join(process.cwd(), "temp", "hd.jpg");
     fs.writeFileSync(temp, buffer);
     const codes = await upload(temp);
@@ -53,6 +51,7 @@ async function handler(m, { sock }) {
     const uplot = codes.code;
     await new Promise((resolve) => setTimeout(resolve, 10000));
     let result = await get(uplot);
+    await m.react("🐣");
     while (result.status === "waiting") {
       await new Promise((resolve) => setTimeout(resolve, 6000));
       result = await get(uplot);

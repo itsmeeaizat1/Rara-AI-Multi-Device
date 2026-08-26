@@ -174,7 +174,6 @@ async function handler(m, { sock }) {
           "Qari: Mishary Rashid Alafasy",
           "",
           "Mengirim audio full surat...",
-          "Mohon tunggu, file bisa cukup besar.",
         ]);
 
         await m.reply(txt);
