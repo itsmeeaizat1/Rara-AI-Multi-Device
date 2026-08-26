@@ -1,31 +1,106 @@
-// === Nova AI Menu Style (v3 — Clean Box Drawing) ===
-// Format konsisten: ╭─「 title 」 / │  ➥ item / ╰─
-// Semua fungsi lama (claraWrap, bracketBox, claraHeader, dll) tetap export
-// dengan nama yang sama untuk backward compat — tinggal output-nya berubah.
+// === Nova AI Menu Style (v4 — Futuristic Dashboard) ===
+// Modern futuristic design: ▎ sections, ┊ details, ▰▱ progress bars, ● status
+// Semua fungsi lama (claraWrap, bracketBox, dll) tetap export dengan signature sama,
+// tapi output-nya sekarang pakai style futuristik v4.
 
 // Small caps map
 const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
 const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c).replace(/[A-Z]/g, c => (SC_MAP[c.toLowerCase()] || c).toUpperCase());
 
-// Section header: ╭─「 *Title* 」
-function sectionHeader(title) {
-  return `╭─「 *${toSC(title)}* 」`;
+// Helper: detect real emoji (multi-char unicode), bukan "i" atau teks biasa
+const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
+
+// ═══════════════════════════════════════════════
+// FUTURISTIC v4 FUNCTIONS (untuk menu/allmenu/allmenucategory)
+// ═══════════════════════════════════════════════
+
+function futuristicHeader(title) {
+  return `◆ ◇ ◆ ${toSC(title)} ◆ ◇ ◆`;
 }
 
-// Section item: │  ➥ text
+function futuristicSection(heading, lines = []) {
+  const out = [`▎${toSC(heading)}`];
+  for (const line of lines) {
+    out.push(`┊ ${line}`);
+  }
+  return out.join("\n");
+}
+
+function progressBar(value, max, width = 8) {
+  const v = Math.max(0, Math.min(value, max));
+  const filled = max > 0 ? Math.round((v / max) * width) : 0;
+  return "▰".repeat(filled) + "▱".repeat(width - filled);
+}
+
+function statusDot(status = "online") {
+  const map = {
+    online: "●",
+    offline: "○",
+    active: "●",
+    idle: "◐",
+    error: "✕",
+  };
+  return map[status.toLowerCase()] || "●";
+}
+
+function futuristicDivider(len = 28) {
+  return "┈" + "┈".repeat(Math.min(len, 36));
+}
+
+function futuristicFooter(stats, botName) {
+  return `${futuristicDivider()}\n${stats}\n${toSC(botName)}`;
+}
+
+function kv(key, value, padTo = 10) {
+  const k = String(key);
+  const padded = k + " ".repeat(Math.max(0, padTo - k.length));
+  return `${padded}: ${value}`;
+}
+
+function futuristicCategory(emoji, name, commands, prefix, perLine = 3) {
+  const header = `▎${emoji} ${toSC(name)} (${commands.length})`;
+  const lines = [];
+  for (let i = 0; i < commands.length; i += perLine) {
+    const chunk = commands.slice(i, i + perLine);
+    lines.push(`┊ ${chunk.map(c => `${prefix}${c}`).join("  ")}`);
+  }
+  return [header, ...lines].join("\n");
+}
+
+function futuristicDashboard(title, intro, sections = [], footerStats, botName) {
+  const parts = [futuristicHeader(title)];
+  if (intro) parts.push(`\n${intro}`);
+  for (const sec of sections) {
+    parts.push("\n" + futuristicSection(sec.heading, sec.lines));
+  }
+  parts.push("\n" + futuristicFooter(footerStats, botName));
+  return parts.join("\n");
+}
+
+// ═══════════════════════════════════════════════
+// BACKWARD COMPAT — fungsi lama, signature sama, output futuristik v4
+// Dipakai oleh 1266+ file plugin. Update di sini = update semua plugin.
+// ═══════════════════════════════════════════════
+
+// Section header: ▎Title (was ╭─「 *Title* 」)
+function sectionHeader(title) {
+  return `▎${toSC(title)}`;
+}
+
+// Section item: ┊ text (was │  ➥ text)
 function sectionItem(text) {
   const clean = String(text).replace(/^[•┊╎❏➶╭╰│]\s*/g, '').replace(/^\s+/g, '');
-  return `│  ➥ ${clean}`;
+  return `┊ ${clean}`;
 }
 
-// Section close: ╰─
+// Section close: ┈┈┈ (was ╰─)
 function sectionClose() {
-  return `╰─`;
+  return futuristicDivider();
 }
 
-// Spacer line: │
+// Spacer line: ┊ (was │)
 function sectionSpacer() {
-  return `│`;
+  return `┊`;
 }
 
 // Build a complete section
@@ -38,39 +113,48 @@ function buildSection(title, items = []) {
   return lines.join("\n");
 }
 
-// === Backward compat functions ===
+// claraHeader: ▎Emoji Title (was ╭─「 *Title* 」)
 function claraHeader(title, emoji = "") {
-  return `╭─「 *${toSC(title)}* 」`;
+  if (isRealEmoji(emoji)) return `▎${emoji} ${toSC(title)}`;
+  return `▎${toSC(title)}`;
 }
 
+// bracketBox: ▎Label / ┊ lines / ┈┈┈ (was ╭─「 」 / │ ➥ / ╰─)
+// Emoji param: hanya render kalau emoji asli, bukan "i" atau teks
 function bracketBox(emoji, label, lines = []) {
-  const header = `╭─「 *${toSC(label)}* 」`;
+  const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
+  const header = `▎${emojiStr}${toSC(label)}`;
   const body = lines.map((line) => {
     const clean = String(line)
       .replace(/^╎❏\s*/, '')
       .replace(/^╎\s*$/, '')
       .replace(/^┊\s+➶\s*/, '')
       .replace(/^[•┊╎❏➶╭╰│]\s*/g, '');
-    return `│  ➥ ${clean}`;
+    return `┊ ${clean}`;
   });
-  const footer = `╰─`;
+  const footer = futuristicDivider();
   return [header, ...body, footer].join("\n");
 }
 
+// separator: ┈┈┈┈┈┈┈ (was ┊──────┊)
 function separator(char = "─", repeat = 20) {
-  return `┊${"─".repeat(Math.min(repeat, 28))}┊`;
+  return futuristicDivider(repeat);
 }
 
+// tipText: ┊ 💡 Tip: text (was │  💡 *Tip:* text)
 function tipText(text) {
-  return `│  💡 *Tip:* ${text}`;
+  return `┊ 💡 Tip: ${text}`;
 }
 
+// claraWrap: calls bracketBox — auto futuristic
 function claraWrap(title, body, type = "info") {
-  const typeLabel = type === "error" ? " Error" : type === "success" ? " Success" : type === "warn" ? " Warning" : "";
-  const lines = String(body).split("\n").filter(l => l.trim());
+  const typeLabel = type === "error" ? " — Error" : type === "success" ? " — Success" : type === "warn" ? " — Warning" : "";
+  const raw = Array.isArray(body) ? body : String(body).split("\n");
+  const lines = raw.filter(l => l.trim());
   return bracketBox(type, title + typeLabel, lines);
 }
 
+// claraLine: calls bracketBox — auto futuristic
 function claraLine(title, text) {
   return bracketBox("i", title, [text]);
 }
@@ -81,6 +165,7 @@ function formatNumber(num) {
   return String(num).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+// broadcastFormat: calls bracketBox — auto futuristic
 function broadcastFormat({ botName = "Nova AI", senderName = "Owner", message, type = "group" }) {
   const now = new Date();
   const tanggal = now.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
@@ -99,6 +184,7 @@ function broadcastFormat({ botName = "Nova AI", senderName = "Owner", message, t
   return bracketBox("i", "Broadcast Info", lines.filter(l => l !== undefined));
 }
 
+// novaUsage: calls bracketBox — auto futuristic
 function novaUsage(commandName, { steps = [], example = "", note = "", emoji = "" } = {}) {
   let lines = [];
   if (steps.length > 0) {
@@ -122,54 +208,33 @@ function novaUsage(commandName, { steps = [], example = "", note = "", emoji = "
   return bracketBox('i', title, lines);
 }
 
-
-// === Info-style box (◈ subsection + ┊ detail) ===
-// Dipakai KHUSUS untuk info/profile (.menu) dan daftar command (.allmenu,
-// .allmenucategory, .menu2) — beda dari bracketBox (➥) yang dipakai untuk
-// caption/petunjuk cara pakai di tiap plugin (JANGAN diganti, sudah benar).
-//
-// Struktur:
-//   ╭─「 Title 」
-//   │ intro (opsional, baris bebas di bawah judul)
-//   │
-//   │  ◈ *Heading Subsection* (opsional)
-//   │  ┊ Key: value
-//   ╰──────────────
+// infoBox: futuristic style (was ╭─「 」 / │ ◈ / │ ┊ / ╰──)
 function infoBox(title, { intro, sections = [] } = {}) {
-  const out = [`╭─「 ${toSC(title)} 」`];
-  if (intro) out.push(`│ ${intro}`);
+  const out = [`▎${toSC(title)}`];
+  if (intro) out.push(`┊ ${intro}`);
   for (const sec of sections) {
-    out.push(`│`);
-    if (sec.heading) out.push(`│  ◈ *${toSC(sec.heading)}*`);
+    out.push(`┊`);
+    if (sec.heading) out.push(`┊ ◈ *${toSC(sec.heading)}*`);
     for (const line of sec.lines || []) {
-      out.push(`│  ┊ ${line}`);
+      out.push(`┊   ${line}`);
     }
   }
-  out.push(`╰──────────────`);
+  out.push(futuristicDivider());
   return out.join("\n");
 }
 
-// Daftar command polos (tanpa subsection), tiap item pakai bullet ◈.
-//   ╭─「 Title 」
-//   │  ◈ item1
-//   │  ◈ item2
-//   ╰──────────────
+// listBox: futuristic style (was ╭─「 」 / │ ◈ / ╰──)
 function listBox(title, items = []) {
-  const out = [`╭─「 ${toSC(title)} 」`];
-  for (const item of items) out.push(`│  ◈ ${item}`);
-  out.push(`╰──────────────`);
+  const out = [`▎${toSC(title)}`];
+  for (const item of items) out.push(`┊ ◈ ${item}`);
+  out.push(futuristicDivider());
   return out.join("\n");
 }
 
-export {
-  buildNavButtons,
-  claraHeader, alyaHeader, bracketBox, claraWrap, claraLine,
-  separator, tipText, formatNumber, broadcastFormat, novaUsage,
-  toSC, sectionHeader, sectionItem, sectionClose, sectionSpacer, buildSection,
-  infoBox, listBox,
-};
+// ═══════════════════════════════════════════════
+// NAV BUTTONS (untuk menu interaktif)
+// ═══════════════════════════════════════════════
 
-// === Tombol navigasi untuk menu (single_select untuk Kategori) ===
 const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
   canvas: "Canvas", tools: "Tools", game: "Games", rpg: "RPG",
@@ -190,16 +255,14 @@ const CATEGORY_EMOJIS = {
   panel: "🖥️", owner: "👑", store: "🛒",
 };
 
-/**
- * Build 4 tombol navigasi: Kategori (single_select popup), Info Lainnya, All Menu/Menu, Tanya AI.
- * @param {string} prefix - Command prefix
- * @param {boolean} isAllMenuCtx - kalau true, tombol ke-3 jadi "🏠 Menu", kalau false jadi "📋 All Menu"
- * @param {Array} allCatKeys - semua key kategori yang tersedia
- * @param {object} commandsByCategory - map cat → commands
- * @param {object} caseCats - map cat → case commands
- * @param {boolean} isOwner - kalau true, tampilkan kategori owner
- * @returns {Array} buttons array untuk sendMenuCard
- */
+const CATEGORY_ORDER = [
+  "main", "ai", "download", "sticker", "tools", "game", "rpg",
+  "fun", "canvas", "media", "search", "group", "utility",
+  "info", "cek", "religi", "economy", "user", "random",
+  "premium", "ephoto", "jpm", "pushkontak", "panel",
+  "store", "owner",
+];
+
 function buildNavButtons(prefix, isAllMenuCtx, allCatKeys, commandsByCategory, caseCats, isOwner) {
   const rows = [];
   for (const cat of allCatKeys.sort()) {
@@ -228,3 +291,16 @@ function buildNavButtons(prefix, isAllMenuCtx, allCatKeys, commandsByCategory, c
     { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
   ];
 }
+
+export {
+  // Futuristic v4
+  futuristicHeader, futuristicSection, progressBar, statusDot,
+  futuristicDivider, futuristicFooter, kv, futuristicCategory,
+  futuristicDashboard, CATEGORY_ORDER,
+  // Backward compat (futuristic output, same signature)
+  buildNavButtons,
+  claraHeader, alyaHeader, bracketBox, claraWrap, claraLine,
+  separator, tipText, formatNumber, broadcastFormat, novaUsage,
+  toSC, sectionHeader, sectionItem, sectionClose, sectionSpacer, buildSection,
+  infoBox, listBox,
+};
