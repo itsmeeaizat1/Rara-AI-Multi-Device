@@ -18,6 +18,7 @@ import os from "os";
 import path from "path";
 import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
+import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 
 const pluginConfig = {
   name: "allmenu",
@@ -253,50 +254,26 @@ ${weatherBlock}${readMore}
 
     txt += `╰──────────❀\n`;
 
-    // ── Send: type 1 buttons + externalAdReply di ROOT ──
-    const menuThumb = getThumb();
-    const buttons = [
-      { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
-      { buttonId: `${prefix}allmenucategory`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
-      { buttonId: `${prefix}owner`, buttonText: { displayText: "👑 Owner" }, type: 1 },
+    // ── Send: nativeFlowMessage buttons (proven pattern) + real image header ──
+    const navButtons = [
+      { id: `${prefix}menu`, text: "🏠 Menu" },
+      { id: `${prefix}allmenu`, text: "📋 All Menu" },
+      { id: `${prefix}allmenucategory`, text: "📂 Kategori" },
+      { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
+      { id: `${prefix}info`, text: "ℹ️ Info" },
+      { id: `${prefix}owner`, text: "👑 Owner" },
     ];
 
-    try {
-      await sock.sendMessage(m.chat, {
-        text: txt,
-        footer: "Nova AI WhatsApp Bot",
-        buttons: buttons,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          externalAdReply: {
-            title: botName,
-            body: "WhatsApp Multi Device",
-            thumbnail: menuThumb,
-            sourceUrl: botConfig.saluran?.link || "",
-            mediaType: 1,
-            renderLargerThumbnail: true,
-          },
-        },
-      }, { quoted: m });
-    } catch (btnErr) {
-      console.error("[allmenu] buttons gagal, fallback:", btnErr.message);
-      await sock.sendMessage(m.chat, {
-        text: txt,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          externalAdReply: {
-            title: botName,
-            body: "WhatsApp Multi Device",
-            thumbnail: menuThumb,
-            sourceUrl: botConfig.saluran?.link || "",
-            mediaType: 1,
-            renderLargerThumbnail: true,
-          },
-        },
-      }, { quoted: m });
-    }
-
     await m.react("🐣");
+
+    await sendMenuCard(sock, m, {
+      text: txt,
+      footer: "Nova AI WhatsApp Bot",
+      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
+      buttons: navButtons,
+      title: botName,
+    });
+
     try { await sendMenuAudio(sock, m, db, true); } catch {}
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);
