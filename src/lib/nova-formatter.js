@@ -467,7 +467,7 @@ function createCommandList(categoryName, commands, prefix = ".") {
  * @param {string} [message='Tunggu sebentar...'] - Pesan loading
  * @returns {string} Formatted wait message
  */
-function createWaitMessage(message = "Tunggu sebentar...") {
+function createWaitMessage(message = "Diproses...") {
   return `${EMOJIS.loading} *${message}*`;
 }
 

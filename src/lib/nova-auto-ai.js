@@ -163,7 +163,6 @@ ATURAN PENTING:
 const fallbackResponses = [
   "Hmm, aku sedang berpikir...",
   "Maaf, pikiranku sedang blank sebentar~",
-  "Eh tunggu sebentar ya, aku loading dulu...",
   "Aduh, otakku lag nih, coba lagi ya!",
   "Hmm apa ya, bentar mikir dulu~",
 ];

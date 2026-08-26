@@ -766,27 +766,19 @@ async function messageHandler(msg, sock) {
     }
 
     // === PROCESSING NOTIFICATION (media/tool only) ===
-    let procMsgKey = null;
     const procNotifOn = dbInstance?.setting?.("procNotif") ?? true;
     const procCategories = ["ai", "canvas", "image", "maker", "sticker", "convert", "tools", "download", "downloader", "tts", "anime"];
     const cmdCategory = plugin.config?.category || "";
     const isProcCategory = procCategories.includes(cmdCategory);
     if (procNotifOn && !m.isNewsletter && isProcCategory) {
-      try {
-        const procMsg = await sock.sendMessage(m.chat, {
-          text: "⏳ Tunggu sebentar ya kak, lagi diproses!",
-        });
-        if (procMsg?.key) procMsgKey = procMsg.key;
-      } catch {}
+      try { await m.react("🕒"); } catch {}
     }
 
     await plugin.handler(m, { sock, conn: sock, config, db: getDatabase(), args: m.args || [], text: m.text || '', uptime: process.uptime() * 1000 });
 
-    // Delete processing notification after handler completes
-    if (procMsgKey) {
-      try {
-        await sock.sendMessage(m.chat, { delete: procMsgKey });
-      } catch {}
+    // React 🐣 after processing completes
+    if (procNotifOn && !m.isNewsletter && isProcCategory) {
+      try { await m.react("🐣"); } catch {}
     }
 
     if (autoTypingOn) {
