@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenucategory.js — Menu per kategori (Futuristic Dashboard v4)
+// allmenucategory.js — Menu per kategori (Indo Dev Bot Style v5)
 import {
   getCommandsByCategory,
   getCategories,
@@ -11,9 +11,9 @@ import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import {
-  futuristicHeader, futuristicSection, progressBar, statusDot,
-  futuristicDivider, futuristicFooter, kv, futuristicCategory,
-  buildNavButtons, CATEGORY_NAMES, CATEGORY_EMOJIS, CATEGORY_ORDER,
+  botHeader, botSignature, sectionBox, progressBar, statusDot,
+  kv, categoryBox, buildNavButtons,
+  CATEGORY_NAMES, CATEGORY_EMOJIS, CATEGORY_ORDER,
 } from "../../src/lib/nova-menu-style.js";
 import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 
@@ -94,40 +94,46 @@ async function buildCategoryText(m, botConfig, db, uptime, category) {
       if (!seen.has(cmd.command)) { seen.add(cmd.command); allCmds.push(cmd); }
     }
 
-    const header = futuristicHeader(`${catEmoji} ${catName}`);
+    const parts = [];
 
-    const userProfile = futuristicSection("User", [
+    parts.push(botHeader(botName));
+    parts.push(`│`);
+    parts.push(`┊ ${catEmoji} *${catName}* — ${getTimeGreeting()} ${m.pushName || "User"} 👋`);
+    parts.push(`│`);
+
+    // User info
+    parts.push(sectionBox("👤", "User", [
       kv("Nama", m.pushName || "User"),
       kv("Status", `${roleEmoji} ${userRole}`),
       kv("Level", `${userLevel} ${expBar}`),
       kv("Prefix", `[ ${prefix} ]`),
-    ]);
+    ]));
+
+    parts.push("");
 
     if (allCmds.length === 0) {
-      const footer = futuristicFooter("0 fitur", botName);
-      return [header, "", userProfile, "", futuristicSection("Kategori", [
+      parts.push(sectionBox(catEmoji, catName, [
         "Tidak ada command di kategori ini",
-      ]), "", footer].join("\n");
+      ]));
+    } else {
+      // Command list with descriptions
+      const cmdLines = allCmds.map((c, i) => {
+        const num = String(i + 1).padStart(2, "0");
+        const desc = c.description ? ` — ${c.description}` : "";
+        return `${num}. ${prefix}${c.command}${desc}`;
+      });
+
+      parts.push(sectionBox(catEmoji, `${catName} (${allCmds.length})`, cmdLines));
     }
 
-    // Command list with descriptions
-    const cmdLines = allCmds.map((c, i) => {
-      const num = String(i + 1).padStart(2, "0");
-      const desc = c.description ? ` — ${c.description}` : "";
-      return `${num}. ${prefix}${c.command}${desc}`;
-    });
+    parts.push("");
+    parts.push(`❀°˖✧ ${allCmds.length} fitur ✧˖°❀`);
+    parts.push(botSignature(botName));
 
-    const cmdSection = futuristicSection(`Commands (${allCmds.length})`, cmdLines);
-
-    const footer = futuristicFooter(
-      `${allCmds.length} fitur · ${prefix} prefix`,
-      botName
-    );
-
-    return [header, "", userProfile, "", cmdSection, "", footer].join("\n");
+    return parts.join("\n");
   } catch (e) {
     console.error("[menukategori] buildCategoryText error:", e.message);
-    return `◆ ◇ ◆ Error ◆ ◇ ◆\n\n┊ ${e.message}`;
+    return `╭─「 *Error* 」\n│ ❏ ${e.message}\n╰──────────`;
   }
 }
 
@@ -170,38 +176,46 @@ async function buildCategoryListText(m, botConfig, db, uptime) {
 
       const name = CATEGORY_NAMES[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
       const emoji = CATEGORY_EMOJIS[cat] || "📂";
-      catEntries.push(`${emoji}  ${prefix}menukategori ${cat.padEnd(12)} ${name} (${total})`);
+      catEntries.push(`${emoji}  ${prefix}menukategori ${cat.padEnd(12)} — ${name} (${total})`);
       totalFitur += total;
       totalKategori++;
     }
 
-    const header = futuristicHeader("Category Index");
+    const parts = [];
 
-    const userProfile = futuristicSection("User", [
+    parts.push(botHeader(botName));
+    parts.push(`│`);
+    parts.push(`┊ ${getTimeGreeting()} *${m.pushName || "User"}* 👋`);
+    parts.push(`│`);
+
+    parts.push(sectionBox("👤", "User", [
       kv("Nama", m.pushName || "User"),
       kv("Status", `${roleEmoji} ${userRole}`),
       kv("Level", `${userLevel} ${expBar}`),
-    ]);
+    ]));
 
-    const systemStatus = futuristicSection("System", [
+    parts.push("");
+
+    parts.push(sectionBox("🤖", "Bot", [
       kv("Status", `${statusDot("online")} Online`),
       kv("Prefix", `[ ${prefix} ]`),
       kv("Uptime", uptimeStr),
       kv("Waktu", `${timeStr} WIB`),
       kv("Cuaca", weatherLine),
-    ]);
+    ]));
 
-    const catSection = futuristicSection(`Kategori (${totalKategori})`, catEntries);
+    parts.push("");
 
-    const footer = futuristicFooter(
-      `${totalFitur} fitur · ${totalKategori} kategori`,
-      botName
-    );
+    parts.push(sectionBox("📂", `Kategori (${totalKategori})`, catEntries));
 
-    return [header, "", userProfile, "", systemStatus, "", catSection, "", footer].join("\n");
+    parts.push("");
+    parts.push(`❀°˖✧ ${totalFitur} fitur · ${totalKategori} kategori ✧˖°❀`);
+    parts.push(botSignature(botName));
+
+    return parts.join("\n");
   } catch (e) {
     console.error("[menukategori] buildCategoryListText error:", e.message);
-    return `◆ ◇ ◆ Error ◆ ◇ ◆\n\n┊ ${e.message}`;
+    return `╭─「 *Error* 」\n│ ❏ ${e.message}\n╰──────────`;
   }
 }
 
@@ -240,13 +254,13 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     const matchedCat = findCategory(inputCat);
     if (!matchedCat) {
-      await m.reply(`◆ ◇ ◆ Error ◆ ◇ ◆\n\n┊ Kategori "${inputCat}" tidak ditemukan\n┊ Ketik *${prefix}menukategori* untuk daftar`);
+      await m.reply(`╭─「 *Tidak Ditemukan* 」\n│ ❏ Kategori "${inputCat}" tidak ada\n│ ❏ Ketik *${prefix}menukategori* untuk daftar\n╰──────────`);
       await m.react("❌");
       return;
     }
 
     if (matchedCat === "owner" && !m.isOwner) {
-      await m.reply("◆ ◇ ◆ Access Denied ◆ ◇ ◆\n\n┊ Kategori ini khusus Owner");
+      await m.reply(`╭─「 *Akses Ditolak* 」\n│ ❏ Kategori ini khusus Owner 👑\n╰──────────`);
       await m.react("❌");
       return;
     }
