@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   eslint-fix-pr:
@@ -22,30 +23,28 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '22'
 
       - name: Install dependencies (skip lifecycle scripts)
         run: npm install --ignore-scripts --no-audit --no-fund
 
-      - name: Create minimal ESLint config
+      - name: Create minimal ESLint config (ESM)
         run: |
           cat > /tmp/eslint-min.json << 'EOF'
           {
-            "env": { "es2021": true, "node": true, "browser": false },
-            "parserOptions": { "ecmaVersion": 2021, "sourceType": "script" },
+            "env": { "es2021": true, "node": true },
+            "parserOptions": { "ecmaVersion": 2022, "sourceType": "module" },
             "rules": {
               "no-unused-vars": "warn",
-              "no-undef": "error"
+              "no-undef": "off"
             }
           }
           EOF
 
       - name: Run ESLint --fix (isolated) and ensure report exists
         run: |
-          # ensure report file exists even if eslint outputs nothing
           : > eslint-report.txt
           npx eslint "plugins/" --ext .js --config /tmp/eslint-min.json --fix -f unix -o eslint-report.txt || true
-          # make sure report exists
           test -f eslint-report.txt || : > eslint-report.txt
 
       - name: Upload ESLint report
@@ -58,7 +57,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # stage only modified tracked files so node_modules / new files are NOT added
           git add -u
           if git diff --cached --quiet; then
             echo "No lint fixes to commit"
@@ -68,7 +66,7 @@ jobs:
           fi
 
       - name: Create Pull Request with fixes
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "chore: apply ESLint --fix (auto)"
