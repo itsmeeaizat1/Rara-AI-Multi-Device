@@ -57,7 +57,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     const thumbPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu.jpg");
     const thumbBuffer = getThumbnailBuffer(thumbPath);
 
-    const nativeButtons = buttons.slice(0, 3).map((btn) => ({
+    const nativeButtons = buttons.slice(0, 4).map((btn) => ({
       name: "quick_reply",
       buttonParamsJson: JSON.stringify({
         display_text: btn.text,
