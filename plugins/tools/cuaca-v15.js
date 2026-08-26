@@ -1,8 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
 import {
+  bracketBox,
   claraHeader,
-    separator,
+  separator,
   tipText,
   claraWrap,
   claraLine,
@@ -188,7 +189,7 @@ async function handler(m, { sock, config: botConfig, db }) {
         return { handled: true };
       }
 
-      await m.reply(footer.trim());
+      await m.reply(`${footer.trim()}\n\n${botConfig?.bot?.name || `Nova AI WhatsApp Bot`}`);
       return { handled: true };
     }
 

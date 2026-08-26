@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenucategory.js — Menu per kategori (interactive header image + nativeFlow buttons)
+// allmenucategory.js — Menu per kategori (elegant, ringkas, tombol navigasi)
 import config from "../../config.js";
 import {
   getCommandsByCategory,
@@ -10,6 +10,7 @@ import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
 import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
+import { bracketBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "allmenucategory",
@@ -26,9 +27,6 @@ const pluginConfig = {
   energi: 0,
   isEnabled: true,
 };
-
-const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c).replace(/[A-Z]/g, c => (SC_MAP[c.toLowerCase()] || c).toUpperCase());
 
 const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
@@ -86,24 +84,16 @@ async function buildCategoryText(m, botConfig, db, category) {
     }
 
     if (allCmds.length === 0) {
-      return `  ° ✿  ${catEmoji} ${catName} ✿ °\n  ┊  ╰➶ Tidak ada command di kategori ini\n\n  ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      return `${bracketBox(catEmoji, catName, ["Tidak ada command di kategori ini"])}\n\n${botConfig.bot?.name || "Nova AI Whatsapp Bot"}`;
     }
 
-    let cmdLines = "";
-    for (let i = 0; i < allCmds.length; i++) {
-      const desc = allCmds[i].description ? ` — ${allCmds[i].description}` : "";
-      cmdLines += `│  ◈ ${prefix}${allCmds[i].command}${desc}\n`;
-    }
+    const cmdLines = allCmds
+      .map((c) => `${prefix}${c.command}${c.description ? ` — ${c.description}` : ""}`);
 
-    return `╭─「 *${catEmoji} ${catName}* 」
-${cmdLines}│
-│  *Total: ${allCmds.length} Fitur*
-╰──────────────
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
-${getTimeGreeting()} *${m.pushName || "User"}* 👋`;
+    return `${bracketBox(catEmoji, catName, cmdLines)}\n\nTotal ${allCmds.length} fitur\n${botConfig.bot?.name || "Nova AI Whatsapp Bot"}`;
   } catch (e) {
     console.error("[menukategori] buildCategoryText error:", e.message);
-    return `╭─「 *Menu Kategori* 」\n│  ➥ Error: ${e.message}\n╰─`;
+    return `╭─「 Menu Kategori 」\n│ Error: ${e.message}\n╰─`;
   }
 }
 
@@ -122,21 +112,17 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       const caseCats = getCasesByCategory();
       const allCatKeys = [...new Set([...pluginCats, ...Object.keys(caseCats)])];
 
-      let catList = "";
+      const rows = [];
       for (const cat of allCatKeys.sort()) {
         if (cat === "owner" && !m.isOwner) continue;
         const total = (commandsByCategory[cat] || []).length + (caseCats[cat] || []).length;
         if (total === 0) continue;
         const name = CATEGORY_NAMES[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
         const emoji = CATEGORY_EMOJIS[cat] || "📂";
-        catList += `│  ◈ ${emoji} ${prefix}menukategori ${cat} — ${name} (${total})\n`;
+        rows.push(`${emoji} ${prefix}menukategori ${cat} — ${name} (${total})`);
       }
 
-      const text = `╭─「 *Kategori* 」
-${catList}│
-│  *Total: ${allCatKeys.length} Kategori*
-╰──────────────
-Ketik *${prefix}menukategori <nama kategori>*`;
+      const text = `${bracketBox("📂", "Kategori", rows)}\n\nTotal ${rows.length} kategori · ketik *${prefix}menukategori <nama>*\n${botConfig.bot?.name || "Nova AI Whatsapp Bot"}`;
 
       const navButtons = [
         { id: `${prefix}menu`, text: "🏠 Menu" },
@@ -146,10 +132,10 @@ Ketik *${prefix}menukategori <nama kategori>*`;
 
       await sendMenuCard(sock, m, {
         text,
-        footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
+        footer: botName,
         thumbnailPath,
         buttons: navButtons,
-        title: toSC(botName),
+        title: "Menu Kategori",
       });
 
       await m.react("🐣");
@@ -159,13 +145,13 @@ Ketik *${prefix}menukategori <nama kategori>*`;
 
     const matchedCat = findCategory(inputCat);
     if (!matchedCat) {
-      await m.reply(`╭─「 Kategori 」\n│  Kategori "${inputCat}" tidak ditemukan\n╰──────────────\nKetik *${prefix}menukategori* untuk daftar kategori`);
+      await m.reply(`${bracketBox("📂", "Kategori", [`Kategori "${inputCat}" tidak ditemukan`])}\n\nKetik *${prefix}menukategori* untuk daftar kategori`);
       await m.react("❌");
       return;
     }
 
     if (matchedCat === "owner" && !m.isOwner) {
-      await m.reply(`╭─「 👑 Owner 」\n│  Kategori ini khusus owner\n╰──────────────`);
+      await m.reply(bracketBox("👑", "Owner", ["Kategori ini khusus owner"]));
       await m.react("❌");
       return;
     }
@@ -182,10 +168,10 @@ Ketik *${prefix}menukategori <nama kategori>*`;
 
     await sendMenuCard(sock, m, {
       text,
-      footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
+      footer: botName,
       thumbnailPath,
       buttons: navButtons,
-      title: `${toSC(botName)} — ${catEmoji} ${catName}`,
+      title: `${catEmoji} ${catName}`,
     });
 
     await m.react("🐣");
