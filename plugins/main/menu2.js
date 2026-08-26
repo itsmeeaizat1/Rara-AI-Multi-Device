@@ -1,13 +1,13 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menu2.js — Quick menu (text + externalAdReply + buttons)
+// menu2.js — Quick menu (interactive header image + nativeFlow buttons)
 import config from "../../config.js";
 import {
   getCommandsByCategory,
   getCategories,
 } from "../../src/lib/nova-plugins.js";
 import { getCasesByCategory } from "../../case/nova.js";
-import fs from "fs";
 import path from "path";
+import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 
 const pluginConfig = {
   name: "menu2",
@@ -39,32 +39,16 @@ const QUICK_LINKS = [
   { label: "Rules", cmd: "rules", emoji: "📜" },
 ];
 
-let _thumbCache = null;
-function getThumb() {
-  if (_thumbCache) return _thumbCache;
-  try {
-    const p = path.join(process.cwd(), "assets", "image", "menu.jpg");
-    if (fs.existsSync(p)) {
-      _thumbCache = fs.readFileSync(p);
-    }
-  } catch (e) {}
-  return _thumbCache;
-}
-
 async function handler(m, { sock, config: botConfig }) {
   try {
     await m.react("🕒");
     const prefix = botConfig.command?.prefix || ".";
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
-    const saluranLink = botConfig.saluran?.link || "";
-    const menuThumb = getThumb();
 
     let linkLines = "";
-    for (let i = 0; i < QUICK_LINKS.length; i++) {
+    for (const i = 0; i < QUICK_LINKS.length; i++) {
       const q = QUICK_LINKS[i];
-      const isLast = i === QUICK_LINKS.length - 1;
-      const bullet = isLast ? "╰" : "➶";
-      linkLines += `  ┊  ${bullet}➶ ${q.emoji} ${prefix}${q.cmd} — ${q.label}\n`;
+      linkLines += `│  ◈ ${q.emoji} ${prefix}${q.cmd} — ${q.label}\n`;
     }
 
     const totalFitur = (() => {
@@ -77,52 +61,26 @@ async function handler(m, { sock, config: botConfig }) {
       return total;
     })();
 
-    const text = `  ° ✿  Quick Menu ✿ °
-${linkLines}
-  *Total: ${totalFitur} Fitur*
-
-  ❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+    const text = `╭─「 *Quick Menu* 」
+${linkLines}│
+│  *Total: ${totalFitur} Fitur*
+╰──────────────
+❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${m.pushName || "User"} 👋`;
 
-    const buttons = [
-      { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
-      { buttonId: `${prefix}allmenu`, buttonText: { displayText: "📋 All Menu" }, type: 1 },
-      { buttonId: `${prefix}owner`, buttonText: { displayText: "👑 Owner" }, type: 1 },
+    const navButtons = [
+      { id: `${prefix}menu`, text: "🏠 Menu" },
+      { id: `${prefix}allmenu`, text: "📋 All Menu" },
+      { id: `${prefix}owner`, text: "👑 Owner" },
     ];
 
-    try {
-      await sock.sendMessage(m.chat, {
-        text: text,
-        footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
-        buttons: buttons,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          externalAdReply: {
-            title: toSC(botName),
-            body: "Quick Navigation",
-            thumbnail: menuThumb,
-            sourceUrl: saluranLink,
-            mediaType: 1,
-            renderLargerThumbnail: true,
-          },
-        },
-      }, { quoted: m });
-    } catch (btnErr) {
-      await sock.sendMessage(m.chat, {
-        text: text,
-        contextInfo: {
-          mentionedJid: [m.sender],
-          externalAdReply: {
-            title: toSC(botName),
-            body: "Quick Navigation",
-            thumbnail: menuThumb,
-            sourceUrl: saluranLink,
-            mediaType: 1,
-            renderLargerThumbnail: true,
-          },
-        },
-      }, { quoted: m });
-    }
+    await sendMenuCard(sock, m, {
+      text,
+      footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
+      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
+      buttons: navButtons,
+      title: toSC(botName),
+    });
 
     await m.react("🐣");
   } catch (e) {

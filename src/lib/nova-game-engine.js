@@ -163,18 +163,31 @@ function isSurrender(text) {
 }
 
 // ═══════════════════════════════════════════════
-// REPLY DETECTION — FIX UTAMA
-// Cek match ID dulu, fallback ke fromMe
+// REPLY DETECTION — FIX UTAMA (v2)
+// Game mengizinkan jawaban LANGSUNG (tanpa reply) sesuai teks
+// yang ditampilkan ke user ("Balas pesan ini atau ketik jawaban
+// langsung"). Reply HANYA dipakai untuk menolak pesan yang jelas-jelas
+// nge-quote pesan LAIN yang tidak terkait game (mencegah false-positive
+// saat user quote pesan orang lain untuk ngomong hal lain).
 // ═══════════════════════════════════════════════
 
 function isReplyToGame(m, session) {
-  if (!m.quoted || !session || !session.messageKey) return false;
+  if (!session || !session.messageKey) return false;
+
+  // Tidak reply sama sekali -> anggap jawaban langsung (sesuai promise ke user)
+  if (!m.quoted) return true;
+
   const quotedId = m.quoted.id || m.quoted.key?.id || '';
   const sessionId = session.messageKey.id || '';
-  // Exact match ID paling reliable
+
+  // Reply tepat ke pesan soal game -> valid
   if (quotedId && sessionId && quotedId === sessionId) return true;
-  // Fallback: user reply ke pesan bot (fromMe)
+
+  // Reply ke pesan bot lain (fromMe) -> masih dianggap valid (longgar)
   if (m.quoted.fromMe === true || m.quoted.isBaileys === true) return true;
+
+  // Reply ke pesan spesifik LAIN yang bukan dari bot -> kemungkinan besar
+  // bukan ditujukan untuk jawab game, jangan proses sebagai jawaban
   return false;
 }
 
