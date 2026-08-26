@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20hapus%20sisa%20loading%20teks%20(-success?style=for-the-badge)
-> *Commit: "fix: hapus sisa loading teks (⏳/Tunggu sebentar) & fix header 」 yang missing di 16 file"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20.open%20tidak%20kebaca%20%26%20AI%20j-success?style=for-the-badge)
+> *Commit: "fix: .open tidak kebaca & AI jawab presiden lama (Jokowi bukan Prabowo)"*
 <!--END_SECTION:latest-update-->
 
 
