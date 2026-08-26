@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "autotranslate", alias: ["autotr", "realtranslate"], category: "future",
+  name: "autotranslate", alias: ["autotranslate"], category: "future",
   alias: ["autotranslate"],
   description: "Toggle auto-translate pesan grup", usage: ".autotranslate <on/off>",
   example: ".autotranslate on", isOwner: true, isPremium: false,

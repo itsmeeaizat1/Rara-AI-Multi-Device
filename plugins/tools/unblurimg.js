@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "unblurimg",
-  alias: ["unblurimg", "unblur", "unblurimage", "hdai", "sharpenai", "jernihkan"],
+  alias: ["unblurimg"],
   category: "tools",
   description: "UnblurImage AI — unblur & upscale gambar ke HD via unblurimage.ai, gratis tanpa token",
   usage: ".unblurimg (reply gambar)\n.unblurimg 2x (reply gambar)\n.unblurimg 4x v1 (reply gambar)",

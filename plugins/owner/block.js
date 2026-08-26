@@ -4,7 +4,7 @@ import { notifyUserBlocked } from "../../src/lib/nova-saluran-broadcast.js";
 
 const pluginConfig = {
   name: "blockuser",
-  alias: ["blockuser", "blokir", "blokiruser"],
+  alias: ["blockuser"],
   category: "owner",
   description: "Blokir user dari WhatsApp bot",
   usage: ".block <@target / nomor>",

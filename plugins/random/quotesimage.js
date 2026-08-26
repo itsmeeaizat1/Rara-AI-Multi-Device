@@ -8,7 +8,7 @@ const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
 
 const pluginConfig = {
     name: 'quotesimage',
-    alias: ["quotesimage", 'quoteimg', 'quotes-image', 'qimg'],
+    alias: ["quotesimage"],
     category: 'random',
     description: 'Random quotes image',
     usage: '.quotesimage',

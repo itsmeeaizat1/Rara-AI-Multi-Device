@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "barista",
-  alias: ["Latte", "barista", "resepkopi", "kopi"],
+  alias: ["barista"],
   category: "future",
   description: "Resep kopi & mocktail, random suggestion, step by step",
   usage: ".barista <command>",

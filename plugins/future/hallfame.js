@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "hallfame",
-  alias: ["hallfame", "hallofame", "penghargaan"],
+  alias: ["hallfame"],
   category: "future",
   description: "Hall of Fame grup - auto-track member terbaik setiap bulan",
   usage: ".hallfame <command>",

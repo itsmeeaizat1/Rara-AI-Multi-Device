@@ -11,7 +11,7 @@ import { listBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "menu2",
-  alias: ["menu2", "quickmenu", "qm", "fastmenu"],
+  alias: ["menu2"],
   category: "main",
   description: "Menu navigasi cepat dengan shortcut",
   usage: ".menu2",

@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "linkgroup",
-  alias: ["linkgroup", "linkgrup2", "gclink2"],
+  alias: ["linkgroup"],
   category: "group",
   description: "Dapatkan link grup",
   usage: ".linkgroup",

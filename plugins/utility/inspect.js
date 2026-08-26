@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "inspect",
-    alias: ["inspect", "inspectgc", "gcinspect"],
+    alias: ["inspect"],
     category: 'utility',
     description: 'Inspect info grup atau saluran WhatsApp via link',
     usage: '.inspect <link grup/saluran>',

@@ -21,7 +21,7 @@ const EMOJIS = ["😀", "😃", "😄", "😁", "😆", "😅", "🤣", "😂", 
 
 const pluginConfig = {
   name: "happyemoji",
-  alias: ["happyemoji", "emoji2", "autoemoji"],
+  alias: ["happyemoji"],
   category: "fun",
   description: "Kirim emoji acak yang ceria",
   usage: ".happyemoji",

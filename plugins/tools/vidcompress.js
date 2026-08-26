@@ -11,7 +11,7 @@ ffmpeg.setFfmpegPath(ffmpegPath.path);
 
 const pluginConfig = {
   name: "vidcompress",
-  alias: ["vidcompress", "compressvideo", "compressvid", "kecilinvid", "vidcompressor"],
+  alias: ["vidcompress"],
   category: "tools",
   description: "Kompres video (MP4/MOV/MKV) dengan kontrol kualitas dan resolusi",
   usage:

@@ -11,7 +11,7 @@ import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "nulis",
-  alias: ["nulis", "tulis", "nulistool"],
+  alias: ["nulis"],
   category: "tools",
   description: "Generate tulisan tangan di kertas",
   usage: ".nulis <teks>",

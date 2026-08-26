@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "personacard",
-  alias: ["personacard", "pcard", "kartuku"],
+  alias: ["personacard"],
   category: "future",
   description: "RPG Persona Card - bikin kartu karakter dari statistik user",
   usage: ".personacard [target]",

@@ -38,7 +38,7 @@ const SAVE_FILE = path.join(process.cwd(), "database", "nokos_result.json");
 
 const pluginConfig = {
   name: ["nokos", "nomorkosong", "nomorkos"],
-  alias: ["nokos", "nomorkosong", "nomorkos", "kos", "ceknomor", "nokosv2"],
+  alias: ["nokos", "nomorkosong", "nomorkos"],
   category: "tools",
   description: "Generate & cek nomor kosong WhatsApp (v2 - advanced)",
   usage: ".nokos [jumlah] [provider]\n.nokos prefix <08xx> [jumlah]\n.nokos cek <nomor>\n.nokos wa <nomor>\n.nokos save\n.nokos list\n.nokos clear",

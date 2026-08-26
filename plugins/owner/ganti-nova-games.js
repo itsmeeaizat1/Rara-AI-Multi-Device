@@ -6,7 +6,7 @@ import { updateAssetUrl } from '../../src/lib/nova-uploader.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ganti-nova-games.jpg',
-    alias: ['gantigames', 'setnovagames'],
+    alias: ["ganti-nova-games.jpg"],
     category: 'owner',
     description: 'Ganti gambar nova-games.jpg (thumbnail games)',
     usage: '.ganti-nova-games.jpg (reply/kirim gambar)',

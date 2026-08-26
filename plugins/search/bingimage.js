@@ -6,7 +6,7 @@ import novaApi from "../../src/lib/nova-apimanager.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "bingimage",
-  alias: ["bingimage", "imagesearch", "carigambar", "bingimg"],
+  alias: ["bingimage"],
   category: "search",
   description: "Cari artwork di Pixiv",
   usage: ".carigambar <query>",

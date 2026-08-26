@@ -29,7 +29,7 @@ function buildSyntheticSwGcRawMessage(sock, remoteJid, innerMessage, messageId) 
 
 const pluginConfig = {
   name: "swgcv2all",
-  alias: ["swgcv2all", "statusgrupv2all"],
+  alias: ["swgcv2all"],
   category: "owner",
   description: "Post Group Status V2 ke SEMUA grup",
   usage: ".swgcv2all <teks> atau reply media",

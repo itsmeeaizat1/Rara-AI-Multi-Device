@@ -100,7 +100,7 @@ async function callAI(prompt, aiConfig) {
 
 const pluginConfig = {
   name: "stt",
-  alias: ["stt", "stt2", "speech2text"],
+  alias: ["stt"],
   category: "ai",
   description: "Ringkas pesan audio/teks menjadi teks",
   usage: ".stt",

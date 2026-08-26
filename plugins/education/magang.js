@@ -4,7 +4,7 @@ import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "magang",
-  alias: ["magang", "internship", "carimagang", "lowonganmagang", "kerjapraktek"],
+  alias: ["magang"],
   category: "education",
   description: "Cari lowongan magang/internship untuk mahasiswa",
   usage: ".magang <command>",

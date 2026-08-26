@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "case",
-  alias: ["case", "report2", "reportcase"],
+  alias: ["case"],
   category: "tools",
   description: "Buat case/laporan",
   usage: ".case <deskripsi>",

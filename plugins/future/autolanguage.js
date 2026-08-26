@@ -3,7 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "autolanguage", alias: ["langdetect", "deteksiBahasa"], category: "future",
+  name: "autolanguage", alias: ["autolanguage"], category: "future",
   alias: ["autolanguage"],
   description: "Deteksi bahasa & translate", usage: ".autolanguage (reply pesan)",
   example: ".autolanguage", isOwner: false, isPremium: true,

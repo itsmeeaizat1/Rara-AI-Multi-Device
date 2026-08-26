@@ -7,7 +7,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "savedb",
-    alias: ["savedb", "savedatabase", "dbdownload"],
+    alias: ["savedb"],
     category: 'owner',
     description: 'Download file database',
     usage: '.savedb',

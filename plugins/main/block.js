@@ -3,7 +3,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "block2",
-  alias: ["block2", "blockmain", "banmain"],
+  alias: ["block2"],
   category: "owner",
   description: "Blokir user",
   usage: ".block <@target>",

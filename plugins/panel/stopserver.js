@@ -5,7 +5,7 @@ import axios from 'axios'
 
 const pluginConfig = {
     name: 'stopserver',
-    alias: ["stopserver", 'stoppanel', 'stopsrv'],
+    alias: ["stopserver"],
     category: 'panel',
     description: 'Stop server panel via Client API (ptlc_)',
     usage: '.stopserver atau .stopserver <serverid>',

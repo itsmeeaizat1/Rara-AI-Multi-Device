@@ -6,7 +6,7 @@ import { f } from '../../src/lib/nova-http.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'asupan',
-    alias: ["asupan", 'asupanrandom'],
+    alias: ["asupan"],
     category: 'asupan',
     description: 'Random video asupan',
     usage: '.asupan',

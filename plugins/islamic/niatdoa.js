@@ -3,7 +3,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "niatdoa",
-  alias: ["niatdoa", "niat", "doaislam", "doasehari"],
+  alias: ["niatdoa"],
   category: "islamic",
   description: "Niat sholat & kumpulan doa sehari-hari",
   usage: ".niatdoa <niat/doa>",

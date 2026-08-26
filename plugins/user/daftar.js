@@ -16,7 +16,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "daftar",
-  alias: ["daftar", "regis", "registeruser", "daftarcepat"],
+  alias: ["daftar"],
   category: "user",
   description: "Daftar sebagai user bot melalui sesi reply interaktif",
   usage: ".daftar",

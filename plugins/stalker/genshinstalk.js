@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "genshinstalk",
-  alias: ["genshinstalk", "genshin", "stalkgenshin", "gi"],
+  alias: ["genshinstalk"],
   category: "stalker",
   description: "Melihat informasi akun Genshin Impact berdasarkan UID.",
   usage: ".genshinstalk <uid>",

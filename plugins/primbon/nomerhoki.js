@@ -4,7 +4,7 @@ import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'nomerhoki',
-    alias: ["nomerhoki", "ceknomor"],
+    alias: ["nomerhoki"],
     category: 'primbon',
     description: 'Cek keberuntungan nomor HP',
     usage: '.nomerhoki <nomor>',

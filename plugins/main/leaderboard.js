@@ -6,7 +6,7 @@ import path from 'path'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "leaderboard2",
-    alias: ["leaderboard2", "lbmain2", "topchat3"],
+    alias: ["leaderboard2"],
     category: 'main',
     description: 'Lihat leaderboard global (koin, exp, energi)',
     usage: '.leaderboard',

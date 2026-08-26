@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wordchain",
-  alias: ["wordchain", "sambungkata", "kataberantai"],
+  alias: ["wordchain"],
   category: "future",
   description: "Word chain - sambung kata, huruf akhir jadi huruf awal",
   usage: ".wordchain <command>",

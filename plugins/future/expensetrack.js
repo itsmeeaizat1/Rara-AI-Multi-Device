@@ -3,7 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "expensetrack", alias: ["patungan", "grupexpense", "sharedexpense"], category: "future",
+  name: "expensetrack", alias: ["expensetrack"], category: "future",
   alias: ["expensetrack"],
   description: "Tracker keuangan grup/patungan", usage: ".expensetrack <add/list/split>",
   example: ".expensetrack add makan 50rb", isOwner: false, isPremium: false,

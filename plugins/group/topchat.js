@@ -3,7 +3,7 @@ import {  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 const pluginConfig = {
   name: "topchat",
-  alias: ["topchat", "topchat2", "activechat"],
+  alias: ["topchat"],
   category: "group",
   description: "Lihat statistik chat member di grup",
   usage: ".topchat",

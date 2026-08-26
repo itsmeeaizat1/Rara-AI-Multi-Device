@@ -5,7 +5,7 @@ import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'antitoxic',
-    alias: ["antitoxic", 'toxic', 'antitoxik'],
+    alias: ["antitoxic"],
     category: 'group',
     description: 'Mengatur antitoxic di grup',
     usage: '.antitoxic <on/off/warn/metode>',

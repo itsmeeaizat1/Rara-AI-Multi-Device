@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "disable",
-  alias: ["disable", "dis", "turnoff"],
+  alias: ["disable"],
   category: "owner",
   description: "Mematikan fitur grup (welcome, antilink, antisticker, dll)",
   usage: ".disable <fitur>",

@@ -5,7 +5,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 const pluginConfig = {
     name: 'buyfitur',
-    alias: ["buyfitur", 'belifitur', 'purchasefeature', 'buyfeature'],
+    alias: ["buyfitur"],
     category: 'user',
     description: 'Beli fitur premium (1 fitur = 3000 koin)',
     usage: '.buyfitur [nama_fitur]',

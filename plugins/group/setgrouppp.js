@@ -74,7 +74,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "setgrouppp",
-  alias: ["setgrouppp", "gantippgrup", "grouppp", "setgpp"],
+  alias: ["setgrouppp"],
   category: "group",
   description: "Ganti foto profil grup",
   usage: ".setgrouppp",

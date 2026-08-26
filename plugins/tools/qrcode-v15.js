@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "qrcode",
-  alias: ["qrcode", "qr", "qrcodev15"],
+  alias: ["qrcode"],
   category: "tools",
   description: "Buat QR code dari teks/link",
   usage: ".qrcode <teks>",

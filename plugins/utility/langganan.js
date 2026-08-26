@@ -4,7 +4,7 @@ import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "langganan",
-  alias: ["langganan", "subscription", "subtrack", "langganantrack"],
+  alias: ["langganan"],
   category: "utility",
   description: "Tracker langganan & subscription - catat, pantau, reminder jatuh tempo",
   usage: ".langganan <add/list/info/edit/remove/total/markpaid/history>",

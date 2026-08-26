@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gag2",
-  alias: ["gag2", "growagarden2"],
+  alias: ["gag2"],
   category: "info",
   description: "Cek stock Grow a Garden dengan fitur watch",
   usage: ".gag2 [watch] [item]",

@@ -9,7 +9,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "transkrip",
-    alias: ["transkrip", "transcribetext", "transkripv2"],
+    alias: ["transkrip"],
     category: 'tools',
     description: 'Konversi voice note / audio ke teks (Speech-to-Text)',
     usage: '.transkrip (reply voice note)',

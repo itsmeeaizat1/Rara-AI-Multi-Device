@@ -29,7 +29,7 @@ function tempPath(prefix, ext) {
 
 const pluginConfig = {
   name: "predictivenudge",
-  alias: ["predictivenudge", "lifenudge", "smartnudge", "behaviornudge", "autopredictnudge"],
+  alias: ["predictivenudge"],
   category: "owner",
   description: "Toggle Predictive Life-Nudge — Bot belajar pola user, kirim pengingat proaktif",
   usage: ".predictivenudge on/off — Toggle\n.predictivenudge status — Lihat pola\n.predictivenudge nudge now — Test nudge\n.predictivenudge reset — Reset data\n.predictivenudge voice on/off — Nudge VN atau teks",

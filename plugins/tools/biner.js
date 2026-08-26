@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "biner",
-  alias: ["biner", "binary", "baseconvert", "baseconv", "radix"],
+  alias: ["biner"],
   category: "tools",
   description: "Base converter (binary, octal, decimal, hex)",
   usage: ".biner <nilai> <dari> <ke>  atau  .biner <nilai> <dari>",

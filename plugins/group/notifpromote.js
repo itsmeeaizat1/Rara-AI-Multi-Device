@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'notifpromote',
-    alias: [],
+    alias: ["notifpromote"],
     category: 'group',
     description: 'Toggle notifikasi saat ada yang dijadikan admin',
     usage: '.notifpromote on/off',

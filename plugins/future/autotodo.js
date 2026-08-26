@@ -3,7 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "autotodo", alias: ["tododetect", "aitodo"], category: "future",
+  name: "autotodo", alias: ["autotodo"], category: "future",
   alias: ["autotodo"],
   description: "AI deteksi tugas dari chat", usage: ".autotodo (reply chat)",
   example: ".autotodo", isOwner: false, isPremium: true,

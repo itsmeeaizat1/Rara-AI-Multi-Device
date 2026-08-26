@@ -36,7 +36,7 @@ const toSC = (s) => String(s || "").replace(/[a-z]/g, c => SC_MAP[c] || c);
 
 const pluginConfig = {
   name: "multi-ai",
-  alias: ["multi-ai", "multiai", "aimulti", "aichatv2", "aimodels", "routerai", "airouter"],
+  alias: ["multi-ai"],
   category: "ai",
   description: "Chat dengan berbagai AI — pilih provider & model kayak OpenRouter",
   usage: ".multi-ai <provider> [model] <pesan>",

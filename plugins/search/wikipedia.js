@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wikipedia",
-  alias: ["wikipedia", "wiki"],
+  alias: ["wikipedia"],
   category: "search",
   description: "Mencari artikel lengkap dari Wikipedia",
   usage: ".wikipedia <query>",

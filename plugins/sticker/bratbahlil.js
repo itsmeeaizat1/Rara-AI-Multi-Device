@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "bratbahlil",
-  alias: [],
+  alias: ["bratbahlil"],
   category: "sticker",
   description: "Membuat sticker brat bahlil",
   usage: ".bratbahlil <text>",

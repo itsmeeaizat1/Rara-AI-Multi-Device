@@ -5,7 +5,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "xnxx2",
-  alias: ["xnxx2", "xnxxdl", "xnxxdownload"],
+  alias: ["xnxx2"],
   category: "nsfw",
   description: "Download video dari XVideos/XNXX by URL (NSFW)",
   usage: ".xnxx2 <url>",

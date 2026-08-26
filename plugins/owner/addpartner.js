@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addpartner',
-    alias: ["addpartner", 'delpartner', 'listpartner'],
+    alias: ["addpartner"],
     category: 'owner',
     description: 'Kelola daftar partner bot',
     usage: '.addpartner <nomor/@tag> [hari]\n.delpartner <nomor/@tag>\n.listpartner\n.cekpartner <nomor/@tag>',

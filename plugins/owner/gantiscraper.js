@@ -8,7 +8,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gantiscraper",
-  alias: ["gantiscraper", "replacescraper", "updatescraper", "gantiscrape"],
+  alias: ["gantiscraper"],
   category: "owner",
   description: "Ganti code scraper yang sudah ada di src/scraper",
   usage: ".gantiscraper [namafile]",

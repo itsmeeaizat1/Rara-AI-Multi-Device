@@ -4,7 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "chord",
-  alias: ["chord", "chordlagu", "kord"],
+  alias: ["chord"],
   category: "future",
   description: "Cari chord & lirik lagu, support transpose key",
   usage: ".chord <judul lagu>",

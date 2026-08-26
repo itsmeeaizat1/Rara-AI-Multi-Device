@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'notifopengroup',
-    alias: ["notifopengroup", 'notifopen'],
+    alias: ["notifopengroup"],
     category: 'group',
     description: 'Toggle notifikasi saat grup dibuka',
     usage: '.notifopengroup on/off',

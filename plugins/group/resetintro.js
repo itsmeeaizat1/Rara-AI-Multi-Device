@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { DEFAULT_INTRO } from './intro.js'
 const pluginConfig = {
     name: 'resetintro',
-    alias: ["resetintro", 'introdel', 'delintro', 'deleteintro'],
+    alias: ["resetintro"],
     category: 'group',
     description: 'Reset intro grup ke default (admin only)',
     usage: '.resetintro',

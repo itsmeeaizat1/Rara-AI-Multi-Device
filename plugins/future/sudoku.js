@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sudoku",
-  alias: ["sudoku", "sudokugame", "sudokudaily"],
+  alias: ["sudoku"],
   category: "future",
   description: "Sudoku harian - puzzle + leaderboard solver tercepat",
   usage: ".sudoku <command>",

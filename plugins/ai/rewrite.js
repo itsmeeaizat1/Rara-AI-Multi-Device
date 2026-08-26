@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rewrite",
-  alias: ["rewrite", "parafrase", "rewritev2"],
+  alias: ["rewrite"],
   category: "ai",
   description: "Tulis ulang teks agar lebih natural",
   usage: ".rewrite <teks> | reply teks",

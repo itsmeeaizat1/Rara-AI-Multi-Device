@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 import { notifyPremiumAdd } from "../../src/lib/nova-saluran-broadcast.js";
 const pluginConfig = {
     name: 'addpremall',
-    alias: ["addpremall", 'addpremiumall', 'setpremall'],
+    alias: ["addpremall"],
     category: 'owner',
     description: 'Menambahkan semua member grup ke premium',
     usage: '.addprem all',

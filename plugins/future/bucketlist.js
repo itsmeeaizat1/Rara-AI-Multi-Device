@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bucketlist",
-  alias: ["bucketlist", "goals", "targethidup"],
+  alias: ["bucketlist"],
   category: "future",
   description: "Bucket list tracker - catat target hidup & centang yang tercapai",
   usage: ".bucketlist <command>",

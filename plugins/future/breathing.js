@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "breathing",
-  alias: ["breathing", "napas", "tariknapas"],
+  alias: ["breathing"],
   category: "future",
   description: "Guided breathing exercise - 4-7-8 technique untuk relaksasi",
   usage: ".breathing <command>",

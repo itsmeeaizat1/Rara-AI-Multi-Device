@@ -4,7 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "crypto",
-  alias: ["crypto", "coin", "cryptoprice"],
+  alias: ["crypto"],
   category: "utility",
   description: "Track harga crypto real-time dari CoinGecko",
   usage: ".crypto <command>",

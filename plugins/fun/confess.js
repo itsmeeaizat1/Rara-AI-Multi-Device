@@ -31,7 +31,7 @@ function trackConfess(senderJid, targetJid, isAnonim) {
 
 const pluginConfig = {
   name: "confess",
-  alias: ["confess", "menfess"],
+  alias: ["confess"],
   category: "fun",
   description: "Kirim pesan confess anonim atau non-anonim",
   usage: ".confess nomor|pesan (anonim)\n.confess nomor|pesan|nama (non-anonim)",

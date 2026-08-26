@@ -4,7 +4,7 @@ import { Client } from 'ssh2'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'installtemaenigma',
-    alias: ["installtemaenigma", 'installthemaenigma', 'temaenigma'],
+    alias: ["installtemaenigma"],
     category: 'panel',
     description: 'Install tema Enigma untuk panel Pterodactyl via SSH',
     usage: '.installtemaenigma <ip>|<password>|<link_wa>|<link_group>|<link_channel>',

@@ -8,7 +8,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gura",
-  alias: ["gura", "guracanvas"],
+  alias: ["gura"],
   category: "canvas",
   description: "Bikin efek canvas gura dari fotomu",
   usage: ".gura (reply/kirim foto)",

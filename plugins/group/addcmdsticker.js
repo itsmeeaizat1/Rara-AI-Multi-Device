@@ -5,7 +5,7 @@ import { getPlugin } from '../../src/lib/nova-plugins.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addcmdsticker',
-    alias: ["addcmdsticker", 'addstickercmd', 'setsticker', 'stickeradd'],
+    alias: ["addcmdsticker"],
     category: 'group',
     description: 'Jadikan sticker sebagai shortcut command',
     usage: '.addcmdsticker <command> (reply sticker)',

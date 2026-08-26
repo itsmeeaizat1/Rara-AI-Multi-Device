@@ -41,7 +41,7 @@ async function formatAndReply( text, cmdName) {
 
 const pluginConfig = {
   name: "autobmkg",
-  alias: ["autogempa2", "bmkgauto", "gempaotomatis"],
+  alias: ["autobmkg"],
   category: "owner",
   description: "Broadcast gempa BMKG otomatis setiap 6 jam ke grup/saluran",
   usage: ".autobmkg <on/off/add/remove/jadwal/status>",

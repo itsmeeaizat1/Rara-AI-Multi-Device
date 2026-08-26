@@ -5,7 +5,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 
 const pluginConfig = {
   name: 'payment',
-  alias: ["payment", 'pay', 'qris'],
+  alias: ["payment"],
   category: 'owner',
   description: 'Menampilkan info payment',
   usage: '.payment',

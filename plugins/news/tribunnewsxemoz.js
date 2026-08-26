@@ -10,7 +10,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tribunnewsxemoz",
-  alias: ["tribunnewsxemoz", "tribunxemoz", "tribunnews"],
+  alias: ["tribunnewsxemoz"],
   category: "news",
   description: "Berita Tribunnews via API xemoz",
   usage: ".tribunnewsxemoz <kata kunci>\n.tribunnewsxemoz (tanpa argumen = headline)",

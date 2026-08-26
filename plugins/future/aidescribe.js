@@ -3,7 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "aidescribe", alias: ["describeai", "deskripsiai", "apaini"], category: "future",
+  name: "aidescribe", alias: ["aidescribe"], category: "future",
   alias: ["aidescribe"],
   description: "AI deskripsikan isi foto", usage: ".aidescribe (reply gambar)",
   example: ".aidescribe", isOwner: false, isPremium: true,

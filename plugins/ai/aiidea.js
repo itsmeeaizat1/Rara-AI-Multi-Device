@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "aiidea",
-  alias: ["aiidea", "ide", "brainstorm", "ideai", "brainstormai"],
+  alias: ["aiidea"],
   category: "ai",
   description: "Dapatkan ide/ brainstorming dengan AI",
   usage: ".aiidea <topik>",

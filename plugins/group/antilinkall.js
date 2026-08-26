@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antilinkall",
-  alias: ["antilinkall", "alall", "antialllink"],
+  alias: ["antilinkall"],
   category: "group",
   description: "Anti semua jenis link (deteksi domain extension)",
   usage: ".antilinkall <on/off/metode> [kick/remove]",

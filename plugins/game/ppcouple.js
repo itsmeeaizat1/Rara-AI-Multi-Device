@@ -61,7 +61,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "ppcouple",
-  alias: ["ppcouple", "ppcp", "ppcouple2"],
+  alias: ["ppcouple"],
   category: "game",
   description: "Lihat PP/status pasangan",
   usage: ".ppcouple",

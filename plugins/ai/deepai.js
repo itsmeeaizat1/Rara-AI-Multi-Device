@@ -10,7 +10,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "deepai",
-  alias: ["deepai", "deepaichat", "aic"],
+  alias: ["deepai"],
   category: "ai",
   description: "AI Chat powered by DeepAI (via API xemoz)",
   usage: ".deepai <pesan>\n.deepai reset — Reset sesi percakapan",

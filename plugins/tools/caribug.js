@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "caribug",
-  alias: ["caribug", "debug", "findbug"],
+  alias: ["caribug"],
   category: "tools",
   description: "Cari bug di kode pemrograman",
   usage: ".caribug [kode] atau reply kode",

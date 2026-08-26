@@ -4,7 +4,7 @@ import { downloadContentFromMessage } from 'nova'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "openvo",
-    alias: ["openvo", "rvo2", "viewonce"],
+    alias: ["openvo"],
     category: 'group',
     description: 'Membuka pesan 1x lihat yang di-reply',
     usage: '.rvo (reply pesan 1x lihat)',

@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "detective",
-  alias: ["detective", "detektif", "mysterygame"],
+  alias: ["detective"],
   category: "future",
   description: "Detective mystery - pecahkan kasus pembunuhan teks",
   usage: ".detective <command>",

@@ -5,7 +5,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "autoweather",
-  alias: ["autoweather", "weatheralert", "cuacaalert"],
+  alias: ["autoweather"],
   category: "future",
   description: "Auto alert peringatan cuaca ekstrem dari BMKG",
   usage: ".autoweather <command>",

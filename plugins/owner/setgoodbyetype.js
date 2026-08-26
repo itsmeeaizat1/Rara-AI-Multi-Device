@@ -6,7 +6,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "setgoodbyetype",
-  alias: ["Text Only", "goodbyetype", "goodbyevariant", "goodbyestyle"],
+  alias: ["setgoodbyetype"],
   category: "owner",
   description: "Mengatur variant tampilan goodbye message",
   usage: ".setgoodbyetype",

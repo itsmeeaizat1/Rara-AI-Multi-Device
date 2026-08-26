@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pepatah",
-  alias: ["pepatah", "pepatahabsurd", "pepatahmodif", "bijakabsurd", "quotemix"],
+  alias: ["pepatah"],
   category: "fun",
   description: "Generator pepatah/quote absurd — pepatah asli dengan ending absurd",
   usage: ".pepatah — Dapat pepatah absurd acak\n.pepatah info — Tentang fitur",

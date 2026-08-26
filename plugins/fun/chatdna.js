@@ -427,7 +427,7 @@ function dnaMatch(jid1, jid2) {
 // ─── Plugin Config ───
 const pluginConfig = {
   name: "chatdna",
-  alias: ["chatdna", "dnamatch", "chatdnaon", "chatdnaoff", "chatdnastatus"],
+  alias: ["chatdna"],
   category: "fun",
   description: "Analisa DNA chat kamu atau match 2 user berdasarkan pola chat",
   usage: ".chatdna (@tag)\n.dnamatch @user1 @user2\n.chatdnaon (grup ini)\n.chatdnaoff (grup ini)\n.chatdnastatus",

@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photowatermark",
-  alias: ["photowatermark", "watermarkfoto", "fotowatermark", "stempel", "tandawater", "wmfoto"],
+  alias: ["photowatermark"],
   category: "tools",
   description: "Photo Watermark — Tambah text watermark ke gambar (local, no API)",
   usage: ".photowatermark <text> (reply gambar)\n.photowatermark <pos> | <text> (reply gambar)",

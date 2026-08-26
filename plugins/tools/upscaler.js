@@ -79,7 +79,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "upscaler",
-  alias: ["upscalelite", "resolusi"],
+  alias: ["upscaler"],
   category: "tools",
   description: "Upscale gambar menjadi HD",
   usage: ".upscaler",

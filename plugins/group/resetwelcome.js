@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'resetwelcome',
-    alias: ["resetwelcome", 'delwelcome', 'clearwelcome'],
+    alias: ["resetwelcome"],
     category: 'group',
     description: 'Reset welcome message ke default',
     usage: '.resetwelcome',

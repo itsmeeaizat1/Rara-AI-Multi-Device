@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'clankick',
-    alias: ["clankick", 'kickclan'],
+    alias: ["clankick"],
     category: 'clan',
     description: 'Kick member dari clan (leader only)',
     usage: '.clankick @user',

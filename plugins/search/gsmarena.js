@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gsmarena",
-  alias: ["gsmarena", "gsm", "phonespec", "spesifikasi"],
+  alias: ["gsmarena"],
   category: "search",
   description: "Cari spesifikasi HP di GSMArena",
   usage: ".gsmarena <nama hp>",

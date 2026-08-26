@@ -27,7 +27,7 @@ function getRandomRenungan() {
 
 export const config = {
   name: "renungan",
-  alias: ["renungan", "quotesrenungan"],
+  alias: ["renungan"],
   category: "fun",
   description: "Random gambar renungan",
   usage: ".renungan",

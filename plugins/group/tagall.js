@@ -7,7 +7,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "tagall",
-  alias: ["tagall", "tagallgc", "mentionall"],
+  alias: ["tagall"],
   category: "group",
   description: "Tag semua member grup",
   usage: ".tagall <pesan>",

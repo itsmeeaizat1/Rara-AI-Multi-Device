@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gachapull",
-  alias: ["gachapull", "pullcard"],
+  alias: ["gachapull"],
   category: "future",
   description: "Gacha collection - pull karakter random dengan rarity",
   usage: ".gachapull <command>",

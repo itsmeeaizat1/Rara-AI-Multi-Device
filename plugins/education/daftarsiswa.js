@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "daftarsiswa",
-  alias: ["daftarsiswa", "daftarbelajar", "regsiswa", "daftaredu", "registereedu"],
+  alias: ["daftarsiswa"],
   category: "education",
   description: "Daftar sebagai siswa untuk main game belajar (soal, essay, leaderboard)",
   usage: ".daftarsiswa <nama>",

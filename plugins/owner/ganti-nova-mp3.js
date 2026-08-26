@@ -6,7 +6,7 @@ import { updateAssetUrl } from '../../src/lib/nova-uploader.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ganti-nova.mp3',
-    alias: ['gantinovaaudio', 'setnovaaudio'],
+    alias: ["ganti-nova.mp3"],
     category: 'owner',
     description: 'Ganti audio nova.mp3',
     usage: '.ganti-nova.mp3 (reply/kirim audio)',

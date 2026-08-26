@@ -150,7 +150,7 @@ async function getGroupMembers(sock, groupId) {
 export default {
   config: {
   name: "donasi",
-  alias: ["donasi", "sedekah", "donate"],
+  alias: ["donasi"],
   category: "group",
   desc: "Donasi & Sedekah Grup - Galang dana, tracking donatur, progress goal, siapa belum donasi",
   usage: ".donasi <target> | <keterangan>\n.donasi list - Kampanye aktif\n.donasi status <id> - Lihat progress & donatur\n.donasi beri <id> <jumlah> - Tandai donasi sendiri\n.donasi terima <id> @tag <jumlah> - (owner) Catat donasi orang\n.donasi close <id> - (owner) Tutup kampanye\n.donasion / .donasioff - Toggle (owner)\n.donasihistory - Riwayat",

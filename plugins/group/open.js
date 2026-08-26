@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "opengc",
-    alias: ["opengc", "buka", "bukagc"],
+    alias: ["opengc"],
     category: 'group',
     description: 'Membuka grup agar semua member bisa chat',
     usage: '.open',

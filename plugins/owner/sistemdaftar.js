@@ -42,7 +42,7 @@ function getRegistrationStats(db) {
 
 const pluginConfig = {
   name: "sistemdaftar",
-  alias: ["regmode", "wajibdaftar", "togglereg"],
+  alias: ["sistemdaftar"],
   category: "owner",
   description: "Kelola sistem wajib daftar dan statistik pendaftaran",
   usage: ".sistemdaftar <on/off/stats>",

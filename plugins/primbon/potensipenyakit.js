@@ -5,7 +5,7 @@ import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'potensipenyakit',
-    alias: ["potensipenyakit", 'cekpenyakit', 'penyakit'],
+    alias: ["potensipenyakit"],
     category: 'primbon',
     description: 'Cek potensi penyakit berdasarkan tanggal lahir',
     usage: '.potensipenyakit <tgl> <bln> <thn>',

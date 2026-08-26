@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "whoishistory",
-  alias: ["whoishistory", "whoisdiff", "domainhistory", "whoishist", "domainage"],
+  alias: ["whoishistory"],
   category: "tools",
   description: "Riwayat WHOIS domain (registrar, NS, created/updated/expiry date)",
   usage: ".whoishistory <domain>",

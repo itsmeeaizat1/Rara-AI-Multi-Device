@@ -6,7 +6,7 @@ import config from '../../config.js'
 
 const pluginConfig = {
     name: "matematika",
-    alias: ["matematika", "math", "mathai"],
+    alias: ["matematika"],
     category: 'ai',
     description: 'AI untuk menyelesaikan soal matematika',
     usage: '.matematika <soal>',

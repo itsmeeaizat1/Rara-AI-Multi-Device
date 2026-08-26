@@ -3,7 +3,7 @@ import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "remote",
-  alias: ["remote", "remotecontrol", "controlbot"],
+  alias: ["remote"],
   category: "owner",
   description: "Kontrol bot dari jarak jauh",
   usage: ".remote <perintah>",

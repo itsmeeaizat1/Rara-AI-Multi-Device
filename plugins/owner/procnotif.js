@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "procnotif",
-  alias: ["procnotif", "notiffungsi", "notifproses"],
+  alias: ["procnotif"],
   category: "owner",
   description: "Toggle notifikasi proses untuk fitur media/tool",
   usage: ".procnotif on/off/status",

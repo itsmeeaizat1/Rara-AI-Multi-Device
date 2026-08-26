@@ -2,7 +2,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: "savekontak",
-    alias: ["savekontak", "sv", "kontaksv"],
+    alias: ["savekontak"],
     category: "owner",
     description: "Menyimpan kontak dari grup menjadi file VCF",
     usage: ".savekontak <nama>",

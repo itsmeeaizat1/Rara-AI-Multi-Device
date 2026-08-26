@@ -3,7 +3,7 @@ import { getActiveJadibots } from '../../src/lib/nova-jadibot-manager.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'listjadibotaktif',
-    alias: ["listjadibotaktif", "listjbaktif", "jbaktif"],
+    alias: ["listjadibotaktif"],
     category: 'owner',
     description: 'Lihat jadibot yang sedang aktif dengan detail',
     usage: '.listjadibotaktif',

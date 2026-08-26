@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "game",
-  alias: ["game", "togglegame"],
+  alias: ["game"],
   category: "group",
   description: "Mengaktifkan atau menonaktifkan fitur game di grup",
   usage: ".game <on/off>",

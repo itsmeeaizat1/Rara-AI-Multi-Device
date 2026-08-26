@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cekintrovert',
-    alias: ["cekintrovert", 'introvert'],
+    alias: ["cekintrovert"],
     category: 'cek',
     description: 'Cek tingkat introvert kamu',
     usage: '.cekintrovert <nama>',

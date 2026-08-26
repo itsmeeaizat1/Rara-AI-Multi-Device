@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'warn',
-    alias: ["warn", 'warning', 'peringatan'],
+    alias: ["warn"],
     category: 'group',
     description: 'Memberi peringatan kepada member',
     usage: '.warn @user <alasan>',

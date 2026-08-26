@@ -5,7 +5,7 @@ import axios from 'axios'
 
 const pluginConfig = {
     name: 'startserver',
-    alias: ["startserver", 'startpanel', 'startsrv'],
+    alias: ["startserver"],
     category: 'panel',
     description: 'Start server panel via Client API (ptlc_)',
     usage: '.startserver atau .startserver <serverid>',

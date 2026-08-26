@@ -5,7 +5,7 @@ import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "lahelu",
-    alias: ["lahelu", "randommeme2", "lahelumeme"],
+    alias: ["lahelu"],
     category: 'random',
     description: 'Random gambar lahelu',
     usage: '.lahelu',

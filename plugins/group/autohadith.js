@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autohadith",
-  alias: ["autohadith", "hadithotomatis", "hadithauto", "autohadis", "hadisauto"],
+  alias: ["autohadith"],
   category: "group",
   description: "Kirim hadist random otomatis tiap interval (toggle on/off per grup)",
   usage: ".autohadith on [menit] | .autohadith off | .autohadith status | .autohadith now",

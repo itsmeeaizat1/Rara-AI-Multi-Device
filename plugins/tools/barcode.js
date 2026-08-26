@@ -3,7 +3,7 @@ import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "barcode",
-  alias: ["barcode", "barcodegen", "code128", "ean13", "barcodemaker"],
+  alias: ["barcode"],
   category: "tools",
   description: "Generate barcode (CODE128, EAN13, EAN8, UPC, ITF, MSI, codabar)",
   usage: ".barcode <teks/angka>  atau  .barcode <type> <data>",

@@ -5,7 +5,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "couple",
-  alias: ["couple", "coupleinfo", "dashboarcouple", "infocouple"],
+  alias: ["couple"],
   category: "fun",
   description: "Dashboard hubungan couple",
   usage: ".couple atau .couple @tag",

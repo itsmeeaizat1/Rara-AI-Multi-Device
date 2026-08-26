@@ -12,7 +12,7 @@ import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "play",
-  alias: ["play", "playaudio"],
+  alias: ["play"],
   category: "search",
   description: "Putar musik dari YouTube (Siputzx API)",
   usage: ".play <query>",

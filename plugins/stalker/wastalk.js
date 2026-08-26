@@ -5,7 +5,7 @@ import PhoneNum from 'awesome-phonenumber'
 import config from '../../config.js'
 const pluginConfig = {
     name: 'wastalk',
-    alias: ["wastalk", 'whatsappstalk', 'stalkwa'],
+    alias: ["wastalk"],
     category: 'stalker',
     description: 'Stalk profile WhatsApp',
     usage: '.wastalk <nomor/tag>',

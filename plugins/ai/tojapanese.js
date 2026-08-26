@@ -6,7 +6,7 @@ import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'tojapanese',
-    alias: ["tojapanese", 'japanese', 'japanesestyle'],
+    alias: ["tojapanese"],
     category: 'ai',
     description: 'Ubah gambar ke style Japanese',
     usage: '.tojapanese (reply gambar)',

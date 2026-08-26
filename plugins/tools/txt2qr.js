@@ -4,7 +4,7 @@ import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "txt2qr",
-    alias: ["txt2qr", "textqr", "text2qr"],
+    alias: ["txt2qr"],
     category: 'tools',
     description: 'Generate QR code dari teks',
     usage: '.txt2qr <text>',

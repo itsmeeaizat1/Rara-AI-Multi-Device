@@ -44,7 +44,7 @@ async function formatAndReply( text, cmdName) {
 
 const pluginConfig = {
   name: "autosholat",
-  alias: ["autoadzan"],
+  alias: ["autosholat"],
   category: "owner",
   description: "Toggle pengingat waktu sholat otomatis dengan audio adzan dan tutup grup",
   usage: ".autosholat on/off/status/kota <nama>",

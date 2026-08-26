@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "track",
-  alias: ["track", "tracking", "lacak", "cekpesanan", "cekorder"],
+  alias: ["track"],
   category: "store",
   description: "Lacak status pesanan berdasarkan nomor transaksi",
   usage: ".track <nomor_trx> — Lacak pesanan\n.track list — Lihat semua pesanan (owner)\n.track pending — Lihat pesanan pending (owner)\n.track update <trx> <status> — Update status (owner)\n.track stats — Statistik pesanan (owner)",

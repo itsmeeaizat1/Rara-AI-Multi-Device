@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antihotword",
-  alias: ["antihotword", "hotword", "wordalert", "katawaspadai", "kataalert"],
+  alias: ["antihotword"],
   category: "group",
   description: "Deteksi kata/hot word khusus di grup — alert admin saat keyword muncul",
   usage: ".antihotword on | .antihotword off | .antihotword add <kata> | .antihotword del <kata> | .antihotword list",

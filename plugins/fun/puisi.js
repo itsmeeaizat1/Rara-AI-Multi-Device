@@ -8,7 +8,7 @@ const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
 
 const pluginConfig = {
     name: 'puisi',
-    alias: ["puisi", 'puisiku', 'sajak'],
+    alias: ["puisi"],
     category: 'fun',
     description: 'Random puisi Indonesia',
     usage: '.puisi',

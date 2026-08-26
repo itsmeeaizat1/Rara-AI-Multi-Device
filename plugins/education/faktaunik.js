@@ -3,7 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "faktaunik",
-  alias: ["faktaunik", "faktamenarik", "faktahariini", "fakta", "funfact"],
+  alias: ["faktaunik"],
   category: 'education',
   description: 'Fakta unik & menarik dari berbagai bidang',
   usage: '.faktaunik | .faktaunik <kategori>',

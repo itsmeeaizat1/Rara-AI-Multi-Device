@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "voodoodoll",
-  alias: ["voodoodoll", "voodoo", "bonekavoodoo", "dukunvoodoo", "pelukvoodoo"],
+  alias: ["voodoodoll"],
   category: "fun",
   description: "Voodoo doll virtual — pilih aksi, hasil lucu, pure fun",
   usage: ".voodoodoll @target — Menu aksi voodoo\n.voodoodoll @target <aksi> — Pilih aksi",

@@ -2,7 +2,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: 'setdeskgc',
-    alias: ["setdeskgc", 'setdesc', 'setdescgc', 'setdeskripsi', 'setdesk'],
+    alias: ["setdeskgc"],
     category: 'group',
     description: 'Mengubah deskripsi grup',
     usage: '.setdeskgc <deskripsi baru>',

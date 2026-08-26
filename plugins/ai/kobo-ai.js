@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kobo-ai",
-  alias: ["kobo-ai", "koboai", "kobo"],
+  alias: ["kobo-ai"],
   category: "ai",
   description: "Chat dengan Kobo Kanaeru — VTuber Hololive ID",
   usage: ".kobo-ai <pertanyaan>",

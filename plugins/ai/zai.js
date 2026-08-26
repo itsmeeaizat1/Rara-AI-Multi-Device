@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "zai",
-  alias: ["zai", "z-ai", "zchat", "zaitalk", "glmchat"],
+  alias: ["zai"],
   category: "ai",
   description: "ZAI — Chat dengan Z.ai AI assistant (GLM-5.2) gratis tanpa API key",
   usage: ".zai <prompt>",

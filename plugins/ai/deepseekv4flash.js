@@ -13,7 +13,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "deepseekv4flash",
-  alias: ["deepseekv4flash", "dsv4f", "ds4flash", "deepseekflash"],
+  alias: ["deepseekv4flash"],
   category: "ai",
   description: "DeepSeek V4 Flash via API xemoz (session-based, dengan reasoning)",
   usage: ".deepseekv4flash <pertanyaan>\n.deepseekv4flash reset — Reset sesi percakapan",

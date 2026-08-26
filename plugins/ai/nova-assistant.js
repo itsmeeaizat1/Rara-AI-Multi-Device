@@ -7,7 +7,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ai",
-  alias: ["ai", "assistant", "novaassistant", "assistantv2"],
+  alias: ["ai"],
   category: "ai",
   description: "AI asisten yang bisa menangani semua perintah dengan bahasa natural",
   usage: ".ai <perintah natural>",

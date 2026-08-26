@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "melolo",
-  alias: ["melolo", "melolodrama", "dramamelolo"],
+  alias: ["melolo"],
   category: "search",
   description: "Cari daftar drama pendek berdasarkan kategori dari Melolo",
   usage: ".melolo <category>",

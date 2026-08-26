@@ -3,7 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "cintagram",
-  alias: ["cintagram", "gramcinta", "loveletter", "lovegram"],
+  alias: ["cintagram"],
   category: 'fun',
   description: 'Buat surat cinta / love gram personal untuk seseorang',
   usage: '.cintagram <nama> | <pesan>',

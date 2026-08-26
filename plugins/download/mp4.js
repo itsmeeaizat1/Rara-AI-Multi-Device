@@ -67,7 +67,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "mp4",
-  alias: ["mp4", "videomp4", "downloadmp4"],
+  alias: ["mp4"],
   category: "download",
   description: "Download file MP4 dari link",
   usage: ".mp4 <link>",

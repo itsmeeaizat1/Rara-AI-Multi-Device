@@ -6,7 +6,7 @@ import { fetchPrayerTimes, buildPrayerMessage, PRAYER_LABELS, PRAYER_EMOJIS, ADV
 
 const pluginConfig = {
   name: "sholat",
-  alias: ["sholat", "sholatv15", "jadwalsholat"],
+  alias: ["sholat"],
   category: "religi",
   description: "Auto jadwal sholat akurat API: reminder 5 menit, notifikasi waktu sholat, info iqamah/jamaah",
   usage: ".jadwalsholat <aktif|off|setting|kota>\n.lokasijadwalsholat <kota>",

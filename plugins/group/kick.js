@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'kick',
-    alias: ["kick", 'remove', 'tendang'],
+    alias: ["kick"],
     category: 'group',
     description: 'Kick member dari grup',
     usage: '.kick @user',

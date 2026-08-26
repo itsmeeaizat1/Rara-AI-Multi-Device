@@ -6,7 +6,7 @@ import { uploadTo0x0 } from '../../src/lib/nova-tmpfiles.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'fakeff2',
-    alias: ["fakeff2", 'fakefreefire2'],
+    alias: ["fakeff2"],
     category: 'canvas',
     description: 'Membuat gambar ff',
     usage: '.fakeff2 <text>',

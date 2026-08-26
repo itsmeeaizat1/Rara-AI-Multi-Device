@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoabsen",
-  alias: ["autoabsen", "absenotomatis", "inactivealert"],
+  alias: ["autoabsen"],
   category: "future",
   description: "Auto notify admin member yang tidak aktif",
   usage: ".autoabsen <command>",

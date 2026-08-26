@@ -8,7 +8,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "cekidgc",
-  alias: ["cekidgc", "infogc", "gcid"],
+  alias: ["cekidgc"],
   category: "group",
   description: "Cek ID dan info lengkap grup",
   usage: ".cekidgc [link grup]",

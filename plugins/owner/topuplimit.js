@@ -5,7 +5,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "topuplimit",
-  alias: ["topuplimit", "addlimit", "tambahlimit", "givelimit", "sisipienergi"],
+  alias: ["topuplimit"],
   category: "owner",
   description: "Tambah limit user (owner only)",
   usage: ".topuplimit @tag <jumlah>",

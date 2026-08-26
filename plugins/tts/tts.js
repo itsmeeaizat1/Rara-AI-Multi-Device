@@ -4,7 +4,7 @@ import novaApi from "../../src/lib/nova-apimanager.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "tts",
-  alias: ["tts", "ttsbot", "say"],
+  alias: ["tts"],
   category: "tts",
   description: "Google Text To Speech",
   usage: ".tts <text>",

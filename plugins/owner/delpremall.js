@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'delpremall',
-    alias: ["delpremall", 'delpremiumall', 'removepremall'],
+    alias: ["delpremall"],
     category: 'owner',
     description: 'Menghapus semua member grup dari premium',
     usage: '.delprem all',

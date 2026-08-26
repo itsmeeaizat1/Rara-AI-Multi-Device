@@ -5,7 +5,7 @@ import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'listban',
-    alias: ["listban", 'listbanned', 'banlist'],
+    alias: ["listban"],
     category: 'owner',
     description: 'Melihat daftar banned user',
     usage: '.listban',

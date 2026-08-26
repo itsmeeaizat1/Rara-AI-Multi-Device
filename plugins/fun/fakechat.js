@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "fakechat",
-  alias: ["fakechat", "fchawa", "chatpalsu", "fakewa", "fakescreenshot"],
+  alias: ["fakechat"],
   category: "fun",
   description: "Generator fake chat WhatsApp lucu untuk prank/meme",
   usage: ".fakechat <nama>|<pesan> — Bikin fake chat\n.fakechat <nama>|<pesan>|<jam> — Custom jam",

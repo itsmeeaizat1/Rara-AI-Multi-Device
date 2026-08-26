@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "qwen3",
-  alias: ["qwen3", "qwen", "qw3"],
+  alias: ["qwen3"],
   category: "ai",
   description: "Chat dengan Qwen3 80B via OverChat",
   usage: ".qwen3 <pertanyaan>",

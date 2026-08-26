@@ -162,7 +162,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
 const pluginConfig = {
   name: "sppd",
-  alias: ["sppd", "spd", "perjalanandinas", "gensppd"],
+  alias: ["sppd"],
   category: "tools",
   description: "Generator Surat Perintah Perjalanan Dinas (SPPD) → PDF",
   usage: ".sppd <nama, NIP, tujuan, maksud, tanggal, anggaran>",

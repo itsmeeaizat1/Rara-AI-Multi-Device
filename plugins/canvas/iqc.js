@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "iqc",
-  alias: ["iqc", "iqchat", "iphonechat"],
+  alias: ["iqc"],
   category: "canvas",
   description: "Membuat gambar chat iPhone style",
   usage: ".iqc <text>",

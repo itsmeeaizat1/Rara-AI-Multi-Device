@@ -5,7 +5,7 @@ import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'sifatusahabisnis',
-    alias: ["sifatusahabisnis", 'usahabisnis', 'sifatbisnis'],
+    alias: ["sifatusahabisnis"],
     category: 'primbon',
     description: 'Cek sifat usaha/bisnis berdasarkan tanggal lahir',
     usage: '.sifatusahabisnis <tgl> <bln> <thn>',

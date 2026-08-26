@@ -5,7 +5,7 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
   name: "escape",
-  alias: ["escape", "escaperoom", "ruangleson"],
+  alias: ["escape"],
   category: "future",
   description: "Escape room text adventure - pecahkan teka-teki untuk keluar",
   usage: ".escape <command>",

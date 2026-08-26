@@ -7,7 +7,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tam",
-  alias: ["tam", "topactive", "topmember"],
+  alias: ["tam"],
   category: "group",
   description: "Lihat top member paling aktif di grup",
   usage: ".tam <jumlah>",

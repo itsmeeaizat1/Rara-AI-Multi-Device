@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "custompayment",
-  alias: ["custompayment", "setpay2", "paymentcustom"],
+  alias: ["custompayment"],
   category: 'owner',
   description: 'Atur teks custom untuk .payment dengan placeholder',
   usage: '.custompayment <teks> / .custompayment reset',

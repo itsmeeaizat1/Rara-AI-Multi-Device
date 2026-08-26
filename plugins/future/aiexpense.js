@@ -3,7 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "aiexpense", alias: ["expense", "pengeluaran", "catatpengeluaran"], category: "future",
+  name: "aiexpense", alias: ["aiexpense"], category: "future",
   alias: ["aiexpense"],
   description: "Catat pengeluaran dengan bahasa natural", usage: ".aiexpense <deskripsi>",
   example: ".aiexpense beli kopi 15rb", isOwner: false, isPremium: false,

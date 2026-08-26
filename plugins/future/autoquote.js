@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoquote",
-  alias: ["autoquote", "quoteotomatis", "quotesauto"],
+  alias: ["autoquote"],
   category: "future",
   description: "Auto broadcast quote/motivasi tiap pagi",
   usage: ".autoquote <command>",

@@ -12,7 +12,7 @@ import fss from "fs"
 
 const pluginConfig = {
   name: "ping",
-  alias: ["ping", "speed2", "ping2", "status2"],
+  alias: ["ping"],
   category: "main",
   description: "Cek performa dan status sistem bot secara real-time",
   usage: ".ping",

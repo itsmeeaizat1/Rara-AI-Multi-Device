@@ -4,7 +4,7 @@ import https from "node:https";
 import http from "node:http";
 
 const pluginConfig = {
-  name: "expandurl", alias: ["unshorten", "urlexpand"], category: "tools",
+  name: "expandurl", alias: ["expandurl"], category: "tools",
   alias: ["expandurl"],
   description: "Expand short URL ke URL asli", usage: ".expandurl <url>",
   example: ".expandurl https://bit.ly/xxx", isOwner: false, isPremium: false,

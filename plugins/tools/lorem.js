@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "lorem",
-  alias: ["lorem", "loremipsum", "lipsum", "dummytext", "placeholder"],
+  alias: ["lorem"],
   category: "tools",
   description: "Lorem ipsum generator (paragraf, kata, kalimat, list)",
   usage: ".lorem <jumlah> <unit>",

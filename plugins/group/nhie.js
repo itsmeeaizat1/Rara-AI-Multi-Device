@@ -4,7 +4,7 @@ import { delay } from "../../src/lib/nova-utils.js";
 
 const pluginConfig = {
   name: "nhiegc",
-  alias: ["nhiegc", "neverhaveever", "nhiegrup"],
+  alias: ["nhiegc"],
   category: "group",
   description: "Never Have I Ever - Bot kasih statement, member jawab pernah/belum",
   usage: ".nhie atau .nhie start atau .nhie result atau .nhie stop",

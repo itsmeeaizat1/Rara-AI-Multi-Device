@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pohon",
-  alias: ["pohon", "silsilah"],
+  alias: ["pohon"],
   category: "fun",
   description: "Generator silsilah keluarga lucu dan absurd",
   usage: ".pohon <nama>",

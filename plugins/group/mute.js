@@ -61,7 +61,7 @@ async function handler(m, { sock, config: botConfig }) {
 export default {
   config: {
     name: "mute2",
-    alias: ["mute2", "mutemain2", "bisukanmain"],
+    alias: ["mute2"],
     category: "group",
     description: "Mute member grup",
     usage: ".mute <@target>",

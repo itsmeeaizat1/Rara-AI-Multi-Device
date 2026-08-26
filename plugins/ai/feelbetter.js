@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "feelbetter",
-  alias: ["feelbetter", "fb2", "supportai"],
+  alias: ["feelbetter"],
   category: "ai",
   description: "Chat dengan FeelBetterBot — AI yang siap mendengarkan tanpa menghakimi",
   usage: ".feelbetter <curhat/pertanyaan>",

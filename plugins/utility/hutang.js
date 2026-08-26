@@ -4,7 +4,7 @@ import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "hutang",
-  alias: ["hutang", "utang", "debt", "piutang", "ioutrack"],
+  alias: ["hutang"],
   category: "utility",
   description: "Tracker hutang & piutang personal - catat, pantau, lunasi",
   usage: ".hutang <add/piutang/list/lunas/info/remove/total/history>",

@@ -3,7 +3,7 @@ import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { spawn } from "node:child_process";
 
 const pluginConfig = {
-  name: "imagetext", alias: ["textonimage", "captionimage"], category: "tools",
+  name: "imagetext", alias: ["imagetext"], category: "tools",
   alias: ["imagetext"],
   description: "Tulis teks di atas gambar", usage: ".imagetext <text> (reply gambar)",
   example: ".imagetext Halo", isOwner: false, isPremium: false,

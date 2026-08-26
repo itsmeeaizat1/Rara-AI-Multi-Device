@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoholiday",
-  alias: ["autoholiday", "holidayauto", "haribesarauto"],
+  alias: ["autoholiday"],
   category: "future",
   description: "Auto greeting hari besar nasional & agama",
   usage: ".autoholiday <command>",

@@ -15,7 +15,7 @@ import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 
 const pluginConfig = {
   name: "allmenucategory",
-  alias: ["allmenucategory", "mk", "kategori", "kat", "menukategori", "allmenucat"],
+  alias: ["allmenucategory"],
   category: "main",
   description: "Menampilkan commands dalam kategori tertentu",
   usage: ".allmenucategory <kategori>",

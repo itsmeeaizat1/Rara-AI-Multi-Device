@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "translate",
-  alias: ["translate", "translatemain", "tl2"],
+  alias: ["translate"],
   category: "tools",
   description: "Terjemahkan teks ke bahasa lain",
   usage: ".translate <bahasa> <teks>",

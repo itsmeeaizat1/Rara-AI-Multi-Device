@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'notifdemote',
-    alias: [],
+    alias: ["notifdemote"],
     category: 'group',
     description: 'Toggle notifikasi saat ada yang dicopot dari admin',
     usage: '.notifdemote on/off',

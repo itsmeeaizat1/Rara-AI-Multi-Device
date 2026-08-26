@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aiemergency",
-  alias: ["aiemergency", "emergency", "emergencywatch", "darurat"],
+  alias: ["aiemergency"],
   category: "future",
   description: "AI Emergency Watch - deteksi kata darurat & alert admin",
   usage: ".emergency <command>",

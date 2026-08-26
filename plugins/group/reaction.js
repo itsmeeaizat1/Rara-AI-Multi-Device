@@ -6,7 +6,7 @@ const EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🔥"];
 
 const pluginConfig = {
   name: "reaction",
-  alias: ["reaction", "react", "emoji"],
+  alias: ["reaction"],
   category: "group",
   description: "Beri reaksi ke pesan",
   usage: ".reaction <emoji>",

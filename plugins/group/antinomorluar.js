@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antinomorluar",
-  alias: ["antinomorluar", "antiasing", "antiforeign", "anl", "antinomor"],
+  alias: ["antinomorluar"],
   category: "group",
   description: "Blokir nomor dengan prefix tertentu di grup (contoh: 60 = Malaysia)",
   usage: ".antinomorluar <on/off/set prefix>",

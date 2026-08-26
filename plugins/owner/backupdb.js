@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { sendStoreBackup, SCHEMA_VERSION } from '../../src/lib/nova-store-backup.js'
 const pluginConfig = {
     name: "backupdb",
-    alias: ["backupdb", "backupdb2", "dbbackup"],
+    alias: ["backupdb"],
     category: 'owner',
     description: 'Backup database/store dan kirim ke owner',
     usage: '.backupdb',

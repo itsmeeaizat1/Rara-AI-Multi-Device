@@ -110,7 +110,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "vision",
-  alias: ["vision", "imganalysis", "imageai2"],
+  alias: ["vision"],
   category: "ai",
   description: "Analisis gambar dengan AI",
   usage: ".vision <pertanyaan> (reply foto)",

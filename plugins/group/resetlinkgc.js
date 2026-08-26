@@ -3,7 +3,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'resetlinkgc',
-    alias: ["resetlinkgc", 'resetlink', 'revokelink', 'newlink'],
+    alias: ["resetlinkgc"],
     category: 'group',
     description: 'Reset link invite grup',
     usage: '.resetlinkgc',

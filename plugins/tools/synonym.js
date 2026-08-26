@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
-  name: "synonym", alias: ["sinonim", "thesaurus"], category: "tools",
+  name: "synonym", alias: ["synonym"], category: "tools",
   alias: ["synonym"],
   description: "Cari sinonim kata", usage: ".synonym <kata>",
   example: ".synonym happy", isOwner: false, isPremium: false,

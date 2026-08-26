@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'close',
-    alias: ["close", 'tutup', 'closegroup', 'tutupgroup'],
+    alias: ["close"],
     category: 'group',
     description: 'Menutup grup agar hanya admin yang bisa chat',
     usage: '.close',

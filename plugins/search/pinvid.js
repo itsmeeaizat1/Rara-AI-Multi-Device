@@ -18,7 +18,7 @@ const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
 const pluginConfig = {
   name: "pinvid",
-  alias: ["pinvid", "pinvideo", "pinterestv", "pinv"],
+  alias: ["pinvid"],
   category: "search",
   description: "Search video Pinterest (album)",
   usage: ".pinvid <query>",

@@ -3,7 +3,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autosambut",
-  alias: ["autosambut", "sambutowner"],
+  alias: ["autosambut"],
   category: "group",
   description: "Mengatur fitur sambutan otomatis saat owner muncul setelah lama idle",
   usage: ".autosambut on/off/delay/add/del/list",

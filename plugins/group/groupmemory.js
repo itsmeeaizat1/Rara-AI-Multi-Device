@@ -5,7 +5,7 @@ import {   separator,
 
 const pluginConfig = {
   name: "groupmemory",
-  alias: ["groupmemory", "grpmemory", "grpmemo"],
+  alias: ["groupmemory"],
   category: "group",
   description: "Ringkasan momen grup: top member, vibe, highlight",
   usage: ".groupmemory",

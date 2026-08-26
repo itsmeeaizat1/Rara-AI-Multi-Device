@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'antibucin',
-    alias: ["antibucin", 'antip simp', 'antisimp', 'antigombal'],
+    alias: ["antibucin"],
     category: 'group',
     description: 'Deteksi kata kata bucin/gombal/simp di grup',
     usage: '.antibucin <on/off/kick/delete/warn/reset/resetall>',

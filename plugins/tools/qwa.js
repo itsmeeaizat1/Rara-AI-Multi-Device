@@ -8,7 +8,7 @@ import { parsePhoneNumber } from 'awesome-phonenumber'
 
 const pluginConfig = {
     name: 'qwa',
-    alias: ["qwa", 'quotewa', 'fakeqwa'],
+    alias: ["qwa"],
     category: 'tools',
     description: 'Membuat gambar quote WhatsApp',
     usage: '.qwa [teks]',

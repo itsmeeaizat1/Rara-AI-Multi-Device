@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "virtualcheck",
-  alias: ["virtualcheck", "cekvirtual", "voipcheck", "cekvoip", "nomorvirtual", "ceknomorvoip"],
+  alias: ["virtualcheck"],
   category: "tools",
   description: "Deteksi apakah nomor HP virtual/VOIP/prepaid disposable atau nomor reguler",
   usage: ".virtualcheck <nomor>",

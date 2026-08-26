@@ -5,7 +5,7 @@ import { live3d } from '../../src/scraper/seaart.js'
 
 const pluginConfig = {
     name: 'to3d',
-    alias: ["to3d", '3d', '3dfy', 'to3dmodel'],
+    alias: ["to3d"],
     category: 'ai',
     description: 'Ubah foto menjadi gaya 3D render',
     usage: '.to3d (reply/kirim gambar)',

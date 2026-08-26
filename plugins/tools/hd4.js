@@ -9,7 +9,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "reminiv2",
-  alias: ["reminiv2", "hd4", "hdv2tool", "hd4kualitas", "enhancev2", "reminihd"],
+  alias: ["reminiv2"],
   category: "tools",
   description: "Enhance gambar all-in-one: remini, recolor, unblur, upscale 4x/8x",
   usage: ".reminiv2 (reply gambar) | .reminiv2 <mode> | .reminiv2 <scale> <mode> doc",

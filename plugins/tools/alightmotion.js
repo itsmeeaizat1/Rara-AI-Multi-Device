@@ -13,7 +13,7 @@ const andarazConfig = getAndarazConfig();
 
 const pluginConfig = {
   name: "amprem",
-  alias: ["amprem", "alightmotion", "alight", "am"],
+  alias: ["amprem"],
   category: "tools",
   description: "Alight Motion Premium Creator V1 — auto register via RyezenStore + CatchMail",
   usage: ".amprem create <jumlah>\n.amprem login <user> <pass>\n.amprem list",

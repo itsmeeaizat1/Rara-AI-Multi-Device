@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "jadwalku",
-  alias: ["jadwalku", "jadwaledu", "jadwalkuliah", "scheduleedu"],
+  alias: ["jadwalku"],
   category: "education",
   description: "Jadwal kuliah personal - catat dan cek jadwal kelas harian",
   usage: ".jadwal <command>",

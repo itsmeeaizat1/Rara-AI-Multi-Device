@@ -3,7 +3,7 @@ import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-m
 import axios from "axios";
 
 const pluginConfig = {
-  name: "waifu", alias: ["waifu", "waifurandom", "waifu2"], category: "random",
+  name: "waifu", alias: ["waifu"], category: "random",
   alias: ["waifu"],
   description: "Random waifu image", usage: ".waifu",
   example: ".waifu", isOwner: false, isPremium: false,

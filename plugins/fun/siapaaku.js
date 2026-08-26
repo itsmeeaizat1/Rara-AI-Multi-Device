@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "siapaaku",
-  alias: ["siapaaku", "akuapa", "siapaku", "whoami", "personalityroast"],
+  alias: ["siapaaku"],
   category: "fun",
   description: "Aku siapa? — Random personality roast/comedy berdasarkan nama",
   usage: ".siapaaku — Analisis random kamu\n.siapaaku <nama> — Analisis nama lain",

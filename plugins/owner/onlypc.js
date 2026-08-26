@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "onlypc",
-  alias: ["onlypc", "onlyprivate", "privateonly"],
+  alias: ["onlypc"],
   category: "owner",
   description: "Toggle mode bot hanya di private chat",
   usage: ".onlypc on/off",

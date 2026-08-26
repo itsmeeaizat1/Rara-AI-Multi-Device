@@ -11,7 +11,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setpayment",
-  alias: ["setpayment", "setpay", "paymentconfig"],
+  alias: ["setpayment"],
   category: "owner",
   description: "Atur Cash, QRIS, e-wallet, dan bank untuk pembayaran toko",
   usage: ".setpayment <perintah> [args]",

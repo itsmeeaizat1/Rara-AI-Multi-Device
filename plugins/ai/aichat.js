@@ -42,7 +42,7 @@ function appendHistory(chatId, role, content) {
 
 const pluginConfig = {
   name: "aichat",
-  alias: ["aichat", "aichatbot", "chatgpt"],
+  alias: ["aichat"],
   category: "ai",
   description: "Chat AI dengan memori percakapan per chat",
   usage: ".aichat <pesan> | .aichat clear",

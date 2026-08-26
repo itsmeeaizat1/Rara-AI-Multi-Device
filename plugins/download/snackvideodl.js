@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "snackvideodl",
-    alias: ["snackvideodl", "svdl", "snackdl"],
+    alias: ["snackvideodl"],
     category: 'download',
     description: 'Download video SnackVideo',
     usage: '.svdl <url>',

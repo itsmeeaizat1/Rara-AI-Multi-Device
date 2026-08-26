@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "tugas",
-  alias: ["tugas", "tugasedu", "tugasmhs"],
+  alias: ["tugas"],
   category: "education",
   description: "Tracker deadline tugas - catat, lihat, dan kelola tugas kuliah",
   usage: ".tugas <command>",

@@ -3,7 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "aihadith", alias: ["hadithai", "carihadis"], category: "future",
+  name: "aihadith", alias: ["aihadith"], category: "future",
   alias: ["aihadith"],
   description: "Cari hadis dengan bahasa natural", usage: ".aihadith <topik>",
   example: ".aihadith hadis tentang sabar", isOwner: false, isPremium: true,

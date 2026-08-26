@@ -3,7 +3,7 @@ import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-m
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "todo", alias: ["todo", "todolist", "tasklist"], category: "utility",
+  name: "todo", alias: ["todo"], category: "utility",
   alias: ["todo"],
   description: "To-do list personal", usage: ".todo <add/del/list/clear>",
   example: ".todo add beli beras", isOwner: false, isPremium: false,

@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spotplay",
-  alias: ["spotplay", "spplay", "spotifysrc"],
+  alias: ["spotplay"],
   category: "search",
   description: "Putar musik dari Spotify",
   usage: ".spotplay <query>",

@@ -4,7 +4,7 @@ import * as timeHelper from '../../src/lib/nova-time.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'checksewa',
-    alias: ["checksewa", 'ceksewa', 'sisasewa'],
+    alias: ["checksewa"],
     category: 'group',
     description: 'Cek sisa waktu sewa bot di grup ini',
     usage: '.checksewa',

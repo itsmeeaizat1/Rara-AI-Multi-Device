@@ -6,7 +6,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "setwelcometype",
-  alias: ["Text Only", "welcometype", "welcomevariant", "welcomestyle"],
+  alias: ["setwelcometype"],
   category: "owner",
   description: "Mengatur variant tampilan welcome message",
   usage: ".setwelcometype",

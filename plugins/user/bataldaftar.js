@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bataldaftar",
-  alias: ["bataldaftar", "cancelreg", "canceldaftar", "regcancel"],
+  alias: ["bataldaftar"],
   category: "user",
   description: "Batalkan sesi pendaftaran yang sedang aktif",
   usage: ".bataldaftar",

@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "setppbot",
-  alias: ["setppbot", "setppbot2", "setppmain"],
+  alias: ["setppbot"],
   category: "owner",
   description: "Ganti foto profil bot (owner only)",
   usage: ".setppbot",

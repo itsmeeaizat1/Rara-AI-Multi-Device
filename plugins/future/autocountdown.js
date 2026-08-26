@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autocountdown",
-  alias: ["autocountdown", "countdownotomatis", "cdauto"],
+  alias: ["autocountdown"],
   category: "future",
   description: "Auto countdown event - notify H-7, H-3, H-1, H-day",
   usage: ".autocountdown <command>",

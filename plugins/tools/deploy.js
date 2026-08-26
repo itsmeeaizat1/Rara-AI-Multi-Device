@@ -3,7 +3,7 @@ import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "deploytool",
-    alias: ["deploytool", 'vercel'],
+    alias: ["deploytool"],
     category: 'owner',
     description: 'Deploy HTML ke Vercel (reply code / file)',
     usage: '.deploy <namawebsite>',

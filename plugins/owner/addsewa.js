@@ -10,7 +10,7 @@ import { notifySewaBot } from "../../src/lib/nova-saluran-broadcast.js";
 import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
 const pluginConfig = {
   name: "addsewa",
-  alias: ["addsewa", "sewaadd", "tambahsewa"],
+  alias: ["addsewa"],
   category: "owner",
   description: "Tambah grup ke whitelist sewa + auto join",
   usage: ".addsewa <link/id grup> <durasi>",

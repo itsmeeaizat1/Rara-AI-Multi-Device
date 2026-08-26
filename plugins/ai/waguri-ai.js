@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "waguri-ai",
-  alias: ["waguri-ai", "waguriai", "waguri"],
+  alias: ["waguri-ai"],
   category: "ai",
   description: "Chat dengan Waguri-san — Gadis pemalu yang lupa kacamata",
   usage: ".waguri-ai <pertanyaan>",

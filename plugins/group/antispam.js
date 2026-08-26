@@ -31,7 +31,7 @@ async function formatAndReply( text, cmdName) {
 
 const pluginConfig = {
     name: "antispam",
-    alias: ["antispam", "antispamgc"],
+    alias: ["antispam"],
     category: "group",
     description: "Mengatur fitur perlindungan grup dari pesan spam secara brutal",
     usage: ".antispam <on/off/action/delay>",

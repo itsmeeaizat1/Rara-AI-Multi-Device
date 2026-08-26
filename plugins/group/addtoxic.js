@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addtoxic',
-    alias: ["addtoxic", 'tambahtoxic', 'addkata'],
+    alias: ["addtoxic"],
     category: 'group',
     description: 'Tambah kata toxic ke daftar',
     usage: '.addtoxic <kata>',

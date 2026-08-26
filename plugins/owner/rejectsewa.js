@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rejectsewa",
-  alias: ["rejectsewa", "sewareject", "tolaksewa"],
+  alias: ["rejectsewa"],
   category: "owner",
   description: "Tolak pendaftaran sewa dari user",
   usage: ".rejectsewa <nomor> <alasan>",

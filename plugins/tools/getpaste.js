@@ -5,7 +5,7 @@ import * as timeHelper from '../../src/lib/nova-time.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
   name: "getpaste",
-  alias: ["getpaste", "pastebinv2", "getpaste2"],
+  alias: ["getpaste"],
   category: "tools",
   description: "Ambil konten dari Pastebin",
   usage: ".getpaste <link pastebin>",

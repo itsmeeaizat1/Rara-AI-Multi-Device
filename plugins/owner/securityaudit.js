@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "securityaudit",
-  alias: ["securityaudit", "auditsecurity", "cekaudit", "auditkeamanan", "botaudit"],
+  alias: ["securityaudit"],
   category: "owner",
   description: "Audit keamanan bot — cek semua proteksi yang aktif/tidak aktif",
   usage: ".securityaudit",

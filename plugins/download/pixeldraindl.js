@@ -11,7 +11,7 @@ const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
 const pluginConfig = {
   name: "pixeldraindl",
-  alias: ["pixeldraindl", "pddl", "pixeldrain", "pddownload"],
+  alias: ["pixeldraindl"],
   category: "download",
   description: "Download file dari Pixeldrain",
   usage: ".pixeldraindl <url>",

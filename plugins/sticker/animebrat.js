@@ -6,7 +6,7 @@ import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "animebrat",
-    alias: ["animebrat", "bratanime2", "animetext2"],
+    alias: ["animebrat"],
     category: 'sticker',
     description: 'Membuat sticker brat',
     usage: '.animebrat <text>',

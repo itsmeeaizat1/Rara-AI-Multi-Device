@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photometadata",
-  alias: ["photometadata", "fotometadata", "exifinfo", "infofoto", "metadataphoto", "exiffoto"],
+  alias: ["photometadata"],
   category: "tools",
   description: "Photo Metadata — Baca EXIF & metadata foto (local, no API)",
   usage: ".photometadata (reply gambar)",

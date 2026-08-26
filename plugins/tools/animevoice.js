@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "animevoice",
-  alias: ["animevoice", "voiceloli", "animevoice2"],
+  alias: ["animevoice"],
   category: "tools",
   description: "Text to speech dengan suara karakter anime (VITS - gratis)",
   usage: ".animevoice <karakter> <text>",

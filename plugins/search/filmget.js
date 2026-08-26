@@ -8,7 +8,7 @@ const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
 const pluginConfig = {
   name: "filmget",
-  alias: ["filmget", "getfilm", "filmdetail", "filminfo"],
+  alias: ["filmget"],
   category: "search",
   description: "Ambil detail film",
   usage: ".filmget <url>",

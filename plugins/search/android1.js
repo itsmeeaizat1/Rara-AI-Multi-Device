@@ -8,7 +8,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "android1",
-  alias: ["android1", "an1"],
+  alias: ["android1"],
   category: "search",
   description: "Cari dan download APK MOD dari Android1",
   usage: ".android1 <query>",

@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "topixel",
-  alias: ["topixel", "pixelate", "pixelart"],
+  alias: ["topixel"],
   category: "canvas",
   description: "Ubah foto kamu jadi gambar pixel art yang keren",
   usage: ".topixel [level] (reply/kirim foto)",

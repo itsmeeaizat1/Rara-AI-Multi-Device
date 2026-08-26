@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setgroupname",
-  alias: ["setgroupname", "gantinama", "gcnama", "setgname"],
+  alias: ["setgroupname"],
   category: "group",
   description: "Ganti nama grup",
   usage: ".setgroupname <nama baru>",

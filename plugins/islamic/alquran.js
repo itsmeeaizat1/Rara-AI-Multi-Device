@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "alquran",
-  alias: ["alquran", "bacaquran", "quranv2"],
+  alias: ["alquran"],
   category: "islamic",
   description: "Baca & dengar Al-Quran surat & ayat dengan terjemahan + audio (API online)",
   usage: ".alquran <surat> [ayat] atau .alquran audio <surat> <ayat>",

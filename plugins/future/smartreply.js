@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
-  name: "smartreplyfuture", alias: ["smartreply2", "smartreplyfuture", "aireply2"], category: "future",
+  name: "smartreplyfuture", alias: ["smartreplyfuture"], category: "future",
   alias: ["smartreplyfuture"],
   description: "Toggle AI auto-reply kontekstual", usage: ".smartreply <on/off>",
   example: ".smartreply on", isOwner: true, isPremium: false,

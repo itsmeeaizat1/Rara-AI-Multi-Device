@@ -3,7 +3,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ringkasan",
-  alias: ["ringkasan", "ringkasan2", "summarizeedu"],
+  alias: ["ringkasan"],
   category: "education",
   description: "Ringkas teks panjang jadi poin-poin utama (extractive summarization)",
   usage: ".ringkasan <teks>",

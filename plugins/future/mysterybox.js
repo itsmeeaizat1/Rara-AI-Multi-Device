@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "mysterybox",
-  alias: ["mysterybox", "mbox", "kotakmisteri"],
+  alias: ["mysterybox"],
   category: "future",
   description: "Mystery Box - buka loot box untuk dapat item random",
   usage: ".mysterybox <command>",

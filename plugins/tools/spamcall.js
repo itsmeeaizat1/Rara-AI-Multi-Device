@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spamcall",
-  alias: ["spamcall", "spamcall", "telepon", "call"],
+  alias: ["spamcall"],
   category: "tools",
   description: "Spam call/virtual call untuk entertainment",
   usage: ".spamcall <jumlah> <nomor>",

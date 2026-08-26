@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autodoa",
-  alias: ["autodoa", "doaotomatis", "doaauto", "autodailydoa"],
+  alias: ["autodoa"],
   category: "group",
   description: "Kirim doa harian random otomatis tiap interval (toggle on/off per grup)",
   usage: ".autodoa on [menit] | .autodoa off | .autodoa status | .autodoa now",

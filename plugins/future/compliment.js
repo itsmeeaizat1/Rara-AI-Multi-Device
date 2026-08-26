@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "compliment",
-  alias: ["compliment", "pujian", "sweetwords"],
+  alias: ["compliment"],
   category: "future",
   description: "Compliment bot - kirim pujian ke seseorang di grup",
   usage: ".compliment <command>",

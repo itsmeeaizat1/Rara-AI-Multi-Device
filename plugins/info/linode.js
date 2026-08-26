@@ -4,7 +4,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "linode",
-  alias: ["linode", "server", "vpsinfo", "cloud"],
+  alias: ["linode"],
   category: "info",
   description: "Cek status server/info VPS lokal",
   usage: ".linode",

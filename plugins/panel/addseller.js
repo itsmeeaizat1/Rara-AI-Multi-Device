@@ -8,7 +8,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { getGroupMode } from '../group/botmode.js'
 const pluginConfig = {
     name: "addseller",
-    alias: ["addseller", "addreseller", "delseller", "delreseller"],
+    alias: ["addseller"],
     category: 'panel',
     description: 'Kelola seller/reseller panel',
     usage: '.addseller @user atau .delseller @user',

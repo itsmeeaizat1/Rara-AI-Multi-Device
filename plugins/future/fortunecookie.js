@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "fortunecookie",
-  alias: ["fortunecookie", "fortune", "kuehoki"],
+  alias: ["fortunecookie"],
   category: "future",
   description: "Fortune cookie harian - pesan hoki & lucky number",
   usage: ".fortunecookie",

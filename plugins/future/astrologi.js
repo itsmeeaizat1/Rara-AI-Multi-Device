@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "astrologi",
-  alias: ["astrologi", "zodiakbarat", "natalchart"],
+  alias: ["astrologi"],
   category: "future",
   description: "Astrologi barat & natal chart dari tanggal lahir",
   usage: ".astrologi <tanggal lahir>",

@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "removebgv2",
-  alias: ["removebgv2", "rmbgv2", "nobgv2", "hapusbgv2", "bgremove", "removebg2"],
+  alias: ["removebgv2"],
   category: "tools",
   description: "Hapus background gambar (AI local, hasil bersih, gratis)",
   usage: ".removebgv2 (reply gambar)\n.removebgv2 doc — kirim sebagai dokumen (no compress)",

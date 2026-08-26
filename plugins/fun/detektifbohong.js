@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "detektifbohong",
-  alias: ["detektifbohong", "lieDetector"],
+  alias: ["detektifbohong"],
   category: "fun",
   description: "Simulator lie detector dengan analisis dramatis",
   usage: ".detektifbohong <pernyataan>",

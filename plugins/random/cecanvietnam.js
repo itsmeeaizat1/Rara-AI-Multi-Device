@@ -5,7 +5,7 @@ import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'cecanvietnam',
-    alias: ["cecanvietnam", 'cewekvietnam', 'cewekvn'],
+    alias: ["cecanvietnam"],
     category: 'cecan',
     description: 'Random gambar cewek cantik Vietnam',
     usage: '.cecanvietnam',

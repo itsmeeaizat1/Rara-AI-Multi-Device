@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { live3d } from '../../src/scraper/seaart.js'
 const pluginConfig = {
     name: 'tofigure3',
-    alias: ["tofigure3", 'figurine3', 'tofigure3', 'bandai3', 'actionfigure3'],
+    alias: ["tofigure3"],
     category: 'ai',
     description: 'Ubah foto menjadi action figure/figurine koleksi',
     usage: '.tofigure3 (reply/kirim gambar)',

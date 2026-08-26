@@ -3,7 +3,7 @@ import { getAllJadibotSessions, getActiveJadibots } from '../../src/lib/nova-jad
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'listjadibot',
-    alias: ["listjadibot", "listjb", "jadibotlist"],
+    alias: ["listjadibot"],
     category: 'owner',
     description: 'Lihat semua session jadibot yang tersimpan',
     usage: '.listjadibot',

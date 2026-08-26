@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "automedia",
-    alias: ["automedia", "autom", "autom3"],
+    alias: ["automedia"],
     category: 'group',
     description: 'Toggle auto media - otomatis jadikan sticker jadi gambar/video',
     usage: '.automedia on/off',

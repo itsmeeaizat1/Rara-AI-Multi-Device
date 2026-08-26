@@ -3,7 +3,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kalkulatormbg",
-  alias: ["kalkulatormbg", "kkmbg"],
+  alias: ["kalkulatormbg"],
   category: "tools",
   description: "Hitung durasi dan perbandingan dana Makan Bergizi Gratis (MBG)",
   usage: ".kkmbg <jumlah_uang>",

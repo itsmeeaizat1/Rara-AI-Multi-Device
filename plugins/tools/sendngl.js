@@ -4,7 +4,7 @@ import novaApi from "../../src/lib/nova-apimanager.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "sendngl",
-  alias: [],
+  alias: ["sendngl"],
   category: "tools",
   description: "Send NGL",
   usage: ".sendngl <url> | <text>",

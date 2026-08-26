@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "bratanime",
-  alias: ["bratanime", "bratsticker", "bratanimesticker"],
+  alias: ["bratanime"],
   category: "sticker",
   description: "Membuat sticker brat anime",
   usage: ".bratanime <text>",

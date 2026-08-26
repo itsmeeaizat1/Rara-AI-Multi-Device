@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "claudehaiku",
-  alias: ["claudehaiku", "claude", "haiku", "chiku"],
+  alias: ["claudehaiku"],
   category: "ai",
   description: "Chat dengan Claude Haiku 4.5 via OverChat",
   usage: ".claudehaiku <pertanyaan>",

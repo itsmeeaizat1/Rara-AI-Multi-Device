@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setgroupdesc",
-  alias: ["setgroupdesc", "gantidesc", "gcdesc", "setgdesc"],
+  alias: ["setgroupdesc"],
   category: "group",
   description: "Ganti deskripsi grup",
   usage: ".setgroupdesc <deskripsi>",

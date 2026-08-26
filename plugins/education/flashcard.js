@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "flashcard",
-  alias: ["flashcard", "kartubelajar", "flashcards", "kartu", "quizdiri"],
+  alias: ["flashcard"],
   category: "education",
   description: "Flashcard study tool - buat kartu belajar, quiz diri sendiri",
   usage: ".flashcard <command>",

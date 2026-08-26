@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'kecocokannamapasangan',
-    alias: ["kecocokannamapasangan", 'cocoknama', 'matchname'],
+    alias: ["kecocokannamapasangan"],
     category: 'primbon',
     description: 'Cek kecocokan nama pasangan',
     usage: '.kecocokannamapasangan <nama1> <nama2>',

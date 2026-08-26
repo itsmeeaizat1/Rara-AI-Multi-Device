@@ -3,7 +3,7 @@ import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-m
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "aifatwa", alias: ["aifatwa", "tanyaislam2", "fatwaai"], category: "future",
+  name: "aifatwa", alias: ["aifatwa"], category: "future",
   alias: ["aifatwa"],
   description: "Tanya hukum Islam, AI cari referensi", usage: ".aifatwa <pertanyaan>",
   example: ".aifatwa hukum trading forex", isOwner: false, isPremium: true,

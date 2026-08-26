@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aitimewarp",
-  alias: ["aitimewarp", "timewarp", "twarp", "lintaswaktu", "timetravel"],
+  alias: ["aitimewarp"],
   category: "ai",
   description: "Mode Chat Lintas Waktu — AI roleplay dari masa depan/lalu",
   usage: ".timewarp <tahun/era> [pertanyaan] | .timewarp off | .timewarp status",

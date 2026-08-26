@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rateuser",
-  alias: ["rateuser", "rateanggota", "ratingmember", "nilaimember"],
+  alias: ["rateuser"],
   category: "group",
   description: "Rate member grup — kasih bintang + review jujur (drama maksimal)",
   usage: ".rateuser @user <bintang> <komentar>",

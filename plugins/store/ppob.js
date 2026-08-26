@@ -21,7 +21,7 @@ const DATA_FILE = path.join(process.cwd(), "database", "ppob.json");
 const PROVIDERS = {
   digiflazz: {
     name: "DigiFlazz",
-    alias: ["ppob", "DigiFlazz"],
+    alias: ["DigiFlazz"],
     baseApi: "https://api.digiflazz.com/v1",
     label: "digiflazz",
     setupHint: "Daftar gratis: https://digiflazz.com\nAPI: Profile > Koneksi API",
@@ -519,7 +519,7 @@ async function sendQrImage(sock, chatId, imageUrl, caption, quoted) {
 
 const pluginConfig = {
   name: ["ppob"],
-  alias: ["isipulsa", "belidata", "tokenpln", "topupgame", "voucher"],
+  alias: ["ppob"],
   category: "store",
   description:
     "PPOB - Pulsa, Paket Data, Token PLN, Topup Game, Voucher (Multi-Provider)",

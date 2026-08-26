@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'levelup',
-    alias: ["levelup", 'lvlup', 'levelnotif'],
+    alias: ["levelup"],
     category: 'user',
     description: 'Toggle notifikasi level up',
     usage: '.levelup <on/off>',

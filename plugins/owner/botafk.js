@@ -4,7 +4,7 @@ import moment from 'moment-timezone'
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'botafk',
-    alias: ["botafk", 'afkbot', 'afkmode'],
+    alias: ["botafk"],
     category: 'owner',
     description: 'Mode AFK untuk bot - bot tidak merespon command, hanya reply pesan AFK',
     usage: '.botafk <alasan>',

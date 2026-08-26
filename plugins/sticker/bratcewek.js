@@ -5,7 +5,7 @@ import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'bratcewek',
-    alias: ["bratcewek", 'cewekbrat', 'bratperempuan', 'bratgirl'],
+    alias: ["bratcewek"],
     category: 'sticker',
     description: 'Membuat sticker brat',
     usage: '.bratcewek <text>',

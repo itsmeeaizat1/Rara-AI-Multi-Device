@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'nova-large',
-    alias: ["nova-large", 'setnovalarge', 'gantinovalarge'],
+    alias: ["nova-large"],
     category: 'owner',
     description: 'Preset: Ganti gambar nova.jpg, serta nova-v7 hingga nova-v11.jpg sekaligus',
     usage: '.nova-large (reply/kirim gambar)',

@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "apkmod-get",
-  alias: ["apkmod-get", "apkmodget", "getapkmod"],
+  alias: ["apkmod-get"],
   category: "search",
   description: "Download APK MOD dari hasil pencarian",
   usage: ".apkmod-get <no> <query>",

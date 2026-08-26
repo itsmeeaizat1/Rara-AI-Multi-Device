@@ -9,7 +9,7 @@ import {
 
 const pluginConfig = {
   name: "cintainfo",
-  alias: ["cintainfo", "coupleinfo", "rpgcintainfo", "coupledash"],
+  alias: ["cintainfo"],
   category: "rpg",
   description: "Dashboard hubungan RPG couple",
   usage: ".cintainfo atau .cintainfo @tag",

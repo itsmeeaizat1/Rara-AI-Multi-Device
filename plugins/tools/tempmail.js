@@ -31,7 +31,7 @@ const PROVIDERS = {
   },
   mailporary: {
     name: "Mailporary",
-    alias: ["tempmail", "mailtmp", "tmpmail", "mailtemp", "Mailporary"],
+    alias: ["Mail.tm"],
     api: "https://web.mailporary.com/api/v1",
     type: "mailporary",
     customName: true,
@@ -55,7 +55,7 @@ const sessions = new Map();
 
 const pluginConfig = {
   name: ["tempmail", "mailtmp", "tmpmail", "mailtemp"],
-  alias: ["tempemail", "emailtmp"],
+  alias: ["tempmail", "mailtmp", "tmpmail", "mailtemp"],
   category: "tools",
   description: "Email sementara multi-provider dengan custom name",
   usage: ".tempmail create <nama> [provider] | .tempmail inbox | .tempmail read <no> | .tempmail delete | .tempmail list",

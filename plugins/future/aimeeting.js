@@ -5,7 +5,7 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
   name: "aimeeting",
-  alias: ["aimeeting", "aimeet", "meetingai"],
+  alias: ["aimeeting"],
   category: "future",
   description: "AI Meeting Minutes - transcribe & notulen otomatis",
   usage: ".aimeeting <command>",

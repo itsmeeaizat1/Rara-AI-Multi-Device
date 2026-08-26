@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "togglejoinreq",
-  alias: ["togglejoinreq", "togglejoinrequest", "joinreqtoggle", "reqjointoggle"],
+  alias: ["togglejoinreq"],
   category: "owner",
   description: "Toggle on/off notifikasi member request join grup",
   usage: ".togglejoinreq (lihat status) / .togglejoinreq owner / .togglejoinreq admin / .togglejoinreq all on/off",

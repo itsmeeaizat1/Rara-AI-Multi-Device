@@ -106,7 +106,7 @@ async function generateMeme(imageBuffer, topText, bottomText) {
 // ─── Plugin Config ───
 const pluginConfig = {
   name: "smemev2",
-  alias: ["smemev2", "memelocal", "smemelocal"],
+  alias: ["smemev2"],
   category: "sticker",
   description: "Membuat sticker meme dari gambar (100% lokal, tanpa API)",
   usage: ".smemev2 <top>|<bottom>",

@@ -3,7 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "aidoc", alias: ["docai", "dokumenai", "summarizedoc"], category: "future",
+  name: "aidoc", alias: ["aidoc"], category: "future",
   alias: ["aidoc"],
   description: "AI rangkum dokumen/teks panjang", usage: ".aidoc (reply teks panjang)",
   example: ".aidoc", isOwner: false, isPremium: true,

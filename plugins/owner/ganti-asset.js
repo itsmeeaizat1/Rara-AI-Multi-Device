@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'ganti-asset',
-    alias: ["ganti-asset", 'gantiasset', 'setasset'],
+    alias: ["ganti-asset"],
     category: 'owner',
     description: 'All-in-one tools untuk ganti asset secara interaktif',
     usage: '.ganti-asset (reply media)',

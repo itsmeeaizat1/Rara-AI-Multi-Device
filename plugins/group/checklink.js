@@ -377,7 +377,7 @@ async function fullAnalysis(urlStr) {
 // ─── Plugin Config ───
 const pluginConfig = {
   name: "checklink",
-  alias: ["checklink", "checkurl", "checklinkdelon", "checklinkdeloff"],
+  alias: ["checklink"],
   category: "group",
   description: "AI Phishing & Scam Link Shield - deteksi link berbahaya di grup",
   usage: ".checklink <url>\n.checklinkon (auto-shield on)\n.checklinkoff (auto-shield off)\n.checklinkdelon (auto-delete on)\n.checklinkdeloff (auto-delete off)\n.checklinkstatus",

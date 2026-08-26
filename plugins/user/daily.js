@@ -4,7 +4,7 @@ import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "dailyuser",
-  alias: ["dailyuser", "daily2", "claimuser"],
+  alias: ["dailyuser"],
   category: "user",
   description: "Claim hadiah harian (Exp, Money, Potion)",
   usage: ".daily",

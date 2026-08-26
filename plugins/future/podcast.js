@@ -5,7 +5,7 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
   name: "podcast",
-  alias: ["podcast", "podcastai", "minicast"],
+  alias: ["podcast"],
   category: "future",
   description: "AI Podcast generator - script podcast 2 menit dari topik",
   usage: ".podcast <command>",

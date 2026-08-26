@@ -5,7 +5,7 @@ import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "tafsirmimpi",
-    alias: ["tafsirmimpi", "mimpi2", "tafsir"],
+    alias: ["tafsirmimpi"],
     category: 'primbon',
     description: 'Cari tafsir mimpi',
     usage: '.tafsirmimpi <kata kunci>',

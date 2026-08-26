@@ -3,7 +3,7 @@ import { claraHeader,  separator, tipText, claraWrap } from "../../src/lib/nova-
 import axios from "axios";
 
 const pluginConfig = {
-  name: "smartbriefing", alias: ["briefing", "morningbrief", "briefingpagi"], category: "future",
+  name: "smartbriefing", alias: ["smartbriefing"], category: "future",
   alias: ["smartbriefing"],
   description: "Briefing pagi: cuaca+berita+sholat", usage: ".smartbriefing <kota>",
   example: ".smartbriefing Jakarta", isOwner: false, isPremium: true,

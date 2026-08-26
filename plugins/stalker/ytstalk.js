@@ -6,7 +6,7 @@ import config from '../../config.js'
 
 const pluginConfig = {
     name: 'ytstalk',
-    alias: ["ytstalk", 'youtubestalk', 'stalkyt'],
+    alias: ["ytstalk"],
     category: 'stalker',
     description: 'Stalk channel YouTube',
     usage: '.ytstalk <username>',

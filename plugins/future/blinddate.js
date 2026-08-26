@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "blinddate",
-  alias: ["blinddate", "kacabut", "blinddategrup"],
+  alias: ["blinddate"],
   category: "future",
   description: "Blind date matching - match anonim, reveal setelah chat",
   usage: ".blinddate <command>",

@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "soalessay",
-  alias: ["soalessay", "essay2", "essayedu"],
+  alias: ["soalessay"],
   category: "education",
   description: "Latihan soal essay/uraian SD/SMP/SMA/SMK - jawab terbuka + kunci jawaban",
   usage: ".essay <jenjang> <mapel> [jumlah]",

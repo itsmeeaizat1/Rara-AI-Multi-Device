@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: "botmodegc",
-    alias: ["CPanel Pterodactyl", "botmodegc", "modegc", "setmodegc"],
+    alias: ["botmodegc"],
     category: 'group',
     description: 'Atur mode bot untuk grup ini',
     usage: '.botmode <md/cpanel/pushkontak/store/otp/all>',

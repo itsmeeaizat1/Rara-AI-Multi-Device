@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'notifsholat',
-    alias: ["notifsholat", 'notifsolat'],
+    alias: ["notifsholat"],
     category: 'group',
     description: 'Toggle notifikasi sholat untuk grup ini',
     usage: '.notifsholat on/off',

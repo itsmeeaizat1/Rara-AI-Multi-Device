@@ -7,7 +7,7 @@ import { default as axios } from 'axios'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "couplepp",
-    alias: ["couplepp", "ppcouple3", "couplepic"],
+    alias: ["couplepp"],
     category: 'random',
     description: 'Random gambar pp couple',
     usage: '.ppcouple',

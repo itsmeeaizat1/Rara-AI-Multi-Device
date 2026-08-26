@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js"
 
 const pluginConfig = {
     name: 'uploadsftp',
-    alias: ["uploadsftp", 'sftp', 'sftpupload', 'sftpup'],
+    alias: ["uploadsftp"],
     category: 'tools',
     description: 'Upload file/media ke server/VPS via SFTP',
     usage: '.uploadsftp (reply media/berkas)',

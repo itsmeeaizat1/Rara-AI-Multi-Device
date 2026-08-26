@@ -2,7 +2,7 @@
 import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "alarm", alias: ["alarm2", "setalarm", "alarmutil"], category: "utility",
+  name: "alarm", alias: ["alarm"], category: "utility",
   alias: ["alarm"],
   description: "Alarm pengingat pribadi", usage: ".alarm <HH:MM> <pesan>",
   example: ".alarm 07:30 bangun sekolah", isOwner: false, isPremium: false,

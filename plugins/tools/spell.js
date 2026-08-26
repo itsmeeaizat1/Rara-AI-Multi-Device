@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
-  name: "spellcheck", alias: ["spelling", "ejaan"], category: "tools",
+  name: "spellcheck", alias: ["spellcheck"], category: "tools",
   alias: ["spellcheck"],
   description: "Cek ejaan kata", usage: ".spell <kata>",
   example: ".spell recieve", isOwner: false, isPremium: false,

@@ -8,7 +8,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ttselon",
-  alias: ["ttselon", "elontts", "ttselonmusk"],
+  alias: ["ttselon"],
   category: "tts",
   description: "Text to Speech dengan suara Elon Musk",
   usage: ".ttselon <text>",

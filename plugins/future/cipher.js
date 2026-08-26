@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "cipher",
-  alias: ["cipher", "enkripsi", "decipher"],
+  alias: ["cipher"],
   category: "future",
   description: "Enkripsi & dekripsi pesan rahasia (Caesar, Vigenere, Base64)",
   usage: ".cipher <method> <encode/decode> <text> [key]",

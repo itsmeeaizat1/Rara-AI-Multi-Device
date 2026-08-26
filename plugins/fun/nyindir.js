@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "nyindir",
-  alias: ["nyindir", "sindiran", "savage", "burn", "clapback"],
+  alias: ["nyindir"],
   category: "fun",
   description: "Generator kalimat nyindir/savage buat reply",
   usage: ".nyindir — Sindiran acak\n.nyindir <kategori> — Kategori: halus, frontal, sarkas, baper\n.nyindir @target — Kirim sindiran ke target",

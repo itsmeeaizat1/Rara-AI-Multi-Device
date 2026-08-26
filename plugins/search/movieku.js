@@ -7,7 +7,7 @@ import te from "../../src/lib/nova-error.js"
 
 const pluginConfig = {
     name: "movieku",
-    alias: ["movieku", "movies", "film2"],
+    alias: ["movieku"],
     category: "search",
     description: "Cari dan tampilkan informasi film lengkap dari Movieku beserta link download dalam berbagai kualitas",
     usage: ".movieku <judul film>",

@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aitimemachine",
-  alias: ["aitimemachine", "timemachine", "tm", "onthisday"],
+  alias: ["aitimemachine"],
   category: "future",
   description: "On this day - inget momen penting grup",
   usage: ".timemachine <command>",

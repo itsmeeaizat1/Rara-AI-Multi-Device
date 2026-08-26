@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sc",
-  alias: ["sc", "script"],
+  alias: ["sc"],
   category: "main",
   description: "Link script bot wa terbaru",
   usage: ".sc",

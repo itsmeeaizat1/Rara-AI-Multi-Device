@@ -3,7 +3,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "q",
-    alias: ["q", "quotely", "quotemsg"],
+    alias: ["q"],
     category: 'tools',
     description: 'Ambil JSON message dari pesan yang direply',
     usage: '.q (reply pesan)',

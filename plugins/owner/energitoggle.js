@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 const pluginConfig = {
     name: ['disableenergi', 'enableenergi'],
-    alias: ["disableenergi", "enableenergi", "offenergi", "onenergi"],
+    alias: ["disableenergi", "enableenergi"],
     category: 'owner',
     description: 'Enable/disable sistem energi',
     usage: '.disableenergi atau .enableenergi',

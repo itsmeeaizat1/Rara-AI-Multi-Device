@@ -26,7 +26,7 @@ const ENDPOINTS = [
 
 const pluginConfig = {
   name: "cecan",
-  alias: ["cecan", "cecan2", "cewek"],
+  alias: ["cecan"],
   category: "search",
   description: "Cari cecan Indonesia",
   usage: ".cecan",

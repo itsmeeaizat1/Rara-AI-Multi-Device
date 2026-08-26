@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "spy",
-  alias: ["spy", "intel", "cektarget", "spyuser"],
+  alias: ["spy"],
   category: "info",
   description: "Lihat info target",
   usage: ".spy <@target>",

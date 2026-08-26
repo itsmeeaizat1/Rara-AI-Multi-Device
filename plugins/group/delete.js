@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'delete',
-    alias: ["delete", 'del', 'hapus', 'd'],
+    alias: ["delete"],
     category: 'group',
     description: 'Hapus pesan dengan reply',
     usage: '.delete (reply pesan)',

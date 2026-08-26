@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "soalujian",
-  alias: ["soalujian", "soal", "ulangan", "quizsekolah", "latihansoal"],
+  alias: ["soalujian"],
   category: "education",
   description: "Latihan soal ulangan SD/SMP/SMA/SMK - pilihan ganda + essay digabung",
   usage: ".soal <jenjang> <mapel> [jumlah] [mode]",

@@ -22,7 +22,7 @@ function getRandomBucin() {
 
 export const config = {
   name: "bucin",
-  alias: ["bucin", "quotesbucin"],
+  alias: ["bucin"],
   category: "fun",
   description: "Random quotes bucin",
   usage: ".bucin",

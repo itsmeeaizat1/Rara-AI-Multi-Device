@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "deepseek",
-  alias: ["deepseek", "ds", "dsv4", "deepthink"],
+  alias: ["deepseek"],
   category: "ai",
   description: "Chat dengan DeepSeek V4 (thinking/reasoning)",
   usage: ".deepseek <pertanyaan>",

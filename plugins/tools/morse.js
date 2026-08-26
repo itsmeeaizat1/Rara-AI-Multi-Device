@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "morse",
-  alias: ["morse", "morsecode", "morsetranslate", "sandimorse"],
+  alias: ["morse"],
   category: "tools",
   description: "Translate morse code (text ke morse & sebaliknya)",
   usage: ".morse <teks>  atau  .morse decode <morse>",

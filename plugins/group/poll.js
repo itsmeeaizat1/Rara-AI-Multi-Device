@@ -3,7 +3,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "poll",
-  alias: ["poll", "survei2", "vote"],
+  alias: ["poll"],
   category: "group",
   description: "Polling/voting interaktif dengan auto-close timer dan real-time results",
   usage: ".poll <command> [args]",

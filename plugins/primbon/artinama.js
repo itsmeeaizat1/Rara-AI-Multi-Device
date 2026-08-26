@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'artinama',
-    alias: ["artinama", 'namameaning', 'artinamaku'],
+    alias: ["artinama"],
     category: 'primbon',
     description: 'Cek arti nama menurut primbon',
     usage: '.artinama <nama>',

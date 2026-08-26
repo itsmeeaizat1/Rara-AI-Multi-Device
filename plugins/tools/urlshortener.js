@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "urlshortener",
-  alias: ["urlshortener", "urlshortmain", "shortlinkv2"],
+  alias: ["urlshortener"],
   category: "tools",
   description: "Pendekkan URL panjang",
   usage: ".urlshortener <link>",

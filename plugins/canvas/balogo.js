@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "balogo",
-    alias: ["balogo", "ba2", "balogo2"],
+    alias: ["balogo"],
     category: 'canvas',
     description: 'Membuat logo Blue Archive style',
     usage: '.balogo <textL> & <textR>',

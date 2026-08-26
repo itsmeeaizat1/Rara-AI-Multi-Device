@@ -525,7 +525,7 @@ function generateReport(analysis, pushName) {
 // ─── Plugin Config ───
 const pluginConfig = {
   name: "moodcheck",
-  alias: ["moodcheck", "mood", "analisavoice", "moodvn", "moodtrackon", "moodtrackoff", "moodtrackstatus", "moodhistory", "moodsuggon", "moodsuggoff", "moodaion", "moodaioff", "moodaiset"],
+  alias: ["moodcheck"],
   category: "fun",
   description: "Menganalisis emosi/mood dari Voice Note",
   usage: ".moodcheck (reply VN)\n.moodtrackon/off (owner)\n.moodsuggon/off (owner)\n.moodaion/off (owner)\n.moodaiset <menit> (owner)\n.moodtrackstatus\n.moodhistory",

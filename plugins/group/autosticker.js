@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "autosticker",
-    alias: ["autosticker", "as2", "autostick"],
+    alias: ["autosticker"],
     category: 'group',
     description: 'Toggle auto sticker - otomatis jadikan gambar/video jadi sticker',
     usage: '.autosticker on/off',

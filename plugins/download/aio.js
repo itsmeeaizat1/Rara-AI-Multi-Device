@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aio",
-  alias: ["aio", "allinone", "downloadaio"],
+  alias: ["aio"],
   category: "downloader",
   description:
     "All in one downloader (IG, TikTok, FB, Twitter, YouTube, Pinterest, CapCut, dll)",

@@ -4,7 +4,7 @@ const afkStorage = global.afkStorage || (global.afkStorage = new Map())
 
 const pluginConfig = {
     name: 'afk',
-    alias: ["afk", 'away', 'brb'],
+    alias: ["afk"],
     category: 'group',
     description: 'Set status AFK dengan alasan',
     usage: '.afk <alasan>',

@@ -13,22 +13,7 @@ import {
 
 const pluginConfig = {
   name: "pushkontak",
-  alias: [
-    "puskontak",
-    "push",
-    "stoppush",
-    "setjedapush",
-    "pushkontak_start",
-    "kelolapush",
-    "autovcf_on",
-    "autovcf_off",
-    "kodeunik_on",
-    "kodeunik_off",
-    "vcftarget_private",
-    "vcftarget_group",
-    "skipadmin_on",
-    "skipadmin_off",
-  ],
+  alias: ["pushkontak"],
   category: "pushkontak",
   description: "Push pesan ke semua member grup + auto simpan kontak VCF",
   usage: ".pushkontak",

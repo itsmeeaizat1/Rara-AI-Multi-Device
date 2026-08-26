@@ -6,7 +6,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "pengingatukt",
-  alias: ["pengingatukt", "ukt", "uktreminder", "reminderukt", "bayarukt", "pengingatspp"],
+  alias: ["pengingatukt"],
   category: "education",
   description: "Pengingat pembayaran UKT/SPP - set deadline & reminder otomatis",
   usage: ".pengingatukt <command>",

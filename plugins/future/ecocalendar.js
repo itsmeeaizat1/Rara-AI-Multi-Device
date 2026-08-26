@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ecocalendar",
-  alias: ["ecocalendar", "ecochallenge", "ecoharian"],
+  alias: ["ecocalendar"],
   category: "future",
   description: "Eco challenge harian - challenge ramah lingkungan",
   usage: ".ecocalendar <command>",

@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "memorygame",
-  alias: ["memorygame", "memory", "simon"],
+  alias: ["memorygame"],
   category: "future",
   description: "Memory game - tes daya ingat, ingat urutan yang makin panjang",
   usage: ".memorygame <command>",

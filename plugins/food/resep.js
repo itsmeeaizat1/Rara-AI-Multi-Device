@@ -281,7 +281,7 @@ function searchIDLocal(query) {
 
 const pluginConfig = {
   name: "resep",
-  alias: ["masakresep", "resep", "resepmasak"],
+  alias: ["resep"],
   category: "food",
   description: "Cari resep masakan (Cookpad Indonesia live + TheMealDB internasional)",
   usage: ".resep <nama> | .resep acak | .resep kategori <nama> | .resep negara <nama> | .resep bahan <bahan>",

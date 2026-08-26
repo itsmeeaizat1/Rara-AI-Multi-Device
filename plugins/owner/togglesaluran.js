@@ -11,7 +11,7 @@ import { claraWrap, tipText, separator } from "../../src/lib/nova-menu-style.js"
 
 const pluginConfig = {
   name: "switch",
-  alias: ["switch", "togglesaluran", "togglasaluran", "salurantoggle", "notifsaluran", "togglenotif", "saluran"],
+  alias: ["switch"],
   category: "owner",
   description: "Switch on/off fitur (saluran, broadcast, dll)",
   usage: ".switch saluran (lihat status) / .switch saluran <event> (toggle) / .switch saluran all on/off",

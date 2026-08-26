@@ -6,7 +6,7 @@ import { AIRich } from "../../src/lib/nova-builder.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "getplugin",
-  alias: ["getplugin", "gp", "getcode", "plugincode", "sourcecode"],
+  alias: ["getplugin"],
   category: "owner",
   description: "Dapatkan source code plugin",
   usage: ".getplugin <nama plugin>",

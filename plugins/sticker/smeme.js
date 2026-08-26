@@ -13,7 +13,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "smeme",
-  alias: ["smeme", "stickermeme", "smemes"],
+  alias: ["smeme"],
   category: "sticker",
   description: "Membuat sticker meme dari gambar",
   usage: ".smeme <top>|<bottom>",

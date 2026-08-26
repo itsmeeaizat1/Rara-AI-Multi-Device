@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "videotranscribe",
-  alias: ["videotranscribe", "video-transcribe", "transkripvideo"],
+  alias: ["videotranscribe"],
   category: "tools",
   description: "Transkrip video dari URL menjadi teks (YouTube, mp4, dll)",
   usage: ".video-transcribe <url> [lang]",

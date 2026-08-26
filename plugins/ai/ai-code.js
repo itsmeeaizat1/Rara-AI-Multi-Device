@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-code",
-  alias: ["ai-code", "codeai", "code", "coding", "programming"],
+  alias: ["ai-code"],
   category: "ai",
   description: "Generate/perbaiki code dengan AI",
   usage: ".ai-code <pertanyaan kode>",

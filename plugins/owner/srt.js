@@ -10,7 +10,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'srt',
-    alias: ["srt", 'shufflereplythumb', 'shufflereply'],
+    alias: ["srt"],
     category: 'owner',
     description: 'Sistem Shuffle Reply Thumb (SRT) untuk reply random image interaktif',
     usage: '.srt on',

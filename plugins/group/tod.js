@@ -258,7 +258,7 @@ function displayName(jid) {
 export default {
   config: {
   name: "tod",
-  alias: ["confession"],
+  alias: ["tod"],
   category: "group",
   desc: "Truth or Dare & Confession - Mini game interaktif untuk groups. Bot kasih pertanyaan jujur (Truth), tantangan seru (Dare), atau confession random.",
   usage: ".tod - Random truth/dare\n.tod truth - Pertanyaan jujur\n.tod dare - Tantangan seru\n.tod confess - Confession random\n.tod target - Tunjuk member random\n.todon / .todoff - Toggle (owner)\n.todstats - Statistik grup",

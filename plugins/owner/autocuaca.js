@@ -19,7 +19,7 @@ import {
 
 const pluginConfig = {
   name: "autocuacav2",
-  alias: ["autocuacav2", "autocuaca", "cuacaauto", "cuacaotomatis"],
+  alias: ["autocuacav2"],
   category: "owner",
   description: "Broadcast cuaca rinci BMKG-style otomatis ke grup/saluran",
   usage: ".autocuacav2 <on/off/add/remove/lokasi/jadwal/status/test>",

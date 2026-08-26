@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "antiremove",
-    alias: ["antiremove", "ar2", "antidelete"],
+    alias: ["antiremove"],
     category: 'group',
     description: 'Mengaktifkan/menonaktifkan anti hapus pesan di grup',
     usage: '.antiremove <on/off>',

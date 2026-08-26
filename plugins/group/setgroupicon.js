@@ -4,7 +4,7 @@ import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setgroupicon",
-  alias: ["setgroupicon", "gantiicon", "gcicon", "setgicon"],
+  alias: ["setgroupicon"],
   category: "group",
   description: "Ganti icon/emoji grup",
   usage: ".setgroupicon <emoji>",

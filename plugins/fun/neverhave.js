@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "neverhave",
-  alias: ["neverhave", "neverhaveiever", "nhie", "pernahgak", "aku belum"],
+  alias: ["neverhave"],
   category: "fun",
   description: "Never Have I Ever — Generator statement lucu/malu/ngakak",
   usage: ".neverhave — Dapat statement acak\n.neverhave <tema> — Tema: lucu, malu, gaul, dewasa, random",

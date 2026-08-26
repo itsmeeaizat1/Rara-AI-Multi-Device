@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sunnah",
-  alias: ["sunnah", "sunnah2", "hadithv2"],
+  alias: ["sunnah"],
   category: "islamic",
   description: "Sunnah - Hadith via official sunnah.com API (requires API key)",
   usage: ".sunnah <command> [args]",

@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setmenuvideo",
-  alias: ["setmenuvideo", "menuvideo", "setvideo", "videomenu"],
+  alias: ["setmenuvideo"],
   category: "owner",
   desc: "Set video/GIF untuk menu V1 (URL atau local). Kosong = pakai assets/video/nova-mp4.mp4",
   usage: ".setmenuvideo <url>\n.setmenuvideo local\n.setmenuvideo check",

@@ -3,7 +3,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "konversinilai",
-  alias: ["konversinilai", "konversinilai2", "nilaimahasiswa"],
+  alias: ["konversinilai"],
   category: "education",
   description: "Konversi nilai - tabel lengkap huruf ke angka, IPK, persentase, predikat",
   usage: ".konversi [nilai]",

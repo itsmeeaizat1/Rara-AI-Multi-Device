@@ -5,7 +5,7 @@ import { sendToolsPreview } from "../../src/lib/nova-context.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "pastebin",
-  alias: ["pastebin", "paste", "uploadpaste"],
+  alias: ["pastebin"],
   category: "tools",
   description: "Upload teks ke Pastebin",
   usage: ".pastebin <text>",

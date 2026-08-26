@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "text2img",
-  alias: ["text2img", "txt2img", "texttoimg"],
+  alias: ["text2img"],
   category: "tools",
   description: "Generate gambar dari text (Pollinations AI - gratis)",
   usage: ".text2img <text>",

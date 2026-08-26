@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "quoteanimesanka",
-  alias: ["quoteanimesanka", "animequotesanka", "qanimesanka"],
+  alias: ["quoteanimesanka"],
   category: "tools",
   description: "Random quote/quotes anime dari Otakotaku",
   usage: ".quoteanimesanka",

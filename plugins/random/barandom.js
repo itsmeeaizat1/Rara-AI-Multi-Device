@@ -5,7 +5,7 @@ import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "barandom",
-    alias: ["barandom", "ba", "barand"],
+    alias: ["barandom"],
     category: 'random',
     description: 'Random gambar Blue Archive',
     usage: '.barandom',

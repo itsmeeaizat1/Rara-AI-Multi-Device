@@ -9,7 +9,7 @@ ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const pluginConfig = {
   name: ["ttmp3"],
-  alias: ["ttmp3", "ttmusic", "tiktokmusic"],
+  alias: ["ttmp3"],
   category: "download",
   description: "Download audio TikTok",
   usage: ".ttmp3 <url>",

@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'capcutdl',
-    alias: ["capcutdl", 'ccdl', 'capcut', 'cc'],
+    alias: ["capcutdl"],
     category: 'download',
     description: 'Download video CapCut',
     usage: '.ccdl <url>',

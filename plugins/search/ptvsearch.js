@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ptvsearch",
-  alias: ["ptvsearch", "ptvs"],
+  alias: ["ptvsearch"],
   category: "search",
   description: "Cari video TikTok",
   usage: ".ptvsearch <query>",

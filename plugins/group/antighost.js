@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antighost",
-  alias: ["antighost", "antighostgc", "ghostdetect", "antilurker", "antilent"],
+  alias: ["antighost"],
   category: "group",
   description: "Deteksi member ghost/lurker yang gak pernah chat di grup",
   usage: ".antighost on [hari] | .antighost off | .antighost status | .antighost scan | .antighost kick",

@@ -6,7 +6,7 @@ import fs from "fs";
 
 const pluginConfig = {
   name: "belistore",
-  alias: ["belistore", "beli2", "pembelian"],
+  alias: ["belistore"],
   category: "store",
   description: "🛒 Pesan produk dan dapatkan nomor transaksi",
   usage: ".beli <nomor_produk>",

@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 
 const pluginConfig = {
     name: 'editstok',
-    alias: ["editstok", 'editstock'],
+    alias: ["editstok"],
     category: 'store',
     description: '✏️ Edit stok item produk (hanya di private chat)',
     usage: '.editstok <nomor_produk> <nomor_item>|<detail_baru>',

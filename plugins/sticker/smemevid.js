@@ -12,7 +12,7 @@ ffmpeg.setFfmpegPath(ffmpegInstaller.path)
 
 const pluginConfig = {
     name: 'smemevid',
-    alias: ["smemevid", 'smemevideo', 'memevid'],
+    alias: ["smemevid"],
     category: 'sticker',
     description: 'Membuat sticker meme dari video',
     usage: '.smemevid <top>|<bottom>',

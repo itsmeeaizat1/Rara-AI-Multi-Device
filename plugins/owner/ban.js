@@ -7,7 +7,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "ban",
-    alias: ["ban", "block", "banuser"],
+    alias: ["ban"],
     category: 'owner',
     description: 'Memblokir user dari menggunakan bot',
     usage: '.ban <nomor/@tag>',

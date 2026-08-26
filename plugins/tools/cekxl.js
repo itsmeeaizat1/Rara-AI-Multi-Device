@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "cekxl",
-    alias: ["cekxl", "checkxl", "xlcheck", "xlcek"],
+    alias: ["cekxl"],
     category: "tools",
     description: "Cek informasi paket dan kuota nomor XL/Axis secara detail",
     usage: ".cekxl <nomor>",

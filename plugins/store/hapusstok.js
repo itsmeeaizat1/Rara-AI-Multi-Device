@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 
 const pluginConfig = {
     name: 'hapusstok',
-    alias: ["hapusstok", 'delstok', 'delstock', 'deletestok'],
+    alias: ["hapusstok"],
     category: 'store',
     description: '🗑️ Hapus stok item dari produk',
     usage: '.hapusstok <nomor_produk> <nomor_item>',

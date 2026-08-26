@@ -6,7 +6,7 @@ import * as timeHelper from '../../src/lib/nova-time.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "groupinfo",
-    alias: ["groupinfo", "infogc2", "gcinfo"],
+    alias: ["groupinfo"],
     category: 'group',
     description: 'Menampilkan informasi lengkap grup',
     usage: '.groupinfo',

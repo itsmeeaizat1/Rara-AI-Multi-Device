@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "lostfound",
-  alias: ["lostfound", "hilangketemu", "lostitem"],
+  alias: ["lostfound"],
   category: "future",
   description: "Lost & Found grup - report barang hilang/ketemu",
   usage: ".lostfound <command>",

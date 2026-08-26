@@ -4,7 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "shortlink",
-  alias: ["TinyURL", "shortlink", "shorturl", "urlshort2"],
+  alias: ["shortlink"],
   category: "tools",
   description: "Perpendek URL dengan berbagai layanan shortlink",
   usage: ".shortlink <provider> <url>\n.shortlink list — Lihat semua provider",

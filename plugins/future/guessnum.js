@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "guessnum",
-  alias: ["guessnum", "tebakangka", "numgame"],
+  alias: ["guessnum"],
   category: "future",
   description: "Guess the number - tebak angka 1-100, petunjuk higher/lower",
   usage: ".guessnum <command>",

@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "storyrelay",
-  alias: ["storyrelay", "sambungcerita", "storychain", "relaystory"],
+  alias: ["storyrelay"],
   category: "group",
   description: "Sambung cerita bareng — tiap orang tambah 1 kalimat",
   usage: ".storyrelay start | .storyrelay <kalimat> | .storyrelay read | .storyrelay stop",

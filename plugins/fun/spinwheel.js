@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spinwheel",
-  alias: ["spinwheel", "rodaacak", "spin", "putar", "roulettepilih"],
+  alias: ["spinwheel"],
   category: "fun",
   description: "Roda putar acak — input pilihan, bot putar dan kasih hasil",
   usage: ".spinwheel <pilihan1,pilihan2,...> — Putar roda\n.spinwheel info — Cara pakai",

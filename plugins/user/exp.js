@@ -6,7 +6,7 @@ import { calculateLevel, getRole } from '../../src/lib/nova-level.js'
 
 const pluginConfig = {
     name: "expuser",
-    alias: ["expuser", "exp2", "xpuser"],
+    alias: ["expuser"],
     category: 'user',
     description: 'Cek exp user',
     usage: '.exp [@user]',

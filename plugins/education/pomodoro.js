@@ -3,7 +3,7 @@ import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pomodoro",
-  alias: ["pomodoro", "studytime", "timerbelajar", "fokus"],
+  alias: ["pomodoro"],
   category: "education",
   description: "Timer belajar Pomodoro (25 menit fokus + 5 menit istirahat)",
   usage: ".pomodoro <command>",

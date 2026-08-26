@@ -4,7 +4,7 @@ import { delay } from "../../src/lib/nova-utils.js";
 
 const pluginConfig = {
   name: "wyr",
-  alias: ["wyr", "wyrgrup", "would"],
+  alias: ["wyr"],
   category: "group",
   description: "Would You Rather - Pilih dilema A atau B, voting real-time",
   usage: ".wyr atau .wyr start atau .wyr result atau .wyr stop",

@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "speedtest",
-  alias: ["speedtest", "speedtest2", "nettest"],
+  alias: ["speedtest"],
   category: "info",
   description: "Tes kecepatan internet panel/VPS (download, upload, ping)",
   usage: ".speedtest",

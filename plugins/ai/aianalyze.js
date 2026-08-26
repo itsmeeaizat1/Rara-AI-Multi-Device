@@ -15,7 +15,7 @@ function ensureTmp() {
 
 const pluginConfig = {
   name: "aianalyze",
-  alias: ["aianalyze", "analyze", "analisismedia", "visionai", "cekmedia"],
+  alias: ["aianalyze"],
   category: "ai",
   description: "Analisis gambar/file dengan AI",
   usage: ".aianalyze (reply media)",

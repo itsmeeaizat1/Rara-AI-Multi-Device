@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 const pluginConfig = {
     name: 'resetlimitdefault',
-    alias: ["resetlimitdefault", 'defaultlimitreset'],
+    alias: ["resetlimitdefault"],
     category: 'owner',
     description: 'Reset default limit ke config asli',
     usage: '.resetlimitdefault',

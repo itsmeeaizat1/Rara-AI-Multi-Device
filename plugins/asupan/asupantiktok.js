@@ -6,7 +6,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "asupantiktok",
-  alias: ["asupantiktok", "tiktokasupan", "ttasupan"],
+  alias: ["asupantiktok"],
   category: "asupan",
   description: "Video TikTok dari username random atau spesifik",
   usage: ".asupantiktok [username]",

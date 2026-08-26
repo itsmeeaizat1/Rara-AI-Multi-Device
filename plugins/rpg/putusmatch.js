@@ -6,7 +6,7 @@ import { getCintaData, breakUp, formatDurasi } from "../../src/lib/nova-rpg-cint
 
 const pluginConfig = {
   name: "putusmatch",
-  alias: ["putusmatch", "putusrpg", "rpgputus"],
+  alias: ["putusmatch"],
   category: "rpg",
   description: "Memutuskan hubungan pacaran di RPG",
   usage: ".putusmatch",

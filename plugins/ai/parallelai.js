@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "parallelai",
-  alias: ["parallelai", "parallel", "paai", "paraai"],
+  alias: ["parallelai"],
   category: "ai",
   description: "Tanya AI menggunakan Parallel AI (reasoning model)",
   usage: ".parallelai <pertanyaan>",

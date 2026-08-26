@@ -20,7 +20,7 @@ function tempPath(ext) {
 
 const pluginConfig = {
   name: "quote",
-  alias: ["quote", "quotes", "quotemain"],
+  alias: ["quote"],
   category: "fun",
   description: "Dapatkan quote motivasi acak",
   usage: ".quote",

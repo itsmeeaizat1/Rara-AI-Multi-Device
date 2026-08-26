@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setmenucat",
-  alias: ["MENUCAT NATIVEFLOW", "menucatvariant", "menucatstyle"],
+  alias: ["setmenucat"],
   category: "owner",
   description: "Mengatur variant tampilan menucat",
   usage: ".setmenucat <v1-v2, v5>",

@@ -3,7 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "aigift", alias: ["giftai", "rekomendasikado", "kadoai"], category: "future",
+  name: "aigift", alias: ["aigift"], category: "future",
   alias: ["aigift"],
   description: "AI rekomendasi kado", usage: ".aigift <info orang>",
   example: ".aigift cowok 20th suka game", isOwner: false, isPremium: true,

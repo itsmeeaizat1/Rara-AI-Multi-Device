@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "musicmaker",
-  alias: ["musicmaker", "bikinlagu", "suno"],
+  alias: ["musicmaker"],
   category: "ai",
   description: "Membuat musik atau lagu menggunakan AI dari teks (prompt)",
   usage: ".musicmaker <prompt>",

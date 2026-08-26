@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'promote',
-    alias: ["promote", 'jadiadmin', 'admin'],
+    alias: ["promote"],
     category: 'group',
     description: 'Jadikan member sebagai admin',
     usage: '.promote @user',

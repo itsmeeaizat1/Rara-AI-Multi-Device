@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "setname",
-    alias: ["setname", "setname2", "setnamebot2"],
+    alias: ["setname"],
     category: 'tools',
     description: 'Mengubah nama profil bot',
     usage: '.setname <nama baru>',

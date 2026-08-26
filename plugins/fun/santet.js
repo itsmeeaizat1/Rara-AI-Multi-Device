@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "santet",
-  alias: ["santet", "kirimsantet", "santetvirtual", "kirim santet", "tenungan"],
+  alias: ["santet"],
   category: "fun",
   description: "Kirim santet virtual ke temen — efek lucu, bisa dilawan",
   usage: ".santet @target — Kirim santet ke target\n.santet info — Statistik santet\n.tawasantet — Lawan santet yang kamu terima",

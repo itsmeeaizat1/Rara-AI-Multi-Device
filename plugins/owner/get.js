@@ -7,7 +7,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "get",
-  alias: ["get", "fetch", "http", "request", "curl"],
+  alias: ["get"],
   category: "owner",
   description: "Advanced HTTP request tool (Owner Only)",
   usage: ".get <url> [options]",
