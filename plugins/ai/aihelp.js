@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
     const keyword = args.join(" ").toLowerCase().trim();
 
     if (!keyword) {
-      await m.reply(`❀°˖ Aɪ Hᴇʟᴘ ˖°❀
+      await m.reply(`╭──「 *Aɪ Hᴇʟᴘ* 」
 
 Ketik *${prefix}aihelp <keyword>* untuk cari command.
 
@@ -37,7 +37,7 @@ ${prefix}aihelp download
 ${prefix}aihelp sticker
 ${prefix}aihelp group
 
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`);
+╰──────────❀`);
       await m.react("🐣");
       return;
     }
@@ -58,11 +58,11 @@ ${prefix}aihelp group
     }
 
     if (matches.length === 0) {
-      await m.reply(`❀°˖ Aɪ Hᴇʟᴘ ˖°❀
+      await m.reply(`╭──「 *Aɪ Hᴇʟᴘ* 」
 
 Tidak ada command untuk "${keyword}".
 
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`);
+╰──────────❀`);
       await m.react("❌");
       return;
     }
@@ -74,15 +74,15 @@ Tidak ada command untuk "${keyword}".
       cmdLines += `${end}  ➶ ${prefix}${matches[i].name}${desc}\n`;
     }
 
-    const text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Aɪ Hᴇʟᴘ
+    const text = `╭──「 *Aɪ Hᴇʟᴘ 」
 ┊
-  ┊  ➶ *Keyword:* ${keyword}
-  ┊  ➶ *Ditemukan:* ${matches.length} command
+│ ❏ *Keyword:* ${keyword}
+│ ❏ *Ditemukan:* ${matches.length} command
 ┊
 ₊˚ʚ ᗢ₊˚✧ ﾟ. 🔍 Hᴀsɪʟ ｡ﾟ
 ┊${cmdLines}₊˚ʚ ᗢ₊˚✧ ﾟ.
 ┊
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+╰──────────❀`;
 
     await m.reply(text);
     await m.react("🐣");

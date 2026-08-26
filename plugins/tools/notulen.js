@@ -84,23 +84,23 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!input || input.trim().length < 10) {
     const help = claraWrap("Notulen", [
-      `  ┊  ➶ AI Notulen Meeting → Text + PDF`,
+      `│ ❏ AI Notulen Meeting → Text + PDF`,
       ``,
-      `  ┊  ➶ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `│ ❏ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  Reply catatan meeting, ketik: ${prefix}notulen`,
       `  Atau ketik langsung: ${prefix}notulen <catatan>`,
       ``,
-      `  ┊  ➶ *ᴄᴏɴᴛᴏʜ:*`,
+      `│ ❏ *ᴄᴏɴᴛᴏʜ:*`,
       `  ${prefix}notulen rapat evaluasi Q1 2024. Budi: perlu upgrade server. Sari: budget 50jt. Keputusan: beli server minggu depan. Budi beli, deadline Jumat`,
       ``,
-      `  ┊  ➶ *ʜᴀꜱɪʟ:*`,
+      `│ ❏ *ʜᴀꜱɪʟ:*`,
       `  Structured notulen: agenda, keputusan, action items`,
     ].join("\n"));
     return m.reply( help, "notulen");
   }
 
   await m.react("🕒");
-  m.reply(claraWrap("Notulen", "  ┊  ➶ AI lagi nyusun notulen meeting..."));
+  m.reply(claraWrap("Notulen", "│ ❏ AI lagi nyusun notulen meeting..."));
 
   try {
     const result = await UnlimitedAI(NOTULEN_PROMPT.replace("__INPUT__", input), "nova-ai");
@@ -117,7 +117,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     await m.reply(claraWrap("Notulen Meeting", preview));
 
     // Also generate PDF
-    m.reply(claraWrap("Notulen", "  ┊  ➶ Render notulen ke PDF..."));
+    m.reply(claraWrap("Notulen", "│ ❏ Render notulen ke PDF..."));
     const pdfBuffer = await renderNotulenPDF(text);
     await sock.sendMessage(m.chat, {
       document: pdfBuffer,

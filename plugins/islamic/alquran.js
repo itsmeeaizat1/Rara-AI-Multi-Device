@@ -59,8 +59,8 @@ async function handler(m, { sock }) {
 
     // MENU
     if (!subCmd || subCmd === "help" || subCmd === "menu") {
-      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Cara pakai:  ┊  ➶\n";
-      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
+      let txt = "╭──「 *Cara pakai:│ ❏\n"; 」
+      txt += "╰──────────❀\n\n";
       let i = 1;
       for (const [key, qari] of Object.entries(QARIS)) {
         txt += i + ". *" + qari.name + "*\n";
@@ -115,8 +115,8 @@ async function handler(m, { sock }) {
         const audioUrl = audioRes.data.audio;
         const indoText = indoRes.data.text;
 
-        let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + surah.englishName + "  ┊  ➶\n";
-        txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+        let txt = "╭──「 *" + surah.englishName + "│ ❏\n"; 」
+        txt += "╰──────────❀\n";
         txt += "Surat: *" + surah.englishName + "* (" + surah.name + ")\n";
         txt += "Total Ayat: " + surah.numberOfAyahs + "\n";
         txt += "Qari: " + qari.name + "\n\n";
@@ -161,8 +161,8 @@ async function handler(m, { sock }) {
       const indoAyah = indoRes.data;
       const audioUrl = audioRes.data.audio;
 
-      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + surah.englishName + "  ┊  ➶\n";
-      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+      let txt = "╭──「 *" + surah.englishName + "│ ❏\n"; 」
+      txt += "╰──────────❀\n";
       txt += "Surat: *" + surah.englishName + "* (" + surah.name + ")\n";
       txt += "Arti: " + surah.englishNameTranslation + "\n";
       txt += "Ayat: " + surah.numberOfAyahs + "\n";

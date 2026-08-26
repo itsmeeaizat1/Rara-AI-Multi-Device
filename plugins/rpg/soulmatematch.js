@@ -65,15 +65,15 @@ async function handler(m, { sock }) {
       return m.reply(
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `  ┊ ➶ \`${m.prefix}soulmatematch @tag\`\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
     if (targetJid === m.sender) {
       return m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *sᴏᴜʟᴍᴀᴛᴄʜ*\n\n` +
+        `╭──「 **sᴏᴜʟᴍᴀᴛᴄʜ*\n\n` + 」
         `  ┊ ➶ 😅 Cek compatibility sama diri sendiri? 100% narcisist!\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
     const tier = getTier(score);
     const fact = pick(FACTS);
 
-    let msg = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *sᴏᴜʟᴍᴀᴛᴄʜ*\n\n`;
+    let msg = `╭──「 **sᴏᴜʟᴍᴀᴛᴄʜ*\n\n`; 」
     msg += `  ┊ ➶ 👤 ${myName} ❤️ ${targetName}\n\n`;
     msg += `  ┊ ➶ ${tier.emoji} Score: *${score}/100*\n`;
     msg += `  ┊ ➶ 📊 Tier: *${tier.label}*\n`;
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
       msg += `  ┊ ➶ Affection: *${myCinta.affection || 0}*\n`;
     }
 
-    msg += `\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    msg += `\n╰──────────❀`;
 
     await m.reply(msg);
     await m.react(tier.emoji);

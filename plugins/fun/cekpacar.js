@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     const name = data.name || targetJid.split("@")[0];
     const now = Date.now();
 
-    let msg = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴇᴋ ᴘᴀᴄᴀʀ*\n\n`;
+    let msg = `╭──「 **ᴄᴇᴋ ᴘᴀᴄᴀʀ*\n\n`; 」
     msg += `  ┊ ➶ 👤 Nama: *${name}*\n`;
 
     if (data.fun.pasangan) {
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
       }
     }
 
-    msg += `\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    msg += `\n╰──────────❀`;
 
     await m.reply(msg);
     await m.react("🔍");

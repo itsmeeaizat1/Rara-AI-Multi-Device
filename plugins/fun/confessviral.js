@@ -56,7 +56,7 @@ function buildMessage(mode, pesan, targetName) {
   const outro = pick(OUTROS);
   const name = targetName ? `, *${targetName}*` : "";
 
-  let text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *${md.emoji} ${md.label}* ❀°˖✧\n\n`;
+  let text = `╭──「 *${md.emoji} ${md.label}*\n\n`
   text += `  Halo${name},\n\n`;
   text += `  ${opener}\n\n`;
   text += `  Aku ${md.intro}.\n\n`;
@@ -64,7 +64,7 @@ function buildMessage(mode, pesan, targetName) {
   text += `  ${outro}\n\n`;
   text += `  🔒 _Pesan ini dikirim secara anonim_\n`;
   text += `  ✉️ _Balas pesan ini untuk membalas_\n\n`;
-  text += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+  text += `╰──────────❀`;
   return text;
 }
 
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
     const raw = m.fullArgs?.trim() || m.text?.trim() || "";
 
     if (!raw || !raw.includes("|")) {
-      let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n`;
+      let txt = `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n`
       txt += `  ┊ ➶ Confes anonymous ala viral TikTok\n\n`;
       txt += `  *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n`;
       txt += `  ┊ ➶ \`${m.prefix}confessviral nomor|mode|pesan\`\n\n`;
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
       txt += `\n  *ᴄᴏɴᴛᴏʜ:*\n`;
       txt += `  ┊ ➶ \`${m.prefix}confessviral 6281234567890|nembak|Aku suka kamu\`\n\n`;
       txt += `  🤫 _Identitas 100% anonim dan aman_\n\n`;
-      txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      txt += `╰──────────❀`;
       await m.reply(txt);
       return;
     }
@@ -128,10 +128,10 @@ async function handler(m, { sock }) {
     const parts = raw.split("|").map((s) => s.trim()).filter(Boolean);
     if (parts.length < 3) {
       await m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n` +
+        `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n` +
         `  ┊ ➶ ❌ Format salah! Butuh 3 bagian\n` +
         `  ┊ ➶ \`${m.prefix}confessviral nomor|mode|pesan\`\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
       return;
     }
@@ -143,39 +143,39 @@ async function handler(m, { sock }) {
 
     if (!number) {
       await m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n` +
+        `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n` +
         `  ┊ ➶ ❌ Nomor tujuan kosong!\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
       return;
     }
 
     if (!MODES[mode]) {
-      let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n`;
+      let txt = `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n`
       txt += `  ┊ ➶ ❌ Mode tidak valid: \`${mode}\`\n\n`;
       txt += `  *ᴍᴏᴅᴇ ᴛᴇʀsᴇᴅɪᴀ:*\n`;
       Object.entries(MODES).forEach(([k, v]) => {
         txt += `  ┊ ➶ ${v.emoji} \`${k}\`\n`;
       });
-      txt += `\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      txt += `\n╰──────────❀`;
       await m.reply(txt);
       return;
     }
 
     if (!pesan || pesan.length < 5) {
       await m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n` +
+        `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n` +
         `  ┊ ➶ ❌ Pesan kosong atau kependekan! Minimal 5 karakter.\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
       return;
     }
 
     if (pesan.length > 1000) {
       await m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n` +
+        `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n` +
         `  ┊ ➶ ❌ Pesan kepanjangan! Maksimal 1000 karakter.\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
       return;
     }
@@ -188,9 +188,9 @@ async function handler(m, { sock }) {
 
     if (targetNumber.length < 10 || targetNumber.length > 15) {
       await m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n` +
+        `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n` +
         `  ┊ ➶ ❌ Nomor tidak valid!\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
       return;
     }
@@ -199,9 +199,9 @@ async function handler(m, { sock }) {
 
     if (targetJid === m.sender) {
       await m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n` +
+        `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n` +
         `  ┊ ➶ 😂 Nggak bisa confess ke diri sendiri!\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
       return;
     }
@@ -212,9 +212,9 @@ async function handler(m, { sock }) {
       const [onWa] = await sock.onWhatsApp(targetNumber);
       if (!onWa?.exists) {
         await m.reply(
-          `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n` +
+          `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n` +
           `  ┊ ➶ ❌ Nomor \`${targetNumber}\` nggak terdaftar di WhatsApp!\n\n` +
-          `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+          `╰──────────❀`
         );
         return;
       }
@@ -249,23 +249,23 @@ async function handler(m, { sock }) {
       }, 24 * 60 * 60 * 1000);
 
       const md = MODES[mode];
-      let receipt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n`;
+      let receipt = `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n`
       receipt += `  ┊ ➶ ✅ ${md.emoji} Terkirim!\n`;
       receipt += `  ┊ ➶ 📱 Ke: \`${targetNumber}\`\n`;
       receipt += `  ┊ ➶ 🎯 Mode: *${md.label}*\n`;
       if (targetName) receipt += `  ┊ ➶ 👤 Nama: *${targetName}*\n`;
       receipt += `  ┊ ➶ 🔒 Status: *Anonim*\n\n`;
       receipt += `  _Kalau dia balas, otomatis diterusin ke sini_\n\n`;
-      receipt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      receipt += `╰──────────❀`;
 
       await m.reply(receipt);
       await m.react(md.emoji);
     } catch (sendErr) {
       console.error("[confessviral] Send error:", sendErr.message);
       await m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n` +
+        `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n` +
         `  ┊ ➶ ❌ Gagal kirim: ${sendErr.message}\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
       try { await m.react("❌"); } catch {}
     }
@@ -292,12 +292,12 @@ async function replyHandler(m, { sock }) {
 
     const md = MODES[info.mode] || MODES.nembak;
 
-    let replyText = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ʙᴀʟᴀsᴀɴ ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n`;
+    let replyText = `╭──「 *ʙᴀʟᴀsᴀɴ ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n`
     replyText += `  ┊ ➶ 💕 Orang yang kamu confess (${md.emoji} ${md.label}) balas!\n\n`;
     replyText += `  💬 *ɪsɪ ʙᴀʟᴀsᴀɴ:*\n`;
     replyText += `  \`\`\`${replyMessage}\`\`\`\n\n`;
     replyText += `  🔒 _Identitas kamu tetap anonim_\n\n`;
-    replyText += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    replyText += `╰──────────❀`;
 
     await sock.sendMessage(info.senderChat, {
       text: replyText,
@@ -306,9 +306,9 @@ async function replyHandler(m, { sock }) {
 
     await sock.sendMessage(m.chat, {
       text:
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* ❀°˖✧\n\n` +
+        `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ*\n\n` +
         `  ┊ ➶ ✅ Balasan terkirim ke pengirim!\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`,
+        `╰──────────❀`,
     });
 
     global.confessViralData.delete(quotedId);

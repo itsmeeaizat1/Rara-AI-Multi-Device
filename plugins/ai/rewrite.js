@@ -81,9 +81,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       const out =
-        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}rewrite <teks>*`,
-          `  ┊  ➶ Atau reply pesan dengan *${prefix}rewrite*`,
-          `  ┊  ➶ Contoh: *${prefix}rewrite pesan ini*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}rewrite <teks>*`,
+          `│ ❏ Atau reply pesan dengan *${prefix}rewrite*`,
+          `│ ❏ Contoh: *${prefix}rewrite pesan ini*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -95,8 +95,8 @@ async function handler(m, { sock, config: botConfig }) {
     const reply = await callAI(prompt, botConfig.aiHelp);
 
     const out =
-      claraWrap("Rewrite", [`  ┊  ➶ Teks: *${text.slice(0, 200)}${text.length > 200 ? "..." : ""}*`,
-        `  ┊  ➶ Hasil: *${reply}*`].join("\n")) +
+      claraWrap("Rewrite", [`│ ❏ Teks: *${text.slice(0, 200)}${text.length > 200 ? "..." : ""}*`,
+        `│ ❏ Hasil: *${reply}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}rewrite <teks> untuk tulis ulang lagi`) +
       "\n" +
@@ -106,8 +106,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *Gagal*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *Gagal*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

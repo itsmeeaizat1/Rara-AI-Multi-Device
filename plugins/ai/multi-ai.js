@@ -73,23 +73,23 @@ async function handler(m, { sock, config: botConfig }) {
         idx++;
       }
 
-      const text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Mᴜʟᴛɪ AI
+      const text = `╭──「 *Mᴜʟᴛɪ AI 」
 ┊
-  ┊  ➶ *Router AI — Pilih Provider & Model*
+│ ❏ *Router AI — Pilih Provider & Model*
   ┊
 ₊˚ʚ ᗢ₊˚✧ ﾟ. 🤖 Pʀᴏᴠɪᴅᴇʀs ｡ﾟ
 ┊${lines}₊˚ʚ ᗢ₊˚✧ ﾟ.
 ┊
-  ┊  ➶ *Cara pakai:*
+│ ❏ *Cara pakai:*
   ┊    ➶ ${prefix}multi-ai <provider> <pesan>
   ┊    ➶ ${prefix}multi-ai <provider> <model> <pesan>
   ┊
-  ┊  ➶ *Contoh:*
+│ ❏ *Contoh:*
   ┊    ➶ ${prefix}multi-ai gemini apa itu AI
   ┊    ➶ ${prefix}multi-ai openai gpt-4o-mini jelaskan kuantum
   ┊    ➶ ${prefix}multi-ai groq buat puisi
   ┊
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+╰──────────❀`;
 
       await m.reply(text);
       await m.react("🐣");
@@ -100,12 +100,12 @@ async function handler(m, { sock, config: botConfig }) {
     const providers = getAllProviders();
     const provider = providers[providerArg];
     if (!provider) {
-      const text = `❀°˖ Aɪ Rᴏᴜᴛᴇʀ ˖°❀
+      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」
 ┊
-  ┊  ➶ Provider *${providerArg}* tidak ditemukan
-  ┊  ➶ Ketik *${prefix}multi-ai list* untuk lihat daftar
+│ ❏ Provider *${providerArg}* tidak ditemukan
+│ ❏ Ketik *${prefix}multi-ai list* untuk lihat daftar
 ┊
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+╰──────────❀`;
       await m.reply(text);
       await m.react("❌");
       return { handled: true };
@@ -126,15 +126,15 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!userMessage) {
-      const text = `❀°˖ Aɪ Rᴏᴜᴛᴇʀ ˖°❀
+      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」
 ┊
-  ┊  ➶ *Provider:* ${toSC(provider.name || providerArg)}
-  ┊  ➶ *Model:* ${model}
+│ ❏ *Provider:* ${toSC(provider.name || providerArg)}
+│ ❏ *Model:* ${model}
   ┊
-  ┊  ➶ Penggunaan: *${prefix}multi-ai ${providerArg} [model] <pesan>*
-  ┊  ➶ Contoh: *${prefix}multi-ai ${providerArg} ${model} apa itu AI*
+│ ❏ Penggunaan: *${prefix}multi-ai ${providerArg} [model] <pesan>*
+│ ❏ Contoh: *${prefix}multi-ai ${providerArg} ${model} apa itu AI*
   ┊
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+╰──────────❀`;
       await m.reply(text);
       await m.react("❌");
       return { handled: true };
@@ -162,13 +162,13 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     if (!reply || reply.trim() === "") {
-      const text = `❀°˖ Aɪ Rᴏᴜᴛᴇʀ ˖°❀
+      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」
 ┊
-  ┊  ➶ *Status:* Gagal
-  ┊  ➶ *Alasan:* AI tidak memberikan respons
-  ┊  ➶ Cek API key di *${prefix}ai-set apiKey <key>*
+│ ❏ *Status:* Gagal
+│ ❏ *Alasan:* AI tidak memberikan respons
+│ ❏ Cek API key di *${prefix}ai-set apiKey <key>*
 ┊
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+╰──────────❀`;
       await m.reply(text);
       await m.react("❌");
       return { handled: true };
@@ -177,31 +177,31 @@ async function handler(m, { sock, config: botConfig }) {
     const trimmedMsg = userMessage.length > 200 ? userMessage.slice(0, 200) + "..." : userMessage;
     const trimmedReply = reply.length > 3000 ? reply.slice(0, 3000) + "..." : reply;
 
-    const text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Aɪ Rᴏᴜᴛᴇʀ
+    const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ 」
 ┊
-  ┊  ➶ *Provider:* ${toSC(provider.name || providerArg)}
-  ┊  ➶ *Model:* ${model}
-  ┊  ➶ *Kamu:* ${trimmedMsg}
+│ ❏ *Provider:* ${toSC(provider.name || providerArg)}
+│ ❏ *Model:* ${model}
+│ ❏ *Kamu:* ${trimmedMsg}
 ┊
 ₊˚ʚ ᗢ₊˚✧ ﾟ. 🤖 Rᴇsᴘᴏɴs ｡ﾟ
-┊  ┊  ➶ ${trimmedReply}
+┊│ ❏ ${trimmedReply}
 ┊
 ₊˚ʚ ᗢ₊˚✧ ﾟ.
 ┊
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+╰──────────❀`;
 
     await m.reply(text);
     await m.react("🐣");
   } catch (error) {
     console.error('[multi-ai.js]:', error.message);
     const prefix = botConfig.command?.prefix || ".";
-    const text = `❀°˖ Aɪ Rᴏᴜᴛᴇʀ ˖°❀
+    const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」
 ┊
-  ┊  ➶ *Status:* Gagal
-  ┊  ➶ *Alasan:* ${error.message}
-  ┊  ➶ Cek API key: *${prefix}ai-set apiKey <key>*
+│ ❏ *Status:* Gagal
+│ ❏ *Alasan:* ${error.message}
+│ ❏ Cek API key: *${prefix}ai-set apiKey <key>*
 ┊
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+╰──────────❀`;
     await m.reply(text);
     await m.react("❌");
   }

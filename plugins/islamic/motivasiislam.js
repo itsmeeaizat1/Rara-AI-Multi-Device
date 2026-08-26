@@ -104,8 +104,8 @@ async function handler(m, { sock }) {
     const indoText = indoRes.data.text;
     const tafsirText = tafsirRes?.data?.text || "";
 
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ MOTIVASI ISLAMI  ┊  ➶\n";
-    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+    let txt = "╭──「 *MOTIVASI ISLAMI│ ❏\n"; 」
+    txt += "╰──────────❀\n";
     txt += "Tema: *" + topic.tag + "*\n";
     txt += "QS. " + surah.englishName + ":" + topic.ayat + "\n\n";
     txt += "*ᴛᴇᴋꜱ ᴀʀᴀʙ:*\n" + arabText + "\n\n";

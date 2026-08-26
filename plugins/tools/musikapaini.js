@@ -103,11 +103,11 @@ async function handler(m, { sock }) {
     const links = music.links || {};
 
     let text = `🎵 *LAGU DITEMUKAN!*\n\n`;
-    text += `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ INFO\n`;
-    text += `  ┊  ➶ 🎶 Title: ${music.title || "-"}\n`;
-    text += `  ┊  ➶ 👤 Artist: ${music.artist || "-"}\n`;
-    text += `  ┊  ➶ 💿 Album: ${music.album || "-"}\n`;
-    text += `  ┊  ➶ 📅 Release: ${music.release || "-"}\n`;
+    text += `╭──「 *INFO\n`; 」
+    text += `│ ❏ 🎶 Title: ${music.title || "-"}\n`;
+    text += `│ ❏ 👤 Artist: ${music.artist || "-"}\n`;
+    text += `│ ❏ 💿 Album: ${music.album || "-"}\n`;
+    text += `│ ❏ 📅 Release: ${music.release || "-"}\n`;
     text += `╰┈┈┈┈┈┈┈┈❖\n\n`;
 
     const buttons = [];

@@ -25,9 +25,9 @@ async function handler(m, { sock, config: botConfig }) {
     const media = m.msg?.imageMessage || m.quoted?.msg?.imageMessage;
     if (!media) {
       const text =
-        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}vision <teks>*`,
-          `  ┊  ➶ Kirim/reply foto, lalu ketik *${prefix}vision <pertanyaan>*`,
-          `  ┊  ➶ Contoh: *${prefix}vision apa yang ada di foto ini?*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}vision <teks>*`,
+          `│ ❏ Kirim/reply foto, lalu ketik *${prefix}vision <pertanyaan>*`,
+          `│ ❏ Contoh: *${prefix}vision apa yang ada di foto ini?*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -47,8 +47,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!apiKey) {
       const text =
-        claraWrap("Gagal", ["  ┊  ➶ Status: *ɢᴀɢᴀʟ*",
-          "  ┊  ➶ Alasan: *ᴀᴘɪ ᴋᴇʏ ᴀɪ ʙᴇʟᴜᴍ ᴅɪɪꜱɪ.*"].join("\n")) +
+        claraWrap("Gagal", ["│ ❏ Status: *ɢᴀɢᴀʟ*",
+          "│ ❏ Alasan: *ᴀᴘɪ ᴋᴇʏ ᴀɪ ʙᴇʟᴜᴍ ᴅɪɪꜱɪ.*"].join("\n")) +
         "\n" +
         tipText("Isi `botConfig.aiHelp.apiKey` dulu, lalu coba lagi.");
 
@@ -86,8 +86,8 @@ async function handler(m, { sock, config: botConfig }) {
     const reply = data?.choices?.[0]?.message?.content || "Tidak ada respon dari AI.";
 
     const out =
-      claraWrap("Vision", [`  ┊  ➶ Pertanyaan: *${prompt}*`,
-        `  ┊  ➶ Hasil: *${reply}*`].join("\n")) +
+      claraWrap("Vision", [`│ ❏ Pertanyaan: *${prompt}*`,
+        `│ ❏ Hasil: *${reply}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}vision <pertanyaan> untuk analisis lain`) +
       "\n" +
@@ -97,8 +97,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

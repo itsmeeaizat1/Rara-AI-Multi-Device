@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
       msg += `  ┊ ➶ Durasi pacaran: *${durasiHari} hari*\n`;
     }
     msg += `\n  _Semoga kamu lebih bahagia kedepannya_ 🙏\n\n`;
-    msg += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    msg += `╰──────────❀`;
 
     await m.reply(msg);
     await m.react("💔");

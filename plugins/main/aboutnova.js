@@ -36,19 +36,19 @@ async function handler(m, { sock, config: botConfig }) {
       cmdLines += `${end}  ➶ ${prefix}${mainCmds[i]}\n`;
     }
 
-    const text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Aʙᴏᴜᴛ Nᴏᴠᴀ
+    const text = `╭──「 *Aʙᴏᴜᴛ Nᴏᴠᴀ 」
 ┊
-  ┊  ➶ *ɴᴀᴍᴀ:* ${toSC(botName)}
-  ┊  ➶ *ᴠᴇʀꜱɪᴏɴ:* ${version}
-  ┊  ➶ *ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${toSC(developer)}
-  ┊  ➶ *ᴘʟᴀᴛꜰᴏʀᴍ:* WhatsApp Multi Device
-  ┊  ➶ *ʟɪʙʀᴀʀʏ:* Baileys (nova-baileys)
-  ┊  ➶ *ʀᴜɴᴛɪᴍᴇ:* Node.js ${process.version}
+│ ❏ *ɴᴀᴍᴀ:* ${toSC(botName)}
+│ ❏ *ᴠᴇʀꜱɪᴏɴ:* ${version}
+│ ❏ *ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${toSC(developer)}
+│ ❏ *ᴘʟᴀᴛꜰᴏʀᴍ:* WhatsApp Multi Device
+│ ❏ *ʟɪʙʀᴀʀʏ:* Baileys (nova-baileys)
+│ ❏ *ʀᴜɴᴛɪᴍᴇ:* Node.js ${process.version}
 ┊
 ₊˚ʚ ᗢ₊˚✧ ﾟ. 🏠 Mᴀɪɴ Cᴏᴍᴍᴀɴᴅs ｡ﾟ
 ┊${cmdLines}₊˚ʚ ᗢ₊˚✧ ﾟ.
 ┊
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+╰──────────❀
 ${prefix}menu untuk melihat semua fitur`;
 
     await m.reply(text);

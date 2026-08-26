@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     const name = rpg.name || targetJid.split("@")[0];
     const now = Date.now();
 
-    let msg = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄɪɴᴛᴀ ɪɴғᴏ*\n\n`;
+    let msg = `╭──「 **ᴄɪɴᴛᴀ ɪɴғᴏ*\n\n`; 」
     msg += `  ┊ ➶ 👤 Nama: *${name}*\n`;
     msg += `  ┊ ➶ ⭐ Level: *${rpg.level || 1}*\n`;
 
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
       if (cinta.divorceCount) msg += `  ┊ ➶ 💔 Total Cerai: *${cinta.divorceCount}x*\n`;
     }
 
-    msg += `\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    msg += `\n╰──────────❀`;
 
     await m.reply(msg);
     await m.react("💑");

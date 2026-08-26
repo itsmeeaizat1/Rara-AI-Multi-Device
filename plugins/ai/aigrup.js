@@ -144,9 +144,9 @@ async function handler(m, { sock, config: botConfig }) {
     const blockFromGroup = async (action) => {
       if (m.isGroup) {
         await m.reply(
-          claraWrap("Ditolak", [`  ┊  ➶ ${action} hanya bisa dari *chat pribadi*`,
-            `  ┊  ➶ Bukan dari dalam grup`,
-            `  ┊  ➶ Alasan: keamanan`].join("\n"))
+          claraWrap("Ditolak", [`│ ❏ ${action} hanya bisa dari *chat pribadi*`,
+            `│ ❏ Bukan dari dalam grup`,
+            `│ ❏ Alasan: keamanan`].join("\n"))
         );
         return true;
       }
@@ -159,14 +159,14 @@ async function handler(m, { sock, config: botConfig }) {
       const enabledGroups = Object.entries(aigrup.groups || {}).filter(([, v]) => v).map(([k]) => k);
       const freeModels = TIO_MODELS.filter((mdl) => mdl.free);
       const text =
-        claraWrap("AI Grup Status", [`  ┊  ➶ Global: *${aigrup.enabled ? "ON ✅" : "OFF ❌"}*`,
-          `  ┊  ➶ Format: *${fmtInfo ? fmtInfo.label : currentFmt}* ${fmtInfo ? fmtInfo.emoji : ""}`,
-          `  ┊  ➶ Model: *${currentModel}*`,
-          `  ┊  ➶ API Key: *${currentKey ? "Terpasang ✅" : "Belum ❌"}*`,
-          `  ┊  ➶ Probability: *${aigrup.probability}%*`,
-          `  ┊  ➶ Proactive: *${aigrup.proactiveInterval || 60} menit*`,
-          `  ┊  ➶ Grup aktif: *${enabledGroups.length}*`].join("\n")) +
-        claraWrap("Command", [`  ┊  ➶ *${prefix}aigrup openai <model> on* — set format+model, ON`, `  ┊  ➶ *${prefix}aigrup gemini <model> on* — set format+model, ON`, `  ┊  ➶ *${prefix}aigrup anthropic <model> on* — set format+model, ON`, `  ┊  ➶ *${prefix}aigrup openai on* — pakai format OpenAI, ON`, `  ┊  ➶ *${prefix}aigrup on* — pakai format saat ini, ON`, `  ┊  ➶ *${prefix}aigrup off* — matikan`, `  ┊  ➶ *${prefix}aigrup prob <0-100>* — atur probability respon`, `  ┊  ➶ *${prefix}aigrup spam on/off* — toggle proactive`, `  ┊  ➶ *${prefix}aigrup interval <menit>* — atur jeda ngomong`, `  ┊  ➶ *${prefix}aigrup model* — lihat semua model`, `  ┊  ➶ *${prefix}aigrup list* — lihat grup aktif`].join("\n")) +
+        claraWrap("AI Grup Status", [`│ ❏ Global: *${aigrup.enabled ? "ON ✅" : "OFF ❌"}*`,
+          `│ ❏ Format: *${fmtInfo ? fmtInfo.label : currentFmt}* ${fmtInfo ? fmtInfo.emoji : ""}`,
+          `│ ❏ Model: *${currentModel}*`,
+          `│ ❏ API Key: *${currentKey ? "Terpasang ✅" : "Belum ❌"}*`,
+          `│ ❏ Probability: *${aigrup.probability}%*`,
+          `│ ❏ Proactive: *${aigrup.proactiveInterval || 60} menit*`,
+          `│ ❏ Grup aktif: *${enabledGroups.length}*`].join("\n")) +
+        claraWrap("Command", [`│ ❏ *${prefix}aigrup openai <model> on* — set format+model, ON`, `│ ❏ *${prefix}aigrup gemini <model> on* — set format+model, ON`, `│ ❏ *${prefix}aigrup anthropic <model> on* — set format+model, ON`, `│ ❏ *${prefix}aigrup openai on* — pakai format OpenAI, ON`, `│ ❏ *${prefix}aigrup on* — pakai format saat ini, ON`, `│ ❏ *${prefix}aigrup off* — matikan`, `│ ❏ *${prefix}aigrup prob <0-100>* — atur probability respon`, `│ ❏ *${prefix}aigrup spam on/off* — toggle proactive`, `│ ❏ *${prefix}aigrup interval <menit>* — atur jeda ngomong`, `│ ❏ *${prefix}aigrup model* — lihat semua model`, `│ ❏ *${prefix}aigrup list* — lihat grup aktif`].join("\n")) +
         
         "\n" ;
       await m.reply(text);
@@ -222,9 +222,9 @@ async function handler(m, { sock, config: botConfig }) {
       const prob = parseInt(args[1] || "0", 10);
       if (isNaN(prob) || prob < 0 || prob > 100) {
         await m.reply(
-          claraWrap("Probability", [`  ┊  ➶ *${prefix}aigrup prob 30* — 30% chance`,
-            `  ┊  ➶ Range: 0-100`,
-            `  ┊  ➶ Saat ini: *${aigrup.probability}%*`].join("\n"))
+          claraWrap("Probability", [`│ ❏ *${prefix}aigrup prob 30* — 30% chance`,
+            `│ ❏ Range: 0-100`,
+            `│ ❏ Saat ini: *${aigrup.probability}%*`].join("\n"))
         );
         return { handled: true };
       }
@@ -238,10 +238,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (subcmd === "list") {
       const groups = Object.entries(aigrup.groups || {}).filter(([, v]) => v);
       await m.reply(
-        claraWrap("Grup AI Aktif", [`  ┊  ➶ Global: *${aigrup.enabled ? "ON" : "OFF"}*`,
-          `  ┊  ➶ Grup terdaftar: *${groups.length}*`,
-          `  ┊  ➶ Proactive: *${aigrup.proactiveInterval || 60} menit*`,
-          ...(groups.length ? groups.map(([gid]) => `  ┊  ➶ ${gid}`) : ["  ┊  ➶ (kosong)"]),
+        claraWrap("Grup AI Aktif", [`│ ❏ Global: *${aigrup.enabled ? "ON" : "OFF"}*`,
+          `│ ❏ Grup terdaftar: *${groups.length}*`,
+          `│ ❏ Proactive: *${aigrup.proactiveInterval || 60} menit*`,
+          ...(groups.length ? groups.map(([gid]) => `│ ❏ ${gid}`) : ["│ ❏ (kosong)"]),
         ])
       );
       return { handled: true };
@@ -266,11 +266,11 @@ async function handler(m, { sock, config: botConfig }) {
           if (sock) restartProactiveTimer(sock);
         } catch (e) { console.error('[aigrup.js]:', e.message); }
         await m.reply(
-          claraWrap("Proactive ON", [`  ┊  ➶ Proactive: *ON*`,
-            `  ┊  ➶ Interval: *${aigrup.proactiveInterval || 60} menit*`,
-            `  ┊  ➶ Bot ngomong sendiri tiap interval`,
-            `  ┊  ➶ Jam aktif: 08:00-22:00`,
-            `  ┊  ➶ Max 3 grup/cycle, 8 pesan/grup/hari`].join("\n")) + "\n" 
+          claraWrap("Proactive ON", [`│ ❏ Proactive: *ON*`,
+            `│ ❏ Interval: *${aigrup.proactiveInterval || 60} menit*`,
+            `│ ❏ Bot ngomong sendiri tiap interval`,
+            `│ ❏ Jam aktif: 08:00-22:00`,
+            `│ ❏ Max 3 grup/cycle, 8 pesan/grup/hari`].join("\n")) + "\n" 
         );
         return { handled: true };
       }
@@ -283,10 +283,10 @@ async function handler(m, { sock, config: botConfig }) {
           stopProactiveTimer();
         } catch (e) { console.error('[aigrup.js]:', e.message); }
         await m.reply(
-          claraWrap("Proactive OFF", [`  ┊  ➶ Proactive: *OFF*`,
-            `  ┊  ➶ Bot tidak ngomong sendiri`,
-            `  ┊  ➶ Bot tetap respon kalau di-tag/reply`,
-            `  ┊  ➶ Nimbrung random tetap jalan`].join("\n")) + "\n" 
+          claraWrap("Proactive OFF", [`│ ❏ Proactive: *OFF*`,
+            `│ ❏ Bot tidak ngomong sendiri`,
+            `│ ❏ Bot tetap respon kalau di-tag/reply`,
+            `│ ❏ Nimbrung random tetap jalan`].join("\n")) + "\n" 
         );
         return { handled: true };
       }
@@ -294,15 +294,15 @@ async function handler(m, { sock, config: botConfig }) {
       // Status spam
       await m.reply(
         claraWrap("Proactive Status",
-        `  ┊  ➶ Proactive: *${aigrup.proactiveEnabled !== false ? "ON ✅" : "OFF ❌"}*\n` +
-        `  ┊  ➶ Interval: *${aigrup.proactiveInterval || 60} menit*\n` +
-        `  ┊  ➶ Jam aktif: 08:00-22:00\n` +
-        `  ┊  ➶ Max 3 grup/cycle\n` +
-        `  ┊  ➶ Max 8 pesan/grup/hari\n\n` +
+        `│ ❏ Proactive: *${aigrup.proactiveEnabled !== false ? "ON ✅" : "OFF ❌"}*\n` +
+        `│ ❏ Interval: *${aigrup.proactiveInterval || 60} menit*\n` +
+        `│ ❏ Jam aktif: 08:00-22:00\n` +
+        `│ ❏ Max 3 grup/cycle\n` +
+        `│ ❏ Max 8 pesan/grup/hari\n\n` +
         `COMMAND:\n` +
-        `  ┊  ➶ *${prefix}aigrup spam on* — nyala\n` +
-        `  ┊  ➶ *${prefix}aigrup spam off* — mati\n` +
-        `  ┊  ➶ *${prefix}aigrup interval 30* — atur jeda`
+        `│ ❏ *${prefix}aigrup spam on* — nyala\n` +
+        `│ ❏ *${prefix}aigrup spam off* — mati\n` +
+        `│ ❏ *${prefix}aigrup interval 30* — atur jeda`
       ));
       return { handled: true };
     }
@@ -313,15 +313,15 @@ async function handler(m, { sock, config: botConfig }) {
       const minutes = parseInt(args[1] || "0", 10);
       if (isNaN(minutes) || minutes < 1 || minutes > 1440) {
         await m.reply(
-          claraWrap("Interval Proactive", [`  ┊  ➶ *${prefix}aigrup interval 5* — tiap 5 menit (⚠️ beresiko)`,
-            `  ┊  ➶ *${prefix}aigrup interval 15* — tiap 15 menit`,
-            `  ┊  ➶ *${prefix}aigrup interval 45* — tiap 45 menit (default, aman)`,
-            `  ┊  ➶ *${prefix}aigrup interval 60* — tiap 1 jam`,
-            `  ┊  ➶ *${prefix}aigrup interval 120* — tiap 2 jam`,
-            `  ┊  ➶ Range: 1-1440 menit`,
-            `  ┊  ➶ Saat ini: *${aigrup.proactiveInterval || 60} menit*`,
-            `  ┊  ➶ Bot aktif: 08:00-22:00`,
-            `  ┊  ➶ ⚠️ Di bawah 10 menit = beresiko ban WA`].join("\n"))
+          claraWrap("Interval Proactive", [`│ ❏ *${prefix}aigrup interval 5* — tiap 5 menit (⚠️ beresiko)`,
+            `│ ❏ *${prefix}aigrup interval 15* — tiap 15 menit`,
+            `│ ❏ *${prefix}aigrup interval 45* — tiap 45 menit (default, aman)`,
+            `│ ❏ *${prefix}aigrup interval 60* — tiap 1 jam`,
+            `│ ❏ *${prefix}aigrup interval 120* — tiap 2 jam`,
+            `│ ❏ Range: 1-1440 menit`,
+            `│ ❏ Saat ini: *${aigrup.proactiveInterval || 60} menit*`,
+            `│ ❏ Bot aktif: 08:00-22:00`,
+            `│ ❏ ⚠️ Di bawah 10 menit = beresiko ban WA`].join("\n"))
         );
         return { handled: true };
       }
@@ -336,10 +336,10 @@ async function handler(m, { sock, config: botConfig }) {
           if (sock) restartProactiveTimer(sock);
         } catch (e) { console.error('[aigrup.js]:', e.message); }
         await m.reply(
-          claraWrap("Interval Diubah", [`  ┊  ➶ Interval: *${minutes} menit*`,
-            `  ┊  ➶ ⚠️ Di bawah 10 menit BERESIKO BAN WA`,
-            `  ┊  ➶ Bot bisa kena banned oleh WhatsApp`,
-            `  ┊  ➶ Disarankan min 30-60 menit`].join("\n")) + "\n" 
+          claraWrap("Interval Diubah", [`│ ❏ Interval: *${minutes} menit*`,
+            `│ ❏ ⚠️ Di bawah 10 menit BERESIKO BAN WA`,
+            `│ ❏ Bot bisa kena banned oleh WhatsApp`,
+            `│ ❏ Disarankan min 30-60 menit`].join("\n")) + "\n" 
         );
         return { handled: true };
       }
@@ -367,20 +367,20 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
       if (await blockFromGroup("Toggle AI Grup")) return { handled: true };
       if (!currentKey) {
         await m.reply(
-          claraWrap("API Key Belum Diisi", [`  ┊  ➶ API Key untuk format *${TIO_FORMATS[currentFmt]?.label || currentFmt}* belum di-set`,
-            `  ┊  ➶ Set di config.js: aiHelp.${TIO_FORMATS[currentFmt]?.apiKeyField || "apiKey"}`].join("\n"))
+          claraWrap("API Key Belum Diisi", [`│ ❏ API Key untuk format *${TIO_FORMATS[currentFmt]?.label || currentFmt}* belum di-set`,
+            `│ ❏ Set di config.js: aiHelp.${TIO_FORMATS[currentFmt]?.apiKeyField || "apiKey"}`].join("\n"))
         );
         return { handled: true };
       }
       aigrup.enabled = true;
       db.save();
       await m.reply(
-        claraWrap("AI Grup Aktif", [`  ┊  ➶ Status: *ON*`,
-          `  ┊  ➶ Format: *${TIO_FORMATS[currentFmt]?.label || currentFmt}*`,
-          `  ┊  ➶ Model: *${currentModel}*`,
-          `  ┊  ➶ Probability: *${aigrup.probability}%*`,
-          `  ┊  ➶ Bot nimbrung di semua grup`,
-          `  ┊  ➶ 100% respon kalau di-tag/reply`].join("\n")) + "\n" 
+        claraWrap("AI Grup Aktif", [`│ ❏ Status: *ON*`,
+          `│ ❏ Format: *${TIO_FORMATS[currentFmt]?.label || currentFmt}*`,
+          `│ ❏ Model: *${currentModel}*`,
+          `│ ❏ Probability: *${aigrup.probability}%*`,
+          `│ ❏ Bot nimbrung di semua grup`,
+          `│ ❏ 100% respon kalau di-tag/reply`].join("\n")) + "\n" 
       );
       return { handled: true };
     }
@@ -395,9 +395,9 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
       aigrup.enabled = false;
       db.save();
       await m.reply(
-        claraWrap("AI Grup Nonaktif", [`  ┊  ➶ Status: *OFF*`,
-          `  ┊  ➶ Bot tidak nimbrung lagi`,
-          `  ┊  ➶ Command biasa tetap jalan`].join("\n")) + "\n" 
+        claraWrap("AI Grup Nonaktif", [`│ ❏ Status: *OFF*`,
+          `│ ❏ Bot tidak nimbrung lagi`,
+          `│ ❏ Command biasa tetap jalan`].join("\n")) + "\n" 
       );
       return { handled: true };
     }
@@ -431,9 +431,9 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
         };
         let text2 = "";
         text2 += claraWrap(`${fmt.label.toUpperCase()} Format`, [
-          `  ┊  ➶ API Key: *${apiKey ? "Terpasang ✅" : "Belum ❌"}*`,
-          `  ┊  ➶ Model saat ini: *${aigrup.format === fmtKey ? currentModel : fmt.defaultModel}*`,
-          `  ┊  ➶ Semua model support format ini`,
+          `│ ❏ API Key: *${apiKey ? "Terpasang ✅" : "Belum ❌"}*`,
+          `│ ❏ Model saat ini: *${aigrup.format === fmtKey ? currentModel : fmt.defaultModel}*`,
+          `│ ❏ Semua model support format ini`,
         ]);
         for (const [brand, models] of Object.entries(brands)) {
           const bemoji = emojiMap[brand] || "🤖";
@@ -457,8 +457,8 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
       if (!modelInput && turnOn) {
         if (!apiKey) {
           await m.reply(
-            claraWrap("API Key Belum Diisi", [`  ┊  ➶ API Key untuk *${fmt.label}* belum di-set`,
-              `  ┊  ➶ Set di config.js: aiHelp.${fmt.apiKeyField}`].join("\n"))
+            claraWrap("API Key Belum Diisi", [`│ ❏ API Key untuk *${fmt.label}* belum di-set`,
+              `│ ❏ Set di config.js: aiHelp.${fmt.apiKeyField}`].join("\n"))
           );
           return { handled: true };
         }
@@ -484,8 +484,8 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
 
       if (!foundModel) {
         await m.reply(
-          claraWrap("Model Tidak Ditemukan", [`  ┊  ➶ Model *${modelInput}* tidak ada`,
-            `  ┊  ➶ Ketik *${prefix}aigrup model* untuk lihat semua`].join("\n"))
+          claraWrap("Model Tidak Ditemukan", [`│ ❏ Model *${modelInput}* tidak ada`,
+            `│ ❏ Ketik *${prefix}aigrup model* untuk lihat semua`].join("\n"))
         );
         return { handled: true };
       }
@@ -497,9 +497,9 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
       if (turnOn) {
         if (!apiKey) {
           await m.reply(
-            claraWrap("API Key Belum Diisi", [`  ┊  ➶ API Key untuk *${fmt.label}* belum di-set`,
-              `  ┊  ➶ Set di config.js: aiHelp.${fmt.apiKeyField}`,
-              `  ┊  ➶ Model sudah disimpan, tapi bot belum ON`].join("\n"))
+            claraWrap("API Key Belum Diisi", [`│ ❏ API Key untuk *${fmt.label}* belum di-set`,
+              `│ ❏ Set di config.js: aiHelp.${fmt.apiKeyField}`,
+              `│ ❏ Model sudah disimpan, tapi bot belum ON`].join("\n"))
           );
           db.save();
           return { handled: true };
@@ -511,13 +511,13 @@ Bot akan ngomong sendiri tiap ${minutes} menit di grup yang aktif.`));
 
       await m.reply(
         claraWrap("AI Grup Update",
-          `  ┊  ➶ Format: *${fmt.label}*\n` +
-          `  ┊  ➶ Model: *${foundModel.label}*\n` +
-          `  ┊  ➶ ID: *${foundModel.id}*\n` +
-          `  ┊  ➶ Gratis: *${foundModel.free ? "Ya ✅" : "Tidak 💎"}*\n` +
-          `  ┊  ➶ API Key: *${apiKey ? "Terpasang ✅" : "Belum ❌"}*\n` +
-          `  ┊  ➶ Status: *${aigrup.enabled ? "ON ✅" : "OFF (belum di-on)"}*\n` +
-          `  ┊  ➶ Probability: *${aigrup.probability}%*`
+          `│ ❏ Format: *${fmt.label}*\n` +
+          `│ ❏ Model: *${foundModel.label}*\n` +
+          `│ ❏ ID: *${foundModel.id}*\n` +
+          `│ ❏ Gratis: *${foundModel.free ? "Ya ✅" : "Tidak 💎"}*\n` +
+          `│ ❏ API Key: *${apiKey ? "Terpasang ✅" : "Belum ❌"}*\n` +
+          `│ ❏ Status: *${aigrup.enabled ? "ON ✅" : "OFF (belum di-on)"}*\n` +
+          `│ ❏ Probability: *${aigrup.probability}%*`
         )
       );
       return { handled: true };

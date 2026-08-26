@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `  ┊ ➶ Reply pesan tembakan + \`${m.prefix}terima\`\n` +
         `  ┊ ➶ Atau \`${m.prefix}terima @tag\`\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 

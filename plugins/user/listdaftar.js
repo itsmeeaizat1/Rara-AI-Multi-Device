@@ -180,7 +180,7 @@ async function handler(m, { sock }) {
       user.lastRegisteredAt || user.registeredAt,
     );
     text += `${listNumber}. ${genderEmoji} *${user.regName || "Unknown"}*\n`;
-    text += `   ┊  ➶ @${user.jid} | ${user.regAge || "?"} tahun | ${registeredAt}\n`;
+    text += ` │ ❏ @${user.jid} | ${user.regAge || "?"} tahun | ${registeredAt}\n`;
   });
 
   if (totalPages > 1) {

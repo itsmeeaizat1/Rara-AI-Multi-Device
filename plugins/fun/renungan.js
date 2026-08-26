@@ -51,7 +51,7 @@ export async function handler(m, { sock }) {
     }
 
     if (!fetchBuffer) {
-      await m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *RENUNGAN*\n\n${imgUrl}\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`);
+      await m.reply(`╭──「 **RENUNGAN*\n\n${imgUrl}\n\n╰──────────❀`); 」
       return;
     }
 
@@ -59,13 +59,13 @@ export async function handler(m, { sock }) {
     try {
       buffer = await fetchBuffer(imgUrl);
     } catch {
-      await m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *RENUNGAN*\n\n${imgUrl}\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`);
+      await m.reply(`╭──「 **RENUNGAN*\n\n${imgUrl}\n\n╰──────────❀`); 」
       return;
     }
 
-    let caption = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *RENUNGAN*\n\n`;
+    let caption = `╭──「 **RENUNGAN*\n\n`; 」
     caption += `_Semoga renungan hari ini bermanfaat_\n\n`;
-    caption += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    caption += `╰──────────❀`;
 
     await sock.sendMessage(m.chat, { image: buffer, caption }, { quoted: m });
     await m.react("🤲");

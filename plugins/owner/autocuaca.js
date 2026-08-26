@@ -170,8 +170,8 @@ async function handler(m, { sock }) {
 
       if (subAction === "list" || !subAction) {
         const status = getCuacaStatus();
-        let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ DAFTAR LOKASI CUACA  ┊  ➶\n";
-        txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
+        let txt = "╭──「 *DAFTAR LOKASI CUACA│ ❏\n"; 」
+        txt += "╰──────────❀\n\n";
         for (let i = 0; i < status.locations.length; i++) {
           const loc = status.locations[i];
           txt += (i + 1) + ". " + loc.name;
@@ -199,8 +199,8 @@ async function handler(m, { sock }) {
     // STATUS
     if (action === "status" || action === "list" || !action) {
       const status = getCuacaStatus();
-      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ AUTO CUACA BMKG STYLE  ┊  ➶\n";
-      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
+      let txt = "╭──「 *AUTO CUACA BMKG STYLE│ ❏\n"; 」
+      txt += "╰──────────❀\n\n";
       txt += "Status: *" + (status.enabled ? "ON" : "OFF") + "*\n";
       txt += "Jadwal: " + formatSchedule(status.schedules) + " WIB\n";
       txt += "Lokasi: " + status.locations.length + " kota\n\n";

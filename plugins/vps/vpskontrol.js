@@ -74,12 +74,12 @@ async function handler(m, { sock }) {
         const actionResult = response.data.action
         
         m.react('✅')
-        await m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Aksi Berhasil
+        await m.reply(`╭──「 *Aksi Berhasil 」
 ┊
-  ┊  ➶ *ᴠᴘꜱ:* ${dropletId}
-  ┊  ➶ *ᴀᴋꜱɪ:* ${action.text}
-  ┊  ➶ *ꜱᴛᴀᴛᴜꜱ:* ${actionResult.status}
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`)
+│ ❏ *ᴠᴘꜱ:* ${dropletId}
+│ ❏ *ᴀᴋꜱɪ:* ${action.text}
+│ ❏ *ꜱᴛᴀᴛᴜꜱ:* ${actionResult.status}
+╰──────────❀`)
         
     } catch (err) {
         return m.reply(te(m.prefix, m.command, m.pushName))

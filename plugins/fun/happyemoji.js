@@ -41,8 +41,8 @@ async function handler(m, { sock, config: botConfig }) {
     const emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
 
     const text =
-      claraWrap("Happy Emoji", [`  ┊  ➶ Emoji: *${emoji}*`,
-        "  ┊  ➶ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+      claraWrap("Happy Emoji", [`│ ❏ Emoji: *${emoji}*`,
+        "│ ❏ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}happyemoji untuk emoji lain`) +
       "\n" +
@@ -52,8 +52,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const reply =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

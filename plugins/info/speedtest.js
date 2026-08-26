@@ -150,36 +150,36 @@ async function handler(m, { sock }) {
     // Jalankan speedtest
     const result = await runSpeedtest();
 
-    let text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Speedtest
+    let text = `╭──「 *Speedtest 」
 ┊
-  ┊  ➶ *ʜᴏꜱᴛ:* ${hostname}
-  ┊  ➶ *ᴘʟᴀᴛꜰᴏʀᴍ:* ${platform} (${arch})
-  ┊  ➶ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+│ ❏ *ʜᴏꜱᴛ:* ${hostname}
+│ ❏ *ᴘʟᴀᴛꜰᴏʀᴍ:* ${platform} (${arch})
+│ ❏ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
+╰──────────❀
 
-❀°˖✧◝(⁰▿⁰)◜✧˖°❀ CPU & RAM
+╭──「 *CPU & RAM 」
 ┊
-  ┊  ➶ *ᴄᴘᴜ:* ${cpuModel}
-  ┊  ➶ *ᴄᴏʀᴇꜱ:* ${cpuCores}
-  ┊  ➶ *ʀᴀᴍ:* ${(usedMem / 1000000).toFixed(0)} / ${(totalMem / 1000000).toFixed(0)} MB (${memUsage}%)
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+│ ❏ *ᴄᴘᴜ:* ${cpuModel}
+│ ❏ *ᴄᴏʀᴇꜱ:* ${cpuCores}
+│ ❏ *ʀᴀᴍ:* ${(usedMem / 1000000).toFixed(0)} / ${(totalMem / 1000000).toFixed(0)} MB (${memUsage}%)
+╰──────────❀
 
-❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Network
+╭──「 *Network 」
 ┊
-  ┊  ➶ *ᴘɪɴɢ:* ${result.ping}
-  ┊  ➶ *ᴅᴏᴡɴʟᴏᴀᴅ:* ${result.download}
-  ┊  ➶ *ᴜᴘʟᴏᴀᴅ:* ${result.upload}
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+│ ❏ *ᴘɪɴɢ:* ${result.ping}
+│ ❏ *ᴅᴏᴡɴʟᴏᴀᴅ:* ${result.download}
+│ ❏ *ᴜᴘʟᴏᴀᴅ:* ${result.upload}
+╰──────────❀
 
-  ┊  ➶ Metode: ${result.method}`;
+│ ❏ Metode: ${result.method}`;
 
     await m.react("🐣");
     await m.reply(claraWrap("speedtest", text));
   } catch (err) {
-    await m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Speedtest Error
+    await m.reply(`╭──「 *Speedtest Error 」
 ┊
-  ┊  ➶ ${err.message || "Unknown error"}
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`);
+│ ❏ ${err.message || "Unknown error"}
+╰──────────❀`);
   }
 }
 

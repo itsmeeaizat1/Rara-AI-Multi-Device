@@ -111,21 +111,21 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!args || args.trim().length < 10) {
     const help = claraWrap("SPPD", [
-      `  ┊  ➶ Generator Surat Perintah Perjalanan Dinas → PDF`,
+      `│ ❏ Generator Surat Perintah Perjalanan Dinas → PDF`,
       ``,
-      `  ┊  ➶ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `│ ❏ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  ${prefix}sppd <detail perjalanan dinas>`,
       ``,
-      `  ┊  ➶ *ᴄᴏɴᴛᴏʜ:*`,
+      `│ ❏ *ᴄᴏɴᴛᴏʜ:*`,
       `  ${prefix}sppd Budi Santoso NIP 198701012015041001 staf Dinas Kominfo, ke Jakarta untuk rapat koordinasi, 15-17 Jan 2024, transport pesawat, transport 2jt, hotel 500rb/hari, uang harian 300rb/hari, diperintahkan oleh Kepala Dinas Hadi NIP 196501011990021001`,
       ``,
-      `  ┊  ➶ *ʜᴀꜱɪʟ:* PDF SPPD siap print`,
+      `│ ❏ *ʜᴀꜱɪʟ:* PDF SPPD siap print`,
     ].join("\n"));
     return m.reply( help, "sppd");
   }
 
   await m.react("🕒");
-  m.reply(claraWrap("SPPD", "  ┊  ➶ AI lagi menyusun SPPD..."));
+  m.reply(claraWrap("SPPD", "│ ❏ AI lagi menyusun SPPD..."));
 
   try {
     const result = await UnlimitedAI(SPPD_PROMPT.replace("__INPUT__", args), "nova-ai");
@@ -142,7 +142,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     await m.reply(claraWrap("SPPD — Preview", preview));
 
     // PDF
-    m.reply(claraWrap("SPPD", "  ┊  ➶ Render SPPD ke PDF..."));
+    m.reply(claraWrap("SPPD", "│ ❏ Render SPPD ke PDF..."));
     const pdfBuffer = await renderSppdPDF(text);
     await sock.sendMessage(m.chat, {
       document: pdfBuffer,

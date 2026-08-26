@@ -30,14 +30,14 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const url = m.text?.trim();
     if (!url || !url.startsWith("http")) {
-      await m.reply( claraWrap("Expand URL", [`  ┊  ➶ Penggunaan: *${prefix}expandurl <url>*`,
-        `  ┊  ➶ Contoh: *${prefix}expandurl https://bit.ly/xxx*`].join("\n")), "expandurl");
+      await m.reply( claraWrap("Expand URL", [`│ ❏ Penggunaan: *${prefix}expandurl <url>*`,
+        `│ ❏ Contoh: *${prefix}expandurl https://bit.ly/xxx*`].join("\n")), "expandurl");
       return { handled: true };
     }
     const result = await expand(url);
-    await m.reply(claraWrap("Expand URL", [`  ┊  ➶ Input: ${url.substring(0,50)}`,
-      `  ┊  ➶ Final: ${result.final.substring(0,80)}`,
-      `  ┊  ➶ Redirect: *${result.redirects}x*`].join("\n")));
+    await m.reply(claraWrap("Expand URL", [`│ ❏ Input: ${url.substring(0,50)}`,
+      `│ ❏ Final: ${result.final.substring(0,80)}`,
+      `│ ❏ Redirect: *${result.redirects}x*`].join("\n")));
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

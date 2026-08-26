@@ -125,22 +125,22 @@ ssh_pwauth: True`,
         const ipv4 = dropletInfo.networks?.v4?.find(n => n.type === 'public')
         const ip = ipv4?.ip_address || 'Tidak tersedia'
         
-        const detailTxt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ VPS Berhasil Dibuat
+        const detailTxt = `╭──「 *VPS Berhasil Dibuat 」
 ┊
-  ┊  ➶ *ID:* ${dropletId}
-  ┊  ➶ *ʜᴏꜱᴛɴᴀᴍᴇ:* ${hostname}
-  ┊  ➶ *IP:* ${ip}
-  ┊  ➶ *ᴜꜱᴇʀ:* root
-  ┊  ➶ *ᴘᴀꜱꜱᴡᴏʀᴅ:* ${password}
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+│ ❏ *ID:* ${dropletId}
+│ ❏ *ʜᴏꜱᴛɴᴀᴍᴇ:* ${hostname}
+│ ❏ *IP:* ${ip}
+│ ❏ *ᴜꜱᴇʀ:* root
+│ ❏ *ᴘᴀꜱꜱᴡᴏʀᴅ:* ${password}
+╰──────────❀
 
-❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Spec
+╭──「 *Spec 」
 ┊
-  ┊  ➶ *ʀᴀᴍ:* ${spec.ram}
-  ┊  ➶ *ᴄᴘᴜ:* ${spec.cpu}
-  ┊  ➶ *ʀᴇɢɪᴏɴ:* ${region}
-  ┊  ➶ *OS:* Ubuntu 22.04
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+│ ❏ *ʀᴀᴍ:* ${spec.ram}
+│ ❏ *ᴄᴘᴜ:* ${spec.cpu}
+│ ❏ *ʀᴇɢɪᴏɴ:* ${region}
+│ ❏ *OS:* Ubuntu 22.04
+╰──────────❀
 
 Simpan data ini baik-baik!`
         

@@ -33,10 +33,10 @@ async function handler(m, { sock }) {
 
     if (!myCinta.spouse) {
       return m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` +
+        `╭──「 **ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` + 」
         `  ┊ ➶ 💔 Kamu belum punya pasangan!\n` +
         `  ┊ ➶ Jomblo mau war sama siapa? 😂\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
@@ -46,23 +46,23 @@ async function handler(m, { sock }) {
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `  ┊ ➶ \`${m.prefix}couplewar @target\`\n` +
         `  ┊ ➶ Tag salah satu pasangan lawan\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
     if (targetJid === m.sender) {
       return m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` +
+        `╭──「 **ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` + 」
         `  ┊ ➶ ❌ War sama diri sendiri? Itu skizofrenia 😂\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
     if (targetJid === myCinta.spouse) {
       return m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` +
+        `╭──「 **ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` + 」
         `  ┊ ➶ ❌ Nggak bisa war sama pasangan sendiri! 😅\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
@@ -71,10 +71,10 @@ async function handler(m, { sock }) {
 
     if (!targetCinta.spouse) {
       return m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` +
+        `╭──「 **ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` + 」
         `  ┊ ➶ 💔 @${targetJid.split("@")[0]} belum punya pasangan!\n` +
         `  ┊ ➶ Jomblo vs jomblo namanya duel bukan couple war 😂\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
@@ -82,9 +82,9 @@ async function handler(m, { sock }) {
     const cd = checkCooldown(m, "couplewar");
     if (cd) {
       return m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` +
+        `╭──「 **ᴄᴏᴜᴘʟᴇ ᴡᴀʀ*\n\n` + 」
         `  ┊ ➶ ⏳ Cooldown: *${formatDurasi(cd)}* lagi\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
@@ -170,7 +170,7 @@ async function handler(m, { sock }) {
     const winnerTeam = iWin ? `${myName} & ${myPartnerName}` : `${targetName} & ${targetPartnerName}`;
     const loserTeam = iWin ? `${targetName} & ${targetPartnerName}` : `${myName} & ${myPartnerName}`;
 
-    let msg = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ ⚔️*\n\n`;
+    let msg = `╭──「 **ᴄᴏᴜᴘʟᴇ ᴡᴀʀ ⚔️*\n\n`; 」
     msg += `  🏠 *Team 1: ${myName} & ${myPartnerName}*\n`;
     msg += `  ┊ ➶ ⚔️ Couple Power: *${myCouplePower}*\n`;
     msg += `  ┊ ➶ 🎲 Roll: *+${myRoll}*\n`;
@@ -188,7 +188,7 @@ async function handler(m, { sock }) {
     msg += `  ┊ ➶ 💕 Affection: *${lossAff}*\n`;
     msg += `  ┊ ➶ ✨ EXP: *+${lossExp}*\n`;
     msg += `  ┊ ➶ 💰 Gold: *+${lossGold}*\n\n`;
-    msg += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    msg += `╰──────────❀`;
 
     await m.reply(msg);
     await m.react(iWin ? "🏆" : "💥");

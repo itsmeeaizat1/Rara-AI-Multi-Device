@@ -45,9 +45,9 @@ export async function handler(m, { sock }) {
       return;
     }
 
-    let text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *QUOTES BUCIN*\n\n`;
+    let text = `╭──「 **QUOTES BUCIN*\n\n`; 」
     text += `\`\`\`${quote}\`\`\`\n\n`;
-    text += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    text += `╰──────────❀`;
 
     await m.reply(text);
     await m.react("💕");

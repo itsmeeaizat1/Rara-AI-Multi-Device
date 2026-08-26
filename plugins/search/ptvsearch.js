@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
 ┃
 ╰┈┈⬡
 
-  ┊  ➶ \`Contoh: ${m.prefix}ptvsearch anime\``, "ptvsearch");
+│ ❏ \`Contoh: ${m.prefix}ptvsearch anime\``, "ptvsearch");
   }
 
   m.react("🕒");

@@ -148,8 +148,8 @@ async function handler(m, { sock }) {
 
     if (products.length === 0) return m.reply("Belum ada produk" + (cat ? " di kategori " + cat : ""));
 
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ DAFTAR PRODUK  ┊  ➶\n";
-    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
+    let txt = "╭──「 *DAFTAR PRODUK│ ❏\n"; 」
+    txt += "╰──────────❀\n\n";
     for (const p of products) {
       txt += p.id + "\n";
       txt += "  " + p.name + " — " + formatRupiah(p.price) + "\n";
@@ -181,8 +181,8 @@ async function handler(m, { sock }) {
 
     if (orders.length === 0) return m.reply("Tidak ada pesanan" + (filter !== "all" ? " dengan status " + filter : ""));
 
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ PESANAN — " + filter.toUpperCase() + "  ┊  ➶\n";
-    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
+    let txt = "╭──「 *PESANAN — " + filter.toUpperCase() + "│ ❏\n"; 」
+    txt += "╰──────────❀\n\n";
     for (const o of orders) {
       txt += o.id + "\n";
       txt += "  " + o.productName + " (" + o.qty + "x) = " + formatRupiah(o.total) + "\n";
@@ -266,8 +266,8 @@ async function handler(m, { sock }) {
     }
     // list
     const cats = listCategories();
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ KATEGORI  ┊  ➶\n";
-    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
+    let txt = "╭──「 *KATEGORI│ ❏\n"; 」
+    txt += "╰──────────❀\n\n";
     cats.forEach((c, i) => { txt += (i + 1) + ". " + c + "\n"; });
     txt += "\nTambah: .toko kategori add <nama>\nHapus: .toko kategori del <nama>";
     return await m.reply(claraWrap("tokobase3", txt));
@@ -310,8 +310,8 @@ async function handler(m, { sock }) {
     const confirmedCount = data.orders.filter((o) => o.status === "confirmed").length;
     const doneCount = data.orders.filter((o) => o.status === "done").length;
 
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ NOVA STORE  ┊  ➶\n";
-    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
+    let txt = "╭──「 *NOVA STORE│ ❏\n"; 」
+    txt += "╰──────────❀\n\n";
     txt += "Nama: " + (config.storeName || "Nova Store") + "\n";
     txt += "Deskripsi: " + (config.storeDesc || "-") + "\n";
     txt += "Notif Buyer: " + (config.autoNotify ? "ON" : "OFF") + "\n";

@@ -60,24 +60,24 @@ async function handler(m, { sock }) {
 
     const text =
       `🌐 *ɪᴘ ʟᴏᴏᴋᴜᴘ*\n\n` +
-      `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ LOKAsI\n` +
-      `  ┊  ➶ 🔢 IP: ${data.ip}\n` +
-      `  ┊  ➶ 🌍 Country: ${data.country} ${data.country_code}\n` +
-      `  ┊  ➶ 🏙️ City: ${data.city || "-"}\n` +
-      `  ┊  ➶ 📍 Region: ${data.region || "-"}\n` +
-      `  ┊  ➶ 🌐 Continent: ${data.continent || "-"}\n` +
-      `  ┊  ➶ 📮 Postal: ${data.postal || "-"}\n` +
-      `  ┊  ➶ ⏰ Timezone: ${data.timezone?.id || "-"}\n` +
+      `╭──「 *LOKAsI\n` + 」
+      `│ ❏ 🔢 IP: ${data.ip}\n` +
+      `│ ❏ 🌍 Country: ${data.country} ${data.country_code}\n` +
+      `│ ❏ 🏙️ City: ${data.city || "-"}\n` +
+      `│ ❏ 📍 Region: ${data.region || "-"}\n` +
+      `│ ❏ 🌐 Continent: ${data.continent || "-"}\n` +
+      `│ ❏ 📮 Postal: ${data.postal || "-"}\n` +
+      `│ ❏ ⏰ Timezone: ${data.timezone?.id || "-"}\n` +
       `╰┈┈┈┈┈┈┈┈❖\n\n` +
-      `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ KONEKsI\n` +
-      `  ┊  ➶ 🏢 ISP: ${data.connection?.isp || "-"}\n` +
-      `  ┊  ➶ 🌐 ORG: ${data.connection?.org || "-"}\n` +
-      `  ┊  ➶ 📡 ASN: ${data.connection?.asn || "-"}\n` +
+      `╭──「 *KONEKsI\n` + 」
+      `│ ❏ 🏢 ISP: ${data.connection?.isp || "-"}\n` +
+      `│ ❏ 🌐 ORG: ${data.connection?.org || "-"}\n` +
+      `│ ❏ 📡 ASN: ${data.connection?.asn || "-"}\n` +
       `╰┈┈┈┈┈┈┈┈❖\n\n` +
-      `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ sECURITY\n` +
-      `  ┊  ➶ 🔒 VPN: ${data.security?.vpn ? "✅ Yes" : "❌ No"}\n` +
-      `  ┊  ➶ 🌐 Proxy: ${data.security?.proxy ? "✅ Yes" : "❌ No"}\n` +
-      `  ┊  ➶ 🤖 Tor: ${data.security?.tor ? "✅ Yes" : "❌ No"}\n` +
+      `╭──「 *sECURITY\n` + 」
+      `│ ❏ 🔒 VPN: ${data.security?.vpn ? "✅ Yes" : "❌ No"}\n` +
+      `│ ❏ 🌐 Proxy: ${data.security?.proxy ? "✅ Yes" : "❌ No"}\n` +
+      `│ ❏ 🤖 Tor: ${data.security?.tor ? "✅ Yes" : "❌ No"}\n` +
       `╰┈┈┈┈┈┈┈┈❖`;
 
     await m.react("🐣");

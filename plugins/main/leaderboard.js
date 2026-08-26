@@ -68,10 +68,10 @@ async function handler(m, { sock }) {
     }
     
     if (users.length === 0) {
-        return m.reply(`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Leaderboard
+        return m.reply(`╭──「 *Leaderboard 」
 ┊
-  ┊  ➶ Belum ada data user terdaftar
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`)
+│ ❏ Belum ada data user terdaftar
+╰──────────❀`)
     }
     
     const senderJid = m.sender.replace('@s.whatsapp.net', '')
@@ -88,15 +88,15 @@ async function handler(m, { sock }) {
             maxEnergiUser.jid.includes('@') ? maxEnergiUser.jid : maxEnergiUser.jid + "@s.whatsapp.net"
         ]
         
-        const overviewText = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Leaderboard
+        const overviewText = `╭──「 *Leaderboard 」
 ┊
-  ┊  ➶ Total User: ${formatNumber(users.length)}
-  ┊  ➶ Koin Teratas: ${formatNumber(maxBalUser.koin)} (@${maxBalUser.jid.split('@')[0]})
-  ┊  ➶ EXP Teratas: ${formatNumber(maxExpUser.exp)} (@${maxExpUser.jid.split('@')[0]})
-  ┊  ➶ Energi Teratas: ${formatNumber(maxEnergiUser.energi)} (@${maxEnergiUser.jid.split('@')[0]})
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+│ ❏ Total User: ${formatNumber(users.length)}
+│ ❏ Koin Teratas: ${formatNumber(maxBalUser.koin)} (@${maxBalUser.jid.split('@')[0]})
+│ ❏ EXP Teratas: ${formatNumber(maxExpUser.exp)} (@${maxExpUser.jid.split('@')[0]})
+│ ❏ Energi Teratas: ${formatNumber(maxEnergiUser.energi)} (@${maxEnergiUser.jid.split('@')[0]})
+╰──────────❀
 
-  ┊  ➶ Pilih tombol di bawah untuk melihat ranking!`
+│ ❏ Pilih tombol di bawah untuk melihat ranking!`
             try {
                 await sock.sendButton(m.chat, fs.readFileSync(path.join(process.cwd(), 'assets', 'images', 'nova.jpg')), overviewText, m, {
                     buttons: [
@@ -168,9 +168,9 @@ async function handler(m, { sock }) {
     const top10 = users.slice(0, 10)
     const totalField = users.reduce((sum, u) => sum + (u[field] || 0), 0)
     
-    let text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${title}\n┊\n`
+    let text = `╭──「 *${title}\n┊\n` 」
     
-    text += `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Ranking\n┊\n`
+    text += `╭──「 *Ranking\n┊\n` 」
     
     const mentions = []
     
@@ -179,14 +179,14 @@ async function handler(m, { sock }) {
         const pct = totalField > 0 ? ((u[field] / totalField) * 100).toFixed(1) : 0
         const isMe = u.jid === senderJid ? " *(You)*" : ""
         
-        text += `  ┊  ➶ ${medal} @${u.jid.split('@')[0]}${isMe}\n`
+        text += `│ ❏ ${medal} @${u.jid.split('@')[0]}${isMe}\n`
         text += `┊   ${formatValue(u)} (${pct}%)\n`
         
         if (i < top10.length - 1) 
         mentions.push(u.jid.includes('@') ? u.jid : u.jid + "@s.whatsapp.net")
     })
     
-    text += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n`
+    text += `╰──────────❀\n\n`
     
     const myRankIndex = users.findIndex(u => u.jid === senderJid)
     if (myRankIndex !== -1) {

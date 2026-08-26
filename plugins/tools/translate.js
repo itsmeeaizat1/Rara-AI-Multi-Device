@@ -27,8 +27,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!lang || !text) {
       const text =
-        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}translate <bahasa> <teks>*`,
-          `  ┊  ➶ Contoh: *${prefix}translate en Halo*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}translate <bahasa> <teks>*`,
+          `│ ❏ Contoh: *${prefix}translate en Halo*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -45,10 +45,10 @@ async function handler(m, { sock, config: botConfig }) {
     } catch (e) { console.error('[translate.js]:', e.message); }
 
     const replyText =
-      claraWrap("Translate", ["  ┊  ➶ Dari: *id*",
-        `  ┊  ➶ Ke: *${lang}*`,
-        `  ┊  ➶ Teks Asli: *${text}*`,
-        `  ┊  ➶ Hasil: *${translated}*`].join("\n")) +
+      claraWrap("Translate", ["│ ❏ Dari: *id*",
+        `│ ❏ Ke: *${lang}*`,
+        `│ ❏ Teks Asli: *${text}*`,
+        `│ ❏ Hasil: *${translated}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}translate <bahasa> <teks> untuk menerjemahkan lagi`) +
       "\n" +
@@ -57,8 +57,8 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(replyText);
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

@@ -25,8 +25,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!prompt) {
       const text =
-        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}ai-code <pertanyaan>*`,
-          `  ┊  ➶ Contoh: *${prefix}ai-code Buat REST API dengan Node.js*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}ai-code <pertanyaan>*`,
+          `│ ❏ Contoh: *${prefix}ai-code Buat REST API dengan Node.js*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -47,8 +47,8 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      claraWrap("AI Code", [`  ┊  ➶ Prompt: *${prompt.slice(0, 200)}${prompt.length > 200 ? "..." : ""}*`,
-        `  ┊  ➶ Jawaban: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      claraWrap("AI Code", [`│ ❏ Prompt: *${prompt.slice(0, 200)}${prompt.length > 200 ? "..." : ""}*`,
+        `│ ❏ Jawaban: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}ai-code <pertanyaan> untuk coding lagi`) +
       "\n" +
@@ -59,8 +59,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

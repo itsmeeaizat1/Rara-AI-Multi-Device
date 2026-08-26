@@ -41,8 +41,8 @@ async function handler(m, { sock }) {
     const bookKey = args[0];
 
     if (!bookKey) {
-      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Cara pakai:  ┊  ➶\n";
-      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
+      let txt = "╭──「 *Cara pakai:│ ❏\n"; 」
+      txt += "╰──────────❀\n\n";
       let i = 1;
       for (const [key, book] of Object.entries(BOOKS)) {
         txt += i + ". *" + book.name + "*\n";
@@ -84,8 +84,8 @@ async function handler(m, { sock }) {
     // Nama section
     const sectionName = indoData.metadata?.section?.[sectionNum] || "Unknown";
 
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ HADIS NABI  ┊  ➶\n";
-    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+    let txt = "╭──「 *HADIS NABI│ ❏\n"; 」
+    txt += "╰──────────❀\n";
     txt += "Kitab: *" + book.name + "*\n";
     txt += "Bab: " + sectionName + "\n";
     txt += "No. Hadis: " + hadis.hadithnumber + "\n\n";

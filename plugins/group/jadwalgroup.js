@@ -146,8 +146,8 @@ async function handler(m, { sock, db }) {
 ┃ ㊗ 📡 sTatus: *🟢 Aktif*
 ╰┈┈⬡
 
-  ┊  ➶ _Grup akan otomatis ${action === 'open' ? 'dibuka' : 'ditutup'}_
-  ┊  ➶ _setiap hari pada jam *${formattedTime}* WIB._`;
+│ ❏ _Grup akan otomatis ${action === 'open' ? 'dibuka' : 'ditutup'}_
+│ ❏ _setiap hari pada jam *${formattedTime}* WIB._`;
     
     await m.reply(successMsg);
 }

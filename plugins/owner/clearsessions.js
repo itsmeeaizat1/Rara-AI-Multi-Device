@@ -64,8 +64,8 @@ async function handler(m, { sock })  {
 ┃
 ╰┈┈⬡
 
-  ┊  ➶ _Session files berhasil dibersihkan!_
-  ┊  ➶ _Restart bot jika diperlukan._`))
+│ ❏ _Session files berhasil dibersihkan!_
+│ ❏ _Restart bot jika diperlukan._`))
         
     } catch (error) {
         await m.reply(claraWrap("clearsessions", te(m.prefix, m.command, m.pushName), "error"))

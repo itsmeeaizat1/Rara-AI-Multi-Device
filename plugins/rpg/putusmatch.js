@@ -30,9 +30,9 @@ async function handler(m, { sock }) {
 
     if (!cinta.spouse) {
       return m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴘᴜᴛᴜs ᴍᴀᴛᴄʜ*\n\n` +
+        `╭──「 **ᴘᴜᴛᴜs ᴍᴀᴛᴄʜ*\n\n` + 」
         `  ┊ ➶ 💔 Kamu tidak punya pasangan!\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
 
     breakUp(m);
 
-    let msg = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴘᴜᴛᴜs ᴍᴀᴛᴄʜ*\n\n`;
+    let msg = `╭──「 **ᴘᴜᴛᴜs ᴍᴀᴛᴄʜ*\n\n`; 」
     msg += `  ┊ ➶ 💔 @${m.sender.split("@")[0]} putus dengan *${cinta.spouseName}*\n`;
     msg += `  ┊ ➶ ⏰ Durasi: *${formatDurasi(durasi)}*\n`;
     if (durasiHari > 0) msg += `  ┊ ➶ 📅 ${durasiHari} hari bersama\n`;
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
     msg += `\n  📊 *Penalty:*\n`;
     msg += `  ┊ ➶ 💰 Gold: *-${goldLost}*\n`;
     msg += `  ┊ ➶ 💔 Affection direset ke *0*\n\n`;
-    msg += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    msg += `╰──────────❀`;
 
     await m.reply(msg);
     await m.react("💔");

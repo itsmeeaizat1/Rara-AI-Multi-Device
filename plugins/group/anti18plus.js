@@ -358,26 +358,26 @@ async function handleAntiNSFW(m, sock, db) {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
                         text:
-                            '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ WARN LIMIT  ┊  ➶\n' +
+                            '╭──「 *WARN LIMIT│ ❏\n' + 」
                             '┃ 👤 User: @' + senderTag + '\n' +
                             '┃ 🏷️ Pelanggaran: ' + typeLabel + '\n' +
                             '┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n' +
                             '┃ 🔍 Terdeteksi: ' + matchesStr + '\n' +
                             '┃ ❌ Aksi: KICK OTOMATIS\n' +
-                            '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n' +
+                            '╰──────────❀\n' +
                             '_User telah dikeluarkan karena mencapai batas peringatan_',
                         mentions: [m.sender],
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
                         text:
-                            '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ WARN LIMIT  ┊  ➶\n' +
+                            '╭──「 *WARN LIMIT│ ❏\n' + 」
                             '┃ 👤 User: @' + senderTag + '\n' +
                             '┃ 🏷️ Pelanggaran: ' + typeLabel + '\n' +
                             '┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n' +
                             '┃ 🔍 Terdeteksi: ' + matchesStr + '\n' +
                             '┃ ⚠️ Aksi: WARN (bot bukan admin)\n' +
-                            '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n' +
+                            '╰──────────❀\n' +
                             '_Bot tidak bisa kick karena bukan admin_',
                         mentions: [m.sender],
                     })
@@ -385,13 +385,13 @@ async function handleAntiNSFW(m, sock, db) {
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
                     text:
-                        '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ PERINGATAN MAX  ┊  ➶\n' +
+                        '╭──「 *PERINGATAN MAX│ ❏\n' + 」
                         '┃ 👤 User: @' + senderTag + '\n' +
                         '┃ 🏷️ Pelanggaran: ' + typeLabel + '\n' +
                         '┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n' +
                         '┃ 🔍 Terdeteksi: ' + matchesStr + '\n' +
                         '┃ 📌 Auto-kick: OFF (mode warn only)\n' +
-                        '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n' +
+                        '╰──────────❀\n' +
                         '_User mencapai batas peringatan, tapi auto-kick dimatikan_',
                     mentions: [m.sender],
                 })
@@ -399,12 +399,12 @@ async function handleAntiNSFW(m, sock, db) {
         } else {
             await sock.sendMessage(m.chat, {
                 text:
-                    '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ PERINGATAN  ┊  ➶\n' +
+                    '╭──「 *PERINGATAN│ ❏\n' + 」
                     '┃ 👤 User: @' + senderTag + '\n' +
                     '┃ 🏷️ Pelanggaran: ' + typeLabel + '\n' +
                     '┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n' +
                     '┃ 🔍 Terdeteksi: ' + matchesStr + '\n' +
-                    '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n' +
+                    '╰──────────❀\n' +
                     '_Tolong hentikan! ' + (maxWarn - currentWarn) + ' peringatan lagi = kick_',
                 mentions: [m.sender],
             })
@@ -440,7 +440,7 @@ async function handler(m, { sock }) {
         const nsfwWarnCount = groupData.nsfwWarns ? Object.keys(groupData.nsfwWarns).length : 0
         const judiWarnCount = groupData.judiWarns ? Object.keys(groupData.judiWarns).length : 0
 
-        let txt = '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ANTI 18+ & JUDI  ┊  ➶\n'
+        let txt = '╭──「 *ANTI 18+ & JUDI│ ❏\n' 」
         txt += '┃\n'
         txt += '┃ *🔞 Anti 18+*\n'
         txt += '┃ ❏ Status: *' + nsfwStatus + '*\n'
@@ -464,7 +464,7 @@ async function handler(m, { sock }) {
         txt += '┃ ❏ `' + m.prefix + 'anti18plus delete on/off`\n'
         txt += '┃ ❏ `' + m.prefix + 'anti18plus reset @user`\n'
         txt += '┃ ❏ `' + m.prefix + 'anti18plus resetall`\n'
-        txt += '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'
+        txt += '╰──────────❀'
 
         return await m.reply(claraWrap("anti18plus", txt))
     }
@@ -473,12 +473,12 @@ async function handler(m, { sock }) {
         db.setGroup(m.chat, { anti18plus: 'on' })
         m.react('✅')
         return m.reply(
-            '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ANTI 18+ AKTIF  ┊  ➶\n' +
+            '╭──「 *ANTI 18+ AKTIF│ ❏\n' + 」
             '┃ Deteksi konten 18+ diaktifkan\n' +
             '┃ Sistem: Warn 3x lalu kick\n' +
             '┃ Auto-delete: ON\n' +
             '┃ Auto-kick: ON\n' +
-            '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n' +
+            '╰──────────❀\n' +
             '_Ketik `' + m.prefix + 'anti18plus` untuk lihat pengaturan_'
         )
     }
@@ -486,9 +486,9 @@ async function handler(m, { sock }) {
     if (sub === 'off') {
         db.setGroup(m.chat, { anti18plus: 'off' })
         return m.reply(
-            '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ANTI 18+ MATI  ┊  ➶\n' +
+            '╭──「 *ANTI 18+ MATI│ ❏\n' + 」
             '┃ Deteksi konten 18+ dinonaktifkan\n' +
-            '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'
+            '╰──────────❀'
         )
     }
 
@@ -498,21 +498,21 @@ async function handler(m, { sock }) {
             db.setGroup(m.chat, { antijudolWarn: 'on' })
             m.react('✅')
             return m.reply(
-                '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ANTI JUDI AKTIF  ┊  ➶\n' +
+                '╭──「 *ANTI JUDI AKTIF│ ❏\n' + 」
                 '┃ Deteksi konten judi diaktifkan\n' +
                 '┃ Sistem: Warn 3x lalu kick\n' +
                 '┃ Auto-delete: ON\n' +
                 '┃ Auto-kick: ON\n' +
-                '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n' +
+                '╰──────────❀\n' +
                 '_Ketik `' + m.prefix + 'anti18plus` untuk lihat pengaturan_'
             )
         }
         if (judiOpt === 'off') {
             db.setGroup(m.chat, { antijudolWarn: 'off' })
             return m.reply(
-                '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ANTI JUDI MATI  ┊  ➶\n' +
+                '╭──「 *ANTI JUDI MATI│ ❏\n' + 」
                 '┃ Deteksi konten judi dinonaktifkan\n' +
-                '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'
+                '╰──────────❀'
             )
         }
         return m.reply('❌ Gunakan: `' + m.prefix + 'anti18plus judi on` atau `' + m.prefix + 'anti18plus judi off`')
@@ -526,10 +526,10 @@ async function handler(m, { sock }) {
         db.setGroup(m.chat, { nsfwMaxWarn: count, judiMaxWarn: count })
         m.react('✅')
         return m.reply(
-            '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ MAX WARN DIUBAH  ┊  ➶\n' +
+            '╭──「 *MAX WARN DIUBAH│ ❏\n' + 」
             '┃ Max peringatan: *' + count + 'x*\n' +
             '┃ Berlaku untuk: Anti 18+ & Anti Judi\n' +
-            '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'
+            '╰──────────❀'
         )
     }
 
@@ -539,21 +539,21 @@ async function handler(m, { sock }) {
             db.setGroup(m.chat, { nsfwKickMode: 'on', judiKickMode: 'on' })
             m.react('✅')
             return m.reply(
-                '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ AUTO-KICK ON  ┊  ➶\n' +
+                '╭──「 *AUTO-KICK ON│ ❏\n' + 」
                 '┃ Auto-kick diaktifkan\n' +
                 '┃ User yang mencapai max warn akan di-kick\n' +
-                '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'
+                '╰──────────❀'
             )
         }
         if (kickOpt === 'off') {
             db.setGroup(m.chat, { nsfwKickMode: 'off', judiKickMode: 'off' })
             m.react('✅')
             return m.reply(
-                '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ AUTO-KICK OFF  ┊  ➶\n' +
+                '╭──「 *AUTO-KICK OFF│ ❏\n' + 」
                 '┃ Auto-kick dimatikan\n' +
                 '┃ User yang mencapai max warn hanya diberi peringatan\n' +
                 '┃ Tidak akan di-kick otomatis\n' +
-                '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'
+                '╰──────────❀'
             )
         }
         return m.reply('❌ Gunakan: `' + m.prefix + 'anti18plus kick on` atau `' + m.prefix + 'anti18plus kick off`')
@@ -565,19 +565,19 @@ async function handler(m, { sock }) {
             db.setGroup(m.chat, { nsfwDeleteMode: 'on', judiDeleteMode: 'on' })
             m.react('✅')
             return m.reply(
-                '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ AUTO-DELETE ON  ┊  ➶\n' +
+                '╭──「 *AUTO-DELETE ON│ ❏\n' + 」
                 '┃ Pesan yang terdeteksi 18+/judi akan auto-delete\n' +
-                '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'
+                '╰──────────❀'
             )
         }
         if (delOpt === 'off') {
             db.setGroup(m.chat, { nsfwDeleteMode: 'off', judiDeleteMode: 'off' })
             m.react('✅')
             return m.reply(
-                '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ AUTO-DELETE OFF  ┊  ➶\n' +
+                '╭──「 *AUTO-DELETE OFF│ ❏\n' + 」
                 '┃ Pesan tidak akan dihapus\n' +
                 '┃ Tapi tetap terdeteksi dan diberi warn\n' +
-                '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'
+                '╰──────────❀'
             )
         }
         return m.reply('❌ Gunakan: `' + m.prefix + 'anti18plus delete on` atau `' + m.prefix + 'anti18plus delete off`')
@@ -597,11 +597,11 @@ async function handler(m, { sock }) {
         const targetTag = target.split('@')[0]
         m.react('✅')
         return m.reply(
-            '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ WARN DIRESET  ┊  ➶\n' +
+            '╭──「 *WARN DIRESET│ ❏\n' + 」
             '┃ 👤 User: @' + targetTag + '\n' +
             '┃ Warn 18+: Direset\n' +
             '┃ Warn Judi: Direset\n' +
-            '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀',
+            '╰──────────❀',
             { mentions: [target] }
         )
     }
@@ -613,9 +613,9 @@ async function handler(m, { sock }) {
         db.setGroup(m.chat, updated)
         m.react('✅')
         return m.reply(
-            '❀°˖✧◝(⁰▿⁰)◜✧˖°❀ SEMUA WARN DIRESET  ┊  ➶\n' +
+            '╭──「 *SEMUA WARN DIRESET│ ❏\n' + 」
             '┃ Semua warn 18+ dan judi di-reset\n' +
-            '❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀'
+            '╰──────────❀'
         )
     }
 
