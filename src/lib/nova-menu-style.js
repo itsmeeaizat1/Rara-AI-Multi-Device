@@ -1,28 +1,23 @@
 // === Nova AI Menu Style (v4 — Futuristic Dashboard) ===
 // Modern futuristic design: ▎ sections, ┊ details, ▰▱ progress bars, ● status
-// Semua fungsi lama (claraWrap, bracketBox, dll) tetap export untuk backward compat.
+// Semua fungsi lama (claraWrap, bracketBox, dll) tetap export dengan signature sama,
+// tapi output-nya sekarang pakai style futuristik v4.
 
 // Small caps map
 const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
 const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c).replace(/[A-Z]/g, c => (SC_MAP[c.toLowerCase()] || c).toUpperCase());
 
+// Helper: detect real emoji (multi-char unicode), bukan "i" atau teks biasa
+const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
+
 // ═══════════════════════════════════════════════
 // FUTURISTIC v4 FUNCTIONS (untuk menu/allmenu/allmenucategory)
 // ═══════════════════════════════════════════════
 
-/**
- * Futuristic header — ◆ ◇ ◆ Title ◆ ◇ ◆
- */
 function futuristicHeader(title) {
   return `◆ ◇ ◆ ${toSC(title)} ◆ ◇ ◆`;
 }
 
-/**
- * Futuristic section — ▎ heading + ┊ lines
- *   ▎ᴜsᴇʀ ᴘʀᴏғɪʟᴇ
- *   ┊ Key : Value
- *   ┊ Key : Value
- */
 function futuristicSection(heading, lines = []) {
   const out = [`▎${toSC(heading)}`];
   for (const line of lines) {
@@ -31,21 +26,12 @@ function futuristicSection(heading, lines = []) {
   return out.join("\n");
 }
 
-/**
- * Progress bar — ▰▰▰▱▱▱
- * @param {number} value - current value
- * @param {number} max - max value
- * @param {number} width - bar width (default 8)
- */
 function progressBar(value, max, width = 8) {
   const v = Math.max(0, Math.min(value, max));
   const filled = max > 0 ? Math.round((v / max) * width) : 0;
   return "▰".repeat(filled) + "▱".repeat(width - filled);
 }
 
-/**
- * Status dot — ● with emoji context
- */
 function statusDot(status = "online") {
   const map = {
     online: "●",
@@ -57,41 +43,20 @@ function statusDot(status = "online") {
   return map[status.toLowerCase()] || "●";
 }
 
-/**
- * Clean divider — ┈┈┈┈┈┈┈┈┈┈┈┈
- */
 function futuristicDivider(len = 28) {
   return "┈" + "┈".repeat(Math.min(len, 36));
 }
 
-/**
- * Futuristic footer
- *   ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
- *   320 fitur · 25 kategori
- *   ɴᴏᴠᴀ ᴀɪ ᴡʜᴀᴛsᴀᴘᴘ ʙᴏᴛ
- */
 function futuristicFooter(stats, botName) {
   return `${futuristicDivider()}\n${stats}\n${toSC(botName)}`;
 }
 
-/**
- * Align key-value with padding for clean look
- *   Nama      : Aizat
- *   Status    : Owner
- */
 function kv(key, value, padTo = 10) {
   const k = String(key);
   const padded = k + " ".repeat(Math.max(0, padTo - k.length));
   return `${padded}: ${value}`;
 }
 
-/**
- * Futuristic command catalog section
- * Multi-column command listing per category:
- *   ▎🤖 ᴀɪ (32)
- *   ┊ .nova-ai  .aichat  .gpt5
- *   ┊ .deepseek  .qwen3  .gemini
- */
 function futuristicCategory(emoji, name, commands, prefix, perLine = 3) {
   const header = `▎${emoji} ${toSC(name)} (${commands.length})`;
   const lines = [];
@@ -102,14 +67,6 @@ function futuristicCategory(emoji, name, commands, prefix, perLine = 3) {
   return [header, ...lines].join("\n");
 }
 
-/**
- * Complete futuristic dashboard layout
- * @param {string} title - Main title
- * @param {string} intro - Greeting line under header
- * @param {Array} sections - [{ heading, lines }]
- * @param {string} footerStats - stats line
- * @param {string} botName - bot name for footer
- */
 function futuristicDashboard(title, intro, sections = [], footerStats, botName) {
   const parts = [futuristicHeader(title)];
   if (intro) parts.push(`\n${intro}`);
@@ -121,28 +78,29 @@ function futuristicDashboard(title, intro, sections = [], footerStats, botName) 
 }
 
 // ═══════════════════════════════════════════════
-// BACKWARD COMPAT — fungsi lama (JANGAN diubah, 250+ plugin pakai ini)
+// BACKWARD COMPAT — fungsi lama, signature sama, output futuristik v4
+// Dipakai oleh 1266+ file plugin. Update di sini = update semua plugin.
 // ═══════════════════════════════════════════════
 
-// Section header: ╭─「 *Title* 」
+// Section header: ▎Title (was ╭─「 *Title* 」)
 function sectionHeader(title) {
-  return `╭─「 *${toSC(title)}* 」`;
+  return `▎${toSC(title)}`;
 }
 
-// Section item: │  ➥ text
+// Section item: ┊ text (was │  ➥ text)
 function sectionItem(text) {
   const clean = String(text).replace(/^[•┊╎❏➶╭╰│]\s*/g, '').replace(/^\s+/g, '');
-  return `│  ➥ ${clean}`;
+  return `┊ ${clean}`;
 }
 
-// Section close: ╰─
+// Section close: ┈┈┈ (was ╰─)
 function sectionClose() {
-  return `╰─`;
+  return futuristicDivider();
 }
 
-// Spacer line: │
+// Spacer line: ┊ (was │)
 function sectionSpacer() {
-  return `│`;
+  return `┊`;
 }
 
 // Build a complete section
@@ -155,38 +113,48 @@ function buildSection(title, items = []) {
   return lines.join("\n");
 }
 
+// claraHeader: ▎Emoji Title (was ╭─「 *Title* 」)
 function claraHeader(title, emoji = "") {
-  return `╭─「 *${toSC(title)}* 」`;
+  if (isRealEmoji(emoji)) return `▎${emoji} ${toSC(title)}`;
+  return `▎${toSC(title)}`;
 }
 
+// bracketBox: ▎Label / ┊ lines / ┈┈┈ (was ╭─「 」 / │ ➥ / ╰─)
+// Emoji param: hanya render kalau emoji asli, bukan "i" atau teks
 function bracketBox(emoji, label, lines = []) {
-  const header = `╭─「 *${toSC(label)}* 」`;
+  const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
+  const header = `▎${emojiStr}${toSC(label)}`;
   const body = lines.map((line) => {
     const clean = String(line)
       .replace(/^╎❏\s*/, '')
       .replace(/^╎\s*$/, '')
       .replace(/^┊\s+➶\s*/, '')
       .replace(/^[•┊╎❏➶╭╰│]\s*/g, '');
-    return `│  ➥ ${clean}`;
+    return `┊ ${clean}`;
   });
-  const footer = `╰─`;
+  const footer = futuristicDivider();
   return [header, ...body, footer].join("\n");
 }
 
+// separator: ┈┈┈┈┈┈┈ (was ┊──────┊)
 function separator(char = "─", repeat = 20) {
-  return `┊${"─".repeat(Math.min(repeat, 28))}┊`;
+  return futuristicDivider(repeat);
 }
 
+// tipText: ┊ 💡 Tip: text (was │  💡 *Tip:* text)
 function tipText(text) {
-  return `│  💡 *Tip:* ${text}`;
+  return `┊ 💡 Tip: ${text}`;
 }
 
+// claraWrap: calls bracketBox — auto futuristic
 function claraWrap(title, body, type = "info") {
-  const typeLabel = type === "error" ? " Error" : type === "success" ? " Success" : type === "warn" ? " Warning" : "";
-  const lines = String(body).split("\n").filter(l => l.trim());
+  const typeLabel = type === "error" ? " — Error" : type === "success" ? " — Success" : type === "warn" ? " — Warning" : "";
+  const raw = Array.isArray(body) ? body : String(body).split("\n");
+  const lines = raw.filter(l => l.trim());
   return bracketBox(type, title + typeLabel, lines);
 }
 
+// claraLine: calls bracketBox — auto futuristic
 function claraLine(title, text) {
   return bracketBox("i", title, [text]);
 }
@@ -197,6 +165,7 @@ function formatNumber(num) {
   return String(num).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+// broadcastFormat: calls bracketBox — auto futuristic
 function broadcastFormat({ botName = "Nova AI", senderName = "Owner", message, type = "group" }) {
   const now = new Date();
   const tanggal = now.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
@@ -215,6 +184,7 @@ function broadcastFormat({ botName = "Nova AI", senderName = "Owner", message, t
   return bracketBox("i", "Broadcast Info", lines.filter(l => l !== undefined));
 }
 
+// novaUsage: calls bracketBox — auto futuristic
 function novaUsage(commandName, { steps = [], example = "", note = "", emoji = "" } = {}) {
   let lines = [];
   if (steps.length > 0) {
@@ -238,25 +208,26 @@ function novaUsage(commandName, { steps = [], example = "", note = "", emoji = "
   return bracketBox('i', title, lines);
 }
 
-// === Legacy info/list boxes (tetap dipakai beberapa plugin lama) ===
+// infoBox: futuristic style (was ╭─「 」 / │ ◈ / │ ┊ / ╰──)
 function infoBox(title, { intro, sections = [] } = {}) {
-  const out = [`╭─「 ${toSC(title)} 」`];
-  if (intro) out.push(`│ ${intro}`);
+  const out = [`▎${toSC(title)}`];
+  if (intro) out.push(`┊ ${intro}`);
   for (const sec of sections) {
-    out.push(`│`);
-    if (sec.heading) out.push(`│  ◈ *${toSC(sec.heading)}*`);
+    out.push(`┊`);
+    if (sec.heading) out.push(`┊ ◈ *${toSC(sec.heading)}*`);
     for (const line of sec.lines || []) {
-      out.push(`│  ┊ ${line}`);
+      out.push(`┊   ${line}`);
     }
   }
-  out.push(`╰──────────────`);
+  out.push(futuristicDivider());
   return out.join("\n");
 }
 
+// listBox: futuristic style (was ╭─「 」 / │ ◈ / ╰──)
 function listBox(title, items = []) {
-  const out = [`╭─「 ${toSC(title)} 」`];
-  for (const item of items) out.push(`│  ◈ ${item}`);
-  out.push(`╰──────────────`);
+  const out = [`▎${toSC(title)}`];
+  for (const item of items) out.push(`┊ ◈ ${item}`);
+  out.push(futuristicDivider());
   return out.join("\n");
 }
 
@@ -326,7 +297,7 @@ export {
   futuristicHeader, futuristicSection, progressBar, statusDot,
   futuristicDivider, futuristicFooter, kv, futuristicCategory,
   futuristicDashboard, CATEGORY_ORDER,
-  // Backward compat
+  // Backward compat (futuristic output, same signature)
   buildNavButtons,
   claraHeader, alyaHeader, bracketBox, claraWrap, claraLine,
   separator, tipText, formatNumber, broadcastFormat, novaUsage,
