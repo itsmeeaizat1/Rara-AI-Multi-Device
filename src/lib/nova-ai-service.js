@@ -14,7 +14,7 @@ const DEFAULT_PROVIDERS = {
     chatEndpoint: "https://api.openai.com/v1/chat/completions",
     authHeader: (key) => ({ Authorization: `Bearer ${key}` }),
     buildBody: ({ model, messages }) => ({ model, messages, temperature: 0.7, max_tokens: 1024 }),
-    parseResponse: (data) => data?.choices?.[0]?.message?.content || "",
+    parseResponse: (data) => data?.choices?.[0]?.message?.content || data?.choices?.[0]?.message?.reasoning || "",
     supportsVision: true,
     supportsSystem: true,
   },
