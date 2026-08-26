@@ -88,8 +88,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     if (game.phase !== "join") {
-      await m.reply(claraWrap("Blind Date", "Sesi sudah dimulai. Tunggu sesi berikutnya."));
-      return { handled: true };
+      await m.react("🕒");
     }
     game.participants.push(m.sender);
     saveConfig(db, gid, game);
@@ -229,6 +228,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
+  await m.react("🐣");
   await m.reply(claraWrap("Blind Date", [
     "BLIND DATE MATCHING",
     "",

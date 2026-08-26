@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
             const hasMedia = m.quoted?.isMedia && (m.quoted?.isImage || m.quoted?.type === 'imageMessage')
             const isDirectImage = m.isImage
             if (!hasMedia && !isDirectImage) return m.reply(claraWrap("editlist", `🖼️ *ʀᴇᴘʟʏ ᴀᴛᴀᴜ ᴋɪʀɪᴍ ɢᴀᴍʙᴀʀ ʙᴀʀᴜ.*\n\nKirim gambar lalu reply dengan command ini.`))
-            await m.reply(claraWrap("editlist", `⏳ _Mengunggah gambar..._`))
+            await m.react("🕒")
             try {
                 const buffer = hasMedia ? await m.quoted.download() : await m.download()
                 if (buffer) {
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
             const hasMedia = m.quoted?.isMedia && (m.quoted?.isVideo || m.quoted?.type === 'videoMessage')
             const isDirectVideo = m.isVideo
             if (!hasMedia && !isDirectVideo) return m.reply(claraWrap("editlist", `🎬 *ʀᴇᴘʟʏ ᴀᴛᴀᴜ ᴋɪʀɪᴍ ᴠɪᴅᴇᴏ ʙᴀʀᴜ.*\n\nKirim video lalu reply dengan command ini.`))
-            await m.reply(claraWrap("editlist", `⏳ _Mengunggah video..._`))
+            await m.react("🕒")
             try {
                 const buffer = hasMedia ? await m.quoted.download() : await m.download()
                 if (buffer) {

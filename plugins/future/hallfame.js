@@ -270,6 +270,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     return { handled: true };
   }
 
+  await m.react("🐣");
   await m.reply(claraWrap("Hall of Fame", [
     "HALL OF FAME GRUP",
     "",

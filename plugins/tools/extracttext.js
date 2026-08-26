@@ -368,8 +368,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
     if (isImage) {
       modeLabel = "AI Vision";
-      m.reply(claraWrap("Extract Text", "  ┊  ➶ Memproses gambar dengan AI vision..."));
-      extractedText = await extractImageText(buffer, botConfig);
+      await m.react("🕒");
     } else if (isPdf || pdfMime.includes("pdf")) {
       if (useAI) {
         modeLabel = "AI Vision";

@@ -65,6 +65,7 @@ async function handler(m, { sock, args }) {
             const count = global.srtSession[m.chat].count;
             delete global.srtSession[m.chat];
             const totalImages = countShuffleImages();
+            await m.react("🐣");
             await m.reply(claraWrap("Srt", `✅ *SESI TANGKAPAN GAMBAR SELESAI*\n\nSesi telah dihentikan dan seluruh gambar telah diproses.\n- Total gambar baru yang ditambahkan: *${count}*\n- Total keseluruhan gambar di sistem: *${totalImages}*`));
         } 
         else if (action === 'list') {
@@ -72,8 +73,7 @@ async function handler(m, { sock, args }) {
             const files = fs.readdirSync(SHUFFLE_DIR).filter(f => f.endsWith('.jpg') || f.endsWith('.png') || f.endsWith('.jpeg'));
             if (files.length === 0) return m.reply(claraWrap("Srt", '❌ Direktori *shuffle* masih kosong. Silakan gunakan perintah tangkapan gambar untuk mulai menambahkan.'));
             
-            await m.reply(claraWrap("Srt", `📂 *DAFTAR GAMBAR SHUFFLE*\n\nSistem menemukan *${files.length}* gambar yang tersimpan. Sedang memproses dan merangkai album untuk ditampilkan, harap tunggu sebentar.`));
-            
+            await m.react("🕒");
             try {
                 const opener = generateWAMessageFromContent(
                     m.chat,

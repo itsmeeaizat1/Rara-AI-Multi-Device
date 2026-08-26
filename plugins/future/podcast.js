@@ -66,8 +66,6 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     await m.react("🕒");
-    await m.reply(claraWrap("Podcast", "Generating script podcast...\nTopik: " + topic + "\nEstimasi: 10-15 detik"));
-
     const script = await generateScript(topic);
     await m.react("🐣");
 

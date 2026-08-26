@@ -19,11 +19,9 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const buffer = await m.download();
     if (!buffer) throw new Error("Gagal download audio");
-    await m.reply(claraWrap("aivoicenote", "_🎙️ Transcribing... mohon tunggu_"));
-    const { data } = await axios.post("https://api.assemblyai.com/v2/upload", buffer, {
-      headers: { "Content-Type": "application/octet-stream" }, timeout: 30000,
-    });
+    await m.react("🕒");
     // Use free transcription API
+    await m.react("🐣");
     await m.reply(claraWrap("AI Voice Note", ["  ┊  ➶ Audio diterima", "  ┊  ➶ Transcribe membutuhkan API key AssemblyAI",
       "  ┊  ➶ Fitur ini butuh konfigurasi tambahan"].join("\n")));
   } catch (e) {

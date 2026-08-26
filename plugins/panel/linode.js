@@ -90,8 +90,7 @@ async function handler(m, { sock, command, args }) {
             }
             
             const linodeId = createData.id
-            await m.reply(claraWrap("linode", `🕕 Linode sedang dibuat... Tunggu 60 detik.`))
-            
+            await m.react("🕒");
             await new Promise(resolve => setTimeout(resolve, 60000))
             
             const infoRes = await fetch(`https://api.linode.com/v4/linode/instances/${linodeId}`, {
@@ -350,6 +349,7 @@ async function handler(m, { sock, command, args }) {
             return
         }
         
+        await m.react("🐣");
         await m.reply(claraWrap("linode", `☁️ *ʟɪɴᴏᴅᴇ ᴄᴏᴍᴍᴀɴᴅꜱ*\n\n` +
             `.linode2gb <label> - Buat VPS 2GB\n` +
             `.linode4gb <label> - Buat VPS 4GB\n` +

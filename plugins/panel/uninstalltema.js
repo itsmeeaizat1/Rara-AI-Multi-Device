@@ -50,8 +50,7 @@ async function handler(m, { sock }) {
     const ress = new Client()
     
     m.react('🕐')
-    await m.reply(claraWrap("root", `🕕 *ᴍᴇᴍᴘʀᴏꜱᴇꜱ ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ...*\n\nTunggu 1-10 menit hingga proses selesai`))
-    
+    await m.react("🕒");
     ress.on('ready', () => {
         ress.exec(command, (err, stream) => {
             if (err) {
@@ -60,6 +59,7 @@ async function handler(m, { sock }) {
             
             stream.on('close', async () => {
                 m.react('✅')
+                await m.react("🐣");
                 await m.reply(claraWrap("root", `╭┈┈⬡「 ✅ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ* 」
 ┃ ㊗ sTatus: *ʙᴇʀʜᴀꜱɪʟ*
 ┃ ㊗ Ip: ${ipvps}

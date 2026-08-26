@@ -115,8 +115,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     if (game.lastUser === m.sender) {
-      await m.reply(claraWrap("Word Chain", "Tunggu orang lain jawab dulu! Tidak boleh gantian diri sendiri."));
-      return { handled: true };
+      await m.react("🕒");
     }
     const expected = getLastChar(game.lastWord);
     const actual = getFirstChar(word);

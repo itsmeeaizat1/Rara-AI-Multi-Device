@@ -28,6 +28,7 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("cekonline", `❌ *ɢᴀɢᴀʟ*\n\nTidak bisa mendapatkan data member grup`))
         }
         
+        await m.react("🐣");
         await m.reply(claraWrap("Cekonline", `🔍 *ᴍᴇɴᴄᴀʀɪ ᴍᴇᴍʙᴇʀ ᴏɴʟɪɴᴇ...*\n\nMenunggu response dari ${participants.length} member\nEstimasi: 5-10 detik`))
         
         const presences = {}
