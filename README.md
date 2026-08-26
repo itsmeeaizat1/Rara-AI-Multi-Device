@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20null-safe%20database%20access-success?style=for-the-badge)
-> *Commit: "fix: null-safe database access in game reward handler"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%209%20tools%20plugins%20missing%20'-success?style=for-the-badge)
+> *Commit: "fix: 9 tools plugins missing 'as config' export"*
 <!--END_SECTION:latest-update-->
 
 
