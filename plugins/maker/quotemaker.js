@@ -12,6 +12,7 @@ async function getCanvas() {
 
 const pluginConfig = {
   name: "quotemaker",
+  alias: ["quotemaker"],
   aliases: ["quotemaker", "quotecard", "quoteimg", "buatquote"],
   category: "maker",
   description: "Buat quote card estetik dari teks sendiri dengan gradient background",

@@ -7,7 +7,7 @@ import FormData from 'form-data'
 
 const pluginConfig = {
     name: 'editproduk',
-    alias: ['editproduct'],
+    alias: ["editproduk", 'editproduct'],
     category: 'store',
     description: '✏️ Edit produk toko (hanya di private chat)',
     usage: '.editproduk <nomor> <field> <nilai>',

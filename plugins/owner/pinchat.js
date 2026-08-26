@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['pinchat', 'pin'],
-    alias: [],
+    alias: ["pinchat", "pin"],
     category: 'owner',
     description: 'Pin/unpin chat',
     usage: '.pinchat <nomor/reply> atau .pinchat buka <nomor>',

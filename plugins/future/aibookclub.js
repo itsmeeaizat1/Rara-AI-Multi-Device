@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aibookclub",
-  alias: ["bookclub", "bookclub", "baca"],
+  alias: ["aibookclub", "bookclub", "bookclub", "baca"],
   category: "future",
   description: "Baca buku bareng di grup - AI book club",
   usage: ".bookclub <command>",

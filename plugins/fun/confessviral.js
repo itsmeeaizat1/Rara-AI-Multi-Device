@@ -4,7 +4,7 @@
 
 const pluginConfig = {
   name: "confessviral",
-  alias: ["confesviral", "confes", "confesv2"],
+  alias: ["confessviral", "confesviral", "confes", "confesv2"],
   category: "fun",
   description: "Confes anonymous ala viral TikTok: nembak, kenalan, ndate, pcr, lowkey, dm",
   usage: ".confessviral nomor|mode|pesan",

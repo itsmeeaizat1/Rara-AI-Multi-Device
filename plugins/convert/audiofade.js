@@ -7,6 +7,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "audiofade",
+  alias: ["audiofade"],
   aliases: ["audiofade", "fadeaudio", "audiofadein", "audiofadeout"],
   category: "convert",
   description: "Tambah fade in/out ke audio untuk transisi smooth",

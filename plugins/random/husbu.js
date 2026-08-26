@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "husbu", alias: ["husband"], category: "random",
+  alias: ["husbu"],
   description: "Random husbu image", usage: ".husbu",
   example: ".husbu", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

@@ -4,6 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['htpremium', 'hidetagpremium', 'htprem'],
+    alias: ["htpremium", "hidetagpremium", "htprem"],
     category: 'group',
     description: 'Hidetag dengan support reply pesan (teks/media)',
     usage: '.htprem [pesan] atau reply pesan',

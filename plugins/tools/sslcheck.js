@@ -4,7 +4,7 @@ import tls from "tls";
 
 const pluginConfig = {
   name: "sslcheck",
-  alias: ["ssl", "sslcert", "certcheck", "certificatecheck"],
+  alias: ["sslcheck", "ssl", "sslcert", "certcheck", "certificatecheck"],
   category: "tools",
   description: "Cek SSL certificate website (issuer, expiry, days left, chain)",
   usage: ".sslcheck <domain>",

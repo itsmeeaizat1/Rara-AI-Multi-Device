@@ -17,7 +17,7 @@ import {
 
 const pluginConfig = {
   name: "weather2",
-  alias: ["weather", "cuacaowner", "weatherowner"],
+  alias: ["weather2", "weather", "cuacaowner", "weatherowner"],
   category: "owner",
   description: "Atur pengiriman info cuaca otomatis ke grup",
   usage: ".weather <aksi>",

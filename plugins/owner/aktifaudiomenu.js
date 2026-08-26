@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'menuwithmusic',
-    alias: ['audiomenu', 'setaudiomenu', 'toggleaudiomenu', 'aktifaudiomenu'],
+    alias: ["menuwithmusic", 'audiomenu', 'setaudiomenu', 'toggleaudiomenu', 'aktifaudiomenu'],
     category: 'owner',
     description: 'Toggle audio saat menampilkan menu',
     usage: '.aktifaudiomenu ya/gak',

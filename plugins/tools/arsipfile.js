@@ -13,7 +13,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "arsipfile",
-  alias: ["archivefile", "arsipzip", "filearsip", "zipfile"],
+  alias: ["arsipfile", "archivefile", "arsipzip", "filearsip", "zipfile"],
   category: "tools",
   description: "Tools arsip file: create/extract zip, tar, tar.gz, gz, list, info",
   usage:

@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'antiphising',
-    alias: ['antiphishing', 'antiscamlink', 'nophising'],
+    alias: ["antiphising", 'antiphishing', 'antiscamlink', 'nophising'],
     category: 'group',
     description: 'Deteksi konten phising di grup',
     usage: '.antiphising <on/off/metode> [kick/remove]',

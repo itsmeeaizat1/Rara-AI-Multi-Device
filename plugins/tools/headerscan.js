@@ -5,6 +5,7 @@ import http from "node:http";
 
 const pluginConfig = {
   name: "headerscan", alias: ["httpheaders", "headercheck"], category: "tools",
+  alias: ["headerscan"],
   description: "Scan HTTP headers website", usage: ".headerscan <url>",
   example: ".headerscan https://google.com", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

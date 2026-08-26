@@ -7,6 +7,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "audioeq",
+  alias: ["audioeq"],
   aliases: ["audioeq", "equalizer", "audiotone", "eqaudio"],
   category: "convert",
   description: "Equalizer custom - bass/mid/treble gain -12 sampai +12 dB",

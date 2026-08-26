@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "kisahrasul",
+  alias: ["kisahrasul"],
   aliases: ["kisahrasul", "kisahsahabat", "sahabatnabi", "kisahsahabat"],
   category: "islami",
   description: "Kisah 10 Sahabat Nabi yang dijanjikan surga (Asyarah Mubasyarah)",

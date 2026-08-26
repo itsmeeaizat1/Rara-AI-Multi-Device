@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['autodl', 'autodownload'],
-    alias: [],
+    alias: ["autodl", "autodownload"],
     category: 'group',
     description: 'Toggle auto download link sosmed',
     usage: '.autodl on/off',

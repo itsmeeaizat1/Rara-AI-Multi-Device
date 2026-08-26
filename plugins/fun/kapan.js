@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'kapan',
-    alias: ['when'],
+    alias: ["kapan", 'when'],
     category: 'fun',
     description: 'Tanya bot kapan sesuatu',
     usage: '.kapan <pertanyaan>',

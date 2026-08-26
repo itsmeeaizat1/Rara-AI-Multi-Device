@@ -6,7 +6,7 @@ import fs from 'fs'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'githubdl',
-    alias: ['gitdl', 'gitclone', 'repodownload'],
+    alias: ["githubdl", 'gitdl', 'gitclone', 'repodownload'],
     category: 'download',
     description: 'Download repository GitHub sebagai ZIP',
     usage: '.githubdl <user> <repo> <branch>',

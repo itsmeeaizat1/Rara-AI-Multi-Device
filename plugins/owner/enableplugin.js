@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "enableplugin",
-  alias: ["eplugin", "pluginenable", "onplugin"],
+  alias: ["enableplugin", "eplugin", "pluginenable", "onplugin"],
   category: "owner",
   description: "Mengaktifkan kembali plugin yang dinonaktifkan",
   usage: ".enableplugin <nama_plugin>",

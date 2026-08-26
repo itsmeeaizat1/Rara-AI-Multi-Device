@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "shopeedl",
-  alias: ["shopeevideo", "shopeevid"],
+  alias: ["shopeedl", "shopeevideo", "shopeevid"],
   category: "download",
   description: "Download video dari Shopee",
   usage: ".shopeedl <url>",

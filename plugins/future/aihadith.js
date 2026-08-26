@@ -4,6 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "aihadith", alias: ["hadithai", "carihadis"], category: "future",
+  alias: ["aihadith"],
   description: "Cari hadis dengan bahasa natural", usage: ".aihadith <topik>",
   example: ".aihadith hadis tentang sabar", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,

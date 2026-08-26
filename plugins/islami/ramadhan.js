@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "ramadhan",
+  alias: ["ramadhan"],
   aliases: ["ramadhan", "doaramadhan", "doasahur", "doaiftar", "puasaramadhan", "doalailatulqadr", "lailatulqadr"],
   category: "islami",
   description: "Panduan lengkap Ramadhan - niat, doa sahur, buka puasa, lailatul qadr, tarawih",

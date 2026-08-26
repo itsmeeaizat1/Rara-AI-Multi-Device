@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "shio",
+  alias: ["shio"],
   aliases: ["shio", "sifatshio", "karaktershio", "shioinfo"],
   category: "primbon",
   description: "Info 12 Shio lengkap - sifat, keberuntungan, jodoh, karier",

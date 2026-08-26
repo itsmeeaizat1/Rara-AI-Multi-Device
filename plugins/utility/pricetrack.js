@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "pricetrack", alias: ["trackprice", "hargatracker"], category: "utility",
+  alias: ["pricetrack"],
   description: "Cek harga produk online", usage: ".pricetrack <url produk>",
   example: ".pricetrack https://shopee.co.id/...", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 0, isEnabled: true,

@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "sholatjenazah",
+  alias: ["sholatjenazah"],
   aliases: ["sholatjenazah", "jenazah", "tatasolatjenazah", "doajenazah", "sholatmayat"],
   category: "islami",
   description: "Panduan tata cara sholat jenazah lengkap (4 takbir, doa, tata cara)",

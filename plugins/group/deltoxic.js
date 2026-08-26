@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'deltoxic',
-    alias: ['hapustoxic', 'remtoxic', 'removetoxic'],
+    alias: ["deltoxic", 'hapustoxic', 'remtoxic', 'removetoxic'],
     category: 'group',
     description: 'Hapus kata toxic dari daftar',
     usage: '.deltoxic <kata>',

@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tolakgabung",
-  alias: ["tolakjoin", "rejgabung", "denygabung", "rejectgabung"],
+  alias: ["tolakgabung", "tolakjoin", "rejgabung", "denygabung", "rejectgabung"],
   category: "owner",
   description: "Tolak member yang request join grup",
   usage: ".tolakgabung <nomor> <linkgrup>",

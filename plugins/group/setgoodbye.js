@@ -3,7 +3,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "setgoodbye",
-  alias: ["customgoodbye"],
+  alias: ["setgoodbye", "customgoodbye"],
   category: "group",
   description: "Set custom goodbye message",
   usage: ".setgoodbye <pesan>",

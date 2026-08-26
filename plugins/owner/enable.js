@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "enable",
-  alias: ["en", "turnon"],
+  alias: ["enable", "en", "turnon"],
   category: "owner",
   description: "Mengaktifkan fitur grup (welcome, antilink, antisticker, dll)",
   usage: ".enable <fitur> [opsi]",

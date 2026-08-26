@@ -4,7 +4,7 @@ import net from "net";
 
 const pluginConfig = {
   name: "portscan",
-  alias: ["scanport", "portcheck", "portopen", "portscanv2"],
+  alias: ["portscan", "scanport", "portcheck", "portopen", "portscanv2"],
   category: "tools",
   description: "Scan port terbuka dari suatu host (common ports)",
   usage: ".portscan <host>  atau  .portscan <host> <port1,port2,...>",

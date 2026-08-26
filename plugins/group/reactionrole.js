@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "reactionrole",
+  alias: ["reactionrole"],
   aliases: ["reactionrole", "rr"],
   category: "group",
   description: "Auto-assign role berdasarkan reaction emoji di message",

@@ -8,7 +8,7 @@ const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
 
 const pluginConfig = {
     name: 'fuckmylife',
-    alias: ['fml'],
+    alias: ["fuckmylife", 'fml'],
     category: 'fun',
     description: 'Random FML story',
     usage: '.fuckmylife',

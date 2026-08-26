@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "verotp",
-  alias: ["verifyotp", "verifyemail"],
+  alias: ["verotp", "verifyotp", "verifyemail"],
   category: "user",
   description: "Verifikasi kode OTP untuk pendaftaran email",
   usage: ".verotp <kode>",

@@ -4,7 +4,7 @@ import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "hafalan",
-  alias: ["hafidz", "hafizh", "tilawah", "murajaah"],
+  alias: ["hafalan", "hafidz", "hafizh", "tilawah", "murajaah"],
   category: "islamic",
   description: "Tracker hafalan Al-Quran - catat, review, spaced repetition",
   usage: ".hafalan <add/list/review/progress/remove/streak>",

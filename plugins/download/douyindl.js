@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "douyindl",
-  alias: ["douyin", "dydl"],
+  alias: ["douyindl", "douyin", "dydl"],
   category: "download",
   description: "Download video/audio dari Douyin (TikTok China)",
   usage: ".douyindl <url>",

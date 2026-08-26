@@ -7,7 +7,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "deepaiedit",
-  alias: ["aiedit", "editimg", "deepaieditv2", "imgeditai", "editgambar"],
+  alias: ["deepaiedit", "aiedit", "editimg", "deepaieditv2", "imgeditai", "editgambar"],
   category: "tools",
   description: "DeepAI Image Editor V2 — edit gambar dengan text prompt, gratis tanpa API key",
   usage: ".deepaiedit <prompt> (reply gambar)\n.deepaiedit list",

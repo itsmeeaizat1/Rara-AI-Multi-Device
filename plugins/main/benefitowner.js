@@ -4,7 +4,7 @@ import config from '../../config.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'benefitowner',
-    alias: ['ownerbenefits', 'ownerfitur'],
+    alias: ["benefitowner", 'ownerbenefits', 'ownerfitur'],
     category: 'main',
     description: 'Lihat penjelasan dan daftar fitur khusus Owner',
     usage: '.benefitowner',

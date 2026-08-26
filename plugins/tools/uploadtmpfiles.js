@@ -14,7 +14,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "uploadtmpfiles",
-  alias: ["tmpfiles", "tmpfile", "uptmp"],
+  alias: ["uploadtmpfiles", "tmpfiles", "tmpfile", "uptmp"],
   category: "tools",
   description: "Upload media ke tmpfiles.org via API xemoz",
   usage: ".uploadtmpfiles (reply/kirim media)",

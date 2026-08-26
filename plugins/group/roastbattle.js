@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "roastbattle",
+  alias: ["roastbattle"],
   aliases: ["roastbattle", "roastwar"],
   category: "group",
   description: "Roast battle 2 orang, AI jadi juri",

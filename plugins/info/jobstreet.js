@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "jobstreet",
-  alias: ["jobstreetid", "carikerja", "lokerid", "lowongankerja"],
+  alias: ["jobstreet", "jobstreetid", "carikerja", "lokerid", "lowongankerja"],
   category: "info",
   description: "JobStreet Indonesia — cari lowongan kerja & lihat detail lowongan",
   usage: ".jobstreet <keyword> — Cari lowongan\n.jobstreet detail <id> — Lihat detail lowongan\n.jobstreet — Info plugin",

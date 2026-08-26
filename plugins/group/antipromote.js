@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antipromote",
+  alias: ["antipromote"],
   aliases: ["antipromote", "antidemote", "antiprodem"],
   category: "group",
   description: "Auto-revert promote/demote tanpa izin owner",

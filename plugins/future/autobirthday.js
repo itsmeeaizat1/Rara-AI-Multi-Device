@@ -4,6 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "autobirthday", alias: ["autobirthday", "autoulta", "ultahauto"], category: "future",
+  alias: ["autobirthday"],
   description: "Catat & reminder ulang tahun", usage: ".autobirthday <add/list>",
   example: ".autobirthday add Budi 17-08", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

@@ -22,7 +22,7 @@ function getRandomBucin() {
 
 export const config = {
   name: "bucin",
-  alias: ["quotesbucin"],
+  alias: ["bucin", "quotesbucin"],
   category: "fun",
   description: "Random quotes bucin",
   usage: ".bucin",
@@ -45,7 +45,7 @@ export async function handler(m, { sock }) {
       return;
     }
 
-    let text = `╭──「 **QUOTES BUCIN*\n\n`; 」
+    let text = `╭──「 *QUOTES BUCIN*\n\n」`;
     text += `\`\`\`${quote}\`\`\`\n\n`;
     text += `╰──────────❀`;
 

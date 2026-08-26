@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pddikti",
-  alias: ["dikti", "carimahasiswa"],
+  alias: ["pddikti", "dikti", "carimahasiswa"],
   category: "search",
   description: "Cari data Mahasiswa, Dosen, PT, dan Prodi dari PDDIKTI",
   usage: ".pddikti <mode> <query>",

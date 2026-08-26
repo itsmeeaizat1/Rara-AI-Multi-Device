@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "playtiktok",
-  alias: ["ttplay", "tiktokplay"],
+  alias: ["playtiktok", "ttplay", "tiktokplay"],
   category: "search",
   description: "Cari dan kirim satu video TikTok terbaik",
   usage: ".playtiktok <query>",

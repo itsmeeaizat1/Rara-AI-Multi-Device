@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "textcase",
-  alias: ["caseconvert", "casetext", "textformat", "caseconv"],
+  alias: ["textcase", "caseconvert", "casetext", "textformat", "caseconv"],
   category: "tools",
   description: "Text case converter (UPPER, lower, Title, camelCase, snake_case, kebab-case)",
   usage: ".textcase <mode> <teks>",

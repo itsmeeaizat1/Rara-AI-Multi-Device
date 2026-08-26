@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "angkanaas",
+  alias: ["angkanaas"],
   aliases: ["angkanaas", "angkaghaib", "angkahoki", "angkajitu"],
   category: "primbon",
   description: "Angka naas & angka hoki berdasarkan weton, mimpi, dan kedutan",

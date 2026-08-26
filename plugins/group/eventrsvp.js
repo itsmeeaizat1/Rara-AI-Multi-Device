@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "eventrsvp",
+  alias: ["eventrsvp"],
   aliases: ["eventrsvp", "ersvp", "groupevent"],
   category: "group",
   description: "Buat event + RSVP (going/maybe/not going)",

@@ -7,7 +7,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'resetdb',
-    alias: ['cleardb', 'wipedb'],
+    alias: ["resetdb", 'cleardb', 'wipedb'],
     category: 'owner',
     description: 'Reset semua data database',
     usage: '.resetdb [confirm]',

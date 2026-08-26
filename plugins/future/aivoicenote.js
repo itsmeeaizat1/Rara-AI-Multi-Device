@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "aivoicenote", alias: ["aivoicenote", "aivoicenote2", "transcribe2"], category: "future",
+  alias: ["aivoicenote"],
   description: "Transcribe voice note jadi text", usage: ".aivoicenote (reply voice note)",
   example: ".aivoicenote", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 5, isEnabled: true,

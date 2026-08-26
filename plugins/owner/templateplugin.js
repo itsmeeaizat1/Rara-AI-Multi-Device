@@ -23,7 +23,7 @@ function handler(m, { sock }) {
     const template = `
 const pluginConfig = {
     name: 'example',
-    alias: ['ex'],
+    alias: ["example", 'ex'],
     category: 'general',
     description: 'Example plugin',
     usage: '.example',

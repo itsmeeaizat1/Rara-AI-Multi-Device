@@ -18,7 +18,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "puter",
-  alias: ["puterai", "puterchat"],
+  alias: ["puter", "puterai", "puterchat"],
   category: "ai",
   description: "Multi-model AI via Puter (GPT, Claude, Gemini, Grok, DeepSeek, Llama)",
   usage: ".puter <pesan>\n.puter model <nama>\n.puter list\n.puter reset\n.puter setkey <token>",

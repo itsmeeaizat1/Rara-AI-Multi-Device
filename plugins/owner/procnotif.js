@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "procnotif",
-  alias: ["notiffungsi", "notifproses"],
+  alias: ["procnotif", "notiffungsi", "notifproses"],
   category: "owner",
   description: "Toggle notifikasi proses untuk fitur media/tool",
   usage: ".procnotif on/off/status",
@@ -24,7 +24,7 @@ async function handler(m, { sock, db }) {
 
   if (args === "status") {
     const status = db.setting("procNotif") ?? true;
-    const txt = `╭──「 *Proc Notif 」
+    const txt = `╭──「 *Proc Notif
 ┊
 │ ❏ Status: ${status ? "Aktif" : "Nonaktif"}
 │ ❏ Kategori: ai, canvas, image, maker, sticker, convert, tools, download, tts, anime

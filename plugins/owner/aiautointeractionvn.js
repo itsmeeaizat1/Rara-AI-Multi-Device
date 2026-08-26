@@ -25,7 +25,7 @@ function tempPath(prefix, ext) {
 
 const pluginConfig = {
   name: "aiautointeractionvn",
-  alias: ["aiautovn", "ailivevn", "vnai", "aivoicechat"],
+  alias: ["aiautointeractionvn", "aiautovn", "ailivevn", "vnai", "aivoicechat"],
   category: "owner",
   description: "Toggle AI auto VN interaction (Gemini Live style) — VN masuk, AI balas suara neural natural",
   usage: ".aiautointeractionvn on/off — Toggle\n.aiautointeractionvn status — Cek status\n.aiautointeractionvn voice <id> — Pilih voice neural\n.aiautointeractionvn lang <kode> — Set bahasa\n.aiautointeractionvn mode api/free — API=Gemini, Free=Edge Neural TTS",

@@ -4,6 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "groupanalytics", alias: ["analytics", "statgrup", "grupstats"], category: "future",
+  alias: ["groupanalytics"],
   description: "Analisis statistik grup", usage: ".groupanalytics",
   example: ".groupanalytics", isOwner: true, isPremium: false,
   isGroup: true, isPrivate: false, cooldown: 30, energi: 0, isEnabled: true,

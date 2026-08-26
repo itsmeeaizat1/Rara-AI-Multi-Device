@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 
 const pluginConfig = {
   name: "password", alias: ["passgen", "generatepassword", "randpass"], category: "tools",
+  alias: ["password"],
   description: "Generate password acak", usage: ".password <panjang>",
   example: ".password 16", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 2, energi: 0, isEnabled: true,

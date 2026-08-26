@@ -4,6 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "aidiet", alias: ["dietai", "kalori", "hitungkalori"], category: "future",
+  alias: ["aidiet"],
   description: "Foto makanan → AI hitung kalori", usage: ".aidiet (reply foto makanan)",
   example: ".aidiet", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 5, isEnabled: true,

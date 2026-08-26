@@ -9,7 +9,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const config = {
   name: "hd3",
-  alias: ["enhance3", "upscale3"],
+  alias: ["hd3", "enhance3", "upscale3"],
   category: "tools",
   description: "Enhance gambar jadi HD (BeautyPlus)",
   usage: ".hd3 (reply gambar)",

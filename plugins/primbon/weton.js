@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "weton",
+  alias: ["weton"],
   aliases: ["weton", "wetonjawa", "wetoninfo", "neptujawa"],
   category: "primbon",
   description: "Info weton Jawa lengkap - karakter, neptu, sifat, keberuntungan",

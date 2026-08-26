@@ -4,7 +4,7 @@ import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'antidocument',
-    alias: ['antidoc', 'nodocument', 'nodoc'],
+    alias: ["antidocument", 'antidoc', 'nodocument', 'nodoc'],
     category: 'group',
     description: 'Mengatur antidocument di grup',
     usage: '.antidocument <on/off>',

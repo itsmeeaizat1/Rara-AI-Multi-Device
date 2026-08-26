@@ -2,7 +2,7 @@
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['buatgrup', 'creategroup', 'newgroup'],
-    alias: [],
+    alias: ["buatgrup", "creategroup", "newgroup"],
     category: 'owner',
     description: 'Buat grup baru',
     usage: '.buatgrup <nama>|<nomor1,nomor2,...>|<durasi_menit>',

@@ -3,7 +3,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: ['clearchat', 'cc', 'cleangc', 'deletechat', 'delchat'],
-    alias: [],
+    alias: ["clearchat", "cc", "cleangc", "deletechat", "delchat"],
     category: 'group',
     description: 'Membersihkan chat grup',
     usage: '.clearchat',

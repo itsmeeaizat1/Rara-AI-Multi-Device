@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-essay",
-  alias: ["aiessay", "essayai", "essayhelper"],
+  alias: ["ai-essay", "aiessay", "essayai", "essayhelper"],
   category: "ai",
   description: "Tulis essay/artikel dengan AI",
   usage: ".ai-essay <topik>",

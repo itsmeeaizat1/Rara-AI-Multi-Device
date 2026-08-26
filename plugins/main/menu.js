@@ -20,7 +20,7 @@ import { sendMenuAudio } from "../../src/lib/send-menu.js";
 
 const pluginConfig = {
   name: "menu",
-  alias: ["help", "bantuan", "commands", "m"],
+  alias: ["menu", "help", "bantuan", "commands", "m"],
   category: "main",
   description: "Menampilkan menu utama bot",
   usage: ".menu",
@@ -121,7 +121,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const more = String.fromCharCode(8206);
     const readMore = more.repeat(4001);
 
-    return `╭──「 *Info User* 」
+    return `╭──「 *Info User*
 │
 │ ❏ *Nama:*  ${m.pushName || "User"}
 │ ❏ *Nomor:* @${m.sender.split("@")[0]}
@@ -134,14 +134,14 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ ❏ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
 │ ❏ *Total Xp:* ${userExp.toLocaleString()}
 │ ❏ *Status:* ${user?.banned ? "Banned" : "Aktif"}
-├──「 *Info Waktu* 」
+├──「 *Info Waktu*
 │ ❏ *Waktu:* ${timeStr} WIB
 │ ❏ *Hari:* ${dayName} ${weton}
 │ ❏ *Tanggal:* ${dateStr}
 │ ❏ *Tanggal Islam:* ${islamicDate}
 │ ❏ *Zona:* Asia/Jakarta
 │ ❏ *Hari Penting:* ${importantDay}
-├──「 *Info Bot* 」
+├──「 *Info Bot*
 │ ❏ *Bot Name:* ${botConfig.bot?.name || "Nova AI Whatsapp Bot"}
 │ ❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
 │ ❏ *Version:* ${botConfig.bot?.version || "-"}
@@ -152,7 +152,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ ❏ *Total User:* ${totalUsers}
 │ ❏ *Total Registrasi:* ${totalRegistered}
 │ ❏ *Premium User:* ${totalPremium}
-├──「 *Info Server* 」
+├──「 *Info Server*
 │ ❏ *Platform:* ${platform}
 │ ❏ *Hostname:* ${hostname}
 │ ❏ *Type:* Node.Js
@@ -166,17 +166,17 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ ❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
 ╰──────────❀
 ${weatherBlock}${readMore}
-╭──「 *Menu* 」
+╭──「 *Menu*
 │ ❏ ${prefix}menu
 │ ❏ ${prefix}allmenu
 │ ❏ ${prefix}allmenucategory <kategori>
 │ ❏ ${prefix}tanyaai
-├──「 *Info* 」
+├──「 *Info*
 │ ❏ ${prefix}info
 │ ❏ ${prefix}owner
 │ ❏ ${prefix}rules
 │ ❏ ${prefix}donasi
-├──「 *Store* 」
+├──「 *Store*
 │ ❏ ${prefix}sewa
 │ ❏ ${prefix}payment
 │ ❏ ${prefix}listban

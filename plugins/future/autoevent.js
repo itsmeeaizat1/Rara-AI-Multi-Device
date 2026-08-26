@@ -4,6 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "autoevent", alias: ["eventai", "detectevent"], category: "future",
+  alias: ["autoevent"],
   description: "AI deteksi event dari chat", usage: ".autoevent (reply chat)",
   example: ".autoevent", isOwner: false, isPremium: true,
   isGroup: true, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,

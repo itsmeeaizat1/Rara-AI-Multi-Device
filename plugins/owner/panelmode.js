@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js"
 
 const pluginConfig = {
     name: 'togglecpanelinfo',
-    alias: ['togglepanelinfo', 'cpanelinfo', 'panelinfomode'],
+    alias: ["togglecpanelinfo", 'togglepanelinfo', 'cpanelinfo', 'panelinfomode'],
     category: 'owner',
     description: 'Atur mode pengiriman info akun panel (dm/grup/both)',
     usage: '.togglecpanelinfo dm / grup / both',

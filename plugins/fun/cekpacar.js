@@ -5,7 +5,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "cekpacar",
-  alias: ["cekpasangan", "statuspacar", "statusjadian"],
+  alias: ["cekpacar", "cekpasangan", "statuspacar", "statusjadian"],
   category: "fun",
   description: "Cek status hubungan seseorang",
   usage: ".cekpacar atau .cekpacar @tag",
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     const name = data.name || targetJid.split("@")[0];
     const now = Date.now();
 
-    let msg = `╭──「 **ᴄᴇᴋ ᴘᴀᴄᴀʀ*\n\n`; 」
+    let msg = `╭──「 *ᴄᴇᴋ ᴘᴀᴄᴀʀ*\n\n」`;
     msg += `  ┊ ➶ 👤 Nama: *${name}*\n`;
 
     if (data.fun.pasangan) {

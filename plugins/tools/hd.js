@@ -8,7 +8,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "remini",
-  alias: ["hd", "enhance", "hd4k"],
+  alias: ["remini", "hd", "enhance", "hd4k"],
   category: "tools",
   description: "Enhance gambar jadi HD (Sharp Lanczos3 upscaler, no API key)",
   usage: ".remini (reply gambar)\n.remini doc — kirim sebagai dokumen\n.remini 2x / 4x / 8x",
@@ -46,7 +46,7 @@ async function handler(m, { sock, args }) {
   const img = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!img) {
-    let txt = `╭──「 *HD ENHANCE\n`; 」
+    let txt = `╭──「 *HD ENHANCE\n」`;
     txt += `╰──────────❀\n`;
     txt += `│ ❏ Kirim/reply gambar dulu ya!\n`;
     txt += `│ ❏ Contoh: .remini (reply gambar)\n`;
@@ -75,7 +75,7 @@ async function handler(m, { sock, args }) {
 
     await m.react("🐣");
 
-    let caption = `╭──「 *HD ENHANCED\n`; 」
+    let caption = `╭──「 *HD ENHANCED\n」`;
     caption += `│ ❏ Scale: ${scale}x (${outW}x${outH})\n`;
     caption += `│ ❏ Size: ${sizeMB}MB\n`;
     caption += `│ ❏ Engine: Sharp Lanczos3 (Local)\n`;
@@ -105,7 +105,7 @@ async function handler(m, { sock, args }) {
   } catch (e) {
     console.error("[HD/Remini] Error:", e.message);
     await m.react("❌");
-    let txt = `╭──「 *ERROR\n`; 」
+    let txt = `╭──「 *ERROR\n」`;
     txt += `│ ❏ Gagal enhance gambar!\n`;
     txt += `│ ❏ ${e.message}\n`;
     txt += `╰──────────❀`;

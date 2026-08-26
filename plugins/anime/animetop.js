@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animetop",
+  alias: ["animetop"],
   aliases: ["animetop", "topanime", "animeranking", "animerank"],
   category: "anime",
   description: "Top 50 anime terbaik sepanjang masa (MyAnimeList ranking)",

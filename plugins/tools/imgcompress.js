@@ -8,7 +8,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "imgcompress",
-  alias: ["compressimg", "kecilinimg", "imgcompressor"],
+  alias: ["imgcompress", "compressimg", "kecilinimg", "imgcompressor"],
   category: "tools",
   description: "Kompres gambar (PNG/JPG/WebP) dengan kontrol kualitas",
   usage:

@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'listantilink',
-    alias: ['antilinklist', 'cekantilink'],
+    alias: ["listantilink", 'antilinklist', 'cekantilink'],
     category: 'group',
     description: 'Melihat daftar link yang diblokir',
     usage: '.listantilink',

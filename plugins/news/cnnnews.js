@@ -4,6 +4,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "cnnnews",
+  alias: ["cnnnews"],
   aliases: ["cnnnews", "cnnews", "cnnindonesia"],
   category: "news",
   description: "Berita terbaru CNN Indonesia (RSS scraping, no API key)",

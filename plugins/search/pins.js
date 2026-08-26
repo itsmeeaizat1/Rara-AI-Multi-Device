@@ -13,7 +13,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pins",
-  alias: ["pinsearch", "pinterestsearch"],
+  alias: ["pins", "pinsearch", "pinterestsearch"],
   category: "search",
   description: "Cari gambar di Pinterest (album)",
   usage: ".pins <query>",

@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 const pluginConfig = {
     name: 'benefitpartner',
-    alias: ['partnerbenefits', 'keuntunganpartner'],
+    alias: ["benefitpartner", 'partnerbenefits', 'keuntunganpartner'],
     category: 'info',
     description: 'Lihat keuntungan menjadi partner bot',
     usage: '.benefitpartner',

@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'resetrules',
-    alias: ['resetbotrules'],
+    alias: ["resetrules", 'resetbotrules'],
     category: 'owner',
     description: 'Reset rules bot ke default',
     usage: '.resetrules',

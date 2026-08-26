@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gpt5",
-  alias: ["gpt5nano", "gpt41"],
+  alias: ["gpt5", "gpt5nano", "gpt41"],
   category: "ai",
   description: "Chat dengan GPT-4.1 Nano via OverChat",
   usage: ".gpt5 <pertanyaan>",

@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoreactvn",
-  alias: ["arvn", "autovn", "vnreply"],
+  alias: ["autoreactvn", "arvn", "autovn", "vnreply"],
   category: "owner",
   description: "Auto reply pesan dengan voice note dari folder assets/vn",
   usage: ".autoreactvn on/off\n.autoreactvn set <trigger1,trigger2,...> (reply VN)\n.autoreactvn del <trigger>\n.autoreactvn list\n.autoreactvn jeda <detik>\n.autoreactvn jedagrup <detik>",

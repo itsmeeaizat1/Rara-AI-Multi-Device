@@ -19,7 +19,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tanyadokter",
-  alias: ["dokter", "konsultasi", "kesehatan", "dokterai", "tanyadok", "aikesehatan", "aidokter", "healthai"],
+  alias: ["tanyadokter", "dokter", "konsultasi", "kesehatan", "dokterai", "tanyadok", "aikesehatan", "aidokter", "healthai"],
   category: "ai",
   description: "Konsultasi kesehatan dengan AI Dokter (gejala, penyakit, gizi, obat)",
   usage: ".tanyadokter <pertanyaan>\n.tanyadokter reset — Reset sesi",
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
 
   if (!input) {
     const help =
-      `╭──「 *Konsultasi Dokter AI\n` + 」
+      `╭──「 *Konsultasi Dokter AI\n」` +
       `┊\n` +
       `│ ❏ Tanya dokter AI tentang kesehatan\n` +
       `│ ❏ Gejala, penyakit, gizi, obat, tips\n` +
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
     if (sessions.has(key)) {
       sessions.delete(key);
       return m.reply(
-        `╭──「 *Konsultasi Dokter AI\n` + 」
+        `╭──「 *Konsultasi Dokter AI\n」` +
         `┊\n` +
         `│ ❏ Sesi percakapan direset\n` +
         `│ ❏ Kirim pertanyaan baru untuk mulai\n` +
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
       );
     }
     return m.reply(
-      `╭──「 *Konsultasi Dokter AI\n` + 」
+      `╭──「 *Konsultasi Dokter AI\n」` +
       `┊\n` +
       `│ ❏ Tidak ada sesi aktif untuk direset\n` +
       `╰──────────❀`
@@ -147,7 +147,7 @@ async function handler(m, { sock }) {
     return m.reply(reply);
   } catch (error) {
     return m.reply(
-      `╭──「 *Dokter AI Error\n` + 」
+      `╭──「 *Dokter AI Error\n」` +
       `┊\n` +
       `│ ❏ *Error:* ${error.message || "Gagal menghubungi dokter AI"}\n` +
       `╰──────────❀\n\n` +

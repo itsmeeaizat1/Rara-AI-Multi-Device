@@ -8,7 +8,7 @@ import { fetchBuffer } from "../../src/lib/nova-utils.js";
 import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "cekfemboy",
-  alias: ["femboy"],
+  alias: ["cekfemboy", "femboy"],
   category: "cek",
   description: "Cek seberapa femboy kamu",
   usage: ".cekfemboy <nama>",

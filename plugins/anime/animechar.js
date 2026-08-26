@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animechar",
+  alias: ["animechar"],
   aliases: ["animechar", "karakteranime", "charinfo", "animecharinfo"],
   category: "anime",
   description: "Database karakter anime terkenal - profil, ability, trivia",

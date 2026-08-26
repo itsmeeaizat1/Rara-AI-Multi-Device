@@ -4,6 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "aidoc", alias: ["docai", "dokumenai", "summarizedoc"], category: "future",
+  alias: ["aidoc"],
   description: "AI rangkum dokumen/teks panjang", usage: ".aidoc (reply teks panjang)",
   example: ".aidoc", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 20, energi: 5, isEnabled: true,

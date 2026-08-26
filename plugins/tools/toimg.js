@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'toimg',
-    alias: ['toimage', 'stickertoimage', 'stimg'],
+    alias: ["toimg", 'toimage', 'stickertoimage', 'stimg'],
     category: 'tools',
     description: 'Mengubah sticker menjadi gambar',
     usage: '.toimg (reply/caption sticker)',

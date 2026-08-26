@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "hajat",
+  alias: ["hajat"],
   aliases: ["hajat", "doahajat", "sholathajat", "doakebaikan"],
   category: "islami",
   description: "Panduan sholat & doa hajat (mohon kebaikan dunia akhirat)",

@@ -5,7 +5,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "broadcast",
-  alias: ["bc", "broadcast", "kirimsemua", "announce"],
+  alias: ["broadcast", "bc", "broadcast", "kirimsemua", "announce"],
   category: "owner",
   description: "Broadcast pesan ke semua grup (owner only)",
   usage: ".broadcast <pesan>",

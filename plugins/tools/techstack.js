@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "techstack",
-  alias: ["whatcms", "stackdetect", "builtwith", "techdetect", "wappdetect"],
+  alias: ["techstack", "whatcms", "stackdetect", "builtwith", "techdetect", "wappdetect"],
   category: "tools",
   description: "Detect teknologi website (framework, CMS, CDN, analytics, JS lib)",
   usage: ".techstack <url>",

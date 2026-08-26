@@ -7,7 +7,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "yts",
-  alias: ["ytsearch", "youtubesearch"],
+  alias: ["yts", "ytsearch", "youtubesearch"],
   category: "search",
   description: "Mencari video di YouTube berdasarkan kata kunci dan menampilkan detail lengkap beserta thumbnail.",
   usage: ".yts <query>",

@@ -196,24 +196,24 @@ async function handleAntiRibut(m, sock, db) {
                 try {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
-                        text: '╭──「 *WARN LIMIT│ ❏\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: ⚔️ Keributan\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ 🔍 Terdeteksi: ' + matchesStr + '\n┃ ❌ Aksi: KICK OTOMATIS\n╰──────────❀\n_User dikeluarkan karena membuat keributan_', 」
+                        text: '╭──「 *WARN LIMIT│ ❏\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: ⚔️ Keributan\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ 🔍 Terdeteksi: ' + matchesStr + '\n┃ ❌ Aksi: KICK OTOMATIS\n╰──────────❀\n_User dikeluarkan karena membuat keributan_',
                         mentions: [m.sender]
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
-                        text: '╭──「 *WARN LIMIT│ ❏\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: ⚔️ Keributan\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ ⚠️ Aksi: Bot bukan admin\n╰──────────❀', 」
+                        text: '╭──「 *WARN LIMIT│ ❏\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: ⚔️ Keributan\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ ⚠️ Aksi: Bot bukan admin\n╰──────────❀',
                         mentions: [m.sender]
                     })
                 }
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
-                    text: '╭──「 *PERINGATAN MAX│ ❏\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: ⚔️ Keributan\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ 📌 Auto-kick: OFF\n╰──────────❀\n_Keributan terus tapi auto-kick dimatikan_', 」
+                    text: '╭──「 *PERINGATAN MAX│ ❏\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: ⚔️ Keributan\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ 📌 Auto-kick: OFF\n╰──────────❀\n_Keributan terus tapi auto-kick dimatikan_',
                     mentions: [m.sender]
                 })
             }
         } else {
             await sock.sendMessage(m.chat, {
-                text: '╭──「 *PERINGATAN│ ❏\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: ⚔️ Keributan\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ 🔍 Terdeteksi: ' + matchesStr + '\n╰──────────❀\n_Jaga suasana! ' + (maxWarn - currentWarn) + ' lagi = kick_', 」
+                text: '╭──「 *PERINGATAN│ ❏\n┃ 👤 User: @' + senderTag + '\n┃ 🏷️ Pelanggaran: ⚔️ Keributan\n┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n┃ 🔍 Terdeteksi: ' + matchesStr + '\n╰──────────❀\n_Jaga suasana! ' + (maxWarn - currentWarn) + ' lagi = kick_',
                 mentions: [m.sender]
             })
         }
@@ -241,7 +241,7 @@ async function handler(m, { sock }) {
         const del = groupData.ributDeleteMode || 'on'
         const warnCount = groupData.ributWarns ? Object.keys(groupData.ributWarns).length : 0
 
-        let txt = '╭──「 *ANTI KERIBUTAN│ ❏\n' 」
+        let txt = '╭──「 *ANTI KERIBUTAN│ ❏\n'
         txt += '┃\n'
         txt += '┃ ❏ Status: *' + status + '*\n'
         txt += '┃ ❏ Max Warn: *' + maxWarn + 'x*\n'
@@ -263,18 +263,18 @@ async function handler(m, { sock }) {
     if (sub === 'on') {
         db.setGroup(m.chat, { antiribut: 'on' })
         m.react('✅')
-        return m.reply(claraWrap("Antiribut", '╭──「 *ANTI RIBUT AKTIF│ ❏\n┃ Deteksi keributan diaktifkan\n┃ Sistem: Warn 3x lalu kick\n╰──────────❀')) 」
+        return m.reply(claraWrap("Antiribut", '╭──「 *ANTI RIBUT AKTIF│ ❏\n┃ Deteksi keributan diaktifkan\n┃ Sistem: Warn 3x lalu kick\n╰──────────❀'))
     }
     if (sub === 'off') {
         db.setGroup(m.chat, { antiribut: 'off' })
-        return m.reply(claraWrap("Antiribut", '╭──「 *ANTI RIBUT MATI│ ❏\n┃ Deteksi keributan dinonaktifkan\n╰──────────❀')) 」
+        return m.reply(claraWrap("Antiribut", '╭──「 *ANTI RIBUT MATI│ ❏\n┃ Deteksi keributan dinonaktifkan\n╰──────────❀'))
     }
     if (sub === 'warn') {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) return m.reply(claraWrap("Antiribut", '❌ Masukkan angka 1-10'))
         db.setGroup(m.chat, { ributMaxWarn: count })
         m.react('✅')
-        return m.reply('╭──「 *MAX WARN│ ❏\n┃ Max peringatan: *' + count + 'x*\n╰──────────❀') 」
+        return m.reply('╭──「 *MAX WARN│ ❏\n┃ Max peringatan: *' + count + 'x*\n╰──────────❀')
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
@@ -295,14 +295,14 @@ async function handler(m, { sock }) {
         if (updated.ributWarns?.[target]) delete updated.ributWarns[target]
         db.setGroup(m.chat, updated)
         m.react('✅')
-        return m.reply('╭──「 *WARN DIRESET│ ❏\n┃ 👤 User: @' + target.split('@')[0] + '\n┃ Warn Ribut: Direset\n╰──────────❀', { mentions: [target] }) 」
+        return m.reply('╭──「 *WARN DIRESET│ ❏\n┃ 👤 User: @' + target.split('@')[0] + '\n┃ Warn Ribut: Direset\n╰──────────❀', { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
         updated.ributWarns = {}
         db.setGroup(m.chat, updated)
         m.react('✅')
-        return m.reply(claraWrap("Antiribut", '╭──「 *SEMUA WARN DIRESET│ ❏\n╰──────────❀')) 」
+        return m.reply(claraWrap("Antiribut", '╭──「 *SEMUA WARN DIRESET│ ❏\n╰──────────❀'))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antiribut` untuk daftar command')
 }

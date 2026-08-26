@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-review",
-  alias: ["codereview", "reviewcode", "aireview"],
+  alias: ["ai-review", "codereview", "reviewcode", "aireview"],
   category: "ai",
   description: "Review code dengan AI",
   usage: ".ai-review <code> | reply code",

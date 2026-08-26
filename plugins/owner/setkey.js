@@ -9,7 +9,7 @@ import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setkey",
-  alias: ["apikeys", "keyconfig", "setapikey", "apikey"],
+  alias: ["setkey", "apikeys", "keyconfig", "setapikey", "apikey"],
   category: "owner",
   description: "Set & lihat semua API key dari 1 tempat",
   usage: ".setkey — Lihat semua status\n.setkey <nama> <value> — Set key\n.setkey <nama> — Hapus key\n.setkey list — Lihat semua",

@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "domaincheck",
-  alias: ["domainavail", "cekdomain", "domainstatus", "domaininfo"],
+  alias: ["domaincheck", "domainavail", "cekdomain", "domainstatus", "domaininfo"],
   category: "tools",
   description: "Cek ketersediaan domain (com, net, id, org, io, dll) via RDAP",
   usage: ".domaincheck <domain>",

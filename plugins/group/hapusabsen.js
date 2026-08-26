@@ -2,7 +2,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'hapusabsen',
-    alias: ['deleteabsen', 'tutupabsen', 'closeabsen', 'resetabsen'],
+    alias: ["hapusabsen", 'deleteabsen', 'tutupabsen', 'closeabsen', 'resetabsen'],
     category: 'group',
     description: 'Hapus/tutup sesi absen (admin only)',
     usage: '.hapusabsen',

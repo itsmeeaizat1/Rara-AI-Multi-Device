@@ -36,7 +36,7 @@ const toSC = (s) => String(s || "").replace(/[a-z]/g, c => SC_MAP[c] || c);
 
 const pluginConfig = {
   name: "multi-ai",
-  alias: ["multiai", "aimulti", "aichatv2", "aimodels", "routerai", "airouter"],
+  alias: ["multi-ai", "multiai", "aimulti", "aichatv2", "aimodels", "routerai", "airouter"],
   category: "ai",
   description: "Chat dengan berbagai AI — pilih provider & model kayak OpenRouter",
   usage: ".multi-ai <provider> [model] <pesan>",
@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
         idx++;
       }
 
-      const text = `╭──「 *Mᴜʟᴛɪ AI 」
+      const text = `╭──「 *Mᴜʟᴛɪ AI
 ┊
 │ ❏ *Router AI — Pilih Provider & Model*
   ┊
@@ -100,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
     const providers = getAllProviders();
     const provider = providers[providerArg];
     if (!provider) {
-      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」
+      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ*
 ┊
 │ ❏ Provider *${providerArg}* tidak ditemukan
 │ ❏ Ketik *${prefix}multi-ai list* untuk lihat daftar
@@ -126,7 +126,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!userMessage) {
-      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」
+      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ*
 ┊
 │ ❏ *Provider:* ${toSC(provider.name || providerArg)}
 │ ❏ *Model:* ${model}
@@ -162,7 +162,7 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     if (!reply || reply.trim() === "") {
-      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」
+      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ*
 ┊
 │ ❏ *Status:* Gagal
 │ ❏ *Alasan:* AI tidak memberikan respons
@@ -177,7 +177,7 @@ async function handler(m, { sock, config: botConfig }) {
     const trimmedMsg = userMessage.length > 200 ? userMessage.slice(0, 200) + "..." : userMessage;
     const trimmedReply = reply.length > 3000 ? reply.slice(0, 3000) + "..." : reply;
 
-    const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ 」
+    const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ
 ┊
 │ ❏ *Provider:* ${toSC(provider.name || providerArg)}
 │ ❏ *Model:* ${model}
@@ -195,7 +195,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error('[multi-ai.js]:', error.message);
     const prefix = botConfig.command?.prefix || ".";
-    const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」
+    const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ*
 ┊
 │ ❏ *Status:* Gagal
 │ ❏ *Alasan:* ${error.message}

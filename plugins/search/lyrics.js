@@ -17,7 +17,7 @@ async function fetchLyrics(judul) {
 
 const pluginConfig = {
     name: 'lirik',
-    alias: ['lyric', 'lyrics', 'liriklagu'],
+    alias: ["lirik", 'lyric', 'lyrics', 'liriklagu'],
     category: 'search',
     description: 'Cari lirik lagu',
     usage: '.lirik <query>',

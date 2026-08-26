@@ -7,7 +7,7 @@ import {  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "jadwalbola",
-  alias: ["bola", "football", "soccer", "jadwalsepakbola"],
+  alias: ["jadwalbola", "bola", "football", "soccer", "jadwalsepakbola"],
   category: "info",
   description: "Lihat jadwal pertandingan sepak bola",
   usage: ".jadwalbola [liga]",

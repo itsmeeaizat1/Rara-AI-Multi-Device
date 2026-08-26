@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'clearsessions',
-    alias: ['clearsession', 'delsession', 'delsessions'],
+    alias: ["clearsessions", 'clearsession', 'delsession', 'delsessions'],
     category: 'owner',
     description: 'Menghapus semua session di storage/sessions/',
     usage: '.clearsessions',
@@ -56,7 +56,7 @@ async function handler(m, { sock })  {
         }
         
         await m.react('✅')
-        await m.reply(claraWrap("Clearsessions", `╭┈┈⬡「 🗑️ *Clear sEssions* 」
+        await m.reply(claraWrap("Clearsessions", `╭┈┈⬡「 🗑️ *Clear sEssions*
 ┃
 ┃ ㊗ Deleted: *${deleted}* file
 ┃ ㊗ sKipped: *${skipped}* file

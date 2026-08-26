@@ -27,7 +27,7 @@ function getRandomRenungan() {
 
 export const config = {
   name: "renungan",
-  alias: ["quotesrenungan"],
+  alias: ["renungan", "quotesrenungan"],
   category: "fun",
   description: "Random gambar renungan",
   usage: ".renungan",
@@ -51,7 +51,7 @@ export async function handler(m, { sock }) {
     }
 
     if (!fetchBuffer) {
-      await m.reply(`╭──「 **RENUNGAN*\n\n${imgUrl}\n\n╰──────────❀`); 」
+      await m.reply(`╭──「 *RENUNGAN*\n\n${imgUrl}\n\n╰──────────❀`);
       return;
     }
 
@@ -59,11 +59,11 @@ export async function handler(m, { sock }) {
     try {
       buffer = await fetchBuffer(imgUrl);
     } catch {
-      await m.reply(`╭──「 **RENUNGAN*\n\n${imgUrl}\n\n╰──────────❀`); 」
+      await m.reply(`╭──「 *RENUNGAN*\n\n${imgUrl}\n\n╰──────────❀`);
       return;
     }
 
-    let caption = `╭──「 **RENUNGAN*\n\n`; 」
+    let caption = `╭──「 *RENUNGAN*\n\n」`;
     caption += `_Semoga renungan hari ini bermanfaat_\n\n`;
     caption += `╰──────────❀`;
 

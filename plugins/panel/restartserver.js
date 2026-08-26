@@ -5,7 +5,7 @@ import axios from 'axios'
 
 const pluginConfig = {
     name: 'restartserver',
-    alias: ['restartpanel', 'restartsrv', 'rebootserver'],
+    alias: ["restartserver", 'restartpanel', 'restartsrv', 'rebootserver'],
     category: 'panel',
     description: 'Restart server panel via Client API (ptlc_)',
     usage: '.restartserver atau .restartserver <serverid>',

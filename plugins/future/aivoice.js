@@ -5,6 +5,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "aivoicefuture", alias: ["aivoice2", "aivoicefuture", "ttsaifuture"], category: "future",
+  alias: ["aivoicefuture"],
   description: "Text ke suara realistik multi-bahasa", usage: ".aivoice <text>",
   example: ".aivoice halo semuanya", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,

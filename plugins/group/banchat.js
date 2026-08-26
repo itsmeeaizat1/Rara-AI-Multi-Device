@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'banchat',
-    alias: ['bangroup', 'bangrup', 'unbanchat', 'unbangroup'],
+    alias: ["banchat", 'bangroup', 'bangrup', 'unbanchat', 'unbangroup'],
     category: 'group',
     description: 'Ban grup dari penggunaan bot (hanya owner yang bisa akses)',
     usage: '.banchat',

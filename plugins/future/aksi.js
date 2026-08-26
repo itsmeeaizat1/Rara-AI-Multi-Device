@@ -3,7 +3,7 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
   name: "aksi",
-  alias: ["aksistory", "ceritaaksi", "actionstory"],
+  alias: ["aksi", "aksistory", "ceritaaksi", "actionstory"],
   category: "future",
   description: "AI Action generator - bikin cerita aksi ala film laga tentang member grup",
   usage: ".aksi @user1 @user2",

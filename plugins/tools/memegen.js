@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "memegenapi",
-  alias: ["mememaker", "buameme", "membuatin", "memeimgflip"],
+  alias: ["memegenapi", "mememaker", "buameme", "membuatin", "memeimgflip"],
   category: "tools",
   description: "Meme Generator — 100+ template meme via Imgflip, gratis tanpa login",
   usage: ".memegen list — Lihat template\n.memegen <id> | text1 | text2 — Buat meme\n.memegen random | text1 | text2 — Random template",

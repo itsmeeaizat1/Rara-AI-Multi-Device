@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'demote',
-    alias: ['unadmin', 'turunkan'],
+    alias: ["demote", 'unadmin', 'turunkan'],
     category: 'group',
     description: 'Turunkan admin menjadi member biasa',
     usage: '.demote @user',

@@ -24,7 +24,7 @@ function tempPath(ext) {
 // ==================== Plugin Config ====================
 const pluginConfig = {
   name: "aianchor",
-  alias: ["anchor", "newsanchor", "ainews", "beritaai"],
+  alias: ["aianchor", "anchor", "newsanchor", "ainews", "beritaai"],
   category: "future",
   description: "AI News Anchor - Berita dengan suara natural realistis",
   usage: ".aianchor <command>",

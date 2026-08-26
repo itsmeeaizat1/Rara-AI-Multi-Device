@@ -4,6 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "aiexpense", alias: ["expense", "pengeluaran", "catatpengeluaran"], category: "future",
+  alias: ["aiexpense"],
   description: "Catat pengeluaran dengan bahasa natural", usage: ".aiexpense <deskripsi>",
   example: ".aiexpense beli kopi 15rb", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 2, energi: 0, isEnabled: true,

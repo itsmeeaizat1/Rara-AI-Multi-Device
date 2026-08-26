@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "lelang",
-  alias: ["lelanggrp", "auctiongrp"],
+  alias: ["lelang", "lelanggrp", "auctiongrp"],
   category: "group",
   description: "Sistem lelang di grup - buat, bid, tutup lelang",
   usage: ".lelang <create/bid/list/info/close/cancel/history>",

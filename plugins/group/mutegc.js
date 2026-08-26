@@ -5,7 +5,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 
 const pluginConfig = {
   name: "mutegc",
-  alias: ["mutegc3", "mutegcon", "mutegrp3"],
+  alias: ["mutegc", "mutegc3", "mutegcon", "mutegrp3"],
   category: "group",
   description: "Blokir command bot untuk member, hanya admin/owner yang bisa pakai",
   usage: ".mutegc",

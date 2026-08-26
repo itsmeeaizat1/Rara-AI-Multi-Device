@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'acc',
-    alias: ['accall', 'joinrequest', 'reqjoin'],
+    alias: ["acc", 'accall', 'joinrequest', 'reqjoin'],
     category: 'group',
     description: 'Kelola permintaan masuk grup (accept/reject)',
     usage: '.acc <list|approve|reject> [all|nomor]',

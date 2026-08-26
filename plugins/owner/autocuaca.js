@@ -19,7 +19,7 @@ import {
 
 const pluginConfig = {
   name: "autocuacav2",
-  alias: ["autocuaca", "cuacaauto", "cuacaotomatis"],
+  alias: ["autocuacav2", "autocuaca", "cuacaauto", "cuacaotomatis"],
   category: "owner",
   description: "Broadcast cuaca rinci BMKG-style otomatis ke grup/saluran",
   usage: ".autocuacav2 <on/off/add/remove/lokasi/jadwal/status/test>",
@@ -170,7 +170,7 @@ async function handler(m, { sock }) {
 
       if (subAction === "list" || !subAction) {
         const status = getCuacaStatus();
-        let txt = "╭──「 *DAFTAR LOKASI CUACA│ ❏\n"; 」
+        let txt = "╭──「 *DAFTAR LOKASI CUACA│ ❏\n";
         txt += "╰──────────❀\n\n";
         for (let i = 0; i < status.locations.length; i++) {
           const loc = status.locations[i];
@@ -199,7 +199,7 @@ async function handler(m, { sock }) {
     // STATUS
     if (action === "status" || action === "list" || !action) {
       const status = getCuacaStatus();
-      let txt = "╭──「 *AUTO CUACA BMKG STYLE│ ❏\n"; 」
+      let txt = "╭──「 *AUTO CUACA BMKG STYLE│ ❏\n";
       txt += "╰──────────❀\n\n";
       txt += "Status: *" + (status.enabled ? "ON" : "OFF") + "*\n";
       txt += "Jadwal: " + formatSchedule(status.schedules) + " WIB\n";

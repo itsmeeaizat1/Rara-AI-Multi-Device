@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aimentor",
-  alias: ["mentor", "mentormatch", "aimentor"],
+  alias: ["aimentor", "mentor", "mentormatch", "aimentor"],
   category: "future",
   description: "Sistem mentor-mentee match di grup",
   usage: ".aimentor <command>",

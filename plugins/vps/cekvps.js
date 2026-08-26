@@ -7,7 +7,7 @@ import te from '../../src/lib/nova-error.js'
 
 const pluginConfig = {
   name: ["cekvps", "cekdroplet", "vpsstatus", "infovps"],
-  alias: [],
+  alias: ["cekvps", "cekdroplet", "vpsstatus", "infovps"],
   category: "vps",
   description: "Cek detail VPS DigitalOcean",
   usage: ".cekvps <id>",
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
     const ipv6 = droplet.networks?.v6?.[0]?.ip_address || "-";
     const status = droplet.status === "active" ? "Active" : droplet.status;
 
-    let txt = `╭──「 *Detail VPS 」
+    let txt = `╭──「 *Detail VPS
 ┊
 │ ❏ *ID:* ${droplet.id}
 │ ❏ *ɴᴀᴍᴇ:* ${droplet.name}
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
 │ ❏ *IPv6:* ${ipv6}
 ╰──────────❀
 
-╭──「 *Spec 」
+╭──「 *Spec
 ┊
 │ ❏ *ʀᴀᴍ:* ${droplet.memory} MB
 │ ❏ *ᴄᴘᴜ:* ${droplet.vcpus} vCPU

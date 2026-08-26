@@ -7,7 +7,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ganticode",
-  alias: ["replaceplugin", "updateplugin", "gantiplugin"],
+  alias: ["ganticode", "replaceplugin", "updateplugin", "gantiplugin"],
   category: "owner",
   description: "Ganti code plugin yang sudah ada",
   usage: ".ganticode [namafile] [folder]",

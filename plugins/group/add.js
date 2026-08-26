@@ -3,7 +3,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'add',
-    alias: ['addmember', 'invite'],
+    alias: ["add", 'addmember', 'invite'],
     category: 'group',
     description: 'Menambahkan member ke grup (support multiple)',
     usage: '.add <nomor1> [nomor2] [nomor3]... [link_grup]',

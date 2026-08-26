@@ -4,7 +4,7 @@ import { getAllPlugins, getPluginInfo } from "../../src/lib/nova-plugins.js";
 
 const pluginConfig = {
   name: "aihelp",
-  alias: ["helpai", "bantuanai", "tanyaaihelp"],
+  alias: ["aihelp", "helpai", "bantuanai", "tanyaaihelp"],
   category: "ai",
   description: "Bantuan AI untuk menemukan command yang tersedia",
   usage: ".aihelp <keyword>",
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
     const keyword = args.join(" ").toLowerCase().trim();
 
     if (!keyword) {
-      await m.reply(`╭──「 *Aɪ Hᴇʟᴘ* 」
+      await m.reply(`╭──「 *Aɪ Hᴇʟᴘ*
 
 Ketik *${prefix}aihelp <keyword>* untuk cari command.
 
@@ -58,7 +58,7 @@ ${prefix}aihelp group
     }
 
     if (matches.length === 0) {
-      await m.reply(`╭──「 *Aɪ Hᴇʟᴘ* 」
+      await m.reply(`╭──「 *Aɪ Hᴇʟᴘ*
 
 Tidak ada command untuk "${keyword}".
 
@@ -74,7 +74,7 @@ Tidak ada command untuk "${keyword}".
       cmdLines += `${end}  ➶ ${prefix}${matches[i].name}${desc}\n`;
     }
 
-    const text = `╭──「 *Aɪ Hᴇʟᴘ 」
+    const text = `╭──「 *Aɪ Hᴇʟᴘ
 ┊
 │ ❏ *Keyword:* ${keyword}
 │ ❏ *Ditemukan:* ${matches.length} command

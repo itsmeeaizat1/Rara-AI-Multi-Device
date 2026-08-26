@@ -7,7 +7,7 @@ import FormData from 'form-data'
 
 const pluginConfig = {
     name: 'addlist',
-    alias: ['addinfo'],
+    alias: ["addlist", 'addinfo'],
     category: 'store',
     description: '➕ Tambah informasi toko baru (hanya di private chat)',
     usage: '.addlist <nama>|<isi>',

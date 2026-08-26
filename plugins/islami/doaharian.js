@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "doaharian",
+  alias: ["doaharian"],
   aliases: ["doaharian", "doasehari", "doaharapan", "doahariini"],
   category: "islami",
   description: "Kumpulan doa sehari-hari (masuk rumah, makan, tidur, keluar rumah, dll)",

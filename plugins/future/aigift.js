@@ -4,6 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "aigift", alias: ["giftai", "rekomendasikado", "kadoai"], category: "future",
+  alias: ["aigift"],
   description: "AI rekomendasi kado", usage: ".aigift <info orang>",
   example: ".aigift cowok 20th suka game", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,

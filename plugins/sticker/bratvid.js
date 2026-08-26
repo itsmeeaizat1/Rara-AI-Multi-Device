@@ -10,7 +10,7 @@ import os from 'os'
 
 const pluginConfig = {
     name: 'bratvid',
-    alias: ['bratgif', 'bratvideo'],
+    alias: ["bratvid", 'bratgif', 'bratvideo'],
     category: 'sticker',
     description: 'Membuat sticker brat animated',
     usage: '.bratvid <text>',

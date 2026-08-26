@@ -4,7 +4,7 @@ import { getCommandsByCategory } from "../../src/lib/nova-plugins.js";
 
 const pluginConfig = {
   name: "fun",
-  alias: ["funmenu", "menufun"],
+  alias: ["fun", "funmenu", "menufun"],
   category: "main",
   description: "List command kategori fun",
   usage: ".fun",
@@ -32,7 +32,7 @@ async function handler(m, { sock, config: botConfig }) {
       cmdLines += `${end}  ➶ ${prefix}${funCmds[i]}\n`;
     }
 
-    const text = `╭──「 *Fᴜɴ 」
+    const text = `╭──「 *Fᴜɴ
 ┊
 ₊˚ʚ ᗢ₊˚✧ ﾟ. 🎮 Fᴜɴ ｡ﾟ
 ┊${cmdLines}₊˚ʚ ᗢ₊˚✧ ﾟ.

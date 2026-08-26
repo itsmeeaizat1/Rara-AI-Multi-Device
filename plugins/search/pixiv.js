@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "pixiv",
-  alias: ["pixivsearch", "caripixiv"],
+  alias: ["pixiv", "pixivsearch", "caripixiv"],
   category: "search",
   description: "Cari artwork di Pixiv",
   usage: ".pixiv <query>",

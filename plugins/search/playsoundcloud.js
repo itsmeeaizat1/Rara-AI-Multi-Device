@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "playsoundcloud",
-  alias: ["playsc"],
+  alias: ["playsoundcloud", "playsc"],
   category: "search",
   description: "Cari dan download lagu dari SoundCloud",
   usage: ".playsc judul",

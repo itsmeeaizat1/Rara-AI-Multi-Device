@@ -5,7 +5,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "autojoingc",
-  alias: ["autojoin", "autojoingroup"],
+  alias: ["autojoingc", "autojoin", "autojoingroup"],
   category: "owner",
   description: "Auto join grup dari link yang terdeteksi di chat",
   usage: ".autojoingc on/off",

@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "webtoapk",
-  alias: ["webtonative", "web2apk", "towebapp", "buatapk", "webtoapp"],
+  alias: ["webtoapk", "webtonative", "web2apk", "towebapp", "buatapk", "webtoapp"],
   category: "tools",
   description: "WebToNative — convert website ke native Android/iOS app gratis tanpa API key",
   usage: ".webtoapk <url> <nama_app>\n.webtoapk <url> <nama_app> <email>",

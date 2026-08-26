@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'stopschedule',
-    alias: ['stopscheduler', 'schedstop', 'pauseschedule'],
+    alias: ["stopschedule", 'stopscheduler', 'schedstop', 'pauseschedule'],
     category: 'owner',
     description: 'Menghentikan scheduler tertentu atau semua',
     usage: '.stopschedule <nama|all>',

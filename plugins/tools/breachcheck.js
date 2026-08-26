@@ -4,7 +4,7 @@ import crypto from "crypto";
 
 const pluginConfig = {
   name: "breachcheck",
-  alias: ["cekbocor", "passcheck", "passwordleak", "cekbocorpassword", "hibp"],
+  alias: ["breachcheck", "cekbocor", "passcheck", "passwordleak", "cekbocorpassword", "hibp"],
   category: "tools",
   description: "Cek apakah password/email pernah bocor di data breach (HIBP API + lokal)",
   usage: ".breachcheck pass <password> | .breachcheck email <email>",

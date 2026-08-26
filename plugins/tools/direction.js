@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "direction", alias: ["rute", "arah", "navigate"], category: "tools",
+  alias: ["direction"],
   description: "Rute & arah GPS", usage: ".direction <dari> -> <ke>",
   example: ".direction Jakarta -> Bandung", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,

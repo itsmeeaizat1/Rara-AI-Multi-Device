@@ -4,6 +4,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "detiknews",
+  alias: ["detiknews"],
   aliases: ["detiknews", "detik", "detikcom"],
   category: "news",
   description: "Berita terbaru Detik.com (RSS scraping, no API key)",

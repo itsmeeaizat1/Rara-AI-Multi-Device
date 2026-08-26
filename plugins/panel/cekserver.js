@@ -5,7 +5,7 @@ import axios from 'axios'
 
 const pluginConfig = {
     name: 'cekserver',
-    alias: ['serverstatus', 'cekpanel', 'serverinfo2'],
+    alias: ["cekserver", 'serverstatus', 'cekpanel', 'serverinfo2'],
     category: 'panel',
     description: 'Cek status & resource usage server panel via Client API',
     usage: '.cekserver atau .cekserver <serverid>',

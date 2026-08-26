@@ -10,7 +10,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakestory4",
-  alias: ["fstory4", "igstory4", "albumstory"],
+  alias: ["fakestory4", "fstory4", "igstory4", "albumstory"],
   category: "canvas",
   description: "Fake Instagram story dengan 2 gambar berbeda",
   usage: ".fakestory4 <nama>",

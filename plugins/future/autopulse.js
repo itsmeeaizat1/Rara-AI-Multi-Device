@@ -6,7 +6,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "autopulse",
-  alias: ["pulse", "grouppulse", "healthgrup"],
+  alias: ["autopulse", "pulse", "grouppulse", "healthgrup"],
   category: "future",
   description: "Group Health Monitor - Lacak aktivitas grup & auto-report ke saluran",
   usage: ".autopulse <command>",

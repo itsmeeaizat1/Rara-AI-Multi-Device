@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
     }
     
     if (users.length === 0) {
-        return m.reply(`╭──「 *Leaderboard 」
+        return m.reply(`╭──「 *Leaderboard
 ┊
 │ ❏ Belum ada data user terdaftar
 ╰──────────❀`)
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
             maxEnergiUser.jid.includes('@') ? maxEnergiUser.jid : maxEnergiUser.jid + "@s.whatsapp.net"
         ]
         
-        const overviewText = `╭──「 *Leaderboard 」
+        const overviewText = `╭──「 *Leaderboard
 ┊
 │ ❏ Total User: ${formatNumber(users.length)}
 │ ❏ Koin Teratas: ${formatNumber(maxBalUser.koin)} (@${maxBalUser.jid.split('@')[0]})
@@ -168,9 +168,9 @@ async function handler(m, { sock }) {
     const top10 = users.slice(0, 10)
     const totalField = users.reduce((sum, u) => sum + (u[field] || 0), 0)
     
-    let text = `╭──「 *${title}\n┊\n` 」
+    let text = `╭──「 *${title}\n┊\n」`
     
-    text += `╭──「 *Ranking\n┊\n` 」
+    text += `╭──「 *Ranking\n┊\n」`
     
     const mentions = []
     

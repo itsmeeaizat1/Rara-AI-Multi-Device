@@ -4,7 +4,7 @@ import config from '../../config.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'benefitpremium',
-    alias: ['premiumbenefits', 'premiumfitur', 'benefitprem'],
+    alias: ["benefitpremium", 'premiumbenefits', 'premiumfitur', 'benefitprem'],
     category: 'main',
     description: 'Lihat penjelasan dan daftar fitur khusus Premium',
     usage: '.benefitpremium',

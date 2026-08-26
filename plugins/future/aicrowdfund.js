@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aicrowdfund",
-  alias: ["crowdfund", "patunganal", "danabareng"],
+  alias: ["aicrowdfund", "crowdfund", "patunganal", "danabareng"],
   category: "future",
   description: "Crowdfund grup - fundraising transparan",
   usage: ".crowdfund <command>",

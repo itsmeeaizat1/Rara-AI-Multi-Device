@@ -21,7 +21,7 @@ import {
  */
 const pluginConfig = {
   name: "schedule",
-  alias: ["schedule2", "jadwal2", "scheduleowner"],
+  alias: ["schedule", "schedule2", "jadwal2", "scheduleowner"],
   category: "owner",
   description: "Bikin reminder atau jadwal bebas dengan text custom",
   usage:

@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "anticall",
-  alias: ["antitelpon", "antitelp", "rejectcall"],
+  alias: ["anticall", "antitelpon", "antitelp", "rejectcall"],
   category: "owner",
   description: "Auto tolak panggilan masuk",
   usage: ".anticall on/off",

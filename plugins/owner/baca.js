@@ -2,7 +2,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
   name: ["baca", "read", "markread"],
-  alias: [],
+  alias: ["baca", "read", "markread"],
   category: "owner",
   description: "Tandai pesan sebagai sudah dibaca",
   usage: ".baca",

@@ -9,7 +9,7 @@ import {
 
 const pluginConfig = {
   name: "cintainfo",
-  alias: ["coupleinfo", "rpgcintainfo", "coupledash"],
+  alias: ["cintainfo", "coupleinfo", "rpgcintainfo", "coupledash"],
   category: "rpg",
   description: "Dashboard hubungan RPG couple",
   usage: ".cintainfo atau .cintainfo @tag",
@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     const name = rpg.name || targetJid.split("@")[0];
     const now = Date.now();
 
-    let msg = `╭──「 **ᴄɪɴᴛᴀ ɪɴғᴏ*\n\n`; 」
+    let msg = `╭──「 *ᴄɪɴᴛᴀ ɪɴғᴏ*\n\n」`;
     msg += `  ┊ ➶ 👤 Nama: *${name}*\n`;
     msg += `  ┊ ➶ ⭐ Level: *${rpg.level || 1}*\n`;
 

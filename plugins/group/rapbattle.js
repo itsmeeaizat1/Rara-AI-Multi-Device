@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rapbattle",
-  alias: ["rap", "rapwar", "battlewrap"],
+  alias: ["rapbattle", "rap", "rapwar", "battlewrap"],
   category: "group",
   description: "Rap battle grup — tiap pemain kirim baris rap, grup vote paling hot",
   usage: ".rapbattle start @lawan | .rapbattle <baris rap> | .rapbattle vote @user | .rapbattle result | .rapbattle stop",

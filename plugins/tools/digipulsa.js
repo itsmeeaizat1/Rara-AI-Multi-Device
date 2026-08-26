@@ -76,7 +76,7 @@ function calcPrice(basePrice, markup) {
 
 const pluginConfig = {
   name: ["digipulsa", "dg", "pulsa"],
-  alias: ["digiflazz", "belipulsa"],
+  alias: ["digipulsa", "dg", "pulsa", "digiflazz", "belipulsa"],
   category: "tools",
   description: "Beli pulsa, paket data, token PLN, topup game via DigiFlazz",
   usage: ".dg\n.dg setkey <username>:<apiKey>\n.dg saldo\n.dg kategori\n.dg cari <keyword>\n.dg beli <sku_code> <nomor>\n.dg bayar <token>\n.dg cek <ref_id>\n.dg setmarkup <persen>\n.dg list",

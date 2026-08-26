@@ -4,6 +4,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "kisahnabi",
+  alias: ["kisahnabi"],
   aliases: ["kisahnabi", "nabi", "storynabi", "kisahrasul"],
   category: "islami",
   description: "Kisah 25 Nabi & Rasul (API gratis kisahnabi.vercel.app)",

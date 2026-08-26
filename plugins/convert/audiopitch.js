@@ -7,6 +7,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "audiopitch",
+  alias: ["audiopitch"],
   aliases: ["audiopitch", "pitchshift", "audionada", "ubahpitch"],
   category: "convert",
   description: "Pitch shift custom - naik/turun nada semitone bebas",

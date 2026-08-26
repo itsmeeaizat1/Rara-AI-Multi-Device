@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "addstok",
-  alias: ["addstock", "importstok", "importstock"],
+  alias: ["addstok", "addstock", "importstok", "importstock"],
   category: "store",
   description: "📦 Tambah stok item ke produk (hanya di private chat)",
   usage:

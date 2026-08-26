@@ -6,7 +6,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 
 const pluginConfig = {
     name: 'jadibot',
-    alias: ['jadibotqr', 'becomebot', 'bot'],
+    alias: ["jadibot", 'jadibotqr', 'becomebot', 'bot'],
     category: 'main',
     description: 'Jadikan nomor kamu menjadi bot (Pairing Code / QR)',
     usage: '.jadibot atau .jadibot qr',

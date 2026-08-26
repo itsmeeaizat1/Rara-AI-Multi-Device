@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bingo",
+  alias: ["bingo"],
   aliases: ["bingo", "groupbingo"],
   category: "group",
   description: "Game Bingo real-time di grup",

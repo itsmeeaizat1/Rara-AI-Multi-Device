@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "mengaji",
+  alias: ["mengaji"],
   aliases: ["mengaji", "belajarquran", "tajwid", "tadarus"],
   category: "islami",
   description: "Belajar mengaji - dasar tajwid, huruf hijaiyah, hukum bacaan",

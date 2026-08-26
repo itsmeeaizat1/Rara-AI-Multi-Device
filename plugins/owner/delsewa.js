@@ -4,7 +4,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "delsewa",
-  alias: ["sewadel", "hapussewa", "removesewa"],
+  alias: ["delsewa", "sewadel", "hapussewa", "removesewa"],
   category: "owner",
   description: "Hapus grup dari whitelist sewa",
   usage: ".delsewa <link/id grup>",

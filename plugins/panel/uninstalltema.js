@@ -4,7 +4,7 @@ import { Client } from 'ssh2'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: ['uinstalltema', 'uninstalltema', 'removetema', 'hapustema'],
-    alias: [],
+    alias: ["uinstalltema", "uninstalltema", "removetema", "hapustema"],
     category: 'panel',
     description: 'Uninstall tema Pterodactyl via SSH',
     usage: '.uinstalltema <ip>|<password>',
@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (!text) {
-        return m.reply( `╭┈┈⬡「 🗑️ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ* 」
+        return m.reply( `╭┈┈⬡「 🗑️ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ*
 ┃ ㊗ Usage: \`${m.prefix}uinstalltema <ip>|<password>\`
 ╰┈┈⬡
 
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
             stream.on('close', async () => {
                 m.react('✅')
                 await m.react("🐣");
-                await m.reply(claraWrap("root", `╭┈┈⬡「 ✅ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ* 」
+                await m.reply(claraWrap("root", `╭┈┈⬡「 ✅ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ*
 ┃ ㊗ sTatus: *ʙᴇʀʜᴀꜱɪʟ*
 ┃ ㊗ Ip: ${ipvps}
 ╰┈┈⬡

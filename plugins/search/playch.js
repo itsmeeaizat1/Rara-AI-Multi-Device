@@ -15,7 +15,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const run = promisify(exec);
 const pluginConfig = {
   name: "playch",
-  alias: ["pch", "playsaluran"],
+  alias: ["playch", "pch", "playsaluran"],
   category: "search",
   description: "Putar musik ke saluran (convert opus)",
   usage: ".playch <query> atau .playch --idch <id> <query>",

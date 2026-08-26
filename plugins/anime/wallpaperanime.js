@@ -20,7 +20,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wallpaperanime",
-  alias: ["wpanime", "animewp", "awall"],
+  alias: ["wallpaperanime", "wpanime", "animewp", "awall"],
   category: "anime",
   description: "Unduh wallpaper anime HD/4K (Wallhaven + Konachan)",
   usage: ".wallpaperanime <karakter>\n.wallpaperanime random\n.wallpaperanime <karakter> hd\n.wallpaperanime <karakter> 4k\n.wallpaperanime <karakter> mobile",

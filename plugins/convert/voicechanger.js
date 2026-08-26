@@ -8,6 +8,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "voicechanger",
+  alias: ["voicechanger"],
   aliases: ["voicechanger", "vc", "ubahsuara", "gantisuara", "voicechange"],
   category: "convert",
   description: "Voice changer 48 model (25 local ffmpeg + 23 anime RVC Genshin Impact API)",

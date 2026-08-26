@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'onlythisgrup',
-    alias: ['onlythisgroup', 'lockgrup', 'lockgroup'],
+    alias: ["onlythisgrup", 'onlythisgroup', 'lockgrup', 'lockgroup'],
     category: 'owner',
     description: 'Bot hanya aktif di grup ini saja',
     usage: '.onlythisgrup',

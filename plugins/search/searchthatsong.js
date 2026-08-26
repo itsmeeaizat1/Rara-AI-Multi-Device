@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "searchthatsong",
-  alias: ["sts", "carilagu"],
+  alias: ["searchthatsong", "sts", "carilagu"],
   category: "search",
   description: "Mencari detail sebuah lagu dari lirik atau potongan kata",
   usage: ".searchthatsong <potongan lirik>",

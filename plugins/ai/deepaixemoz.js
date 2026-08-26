@@ -10,7 +10,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "deepaixemoz",
-  alias: ["deepaichatxemoz", "aicxemoz"],
+  alias: ["deepaixemoz", "deepaichatxemoz", "aicxemoz"],
   category: "ai",
   description: "AI Chat powered by DeepAI (via API xemoz)",
   usage: ".deepaixemoz <pesan>\n.deepaixemoz reset — Reset sesi percakapan",

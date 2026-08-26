@@ -4,7 +4,7 @@ import { calculateLevel, getRole, addExpWithLevelCheck } from '../../src/lib/nov
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addlevel',
-    alias: ['tambahlevel', 'givelevel', 'addlvl'],
+    alias: ["addlevel", 'tambahlevel', 'givelevel', 'addlvl'],
     category: 'owner',
     description: 'Tambah level user (via exp)',
     usage: '.addlevel <jumlah> @user',

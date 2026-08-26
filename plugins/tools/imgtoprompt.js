@@ -11,7 +11,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'imgtoprompt',
-    alias: ['img2prompt', 'imagetoprompt', 'i2p'],
+    alias: ["imgtoprompt", 'img2prompt', 'imagetoprompt', 'i2p'],
     category: 'tools',
     description: 'Mengubah gambar menjadi prompt AI',
     usage: '.imgtoprompt (reply gambar)',

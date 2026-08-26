@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rednotedl",
-  alias: ["rednote", "xhsdl", "xiaohongshu"],
+  alias: ["rednotedl", "rednote", "xhsdl", "xiaohongshu"],
   category: "download",
   description: "Download video/foto dari RedNote (XiaoHongShu)",
   usage: ".rednotedl <url>",

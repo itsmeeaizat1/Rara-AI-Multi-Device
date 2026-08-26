@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 
 const pluginConfig = {
   name: "hash", alias: ["md5", "sha256", "sha1", "checksum"], category: "tools",
+  alias: ["hash"],
   description: "Hash text md5/sha256/sha1", usage: ".hash <algo> <text>",
   example: ".hash sha256 halo", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 2, energi: 0, isEnabled: true,

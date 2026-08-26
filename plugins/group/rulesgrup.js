@@ -6,7 +6,7 @@ import path from "path";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "rulesgrup",
-  alias: ["grouprules", "aturangrup", "grules"],
+  alias: ["rulesgrup", "grouprules", "aturangrup", "grules"],
   category: "group",
   description: "Menampilkan rules/aturan grup",
   usage: ".rulesgrup",

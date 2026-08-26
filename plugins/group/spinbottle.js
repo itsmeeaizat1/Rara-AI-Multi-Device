@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spinbottle",
+  alias: ["spinbottle"],
   aliases: ["spinbottle", "bottle", "putarbotol"],
   category: "group",
   description: "Spin the Bottle - putar botol, dapet member random, truth/dare",

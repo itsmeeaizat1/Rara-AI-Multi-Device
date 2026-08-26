@@ -6,7 +6,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "musiccard",
-  alias: ["mcard", "spotifycard"],
+  alias: ["musiccard", "mcard", "spotifycard"],
   category: "canvas",
   description: "Membuat kartu musik (music card) keren dari gambar yang dikirim.",
   usage: ".musiccard <judul>|<nama artis>",

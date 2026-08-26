@@ -5,7 +5,7 @@ import { sendToolsPreview } from "../../src/lib/nova-context.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "lookup",
-  alias: ["dnslookup", "dns", "whois"],
+  alias: ["lookup", "dnslookup", "dns", "whois"],
   category: "tools",
   description: "DNS Lookup untuk domain",
   usage: ".lookup <domain>",
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
         }
       });
 
-      text += `╭──「 *DNs RECORDs\n`; 」
+      text += `╭──「 *DNs RECORDs\n」`;
       if (records["A"])
         text += `│ ❏ 🅰️ A: ${records["A"].slice(0, 3).join(", ")}\n`;
       if (records["AAAA"])
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
           ?.slice(0, 2)
           .map((ns) => ns.split(":")[1]?.trim()) || [];
 
-      text += `╭──「 *WHOIs\n`; 」
+      text += `╭──「 *WHOIs\n」`;
       text += `│ ❏ 🏢 Registrar: ${registrar.slice(0, 35)}\n`;
       text += `│ ❏ 📅 Created: ${created.slice(0, 20)}\n`;
       text += `│ ❏ ⏰ Expires: ${expires.slice(0, 20)}\n`;

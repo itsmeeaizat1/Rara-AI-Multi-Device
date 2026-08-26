@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photofilter",
-  alias: ["filterfoto", "fotofilter", "efekfoto", "fotoefek", "photofx"],
+  alias: ["photofilter", "filterfoto", "fotofilter", "efekfoto", "fotoefek", "photofx"],
   category: "tools",
   description: "Photo Filter — 15 efek foto langsung dari HP, no API, lokal",
   usage: ".photofilter <efek> (reply gambar)\n.photofilter list — Lihat semua efek",

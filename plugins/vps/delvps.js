@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 
 const pluginConfig = {
     name: ['delvps', 'deldroplet', 'deletevps'],
-    alias: [],
+    alias: ["delvps", "deldroplet", "deletevps"],
     category: 'vps',
     description: 'Hapus VPS DigitalOcean',
     usage: '.delvps <id>',
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
         })
         
         m.react('✅')
-        await m.reply(`╭──「 *VPS Dihapus 」
+        await m.reply(`╭──「 *VPS Dihapus
 ┊
 │ ❏ *ID:* ${dropletId}
 │ ❏ *ꜱᴛᴀᴛᴜꜱ:* Berhasil dihapus

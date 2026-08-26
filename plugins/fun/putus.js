@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "putus",
-  alias: ["putuspacar", "breakup"],
+  alias: ["putus", "putuspacar", "breakup"],
   category: "fun",
   description: "Memutuskan hubungan dengan pasangan",
   usage: ".putus",

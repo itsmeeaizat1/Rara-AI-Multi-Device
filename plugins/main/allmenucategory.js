@@ -15,7 +15,7 @@ import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 
 const pluginConfig = {
   name: "allmenucategory",
-  alias: ["mk", "kategori", "kat", "menukategori", "allmenucat"],
+  alias: ["allmenucategory", "mk", "kategori", "kat", "menukategori", "allmenucat"],
   category: "main",
   description: "Menampilkan commands dalam kategori tertentu",
   usage: ".allmenucategory <kategori>",
@@ -131,7 +131,7 @@ async function handler(m, { sock, db }) {
         if (wf) weatherBlock = `${wf}\n\n`;
       } catch {}
 
-      let txt = `${weatherBlock}╭──「 *Keterangan* 」
+      let txt = `${weatherBlock}╭──「 *Keterangan*
 │
 │ ❏ Ⓞ = Hanya untuk owner
 │ ❏ ⓟ = Hanya untuk premium
@@ -245,7 +245,7 @@ async function handler(m, { sock, db }) {
       if (wf2) weatherBlock2 = `${wf2}\n\n`;
     } catch {}
 
-    let txt = `${weatherBlock2}╭──「 *${catName}* 」
+    let txt = `${weatherBlock2}╭──「 *${catName}*
 │
 │ ❏ *Total: ${totalFitur} Fitur*
 │

@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "spellcheck", alias: ["spelling", "ejaan"], category: "tools",
+  alias: ["spellcheck"],
   description: "Cek ejaan kata", usage: ".spell <kata>",
   example: ".spell recieve", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

@@ -5,6 +5,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "aiquran2", alias: ["aiquran2", "quranai", "aiquranfuture"], category: "future",
+  alias: ["aiquran2"],
   description: "Cari ayat Quran dengan bahasa natural", usage: ".aiquran <topik>",
   example: ".aiquran ayat tentang sabar", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,

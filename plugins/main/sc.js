@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sc",
-  alias: ["script"],
+  alias: ["sc", "script"],
   category: "main",
   description: "Link script bot wa terbaru",
   usage: ".sc",
@@ -23,7 +23,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const botName = config.bot?.name || "Nova-AI";
 
-  const caption = `╭──「 *Script Bot 」
+  const caption = `╭──「 *Script Bot
 ┊
 │ ❏ *ʙᴏᴛ:* ${botName}
 │ ❏ *ᴜꜱᴇʀ:* ${m.pushName}

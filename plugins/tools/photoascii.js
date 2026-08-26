@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photoascii",
-  alias: ["fotoascii", "asciifoto", "fototoascii", "imgtoascii", "asciiphoto"],
+  alias: ["photoascii", "fotoascii", "asciifoto", "fototoascii", "imgtoascii", "asciiphoto"],
   category: "tools",
   description: "Photo ASCII — Convert foto ke ASCII art text (local, no API)",
   usage: ".photoascii (reply gambar)\n.photoascii <width> (reply gambar)",

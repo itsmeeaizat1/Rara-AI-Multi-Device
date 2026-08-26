@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "smartremind",
+  alias: ["smartremind"],
   aliases: ["smartremind", "sremind", "airemind"],
   category: "group",
   description: "AI auto-deteksi jadwal/acara dari pesan + set reminder otomatis",

@@ -7,6 +7,7 @@ for (let i = 1; i <= 52; i++) {
 
 const pluginConfig = {
     name: 'music',
+    alias: ["music"],
     alias: MUSIC_LIST,
     category: 'media',
     description: 'Koleksi musik 1-65',

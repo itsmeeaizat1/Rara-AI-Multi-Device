@@ -3,7 +3,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "setwelcome",
-  alias: ["customwelcome"],
+  alias: ["setwelcome", "customwelcome"],
   category: "group",
   description: "Set custom welcome message",
   usage: ".setwelcome <pesan>",

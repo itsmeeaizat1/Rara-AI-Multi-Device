@@ -8,7 +8,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "backupsc",
-  alias: ["backup", "backupscript", "backupsource"],
+  alias: ["backupsc", "backup", "backupscript", "backupsource"],
   category: "owner",
   description: "Backup script bot dalam bentuk zip",
   usage: ".backupsc",

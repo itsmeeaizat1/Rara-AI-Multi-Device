@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antibug",
-  alias: ["antibugmsg", "abug", "antibugwa"],
+  alias: ["antibug", "antibugmsg", "abug", "antibugwa"],
   category: "group",
   description: "Blokir pesan bug WhatsApp di grup",
   usage: ".antibug <on/off>",

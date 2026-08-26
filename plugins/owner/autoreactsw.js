@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "autoreactsw",
-  alias: ["reactsw", "autoreactstory", "autoreaksi"],
+  alias: ["autoreactsw", "reactsw", "autoreactstory", "autoreaksi"],
   category: "owner",
   description: "Auto react semua status/story WA",
   usage: ".autoreactsw on/off [emoji]",

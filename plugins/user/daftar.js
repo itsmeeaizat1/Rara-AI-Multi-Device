@@ -246,7 +246,7 @@ function generateSerialNumber() {
 
 function buildUserDataBlock(name, age, gender, serial) {
   return (
-    `╭──「 *DATA REGISTRASI\n` + 」
+    `╭──「 *DATA REGISTRASI\n」` +
     `│ ❏ 📛 Nama: *${name || "-"}*\n` +
     `│ ❏ 🎂 Umur: *${age ? `${age} tahun` : "-"}*\n` +
     `│ ❏ 👤 Gender: *${gender || "-"}*\n` +
@@ -270,7 +270,7 @@ function buildWelcomeMessage(user, registrationRequired, prefix) {
   }
 
   return (
-    `╭──「 *MENU DAFTAR\n` + 」
+    `╭──「 *MENU DAFTAR\n」` +
     `│ ❏ *Selamat datang di Menu Daftar!*\n\n` +
     `┊ ✨ Dengan daftar, data akun kamu jadi lebih aman\n` +
     `┊ dan pengalaman pakai bot jadi lebih lengkap.\n\n` +

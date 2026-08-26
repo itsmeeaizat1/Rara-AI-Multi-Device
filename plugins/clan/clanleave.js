@@ -3,7 +3,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'clanleave',
-    alias: ['leaveclan', 'guildleave'],
+    alias: ["clanleave", 'leaveclan', 'guildleave'],
     category: 'clan',
     description: 'Keluar dari clan',
     usage: '.clanleave',

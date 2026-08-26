@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "otakudict",
+  alias: ["otakudict"],
   aliases: ["otakudict", "animeterminology", "animeglossary", "istilahanime"],
   category: "anime",
   description: "Kamus istilah anime & manga (otaku terminology)",

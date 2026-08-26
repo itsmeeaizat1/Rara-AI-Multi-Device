@@ -7,6 +7,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "audioconvert",
+  alias: ["audioconvert"],
   aliases: ["audioconvert", "audio2audio", "konversiaudio", "audioformat"],
   category: "convert",
   description: "Convert audio ke audio format lain (10+ format)",

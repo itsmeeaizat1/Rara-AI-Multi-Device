@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'likeedl',
-    alias: ['lkdl', 'likee', 'lk'],
+    alias: ["likeedl", 'lkdl', 'likee', 'lk'],
     category: 'download',
     description: 'Download video Likee',
     usage: '.lkdl <url>',

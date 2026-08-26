@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tiktokv2",
-  alias: ["ttv2", "tiktokdlv2"],
+  alias: ["tiktokv2", "ttv2", "tiktokdlv2"],
   category: "download",
   description: "Download TikTok tanpa watermark via (V2)",
   usage: ".tiktokv2 <url>",

@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-tio",
-  alias: ["aitio", "aiotio", "aitio2"],
+  alias: ["ai-tio", "aitio", "aiotio", "aitio2"],
   category: "ai",
   description: "Tanya AI via Tio AIO - 3 format: .tio openai/gemini/anthropic <pesan>",
   usage: ".tio <format> <pertanyaan>",

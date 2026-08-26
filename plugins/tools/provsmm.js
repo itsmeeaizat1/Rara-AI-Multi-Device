@@ -114,7 +114,7 @@ function calcPrice(ratePer1000, quantity, markup) {
 
 const pluginConfig = {
   name: ["provsmm", "prov", "suntikprov"],
-  alias: ["providersmm", "psmm", "beliprov"],
+  alias: ["provsmm", "prov", "suntikprov", "providersmm", "psmm", "beliprov"],
   category: "tools",
   description: "Beli SMM via ProviderSMM (IG/TikTok/FB/Threads/X Indonesia, Roblox)",
   usage: ".prov\n.prov setkey <key>\n.prov saldo\n.prov cari <keyword>\n.prov kategori\n.prov beli <service_id> <link> <qty>\n.prov bayar <token>\n.prov cek <order_id>\n.prov refill <order_id>\n.prov batal <order_id>\n.prov setmarkup <persen>\n.prov list",

@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "anticaps",
+  alias: ["anticaps"],
   aliases: ["anticaps", "anticapslock", "antihurufbesar"],
   category: "group",
   description: "Auto warn member caps lock berlebihan, mute setelah 3x",

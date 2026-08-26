@@ -3,6 +3,7 @@ import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style
 
 const pluginConfig = {
   name: "css", alias: ["csstemplate", "cssgen"], category: "tools",
+  alias: ["css"],
   description: "Generate CSS snippet", usage: ".css <template>",
   example: ".css flexbox", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 2, energi: 0, isEnabled: true,

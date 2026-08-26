@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "emojiguess",
-  alias: ["tebakemoji", "emojitebak", "emojiriddle"],
+  alias: ["emojiguess", "tebakemoji", "emojitebak", "emojiriddle"],
   category: "group",
   description: "Tebak judul dari emoji — film, lagu, makanan, dll",
   usage: ".emojiguess start | .emojiguess <jawaban> | .emojiguess hint | .emojiguess stop",

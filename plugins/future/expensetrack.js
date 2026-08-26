@@ -4,6 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "expensetrack", alias: ["patungan", "grupexpense", "sharedexpense"], category: "future",
+  alias: ["expensetrack"],
   description: "Tracker keuangan grup/patungan", usage: ".expensetrack <add/list/split>",
   example: ".expensetrack add makan 50rb", isOwner: false, isPremium: false,
   isGroup: true, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

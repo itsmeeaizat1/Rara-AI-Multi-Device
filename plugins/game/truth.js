@@ -22,7 +22,7 @@ function getRandomTruth() {
 
 export const config = {
   name: "truth",
-  alias: ["truthdare"],
+  alias: ["truth", "truthdare"],
   category: "game",
   description: "Truth or Dare — pertanyaan jujur",
   usage: ".truth",
@@ -45,7 +45,7 @@ export async function handler(m, { sock }) {
       return;
     }
 
-    let text = `╭──「 **TRUTH OR DARE*\n\n`; 」
+    let text = `╭──「 *TRUTH OR DARE*\n\n」`;
     text += `┊ ➶ 🎭 Mode: *TRUTH*\n\n`;
     text += `\`\`\`${truth}\`\`\`\n\n`;
     text += `_Jawab jujur ya, atau ketik .dare buat ganti tantangan_\n`;

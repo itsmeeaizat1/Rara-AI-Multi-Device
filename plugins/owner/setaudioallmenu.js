@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "setaudioallmenu",
-    alias: ["setaudioam", "audioallmenu"],
+    alias: ["setaudioallmenu", "setaudioam", "audioallmenu"],
     category: "owner",
     description: "Mengatur gaya audio untuk All Menu",
     usage: ".setaudioallmenu <1-4>",

@@ -3,7 +3,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "niatdoa",
-  alias: ["niat", "doaislam", "doasehari"],
+  alias: ["niatdoa", "niat", "doaislam", "doasehari"],
   category: "islamic",
   description: "Niat sholat & kumpulan doa sehari-hari",
   usage: ".niatdoa <niat/doa>",
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
   const action = args[0];
 
   if (!action) {
-    let txt = "╭──「 *Niat Sholat:│ ❏\n"; 」
+    let txt = "╭──「 *Niat Sholat:│ ❏\n";
     txt += "╰──────────❀\n";
     txt += "*" + sholat.toUpperCase() + "*\n\n";
     txt += "Arab:\n" + niat.arab + "\n\n";
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("niatdoa", "Doa tidak ditemukan!\nKetik .niatdoa buat lihat semua doa."));
   }
 
-  let txt = "╭──「 *" + doa.title.toUpperCase() + "│ ❏\n"; 」
+  let txt = "╭──「 *" + doa.title.toUpperCase() + "│ ❏\n";
   txt += "╰──────────❀\n\n";
   txt += "Arab:\n" + doa.arab + "\n\n";
   txt += "Latin:\n" + doa.latin + "\n\n";

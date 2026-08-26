@@ -4,7 +4,7 @@ import { getParticipantJid } from '../../src/lib/nova-lid.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'listadmin',
-    alias: ['admins', 'adminlist'],
+    alias: ["listadmin", 'admins', 'adminlist'],
     category: 'group',
     description: 'Menampilkan daftar admin grup',
     usage: '.listadmin',

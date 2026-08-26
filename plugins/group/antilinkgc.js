@@ -4,7 +4,7 @@ import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'antilinkgc',
-    alias: ['algc', 'antilinkgrup'],
+    alias: ["antilinkgc", 'algc', 'antilinkgrup'],
     category: 'group',
     description: 'Anti link WhatsApp (grup, saluran, wa.me)',
     usage: '.antilinkgc <on/off/metode> [kick/remove]',

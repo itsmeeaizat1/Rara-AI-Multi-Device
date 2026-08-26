@@ -7,6 +7,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "audiovol",
+  alias: ["audiovol"],
   aliases: ["audiovol", "volset", "setvolume", "audiovolume2"],
   category: "convert",
   description: "Set volume custom 0-500% (bisa boost sampai 5x)",

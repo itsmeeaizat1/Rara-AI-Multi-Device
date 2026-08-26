@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "animepowerlevel",
+  alias: ["animepowerlevel"],
   aliases: ["animepowerlevel", "powerlevel", "scalinganime", "animescaling"],
   category: "anime",
   description: "Power level/scaling karakter anime dari lemah hingga dewa",

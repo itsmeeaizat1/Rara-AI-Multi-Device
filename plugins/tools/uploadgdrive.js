@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js"
 
 const pluginConfig = {
     name: 'uploadgdrive',
-    alias: ['gdrive', 'gdriveupload', 'gd'],
+    alias: ["uploadgdrive", 'gdrive', 'gdriveupload', 'gd'],
     category: 'tools',
     description: 'Upload file/media ke Google Drive via Service Account',
     usage: '.uploadgdrive (reply media/berkas)',

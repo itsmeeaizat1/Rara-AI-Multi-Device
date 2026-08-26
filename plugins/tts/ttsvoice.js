@@ -8,6 +8,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "ttsvoice",
+  alias: ["ttsvoice"],
   aliases: ["ttsvoice", "ttscustom", "voicett", "sayvoice"],
   category: "tts",
   description: "Text To Speech custom dengan pilihan bahasa & suara (Google TTS)",

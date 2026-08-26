@@ -7,6 +7,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "mp4toaudio",
+  alias: ["mp4toaudio"],
   aliases: ["mp4toaudio", "vidtoaudio", "videokeaudio", "extractaud"],
   category: "convert",
   description: "Extract audio dari video/MP4 ke berbagai format audio",

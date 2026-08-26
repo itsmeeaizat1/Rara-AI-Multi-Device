@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "tutorku",
-  alias: ["tutor", "tutormahasiswa", "aibimbel", "belajarku"],
+  alias: ["tutorku", "tutor", "tutormahasiswa", "aibimbel", "belajarku"],
   category: "education",
   description: "AI Tutor per mata kuliah - penjelasan, latihan soal, dan tanya jawab",
   usage: ".tutorku <mata kuliah> <pertanyaan>",

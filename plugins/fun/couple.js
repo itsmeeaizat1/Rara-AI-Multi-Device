@@ -5,7 +5,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "couple",
-  alias: ["coupleinfo", "dashboarcouple", "infocouple"],
+  alias: ["couple", "coupleinfo", "dashboarcouple", "infocouple"],
   category: "fun",
   description: "Dashboard hubungan couple",
   usage: ".couple atau .couple @tag",
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     const name = data.name || targetJid.split("@")[0];
     const now = Date.now();
 
-    let msg = `╭──「 **ᴄᴏᴜᴘʟᴇ ɪɴғᴏ*\n\n`; 」
+    let msg = `╭──「 *ᴄᴏᴜᴘʟᴇ ɪɴғᴏ*\n\n」`;
     msg += `  ┊ ➶ 👤 Nama: *${name}*\n`;
 
     if (data.fun.pasangan) {

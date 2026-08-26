@@ -4,7 +4,7 @@ import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "absenv2",
-  alias: ["absengroup", "absengrp", "rsvp", "kehadiran"],
+  alias: ["absenv2", "absengroup", "absengrp", "rsvp", "kehadiran"],
   category: "group",
   description: "Sistem absensi grup v2 - RSVP, jadwal, history, attendance rate",
   usage: ".absenv2 <create/list/hadir/absen/maybe/close/info/history/stats>",

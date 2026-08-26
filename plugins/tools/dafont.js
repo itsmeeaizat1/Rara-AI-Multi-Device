@@ -38,6 +38,7 @@ function clearSession(jid) {
 
 const pluginConfig = {
   name: "dafont",
+  alias: ["dafont"],
   alias: ["dafont", "dafontsearch", "fontd2"],
   category: "tools",
   description: "Cari dan download font dari DaFont",

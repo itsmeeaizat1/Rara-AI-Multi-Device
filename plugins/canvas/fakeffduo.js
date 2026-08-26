@@ -6,7 +6,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakeffduo",
-  alias: ["fakefreefirduo"],
+  alias: ["fakeffduo", "fakefreefirduo"],
   category: "canvas",
   description: "Membuat gambar ff",
   usage: ".fakeffduo <text>",

@@ -12,6 +12,7 @@ async function getCanvas() {
 
 const pluginConfig = {
   name: "watermark",
+  alias: ["watermark"],
   aliases: ["watermark", "wmtext", "addwm", "watermarktext"],
   category: "maker",
   description: "Tambah watermark teks ke gambar - posisi, opacity, ukuran, warna custom",

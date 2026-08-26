@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "cron",
-  alias: ["cronexpr", "cronbuilder", "cronexplain", "crontab"],
+  alias: ["cron", "cronexpr", "cronbuilder", "cronexplain", "crontab"],
   category: "tools",
   description: "Cron expression builder & explainer (5-field standard cron)",
   usage: ".cron <expression>  atau  .cron build <opsi>",

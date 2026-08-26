@@ -4,7 +4,7 @@ import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ytmp3",
-  alias: ["youtubemp3", "ytaudio"],
+  alias: ["ytmp3", "youtubemp3", "ytaudio"],
   category: "download",
   description: "Download audio YouTube",
   usage: ".ytmp3 <url>",

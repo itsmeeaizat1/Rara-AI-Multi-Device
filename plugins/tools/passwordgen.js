@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "passwordgen",
-  alias: ["genpass", "passwordgenerator", "buatpassword"],
+  alias: ["passwordgen", "genpass", "passwordgenerator", "buatpassword"],
   category: "tools",
   description: "Generate password kuat dengan opsi panjang & kompleksitas",
   usage: ".passwordgen [panjang] [opsi]",

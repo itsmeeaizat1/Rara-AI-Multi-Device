@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "niatpuasa",
+  alias: ["niatpuasa"],
   aliases: ["niatpuasa", "puasa", "panduanpuasa", "doapuasa", "ramadhan"],
   category: "islami",
   description: "Niat puasa + doa buka puasa + panduan puasa",

@@ -3,6 +3,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "panduanwudhu",
+  alias: ["panduanwudhu"],
   aliases: ["panduanwudhu", "carawudhu", "tatawudhu", "wudhuguide", "wudhu"],
   category: "islami",
   description: "Panduan lengkap tata cara wudhu (7 langkah + doa)",

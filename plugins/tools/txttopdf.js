@@ -8,7 +8,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "txttopdf",
-  alias: ["texttopdf", "txt2pdf", "topdf", "makpdf", "txttodoc", "texttodoc", "txt2doc", "todoc", "makeword"],
+  alias: ["txttopdf", "texttopdf", "txt2pdf", "topdf", "makpdf", "txttodoc", "texttodoc", "txt2doc", "todoc", "makeword"],
   category: "tools",
   description: "Convert text ke PDF/Word + AI CV/Portfolio (kasih data diri, AI yg buat) - font, warna & HD",
   usage: ".txttopdf <teks>  |  .txttopdf aicv <info>  |  .txttopdf aiporto <info>",

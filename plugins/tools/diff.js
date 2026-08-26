@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "diff",
-  alias: ["textdiff", "bandingtext", "comparetext", "textcompare"],
+  alias: ["diff", "textdiff", "bandingtext", "comparetext", "textcompare"],
   category: "tools",
   description: "Bandingin 2 teks dan highlight perbedaannya (line & word level)",
   usage: ".diff <teks1> | <teks2>  atau  .diff word <teks1> | <teks2>",

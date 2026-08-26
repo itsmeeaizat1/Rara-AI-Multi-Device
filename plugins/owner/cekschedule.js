@@ -8,7 +8,7 @@ import { getTodaySchedule, extractPrayerTimes } from '../../src/lib/nova-sholat-
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'cekschedule',
-    alias: ['cekscheduler', 'schedulerstatus', 'schedstatus'],
+    alias: ["cekschedule", 'cekscheduler', 'schedulerstatus', 'schedstatus'],
     category: 'owner',
     description: 'Melihat status semua scheduler bot',
     usage: '.cekschedule',

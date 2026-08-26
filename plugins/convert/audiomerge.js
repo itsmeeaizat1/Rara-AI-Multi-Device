@@ -8,6 +8,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "audiomerge",
+  alias: ["audiomerge"],
   aliases: ["audiomerge", "mergeaudio", "audiojoin", "gabungaudio"],
   category: "convert",
   description: "Gabung 2+ audio jadi 1 file dengan jeda/crossfade",

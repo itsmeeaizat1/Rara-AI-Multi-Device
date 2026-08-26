@@ -4,7 +4,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'stopdandeletejadibot',
-    alias: ['deletejadibot', 'removejadibot', 'hapusjadibot'],
+    alias: ["stopdandeletejadibot", 'deletejadibot', 'removejadibot', 'hapusjadibot'],
     category: 'owner',
     description: 'Stop dan hapus session jadibot user secara permanen',
     usage: '.stopdandeletejadibot @user',

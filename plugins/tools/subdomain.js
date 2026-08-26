@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "subdomain",
-  alias: ["subdom", "subfinder", "dnsenum", "subdomaincheck"],
+  alias: ["subdomain", "subdom", "subfinder", "dnsenum", "subdomaincheck"],
   category: "tools",
   description: "Enumerasi subdomain dari domain (passive via Certificate Transparency)",
   usage: ".subdomain <domain>",

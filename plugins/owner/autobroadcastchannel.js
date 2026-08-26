@@ -38,6 +38,7 @@ async function formatAndReply( text, cmdName) {
 
 const pluginConfig = {
   name: "autobroadcastchannel",
+  alias: ["autobroadcastchannel"],
   alias: ["autobcsaluran", "autobc", "autobroadcast", "autosaluran", "autobcchannel"],
   category: "owner",
   description: "Auto broadcast saluran — toggle on/off semua event notifikasi saluran",

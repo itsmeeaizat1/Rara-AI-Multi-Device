@@ -9,7 +9,7 @@ import util from 'util'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'exec',
-    alias: ['>', 'run', 'execute'],
+    alias: ["exec", '>', 'run', 'execute'],
     category: 'owner',
     description: 'Jalankan kode JS dari pesan yang di-reply (Owner Only)',
     usage: '.> (reply pesan berisi kode)',

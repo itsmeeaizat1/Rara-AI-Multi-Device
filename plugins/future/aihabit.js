@@ -4,6 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "aihabit", alias: ["habitcoach", "habittracker", "habit"], category: "future",
+  alias: ["aihabit"],
   description: "AI habit coach & tracker", usage: ".aihabit <add/list/streak>",
   example: ".aihabit add olahraga 30 hari", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: true, cooldown: 2, energi: 0, isEnabled: true,

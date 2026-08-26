@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "aiimagev2", alias: ["aigen", "texttoimage", "generateimage"], category: "future",
+  alias: ["aiimagev2"],
   description: "Generate gambar dari teks dengan AI", usage: ".aiimage <deskripsi>",
   example: ".aiimage kucing astronaut di bulan", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 30, energi: 5, isEnabled: true,

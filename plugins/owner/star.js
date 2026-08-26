@@ -2,7 +2,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 const pluginConfig = {
     name: ['star', 'bintang'],
-    alias: [],
+    alias: ["star", "bintang"],
     category: 'owner',
     description: 'Beri/hapus bintang pada pesan',
     usage: '.star (reply pesan) atau .star hapus (reply pesan)',

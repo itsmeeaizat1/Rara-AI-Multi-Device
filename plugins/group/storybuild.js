@@ -4,6 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "storybuild",
+  alias: ["storybuild"],
   aliases: ["storybuild", "ceritabareng", "collabstory"],
   category: "group",
   description: "Collab cerita bareng - tiap member sambung 1 kalimat",

@@ -4,6 +4,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "dailyayat",
+  alias: ["dailyayat"],
   aliases: ["dailyayat", "ayatharian", "randomayat", "randomverse", "ayatacak"],
   category: "islami",
   description: "Ayat Al-Quran acak dengan terjemahan (API equran.id Kemenag)",

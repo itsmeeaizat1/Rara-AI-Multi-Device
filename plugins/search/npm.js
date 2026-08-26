@@ -3,7 +3,7 @@ import te from "../../src/lib/nova-error.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "npm",
-  alias: ["npmsearch", "npmjs", "npmfind"],
+  alias: ["npm", "npmsearch", "npmjs", "npmfind"],
   category: "search",
   description: "Search package di NPM registry",
   usage: ".npm <query>",

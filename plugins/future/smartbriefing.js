@@ -4,6 +4,7 @@ import axios from "axios";
 
 const pluginConfig = {
   name: "smartbriefing", alias: ["briefing", "morningbrief", "briefingpagi"], category: "future",
+  alias: ["smartbriefing"],
   description: "Briefing pagi: cuaca+berita+sholat", usage: ".smartbriefing <kota>",
   example: ".smartbriefing Jakarta", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 60, energi: 5, isEnabled: true,

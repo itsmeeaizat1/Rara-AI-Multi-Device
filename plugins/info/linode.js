@@ -4,7 +4,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "linode",
-  alias: ["server", "vpsinfo", "cloud"],
+  alias: ["linode", "server", "vpsinfo", "cloud"],
   category: "info",
   description: "Cek status server/info VPS lokal",
   usage: ".linode",
@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
     } catch (e) { console.error('[linode.js]:', e.message); }
 
-    let text = `╭──「 *Server Info 」
+    let text = `╭──「 *Server Info
 ┊
 │ ❏ *OS:* ${osName}
 │ ❏ *ʜᴏꜱᴛ:* ${hostname}
@@ -51,7 +51,7 @@ Ketik ${prefix}menu untuk kembali`;
     await m.reply(claraWrap("linode", text));
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
-    let text = `╭──「 *Server Error 」
+    let text = `╭──「 *Server Error
 ┊
 │ ❏ *ꜱᴛᴀᴛᴜꜱ:* Gagal
 │ ❏ *ᴀʟᴀꜱᴀɴ:* ${error.message}

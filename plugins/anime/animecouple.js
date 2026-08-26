@@ -4,7 +4,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "animecouple",
-  alias: ["animeppcp", "ppanimecouple", "coupleanime"],
+  alias: ["animecouple", "animeppcp", "ppanimecouple", "coupleanime"],
   category: "anime",
   description: "Anime Couple PP — random gambar pp couple anime via Andaraz API",
   usage: ".animecouple",

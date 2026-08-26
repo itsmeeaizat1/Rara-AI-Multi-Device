@@ -4,7 +4,7 @@ import { DEFAULT_PROVIDERS } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "aiset",
-  alias: ["setai", "settingai", "konfigai"],
+  alias: ["aiset", "setai", "settingai", "konfigai"],
   category: "ai",
   description: "Kelola pengaturan AI dari dalam bot",
   usage: ".aiset list | .aiset provider <nama> | .aiset on/off",

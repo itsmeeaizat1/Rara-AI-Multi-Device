@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "selfthisgc",
-  alias: ["selfgc", "selfgroup", "selfthisgroup"],
+  alias: ["selfthisgc", "selfgc", "selfgroup", "selfthisgroup"],
   category: "group",
   description: "Aktifkan mode self hanya di grup ini",
   usage: ".selfthisgc",

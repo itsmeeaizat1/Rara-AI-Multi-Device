@@ -29,6 +29,7 @@ const TIERS = {
   },
   premium: {
     name: "Premium",
+    alias: ["nokosbeli", "belinomor", "vnum", "Premium"],
     desc: "Success rate tinggi, nomor private",
     multiplier: 1.8,
     note: "Success rate tinggi, nomor exclusive",

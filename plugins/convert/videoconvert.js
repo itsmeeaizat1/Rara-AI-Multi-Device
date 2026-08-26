@@ -7,6 +7,7 @@ import os from 'os'
 
 const pluginConfig = {
   name: "videoconvert",
+  alias: ["videoconvert"],
   aliases: ["videoconvert", "video2video", "konversivideo", "videoformat"],
   category: "convert",
   description: "Convert video ke berbagai format video lain",
