@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenu.js — Semua fitur (bracket box, info lengkap + cuaca + tombol)
+// allmenu.js — Semua fitur (Futuristic Command Catalog v4)
 import { getCasesByCategory } from "../../case/nova.js";
 import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
 import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/nova-time.js";
@@ -10,7 +10,11 @@ import {
 import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { infoBox, listBox, buildNavButtons } from "../../src/lib/nova-menu-style.js";
+import {
+  futuristicHeader, futuristicSection, progressBar, statusDot,
+  futuristicDivider, futuristicFooter, kv, futuristicCategory,
+  buildNavButtons, CATEGORY_NAMES, CATEGORY_EMOJIS, CATEGORY_ORDER,
+} from "../../src/lib/nova-menu-style.js";
 import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 
 const pluginConfig = {
@@ -29,45 +33,17 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const CATEGORY_NAMES = {
-  ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
-  canvas: "Canvas", tools: "Tools", game: "Games", rpg: "RPG",
-  media: "Media", search: "Search", group: "Group", main: "Main",
-  utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
-  economy: "Economy", user: "User", random: "Random", premium: "Premium",
-  ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
-  panel: "Panel", owner: "Owner", store: "Store",
-};
-
-const CATEGORY_EMOJIS = {
-  ai: "🤖", sticker: "🖼️", download: "📥", fun: "🎮",
-  canvas: "🎨", tools: "🛠️", game: "🎯", rpg: "🗡️",
-  media: "🎬", search: "🔍", group: "👥", main: "🏠",
-  utility: "🔧", religi: "☪️", info: "ℹ️", cek: "📋",
-  economy: "💰", user: "📊", random: "🎲", premium: "💎",
-  ephoto: "🎨", jpm: "📢", pushkontak: "📱",
-  panel: "🖥️", owner: "👑", store: "🛒",
-};
-
-const CATEGORY_ORDER = [
-  "main", "ai", "download", "sticker", "tools", "game", "rpg",
-  "fun", "canvas", "media", "search", "group", "utility",
-  "info", "cek", "religi", "economy", "user", "random",
-  "premium", "ephoto", "jpm", "pushkontak", "panel",
-  "store", "owner",
-];
-
 function formatUptime(ms) {
-  if (!ms || ms < 0) return "0s";
+  if (!ms || ms < 0) return "0d";
   const s = Math.floor((ms / 1000) % 60);
   const m = Math.floor((ms / (1000 * 60)) % 60);
   const h = Math.floor((ms / (1000 * 60 * 60)) % 24);
   const d = Math.floor(ms / (1000 * 60 * 60 * 24));
   const parts = [];
-  if (d > 0) parts.push(`${d}d`);
-  if (h > 0) parts.push(`${h}h`);
+  if (d > 0) parts.push(`${d}h`);
+  if (h > 0) parts.push(`${h}j`);
   if (m > 0) parts.push(`${m}m`);
-  if (s > 0 || parts.length === 0) parts.push(`${s}s`);
+  if (s > 0 || parts.length === 0) parts.push(`${s}d`);
   return parts.join(" ");
 }
 
@@ -78,55 +54,27 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
     const timeStr = fmtTime("HH:mm");
     const dateStr = fmtFull("DD MMMM YYYY");
     const uptimeStr = formatUptime(uptime);
+    const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
-    let userRole = "User", roleEmoji = "👤";
+    let userRole = "Free", roleEmoji = "👤";
     if (m.isOwner) { userRole = "Owner"; roleEmoji = "👑"; }
     else if (m.isPremium) { userRole = "Premium"; roleEmoji = "💎"; }
 
     const userExp = user?.exp || 0;
     const userLevel = Math.floor(userExp / 20000) + 1;
-    const expMin = (userLevel - 1) * 20000;
-    const expMax = userLevel * 20000;
-    const expCurr = userExp - expMin;
+    const expCurr = userExp - (userLevel - 1) * 20000;
+    const expBar = progressBar(expCurr, 20000, 8);
 
-    let weatherLine = null;
-    try { weatherLine = await getWeatherAddress(); } catch {}
+    let weatherLine = "—";
+    try { const w = await getWeatherAddress(); if (w) weatherLine = w; } catch {}
 
-    const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
-
-    // Info lengkap di atas (sama kayak menu, tapi lebih compact)
-    const infoText = infoBox(botName, {
-      intro: `${getTimeGreeting()} *${m.pushName || "User"}* 👋`,
-      sections: [
-        {
-          heading: "User",
-          lines: [
-            `Nama: ${m.pushName || "User"}`,
-            `Role: ${roleEmoji} ${userRole}`,
-            `Level: ${userLevel} · ${expCurr.toLocaleString()}/${(expMax - expMin).toLocaleString()} XP`,
-            `Koin: 🪙 ${(user?.koin || 0).toLocaleString("id-ID")}`,
-          ],
-        },
-        {
-          heading: "Bot",
-          lines: [
-            `Version: ${botConfig.bot?.version || "-"}`,
-            `Prefix: [ ${prefix} ]`,
-            `Uptime: ${uptimeStr}`,
-            `Waktu: ${timeStr} WIB · ${dateStr}`,
-            ...(weatherLine ? [`Cuaca: ${weatherLine}`] : []),
-          ],
-        },
-      ],
-    });
-
-    // Daftar semua command per kategori
+    // Collect all commands per category
     const pluginCats = getCategories();
     const commandsByCategory = getCommandsByCategory();
     const caseCats = getCasesByCategory();
     const allCatKeys = [...new Set([...pluginCats, ...Object.keys(caseCats)])];
 
-    let totalFitur = 0;
+    let totalFitur = 0, totalKategori = 0;
     const categorySections = [];
 
     for (const cat of allCatKeys.sort((a, b) => {
@@ -141,17 +89,50 @@ async function buildAllMenuText(m, botConfig, db, uptime, sock) {
       if (cat === "owner" && !m.isOwner) continue;
 
       totalFitur += allCmds.length;
+      totalKategori++;
+
       const catName = CATEGORY_NAMES[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
       const catEmoji = CATEGORY_EMOJIS[cat] || "📂";
 
-      const items = allCmds.map(cmd => `${prefix}${cmd}`);
-      categorySections.push(listBox(`${catEmoji} ${catName}`, items));
+      categorySections.push(futuristicCategory(catEmoji, catName, allCmds, prefix, 3));
     }
 
-    return `${infoText}\n\n${categorySections.join("\n\n")}\n\nTotal ${totalFitur} fitur · prefix [ ${prefix} ]\n${botName}`;
+    const header = futuristicHeader("Command Catalog");
+
+    const userProfile = futuristicSection("User", [
+      kv("Nama", m.pushName || "User"),
+      kv("Status", `${roleEmoji} ${userRole}`),
+      kv("Level", `${userLevel} ${expBar}`),
+    ]);
+
+    const systemStatus = futuristicSection("System", [
+      kv("Status", `${statusDot("online")} Online`),
+      kv("Version", botConfig.bot?.version || "v4.0.0"),
+      kv("Prefix", `[ ${prefix} ]`),
+      kv("Uptime", uptimeStr),
+      kv("Waktu", `${timeStr} WIB · ${dateStr}`),
+      kv("Cuaca", weatherLine),
+    ]);
+
+    const footer = futuristicFooter(
+      `${totalFitur} fitur · ${totalKategori} kategori · ${prefix} prefix`,
+      botName
+    );
+
+    return [
+      header,
+      "",
+      userProfile,
+      "",
+      systemStatus,
+      "",
+      ...categorySections.map((s, i) => i === 0 ? s : "\n" + s),
+      "",
+      footer,
+    ].join("\n");
   } catch (e) {
     console.error("[allmenu] buildAllMenuText error:", e.message);
-    return `╭─「 All Menu 」\n│ Error: ${e.message}\n╰──────────────`;
+    return `◆ ◇ ◆ Error ◆ ◇ ◆\n\n┊ ${e.message}`;
   }
 }
 
@@ -162,7 +143,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const text = await buildAllMenuText(m, botConfig, db, uptime, sock);
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
-    // Build tombol: Kategori = single_select popup, sisanya quick_reply
     const pluginCats = getCategories();
     const commandsByCategory = getCommandsByCategory();
     const caseCats = getCasesByCategory();

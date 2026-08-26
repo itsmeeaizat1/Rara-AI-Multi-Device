@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenucategory.js — Menu per kategori (bracket box, info lengkap + cuaca + tombol)
+// allmenucategory.js — Menu per kategori (Futuristic Dashboard v4)
 import {
   getCommandsByCategory,
   getCategories,
@@ -10,7 +10,11 @@ import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/nova
 import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { infoBox, listBox, buildNavButtons } from "../../src/lib/nova-menu-style.js";
+import {
+  futuristicHeader, futuristicSection, progressBar, statusDot,
+  futuristicDivider, futuristicFooter, kv, futuristicCategory,
+  buildNavButtons, CATEGORY_NAMES, CATEGORY_EMOJIS, CATEGORY_ORDER,
+} from "../../src/lib/nova-menu-style.js";
 import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 
 const pluginConfig = {
@@ -29,26 +33,6 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-const CATEGORY_NAMES = {
-  ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
-  canvas: "Canvas", tools: "Tools", game: "Games", rpg: "RPG",
-  media: "Media", search: "Search", group: "Group", main: "Main",
-  utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
-  economy: "Economy", user: "User", random: "Random", premium: "Premium",
-  ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
-  panel: "Panel", owner: "Owner", store: "Store",
-};
-
-const CATEGORY_EMOJIS = {
-  ai: "🤖", sticker: "🖼️", download: "📥", fun: "🎮",
-  canvas: "🎨", tools: "🛠️", game: "🎯", rpg: "🗡️",
-  media: "🎬", search: "🔍", group: "👥", main: "🏠",
-  utility: "🔧", religi: "☪️", info: "ℹ️", cek: "📋",
-  economy: "💰", user: "📊", random: "🎲", premium: "💎",
-  ephoto: "🎨", jpm: "📢", pushkontak: "📱",
-  panel: "🖥️", owner: "👑", store: "🛒",
-};
-
 function findCategory(input) {
   if (!input) return null;
   const lower = input.toLowerCase().trim();
@@ -63,74 +47,37 @@ function findCategory(input) {
 }
 
 function formatUptime(ms) {
-  if (!ms || ms < 0) return "0s";
+  if (!ms || ms < 0) return "0d";
   const s = Math.floor((ms / 1000) % 60);
   const m = Math.floor((ms / (1000 * 60)) % 60);
   const h = Math.floor((ms / (1000 * 60 * 60)) % 24);
   const d = Math.floor(ms / (1000 * 60 * 60 * 24));
   const parts = [];
-  if (d > 0) parts.push(`${d}d`);
-  if (h > 0) parts.push(`${h}h`);
+  if (d > 0) parts.push(`${d}h`);
+  if (h > 0) parts.push(`${h}j`);
   if (m > 0) parts.push(`${m}m`);
-  if (s > 0 || parts.length === 0) parts.push(`${s}s`);
+  if (s > 0 || parts.length === 0) parts.push(`${s}d`);
   return parts.join(" ");
 }
 
-async function buildInfoHeader(m, botConfig, db, uptime) {
-  const prefix = botConfig.command?.prefix || ".";
-  const user = db.getUser(m.sender);
-  const timeStr = fmtTime("HH:mm");
-  const dateStr = fmtFull("DD MMMM YYYY");
-  const uptimeStr = formatUptime(uptime);
-
-  let userRole = "User", roleEmoji = "👤";
-  if (m.isOwner) { userRole = "Owner"; roleEmoji = "👑"; }
-  else if (m.isPremium) { userRole = "Premium"; roleEmoji = "💎"; }
-
-  const userExp = user?.exp || 0;
-  const userLevel = Math.floor(userExp / 20000) + 1;
-  const expMin = (userLevel - 1) * 20000;
-  const expMax = userLevel * 20000;
-  const expCurr = userExp - expMin;
-
-  let weatherLine = null;
-  try { weatherLine = await getWeatherAddress(); } catch {}
-
-  const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
-
-  return infoBox(botName, {
-    intro: `${getTimeGreeting()} *${m.pushName || "User"}* 👋`,
-    sections: [
-      {
-        heading: "User",
-        lines: [
-          `Nama: ${m.pushName || "User"}`,
-          `Role: ${roleEmoji} ${userRole}`,
-          `Level: ${userLevel} · ${expCurr.toLocaleString()}/${(expMax - expMin).toLocaleString()} XP`,
-          `Koin: 🪙 ${(user?.koin || 0).toLocaleString("id-ID")}`,
-        ],
-      },
-      {
-        heading: "Bot",
-        lines: [
-          `Version: ${botConfig.bot?.version || "-"}`,
-          `Prefix: [ ${prefix} ]`,
-          `Uptime: ${uptimeStr}`,
-          `Waktu: ${timeStr} WIB · ${dateStr}`,
-          ...(weatherLine ? [`Cuaca: ${weatherLine}`] : []),
-        ],
-      },
-    ],
-  });
-}
-
-async function buildCategoryText(m, botConfig, db, category) {
+async function buildCategoryText(m, botConfig, db, uptime, category) {
   try {
     const prefix = botConfig.command?.prefix || ".";
     const catName = CATEGORY_NAMES[category] || (category.charAt(0).toUpperCase() + category.slice(1));
     const catEmoji = CATEGORY_EMOJIS[category] || "📂";
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
+    const user = db.getUser(m.sender);
+    let userRole = "Free", roleEmoji = "👤";
+    if (m.isOwner) { userRole = "Owner"; roleEmoji = "👑"; }
+    else if (m.isPremium) { userRole = "Premium"; roleEmoji = "💎"; }
+
+    const userExp = user?.exp || 0;
+    const userLevel = Math.floor(userExp / 20000) + 1;
+    const expCurr = userExp - (userLevel - 1) * 20000;
+    const expBar = progressBar(expCurr, 20000, 8);
+
+    // Collect commands
     const commandsByCategory = getCommandsByCategory();
     const caseCats = getCasesByCategory();
     const pluginCmds = (commandsByCategory[category] || []).map(c => ({
@@ -147,16 +94,114 @@ async function buildCategoryText(m, botConfig, db, category) {
       if (!seen.has(cmd.command)) { seen.add(cmd.command); allCmds.push(cmd); }
     }
 
+    const header = futuristicHeader(`${catEmoji} ${catName}`);
+
+    const userProfile = futuristicSection("User", [
+      kv("Nama", m.pushName || "User"),
+      kv("Status", `${roleEmoji} ${userRole}`),
+      kv("Level", `${userLevel} ${expBar}`),
+      kv("Prefix", `[ ${prefix} ]`),
+    ]);
+
     if (allCmds.length === 0) {
-      return `${listBox(`${catEmoji} ${catName}`, ["Tidak ada command di kategori ini"])}\n\n${botName}`;
+      const footer = futuristicFooter("0 fitur", botName);
+      return [header, "", userProfile, "", futuristicSection("Kategori", [
+        "Tidak ada command di kategori ini",
+      ]), "", footer].join("\n");
     }
 
-    const items = allCmds.map((c) => `${prefix}${c.command}${c.description ? ` — ${c.description}` : ""}`);
+    // Command list with descriptions
+    const cmdLines = allCmds.map((c, i) => {
+      const num = String(i + 1).padStart(2, "0");
+      const desc = c.description ? ` — ${c.description}` : "";
+      return `${num}. ${prefix}${c.command}${desc}`;
+    });
 
-    return `${listBox(`${catEmoji} ${catName}`, items)}\n\nTotal ${allCmds.length} fitur\n${botName}`;
+    const cmdSection = futuristicSection(`Commands (${allCmds.length})`, cmdLines);
+
+    const footer = futuristicFooter(
+      `${allCmds.length} fitur · ${prefix} prefix`,
+      botName
+    );
+
+    return [header, "", userProfile, "", cmdSection, "", footer].join("\n");
   } catch (e) {
     console.error("[menukategori] buildCategoryText error:", e.message);
-    return `╭─「 Menu Kategori 」\n│ Error: ${e.message}\n╰──────────────`;
+    return `◆ ◇ ◆ Error ◆ ◇ ◆\n\n┊ ${e.message}`;
+  }
+}
+
+async function buildCategoryListText(m, botConfig, db, uptime) {
+  try {
+    const prefix = botConfig.command?.prefix || ".";
+    const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
+    const user = db.getUser(m.sender);
+
+    let userRole = "Free", roleEmoji = "👤";
+    if (m.isOwner) { userRole = "Owner"; roleEmoji = "👑"; }
+    else if (m.isPremium) { userRole = "Premium"; roleEmoji = "💎"; }
+
+    const userExp = user?.exp || 0;
+    const userLevel = Math.floor(userExp / 20000) + 1;
+    const expCurr = userExp - (userLevel - 1) * 20000;
+    const expBar = progressBar(expCurr, 20000, 8);
+
+    const timeStr = fmtTime("HH:mm");
+    const uptimeStr = formatUptime(uptime);
+
+    let weatherLine = "—";
+    try { const w = await getWeatherAddress(); if (w) weatherLine = w; } catch {}
+
+    const pluginCats = getCategories();
+    const commandsByCategory = getCommandsByCategory();
+    const caseCats = getCasesByCategory();
+    const allCatKeys = [...new Set([...pluginCats, ...Object.keys(caseCats)])];
+
+    let totalFitur = 0, totalKategori = 0;
+    const catEntries = [];
+
+    for (const cat of allCatKeys.sort((a, b) => {
+      const ia = CATEGORY_ORDER.indexOf(a), ib = CATEGORY_ORDER.indexOf(b);
+      return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+    })) {
+      if (cat === "owner" && !m.isOwner) continue;
+      const total = (commandsByCategory[cat] || []).length + (caseCats[cat] || []).length;
+      if (total === 0) continue;
+
+      const name = CATEGORY_NAMES[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
+      const emoji = CATEGORY_EMOJIS[cat] || "📂";
+      catEntries.push(`${emoji}  ${prefix}menukategori ${cat.padEnd(12)} ${name} (${total})`);
+      totalFitur += total;
+      totalKategori++;
+    }
+
+    const header = futuristicHeader("Category Index");
+
+    const userProfile = futuristicSection("User", [
+      kv("Nama", m.pushName || "User"),
+      kv("Status", `${roleEmoji} ${userRole}`),
+      kv("Level", `${userLevel} ${expBar}`),
+    ]);
+
+    const systemStatus = futuristicSection("System", [
+      kv("Status", `${statusDot("online")} Online`),
+      kv("Prefix", `[ ${prefix} ]`),
+      kv("Uptime", uptimeStr),
+      kv("Waktu", `${timeStr} WIB`),
+      kv("Cuaca", weatherLine),
+    ]);
+
+    const catSection = futuristicSection(`Kategori (${totalKategori})`, catEntries);
+
+    const footer = futuristicFooter(
+      `${totalFitur} fitur · ${totalKategori} kategori`,
+      botName
+    );
+
+    return [header, "", userProfile, "", systemStatus, "", catSection, "", footer].join("\n");
+  } catch (e) {
+    console.error("[menukategori] buildCategoryListText error:", e.message);
+    return `◆ ◇ ◆ Error ◆ ◇ ◆\n\n┊ ${e.message}`;
   }
 }
 
@@ -169,32 +214,13 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
     const thumbnailPath = path.join(process.cwd(), "assets", "image", "menu.jpg");
 
-    // Data kategori untuk tombol single_select
     const pluginCats = getCategories();
     const commandsByCategory = getCommandsByCategory();
     const caseCats = getCasesByCategory();
     const allCatKeys = [...new Set([...pluginCats, ...Object.keys(caseCats)])];
 
     if (!inputCat) {
-      // Tampilkan daftar kategori + info lengkap di atas
-      const infoHeader = await buildInfoHeader(m, botConfig, db, uptime);
-
-      const rows = [];
-      let totalCats = 0;
-      for (const cat of allCatKeys.sort()) {
-        if (cat === "owner" && !m.isOwner) continue;
-        const total = (commandsByCategory[cat] || []).length + (caseCats[cat] || []).length;
-        if (total === 0) continue;
-        const name = CATEGORY_NAMES[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
-        const emoji = CATEGORY_EMOJIS[cat] || "📂";
-        rows.push(`${emoji} ${prefix}menukategori ${cat} — ${name} (${total})`);
-        totalCats++;
-      }
-
-      const catList = listBox("Daftar Kategori", rows);
-      const text = `${infoHeader}\n\n${catList}\n\nTotal ${totalCats} kategori · ketik *${prefix}menukategori <nama>*\n${botName}`;
-
-      // Kategori button = single_select, tombol ke-3 = All Menu (bukan Menu)
+      const text = await buildCategoryListText(m, botConfig, db, uptime);
       const buttons = buildNavButtons(
         prefix, false, allCatKeys, commandsByCategory, caseCats, m.isOwner
       );
@@ -214,22 +240,21 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     const matchedCat = findCategory(inputCat);
     if (!matchedCat) {
-      await m.reply(`${listBox("Kategori", [`Kategori "${inputCat}" tidak ditemukan`])}\n\nKetik *${prefix}menukategori* untuk daftar kategori`);
+      await m.reply(`◆ ◇ ◆ Error ◆ ◇ ◆\n\n┊ Kategori "${inputCat}" tidak ditemukan\n┊ Ketik *${prefix}menukategori* untuk daftar`);
       await m.react("❌");
       return;
     }
 
     if (matchedCat === "owner" && !m.isOwner) {
-      await m.reply(listBox("👑 Owner", ["Kategori ini khusus owner"]));
+      await m.reply("◆ ◇ ◆ Access Denied ◆ ◇ ◆\n\n┊ Kategori ini khusus Owner");
       await m.react("❌");
       return;
     }
 
-    const text = await buildCategoryText(m, botConfig, db, matchedCat);
+    const text = await buildCategoryText(m, botConfig, db, uptime, matchedCat);
     const catName = CATEGORY_NAMES[matchedCat] || matchedCat;
     const catEmoji = CATEGORY_EMOJIS[matchedCat] || "📂";
 
-    // Kategori button = single_select, tombol ke-3 = All Menu
     const buttons = buildNavButtons(
       prefix, false, allCatKeys, commandsByCategory, caseCats, m.isOwner
     );

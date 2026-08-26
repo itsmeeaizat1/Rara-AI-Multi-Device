@@ -1,11 +1,128 @@
-// === Nova AI Menu Style (v3 — Clean Box Drawing) ===
-// Format konsisten: ╭─「 title 」 / │  ➥ item / ╰─
-// Semua fungsi lama (claraWrap, bracketBox, claraHeader, dll) tetap export
-// dengan nama yang sama untuk backward compat — tinggal output-nya berubah.
+// === Nova AI Menu Style (v4 — Futuristic Dashboard) ===
+// Modern futuristic design: ▎ sections, ┊ details, ▰▱ progress bars, ● status
+// Semua fungsi lama (claraWrap, bracketBox, dll) tetap export untuk backward compat.
 
 // Small caps map
 const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
 const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c).replace(/[A-Z]/g, c => (SC_MAP[c.toLowerCase()] || c).toUpperCase());
+
+// ═══════════════════════════════════════════════
+// FUTURISTIC v4 FUNCTIONS (untuk menu/allmenu/allmenucategory)
+// ═══════════════════════════════════════════════
+
+/**
+ * Futuristic header — ◆ ◇ ◆ Title ◆ ◇ ◆
+ */
+function futuristicHeader(title) {
+  return `◆ ◇ ◆ ${toSC(title)} ◆ ◇ ◆`;
+}
+
+/**
+ * Futuristic section — ▎ heading + ┊ lines
+ *   ▎ᴜsᴇʀ ᴘʀᴏғɪʟᴇ
+ *   ┊ Key : Value
+ *   ┊ Key : Value
+ */
+function futuristicSection(heading, lines = []) {
+  const out = [`▎${toSC(heading)}`];
+  for (const line of lines) {
+    out.push(`┊ ${line}`);
+  }
+  return out.join("\n");
+}
+
+/**
+ * Progress bar — ▰▰▰▱▱▱
+ * @param {number} value - current value
+ * @param {number} max - max value
+ * @param {number} width - bar width (default 8)
+ */
+function progressBar(value, max, width = 8) {
+  const v = Math.max(0, Math.min(value, max));
+  const filled = max > 0 ? Math.round((v / max) * width) : 0;
+  return "▰".repeat(filled) + "▱".repeat(width - filled);
+}
+
+/**
+ * Status dot — ● with emoji context
+ */
+function statusDot(status = "online") {
+  const map = {
+    online: "●",
+    offline: "○",
+    active: "●",
+    idle: "◐",
+    error: "✕",
+  };
+  return map[status.toLowerCase()] || "●";
+}
+
+/**
+ * Clean divider — ┈┈┈┈┈┈┈┈┈┈┈┈
+ */
+function futuristicDivider(len = 28) {
+  return "┈" + "┈".repeat(Math.min(len, 36));
+}
+
+/**
+ * Futuristic footer
+ *   ┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈
+ *   320 fitur · 25 kategori
+ *   ɴᴏᴠᴀ ᴀɪ ᴡʜᴀᴛsᴀᴘᴘ ʙᴏᴛ
+ */
+function futuristicFooter(stats, botName) {
+  return `${futuristicDivider()}\n${stats}\n${toSC(botName)}`;
+}
+
+/**
+ * Align key-value with padding for clean look
+ *   Nama      : Aizat
+ *   Status    : Owner
+ */
+function kv(key, value, padTo = 10) {
+  const k = String(key);
+  const padded = k + " ".repeat(Math.max(0, padTo - k.length));
+  return `${padded}: ${value}`;
+}
+
+/**
+ * Futuristic command catalog section
+ * Multi-column command listing per category:
+ *   ▎🤖 ᴀɪ (32)
+ *   ┊ .nova-ai  .aichat  .gpt5
+ *   ┊ .deepseek  .qwen3  .gemini
+ */
+function futuristicCategory(emoji, name, commands, prefix, perLine = 3) {
+  const header = `▎${emoji} ${toSC(name)} (${commands.length})`;
+  const lines = [];
+  for (let i = 0; i < commands.length; i += perLine) {
+    const chunk = commands.slice(i, i + perLine);
+    lines.push(`┊ ${chunk.map(c => `${prefix}${c}`).join("  ")}`);
+  }
+  return [header, ...lines].join("\n");
+}
+
+/**
+ * Complete futuristic dashboard layout
+ * @param {string} title - Main title
+ * @param {string} intro - Greeting line under header
+ * @param {Array} sections - [{ heading, lines }]
+ * @param {string} footerStats - stats line
+ * @param {string} botName - bot name for footer
+ */
+function futuristicDashboard(title, intro, sections = [], footerStats, botName) {
+  const parts = [futuristicHeader(title)];
+  if (intro) parts.push(`\n${intro}`);
+  for (const sec of sections) {
+    parts.push("\n" + futuristicSection(sec.heading, sec.lines));
+  }
+  parts.push("\n" + futuristicFooter(footerStats, botName));
+  return parts.join("\n");
+}
+
+// ═══════════════════════════════════════════════
+// BACKWARD COMPAT — fungsi lama (JANGAN diubah, 250+ plugin pakai ini)
+// ═══════════════════════════════════════════════
 
 // Section header: ╭─「 *Title* 」
 function sectionHeader(title) {
@@ -38,7 +155,6 @@ function buildSection(title, items = []) {
   return lines.join("\n");
 }
 
-// === Backward compat functions ===
 function claraHeader(title, emoji = "") {
   return `╭─「 *${toSC(title)}* 」`;
 }
@@ -122,19 +238,7 @@ function novaUsage(commandName, { steps = [], example = "", note = "", emoji = "
   return bracketBox('i', title, lines);
 }
 
-
-// === Info-style box (◈ subsection + ┊ detail) ===
-// Dipakai KHUSUS untuk info/profile (.menu) dan daftar command (.allmenu,
-// .allmenucategory, .menu2) — beda dari bracketBox (➥) yang dipakai untuk
-// caption/petunjuk cara pakai di tiap plugin (JANGAN diganti, sudah benar).
-//
-// Struktur:
-//   ╭─「 Title 」
-//   │ intro (opsional, baris bebas di bawah judul)
-//   │
-//   │  ◈ *Heading Subsection* (opsional)
-//   │  ┊ Key: value
-//   ╰──────────────
+// === Legacy info/list boxes (tetap dipakai beberapa plugin lama) ===
 function infoBox(title, { intro, sections = [] } = {}) {
   const out = [`╭─「 ${toSC(title)} 」`];
   if (intro) out.push(`│ ${intro}`);
@@ -149,11 +253,6 @@ function infoBox(title, { intro, sections = [] } = {}) {
   return out.join("\n");
 }
 
-// Daftar command polos (tanpa subsection), tiap item pakai bullet ◈.
-//   ╭─「 Title 」
-//   │  ◈ item1
-//   │  ◈ item2
-//   ╰──────────────
 function listBox(title, items = []) {
   const out = [`╭─「 ${toSC(title)} 」`];
   for (const item of items) out.push(`│  ◈ ${item}`);
@@ -161,15 +260,10 @@ function listBox(title, items = []) {
   return out.join("\n");
 }
 
-export {
-  buildNavButtons,
-  claraHeader, alyaHeader, bracketBox, claraWrap, claraLine,
-  separator, tipText, formatNumber, broadcastFormat, novaUsage,
-  toSC, sectionHeader, sectionItem, sectionClose, sectionSpacer, buildSection,
-  infoBox, listBox,
-};
+// ═══════════════════════════════════════════════
+// NAV BUTTONS (untuk menu interaktif)
+// ═══════════════════════════════════════════════
 
-// === Tombol navigasi untuk menu (single_select untuk Kategori) ===
 const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
   canvas: "Canvas", tools: "Tools", game: "Games", rpg: "RPG",
@@ -190,16 +284,14 @@ const CATEGORY_EMOJIS = {
   panel: "🖥️", owner: "👑", store: "🛒",
 };
 
-/**
- * Build 4 tombol navigasi: Kategori (single_select popup), Info Lainnya, All Menu/Menu, Tanya AI.
- * @param {string} prefix - Command prefix
- * @param {boolean} isAllMenuCtx - kalau true, tombol ke-3 jadi "🏠 Menu", kalau false jadi "📋 All Menu"
- * @param {Array} allCatKeys - semua key kategori yang tersedia
- * @param {object} commandsByCategory - map cat → commands
- * @param {object} caseCats - map cat → case commands
- * @param {boolean} isOwner - kalau true, tampilkan kategori owner
- * @returns {Array} buttons array untuk sendMenuCard
- */
+const CATEGORY_ORDER = [
+  "main", "ai", "download", "sticker", "tools", "game", "rpg",
+  "fun", "canvas", "media", "search", "group", "utility",
+  "info", "cek", "religi", "economy", "user", "random",
+  "premium", "ephoto", "jpm", "pushkontak", "panel",
+  "store", "owner",
+];
+
 function buildNavButtons(prefix, isAllMenuCtx, allCatKeys, commandsByCategory, caseCats, isOwner) {
   const rows = [];
   for (const cat of allCatKeys.sort()) {
@@ -228,3 +320,16 @@ function buildNavButtons(prefix, isAllMenuCtx, allCatKeys, commandsByCategory, c
     { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
   ];
 }
+
+export {
+  // Futuristic v4
+  futuristicHeader, futuristicSection, progressBar, statusDot,
+  futuristicDivider, futuristicFooter, kv, futuristicCategory,
+  futuristicDashboard, CATEGORY_ORDER,
+  // Backward compat
+  buildNavButtons,
+  claraHeader, alyaHeader, bracketBox, claraWrap, claraLine,
+  separator, tipText, formatNumber, broadcastFormat, novaUsage,
+  toSC, sectionHeader, sectionItem, sectionClose, sectionSpacer, buildSection,
+  infoBox, listBox,
+};
