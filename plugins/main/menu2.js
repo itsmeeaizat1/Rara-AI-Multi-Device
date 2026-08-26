@@ -77,7 +77,7 @@ ${m.pushName || "User"} 👋`;
     await sendMenuCard(sock, m, {
       text,
       footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
-      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
+      useImage: false, // tanpa gambar = gak save ke galeri
       buttons: navButtons,
       title: toSC(botName),
     });
