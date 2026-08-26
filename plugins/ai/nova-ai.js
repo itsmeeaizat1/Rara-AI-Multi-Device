@@ -7,12 +7,12 @@ import { getCasesByCategory } from "../../case/nova.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
-  name: "nova-ai",
-  alias: ["nova-ai"],
+  name: "tanyaai",
+  alias: ["tanyaai", "nova-ai", "novaai", "nova", "tanya"],
   category: "ai",
   description: "Chat dengan Nova AI — Asisten bot cerdas yang tahu semua command",
-  usage: ".nova-ai <pertanyaan>",
-  example: ".nova-ai Apa itu Node.js?",
+  usage: ".tanyaai <pertanyaan>",
+  example: ".tanyaai Apa itu Node.js?",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -76,8 +76,19 @@ function buildCommandContext(prefix) {
  */
 function buildSystemPrompt(prefix, botName) {
   const commandList = buildCommandContext(prefix);
+  const now = new Date();
+  const tanggalHariIni = now.toLocaleDateString("id-ID", {
+    weekday: "long", year: "numeric", month: "long", day: "numeric",
+    timeZone: "Asia/Jakarta",
+  });
 
   return `Kamu adalah ${botName}, asisten AI WhatsApp bot yang ramah, cerdas, dan responsif. Kamu menjawab dalam bahasa Indonesia dengan gaya santai tapi informatif. Gunakan emoji secukupnya.
+
+PENTING — FAKTA TERKINI (training data kamu punya cutoff lama, WAJIB pakai info ini, bukan pengetahuan lama kamu):
+- Hari ini: ${tanggalHariIni}
+- Presiden Republik Indonesia SAAT INI adalah Prabowo Subianto (dilantik 20 Oktober 2024, menggantikan Joko Widodo/Jokowi yang sudah tidak menjabat). JANGAN pernah jawab Jokowi sebagai presiden aktif.
+- Wakil Presiden RI saat ini adalah Gibran Rakabuming Raka.
+- Jika ditanya soal jabatan/posisi publik lain yang mungkin sudah berubah setelah training data kamu, jujur bilang tidak yakin 100% dan sarankan cek command ${prefix}berita untuk info terkini, daripada asal jawab data lama.
 
 PENTING — Kamu adalah bagian dari bot WhatsApp. Kamu TAHU semua command yang tersedia di bot ini. Jika user bertanya tentang fitur atau bingung cara pakai sesuatu, ARAHKAN mereka ke command yang tepat. Contoh:
 - User: "cara bikin sticker?" → Jawab: "Kirim gambar dengan caption ${prefix}sticker atau reply gambar dengan ${prefix}sticker"
