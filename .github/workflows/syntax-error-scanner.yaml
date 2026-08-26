@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   scan:
+    name: Scan JS Files
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -38,7 +39,6 @@ jobs:
           echo "  NOVA AI - SYNTAX & CODE ERROR SCANNER"
           echo "============================================"
           
-          # Check if project uses ESM
           IS_ESM="false"
           if grep -q '"type":\s*"module"' package.json 2>/dev/null; then
             IS_ESM="true"
@@ -55,7 +55,6 @@ jobs:
           while IFS= read -r file; do
             CHECKED=$((CHECKED + 1))
             
-            # For ESM files with import/export, use --input-type=module
             if [ "$IS_ESM" = "true" ]; then
               ERROR_OUTPUT=$(node --check --input-type=module < "$file" 2>&1)
             else
@@ -87,7 +86,6 @@ jobs:
             echo -e "$ERROR_FILES"
             echo ""
             echo "⚠️ Ditemukan $ERROR_COUNT file dengan syntax error!"
-            # Exit 1 = fail workflow, biar kelihatan di GitHub Actions
             exit 1
           else
             echo ""
@@ -95,25 +93,21 @@ jobs:
           fi
 
       - name: Check for Common Runtime Issues
+        if: always()
         run: |
-          echo ""
           echo "============================================"
           echo "  CEK RUNTIME ISSUES UMUM"
           echo "============================================"
           
-          # Cek import yang missing export
           echo "1. Cek import path yang tidak ada..."
           find plugins/ src/ -name "*.js" -exec grep -l "^import.*from" {} \; 2>/dev/null | while read f; do
             grep "^import.*from" "$f" | sed "s/.*from *[\"']//; s/[\"'].*//" | while read imp; do
-              # Skip node: builtins dan package imports
               case "$imp" in
                 node:*|https:*|http:*) continue ;;
               esac
-              # Resolve relative imports
               if [[ "$imp" == .* ]]; then
                 dir=$(dirname "$f")
                 resolved=$(realpath -m "$dir/$imp" 2>/dev/null)
-                # Try with .js extension
                 if [ -n "$resolved" ]; then
                   if [ ! -f "$resolved" ] && [ ! -f "${resolved}.js" ] && [ ! -f "${resolved}/index.js" ]; then
                     echo "⚠️ $f: import '$imp' mungkin tidak ditemukan"
@@ -123,22 +117,22 @@ jobs:
             done
           done 2>/dev/null
           
-          # Cek duplicate plugin names
           echo ""
           echo "2. Cek duplicate plugin names..."
           grep -rh "name:\s*\"" plugins/ --include="*.js" 2>/dev/null | sed 's/.*name:\s*"//;s/".*//' | sort | uniq -d | while read dup; do
             echo "⚠️ Duplicate plugin name: $dup"
           done
           
-          # Cek file kosong atau terlalu kecil
           echo ""
-          echo "3. Cek file kosong..."
-          find plugins/ src/ -name "*.js" -size -50c 2>/dev/null | while read f; do
-            lines=$(wc -l < "$f" 2>/dev/null)
-            if [ "$lines" -lt 5 ]; then
-              echo "⚠️ File hampir kosong: $f ($lines lines)"
+          echo "3. Cek plugin tanpa export config/handler..."
+          find plugins/ -name "*.js" -exec sh -c '
+            if ! grep -q "export.*config" "$1" 2>/dev/null && ! grep -q "export default" "$1" 2>/dev/null; then
+              echo "⚠️ $1: tidak ada export config"
             fi
-          done
+            if ! grep -q "export.*handler" "$1" 2>/dev/null && ! grep -q "export default" "$1" 2>/dev/null; then
+              echo "⚠️ $1: tidak ada export handler"
+            fi
+          ' _ {} \; 2>/dev/null | head -20
           
           echo ""
           echo "============================================"

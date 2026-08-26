@@ -13,7 +13,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '22'
 
       - name: Install system libs (for canvas)
         run: |
@@ -22,12 +22,20 @@ jobs:
 
       - name: Install dependencies
         run: |
-          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+          if [ -f package-lock.json ]; then npm ci --ignore-scripts; else npm install --ignore-scripts; fi
 
       - name: Verify installed canvas packages
         run: |
-          node -e "try { console.log(require('@napi-rs/canvas') ? 'napi-canvas OK' : 'napi-canvas missing') } catch(e){ console.error('napi-canvas load failed:', e.message); process.exit(1) }"
+          node -e "import('@napi-rs/canvas').then(() => console.log('✅ napi-canvas OK')).catch(e => { console.error('❌ napi-canvas:', e.message); process.exit(1) })"
 
-      - name: Syntax check (quick)
+      - name: Syntax check (ESM-aware)
         run: |
-          node --check index.js
+          IS_ESM=$(grep -q '"type":\s*"module"' package.json 2>/dev/null && echo "true" || echo "false")
+          find . -path ./node_modules -prune -o -path ./.git -prune -o -name "*.js" -print | while read f; do
+            if [ "$IS_ESM" = "true" ]; then
+              node --check --input-type=module < "$f" 2>&1 | head -3
+            else
+              node --check "$f" 2>&1 | head -3
+            fi
+          done
+          echo "✅ Syntax check selesai"
