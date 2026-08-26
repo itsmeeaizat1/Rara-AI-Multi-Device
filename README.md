@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20rebuild%20game%20system%20from-success?style=for-the-badge)
-> *Commit: "feat: rebuild game system from scratch — fix nyerah/surrender bug"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-docs%3A%20update%20FEATURES.md%20with%20-success?style=for-the-badge)
+> *Commit: "docs: update FEATURES.md with 30 rebuilt game plugins"*
 <!--END_SECTION:latest-update-->
 
 
