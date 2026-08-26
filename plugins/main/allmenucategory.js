@@ -1,14 +1,17 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenucategory.js — Menu per kategori (elegant, style ◈ untuk list command)
+// allmenucategory.js — Menu per kategori (bracket box, info lengkap + cuaca + tombol)
 import {
   getCommandsByCategory,
   getCategories,
 } from "../../src/lib/nova-plugins.js";
 import { getCasesByCategory } from "../../case/nova.js";
+import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
+import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/nova-time.js";
 import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { listBox } from "../../src/lib/nova-menu-style.js";
+import { infoBox, listBox } from "../../src/lib/nova-menu-style.js";
+import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 
 const pluginConfig = {
   name: "allmenucategory",
@@ -46,6 +49,13 @@ const CATEGORY_EMOJIS = {
   panel: "🖥️", owner: "👑", store: "🛒",
 };
 
+const NAV_BUTTONS = (prefix) => [
+  { id: `${prefix}menu`, text: "🏠 Menu" },
+  { id: `${prefix}owner`, text: "ℹ️ Info Lainnya" },
+  { id: `${prefix}allmenu`, text: "📋 All Menu" },
+  { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
+];
+
 function findCategory(input) {
   if (!input) return null;
   const lower = input.toLowerCase().trim();
@@ -57,6 +67,68 @@ function findCategory(input) {
     if (key.includes(lower) || name.toLowerCase().includes(lower)) return key;
   }
   return null;
+}
+
+function formatUptime(ms) {
+  if (!ms || ms < 0) return "0s";
+  const s = Math.floor((ms / 1000) % 60);
+  const m = Math.floor((ms / (1000 * 60)) % 60);
+  const h = Math.floor((ms / (1000 * 60 * 60)) % 24);
+  const d = Math.floor(ms / (1000 * 60 * 60 * 24));
+  const parts = [];
+  if (d > 0) parts.push(`${d}d`);
+  if (h > 0) parts.push(`${h}h`);
+  if (m > 0) parts.push(`${m}m`);
+  if (s > 0 || parts.length === 0) parts.push(`${s}s`);
+  return parts.join(" ");
+}
+
+async function buildInfoHeader(m, botConfig, db, uptime) {
+  const prefix = botConfig.command?.prefix || ".";
+  const user = db.getUser(m.sender);
+  const timeStr = fmtTime("HH:mm");
+  const dateStr = fmtFull("DD MMMM YYYY");
+  const uptimeStr = formatUptime(uptime);
+
+  let userRole = "User", roleEmoji = "👤";
+  if (m.isOwner) { userRole = "Owner"; roleEmoji = "👑"; }
+  else if (m.isPremium) { userRole = "Premium"; roleEmoji = "💎"; }
+
+  const userExp = user?.exp || 0;
+  const userLevel = Math.floor(userExp / 20000) + 1;
+  const expMin = (userLevel - 1) * 20000;
+  const expMax = userLevel * 20000;
+  const expCurr = userExp - expMin;
+
+  let weatherLine = null;
+  try { weatherLine = await getWeatherAddress(); } catch {}
+
+  const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
+
+  return infoBox(botName, {
+    intro: `${getTimeGreeting()} *${m.pushName || "User"}* 👋`,
+    sections: [
+      {
+        heading: "User",
+        lines: [
+          `Nama: ${m.pushName || "User"}`,
+          `Role: ${roleEmoji} ${userRole}`,
+          `Level: ${userLevel} · ${expCurr.toLocaleString()}/${(expMax - expMin).toLocaleString()} XP`,
+          `Koin: 🪙 ${(user?.koin || 0).toLocaleString("id-ID")}`,
+        ],
+      },
+      {
+        heading: "Bot",
+        lines: [
+          `Version: ${botConfig.bot?.version || "-"}`,
+          `Prefix: [ ${prefix} ]`,
+          `Uptime: ${uptimeStr}`,
+          `Waktu: ${timeStr} WIB · ${dateStr}`,
+          ...(weatherLine ? [`Cuaca: ${weatherLine}`] : []),
+        ],
+      },
+    ],
+  });
 }
 
 async function buildCategoryText(m, botConfig, db, category) {
@@ -105,12 +177,16 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const thumbnailPath = path.join(process.cwd(), "assets", "image", "menu.jpg");
 
     if (!inputCat) {
+      // Tampilkan daftar kategori + info lengkap di atas
       const pluginCats = getCategories();
       const commandsByCategory = getCommandsByCategory();
       const caseCats = getCasesByCategory();
       const allCatKeys = [...new Set([...pluginCats, ...Object.keys(caseCats)])];
 
+      const infoHeader = await buildInfoHeader(m, botConfig, db, uptime);
+
       const rows = [];
+      let totalCats = 0;
       for (const cat of allCatKeys.sort()) {
         if (cat === "owner" && !m.isOwner) continue;
         const total = (commandsByCategory[cat] || []).length + (caseCats[cat] || []).length;
@@ -118,22 +194,18 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
         const name = CATEGORY_NAMES[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
         const emoji = CATEGORY_EMOJIS[cat] || "📂";
         rows.push(`${emoji} ${prefix}menukategori ${cat} — ${name} (${total})`);
+        totalCats++;
       }
 
-      const text = `${listBox("Kategori", rows)}\n\nTotal ${rows.length} kategori · ketik *${prefix}menukategori <nama>*\n${botName}`;
-
-      const navButtons = [
-        { id: `${prefix}menu`, text: "🏠 Menu" },
-        { id: `${prefix}allmenu`, text: "📋 All Menu" },
-        { id: `${prefix}owner`, text: "👑 Owner" },
-      ];
+      const catList = listBox("Daftar Kategori", rows);
+      const text = `${infoHeader}\n\n${catList}\n\nTotal ${totalCats} kategori · ketik *${prefix}menukategori <nama>*\n${botName}`;
 
       await m.react("🐣");
       await sendMenuCard(sock, m, {
         text,
         footer: botName,
         thumbnailPath,
-        buttons: navButtons,
+        buttons: NAV_BUTTONS(prefix),
         title: "Menu Kategori",
       });
 
@@ -158,18 +230,12 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const catName = CATEGORY_NAMES[matchedCat] || matchedCat;
     const catEmoji = CATEGORY_EMOJIS[matchedCat] || "📂";
 
-    const navButtons = [
-      { id: `${prefix}menu`, text: "🏠 Menu" },
-      { id: `${prefix}allmenu`, text: "📋 All Menu" },
-      { id: `${prefix}allmenucategory`, text: "📂 Kategori" },
-    ];
-
     await m.react("🐣");
     await sendMenuCard(sock, m, {
       text,
       footer: botName,
       thumbnailPath,
-      buttons: navButtons,
+      buttons: NAV_BUTTONS(prefix),
       title: `${catEmoji} ${catName}`,
     });
 
