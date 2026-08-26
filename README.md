@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20loading%20text%20%E2%8F%B3-success?style=for-the-badge)
-> *Commit: "refactor: hapus loading text ⏳, ganti dengan react 🕒→🐣"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20handler.js%20loading%20t-success?style=for-the-badge)
+> *Commit: "refactor: handler.js loading text → react 🕒→🐣"*
 <!--END_SECTION:latest-update-->
 
 
