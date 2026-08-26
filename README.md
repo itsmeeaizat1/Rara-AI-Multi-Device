@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20alias%20pertama%20%3D%20nama%20cmd-success?style=for-the-badge)
-> *Commit: "feat: alias pertama = nama cmd di semua plugin + fix syntax 」"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20simplify%20alias%20%E2%80%94%20han-success?style=for-the-badge)
+> *Commit: "refactor: simplify alias — hanya nama cmd, buang alias acak"*
 <!--END_SECTION:latest-update-->
 
 
