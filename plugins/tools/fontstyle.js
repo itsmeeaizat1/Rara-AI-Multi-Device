@@ -242,4 +242,4 @@ async function handler(m, { sock }) {
   ].join("\n")));
 }
 
-export { pluginConfig, handler };
+export { pluginConfig as config, handler };

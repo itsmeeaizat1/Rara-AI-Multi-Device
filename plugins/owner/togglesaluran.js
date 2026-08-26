@@ -6,7 +6,7 @@ import {
   NOTIFY_EVENTS,
   getAllNotifyStatus,
   setNotifyEnabled,
-} from "../../src/lib/nova-notify.js";
+} from "../../src/lib/nova-saluran-broadcast.js";
 import { claraWrap, tipText, separator } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {

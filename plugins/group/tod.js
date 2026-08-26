@@ -256,6 +256,7 @@ function displayName(jid) {
 
 // ─── Plugin ───
 export default {
+  config: {
   name: "tod",
   alias: ["confession"],
   category: "group",
@@ -265,6 +266,7 @@ export default {
   wait: "🕐",
   error: "❌",
 
+  },
   async handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const groupId = m.key?.remoteJid || m.chat || "";

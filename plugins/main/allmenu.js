@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// allmenu.js — Semua command per kategori (root sendMessage + preview card + type 1 buttons)
+// allmenu.js — Semua command per kategori (text + externalAdReply preview card + type 1 buttons)
 import config from "../../config.js";
 import {
   getTimeGreeting,
@@ -63,11 +63,12 @@ const CATEGORY_EMOJIS = {
   panel: "🖥️", owner: "👑", store: "🛒",
 };
 
+// Thumbnail: SATU file untuk semua menu
 let _thumbCache = null;
 function getThumb() {
   if (_thumbCache) return _thumbCache;
   try {
-    const p = path.join(process.cwd(), "assets", "image", "nova-thumbnail-allmenu.jpg");
+    const p = path.join(process.cwd(), "assets", "image", "menu.jpg");
     if (fs.existsSync(p)) {
       _thumbCache = fs.readFileSync(p);
       console.log("[allmenu] ✅ Thumbnail loaded: " + _thumbCache.length + " bytes");
@@ -181,32 +182,30 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     await m.react("🕒");
     const prefix = botConfig.command?.prefix || ".";
     const text = await buildAllMenuText(m, botConfig, db, uptime, sock);
-    const thumbBuffer = getThumb();
+    const menuThumb = getThumb();
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
     const saluranLink = botConfig.saluran?.link || "";
-    const footerText = `${botName} | Nova AI WhatsApp Bot`;
 
-    // Type 1 buttons + externalAdReply preview card (thumbnail TIDAK kesimpen galeri)
+    // Template: text + footer + type 1 buttons + externalAdReply di level ROOT
     const buttons = [
       { buttonId: `${prefix}menu`, buttonText: { displayText: "🏠 Menu" }, type: 1 },
       { buttonId: `${prefix}allmenucategory`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
-      { buttonId: `${prefix}tanyaai`, buttonText: { displayText: "🤖 Tanya AI" }, type: 1 },
+      { buttonId: `${prefix}owner`, buttonText: { displayText: "👑 Owner" }, type: 1 },
     ];
 
     try {
       await sock.sendMessage(m.chat, {
         text: text,
-        footer: footerText,
+        footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
         buttons: buttons,
         contextInfo: {
           mentionedJid: [m.sender],
           externalAdReply: {
             title: toSC(botName),
             body: "All Menu - Complete List",
-            thumbnail: thumbBuffer,
+            thumbnail: menuThumb,
             sourceUrl: saluranLink,
-            mediaType: 2,
-            showAdAttribution: false,
+            mediaType: 1,
             renderLargerThumbnail: true,
           },
         },
@@ -220,10 +219,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
           externalAdReply: {
             title: toSC(botName),
             body: "All Menu - Complete List",
-            thumbnail: thumbBuffer,
+            thumbnail: menuThumb,
             sourceUrl: saluranLink,
-            mediaType: 2,
-            showAdAttribution: false,
+            mediaType: 1,
             renderLargerThumbnail: true,
           },
         },
@@ -241,4 +239,4 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   }
 }
 
-export { pluginConfig, handler };
+export { pluginConfig as config, handler };

@@ -426,4 +426,4 @@ async function handler(m, { sock, args }) {
   return m.reply(`Subkomandan tidak dikenal: "${sub}"\n\nKetik \`${m.prefix}dapur\` untuk lihat daftar perintah.`);
 }
 
-export { pluginConfig, handler };
+export { pluginConfig as config, handler };

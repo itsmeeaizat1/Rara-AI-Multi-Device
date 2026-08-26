@@ -2,16 +2,23 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
-export const cmd = "logmsg";
-export const aliases = ["logpesan"];
-export const category = "owner";
-export const desc = "Toggle panel message logging (group only, private never logged)";
-export const owner = true;
-export const cooldown = 3;
-export const energi = 0;
+const pluginConfig = {
+  name: "logmsg",
+  alias: ["logpesan"],
+  category: "owner",
+  description: "Toggle panel message logging (group only, private never logged)",
+  usage: ".logmsg on/off",
+  example: ".logmsg on",
+  isOwner: true,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 3,
+  energi: 0,
+  isEnabled: true,
+};
 
-export async function execute(ctx, args) {
-  const { m, sock } = ctx;
+async function handler(m, { sock, config: botConfig, args }) {
   const db = getDatabase();
 
   if (!db.db?.data?.settings) {
@@ -21,7 +28,7 @@ export async function execute(ctx, args) {
     db.db.data.settings.logMessage = false;
   }
 
-  const arg = (args[0] || "").toLowerCase();
+  const arg = (args?.[0] || m.text?.split(/\s+/)?.[1] || "").toLowerCase();
 
   let status, text;
 
@@ -52,3 +59,5 @@ export async function execute(ctx, args) {
 
   return m.reply(claraWrap("logmsg", result));
 }
+
+export { pluginConfig as config, handler };

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// menu.js — Menu utama (root sendMessage + externalAdReply preview card + type 1 buttons)
+// menu.js — Menu utama (text + externalAdReply preview card + type 1 buttons)
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import config from "../../config.js";
 import {
@@ -13,7 +13,6 @@ import {
   getCategories,
 } from "../../src/lib/nova-plugins.js";
 import fs from "fs";
-import os from "os";
 import path from "path";
 import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
@@ -56,12 +55,12 @@ function formatBytes(b) {
   return (b / 1024 / 1024 / 1024).toFixed(2) + " GB";
 }
 
-// ── Load thumbnail raw buffer (NO sharp, cached) ──
+// Thumbnail: SATU file untuk semua menu
 let _thumbCache = null;
 function getThumb() {
   if (_thumbCache) return _thumbCache;
   try {
-    const p = path.join(process.cwd(), "assets", "image", "nova-thumbnail-menu.jpg");
+    const p = path.join(process.cwd(), "assets", "image", "menu.jpg");
     if (fs.existsSync(p)) {
       _thumbCache = fs.readFileSync(p);
       console.log("[menu] ✅ Thumbnail loaded: " + _thumbCache.length + " bytes");
@@ -91,15 +90,15 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const totalRegistered = Object.values(allUsers).filter(u => u.registeredAt).length;
     const totalPremium = Object.values(allUsers).filter(u => u.isPremium).length;
     const memUsage = process.memoryUsage();
-    const totalMem = os.totalmem();
-    const usedMem = totalMem - os.freemem();
-    const memPercent = ((usedMem / totalMem) * 100).toFixed(1);
-    const cpuModel = os.cpus()[0]?.model || "Unknown";
-    const cpuCores = os.cpus().length;
-    const cpuSpeed = os.cpus()[0]?.speed || "-";
-    const hostname = os.hostname();
-    const serverUptime = formatUptime(os.uptime());
-    const loadAvg = os.loadavg()[0].toFixed(2);
+    const totalMem = os.totalmem?.() || 0;
+    const usedMem = totalMem - (os.freemem?.() || 0);
+    const memPercent = totalMem ? ((usedMem / totalMem) * 100).toFixed(1) : "-";
+    const cpuModel = os.cpus?.()?.[0]?.model || "Unknown";
+    const cpuCores = os.cpus?.()?.length || "-";
+    const cpuSpeed = os.cpus?.()?.[0]?.speed || "-";
+    const hostname = os.hostname?.() || "unknown";
+    const serverUptime = formatUptime(os.uptime?.() || 0);
+    const loadAvg = (os.loadavg?.()?.[0] || 0).toFixed(2);
     const userExp = user?.exp || 0;
     const userLevel = Math.floor(userExp / 20000) + 1;
     const expMin = (userLevel - 1) * 20000;
@@ -165,7 +164,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
   ┊  ➶ *ᴄᴘᴜ:* ${cpuModel}
   ┊  ➶ *ᴄᴏʀᴇꜱ:* ${cpuCores} threads @ ${cpuSpeed} MHz
   ┊  ➶ *ʟᴏᴀᴅ ᴀᴠɢ:* ${loadAvg}
-  ┊  ➶ *ʀᴀᴍ:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
+  ┊  ➶ *ʀᴀᴍ:* ${totalMem ? formatBytes(usedMem) + " / " + formatBytes(totalMem) + " (" + memPercent + "%)" : "-"}
   ┊  ➶ *ʀᴀᴍ ʙᴏᴛ:* ${formatBytes(memUsage.rss)}
 ${weatherBlock ? weatherBlock : ""}❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
 ${readMore}
@@ -204,34 +203,30 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     await m.react("🕒");
     const prefix = botConfig.command?.prefix || ".";
     const text = await buildMenuText(m, botConfig, db, uptime, sock);
-    const thumbBuffer = getThumb();
+    const menuThumb = getThumb();
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
     const saluranLink = botConfig.saluran?.link || "";
-    const footerText = `${botName} | Nova AI WhatsApp Bot`;
 
-    // Tombol navigasi type 1 (support externalAdReply preview card)
-    // Thumbnail sebagai preview card = TIDAK tersimpan ke galeri HP
+    // Template: text + footer + type 1 buttons + externalAdReply di level ROOT
     const buttons = [
       { buttonId: `${prefix}allmenu`, buttonText: { displayText: "📋 All Menu" }, type: 1 },
       { buttonId: `${prefix}allmenucategory`, buttonText: { displayText: "📂 Kategori" }, type: 1 },
-      { buttonId: `${prefix}tanyaai`, buttonText: { displayText: "🤖 Tanya AI" }, type: 1 },
       { buttonId: `${prefix}owner`, buttonText: { displayText: "👑 Owner" }, type: 1 },
     ];
 
     try {
       await sock.sendMessage(m.chat, {
         text: text,
-        footer: footerText,
+        footer: "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀",
         buttons: buttons,
         contextInfo: {
           mentionedJid: [m.sender],
           externalAdReply: {
             title: toSC(botName),
             body: "WhatsApp Multi Device",
-            thumbnail: thumbBuffer,
+            thumbnail: menuThumb,
             sourceUrl: saluranLink,
-            mediaType: 2,
-            showAdAttribution: false,
+            mediaType: 1,
             renderLargerThumbnail: true,
           },
         },
@@ -245,10 +240,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
           externalAdReply: {
             title: toSC(botName),
             body: "WhatsApp Multi Device",
-            thumbnail: thumbBuffer,
+            thumbnail: menuThumb,
             sourceUrl: saluranLink,
-            mediaType: 2,
-            showAdAttribution: false,
+            mediaType: 1,
             renderLargerThumbnail: true,
           },
         },
@@ -266,4 +260,4 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   }
 }
 
-export { pluginConfig, handler };
+export { pluginConfig as config, handler };

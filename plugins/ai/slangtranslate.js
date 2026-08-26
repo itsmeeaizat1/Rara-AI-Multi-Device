@@ -39,6 +39,7 @@ async function transcribeAudio(wavBuffer, groqKey) {
 }
 
 export default {
+  config: {
   name: "slangtranslate",
   alias: ["slangtranslate", "slangtr", "sltr"],
   category: "ai",
@@ -48,6 +49,7 @@ export default {
   wait: "🕐",
   error: "❌",
 
+  },
   async handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const aiConfig = botConfig.aiHelp || {};
