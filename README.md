@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20menu%20style%20%E2%97%88%2F%E2%94%8A%20untuk-success?style=for-the-badge)
-> *Commit: "refactor: menu style ◈/┊ untuk info+list command (sesuai referensi user)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20urutan%20react%20%F0%9F%95%92%E2%86%92%F0%9F%90%A3%E2%86%92menu%20(-success?style=for-the-badge)
+> *Commit: "fix: urutan react 🕒→🐣→menu (🐣 sebelum menu dikirim, bukan setelah)"*
 <!--END_SECTION:latest-update-->
 
 
