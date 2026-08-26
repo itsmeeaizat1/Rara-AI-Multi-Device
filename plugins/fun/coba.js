@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { askFunAI } from "../../src/lib/nova-fun-ai.js";
 const pluginConfig = {
     name: 'coba',
     alias: ["coba"],
@@ -39,14 +40,19 @@ const answers = [
     'Hmm, tebakan aku: kamu butuh temen ngobrol!'
 ];
 
-async function handler(m, { sock }) {
+async function handler(m, { sock, config: botConfig }) {
     const text = m.text?.trim();
     
     if (!text) {
         return m.reply(claraWrap("Coba", `🎯 *ᴄᴏʙᴀ*\n\nMasukkan sesuatu!\n\n*ᴄᴏɴᴛᴏʜ:*\n.coba tebak apa yang aku pikirkan`));
     }
     
-    const answer = answers[Math.floor(Math.random() * answers.length)];
+    const { text: answer, fromAI } = await askFunAI({
+        botConfig: botConfig || {},
+        question: text,
+        persona: "coba",
+        fallbackAnswers: answers,
+    });
     
     { const __navText = claraWrap("Coba", [`${m.body.slice(1)}?`, `*${answer}*`].join("\n")); await m.reply(__navText); }
 }

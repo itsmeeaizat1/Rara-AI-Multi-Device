@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { cekFunAI } from "../../src/lib/nova-fun-ai.js";
 const pluginConfig = {
   name: "cekmesum",
   alias: ["cekmesum"],
@@ -16,13 +17,25 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-async function handler(m, { sock }) {
+async function handler(m, { sock, config: botConfig }) {
   const percent = Math.floor(Math.random() * 101);
   const mentioned = m.mentionedJid[0] || m.sender;
 
   let desc = "";
   if (percent >= 90) {
     desc = "MESUM AKUT! Tobat mas! 😳🔞";
+    // Coba AI buat deskripsi yang lebih lucu, fallback ke desc di atas
+    try {
+        const aiResult = await cekFunAI({
+            botConfig: botConfig || {},
+            cekType: "mesum",
+            percent: percent,
+            fallbackDesc: desc,
+        });
+        if (aiResult.text) desc = aiResult.text;
+    } catch {}
+
+
   } else if (percent >= 70) {
     desc = "Mesum banget! 👀";
   } else if (percent >= 50) {
