@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Auto-generated game plugin: tebakkalimat
 
-import { games } from "../../src/lib/nova-games.js";
+import { games } from "../../src/lib/nova-game-factory.js";
 
 const plugin = games.createPlugin("tebakkalimat");
 

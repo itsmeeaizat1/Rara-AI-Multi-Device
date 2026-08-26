@@ -337,10 +337,10 @@ async function messageHandler(msg, sock) {
       if (config.dev?.debugLog) logger.error("family100", e.message);
     }
 
-    // All other games (via nova-games factory — shared session map)
+    // All other games (via nova-game-factory — shared session map in nova-game-engine)
     try {
-      const { games } = await import("./lib/nova-games.js");
-      const { getSession } = await import("./lib/nova-game-data.js");
+      const { games } = await import("./lib/nova-game-factory.js");
+      const { getSession } = await import("./lib/nova-game-engine.js");
       const session = getSession(m.chat);
       if (session && session.gameType) {
         const cfg = games.get(session.gameType);

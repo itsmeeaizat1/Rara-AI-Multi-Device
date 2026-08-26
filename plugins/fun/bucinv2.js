@@ -1,5 +1,5 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { getRandomItem } from '../../src/lib/nova-game-data.js'
+import { getRandomItem } from '../../src/lib/nova-game-engine.js'
 const pluginConfig = {
     name: "bucinv2",
     alias: ["bucinv2", "bucinlevel2", "bucincekv2"],
