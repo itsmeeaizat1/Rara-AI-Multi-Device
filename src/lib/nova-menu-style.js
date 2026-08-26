@@ -1,6 +1,6 @@
 // === Nova AI Menu Style (v5 — Indo Dev Bot Style) ===
 // Aesthetic khas bot WhatsApp dev Indonesia (YouTube-style):
-// ╭─「 」 box drawing, │ ❏ bullets, ❀ ✧ decorations, emoji section headers
+// ╭──「 」 box drawing, │ ❏ bullets, ❀ ✧ decorations, emoji section headers
 // + modern data: ▰▱ progress bars, ● status dots, system info
 // Semua fungsi lama tetap export dengan signature sama.
 
@@ -16,10 +16,10 @@ const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
 // ═══════════════════════════════════════════════
 
 /**
- * Bot header — ╭─「 *BotName* 」
+ * Bot header — ╭──「 *BotName* 」
  */
 function botHeader(botName) {
-  return `╭─「 *${toSC(botName)}* 」`;
+  return `╭──「 *${toSC(botName)}* 」`;
 }
 
 /**
@@ -30,11 +30,11 @@ function botSignature(botName) {
 }
 
 /**
- * Section box — ╭─「 Emoji Title 」 / │ ❏ lines / ╰──────────
+ * Section box — ╭──「 Emoji Title 」 / │ ❏ lines / ╰──────────❀
  */
 function sectionBox(emoji, title, lines = []) {
   const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
-  const header = `╭─「 ${emojiStr}${toSC(title)} 」`;
+  const header = `╭──「 ${emojiStr}${toSC(title)} 」`;
   const body = lines.map(line => {
     const clean = String(line)
       .replace(/^╎❏\s*/, '')
@@ -43,7 +43,7 @@ function sectionBox(emoji, title, lines = []) {
       .replace(/^[•┊╎❏➶╭╰│]\s*/g, '');
     return `│ ❏ ${clean}`;
   });
-  const footer = `╰──────────`;
+  const footer = `╰──────────❀`;
   return [header, ...body, footer].join("\n");
 }
 
@@ -75,20 +75,20 @@ function kv(key, value, padTo = 10) {
 
 /**
  * Multi-column command list per category (untuk allmenu)
- *   ╭─「 🤖 AI (10) 」
+ *   ╭──「 🤖 AI (10) 」
  *   │ ❏ .a  ❏ .b  ❏ .c
  *   │ ❏ .d  ❏ .e  ❏ .f
- *   ╰──────────
+ *   ╰──────────❀
  */
 function categoryBox(emoji, name, commands, prefix, perLine = 3) {
   const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
-  const header = `╭─「 ${emojiStr}${toSC(name)} (${commands.length}) 」`;
+  const header = `╭──「 ${emojiStr}${toSC(name)} (${commands.length}) 」`;
   const lines = [];
   for (let i = 0; i < commands.length; i += perLine) {
     const chunk = commands.slice(i, i + perLine);
     lines.push(`│ ❏ ${chunk.map(c => `${prefix}${c}`).join("  ❏ ")}`);
   }
-  const footer = `╰──────────`;
+  const footer = `╰──────────❀`;
   return [header, ...lines, footer].join("\n");
 }
 
@@ -98,9 +98,9 @@ function categoryBox(emoji, name, commands, prefix, perLine = 3) {
 // Dipakai oleh 1266+ file plugin. Update di sini = update semua.
 // ═══════════════════════════════════════════════
 
-// Section header: ╭─「 *Title* 」
+// Section header: ╭──「 *Title* 」
 function sectionHeader(title) {
-  return `╭─「 *${toSC(title)}* 」`;
+  return `╭──「 *${toSC(title)}* 」`;
 }
 
 // Section item: │ ❏ text
@@ -109,9 +109,9 @@ function sectionItem(text) {
   return `│ ❏ ${clean}`;
 }
 
-// Section close: ╰──────────
+// Section close: ╰──────────❀
 function sectionClose() {
-  return `╰──────────`;
+  return `╰──────────❀`;
 }
 
 // Spacer: │
@@ -129,16 +129,16 @@ function buildSection(title, items = []) {
   return lines.join("\n");
 }
 
-// claraHeader: ╭─「 Emoji Title 」
+// claraHeader: ╭──「 Emoji Title 」
 function claraHeader(title, emoji = "") {
-  if (isRealEmoji(emoji)) return `╭─「 ${emoji} ${toSC(title)} 」`;
-  return `╭─「 *${toSC(title)}* 」`;
+  if (isRealEmoji(emoji)) return `╭──「 ${emoji} ${toSC(title)} 」`;
+  return `╭──「 *${toSC(title)}* 」`;
 }
 
-// bracketBox: ╭─「 Emoji Label 」 / │ ❏ lines / ╰──────────
+// bracketBox: ╭──「 Emoji Label 」 / │ ❏ lines / ╰──────────❀
 function bracketBox(emoji, label, lines = []) {
   const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
-  const header = `╭─「 ${emojiStr}*${toSC(label)}* 」`;
+  const header = `╭──「 ${emojiStr}*${toSC(label)}* 」`;
   const body = lines.map((line) => {
     const clean = String(line)
       .replace(/^╎❏\s*/, '')
@@ -147,7 +147,7 @@ function bracketBox(emoji, label, lines = []) {
       .replace(/^[•┊╎❏➶╭╰│]\s*/g, '');
     return `│ ❏ ${clean}`;
   });
-  const footer = `╰──────────`;
+  const footer = `╰──────────❀`;
   return [header, ...body, footer].join("\n");
 }
 
@@ -223,9 +223,9 @@ function novaUsage(commandName, { steps = [], example = "", note = "", emoji = "
   return bracketBox('i', title, lines);
 }
 
-// infoBox: ╭─「 」 / │ ◈ heading / │ ┊ detail / ╰──────────
+// infoBox: ╭──「 」 / │ ◈ heading / │ ┊ detail / ╰──────────❀
 function infoBox(title, { intro, sections = [] } = {}) {
-  const out = [`╭─「 ${toSC(title)} 」`];
+  const out = [`╭──「 ${toSC(title)} 」`];
   if (intro) out.push(`│ ${intro}`);
   for (const sec of sections) {
     out.push(`│`);
@@ -234,15 +234,15 @@ function infoBox(title, { intro, sections = [] } = {}) {
       out.push(`│ ┊ ${line}`);
     }
   }
-  out.push(`╰──────────`);
+  out.push(`╰──────────❀`);
   return out.join("\n");
 }
 
-// listBox: ╭─「 」 / │ ❏ item / ╰──────────
+// listBox: ╭──「 」 / │ ❏ item / ╰──────────❀
 function listBox(title, items = []) {
-  const out = [`╭─「 ${toSC(title)} 」`];
+  const out = [`╭──「 ${toSC(title)} 」`];
   for (const item of items) out.push(`│ ❏ ${item}`);
-  out.push(`╰──────────`);
+  out.push(`╰──────────❀`);
   return out.join("\n");
 }
 
