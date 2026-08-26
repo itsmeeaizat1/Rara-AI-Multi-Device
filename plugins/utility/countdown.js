@@ -5,7 +5,7 @@ const pluginConfig = {
   name: "countdown", alias: ["hitungmundur", "mundur"], category: "utility",
   description: "Hitung mundur ke tanggal tertentu", usage: ".countdown <DD-MM-YYYY>",
   example: ".countdown 25-12-2026", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 3, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

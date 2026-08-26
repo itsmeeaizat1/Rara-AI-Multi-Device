@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "aidescribe", alias: ["describeai", "deskripsiai", "apaini"], category: "future",
   description: "AI deskripsikan isi foto", usage: ".aidescribe (reply gambar)",
   example: ".aidescribe", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 15, energi: 5, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 15, energi: 5, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

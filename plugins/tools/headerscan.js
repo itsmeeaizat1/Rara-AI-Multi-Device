@@ -7,7 +7,7 @@ const pluginConfig = {
   name: "headerscan", alias: ["httpheaders", "headercheck"], category: "tools",
   description: "Scan HTTP headers website", usage: ".headerscan <url>",
   example: ".headerscan https://google.com", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 5, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

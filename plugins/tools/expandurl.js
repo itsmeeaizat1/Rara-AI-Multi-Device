@@ -7,7 +7,7 @@ const pluginConfig = {
   name: "expandurl", alias: ["unshorten", "urlexpand"], category: "tools",
   description: "Expand short URL ke URL asli", usage: ".expandurl <url>",
   example: ".expandurl https://bit.ly/xxx", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 3, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
 async function expand(url, maxRedirects = 10) {

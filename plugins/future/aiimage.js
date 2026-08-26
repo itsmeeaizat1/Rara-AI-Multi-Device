@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "aiimagev2", alias: ["aigen", "texttoimage", "generateimage"], category: "future",
   description: "Generate gambar dari teks dengan AI", usage: ".aiimage <deskripsi>",
   example: ".aiimage kucing astronaut di bulan", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 30, energi: 5, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 30, energi: 5, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

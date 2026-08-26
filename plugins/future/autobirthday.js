@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "autobirthday", alias: ["autobirthday", "autoulta", "ultahauto"], category: "future",
   description: "Catat & reminder ulang tahun", usage: ".autobirthday <add/list>",
   example: ".autobirthday add Budi 17-08", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 3, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

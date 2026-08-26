@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "autolanguage", alias: ["langdetect", "deteksiBahasa"], category: "future",
   description: "Deteksi bahasa & translate", usage: ".autolanguage (reply pesan)",
   example: ".autolanguage", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 10, energi: 2, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 10, energi: 2, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

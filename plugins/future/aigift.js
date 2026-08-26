@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "aigift", alias: ["giftai", "rekomendasikado", "kadoai"], category: "future",
   description: "AI rekomendasi kado", usage: ".aigift <info orang>",
   example: ".aigift cowok 20th suka game", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 15, energi: 3, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

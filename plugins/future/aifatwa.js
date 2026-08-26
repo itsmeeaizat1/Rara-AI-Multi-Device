@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "aifatwa", alias: ["aifatwa", "tanyaislam2", "fatwaai"], category: "future",
   description: "Tanya hukum Islam, AI cari referensi", usage: ".aifatwa <pertanyaan>",
   example: ".aifatwa hukum trading forex", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 15, energi: 3, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

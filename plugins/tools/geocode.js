@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "geocode", alias: ["koordinat", "lokasi"], category: "tools",
   description: "Alamat ke koordinat GPS", usage: ".geocode <nama tempat>",
   example: ".geocode Monas Jakarta", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 5, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

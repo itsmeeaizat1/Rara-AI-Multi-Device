@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "aidiet", alias: ["dietai", "kalori", "hitungkalori"], category: "future",
   description: "Foto makanan → AI hitung kalori", usage: ".aidiet (reply foto makanan)",
   example: ".aidiet", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 15, energi: 5, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 15, energi: 5, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

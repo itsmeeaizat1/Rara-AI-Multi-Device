@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "imagetext", alias: ["textonimage", "captionimage"], category: "tools",
   description: "Tulis teks di atas gambar", usage: ".imagetext <text> (reply gambar)",
   example: ".imagetext Halo", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 10, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

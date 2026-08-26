@@ -5,7 +5,7 @@ const pluginConfig = {
   name: "alarm", alias: ["alarm2", "setalarm", "alarmutil"], category: "utility",
   description: "Alarm pengingat pribadi", usage: ".alarm <HH:MM> <pesan>",
   example: ".alarm 07:30 bangun sekolah", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 3, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

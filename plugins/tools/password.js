@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "password", alias: ["passgen", "generatepassword", "randpass"], category: "tools",
   description: "Generate password acak", usage: ".password <panjang>",
   example: ".password 16", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 2, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 2, energi: 0, isEnabled: true,
 };
 
 const LOWER = "abcdefghijklmnopqrstuvwxyz";

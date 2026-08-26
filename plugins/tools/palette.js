@@ -5,7 +5,7 @@ const pluginConfig = {
   name: "palette", alias: ["colorpalette", "warna"], category: "tools",
   description: "Generate color palette dari hex", usage: ".palette <#hex>",
   example: ".palette #ff6600", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 2, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 2, energi: 0, isEnabled: true,
 };
 
 function hexToHsl(hex) {

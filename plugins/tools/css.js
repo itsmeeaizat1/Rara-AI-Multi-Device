@@ -5,7 +5,7 @@ const pluginConfig = {
   name: "css", alias: ["csstemplate", "cssgen"], category: "tools",
   description: "Generate CSS snippet", usage: ".css <template>",
   example: ".css flexbox", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 2, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 2, energi: 0, isEnabled: true,
 };
 
 const TEMPLATES = {

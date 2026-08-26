@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "autotodo", alias: ["tododetect", "aitodo"], category: "future",
   description: "AI deteksi tugas dari chat", usage: ".autotodo (reply chat)",
   example: ".autotodo", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 15, energi: 3, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "hadith", alias: ["hadisreligi", "hadithreligi", "hadis3"], category: "religi",
   description: "Cari hadis Bukhari & Muslim", usage: ".hadith <kata kunci>",
   example: ".hadith sabar", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 10, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {
