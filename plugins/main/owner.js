@@ -45,12 +45,12 @@ async function handler(m, { sock, config: botConfig }) {
       text: "Jika kamu memiliki pertanyaan, jangan ragu untuk bertanya, owner ramah kok",
     }, { quoted: zanne });
   } else {
-    const ownerText = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Owner Information
+    const ownerText = `╭──「 *Owner Information 」
 ┊
-  ┊  ➶ *ɴᴀᴍᴀ:* ${ownerNames}
-  ┊  ➶ *ʙᴏᴛ:* ${botName}
-  ┊  ➶ *ꜱᴛᴀᴛᴜꜱ:* Online
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+│ ❏ *ɴᴀᴍᴀ:* ${ownerNames}
+│ ❏ *ʙᴏᴛ:* ${botName}
+│ ❏ *ꜱᴛᴀᴛᴜꜱ:* Online
+╰──────────❀
 
 Jika ada pertanyaan atau kendala,
 silakan hubungi owner di atas!

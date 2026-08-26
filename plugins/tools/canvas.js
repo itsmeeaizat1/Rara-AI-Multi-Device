@@ -24,8 +24,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       const out =
-        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}canvas <teks>*`,
-          `  ┊  ➶ Contoh: *${prefix}canvas Hello World*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}canvas <teks>*`,
+          `│ ❏ Contoh: *${prefix}canvas Hello World*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -47,9 +47,9 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const out =
-      claraWrap("Canvas", [`  ┊  ➶ Teks: *${text.slice(0, 50)}${text.length > 50 ? "..." : ""}*`,
-        "  ┊  ➶ Ukuran: *1080x1080*",
-        "  ┊  ➶ Format: *ᴘɴɢ*"].join("\n")) +
+      claraWrap("Canvas", [`│ ❏ Teks: *${text.slice(0, 50)}${text.length > 50 ? "..." : ""}*`,
+        "│ ❏ Ukuran: *1080x1080*",
+        "│ ❏ Format: *ᴘɴɢ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}canvas <teks> untuk desain lain`) +
       "\n" +
@@ -59,8 +59,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

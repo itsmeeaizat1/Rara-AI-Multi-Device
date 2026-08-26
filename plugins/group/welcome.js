@@ -25,9 +25,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!["on", "off"].includes(args)) {
       const text =
-        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}welcome on/off*`,
-          `  ┊  ➶ Contoh: *${prefix}welcome on*`,
-          `  ┊  ➶ Contoh: *${prefix}welcome off*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}welcome on/off*`,
+          `│ ❏ Contoh: *${prefix}welcome on*`,
+          `│ ❏ Contoh: *${prefix}welcome off*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -39,9 +39,9 @@ async function handler(m, { sock, config: botConfig }) {
     db.setGroup(m.chat, { welcome: args === "on" });
 
     const text =
-      claraWrap("Welcome", ["  ┊  ➶ Fitur: *ᴡᴇʟᴄᴏᴍᴇ ᴍᴇꜱꜱᴀɢᴇ*",
-        `  ┊  ➶ Status: *${args === "on" ? "ON" : "OFF"}*`,
-        `  ┊  ➶ Group: *${m.chat}*`].join("\n")) +
+      claraWrap("Welcome", ["│ ❏ Fitur: *ᴡᴇʟᴄᴏᴍᴇ ᴍᴇꜱꜱᴀɢᴇ*",
+        `│ ❏ Status: *${args === "on" ? "ON" : "OFF"}*`,
+        `│ ❏ Group: *${m.chat}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}welcome on/off untuk mengubah`) +
       "\n" +
@@ -51,8 +51,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

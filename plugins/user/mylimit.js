@@ -57,18 +57,18 @@ async function handler(m, { sock }) {
     status = "Free";
   }
 
-  let msg = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ MY LIMIT\n`;
-  msg += `  ┊  ➶ Status: *${status}*\n`;
-  msg += `  ┊  ➶ Sisa limit: *${formatNumber(currentEnergi)}*\n`;
+  let msg = `╭──「 *MY LIMIT\n`; 」
+  msg += `│ ❏ Status: *${status}*\n`;
+  msg += `│ ❏ Sisa limit: *${formatNumber(currentEnergi)}*\n`;
   if (!isOwner && currentEnergi !== -1) {
-    msg += `  ┊  ➶ Terpakai: *${formatNumber(terpakai)}*\n`;
-    msg += `  ┊  ➶ Total harian: *${formatNumber(totalLimit)}*\n`;
+    msg += `│ ❏ Terpakai: *${formatNumber(terpakai)}*\n`;
+    msg += `│ ❏ Total harian: *${formatNumber(totalLimit)}*\n`;
   }
-  msg += `  ┊  ➶ Reset: *${resetTime} WIB* tiap hari\n`;
+  msg += `│ ❏ Reset: *${resetTime} WIB* tiap hari\n`;
   if (isWeekend && !isPremium && !isOwner) {
-    msg += `  ┊  ➶ Bonus weekend: *+${formatNumber(weekendBonus)} limit*\n`;
+    msg += `│ ❏ Bonus weekend: *+${formatNumber(weekendBonus)} limit*\n`;
   }
-  msg += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n`;
+  msg += `╰──────────❀\n\n`;
   msg += `Beli limit? Ketik \`.buyenergi <jumlah>\``;
 
   return m.reply( msg, "mylimit");

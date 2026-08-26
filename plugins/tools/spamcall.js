@@ -27,10 +27,10 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!count || count <= 0 || !target) {
       const text =
-        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}spamcall <jumlah> <nomor>*`,
-          `  ┊  ➶ Contoh: *${prefix}spamcall 3 628xxxx*`,
-          `  ┊  ➶ Atau: *${prefix}spamcall 3 @member*`,
-          "  ┊  ➶ Maksimal: *5x*"].join("\n")) +
+        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}spamcall <jumlah> <nomor>*`,
+          `│ ❏ Contoh: *${prefix}spamcall 3 628xxxx*`,
+          `│ ❏ Atau: *${prefix}spamcall 3 @member*`,
+          "│ ❏ Maksimal: *5x*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -43,15 +43,15 @@ async function handler(m, { sock, config: botConfig }) {
     const targetClean = String(target).replace(/@.+$/, "");
 
     for (let i = 0; i < count; i++) {
-      const body = `📞 *ꜱᴘᴀᴍ ᴄᴀʟʟ*\n┃   ┊  ➶ Target: *@${targetClean}*\n┃   ┊  ➶ Call #${i + 1}/${count}`;
+      const body = `📞 *ꜱᴘᴀᴍ ᴄᴀʟʟ*\n┃ │ ❏ Target: *@${targetClean}*\n┃ │ ❏ Call #${i + 1}/${count}`;
       mentions.push(targetClean);
       await sock.sendMessage(chat, { text: body, mentions });
     }
 
     const text =
-      claraWrap("Spam Call", [`  ┊  ➶ Target: *@${targetClean}*`,
-        `  ┊  ➶ Jumlah: *${count}x*`,
-        "  ┊  ➶ Status: *ꜱᴇʟᴇꜱᴀɪ*"].join("\n")) +
+      claraWrap("Spam Call", [`│ ❏ Target: *@${targetClean}*`,
+        `│ ❏ Jumlah: *${count}x*`,
+        "│ ❏ Status: *ꜱᴇʟᴇꜱᴀɪ*"].join("\n")) +
       "\n" +
       tipText(`Gunakan dengan bijak`) +
       "\n" +
@@ -61,8 +61,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

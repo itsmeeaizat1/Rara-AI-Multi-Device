@@ -68,16 +68,16 @@ function handler(m, { sock }) {
   text += `╰┈┈⬡\n\n`;
 
   text += `╭┈┈⬡「 ⚙️ *ᴋᴏɴꜰɪɢ* 」\n`;
-  text += `┃   ┊  ➶ Jeda: *${jedaMs === 0 ? "OFF" : formatTime(jedaMs)}*\n`;
-  text += `┃   ┊  ➶ Default: *5 menit*\n`;
+  text += `┃ │ ❏ Jeda: *${jedaMs === 0 ? "OFF" : formatTime(jedaMs)}*\n`;
+  text += `┃ │ ❏ Default: *5 menit*\n`;
 
   if (lastUsed > 0) {
     const lastUsedTime = timeHelper.fromTimestamp(lastUsed, "HH:mm:ss");
-    text += `┃   ┊  ➶ Last create: *${lastUsedTime}*\n`;
+    text += `┃ │ ❏ Last create: *${lastUsedTime}*\n`;
   }
 
   if (remaining > 0) {
-    text += `┃   ┊  ➶ Sisa: *${formatTime(remaining)}*\n`;
+    text += `┃ │ ❏ Sisa: *${formatTime(remaining)}*\n`;
   }
 
   text += `╰┈┈⬡\n\n`;

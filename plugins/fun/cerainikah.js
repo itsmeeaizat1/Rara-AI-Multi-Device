@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
       msg += `  ┊ ➶ Durasi nikah: *${durasiNikah} hari*\n`;
     }
     msg += `\n  _Tetap berpacaran, tapi tidak lagi menikah_ 💔\n\n`;
-    msg += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    msg += `╰──────────❀`;
 
     await m.reply(msg);
     await m.react("💔");

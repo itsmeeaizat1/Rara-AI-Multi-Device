@@ -32,14 +32,14 @@ async function handler(m, { sock, config: botConfig }) {
       cmdLines += `${end}  ➶ ${prefix}${funCmds[i]}\n`;
     }
 
-    const text = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Fᴜɴ
+    const text = `╭──「 *Fᴜɴ 」
 ┊
 ₊˚ʚ ᗢ₊˚✧ ﾟ. 🎮 Fᴜɴ ｡ﾟ
 ┊${cmdLines}₊˚ʚ ᗢ₊˚✧ ﾟ.
 ┊
-  ┊  ➶ *Total: ${funCmds.length} Fitur*
+│ ❏ *Total: ${funCmds.length} Fitur*
 ┊
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+╰──────────❀`;
 
     await m.reply(text);
     await m.react("🐣");

@@ -46,13 +46,13 @@ async function handler(m, { sock, args }) {
   const img = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!img) {
-    let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ HD ENHANCE\n`;
-    txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n`;
-    txt += `  ┊  ➶ Kirim/reply gambar dulu ya!\n`;
-    txt += `  ┊  ➶ Contoh: .remini (reply gambar)\n`;
-    txt += `  ┊  ➶ Custom scale: .remini 4x\n`;
-    txt += `  ┊  ➶ Kirim sebagai dokumen: .remini doc\n`;
-    txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    let txt = `╭──「 *HD ENHANCE\n`; 」
+    txt += `╰──────────❀\n`;
+    txt += `│ ❏ Kirim/reply gambar dulu ya!\n`;
+    txt += `│ ❏ Contoh: .remini (reply gambar)\n`;
+    txt += `│ ❏ Custom scale: .remini 4x\n`;
+    txt += `│ ❏ Kirim sebagai dokumen: .remini doc\n`;
+    txt += `╰──────────❀`;
     return await m.reply( txt, "remini");
   }
 
@@ -75,11 +75,11 @@ async function handler(m, { sock, args }) {
 
     await m.react("🐣");
 
-    let caption = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ HD ENHANCED\n`;
-    caption += `  ┊  ➶ Scale: ${scale}x (${outW}x${outH})\n`;
-    caption += `  ┊  ➶ Size: ${sizeMB}MB\n`;
-    caption += `  ┊  ➶ Engine: Sharp Lanczos3 (Local)\n`;
-    caption += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    let caption = `╭──「 *HD ENHANCED\n`; 」
+    caption += `│ ❏ Scale: ${scale}x (${outW}x${outH})\n`;
+    caption += `│ ❏ Size: ${sizeMB}MB\n`;
+    caption += `│ ❏ Engine: Sharp Lanczos3 (Local)\n`;
+    caption += `╰──────────❀`;
 
     if (wantDoc || resultBuffer.length > 5 * 1024 * 1024) {
       await sock.sendMessage(
@@ -105,10 +105,10 @@ async function handler(m, { sock, args }) {
   } catch (e) {
     console.error("[HD/Remini] Error:", e.message);
     await m.react("❌");
-    let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ERROR\n`;
-    txt += `  ┊  ➶ Gagal enhance gambar!\n`;
-    txt += `  ┊  ➶ ${e.message}\n`;
-    txt += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    let txt = `╭──「 *ERROR\n`; 」
+    txt += `│ ❏ Gagal enhance gambar!\n`;
+    txt += `│ ❏ ${e.message}\n`;
+    txt += `╰──────────❀`;
     await m.reply(claraWrap("remini", txt));
   }
 }

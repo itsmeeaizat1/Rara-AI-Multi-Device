@@ -25,8 +25,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!icon) {
       const text =
-        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}setgroupicon <emoji>*`,
-          `  ┊  ➶ Contoh: *${prefix}setgroupicon 🎮*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}setgroupicon <emoji>*`,
+          `│ ❏ Contoh: *${prefix}setgroupicon 🎮*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -37,17 +37,17 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.groupMetadataUpdate(m.chat, { subject: icon });
 
     const text =
-      claraWrap("Set Group Icon", [`  ┊  ➶ Icon Baru: *${icon}*`,
-        `  ┊  ➶ Group: *${m.chat}*`,
-        "  ┊  ➶ Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
+      claraWrap("Set Group Icon", [`│ ❏ Icon Baru: *${icon}*`,
+        `│ ❏ Group: *${m.chat}*`,
+        "│ ❏ Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await m.reply(claraWrap("setgroupicon", text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

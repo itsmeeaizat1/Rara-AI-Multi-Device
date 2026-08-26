@@ -156,9 +156,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (isControlCommand(lower) && db && !isAuthorized(m, db)) {
       const text =
-        claraWrap("Auto Sholat", ["  ┊  ➶ Kamu tidak punya izin untuk mengubah pengaturan Auto Sholat.",
-          "  ┊  ➶ Izin saat ini: *" + (SHOLAT_PERMISSION_LABELS[db.getGroup?.(m.chat)?.sholat?.permission] || "Owner only") + "*",
-          "  ┊  ➶ Hubungi owner untuk mengaktifkan atau mematikan fitur ini."].join("\n")) +
+        claraWrap("Auto Sholat", ["│ ❏ Kamu tidak punya izin untuk mengubah pengaturan Auto Sholat.",
+          "│ ❏ Izin saat ini: *" + (SHOLAT_PERMISSION_LABELS[db.getGroup?.(m.chat)?.sholat?.permission] || "Owner only") + "*",
+          "│ ❏ Hubungi owner untuk mengaktifkan atau mematikan fitur ini."].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}jadwalsholat untuk lihat jadwal`) +
         "\n" +
@@ -177,15 +177,15 @@ async function handler(m, { sock, config: botConfig }) {
       const chatLabel = chatTarget.type === "group" ? "Grup" : "Chat Pribadi";
 
       const text =
-        claraWrap("Auto Sholat", [`  ┊  ➶ Jadwal: *${prefix}jadwalsholat <kota>*`,
-          `  ┊  ➶ Lokasi: *${prefix}lokasijadwalsholat <kota>*`,
-          `  ┊  ➶ Aktifkan: *${prefix}jadwalsholat aktif <kota>*`,
-          `  ┊  ➶ Matikan: *${prefix}jadwalsholat off*`,
-          `  ┊  ➶ Izin: *${prefix}jadwalsholat setting <owner|user|owner+user|owner+admin>*`,
-          `  ┊  ➶ Contoh: *${prefix}jadwalsholat Jakarta*`,
-          `  ┊  ➶ Contoh: *${prefix}jadwalsholat Serang*`].join("\n")) +
+        claraWrap("Auto Sholat", [`│ ❏ Jadwal: *${prefix}jadwalsholat <kota>*`,
+          `│ ❏ Lokasi: *${prefix}lokasijadwalsholat <kota>*`,
+          `│ ❏ Aktifkan: *${prefix}jadwalsholat aktif <kota>*`,
+          `│ ❏ Matikan: *${prefix}jadwalsholat off*`,
+          `│ ❏ Izin: *${prefix}jadwalsholat setting <owner|user|owner+user|owner+admin>*`,
+          `│ ❏ Contoh: *${prefix}jadwalsholat Jakarta*`,
+          `│ ❏ Contoh: *${prefix}jadwalsholat Serang*`].join("\n")) +
         "\n" +
-        claraWrap("ꜱTatuꜱ", [`  ┊  ➶ Chat: *${chatLabel}*`, `  ┊  ➶ Status: *${currentStatus}*`, `  ┊  ➶ Kota: *${currentCity}*`, `  ┊  ➶ Izin: *${permissionLabel}*`].join("\n")) +
+        claraWrap("ꜱTatuꜱ", [`│ ❏ Chat: *${chatLabel}*`, `│ ❏ Status: *${currentStatus}*`, `│ ❏ Kota: *${currentCity}*`, `│ ❏ Izin: *${permissionLabel}*`].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +
@@ -223,9 +223,9 @@ async function handler(m, { sock, config: botConfig }) {
         db.setUser?.(chatTarget.id, { sholat: { enabled: false, city: null } });
       }
       const text =
-        claraWrap("Auto Sholat", ["  ┊  ➶ Fitur: *ᴀᴜᴛᴏ ꜱʜᴏʟᴀᴛ*",
-          "  ┊  ➶ Status: *ᴏꜰꜰ*",
-          `  ┊  ➶ Chat: *${m.chatName || chatTarget.id}*`].join("\n")) +
+        claraWrap("Auto Sholat", ["│ ❏ Fitur: *ᴀᴜᴛᴏ ꜱʜᴏʟᴀᴛ*",
+          "│ ❏ Status: *ᴏꜰꜰ*",
+          `│ ❏ Chat: *${m.chatName || chatTarget.id}*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}jadwalsholat aktif <kota> untuk aktifkan`);
 
@@ -255,11 +255,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
       const modeText = chatTarget.type === "group" ? "👥 Grup" : "💬 Chat Pribadi";
       const text =
-        claraWrap("Auto Sholat", ["  ┊  ➶ Fitur: *ᴀᴜᴛᴏ ꜱʜᴏʟᴀᴛ*",
-          "  ┊  ➶ Status: *ON*",
-          `  ┊  ➶ Mode: *${modeText}*`,
-          `  ┊  ➶ Kota: *${city}*`,
-          `  ┊  ➶ Chat: *${m.chatName || chatTarget.id}*`].join("\n")) +
+        claraWrap("Auto Sholat", ["│ ❏ Fitur: *ᴀᴜᴛᴏ ꜱʜᴏʟᴀᴛ*",
+          "│ ❏ Status: *ON*",
+          `│ ❏ Mode: *${modeText}*`,
+          `│ ❏ Kota: *${city}*`,
+          `│ ❏ Chat: *${m.chatName || chatTarget.id}*`].join("\n")) +
         "\n" +
         tipText("Bot akan mengingatkan 5 menit sebelum sholat") +
         "\n" +
@@ -291,9 +291,9 @@ async function handler(m, { sock, config: botConfig }) {
       db.setGroup?.(m.chat, { sholat: { enabled: groupData?.sholat?.enabled ?? false, city: groupData?.sholat?.city || null, permission: permissionRaw } });
       const label = SHOLAT_PERMISSION_LABELS[permissionRaw] || permissionRaw;
       const text =
-        claraWrap("Auto Sholat", ["  ┊  ➶ Fitur: *ᴀᴜᴛᴏ ꜱʜᴏʟᴀᴛ*",
-          `  ┊  ➶ Izin: *${label}*`,
-          `  ┊  ➶ Chat: *${m.chatName || m.chat}*`].join("\n")) +
+        claraWrap("Auto Sholat", ["│ ❏ Fitur: *ᴀᴜᴛᴏ ꜱʜᴏʟᴀᴛ*",
+          `│ ❏ Izin: *${label}*`,
+          `│ ❏ Chat: *${m.chatName || m.chat}*`].join("\n")) +
         "\n" +
         tipText("Izin berhasil diperbarui") +
         "\n" +
@@ -315,8 +315,8 @@ async function handler(m, { sock, config: botConfig }) {
       timings = await fetchPrayerTimes(city);
     } catch (apiError) {
       const text =
-        claraWrap("Gagal", ["  ┊  ➶ Status: *ɢᴀɢᴀʟ ᴍᴇɴɢᴀᴍʙɪʟ ᴅᴀᴛᴀ*",
-          `  ┊  ➶ Alasan: *${apiError.message}*`].join("\n")) +
+        claraWrap("Gagal", ["│ ❏ Status: *ɢᴀɢᴀʟ ᴍᴇɴɢᴀᴍʙɪʟ ᴅᴀᴛᴀ*",
+          `│ ❏ Alasan: *${apiError.message}*`].join("\n")) +
         "\n" +
         tipText("Pastikan nama kota benar dan coba lagi");
 
@@ -344,8 +344,8 @@ async function handler(m, { sock, config: botConfig }) {
       claraHeader(`Jadwal Sholat - ${city}`, "🕌") +
       "\n\n" +
       claraWrap(next.label, [
-        `  ┊  ➶ Waktu: *${formatTime24(next.time)}*`,
-        `  ┊  ➶ Sisa: *${next.remainingMinutes} menit*`,
+        `│ ❏ Waktu: *${formatTime24(next.time)}*`,
+        `│ ❏ Sisa: *${next.remainingMinutes} menit*`,
       ]) +
       "\n\n" +
       reminderText +
@@ -369,8 +369,8 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(claraWrap("sholat", text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

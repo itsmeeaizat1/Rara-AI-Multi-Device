@@ -22,8 +22,8 @@ async function handler(m, { sock }) {
     
     if (!text) {
         return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `  ┊  ➶ \`${m.prefix}pakustad <pertanyaan>\`\n\n` +
-            `  ┊  ➶ Contoh: \`${m.prefix}pakustad kenapa aku ganteng\``, "pakustad")
+            `│ ❏ \`${m.prefix}pakustad <pertanyaan>\`\n\n` +
+            `│ ❏ Contoh: \`${m.prefix}pakustad kenapa aku ganteng\``, "pakustad")
     }
     
     await m.react('🕐')

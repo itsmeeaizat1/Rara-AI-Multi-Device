@@ -47,8 +47,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!prompt) {
       const text =
-        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}ai-avatar <prompt>*`,
-          `  ┊  ➶ Contoh: *${prefix}ai-avatar anime girl with neon city*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}ai-avatar <prompt>*`,
+          `│ ❏ Contoh: *${prefix}ai-avatar anime girl with neon city*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -84,8 +84,8 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const text =
-      claraWrap("AI Avatar", [`  ┊  ➶ Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
-        "  ┊  ➶ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+      claraWrap("AI Avatar", [`│ ❏ Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
+        "│ ❏ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}ai-avatar <prompt> untuk avatar lain`) +
       "\n" +
@@ -95,8 +95,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

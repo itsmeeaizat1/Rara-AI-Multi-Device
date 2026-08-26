@@ -30,10 +30,10 @@ async function handler(m, { sock }) {
 
     if (!cinta.spouse) {
       return m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ʀᴘɢ ᴋᴇɴᴄᴀɴ*\n\n` +
+        `╭──「 **ʀᴘɢ ᴋᴇɴᴄᴀɴ*\n\n` + 」
         `  ┊ ➶ 💔 Kamu belum punya pasangan!\n` +
         `  ┊ ➶ Gunakan \`${m.prefix}rpgcouple @tag\` dulu\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
@@ -41,9 +41,9 @@ async function handler(m, { sock }) {
     const cd = checkCooldown(m, "rpgkencan");
     if (cd) {
       return m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ʀᴘɢ ᴋᴇɴᴄᴀɴ*\n\n` +
+        `╭──「 **ʀᴘɢ ᴋᴇɴᴄᴀɴ*\n\n` + 」
         `  ┊ ➶ ⏳ Cooldown: *${formatDurasi(cd)}* lagi\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
 
     if (pick === null || isNaN(pick) || pick < 0 || pick >= KENCAN_ACTIVITIES.length) {
       // Tampilkan menu kencan
-      let msg = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ʀᴘɢ ᴋᴇɴᴄᴀɴ*\n\n`;
+      let msg = `╭──「 **ʀᴘɢ ᴋᴇɴᴄᴀɴ*\n\n`; 」
       msg += `  ┊ ➶ ❤️ Pasangan: *${cinta.spouseName || cinta.spouse.split("@")[0]}*\n`;
       msg += `  ┊ ➶ 💕 Affection: *${cinta.affection || 0}*\n`;
       msg += `  ┊ ➶ 💰 Gold: *${rpg.gold || 0}*\n`;
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
         msg += `  ┊     💕 +${a.affection} affection | ✨ +${a.exp} exp\n\n`;
       });
       msg += `  Ketik: \`${m.prefix}rpgkencan <nomor>\`\n\n`;
-      msg += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+      msg += `╰──────────❀`;
       return m.reply(msg);
     }
 
@@ -73,21 +73,21 @@ async function handler(m, { sock }) {
     // Cek gold
     if ((rpg.gold || 0) < activity.cost) {
       return m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ʀᴘɢ ᴋᴇɴᴄᴀɴ*\n\n` +
+        `╭──「 **ʀᴘɢ ᴋᴇɴᴄᴀɴ*\n\n` + 」
         `  ┊ ➶ ❌ Gold tidak cukup!\n` +
         `  ┊ ➶ Butuh: *${activity.cost} gold*\n` +
         `  ┊ ➶ Punya: *${rpg.gold || 0} gold*\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
     // Cek energy
     if (!useEnergy(m, activity.energy)) {
       return m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ʀᴘɢ ᴋᴇɴᴄᴀɴ*\n\n` +
+        `╭──「 **ʀᴘɢ ᴋᴇɴᴄᴀɴ*\n\n` + 」
         `  ┊ ➶ ❌ Energy tidak cukup!\n` +
         `  ┊ ➶ Butuh: *${activity.energy} energy*\n\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `╰──────────❀`
       );
     }
 
@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
     ];
     const event = events[Math.floor(Math.random() * events.length)];
 
-    let msg = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ʀᴘɢ ᴋᴇɴᴄᴀɴ*\n\n`;
+    let msg = `╭──「 **ʀᴘɢ ᴋᴇɴᴄᴀɴ*\n\n`; 」
     msg += `  ┊ ➶ ${activity.emoji} Aktivitas: *${activity.name}*\n`;
     msg += `  ┊ ➶ 💬 "${event}"\n`;
     msg += `  ┊ ➶ ❤️ Bersama: *${cinta.spouseName || cinta.spouse.split("@")[0]}*\n\n`;
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
     msg += `  ┊ ➶ ✨ EXP: *+${activity.exp}*\n`;
     msg += `  ┊ ➶ 💰 Gold: *-${activity.cost}*\n`;
     msg += `  ┊ ➶ ⚡ Energy: *-${activity.energy}*\n\n`;
-    msg += `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+    msg += `╰──────────❀`;
 
     await m.reply(msg);
     await m.react(activity.emoji);

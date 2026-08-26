@@ -22,8 +22,8 @@ async function handler(m, { sock }) {
     if (!name) {
         return m.reply(claraWrap("Deploy", `🚀 *DEPLOY*
 
-  ┊  ➶ Masukkan nama website
-  ┊  ➶ Reply kode HTML atau file .html
+│ ❏ Masukkan nama website
+│ ❏ Reply kode HTML atau file .html
 
 Contoh:
 .deploy mysite`))
@@ -33,8 +33,8 @@ Contoh:
         return m.reply(
 `❌ *HTML TIDAK DITEMUKAN*
 
-  ┊  ➶ Reply pesan berisi HTML
-  ┊  ➶ atau reply file .html`
+│ ❏ Reply pesan berisi HTML
+│ ❏ atau reply file .html`
         )
     }
 
@@ -59,14 +59,14 @@ Contoh:
         } else {
             return m.reply(claraWrap("Deploy", `❌ *FORMAT TIDAK DIDUKUNG*
 
-  ┊  ➶ Reply teks HTML
-  ┊  ➶ atau file .html`))
+│ ❏ Reply teks HTML
+│ ❏ atau file .html`))
         }
 
         if (!/<html|<!doctype html|<head|<body/i.test(htmlContent)) {
             return m.reply(claraWrap("Deploy", `❌ *BUKAN HTML VALID*
 
-  ┊  ➶ Pastikan berisi struktur HTML`))
+│ ❏ Pastikan berisi struktur HTML`))
         }
 
         const payload = {
@@ -121,7 +121,7 @@ Contoh:
 
         m.react('✅')
 
-        await m.reply(claraWrap("Deploy", `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ DEPLOY SUCCESS
+        await m.reply(claraWrap("Deploy", `╭──「 *DEPLOY SUCCESS 」
 │
 │ 🌐 Nama     : ${name}
 │ ☁️ Platform : Vercel
@@ -131,7 +131,7 @@ Contoh:
 │ 🔗 URL
 │ https://${domain}
 │
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`))
+╰──────────❀`))
 
     } catch (error) {
 
@@ -141,11 +141,11 @@ Contoh:
             error.message
 
         m.reply(
-`❀°˖✧◝(⁰▿⁰)◜✧˖°❀ DEPLOY FAILED
+`╭──「 *DEPLOY FAILED 」
 │
 │ ❌ ${err}
 │
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+╰──────────❀`
         )
     }
 }

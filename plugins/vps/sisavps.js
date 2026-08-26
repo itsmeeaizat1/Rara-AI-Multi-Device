@@ -57,12 +57,12 @@ async function handler(m, { sock }) {
         const dropletsUsed = droplets.length
         const dropletsRemaining = dropletLimit - dropletsUsed
         
-        let txt = `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Kuota DigitalOcean
+        let txt = `╭──「 *Kuota DigitalOcean 」
 ┊
-  ┊  ➶ *ʟɪᴍɪᴛ:* ${dropletLimit} droplet
-  ┊  ➶ *ᴛᴇʀᴘᴀᴋᴀɪ:* ${dropletsUsed} droplet
-  ┊  ➶ *ꜱɪꜱᴀ:* ${dropletsRemaining} droplet
-❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀
+│ ❏ *ʟɪᴍɪᴛ:* ${dropletLimit} droplet
+│ ❏ *ᴛᴇʀᴘᴀᴋᴀɪ:* ${dropletsUsed} droplet
+│ ❏ *ꜱɪꜱᴀ:* ${dropletsRemaining} droplet
+╰──────────❀
 
 Email: ${account.email}
 Status: ${account.status}`

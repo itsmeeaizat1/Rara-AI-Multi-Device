@@ -32,8 +32,8 @@ async function formatAndReply( text, cmdName) {
     if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:") || line.includes("❀°˖") || line.includes("❀⋆｡˚")) return line;
     return toSC(line);
   }).join("\n");
-  if (!text.includes("❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀")) {
-    text = text + "\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
+  if (!text.includes("╰──────────❀")) {
+    text = text + "\n\n╰──────────❀";
   }
   return await m.reply(text);
 }
@@ -171,8 +171,8 @@ async function handler(m, { sock }) {
       // Test fetch gempa terkini
       const { fetchGempaTerkini } = await import("../../src/lib/nova-bmkg-scheduler.js");
       const g = await fetchGempaTerkini();
-      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + g.Tanggal + "  ┊  ➶\n";
-      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n";
+      let txt = "╭──「 *" + g.Tanggal + "│ ❏\n"; 」
+      txt += "╰──────────❀\n\n";
       txt += "Status: *" + (status.enabled ? "ON" : "OFF") + "*\n";
       txt += "Jadwal: " + formatSchedule(status.schedules) + " WIB\n";
       txt += "Min Magnitude: M" + (status.minMagnitude || 0) + "\n";

@@ -29,8 +29,8 @@ async function formatAndReply( text, cmdName) {
     if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:") || line.includes("❀°˖") || line.includes("❀⋆｡˚")) return line;
     return toSC(line);
   }).join("\n");
-  if (!text.includes("❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀")) {
-    text = text + "\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀";
+  if (!text.includes("╰──────────❀")) {
+    text = text + "\n\n╰──────────❀";
   }
   return await m.reply(text);
 }

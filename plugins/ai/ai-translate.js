@@ -28,9 +28,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       const out =
-        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}ai-translate <teks>*`,
-          `  ┊  ➶ Atau: *${prefix}ai-translate <bahasa> <teks>*`,
-          `  ┊  ➶ Contoh: *${prefix}ai-translate English Saya makan nasi*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}ai-translate <teks>*`,
+          `│ ❏ Atau: *${prefix}ai-translate <bahasa> <teks>*`,
+          `│ ❏ Contoh: *${prefix}ai-translate English Saya makan nasi*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -49,8 +49,8 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const out =
-      claraWrap("AI Translate", [`  ┊  ➶ Bahasa: *${lang}*`,
-        `  ┊  ➶ Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      claraWrap("AI Translate", [`│ ❏ Bahasa: *${lang}*`,
+        `│ ❏ Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}ai-translate <teks> untuk terjemahkan lagi`) +
       "\n" +
@@ -61,8 +61,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

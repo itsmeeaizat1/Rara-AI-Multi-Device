@@ -125,21 +125,21 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!isPdf && !pdfMime.includes("pdf")) {
     const help = claraWrap("Kop", [
-      `  ┊  ➶ Tambah Kop Surat ke PDF`,
+      `│ ❏ Tambah Kop Surat ke PDF`,
       ``,
-      `  ┊  ➶ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `│ ❏ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  Reply PDF, ketik:`,
       `  ${prefix}kop instansi=PT Maju Jaya alamat=Jl. Merdeka 1 Jakarta telepon=021123456 email=info@ptmaju.com`,
       ``,
-      `  ┊  ➶ *ᴘᴀʀᴀᴍᴇᴛᴇʀ:*`,
+      `│ ❏ *ᴘᴀʀᴀᴍᴇᴛᴇʀ:*`,
       `  instansi= (nama instansi/perusahaan)`,
       `  alamat= (alamat lengkap)`,
       `  telepon= (nomor telepon)`,
       `  email= (alamat email)`,
       `  website= (situs web, opsional)`,
       ``,
-      `  ┊  ➶ Kop surat ditambah di setiap halaman`,
-      `  ┊  ➶ Double border line (standar surat resmi)`,
+      `│ ❏ Kop surat ditambah di setiap halaman`,
+      `│ ❏ Double border line (standar surat resmi)`,
     ].join("\n"));
     return m.reply( help, "kop");
   }
@@ -152,7 +152,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   }
 
   await m.react("🕒");
-  m.reply(claraWrap("Kop", "  ┊  ➶ Tambah kop surat ke PDF..."));
+  m.reply(claraWrap("Kop", "│ ❏ Tambah kop surat ke PDF..."));
 
   try {
     const pdfBuffer = await m.quoted.download();

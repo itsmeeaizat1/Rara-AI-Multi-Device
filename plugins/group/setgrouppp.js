@@ -34,9 +34,9 @@ async function handler(m, { sock, config: botConfig }) {
     const media = extractImage(m);
     if (!media) {
       const text =
-        claraWrap("Set Group PP", ["  ┊  ➶ Cara 1: *Kirim gambar + caption .setgrouppp*",
-          "  ┊  ➶ Cara 2: *ʀᴇᴘʟʏ ɢᴀᴍʙᴀʀ ᴅᴇɴɢᴀɴ .ꜱᴇᴛɢʀᴏᴜᴘᴘᴘ*",
-          "  ┊  ➶ Format: *JPG, PNG, WEBP*"].join("\n")) +
+        claraWrap("Set Group PP", ["│ ❏ Cara 1: *Kirim gambar + caption .setgrouppp*",
+          "│ ❏ Cara 2: *ʀᴇᴘʟʏ ɢᴀᴍʙᴀʀ ᴅᴇɴɢᴀɴ .ꜱᴇᴛɢʀᴏᴜᴘᴘᴘ*",
+          "│ ❏ Format: *JPG, PNG, WEBP*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -52,8 +52,8 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.updateGroupPicture(m.chat, buffer);
 
     const text =
-      claraWrap("Set Group PP", [`  ┊  ➶ Group: *${m.chat}*`,
-        "  ┊  ➶ Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
+      claraWrap("Set Group PP", [`│ ❏ Group: *${m.chat}*`,
+        "│ ❏ Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -61,8 +61,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

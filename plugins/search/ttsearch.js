@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
 ┃
 ╰┈┈⬡
 
-  ┊  ➶ \`Contoh: ${m.prefix}ttsearch anime\``, "ttsearch");
+│ ❏ \`Contoh: ${m.prefix}ttsearch anime\``, "ttsearch");
   }
 
   m.react("🕒");

@@ -435,7 +435,7 @@ async function handler(m, { sock }) {
         "nama | durasi | jumlah pemenang\n\n" +
         "Contoh: Premium Account | 5m | 1\n" +
         "Durasi: 30s, 5m, 1h, 1d\n\n" +
-        "  ┊  ➶ Bot akan diam jika format salah",
+        "│ ❏ Bot akan diam jika format salah",
     );
     return;
   }

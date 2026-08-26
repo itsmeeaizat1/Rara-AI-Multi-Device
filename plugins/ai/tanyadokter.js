@@ -81,12 +81,12 @@ async function handler(m, { sock }) {
 
   if (!input) {
     const help =
-      `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Konsultasi Dokter AI\n` +
+      `╭──「 *Konsultasi Dokter AI\n` + 」
       `┊\n` +
-      `  ┊  ➶ Tanya dokter AI tentang kesehatan\n` +
-      `  ┊  ➶ Gejala, penyakit, gizi, obat, tips\n` +
-      `  ┊  ➶ *Gratis* — via API Xemoz\n` +
-      `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
+      `│ ❏ Tanya dokter AI tentang kesehatan\n` +
+      `│ ❏ Gejala, penyakit, gizi, obat, tips\n` +
+      `│ ❏ *Gratis* — via API Xemoz\n` +
+      `╰──────────❀\n\n` +
       `*Cara pakai:*\n` +
       `${m.prefix}tanyadokter <pertanyaan>\n\n` +
       `*Contoh:*\n` +
@@ -103,18 +103,18 @@ async function handler(m, { sock }) {
     if (sessions.has(key)) {
       sessions.delete(key);
       return m.reply(
-        `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Konsultasi Dokter AI\n` +
+        `╭──「 *Konsultasi Dokter AI\n` + 」
         `┊\n` +
-        `  ┊  ➶ Sesi percakapan direset\n` +
-        `  ┊  ➶ Kirim pertanyaan baru untuk mulai\n` +
-        `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+        `│ ❏ Sesi percakapan direset\n` +
+        `│ ❏ Kirim pertanyaan baru untuk mulai\n` +
+        `╰──────────❀`
       );
     }
     return m.reply(
-      `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Konsultasi Dokter AI\n` +
+      `╭──「 *Konsultasi Dokter AI\n` + 」
       `┊\n` +
-      `  ┊  ➶ Tidak ada sesi aktif untuk direset\n` +
-      `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+      `│ ❏ Tidak ada sesi aktif untuk direset\n` +
+      `╰──────────❀`
     );
   }
 
@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
 
     // Tambah disclaimer di akhir
     reply +=
-      `\n\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n` +
+      `\n\n╰──────────❀\n` +
       `_Catatan: Ini adalah saran kesehatan umum dari AI. Untuk diagnosis pasti, konsultasi langsung dengan dokter._`;
 
     // Potong jika terlalu panjang
@@ -147,10 +147,10 @@ async function handler(m, { sock }) {
     return m.reply(reply);
   } catch (error) {
     return m.reply(
-      `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ Dokter AI Error\n` +
+      `╭──「 *Dokter AI Error\n` + 」
       `┊\n` +
-      `  ┊  ➶ *Error:* ${error.message || "Gagal menghubungi dokter AI"}\n` +
-      `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n\n` +
+      `│ ❏ *Error:* ${error.message || "Gagal menghubungi dokter AI"}\n` +
+      `╰──────────❀\n\n` +
       `Coba lagi beberapa saat.`
     );
   }

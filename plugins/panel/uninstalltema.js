@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
 ┃ ㊗ Usage: \`${m.prefix}uinstalltema <ip>|<password>\`
 ╰┈┈⬡
 
-  ┊  ➶ \`Contoh: ${m.prefix}uinstalltema 192.168.1.1|secretpass\``, "root")
+│ ❏ \`Contoh: ${m.prefix}uinstalltema 192.168.1.1|secretpass\``, "root")
     }
     
     const parts = text.split('|')
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
 ┃ ㊗ Ip: ${ipvps}
 ╰┈┈⬡
 
-  ┊  ➶ _Tema berhasil diuninstall!_`))
+│ ❏ _Tema berhasil diuninstall!_`))
                 ress.end()
             }).on('data', (data) => {
                 console.log('[UninstallTema]', data.toString())

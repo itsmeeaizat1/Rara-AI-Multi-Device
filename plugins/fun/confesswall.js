@@ -62,11 +62,11 @@ function formatTime(ts) {
 }
 
 function buildHeader() {
-  return `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ *ᴄᴏɴꜰᴇss ᴡᴀʟʟ* ❀°˖✧\n\n`;
+  return `╭──「 *ᴄᴏɴꜰᴇss ᴡᴀʟʟ*\n\n`
 }
 
 function buildFooter() {
-  return `\n❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`;
+  return `\n╰──────────❀`;
 }
 
 async function handler(m, { sock }) {

@@ -246,12 +246,12 @@ function generateSerialNumber() {
 
 function buildUserDataBlock(name, age, gender, serial) {
   return (
-    `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ DATA REGISTRASI\n` +
-    `  ┊  ➶ 📛 Nama: *${name || "-"}*\n` +
-    `  ┊  ➶ 🎂 Umur: *${age ? `${age} tahun` : "-"}*\n` +
-    `  ┊  ➶ 👤 Gender: *${gender || "-"}*\n` +
-    `  ┊  ➶ 🔑 SN: *${serial || "-"}*\n` +
-    `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+    `╭──「 *DATA REGISTRASI\n` + 」
+    `│ ❏ 📛 Nama: *${name || "-"}*\n` +
+    `│ ❏ 🎂 Umur: *${age ? `${age} tahun` : "-"}*\n` +
+    `│ ❏ 👤 Gender: *${gender || "-"}*\n` +
+    `│ ❏ 🔑 SN: *${serial || "-"}*\n` +
+    `╰──────────❀`
   );
 }
 
@@ -270,21 +270,21 @@ function buildWelcomeMessage(user, registrationRequired, prefix) {
   }
 
   return (
-    `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ MENU DAFTAR\n` +
-    `  ┊  ➶ *Selamat datang di Menu Daftar!*\n\n` +
+    `╭──「 *MENU DAFTAR\n` + 」
+    `│ ❏ *Selamat datang di Menu Daftar!*\n\n` +
     `┊ ✨ Dengan daftar, data akun kamu jadi lebih aman\n` +
     `┊ dan pengalaman pakai bot jadi lebih lengkap.\n\n` +
-    `  ┊  ➶ *ᴍᴀɴꜰᴀᴀᴛ ᴅᴀꜰᴛᴀʀ*\n` +
-    `${benefits.map((item) => `  ┊  ➶ ${item}`).join("\n")}\n\n` +
-    `  ┊  ➶ *Pertanyaan 1/4*\n` +
+    `│ ❏ *ᴍᴀɴꜰᴀᴀᴛ ᴅᴀꜰᴛᴀʀ*\n` +
+    `${benefits.map((item) => `│ ❏ ${item}`).join("\n")}\n\n` +
+    `│ ❏ *Pertanyaan 1/4*\n` +
     `┊ ➶ Siapa nama kamu?\n\n` +
-    `  ┊  ➶ *ᴡᴀᴊɪʙ ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ʏᴀ*\n` +
+    `│ ❏ *ᴡᴀᴊɪʙ ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ʏᴀ*\n` +
     `┊ ➶ Untuk batal: reply \`batal\` atau ketik \`${prefix}bataldaftar\`\n\n` +
-    `  ┊  ➶ *ᴍᴇᴛᴏᴅᴇ ᴅᴀꜰᴛᴀʀ ʟᴀɪɴɴʏᴀ*\n` +
+    `│ ❏ *ᴍᴇᴛᴏᴅᴇ ᴅᴀꜰᴛᴀʀ ʟᴀɪɴɴʏᴀ*\n` +
     `┊ ➶ \`${prefix}daftar Nama, Umur\` - Daftar cepat\n` +
     `┊ ➶ \`${prefix}daftarotomatis\` - Daftar via captcha (DM)\n` +
     `┊ ➶ \`${prefix}regmail Nama, email\` - Daftar via email OTP\n` +
-    `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀`
+    `╰──────────❀`
   );
 }
 

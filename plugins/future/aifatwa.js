@@ -14,9 +14,9 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const q = m.text?.trim();
     if (!q) {
-      await m.reply( claraWrap("AI Fatwa", [`  ┊  ➶ Penggunaan: *${prefix}aifatwa <pertanyaan>*`,
-        `  ┊  ➶ Contoh: *${prefix}aifatwa hukum trading*`,
-        "  ┊  ➶ AI berdasarkan referensi umum, bukan fatwa resmi"].join("\n")), "aifatwa");
+      await m.reply( claraWrap("AI Fatwa", [`│ ❏ Penggunaan: *${prefix}aifatwa <pertanyaan>*`,
+        `│ ❏ Contoh: *${prefix}aifatwa hukum trading*`,
+        "│ ❏ AI berdasarkan referensi umum, bukan fatwa resmi"].join("\n")), "aifatwa");
       return { handled: true };
     }
     const result = await callAI(`Jawab pertanyaan Islam berikut berdasarkan Al-Quran, Hadis, dan pendapat ulama. Berikan referensi. Bahasa Indonesia.\n\nPertanyaan: ${q}`, {

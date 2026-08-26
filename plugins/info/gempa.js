@@ -40,8 +40,8 @@ async function handler(m, { sock }) {
         ? API_BASE + "/" + g.Shakemap
         : null;
 
-      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ " + g.Tanggal + "  ┊  ➶\n";
-      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+      let txt = "╭──「 *" + g.Tanggal + "│ ❏\n"; 」
+      txt += "╰──────────❀\n";
       txt += "10 gempa dirasakan terbaru\n\n";
 
       for (let i = 0; i < limit; i++) {
@@ -61,8 +61,8 @@ async function handler(m, { sock }) {
       const gempaList = data.Infogempa.gempa;
       const limit = Math.min(15, gempaList.length);
 
-      let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ GEMA TERKINI M5.0+ — BMKG  ┊  ➶\n";
-      txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+      let txt = "╭──「 *GEMA TERKINI M5.0+ — BMKG│ ❏\n"; 」
+      txt += "╰──────────❀\n";
       txt += "15 gempa M 5.0+ terbaru\n\n";
 
       for (let i = 0; i < limit; i++) {
@@ -78,8 +78,8 @@ async function handler(m, { sock }) {
     }
 
     // HELP
-    let txt = "❀°˖✧◝(⁰▿⁰)◜✧˖°❀ INFO GEMPA — BMKG  ┊  ➶\n";
-    txt += "❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀\n";
+    let txt = "╭──「 *INFO GEMPA — BMKG│ ❏\n"; 」
+    txt += "╰──────────❀\n";
     txt += "Data gempa langsung dari BMKG Indonesia.\n\n";
     txt += "*ᴘᴇʀɪɴᴛᴀʜ:*\n";
     txt += "1. .gempa — Gempa terkini (1 terbaru + shakemap)\n";

@@ -28,11 +28,11 @@ async function handler(m, { sock }) {
 
   if (!name || name.length < 2) {
     return m.reply( "📢 *Buat sAluran*\n\n" +
-        "  ┊  ➶ `.buatsaluran Nama Saluran`\n" +
-        "  ┊  ➶ `.buatsaluran Nama|Deskripsi`\n\n" +
+        "│ ❏ `.buatsaluran Nama Saluran`\n" +
+        "│ ❏ `.buatsaluran Nama|Deskripsi`\n\n" +
         "📝 Contoh:\n" +
-        "  ┊  ➶ `.buatsaluran Info Bot`\n" +
-        "  ┊  ➶ `.buatsaluran Info Bot|Update terbaru bot kami`", "buatsaluran");
+        "│ ❏ `.buatsaluran Info Bot`\n" +
+        "│ ❏ `.buatsaluran Info Bot|Update terbaru bot kami`", "buatsaluran");
   }
 
   try {

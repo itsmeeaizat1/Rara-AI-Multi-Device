@@ -33,8 +33,8 @@ function handler(m, { sock }) {
         
         return m.reply( `🔗 *Antilink Wa*\n\n` +
             `╭┈┈⬡「 📋 *sTatus* 」\n` +
-            `┃   ┊  ➶ Status: *${status.toUpperCase()}*\n` +
-            `┃   ┊  ➶ Mode: *${mode.toUpperCase()}*\n` +
+            `┃ │ ❏ Status: *${status.toUpperCase()}*\n` +
+            `┃ │ ❏ Mode: *${mode.toUpperCase()}*\n` +
             `╰┈┈⬡\n\n` +
             `*Deteksi:*\n` +
             `chat.whatsapp.com (grup)\n` +

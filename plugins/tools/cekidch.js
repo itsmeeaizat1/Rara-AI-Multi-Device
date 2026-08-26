@@ -67,14 +67,14 @@ async function handler(m, { sock }) {
 
         const infoText =
             `── .✦ 𝗖𝗛𝗔𝗡𝗡𝗘𝗟 𝗜𝗡𝗙𝗢 ✦. ──\n\n` +
-            `❀°˖✧◝(⁰▿⁰)◜✧˖°❀ ${chName}\n` +
+            `╭──「 *${chName}\n` + 」
             `│  ✦ NAMA       : *${chName}*\n` +
             `│  ✦ ID            : \`${chId}\`\n` +
             `│  ✦ sUBsCRIBER : *${formatSubs(chSubs)}*\n` +
             `│  ✦ sTATUs     : *${chVerified}*\n` +
             `│  ✦ DIBUAT      : *${chCreated}*\n` +
             `│  ✦ DEsKRIPsI  : ${descPreview}\n` +
-            `❀⋆｡˚ Nova AI WhatsApp Bot ˚｡⋆❀❖`
+            `╰──────────❀❖`
 
         const buttons = [
             {

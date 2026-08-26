@@ -14,8 +14,8 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const topic = m.text?.trim();
     if (!topic) {
-      await m.reply(claraWrap("AI Poll", [`  ┊  ➶ Penggunaan: *${prefix}aipoll <topik>*`,
-        `  ┊  ➶ Contoh: *${prefix}aipoll makan malam apa*`].join("\n")));
+      await m.reply(claraWrap("AI Poll", [`│ ❏ Penggunaan: *${prefix}aipoll <topik>*`,
+        `│ ❏ Contoh: *${prefix}aipoll makan malam apa*`].join("\n")));
       return { handled: true };
     }
     const prompt = `Buat polling dengan topik "${topic}". Berikan 4 pilihan singkat (maks 20 karakter per pilihan). Format: pilihan1|pilihan2|pilihan3|pilihan4. Hanya jawaban dalam format itu.`;

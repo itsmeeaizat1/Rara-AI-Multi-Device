@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     text += "\n" + separator("━", 22) + "\n" + tipText(`Sumber: Google Trends Indonesia`);
     await m.reply(claraWrap("trending", text));
   } catch (e) {
-    await m.reply(claraWrap("Gagal", [`  ┊  ➶ ${e.message}`].join("\n")));
+    await m.reply(claraWrap("Gagal", [`│ ❏ ${e.message}`].join("\n")));
   }
   return { handled: true };
 }

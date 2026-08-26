@@ -27,9 +27,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!expr) {
       const text =
-        claraWrap("Cara Pakai", [`  ┊  ➶ Penggunaan: *${prefix}calc <ekspresi>*`,
-          `  ┊  ➶ Contoh: *${prefix}calc 5 + 3 * 2*`,
-          "  ┊  ➶ Operator: *+ - * / %*"].join("\n")) +
+        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}calc <ekspresi>*`,
+          `│ ❏ Contoh: *${prefix}calc 5 + 3 * 2*`,
+          "│ ❏ Operator: *+ - * / %*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -39,8 +39,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!ALLOWED.test(expr)) {
       const text =
-        claraWrap("Calculator", [`  ┊  ➶ Ekspresi: *${expr}*`,
-          "  ┊  ➶ Status: *ᴇᴋꜱᴘʀᴇꜱɪ ᴛɪᴅᴀᴋ ᴅɪᴅᴜᴋᴜɴɢ*"].join("\n")) +
+        claraWrap("Calculator", [`│ ❏ Ekspresi: *${expr}*`,
+          "│ ❏ Status: *ᴇᴋꜱᴘʀᴇꜱɪ ᴛɪᴅᴀᴋ ᴅɪᴅᴜᴋᴜɴɢ*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}calc <ekspresi> untuk menghitung lagi`) +
         "\n" +
@@ -59,8 +59,8 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      claraWrap("Calculator", [`  ┊  ➶ Ekspresi: *${expr}*`,
-        `  ┊  ➶ Hasil: *${result}*`].join("\n")) +
+      claraWrap("Calculator", [`│ ❏ Ekspresi: *${expr}*`,
+        `│ ❏ Hasil: *${result}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}calc <ekspresi> untuk menghitung lagi`) +
       "\n" +
@@ -69,8 +69,8 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(claraWrap("calculator", text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`  ┊  ➶ Status: *ɢᴀɢᴀʟ*`,
-        `  ┊  ➶ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
+        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

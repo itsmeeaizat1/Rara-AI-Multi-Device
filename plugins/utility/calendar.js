@@ -24,14 +24,14 @@ async function handler(m, { sock, config: botConfig }) {
       if (!date || !name) throw new Error("Format: .calendar add DD-MM-YYYY nama_event");
       db.calendar[gid].push({ date, name, created: Date.now() });
       db.write();
-      await m.reply(claraWrap("Kalender", [`  ┊  ➶ Tanggal: *${date}*`, `  ┊  ➶ Event: *${name}*`].join("\n")));
+      await m.reply(claraWrap("Kalender", [`│ ❏ Tanggal: *${date}*`, `│ ❏ Event: *${name}*`].join("\n")));
     } else if (action === "del") {
       const idx = parseInt(args[1]) - 1;
       db.calendar[gid].splice(idx, 1); db.write();
-      await m.reply(claraWrap("Kalender", [`  ┊  ➶ Event #${idx+1} dihapus`].join("\n")));
+      await m.reply(claraWrap("Kalender", [`│ ❏ Event #${idx+1} dihapus`].join("\n")));
     } else {
       if (!db.calendar[gid].length) {
-        await m.reply(claraWrap("Kalender", ["  ┊  ➶ Belum ada event", `  ┊  ➶ Ketik: *${prefix}calendar add <tgl> <nama>*`].join("\n")));
+        await m.reply(claraWrap("Kalender", ["│ ❏ Belum ada event", `│ ❏ Ketik: *${prefix}calendar add <tgl> <nama>*`].join("\n")));
         return { handled: true };
       }
       db.calendar[gid].sort((a,b) => {
@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply(text);
     }
   } catch (e) {
-    await m.reply(claraWrap("Gagal", [`  ┊  ➶ ${e.message}`].join("\n")));
+    await m.reply(claraWrap("Gagal", [`│ ❏ ${e.message}`].join("\n")));
   }
   return { handled: true };
 }

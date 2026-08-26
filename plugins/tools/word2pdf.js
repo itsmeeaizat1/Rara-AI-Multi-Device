@@ -112,23 +112,23 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!isDocx && !isDocxFile) {
     const help = claraWrap("Word2Pdf", [
-      `  ┊  ➶ Converter .docx ke PDF`,
+      `│ ❏ Converter .docx ke PDF`,
       ``,
-      `  ┊  ➶ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `│ ❏ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  Reply file .docx, ketik:`,
       `  ${prefix}word2pdf`,
       ``,
-      `  ┊  ➶ Auto-detect heading, bullet, paragraf`,
-      `  ┊  ➶ Hasil: PDF siap print`,
+      `│ ❏ Auto-detect heading, bullet, paragraf`,
+      `│ ❏ Hasil: PDF siap print`,
       ``,
-      `  ┊  ➶ *ꜰᴏʀᴍᴀᴛ ᴅɪᴅᴜᴋᴜɴɢ:* .docx (Word 2007+)`,
-      `  ┊  ➶ .doc (Word lama) belum didukung`,
+      `│ ❏ *ꜰᴏʀᴍᴀᴛ ᴅɪᴅᴜᴋᴜɴɢ:* .docx (Word 2007+)`,
+      `│ ❏ .doc (Word lama) belum didukung`,
     ].join("\n"));
     return m.reply( help, "word2pdf");
   }
 
   await m.react("🕒");
-  m.reply(claraWrap("Word2Pdf", "  ┊  ➶ Konversi .docx ke PDF..."));
+  m.reply(claraWrap("Word2Pdf", "│ ❏ Konversi .docx ke PDF..."));
 
   try {
     let buffer;
