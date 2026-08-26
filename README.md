@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20single%20message%20-%20thumbna-success?style=for-the-badge)
-> *Commit: "feat: single message - thumbnail + tombol dalam 1 interactiveMessage"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20redesign%20menu%20elegan-success?style=for-the-badge)
+> *Commit: "refactor: redesign menu elegant — bot name cuma di footer akhir"*
 <!--END_SECTION:latest-update-->
 
 
