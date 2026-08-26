@@ -99,7 +99,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     parts.push(`│`);
 
     // User info section
-    parts.push(sectionBox("👤", "Info User", [
+    parts.push(sectionBox("👤", "User Info", [
       kv("Nama", m.pushName || "User"),
       kv("Status", `${roleEmoji} ${userRole}`),
       kv("Level", `${userLevel} ${expBar} ${expPct}%`),
@@ -112,7 +112,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     parts.push("");
 
     // Bot info section
-    parts.push(sectionBox("🤖", "Info Bot", [
+    parts.push(sectionBox("🤖", "Bot Info", [
       kv("Status", `${statusDot("online")} Online`),
       kv("Versi", botConfig.bot?.version || "v4.0.0"),
       kv("Prefix", `[ ${prefix} ]`),
