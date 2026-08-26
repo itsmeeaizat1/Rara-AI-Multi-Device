@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "waifu", alias: ["waifu", "waifurandom", "waifu2"], category: "random",
   description: "Random waifu image", usage: ".waifu",
   example: ".waifu", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 5, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

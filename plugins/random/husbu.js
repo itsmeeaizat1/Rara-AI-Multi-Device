@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "husbu", alias: ["husband"], category: "random",
   description: "Random husbu image", usage: ".husbu",
   example: ".husbu", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 5, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

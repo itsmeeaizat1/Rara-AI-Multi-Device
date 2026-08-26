@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "trending", alias: ["trend", "viral", "populer"], category: "tools",
   description: "Trending topic Google", usage: ".trending",
   example: ".trending", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 30, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 30, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

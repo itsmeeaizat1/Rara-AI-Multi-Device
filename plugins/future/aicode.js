@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "aicodev2", alias: ["aicodev2", "codereviewv2", "reviewcodev2"], category: "future",
   description: "AI review kode kamu", usage: ".aicode <kode> atau reply kode",
   example: ".aicode function hello() { return 'hi' }", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 15, energi: 5, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 15, energi: 5, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

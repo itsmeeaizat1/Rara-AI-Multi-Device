@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "synonym", alias: ["sinonim", "thesaurus"], category: "tools",
   description: "Cari sinonim kata", usage: ".synonym <kata>",
   example: ".synonym happy", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 3, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

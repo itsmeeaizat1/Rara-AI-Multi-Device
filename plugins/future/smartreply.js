@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "smartreplyfuture", alias: ["smartreply2", "smartreplyfuture", "aireply2"], category: "future",
   description: "Toggle AI auto-reply kontekstual", usage: ".smartreply <on/off>",
   example: ".smartreply on", isOwner: true, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 5, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

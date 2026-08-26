@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "aihadith", alias: ["hadithai", "carihadis"], category: "future",
   description: "Cari hadis dengan bahasa natural", usage: ".aihadith <topik>",
   example: ".aihadith hadis tentang sabar", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 15, energi: 3, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

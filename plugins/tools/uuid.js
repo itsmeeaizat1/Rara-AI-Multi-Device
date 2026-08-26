@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "uuid", alias: ["guid", "uniqueid"], category: "tools",
   description: "Generate UUID v4", usage: ".uuid",
   example: ".uuid", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 2, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 2, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

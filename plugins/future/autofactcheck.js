@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "autofactcheck", alias: ["factcheck", "cekfakta", "factai"], category: "future",
   description: "AI cek fakta dari claim", usage: ".autofactcheck (reply claim)",
   example: ".autofactcheck", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 15, energi: 3, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

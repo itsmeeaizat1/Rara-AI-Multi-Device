@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "aivoicenote", alias: ["aivoicenote", "aivoicenote2", "transcribe2"], category: "future",
   description: "Transcribe voice note jadi text", usage: ".aivoicenote (reply voice note)",
   example: ".aivoicenote", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 15, energi: 5, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 15, energi: 5, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

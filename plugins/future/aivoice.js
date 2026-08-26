@@ -7,7 +7,7 @@ const pluginConfig = {
   name: "aivoicefuture", alias: ["aivoice2", "aivoicefuture", "ttsaifuture"], category: "future",
   description: "Text ke suara realistik multi-bahasa", usage: ".aivoice <text>",
   example: ".aivoice halo semuanya", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 15, energi: 3, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

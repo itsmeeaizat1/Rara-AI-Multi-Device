@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "hash", alias: ["md5", "sha256", "sha1", "checksum"], category: "tools",
   description: "Hash text md5/sha256/sha1", usage: ".hash <algo> <text>",
   example: ".hash sha256 halo", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 2, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 2, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

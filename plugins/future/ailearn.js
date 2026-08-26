@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "ailearn", alias: ["aitutor", "tutorai", "belajarai"], category: "future",
   description: "AI tutor bahasa & pelajaran", usage: ".ailearn <topik> <pertanyaan>",
   example: ".ailearn inggris apa arti determination", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 15, energi: 3, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

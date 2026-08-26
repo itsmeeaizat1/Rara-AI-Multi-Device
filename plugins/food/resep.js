@@ -286,7 +286,7 @@ const pluginConfig = {
   description: "Cari resep masakan (Cookpad Indonesia live + TheMealDB internasional)",
   usage: ".resep <nama> | .resep acak | .resep kategori <nama> | .resep negara <nama> | .resep bahan <bahan>",
   example: ".resep nasi padang | .resep masakan ayam goreng | .resep acak | .resep kategori seafood",
-  isOwner: false, isPremium: false, isGroup: true, isPrivate: true,
+  isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 5, energi: 1, isEnabled: true,
 };
 

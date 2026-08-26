@@ -5,7 +5,7 @@ const pluginConfig = {
   name: "sleepcoach", alias: ["sleepcoach", "sleeptips", "tidurcoach"], category: "future",
   description: "AI analisis pola tidur dari chat", usage: ".sleepcoach",
   example: ".sleepcoach", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 30, energi: 3, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 30, energi: 3, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

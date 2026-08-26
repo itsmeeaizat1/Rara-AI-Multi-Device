@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "aiexpense", alias: ["expense", "pengeluaran", "catatpengeluaran"], category: "future",
   description: "Catat pengeluaran dengan bahasa natural", usage: ".aiexpense <deskripsi>",
   example: ".aiexpense beli kopi 15rb", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 2, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 2, energi: 0, isEnabled: true,
 };
 
 function parseAmount(text) {

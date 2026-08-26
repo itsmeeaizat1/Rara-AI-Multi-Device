@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "readqr", alias: ["scanqr", "qrdecode"], category: "tools",
   description: "Baca QR code dari gambar", usage: ".readqr (reply gambar QR)",
   example: ".readqr", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 10, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

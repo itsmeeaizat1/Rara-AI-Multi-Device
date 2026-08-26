@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "direction", alias: ["rute", "arah", "navigate"], category: "tools",
   description: "Rute & arah GPS", usage: ".direction <dari> -> <ke>",
   example: ".direction Jakarta -> Bandung", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 10, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,
 };
 
 async function geocode(q) {

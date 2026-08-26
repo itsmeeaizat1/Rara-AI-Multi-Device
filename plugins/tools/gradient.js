@@ -5,7 +5,7 @@ const pluginConfig = {
   name: "gradient", alias: ["colorgradient", "cssgradient"], category: "tools",
   description: "Generate gradient CSS", usage: ".gradient <warna1> <warna2>",
   example: ".gradient #ff0000 #0000ff", isOwner: false, isPremium: false,
-  isGroup: true, isPrivate: true, cooldown: 3, energi: 0, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {

@@ -6,7 +6,7 @@ const pluginConfig = {
   name: "smartbriefing", alias: ["briefing", "morningbrief", "briefingpagi"], category: "future",
   description: "Briefing pagi: cuaca+berita+sholat", usage: ".smartbriefing <kota>",
   example: ".smartbriefing Jakarta", isOwner: false, isPremium: true,
-  isGroup: true, isPrivate: true, cooldown: 60, energi: 5, isEnabled: true,
+  isGroup: false, isPrivate: false, cooldown: 60, energi: 5, isEnabled: true,
 };
 
 async function handler(m, { sock, config: botConfig }) {
