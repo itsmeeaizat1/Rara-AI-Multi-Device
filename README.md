@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20teks%20loading%20d-success?style=for-the-badge)
-> *Commit: "refactor: hapus teks loading di plugin, ganti react 🕒→🐣"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20opengc%20%26%208%20plugin%20lain%20cr-success?style=for-the-badge)
+> *Commit: "fix: opengc & 8 plugin lain crash gara-gara comma-expression bug pada __navText"*
 <!--END_SECTION:latest-update-->
 
 
