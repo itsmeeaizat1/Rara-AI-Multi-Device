@@ -94,7 +94,6 @@ async function handler(m, { sock }) {
     db.db.data.sewa.enabled = true;
     db.db.write();
     await m.react("🕒");
-    await m.reply(claraWrap("Sewabot", `🕕 Sistem sewa diaktifkan, memproses auto-leave...`));
     try {
       global.isFetchingGroups = true;
       const allGroups = await sock.groupFetchAllParticipating();

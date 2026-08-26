@@ -311,8 +311,7 @@ async function splitPdf(m, sock) {
       return m.reply("PDF terlalu banyak halaman (" + pageCount + "). Maksimal 20 halaman untuk split.\n\nGunakan .pdftools compress untuk kompres saja.");
     }
 
-    await m.reply("Memproses split " + pageCount + " halaman, tunggu sebentar...");
-
+    await m.react("🕒");
     let sent = 0;
     for (let i = 0; i < pageCount; i++) {
       const newPdf = await PDFDocument.create();
@@ -468,6 +467,7 @@ async function compressPdf(m, sock) {
     caption += "Sesudah: " + formatSize(compressedSize) + "\n";
     caption += "Pengurangan: " + (reduction > 0 ? reduction + "%" : "0% (sudah optimal)");
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       document: { url: filepath },
       fileName: "compressed_" + Date.now() + ".pdf",

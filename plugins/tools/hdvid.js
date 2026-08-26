@@ -51,8 +51,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("hdvid", `❌ *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*\n\nMaaf kak, maksimal ukuran video cuma 50MB ya!`));
     }
 
-    await m.reply(claraWrap("Hdvid", `🎞️ *ᴘʀᴏꜱᴇꜱ ᴇɴʜᴀɴᴄᴇ ᴅɪᴍᴜʟᴀɪ* 🎞️\n\nVideo kakak sedang diproses agar menjadi HD! ✨\nEstimasi waktu tergantung ukuran video, mohon bersabar ya kak!`));
-
+    await m.react("🕒");
     const tempDir = os.tmpdir();
     const inputPath = path.join(tempDir, `input-hd-${Date.now()}.mp4`);
     const outputPath = path.join(tempDir, `output-hd-${Date.now()}.mp4`);

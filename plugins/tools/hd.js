@@ -63,7 +63,7 @@ async function handler(m, { sock, args }) {
     let scale = scaleArg ? parseInt(scaleArg.replace("x", "")) : 2;
     scale = Math.max(2, Math.min(8, scale || 2));
 
-    await m.react("⏳");
+    await m.react("🕒");
 
     const buffer = await m.download();
     if (!buffer) {

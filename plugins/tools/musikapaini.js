@@ -81,8 +81,6 @@ async function handler(m, { sock }) {
   m.react("🕒");
 
   try {
-    await m.reply(claraWrap("Musikapaini", "🕕 *ᴍᴇɴɢᴜᴘʟᴏᴀᴅ...*\n\nMengupload audio..."));
-
     const audioUrl = await uploadTo0x0(audioBuffer, filename);
 
     await m.reply(claraWrap("Musikapaini", "🔍 *ᴍᴇɴɢɪᴅᴇɴᴛɪꜰɪᴋᴀꜱɪ...*\n\nMencari info lagu..."));

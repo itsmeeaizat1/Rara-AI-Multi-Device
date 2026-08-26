@@ -283,8 +283,7 @@ async function handler(m, { sock, config: botConfig }) {
       // Mode Fish Audio: upload ke Fish Audio buat create voice model
       if (useFishAudio) {
         try {
-          await m.reply(claraWrap("Voice Clone", "Mengupload sample ke Fish Audio... mohon tunggu 5-10 detik"));
-          const result = await fishCreateVoice(samplePath, `Nova-${profileName}`, apiKey);
+          await m.react("🕒");
           const voiceId = result._id || result.id;
           const voiceState = result.state || "trained";
 
@@ -551,6 +550,7 @@ async function handler(m, { sock, config: botConfig }) {
       info += `Profil: ${state.activeProfile || "default"}\n`;
       info += `Mode: ${mode}\n`;
       info += `Teks: "${speechText.slice(0, 60)}${speechText.length > 60 ? "..." : ""}"`;
+      await m.react("🐣");
       await m.reply(claraWrap("Voice Clone", info));
     } catch (e) {
       return m.reply(claraWrap("Voice Clone", `Gagal kirim VN: ${e.message}`));

@@ -109,6 +109,7 @@ async function handler(m, { sock }) {
                 else if (latency < 500) speed = '⚡ Good';
                 else if (latency < 1000) speed = '🐢 Oke';
                 else speed = '🐌 Slow';
+                await m.react("🐣");
                 m.reply(claraWrap("System", `📶 *Pong!*\nLatency: ${latency}ms\nResponse: ${speed}`));
             }
             break;

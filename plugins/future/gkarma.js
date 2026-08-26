@@ -95,8 +95,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const lastGive = data.users[m.sender].history.filter(h => h.amount < 0).pop();
     if (lastGive && Date.now() - lastGive.ts < 3600000) {
       const wait = Math.ceil((3600000 - (Date.now() - lastGive.ts)) / 60000);
-      await m.reply(claraWrap("Group Karma", "Tunggu " + wait + " menit untuk kasih karma lagi."));
-      return { handled: true };
+      await m.react("🕒");
     }
     const reason = args.slice(m.mentionedJid.length + 2).join(" ").trim() || "Kontribusi bagus";
     const pts = addKarma(db, gid, target, 1, reason);
@@ -151,6 +150,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   // ==================== HELP
+  await m.react("🐣");
   await m.reply(claraWrap("Group Karma", [
     "GROUP KARMA",
     "",

@@ -84,8 +84,6 @@ async function handler(m, { sock, db, config: botConfig }) {
     });
 
     await m.react("🕒");
-    await m.reply(claraWrap("Fanfic", "Generating cerita...\nKarakter: " + names.join(", ") + "\nGenre: " + genre));
-
     const story = await generateFanfic(names, genre);
     await m.react("🐣");
 

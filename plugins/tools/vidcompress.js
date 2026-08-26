@@ -235,8 +235,7 @@ async function handler(m, { sock }) {
     // === AUDIO EXTRACT ===
     if (arg === "audio" || arg === "mp3" || arg === "extract") {
       const audioPath = getTmpFile("mp3");
-      await m.reply(claraWrap("Vidcompress", "Ekstrak audio dari video, tunggu sebentar..."));
-
+      await m.react("🕒");
       await runFfmpegAudioOnly(inputPath, audioPath);
       const audioBuffer = fs.readFileSync(audioPath);
 
@@ -263,8 +262,7 @@ async function handler(m, { sock }) {
       preset = PRESETS.medium; // default
     }
 
-    await m.reply("Kompres video " + preset.label + ", tunggu sebentar...");
-
+    await m.react("🕒");
     await runFfmpeg(inputPath, outputPath, preset);
 
     const compressedSize = fs.statSync(outputPath).size;
@@ -277,6 +275,7 @@ async function handler(m, { sock }) {
     caption += "Sesudah: " + formatSize(compressedSize) + "\n";
     caption += "Pengurangan: " + (ratio > 0 ? ratio + "%" : "0% (sudah optimal)");
 
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
       video: { url: outputPath },
       caption: caption,

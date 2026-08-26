@@ -19,7 +19,7 @@ async function handler(m, { sock, config: botConfig }) {
         "  ┊  ➶ AI akan generate gambar dari teks"].join("\n")), "aiimage");
       return { handled: true };
     }
-    { const __navText = "_🎨 Generating gambar... mohon tunggu_"; await m.reply(__navText); };
+    { await m.react("🕒"); };
     const { data } = await axios.get("https://image.pollinations.ai/prompt/" + encodeURIComponent(prompt), {
       timeout: 60000, responseType: "arraybuffer",
     });

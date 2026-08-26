@@ -60,6 +60,7 @@ async function handler(m, { sock }) {
   txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
   txt += `Jangan lupa claim lagi besok!`;
 
+  await m.react("🐣");
   await m.reply( txt, "daily");
 }
 

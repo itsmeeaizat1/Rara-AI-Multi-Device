@@ -162,6 +162,7 @@ async function handler(m, { sock }) {
 
         await m.react('✅')
     } catch (error) {
+        await m.react("🐣");
         m.reply(te(m.prefix, m.command, m.pushName))
     } finally {
         try { fs.existsSync(inputPath) && fs.unlinkSync(inputPath) } catch (e) { console.error('[audiofx.js]:', e.message); }
