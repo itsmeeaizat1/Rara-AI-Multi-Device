@@ -10,7 +10,7 @@ import { formatTime as fmtTime, formatFull as fmtFull } from "../../src/lib/nova
 import path from "path";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { infoBox, listBox } from "../../src/lib/nova-menu-style.js";
+import { infoBox, listBox, buildNavButtons } from "../../src/lib/nova-menu-style.js";
 import { getWeatherAddress } from "../../src/lib/nova-weather-footer.js";
 
 const pluginConfig = {
@@ -48,13 +48,6 @@ const CATEGORY_EMOJIS = {
   ephoto: "🎨", jpm: "📢", pushkontak: "📱",
   panel: "🖥️", owner: "👑", store: "🛒",
 };
-
-const NAV_BUTTONS = (prefix) => [
-  { id: `${prefix}menu`, text: "🏠 Menu" },
-  { id: `${prefix}owner`, text: "ℹ️ Info Lainnya" },
-  { id: `${prefix}allmenu`, text: "📋 All Menu" },
-  { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
-];
 
 function findCategory(input) {
   if (!input) return null;
@@ -176,13 +169,14 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
     const thumbnailPath = path.join(process.cwd(), "assets", "image", "menu.jpg");
 
+    // Data kategori untuk tombol single_select
+    const pluginCats = getCategories();
+    const commandsByCategory = getCommandsByCategory();
+    const caseCats = getCasesByCategory();
+    const allCatKeys = [...new Set([...pluginCats, ...Object.keys(caseCats)])];
+
     if (!inputCat) {
       // Tampilkan daftar kategori + info lengkap di atas
-      const pluginCats = getCategories();
-      const commandsByCategory = getCommandsByCategory();
-      const caseCats = getCasesByCategory();
-      const allCatKeys = [...new Set([...pluginCats, ...Object.keys(caseCats)])];
-
       const infoHeader = await buildInfoHeader(m, botConfig, db, uptime);
 
       const rows = [];
@@ -200,12 +194,17 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       const catList = listBox("Daftar Kategori", rows);
       const text = `${infoHeader}\n\n${catList}\n\nTotal ${totalCats} kategori · ketik *${prefix}menukategori <nama>*\n${botName}`;
 
+      // Kategori button = single_select, tombol ke-3 = All Menu (bukan Menu)
+      const buttons = buildNavButtons(
+        prefix, false, allCatKeys, commandsByCategory, caseCats, m.isOwner
+      );
+
       await m.react("🐣");
       await sendMenuCard(sock, m, {
         text,
         footer: botName,
         thumbnailPath,
-        buttons: NAV_BUTTONS(prefix),
+        buttons,
         title: "Menu Kategori",
       });
 
@@ -230,12 +229,17 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const catName = CATEGORY_NAMES[matchedCat] || matchedCat;
     const catEmoji = CATEGORY_EMOJIS[matchedCat] || "📂";
 
+    // Kategori button = single_select, tombol ke-3 = All Menu
+    const buttons = buildNavButtons(
+      prefix, false, allCatKeys, commandsByCategory, caseCats, m.isOwner
+    );
+
     await m.react("🐣");
     await sendMenuCard(sock, m, {
       text,
       footer: botName,
       thumbnailPath,
-      buttons: NAV_BUTTONS(prefix),
+      buttons,
       title: `${catEmoji} ${catName}`,
     });
 

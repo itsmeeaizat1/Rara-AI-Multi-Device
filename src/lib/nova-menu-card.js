@@ -8,7 +8,7 @@
  *
  - externalAdReply = link-preview card, BUKAN media attachment
  * → thumbnail muncul tapi gak tersimpan ke galeri HP penerima.
- * - nativeFlowMessage = tombol quick_reply yang jalan di Android/iOS/Web.
+ * - nativeFlowMessage = tombol quick_reply / single_select yang jalan di Android/iOS/Web.
  * - 1 pesan doang, gak perlu split 2 pesan.
  */
 
@@ -47,7 +47,9 @@ function getThumbnailBuffer(imagePath) {
  * @param {string} opts.text - Isi teks menu
  * @param {string} opts.footer - Footer text
  * @param {string} [opts.thumbnailPath] - Path ke file gambar thumbnail
- * @param {Array<{id: string, text: string}>} opts.buttons - Max 3 tombol
+ * @param {Array} opts.buttons - Max 4 tombol. Tiap button bisa:
+ *   - { id, text } → quick_reply (default)
+ *   - { type: "single_select", text, title, sections: [{ title, rows: [{title, description?, id}] }] }
  * @param {string} [opts.title] - Judul untuk externalAdReply
  */
 async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = [], title = "" }) {
@@ -57,13 +59,26 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     const thumbPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu.jpg");
     const thumbBuffer = getThumbnailBuffer(thumbPath);
 
-    const nativeButtons = buttons.slice(0, 4).map((btn) => ({
-      name: "quick_reply",
-      buttonParamsJson: JSON.stringify({
-        display_text: btn.text,
-        id: btn.id,
-      }),
-    }));
+    const nativeButtons = buttons.slice(0, 4).map((btn) => {
+      // single_select → popup list kategori
+      if (btn.type === "single_select") {
+        return {
+          name: "single_select",
+          buttonParamsJson: JSON.stringify({
+            title: btn.text,
+            sections: btn.sections || [],
+          }),
+        };
+      }
+      // default → quick_reply
+      return {
+        name: "quick_reply",
+        buttonParamsJson: JSON.stringify({
+          display_text: btn.text,
+          id: btn.id,
+        }),
+      };
+    });
 
     // interactiveMessage dengan contextInfo.externalAdReply di messageContextInfo
     const interactiveContent = {
