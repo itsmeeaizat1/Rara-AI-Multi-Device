@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-Merge%20branch%20'main'%20of%20https%3A%2F-success?style=for-the-badge)
-> *Commit: "Merge branch 'main' of https://github.com/itsmeeaizat/Nova-AI-Whatsapp-Bot-Multi-Device"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20label%20info%20kembali%20ke%20bah-success?style=for-the-badge)
+> *Commit: "fix: label info kembali ke bahasa Inggris (User Info, Bot Info)"*
 <!--END_SECTION:latest-update-->
 
 
