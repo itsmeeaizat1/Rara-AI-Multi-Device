@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tambah%205%20fitur%20owner%20adv-success?style=for-the-badge)
-> *Commit: "feat: tambah 5 fitur owner advanced automation system"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20integrate%20all%20owner%20auto-success?style=for-the-badge)
+> *Commit: "feat: integrate all owner automation into unified hub system"*
 <!--END_SECTION:latest-update-->
 
 
