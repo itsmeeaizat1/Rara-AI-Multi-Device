@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20redesign%20broadcast%20messa-success?style=for-the-badge)
-> *Commit: "feat: redesign broadcast messages to modern box style"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-Merge%20branch%20'feat%2Frpg-system--success?style=for-the-badge)
+> *Commit: "Merge branch 'feat/rpg-system-overhaul'"*
 <!--END_SECTION:latest-update-->
 
 
