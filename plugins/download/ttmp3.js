@@ -4,7 +4,7 @@ import axios from "axios";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const pluginConfig = {
@@ -82,12 +82,13 @@ async function handler(m, { sock }) {
   };
 
   if (!url) {
-    return m.reply( `╭──「 🎵 *ᴛɪᴋᴛᴏᴋ ᴅᴏᴡɴʟᴏᴀᴅ*
-│
-│ 📌 *Cara Pakai:* \`${m.prefix}ttmp3 <url>\`
-╰──────────❀
-
-│ 💡 *Contoh:* ${m.prefix}ttmp3 https://vt.tiktok.com/xxx`, "ttmp3");
+    return m.reply(novaCaption({
+  emoji: "🎵",
+  name: "ttmp3",
+  description: "Download audio TikTok",
+  usage: `${m.prefix}ttmp3 <url>`,
+  example: `${m.prefix}ttmp3 https://vt.tiktok.com/xxx`,
+}), "ttmp3")
   }
 
   if (!url.match(/tiktok\.com|vt\.tiktok/i)) {

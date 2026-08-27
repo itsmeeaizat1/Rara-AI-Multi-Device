@@ -81,12 +81,12 @@ async function handler(m, { sock }) {
   const prefix = m.prefix;
 
   if (!text) {
-    return novaCaption({
+    return m.reply(novaCaption({
   emoji: "🎵",
   name: "spotifyplay",
   description: "Cari & download lagu dari Spotify berdasarkan judul/artist",
-  usage: `$m.prefixspotifyplay <judul lagu>`,
-  example: `$m.prefixspotifyplay blinding lights the weeknd`,
+  usage: `${m.prefix}spotifyplay <judul lagu>`,
+  example: `${m.prefix}spotifyplay blinding lights the weeknd`,
 }), "spotifyplay")
   }
 

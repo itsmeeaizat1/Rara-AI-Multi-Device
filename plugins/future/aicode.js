@@ -15,13 +15,14 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const code = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!code) {
-      { const __navText = (novaCaption({
-  emoji: "📁",
-  name: "aicodev2",
-  description: "AI review kode kamu",
-  usage: `$prefixaicode <kode> atau reply kode`,
-  example: `$prefixaicode function hello() { return `,
-})); await m.reply( __navText, "aicode"); };
+      const text = novaCaption({
+        emoji: "📁",
+        name: "aicodev2",
+        description: "AI review kode kamu",
+        usage: `${prefix}aicode <kode> atau reply kode`,
+        example: `${prefix}aicode function hello() { return 'hi' }`,
+      });
+      await m.reply(text, "aicode");
       return { handled: true };
     }
     const prompt = `Review kode berikut, jelaskan error jika ada, berikan saran perbaikan. Balas dalam Bahasa Indonesia:\n\n${code}`;

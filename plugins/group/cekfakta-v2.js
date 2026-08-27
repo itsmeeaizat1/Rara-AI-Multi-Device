@@ -289,12 +289,12 @@ export default {
 
     if (!claimText || claimText.length < 3) {
       await m.reply(claraWrap("Cek Fakta", [
-        `│ Cara Pakai:`,
+        `│ 📌 *Cara Pakai:*`,
         ``,
         `│ 1. Reply pesan/berita → ketik *${prefix}cekfakta*`,
         `│ 2. Atau ketik: *${prefix}cekfakta <klaim>*`,
         ``,
-        `│ Contoh:`,
+        `│ 💡 *Contoh:*`,
         `│ *${prefix}cekfakta Vaksin COVID bikin mandul*`,
         `│ Reply WA forward → *${prefix}cekfakta*`,
         ``,

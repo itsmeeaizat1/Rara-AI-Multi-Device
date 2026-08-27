@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'antilinkgc',
     alias: ["antilinkgc"],
@@ -31,20 +31,13 @@ function handler(m, { sock }) {
         const status = groupData.antilinkgc || 'off'
         const mode = groupData.antilinkgcMode || 'remove'
         
-        return m.reply( `🔗 *Antilink Wa*\n\n` +
-            `╭──「 📋 *sTatus* 」\n` +
-            `│ │ Status: *${status.toUpperCase()}*\n` +
-            `│ │ Mode: *${mode.toUpperCase()}*\n` +
-            `╰──────────❀\n\n` +
-            `*Deteksi:*\n` +
-            `chat.whatsapp.com (grup)\n` +
-            `wa.me (kontak)\n` +
-            `whatsapp.com/channel (saluran)\n\n` +
-            `*Cara Pakai:*\n` +
-            `\`${m.prefix}antilinkgc on\` - Aktifkan\n` +
-            `\`${m.prefix}antilinkgc off\` - Nonaktifkan\n` +
-            `\`${m.prefix}antilinkgc metode kick\` - Mode kick user\n` +
-            `\`${m.prefix}antilinkgc metode remove\` - Mode hapus pesan`, "antilinkgc")
+        return m.reply(novaCaption({
+  emoji: "🔗",
+  name: "antilinkgc",
+  description: "Anti link WhatsApp (grup, saluran, wa.me)",
+  usage: `${m.prefix}antilinkgc <on/off/metode> [kick/remove]`,
+  example: `${m.prefix}antilinkgc on`,
+}), "antilinkgc");
     }
     
     if (option === 'on') {

@@ -27,8 +27,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "🛠️",
   name: "css",
   description: "Generate CSS snippet",
-  usage: `$prefixcss <template>`,
-  example: `$prefixcss flexbox`,
+  usage: `${prefix}css <template>`,
+  example: `${prefix}css flexbox`,
 })); await m.reply( __navText, "css"); };
       return { handled: true };
     }

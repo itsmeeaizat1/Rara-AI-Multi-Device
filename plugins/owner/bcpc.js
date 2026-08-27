@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
   emoji: "👑",
   name: "bcpc",
   description: "Broadcast pesan ke semua kontak private chat",
-  usage: `$m.prefixbcpc <pesan>`,
+  usage: `${m.prefix}bcpc <pesan>`,
 }), "bcpc");
   }
 

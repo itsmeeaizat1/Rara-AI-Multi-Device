@@ -28,8 +28,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "👥",
   name: "unban2",
   description: "Unban member grup",
-  usage: `$prefixunban <@target>`,
-  example: `$prefixunban @username`,
+  usage: `${prefix}unban <@target>`,
+  example: `${prefix}unban @username`,
 }) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);

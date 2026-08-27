@@ -20,8 +20,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "📁",
   name: "aivoicefuture",
   description: "Text ke suara realistik multi-bahasa",
-  usage: `$prefixaivoice <text>`,
-  example: `$prefixaivoice halo semuanya`,
+  usage: `${prefix}aivoice <text>`,
+  example: `${prefix}aivoice halo semuanya`,
 })); await m.reply( __navText, "aivoice"); };
       return { handled: true };
     }

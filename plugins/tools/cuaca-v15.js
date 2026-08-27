@@ -1,13 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import {
+import { 
   bracketBox,
   claraHeader,
   separator,
   tipText,
   claraWrap,
-  claraLine,
-} from "../../src/lib/nova-menu-style.js";
+  claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "cuaca",
@@ -155,13 +154,13 @@ async function handler(m, { sock, config: botConfig, db }) {
     if (sub === "lokasi") {
       const lokasi = parts.slice(1).join(" ");
       if (!lokasi) {
-        await m.reply(
-          claraWrap("Lokasi Cuaca", [`│
-│ 📌 *Cara Pakai:* *${prefix}cuaca lokasi <kota>*`,
-              `│ Contoh: *${prefix}cuaca lokasi Bandung*`].join("\n")) +
-            "\n" +
-            tipText(`Ketik ${prefix}cuaca help untuk melihat bantuan`)
-        );
+        await m.reply(novaCaption({
+  emoji: "🌤️",
+  name: "cuaca",
+  description: "Cek cuaca realtime dan pilih provider API cuaca",
+  usage: `${prefix}cuaca <provider|set|lokasi|on|off|now|help>`,
+  example: `${prefix}cuaca provider open-meteo\\n.cuaca lokasi Bandung`,
+}));
         return { handled: true };
       }
 

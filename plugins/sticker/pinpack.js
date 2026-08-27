@@ -5,7 +5,7 @@ import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { f } from "../../src/lib/nova-http.js";
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 function getSharp() {
   return _sharp;
@@ -53,14 +53,13 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `── .✦ 𝗣𝗜𝗡 𝗣𝗔𝗖𝗞 ✦. ── 𝜗ৎ\n\n` +
-        `Cari gambar Pinterest → jadikan sticker pack!\n\n` +
-        `╭─〔 Cara Pakai 〕───⬣\n` +
-        `│  ✦ ${m.prefix}pinpack <query>\n` +
-        `╰──────────────⬣\n\n` +
-        `*${m.prefix}pinpack anime cat*\n` +
-        `*${m.prefix}pinpack aesthetic*\n\n` +
-        `.☘︎ ݁˖`, "pinpack");
+    return m.reply(novaCaption({
+  emoji: "📌",
+  name: "pinpack",
+  description: "Cari gambar Pinterest lalu jadikan sticker pack",
+  usage: `${m.prefix}pinpack <query>`,
+  example: `${m.prefix}pinpack cat`,
+}), "pinpack");
   }
 
   await m.react("🕒");

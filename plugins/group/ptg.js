@@ -268,7 +268,7 @@ export default {
       if (!billId) {
         await m.reply(claraWrap("Patungan", [
           `│ Format: *${prefix}ptg status <id>*`,
-          `│ Contoh: *${prefix}ptg status PTG3A2*`,
+          `│ 💡 *Contoh:* *${prefix}ptg status PTG3A2*`,
           ``,
           `│ Ketik *${prefix}ptg list* untuk lihat ID aktif.`,
         ].join("\n")));
@@ -350,7 +350,7 @@ export default {
       if (!billId) {
         await m.reply(claraWrap("Patungan", [
           `│ Format: *${prefix}ptg bayar <id>*`,
-          `│ Contoh: *${prefix}ptg bayar PTG3A2*`,
+          `│ 💡 *Contoh:* *${prefix}ptg bayar PTG3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -444,7 +444,7 @@ export default {
       if (!billId || mentionedJids.length === 0) {
         await m.reply(claraWrap("Patungan", [
           `│ Format: *${prefix}ptg lunas <id> @tag*`,
-          `│ Contoh: *${prefix}ptg lunas PTG3A2 @62812...*`,
+          `│ 💡 *Contoh:* *${prefix}ptg lunas PTG3A2 @62812...*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -533,7 +533,7 @@ export default {
       if (!billId) {
         await m.reply(claraWrap("Patungan", [
           `│ Format: *${prefix}ptg close <id>*`,
-          `│ Contoh: *${prefix}ptg close PTG3A2*`,
+          `│ 💡 *Contoh:* *${prefix}ptg close PTG3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -579,7 +579,7 @@ export default {
       if (!billId) {
         await m.reply(claraWrap("Patungan", [
           `│ Format: *${prefix}ptg join <id>*`,
-          `│ Contoh: *${prefix}ptg join PTG3A2*`,
+          `│ 💡 *Contoh:* *${prefix}ptg join PTG3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -642,7 +642,7 @@ export default {
     // ─── .ptg help ───
     if (subCmd && (subCmd[1] === "help" || subCmd[1] === "bantu")) {
       await m.reply(claraWrap("Patungan - Bantuan", [
-        `│ Cara Pakai:`,
+        `│ 📌 *Cara Pakai:*`,
         ``,
         `│ 1. Bikin patungan baru:`,
         `│ *${prefix}ptg <total> | <orang> | <keterangan>*`,
@@ -681,11 +681,11 @@ export default {
 
     if (!body) {
       await m.reply(claraWrap("Patungan - Bantuan", [
-        `│ Cara Pakai:`,
+        `│ 📌 *Cara Pakai:*`,
         ``,
         `│ *${prefix}ptg <total> | <orang> | <keterangan>*`,
         ``,
-        `│ Contoh:`,
+        `│ 💡 *Contoh:*`,
         `│ *${prefix}ptg 150000 | 5 | Makan Warkop*`,
         `│ *${prefix}ptg 300000 | @Budi @Siti | Sewa Villa*`,
         ``,
@@ -708,7 +708,7 @@ export default {
         `│ Format kurang lengkap.`,
         ``,
         `│ Format: *${prefix}ptg <total> | <orang> | <keterangan>*`,
-        `│ Contoh: *${prefix}ptg 150000 | 5 | Makan Warkop*`,
+        `│ 💡 *Contoh:* *${prefix}ptg 150000 | 5 | Makan Warkop*`,
         `│ *${prefix}ptg 300000 | @Budi @Siti | Sewa Villa*`,
       ].join("\n")));
       return { handled: true };

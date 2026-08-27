@@ -9,7 +9,7 @@ function getSharp() {
 }
 import te from "../../src/lib/nova-error.js";
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "stickerpack",
@@ -95,14 +95,13 @@ async function handler(m, { sock }) {
   const query = m.args?.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `── .✦ 𝗦𝗧𝗜𝗖𝗞𝗘𝗥 𝗣𝗔𝗖𝗞 ✦. ── 𝜗ৎ\n\n` +
-        `Cari dan kirim sticker pack!\n\n` +
-        `╭─〔 Cara Pakai 〕───⬣\n` +
-        `│  ✦ ${m.prefix}stickerpack <query>\n` +
-        `╰──────────────⬣\n\n` +
-        `*${m.prefix}stickerpack anime*\n` +
-        `*${m.prefix}stickerpack cat*\n\n` +
-        `.☘︎ ݁˖`, "stickerpack");
+    return m.reply(novaCaption({
+  emoji: "🖼️",
+  name: "stickerpack",
+  description: "Cari dan kirim sticker pack",
+  usage: `${m.prefix}stickerpack <query>`,
+  example: `${m.prefix}stickerpack anime`,
+}), "stickerpack");
   }
 
   await m.react("🕒");

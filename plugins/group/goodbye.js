@@ -29,8 +29,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "👥",
   name: "goodbye2",
   description: "Pesan goodbye saat member keluar grup",
-  usage: `$prefixgoodbye on/off`,
-  example: `$prefixgoodbye on`,
+  usage: `${prefix}goodbye on/off`,
+  example: `${prefix}goodbye on`,
 }) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);

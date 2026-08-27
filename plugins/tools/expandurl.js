@@ -35,8 +35,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "🛠️",
   name: "expandurl",
   description: "Expand short URL ke URL asli",
-  usage: `$prefixexpandurl <url>`,
-  example: `$prefixexpandurl https://bit.ly/xxx`,
+  usage: `${prefix}expandurl <url>`,
+  example: `${prefix}expandurl https://bit.ly/xxx`,
 }), "expandurl");
       return { handled: true };
     }

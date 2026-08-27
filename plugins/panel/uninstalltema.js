@@ -22,12 +22,12 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (!text) {
-        return novaCaption({
+        return m.reply(novaCaption({
   emoji: "🖥️",
   name: "root",
   description: "Uninstall tema Pterodactyl via SSH",
-  usage: `$m.prefixuinstalltema <ip>|<password>`,
-  example: `$m.prefixuinstalltema 192.168.1.1|secretpass`,
+  usage: `${m.prefix}uinstalltema <ip>|<password>`,
+  example: `${m.prefix}uinstalltema 192.168.1.1|secretpass`,
 }), "root")
     }
     

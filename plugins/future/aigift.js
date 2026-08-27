@@ -19,8 +19,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "📁",
   name: "aigift",
   description: "AI rekomendasi kado",
-  usage: `$prefixaigift <info orang>`,
-  example: `$prefixaigift cowok 20th suka game`,
+  usage: `${prefix}aigift <info orang>`,
+  example: `${prefix}aigift cowok 20th suka game`,
 }), "aigift");
       return { handled: true };
     }

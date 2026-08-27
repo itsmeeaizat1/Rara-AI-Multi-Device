@@ -20,8 +20,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "📁",
   name: "aiquran2",
   description: "Cari ayat Quran dengan bahasa natural",
-  usage: `$prefixaiquran <topik>`,
-  example: `$prefixaiquran ayat tentang sabar`,
+  usage: `${prefix}aiquran <topik>`,
+  example: `${prefix}aiquran ayat tentang sabar`,
 }), "aiquran");
       return { handled: true };
     }

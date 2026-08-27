@@ -19,8 +19,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "📁",
   name: "aifatwa",
   description: "Tanya hukum Islam, AI cari referensi",
-  usage: `$prefixaifatwa <pertanyaan>`,
-  example: `$prefixaifatwa hukum trading forex`,
+  usage: `${prefix}aifatwa <pertanyaan>`,
+  example: `${prefix}aifatwa hukum trading forex`,
 }), "aifatwa");
       return { handled: true };
     }

@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
   emoji: "👑",
   name: "bcgc",
   description: "Broadcast pesan ke semua grup dengan dukungan semua jenis media",
-  usage: `$m.prefixbcgc`,
+  usage: `${m.prefix}bcgc`,
 }), "bcgc");
   }
 

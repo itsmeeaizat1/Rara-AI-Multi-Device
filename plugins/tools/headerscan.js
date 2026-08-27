@@ -20,8 +20,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "🛠️",
   name: "headerscan",
   description: "Scan HTTP headers website",
-  usage: `$prefixheaderscan <url>`,
-  example: `$prefixheaderscan https://google.com`,
+  usage: `${prefix}headerscan <url>`,
+  example: `${prefix}headerscan https://google.com`,
 }), "headerscan");
       return { handled: true };
     }

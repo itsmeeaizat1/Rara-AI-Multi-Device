@@ -19,8 +19,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "🛠️",
   name: "spellcheck",
   description: "Cek ejaan kata",
-  usage: `$prefixspell <kata>`,
-  example: `$prefixspell recieve`,
+  usage: `${prefix}spell <kata>`,
+  example: `${prefix}spell recieve`,
 }), "spell");
       return { handled: true };
     }

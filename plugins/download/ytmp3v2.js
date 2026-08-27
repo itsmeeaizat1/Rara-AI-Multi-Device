@@ -39,12 +39,12 @@ async function rlGet(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return novaCaption({
+    return m.reply(novaCaption({
   emoji: "🎵",
   name: "ytmp3v2",
   description: "Download YouTube MP3 via (V2)",
-  usage: `$m.prefixytmp3v2 <url>`,
-  example: `$m.prefixytmp3v2 https://youtu.be/xxx`,
+  usage: `${m.prefix}ytmp3v2 <url>`,
+  example: `${m.prefix}ytmp3v2 https://youtu.be/xxx`,
 }), "ytmp3v2")
   }
   m.react("🕒");

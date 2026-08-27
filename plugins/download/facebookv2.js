@@ -39,12 +39,12 @@ async function rlGet(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return novaCaption({
+    return m.reply(novaCaption({
   emoji: "📘",
   name: "facebookv2",
   description: "Download video Facebook via (V2)",
-  usage: `$m.prefixfacebookv2 <url>`,
-  example: `$m.prefixfacebookv2 https://www.facebook.com/watch?v=xxx`,
+  usage: `${m.prefix}facebookv2 <url>`,
+  example: `${m.prefix}facebookv2 https://www.facebook.com/watch?v=xxx`,
 }), "facebookv2")
   }
   m.react("🕒");

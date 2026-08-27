@@ -2,7 +2,7 @@
 import config from '../../config.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addenergiall',
     alias: ["addenergiall"],
@@ -24,7 +24,13 @@ async function handler(m, { sock }) {
         const amount = parseInt(m.args[0])
         
         if (isNaN(amount) || amount <= 0) {
-            return m.reply(`⚠️ *Cara Pakai*\n\nMasukkan jumlah limit yang ingin ditambahkan.\n\n\`Contoh: ${m.prefix}addlimitall 50\``)
+            return m.reply(novaCaption({
+  emoji: "📊",
+  name: "addlimitall",
+  description: "Tambah limit semua member grup",
+  usage: `${m.prefix}addlimitall <jumlah>`,
+  example: `${m.prefix}addlimitall 50`,
+}))
         }
         
         const groupMeta = m.groupMetadata

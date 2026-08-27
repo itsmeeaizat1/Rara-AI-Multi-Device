@@ -19,8 +19,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "📁",
   name: "aipoll",
   description: "AI bikin polling dari topik",
-  usage: `$prefixaipoll <topik>`,
-  example: `$prefixaipoll makan malam apa`,
+  usage: `${prefix}aipoll <topik>`,
+  example: `${prefix}aipoll makan malam apa`,
 }));
       return { handled: true };
     }

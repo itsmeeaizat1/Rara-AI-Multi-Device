@@ -75,12 +75,12 @@ async function douyinAzbry(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return novaCaption({
+    return m.reply(novaCaption({
   emoji: "🎬",
   name: "douyinv2",
   description: "Download video Douyin (V2)",
-  usage: `$m.prefixdouyinv2 <url>`,
-  example: `$m.prefixdouyinv2 https://v.douyin.com/xxx`,
+  usage: `${m.prefix}douyinv2 <url>`,
+  example: `${m.prefix}douyinv2 https://v.douyin.com/xxx`,
 }), "douyinv2")
   }
 

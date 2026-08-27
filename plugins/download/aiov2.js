@@ -49,12 +49,12 @@ function formatSize(bytes) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return novaCaption({
+    return m.reply(novaCaption({
   emoji: "🌐",
   name: "aiov2",
   description: "AIO Downloader all-in-one sosmed via V2 API (V2)",
-  usage: `$m.prefixaiov2 <url>`,
-  example: `$m.prefixaiov2 https://vt.tiktok.com/xxx`,
+  usage: `${m.prefix}aiov2 <url>`,
+  example: `${m.prefix}aiov2 https://vt.tiktok.com/xxx`,
 }), "aiov2")
   }
 

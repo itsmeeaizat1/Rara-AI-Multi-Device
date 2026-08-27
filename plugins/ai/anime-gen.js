@@ -2,7 +2,7 @@
 import { f } from '../../src/lib/nova-http.js'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'anime-gen',
     alias: ["anime-gen"],
@@ -23,17 +23,13 @@ async function handler(m, { sock }) {
     const prompt = m.text
     
     if (!prompt) {
-        return m.reply( `🎨 *Anime Art Generator*\n\n` +
-            `Generate gambar anime AI dari prompt!\n\n` +
-            `*Cara Pakai:*\n` +
-            `\`${m.prefix}anime-gen <deskripsi>\`\n\n` +
-            `*Contoh:*\n` +
-            `\`${m.prefix}anime-gen girl, vibrant color, smilling, yellow pink gradient hair\`\n` +
-            `\`${m.prefix}anime-gen boy, dark aesthetic, silver hair, red eyes\`\n\n` +
-            `*Tips:*\n` +
-            `Gunakan bahasa Inggris\n` +
-            `Makin detail prompt, makin bagus hasil\n` +
-            `Tambahkan style: vibrant, dark, pastel, etc`, "anime-gen")
+        return m.reply(novaCaption({
+  emoji: "🎨",
+  name: "anime-gen",
+  description: "Generate AI anime art dari prompt",
+  usage: `${m.prefix}anime-gen <prompt>`,
+  example: `${m.prefix}anime-gen girl, vibrant color, smilling`,
+}), "anime-gen");
     }
     
     m.react('🕐')

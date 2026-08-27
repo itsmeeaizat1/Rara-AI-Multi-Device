@@ -28,8 +28,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "👥",
   name: "mute2",
   description: "Mute member grup",
-  usage: `$prefixmute <@target>`,
-  example: `$prefixmute @username`,
+  usage: `${prefix}mute <@target>`,
+  example: `${prefix}mute @username`,
 }) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);

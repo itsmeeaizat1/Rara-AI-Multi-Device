@@ -23,12 +23,12 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return novaCaption({
+    return m.reply(novaCaption({
   emoji: "🔍",
   name: "ptvsearch",
   description: "Cari video TikTok",
-  usage: `$m.prefixptvsearch <query>`,
-  example: `$m.prefixptvsearch jj epep`,
+  usage: `${m.prefix}ptvsearch <query>`,
+  example: `${m.prefix}ptvsearch jj epep`,
 }), "ptvsearch")
   }
 

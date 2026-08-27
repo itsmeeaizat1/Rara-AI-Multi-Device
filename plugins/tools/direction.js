@@ -28,8 +28,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "🛠️",
   name: "direction",
   description: "Rute & arah GPS",
-  usage: `$prefixdirection <dari> -> <ke>`,
-  example: `$prefixdirection Jakarta -> Bandung`,
+  usage: `${prefix}direction <dari> -> <ke>`,
+  example: `${prefix}direction Jakarta -> Bandung`,
 }), "direction");
       return { handled: true };
     }

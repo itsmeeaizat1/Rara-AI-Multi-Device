@@ -19,8 +19,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "🔧",
   name: "pricetrack",
   description: "Cek harga produk online",
-  usage: `$prefixpricetrack <url produk>`,
-  example: `$prefixpricetrack https://shopee.co.id/...`,
+  usage: `${prefix}pricetrack <url produk>`,
+  example: `${prefix}pricetrack https://shopee.co.id/...`,
 }), "pricetrack");
       return { handled: true };
     }
