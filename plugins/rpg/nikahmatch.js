@@ -131,7 +131,7 @@ async function answerHandler(m, sock) {
 
     if (text === "terima") {
       // Deduct gold
-      removeGold({ sender: proposer, pushName: "" }, MARRIAGE_COST);
+      removeGold({ sender: proposer, pushName: "", chat: m.chat }, MARRIAGE_COST, sock);
       // Marry both
       marry({ sender: proposer, pushName: "" });
       marry(m);

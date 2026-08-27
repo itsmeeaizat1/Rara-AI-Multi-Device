@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
     // Penalty gold
     const goldLost = Math.min(rpg.gold || 0, PUTUS_PENALTY);
-    removeGold(m, goldLost);
+    removeGold(m, goldLost, sock);
 
     const durasi = Date.now() - (cinta.datingDate || 0);
     const durasiHari = Math.floor(durasi / 86400000);

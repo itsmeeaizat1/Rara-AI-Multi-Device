@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
     }
 
     // Cek energy
-    if (!useEnergy(m, activity.energy)) {
+    if (!useEnergy(m, activity.energy, sock)) {
       return m.reply(
         `╭──「 *ʀᴘɢ ᴋᴇɴᴄᴀɴ* 」\n\n」` +
         `│ ❌ Energy tidak cukup!\n` +
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
     }
 
     // Eksekusi kencan
-    removeGold(m, activity.cost);
+    removeGold(m, activity.cost, sock);
     addAffection(m, activity.affection);
     addExp(m, activity.exp);
 

@@ -275,11 +275,16 @@ export function addGold(m, amount) {
   } catch { return 0; }
 }
 
-export function removeGold(m, amount) {
+export function removeGold(m, amount, sock) {
   try {
     const rpg = ensureRpg(m);
     if (!rpg || rpg.gold < amount) return false;
-    rpg.gold -= amount; saveRpg(m, rpg); return true;
+    rpg.gold -= amount; saveRpg(m, rpg);
+    if (sock) {
+      const chatId = m.chat || m.sender;
+      sock.sendMessage(chatId, { text: amount + " Gold terpakai" }).catch(() => {});
+    }
+    return true;
   } catch { return false; }
 }
 
@@ -292,11 +297,16 @@ export function addGems(m, amount) {
   } catch { return 0; }
 }
 
-export function removeGems(m, amount) {
+export function removeGems(m, amount, sock) {
   try {
     const rpg = ensureRpg(m);
     if (!rpg || rpg.gems < amount) return false;
-    rpg.gems -= amount; saveRpg(m, rpg); return true;
+    rpg.gems -= amount; saveRpg(m, rpg);
+    if (sock) {
+      const chatId = m.chat || m.sender;
+      sock.sendMessage(chatId, { text: amount + " Gems terpakai" }).catch(() => {});
+    }
+    return true;
   } catch { return false; }
 }
 
@@ -309,11 +319,16 @@ export function addTokens(m, amount) {
   } catch { return 0; }
 }
 
-export function removeTokens(m, amount) {
+export function removeTokens(m, amount, sock) {
   try {
     const rpg = ensureRpg(m);
     if (!rpg || rpg.tokens < amount) return false;
-    rpg.tokens -= amount; saveRpg(m, rpg); return true;
+    rpg.tokens -= amount; saveRpg(m, rpg);
+    if (sock) {
+      const chatId = m.chat || m.sender;
+      sock.sendMessage(chatId, { text: amount + " Tokens terpakai" }).catch(() => {});
+    }
+    return true;
   } catch { return false; }
 }
 
@@ -321,13 +336,18 @@ export function removeTokens(m, amount) {
 // ENERGY & MANA & HP
 // ═══════════════════════════════════════════════════
 
-export function useEnergy(m, amount) {
+export function useEnergy(m, amount, sock) {
   try {
     const rpg = ensureRpg(m);
     if (!rpg) return false;
     if (rpg.energy < amount) return false;
     rpg.energy -= amount; rpg.lastActive = Date.now();
-    saveRpg(m, rpg); return true;
+    saveRpg(m, rpg);
+    if (sock) {
+      const chatId = m.chat || m.sender;
+      sock.sendMessage(chatId, { text: amount + " Energy terpakai" }).catch(() => {});
+    }
+    return true;
   } catch { return false; }
 }
 
@@ -341,11 +361,16 @@ export function regenEnergy(m, amount = 10) {
   } catch { return 0; }
 }
 
-export function useMana(m, amount) {
+export function useMana(m, amount, sock) {
   try {
     const rpg = ensureRpg(m);
     if (!rpg || rpg.mana < amount) return false;
-    rpg.mana -= amount; saveRpg(m, rpg); return true;
+    rpg.mana -= amount; saveRpg(m, rpg);
+    if (sock) {
+      const chatId = m.chat || m.sender;
+      sock.sendMessage(chatId, { text: amount + " Mana terpakai" }).catch(() => {});
+    }
+    return true;
   } catch { return false; }
 }
 
@@ -386,14 +411,20 @@ export function addItem(m, itemId, quantity = 1) {
   } catch { return false; }
 }
 
-export function removeItem(m, itemId, quantity = 1) {
+export function removeItem(m, itemId, quantity = 1, sock) {
   try {
     const rpg = ensureRpg(m);
     if (!rpg || !rpg.inventory || !rpg.inventory[itemId]) return false;
     if (rpg.inventory[itemId].qty < quantity) return false;
     rpg.inventory[itemId].qty -= quantity;
     if (rpg.inventory[itemId].qty <= 0) delete rpg.inventory[itemId];
-    saveRpg(m, rpg); return true;
+    saveRpg(m, rpg);
+    if (sock) {
+      const chatId = m.chat || m.sender;
+      const itemName = (ITEM_DB[itemId]?.name) || itemId;
+      sock.sendMessage(chatId, { text: quantity + "x " + itemName + " terpakai" }).catch(() => {});
+    }
+    return true;
   } catch { return false; }
 }
 
@@ -424,7 +455,7 @@ export function getItemCount(m, itemId) {
 
 const SLOT_MAP = { weapon: "equipWeapon", armor: "equipArmor", helmet: "equipHelmet", boots: "equipBoots", accessory: "equipAccessory", ring: "equipRing", shield: "equipShield" };
 
-export function equipItem(m, itemId) {
+export function equipItem(m, itemId, sock) {
   try {
     const rpg = ensureRpg(m);
     if (!rpg) return { success: false, reason: "RPG belum siap" };
@@ -436,7 +467,7 @@ export function equipItem(m, itemId) {
     const previous = rpg[slot];
     if (previous) { addItem(m, previous.id, 1); unequipStat(rpg, previous); }
     rpg[slot] = { id: itemId, name: itemDef.name, rarity: itemDef.rarity, enchant: 0, ...extractEquipStats(itemDef) };
-    removeItem(m, itemId, 1);
+    removeItem(m, itemId, 1, sock);
     applyEquipStat(rpg, rpg[slot]);
     saveRpg(m, rpg);
     return { success: true, item: itemDef, slot };
@@ -509,7 +540,7 @@ export function getEquipStats(m) {
 // ENCHANTMENT
 // ═══════════════════════════════════════════════════
 
-export function enchantItem(m, slot, materialId = "mithrilOre", materialQty = 1) {
+export function enchantItem(m, slot, materialId = "mithrilOre", materialQty = 1, sock) {
   try {
     const rpg = ensureRpg(m);
     if (!rpg) return { success: false, reason: "RPG belum siap" };
@@ -517,7 +548,7 @@ export function enchantItem(m, slot, materialId = "mithrilOre", materialQty = 1)
     if (!rpg.inventory || !rpg.inventory[materialId] || rpg.inventory[materialId].qty < materialQty) return { success: false, reason: "Material tidak cukup" };
     const item = rpg[slot];
     const successRate = Math.max(20, 80 - item.enchant * 10);
-    removeItem(m, materialId, materialQty);
+    removeItem(m, materialId, materialQty, sock);
     if (Math.random() * 100 <= successRate) {
       item.enchant += 1;
       if (item.atk) item.atk = Math.floor(item.atk * 1.1);
@@ -856,7 +887,7 @@ export function rebirth(m) {
     if (!rpg) return { success: false, reason: "RPG belum siap" };
     if (rpg.level < 100) return { success: false, reason: "Butuh level 100 untuk reinkarnasi" };
     if (!rpg.inventory || !rpg.inventory["rebirthStone"] || rpg.inventory["rebirthStone"].qty < 1) return { success: false, reason: "Butuh Batu Reinkarnasi" };
-    removeItem(m, "rebirthStone", 1);
+    removeItem(m, "rebirthStone", 1, sock);
     const bonusPercent = 5; // 5% permanent stat bonus per rebirth
     const rebirthCount = (rpg.rebirthCount || 0) + 1;
     const newRpg = {
