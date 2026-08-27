@@ -1,12 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
   name: "dailyuser",
   alias: ["dailyuser"],
   category: "user",
-  description: "Claim hadiah harian (Exp, Money, Potion)",
+  description: "Claim hadiah harian (Exp, Koin, Gold, Gems)",
   usage: ".daily",
   example: ".daily",
   isOwner: false,
@@ -20,9 +20,18 @@ const pluginConfig = {
 
 const DAILY_COOLDOWN = 24 * 60 * 60 * 1000;
 
+function formatNum(n) {
+  return n.toLocaleString("id-ID");
+}
+
 async function handler(m, { sock }) {
   const db = getDatabase();
-  const user = db.getUser(m.sender);
+  let user = db.getUser(m.sender);
+
+  if (!user) {
+    db.setUser(m.sender);
+    user = db.getUser(m.sender);
+  }
 
   if (!user.cooldowns) user.cooldowns = {};
   const lastDaily = user.cooldowns.daily || 0;
@@ -32,36 +41,83 @@ async function handler(m, { sock }) {
     const remaining = lastDaily + DAILY_COOLDOWN - now;
     const hours = Math.floor(remaining / (1000 * 60 * 60));
     const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-    return mm.reply(claraWrap("Cooldown", `🕕 *ᴄᴏᴏʟᴅᴏᴡɴ*\n\nKamu sudah klaim hari ini.\nTunggu: *${hours} jam ${minutes} menit* lagi.`))
+    return m.reply(
+      "╭──「 🎁 Daily Claim 」\n" +
+      "├──\n" +
+      "├── 🕖 Cooldown\n" +
+      "├── Kamu sudah klaim hari ini\n" +
+      "├── Tunggu: *" + hours + " jam " + minutes + " menit* lagi\n" +
+      "╰──────────❀"
+    );
   }
 
-  const expReward = Math.floor(Math.random() * 5000) + 1000;
-  const moneyReward = Math.floor(Math.random() * 10000) + 5000;
+  // Calculate streak
+  if (!user.rpg) user.rpg = {};
+  const streak = (user.rpg.dailyStreak || 0) + 1;
+
+  // Streak bonus — semakin lama consecutive, semakin besar
+  const streakMultiplier = 1 + Math.min(streak * 0.1, 2); // Max 3x at streak 20+
+  const expReward = Math.floor((Math.random() * 5000 + 1000) * streakMultiplier);
+  const koinReward = Math.floor((Math.random() * 10000 + 5000) * streakMultiplier);
+  const goldReward = Math.floor((Math.random() * 300 + 100) * streakMultiplier);
+
+  // Small chance for gems (5%)
+  let gemsReward = 0;
+  let diamondsReward = 0;
+  const luckyRoll = Math.random();
+  if (luckyRoll < 0.03) {
+    diamondsReward = Math.floor(Math.random() * 2) + 1;
+    gemsReward = Math.floor(Math.random() * 5) + 3;
+  } else if (luckyRoll < 0.15) {
+    gemsReward = Math.floor(Math.random() * 3) + 1;
+  }
+
   const potionReward = Math.floor(Math.random() * 3) + 1;
 
-  if (!user.rpg) user.rpg = {};
+  // Apply rewards
   db.updateExp(m.sender, expReward);
-  user.koin = (user.koin || 0) + moneyReward;
+  db.updateKoin(m.sender, koinReward);
+  db.updateRpgCurrency(m.sender, "gold", goldReward);
+  if (gemsReward > 0) db.updateRpgCurrency(m.sender, "gems", gemsReward);
+  if (diamondsReward > 0) db.updateRpgCurrency(m.sender, "diamonds", diamondsReward);
 
+  // Update streak
+  user.rpg.dailyStreak = streak;
+  db.updateRpgCurrency(m.sender, "dailyStreak", 0); // just trigger save
+  user = db.getUser(m.sender);
+  user.rpg.dailyStreak = streak;
+
+  // Potion to inventory
   if (!user.inventory) user.inventory = {};
   user.inventory.potion = (user.inventory.potion || 0) + potionReward;
 
   user.cooldowns.daily = now;
+  db.setUser(m.sender, user);
   db.save();
 
   const greeting = getTimeGreeting();
 
-  let txt = `🎉 *ᴅᴀɪʟʏ ᴄʟᴀɪᴍ ꜱᴜᴋꜱᴇꜱ*\n`;
-  txt += `${greeting}, @${m.sender.split("@")[0]}\n\n`;
-  txt += `╭──「 🎁 *ʀᴇᴡᴀʀᴅꜱ* 」\n`;
-  txt += `│ 🚄 Exp: *+${expReward}*\n`;
-  txt += `│ 💰 Koin: *+${moneyReward.toLocaleString("id-ID")}*\n`;
-  txt += `│ 🥤 Potion: *+${potionReward}*\n`;
-  txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
-  txt += `Jangan lupa claim lagi besok!`;
+  let txt = "╭──「 🎁 Daily Claim 」\n";
+  txt += "├──\n";
+  txt += "├── " + greeting + ", @"+ m.sender.split("@")[0] +"!\n";
+  txt += "├── 🔥 Streak: *" + streak + " hari*\n";
+  if (streakMultiplier > 1) {
+    txt += "├── ⚡ Bonus Streak: *" + (Math.round(streakMultiplier * 100) / 100) + "x*\n";
+  }
+  txt += "├──\n";
+  txt += "├──「 *Hadiah* 」\n";
+  txt += "├── 🚄 Exp: *+" + formatNum(expReward) + "*\n";
+  txt += "├── 🪙 Koin: *+" + formatNum(koinReward) + "*\n";
+  txt += "├── 💰 Gold: *+" + formatNum(goldReward) + "*\n";
+  if (gemsReward > 0) txt += "├── 💎 Gems: *+" + gemsReward + "*\n";
+  if (diamondsReward > 0) txt += "├── ♦️ Diamonds: *+" + diamondsReward + "*\n";
+  txt += "├── 🥤 Potion: *+" + potionReward + "*\n";
+  txt += "├──\n";
+  txt += "├── 💡 Klaim lagi besok untuk lanjutkan streak!\n";
+  txt += "╰──────────❀";
 
   await m.react("🐣");
-  await m.reply( txt, "daily");
+  await sock.sendMessage(m.chat, { text: txt, mentions: [m.sender] }, { quoted: m });
 }
 
 export { pluginConfig as config, handler };

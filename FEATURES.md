@@ -11,6 +11,27 @@
 ---
 
 
+## 🆕 RPG System Overhaul v21.7.0
+
+### Sistem EXP & Level
+- `.level [@user]` — Cek level dengan progress bar (Modern Box)
+- `.exp [@user]` — Cek EXP user (Modern Box)
+- `.koin [@user]` — Cek koin + shop info (Modern Box)
+- `.profile [@user]` — Profil lengkap dengan semua RPG stats (Modern Box)
+- `.daily` — Daily claim dengan streak system & multiplier bonus
+
+### Database RPG Integration
+- Auto-init RPG combat stats (HP, Mana, Energy, Stamina, ATK, DEF, SPD, dll)
+- Owner auto-get: 9B EXP, 9T Koin, 1M Gold, 999K Gems/Diamonds
+- Game rewards sekarang include Gold (100-500), Gems (5% chance), Diamonds (3% chance)
+- Daily streak system dengan multiplier bonus (max 3x at 20+ streak)
+- RPG currencies: Gold, Gems, Diamonds, Tokens — semua tracked di DB
+
+### Game Rewards
+- Win game: +3-8 Limit, +500-2000 Koin, +1000-3000 EXP, +100-500 Gold
+- 5% chance: +5-15 Gems, 3% chance: +1-3 Diamonds (jackpot)
+- Daily: EXP + Koin + Gold + chance Gems/Diamonds + Potion
+
 ## 🆕 Fitur Baru v21.5.0
 
 ### Fitur Baru (No API Key)
