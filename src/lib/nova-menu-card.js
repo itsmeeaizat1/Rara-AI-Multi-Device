@@ -100,7 +100,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     if (rawBuffer) {
       try {
         const resized = await sharp(rawBuffer)
-          .resize(600, 600, { fit: "cover" })
+          .resize(640, 360, { fit: "cover" })
           .jpeg({ quality: 85 })
           .toBuffer();
         headerMedia = await prepareWAMessageMedia(
