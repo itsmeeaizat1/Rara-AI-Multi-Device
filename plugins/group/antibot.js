@@ -4,7 +4,6 @@ import {
   findParticipantByNumber,
   getParticipantJid,
 } from "../../src/lib/nova-lid.js";
-import config from "../../config.js";
 import { gpMsg } from "../../src/lib/nova-group-protection.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
