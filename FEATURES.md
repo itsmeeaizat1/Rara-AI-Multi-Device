@@ -370,3 +370,13 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - Menampilkan: status premium, keuntungan, paket harga, cara beli, metode pembayaran
 - Paket: 7 Hari (Rp 10.000), 30 Hari (Rp 25.000), 90 Hari (Rp 60.000), Permanent (Rp 150.000)
 - Tombol: Beli Premium, Menu, Sewa Bot, Owner
+
+
+## 📥 All Downloader
+
+- `.alldl <url> [format]` — All-in-one downloader, paste link apapun auto-detect
+- Alias: `.dl`, `.download`, `.get`
+- Auto-detect: YouTube, TikTok, Instagram, Facebook, Twitter/X, Pinterest, Threads, Reddit, CapCut, Dailymotion, SoundCloud, Spotify, Vimeo, SnackVideo, Likee
+- Format: mp3 (audio), 360/480/720/1080 (video, default 720)
+- Strategy: SaveNow API (primary) → AIO scraper (fallback)
+- Contoh: `.alldl https://youtu.be/xxx`, `.alldl https://vt.tiktok.com/xxx mp3`
