@@ -148,18 +148,24 @@ function broadcastFormat({ botName = "Nova AI", senderName = "Owner", message, t
   const now = new Date();
   const tanggal = now.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
   const waktu = now.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
-  const typeLabel = type === "private" ? "Private Chat" : type === "channel" ? "Channel" : "Grup";
-  const lines = [
-    `Bot: ${botName}`,
-    `Pengirim: ${senderName}`,
-    `Tipe: ${typeLabel}`,
-    `Tanggal: ${tanggal}`,
-    `Waktu: ${waktu}`,
-    "",
-    "Pesan:",
-    message,
-  ].filter(l => l !== undefined);
-  return bracketBox("i", "Broadcast Info", lines.filter(l => l !== undefined));
+  const typeLabel = type === "private" ? "Private Chat" : type === "channel" ? "Channel" : "Grup Broadcast";
+  const typeIcon = type === "private" ? "📱" : type === "channel" ? "📺" : "📢";
+
+  let text = "╭──「 📢 Broadcast Info 」";
+  text += "\n│";
+  text += "\n├──「 *Detail* 」";
+  text += "\n│ *Bot:* " + botName;
+  text += "\n│ *Dari:* " + senderName;
+  text += "\n│ *Tipe:* " + typeIcon + " " + typeLabel;
+  text += "\n│ *Tanggal:* " + tanggal;
+  text += "\n│ *Waktu:* " + waktu + " WIB";
+  text += "\n├──";
+  text += "\n├──「 *Pesan* 」";
+  text += "\n│ " + String(message || "").split("\n").map(l => l.trim() ? "│ " + l : "│").join("\n");
+  text += "\n├──";
+  text += "\n├── ⚠️ _Pesan resmi dari owner bot_";
+  text += "\n╰──────────❀";
+  return text;
 }
 
 // novaUsage: pesan usage yang menarik dengan emoji labels

@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 
 const pluginConfig = {
@@ -45,38 +44,49 @@ async function handler(m, { sock }) {
   const current = db.setting('jedaBcpc') || 5000
 
   if (!input) {
-    return m.reply( claraWrap("Jeda Broadcast Private", [
-      `Jeda saat ini: ${formatDelay(current)} (${current}ms)`,
-      "",
-      "CARA PAKAI:",
-      `${m.prefix}bcpcjeda <angka><satuan>`,
-      "",
-      "SATUAN:",
-      "s — detik",
-      "m — menit",
-      "h — jam",
-      "d — hari",
-      "",
-      "CONTOH:",
-      `${m.prefix}bcpcjeda 5s -> 5 detik`,
-      `${m.prefix}bcpcjeda 2m -> 2 menit`,
-      `${m.prefix}bcpcjeda 1h -> 1 jam`,
-    ].join("\n")), "bcpcjeda")
+    return m.reply(
+      "╭──「 ⏱️ Jeda Broadcast Private 」\n" +
+      "├──\n" +
+      "├── ⏱️ Jeda saat ini: " + formatDelay(current) + " (" + current + "ms)\n" +
+      "├──\n" +
+      "├── 📌 *Cara Pakai:*\n" +
+      "├── `" + m.prefix + "bcpcjeda <angka><satuan>`\n" +
+      "├──\n" +
+      "├── 💡 *Satuan:*\n" +
+      "├── s — detik | m — menit | h — jam | d — hari\n" +
+      "├──\n" +
+      "├── 💡 *Contoh:*\n" +
+      "├── `" + m.prefix + "bcpcjeda 5s` → 5 detik\n" +
+      "├── `" + m.prefix + "bcpcjeda 2m` → 2 menit\n" +
+      "├── `" + m.prefix + "bcpcjeda 1h` → 1 jam\n" +
+      "╰──────────❀"
+    )
   }
 
   const ms = parseDelay(input)
   if (!ms || ms < 1000) {
-    return m.reply(claraWrap("Jeda Broadcast", "Format salah. Contoh: 5s, 2m, 1h, 1d"))
+    return m.reply(
+      "╭──「 ⏱️ Jeda Broadcast Private 」\n" +
+      "├──\n" +
+      "├── ❌ Format salah\n" +
+      "├── 💡 Contoh: `5s`, `2m`, `1h`, `1d`\n" +
+      "╰──────────❀"
+    )
   }
 
   const prev = current
   db.setting('jedaBcpc', ms)
 
-  return m.reply(claraWrap("Jeda Broadcast Private", [
-    "Jeda berhasil diubah",
-    `Sebelumnya: ${formatDelay(prev)}`,
-    `Sekarang: ${formatDelay(ms)}`,
-  ].join("\n")))
+  return m.reply(
+    "╭──「 ⏱️ Jeda Broadcast Private 」\n" +
+    "├──\n" +
+    "├── ✅ Jeda berhasil diubah\n" +
+    "├── 📌 Sebelumnya: " + formatDelay(prev) + "\n" +
+    "├── 📌 Sekarang: " + formatDelay(ms) + "\n" +
+    "├──\n" +
+    "├── 📊 Estimasi 100 kontak: " + Math.ceil((100 * ms) / 60000) + " menit\n" +
+    "╰──────────❀"
+  )
 }
 
 export { pluginConfig as config, handler }
