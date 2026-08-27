@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20connection.js%20notifikasi%20-success?style=for-the-badge)
-> *Commit: "fix: connection.js notifikasi owner gagal karena require() di ESM"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20notifikasi%20bot%20online%20ke%20-success?style=for-the-badge)
+> *Commit: "fix: notifikasi bot online ke owner fire setiap connect, bukan cuma first-pair"*
 <!--END_SECTION:latest-update-->
 
 
