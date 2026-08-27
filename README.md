@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20tanyaai%20pakai%20tio_openai%20-success?style=for-the-badge)
-> *Commit: "fix: tanyaai pakai tio_openai provider, callAI respect apiEndpoint"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20thumbnail%20menu%20jadi%20lands-success?style=for-the-badge)
+> *Commit: "fix: thumbnail menu jadi landscape 640x360 (bukan square 600x600)"*
 <!--END_SECTION:latest-update-->
 
 
