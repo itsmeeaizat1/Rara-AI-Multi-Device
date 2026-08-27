@@ -1,132 +1,108 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// beritav2.js — Berita via NewsAPI.org + NewsData.io fallback (needs API key)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
-import config from "../../config.js";
+// beritav2.js — Berita terkini via RSS Indonesia (gratis, no API key)
+import axios from 'axios'
+import * as cheerio from 'cheerio'
 
 const pluginConfig = {
   name: "beritav2",
   alias: ["beritav2"],
   category: "info",
-  description: "Berita terkini dari NewsAPI & NewsData (global + Indonesia)",
-  usage: ".beritav2 [topik] atau .beritav2 id (berita Indonesia)",
-  example: ".beritav2 teknologi\n.beritav2 id\n.beritav2",
+  description: "Berita terkini dari RSS Indonesia (Detik, Kompas, CNN, Tribun)",
+  usage: ".beritav2 <sumber>",
+  example: ".beritav2 detik",
   isOwner: false,
   isPremium: false,
   isGroup: false,
   isPrivate: false,
-  cooldown: 20,
-  energi: 2,
+  cooldown: 10,
+  energi: 1,
   isEnabled: true,
-};
-
-const aiConfig = config.aiHelp || {};
-
-async function fetchNewsAPI(query, isIndonesia) {
-  const key = aiConfig.newsApiKey || config.newsApiKey || "";
-  if (!key) return null;
-
-  let url;
-  if (query && query !== "id") {
-    url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&apiKey=${key}&pageSize=8&sortBy=publishedAt&language=${isIndonesia ? "id" : "en"}`;
-  } else {
-    url = `https://newsapi.org/v2/top-headlines?country=${isIndonesia ? "id" : "us"}&apiKey=${key}&pageSize=8`;
-  }
-
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`NewsAPI ${res.status}`);
-  const json = await res.json();
-  return (json.articles || []).map(a => ({
-    title: a.title,
-    source: a.source?.name || "Unknown",
-    url: a.url,
-    publishedAt: a.publishedAt,
-  }));
 }
 
-async function fetchNewsData(query, isIndonesia) {
-  const key = aiConfig.newsDataKey || config.newsDataKey || "";
-  if (!key) return null;
-
-  let url;
-  if (query && query !== "id") {
-    url = `https://newsdata.io/api/1/news?q=${encodeURIComponent(query)}&apikey=${key}&size=8&country=id`;
-  } else {
-    url = `https://newsdata.io/api/1/news?country=id&apikey=${key}&size=8`;
-  }
-
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`NewsData ${res.status}`);
-  const json = await res.json();
-  return (json.results || []).map(a => ({
-    title: a.title,
-    source: a.source_id || "Unknown",
-    url: a.link,
-    publishedAt: a.pub_date,
-  }));
+const SOURCES = {
+  detik: { url: "https://rss.detik.com/index.php/detiknews", name: "Detik News" },
+  kompas: { url: "https://www.kompas.com/getrss", name: "Kompas" },
+  cnn: { url: "https://www.cnnindonesia.com/rss", name: "CNN Indonesia" },
+  tribun: { url: "https://www.tribunnews.com/rss", name: "Tribun News" },
 }
 
-function formatNews(items) {
-  return items.slice(0, 8).map((n, i) => {
-    const date = n.publishedAt ? new Date(n.publishedAt).toLocaleDateString("id-ID", { day: "numeric", month: "short" }) : "";
-    return `${i + 1}. ${n.title}\n   ${n.source} | ${date}\n   ${n.url || ""}`;
-  }).join("\n\n");
+async function parseRSS(url) {
+  const { data } = await axios.get(url, {
+    timeout: 15000,
+    headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" }
+  })
+  const $ = cheerio.load(data, { xmlMode: true })
+  const items = []
+  $("item").slice(0, 5).each((_, el) => {
+    const title = $(el).find("title").text().trim()
+    const link = $(el).find("link").text().trim()
+    const pubDate = $(el).find("pubDate").text().trim()
+    items.push({ title, link, pubDate })
+  })
+  return items
 }
 
-async function handler(m, { sock, config: botConfig, db }) {
+function formatDate(dateStr) {
   try {
-    const input = m.args?.join(" ") || "";
-    const isIndonesia = input.toLowerCase() === "id" || input === "";
-    const query = input.toLowerCase() === "id" ? "" : input;
-
-    await m.react("🕒");
-
-    let news = null;
-    let source = "";
-
-    // Try NewsAPI first
-    try {
-      news = await fetchNewsAPI(query, isIndonesia);
-      if (news && news.length) source = "NewsAPI.org";
-    } catch (e) {
-      console.log("[beritav2] NewsAPI failed:", e.message);
-    }
-
-    // Fallback to NewsData
-    if (!news || !news.length) {
-      try {
-        news = await fetchNewsData(query, isIndonesia);
-        if (news && news.length) source = "NewsData.io";
-      } catch (e) {
-        console.log("[beritav2] NewsData failed:", e.message);
-      }
-    }
-
-    if (!news || !news.length) {
-      await m.react("🐣");
-      return m.reply(claraWrap("Berita v2", [
-        "Tidak ada API key berita yang aktif.",
-        "",
-        "Set API key di config.js:",
-        "• newsApiKey (NewsAPI.org — free 100 req/day)",
-        "• newsDataKey (NewsData.io — free 200 req/day)",
-        "",
-        `Atau gunakan ${m.prefix}berita (via Google search)`,
-      ]));
-    }
-
-    await m.react("🐣");
-    const heading = isIndonesia ? "Berita Indonesia" : query ? `Berita: "${query}"` : "Berita Global";
-    return m.reply(claraWrap("Berita v2", [
-      `${heading} (${source})`,
-      "",
-      formatNews(news),
-    ]));
-  } catch (e) {
-    console.error("[beritav2] error:", e.message);
-    await m.react("❌");
-    return m.reply(te(m.prefix, m.command, m.pushName), "beritav2");
+    return new Date(dateStr).toLocaleDateString("id-ID", {
+      day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"
+    })
+  } catch {
+    return dateStr || ""
   }
 }
 
-export { pluginConfig as config, handler };
+async function handler(m, { sock }) {
+  try {
+    const input = (m.text || "").trim().toLowerCase()
+
+    if (!input || !SOURCES[input]) {
+      const list = Object.entries(SOURCES)
+        .map(([key, val]) => `├── .beritav2 ${key} — ${val.name}`)
+        .join("\n")
+      return m.reply(
+        "╭──「 Berita v2 」\n" +
+        "├── Pilih sumber berita:\n" +
+        list + "\n" +
+        "╰──────────❀"
+      )
+    }
+
+    const source = SOURCES[input]
+    await m.react("🕒")
+
+    const news = await parseRSS(source.url)
+
+    if (!news.length) {
+      await m.react("🐣")
+      return m.reply(
+        "╭──「 Berita v2 」\n" +
+        "├── Tidak ada berita tersedia saat ini.\n" +
+        "╰──────────❀"
+      )
+    }
+
+    let text = "╭──「 Berita " + source.name + " 」\n"
+    news.forEach((n, i) => {
+      text += "├── " + (i + 1) + ". " + n.title + "\n"
+      text += "├── " + formatDate(n.pubDate) + "\n"
+      text += "├── " + n.link + "\n"
+      if (i < news.length - 1) text += "├──\n"
+    })
+    text += "╰──────────❀"
+
+    await m.react("🐣")
+    return m.reply(text)
+  } catch (e) {
+    console.error("[beritav2] error:", e.message)
+    await m.react("🐣")
+    return m.reply(
+      "╭──「 Error 」\n" +
+      "├── Gagal mengambil berita.\n" +
+      "├── " + (e.message || "Terjadi kesalahan") + "\n" +
+      "╰──────────❀"
+    )
+  }
+}
+
+export { pluginConfig as config, handler }

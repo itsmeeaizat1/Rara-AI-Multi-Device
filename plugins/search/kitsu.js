@@ -85,7 +85,7 @@ async function handler(m, { sock, config, db }) {
     return m.reply(claraWrap("Kitsu", text));
   } catch (e) {
     console.error("[kitsu] error:", e.message);
-    await m.react("❌");
+    await m.react("🐣");
     return m.reply(te(m.prefix, m.command, m.pushName), "kitsu");
   }
 }

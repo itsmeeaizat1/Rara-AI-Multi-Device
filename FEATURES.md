@@ -16,14 +16,15 @@
 ### Fitur Baru (No API Key)
 - `.anilist` — search — Cari & detail anime dari AniList (seasonal, top, search)
 - `.kitsu` — search — Cari anime & manga dari Kitsu database
+- `.animev2` — search — Search anime dari MyAnimeList (Jikan API v4)
 - `.joke` — fun — Random joke dari JokeAPI dengan kategori
-- `.gamedeal` — search — Cari diskon & harga game termurah (CheapShark)
+- `.gameprice` — tools — Cari diskon & harga game Steam (CheapShark)
 - `.quranv4` — islamic — Al-Quran via equran.id (surat, ayat, audio murottal)
 - `.sholatv2` — religi — Jadwal sholat per kota Indonesia (myquran.com)
+- `.beritav2` — info — Berita terkini via RSS Indonesia (Detik, Kompas, CNN, Tribun)
 
 ### Fitur Baru (Butuh API Key)
-- `.beritav2` — info — Berita terkini dari NewsAPI & NewsData (set newsApiKey/newsDataKey)
-- `.gamedb` — search — Cari info game dari RAWG.io (set rawgApiKey)
+- `.rawg` — search — Cari info game dari RAWG.io (set config.APIkey.rawg)
 - `.cekcuacav2` — info — Cek cuaca via OpenWeather (set openWeatherKey)
 - `.cekresi` — tools — Cek resi JNE/J&T/SiCepat/AnterAja dll (set binderbyteKey)
 
@@ -32,12 +33,17 @@
 
 ### Config API Key Baru
 ```
-newsApiKey: ""      // NewsAPI.org (free 100 req/day)
-newsDataKey: ""     // NewsData.io (free 200 req/day)
 rawgApiKey: ""      // RAWG.io (free)
 openWeatherKey: ""  // OpenWeather (free 1000 req/day)
 binderbyteKey: ""   // Binderbyte cek resi
 ```
+
+### NPM Dependencies Baru
+- `rss-parser` — Parse RSS feed berita
+- `genius-lyrics` — Cari lirik lagu dari Genius
+- `spotify-url-info` — Info track Spotify
+- `youtubei.js` — YouTube scraping tanpa API key
+- `node-id3` — MP3 metadata/tags
 
 
 ## 🆕 Fitur Baru v21.6.0 — Games & Trivia

@@ -1,72 +1,33 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// memev2.js — Random meme from meme-api.com (no API key, Reddit source)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import axios from 'axios'
 
 const pluginConfig = {
-  name: "memev2",
-  alias: ["memev2"],
-  category: "random",
-  description: "Random meme dari Reddit via meme-api.com",
-  usage: ".memev2 [subreddit]",
-  example: ".memev2\n.memev2 dankmemes\n.memev2 wholesomememes",
-  isOwner: false,
-  isPremium: false,
-  isGroup: false,
-  isPrivate: false,
-  cooldown: 10,
-  energi: 1,
-  isEnabled: true,
-};
-
-async function getMeme(subreddit) {
-  const url = subreddit
-    ? `https://meme-api.com/gimme/${encodeURIComponent(subreddit)}`
-    : "https://meme-api.com/gimme";
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Meme API ${res.status}`);
-  return await res.json();
+    name: "memev2",
+    alias: ["memev2"],
+    category: 'random',
+    description: 'Random meme dari Reddit (meme-api.com)',
+    usage: '.memev2',
+    example: '.memev2',
+    isOwner: false,
+    isPremium: false,
+    isGroup: false,
+    isPrivate: false,
+    cooldown: 5,
+    energi: 0,
+    isEnabled: true
 }
 
-async function handler(m, { sock, config, db }) {
-  try {
-    const subreddit = m.args?.[0] || "";
-
-    await m.react("🕒");
-
-    let meme = null;
-    let retries = 0;
-
-    // Retry if NSFW (max 3)
-    while (retries < 3) {
-      meme = await getMeme(subreddit);
-      if (!meme.nsfw && !meme.spoiler) break;
-      retries++;
+async function handler(m, { sock }) {
+    try {
+        const { data } = await axios.get('https://meme-api.com/gimme')
+        
+        await sock.sendMessage(m.chat, {
+            image: { url: data.url },
+            caption: '╭──「 Random Meme 」\n├── ' + data.title + '\n├── r/' + data.subreddit + ' — u/' + data.author + '\n╰──────────❀'
+        }, { quoted: m })
+    } catch (e) {
+        await m.reply('╭──「 Error 」\n├── Gagal mengambil meme: ' + (e.message || e) + '\n╰──────────❀')
     }
-
-    if (!meme || !meme.url) {
-      await m.react("🐣");
-      return m.reply(claraWrap("Meme v2", "Gagal mengambil meme. Coba lagi nanti."));
-    }
-
-    await m.react("🐣");
-
-    const caption = claraWrap("Meme v2", [
-      `${meme.title || "Untitled"}`,
-      `r/${meme.subreddit || "memes"} — u/${meme.author || "unknown"}`,
-      meme.postLink ? `${meme.postLink}` : "",
-    ]);
-
-    // Send image with caption
-    return await sock.sendMessage(m.chat, {
-      image: { url: meme.url },
-      caption,
-    }, { quoted: m });
-  } catch (e) {
-    console.error("[memev2] error:", e.message);
-    await m.react("❌");
-    return m.reply(te(m.prefix, m.command, m.pushName), "memev2");
-  }
 }
 
-export { pluginConfig as config, handler };
+export { pluginConfig as config, handler }
