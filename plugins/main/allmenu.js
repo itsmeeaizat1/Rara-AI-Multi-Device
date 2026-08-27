@@ -195,6 +195,18 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ *Total Registrasi:* ${totalRegistered}
 │ *Premium User:* ${totalPremium}
 │ *Total Fitur:* ${totalFeatures}
+├──「 *Info Statistik*
+│ 👥 Total User: ${totalUsers}
+│ ✅ Terdaftar: ${totalRegistered}
+│ 💎 Premium: ${totalPremium}
+│ 🚫 Diblokir: ${totalBanned}
+│ ⚠️ Kena Warn: ${totalWarned}
+│ 🏠 Grup Aktif: ${totalActiveGroups} / ${totalGroups}
+│ 📥 Pesan Masuk: ${totalMessagesIn > 0 ? totalMessagesIn.toLocaleString() : '-'}
+│ 📤 Pesan Keluar: ${totalMessagesOut > 0 ? totalMessagesOut.toLocaleString() : '-'}
+│ ⚡ Command Run: ${totalCommandsRun > 0 ? totalCommandsRun.toLocaleString() : '-'}
+│ 🎫 Sticker Dibuat: ${totalStickerMade > 0 ? totalStickerMade.toLocaleString() : '-'}
+│ 📥 Download: ${totalDownloads > 0 ? totalDownloads.toLocaleString() : '-'}
 ├──「 *Info Server*
 │ *Platform:* ${platform}
 │ *Hostname:* ${hostname}
