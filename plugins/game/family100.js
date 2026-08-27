@@ -233,7 +233,7 @@ function pick(arr) {
 const pluginConfig = {
   name: "family100",
   alias: ["family100"],
-  category: "game",
+  category: "rpg",
   description: "Game Family 100 — tebak semua jawaban survey!",
   usage: ".family100",
   example: ".family100",

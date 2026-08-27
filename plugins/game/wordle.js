@@ -6,7 +6,7 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "wordle",
   alias: ["wordle"],
-  category: "game",
+  category: "rpg",
   description: "Game Wordle — tebak kata 5 huruf dalam 6 percobaan",
   usage: ".wordle [start/new/hint]",
   example: ".wordle\n.wordle start\n.wordle hint",

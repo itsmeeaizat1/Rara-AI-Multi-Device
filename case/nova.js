@@ -51,7 +51,7 @@ function formatNumber(num) {
 
 const CATEGORY_EMOJIS = {
   ai: "🤖", sticker: "🖼️", download: "📥", fun: "🎮",
-  canvas: "🎨", tools: "🛠️", game: "🎯", rpg: "⚔️",
+  canvas: "🎨", tools: "🛠️", rpg: "🎯", "rpg cinta": "❤️",
   media: "🎬", search: "🔍", group: "👥", main: "🏠",
   utility: "🔧", religi: "☪️", info: "ℹ️", cek: "🔎",
   economy: "💰", user: "👤", random: "🎲", premium: "💎",

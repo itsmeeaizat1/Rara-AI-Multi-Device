@@ -6,7 +6,7 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "hangman",
   alias: ["hangman"],
-  category: "game",
+  category: "rpg",
   description: "Tebak kata sebelum gantungan penuh (classic Hangman)",
   usage: ".hangman [start/letter/end]",
   example: ".hangman start\n.hangman a\n.hangman end",
