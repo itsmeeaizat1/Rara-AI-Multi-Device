@@ -144,8 +144,8 @@ async function handler(m, { sock }) {
       return m.reply(
         `╭──「 *Video Terlalu Pendek* 」\n` +
         `\n` +
-        `│ ❏ *ᴅᴜʀᴀꜱɪ ᴠɪᴅᴇᴏ:* ${srcDuration.toFixed(1)}s\n` +
-        `│ ❏ *ᴍɪɴɪᴍᴀʟ ᴡᴀᴊɪʙ:* ${SRC_MIN_DURATION}s\n` +
+        `│ *ᴅᴜʀᴀꜱɪ ᴠɪᴅᴇᴏ:* ${srcDuration.toFixed(1)}s\n` +
+        `│ *ᴍɪɴɪᴍᴀʟ ᴡᴀᴊɪʙ:* ${SRC_MIN_DURATION}s\n` +
         `╰──────────❀\n\n` +
         `Video sumber terlalu pendek! Minimal ${SRC_MIN_DURATION}s biar efek live-nya kelihatan dan pas.`
       );
@@ -179,8 +179,8 @@ async function handler(m, { sock }) {
       return m.reply(
         `╭──「 *Durasi Output Terlalu Pendek* 」\n` +
         `\n` +
-        `│ ❏ *ᴅɪᴍɪɴᴛᴀ:* ${duration}s\n` +
-        `│ ❏ *ᴍɪɴɪᴍᴀʟ:* ${OUT_MIN_DURATION}s (wajib)\n` +
+        `│ *ᴅɪᴍɪɴᴛᴀ:* ${duration}s\n` +
+        `│ *ᴍɪɴɪᴍᴀʟ:* ${OUT_MIN_DURATION}s (wajib)\n` +
         `╰──────────❀\n\n` +
         `Durasi output minimal ${OUT_MIN_DURATION}s wajib biar efek live pas!`
       );
@@ -192,8 +192,8 @@ async function handler(m, { sock }) {
       return m.reply(
         `╭──「 *Durasi Output Terlalu Panjang* 」\n` +
         `\n` +
-        `│ ❏ *ᴅɪᴍɪɴᴛᴀ:* ${duration}s\n` +
-        `│ ❏ *ᴍᴀᴋꜱɪᴍᴀʟ:* ${OUT_MAX_DURATION}s\n` +
+        `│ *ᴅɪᴍɪɴᴛᴀ:* ${duration}s\n` +
+        `│ *ᴍᴀᴋꜱɪᴍᴀʟ:* ${OUT_MAX_DURATION}s\n` +
         `╰──────────❀\n\n` +
         `Durasi output maksimal ${OUT_MAX_DURATION}s untuk performa optimal.`
       );
@@ -259,11 +259,11 @@ async function handler(m, { sock }) {
       caption:
         `╭──「 *Live Photo* 」\n` +
         `\n` +
-        `│ ❏ *ᴅᴜʀᴀꜱɪ:* ${durLabel}\n` +
-        `│ ❏ *ʀᴇꜱᴏʟᴜꜱɪ:* ${resolution}p\n` +
-        `│ ❏ *ꜰᴘꜱ:* ${fps}\n` +
-        `│ ❏ *ᴜᴋᴜʀᴀɴ:* ${formatSize(liveSize)}\n` +
-        (wasTrimmed ? `│ ❏ *ᴛʀɪᴍᴍᴇᴅ:* ${srcDuration.toFixed(1)}s → ${durLabel}\n` : '') +
+        `│ *ᴅᴜʀᴀꜱɪ:* ${durLabel}\n` +
+        `│ *ʀᴇꜱᴏʟᴜꜱɪ:* ${resolution}p\n` +
+        `│ *ꜰᴘꜱ:* ${fps}\n` +
+        `│ *ᴜᴋᴜʀᴀɴ:* ${formatSize(liveSize)}\n` +
+        (wasTrimmed ? `│ *ᴛʀɪᴍᴍᴇᴅ:* ${srcDuration.toFixed(1)}s → ${durLabel}\n` : '') +
         `╰──────────❀`,
     }, { quoted: m });
 
@@ -280,7 +280,7 @@ async function handler(m, { sock }) {
     await m.reply(
       `╭──「 *Live Photo Error* 」\n` +
       `\n` +
-      `│ ❏ *ᴇʀʀᴏʀ:* ${errMsg}\n` +
+      `│ *ᴇʀʀᴏʀ:* ${errMsg}\n` +
       `╰──────────❀\n\n` +
       `Coba video lain atau durasi lebih pendek.`
     );

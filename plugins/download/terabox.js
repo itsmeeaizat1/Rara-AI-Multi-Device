@@ -25,8 +25,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!url) {
       const text =
-        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}terabox <link>*`,
-          `│ ❏ Contoh: *${prefix}terabox https://terabox.com/s/xxxx*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}terabox <link>*`,
+          `│ Contoh: *${prefix}terabox https://terabox.com/s/xxxx*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -47,8 +47,8 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      claraWrap("Terabox", [`│ ❏ Link: *${url}*`,
-        "│ ❏ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+      claraWrap("Terabox", [`│ Link: *${url}*`,
+        "│ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}terabox <link> untuk download file lain`) +
       "\n" +
@@ -58,8 +58,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
-        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
+        `│ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

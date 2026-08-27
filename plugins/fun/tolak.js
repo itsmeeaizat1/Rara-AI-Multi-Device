@@ -43,8 +43,8 @@ async function handler(m, { sock }) {
     if (!shooterJid) {
       return m.reply(
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `│ ❏ Reply pesan tembakan + \`${m.prefix}tolak\`\n` +
-        `│ ❏ Atau \`${m.prefix}tolak @tag\`\n\n` +
+        `│ Reply pesan tembakan + \`${m.prefix}tolak\`\n` +
+        `│ Atau \`${m.prefix}tolak @tag\`\n\n` +
         `╰──────────❀`
       );
     }

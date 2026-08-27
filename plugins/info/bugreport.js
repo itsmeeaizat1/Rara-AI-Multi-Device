@@ -26,8 +26,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!message) {
       const text =
-        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}bugreport <pesan>*`,
-          `│ ❏ Contoh: *${prefix}bugreport Fitur .play error*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}bugreport <pesan>*`,
+          `│ Contoh: *${prefix}bugreport Fitur .play error*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -44,8 +44,8 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      claraWrap("Bug Report", [`│ ❏ Pesan: *${message.slice(0, 1500)}${message.length > 1500 ? "..." : ""}*`,
-        "│ ❏ Status: *ᴛᴇʀꜱɪᴍᴘᴀɴ*"].join("\n")) +
+      claraWrap("Bug Report", [`│ Pesan: *${message.slice(0, 1500)}${message.length > 1500 ? "..." : ""}*`,
+        "│ Status: *ᴛᴇʀꜱɪᴍᴘᴀɴ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -53,8 +53,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
-        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
+        `│ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

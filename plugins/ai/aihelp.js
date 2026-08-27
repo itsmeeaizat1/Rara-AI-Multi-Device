@@ -70,11 +70,11 @@ Tidak ada command untuk "${keyword}".
     let cmdLines = "";
     for (let i = 0; i < matches.length; i++) {
       const desc = matches[i].description ? ` — ${toSC(matches[i].description)}` : "";
-      cmdLines += `│ ❏ ${prefix}${matches[i].name}${desc}\n`;
+      cmdLines += `│ ${prefix}${matches[i].name}${desc}\n`;
     }
 
-    const text = `╭──「 *Aɪ Hᴇʟᴘ* 」\n│ ❏ *Keyword:* ${keyword}
-│ ❏ *Ditemukan:* ${matches.length} command
+    const text = `╭──「 *Aɪ Hᴇʟᴘ* 」\n│ *Keyword:* ${keyword}
+│ *Ditemukan:* ${matches.length} command
 ├──「 Hasil 」
 ${cmdLines}╰──────────❀`;
 

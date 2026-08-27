@@ -29,15 +29,15 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!args && !m.quoted) {
     const help = claraWrap("Pohon", [
-      `│ ❏ Generator silsilah keluarga lucu`,
+      `│ Generator silsilah keluarga lucu`,
       ``,
-      `│ ❏ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `│ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  ${prefix}pohon <nama>`,
       `  ${prefix}pohon Budi`,
       `  Reply orang: ${prefix}pohon`,
       ``,
-      `│ ❏ Hasil: silsilah keluarga absurd + warisan lucu`,
-      `│ ❏ Pure fun, jangan dipakai beneran ya :v`,
+      `│ Hasil: silsilah keluarga absurd + warisan lucu`,
+      `│ Pure fun, jangan dipakai beneran ya :v`,
     ].join("\n"));
     return m.reply(help, "pohon");
   }

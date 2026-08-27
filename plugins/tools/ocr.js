@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
       `╭──「 *TEKs* 」\n` +
       `${extractedText
         .split("\n")
-        .map((l) => `│ ❏ ${l}`)
+        .map((l) => `│ ${l}`)
         .join("\n")}\n` +
       `╰┈┈┈┈┈┈┈┈❖\n\n` +
       `Total: ${extractedText.length} karakter`;

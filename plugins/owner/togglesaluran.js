@@ -34,10 +34,10 @@ async function handler(m, { sock, config: botConfig }) {
     // No args - show usage
     if (!subCmd) {
       return await m.reply(claraWrap("Switch", "⚙️") + "\n\n" + claraWrap("Cara Pakai", [
-        `│ ❏ \`${prefix}switch saluran\` — Lihat status saluran`,
-        `│ ❏ \`${prefix}switch saluran <event>\` — Toggle event`,
-        `│ ❏ \`${prefix}switch saluran all on\` — Aktifkan semua`,
-        `│ ❏ \`${prefix}switch saluran all off\` — Matikan semua`,
+        `│ \`${prefix}switch saluran\` — Lihat status saluran`,
+        `│ \`${prefix}switch saluran <event>\` — Toggle event`,
+        `│ \`${prefix}switch saluran all on\` — Aktifkan semua`,
+        `│ \`${prefix}switch saluran all off\` — Matikan semua`,
       ]) + "\n\n" + tipText(`Contoh: \`${prefix}switch saluran all on\``));
     }
 
@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
       let offCount = 0;
 
       let text =
-        claraWrap("Switch Saluran", [`│ ❏ Saluran: *${botConfig.saluran?.name || "Belum diset"}*`, `│ ❏ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`].join("\n")) +
+        claraWrap("Switch Saluran", [`│ Saluran: *${botConfig.saluran?.name || "Belum diset"}*`, `│ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`].join("\n")) +
         "\nSTATUS TOGGLE:\n\n";
 
       for (const [key, info] of Object.entries(statuses)) {
@@ -89,7 +89,7 @@ async function handler(m, { sock, config: botConfig }) {
         count++;
       }
 
-      await m.reply(claraWrap("Switch Saluran", "🔔") + "\n\n" + claraWrap("SEMUA EVENT", [`│ ❏ Status: *${enabled ? "ALL ON" : "ALL OFF"}*`, `│ ❏ Total: *${count} event*`]) + "\n\n" + tipText(`Cek status: \`${prefix}switch saluran\``));
+      await m.reply(claraWrap("Switch Saluran", "🔔") + "\n\n" + claraWrap("SEMUA EVENT", [`│ Status: *${enabled ? "ALL ON" : "ALL OFF"}*`, `│ Total: *${count} event*`]) + "\n\n" + tipText(`Cek status: \`${prefix}switch saluran\``));
     }
 
     // Toggle specific event
@@ -100,7 +100,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       setNotifyEnabled(eventCmd, newVal);
 
-      await m.reply(claraWrap("Switch Saluran", "🔔") + "\n\n" + claraWrap("TOGGLE BERHASIL", [`│ ❏ Event: *${NOTIFY_EVENTS[eventCmd]}*`, `│ ❏ Status: *${newVal ? "ON" : "OFF"}*`]) + "\n\n" + tipText(`${newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan"}`) + "\n" + tipText(`Cek semua: \`${prefix}switch saluran\``));
+      await m.reply(claraWrap("Switch Saluran", "🔔") + "\n\n" + claraWrap("TOGGLE BERHASIL", [`│ Event: *${NOTIFY_EVENTS[eventCmd]}*`, `│ Status: *${newVal ? "ON" : "OFF"}*`]) + "\n\n" + tipText(`${newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan"}`) + "\n" + tipText(`Cek semua: \`${prefix}switch saluran\``));
     }
 
     // Unknown event

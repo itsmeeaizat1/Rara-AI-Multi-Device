@@ -26,12 +26,12 @@ async function handler(m, { sock, config: botConfig }) {
     const groups = Object.keys(db.groups || {}).length;
 
     const text =
-      claraWrap("Info V2", [`│ ❏ Bot: *${botConfig.bot?.name || "Nova AI"}*`,
-        `│ ❏ Versi: *${botConfig.bot?.version || "1.0.0"}*`,
-        `│ ❏ Mode: *${(botConfig.mode || "public").toUpperCase()}*`,
-        `│ ❏ Prefix: *${prefix}*`,
-        `│ ❏ Users: *${users}*`,
-        `│ ❏ Groups: *${groups}*`].join("\n")) +
+      claraWrap("Info V2", [`│ Bot: *${botConfig.bot?.name || "Nova AI"}*`,
+        `│ Versi: *${botConfig.bot?.version || "1.0.0"}*`,
+        `│ Mode: *${(botConfig.mode || "public").toUpperCase()}*`,
+        `│ Prefix: *${prefix}*`,
+        `│ Users: *${users}*`,
+        `│ Groups: *${groups}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`) +
       "\n" +
@@ -66,8 +66,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
-        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
+        `│ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

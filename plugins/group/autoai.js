@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
     if (cfg.enableCommands)
       return m.reply(claraWrap("Autoai", `ℹ️ *ᴄᴏᴍᴍᴀɴᴅ ꜱᴜᴅᴀʜ ᴅɪ-ᴇɴᴀʙʟᴇ*
 
-│ ❏ User tetap bisa pakai command walau AutoAI aktif`));
+│ User tetap bisa pakai command walau AutoAI aktif`));
     cfg.enableCommands = true;
     db.save();
     return m.reply(
@@ -170,7 +170,7 @@ async function handler(m, { sock }) {
     if (!cfg.enableCommands)
       return m.reply(claraWrap("Autoai", `ℹ️ *ᴄᴏᴍᴍᴀɴᴅ ꜱᴜᴅᴀʜ ᴅɪ-ᴅɪꜱᴀʙʟᴇ*
 
-│ ❏ Semua command (kecuali owner) diblokir saat AutoAI aktif`));
+│ Semua command (kecuali owner) diblokir saat AutoAI aktif`));
     cfg.enableCommands = false;
     db.save();
     return m.reply(

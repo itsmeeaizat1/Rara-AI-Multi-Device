@@ -16,8 +16,8 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const text = m.text?.trim();
     if (!text) {
-      { const __navText = (claraWrap("AI Voice", [`│ ❏ Penggunaan: *${prefix}aivoice <text>*`,
-        `│ ❏ Contoh: *${prefix}aivoice halo selamat datang*`].join("\n"))); await m.reply( __navText, "aivoice"); };
+      { const __navText = (claraWrap("AI Voice", [`│ Penggunaan: *${prefix}aivoice <text>*`,
+        `│ Contoh: *${prefix}aivoice halo selamat datang*`].join("\n"))); await m.reply( __navText, "aivoice"); };
       return { handled: true };
     }
     const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=id&client=tw-ob`;

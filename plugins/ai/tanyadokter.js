@@ -83,9 +83,9 @@ async function handler(m, { sock }) {
     const help =
       `╭──「 *Konsultasi Dokter AI* 」\n` +
       `\n` +
-      `│ ❏ Tanya dokter AI tentang kesehatan\n` +
-      `│ ❏ Gejala, penyakit, gizi, obat, tips\n` +
-      `│ ❏ *Gratis* — via API Xemoz\n` +
+      `│ Tanya dokter AI tentang kesehatan\n` +
+      `│ Gejala, penyakit, gizi, obat, tips\n` +
+      `│ *Gratis* — via API Xemoz\n` +
       `╰──────────❀\n\n` +
       `*Cara pakai:*\n` +
       `${m.prefix}tanyadokter <pertanyaan>\n\n` +
@@ -105,15 +105,15 @@ async function handler(m, { sock }) {
       return m.reply(
         `╭──「 *Konsultasi Dokter AI* 」\n` +
         `\n` +
-        `│ ❏ Sesi percakapan direset\n` +
-        `│ ❏ Kirim pertanyaan baru untuk mulai\n` +
+        `│ Sesi percakapan direset\n` +
+        `│ Kirim pertanyaan baru untuk mulai\n` +
         `╰──────────❀`
       );
     }
     return m.reply(
       `╭──「 *Konsultasi Dokter AI* 」\n` +
       `\n` +
-      `│ ❏ Tidak ada sesi aktif untuk direset\n` +
+      `│ Tidak ada sesi aktif untuk direset\n` +
       `╰──────────❀`
     );
   }
@@ -149,7 +149,7 @@ async function handler(m, { sock }) {
     return m.reply(
       `╭──「 *Dokter AI Error* 」\n` +
       `\n` +
-      `│ ❏ *Error:* ${error.message || "Gagal menghubungi dokter AI"}\n` +
+      `│ *Error:* ${error.message || "Gagal menghubungi dokter AI"}\n` +
       `╰──────────❀\n\n` +
       `Coba lagi beberapa saat.`
     );

@@ -247,10 +247,10 @@ function generateSerialNumber() {
 function buildUserDataBlock(name, age, gender, serial) {
   return (
     `╭──「 *DATA REGISTRASI* 」\n` +
-    `│ ❏ 📛 Nama: *${name || "-"}*\n` +
-    `│ ❏ 🎂 Umur: *${age ? `${age} tahun` : "-"}*\n` +
-    `│ ❏ 👤 Gender: *${gender || "-"}*\n` +
-    `│ ❏ 🔑 SN: *${serial || "-"}*\n` +
+    `│ 📛 Nama: *${name || "-"}*\n` +
+    `│ 🎂 Umur: *${age ? `${age} tahun` : "-"}*\n` +
+    `│ 👤 Gender: *${gender || "-"}*\n` +
+    `│ 🔑 SN: *${serial || "-"}*\n` +
     `╰──────────❀`
   );
 }
@@ -271,19 +271,19 @@ function buildWelcomeMessage(user, registrationRequired, prefix) {
 
   return (
     `╭──「 *Menu Daftar* 」` +
-    `│ ❏ *Selamat datang di Menu Daftar!*\n\n` +
-    `│ ❏ ✨ Dengan daftar, data akun kamu jadi lebih aman\n` +
-    `│ ❏ dan pengalaman pakai bot jadi lebih lengkap.\n\n` +
-    `│ ❏ *ᴍᴀɴꜰᴀᴀᴛ ᴅᴀꜰᴛᴀʀ*\n` +
-    `${benefits.map((item) => `│ ❏ ${item}`).join("\n")}\n\n` +
-    `│ ❏ *Pertanyaan 1/4*\n` +
-    `│ ❏ Siapa nama kamu?\n\n` +
-    `│ ❏ *ᴡᴀᴊɪʙ ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ʏᴀ*\n` +
-    `│ ❏ Untuk batal: reply \`batal\` atau ketik \`${prefix}bataldaftar\`\n\n` +
-    `│ ❏ *ᴍᴇᴛᴏᴅᴇ ᴅᴀꜰᴛᴀʀ ʟᴀɪɴɴʏᴀ*\n` +
-    `│ ❏ \`${prefix}daftar Nama, Umur\` - Daftar cepat\n` +
-    `│ ❏ \`${prefix}daftarotomatis\` - Daftar via captcha (DM)\n` +
-    `│ ❏ \`${prefix}regmail Nama, email\` - Daftar via email OTP\n` +
+    `│ *Selamat datang di Menu Daftar!*\n\n` +
+    `│ ✨ Dengan daftar, data akun kamu jadi lebih aman\n` +
+    `│ dan pengalaman pakai bot jadi lebih lengkap.\n\n` +
+    `│ *ᴍᴀɴꜰᴀᴀᴛ ᴅᴀꜰᴛᴀʀ*\n` +
+    `${benefits.map((item) => `│ ${item}`).join("\n")}\n\n` +
+    `│ *Pertanyaan 1/4*\n` +
+    `│ Siapa nama kamu?\n\n` +
+    `│ *ᴡᴀᴊɪʙ ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ʏᴀ*\n` +
+    `│ Untuk batal: reply \`batal\` atau ketik \`${prefix}bataldaftar\`\n\n` +
+    `│ *ᴍᴇᴛᴏᴅᴇ ᴅᴀꜰᴛᴀʀ ʟᴀɪɴɴʏᴀ*\n` +
+    `│ \`${prefix}daftar Nama, Umur\` - Daftar cepat\n` +
+    `│ \`${prefix}daftarotomatis\` - Daftar via captcha (DM)\n` +
+    `│ \`${prefix}regmail Nama, email\` - Daftar via email OTP\n` +
     `╰──────────❀`
   );
 }

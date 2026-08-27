@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
     }
     
     if (users.length === 0) {
-        return m.reply(`╭──「 *Leaderboard* 」\n│ ❏ Belum ada data user terdaftar
+        return m.reply(`╭──「 *Leaderboard* 」\n│ Belum ada data user terdaftar
 ╰──────────❀`)
     }
     
@@ -86,13 +86,13 @@ async function handler(m, { sock }) {
             maxEnergiUser.jid.includes('@') ? maxEnergiUser.jid : maxEnergiUser.jid + "@s.whatsapp.net"
         ]
         
-        const overviewText = `╭──「 *Leaderboard* 」\n│ ❏ Total User: ${formatNumber(users.length)}
-│ ❏ Koin Teratas: ${formatNumber(maxBalUser.koin)} (@${maxBalUser.jid.split('@')[0]})
-│ ❏ EXP Teratas: ${formatNumber(maxExpUser.exp)} (@${maxExpUser.jid.split('@')[0]})
-│ ❏ Energi Teratas: ${formatNumber(maxEnergiUser.energi)} (@${maxEnergiUser.jid.split('@')[0]})
+        const overviewText = `╭──「 *Leaderboard* 」\n│ Total User: ${formatNumber(users.length)}
+│ Koin Teratas: ${formatNumber(maxBalUser.koin)} (@${maxBalUser.jid.split('@')[0]})
+│ EXP Teratas: ${formatNumber(maxExpUser.exp)} (@${maxExpUser.jid.split('@')[0]})
+│ Energi Teratas: ${formatNumber(maxEnergiUser.energi)} (@${maxEnergiUser.jid.split('@')[0]})
 ╰──────────❀
 
-│ ❏ Pilih tombol di bawah untuk melihat ranking!`
+│ Pilih tombol di bawah untuk melihat ranking!`
             try {
                 await sock.sendButton(m.chat, fs.readFileSync(path.join(process.cwd(), 'assets', 'images', 'nova.jpg')), overviewText, m, {
                     buttons: [
@@ -173,8 +173,8 @@ async function handler(m, { sock }) {
         const pct = totalField > 0 ? ((u[field] / totalField) * 100).toFixed(1) : 0
         const isMe = u.jid === senderJid ? " *(You)*" : ""
         
-        text += `│ ❏ ${medal} @${u.jid.split('@')[0]}${isMe}\n`
-        text += `│ ❏   ${formatValue(u)} (${pct}%)\n`
+        text += `│ ${medal} @${u.jid.split('@')[0]}${isMe}\n`
+        text += `│   ${formatValue(u)} (${pct}%)\n`
         
         if (i < top10.length - 1) 
         mentions.push(u.jid.includes('@') ? u.jid : u.jid + "@s.whatsapp.net")

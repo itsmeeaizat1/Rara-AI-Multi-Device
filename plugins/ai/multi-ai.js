@@ -65,19 +65,19 @@ async function handler(m, { sock, config: botConfig }) {
       let lines = "";
       for (const [key, provider] of Object.entries(providers)) {
         const models = Array.isArray(provider.models) ? provider.models : [provider.model || "-"];
-        const modelList = models.map(mo => `│ ❏   ${mo}`).join("\n");
-        lines += `│ ❏ ${provider.name || key} (${key})\n${modelList}\n`;
+        const modelList = models.map(mo => `│   ${mo}`).join("\n");
+        lines += `│ ${provider.name || key} (${key})\n${modelList}\n`;
       }
 
-      const text = `╭──「 *Mᴜʟᴛɪ AI* 」\n│ ❏ Router AI — Pilih Provider & Model
+      const text = `╭──「 *Mᴜʟᴛɪ AI* 」\n│ Router AI — Pilih Provider & Model
 ├──「 Providers 」
 ${lines}├──「 Cara Pakai 」
-│ ❏ ${prefix}multi-ai <provider> <pesan>
-│ ❏ ${prefix}multi-ai <provider> <model> <pesan>
+│ ${prefix}multi-ai <provider> <pesan>
+│ ${prefix}multi-ai <provider> <model> <pesan>
 ├──「 Contoh 」
-│ ❏ ${prefix}multi-ai gemini apa itu AI
-│ ❏ ${prefix}multi-ai openai gpt-4o-mini jelaskan kuantum
-│ ❏ ${prefix}multi-ai groq buat puisi
+│ ${prefix}multi-ai gemini apa itu AI
+│ ${prefix}multi-ai openai gpt-4o-mini jelaskan kuantum
+│ ${prefix}multi-ai groq buat puisi
 ╰──────────❀`;
 
       await m.reply(text);
@@ -89,8 +89,8 @@ ${lines}├──「 Cara Pakai 」
     const providers = getAllProviders();
     const provider = providers[providerArg];
     if (!provider) {
-      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ ❏ Provider *${providerArg}* tidak ditemukan
-│ ❏ Ketik *${prefix}multi-ai list* untuk lihat daftar
+      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ Provider *${providerArg}* tidak ditemukan
+│ Ketik *${prefix}multi-ai list* untuk lihat daftar
 ╰──────────❀`;
       await m.reply(text);
       await m.react("❌");
@@ -110,10 +110,10 @@ ${lines}├──「 Cara Pakai 」
     }
 
     if (!userMessage) {
-      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ ❏ *Provider:* ${toSC(provider.name || providerArg)}
-│ ❏ *Model:* ${model}
-│ ❏ Penggunaan: *${prefix}multi-ai ${providerArg} [model] <pesan>*
-│ ❏ Contoh: *${prefix}multi-ai ${providerArg} ${model} apa itu AI*
+      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Provider:* ${toSC(provider.name || providerArg)}
+│ *Model:* ${model}
+│ Penggunaan: *${prefix}multi-ai ${providerArg} [model] <pesan>*
+│ Contoh: *${prefix}multi-ai ${providerArg} ${model} apa itu AI*
 ╰──────────❀`;
       await m.reply(text);
       await m.react("❌");
@@ -142,9 +142,9 @@ ${lines}├──「 Cara Pakai 」
     });
 
     if (!reply || reply.trim() === "") {
-      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ ❏ *Status:* Gagal
-│ ❏ *Alasan:* AI tidak memberikan respons
-│ ❏ Cek API key di *${prefix}ai-set apiKey <key>*
+      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Status:* Gagal
+│ *Alasan:* AI tidak memberikan respons
+│ Cek API key di *${prefix}ai-set apiKey <key>*
 ╰──────────❀`;
       await m.reply(text);
       await m.react("❌");
@@ -154,11 +154,11 @@ ${lines}├──「 Cara Pakai 」
     const trimmedMsg = userMessage.length > 200 ? userMessage.slice(0, 200) + "..." : userMessage;
     const trimmedReply = reply.length > 3000 ? reply.slice(0, 3000) + "..." : reply;
 
-    const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ ❏ *Provider:* ${toSC(provider.name || providerArg)}
-│ ❏ *Model:* ${model}
-│ ❏ *Kamu:* ${trimmedMsg}
+    const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Provider:* ${toSC(provider.name || providerArg)}
+│ *Model:* ${model}
+│ *Kamu:* ${trimmedMsg}
 ├──「 Respons 」
-│ ❏ ${trimmedReply}
+│ ${trimmedReply}
 ╰──────────❀`;
 
     await m.reply(text);
@@ -166,9 +166,9 @@ ${lines}├──「 Cara Pakai 」
   } catch (error) {
     console.error('[multi-ai.js]:', error.message);
     const prefix = botConfig.command?.prefix || ".";
-    const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ ❏ *Status:* Gagal
-│ ❏ *Alasan:* ${error.message}
-│ ❏ Cek API key: *${prefix}ai-set apiKey <key>*
+    const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Status:* Gagal
+│ *Alasan:* ${error.message}
+│ Cek API key: *${prefix}ai-set apiKey <key>*
 ╰──────────❀`;
     await m.reply(text);
     await m.react("❌");

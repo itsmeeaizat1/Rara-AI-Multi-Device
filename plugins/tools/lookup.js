@@ -76,15 +76,15 @@ async function handler(m, { sock }) {
 
       text += `╭──「 *DNs RECORDs* 」\n`;
       if (records["A"])
-        text += `│ ❏ 🅰️ A: ${records["A"].slice(0, 3).join(", ")}\n`;
+        text += `│ 🅰️ A: ${records["A"].slice(0, 3).join(", ")}\n`;
       if (records["AAAA"])
-        text += `│ ❏ 🔢 AAAA: ${records["AAAA"].slice(0, 2).join(", ")}\n`;
+        text += `│ 🔢 AAAA: ${records["AAAA"].slice(0, 2).join(", ")}\n`;
       if (records["MX"])
-        text += `│ ❏ 📧 MX: ${records["MX"].slice(0, 2).join(", ")}\n`;
+        text += `│ 📧 MX: ${records["MX"].slice(0, 2).join(", ")}\n`;
       if (records["NS"])
-        text += `│ ❏ 🌐 NS: ${records["NS"].slice(0, 3).join(", ")}\n`;
+        text += `│ 🌐 NS: ${records["NS"].slice(0, 3).join(", ")}\n`;
       if (records["TXT"])
-        text += `│ ❏ 📝 TXT: ${records["TXT"].length} records\n`;
+        text += `│ 📝 TXT: ${records["TXT"].length} records\n`;
       text += `╰┈┈┈┈┈┈┈┈❖\n\n`;
     }
 
@@ -99,11 +99,11 @@ async function handler(m, { sock }) {
           .map((ns) => ns.split(":")[1]?.trim()) || [];
 
       text += `╭──「 *WHOIs* 」\n`;
-      text += `│ ❏ 🏢 Registrar: ${registrar.slice(0, 35)}\n`;
-      text += `│ ❏ 📅 Created: ${created.slice(0, 20)}\n`;
-      text += `│ ❏ ⏰ Expires: ${expires.slice(0, 20)}\n`;
+      text += `│ 🏢 Registrar: ${registrar.slice(0, 35)}\n`;
+      text += `│ 📅 Created: ${created.slice(0, 20)}\n`;
+      text += `│ ⏰ Expires: ${expires.slice(0, 20)}\n`;
       if (nameservers.length > 0)
-        text += `│ ❏ 🌐 NS: ${nameservers.join(", ")}\n`;
+        text += `│ 🌐 NS: ${nameservers.join(", ")}\n`;
       text += `╰┈┈┈┈┈┈┈┈❖`;
     }
 

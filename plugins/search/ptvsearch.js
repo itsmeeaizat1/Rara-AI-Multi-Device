@@ -25,11 +25,11 @@ async function handler(m, { sock }) {
   if (!query) {
     return m.reply( `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴇᴀʀᴄʜ*
 ┃
-┃ ❏ Usage: \`${m.prefix}ptvsearch <query>\`
+┃ Usage: \`${m.prefix}ptvsearch <query>\`
 ┃
 ╰┈┈⬡
 
-│ ❏ \`Contoh: ${m.prefix}ptvsearch anime\``, "ptvsearch");
+│ \`Contoh: ${m.prefix}ptvsearch anime\``, "ptvsearch");
   }
 
   m.react("🕒");

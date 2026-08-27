@@ -110,9 +110,9 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!cmd || cmd === "help" || cmd === "menu") {
     const help = claraWrap("Kalkulatur", [
-      `│ ❏ Kalkulator Kantoran`,
+      `│ Kalkulator Kantoran`,
       ``,
-      `│ ❏ *ᴍᴏᴅᴇ:*`,
+      `│ *ᴍᴏᴅᴇ:*`,
       `  ${prefix}kalkulatur pph21 <gaji> [k/tk] [tanggungan]`,
       `  ${prefix}kalkulatur thr <gaji> [masa kerja bulan]`,
       `  ${prefix}kalkulatur lembur <upah/jam> <jam> [kerja/libur/liburnasional]`,
@@ -120,12 +120,12 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       `  ${prefix}kalkulatur thp <gaji> [k/tk] [tanggungan]`,
       `  ${prefix}kalkulatur takehome <gaji> [k/tk] [tanggungan]`,
       ``,
-      `│ ❏ *ᴋᴇᴛᴇʀᴀɴɢᴀɴ:*`,
+      `│ *ᴋᴇᴛᴇʀᴀɴɢᴀɴ:*`,
       `  k = kawin, tk = belum kawin`,
       `  tanggungan = 0-3 (anak/dependen)`,
       `  thp = take home pay (gaji - PPh21 - BPJS)`,
       ``,
-      `│ ❏ *ᴄᴏɴᴛᴏʜ:*`,
+      `│ *ᴄᴏɴᴛᴏʜ:*`,
       `  ${prefix}kalkulatur pph21 10000000 k 1`,
       `  ${prefix}kalkulatur thr 5000000 6`,
       `  ${prefix}kalkulatur lembur 30000 4 kerja`,
@@ -148,15 +148,15 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       const r = calcPPh21(gaji, kawin, tanggungan);
 
       result = claraWrap("PPh 21 Bulanan", [
-        `│ ❏ Gaji Bruto: ${rp(gaji)}/bln`,
-        `│ ❏ Status: ${kawin ? "Kawin" : "Tidak Kawin"} (${tanggungan} tanggungan)`,
-        `│ ❏ Biaya Jabatan (5%): ${rp(r.biayaJabatan)}/thn`,
-        `│ ❏ Penghasilan Netto: ${rp(r.nettoSetahun)}/thn`,
-        `│ ❏ PTKP: ${rp(r.ptkp)}/thn`,
-        `│ ❏ PKP: ${rp(r.pkp)}/thn`,
+        `│ Gaji Bruto: ${rp(gaji)}/bln`,
+        `│ Status: ${kawin ? "Kawin" : "Tidak Kawin"} (${tanggungan} tanggungan)`,
+        `│ Biaya Jabatan (5%): ${rp(r.biayaJabatan)}/thn`,
+        `│ Penghasilan Netto: ${rp(r.nettoSetahun)}/thn`,
+        `│ PTKP: ${rp(r.ptkp)}/thn`,
+        `│ PKP: ${rp(r.pkp)}/thn`,
         ``,
-        `│ ❏ *PPh 21: ${rp(r.pphBulanan)}/bln*`,
-        `│ ❏ PPh 21 Setahun: ${rp(r.pphSetahun)}/thn`,
+        `│ *PPh 21: ${rp(r.pphBulanan)}/bln*`,
+        `│ PPh 21 Setahun: ${rp(r.pphSetahun)}/thn`,
       ].join("\n"));
     }
 
@@ -168,11 +168,11 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       const thr = calcTHR(gaji, masaKerja);
 
       result = claraWrap("THR", [
-        `│ ❏ Gaji Pokok: ${rp(gaji)}`,
-        `│ ❏ Masa Kerja: ${masaKerja} bulan`,
-        `│ ❏ Prorata: ${masaKerja >= 12 ? "Tidak (full)" : `${masaKerja}/12`}`,
+        `│ Gaji Pokok: ${rp(gaji)}`,
+        `│ Masa Kerja: ${masaKerja} bulan`,
+        `│ Prorata: ${masaKerja >= 12 ? "Tidak (full)" : `${masaKerja}/12`}`,
         ``,
-        `│ ❏ *THR: ${rp(thr)}*`,
+        `│ *THR: ${rp(thr)}*`,
       ].join("\n"));
     }
 
@@ -185,11 +185,11 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       const upah = calcLembur(upahPerJam, jam, jenis);
 
       result = claraWrap("Lembur", [
-        `│ ❏ Upah/Jam: ${rp(upahPerJam)}`,
-        `│ ❏ Jumlah Jam: ${jam} jam`,
-        `│ ❏ Jenis Hari: ${jenis}`,
+        `│ Upah/Jam: ${rp(upahPerJam)}`,
+        `│ Jumlah Jam: ${jam} jam`,
+        `│ Jenis Hari: ${jenis}`,
         ``,
-        `│ ❏ *Upah Lembur: ${rp(upah)}*`,
+        `│ *Upah Lembur: ${rp(upah)}*`,
       ].join("\n"));
     }
 
@@ -200,15 +200,15 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       const r = calcBPJS(gaji);
 
       result = claraWrap("BPJS", [
-        `│ ❏ Gaji: ${rp(gaji)}`,
+        `│ Gaji: ${rp(gaji)}`,
         ``,
-        `│ ❏ Potongan Karyawan:`,
+        `│ Potongan Karyawan:`,
         `  Kesehatan (1%): ${rp(r.kesehatanKaryawan)}`,
         `  JHT (2%): ${rp(r.jhtKaryawan)}`,
         `  JPN (1%): ${rp(r.jpnKaryawan)}`,
         `  *Total: ${rp(r.totalKaryawan)}/bln*`,
         ``,
-        `│ ❏ Perusahaan:`,
+        `│ Perusahaan:`,
         `  Kesehatan (4%): ${rp(r.kesehatanPerusahaan)}`,
       ].join("\n"));
     }
@@ -222,17 +222,17 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       const r = calcTakeHome(gaji, kawin, tanggungan);
 
       result = claraWrap("Take Home Pay", [
-        `│ ❏ Gaji Bruto: ${rp(r.gajiBruto)}`,
-        `│ ❏ Status: ${kawin ? "Kawin" : "Tidak Kawin"} (${tanggungan} tanggungan)`,
+        `│ Gaji Bruto: ${rp(r.gajiBruto)}`,
+        `│ Status: ${kawin ? "Kawin" : "Tidak Kawin"} (${tanggungan} tanggungan)`,
         ``,
-        `│ ❏ Potongan:`,
+        `│ Potongan:`,
         `  PPh 21: ${rp(r.pph.pphBulanan)}`,
         `  BPJS Kesehatan: ${rp(r.bpjs.kesehatanKaryawan)}`,
         `  BPJS JHT: ${rp(r.bpjs.jhtKaryawan)}`,
         `  BPJS JPN: ${rp(r.bpjs.jpnKaryawan)}`,
         `  *Total Potongan: ${rp(r.totalPotongan)}*`,
         ``,
-        `│ ❏ *Take Home Pay: ${rp(r.takeHome)}/bln*`,
+        `│ *Take Home Pay: ${rp(r.takeHome)}/bln*`,
       ].join("\n"));
     }
 

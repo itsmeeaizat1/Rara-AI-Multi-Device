@@ -63,9 +63,9 @@ async function handler(m, { sock }) {
     db.save();
 
     return m.reply( `╭──「 *TOPUP LIMIT* 」\n` +
-      `│ ❏ User: *${targetJid.split("@")[0]}*\n` +
-      `│ ❏ Sebelum: *${formatNumber(beforeEnergi)}*\n` +
-      `│ ❏ Sesudah: *∞ Unlimited*\n` +
+      `│ User: *${targetJid.split("@")[0]}*\n` +
+      `│ Sebelum: *${formatNumber(beforeEnergi)}*\n` +
+      `│ Sesudah: *∞ Unlimited*\n` +
       `╰──────────❀`, "topuplimit");
   }
 
@@ -75,10 +75,10 @@ async function handler(m, { sock }) {
 
   const targetName = targetJid.split("@")[0];
   let msg = `╭──「 *TOPUP LIMIT* 」\n`;
-  msg += `│ ❏ User: *${targetName}*\n`;
-  msg += `│ ❏ Sebelum: *${formatNumber(beforeEnergi)}*\n`;
-  msg += `│ ❏ Tambah: *+${formatNumber(amount)}*\n`;
-  msg += `│ ❏ Sesudah: *${formatNumber(afterEnergi)}*\n`;
+  msg += `│ User: *${targetName}*\n`;
+  msg += `│ Sebelum: *${formatNumber(beforeEnergi)}*\n`;
+  msg += `│ Tambah: *+${formatNumber(amount)}*\n`;
+  msg += `│ Sesudah: *${formatNumber(afterEnergi)}*\n`;
   msg += `╰──────────❀`;
 
   return m.reply( msg, "topuplimit");

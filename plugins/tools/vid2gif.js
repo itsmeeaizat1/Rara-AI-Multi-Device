@@ -66,20 +66,20 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!isVideo) {
       const text =
-        claraWrap("Video to GIF", ["│ ❏ Reply video lalu ketik .vid2gif",
-          "│ ❏ Convert video ke GIF dengan FFmpeg",
+        claraWrap("Video to GIF", ["│ Reply video lalu ketik .vid2gif",
+          "│ Convert video ke GIF dengan FFmpeg",
           "",
           "*ᴏᴘꜱɪ:*",
-          `│ ❏ ${prefix}vid2gif — Default (10s, 480p, 15fps)`,
-          `│ ❏ ${prefix}vid2gif 5 — 5 detik pertama`,
-          `│ ❏ ${prefix}vid2gif 720 — Resolusi 720p`,
-          `│ ❏ ${prefix}vid2gif 5 720 — 5 detik, 720p`,
-          `│ ❏ ${prefix}vid2gif 0 480 30 — Full video, 480p, 30fps`,
+          `│ ${prefix}vid2gif — Default (10s, 480p, 15fps)`,
+          `│ ${prefix}vid2gif 5 — 5 detik pertama`,
+          `│ ${prefix}vid2gif 720 — Resolusi 720p`,
+          `│ ${prefix}vid2gif 5 720 — 5 detik, 720p`,
+          `│ ${prefix}vid2gif 0 480 30 — Full video, 480p, 30fps`,
           "",
           "*ᴘᴀʀᴀᴍᴇᴛᴇʀ:*",
-          "│ ❏ Detik: 0 = full video (max 30s)",
-          "│ ❏ Resolusi: 240, 360, 480, 720 (default 480)",
-          "│ ❏ FPS: 10, 15, 20, 30 (default 15)"].join("\n")) + "\n" +
+          "│ Detik: 0 = full video (max 30s)",
+          "│ Resolusi: 240, 360, 480, 720 (default 480)",
+          "│ FPS: 10, 15, 20, 30 (default 15)"].join("\n")) + "\n" +
         tipText("Reply video lalu ketik .vid2gif");
 
       await m.reply( text, "vid2gif");
@@ -96,8 +96,8 @@ async function handler(m, { sock, config: botConfig }) {
       mediaBuffer = await m.quoted.download();
     } else {
       const text =
-        claraWrap("Video to GIF", ["│ ❏ Status: *ɢᴀɢᴀʟ ᴅᴏᴡɴʟᴏᴀᴅ ᴠɪᴅᴇᴏ*",
-          "│ ❏ Coba reply video yang valid"].join("\n")) + "\n" +
+        claraWrap("Video to GIF", ["│ Status: *ɢᴀɢᴀʟ ᴅᴏᴡɴʟᴏᴀᴅ ᴠɪᴅᴇᴏ*",
+          "│ Coba reply video yang valid"].join("\n")) + "\n" +
         tipText("Reply video lalu ketik .vid2gif");
 
       await m.reply( text, "vid2gif");
@@ -106,7 +106,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
       const text =
-        claraWrap("Video to GIF", ["│ ❏ Status: *ʙᴜꜰꜰᴇʀ ᴠɪᴅᴇᴏ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*"].join("\n")) + "\n" +
+        claraWrap("Video to GIF", ["│ Status: *ʙᴜꜰꜰᴇʀ ᴠɪᴅᴇᴏ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*"].join("\n")) + "\n" +
         tipText("Coba video lain");
 
       await m.reply( text, "vid2gif");
@@ -116,9 +116,9 @@ async function handler(m, { sock, config: botConfig }) {
     if (mediaBuffer.length > MAX_VIDEO_SIZE) {
       const sizeMB = (mediaBuffer.length / 1024 / 1024).toFixed(1);
       const text =
-        claraWrap("Video to GIF", [`│ ❏ Ukuran: *${sizeMB} MB*`,
-          `│ ❏ Maksimal: *20 MB*`,
-          "│ ❏ Compress video dulu atau gunakan video lebih kecil"].join("\n")) + "\n" +
+        claraWrap("Video to GIF", [`│ Ukuran: *${sizeMB} MB*`,
+          `│ Maksimal: *20 MB*`,
+          "│ Compress video dulu atau gunakan video lebih kecil"].join("\n")) + "\n" +
         tipText("Gunakan video di bawah 20MB");
 
       await m.reply( text, "vid2gif");
@@ -195,12 +195,12 @@ async function handler(m, { sock, config: botConfig }) {
         fileName: "converted_" + Date.now() + ".gif",
         mimetype: "image/gif",
         caption:
-          claraWrap("Video to GIF", [`│ ❏ Status: *ʙᴇʀʜᴀꜱɪʟ*`,
-            `│ ❏ Mode: *Dokumen (file besar)*`,
-            `│ ❏ Durasi: *${durLabel}*`,
-            `│ ❏ Resolusi: *${resolution}p*`,
-            `│ ❏ FPS: *${fps}*`,
-            `│ ❏ Ukuran: *${formatSize(gifSize)}*`].join("\n")) + "\n" +
+          claraWrap("Video to GIF", [`│ Status: *ʙᴇʀʜᴀꜱɪʟ*`,
+            `│ Mode: *Dokumen (file besar)*`,
+            `│ Durasi: *${durLabel}*`,
+            `│ Resolusi: *${resolution}p*`,
+            `│ FPS: *${fps}*`,
+            `│ Ukuran: *${formatSize(gifSize)}*`].join("\n")) + "\n" +
           tipText("GIF dikirim sebagai dokumen karena ukuran besar"),
       }, { quoted: m });
     } else {
@@ -208,11 +208,11 @@ async function handler(m, { sock, config: botConfig }) {
       await sock.sendMessage(m.chat, {
         video: gifBuffer,
         caption:
-          claraWrap("Video to GIF", [`│ ❏ Status: *ʙᴇʀʜᴀꜱɪʟ*`,
-            `│ ❏ Durasi: *${durLabel}*`,
-            `│ ❏ Resolusi: *${resolution}p*`,
-            `│ ❏ FPS: *${fps}*`,
-            `│ ❏ Ukuran: *${formatSize(gifSize)}*`].join("\n")) + "\n" +
+          claraWrap("Video to GIF", [`│ Status: *ʙᴇʀʜᴀꜱɪʟ*`,
+            `│ Durasi: *${durLabel}*`,
+            `│ Resolusi: *${resolution}p*`,
+            `│ FPS: *${fps}*`,
+            `│ Ukuran: *${formatSize(gifSize)}*`].join("\n")) + "\n" +
           tipText(`${prefix}vid2gif 5 720 — 5 detik 720p`),
       }, { quoted: m, gifPlayback: true });
     }
@@ -221,8 +221,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[Vid2GIF Error]", error);
     const text =
-      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ ᴄᴏɴᴠᴇʀᴛ*`,
-        `│ ❏ Alasan: *${error.message || "Unknown error"}*`].join("\n")) + "\n" +
+      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ ᴄᴏɴᴠᴇʀᴛ*`,
+        `│ Alasan: *${error.message || "Unknown error"}*`].join("\n")) + "\n" +
       tipText("Coba video lain atau durasi lebih pendek");
 
     await m.reply(claraWrap("vid2gif", text));

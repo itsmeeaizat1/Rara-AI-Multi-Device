@@ -164,7 +164,7 @@ async function handler(m, { sock }) {
             listTxt += `Ditemukan *${movies.length}* film yang cocok dengan pencarianmu, berikut daftar lengkapnya:\n\n`
             const maxShow = Math.min(movies.length, 10)
             for (let i = 1; i < maxShow; i++) {
-                listTxt += `- *${movies[i].post_title}*\n│ ❏ ${movies[i].post_link}\n\n`
+                listTxt += `- *${movies[i].post_title}*\n│ ${movies[i].post_link}\n\n`
             }
             if (movies.length > 10) {
                 listTxt += `_...dan ${movies.length - 10} film lainnya_`

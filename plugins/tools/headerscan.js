@@ -16,22 +16,22 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const url = m.text?.trim();
     if (!url || !url.startsWith("http")) {
-      await m.reply( claraWrap("Header Scan", [`│ ❏ Penggunaan: *${prefix}headerscan <url>*`,
-        `│ ❏ Contoh: *${prefix}headerscan https://google.com*`].join("\n")), "headerscan");
+      await m.reply( claraWrap("Header Scan", [`│ Penggunaan: *${prefix}headerscan <url>*`,
+        `│ Contoh: *${prefix}headerscan https://google.com*`].join("\n")), "headerscan");
       return { handled: true };
     }
     const mod = url.startsWith("https") ? https : http;
     await new Promise((resolve, reject) => {
       mod.request(url, { method: "HEAD", timeout: 10000 }, (res) => {
         let text = claraWrap("Header Scan", "🔍") + "\n\n" + claraWrap(url, [
-          `│ ❏ Status: *${res.statusCode} ${res.statusMessage}*`,
-          ...Object.entries(res.headers).slice(0, 12).map(([k,v]) => `│ ❏ ${k}: ${v}`),
+          `│ Status: *${res.statusCode} ${res.statusMessage}*`,
+          ...Object.entries(res.headers).slice(0, 12).map(([k,v]) => `│ ${k}: ${v}`),
         ]) + "\n\n" + separator("━", 22);
         m.reply(claraWrap("headerscan", text)).then(() => resolve());
       }).on("error", reject).end();
     });
   } catch (e) {
-    await m.reply(claraWrap("Gagal", [`│ ❏ ${e.message}`].join("\n")));
+    await m.reply(claraWrap("Gagal", [`│ ${e.message}`].join("\n")));
   }
   return { handled: true };
 }

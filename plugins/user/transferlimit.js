@@ -98,11 +98,11 @@ async function handler(m, { sock }) {
 
   const targetName = targetJid.split("@")[0];
   let msg = `╭──「 *TRANSFER LIMIT* 」\n`;
-  msg += `│ ❏ Dari: *${m.pushName || m.sender.split("@")[0]}*\n`;
-  msg += `│ ❏ Ke: *${targetName}*\n`;
-  msg += `│ ❏ Jumlah: *${formatNumber(diterima)} limit*\n`;
-  msg += `│ ❏ Biaya admin: *${formatNumber(fee)} limit (5%)*\n`;
-  msg += `│ ❏ Total dipotong: *${formatNumber(totalDeduct)} limit*\n`;
+  msg += `│ Dari: *${m.pushName || m.sender.split("@")[0]}*\n`;
+  msg += `│ Ke: *${targetName}*\n`;
+  msg += `│ Jumlah: *${formatNumber(diterima)} limit*\n`;
+  msg += `│ Biaya admin: *${formatNumber(fee)} limit (5%)*\n`;
+  msg += `│ Total dipotong: *${formatNumber(totalDeduct)} limit*\n`;
   msg += `╰──────────❀\n\n`;
   msg += `Sisa limit kamu: ${formatNumber(senderEnergi - totalDeduct)}`;
 

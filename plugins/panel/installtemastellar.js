@@ -38,7 +38,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply( `╭┈┈⬡「 🎨 *ɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ ꜱᴛᴇʟʟᴀʀ* 」\n┃ ❏ Usage: \`${m.prefix}installtemastellar <ip>|<password>\`\n╰┈┈⬡\n\n\`Contoh: ${m.prefix}installtemastellar 192.168.1.1|secretpass\``, "installtemastellar")
+        return m.reply( `╭┈┈⬡「 🎨 *ɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ ꜱᴛᴇʟʟᴀʀ* 」\n┃ Usage: \`${m.prefix}installtemastellar <ip>|<password>\`\n╰┈┈⬡\n\n\`Contoh: ${m.prefix}installtemastellar 192.168.1.1|secretpass\``, "installtemastellar")
     }
 
     const parts = text.split('|')
@@ -73,7 +73,7 @@ function handler(m, { sock }) {
             await execSSH(conn, BUILD_CMD)
 
             m.react('✅')
-            await m.reply(claraWrap("installtemastellar", `╭┈┈⬡「 ✅ *ᴛᴇᴍᴀ ꜱᴛᴇʟʟᴀʀ* 」\n┃ ❏ sTatus: *ᴛᴇʀɪɴꜱᴛᴀʟʟ*\n┃ ❏ Ip: ${ipvps}\n╰┈┈⬡\n\n_Tema Stellar + dependencies berhasil diinstall!_`))
+            await m.reply(claraWrap("installtemastellar", `╭┈┈⬡「 ✅ *ᴛᴇᴍᴀ ꜱᴛᴇʟʟᴀʀ* 」\n┃ sTatus: *ᴛᴇʀɪɴꜱᴛᴀʟʟ*\n┃ Ip: ${ipvps}\n╰┈┈⬡\n\n_Tema Stellar + dependencies berhasil diinstall!_`))
         } catch (err) {
             m.reply(claraWrap("installtemastellar", te(m.prefix, m.command, m.pushName), "error"))
         } finally {
