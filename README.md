@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20restore%20Update-badge%20workflow%20(REA-success?style=for-the-badge)
-> *Commit: "feat: restore Update-badge workflow (README.md only, no .js edits)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20menu%20voice%20note%20tidak%20bisa%20diputar%20-success?style=for-the-badge)
+> *Commit: "fix: menu voice note tidak bisa diputar — convert MP3 ke OGG/Opus"*
 <!--END_SECTION:latest-update-->
 
 ---
