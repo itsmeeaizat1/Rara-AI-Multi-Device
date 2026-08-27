@@ -203,12 +203,12 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     // 6 tombol quick access — nativeFlowMessage (proven pattern, bukan legacy type 1)
     // "Kategori" pakai single_select → klik buka popup list semua kategori
     const navButtons = [
-      { id: `${prefix}menu`, text: "🏠 Menu" },
-      { id: `${prefix}allmenu`, text: "📋 All Menu" },
+      { id: `${prefix}menu`, text: "Menu" },
+      { id: `${prefix}allmenu`, text: "All Menu" },
       buildCategoryButton(m, db, prefix),
-      { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
-      { id: `${prefix}info`, text: "ℹ️ Info" },
-      { id: `${prefix}owner`, text: "👑 Owner" },
+      { id: `${prefix}tanyaai`, text: "Tanya AI" },
+      { id: `${prefix}info`, text: "Info" },
+      { id: `${prefix}owner`, text: "Owner" },
     ];
 
     await m.react("🐣");
