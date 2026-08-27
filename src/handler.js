@@ -73,6 +73,14 @@ async function messageHandler(msg, sock) {
 
   const db = getDatabase();
 
+  // === Self mode guard for non-command features ===
+  // In self mode, only owner/fromMe can trigger non-command auto-features (AI grup, auto-AI, etc.)
+  // Anti-detection (anti-NSFW, anti-kasar, etc.) still runs regardless of mode for group safety.
+  const __novaBotMode = db.setting("botMode") || config.config?.mode || "public";
+  const __novaIsSelfMode = __novaBotMode === "self";
+  const __novaSelfModeSkip = __novaIsSelfMode && !m.fromMe && !m.isOwner;
+
+
   // Panel message logging (group only, private never logged)
   try {
     const logEnabled = db.db?.data?.settings?.logMessage === true || (config.features?.logMessage === true && db.db?.data?.settings?.logMessage !== false);
@@ -261,8 +269,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // AI Grup: catat aktivitas grup + bot nimbrung otomatis
-  if (!m.isCommand && !m.fromMe && !m.isNewsletter && m.isGroup) {
+  // AI Grup: catat aktivitas grup + bot nimbrung otomatis (skip in self mode)
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter && m.isGroup && !__novaSelfModeSkip) {
     try {
       // Catat aktivitas grup untuk proactive messaging
       const { recordGroupActivity } = await import("./lib/nova-aigrup-proactive.js");
@@ -433,8 +441,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Auto React VN: jalan walau fromMe (owner testing di self-chat), asal bukan command/newsletter
-  if (!m.isCommand && !m.isNewsletter) {
+  // Auto React VN: jalan walau fromMe (owner testing di self-chat), asal bukan command/newsletter (skip in self mode for non-owner)
+  if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { handleAutoreactvn, isAutoreactvnEnabled } = await import("./lib/nova-autoreactvn.js");
       if (typeof isAutoreactvnEnabled === "function" && isAutoreactvnEnabled(m, sock)) {
@@ -446,8 +454,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Auto VN Translate: real-time voice note detection & translate
-  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+  // Auto VN Translate: real-time voice note detection & translate (skip in self mode)
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { handleAutoVnTranslate, isAutoVnEnabled } = await import("../plugins/owner/autotranslatevn.js");
       if (typeof isAutoVnEnabled === "function" && isAutoVnEnabled(m, sock)) {
@@ -459,8 +467,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Auto OCR Solve: real-time image detection for math/code
-  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+  // Auto OCR Solve: real-time image detection for math/code (skip in self mode)
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { handleAutoOcrSolve, isAutoOcrEnabled } = await import("../plugins/ai/ocrsolve.js");
       if (typeof isAutoOcrEnabled === "function" && isAutoOcrEnabled(m, sock)) {
@@ -472,8 +480,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Auto Meme Gen: real-time image detection for instant meme
-  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+  // Auto Meme Gen: real-time image detection for instant meme (skip in self mode)
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { handleAutoMemeGen, isAutoMemeEnabled } = await import("../plugins/ai/automemegenerator.js");
       if (typeof isAutoMemeEnabled === "function" && isAutoMemeEnabled(m, sock)) {
@@ -485,8 +493,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // AI Auto VN Interaction: real-time VN detection, AI balas pakai suara neural (Gemini Live style)
-  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+  // AI Auto VN Interaction: real-time VN detection (skip in self mode)
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { handleAiAutoVnInteraction, isAiAutoVnEnabled } = await import("../plugins/owner/aiautointeractionvn.js");
       if (typeof isAiAutoVnEnabled === "function" && isAiAutoVnEnabled(m, sock)) {
@@ -498,8 +506,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Ambient Context Mimicry: bot dengar lingkungan dari VN, deteksi emosi, respon empatik
-  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+  // Ambient Context Mimicry (skip in self mode)
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { handleAmbientMimic, isAmbientMimicEnabled } = await import("../plugins/owner/ambientmimic.js");
       if (typeof isAmbientMimicEnabled === "function" && isAmbientMimicEnabled(m, sock)) {
@@ -511,8 +519,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Mood-Driven Theme: passive typing pattern tracking
-  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+  // Mood-Driven Theme: passive typing pattern tracking (skip in self mode)
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { trackMoodTheme, isMoodThemeEnabled } = await import("../plugins/owner/moodtheme.js");
       if (typeof isMoodThemeEnabled === "function" && isMoodThemeEnabled(m)) {
@@ -523,8 +531,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Predictive Life-Nudge: passive pattern tracking + proactive nudge
-  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+  // Predictive Life-Nudge (skip in self mode)
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { trackPredictiveNudge, checkAndSendNudge, isPredictiveNudgeEnabled } = await import("../plugins/owner/predictivenudge.js");
       if (typeof isPredictiveNudgeEnabled === "function" && isPredictiveNudgeEnabled(m, sock)) {
@@ -545,8 +553,8 @@ async function messageHandler(msg, sock) {
       trackActivity(m);
     } catch {}
   }
-  // Auto-forward & Auto-mod hooks (run on ALL messages, not just commands)
-  if (!m.fromMe && !m.isNewsletter) {
+  // Auto-forward & Auto-mod hooks (skip in self mode for non-owner)
+  if (!m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { checkAutoForward, checkAutoMod } = await import("./lib/nova-automation-hub.js");
       await checkAutoForward(m, sock);
@@ -557,8 +565,8 @@ async function messageHandler(msg, sock) {
   }
 
 
-  // Auto-AI: if not a command, check if auto-AI should respond
-  if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
+  // Auto-AI: if not a command, check if auto-AI should respond (skip in self mode)
+  if (!m.isCommand && !m.fromMe && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { handleAutoAI, isAutoAIEnabled } = await import("./lib/nova-auto-ai.js");
       if (typeof isAutoAIEnabled === "function" && isAutoAIEnabled(m, sock)) {
