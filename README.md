@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20notifikasi%20bot%20online%20ke%20-success?style=for-the-badge)
-> *Commit: "fix: notifikasi bot online ke owner fire setiap connect, bukan cuma first-pair"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20handler.js%20standardisasi%20-success?style=for-the-badge)
+> *Commit: "fix: handler.js standardisasi pesan ke Modern Box style"*
 <!--END_SECTION:latest-update-->
 
 
