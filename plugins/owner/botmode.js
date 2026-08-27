@@ -43,10 +43,10 @@ async function handler(m, { sock }) {
     
     if (!mode) {
         let txt = `╭┈┈⬡「 🤖 *Bot Mode* 」\n`
-        txt += `┃ ㊗ Global: *${globalMode.toUpperCase()}*\n`
+        txt += `┃ ❏ Global: *${globalMode.toUpperCase()}*\n`
         
         if (m.isGroup) {
-            txt += `┃ ㊗ Grup: *${(groupMode || 'INHERIT').toUpperCase()}*\n`
+            txt += `┃ ❏ Grup: *${(groupMode || 'INHERIT').toUpperCase()}*\n`
         }
         txt += `╰┈┈⬡\n\n`
         
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
         
         for (const [key, desc] of Object.entries(MODE_DESCRIPTIONS)) {
             const isActive = key === currentMode ? ' ✅' : ''
-            txt += `┃ ㊗ *${key.toUpperCase()}*${isActive}\n`
+            txt += `┃ ❏ *${key.toUpperCase()}*${isActive}\n`
             txt += `┃   ${desc}\n`
         }
         txt += `╰┈┈⬡\n\n`

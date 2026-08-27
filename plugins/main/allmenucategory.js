@@ -157,7 +157,7 @@ async function handler(m, { sock, db }) {
       for (const entry of catEntries) {
         txt += `│ ${entry.emoji} \`\`${entry.catName}\`\` — ${entry.total} cmd\n`;
       }
-      txt += `│\n│ ❏ Ketik \`\`${prefix}allmenucategory <nama>\`\`\n│   atau klik tombol Kategori di bawah\n╰──────────❀\n`;
+      txt += `│\n│ ❏ Ketik \`\`${prefix}allmenucategory <nama>\`\`\n│   atau klik tombol Kategori di bawah\n╰──────────❀\n\nNova AI WhatsApp Bot`;
 
       const navButtons = [
         { id: `${prefix}menu`, text: "Menu" },
@@ -172,7 +172,7 @@ async function handler(m, { sock, db }) {
 
       await sendMenuCard(sock, m, {
         text: txt,
-        footer: "Nova AI WhatsApp Bot",
+        footer: "",
         thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
         buttons: navButtons,
         title: botName,
@@ -243,7 +243,7 @@ async function handler(m, { sock, db }) {
       }
     }
 
-    txt += `│\n╰──────────❀\n`;
+    txt += `│\n╰──────────❀\n\nNova AI WhatsApp Bot`;
 
     const navButtons2 = [
       buildCategoryButton(m, db, prefix, "Kategori Lain"),
@@ -258,7 +258,7 @@ async function handler(m, { sock, db }) {
 
     await sendMenuCard(sock, m, {
       text: txt,
-      footer: "Nova AI WhatsApp Bot",
+      footer: "",
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
       buttons: navButtons2,
       title: `${botName} — ${catName}`,

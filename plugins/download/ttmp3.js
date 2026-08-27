@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
 
   if (!url) {
     return m.reply( `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ᴅᴏᴡɴʟᴏᴀᴅ*
-┃ ㊗ Usage: \`${m.prefix}ttmp3 <url>\`
+┃ ❏ Usage: \`${m.prefix}ttmp3 <url>\`
 ╰┈┈⬡
 
 │ ❏ Contoh: ${m.prefix}ttmp3 https://vt.tiktok.com/xxx`, "ttmp3");
