@@ -232,8 +232,14 @@ class GameFactory {
             const db = getDatabase();
             if (db) {
               const user = db.getUser(m.sender);
+              if (!user) {
+                db.setUser(m.sender);
+              }
               if (reward.limit > 0) db.updateEnergi(m.sender, reward.limit);
               if (reward.koin > 0) db.updateKoin(m.sender, reward.koin);
+              if (reward.gold > 0) db.updateRpgCurrency(m.sender, 'gold', reward.gold);
+              if (reward.gems > 0) db.updateRpgCurrency(m.sender, 'gems', reward.gems);
+              if (reward.diamonds > 0) db.updateRpgCurrency(m.sender, 'diamonds', reward.diamonds);
               if (reward.exp > 0 && user) {
                 if (!user.rpg) user.rpg = {};
                 try {
@@ -257,6 +263,9 @@ class GameFactory {
           if (reward.limit > 0) parts.push(`+${reward.limit} Limit`);
           if (reward.koin > 0) parts.push(`+${reward.koin} Koin`);
           if (reward.exp > 0) parts.push(`+${reward.exp} EXP`);
+          if (reward.gold > 0) parts.push(`+${reward.gold} Gold`);
+          if (reward.gems > 0) parts.push(`+${reward.gems} Gems`);
+          if (reward.diamonds > 0) parts.push(`+${reward.diamonds} Diamonds`);
           if (parts.length > 0) text += `🎁 *Hadiah:* ${parts.join(', ')}\n`;
 
           if (session.question.deskripsi) {
