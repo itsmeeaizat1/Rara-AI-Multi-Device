@@ -277,7 +277,7 @@ function buildNavButtons(prefix, isAllMenuCtx, allCatKeys, commandsByCategory, c
     const total = (commandsByCategory[cat] || []).length + (caseCats[cat] || []).length;
     if (total === 0) continue;
     const name = CATEGORY_NAMES[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
-    const emoji = CATEGORY_EMOJIS[cat] || "📂";
+    const emoji = CATEGORY_EMOJIS[cat] || "📋";
     rows.push({
       title: `${emoji} ${name}`,
       description: `${total} fitur`,
