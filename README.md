@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%2011%20plugin%20baru%20%E2%80%94%20anime%2C%20-success?style=for-the-badge)
-> *Commit: "feat: 11 plugin baru — anime, berita, meme, joke, game, quran, sholat, cuaca, resi"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%207%20game%20%26%20trivia%20baru%20%E2%80%94%20t-success?style=for-the-badge)
+> *Commit: "feat: 7 game & trivia baru — trivia, wyr, tictactoe, wordle, hangman, typingrace, todv2"*
 <!--END_SECTION:latest-update-->
 
 
