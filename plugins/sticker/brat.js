@@ -7,11 +7,11 @@ import novaApi from "../../src/lib/nova-apimanager.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "brat",
-  alias: ["brat"],
+  alias: ["brat", "bratimg"],
   category: "sticker",
-  description: "Menu variant brat dan generator sticker brat",
-  usage: ".brat | .bratimg <text>",
-  example: ".bratimg Hai semua",
+  description: "Generator sticker brat (default latar putih) + menu variant",
+  usage: ".brat <text>",
+  example: ".brat Hai semua",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -137,27 +137,30 @@ async function handler(m, { sock }) {
   const text = m.text;
   const command = String(m.command || "").toLowerCase();
 
-  if (command === "brat") {
+  // .brat tanpa teks -> tampilkan menu variant
+  if (!text) {
     await sendBratMenu(m, sock, text);
     return;
   }
 
-  if (!text) {
-    return m.reply( `🖼️ *ʙʀᴀᴛ ɪᴍᴀɢᴇ*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratimg Hai semua\``, "brat");
-  }
-
-  m.react("🕒");
-
+  // .brat <text> -> langsung generate brat latar putih (default)
   try {
-    const url = novaApi.yupra.url("/api/image/brat", { text });
+    const url = novaApi.yupra.url("/api/bratwhite", { text });
     await sock.sendImageAsSticker(m.chat, url, m, {
       packname: config.sticker.packname,
       author: config.sticker.author,
     });
-
-    m.react("🐣");
   } catch (error) {
-    m.reply(claraWrap("brat", te(m.prefix, m.command, m.pushName), "error"));
+    // Fallback ke brat default (green) jika API white gagal
+    try {
+      const url = novaApi.yupra.url("/api/image/brat", { text });
+      await sock.sendImageAsSticker(m.chat, url, m, {
+        packname: config.sticker.packname,
+        author: config.sticker.author,
+      });
+    } catch (error2) {
+      m.reply(claraWrap("brat", te(m.prefix, m.command, m.pushName), "error"));
+    }
   }
 }
 
