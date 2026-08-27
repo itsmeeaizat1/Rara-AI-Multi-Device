@@ -714,6 +714,23 @@ async function messageHandler(msg, sock) {
     return;
   }
 
+  // === TOGGLE FITUR CHECK (owner-controlled on/off) ===
+  try {
+    const dbInstance = getDatabase();
+    const cmdName = plugin.config.name || command;
+    const cmdCat = plugin.config.category || "";
+    const disabledCmds = dbInstance.setting("disabledCommands") || [];
+    const disabledCats = dbInstance.setting("disabledCategories") || [];
+    if (disabledCmds.includes(cmdName) || (cmdCat && disabledCats.includes(cmdCat))) {
+      if (!m.isNewsletter) {
+        try {
+          await m.reply("╭──「 Nonaktif 」\n├── Fitur ini sedang dinonaktifkan oleh owner\n├── Ketik .togglefitur untuk melihat status\n╰──────────❀");
+        } catch {}
+      }
+      return;
+    }
+  } catch {}
+
   // === ENERGI / LIMIT CHECK & DEDUCTION ===
   const energiCost = plugin.config.energi || 0;
   let energiDeducted = 0;
