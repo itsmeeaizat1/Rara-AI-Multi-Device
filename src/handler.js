@@ -101,7 +101,8 @@ async function messageHandler(msg, sock) {
   } catch {}
 
   // Anti-detection features (runs on ALL group messages, not just commands)
-  if (m.isGroup && !m.fromMe) {
+  // Skip in self mode — bot harus silent di grup saat self mode
+  if (m.isGroup && !m.fromMe && !__novaSelfModeSkip) {
     try {
       const { handleAntiNSFW } = await import("../plugins/group/anti18plus.js");
       await handleAntiNSFW(m, sock, db);
@@ -884,6 +885,11 @@ async function groupHandler(update, sock) {
   if (!update || !update.id) return;
 
   const db = getDatabase();
+  
+  // Skip welcome/goodbye in self mode
+  const __ghBotMode = db.setting("botMode") || config.config?.mode || "public";
+  if (__ghBotMode === "self") return;
+
   const action = update.action;
   const participants = update.participants || [];
 
@@ -965,6 +971,10 @@ async function groupHandler(update, sock) {
 async function messageUpdateHandler(updates, sock) {
   if (!updates || !Array.isArray(updates)) return;
   const db = getDatabase();
+  
+  // Skip anti-delete in self mode
+  const __muBotMode = db.setting("botMode") || config.config?.mode || "public";
+  if (__muBotMode === "self") return;
 
   for (const update of updates) {
     try {
@@ -999,6 +1009,10 @@ async function messageUpdateHandler(updates, sock) {
 async function groupSettingsHandler(update, sock) {
   if (!update || !update.id) return;
   const db = getDatabase();
+  
+  // Skip in self mode
+  const __gsBotMode = db.setting("botMode") || config.config?.mode || "public";
+  if (__gsBotMode === "self") return;
 
   try {
     // Check for announcement mode change
