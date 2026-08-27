@@ -62,9 +62,21 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const totalMem = os.totalmem();
     const usedMem = totalMem - os.freemem();
     const memPercent = ((usedMem / totalMem) * 100).toFixed(1);
-    const cpuModel = os.cpus()[0]?.model || "Unknown";
+    
     const cpuCores = os.cpus().length;
-    const cpuSpeed = os.cpus()[0]?.speed || 0;
+    let cpuSpeed = os.cpus()[0]?.speed || 0;
+    let cpuModel = os.cpus()[0]?.model || "Unknown";
+    if ((!cpuSpeed || cpuSpeed === 0) || cpuModel === "Unknown") {
+      try {
+        const fs = require("fs");
+        const cpuinfo = fs.readFileSync("/proc/cpuinfo", "utf8");
+        const mhzMatch = cpuinfo.match(/cpu MHz\s*:\s*([\d.]+)/i);
+        if (mhzMatch) cpuSpeed = Math.round(parseFloat(mhzMatch[1]));
+        const modelMatch = cpuinfo.match(/model name\s*:\s*(.+)/i);
+        if (modelMatch) cpuModel = modelMatch[1].trim();
+      } catch {}
+    }
+    if (!cpuSpeed || cpuSpeed === 0) cpuSpeed = "-";
     const loadAvg = os.loadavg()[0].toFixed(2);
     const serverUptime = formatUptime(os.uptime() * 1000);
     const botUptime = uptime ? formatUptime(uptime) : formatUptime(process.uptime() * 1000);
