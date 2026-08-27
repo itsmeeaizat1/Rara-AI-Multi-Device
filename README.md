@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20convert%20116%20plugins%20to%20n-success?style=for-the-badge)
-> *Commit: "feat: convert 116 plugins to novaCaption + fix brace/paren issues"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20tanyaai%20pakai%20tio_openai%20-success?style=for-the-badge)
+> *Commit: "fix: tanyaai pakai tio_openai provider, callAI respect apiEndpoint"*
 <!--END_SECTION:latest-update-->
 
 
