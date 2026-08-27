@@ -1621,9 +1621,13 @@ async function startConnection(options = {}) {
             colors.logger.warn("Call", `Menolak panggilan dari ${call.from}`);
             await sock.rejectCall(call.id, call.from);
 
-            await sock.sendMessage(call.from, {
-              text: config.messages?.rejectCall,
-            });
+            // Skip reject message in self mode
+            const __callBotMode = getDatabase().setting("botMode") || config.config?.mode || "public";
+            if (__callBotMode !== "self") {
+              await sock.sendMessage(call.from, {
+                text: config.messages?.rejectCall,
+              });
+            }
 
             if (config.features?.blockIfCall) {
               let targetJid = call.from;
