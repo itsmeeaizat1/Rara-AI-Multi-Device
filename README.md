@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tambah%204%20plugin%20v2%20(liri-success?style=for-the-badge)
-> *Commit: "feat: tambah 4 plugin v2 (lirikv2, spotifyv2, ytv2, rss) + fix beritav2 ke RSS"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tambah%205%20fitur%20owner%20adv-success?style=for-the-badge)
+> *Commit: "feat: tambah 5 fitur owner advanced automation system"*
 <!--END_SECTION:latest-update-->
 
 
