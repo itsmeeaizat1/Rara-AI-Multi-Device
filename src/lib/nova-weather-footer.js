@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from "../../config.js";
+import { toSC } from "./nova-menu-style.js";
 
 const DEFAULT_TIMEOUT_MS = 10_000;
 const CACHE_TTL_MS = 10 * 60 * 1000;
@@ -235,17 +236,17 @@ function buildFooter(normalized) {
   const emoji = symbolFor(normalized.weather_code);
 
   const lines = [
-    `╭──「 *Cuaca* 」`,
-    `│ *Lokasi:* ${location.name || "Lokasi"} 📍`,
-    `│ *Kondisi:* ${normalized.description} ${emoji}`,
-    `│ *Suhu:* ${fmt(normalized.temperature_2m, "°C")} 🌡️`,
-    `│ *Terasa:* ${fmt(normalized.apparent_temperature, "°C")} 🥵`,
-    `│ *Kelembapan:* ${fmt(normalized.relative_humidity_2m, "%")} 💧`,
-    `│ *Angin:* ${fmt(normalized.wind_speed_10m, " km/jam")} 🌬️`,
-    `│ *Arah angin:* ${windDirectionText(normalized.wind_direction_10m)} 🧭`,
-    `│ *Tutupan awan:* ${fmt(normalized.cloud_cover, "%")} ☁️`,
-    `│ *UV index:* ${uvText(normalized.uv_index)} ☀️`,
-    `│ *Curah hujan:* ${fmt(normalized.precipitation, " mm")} 🌧️`,
+    `╭──「 *${toSC("Cuaca")}* 」`,
+    `│ *${toSC("Lokasi")}:* ${toSC(location.name || "Lokasi")} 📍`,
+    `│ *${toSC("Kondisi")}:* ${toSC(normalized.description)} ${emoji}`,
+    `│ *${toSC("Suhu")}:* ${fmt(normalized.temperature_2m, "°C")} 🌡️`,
+    `│ *${toSC("Terasa")}:* ${fmt(normalized.apparent_temperature, "°C")} 🥵`,
+    `│ *${toSC("Kelembapan")}:* ${fmt(normalized.relative_humidity_2m, "%")} 💧`,
+    `│ *${toSC("Angin")}:* ${fmt(normalized.wind_speed_10m, " km/jam")} 🌬️`,
+    `│ *${toSC("Arah angin")}:* ${toSC(windDirectionText(normalized.wind_direction_10m))} 🧭`,
+    `│ *${toSC("Tutupan awan")}:* ${fmt(normalized.cloud_cover, "%")} ☁️`,
+    `│ *${toSC("UV index")}:* ${uvText(normalized.uv_index)} ☀️`,
+    `│ *${toSC("Curah hujan")}:* ${fmt(normalized.precipitation, " mm")} 🌧️`,
     `╰──────────❀`,
   ];
 

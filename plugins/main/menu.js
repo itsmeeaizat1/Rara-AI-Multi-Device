@@ -19,6 +19,7 @@ import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
+import { toSC } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "menu",
@@ -154,85 +155,85 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const readMore = more.repeat(4001);
 
     return `
-╭──「 *Info Profil* 」
-│ *Nama:*  ${m.pushName || "User"}
-│ *Nomor:* @${m.sender.split("@")[0]}
-│ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
-│ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
-│ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
-│ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
-│ *Role:* ${roleEmoji} ${userRole}
-│ *Level:* ${userLevel}
-│ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
-│ *Total Xp:* ${userExp.toLocaleString()}
-│ *Status:* ${user?.banned ? "Banned" : "Aktif"}
-├──「 *Info Waktu*
-│ *Waktu:* ${timeStr} WIB
-│ *Hari:* ${dayName} ${weton}
-│ *Tanggal:* ${dateStr}
-│ *Tanggal Islam:* ${islamicDate}
-│ *Zona:* Asia/Jakarta
-│ *Hari Penting:* ${importantDay}
-├──「 *Info Bot*
-│ *Bot Name:* ${botConfig.bot?.name || "Nova AI Whatsapp Bot"}
-│ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
-│ *Version:* ${botConfig.bot?.version || "-"}
-│ *Developer:* ${botConfig.bot?.developer || "-"}
-│ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
-│ *Prefix:* [ *${prefix}* ]
-│ *Uptime:* ${runtimeStr}
-│ *Total User:* ${totalUsers}
-│ *Total Registrasi:* ${totalRegistered}
-│ *Premium User:* ${totalPremium}
-├──「 *Info Database*
-│ *Total User:* ${totalUsers}
-│ *Terdaftar:* ${totalRegistered}
-│ *Premium:* ${totalPremium}
-│ *Diblokir:* ${totalBanned}
-│ *Batal Daftar:* ${totalUnregistered}
-│ *Kena Warn:* ${totalWarned}
-│ *Grup Aktif:* ${totalActiveGroups} / ${totalGroups}
-│ *Pesan Masuk:* ${totalMessagesIn > 0 ? totalMessagesIn.toLocaleString() : '-'}
-│ *Pesan Keluar:* ${totalMessagesOut > 0 ? totalMessagesOut.toLocaleString() : '-'}
-│ *Command Run:* ${totalCommandsRun > 0 ? totalCommandsRun.toLocaleString() : '-'}
-│ *Sticker Dibuat:* ${totalStickerMade > 0 ? totalStickerMade.toLocaleString() : '-'}
-│ *Download:* ${totalDownloads > 0 ? totalDownloads.toLocaleString() : '-'}
-├──「 *Info Server*
-│ *Platform:* ${platform}
-│ *Hostname:* ${hostname}
-│ *Type:* Node.Js
-│ *Baileys:* Multi Device
-│ *Node.js:* ${process.version}
-│ *Server Uptime:* ${serverUptime}
-│ *CPU:* ${cpuModel}
-│ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
-│ *Load Avg:* ${loadAvg}
-│ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
-│ *RAM Bot:* ${formatBytes(memUsage.rss)}
+╭──「 *${toSC("Info Profil")}* 」
+│ *${toSC("Nama")}:*  ${toSC(m.pushName || "User")}
+│ *${toSC("Nomor")}:* @${m.sender.split("@")[0]}
+│ *${toSC("Premium")}:* ${toSC(m.isPremium ? "Aktif" : "Free")}
+│ *${toSC("Energi")}:* ${m.isOwner || m.isPremium ? toSC("∞ Unlimited") : (user?.energi ?? 25)}
+│ *${toSC("Koin")}:* ${(user?.koin ?? 0).toLocaleString()}
+│ *${toSC("Limit")}:* ${m.isOwner || m.isPremium ? toSC("Unlimited") : (user?.limit ?? "-")}
+│ *${toSC("Role")}:* ${roleEmoji} ${toSC(userRole)}
+│ *${toSC("Level")}:* ${userLevel}
+│ *${toSC("Xp")}:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
+│ *${toSC("Total Xp")}:* ${userExp.toLocaleString()}
+│ *${toSC("Status")}:* ${toSC(user?.banned ? "Banned" : "Aktif")}
+├──「 *${toSC("Info Waktu")}*
+│ *${toSC("Waktu")}:* ${timeStr} ${toSC("WIB")}
+│ *${toSC("Hari")}:* ${toSC(dayName)} ${toSC(weton)}
+│ *${toSC("Tanggal")}:* ${dateStr}
+│ *${toSC("Tanggal Islam")}:* ${islamicDate}
+│ *${toSC("Zona")}:* ${toSC("Asia/Jakarta")}
+│ *${toSC("Hari Penting")}:* ${toSC(importantDay)}
+├──「 *${toSC("Info Bot")}*
+│ *${toSC("Bot Name")}:* ${toSC(botConfig.bot?.name || "Nova AI Whatsapp Bot")}
+│ *${toSC("Bot Nomor")}:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : toSC("Unknown")}
+│ *${toSC("Version")}:* ${botConfig.bot?.version || "-"}
+│ *${toSC("Developer")}:* ${toSC(botConfig.bot?.developer || "-")}
+│ *${toSC("Mode")}:* ${toSC((botConfig.mode || "public").toUpperCase())}
+│ *${toSC("Prefix")}:* [ *${prefix}* ]
+│ *${toSC("Uptime")}:* ${runtimeStr}
+│ *${toSC("Total User")}:* ${totalUsers}
+│ *${toSC("Total Registrasi")}:* ${totalRegistered}
+│ *${toSC("Premium User")}:* ${totalPremium}
+├──「 *${toSC("Info Database")}*
+│ *${toSC("Total User")}:* ${totalUsers}
+│ *${toSC("Terdaftar")}:* ${totalRegistered}
+│ *${toSC("Premium")}:* ${totalPremium}
+│ *${toSC("Diblokir")}:* ${totalBanned}
+│ *${toSC("Batal Daftar")}:* ${totalUnregistered}
+│ *${toSC("Kena Warn")}:* ${totalWarned}
+│ *${toSC("Grup Aktif")}:* ${totalActiveGroups} / ${totalGroups}
+│ *${toSC("Pesan Masuk")}:* ${totalMessagesIn > 0 ? totalMessagesIn.toLocaleString() : '-'}
+│ *${toSC("Pesan Keluar")}:* ${totalMessagesOut > 0 ? totalMessagesOut.toLocaleString() : '-'}
+│ *${toSC("Command Run")}:* ${totalCommandsRun > 0 ? totalCommandsRun.toLocaleString() : '-'}
+│ *${toSC("Sticker Dibuat")}:* ${totalStickerMade > 0 ? totalStickerMade.toLocaleString() : '-'}
+│ *${toSC("Download")}:* ${totalDownloads > 0 ? totalDownloads.toLocaleString() : '-'}
+├──「 *${toSC("Info Server")}*
+│ *${toSC("Platform")}:* ${toSC(platform)}
+│ *${toSC("Hostname")}:* ${toSC(hostname)}
+│ *${toSC("Type")}:* ${toSC("Node.Js")}
+│ *${toSC("Baileys")}:* ${toSC("Multi Device")}
+│ *${toSC("Node.js")}:* ${process.version}
+│ *${toSC("Server Uptime")}:* ${serverUptime}
+│ *${toSC("CPU")}:* ${cpuModel}
+│ *${toSC("Cores")}:* ${cpuCores} ${toSC("threads")} @ ${cpuSpeed} MHz
+│ *${toSC("Load Avg")}:* ${loadAvg}
+│ *${toSC("RAM")}:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
+│ *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
 ╰──────────❀
 ${weatherBlock}${readMore}
-╭──「 *Menu* 」\n│ ${prefix}menu
+╭──「 *${toSC("Menu")}* 」\n│ ${prefix}menu
 │ ${prefix}allmenu
-│ ${prefix}allmenucategory <kategori>
+│ ${prefix}allmenucategory ${toSC("<kategori>")}
 │ ${prefix}tanyaai
-├──「 *Info*
+├──「 *${toSC("Info")}*
 │ ${prefix}info
 │ ${prefix}owner
 │ ${prefix}rules
 │ ${prefix}donasi
-├──「 *Store*
+├──「 *${toSC("Store")}*
 │ ${prefix}sewa
 │ ${prefix}payment
 │ ${prefix}listban
 ╰──────────❀
 
-*Total: ${totalFitur} Fitur*
+*${toSC("Total")}: ${totalFitur} ${toSC("Fitur")}*
 
-${getTimeGreeting()} *${m.pushName || "User"}* 👋
+${toSC(getTimeGreeting())} *${toSC(m.pushName || "User")}* 👋
 
-Ketik *${prefix}allmenu* untuk melihat semua fitur
+${toSC("Ketik")} *${prefix}allmenu* ${toSC("untuk melihat semua fitur")}
 
-Nova AI WhatsApp Bot`;
+${toSC("Nova AI WhatsApp Bot")}`;
   } catch (e) {
     console.error("[menu] buildMenuText error:", e.message);
     return "Menu error: " + e.message;
@@ -249,12 +250,12 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     // 6 tombol quick access — nativeFlowMessage (proven pattern, bukan legacy type 1)
     // "Kategori" pakai single_select → klik buka popup list semua kategori
     const navButtons = [
-      { id: `${prefix}menu`, text: "Menu" },
-      { id: `${prefix}allmenu`, text: "All Menu" },
+      { id: `${prefix}menu`, text: toSC("Menu") },
+      { id: `${prefix}allmenu`, text: toSC("All Menu") },
       buildCategoryButton(m, db, prefix),
-      { id: `${prefix}tanyaai`, text: "Tanya AI" },
-      { id: `${prefix}info`, text: "Info" },
-      { id: `${prefix}owner`, text: "Owner" },
+      { id: `${prefix}tanyaai`, text: toSC("Tanya AI") },
+      { id: `${prefix}info`, text: toSC("Info") },
+      { id: `${prefix}owner`, text: toSC("Owner") },
     ];
 
     await m.react("🐣");
@@ -270,7 +271,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[menu] handler error:", e.message);
-    try { await m.reply("╭──「 Menu 」\n├── ❌ Gagal menampilkan menu\n├── Coba lagi nanti\n╰──────────❀"); } catch {}
+    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n├── ❌ ${toSC("Gagal menampilkan menu")}\n├── ${toSC("Coba lagi nanti")}\n╰──────────❀`); } catch {}
     await m.react("❌");
   }
 }

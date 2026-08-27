@@ -191,72 +191,72 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
-    // ── Info section (Clara-MD box style) ──
+    // ── Info section (Full SmallCaps Style v7) ──
     let txt = `
-╭──「 *Info Profil* 」
-│ *Nama:*  ${m.pushName || "User"}
-│ *Nomor:* @${m.sender.split("@")[0]}
-│ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
-│ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
-│ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
-│ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
-│ *Role:* ${roleEmoji} ${userRole}
-│ *Level:* ${userLevel}
-│ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
-│ *Total Xp:* ${userExp.toLocaleString()}
-│ *Status:* ${user?.banned ? "Banned" : "Aktif"}
-├──「 *Info Waktu*
-│ *Waktu:* ${timeStr} WIB
-│ *Hari:* ${dayName} ${weton}
-│ *Tanggal:* ${dateStr}
-│ *Tanggal Islam:* ${islamicDate}
-│ *Zona:* Asia/Jakarta
-│ *Hari Penting:* ${importantDay}
-├──「 *Info Bot*
-│ *Bot Name:* ${botConfig.bot?.name || botName}
-│ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
-│ *Version:* ${botConfig.bot?.version || "-"}
-│ *Developer:* ${botConfig.bot?.developer || "-"}
-│ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
-│ *Prefix:* [ *${prefix}* ]
-│ *Uptime:* ${runtimeStr}
-│ *Total User:* ${totalUsers}
-│ *Total Registrasi:* ${totalRegistered}
-│ *Premium User:* ${totalPremium}
-│ *Total Fitur:* ${totalFeatures}
-├──「 *Info Database*
-│ *Total User:* ${totalUsers}
-│ *Terdaftar:* ${totalRegistered}
-│ *Premium:* ${totalPremium}
-│ *Diblokir:* ${totalBanned}
-│ *Batal Daftar:* ${totalUnregistered}
-│ *Kena Warn:* ${totalWarned}
-│ *Grup Aktif:* ${totalActiveGroups} / ${totalGroups}
-│ *Pesan Masuk:* ${totalMessagesIn > 0 ? totalMessagesIn.toLocaleString() : '-'}
-│ *Pesan Keluar:* ${totalMessagesOut > 0 ? totalMessagesOut.toLocaleString() : '-'}
-│ *Command Run:* ${totalCommandsRun > 0 ? totalCommandsRun.toLocaleString() : '-'}
-│ *Sticker Dibuat:* ${totalStickerMade > 0 ? totalStickerMade.toLocaleString() : '-'}
-│ *Download:* ${totalDownloads > 0 ? totalDownloads.toLocaleString() : '-'}
-├──「 *Info Server*
-│ *Platform:* ${platform}
-│ *Hostname:* ${hostname}
-│ *Type:* Node.Js
-│ *Baileys:* Multi Device
-│ *Node.js:* ${process.version}
-│ *Server Uptime:* ${serverUptime}
-│ *CPU:* ${cpuModel}
-│ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
-│ *Load Avg:* ${loadAvg}
-│ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
-│ *RAM Bot:* ${formatBytes(memUsage.rss)}
+╭──「 *${toSC("Info Profil")}* 」
+│ *${toSC("Nama")}:*  ${toSC(m.pushName || "User")}
+│ *${toSC("Nomor")}:* @${m.sender.split("@")[0]}
+│ *${toSC("Premium")}:* ${toSC(m.isPremium ? "Aktif" : "Free")}
+│ *${toSC("Energi")}:* ${m.isOwner || m.isPremium ? toSC("∞ Unlimited") : (user?.energi ?? 25)}
+│ *${toSC("Koin")}:* ${(user?.koin ?? 0).toLocaleString()}
+│ *${toSC("Limit")}:* ${m.isOwner || m.isPremium ? toSC("Unlimited") : (user?.limit ?? "-")}
+│ *${toSC("Role")}:* ${roleEmoji} ${toSC(userRole)}
+│ *${toSC("Level")}:* ${userLevel}
+│ *${toSC("Xp")}:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
+│ *${toSC("Total Xp")}:* ${userExp.toLocaleString()}
+│ *${toSC("Status")}:* ${toSC(user?.banned ? "Banned" : "Aktif")}
+├──「 *${toSC("Info Waktu")}*
+│ *${toSC("Waktu")}:* ${timeStr} ${toSC("WIB")}
+│ *${toSC("Hari")}:* ${toSC(dayName)} ${toSC(weton)}
+│ *${toSC("Tanggal")}:* ${dateStr}
+│ *${toSC("Tanggal Islam")}:* ${islamicDate}
+│ *${toSC("Zona")}:* ${toSC("Asia/Jakarta")}
+│ *${toSC("Hari Penting")}:* ${toSC(importantDay)}
+├──「 *${toSC("Info Bot")}*
+│ *${toSC("Bot Name")}:* ${toSC(botConfig.bot?.name || botName)}
+│ *${toSC("Bot Nomor")}:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : toSC("Unknown")}
+│ *${toSC("Version")}:* ${botConfig.bot?.version || "-"}
+│ *${toSC("Developer")}:* ${toSC(botConfig.bot?.developer || "-")}
+│ *${toSC("Mode")}:* ${toSC((botConfig.mode || "public").toUpperCase())}
+│ *${toSC("Prefix")}:* [ *${prefix}* ]
+│ *${toSC("Uptime")}:* ${runtimeStr}
+│ *${toSC("Total User")}:* ${totalUsers}
+│ *${toSC("Total Registrasi")}:* ${totalRegistered}
+│ *${toSC("Premium User")}:* ${totalPremium}
+│ *${toSC("Total Fitur")}:* ${totalFeatures}
+├──「 *${toSC("Info Database")}*
+│ *${toSC("Total User")}:* ${totalUsers}
+│ *${toSC("Terdaftar")}:* ${totalRegistered}
+│ *${toSC("Premium")}:* ${totalPremium}
+│ *${toSC("Diblokir")}:* ${totalBanned}
+│ *${toSC("Batal Daftar")}:* ${totalUnregistered}
+│ *${toSC("Kena Warn")}:* ${totalWarned}
+│ *${toSC("Grup Aktif")}:* ${totalActiveGroups} / ${totalGroups}
+│ *${toSC("Pesan Masuk")}:* ${totalMessagesIn > 0 ? totalMessagesIn.toLocaleString() : '-'}
+│ *${toSC("Pesan Keluar")}:* ${totalMessagesOut > 0 ? totalMessagesOut.toLocaleString() : '-'}
+│ *${toSC("Command Run")}:* ${totalCommandsRun > 0 ? totalCommandsRun.toLocaleString() : '-'}
+│ *${toSC("Sticker Dibuat")}:* ${totalStickerMade > 0 ? totalStickerMade.toLocaleString() : '-'}
+│ *${toSC("Download")}:* ${totalDownloads > 0 ? totalDownloads.toLocaleString() : '-'}
+├──「 *${toSC("Info Server")}*
+│ *${toSC("Platform")}:* ${toSC(platform)}
+│ *${toSC("Hostname")}:* ${toSC(hostname)}
+│ *${toSC("Type")}:* ${toSC("Node.Js")}
+│ *${toSC("Baileys")}:* ${toSC("Multi Device")}
+│ *${toSC("Node.js")}:* ${process.version}
+│ *${toSC("Server Uptime")}:* ${serverUptime}
+│ *${toSC("CPU")}:* ${cpuModel}
+│ *${toSC("Cores")}:* ${cpuCores} ${toSC("threads")} @ ${cpuSpeed} MHz
+│ *${toSC("Load Avg")}:* ${loadAvg}
+│ *${toSC("RAM")}:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
+│ *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
 ╰──────────❀
 ${weatherBlock}${readMore}
-╭──「 *Keterangan* 」\n│ Ⓞ = Hanya untuk owner
-│ ⓟ = Hanya untuk premium
-│ Ⓛ = Membutuhkan limit
-│ Ⓐ = Hanya untuk admin
-│ Ⓖ = Hanya di dalam grup
-│ Ⓟ = Hanya di private chat
+╭──「 *${toSC("Keterangan")}* 」\n│ Ⓞ = ${toSC("Hanya untuk owner")}
+│ ⓟ = ${toSC("Hanya untuk premium")}
+│ Ⓛ = ${toSC("Membutuhkan limit")}
+│ Ⓐ = ${toSC("Hanya untuk admin")}
+│ Ⓖ = ${toSC("Hanya di dalam grup")}
+│ Ⓟ = ${toSC("Hanya di private chat")}
 ╰──────────❀
 `;
 
@@ -297,17 +297,17 @@ ${weatherBlock}${readMore}
       }
     }
 
-    txt += `╰──────────❀\n\nNova AI WhatsApp Bot`;
+    txt += `╰──────────❀\n\n${toSC("Nova AI WhatsApp Bot")}`;
 
     // ── Send: nativeFlowMessage buttons (proven pattern) + real image header ──
     // "Kategori" pakai single_select → klik buka popup list semua kategori
     const navButtons = [
-      { id: `${prefix}menu`, text: "Menu" },
-      { id: `${prefix}allmenu`, text: "All Menu" },
+      { id: `${prefix}menu`, text: toSC("Menu") },
+      { id: `${prefix}allmenu`, text: toSC("All Menu") },
       buildCategoryButton(m, db, prefix),
-      { id: `${prefix}tanyaai`, text: "Tanya AI" },
-      { id: `${prefix}info`, text: "Info" },
-      { id: `${prefix}owner`, text: "Owner" },
+      { id: `${prefix}tanyaai`, text: toSC("Tanya AI") },
+      { id: `${prefix}info`, text: toSC("Info") },
+      { id: `${prefix}owner`, text: toSC("Owner") },
     ];
 
     await m.react("🐣");
@@ -323,7 +323,7 @@ ${weatherBlock}${readMore}
     try { await sendMenuAudio(sock, m, db, true); } catch {}
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);
-    try { await m.reply("╭──「 Menu 」\n├── ❌ Gagal menampilkan menu\n├── Coba lagi nanti\n╰──────────❀"); } catch {}
+    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n├── ❌ ${toSC("Gagal menampilkan menu")}\n├── ${toSC("Coba lagi nanti")}\n╰──────────❀`); } catch {}
     await m.react("❌");
   }
 }
