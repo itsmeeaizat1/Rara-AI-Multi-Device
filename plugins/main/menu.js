@@ -186,7 +186,10 @@ ${weatherBlock}${readMore}
 *Total: ${totalFitur} Fitur*
 
 ${getTimeGreeting()} *${m.pushName || "User"}* 👋
-Ketik *${prefix}allmenu* untuk melihat semua fitur`;
+
+Ketik *${prefix}allmenu* untuk melihat semua fitur
+
+Nova AI WhatsApp Bot`;
   } catch (e) {
     console.error("[menu] buildMenuText error:", e.message);
     return "Menu error: " + e.message;
@@ -215,7 +218,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     await sendMenuCard(sock, m, {
       text,
-      footer: "Nova AI WhatsApp Bot",
+      footer: "",
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
       buttons: navButtons,
       title: botName,

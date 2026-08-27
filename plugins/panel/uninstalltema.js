@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     
     if (!text) {
         return m.reply( `╭┈┈⬡「 🗑️ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ*
-┃ ㊗ Usage: \`${m.prefix}uinstalltema <ip>|<password>\`
+┃ ❏ Usage: \`${m.prefix}uinstalltema <ip>|<password>\`
 ╰┈┈⬡
 
 │ ❏ \`Contoh: ${m.prefix}uinstalltema 192.168.1.1|secretpass\``, "root")
@@ -61,8 +61,8 @@ async function handler(m, { sock }) {
                 m.react('✅')
                 await m.react("🐣");
                 await m.reply(claraWrap("root", `╭┈┈⬡「 ✅ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ*
-┃ ㊗ sTatus: *ʙᴇʀʜᴀꜱɪʟ*
-┃ ㊗ Ip: ${ipvps}
+┃ ❏ sTatus: *ʙᴇʀʜᴀꜱɪʟ*
+┃ ❏ Ip: ${ipvps}
 ╰┈┈⬡
 
 │ ❏ _Tema berhasil diuninstall!_`))

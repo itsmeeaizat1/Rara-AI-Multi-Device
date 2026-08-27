@@ -253,7 +253,7 @@ ${weatherBlock}${readMore}
       }
     }
 
-    txt += `╰──────────❀\n`;
+    txt += `╰──────────❀\n\nNova AI WhatsApp Bot`;
 
     // ── Send: nativeFlowMessage buttons (proven pattern) + real image header ──
     // "Kategori" pakai single_select → klik buka popup list semua kategori
@@ -270,7 +270,7 @@ ${weatherBlock}${readMore}
 
     await sendMenuCard(sock, m, {
       text: txt,
-      footer: "Nova AI WhatsApp Bot",
+      footer: "",
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
       buttons: navButtons,
       title: botName,

@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
   if (!query) {
     return m.reply( `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴇᴀʀᴄʜ*
 ┃
-㊗ Usage: \`${m.prefix}ttsearch <query>\`
+❏ Usage: \`${m.prefix}ttsearch <query>\`
 ┃
 ╰┈┈⬡
 

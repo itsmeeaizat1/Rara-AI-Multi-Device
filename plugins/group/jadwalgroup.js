@@ -141,9 +141,9 @@ async function handler(m, { sock, db }) {
     const successMsg = `✅ *ᴊᴀᴅᴡᴀʟ ᴅɪꜱɪᴍᴘᴀɴ*
 
 ╭┈┈⬡「 ⏰ *ꜱᴇᴛᴛɪɴɢ*
-┃ ㊗ ${emoji} Aksi: *${actionText}*
-┃ ㊗ ⏱️ Waktu: *${formattedTime} WIB*
-┃ ㊗ 📡 sTatus: *🟢 Aktif*
+┃ ❏ ${emoji} Aksi: *${actionText}*
+┃ ❏ ⏱️ Waktu: *${formattedTime} WIB*
+┃ ❏ 📡 sTatus: *🟢 Aktif*
 ╰┈┈⬡
 
 │ ❏ _Grup akan otomatis ${action === 'open' ? 'dibuka' : 'ditutup'}_
