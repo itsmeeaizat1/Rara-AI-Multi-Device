@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20thumbnail%20menu%20jadi%20lands-success?style=for-the-badge)
-> *Commit: "fix: thumbnail menu jadi landscape 640x360 (bukan square 600x600)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%2011%20plugin%20baru%20%E2%80%94%20anime%2C%20-success?style=for-the-badge)
+> *Commit: "feat: 11 plugin baru — anime, berita, meme, joke, game, quran, sholat, cuaca, resi"*
 <!--END_SECTION:latest-update-->
 
 
