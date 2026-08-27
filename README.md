@@ -36,11 +36,6 @@ Automation:
 ![Main](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/main.yml/badge.svg)
 
 
-<!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-Merge%20branch%20'feat%2Frpg-system--success?style=for-the-badge)
-> *Commit: "Merge branch 'feat/rpg-system-overhaul'"*
-<!--END_SECTION:latest-update-->
-
 
 ---
 
