@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20bersihkan%20sisa%20gaya%20-success?style=for-the-badge)
-> *Commit: "refactor: bersihkan sisa gaya lama di core files ke Modern Box"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tombol%20Kategori%20jadi%20sin-success?style=for-the-badge)
+> *Commit: "feat: tombol Kategori jadi single_select popup list (0 file per kategori)"*
 <!--END_SECTION:latest-update-->
 
 
