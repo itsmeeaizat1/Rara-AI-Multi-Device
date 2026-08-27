@@ -6,7 +6,7 @@
 
 // Small caps map
 const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c).replace(/[A-Z]/g, c => (SC_MAP[c.toLowerCase()] || c).toUpperCase());
+const toSC = (s) => s.replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
 
 // Helper: detect real emoji (bukan "i" atau teks biasa)
 const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
@@ -117,6 +117,16 @@ function bracketBox(emoji, label, lines = []) {
   });
   const footer = `╰──────────❀`;
   return [header, ...body, footer].join("\n");
+}
+
+// commandListLine: baris command di list menu (allmenu/allmenucategory)
+// Format: ♦ .ᴄᴍᴅ <ᴘᴀʀᴀᴍ> Ⓛ — bintang cuma dipakai di baris command list,
+// smallcaps diterapkan ke command name + param placeholder biar konsisten.
+function commandListLine(prefix, cmdName, usage = "", symbols = "") {
+  const paramMatches = usage ? String(usage).match(/<[^>]+>/g) : null;
+  const paramPart = paramMatches ? " " + toSC(paramMatches.join(" ")) : "";
+  const symbolPart = symbols ? " " + String(symbols).trim() : "";
+  return `♦ ${prefix}${toSC(String(cmdName))}${paramPart}${symbolPart}`;
 }
 
 function separator(char = "─", repeat = 20) {
@@ -306,7 +316,7 @@ export {
   claraHeader, alyaHeader, bracketBox, claraWrap, claraLine,
   separator, tipText, formatNumber, broadcastFormat, novaUsage,
   toSC, sectionHeader, sectionItem, sectionClose, sectionSpacer, buildSection,
-  infoBox, listBox, novaCaption,
+  infoBox, listBox, novaCaption, commandListLine,
 };
 
 // novaCaption: caption menarik per-fitur dari metadata plugin
