@@ -102,7 +102,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ *Platform:* Node.js + Baileys
 │ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
 │ *Prefix:* [ *${prefix}* ]
-├──「 *Statistik* 」
+├──「 *Info Database* 」
 │ *Total User:* ${totalUsers}
 │ *Total Grup:* ${totalGroups}
 │ *User Terdaftar:* ${totalRegistered}
