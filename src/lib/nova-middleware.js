@@ -60,7 +60,7 @@ function checkPermission(m, pluginConfig) {
   }
 
   if (pluginConfig.isPartner && !m.isPartner && !m.isOwner && !hasAccess) {
-    return { allowed: false, reason: "🤝 Partner only!" };
+    return { allowed: false, reason: "╭──「 🤝 Partner Only 」\n├── Fitur ini khusus Partner bot\n╰──────────❀" };
   }
 
   if (
@@ -118,7 +118,7 @@ function checkPermission(m, pluginConfig) {
         if (!m.isAdmin && !m.isOwner && !hasAccess) {
           return {
             allowed: false,
-            reason: "🎮 Fitur Game sedang dinonaktifkan di grup ini oleh Admin!",
+            reason: "╭──「 🎮 Game Disabled 」\n├── Fitur Game sedang dinonaktifkan\n├── di grup ini oleh Admin\n╰──────────❀",
           };
         }
       }
@@ -126,7 +126,7 @@ function checkPermission(m, pluginConfig) {
         if (!m.isAdmin && !m.isOwner && !hasAccess) {
           return {
             allowed: false,
-            reason: "⚔️ Fitur RPG sedang dinonaktifkan di grup ini oleh Admin!",
+            reason: "╭──「 ⚔️ RPG Disabled 」\n├── Fitur RPG sedang dinonaktifkan\n├── di grup ini oleh Admin\n╰──────────❀",
           };
         }
       }
@@ -156,11 +156,10 @@ function checkMode(m, getActiveJadibots) {
       allowed: false,
       isAfk: true,
       afkMessage:
-        `╭──「 Aꜰᴋ 」\n│\n` + +
-        `  │ ❏ 💤 Bot sedang AFK\n` +
-        `  │ ❏ *Alasan:* ${botAfk.reason || "AFK"}\n` +
-        `  │ ❏ *Sejak:* ${duration} yang lalu\n` +
-        `│\n` +
+        `╭──「 💤 AFK 」\n` +
+        `├── Bot sedang AFK\n` +
+        `├── Alasan: ${botAfk.reason || "AFK"}\n` +
+        `├── Sejak: ${duration} yang lalu\n` +
         `╰──────────❀`,
     };
   }
@@ -177,11 +176,14 @@ function checkMode(m, getActiveJadibots) {
         allowed: false,
         isOnlyThisGroup: true,
         onlyThisGroupMessage:
-          `🔒 *Akses Ditolak*\n\n` +
-          `Maaf, saat ini bot kami hanya bisa diakses dan digunakan secara eksklusif di Grup Utama (*${onlyThisGroup.name}*).\n\n` +
-          `Silakan bergabung ke grup utama kami melalui tautan berikut:\n` +
-          `🔗 ${onlyThisGroup.link}\n\n` +
-          `Setelah bergabung, Anda bebas menggunakan semua fitur bot. Terima kasih!`
+          `╭──「 🔒 Akses Ditolak 」\n` +
+          `├── Bot hanya bisa diakses di Grup Utama:\n` +
+          `├── *${onlyThisGroup.name}*\n` +
+          `├──\n` +
+          `├── 🔗 ${onlyThisGroup.link}\n` +
+          `├──\n` +
+          `├── Setelah bergabung, bebas pakai semua fitur\n` +
+          `╰──────────❀`
       };
     }
   }
@@ -206,18 +208,17 @@ function checkMode(m, getActiveJadibots) {
     if (activeJadibots.length > 0) {
       let jadibotList = "";
       activeJadibots.forEach((jb, i) => {
-        jadibotList += `  │ ❏ ${i + 1}. @${jb.id}\n`;
+        jadibotList += `├── ${i + 1}. @${jb.id}\n`;
       });
       const mentions = activeJadibots.map((jb) => jb.id + "@s.whatsapp.net");
       return {
         allowed: false,
         hasJadibots: true,
         jadibotMessage:
-          `╭──「 Mᴏᴅᴇ Pʀɪᴠᴀᴛᴇ 」\n│\n` + +
-          `  │ ❏ 🤖 Bot utama dalam mode private\n` +
-          `  │ ❏ Bot turunan yang tersedia:\n` +
+          `╭──「 🔒 Mode Private 」\n` +
+          `├── Bot utama dalam mode private\n` +
+          `├── Bot turunan yang tersedia:\n` +
           `${jadibotList}` +
-          `│\n` +
           `╰──────────❀`,
         jadibotMentions: mentions,
       };
