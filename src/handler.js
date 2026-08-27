@@ -78,7 +78,10 @@ async function messageHandler(msg, sock) {
   // Anti-detection (anti-NSFW, anti-kasar, etc.) still runs regardless of mode for group safety.
   const __novaBotMode = db.setting("botMode") || config.config?.mode || "public";
   const __novaIsSelfMode = __novaBotMode === "self";
-  const __novaSelfModeSkip = __novaIsSelfMode && !m.fromMe && !m.isOwner;
+  // Cek juga publicGroups & selfGroups untuk akurasi skip
+  const __novaPublicGroups = db.setting("publicGroups") || [];
+  const __novaIsPublicGroup = m.isGroup && __novaPublicGroups.includes(m.chat);
+  const __novaSelfModeSkip = __novaIsSelfMode && !m.fromMe && !m.isOwner && !__novaIsPublicGroup;
 
 
   // Panel message logging (group only, private never logged)
@@ -583,6 +586,25 @@ async function messageHandler(msg, sock) {
   // From here, only process commands
   if (!m.isCommand) return;
 
+  // Check mode (self/public) — MOVED HERE (before case handler & notFound)
+  // Ini memastikan SEMUA command (case handler, plugin, notFound) di-blokir di self mode
+  try {
+    const modeResult = checkMode(m, getActiveJadibots);
+    if (!modeResult.allowed) {
+      if (modeResult.isAfk && modeResult.afkMessage) {
+        await m.reply(modeResult.afkMessage);
+      } else if (modeResult.isOnlyThisGroup && modeResult.onlyThisGroupMessage) {
+        await m.reply(modeResult.onlyThisGroupMessage);
+      } else if (modeResult.hasJadibots && modeResult.jadibotMessage) {
+        await sock.sendMessage(m.chat, {
+          text: modeResult.jadibotMessage,
+          mentions: modeResult.jadibotMentions || [],
+        }, { quoted: msg });
+      }
+      return;
+    }
+  } catch {}
+
   // Try case handler first (case/nova.js)
   try {
     const { handleCommand: handleCase } = await import("../case/nova.js");
@@ -628,24 +650,6 @@ async function messageHandler(msg, sock) {
     }
     return;
   }
-
-  // Check mode (self/public)
-  try {
-    const modeResult = checkMode(m, getActiveJadibots);
-    if (!modeResult.allowed) {
-      if (modeResult.isAfk && modeResult.afkMessage) {
-        await m.reply(modeResult.afkMessage);
-      } else if (modeResult.isOnlyThisGroup && modeResult.onlyThisGroupMessage) {
-        await m.reply(modeResult.onlyThisGroupMessage);
-      } else if (modeResult.hasJadibots && modeResult.jadibotMessage) {
-        await sock.sendMessage(m.chat, {
-          text: modeResult.jadibotMessage,
-          mentions: modeResult.jadibotMentions || [],
-        }, { quoted: msg });
-      }
-      return;
-    }
-  } catch {}
 
   // Check permissions
   try {
