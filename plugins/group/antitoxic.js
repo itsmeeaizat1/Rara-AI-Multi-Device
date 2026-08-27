@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
 import { getDatabase } from '../../src/lib/nova-database.js'
-import config from '../../config.js'
+import { gpMsg } from "../../src/lib/nova-group-protection.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'antitoxic',
@@ -50,17 +50,6 @@ function isToxic(text, toxicList) {
     return { toxic: false, word: null }
 }
 
-function gpMsg(key, replacements = {}) {
-    const defaults = {
-        antitoxicWarn: '⚠ @%user% berkata kasar.\nPeringatan ke %warn% dari %max%, pelanggaran berikutnya bisa di-%method%.',
-        antitoxicAction: '🚫 @%user% di-%method% karena toxic. (%warn%/%max%)',
-    }
-    let text = config.groupProtection?.[key] || defaults[key] || ''
-    for (const [k, v] of Object.entries(replacements)) {
-        text = text.replace(new RegExp(`%${k}%`, 'g'), v)
-    }
-    return text
-}
 
 async function handleToxicMessage(m, sock, db, toxicWord) {
     const groupData = db.getGroup(m.chat) || {}
