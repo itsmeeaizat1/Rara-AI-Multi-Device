@@ -4,7 +4,7 @@ import {
   findParticipantByNumber,
   getParticipantJid,
 } from "../../src/lib/nova-lid.js";
-import config from "../../config.js";
+import { gpMsg } from "../../src/lib/nova-group-protection.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: ["antibot", "botdetect"],
@@ -24,16 +24,6 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-function gpMsg(key, replacements = {}) {
-  const defaults = {
-    antibot: "🤖 *ᴀɴᴛɪʙᴏᴛ* — @%user% terdeteksi sebagai bot dan di-kick.",
-  };
-  let text = config.groupProtection?.[key] || defaults[key] || "";
-  for (const [k, v] of Object.entries(replacements)) {
-    text = text.replace(new RegExp(`%${k}%`, "g"), v);
-  }
-  return text;
-}
 
 function extractMessageId(m) {
   return String(m?.key?.id || m?.id || "").trim();

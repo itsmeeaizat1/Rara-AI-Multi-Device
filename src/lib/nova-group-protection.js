@@ -6,34 +6,42 @@ const messageCache = new Map();
 const CACHE_EXPIRY = 30 * 60 * 1000;
 const CACHE_MAX_SIZE = 5000;
 
+// Satu-satunya sumber default pesan groupProtection — dipakai semua plugin
+// anti-* (antibot, antidocument, antifoto, antimedia, antisticker, antitoxic,
+// antivideo, antivn) via import { gpMsg } biar gak ada lagi copy-paste function.
+// config.groupProtection.<key> di config.js selalu diutamakan kalau owner mau custom.
+const GP_DEFAULTS = {
+  antilink: "╭──「 *Antilink* 」\n├── @%user% mengirim link\n├── Pesan sudah dihapus\n╰──────────❀",
+  antilinkKick: "╭──「 *Antilink* 」\n├── @%user% di-kick\n├── karena mengirim link\n╰──────────❀",
+  antilinkGc: "╭──「 *Antilink WA* 」\n├── @%user% mengirim link WA\n├── Pesan sudah dihapus\n╰──────────❀",
+  antilinkGcKick: "╭──「 *Antilink WA* 」\n├── @%user% di-kick\n├── karena mengirim link WA\n╰──────────❀",
+  antilinkAll: "╭──「 *Antilink* 」\n├── @%user% mengirim link\n├── Pesan sudah dihapus\n╰──────────❀",
+  antilinkAllKick: "╭──「 *Antilink* 」\n├── @%user% di-kick\n├── karena mengirim link\n╰──────────❀",
+  antitagsw: "╭──「 *AntiTagSW* 」\n├── Tag status dari @%user%\n├── sudah dihapus\n╰──────────❀",
+  antiswgc: "╭──「 *AntiSWGC* 」\n├── SW group type *%type%*\n├── dari @%user% sudah dihapus\n╰──────────❀",
+  antijudol: "╭──「 *AntiJudol* 」\n├── @%user% terdeteksi kirim konten judol\n├── Pesan sudah dihapus\n╰──────────❀",
+  antijudolKick: "╭──「 *AntiJudol* 」\n├── @%user% di-kick\n├── karena kirim konten judol\n╰──────────❀",
+  antiphising: "╭──「 *AntiPhising* 」\n├── @%user% terdeteksi kirim konten phising\n├── Pesan sudah dihapus\n╰──────────❀",
+  antiphisingKick: "╭──「 *AntiPhising* 」\n├── @%user% di-kick\n├── karena kirim konten phising\n╰──────────❀",
+  anticustom: "╭──「 *AntiCustom* 」\n├── @%user% melanggar rule custom *%rule%*\n├── Pesan sudah dihapus\n╰──────────❀",
+  anticustomKick: "╭──「 *AntiCustom* 」\n├── @%user% di-kick\n├── karena melanggar rule custom *%rule%*\n╰──────────❀",
+  antiviewonce: "╭──「 *ViewOnce* 」\n├── Media sekali lihat dari @%user%\n╰──────────❀",
+  antiremove: "╭──「 *AntiDelete* 」\n├── @%user% menghapus pesan\n╰──────────❀",
+  antihidetag: "╭──「 *AntiHidetag* 」\n├── Hidetag dari @%user%\n├── sudah dihapus\n╰──────────❀",
+  antitoxicWarn: "╭──「 *Peringatan* 」\n├── @%user% berkata kasar\n├── Warn %warn%/%max%, selanjutnya di-%method%\n╰──────────❀",
+  antitoxicAction: "╭──「 *AntiToxic* 」\n├── @%user% di-%method%\n├── karena toxic (%warn%/%max%)\n╰──────────❀",
+  antidocument: "╭──「 *AntiDocument* 」\n├── Dokumen dari @%user%\n├── sudah dihapus\n╰──────────❀",
+  antisticker: "╭──「 *AntiSticker* 」\n├── Sticker dari @%user%\n├── sudah dihapus\n╰──────────❀",
+  antimedia: "╭──「 *AntiMedia* 」\n├── Media dari @%user%\n├── sudah dihapus\n╰──────────❀",
+  antifoto: "╭──「 *AntiFoto* 」\n├── Foto dari @%user%\n├── sudah dihapus\n╰──────────❀",
+  antivideo: "╭──「 *AntiVideo* 」\n├── Video dari @%user%\n├── sudah dihapus\n╰──────────❀",
+  antivn: "╭──「 *AntiVN* 」\n├── Voice note dari @%user%\n├── sudah dihapus\n╰──────────❀",
+  antibot: "╭──「 *AntiBot* 」\n├── @%user% terdeteksi sebagai bot\n├── dan sudah di-kick\n╰──────────❀",
+  notAdmin: "╭──「 *Bot Bukan Admin* 」\n├── Bot bukan admin\n├── Tidak bisa menghapus pesan\n╰──────────❀",
+};
+
 function gpMsg(key, replacements = {}) {
-  const defaults = {
-    antilink: "⚠ *Antilink* — @%user% mengirim link.\nPesan dihapus.",
-    antilinkKick: "⚠ *Antilink* — @%user% di-kick karena mengirim link.",
-    antilinkGc: "⚠ *Antilink WA* — @%user% mengirim link WA.\nPesan dihapus.",
-    antilinkGcKick:
-      "⚠ *Antilink WA* — @%user% di-kick karena mengirim link WA.",
-    antilinkAll: "⚠ *Antilink* — @%user% mengirim link.\nPesan dihapus.",
-    antilinkAllKick: "⚠ *Antilink* — @%user% di-kick karena mengirim link.",
-    antitagsw: "⚠ *AntiTagSW* — Tag status dari @%user% dihapus.",
-    antiswgc: "⚠ *AntiSWGC* — SW group type *%type%* dari @%user% dihapus.",
-    antijudol:
-      "⚠ *AntiJudol* — @%user% terdeteksi kirim konten judol.\nPesan dihapus.",
-    antijudolKick: "⚠ *AntiJudol* — @%user% di-kick karena kirim konten judol.",
-    antiphising:
-      "⚠ *AntiPhising* — @%user% terdeteksi kirim konten phising.\nPesan dihapus.",
-    antiphisingKick:
-      "⚠ *AntiPhising* — @%user% di-kick karena kirim konten phising.",
-    anticustom:
-      "⚠ *AntiCustom* — @%user% melanggar rule custom *%rule%*.\nPesan dihapus.",
-    anticustomKick:
-      "⚠ *AntiCustom* — @%user% di-kick karena melanggar rule custom *%rule%*.",
-    antiviewonce: "👁️ *ViewOnce* — Dari @%user%",
-    antiremove: "🗑️ *AntiDelete* — @%user% menghapus pesan:",
-    antihidetag: "⚠ *AntiHidetag* — Hidetag dari @%user% dihapus.",
-    notAdmin: "⚠ Bot bukan admin, tidak bisa menghapus pesan.",
-  };
-  let text = config.groupProtection?.[key] || defaults[key] || "";
+  let text = config.groupProtection?.[key] || GP_DEFAULTS[key] || "";
   for (const [k, v] of Object.entries(replacements)) {
     text = text.replace(new RegExp(`%${k}%`, "g"), v);
   }
@@ -1466,6 +1474,7 @@ async function handleAntiHidetag(m, sock, db) {
 }
 
 export {
+  gpMsg,
   handleAntilink,
   handleAntiTagSW,
   handleAntiSwGc,
