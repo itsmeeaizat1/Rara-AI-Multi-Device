@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tambah%2012%20plugin%20baru%20%2B%20-success?style=for-the-badge)
-> *Commit: "feat: tambah 12 plugin baru + 5 npm dependencies baru"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tambah%204%20plugin%20v2%20(liri-success?style=for-the-badge)
+> *Commit: "feat: tambah 4 plugin v2 (lirikv2, spotifyv2, ytv2, rss) + fix beritav2 ke RSS"*
 <!--END_SECTION:latest-update-->
 
 
