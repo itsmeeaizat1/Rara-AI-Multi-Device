@@ -154,7 +154,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const readMore = more.repeat(4001);
 
     return `
-╭──「 *Info User* 」
+╭──「 *Info Profil* 」
 │ *Nama:*  ${m.pushName || "User"}
 │ *Nomor:* @${m.sender.split("@")[0]}
 │ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
@@ -184,7 +184,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ *Total User:* ${totalUsers}
 │ *Total Registrasi:* ${totalRegistered}
 │ *Premium User:* ${totalPremium}
-├──「 *Info Statistik*
+├──「 *Info Database*
 │ 👥 Total User: ${totalUsers}
 │ ✅ Terdaftar: ${totalRegistered}
 │ 💎 Premium: ${totalPremium}

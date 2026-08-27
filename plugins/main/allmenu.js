@@ -192,7 +192,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     // ── Info section (Clara-MD box style) ──
     let txt = `
-╭──「 *Info User* 」
+╭──「 *Info Profil* 」
 │ *Nama:*  ${m.pushName || "User"}
 │ *Nomor:* @${m.sender.split("@")[0]}
 │ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
@@ -223,7 +223,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ *Total Registrasi:* ${totalRegistered}
 │ *Premium User:* ${totalPremium}
 │ *Total Fitur:* ${totalFeatures}
-├──「 *Info Statistik*
+├──「 *Info Database*
 │ 👥 Total User: ${totalUsers}
 │ ✅ Terdaftar: ${totalRegistered}
 │ 💎 Premium: ${totalPremium}
