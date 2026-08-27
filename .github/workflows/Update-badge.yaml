@@ -1,26 +1,69 @@
-name: Feature Badge Info (Read Only)
+name: Auto Update Feature Badge
 
 on:
   push:
     branches: [ "main", "master" ]
 
-permissions:
-  contents: read
-
 jobs:
-  show-badge:
+  update-readme:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Get Last Commit Message
+    - name: Get Last Commit Message (Feature Name)
       id: commit
       run: |
         LAST_COMMIT=$(git log -1 --pretty=format:"%s")
         echo "feature_name=$LAST_COMMIT" >> $GITHUB_OUTPUT
-        echo "============================================"
-        echo "  Latest Feature: $LAST_COMMIT"
-        echo "============================================"
-        echo "ℹ️ Badge update di-skip (read-only mode)"
-        echo "Untuk update badge, edit README.md secara manual"
+
+    - name: Update README with Latest Feature (README.md only)
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const featureName = "${{ steps.commit.outputs.feature_name }}";
+          
+          const encodedName = encodeURIComponent(featureName.substring(0, 40));
+          const badgeUrl = `https://img.shields.io/badge/Update-${encodedName}-success?style=for-the-badge`;
+          const badgeMarkdown = `![Fitur Terbaru](${badgeUrl})`;
+
+          let readme = fs.readFileSync('README.md', 'utf8');
+          
+          const newContent = `> 🔥 **Fitur/Update Terbaru:** ${badgeMarkdown}\n> *Commit: "${featureName}"*`;
+
+          const startTag = '<!--START_SECTION:latest-update-->';
+          const endTag = '<!--END_SECTION:latest-update-->';
+          
+          if (readme.includes(startTag) && readme.includes(endTag)) {
+            const startIndex = readme.indexOf(startTag) + startTag.length;
+            const endIndex = readme.indexOf(endTag);
+            const updatedReadme = readme.substring(0, startIndex) + '\n' + newContent + '\n' + readme.substring(endIndex);
+            fs.writeFileSync('README.md', updatedReadme, 'utf8');
+            console.log('README.md berhasil di-update!');
+          } else {
+            // Insert the section if it doesn't exist yet
+            const section = `\n${startTag}\n${newContent}\n${endTag}\n`;
+            // Insert after the badges section, before the first ---
+            const firstHr = readme.indexOf('\n---');
+            if (firstHr > -1) {
+              const updatedReadme = readme.substring(0, firstHr) + section + readme.substring(firstHr);
+              fs.writeFileSync('README.md', updatedReadme, 'utf8');
+              console.log('README.md section created!');
+            }
+          }
+
+    - name: Commit README.md only (never touch .js files)
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add README.md
+        if git diff --cached --quiet; then
+          echo "Tidak ada perubahan README"
+          exit 0
+        fi
+        git commit -m "docs: auto update latest feature badge [skip ci]"
+        git push
