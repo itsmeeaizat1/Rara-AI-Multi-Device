@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20update%207%20dependencies%20ke%20-success?style=for-the-badge)
-> *Commit: "fix: update 7 dependencies ke versi terbaru (safe upgrade)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tambah%2012%20plugin%20baru%20%2B%20-success?style=for-the-badge)
+> *Commit: "feat: tambah 12 plugin baru + 5 npm dependencies baru"*
 <!--END_SECTION:latest-update-->
 
 
