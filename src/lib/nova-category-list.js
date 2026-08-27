@@ -68,19 +68,19 @@ function buildCategoryRows(m, db, prefix = ".") {
   const commandsByCategory = getCommandsByCategory();
   const casesByCategory = getCasesByCategory();
 
-  // Cari kategori dengan klik terbanyak (buat badge "Viral")
-  let mostViralCat = null;
+  // Ranking kategori berdasarkan klik (buat badge label)
+  let topCategories = [];
   try {
     if (db) {
       const allStats = db.getStats() || {};
-      let maxClicks = 0;
+      const clickEntries = [];
       for (const [key, val] of Object.entries(allStats)) {
-        if (key.startsWith("categoryClicks_") && val > maxClicks) {
-          maxClicks = val;
-          mostViralCat = key.replace("categoryClicks_", "");
+        if (key.startsWith("categoryClicks_") && val > 0) {
+          clickEntries.push({ cat: key.replace("categoryClicks_", ""), clicks: val });
         }
       }
-      if (maxClicks <= 0) mostViralCat = null;
+      clickEntries.sort((a, b) => b.clicks - a.clicks);
+      topCategories = clickEntries.slice(0, 3).map(e => e.cat);
     }
   } catch {}
 
@@ -125,10 +125,14 @@ function buildCategoryRows(m, db, prefix = ".") {
     const catName = CATEGORY_NAMES[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
     const emoji = CATEGORY_EMOJI[cat] || "📋";
 
-    const viralBadge = cat === mostViralCat ? "  🟩 Viral" : "";
+    const rankIdx = topCategories.indexOf(cat);
+    const headerLabel = rankIdx === 0 ? "🔥 Paling sering digunakan"
+      : rankIdx === 1 ? "🔥 Sering digunakan"
+      : rankIdx === 2 ? "🔥 Populer"
+      : "";
     rows.push({
-      header: "",
-      title: `${emoji} ${catName}${viralBadge}`,
+      header: headerLabel,
+      title: `${emoji} ${catName}`,
       description: `${total} command tersedia`,
       id: `${prefix}allmenucategory ${cat}`,
     });
