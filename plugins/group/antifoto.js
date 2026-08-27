@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
+import { gpMsg } from "../../src/lib/nova-group-protection.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -21,16 +22,6 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-function gpMsg(key, replacements = {}) {
-  const defaults = {
-    antifoto: "Anti Foto — Foto dari @%user% dihapus.",
-  };
-  let text = config.groupProtection?.[key] || defaults[key] || "";
-  for (const [k, v] of Object.entries(replacements)) {
-    text = text.replace(new RegExp(`%${k}%`, "g"), v);
-  }
-  return text;
-}
 
 async function handleAntiFoto(m, sock, db) {
   if (!m.isGroup) return false;
