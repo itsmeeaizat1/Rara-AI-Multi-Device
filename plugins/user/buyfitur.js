@@ -101,6 +101,7 @@ async function handler(m, { sock }) {
     }
     
     db.updateKoin(m.sender, -PRICE_PER_FEATURE)
+    try { sock.sendMessage(m.chat, { text: PRICE_PER_FEATURE + " Koin terpakai" }); } catch {}
     unlockedFeatures.push(feature.id)
     db.setUser(m.sender, { unlockedFeatures })
     

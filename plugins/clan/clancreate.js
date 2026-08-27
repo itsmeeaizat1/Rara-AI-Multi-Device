@@ -91,6 +91,7 @@ async function handler(m, { sock }) {
 
     db.db.data.clans[clanId] = clan
     db.updateKoin(m.sender, -CLAN_CREATE_COST)
+    try { sock.sendMessage(m.chat, { text: CLAN_CREATE_COST + " Koin terpakai" }); } catch {}
     db.setUser(m.sender, { clanId })
     await db.save()
 

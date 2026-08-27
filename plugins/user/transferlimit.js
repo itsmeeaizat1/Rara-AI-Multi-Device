@@ -91,6 +91,7 @@ async function handler(m, { sock }) {
   }
 
   db.updateEnergi(m.sender, -totalDeduct);
+  try { sock.sendMessage(m.chat, { text: totalDeduct + " Limit terpakai" }); } catch {}
 
   // Tambah ke target
   db.updateEnergi(targetJid, diterima);
