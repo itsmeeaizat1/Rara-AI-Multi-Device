@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20handler.js%20standardisasi%20-success?style=for-the-badge)
-> *Commit: "fix: handler.js standardisasi pesan ke Modern Box style"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20update%207%20dependencies%20ke%20-success?style=for-the-badge)
+> *Commit: "fix: update 7 dependencies ke versi terbaru (safe upgrade)"*
 <!--END_SECTION:latest-update-->
 
 
