@@ -333,7 +333,18 @@ class Database {
     if (!jid) return null;
     const cleanJid = jid.replace(/@.+/g, "");
     if (cleanJid.length > 15 || cleanJid.startsWith("120")) return null;
-    return this.db.data.users[cleanJid] || null;
+    const user = this.db.data.users[cleanJid] || null;
+    // Auto-init owner defaults if owner exists in DB but hasn't been initialized
+    if (user && !user.rpg?._ownerInit) {
+      try {
+        const isOwnerUser = config.isOwner?.(jid) || config.isOwner?.(cleanJid);
+        if (isOwnerUser) {
+          this.ensureOwnerDefaults(jid);
+          return this.db.data.users[cleanJid];
+        }
+      } catch {}
+    }
+    return user;
   }
 
   setUser(jid, data = {}) {
@@ -385,7 +396,67 @@ class Database {
       regGender: data.regGender ?? existing.regGender ?? null,
       regSerial: data.regSerial ?? existing.regSerial ?? null,
       regEmail: data.regEmail ?? existing.regEmail ?? null,
-      rpg: { ...(existing.rpg || {}), ...(data.rpg || {}) },
+      rpg: {
+        // Combat
+        hp: data.rpg?.hp ?? existing.rpg?.hp ?? config.rpg?.combatDefaults?.hp ?? 100,
+        maxHp: data.rpg?.maxHp ?? existing.rpg?.maxHp ?? config.rpg?.combatDefaults?.maxHp ?? 100,
+        mana: data.rpg?.mana ?? existing.rpg?.mana ?? config.rpg?.combatDefaults?.mana ?? 50,
+        maxMana: data.rpg?.maxMana ?? existing.rpg?.maxMana ?? config.rpg?.combatDefaults?.maxMana ?? 50,
+        energy: data.rpg?.energy ?? existing.rpg?.energy ?? config.rpg?.combatDefaults?.energy ?? 100,
+        maxEnergy: data.rpg?.maxEnergy ?? existing.rpg?.maxEnergy ?? config.rpg?.combatDefaults?.maxEnergy ?? 100,
+        stamina: data.rpg?.stamina ?? existing.rpg?.stamina ?? config.rpg?.combatDefaults?.stamina ?? 100,
+        maxStamina: data.rpg?.maxStamina ?? existing.rpg?.maxStamina ?? config.rpg?.combatDefaults?.maxStamina ?? 100,
+        atk: data.rpg?.atk ?? existing.rpg?.atk ?? config.rpg?.combatDefaults?.atk ?? 10,
+        def: data.rpg?.def ?? existing.rpg?.def ?? config.rpg?.combatDefaults?.def ?? 5,
+        spd: data.rpg?.spd ?? existing.rpg?.spd ?? config.rpg?.combatDefaults?.spd ?? 10,
+        critRate: data.rpg?.critRate ?? existing.rpg?.critRate ?? config.rpg?.combatDefaults?.critRate ?? 5,
+        critDmg: data.rpg?.critDmg ?? existing.rpg?.critDmg ?? config.rpg?.combatDefaults?.critDmg ?? 50,
+        evasion: data.rpg?.evasion ?? existing.rpg?.evasion ?? config.rpg?.combatDefaults?.evasion ?? 3,
+        accuracy: data.rpg?.accuracy ?? existing.rpg?.accuracy ?? config.rpg?.combatDefaults?.accuracy ?? 95,
+        lifesteal: data.rpg?.lifesteal ?? existing.rpg?.lifesteal ?? config.rpg?.combatDefaults?.lifesteal ?? 0,
+        penetration: data.rpg?.penetration ?? existing.rpg?.penetration ?? config.rpg?.combatDefaults?.penetration ?? 0,
+        // Luck & Bonus
+        luck: data.rpg?.luck ?? existing.rpg?.luck ?? config.rpg?.luckDefaults?.luck ?? 0,
+        dropBonus: data.rpg?.dropBonus ?? existing.rpg?.dropBonus ?? config.rpg?.luckDefaults?.dropBonus ?? 0,
+        goldFind: data.rpg?.goldFind ?? existing.rpg?.goldFind ?? config.rpg?.luckDefaults?.goldFind ?? 0,
+        expBonus: data.rpg?.expBonus ?? existing.rpg?.expBonus ?? config.rpg?.luckDefaults?.expBonus ?? 0,
+        // Currencies
+        gold: data.rpg?.gold ?? existing.rpg?.gold ?? config.rpg?.userDefaults?.gold ?? 0,
+        gems: data.rpg?.gems ?? existing.rpg?.gems ?? config.rpg?.userDefaults?.gems ?? 0,
+        diamonds: data.rpg?.diamonds ?? existing.rpg?.diamonds ?? config.rpg?.userDefaults?.diamonds ?? 0,
+        tokens: data.rpg?.tokens ?? existing.rpg?.tokens ?? config.rpg?.userDefaults?.tokens ?? 0,
+        // Records
+        pvpWins: data.rpg?.pvpWins ?? existing.rpg?.pvpWins ?? 0,
+        pvpLosses: data.rpg?.pvpLosses ?? existing.rpg?.pvpLosses ?? 0,
+        pvpRating: data.rpg?.pvpRating ?? existing.rpg?.pvpRating ?? 1000,
+        pvpStreak: data.rpg?.pvpStreak ?? existing.rpg?.pvpStreak ?? 0,
+        pvpBestStreak: data.rpg?.pvpBestStreak ?? existing.rpg?.pvpBestStreak ?? 0,
+        totalKills: data.rpg?.totalKills ?? existing.rpg?.totalKills ?? 0,
+        bossKills: data.rpg?.bossKills ?? existing.rpg?.bossKills ?? 0,
+        dungeonClears: data.rpg?.dungeonClears ?? existing.rpg?.dungeonClears ?? 0,
+        dailyStreak: data.rpg?.dailyStreak ?? existing.rpg?.dailyStreak ?? 0,
+        achievements: data.rpg?.achievements ?? existing.rpg?.achievements ?? [],
+        achievementPoints: data.rpg?.achievementPoints ?? existing.rpg?.achievementPoints ?? 0,
+        // Profession
+        job: data.rpg?.job ?? existing.rpg?.job ?? "novice",
+        jobLevel: data.rpg?.jobLevel ?? existing.rpg?.jobLevel ?? 1,
+        skillPoints: data.rpg?.skillPoints ?? existing.rpg?.skillPoints ?? 0,
+        skills: data.rpg?.skills ?? existing.rpg?.skills ?? [],
+        // Misc
+        level: data.rpg?.level ?? existing.rpg?.level ?? 1,
+        inventory: data.rpg?.inventory ?? existing.rpg?.inventory ?? {},
+        equipWeapon: data.rpg?.equipWeapon ?? existing.rpg?.equipWeapon ?? null,
+        equipArmor: data.rpg?.equipArmor ?? existing.rpg?.equipArmor ?? null,
+        equipHelmet: data.rpg?.equipHelmet ?? existing.rpg?.equipHelmet ?? null,
+        equipBoots: data.rpg?.equipBoots ?? existing.rpg?.equipBoots ?? null,
+        equipAccessory: data.rpg?.equipAccessory ?? existing.rpg?.equipAccessory ?? null,
+        equipRing: data.rpg?.equipRing ?? existing.rpg?.equipRing ?? null,
+        equipShield: data.rpg?.equipShield ?? existing.rpg?.equipShield ?? null,
+        spouse: data.rpg?.spouse ?? existing.rpg?.spouse ?? null,
+        rebirthCount: data.rpg?.rebirthCount ?? existing.rpg?.rebirthCount ?? 0,
+        permBonus: data.rpg?.permBonus ?? existing.rpg?.permBonus ?? 0,
+        title: data.rpg?.title ?? existing.rpg?.title ?? null,
+      },
       inventory: { ...(existing.inventory || {}), ...(data.inventory || {}) },
       access: data.access || existing.access || [],
     };
@@ -458,6 +529,54 @@ class Database {
     user.exp = Math.max(0, Math.min(MAX_EXP, (user.exp ?? 0) + amount));
     this.setUser(jid, user);
     return user.exp;
+  }
+
+  // Owner auto-init: beri stats tinggi saat owner pertama kali dibuat di DB
+  ensureOwnerDefaults(jid) {
+    if (!jid) return null;
+    const cleanJid = jid.replace(/@.+/g, "");
+    const isOwnerUser = config.isOwner?.(jid) || config.isOwner?.(cleanJid);
+    if (!isOwnerUser) return null;
+
+    const user = this.getUser(jid);
+    const alreadyInit = user?.rpg?._ownerInit;
+    if (alreadyInit) return user;
+
+    const od = config.rpg?.ownerDefaults || {};
+    const userData = {
+      exp: od.exp ?? 9000000000,
+      koin: od.koin ?? 9000000000000,
+      saldo: od.saldo ?? 1000000000,
+      isPremium: true,
+      rpg: {
+        _ownerInit: true,
+        gold: od.gold ?? 999999999,
+        gems: od.gems ?? 999999,
+        diamonds: od.diamonds ?? 999999,
+        tokens: od.tokens ?? 99999,
+        level: od.level ?? 900000,
+        title: od.role ?? "👑 Developer",
+      },
+    };
+    return this.setUser(jid, userData);
+  }
+
+  // Update RPG currency (gold, gems, diamonds, tokens)
+  updateRpgCurrency(jid, currency, amount) {
+    const user = this.getUser(jid) || this.setUser(jid);
+    if (!user) return 0;
+    if (!user.rpg) user.rpg = {};
+    const current = user.rpg[currency] || 0;
+    user.rpg[currency] = Math.max(0, current + amount);
+    this.setUser(jid, user);
+    return user.rpg[currency];
+  }
+
+  // Get RPG stat
+  getRpgStat(jid, stat) {
+    const user = this.getUser(jid);
+    if (!user?.rpg) return null;
+    return user.rpg[stat];
   }
 
   getTopUsers(field, limit = 10) {

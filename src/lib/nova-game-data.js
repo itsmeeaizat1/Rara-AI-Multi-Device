@@ -235,8 +235,10 @@ function isReplyToGame(m, session) {
 
 const GAME_REWARD = {
     limit: 5,
-    balance: 1000,
-    exp: 2000
+    koin: 1000,
+    exp: 2000,
+    gold: 500,
+    gems: 5,
 };
 
 function randBetween(min, max) {
@@ -244,10 +246,26 @@ function randBetween(min, max) {
 }
 
 function getRandomReward() {
+    // Tiered rewards — chance untuk dapat gems/diamonds kecil
+    const roll = Math.random();
+    let gems = 0;
+    let diamonds = 0;
+    if (roll < 0.05) {
+        // 5% chance — jackpot
+        gems = randBetween(5, 15);
+        diamonds = randBetween(1, 3);
+    } else if (roll < 0.20) {
+        // 15% chance — small gems
+        gems = randBetween(1, 5);
+    }
+
     return {
         limit: randBetween(3, 8),
         koin: randBetween(500, 2000),
-        exp: randBetween(1000, 3000)
+        exp: randBetween(1000, 3000),
+        gold: randBetween(100, 500),
+        gems,
+        diamonds,
     };
 }
 
@@ -276,4 +294,4 @@ setInterval(() => {
     }
 }, 5 * 60 * 1000);
 
-export { loadData, getRandomItem, getItemByIndex, searchItem, getAllData, normalizeAnswer, checkAnswer, checkAnswerAdvanced, getSimilarity, getHint, isSurrender, createSession, setSessionTimer, getSession, endSession, hasActiveSession, getRemainingTime, formatRemainingTime, isReplyToGame, GAME_REWARD, getRandomReward, getProgressiveHint }
+export { loadData, getRandomItem, getItemByIndex, searchItem, getAllData, normalizeAnswer, checkAnswer, checkAnswerAdvanced, getSimilarity, getHint, isSurrender, createSession, setSessionTimer, getSession, endSession, hasActiveSession, getRemainingTime, formatRemainingTime, isReplyToGame, GAME_REWARD, getRandomReward, getProgressiveHint, randBetween }

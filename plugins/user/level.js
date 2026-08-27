@@ -1,8 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import config from "../../config.js";
 
-const EXP_PER_LEVEL = 10000;
+const EXP_PER_LEVEL = config.rpg?.EXP_PER_LEVEL || 10000;
 
 const pluginConfig = {
   name: "level",
@@ -54,6 +54,13 @@ function getLevelBar(current, target) {
   return "▰".repeat(filledBars) + "▱".repeat(emptyBars);
 }
 
+function formatNumber(num) {
+  if (num >= 1000000000) return (num / 1000000000).toFixed(2) + "B";
+  if (num >= 1000000) return (num / 1000000).toFixed(2) + "M";
+  if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+  return (num || 0).toLocaleString("id-ID");
+}
+
 async function handler(m, { sock }) {
   const db = getDatabase();
 
@@ -80,27 +87,22 @@ async function handler(m, { sock }) {
   const expNeeded = nextLevelExp - currentLevelExp;
   const progress = getLevelBar(expInLevel, expNeeded);
 
-  let txt = `╭━━━━━━━━━━━━━━━━━╮\n`;
-  txt += `│ 📊 *ʟᴇᴠᴇʟ ɪɴꜰᴏ*\n`;
-  txt += `╰━━━━━━━━━━━━━━━━━╯\n\n`;
+  let txt = "╭──「 📊 Level Info 」\n";
+  txt += "├──\n";
+  txt += "├── 👤 User: *" + targetName + "*\n";
+  txt += "├── 🆔 Tag: @" + targetJid.split("@")[0] + "\n";
+  txt += "├──\n";
+  txt += "├──「 *Stats* 」\n";
+  txt += "├── 📊 Level: *" + level + "*\n";
+  txt += "├── 🎖️ Role: " + role + "\n";
+  txt += "├── 🚄 Exp: *" + formatNumber(exp) + "*\n";
+  txt += "├── 📊 Progress: " + progress + "\n";
+  txt += "├── ↳ " + formatNumber(expInLevel) + " / " + formatNumber(expNeeded) + " XP\n";
+  txt += "├──\n";
+  txt += "├── 💡 Next level: *" + formatNumber(expToNextLevel(exp)) + "* exp lagi!\n";
+  txt += "╰──────────❀";
 
-  txt += `╭──「 👤 *ᴜꜱᴇʀ* 」\n`;
-  txt += `│ 🏷️ Name: *${targetName}*\n`;
-  txt += `│ 🆔 Tag: @${targetJid.split("@")[0]}\n`;
-  txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
-
-  txt += `╭──「 📈 *ꜱᴛᴀᴛꜱ* 」\n`;
-  txt += `│ 📊 Level: *${level}*\n`;
-  txt += `│ ${role}\n`;
-  txt += `│ 🚄 Exp: *${exp.toLocaleString("id-ID")}*\n`;
-  txt += `│ 📊 Progress:\n`;
-  txt += `│ ${progress}\n`;
-  txt += `│ ${expInLevel.toLocaleString("id-ID")} / ${expNeeded.toLocaleString("id-ID")}\n`;
-  txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
-
-  txt += `Next level: *${expToNextLevel(exp).toLocaleString("id-ID")} exp* lagi!`;
-
-  await m.reply(claraWrap("level", txt), { mentions: [targetJid] });
+  await m.reply(txt, { mentions: [targetJid] });
 }
 
 export {
