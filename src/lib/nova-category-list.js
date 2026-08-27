@@ -68,6 +68,22 @@ function buildCategoryRows(m, db, prefix = ".") {
   const commandsByCategory = getCommandsByCategory();
   const casesByCategory = getCasesByCategory();
 
+  // Cari kategori dengan klik terbanyak (buat badge "Viral")
+  let mostViralCat = null;
+  try {
+    if (db) {
+      const allStats = db.getStats() || {};
+      let maxClicks = 0;
+      for (const [key, val] of Object.entries(allStats)) {
+        if (key.startsWith("categoryClicks_") && val > maxClicks) {
+          maxClicks = val;
+          mostViralCat = key.replace("categoryClicks_", "");
+        }
+      }
+      if (maxClicks <= 0) mostViralCat = null;
+    }
+  } catch {}
+
   const groupData = m?.isGroup && db ? db.getGroup(m.chat) || {} : {};
   const botMode = groupData.botMode || "md";
 
@@ -109,9 +125,10 @@ function buildCategoryRows(m, db, prefix = ".") {
     const catName = CATEGORY_NAMES[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
     const emoji = CATEGORY_EMOJI[cat] || "📋";
 
+    const viralBadge = cat === mostViralCat ? "  🟩 Viral" : "";
     rows.push({
       header: "",
-      title: `${emoji} ${catName}`,
+      title: `${emoji} ${catName}${viralBadge}`,
       description: `${total} command tersedia`,
       id: `${prefix}allmenucategory ${cat}`,
     });
