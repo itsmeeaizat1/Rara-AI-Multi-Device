@@ -67,6 +67,45 @@ binderbyteKey: ""   // Binderbyte cek resi
 - TruthOrDareBot API: truthordarebot.xyz (pg/pg13/r ratings)
 - Quotable API: quotable.io (typing race quotes)
 
+## 🆕 Fitur Owner Advanced v21.7.0 — Automation Systems
+
+### Server Monitor
+- `.servermonitor` — owner — Monitor VPS (CPU, RAM, disk, PM2) + auto-alert
+- `.servermonitor status` — Cek VPS real-time
+- `.servermonitor alert on/off` — Toggle auto-alert (cek tiap 5 menit)
+- `.servermonitor threshold cpu 80 ram 85 disk 90` — Set threshold alert
+- `.servermonitor test` — Test alert system
+
+### Smart Digest
+- `.smartdigest` — owner — Report aktivitas bot (command, grup, user teraktif)
+- `.smartdigest now` — Generate digest sekarang
+- `.smartdigest auto on/off` — Toggle auto-digest harian
+- `.smartdigest settime 08:00` — Set jam kirim auto-digest
+- `.smartdigest reset` — Reset stats
+
+### Auto Forward
+- `.autoforward` — owner — Auto-forward pesan match keyword ke PM owner
+- `.autoforward add <keyword>` — Tambah keyword watch
+- `.autoforward del <keyword>` — Hapus keyword
+- `.autoforward on/off` — Toggle
+- `.autoforward scope all/gc/pc` — Set scope forward
+
+### Crash Guard
+- `.crashguard` — owner — Monitor PM2 crash + auto-restart + notifikasi
+- `.crashguard status` — Status & PM2 info
+- `.crashguard on/off` — Toggle monitoring
+- `.crashguard restart [process]` — Restart PM2 manual
+- `.crashguard history` — Lihat crash history
+- `.crashguard clear` — Clear history
+
+### Auto Moderation
+- `.automod` — owner — Auto-moderation grup (anti-link, anti-spam, anti-badword)
+- `.automod addgc/delgc <groupId>` — Tambah/hapus grup
+- `.automod setrule <groupId> <rule> on/off` — Toggle rule (antilink/antispam/antibadword/antisticker/antivoice)
+- `.automod addword/delword <groupId> <word>` — Manage badword list
+- `.automod action <groupId> delete/warn/kick` — Set action violation
+- `.automod rules <groupId>` — Lihat rules per grup
+
 ## 📂 Daftar Kategori & Command
 
 ### 🤖 AI (103 plugin)
