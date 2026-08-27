@@ -7,6 +7,7 @@ import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { getPluginCount, getCategories } from "../../src/lib/nova-plugins.js";
 import { getCaseCount } from "../../case/nova.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { toSC } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "info",
@@ -92,42 +93,42 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       if (wf) weatherBlock = `${wf}\n\n`;
     } catch {}
 
-    const text = `${weatherBlock}╭──「 *Bot Info* 」
+    const text = `${weatherBlock}╭──「 *${toSC("Bot Info")}* 」
 │
-├──「 *Identitas* 」
-│ *Nama:* ${botName}
-│ *Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
-│ *Versi:* ${botConfig.bot?.version || "1.0.0"}
-│ *Developer:* ${botConfig.bot?.developer || "-"}
-│ *Platform:* Node.js + Baileys
-│ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
-│ *Prefix:* [ *${prefix}* ]
-├──「 *Info Database* 」
-│ *Total User:* ${totalUsers}
-│ *Total Grup:* ${totalGroups}
-│ *User Terdaftar:* ${totalRegistered}
-│ *Premium User:* ${totalPremium}
-│ *Total Fitur:* ${totalFeatures}
-│ *Total Kategori:* ${totalCategories}
-├──「 *Server* 」
-│ *OS:* ${os.platform()} ${os.arch()}
-│ *Hostname:* ${os.hostname()}
-│ *Node.js:* ${process.version}
-│ *CPU:* ${cpuModel}
-│ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
-│ *Load Avg:* ${loadAvg}
-│ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
-│ *RAM Bot:* ${formatBytes(memUsage.rss)}
-│ *Uptime Server:* ${serverUptime}
-│ *Uptime Bot:* ${botUptime}
+├──「 *${toSC("Identitas")}* 」
+│ *${toSC("Nama")}:* ${toSC(botName)}
+│ *${toSC("Nomor")}:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : toSC("Unknown")}
+│ *${toSC("Versi")}:* ${botConfig.bot?.version || "1.0.0"}
+│ *${toSC("Developer")}:* ${toSC(botConfig.bot?.developer || "-")}
+│ *${toSC("Platform")}:* ${toSC("Node.js + Baileys")}
+│ *${toSC("Mode")}:* ${toSC((botConfig.mode || "public").toUpperCase())}
+│ *${toSC("Prefix")}:* [ *${prefix}* ]
+├──「 *${toSC("Info Database")}* 」
+│ *${toSC("Total User")}:* ${totalUsers}
+│ *${toSC("Total Grup")}:* ${totalGroups}
+│ *${toSC("User Terdaftar")}:* ${totalRegistered}
+│ *${toSC("Premium User")}:* ${totalPremium}
+│ *${toSC("Total Fitur")}:* ${totalFeatures}
+│ *${toSC("Total Kategori")}:* ${totalCategories}
+├──「 *${toSC("Server")}* 」
+│ *${toSC("OS")}:* ${os.platform()} ${os.arch()}
+│ *${toSC("Hostname")}:* ${toSC(os.hostname())}
+│ *${toSC("Node.js")}:* ${process.version}
+│ *${toSC("CPU")}:* ${cpuModel}
+│ *${toSC("Cores")}:* ${cpuCores} ${toSC("threads")} @ ${cpuSpeed} MHz
+│ *${toSC("Load Avg")}:* ${loadAvg}
+│ *${toSC("RAM")}:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
+│ *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
+│ *${toSC("Uptime Server")}:* ${serverUptime}
+│ *${toSC("Uptime Bot")}:* ${botUptime}
 ╰──────────❀
 
-Nova AI WhatsApp Bot`;
+${toSC("Nova AI WhatsApp Bot")}`;
 
     const navButtons = [
-      { id: `${prefix}menu`, text: "Menu" },
-      { id: `${prefix}allmenu`, text: "All Menu" },
-      { id: `${prefix}owner`, text: "Owner" },
+      { id: `${prefix}menu`, text: toSC("Menu") },
+      { id: `${prefix}allmenu`, text: toSC("All Menu") },
+      { id: `${prefix}owner`, text: toSC("Owner") },
     ];
 
     await m.react("🐣");
@@ -137,13 +138,13 @@ Nova AI WhatsApp Bot`;
       footer: "",
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
       buttons: navButtons,
-      title: `${botName} — Info`,
+      title: `${toSC(botName)} — ${toSC("Info")}`,
     });
 
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[info] handler error:", e.message);
-    try { await m.reply("╭──「 Info 」\n├── ❌ Gagal menampilkan info\n├── Coba lagi nanti ya\n╰──────────❀"); } catch {}
+    try { await m.reply(`╭──「 ${toSC("Info")} 」\n├── ❌ ${toSC("Gagal menampilkan info")}\n├── ${toSC("Coba lagi nanti ya")}\n╰──────────❀`); } catch {}
   }
 
   return { handled: true };

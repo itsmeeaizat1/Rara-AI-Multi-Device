@@ -9,7 +9,7 @@
 import fs from "fs";
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, bracketBox, tipText, toSC } from "../../src/lib/nova-menu-style.js";
 import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
 
 const pluginConfig = {
@@ -119,19 +119,19 @@ async function notifyOwner(sock, m, pkg, groupLink) {
   const buyerName = m.pushName || "Unknown";
   const groupName = m.isGroup ? (m.chat?.split("@")[0] || "Unknown") : "Unknown";
 
-  const notifText = `╭──「 🏪 PEMBELIAN SEWA BARU 」
-│ Pembeli: *${buyerName}*
-│ Nomor: ${buyerNumber}
-│ Paket: *${pkg.label}*
-│ Durasi: *${pkg.duration}*
-│ Harga: *${getSewaPrice(pkg.duration)}*
-│ Grup: ${groupLink || (m.isGroup ? m.chat : "Belum ditentukan")}
-│ Status: *MENUNGGU PEMBAYARAN*
-│ Waktu: ${new Date().toLocaleString("id-ID")}
+  const notifText = `╭──「 🏪 ${toSC("PEMBELIAN SEWA BARU")} 」
+│ ${toSC("Pembeli")}: *${toSC(buyerName)}*
+│ ${toSC("Nomor")}: ${buyerNumber}
+│ ${toSC("Paket")}: *${toSC(pkg.label)}*
+│ ${toSC("Durasi")}: *${toSC(pkg.duration)}*
+│ ${toSC("Harga")}: *${getSewaPrice(pkg.duration)}*
+│ ${toSC("Grup")}: ${groupLink || (m.isGroup ? m.chat : toSC("Belum ditentukan"))}
+│ ${toSC("Status")}: *${toSC("MENUNGGU PEMBAYARAN")}*
+│ ${toSC("Waktu")}: ${new Date().toLocaleString("id-ID")}
 ╰──────────❀
 
-User ini menunggu konfirmasi pembayaran sewa.
-Jika sudah bayar, ketik: *.addsewa ${groupLink || "<link-grup>"} ${pkg.duration}*`;
+${toSC("User ini menunggu konfirmasi pembayaran sewa.")}
+${toSC("Jika sudah bayar, ketik")}: *.addsewa ${groupLink || "<link-grup>"} ${pkg.duration}*`;
 
   for (const num of ownerNumbers) {
     try {
