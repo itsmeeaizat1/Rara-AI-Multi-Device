@@ -234,64 +234,56 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
       ? 'audio/ogg; codecs=opus'   // OGG/Opus — VN bisa diputar
       : 'audio/mpeg';              // Fallback MP3 (mungkin bermasalah sebagai PTT)
 
-    if (isAllMenu) {
-      // All Menu: pakai varian allmenuAudioStyle (1-4)
-      const style = (db?.setting ? db.setting('allmenuAudioStyle') : null) || 1;
+    // Semua menu (menu, allmenu, menukategori) pakai style yang sama
+    // Style 1=PTT reply asli, 2=PTT reply fake polling, 3=MP3 reply fake text, 4=MP3 reply fake troli
+    const style = (db?.setting ? db.setting('allmenuAudioStyle') : null) || 1;
 
-      if (style === 1) {
-        // PTT Voice Note + reply pesan asli
-        await sock.sendMessage(m.chat, {
-          audio: _menuAudioPtt,
-          ptt: true,
-          mimetype: pttMimetype,
-        }, { quoted: m });
-      } else if (style === 2) {
-        // PTT Voice Note + reply fake polling
-        const fakeKey = {
-          remoteJid: m.chat,
-          fromMe: false,
-          id: 'FAKE_POLL_' + Date.now(),
-          participant: '0@s.whatsapp.net',
-        };
-        await sock.sendMessage(m.chat, {
-          audio: _menuAudioPtt,
-          ptt: true,
-          mimetype: pttMimetype,
-        }, { quoted: { key: fakeKey, message: { pollCreationMessage: { name: 'Nova AI Menu', options: [], selectableOptionsCount: 0 } } } });
-      } else if (style === 3) {
-        // MP3 biasa + reply fake text
-        const fakeKey = {
-          remoteJid: m.chat,
-          fromMe: false,
-          id: 'FAKE_TEXT_' + Date.now(),
-          participant: '0@s.whatsapp.net',
-        };
-        await sock.sendMessage(m.chat, {
-          audio: _menuAudioMp3,
-          ptt: false,
-          mimetype: 'audio/mpeg',
-        }, { quoted: { key: fakeKey, message: { conversation: '🎵 Nova AI WhatsApp Bot - Menu Audio' } } });
-      } else if (style === 4) {
-        // MP3 biasa + reply fake troli order
-        const fakeKey = {
-          remoteJid: m.chat,
-          fromMe: false,
-          id: 'FAKE_TROLI_' + Date.now(),
-          participant: '0@s.whatsapp.net',
-        };
-        await sock.sendMessage(m.chat, {
-          audio: _menuAudioMp3,
-          ptt: false,
-          mimetype: 'audio/mpeg',
-        }, { quoted: { key: fakeKey, message: { orderMessage: { orderId: 'NOVA-' + Date.now(), thumbnail: null, itemCount: 1, status: 1, surface: 1, message: 'Nova AI WhatsApp Bot', sellerJid: '0@s.whatsapp.net', token: 'nova' } } } });
-      }
-    } else {
-      // Menu biasa & menukategori: PTT sederhana
+    if (style === 1) {
+      // PTT Voice Note + reply pesan asli
       await sock.sendMessage(m.chat, {
         audio: _menuAudioPtt,
         ptt: true,
         mimetype: pttMimetype,
       }, { quoted: m });
+    } else if (style === 2) {
+      // PTT Voice Note + reply fake polling
+      const fakeKey = {
+        remoteJid: m.chat,
+        fromMe: false,
+        id: 'FAKE_POLL_' + Date.now(),
+        participant: '0@s.whatsapp.net',
+      };
+      await sock.sendMessage(m.chat, {
+        audio: _menuAudioPtt,
+        ptt: true,
+        mimetype: pttMimetype,
+      }, { quoted: { key: fakeKey, message: { pollCreationMessage: { name: 'Nova AI Menu', options: [], selectableOptionsCount: 0 } } } });
+    } else if (style === 3) {
+      // MP3 biasa + reply fake text
+      const fakeKey = {
+        remoteJid: m.chat,
+        fromMe: false,
+        id: 'FAKE_TEXT_' + Date.now(),
+        participant: '0@s.whatsapp.net',
+      };
+      await sock.sendMessage(m.chat, {
+        audio: _menuAudioMp3,
+        ptt: false,
+        mimetype: 'audio/mpeg',
+      }, { quoted: { key: fakeKey, message: { conversation: '🎵 Nova AI WhatsApp Bot - Menu Audio' } } });
+    } else if (style === 4) {
+      // MP3 biasa + reply fake troli order
+      const fakeKey = {
+        remoteJid: m.chat,
+        fromMe: false,
+        id: 'FAKE_TROLI_' + Date.now(),
+        participant: '0@s.whatsapp.net',
+      };
+      await sock.sendMessage(m.chat, {
+        audio: _menuAudioMp3,
+        ptt: false,
+        mimetype: 'audio/mpeg',
+      }, { quoted: { key: fakeKey, message: { orderMessage: { orderId: 'NOVA-' + Date.now(), thumbnail: null, itemCount: 1, status: 1, surface: 1, message: 'Nova AI WhatsApp Bot', sellerJid: '0@s.whatsapp.net', token: 'nova' } } } });
     }
   } catch (e) {
     console.error('[send-menu] ❌ sendMenuAudio error:', e.message);
