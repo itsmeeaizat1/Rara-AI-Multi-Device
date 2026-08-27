@@ -20,6 +20,7 @@ import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
+import { commandListLine, toSC } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "allmenu",
@@ -286,11 +287,13 @@ ${weatherBlock}${readMore}
       if (allCmds.length === 0) continue;
       const catName = CATEGORY_NAMES[category] || category.charAt(0).toUpperCase() + category.slice(1);
 
-      txt += `├──「 *${catName}* 」\n`;
+      txt += `├──「 *${toSC(catName)}* 」\n`;
       for (let i = 0; i < allCmds.length; i++) {
         const cmd = allCmds[i];
         const symbols = getCommandSymbols(cmd);
-        txt += `│ ${prefix}${cmd}${symbols}\n`;
+        const pinfo = getPlugin(cmd);
+        const usage = pinfo?.config?.usage || "";
+        txt += `│ ${commandListLine(prefix, cmd, usage, symbols)}\n`;
       }
     }
 

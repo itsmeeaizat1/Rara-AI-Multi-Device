@@ -11,6 +11,14 @@
 ---
 
 
+## 🔊 Play System v21.7.0
+
+- `.play <query>` — Search YouTube + tombol pilihan Audio/Video/kbps
+- `.playaudio<kbps> <url>` — Audio dengan kbps spesifik (128/192/256/320)
+- `.playvideo<quality> <url>` — Video dengan quality spesifik (360/480/720/1080)
+- nova-ytdlp.js: yt-dlp binary scraper (gratis, no API key) + cobalt fallback
+
+
 ## 🆕 RPG System Overhaul v21.7.0
 
 ### Sistem EXP & Level
@@ -221,7 +229,7 @@ alquran, hadisnabi, hafalan, motivasiislam, murrotal, niatdoa, quran, quranv3, s
 jpm
 
 ### 🏠 Main (27+ plugin)
-aboutnova, allmenu, autoreaction, belanja, benefitowner, benefitpremium, block, carifitur, channelnovaofficial, daftarsewa, fun, infov2, jadibot, leaderboard, menu, menu2, menukategori, owner, ping, ping2, rules, sc, stats, stopjadibot, system, totalfitur, tqto
+aboutnova, allmenu, autoreaction, belanja, benefitowner, benefitpremium, block, buyprem, buysewa, carifitur, channelnovaofficial, daftarsewa, fun, infov2, jadibot, leaderboard, menu, menu2, menukategori, owner, premium, ping, ping2, rules, sc, stats, stopjadibot, system, totalfitur, tqto
 
 ### 🛠️ Maker (7 plugin)
 captionig, certmaker, image.jpg, lyricscard, mask.png, nowm, profilecard, quotemaker, watermark
