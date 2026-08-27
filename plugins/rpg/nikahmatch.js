@@ -10,7 +10,7 @@ import {
 const pluginConfig = {
   name: "nikahmatch",
   alias: ["nikahmatch"],
-  category: "rpg",
+  category: "rpg cinta",
   description: "Lamar pasangan RPG untuk menikah",
   usage: ".rpgnikah",
   example: ".rpgnikah",

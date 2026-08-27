@@ -6,7 +6,7 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "typingrace",
   alias: ["typingrace"],
-  category: "game",
+  category: "rpg",
   description: "Tes kecepatan mengetik (WPM) — ketik quote secepat mungkin",
   usage: ".typingrace [start/easy/medium/hard/end]",
   example: ".typingrace\n.typingrace start\n.typingrace hard",

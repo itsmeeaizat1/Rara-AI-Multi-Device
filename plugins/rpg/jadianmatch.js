@@ -7,7 +7,7 @@ import { getCintaData, startDating, DATING_MIN_LEVEL, formatDurasi } from "../..
 const pluginConfig = {
   name: "jadianmatch",
   alias: ["jadianmatch"],
-  category: "rpg",
+  category: "rpg cinta",
   description: "Ajak seseorang berpacaran di RPG",
   usage: ".rpgcouple @tag",
   example: ".rpgcouple @628xxx",

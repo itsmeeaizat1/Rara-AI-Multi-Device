@@ -10,7 +10,7 @@ const pluginConfig = {
   category: "owner",
   description: "Aktifkan/nonaktifkan command atau kategori fitur bot",
   usage: ".togglefitur <command/category> | .togglefitur on <name> | .togglefitur off <name> | .togglefitur list",
-  example: ".togglefitur off game",
+  example: ".togglefitur off rpg",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
   if (!action) {
     let text = "╭──「 *TOGGLE FITUR* 」\n\n";
     text += "│ 📋 Panduan:\n";
-    text += "│ • .togglefitur off game → matikan kategori\n";
+    text += "│ • .togglefitur off rpg → matikan kategori\n";
     text += "│ • .togglefitur on kencanmatch → hidupkan command\n";
     text += "│ • .togglefitur list → lihat semua status\n\n";
     text += "│ 🔴 Kategori Nonaktif:\n";
@@ -94,13 +94,13 @@ async function handler(m, { sock }) {
     mode = "off";
     name = target;
   } else {
-    // Toggle mode: .togglefitur game → toggle kategori/command
+    // Toggle mode: .togglefitur rpg → toggle kategori/command
     mode = "toggle";
     name = action;
   }
 
   if (!name) {
-    return m.reply("╭──「 *TOGGLE FITUR* 」\n├── Contoh: .togglefitur off game\n├── Contoh: .togglefitur on kencanmatch\n╰──────────❀");
+    return m.reply("╭──「 *TOGGLE FITUR* 」\n├── Contoh: .togglefitur off rpg\n├── Contoh: .togglefitur on kencanmatch\n╰──────────❀");
   }
 
   const allCats = getAllCategories();

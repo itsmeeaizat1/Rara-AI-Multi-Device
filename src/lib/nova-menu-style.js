@@ -232,7 +232,7 @@ function listBox(title, items = []) {
 
 const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
-  canvas: "Canvas", tools: "Tools", game: "Games", rpg: "RPG",
+  canvas: "Canvas", tools: "Tools", rpg: "RPG", "rpg cinta": "RPG Cinta",
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
@@ -248,7 +248,7 @@ const CATEGORY_NAMES = {
 
 const CATEGORY_EMOJIS = {
   ai: "🤖", sticker: "🖼️", download: "📥", fun: "🎮",
-  canvas: "🎨", tools: "🛠️", game: "🎯", rpg: "🗡️",
+  canvas: "🎨", tools: "🛠️", rpg: "🎯", "rpg cinta": "❤️",
   media: "🎬", search: "🔍", group: "👥", main: "🏠",
   utility: "🔧", religi: "☪️", info: "ℹ️", cek: "📋",
   economy: "💰", user: "📊", random: "🎲", premium: "💎",
@@ -263,7 +263,7 @@ const CATEGORY_EMOJIS = {
 };
 
 const CATEGORY_ORDER = [
-  "main", "ai", "download", "sticker", "tools", "game", "rpg",
+  "main", "ai", "download", "sticker", "tools", "rpg", "rpg cinta",
   "fun", "canvas", "media", "search", "group", "utility",
   "info", "cek", "religi", "economy", "user", "random",
   "premium", "ephoto", "jpm", "pushkontak", "panel",

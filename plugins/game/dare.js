@@ -23,7 +23,7 @@ function getRandomDare() {
 export const config = {
   name: "dare",
   alias: ["dare"],
-  category: "game",
+  category: "rpg",
   description: "Truth or Dare — tantangan berani",
   usage: ".dare",
   example: ".dare",

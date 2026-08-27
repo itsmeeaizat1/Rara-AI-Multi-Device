@@ -15,7 +15,7 @@ import { getCasesByCategory } from "../../case/nova.js";
 
 const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
-  canvas: "Canvas", tools: "Tools", game: "Game", rpg: "RPG",
+  canvas: "Canvas", tools: "Tools", rpg: "RPG", "rpg cinta": "RPG Cinta",
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
@@ -31,7 +31,7 @@ const CATEGORY_NAMES = {
 
 const CATEGORY_ORDER = [
   "ai", "sticker", "download", "fun", "canvas", "tools",
-  "game", "rpg", "media", "search", "group", "main",
+  "rpg", "rpg cinta", "media", "search", "group", "main",
   "utility", "religi", "info", "cek", "economy", "user",
   "random", "premium", "ephoto", "jpm", "pushkontak",
   "panel", "owner", "store",
@@ -39,7 +39,7 @@ const CATEGORY_ORDER = [
 
 const CATEGORY_EMOJI = {
   ai: "🤖", sticker: "🖼️", download: "⬇️", fun: "🎉",
-  canvas: "🎨", tools: "🛠️", game: "🎮", rpg: "⚔️",
+  canvas: "🎨", tools: "🛠️", rpg: "🎮", "rpg cinta": "❤️",
   media: "🎬", search: "🔍", group: "👥", main: "🏠",
   utility: "🧰", religi: "🕌", info: "ℹ️", cek: "🔎",
   economy: "💰", user: "👤", random: "🎲", premium: "💎",

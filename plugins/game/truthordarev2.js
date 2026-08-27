@@ -6,7 +6,7 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "truthordarev2",
   alias: ["truthordarev2"],
-  category: "game",
+  category: "rpg",
   description: "Truth or Dare v2 — via API dengan rating filter + local fallback",
   usage: ".truthordarev2 <truth/dare> [rating]",
   example: ".truthordarev2 truth\n.truthordarev2 dare pg\n.truthordarev2 truth r",
