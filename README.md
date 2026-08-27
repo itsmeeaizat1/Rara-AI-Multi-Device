@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tambah%20plugin%20.info%20buat-success?style=for-the-badge)
-> *Commit: "feat: tambah plugin .info buat tombol Info di menu"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20hapus%20emoji%20%E3%8A%97%20aneh%20%2B%20rapi-success?style=for-the-badge)
+> *Commit: "fix: hapus emoji ㊗ aneh + rapikan spacing & footer text menu"*
 <!--END_SECTION:latest-update-->
 
 
