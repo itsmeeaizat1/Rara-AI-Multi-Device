@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20hapus%20emoji%20%E3%8A%97%20aneh%20%2B%20rapi-success?style=for-the-badge)
-> *Commit: "fix: hapus emoji ㊗ aneh + rapikan spacing & footer text menu"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20bullet%20%E2%9D%8F%20dari%20-success?style=for-the-badge)
+> *Commit: "refactor: hapus bullet ❏ dari pesan fitur, biar bersih murni teks"*
 <!--END_SECTION:latest-update-->
 
 
