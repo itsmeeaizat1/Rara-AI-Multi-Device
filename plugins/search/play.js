@@ -4,21 +4,22 @@
  * Pembuat Code: Aizat
  * Saluran: https://whatsapp.com/channel/0029Vb7g5Qt90x2yn7bOlM2U
  * Fitur: Search YouTube → pilih Audio (128/192/256/320 kbps) atau Video (360/480/720)
- * API: Cuki API (audio kbps) + ytdl.js (video fallback)
+ * API: yt-dlp (primary, gratis no apikey) → Cuki API (secondary) → ytdl.js (fallback)
  */
 
 import yts from "yt-search";
 import axios from "axios";
-import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { downloadAudio, downloadVideo } from "../../src/scraper/nova-ytdlp.js";
+import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { generateWAMessageFromContent } from "nova";
 
 const pluginConfig = {
   name: "play",
   alias: ["play"],
   category: "search",
-  description: "Putar musik/video YouTube dengan pilihan kualitas (Cuki API + ytdl)",
+  description: "Putar musik/video YouTube dengan pilihan kualitas",
   usage: ".play <query>",
   example: ".play komang",
   cooldown: 15,
@@ -27,6 +28,7 @@ const pluginConfig = {
 };
 
 const CUKI_APIKEY = config.APIkey?.cuki || "cuki-x";
+
 const AUDIO_QUALITIES = [
   { value: "128", label: "128 kbps (Standar)" },
   { value: "192", label: "192 kbps (Baik)" },
@@ -49,7 +51,7 @@ function formatViews(n) {
 /**
  * Download audio via Cuki API (support pilih kbps) → fallback ytdl.js
  */
-async function getAudioDownload(url, quality = "128") {
+async function getAudioDownloadCuki(url, quality = "128") {
   try {
     const apiUrl = `https://api.cuki.biz.id/api/downloader/ytmp3?apikey=${CUKI_APIKEY}&url=${encodeURIComponent(url)}&quality=${quality}`;
     const { data } = await axios.get(apiUrl, { timeout: 30000 });
@@ -81,123 +83,58 @@ async function getAudioDownload(url, quality = "128") {
 }
 
 /**
- * Download video via ytdl.js (ytmp3.mobi MP4) → fallback firefly
+ * Kirim audio ke chat (dari buffer atau URL)
  */
-async function getVideoDownload(url) {
-  // Coba ytdl.js dulu
-  try {
-    const result = await ytdl(url, "mp4");
-    if (result?.status && result?.dl) {
-      return { download: result.dl, title: result.title };
-    }
-  } catch (err) {
-    console.error("[Play] ytdl video error:", err.message);
-  }
-
-  // Fallback ke firefly API
-  try {
-    const { data } = await axios.get(
-      `https://firefly.maiku.my.id/api/ytdown?apikey=${config.APIkey.firefly}&url=${encodeURIComponent(url)}`,
-      { timeout: 30000 },
-    );
-
-    if (data?.status && data?.data?.mediaItems) {
-      const video =
-        data.data.mediaItems.find((m) => m.type === "Video" && m.mediaQuality === "HD") ||
-        data.data.mediaItems.find((m) => m.type === "Video" && m.mediaQuality === "SD") ||
-        data.data.mediaItems.find((m) => m.type === "Video");
-
-      if (video && video.mediaUrl) {
-        let attempts = 0;
-        while (attempts < 10) {
-          const { data: fileData } = await axios.get(video.mediaUrl, { timeout: 10000 });
-          if (fileData?.status === "completed" && fileData?.fileUrl) {
-            return { download: fileData.fileUrl, title: "Video" };
-          }
-          await new Promise((resolve) => setTimeout(resolve, 3000));
-          attempts++;
-        }
-      }
-    }
-  } catch (err) {
-    console.error("[Play] Firefly API error:", err.message);
-  }
-
-  throw new Error("Gagal mendapatkan video download URL");
-}
-
-/**
- * Kirim audio ke chat
- */
-async function sendAudio(sock, m, audio, video) {
-  if (audio.isCuki) {
-    // Cuki URL → download buffer → kirim
-    try {
-      const { data } = await axios.get(audio.download, {
-        responseType: "arraybuffer",
-        timeout: 60000,
-      });
-      const mp3Buffer = Buffer.from(data);
-      if (!mp3Buffer.length) throw new Error("Audio kosong");
-
-      await sock.sendMessage(
-        m.chat,
-        {
-          audio: mp3Buffer,
-          mimetype: "audio/mpeg",
-          ptt: false,
-          fileName: `${audio.title || video.title || "audio"}.mp3`,
-        },
-        { quoted: m },
-      );
-      return;
-    } catch (err) {
-      console.error("[Play] Cuki buffer error, trying fallback:", err.message);
-    }
-  }
-
-  // Fallback path (ytdl.js) → convert via fallbackToMp3Buffer
-  const mp3Buffer = await fallbackToMp3Buffer(audio.download);
+async function sendAudio(sock, m, audioBuffer, title, kbps) {
   await sock.sendMessage(
     m.chat,
     {
-      audio: mp3Buffer,
+      audio: audioBuffer,
       mimetype: "audio/mpeg",
       ptt: false,
-      fileName: `${audio.title || video.title || "audio"}.mp3`,
+      fileName: `${title || "audio"}.mp3`,
     },
     { quoted: m },
   );
 }
 
 /**
- * Kirim video ke chat
+ * Kirim video ke chat (dari buffer)
  */
-async function sendVideo(sock, m, videoInfo, videoMeta) {
-  await sock.sendMedia(m.chat, videoInfo.download, null, m, {
-    type: "video",
-    caption: claraWrap("play", [
-      `│ Judul: *${videoInfo.title || videoMeta.title}*`,
-      `│ Channel: *${videoMeta.author.name}*`,
-      `│ Durasi: *${videoMeta.duration.timestamp}*`,
-    ].join("\n")),
-  });
+async function sendVideo(sock, m, videoBuffer, title, quality, videoMeta) {
+  const caption = claraWrap("play", [
+    `│ Judul: *${title || videoMeta.title}*`,
+    `│ Channel: *${videoMeta.author.name}*`,
+    `│ Durasi: *${videoMeta.duration.timestamp}*`,
+    `│ Quality: *${quality}*`,
+  ].join("\n"));
+
+  await sock.sendMessage(
+    m.chat,
+    {
+      video: videoBuffer,
+      caption,
+      mimetype: "video/mp4",
+      fileName: `${title || "video"}.mp4`,
+    },
+    { quoted: m },
+  );
 }
 
 /**
- * Build interactive buttons message dengan pilihan Audio/Video
+ * Build interactive buttons message dengan pilihan Audio/Video + kbps
  */
 async function sendChoiceButtons(sock, m, video) {
-  const info = `🎵 *ɴᴏᴡ ᴘʟᴀʏɪɴɢ*
-
-📌 *ᴊᴜᴅᴜʟ:* ${video.title}
-👤 *ᴄʜᴀɴɴᴇʟ:* ${video.author.name}
-⏱️ *ᴅᴜʀᴀsɪ:* ${video.duration.timestamp}
-👀 *ᴠɪᴇᴡs:* ${formatViews(video.views)}
-📅 *ᴜᴘʟᴏᴀᴅ:* ${video.ago}
-🔗 ${video.url}
-
-Pilih format & kualitas di bawah:`;
+  const info = `╭──「 *Now Playing* 」
+│
+│ 📌 *Judul:* ${video.title}
+│ 👤 *Channel:* ${video.author.name}
+│ ⏱️ *Durasi:* ${video.duration.timestamp}
+│ 👀 *Views:* ${formatViews(video.views)}
+│ 📅 *Upload:* ${video.ago}
+│ 🔗 ${video.url}
+│
+│ Pilih format & kualitas di bawah:`;
 
   const content = {
     buttonsMessage: {
@@ -253,7 +190,19 @@ async function handler(m, { sock, text }) {
   const query = m.text?.trim();
   if (!query) {
     return m.reply(
-      claraWrap("play", `🎵 *PLAY*\n\nContoh:\n\`${m.prefix}play komang\``),
+      claraWrap("play", [
+        `│ 🎵 *PLAY YOUTUBE*`,
+        `│`,
+        `│ 📌 *Cara Pakai:*`,
+        `│ \`${m.prefix}play <judul lagu>\``,
+        `│`,
+        `│ 💡 *Contoh:*`,
+        `│ \`${m.prefix}play komang\``,
+        `│ \`${m.prefix}play rizky febian\``,
+        `│`,
+        `│ ✨ Support: Audio (128/192/256/320 kbps)`,
+        `│ ✨ Support: Video (360/480/720p)`,
+      ].join("\n")),
     );
   }
 
@@ -265,7 +214,7 @@ async function handler(m, { sock, text }) {
 
     const video = search.videos[0];
 
-    // Tampilkan info + tombol pilihan
+    // Tampilkan info + tombol pilihan audio/video
     await sendChoiceButtons(sock, m, video);
 
     m.react("🐣");

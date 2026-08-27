@@ -11,6 +11,14 @@
 ---
 
 
+## 🔊 Play System v21.7.0
+
+- `.play <query>` — Search YouTube + tombol pilihan Audio/Video/kbps
+- `.playaudio<kbps> <url>` — Audio dengan kbps spesifik (128/192/256/320)
+- `.playvideo<quality> <url>` — Video dengan quality spesifik (360/480/720/1080)
+- nova-ytdlp.js: yt-dlp binary scraper (gratis, no API key) + cobalt fallback
+
+
 ## 🆕 RPG System Overhaul v21.7.0
 
 ### Sistem EXP & Level

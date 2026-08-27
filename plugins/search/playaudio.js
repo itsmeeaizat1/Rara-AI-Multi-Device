@@ -2,11 +2,13 @@
 /**
  * Nama Plugin: PlayAudio (dipanggil dari tombol .play)
  * Pembuat Code: Aizat
- * Fitur: Download audio YouTube dengan kbps spesifik via Cuki API
+ * Fitur: Download audio YouTube dengan kbps spesifik
+ * API: yt-dlp (primary, gratis no apikey) → Cuki API (fallback) → ytdl.js (last resort)
  */
 
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
+import { downloadAudio } from "../../src/scraper/nova-ytdlp.js";
 import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -16,7 +18,7 @@ const pluginConfig = {
   name: "playaudio",
   alias: ["playaudio"],
   category: "search",
-  description: "Download audio YouTube dengan kualitas kbps spesifik (Cuki API)",
+  description: "Download audio YouTube dengan kualitas kbps spesifik",
   usage: ".playaudio<kbps> <url> (dipanggil dari tombol .play)",
   example: ".playaudio320 https://youtube.com/watch?v=xxx",
   cooldown: 15,
@@ -25,35 +27,45 @@ const pluginConfig = {
   isHidden: true,
 };
 
-async function getAudioDownload(url, quality = "128") {
+/**
+ * Cuki API fallback — download audio dengan kbps spesifik
+ */
+async function getAudioCuki(url, quality = "128") {
   try {
     const apiUrl = `https://api.cuki.biz.id/api/downloader/ytmp3?apikey=${CUKI_APIKEY}&url=${encodeURIComponent(url)}&quality=${quality}`;
     const { data } = await axios.get(apiUrl, { timeout: 30000 });
 
     if (data?.success && data?.data?.audio?.download?.downloadUrl) {
-      return {
-        download: data.data.audio.download.downloadUrl,
-        title: data.data.metadata?.title || "Audio",
-        quality: data.data.audio?.quality || quality,
-        isCuki: true,
-      };
+      // Download the buffer
+      const { data: audioData } = await axios.get(
+        data.data.audio.download.downloadUrl,
+        { responseType: "arraybuffer", timeout: 60000 },
+      );
+      const buffer = Buffer.from(audioData);
+      if (buffer.length > 10000) {
+        return {
+          buffer,
+          title: data.data.metadata?.title || "Audio",
+          quality: data.data.audio?.quality || quality,
+        };
+      }
     }
   } catch (err) {
     console.error("[PlayAudio] Cuki API error:", err.message);
   }
+  return null;
+}
 
-  // Fallback ke ytdl.js
-  const fallback = await ytdl(url, "mp3");
-  if (fallback?.status && fallback?.dl) {
-    return {
-      download: fallback.dl,
-      title: fallback.title,
-      quality: "128",
-      isCuki: false,
-    };
+/**
+ * ytdl.js last resort fallback
+ */
+async function getAudioYtdl(url) {
+  const result = await ytdl(url, "mp3");
+  if (result?.status && result?.dl) {
+    const buffer = await fallbackToMp3Buffer(result.dl);
+    return { buffer, title: result.title, quality: "128" };
   }
-
-  throw new Error(fallback?.mess || "Gagal mendapatkan audio download URL");
+  return null;
 }
 
 async function handler(m, { sock }) {
@@ -76,43 +88,47 @@ async function handler(m, { sock }) {
   m.react("🕒");
 
   try {
-    const audio = await getAudioDownload(url, quality);
+    let audioResult = null;
 
-    if (audio.isCuki) {
+    // 1. Try yt-dlp (free, no API key, supports kbps selection)
+    try {
+      console.log(`[PlayAudio] 🎵 yt-dlp ${quality}kbps...`);
+      audioResult = await downloadAudio(url, quality);
+    } catch (err) {
+      console.error("[PlayAudio] yt-dlp failed:", err.message);
+    }
+
+    // 2. Fallback: Cuki API (supports kbps)
+    if (!audioResult) {
       try {
-        const { data } = await axios.get(audio.download, {
-          responseType: "arraybuffer",
-          timeout: 60000,
-        });
-        const mp3Buffer = Buffer.from(data);
-        if (!mp3Buffer.length) throw new Error("Audio kosong");
-
-        await sock.sendMessage(
-          m.chat,
-          {
-            audio: mp3Buffer,
-            mimetype: "audio/mpeg",
-            ptt: false,
-            fileName: `${audio.title}.mp3`,
-          },
-          { quoted: m },
-        );
-        m.react("🐣");
-        return;
+        console.log(`[PlayAudio] 🎵 Cuki API ${quality}kbps...`);
+        audioResult = await getAudioCuki(url, quality);
       } catch (err) {
-        console.error("[PlayAudio] Cuki buffer error:", err.message);
+        console.error("[PlayAudio] Cuki failed:", err.message);
       }
     }
 
-    // Fallback path
-    const mp3Buffer = await fallbackToMp3Buffer(audio.download);
+    // 3. Last resort: ytdl.js (128kbps only)
+    if (!audioResult) {
+      try {
+        console.log("[PlayAudio] 🎵 ytdl.js fallback (128kbps)...");
+        audioResult = await getAudioYtdl(url);
+      } catch (err) {
+        console.error("[PlayAudio] ytdl.js failed:", err.message);
+      }
+    }
+
+    if (!audioResult || !audioResult.buffer || audioResult.buffer.length < 10000) {
+      throw new Error("Semua API audio gagal");
+    }
+
     await sock.sendMessage(
       m.chat,
       {
-        audio: mp3Buffer,
+        audio: audioResult.buffer,
         mimetype: "audio/mpeg",
         ptt: false,
-        fileName: `${audio.title}.mp3`,
+        fileName: `${audioResult.title || "audio"}.mp3`,
       },
       { quoted: m },
     );

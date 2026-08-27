@@ -2,11 +2,13 @@
 /**
  * Nama Plugin: PlayVideo (dipanggil dari tombol .play)
  * Pembuat Code: Aizat
- * Fitur: Download video YouTube dengan kualitas spesifik via ytdl.js + firefly fallback
+ * Fitur: Download video YouTube dengan kualitas spesifik
+ * API: yt-dlp (primary, gratis no apikey) → ytdl.js (fallback) → firefly (last resort)
  */
 
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
+import { downloadVideo } from "../../src/scraper/nova-ytdlp.js";
 import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -23,8 +25,10 @@ const pluginConfig = {
   isHidden: true,
 };
 
-async function getVideoDownload(url) {
-  // Coba ytdl.js dulu (ytmp3.mobi MP4)
+/**
+ * ytdl.js fallback (ytmp3.mobi MP4)
+ */
+async function getVideoYtdl(url) {
   try {
     const result = await ytdl(url, "mp4");
     if (result?.status && result?.dl) {
@@ -33,8 +37,13 @@ async function getVideoDownload(url) {
   } catch (err) {
     console.error("[PlayVideo] ytdl error:", err.message);
   }
+  return null;
+}
 
-  // Fallback ke firefly API
+/**
+ * Firefly API last resort
+ */
+async function getVideoFirefly(url) {
   try {
     const { data } = await axios.get(
       `https://firefly.maiku.my.id/api/ytdown?apikey=${config.APIkey?.firefly || ""}&url=${encodeURIComponent(url)}`,
@@ -62,8 +71,7 @@ async function getVideoDownload(url) {
   } catch (err) {
     console.error("[PlayVideo] Firefly API error:", err.message);
   }
-
-  throw new Error("Gagal mendapatkan video download URL");
+  return null;
 }
 
 async function handler(m, { sock }) {
@@ -76,6 +84,7 @@ async function handler(m, { sock }) {
     );
   }
 
+  const quality = match[1] || "720";
   const url = match[2];
 
   if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
@@ -85,15 +94,74 @@ async function handler(m, { sock }) {
   m.react("🕒");
 
   try {
-    const video = await getVideoDownload(url);
+    let videoBuffer = null;
+    let videoTitle = "Video";
 
-    await sock.sendMedia(m.chat, video.download, null, m, {
-      type: "video",
-      caption: claraWrap("play", [
-        `│ Judul: *${video.title}*`,
-        `│ Format: *MP4*`,
-      ].join("\n")),
-    });
+    // 1. Try yt-dlp (free, no API key, supports quality selection)
+    try {
+      console.log(`[PlayVideo] 🎥 yt-dlp ${quality}p...`);
+      const result = await downloadVideo(url, quality);
+      if (result?.buffer?.length > 10000) {
+        videoBuffer = result.buffer;
+        videoTitle = result.title;
+      }
+    } catch (err) {
+      console.error("[PlayVideo] yt-dlp failed:", err.message);
+    }
+
+    // 2. Fallback: ytdl.js (no quality control)
+    if (!videoBuffer) {
+      const ytdlResult = await getVideoYtdl(url);
+      if (ytdlResult?.download) {
+        // Download the URL to buffer
+        try {
+          const { data } = await axios.get(ytdlResult.download, {
+            responseType: "arraybuffer",
+            timeout: 120000,
+          });
+          videoBuffer = Buffer.from(data);
+          videoTitle = ytdlResult.title;
+        } catch (err) {
+          console.error("[PlayVideo] ytdl buffer error:", err.message);
+        }
+      }
+    }
+
+    // 3. Last resort: firefly API
+    if (!videoBuffer) {
+      const fireflyResult = await getVideoFirefly(url);
+      if (fireflyResult?.download) {
+        try {
+          const { data } = await axios.get(fireflyResult.download, {
+            responseType: "arraybuffer",
+            timeout: 120000,
+          });
+          videoBuffer = Buffer.from(data);
+          videoTitle = fireflyResult.title;
+        } catch (err) {
+          console.error("[PlayVideo] firefly buffer error:", err.message);
+        }
+      }
+    }
+
+    if (!videoBuffer || videoBuffer.length < 10000) {
+      throw new Error("Semua API video gagal");
+    }
+
+    await sock.sendMessage(
+      m.chat,
+      {
+        video: videoBuffer,
+        caption: claraWrap("play", [
+          `│ Judul: *${videoTitle}*`,
+          `│ Quality: *${quality}p*`,
+          `│ Format: *MP4*`,
+        ].join("\n")),
+        mimetype: "video/mp4",
+        fileName: `${videoTitle}.mp4`,
+      },
+      { quoted: m },
+    );
 
     m.react("🐣");
   } catch (err) {
