@@ -92,7 +92,7 @@ async function handler(m, { sock, args }) {
       const input = cmdArgs.join(" ");
       const parts = input.split("|").map(s => s.trim());
       if (parts.length < 4) {
-        return m.reply(claraWrap("jadwal", "Format salah!\n\nContoh: `.jadwal add senin | 08.00 | 09.30 | Kalkulus | R.301`\n\nFormat: <hari> | <jam mulai> | <jam selesai> | <matkul> | <ruang (opsional)>"));
+        return m.reply(claraWrap("jadwal", "Format salah!\n\n💡 *Contoh:* `.jadwal add senin | 08.00 | 09.30 | Kalkulus | R.301`\n\nFormat: <hari> | <jam mulai> | <jam selesai> | <matkul> | <ruang (opsional)>"));
       }
 
       const day = parts[0].toLowerCase();

@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     if (args[0]?.toLowerCase() === 'max') {
         const newMax = parseInt(args[1])
         if (isNaN(newMax) || newMax < 1 || newMax > 20) {
-            return m.reply(claraWrap("warn", `❌ *ɢᴀɢᴀʟ*\n\nBatas referensi warning harus berupa angka 1-20.\nContoh: *${m.prefix}warn max 5*`))
+            return m.reply(claraWrap("warn", `❌ *ɢᴀɢᴀʟ*\n\nBatas referensi warning harus berupa angka 1-20.\n💡 *Contoh:* *${m.prefix}warn max 5*`))
         }
         groupData.maxWarnings = newMax
         db.setGroup(m.chat, groupData)

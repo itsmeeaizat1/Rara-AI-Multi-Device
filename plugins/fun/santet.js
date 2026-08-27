@@ -111,7 +111,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     const target = m.mentionedJid?.[0] || m.quoted?.sender;
     if (!target) {
-      return m.reply(claraWrap("Santet", "Tag target yang mau disantet!\n\nContoh: " + usedPrefix + "santet @target", "warn"));
+      return m.reply(claraWrap("Santet", "Tag target yang mau disantet!\n\n💡 *Contoh:* " + usedPrefix + "santet @target", "warn"));
     }
 
     if (target === m.sender) {

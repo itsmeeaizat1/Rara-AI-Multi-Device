@@ -235,7 +235,7 @@ async function handler(m, { sock }) {
 
     // Validate type
     if (typeArg !== "menu" && typeArg !== "fitur") {
-      return m.reply(claraWrap("Anti-Spam Menu V2", `Tipe harus "menu" atau "fitur"\nContoh: .antispammenuv2 ${action} menu on`, "error"));
+      return m.reply(claraWrap("Anti-Spam Menu V2", `Tipe harus "menu" atau "fitur"\n💡 *Contoh:* .antispammenuv2 ${action} menu on`, "error"));
     }
 
     const typeKey = typeArg;
@@ -257,7 +257,7 @@ async function handler(m, { sock }) {
     if (subCmd === "limit") {
       const val = parseInt(subVal);
       if (!val || val < 1 || val > 20) {
-        return m.reply(claraWrap("Anti-Spam Menu V2", `Nilai limit 1-20!\nContoh: .antispammenuv2 ${action} ${typeArg} limit 5`, "error"));
+        return m.reply(claraWrap("Anti-Spam Menu V2", `Nilai limit 1-20!\n💡 *Contoh:* .antispammenuv2 ${action} ${typeArg} limit 5`, "error"));
       }
       target.limit = val;
       db.setting("antispamMenuV2", settings);
@@ -267,7 +267,7 @@ async function handler(m, { sock }) {
     if (subCmd === "window") {
       const val = parseInt(subVal);
       if (!val || val < 5 || val > 600) {
-        return m.reply(claraWrap("Anti-Spam Menu V2", `Window 5-600 detik!\nContoh: .antispammenuv2 ${action} ${typeArg} window 60`, "error"));
+        return m.reply(claraWrap("Anti-Spam Menu V2", `Window 5-600 detik!\n💡 *Contoh:* .antispammenuv2 ${action} ${typeArg} window 60`, "error"));
       }
       target.windowMs = val * 1000;
       db.setting("antispamMenuV2", settings);
@@ -277,7 +277,7 @@ async function handler(m, { sock }) {
     if (subCmd === "cooldown") {
       const val = parseInt(subVal);
       if (!val || val < 5 || val > 600) {
-        return m.reply(claraWrap("Anti-Spam Menu V2", `Cooldown 5-600 detik!\nContoh: .antispammenuv2 ${action} ${typeArg} cooldown 120`, "error"));
+        return m.reply(claraWrap("Anti-Spam Menu V2", `Cooldown 5-600 detik!\n💡 *Contoh:* .antispammenuv2 ${action} ${typeArg} cooldown 120`, "error"));
       }
       target.cooldownMs = val * 1000;
       db.setting("antispamMenuV2", settings);

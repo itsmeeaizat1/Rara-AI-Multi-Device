@@ -1,6 +1,6 @@
-// === Nova AI Menu Style (v5 — Indo Dev Bot Style) ===
-// Aesthetic khas bot WhatsApp dev Indonesia (YouTube-style):
-// ╭──「 」 box drawing, │ ❏ bullets, ❀ ✧ decorations, emoji section headers
+// === Nova AI Menu Style (v6 — Clean Caption Style) ===
+// Aesthetic khas bot WhatsApp dev Indonesia:
+// ╭──「 」 box drawing, │ clean lines (no bullets), ❀ footer
 // + modern data: ▰▱ progress bars, ● status dots, system info
 // Semua fungsi lama tetap export dengan signature sama.
 
@@ -15,23 +15,14 @@ const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
 // INDO DEV STYLE FUNCTIONS (untuk menu/allmenu/allmenucategory)
 // ═══════════════════════════════════════════════
 
-/**
- * Bot header — ╭──「 *BotName* 」
- */
 function botHeader(botName) {
   return `╭──「 *${toSC(botName)}* 」`;
 }
 
-/**
- * Bot signature footer — ╰──────────❀
- */
 function botSignature(botName) {
   return `╰──────────❀`;
 }
 
-/**
- * Section box — ╭──「 Emoji Title 」 / │ ❏ lines / ╰──────────❀
- */
 function sectionBox(emoji, title, lines = []) {
   const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
   const header = `╭──「 ${emojiStr}${toSC(title)} 」`;
@@ -41,52 +32,36 @@ function sectionBox(emoji, title, lines = []) {
       .replace(/^╎\s*$/, '')
       .replace(/^┊\s+➶\s*/, '')
       .replace(/^[•┊╎❏➶╭╰│]\s*/g, '');
-    return `│ ❏ ${clean}`;
+    return `│ ${clean}`;
   });
   const footer = `╰──────────❀`;
   return [header, ...body, footer].join("\n");
 }
 
-/**
- * Progress bar — ▰▰▰▱▱▱
- */
 function progressBar(value, max, width = 8) {
   const v = Math.max(0, Math.min(value, max));
   const filled = max > 0 ? Math.round((v / max) * width) : 0;
   return "▰".repeat(filled) + "▱".repeat(width - filled);
 }
 
-/**
- * Status dot
- */
 function statusDot(status = "online") {
   const map = { online: "●", offline: "○", active: "●", idle: "◐", error: "✕" };
   return map[status.toLowerCase()] || "●";
 }
 
-/**
- * Key-value with padding for aligned look
- */
 function kv(key, value, padTo = 10) {
   const k = String(key);
   const padded = k + " ".repeat(Math.max(0, padTo - k.length));
   return `${padded} : ${value}`;
 }
 
-/**
- * Multi-column command list per category (untuk allmenu)
- *   ╭──「 🤖 AI (10) 」
- *   │ ❏ .a  ❏ .b  ❏ .c
- *   │ ❏ .d  ❏ .e  ❏ .f
- *   ╰──────────❀
- */
 function categoryBox(emoji, name, commands, prefix, perLine = 3) {
   const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
   const header = `╭──「 ${emojiStr}${toSC(name)} (${commands.length}) 」`;
   const lines = [];
   for (let i = 0; i < commands.length; i += perLine) {
     const chunk = commands.slice(i, i + perLine);
-    lines.push(`│ ❏ ${chunk.map(c => `${prefix}${c}`).join("  ❏ ")}`);
+    lines.push(`│ ${chunk.map(c => `${prefix}${c}`).join("  ")}`);
   }
   const footer = `╰──────────❀`;
   return [header, ...lines, footer].join("\n");
@@ -94,32 +69,27 @@ function categoryBox(emoji, name, commands, prefix, perLine = 3) {
 
 // ═══════════════════════════════════════════════
 // BACKWARD COMPAT — fungsi lama, signature sama
-// Output: Indo Dev Bot Style v5
+// Output: Clean Caption Style v6 (no ❏ bullets)
 // Dipakai oleh 1266+ file plugin. Update di sini = update semua.
 // ═══════════════════════════════════════════════
 
-// Section header: ╭──「 *Title* 」
 function sectionHeader(title) {
   return `╭──「 *${toSC(title)}* 」`;
 }
 
-// Section item: │ ❏ text
 function sectionItem(text) {
   const clean = String(text).replace(/^[•┊╎❏➶╭╰│]\s*/g, '').replace(/^\s+/g, '');
-  return `│ ❏ ${clean}`;
+  return `│ ${clean}`;
 }
 
-// Section close: ╰──────────❀
 function sectionClose() {
   return `╰──────────❀`;
 }
 
-// Spacer: │
 function sectionSpacer() {
   return `│`;
 }
 
-// Build a complete section
 function buildSection(title, items = []) {
   const lines = [sectionHeader(title)];
   for (const item of items) {
@@ -129,13 +99,11 @@ function buildSection(title, items = []) {
   return lines.join("\n");
 }
 
-// claraHeader: ╭──「 Emoji Title 」
 function claraHeader(title, emoji = "") {
   if (isRealEmoji(emoji)) return `╭──「 ${emoji} ${toSC(title)} 」`;
   return `╭──「 *${toSC(title)}* 」`;
 }
 
-// bracketBox: ╭──「 Emoji Label 」 / │ ❏ lines / ╰──────────❀
 function bracketBox(emoji, label, lines = []) {
   const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
   const header = `╭──「 ${emojiStr}*${toSC(label)}* 」`;
@@ -145,23 +113,20 @@ function bracketBox(emoji, label, lines = []) {
       .replace(/^╎\s*$/, '')
       .replace(/^┊\s+➶\s*/, '')
       .replace(/^[•┊╎❏➶╭╰│]\s*/g, '');
-    return `│ ❏ ${clean}`;
+    return `│ ${clean}`;
   });
   const footer = `╰──────────❀`;
   return [header, ...body, footer].join("\n");
 }
 
-// separator: ──────────
 function separator(char = "─", repeat = 20) {
   return "─".repeat(Math.min(repeat, 28));
 }
 
-// tipText: │ 💡 Tip: text
 function tipText(text) {
-  return `│ 💡 Tip: ${text}`;
+  return `│ 💡 *Tip:* ${text}`;
 }
 
-// claraWrap: calls bracketBox — auto Indo style
 function claraWrap(title, body, type = "info") {
   const typeLabel = type === "error" ? " — Error" : type === "success" ? " — Success" : type === "warn" ? " — Warning" : "";
   const raw = Array.isArray(body) ? body : String(body).split("\n");
@@ -169,7 +134,6 @@ function claraWrap(title, body, type = "info") {
   return bracketBox(type, title + typeLabel, lines);
 }
 
-// claraLine: calls bracketBox
 function claraLine(title, text) {
   return bracketBox("i", title, [text]);
 }
@@ -180,7 +144,6 @@ function formatNumber(num) {
   return String(num).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-// broadcastFormat: calls bracketBox
 function broadcastFormat({ botName = "Nova AI", senderName = "Owner", message, type = "group" }) {
   const now = new Date();
   const tanggal = now.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
@@ -199,11 +162,22 @@ function broadcastFormat({ botName = "Nova AI", senderName = "Owner", message, t
   return bracketBox("i", "Broadcast Info", lines.filter(l => l !== undefined));
 }
 
-// novaUsage: calls bracketBox
+// novaUsage: pesan usage yang menarik dengan emoji labels
+// Output:
+// ╭──「 🎵 Tiktok Download 」
+// │
+// │ 📌 *Cara Pakai:*
+// │ `.tiktok2 <url>`
+// │
+// │ 💡 *Contoh:*
+// │ `.tiktok2 https://vt.tiktok.com/xxx`
+// │
+// ╰──────────❀
 function novaUsage(commandName, { steps = [], example = "", note = "", emoji = "" } = {}) {
   let lines = [];
   if (steps.length > 0) {
-    lines.push("*Cara Pakai:*");
+    lines.push("");
+    lines.push("📌 *Cara Pakai:*");
     for (const step of steps) {
       const clean = String(step)
         .replace(/^[•┊╎❏➶╭╰│]\s*/g, '')
@@ -212,18 +186,19 @@ function novaUsage(commandName, { steps = [], example = "", note = "", emoji = "
     }
   }
   if (example) {
-    lines.push('');
-    lines.push(`*Contoh:* ${example}`);
+    lines.push("");
+    lines.push("💡 *Contoh:*");
+    lines.push(`\`${example}\``);
   }
   if (note) {
-    lines.push('');
+    lines.push("");
     lines.push(`_${note}_`);
   }
+  lines.push("");
   const title = emoji ? `${emoji} ${commandName}` : commandName;
   return bracketBox('i', title, lines);
 }
 
-// infoBox: ╭──「 」 / │ ◈ heading / │ ┊ detail / ╰──────────❀
 function infoBox(title, { intro, sections = [] } = {}) {
   const out = [`╭──「 ${toSC(title)} 」`];
   if (intro) out.push(`│ ${intro}`);
@@ -238,10 +213,9 @@ function infoBox(title, { intro, sections = [] } = {}) {
   return out.join("\n");
 }
 
-// listBox: ╭──「 」 / │ ❏ item / ╰──────────❀
 function listBox(title, items = []) {
   const out = [`╭──「 ${toSC(title)} 」`];
-  for (const item of items) out.push(`│ ❏ ${item}`);
+  for (const item of items) out.push(`│ ${item}`);
   out.push(`╰──────────❀`);
   return out.join("\n");
 }
@@ -296,25 +270,69 @@ function buildNavButtons(prefix, isAllMenuCtx, allCatKeys, commandsByCategory, c
   return [
     {
       type: "single_select",
-      text: "📂 Kategori",
+      text: "Kategori",
       sections: [{ title: "Pilih Kategori", rows }],
     },
-    { id: `${prefix}owner`, text: "ℹ️ Info Lainnya" },
+    { id: `${prefix}owner`, text: "Info Lainnya" },
     isAllMenuCtx
-      ? { id: `${prefix}menu`, text: "🏠 Menu" }
-      : { id: `${prefix}allmenu`, text: "📋 All Menu" },
-    { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
+      ? { id: `${prefix}menu`, text: "Menu" }
+      : { id: `${prefix}allmenu`, text: "All Menu" },
+    { id: `${prefix}tanyaai`, text: "Tanya AI" },
   ];
 }
 
 export {
-  // Indo Dev Style v5
   botHeader, botSignature, sectionBox, progressBar, statusDot,
   kv, categoryBox, CATEGORY_ORDER, CATEGORY_NAMES, CATEGORY_EMOJIS,
-  // Backward compat (Indo Dev Style output, same signature)
   buildNavButtons,
   claraHeader, alyaHeader, bracketBox, claraWrap, claraLine,
   separator, tipText, formatNumber, broadcastFormat, novaUsage,
   toSC, sectionHeader, sectionItem, sectionClose, sectionSpacer, buildSection,
-  infoBox, listBox,
+  infoBox, listBox, novaCaption,
 };
+
+// novaCaption: caption menarik per-fitur dari metadata plugin
+// ╭──「 🎵 TikTok Download 」
+// │ Download video TikTok tanpa watermark
+// │
+// │ 📌 *Cara Pakai:*
+// │ `.tiktok2 <url>`
+// │
+// │ 💡 *Contoh:*
+// │ `.tiktok2 https://vt.tiktok.com/xxx`
+// │
+// ╰──────────❀
+function novaCaption({ emoji = "", name = "", description = "", usage = "", example = "", note = "" } = {}) {
+  const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
+  const lines = [];
+  
+  if (description) {
+    lines.push(description);
+    lines.push("");
+  }
+  
+  if (usage) {
+    lines.push("📌 *Cara Pakai:*");
+    lines.push(`\`${usage}\``);
+    lines.push("");
+  }
+  
+  if (example) {
+    lines.push("💡 *Contoh:*");
+    if (example.includes("\n")) {
+      for (const line of example.split("\n")) {
+        lines.push(`\`${line.trim()}\``);
+      }
+    } else {
+      lines.push(`\`${example}\``);
+    }
+    lines.push("");
+  }
+  
+  if (note) {
+    lines.push(`📝 _${note}_`);
+    lines.push("");
+  }
+  
+  return bracketBox("i", `${emojiStr}${name}`, lines);
+}

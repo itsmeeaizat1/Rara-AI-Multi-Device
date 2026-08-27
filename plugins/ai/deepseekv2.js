@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
 
   if (!text) {
-    const help = `Kirim pertanyaan setelah command.\nContoh: .deepseekv2 jelaskan black hole`;
+    const help = `Kirim pertanyaan setelah command.\n💡 *Contoh:* .deepseekv2 jelaskan black hole`;
     return m.reply( claraWrap("DeepSeek v3.2", help));
   }
 

@@ -67,7 +67,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "start" || sub === "mulai") {
     const topic = args.slice(2).join(" ").trim();
     if (!topic) {
-      await m.reply(claraWrap("AI Debate", "Format: " + prefix + "debate start <topik>\nContoh: " + prefix + "debate start AI menguntungkan manusia"));
+      await m.reply(claraWrap("AI Debate", "Format: " + prefix + "debate start <topik>\n💡 *Contoh:* " + prefix + "debate start AI menguntungkan manusia"));
       return { handled: true };
     }
     const existing = getDebate(db, gid);

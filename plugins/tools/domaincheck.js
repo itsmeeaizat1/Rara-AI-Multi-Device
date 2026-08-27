@@ -97,7 +97,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const domain = text.replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/^www\./, "").trim();
     if (!domain || !domain.includes(".")) {
-      return m.reply(claraWrap("DomainCheck", "Domain tidak valid!\nContoh: " + prefix + "domaincheck example.com"));
+      return m.reply(claraWrap("DomainCheck", "Domain tidak valid!\n💡 *Contoh:* " + prefix + "domaincheck example.com"));
     }
 
     await m.react("🕒");

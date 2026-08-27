@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -24,8 +24,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const input = m.text?.trim();
     if (!input || !input.includes("->")) {
-      await m.reply( claraWrap("Rute & Arah", [`│ Penggunaan: *${prefix}direction <dari> -> <ke>*`,
-        `│ Contoh: *${prefix}direction Jakarta -> Bandung*`].join("\n")), "direction");
+      await m.reply( novaCaption({
+  emoji: "🛠️",
+  name: "direction",
+  description: "Rute & arah GPS",
+  usage: `$prefixdirection <dari> -> <ke>`,
+  example: `$prefixdirection Jakarta -> Bandung`,
+}), "direction");
       return { handled: true };
     }
     const [from, to] = input.split("->").map(s => s.trim());

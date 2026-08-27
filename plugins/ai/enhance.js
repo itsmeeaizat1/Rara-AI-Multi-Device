@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,8 +25,13 @@ async function handler(m, { sock, config: botConfig }) {
     const media = m.msg?.imageMessage || m.msg?.videoMessage || m.quoted?.msg?.imageMessage || m.quoted?.msg?.videoMessage;
     if (!media) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}enhance*`,
-          `│ Kirim/reply foto/video, lalu ketik *${prefix}enhance*`].join("\n")) +
+        novaCaption({
+  emoji: "🤖",
+  name: "enhance2",
+  description: "Enhance kualitas foto/video",
+  usage: `${prefix}enhance (reply media)`,
+  example: `${prefix}enhance (reply foto)`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

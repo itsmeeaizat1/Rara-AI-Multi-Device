@@ -277,7 +277,7 @@ async function handler(m, { sock }) {
     const optNum = parseInt(args[2]);
 
     if (!pollId || !optNum) {
-      return m.reply(claraWrap("Poll", "Format: .poll vote <pollId> <nomorOpsi>\n\nContoh: .poll vote POLL-A1B2C 2", "error"));
+      return m.reply(claraWrap("Poll", "Format: .poll vote <pollId> <nomorOpsi>\n\n💡 *Contoh:* .poll vote POLL-A1B2C 2", "error"));
     }
 
     const poll = global.novaPolls[chatId]?.[pollId];

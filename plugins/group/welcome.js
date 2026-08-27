@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,9 +25,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!["on", "off"].includes(args)) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}welcome on/off*`,
-          `│ Contoh: *${prefix}welcome on*`,
-          `│ Contoh: *${prefix}welcome off*`].join("\n")) +
+        novaCaption({
+  emoji: "👥",
+  name: "welcome2",
+  description: "Pesan welcome saat member join grup",
+  usage: `$prefixwelcome on/off`,
+  example: `$prefixwelcome on`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

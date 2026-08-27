@@ -108,7 +108,7 @@ async function handler(m, { sock, config: botConfig }) {
   }
 
   return m.reply(
-    "Event tidak dikenal.\n\nPilihan: owner, admin, all\nContoh: " + prefix + "togglejoinreq owner"
+    "Event tidak dikenal.\n\nPilihan: owner, admin, all\n💡 *Contoh:* " + prefix + "togglejoinreq owner"
   );
 }
 

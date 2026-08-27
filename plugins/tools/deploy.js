@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
 │ Masukkan nama website
 │ Reply kode HTML atau file .html
 
-Contoh:
+💡 *Contoh:*
 .deploy mysite`))
     }
 

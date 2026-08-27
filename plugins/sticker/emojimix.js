@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
     const emojis = text.match(emojiRegex)
     
     if (!emojis || emojis.length < 2) {
-        return m.reply( claraWrap("Emojimix", `❌ Masukkan minimal 2 emoji!\n\nContoh: ${m.prefix}emojimix 😂🔥`), { commandName: "emojimix" })
+        return m.reply( claraWrap("Emojimix", `❌ Masukkan minimal 2 emoji!\n\n💡 *Contoh:* ${m.prefix}emojimix 😂🔥`), { commandName: "emojimix" })
     }
     
     const emoji1 = emojis[0]

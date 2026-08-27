@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
@@ -24,12 +24,13 @@ async function handler(m, { sock }) {
     const action = args[0]?.toLowerCase()
     
     if (!action || !['on', 'off'].includes(action)) {
-        return m.rem.reply( `👋 *Welcome Global*\n\n` +
-            `Aktifkan/nonaktifkan welcome di SEMUA grup sekaligus\n\n` +
-            `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
-            `┃ ${m.prefix}welcomeall on\n` +
-            `┃ ${m.prefix}welcomeall off\n` +
-            `╰┈┈┈┈┈┈┈┈⬡`, "welcomeall") }
+        return novaCaption({
+  emoji: "👑",
+  name: "welcomeall",
+  description: "Aktifkan/nonaktifkan welcome di semua grup",
+  usage: `$m.prefixwelcomeall <on/off>`,
+  example: `$m.prefixwelcomeall on`,
+}), "welcomeall")
     
     await m.react('🕐')
     
@@ -48,15 +49,15 @@ async function handler(m, { sock }) {
         
         if (status) {
             return m.m.reply(claraWrap("welcomeall", `✅ *Welcome Global On*\n\n` +
-                `╭┈┈⬡「 📊 *Result* 」\n` +
-                `┃ 🌐 Total Grup: *${count}*\n` +
-                `┃ ✅ Welcome: *AKTIF*\n` +
+                `╭──「 📊 *Result* 」\n` +
+                `│ 🌐 Total Grup: *${count}*\n` +
+                `│ ✅ Welcome: *AKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈⬡\n\n` +
                 `Semua member baru akan disambut otomatis!`))       } else {
             return m.reply(claraWrap("welcomeall", `❌ *Welcome Global Off*\n\n` +
-                `╭┈┈⬡「 📊 *Result* 」\n` +
-                `┃ 🌐 Total Grup: *${count}*\n` +
-                `┃ ❌ Welcome: *NONAKTIF*\n` +
+                `╭──「 📊 *Result* 」\n` +
+                `│ 🌐 Total Grup: *${count}*\n` +
+                `│ ❌ Welcome: *NONAKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈⬡\n\n` +
                 `Welcome dinonaktifkan di semua grup.`))
         }

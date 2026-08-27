@@ -56,7 +56,7 @@ async function handler(m, { sock, command, args }) {
         if (LINODE_TYPES[cmd]) {
             const label = args[0]
             if (!label) {
-                return m.reply( claraWrap("linode2gb", `❌ Masukkan label untuk VPS!\n\nContoh: ${m.prefix}${cmd} myserver`), "linode2gb")
+                return m.reply( claraWrap("linode2gb", `❌ Masukkan label untuk VPS!\n\n💡 *Contoh:* ${m.prefix}${cmd} myserver`), "linode2gb")
             }
             
             const spec = LINODE_TYPES[cmd]
@@ -150,7 +150,7 @@ async function handler(m, { sock, command, args }) {
         
         if (cmd === 'onlinode') {
             const linodeId = args[0]
-            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\nContoh: ${m.prefix}onlinode 12345`), "linode2gb")
+            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}onlinode 12345`), "linode2gb")
             
             
             const res = await fetch(`https://api.linode.com/v4/linode/instances/${linodeId}/boot`, {
@@ -173,7 +173,7 @@ async function handler(m, { sock, command, args }) {
         
         if (cmd === 'offlinode') {
             const linodeId = args[0]
-            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\nContoh: ${m.prefix}offlinode 12345`), "linode2gb")
+            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}offlinode 12345`), "linode2gb")
             
             
             const res = await fetch(`https://api.linode.com/v4/linode/instances/${linodeId}/shutdown`, {
@@ -196,7 +196,7 @@ async function handler(m, { sock, command, args }) {
         
         if (cmd === 'rebootlinode') {
             const linodeId = args[0]
-            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\nContoh: ${m.prefix}rebootlinode 12345`), "linode2gb")
+            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}rebootlinode 12345`), "linode2gb")
             
             m.react('🕐')
             
@@ -221,7 +221,7 @@ async function handler(m, { sock, command, args }) {
         if (cmd === 'rebuildlinode') {
             const linodeId = args[0]
             const image = args[1] || 'linode/ubuntu20.04'
-            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\nContoh: ${m.prefix}rebuildlinode 12345 linode/ubuntu20.04`), "linode2gb")
+            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}rebuildlinode 12345 linode/ubuntu20.04`), "linode2gb")
             
             const rootPass = randomKarakter(4) + randomNomor(3)
             
@@ -250,7 +250,7 @@ async function handler(m, { sock, command, args }) {
         
         if (cmd === 'delinode') {
             const linodeId = args[0]
-            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\nContoh: ${m.prefix}delinode 12345`), "linode2gb")
+            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}delinode 12345`), "linode2gb")
             
             
             const res = await fetch(`https://api.linode.com/v4/linode/instances/${linodeId}`, {
@@ -320,7 +320,7 @@ async function handler(m, { sock, command, args }) {
         
         if (cmd === 'cekvpslinode') {
             const linodeId = args[0]
-            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\nContoh: ${m.prefix}cekvpslinode 12345`), "linode2gb")
+            if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}cekvpslinode 12345`), "linode2gb")
             
             m.react('🕐')
             

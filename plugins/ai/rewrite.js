@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rewrite",
@@ -81,9 +81,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       const out =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}rewrite <teks>*`,
-          `│ Atau reply pesan dengan *${prefix}rewrite*`,
-          `│ Contoh: *${prefix}rewrite pesan ini*`].join("\n")) +
+        novaCaption({
+  emoji: "🤖",
+  name: "rewrite",
+  description: "Tulis ulang teks agar lebih natural",
+  usage: `${prefix}rewrite <teks> | reply teks`,
+  example: `${prefix}rewrite <teks>`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

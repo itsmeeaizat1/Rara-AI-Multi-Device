@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,9 +25,13 @@ async function handler(m, { sock, config: botConfig }) {
     const media = m.msg?.imageMessage || m.quoted?.msg?.imageMessage;
     if (!media) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}vision <teks>*`,
-          `│ Kirim/reply foto, lalu ketik *${prefix}vision <pertanyaan>*`,
-          `│ Contoh: *${prefix}vision apa yang ada di foto ini?*`].join("\n")) +
+        novaCaption({
+  emoji: "🤖",
+  name: "vision",
+  description: "Analisis gambar dengan AI",
+  usage: `${prefix}vision <pertanyaan> (reply foto)`,
+  example: `${prefix}vision apa yang ada di foto ini?`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

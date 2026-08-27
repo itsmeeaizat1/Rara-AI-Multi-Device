@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ") || m.text?.trim();
 
   if (!text) {
-    { const __navText = "❌ Masukkan teks yang ingin disempurnakan.\n\nContoh: `.quilbot Saya sedang makan nasi di rumah`"; return await m.reply(__navText, "quilbot"); };
+    { const __navText = "❌ Masukkan teks yang ingin disempurnakan.\n\n💡 *Contoh:* `.quilbot Saya sedang makan nasi di rumah`"; return await m.reply(__navText, "quilbot"); };
   }
 
   await m.react("🕒");

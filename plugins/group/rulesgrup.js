@@ -22,14 +22,14 @@ const pluginConfig = {
 
 const DEFAULT_GROUP_RULES = `📜 *ᴀᴛᴜʀᴀɴ ɢʀᴜᴘ*
 
-┃ 1️⃣ Dilarang spam/flood chat
-┃ 2️⃣ Dilarang promosi tanpa izin
-┃ 3️⃣ Dilarang konten SARA/Porn
-┃ 4️⃣ Hormati sesama member
-┃ 5️⃣ Gunakan bahasa yang sopan
-┃ 6️⃣ Dilarang share link tanpa izin
-┃ 7️⃣ Patuhi instruksi admin
-┃ 8️⃣ No toxic & bullying
+│ 1️⃣ Dilarang spam/flood chat
+│ 2️⃣ Dilarang promosi tanpa izin
+│ 3️⃣ Dilarang konten SARA/Porn
+│ 4️⃣ Hormati sesama member
+│ 5️⃣ Gunakan bahasa yang sopan
+│ 6️⃣ Dilarang share link tanpa izin
+│ 7️⃣ Patuhi instruksi admin
+│ 8️⃣ No toxic & bullying
 
 _Mau langgar? Siap-siap di Kick!_`;
 

@@ -388,7 +388,7 @@ async function createBratVideo(text, template) {
 async function handler(m, { sock }) {
   const text = m.text;
   if (!text) {
-    { const __navText = `⚠️ Harap masukkan teksnya!\nContoh: \`${m.prefix}${m.command} Halo semuanya\``; return await m.reply(__navText, "bratlocal"); };
+    { const __navText = `⚠️ Harap masukkan teksnya!\n💡 *Contoh:* \`${m.prefix}${m.command} Halo semuanya\``; return await m.reply(__navText, "bratlocal"); };
   }
 
   await m.react("🕒");

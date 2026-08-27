@@ -69,12 +69,12 @@ function handler(m, { sock }) {
 
         const timeInput = args[1]
         if (!timeInput) {
-            return m.reply( `❌ *Masukkan jadwal tidur!*\n\nContoh: \`${m.prefix}notiftidur on 22.00\``, "notiftidur")
+            return m.reply( `❌ *Masukkan jadwal tidur!*\n\n💡 *Contoh:* \`${m.prefix}notiftidur on 22.00\``, "notiftidur")
         }
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\nContoh: \`22.00\` atau \`23.30\``)
+            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\n💡 *Contoh:* \`22.00\` atau \`23.30\``)
         }
 
         setNotifTidur(sender, chatJid, jadwal)
@@ -96,12 +96,12 @@ function handler(m, { sock }) {
 
         const timeInput = args[1]
         if (!timeInput) {
-            return m.reply(`❌ *Masukkan jadwal baru!*\n\nContoh: \`${m.prefix}notiftidur edit 23.00\``)
+            return m.reply(`❌ *Masukkan jadwal baru!*\n\n💡 *Contoh:* \`${m.prefix}notiftidur edit 23.00\``)
         }
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\nContoh: \`23.00\` atau \`22.30\``)
+            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\n💡 *Contoh:* \`23.00\` atau \`22.30\``)
         }
 
         setNotifTidur(sender, chatJid, jadwal)

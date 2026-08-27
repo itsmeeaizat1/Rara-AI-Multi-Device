@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraHeader, separator, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -15,8 +15,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const query = m.text?.trim();
     if (!query) {
-      await m.reply( claraWrap("AI Hadith", [`│ Penggunaan: *${prefix}aihadith <topik>*`,
-        `│ Contoh: *${prefix}aihadith hadis tentang sabar*`].join("\n")), "aihadith");
+      await m.reply( novaCaption({
+  emoji: "📁",
+  name: "aihadith",
+  description: "Cari hadis dengan bahasa natural",
+  usage: `$prefixaihadith <topik>`,
+  example: `$prefixaihadith hadis tentang sabar`,
+}), "aihadith");
       return { handled: true };
     }
     const result = await callAI(`Cari hadis yang berkaitan dengan: "${query}". Berikan riwayat (Bukhari/Muslim/dll), teks hadis, dan terjemahan dalam Bahasa Indonesia. Maksimal 3 hadis.`, {

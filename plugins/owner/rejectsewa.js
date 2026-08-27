@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
 
   const input = m.text?.trim();
   if (!input) {
-    return m.reply( claraWrap("Rejectsewa", "Format: *.rejectsewa <nomor> <alasan>*\n\nContoh: .rejectsewa 628xxx grup penuh"), { commandName: "rejectsewa" });
+    return m.reply( claraWrap("Rejectsewa", "Format: *.rejectsewa <nomor> <alasan>*\n\n💡 *Contoh:* .rejectsewa 628xxx grup penuh"), { commandName: "rejectsewa" });
   }
 
   const parts = input.split(/\s+/);

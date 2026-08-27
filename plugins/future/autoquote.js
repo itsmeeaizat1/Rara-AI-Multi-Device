@@ -86,7 +86,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const time = args[2] || cfg.time;
     if (!/^\d{2}:\d{2}$/.test(time)) {
-      await m.reply(claraWrap("Auto Quote", "Format: " + prefix + "autoquote on <HH:MM>\nContoh: " + prefix + "autoquote on 07:00"));
+      await m.reply(claraWrap("Auto Quote", "Format: " + prefix + "autoquote on <HH:MM>\n💡 *Contoh:* " + prefix + "autoquote on 07:00"));
       return { handled: true };
     }
     cfg.enabled = true;

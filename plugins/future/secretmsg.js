@@ -40,7 +40,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "send" || sub === "kirim" || sub === "whisper") {
     const mentioned = m.mentionedJid && m.mentionedJid.length > 0 ? m.mentionedJid[0] : null;
     if (!mentioned) {
-      await m.reply(claraWrap("SecretMsg", "Format: " + prefix + "secretmsg send @target <pesan>\nContoh: " + prefix + "secretmsg send @user kamu keren hari ini"));
+      await m.reply(claraWrap("SecretMsg", "Format: " + prefix + "secretmsg send @target <pesan>\n💡 *Contoh:* " + prefix + "secretmsg send @user kamu keren hari ini"));
       return { handled: true };
     }
     if (mentioned === m.sender) {

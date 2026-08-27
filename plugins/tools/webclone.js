@@ -95,7 +95,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     // Validate URL
     if (!url.match(/^https?:\/\/.+/)) {
-      return m.reply(claraWrap("WebsiteCloner", "URL tidak valid! Harus diawali http:// atau https://\nContoh: .webclone https://example.com"));
+      return m.reply(claraWrap("WebsiteCloner", "URL tidak valid! Harus diawali http:// atau https://\n💡 *Contoh:* .webclone https://example.com"));
     }
 
     m.reply(claraWrap("WebsiteCloner", "Sedang cloning website...\nURL: " + url + "\nMungkin butuh 10-30 detik."));

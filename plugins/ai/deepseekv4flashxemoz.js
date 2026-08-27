@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
   const sessionId = toSessionId(key);
 
   if (!text) {
-    const help = `Kirim pertanyaan setelah command.\nContoh: .deepseekv4flashxemoz halo siapa kamu?\n\n.deepseekv4flashxemoz reset — Reset sesi percakapan`;
+    const help = `Kirim pertanyaan setelah command.\n💡 *Contoh:* .deepseekv4flashxemoz halo siapa kamu?\n\n.deepseekv4flashxemoz reset — Reset sesi percakapan`;
     return m.reply( claraWrap("DeepSeek V4 Flash", help));
   }
 

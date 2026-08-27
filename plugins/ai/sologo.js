@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const prompt = m.text?.trim() || m.args.join(" ");
 
   if (!prompt) {
-    { const __navText = "❌ Masukkan deskripsi logo yang ingin dibuat.\n\nContoh: `.sologo robot keren warna merah`"; return await m.reply(__navText, "sologo"); };
+    { const __navText = "❌ Masukkan deskripsi logo yang ingin dibuat.\n\n💡 *Contoh:* `.sologo robot keren warna merah`"; return await m.reply(__navText, "sologo"); };
   }
 
   await m.react("🕒");

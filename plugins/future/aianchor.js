@@ -363,7 +363,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     if (autoSub === "cron") {
       const cronExpr = args.slice(3).join(" ").trim();
       if (!cronExpr) {
-        await m.reply(claraWrap("AI Anchor", `Format: ${prefix}aianchor auto cron <cron>\nContoh: 0 7,12,18 * * *`, "warn"));
+        await m.reply(claraWrap("AI Anchor", `Format: ${prefix}aianchor auto cron <cron>\n💡 *Contoh:* 0 7,12,18 * * *`, "warn"));
         return { handled: true };
       }
       const cfg = getAutoConfig(db);
@@ -405,7 +405,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (subCmd === "news") {
     const topic = args.slice(2).join(" ").trim();
     if (!topic) {
-      await m.reply(claraWrap("AI Anchor", `Format: ${prefix}aianchor news <topik>\nContoh: ${prefix}aianchor news gempa terkini`, "warn"));
+      await m.reply(claraWrap("AI Anchor", `Format: ${prefix}aianchor news <topik>\n💡 *Contoh:* ${prefix}aianchor news gempa terkini`, "warn"));
       return { handled: true };
     }
 

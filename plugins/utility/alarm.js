@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraHeader, separator, tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "alarm", alias: ["alarm"], category: "utility",
@@ -14,9 +14,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const input = (m.text || "").trim();
     if (!input) {
-      await m.reply(claraWrap("Alarm", [`│ Penggunaan: *${prefix}alarm <HH:MM> <pesan>*`,
-        `│ Contoh: *${prefix}alarm 07:30 bangun sekolah*`,
-        `│ Hapus: *${prefix}alarm list* / *${prefix}alarm del <nomor>*`].join("\n")));
+      await m.reply(novaCaption({
+  emoji: "🔧",
+  name: "alarm",
+  description: "Alarm pengingat pribadi",
+  usage: `$prefixalarm <HH:MM> <pesan>`,
+  example: `$prefixalarm 07:30 bangun sekolah`,
+}));
       return { handled: true };
     }
     const args = input.split(/\s+/);

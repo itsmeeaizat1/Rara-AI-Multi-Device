@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
 
   if (action === "set") {
     if (!prefixArg) {
-      return m.reply(`Masukkan prefix nomor!\nContoh: \`${m.prefix}antinomorluar set 60\``);
+      return m.reply(`Masukkan prefix nomor!\n💡 *Contoh:* \`${m.prefix}antinomorluar set 60\``);
     }
     db.setGroup(m.chat, { nomorluarBlock: prefixArg });
     m.react("🐣");

@@ -19,7 +19,7 @@ function handler(m, { sock }) {
     const text = m.text;
     
     if (!text) {
-        return m.reply( claraWrap("readmore", `⚠️ Masukan text!\nContoh: \`${m.prefix}${m.command} Halo|Ini teks tersembunyi\``), "readmore");
+        return m.reply( claraWrap("readmore", `⚠️ Masukan text!\n💡 *Contoh:* \`${m.prefix}${m.command} Halo|Ini teks tersembunyi\``), "readmore");
     }
     
     let [l, r] = text.split('|');

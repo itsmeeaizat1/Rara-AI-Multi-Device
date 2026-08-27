@@ -30,12 +30,12 @@ async function handler(m, { sock }) {
     const ownerNum = config.owner?.number?.[0] || "Tidak diset";
 
     let txt = `🗂️ *Auto Backup sYstem*\n\n`;
-    txt += `╭┈┈⬡「 📊 *sTatus* 」\n`;
-    txt += `┃ 🔘 Status: ${status.enabled ? "✅ *ON*" : "❌ *OFF*"}\n`;
-    txt += `┃ ⏱️ Interval: ${status.interval}\n`;
-    txt += `┃ 📅 Last Backup: ${status.lastBackup ? timeHelper.fromTimestamp(status.lastBackup, "DD MMMM YYYY HH:mm:ss") : "-"}\n`;
-    txt += `┃ #️⃣ Total: ${status.backupCount} backup\n`;
-    txt += `┃ 📤 Dikirim ke: ${ownerNum}\n`;
+    txt += `╭──「 📊 *sTatus* 」\n`;
+    txt += `│ 🔘 Status: ${status.enabled ? "✅ *ON*" : "❌ *OFF*"}\n`;
+    txt += `│ ⏱️ Interval: ${status.interval}\n`;
+    txt += `│ 📅 Last Backup: ${status.lastBackup ? timeHelper.fromTimestamp(status.lastBackup, "DD MMMM YYYY HH:mm:ss") : "-"}\n`;
+    txt += `│ #️⃣ Total: ${status.backupCount} backup\n`;
+    txt += `│ 📤 Dikirim ke: ${ownerNum}\n`;
     txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
 
     txt += `*Cara Pakai:*\n`;
@@ -84,10 +84,10 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       return m.reply(
         `✅ *Auto Backup Diaktifkan*\n\n` +
-          `╭┈┈⬡「 ⚙️ *sEttings* 」\n` +
-          `┃ ⏱️ Interval: ${result.interval}\n` +
-          `┃ 📤 Dikirim ke: ${ownerNum}\n` +
-          `┃ 📦 Exclude: node_modules, .git, storages, dll\n` +
+          `╭──「 ⚙️ *sEttings* 」\n` +
+          `│ ⏱️ Interval: ${result.interval}\n` +
+          `│ 📤 Dikirim ke: ${ownerNum}\n` +
+          `│ 📦 Exclude: node_modules, .git, storages, dll\n` +
           `╰┈┈┈┈┈┈┈┈⬡\n\n` +
           `Backup pertama akan dikirim dalam ${result.interval}`,
       );
@@ -112,13 +112,13 @@ async function handler(m, { sock }) {
       const ownerNum = config.owner?.number?.[0] || "Tidak diset";
 
       let txt = `🗂️ *sTatus Auto Backup*\n\n`;
-      txt += `╭┈┈⬡「 📊 *Info* 」\n`;
-      txt += `┃ 🔘 Enabled: ${status.enabled ? "✅ Ya" : "❌ Tidak"}\n`;
-      txt += `┃ ⏱️ Interval: ${status.interval}\n`;
-      txt += `┃ 🔄 Running: ${status.isRunning ? "✅ Ya" : "❌ Tidak"}\n`;
-      txt += `┃ 📅 Last: ${status.lastBackup ? timeHelper.fromTimestamp(status.lastBackup, "DD MMMM YYYY HH:mm:ss") : "-"}\n`;
-      txt += `┃ #️⃣ Total: ${status.backupCount} backup\n`;
-      txt += `┃ 📤 Target: ${ownerNum}\n`;
+      txt += `╭──「 📊 *Info* 」\n`;
+      txt += `│ 🔘 Enabled: ${status.enabled ? "✅ Ya" : "❌ Tidak"}\n`;
+      txt += `│ ⏱️ Interval: ${status.interval}\n`;
+      txt += `│ 🔄 Running: ${status.isRunning ? "✅ Ya" : "❌ Tidak"}\n`;
+      txt += `│ 📅 Last: ${status.lastBackup ? timeHelper.fromTimestamp(status.lastBackup, "DD MMMM YYYY HH:mm:ss") : "-"}\n`;
+      txt += `│ #️⃣ Total: ${status.backupCount} backup\n`;
+      txt += `│ 📤 Target: ${ownerNum}\n`;
       txt += `╰┈┈┈┈┈┈┈┈⬡`;
 
       return await m.reply(claraWrap("autobackup", txt));

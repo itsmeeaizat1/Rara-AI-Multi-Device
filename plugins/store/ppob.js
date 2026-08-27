@@ -602,7 +602,7 @@ async function handler(m, { sock }) {
       Object.keys(PROVIDERS).forEach(
         (k) => (body += "  " + PROVIDERS[k].name + " (" + k + ")\n")
       );
-      body += "\nContoh: .ppob setprovider digiflazz";
+      body += "\n💡 *Contoh:* .ppob setprovider digiflazz";
       return m.reply( claraWrap("PPOB", body), "ppob");
     }
     data.activeProvider = target;

@@ -52,7 +52,7 @@ async function handler(m, { sock, args }) {
     if (cmd === "quick" || cmd === "cepat") {
       const inputArgs = cmdArgs;
       if (inputArgs.length < 2 || inputArgs.length % 2 !== 0) {
-        return m.reply(claraWrap("ipk", "Format salah!\n\nContoh: `.ipk quick A 4 B 3 AB 2`\n\nFormat: <nilai> <sks> <nilai> <sks> ..."));
+        return m.reply(claraWrap("ipk", "Format salah!\n\n💡 *Contoh:* `.ipk quick A 4 B 3 AB 2`\n\nFormat: <nilai> <sks> <nilai> <sks> ..."));
       }
       let totalBobot = 0, totalSKS = 0, details = [];
       for (let i = 0; i < inputArgs.length; i += 2) {

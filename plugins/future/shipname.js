@@ -97,7 +97,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   const mentioned = m.mentionedJid && m.mentionedJid.length >= 2 ? m.mentionedJid : null;
   if (!mentioned) {
-    await m.reply(claraWrap("Ship Name", "Tag 2 orang!\nContoh: " + prefix + "shipname @user1 @user2"));
+    await m.reply(claraWrap("Ship Name", "Tag 2 orang!\n💡 *Contoh:* " + prefix + "shipname @user1 @user2"));
     return { handled: true };
   }
 

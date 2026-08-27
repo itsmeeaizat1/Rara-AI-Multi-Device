@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
 
   if (!text) {
-    const help = `Kirim pertanyaan setelah command.\nContoh: .gpt5v2xemoz jelaskan kuantum computing`;
+    const help = `Kirim pertanyaan setelah command.\n💡 *Contoh:* .gpt5v2xemoz jelaskan kuantum computing`;
     return m.reply( claraWrap("GPT-5.5", help));
   }
 

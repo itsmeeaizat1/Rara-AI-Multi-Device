@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
     }
     data.markup = pct; saveData(data);
     await m.react("🐣");
-    return m.reply( claraWrap("DigiPulsa", "Markup: " + pct + "%\n\nContoh: Pulsa 50k harga API Rp49.000\nHarga jual: " + formatRupiah(49000 * (1 + pct/100))), "digipulsa");
+    return m.reply( claraWrap("DigiPulsa", "Markup: " + pct + "%\n\n💡 *Contoh:* Pulsa 50k harga API Rp49.000\nHarga jual: " + formatRupiah(49000 * (1 + pct/100))), "digipulsa");
   }
 
   // TOPUP
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
     const target = (arg1 || "").replace(/[^0-9]/g, "");
     const amount = parseInt(arg2) || 0;
     if (!target || amount < 100) {
-      return m.reply( claraWrap("DigiPulsa", "Topup Saldo (Owner)\n\n.dg topup <nomor> <jumlah>\nContoh: .dg topup 628123456789 50000\nMin: Rp100"), "digipulsa");
+      return m.reply( claraWrap("DigiPulsa", "Topup Saldo (Owner)\n\n.dg topup <nomor> <jumlah>\n💡 *Contoh:* .dg topup 628123456789 50000\nMin: Rp100"), "digipulsa");
     }
     const targetUser = getUser(data, target + "@s.whatsapp.net");
     targetUser.balance += amount; saveData(data);
@@ -216,7 +216,7 @@ async function handler(m, { sock }) {
         body += "\n";
       });
       if (filtered.length > 15) body += "... dan " + (filtered.length - 15) + " produk lain\n";
-      body += "\nBeli: .dg beli <sku_code> <nomor>\nContoh: .dg beli " + filtered[0].buyer_sku_code + " 08123456789";
+      body += "\nBeli: .dg beli <sku_code> <nomor>\n💡 *Contoh:* .dg beli " + filtered[0].buyer_sku_code + " 08123456789";
       await m.react("🐣");
       return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
@@ -277,7 +277,7 @@ async function handler(m, { sock }) {
   // BAYAR - Execute order, send to API
   if (sub === "bayar" || sub === "pay" || sub === "confirm") {
     const token = arg1 ? arg1.toUpperCase() : "";
-    if (!token) return m.reply( claraWrap("DigiPulsa", "Masukkan token!\nContoh: .dg bayar ABC123"), "digipulsa");
+    if (!token) return m.reply( claraWrap("DigiPulsa", "Masukkan token!\n💡 *Contoh:* .dg bayar ABC123"), "digipulsa");
     const pending = data.pendingPayments[token];
     if (!pending) return m.reply( claraWrap("DigiPulsa", "Token tidak ditemukan!"), "digipulsa");
     if (pending.sender !== sender) return m.reply( claraWrap("DigiPulsa", "Bukan token kamu!"), "digipulsa");
@@ -335,7 +335,7 @@ async function handler(m, { sock }) {
   // CEK
   if (sub === "cek" || sub === "check" || sub === "status") {
     const refId = arg1;
-    if (!refId) return m.reply( claraWrap("DigiPulsa", "Masukkan Ref ID!\nContoh: .dg cek DG1234ABC"), "digipulsa");
+    if (!refId) return m.reply( claraWrap("DigiPulsa", "Masukkan Ref ID!\n💡 *Contoh:* .dg cek DG1234ABC"), "digipulsa");
     const order = data.orders.find(o => o.refId === refId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("DigiPulsa", "Order tidak ditemukan!"), "digipulsa");
     await m.react("🕒");

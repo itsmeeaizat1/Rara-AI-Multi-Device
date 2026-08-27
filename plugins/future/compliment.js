@@ -121,7 +121,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   // Default: send compliment to mentioned user
   const mentioned = m.mentionedJid && m.mentionedJid.length > 0 ? m.mentionedJid[0] : null;
   if (!mentioned) {
-    await m.reply(claraWrap("Compliment", "Tag orang yang mau di-compliment!\nContoh: " + prefix + "compliment @user\n" + prefix + "compliment sweet @user"));
+    await m.reply(claraWrap("Compliment", "Tag orang yang mau di-compliment!\n💡 *Contoh:* " + prefix + "compliment @user\n" + prefix + "compliment sweet @user"));
     return { handled: true };
   }
   if (mentioned === m.sender) {

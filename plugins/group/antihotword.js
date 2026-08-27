@@ -116,7 +116,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // ADD
     if (sub === "add" || sub === "tambah") {
       const word = args.slice(1).join(" ").trim().toLowerCase();
-      if (!word) return m.reply(claraWrap("Anti Hot Word", "Masukkan kata!\nContoh: .antihotword add judi"));
+      if (!word) return m.reply(claraWrap("Anti Hot Word", "Masukkan kata!\n💡 *Contoh:* .antihotword add judi"));
       if (!cfg.words) cfg.words = [];
       if (cfg.words.includes(word)) return m.reply(claraWrap("Anti Hot Word", "Kata '" + word + "' sudah ada di daftar."));
       cfg.words.push(word);
@@ -127,7 +127,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // DEL
     if (sub === "del" || sub === "hapus" || sub === "remove") {
       const word = args.slice(1).join(" ").trim().toLowerCase();
-      if (!word) return m.reply(claraWrap("Anti Hot Word", "Masukkan kata!\nContoh: .antihotword del judi"));
+      if (!word) return m.reply(claraWrap("Anti Hot Word", "Masukkan kata!\n💡 *Contoh:* .antihotword del judi"));
       if (!cfg.words) cfg.words = [];
       const idx = cfg.words.indexOf(word);
       if (idx === -1) return m.reply(claraWrap("Anti Hot Word", "Kata '" + word + "' tidak ditemukan."));

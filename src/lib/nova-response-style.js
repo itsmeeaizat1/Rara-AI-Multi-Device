@@ -11,7 +11,7 @@ function formatNumber(num) {
 }
 
 function tipText(text) {
-  return `  │ ❏ 💡 *Tip:* ${text}`;
+  return `  │ 💡 *Tip:* ${text}`;
 }
 
 function smartGreeting(prefix = ".", userName = "") {
@@ -22,13 +22,13 @@ function smartGreeting(prefix = ".", userName = "") {
   else if (hour >= 14 && hour < 18) timeGreeting = "Selamat sore";
 
   const namePart = userName ? `, ${userName}` : "";
-  return `╭──「\n│\n  │ ❏ ${timeGreeting}${namePart}! Ada yang bisa aku bantu?\n│\n╰──────────❀`;
+  return `╭──「\n│\n  │ ${timeGreeting}${namePart}! Ada yang bisa aku bantu?\n│\n╰──────────❀`;
 }
 
 function previewBlock(items = [], title = "Preview") {
   const lines = items.map(([label, value]) => {
     const val = typeof value === "undefined" || value === null ? "tidak diketahui" : value;
-    return `  │ ❏ *${label}:* ${val}`;
+    return `  │ *${label}:* ${val}`;
   });
   return `╭──「 ${title}\n│\n${lines.join("\n")}\n│\n╰──────────❀`;
 }
@@ -36,11 +36,11 @@ function previewBlock(items = [], title = "Preview") {
 function resultBlock(title, items = [], prefix = ".") {
   const body = items.map((item, i) => {
     if (typeof item === "string") {
-      return `  │ ❏ ${i + 1}. ${prefix}${item}`;
+      return `  │ ${i + 1}. ${prefix}${item}`;
     }
     const name = item.name || item.command || "unknown";
     const alias = Array.isArray(item.alias) && item.alias.length ? ` (${item.alias.slice(0, 2).join(", ")})` : "";
-    return `  │ ❏ ${i + 1}. ${prefix}${name}${alias}`;
+    return `  │ ${i + 1}. ${prefix}${name}${alias}`;
   });
   return [`╭──「 ${title} 」`, `│`, ...body, `│`, `╰──────────❀`].join("\n");
 }
@@ -57,7 +57,7 @@ function chatBubble(role, text) {
 }
 
 function infoBlock(title, lines = []) {
-  const body = lines.map((line) => `  │ ❏ ${line}`);
+  const body = lines.map((line) => `  │ ${line}`);
   return [`╭──「 ${title} 」`, `│`, ...body, `│`, `╰──────────❀`].join("\n");
 }
 

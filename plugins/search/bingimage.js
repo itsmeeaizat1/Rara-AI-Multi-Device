@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const query = m.text;
 
     if (!query) {
-      return m.reply( claraWrap("Bingimage", `❌ *Masukkan kata kunci pencarian!*\n\nContoh: ${m.prefix}carigambar rem`), { commandName: "bingimage" });
+      return m.reply( claraWrap("Bingimage", `❌ *Masukkan kata kunci pencarian!*\n\n💡 *Contoh:* ${m.prefix}carigambar rem`), { commandName: "bingimage" });
     }
 
     await m.react("🕒");

@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
   if (action === "limit") {
     const val = parseInt(args[1]);
     if (!val || val < 3 || val > 50) {
-      return m.reply(claraWrap("Anti-Spam DM", "Nilai limit harus 3-50!\n\nContoh: .antispamdm limit 15", "error"));
+      return m.reply(claraWrap("Anti-Spam DM", "Nilai limit harus 3-50!\n\n💡 *Contoh:* .antispamdm limit 15", "error"));
     }
     settings.limit = val;
     db.setting("antispamDM", settings);
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
   if (action === "window") {
     const val = parseInt(args[1]);
     if (!val || val < 3 || val > 120) {
-      return m.reply(claraWrap("Anti-Spam DM", "Window harus 3-120 detik!\n\nContoh: .antispamdm window 15", "error"));
+      return m.reply(claraWrap("Anti-Spam DM", "Window harus 3-120 detik!\n\n💡 *Contoh:* .antispamdm window 15", "error"));
     }
     settings.windowMs = val * 1000;
     db.setting("antispamDM", settings);
@@ -124,7 +124,7 @@ async function handler(m, { sock }) {
   if (action === "warn") {
     const val = parseInt(args[1]);
     if (!val || val < 1 || val > 10) {
-      return m.reply(claraWrap("Anti-Spam DM", "Max warning harus 1-10!\n\nContoh: .antispamdm warn 5", "error"));
+      return m.reply(claraWrap("Anti-Spam DM", "Max warning harus 1-10!\n\n💡 *Contoh:* .antispamdm warn 5", "error"));
     }
     settings.maxWarn = val;
     db.setting("antispamDM", settings);
@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
   if (action === "mute") {
     const val = parseInt(args[1]);
     if (!val || val < 1 || val > 1440) {
-      return m.reply(claraWrap("Anti-Spam DM", "Mute duration 1-1440 menit!\n\nContoh: .antispamdm mute 10", "error"));
+      return m.reply(claraWrap("Anti-Spam DM", "Mute duration 1-1440 menit!\n\n💡 *Contoh:* .antispamdm mute 10", "error"));
     }
     settings.muteMin = val;
     db.setting("antispamDM", settings);

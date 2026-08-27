@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -16,8 +16,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const text = m.text?.trim();
     if (!text) {
-      { const __navText = (claraWrap("AI Voice", [`│ Penggunaan: *${prefix}aivoice <text>*`,
-        `│ Contoh: *${prefix}aivoice halo selamat datang*`].join("\n"))); await m.reply( __navText, "aivoice"); };
+      { const __navText = (novaCaption({
+  emoji: "📁",
+  name: "aivoicefuture",
+  description: "Text ke suara realistik multi-bahasa",
+  usage: `$prefixaivoice <text>`,
+  example: `$prefixaivoice halo semuanya`,
+})); await m.reply( __navText, "aivoice"); };
       return { handled: true };
     }
     const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=id&client=tw-ob`;

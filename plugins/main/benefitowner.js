@@ -34,23 +34,23 @@ async function handler(m, { sock }) {
     const message = 
         `👑 *Apa Itu Owner?*\n\n` +
         `Owner adalah *ᴘᴇᴍɪʟɪᴋ ʙᴏᴛ* yang memiliki akses penuh ke semua fitur dan kontrol sistem.\n\n` +
-        `╭┈┈⬡「 🔐 *KeiꜱTimewaan Owner* 」\n` +
-        `┃ ✦ \`\`\`Akses semua command tanpa batasan\`\`\`\n` +
-        `┃ ✦ \`\`\`Limit tidak terbatas (-1)\`\`\`\n` +
-        `┃ ✦ \`\`\`Bypass semua cooldown\`\`\`\n` +
-        `┃ ✦ \`\`\`Kontrol penuh sistem bot\`\`\`\n` +
-        `┃ ✦ \`\`\`Manajemen user & group\`\`\`\n` +
-        `┃ ✦ \`\`\`Akses panel & server\`\`\`\n` +
+        `╭──「 🔐 *KeiꜱTimewaan Owner* 」\n` +
+        `│ ✦ \`\`\`Akses semua command tanpa batasan\`\`\`\n` +
+        `│ ✦ \`\`\`Limit tidak terbatas (-1)\`\`\`\n` +
+        `│ ✦ \`\`\`Bypass semua cooldown\`\`\`\n` +
+        `│ ✦ \`\`\`Kontrol penuh sistem bot\`\`\`\n` +
+        `│ ✦ \`\`\`Manajemen user & group\`\`\`\n` +
+        `│ ✦ \`\`\`Akses panel & server\`\`\`\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `╭┈┈⬡「 ⚙️ *ᴄᴀʀᴀ ᴋᴇʀᴊᴀ* 」\n` +
-        `┃ \`Owner ditambahkan melalui:\`\n` +
-        `┃ • \`\`\`${config.command?.prefix || '.'}addowner <nomor>\`\`\`\n` +
-        `┃ • Atau langsung di config.js\n` +
+        `╭──「 ⚙️ *ᴄᴀʀᴀ ᴋᴇʀᴊᴀ* 」\n` +
+        `│ \`Owner ditambahkan melalui:\`\n` +
+        `│ • \`\`\`${config.command?.prefix || '.'}addowner <nomor>\`\`\`\n` +
+        `│ • Atau langsung di config.js\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴀꜰᴛᴀʀ ᴄᴏᴍᴍᴀɴᴅ ᴏᴡɴᴇʀ* 」\n` +
-        `┃ \`Total: ${totalCommands} command\`\n` +
+        `╭──「 📋 *ᴅᴀꜰᴛᴀʀ ᴄᴏᴍᴍᴀɴᴅ ᴏᴡɴᴇʀ* 」\n` +
+        `│ \`Total: ${totalCommands} command\`\n` +
         `┃\n` +
-        commandList.map(cmd => `┃ ${cmd}`).join('\n') +
+        commandList.map(cmd => `│ ${cmd}`).join('\n') +
         `\n╰┈┈┈┈┈┈┈┈⬡\n\n` +
         `Hubungi owner untuk mendapatkan akses!`
     

@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
       .map((s) => s.trim());
     if (personaArgs.length < 2 || !personaArgs[0] || !personaArgs[1])
       return m.reply(
-        `❌ Format salah!\n\n.autoai tambahpersona nama | instruction\n\nContoh: .autoai tambahpersona nexa | kamu adalah nexa ai, ...`,
+        `❌ Format salah!\n\n.autoai tambahpersona nama | instruction\n\n💡 *Contoh:* .autoai tambahpersona nexa | kamu adalah nexa ai, ...`,
       );
     const pName = personaArgs[0].toLowerCase().replace(/\s+/g, "_");
     const pInstruction = personaArgs.slice(1).join("|").trim();
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
     const pKey = (args[1] || "").toLowerCase().trim();
     if (!pKey)
       return m.reply(
-        `❌ Format salah!\n\n.autoai hapuspersona <nama>\n\nContoh: .autoai hapuspersona nexa`,
+        `❌ Format salah!\n\n.autoai hapuspersona <nama>\n\n💡 *Contoh:* .autoai hapuspersona nexa`,
       );
     if (!db.db.data.autoai_personas[pKey])
       return m.reply(
@@ -276,9 +276,9 @@ async function handler(m, { sock }) {
       db.save();
       return m.reply(
         `🌐 *Auto Ai Global DiaktiғKan*\n\n` +
-          `╭┈┈⬡「 📋 *InғO* 」\n` +
-          `┃ 🎭 Karakter: *${characterName}*\n` +
-          `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n` +
+          `╭──「 📋 *InғO* 」\n` +
+          `│ 🎭 Karakter: *${characterName}*\n` +
+          `│ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n` +
           `╰┈┈┈┈┈┈┈┈⬡\n\n` +
           `ℹ️ AutoAI aktif di seluruh grup\n` +
           `ℹ️ Grup yang sudah punya config tetap pakai config sendiri\n` +
@@ -358,14 +358,14 @@ async function handler(m, { sock }) {
       "custom",
     ].join(", ");
     return m.reply(
-      `❌ Karakter tidak valid!\n\nKarakter tersedia: ${charList}\n\nContoh: .autoai on --novamode=furina --type=voice\nCustom: .autoai on --novamode=custom --logic=kamu adalah nexa ai`,
+      `❌ Karakter tidak valid!\n\nKarakter tersedia: ${charList}\n\n💡 *Contoh:* .autoai on --novamode=furina --type=voice\nCustom: .autoai on --novamode=custom --logic=kamu adalah nexa ai`,
     );
   }
 
   if (charKey === "custom") {
     if (!customLogic) {
       return m.reply(
-        `❌ Mode custom membutuhkan --logic!\n\nContoh: .autoai on --novamode=custom --logic=kamu adalah nexa ai, ...`,
+        `❌ Mode custom membutuhkan --logic!\n\n💡 *Contoh:* .autoai on --novamode=custom --logic=kamu adalah nexa ai, ...`,
       );
     }
     db.db.data.autoai[m.chat] = {
@@ -382,11 +382,11 @@ async function handler(m, { sock }) {
     };
     db.save();
     let txt = `🤖 *Auto Ai DiaktiғKan*\n\n`;
-    txt += `╭┈┈⬡「 📋 *InғO* 」\n`;
-    txt += `┃ 🎭 Karakter: *ᴄᴜꜱᴛᴏᴍ*\n`;
-    txt += `┃ 🧠 Logic: ${customLogic.substring(0, 100)}${customLogic.length > 100 ? "..." : ""}\n`;
-    txt += `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
-    txt += `┃ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
+    txt += `╭──「 📋 *InғO* 」\n`;
+    txt += `│ 🎭 Karakter: *ᴄᴜꜱᴛᴏᴍ*\n`;
+    txt += `│ 🧠 Logic: ${customLogic.substring(0, 100)}${customLogic.length > 100 ? "..." : ""}\n`;
+    txt += `│ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
+    txt += `│ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
     txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
     txt += `ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
     txt += `ℹ️ Bot respond ketika di-reply atau di-tag\n`;
@@ -412,10 +412,10 @@ async function handler(m, { sock }) {
     };
     db.save();
     let txt = `🤖 *Auto Ai DiaktiғKan*\n\n`;
-    txt += `╭┈┈⬡「 📋 *InғO* 」\n`;
-    txt += `┃ 🎭 Karakter: *${customPersona.name}* (custom)\n`;
-    txt += `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
-    txt += `┃ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
+    txt += `╭──「 📋 *InғO* 」\n`;
+    txt += `│ 🎭 Karakter: *${customPersona.name}* (custom)\n`;
+    txt += `│ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
+    txt += `│ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
     txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
     txt += `ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
     txt += `ℹ️ Bot respond ketika di-reply atau di-tag\n`;
@@ -432,7 +432,7 @@ async function handler(m, { sock }) {
       "custom",
     ].join(", ");
     return m.reply(
-      `❌ Karakter tidak valid!\n\nKarakter tersedia: ${charList}\n\nContoh: .autoai on --novamode=furina --type=voice`,
+      `❌ Karakter tidak valid!\n\nKarakter tersedia: ${charList}\n\n💡 *Contoh:* .autoai on --novamode=furina --type=voice`,
     );
   }
 
@@ -451,10 +451,10 @@ async function handler(m, { sock }) {
   db.save();
 
   let txt = `🤖 *Auto Ai DiaktiғKan*\n\n`;
-  txt += `╭┈┈⬡「 📋 *InғO* 」\n`;
-  txt += `┃ 🎭 Karakter: *${characters[charKey].name}*\n`;
-  txt += `┃ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
-  txt += `┃ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
+  txt += `╭──「 📋 *InғO* 」\n`;
+  txt += `│ 🎭 Karakter: *${characters[charKey].name}*\n`;
+  txt += `│ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
+  txt += `│ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
   txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
   txt += `ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
   txt += `ℹ️ Bot respond ketika di-reply atau di-tag\n`;

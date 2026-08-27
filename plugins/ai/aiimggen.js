@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,8 +47,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!prompt) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}aiimggen <prompt>*`,
-          `│ Contoh: *${prefix}aiimggen sunset over mountains*`].join("\n")) +
+        novaCaption({
+  emoji: "🤖",
+  name: "aiimggen2",
+  description: "Generate gambar dari teks",
+  usage: `${prefix}aiimggen <prompt>`,
+  example: `${prefix}aiimggen sunset over mountains`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

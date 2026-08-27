@@ -171,7 +171,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "detail" || sub === "d") {
       const jobId = parts[1];
       if (!jobId) {
-        return m.reply(claraWrap("JobStreet", "ID lowongan wajib!\nContoh: " + usedPrefix + "jobstreet detail 93291047"));
+        return m.reply(claraWrap("JobStreet", "ID lowongan wajib!\n💡 *Contoh:* " + usedPrefix + "jobstreet detail 93291047"));
       }
 
       m.reply(claraWrap("JobStreet", "Mengambil detail lowongan...\nID: " + jobId));
@@ -191,7 +191,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!keyword) {
-      return m.reply(claraWrap("JobStreet", "Keyword pencarian wajib!\nContoh: " + usedPrefix + "jobstreet developer"));
+      return m.reply(claraWrap("JobStreet", "Keyword pencarian wajib!\n💡 *Contoh:* " + usedPrefix + "jobstreet developer"));
     }
 
     m.reply(claraWrap("JobStreet", "Mencari lowongan...\nKeyword: " + keyword + "\nHalaman: " + page));

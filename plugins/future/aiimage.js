@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -15,9 +15,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const prompt = m.text?.trim();
     if (!prompt) {
-      await m.reply( claraWrap("AI Image", [`│ Penggunaan: *${prefix}aiimage <deskripsi>*`,
-        `│ Contoh: *${prefix}aiimage kucing astronaut*`,
-        "│ AI akan generate gambar dari teks"].join("\n")), "aiimage");
+      await m.reply( novaCaption({
+  emoji: "📁",
+  name: "aiimagev2",
+  description: "Generate gambar dari teks dengan AI",
+  usage: `$prefixaiimage <deskripsi>`,
+  example: `$prefixaiimage kucing astronaut di bulan`,
+}), "aiimage");
       return { handled: true };
     }
     { await m.react("🕒"); };

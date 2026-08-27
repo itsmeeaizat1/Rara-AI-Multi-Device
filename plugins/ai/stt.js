@@ -3,9 +3,9 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { 
+import {  
   separator,
-  tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,8 +27,13 @@ async function handler(m, { sock, config: botConfig }) {
     const quoted = m.quoted?.text ? m.quoted : m.msg?.text ? m : null;
     if (!quoted) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}stt*`,
-          `│ Contoh: *Kirim/reply audio/voice*, lalu ketik *${prefix}stt*`].join("\n")) +
+        novaCaption({
+  emoji: "🤖",
+  name: "stt",
+  description: "Ringkas pesan audio/teks menjadi teks",
+  usage: `${prefix}stt`,
+  example: `${prefix}stt (reply pesan)`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

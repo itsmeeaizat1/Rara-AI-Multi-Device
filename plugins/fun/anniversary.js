@@ -188,7 +188,7 @@ async function handler(m, { sock }) {
     // Parse DD/MM/YYYY
     const parts = dateStr.split(/[\/\-.]/);
     if (parts.length !== 3) {
-      return m.reply(claraWrap("anniversary", "Format tanggal salah. Gunakan: DD/MM/YYYY\n\nContoh: .anniversary set 14/02/2024"));
+      return m.reply(claraWrap("anniversary", "Format tanggal salah. Gunakan: DD/MM/YYYY\n\n💡 *Contoh:* .anniversary set 14/02/2024"));
     }
 
     const day = parseInt(parts[0]);

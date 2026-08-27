@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "douyinv2",
@@ -75,12 +75,13 @@ async function douyinAzbry(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(
-      `╭┈┈⬡「 DOUYIN V2 」\n` +
-      `┃ Usage: ${m.prefix}douyinv2 <url>\n` +
-      `╰┈┈⬡\n\n` +
-      `${m.prefix}douyinv2 https://v.douyin.com/xxx`,
-      "douyinv2");
+    return novaCaption({
+  emoji: "🎬",
+  name: "douyinv2",
+  description: "Download video Douyin (V2)",
+  usage: `$m.prefixdouyinv2 <url>`,
+  example: `$m.prefixdouyinv2 https://v.douyin.com/xxx`,
+}), "douyinv2")
   }
 
   m.react("🕒");
@@ -96,12 +97,12 @@ async function handler(m, { sock }) {
 
     if (!data.video) throw new Error("Video URL tidak ditemukan");
 
-    let caption = `╭┈┈⬡「 DOUYIN V2 」\n`;
-    caption += `┃ Title: ${data.title}\n`;
-    caption += `┃ Author: ${data.author}\n`;
-    if (data.duration > 0) caption += `┃ Durasi: ${data.duration}s\n`;
-    caption += `┃ Source: ${data.source} API\n`;
-    caption += `╰┈┈⬡`;
+    let caption = `╭──「 DOUYIN V2 」\n`;
+    caption += `│ Title: ${data.title}\n`;
+    caption += `│ Author: ${data.author}\n`;
+    if (data.duration > 0) caption += `│ Durasi: ${data.duration}s\n`;
+    caption += `│ Source: ${data.source} API\n`;
+    caption += `╰──────────❀`;
 
     await sock.sendMedia(m.chat, data.video, caption, m, { type: "video" });
 

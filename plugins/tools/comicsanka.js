@@ -85,7 +85,7 @@ async function handler(m, { sock, args }) {
     // === SEARCH ===
     if (cmd === "search" || cmd === "cari" || cmd === "s") {
       const query = cmdArgs.join(" ").trim();
-      if (!query) return m.reply(claraWrap("Comicsanka", "Masukkan judul komik!\n\nContoh: `.comicsanka search naruto`"));
+      if (!query) return m.reply(claraWrap("Comicsanka", "Masukkan judul komik!\n\n💡 *Contoh:* `.comicsanka search naruto`"));
 
       const res = await apiGet(`/comic/search?q=${encodeURIComponent(query)}`);
       if (res.status !== 200 || !res.data?.status) throw new Error(res.data?.message || "API error");
@@ -109,7 +109,7 @@ async function handler(m, { sock, args }) {
     // === DETAIL ===
     else if (cmd === "detail" || cmd === "d" || cmd === "info") {
       const slug = cmdArgs[0];
-      if (!slug) return m.reply(claraWrap("Comicsanka", "Masukkan slug komik!\n\nContoh: `.comicsanka detail naruto-manga`"));
+      if (!slug) return m.reply(claraWrap("Comicsanka", "Masukkan slug komik!\n\n💡 *Contoh:* `.comicsanka detail naruto-manga`"));
 
       const res = await apiGet(`/comic/comic/${slug}`);
       if (res.status !== 200 || !res.data?.status) throw new Error(res.data?.message || "API error");
@@ -155,7 +155,7 @@ async function handler(m, { sock, args }) {
     // === CHAPTER (baca) ===
     else if (cmd === "chapter" || cmd === "read" || cmd === "baca") {
       const slug = cmdArgs[0];
-      if (!slug) return m.reply(claraWrap("Comicsanka", "Masukkan slug chapter!\n\nContoh: `.comicsanka chapter naruto-chapter-1`"));
+      if (!slug) return m.reply(claraWrap("Comicsanka", "Masukkan slug chapter!\n\n💡 *Contoh:* `.comicsanka chapter naruto-chapter-1`"));
 
       const res = await apiGet(`/comic/chapter/${slug}`);
       if (res.status !== 200 || !res.data?.status) throw new Error(res.data?.message || "API error");
@@ -361,7 +361,7 @@ async function handler(m, { sock, args }) {
     // === GENRE (by name) ===
     else if (cmd === "genre" || cmd === "g") {
       const genreSlug = cmdArgs[0];
-      if (!genreSlug) return m.reply(claraWrap("Comicsanka", "Masukkan nama genre!\n\nContoh: `.comicsanka genre action`"));
+      if (!genreSlug) return m.reply(claraWrap("Comicsanka", "Masukkan nama genre!\n\n💡 *Contoh:* `.comicsanka genre action`"));
 
       const res = await apiGet(`/comic/genre/${encodeURIComponent(genreSlug)}`);
       if (res.status !== 200 || !res.data?.status) throw new Error(res.data?.message || "API error");
@@ -385,7 +385,7 @@ async function handler(m, { sock, args }) {
       const type = (cmdArgs[0] || "").toLowerCase();
       const validTypes = ["manga", "manhwa", "manhua"];
       if (!validTypes.includes(type)) {
-        return m.reply(`Tipe tidak valid!\n\nPilihan: manga, manhwa, manhua\n\nContoh: \`${m.prefix}comicsanka type manhwa\``);
+        return m.reply(`Tipe tidak valid!\n\nPilihan: manga, manhwa, manhua\n\n💡 *Contoh:* \`${m.prefix}comicsanka type manhwa\``);
       }
 
       const res = await apiGet(`/comic/type/${type}`);

@@ -84,7 +84,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   const dateStr = (args[1] || "").trim();
 
   if (!dateStr || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-    await m.reply(claraWrap("Astrologi", "Format: " + prefix + "astrologi <YYYY-MM-DD>\nContoh: " + prefix + "astrologi 2000-05-15"));
+    await m.reply(claraWrap("Astrologi", "Format: " + prefix + "astrologi <YYYY-MM-DD>\n💡 *Contoh:* " + prefix + "astrologi 2000-05-15"));
     return { handled: true };
   }
 

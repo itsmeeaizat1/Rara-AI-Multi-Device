@@ -1,4 +1,4 @@
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -26,10 +26,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!["on", "off"].includes(args)) {
       const text =
-        claraWrap("Autoreaction", [`│ Penggunaan: *${prefix}autoreaction on/off*`,
-          `│ Contoh: *${prefix}autoreaction on*`,
-          `│ Contoh: *${prefix}autoreaction off*`,
-          `│ Emoji: ${EMOJIS.join(" ")}`].join("\n")) +
+        novaCaption({
+  emoji: "⚡",
+  name: "autoreaction",
+  description: "Auto reaction pesan di grup",
+  usage: `$prefixautoreaction on/off`,
+  example: `$prefixautoreaction on`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

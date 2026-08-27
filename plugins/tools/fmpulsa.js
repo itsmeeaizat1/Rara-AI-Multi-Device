@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
     }
     data.markup = pct; saveData(data);
     await m.react("🐣");
-    return m.reply( claraWrap("FMPulsa", "Markup: " + pct + "%\n\nContoh: Pulsa 50k harga API Rp49.000\nHarga jual: " + formatRupiah(49000 * (1 + pct/100))), "fmpulsa");
+    return m.reply( claraWrap("FMPulsa", "Markup: " + pct + "%\n\n💡 *Contoh:* Pulsa 50k harga API Rp49.000\nHarga jual: " + formatRupiah(49000 * (1 + pct/100))), "fmpulsa");
   }
 
   // TOPUP
@@ -134,7 +134,7 @@ async function handler(m, { sock }) {
     const target = (arg1 || "").replace(/[^0-9]/g, "");
     const amount = parseInt(arg2) || 0;
     if (!target || amount < 100) {
-      return m.reply( claraWrap("FMPulsa", "Topup Saldo (Owner)\n\n.fm topup <nomor> <jumlah>\nContoh: .fm topup 628123456789 50000\nMin: Rp100"), "fmpulsa");
+      return m.reply( claraWrap("FMPulsa", "Topup Saldo (Owner)\n\n.fm topup <nomor> <jumlah>\n💡 *Contoh:* .fm topup 628123456789 50000\nMin: Rp100"), "fmpulsa");
     }
     const targetUser = getUser(data, target + "@s.whatsapp.net");
     targetUser.balance += amount; saveData(data);
@@ -230,7 +230,7 @@ async function handler(m, { sock }) {
         body += "\n";
       });
       if (filtered.length > 15) body += "... dan " + (filtered.length - 15) + " produk lain\n";
-      body += "\nBeli: .fm beli <code> <nomor>\nContoh: .fm beli " + filtered[0].code + " 08123456789";
+      body += "\nBeli: .fm beli <code> <nomor>\n💡 *Contoh:* .fm beli " + filtered[0].code + " 08123456789";
       await m.react("🐣");
       return m.reply( claraWrap("FMPulsa", body), "fmpulsa");
     } catch (err) {
@@ -294,7 +294,7 @@ async function handler(m, { sock }) {
   // BAYAR - Execute order, send to API
   if (sub === "bayar" || sub === "pay" || sub === "confirm") {
     const token = arg1 ? arg1.toUpperCase() : "";
-    if (!token) return m.reply( claraWrap("FMPulsa", "Masukkan token!\nContoh: .fm bayar ABC123"), "fmpulsa");
+    if (!token) return m.reply( claraWrap("FMPulsa", "Masukkan token!\n💡 *Contoh:* .fm bayar ABC123"), "fmpulsa");
     const pending = data.pendingPayments[token];
     if (!pending) return m.reply( claraWrap("FMPulsa", "Token tidak ditemukan!"), "fmpulsa");
     if (pending.sender !== sender) return m.reply( claraWrap("FMPulsa", "Bukan token kamu!"), "fmpulsa");
@@ -355,7 +355,7 @@ async function handler(m, { sock }) {
   // CEK
   if (sub === "cek" || sub === "check" || sub === "status") {
     const refId = arg1;
-    if (!refId) return m.reply( claraWrap("FMPulsa", "Masukkan Ref ID!\nContoh: .fm cek FM1234ABC"), "fmpulsa");
+    if (!refId) return m.reply( claraWrap("FMPulsa", "Masukkan Ref ID!\n💡 *Contoh:* .fm cek FM1234ABC"), "fmpulsa");
     const order = data.orders.find(o => o.refId === refId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("FMPulsa", "Order tidak ditemukan!"), "fmpulsa");
     await m.react("🕒");

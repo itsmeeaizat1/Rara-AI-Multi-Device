@@ -54,7 +54,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const event = args.slice(2).join(" ").trim();
     if (!event) {
-      await m.reply(claraWrap("Time Machine", "Format: " + prefix + "timemachine add <momen>\nContoh: " + prefix + "timemachine add Grup capai 100 member"));
+      await m.reply(claraWrap("Time Machine", "Format: " + prefix + "timemachine add <momen>\n💡 *Contoh:* " + prefix + "timemachine add Grup capai 100 member"));
       return { handled: true };
     }
     const events = getTimeline(db, gid);

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { parallelAI } from "../../src/scraper/parallelai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -28,12 +28,13 @@ async function handler(m, { sock, config: botConfig }) {
       .trim();
 
     if (!prompt) {
-      const text = claraWrap("Cara Pakai", [
-        `│ Penggunaan: *${prefix}parallelai <pertanyaan>*`,
-        `│ Contoh: *${prefix}parallelai cari kan rest api gratis*`,
-        "",
-        "Parallel AI adalah reasoning model yang bisa jawab pertanyaan kompleks dengan effort adjustable (low/medium/high).",
-      ].join("\n"));
+      const text = novaCaption({
+  emoji: "🤖",
+  name: "parallelai",
+  description: "Tanya AI menggunakan Parallel AI (reasoning model)",
+  usage: `${prefix}parallelai <pertanyaan>`,
+  example: `${prefix}parallelai cari kan rest api gratis`,
+});
       return await m.reply(text, "parallelai");
     }
 

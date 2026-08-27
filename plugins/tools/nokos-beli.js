@@ -504,7 +504,7 @@ async function handler(m, { sock }) {
     const target = (arg1 || "").replace(/[^0-9]/g, "");
     const amount = parseInt(arg2) || 0;
     if (!target || amount < 500) {
-      return m.reply( claraWrap("Nokos Beli", "Topup Saldo (Owner)\n\n.nokosbeli topup <nomor> <jumlah>\nContoh: .nokosbeli topup 628123456789 10000\nMin: Rp500"), "nokosbeli");
+      return m.reply( claraWrap("Nokos Beli", "Topup Saldo (Owner)\n\n.nokosbeli topup <nomor> <jumlah>\n💡 *Contoh:* .nokosbeli topup 628123456789 10000\nMin: Rp500"), "nokosbeli");
     }
     const targetUser = getUser(data, target + "@s.whatsapp.net");
     targetUser.balance += amount; saveData(data);
@@ -517,7 +517,7 @@ async function handler(m, { sock }) {
     if (!isOwner) return m.reply(claraWrap("Budget", "Khusus owner!"));
     const country = arg1; const service = arg2 ? arg2.toLowerCase() : ""; const price = parseInt(arg3);
     if (!country || !service || !price) {
-      return m.reply( claraWrap("Nokos Beli", "Set Custom Price (Owner)\n\n.nokosbeli setprice <negara> <layanan> <harga>\nContoh: .nokosbeli setprice 6 wa 4000\n\nBudget = 20% x standard\nPremium = 180% x standard"), "nokosbeli");
+      return m.reply( claraWrap("Nokos Beli", "Set Custom Price (Owner)\n\n.nokosbeli setprice <negara> <layanan> <harga>\n💡 *Contoh:* .nokosbeli setprice 6 wa 4000\n\nBudget = 20% x standard\nPremium = 180% x standard"), "nokosbeli");
     }
     const cData = COUNTRIES[parseInt(country)];
     if (cData) cData[service] = price;
@@ -665,7 +665,7 @@ async function handler(m, { sock }) {
         body += (i+1) + ". ID: " + s.id + "\n   " + (s.product || "?") + " | " + (s.country || "?") + "\n   Harga: Rp" + priceBase + " -> " + formatRupiah(priceFinal) + " (" + t.name + ")\n   Stok: " + (s.stock || 0) + "\n\n";
       });
       if (filtered.length > 20) body += "... dan " + (filtered.length - 20) + " layanan lain\n";
-      body += "\nBeli: .nokosbeli nexusbuy <service_id>\nContoh: .nokosbeli nexusbuy " + filtered[0].id;
+      body += "\nBeli: .nokosbeli nexusbuy <service_id>\n💡 *Contoh:* .nokosbeli nexusbuy " + filtered[0].id;
       await m.react("🐣");
       return m.reply( claraWrap("Nokos Beli", body), "nokosbeli");
     } catch (err) {
@@ -679,7 +679,7 @@ async function handler(m, { sock }) {
       return m.reply( claraWrap("Nokos Beli", "Fitur ini khusus NexusSMM!\n\nSet provider:\n.nokosbeli setkey nexus <api_id>:<api_key>"), "nokosbeli");
     }
     const serviceId = arg1;
-    if (!serviceId) return m.reply( claraWrap("Nokos Beli", "Masukkan Service ID!\nContoh: .nokosbeli nexusbuy 5320448\n\nCari ID: .nokosbeli nexusharga whatsapp indonesia"), "nokosbeli");
+    if (!serviceId) return m.reply( claraWrap("Nokos Beli", "Masukkan Service ID!\n💡 *Contoh:* .nokosbeli nexusbuy 5320448\n\nCari ID: .nokosbeli nexusharga whatsapp indonesia"), "nokosbeli");
     await m.react("🕒");
     try {
       const services = await nexusServices(data);
@@ -726,7 +726,7 @@ async function handler(m, { sock }) {
   // BAYAR
   if (sub === "bayar" || sub === "pay" || sub === "confirm") {
     const token = arg1 ? arg1.toUpperCase() : "";
-    if (!token) return m.reply( claraWrap("Nokos Beli", "Masukkan token!\nContoh: .nokosbeli bayar ABC123"), "nokosbeli");
+    if (!token) return m.reply( claraWrap("Nokos Beli", "Masukkan token!\n💡 *Contoh:* .nokosbeli bayar ABC123"), "nokosbeli");
     const pending = data.pendingPayments[token];
     if (!pending) return m.reply( claraWrap("Nokos Beli", "Token tidak ditemukan!\nBeli: .nokosbeli buy"), "nokosbeli");
     if (pending.sender !== sender) return m.reply( claraWrap("Nokos Beli", "Bukan token kamu!"), "nokosbeli");
@@ -754,7 +754,7 @@ async function handler(m, { sock }) {
   // OTP / CEK
   if (sub === "otp" || sub === "cek" || sub === "check" || sub === "sms") {
     const orderId = arg1;
-    if (!orderId) return m.reply( claraWrap("Nokos Beli", "Masukkan Order ID!\nContoh: .nokosbeli otp 12345\nLihat: .nokosbeli list"), "nokosbeli");
+    if (!orderId) return m.reply( claraWrap("Nokos Beli", "Masukkan Order ID!\n💡 *Contoh:* .nokosbeli otp 12345\nLihat: .nokosbeli list"), "nokosbeli");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     await m.react("🕒");
     try {
@@ -782,7 +782,7 @@ async function handler(m, { sock }) {
   // RETRY - Minta OTP lagi ke nomor yang sama
   if (sub === "retry" || sub === "ulang" || sub === "otpbaru") {
     const orderId = arg1;
-    if (!orderId) return m.reply( claraWrap("Nokos Beli", "Masukkan Order ID!\nContoh: .nokosbeli retry 12345"), "nokosbeli");
+    if (!orderId) return m.reply( claraWrap("Nokos Beli", "Masukkan Order ID!\n💡 *Contoh:* .nokosbeli retry 12345"), "nokosbeli");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("Nokos Beli", "Order tidak ditemukan!"), "nokosbeli");
     await m.react("🕒");
@@ -822,7 +822,7 @@ async function handler(m, { sock }) {
   // BATAL
   if (sub === "batal" || sub === "cancel") {
     const orderId = arg1;
-    if (!orderId) return m.reply( claraWrap("Nokos Beli", "Masukkan Order ID!\nContoh: .nokosbeli batal 12345"), "nokosbeli");
+    if (!orderId) return m.reply( claraWrap("Nokos Beli", "Masukkan Order ID!\n💡 *Contoh:* .nokosbeli batal 12345"), "nokosbeli");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("Nokos Beli", "Order tidak ditemukan!"), "nokosbeli");
     await m.react("🕒");
@@ -868,7 +868,7 @@ async function handler(m, { sock }) {
   if (sub === "layanan" || sub === "service") {
     let body = "Daftar Layanan\n\n";
     Object.entries(SERVICES).forEach(([code, name]) => { body += code + ": " + name + "\n"; });
-    body += "\nContoh: .nokosbeli buy 6 wa";
+    body += "\n💡 *Contoh:* .nokosbeli buy 6 wa";
     return m.reply( claraWrap("Nokos Beli", body), "nokosbeli");
   }
 

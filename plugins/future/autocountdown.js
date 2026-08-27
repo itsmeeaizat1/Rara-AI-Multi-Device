@@ -53,7 +53,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const dateStr = (args[args.length - 1] || "").trim();
     const name = args.slice(2, -1).join(" ").trim();
     if (!name || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-      await m.reply(claraWrap("Auto Countdown", "Format: " + prefix + "autocountdown add <nama> <YYYY-MM-DD>\nContoh: " + prefix + "autocountdown add Reuni Akbar 2026-12-20"));
+      await m.reply(claraWrap("Auto Countdown", "Format: " + prefix + "autocountdown add <nama> <YYYY-MM-DD>\n💡 *Contoh:* " + prefix + "autocountdown add Reuni Akbar 2026-12-20"));
       return { handled: true };
     }
     cfg.events.push({ name, date: dateStr, id: Date.now(), addedBy: m.sender });

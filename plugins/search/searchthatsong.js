@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ") || m.text?.trim();
 
   if (!query) {
-    { const __navText = "❌ Masukkan potongan lirik atau nama lagu yang ingin dicari.\n\nContoh: `.sts ku menangis membayangkan`"; return await m.reply( __navText, "searchthatsong"); };
+    { const __navText = "❌ Masukkan potongan lirik atau nama lagu yang ingin dicari.\n\n💡 *Contoh:* `.sts ku menangis membayangkan`"; return await m.reply( __navText, "searchthatsong"); };
   }
 
   await m.react("🕒");

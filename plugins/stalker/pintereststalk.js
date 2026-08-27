@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const username = m.text?.trim() || m.args[0];
 
   if (!username) {
-    return m.reply(claraWrap("pintereststalk", "❌ *Waduh, username Pinterest-nya belum dimasukkan!*\n\nKamu harus mengetikkan username Pinterest yang ingin di-stalk. \n\nContoh: `.pintereststalk dims`"));
+    return m.reply(claraWrap("pintereststalk", "❌ *Waduh, username Pinterest-nya belum dimasukkan!*\n\nKamu harus mengetikkan username Pinterest yang ingin di-stalk. \n\n💡 *Contoh:* `.pintereststalk dims`"));
   }
 
   await m.react("🕒");

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -15,9 +15,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const url = m.text?.trim();
     if (!url || !url.startsWith("http")) {
-      await m.reply( claraWrap("Price Track", [`│ Penggunaan: *${prefix}pricetrack <url>*`,
-        `│ Support: Shopee, Tokopedia, Bukalapak`,
-        "│ Cek harga & info produk"].join("\n")), "pricetrack");
+      await m.reply( novaCaption({
+  emoji: "🔧",
+  name: "pricetrack",
+  description: "Cek harga produk online",
+  usage: `$prefixpricetrack <url produk>`,
+  example: `$prefixpricetrack https://shopee.co.id/...`,
+}), "pricetrack");
       return { handled: true };
     }
     const { data: html } = await axios.get(url, { timeout: 15000, headers: { "User-Agent": "Mozilla/5.0" } });

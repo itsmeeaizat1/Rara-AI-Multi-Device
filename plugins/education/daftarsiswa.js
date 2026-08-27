@@ -72,7 +72,7 @@ async function handler(m, { sock, args }) {
   if (cmd.startsWith("ubah ")) {
     const newName = name.slice(5).trim();
     if (!newName || newName.length < 2) {
-      return m.reply(claraWrap("Daftarsiswa", "Nama terlalu pendek! Min 2 karakter.\n\nContoh: `.daftarsiswa ubah Budi Santoso`"));
+      return m.reply(claraWrap("Daftarsiswa", "Nama terlalu pendek! Min 2 karakter.\n\n💡 *Contoh:* `.daftarsiswa ubah Budi Santoso`"));
     }
     const reg = db.db.data.eduRegistered[sender];
     if (!reg) {
@@ -105,7 +105,7 @@ async function handler(m, { sock, args }) {
   // === REGISTER ===
   // Validate name
   if (name.length < 2) {
-    return m.reply(claraWrap("Daftarsiswa", "Nama terlalu pendek! Min 2 karakter.\n\nContoh: `.daftarsiswa Andi Pratama`"));
+    return m.reply(claraWrap("Daftarsiswa", "Nama terlalu pendek! Min 2 karakter.\n\n💡 *Contoh:* `.daftarsiswa Andi Pratama`"));
   }
   if (name.length > 30) {
     return m.reply(claraWrap("Daftarsiswa", "Nama terlalu panjang! Maks 30 karakter."));

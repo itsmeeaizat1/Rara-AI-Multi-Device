@@ -70,12 +70,12 @@ function handler(m, { sock }) {
 
         const timeInput = args[1]
         if (!timeInput) {
-            return m.reply( `❌ *Masukkan jadwal makan!*\n\nContoh: \`${m.prefix}notifmakan on 07.00,12.00,19.00\``, "notifmakan")
+            return m.reply( `❌ *Masukkan jadwal makan!*\n\n💡 *Contoh:* \`${m.prefix}notifmakan on 07.00,12.00,19.00\``, "notifmakan")
         }
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\nContoh: \`07.00,12.30,19.00\``)
+            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\n💡 *Contoh:* \`07.00,12.30,19.00\``)
         }
 
         const menu = args.slice(2).join(' ').trim()
@@ -100,12 +100,12 @@ function handler(m, { sock }) {
 
         const timeInput = args[1]
         if (!timeInput) {
-            return m.reply(`❌ *Masukkan jadwal baru!*\n\nContoh: \`${m.prefix}notifmakan edit 08.00,13.00,20.00\``)
+            return m.reply(`❌ *Masukkan jadwal baru!*\n\n💡 *Contoh:* \`${m.prefix}notifmakan edit 08.00,13.00,20.00\``)
         }
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\nContoh: \`08.00,13.00,20.00\``)
+            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\n💡 *Contoh:* \`08.00,13.00,20.00\``)
         }
 
         const menu = args.slice(2).join(' ').trim() || existing.menu || ''

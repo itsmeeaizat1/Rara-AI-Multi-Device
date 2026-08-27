@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "qrcode",
@@ -25,8 +25,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       const out =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}qrcode <teks/link>*`,
-          `│ Contoh: *${prefix}qrcode https://wa.me/628xxxx*`].join("\n")) +
+        novaCaption({
+  emoji: "🛠️",
+  name: "qrcode",
+  description: "Buat QR code dari teks/link",
+  usage: `${prefix}qrcode <teks>`,
+  example: `${prefix}qrcode https://wa.me/628xxxx`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

@@ -112,8 +112,9 @@ ${lines}├──「 Cara Pakai 」
     if (!userMessage) {
       const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Provider:* ${toSC(provider.name || providerArg)}
 │ *Model:* ${model}
-│ Penggunaan: *${prefix}multi-ai ${providerArg} [model] <pesan>*
-│ Contoh: *${prefix}multi-ai ${providerArg} ${model} apa itu AI*
+│
+│ 📌 *Cara Pakai:* *${prefix}multi-ai ${providerArg} [model] <pesan>*
+│ 💡 *Contoh:* *${prefix}multi-ai ${providerArg} ${model} apa itu AI*
 ╰──────────❀`;
       await m.reply(text);
       await m.react("❌");

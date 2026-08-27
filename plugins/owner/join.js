@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,8 +24,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!url) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}join <link grup>*`,
-          `│ Contoh: *${prefix}join https://chat.whatsapp.com/xxxxx*`].join("\n")) +
+        novaCaption({
+  emoji: "👑",
+  name: "join2",
+  description: "Bot join ke grup via link",
+  usage: `${prefix}join <link grup>`,
+  example: `${prefix}join https://chat.whatsapp.com/xxxxx`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

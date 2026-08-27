@@ -77,7 +77,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const type = (args[2] || "").toLowerCase();
     const value = parseInt(args[3] || "0", 10);
     if (!TYPES[type] || !value) {
-      await m.reply(claraWrap("Auto Milestone", "Format: " + prefix + "automilestone add <type> <value>\nType: " + Object.keys(TYPES).join(", ") + "\nContoh: " + prefix + "automilestone add member 100"));
+      await m.reply(claraWrap("Auto Milestone", "Format: " + prefix + "automilestone add <type> <value>\nType: " + Object.keys(TYPES).join(", ") + "\n💡 *Contoh:* " + prefix + "automilestone add member 100"));
       return { handled: true };
     }
     cfg.milestones.push({ type, value, id: Date.now() });

@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
     const serverArg = args[0].toLowerCase()
     const serverNum = serverArg.match(/^v?([1-5])$/)?.[1]
     if (!serverNum) {
-        return m.reply(claraWrap('setpanel', 'Server tidak valid. Gunakan v1 sampai v5.\n\nContoh: ' + prefix + 'setpanel v1 https://domain.com'))
+        return m.reply(claraWrap('setpanel', 'Server tidak valid. Gunakan v1 sampai v5.\n\n💡 *Contoh:* ' + prefix + 'setpanel v1 https://domain.com'))
     }
 
     const serverKey = 'server' + serverNum
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
         // .setpanel v1 apikey <value>
         const value = args[2]
         if (!value) {
-            return m.reply(claraWrap('setpanel', 'Value tidak boleh kosong.\n\nContoh: ' + prefix + 'setpanel v1 apikey ptla_xxxx'))
+            return m.reply(claraWrap('setpanel', 'Value tidak boleh kosong.\n\n💡 *Contoh:* ' + prefix + 'setpanel v1 apikey ptla_xxxx'))
         }
 
         // Jangan tampilkan key di response

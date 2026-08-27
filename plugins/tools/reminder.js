@@ -184,7 +184,7 @@ async function handler(m, { sock }) {
   const message = text.slice(durStr.length).trim();
 
   if (!message) {
-    return m.reply(claraWrap("Reminder", "Pesan reminder gak boleh kosong!\n\nContoh: .remind 30m beli pulsa", "error"));
+    return m.reply(claraWrap("Reminder", "Pesan reminder gak boleh kosong!\n\n💡 *Contoh:* .remind 30m beli pulsa", "error"));
   }
 
   if (message.length > 200) {

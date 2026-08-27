@@ -47,7 +47,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "add" || sub === "tambah") {
     const item = args.slice(2).join(" ").trim();
     if (!item) {
-      await m.reply(claraWrap("Bucket List", "Format: " + prefix + "bucketlist add <target>\nContoh: " + prefix + "bucketlist add Naik gunung Semeru"));
+      await m.reply(claraWrap("Bucket List", "Format: " + prefix + "bucketlist add <target>\n💡 *Contoh:* " + prefix + "bucketlist add Naik gunung Semeru"));
       return { handled: true };
     }
     const all = db.setting("bucketlist") || {};

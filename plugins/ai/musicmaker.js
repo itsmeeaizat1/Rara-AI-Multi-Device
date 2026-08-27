@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const prompt = m.text?.trim() || m.args.join(" ");
 
   if (!prompt) {
-    { const __navText = "❌ Masukkan deskripsi lagu yang ingin dibuat.\n\nContoh: `.musicmaker Lagu pop romantis yang ceria`"; return await m.reply(__navText, "musicmaker"); };
+    { const __navText = "❌ Masukkan deskripsi lagu yang ingin dibuat.\n\n💡 *Contoh:* `.musicmaker Lagu pop romantis yang ceria`"; return await m.reply(__navText, "musicmaker"); };
   }
 
   await m.react("🕒");

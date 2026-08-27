@@ -76,7 +76,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "action" || sub === "aksi") {
       const action = (args[1] || "").toLowerCase();
       if (!["warn", "kick"].includes(action)) {
-        return m.reply(claraWrap("Anti Ghost", "Pilih: warn atau kick\nContoh: .antighost action kick"));
+        return m.reply(claraWrap("Anti Ghost", "Pilih: warn atau kick\n💡 *Contoh:* .antighost action kick"));
       }
       cfg.action = action;
       await db.save();

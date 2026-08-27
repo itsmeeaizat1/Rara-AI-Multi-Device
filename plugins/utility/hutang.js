@@ -90,7 +90,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const dueDate = dueStr ? parseDate(dueStr) : null;
       if (dueStr && !dueDate) {
-        return m.reply(claraWrap("Hutang", "Format tanggal salah! Gunakan: DD-MM-YYYY\nContoh: 30-08-2026"));
+        return m.reply(claraWrap("Hutang", "Format tanggal salah! Gunakan: DD-MM-YYYY\n💡 *Contoh:* 30-08-2026"));
       }
 
       const debts = getDebts(db, sender);

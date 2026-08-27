@@ -216,7 +216,7 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
 
   if (!text || !/open\.spotify\.com\/track/i.test(text)) {
-    { const __navText = "❌ *Waduh, link Spotify-nya mana nih atau kurang tepat!*\n\nKamu harus memasukkan tautan (link) lagu dari Spotify yang valid. Pastikan itu adalah link ke track/lagu ya! \n\nContoh: `.spdl https://open.spotify.com/track/3RY0NyQQXxuAiyk5eAS4fC`"; return await m.reply( __navText, "spotifydl"); };
+    { const __navText = "❌ *Waduh, link Spotify-nya mana nih atau kurang tepat!*\n\nKamu harus memasukkan tautan (link) lagu dari Spotify yang valid. Pastikan itu adalah link ke track/lagu ya! \n\n💡 *Contoh:* `.spdl https://open.spotify.com/track/3RY0NyQQXxuAiyk5eAS4fC`"; return await m.reply( __navText, "spotifydl"); };
   }
 
   await m.react("🕒");

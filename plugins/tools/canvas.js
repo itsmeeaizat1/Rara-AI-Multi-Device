@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,8 +24,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       const out =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}canvas <teks>*`,
-          `│ Contoh: *${prefix}canvas Hello World*`].join("\n")) +
+        novaCaption({
+  emoji: "🛠️",
+  name: "canvas",
+  description: "Buat desain/grafis",
+  usage: `${prefix}canvas <teks>`,
+  example: `${prefix}canvas Hello World`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

@@ -228,7 +228,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       saveConfig(db, gid, cfg);
       await m.reply(claraWrap("Tribe", "Defense power naik! +10\nDefense: " + my.tribe.defensePower + " | Resources: " + my.tribe.resources));
     } else {
-      await m.reply(claraWrap("Tribe", "Type: attack atau defense\nContoh: " + prefix + "tribe upgrade attack\nCost: " + cost + " resources"));
+      await m.reply(claraWrap("Tribe", "Type: attack atau defense\n💡 *Contoh:* " + prefix + "tribe upgrade attack\nCost: " + cost + " resources"));
     }
     return { handled: true };
   }

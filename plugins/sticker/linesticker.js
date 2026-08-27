@@ -25,8 +25,8 @@ async function handler(m, { sock }) {
     if (!url || !url.includes('store.line.me')) {
         return m.reply( `🎨 *ʟɪɴᴇ ꜱᴛɪᴄᴋᴇʀ ᴘᴀᴄᴋ*\n\n` +
             `Download LINE sticker pack\n\n` +
-            `╭┈┈⬡「 📋 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
-            `┃ ${m.prefix}linesticker <url>\n` +
+            `╭──「 📋 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
+            `│ ${m.prefix}linesticker <url>\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
             `*ᴄᴀʀᴀ ᴅᴀᴘᴀᴛ ᴜʀʟ:*\n` +
             `1. Buka https://store.line.me\n` +
@@ -66,11 +66,11 @@ async function handler(m, { sock }) {
         
         await m.reply(
             `🎨 *ʟɪɴᴇ ꜱᴛɪᴄᴋᴇʀ ᴘᴀᴄᴋ*\n\n` +
-            `╭┈┈⬡「 📦 *ɪɴꜰᴏ* 」\n` +
-            `┃ 📝 *ᴛɪᴛʟᴇ:* ${title}\n` +
-            `┃ 👤 *ᴀᴜᴛʜᴏʀ:* ${author}\n` +
-            `┃ 🎬 *ᴀɴɪᴍᴀᴛᴇᴅ:* ${isAnimated ? 'Ya' : 'Tidak'}\n` +
-            `┃ 📊 *ᴛᴏᴛᴀʟ:* ${stickerUrls.length}\n` +
+            `╭──「 📦 *ɪɴꜰᴏ* 」\n` +
+            `│ 📝 *ᴛɪᴛʟᴇ:* ${title}\n` +
+            `│ 👤 *ᴀᴜᴛʜᴏʀ:* ${author}\n` +
+            `│ 🎬 *ᴀɴɪᴍᴀᴛᴇᴅ:* ${isAnimated ? 'Ya' : 'Tidak'}\n` +
+            `│ 📊 *ᴛᴏᴛᴀʟ:* ${stickerUrls.length}\n` +
             `╰┈┈┈┈┈┈┈┈⬡\n\n` +
             `🕕 Mengirim sticker...`
         )

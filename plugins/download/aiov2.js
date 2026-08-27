@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aiov2",
@@ -49,15 +49,13 @@ function formatSize(bytes) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(
-      `╭┈┈⬡「 AIO V2 」\n` +
-      `┃ Usage: ${m.prefix}aiov2 <url>\n` +
-      `╰┈┈⬡\n\n` +
-      `Support: TikTok, IG, FB, Twitter, YT, dll\n\n` +
-      `Contoh:\n` +
-      `1. ${m.prefix}aiov2 https://vt.tiktok.com/xxx\n` +
-      `2. ${m.prefix}aiov2 https://instagram.com/reel/xxx`,
-      "aiov2");
+    return novaCaption({
+  emoji: "🌐",
+  name: "aiov2",
+  description: "AIO Downloader all-in-one sosmed via V2 API (V2)",
+  usage: `$m.prefixaiov2 <url>`,
+  example: `$m.prefixaiov2 https://vt.tiktok.com/xxx`,
+}), "aiov2")
   }
 
   m.react("🕒");
@@ -73,13 +71,13 @@ async function handler(m, { sock }) {
     const medias = r.medias || [];
     if (!medias.length) throw new Error("Media tidak ditemukan untuk URL ini");
 
-    let caption = `╭┈┈⬡「 AIO V2 」\n`;
-    caption += `┃ Title: ${r.title || "Media"}\n`;
-    caption += `┃ Source: ${r.source || "Unknown"}\n`;
-    if (r.duration) caption += `┃ Durasi: ${r.duration}s\n`;
-    if (r.thumbnail) caption += `┃ Thumb: tersedia\n`;
-    caption += `┃ Quality: ${medias.length} opsi tersedia\n`;
-    caption += `╰┈┈⬡`;
+    let caption = `╭──「 AIO V2 」\n`;
+    caption += `│ Title: ${r.title || "Media"}\n`;
+    caption += `│ Source: ${r.source || "Unknown"}\n`;
+    if (r.duration) caption += `│ Durasi: ${r.duration}s\n`;
+    if (r.thumbnail) caption += `│ Thumb: tersedia\n`;
+    caption += `│ Quality: ${medias.length} opsi tersedia\n`;
+    caption += `╰──────────❀`;
 
     // Pick best quality (usually last in array)
     const best = medias[medias.length - 1];

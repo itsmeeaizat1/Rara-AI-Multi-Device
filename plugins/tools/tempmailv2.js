@@ -223,7 +223,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       let email = (args[2] || "").toLowerCase().trim();
       if (!email) email = user.tempmailV2 || "";
       if (!id) {
-        return m.reply(claraWrap("Temp Email V2", "Format: .tempmailv2 read <id> <email>\nContoh: .tempmailv2 read abc123 aizat@catchmail.io"));
+        return m.reply(claraWrap("Temp Email V2", "Format: .tempmailv2 read <id> <email>\n💡 *Contoh:* .tempmailv2 read abc123 aizat@catchmail.io"));
       }
       if (!email) {
         return m.reply(claraWrap("Temp Email V2", "Belum ada email aktif. Ketik .tempmailv2 new <username>"));
@@ -279,7 +279,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       let email = (args[2] || "").toLowerCase().trim();
       if (!email) email = user.tempmailV2 || "";
       if (!id || !email) {
-        return m.reply(claraWrap("Temp Email V2", "Format: .tempmailv2 delete <id> <email>\nContoh: .tempmailv2 delete abc123 aizat@catchmail.io"));
+        return m.reply(claraWrap("Temp Email V2", "Format: .tempmailv2 delete <id> <email>\n💡 *Contoh:* .tempmailv2 delete abc123 aizat@catchmail.io"));
       }
 
       await apiDeleteMessage(id, email);

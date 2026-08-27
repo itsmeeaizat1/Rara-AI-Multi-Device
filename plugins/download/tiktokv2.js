@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tiktokv2",
@@ -39,12 +39,13 @@ async function rlGet(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(
-      `╭┈┈⬡「 TIKTOK V2 」\n` +
-      `┃ Usage: ${m.prefix}tiktokv2 <url>\n` +
-      `╰┈┈⬡\n\n` +
-      `${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`,
-      "tiktokv2");
+    return novaCaption({
+  emoji: "🎵",
+  name: "tiktokv2",
+  description: "Download TikTok tanpa watermark via (V2)",
+  usage: `$m.prefixtiktokv2 <url>`,
+  example: `$m.prefixtiktokv2 https://vt.tiktok.com/xxx`,
+}), "tiktokv2")
   }
   m.react("🕒");
   try {
@@ -52,14 +53,14 @@ async function handler(m, { sock }) {
     const r = res.data?.result || res.data?.data;
     if (!r?.play) throw new Error("Gagal mengambil video TikTok");
 
-    let caption = `╭┈┈⬡「 TIKTOK V2 」\n`;
-    caption += `┃ Title: ${r.title || "TikTok Video"}\n`;
-    caption += `┃ Author: ${r.author?.nickname || "Unknown"}\n`;
-    if (r.duration) caption += `┃ Durasi: ${r.duration}s\n`;
-    caption += `┃ Views: ${(r.play_count || 0).toLocaleString()}\n`;
-    caption += `┃ Likes: ${(r.digg_count || 0).toLocaleString()}\n`;
-    caption += `┃ Source: API V2\n`;
-    caption += `╰┈┈⬡`;
+    let caption = `╭──「 TIKTOK V2 」\n`;
+    caption += `│ Title: ${r.title || "TikTok Video"}\n`;
+    caption += `│ Author: ${r.author?.nickname || "Unknown"}\n`;
+    if (r.duration) caption += `│ Durasi: ${r.duration}s\n`;
+    caption += `│ Views: ${(r.play_count || 0).toLocaleString()}\n`;
+    caption += `│ Likes: ${(r.digg_count || 0).toLocaleString()}\n`;
+    caption += `│ Source: API V2\n`;
+    caption += `╰──────────❀`;
 
     await sock.sendMedia(m.chat, r.play, caption, m, { type: "video" });
     m.react("🐣");

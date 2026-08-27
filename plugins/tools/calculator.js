@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "calculator",
@@ -27,9 +27,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!expr) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}calc <ekspresi>*`,
-          `│ Contoh: *${prefix}calc 5 + 3 * 2*`,
-          "│ Operator: *+ - * / %*"].join("\n")) +
+        novaCaption({
+  emoji: "🛠️",
+  name: "calculator",
+  description: "Kalkulator matematika",
+  usage: `${prefix}calc <ekspresi>`,
+  example: `${prefix}calc 5 + 3 * 2`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

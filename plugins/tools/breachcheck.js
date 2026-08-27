@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
   if (sub === "pass" || sub === "password" || sub === "pw") {
     const password = args.slice(1).join(" ");
     if (!password) {
-      return m.reply(claraWrap("Breach Check", "Masukkan password!\nContoh: .breachcheck pass password123"));
+      return m.reply(claraWrap("Breach Check", "Masukkan password!\n💡 *Contoh:* .breachcheck pass password123"));
     }
 
     await m.react("🔍");
@@ -166,7 +166,7 @@ async function handler(m, { sock }) {
   if (sub === "email" || sub === "mail") {
     const email = args[1] || "";
     if (!email) {
-      return m.reply(claraWrap("Breach Check", "Masukkan email!\nContoh: .breachcheck email test@gmail.com"));
+      return m.reply(claraWrap("Breach Check", "Masukkan email!\n💡 *Contoh:* .breachcheck email test@gmail.com"));
     }
 
     await m.react("🔍");
@@ -175,7 +175,7 @@ async function handler(m, { sock }) {
 
     if (!validation.valid) {
       await m.react("❌");
-      return m.reply(claraWrap("Breach Check", "Format email tidak valid!\nContoh: user@domain.com"));
+      return m.reply(claraWrap("Breach Check", "Format email tidak valid!\n💡 *Contoh:* user@domain.com"));
     }
 
     const lines = [

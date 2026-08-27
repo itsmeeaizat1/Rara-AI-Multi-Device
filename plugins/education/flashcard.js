@@ -86,7 +86,7 @@ async function handler(m, { sock, args }) {
       const input = cmdArgs.join(" ");
       const parts = input.split("|").map(s => s.trim());
       if (parts.length < 3) {
-        return m.reply(claraWrap("flashcard", "Format salah!\n\nContoh: `.flashcard add Biologi | Apa fungsi jantung? | Memompa darah`\n\nFormat: <nama deck> | <pertanyaan> | <jawaban>"));
+        return m.reply(claraWrap("flashcard", "Format salah!\n\n💡 *Contoh:* `.flashcard add Biologi | Apa fungsi jantung? | Memompa darah`\n\nFormat: <nama deck> | <pertanyaan> | <jawaban>"));
       }
       const deckName = parts[0].toLowerCase();
       const q = parts[1];

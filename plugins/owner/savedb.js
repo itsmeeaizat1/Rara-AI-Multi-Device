@@ -39,11 +39,11 @@ async function handler(m, { sock }) {
             fileName: fileName,
             mimetype: 'application/json',
             caption: `📦 *Database Backup*\n\n` +
-                `╭┈┈⬡「 📋 *InғO* 」\n` +
-                `┃ 📁 File: \`db.json\`\n` +
-                `┃ 📊 Size: \`${(stats.size / 1024).toFixed(2)} KB\`\n` +
-                `┃ 📅 Date: \`${now.format('DD/MM/YYYY')}\`\n` +
-                `┃ ⏰ Time: \`${now.format('HH:mm:ss')}\`\n` +
+                `╭──「 📋 *InғO* 」\n` +
+                `│ 📁 File: \`db.json\`\n` +
+                `│ 📊 Size: \`${(stats.size / 1024).toFixed(2)} KB\`\n` +
+                `│ 📅 Date: \`${now.format('DD/MM/YYYY')}\`\n` +
+                `│ ⏰ Time: \`${now.format('HH:mm:ss')}\`\n` +
                 `╰┈┈┈┈┈┈┈┈⬡`
         }, { quoted: m })
     } catch (error) {

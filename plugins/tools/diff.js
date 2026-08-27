@@ -178,7 +178,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Split by pipe
     const parts = input.split("|").map((s) => s.trim());
     if (parts.length < 2) {
-      return m.reply(claraWrap("Diff", "Gunakan tanda | untuk pisahkan teks\nContoh: " + prefix + "diff Halo | Hai"));
+      return m.reply(claraWrap("Diff", "Gunakan tanda | untuk pisahkan teks\n💡 *Contoh:* " + prefix + "diff Halo | Hai"));
     }
 
     const textA = parts[0];

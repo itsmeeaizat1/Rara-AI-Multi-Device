@@ -597,7 +597,7 @@ async function handler(m, { sock }) {
     if (!PROVIDERS[providerKey]) {
       const validKeys = Object.keys(PROVIDERS).join(", ");
       return m.reply(
-        claraWrap("Temp Email", `Provider "${providerKey}" tidak ada!\nTersedia: ${validKeys}\n\nContoh: ${m.prefix}tempmail create aizat mailtm`)
+        claraWrap("Temp Email", `Provider "${providerKey}" tidak ada!\nTersedia: ${validKeys}\n\n💡 *Contoh:* ${m.prefix}tempmail create aizat mailtm`)
       );
     }
 
@@ -608,7 +608,7 @@ async function handler(m, { sock }) {
         const result = await providerCreate(providerKey);
         sessions.set(m.sender, { ...result, createdAt: Date.now() });
         await m.react("🐣");
-        const body = `Berhasil dibuat!\n\n❏ Provider: ${PROVIDERS[result.provider].name}\n❏ Email: ${result.address}\n❏ Status: Aktif\n\nKirim email ke alamat di atas, lalu cek:\n${m.prefix}tempmail inbox\n\nNote: ${PROVIDERS[result.provider].name} auto-generate email, tidak support custom name.`;
+        const body = `Berhasil dibuat!\n\nProvider: ${PROVIDERS[result.provider].name}\nEmail: ${result.address}\nStatus: Aktif\n\nKirim email ke alamat di atas, lalu cek:\n${m.prefix}tempmail inbox\n\nNote: ${PROVIDERS[result.provider].name} auto-generate email, tidak support custom name.`;
         return m.reply( claraWrap("Temp Email", body), "tempmail");
       } catch (err) {
         return m.reply(claraWrap("Mail.tm", te(m.prefix, m.command, m.pushName), "error"));
@@ -640,8 +640,8 @@ async function handler(m, { sock }) {
       await m.react("🐣");
 
       const providerName = PROVIDERS[result.provider].name;
-      const pwdLine = result.password !== "-" ? `\n❏ Password: ${result.password}` : "";
-      const body = `Berhasil dibuat!\n\n❏ Provider: ${providerName}\n❏ Email: ${result.address}${pwdLine}\n❏ Status: Aktif\n\nKirim email ke alamat di atas, lalu cek:\n${m.prefix}tempmail inbox`;
+      const pwdLine = result.password !== "-" ? `\nPassword: ${result.password}` : "";
+      const body = `Berhasil dibuat!\n\nProvider: ${providerName}\nEmail: ${result.address}${pwdLine}\nStatus: Aktif\n\nKirim email ke alamat di atas, lalu cek:\n${m.prefix}tempmail inbox`;
 
       return m.reply( claraWrap("Temp Email", body), "tempmail");
     } catch (err) {
@@ -668,12 +668,12 @@ async function handler(m, { sock }) {
         return m.reply(
           claraWrap(
             "Temp Email",
-            `Email: ${session.address}\nProvider: ${PROVIDERS[session.provider].name}\n\n❏ Tidak ada pesan masuk.\nTunggu email masuk lalu cek lagi.`
+            `Email: ${session.address}\nProvider: ${PROVIDERS[session.provider].name}\n\nTidak ada pesan masuk.\nTunggu email masuk lalu cek lagi.`
           )
         );
       }
 
-      let list = `Email: ${session.address}\nProvider: ${PROVIDERS[session.provider].name}\n\n❏ Total: ${messages.length} pesan\n\n`;
+      let list = `Email: ${session.address}\nProvider: ${PROVIDERS[session.provider].name}\n\nTotal: ${messages.length} pesan\n\n`;
       messages.forEach((msg, i) => {
         const isNew = !msg.seen ? " (Baru)" : "";
         list += `${i + 1}. ${msg.subject}${isNew}\n   Dari: ${msg.from}\n   ${timeAgo(msg.time)}\n\n`;
@@ -730,12 +730,12 @@ async function handler(m, { sock }) {
           const full = await providerGetMessage(session, msg.id);
           content += `━━━━━━━━━━━━━━\n`;
           content += `PESAN ${i + 1}\n`;
-          content += `❏ Dari: ${msg.from}\n`;
-          content += `❏ Subjek: ${msg.subject}\n`;
-          content += `❏ Waktu: ${timeAgo(msg.time)}\n`;
+          content += `Dari: ${msg.from}\n`;
+          content += `Subjek: ${msg.subject}\n`;
+          content += `Waktu: ${timeAgo(msg.time)}\n`;
           let body = full.text || "(No content)";
           if (body.length > 800) body = body.slice(0, 800) + "\n\n... (dipotong)";
-          content += `❏ Isi:\n${body}\n\n`;
+          content += `Isi:\n${body}\n\n`;
         }
         await m.react("🐣");
         return m.reply( claraWrap("Temp Email - Semua Pesan", content), "tempmail");
@@ -756,21 +756,21 @@ async function handler(m, { sock }) {
       const full = await providerGetMessage(session, msg.id);
 
       let content = `Email: ${session.address}\nProvider: ${PROVIDERS[session.provider].name}\n\n`;
-      content += `❏ Dari: ${full.from}\n`;
-      content += `❏ Nama: ${full.fromName}\n`;
-      content += `❏ Subjek: ${full.subject}\n`;
-      content += `❏ Waktu: ${new Date(full.time).toLocaleString("id-ID")}\n`;
+      content += `Dari: ${full.from}\n`;
+      content += `Nama: ${full.fromName}\n`;
+      content += `Subjek: ${full.subject}\n`;
+      content += `Waktu: ${new Date(full.time).toLocaleString("id-ID")}\n`;
 
       let body = full.text || "(No content)";
       if (body.length > 1500) body = body.slice(0, 1500) + "\n\n... (dipotong, max 1500)";
-      content += `❏ Isi:\n${body}`;
+      content += `Isi:\n${body}`;
 
       // Extract links from HTML
       if (full.html && full.html.length > 0) {
         const links = full.html.match(/https?:\/\/[^\s"<>]+/g);
         if (links && links.length > 0) {
           const uniqueLinks = [...new Set(links)].slice(0, 5);
-          content += `\n\n❏ Link penting:\n`;
+          content += `\n\nLink penting:\n`;
           uniqueLinks.forEach((link, i) => {
             content += `${i + 1}. ${link}\n`;
           });
@@ -825,7 +825,7 @@ async function handler(m, { sock }) {
     return m.reply(
       claraWrap(
         "Temp Email Status",
-        `❏ Provider: ${providerName}\n❏ Email: ${session.address}\n${session.password !== "-" ? `❏ Password: ${session.password}\n` : ""}❏ Dibuat: ${hrs}j ${mins}m lalu\n❏ Token: Aktif\n\nInbox: ${m.prefix}tempmail inbox\nHapus: ${m.prefix}tempmail delete`
+        `Provider: ${providerName}\nEmail: ${session.address}\n${session.password !== "-" ? `Password: ${session.password}\n` : ""}Dibuat: ${hrs}j ${mins}m lalu\nToken: Aktif\n\nInbox: ${m.prefix}tempmail inbox\nHapus: ${m.prefix}tempmail delete`
       )
     );
   }

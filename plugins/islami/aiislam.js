@@ -265,7 +265,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (text.toLowerCase().startsWith("ayah ")) {
     const ref = text.slice(5).trim();
     if (!ref.includes(":")) {
-      return m.reply(claraWrap("AI Islam", "Format: .aiislam ayah <surah>:<ayah>\nContoh: .aiislam ayah 2:255"));
+      return m.reply(claraWrap("AI Islam", "Format: .aiislam ayah <surah>:<ayah>\n💡 *Contoh:* .aiislam ayah 2:255"));
     }
     const [surahNum, ayahNum] = ref.split(":").map(n => parseInt(n.trim()));
     if (!surahNum || surahNum < 1 || surahNum > 114 || !ayahNum) {
@@ -291,7 +291,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (text.toLowerCase().startsWith("tafsir ")) {
     const ref = text.slice(7).trim();
     if (!ref.includes(":")) {
-      return m.reply(claraWrap("AI Islam", "Format: .aiislam tafsir <surah>:<ayah>\nContoh: .aiislam tafsir 1:1"));
+      return m.reply(claraWrap("AI Islam", "Format: .aiislam tafsir <surah>:<ayah>\n💡 *Contoh:* .aiislam tafsir 1:1"));
     }
     const [surahNum, ayahNum] = ref.split(":").map(n => parseInt(n.trim()));
     if (!surahNum || !ayahNum) {
@@ -317,7 +317,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (text.toLowerCase().startsWith("asktafsir ")) {
     const ref = text.slice(10).trim();
     if (!ref.includes(":")) {
-      return m.reply(claraWrap("AI Islam", "Format: .aiislam asktafsir <surah>:<ayah>\nContoh: .aiislam asktafsir 1:1"));
+      return m.reply(claraWrap("AI Islam", "Format: .aiislam asktafsir <surah>:<ayah>\n💡 *Contoh:* .aiislam asktafsir 1:1"));
     }
     const [surahNum, ayahNum] = ref.split(":").map(n => parseInt(n.trim()));
     if (!surahNum || !ayahNum) {
@@ -359,7 +359,7 @@ async function handler(m, { sock, config: botConfig }) {
     const surahNum = parseInt(parts[0]);
     const qariId = parts[1] || "05"; // Default: Mishary Rashid Alafasy
     if (!surahNum || surahNum < 1 || surahNum > 114) {
-      return m.reply(claraWrap("AI Islam", "Format: .aiislam audio <surah> <qari>\nQari: 01-06\nContoh: .aiislam audio 1 05"));
+      return m.reply(claraWrap("AI Islam", "Format: .aiislam audio <surah> <qari>\nQari: 01-06\n💡 *Contoh:* .aiislam audio 1 05"));
     }
     await m.react("🕒");
     try {

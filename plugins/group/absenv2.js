@@ -179,7 +179,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (dateTimeStr) {
         const parsed = parseDateTime(dateTimeStr);
         if (!parsed) {
-          return m.reply(claraWrap("Absen v2", "Format tanggal salah! Gunakan: DD-MM-YYYY HH:MM\nContoh: 15-08-2026 20:00"));
+          return m.reply(claraWrap("Absen v2", "Format tanggal salah! Gunakan: DD-MM-YYYY HH:MM\n💡 *Contoh:* 15-08-2026 20:00"));
         }
         eventTime = parsed;
       }

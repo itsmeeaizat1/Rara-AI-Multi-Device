@@ -65,11 +65,11 @@ async function handler(m, { sock }) {
     await m.react('✅')
     
     await m.reply(claraWrap("delexp", `✅ *Exp Dikurangi*\n\n` +
-        `╭┈┈⬡「 📋 *Detail* 」\n` +
-        `┃ 👤 User: @${targetJid.split('@')[0]}\n` +
-        `┃ ➖ Kurang: *-${formatNumber(amount)}*\n` +
-        `┃ ⭐ sIsa: *${formatNumber(newExp)}*\n` +
-        `╰┈┈⬡`))
+        `╭──「 📋 *Detail* 」\n` +
+        `│ 👤 User: @${targetJid.split('@')[0]}\n` +
+        `│ ➖ Kurang: *-${formatNumber(amount)}*\n` +
+        `│ ⭐ sIsa: *${formatNumber(newExp)}*\n` +
+        `╰──────────❀`))
 }
 
 export { pluginConfig as config, handler }

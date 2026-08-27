@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const uid = m.text?.trim() || m.args[0];
 
   if (!uid) {
-    return m.reply(claraWrap("ffstalk", "❌ *Waduh, ID Free Fire-nya belum dimasukkan!*\n\nKamu harus mengetikkan UID pemain Free Fire yang ingin di-stalk. \n\nContoh: `.ffstalk 470699855`"));
+    return m.reply(claraWrap("ffstalk", "❌ *Waduh, ID Free Fire-nya belum dimasukkan!*\n\nKamu harus mengetikkan UID pemain Free Fire yang ingin di-stalk. \n\n💡 *Contoh:* `.ffstalk 470699855`"));
   }
 
   await m.react("🕒");

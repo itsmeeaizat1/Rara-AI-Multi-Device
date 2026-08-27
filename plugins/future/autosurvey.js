@@ -72,7 +72,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const question = args.slice(2).join(" ").trim();
     if (!question) {
-      await m.reply(claraWrap("Auto Survey", "Format: " + prefix + "autosurvey add <pertanyaan>\nContoh: " + prefix + "autosurvey add Rate aktivitas grup minggu ini 1-10"));
+      await m.reply(claraWrap("Auto Survey", "Format: " + prefix + "autosurvey add <pertanyaan>\n💡 *Contoh:* " + prefix + "autosurvey add Rate aktivitas grup minggu ini 1-10"));
       return { handled: true };
     }
     cfg.surveys.push({ question, id: Date.now(), responses: {} });

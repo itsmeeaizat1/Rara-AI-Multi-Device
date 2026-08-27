@@ -436,7 +436,7 @@ async function handler(m, { sock, db }) {
     const cronExpr = args.slice(2).join(" ").trim();
     if (!cronExpr) {
       await m.reply(claraWrap("AutoPulse",
-        `Format: ${prefix}autopulse setcron <cron>\nContoh: ${prefix}autopulse setcron 0 8 * * 0\n\nFormat cron: menit jam * * hari\n0=Min 1=Sen 2=Sel 3=Rab 4=Kam 5=Jum 6=Sab`,
+        `Format: ${prefix}autopulse setcron <cron>\n💡 *Contoh:* ${prefix}autopulse setcron 0 8 * * 0\n\nFormat cron: menit jam * * hari\n0=Min 1=Sen 2=Sel 3=Rab 4=Kam 5=Jum 6=Sab`,
         "warn"));
       return { handled: true };
     }

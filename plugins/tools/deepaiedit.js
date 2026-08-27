@@ -144,7 +144,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const q = m.quoted || m;
     const mime = (q.message?.[Object.keys(q.message)[0]]?.mimetype) || "";
     if (!mime || !mime.startsWith("image/")) {
-      return m.reply(claraWrap("DeepAI Image Editor V2", "Reply gambar yang mau di-edit, lalu ketik perintah ini!\n\nContoh: Reply gambar + .deepaiedit change background to beach"));
+      return m.reply(claraWrap("DeepAI Image Editor V2", "Reply gambar yang mau di-edit, lalu ketik perintah ini!\n\n💡 *Contoh:* Reply gambar + .deepaiedit change background to beach"));
     }
 
     m.reply(claraWrap("DeepAI Image Editor V2", "Sedang mengedit gambar dengan DeepAI...\nPrompt: " + prompt));

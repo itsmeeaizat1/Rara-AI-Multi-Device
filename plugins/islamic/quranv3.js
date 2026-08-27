@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
       const ayatNum = args[2] ? parseInt(args[2]) : null;
 
       if (!suratNum || suratNum < 1 || suratNum > 114) {
-        return m.reply(claraWrap("Quran V3", "Format: .quranv3 audio <surat> [ayat]\nContoh: .quranv3 audio 1\n.quranv3 audio 36 1"));
+        return m.reply(claraWrap("Quran V3", "Format: .quranv3 audio <surat> [ayat]\n💡 *Contoh:* .quranv3 audio 1\n.quranv3 audio 36 1"));
       }
 
       await m.react("🕒");
@@ -203,7 +203,7 @@ async function handler(m, { sock }) {
     if (subCmd === "surah") {
       const suratNum = parseInt(args[1]);
       if (!suratNum || suratNum < 1 || suratNum > 114) {
-        return m.reply(claraWrap("Quran V3", "Format: .quranv3 surah <nomor>\nContoh: .quranv3 surah 1"));
+        return m.reply(claraWrap("Quran V3", "Format: .quranv3 surah <nomor>\n💡 *Contoh:* .quranv3 surah 1"));
       }
 
       await m.react("🕒");
@@ -248,7 +248,7 @@ async function handler(m, { sock }) {
       const ayatNum = parseInt(parts[1]);
 
       if (!suratNum || !ayatNum) {
-        return m.reply(claraWrap("Quran V3", "Format: .quranv3 ayah <surat>:<ayat>\nContoh: .quranv3 ayah 1:1\n.quranv3 ayah 2:255"));
+        return m.reply(claraWrap("Quran V3", "Format: .quranv3 ayah <surat>:<ayat>\n💡 *Contoh:* .quranv3 ayah 1:1\n.quranv3 ayah 2:255"));
       }
 
       if (suratNum < 1 || suratNum > 114) {

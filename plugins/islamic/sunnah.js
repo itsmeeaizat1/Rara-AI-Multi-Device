@@ -76,7 +76,7 @@ async function handler(m, { sock, args }) {
         return m.reply(claraWrap("Sunnah", "Hanya owner yang bisa set API key!"));
       }
       const key = cmdArgs[0];
-      if (!key) return m.reply(claraWrap("Sunnah", "Masukkan API key!\n\nContoh: `.sunnah setkey YOUR_KEY`"));
+      if (!key) return m.reply(claraWrap("Sunnah", "Masukkan API key!\n\n💡 *Contoh:* `.sunnah setkey YOUR_KEY`"));
       await m.reply(claraWrap("Sunnah", `API key diterima! Set environment variable:\n\nSUNNAH_API_KEY=${key}\n\nDi Pterodactyl, tambahkan di server settings.`));
       await m.react("🐣");
     }
@@ -102,7 +102,7 @@ async function handler(m, { sock, args }) {
     // === COLLECTION DETAIL ===
     else if (cmd === "collection" || cmd === "detail") {
       const collection = cmdArgs[0]?.toLowerCase();
-      if (!collection) return m.reply(claraWrap("Sunnah", "Masukkan nama koleksi!\n\nContoh: `.sunnah collection bukhari`"));
+      if (!collection) return m.reply(claraWrap("Sunnah", "Masukkan nama koleksi!\n\n💡 *Contoh:* `.sunnah collection bukhari`"));
 
       const res = await apiGet(`/collections/${collection}`);
       if (res.status !== 200 || !res.data) throw new Error("Koleksi tidak ditemukan");
@@ -122,7 +122,7 @@ async function handler(m, { sock, args }) {
     // === BOOKS of a collection ===
     else if (cmd === "books" || cmd === "buku") {
       const collection = cmdArgs[0]?.toLowerCase();
-      if (!collection) return m.reply(claraWrap("Sunnah", "Masukkan nama koleksi!\n\nContoh: `.sunnah books bukhari`"));
+      if (!collection) return m.reply(claraWrap("Sunnah", "Masukkan nama koleksi!\n\n💡 *Contoh:* `.sunnah books bukhari`"));
 
       const res = await apiGet(`/collections/${collection}/books?limit=50`);
       if (res.status !== 200 || !res.data?.data) throw new Error("Gagal mengambil daftar buku");
@@ -144,7 +144,7 @@ async function handler(m, { sock, args }) {
     else if (cmd === "book") {
       const collection = cmdArgs[0]?.toLowerCase();
       const bookNumber = cmdArgs[1];
-      if (!collection || !bookNumber) return m.reply(claraWrap("sunnah", "Format salah!\n\nContoh: `.sunnah book bukhari 1`"));
+      if (!collection || !bookNumber) return m.reply(claraWrap("sunnah", "Format salah!\n\n💡 *Contoh:* `.sunnah book bukhari 1`"));
 
       const res = await apiGet(`/collections/${collection}/books/${bookNumber}`);
       if (res.status !== 200 || !res.data) throw new Error("Buku tidak ditemukan");
@@ -164,7 +164,7 @@ async function handler(m, { sock, args }) {
     else if (cmd === "chapters" || cmd === "bab") {
       const collection = cmdArgs[0]?.toLowerCase();
       const bookNumber = cmdArgs[1];
-      if (!collection || !bookNumber) return m.reply(claraWrap("sunnah", "Format salah!\n\nContoh: `.sunnah chapters bukhari 1`"));
+      if (!collection || !bookNumber) return m.reply(claraWrap("sunnah", "Format salah!\n\n💡 *Contoh:* `.sunnah chapters bukhari 1`"));
 
       const res = await apiGet(`/collections/${collection}/books/${bookNumber}/chapters?limit=50`);
       if (res.status !== 200 || !res.data?.data) throw new Error("Gagal mengambil daftar bab");
@@ -187,7 +187,7 @@ async function handler(m, { sock, args }) {
       const collection = cmdArgs[0]?.toLowerCase();
       const bookNumber = cmdArgs[1];
       const page = parseInt(cmdArgs[2]) || 1;
-      if (!collection || !bookNumber) return m.reply(claraWrap("sunnah", "Format salah!\n\nContoh: `.sunnah bookhadiths bukhari 1`"));
+      if (!collection || !bookNumber) return m.reply(claraWrap("sunnah", "Format salah!\n\n💡 *Contoh:* `.sunnah bookhadiths bukhari 1`"));
 
       const res = await apiGet(`/collections/${collection}/books/${bookNumber}/hadiths?limit=10&page=${page}`);
       if (res.status !== 200 || !res.data?.data) throw new Error("Gagal mengambil hadith");
@@ -214,7 +214,7 @@ async function handler(m, { sock, args }) {
     else if (cmd === "hadith" || cmd === "h") {
       const collection = cmdArgs[0]?.toLowerCase();
       const number = parseInt(cmdArgs[1]) || 1;
-      if (!collection) return m.reply(claraWrap("Sunnah", "Masukkan koleksi dan nomor!\n\nContoh: `.sunnah hadith bukhari 1`"));
+      if (!collection) return m.reply(claraWrap("Sunnah", "Masukkan koleksi dan nomor!\n\n💡 *Contoh:* `.sunnah hadith bukhari 1`"));
 
       const res = await apiGet(`/collections/${collection}/hadiths/${number}`);
       if (res.status !== 200 || !res.data) throw new Error(`Gagal mengambil ${collection} #${number}`);

@@ -166,7 +166,7 @@ async function handler(m, { sock }) {
     const target = (arg1 || "").replace(/[^0-9]/g, "");
     const amount = parseInt(arg2) || 0;
     if (!target || amount < 100) {
-      return m.reply( claraWrap("ProviderSMM", "Topup Saldo (Owner)\n\n.prov topup <nomor> <jumlah>\nContoh: .prov topup 628123456789 50000\nMin: Rp100"), "provsmm");
+      return m.reply( claraWrap("ProviderSMM", "Topup Saldo (Owner)\n\n.prov topup <nomor> <jumlah>\n💡 *Contoh:* .prov topup 628123456789 50000\nMin: Rp100"), "provsmm");
     }
     const targetUser = getUser(data, target + "@s.whatsapp.net");
     targetUser.balance += amount; saveData(data);
@@ -248,7 +248,7 @@ async function handler(m, { sock }) {
         body += "\n";
       });
       if (filtered.length > 15) body += "... dan " + (filtered.length - 15) + " layanan lain\n";
-      body += "\nBeli: .prov beli <service_id> <link> <qty>\nContoh: .prov beli " + filtered[0].service + " https://... 100";
+      body += "\nBeli: .prov beli <service_id> <link> <qty>\n💡 *Contoh:* .prov beli " + filtered[0].service + " https://... 100";
       await m.react("🐣");
       return m.reply( claraWrap("ProviderSMM", body), "provsmm");
     } catch (err) {
@@ -317,7 +317,7 @@ async function handler(m, { sock }) {
   // BAYAR
   if (sub === "bayar" || sub === "pay" || sub === "confirm") {
     const token = arg1 ? arg1.toUpperCase() : "";
-    if (!token) return m.reply( claraWrap("ProviderSMM", "Masukkan token!\nContoh: .prov bayar ABC123"), "provsmm");
+    if (!token) return m.reply( claraWrap("ProviderSMM", "Masukkan token!\n💡 *Contoh:* .prov bayar ABC123"), "provsmm");
     const pending = data.pendingPayments[token];
     if (!pending) return m.reply( claraWrap("ProviderSMM", "Token tidak ditemukan!"), "provsmm");
     if (pending.sender !== sender) return m.reply( claraWrap("ProviderSMM", "Bukan token kamu!"), "provsmm");
@@ -364,7 +364,7 @@ async function handler(m, { sock }) {
   // CEK
   if (sub === "cek" || sub === "check" || sub === "status") {
     const orderId = arg1;
-    if (!orderId) return m.reply( claraWrap("ProviderSMM", "Masukkan Order ID!\nContoh: .prov cek 23501"), "provsmm");
+    if (!orderId) return m.reply( claraWrap("ProviderSMM", "Masukkan Order ID!\n💡 *Contoh:* .prov cek 23501"), "provsmm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("ProviderSMM", "Order tidak ditemukan!"), "provsmm");
     await m.react("🕒");
@@ -393,7 +393,7 @@ async function handler(m, { sock }) {
   // REFILL
   if (sub === "refill" || sub === "isiulang") {
     const orderId = arg1;
-    if (!orderId) return m.reply( claraWrap("ProviderSMM", "Masukkan Order ID!\nContoh: .prov refill 23501"), "provsmm");
+    if (!orderId) return m.reply( claraWrap("ProviderSMM", "Masukkan Order ID!\n💡 *Contoh:* .prov refill 23501"), "provsmm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("ProviderSMM", "Order tidak ditemukan!"), "provsmm");
     if (order && !order.refill) return m.reply( claraWrap("ProviderSMM", "Layanan ini tidak support refill!"), "provsmm");
@@ -411,7 +411,7 @@ async function handler(m, { sock }) {
   // REFILL STATUS
   if (sub === "refillstatus" || sub === "cekrefill") {
     const refillId = arg1;
-    if (!refillId) return m.reply( claraWrap("ProviderSMM", "Masukkan Refill ID!\nContoh: .prov refillstatus 123"), "provsmm");
+    if (!refillId) return m.reply( claraWrap("ProviderSMM", "Masukkan Refill ID!\n💡 *Contoh:* .prov refillstatus 123"), "provsmm");
     await m.react("🕒");
     try {
       const result = await refillStatus(data, refillId);
@@ -426,7 +426,7 @@ async function handler(m, { sock }) {
   // BATAL
   if (sub === "batal" || sub === "cancel") {
     const orderId = arg1;
-    if (!orderId) return m.reply( claraWrap("ProviderSMM", "Masukkan Order ID!\nContoh: .prov batal 23501"), "provsmm");
+    if (!orderId) return m.reply( claraWrap("ProviderSMM", "Masukkan Order ID!\n💡 *Contoh:* .prov batal 23501"), "provsmm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("ProviderSMM", "Order tidak ditemukan!"), "provsmm");
     await m.react("🕒");

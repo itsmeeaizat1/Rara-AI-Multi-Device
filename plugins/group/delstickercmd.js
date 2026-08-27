@@ -33,10 +33,10 @@ async function handler(m, { sock }) {
         }
         
         let txt = `🖼️ *ꜱᴛɪᴄᴋᴇʀ ᴄᴏᴍᴍᴀɴᴅꜱ*\n\n`
-        txt += `╭┈┈⬡「 📋 *ᴅᴀꜰᴛᴀʀ* 」\n`
+        txt += `╭──「 📋 *ᴅᴀꜰᴛᴀʀ* 」\n`
         
         for (const cmd of existingCmds) {
-            txt += `┃ 🖼️ → \`.${cmd.command}\`\n`
+            txt += `│ 🖼️ → \`.${cmd.command}\`\n`
         }
         txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`
         

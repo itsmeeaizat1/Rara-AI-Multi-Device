@@ -32,7 +32,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 Ketik *${prefix}aihelp <keyword>* untuk cari command.
 
-Contoh:
+💡 *Contoh:*
 ${prefix}aihelp download
 ${prefix}aihelp sticker
 ${prefix}aihelp group

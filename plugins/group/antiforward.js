@@ -112,7 +112,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "action" || sub === "aksi") {
       const action = (args[1] || "").toLowerCase();
       if (!["delete", "warn", "kick"].includes(action)) {
-        return m.reply(claraWrap("Anti Forward", "Pilih: delete, warn, atau kick\nContoh: .antiforward action warn"));
+        return m.reply(claraWrap("Anti Forward", "Pilih: delete, warn, atau kick\n💡 *Contoh:* .antiforward action warn"));
       }
       cfg.action = action;
       await db.save();

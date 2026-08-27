@@ -51,15 +51,15 @@ async function handler(m, { sock }) {
         text += `Ditemukan: *${players.length}* player\n\n`
         
         players.forEach((player, i) => {
-            text += `╭┈┈⬡「 ${i + 1}. *${player.displayName}* 」\n`
-            text += `┃ 🆔 ID: \`${player.id}\`\n`
-            text += `┃ 👤 Username: \`${player.name}\`\n`
-            text += `┃ 📛 Display: *${player.displayName}*\n`
-            text += `┃ ✅ Verified: ${player.hasVerifiedBadge ? 'Ya' : 'Tidak'}\n`
+            text += `╭──「 ${i + 1}. *${player.displayName}* 」\n`
+            text += `│ 🆔 ID: \`${player.id}\`\n`
+            text += `│ 👤 Username: \`${player.name}\`\n`
+            text += `│ 📛 Display: *${player.displayName}*\n`
+            text += `│ ✅ Verified: ${player.hasVerifiedBadge ? 'Ya' : 'Tidak'}\n`
             if (player.previousUsernames?.length > 0) {
-                text += `┃ 📜 Previous: ${player.previousUsernames.join(', ')}\n`
+                text += `│ 📜 Previous: ${player.previousUsernames.join(', ')}\n`
             }
-            text += `╰┈┈⬡\n\n`
+            text += `╰──────────❀\n\n`
         })
         
         text += `_Gunakan \`.robloxstalk <username>\` untuk info detail_`

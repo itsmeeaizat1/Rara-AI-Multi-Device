@@ -242,7 +242,7 @@ async function handler(m, { sock }) {
     const banks = (data.banks || []).filter((b) => b.number);
     const cash = data.cash || { enabled: false, info: "" };
 
-    let txt = "╭──「 *PAYMENT INFO* 」\n│ ❏\n";
+    let txt = "╭──「 *PAYMENT INFO* 」\n│\n";
     txt += "╰──────────❀\n\n";
 
     // Cash

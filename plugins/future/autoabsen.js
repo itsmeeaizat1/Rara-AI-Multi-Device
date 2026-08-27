@@ -70,7 +70,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const days = parseInt(args[2] || "0", 10);
     if (!days || days < 1) {
-      await m.reply(claraWrap("Auto Absen", "Format: " + prefix + "autoabsen threshold <hari>\nContoh: " + prefix + "autoabsen threshold 14"));
+      await m.reply(claraWrap("Auto Absen", "Format: " + prefix + "autoabsen threshold <hari>\n💡 *Contoh:* " + prefix + "autoabsen threshold 14"));
       return { handled: true };
     }
     cfg.threshold = days;

@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const query = m.text?.trim();
 
   if (!query) {
-    return m.reply( `🔞 *xɴxx ꜱᴇᴀʀᴄʜ*\n\nMasukkan query pencarian\n\nContoh: \`${m.prefix}xnxx amateur\``, "xnxx");
+    return m.reply( `🔞 *xɴxx ꜱᴇᴀʀᴄʜ*\n\nMasukkan query pencarian\n\n💡 *Contoh:* \`${m.prefix}xnxx amateur\``, "xnxx");
   }
 
   await m.react("🕒");

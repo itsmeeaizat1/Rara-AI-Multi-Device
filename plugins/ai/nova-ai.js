@@ -137,7 +137,7 @@ Kamu BISA menjalankan command bot secara OTOMATIS untuk user. Jika user meminta 
 Cara kerjanya: sertakan tag [ACTION] di akhir balasan kamu. Formatnya:
 [ACTION:namacommand|argumen]
 
-Contoh:
+💡 *Contoh:*
 - User: "tutup grup dong" => Balas: "Oke, grup ditutup ya!" lalu [ACTION:close|]
 - User: "carikan musik faded" => Balas: "Sip, aku cariin musik Faded ya!" lalu [ACTION:play|faded]
 - User: "bikin sticker dari gambar ini" (ada gambar) => Balas: "Oke, bikin sticker ya!" lalu [ACTION:sticker|]

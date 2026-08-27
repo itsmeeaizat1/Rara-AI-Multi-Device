@@ -59,7 +59,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const semitones = parseInt(args[args.length - 1] || "0", 10);
     if (isNaN(semitones) || semitones < -6 || semitones > 6) {
-      await m.reply(claraWrap("Chord", "Semitones: -6 sampai +6\nContoh: " + prefix + "chord transpose " + song.title.toLowerCase().split(" ")[0] + " 2"));
+      await m.reply(claraWrap("Chord", "Semitones: -6 sampai +6\n💡 *Contoh:* " + prefix + "chord transpose " + song.title.toLowerCase().split(" ")[0] + " 2"));
       return { handled: true };
     }
     const transposedChords = transposeText(song.chords, semitones);

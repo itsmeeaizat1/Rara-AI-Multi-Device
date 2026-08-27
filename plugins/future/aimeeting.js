@@ -45,7 +45,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const durasi = parseInt(args[2] || "10", 10);
     if (isNaN(durasi) || durasi < 1 || durasi > 60) {
-      await m.reply(claraWrap("AI Meeting", "Format: " + prefix + "aimeeting start <durasi menit>\nContoh: " + prefix + "aimeeting start 10"));
+      await m.reply(claraWrap("AI Meeting", "Format: " + prefix + "aimeeting start <durasi menit>\n💡 *Contoh:* " + prefix + "aimeeting start 10"));
       return { handled: true };
     }
     saveMeeting(db, gid, {

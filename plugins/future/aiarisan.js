@@ -56,7 +56,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const iuran = parseInt(args[2] || "0", 10);
     if (!iuran || iuran < 1000) {
-      await m.reply(claraWrap("Arisan", "Format: " + prefix + "aiarisan buat <iuran>\nContoh: " + prefix + "aiarisan buat 50000"));
+      await m.reply(claraWrap("Arisan", "Format: " + prefix + "aiarisan buat <iuran>\n💡 *Contoh:* " + prefix + "aiarisan buat 50000"));
       return { handled: true };
     }
     const data = {

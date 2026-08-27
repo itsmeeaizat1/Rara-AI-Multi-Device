@@ -130,7 +130,7 @@ async function handler(m, { sock, config: botConfig }) {
     availableList += `${key} - ${label}\n`;
   }
 
-  return await m.reply(claraWrap("AutoBroadcastChannel", [`Event: *${subCmd}*`, `Tidak ada dalam daftar`].join("\n")) + "\nEVENT TERSEDIA:\n\n" + availableList + "\nContoh: " + prefix + "autobroadcastchannel userBanned on");
+  return await m.reply(claraWrap("AutoBroadcastChannel", [`Event: *${subCmd}*`, `Tidak ada dalam daftar`].join("\n")) + "\nEVENT TERSEDIA:\n\n" + availableList + "\n💡 *Contoh:* " + prefix + "autobroadcastchannel userBanned on");
 }
 
 export { pluginConfig as config, handler };

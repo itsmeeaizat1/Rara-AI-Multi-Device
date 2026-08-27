@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -26,8 +26,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!topic) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}aiidea <topik>*`,
-          `│ Contoh: *${prefix}aiidea ide bisnis Modal kecil*`].join("\n")) +
+        novaCaption({
+  emoji: "🤖",
+  name: "aiidea",
+  description: "Dapatkan ide/ brainstorming dengan AI",
+  usage: `${prefix}aiidea <topik>`,
+  example: `${prefix}aiidea ide konten TikTok untuk kuliner`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

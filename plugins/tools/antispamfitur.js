@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
     if (subCmd === "limit") {
       const val = parseInt(subVal);
       if (!val || val < 1 || val > 50) {
-        return m.reply(claraWrap("Anti-Spam Fitur", `Limit 1-50!\nContoh: .antispamfitur ${action} limit 10`, "error"));
+        return m.reply(claraWrap("Anti-Spam Fitur", `Limit 1-50!\n💡 *Contoh:* .antispamfitur ${action} limit 10`, "error"));
       }
       target.limit = val;
       db.setting("antispamMenuV2", settings);
@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
     if (subCmd === "window") {
       const val = parseInt(subVal);
       if (!val || val < 5 || val > 600) {
-        return m.reply(claraWrap("Anti-Spam Fitur", `Window 5-600 detik!\nContoh: .antispamfitur ${action} window 60`, "error"));
+        return m.reply(claraWrap("Anti-Spam Fitur", `Window 5-600 detik!\n💡 *Contoh:* .antispamfitur ${action} window 60`, "error"));
       }
       target.windowMs = val * 1000;
       db.setting("antispamMenuV2", settings);
@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
     if (subCmd === "cooldown") {
       const val = parseInt(subVal);
       if (!val || val < 5 || val > 600) {
-        return m.reply(claraWrap("Anti-Spam Fitur", `Cooldown 5-600 detik!\nContoh: .antispamfitur ${action} cooldown 120`, "error"));
+        return m.reply(claraWrap("Anti-Spam Fitur", `Cooldown 5-600 detik!\n💡 *Contoh:* .antispamfitur ${action} cooldown 120`, "error"));
       }
       target.cooldownMs = val * 1000;
       db.setting("antispamMenuV2", settings);

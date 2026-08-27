@@ -148,7 +148,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   const kopData = parseKopArgs(args || "");
 
   if (!kopData.instansi) {
-    return m.reply(claraWrap("Kop", `❌ Minimal isi instansi= \n\nContoh: ${prefix}kop instansi=PT Maju Jaya alamat=Jl. Merdeka 1 Jakarta`));
+    return m.reply(claraWrap("Kop", `❌ Minimal isi instansi= \n\n💡 *Contoh:* ${prefix}kop instansi=PT Maju Jaya alamat=Jl. Merdeka 1 Jakarta`));
   }
 
   await m.react("🕒");

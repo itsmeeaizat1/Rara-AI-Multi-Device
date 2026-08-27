@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "urlshortener",
@@ -25,8 +25,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!url) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}urlshortener <link>*`,
-          `│ Contoh: *${prefix}urlshortener https://example.com*`].join("\n")) +
+        novaCaption({
+  emoji: "🛠️",
+  name: "urlshortener",
+  description: "Pendekkan URL panjang",
+  usage: `${prefix}urlshortener <link>`,
+  example: `${prefix}urlshortener https://example.com/very/long/url`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

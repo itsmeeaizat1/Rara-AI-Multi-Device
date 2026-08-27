@@ -64,7 +64,7 @@ function handler(m, { sock }) {
       db.setGroup(m.chat, { antilinkall: "on", antilinkallMode: "remove" });
       return m.reply(claraWrap("Antilinkall", `✅ *Antilink All — Mode Delete*\n\nPesan dengan link akan dihapus`));
     } else {
-      return m.reply(claraWrap("Antilinkall", `❌ *Metode Tidak Valid*\n\nGunakan *kick* atau *remove*\nContoh: *${m.prefix}antilinkall metode kick*`));
+      return m.reply(claraWrap("Antilinkall", `❌ *Metode Tidak Valid*\n\nGunakan *kick* atau *remove*\n💡 *Contoh:* *${m.prefix}antilinkall metode kick*`));
     }
   }
 

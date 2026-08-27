@@ -429,7 +429,7 @@ async function handler(m, { sock, config: botConfig }) {
         for (const [id, v] of Object.entries(BASE_VOICES)) {
           txt += `  ${id} - ${v.name}\n`;
         }
-        txt += `\nContoh: ${prefix}voiceclone voice ardi`;
+        txt += `\n💡 *Contoh:* ${prefix}voiceclone voice ardi`;
         return m.reply(claraWrap("Voice Clone", txt));
       }
       state.baseVoice = voiceId;
@@ -465,7 +465,7 @@ async function handler(m, { sock, config: botConfig }) {
     // === GENERATE SPEECH ===
     const speechText = text;
     if (!speechText || speechText.length < 2) {
-      return m.reply(claraWrap("Voice Clone", `Teks tidak boleh kosong!\n\nContoh: ${prefix}voiceclone Halo semuanya`));
+      return m.reply(claraWrap("Voice Clone", `Teks tidak boleh kosong!\n\n💡 *Contoh:* ${prefix}voiceclone Halo semuanya`));
     }
     if (speechText.length > 500) {
       return m.reply(claraWrap("Voice Clone", "Teks maksimal 500 karakter."));

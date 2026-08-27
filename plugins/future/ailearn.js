@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraHeader, separator, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -15,9 +15,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const input = m.text?.trim();
     if (!input) {
-      await m.reply( claraWrap("AI Learn", [`│ Penggunaan: *${prefix}ailearn <topik> <pertanyaan>*`,
-        `│ Contoh: *${prefix}ailearn matematika 2+2*`,
-        `│ Contoh: *${prefix}ailearn inggris terjemahkan*`].join("\n")), "ailearn");
+      await m.reply( novaCaption({
+  emoji: "📁",
+  name: "ailearn",
+  description: "AI tutor bahasa & pelajaran",
+  usage: `$prefixailearn <topik> <pertanyaan>`,
+  example: `$prefixailearn inggris apa arti determination`,
+}), "ailearn");
       return { handled: true };
     }
     const result = await callAI(`Kamu adalah tutor. Jawab pertanyaan berikut dengan cara yang mudah dipahami, berikan penjelasan & contoh. Bahasa Indonesia.\n\n${input}`, {

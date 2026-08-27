@@ -140,11 +140,11 @@ async function handler(m, { sock, db }) {
     
     const successMsg = `✅ *ᴊᴀᴅᴡᴀʟ ᴅɪꜱɪᴍᴘᴀɴ*
 
-╭┈┈⬡「 ⏰ *ꜱᴇᴛᴛɪɴɢ*
-┃ ${emoji} Aksi: *${actionText}*
-┃ ⏱️ Waktu: *${formattedTime} WIB*
-┃ 📡 sTatus: *🟢 Aktif*
-╰┈┈⬡
+╭──「 ⏰ *ꜱᴇᴛᴛɪɴɢ*
+│ ${emoji} Aksi: *${actionText}*
+│ ⏱️ Waktu: *${formattedTime} WIB*
+│ 📡 sTatus: *🟢 Aktif*
+╰──────────❀
 
 │ _Grup akan otomatis ${action === 'open' ? 'dibuka' : 'ditutup'}_
 │ _setiap hari pada jam *${formattedTime}* WIB._`;

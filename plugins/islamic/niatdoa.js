@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
   const action = args[0];
 
   if (!action) {
-    let txt = "╭──「 *Niat Sholat:* 」\n│ ❏\n";
+    let txt = "╭──「 *Niat Sholat:* 」\n│\n";
     txt += "╰──────────❀\n";
     txt += "*" + sholat.toUpperCase() + "*\n\n";
     txt += "Arab:\n" + niat.arab + "\n\n";
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("niatdoa", "Doa tidak ditemukan!\nKetik .niatdoa buat lihat semua doa."));
   }
 
-  let txt = "╭──「 *" + doa.title.toUpperCase() + "* 」\n│ ❏\n";
+  let txt = "╭──「 *" + doa.title.toUpperCase() + "* 」\n│\n";
   txt += "╰──────────❀\n\n";
   txt += "Arab:\n" + doa.arab + "\n\n";
   txt += "Latin:\n" + doa.latin + "\n\n";
