@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
 
     if (targetJid === m.sender) {
       return m.reply(
-        `╭──「 *sᴏᴜʟᴍᴀᴛᴄʜ* 」\n\n」` +
+        `╭──「 *sᴏᴜʟᴍᴀᴛᴄʜ* 」\n` +
         `│ 😅 Cek compatibility sama diri sendiri? 100% narcisist!\n\n` +
         `╰──────────❀`
       );
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
     const tier = getTier(score);
     const fact = pick(FACTS);
 
-    let msg = `╭──「 *sᴏᴜʟᴍᴀᴛᴄʜ* 」\n\n」`;
+    let msg = `╭──「 *sᴏᴜʟᴍᴀᴛᴄʜ* 」\n`;
     msg += `│ 👤 ${myName} ❤️ ${targetName}\n\n`;
     msg += `│ ${tier.emoji} Score: *${score}/100*\n`;
     msg += `│ 📊 Tier: *${tier.label}*\n`;

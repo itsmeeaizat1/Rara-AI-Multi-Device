@@ -131,7 +131,7 @@ Nova AI WhatsApp Bot`;
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[info] handler error:", e.message);
-    try { await m.reply("Gagal menampilkan info: " + e.message); } catch {}
+    try { await m.reply("╭──「 Info 」\n├── ❌ Gagal menampilkan info\n├── Coba lagi nanti ya\n╰──────────❀"); } catch {}
   }
 
   return { handled: true };

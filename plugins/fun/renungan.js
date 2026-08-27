@@ -46,34 +46,43 @@ export async function handler(m, { sock }) {
   try {
     const imgUrl = getRandomRenungan();
     if (!imgUrl) {
-      await m.reply("❌ *Data renungan tidak tersedia!*");
+      await m.reply("╭──「 🤲 Renungan 」\n├── ❌ Data tidak tersedia\n├── Coba lagi nanti ya\n╰──────────❀");
       return;
     }
 
+    const caption = [
+      "╭──「 🤲 *Renungan Harian* 」",
+      "│",
+      "├── 💡 Semoga renungan hari ini bermanfaat",
+      "├── 🤲 Semoga kita selalu dalam lindungan-Nya",
+      "╰──────────❀",
+    ].join("\n");
+
     if (!fetchBuffer) {
-      await m.reply(`╭──「 *RENUNGAN* 」\n\n${imgUrl}\n\n╰──────────❀`);
+      await sock.sendMessage(m.chat, {
+        image: { url: imgUrl },
+        caption,
+      }, { quoted: m });
+      await m.react("🤲");
       return;
     }
 
     let buffer;
     try {
       buffer = await fetchBuffer(imgUrl);
+      await sock.sendMessage(m.chat, { image: buffer, caption }, { quoted: m });
     } catch {
-      await m.reply(`╭──「 *RENUNGAN* 」\n\n${imgUrl}\n\n╰──────────❀`);
-      return;
+      await sock.sendMessage(m.chat, {
+        image: { url: imgUrl },
+        caption,
+      }, { quoted: m });
     }
-
-    let caption = `╭──「 *RENUNGAN* 」\n\n」`;
-    caption += `_Semoga renungan hari ini bermanfaat_\n\n`;
-    caption += `╰──────────❀`;
-
-    await sock.sendMessage(m.chat, { image: buffer, caption }, { quoted: m });
     await m.react("🤲");
   } catch (e) {
     console.error("[renungan] Error:", e.message);
     try {
       await m.react("❌");
-      await m.reply("❌ *Terjadi error!*");
+      await m.reply("╭──「 🤲 Renungan 」\n├── ❌ Terjadi error\n├── Coba lagi nanti ya\n╰──────────❀");
     } catch {}
   }
 }
