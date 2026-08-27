@@ -11,6 +11,7 @@ import pino from "pino";
 import fs from "fs";
 import path from "path";
 import readline from "readline";
+import os from "os";
 import NodeCache from "node-cache";
 import config, { isOwner as isOwners, setBotNumber } from "../config.js";
 import * as colors from "./lib/nova-logger.js";
@@ -606,7 +607,7 @@ async function startConnection(options = {}) {
             const tz = "Asia/Jakarta";
             const waktu = now.toLocaleString("id-ID", { timeZone: tz, dateStyle: "full", timeStyle: "short" });
             const platform = process.platform;
-            const hostname = require("os").hostname();
+            const hostname = os.hostname();
             const nodeVer = process.version;
 
             const notifText = [
@@ -801,7 +802,7 @@ async function startConnection(options = {}) {
             config.saluran?.name || config.bot?.name || "Nova-AI";
 
           const welcomeText =
-            `╭──「 Wᴇʟᴄᴏᴍᴇ 」\n│\n` + +
+            `╭──「 Wᴇʟᴄᴏᴍᴇ 」\n│\n` +
             `  │ ❏ *Hai, Salam Kenal!*\n` +
             `  │ ❏ Aku *${config.bot?.name || "Nova-AI"}* 🤖\n` +
             `  │ ❏ Terima kasih sudah undang aku ke *${groupName}*!\n` +
