@@ -123,64 +123,64 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const more = String.fromCharCode(8206);
     const readMore = more.repeat(4001);
 
-    return `╭──「 *Info User* 」
-│
-│ ❏ *Nama:*  ${m.pushName || "User"}
-│ ❏ *Nomor:* @${m.sender.split("@")[0]}
-│ ❏ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
-│ ❏ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
-│ ❏ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
-│ ❏ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
-│ ❏ *Role:* ${roleEmoji} ${userRole}
-│ ❏ *Level:* ${userLevel}
-│ ❏ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
-│ ❏ *Total Xp:* ${userExp.toLocaleString()}
-│ ❏ *Status:* ${user?.banned ? "Banned" : "Aktif"}
+    return `
+╭──「 *Info User* 」
+│ *Nama:*  ${m.pushName || "User"}
+│ *Nomor:* @${m.sender.split("@")[0]}
+│ *Premium:* ${m.isPremium ? "Aktif" : "Free"}
+│ *Energi:* ${m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25)}
+│ *Koin:* ${(user?.koin ?? 0).toLocaleString()}
+│ *Limit:* ${m.isOwner || m.isPremium ? "Unlimited" : (user?.limit ?? "-")}
+│ *Role:* ${roleEmoji} ${userRole}
+│ *Level:* ${userLevel}
+│ *Xp:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
+│ *Total Xp:* ${userExp.toLocaleString()}
+│ *Status:* ${user?.banned ? "Banned" : "Aktif"}
 ├──「 *Info Waktu*
-│ ❏ *Waktu:* ${timeStr} WIB
-│ ❏ *Hari:* ${dayName} ${weton}
-│ ❏ *Tanggal:* ${dateStr}
-│ ❏ *Tanggal Islam:* ${islamicDate}
-│ ❏ *Zona:* Asia/Jakarta
-│ ❏ *Hari Penting:* ${importantDay}
+│ *Waktu:* ${timeStr} WIB
+│ *Hari:* ${dayName} ${weton}
+│ *Tanggal:* ${dateStr}
+│ *Tanggal Islam:* ${islamicDate}
+│ *Zona:* Asia/Jakarta
+│ *Hari Penting:* ${importantDay}
 ├──「 *Info Bot*
-│ ❏ *Bot Name:* ${botConfig.bot?.name || "Nova AI Whatsapp Bot"}
-│ ❏ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
-│ ❏ *Version:* ${botConfig.bot?.version || "-"}
-│ ❏ *Developer:* ${botConfig.bot?.developer || "-"}
-│ ❏ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
-│ ❏ *Prefix:* [ *${prefix}* ]
-│ ❏ *Uptime:* ${runtimeStr}
-│ ❏ *Total User:* ${totalUsers}
-│ ❏ *Total Registrasi:* ${totalRegistered}
-│ ❏ *Premium User:* ${totalPremium}
+│ *Bot Name:* ${botConfig.bot?.name || "Nova AI Whatsapp Bot"}
+│ *Bot Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
+│ *Version:* ${botConfig.bot?.version || "-"}
+│ *Developer:* ${botConfig.bot?.developer || "-"}
+│ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
+│ *Prefix:* [ *${prefix}* ]
+│ *Uptime:* ${runtimeStr}
+│ *Total User:* ${totalUsers}
+│ *Total Registrasi:* ${totalRegistered}
+│ *Premium User:* ${totalPremium}
 ├──「 *Info Server*
-│ ❏ *Platform:* ${platform}
-│ ❏ *Hostname:* ${hostname}
-│ ❏ *Type:* Node.Js
-│ ❏ *Baileys:* Multi Device
-│ ❏ *Node.js:* ${process.version}
-│ ❏ *Server Uptime:* ${serverUptime}
-│ ❏ *CPU:* ${cpuModel}
-│ ❏ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
-│ ❏ *Load Avg:* ${loadAvg}
-│ ❏ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
-│ ❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
+│ *Platform:* ${platform}
+│ *Hostname:* ${hostname}
+│ *Type:* Node.Js
+│ *Baileys:* Multi Device
+│ *Node.js:* ${process.version}
+│ *Server Uptime:* ${serverUptime}
+│ *CPU:* ${cpuModel}
+│ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
+│ *Load Avg:* ${loadAvg}
+│ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
+│ *RAM Bot:* ${formatBytes(memUsage.rss)}
 ╰──────────❀
 ${weatherBlock}${readMore}
-╭──「 *Menu* 」\n│ ❏ ${prefix}menu
-│ ❏ ${prefix}allmenu
-│ ❏ ${prefix}allmenucategory <kategori>
-│ ❏ ${prefix}tanyaai
+╭──「 *Menu* 」\n│ ${prefix}menu
+│ ${prefix}allmenu
+│ ${prefix}allmenucategory <kategori>
+│ ${prefix}tanyaai
 ├──「 *Info*
-│ ❏ ${prefix}info
-│ ❏ ${prefix}owner
-│ ❏ ${prefix}rules
-│ ❏ ${prefix}donasi
+│ ${prefix}info
+│ ${prefix}owner
+│ ${prefix}rules
+│ ${prefix}donasi
 ├──「 *Store*
-│ ❏ ${prefix}sewa
-│ ❏ ${prefix}payment
-│ ❏ ${prefix}listban
+│ ${prefix}sewa
+│ ${prefix}payment
+│ ${prefix}listban
 ╰──────────❀
 
 *Total: ${totalFitur} Fitur*
