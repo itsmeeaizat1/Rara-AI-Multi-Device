@@ -1,24 +1,23 @@
-name: ESLint Auto Fix (create PR)
+name: ESLint Check (Report Only)
 
 on:
-  workflow_dispatch: {}
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
-  eslint-fix-pr:
+  eslint-check:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: true
 
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -41,35 +40,24 @@ jobs:
           }
           EOF
 
-      - name: Run ESLint --fix (isolated) and ensure report exists
+      - name: Run ESLint (check only, NO --fix, NO commit)
         run: |
-          : > eslint-report.txt
-          npx eslint "plugins/" --ext .js --config /tmp/eslint-min.json --fix -f unix -o eslint-report.txt || true
-          test -f eslint-report.txt || : > eslint-report.txt
+          echo "============================================"
+          echo "  ESLint CHECK — Report Only (no auto-fix)"
+          echo "============================================"
+          npx eslint "plugins/" --ext .js --config /tmp/eslint-min.json -f unix -o eslint-report.txt || true
+          
+          if [ -f eslint-report.txt ] && [ -s eslint-report.txt ]; then
+            echo ""
+            echo "⚠️ Ditemukan warning/issue:"
+            cat eslint-report.txt
+          else
+            echo "✅ Tidak ada issue ESLint yang signifikan"
+          fi
 
       - name: Upload ESLint report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: eslint-report
           path: eslint-report.txt
-
-      - name: Commit fixes (only update tracked files)
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -u
-          if git diff --cached --quiet; then
-            echo "No lint fixes to commit"
-            exit 0
-          else
-            git commit -m "chore: apply ESLint --fix (auto)"
-          fi
-
-      - name: Create Pull Request with fixes
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: apply ESLint --fix (auto)"
-          branch: "eslint-fix-auto/${{ github.run_id }}"
-          title: "chore: ESLint fixes (auto)"
-          body: "This PR contains automatic ESLint --fix changes."
