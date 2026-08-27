@@ -159,7 +159,7 @@ const config = {
     notAdmin: "╭──「 *Bot Bukan Admin* 」\n├── Bot bukan admin\n├── Tidak bisa menghapus pesan\n╰──────────❀",
   },
 
-  errorTemplate: `❗ Kayaknya perintah atau fitur ini \`{prefix}{command}\` lagi ada kendala\nSilahkan coba lagi nanti, {pushName}\n\nJika masalah berlanjut, silahkan hubungi owner bot`,
+  errorTemplate: `╭──「 ⚠️ Kendala 」\n├── Perintah \`{prefix}{command}\` lagi bermasalah\n├── Coba lagi nanti ya, {pushName}\n├── Masih error? Hubungi owner bot\n╰──────────❀`,
 
   features: {
     antiCall: true, // Jika true, bot akan menolak panggilan masuk
@@ -332,34 +332,34 @@ const config = {
   },
 
   messages: {
-    wait: "╭──\n├── 🕕 Proses...\n├── Mohon tunggu sebentar\n╰──────────❀",
-    success: "╭──\n├── ✅ Berhasil!\n├── Permintaan kamu sudah selesai\n╰──────────❀",
-    error: "╭──「 ⚠️ Error 」\n├── Ada masalah pada sistem\n├── Coba lagi nanti atau hubungi owner\n╰──────────❀",
+    wait: "╭──「 🕕 Sedang Diproses 」\n├── Sabar ya, lagi dikerjakan\n├── Jangan spam ya bestie\n╰──────────❀",
+    success: "╭──「 ✅ Berhasil 」\n├── Permintaan kamu selesai\n├── Ada lagi yang bisa dibantu?\n╰──────────❀",
+    error: "╭──「 ⚠️ Error 」\n├── Ada masalah di sistem\n├── Coba lagi beberapa saat\n├── Masih error? Lapor owner\n╰──────────❀",
 
-    ownerOnly: "╭──「 🚫 Akses Ditolak 」\n├── Fitur ini khusus Owner bot\n╰──────────❀",
+    ownerOnly: "╭──「 🚫 Akses Ditolak 」\n├── Fitur ini cuma buat Owner\n├── Jangan maksa ya\n╰──────────❀",
     premiumOnly:
-      "╭──「 💎 Premium Only 」\n├── Fitur ini khusus member Premium\n├── Ketik .benefitpremium untuk info upgrade\n╰──────────❀",
+      "╭──「 💎 Premium Only 」\n├── Fitur ini khusus member Premium\n├── Mau upgrade? Ketik .benefitpremium\n╰──────────❀",
 
-    groupOnly: "╭──「 👥 Group Only 」\n├── Fitur ini hanya bisa\n├── digunakan di dalam grup\n╰──────────❀",
+    groupOnly: "╭──「 👥 Group Only 」\n├── Fitur ini cuma jalan di grup\n├── Pindah ke grup dulu ya\n╰──────────❀",
     privateOnly:
-      "╭──「 📱 Private Only 」\n├── Fitur ini hanya bisa\n├── digunakan di chat pribadi\n╰──────────❀",
+      "╭──「 📱 Private Only 」\n├── Fitur ini cuma jalan di chat pribadi\n├── Chat bot langsung ya\n╰──────────❀",
 
     adminOnly:
-      "╭──「 👮 Admin Only 」\n├── Kamu harus jadi Admin grup\n├── untuk pakai fitur ini\n╰──────────❀",
+      "╭──「 👮 Admin Only 」\n├── Kamu harus jadi Admin grup\n├── buat pakai fitur ini\n╰──────────❀",
     botAdminOnly:
-      "╭──「 🤖 Bot Bukan Admin 」\n├── Jadikan bot sebagai Admin grup\n├── dulu biar bisa kerja\n╰──────────❀",
+      "╭──「 🤖 Bot Bukan Admin 」\n├── Jadikan bot Admin dulu\n├── biar bisa ngerjain fitur ini\n╰──────────❀",
 
     cooldown:
-      "╭──「 🕕 Cooldown 」\n├── Tunggu %time% detik lagi ya\n╰──────────❀",
+      "╭──「 🕕 Cooldown 」\n├── Sabar, tunggu %time% detik\n├── sebelum pakai lagi\n╰──────────❀",
     energiExceeded:
-      "╭──「 ⚡ Energi Habis 」\n├── Energi kamu sudah habis\n├── Tunggu reset besok atau\n├── beli Premium\n╰──────────❀",
+      "╭──「 ⚡ Energi Habis 」\n├── Energi kamu habis hari ini\n├── Reset besok atau\n├── upgrade Premium buat unlimited\n╰──────────❀",
     limitDeducted:
-      "🔋 Limit berkurang {amount}. Sisa limit: {sisa}",
+      "╭──「 🔋 Limit 」\n├── Limit berkurang {amount}\n├── Sisa limit: {sisa}\n╰──────────❀",
 
     banned:
-      "╭──「 🚫 Diblokir 」\n├── Kamu tidak bisa menggunakan bot\n├── karena melanggar aturan\n├── Hubungi owner untuk info lebih lanjut\n╰──────────❀",
+      "╭──「 🚫 Diblokir 」\n├── Kamu lagi gak bisa pakai bot\n├── karena melanggar aturan\n├── Hubungi owner buat appeal\n╰──────────❀",
 
-    rejectCall: "╭──「 ❗ Ditolak 」\n├── Ga boleh telepon nomor bot ini\n╰──────────❀",
+    rejectCall: "╭──「 📞 Ditolak 」\n├── Jangan telepon nomor bot\n├── Chat aja ya\n╰──────────❀",
   },
 
   database: { path: "./database/main" },
