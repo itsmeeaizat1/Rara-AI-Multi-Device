@@ -39,12 +39,12 @@ async function rlGet(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return novaCaption({
+    return m.reply(novaCaption({
   emoji: "🎵",
   name: "tiktokv2",
   description: "Download TikTok tanpa watermark via (V2)",
-  usage: `$m.prefixtiktokv2 <url>`,
-  example: `$m.prefixtiktokv2 https://vt.tiktok.com/xxx`,
+  usage: `${m.prefix}tiktokv2 <url>`,
+  example: `${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`,
 }), "tiktokv2")
   }
   m.react("🕒");

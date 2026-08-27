@@ -18,8 +18,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "🔧",
   name: "alarm",
   description: "Alarm pengingat pribadi",
-  usage: `$prefixalarm <HH:MM> <pesan>`,
-  example: `$prefixalarm 07:30 bangun sekolah`,
+  usage: `${prefix}alarm <HH:MM> <pesan>`,
+  example: `${prefix}alarm 07:30 bangun sekolah`,
 }));
       return { handled: true };
     }

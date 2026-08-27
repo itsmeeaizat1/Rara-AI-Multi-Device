@@ -19,8 +19,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "☪️",
   name: "hadith",
   description: "Cari hadis Bukhari & Muslim",
-  usage: `$prefixhadith <kata kunci>`,
-  example: `$prefixhadith sabar`,
+  usage: `${prefix}hadith <kata kunci>`,
+  example: `${prefix}hadith sabar`,
 }) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`));
       return { handled: true };
     }

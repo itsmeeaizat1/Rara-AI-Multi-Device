@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import { generateWAMessage, generateWAMessageFromContent, jidNormalizedUser } from 'nova'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
     Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -122,11 +122,13 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
 
     if (!url) {
-        return m.reply( `╭──「 🎵 *ᴛɪᴋᴛᴏᴋ ᴅᴏᴡɴʟᴏᴀᴅ* 」\n` +
-            `│
-│ 📌 *Cara Pakai:* \`${m.prefix}tiktok2 <url>\`\n` +
-            `╰──────────❀\n\n` +
-            `Contoh: ${m.prefix}tiktok2 https://vt.tiktok.com/xxx`, "tiktok2")
+        return m.reply(novaCaption({
+  emoji: "🎵",
+  name: "tiktokdl2",
+  description: "Download video/slide TikTok tanpa watermark",
+  usage: `${m.prefix}tiktok2 <url>`,
+  example: `${m.prefix}tiktok2 https://vt.tiktok.com/xxx`,
+}), "tiktok2")
     }
 
     if (!url.match(/tiktok\.com|vt\.tiktok/i)) {

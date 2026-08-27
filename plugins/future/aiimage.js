@@ -19,8 +19,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "📁",
   name: "aiimagev2",
   description: "Generate gambar dari teks dengan AI",
-  usage: `$prefixaiimage <deskripsi>`,
-  example: `$prefixaiimage kucing astronaut di bulan`,
+  usage: `${prefix}aiimage <deskripsi>`,
+  example: `${prefix}aiimage kucing astronaut di bulan`,
 }), "aiimage");
       return { handled: true };
     }

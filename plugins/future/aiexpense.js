@@ -28,8 +28,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "📁",
   name: "aiexpense",
   description: "Catat pengeluaran dengan bahasa natural",
-  usage: `$prefixaiexpense <deskripsi>`,
-  example: `$prefixaiexpense beli kopi 15rb`,
+  usage: `${prefix}aiexpense <deskripsi>`,
+  example: `${prefix}aiexpense beli kopi 15rb`,
 }));
       return { handled: true };
     }

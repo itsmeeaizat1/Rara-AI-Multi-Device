@@ -19,8 +19,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "🛠️",
   name: "synonym",
   description: "Cari sinonim kata",
-  usage: `$prefixsynonym <kata>`,
-  example: `$prefixsynonym happy`,
+  usage: `${prefix}synonym <kata>`,
+  example: `${prefix}synonym happy`,
 }), "synonym");
       return { handled: true };
     }

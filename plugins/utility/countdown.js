@@ -18,8 +18,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "🔧",
   name: "countdown",
   description: "Hitung mundur ke tanggal tertentu",
-  usage: `$prefixcountdown <DD-MM-YYYY>`,
-  example: `$prefixcountdown 25-12-2026`,
+  usage: `${prefix}countdown <DD-MM-YYYY>`,
+  example: `${prefix}countdown 25-12-2026`,
 }), "countdown");
       return { handled: true };
     }

@@ -19,8 +19,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "📁",
   name: "ailearn",
   description: "AI tutor bahasa & pelajaran",
-  usage: `$prefixailearn <topik> <pertanyaan>`,
-  example: `$prefixailearn inggris apa arti determination`,
+  usage: `${prefix}ailearn <topik> <pertanyaan>`,
+  example: `${prefix}ailearn inggris apa arti determination`,
 }), "ailearn");
       return { handled: true };
     }

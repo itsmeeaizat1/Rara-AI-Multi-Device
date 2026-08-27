@@ -19,8 +19,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "🛠️",
   name: "geocode",
   description: "Alamat ke koordinat GPS",
-  usage: `$prefixgeocode <nama tempat>`,
-  example: `$prefixgeocode Monas Jakarta`,
+  usage: `${prefix}geocode <nama tempat>`,
+  example: `${prefix}geocode Monas Jakarta`,
 }));
       return { handled: true };
     }

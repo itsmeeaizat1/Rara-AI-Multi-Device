@@ -7,7 +7,7 @@ import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { handleAntiSwGc } from "../../src/lib/nova-group-protection.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 const botConfig = config;
 
 function buildSyntheticSwGcRawMessage(sock, remoteJid, content, messageId) {
@@ -255,7 +255,13 @@ async function handler(m, { sock, db }) {
         rawContent.ptt = m.msg?.ptt || false;
       }
     } catch (e) {
-      await m.reply(claraWrap("swgc", te(m.prefix, m.command, m.pushName), "error"));
+      await m.reply(novaCaption({
+  emoji: "📢",
+  name: "swgc",
+  description: "Post Group Status/Story ke grup pilihan (border hijau)",
+  usage: `${m.prefix}swgc <teks> atau reply media`,
+  example: `${m.prefix}swgc Halo semua!`,
+}), "error");
       return;
     }
   } else if (text && text.trim()) {

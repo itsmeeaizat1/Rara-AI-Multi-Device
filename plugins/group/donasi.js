@@ -290,7 +290,7 @@ export default {
       if (!campaignId) {
         await m.reply(claraWrap("Donasi", [
           `│ Format: *${prefix}donasi status <id>*`,
-          `│ Contoh: *${prefix}donasi status DNR3A2*`,
+          `│ 💡 *Contoh:* *${prefix}donasi status DNR3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -399,7 +399,7 @@ export default {
       if (!idMatch) {
         await m.reply(claraWrap("Donasi", [
           `│ Format: *${prefix}donasi beri <id> <jumlah>*`,
-          `│ Contoh: *${prefix}donasi beri DNR3A2 50000*`,
+          `│ 💡 *Contoh:* *${prefix}donasi beri DNR3A2 50000*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -523,7 +523,7 @@ export default {
       if (!campaignId || mentionedJids.length === 0 || !amount) {
         await m.reply(claraWrap("Donasi", [
           `│ Format: *${prefix}donasi terima <id> @tag <jumlah>*`,
-          `│ Contoh: *${prefix}donasi terima DNR3A2 @62812... 50000*`,
+          `│ 💡 *Contoh:* *${prefix}donasi terima DNR3A2 @62812... 50000*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -619,7 +619,7 @@ export default {
       if (!campaignId) {
         await m.reply(claraWrap("Donasi", [
           `│ Format: *${prefix}donasi close <id>*`,
-          `│ Contoh: *${prefix}donasi close DNR3A2*`,
+          `│ 💡 *Contoh:* *${prefix}donasi close DNR3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -670,7 +670,7 @@ export default {
     // .donasi help
     if (subCmd && (subCmd[1] === "help" || subCmd[1] === "bantu")) {
       await m.reply(claraWrap("Donasi - Bantuan", [
-        `│ Cara Pakai:`,
+        `│ 📌 *Cara Pakai:*`,
         ``,
         `│ 1. Bikin kampanye donasi:`,
         `│ *${prefix}donasi <target> | <keterangan>*`,
@@ -705,11 +705,11 @@ export default {
 
     if (!body) {
       await m.reply(claraWrap("Donasi - Bantuan", [
-        `│ Cara Pakai:`,
+        `│ 📌 *Cara Pakai:*`,
         ``,
         `│ *${prefix}donasi <target> | <keterangan>*`,
         ``,
-        `│ Contoh:`,
+        `│ 💡 *Contoh:*`,
         `│ *${prefix}donasi 5000000 | Sedekah korban banjir*`,
         `│ *${prefix}donasi 1000000 | Bantuan yatim*`,
         ``,
@@ -730,7 +730,7 @@ export default {
     if (parts.length < 1) {
       await m.reply(claraWrap("Donasi", [
         `│ Format: *${prefix}donasi <target> | <keterangan>*`,
-        `│ Contoh: *${prefix}donasi 5000000 | Sedekah korban banjir*`,
+        `│ 💡 *Contoh:* *${prefix}donasi 5000000 | Sedekah korban banjir*`,
       ].join("\n")));
       return { handled: true };
     }
@@ -789,7 +789,7 @@ export default {
       ``,
       `│ 🤝 Cara Donasi:`,
       `│ Ketik *${prefix}donasi beri ${campaignId} <jumlah>*`,
-      `│ Contoh: *${prefix}donasi beri ${campaignId} 50000*`,
+      `│ 💡 *Contoh:* *${prefix}donasi beri ${campaignId} 50000*`,
       ``,
       `│ 📊 Cek Progress:`,
       `│ Ketik *${prefix}donasi status ${campaignId}*`,
@@ -810,7 +810,7 @@ export default {
       ``,
       `│ 🤝 Catat donasi:`,
       `│ Ketik *${prefix}donasi beri ${campaignId} <jumlah>*`,
-      `│ Contoh: *${prefix}donasi beri ${campaignId} 50000*`,
+      `│ 💡 *Contoh:* *${prefix}donasi beri ${campaignId} 50000*`,
       ``,
       `│ 📊 Cek Progress:`,
       `│ Ketik *${prefix}donasi status ${campaignId}*`,

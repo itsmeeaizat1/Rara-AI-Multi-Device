@@ -8,7 +8,7 @@ import te from "../../src/lib/nova-error.js";
 import { handleAntiSwGc } from "../../src/lib/nova-group-protection.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { generateWAMessage } from "nova";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const botConfig = config;
 
@@ -228,7 +228,13 @@ async function handler(m, { sock, db }) {
         rawContent.ptt = m.msg?.ptt || false;
       }
     } catch (e) {
-      await m.reply(claraWrap("swgcv2", te(m.prefix, m.command, m.pushName), "error"));
+      await m.reply(novaCaption({
+  emoji: "📢",
+  name: "swgcv2",
+  description: "Post Group Status V2 ke grup pilihan",
+  usage: `${m.prefix}swgcv2 <teks> atau reply media`,
+  example: `${m.prefix}swgcv2 Halo semua!`,
+}), "error");
       return;
     }
   } else if (text && text.trim()) {

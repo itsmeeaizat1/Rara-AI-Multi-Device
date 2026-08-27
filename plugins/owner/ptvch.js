@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ptvch',
     alias: ["ptvch"],
@@ -25,20 +25,14 @@ async function handler(m, { sock }) {
         try {
             video = await m.quoted.download()
         } catch (e) {
-            return m.reply(claraWrap("ptvch", `❌ Gagal download video dari quoted.`))
+            return m.reply(novaCaption({
+  emoji: "📺",
+  name: "ptvch",
+  description: "Kirim video sebagai PTV ke channel",
+  usage: `${m.prefix}ptvch (reply video)`,
+  example: `${m.prefix}ptvch`,
+}), "ptvch");
         }
-    } else if (m.isVideo) {
-        try {
-            video = await m.download()
-        } catch (e) {
-            return m.reply(claraWrap("ptvch", `❌ Gagal download video.`))
-        }
-    }
-    
-    if (!video) {
-        return m.reply( `⚠️ *Cara Pakai*\n\n` +
-            `Kirim *video* atau *balas video* lalu ketik:\n` +
-            `\`${m.prefix}ptvch\``, "ptvch")
     }
     
     const channelId = config.saluran?.id || '120363404849776664@newsletter'

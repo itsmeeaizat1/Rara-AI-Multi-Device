@@ -191,7 +191,7 @@ export default {
     if (!inputText || inputText.length < 2) {
       const text =
         claraWrap("Slang Translator", [
-          `│ Cara Pakai:`,
+          `│ 📌 *Cara Pakai:*`,
           ``,
           `│ 1. Reply pesan teks/VN yang mau diterjemahkan`,
           `│ lalu ketik *${prefix}slangtranslate*`,
@@ -199,7 +199,7 @@ export default {
           `│ 2. Atau ketik langsung:`,
           `│ *${prefix}slangtranslate <teks>*`,
           ``,
-          `│ Contoh:`,
+          `│ 💡 *Contoh:*`,
           `│ *${prefix}slangtranslate that's cap fr fr*`,
           `│ *${prefix}slangtranslate ngap sih lo*`,
           `│ Reply VN bahasa Sunda → *.slangtranslate*`,

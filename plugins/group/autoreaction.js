@@ -31,8 +31,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "👥",
   name: "autoreactionemoji",
   description: "Auto reaction pesan di grup",
-  usage: `$prefixautoreaction on/off`,
-  example: `$prefixautoreaction on`,
+  usage: `${prefix}autoreaction on/off`,
+  example: `${prefix}autoreaction on`,
 }) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);

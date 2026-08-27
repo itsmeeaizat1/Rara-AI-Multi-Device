@@ -21,8 +21,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "🛠️",
   name: "hash",
   description: "Hash text md5/sha256/sha1",
-  usage: `$prefixhash <algo> <text>`,
-  example: `$prefixhash sha256 halo`,
+  usage: `${prefix}hash <algo> <text>`,
+  example: `${prefix}hash sha256 halo`,
 })); await m.reply( __navText, "hash"); };
       return { handled: true };
     }

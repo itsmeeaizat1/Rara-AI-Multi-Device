@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "onlygc",
@@ -24,12 +24,13 @@ async function handler(m, { sock }) {
 
   if (!option) {
     const current = db.setting("onlyGc") || false;
-    return m.reply( `🏘️ *Only Group*\n\n` +
-        `Status: *${current ? "Aktif ✅" : "Nonaktif ❌"}*\n\n` +
-        `*Cara Pakai:*\n` +
-        `*${m.prefix}onlygc on* — Bot hanya bisa diakses di grup\n` +
-        `*${m.prefix}onlygc off* — Bot bisa diakses di mana saja\n\n` +
-        `_Jika aktif, mode Only Private akan otomatis nonaktif_`, "onlygc");
+    return m.reply(novaCaption({
+  emoji: "👥",
+  name: "onlygc",
+  description: "Toggle mode bot hanya di grup",
+  usage: `${m.prefix}onlygc on/off`,
+  example: `${m.prefix}onlygc on`,
+}), "onlygc");
   }
 
   if (option === "on") {

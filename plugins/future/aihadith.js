@@ -19,8 +19,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "📁",
   name: "aihadith",
   description: "Cari hadis dengan bahasa natural",
-  usage: `$prefixaihadith <topik>`,
-  example: `$prefixaihadith hadis tentang sabar`,
+  usage: `${prefix}aihadith <topik>`,
+  example: `${prefix}aihadith hadis tentang sabar`,
 }), "aihadith");
       return { handled: true };
     }

@@ -31,8 +31,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "👥",
   name: "reaction",
   description: "Beri reaksi ke pesan",
-  usage: `$prefixreaction <emoji>`,
-  example: `$prefixreaction 🔥`,
+  usage: `${prefix}reaction <emoji>`,
+  example: `${prefix}reaction 🔥`,
 }) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);

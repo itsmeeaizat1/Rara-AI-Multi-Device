@@ -6,7 +6,7 @@ import path from "path";
 import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const botConfig = config;
 
@@ -148,7 +148,13 @@ async function handler(m, { sock, db }) {
         rawContent.ptt = source.msg?.ptt || false;
       }
     } catch {
-      return m.reply(claraWrap("swgcall", te(m.prefix, m.command, m.pushName), "error"));
+      return m.reply(novaCaption({
+  emoji: "📢",
+  name: "swgcall",
+  description: "Post Group Status/Story ke SEMUA grup sekaligus (border hijau)",
+  usage: `${m.prefix}swgcall <teks> atau reply media`,
+  example: `${m.prefix}swgcall Pengumuman penting!`,
+}), "error");
     }
   } else if (text && text.trim()) {
     rawContent.text = text;

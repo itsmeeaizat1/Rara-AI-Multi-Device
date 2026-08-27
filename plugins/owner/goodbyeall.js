@@ -24,13 +24,14 @@ async function handler(m, { sock }) {
     const action = args[0]?.toLowerCase()
     
     if (!action || !['on', 'off'].includes(action)) {
-        return novaCaption({
+        return m.reply(novaCaption({
   emoji: "👑",
   name: "goodbyeall",
   description: "Aktifkan/nonaktifkan goodbye di semua grup",
-  usage: `$m.prefixgoodbyeall <on/off>`,
-  example: `$m.prefixgoodbyeall on`,
-}), "goodbyeall")
+  usage: `${m.prefix}goodbyeall <on/off>`,
+  example: `${m.prefix}goodbyeall on`,
+}), "goodbyeall");
+    }
     
     await m.react('🕐')
     

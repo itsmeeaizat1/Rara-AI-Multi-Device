@@ -29,8 +29,8 @@ async function handler(m, { sock, config: botConfig }) {
   emoji: "👥",
   name: "welcome2",
   description: "Pesan welcome saat member join grup",
-  usage: `$prefixwelcome on/off`,
-  example: `$prefixwelcome on`,
+  usage: `${prefix}welcome on/off`,
+  example: `${prefix}welcome on`,
 }) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);

@@ -476,7 +476,7 @@ export default {
       if (!eventId) {
         await m.reply(claraWrap("Agenda", [
           `│ Format: *${prefix}agenda status <id>*`,
-          `│ Contoh: *${prefix}agenda status AGD3A2*`,
+          `│ 💡 *Contoh:* *${prefix}agenda status AGD3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -544,7 +544,7 @@ export default {
       if (!eventId) {
         await m.reply(claraWrap("Agenda", [
           `│ Format: *${prefix}agenda hapus <id>*`,
-          `│ Contoh: *${prefix}agenda hapus AGD3A2*`,
+          `│ 💡 *Contoh:* *${prefix}agenda hapus AGD3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -576,7 +576,7 @@ export default {
     // .agenda help
     if (subCmd && (subCmd[1] === "help" || subCmd[1] === "bantu")) {
       await m.reply(claraWrap("Agenda - Bantuan", [
-        `│ Cara Pakai:`,
+        `│ 📌 *Cara Pakai:*`,
         ``,
         `│ 1. Tambah acara:`,
         `│ *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
@@ -614,11 +614,11 @@ export default {
 
     if (!body || (!subCmd && !body.toLowerCase().startsWith("tambah"))) {
       await m.reply(claraWrap("Agenda - Bantuan", [
-        `│ Cara Pakai:`,
+        `│ 📌 *Cara Pakai:*`,
         ``,
         `│ *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
         ``,
-        `│ Contoh:`,
+        `│ 💡 *Contoh:*`,
         `│ *${prefix}agenda tambah | Mabar Valorant | 25 Aug 2026 20:00*`,
         `│ *${prefix}agenda tambah | Kopdar | besok 15:00*`,
         `│ *${prefix}agenda tambah | Ulang tahun Budi | 25/08/2026 00:00*`,
@@ -640,7 +640,7 @@ export default {
         `│ Format kurang lengkap.`,
         ``,
         `│ Format: *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
-        `│ Contoh: *${prefix}agenda tambah | Mabar Valorant | 25 Aug 2026 20:00*`,
+        `│ 💡 *Contoh:* *${prefix}agenda tambah | Mabar Valorant | 25 Aug 2026 20:00*`,
       ].join("\n")));
       return { handled: true };
     }

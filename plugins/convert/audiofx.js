@@ -3,7 +3,7 @@ import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, bracketBox, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const EFFECTS = {
     bass:      { emoji: '🔊', filter: 'bass=g=20:f=110:w=0.6', desc: 'Bass boost' },
@@ -86,12 +86,13 @@ function buildEffectList(prefix) {
     }
 
     return boxes.join('\n\n') +
-        '\n\n' + bracketBox('💡', 'Cara Pakai', [
-            'Reply audio/video lalu ketik command',
-            'Contoh: .' + prefix + ' bass',
-            'Atau langsung: .' + prefix + ' nightcore',
-            'Total ' + EFFECT_NAMES.length + ' efek tersedia',
-        ])
+        '\n\n' + novaCaption({
+  emoji: "🎵",
+  name: "audiofun",
+  description: "Audio effects & voice changer (25 efek)",
+  usage: `${m.prefix}audiofun <efek> atau .audiofun list`,
+  example: `${m.prefix}audiofun bass (reply audio)`,
+})
 }
 
 async function handler(m, { sock }) {
