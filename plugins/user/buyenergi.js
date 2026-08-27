@@ -50,6 +50,7 @@ async function handler(m, { sock }) {
     }
     
     db.updateKoin(m.sender, -totalPrice)
+    try { sock.sendMessage(m.chat, { text: totalPrice + " Koin terpakai" }); } catch {}
     
     if (user.energi === -1) {
         m.react('✅')
