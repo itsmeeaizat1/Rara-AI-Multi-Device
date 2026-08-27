@@ -257,7 +257,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[menu] handler error:", e.message);
-    try { await m.reply("❌ Gagal menampilkan menu: " + e.message); } catch {}
+    try { await m.reply("╭──「 Menu 」\n├── ❌ Gagal menampilkan menu\n├── Coba lagi nanti\n╰──────────❀"); } catch {}
     await m.react("❌");
   }
 }

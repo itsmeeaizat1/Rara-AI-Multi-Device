@@ -56,11 +56,11 @@ async function handler(m, { sock }) {
   const story = await generateAksi(names);
 
   if (!story) {
-    return m.reply( "❌ Gagal generate cerita aksi. Coba lagi nanti.", "aksi");
+    return m.reply("╭──「 💥 Action Story 」\n├── ❌ Gagal generate cerita\n├── Coba lagi nanti\n╰──────────❀", "aksi");
   }
 
   const header = "🔥 *ᴀᴄᴛɪᴏɴ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";
-  const footer = "\n\n_Dibuat oleh Nova AI_";
+  const footer = "\n├──\n├── ✨ Dibuat oleh Nova AI\n╰──────────❀";
 
   await m.react("🐣");
   return m.reply( header + story + footer, "aksi");

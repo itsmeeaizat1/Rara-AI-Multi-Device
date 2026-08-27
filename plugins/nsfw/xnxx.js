@@ -23,7 +23,11 @@ async function handler(m, { sock }) {
   const query = m.text?.trim();
 
   if (!query) {
-    return m.reply( `🔞 *xɴxx ꜱᴇᴀʀᴄʜ*\n\nMasukkan query pencarian\n\n💡 *Contoh:* \`${m.prefix}xnxx amateur\``, "xnxx");
+    return m.reply(`╭──「 🔞 XNXX Search 」
+├── Masukkan query pencarian
+├──
+├── 💡 *Contoh:* \`${m.prefix}xnxx amateur\`
+╰──────────❀`, "xnxx");
   }
 
   await m.react("🕒");
@@ -35,11 +39,17 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data || res.data.data.length === 0) {
-      return m.reply( `❌ Tidak ditemukan hasil untuk: ${query}`, "xnxx");
+      return m.reply(`╭──「 🔞 XNXX Search 」
+├── ❌ Tidak ditemukan untuk: ${query}
+├── Coba keyword lain
+╰──────────❀`, "xnxx");
     }
 
     const results = res.data.data.slice(0, 5);
-    let text = `🔞 *xɴxx ꜱᴇᴀʀᴄʜ*\n\nQuery: ${query}\n\n`;
+    let text = `╭──「 🔞 XNXX Search 」
+├── Query: ${query}
+├──
+`;
     for (let i = 0; i < results.length; i++) {
       const r = results[i];
       text += `${i + 1}. ${r.title}\n`;

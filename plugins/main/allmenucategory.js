@@ -265,7 +265,7 @@ async function handler(m, { sock, db }) {
     });
   } catch (e) {
     console.error("[allmenucategory] handler error:", e.message);
-    try { await m.reply("❌ Gagal menampilkan kategori: " + e.message); } catch {}
+    try { await m.reply("╭──「 Menu 」\n├── ❌ Gagal menampilkan kategori\n├── Coba lagi nanti\n╰──────────❀"); } catch {}
     await m.react("❌");
   }
 }

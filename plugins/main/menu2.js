@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
 
   } catch (e) {
     console.error("[menu2] handler error:", e.message);
-    try { await m.reply("❌ Gagal menampilkan menu2: " + e.message); } catch {}
+    try { await m.reply("╭──「 Menu 」\n├── ❌ Gagal menampilkan menu\n├── Coba lagi nanti\n╰──────────❀"); } catch {}
     await m.react("❌");
   }
 }
