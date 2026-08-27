@@ -193,6 +193,9 @@ async function handler(m, { sock, db }) {
       return;
     }
 
+    // Track klik kategori (buat badge "Viral" di popup kategori)
+    try { db.incrementStat(`categoryClicks_${matchedCat}`); } catch {}
+
     if (matchedCat === "owner" && !m.isOwner) {
       await m.reply(
         `╭──「 *Akses Ditolak* 」\n│ Kategori ini hanya untuk owner\n╰──────────❀`
