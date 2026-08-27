@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20menu%20voice%20note%20tidak%20bisa%20diputar%20-success?style=for-the-badge)
-> *Commit: "fix: menu voice note tidak bisa diputar — convert MP3 ke OGG/Opus"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20hapus%20bullet%20kotak%20%E2%9D%8F%20di%20menu%2C%20rapik-success?style=for-the-badge)
+> *Commit: "fix: hapus bullet kotak ❏ di menu, rapikan spasi header"*
 <!--END_SECTION:latest-update-->
 
 ---
