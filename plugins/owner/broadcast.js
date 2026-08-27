@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  tipText, claraWrap, broadcastFormat, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { broadcastFormat, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 
@@ -25,18 +25,15 @@ async function handler(m, { sock, config: botConfig }) {
     const message = m.text?.trim();
 
     if (!message) {
-      const text =
-        novaCaption({
-  emoji: "👑",
-  name: "broadcast",
-  description: "Broadcast pesan ke semua grup (owner only)",
-  usage: `${prefix}broadcast <pesan>`,
-  example: `${prefix}broadcast Update bot v2.0`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
+      const text = novaCaption({
+        emoji: "👑",
+        name: "broadcast",
+        description: "Broadcast pesan ke semua grup (owner only)",
+        usage: `${prefix}broadcast <pesan>`,
+        example: `${prefix}broadcast Update bot v2.0`,
+      }) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`);
 
-      await m.reply( text, "broadcast");
+      await m.reply(text, "broadcast");
       return { handled: true };
     }
 
@@ -45,15 +42,13 @@ async function handler(m, { sock, config: botConfig }) {
     const groupJids = Object.keys(groups);
 
     if (!groupJids.length) {
-      const text =
-        claraWrap("Broadcast", [
-          "Target: Tidak ada grup terdaftar",
-          "Status: Dibatalkan",
-        ].join("\n")) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply(text);
+      await m.reply(
+        "╭──「 📢 Broadcast 」\n" +
+        "├──\n" +
+        "├── ❌ Tidak ada grup terdaftar\n" +
+        "├── Status: Dibatalkan\n" +
+        "╰──────────❀"
+      );
       return { handled: true };
     }
 
@@ -79,28 +74,27 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const result =
-      claraWrap("Broadcast Selesai", [
-        `Pesan: ${message.slice(0, 50)}${message.length > 50 ? "..." : ""}`,
-        `Target: ${groupJids.length} Grup`,
-        `Berhasil: ${success.length}`,
-        `Gagal: ${failed.length}`,
-        "Status: SELESAI",
-      ].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali`);
+      "╭──「 📢 Broadcast Selesai 」\n" +
+      "├──\n" +
+      "├── 📝 Pesan: " + message.slice(0, 50) + (message.length > 50 ? "..." : "") + "\n" +
+      "├── 🎯 Target: " + groupJids.length + " Grup\n" +
+      "├── ✅ Berhasil: " + success.length + "\n" +
+      "├── ❌ Gagal: " + failed.length + "\n" +
+      "├── 📊 Sukses Rate: " + Math.round((success.length / groupJids.length) * 100) + "%\n" +
+      "├──\n" +
+      "├── 🏷️ " + botName + "\n" +
+      "╰──────────❀";
 
     await m.reply(result);
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [
-        "Status: Gagal",
-        `Alasan: ${error.message}`,
-      ].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
+      "╭──「 📢 Broadcast — Error 」\n" +
+      "├──\n" +
+      "├── ❌ Gagal mengirim broadcast\n" +
+      "├── Alasan: " + error.message + "\n" +
+      "╰──────────❀";
 
-    await m.reply( text, "broadcast");
+    await m.reply(text, "broadcast");
   }
 
   return { handled: true };

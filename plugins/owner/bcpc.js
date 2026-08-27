@@ -2,7 +2,7 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { decodeAndNormalize } from "../../src/lib/nova-lid.js";
 import config from "../../config.js";
-import {  claraWrap, broadcastFormat, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { broadcastFormat } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bcpc",
@@ -35,16 +35,25 @@ async function handler(m, { sock }) {
 
   if (!input) {
     const jeda = db.setting("jedaBcpc") || 5000;
-    return m.reply( novaCaption({
-  emoji: "👑",
-  name: "bcpc",
-  description: "Broadcast pesan ke semua kontak private chat",
-  usage: `${m.prefix}bcpc <pesan>`,
-}), "bcpc");
+    return m.reply(
+      "╭──「 📢 Broadcast Private 」\n" +
+      "├──\n" +
+      "├── 📋 Broadcast pesan + media ke semua kontak PC\n" +
+      "├── ⏱️ Jeda: " + jeda + "ms\n" +
+      "├──\n" +
+      "├── 📌 *Cara Pakai:*\n" +
+      "├── Kirim teks/foto/video, lalu reply dengan `" + m.prefix + "bcpc`\n" +
+      "├──\n" +
+      "├── 💡 *Contoh:*\n" +
+      "├── `" + m.prefix + "bcpc Info: bot update besok`\n" +
+      "├── `" + m.prefix + "stopbcpc` — Hentikan broadcast\n" +
+      "├── `" + m.prefix + "bcpcjeda 5s` — Atur jeda\n" +
+      "╰──────────❀"
+    );
   }
 
   if (global.statusBcpc) {
-    return m.reply(claraWrap("Broadcast Private", `Sedang berjalan. Ketik ${m.prefix}stopbcpc untuk menghentikan.`));
+    return m.reply("╭──「 📢 Broadcast Private 」\n├──\n├── 🔄 Sedang berjalan\n├── ⏹️ Ketik `" + m.prefix + "stopbcpc` untuk hentikan\n╰──────────❀");
   }
 
   try {
@@ -101,26 +110,29 @@ async function handler(m, { sock }) {
     }
 
     if (privateJids.size === 0) {
-      return m.reply(claraWrap("Broadcast Private", "Tidak ada kontak ditemukan. Pastikan bot sudah pernah menerima pesan dari kontak tersebut."));
+      return m.reply("╭──「 📢 Broadcast Private 」\n├──\n├── ❌ Tidak ada kontak ditemukan\n├── Pastikan bot sudah pernah menerima pesan dari kontak tersebut\n╰──────────❀");
     }
 
     const filtered = [...privateJids];
     const jeda = db.setting("jedaBcpc") || 5000;
     const ctx = getBcContextInfo();
 
-    // Status report ke owner (claraWrap style)
+    // Status report ke owner — Modern Box
     await sock.sendMessage(
       m.chat,
       {
-        text: claraWrap("Broadcast Private Dimulai", [
-          `Pesan: ${input.substring(0, 50)}${input.length > 50 ? "..." : ""}`,
-          `Media: ${mediaBuffer ? mediaType : "Tidak ada"}`,
-          `Target: ${filtered.length} kontak`,
-          `Jeda: ${jeda}ms`,
-          `Estimasi: ${Math.ceil((filtered.length * jeda) / 60000)} menit`,
-          "",
-          "Sedang mengirim ke semua kontak...",
-        ].join("\n")),
+        text:
+          "╭──「 📢 Broadcast Private Dimulai 」\n" +
+          "├──\n" +
+          "├── 📝 Pesan: " + input.substring(0, 50) + (input.length > 50 ? "..." : "") + "\n" +
+          "├── 🎬 Media: " + (mediaBuffer ? mediaType : "Tidak ada") + "\n" +
+          "├── 🎯 Target: " + filtered.length + " kontak\n" +
+          "├── ⏱️ Jeda: " + jeda + "ms\n" +
+          "├── 📊 Estimasi: " + Math.ceil((filtered.length * jeda) / 60000) + " menit\n" +
+          "├──\n" +
+          "├── 🔄 Sedang mengirim ke semua kontak...\n" +
+          "├── ⏹️ Hentikan: `" + m.prefix + "stopbcpc`\n" +
+          "╰──────────❀",
         contextInfo: ctx,
       },
       { quoted: m },
@@ -166,22 +178,27 @@ async function handler(m, { sock }) {
     delete global.statusBcpc;
     m.react("🐣");
 
-    // Hasil ke owner (claraWrap style, no typo)
+    // Hasil ke owner — Modern Box
     await sock.sendMessage(
       m.chat,
       {
-        text: claraWrap("Broadcast Private Selesai", [
-          `Berhasil: ${success}`,
-          `Gagal: ${failed}`,
-          `Total: ${filtered.length}`,
-        ].join("\n")),
+        text:
+          "╭──「 📢 Broadcast Private Selesai 」\n" +
+          "├──\n" +
+          "├── ✅ Berhasil: " + success + "\n" +
+          "├── ❌ Gagal: " + failed + "\n" +
+          "├── 📊 Total: " + filtered.length + " kontak\n" +
+          "├── 📈 Sukses Rate: " + Math.round((success / filtered.length) * 100) + "%\n" +
+          "├──\n" +
+          "├── 🏷️ " + (config.bot?.name || "Nova AI") + "\n" +
+          "╰──────────❀",
         contextInfo: ctx,
       },
       { quoted: m },
     );
   } catch (e) {
     delete global.statusBcpc;
-    m.reply(claraWrap("Broadcast Private", "Gagal: " + e.message));
+    m.reply("╭──「 📢 Broadcast Private — Error 」\n├──\n├── ❌ Gagal: " + e.message + "\n╰──────────❀");
   }
 }
 
