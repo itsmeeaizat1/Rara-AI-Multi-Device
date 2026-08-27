@@ -881,7 +881,7 @@ export function getRandomMonster(level) {
 // REBIRTH / PRESTIGE
 // ═══════════════════════════════════════════════════
 
-export function rebirth(m) {
+export function rebirth(m, sock) {
   try {
     const rpg = ensureRpg(m);
     if (!rpg) return { success: false, reason: "RPG belum siap" };

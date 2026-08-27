@@ -503,13 +503,19 @@ class Database {
     return user.energi;
   }
 
-  updateKoin(jid, amount) {
+  updateKoin(jid, amount, sock, chatId) {
     const user = this.getUser(jid) || this.setUser(jid);
     if (!user) return 0;
     if (user.koin === -1) return -1;
     const MAX_KOIN = 9000000000000;
     user.koin = Math.max(0, Math.min(MAX_KOIN, (user.koin ?? 0) + amount));
     this.setUser(jid, user);
+    // Notif saat koin dipotong (amount negatif)
+    if (amount < 0 && sock && chatId) {
+      try {
+        sock.sendMessage(chatId, { text: Math.abs(amount) + " Koin terpakai" }).catch(() => {});
+      } catch {}
+    }
     return user.koin;
   }
 
@@ -562,13 +568,20 @@ class Database {
   }
 
   // Update RPG currency (gold, gems, diamonds, tokens)
-  updateRpgCurrency(jid, currency, amount) {
+  updateRpgCurrency(jid, currency, amount, sock, chatId) {
     const user = this.getUser(jid) || this.setUser(jid);
     if (!user) return 0;
     if (!user.rpg) user.rpg = {};
     const current = user.rpg[currency] || 0;
     user.rpg[currency] = Math.max(0, current + amount);
     this.setUser(jid, user);
+    // Notif saat currency dipotong (amount negatif)
+    if (amount < 0 && sock && chatId) {
+      const label = currency.charAt(0).toUpperCase() + currency.slice(1);
+      try {
+        sock.sendMessage(chatId, { text: Math.abs(amount) + " " + label + " terpakai" }).catch(() => {});
+      } catch {}
+    }
     return user.rpg[currency];
   }
 
