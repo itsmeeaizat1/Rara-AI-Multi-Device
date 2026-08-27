@@ -11,7 +11,7 @@
  * Setiap fetcher punya multiple fallback endpoint.
  */
 
-import { getAndarazConfig } from "../config/env-loader.js";
+import { getAndarazConfig } from "./config/env-loader.js";
 import { logger } from "./nova-logger.js";
 
 const DEFAULT_TIMEOUT_MS = 15_000;
