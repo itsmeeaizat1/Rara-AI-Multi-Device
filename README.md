@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20novaCaption%20helper%20%2B%20%E2%9D%8F%20o-success?style=for-the-badge)
-> *Commit: "feat: novaCaption helper + ❏ only in menu/allmenu/allmenucategory"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20convert%20116%20plugins%20to%20n-success?style=for-the-badge)
+> *Commit: "feat: convert 116 plugins to novaCaption + fix brace/paren issues"*
 <!--END_SECTION:latest-update-->
 
 
