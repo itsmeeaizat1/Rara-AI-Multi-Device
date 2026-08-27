@@ -34,12 +34,18 @@ const CATEGORY_NAMES = {
 
 const CATEGORY_EMOJIS = {
   ai: "🤖", sticker: "🖼️", download: "📥", fun: "🎮",
-  canvas: "🎨", tools: "🛠️", game: "🎯", rpg: "🗡️",
+  canvas: "🎨", tools: "🛠️", game: "🎯", rpg: "⚔️",
   media: "🎬", search: "🔍", group: "👥", main: "🏠",
-  utility: "🔧", religi: "☪️", info: "ℹ️", cek: "📋",
-  economy: "💰", user: "📊", random: "🎲", premium: "💎",
-  ephoto: "🎨", jpm: "📢", pushkontak: "📱",
-  panel: "🖥️", owner: "👑", store: "🛒",
+  utility: "🔧", religi: "☪️", info: "ℹ️", cek: "🔎",
+  economy: "💰", user: "👤", random: "🎲", premium: "💎",
+  ephoto: "📸", jpm: "📦", pushkontak: "📲",
+  panel: "🖥️", owner: "👑", store: "🏬",
+  anime: "🎌", asupan: "😍", clan: "🛡️", convert: "🔄",
+  downloader: "📥", education: "📚", food: "🍔",
+  future: "🌌", islami: "☪️", islamic: "🕋", menu: "📋",
+  maker: "🖌️", news: "📰", nsfw: "🔞", linode: "☁️",
+  primbon: "🔮", cecan: "💃", stalker: "🕵️", tts: "🔊",
+  vps: "🖧",
 };
 
 // Kategori command yang BOLEH di-auto-execute oleh AI

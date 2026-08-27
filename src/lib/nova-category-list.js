@@ -107,7 +107,7 @@ function buildCategoryRows(m, db, prefix = ".") {
     if (total === 0) continue;
 
     const catName = CATEGORY_NAMES[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
-    const emoji = CATEGORY_EMOJI[cat] || "📂";
+    const emoji = CATEGORY_EMOJI[cat] || "📋";
 
     rows.push({
       header: "",

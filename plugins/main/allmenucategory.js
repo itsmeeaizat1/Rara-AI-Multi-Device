@@ -144,7 +144,7 @@ async function handler(m, { sock, db }) {
         if (total === 0) continue;
         totalAllCmds += total;
         const catName = CATEGORY_NAMES[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
-        const emoji = CATEGORY_EMOJI?.[cat] || "📂";
+        const emoji = CATEGORY_EMOJI?.[cat] || "📋";
         catEntries.push({ cat, catName, emoji, total });
       }
 
@@ -223,7 +223,7 @@ async function handler(m, { sock, db }) {
     } catch {}
 
     // Compact 2-column layout — beda dari allmenu yang dump semua kategori
-    const emoji = CATEGORY_EMOJI?.[matchedCat] || "📂";
+    const emoji = CATEGORY_EMOJI?.[matchedCat] || "📋";
     let txt = `${weatherBlock2}
 ╭──「 ${emoji} *${catName}* 」
 │ *Total:* ${totalFitur} fitur
