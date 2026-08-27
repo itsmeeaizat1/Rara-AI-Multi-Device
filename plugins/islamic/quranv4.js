@@ -1,151 +1,114 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// quranv4.js — Al-Quran via equran.id API v2 (no API key)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+// quranv4.js - Plugin Al-Quran via equran.id API v2
 
 const pluginConfig = {
-  name: "quranv4",
-  alias: ["quranv4"],
-  category: "islamic",
-  description: "Al-Quran lengkap via equran.id (surat, ayat, audio murottal)",
-  usage: ".quranv4 [subcommand] [args]",
-  example: ".quranv4 list\n.quranv4 1\n.quranv4 1 5\n.quranv4 audio 1\n.quranv4 random",
-  isOwner: false,
-  isPremium: false,
-  isGroup: false,
-  isPrivate: false,
-  cooldown: 10,
-  energi: 2,
-  isEnabled: true,
+    name: "quranv4",
+    alias: ["quranv4"],
+    category: 'islamic',
+    description: 'Al-Quran lengkap (equran.id API v2)',
+    usage: '.quranv2 <nomor surat>',
+    example: '.quranv2 1',
+    isOwner: false,
+    isPremium: false,
+    isGroup: false,
+    isPrivate: false,
+    cooldown: 5,
+    energi: 1,
+    isEnabled: true
 };
 
-const API = "https://equran.id/api/v2";
+const API_BASE = "https://equran.id/api/v2/surat";
 
 async function fetchJSON(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`equran.id API ${res.status}`);
-  return await res.json();
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+    return await res.json();
 }
 
-async function handler(m, { sock, config, db }) {
-  try {
-    const sub = (m.args?.[0] || "").toLowerCase();
+async function handler(m, { text, args }) {
+    try {
+        const rawInput = (text || m.text || args?.[0] || m.args?.[0] || "").trim();
 
-    if (!sub || sub === "help") {
-      return m.reply(claraWrap("Quran v4", [
-        "Al-Quran via equran.id",
-        "",
-        "📌 *Cara Pakai:*",
-        `${m.prefix}quranv4 list — daftar 114 surat`,
-        `${m.prefix}quranv4 <surah> — baca surat penuh`,
-        `${m.prefix}quranv4 <surah> <ayat> — ayat spesifik`,
-        `${m.prefix}quranv4 audio <surah> — audio murottal`,
-        `${m.prefix}quranv4 random — ayat acak`,
-      ]));
-    }
+        // Jika input kosong, tampilkan daftar 114 surat dalam Modern Box
+        if (!rawInput) {
+            const json = await fetchJSON(API_BASE);
+            const surahs = json?.data || [];
+            if (!surahs.length) {
+                throw new Error("Gagal mengambil daftar surat Al-Quran.");
+            }
 
-    await m.react("🕒");
+            let lines = [];
+            lines.push("╭──「 Daftar Surat Al-Quran 」");
+            lines.push("├── Total: 114 Surat");
+            lines.push("├──");
 
-    // List all surah
-    if (sub === "list") {
-      const data = await fetchJSON(`${API}/surat`);
-      const surahs = data?.data || [];
-      if (!surahs.length) {
-        await m.react("🐣");
-        return m.reply(claraWrap("Quran v4", "Gagal mengambil daftar surat."));
-      }
-      let text = "Daftar 114 Surat Al-Quran\n\n";
-      for (let i = 0; i < surahs.length; i += 5) {
-        const batch = surahs.slice(i, i + 5);
-        text += batch.map(s => `${s.nomor}. ${s.namaLatin} (${s.jumlahAyat})`).join(" | ") + "\n";
-      }
-      await m.react("🐣");
-      return m.reply(claraWrap("Quran v4", text));
-    }
+            const limit = Math.min(surahs.length, 10);
+            for (let i = 0; i < limit; i++) {
+                const s = surahs[i];
+                lines.push(`├── ${s.nomor}. ${s.namaLatin} (${s.arti}) - ${s.jumlahAyat} ayat`);
+            }
 
-    // Random ayat
-    if (sub === "random") {
-      const listData = await fetchJSON(`${API}/surat`);
-      const surahs = listData?.data || [];
-      if (!surahs.length) throw new Error("Gagal mengambil daftar surat");
-      const randomSurah = surahs[Math.floor(Math.random() * surahs.length)];
-      const detail = await fetchJSON(`${API}/surat/${randomSurah.nomor}`);
-      const ayatList = detail?.data?.ayat || [];
-      if (!ayatList.length) throw new Error("Gagal mengambil ayat");
-      const randomAyat = ayatList[Math.floor(Math.random() * ayatList.length)];
-      const text = `Surat ${detail.data.namaLatin} (${detail.data.nomor}:${randomAyat.nomorAyat})\n\n${randomAyat.teksArab}\n\n${randomAyat.teksLatin}\n\n${randomAyat.teksIndonesia}`;
-      await m.react("🐣");
-      return m.reply(claraWrap("Quran v4", text));
-    }
+            lines.push("├──");
+            lines.push(`├── ... dan ${surahs.length - limit} surat lainnya.`);
+            lines.push("├──");
+            lines.push("├── 💡 *Cara Pakai:*");
+            lines.push("├── Ketik .quranv4 <nomor_surat> untuk membaca.");
+            lines.push("├── Contoh: .quranv4 1");
+            lines.push("╰──────────❀");
 
-    // Audio murottal
-    if (sub === "audio") {
-      const surahNum = parseInt(m.args?.[1] || "");
-      if (!surahNum || surahNum < 1 || surahNum > 114) {
-        await m.react("🐣");
-        return m.reply(claraWrap("Quran v4", `Nomor surat tidak valid. Contoh: ${m.prefix}quranv4 audio 1`));
-      }
-      const detail = await fetchJSON(`${API}/surat/${surahNum}`);
-      const surah = detail?.data;
-      if (!surah) throw new Error("Surat tidak ditemukan");
-      const audioUrl = surah.audioFull?.["05"] || surah.audioFull?.["01"] || Object.values(surah.audioFull || {})[0];
-      if (!audioUrl) {
-        await m.react("🐣");
-        return m.reply(claraWrap("Quran v4", `Audio murottal surat ${surah.namaLatin} tidak tersedia.`));
-      }
-      await m.react("🐣");
-      await sock.sendMessage(m.chat, {
-        audio: { url: audioUrl },
-        ptt: true,
-        mimetype: "audio/mpeg",
-      }, { quoted: m });
-      return m.reply(claraWrap("Quran v4", `Audio murottal: ${surah.namaLatin} (Surat ${surah.nomor})`));
-    }
-
-    // Show surah or specific ayat
-    const surahNum = parseInt(sub);
-    if (surahNum && surahNum >= 1 && surahNum <= 114) {
-      const ayatNum = parseInt(m.args?.[1] || "");
-      const detail = await fetchJSON(`${API}/surat/${surahNum}`);
-      const surah = detail?.data;
-      if (!surah) throw new Error("Surat tidak ditemukan");
-
-      if (ayatNum) {
-        const ayat = surah.ayat?.find(a => a.nomorAyat === ayatNum);
-        if (!ayat) {
-          await m.react("🐣");
-          return m.reply(claraWrap("Quran v4", `Ayat ${ayatNum} tidak ditemukan di surat ${surah.namaLatin}. Surat ini punya ${surah.jumlahAyat} ayat.`));
+            return await m.reply(lines.join("\n"));
         }
-        const text = `Surat ${surah.namaLatin} : ${ayat.nomorAyat}\n\n${ayat.teksArab}\n\n${ayat.teksLatin}\n\n${ayat.teksIndonesia}`;
-        await m.react("🐣");
-        return m.reply(claraWrap("Quran v4", text));
-      }
 
-      // Full surah (limit first 10 ayat to avoid WhatsApp length limit)
-      const ayatList = surah.ayat || [];
-      const limit = ayatList.length > 15 ? 10 : ayatList.length;
-      let text = `Surat ${surah.namaLatin} (${surah.nomor})\n${surah.jumlahAyat} ayat | ${surah.tempatTurun}\n\n`;
-      for (let i = 0; i < limit; i++) {
-        const a = ayatList[i];
-        text += `${a.nomorAyat}. ${a.teksArab}\n${a.teksLatin}\n${a.teksIndonesia}\n\n`;
-      }
-      if (ayatList.length > limit) {
-        text += `...dan ${ayatList.length - limit} ayat lagi.\nLihat ayat spesifik: ${m.prefix}quranv4 ${surahNum} <ayat>`;
-      }
-      await m.react("🐣");
-      return m.reply(claraWrap("Quran v4", text));
+        const surahNum = parseInt(rawInput, 10);
+        if (isNaN(surahNum) || surahNum < 1 || surahNum > 114) {
+            return await m.reply(
+                "╭──「 Error 」\n" +
+                "├── Nomor surat tidak valid! Harap masukkan nomor 1 sampai 114.\n" +
+                "╰──────────❀"
+            );
+        }
+
+        // Ambil ayat-ayat dari surat tersebut
+        const detailJson = await fetchJSON(`${API_BASE}/${surahNum}`);
+        const surah = detailJson?.data;
+        if (!surah || !surah.ayat || !surah.ayat.length) {
+            throw new Error(`Data ayat untuk surat nomor ${surahNum} tidak ditemukan.`);
+        }
+
+        let lines = [];
+        lines.push(`╭──「 Surat ${surah.namaLatin} (${surah.arti}) 」`);
+        lines.push(`├── ${surah.jumlahAyat} ayat | ${surah.tempatTurun}`);
+        lines.push("├──");
+
+        const ayatList = surah.ayat;
+        const maxAyat = Math.min(ayatList.length, 20);
+
+        for (let i = 0; i < maxAyat; i++) {
+            const a = ayatList[i];
+            lines.push(`├── ${a.nomorAyat}. ${a.teksArab}`);
+            lines.push(`├── ${a.teksIndonesia}`);
+            lines.push("├──");
+        }
+
+        if (ayatList.length > 20) {
+            lines.push(`├── 📌 *Catatan:* Menampilkan 20 dari ${surah.jumlahAyat} ayat.`);
+        } else {
+            // Hapus baris pemisah kosong terakhir jika tidak dipotong
+            if (lines[lines.length - 1] === "├──") {
+                lines.pop();
+            }
+        }
+
+        lines.push("╰──────────❀");
+
+        return await m.reply(lines.join("\n"));
+    } catch (error) {
+        return await m.reply(
+            "╭──「 Error 」\n" +
+            `├── ${error.message || "Gagal memproses permintaan Al-Quran."}\n` +
+            "╰──────────❀"
+        );
     }
-
-    await m.react("🐣");
-    return m.reply(claraWrap("Quran v4", [
-      "Command tidak dikenal.",
-      `Lihat: ${m.prefix}quranv4 help`,
-    ]));
-  } catch (e) {
-    console.error("[quranv4] error:", e.message);
-    await m.react("❌");
-    return m.reply(te(m.prefix, m.command, m.pushName), "quranv4");
-  }
 }
 
 export { pluginConfig as config, handler };

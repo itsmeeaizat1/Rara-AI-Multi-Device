@@ -80,7 +80,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     return m.reply(claraWrap("Cuaca v2", text));
   } catch (e) {
     console.error("[cekcuacav2] error:", e.message);
-    await m.react("❌");
+    await m.react("🐣");
     return m.reply(te(m.prefix, m.command, m.pushName), "cekcuacav2");
   }
 }
