@@ -10,6 +10,7 @@
  */
 
 import * as botmodePlugin from "../../plugins/group/botmode.js";
+import { toSC } from "./nova-menu-style.js";
 import { getCommandsByCategory, getCategories } from "./nova-plugins.js";
 import { getCasesByCategory } from "../../case/nova.js";
 
@@ -149,15 +150,15 @@ function buildCategoryRows(m, db, prefix = ".") {
  * @param {string} prefix
  * @returns {object} { type: "single_select", text, title, sections }
  */
-function buildCategoryButton(m, db, prefix = ".", label = "Kategori") {
+function buildCategoryButton(m, db, prefix = ".", label = toSC("Kategori")) {
   const rows = buildCategoryRows(m, db, prefix);
   return {
     type: "single_select",
     text: label,
-    title: "Pilih Kategori",
+    title: toSC("Pilih Kategori"),
     sections: [
       {
-        title: `Semua Kategori (${rows.length})`,
+        title: `${toSC("Semua Kategori")} (${rows.length})`,
         rows,
       },
     ],

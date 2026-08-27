@@ -150,9 +150,9 @@ async function handler(m, { sock, db }) {
       }
 
       let txt = `${weatherBlock}
-╭──「 *Daftar Kategori* 」
-│ *Total:* ${catEntries.length} kategori
-│ *Total Fitur:* ${totalAllCmds} command
+╭──「 *${toSC("Daftar Kategori")}* 」
+│ *${toSC("Total")}:* ${catEntries.length} ${toSC("kategori")}
+│ *${toSC("Total Fitur")}:* ${totalAllCmds} ${toSC("command")}
 │
 `;
       for (const entry of catEntries) {
@@ -161,12 +161,12 @@ async function handler(m, { sock, db }) {
       txt += `│\n│ Ketik \`\`${prefix}allmenucategory <nama>\`\`\n│   atau klik tombol Kategori di bawah\n╰──────────❀\n\nNova AI WhatsApp Bot`;
 
       const navButtons = [
-        { id: `${prefix}menu`, text: "Menu" },
-        { id: `${prefix}allmenu`, text: "All Menu" },
+        { id: `${prefix}menu`, text: toSC("Menu") },
+        { id: `${prefix}allmenu`, text: toSC("All Menu") },
         buildCategoryButton(m, db, prefix),
-        { id: `${prefix}tanyaai`, text: "Tanya AI" },
-        { id: `${prefix}info`, text: "Info" },
-        { id: `${prefix}owner`, text: "Owner" },
+        { id: `${prefix}tanyaai`, text: toSC("Tanya AI") },
+        { id: `${prefix}info`, text: toSC("Info") },
+        { id: `${prefix}owner`, text: toSC("Owner") },
       ];
 
       await m.react("🐣");
@@ -199,7 +199,7 @@ async function handler(m, { sock, db }) {
 
     if (matchedCat === "owner" && !m.isOwner) {
       await m.reply(
-        `╭──「 *Akses Ditolak* 」\n│ Kategori ini hanya untuk owner\n╰──────────❀`
+        `╭──「 *${toSC("Akses Ditolak")}* 」\n│ ${toSC("Kategori ini hanya untuk owner")}\n╰──────────❀`
       );
       await m.react("❌");
       return;
@@ -230,7 +230,7 @@ async function handler(m, { sock, db }) {
     const emoji = CATEGORY_EMOJI?.[matchedCat] || "📋";
     let txt = `${weatherBlock2}
 ╭──「 ${emoji} *${toSC(catName)}* 」
-│ *Total:* ${totalFitur} fitur
+│ *${toSC("Total")}:* ${totalFitur} ${toSC("fitur")}
 │
 `;
     for (let i = 0; i < allCommands.length; i++) {
@@ -248,15 +248,15 @@ async function handler(m, { sock, db }) {
       }
     }
 
-    txt += `│\n╰──────────❀\n\nNova AI WhatsApp Bot`;
+    txt += `│\n╰──────────❀\n\n${toSC("Nova AI WhatsApp Bot")}`;
 
     const navButtons2 = [
-      buildCategoryButton(m, db, prefix, "Kategori Lain"),
-      { id: `${prefix}menu`, text: "Menu" },
-      { id: `${prefix}allmenu`, text: "All Menu" },
-      { id: `${prefix}tanyaai`, text: "Tanya AI" },
-      { id: `${prefix}info`, text: "Info" },
-      { id: `${prefix}owner`, text: "Owner" },
+      buildCategoryButton(m, db, prefix, toSC("Kategori Lain")),
+      { id: `${prefix}menu`, text: toSC("Menu") },
+      { id: `${prefix}allmenu`, text: toSC("All Menu") },
+      { id: `${prefix}tanyaai`, text: toSC("Tanya AI") },
+      { id: `${prefix}info`, text: toSC("Info") },
+      { id: `${prefix}owner`, text: toSC("Owner") },
     ];
 
     await m.react("🐣");
@@ -270,7 +270,7 @@ async function handler(m, { sock, db }) {
     });
   } catch (e) {
     console.error("[allmenucategory] handler error:", e.message);
-    try { await m.reply("╭──「 Menu 」\n├── ❌ Gagal menampilkan kategori\n├── Coba lagi nanti\n╰──────────❀"); } catch {}
+    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n├── ❌ ${toSC("Gagal menampilkan kategori")}\n├── ${toSC("Coba lagi nanti")}\n╰──────────❀`); } catch {}
     await m.react("❌");
   }
 }

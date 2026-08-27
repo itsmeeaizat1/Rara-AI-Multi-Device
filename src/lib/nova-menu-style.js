@@ -1,12 +1,37 @@
-// === Nova AI Menu Style (v6 — Clean Caption Style) ===
+// === Nova AI Menu Style (v7 — Full SmallCaps) ===
 // Aesthetic khas bot WhatsApp dev Indonesia:
 // ╭──「 」 box drawing, │ clean lines (no bullets), ❀ footer
 // + modern data: ▰▱ progress bars, ● status dots, system info
+// SEMUA text pakai smallcaps font (toSC diterapkan ke header + body)
 // Semua fungsi lama tetap export dengan signature sama.
 
-// Small caps map
+// Small caps map (q & x tidak ada di Unicode smallcaps, tetap as-is)
 const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-const toSC = (s) => s.replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+
+// toSC: convert a-zA-Z → smallcaps, sisanya tetap
+const toSC = (s) => String(s).replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
+
+// scLine: apply smallcaps to text content, tapi preserve:
+// - box drawing chars (╭╮╰╯│├─┊❀)
+// - emoji & special symbols (📌💡⚠️🐦 dll)
+// - markdown markers (* ` _)
+// - URLs (http/https jangan di-convert)
+// - numbers
+// - leading │ prefix
+const scLine = (line) => {
+  const str = String(line);
+  if (!str || !str.trim()) return str;
+  // Jangan convert URL
+  // Split by URL pattern, convert non-URL parts, rejoin
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = str.split(urlRegex);
+  return parts.map((part, i) => {
+    // Odd indices = URLs (from split with capture group)
+    if (i % 2 === 1) return part;
+    // Even indices = normal text → smallcaps
+    return toSC(part);
+  }).join('');
+};
 
 // Helper: detect real emoji (bukan "i" atau teks biasa)
 const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
@@ -32,7 +57,7 @@ function sectionBox(emoji, title, lines = []) {
       .replace(/^╎\s*$/, '')
       .replace(/^┊\s+➶\s*/, '')
       .replace(/^[•┊╎❏➶╭╰│]\s*/g, '');
-    return `│ ${clean}`;
+    return `│ ${scLine(clean)}`;
   });
   const footer = `╰──────────❀`;
   return [header, ...body, footer].join("\n");
@@ -50,9 +75,9 @@ function statusDot(status = "online") {
 }
 
 function kv(key, value, padTo = 10) {
-  const k = String(key);
+  const k = toSC(String(key));
   const padded = k + " ".repeat(Math.max(0, padTo - k.length));
-  return `${padded} : ${value}`;
+  return `${padded} : ${scLine(value)}`;
 }
 
 function categoryBox(emoji, name, commands, prefix, perLine = 3) {
@@ -61,7 +86,7 @@ function categoryBox(emoji, name, commands, prefix, perLine = 3) {
   const lines = [];
   for (let i = 0; i < commands.length; i += perLine) {
     const chunk = commands.slice(i, i + perLine);
-    lines.push(`│ ${chunk.map(c => `${prefix}${c}`).join("  ")}`);
+    lines.push(`│ ${chunk.map(c => `${prefix}${toSC(c)}`).join("  ")}`);
   }
   const footer = `╰──────────❀`;
   return [header, ...lines, footer].join("\n");
@@ -69,7 +94,7 @@ function categoryBox(emoji, name, commands, prefix, perLine = 3) {
 
 // ═══════════════════════════════════════════════
 // BACKWARD COMPAT — fungsi lama, signature sama
-// Output: Clean Caption Style v6 (no ❏ bullets)
+// Output: Full SmallCaps Style v7 (semua text ke-smallcaps)
 // Dipakai oleh 1266+ file plugin. Update di sini = update semua.
 // ═══════════════════════════════════════════════
 
@@ -79,7 +104,7 @@ function sectionHeader(title) {
 
 function sectionItem(text) {
   const clean = String(text).replace(/^[•┊╎❏➶╭╰│]\s*/g, '').replace(/^\s+/g, '');
-  return `│ ${clean}`;
+  return `│ ${scLine(clean)}`;
 }
 
 function sectionClose() {
@@ -113,15 +138,14 @@ function bracketBox(emoji, label, lines = []) {
       .replace(/^╎\s*$/, '')
       .replace(/^┊\s+➶\s*/, '')
       .replace(/^[•┊╎❏➶╭╰│]\s*/g, '');
-    return `│ ${clean}`;
+    return `│ ${scLine(clean)}`;
   });
   const footer = `╰──────────❀`;
   return [header, ...body, footer].join("\n");
 }
 
 // commandListLine: baris command di list menu (allmenu/allmenucategory)
-// Format: ♦ .ᴄᴍᴅ <ᴘᴀʀᴀᴍ> Ⓛ — bintang cuma dipakai di baris command list,
-// smallcaps diterapkan ke command name + param placeholder biar konsisten.
+// Format: ♦ .ᴄᴍᴅ <ᴘᴀʀᴀᴍ> Ⓛ — smallcaps diterapkan ke semua
 function commandListLine(prefix, cmdName, usage = "", symbols = "") {
   const paramMatches = usage ? String(usage).match(/<[^>]+>/g) : null;
   const paramPart = paramMatches ? " " + toSC(paramMatches.join(" ")) : "";
@@ -134,7 +158,7 @@ function separator(char = "─", repeat = 20) {
 }
 
 function tipText(text) {
-  return `│ 💡 *Tip:* ${text}`;
+  return `│ 💡 *${toSC("Tip")}:* ${scLine(text)}`;
 }
 
 function claraWrap(title, body, type = "info") {
@@ -161,54 +185,45 @@ function broadcastFormat({ botName = "Nova AI", senderName = "Owner", message, t
   const typeLabel = type === "private" ? "Private Chat" : type === "channel" ? "Channel" : "Grup Broadcast";
   const typeIcon = type === "private" ? "📱" : type === "channel" ? "📺" : "📢";
 
-  let text = "╭──「 📢 Broadcast Info 」";
+  let text = `╭──「 ${typeIcon} ${toSC("Broadcast Info")} 」`;
   text += "\n│";
-  text += "\n├──「 *Detail* 」";
-  text += "\n│ *Bot:* " + botName;
-  text += "\n│ *Dari:* " + senderName;
-  text += "\n│ *Tipe:* " + typeIcon + " " + typeLabel;
-  text += "\n│ *Tanggal:* " + tanggal;
-  text += "\n│ *Waktu:* " + waktu + " WIB";
+  text += `\n├──「 *${toSC("Detail")}* 」`;
+  text += `\n│ *${toSC("Bot")}:* ${scLine(botName)}`;
+  text += `\n│ *${toSC("Dari")}:* ${scLine(senderName)}`;
+  text += `\n│ *${toSC("Tipe")}:* ${typeIcon} ${scLine(typeLabel)}`;
+  text += `\n│ *${toSC("Tanggal")}:* ${tanggal}`;
+  text += `\n│ *${toSC("Waktu")}:* ${waktu} ${toSC("WIB")}`;
   text += "\n├──";
-  text += "\n├──「 *Pesan* 」";
-  text += "\n│ " + String(message || "").split("\n").map(l => l.trim() ? "│ " + l : "│").join("\n");
+  text += `\n├──「 *${toSC("Pesan")}* 」`;
+  text += "\n│ " + String(message || "").split("\n").map(l => l.trim() ? `│ ${scLine(l)}` : "│").join("\n");
   text += "\n├──";
-  text += "\n├── ⚠️ _Pesan resmi dari owner bot_";
+  text += `\n├── ⚠️ _${toSC("Pesan resmi dari owner bot")}_`;
   text += "\n╰──────────❀";
   return text;
 }
 
 // novaUsage: pesan usage yang menarik dengan emoji labels
-// Output:
-// ╭──「 🎵 Tiktok Download 」
-// │
-// │ 📌 *Cara Pakai:*
-// │ `.tiktok2 <url>`
-// │
-// │ 💡 *Contoh:*
-// │ `.tiktok2 https://vt.tiktok.com/xxx`
-// │
-// ╰──────────❀
+// SEMUA text pakai smallcaps (kecuali URL & command syntax di backtick)
 function novaUsage(commandName, { steps = [], example = "", note = "", emoji = "" } = {}) {
   let lines = [];
   if (steps.length > 0) {
     lines.push("");
-    lines.push("📌 *Cara Pakai:*");
+    lines.push(`📌 *${toSC("Cara Pakai")}:*`);
     for (const step of steps) {
       const clean = String(step)
         .replace(/^[•┊╎❏➶╭╰│]\s*/g, '')
         .replace(/^\s+/g, '');
-      lines.push(clean);
+      lines.push(scLine(clean));
     }
   }
   if (example) {
     lines.push("");
-    lines.push("💡 *Contoh:*");
+    lines.push(`💡 *${toSC("Contoh")}:*`);
     lines.push(`\`${example}\``);
   }
   if (note) {
     lines.push("");
-    lines.push(`_${note}_`);
+    lines.push(`_${scLine(note)}_`);
   }
   lines.push("");
   const title = emoji ? `${emoji} ${commandName}` : commandName;
@@ -217,12 +232,12 @@ function novaUsage(commandName, { steps = [], example = "", note = "", emoji = "
 
 function infoBox(title, { intro, sections = [] } = {}) {
   const out = [`╭──「 ${toSC(title)} 」`];
-  if (intro) out.push(`│ ${intro}`);
+  if (intro) out.push(`│ ${scLine(intro)}`);
   for (const sec of sections) {
     out.push(`│`);
     if (sec.heading) out.push(`│ ◈ *${toSC(sec.heading)}*`);
     for (const line of sec.lines || []) {
-      out.push(`│ ┊ ${line}`);
+      out.push(`│ ┊ ${scLine(line)}`);
     }
   }
   out.push(`╰──────────❀`);
@@ -231,7 +246,7 @@ function infoBox(title, { intro, sections = [] } = {}) {
 
 function listBox(title, items = []) {
   const out = [`╭──「 ${toSC(title)} 」`];
-  for (const item of items) out.push(`│ ${item}`);
+  for (const item of items) out.push(`│ ${scLine(item)}`);
   out.push(`╰──────────❀`);
   return out.join("\n");
 }
@@ -289,8 +304,8 @@ function buildNavButtons(prefix, isAllMenuCtx, allCatKeys, commandsByCategory, c
     const name = CATEGORY_NAMES[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1));
     const emoji = CATEGORY_EMOJIS[cat] || "📋";
     rows.push({
-      title: `${emoji} ${name}`,
-      description: `${total} fitur`,
+      title: `${emoji} ${toSC(name)}`,
+      description: `${total} ${toSC("fitur")}`,
       id: `${prefix}menukategori ${cat}`,
     });
   }
@@ -298,55 +313,36 @@ function buildNavButtons(prefix, isAllMenuCtx, allCatKeys, commandsByCategory, c
   return [
     {
       type: "single_select",
-      text: "Kategori",
-      sections: [{ title: "Pilih Kategori", rows }],
+      text: toSC("Kategori"),
+      sections: [{ title: toSC("Pilih Kategori"), rows }],
     },
-    { id: `${prefix}owner`, text: "Info Lainnya" },
+    { id: `${prefix}owner`, text: toSC("Info Lainnya") },
     isAllMenuCtx
-      ? { id: `${prefix}menu`, text: "Menu" }
-      : { id: `${prefix}allmenu`, text: "All Menu" },
-    { id: `${prefix}tanyaai`, text: "Tanya AI" },
+      ? { id: `${prefix}menu`, text: toSC("Menu") }
+      : { id: `${prefix}allmenu`, text: toSC("All Menu") },
+    { id: `${prefix}tanyaai`, text: toSC("Tanya AI") },
   ];
 }
 
-export {
-  botHeader, botSignature, sectionBox, progressBar, statusDot,
-  kv, categoryBox, CATEGORY_ORDER, CATEGORY_NAMES, CATEGORY_EMOJIS,
-  buildNavButtons,
-  claraHeader, alyaHeader, bracketBox, claraWrap, claraLine,
-  separator, tipText, formatNumber, broadcastFormat, novaUsage,
-  toSC, sectionHeader, sectionItem, sectionClose, sectionSpacer, buildSection,
-  infoBox, listBox, novaCaption, commandListLine,
-};
-
 // novaCaption: caption menarik per-fitur dari metadata plugin
-// ╭──「 🎵 TikTok Download 」
-// │ Download video TikTok tanpa watermark
-// │
-// │ 📌 *Cara Pakai:*
-// │ `.tiktok2 <url>`
-// │
-// │ 💡 *Contoh:*
-// │ `.tiktok2 https://vt.tiktok.com/xxx`
-// │
-// ╰──────────❀
+// SEMUA text pakai smallcaps
 function novaCaption({ emoji = "", name = "", description = "", usage = "", example = "", note = "" } = {}) {
   const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
   const lines = [];
   
   if (description) {
-    lines.push(description);
+    lines.push(scLine(description));
     lines.push("");
   }
   
   if (usage) {
-    lines.push("📌 *Cara Pakai:*");
+    lines.push(`📌 *${toSC("Cara Pakai")}:*`);
     lines.push(`\`${usage}\``);
     lines.push("");
   }
   
   if (example) {
-    lines.push("💡 *Contoh:*");
+    lines.push(`💡 *${toSC("Contoh")}:*`);
     if (example.includes("\n")) {
       for (const line of example.split("\n")) {
         lines.push(`\`${line.trim()}\``);
@@ -358,9 +354,19 @@ function novaCaption({ emoji = "", name = "", description = "", usage = "", exam
   }
   
   if (note) {
-    lines.push(`📝 _${note}_`);
+    lines.push(`📝 _${scLine(note)}_`);
     lines.push("");
   }
   
   return bracketBox("i", `${emojiStr}${name}`, lines);
 }
+
+export {
+  botHeader, botSignature, sectionBox, progressBar, statusDot,
+  kv, categoryBox, CATEGORY_ORDER, CATEGORY_NAMES, CATEGORY_EMOJIS,
+  buildNavButtons,
+  claraHeader, alyaHeader, bracketBox, claraWrap, claraLine,
+  separator, tipText, formatNumber, broadcastFormat, novaUsage,
+  toSC, scLine, sectionHeader, sectionItem, sectionClose, sectionSpacer, buildSection,
+  infoBox, listBox, novaCaption, commandListLine,
+};

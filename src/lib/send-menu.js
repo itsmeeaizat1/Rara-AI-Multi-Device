@@ -75,7 +75,7 @@ export async function sendMenuPreview(sock, m, {
       mentionedJid: [m.sender],
       isForwarded: false,
       externalAdReply: {
-        title: title || 'Nova AI WhatsApp Bot',
+        title: title || "Nova AI WhatsApp Bot",
         body: body || 'WhatsApp Multi Device',
         thumbnail: menuThumb,
         sourceUrl: sourceUrl || '',
@@ -105,7 +105,7 @@ export async function sendMenuPreview(sock, m, {
         contextInfo: {
           mentionedJid: [m.sender],
           externalAdReply: {
-            title: title || 'Nova AI WhatsApp Bot',
+            title: title || "Nova AI WhatsApp Bot",
             body: body || 'WhatsApp Multi Device',
             thumbnail: menuThumb,
             sourceUrl: sourceUrl || '',
