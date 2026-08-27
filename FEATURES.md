@@ -20,6 +20,10 @@
 - `.profile [@user]` — Profil lengkap dengan semua RPG stats (Modern Box)
 - `.daily` — Daily claim dengan streak system & multiplier bonus
 
+### Cheat RPG (Owner Only)
+- `.cheatrpg` — Cheat/add RPG stats ke user (exp, koin, gold, gems, diamonds, hp, mana, atk, def, dll)
+  Support 30+ type, bisa tambah/kurang, auto-report before/after values
+
 ### Database RPG Integration
 - Auto-init RPG combat stats (HP, Mana, Energy, Stamina, ATK, DEF, SPD, dll)
 - Owner auto-get: 9B EXP, 9T Koin, 1M Gold, 999K Gems/Diamonds
