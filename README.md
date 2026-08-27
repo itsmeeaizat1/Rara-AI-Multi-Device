@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20hapus%20emoji%20dari%20tombol%20-success?style=for-the-badge)
-> *Commit: "feat: hapus emoji dari tombol nav, tampilan kategori lebih compact"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tambah%20plugin%20.info%20buat-success?style=for-the-badge)
+> *Commit: "feat: tambah plugin .info buat tombol Info di menu"*
 <!--END_SECTION:latest-update-->
 
 
