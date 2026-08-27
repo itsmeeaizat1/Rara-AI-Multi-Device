@@ -147,31 +147,69 @@ export async function sendMenuCard(sock, m, {
 // Kirim musik menu setelah tampilan menu (jika audioMenu aktif)
 // allmenuAudioStyle: 1=PTT reply asli, 2=PTT reply fake polling, 3=MP3 reply fake text, 4=MP3 reply fake troli
 
-
-let _menuAudioCache = null;
+let _menuAudioPtt = null;   // OGG/Opus buffer untuk VN (ptt: true)
+let _menuAudioMp3 = null;   // MP3 buffer untuk audio biasa (ptt: false)
 let _menuAudioLoaded = false;
 
-function getMenuAudio() {
-  if (_menuAudioLoaded) return _menuAudioCache;
+async function ensureMenuAudioLoaded() {
+  if (_menuAudioLoaded) return;
   _menuAudioLoaded = true;
+
   try {
-    _menuAudioCache = getAssetBuffer('nova-mp3');
-    if (_menuAudioCache) {
-      console.log('[send-menu] ✅ Menu audio loaded: ' + _menuAudioCache.length + ' bytes');
-    } else {
-      // Fallback: direct fs
+    // Load MP3 buffer
+    _menuAudioMp3 = getAssetBuffer('nova-mp3');
+    if (!_menuAudioMp3) {
       const p = path.join(process.cwd(), 'assets', 'audio', 'cinta-terbaik-cassandra.mp3');
       if (fs.existsSync(p)) {
-        _menuAudioCache = fs.readFileSync(p);
-        console.log('[send-menu] ✅ Menu audio loaded (fallback fs): ' + _menuAudioCache.length + ' bytes');
-      } else {
-        console.warn('[send-menu] ⚠️ Menu audio not found (nova-mp3 / cinta-terbaik-cassandra.mp3)');
+        _menuAudioMp3 = fs.readFileSync(p);
       }
+    }
+
+    if (_menuAudioMp3) {
+      console.log('[send-menu] ✅ Menu audio MP3 loaded: ' + _menuAudioMp3.length + ' bytes');
+
+      // Convert MP3 → OGG/Opus untuk VN (ptt: true)
+      // WhatsApp butuh audio/ogg; codecs=opus untuk voice note yang bisa diputar
+      try {
+        const ffmpegPath = (await import('@ffmpeg-installer/ffmpeg')).default.path;
+        const ffmpeg = (await import('fluent-ffmpeg')).default;
+        ffmpeg.setFfmpegPath(ffmpegPath);
+
+        _menuAudioPtt = await new Promise((resolve, reject) => {
+          const chunks = [];
+          const stream = require('stream');
+          const passThrough = new stream.PassThrough();
+
+          ffmpeg({ source: path.join(process.cwd(), 'assets', 'audio', 'cinta-terbaik-cassandra.mp3') })
+            .format('opus')
+            .audioCodec('libopus')
+            .audioBitrate('64k')
+            .audioFrequency(48000)
+            .audioChannels(1)
+            .on('error', (err) => {
+              console.error('[send-menu] ❌ FFmpeg convert error:', err.message);
+              reject(err);
+            })
+            .on('end', () => {
+              const buffer = Buffer.concat(chunks);
+              console.log('[send-menu] ✅ Menu audio OGG/Opus converted: ' + buffer.length + ' bytes');
+              resolve(buffer);
+            })
+            .stream(passThrough, { end: true });
+
+          passThrough.on('data', (chunk) => chunks.push(chunk));
+        });
+      } catch (convErr) {
+        console.error('[send-menu] ❌ FFmpeg conversion failed, PTT will use MP3 mimetype:', convErr.message);
+        // Fallback: pakai MP3 buffer untuk PTT (mungkin ga bisa diputar tapi setidaknya muncul)
+        _menuAudioPtt = _menuAudioMp3;
+      }
+    } else {
+      console.warn('[send-menu] ⚠️ Menu audio not found (nova-mp3 / cinta-terbaik-cassandra.mp3)');
     }
   } catch (e) {
     console.error('[send-menu] ❌ Menu audio load failed:', e.message);
   }
-  return _menuAudioCache;
 }
 
 /**
@@ -187,8 +225,14 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
     const audioEnabled = db?.setting ? (db.setting('audioMenu') !== false) : true;
     if (!audioEnabled) return;
 
-    const audioBuffer = getMenuAudio();
-    if (!audioBuffer) return;
+    await ensureMenuAudioLoaded();
+
+    if (!_menuAudioPtt && !_menuAudioMp3) return;
+
+    // Tentukan mimetype berdasarkan format yang tersedia
+    const pttMimetype = _menuAudioPtt && _menuAudioPtt !== _menuAudioMp3
+      ? 'audio/ogg; codecs=opus'   // OGG/Opus — VN bisa diputar
+      : 'audio/mpeg';              // Fallback MP3 (mungkin bermasalah sebagai PTT)
 
     if (isAllMenu) {
       // All Menu: pakai varian allmenuAudioStyle (1-4)
@@ -197,9 +241,9 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
       if (style === 1) {
         // PTT Voice Note + reply pesan asli
         await sock.sendMessage(m.chat, {
-          audio: audioBuffer,
+          audio: _menuAudioPtt,
           ptt: true,
-          mimetype: 'audio/mpeg',
+          mimetype: pttMimetype,
         }, { quoted: m });
       } else if (style === 2) {
         // PTT Voice Note + reply fake polling
@@ -210,9 +254,9 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
           participant: '0@s.whatsapp.net',
         };
         await sock.sendMessage(m.chat, {
-          audio: audioBuffer,
+          audio: _menuAudioPtt,
           ptt: true,
-          mimetype: 'audio/mpeg',
+          mimetype: pttMimetype,
         }, { quoted: { key: fakeKey, message: { pollCreationMessage: { name: 'Nova AI Menu', options: [], selectableOptionsCount: 0 } } } });
       } else if (style === 3) {
         // MP3 biasa + reply fake text
@@ -223,7 +267,7 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
           participant: '0@s.whatsapp.net',
         };
         await sock.sendMessage(m.chat, {
-          audio: audioBuffer,
+          audio: _menuAudioMp3,
           ptt: false,
           mimetype: 'audio/mpeg',
         }, { quoted: { key: fakeKey, message: { conversation: '🎵 Nova AI WhatsApp Bot - Menu Audio' } } });
@@ -236,7 +280,7 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
           participant: '0@s.whatsapp.net',
         };
         await sock.sendMessage(m.chat, {
-          audio: audioBuffer,
+          audio: _menuAudioMp3,
           ptt: false,
           mimetype: 'audio/mpeg',
         }, { quoted: { key: fakeKey, message: { orderMessage: { orderId: 'NOVA-' + Date.now(), thumbnail: null, itemCount: 1, status: 1, surface: 1, message: 'Nova AI WhatsApp Bot', sellerJid: '0@s.whatsapp.net', token: 'nova' } } } });
@@ -244,9 +288,9 @@ export async function sendMenuAudio(sock, m, db, isAllMenu = false) {
     } else {
       // Menu biasa & menukategori: PTT sederhana
       await sock.sendMessage(m.chat, {
-        audio: audioBuffer,
+        audio: _menuAudioPtt,
         ptt: true,
-        mimetype: 'audio/mpeg',
+        mimetype: pttMimetype,
       }, { quoted: m });
     }
   } catch (e) {
