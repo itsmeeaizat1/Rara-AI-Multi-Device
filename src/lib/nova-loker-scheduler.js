@@ -10,6 +10,7 @@ import { CronJob } from "cron";
 import { getDatabase } from "./nova-database.js";
 import { logger } from "./nova-logger.js";
 import config from "../../config.js";
+import { getAndarazConfig } from "../config/env-loader.js";
 
 let _sharp = null;
 async function getSharp() {
@@ -61,7 +62,7 @@ function getLokerSettings(db) {
         ]),
     sources: Array.isArray(stored.sources) && stored.sources.length
       ? stored.sources
-      : (Array.isArray(base.sources) ? base.sources : ["remotive", "arbeitnow", "themuse"]),
+      : (Array.isArray(base.sources) ? base.sources : ["jobstreet", "lokereid", "remotive", "arbeitnow", "themuse"]),
     targets: Array.isArray(stored.targets) ? stored.targets : [],
   };
 }
@@ -425,6 +426,10 @@ async function fetchNewJobs({ sources, keywords, categories, limit, sentIds = {}
   const allJobs = [];
   const fetchers = [];
 
+  // JobStreet ID sebagai prioritas utama
+  if (sources.includes("jobstreet")) fetchers.push(fetchJobstreet({ keywords, limit: limit + 20 }));
+  // Loker Indonesia (filtered Remotive for Asia/ID)
+  if (sources.includes("lokereid")) fetchers.push(fetchLokerID({ keywords, limit: limit + 20 }));
   if (sources.includes("remotive")) fetchers.push(fetchRemotive({ keywords, categories, limit: limit + 20 }));
   if (sources.includes("arbeitnow")) fetchers.push(fetchArbeitnow({ keywords, limit: limit + 20 }));
   if (sources.includes("themuse")) fetchers.push(fetchTheMuse({ keywords, limit: limit + 20 }));
@@ -445,6 +450,90 @@ async function fetchNewJobs({ sources, keywords, categories, limit, sentIds = {}
   }
 
   return fresh;
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// JOBSTREET INDONESIA (via Andaraz API)
+// ────────────────────────────────────────────────────────────────────────────
+
+function normalizeJobstreet(job) {
+  return {
+    id: `jobstreet_${job.id || (job.title + "-" + job.company)}`,
+    title: job.title || job.jobTitle || "-",
+    company: job.company || job.companyName || "-",
+    location: job.location || job.jobLocation || "Indonesia",
+    type: (job.work_types && job.work_types.label) || job.jobType || "Full time",
+    tags: [],
+    url: job.url || `https://id.jobstreet.com/id/job/${job.id || ""}`,
+    postedAt: (job.date_posted && job.date_posted.dateTimeUtc) || "",
+    expiryDate: "",
+    salary: job.salary || job.salaryRange || "",
+    source: "JobStreet ID",
+    image: null,
+  };
+}
+
+async function fetchJobstreet({ keywords = [], limit = 20 } = {}) {
+  try {
+    const andaraz = getAndarazConfig();
+    const apiKey = andaraz.apikey;
+    const baseUrl = andaraz.baseUrl || "https://api.andaraz.com";
+    if (!apiKey) {
+      logger.warn("LOKER", "Andaraz API key tidak ditemukan, skip JobStreet");
+      return [];
+    }
+
+    const q = keywords.length ? keywords.join(" ") : "indonesia";
+    const url = `${baseUrl}/api/jobstreet/search?apikey=${apiKey}&q=${encodeURIComponent(q)}&page=1`;
+    const data = await fetchWithTimeout(url);
+
+    if (!data.status) {
+      logger.warn("LOKER", `JobStreet search gagal: ${data.message || "unknown"}`);
+      return [];
+    }
+
+    let jobs = (data.jobs || data.results || data.data || []).map(normalizeJobstreet);
+    if (keywords.length) {
+      const kwLower = keywords.map((k) => k.toLowerCase());
+      jobs = jobs.filter((j) => {
+        const text = `${j.title} ${j.company} ${j.location}`.toLowerCase();
+        return kwLower.some((kw) => text.includes(kw));
+      });
+    }
+    return jobs.slice(0, limit);
+  } catch (err) {
+    logger.warn("LOKER", `JobStreet fetch error: ${err.message}`);
+    return [];
+  }
+}
+
+// ────────────────────────────────────────────────────────────────────────────
+// LOKER INDONESIA — scrape dari situs lokal gratis
+// ────────────────────────────────────────────────────────────────────────────
+
+async function fetchLokerID({ keywords = [], limit = 20 } = {}) {
+  try {
+    // Coba API dari layoffs.fyi alternative atau Diknaker JSON
+    // Sementara: filter Remotive untuk Asia/Worldwide + Indonesia keywords
+    const kw = keywords.length ? keywords.join(" ") : "";
+    const params = new URLSearchParams({ limit: String(limit * 5) });
+    if (kw) params.set("search", `${kw} indonesia asia`);
+
+    const data = await fetchWithTimeout(`https://remotive.com/api/remote-jobs?${params}`);
+    let jobs = (data.jobs || []).map(normalizeRemotive);
+
+    // Filter: hanya jobs yang lokasinya relevant untuk Indonesia/Asia
+    const idKeywords = ["indonesia", "asia", "apac", "worldwide", "southeast", "remote", "anywhere"];
+    jobs = jobs.filter((j) => {
+      const loc = (j.location || "").toLowerCase();
+      return idKeywords.some((k) => loc.includes(k));
+    });
+
+    return jobs.slice(0, limit);
+  } catch (err) {
+    logger.warn("LOKER", `LokerID fetch error: ${err.message}`);
+    return [];
+  }
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -625,6 +714,8 @@ export {
   fetchArbeitnow,
   fetchTheMuse,
   fetchJobicy,
+  fetchJobstreet,
+  fetchLokerID,
   formatLokerMessage,
   getSentIds,
   markSent,

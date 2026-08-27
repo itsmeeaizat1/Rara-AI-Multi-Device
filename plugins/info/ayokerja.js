@@ -13,6 +13,8 @@ import {
   fetchArbeitnow,
   fetchTheMuse,
   fetchJobicy,
+  fetchJobstreet,
+  fetchLokerID,
   formatLokerMessage,
   getLokerStatus,
 } from "../../src/lib/nova-loker-scheduler.js";
@@ -89,7 +91,7 @@ async function handler(m, { sock }) {
     const mergedCategories = category ? [category] : settings.categories || [];
 
     const jobs = await fetchNewJobs({
-      sources: ["remotive", "arbeitnow"],
+      sources: ["jobstreet", "lokereid", "remotive"],
       keywords: mergedKeywords,
       categories: mergedCategories,
       limit: 5,
