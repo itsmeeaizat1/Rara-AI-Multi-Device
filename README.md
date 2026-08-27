@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20tambah%20emoji%20unik%20untuk%2016%20kategori-success?style=for-the-badge)
-> *Commit: "fix: tambah emoji unik untuk 16 kategori yang masih fallback folder icon"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20samakan%20emoji%20map%20di%20case%2Fnova.js%20d-success?style=for-the-badge)
+> *Commit: "fix: samakan emoji map di case/nova.js dan nova-ai.js dengan 40 kategori lengkap"*
 <!--END_SECTION:latest-update-->
 
 ---
