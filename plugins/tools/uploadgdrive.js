@@ -228,8 +228,7 @@ async function handler(m, { sock }) {
         if (!fileId) {
             return m.reply(claraWrap("Upload GDrive",
                 "*ᴅᴇʟᴇᴛᴇ ɢᴅʀɪᴠᴇ ꜰɪʟᴇ*\n\n" +
-                "│
-│ 📌 *Cara Pakai:* `.uploadgdrive delete <fileId>`\n" +
+                "│\n│ 📌 *Cara Pakai:* `.uploadgdrive delete <fileId>`\n" +
                 "│ Lihat fileId: `.uploadgdrive list`"
             ))
         }
