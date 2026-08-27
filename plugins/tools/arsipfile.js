@@ -189,7 +189,7 @@ async function extractZip(m, sock) {
 
     if (entries.length > 30) {
       cleanup(tmpDir);
-      return m.reply("Arsip terlalu banyak file (" + entries.length + "). Maksimal 30 file.");
+      return m.reply(claraWrap("Info", "\u26a0\ufe0f Arsip terlalu banyak file (" + entries.length + "). Maksimal 30 file."));
     }
 
     zip.extractAllTo(tmpDir, true);
@@ -214,7 +214,7 @@ async function extractZip(m, sock) {
       return m.reply(claraWrap("Arsipfile", "Arsip kosong, tidak ada file untuk diextract."));
     }
 
-    await m.reply("Extracting " + allFiles.length + " file dari ZIP...");
+    await m.reply(claraWrap("Info", "\u23f3 Extracting " + allFiles.length + " file dari ZIP..."));
 
     for (const fp of allFiles.slice(0, 30)) {
       const relName = path.relative(tmpDir, fp);
@@ -229,7 +229,7 @@ async function extractZip(m, sock) {
       } catch (e) { console.error('[arsipfile.js]:', e.message); }
     }
 
-    await m.reply("Extract ZIP selesai. " + sent + " file terkirim.");
+    await m.reply(claraWrap("Info", "\u2705 Extract ZIP selesai. " + sent + " file terkirim."));
     cleanup(tmpDir);
   } catch (e) {
     return m.reply("Gagal extract ZIP: " + e.message);
@@ -318,10 +318,10 @@ async function extractTar(m, sock) {
 
     if (allFiles.length > 30) {
       cleanup(tmpDir);
-      return m.reply("Arsip terlalu banyak file (" + allFiles.length + "). Maksimal 30 file.");
+      return m.reply(claraWrap("Info", "\u26a0\ufe0f Arsip terlalu banyak file (" + allFiles.length + "). Maksimal 30 file."));
     }
 
-    await m.reply("Extracting " + allFiles.length + " file dari TAR.GZ...");
+    await m.reply(claraWrap("Info", "\u23f3 Extracting " + allFiles.length + " file dari TAR.GZ..."));
 
     let sent = 0;
     for (const fp of allFiles.slice(0, 30)) {
@@ -337,7 +337,7 @@ async function extractTar(m, sock) {
       } catch (e) { console.error('[arsipfile.js]:', e.message); }
     }
 
-    await m.reply("Extract TAR.GZ selesai. " + sent + " file terkirim.");
+    await m.reply(claraWrap("Info", "\u2705 Extract TAR.GZ selesai. " + sent + " file terkirim."));
     cleanup(tmpDir);
   } catch (e) {
     return m.reply("Gagal extract TAR.GZ: " + e.message);

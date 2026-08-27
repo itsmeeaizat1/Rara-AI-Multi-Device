@@ -76,7 +76,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "auto") {
       const toggle = (args[1] || "").toLowerCase();
-      if (!["on", "off"].includes(toggle)) return m.reply(`Cara: ${usedPrefix}smartremind auto on|off`);
+      if (!["on", "off"].includes(toggle)) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}smartremind auto on|off`));
       data.autoDetect = toggle === "on";
       await db.save();
       return m.reply(claraWrap("Smart Remind", `Auto-detect ${toggle === "on" ? "diaktifkan" : "dimatikan"}. Bot akan scan pesan untuk jadwal otomatis.`));
@@ -91,9 +91,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "del" || sub === "remove") {
       const id = parseInt(args[1]);
-      if (!id) return m.reply(`Cara: ${usedPrefix}smartremind del <id>`);
+      if (!id) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}smartremind del <id>`));
       const idx = data.reminders.findIndex(r => r.id === id);
-      if (idx === -1) return m.reply(`Reminder ID ${id} tidak ditemukan.`);
+      if (idx === -1) return m.reply(claraWrap("Info", `\u274c Reminder ID ${id} tidak ditemukan.`));
       data.reminders.splice(idx, 1);
       await db.save();
       return m.reply(claraWrap("Smart Remind", `Reminder ID ${id} dihapus.`));

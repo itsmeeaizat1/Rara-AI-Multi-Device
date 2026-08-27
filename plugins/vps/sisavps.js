@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     }
     
     if (!hasAccess(m.sender, m.isOwner)) {
-        return m.reply(`Akses ditolak. Fitur ini hanya untuk Owner/Seller.`)
+        return m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Fitur ini hanya untuk Owner/Seller."))
     }
     
     await m.react("🕒")

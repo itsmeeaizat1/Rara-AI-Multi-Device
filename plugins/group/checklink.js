@@ -453,7 +453,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Auto-Shield ON ───
     if (command === "checklinkon") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Perintah ini khusus Owner bot."));
         return;
       }
       await m.react("🕒");
@@ -470,7 +470,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Auto-Shield OFF ───
     if (command === "checklinkoff") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Perintah ini khusus Owner bot."));
         return;
       }
       await m.react("🕒");
@@ -486,7 +486,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Auto-Delete ON ───
     if (command === "checklinkdelon") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Perintah ini khusus Owner bot."));
         return;
       }
       await m.react("🕒");
@@ -503,7 +503,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Auto-Delete OFF ───
     if (command === "checklinkdeloff") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Perintah ini khusus Owner bot."));
         return;
       }
       await m.react("🕒");

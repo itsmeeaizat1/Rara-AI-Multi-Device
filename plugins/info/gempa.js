@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
     txt += "Sumber: data.bmkg.go.id (API resmi BMKG)";
     return m.reply(claraWrap("gempa", txt));
   } catch (error) {
-    return m.reply("Error: " + error.message + "\n\nCoba lagi nanti.");
+    return m.reply(claraWrap("Error", "\u274c " + error.message + "\n\nCoba lagi nanti."));
   }
 }
 

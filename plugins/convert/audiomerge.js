@@ -102,7 +102,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "gap") {
       const sec = parseInt(args[1]) || 0;
-      if (sec < 0 || sec > 10) return m.reply("Gap 0-10 detik. Contoh: .audiomerge gap 1");
+      if (sec < 0 || sec > 10) return m.reply(claraWrap("Info", "Gap 0-10 detik. Contoh: .audiomerge gap 1"));
       data.gap = sec;
       await db.save();
       return m.reply(claraWrap("Audio Merge", `Jeda antar audio diatur ke ${sec} detik.`));
@@ -117,7 +117,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "remove" || sub === "del") {
       const idx = parseInt(args[1]) - 1;
-      if (isNaN(idx) || idx < 0 || idx >= data.queue.length) return m.reply(`Cara: ${usedPrefix}audiomerge remove <nomor>`);
+      if (isNaN(idx) || idx < 0 || idx >= data.queue.length) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}audiomerge remove <nomor>`));
       try { fs.unlinkSync(data.queue[idx].path); } catch (e) { console.error('[audiomerge.js]:', e.message); }
       data.queue.splice(idx, 1);
       await db.save();

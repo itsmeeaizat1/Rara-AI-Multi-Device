@@ -144,14 +144,14 @@ async function handler(m, { sock }) {
     try {
         const buffer = await media.download()
         if (!buffer?.length) {
-            return m.reply('Gagal download media')
+            return m.reply(claraWrap("Error", "❌ Gagal download media"))
         }
 
         fs.writeFileSync(inputPath, buffer)
         await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + fx.filter + '" -vn "' + outputPath + '"')
 
         if (!fs.existsSync(outputPath)) {
-            return m.reply('Gagal memproses audio')
+            return m.reply(claraWrap("Error", "❌ Gagal memproses audio"))
         }
 
         const audioBuffer = fs.readFileSync(outputPath)

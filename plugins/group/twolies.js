@@ -45,9 +45,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "submit") {
-      if (!game.active) return m.reply(`Belum mulai. Ketik ${usedPrefix}twotruths start`);
-      if (game.phase !== "submit") return m.reply("Phase submit sudah selesai.");
-      if (game.players[sender]) return m.reply("Kamu sudah submit!");
+      if (!game.active) return m.reply(claraWrap("Info", `Belum mulai. Ketik ${usedPrefix}twotruths start`));
+      if (game.phase !== "submit") return m.reply(claraWrap("Info", "\u274c Phase submit sudah selesai."));
+      if (game.players[sender]) return m.reply(claraWrap("Info", "\u274c Kamu sudah submit!"));
 
       const parts = text.split("|").map(s => s.trim());
       parts.shift();
@@ -84,7 +84,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "guess") {
-      if (!game.active) return m.reply("Tidak ada game aktif.");
+      if (!game.active) return m.reply(claraWrap("Info", "\u274c Tidak ada game aktif."));
       const target = m.mentionedJid?.[0];
       const guessNum = parseInt(args[2]) || parseInt(args[1]);
       if (!target) {
@@ -101,10 +101,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           playerList,
         ].join("\n")));
       }
-      if (!game.players[target]) return m.reply("Player tidak ditemukan.");
-      if (target === sender) return m.reply("Tidak bisa tebak sendiri!");
-      if (game.players[target].guessedBy[sender]) return m.reply("Kamu sudah tebak player ini!");
-      if (!guessNum || guessNum < 1 || guessNum > 3) return m.reply("Pilih nomor 1, 2, atau 3.");
+      if (!game.players[target]) return m.reply(claraWrap("Info", "\u274c Player tidak ditemukan."));
+      if (target === sender) return m.reply(claraWrap("Info", "\u274c Tidak bisa tebak sendiri!"));
+      if (game.players[target].guessedBy[sender]) return m.reply(claraWrap("Info", "\u274c Kamu sudah tebak player ini!"));
+      if (!guessNum || guessNum < 1 || guessNum > 3) return m.reply(claraWrap("Usage", "Pilih nomor 1, 2, atau 3."));
 
       const isCorrect = game.players[target].statements[guessNum - 1].isLie;
       game.players[target].guessedBy[sender] = guessNum;
@@ -120,7 +120,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "reveal") {
-      if (!game.active) return m.reply("Tidak ada game aktif.");
+      if (!game.active) return m.reply(claraWrap("Info", "\u274c Tidak ada game aktif."));
       game.phase = "revealed";
       const results = Object.entries(game.players).map(([jid, p]) => {
         const lieIdx = p.statements.findIndex(s => s.isLie);
@@ -140,7 +140,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "list") {
-      if (!game.active) return m.reply("Tidak ada game aktif.");
+      if (!game.active) return m.reply(claraWrap("Info", "\u274c Tidak ada game aktif."));
       const list = Object.entries(game.players).map(([jid, p]) => {
         const s = p.statements.map((st, i) => `${i + 1}. ${st.text}`).join("\n");
         return `@${jid.split("@")[0]}:\n${s}`;

@@ -38,7 +38,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "auto") {
       const toggle = (args[1] || "").toLowerCase();
       if (!["on", "off"].includes(toggle)) {
-        return m.reply(`Cara: ${usedPrefix}grupdashboard auto on|off`);
+        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupdashboard auto on|off`));
       }
       stats.autoPost = toggle === "on";
       await db.save();

@@ -191,7 +191,7 @@ async function handler(m, { sock, args }) {
     const _regDb = getDatabase();
     if (!_regDb.db.data.eduRegistered || !_regDb.db.data.eduRegistered[sender]) {
       essaySessions.delete(sender);
-      return m.reply('Pendaftaran kamu telah dihapus! Essay dibatalkan.\n\nDaftar lagi: ' + m.prefix + 'daftarsiswa <nama>');
+      return m.reply(claraWrap('Info', '\u2705 Pendaftaran kamu telah dihapus! Essay dibatalkan.\n\nDaftar lagi: ' + m.prefix + 'daftarsiswa <nama>'));
     }
     const _rateChk = _essayCheckRate(sender);
     if (!_rateChk.allowed) {
@@ -201,7 +201,7 @@ async function handler(m, { sock, args }) {
         _essaySpamWarn.delete(sender);
         return m.reply(claraWrap("Soalessay", "Essay quiz dibatalkan karena spam!\n\nBaca soal dulu, jangan asal jawab.\n\nKetik .essay untuk mulai lagi."));
       }
-      return m.reply("Terlalu cepat! Tunggu " + Math.ceil(_rateChk.waitMs / 1000) + " detik.\n\nPeringatan " + _w + "/3 - jangan spam!");
+      return m.reply(claraWrap("Info", "\u23f3 Terlalu cepat! Tunggu " + Math.ceil(_rateChk.waitMs / 1000) + " detik.\n\nPeringatan " + _w + "/3 - jangan spam!"));
     }
     _essaySpamWarn.delete(sender);
     const check = checkKeywords(userAnswer, q.keywords);

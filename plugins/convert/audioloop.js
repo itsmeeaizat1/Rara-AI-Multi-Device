@@ -32,7 +32,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     const fadeSec = args[1] === "fade" ? (parseFloat(args[2]) || 0) : 0;
-    if (fadeSec > 5) return m.reply("Fade maksimal 5 detik.");
+    if (fadeSec > 5) return m.reply(claraWrap("Info", "Fade maksimal 5 detik."));
 
     const isPtt = !!quoted.pttMessage;
     const tmpDir = path.join(os.tmpdir(), 'nova-loop');

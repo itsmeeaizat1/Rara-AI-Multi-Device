@@ -196,12 +196,12 @@ async function handler(m, { sock, args }) {
   if (action === "del" || action === "rm") {
     const trigger = args.slice(1).join(" ").trim().toLowerCase();
     if (!trigger) {
-      return m.reply("Masukkan trigger yang mau dihapus!\n\n```" + m.prefix + "autoreactvn del <trigger>```");
+      return m.reply(claraWrap("Usage", "Masukkan trigger yang mau dihapus!\n\n```" + m.prefix + "autoreactvn del <trigger>```"));
     }
 
     const index = triggers.findIndex(t => t.trigger === trigger);
     if (index === -1) {
-      return m.reply("Trigger \"" + trigger + "\" tidak ditemukan!");
+      return m.reply(claraWrap("Info", "❌ Trigger \"" + trigger + "\" tidak ditemukan!"));
     }
 
     const vnFile = triggers[index].vnFile;
@@ -250,7 +250,7 @@ async function handler(m, { sock, args }) {
 
     const seconds = parseInt(subArg);
     if (isNaN(seconds) || seconds < 1) {
-      return m.reply("Jeda minimal 1 detik!\n\n```" + m.prefix + "autoreactvn jeda 5```");
+      return m.reply(claraWrap("Info", "\u26a0\ufe0f Jeda minimal 1 detik!\n\n```" + m.prefix + "autoreactvn jeda 5```"));
     }
 
     db.setting("autoreactvnJedaPrivate", seconds * 1000);
@@ -277,7 +277,7 @@ async function handler(m, { sock, args }) {
 
     const seconds = parseInt(subArg);
     if (isNaN(seconds) || seconds < 1) {
-      return m.reply("Jeda minimal 1 detik!\n\n```" + m.prefix + "autoreactvn jedagrup 15```");
+      return m.reply(claraWrap("Info", "\u26a0\ufe0f Jeda minimal 1 detik!\n\n```" + m.prefix + "autoreactvn jedagrup 15```"));
     }
 
     db.setting("autoreactvnJedaGrup", seconds * 1000);

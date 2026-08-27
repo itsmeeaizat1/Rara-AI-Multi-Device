@@ -38,12 +38,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "speed" || sub === "s") {
       rotationSpeed = parseFloat(args[1]) || 0.2;
-      if (rotationSpeed < 0.05 || rotationSpeed > 2.0) return m.reply("Speed 0.05-2.0. Contoh: .audio8d speed 0.5");
+      if (rotationSpeed < 0.05 || rotationSpeed > 2.0) return m.reply(claraWrap("Info", "Speed 0.05-2.0. Contoh: .audio8d speed 0.5"));
     }
 
     if (sub === "depth" || sub === "d") {
       depth = parseFloat(args[1]) || 0.8;
-      if (depth < 0.1 || depth > 1.0) return m.reply("Depth 0.1-1.0. Contoh: .audio8d depth 0.9");
+      if (depth < 0.1 || depth > 1.0) return m.reply(claraWrap("Info", "Depth 0.1-1.0. Contoh: .audio8d depth 0.9"));
     }
 
     if (!isNaN(parseFloat(sub)) && sub !== "") {

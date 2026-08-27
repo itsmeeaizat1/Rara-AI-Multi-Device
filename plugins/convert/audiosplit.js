@@ -43,7 +43,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
       const startSec = parseTime(start);
       const endSec = parseTime(end);
-      if (startSec >= endSec) return m.reply("Start harus lebih kecil dari end!");
+      if (startSec >= endSec) return m.reply(claraWrap("Info", "Start harus lebih kecil dari end!"));
 
       const duration = endSec - startSec;
       const outputPath = path.join(tmpDir, `trimmed_${Date.now()}.mp3`);

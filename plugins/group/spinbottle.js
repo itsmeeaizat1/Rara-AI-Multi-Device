@@ -65,9 +65,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "spin") {
       const meta = await conn.groupMetadata(groupId).catch(() => null);
-      if (!meta) return m.reply("Gagal mengambil info grup.");
+      if (!meta) return m.reply(claraWrap("Error", "\u274c Gagal mengambil info grup."));
       const participants = meta.participants.map(p => p.id).filter(id => id !== conn.user?.id);
-      if (participants.length < 2) return m.reply("Minimal butuh 2 member untuk spin.");
+      if (participants.length < 2) return m.reply(claraWrap("Info", "\u274c Minimal butuh 2 member untuk spin."));
 
       const randomTarget = participants[Math.floor(Math.random() * participants.length)];
       game.active = true;
@@ -117,7 +117,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "next") {
-      if (!game.active) return m.reply("Tidak ada game aktif.");
+      if (!game.active) return m.reply(claraWrap("Info", "\u274c Tidak ada game aktif."));
       game.phase = "idle";
       game.target = null;
       await db.save();

@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
     txt += "Sumber: fawazahmed0/hadith-api";
     return await m.reply(txt);
   } catch (error) {
-    return m.reply("Error: " + error.message + "\n\nCoba lagi nanti atau pilih perawi lain.");
+    return m.reply(claraWrap("Error", "\u274c " + error.message + "\n\nCoba lagi nanti atau pilih perawi lain."));
   }
 }
 

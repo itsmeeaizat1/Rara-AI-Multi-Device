@@ -47,7 +47,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "whitelist" || sub === "wl") {
       const target = m.mentionedJid?.[0];
-      if (!target) return m.reply(`Cara: ${usedPrefix}antipromote whitelist @user`);
+      if (!target) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}antipromote whitelist @user`));
       if (data.whitelist.includes(target)) {
         data.whitelist = data.whitelist.filter(j => j !== target);
         await db.save();
@@ -62,7 +62,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "promote" || sub === "demote") {
       const toggle = (args[1] || "").toLowerCase();
       if (!["on", "off"].includes(toggle)) {
-        return m.reply(`Cara: ${usedPrefix}antipromote ${sub} on|off`);
+        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}antipromote ${sub} on|off`));
       }
       if (sub === "promote") data.blockPromote = toggle === "on";
       if (sub === "demote") data.blockDemote = toggle === "on";

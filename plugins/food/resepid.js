@@ -95,7 +95,7 @@ async function handler(m, { sock, args }) {
       const cat = query.charAt(0).toUpperCase() + query.slice(1).toLowerCase();
       pool = RECIPES.filter(r => r.c.toLowerCase() === cat.toLowerCase());
       if (pool.length === 0) {
-        return m.reply(`Kategori "${query}" tidak ditemukan.\n\nTersedia: ${CATEGORIES.join(", ")}`);
+        return m.reply(claraWrap("Info", `Kategori "${query}" tidak ditemukan.\n\nTersedia: ${CATEGORIES.join(", ")}`));
       }
     }
     const recipe = pool[Math.floor(Math.random() * pool.length)];
@@ -121,7 +121,7 @@ async function handler(m, { sock, args }) {
     const filtered = RECIPES.filter(r => r.c.toLowerCase() === cat.toLowerCase());
     
     if (filtered.length === 0) {
-      return m.reply(`Kategori "${query}" tidak ditemukan.\n\nTersedia: ${CATEGORIES.join(", ")}`);
+      return m.reply(claraWrap("Info", `Kategori "${query}" tidak ditemukan.\n\nTersedia: ${CATEGORIES.join(", ")}`));
     }
     
     // Sort by loves
@@ -160,7 +160,7 @@ async function handler(m, { sock, args }) {
     const recipe = RECIPES.find(r => r.id === id);
     
     if (!recipe) {
-      return m.reply(`Resep ID ${id} tidak ditemukan.\n\nTotal resep: ${RECIPES.length}\nRange ID: 1-${RECIPES.length}`);
+      return m.reply(claraWrap("Info", `Resep ID ${id} tidak ditemukan.\n\nTotal resep: ${RECIPES.length}\nRange ID: 1-${RECIPES.length}`));
     }
     
     return await m.reply( formatRecipe(recipe), { commandName: "resepid" });

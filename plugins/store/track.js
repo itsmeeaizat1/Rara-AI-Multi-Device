@@ -327,14 +327,14 @@ async function updateOrderStatus(m, sock, db, args) {
   }
 
   if (!VALID_STATUSES.includes(newStatus)) {
-    return m.reply("Status tidak valid: " + newStatus + "\n\nStatus tersedia: " + VALID_STATUSES.join(", "));
+    return m.reply(claraWrap("Info", "\u274c Status tidak valid: " + newStatus + "\n\nStatus tersedia: " + VALID_STATUSES.join(", ")));
   }
 
   const transactions = db.setting("storeTransactions") || {};
   const trx = transactions[trxId];
 
   if (!trx) {
-    return m.reply("Pesanan " + trxId + " tidak ditemukan.");
+    return m.reply(claraWrap("Info", "\u274c Pesanan " + trxId + " tidak ditemukan."));
   }
 
   // Update status dan timestamp
