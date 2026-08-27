@@ -3,10 +3,10 @@
 > Daftar lengkap fitur per kategori. Update file ini setiap kali ada perubahan fitur.
 
 ## Statistik
-- **Total Plugin:** 1.584
-- **Total Command:** 2.111+
+- **Total Plugin:** 1.591
+- **Total Command:** 2.118+
 - **Total Kategori:** 39
-- **Versi:** 21.5.0
+- **Versi:** 21.6.0
 
 ---
 
@@ -38,6 +38,24 @@ rawgApiKey: ""      // RAWG.io (free)
 openWeatherKey: ""  // OpenWeather (free 1000 req/day)
 binderbyteKey: ""   // Binderbyte cek resi
 ```
+
+
+## 🆕 Fitur Baru v21.6.0 — Games & Trivia
+
+### Game Baru (No API Key)
+- `.trivia` — fun — Quiz trivia multiple choice (Open Trivia DB + The Trivia API fallback)
+- `.wouldyourather` — fun — Dilema Would You Rather (API + 20 local fallback)
+- `.tictactoe` — game — Tic Tac Toe 2 player (X vs O, balas nomor 1-9)
+- `.wordle` — game — Tebak kata 5 huruf (ID + EN, 6 percobaan, 🟩🟨⬛)
+- `.hangman` — game — Tebak kata sebelum gantungan penuh (ID + EN)
+- `.typingrace` — game — Tes kecepatan ketik WPM (Quotable API + local fallback)
+- `.truthordarev2` — game — Truth or Dare v2 (API + 20 local truth & 20 local dare)
+
+### API Sources
+- Open Trivia DB: opentdb.com (5000+ soal, 23+ kategori)
+- The Trivia API: the-trivia-api.com (fallback)
+- TruthOrDareBot API: truthordarebot.xyz (pg/pg13/r ratings)
+- Quotable API: quotable.io (typing race quotes)
 
 ## 📂 Daftar Kategori & Command
 
@@ -229,7 +247,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## ✅ Status Audit (Update Terakhir)
 
-- **Total Plugin:** 1.584 (12 plugin dibikin ulang setelah dihapus AI agent lain)
+- **Total Plugin:** 1.591 (12 plugin dibikin ulang setelah dihapus AI agent lain)
 - **Syntax Check:** 0 error
 - **Broken Import:** 0
 - **api.neoxr.eu:** 0 (semua diganti)
