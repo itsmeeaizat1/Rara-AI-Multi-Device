@@ -10,7 +10,7 @@ import { CronJob } from "cron";
 import { getDatabase } from "./nova-database.js";
 import { logger } from "./nova-logger.js";
 import config from "../../config.js";
-import { getAndarazConfig } from "../config/env-loader.js";
+import { getAndarazConfig } from "./config/env-loader.js";
 import {
   fetchJobstreetID,
   fetchGlintsID,
