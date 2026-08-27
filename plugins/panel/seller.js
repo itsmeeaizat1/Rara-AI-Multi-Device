@@ -136,12 +136,12 @@ function handler(m, { sock }) {
         if (saveConfig()) {
             m.react('✅')
             return m.reply(`✅ *ꜱᴇʟʟᴇʀ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
-                `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-                `┃ 📱 Nomor: \`${targetUser}\`\n` +
-                `┃ 🏷️ sTatus: \`Seller/Reseller\`\n` +
-                `┃ 🔓 Akses: \`Create Server (1gb-10gb v1-v3)\`\n` +
-                `┃ 📊 Total: \`${pteroConfig.sellers.length}\` seller\n` +
-                `╰┈┈⬡${roleChanged}`)
+                `╭──「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
+                `│ 📱 Nomor: \`${targetUser}\`\n` +
+                `│ 🏷️ sTatus: \`Seller/Reseller\`\n` +
+                `│ 🔓 Akses: \`Create Server (1gb-10gb v1-v3)\`\n` +
+                `│ 📊 Total: \`${pteroConfig.sellers.length}\` seller\n` +
+                `╰──────────❀${roleChanged}`)
         } else {
             pteroConfig.sellers = pteroConfig.sellers.filter(s => s !== targetUser)
             return m.reply(claraWrap("seller", `❌ Gagal menyimpan ke config.js`))

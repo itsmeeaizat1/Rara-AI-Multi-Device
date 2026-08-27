@@ -53,10 +53,10 @@ async function handler(m, { sock }) {
 
   let txt = `🎉 *ᴅᴀɪʟʏ ᴄʟᴀɪᴍ ꜱᴜᴋꜱᴇꜱ*\n`;
   txt += `${greeting}, @${m.sender.split("@")[0]}\n\n`;
-  txt += `╭┈┈⬡「 🎁 *ʀᴇᴡᴀʀᴅꜱ* 」\n`;
-  txt += `┃ 🚄 Exp: *+${expReward}*\n`;
-  txt += `┃ 💰 Koin: *+${moneyReward.toLocaleString("id-ID")}*\n`;
-  txt += `┃ 🥤 Potion: *+${potionReward}*\n`;
+  txt += `╭──「 🎁 *ʀᴇᴡᴀʀᴅꜱ* 」\n`;
+  txt += `│ 🚄 Exp: *+${expReward}*\n`;
+  txt += `│ 💰 Koin: *+${moneyReward.toLocaleString("id-ID")}*\n`;
+  txt += `│ 🥤 Potion: *+${potionReward}*\n`;
   txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
   txt += `Jangan lupa claim lagi besok!`;
 

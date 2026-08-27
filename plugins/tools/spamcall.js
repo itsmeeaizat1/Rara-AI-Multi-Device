@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spamcall",
@@ -27,10 +27,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!count || count <= 0 || !target) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}spamcall <jumlah> <nomor>*`,
-          `│ Contoh: *${prefix}spamcall 3 628xxxx*`,
-          `│ Atau: *${prefix}spamcall 3 @member*`,
-          "│ Maksimal: *5x*"].join("\n")) +
+        novaCaption({
+  emoji: "🛠️",
+  name: "spamcall",
+  description: "Spam call/virtual call untuk entertainment",
+  usage: `${prefix}spamcall <jumlah> <nomor>`,
+  example: `${prefix}spamcall 5 628xxxx`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -43,7 +46,9 @@ async function handler(m, { sock, config: botConfig }) {
     const targetClean = String(target).replace(/@.+$/, "");
 
     for (let i = 0; i < count; i++) {
-      const body = `📞 *ꜱᴘᴀᴍ ᴄᴀʟʟ*\n┃ │ Target: *@${targetClean}*\n┃ │ Call #${i + 1}/${count}`;
+      const body = `📞 *ꜱᴘᴀᴍ ᴄᴀʟʟ*
+│ │ Target: *@${targetClean}*
+│ │ Call #${i + 1}/${count}`;
       mentions.push(targetClean);
       await sock.sendMessage(chat, { text: body, mentions });
     }

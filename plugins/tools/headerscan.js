@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraHeader,  separator, claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraHeader,  separator, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import https from "node:https";
 import http from "node:http";
 
@@ -16,8 +16,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const url = m.text?.trim();
     if (!url || !url.startsWith("http")) {
-      await m.reply( claraWrap("Header Scan", [`│ Penggunaan: *${prefix}headerscan <url>*`,
-        `│ Contoh: *${prefix}headerscan https://google.com*`].join("\n")), "headerscan");
+      await m.reply( novaCaption({
+  emoji: "🛠️",
+  name: "headerscan",
+  description: "Scan HTTP headers website",
+  usage: `$prefixheaderscan <url>`,
+  example: `$prefixheaderscan https://google.com`,
+}), "headerscan");
       return { handled: true };
     }
     const mod = url.startsWith("https") ? https : http;

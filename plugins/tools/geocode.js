@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraHeader,  separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraHeader,  separator, tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -15,8 +15,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const query = m.text?.trim();
     if (!query) {
-      await m.reply(claraWrap("Geocode", [`│ Penggunaan: *${prefix}geocode <nama tempat>*`,
-        `│ Contoh: *${prefix}geocode Monas Jakarta*`].join("\n")));
+      await m.reply(novaCaption({
+  emoji: "🛠️",
+  name: "geocode",
+  description: "Alamat ke koordinat GPS",
+  usage: `$prefixgeocode <nama tempat>`,
+  example: `$prefixgeocode Monas Jakarta`,
+}));
       return { handled: true };
     }
     const { data } = await axios.get("https://nominatim.openstreetmap.org/search", {

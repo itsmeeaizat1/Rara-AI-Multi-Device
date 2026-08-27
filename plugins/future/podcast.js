@@ -62,7 +62,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "gen" || sub === "generate" || sub === "buat") {
     const topic = args.slice(2).join(" ").trim();
     if (!topic) {
-      await m.reply(claraWrap("Podcast", "Format: " + prefix + "podcast gen <topik>\nContoh: " + prefix + "podcast gen Teknologi AI di Indonesia"));
+      await m.reply(claraWrap("Podcast", "Format: " + prefix + "podcast gen <topik>\n💡 *Contoh:* " + prefix + "podcast gen Teknologi AI di Indonesia"));
       return { handled: true };
     }
     await m.react("🕒");

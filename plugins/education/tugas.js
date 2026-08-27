@@ -105,12 +105,12 @@ async function handler(m, { sock, args }) {
       const input = cmdArgs.join(" ");
       const parts = input.split("|").map(s => s.trim());
       if (parts.length < 2) {
-        return m.reply(claraWrap("tugas", "Format salah!\n\nContoh: `.tugas add 25/12 | Essay Filsafat | Filsafat Umum`\n\nFormat: <deadline> | <nama tugas> | <matkul (opsional)>"));
+        return m.reply(claraWrap("tugas", "Format salah!\n\n💡 *Contoh:* `.tugas add 25/12 | Essay Filsafat | Filsafat Umum`\n\nFormat: <deadline> | <nama tugas> | <matkul (opsional)>"));
       }
 
       const deadline = parseDate(parts[0]);
       if (!deadline) {
-        return m.reply(claraWrap("tugas", `Format tanggal salah!\n\nGunakan: DD/MM atau DD/MM/YYYY\nContoh: 25/12 atau 25/12/2026`));
+        return m.reply(claraWrap("tugas", `Format tanggal salah!\n\nGunakan: DD/MM atau DD/MM/YYYY\n💡 *Contoh:* 25/12 atau 25/12/2026`));
       }
 
       const name = parts[1] || "Tanpa nama";

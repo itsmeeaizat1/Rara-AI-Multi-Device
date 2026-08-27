@@ -123,7 +123,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const comment = parts.slice(1).join(" ") || FUNNY_COMMENTS[Math.floor(Math.random() * FUNNY_COMMENTS.length)];
 
     if (!bintang || bintang < 1 || bintang > 5) {
-      return m.reply(claraWrap("Rate User", "Kasih bintang 1-5!\nContoh: .rateuser @Budi 5 Boss gede"));
+      return m.reply(claraWrap("Rate User", "Kasih bintang 1-5!\n💡 *Contoh:* .rateuser @Budi 5 Boss gede"));
     }
 
     if (!groupData.ratings[target]) {

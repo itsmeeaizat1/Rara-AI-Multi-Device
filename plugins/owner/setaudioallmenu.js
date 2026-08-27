@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
 
     const newStyle = parseInt(args);
     if (isNaN(newStyle) || newStyle < 1 || newStyle > 4) {
-        return m.reply(claraWrap("setaudioallmenu", `❌ *GAGAL*\n\nPilihan varian audio harus berupa angka 1 sampai 4.\nContoh: *${m.prefix}setaudioallmenu 2*`));
+        return m.reply(claraWrap("setaudioallmenu", `❌ *GAGAL*\n\nPilihan varian audio harus berupa angka 1 sampai 4.\n💡 *Contoh:* *${m.prefix}setaudioallmenu 2*`));
     }
 
     await m.react("🕒");

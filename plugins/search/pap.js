@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
   const validTypes = ["cewe", "cowo", "femboy"];
 
   if (!arg || !validTypes.includes(arg)) {
-    return m.reply( claraWrap("Pap", "❌ Pilih salah satu tipe pap yang tersedia: `cewe`, `cowo`, atau `femboy`.\n\nContoh: `.pap cewe`"), { commandName: "pap" });
+    return m.reply( claraWrap("Pap", "❌ Pilih salah satu tipe pap yang tersedia: `cewe`, `cowo`, atau `femboy`.\n\n💡 *Contoh:* `.pap cewe`"), { commandName: "pap" });
   }
 
   await m.react("🕒");

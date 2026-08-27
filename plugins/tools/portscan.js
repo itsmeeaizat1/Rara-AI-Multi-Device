@@ -109,7 +109,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (portStr.includes("-")) {
         const [start, end] = portStr.split("-").map((n) => parseInt(n));
         if (isNaN(start) || isNaN(end) || start < 1 || end > 65535 || start > end) {
-          return m.reply(claraWrap("PortScan", "Range port invalid!\nContoh: 1-100"));
+          return m.reply(claraWrap("PortScan", "Range port invalid!\n💡 *Contoh:* 1-100"));
         }
         const range = end - start + 1;
         if (range > 50) {

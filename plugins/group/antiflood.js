@@ -152,7 +152,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "action" || sub === "aksi") {
       const action = (args[1] || "").toLowerCase();
       if (!["warn", "kick", "delete"].includes(action)) {
-        return m.reply(claraWrap("Anti Flood", "Pilih: warn, kick, atau delete\nContoh: .antiflood action kick"));
+        return m.reply(claraWrap("Anti Flood", "Pilih: warn, kick, atau delete\n💡 *Contoh:* .antiflood action kick"));
       }
       cfg.action = action;
       await db.save();

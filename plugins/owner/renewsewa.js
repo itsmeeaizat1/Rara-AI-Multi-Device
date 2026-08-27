@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
   const durationMs = parseDurationMs(durationStr);
 
   if (!durationMs)
-    return m.reply(claraWrap("Renewsewa", `❌ Format durasi tidak valid\nContoh: 7d, 1m, 1y, lifetime`));
+    return m.reply(claraWrap("Renewsewa", `❌ Format durasi tidak valid\n💡 *Contoh:* 7d, 1m, 1y, lifetime`));
 
   await m.react("🕒");
 

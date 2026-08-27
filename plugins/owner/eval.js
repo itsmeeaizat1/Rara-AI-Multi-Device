@@ -76,9 +76,9 @@ async function handler(m, { sock, store }) {
 
     await m.reply(
         `⚙️ *Eval Result*\n\n` +
-        `╭┈┈⬡「 📋 *InғO* 」\n` +
-        `┃ ${status}\n` +
-        `┃ Type: ${type}\n` +
+        `╭──「 📋 *InғO* 」\n` +
+        `│ ${status}\n` +
+        `│ Type: ${type}\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
         `\`\`\`${output}\`\`\``
     )

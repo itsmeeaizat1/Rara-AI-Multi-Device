@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const uid = m.text?.trim() || m.args[0];
 
   if (!uid) {
-    return m.reply(claraWrap("genshinstalk", "❌ *UID Genshin-nya mana nih?*\n\nKamu harus memasukkan UID pemain Genshin Impact yang ingin di-stalk. \n\nContoh: `.genshinstalk 856012067`"));
+    return m.reply(claraWrap("genshinstalk", "❌ *UID Genshin-nya mana nih?*\n\nKamu harus memasukkan UID pemain Genshin Impact yang ingin di-stalk. \n\n💡 *Contoh:* `.genshinstalk 856012067`"));
   }
 
   await m.react("🕒");

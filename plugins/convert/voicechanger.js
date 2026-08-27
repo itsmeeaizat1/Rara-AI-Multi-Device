@@ -250,7 +250,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }
 
       if (!hasAudio) {
-        return m.reply(claraWrap("Voice Changer", "Reply pesan audio / voice note yang mau diubah.\n\nContoh: Reply VN lalu " + usedPrefix + "vc anime " + char.id));
+        return m.reply(claraWrap("Voice Changer", "Reply pesan audio / voice note yang mau diubah.\n\n💡 *Contoh:* Reply VN lalu " + usedPrefix + "vc anime " + char.id));
       }
 
       const statusMsg = await conn.sendMessage(m.key.remoteJid, {
@@ -426,7 +426,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (!hasAudio) {
-      return m.reply(claraWrap("Voice Changer", "Reply pesan audio / voice note yang mau diubah.\n\nContoh: Reply VN lalu ketik " + usedPrefix + "vc " + input));
+      return m.reply(claraWrap("Voice Changer", "Reply pesan audio / voice note yang mau diubah.\n\n💡 *Contoh:* Reply VN lalu ketik " + usedPrefix + "vc " + input));
     }
 
     const vm = LOCAL_MODELS[input];

@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url || (!url.includes("xnxx") && !url.includes("xvideos"))) {
-    return m.reply( `🔞 *xɴxx ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\nKirim URL video XNXX/XVideos\n\nContoh: \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\``, "xnxx2");
+    return m.reply( `🔞 *xɴxx ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\nKirim URL video XNXX/XVideos\n\n💡 *Contoh:* \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\``, "xnxx2");
   }
 
   await m.react("🕒");

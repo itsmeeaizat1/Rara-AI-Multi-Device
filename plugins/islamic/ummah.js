@@ -111,7 +111,7 @@ async function handler(m, { sock, args }) {
         txt += `${i}. ${key}\n`;
         i++;
       }
-      txt += `\nContoh: \`${m.prefix}ummah topic zakat\``;
+      txt += `\n💡 *Contoh:* \`${m.prefix}ummah topic zakat\``;
       await m.reply(txt);
       await m.react("🐣");
     }
@@ -181,7 +181,7 @@ async function handler(m, { sock, args }) {
     // === SEARCH ===
     else if (cmd === "search" || cmd === "cari" || cmd === "s") {
       const query = cmdArgs.join(" ").trim();
-      if (!query) return m.reply(claraWrap("Ummah", "Masukkan kata kunci!\n\nContoh: `.ummah search charity`"));
+      if (!query) return m.reply(claraWrap("Ummah", "Masukkan kata kunci!\n\n💡 *Contoh:* `.ummah search charity`"));
 
       const res = await apiGet(`/search?q=${encodeURIComponent(query)}`);
       if (res.status !== 200 || !res.data?.success) throw new Error("Search gagal");
@@ -209,7 +209,7 @@ async function handler(m, { sock, args }) {
       const collection = cmdArgs[0]?.toLowerCase();
       const number = parseInt(cmdArgs[1]) || 1;
       if (!collection || !UMMAH_KEYS.includes(collection)) {
-        return m.reply(`Format salah!\n\nContoh: \`.ummah grade bukhari 1\`\n\nKoleksi: ${UMMAH_KEYS.join(", ")}`);
+        return m.reply(`Format salah!\n\n💡 *Contoh:* \`.ummah grade bukhari 1\`\n\nKoleksi: ${UMMAH_KEYS.join(", ")}`);
       }
 
       const res = await apiGet(`/${collection}/${number}`);

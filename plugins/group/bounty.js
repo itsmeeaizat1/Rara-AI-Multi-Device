@@ -124,7 +124,7 @@ async function handler(m, { sock, db }) {
     const rest = args.slice(2).join(" ");
     if (!rest || !rest.includes("|")) {
       await safeReply(m, sock, claraWrap("Bounty Board",
-        `Format salah!\n\nGunakan: ${prefix}bounty post <deskripsi> | <reward>\nContoh: ${prefix}bounty post Buat logo grup | 500`,
+        `Format salah!\n\nGunakan: ${prefix}bounty post <deskripsi> | <reward>\n💡 *Contoh:* ${prefix}bounty post Buat logo grup | 500`,
         "warn"));
       return { handled: true };
     }

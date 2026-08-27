@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
   const input = args.join(" ").trim();
 
   if (!input) {
-    const help = `Kirim pesan setelah command.\nContoh: .deepaixemoz halo, siapa kamu?\n\n.deepaixemoz reset — Reset sesi percakapan`;
+    const help = `Kirim pesan setelah command.\n💡 *Contoh:* .deepaixemoz halo, siapa kamu?\n\n.deepaixemoz reset — Reset sesi percakapan`;
     return m.reply( claraWrap("DeepAI Chat", help));
   }
 

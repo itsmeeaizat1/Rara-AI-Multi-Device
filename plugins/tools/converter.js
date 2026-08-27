@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
   }
 
   if (!targetFormat) {
-    return m.reply( `❌ Masukkan format tujuan!\n\nContoh: \`${m.prefix}converter mp3\``, "converter");
+    return m.reply( `❌ Masukkan format tujuan!\n\n💡 *Contoh:* \`${m.prefix}converter mp3\``, "converter");
   }
 
   const quoted = m.quoted;

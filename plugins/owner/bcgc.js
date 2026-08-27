@@ -4,7 +4,7 @@ import { fetchGroupsSafe } from "../../src/lib/nova-jpm-helper.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine, broadcastFormat } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, broadcastFormat, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bcgc",
@@ -83,27 +83,12 @@ async function handler(m, { sock }) {
   if (!input && !m.quoted) {
     const enabled = db.setting("bcgcEnabled");
     const jeda = db.setting("jedaBcgc") || 5000;
-    return m.reply( claraWrap("Broadcast Grup", [
-      "Kirim pesan ke seluruh grup sekaligus dalam satu perintah.",
-      "",
-      "STATUS:",
-      `Broadcast: ${enabled ? "Aktif" : "Nonaktif"}`,
-      `Jeda: ${formatDelay(jeda)} (${jeda}ms)`,
-      "",
-      "Cara Pakai:",
-      `${m.prefix}bcgc on — Aktifkan broadcast`,
-      `${m.prefix}bcgc off — Nonaktifkan broadcast`,
-      `${m.prefix}bcgc <pesan> — Kirim broadcast teks`,
-      `${m.prefix}bcgc (reply media) — Kirim dengan media`,
-      `${m.prefix}bcgc (reply teks) — Kirim isi pesan yang di-reply`,
-      "",
-      "JEDA:",
-      `${m.prefix}jedabcgc 5s — Set jeda 5 detik`,
-      `${m.prefix}jedabcgc 2m — Set jeda 2 menit`,
-      "",
-      "STOP:",
-      `${m.prefix}stopbcgc — Hentikan broadcast`,
-    ].join("\n")), "bcgc");
+    return m.reply( novaCaption({
+  emoji: "👑",
+  name: "bcgc",
+  description: "Broadcast pesan ke semua grup dengan dukungan semua jenis media",
+  usage: `$m.prefixbcgc`,
+}), "bcgc");
   }
 
   if (global.statusBcgc) {

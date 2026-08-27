@@ -7,7 +7,7 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 const execAsync = promisify(exec);
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -50,8 +50,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       const out =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}aivoice <teks>*`,
-          `│ Contoh: *${prefix}aivoice Halo dunia*`].join("\n")) +
+        novaCaption({
+  emoji: "🤖",
+  name: "aivoice",
+  description: "Ubah teks menjadi suara dengan AI/TTS",
+  usage: `${prefix}aivoice <teks>`,
+  example: `${prefix}aivoice Halo, ini suara AI.`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

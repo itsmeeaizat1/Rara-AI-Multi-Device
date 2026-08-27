@@ -48,7 +48,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const time = args[2] || cfg.time;
     if (!/^\d{2}:\d{2}$/.test(time)) {
-      await m.reply(claraWrap("Auto Rekap", "Format jam: HH:MM\nContoh: " + prefix + "autorekap on 20:00"));
+      await m.reply(claraWrap("Auto Rekap", "Format jam: HH:MM\n💡 *Contoh:* " + prefix + "autorekap on 20:00"));
       return { handled: true };
     }
     cfg.enabled = true;

@@ -1,5 +1,5 @@
 
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "block2",
@@ -24,8 +24,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!targetRaw) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}block <@target>*`,
-          `│ Contoh: *${prefix}block @username*`].join("\n")) +
+        novaCaption({
+  emoji: "👑",
+  name: "block2",
+  description: "Blokir user",
+  usage: `${prefix}block <@target>`,
+  example: `${prefix}block @username`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

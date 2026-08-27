@@ -148,7 +148,7 @@ async function handler(m, { sock }) {
 
   if (!expiredAt)
     return m.reply(
-      `❌ Format durasi tidak valid\n\nContoh: 7d, 1m, 1y, lifetime`,
+      `❌ Format durasi tidak valid\n\n💡 *Contoh:* 7d, 1m, 1y, lifetime`,
     );
 
   await m.react("🕒");

@@ -72,7 +72,7 @@ async function handler(m, { sock, args }) {
     if (cmd === "final" || cmd === "akhir" || cmd === "hitung") {
       const inputArgs = cmdArgs;
       if (inputArgs.length < 2 || inputArgs.length % 2 !== 0) {
-        return m.reply(claraWrap("kalkulatornilai", "Format salah!\n\nContoh: `.nilai final 80 30 75 30 60 40`\n\nFormat: <nilai> <bobot%> <nilai> <bobot%> ...\nBobot total harus 100."));
+        return m.reply(claraWrap("kalkulatornilai", "Format salah!\n\n💡 *Contoh:* `.nilai final 80 30 75 30 60 40`\n\nFormat: <nilai> <bobot%> <nilai> <bobot%> ...\nBobot total harus 100."));
       }
 
       let totalWeighted = 0;
@@ -122,7 +122,7 @@ async function handler(m, { sock, args }) {
       const remainingWeight = parseFloat(cmdArgs[3]);
 
       if (isNaN(target) || isNaN(currentScore) || isNaN(currentWeight) || isNaN(remainingWeight)) {
-        return m.reply(claraWrap("kalkulatornilai", "Format salah!\n\nContoh: `.nilai needed 70 75 40 60`\n\nFormat: <target nilai> <nilai sudah> <bobot sudah %> <bobot sisa %>"));
+        return m.reply(claraWrap("kalkulatornilai", "Format salah!\n\n💡 *Contoh:* `.nilai needed 70 75 40 60`\n\nFormat: <target nilai> <nilai sudah> <bobot sudah %> <bobot sisa %>"));
       }
 
       if (currentWeight + remainingWeight !== 100) {
@@ -160,7 +160,7 @@ async function handler(m, { sock, args }) {
     else if (cmd === "convert" || cmd === "konversi") {
       const grade = cmdArgs[0]?.toUpperCase().replace(".", "");
       if (!grade) {
-        return m.reply(claraWrap("Kalkulatornilai", "Masukkan nilai huruf!\n\nContoh: `.nilai convert AB`\n\nPilihan: A, AB, B, BC, C, CD, D, E"));
+        return m.reply(claraWrap("Kalkulatornilai", "Masukkan nilai huruf!\n\n💡 *Contoh:* `.nilai convert AB`\n\nPilihan: A, AB, B, BC, C, CD, D, E"));
       }
 
       const gpa = GRADE_MAP[grade];

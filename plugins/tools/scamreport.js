@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
   if (sub === "cek" || sub === "check") {
     const num = normalizeNumber(args[1] || "");
     if (!num || num.length < 8) {
-      return m.reply(claraWrap("Scam Report", "Nomor tidak valid!\nContoh: .scamreport cek 6281234567890"));
+      return m.reply(claraWrap("Scam Report", "Nomor tidak valid!\n💡 *Contoh:* .scamreport cek 6281234567890"));
     }
 
     const report = scamDB.numbers[num];
@@ -147,10 +147,10 @@ async function handler(m, { sock }) {
   const reportText = args.slice(1).join(" ").trim();
 
   if (!num || num.length < 8) {
-    return m.reply(claraWrap("Scam Report", "Nomor tidak valid!\nContoh: .scamreport 6281234567890 Penipu"));
+    return m.reply(claraWrap("Scam Report", "Nomor tidak valid!\n💡 *Contoh:* .scamreport 6281234567890 Penipu"));
   }
   if (!reportText || reportText.length < 3) {
-    return m.reply(claraWrap("Scam Report", "Jelaskan penipuannya!\nContoh: .scamreport 6281234567890 Kiriman gak dikirim"));
+    return m.reply(claraWrap("Scam Report", "Jelaskan penipuannya!\n💡 *Contoh:* .scamreport 6281234567890 Kiriman gak dikirim"));
   }
 
   // Cek apakah sudah pernah lapor nomor ini

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
@@ -24,12 +24,13 @@ async function handler(m, { sock }) {
     const action = args[0]?.toLowerCase()
     
     if (!action || !['on', 'off'].includes(action)) {
-        return m.rem.reply( `👋 *Goodbye Global*\n\n` +
-            `Aktifkan/nonaktifkan goodbye di SEMUA grup sekaligus\n\n` +
-            `╭┈┈⬡「 📋 *Cara Pakai* 」\n` +
-            `┃ ${m.prefix}goodbyeall on\n` +
-            `┃ ${m.prefix}goodbyeall off\n` +
-            `╰┈┈┈┈┈┈┈┈⬡`, "goodbyeall") }
+        return novaCaption({
+  emoji: "👑",
+  name: "goodbyeall",
+  description: "Aktifkan/nonaktifkan goodbye di semua grup",
+  usage: `$m.prefixgoodbyeall <on/off>`,
+  example: `$m.prefixgoodbyeall on`,
+}), "goodbyeall")
     
     await m.react('🕐')
     
@@ -48,15 +49,15 @@ async function handler(m, { sock }) {
         
         if (status) {
             return m.m.reply(claraWrap("goodbyeall", `✅ *Goodbye Global On*\n\n` +
-                `╭┈┈⬡「 📊 *Result* 」\n` +
-                `┃ 🌐 Total Grup: *${count}*\n` +
-                `┃ ✅ Goodbye: *AKTIF*\n` +
+                `╭──「 📊 *Result* 」\n` +
+                `│ 🌐 Total Grup: *${count}*\n` +
+                `│ ✅ Goodbye: *AKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈⬡\n\n` +
                 `Member yang keluar akan dikirim pesan perpisahan!`))       } else {
             return m.reply(claraWrap("goodbyeall", `❌ *Goodbye Global Off*\n\n` +
-                `╭┈┈⬡「 📊 *Result* 」\n` +
-                `┃ 🌐 Total Grup: *${count}*\n` +
-                `┃ ❌ Goodbye: *NONAKTIF*\n` +
+                `╭──「 📊 *Result* 」\n` +
+                `│ 🌐 Total Grup: *${count}*\n` +
+                `│ ❌ Goodbye: *NONAKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈⬡\n\n` +
                 `Goodbye dinonaktifkan di semua grup.`))
         }

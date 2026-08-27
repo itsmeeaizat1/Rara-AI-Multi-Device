@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
   const username = m.args[0]?.replace("@", "")?.trim();
 
   if (!username) {
-    return m.reply( `🐦 *Twitter/X Stalker*\n\nMasukkan username Twitter/X\n\nContoh: \`${m.prefix}twitterstalk elonmusk\``, "twitterstalk");
+    return m.reply( `🐦 *Twitter/X Stalker*\n\nMasukkan username Twitter/X\n\n💡 *Contoh:* \`${m.prefix}twitterstalk elonmusk\``, "twitterstalk");
   }
 
   await m.react("🕒");

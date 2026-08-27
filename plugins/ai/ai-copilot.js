@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -52,10 +52,13 @@ async function handler(m, { sock, config: botConfig }) {
     if (!code) {
       const modes = Object.keys(COPILOT_PROMPTS).join(", ");
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}ai-copilot <mode> <code>*`,
-          `│ Atau reply code dengan *${prefix}ai-copilot <mode>*`,
-          `│ Mode: *${modes}*`,
-          `│ Contoh: *${prefix}ai-copilot continue function add(a,b)*`].join("\n")) +
+        novaCaption({
+  emoji: "🤖",
+  name: "ai-copilot",
+  description: "Mode copilot: lanjutkan, refactor, atau jelaskan code",
+  usage: `${prefix}ai-copilot <perintah> <code> | reply code`,
+  example: `${prefix}ai-copilot continue function add(a,b)`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

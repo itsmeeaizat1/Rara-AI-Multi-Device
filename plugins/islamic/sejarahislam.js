@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
     const action = args[0];
 
     if (!action) {
-      let txt = "╭──「 *Perintah:* 」\n│ ❏\n";
+      let txt = "╭──「 *Perintah:* 」\n│\n";
       txt += "╰──────────❀\n";
       txt += "Surat: *" + s.nama_latin + "* (" + s.nama + ")\n";
       txt += "Arti: " + s.arti + "\n";
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     // DAFTAR SURAT
     if (action === "daftarsurat" || action === "list") {
       const allSurah = await fetchJson(EQURAN_API);
-      let txt = "╭──「 *DAFTAR 114 SURAT* 」\n│ ❏\n";
+      let txt = "╭──「 *DAFTAR 114 SURAT* 」\n│\n";
       txt += "╰──────────❀\n\n";
 
       for (let i = 0; i < allSurah.length; i++) {
@@ -63,13 +63,13 @@ async function handler(m, { sock }) {
     if (action === "turun") {
       const tempat = args[1];
       if (!tempat || (tempat !== "mekah" && tempat !== "madinah")) {
-        return m.reply(claraWrap("Sejarahislam", "Pilih: mekah atau madinah\nContoh: .sejarahislam turun mekah"));
+        return m.reply(claraWrap("Sejarahislam", "Pilih: mekah atau madinah\n💡 *Contoh:* .sejarahislam turun mekah"));
       }
 
       const allSurah = await fetchJson(EQURAN_API);
       const filtered = allSurah.filter((s) => s.tempat_turun === tempat);
 
-      let txt = "╭──「 *SURAT TURUN DI " + (tempat === "mekah" ? "MEKKAH" : "MADINAH") + "* 」\n│ ❏\n";
+      let txt = "╭──「 *SURAT TURUN DI " + (tempat === "mekah" ? "MEKKAH" : "MADINAH") + "* 」\n│\n";
       txt += "╰──────────❀\n";
       txt += "Total: " + filtered.length + " surat\n\n";
 

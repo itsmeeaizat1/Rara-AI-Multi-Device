@@ -147,7 +147,7 @@ async function handler(m, { sock }) {
         body += (i+1) + ". ID: " + s.service_id + "\n   " + (s.name || "?").substring(0, 60) + "\n   Kategori: " + (s.category || "?") + "\n   Harga: " + formatRupiah(Math.round(price)) + "\n   Min: " + (s.min || "?") + " | Max: " + (s.max || "?") + "\n\n";
       });
       if (filtered.length > 15) body += "... dan " + (filtered.length - 15) + " layanan lain\n";
-      body += "\nBeli: .smm beli <service_id> <target> <qty>\nContoh: .smm beli " + filtered[0].service_id + " @username 100";
+      body += "\nBeli: .smm beli <service_id> <target> <qty>\n💡 *Contoh:* .smm beli " + filtered[0].service_id + " @username 100";
       await m.react("🐣");
       return m.reply( claraWrap("NexusSMM", body), "smm");
     } catch (err) {
@@ -195,7 +195,7 @@ async function handler(m, { sock }) {
   // BAYAR
   if (sub === "bayar" || sub === "pay" || sub === "confirm") {
     const token = arg1 ? arg1.toUpperCase() : "";
-    if (!token) return m.reply( claraWrap("NexusSMM", "Masukkan token!\nContoh: .smm bayar ABC123"), "smm");
+    if (!token) return m.reply( claraWrap("NexusSMM", "Masukkan token!\n💡 *Contoh:* .smm bayar ABC123"), "smm");
     const pending = data.pendingPayments[token];
     if (!pending) return m.reply( claraWrap("NexusSMM", "Token tidak ditemukan!"), "smm");
     if (pending.sender !== sender) return m.reply( claraWrap("NexusSMM", "Bukan token kamu!"), "smm");
@@ -218,7 +218,7 @@ async function handler(m, { sock }) {
   // CEK - Check order status
   if (sub === "cek" || sub === "check" || sub === "status") {
     const orderId = arg1;
-    if (!orderId) return m.reply( claraWrap("NexusSMM", "Masukkan Order ID!\nContoh: .smm cek 12345"), "smm");
+    if (!orderId) return m.reply( claraWrap("NexusSMM", "Masukkan Order ID!\n💡 *Contoh:* .smm cek 12345"), "smm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("NexusSMM", "Order tidak ditemukan!"), "smm");
     await m.react("🕒");

@@ -340,7 +340,7 @@ async function handler(m, { sock, args }) {
   const _eduDb = getDatabase();
   if (!_eduDb.db.data.eduRegistered) _eduDb.db.data.eduRegistered = {};
   if (!_eduDb.db.data.eduRegistered[m.sender]) {
-    return m.reply("Kamu belum terdaftar sebagai siswa!\n\nDaftar dulu: " + m.prefix + "daftarsiswa <nama>\n\nContoh: " + m.prefix + "daftarsiswa Andi Pratama");
+    return m.reply("Kamu belum terdaftar sebagai siswa!\n\nDaftar dulu: " + m.prefix + "daftarsiswa <nama>\n\n💡 *Contoh:* " + m.prefix + "daftarsiswa Andi Pratama");
   }
 
   await m.react("🕒");

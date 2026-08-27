@@ -85,7 +85,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const target = m.mentionedJid && m.mentionedJid.length > 0 ? m.mentionedJid[0] : null;
     if (!target) {
-      await m.reply(claraWrap("Hot Seat", "Tag orang yang mau di-hot seat!\nContoh: " + prefix + "hotseat start @user"));
+      await m.reply(claraWrap("Hot Seat", "Tag orang yang mau di-hot seat!\n💡 *Contoh:* " + prefix + "hotseat start @user"));
       return { handled: true };
     }
 

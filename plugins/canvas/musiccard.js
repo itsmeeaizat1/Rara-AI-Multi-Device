@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
   if (m.quoted?.message) {
     const type = getContentType(m.quoted.message);
     if (type !== "imageMessage") {
-      return m.reply(claraWrap("Musiccard", "❌ *Waduh, itu bukan gambar!*\n\nKamu harus me-reply (membalas) pesan berupa *ɢᴀᴍʙᴀʀ* dengan format `.musiccard <judul>|<nama>`.\n\nContoh: \nBalas gambar temanmu, lalu ketik: `.musiccard Perfect|Ed Sheeran`"));
+      return m.reply(claraWrap("Musiccard", "❌ *Waduh, itu bukan gambar!*\n\nKamu harus me-reply (membalas) pesan berupa *ɢᴀᴍʙᴀʀ* dengan format `.musiccard <judul>|<nama>`.\n\n💡 *Contoh:* \nBalas gambar temanmu, lalu ketik: `.musiccard Perfect|Ed Sheeran`"));
     }
     try {
       mediaBuffer = await downloadMediaMessage(
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
   } else if (m.message) {
     const type = getContentType(m.message);
     if (type !== "imageMessage") {
-      return m.reply(claraWrap("Musiccard", "❌ *Waduh, gambarnya mana nih?*\n\nKamu harus mengirim sebuah gambar dengan caption (teks pelengkap) `.musiccard <judul>|<nama>` atau reply gambar yang sudah ada.\n\nContoh: \nKirim gambar dengan caption: `.musiccard Perfect|Ed Sheeran`"));
+      return m.reply(claraWrap("Musiccard", "❌ *Waduh, gambarnya mana nih?*\n\nKamu harus mengirim sebuah gambar dengan caption (teks pelengkap) `.musiccard <judul>|<nama>` atau reply gambar yang sudah ada.\n\n💡 *Contoh:* \nKirim gambar dengan caption: `.musiccard Perfect|Ed Sheeran`"));
     }
     try {
       mediaBuffer = await downloadMediaMessage(

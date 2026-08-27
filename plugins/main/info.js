@@ -83,31 +83,31 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const text = `${weatherBlock}╭──「 *Bot Info* 」
 │
 ├──「 *Identitas* 」
-│ ❏ *Nama:* ${botName}
-│ ❏ *Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
-│ ❏ *Versi:* ${botConfig.bot?.version || "1.0.0"}
-│ ❏ *Developer:* ${botConfig.bot?.developer || "-"}
-│ ❏ *Platform:* Node.js + Baileys
-│ ❏ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
-│ ❏ *Prefix:* [ *${prefix}* ]
+│ *Nama:* ${botName}
+│ *Nomor:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : "Unknown"}
+│ *Versi:* ${botConfig.bot?.version || "1.0.0"}
+│ *Developer:* ${botConfig.bot?.developer || "-"}
+│ *Platform:* Node.js + Baileys
+│ *Mode:* ${(botConfig.mode || "public").toUpperCase()}
+│ *Prefix:* [ *${prefix}* ]
 ├──「 *Statistik* 」
-│ ❏ *Total User:* ${totalUsers}
-│ ❏ *Total Grup:* ${totalGroups}
-│ ❏ *User Terdaftar:* ${totalRegistered}
-│ ❏ *Premium User:* ${totalPremium}
-│ ❏ *Total Fitur:* ${totalFeatures}
-│ ❏ *Total Kategori:* ${totalCategories}
+│ *Total User:* ${totalUsers}
+│ *Total Grup:* ${totalGroups}
+│ *User Terdaftar:* ${totalRegistered}
+│ *Premium User:* ${totalPremium}
+│ *Total Fitur:* ${totalFeatures}
+│ *Total Kategori:* ${totalCategories}
 ├──「 *Server* 」
-│ ❏ *OS:* ${os.platform()} ${os.arch()}
-│ ❏ *Hostname:* ${os.hostname()}
-│ ❏ *Node.js:* ${process.version}
-│ ❏ *CPU:* ${cpuModel}
-│ ❏ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
-│ ❏ *Load Avg:* ${loadAvg}
-│ ❏ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
-│ ❏ *RAM Bot:* ${formatBytes(memUsage.rss)}
-│ ❏ *Uptime Server:* ${serverUptime}
-│ ❏ *Uptime Bot:* ${botUptime}
+│ *OS:* ${os.platform()} ${os.arch()}
+│ *Hostname:* ${os.hostname()}
+│ *Node.js:* ${process.version}
+│ *CPU:* ${cpuModel}
+│ *Cores:* ${cpuCores} threads @ ${cpuSpeed} MHz
+│ *Load Avg:* ${loadAvg}
+│ *RAM:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
+│ *RAM Bot:* ${formatBytes(memUsage.rss)}
+│ *Uptime Server:* ${serverUptime}
+│ *Uptime Bot:* ${botUptime}
 ╰──────────❀
 
 Nova AI WhatsApp Bot`;

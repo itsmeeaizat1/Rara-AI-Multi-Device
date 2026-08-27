@@ -61,7 +61,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       list = DZIKIR_PETANG;
       judul = "Dzikir Petang";
     } else {
-      return m.reply(claraWrap("Dzikir", "Pilihan: pagi atau petang\nContoh: " + usedPrefix + "dzikir pagi"));
+      return m.reply(claraWrap("Dzikir", "Pilihan: pagi atau petang\n💡 *Contoh:* " + usedPrefix + "dzikir pagi"));
     }
 
     let lines = [];

@@ -58,7 +58,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const target = parseInt(args[args.length - 1] || "0", 10);
     const title = args.slice(2, -1).join(" ").trim();
     if (!title || !target || target < 1000) {
-      await m.reply(claraWrap("Crowdfund", "Format: " + prefix + "crowdfund buat <judul> <target>\nContoh: " + prefix + "crowdfund buat Beli gift ultah 50000"));
+      await m.reply(claraWrap("Crowdfund", "Format: " + prefix + "crowdfund buat <judul> <target>\n💡 *Contoh:* " + prefix + "crowdfund buat Beli gift ultah 50000"));
       return { handled: true };
     }
     const deadlineDays = parseInt(args[args.length] || "7", 10);
@@ -102,7 +102,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const amount = parseInt(args[2] || "0", 10);
     if (!amount || amount < 1000) {
-      await m.reply(claraWrap("Crowdfund", "Format: " + prefix + "crowdfund donor <nominal>\nContoh: " + prefix + "crowdfund donor 10000"));
+      await m.reply(claraWrap("Crowdfund", "Format: " + prefix + "crowdfund donor <nominal>\n💡 *Contoh:* " + prefix + "crowdfund donor 10000"));
       return { handled: true };
     }
     if (fund.collected + amount > fund.target * 1.5) {

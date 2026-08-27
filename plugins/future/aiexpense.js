@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraHeader, separator, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -24,10 +24,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const input = m.text?.trim();
     if (!input) {
-      await m.reply(claraWrap("AI Expense", [`│ Penggunaan: *${prefix}aiexpense <deskripsi>*`,
-        `│ Contoh: *${prefix}aiexpense beli kopi 15rb*`,
-        `│ Lihat: *${prefix}aiexpense list*`,
-        `│ Hapus: *${prefix}aiexpense clear*`].join("\n")));
+      await m.reply(novaCaption({
+  emoji: "📁",
+  name: "aiexpense",
+  description: "Catat pengeluaran dengan bahasa natural",
+  usage: `$prefixaiexpense <deskripsi>`,
+  example: `$prefixaiexpense beli kopi 15rb`,
+}));
       return { handled: true };
     }
     const db = getDatabase();

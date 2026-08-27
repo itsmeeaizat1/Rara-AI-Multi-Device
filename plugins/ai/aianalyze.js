@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -36,8 +36,13 @@ async function handler(m, { sock, config: botConfig }) {
     const media = m.msg?.imageMessage || m.quoted?.msg?.imageMessage;
     if (!media) {
       const out =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}aianalyze*`,
-          `│ Reply media gambar/video, lalu ketik *${prefix}aianalyze*`].join("\n")) +
+        novaCaption({
+  emoji: "🤖",
+  name: "aianalyze",
+  description: "Analisis gambar/file dengan AI",
+  usage: `${prefix}aianalyze (reply media)`,
+  example: `${prefix}aianalyze (reply foto)`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

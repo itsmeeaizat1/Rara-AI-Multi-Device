@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const parts = text.split(/\s+/);
     if (parts.length < 2) {
-      return m.reply(claraWrap("URLDiff", "Butuh 2 URL!\nContoh: " + prefix + "urldiff site1.com site2.com"));
+      return m.reply(claraWrap("URLDiff", "Butuh 2 URL!\n💡 *Contoh:* " + prefix + "urldiff site1.com site2.com"));
     }
 
     const url1 = parts[0];

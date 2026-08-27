@@ -2,7 +2,7 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { decodeAndNormalize } from "../../src/lib/nova-lid.js";
 import config from "../../config.js";
-import { claraWrap, broadcastFormat } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, broadcastFormat, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "bcpc",
@@ -35,16 +35,12 @@ async function handler(m, { sock }) {
 
   if (!input) {
     const jeda = db.setting("jedaBcpc") || 5000;
-    return m.reply( claraWrap("Broadcast Private Chat", [
-      `Jeda: ${jeda}ms (${(jeda / 1000).toFixed(1)}s)`,
-      "",
-      "Cara Pakai:",
-      `${m.prefix}bcpc <pesan> — Kirim ke semua kontak`,
-      `${m.prefix}bcpc (reply media) — Kirim dengan media`,
-      "",
-      "Peringatan: Bot akan mengirim pesan ke semua kontak yang tersimpan!",
-      "Note: Kontak hanya terdeteksi jika mereka sudah pernah mengirim pesan ke bot.",
-    ].join("\n")), "bcpc");
+    return m.reply( novaCaption({
+  emoji: "👑",
+  name: "bcpc",
+  description: "Broadcast pesan ke semua kontak private chat",
+  usage: `$m.prefixbcpc <pesan>`,
+}), "bcpc");
   }
 
   if (global.statusBcpc) {

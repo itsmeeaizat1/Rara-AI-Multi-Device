@@ -36,26 +36,26 @@ async function handler(m, { sock }) {
     const message = 
         `⭐ *Apa Itu Premium?*\n\n` +
         `Premium adalah *ᴜꜱᴇʀ ʙᴇʀʙᴀʏᴀʀ* yang mendapatkan akses ke fitur eksklusif dan keuntungan lebih.\n\n` +
-        `╭┈┈⬡「 💎 *ᴋᴇᴜɴᴛᴜɴɢᴀɴ ᴘʀᴇᴍɪᴜᴍ* 」\n` +
-        `┃ ✦ \`\`\`Limit harian: ${premiumLimit}x (vs ${defaultLimit}x user biasa)\`\`\`\n` +
-        `┃ ✦ \`\`\`Cooldown lebih rendah\`\`\`\n` +
-        `┃ ✦ \`\`\`Akses fitur eksklusif\`\`\`\n` +
-        `┃ ✦ \`\`\`Prioritas response\`\`\`\n` +
-        `┃ ✦ \`\`\`No watermark di beberapa fitur\`\`\`\n` +
-        `┃ ✦ \`\`\`Support prioritas\`\`\`\n` +
+        `╭──「 💎 *ᴋᴇᴜɴᴛᴜɴɢᴀɴ ᴘʀᴇᴍɪᴜᴍ* 」\n` +
+        `│ ✦ \`\`\`Limit harian: ${premiumLimit}x (vs ${defaultLimit}x user biasa)\`\`\`\n` +
+        `│ ✦ \`\`\`Cooldown lebih rendah\`\`\`\n` +
+        `│ ✦ \`\`\`Akses fitur eksklusif\`\`\`\n` +
+        `│ ✦ \`\`\`Prioritas response\`\`\`\n` +
+        `│ ✦ \`\`\`No watermark di beberapa fitur\`\`\`\n` +
+        `│ ✦ \`\`\`Support prioritas\`\`\`\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `╭┈┈⬡「 ⚙️ *ᴄᴀʀᴀ ᴍᴇɴᴅᴀᴘᴀᴛᴋᴀɴ* 」\n` +
-        `┃ \`Premium didapatkan melalui:\`\n` +
-        `┃ • Hubungi owner bot\n` +
-        `┃ • \`\`\`${config.command?.prefix || '.'}addprem <nomor> <durasi>\`\`\`\n` +
-        `┃ • Contoh: .addprem 628xxx 30d\n` +
+        `╭──「 ⚙️ *ᴄᴀʀᴀ ᴍᴇɴᴅᴀᴘᴀᴛᴋᴀɴ* 」\n` +
+        `│ \`Premium didapatkan melalui:\`\n` +
+        `│ • Hubungi owner bot\n` +
+        `│ • \`\`\`${config.command?.prefix || '.'}addprem <nomor> <durasi>\`\`\`\n` +
+        `│ • Contoh: .addprem 628xxx 30d\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴀꜰᴛᴀʀ ᴄᴏᴍᴍᴀɴᴅ ᴘʀᴇᴍɪᴜᴍ* 」\n` +
-        `┃ \`Total: ${totalCommands} command\`\n` +
+        `╭──「 📋 *ᴅᴀꜰᴛᴀʀ ᴄᴏᴍᴍᴀɴᴅ ᴘʀᴇᴍɪᴜᴍ* 」\n` +
+        `│ \`Total: ${totalCommands} command\`\n` +
         `┃\n` +
         (totalCommands > 0 
-            ? commandList.map(cmd => `┃ ${cmd}`).join('\n')
-            : `┃ Semua command bisa diakses user biasa`) +
+            ? commandList.map(cmd => `│ ${cmd}`).join('\n')
+            : `│ Semua command bisa diakses user biasa`) +
         `\n╰┈┈┈┈┈┈┈┈⬡\n\n` +
         `Mau Upgrade? silahkan hubungi owner bot\n${config.owner.number.map(num => `- wa.me/${num}`).join('\n') }`
     

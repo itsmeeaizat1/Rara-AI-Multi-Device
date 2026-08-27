@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
             txt += `${status} *${i + 1}.* @${s.id}\n`
         })
 
-        txt += `\nContoh: \`${m.prefix}stopdandeletejadibot @628xxx\``
+        txt += `\n💡 *Contoh:* \`${m.prefix}stopdandeletejadibot @628xxx\``
 
         return sock.sendMessage(m.chat, {
             text: txt,

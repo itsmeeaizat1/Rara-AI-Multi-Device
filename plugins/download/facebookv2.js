@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "facebookv2",
@@ -39,12 +39,13 @@ async function rlGet(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(
-      `╭┈┈⬡「 FACEBOOK V2 」\n` +
-      `┃ Usage: ${m.prefix}facebookv2 <url>\n` +
-      `╰┈┈⬡\n\n` +
-      `${m.prefix}facebookv2 https://www.facebook.com/watch?v=xxx`,
-      "facebookv2");
+    return novaCaption({
+  emoji: "📘",
+  name: "facebookv2",
+  description: "Download video Facebook via (V2)",
+  usage: `$m.prefixfacebookv2 <url>`,
+  example: `$m.prefixfacebookv2 https://www.facebook.com/watch?v=xxx`,
+}), "facebookv2")
   }
   m.react("🕒");
   try {
@@ -55,11 +56,11 @@ async function handler(m, { sock }) {
     const videoUrl = r.media || (r.video && r.video[0]?.url) || null;
     if (!videoUrl) throw new Error("Video tidak ditemukan");
 
-    let caption = `╭┈┈⬡「 FACEBOOK V2 」\n`;
-    caption += `┃ Title: ${r.title || "Facebook Video"}\n`;
-    if (r.duration) caption += `┃ Durasi: ${r.duration}\n`;
-    caption += `┃ Source: API V2\n`;
-    caption += `╰┈┈⬡`;
+    let caption = `╭──「 FACEBOOK V2 」\n`;
+    caption += `│ Title: ${r.title || "Facebook Video"}\n`;
+    if (r.duration) caption += `│ Durasi: ${r.duration}\n`;
+    caption += `│ Source: API V2\n`;
+    caption += `╰──────────❀`;
 
     await sock.sendMedia(m.chat, videoUrl, caption, m, { type: "video" });
     m.react("🐣");

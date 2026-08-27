@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -15,8 +15,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const word = m.text?.trim();
     if (!word) {
-      await m.reply( claraWrap("Synonym", [`│ Penggunaan: *${prefix}synonym <kata>*`,
-        `│ Contoh: *${prefix}synonym happy*`].join("\n")), "synonym");
+      await m.reply( novaCaption({
+  emoji: "🛠️",
+  name: "synonym",
+  description: "Cari sinonim kata",
+  usage: `$prefixsynonym <kata>`,
+  example: `$prefixsynonym happy`,
+}), "synonym");
       return { handled: true };
     }
     const { data } = await axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`, { timeout: 10000 });

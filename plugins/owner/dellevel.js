@@ -42,9 +42,9 @@ async function handler(m, { sock }) {
 
   if (!targetJid || levels <= 0) {
     return m.reply( `📊 *Del Level*\n\n` +
-        `╭┈┈⬡「 📋 *Usage* 」\n` +
-        `┃ > \`.dellevel <jumlah>\` - ke diri sendiri\n` +
-        `┃ > \`.dellevel <jumlah> @user\` - ke orang lain\n` +
+        `╭──「 📋 *Usage* 」\n` +
+        `│ > \`.dellevel <jumlah>\` - ke diri sendiri\n` +
+        `│ > \`.dellevel <jumlah> @user\` - ke orang lain\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
         `Contoh: \`${m.prefix}dellevel 5\``, "dellevel");
   }
@@ -60,12 +60,12 @@ async function handler(m, { sock }) {
   await m.react("🐣");
 
   await m.reply(claraWrap("dellevel", `✅ *Level Dikurangi*\n\n` +
-      `╭┈┈⬡「 📋 *Detail* 」\n` +
-      `┃ 👤 User: @${targetJid.split("@")[0]}\n` +
-      `┃ ➖ Kurang: *-${levels} Level*\n` +
-      `┃ 🚄 Exp Removed: *-${expToRemove.toLocaleString("id-ID")}*\n` +
-      `┃ 📊 Level: *${oldLevel} → ${newLevel}*\n` +
-      `┃ ${getRole(newLevel)}\n` +
+      `╭──「 📋 *Detail* 」\n` +
+      `│ 👤 User: @${targetJid.split("@")[0]}\n` +
+      `│ ➖ Kurang: *-${levels} Level*\n` +
+      `│ 🚄 Exp Removed: *-${expToRemove.toLocaleString("id-ID")}*\n` +
+      `│ 📊 Level: *${oldLevel} → ${newLevel}*\n` +
+      `│ ${getRole(newLevel)}\n` +
       `╰┈┈┈┈┈┈┈┈⬡`));
 }
 

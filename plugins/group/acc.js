@@ -38,12 +38,12 @@ async function handler(m, { sock }) {
 
     if (!sub || !['list', 'approve', 'reject'].includes(sub)) {
         return m.reply(claraWrap("Join ReQUest Manager", `📋 *ᴊᴏɪɴ ʀᴇqᴜᴇꜱᴛ ᴍᴀɴᴀɢᴇʀ*\n\n` +
-            `╭┈┈⬡「 📌 *ᴄᴏᴍᴍᴀɴᴅ* 」\n` +
-            `┃ ${m.prefix}acc list\n` +
-            `┃ ${m.prefix}acc approve all\n` +
-            `┃ ${m.prefix}acc reject all\n` +
-            `┃ ${m.prefix}acc approve 1|2|3\n` +
-            `┃ ${m.prefix}acc reject 1|2|3\n` +
+            `╭──「 📌 *ᴄᴏᴍᴍᴀɴᴅ* 」\n` +
+            `│ ${m.prefix}acc list\n` +
+            `│ ${m.prefix}acc approve all\n` +
+            `│ ${m.prefix}acc reject all\n` +
+            `│ ${m.prefix}acc approve 1|2|3\n` +
+            `│ ${m.prefix}acc reject 1|2|3\n` +
             `╰┈┈┈┈┈┈┈┈⬡`))
     }
 

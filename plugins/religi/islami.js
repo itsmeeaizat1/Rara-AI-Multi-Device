@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
 
                 if (!text) {
                     let daftarNiat = '📋 *ᴅᴀꜰᴛᴀʀ ɴɪᴀᴛ ꜱʜᴏʟᴀᴛ*\n\n' + niatSholat.map((item) => `- ${item.name}`).join('\n')
-                    daftarNiat += `\n\n📌 Ketik \`${m.prefix}niatsholat [nama sholat]\` untuk melihat niat\nContoh: \`${m.prefix}niatsholat subuh\``
+                    daftarNiat += `\n\n📌 Ketik \`${m.prefix}niatsholat [nama sholat]\` untuk melihat niat\n💡 *Contoh:* \`${m.prefix}niatsholat subuh\``
                     m.reply( daftarNiat, "islami")
                 } else {
                     let hasil = niatSholat.find((item) => item.name.toLowerCase().includes(text.toLowerCase()))
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
 
             case 'surah': {
                 if (!text) {
-                    m.reply( `⚠️ Ketik nomor surahnya!\nContoh: \`${m.prefix}surah 1\` buat ambil ayat-ayat dari Al-Fatihah`, "islami")
+                    m.reply( `⚠️ Ketik nomor surahnya!\n💡 *Contoh:* \`${m.prefix}surah 1\` buat ambil ayat-ayat dari Al-Fatihah`, "islami")
                     return
                 }
 
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
 
                 if (!text) {
                     let listDoa = '🤲 *ᴅᴀꜰᴛᴀʀ ᴅᴏᴀ*\n\n' + daftarDoa.map((item) => `- ${item.doa}`).join('\n')
-                     listDoa += `\n\n📌 Ketik \`${m.prefix}doa [nama doa]\` untuk melihat doa\nContoh: \`${m.prefix}doa doa sebelum tidur\``
+                     listDoa += `\n\n📌 Ketik \`${m.prefix}doa [nama doa]\` untuk melihat doa\n💡 *Contoh:* \`${m.prefix}doa doa sebelum tidur\``
                     m.reply( listDoa, "islami")
                 } else {
                     let hasil = daftarDoa.find((item) => item.doa.toLowerCase().includes(text.toLowerCase()))
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
             break
 
             case 'gislam': {
-                if (!text) return m.reply( `❓ Mau cari artikel tentang apa?\nContoh: \`${m.prefix}gislam puasa\``, "islami")
+                if (!text) return m.reply( `❓ Mau cari artikel tentang apa?\n💡 *Contoh:* \`${m.prefix}gislam puasa\``, "islami")
                 
                 try {
                     const response = await fetchJson(`https://artikel-islam.netlify.app/.netlify/functions/api/ms?page=1&s=${text}`)

@@ -131,12 +131,12 @@ const NUTRITION_PROMPT = `Kamu adalah ahli gizi dan nutrisi profesional. Analisi
 [Nama makanan yang terdeteksi, singkat]
 
 📊 ESTIMASI NUTRISI (per porsi)
-❏ Kalori: [angka] kkal
-❏ Protein: [angka] gram
-❏ Karbohidrat: [angka] gram
-❏ Lemak: [angka] gram
-❏ Serat: [angka] gram
-❏ Natrium: [angka] mg
+Kalori: [angka] kkal
+Protein: [angka] gram
+Karbohidrat: [angka] gram
+Lemak: [angka] gram
+Serat: [angka] gram
+Natrium: [angka] mg
 
 ⚖️ TINGKAT KESEHATAN
 [Tulis: Sehat / Cukup Sehat / Kurang Sehat / Tidak Sehat]
@@ -159,9 +159,9 @@ async function handler(m, { sock, config: botConfig }) {
       `*${prefix}nutrisi*`,
       ``,
       `Bot akan menganalisis:`,
-      `❏ Kalori & gizi (protein, karbohidrat, lemak)`,
-      `❏ Tingkat kesehatan makanan`,
-      `❏ Tips kesehatan singkat`,
+      `Kalori & gizi (protein, karbohidrat, lemak)`,
+      `Tingkat kesehatan makanan`,
+      `Tips kesehatan singkat`,
     ].join("\n"));
     await m.reply( text, "nutrisi");
     return;
@@ -173,8 +173,8 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(claraWrap("Nutrisi Scanner", [
       `API Vision belum dikonfigurasi.`,
       `Set salah satu di config.js:`,
-      `❏ aiHelp.apiKey (OpenAI format)`,
-      `❏ APIkey.google (Gemini)`,
+      `aiHelp.apiKey (OpenAI format)`,
+      `APIkey.google (Gemini)`,
     ].join("\n")));
     return;
   }

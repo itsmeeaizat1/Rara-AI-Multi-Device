@@ -32,10 +32,10 @@ function handler(m, { sock }) {
         const mode = groupData.antilinkgcMode || 'remove'
         
         return m.reply( `🔗 *Antilink Wa*\n\n` +
-            `╭┈┈⬡「 📋 *sTatus* 」\n` +
-            `┃ │ Status: *${status.toUpperCase()}*\n` +
-            `┃ │ Mode: *${mode.toUpperCase()}*\n` +
-            `╰┈┈⬡\n\n` +
+            `╭──「 📋 *sTatus* 」\n` +
+            `│ │ Status: *${status.toUpperCase()}*\n` +
+            `│ │ Mode: *${mode.toUpperCase()}*\n` +
+            `╰──────────❀\n\n` +
             `*Deteksi:*\n` +
             `chat.whatsapp.com (grup)\n` +
             `wa.me (kontak)\n` +
@@ -66,7 +66,7 @@ function handler(m, { sock }) {
             db.setGroup(m.chat, { antilinkgc: 'on', antilinkgcMode: 'remove' })
             return m.reply(claraWrap("Antilinkgc", `✅ *Antilink Wa* mode DELETE diaktifkan!\n\nPesan dengan link WA akan dihapus.`))
         } else {
-            return m.reply(`❌ Metode tidak valid! Gunakan: \`kick\` atau \`remove\`\n\nContoh: \`${m.prefix}antilinkgc metode kick\``)
+            return m.reply(`❌ Metode tidak valid! Gunakan: \`kick\` atau \`remove\`\n\n💡 *Contoh:* \`${m.prefix}antilinkgc metode kick\``)
         }
     }
     

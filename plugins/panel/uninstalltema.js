@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { Client } from 'ssh2'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
@@ -22,11 +22,13 @@ async function handler(m, { sock }) {
     const text = m.text?.trim()
     
     if (!text) {
-        return m.reply( `╭┈┈⬡「 🗑️ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ*
-┃ Usage: \`${m.prefix}uinstalltema <ip>|<password>\`
-╰┈┈⬡
-
-│ \`Contoh: ${m.prefix}uinstalltema 192.168.1.1|secretpass\``, "root")
+        return novaCaption({
+  emoji: "🖥️",
+  name: "root",
+  description: "Uninstall tema Pterodactyl via SSH",
+  usage: `$m.prefixuinstalltema <ip>|<password>`,
+  example: `$m.prefixuinstalltema 192.168.1.1|secretpass`,
+}), "root")
     }
     
     const parts = text.split('|')
@@ -60,10 +62,10 @@ async function handler(m, { sock }) {
             stream.on('close', async () => {
                 m.react('✅')
                 await m.react("🐣");
-                await m.reply(claraWrap("root", `╭┈┈⬡「 ✅ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ*
-┃ sTatus: *ʙᴇʀʜᴀꜱɪʟ*
-┃ Ip: ${ipvps}
-╰┈┈⬡
+                await m.reply(claraWrap("root", `╭──「 ✅ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ*
+│ sTatus: *ʙᴇʀʜᴀꜱɪʟ*
+│ Ip: ${ipvps}
+╰──────────❀
 
 │ _Tema berhasil diuninstall!_`))
                 ress.end()

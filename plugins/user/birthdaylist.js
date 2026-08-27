@@ -63,21 +63,21 @@ async function handler(m, { sock }) {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
     
     let text = `╭━━━━━━━━━━━━━━━━━╮\n`
-    text += `┃  🎂 *DaғTar Ultah*\n`
+    text += `│  🎂 *DaғTar Ultah*\n`
     text += `╰━━━━━━━━━━━━━━━━━╯\n\n`
-    text += `╭┈┈⬡「 📋 *${birthdays.length} Member* 」\n`
+    text += `╭──「 📋 *${birthdays.length} Member* 」\n`
     
     const mentions = []
     
     for (const b of birthdays.slice(0, 15)) {
         const isToday = b.day === currentDay && b.month === currentMonth
         const emoji = isToday ? '🎉' : '🎂'
-        text += `┃ ${emoji} ${b.day} ${months[b.month - 1]} - @${b.jid.split('@')[0]}${isToday ? ' *HARI INI!*' : ''}\n`
+        text += `│ ${emoji} ${b.day} ${months[b.month - 1]} - @${b.jid.split('@')[0]}${isToday ? ' *HARI INI!*' : ''}\n`
         mentions.push(b.jid)
     }
     
     if (birthdays.length > 15) {
-        text += `┃ ... dan ${birthdays.length - 15} lainnya\n`
+        text += `│ ... dan ${birthdays.length - 15} lainnya\n`
     }
     
     text += `╰┈┈┈┈┈┈┈┈⬡\n\n`

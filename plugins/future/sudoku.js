@@ -103,7 +103,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "play" || sub === "main" || sub === "baru") {
     const difficulty = (args[2] || "medium").toLowerCase();
     if (!["easy", "medium", "hard"].includes(difficulty)) {
-      await m.reply(claraWrap("Sudoku", "Level: easy, medium, hard\nContoh: " + prefix + "sudoku play medium"));
+      await m.reply(claraWrap("Sudoku", "Level: easy, medium, hard\n💡 *Contoh:* " + prefix + "sudoku play medium"));
       return { handled: true };
     }
     const gen = generateSudoku(difficulty);

@@ -42,7 +42,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "lost" || sub === "hilang") {
     const desc = args.slice(2).join(" ").trim();
     if (!desc) {
-      await m.reply(claraWrap("Lost & Found", "Format: " + prefix + "lostfound lost <deskripsi>\nContoh: " + prefix + "lostfound lost Dompet coklat, isi KTP dan ATM BCA"));
+      await m.reply(claraWrap("Lost & Found", "Format: " + prefix + "lostfound lost <deskripsi>\n💡 *Contoh:* " + prefix + "lostfound lost Dompet coklat, isi KTP dan ATM BCA"));
       return { handled: true };
     }
     cfg.counter++;
@@ -85,7 +85,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "found" || sub === "ketemu") {
     const desc = args.slice(2).join(" ").trim();
     if (!desc) {
-      await m.reply(claraWrap("Lost & Found", "Format: " + prefix + "lostfound found <deskripsi>\nContoh: " + prefix + "lostfound found Dompet coklat di kantin lantai 2"));
+      await m.reply(claraWrap("Lost & Found", "Format: " + prefix + "lostfound found <deskripsi>\n💡 *Contoh:* " + prefix + "lostfound found Dompet coklat di kantin lantai 2"));
       return { handled: true };
     }
     cfg.counter++;

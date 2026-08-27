@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setgroupicon",
@@ -25,8 +25,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!icon) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}setgroupicon <emoji>*`,
-          `│ Contoh: *${prefix}setgroupicon 🎮*`].join("\n")) +
+        novaCaption({
+  emoji: "👥",
+  name: "setgroupicon",
+  description: "Ganti icon/emoji grup",
+  usage: `${prefix}setgroupicon <emoji>`,
+  example: `${prefix}setgroupicon 🎮`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

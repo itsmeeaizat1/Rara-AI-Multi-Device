@@ -72,7 +72,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "gen" || sub === "generate" || sub === "buat") {
     const mentioned = m.mentionedJid && m.mentionedJid.length > 0 ? m.mentionedJid : null;
     if (!mentioned || mentioned.length < 2) {
-      await m.reply(claraWrap("Fanfic", "Tag minimal 2 orang.\nContoh: " + prefix + "fanfic gen @user1 @user2 komedi"));
+      await m.reply(claraWrap("Fanfic", "Tag minimal 2 orang.\n💡 *Contoh:* " + prefix + "fanfic gen @user1 @user2 komedi"));
       return { handled: true };
     }
     let genre = (args[args.indexOf("@" + mentioned[0].split("@")[0]) + 1] || "").toLowerCase();

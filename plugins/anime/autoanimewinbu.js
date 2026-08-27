@@ -202,7 +202,7 @@ async function handler(m, { sock, args }) {
             const rest = (typeof args === 'string' ? args : '').replace(/^interval\s*/i, '').trim()
             const mins = parseInt(rest)
             if (!mins || mins < 1 || mins > 60) {
-                return m.reply(claraWrap("autoanimewinbu", `❌ Interval harus 1-60 menit\n\nContoh: \`${m.prefix}autoanimewinbu interval 10\``), "autoanimewinbu")
+                return m.reply(claraWrap("autoanimewinbu", `❌ Interval harus 1-60 menit\n\n💡 *Contoh:* \`${m.prefix}autoanimewinbu interval 10\``), "autoanimewinbu")
             }
 
             saveState({ ...state, interval: mins })

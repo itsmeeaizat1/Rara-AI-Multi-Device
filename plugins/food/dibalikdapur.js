@@ -200,7 +200,7 @@ async function handler(m, { sock, args }) {
 
     const parts = query.toLowerCase().split(/\s+/);
     if (parts.length < 3) {
-      return m.reply(`Format salah!\n\nGunakan: \`${m.prefix}dapur konversi <angka> <dari> <ke>\`\nContoh: \`${m.prefix}dapur konversi 1 cup ml\``);
+      return m.reply(`Format salah!\n\nGunakan: \`${m.prefix}dapur konversi <angka> <dari> <ke>\`\n💡 *Contoh:* \`${m.prefix}dapur konversi 1 cup ml\``);
     }
 
     const amount = parseFloat(parts[0]);
@@ -341,7 +341,7 @@ async function handler(m, { sock, args }) {
   // === SCAN BARCODE ===
   if (sub === "scan" || sub === "barcode" || sub === "cekproduk") {
     if (!query) {
-      return m.reply(`Format: \`${m.prefix}dapur scan <barcode>\`\n\nContoh: \`${m.prefix}dapur scan 3017620422003\`\n\nSumber: Open Food Facts (gratis, jutaan produk)`);
+      return m.reply(`Format: \`${m.prefix}dapur scan <barcode>\`\n\n💡 *Contoh:* \`${m.prefix}dapur scan 3017620422003\`\n\nSumber: Open Food Facts (gratis, jutaan produk)`);
     }
 
     await m.react("🕒");

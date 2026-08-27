@@ -469,7 +469,7 @@ async function handler(m, { sock, args }) {
     const lbQuery = args.slice(1).join(" ").trim() || args.slice(0).join(" ").trim();
     const lbCleaned = cleanQuery(lbQuery);
     if (!lbCleaned) {
-            return m.reply(`Masukkan nama resep.\nContoh: \`${m.prefix}reseplb nasi goreng\``);
+            return m.reply(`Masukkan nama resep.\n💡 *Contoh:* \`${m.prefix}reseplb nasi goreng\``);
     }
     await m.react("🕒");
     const [cpRes, tmRes] = await Promise.all([
@@ -540,7 +540,7 @@ async function handler(m, { sock, args }) {
   const rawQuery = args.join(" ").trim();
   const cleaned = cleanQuery(rawQuery);
   if (!cleaned) {
-        return m.reply(`Masukkan nama resep yang dicari.\n\nContoh: \`${m.prefix}resep nasi goreng\` atau \`${m.prefix}resep masakan ayam\``);
+        return m.reply(`Masukkan nama resep yang dicari.\n\n💡 *Contoh:* \`${m.prefix}resep nasi goreng\` atau \`${m.prefix}resep masakan ayam\``);
   }
 
   // Search Cookpad (live) and TheMealDB simultaneously

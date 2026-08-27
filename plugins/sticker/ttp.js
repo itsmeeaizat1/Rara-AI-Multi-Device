@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ") || m.text?.trim();
 
   if (!text) {
-    { const __navText = "❌ *Waduh, teksnya mana nih?*\n\nKamu harus memasukkan teks yang ingin dijadikan stiker.\n\nContoh: `.ttp Hai Cantik`"; return await m.reply( __navText, "ttp"); };
+    { const __navText = "❌ *Waduh, teksnya mana nih?*\n\nKamu harus memasukkan teks yang ingin dijadikan stiker.\n\n💡 *Contoh:* `.ttp Hai Cantik`"; return await m.reply( __navText, "ttp"); };
   }
 
   await m.react("🕒");

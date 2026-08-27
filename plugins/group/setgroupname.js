@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setgroupname",
@@ -25,8 +25,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!name) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}setgroupname <nama>*`,
-          `│ Contoh: *${prefix}setgroupname Grup RPG Nova*`].join("\n")) +
+        novaCaption({
+  emoji: "👥",
+  name: "setgroupname",
+  description: "Ganti nama grup",
+  usage: `${prefix}setgroupname <nama baru>`,
+  example: `${prefix}setgroupname Grup RPG Nova`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

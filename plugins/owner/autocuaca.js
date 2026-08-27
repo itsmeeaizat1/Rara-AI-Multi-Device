@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
       if (subAction === "add") {
         const cityName = (m.args || []).slice(2).join(" ").trim();
         if (!cityName) {
-          return m.reply(claraWrap("Autocuacav2", "Format: .autocuacav2 lokasi add <nama kota>\nContoh: .autocuacav2 lokasi add Yogyakarta"));
+          return m.reply(claraWrap("Autocuacav2", "Format: .autocuacav2 lokasi add <nama kota>\n💡 *Contoh:* .autocuacav2 lokasi add Yogyakarta"));
         }
         try {
           const loc = await geocodeCity(cityName);
@@ -155,7 +155,7 @@ async function handler(m, { sock }) {
       if (subAction === "remove" || subAction === "del") {
         const cityName = (m.args || []).slice(2).join(" ").trim();
         if (!cityName) {
-          return m.reply(claraWrap("Autocuacav2", "Format: .autocuacav2 lokasi remove <nama kota>\nContoh: .autocuacav2 lokasi remove Bandung"));
+          return m.reply(claraWrap("Autocuacav2", "Format: .autocuacav2 lokasi remove <nama kota>\n💡 *Contoh:* .autocuacav2 lokasi remove Bandung"));
         }
         const settings = updateCuacaSettings((cur) => ({
           ...cur,
@@ -170,7 +170,7 @@ async function handler(m, { sock }) {
 
       if (subAction === "list" || !subAction) {
         const status = getCuacaStatus();
-        let txt = "╭──「 *DAFTAR LOKASI CUACA* 」\n│ ❏\n";
+        let txt = "╭──「 *DAFTAR LOKASI CUACA* 」\n│\n";
         txt += "╰──────────❀\n\n";
         for (let i = 0; i < status.locations.length; i++) {
           const loc = status.locations[i];
@@ -199,7 +199,7 @@ async function handler(m, { sock }) {
     // STATUS
     if (action === "status" || action === "list" || !action) {
       const status = getCuacaStatus();
-      let txt = "╭──「 *AUTO CUACA BMKG STYLE* 」\n│ ❏\n";
+      let txt = "╭──「 *AUTO CUACA BMKG STYLE* 」\n│\n";
       txt += "╰──────────❀\n\n";
       txt += "Status: *" + (status.enabled ? "ON" : "OFF") + "*\n";
       txt += "Jadwal: " + formatSchedule(status.schedules) + " WIB\n";

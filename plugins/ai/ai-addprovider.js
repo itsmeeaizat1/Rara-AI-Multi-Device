@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { DEFAULT_PROVIDERS } from "../../src/lib/nova-ai-service.js";
 
 
@@ -124,9 +124,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!name || !endpoint || !model) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}ai-addprovider <nama> <endpoint> <model> [apiKey]*`,
-          `│ Contoh: *${prefix}ai-addprovider myai https://example.com/chat gpt-4o-mini sk-xxx*`,
-          `│ Lihat daftar: *${prefix}ai-addprovider list*`].join("\n")) +
+        novaCaption({
+  emoji: "🤖",
+  name: "ai-addprovider",
+  description: "Tambah provider AI custom lewat chat",
+  usage: `${prefix}ai-addprovider <nama> <endpoint> <model> <apiKey?>`,
+  example: `${prefix}ai-addprovider myai https://example.com/chat gpt-4o-mini sk-xxx`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

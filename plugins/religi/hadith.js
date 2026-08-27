@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraHeader,  separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraHeader,  separator, tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -15,9 +15,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const query = m.text?.trim();
     if (!query) {
-      await m.reply(claraWrap("Cari Hadis", [`│ Penggunaan: *${prefix}hadith <kata kunci>*`,
-        `│ Contoh: *${prefix}hadith sabar*`,
-        "│ Sumber: Hadis Bukhari & Muslim"].join("\n")) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`));
+      await m.reply(novaCaption({
+  emoji: "☪️",
+  name: "hadith",
+  description: "Cari hadis Bukhari & Muslim",
+  usage: `$prefixhadith <kata kunci>`,
+  example: `$prefixhadith sabar`,
+}) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`));
       return { handled: true };
     }
     const { data } = await axios.get(`https://api.hadith.gading.dev/books/search`, {

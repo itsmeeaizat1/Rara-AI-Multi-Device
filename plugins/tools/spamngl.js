@@ -22,10 +22,10 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const text = m.text?.split('|')
     const [ link, kata, jumlah ] = text
-    if(!link) return m.reply( `*LINK NGL NYA MANA ??*\nContoh: \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
-    if(!kata) return m.reply( `*KATA KATA NYA MANA ??*\n\nContoh: \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
-    if(!jumlah) return m.reply( `*JUMLAH NYA MANA ??*\n\nContoh: \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
-    if(isNaN(jumlah)) { const __navText = `*ᴊᴜᴍʟᴀʜ ɴʏᴀ ʜᴀʀᴜꜱ ᴀɴɢᴋᴀ*\n\nContoh: \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`; return await m.reply(__navText); }
+    if(!link) return m.reply( `*LINK NGL NYA MANA ??*\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
+    if(!kata) return m.reply( `*KATA KATA NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
+    if(!jumlah) return m.reply( `*JUMLAH NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
+    if(isNaN(jumlah)) { const __navText = `*ᴊᴜᴍʟᴀʜ ɴʏᴀ ʜᴀʀᴜꜱ ᴀɴɢᴋᴀ*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`; return await m.reply(__navText); }
     m.react('🕐')
     
     try {

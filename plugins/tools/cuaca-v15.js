@@ -156,7 +156,8 @@ async function handler(m, { sock, config: botConfig, db }) {
       const lokasi = parts.slice(1).join(" ");
       if (!lokasi) {
         await m.reply(
-          claraWrap("Lokasi Cuaca", [`│ Penggunaan: *${prefix}cuaca lokasi <kota>*`,
+          claraWrap("Lokasi Cuaca", [`│
+│ 📌 *Cara Pakai:* *${prefix}cuaca lokasi <kota>*`,
               `│ Contoh: *${prefix}cuaca lokasi Bandung*`].join("\n")) +
             "\n" +
             tipText(`Ketik ${prefix}cuaca help untuk melihat bantuan`)

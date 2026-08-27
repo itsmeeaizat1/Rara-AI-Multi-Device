@@ -31,10 +31,10 @@ async function handler(m, { sock }) {
         const user = db.getUser(m.sender) || db.setUser(m.sender)
         
         return m.reply( claraWrap("Buy Energi", `🛒 *ʙᴜʏ ᴇɴᴇʀɢɪ*\n\n` +
-            `╭┈┈⬡「 💰 *ɪɴꜰᴏ* 」\n` +
-            `┃ 💵 Harga: *${PRICE_PER_ENERGI}* koin/energi\n` +
-            `┃ 💰 Koin Kamu: *${formatNumber(user.koin || 0)}*\n` +
-            `╰┈┈⬡\n\n` +
+            `╭──「 💰 *ɪɴꜰᴏ* 」\n` +
+            `│ 💵 Harga: *${PRICE_PER_ENERGI}* koin/energi\n` +
+            `│ 💰 Koin Kamu: *${formatNumber(user.koin || 0)}*\n` +
+            `╰──────────❀\n\n` +
             `Gunakan: \`.buyenergi <jumlah>\`\n\n` +
             `\`Contoh: ${m.prefix}buyenergi 10\``), "buyenergi")
     }
@@ -64,14 +64,14 @@ async function handler(m, { sock }) {
     m.react('✅')
     
     await m.reply( claraWrap("Pembelian Berhasil", `✅ *ᴘᴇᴍʙᴇʟɪᴀɴ ʙᴇʀʜᴀꜱɪʟ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-        `┃ ⚡ Energi: *+${formatNumber(amount)}*\n` +
-        `┃ 💵 Harga: *-${formatNumber(totalPrice)}* koin\n` +
-        `╰┈┈⬡\n\n` +
-        `╭┈┈⬡「 💰 *ꜱᴀʟᴅᴏ* 」\n` +
-        `┃ ⚡ Energi: *${formatNumber(newEnergi)}*\n` +
-        `┃ 💰 Koin: *${formatNumber(newKoin)}*\n` +
-        `╰┈┈⬡`), "buyenergi")
+        `╭──「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
+        `│ ⚡ Energi: *+${formatNumber(amount)}*\n` +
+        `│ 💵 Harga: *-${formatNumber(totalPrice)}* koin\n` +
+        `╰──────────❀\n\n` +
+        `╭──「 💰 *ꜱᴀʟᴅᴏ* 」\n` +
+        `│ ⚡ Energi: *${formatNumber(newEnergi)}*\n` +
+        `│ 💰 Koin: *${formatNumber(newKoin)}*\n` +
+        `╰──────────❀`), "buyenergi")
 }
 
 export { pluginConfig as config, handler }

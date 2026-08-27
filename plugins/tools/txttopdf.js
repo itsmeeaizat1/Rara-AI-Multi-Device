@@ -1478,7 +1478,7 @@ async function handler(m, { sock, config: botConfig }) {
       const userInput = afterFlags.replace(/^aicv\s+|^cvai\s+/i, "").trim();
       if (!userInput || userInput.length < 3) {
         await m.react("❌");
-        return m.reply(claraWrap("TxtToPDF AI", "Kasih info buat CV!\nContoh: .txttopdf aicv buatkan cv lamaran ke restoran. Nama Andi, pengalaman cafe 2 thn, skill: masak, pelayanan pelanggan"));
+        return m.reply(claraWrap("TxtToPDF AI", "Kasih info buat CV!\n💡 *Contoh:* .txttopdf aicv buatkan cv lamaran ke restoran. Nama Andi, pengalaman cafe 2 thn, skill: masak, pelayanan pelanggan"));
       }
       await m.react("🕒");
       await m.reply(claraWrap("Joki CV AI", "AI lagi nulis CV kamu...\n\nInfo: " + userInput.substring(0, 100) + "..."));
@@ -1503,7 +1503,7 @@ async function handler(m, { sock, config: botConfig }) {
       const userInput = afterFlags.replace(/^aiporto\s+|^portoai\s+|^aiportofolio\s+/i, "").trim();
       if (!userInput || userInput.length < 3) {
         await m.react("❌");
-        return m.reply(claraWrap("TxtToPDF AI", "Kasih info buat portofolio!\nContoh: .txttopdf aiporto buatkan portofolio web dev. Nama Sari, proyek: website company, app laundry, design poster"));
+        return m.reply(claraWrap("TxtToPDF AI", "Kasih info buat portofolio!\n💡 *Contoh:* .txttopdf aiporto buatkan portofolio web dev. Nama Sari, proyek: website company, app laundry, design poster"));
       }
       await m.react("🕒");
       await m.reply(claraWrap("Joki Portofolio AI", "AI lagi nulis portofolio kamu...\n\nInfo: " + userInput.substring(0, 100) + "..."));

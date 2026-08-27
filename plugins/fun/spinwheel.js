@@ -41,7 +41,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     const input = text || args.join(" ");
     if (!input) {
-      return m.reply(claraWrap("Spin Wheel", "Masukkan pilihan dipisah koma!\n\nContoh: " + usedPrefix + "spinwheel pizza,burger,sate", "warn"));
+      return m.reply(claraWrap("Spin Wheel", "Masukkan pilihan dipisah koma!\n\n💡 *Contoh:* " + usedPrefix + "spinwheel pizza,burger,sate", "warn"));
     }
 
     const choices = input.split(",").map(c => c.trim()).filter(Boolean);

@@ -222,7 +222,7 @@ async function handler(m, { sock, config: botConfig }) {
       const bidAmount = parseInt((args[2] || "").replace(/[^\d]/g, ""));
 
       if (!auctionId || isNaN(bidAmount)) {
-        return m.reply(claraWrap("Lelang", "Format: " + prefix + "lelang bid <ID> <harga>\nContoh: " + prefix + "lelang bid LNG-ABC12 60000"));
+        return m.reply(claraWrap("Lelang", "Format: " + prefix + "lelang bid <ID> <harga>\n💡 *Contoh:* " + prefix + "lelang bid LNG-ABC12 60000"));
       }
 
       const all = db.setting("auctions") || {};

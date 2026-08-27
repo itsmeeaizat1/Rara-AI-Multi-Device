@@ -24,19 +24,19 @@ async function handler(m, { sock }) {
 
   if (!text) {
     return m.reply( `📝 *ꜱᴇᴛ ᴡᴇʟᴄᴏᴍᴇ*\n\n` +
-        `╭┈┈⬡「 📋 *ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀ* 」\n` +
-        `┃ │ \`{user}\` - Nama member\n` +
-        `┃ │ \`{number}\` - Nomor member\n` +
-        `┃ │ \`{group}\` - Nama grup\n` +
-        `┃ │ \`{desc}\` - Deskripsi grup\n` +
-        `┃ │ \`{count}\` - Jumlah member\n` +
-        `┃ │ \`{owner}\` - Nama owner grup\n` +
-        `┃ │ \`{date}\` - Tanggal (DD/MM/YYYY)\n` +
-        `┃ │ \`{time}\` - Waktu (HH:mm WIB)\n` +
-        `┃ │ \`{day}\` - Hari (Senin, Selasa, dll)\n` +
-        `┃ │ \`{bot}\` - Nama bot\n` +
-        `┃ │ \`{prefix}\` - Prefix bot\n` +
-        `╰┈┈⬡\n\n` +
+        `╭──「 📋 *ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀ* 」\n` +
+        `│ │ \`{user}\` - Nama member\n` +
+        `│ │ \`{number}\` - Nomor member\n` +
+        `│ │ \`{group}\` - Nama grup\n` +
+        `│ │ \`{desc}\` - Deskripsi grup\n` +
+        `│ │ \`{count}\` - Jumlah member\n` +
+        `│ │ \`{owner}\` - Nama owner grup\n` +
+        `│ │ \`{date}\` - Tanggal (DD/MM/YYYY)\n` +
+        `│ │ \`{time}\` - Waktu (HH:mm WIB)\n` +
+        `│ │ \`{day}\` - Hari (Senin, Selasa, dll)\n` +
+        `│ │ \`{bot}\` - Nama bot\n` +
+        `│ │ \`{prefix}\` - Prefix bot\n` +
+        `╰──────────❀\n\n` +
         `\`Contoh:\`\n` +
         `\`${m.prefix}setwelcome Halo {user}! 👋\`\n` +
         `\`Selamat datang di {group} pada {day}, {date}\``, "setwelcome");

@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const text = m.args.join(" ") || m.text?.trim();
 
   if (!text) {
-    { const __navText = "❌ Mau ngobrol apa sama Simi?\n\nContoh: `.simi Halo Simi!`"; return await m.reply(__navText, "simi"); };
+    { const __navText = "❌ Mau ngobrol apa sama Simi?\n\n💡 *Contoh:* `.simi Halo Simi!`"; return await m.reply(__navText, "simi"); };
   }
 
   await m.react("🕒");

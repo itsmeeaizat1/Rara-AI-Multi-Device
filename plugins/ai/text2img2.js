@@ -20,7 +20,7 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-  if (!m.fullArgs) { const __navText = `Silahkan masukkan prompt.\nContoh: ${m.prefix + m.command} car`; return await m.reply(__navText); }
+  if (!m.fullArgs) { const __navText = `Silahkan masukkan prompt.\n💡 *Contoh:* ${m.prefix + m.command} car`; return await m.reply(__navText); }
 
   await m.react('🕐')
 

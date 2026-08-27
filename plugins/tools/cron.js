@@ -21,7 +21,7 @@ const pluginConfig = {
 function explainCron(expr) {
   const parts = expr.trim().split(/\s+/);
   if (parts.length !== 5) {
-    return { error: "Cron expression harus 5 field: minute hour day month weekday\nContoh: */5 * * * *" };
+    return { error: "Cron expression harus 5 field: minute hour day month weekday\n💡 *Contoh:* */5 * * * *" };
   }
 
   const [min, hour, day, month, weekday] = parts;
@@ -248,7 +248,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (text.toLowerCase().startsWith("build ")) {
       const input = text.substring(6).trim();
       if (!input) {
-        return m.reply(claraWrap("Cron", "Masukkan opsi build!\nContoh: " + prefix + "cron build every 5 minutes"));
+        return m.reply(claraWrap("Cron", "Masukkan opsi build!\n💡 *Contoh:* " + prefix + "cron build every 5 minutes"));
       }
 
       const result = buildCron(input);

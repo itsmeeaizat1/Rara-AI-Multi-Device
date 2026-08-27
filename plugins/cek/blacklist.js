@@ -137,7 +137,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "cek") {
       const numberInput = args[1];
       if (!numberInput) {
-        return m.reply(claraWrap("Blacklist", "Format: " + prefix + "blacklist cek <nomor>\nContoh: " + prefix + "blacklist cek 08123456789"));
+        return m.reply(claraWrap("Blacklist", "Format: " + prefix + "blacklist cek <nomor>\n💡 *Contoh:* " + prefix + "blacklist cek 08123456789"));
       }
 
       const number = normalizeNumber(numberInput);

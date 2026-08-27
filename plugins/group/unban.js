@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,8 +24,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!targetRaw) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}unban <@target>*`,
-          `│ Contoh: *${prefix}unban @username*`].join("\n")) +
+        novaCaption({
+  emoji: "👥",
+  name: "unban2",
+  description: "Unban member grup",
+  usage: `$prefixunban <@target>`,
+  example: `$prefixunban @username`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

@@ -104,7 +104,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       const target = m.mentionedJid?.[0] || (args[1] ? args[1].replace("@", "") + "@s.whatsapp.net" : null);
       if (!target) {
-        return m.reply(claraWrap("Most Likely", "Tag orangnya!\nContoh: .mostlikely vote @Budi"));
+        return m.reply(claraWrap("Most Likely", "Tag orangnya!\n💡 *Contoh:* .mostlikely vote @Budi"));
       }
 
       if (game.voters[sender]) {

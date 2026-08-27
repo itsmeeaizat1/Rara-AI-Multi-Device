@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "countdown", alias: ["countdown"], category: "utility",
@@ -14,8 +14,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const input = m.text?.trim();
     if (!input) {
-      await m.reply( claraWrap("Countdown", [`│ Penggunaan: *${prefix}countdown <DD-MM-YYYY>*`,
-        `│ Contoh: *${prefix}countdown 25-12-2026*`].join("\n")), "countdown");
+      await m.reply( novaCaption({
+  emoji: "🔧",
+  name: "countdown",
+  description: "Hitung mundur ke tanggal tertentu",
+  usage: `$prefixcountdown <DD-MM-YYYY>`,
+  example: `$prefixcountdown 25-12-2026`,
+}), "countdown");
       return { handled: true };
     }
     const parts = input.split(/[-/]/).map(Number);

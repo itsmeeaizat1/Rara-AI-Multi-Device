@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
     if (subCommand === 'warn') {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) {
-            return m.reply(`❌ Masukkan angka 1-10\nContoh: \`.antitoxic warn 5\``)
+            return m.reply(`❌ Masukkan angka 1-10\n💡 *Contoh:* \`.antitoxic warn 5\``)
         }
         db.setGroup(m.chat, { toxicMaxWarn: count })
         m.react('✅')
@@ -169,7 +169,7 @@ async function handler(m, { sock }) {
     if (subCommand === 'metode' || subCommand === 'method' || subCommand === 'mode') {
         const method = args[1]?.toLowerCase()
         if (!method || !['kick', 'delete'].includes(method)) {
-            return m.reply(`❌ Pilih metode: *ᴋɪᴄᴋ* atau *ᴅᴇʟᴇᴛᴇ*\nContoh: \`.antitoxic metode kick\``)
+            return m.reply(`❌ Pilih metode: *ᴋɪᴄᴋ* atau *ᴅᴇʟᴇᴛᴇ*\n💡 *Contoh:* \`.antitoxic metode kick\``)
         }
         db.setGroup(m.chat, { toxicMethod: method })
         m.react('✅')

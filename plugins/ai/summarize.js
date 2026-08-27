@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "summarize",
@@ -81,9 +81,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!text) {
       const out =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}summarize <teks>*`,
-          `│ Atau reply pesan dengan *${prefix}summarize*`,
-          `│ Contoh: *${prefix}summarize ${prefix}berita*`].join("\n")) +
+        novaCaption({
+  emoji: "🤖",
+  name: "summarize",
+  description: "Ringkas teks panjang menjadi inti",
+  usage: `${prefix}summarize <teks> | reply teks`,
+  example: `${prefix}summarize <teks panjang>`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

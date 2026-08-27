@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -34,9 +34,13 @@ async function handler(m, { sock, config: botConfig }) {
     const media = extractImage(m);
     if (!media) {
       const text =
-        claraWrap("Cara Pakai", ["│ Kirim gambar + caption .wanted",
-          "│ Atau reply gambar dengan .wanted",
-          "│ Format: JPG, PNG, WEBP"].join("\n")) +
+        novaCaption({
+  emoji: "🎨",
+  name: "wanted",
+  description: "Buat wanted poster dari gambar",
+  usage: `${prefix}wanted`,
+  example: `${prefix}wanted (kirim/reply gambar)`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

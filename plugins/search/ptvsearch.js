@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ptvsearch",
@@ -23,13 +23,13 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴇᴀʀᴄʜ*
-┃
-┃ Usage: \`${m.prefix}ptvsearch <query>\`
-┃
-╰┈┈⬡
-
-│ \`Contoh: ${m.prefix}ptvsearch anime\``, "ptvsearch");
+    return novaCaption({
+  emoji: "🔍",
+  name: "ptvsearch",
+  description: "Cari video TikTok",
+  usage: `$m.prefixptvsearch <query>`,
+  example: `$m.prefixptvsearch jj epep`,
+}), "ptvsearch")
   }
 
   m.react("🕒");

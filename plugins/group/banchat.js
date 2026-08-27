@@ -38,11 +38,11 @@ async function handler(m, { sock }) {
             
             return sock.sendMessage(m.chat, {
                 text: `✅ *ɢʀᴜᴘ ᴅɪ-ᴜɴʙᴀɴ*\n\n` +
-                    `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-                    `┃ 📛 Grup: *${groupName}*\n` +
-                    `┃ 📊 sTatus: *✅ AKTIF*\n` +
-                    `┃ 👤 Unban Oleh: @${m.sender.split('@')[0]}\n` +
-                    `╰┈┈⬡\n\n` +
+                    `╭──「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
+                    `│ 📛 Grup: *${groupName}*\n` +
+                    `│ 📊 sTatus: *✅ AKTIF*\n` +
+                    `│ 👤 Unban Oleh: @${m.sender.split('@')[0]}\n` +
+                    `╰──────────❀\n\n` +
                     `Semua member sekarang bisa menggunakan bot kembali.`,
                 mentions: [m.sender]
             }, { quoted: m })
@@ -56,11 +56,11 @@ async function handler(m, { sock }) {
         db.setGroup(m.chat, { ...groupData, isBanned: true })
         
         await m.reply(claraWrap("banchat", `🚫 *ɢʀᴜᴘ ᴅɪʙᴀɴ*\n\n` +
-                `╭┈┈⬡「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
-                `┃ 📛 Grup: *${groupName}*\n` +
-                `┃ 📊 sTatus: *🔴 BANNED*\n` +
-                `┃ 👤 Ban Oleh: @${m.sender.split('@')[0]}\n` +
-                `╰┈┈⬡\n\n` +
+                `╭──「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
+                `│ 📛 Grup: *${groupName}*\n` +
+                `│ 📊 sTatus: *🔴 BANNED*\n` +
+                `│ 👤 Ban Oleh: @${m.sender.split('@')[0]}\n` +
+                `╰──────────❀\n\n` +
                 `Member biasa tidak bisa menggunakan bot di grup ini.\n` +
                 `Hanya owner yang bisa menggunakan bot.`))
         

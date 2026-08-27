@@ -220,20 +220,30 @@ function buildConfirmationRewardBlock(user) {
   const rewards = getRegistrationRewards();
 
   if (user?.hasClaimedRegisterReward) {
-    return `╭┈┈⬡「 🎁 *ʙᴏɴᴜꜱ* 」\n┃ Bonus daftar pertama sudah pernah diambil\n┃ Daftar ulang tidak mendapat reward lagi\n╰┈┈┈┈┈┈┈┈⬡`;
+    return `╭──「 🎁 *ʙᴏɴᴜꜱ* 」
+│ Bonus daftar pertama sudah pernah diambil
+│ Daftar ulang tidak mendapat reward lagi\n╰┈┈┈┈┈┈┈┈⬡`;
   }
 
-  return `╭┈┈⬡「 🎁 *ʀᴇᴡᴀʀᴅꜱ* 」\n┃ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n┃ ⚡ +${rewards.energi} Energi\n┃ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈⬡`;
+  return `╭──「 🎁 *ʀᴇᴡᴀʀᴅꜱ* 」
+│ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin
+│ ⚡ +${rewards.energi} Energi
+│ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈⬡`;
 }
 
 function buildSuccessRewardBlock(alreadyClaimedReward, randomBonus) {
   const rewards = getRegistrationRewards();
 
   if (alreadyClaimedReward) {
-    return `╭┈┈⬡「 🎁 *ʙᴏɴᴜꜱ* 」\n┃ Bonus daftar sudah pernah diklaim\n┃ Tidak ada reward tambahan kali ini\n╰┈┈┈┈┈┈┈┈⬡`;
+    return `╭──「 🎁 *ʙᴏɴᴜꜱ* 」
+│ Bonus daftar sudah pernah diklaim
+│ Tidak ada reward tambahan kali ini\n╰┈┈┈┈┈┈┈┈⬡`;
   }
 
-  return `╭┈┈⬡「 🎁 *ʀᴇᴡᴀʀᴅꜱ* 」\n┃ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n┃ ⚡ +${rewards.energi} Energi\n┃ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈⬡`;
+  return `╭──「 🎁 *ʀᴇᴡᴀʀᴅꜱ* 」
+│ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin
+│ ⚡ +${rewards.energi} Energi
+│ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈⬡`;
 }
 
 function generateSerialNumber() {
@@ -515,8 +525,8 @@ async function registrationAnswerHandler(m, sock) {
       m,
       `❓ *Pertanyaan 3/4*\n\n` +
       `Kamu cowo atau cewe?\n\n` +
-      `┃ 👦 *ᴄᴏᴡᴏ* / *ᴄᴏᴡᴏᴋ* / *ʟᴀᴋɪ-ʟᴀᴋɪ* / *L*\n` +
-      `┃ 👧 *ᴄᴇᴡᴇ* / *ᴄᴇᴡᴇᴋ* / *ᴘᴇʀᴇᴍᴘᴜᴀɴ* / *P*\n\n` +
+      `│ 👦 *ᴄᴏᴡᴏ* / *ᴄᴏᴡᴏᴋ* / *ʟᴀᴋɪ-ʟᴀᴋɪ* / *L*\n` +
+      `│ 👧 *ᴄᴇᴡᴇ* / *ᴄᴇᴡᴇᴋ* / *ᴘᴇʀᴇᴍᴘᴜᴀɴ* / *P*\n\n` +
       `📩 Reply pesan ini dengan jawabanmu`,
     );
 
@@ -680,8 +690,8 @@ async function registrationAnswerHandler(m, sock) {
         m,
         `👤 *ʀᴇᴠɪꜱɪ ɢᴇɴᴅᴇʀ*\n\n` +
         `Pilih gender yang benar ya.\n\n` +
-        `┃ 👦 *ᴄᴏᴡᴏ* / *ᴄᴏᴡᴏᴋ* / *ʟᴀᴋɪ-ʟᴀᴋɪ* / *L*\n` +
-        `┃ 👧 *ᴄᴇᴡᴇ* / *ᴄᴇᴡᴇᴋ* / *ᴘᴇʀᴇᴍᴘᴜᴀɴ* / *P*\n\n` +
+        `│ 👦 *ᴄᴏᴡᴏ* / *ᴄᴏᴡᴏᴋ* / *ʟᴀᴋɪ-ʟᴀᴋɪ* / *L*\n` +
+        `│ 👧 *ᴄᴇᴡᴇ* / *ᴄᴇᴡᴇᴋ* / *ᴘᴇʀᴇᴍᴘᴜᴀɴ* / *P*\n\n` +
         `📩 Reply pesan ini dengan jawabanmu`,
       );
 

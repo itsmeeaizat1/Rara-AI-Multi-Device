@@ -107,7 +107,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const region = args.slice(2).join(" ").trim();
     if (!region) {
-      await m.reply(claraWrap("Auto Weather", "Format: " + prefix + "autoweather region <nama provinsi/all>\nContoh: " + prefix + "autoweather region Jawa Barat"));
+      await m.reply(claraWrap("Auto Weather", "Format: " + prefix + "autoweather region <nama provinsi/all>\n💡 *Contoh:* " + prefix + "autoweather region Jawa Barat"));
       return { handled: true };
     }
     cfg.region = region;

@@ -81,21 +81,21 @@ async function handler(m, { sock }) {
   const progress = getLevelBar(expInLevel, expNeeded);
 
   let txt = `╭━━━━━━━━━━━━━━━━━╮\n`;
-  txt += `┃ 📊 *ʟᴇᴠᴇʟ ɪɴꜰᴏ*\n`;
+  txt += `│ 📊 *ʟᴇᴠᴇʟ ɪɴꜰᴏ*\n`;
   txt += `╰━━━━━━━━━━━━━━━━━╯\n\n`;
 
-  txt += `╭┈┈⬡「 👤 *ᴜꜱᴇʀ* 」\n`;
-  txt += `┃ 🏷️ Name: *${targetName}*\n`;
-  txt += `┃ 🆔 Tag: @${targetJid.split("@")[0]}\n`;
+  txt += `╭──「 👤 *ᴜꜱᴇʀ* 」\n`;
+  txt += `│ 🏷️ Name: *${targetName}*\n`;
+  txt += `│ 🆔 Tag: @${targetJid.split("@")[0]}\n`;
   txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
 
-  txt += `╭┈┈⬡「 📈 *ꜱᴛᴀᴛꜱ* 」\n`;
-  txt += `┃ 📊 Level: *${level}*\n`;
-  txt += `┃ ${role}\n`;
-  txt += `┃ 🚄 Exp: *${exp.toLocaleString("id-ID")}*\n`;
-  txt += `┃ 📊 Progress:\n`;
-  txt += `┃ ${progress}\n`;
-  txt += `┃ ${expInLevel.toLocaleString("id-ID")} / ${expNeeded.toLocaleString("id-ID")}\n`;
+  txt += `╭──「 📈 *ꜱᴛᴀᴛꜱ* 」\n`;
+  txt += `│ 📊 Level: *${level}*\n`;
+  txt += `│ ${role}\n`;
+  txt += `│ 🚄 Exp: *${exp.toLocaleString("id-ID")}*\n`;
+  txt += `│ 📊 Progress:\n`;
+  txt += `│ ${progress}\n`;
+  txt += `│ ${expInLevel.toLocaleString("id-ID")} / ${expNeeded.toLocaleString("id-ID")}\n`;
   txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
 
   txt += `Next level: *${expToNextLevel(exp).toLocaleString("id-ID")} exp* lagi!`;

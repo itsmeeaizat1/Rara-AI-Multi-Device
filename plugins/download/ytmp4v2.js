@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ytmp4v2",
@@ -39,12 +39,13 @@ async function rlGet(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(
-      `╭┈┈⬡「 YTMP4 V2 」\n` +
-      `┃ Usage: ${m.prefix}ytmp4v2 <url>\n` +
-      `╰┈┈⬡\n\n` +
-      `${m.prefix}ytmp4v2 https://youtu.be/xxx`,
-      "ytmp4v2");
+    return novaCaption({
+  emoji: "🎬",
+  name: "ytmp4v2",
+  description: "Download YouTube MP4 via (V2)",
+  usage: `$m.prefixytmp4v2 <url>`,
+  example: `$m.prefixytmp4v2 https://youtu.be/xxx`,
+}), "ytmp4v2")
   }
   m.react("🕒");
   try {
@@ -52,10 +53,10 @@ async function handler(m, { sock }) {
     const r = res.data?.result || res.data?.data;
     if (!r?.download) throw new Error("Gagal mengambil video YouTube");
 
-    let caption = `╭┈┈⬡「 YTMP4 V2 」\n`;
-    caption += `┃ Title: ${r.title || "YouTube Video"}\n`;
-    caption += `┃ Source: API V2\n`;
-    caption += `╰┈┈⬡`;
+    let caption = `╭──「 YTMP4 V2 」\n`;
+    caption += `│ Title: ${r.title || "YouTube Video"}\n`;
+    caption += `│ Source: API V2\n`;
+    caption += `╰──────────❀`;
 
     await sock.sendMedia(m.chat, r.download, caption, m, { type: "video" });
     m.react("🐣");

@@ -122,9 +122,10 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
 
     if (!url) {
-        return m.reply( `╭┈┈⬡「 🎵 *ᴛɪᴋᴛᴏᴋ ᴅᴏᴡɴʟᴏᴀᴅ* 」\n` +
-            `┃ Usage: \`${m.prefix}tiktok2 <url>\`\n` +
-            `╰┈┈⬡\n\n` +
+        return m.reply( `╭──「 🎵 *ᴛɪᴋᴛᴏᴋ ᴅᴏᴡɴʟᴏᴀᴅ* 」\n` +
+            `│
+│ 📌 *Cara Pakai:* \`${m.prefix}tiktok2 <url>\`\n` +
+            `╰──────────❀\n\n` +
             `Contoh: ${m.prefix}tiktok2 https://vt.tiktok.com/xxx`, "tiktok2")
     }
 

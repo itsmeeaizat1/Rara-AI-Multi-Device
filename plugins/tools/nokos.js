@@ -166,13 +166,13 @@ async function handler(m, { sock }) {
       const prov = providerOf(num);
       const registered = res?.exists === true;
       let body = `Hasil Cek Nomor\n\n`;
-      body += `❏ Nomor: ${disp}\n`;
-      body += `❏ Provider: ${prov}\n`;
-      body += `❏ Status: ${registered ? "TERDAFTAR" : "KOSONG"}\n`;
+      body += `Nomor: ${disp}\n`;
+      body += `Provider: ${prov}\n`;
+      body += `Status: ${registered ? "TERDAFTAR" : "KOSONG"}\n`;
       if (registered) {
-        body += `❏ JID: ${res.jid}\n`;
+        body += `JID: ${res.jid}\n`;
         const prof = await getProfile(sock, res.jid);
-        body += `❏ Foto profil: ${prof.hasPic ? "Ada" : "Tidak"}\n`;
+        body += `Foto profil: ${prof.hasPic ? "Ada" : "Tidak"}\n`;
         body += `\nNomor ini sudah aktif di WhatsApp.`;
       } else {
         body += `\nNomor ini KOSONG!\nBisa digunakan untuk registrasi WA baru.\n\nCatatan: Kamu harus punya akses ke nomor ini untuk menerima OTP via SMS.`;
@@ -202,9 +202,9 @@ async function handler(m, { sock }) {
       const kosong = results.filter(r => !r.exists);
       const terdaftar = results.filter(r => r.exists);
       let body = `Hasil Generate (Prefix ${prefix})\n\n`;
-      body += `❏ Total dicek: ${count}\n`;
-      body += `❏ Kosong: ${kosong.length}\n`;
-      body += `❏ Terdaftar: ${terdaftar.length}\n\n`;
+      body += `Total dicek: ${count}\n`;
+      body += `Kosong: ${kosong.length}\n`;
+      body += `Terdaftar: ${terdaftar.length}\n\n`;
       if (kosong.length > 0) {
         body += `NOMOR KOSONG:\n\n`;
         kosong.forEach((r, i) => {
@@ -241,7 +241,7 @@ async function handler(m, { sock }) {
       saveSaved(data);
       await m.react("🐣");
       return m.reply( claraWrap("Nomor Kosong",
-        `Hasil Save Nomor Kosong\n\n❏ Dicek: ${count} nomor\n❏ Ditemukan kosong: ${kosong.length}\n❏ Baru disimpan: ${newNums.length}\n❏ Total tersimpan: ${data.numbers.length}\n\nGunakan .nokos list untuk melihat semua nomor tersimpan.`
+        `Hasil Save Nomor Kosong\n\nDicek: ${count} nomor\nDitemukan kosong: ${kosong.length}\nBaru disimpan: ${newNums.length}\nTotal tersimpan: ${data.numbers.length}\n\nGunakan .nokos list untuk melihat semua nomor tersimpan.`
       ), "nokos");
     } catch {
       return m.reply(claraWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));
@@ -259,8 +259,8 @@ async function handler(m, { sock }) {
       ), "nokos");
     }
     let body = `Daftar Nomor Kosong Tersimpan\n\n`;
-    body += `❏ Total: ${data.numbers.length} nomor\n`;
-    body += `❏ Update: ${data.lastUpdate ? new Date(data.lastUpdate).toLocaleString("id-ID") : "-"}\n\n`;
+    body += `Total: ${data.numbers.length} nomor\n`;
+    body += `Update: ${data.lastUpdate ? new Date(data.lastUpdate).toLocaleString("id-ID") : "-"}\n\n`;
     data.numbers.slice(0, 30).forEach((n, i) => {
       body += `${i + 1}. ${toDisplay(n)} (${providerOf(n)})\n`;
     });
@@ -314,13 +314,13 @@ async function handler(m, { sock }) {
   // --- HELP ---
   if (sub === "help" || sub === "menu") {
     let body = `Nomor Kosong v2 - Menu\n\n`;
-    body += `❏ .nokos [jumlah] [provider]\n  Generate & cek nomor random\n  Contoh: .nokos 10 telkomsel\n\n`;
-    body += `❏ .nokos prefix <08xx> [jumlah]\n  Generate dari prefix spesifik\n  Contoh: .nokos prefix 0852 5\n\n`;
-    body += `❏ .nokos cek <nomor>\n  Cek nomor spesifik di WhatsApp\n  Contoh: .nokos cek 08123456789\n\n`;
-    body += `❏ .nokos save [jumlah] [provider]\n  Generate, cek & simpan yang kosong\n  Contoh: .nokos save 20 indosat\n\n`;
-    body += `❏ .nokos list\n  Lihat nomor kosong tersimpan\n\n`;
-    body += `❏ .nokos export\n  Export nomor tersimpan ke txt\n\n`;
-    body += `❏ .nokos clear\n  Hapus semua nomor tersimpan\n\n`;
+    body += `.nokos [jumlah] [provider]\n  Generate & cek nomor random\n  Contoh: .nokos 10 telkomsel\n\n`;
+    body += `.nokos prefix <08xx> [jumlah]\n  Generate dari prefix spesifik\n  Contoh: .nokos prefix 0852 5\n\n`;
+    body += `.nokos cek <nomor>\n  Cek nomor spesifik di WhatsApp\n  Contoh: .nokos cek 08123456789\n\n`;
+    body += `.nokos save [jumlah] [provider]\n  Generate, cek & simpan yang kosong\n  Contoh: .nokos save 20 indosat\n\n`;
+    body += `.nokos list\n  Lihat nomor kosong tersimpan\n\n`;
+    body += `.nokos export\n  Export nomor tersimpan ke txt\n\n`;
+    body += `.nokos clear\n  Hapus semua nomor tersimpan\n\n`;
     body += `Provider: telkomsel, indosat, xl, tri, axis, smartfren, all\n`;
     body += `Max 30 nomor per command`;
     return m.reply( claraWrap("Nomor Kosong", body), "nokos");
@@ -343,10 +343,10 @@ async function handler(m, { sock }) {
     const kosong = results.filter(r => !r.exists);
     const terdaftar = results.filter(r => r.exists);
     let body = `Hasil Generate Nomor Kosong\n\n`;
-    body += `❏ Provider: ${prov}\n`;
-    body += `❏ Total dicek: ${count}\n`;
-    body += `❏ Kosong: ${kosong.length}\n`;
-    body += `❏ Terdaftar: ${terdaftar.length}\n\n`;
+    body += `Provider: ${prov}\n`;
+    body += `Total dicek: ${count}\n`;
+    body += `Kosong: ${kosong.length}\n`;
+    body += `Terdaftar: ${terdaftar.length}\n\n`;
     if (kosong.length > 0) {
       body += `NOMOR KOSONG:\n\n`;
       kosong.forEach((r, i) => {

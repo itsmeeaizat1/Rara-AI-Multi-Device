@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,8 +25,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!url) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}sfiledl <link>*`,
-          `│ Contoh: *${prefix}sfiledl https://sfile.mobi/xxxx*`].join("\n")) +
+        novaCaption({
+  emoji: "📥",
+  name: "sfiledl2",
+  description: "Download file dari SFile",
+  usage: `${prefix}sfiledl <link>`,
+  example: `${prefix}sfiledl https://sfile.mobi/xxxx`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

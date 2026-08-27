@@ -52,7 +52,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     if (!skill) {
-      await m.reply(claraWrap("Mentor Match", "Ketik skill yang kamu bisa/butuh.\nContoh: " + prefix + "aimentor daftar mentor python"));
+      await m.reply(claraWrap("Mentor Match", "Ketik skill yang kamu bisa/butuh.\n💡 *Contoh:* " + prefix + "aimentor daftar mentor python"));
       return { handled: true };
     }
 

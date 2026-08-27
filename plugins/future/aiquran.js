@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraHeader, separator, claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraHeader, separator, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import axios from "axios";
 
@@ -16,8 +16,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const query = m.text?.trim();
     if (!query) {
-      await m.reply( claraWrap("AI Quran", [`│ Penggunaan: *${prefix}aiquran <topik>*`,
-        `│ Contoh: *${prefix}aiquran ayat tentang sabar*`].join("\n")), "aiquran");
+      await m.reply( novaCaption({
+  emoji: "📁",
+  name: "aiquran2",
+  description: "Cari ayat Quran dengan bahasa natural",
+  usage: `$prefixaiquran <topik>`,
+  example: `$prefixaiquran ayat tentang sabar`,
+}), "aiquran");
       return { handled: true };
     }
     const result = await callAI(`Cari ayat Al-Quran yang berkaitan dengan: "${query}". Berikan surah, ayat, teks Arab (jika tahu), dan terjemahan dalam Bahasa Indonesia. Maksimal 3 ayat.`, {

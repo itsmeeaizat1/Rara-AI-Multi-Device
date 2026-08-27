@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spotifyplay",
@@ -81,16 +81,13 @@ async function handler(m, { sock }) {
   const prefix = m.prefix;
 
   if (!text) {
-    return m.reply(
-      `╭┈┈⬡「 SPOTIFY PLAY 」\n` +
-      `┃ Usage: ${prefix}spotifyplay <judul lagu>\n` +
-      `┃ Atau: ${prefix}spotifyplay <spotify url>\n` +
-      `╰┈┈⬡\n\n` +
-      `Contoh:\n` +
-      `${prefix}spotifyplay blinding lights the weeknd\n` +
-      `${prefix}spotifyplay https://open.spotify.com/track/xxx`,
-      "spotifyplay"
-    );
+    return novaCaption({
+  emoji: "🎵",
+  name: "spotifyplay",
+  description: "Cari & download lagu dari Spotify berdasarkan judul/artist",
+  usage: `$m.prefixspotifyplay <judul lagu>`,
+  example: `$m.prefixspotifyplay blinding lights the weeknd`,
+}), "spotifyplay")
   }
 
   m.react("🕒");
@@ -125,13 +122,13 @@ async function handler(m, { sock }) {
     const safeArtist = (data.artis || "Unknown").replace(/[^\w\s-]/g, "").trim() || "Unknown";
 
     // Build caption
-    let caption = `╭┈┈⬡「 SPOTIFY PLAY 」\n`;
-    caption += `┃ Judul: ${data.title || "Unknown"}\n`;
-    caption += `┃ Artist: ${data.artis || "Unknown"}\n`;
-    if (data.album) caption += `┃ Album: ${data.album}\n`;
-    if (data.durasi && data.durasi > 0) caption += `┃ Durasi: ${formatDuration(data.durasi)}\n`;
-    if (data.size) caption += `┃ Size: ${formatSize(data.size)}\n`;
-    caption += `╰┈┈⬡`;
+    let caption = `╭──「 SPOTIFY PLAY 」\n`;
+    caption += `│ Judul: ${data.title || "Unknown"}\n`;
+    caption += `│ Artist: ${data.artis || "Unknown"}\n`;
+    if (data.album) caption += `│ Album: ${data.album}\n`;
+    if (data.durasi && data.durasi > 0) caption += `│ Durasi: ${formatDuration(data.durasi)}\n`;
+    if (data.size) caption += `│ Size: ${formatSize(data.size)}\n`;
+    caption += `╰──────────❀`;
 
     // Send thumbnail if available
     if (data.image) {

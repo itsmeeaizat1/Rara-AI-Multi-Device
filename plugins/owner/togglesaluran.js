@@ -7,7 +7,7 @@ import {
   getAllNotifyStatus,
   setNotifyEnabled,
 } from "../../src/lib/nova-saluran-broadcast.js";
-import { claraWrap, tipText, separator } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, tipText, separator , novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "switch",
@@ -33,12 +33,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     // No args - show usage
     if (!subCmd) {
-      return await m.reply(claraWrap("Switch", "⚙️") + "\n\n" + claraWrap("Cara Pakai", [
-        `│ \`${prefix}switch saluran\` — Lihat status saluran`,
-        `│ \`${prefix}switch saluran <event>\` — Toggle event`,
-        `│ \`${prefix}switch saluran all on\` — Aktifkan semua`,
-        `│ \`${prefix}switch saluran all off\` — Matikan semua`,
-      ]) + "\n\n" + tipText(`Contoh: \`${prefix}switch saluran all on\``));
+      return await m.reply(claraWrap("Switch", "⚙️") + "\n\n" + novaCaption({
+  emoji: "👑",
+  name: "switch",
+  description: "Switch on/off fitur (saluran, broadcast, dll)",
+  usage: `${prefix}switch saluran (lihat status) / .switch saluran <event> (toggle) / .switch saluran all on/off`,
+  example: `${prefix}switch saluran\\n.switch saluran sewaRegister\\n.switch saluran all on\\n.switch saluran all off`,
+}) + "\n\n" + tipText(`Contoh: \`${prefix}switch saluran all on\``));
     }
 
     // If first arg is "saluran", shift to get the actual subcommand

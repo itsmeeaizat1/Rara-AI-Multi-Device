@@ -143,7 +143,7 @@ async function handler(m, { sock, config: botConfig }) {
     return formatAndReply(m, claraWrap("Language Menu Bot", [
       `Kode bahasa: *${subCmd}*`,
       "Tidak ada dalam daftar",
-    ].join("\n")) + "\nBAHASA TERSEDIA:\n\n" + availableList + "\nContoh: " + prefix + "languagemenubot en", "languagemenubot");
+    ].join("\n")) + "\nBAHASA TERSEDIA:\n\n" + availableList + "\n💡 *Contoh:* " + prefix + "languagemenubot en", "languagemenubot");
   } catch (error) {
     console.error('[languagemenubot.js]:', error.message);
     await m.reply("❀°˖ Language Menu Bot ˖°❀\n\n│ Terjadi error: " + error.message + "\n\n╰──────────❀");

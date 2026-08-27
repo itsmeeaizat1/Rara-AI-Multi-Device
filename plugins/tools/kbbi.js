@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kbbi",
@@ -25,8 +25,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!word) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}kbbi <kata>*`,
-          `│ Contoh: *${prefix}kbbi mobil*`].join("\n")) +
+        novaCaption({
+  emoji: "🛠️",
+  name: "kbbi",
+  description: "Cek arti kata di KBBI",
+  usage: `${prefix}kbbi <kata>`,
+  example: `${prefix}kbbi mobil`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

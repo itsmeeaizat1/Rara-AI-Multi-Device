@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import https from "node:https";
 import http from "node:http";
 
@@ -31,8 +31,13 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const url = m.text?.trim();
     if (!url || !url.startsWith("http")) {
-      await m.reply( claraWrap("Expand URL", [`│ Penggunaan: *${prefix}expandurl <url>*`,
-        `│ Contoh: *${prefix}expandurl https://bit.ly/xxx*`].join("\n")), "expandurl");
+      await m.reply( novaCaption({
+  emoji: "🛠️",
+  name: "expandurl",
+  description: "Expand short URL ke URL asli",
+  usage: `$prefixexpandurl <url>`,
+  example: `$prefixexpandurl https://bit.ly/xxx`,
+}), "expandurl");
       return { handled: true };
     }
     const result = await expand(url);

@@ -51,7 +51,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const text = args.slice(3).join(" ").trim();
 
     if (!duration || !DURATIONS[duration]) {
-      await m.reply(claraWrap("FutureMe", "Format: " + prefix + "futureme write <durasi> <pesan>\nDurasi: 1d, 1w, 2w, 1m, 3m, 6m, 1y\nContoh: " + prefix + "futureme write 1m Semangat ya diriku!"));
+      await m.reply(claraWrap("FutureMe", "Format: " + prefix + "futureme write <durasi> <pesan>\nDurasi: 1d, 1w, 2w, 1m, 3m, 6m, 1y\n💡 *Contoh:* " + prefix + "futureme write 1m Semangat ya diriku!"));
       return { handled: true };
     }
     if (!text || text.length < 10) {

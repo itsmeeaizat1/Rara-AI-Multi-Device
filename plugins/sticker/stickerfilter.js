@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     for (const f of FILTERS) {
       help += `- ${f}\n`;
     }
-    help += `\nContoh: \`${m.prefix}stickerfilter blur\` (reply sticker)`;
+    help += `\n💡 *Contoh:* \`${m.prefix}stickerfilter blur\` (reply sticker)`;
     return m.reply( help, "stickerfilter");
   }
 

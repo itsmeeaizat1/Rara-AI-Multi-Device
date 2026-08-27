@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
   if (
     !/^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?(\.[a-zA-Z]{2,})+$/.test(domain)
   ) {
-    { const __navText = `❌ *ғORMAT TIDAK VALID*\n\nContoh: \`google.com\``; return await m.reply(__navText); };
+    { const __navText = `❌ *ғORMAT TIDAK VALID*\n\n💡 *Contoh:* \`google.com\``; return await m.reply(__navText); };
   }
 
   await m.react("🕒");

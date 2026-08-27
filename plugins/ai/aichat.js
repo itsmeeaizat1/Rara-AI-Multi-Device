@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -85,9 +85,13 @@ async function handler(m, { sock, config: botConfig }) {
     const message = raw.replace(/^\.aichat\s+/i, "").trim();
     if (!message) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}aichat <pesan>*`,
-          `│ Reset: *${prefix}aichat clear*`,
-          `│ Contoh: *${prefix}aichat halo*`].join("\n")) +
+        novaCaption({
+  emoji: "🤖",
+  name: "aichat",
+  description: "Chat AI dengan memori percakapan per chat",
+  usage: `${prefix}aichat <pesan> | .aichat clear`,
+  example: `${prefix}aichat Jelaskan kuantum computing`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

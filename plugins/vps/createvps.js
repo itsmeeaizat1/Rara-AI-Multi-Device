@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     
     const hostname = m.text?.trim()
     if (!hostname) {
-        let paketTxt = `Cara pakai:\n${m.prefix}${m.command} <hostname>\n\nContoh: ${m.prefix}${m.command} myserver\n\nPaket tersedia:\n`
+        let paketTxt = `Cara pakai:\n${m.prefix}${m.command} <hostname>\n\n💡 *Contoh:* ${m.prefix}${m.command} myserver\n\nPaket tersedia:\n`
         for (const [cmd, spec] of Object.entries(VPS_SPECS)) {
             paketTxt += `${m.prefix}${cmd} - ${spec.ram} RAM, ${spec.cpu}\n`
         }

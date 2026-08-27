@@ -155,7 +155,7 @@ async function handler(m, { sock, db }) {
   if (action === "add") {
     const newMsg = args.slice(1).filter(v => v !== '--global').join(" ").trim();
     if (!newMsg) {
-      return m.reply( `Tolong masukkan teks sambutannya.\nContoh: \`${m.prefix}autosambut add Halo bosku {user}!\``, "autosambut");
+      return m.reply( `Tolong masukkan teks sambutannya.\n💡 *Contoh:* \`${m.prefix}autosambut add Halo bosku {user}!\``, "autosambut");
     }
 
     groupData.autoSambut.pesanList.push(newMsg);

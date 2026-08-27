@@ -22,9 +22,9 @@ async function handler(m, { sock }) {
   const text = m.text?.split("|");
   const [link, kata] = text;
   if (!link)
-    return m.reply( `*LINK NGL NYA MANA ??*\nContoh: \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
+    return m.reply( `*LINK NGL NYA MANA ??*\n💡 *Contoh:* \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
   if (!kata)
-    return m.reply( `*KATA KATA NYA MANA ??*\n\nContoh: \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
+    return m.reply( `*KATA KATA NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
   m.react("🕒");
 
   try {

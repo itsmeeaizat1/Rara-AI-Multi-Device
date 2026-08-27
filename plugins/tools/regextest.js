@@ -45,7 +45,7 @@ async function handler(m, { sock, config: botConfig }) {
       const afterFlags = text.substring(6).trim();
       const spaceIdx = afterFlags.indexOf(" ");
       if (spaceIdx === -1) {
-        return m.reply(claraWrap("Regex", "Format flags salah!\nContoh: " + prefix + "regex flags gi \\d+ | teks123"));
+        return m.reply(claraWrap("Regex", "Format flags salah!\n💡 *Contoh:* " + prefix + "regex flags gi \\d+ | teks123"));
       }
       flags = afterFlags.substring(0, spaceIdx).trim();
       // Validate flags
@@ -58,7 +58,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Split by pipe — first part is pattern, rest is text
     const pipeIdx = input.indexOf("|");
     if (pipeIdx === -1) {
-      return m.reply(claraWrap("Regex", "Gunakan | untuk pisahkan pattern dan teks\nContoh: " + prefix + "regex \\d+ | Halo 123"));
+      return m.reply(claraWrap("Regex", "Gunakan | untuk pisahkan pattern dan teks\n💡 *Contoh:* " + prefix + "regex \\d+ | Halo 123"));
     }
 
     const patternStr = input.substring(0, pipeIdx).trim();

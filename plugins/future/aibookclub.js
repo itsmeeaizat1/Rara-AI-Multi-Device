@@ -52,7 +52,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const title = args.slice(2).join(" ").trim();
     if (!title) {
-      await m.reply(claraWrap("Book Club", "Format: " + prefix + "bookclub start <judul buku>\nContoh: " + prefix + "bookclub start Atomic Habits"));
+      await m.reply(claraWrap("Book Club", "Format: " + prefix + "bookclub start <judul buku>\n💡 *Contoh:* " + prefix + "bookclub start Atomic Habits"));
       return { handled: true };
     }
     const deadline = parseInt(args[args.length - 1] || "7", 10);

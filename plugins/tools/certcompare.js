@@ -76,7 +76,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const parts = text.split(/\s+/);
     if (parts.length < 2) {
-      return m.reply(claraWrap("CertCompare", "Butuh 2 domain!\nContoh: " + prefix + "certcompare google.com cloudflare.com"));
+      return m.reply(claraWrap("CertCompare", "Butuh 2 domain!\n💡 *Contoh:* " + prefix + "certcompare google.com cloudflare.com"));
     }
 
     const domain1 = parts[0].replace(/^https?:\/\//, "").replace(/\/.*$/, "");

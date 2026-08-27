@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,8 +25,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!query) {
       const text =
-        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}nhentai <kode/nama>*`,
-          `│ Contoh: *${prefix}nhentai 123456*`].join("\n")) +
+        novaCaption({
+  emoji: "🔍",
+  name: "nhentai",
+  description: "Cari info manga/doujin",
+  usage: `${prefix}nhentai <kode/nama>`,
+  example: `${prefix}nhentai 123456`,
+}) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
