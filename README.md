@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%207%20game%20%26%20trivia%20baru%20%E2%80%94%20t-success?style=for-the-badge)
-> *Commit: "feat: 7 game & trivia baru — trivia, wyr, tictactoe, wordle, hangman, typingrace, todv2"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20bugreport%20%26%20report%20sekara-success?style=for-the-badge)
+> *Commit: "fix: bugreport & report sekarang kirim notifikasi ke owner via WA"*
 <!--END_SECTION:latest-update-->
 
 
