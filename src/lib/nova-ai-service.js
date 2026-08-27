@@ -297,7 +297,7 @@ async function callAI(firstArg, secondArg) {
   const effectiveModel = String(model || provider.defaultModel);
   const normalizedMessages = normalizeMessages(messages, systemPrompt && provider.supportsSystem ? systemPrompt : undefined);
 
-  const url = typeof provider.chatEndpoint === "function" ? provider.chatEndpoint(effectiveModel) : provider.chatEndpoint;
+  const url = apiEndpoint || (typeof provider.chatEndpoint === "function" ? provider.chatEndpoint(effectiveModel) : provider.chatEndpoint);
   const finalUrl = String(url || "").replace("__API_KEY__", encodeURIComponent(effectiveApiKey));
   const body = provider.buildBody({ model: effectiveModel, messages: normalizedMessages, systemPrompt });
 

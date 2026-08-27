@@ -310,7 +310,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     ];
 
     const reply = await callAI({
-      providerKey: "openai",
+      providerKey: "tio_openai",
       model: aiConfig.openaiModel || "kilo-auto/free",
       messages,
       systemPrompt,
