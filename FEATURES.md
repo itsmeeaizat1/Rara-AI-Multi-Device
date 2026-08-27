@@ -352,3 +352,12 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - **Plugin Merged:** 23 Genshin voice convert di-merge ke voicechanger.js
 - **Exception:** `AIRich` class di `nova-builder.js` tetap pakai `interactiveMessage` untuk carousel cards (batasan teknis WhatsApp)
 - .togglefitur/.onoff - owner - aktifkan/nonaktifkan command atau kategori fitur bot (on/off/toggle/list)
+
+
+## 💾 SaveNow Downloader v21.7.0
+
+- `.savenow <url> [format]` — Download video/audio dari YouTube, IG, TikTok, FB, Twitter, dll
+- Alias: `.sn`, `.snnow`
+- Format: mp3 (audio), 360/480/720/1080 (video)
+- API: savenow.to (4kdownload.to)
+- Polling progress system dengan auto-download buffer
