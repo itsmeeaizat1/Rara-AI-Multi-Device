@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20bugreport%20%26%20report%20sekara-success?style=for-the-badge)
-> *Commit: "fix: bugreport & report sekarang kirim notifikasi ke owner via WA"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20connection.js%20notifikasi%20-success?style=for-the-badge)
+> *Commit: "fix: connection.js notifikasi owner gagal karena require() di ESM"*
 <!--END_SECTION:latest-update-->
 
 
