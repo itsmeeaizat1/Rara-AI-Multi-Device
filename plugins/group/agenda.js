@@ -261,13 +261,13 @@ function startAgendaChecker() {
             // ─── Reminder: H-1 hour ───
             if (!event.reminded1h && diff <= 3600000 && diff > 0) {
               const lines = [
-                `│ ❏ ⏰ PENGINGAT: 1 Jam Lagi!`,
+                `│ ⏰ PENGINGAT: 1 Jam Lagi!`,
                 ``,
-                `│ ❏ Acara: *${event.name}*`,
-                `│ ❏ Waktu: ${formatDate(event.eventTime)}`,
-                `│ ❏ Sisa: *${formatCountdown(diff)}*`,
+                `│ Acara: *${event.name}*`,
+                `│ Waktu: ${formatDate(event.eventTime)}`,
+                `│ Sisa: *${formatCountdown(diff)}*`,
                 ``,
-                `│ ❏ 📢 Bersiap-siap ya semuanya!`,
+                `│ 📢 Bersiap-siap ya semuanya!`,
               ];
 
               try {
@@ -282,13 +282,13 @@ function startAgendaChecker() {
             // ─── Reminder: H-1 day ───
             if (!event.reminded1d && diff <= 86400000 && diff > 3600000) {
               const lines = [
-                `│ ❏ ⏰ PENGINGAT: Besok!`,
+                `│ ⏰ PENGINGAT: Besok!`,
                 ``,
-                `│ ❏ Acara: *${event.name}*`,
-                `│ ❏ Waktu: ${formatDate(event.eventTime)}`,
-                `│ ❏ Sisa: *${formatCountdown(diff)}*`,
+                `│ Acara: *${event.name}*`,
+                `│ Waktu: ${formatDate(event.eventTime)}`,
+                `│ Sisa: *${formatCountdown(diff)}*`,
                 ``,
-                `│ ❏ Jangan lupa ya!`,
+                `│ Jangan lupa ya!`,
               ];
 
               try {
@@ -303,12 +303,12 @@ function startAgendaChecker() {
             // ─── Event time reached ───
             if (diff <= 0 && !event.notified) {
               const lines = [
-                `│ ❏ 🔔 WAKTUNYA TIBA!`,
+                `│ 🔔 WAKTUNYA TIBA!`,
                 ``,
-                `│ ❏ Acara: *${event.name}*`,
-                `│ ❏ Waktu: ${formatDate(event.eventTime)}`,
+                `│ Acara: *${event.name}*`,
+                `│ Waktu: ${formatDate(event.eventTime)}`,
                 ``,
-                `│ ❏ 📢 Ayo semuanya! Jangan sampai ketinggalan!`,
+                `│ 📢 Ayo semuanya! Jangan sampai ketinggalan!`,
               ];
 
               try {
@@ -360,18 +360,18 @@ export default {
     if (new RegExp(`^${prefix}agendaon\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Agenda", [
-          `│ ❏ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
-          `│ ❏ Hanya owner yang bisa mengatur fitur ini.`,
+          `│ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Agenda", [
-        `│ ❏ Status: *ᴀᴋᴛɪꜰ* 🟢`,
+        `│ Status: *ᴀᴋᴛɪꜰ* 🟢`,
         ``,
-        `│ ❏ Fitur Smart Agenda dinyalakan.`,
-        `│ ❏ Ketik *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
+        `│ Fitur Smart Agenda dinyalakan.`,
+        `│ Ketik *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
       ].join("\n")));
       await m.react("🐣");
       return { handled: true };
@@ -380,16 +380,16 @@ export default {
     if (new RegExp(`^${prefix}agendaoff\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Agenda", [
-          `│ ❏ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Agenda", [
-        `│ ❏ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
+        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
         ``,
-        `│ ❏ Fitur Agenda dimatikan.`,
-        `│ ❏ Ketik *${prefix}agendaon* untuk aktifkan lagi.`,
+        `│ Fitur Agenda dimatikan.`,
+        `│ Ketik *${prefix}agendaon* untuk aktifkan lagi.`,
       ].join("\n")));
       await m.react("🐣");
       return { handled: true };
@@ -400,18 +400,18 @@ export default {
       const all = getEvents(groupId);
       if (all.length === 0) {
         await m.reply(claraWrap("Agenda - Riwayat", [
-          `│ ❏ Belum ada riwayat acara di grup ini.`,
+          `│ Belum ada riwayat acara di grup ini.`,
         ].join("\n")));
         return { handled: true };
       }
 
-      const lines = [`│ ❏ Total: *${all.length}* acara`, ``];
+      const lines = [`│ Total: *${all.length}* acara`, ``];
       all.slice(-10).reverse().forEach((e) => {
         const status = e.status === "active" ? "🟢" : e.status === "done" ? "✅" : "🔴";
         lines.push(
-          `│ ❏ ${status} ${e.shortId} - ${e.name}`,
-          `│ ❏ ${formatDate(e.eventTime)}`,
-          `│ ❏ ${e.status === "done" ? "Selesai" : formatCountdown(e.eventTime - Date.now())}`,
+          `│ ${status} ${e.shortId} - ${e.name}`,
+          `│ ${formatDate(e.eventTime)}`,
+          `│ ${e.status === "done" ? "Selesai" : formatCountdown(e.eventTime - Date.now())}`,
           ``
         );
       });
@@ -424,9 +424,9 @@ export default {
     // Check if enabled
     if (!isAgendaOn(groupId)) {
       await m.reply(claraWrap("Agenda", [
-        `│ ❏ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
+        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
         ``,
-        `│ ❏ Owner: ketik *${prefix}agendaon* untuk mengaktifkan.`,
+        `│ Owner: ketik *${prefix}agendaon* untuk mengaktifkan.`,
       ].join("\n")));
       return { handled: true };
     }
@@ -441,27 +441,27 @@ export default {
       const active = getActiveEvents(groupId);
       if (active.length === 0) {
         await m.reply(claraWrap("Agenda - Aktif", [
-          `│ ❏ Tidak ada acara aktif.`,
+          `│ Tidak ada acara aktif.`,
           ``,
-          `│ ❏ Bikin baru: *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
+          `│ Bikin baru: *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
         ].join("\n")));
         return { handled: true };
       }
 
-      const lines = [`│ ❏ Acara aktif: *${active.length}*`, ``];
+      const lines = [`│ Acara aktif: *${active.length}*`, ``];
       const sorted = active.sort((a, b) => a.eventTime - b.eventTime);
       sorted.forEach((e, i) => {
         const diff = e.eventTime - Date.now();
         const hl = hLabel(diff);
         lines.push(
-          `│ ❏ ${i + 1}. ${e.shortId} - ${e.name}`,
-          `│ ❏ ${formatDate(e.eventTime)}`,
-          `│ ❏ *${hl}* - ${formatCountdown(diff)} lagi`,
+          `│ ${i + 1}. ${e.shortId} - ${e.name}`,
+          `│ ${formatDate(e.eventTime)}`,
+          `│ *${hl}* - ${formatCountdown(diff)} lagi`,
           ``
         );
       });
 
-      lines.push(`│ ❏ Ketik *${prefix}agenda status <id>* untuk detail.`);
+      lines.push(`│ Ketik *${prefix}agenda status <id>* untuk detail.`);
 
       await m.reply(claraWrap("Agenda - Daftar Aktif", lines.join("\n")));
       await m.react("🐣");
@@ -475,8 +475,8 @@ export default {
 
       if (!eventId) {
         await m.reply(claraWrap("Agenda", [
-          `│ ❏ Format: *${prefix}agenda status <id>*`,
-          `│ ❏ Contoh: *${prefix}agenda status AGD3A2*`,
+          `│ Format: *${prefix}agenda status <id>*`,
+          `│ Contoh: *${prefix}agenda status AGD3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -484,8 +484,8 @@ export default {
       const event = findEvent(groupId, eventId);
       if (!event) {
         await m.reply(claraWrap("Agenda", [
-          `│ ❏ Acara *${eventId}* tidak ditemukan.`,
-          `│ ❏ Ketik *${prefix}agenda list* untuk lihat yang aktif.`,
+          `│ Acara *${eventId}* tidak ditemukan.`,
+          `│ Ketik *${prefix}agenda list* untuk lihat yang aktif.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -494,28 +494,28 @@ export default {
       const hl = hLabel(diff);
 
       const lines = [
-        `│ ❏ ${event.shortId} - ${event.name}`,
-        `│ ❏ Dibuat oleh: ${event.creator}`,
-        `│ ❏ Tanggal dibuat: ${formatDate(event.createdAt)}`,
+        `│ ${event.shortId} - ${event.name}`,
+        `│ Dibuat oleh: ${event.creator}`,
+        `│ Tanggal dibuat: ${formatDate(event.createdAt)}`,
         ``,
-        `│ ❏ 📅 Waktu Acara:`,
-        `│ ❏ *${formatDate(event.eventTime)}*`,
+        `│ 📅 Waktu Acara:`,
+        `│ *${formatDate(event.eventTime)}*`,
         ``,
-        `│ ❏ ⏰ Countdown:`,
-        `│ ❏ *${hl}* - ${diff > 0 ? formatCountdown(diff) + " lagi" : "Waktunya tiba!"}`,
+        `│ ⏰ Countdown:`,
+        `│ *${hl}* - ${diff > 0 ? formatCountdown(diff) + " lagi" : "Waktunya tiba!"}`,
       ];
 
       if (event.status === "done") {
-        lines.push(``, `│ ❏ Status: *ꜱᴇʟᴇꜱᴀɪ* ✅`);
+        lines.push(``, `│ Status: *ꜱᴇʟᴇꜱᴀɪ* ✅`);
         if (event.notifiedAt) {
-          lines.push(`│ ❏ Notifikasi terkirim: ${formatDate(event.notifiedAt)}`);
+          lines.push(`│ Notifikasi terkirim: ${formatDate(event.notifiedAt)}`);
         }
       } else if (diff <= 0) {
-        lines.push(``, `│ ❏ Status: *Waktunya tiba!* 🔔`);
+        lines.push(``, `│ Status: *Waktunya tiba!* 🔔`);
       } else {
-        lines.push(``, `│ ❏ Status: *ᴀᴋᴛɪꜰ* 🟢`);
-        if (event.reminded1d) lines.push(`│ ❏ Pengingat H-1 hari: ✅ terkirim`);
-        if (event.reminded1h) lines.push(`│ ❏ Pengingat H-1 jam: ✅ terkirim`);
+        lines.push(``, `│ Status: *ᴀᴋᴛɪꜰ* 🟢`);
+        if (event.reminded1d) lines.push(`│ Pengingat H-1 hari: ✅ terkirim`);
+        if (event.reminded1h) lines.push(`│ Pengingat H-1 jam: ✅ terkirim`);
       }
 
       const text = claraWrap("Agenda - Status", lines.join("\n")) +
@@ -531,9 +531,9 @@ export default {
     if (subCmd && subCmd[1] === "hapus") {
       if (!isOwner) {
         await m.reply(claraWrap("Agenda", [
-          `│ ❏ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
-          `│ ❏ Hanya owner yang bisa menghapus acara.`,
+          `│ Hanya owner yang bisa menghapus acara.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -543,8 +543,8 @@ export default {
 
       if (!eventId) {
         await m.reply(claraWrap("Agenda", [
-          `│ ❏ Format: *${prefix}agenda hapus <id>*`,
-          `│ ❏ Contoh: *${prefix}agenda hapus AGD3A2*`,
+          `│ Format: *${prefix}agenda hapus <id>*`,
+          `│ Contoh: *${prefix}agenda hapus AGD3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -552,7 +552,7 @@ export default {
       const event = findEvent(groupId, eventId);
       if (!event) {
         await m.reply(claraWrap("Agenda", [
-          `│ ❏ Acara *${eventId}* tidak ditemukan.`,
+          `│ Acara *${eventId}* tidak ditemukan.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -560,13 +560,13 @@ export default {
       const deleted = deleteEvent(groupId, event.id);
       if (deleted) {
         await m.reply(claraWrap("Agenda - Hapus", [
-          `│ ❏ ✅ Acara *${event.shortId}* dihapus.`,
-          `│ ❏ ${event.name}`,
+          `│ ✅ Acara *${event.shortId}* dihapus.`,
+          `│ ${event.name}`,
         ].join("\n")));
         await m.react("🐣");
       } else {
         await m.reply(claraWrap("Agenda", [
-          `│ ❏ Gagal menghapus acara.`,
+          `│ Gagal menghapus acara.`,
         ].join("\n")));
         await m.react("❌");
       }
@@ -576,34 +576,34 @@ export default {
     // .agenda help
     if (subCmd && (subCmd[1] === "help" || subCmd[1] === "bantu")) {
       await m.reply(claraWrap("Agenda - Bantuan", [
-        `│ ❏ Cara Pakai:`,
+        `│ Cara Pakai:`,
         ``,
-        `│ ❏ 1. Tambah acara:`,
-        `│ ❏ *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
+        `│ 1. Tambah acara:`,
+        `│ *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
         ``,
-        `│ ❏ 2. Format tanggal:`,
-        `│ ❏ 25 Aug 2026 20:00`,
-        `│ ❏ 25/08/2026 20:00`,
-        `│ ❏ besok 15:00`,
-        `│ ❏ hari ini 18:00`,
+        `│ 2. Format tanggal:`,
+        `│ 25 Aug 2026 20:00`,
+        `│ 25/08/2026 20:00`,
+        `│ besok 15:00`,
+        `│ hari ini 18:00`,
         ``,
-        `│ ❏ 3. Lihat acara aktif:`,
-        `│ ❏ *${prefix}agenda list*`,
+        `│ 3. Lihat acara aktif:`,
+        `│ *${prefix}agenda list*`,
         ``,
-        `│ ❏ 4. Cek countdown:`,
-        `│ ❏ *${prefix}agenda status <id>*`,
+        `│ 4. Cek countdown:`,
+        `│ *${prefix}agenda status <id>*`,
         ``,
-        `│ ❏ 5. Hapus acara (owner):`,
-        `│ ❏ *${prefix}agenda hapus <id>*`,
+        `│ 5. Hapus acara (owner):`,
+        `│ *${prefix}agenda hapus <id>*`,
         ``,
-        `│ ❏ 6. Riwayat:`,
-        `│ ❏ *${prefix}agendahistory*`,
+        `│ 6. Riwayat:`,
+        `│ *${prefix}agendahistory*`,
         ``,
-        `│ ❏ 7. Toggle (owner):`,
-        `│ ❏ *${prefix}agendaon* / *${prefix}agendaoff*`,
+        `│ 7. Toggle (owner):`,
+        `│ *${prefix}agendaon* / *${prefix}agendaoff*`,
         ``,
-        `│ ❏ 📌 Auto-reminder: H-1 hari & H-1 jam`,
-        `│ ❏ 📌 Auto-ping semua member saat waktunya tiba`,
+        `│ 📌 Auto-reminder: H-1 hari & H-1 jam`,
+        `│ 📌 Auto-ping semua member saat waktunya tiba`,
       ].join("\n")));
       await m.react("🐣");
       return { handled: true };
@@ -614,20 +614,20 @@ export default {
 
     if (!body || (!subCmd && !body.toLowerCase().startsWith("tambah"))) {
       await m.reply(claraWrap("Agenda - Bantuan", [
-        `│ ❏ Cara Pakai:`,
+        `│ Cara Pakai:`,
         ``,
-        `│ ❏ *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
+        `│ *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
         ``,
-        `│ ❏ Contoh:`,
-        `│ ❏ *${prefix}agenda tambah | Mabar Valorant | 25 Aug 2026 20:00*`,
-        `│ ❏ *${prefix}agenda tambah | Kopdar | besok 15:00*`,
-        `│ ❏ *${prefix}agenda tambah | Ulang tahun Budi | 25/08/2026 00:00*`,
+        `│ Contoh:`,
+        `│ *${prefix}agenda tambah | Mabar Valorant | 25 Aug 2026 20:00*`,
+        `│ *${prefix}agenda tambah | Kopdar | besok 15:00*`,
+        `│ *${prefix}agenda tambah | Ulang tahun Budi | 25/08/2026 00:00*`,
         ``,
-        `│ ❏ Sub-command:`,
-        `│ ❏ *${prefix}agenda list* - Acara aktif`,
-        `│ ❏ *${prefix}agenda status <id>* - Countdown`,
-        `│ ❏ *${prefix}agenda hapus <id>* - Hapus (owner)`,
-        `│ ❏ *${prefix}agendahistory* - Riwayat`,
+        `│ Sub-command:`,
+        `│ *${prefix}agenda list* - Acara aktif`,
+        `│ *${prefix}agenda status <id>* - Countdown`,
+        `│ *${prefix}agenda hapus <id>* - Hapus (owner)`,
+        `│ *${prefix}agendahistory* - Riwayat`,
       ].join("\n")));
       return { handled: true };
     }
@@ -637,10 +637,10 @@ export default {
 
     if (parts.length < 3) {
       await m.reply(claraWrap("Agenda", [
-        `│ ❏ Format kurang lengkap.`,
+        `│ Format kurang lengkap.`,
         ``,
-        `│ ❏ Format: *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
-        `│ ❏ Contoh: *${prefix}agenda tambah | Mabar Valorant | 25 Aug 2026 20:00*`,
+        `│ Format: *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
+        `│ Contoh: *${prefix}agenda tambah | Mabar Valorant | 25 Aug 2026 20:00*`,
       ].join("\n")));
       return { handled: true };
     }
@@ -657,22 +657,22 @@ export default {
 
     if (!eventTime) {
       await m.reply(claraWrap("Agenda", [
-        `│ ❏ Format tanggal tidak valid: *${dateTimeStr}*`,
+        `│ Format tanggal tidak valid: *${dateTimeStr}*`,
         ``,
-        `│ ❏ Format yang didukung:`,
-        `│ ❏ 25 Aug 2026 20:00`,
-        `│ ❏ 25/08/2026 20:00`,
-        `│ ❏ 2026-08-25 20:00`,
-        `│ ❏ besok 15:00`,
-        `│ ❏ hari ini 18:00`,
+        `│ Format yang didukung:`,
+        `│ 25 Aug 2026 20:00`,
+        `│ 25/08/2026 20:00`,
+        `│ 2026-08-25 20:00`,
+        `│ besok 15:00`,
+        `│ hari ini 18:00`,
       ].join("\n")));
       return { handled: true };
     }
 
     if (eventTime <= Date.now()) {
       await m.reply(claraWrap("Agenda", [
-        `│ ❏ Waktu yang dimasukkan sudah lewat.`,
-        `│ ❏ Gunakan tanggal & jam yang masih akan datang.`,
+        `│ Waktu yang dimasukkan sudah lewat.`,
+        `│ Gunakan tanggal & jam yang masih akan datang.`,
       ].join("\n")));
       return { handled: true };
     }
@@ -702,18 +702,18 @@ export default {
     const hl = hLabel(diff);
 
     const lines = [
-      `│ ❏ ${eventId} - ${eventName}`,
-      `│ ❏ Dibuat oleh: ${senderName}`,
+      `│ ${eventId} - ${eventName}`,
+      `│ Dibuat oleh: ${senderName}`,
       ``,
-      `│ ❏ 📅 Waktu Acara:`,
-      `│ ❏ *${formatDate(eventTime)}*`,
+      `│ 📅 Waktu Acara:`,
+      `│ *${formatDate(eventTime)}*`,
       ``,
-      `│ ❏ ⏰ Countdown:`,
-      `│ ❏ *${hl}* - ${formatCountdown(diff)} lagi`,
+      `│ ⏰ Countdown:`,
+      `│ *${hl}* - ${formatCountdown(diff)} lagi`,
       ``,
-      `│ ❏ 📌 Auto-reminder akan dikirim:`,
-      `│ ❏ H-1 jam sebelum acara`,
-      `│ ❏ Saat waktunya tiba (notifikasi tanpa tag)`,
+      `│ 📌 Auto-reminder akan dikirim:`,
+      `│ H-1 jam sebelum acara`,
+      `│ Saat waktunya tiba (notifikasi tanpa tag)`,
     ];
 
     const text = claraWrap("Agenda - Acara Baru", lines.join("\n")) +

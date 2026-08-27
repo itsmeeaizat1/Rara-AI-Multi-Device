@@ -23,8 +23,8 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const tpl = m.text?.trim()?.toLowerCase();
     if (!tpl) {
-      { const __navText = (claraWrap("CSS Generator", [`│ ❏ Tersedia: ${Object.keys(TEMPLATES).join(", ")}`,
-        `│ ❏ Penggunaan: *${prefix}css <template>*`].join("\n"))); await m.reply( __navText, "css"); };
+      { const __navText = (claraWrap("CSS Generator", [`│ Tersedia: ${Object.keys(TEMPLATES).join(", ")}`,
+        `│ Penggunaan: *${prefix}css <template>*`].join("\n"))); await m.reply( __navText, "css"); };
       return { handled: true };
     }
     if (!TEMPLATES[tpl]) throw new Error(`Template "${tpl}" tidak ada. Pilih: ${Object.keys(TEMPLATES).join(", ")}`);

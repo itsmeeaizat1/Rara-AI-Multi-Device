@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
       await sock.sendMessage(
         m.chat,
         {
-          footer: "│ ❏ 🌿 Mau dapetin audio nya juga? kalau mau bisa tekan tombol dibawah",
+          footer: "│ 🌿 Mau dapetin audio nya juga? kalau mau bisa tekan tombol dibawah",
           text: "",
           interactiveButtons: [
             {

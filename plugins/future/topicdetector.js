@@ -18,7 +18,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!db.recentMsgs) db.recentMsgs = {};
     const msgs = db.recentMsgs[gid] || [];
     if (msgs.length < 5) {
-      await m.reply(claraWrap("Topic Detector", ["│ ❏ Belum cukup pesan untuk analisis"].join("\n")));
+      await m.reply(claraWrap("Topic Detector", ["│ Belum cukup pesan untuk analisis"].join("\n")));
       return { handled: true };
     }
     const chatText = msgs.slice(-20).map(m => m.text || "").filter(Boolean).join("\n");

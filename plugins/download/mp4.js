@@ -25,8 +25,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!url) {
       const text =
-        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}mp4 <link>*`,
-          `│ ❏ Contoh: *${prefix}mp4 https://example.com/video.mp4*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}mp4 <link>*`,
+          `│ Contoh: *${prefix}mp4 https://example.com/video.mp4*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -41,12 +41,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     await sock.sendMessage(m.chat, {
       video: fs.readFileSync(filePath),
-      caption: `│ ❏ URL: *${url}*\n│ ❏ Ukuran: *${(buffer.length / 1024 / 1024).toFixed(2)} MB*`,
+      caption: `│ URL: *${url}*\n│ Ukuran: *${(buffer.length / 1024 / 1024).toFixed(2)} MB*`,
     }, { quoted: m });
 
     const text =
-      claraWrap("MP4 Download", [`│ ❏ Link: *${url}*`,
-        "│ ❏ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+      claraWrap("MP4 Download", [`│ Link: *${url}*`,
+        "│ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
@@ -54,8 +54,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
-        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
+        `│ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

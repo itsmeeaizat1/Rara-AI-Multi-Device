@@ -29,12 +29,12 @@ function buildProviderList(prefix) {
   });
 
   return [
-    `│ ❏ Berikut daftar provider yang didukung:`,
+    `│ Berikut daftar provider yang didukung:`,
     "",
     ...lines,
     "",
-    `│ ❏ Contoh pakai: *${prefix}multi-ai gemini Jelaskan quantum computing*`,
-    `│ ❏ Provider aktif sekarang diatur lewat config *ᴀɪʜᴇʟᴘ* di config.js.`,
+    `│ Contoh pakai: *${prefix}multi-ai gemini Jelaskan quantum computing*`,
+    `│ Provider aktif sekarang diatur lewat config *ᴀɪʜᴇʟᴘ* di config.js.`,
   ];
 }
 
@@ -52,13 +52,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!action || action === "list" || action === "daftar") {
       const text =
-        claraWrap("AI Settings", [`│ ❏ Status: *${enabled ? "ON" : "OFF"}*`,
-          `│ ❏ Mode: *${currentMode.toUpperCase()}*`,
-          `│ ❏ Provider: *${aiHelpConfig.provider || "openai"}*`,
-          `│ ❏ Model: *${aiHelpConfig.model || "gpt-4o-mini"}*`,
-          `│ ❏ Endpoint: *${aiHelpConfig.apiEndpoint || "https://api.openai.com/v1/chat/completions"}*`].join("\n")) +
+        claraWrap("AI Settings", [`│ Status: *${enabled ? "ON" : "OFF"}*`,
+          `│ Mode: *${currentMode.toUpperCase()}*`,
+          `│ Provider: *${aiHelpConfig.provider || "openai"}*`,
+          `│ Model: *${aiHelpConfig.model || "gpt-4o-mini"}*`,
+          `│ Endpoint: *${aiHelpConfig.apiEndpoint || "https://api.openai.com/v1/chat/completions"}*`].join("\n")) +
         claraWrap("Provider", buildProviderList(prefix)) +
-        claraWrap("Pakai", [`│ ❏ *${prefix}aiset list* — lihat pengaturan AI`, `│ ❏ *${prefix}aiset provider <nama>* — lihat provider`, `│ ❏ *${prefix}aiset on/off* — owner toggle AI Help`, `│ ❏ *${prefix}aiset mode offline/online* — owner ganti mode`].join("\n")) +
+        claraWrap("Pakai", [`│ *${prefix}aiset list* — lihat pengaturan AI`, `│ *${prefix}aiset provider <nama>* — lihat provider`, `│ *${prefix}aiset on/off* — owner toggle AI Help`, `│ *${prefix}aiset mode offline/online* — owner ganti mode`].join("\n")) +
         
         "\n" ;
 
@@ -71,8 +71,8 @@ async function handler(m, { sock, config: botConfig }) {
       const provider = DEFAULT_PROVIDERS[key];
       if (!provider) {
         const text =
-          claraWrap("Tidak Dikenal", [`│ ❏ Provider *${value || ""}* tidak dikenali.`,
-            `│ ❏ Ketik *${prefix}aiset list* untuk lihat daftar.`].join("\n")) +
+          claraWrap("Tidak Dikenal", [`│ Provider *${value || ""}* tidak dikenali.`,
+            `│ Ketik *${prefix}aiset list* untuk lihat daftar.`].join("\n")) +
           "\n" ;
 
         await m.reply(text, "aiset");
@@ -83,10 +83,10 @@ async function handler(m, { sock, config: botConfig }) {
       const text =
         claraWrap("Provider", "🤖") +
         claraWrap(provider.name.toUpperCase(), [
-          `│ ❏ Key: *${key}*`,
-          `│ ❏ Default model: *${provider.defaultModel}*`,
-          `│ ❏ Models: *${models}*`,
-          `│ ❏ Supports vision: *${provider.supportsVision ? "Ya" : "Tidak"}*`,
+          `│ Key: *${key}*`,
+          `│ Default model: *${provider.defaultModel}*`,
+          `│ Models: *${models}*`,
+          `│ Supports vision: *${provider.supportsVision ? "Ya" : "Tidak"}*`,
         ]) +
         
         "\n"  +
@@ -99,8 +99,8 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "on" || action === "off") {
       if (!m.isOwner) {
         const text =
-          claraWrap("Ditolak", ["│ ❏ Status: *ᴅɪᴛᴏʟᴀᴋ*",
-            "│ ❏ Alasan: *Hanya owner yang bisa menyalakan/mematikan AI Help.*"].join("\n")) +
+          claraWrap("Ditolak", ["│ Status: *ᴅɪᴛᴏʟᴀᴋ*",
+            "│ Alasan: *Hanya owner yang bisa menyalakan/mematikan AI Help.*"].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -113,9 +113,9 @@ async function handler(m, { sock, config: botConfig }) {
       if (!botConfig.aiHelp.mode) botConfig.aiHelp.mode = "offline";
 
       const text =
-        claraWrap("AI Settings", [`│ ❏ Status: *${newState ? "ON" : "OFF"}*`,
-          `│ ❏ Mode: *${String(botConfig.aiHelp.mode || "offline").toUpperCase()}*`,
-          "│ ❏ Perubahan akan berlaku setelah config reload."].join("\n")) +
+        claraWrap("AI Settings", [`│ Status: *${newState ? "ON" : "OFF"}*`,
+          `│ Mode: *${String(botConfig.aiHelp.mode || "offline").toUpperCase()}*`,
+          "│ Perubahan akan berlaku setelah config reload."].join("\n")) +
         "\n"  +
         "\n" ;
 
@@ -126,8 +126,8 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "mode") {
       if (!m.isOwner) {
         const text =
-          claraWrap("Ditolak", ["│ ❏ Status: *ᴅɪᴛᴏʟᴀᴋ*",
-            "│ ❏ Alasan: *ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇ ᴀɪ ʜᴇʟᴘ.*"].join("\n")) +
+          claraWrap("Ditolak", ["│ Status: *ᴅɪᴛᴏʟᴀᴋ*",
+            "│ Alasan: *ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇ ᴀɪ ʜᴇʟᴘ.*"].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -137,8 +137,8 @@ async function handler(m, { sock, config: botConfig }) {
       const newMode = String(value || "").toLowerCase();
       if (!["offline", "online"].includes(newMode)) {
         const text =
-          claraWrap("Mode Tidak Valid", ["│ ❏ Mode yang tersedia: *ᴏꜰꜰʟɪɴᴇ* atau *ᴏɴʟɪɴᴇ*.",
-            `│ ❏ Contoh: *${prefix}aiset mode online*`].join("\n")) +
+          claraWrap("Mode Tidak Valid", ["│ Mode yang tersedia: *ᴏꜰꜰʟɪɴᴇ* atau *ᴏɴʟɪɴᴇ*.",
+            `│ Contoh: *${prefix}aiset mode online*`].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -149,8 +149,8 @@ async function handler(m, { sock, config: botConfig }) {
       botConfig.aiHelp.mode = newMode;
 
       const text =
-        claraWrap("AI Settings", [`│ ❏ Mode: *${newMode.toUpperCase()}*`,
-          "│ ❏ Perubahan akan berlaku setelah config reload."].join("\n")) +
+        claraWrap("AI Settings", [`│ Mode: *${newMode.toUpperCase()}*`,
+          "│ Perubahan akan berlaku setelah config reload."].join("\n")) +
         "\n"  +
         "\n" ;
 
@@ -159,16 +159,16 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      claraWrap("Tidak Dikenal", [`│ ❏ Aksi *${action}* tidak dikenali.`,
-        `│ ❏ Ketik *${prefix}aiset list* untuk lihat opsi.`].join("\n")) +
+      claraWrap("Tidak Dikenal", [`│ Aksi *${action}* tidak dikenali.`,
+        `│ Ketik *${prefix}aiset list* untuk lihat opsi.`].join("\n")) +
       "\n" ;
 
     await m.reply(text);
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
-        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
+        `│ Alasan: *${error.message}*`].join("\n")) +
       "\n" ;
 
     await m.reply(text, "aiset");

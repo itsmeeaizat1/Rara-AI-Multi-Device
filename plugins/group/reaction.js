@@ -27,9 +27,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!emoji) {
       const text =
-        claraWrap("Reaction", [`│ ❏ Penggunaan: *${prefix}reaction <emoji>*`,
-          `│ ❏ Contoh: *${prefix}reaction 🔥*`,
-          `│ ❏ Pilihan: ${EMOJIS.join(" ")}`].join("\n")) +
+        claraWrap("Reaction", [`│ Penggunaan: *${prefix}reaction <emoji>*`,
+          `│ Contoh: *${prefix}reaction 🔥*`,
+          `│ Pilihan: ${EMOJIS.join(" ")}`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -38,8 +38,8 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      claraWrap("Reaction", [`│ ❏ Emoji: *${emoji}*`,
-        "│ ❏ Status: *ᴛᴇʀᴋɪʀɪᴍ*"].join("\n")) +
+      claraWrap("Reaction", [`│ Emoji: *${emoji}*`,
+        "│ Status: *ᴛᴇʀᴋɪʀɪᴍ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}reaction <emoji> untuk reaksi lain`) +
       "\n" +
@@ -49,8 +49,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
-        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
+        `│ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

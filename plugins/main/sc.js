@@ -23,13 +23,13 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const botName = config.bot?.name || "Nova-AI";
 
-  const caption = `╭──「 *Script Bot* 」\n│ ❏ *ʙᴏᴛ:* ${botName}
-│ ❏ *ᴜꜱᴇʀ:* ${m.pushName}
+  const caption = `╭──「 *Script Bot* 」\n│ *ʙᴏᴛ:* ${botName}
+│ *ᴜꜱᴇʀ:* ${m.pushName}
 ╰──────────❀
 
-│ ❏ Untuk asli dari bot ini, kamu bisa
-│ ❏ dapatkan melalui link di bawah.
-│ ❏ Cari kata kunci *ɴᴏᴠᴀ ᴍᴅ*`;
+│ Untuk asli dari bot ini, kamu bisa
+│ dapatkan melalui link di bawah.
+│ Cari kata kunci *ɴᴏᴠᴀ ᴍᴅ*`;
 
   return await sock.sendMessage(m.chat, {
     image: getAssetBuffer("nova"),

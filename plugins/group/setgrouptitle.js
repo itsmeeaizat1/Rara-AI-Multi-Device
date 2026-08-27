@@ -25,8 +25,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!title) {
       const text =
-        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}setgrouptitle <title>*`,
-          `│ ❏ Contoh: *${prefix}setgrouptitle RPG Master*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}setgrouptitle <title>*`,
+          `│ Contoh: *${prefix}setgrouptitle RPG Master*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -37,17 +37,17 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.groupMetadataUpdate(m.chat, { subject: title });
 
     const text =
-      claraWrap("Set Group Title", [`│ ❏ Title Baru: *${title}*`,
-        `│ ❏ Group: *${m.chat}*`,
-        "│ ❏ Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
+      claraWrap("Set Group Title", [`│ Title Baru: *${title}*`,
+        `│ Group: *${m.chat}*`,
+        "│ Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
     await m.reply(claraWrap("setgrouptitle", text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
-        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
+        `│ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

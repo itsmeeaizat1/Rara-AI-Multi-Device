@@ -22,8 +22,8 @@ async function handler(m, { sock }) {
     if (!name) {
         return m.reply(claraWrap("Deploy", `🚀 *ᴅᴇᴘʟᴏʏ*
 
-│ ❏ Masukkan nama website
-│ ❏ Reply kode HTML atau file .html
+│ Masukkan nama website
+│ Reply kode HTML atau file .html
 
 Contoh:
 .deploy mysite`))
@@ -33,8 +33,8 @@ Contoh:
         return m.reply(
 `❌ *ʜᴛᴍʟ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*
 
-│ ❏ Reply pesan berisi HTML
-│ ❏ atau reply file .html`
+│ Reply pesan berisi HTML
+│ atau reply file .html`
         )
     }
 
@@ -59,14 +59,14 @@ Contoh:
         } else {
             return m.reply(claraWrap("Deploy", `❌ *ꜰᴏʀᴍᴀᴛ ᴛɪᴅᴀᴋ ᴅɪᴅᴜᴋᴜɴɢ*
 
-│ ❏ Reply teks HTML
-│ ❏ atau file .html`))
+│ Reply teks HTML
+│ atau file .html`))
         }
 
         if (!/<html|<!doctype html|<head|<body/i.test(htmlContent)) {
             return m.reply(claraWrap("Deploy", `❌ *ʙᴜᴋᴀɴ ʜᴛᴍʟ ᴠᴀʟɪᴅ*
 
-│ ❏ Pastikan berisi struktur HTML`))
+│ Pastikan berisi struktur HTML`))
         }
 
         const payload = {

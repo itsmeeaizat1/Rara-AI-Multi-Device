@@ -34,15 +34,15 @@ async function handler(m, { sock, config: botConfig }) {
       expenses.push({ desc, amount: amt, by: m.sender, date: Date.now() });
       db.setting("grpExpense", allExpenses);
       db.save();
-      await m.reply(claraWrap("Group Expense", [`│ ❏ Item: *${desc}*`, `│ ❏ Nominal: *Rp${amt.toLocaleString("id-ID")}*`,
-        `│ ❏ Oleh: @${m.sender.split("@")[0]}`].join("\n")));
+      await m.reply(claraWrap("Group Expense", [`│ Item: *${desc}*`, `│ Nominal: *Rp${amt.toLocaleString("id-ID")}*`,
+        `│ Oleh: @${m.sender.split("@")[0]}`].join("\n")));
     } else if (action === "split") {
       const total = expenses.reduce((s,e) => s+e.amount, 0);
       const members = new Set(expenses.map(e => e.by));
       const perPerson = members.size > 0 ? Math.ceil(total / members.size) : 0;
-      await m.reply(claraWrap("Split Bill", [`│ ❏ Total: *Rp${total.toLocaleString("id-ID")}*`,
-        `│ ❏ Orang: *${members.size}*`,
-        `│ ❏ Per orang: *Rp${perPerson.toLocaleString("id-ID")}*`].join("\n")));
+      await m.reply(claraWrap("Split Bill", [`│ Total: *Rp${total.toLocaleString("id-ID")}*`,
+        `│ Orang: *${members.size}*`,
+        `│ Per orang: *Rp${perPerson.toLocaleString("id-ID")}*`].join("\n")));
     } else {
       if (!expenses.length) { await m.reply(claraWrap("expensetrack", "Belum ada expense. Ketik .expensetrack add <desc> <jumlah>")); return { handled: true }; }
       let total = 0; let text = claraWrap("Group Expenses", "💰") + "\n\n";

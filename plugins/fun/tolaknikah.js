@@ -40,8 +40,8 @@ async function handler(m, { sock }) {
     if (!proposerJid) {
       return m.reply(
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `│ ❏ Reply pesan lamaran + \`${m.prefix}tolaknikah\`\n` +
-        `│ ❏ Atau \`${m.prefix}tolaknikah @tag\`\n\n` +
+        `│ Reply pesan lamaran + \`${m.prefix}tolaknikah\`\n` +
+        `│ Atau \`${m.prefix}tolaknikah @tag\`\n\n` +
         `╰──────────❀`
       );
     }

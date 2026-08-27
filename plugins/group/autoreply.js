@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
             text += `*ᴅᴀꜰᴛᴀʀ ᴛʀɪɢɢᴇʀ:*\n`
             globalCustomReplies.forEach((r, i) => {
                 const hasImage = r.image ? '🖼️' : ''
-                text += `${i + 1}. *${r.trigger}* ${hasImage}\n│ ❏ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
+                text += `${i + 1}. *${r.trigger}* ${hasImage}\n│ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
             })
             return m.reply(text.trim())
         }
@@ -370,7 +370,7 @@ async function handler(m, { sock }) {
         text += `*ᴅᴇꜰᴀᴜʟᴛ ᴛʀɪɢɢᴇʀꜱ:*\n`
         defaultTriggers.forEach((r, i) => {
             text += `*${r.trigger}*\n`
-            text += `│ ❏ ${r.reply}\n`
+            text += `│ ${r.reply}\n`
         })
         text += `\n`
         
@@ -380,7 +380,7 @@ async function handler(m, { sock }) {
                 const hasImage = r.image ? '🖼️' : ''
                 text += `*${r.trigger}* ${hasImage}\n`
                 if (r.reply) {
-                    text += `│ ❏ ${r.reply.substring(0, 35)}${r.reply.length > 35 ? '...' : ''}\n`
+                    text += `│ ${r.reply.substring(0, 35)}${r.reply.length > 35 ? '...' : ''}\n`
                 }
             })
             text += `\n`

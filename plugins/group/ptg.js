@@ -155,18 +155,18 @@ export default {
     if (new RegExp(`^${prefix}ptgon\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
-          `│ ❏ Hanya owner yang bisa mengatur fitur ini.`,
+          `│ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Patungan", [
-        `│ ❏ Status: *ᴀᴋᴛɪꜰ* 🟢`,
+        `│ Status: *ᴀᴋᴛɪꜰ* 🟢`,
         ``,
-        `│ ❏ Fitur Split Bill & Patungan dinyalakan.`,
-        `│ ❏ Ketik *${prefix}ptg <total> | <orang> | <keterangan>*`,
+        `│ Fitur Split Bill & Patungan dinyalakan.`,
+        `│ Ketik *${prefix}ptg <total> | <orang> | <keterangan>*`,
       ].join("\n")));
       await m.react("🐣");
       return { handled: true };
@@ -176,18 +176,18 @@ export default {
     if (new RegExp(`^${prefix}ptgoff\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
-          `│ ❏ Hanya owner yang bisa mengatur fitur ini.`,
+          `│ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Patungan", [
-        `│ ❏ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
+        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
         ``,
-        `│ ❏ Fitur Patungan dimatikan.`,
-        `│ ❏ Ketik *${prefix}ptgon* untuk aktifkan lagi.`,
+        `│ Fitur Patungan dimatikan.`,
+        `│ Ketik *${prefix}ptgon* untuk aktifkan lagi.`,
       ].join("\n")));
       await m.react("🐣");
       return { handled: true };
@@ -198,19 +198,19 @@ export default {
       const allBills = getAllBills(groupId);
       if (allBills.length === 0) {
         await m.reply(claraWrap("Patungan - Riwayat", [
-          `│ ❏ Belum ada riwayat patungan di grup ini.`,
+          `│ Belum ada riwayat patungan di grup ini.`,
         ].join("\n")));
         return { handled: true };
       }
 
-      const lines = [`│ ❏ Total: *${allBills.length}* patungan`, ``];
+      const lines = [`│ Total: *${allBills.length}* patungan`, ``];
       allBills.slice(-10).reverse().forEach((b, i) => {
         const paidCount = b.members.filter(mb => mb.paid).length;
         const status = b.status === "active" ? "🟢" : b.status === "closed" ? "✅" : "🔴";
         lines.push(
-          `│ ❏ ${status} ${b.shortId} - ${b.description}`,
-          `│ ❏ ${formatRupiah(b.total)} | ${b.perPerson}/orang`,
-          `│ ❏ Bayar: ${paidCount}/${b.members.length} | ${b.date}`,
+          `│ ${status} ${b.shortId} - ${b.description}`,
+          `│ ${formatRupiah(b.total)} | ${b.perPerson}/orang`,
+          `│ Bayar: ${paidCount}/${b.members.length} | ${b.date}`,
           ``
         );
       });
@@ -223,9 +223,9 @@ export default {
     // Check if feature is enabled
     if (!isPtgOn(groupId)) {
       await m.reply(claraWrap("Patungan", [
-        `│ ❏ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
+        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
         ``,
-        `│ ❏ Owner: ketik *${prefix}ptgon* untuk mengaktifkan.`,
+        `│ Owner: ketik *${prefix}ptgon* untuk mengaktifkan.`,
       ].join("\n")));
       return { handled: true };
     }
@@ -235,22 +235,22 @@ export default {
       const active = getActiveBills(groupId);
       if (active.length === 0) {
         await m.reply(claraWrap("Patungan - Aktif", [
-          `│ ❏ Tidak ada patungan aktif.`,
+          `│ Tidak ada patungan aktif.`,
           ``,
-          `│ ❏ Bikin baru: *${prefix}ptg <total> | <orang> | <keterangan>*`,
+          `│ Bikin baru: *${prefix}ptg <total> | <orang> | <keterangan>*`,
         ].join("\n")));
         return { handled: true };
       }
 
-      const lines = [`│ ❏ Patungan aktif: *${active.length}*`, ``];
+      const lines = [`│ Patungan aktif: *${active.length}*`, ``];
       active.forEach((b, i) => {
         const paidCount = b.members.filter(mb => mb.paid).length;
         const unpaidCount = b.members.length - paidCount;
         lines.push(
-          `│ ❏ ${i + 1}. ${b.shortId} - ${b.description}`,
-          `│ ❏ Total: ${formatRupiah(b.total)} | ${b.perPerson}/orang`,
-          `│ ❏ Lunas: ${paidCount}/${b.members.length} | Belum: ${unpaidCount}`,
-          `│ ❏ Ketik: *${prefix}ptg status ${b.shortId}*`,
+          `│ ${i + 1}. ${b.shortId} - ${b.description}`,
+          `│ Total: ${formatRupiah(b.total)} | ${b.perPerson}/orang`,
+          `│ Lunas: ${paidCount}/${b.members.length} | Belum: ${unpaidCount}`,
+          `│ Ketik: *${prefix}ptg status ${b.shortId}*`,
           ``
         );
       });
@@ -267,10 +267,10 @@ export default {
 
       if (!billId) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Format: *${prefix}ptg status <id>*`,
-          `│ ❏ Contoh: *${prefix}ptg status PTG3A2*`,
+          `│ Format: *${prefix}ptg status <id>*`,
+          `│ Contoh: *${prefix}ptg status PTG3A2*`,
           ``,
-          `│ ❏ Ketik *${prefix}ptg list* untuk lihat ID aktif.`,
+          `│ Ketik *${prefix}ptg list* untuk lihat ID aktif.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -278,8 +278,8 @@ export default {
       const bill = findBill(groupId, billId);
       if (!bill) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Patungan *${billId}* tidak ditemukan.`,
-          `│ ❏ Ketik *${prefix}ptg list* untuk lihat yang aktif.`,
+          `│ Patungan *${billId}* tidak ditemukan.`,
+          `│ Ketik *${prefix}ptg list* untuk lihat yang aktif.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -289,38 +289,38 @@ export default {
       const unpaidJids = unpaidMembers.map(mb => mb.jid);
 
       const lines = [
-        `│ ❏ ${bill.shortId} - ${bill.description}`,
-        `│ ❏ Tanggal: ${bill.date}`,
-        `│ ❏ Dibuat oleh: ${bill.creator}`,
+        `│ ${bill.shortId} - ${bill.description}`,
+        `│ Tanggal: ${bill.date}`,
+        `│ Dibuat oleh: ${bill.creator}`,
         ``,
-        `│ ❏ Total: *${formatRupiah(bill.total)}*`,
-        `│ ❏ Per orang: *${bill.perPerson}*`,
-        `│ ❏ Orang: *${bill.members.length}*`,
+        `│ Total: *${formatRupiah(bill.total)}*`,
+        `│ Per orang: *${bill.perPerson}*`,
+        `│ Orang: *${bill.members.length}*`,
         ``,
-        `│ ❏ ✅ Sudah Bayar (${paidMembers.length}):`,
+        `│ ✅ Sudah Bayar (${paidMembers.length}):`,
       ];
 
       if (paidMembers.length > 0) {
         paidMembers.forEach(mb => {
-          lines.push(`│ ❏ ✓ ${mb.name} ${mb.paidAt ? `(${mb.paidAt})` : ""}`);
+          lines.push(`│ ✓ ${mb.name} ${mb.paidAt ? `(${mb.paidAt})` : ""}`);
         });
       } else {
-        lines.push(`│ ❏ _Belum ada_`);
+        lines.push(`│ _Belum ada_`);
       }
 
-      lines.push(``, `│ ❏ ❌ Belum Bayar (${unpaidMembers.length}):`);
+      lines.push(``, `│ ❌ Belum Bayar (${unpaidMembers.length}):`);
       if (unpaidMembers.length > 0) {
         unpaidMembers.forEach(mb => {
-          lines.push(`│ ❏ ✗ ${mb.name}`);
+          lines.push(`│ ✗ ${mb.name}`);
         });
       } else {
-        lines.push(`│ ❏ _Semua sudah bayar!_ 🎉`);
+        lines.push(`│ _Semua sudah bayar!_ 🎉`);
       }
 
       // Add mention list for unpaid
       if (unpaidJids.length > 0) {
         const mentionText = unpaidJids.map(j => `@${j.split("@")[0]}`).join(" ");
-        lines.push(``, `│ ❏ 📢 Tag yang belum bayar:`, `│ ❏ ${mentionText}`);
+        lines.push(``, `│ 📢 Tag yang belum bayar:`, `│ ${mentionText}`);
 
         const text = claraWrap("Patungan - Status", lines.join("\n")) +
           "\n" +
@@ -331,7 +331,7 @@ export default {
           mentions: unpaidJids,
         });
       } else {
-        lines.push(``, `│ ❏ 🎉 Patungan LUNAS semua!`);
+        lines.push(``, `│ 🎉 Patungan LUNAS semua!`);
         const text = claraWrap("Patungan - Status", lines.join("\n")) +
           "\n" +
           tipText(`${prefix}ptg close ${bill.shortId} untuk tutup (owner)`);
@@ -349,8 +349,8 @@ export default {
 
       if (!billId) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Format: *${prefix}ptg bayar <id>*`,
-          `│ ❏ Contoh: *${prefix}ptg bayar PTG3A2*`,
+          `│ Format: *${prefix}ptg bayar <id>*`,
+          `│ Contoh: *${prefix}ptg bayar PTG3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -358,14 +358,14 @@ export default {
       const bill = findBill(groupId, billId);
       if (!bill) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Patungan *${billId}* tidak ditemukan.`,
+          `│ Patungan *${billId}* tidak ditemukan.`,
         ].join("\n")));
         return { handled: true };
       }
 
       if (bill.status !== "active") {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Patungan *${billId}* sudah ditutup.`,
+          `│ Patungan *${billId}* sudah ditutup.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -373,16 +373,16 @@ export default {
       const member = bill.members.find(mb => mb.jid === sender);
       if (!member) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Kamu tidak terdaftar di patungan *${billId}*.`,
-          `│ ❏ Patungan ini hanya untuk yang di-tag saat dibuat.`,
+          `│ Kamu tidak terdaftar di patungan *${billId}*.`,
+          `│ Patungan ini hanya untuk yang di-tag saat dibuat.`,
         ].join("\n")));
         return { handled: true };
       }
 
       if (member.paid) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Kamu sudah menandai bayar untuk *${billId}*.`,
-          `│ ❏ ${bill.perPerson} - ${bill.description}`,
+          `│ Kamu sudah menandai bayar untuk *${billId}*.`,
+          `│ ${bill.perPerson} - ${bill.description}`,
         ].join("\n")));
         return { handled: true };
       }
@@ -402,22 +402,22 @@ export default {
       const allPaid = paidCount === updatedBill.members.length;
 
       let lines = [
-        `│ ❏ ✅ *${member.name}* sudah bayar!`,
-        `│ ❏ Patungan: ${bill.shortId} - ${bill.description}`,
-        `│ ❏ Nominal: ${bill.perPerson}`,
+        `│ ✅ *${member.name}* sudah bayar!`,
+        `│ Patungan: ${bill.shortId} - ${bill.description}`,
+        `│ Nominal: ${bill.perPerson}`,
         ``,
-        `│ ❏ Progress: ${paidCount}/${updatedBill.members.length} sudah bayar`,
+        `│ Progress: ${paidCount}/${updatedBill.members.length} sudah bayar`,
       ];
 
       if (allPaid) {
-        lines.push(``, `│ ❏ 🎉 Semua sudah bayar! Patungan LUNAS!`);
+        lines.push(``, `│ 🎉 Semua sudah bayar! Patungan LUNAS!`);
         // Auto-close
         updateBill(groupId, bill.id, (b) => { b.status = "closed"; });
       } else {
         const unpaid = updatedBill.members.filter(mb => !mb.paid);
-        lines.push(``, `│ ❏ Belum bayar:`);
-        unpaid.forEach(mb => lines.push(`│ ❏ ✗ ${mb.name}`));
-        lines.push(``, `│ ❏ Ketik *${prefix}ptg bayar ${bill.shortId}* untuk tandai bayar`);
+        lines.push(``, `│ Belum bayar:`);
+        unpaid.forEach(mb => lines.push(`│ ✗ ${mb.name}`));
+        lines.push(``, `│ Ketik *${prefix}ptg bayar ${bill.shortId}* untuk tandai bayar`);
       }
 
       await m.reply(claraWrap("Patungan - Bayar", lines.join("\n")));
@@ -429,10 +429,10 @@ export default {
     if (subCmd && subCmd[1] === "lunas") {
       if (!isOwner) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
-          `│ ❏ Hanya owner yang bisa menandai orang lain sebagai lunas.`,
-          `│ ❏ Kalau kamu yang mau bayar, ketik *${prefix}ptg bayar <id>*`,
+          `│ Hanya owner yang bisa menandai orang lain sebagai lunas.`,
+          `│ Kalau kamu yang mau bayar, ketik *${prefix}ptg bayar <id>*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -443,8 +443,8 @@ export default {
 
       if (!billId || mentionedJids.length === 0) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Format: *${prefix}ptg lunas <id> @tag*`,
-          `│ ❏ Contoh: *${prefix}ptg lunas PTG3A2 @62812...*`,
+          `│ Format: *${prefix}ptg lunas <id> @tag*`,
+          `│ Contoh: *${prefix}ptg lunas PTG3A2 @62812...*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -452,14 +452,14 @@ export default {
       const bill = findBill(groupId, billId);
       if (!bill) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Patungan *${billId}* tidak ditemukan.`,
+          `│ Patungan *${billId}* tidak ditemukan.`,
         ].join("\n")));
         return { handled: true };
       }
 
       if (bill.status !== "active") {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Patungan *${billId}* sudah ditutup.`,
+          `│ Patungan *${billId}* sudah ditutup.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -486,8 +486,8 @@ export default {
 
       if (markedCount === 0) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Tidak ada anggota yang ditandai.`,
-          `│ ❏ Mungkin sudah bayar semua atau tidak terdaftar.`,
+          `│ Tidak ada anggota yang ditandai.`,
+          `│ Mungkin sudah bayar semua atau tidak terdaftar.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -497,14 +497,14 @@ export default {
       const allPaid = paidCount === updatedBill.members.length;
 
       const lines = [
-        `│ ❏ ✅ Owner menandai *${markedCount}* orang lunas:`,
-        `│ ❏ ${markedNames.join(", ")}`,
+        `│ ✅ Owner menandai *${markedCount}* orang lunas:`,
+        `│ ${markedNames.join(", ")}`,
         ``,
-        `│ ❏ Progress: ${paidCount}/${updatedBill.members.length} sudah bayar`,
+        `│ Progress: ${paidCount}/${updatedBill.members.length} sudah bayar`,
       ];
 
       if (allPaid) {
-        lines.push(``, `│ ❏ 🎉 Semua sudah bayar! Patungan LUNAS!`);
+        lines.push(``, `│ 🎉 Semua sudah bayar! Patungan LUNAS!`);
         updateBill(groupId, bill.id, (b) => { b.status = "closed"; });
       }
 
@@ -520,9 +520,9 @@ export default {
     if (subCmd && subCmd[1] === "close") {
       if (!isOwner) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
-          `│ ❏ Hanya owner yang bisa menutup patungan.`,
+          `│ Hanya owner yang bisa menutup patungan.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -532,8 +532,8 @@ export default {
 
       if (!billId) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Format: *${prefix}ptg close <id>*`,
-          `│ ❏ Contoh: *${prefix}ptg close PTG3A2*`,
+          `│ Format: *${prefix}ptg close <id>*`,
+          `│ Contoh: *${prefix}ptg close PTG3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -541,14 +541,14 @@ export default {
       const bill = findBill(groupId, billId);
       if (!bill) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Patungan *${billId}* tidak ditemukan.`,
+          `│ Patungan *${billId}* tidak ditemukan.`,
         ].join("\n")));
         return { handled: true };
       }
 
       if (bill.status === "closed") {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Patungan *${billId}* sudah ditutup sebelumnya.`,
+          `│ Patungan *${billId}* sudah ditutup sebelumnya.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -557,13 +557,13 @@ export default {
 
       const paidCount = bill.members.filter(mb => mb.paid).length;
       const lines = [
-        `│ ❏ Patungan *${bill.shortId}* ditutup.`,
-        `│ ❏ ${bill.description}`,
+        `│ Patungan *${bill.shortId}* ditutup.`,
+        `│ ${bill.description}`,
         ``,
-        `│ ❏ Total: ${formatRupiah(bill.total)}`,
-        `│ ❏ Per orang: ${bill.perPerson}`,
-        `│ ❏ Lunas: ${paidCount}/${bill.members.length}`,
-        `│ ❏ Status: CLOSED ✅`,
+        `│ Total: ${formatRupiah(bill.total)}`,
+        `│ Per orang: ${bill.perPerson}`,
+        `│ Lunas: ${paidCount}/${bill.members.length}`,
+        `│ Status: CLOSED ✅`,
       ];
 
       await m.reply(claraWrap("Patungan - Tutup", lines.join("\n")));
@@ -578,8 +578,8 @@ export default {
 
       if (!billId) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Format: *${prefix}ptg join <id>*`,
-          `│ ❏ Contoh: *${prefix}ptg join PTG3A2*`,
+          `│ Format: *${prefix}ptg join <id>*`,
+          `│ Contoh: *${prefix}ptg join PTG3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -587,14 +587,14 @@ export default {
       const bill = findBill(groupId, billId);
       if (!bill) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Patungan *${billId}* tidak ditemukan.`,
+          `│ Patungan *${billId}* tidak ditemukan.`,
         ].join("\n")));
         return { handled: true };
       }
 
       if (bill.status !== "active") {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Patungan *${billId}* sudah ditutup.`,
+          `│ Patungan *${billId}* sudah ditutup.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -603,8 +603,8 @@ export default {
       const existing = bill.members.find(mb => mb.jid === sender);
       if (existing) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Kamu sudah terdaftar di patungan *${billId}*.`,
-          `│ ❏ Ketik *${prefix}ptg bayar ${billId}* untuk tandai bayar.`,
+          `│ Kamu sudah terdaftar di patungan *${billId}*.`,
+          `│ Ketik *${prefix}ptg bayar ${billId}* untuk tandai bayar.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -613,7 +613,7 @@ export default {
       const openSlot = bill.members.find(mb => mb.isSlot && !mb.jid);
       if (!openSlot) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Semua slot patungan *${billId}* sudah penuh.`,
+          `│ Semua slot patungan *${billId}* sudah penuh.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -629,11 +629,11 @@ export default {
       });
 
       await m.reply(claraWrap("Patungan - Join", [
-        `│ ❏ ✅ *${senderName}* bergabung di patungan *${billId}*`,
-        `│ ❏ ${bill.description}`,
-        `│ ❏ Bagian kamu: *${bill.perPerson}*`,
+        `│ ✅ *${senderName}* bergabung di patungan *${billId}*`,
+        `│ ${bill.description}`,
+        `│ Bagian kamu: *${bill.perPerson}*`,
         ``,
-        `│ ❏ Ketik *${prefix}ptg bayar ${billId}* untuk tandai bayar`,
+        `│ Ketik *${prefix}ptg bayar ${billId}* untuk tandai bayar`,
       ].join("\n")));
       await m.react("🐣");
       return { handled: true };
@@ -642,34 +642,34 @@ export default {
     // ─── .ptg help ───
     if (subCmd && (subCmd[1] === "help" || subCmd[1] === "bantu")) {
       await m.reply(claraWrap("Patungan - Bantuan", [
-        `│ ❏ Cara Pakai:`,
+        `│ Cara Pakai:`,
         ``,
-        `│ ❏ 1. Bikin patungan baru:`,
-        `│ ❏ *${prefix}ptg <total> | <orang> | <keterangan>*`,
+        `│ 1. Bikin patungan baru:`,
+        `│ *${prefix}ptg <total> | <orang> | <keterangan>*`,
         ``,
-        `│ ❏ 2. Dengan tag anggota:`,
-        `│ ❏ *${prefix}ptg 150000 | @Budi @Siti | Makan*`,
+        `│ 2. Dengan tag anggota:`,
+        `│ *${prefix}ptg 150000 | @Budi @Siti | Makan*`,
         ``,
-        `│ ❏ 3. Lihat patungan aktif:`,
-        `│ ❏ *${prefix}ptg list*`,
+        `│ 3. Lihat patungan aktif:`,
+        `│ *${prefix}ptg list*`,
         ``,
-        `│ ❏ 4. Cek status:`,
-        `│ ❏ *${prefix}ptg status <id>*`,
+        `│ 4. Cek status:`,
+        `│ *${prefix}ptg status <id>*`,
         ``,
-        `│ ❏ 5. Tandai sudah bayar:`,
-        `│ ❏ *${prefix}ptg bayar <id>*`,
+        `│ 5. Tandai sudah bayar:`,
+        `│ *${prefix}ptg bayar <id>*`,
         ``,
-        `│ ❏ 6. Owner tandai orang lunas:`,
-        `│ ❏ *${prefix}ptg lunas <id> @tag*`,
+        `│ 6. Owner tandai orang lunas:`,
+        `│ *${prefix}ptg lunas <id> @tag*`,
         ``,
-        `│ ❏ 7. Tutup patungan (owner):`,
-        `│ ❏ *${prefix}ptg close <id>*`,
+        `│ 7. Tutup patungan (owner):`,
+        `│ *${prefix}ptg close <id>*`,
         ``,
-        `│ ❏ 8. Riwayat:`,
-        `│ ❏ *${prefix}ptghistory*`,
+        `│ 8. Riwayat:`,
+        `│ *${prefix}ptghistory*`,
         ``,
-        `│ ❏ 9. Toggle (owner):`,
-        `│ ❏ *${prefix}ptgon* / *${prefix}ptgoff*`,
+        `│ 9. Toggle (owner):`,
+        `│ *${prefix}ptgon* / *${prefix}ptgoff*`,
       ].join("\n")));
       await m.react("🐣");
       return { handled: true };
@@ -681,21 +681,21 @@ export default {
 
     if (!body) {
       await m.reply(claraWrap("Patungan - Bantuan", [
-        `│ ❏ Cara Pakai:`,
+        `│ Cara Pakai:`,
         ``,
-        `│ ❏ *${prefix}ptg <total> | <orang> | <keterangan>*`,
+        `│ *${prefix}ptg <total> | <orang> | <keterangan>*`,
         ``,
-        `│ ❏ Contoh:`,
-        `│ ❏ *${prefix}ptg 150000 | 5 | Makan Warkop*`,
-        `│ ❏ *${prefix}ptg 300000 | @Budi @Siti | Sewa Villa*`,
+        `│ Contoh:`,
+        `│ *${prefix}ptg 150000 | 5 | Makan Warkop*`,
+        `│ *${prefix}ptg 300000 | @Budi @Siti | Sewa Villa*`,
         ``,
-        `│ ❏ Sub-command:`,
-        `│ ❏ *${prefix}ptg list* - Patungan aktif`,
-        `│ ❏ *${prefix}ptg status <id>* - Cek siapa belum bayar`,
-        `│ ❏ *${prefix}ptg bayar <id>* - Tandai sudah bayar`,
-        `│ ❏ *${prefix}ptg lunas <id> @tag* - (owner) Tandai orang bayar`,
-        `│ ❏ *${prefix}ptg close <id>* - (owner) Tutup patungan`,
-        `│ ❏ *${prefix}ptghistory* - Riwayat patungan`,
+        `│ Sub-command:`,
+        `│ *${prefix}ptg list* - Patungan aktif`,
+        `│ *${prefix}ptg status <id>* - Cek siapa belum bayar`,
+        `│ *${prefix}ptg bayar <id>* - Tandai sudah bayar`,
+        `│ *${prefix}ptg lunas <id> @tag* - (owner) Tandai orang bayar`,
+        `│ *${prefix}ptg close <id>* - (owner) Tutup patungan`,
+        `│ *${prefix}ptghistory* - Riwayat patungan`,
       ].join("\n")));
       return { handled: true };
     }
@@ -705,11 +705,11 @@ export default {
 
     if (parts.length < 2) {
       await m.reply(claraWrap("Patungan", [
-        `│ ❏ Format kurang lengkap.`,
+        `│ Format kurang lengkap.`,
         ``,
-        `│ ❏ Format: *${prefix}ptg <total> | <orang> | <keterangan>*`,
-        `│ ❏ Contoh: *${prefix}ptg 150000 | 5 | Makan Warkop*`,
-        `│ ❏ *${prefix}ptg 300000 | @Budi @Siti | Sewa Villa*`,
+        `│ Format: *${prefix}ptg <total> | <orang> | <keterangan>*`,
+        `│ Contoh: *${prefix}ptg 150000 | 5 | Makan Warkop*`,
+        `│ *${prefix}ptg 300000 | @Budi @Siti | Sewa Villa*`,
       ].join("\n")));
       return { handled: true };
     }
@@ -722,15 +722,15 @@ export default {
 
     if (!total || total < 1) {
       await m.reply(claraWrap("Patungan", [
-        `│ ❏ Total harga tidak valid: *${parts[0]}*`,
-        `│ ❏ Gunakan angka, contoh: 150000`,
+        `│ Total harga tidak valid: *${parts[0]}*`,
+        `│ Gunakan angka, contoh: 150000`,
       ].join("\n")));
       return { handled: true };
     }
 
     if (total > 999999999999) {
       await m.reply(claraWrap("Patungan", [
-        `│ ❏ Total terlalu besar. Maksimal Rp999.999.999.999`,
+        `│ Total terlalu besar. Maksimal Rp999.999.999.999`,
       ].join("\n")));
       return { handled: true };
     }
@@ -761,8 +761,8 @@ export default {
       const count = parseInt(peopleStr.replace(/[^0-9]/g, ""), 10);
       if (!count || count < 1 || count > 100) {
         await m.reply(claraWrap("Patungan", [
-          `│ ❏ Jumlah orang tidak valid: *${peopleStr}*`,
-          `│ ❏ Gunakan angka (1-100) atau tag @anggota`,
+          `│ Jumlah orang tidak valid: *${peopleStr}*`,
+          `│ Gunakan angka (1-100) atau tag @anggota`,
         ].join("\n")));
         await m.react("❌");
         return { handled: true };
@@ -816,51 +816,51 @@ export default {
 
     // Build output
     const lines = [
-      `│ ❏ ${billId} - ${description}`,
-      `│ ❏ Tanggal: ${dateStr}`,
-      `│ ❏ Dibuat oleh: ${senderName}`,
+      `│ ${billId} - ${description}`,
+      `│ Tanggal: ${dateStr}`,
+      `│ Dibuat oleh: ${senderName}`,
       ``,
-      `│ ❏ Total: *${formatRupiah(total)}*`,
-      `│ ❏ Dibagi: *${memberCount}* orang`,
-      `│ ❏ Per orang: *${perPersonStr}*`,
+      `│ Total: *${formatRupiah(total)}*`,
+      `│ Dibagi: *${memberCount}* orang`,
+      `│ Per orang: *${perPersonStr}*`,
       ``,
-      `│ ❏ Daftar Anggota:`,
+      `│ Daftar Anggota:`,
     ];
 
     // If numeric mode with open slots, show instructions
     if (isNumericCount) {
       members.forEach((mb, i) => {
         if (mb.isSlot) {
-          lines.push(`│ ❏ ${i + 1}. ${mb.name}`);
+          lines.push(`│ ${i + 1}. ${mb.name}`);
         } else {
-          lines.push(`│ ❏ ${i + 1}. ${mb.name} (creator)`);
+          lines.push(`│ ${i + 1}. ${mb.name} (creator)`);
         }
       });
 
       lines.push(
         ``,
-        `│ ❏ 📌 Cara bayar:`,
-        `│ ❏ Ketik *${prefix}ptg bayar ${billId}*`,
-        `│ ❏ (Tandai diri sendiri sudah bayar)`,
+        `│ 📌 Cara bayar:`,
+        `│ Ketik *${prefix}ptg bayar ${billId}*`,
+        `│ (Tandai diri sendiri sudah bayar)`,
         ``,
-        `│ ❏ 📌 Slot kosong: Anggota grup lain bisa`,
-        `│ ❏ ketik *${prefix}ptg join ${billId}* untuk isi slot`,
+        `│ 📌 Slot kosong: Anggota grup lain bisa`,
+        `│ ketik *${prefix}ptg join ${billId}* untuk isi slot`,
       );
     } else {
       // Tag mode: list all tagged members
       members.forEach((mb, i) => {
-        lines.push(`│ ❏ ${i + 1}. ${mb.name}`);
+        lines.push(`│ ${i + 1}. ${mb.name}`);
       });
 
       const unpaidJids = members.map(mb => mb.jid).filter(j => j);
 
       lines.push(
         ``,
-        `│ ❏ 📌 Cara bayar:`,
-        `│ ❏ Ketik *${prefix}ptg bayar ${billId}*`,
+        `│ 📌 Cara bayar:`,
+        `│ Ketik *${prefix}ptg bayar ${billId}*`,
         ``,
-        `│ ❏ 📌 Cek status:`,
-        `│ ❏ Ketik *${prefix}ptg status ${billId}*`,
+        `│ 📌 Cek status:`,
+        `│ Ketik *${prefix}ptg status ${billId}*`,
       );
 
       // Send with mentions

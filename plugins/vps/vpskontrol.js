@@ -74,9 +74,9 @@ async function handler(m, { sock }) {
         const actionResult = response.data.action
         
         m.react('✅')
-        await m.reply(`╭──「 *Aksi Berhasil* 」\n│ ❏ *ᴠᴘꜱ:* ${dropletId}
-│ ❏ *ᴀᴋꜱɪ:* ${action.text}
-│ ❏ *ꜱᴛᴀᴛᴜꜱ:* ${actionResult.status}
+        await m.reply(`╭──「 *Aksi Berhasil* 」\n│ *ᴠᴘꜱ:* ${dropletId}
+│ *ᴀᴋꜱɪ:* ${action.text}
+│ *ꜱᴛᴀᴛᴜꜱ:* ${actionResult.status}
 ╰──────────❀`)
         
     } catch (err) {

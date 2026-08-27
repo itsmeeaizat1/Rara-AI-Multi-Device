@@ -172,18 +172,18 @@ export default {
     if (new RegExp(`^${prefix}donasion\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
-          `│ ❏ Hanya owner yang bisa mengatur fitur ini.`,
+          `│ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Donasi", [
-        `│ ❏ Status: *ᴀᴋᴛɪꜰ* 🟢`,
+        `│ Status: *ᴀᴋᴛɪꜰ* 🟢`,
         ``,
-        `│ ❏ Fitur Donasi & Sedekah dinyalakan.`,
-        `│ ❏ Ketik *${prefix}donasi <target> | <keterangan>* untuk mulai.`,
+        `│ Fitur Donasi & Sedekah dinyalakan.`,
+        `│ Ketik *${prefix}donasi <target> | <keterangan>* untuk mulai.`,
       ].join("\n")));
       await m.react("🐣");
       return { handled: true };
@@ -192,18 +192,18 @@ export default {
     if (new RegExp(`^${prefix}donasioff\\b`, "i").test(raw)) {
       if (!isOwner) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
-          `│ ❏ Hanya owner yang bisa mengatur fitur ini.`,
+          `│ Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Donasi", [
-        `│ ❏ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
+        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
         ``,
-        `│ ❏ Fitur Donasi dimatikan.`,
-        `│ ❏ Ketik *${prefix}donasion* untuk aktifkan lagi.`,
+        `│ Fitur Donasi dimatikan.`,
+        `│ Ketik *${prefix}donasion* untuk aktifkan lagi.`,
       ].join("\n")));
       await m.react("🐣");
       return { handled: true };
@@ -214,19 +214,19 @@ export default {
       const all = getCampaigns(groupId);
       if (all.length === 0) {
         await m.reply(claraWrap("Donasi - Riwayat", [
-          `│ ❏ Belum ada riwayat donasi di grup ini.`,
+          `│ Belum ada riwayat donasi di grup ini.`,
         ].join("\n")));
         return { handled: true };
       }
 
-      const lines = [`│ ❏ Total: *${all.length}* kampanye`, ``];
+      const lines = [`│ Total: *${all.length}* kampanye`, ``];
       all.slice(-10).reverse().forEach((c) => {
         const status = c.status === "active" ? "🟢" : c.status === "closed" ? "✅" : "🔴";
         const pct = c.target > 0 ? Math.round((c.raised / c.target) * 100) : 0;
         lines.push(
-          `│ ❏ ${status} ${c.shortId} - ${c.description}`,
-          `│ ❏ Target: ${formatRupiah(c.target)} | Terkumpul: ${formatRupiah(c.raised)} (${pct}%)`,
-          `│ ❏ Donatur: ${c.donations.length} orang | ${c.date}`,
+          `│ ${status} ${c.shortId} - ${c.description}`,
+          `│ Target: ${formatRupiah(c.target)} | Terkumpul: ${formatRupiah(c.raised)} (${pct}%)`,
+          `│ Donatur: ${c.donations.length} orang | ${c.date}`,
           ``
         );
       });
@@ -239,9 +239,9 @@ export default {
     // Check if enabled
     if (!isDonasiOn(groupId)) {
       await m.reply(claraWrap("Donasi", [
-        `│ ❏ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
+        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
         ``,
-        `│ ❏ Owner: ketik *${prefix}donasion* untuk mengaktifkan.`,
+        `│ Owner: ketik *${prefix}donasion* untuk mengaktifkan.`,
       ].join("\n")));
       return { handled: true };
     }
@@ -256,23 +256,23 @@ export default {
       const active = getActiveCampaigns(groupId);
       if (active.length === 0) {
         await m.reply(claraWrap("Donasi - Aktif", [
-          `│ ❏ Tidak ada kampanye donasi aktif.`,
+          `│ Tidak ada kampanye donasi aktif.`,
           ``,
-          `│ ❏ Bikin baru: *${prefix}donasi <target> | <keterangan>*`,
+          `│ Bikin baru: *${prefix}donasi <target> | <keterangan>*`,
         ].join("\n")));
         return { handled: true };
       }
 
-      const lines = [`│ ❏ Kampanye aktif: *${active.length}*`, ``];
+      const lines = [`│ Kampanye aktif: *${active.length}*`, ``];
       active.forEach((c, i) => {
         const pct = c.target > 0 ? Math.round((c.raised / c.target) * 100) : 0;
         const bar = progressBar(c.raised, c.target);
         lines.push(
-          `│ ❏ ${i + 1}. ${c.shortId} - ${c.description}`,
-          `│ ❏ ${bar} ${pct}%`,
-          `│ ❏ Terkumpul: ${formatRupiah(c.raised)} / ${formatRupiah(c.target)}`,
-          `│ ❏ Donatur: ${c.donations.length} orang`,
-          `│ ❏ Ketik: *${prefix}donasi status ${c.shortId}*`,
+          `│ ${i + 1}. ${c.shortId} - ${c.description}`,
+          `│ ${bar} ${pct}%`,
+          `│ Terkumpul: ${formatRupiah(c.raised)} / ${formatRupiah(c.target)}`,
+          `│ Donatur: ${c.donations.length} orang`,
+          `│ Ketik: *${prefix}donasi status ${c.shortId}*`,
           ``
         );
       });
@@ -289,8 +289,8 @@ export default {
 
       if (!campaignId) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Format: *${prefix}donasi status <id>*`,
-          `│ ❏ Contoh: *${prefix}donasi status DNR3A2*`,
+          `│ Format: *${prefix}donasi status <id>*`,
+          `│ Contoh: *${prefix}donasi status DNR3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -298,8 +298,8 @@ export default {
       const campaign = findCampaign(groupId, campaignId);
       if (!campaign) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Kampanye *${campaignId}* tidak ditemukan.`,
-          `│ ❏ Ketik *${prefix}donasi list* untuk lihat yang aktif.`,
+          `│ Kampanye *${campaignId}* tidak ditemukan.`,
+          `│ Ketik *${prefix}donasi list* untuk lihat yang aktif.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -309,29 +309,29 @@ export default {
       const remaining = Math.max(campaign.target - campaign.raised, 0);
 
       const lines = [
-        `│ ❏ ${campaign.shortId} - ${campaign.description}`,
-        `│ ❏ Tanggal: ${campaign.date}`,
-        `│ ❏ Dibuat oleh: ${campaign.creator}`,
+        `│ ${campaign.shortId} - ${campaign.description}`,
+        `│ Tanggal: ${campaign.date}`,
+        `│ Dibuat oleh: ${campaign.creator}`,
         ``,
-        `│ ❏ Target: *${formatRupiah(campaign.target)}*`,
-        `│ ❏ Terkumpul: *${formatRupiah(campaign.raised)}*`,
-        `│ ❏ Sisa: *${formatRupiah(remaining)}*`,
+        `│ Target: *${formatRupiah(campaign.target)}*`,
+        `│ Terkumpul: *${formatRupiah(campaign.raised)}*`,
+        `│ Sisa: *${formatRupiah(remaining)}*`,
         ``,
-        `│ ❏ Progress:`,
-        `│ ❏ ${bar} ${pct}%`,
+        `│ Progress:`,
+        `│ ${bar} ${pct}%`,
         ``,
-        `│ ❏ Donatur: *${campaign.donations.length}* orang`,
+        `│ Donatur: *${campaign.donations.length}* orang`,
       ];
 
       if (campaign.donations.length > 0) {
-        lines.push(``, `│ ❏ 🤝 Daftar Donatur:`);
+        lines.push(``, `│ 🤝 Daftar Donatur:`);
         // Sort by amount descending
         const sorted = [...campaign.donations].sort((a, b) => b.amount - a.amount);
         sorted.forEach((d, i) => {
-          lines.push(`│ ❏ ${i + 1}. ${d.name} - ${formatRupiah(d.amount)}${d.markedBy === "owner" ? " (owner)" : ""}`);
+          lines.push(`│ ${i + 1}. ${d.name} - ${formatRupiah(d.amount)}${d.markedBy === "owner" ? " (owner)" : ""}`);
         });
       } else {
-        lines.push(``, `│ ❏ _Belum ada donatur_`);
+        lines.push(``, `│ _Belum ada donatur_`);
       }
 
       // Check group members who haven't donated
@@ -341,17 +341,17 @@ export default {
         const nonDonators = groupMembers.filter(gm => !donatorJids.has(gm.jid) && !gm.jid.includes("bot"));
 
         if (nonDonators.length > 0 && nonDonators.length <= 30) {
-          lines.push(``, `│ ❏ 📢 Belum Donasi (${nonDonators.length}):`);
+          lines.push(``, `│ 📢 Belum Donasi (${nonDonators.length}):`);
           const nonDonatorJids = nonDonators.map(nd => nd.jid);
           const mentionText = nonDonators.slice(0, 15).map(nd => `@${nd.jid.split("@")[0]}`).join(" ");
-          lines.push(`│ ❏ ${mentionText}`);
+          lines.push(`│ ${mentionText}`);
           if (nonDonators.length > 15) {
-            lines.push(`│ ❏ ...dan ${nonDonators.length - 15} lainnya`);
+            lines.push(`│ ...dan ${nonDonators.length - 15} lainnya`);
           }
 
           lines.push(
             ``,
-            `│ ❏ Yuk ikut donasi: *${prefix}donasi beri ${campaign.shortId} <jumlah>*`,
+            `│ Yuk ikut donasi: *${prefix}donasi beri ${campaign.shortId} <jumlah>*`,
           );
 
           const text = claraWrap("Donasi - Status", lines.join("\n")) +
@@ -368,7 +368,7 @@ export default {
       }
 
       if (pct >= 100 && campaign.status === "active") {
-        lines.push(``, `│ ❏ 🎉 Target tercapai! Alhamdulillah!`);
+        lines.push(``, `│ 🎉 Target tercapai! Alhamdulillah!`);
       }
 
       const statusCaption = claraWrap("Donasi - Status", lines.join("\n")) +
@@ -398,8 +398,8 @@ export default {
       const idMatch = raw.match(new RegExp(`^${prefix}donasi\\s+beri\\s+(\\S+)\\s+(\\d+)`, "i"));
       if (!idMatch) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Format: *${prefix}donasi beri <id> <jumlah>*`,
-          `│ ❏ Contoh: *${prefix}donasi beri DNR3A2 50000*`,
+          `│ Format: *${prefix}donasi beri <id> <jumlah>*`,
+          `│ Contoh: *${prefix}donasi beri DNR3A2 50000*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -409,7 +409,7 @@ export default {
 
       if (!amount || amount < 1) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Jumlah tidak valid. Minimal Rp1`,
+          `│ Jumlah tidak valid. Minimal Rp1`,
         ].join("\n")));
         return { handled: true };
       }
@@ -417,14 +417,14 @@ export default {
       const campaign = findCampaign(groupId, campaignId);
       if (!campaign) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Kampanye *${campaignId}* tidak ditemukan.`,
+          `│ Kampanye *${campaignId}* tidak ditemukan.`,
         ].join("\n")));
         return { handled: true };
       }
 
       if (campaign.status !== "active") {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Kampanye *${campaignId}* sudah ditutup.`,
+          `│ Kampanye *${campaignId}* sudah ditutup.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -445,16 +445,16 @@ export default {
         const pct = updated.target > 0 ? Math.round((updated.raised / updated.target) * 100) : 0;
 
         const lines = [
-          `│ ❏ ✅ *${senderName}* tambah donasi!`,
-          `│ ❏ Kampanye: ${campaign.shortId} - ${campaign.description}`,
-          `│ ❏ Tambahan: +${formatRupiah(amount)}`,
-          `│ ❏ Total donasi kamu: ${formatRupiah(existing.amount + amount)}`,
+          `│ ✅ *${senderName}* tambah donasi!`,
+          `│ Kampanye: ${campaign.shortId} - ${campaign.description}`,
+          `│ Tambahan: +${formatRupiah(amount)}`,
+          `│ Total donasi kamu: ${formatRupiah(existing.amount + amount)}`,
           ``,
-          `│ ❏ Terkumpul: ${formatRupiah(updated.raised)} / ${formatRupiah(updated.target)} (${pct}%)`,
+          `│ Terkumpul: ${formatRupiah(updated.raised)} / ${formatRupiah(updated.target)} (${pct}%)`,
         ];
 
         if (pct >= 100) {
-          lines.push(``, `│ ❏ 🎉 Target tercapai! Alhamdulillah!`);
+          lines.push(``, `│ 🎉 Target tercapai! Alhamdulillah!`);
           updateCampaign(groupId, campaign.id, (c) => { c.status = "closed"; c.closedAt = Date.now(); });
         }
 
@@ -481,21 +481,21 @@ export default {
       const bar = progressBar(updated.raised, updated.target, 15);
 
       const lines = [
-        `│ ❏ ✅ *${senderName}* berdonasi!`,
-        `│ ❏ Kampanye: ${campaign.shortId} - ${campaign.description}`,
-        `│ ❏ Nominal: ${formatRupiah(amount)}`,
+        `│ ✅ *${senderName}* berdonasi!`,
+        `│ Kampanye: ${campaign.shortId} - ${campaign.description}`,
+        `│ Nominal: ${formatRupiah(amount)}`,
         ``,
-        `│ ❏ ${bar} ${pct}%`,
-        `│ ❏ Terkumpul: ${formatRupiah(updated.raised)} / ${formatRupiah(updated.target)}`,
-        `│ ❏ Donatur: ${updated.donations.length} orang`,
+        `│ ${bar} ${pct}%`,
+        `│ Terkumpul: ${formatRupiah(updated.raised)} / ${formatRupiah(updated.target)}`,
+        `│ Donatur: ${updated.donations.length} orang`,
       ];
 
       if (pct >= 100) {
-        lines.push(``, `│ ❏ 🎉 Target tercapai! Alhamdulillah!`);
+        lines.push(``, `│ 🎉 Target tercapai! Alhamdulillah!`);
         updateCampaign(groupId, campaign.id, (c) => { c.status = "closed"; c.closedAt = Date.now(); });
       }
 
-      lines.push(``, `│ ❏ Jazakallah khair! Semoga berkat.`, `│ ❏ Ketik *${prefix}donasi status ${campaign.shortId}* untuk lihat progress.`);
+      lines.push(``, `│ Jazakallah khair! Semoga berkat.`, `│ Ketik *${prefix}donasi status ${campaign.shortId}* untuk lihat progress.`);
 
       await m.reply(claraWrap("Donasi - Terima", lines.join("\n")));
       await m.react("🐣");
@@ -506,10 +506,10 @@ export default {
     if (subCmd && (subCmd[1] === "terima")) {
       if (!isOwner) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
-          `│ ❏ Hanya owner yang bisa mencatat donasi orang lain.`,
-          `│ ❏ Kalau kamu yang mau donasi, ketik *${prefix}donasi beri <id> <jumlah>*`,
+          `│ Hanya owner yang bisa mencatat donasi orang lain.`,
+          `│ Kalau kamu yang mau donasi, ketik *${prefix}donasi beri <id> <jumlah>*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -522,8 +522,8 @@ export default {
 
       if (!campaignId || mentionedJids.length === 0 || !amount) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Format: *${prefix}donasi terima <id> @tag <jumlah>*`,
-          `│ ❏ Contoh: *${prefix}donasi terima DNR3A2 @62812... 50000*`,
+          `│ Format: *${prefix}donasi terima <id> @tag <jumlah>*`,
+          `│ Contoh: *${prefix}donasi terima DNR3A2 @62812... 50000*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -531,14 +531,14 @@ export default {
       const campaign = findCampaign(groupId, campaignId);
       if (!campaign) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Kampanye *${campaignId}* tidak ditemukan.`,
+          `│ Kampanye *${campaignId}* tidak ditemukan.`,
         ].join("\n")));
         return { handled: true };
       }
 
       if (campaign.status !== "active") {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Kampanye *${campaignId}* sudah ditutup.`,
+          `│ Kampanye *${campaignId}* sudah ditutup.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -581,16 +581,16 @@ export default {
       const bar = progressBar(updated.raised, updated.target, 15);
 
       const lines = [
-        `│ ❏ ✅ Owner mencatat donasi *${addedCount}* orang:`,
-        `│ ❏ ${addedNames.join(", ")}`,
-        `│ ❏ Nominal per orang: ${formatRupiah(amount)}`,
+        `│ ✅ Owner mencatat donasi *${addedCount}* orang:`,
+        `│ ${addedNames.join(", ")}`,
+        `│ Nominal per orang: ${formatRupiah(amount)}`,
         ``,
-        `│ ❏ ${bar} ${pct}%`,
-        `│ ❏ Terkumpul: ${formatRupiah(updated.raised)} / ${formatRupiah(updated.target)}`,
+        `│ ${bar} ${pct}%`,
+        `│ Terkumpul: ${formatRupiah(updated.raised)} / ${formatRupiah(updated.target)}`,
       ];
 
       if (pct >= 100) {
-        lines.push(``, `│ ❏ 🎉 Target tercapai! Alhamdulillah!`);
+        lines.push(``, `│ 🎉 Target tercapai! Alhamdulillah!`);
         updateCampaign(groupId, campaign.id, (c) => { c.status = "closed"; c.closedAt = Date.now(); });
       }
 
@@ -606,9 +606,9 @@ export default {
     if (subCmd && (subCmd[1] === "close" || subCmd[1] === "tutup")) {
       if (!isOwner) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
-          `│ ❏ Hanya owner yang bisa menutup kampanye.`,
+          `│ Hanya owner yang bisa menutup kampanye.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -618,8 +618,8 @@ export default {
 
       if (!campaignId) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Format: *${prefix}donasi close <id>*`,
-          `│ ❏ Contoh: *${prefix}donasi close DNR3A2*`,
+          `│ Format: *${prefix}donasi close <id>*`,
+          `│ Contoh: *${prefix}donasi close DNR3A2*`,
         ].join("\n")));
         return { handled: true };
       }
@@ -627,14 +627,14 @@ export default {
       const campaign = findCampaign(groupId, campaignId);
       if (!campaign) {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Kampanye *${campaignId}* tidak ditemukan.`,
+          `│ Kampanye *${campaignId}* tidak ditemukan.`,
         ].join("\n")));
         return { handled: true };
       }
 
       if (campaign.status === "closed") {
         await m.reply(claraWrap("Donasi", [
-          `│ ❏ Kampanye *${campaignId}* sudah ditutup sebelumnya.`,
+          `│ Kampanye *${campaignId}* sudah ditutup sebelumnya.`,
         ].join("\n")));
         return { handled: true };
       }
@@ -647,19 +647,19 @@ export default {
       const pct = campaign.target > 0 ? Math.round((campaign.raised / campaign.target) * 100) : 0;
 
       const lines = [
-        `│ ❏ Kampanye *${campaign.shortId}* ditutup.`,
-        `│ ❏ ${campaign.description}`,
+        `│ Kampanye *${campaign.shortId}* ditutup.`,
+        `│ ${campaign.description}`,
         ``,
-        `│ ❏ Target: ${formatRupiah(campaign.target)}`,
-        `│ ❏ Terkumpul: ${formatRupiah(campaign.raised)} (${pct}%)`,
-        `│ ❏ Donatur: ${campaign.donations.length} orang`,
-        `│ ❏ Status: CLOSED ✅`,
+        `│ Target: ${formatRupiah(campaign.target)}`,
+        `│ Terkumpul: ${formatRupiah(campaign.raised)} (${pct}%)`,
+        `│ Donatur: ${campaign.donations.length} orang`,
+        `│ Status: CLOSED ✅`,
       ];
 
       if (pct >= 100) {
-        lines.push(``, `│ ❏ 🎉 Target tercapai! Alhamdulillah!`);
+        lines.push(``, `│ 🎉 Target tercapai! Alhamdulillah!`);
       } else {
-        lines.push(``, `│ ❏ 📌 Target belum tercapai (${100 - pct}% lagi).`);
+        lines.push(``, `│ 📌 Target belum tercapai (${100 - pct}% lagi).`);
       }
 
       await m.reply(claraWrap("Donasi - Tutup", lines.join("\n")));
@@ -670,31 +670,31 @@ export default {
     // .donasi help
     if (subCmd && (subCmd[1] === "help" || subCmd[1] === "bantu")) {
       await m.reply(claraWrap("Donasi - Bantuan", [
-        `│ ❏ Cara Pakai:`,
+        `│ Cara Pakai:`,
         ``,
-        `│ ❏ 1. Bikin kampanye donasi:`,
-        `│ ❏ *${prefix}donasi <target> | <keterangan>*`,
+        `│ 1. Bikin kampanye donasi:`,
+        `│ *${prefix}donasi <target> | <keterangan>*`,
         ``,
-        `│ ❏ 2. Donasi sendiri:`,
-        `│ ❏ *${prefix}donasi beri <id> <jumlah>*`,
+        `│ 2. Donasi sendiri:`,
+        `│ *${prefix}donasi beri <id> <jumlah>*`,
         ``,
-        `│ ❏ 3. Lihat kampanye aktif:`,
-        `│ ❏ *${prefix}donasi list*`,
+        `│ 3. Lihat kampanye aktif:`,
+        `│ *${prefix}donasi list*`,
         ``,
-        `│ ❏ 4. Cek progress & donatur:`,
-        `│ ❏ *${prefix}donasi status <id>*`,
+        `│ 4. Cek progress & donatur:`,
+        `│ *${prefix}donasi status <id>*`,
         ``,
-        `│ ❏ 5. Owner catat donasi orang:`,
-        `│ ❏ *${prefix}donasi terima <id> @tag <jumlah>*`,
+        `│ 5. Owner catat donasi orang:`,
+        `│ *${prefix}donasi terima <id> @tag <jumlah>*`,
         ``,
-        `│ ❏ 6. Tutup kampanye (owner):`,
-        `│ ❏ *${prefix}donasi close <id>*`,
+        `│ 6. Tutup kampanye (owner):`,
+        `│ *${prefix}donasi close <id>*`,
         ``,
-        `│ ❏ 7. Riwayat:`,
-        `│ ❏ *${prefix}donasihistory*`,
+        `│ 7. Riwayat:`,
+        `│ *${prefix}donasihistory*`,
         ``,
-        `│ ❏ 8. Toggle (owner):`,
-        `│ ❏ *${prefix}donasion* / *${prefix}donasioff*`,
+        `│ 8. Toggle (owner):`,
+        `│ *${prefix}donasion* / *${prefix}donasioff*`,
       ].join("\n")));
       await m.react("🐣");
       return { handled: true };
@@ -705,21 +705,21 @@ export default {
 
     if (!body) {
       await m.reply(claraWrap("Donasi - Bantuan", [
-        `│ ❏ Cara Pakai:`,
+        `│ Cara Pakai:`,
         ``,
-        `│ ❏ *${prefix}donasi <target> | <keterangan>*`,
+        `│ *${prefix}donasi <target> | <keterangan>*`,
         ``,
-        `│ ❏ Contoh:`,
-        `│ ❏ *${prefix}donasi 5000000 | Sedekah korban banjir*`,
-        `│ ❏ *${prefix}donasi 1000000 | Bantuan yatim*`,
+        `│ Contoh:`,
+        `│ *${prefix}donasi 5000000 | Sedekah korban banjir*`,
+        `│ *${prefix}donasi 1000000 | Bantuan yatim*`,
         ``,
-        `│ ❏ Sub-command:`,
-        `│ ❏ *${prefix}donasi list* - Kampanye aktif`,
-        `│ ❏ *${prefix}donasi status <id>* - Progress & donatur`,
-        `│ ❏ *${prefix}donasi beri <id> <jumlah>* - Donasi`,
-        `│ ❏ *${prefix}donasi terima <id> @tag <jumlah>* - (owner) Catat donasi`,
-        `│ ❏ *${prefix}donasi close <id>* - (owner) Tutup kampanye`,
-        `│ ❏ *${prefix}donasihistory* - Riwayat`,
+        `│ Sub-command:`,
+        `│ *${prefix}donasi list* - Kampanye aktif`,
+        `│ *${prefix}donasi status <id>* - Progress & donatur`,
+        `│ *${prefix}donasi beri <id> <jumlah>* - Donasi`,
+        `│ *${prefix}donasi terima <id> @tag <jumlah>* - (owner) Catat donasi`,
+        `│ *${prefix}donasi close <id>* - (owner) Tutup kampanye`,
+        `│ *${prefix}donasihistory* - Riwayat`,
       ].join("\n")));
       return { handled: true };
     }
@@ -729,8 +729,8 @@ export default {
 
     if (parts.length < 1) {
       await m.reply(claraWrap("Donasi", [
-        `│ ❏ Format: *${prefix}donasi <target> | <keterangan>*`,
-        `│ ❏ Contoh: *${prefix}donasi 5000000 | Sedekah korban banjir*`,
+        `│ Format: *${prefix}donasi <target> | <keterangan>*`,
+        `│ Contoh: *${prefix}donasi 5000000 | Sedekah korban banjir*`,
       ].join("\n")));
       return { handled: true };
     }
@@ -741,15 +741,15 @@ export default {
 
     if (!target || target < 1) {
       await m.reply(claraWrap("Donasi", [
-        `│ ❏ Target tidak valid: *${parts[0]}*`,
-        `│ ❏ Gunakan angka, contoh: 5000000`,
+        `│ Target tidak valid: *${parts[0]}*`,
+        `│ Gunakan angka, contoh: 5000000`,
       ].join("\n")));
       return { handled: true };
     }
 
     if (target > 999999999999) {
       await m.reply(claraWrap("Donasi", [
-        `│ ❏ Target terlalu besar. Maksimal Rp999.999.999.999`,
+        `│ Target terlalu besar. Maksimal Rp999.999.999.999`,
       ].join("\n")));
       return { handled: true };
     }
@@ -778,42 +778,42 @@ export default {
     const bar = progressBar(0, target, 15);
 
     const lines = [
-      `│ ❏ ${campaignId} - ${description}`,
-      `│ ❏ Tanggal: ${dateStr}`,
-      `│ ❏ Dibuat oleh: ${senderName}`,
+      `│ ${campaignId} - ${description}`,
+      `│ Tanggal: ${dateStr}`,
+      `│ Dibuat oleh: ${senderName}`,
       ``,
-      `│ ❏ Target: *${formatRupiah(target)}*`,
-      `│ ❏ Terkumpul: *${formatRupiah(0)}*`,
+      `│ Target: *${formatRupiah(target)}*`,
+      `│ Terkumpul: *${formatRupiah(0)}*`,
       ``,
-      `│ ❏ ${bar} 0%`,
+      `│ ${bar} 0%`,
       ``,
-      `│ ❏ 🤝 Cara Donasi:`,
-      `│ ❏ Ketik *${prefix}donasi beri ${campaignId} <jumlah>*`,
-      `│ ❏ Contoh: *${prefix}donasi beri ${campaignId} 50000*`,
+      `│ 🤝 Cara Donasi:`,
+      `│ Ketik *${prefix}donasi beri ${campaignId} <jumlah>*`,
+      `│ Contoh: *${prefix}donasi beri ${campaignId} 50000*`,
       ``,
-      `│ ❏ 📊 Cek Progress:`,
-      `│ ❏ Ketik *${prefix}donasi status ${campaignId}*`,
+      `│ 📊 Cek Progress:`,
+      `│ Ketik *${prefix}donasi status ${campaignId}*`,
     ];
 
     const lines2 = [
-      `│ ❏ ${campaignId} - ${description}`,
-      `│ ❏ Tanggal: ${dateStr}`,
-      `│ ❏ Dibuat oleh: ${senderName}`,
+      `│ ${campaignId} - ${description}`,
+      `│ Tanggal: ${dateStr}`,
+      `│ Dibuat oleh: ${senderName}`,
       ``,
-      `│ ❏ Target: *${formatRupiah(target)}*`,
-      `│ ❏ Terkumpul: *${formatRupiah(0)}*`,
+      `│ Target: *${formatRupiah(target)}*`,
+      `│ Terkumpul: *${formatRupiah(0)}*`,
       ``,
-      `│ ❏ ${bar} 0%`,
+      `│ ${bar} 0%`,
       ``,
-      `│ ❏ 📲 Scan QR untuk transfer donasi:`,
-      `│ ❏ Scan QR untuk transfer donasi`,
+      `│ 📲 Scan QR untuk transfer donasi:`,
+      `│ Scan QR untuk transfer donasi`,
       ``,
-      `│ ❏ 🤝 Catat donasi:`,
-      `│ ❏ Ketik *${prefix}donasi beri ${campaignId} <jumlah>*`,
-      `│ ❏ Contoh: *${prefix}donasi beri ${campaignId} 50000*`,
+      `│ 🤝 Catat donasi:`,
+      `│ Ketik *${prefix}donasi beri ${campaignId} <jumlah>*`,
+      `│ Contoh: *${prefix}donasi beri ${campaignId} 50000*`,
       ``,
-      `│ ❏ 📊 Cek Progress:`,
-      `│ ❏ Ketik *${prefix}donasi status ${campaignId}*`,
+      `│ 📊 Cek Progress:`,
+      `│ Ketik *${prefix}donasi status ${campaignId}*`,
     ];
 
     const caption = claraWrap("Donasi - Kampanye Baru", lines2.join("\n")) +

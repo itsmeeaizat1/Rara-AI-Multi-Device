@@ -45,9 +45,9 @@ function buildMemoryBook(prefix, groupName) {
   const topMembers = randomTopMembers();
 
   return (
-    claraWrap("Group Memory Book", [`│ ❏ Grup: *${groupName || "Grup ini"}*`,
-      `│ ❏ Vibe: *${vibe}*`,
-      `│ ❏ Momen: *${highlight}*`].join("\n")) +
+    claraWrap("Group Memory Book", [`│ Grup: *${groupName || "Grup ini"}*`,
+      `│ Vibe: *${vibe}*`,
+      `│ Momen: *${highlight}*`].join("\n")) +
     "\n" +
     claraWrap("Top Member", topMembers) +
     "\n\n" +
@@ -70,8 +70,8 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(claraWrap("groupmemory", text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`│ ❏ Status: *ɢᴀɢᴀʟ*`,
-        `│ ❏ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
+        `│ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);
 

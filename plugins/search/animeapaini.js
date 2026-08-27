@@ -117,8 +117,8 @@ async function handler(m, { sock }) {
             `📺 *ᴇᴘɪꜱᴏᴅᴇ:* ${d.episode || 'Movie/OVA'}\n` +
             `🆔 *ᴀɴɪʟɪꜱᴛ ɪᴅ:* ${d.anilist || '-'}\n\n` +
             `⏱️ *ᴛɪᴍᴇꜱᴛᴀᴍᴘ:*\n` +
-            `  │ ❏ From: \`${formatTime(d.from)}\`\n` +
-            `  │ ❏ To: \`${formatTime(d.to)}\`\n\n` +
+            `  │ From: \`${formatTime(d.from)}\`\n` +
+            `  │ To: \`${formatTime(d.to)}\`\n\n` +
             `📊 *ꜱɪᴍɪʟᴀʀɪᴛʏ:* ${similarity}%\n\n` +
             `🔗 https://anilist.co/anime/${d.anilist || ''}`
         

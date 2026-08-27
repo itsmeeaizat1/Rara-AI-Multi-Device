@@ -52,10 +52,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (!code) {
       const modes = Object.keys(COPILOT_PROMPTS).join(", ");
       const text =
-        claraWrap("Cara Pakai", [`│ ❏ Penggunaan: *${prefix}ai-copilot <mode> <code>*`,
-          `│ ❏ Atau reply code dengan *${prefix}ai-copilot <mode>*`,
-          `│ ❏ Mode: *${modes}*`,
-          `│ ❏ Contoh: *${prefix}ai-copilot continue function add(a,b)*`].join("\n")) +
+        claraWrap("Cara Pakai", [`│ Penggunaan: *${prefix}ai-copilot <mode> <code>*`,
+          `│ Atau reply code dengan *${prefix}ai-copilot <mode>*`,
+          `│ Mode: *${modes}*`,
+          `│ Contoh: *${prefix}ai-copilot continue function add(a,b)*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 

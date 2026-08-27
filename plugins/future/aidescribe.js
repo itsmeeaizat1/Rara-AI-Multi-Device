@@ -14,8 +14,8 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!quoted) {
-      await m.reply( claraWrap("AI Describe", ["│ ❏ Reply gambar dengan command ini",
-        "│ ❏ AI akan mendeskripsikan isinya"].join("\n")), "aidescribe");
+      await m.reply( claraWrap("AI Describe", ["│ Reply gambar dengan command ini",
+        "│ AI akan mendeskripsikan isinya"].join("\n")), "aidescribe");
       return { handled: true };
     }
     const buffer = await m.download();

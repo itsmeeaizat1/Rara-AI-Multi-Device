@@ -15,9 +15,9 @@ async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
     const code = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!code) {
-      { const __navText = (claraWrap("AI Code Review", [`│ ❏ Penggunaan: *${prefix}aicode <kode>*`,
-        `│ ❏ Atau reply pesan berisi kode`,
-        "│ ❏ AI akan review & kasih saran"].join("\n"))); await m.reply( __navText, "aicode"); };
+      { const __navText = (claraWrap("AI Code Review", [`│ Penggunaan: *${prefix}aicode <kode>*`,
+        `│ Atau reply pesan berisi kode`,
+        "│ AI akan review & kasih saran"].join("\n"))); await m.reply( __navText, "aicode"); };
       return { handled: true };
     }
     const prompt = `Review kode berikut, jelaskan error jika ada, berikan saran perbaikan. Balas dalam Bahasa Indonesia:\n\n${code}`;

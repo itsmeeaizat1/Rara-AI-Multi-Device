@@ -82,15 +82,15 @@ async function handler(m, { sock }) {
       const text = args.slice(1).join(" ").trim();
       if (!text || text.length < 5) {
         let msg = buildHeader();
-        msg += `│ ❏ ❌ Pesan kependekan! Minimal 5 karakter.\n`;
-        msg += `│ ❏ \`${m.prefix}confesswall post <confess kamu>\`\n`;
+        msg += `│ ❌ Pesan kependekan! Minimal 5 karakter.\n`;
+        msg += `│ \`${m.prefix}confesswall post <confess kamu>\`\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
       }
       if (text.length > 500) {
         let msg = buildHeader();
-        msg += `│ ❏ ❌ Pesan kepanjangan! Maksimal 500 karakter.\n`;
+        msg += `│ ❌ Pesan kepanjangan! Maksimal 500 karakter.\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -111,13 +111,13 @@ async function handler(m, { sock }) {
       saveWall(db, gid, wall);
 
       let msg = buildHeader();
-      msg += `│ ❏ ✅ Confess terposting!\n`;
-      msg += `│ ❏ 🆔 Post ID: *#${post.id}*\n`;
-      msg += `│ ❏ 🔒 Status: *Anonim*\n\n`;
+      msg += `│ ✅ Confess terposting!\n`;
+      msg += `│ 🆔 Post ID: *#${post.id}*\n`;
+      msg += `│ 🔒 Status: *Anonim*\n\n`;
       msg += `  📝 *Isi Confess:*\n  \`\`\`${text}\`\`\`\n\n`;
-      msg += `  *ʀᴇᴀᴄᴛ:*\n│ ❏ \`${m.prefix}confesswall react ${post.id} <type>\`\n`;
-      msg += `  *ʀᴇᴘʟʏ:*\n│ ❏ \`${m.prefix}confesswall reply ${post.id} <balasan>\`\n`;
-      msg += `  *ʀᴇᴀᴅ:*\n│ ❏ \`${m.prefix}confesswall read ${post.id}\`\n`;
+      msg += `  *ʀᴇᴀᴄᴛ:*\n│ \`${m.prefix}confesswall react ${post.id} <type>\`\n`;
+      msg += `  *ʀᴇᴘʟʏ:*\n│ \`${m.prefix}confesswall reply ${post.id} <balasan>\`\n`;
+      msg += `  *ʀᴇᴀᴅ:*\n│ \`${m.prefix}confesswall read ${post.id}\`\n`;
       msg += buildFooter();
       await m.reply(msg);
       await m.react("💌");
@@ -129,8 +129,8 @@ async function handler(m, { sock }) {
       const recent = (wall.posts || []).slice(-5).reverse();
       if (recent.length === 0) {
         let msg = buildHeader();
-        msg += `│ ❏ 📭 Wall kosong\n`;
-        msg += `│ ❏ \`${m.prefix}confesswall post <confess>\` untuk mulai\n`;
+        msg += `│ 📭 Wall kosong\n`;
+        msg += `│ \`${m.prefix}confesswall post <confess>\` untuk mulai\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -141,11 +141,11 @@ async function handler(m, { sock }) {
       recent.forEach((p) => {
         const totalReacts = (p.reactions?.support || 0) + (p.reactions?.relate || 0) + (p.reactions?.love || 0) + (p.reactions?.hug || 0);
         const preview = p.text.length > 80 ? p.text.slice(0, 80) + "..." : p.text;
-        msg += `│ ❏ *#${p.id}* (${formatTime(p.createdAt)})\n`;
-        msg += `│ ❏ "${preview}"\n`;
-        msg += `│ ❏ ${totalReacts} react, ${(p.replies || []).length} reply\n\n`;
+        msg += `│ *#${p.id}* (${formatTime(p.createdAt)})\n`;
+        msg += `│ "${preview}"\n`;
+        msg += `│ ${totalReacts} react, ${(p.replies || []).length} reply\n\n`;
       });
-      msg += `│ ❏ Baca full: \`${m.prefix}confesswall read <id>\`\n`;
+      msg += `│ Baca full: \`${m.prefix}confesswall read <id>\`\n`;
       msg += buildFooter();
       await m.reply(msg);
       return;
@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
       const post = (wall.posts || []).find((p) => p.id === id);
       if (!post) {
         let msg = buildHeader();
-        msg += `│ ❏ ❌ Post #${id} tidak ditemukan!\n`;
+        msg += `│ ❌ Post #${id} tidak ditemukan!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -165,26 +165,26 @@ async function handler(m, { sock }) {
 
       let msg = buildHeader();
       msg += `  *ᴘᴏsᴛ #${post.id}*\n`;
-      msg += `│ ❏ 📅 ${formatTime(post.createdAt)}\n`;
-      msg += `│ ❏ 🔒 Anonim\n\n`;
+      msg += `│ 📅 ${formatTime(post.createdAt)}\n`;
+      msg += `│ 🔒 Anonim\n\n`;
       msg += `  📝 *Isi Confess:*\n  \`\`\`${post.text}\`\`\`\n\n`;
 
       // Reactions
       msg += `  *ʀᴇᴀᴄᴛɪᴏɴs:*\n`;
       Object.entries(REACT_TYPES).forEach(([key, val]) => {
         const count = post.reactions?.[key] || 0;
-        msg += `│ ❏ ${val.emoji} ${val.label}: *${count}*\n`;
+        msg += `│ ${val.emoji} ${val.label}: *${count}*\n`;
       });
 
       // Replies
       const replies = post.replies || [];
       msg += `\n  *ʀᴇᴘʟɪᴇs* (${replies.length}):\n`;
       if (replies.length === 0) {
-        msg += `│ ❏ (belum ada balasan)\n`;
-        msg += `│ ❏ \`${m.prefix}confesswall reply ${post.id} <teks>\`\n`;
+        msg += `│ (belum ada balasan)\n`;
+        msg += `│ \`${m.prefix}confesswall reply ${post.id} <teks>\`\n`;
       } else {
         replies.forEach((r, i) => {
-          msg += `│ ❏ ${i + 1}. \`\`\`${r.text}\`\`\`\n`;
+          msg += `│ ${i + 1}. \`\`\`${r.text}\`\`\`\n`;
         });
       }
       msg += buildFooter();
@@ -200,7 +200,7 @@ async function handler(m, { sock }) {
 
       if (!post) {
         let msg = buildHeader();
-        msg += `│ ❏ ❌ Post #${id} tidak ditemukan!\n`;
+        msg += `│ ❌ Post #${id} tidak ditemukan!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -208,12 +208,12 @@ async function handler(m, { sock }) {
 
       if (!REACT_TYPES[type]) {
         let msg = buildHeader();
-        msg += `│ ❏ ❌ Type tidak valid!\n`;
+        msg += `│ ❌ Type tidak valid!\n`;
         msg += `  *ʀᴇᴀᴄᴛ ᴛʏᴘᴇ:*\n`;
         Object.entries(REACT_TYPES).forEach(([k, v]) => {
-          msg += `│ ❏ ${v.emoji} \`${k}\`\n`;
+          msg += `│ ${v.emoji} \`${k}\`\n`;
         });
-        msg += `\n│ ❏ \`${m.prefix}confesswall react ${id} <type>\`\n`;
+        msg += `\n│ \`${m.prefix}confesswall react ${id} <type>\`\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -230,7 +230,7 @@ async function handler(m, { sock }) {
           delete post.reactedBy[m.sender];
           saveWall(db, gid, wall);
           let msg = buildHeader();
-          msg += `│ ❏ ✅ React ${REACT_TYPES[type].emoji} dihapus dari #${id}\n`;
+          msg += `│ ✅ React ${REACT_TYPES[type].emoji} dihapus dari #${id}\n`;
           msg += buildFooter();
           await m.reply(msg);
         } else {
@@ -240,7 +240,7 @@ async function handler(m, { sock }) {
           post.reactedBy[m.sender] = type;
           saveWall(db, gid, wall);
           let msg = buildHeader();
-          msg += `│ ❏ ✅ React diubah ke ${REACT_TYPES[type].emoji} ${REACT_TYPES[type].label} di #${id}\n`;
+          msg += `│ ✅ React diubah ke ${REACT_TYPES[type].emoji} ${REACT_TYPES[type].label} di #${id}\n`;
           msg += buildFooter();
           await m.reply(msg);
         }
@@ -250,11 +250,11 @@ async function handler(m, { sock }) {
         post.reactedBy[m.sender] = type;
         saveWall(db, gid, wall);
         let msg = buildHeader();
-        msg += `│ ❏ ✅ ${REACT_TYPES[type].emoji} ${REACT_TYPES[type].label} terkirim ke #${id}!\n\n`;
+        msg += `│ ✅ ${REACT_TYPES[type].emoji} ${REACT_TYPES[type].label} terkirim ke #${id}!\n\n`;
         msg += `  *ᴛᴏᴛᴀʟ ʀᴇᴀᴄᴛs:*\n`;
         Object.entries(REACT_TYPES).forEach(([k, v]) => {
           const c = post.reactions[k] || 0;
-          if (c > 0) msg += `│ ❏ ${v.emoji} ${v.label}: *${c}*\n`;
+          if (c > 0) msg += `│ ${v.emoji} ${v.label}: *${c}*\n`;
         });
         msg += buildFooter();
         await m.reply(msg);
@@ -270,7 +270,7 @@ async function handler(m, { sock }) {
 
       if (!post) {
         let msg = buildHeader();
-        msg += `│ ❏ ❌ Post #${id} tidak ditemukan!\n`;
+        msg += `│ ❌ Post #${id} tidak ditemukan!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -278,8 +278,8 @@ async function handler(m, { sock }) {
 
       if (!text || text.length < 3) {
         let msg = buildHeader();
-        msg += `│ ❏ ❌ Balasan kosong! Minimal 3 karakter.\n`;
-        msg += `│ ❏ \`${m.prefix}confesswall reply ${id} <teks>\`\n`;
+        msg += `│ ❌ Balasan kosong! Minimal 3 karakter.\n`;
+        msg += `│ \`${m.prefix}confesswall reply ${id} <teks>\`\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -287,7 +287,7 @@ async function handler(m, { sock }) {
 
       if (text.length > 500) {
         let msg = buildHeader();
-        msg += `│ ❏ ❌ Maksimal 500 karakter!\n`;
+        msg += `│ ❌ Maksimal 500 karakter!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -303,8 +303,8 @@ async function handler(m, { sock }) {
       saveWall(db, gid, wall);
 
       let msg = buildHeader();
-      msg += `│ ❏ ✅ Reply terkirim ke #${id}!\n`;
-      msg += `│ ❏ 💬 Total reply: *${post.replies.length}*\n\n`;
+      msg += `│ ✅ Reply terkirim ke #${id}!\n`;
+      msg += `│ 💬 Total reply: *${post.replies.length}*\n\n`;
       msg += `  📝 *Isi balasan:*\n  \`\`\`${text}\`\`\`\n`;
       msg += buildFooter();
       await m.reply(msg);
@@ -321,9 +321,9 @@ async function handler(m, { sock }) {
 
       let msg = buildHeader();
       msg += `  📊 *Statistik Confess Wall*\n\n`;
-      msg += `│ ❏ 📝 Total posts: *${posts.length}*\n`;
-      msg += `│ ❏ 💬 Total replies: *${totalReplies}*\n`;
-      msg += `│ ❏ 💕 Total reacts: *${totalReacts}*\n\n`;
+      msg += `│ 📝 Total posts: *${posts.length}*\n`;
+      msg += `│ 💬 Total replies: *${totalReplies}*\n`;
+      msg += `│ 💕 Total reacts: *${totalReacts}*\n\n`;
 
       // React breakdown
       const breakdown = { support: 0, relate: 0, love: 0, hug: 0 };
@@ -336,7 +336,7 @@ async function handler(m, { sock }) {
       });
       msg += `  *ʀᴇᴀᴄᴛ ʙʀᴇᴀᴋᴅᴏᴡɴ:*\n`;
       Object.entries(REACT_TYPES).forEach(([k, v]) => {
-        msg += `│ ❏ ${v.emoji} ${v.label}: *${breakdown[k]}*\n`;
+        msg += `│ ${v.emoji} ${v.label}: *${breakdown[k]}*\n`;
       });
       msg += buildFooter();
       await m.reply(msg);
@@ -347,7 +347,7 @@ async function handler(m, { sock }) {
     if (sub === "reveal" || sub === "buka") {
       if (!m.isOwner) {
         let msg = buildHeader();
-        msg += `│ ❏ ❌ Khusus owner!\n`;
+        msg += `│ ❌ Khusus owner!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -356,16 +356,16 @@ async function handler(m, { sock }) {
       const post = (wall.posts || []).find((p) => p.id === id);
       if (!post) {
         let msg = buildHeader();
-        msg += `│ ❏ ❌ Post #${id} tidak ditemukan!\n`;
+        msg += `│ ❌ Post #${id} tidak ditemukan!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
       }
       let msg = buildHeader();
       msg += `  *ʀᴇᴠᴇᴀʟ ᴘᴏsᴛ #${id}*\n\n`;
-      msg += `│ ❏ 👤 Author: @${post.author.split("@")[0]}\n`;
-      msg += `│ ❏ 📅 ${formatTime(post.createdAt)}\n`;
-      msg += `│ ❏ 📝 \`\`\`${post.text}\`\`\`\n`;
+      msg += `│ 👤 Author: @${post.author.split("@")[0]}\n`;
+      msg += `│ 📅 ${formatTime(post.createdAt)}\n`;
+      msg += `│ 📝 \`\`\`${post.text}\`\`\`\n`;
       msg += buildFooter();
       await m.reply(msg, { mentions: [post.author] });
       return;
@@ -375,7 +375,7 @@ async function handler(m, { sock }) {
     if (sub === "del" || sub === "hapus") {
       if (!m.isOwner) {
         let msg = buildHeader();
-        msg += `│ ❏ ❌ Khusus owner!\n`;
+        msg += `│ ❌ Khusus owner!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -384,7 +384,7 @@ async function handler(m, { sock }) {
       const idx = (wall.posts || []).findIndex((p) => p.id === id);
       if (idx === -1) {
         let msg = buildHeader();
-        msg += `│ ❏ ❌ Post #${id} tidak ditemukan!\n`;
+        msg += `│ ❌ Post #${id} tidak ditemukan!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -392,7 +392,7 @@ async function handler(m, { sock }) {
       wall.posts.splice(idx, 1);
       saveWall(db, gid, wall);
       let msg = buildHeader();
-      msg += `│ ❏ ✅ Post #${id} dihapus!\n`;
+      msg += `│ ✅ Post #${id} dihapus!\n`;
       msg += buildFooter();
       await m.reply(msg);
       return;
@@ -401,17 +401,17 @@ async function handler(m, { sock }) {
     // ─── HELP ───
     let msg = buildHeader();
     msg += `  *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n\n`;
-    msg += `│ ❏ \`${m.prefix}confesswall post <teks>\`\n│ ❏ Post anonim ke wall (min 5, max 500 karakter)\n\n`;
-    msg += `│ ❏ \`${m.prefix}confesswall list\`\n│ ❏ Lihat 5 post terakhir\n\n`;
-    msg += `│ ❏ \`${m.prefix}confesswall read <id>\`\n│ ❏ Baca post + semua reply\n\n`;
-    msg += `│ ❏ \`${m.prefix}confesswall react <id> <type>\`\n│ ❏ React post (support, relate, love, hug)\n\n`;
-    msg += `│ ❏ \`${m.prefix}confesswall reply <id> <teks>\`\n│ ❏ Balas post anonim\n\n`;
-    msg += `│ ❏ \`${m.prefix}confesswall stats\`\n│ ❏ Statistik wall grup\n\n`;
-    msg += `│ ❏ \`${m.prefix}confesswall reveal <id>\` *(owner)*\n│ ❏ Buka identitas penulis\n\n`;
-    msg += `│ ❏ \`${m.prefix}confesswall del <id>\` *(owner)*\n│ ❏ Hapus post\n\n`;
+    msg += `│ \`${m.prefix}confesswall post <teks>\`\n│ Post anonim ke wall (min 5, max 500 karakter)\n\n`;
+    msg += `│ \`${m.prefix}confesswall list\`\n│ Lihat 5 post terakhir\n\n`;
+    msg += `│ \`${m.prefix}confesswall read <id>\`\n│ Baca post + semua reply\n\n`;
+    msg += `│ \`${m.prefix}confesswall react <id> <type>\`\n│ React post (support, relate, love, hug)\n\n`;
+    msg += `│ \`${m.prefix}confesswall reply <id> <teks>\`\n│ Balas post anonim\n\n`;
+    msg += `│ \`${m.prefix}confesswall stats\`\n│ Statistik wall grup\n\n`;
+    msg += `│ \`${m.prefix}confesswall reveal <id>\` *(owner)*\n│ Buka identitas penulis\n\n`;
+    msg += `│ \`${m.prefix}confesswall del <id>\` *(owner)*\n│ Hapus post\n\n`;
     msg += `  *ʀᴇᴀᴄᴛ ᴛʏᴘᴇ:*\n`;
     Object.entries(REACT_TYPES).forEach(([k, v]) => {
-      msg += `│ ❏ ${v.emoji} \`${k}\`\n`;
+      msg += `│ ${v.emoji} \`${k}\`\n`;
     });
     msg += buildFooter();
     await m.reply(msg);
