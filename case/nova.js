@@ -223,7 +223,7 @@ async function handleCommand(m, sock) {
           }
 
           if (totalPlugins === 0) {
-            await m.reply("⚠️ *Belum ada plugin yang dimuat*");
+            await m.reply("╭──「 ⚠️ Menu 」\n├── Belum ada plugin yang dimuat\n├── Coba restart bot dulu ya\n╰──────────❀");
             return { handled: true };
           }
 

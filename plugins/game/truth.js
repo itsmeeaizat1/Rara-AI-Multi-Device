@@ -41,15 +41,21 @@ export async function handler(m, { sock }) {
   try {
     const truth = getRandomTruth();
     if (!truth) {
-      await m.reply("❌ *Data truth tidak tersedia!*");
+      await m.reply("╭──「 🎭 Truth 」\n├── ❌ Data tidak tersedia\n├── Coba lagi nanti ya\n╰──────────❀");
       return;
     }
 
-    let text = `╭──「 *TRUTH OR DARE* 」\n\n」`;
-    text += `│ 🎭 Mode: *TRUTH*\n\n`;
-    text += `\`\`\`${truth}\`\`\`\n\n`;
-    text += `_Jawab jujur ya, atau ketik .dare buat ganti tantangan_\n`;
-    text += `╰──────────❀`;
+    const text = [
+      "╭──「 🎭 *Truth or Dare* 」",
+      "│",
+      `├── *Mode:* TRUTH 🎭`,
+      "├──",
+      "│ ```" + truth + "```",
+      "├──",
+      "├── 💡 Jawab jujur ya!",
+      "├── Atau ketik .dare buat ganti tantangan",
+      "╰──────────❀",
+    ].join("\n");
 
     await m.reply(text);
     await m.react("🎭");
@@ -57,7 +63,7 @@ export async function handler(m, { sock }) {
     console.error("[truth] Error:", e.message);
     try {
       await m.react("❌");
-      await m.reply("❌ *Terjadi error saat mengambil pertanyaan truth!*");
+      await m.reply("╭──「 🎭 Truth 」\n├── ❌ Terjadi error\n├── Coba lagi nanti ya\n╰──────────❀");
     } catch {}
   }
 }
