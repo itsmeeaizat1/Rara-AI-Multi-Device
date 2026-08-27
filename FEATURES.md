@@ -374,9 +374,11 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## 📥 All Downloader
 
-- `.alldl <url> [format]` — All-in-one downloader, paste link apapun auto-detect
+- `.alldl <url>` — All-in-one downloader dengan pilihan format interaktif
 - Alias: `.dl`, `.download`, `.get`
+- Flow: paste link → bot detect platform → pilih format (tombol) → download
+- Pilihan: Video HD, Video SD, Audio MP3, Image/Foto (sesuai platform)
 - Auto-detect: YouTube, TikTok, Instagram, Facebook, Twitter/X, Pinterest, Threads, Reddit, CapCut, Dailymotion, SoundCloud, Spotify, Vimeo, SnackVideo, Likee
-- Format: mp3 (audio), 360/480/720/1080 (video, default 720)
 - Strategy: SaveNow API (primary) → AIO scraper (fallback)
-- Contoh: `.alldl https://youtu.be/xxx`, `.alldl https://vt.tiktok.com/xxx mp3`
+- Session 3 menit (link disimpan sementara saat user pilih format)
+- Contoh: `.alldl https://youtu.be/xxx` → klik tombol → download
