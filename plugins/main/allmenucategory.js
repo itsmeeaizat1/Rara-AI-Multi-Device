@@ -14,6 +14,7 @@ import path from "path";
 import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton, CATEGORY_EMOJI } from "../../src/lib/nova-category-list.js";
+import { commandListLine, toSC } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "allmenucategory",
@@ -228,7 +229,7 @@ async function handler(m, { sock, db }) {
     // Compact 2-column layout — beda dari allmenu yang dump semua kategori
     const emoji = CATEGORY_EMOJI?.[matchedCat] || "📋";
     let txt = `${weatherBlock2}
-╭──「 ${emoji} *${catName}* 」
+╭──「 ${emoji} *${toSC(catName)}* 」
 │ *Total:* ${totalFitur} fitur
 │
 `;
@@ -236,13 +237,14 @@ async function handler(m, { sock, db }) {
       const cmd = allCommands[i];
       const symbols = getCommandSymbols(cmd);
       const pinfo = getPlugin(cmd);
+      const usage = pinfo?.config?.usage || "";
       const desc = pinfo?.config?.description || "";
       // Truncate description to keep it compact
       const shortDesc = desc ? desc.slice(0, 40) : "";
       if (shortDesc) {
-        txt += `│ \`\`${prefix}${cmd}${symbols}\`\`\n│   └ ${shortDesc}\n`;
+        txt += `│ ${commandListLine(prefix, cmd, usage, symbols)}\n│   └ ${shortDesc}\n`;
       } else {
-        txt += `│ \`\`${prefix}${cmd}${symbols}\`\`\n`;
+        txt += `│ ${commandListLine(prefix, cmd, usage, symbols)}\n`;
       }
     }
 
