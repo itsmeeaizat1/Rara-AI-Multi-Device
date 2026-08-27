@@ -54,7 +54,7 @@ async function handler(m, { sock, config: botConfig }) {
       return total;
     })();
 
-    const text = `${listBox("Quick Menu", items)}\n\nTotal ${totalFitur} fitur\n${botName}`;
+    const text = `\n${listBox("Quick Menu", items)}\n\nTotal ${totalFitur} fitur\n${botName}`;
 
     const navButtons = [
       { id: `${prefix}menu`, text: "🏠 Menu" },

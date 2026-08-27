@@ -130,7 +130,7 @@ async function handler(m, { sock, db }) {
       let weatherBlock = "";
       try {
         const wf = await getWeatherFooter();
-        if (wf) weatherBlock = `${wf}\n\n`;
+        if (wf) weatherBlock = `${wf}\n`;
       } catch {}
 
       // Compact index — cuma nama kategori + jumlah command, BUKAN dump semua command
@@ -148,16 +148,16 @@ async function handler(m, { sock, db }) {
         catEntries.push({ cat, catName, emoji, total });
       }
 
-      let txt = `${weatherBlock}╭──「 *Daftar Kategori* 」
-│
-│ ❏ *Total:* ${catEntries.length} kategori
-│ ❏ *Total Fitur:* ${totalAllCmds} command
+      let txt = `${weatherBlock}
+╭──「 *Daftar Kategori* 」
+│ *Total:* ${catEntries.length} kategori
+│ *Total Fitur:* ${totalAllCmds} command
 │
 `;
       for (const entry of catEntries) {
         txt += `│ ${entry.emoji} \`\`${entry.catName}\`\` — ${entry.total} cmd\n`;
       }
-      txt += `│\n│ ❏ Ketik \`\`${prefix}allmenucategory <nama>\`\`\n│   atau klik tombol Kategori di bawah\n╰──────────❀\n\nNova AI WhatsApp Bot`;
+      txt += `│\n│ Ketik \`\`${prefix}allmenucategory <nama>\`\`\n│   atau klik tombol Kategori di bawah\n╰──────────❀\n\nNova AI WhatsApp Bot`;
 
       const navButtons = [
         { id: `${prefix}menu`, text: "Menu" },
@@ -187,7 +187,7 @@ async function handler(m, { sock, db }) {
 
     if (!matchedCat) {
       await m.reply(
-        `╭──「 *Error* 」\n│ ❏ Kategori \`${categoryArg}\` tidak ditemukan\n│ ❏ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰──────────❀`
+        `╭──「 *Error* 」\n│ Kategori \`${categoryArg}\` tidak ditemukan\n│ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰──────────❀`
       );
       await m.react("❌");
       return;
@@ -195,7 +195,7 @@ async function handler(m, { sock, db }) {
 
     if (matchedCat === "owner" && !m.isOwner) {
       await m.reply(
-        `╭──「 *Akses Ditolak* 」\n│ ❏ Kategori ini hanya untuk owner\n╰──────────❀`
+        `╭──「 *Akses Ditolak* 」\n│ Kategori ini hanya untuk owner\n╰──────────❀`
       );
       await m.react("❌");
       return;
@@ -207,7 +207,7 @@ async function handler(m, { sock, db }) {
 
     if (allCommands.length === 0) {
       await m.reply(
-        `╭──「 *Kosong* 」\n│ ❏ Kategori \`${matchedCat}\` tidak ada command\n╰──────────❀`
+        `╭──「 *Kosong* 」\n│ Kategori \`${matchedCat}\` tidak ada command\n╰──────────❀`
       );
       await m.react("❌");
       return;
@@ -219,14 +219,14 @@ async function handler(m, { sock, db }) {
     let weatherBlock2 = "";
     try {
       const wf2 = await getWeatherFooter();
-      if (wf2) weatherBlock2 = `${wf2}\n\n`;
+      if (wf2) weatherBlock2 = `${wf2}\n`;
     } catch {}
 
     // Compact 2-column layout — beda dari allmenu yang dump semua kategori
     const emoji = CATEGORY_EMOJI?.[matchedCat] || "📂";
-    let txt = `${weatherBlock2}╭──「 ${emoji} *${catName}* 」
-│
-│ ❏ *Total:* ${totalFitur} fitur
+    let txt = `${weatherBlock2}
+╭──「 ${emoji} *${catName}* 」
+│ *Total:* ${totalFitur} fitur
 │
 `;
     for (let i = 0; i < allCommands.length; i++) {
@@ -237,9 +237,9 @@ async function handler(m, { sock, db }) {
       // Truncate description to keep it compact
       const shortDesc = desc ? desc.slice(0, 40) : "";
       if (shortDesc) {
-        txt += `│ ❏ \`\`${prefix}${cmd}${symbols}\`\`\n│   └ ${shortDesc}\n`;
+        txt += `│ \`\`${prefix}${cmd}${symbols}\`\`\n│   └ ${shortDesc}\n`;
       } else {
-        txt += `│ ❏ \`\`${prefix}${cmd}${symbols}\`\`\n`;
+        txt += `│ \`\`${prefix}${cmd}${symbols}\`\`\n`;
       }
     }
 
