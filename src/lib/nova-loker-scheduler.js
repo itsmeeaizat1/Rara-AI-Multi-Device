@@ -69,7 +69,7 @@ function getLokerSettings(db) {
         ]),
     sources: Array.isArray(stored.sources) && stored.sources.length
       ? stored.sources
-      : (Array.isArray(base.sources) ? base.sources : ["jobstreet", "lokereid", "remotive", "arbeitnow", "themuse"]),
+      : (Array.isArray(base.sources) ? base.sources : ["jobstreet", "glints", "kalibrr", "indeed", "remotive", "arbeitnow"]),
     targets: Array.isArray(stored.targets) ? stored.targets : [],
   };
 }
@@ -433,10 +433,6 @@ async function fetchNewJobs({ sources, keywords, categories, limit, sentIds = {}
   const allJobs = [];
   const fetchers = [];
 
-  // JobStreet ID sebagai prioritas utama
-  if (sources.includes("jobstreet")) fetchers.push(fetchJobstreet({ keywords, limit: limit + 20 }));
-  // Loker Indonesia (filtered Remotive for Asia/ID)
-  if (sources.includes("lokereid")) fetchers.push(fetchLokerID({ keywords, limit: limit + 20 }));
   // Portal Indonesia (prioritas)
   if (sources.includes("jobstreet")) fetchers.push(fetchJobstreetID({ keywords, limit: limit + 20 }));
   if (sources.includes("glints")) fetchers.push(fetchGlintsID({ keywords, limit: limit + 20 }));
@@ -468,57 +464,6 @@ async function fetchNewJobs({ sources, keywords, categories, limit, sentIds = {}
 // ────────────────────────────────────────────────────────────────────────────
 // JOBSTREET INDONESIA (via Andaraz API)
 // ────────────────────────────────────────────────────────────────────────────
-
-function normalizeJobstreet(job) {
-  return {
-    id: `jobstreet_${job.id || (job.title + "-" + job.company)}`,
-    title: job.title || job.jobTitle || "-",
-    company: job.company || job.companyName || "-",
-    location: job.location || job.jobLocation || "Indonesia",
-    type: (job.work_types && job.work_types.label) || job.jobType || "Full time",
-    tags: [],
-    url: job.url || `https://id.jobstreet.com/id/job/${job.id || ""}`,
-    postedAt: (job.date_posted && job.date_posted.dateTimeUtc) || "",
-    expiryDate: "",
-    salary: job.salary || job.salaryRange || "",
-    source: "JobStreet ID",
-    image: null,
-  };
-}
-
-async function fetchJobstreet({ keywords = [], limit = 20 } = {}) {
-  try {
-    const andaraz = getAndarazConfig();
-    const apiKey = andaraz.apikey;
-    const baseUrl = andaraz.baseUrl || "https://api.andaraz.com";
-    if (!apiKey) {
-      logger.warn("LOKER", "Andaraz API key tidak ditemukan, skip JobStreet");
-      return [];
-    }
-
-    const q = keywords.length ? keywords.join(" ") : "indonesia";
-    const url = `${baseUrl}/api/jobstreet/search?apikey=${apiKey}&q=${encodeURIComponent(q)}&page=1`;
-    const data = await fetchWithTimeout(url);
-
-    if (!data.status) {
-      logger.warn("LOKER", `JobStreet search gagal: ${data.message || "unknown"}`);
-      return [];
-    }
-
-    let jobs = (data.jobs || data.results || data.data || []).map(normalizeJobstreet);
-    if (keywords.length) {
-      const kwLower = keywords.map((k) => k.toLowerCase());
-      jobs = jobs.filter((j) => {
-        const text = `${j.title} ${j.company} ${j.location}`.toLowerCase();
-        return kwLower.some((kw) => text.includes(kw));
-      });
-    }
-    return jobs.slice(0, limit);
-  } catch (err) {
-    logger.warn("LOKER", `JobStreet fetch error: ${err.message}`);
-    return [];
-  }
-}
 
 // ────────────────────────────────────────────────────────────────────────────
 // LOKER INDONESIA — scrape dari situs lokal gratis
@@ -727,8 +672,6 @@ export {
   fetchArbeitnow,
   fetchTheMuse,
   fetchJobicy,
-  fetchJobstreet,
-  fetchLokerID,
   fetchJobstreetID,
   fetchGlintsID,
   fetchKalibrrID,
