@@ -63,6 +63,13 @@ export function getDeepAiKey() {
 }
 
 /**
+ * Ambil SaveNow API key (4kdownload.to)
+ */
+export function getSaveNowKey() {
+  return miscData.savenow_apikey || "";
+}
+
+/**
  * Ambil Pterodactyl config
  */
 /**
