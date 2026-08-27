@@ -13,6 +13,7 @@ import fs from "fs";
 import path from "path";
 import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
+import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
 
 const pluginConfig = {
   name: "allmenucategory",
@@ -163,7 +164,7 @@ async function handler(m, { sock, db }) {
       const navButtons = [
         { id: `${prefix}menu`, text: "🏠 Menu" },
         { id: `${prefix}allmenu`, text: "📋 All Menu" },
-        { id: `${prefix}allmenucategory`, text: "📂 Kategori" },
+        buildCategoryButton(m, db, prefix),
         { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
         { id: `${prefix}info`, text: "ℹ️ Info" },
         { id: `${prefix}owner`, text: "👑 Owner" },
@@ -237,7 +238,7 @@ async function handler(m, { sock, db }) {
     txt += `╰──────────❀\n`;
 
     const navButtons2 = [
-      { id: `${prefix}allmenucategory`, text: "📂 Kategori Lain" },
+      buildCategoryButton(m, db, prefix, "📂 Kategori Lain"),
       { id: `${prefix}menu`, text: "🏠 Menu" },
       { id: `${prefix}allmenu`, text: "📋 All Menu" },
       { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },

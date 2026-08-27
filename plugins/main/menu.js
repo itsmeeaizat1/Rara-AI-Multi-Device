@@ -18,6 +18,7 @@ import path from "path";
 import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
+import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
 
 const pluginConfig = {
   name: "menu",
@@ -200,10 +201,11 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
     // 6 tombol quick access — nativeFlowMessage (proven pattern, bukan legacy type 1)
+    // "Kategori" pakai single_select → klik buka popup list semua kategori
     const navButtons = [
       { id: `${prefix}menu`, text: "🏠 Menu" },
       { id: `${prefix}allmenu`, text: "📋 All Menu" },
-      { id: `${prefix}allmenucategory`, text: "📂 Kategori" },
+      buildCategoryButton(m, db, prefix),
       { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
       { id: `${prefix}info`, text: "ℹ️ Info" },
       { id: `${prefix}owner`, text: "👑 Owner" },
