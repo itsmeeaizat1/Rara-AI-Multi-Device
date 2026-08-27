@@ -3,12 +3,41 @@
 > Daftar lengkap fitur per kategori. Update file ini setiap kali ada perubahan fitur.
 
 ## Statistik
-- **Total Plugin:** 1.573
-- **Total Command:** 2.100+
+- **Total Plugin:** 1.584
+- **Total Command:** 2.111+
 - **Total Kategori:** 39
-- **Versi:** 21.4.0
+- **Versi:** 21.5.0
 
 ---
+
+
+## 🆕 Fitur Baru v21.5.0
+
+### Fitur Baru (No API Key)
+- `.anilist` — search — Cari & detail anime dari AniList (seasonal, top, search)
+- `.kitsu` — search — Cari anime & manga dari Kitsu database
+- `.joke` — fun — Random joke dari JokeAPI dengan kategori
+- `.gamedeal` — search — Cari diskon & harga game termurah (CheapShark)
+- `.quranv4` — islamic — Al-Quran via equran.id (surat, ayat, audio murottal)
+- `.sholatv2` — religi — Jadwal sholat per kota Indonesia (myquran.com)
+
+### Fitur Baru (Butuh API Key)
+- `.beritav2` — info — Berita terkini dari NewsAPI & NewsData (set newsApiKey/newsDataKey)
+- `.gamedb` — search — Cari info game dari RAWG.io (set rawgApiKey)
+- `.cekcuacav2` — info — Cek cuaca via OpenWeather (set openWeatherKey)
+- `.cekresi` — tools — Cek resi JNE/J&T/SiCepat/AnterAja dll (set binderbyteKey)
+
+### V2 / Next Version
+- `.memev2` — random — Random meme dari Reddit via meme-api.com (v2 dari .meme)
+
+### Config API Key Baru
+```
+newsApiKey: ""      // NewsAPI.org (free 100 req/day)
+newsDataKey: ""     // NewsData.io (free 200 req/day)
+rawgApiKey: ""      // RAWG.io (free)
+openWeatherKey: ""  // OpenWeather (free 1000 req/day)
+binderbyteKey: ""   // Binderbyte cek resi
+```
 
 ## 📂 Daftar Kategori & Command
 
@@ -200,7 +229,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## ✅ Status Audit (Update Terakhir)
 
-- **Total Plugin:** 1.573 (12 plugin dibikin ulang setelah dihapus AI agent lain)
+- **Total Plugin:** 1.584 (12 plugin dibikin ulang setelah dihapus AI agent lain)
 - **Syntax Check:** 0 error
 - **Broken Import:** 0
 - **api.neoxr.eu:** 0 (semua diganti)

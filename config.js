@@ -220,6 +220,19 @@ const config = {
     apiEndpointGemini: "https://ai.tioo.eu.org/v1beta/models",
     // ClipDrop API key untuk watermark remover (.nowm) — gratis 100 credits di clipdrop.co/apis
     clipdropApiKey: "",
+    // ═══════════════════════════════════════════
+    // API Keys untuk fitur baru (v2 + new plugins)
+    // ═══════════════════════════════════════════
+    // NewsAPI.org — https://newsapi.org (free 100 req/day)
+    newsApiKey: "",
+    // NewsData.io — https://newsdata.io (free 200 req/day)
+    newsDataKey: "",
+    // RAWG.io — https://rawg.io (free game database)
+    rawgApiKey: "",
+    // OpenWeather — https://openweathermap.org (free 1000 req/day)
+    openWeatherKey: "",
+    // Binderbyte — https://binderbyte.com (cek resi)
+    binderbyteKey: "",
     // Fallback key (kalau per-format kosong, pakai ini)
     apiKey: "",
     // ═══════════════════════════════════════════
