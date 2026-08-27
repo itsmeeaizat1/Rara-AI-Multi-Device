@@ -11,6 +11,13 @@ import { getDatabase } from "./nova-database.js";
 import { logger } from "./nova-logger.js";
 import config from "../../config.js";
 import { getAndarazConfig } from "../config/env-loader.js";
+import {
+  fetchJobstreetID,
+  fetchGlintsID,
+  fetchKalibrrID,
+  fetchIndeedID,
+  fetchAllIndonesiaJobs,
+} from "./nova-loker-id-sources.js";
 
 let _sharp = null;
 async function getSharp() {
@@ -430,6 +437,12 @@ async function fetchNewJobs({ sources, keywords, categories, limit, sentIds = {}
   if (sources.includes("jobstreet")) fetchers.push(fetchJobstreet({ keywords, limit: limit + 20 }));
   // Loker Indonesia (filtered Remotive for Asia/ID)
   if (sources.includes("lokereid")) fetchers.push(fetchLokerID({ keywords, limit: limit + 20 }));
+  // Portal Indonesia (prioritas)
+  if (sources.includes("jobstreet")) fetchers.push(fetchJobstreetID({ keywords, limit: limit + 20 }));
+  if (sources.includes("glints")) fetchers.push(fetchGlintsID({ keywords, limit: limit + 20 }));
+  if (sources.includes("kalibrr")) fetchers.push(fetchKalibrrID({ keywords, limit: limit + 20 }));
+  if (sources.includes("indeed")) fetchers.push(fetchIndeedID({ keywords, limit: limit + 20 }));
+  // Portal international (fallback)
   if (sources.includes("remotive")) fetchers.push(fetchRemotive({ keywords, categories, limit: limit + 20 }));
   if (sources.includes("arbeitnow")) fetchers.push(fetchArbeitnow({ keywords, limit: limit + 20 }));
   if (sources.includes("themuse")) fetchers.push(fetchTheMuse({ keywords, limit: limit + 20 }));
@@ -716,6 +729,11 @@ export {
   fetchJobicy,
   fetchJobstreet,
   fetchLokerID,
+  fetchJobstreetID,
+  fetchGlintsID,
+  fetchKalibrrID,
+  fetchIndeedID,
+  fetchAllIndonesiaJobs,
   formatLokerMessage,
   getSentIds,
   markSent,

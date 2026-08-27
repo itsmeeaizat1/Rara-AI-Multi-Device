@@ -9,12 +9,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 import {
   fetchNewJobs,
-  fetchRemotive,
-  fetchArbeitnow,
-  fetchTheMuse,
-  fetchJobicy,
-  fetchJobstreet,
-  fetchLokerID,
+  fetchAllIndonesiaJobs,
   formatLokerMessage,
   getLokerStatus,
 } from "../../src/lib/nova-loker-scheduler.js";
@@ -23,7 +18,7 @@ const pluginConfig = {
   name: "ayokerja",
   alias: ["ayokerja"],
   category: "info",
-  description: "Cek informasi lowongan kerja terbaru",
+  description: "Cari lowongan kerja Indonesia (JobStreet, Glints, Kalibrr, Indeed)",
   usage: ".ayokerja [kata kunci]",
   example: ".ayokerja developer",
   isOwner: false,
@@ -90,13 +85,24 @@ async function handler(m, { sock }) {
 
     const mergedCategories = category ? [category] : settings.categories || [];
 
-    const jobs = await fetchNewJobs({
-      sources: ["jobstreet", "lokereid", "remotive"],
+    // Coba 4 portal Indonesia dulu (JobStreet, Glints, Kalibrr, Indeed)
+    let jobs = await fetchAllIndonesiaJobs({
+      sources: ["jobstreet", "glints", "kalibrr", "indeed"],
       keywords: mergedKeywords,
-      categories: mergedCategories,
       limit: 5,
       sentIds: {},
     });
+
+    // Fallback ke sumber international jika tidak ada hasil
+    if (!jobs.length) {
+      jobs = await fetchNewJobs({
+        sources: ["remotive", "arbeitnow"],
+        keywords: mergedKeywords,
+        categories: mergedCategories,
+        limit: 5,
+        sentIds: {},
+      });
+    }
 
     if (!jobs || !jobs.length) {
       const noMsg = mergedKeywords && mergedKeywords.length
