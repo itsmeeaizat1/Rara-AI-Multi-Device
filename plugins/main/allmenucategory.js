@@ -13,7 +13,7 @@ import fs from "fs";
 import path from "path";
 import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
+import { buildCategoryButton, CATEGORY_EMOJI } from "../../src/lib/nova-category-list.js";
 
 const pluginConfig = {
   name: "allmenucategory",
@@ -133,41 +133,39 @@ async function handler(m, { sock, db }) {
         if (wf) weatherBlock = `${wf}\n\n`;
       } catch {}
 
-      let txt = `${weatherBlock}╭──「 *Keterangan* 」
-│
-│ ❏ Ⓞ = Hanya untuk owner
-│ ❏ ⓟ = Hanya untuk premium
-│ ❏ Ⓛ = Membutuhkan limit
-│ ❏ Ⓐ = Hanya untuk admin
-│ ❏ Ⓖ = Hanya di dalam grup
-│ ❏ Ⓟ = Hanya di private chat
-╰──────────❀
-`;
-
+      // Compact index — cuma nama kategori + jumlah command, BUKAN dump semua command
+      // (yang itu tugas allmenu, bukan allmenucategory)
+      let totalAllCmds = 0;
+      const catEntries = [];
       for (const cat of visibleCats) {
         const pluginCmds = commandsByCategory[cat] || [];
         const caseCmds = casesByCategory[cat] || [];
-        const allCmds = [...pluginCmds, ...caseCmds];
-        if (allCmds.length === 0) continue;
+        const total = pluginCmds.length + caseCmds.length;
+        if (total === 0) continue;
+        totalAllCmds += total;
         const catName = CATEGORY_NAMES[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
-
-        txt += `├──「 *${catName}* 」\n`;
-        for (let i = 0; i < allCmds.length; i++) {
-          const cmd = allCmds[i];
-          const symbols = getCommandSymbols(cmd);
-          txt += `│ ❏ ${prefix}${cmd}${symbols}\n`;
-        }
+        const emoji = CATEGORY_EMOJI?.[cat] || "📂";
+        catEntries.push({ cat, catName, emoji, total });
       }
 
-      txt += `╰──────────❀\n`;
+      let txt = `${weatherBlock}╭──「 *Daftar Kategori* 」
+│
+│ ❏ *Total:* ${catEntries.length} kategori
+│ ❏ *Total Fitur:* ${totalAllCmds} command
+│
+`;
+      for (const entry of catEntries) {
+        txt += `│ ${entry.emoji} \`\`${entry.catName}\`\` — ${entry.total} cmd\n`;
+      }
+      txt += `│\n│ ❏ Ketik \`\`${prefix}allmenucategory <nama>\`\`\n│   atau klik tombol Kategori di bawah\n╰──────────❀\n`;
 
       const navButtons = [
-        { id: `${prefix}menu`, text: "🏠 Menu" },
-        { id: `${prefix}allmenu`, text: "📋 All Menu" },
+        { id: `${prefix}menu`, text: "Menu" },
+        { id: `${prefix}allmenu`, text: "All Menu" },
         buildCategoryButton(m, db, prefix),
-        { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
-        { id: `${prefix}info`, text: "ℹ️ Info" },
-        { id: `${prefix}owner`, text: "👑 Owner" },
+        { id: `${prefix}tanyaai`, text: "Tanya AI" },
+        { id: `${prefix}info`, text: "Info" },
+        { id: `${prefix}owner`, text: "Owner" },
       ];
 
       await m.react("🐣");
@@ -224,26 +222,36 @@ async function handler(m, { sock, db }) {
       if (wf2) weatherBlock2 = `${wf2}\n\n`;
     } catch {}
 
-    let txt = `${weatherBlock2}╭──「 *${catName}* 」
+    // Compact 2-column layout — beda dari allmenu yang dump semua kategori
+    const emoji = CATEGORY_EMOJI?.[matchedCat] || "📂";
+    let txt = `${weatherBlock2}╭──「 ${emoji} *${catName}* 」
 │
-│ ❏ *Total: ${totalFitur} Fitur*
+│ ❏ *Total:* ${totalFitur} fitur
 │
 `;
     for (let i = 0; i < allCommands.length; i++) {
       const cmd = allCommands[i];
       const symbols = getCommandSymbols(cmd);
-      txt += `│ ❏ ${prefix}${cmd}${symbols}\n`;
+      const pinfo = getPlugin(cmd);
+      const desc = pinfo?.config?.description || "";
+      // Truncate description to keep it compact
+      const shortDesc = desc ? desc.slice(0, 40) : "";
+      if (shortDesc) {
+        txt += `│ ❏ \`\`${prefix}${cmd}${symbols}\`\`\n│   └ ${shortDesc}\n`;
+      } else {
+        txt += `│ ❏ \`\`${prefix}${cmd}${symbols}\`\`\n`;
+      }
     }
 
-    txt += `╰──────────❀\n`;
+    txt += `│\n╰──────────❀\n`;
 
     const navButtons2 = [
-      buildCategoryButton(m, db, prefix, "📂 Kategori Lain"),
-      { id: `${prefix}menu`, text: "🏠 Menu" },
-      { id: `${prefix}allmenu`, text: "📋 All Menu" },
-      { id: `${prefix}tanyaai`, text: "🤖 Tanya AI" },
-      { id: `${prefix}info`, text: "ℹ️ Info" },
-      { id: `${prefix}owner`, text: "👑 Owner" },
+      buildCategoryButton(m, db, prefix, "Kategori Lain"),
+      { id: `${prefix}menu`, text: "Menu" },
+      { id: `${prefix}allmenu`, text: "All Menu" },
+      { id: `${prefix}tanyaai`, text: "Tanya AI" },
+      { id: `${prefix}info`, text: "Info" },
+      { id: `${prefix}owner`, text: "Owner" },
     ];
 
     await m.react("🐣");

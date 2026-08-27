@@ -121,7 +121,7 @@ function buildCategoryRows(m, db, prefix = ".") {
  * @param {string} prefix
  * @returns {object} { type: "single_select", text, title, sections }
  */
-function buildCategoryButton(m, db, prefix = ".", label = "📂 Kategori") {
+function buildCategoryButton(m, db, prefix = ".", label = "Kategori") {
   const rows = buildCategoryRows(m, db, prefix);
   return {
     type: "single_select",
