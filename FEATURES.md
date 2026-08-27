@@ -221,7 +221,7 @@ alquran, hadisnabi, hafalan, motivasiislam, murrotal, niatdoa, quran, quranv3, s
 jpm
 
 ### 🏠 Main (27+ plugin)
-aboutnova, allmenu, autoreaction, belanja, benefitowner, benefitpremium, block, carifitur, channelnovaofficial, daftarsewa, fun, infov2, jadibot, leaderboard, menu, menu2, menukategori, owner, ping, ping2, rules, sc, stats, stopjadibot, system, totalfitur, tqto
+aboutnova, allmenu, autoreaction, belanja, benefitowner, benefitpremium, block, buyprem, buysewa, carifitur, channelnovaofficial, daftarsewa, fun, infov2, jadibot, leaderboard, menu, menu2, menukategori, owner, ping, ping2, rules, sc, stats, stopjadibot, system, totalfitur, tqto
 
 ### 🛠️ Maker (7 plugin)
 captionig, certmaker, image.jpg, lyricscard, mask.png, nowm, profilecard, quotemaker, watermark
