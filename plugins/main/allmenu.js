@@ -139,8 +139,23 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const platform = process.platform;
     const totalUsers = db.getUserCount();
     const allUsers = db.getAllUsers();
-    const totalRegistered = Object.values(allUsers).filter(u => u.registeredAt).length;
+    const totalRegistered = Object.values(allUsers).filter(u => u.registeredAt || u.isRegistered).length;
     const totalPremium = Object.values(allUsers).filter(u => u.isPremium).length;
+    const totalBanned = Object.values(allUsers).filter(u => u.isBanned).length;
+    const totalUnregistered = Object.values(allUsers).filter(u => u.unregisteredAt).length;
+    const allGroups = db.getAllGroups();
+    const totalGroups = Object.keys(allGroups).length;
+    const totalActiveGroups = Object.values(allGroups).filter(g => g.isLeft !== true && g.isBanned !== true).length;
+    const totalWarned = Object.values(allUsers).filter(u => {
+      const w = u.warnings;
+      return Array.isArray(w) ? w.length > 0 : (w && typeof w === 'object' ? Object.keys(w).length > 0 : false);
+    }).length;
+    const dbStats = db.getStats();
+    const totalCommandsRun = dbStats.commandsRun || dbStats.totalCommands || 0;
+    const totalMessagesIn = dbStats.messagesReceived || dbStats.totalMessages || 0;
+    const totalMessagesOut = dbStats.messagesSent || 0;
+    const totalStickerMade = dbStats.stickerMade || 0;
+    const totalDownloads = dbStats.downloads || 0;
     const memUsage = process.memoryUsage();
     const totalMem = os.totalmem();
     const usedMem = totalMem - os.freemem();
@@ -200,6 +215,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ ✅ Terdaftar: ${totalRegistered}
 │ 💎 Premium: ${totalPremium}
 │ 🚫 Diblokir: ${totalBanned}
+│ ❌ Batal Daftar: ${totalUnregistered}
 │ ⚠️ Kena Warn: ${totalWarned}
 │ 🏠 Grup Aktif: ${totalActiveGroups} / ${totalGroups}
 │ 📥 Pesan Masuk: ${totalMessagesIn > 0 ? totalMessagesIn.toLocaleString() : '-'}

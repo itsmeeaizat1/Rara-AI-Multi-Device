@@ -94,6 +94,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const totalGroups = Object.keys(allGroups).length;
     const totalActiveGroups = Object.values(allGroups).filter(g => g.isLeft !== true && g.isBanned !== true).length;
     // Hitung user yang punya warning/spam record
+    const totalUnregistered = Object.values(allUsers).filter(u => u.unregisteredAt).length;
     const totalWarned = Object.values(allUsers).filter(u => {
       const w = u.warnings;
       return Array.isArray(w) ? w.length > 0 : (w && typeof w === 'object' ? Object.keys(w).length > 0 : false);
@@ -175,6 +176,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ ✅ Terdaftar: ${totalRegistered}
 │ 💎 Premium: ${totalPremium}
 │ 🚫 Diblokir: ${totalBanned}
+│ ❌ Batal Daftar: ${totalUnregistered}
 │ ⚠️ Kena Warn: ${totalWarned}
 │ 🏠 Grup Aktif: ${totalActiveGroups} / ${totalGroups}
 │ 📥 Pesan Masuk: ${totalMessagesIn > 0 ? totalMessagesIn.toLocaleString() : '-'}
