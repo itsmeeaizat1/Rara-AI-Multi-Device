@@ -1,16 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// crashguard.js — PM2 Crash Monitor + Auto-Restart + Notifikasi owner
-// .crashguard status — Lihat status crash guard & history
-// .crashguard on/off — Toggle monitoring
-// .crashguard restart — Restart PM2 process manual
-// .crashguard history — Lihat crash history
-// .crashguard clear — Clear crash history
+// crashguard.js — PM2 Crash Monitor + Auto-Restart (integrated with automation hub)
 import { exec } from 'child_process'
 import { promisify } from 'util'
-import fs from 'fs'
-import path from 'path'
 import { getDatabase } from '../../src/lib/nova-database.js'
-import config from '../../config.js'
 
 const execAsync = promisify(exec)
 
@@ -30,73 +22,32 @@ const pluginConfig = {
   isEnabled: true,
 }
 
-const GUARD_KEY = "crashguard_config"
-const HISTORY_KEY = "crashguard_history"
-
-async function getConfig(db) {
-  return await db.get(GUARD_KEY) || {
-    enabled: false,
-    processName: "all",
-    maxRestarts: 5,
-    restartWindow: 300000,
-    lastRestart: 0,
+function getCfg(db) {
+  if (!db.db.data.automation) db.db.data.automation = {}
+  if (!db.db.data.automation.crashguard) {
+    db.db.data.automation.crashguard = {
+      enabled: false, processName: "all",
+      maxRestarts: 5, restartWindow: 300000,
+      lastRestart: 0, restartHistory: [],
+    }
   }
+  return db.db.data.automation.crashguard
 }
 
-async function saveConfig(db, cfg) {
-  await db.set(GUARD_KEY, cfg)
-}
-
-async function getHistory(db) {
-  return await db.get(HISTORY_KEY) || []
-}
-
-async function addHistory(db, entry) {
-  const history = await getHistory(db)
-  history.unshift(entry)
-  if (history.length > 20) history.length = 20
-  await db.set(HISTORY_KEY, history)
-}
+function save(db) { db.markDirty("settings"); db.db.write?.() }
 
 async function getPM2Info() {
   try {
     const { stdout } = await execAsync("pm2 jlist 2>/dev/null || echo '[]'")
-    const procs = JSON.parse(stdout)
-    return procs.map(p => ({
-      name: p.name,
-      pid: p.pid,
-      status: p.pm2_env?.status || "unknown",
+    return JSON.parse(stdout).map(p => ({
+      name: p.name, status: p.pm2_env?.status || "unknown",
       restarts: p.pm2_env?.restart_time || 0,
       uptime: p.pm2_env?.pm_uptime || 0,
-      unstableRestarts: p.pm2_env?.unstable_restarts || 0,
+      unstable: p.pm2_env?.unstable_restarts || 0,
       memory: Math.round((p.monit?.memory || 0) / 1024 / 1024),
       cpu: p.monit?.cpu || 0,
     }))
-  } catch {
-    return []
-  }
-}
-
-async function restartPM2(processName) {
-  try {
-    const target = processName === "all" ? "all" : processName
-    const { stdout, stderr } = await execAsync("pm2 restart " + target + " 2>&1")
-    return { success: true, output: stdout || stderr || "Restarted" }
-  } catch (e) {
-    return { success: false, output: e.message }
-  }
-}
-
-async function getRecentLogs(processName, lines = 20) {
-  try {
-    const target = processName === "all" ? "" : processName
-    const { stdout } = await execAsync(
-      "pm2 logs " + target + " --lines " + lines + " --nostream --raw 2>&1 | tail -" + lines
-    )
-    return stdout.slice(-2000)
-  } catch {
-    return "Tidak bisa mengambil logs"
-  }
+  } catch { return [] }
 }
 
 function timeAgo(ms) {
@@ -109,147 +60,90 @@ function timeAgo(ms) {
   return Math.floor(h / 24) + "d ago"
 }
 
-async function handler(m, { sock, config: botConfig }) {
+async function handler(m, { sock }) {
   try {
     const db = getDatabase()
     const args = (m.text || "").trim().split(/\s+/)
     const subCmd = args[0]?.toLowerCase() || "status"
-    const cfg = await getConfig(db)
+    const cfg = getCfg(db)
 
-    // Sub-command: on/off
     if (subCmd === "on" || subCmd === "off") {
-      cfg.enabled = subCmd === "on"
-      await saveConfig(db, cfg)
+      cfg.enabled = subCmd === "on"; save(db)
       await m.react("🐣")
-      return m.reply(
-        "╭──「 Crash Guard 」\n" +
-        "├── Status: " + (cfg.enabled ? "ON" : "OFF") + "\n" +
-        "├── Process: " + cfg.processName + "\n" +
-        "├── Max restarts: " + cfg.maxRestarts + " per " + (cfg.restartWindow / 60000) + " menit\n" +
-        "╰──────────❀"
-      )
+      return m.reply("╭──「 Crash Guard 」\n├── Status: " + (cfg.enabled ? "ON (monitoring)" : "OFF") + "\n├── Max restarts: " + cfg.maxRestarts + " per " + (cfg.restartWindow / 60000) + " min\n╰──────────❀")
     }
 
-    // Sub-command: restart
     if (subCmd === "restart") {
       const procName = args[1] || cfg.processName
       await m.react("🕒")
-      const result = await restartPM2(procName)
-
-      await addHistory(db, {
-        time: Date.now(),
-        action: "manual_restart",
-        process: procName,
-        success: result.success,
-      })
-
-      await m.react("🐣")
-      if (result.success) {
-        return m.reply(
-          "╭──「 Crash Guard 」\n" +
-          "├── PM2 \"" + procName + "\" berhasil di-restart\n" +
-          "╰──────────❀"
-        )
+      try {
+        await execAsync("pm2 restart " + (procName === "all" ? "all" : procName) + " 2>&1")
+        cfg.restartHistory.unshift({ time: Date.now(), action: "manual_restart", process: procName, success: true })
+        cfg.restartHistory = cfg.restartHistory.slice(0, 20)
+        cfg.lastRestart = Date.now()
+        save(db)
+        await m.react("🐣")
+        return m.reply("╭──「 Crash Guard 」\n├── PM2 \"" + procName + "\" berhasil di-restart\n╰──────────❀")
+      } catch (e) {
+        await m.react("🐣")
+        return m.reply("╭──「 Crash Guard 」\n├── Gagal restart: " + e.message.slice(0, 100) + "\n╰──────────❀")
       }
-      return m.reply(
-        "╭──「 Crash Guard 」\n" +
-        "├── Gagal restart PM2 \"" + procName + "\"\n" +
-        "├── " + result.output + "\n" +
-        "╰──────────❀"
-      )
     }
 
-    // Sub-command: history
     if (subCmd === "history") {
-      const history = await getHistory(db)
+      const history = cfg.restartHistory || []
       await m.react("🐣")
-      if (!history.length) {
-        return m.reply(
-          "╭──「 Crash Guard 」\n" +
-          "├── Belum ada crash/restart history.\n" +
-          "╰──────────❀"
-        )
-      }
+      if (!history.length) return m.reply("╭──「 Crash Guard 」\n├── Belum ada history.\n╰──────────❀")
       let text = "╭──「 Crash Guard History 」\n"
       history.slice(0, 10).forEach((h, i) => {
         const icon = h.success ? "✅" : "❌"
         text += "├── " + (i + 1) + ". " + icon + " " + h.action + " — " + (h.process || "?") + "\n"
         text += "├── " + new Date(h.time).toLocaleString("id-ID") + "\n"
-        if (h.error) text += "├── " + h.error.slice(0, 80) + "\n"
         if (i < 9) text += "├──\n"
       })
       text += "╰──────────❀"
       return m.reply(text)
     }
 
-    // Sub-command: clear
     if (subCmd === "clear") {
-      await db.set(HISTORY_KEY, [])
+      cfg.restartHistory = []; save(db)
       await m.react("🐣")
-      return m.reply(
-        "╭──「 Crash Guard 」\n" +
-        "├── History dihapus.\n" +
-        "╰──────────❀"
-      )
+      return m.reply("╭──「 Crash Guard 」\n├── History dihapus.\n╰──────────❀")
     }
 
-    // Sub-command: set process
     if (subCmd === "set") {
-      const key = args[1]?.toLowerCase()
-      const val = args[2]
+      const key = args[1]?.toLowerCase(), val = args[2]
       if (key === "process" && val) cfg.processName = val
       if (key === "maxrestart" && val) cfg.maxRestarts = parseInt(val) || 5
-      await saveConfig(db, cfg)
-      await m.react("🐣")
-      return m.reply(
-        "╭──「 Crash Guard 」\n" +
-        "├── Config updated.\n" +
-        "├── Process: " + cfg.processName + "\n" +
-        "├── Max restarts: " + cfg.maxRestarts + "\n" +
-        "╰──────────❀"
-      )
+      save(db); await m.react("🐣")
+      return m.reply("╭──「 Crash Guard 」\n├── Config updated.\n├── Process: " + cfg.processName + "\n├── Max restarts: " + cfg.maxRestarts + "\n╰──────────❀")
     }
 
     // Default: status
-    const pm2Info = await getPM2Info()
-    const history = await getHistory(db)
+    const pm2 = await getPM2Info()
     const lastRestart = cfg.lastRestart ? timeAgo(Date.now() - cfg.lastRestart) : "never"
-
     await m.react("🐣")
-
     let text = "╭──「 Crash Guard 」\n"
     text += "├── Status: " + (cfg.enabled ? "ON (monitoring)" : "OFF") + "\n"
     text += "├── Last restart: " + lastRestart + "\n"
-    text += "├── Total events: " + history.length + "\n"
+    text += "├── Events: " + (cfg.restartHistory?.length || 0) + "\n"
     text += "├──\n"
-
-    if (pm2Info.length) {
+    if (pm2.length) {
       text += "├── PM2 Processes:\n"
-      pm2Info.forEach(p => {
+      pm2.forEach(p => {
         const icon = p.status === "online" ? "✅" : "❌"
-        const upTime = p.uptime ? timeAgo(Date.now() - p.uptime) : "?"
+        const up = p.uptime ? timeAgo(Date.now() - p.uptime) : "?"
         text += "├── " + icon + " " + p.name + " — " + p.status + "\n"
-        text += "├── Restarts: " + p.restarts + " | Up: " + upTime + "\n"
-        text += "├── CPU: " + p.cpu + "% | RAM: " + p.memory + "MB\n"
-        if (p.unstableRestarts > 0) {
-          text += "├── ⚠️ Unstable restarts: " + p.unstableRestarts + "\n"
-        }
+        text += "├── Restarts: " + p.restarts + " | Up: " + up + " | CPU: " + p.cpu + "% | RAM: " + p.memory + "MB\n"
+        if (p.unstable > 0) text += "├── ⚠️ Unstable: " + p.unstable + "\n"
       })
-    } else {
-      text += "├── PM2 tidak terdeteksi\n"
-    }
-
+    } else { text += "├── PM2 tidak terdeteksi\n" }
     text += "╰──────────❀"
     return m.reply(text)
   } catch (e) {
     console.error("[crashguard] error:", e.message)
     await m.react("🐣")
-    return m.reply(
-      "╭──「 Error 」\n" +
-      "├── Gagal menjalankan crash guard.\n" +
-      "├── " + (e.message || "Terjadi kesalahan") + "\n" +
-      "╰──────────❀"
-    )
+    return m.reply("╭──「 Error 」\n├── " + (e.message || "Terjadi kesalahan") + "\n╰──────────❀")
   }
 }
 

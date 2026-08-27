@@ -537,6 +537,26 @@ async function messageHandler(msg, sock) {
     }
   }
 
+  // === Automation Hub Hooks ===
+  // Track activity for smartdigest
+  if (!m.isNewsletter) {
+    try {
+      const { trackActivity } = await import("./lib/nova-automation-hub.js");
+      trackActivity(m);
+    } catch {}
+  }
+  // Auto-forward & Auto-mod hooks (run on ALL messages, not just commands)
+  if (!m.fromMe && !m.isNewsletter) {
+    try {
+      const { checkAutoForward, checkAutoMod } = await import("./lib/nova-automation-hub.js");
+      await checkAutoForward(m, sock);
+      await checkAutoMod(m, sock);
+    } catch (e) {
+      if (config.dev?.debugLog) console.error("[AutomationHub] Hook error:", e.message);
+    }
+  }
+
+
   // Auto-AI: if not a command, check if auto-AI should respond
   if (!m.isCommand && !m.fromMe && !m.isNewsletter) {
     try {

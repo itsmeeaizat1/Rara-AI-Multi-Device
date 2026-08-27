@@ -1,16 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// servermonitor.js — VPS Health Monitor + Auto-Alert ke owner
-// .servermonitor status — Cek VPS sekarang
-// .servermonitor alert on/off — Toggle auto-alert
-// .servermonitor threshold cpu 80 ram 85 disk 90 — Set threshold alert
-// .servermonitor test — Test kirim alert
+// servermonitor.js — VPS Health Monitor + Auto-Alert (integrated with automation hub)
 import os from 'os'
-import fs from 'fs'
-import path from 'path'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { initAutomationHub } from '../../src/lib/nova-automation-hub.js'
 
 const execAsync = promisify(exec)
 
@@ -30,23 +24,19 @@ const pluginConfig = {
   isEnabled: true,
 }
 
-const MONITOR_KEY = "servermonitor_config"
-
-async function getConfig(db) {
-  const data = await db.get(MONITOR_KEY) || {}
-  return {
-    alertEnabled: data.alertEnabled ?? false,
-    cpuThreshold: data.cpuThreshold ?? 80,
-    ramThreshold: data.ramThreshold ?? 85,
-    diskThreshold: data.diskThreshold ?? 90,
-    lastAlert: data.lastAlert || 0,
-    lastCheck: data.lastCheck || 0,
+function getCfg(db) {
+  if (!db.db.data.automation) db.db.data.automation = {}
+  if (!db.db.data.automation.servermonitor) {
+    db.db.data.automation.servermonitor = {
+      alertEnabled: false,
+      cpuThreshold: 80, ramThreshold: 85, diskThreshold: 90,
+      lastAlert: 0,
+    }
   }
+  return db.db.data.automation.servermonitor
 }
 
-async function saveConfig(db, cfg) {
-  await db.set(MONITOR_KEY, cfg)
-}
+function save(db) { db.markDirty("settings"); db.db.write?.() }
 
 async function getCPUUsage() {
   const cpus = os.cpus()
@@ -62,204 +52,102 @@ async function getDiskUsage() {
   try {
     const { stdout } = await execAsync("df -h / | tail -1 | awk '{print $5}'")
     return parseInt(stdout.trim()) || 0
-  } catch {
-    return 0
-  }
+  } catch { return 0 }
 }
 
 async function getPM2Status() {
   try {
     const { stdout } = await execAsync("pm2 jlist 2>/dev/null || echo '[]'")
-    const procs = JSON.parse(stdout)
-    return procs.map(p => ({
-      name: p.name,
-      status: p.pm2_env?.status || "unknown",
+    return JSON.parse(stdout).map(p => ({
+      name: p.name, status: p.pm2_env?.status || "unknown",
       restarts: p.pm2_env?.restart_time || 0,
       uptime: p.pm2_env?.pm_uptime || 0,
       memory: Math.round((p.monit?.memory || 0) / 1024 / 1024),
     }))
-  } catch {
-    return []
-  }
+  } catch { return [] }
 }
 
-async function getSystemInfo() {
-  const totalMem = os.totalmem()
-  const freeMem = os.freemem()
-  const usedMem = totalMem - freeMem
-  const memPercent = Math.round((usedMem / totalMem) * 100)
-  const cpuPercent = await getCPUUsage()
-  const diskPercent = await getDiskUsage()
-  const pm2 = await getPM2Status()
-  const uptime = os.uptime()
-  const loadAvg = os.loadavg()
-
-  return {
-    cpu: cpuPercent,
-    ram: memPercent,
-    ramUsed: Math.round(usedMem / 1024 / 1024),
-    ramTotal: Math.round(totalMem / 1024 / 1024),
-    disk: diskPercent,
-    uptime: uptime,
-    loadAvg: loadAvg,
-    pm2: pm2,
-    cores: os.cpus().length,
-  }
+function formatUptime(s) {
+  const d = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60)
+  if (d) return d + "d " + h + "h"
+  if (h) return h + "h " + m + "m"
+  return m + "m"
 }
 
-function formatUptime(seconds) {
-  const d = Math.floor(seconds / 86400)
-  const h = Math.floor((seconds % 86400) / 3600)
-  const m = Math.floor((seconds % 3600) / 60)
-  const parts = []
-  if (d) parts.push(d + "d")
-  if (h) parts.push(h + "h")
-  parts.push(m + "m")
-  return parts.join(" ")
-}
-
-function formatReport(info) {
-  let text = "╭──「 VPS Monitor 」\n"
-  text += "├── CPU: " + info.cpu + "% (" + info.cores + " cores)\n"
-  text += "├── RAM: " + info.ram + "% (" + info.ramUsed + "MB / " + info.ramTotal + "MB)\n"
-  text += "├── Disk: " + info.disk + "%\n"
-  text += "├── Uptime: " + formatUptime(info.uptime) + "\n"
-  text += "├── Load: " + info.loadAvg.map(l => l.toFixed(2)).join(", ") + "\n"
-  text += "├──\n"
-
-  if (info.pm2.length) {
-    text += "├── PM2 Processes:\n"
-    info.pm2.forEach(p => {
-      const icon = p.status === "online" ? "✅" : "❌"
-      text += "├── " + icon + " " + p.name + " — " + p.status + " (" + p.restarts + " restarts, " + p.memory + "MB)\n"
-    })
-  } else {
-    text += "├── PM2: tidak terdeteksi\n"
-  }
-
-  text += "╰──────────❀"
-  return text
-}
-
-function checkAlerts(info, cfg) {
-  const alerts = []
-  if (info.cpu >= cfg.cpuThreshold) {
-    alerts.push("⚠️ CPU " + info.cpu + "% >= " + cfg.cpuThreshold + "%")
-  }
-  if (info.ram >= cfg.ramThreshold) {
-    alerts.push("⚠️ RAM " + info.ram + "% >= " + cfg.ramThreshold + "%")
-  }
-  if (info.disk >= cfg.diskThreshold) {
-    alerts.push("⚠️ Disk " + info.disk + "% >= " + cfg.diskThreshold + "%")
-  }
-  info.pm2.forEach(p => {
-    if (p.status !== "online") {
-      alerts.push("❌ PM2 " + p.name + " status: " + p.status)
-    }
-  })
-  return alerts
-}
-
-async function handler(m, { sock, config: botConfig }) {
+async function handler(m, { sock }) {
   try {
     const db = getDatabase()
     const args = (m.text || "").trim().split(/\s+/)
     const subCmd = args[0]?.toLowerCase() || "status"
-    const cfg = await getConfig(db)
+    const cfg = getCfg(db)
 
-    // Sub-command: alert on/off
     if (subCmd === "alert") {
       const toggle = args[1]?.toLowerCase()
       if (toggle === "on") {
-        cfg.alertEnabled = true
-        await saveConfig(db, cfg)
+        cfg.alertEnabled = true; save(db)
         await m.react("🐣")
-        return m.reply(
-          "╭──「 VPS Monitor 」\n" +
-          "├── Auto-alert: ON\n" +
-          "├── Threshold: CPU " + cfg.cpuThreshold + "% / RAM " + cfg.ramThreshold + "% / Disk " + cfg.diskThreshold + "%\n" +
-          "├── Bot akan cek VPS tiap 5 menit\n" +
-          "├── Alert dikirim ke PM owner\n" +
-          "╰──────────❀"
-        )
+        return m.reply("╭──「 VPS Monitor 」\n├── Auto-alert: ON\n├── Cek tiap 60 detik, alert ke PM owner\n├── Threshold: CPU " + cfg.cpuThreshold + "% / RAM " + cfg.ramThreshold + "% / Disk " + cfg.diskThreshold + "%\n╰──────────❀")
       } else if (toggle === "off") {
-        cfg.alertEnabled = false
-        await saveConfig(db, cfg)
+        cfg.alertEnabled = false; save(db)
         await m.react("🐣")
-        return m.reply(
-          "╭──「 VPS Monitor 」\n" +
-          "├── Auto-alert: OFF\n" +
-          "╰──────────❀"
-        )
+        return m.reply("╭──「 VPS Monitor 」\n├── Auto-alert: OFF\n╰──────────❀")
       }
     }
 
-    // Sub-command: threshold
     if (subCmd === "threshold") {
       const rest = args.slice(1)
       for (let i = 0; i < rest.length; i += 2) {
-        const key = rest[i]?.toLowerCase()
-        const val = parseInt(rest[i + 1])
+        const key = rest[i]?.toLowerCase(), val = parseInt(rest[i + 1])
         if (key === "cpu" && val) cfg.cpuThreshold = val
         if (key === "ram" && val) cfg.ramThreshold = val
         if (key === "disk" && val) cfg.diskThreshold = val
       }
-      await saveConfig(db, cfg)
-      await m.react("🐣")
-      return m.reply(
-        "╭──「 VPS Monitor 」\n" +
-        "├── Threshold updated:\n" +
-        "├── CPU: " + cfg.cpuThreshold + "%\n" +
-        "├── RAM: " + cfg.ramThreshold + "%\n" +
-        "├── Disk: " + cfg.diskThreshold + "%\n" +
-        "╰──────────❀"
-      )
+      save(db); await m.react("🐣")
+      return m.reply("╭──「 VPS Monitor 」\n├── Threshold updated:\n├── CPU: " + cfg.cpuThreshold + "%\n├── RAM: " + cfg.ramThreshold + "%\n├── Disk: " + cfg.diskThreshold + "%\n╰──────────❀")
     }
 
-    // Sub-command: test
     if (subCmd === "test") {
-      const info = await getSystemInfo()
-      const alerts = checkAlerts(info, cfg)
+      const cpu = await getCPUUsage()
+      const ram = Math.round(((os.totalmem() - os.freemem()) / os.totalmem()) * 100)
+      const disk = await getDiskUsage()
+      const alerts = []
+      if (cpu >= cfg.cpuThreshold) alerts.push("⚠️ CPU " + cpu + "% >= " + cfg.cpuThreshold + "%")
+      if (ram >= cfg.ramThreshold) alerts.push("⚠️ RAM " + ram + "% >= " + cfg.ramThreshold + "%")
+      if (disk >= cfg.diskThreshold) alerts.push("⚠️ Disk " + disk + "% >= " + cfg.diskThreshold + "%")
       await m.react("🐣")
-      if (alerts.length) {
-        return m.reply(
-          "╭──「 VPS Alert Test 」\n" +
-          alerts.map(a => "├── " + a).join("\n") + "\n" +
-          "╰──────────❀"
-        )
-      }
-      return m.reply(
-        "╭──「 VPS Alert Test 」\n" +
-        "├── Tidak ada alert aktif. Semua normal.\n" +
-        formatReport(info).replace("╭──「 VPS Monitor 」", "├──\n├── Status:") + "\n" +
-        "╰──────────❀"
-      )
+      if (alerts.length) return m.reply("╭──「 VPS Alert Test 」\n" + alerts.map(a => "├── " + a).join("\n") + "\n╰──────────❀")
+      return m.reply("╭──「 VPS Alert Test 」\n├── Semua normal. Tidak ada alert.\n├── CPU " + cpu + "% | RAM " + ram + "% | Disk " + disk + "%\n╰──────────❀")
     }
 
     // Default: status
-    const info = await getSystemInfo()
+    const cpu = await getCPUUsage()
+    const totalMem = os.totalmem(), usedMem = totalMem - os.freemem()
+    const ram = Math.round((usedMem / totalMem) * 100)
+    const disk = await getDiskUsage()
+    const pm2 = await getPM2Status()
+
+    let text = "╭──「 VPS Monitor 」\n"
+    text += "├── CPU: " + cpu + "% (" + os.cpus().length + " cores)\n"
+    text += "├── RAM: " + ram + "% (" + Math.round(usedMem / 1024 / 1024) + "MB / " + Math.round(totalMem / 1024 / 1024) + "MB)\n"
+    text += "├── Disk: " + disk + "%\n"
+    text += "├── Uptime: " + formatUptime(os.uptime()) + "\n"
+    text += "├── Load: " + os.loadavg().map(l => l.toFixed(2)).join(", ") + "\n"
+    text += "├── Alert: " + (cfg.alertEnabled ? "ON ✅" : "OFF ❌") + "\n"
+    text += "├──\n"
+    if (pm2.length) {
+      text += "├── PM2 Processes:\n"
+      pm2.forEach(p => {
+        const icon = p.status === "online" ? "✅" : "❌"
+        text += "├── " + icon + " " + p.name + " — " + p.status + " (" + p.restarts + " restarts, " + p.memory + "MB)\n"
+      })
+    } else { text += "├── PM2: tidak terdeteksi\n" }
+    text += "╰──────────❀"
     await m.react("🐣")
-    let text = formatReport(info)
-
-    if (cfg.alertEnabled) {
-      const alerts = checkAlerts(info, cfg)
-      if (alerts.length) {
-        text += "\n\n╭──「 Alerts 」\n" +
-          alerts.map(a => "├── " + a).join("\n") + "\n" +
-          "╰──────────❀"
-      }
-    }
-
     return m.reply(text)
   } catch (e) {
     console.error("[servermonitor] error:", e.message)
     await m.react("🐣")
-    return m.reply(
-      "╭──「 Error 」\n" +
-      "├── Gagal mengambil info VPS.\n" +
-      "├── " + (e.message || "Terjadi kesalahan") + "\n" +
-      "╰──────────❀"
-    )
+    return m.reply("╭──「 Error 」\n├── " + (e.message || "Terjadi kesalahan") + "\n╰──────────❀")
   }
 }
 

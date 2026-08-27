@@ -552,6 +552,14 @@ async function startConnection(options = {}) {
         console.error("[aigrup] Failed to start proactive timer:", e.message);
       }
 
+      // Start Automation Hub (servermonitor, crashguard, smartdigest, autoforward, automod)
+      try {
+        const { initAutomationHub } = await import("./lib/nova-automation-hub.js");
+        initAutomationHub(sock);
+      } catch (e) {
+        console.error("[automation] Failed to start automation hub:", e.message);
+      }
+
       const autoActionFlag = path.join(
         process.cwd(),
         "storage",
