@@ -1,5 +1,4 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import crypto from "crypto";
 import config, { getOwnerName } from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
@@ -28,8 +27,10 @@ async function handler(m, { sock, config: botConfig }) {
   const ownerNumbers = [...new Set([...configOwners, ...dbOwners])];
   const botName = botConfig.bot?.name || "Nova-AI";
   const ownerNames = ownerNumbers.map((n) => getOwnerName(n)).join(", ");
+  const totalOwners = ownerNumbers.length;
 
   if (ownerType === 2) {
+    // Type 2: Contact card langsung tanpa teks panjang
     const contacts = [];
     for (const number of ownerNumbers) {
       const cleanNumber = number.replace(/[^0-9]/g, "");
@@ -45,16 +46,20 @@ async function handler(m, { sock, config: botConfig }) {
       text: "Jika kamu memiliki pertanyaan, jangan ragu untuk bertanya, owner ramah kok",
     }, { quoted: zanne });
   } else {
-    const ownerText = `╭──「 *Owner Information* 」\n│ *ɴᴀᴍᴀ:* ${ownerNames}
-│ *ʙᴏᴛ:* ${botName}
-│ *ꜱᴛᴀᴛᴜꜱ:* Online
-╰──────────❀
+    // Type 1: Teks keren + contact card
+    const ownerText = [
+      `👨‍💻 *Owner:* ${ownerNames}`,
+      `🤖 *Bot:* ${botName}`,
+      `🟢 *Status:* Online`,
+      `👥 *Total Admin:* ${totalOwners}`,
+      ``,
+      `💡 Butuh bantuan? Laporkan bug?`,
+      `Mau request fitur atau sekadar ngobrol?`,
+      `Owner bot ini ramah dan open-minded kok 😊`,
+      `Silakan save kontak di bawah ya!`,
+    ].join("\n");
 
-Jika ada pertanyaan atau kendala,
-silakan hubungi owner di atas!
-Contact card di bawah.`;
-
-    await m.reply(claraWrap("owner", ownerText));
+    await m.reply(claraWrap("👨‍💻 Owner", ownerText));
 
     for (const number of ownerNumbers) {
       const cleanNumber = number.replace(/[^0-9]/g, "");
