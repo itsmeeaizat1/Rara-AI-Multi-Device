@@ -290,7 +290,8 @@ async function messageHandler(msg, sock) {
   // Registration session handler (interactive reply-based daftar)
   // Note: TIDAK exclude fromMe — biar owner bisa testing daftar via chat ke diri sendiri.
   // Proteksi echo pesan prompt milik bot sendiri ada di dalam registrationAnswerHandler (cek session.promptId).
-  if (!m.isCommand && !m.isNewsletter) {
+  // Skip in self mode for non-owner.
+  if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { registrationAnswerHandler } = await import("./../plugins/user/daftar.js");
       if (typeof registrationAnswerHandler === "function") {
@@ -300,9 +301,10 @@ async function messageHandler(msg, sock) {
     } catch (e) {
       if (config.dev?.debugLog) logger.error("registration", e.message);
     }
+  }
 
-    // VN Captcha Interrogation: jika user lagi dalam sesi ujian suara, verify VN
-  if (!m.isCommand && !m.fromMe) {
+  // VN Captcha Interrogation: jika user lagi dalam sesi ujian suara, verify VN (skip in self mode)
+  if (!m.isCommand && !m.fromMe && !__novaSelfModeSkip) {
     try {
       const { verifyVnCaptcha, hasVnCaptchaChallenge, isVnCaptchaBlocked } = await import("../plugins/owner/vncaptcha.js");
       const senderJid = m.key?.remoteJid || m.sender;
@@ -319,7 +321,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Captcha session handler (daftarotomatis captcha verification)
+  // Captcha session handler (daftarotomatis captcha verification) — skip in self mode for non-owner
+  if (!__novaSelfModeSkip) {
     try {
       const { captchaAnswerHandler } = await import("./../plugins/user/daftarotomatis.js");
       if (typeof captchaAnswerHandler === "function") {
@@ -331,9 +334,9 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Game answer handler (non-command reply to game message)
+  // Game answer handler (non-command reply to game message) — skip in self mode for non-owner
   // Checks all registered game sessions via nova-games + family100
-  if (!m.isCommand && !m.isNewsletter) {
+  if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     // Family 100 (separate plugin, own session system)
     try {
       const { answerHandler: fam100Handler } = await import("../plugins/game/family100.js");
@@ -363,8 +366,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Pacaran answer handler (reply terima/tolak to tembakan)
-  if (!m.isCommand && !m.isNewsletter) {
+  // Pacaran answer handler (reply terima/tolak to tembakan) — skip in self mode for non-owner
+  if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { answerHandler: pacaranHandler } = await import("../plugins/fun/pacaran.js");
       if (typeof pacaranHandler === "function") {
@@ -376,8 +379,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Nikah answer handler (reply terima/tolak to lamaran)
-  if (!m.isCommand && !m.isNewsletter) {
+  // Nikah answer handler (reply terima/tolak to lamaran) — skip in self mode for non-owner
+  if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { answerHandler: nikahHandler } = await import("../plugins/fun/nikah.js");
       if (typeof nikahHandler === "function") {
@@ -389,8 +392,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // RPG Cinta answer handler (reply terima/tolak to jadianmatch)
-  if (!m.isCommand && !m.isNewsletter) {
+  // RPG Cinta answer handler (reply terima/tolak to jadianmatch) — skip in self mode for non-owner
+  if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { answerHandler: jadianMatchHandler } = await import("../plugins/rpg/jadianmatch.js");
       if (typeof jadianMatchHandler === "function") {
@@ -402,8 +405,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // RPG Cinta nikah answer handler (reply terima/tolak to nikahmatch)
-  if (!m.isCommand && !m.isNewsletter) {
+  // RPG Cinta nikah answer handler (reply terima/tolak to nikahmatch) — skip in self mode for non-owner
+  if (!m.isCommand && !m.isNewsletter && !__novaSelfModeSkip) {
     try {
       const { answerHandler: nikahMatchHandler } = await import("../plugins/rpg/nikahmatch.js");
       if (typeof nikahMatchHandler === "function") {
@@ -415,8 +418,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // Confess reply handler (balasan ke pesan confess anonim/non-anonim)
-  if (!m.isCommand && !m.isNewsletter && m.quoted) {
+  // Confess reply handler (balasan ke pesan confess anonim/non-anonim) — skip in self mode for non-owner
+  if (!m.isCommand && !m.isNewsletter && m.quoted && !__novaSelfModeSkip) {
     try {
       const { replyHandler: confessReply } = await import("../plugins/fun/confess.js");
       if (typeof confessReply === "function") {
@@ -428,8 +431,8 @@ async function messageHandler(msg, sock) {
     }
   }
 
-  // ConfessViral reply handler (balasan ke pesan confess viral)
-  if (!m.isCommand && !m.isNewsletter && m.quoted) {
+  // ConfessViral reply handler (balasan ke pesan confess viral) — skip in self mode for non-owner
+  if (!m.isCommand && !m.isNewsletter && m.quoted && !__novaSelfModeSkip) {
     try {
       const { replyHandler: viralReply } = await import("../plugins/fun/confessviral.js");
       if (typeof viralReply === "function") {
@@ -595,8 +598,8 @@ async function messageHandler(msg, sock) {
 
   const plugin = getPlugin(command);
   if (!plugin) {
-    // Command not found — check if suggestion feature is on
-    if (config.features?.commandSuggestion !== false) {
+    // Command not found — check if suggestion feature is on (skip in self mode for non-owner)
+    if (config.features?.commandSuggestion !== false && !__novaSelfModeSkip) {
       const { getAllCommandNames } = await import("./lib/nova-plugins.js");
       const allCommands = getAllCommandNames();
       const { levenshtein } = await import("./lib/nova-middleware.js");
