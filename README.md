@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-RPG%20System%20Overhaul-success?style=for-the-badge)
-> *Commit: "feat: RPG system overhaul — full DB tracking, owner defaults, game rewards"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20restore%20Update-badge%20workflow%20(REA-success?style=for-the-badge)
+> *Commit: "feat: restore Update-badge workflow (README.md only, no .js edits)"*
 <!--END_SECTION:latest-update-->
 
 ---
