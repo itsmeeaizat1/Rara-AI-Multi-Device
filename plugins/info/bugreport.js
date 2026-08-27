@@ -1,18 +1,20 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+// bugreport.js — Laporkan bug ke owner (kirim langsung ke WA owner + simpan DB)
+import { claraWrap, novaCaption, tipText } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
+import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "bugreport",
   alias: ["bugreport"],
   category: "info",
-  description: "Laporkan bug ke owner/admin bot",
+  description: "Laporkan bug ke owner bot — notifikasi langsung ke WA owner",
   usage: ".bugreport <pesan>",
   example: ".bugreport Fitur .play error",
   isOwner: false,
   isPremium: false,
   isGroup: true,
-  isPrivate: false,
+  isPrivate: true,
   cooldown: 10,
   energi: 0,
   isEnabled: true,
@@ -22,51 +24,96 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const prefix = botConfig.command?.prefix || ".";
     const raw = m.text?.trim() || "";
-    const message = raw.replace(/^\.bugreport\s+/i, "").trim();
 
-    if (!message) {
-      const text =
-        novaCaption({
-  emoji: "ℹ️",
-  name: "bugreport",
-  description: "Laporkan bug ke owner/admin bot",
-  usage: `${prefix}bugreport <pesan>`,
-  example: `${prefix}bugreport Fitur .play error`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
+    // Extract message — handle both quoted reply and plain text
+    let message = raw.replace(/^\.bugreport\s+/i, "").trim();
 
-      await m.reply( text, "bugreport");
-      return { handled: true };
+    // If no text but replying to a message, use the quoted text
+    if (!message && m.quoted?.text) {
+      message = m.quoted.text.trim();
     }
 
+    if (!message) {
+      return m.reply(claraWrap("Bug Report", [
+        "Laporkan bug ke owner bot",
+        "",
+        "📌 *Cara Pakai:*",
+        `${prefix}bugreport <pesan>`,
+        `${prefix}bugreport (reply pesan yang bug)`,
+        "",
+        "💡 *Contoh:*",
+        `${prefix}bugreport Fitur .play error`,
+      ]));
+    }
+
+    // Save to database
     const db = getDatabase();
+    const reportId = Date.now();
     db.push("bugReports", {
+      id: reportId,
       from: m.sender,
+      fromName: m.pushName || "Unknown",
       chat: m.chat,
+      chatName: m.chatName || "Private",
       message,
       createdAt: Date.now(),
+      status: "pending",
     });
 
-    const text =
-      claraWrap("Bug Report", [`│ Pesan: *${message.slice(0, 1500)}${message.length > 1500 ? "..." : ""}*`,
-        "│ Status: *ᴛᴇʀꜱɪᴍᴘᴀɴ*"].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali`);
+    // Kirim notifikasi ke owner
+    const ownerNumbers = botConfig.owner?.number || [];
+    let ownerNotified = false;
 
-    await m.reply(claraWrap("bugreport", text));
+    if (ownerNumbers.length > 0) {
+      const ownerJid = `${String(ownerNumbers[0]).replace(/[^0-9]/g, "")}@s.whatsapp.net`;
+
+      const reporterName = m.pushName || "Unknown";
+      const reporterNum = m.sender?.split("@")[0] || "Unknown";
+      const chatType = m.isGroup ? "Grup" : "Private";
+      const chatName = m.chatName || (m.isGroup ? "Unknown Group" : "Private Chat");
+      const time = new Date().toLocaleString("id-ID", {
+        timeZone: "Asia/Jakarta",
+        dateStyle: "medium",
+        timeStyle: "short",
+      });
+
+      const ownerMsg = claraWrap("Bug Report Masuk", [
+        `Pesan: *${message.slice(0, 1000)}${message.length > 1000 ? "..." : ""}*`,
+        "",
+        `Dari: ${reporterName} (${reporterNum})`,
+        `Chat: ${chatName} (${chatType})`,
+        `Waktu: ${time}`,
+        "",
+        `Balas pesan ini atau chat langsung: wa.me/${reporterNum}`,
+      ]);
+
+      try {
+        await sock.sendMessage(ownerJid, { text: ownerMsg });
+        ownerNotified = true;
+      } catch (e) {
+        console.error("[bugreport] Gagal kirim ke owner:", e.message);
+      }
+    }
+
+    // Reply ke pengirim
+    if (ownerNotified) {
+      await m.reply(claraWrap("Bug Report", [
+        `Pesan: *${message.slice(0, 500)}${message.length > 500 ? "..." : ""}*`,
+        `Status: Terkirim ke owner`,
+      ]));
+    } else {
+      await m.reply(claraWrap("Bug Report", [
+        `Pesan: *${message.slice(0, 500)}${message.length > 500 ? "..." : ""}*`,
+        `Status: Tersimpan (owner tidak terjangkau)`,
+      ]));
+    }
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply( text, "bugreport");
+    console.error("[bugreport] error:", error.message);
+    await m.react("❌");
+    return m.reply(te(m.prefix, m.command, m.pushName), "bugreport");
   }
 
   return { handled: true };
 }
 
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler };
