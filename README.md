@@ -36,6 +36,10 @@ Automation:
 ![Main](https://github.com/itsmeeaizat/Nova-Ai-Whatsapp-Bot-Multi-Device/actions/workflows/main.yml/badge.svg)
 
 
+<!--START_SECTION:latest-update-->
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-RPG%20System%20Overhaul-success?style=for-the-badge)
+> *Commit: "feat: RPG system overhaul — full DB tracking, owner defaults, game rewards"*
+<!--END_SECTION:latest-update-->
 
 ---
 
