@@ -31,7 +31,11 @@ async function handler(m, { sock }) {
   const username = m.args[0]?.replace("@", "")?.trim();
 
   if (!username) {
-    return m.reply( `🐦 *Twitter/X Stalker*\n\nMasukkan username Twitter/X\n\n💡 *Contoh:* \`${m.prefix}twitterstalk elonmusk\``, "twitterstalk");
+    return m.reply(`╭──「 🐦 Twitter/X Stalker 」
+├── Masukkan username Twitter/X
+├──
+├── 💡 *Contoh:* \`${m.prefix}twitterstalk elonmusk\`
+╰──────────❀`, "twitterstalk");
   }
 
   await m.react("🕒");
@@ -43,7 +47,7 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data) {
-      return m.reply( `❌ Akun @${username} tidak ditemukan.`, "twitterstalk");
+      return m.reply(`╭──「 🐦 Twitter/X Stalker 」\n├── ❌ Akun @${username} tidak ditemukan\n╰──────────❀`, "twitterstalk");
     }
 
     const d = res.data.data;

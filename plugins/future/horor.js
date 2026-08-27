@@ -57,11 +57,11 @@ async function handler(m, { sock }) {
   const story = await generateHoror(names);
 
   if (!story) {
-    return m.reply( "❌ Gagal generate cerita horor. Coba lagi nanti.", "horor");
+    return m.reply("╭──「 👻 Horror Story 」\n├── ❌ Gagal generate cerita\n├── Coba lagi nanti\n╰──────────❀", "horor");
   }
 
   const header = "👻 *ʜᴏʀʀᴏʀ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";
-  const footer = "\n\n_Dibuat oleh Nova AI_";
+  const footer = "\n├──\n├── ✨ Dibuat oleh Nova AI\n╰──────────❀";
 
   await m.react("🐣");
   return m.reply( header + story + footer, "horor");

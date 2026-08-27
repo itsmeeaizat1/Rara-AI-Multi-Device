@@ -307,7 +307,7 @@ ${weatherBlock}${readMore}
     try { await sendMenuAudio(sock, m, db, true); } catch {}
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);
-    try { await m.reply("❌ Gagal menampilkan allmenu: " + e.message); } catch {}
+    try { await m.reply("╭──「 Menu 」\n├── ❌ Gagal menampilkan menu\n├── Coba lagi nanti\n╰──────────❀"); } catch {}
     await m.react("❌");
   }
 }

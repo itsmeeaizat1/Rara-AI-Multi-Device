@@ -23,7 +23,11 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url || (!url.includes("xnxx") && !url.includes("xvideos"))) {
-    return m.reply( `🔞 *xɴxx ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\nKirim URL video XNXX/XVideos\n\n💡 *Contoh:* \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\``, "xnxx2");
+    return m.reply(`╭──「 🔞 XNXX Downloader 」
+├── Kirim URL video XNXX/XVideos
+├──
+├── 💡 *Contoh:* \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\`
+╰──────────❀`, "xnxx2");
   }
 
   await m.react("🕒");
@@ -35,7 +39,7 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data) {
-      return m.reply( "❌ Gagal download. URL mungkin tidak valid.", "xnxx2");
+      return m.reply("╭──「 🔞 XNXX Downloader 」\n├── ❌ Gagal download\n├── URL mungkin tidak valid\n╰──────────❀", "xnxx2");
     }
 
     const d = res.data.data;
@@ -60,7 +64,7 @@ async function handler(m, { sock }) {
       }
     }
 
-    return m.reply( "❌ File video gagal diunduh. Coba lagi nanti.", "xnxx2");
+    return m.reply("╭──「 🔞 XNXX Downloader 」\n├── ❌ File gagal diunduh\n├── Coba lagi nanti\n╰──────────❀", "xnxx2");
   } catch (err) {
     console.error("[XNXX2] Error:", err.message);
     await m.react("❌");
