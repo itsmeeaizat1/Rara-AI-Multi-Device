@@ -22,10 +22,11 @@ const CATEGORY_NAMES = {
   ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
   panel: "Panel", owner: "Owner", store: "Store",
   anime: "Anime", asupan: "Asupan", clan: "Clan", convert: "Convert",
-  downloader: "Downloader", education: "Education", future: "Future",
-  islami: "Islami", islamic: "Islamic", menu: "Menu", maker: "Maker",
-  news: "News", linode: "Linode", primbon: "Primbon", cecan: "Cecan",
-  stalker: "Stalker", tts: "TTS", vps: "VPS",
+  downloader: "Downloader", education: "Education", food: "Food",
+  future: "Future", islami: "Islami", islamic: "Islamic", menu: "Menu",
+  maker: "Maker", news: "News", nsfw: "NSFW", linode: "Linode",
+  primbon: "Primbon", cecan: "Cecan", stalker: "Stalker", tts: "TTS",
+  vps: "VPS",
 };
 
 const CATEGORY_ORDER = [
@@ -44,6 +45,12 @@ const CATEGORY_EMOJI = {
   economy: "💰", user: "👤", random: "🎲", premium: "💎",
   ephoto: "📸", jpm: "📦", pushkontak: "📲",
   panel: "🖥️", owner: "👑", store: "🏬",
+  anime: "🎌", asupan: "😍", clan: "🛡️", convert: "🔄",
+  downloader: "📥", education: "📚", food: "🍔",
+  future: "🌌", islami: "☪️", islamic: "🕋", menu: "📋",
+  maker: "🖌️", news: "📰", nsfw: "🔞", linode: "☁️",
+  primbon: "🔮", cecan: "💃", stalker: "🕵️", tts: "🔊",
+  vps: "🖧",
 };
 
 /**
