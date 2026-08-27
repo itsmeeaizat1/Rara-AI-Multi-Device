@@ -271,8 +271,12 @@ emojitoanimasi, emojitoimage, invoicemaker, musikapaini, dan ratusan tool lainny
 ### 🔊 TTS (4 plugin)
 tts, voicemaker, voiceclone
 
-### 👤 User (22 plugin)
-profile, register, login, level, energi, koin, limit, inventory, quest, daily, weekly, dll
+### 👤 User (24 plugin)
+profile, register, login, daftar, daftarotomatis, unreg, bataldaftar, level, energi, koin, limit, inventory, quest, daily, weekly, dll
+- `.daftar` — Daftar via sesi interaktif (reward koin/energi/exp)
+- `.daftarotomatis` — Daftar via captcha (DM)
+- `.unreg` / `.bataldaftar` — Batalkan/hapus data pendaftaran
+- `.bataldaftar` — Batalkan sesi pendaftaran aktif
 
 ### 🔧 Utility (11 plugin)
 calc, currency, txt2qr, barcode, shortlink, translate, dll
