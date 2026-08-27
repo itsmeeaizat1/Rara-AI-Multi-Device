@@ -186,41 +186,48 @@ async function handleAntiBucin(m, sock, db) {
                 try {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
-                        text: '╭──「 *WARN LIMIT* 」\n│
-│ 👤 User: @' + senderTag + '
+                        text: `╭──「 *WARN LIMIT* 」
+│ 👤 User: @${senderTag}
 │ 🏷️ Pelanggaran: 💕 Bucin
-│ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '
-│ 🔍 Terdeteksi: ' + matchesStr + '
-│ ❌ Aksi: KICK OTOMATIS\n╰──────────❀\n_User dikeluarkan karena terlalu bucin_',
+│ ⚠️ Warn: ${currentWarn}/${maxWarn}
+│ 🔍 Terdeteksi: ${matchesStr}
+│ ❌ Aksi: KICK OTOMATIS
+╰──────────❀
+_User dikeluarkan karena terlalu bucin_`,
                         mentions: [m.sender]
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
-                        text: '╭──「 *WARN LIMIT* 」\n│
-│ 👤 User: @' + senderTag + '
+                        text: `╭──「 *WARN LIMIT* 」
+│ 👤 User: @${senderTag}
 │ 🏷️ Pelanggaran: 💕 Bucin
-│ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '
-│ ⚠️ Aksi: Bot bukan admin\n╰──────────❀',
+│ ⚠️ Warn: ${currentWarn}/${maxWarn}
+│ ⚠️ Aksi: Bot bukan admin
+╰──────────❀`,
                         mentions: [m.sender]
                     })
                 }
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
-                    text: '╭──「 *PERINGATAN MAX* 」\n│
-│ 👤 User: @' + senderTag + '
+                    text: `╭──「 *PERINGATAN MAX* 」
+│ 👤 User: @${senderTag}
 │ 🏷️ Pelanggaran: 💕 Bucin
-│ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '
-│ 📌 Auto-kick: OFF\n╰──────────❀\n_Bucin berlebihan tapi auto-kick dimatikan_',
+│ ⚠️ Warn: ${currentWarn}/${maxWarn}
+│ 📌 Auto-kick: OFF
+╰──────────❀
+_Bucin berlebihan tapi auto-kick dimatikan_`,
                     mentions: [m.sender]
                 })
             }
         } else {
             await sock.sendMessage(m.chat, {
-                text: '╭──「 *PERINGATAN* 」\n│
-│ 👤 User: @' + senderTag + '
+                text: `╭──「 *PERINGATAN* 」
+│ 👤 User: @${senderTag}
 │ 🏷️ Pelanggaran: 💕 Bucin
-│ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '
-│ 🔍 Terdeteksi: ' + matchesStr + '\n╰──────────❀\n_Tolong kurangi gombal/bucin! ' + (maxWarn - currentWarn) + ' lagi = kick_',
+│ ⚠️ Warn: ${currentWarn}/${maxWarn}
+│ 🔍 Terdeteksi: ${matchesStr}
+╰──────────❀
+_Tolong kurangi gombal/bucin! ${maxWarn - currentWarn} lagi = kick_`,
                 mentions: [m.sender]
             })
         }
@@ -270,22 +277,25 @@ async function handler(m, { sock }) {
     if (sub === 'on') {
         db.setGroup(m.chat, { antibucin: 'on' })
         m.react('✅')
-        return m.reply(claraWrap("Antibucin", '╭──「 *ANTI BUCIN AKTIF* 」\n│
+        return m.reply(claraWrap("Antibucin", `╭──「 *ANTI BUCIN AKTIF* 」
 │ Deteksi bucin/gombal diaktifkan
-│ Sistem: Warn 3x lalu kick\n╰──────────❀'))
+│ Sistem: Warn 3x lalu kick
+╰──────────❀`))
     }
     if (sub === 'off') {
         db.setGroup(m.chat, { antibucin: 'off' })
-        return m.reply(claraWrap("Antibucin", '╭──「 *ANTI BUCIN MATI* 」\n│
-│ Deteksi bucin dinonaktifkan\n╰──────────❀'))
+        return m.reply(claraWrap("Antibucin", `╭──「 *ANTI BUCIN MATI* 」
+│ Deteksi bucin dinonaktifkan
+╰──────────❀`))
     }
     if (sub === 'warn') {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) return m.reply(claraWrap("Antibucin", '❌ Masukkan angka 1-10'))
         db.setGroup(m.chat, { bucinMaxWarn: count })
         m.react('✅')
-        return m.reply('╭──「 *MAX WARN* 」\n│
-│ Max peringatan: *' + count + 'x*\n╰──────────❀')
+        return m.reply(`╭──「 *MAX WARN* 」
+│ Max peringatan: *${count}x*
+╰──────────❀`)
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
@@ -306,9 +316,10 @@ async function handler(m, { sock }) {
         if (updated.bucinWarns?.[target]) delete updated.bucinWarns[target]
         db.setGroup(m.chat, updated)
         m.react('✅')
-        return m.reply('╭──「 *WARN DIRESET* 」\n│
-│ 👤 User: @' + target.split('@')[0] + '
-│ Warn Bucin: Direset\n╰──────────❀', { mentions: [target] })
+        return m.reply(`╭──「 *WARN DIRESET* 」
+│ 👤 User: @${target.split('@')[0]}
+│ Warn Bucin: Direset
+╰──────────❀`, { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
