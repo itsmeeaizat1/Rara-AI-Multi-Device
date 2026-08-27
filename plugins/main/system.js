@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
         }
     } catch (e) {
         console.error('System Plugin Error:', e);
-        m.reply('❌ Terjadi kesalahan mengambil data sistem.');
+        m.reply(claraWrap('Error', '❌ Terjadi kesalahan mengambil data sistem.'));
     }
 }
 

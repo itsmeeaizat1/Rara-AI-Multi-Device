@@ -451,7 +451,7 @@ async function handler(m, { sock }) {
     // ─── Toggle commands (owner only) ───
     if (command === "chatdnaon") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       await m.react("🕒");
@@ -467,7 +467,7 @@ async function handler(m, { sock }) {
 
     if (command === "chatdnaoff") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       await m.react("🕒");

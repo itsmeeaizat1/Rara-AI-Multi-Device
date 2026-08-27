@@ -67,7 +67,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "add") {
       if (!story.active) return m.reply(claraWrap("Story Build", `Belum ada cerita. Mulai: ${usedPrefix}storybuild start <tema>`));
       const sentence = text.split(" ").slice(1).join(" ").trim();
-      if (!sentence) return m.reply(`Cara: ${usedPrefix}storybuild add <kalimat kamu>`);
+      if (!sentence) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}storybuild add <kalimat kamu>`));
       if (story.currentRound >= story.maxRounds) return m.reply(claraWrap("Story Build", `Maksimal ${story.maxRounds} putaran. Ketik ${usedPrefix}storybuild end untuk rangkum.`));
 
       const lastAuthor = story.sentences[story.sentences.length - 1]?.author;

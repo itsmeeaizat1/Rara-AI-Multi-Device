@@ -77,7 +77,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (bassGain < -12 || bassGain > 12 || midGain < -12 || midGain > 12 || trebleGain < -12 || trebleGain > 12) {
-      return m.reply("Setiap gain harus -12 sampai +12 dB.");
+      return m.reply(claraWrap("Info", "Setiap gain harus -12 sampai +12 dB."));
     }
 
     const isPtt = !!quoted.pttMessage;

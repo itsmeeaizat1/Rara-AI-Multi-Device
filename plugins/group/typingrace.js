@@ -71,8 +71,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "join") {
-      if (!game.active || game.phase !== "join") return m.reply(`Belum ada race. Ketik ${usedPrefix}typingrace start`);
-      if (game.players.includes(sender)) return m.reply("Sudah join!");
+      if (!game.active || game.phase !== "join") return m.reply(claraWrap("Info", `Belum ada race. Ketik ${usedPrefix}typingrace start`));
+      if (game.players.includes(sender)) return m.reply(claraWrap("Info", "\u274c Sudah join!"));
       game.players.push(sender);
       await db.save();
       return m.reply(claraWrap("Typing Race", [
@@ -84,8 +84,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "go") {
-      if (!game.active || game.phase !== "join") return m.reply("Tidak dalam fase join.");
-      if (game.players.length < 2) return m.reply("Minimal butuh 2 player.");
+      if (!game.active || game.phase !== "join") return m.reply(claraWrap("Info", "\u274c Tidak dalam fase join."));
+      if (game.players.length < 2) return m.reply(claraWrap("Info", "\u274c Minimal butuh 2 player."));
       game.sentence = SENTENCES[Math.floor(Math.random() * SENTENCES.length)];
       game.startedAt = Date.now();
       game.phase = "racing";
@@ -102,10 +102,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "done") {
-      if (!game.active || game.phase !== "racing") return m.reply("Tidak ada race berjalan.");
-      if (game.winner) return m.reply(`Race sudah selesai! Pemenang: @${game.winner.split("@")[0]}`);
+      if (!game.active || game.phase !== "racing") return m.reply(claraWrap("Info", "\u274c Tidak ada race berjalan."));
+      if (game.winner) return m.reply(claraWrap("Info", `\U0001f3c6 Race sudah selesai! Pemenang: @${game.winner.split("@")[0]}`));
       const typed = text.split(" ").slice(1).join(" ").trim();
-      if (!typed) return m.reply(`Cara: ${usedPrefix}typingrace done <kalimat>`);
+      if (!typed) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}typingrace done <kalimat>`));
 
       if (typed === game.sentence) {
         const elapsed = (Date.now() - game.startedAt) / 1000;

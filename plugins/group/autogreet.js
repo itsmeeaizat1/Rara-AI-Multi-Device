@@ -67,7 +67,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           `Contoh: ${usedPrefix}autogreet set pagi Halo semuanya, semangat pagi!`,
         ].join("\n")));
       }
-      if (!msg) return m.reply(`Pesan tidak boleh kosong. Contoh: ${usedPrefix}autogreet set ${slot} Pesan kamu`);
+      if (!msg) return m.reply(claraWrap("Usage", `Pesan tidak boleh kosong. Contoh: ${usedPrefix}autogreet set ${slot} Pesan kamu`));
       data.greetings[slot] = msg;
       await db.save();
       return m.reply(claraWrap("Auto Greet", `Pesan ${slot} diupdate:\n"${msg}"`));

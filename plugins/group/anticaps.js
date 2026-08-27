@@ -56,28 +56,28 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const val = args[2];
       if (key === "threshold") {
         const pct = parseInt(val);
-        if (!pct || pct < 30 || pct > 100) return m.reply("Threshold 30-100%. Contoh: .anticaps set threshold 80");
+        if (!pct || pct < 30 || pct > 100) return m.reply(claraWrap("Usage", "Threshold 30-100%.\nContoh: .anticaps set threshold 80"));
         data.threshold = pct;
         await db.save();
         return m.reply(claraWrap("Anti Caps", `Threshold diatur ke ${pct}%.`));
       }
       if (key === "minletters" || key === "min") {
         const num = parseInt(val);
-        if (!num || num < 3) return m.reply("Min letters minimal 3. Contoh: .anticaps set minletters 10");
+        if (!num || num < 3) return m.reply(claraWrap("Usage", "Min letters minimal 3.\nContoh: .anticaps set minletters 10"));
         data.minLetters = num;
         await db.save();
         return m.reply(claraWrap("Anti Caps", `Min letters diatur ke ${num}.`));
       }
       if (key === "maxwarn" || key === "maxwarnings") {
         const num = parseInt(val);
-        if (!num || num < 1) return m.reply("Max warning minimal 1. Contoh: .anticaps set maxwarn 3");
+        if (!num || num < 1) return m.reply(claraWrap("Usage", "Max warning minimal 1.\nContoh: .anticaps set maxwarn 3"));
         data.maxWarnings = num;
         await db.save();
         return m.reply(claraWrap("Anti Caps", `Max warning diatur ke ${num}x.`));
       }
       if (key === "action") {
         if (!["warn", "mute", "kick"].includes((val || "").toLowerCase())) {
-          return m.reply("Action: warn, mute, atau kick. Contoh: .anticaps set action mute");
+          return m.reply(claraWrap("Usage", "Action: warn, mute, atau kick.\nContoh: .anticaps set action mute"));
         }
         data.action = val.toLowerCase();
         await db.save();

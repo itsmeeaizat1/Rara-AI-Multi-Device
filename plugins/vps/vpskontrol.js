@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     }
     
     if (!hasAccess(m.sender, m.isOwner)) {
-        return m.reply(`Akses ditolak. Fitur ini hanya untuk Owner/Seller.`)
+        return m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Fitur ini hanya untuk Owner/Seller."))
     }
     
     const dropletId = m.text?.trim()
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
         return m.reply( `Aksi tidak dikenali.`, "turnon")
     }
     
-    await m.reply(`Sedang ${action.text} VPS...\nID: ${dropletId}`)
+    await m.reply(claraWrap("VPS", `\u23f3 Sedang ${action.text} VPS...\nID: ${dropletId}`))
     
     try {
         const response = await axios.post(

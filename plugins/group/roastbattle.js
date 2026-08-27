@@ -29,8 +29,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "challenge") {
       const target = m.mentionedJid?.[0];
-      if (!target) return m.reply(`Cara: ${usedPrefix}roastbattle challenge @user`);
-      if (target === sender) return m.reply("Tidak bisa challenge diri sendiri!");
+      if (!target) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}roastbattle challenge @user`));
+      if (target === sender) return m.reply(claraWrap("Info", "\u274c Tidak bisa challenge diri sendiri!"));
       if (game.active) return m.reply(claraWrap("Roast Battle", "Sudah ada battle berjalan."));
       game.active = true;
       game.p1 = sender;
@@ -53,7 +53,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "accept") {
       if (!game.active || game.p2 !== sender) return m.reply(claraWrap("Roast Battle", "Kamu tidak di-challenge."));
-      if (game.state !== "p1_turn") return m.reply("Belum giliranmu.");
+      if (game.state !== "p1_turn") return m.reply(claraWrap("Info", "\u23f3 Belum giliranmu."));
       game.state = "p1_submit";
       await db.save();
       return m.reply(claraWrap("Roast Battle", [
@@ -65,8 +65,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "submit") {
       const roastText = text.split(" ").slice(1).join(" ").trim();
-      if (!roastText) return m.reply(`Cara: ${usedPrefix}roastbattle submit <roast kamu>`);
-      if (!game.active) return m.reply("Tidak ada battle aktif.");
+      if (!roastText) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}roastbattle submit <roast kamu>`));
+      if (!game.active) return m.reply(claraWrap("Info", "\u274c Tidak ada battle aktif."));
 
       if (game.state === "p1_submit") {
         game.roasts[game.p1].push(roastText);
@@ -132,7 +132,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "result" || sub === "score") {
-      if (!game.active && game.scores[game.p1] === undefined) return m.reply("Belum ada battle.");
+      if (!game.active && game.scores[game.p1] === undefined) return m.reply(claraWrap("Info", "\u274c Belum ada battle."));
       return m.reply(claraWrap("Roast Battle", [
         `Score saat ini:`,
         `P1 (@${game.p1?.split("@")[0] || "?"}): ${game.scores[game.p1] || 0}`,

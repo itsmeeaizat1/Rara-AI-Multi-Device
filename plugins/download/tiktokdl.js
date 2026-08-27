@@ -201,7 +201,7 @@ async function handler(m, { sock }) {
     m.react("🐣");
   } catch (e) {
     console.error(e);
-    m.reply("Coba lagi nanti, atau bisa coba " + m.prefix + "tt2");
+    m.reply(claraWrap("Error", "\u274c Coba lagi nanti, atau bisa coba " + m.prefix + "tt2"));
   }
 }
 

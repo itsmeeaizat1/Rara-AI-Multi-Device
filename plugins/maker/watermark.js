@@ -64,8 +64,8 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (!POSITIONS[posName]) {
       return m.reply(claraWrap("Watermark Maker", "Posisi: " + Object.keys(POSITIONS).join(", ")));
     }
-    if (opacity < 0.1 || opacity > 1.0) return m.reply("Opacity 0.1 - 1.0");
-    if (wmText.length > 50) return m.reply("Teks maksimal 50 karakter.");
+    if (opacity < 0.1 || opacity > 1.0) return m.reply(claraWrap("Info", "Opacity 0.1 - 1.0"));
+    if (wmText.length > 50) return m.reply(claraWrap("Info", "Teks maksimal 50 karakter."));
 
     const pos = POSITIONS[posName];
     const buffer = await conn.downloadMediaMessage({ key: { remoteJid: m.key.remoteJid, id: m.quoted && m.quoted.id }, message: quoted });

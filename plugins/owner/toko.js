@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
     const cat = args[1];
     const products = listProducts(cat);
 
-    if (products.length === 0) return m.reply("Belum ada produk" + (cat ? " di kategori " + cat : ""));
+    if (products.length === 0) return m.reply(claraWrap("Info", "Belum ada produk" + (cat ? " di kategori " + cat : "")));
 
     let txt = "╭──「 *DAFTAR PRODUK* 」\n│\n";
     txt += "╰──────────❀\n\n";
@@ -179,7 +179,7 @@ async function handler(m, { sock }) {
     const filter = (args[1] || "pending").toLowerCase();
     const orders = listOrders(filter);
 
-    if (orders.length === 0) return m.reply("Tidak ada pesanan" + (filter !== "all" ? " dengan status " + filter : ""));
+    if (orders.length === 0) return m.reply(claraWrap("Info", "Tidak ada pesanan" + (filter !== "all" ? " dengan status " + filter : "")));
 
     let txt = "╭──「 *PESANAN — " + filter.toUpperCase() + "* 」\n│\n";
     txt += "╰──────────❀\n\n";
@@ -219,7 +219,7 @@ async function handler(m, { sock }) {
     const order = updateOrderStatus(id, "rejected", note);
     if (!order) return m.reply("Pesanan tidak ditemukan: " + id);
     await notifyBuyer(order, "rejected", note);
-    return m.reply("Pesanan ditolak: " + id + "\nNotif terkirim ke buyer.");
+    return m.reply(claraWrap("Info", "\u2705 Pesanan ditolak: " + id + "\nNotif terkirim ke buyer."));
   }
 
   if (action === "kirim" || action === "ship") {
@@ -229,7 +229,7 @@ async function handler(m, { sock }) {
     const order = updateOrderStatus(id, "shipped", note);
     if (!order) return m.reply("Pesanan tidak ditemukan: " + id);
     await notifyBuyer(order, "shipped", note);
-    return m.reply("Pesanan dikirim: " + id + "\nNotif terkirim ke buyer.");
+    return m.reply(claraWrap("Info", "\u2705 Pesanan dikirim: " + id + "\nNotif terkirim ke buyer."));
   }
 
   if (action === "selesai" || action === "done") {
@@ -292,13 +292,13 @@ async function handler(m, { sock }) {
   if (action === "notif") {
     const on = (args[1] || "").toLowerCase() === "on";
     updateStoreConfig((c) => ({ ...c, autoNotify: on }));
-    return m.reply("Notif buyer: " + (on ? "ON" : "OFF"));
+    return m.reply(claraWrap("Info", "\u2705 Notif buyer: " + (on ? "ON" : "OFF")));
   }
 
   if (action === "autostok") {
     const on = (args[1] || "").toLowerCase() === "on";
     updateStoreConfig((c) => ({ ...c, autoReduceStock: on }));
-    return m.reply("Auto-kurang stok: " + (on ? "ON" : "OFF"));
+    return m.reply(claraWrap("Info", "\u2705 Auto-kurang stok: " + (on ? "ON" : "OFF")));
   }
 
   // ── STATUS ──────────────────────────────────────────────────────────────

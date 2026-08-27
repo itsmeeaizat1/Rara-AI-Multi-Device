@@ -327,12 +327,12 @@ async function handler(m, { sock, args }) {
   if (action === "deltrigger" || action === "rmttrigger") {
     const trigger = args.slice(1).join(" ").trim().toLowerCase();
     if (!trigger) {
-      return m.reply("Masukkan trigger yang mau dihapus!\n\n" + m.prefix + "autoreactsticker deltrigger <trigger>");
+      return m.reply(claraWrap("Usage", "Masukkan trigger yang mau dihapus!\n\n" + m.prefix + "autoreactsticker deltrigger <trigger>"));
     }
 
     const index = triggers.findIndex((t) => t.trigger === trigger);
     if (index === -1) {
-      return m.reply("Trigger \"" + trigger + "\" tidak ditemukan!");
+      return m.reply(claraWrap("Info", "❌ Trigger \"" + trigger + "\" tidak ditemukan!"));
     }
 
     const stickerFile = triggers[index].stickerFile;
@@ -416,7 +416,7 @@ async function handler(m, { sock, args }) {
       const trigger = args.slice(2).join(" ").trim().toLowerCase();
       const index = triggers.findIndex((t) => t.trigger === trigger);
       if (index === -1) {
-        return m.reply("Trigger \"" + trigger + "\" tidak ditemukan!");
+        return m.reply(claraWrap("Info", "❌ Trigger \"" + trigger + "\" tidak ditemukan!"));
       }
       const stickerFile = triggers[index].stickerFile;
       if (stickerFile) {
@@ -518,7 +518,7 @@ async function handler(m, { sock, args }) {
 
     const seconds = parseInt(subArg);
     if (isNaN(seconds) || seconds < 3) {
-      return m.reply("Jeda minimal 3 detik!\n\n" + m.prefix + "autoreactsticker jeda 10");
+      return m.reply(claraWrap("Info", "\u26a0\ufe0f Jeda minimal 3 detik!\n\n" + m.prefix + "autoreactsticker jeda 10"));
     }
 
     db.setting("autoreactstickerJedaPrivate", seconds * 1000);
@@ -547,7 +547,7 @@ async function handler(m, { sock, args }) {
 
     const seconds = parseInt(subArg);
     if (isNaN(seconds) || seconds < 3) {
-      return m.reply("Jeda minimal 3 detik!\n\n" + m.prefix + "autoreactsticker jedagrup 30");
+      return m.reply(claraWrap("Info", "\u26a0\ufe0f Jeda minimal 3 detik!\n\n" + m.prefix + "autoreactsticker jedagrup 30"));
     }
 
     db.setting("autoreactstickerJedaGrup", seconds * 1000);

@@ -433,7 +433,7 @@ async function handler(m, { sock, args }) {
     const _regDb = getDatabase();
     if (!_regDb.db.data.eduRegistered || !_regDb.db.data.eduRegistered[sender]) {
       quizSessions.delete(sender);
-      return m.reply('Pendaftaran kamu telah dihapus! Quiz dibatalkan.\n\nDaftar lagi: ' + m.prefix + 'daftarsiswa <nama>');
+      return m.reply(claraWrap('Info', '\u2705 Pendaftaran kamu telah dihapus! Quiz dibatalkan.\n\nDaftar lagi: ' + m.prefix + 'daftarsiswa <nama>'));
     }
 
 
@@ -643,7 +643,7 @@ async function handler(m, { sock, args }) {
   // Check daily quiz limit
   const dailyCheck = checkDailyLimit(sender);
   if (!dailyCheck.allowed) {
-    return m.reply("Kamu sudah main " + MAX_QUIZ_PER_DAY + " quiz hari ini!\n\nKembali besok untuk lanjut belajar.\n\nKetik .edulb untuk lihat ranking");
+    return m.reply(claraWrap("Info", "\u23f3 Kamu sudah main " + MAX_QUIZ_PER_DAY + " quiz hari ini!\n\nKembali besok untuk lanjut belajar.\n\nKetik .edulb untuk lihat ranking"));
   }
   await m.react("🕒");
 

@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     }
     
     if (!hasAccess(m.sender, m.isOwner)) {
-        return m.reply(`Akses ditolak. Fitur ini hanya untuk Owner/Seller.`)
+        return m.reply(claraWrap("Akses Ditolak", "🚫 Fitur ini hanya untuk Owner/Seller."))
     }
     
     const dropletId = m.text?.trim()
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
         return m.reply( `Cara pakai:\n${m.prefix}delvps <droplet_id>\n\nGunakan ${m.prefix}listvps untuk melihat ID`, "delvps")
     }
     
-    await m.reply(`Menghapus VPS...\nID: ${dropletId}`)
+    await m.reply(claraWrap("VPS", `\u23f3 Menghapus VPS...\nID: ${dropletId}`))
     
     try {
         await axios.delete(`https://api.digitalocean.com/v2/droplets/${dropletId}`, {

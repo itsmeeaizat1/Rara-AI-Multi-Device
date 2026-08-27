@@ -64,7 +64,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "going" || sub === "maybe" || sub === "notgoing") {
       const id = parseInt(args[1]);
-      if (!id || !data.events[id]) return m.reply(`Event ID ${id} tidak ditemukan. Ketik ${usedPrefix}eventrsvp list`);
+      if (!id || !data.events[id]) return m.reply(claraWrap("Info", `Event ID ${id} tidak ditemukan. Ketik ${usedPrefix}eventrsvp list`));
       const rsvpKey = sub;
       for (const key of ["going", "maybe", "notgoing"]) {
         data.events[id].rsvp[key] = data.events[id].rsvp[key].filter(j => j !== sender);
@@ -89,7 +89,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "info") {
       const id = parseInt(args[1]);
-      if (!id || !data.events[id]) return m.reply(`Event ID tidak ditemukan.`);
+      if (!id || !data.events[id]) return m.reply(claraWrap("Info", `Event ID tidak ditemukan.`));
       const e = data.events[id];
       const formatList = (arr) => arr.length > 0 ? arr.map(j => "@" + j.split("@")[0]).join(", ") : "Belum ada";
       return m.reply(claraWrap("Event RSVP", [
@@ -108,7 +108,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "del" || sub === "remove") {
       const id = parseInt(args[1]);
-      if (!id || !data.events[id]) return m.reply(`Event ID tidak ditemukan.`);
+      if (!id || !data.events[id]) return m.reply(claraWrap("Info", `Event ID tidak ditemukan.`));
       delete data.events[id];
       await db.save();
       return m.reply(claraWrap("Event RSVP", `Event ID ${id} dihapus.`));
@@ -116,7 +116,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "remind") {
       const id = parseInt(args[1]);
-      if (!id || !data.events[id]) return m.reply(`Event ID tidak ditemukan.`);
+      if (!id || !data.events[id]) return m.reply(claraWrap("Info", `Event ID tidak ditemukan.`));
       const e = data.events[id];
       const going = e.rsvp.going.map(j => "@" + j.split("@")[0]).join(" ");
       return m.reply(claraWrap("Event Reminder", [

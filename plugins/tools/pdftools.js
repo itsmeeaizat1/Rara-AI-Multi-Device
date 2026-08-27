@@ -308,7 +308,7 @@ async function splitPdf(m, sock) {
     const pageCount = srcPdf.getPageCount();
 
     if (pageCount > 20) {
-      return m.reply("PDF terlalu banyak halaman (" + pageCount + "). Maksimal 20 halaman untuk split.\n\nGunakan .pdftools compress untuk kompres saja.");
+      return m.reply(claraWrap("Info", "\u26a0\ufe0f PDF terlalu banyak halaman (" + pageCount + "). Maksimal 20 halaman untuk split.\n\nGunakan .pdftools compress untuk kompres saja."));
     }
 
     await m.react("🕒");
@@ -332,7 +332,7 @@ async function splitPdf(m, sock) {
       if (i < pageCount - 1) await new Promise(r => setTimeout(r, 500));
     }
 
-    await m.reply("Split selesai. " + sent + " file PDF terkirim (1 halaman per file).");
+    await m.reply(claraWrap("Info", "\u2705 Split selesai. " + sent + " file PDF terkirim (1 halaman per file)."));
   } catch (e) {
     return m.reply("Gagal split PDF: " + e.message);
   }
@@ -365,7 +365,7 @@ async function extractText(m, sock) {
 
     if (!extracted) {
       // pdf-lib tidak support text extraction dengan baik
-      return m.reply("Extract teks tidak didukung penuh oleh pdf-lib.\n\nPDF ini punya " + pageCount + " halaman.\n\nUntuk extract teks, gunakan .pdftools info untuk metadata saja.\n\nAlternatif: gunakan .ocr untuk scan gambar dari PDF.");
+      return m.reply(claraWrap("Info", "\u26a0\ufe0f Extract teks tidak didukung penuh oleh pdf-lib.\n\nPDF ini punya " + pageCount + " halaman.\n\nUntuk extract teks, gunakan .pdftools info untuk metadata saja.\n\nAlternatif: gunakan .ocr untuk scan gambar dari PDF."));
     }
 
     if (extracted.length > 3000) extracted = extracted.slice(0, 3000) + "\n\n... (dipotong, terlalu panjang)";

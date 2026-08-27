@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
   }
 
   if (!hasAccess(m.sender, m.isOwner)) {
-    return m.reply(`Akses ditolak. Fitur ini hanya untuk Owner/Seller.`);
+    return m.reply(claraWrap("Akses Ditolak", "🚫 Fitur ini hanya untuk Owner/Seller."));
   }
 
   const dropletId = m.text?.trim();

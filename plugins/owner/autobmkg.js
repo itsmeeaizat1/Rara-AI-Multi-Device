@@ -149,10 +149,10 @@ async function handler(m, { sock }) {
     if (action === "shakemap" || action === "peta") {
       const val = args[1];
       if (val !== "on" && val !== "off") {
-        return m.reply("Format: .autobmkg shakemap <on/off>\nSaat ini: " + (getBmkgStatus().sendShakemap ? "ON" : "OFF"));
+        return m.reply(claraWrap("Usage", "Format: .autobmkg shakemap <on/off>\nSaat ini: " + (getBmkgStatus().sendShakemap ? "ON" : "OFF")));
       }
       const settings = updateBmkgSettings((cur) => ({ ...cur, sendShakemap: val === "on" }));
-      return m.reply("Shakemap (peta gempa): *" + (val === "on" ? "ON" : "OFF") + "*");
+      return m.reply(claraWrap("Info", "\u2705 Shakemap (peta gempa): *" + (val === "on" ? "ON" : "OFF") + "*"));
     }
 
     if (action === "minmag") {

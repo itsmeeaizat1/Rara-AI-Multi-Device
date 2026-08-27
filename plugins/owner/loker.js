@@ -301,7 +301,7 @@ async function handler(m, { sock }) {
 
     if (choice === "reset" || choice === "all") {
       const settings = updateLokerSettings((cur) => ({ ...cur, sources: AVAILABLE }));
-      return m.reply("Semua sumber loker diaktifkan: " + AVAILABLE.join(", "));
+      return m.reply(claraWrap("Info", "\u2705 Semua sumber loker diaktifkan: " + AVAILABLE.join(", ")));
     }
 
     if (!AVAILABLE.includes(choice)) {

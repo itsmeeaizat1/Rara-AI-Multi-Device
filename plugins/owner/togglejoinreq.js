@@ -78,7 +78,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.react("🐣");
       return m.reply(claraWrap("togglejoinreq", "Semua notifikasi join request *DIMATIKAN*\n\n1. Notify Owner: *OFF*\n2. Notify Admin Grup: *OFF*"));
     }
-    return m.reply("Format: " + prefix + "togglejoinreq all on/off");
+    return m.reply(claraWrap("Usage", "Format: " + prefix + "togglejoinreq all on/off"));
   }
 
   if (subCmd === "owner") {

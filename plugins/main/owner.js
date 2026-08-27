@@ -42,8 +42,14 @@ async function handler(m, { sock, config: botConfig }) {
       { contacts: { displayName: "Ini adalah owner kami", contacts } },
       { quoted: m.raw },
     );
+    const followUpText = [
+      `💡 Butuh bantuan? Laporkan bug?`,
+      `Mau request fitur atau sekadar ngobrol?`,
+      `Owner bot ini ramah dan open-minded kok 😊`,
+      `Silakan save kontak di atas ya!`,
+    ].join("\n");
     await sock.sendMessage(m.chat, {
-      text: "Jika kamu memiliki pertanyaan, jangan ragu untuk bertanya, owner ramah kok",
+      text: claraWrap("👨‍💻 Owner", followUpText),
     }, { quoted: zanne });
   } else {
     // Type 1: Teks keren + contact card

@@ -112,7 +112,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     return await m.reply(claraWrap("Switch Saluran", [`Event: *${eventCmd}*`, `Tidak ada dalam daftar toggle`].join("\n")) + "\nEVENT TERSEDIA:\n\n" + availableList + "\n" + tipText(`Contoh: \`${prefix}switch saluran sewaRegister\``));
   } catch (e) {
-    return m.reply(`Error: ${e.message || e}`);
+    return m.reply(claraWrap("Error", `\u274c ${e.message || e}`));
   }
 }
 

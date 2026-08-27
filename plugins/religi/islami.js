@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
                     return
                 }
 
-                m.reply('🕕 Sedang memuat surah...')
+                m.reply(claraWrap('Info', '🕕 Sedang memuat surah...'))
                 let response = await fetchJson(`https://api.siputzx.my.id/api/s/surah?no=${text}`)
                 let data = response.data
                 if (data && data.length > 0) {

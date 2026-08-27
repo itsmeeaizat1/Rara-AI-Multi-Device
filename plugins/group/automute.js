@@ -88,7 +88,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "del" || sub === "remove") {
       const idx = parseInt(args[1]) - 1;
       if (isNaN(idx) || idx < 0 || idx >= data.schedules.length) {
-        return m.reply(`Cara: ${usedPrefix}automute del <nomor>`);
+        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}automute del <nomor>`));
       }
       data.schedules.splice(idx, 1);
       await db.save();

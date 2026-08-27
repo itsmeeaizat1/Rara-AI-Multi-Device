@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
 
     return m.reply(claraWrap("Sejarahislam", "Perintah tidak valid!\n\nKetik .sejarahislam buat lihat semua perintah."));
   } catch (error) {
-    return m.reply("Error: " + error.message + "\n\nCoba lagi nanti.");
+    return m.reply(claraWrap("Error", "\u274c " + error.message + "\n\nCoba lagi nanti."));
   }
 }
 

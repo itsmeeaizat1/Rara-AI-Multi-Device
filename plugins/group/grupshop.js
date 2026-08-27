@@ -59,10 +59,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "buy") {
       const itemId = parseInt(args[1]);
-      if (!itemId) return m.reply(`Cara: ${usedPrefix}grupshop buy <id>`);
+      if (!itemId) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupshop buy <id>`));
       const item = shop.items.find(i => i.id === itemId);
-      if (!item) return m.reply(`Item ID ${itemId} tidak ditemukan.`);
-      if (wallet.coins < item.price) return m.reply(`Koin kurang! Butuh ${item.price}, kamu punya ${wallet.coins}.`);
+      if (!item) return m.reply(claraWrap("Info", `Item ID ${itemId} tidak ditemukan.`));
+      if (wallet.coins < item.price) return m.reply(claraWrap("Info", `Koin kurang! Butuh ${item.price}, kamu punya ${wallet.coins}.`));
       wallet.coins -= item.price;
       if (item.type === "badge") wallet.badges.push(item.name);
       else if (item.type === "title") wallet.titles.push(item.name);
@@ -82,7 +82,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const price = parseInt(args[args.length - 2]);
       const type = (args[args.length - 1] || "").toLowerCase();
       if (!itemName || !price || !type) {
-        return m.reply(`Cara: ${usedPrefix}grupshop add <item> <price> <type>\nType: badge, title, privilege, cosmetic`);
+        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupshop add <item> <price> <type>\nType: badge, title, privilege, cosmetic`));
       }
       const newId = shop.pendingId++;
       shop.items.push({ id: newId, name: itemName, price, type, desc: "Custom item" });
@@ -102,7 +102,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "give" && isOwner) {
       const target = m.mentionedJid?.[0] || args[1]?.replace(/[@.]/g, "") + "@s.whatsapp.net";
       const amount = parseInt(args[2]);
-      if (!target || !amount) return m.reply(`Cara: ${usedPrefix}grupshop give @user <amount>`);
+      if (!target || !amount) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}grupshop give @user <amount>`));
       if (!shop.wallet[target]) shop.wallet[target] = { coins: 0, badges: [], titles: [], privileges: [] };
       shop.wallet[target].coins += amount;
       await db.save();

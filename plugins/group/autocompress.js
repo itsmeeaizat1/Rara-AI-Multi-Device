@@ -58,7 +58,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       if (key === "maxwidth" || key === "width") {
         const px = parseInt(val);
-        if (!px || px < 320 || px > 3840) return m.reply("Max width 320-3840px. Contoh: .autocompress set maxwidth 1280");
+        if (!px || px < 320 || px > 3840) return m.reply(claraWrap("Usage", "Max width 320-3840px.\nContoh: .autocompress set maxwidth 1280"));
         data.maxWidth = px;
         await db.save();
         return m.reply(claraWrap("Auto Compress", `Max width diatur ke ${px}px.`));
@@ -66,7 +66,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       if (key === "quality" || key === "q") {
         const q = parseInt(val);
-        if (!q || q < 10 || q > 100) return m.reply("Quality 10-100%. Contoh: .autocompress set quality 80");
+        if (!q || q < 10 || q > 100) return m.reply(claraWrap("Usage", "Quality 10-100%.\nContoh: .autocompress set quality 80"));
         data.quality = q;
         await db.save();
         return m.reply(claraWrap("Auto Compress", `Quality diatur ke ${q}%.`));
@@ -74,7 +74,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
       if (key === "format") {
         if (!["jpeg", "webp", "png"].includes((val || "").toLowerCase())) {
-          return m.reply("Format: jpeg, webp, atau png. Contoh: .autocompress set format webp");
+          return m.reply(claraWrap("Usage", "Format: jpeg, webp, atau png.\nContoh: .autocompress set format webp"));
         }
         data.format = val.toLowerCase();
         await db.save();

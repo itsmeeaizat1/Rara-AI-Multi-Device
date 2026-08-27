@@ -286,7 +286,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     cleanup(inputPath);
     cleanup(outputPath);
-    return m.reply("Gagal kompres video: " + e.message + "\n\nPastikan video valid dan tidak terlalu panjang (max 5 menit).");
+    return m.reply(claraWrap("Error", "\u274c Gagal kompres video: " + e.message + "\n\nPastikan video valid dan tidak terlalu panjang (max 5 menit)."));
   }
 }
 

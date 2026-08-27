@@ -549,7 +549,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Mood Tracking ON ───
     if (command === "moodtrackon") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       await m.react("🕒");
@@ -566,7 +566,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Mood Tracking OFF ───
     if (command === "moodtrackoff") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       await m.react("🕒");
@@ -582,7 +582,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Mood Suggest ON ───
     if (command === "moodsuggon") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       await m.react("🕒");
@@ -599,7 +599,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Mood Suggest OFF ───
     if (command === "moodsuggoff") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       await m.react("🕒");
@@ -615,7 +615,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Mood AI Connect ON ───
     if (command === "moodaion") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       await m.react("🕒");
@@ -632,7 +632,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Mood AI Connect OFF ───
     if (command === "moodaioff") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       await m.react("🕒");
@@ -648,7 +648,7 @@ async function handler(m, { sock }) {
     // ─── Set AI Cooldown Duration ───
     if (command === "moodaiset") {
       if (!isOwner) {
-        await m.reply("Perintah ini khusus Owner bot.");
+        await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
       const args = m.body?.split(" ").slice(1) || [];
@@ -748,7 +748,7 @@ async function handler(m, { sock }) {
       const mentioned = m.mentionedJid?.[0];
       if (mentioned) {
         if (!isOwner) {
-          await m.reply("Lihat mood history orang lain khusus Owner.");
+          await m.reply(claraWrap("Akses Ditolak", "🚫 Lihat mood history orang lain khusus Owner."));
           return;
         }
         targetJid = mentioned;

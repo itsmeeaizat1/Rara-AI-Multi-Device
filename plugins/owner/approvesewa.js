@@ -218,7 +218,7 @@ async function handler(m, { sock }) {
 
     return m.reply(ownerText);
   } catch (error) {
-    return m.reply("Gagal approve sewa: " + (error.message || "Unknown error"));
+    return m.reply(claraWrap("Error", "\u274c Gagal approve sewa: " + (error.message || "Unknown error")));
   }
 }
 

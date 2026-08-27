@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     }
     
     if (!hasAccess(m.sender, m.isOwner)) {
-        return m.reply(`Akses ditolak. Fitur ini hanya untuk Owner/Seller.`)
+        return m.reply(claraWrap("Akses Ditolak", "🚫 Fitur ini hanya untuk Owner/Seller."))
     }
     
     const hostname = m.text?.trim()
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
     }
     
     if (!/^[a-zA-Z0-9-]+$/.test(hostname)) {
-        return m.reply(`Hostname hanya boleh huruf, angka, dan dash.`)
+        return m.reply(claraWrap("Info", "❌ Hostname hanya boleh huruf, angka, dan dash."))
     }
     
     const spec = VPS_SPECS[m.command]
@@ -100,7 +100,7 @@ ssh_pwauth: True`,
     }
     
     await m.react("🕒")
-    await m.reply(`Membuat VPS...\nHostname: ${hostname}\nSpec: ${spec.ram} RAM, ${spec.cpu}\nRegion: ${region}`)
+    await m.reply(claraWrap("VPS", `Membuat VPS...\nHostname: ${hostname}\nSpec: ${spec.ram} RAM, ${spec.cpu}\nRegion: ${region}`))
     
     try {
         const response = await axios.post('https://api.digitalocean.com/v2/droplets', dropletData, {
@@ -113,7 +113,7 @@ ssh_pwauth: True`,
         const droplet = response.data.droplet
         const dropletId = droplet.id
         
-        await m.reply(`Menunggu VPS siap...\nID: ${dropletId}\nEstimasi: 60 detik`)
+        await m.reply(claraWrap("VPS", `Menunggu VPS siap...\nID: ${dropletId}\nEstimasi: 60 detik`))
         
         await new Promise(resolve => setTimeout(resolve, 60000))
         
@@ -142,7 +142,7 @@ Simpan data ini baik-baik!`
         
         await sock.sendMessage(m.sender, { text: detailTxt })
         await m.react("🐣")
-        await m.reply(`VPS berhasil dibuat. Data dikirim ke private chat.`)
+        await m.reply(claraWrap("VPS", "✅ VPS berhasil dibuat. Data dikirim ke private chat."))
         
     } catch (err) {
         return m.reply(te(m.prefix, m.command, m.pushName))

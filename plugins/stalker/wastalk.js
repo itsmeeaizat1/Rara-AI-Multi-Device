@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
 
     } catch (e) {
         console.error('WaStalk Error:', e);
-        m.reply('❌ Failed to stalk user.');
+        m.reply(claraWrap('Error', '❌ Failed to stalk user.'));
     }
 }
 

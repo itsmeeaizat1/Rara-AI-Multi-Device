@@ -37,7 +37,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "auto") {
       const toggle = (args[1] || "").toLowerCase();
       if (!["on", "off"].includes(toggle)) {
-        return m.reply(`Cara: ${usedPrefix}motw auto on|off`);
+        return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}motw auto on|off`));
       }
       data.autoSelect = toggle === "on";
       await db.save();

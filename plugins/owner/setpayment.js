@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
       if (!data.cash) data.cash = { enabled: false, info: "" };
       data.cash.enabled = sub === "on";
       savePaymentData(data);
-      return m.reply("Pembayaran cash: " + (sub === "on" ? "ON" : "OFF"));
+      return m.reply(claraWrap("Info", "\u2705 Pembayaran cash: " + (sub === "on" ? "ON" : "OFF")));
     }
 
     if (sub === "info" || sub === "set") {

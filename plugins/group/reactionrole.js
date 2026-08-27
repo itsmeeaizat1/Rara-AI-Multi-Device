@@ -72,9 +72,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "del" || sub === "remove") {
       const emoji = args[1];
-      if (!emoji) return m.reply(`Cara: ${usedPrefix}reactionrole del <emoji>`);
+      if (!emoji) return m.reply(claraWrap("Usage", `Cara: ${usedPrefix}reactionrole del <emoji>`));
       const idx = roles.findIndex(r => r.emoji === emoji);
-      if (idx === -1) return m.reply(`Reaction role ${emoji} tidak ditemukan.`);
+      if (idx === -1) return m.reply(claraWrap("Info", `Reaction role ${emoji} tidak ditemukan.`));
       roles.splice(idx, 1);
       await db.save();
       return m.reply(claraWrap("Reaction Role", `Reaction role ${emoji} berhasil dihapus.`));
