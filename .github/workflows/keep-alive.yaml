@@ -1,4 +1,4 @@
-name: Keep Alive
+name: Keep Alive (Read Only)
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   ping:
@@ -17,10 +17,14 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Send dummy commit / ping
+    - name: Repository Status Check
       run: |
-        git config --global user.name "GitHub Actions Bot"
-        git config --global user.email "actions@github.com"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-        git commit --allow-empty -m "Keep-alive: Refresh repository status [skip ci]"
-        git push origin HEAD:main
+        echo "============================================"
+        echo "  Keep Alive — Repository Status"
+        echo "============================================"
+        echo "Time: $(date -u)"
+        echo "Branch: $(git branch --show-current)"
+        echo "Last commit: $(git log -1 --oneline)"
+        echo "Total commits: $(git rev-list --count HEAD)"
+        echo "✅ Repository is accessible and active"
+        echo "ℹ️ No commits pushed (read-only mode)"

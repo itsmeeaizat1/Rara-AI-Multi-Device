@@ -1,21 +1,32 @@
-name: Auto Clean Session Cache
+name: Session Cache Info (Read Only)
 
 on:
   schedule:
-    # Berjalan otomatis setiap hari Minggu pukul 00:00 UTC
     - cron: '0 0 * * 0'
   workflow_dispatch:
 
-jobs:
-    clean-cache:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
+permissions:
+  contents: read
 
-        - name: Remove Junk Session Files
-          run: |
-            echo "Membersihkan file sampah sesi lama..."
-            # Menghapus file cache sampah tapi tetap mengamankan kredensial utama jika ada
-            rm -rf session/pre-key* session/sender-key* session/app-state-sync*
-            echo "Pembersihan selesai."
+jobs:
+  cache-info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Report Session Cache Status
+        run: |
+          echo "============================================"
+          echo "  Session Cache Status"
+          echo "============================================"
+          echo "Time: $(date -u)"
+          if [ -d "session" ]; then
+            echo "Session directory exists"
+            echo "File count: $(find session/ -type f 2>/dev/null | wc -l)"
+            echo "Total size: $(du -sh session/ 2>/dev/null | cut -f1 || echo 'N/A')"
+          else
+            echo "No session directory found in repo"
+          fi
+          echo "ℹ️ Auto-cleanup di-skip (read-only mode)"
+          echo "Untuk bersihkan session, lakukan manual di VPS/panel"
