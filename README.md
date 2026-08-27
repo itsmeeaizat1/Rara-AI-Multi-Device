@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20integrate%20all%20owner%20auto-success?style=for-the-badge)
-> *Commit: "feat: integrate all owner automation into unified hub system"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20redesign%20broadcast%20messa-success?style=for-the-badge)
+> *Commit: "feat: redesign broadcast messages to modern box style"*
 <!--END_SECTION:latest-update-->
 
 
