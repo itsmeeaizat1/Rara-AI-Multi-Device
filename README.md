@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tombol%20Kategori%20jadi%20sin-success?style=for-the-badge)
-> *Commit: "feat: tombol Kategori jadi single_select popup list (0 file per kategori)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20hapus%20emoji%20dari%20tombol%20-success?style=for-the-badge)
+> *Commit: "feat: hapus emoji dari tombol nav, tampilan kategori lebih compact"*
 <!--END_SECTION:latest-update-->
 
 
