@@ -1,0 +1,205 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+/**
+ * Nama Plugin: BuyPrem
+ * Pembuat Code: Aizat
+ * Fitur: User membeli premium sendiri via QRIS / E-Wallet
+ *        Pilih durasi → lihat harga → bayar → otomatis kirim notif ke owner
+ */
+
+import fs from "fs";
+import config from "../../config.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
+import { claraWrap, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+import { generateWAMessageFromContent } from "nova";
+import axios from "axios";
+
+const pluginConfig = {
+  name: "buyprem",
+  alias: ["buyprem"],
+  category: "main",
+  description: "Beli premium bot - pilih durasi, lihat harga, bayar via QRIS/E-Wallet",
+  usage: ".buyprem [durasi]",
+  example: ".buyprem 30d  atau  .buyprem (pilih dari list)",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: true,
+  cooldown: 30,
+  energi: 0,
+  isEnabled: true,
+};
+
+// Harga premium per durasi
+const PREMIUM_PRICES = [
+  { duration: "7d", label: "7 Hari", price: "Rp 10.000", days: 7 },
+  { duration: "30d", label: "30 Hari", price: "Rp 25.000", days: 30 },
+  { duration: "90d", label: "90 Hari", price: "Rp 60.000", days: 90 },
+  { duration: "lifetime", label: "Permanent", price: "Rp 150.000", days: 0 },
+];
+
+// Session sementara untuk user yang lagi proses beli
+const buySessions = new Map();
+const SESSION_TIMEOUT = 10 * 60 * 1000; // 10 menit
+
+function formatRupiah(str) {
+  return str || "Nego";
+}
+
+function buildPaymentMethods() {
+  const payment = config.payment || {};
+  const methods = [];
+
+  if (payment.qrisUrl) methods.push("QRIS (scan gambar)");
+
+  const eWallets = (payment.methods || []).filter((m) => m.number);
+  for (const m of eWallets) {
+    methods.push(`${m.name}: ${m.number}${m.holder ? ` (${m.holder})` : ""}`);
+  }
+
+  const banks = (payment.banks || []).filter((b) => b.number);
+  for (const b of banks) {
+    methods.push(`${b.name}: ${b.number}${b.holder ? ` (${b.holder})` : ""}`);
+  }
+
+  if (methods.length === 0) {
+    methods.push("Hubungi owner untuk metode pembayaran");
+  }
+
+  return methods;
+}
+
+async function sendQRIS(sock, m) {
+  const qrisUrl = config.payment?.qrisUrl || "";
+  if (!qrisUrl) return;
+
+  try {
+    let qrisBuffer;
+    if (/^https?:\/\//.test(qrisUrl)) {
+      const response = await fetch(qrisUrl);
+      qrisBuffer = Buffer.from(await response.arrayBuffer());
+    } else {
+      qrisBuffer = fs.readFileSync(qrisUrl);
+    }
+    await sock.sendMessage(m.chat, {
+      image: qrisBuffer,
+      caption: "Scan QRIS di atas untuk pembayaran premium",
+    }, { quoted: m });
+  } catch (e) {
+    console.error("[buyprem] QRIS error:", e.message);
+  }
+}
+
+async function notifyOwner(sock, m, data) {
+  const ownerNumbers = config.owner?.number || ["628174887770"];
+  const buyerNumber = m.sender?.replace(/[^0-9]/g, "") || "";
+  const buyerName = m.pushName || "Unknown";
+
+  const notifText = `╭──「 💎 PEMBELIAN PREMIUM BARU 」
+│ Pembeli: *${buyerName}*
+│ Nomor: ${buyerNumber}
+│ Paket: *${data.label}*
+│ Durasi: *${data.duration}*
+│ Harga: *${data.price}*
+│ Status: *MENUNGGU PEMBAYARAN*
+│ Waktu: ${new Date().toLocaleString("id-ID")}
+╰──────────❀
+
+User ini menunggu konfirmasi pembayaran.
+Jika sudah bayar, ketik: *.addprem ${buyerNumber} ${data.days}*`;
+
+  for (const num of ownerNumbers) {
+    try {
+      const jid = `${num}@s.whatsapp.net`;
+      await sock.sendMessage(jid, { text: notifText });
+    } catch (e) {
+      console.error(`[buyprem] Notif owner ${num} error:`, e.message);
+    }
+  }
+}
+
+async function handler(m, { sock }) {
+  const prefix = m.prefix || config.command?.prefix || ".";
+  const sender = m.sender;
+  const args = m.text?.trim();
+
+  // Cancel
+  if (args === "batal" || args === "cancel") {
+    buySessions.delete(sender);
+    return m.reply(claraWrap("buyprem", "Pembelian premium dibatalkan."));
+  }
+
+  // Kalau ada argumen durasi langsung → cari paket matching
+  if (args) {
+    const pkg = PREMIUM_PRICES.find(
+      (p) => p.duration === args.toLowerCase() || p.label.toLowerCase() === args.toLowerCase(),
+    );
+
+    if (pkg) {
+      buySessions.set(sender, { ...pkg, startedAt: Date.now() });
+      setTimeout(() => buySessions.delete(sender), SESSION_TIMEOUT);
+
+      const priceBox = bracketBox("💰", "Detail Pembelian", [
+        `Paket: *${pkg.label}*`,
+        `Harga: *${pkg.price}*`,
+        `Durasi: *${pkg.duration}*`,
+      ]);
+
+      const stepsBox = bracketBox("📝", "Cara Pembayaran", [
+        `1. Bayar *${pkg.price}* via QRIS/E-Wallet`,
+        `2. Screenshot bukti transfer`,
+        `3. Kirim bukti ke owner`,
+        `4. Owner konfirmasi → premium aktif!`,
+      ]);
+
+      const contactBox = bracketBox("👨‍💻", "Kontak Owner", [
+        `Nama: *${config.owner?.name || "Owner"}*`,
+        `Nomor: wa.me/${(config.owner?.number || ["628174887770"])[0]}`,
+      ]);
+
+      const fullText =
+        priceBox + "\n\n" +
+        stepsBox + "\n\n" +
+        contactBox + "\n\n" +
+        tipText(`Ketik ${prefix}buyprem batal untuk batalkan`);
+
+      await m.reply(fullText, "buyprem");
+      await sendQRIS(sock, m);
+      await notifyOwner(sock, m, pkg);
+      return;
+    }
+  }
+
+  // Tampilkan list paket
+  const priceLines = PREMIUM_PRICES.map((p, i) =>
+    `${i + 1}. *${p.label}* — ${p.price}`,
+  );
+
+  const benefitBox = bracketBox("⭐", "Keuntungan Premium", [
+    `Limit harian: *${config.energi?.premium || 100}x* (vs ${config.energi?.default || 25}x biasa)`,
+    `Cooldown lebih rendah`,
+    `Akses fitur eksklusif`,
+    `Prioritas response`,
+    `No watermark di beberapa fitur`,
+  ]);
+
+  const priceBox = bracketBox("💰", "Paket Premium", priceLines);
+
+  const howBox = bracketBox("📝", "Cara Beli", [
+    `Ketik: *${prefix}buyprem <paket>*`,
+    `Contoh: *${prefix}buyprem 30d*`,
+    `Atau: *${prefix}buyprem 30 Hari*`,
+  ]);
+
+  const paymentBox = bracketBox("💳", "Metode Pembayaran", buildPaymentMethods());
+
+  const fullText =
+    benefitBox + "\n\n" +
+    priceBox + "\n\n" +
+    howBox + "\n\n" +
+    paymentBox + "\n\n" +
+    tipText(`Ketik ${prefix}buyprem <durasi> untuk mulai beli!`);
+
+  await m.reply(fullText, "buyprem");
+}
+
+export { pluginConfig as config, handler };

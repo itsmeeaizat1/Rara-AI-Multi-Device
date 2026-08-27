@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getAllPlugins } from '../../src/lib/nova-plugins.js'
 import config from '../../config.js'
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, commandListLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'benefitowner',
     alias: ["benefitowner"],
@@ -14,9 +14,10 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
+    const prefix = config.command?.prefix || '.'
     const plugins = getAllPlugins()
     const ownerCommands = plugins.filter(p => p.config.isOwner && p.config.isEnabled)
-    
+
     const seen = new Set()
     const commandList = []
     for (const p of ownerCommands) {
@@ -24,17 +25,17 @@ async function handler(m, { sock }) {
         for (const name of names) {
             if (!name || seen.has(name)) continue
             seen.add(name)
-            commandList.push(`*${config.command?.prefix || '.'}${name}*`)
+            commandList.push({ name, usage: p.config.usage || '' })
         }
     }
-    commandList.sort()
-    
+    commandList.sort((a, b) => a.name.localeCompare(b.name))
+
     const totalCommands = commandList.length
-    
+
     const message = 
         `👑 *Apa Itu Owner?*\n\n` +
         `Owner adalah *ᴘᴇᴍɪʟɪᴋ ʙᴏᴛ* yang memiliki akses penuh ke semua fitur dan kontrol sistem.\n\n` +
-        `╭──「 🔐 *KeiꜱTimewaan Owner* 」\n` +
+        `╭──「 🔐 *Keuntungan Owner* 」\n` +
         `│ ✦ \`\`\`Akses semua command tanpa batasan\`\`\`\n` +
         `│ ✦ \`\`\`Limit tidak terbatas (-1)\`\`\`\n` +
         `│ ✦ \`\`\`Bypass semua cooldown\`\`\`\n` +
@@ -42,18 +43,18 @@ async function handler(m, { sock }) {
         `│ ✦ \`\`\`Manajemen user & group\`\`\`\n` +
         `│ ✦ \`\`\`Akses panel & server\`\`\`\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `╭──「 ⚙️ *ᴄᴀʀᴀ ᴋᴇʀᴊᴀ* 」\n` +
+        `╭──「 ⚙️ *Cara Kerja* 」\n` +
         `│ \`Owner ditambahkan melalui:\`\n` +
-        `│ • \`\`\`${config.command?.prefix || '.'}addowner <nomor>\`\`\`\n` +
+        `│ • \`\`\`${prefix}addowner <nomor>\`\`\`\n` +
         `│ • Atau langsung di config.js\n` +
         `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `╭──「 📋 *ᴅᴀꜰᴛᴀʀ ᴄᴏᴍᴍᴀɴᴅ ᴏᴡɴᴇʀ* 」\n` +
+        `╭──「 📋 *Daftar Command Owner* 」\n` +
         `│ \`Total: ${totalCommands} command\`\n` +
         `┃\n` +
-        commandList.map(cmd => `│ ${cmd}`).join('\n') +
+        commandList.map(c => `│ ${commandListLine(prefix, c.name, c.usage)}`).join('\n') +
         `\n╰┈┈┈┈┈┈┈┈⬡\n\n` +
         `Hubungi owner untuk mendapatkan akses!`
-    
+
     await m.reply(claraWrap("benefitowner", message))
 }
 
