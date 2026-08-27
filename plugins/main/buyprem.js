@@ -9,7 +9,7 @@
 import fs from "fs";
 import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, bracketBox, tipText, toSC } from "../../src/lib/nova-menu-style.js";
 import { generateWAMessageFromContent } from "nova";
 import axios from "axios";
 
@@ -94,18 +94,18 @@ async function notifyOwner(sock, m, data) {
   const buyerNumber = m.sender?.replace(/[^0-9]/g, "") || "";
   const buyerName = m.pushName || "Unknown";
 
-  const notifText = `╭──「 💎 PEMBELIAN PREMIUM BARU 」
-│ Pembeli: *${buyerName}*
-│ Nomor: ${buyerNumber}
-│ Paket: *${data.label}*
-│ Durasi: *${data.duration}*
-│ Harga: *${data.price}*
-│ Status: *MENUNGGU PEMBAYARAN*
-│ Waktu: ${new Date().toLocaleString("id-ID")}
+  const notifText = `╭──「 💎 ${toSC("PEMBELIAN PREMIUM BARU")} 」
+│ ${toSC("Pembeli")}: *${toSC(buyerName)}*
+│ ${toSC("Nomor")}: ${buyerNumber}
+│ ${toSC("Paket")}: *${toSC(data.label)}*
+│ ${toSC("Durasi")}: *${toSC(data.duration)}*
+│ ${toSC("Harga")}: *${toSC(data.price)}*
+│ ${toSC("Status")}: *${toSC("MENUNGGU PEMBAYARAN")}*
+│ ${toSC("Waktu")}: ${new Date().toLocaleString("id-ID")}
 ╰──────────❀
 
-User ini menunggu konfirmasi pembayaran.
-Jika sudah bayar, ketik: *.addprem ${buyerNumber} ${data.days}*`;
+${toSC("User ini menunggu konfirmasi pembayaran.")}
+${toSC("Jika sudah bayar, ketik")}: *.addprem ${buyerNumber} ${data.days}*`;
 
   for (const num of ownerNumbers) {
     try {
