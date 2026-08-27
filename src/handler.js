@@ -813,38 +813,25 @@ async function messageHandler(msg, sock) {
       await sock.sendPresenceUpdate("paused", m.chat);
     }
 
-    // === ENERGI NOTIF SETELAH EKSEKUSI ===
+    // === ENERGI NOTIF SETELAH EKSEKUSI (simple, plain text, tanpa quote) ===
     if (energiCost > 0 && !m.isNewsletter && !m.isOwner) {
       try {
-        let notifText;
-        if (isUnlimited || energiDeducted === 0) {
-          // Premium unlimited — tetap kasih notif
-          notifText =
-            "╭──「 Limit 」\n" +
-            "├── " + energiCost + " limit terpakai\n" +
-            "├── Sisa limit: ∞ (Premium)\n" +
-            "╰──────────❀";
-        } else {
-          notifText =
-            "╭──「 Limit 」\n" +
-            "├── " + energiDeducted + " limit terpakai\n" +
-            "├── Sisa limit: " + sisaEnergi + "\n" +
-            "╰──────────❀";
+        const usedAmount = isUnlimited ? energiCost : energiDeducted;
+        let notifText = usedAmount + " Limit terpakai";
+        if (!isUnlimited) {
+          notifText += "\nSisa limit: " + sisaEnergi;
         }
-        await m.reply(notifText);
+        await sock.sendMessage(m.chat, { text: notifText });
 
-        // === WARNING LIMIT RENDAH ===
+        // === WARNING LIMIT RENDAH (tetap dikirim jika sisa limit menipis) ===
         if (!isUnlimited && energiDeducted > 0) {
           const warnThresholds = [50, 30, 10];
           for (const threshold of warnThresholds) {
             if (sisaEnergi <= threshold && sisaEnergi > 0) {
               try {
-                await m.reply(
-                  "╭──「 Limit Menipis 」\n" +
-                  "├── Sisa limit kamu: *" + sisaEnergi + "*\n" +
-                  "├── Gunakan dengan bijak atau beli Premium\n" +
-                  "├── Ketik .buyenergi <jumlah> untuk beli limit\n" +
-                  "╰──────────❀"
+                await sock.sendMessage(
+                  m.chat,
+                  { text: "⚠️ Sisa limit kamu tinggal " + sisaEnergi + ". Ketik .buyenergi <jumlah> untuk beli limit atau upgrade Premium." }
                 );
               } catch {}
               break;
