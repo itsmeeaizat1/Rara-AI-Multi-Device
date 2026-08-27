@@ -49,8 +49,7 @@ async function handler(m, { sock }) {
             `Kamu punya: *${formatNumber(user.koin || 0)}*`), "buyenergi")
     }
     
-    db.updateKoin(m.sender, -totalPrice)
-    try { sock.sendMessage(m.chat, { text: totalPrice + " Koin terpakai" }); } catch {}
+    db.updateKoin(m.sender, -totalPrice, sock, m.chat)
     
     if (user.energi === -1) {
         m.react('✅')
