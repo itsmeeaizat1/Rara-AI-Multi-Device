@@ -30,6 +30,10 @@
 
 ### V2 / Next Version
 - `.memev2` — random — Random meme dari Reddit via meme-api.com (v2 dari .meme)
+- `.lirikv2` — search — Cari lirik via Genius API + nexray fallback (v2 dari .lirik)
+- `.spotifyv2` — search — Info track Spotify dari URL (v2 dari .spotify, parse URL)
+- `.ytv2` — search — Search YouTube via Innertube (v2 dari .yts, no API key)
+- `.rss` — tools — Generic RSS reader (shortcut: detik/kompas/cnn/tribun atau URL)
 
 ### Config API Key Baru
 ```
