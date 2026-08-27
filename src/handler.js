@@ -695,7 +695,7 @@ async function messageHandler(msg, sock) {
   if (!checkCooldown(m, plugin)) {
     if (!m.isNewsletter) {
       try {
-        await m.react("⚠️");
+        await m.react("❗");
       } catch {}
     }
     return;
@@ -710,7 +710,7 @@ async function messageHandler(msg, sock) {
       const msg = spamResult.reason === "limit"
         ? "Jangan spam " + label + "! Tunggu " + spamResult.remainSec + " detik lagi"
         : "Tunggu " + spamResult.remainSec + " detik sebelum pakai " + label + " lagi";
-      if (!m.isNewsletter) { try { await m.react("⚠️"); } catch {} }
+      if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
       await m.reply("╭──「 Anti-Spam 」\n├── " + msg + "\n╰──────────❀");
       return;
     }
@@ -722,7 +722,7 @@ async function messageHandler(msg, sock) {
   if (plugin.config.isEnabled === false) {
     if (!m.isNewsletter) {
       try {
-        if (!m.isNewsletter) { try { await m.react("⚠️"); } catch {} }
+        if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
         await m.reply("╭──「 Nonaktif 」\n├── Command ini sedang dinonaktifkan\n╰──────────❀");
       } catch {}
     }
@@ -739,7 +739,7 @@ async function messageHandler(msg, sock) {
     if (disabledCmds.includes(cmdName) || (cmdCat && disabledCats.includes(cmdCat))) {
       if (!m.isNewsletter) {
         try {
-          if (!m.isNewsletter) { try { await m.react("⚠️"); } catch {} }
+          if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
           await m.reply("╭──「 Nonaktif 」\n├── Fitur ini sedang dinonaktifkan oleh owner\n├── Ketik .togglefitur untuk melihat status\n╰──────────❀");
         } catch {}
       }
@@ -789,7 +789,7 @@ async function messageHandler(msg, sock) {
         // Energi tidak cukup
         if (!m.isNewsletter) {
           try {
-            if (!m.isNewsletter) { try { await m.react("⚠️"); } catch {} }
+            if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
           await m.reply(
               (config.messages?.energiExceeded ||
                "╭──「 Energi Habis 」\n├── Energi kamu sudah habis!\n├── Tunggu reset besok atau beli Premium.\n╰──────────❀")
