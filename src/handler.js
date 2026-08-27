@@ -309,7 +309,7 @@ async function messageHandler(msg, sock) {
       const { verifyVnCaptcha, hasVnCaptchaChallenge, isVnCaptchaBlocked } = await import("../plugins/owner/vncaptcha.js");
       const senderJid = m.key?.remoteJid || m.sender;
       if (typeof isVnCaptchaBlocked === "function" && isVnCaptchaBlocked(senderJid)) {
-        await sock.sendMessage(senderJid, { text: "Nomor diblokir 24 jam karena gagal verifikasi suara. Coba lagi besok." });
+        await sock.sendMessage(senderJid, { text: "╭──「 🚫 Diblokir 24 Jam 」\n├── Gagal verifikasi suara\n├── Coba lagi besok\n╰──────────❀" });
         return;
       }
       if (typeof hasVnCaptchaChallenge === "function" && hasVnCaptchaChallenge(senderJid)) {
@@ -614,11 +614,14 @@ async function messageHandler(msg, sock) {
       }
       if (!m.isNewsletter) {
         try {
-          let notFoundText = `❓ Command *${m.prefix}${command}* tidak ditemukan\n\n`;
+          let notFoundText = `╭──「 ❓ Not Found 」\n`;
+          notFoundText += `├── Command *${m.prefix}${command}* tidak ditemukan\n`;
           if (closest) {
-            notFoundText += `Mungkin maksudmu: *${m.prefix}${closest}* ?\n\n`;
+            notFoundText += `├── Mungkin maksudmu: *${m.prefix}${closest}* ?\n`;
           }
-          notFoundText += `Ketik *${m.prefix}tanyaai <pertanyaan>* untuk tanya AI lebih lanjut`;
+          notFoundText += `├──\n`;
+          notFoundText += `├── 💡 Ketik *${m.prefix}tanyaai* untuk tanya AI\n`;
+          notFoundText += `╰──────────❀`;
           await m.reply(notFoundText);
         } catch {}
       }
@@ -837,10 +840,11 @@ async function messageHandler(msg, sock) {
     if (energiCost > 0 && !m.isNewsletter && !m.isOwner) {
       try {
         const usedAmount = isUnlimited ? energiCost : energiDeducted;
-        let notifText = usedAmount + " Limit terpakai";
+        let notifText = "╭──「 🔋 Limit 」\n├── " + usedAmount + " limit terpakai";
         if (!isUnlimited) {
-          notifText += "\nSisa limit: " + sisaEnergi;
+          notifText += "\n├── Sisa limit: " + sisaEnergi;
         }
+        notifText += "\n╰──────────❀";
         await sock.sendMessage(m.chat, { text: notifText });
 
         // === WARNING LIMIT RENDAH (tetap dikirim jika sisa limit menipis) ===
@@ -851,7 +855,7 @@ async function messageHandler(msg, sock) {
               try {
                 await sock.sendMessage(
                   m.chat,
-                  { text: "⚠️ Sisa limit kamu tinggal " + sisaEnergi + ". Ketik .buyenergi <jumlah> untuk beli limit atau upgrade Premium." }
+                  { text: "╭──「 ⚠️ Limit Menipis 」\n├── Sisa limit kamu tinggal " + sisaEnergi + "\n├── Ketik .buyenergi <jumlah> untuk beli\n├── atau upgrade Premium\n╰──────────❀" }
                 );
               } catch {}
               break;

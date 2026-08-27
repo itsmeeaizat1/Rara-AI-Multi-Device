@@ -322,34 +322,34 @@ const config = {
   },
 
   messages: {
-    wait: "🕕 *Proses...* Mohon tunggu sebentar ya.",
-    success: "✅ *Berhasil!* Permintaan kamu sudah selesai.",
-    error: "❌ *Error!* Ada masalah pada sistem fiturnya, coba lagi nanti atau hubungi owner untuk kirim feedback.",
+    wait: "╭──\n├── 🕕 Proses...\n├── Mohon tunggu sebentar\n╰──────────❀",
+    success: "╭──\n├── ✅ Berhasil!\n├── Permintaan kamu sudah selesai\n╰──────────❀",
+    error: "╭──「 ⚠️ Error 」\n├── Ada masalah pada sistem\n├── Coba lagi nanti atau hubungi owner\n╰──────────❀",
 
-    ownerOnly: "*Akses Ditolak!* Fitur ini khusus untuk Owner bot.",
+    ownerOnly: "╭──「 🚫 Akses Ditolak 」\n├── Fitur ini khusus Owner bot\n╰──────────❀",
     premiumOnly:
-      "💎 *Premium Only!* Fitur ini khusus member Premium. Ketik *.benefitpremium* untuk info upgrade.",
+      "╭──「 💎 Premium Only 」\n├── Fitur ini khusus member Premium\n├── Ketik .benefitpremium untuk info upgrade\n╰──────────❀",
 
-    groupOnly: "👥 *Group Only!* Fitur ini hanya bisa digunakan di dalam grup.",
+    groupOnly: "╭──「 👥 Group Only 」\n├── Fitur ini hanya bisa\n├── digunakan di dalam grup\n╰──────────❀",
     privateOnly:
-      "👥 *Private Only!* Fitur ini hanya bisa digunakan di chat pribadi bot.",
+      "╭──「 📱 Private Only 」\n├── Fitur ini hanya bisa\n├── digunakan di chat pribadi\n╰──────────❀",
 
     adminOnly:
-      "👥 *Admin Only!* Kamu harus jadi Admin grup untuk pakai fitur ini.",
+      "╭──「 👮 Admin Only 」\n├── Kamu harus jadi Admin grup\n├── untuk pakai fitur ini\n╰──────────❀",
     botAdminOnly:
-      "❗ *Bot Bukan Admin!* Jadikan bot sebagai Admin grup dulu biar bisa kerja.",
+      "╭──「 🤖 Bot Bukan Admin 」\n├── Jadikan bot sebagai Admin grup\n├── dulu biar bisa kerja\n╰──────────❀",
 
     cooldown:
-      "🕕 *Tunggu Dulu!* Kamu masih dalam cooldown. Tunggu %time% detik lagi ya.",
+      "╭──「 🕕 Cooldown 」\n├── Tunggu %time% detik lagi ya\n╰──────────❀",
     energiExceeded:
-      "⚡ *Energi Habis!* Energi kamu sudah habis. Tunggu reset besok atau beli Premium.",
+      "╭──「 ⚡ Energi Habis 」\n├── Energi kamu sudah habis\n├── Tunggu reset besok atau\n├── beli Premium\n╰──────────❀",
     limitDeducted:
-      "🔋 Limit kau berkurang sebanyak {amount}. Sisa limit: {sisa}",
+      "🔋 Limit berkurang {amount}. Sisa limit: {sisa}",
 
     banned:
-      "🚫 *Kamu diblokir!* Kamu tidak bisa menggunakan bot ini karena telah melanggar aturan, hubungi owner untuk lebih lanjut.",
+      "╭──「 🚫 Diblokir 」\n├── Kamu tidak bisa menggunakan bot\n├── karena melanggar aturan\n├── Hubungi owner untuk info lebih lanjut\n╰──────────❀",
 
-    rejectCall: "❗ Ga boleh telepon nomor bot ini.",
+    rejectCall: "╭──「 ❗ Ditolak 」\n├── Ga boleh telepon nomor bot ini\n╰──────────❀",
   },
 
   database: { path: "./database/main" },
