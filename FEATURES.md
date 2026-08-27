@@ -361,3 +361,12 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - Format: mp3 (audio), 360/480/720/1080 (video)
 - API: savenow.to (4kdownload.to)
 - Polling progress system dengan auto-download buffer
+
+
+## 💎 Premium List
+
+- `.premium` — Tampilkan list harga premium user
+- Alias: `.premlist`, `.hargapremium`
+- Menampilkan: status premium, keuntungan, paket harga, cara beli, metode pembayaran
+- Paket: 7 Hari (Rp 10.000), 30 Hari (Rp 25.000), 90 Hari (Rp 60.000), Permanent (Rp 150.000)
+- Tombol: Beli Premium, Menu, Sewa Bot, Owner
