@@ -8,6 +8,7 @@ import {
   getLokerStatus,
   updateLokerSettings,
   fetchNewJobs,
+  fetchAllIndonesiaJobs,
   fetchTheMuse,
   fetchJobicy,
   formatLokerMessage,
@@ -81,8 +82,8 @@ function help(m) {
     "  Jumlah loker per broadcast (1–10).",
     "",
     "`" + p + "loker sumber [nama]`",
-    "  Lihat/toggle sumber loker: remotive, arbeitnow, themuse, jobicy.",
-    "  Contoh: " + p + "loker sumber themuse",
+    "  Lihat/toggle sumber loker: jobstreet, glints, kalibrr, indeed, remotive, arbeitnow",
+    "  Contoh: " + p + "loker sumber jobstreet",
     "",
     "`" + p + "loker test`",
     "  Kirim preview loker sekarang ke chat ini.",
@@ -283,7 +284,7 @@ async function handler(m, { sock }) {
 
   // ── SUMBER (toggle sources) ──────────────────────────────────────────
   if (action === "sumber" || action === "sources") {
-    const AVAILABLE = ["remotive", "arbeitnow", "themuse", "jobicy"];
+    const AVAILABLE = ["jobstreet", "glints", "kalibrr", "indeed", "remotive", "arbeitnow"];
     const choice = (args[0] || "").toLowerCase();
 
     if (!choice) {

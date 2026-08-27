@@ -387,7 +387,7 @@ const config = {
       { key: "siang", label: "Siang", hour: 13, minute: 0 },
       { key: "sore",  label: "Sore",  hour: 17, minute: 0 },
     ],
-    sources: ["jobstreet", "lokereid", "remotive", "arbeitnow"],
+    sources: ["jobstreet", "glints", "kalibrr", "indeed", "remotive", "arbeitnow"],
   },
 
   // Dev mode settings (auto-enabled jika NODE_ENV=development)
