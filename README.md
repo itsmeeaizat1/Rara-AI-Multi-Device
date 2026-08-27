@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20bullet%20%E2%9D%8F%20dari%20-success?style=for-the-badge)
-> *Commit: "refactor: hapus bullet ❏ dari pesan fitur, biar bersih murni teks"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20novaCaption%20helper%20%2B%20%E2%9D%8F%20o-success?style=for-the-badge)
+> *Commit: "feat: novaCaption helper + ❏ only in menu/allmenu/allmenucategory"*
 <!--END_SECTION:latest-update-->
 
 
