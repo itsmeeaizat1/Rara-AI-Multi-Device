@@ -821,19 +821,16 @@ async function messageHandler(msg, sock) {
       await sock.readMessages([msg.key]);
     }
 
-    // === PROCESSING NOTIFICATION (media/tool only) ===
+    // === PROCESSING NOTIFICATION (all commands) ===
     const procNotifOn = dbInstance?.setting?.("procNotif") ?? true;
-    const procCategories = ["ai", "canvas", "image", "maker", "sticker", "convert", "tools", "download", "downloader", "tts", "anime"];
-    const cmdCategory = plugin.config?.category || "";
-    const isProcCategory = procCategories.includes(cmdCategory);
-    if (procNotifOn && !m.isNewsletter && isProcCategory) {
+    if (procNotifOn && !m.isNewsletter) {
       try { await m.react("🕒"); } catch {}
     }
 
     await plugin.handler(m, { sock, conn: sock, config, db: getDatabase(), args: m.args || [], text: m.text || '', uptime: process.uptime() * 1000 });
 
     // React 🐣 after processing completes
-    if (procNotifOn && !m.isNewsletter && isProcCategory) {
+    if (procNotifOn && !m.isNewsletter) {
       try { await m.react("🐣"); } catch {}
     }
 
