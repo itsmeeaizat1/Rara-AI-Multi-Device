@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "statscard",
@@ -19,7 +19,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const mode = (args[0] || "").toLowerCase();
 
     const groupMeta = await conn.groupMetadata(groupId).catch(() => null);
-    if (!groupMeta) return m.reply(claraWrap("Error", "\u274c Gagal mengambil info grup."));
+    if (!groupMeta) return m.reply(novaError("Stats Card", "Gagal mengambil info/metadata grup nih."));
 
     const totalMembers = groupMeta.participants.length;
     const admins = groupMeta.participants.filter(p => p.admin).length;
@@ -127,7 +127,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
   } catch (e) {
     console.error("statscard error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Stats Card", `Terjadi kesalahan: ${e.message}`));
   }
 }
 

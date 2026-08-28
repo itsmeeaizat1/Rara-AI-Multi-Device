@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
     name: 'setppgc',
     alias: ["setppgc"],
@@ -24,31 +25,26 @@ async function handler(m, { sock }) {
         try {
             buffer = await m.quoted.download()
         } catch (e) {
-            await m.reply(claraWrap("setppgc", `❌ Gagal mengambil gambar.`))
+            await m.reply(novaError('SetPPGC', 'Duh, gagal mengambil gambar dari pesan yang kamu reply nih.'))
             return
         }
     } else if (m.isImage) {
         try {
             buffer = await m.download()
         } catch (e) {
-            await m.reply(claraWrap("setppgc", `❌ Gagal mengambil gambar.`))
+            await m.reply(novaError('SetPPGC', 'Duh, gagal mengambil gambar yang kamu kirim nih.'))
             return
         }
     }
     if (!buffer) {
-        await m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `Reply gambar + \`${m.prefix}setppgc\`\n` +
-            `Kirim gambar + caption \`${m.prefix}setppgc\``, "setppgc")
+        await m.reply(novaGuide('SetPPGC', 'Kirim atau reply gambar yang ingin dijadikan foto profil grup baru!', `${m.prefix}setppgc`))
         return
     }
     try {
         await sock.updateProfilePicture(m.chat, buffer)
         await m.reply(claraWrap("Setppgc", `✅ Foto profil grup berhasil diperbarui!`))
     } catch (error) {
-        await m.reply(
-            `❌ Gagal mengubah foto grup.\n` +
-            `_${error.message}_`
-        )
+        await m.reply(novaError('SetPPGC', `Gagal mengubah foto profil grup: ${error.message}`))
     }
 }
 

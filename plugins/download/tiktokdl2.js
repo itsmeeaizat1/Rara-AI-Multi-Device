@@ -5,7 +5,8 @@ import crypto from 'crypto'
 import { generateWAMessage, generateWAMessageFromContent, jidNormalizedUser } from 'nova'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+
 const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
     Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -122,17 +123,11 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
 
     if (!url) {
-        return m.reply(novaCaption({
-  emoji: "🎵",
-  name: "tiktokdl2",
-  description: "Download video/slide TikTok tanpa watermark",
-  usage: `${m.prefix}tiktok2 <url>`,
-  example: `${m.prefix}tiktok2 https://vt.tiktok.com/xxx`,
-}), "tiktok2")
+        return m.reply(novaNoInput("TikTok DL 2", "Masukkan link TikTok yang mau kamu download!", `${m.prefix}tiktok2 https://vt.tiktok.com/xxx`));
     }
 
     if (!url.match(/tiktok\.com|vt\.tiktok/i)) {
-        return m.reply(claraWrap("Tiktokdl2", '❌ URL tidak valid. Gunakan link TikTok.'))
+        return m.reply(novaGuide("TikTok DL 2", "URL tidak valid! Kirim link TikTok ya.", `${m.prefix}tiktok2 https://vt.tiktok.com/xxx`));
     }
 
     m.react('🕐')
@@ -141,11 +136,12 @@ async function handler(m, { sock }) {
         const result = await savett(url)
 
         const caption =
-            `✅ *ᴅᴏɴᴇ ᴋᴀᴋ*\n\n` +
-            `👤 *${result.username || '-'}*\n` +
-            `👁️ Views: ${result.views || '-'} | ❤️ Likes: ${result.likes || '-'}\n` +
-            `💬 Comments: ${result.comments || '-'} | 🔗 Shares: ${result.shares || '-'}\n` +
-            `⏱️ Duration: ${result.duration || '-'}`
+            `╭──「 TikTok DL 」\n` +
+            `│ Author: ${result.username || '-'}\n` +
+            `│ Views: ${result.views || '-'} | Likes: ${result.likes || '-'}\n` +
+            `│ Comments: ${result.comments || '-'} | Shares: ${result.shares || '-'}\n` +
+            `│ Duration: ${result.duration || '-'}\n` +
+            `╰──────────❀`
 
         if (result.type === 'video' && result.downloads.nowm.length > 0) {
             const videoRes = await axios.get(result.downloads.nowm[0], {
@@ -270,7 +266,7 @@ async function handler(m, { sock }) {
 
     } catch (err) {
         console.error('[TikTokDL2] Error:', err)
-        m.reply(claraWrap("tiktokdl2", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaError("TikTok DL 2", err.message || "Gagal mengunduh video TikTok"));
     }
 }
 

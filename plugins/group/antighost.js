@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antighost",
@@ -76,7 +76,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     if (sub === "action" || sub === "aksi") {
       const action = (args[1] || "").toLowerCase();
       if (!["warn", "kick"].includes(action)) {
-        return m.reply(claraWrap("Anti Ghost", "Pilih: warn atau kick\n💡 *Contoh:* .antighost action kick"));
+        return m.reply(novaGuide("Anti Ghost", "Pilih aksi yang valid: warn atau kick", `${usedPrefix}antighost action kick`));
       }
       cfg.action = action;
       await db.save();
@@ -97,13 +97,13 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // SCAN
-    if (sub === "scan" || sub === "cek" || sub === "cekmember") {
+    if (sub === "scan" || sub === "cekmember") {
       await m.react("🔍");
       let metadata;
       try {
         metadata = await conn.groupMetadata(groupId);
       } catch {
-        return m.reply(claraWrap("Anti Ghost", "Gagal ambil data grup."));
+        return m.reply(novaError("Anti Ghost", "Gagal mengambil data metadata grup."));
       }
 
       const participants = metadata.participants || [];
@@ -163,14 +163,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // KICK
     if (sub === "kick" || sub === "kickall") {
       if ((cfg.action || "warn") !== "kick") {
-        return m.reply(claraWrap("Anti Ghost", "Set action ke kick dulu!\nKetik: .antighost action kick"));
+        return m.reply(novaGuide("Anti Ghost", "Set action ke kick dulu sebelum mengeluarkan ghost!", `${usedPrefix}antighost action kick`));
       }
 
       let metadata;
       try {
         metadata = await conn.groupMetadata(groupId);
       } catch {
-        return m.reply(claraWrap("Anti Ghost", "Gagal ambil data grup."));
+        return m.reply(novaError("Anti Ghost", "Gagal mengambil data metadata grup."));
       }
 
       const participants = metadata.participants || [];
@@ -186,7 +186,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       });
 
       if (ghosts.length === 0) {
-        return m.reply(claraWrap("Anti Ghost", "Tidak ada ghost untuk dikick."));
+        return m.reply(novaEmpty("Anti Ghost", "Tidak ada ghost/member tidak aktif yang bisa dikick."));
       }
 
       let kicked = 0;
@@ -211,24 +211,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // HELP
-    return m.reply( claraWrap("Anti Ghost", [
-      "Deteksi member ghost/lurker yang gak pernah chat",
-      "",
-      "CARA PAKAI:",
-      usedPrefix + "antighost on [hari] — Aktifkan (default 7 hari)",
-      usedPrefix + "antighost off — Matikan",
-      usedPrefix + "antighost action <warn/kick> — Ubah aksi",
-      usedPrefix + "antighost status — Lihat status",
-      usedPrefix + "antighost scan — Scan member ghost sekarang",
-      usedPrefix + "antighost kick — Kick semua ghost (action harus kick)",
-      "",
-      "CONTOH:",
-      usedPrefix + "antighost on 14 (14 hari tidak chat = ghost)",
-      usedPrefix + "antighost scan",
-    ]), "antighost");
+    return m.reply(novaGuide("Anti Ghost", "Deteksi member ghost/lurker yang tidak pernah chat di grup.", `${usedPrefix}antighost on 7`));
   } catch (e) {
     console.error("[Anti Ghost]", e);
-    m.reply(claraWrap("Anti Ghost", "Error: " + e.message));
+    m.reply(novaError("Anti Ghost", `Terjadi kesalahan: ${e.message}`));
   }
 }
 

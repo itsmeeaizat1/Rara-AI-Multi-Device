@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aiov2",
@@ -49,13 +49,7 @@ function formatSize(bytes) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(novaCaption({
-  emoji: "🌐",
-  name: "aiov2",
-  description: "AIO Downloader all-in-one sosmed via V2 API (V2)",
-  usage: `${m.prefix}aiov2 <url>`,
-  example: `${m.prefix}aiov2 https://vt.tiktok.com/xxx`,
-}), "aiov2")
+    return m.reply(novaNoInput("AIO Downloader V2", "Masukkan URL sosmed yang mau kamu download!", `${m.prefix}aiov2 https://vt.tiktok.com/xxx`));
   }
 
   m.react("🕒");
@@ -101,7 +95,7 @@ async function handler(m, { sock }) {
     m.react("🐣");
   } catch (e) {
     console.error("[AIOV2] Error:", e.message);
-    m.reply(claraWrap("Aiov2", `Gagal mengambil media.\n>${e.message || "Coba lagi nanti"}`));
+    m.reply(novaError("AIO Downloader V2", e.message || "Gagal mengambil media dari URL tersebut"));
   }
 }
 

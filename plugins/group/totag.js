@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
@@ -22,11 +22,7 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     if (!m.quoted) {
-        return m.reply(
-            `📢 *ᴛᴏᴛᴀɢ*\n\n` +
-            `Reply pesan yang ingin di-forward ke semua member\n\n` +
-            `Contoh: Reply pesan lalu ketik \`${m.prefix}totag\``
-        )
+        return m.reply(novaGuide("Totag", "Reply pesan yang ingin di-forward dan di-tag ke semua member!", `${m.prefix || "."}totag`))
     }
     
     
@@ -34,7 +30,7 @@ async function handler(m, { sock }) {
         const participants = m.groupMembers || []
         
         if (!participants || participants.length === 0) {
-            { const __navText = claraWrap("totag", `❌ Gagal mendapatkan data member grup`); return await m.reply(__navText); }
+            return await m.reply(novaEmpty("Totag", "Gagal mendapatkan data member grup nih."));
         }
         
         const users = participants
@@ -49,7 +45,7 @@ async function handler(m, { sock }) {
         m.react('✅')
         
     } catch (err) {
-        m.reply(claraWrap("totag", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaError("Totag", `Gagal melakukan totag: ${err.message || "terjadi kesalahan"}`))
     }
 }
 

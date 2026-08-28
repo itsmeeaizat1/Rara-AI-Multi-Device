@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spinbottle",
@@ -65,9 +65,9 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     if (sub === "spin") {
       const meta = await conn.groupMetadata(groupId).catch(() => null);
-      if (!meta) return m.reply(claraWrap("Error", "\u274c Gagal mengambil info grup."));
+      if (!meta) return m.reply(novaError("Spin Bottle", "Gagal mengambil data/info grup nih."));
       const participants = meta.participants.map(p => p.id).filter(id => id !== conn.user?.id);
-      if (participants.length < 2) return m.reply(claraWrap("Info", "\u274c Minimal butuh 2 member untuk spin."));
+      if (participants.length < 2) return m.reply(novaError("Spin Bottle", "Minimal butuh 2 member di grup untuk putar botol ya!"));
 
       const randomTarget = participants[Math.floor(Math.random() * participants.length)];
       game.active = true;
@@ -89,7 +89,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "truth") {
-      if (!game.active || game.target !== sender) return m.reply(claraWrap("Spin The Bottle", "Bukan giliranmu!"));
+      if (!game.active || game.target !== sender) return m.reply(novaError("Spin Bottle", "Bukan giliranmu untuk pilih truth/dare nih!"));
       const q = TRUTH_QUESTIONS[Math.floor(Math.random() * TRUTH_QUESTIONS.length)];
       game.phase = "answered";
       await db.save();
@@ -103,7 +103,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "dare") {
-      if (!game.active || game.target !== sender) return m.reply(claraWrap("Spin The Bottle", "Bukan giliranmu!"));
+      if (!game.active || game.target !== sender) return m.reply(novaError("Spin Bottle", "Bukan giliranmu untuk pilih truth/dare nih!"));
       const d = DARE_CHALLENGES[Math.floor(Math.random() * DARE_CHALLENGES.length)];
       game.phase = "answered";
       await db.save();
@@ -117,7 +117,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "next") {
-      if (!game.active) return m.reply(claraWrap("Info", "\u274c Tidak ada game aktif."));
+      if (!game.active) return m.reply(novaEmpty("Spin Bottle", "Tidak ada permainan Spin Bottle yang aktif nih."));
       game.phase = "idle";
       game.target = null;
       await db.save();
@@ -154,7 +154,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ].join("\n")));
   } catch (e) {
     console.error("spinbottle error:", e);
-    return m.reply("Error: " + e.message);
+    return m.reply(novaError("Spin Bottle", `Terjadi kesalahan: ${e.message}`));
   }
 }
 
