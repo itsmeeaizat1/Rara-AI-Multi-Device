@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { separator,
+import { novaError, novaEmpty, novaGuide, novaNoInput, separator,
   tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -135,16 +135,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!isImage) {
       const text =
-        claraWrap("AI Caption", [`│ Reply atau kirim foto dengan caption .aicaption`,
-          `│ AI akan analisis foto dan buat caption Instagram`,
-          ``,
-          `*Style tersedia:*`,
-          `│ ${prefix}aicaption — Default (mix)`,
-          `│ ${prefix}aicaption product — Jualan`,
-          `│ ${prefix}aicaption funny — Lucu`,
-          `│ ${prefix}aicaption aesthetic — Estetik`,
-          `│ ${prefix}aicaption motivasi — Inspiratif`,
-          `│ ${prefix}aicaption singkat — Max 5 kata`].join("\n")) + "\n" +
+        novaError("AICaption", "Error nih") + "\n" +
         tipText("Reply foto lalu ketik .aicaption");
 
       await m.reply(text, "aicaption");
@@ -164,8 +155,7 @@ async function handler(m, { sock, config: botConfig }) {
       mediaBuffer = Buffer.isBuffer(stream) ? stream : Buffer.from(stream);
     } else {
       const text =
-        claraWrap("AI Caption", [`│ Status: *Gagal download gambar*`,
-          `│ Coba reply foto yang valid`].join("\n")) + "\n" +
+        novaError("AICaption", "Error nih") + "\n" +
         tipText("Reply foto lalu ketik .aicaption");
 
       await m.reply(text, "aicaption");
@@ -174,7 +164,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!mediaBuffer || !Buffer.isBuffer(mediaBuffer)) {
       const text =
-        claraWrap("AI Caption", [`│ Status: *Buffer gambar tidak valid*`].join("\n")) + "\n" +
+        novaError("AICaption", "Error nih") + "\n" +
         tipText("Coba foto lain");
 
       await m.reply(text, "aicaption");
@@ -227,9 +217,7 @@ async function handler(m, { sock, config: botConfig }) {
     const styleLabel = useStyle === "default" ? "Mix" : useStyle.charAt(0).toUpperCase() + useStyle.slice(1);
 
     const result =
-      claraWrap("AI Caption", [`│ Style: *${styleLabel}*`,
-        `│ Provider: *${usedProvider}*`,
-        `│ Hasil:`].join("\n")) + "\n\n" +
+      novaError("AICaption", "Error nih") + "\n\n" +
       `${captionResult}` + "\n\n" +
       separator("━", 22) + "\n" +
       tipText("Copy caption favoritmu untuk Instagram") + "\n" +
@@ -240,9 +228,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[AI Caption Error]", error);
     const text =
-      claraWrap("Gagal", [`│ Status: *Gagal generate caption*`,
-        `│ Alasan: *${error.message || "Unknown error"}*`].join("\n")) + "\n" +
-      tipText("Coba lagi nanti atau hubungi owner");
+      novaError("AICaption", "Gagal generate caption nih");
 
     await m.reply(text);
     return { handled: true };

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {
+import { novaError, novaEmpty, novaGuide, novaNoInput,
   claraHeader,
   separator,
   tipText,
@@ -130,7 +130,7 @@ async function handler(m, { sock, config: botConfig }) {
     const args = raw.split(/[ \t]+/).filter(Boolean);
 
     const db = getDatabase();
-    if (!db?.db?.data) return m.reply(claraWrap("aigrup", "❌ Database belum siap."));
+    if (!db?.db?.data) return m.reply(novaError("AIGrup", "Database belum siap nih"));
     if (!db.db.data.aigrup) db.db.data.aigrup = { enabled: false, groups: {}, probability: 10, format: "openai", model: "deepseek-v4-flash:free" };
 
     const aigrup = db.db.data.aigrup;

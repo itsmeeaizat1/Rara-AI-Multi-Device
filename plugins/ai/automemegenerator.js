@@ -4,7 +4,7 @@
 //   One-shot (all users): .automeme — reply ke foto, generate meme sekali
 //   Persistent (owner): .toggleautomeme on/off — auto generate tiap foto masuk (default ON)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -57,7 +57,7 @@ async function doMemeAnalysis(m, sock, style) {
 
     const buffer = await sock.downloadMediaMessage(m.quoted || m);
     if (!buffer || buffer.length < 500) {
-      await m.reply(claraWrap("Auto Meme", "Gagal download gambar."));
+      await m.reply(novaError("AutoMeme", "Gagal download gambar nih"));
       return { handled: true };
     }
 
@@ -117,7 +117,7 @@ async function doMemeAnalysis(m, sock, style) {
 
     if (!memeText || memeText.length < 2) {
       await sock.sendReaction(m.key.remoteJid, "⚠️", m.key);
-      await m.reply(claraWrap("Auto Meme", "Gagal generate meme. Coba lagi."));
+      await m.reply(novaError("AutoMeme", "Gagal generate meme nih, coba lagi ya"));
       return { handled: true };
     }
 
@@ -234,7 +234,7 @@ async function handler(m, { sock, config: botConfig }) {
       } else if (args[0] === "style") {
         const style = args[1] || "auto";
         if (!["top", "bottom", "full", "auto"].includes(style)) {
-          await m.reply(claraWrap("Auto Meme Generator", "Style tidak valid. Tersedia: top, bottom, full, auto"), "automemegenerator");
+          await m.reply(novaError("AutoMeme", "Style gak valid nih! Tersedia: top, bottom, full, auto"), "automemegenerator");
           return { handled: true };
         }
         if (!cfg[gid]) cfg[gid] = {};

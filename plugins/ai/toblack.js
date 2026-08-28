@@ -4,7 +4,7 @@ import { uploadImage } from "../../src/lib/nova-uploader.js";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
 import { live3d } from "../../src/scraper/seaart.js";
-import { claraWrap, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "toblack",
   alias: ["toblack"],

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "prabowo-ai",
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     const result = await UnlimitedAI(text, "prabowo-ai");
 
     if (!result.status) {
-      { const __navText = `❌ *ᴘʀᴀʙᴏᴡᴏ ᴀɪ ᴇʀʀᴏʀ*\n\n${result.error || "Gagal mendapatkan respons"}`; return await m.reply(__navText); };
+      { const __navText = `❌ *ᴘʀᴀʙᴏᴡᴏ ᴀɪ ᴇʀʀᴏʀ*\n\n${result.error || "Gagal dapet respons nih"}`; return await m.reply(__navText); };
     }
 
     await m.react("🐣");
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);
-    m.reply(claraWrap("prabowo-ai", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaError("PrabowoAI", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

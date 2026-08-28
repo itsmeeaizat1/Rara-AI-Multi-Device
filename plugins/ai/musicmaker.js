@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "musicmaker",
@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
   const prompt = m.text?.trim() || m.args.join(" ");
 
   if (!prompt) {
-    { const __navText = "❌ Masukkan deskripsi lagu yang ingin dibuat.\n\n💡 *Contoh:* `.musicmaker Lagu pop romantis yang ceria`"; return await m.reply(__navText, "musicmaker"); };
+    return m.reply(novaGuide("MusicMaker", "Masukin deskripsi lagu nih!", ".musicmaker Lagu pop romantis yang ceria"));
   }
 
   await m.react("🕒");
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
 
   } catch (error) {
     console.error("[Music Maker AI]", error.message);
-    m.reply(claraWrap("musicmaker", "😔 Terjadi kesalahan saat memproses permintaan pembuatan lagu ke AI. Server AI mungkin sibuk."));
+    m.reply(novaError("MusicMaker", "Ada error nih, AI mungkin lagi sibuk"));
   }
 }
 

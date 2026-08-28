@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aitimewarp",
@@ -423,7 +423,7 @@ async function handler(m, { sock, db, config: botConfig }) {
           result,
         ].join("\n")), "aitimewarp");
       } else {
-        await m.reply(claraWrap("Time-Warp", "Gagal dapat respon AI. Coba lagi."));
+        await m.reply(novaError("AITimeWarp", "Gagal dapet respon AI nih, coba lagi ya"));
       }
     } catch (e) {
       await m.reply(claraWrap("Time-Warp", "Error: " + e.message));

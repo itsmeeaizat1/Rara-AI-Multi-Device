@@ -2,7 +2,7 @@
 import { GPT5 } from "../../src/scraper/gpt5.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gpt5",
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const result = await GPT5(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("GPT-5 Gagal", `❌ *GPT-5 Gagal*\n\n${result.error || "Gagal mendapatkan respons"}`));
+      return m.reply(claraWrap("GPT-5 Gagal", `❌ *GPT-5 Gagal*\n\n${result.error || "Gagal dapet respons nih"}`));
     }
 
     await m.react("🐣");

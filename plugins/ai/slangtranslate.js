@@ -4,7 +4,7 @@ import os from "os";
 import { exec } from "child_process";
 import FormData from "form-data";
 import axios from "axios";
-import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import config from "../../config.js";
 

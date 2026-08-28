@@ -2,7 +2,7 @@
 import { DeepSeekThinking } from "../../src/scraper/deepseek.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "deepseek",
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const result = await DeepSeekThinking(text);
 
     if (!result.success) {
-      return m.reply(claraWrap("DeepSeek Gagal", `❌ *ᴅᴇᴇᴘꜱᴇᴇᴋ ɢᴀɢᴀʟ*\n\nGagal mendapatkan respons`));
+      return m.reply(novaError("DeepSeek", "Gagal dapet respons nih"));
     }
 
     await m.react("🐣");
