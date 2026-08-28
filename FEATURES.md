@@ -431,3 +431,14 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - Owner juga dapat laporan ringkasan (total user, total notif terkirim)
 - Default jam 00:00 WIB (tengah malam)
 - Contoh: `.autorefill on 00:00`
+
+## 💎 Auto Renewal Reminder
+
+- `.autorenewal <on/off/status/now/list> [HH:MM] [reminder_days]` — Auto premium expiry reminder
+- Alias: `.renewal`, `.premiumreminder`
+- Bot cek tiap hari, kirim notif ke premium user H-3 (configurable) sebelum expired
+- Reminder dikirim ke user via DM dengan detail: tanggal expired, sisa hari, keuntungan premium, cara perpanjang
+- Anti-spam: 1x per user per hari (tidak kirim berulang di hari yang sama)
+- Owner juga dapat laporan ringkasan siapa yang akan expired
+- `.autorenewal list` — lihat daftar premium user yang akan expired
+- Contoh: `.autorenewal on 09:00 3`
