@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'antijudol',
@@ -28,14 +28,7 @@ function handler(m, { sock }) {
     if (!option) {
         const status = groupData.antijudol || 'off'
         const mode = groupData.antijudolMode || 'remove'
-        return m.reply( `🎰 *Antijudol*\n\n` +
-            `Status: *${status.toUpperCase()}*\n` +
-            `Mode: *${mode.toUpperCase()}*\n\n` +
-            `Deteksi konten judol seperti judi, slot, gacor, maxwin, togel, bonus member, link alternatif, dan pola sejenis.\n\n` +
-            `\`${m.prefix}antijudol on\`\n` +
-            `\`${m.prefix}antijudol off\`\n` +
-            `\`${m.prefix}antijudol metode kick\`\n` +
-            `\`${m.prefix}antijudol metode remove\``, "antijudol")
+        return m.reply(novaGuide("Anti-Judol", `Status: ${status.toUpperCase()} | Mode: ${mode.toUpperCase()}\n\nDeteksi konten judi online/slot gacor di grup.`, `${m.prefix}antijudol on`))
     }
 
     if (option === 'on') {
@@ -71,7 +64,7 @@ function handler(m, { sock }) {
         return m.reply(claraWrap("Antijudol", '✅ *AntiJudol mode DELETE diaktifkan*'))
     }
 
-    return m.reply(claraWrap("Antijudol", '❌ Opsi tidak valid! Gunakan: `on`, `off`, `metode kick`, `metode remove`'))
+    return m.reply(novaError("Anti-Judol", "Opsi tidak valid nih! Gunakan: on, off, metode kick, atau metode remove"))
 }
 
 export { pluginConfig as config, handler }

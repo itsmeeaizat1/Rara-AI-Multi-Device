@@ -5,7 +5,8 @@ import path from "path";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
   name: "pindl",
   alias: ["pindl"],
@@ -21,23 +22,20 @@ const pluginConfig = {
   energi: 1,
   isEnabled: true,
 };
+
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply( `📌 *ᴘɪɴᴛᴇʀᴇꜱᴛ ᴅᴏᴡɴʟᴏᴀᴅ*\n\n` +
-        `Download gambar/video dari Pinterest\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `\`${m.prefix}pindl https://pin.it/xxx\`\n` +
-        `\`${m.prefix}pindl https://pinterest.com/pin/xxx\``, "pindl");
+    return m.reply(novaGuide("Pinterest DL", "Masukkan URL Pinterest yang ingin kamu unduh!", `${m.prefix}pindl https://pin.it/xxx`));
   }
   if (!url.includes("pinterest") && !url.includes("pin.it")) {
-    { const __navText = "❌ URL tidak valid. Gunakan link Pinterest."; return await m.reply(__navText); };
+    return m.reply(novaError("Pinterest DL", "URL tidak valid. Pastikan pakai link Pinterest (pin.it atau pinterest.com)!"));
   }
   m.react("🕒");
   try {
     const result = await pinterestdl(url);
     if (!result || !result.media || result.media.length === 0) {
-      throw new Error("Tidak ada media ditemukan");
+      return m.reply(novaEmpty("Pinterest DL", "Tidak ada media yang ditemukan dari link Pinterest tersebut."));
     }
     for (const media of result.media) {
       if (media.type === "video") {
@@ -96,7 +94,7 @@ async function handler(m, { sock }) {
     m.react("🐣");
   } catch (error) {
     console.error("[PinDL] Error:", error);
-    m.reply(claraWrap("pindl", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaError("Pinterest DL", `Gagal mengunduh media Pinterest — ${error.message || 'terjadi kesalahan'}`));
   }
 }
 export { pluginConfig as config, handler };

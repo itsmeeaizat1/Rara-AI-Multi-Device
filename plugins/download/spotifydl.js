@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import path from "node:path";
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const BASE_URL = "https://spotisaver.net";
 const LANG = "en";
@@ -216,7 +216,7 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
 
   if (!text || !/open\.spotify\.com\/track/i.test(text)) {
-    { const __navText = "❌ *Waduh, link Spotify-nya mana nih atau kurang tepat!*\n\nKamu harus memasukkan tautan (link) lagu dari Spotify yang valid. Pastikan itu adalah link ke track/lagu ya! \n\n💡 *Contoh:* `.spdl https://open.spotify.com/track/3RY0NyQQXxuAiyk5eAS4fC`"; return await m.reply( __navText, "spotifydl"); };
+    return m.reply(novaGuide("Spotify DL", "Masukkan link lagu Spotify yang valid!", `${m.prefix}spotifydl https://open.spotify.com/track/3RY0NyQQXxuAiyk5eAS4fC`));
   }
 
   await m.react("🕒");
@@ -236,14 +236,14 @@ async function handler(m, { sock }) {
     }, pageReferer);
 
     if (!playlistSig.ok || !playlistSig.data?.success || !playlistSig.data?.token || !playlistSig.data?.exp) {
-      return m.reply(claraWrap("spotifydl", "⚠️ *Gagal memverifikasi sesi Spotify!* \n\nMohon pastikan tautan yang kamu berikan valid atau coba beberapa saat lagi ya."));
+      return m.reply(novaError("Spotify DL", "Gagal verifikasi sesi Spotify. Coba lagi nanti ya!"));
     }
 
     const playlistUrl = `${BASE_URL}/api/get_playlist.php?id=${encodeURIComponent(parsed.id)}&type=${encodeURIComponent(parsed.type)}&lang=${encodeURIComponent(LANG)}`;
     const playlist = await requestJson(playlistUrl, { "x-pe": String(playlistSig.data.exp), "x-pt": String(playlistSig.data.token) }, pageReferer);
 
     if (!playlist.ok || !playlist.data?.tracks?.length) {
-      return m.reply(claraWrap("spotifydl", "⚠️ *Waduh, lagu tidak ditemukan!* \n\nSepertinya lagu tersebut tidak tersedia atau tautan salah."));
+      return m.reply(novaEmpty("Spotify DL", "Lagu Spotify tidak ditemukan atau tidak tersedia."));
     }
 
     const info = playlist.data.playlist_info || {};
@@ -255,7 +255,7 @@ async function handler(m, { sock }) {
     const downloadSig = await getSignature("download_track", downloadCtx, realReferer);
 
     if (!downloadSig.ok || !downloadSig.data?.success || !downloadSig.data?.token || !downloadSig.data?.exp) {
-      return m.reply(claraWrap("spotifydl", "⚠️ *Gagal meminta kunci unduhan!* \n\nServer kami sedang sibuk, mohon coba lagi ya."));
+      return m.reply(novaError("Spotify DL", "Gagal meminta kunci unduhan. Server sedang sibuk, coba lagi nanti!"));
     }
 
     const sigPayload = jsonBase64({ token: String(downloadSig.data.token), exp: String(downloadSig.data.exp) });
@@ -265,7 +265,7 @@ async function handler(m, { sock }) {
     const dl = await requestDownload(dlUrl, body, realReferer);
 
     if (!dl.ok || !dl.contentType.includes("audio")) {
-      return m.reply(claraWrap("spotifydl", "😔 *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴᴅᴜʜ ᴀᴜᴅɪᴏ.* \n\nMungkin ada batasan dari server atau lagu tidak tersedia untuk diunduh."));
+      return m.reply(novaError("Spotify DL", "Gagal mengunduh audio lagu ini. Server sedang sibuk atau lagu tidak tersedia."));
     }
 
     const headerName = getFilenameFromDisposition(dl.disposition);
@@ -282,7 +282,7 @@ async function handler(m, { sock }) {
 
   } catch (error) {
     console.error(error);
-    m.reply(claraWrap("spotifydl", "😔 *Terjadi kesalahan sistem saat memproses tautan Spotify tersebut.* Mohon coba lagi nanti ya!"));
+    m.reply(novaError("Spotify DL", `Gagal memproses lagu Spotify — ${error.message || 'terjadi kesalahan sistem'}`));
   }
 }
 

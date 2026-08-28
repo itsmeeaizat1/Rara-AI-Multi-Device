@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
-import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'antilinkgc',
     alias: ["antilinkgc"],
@@ -27,17 +27,7 @@ function handler(m, { sock }) {
     const option = m.text?.toLowerCase()?.trim()
     
     if (!option) {
-        const groupData = db.getGroup(m.chat) || {}
-        const status = groupData.antilinkgc || 'off'
-        const mode = groupData.antilinkgcMode || 'remove'
-        
-        return m.reply(novaCaption({
-  emoji: "🔗",
-  name: "antilinkgc",
-  description: "Anti link WhatsApp (grup, saluran, wa.me)",
-  usage: `${m.prefix}antilinkgc <on/off/metode> [kick/remove]`,
-  example: `${m.prefix}antilinkgc on`,
-}), "antilinkgc");
+        return m.reply(novaGuide("Anti-Link GC", "Fitur anti link WhatsApp (grup, saluran, wa.me) di grup.", `${m.prefix}antilinkgc on`))
     }
     
     if (option === 'on') {
@@ -59,7 +49,7 @@ function handler(m, { sock }) {
             db.setGroup(m.chat, { antilinkgc: 'on', antilinkgcMode: 'remove' })
             return m.reply(claraWrap("Antilinkgc", `✅ *Antilink Wa* mode DELETE diaktifkan!\n\nPesan dengan link WA akan dihapus.`))
         } else {
-            return m.reply(`❌ Metode tidak valid! Gunakan: \`kick\` atau \`remove\`\n\n💡 *Contoh:* \`${m.prefix}antilinkgc metode kick\``)
+            return m.reply(novaError("Anti-Link GC", `Metode tidak valid! Gunakan: kick atau remove.\nContoh: ${m.prefix}antilinkgc metode kick`))
         }
     }
     

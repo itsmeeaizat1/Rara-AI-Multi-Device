@@ -4,7 +4,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
 import fs from 'fs'
 import path from 'path'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "autoreply",
     alias: ["autoreply"],
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     
     if (action === 'private') {
         if (!m.isOwner) {
-            return m.reply(claraWrap("Autoreply", `❌ *ɢᴀɢᴀʟ*\n\nHanya owner yang bisa mengatur autoreply private!`))
+            return m.reply(novaError("Autoreply", "Fitur autoreply private cuma bisa diatur oleh Owner bot ya!"))
         }
         
         const subAction = args[1]?.toLowerCase()
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
     
     if (action === 'global') {
         if (!m.isOwner) {
-            return m.reply(claraWrap("Autoreply", `❌ *ɢᴀɢᴀʟ*\n\nHanya owner yang bisa mengatur global autoreply!`))
+            return m.reply(novaError("Autoreply", "Fitur global autoreply cuma bisa diatur oleh Owner bot ya!"))
         }
         
         const subAction = args[1]?.toLowerCase()
@@ -76,12 +76,7 @@ async function handler(m, { sock }) {
             const fullBody = m.body || ''
             const pipeIdx = fullBody.indexOf('|')
             if (pipeIdx === -1) {
-                return m.reply(
-                    `❌ *ꜰᴏʀᴍᴀᴛ ꜱᴀʟᴀʜ*\n\n` +
-                    `Gunakan format: \`trigger|reply\`\n\n` +
-                    `Contoh:\n` +
-                    `\`${m.prefix}autoreply global add halo|Hai {name}!\``
-                )
+                return m.reply(novaNoInput("Autoreply Global", `Format salah nih! Gunakan format: trigger|reply\nContoh: ${m.prefix}autoreply global add halo|Hai {name}!`))
             }
             
             const triggerStart = fullBody.toLowerCase().indexOf('global add ') + 'global add '.length
@@ -90,7 +85,7 @@ async function handler(m, { sock }) {
             const reply = fullBody.substring(pipeIdx + 1)
             
             if (!trigger.trim() || !reply) {
-                return m.reply(claraWrap("Autoreply", `❌ *ɢᴀɢᴀʟ*\n\nTrigger dan reply tidak boleh kosong!`))
+                return m.reply(novaError("Autoreply Global", "Trigger dan reply tidak boleh kosong ya!"))
             }
             
             const existingIndex = globalCustomReplies.findIndex(r => r.trigger.toLowerCase() === trigger.trim().toLowerCase())
@@ -115,12 +110,12 @@ async function handler(m, { sock }) {
         if (subAction === 'del' || subAction === 'rm') {
             const trigger = args.slice(2).join(' ').toLowerCase().trim()
             if (!trigger) {
-                return m.reply(claraWrap("Autoreply", `❌ *ɢᴀɢᴀʟ*\n\nMasukkan trigger yang mau dihapus!`))
+                return m.reply(novaNoInput("Autoreply Global", "Masukkan trigger yang mau dihapus ya!"))
             }
             
             const index = globalCustomReplies.findIndex(r => r.trigger === trigger)
             if (index === -1) {
-                return m.reply(`❌ *ɢᴀɢᴀʟ*\n\nTrigger \`${trigger}\` tidak ditemukan!`)
+                return m.reply(novaEmpty("Autoreply Global", `Trigger "${trigger}" tidak ditemukan!`))
             }
             
             globalCustomReplies.splice(index, 1)
@@ -171,7 +166,7 @@ async function handler(m, { sock }) {
     }
     
     if (!m.isAdmin && !m.isOwner) {
-        return m.reply(claraWrap("Autoreply", `❌ *ɢᴀɢᴀʟ*\n\nHanya admin yang bisa mengatur autoreply di grup!`))
+        return m.reply(novaError("Autoreply", "Hanya admin grup atau owner yang bisa mengatur autoreply di grup!"))
     }
     
     const groupData = db.getGroup(m.chat) || {}
@@ -327,14 +322,14 @@ async function handler(m, { sock }) {
         const trigger = args.slice(1).join(' ').toLowerCase().trim()
         
         if (!trigger) {
-            return m.reply(`❌ *ɢᴀɢᴀʟ*\n\nMasukkan trigger yang mau dihapus!\n\n\`${m.prefix}autoreply del halo\``)
+            return m.reply(novaNoInput("Autoreply", `Masukkan trigger yang mau dihapus ya!\nContoh: ${m.prefix}autoreply del halo`))
         }
         
         const customReplies = groupData.customReplies || []
         const index = customReplies.findIndex(r => r.trigger === trigger)
         
         if (index === -1) {
-            return m.reply(`❌ *ɢᴀɢᴀʟ*\n\nTrigger \`${trigger}\` tidak ditemukan!`)
+            return m.reply(novaEmpty("Autoreply Global", `Trigger "${trigger}" tidak ditemukan!`))
         }
         
         if (customReplies[index].image) {

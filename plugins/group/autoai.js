@@ -6,7 +6,7 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
 import path from "path";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const execAsync = promisify(exec);
 
 const pluginConfig = {
@@ -79,11 +79,11 @@ async function handler(m, { sock }) {
   const fullArgs = m.fullArgs || "";
 
   if (!m.isGroup) {
-    return m.reply(claraWrap("Autoai", `❌ Fitur ini hanya untuk grup!`));
+    return m.reply(novaError("AutoAI", "Fitur ini khusus untuk grup ya!"));
   }
 
   if (!m.isAdmin && !m.isOwner) {
-    return m.reply(claraWrap("Autoai", `❌ Hanya admin yang bisa menggunakan fitur ini!`));
+    return m.reply(novaError("AutoAI", "Hanya admin grup yang bisa menggunakan fitur ini!"));
   }
 
   if (!db.db.data.autoai) db.db.data.autoai = {};
@@ -94,20 +94,20 @@ async function handler(m, { sock }) {
 
   if (subcmd === "tambahpersona") {
     if (!m.isOwner)
-      return m.reply(claraWrap("Autoai", `❌ Hanya owner yang bisa menambah persona!`));
+      return m.reply(novaError("AutoAI", "Hanya owner yang bisa menambah persona!"));
     const personaArgs = fullArgs
       .replace(/^tambahpersona\s*/i, "")
       .split("|")
       .map((s) => s.trim());
     if (personaArgs.length < 2 || !personaArgs[0] || !personaArgs[1])
       return m.reply(
-        `❌ Format salah!\n\n.autoai tambahpersona nama | instruction\n\n💡 *Contoh:* .autoai tambahpersona nexa | kamu adalah nexa ai, ...`,
+        novaNoInput("AutoAI Persona", "Format tambah persona salah!", `${m.prefix || "."}autoai tambahpersona nexa | kamu adalah nexa ai, ...`)
       );
     const pName = personaArgs[0].toLowerCase().replace(/\s+/g, "_");
     const pInstruction = personaArgs.slice(1).join("|").trim();
     if (characters[pName])
       return m.reply(
-        `❌ Nama "${pName}" sudah dipakai persona bawaan!\n\nPilih nama lain`,
+        novaError("AutoAI Persona", `Nama persona "${pName}" sudah dipakai persona bawaan! Pilih nama lain.`)
       );
     db.db.data.autoai_personas[pName] = {
       name: personaArgs[0],
@@ -123,15 +123,15 @@ async function handler(m, { sock }) {
 
   if (subcmd === "hapuspersona") {
     if (!m.isOwner)
-      return m.reply(claraWrap("Autoai", `❌ Hanya owner yang bisa menghapus persona!`));
+      return m.reply(novaError("AutoAI", "Hanya owner yang bisa menghapus persona!"));
     const pKey = (args[1] || "").toLowerCase().trim();
     if (!pKey)
       return m.reply(
-        `❌ Format salah!\n\n.autoai hapuspersona <nama>\n\n💡 *Contoh:* .autoai hapuspersona nexa`,
+        novaNoInput("AutoAI Persona", "Masukkan nama persona yang mau dihapus", `${m.prefix || "."}autoai hapuspersona nexa`)
       );
     if (!db.db.data.autoai_personas[pKey])
       return m.reply(
-        `❌ Persona "${pKey}" tidak ditemukan!\n\nKetik .autoai listpersona untuk melihat daftar`,
+        novaEmpty("AutoAI Persona", `Persona "${pKey}" tidak ditemukan! Ketik .autoai listpersona untuk melihat daftar`)
       );
     delete db.db.data.autoai_personas[pKey];
     db.save();
@@ -140,49 +140,29 @@ async function handler(m, { sock }) {
 
   if (subcmd === "enablecommand" || subcmd === "enablecmd") {
     if (!m.isAdmin && !m.isOwner)
-      return m.reply(claraWrap("Autoai", `❌ Hanya admin yang bisa mengatur ini!`));
+      return m.reply(novaError("AutoAI", "Hanya admin yang bisa mengatur ini!"));
     const cfg = db.db.data.autoai[m.chat];
-    if (!cfg?.enabled) return m.reply(claraWrap("autoai", `❌ AutoAI belum aktif di grup ini!`));
+    if (!cfg?.enabled) return m.reply(novaError("AutoAI", "AutoAI belum aktif di grup ini!"));
     if (cfg.enableCommands)
-      return m.reply(claraWrap("Autoai", `ℹ️ *ᴄᴏᴍᴍᴀɴᴅ ꜱᴜᴅᴀʜ ᴅɪ-ᴇɴᴀʙʟᴇ*
-
-│ User tetap bisa pakai command walau AutoAI aktif`));
+      return m.reply(novaGuide("AutoAI Command", "Command sudah di-enable sebelumnya. User tetap bisa pakai command walau AutoAI aktif."));
     cfg.enableCommands = true;
     db.save();
     return m.reply(
-      `✅ *ᴇɴᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅ*
-
-` +
-        `User sekarang bisa menggunakan command walau AutoAI aktif
-` +
-        `Bot tetap merespon saat di-tag/reply
-
-` +
-        `_Gunakan ${m.prefix}autoai disablecommand untuk menonaktifkan_`,
+      `✅ *ᴇɴᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅ*\n\nUser sekarang bisa menggunakan command walau AutoAI aktif\nBot tetap merespon saat di-tag/reply\n\n_Gunakan ${m.prefix || "."}autoai disablecommand untuk menonaktifkan_`,
     );
   }
 
   if (subcmd === "disablecommand" || subcmd === "disablecmd") {
     if (!m.isAdmin && !m.isOwner)
-      return m.reply(claraWrap("Autoai", `❌ Hanya admin yang bisa mengatur ini!`));
+      return m.reply(novaError("AutoAI", "Hanya admin yang bisa mengatur ini!"));
     const cfg = db.db.data.autoai[m.chat];
-    if (!cfg?.enabled) return m.reply(claraWrap("autoai", `❌ AutoAI belum aktif di grup ini!`));
+    if (!cfg?.enabled) return m.reply(novaError("AutoAI", "AutoAI belum aktif di grup ini!"));
     if (!cfg.enableCommands)
-      return m.reply(claraWrap("Autoai", `ℹ️ *ᴄᴏᴍᴍᴀɴᴅ ꜱᴜᴅᴀʜ ᴅɪ-ᴅɪꜱᴀʙʟᴇ*
-
-│ Semua command (kecuali owner) diblokir saat AutoAI aktif`));
+      return m.reply(novaGuide("AutoAI Command", "Command sudah di-disable sebelumnya. Semua command (kecuali owner) diblokir saat AutoAI aktif."));
     cfg.enableCommands = false;
     db.save();
     return m.reply(
-      `🔒 *ᴅɪꜱᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅ*
-
-` +
-        `Semua command (kecuali owner) diblokir saat AutoAI aktif
-` +
-        `Bot hanya merespon saat di-tag atau di-reply
-
-` +
-        `_Gunakan ${m.prefix}autoai enablecommand untuk mengaktifkan kembali_`,
+      `🔒 *ᴅɪꜱᴀʙʟᴇ ᴄᴏᴍᴍᴀɴᴅ*\n\nSemua command (kecuali owner) diblokir saat AutoAI aktif\nBot hanya merespon saat di-tag atau di-reply\n\n_Gunakan ${m.prefix || "."}autoai enablecommand untuk mengaktifkan kembali_`,
     );
   }
 
@@ -211,11 +191,11 @@ async function handler(m, { sock }) {
   }
 
   if (subcmd === "global") {
-    if (!m.isOwner) return m.reply(claraWrap("Autoai", `❌ Hanya owner yang bisa toggle global!`));
+    if (!m.isOwner) return m.reply(novaError("AutoAI Global", "Hanya owner yang bisa toggle global!"));
     const globalMode = (args[1] || "").toLowerCase();
     if (!["on", "off"].includes(globalMode))
       return m.reply(
-        `❌ Format salah!\n\n.autoai global on/off\n\nGlobal saat ini: ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}`,
+        novaNoInput("AutoAI Global", `Gunakan 'on' atau 'off'. Status global saat ini: ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}`, `${m.prefix || "."}autoai global on`)
       );
     if (globalMode === "on") {
       const modeMatch = fullArgs.match(/--novamode=(\w+)/i);
@@ -253,7 +233,7 @@ async function handler(m, { sock }) {
           characterName = existingGlobal.characterName || "Global";
         } else {
           return m.reply(
-            `❌ Belum ada persona global yang diset!\n\n.autoai global on --novamode=furina\n.autoai global on --novamode=custom --logic=...`,
+            novaError("AutoAI Global", "Belum ada persona global yang diset! Ketik: .autoai global on --novamode=furina")
           );
         }
       } else {
@@ -262,7 +242,7 @@ async function handler(m, { sock }) {
           ...Object.keys(db.db.data.autoai_personas),
           "custom",
         ].join(", ");
-        return m.reply(claraWrap("Autoai", `❌ Karakter tidak valid!\n\nTersedia: ${charList}`));
+        return m.reply(novaError("AutoAI Global", `Karakter tidak valid! Tersedia: ${charList}`));
       }
 
       db.db.data.autoai_global = {
@@ -306,38 +286,11 @@ async function handler(m, { sock }) {
   const customLogic = logicMatch ? logicMatch[1].trim() : null;
 
   if (!mode || !["on", "off"].includes(mode)) {
-    const charList = Object.entries(characters)
-      .map(([key, val]) => `${key} - ${val.name}`)
-      .join("\n");
-    const customP = Object.entries(db.db.data.autoai_personas);
-    const customList = customP.length
-      ? customP.map(([k, v]) => `${k} - ${v.name} (custom)`).join("\n")
-      : "";
-    let txt = `🤖 *ᴀᴜᴛᴏ ᴀɪ*\n\n`;
-    txt += `Mengaktifkan/menonaktifkan auto AI response\n\n`;
-    txt += `*ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n`;
-    txt += `.autoai on --novamode=<karakter|custom> --type=<text|voice> --mode=<onlychat|assistant>\n`;
-    txt += `.autoai off\n`;
-    txt += `.autoai tambahpersona nama | logic\n`;
-    txt += `.autoai hapuspersona nama\n`;
-    txt += `.autoai listpersona\n`;
-    txt += `.autoai global on/off\n`;
-    txt += `.autoai enablecommand / disablecommand\n\n`;
-    txt += `*ᴋᴀʀᴀᴋᴛᴇʀ ʙᴀᴡᴀᴀɴ:*\n${charList}\n`;
-    if (customList) txt += `\n*ᴋᴀʀᴀᴋᴛᴇʀ ᴄᴜꜱᴛᴏᴍ:*\n${customList}\n`;
-    txt += `\n*ɢʟᴏʙᴀʟ:* ${db.db.data.autoai_global.enabled ? "✅ Aktif" : "❌ Nonaktif"}\n\n`;
-    txt += `*ʀᴇꜱᴘᴏɴꜱᴇ ᴛʏᴘᴇ:*\n`;
-    txt += `text - Reply dengan text biasa\n`;
-    txt += `voice - Reply dengan voice note (TTS)\n\n`;
-    txt += `*ᴍᴏᴅᴇ ᴀᴜᴛᴏᴀɪ:*\n`;
-    txt += `assistant - Bot bisa jalankan aksi (buka tutup grup, kick, rich message)\n`;
-    txt += `onlychat - Bot hanya murni chat santai biasa\n\n`;
-    txt += `*ᴄᴏɴᴛᴏʜ:*\n`;
-    txt += `.autoai on --novamode=furina --type=text\n`;
-    txt += `.autoai on --novamode=custom --logic=kamu adalah nexa ai\n`;
-    txt += `.autoai tambahpersona nexa | kamu adalah nexa ai\n`;
-    txt += `.autoai global on --novamode=furina`;
-    return await m.reply( txt, "autoai");
+    return await m.reply(novaGuide(
+      "AutoAI Usage",
+      "Mengaktifkan/menonaktifkan auto AI response grup",
+      `${m.prefix || "."}autoai on --novamode=furina --type=voice\n${m.prefix || "."}autoai off\n${m.prefix || "."}autoai listpersona`
+    ));
   }
 
   if (mode === "off") {
@@ -358,14 +311,14 @@ async function handler(m, { sock }) {
       "custom",
     ].join(", ");
     return m.reply(
-      `❌ Karakter tidak valid!\n\nKarakter tersedia: ${charList}\n\n💡 *Contoh:* .autoai on --novamode=furina --type=voice\nCustom: .autoai on --novamode=custom --logic=kamu adalah nexa ai`,
+      novaError("AutoAI", `Karakter tidak valid! Karakter tersedia: ${charList}`)
     );
   }
 
   if (charKey === "custom") {
     if (!customLogic) {
       return m.reply(
-        `❌ Mode custom membutuhkan --logic!\n\n💡 *Contoh:* .autoai on --novamode=custom --logic=kamu adalah nexa ai, ...`,
+        novaNoInput("AutoAI Custom", "Mode custom membutuhkan --logic!", `${m.prefix || "."}autoai on --novamode=custom --logic=kamu adalah nexa ai`)
       );
     }
     db.db.data.autoai[m.chat] = {
@@ -432,7 +385,7 @@ async function handler(m, { sock }) {
       "custom",
     ].join(", ");
     return m.reply(
-      `❌ Karakter tidak valid!\n\nKarakter tersedia: ${charList}\n\n💡 *Contoh:* .autoai on --novamode=furina --type=voice`,
+      novaError("AutoAI", `Karakter tidak valid! Karakter tersedia: ${charList}`)
     );
   }
 

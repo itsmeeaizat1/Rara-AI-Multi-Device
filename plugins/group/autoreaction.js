@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -26,18 +26,7 @@ async function handler(m, { sock, config: botConfig }) {
     const args = m.text?.trim().toLowerCase();
 
     if (!["on", "off"].includes(args)) {
-      const text =
-        novaCaption({
-  emoji: "👥",
-  name: "autoreactionemoji",
-  description: "Auto reaction pesan di grup",
-  usage: `${prefix}autoreaction on/off`,
-  example: `${prefix}autoreaction on`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply(claraWrap("autoreaction", text));
+      await m.reply(novaGuide("Auto Reaction", "Pengaturan auto reaction emoji pesan di grup.", `${prefix}autoreaction on`));
       return { handled: true };
     }
 
@@ -55,14 +44,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply(claraWrap("autoreaction", text));
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply( text, "autoreaction");
+    await m.reply(novaError("Auto Reaction", `Terjadi kesalahan: ${error.message || "coba lagi nanti ya"}`));
   }
 
   return { handled: true };

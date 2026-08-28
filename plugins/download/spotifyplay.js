@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spotifyplay",
@@ -81,13 +81,7 @@ async function handler(m, { sock }) {
   const prefix = m.prefix;
 
   if (!text) {
-    return m.reply(novaCaption({
-  emoji: "🎵",
-  name: "spotifyplay",
-  description: "Cari & download lagu dari Spotify berdasarkan judul/artist",
-  usage: `${m.prefix}spotifyplay <judul lagu>`,
-  example: `${m.prefix}spotifyplay blinding lights the weeknd`,
-}), "spotifyplay")
+    return m.reply(novaGuide("Spotify Play", "Masukkan judul lagu atau link Spotify yang mau dicari!", `${m.prefix}spotifyplay blinding lights the weeknd`));
   }
 
   m.react("🕒");
@@ -103,7 +97,7 @@ async function handler(m, { sock }) {
     }
 
     if (!data.download) {
-      throw new Error("Link download tidak tersedia");
+      return m.reply(novaEmpty("Spotify Play", "Link download audio lagu ini tidak tersedia."));
     }
 
     // Download audio buffer
@@ -114,7 +108,7 @@ async function handler(m, { sock }) {
     });
 
     if (!audioRes.data || audioRes.data.byteLength === 0) {
-      throw new Error("Audio kosong atau gagal didownload");
+      return m.reply(novaError("Spotify Play", "Audio lagu kosong atau gagal diunduh dari server."));
     }
 
     const audioBuffer = Buffer.from(audioRes.data);
@@ -154,10 +148,7 @@ async function handler(m, { sock }) {
     m.react("🐣");
   } catch (e) {
     console.error("[SPOTIFYPLAY] Error:", e.message);
-    m.reply(
-      `Gagal mengambil data Spotify.\n>${e.message || "Coba lagi nanti"}`,
-      "spotifyplay"
-    );
+    m.reply(novaError("Spotify Play", `Gagal mengambil data Spotify — ${e.message || "coba lagi nanti ya"}`));
   }
 }
 

@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,19 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     const url = m.text?.trim();
 
     if (!url) {
-      const text =
-        novaCaption({
-  emoji: "📥",
-  name: "terabox2",
-  description: "Download file dari Terabox",
-  usage: `${prefix}terabox <link>`,
-  example: `${prefix}terabox https://terabox.com/s/xxxx`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply( text, "terabox");
-      return { handled: true };
+      return m.reply(novaGuide("Terabox", "Masukkan URL file Terabox yang mau diunduh!", `${prefix}terabox https://terabox.com/s/xxxx`));
     }
 
     const response = await axios.get(url, { responseType: "arraybuffer", maxRedirects: 5 });
@@ -55,20 +43,11 @@ async function handler(m, { sock, config: botConfig }) {
       claraWrap("Terabox", [`│ Link: *${url}*`,
         "│ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
       "\n" +
-      tipText(`Ketik ${prefix}terabox <link> untuk download file lain`) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
+      tipText(`Ketik ${prefix}terabox <link> untuk download file lain`);
 
-    await m.reply(claraWrap("terabox2", text));
+    await m.reply(text);
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply( text, "terabox");
+    return m.reply(novaError("Terabox", `Gagal mengunduh file — ${error.message || 'terjadi kesalahan, coba lagi nanti ya'}`));
   }
 
   return { handled: true };

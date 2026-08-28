@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption, mediaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "facebookv2",
@@ -39,22 +39,20 @@ async function rlGet(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(novaCaption({
-  emoji: "📘",
-  name: "facebookv2",
-  description: "Download video Facebook via (V2)",
-  usage: `${m.prefix}facebookv2 <url>`,
-  example: `${m.prefix}facebookv2 https://www.facebook.com/watch?v=xxx`,
-}), "facebookv2")
+    return m.reply(novaGuide("Facebook V2", "Masukkan URL video Facebook yang mau diunduh!", `${m.prefix}facebookv2 https://www.facebook.com/watch?v=xxx`));
   }
   m.react("🕒");
   try {
     const res = await rlGet(`${API_BASE}/download/facebook?apikey=${API_KEY}&url=${encodeURIComponent(text)}`);
     const r = res.data?.result || res.data?.data;
-    if (!r) throw new Error("Gagal mengambil data Facebook");
+    if (!r) {
+      return m.reply(novaError("Facebook V2", "Gagal mengambil data dari server Facebook. Coba lagi nanti ya!"));
+    }
 
     const videoUrl = r.media || (r.video && r.video[0]?.url) || null;
-    if (!videoUrl) throw new Error("Video tidak ditemukan");
+    if (!videoUrl) {
+      return m.reply(novaEmpty("Facebook V2", "Video Facebook tidak ditemukan atau mungkin dibatasi privat."));
+    }
 
     const caption = mediaCaption({
         platformIcon: "👥",
@@ -72,7 +70,7 @@ async function handler(m, { sock }) {
     m.react("🐣");
   } catch (e) {
     console.error("[FBV2]", e.message);
-    m.reply(claraWrap("Facebookv2", `Gagal mengambil video.\n>${e.message}`));
+    m.reply(novaError("Facebook V2", `Gagal mengunduh video Facebook — ${e.message || 'terjadi kesalahan'}`));
   }
 }
 export { pluginConfig as config, handler };

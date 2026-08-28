@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoroast",
@@ -221,22 +221,14 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // HELP
-    return m.reply(claraWrap("Auto Roast", [
-      "Bot roast member grup acak secara otomatis",
-      "",
-      "CARA PAKAI:",
-      usedPrefix + "autoroast on [menit] — Aktifkan (default 60 menit, min 20, max 360)",
-      usedPrefix + "autoroast off — Matikan",
-      usedPrefix + "autoroast status — Lihat status",
-      usedPrefix + "autoroast now — Roast sekarang",
-      "",
-      "CONTOH:",
-      usedPrefix + "autoroast on 30",
-      usedPrefix + "autoroast off",
-    ]));
+    return m.reply(novaGuide(
+      "Auto Roast",
+      "Bot roast member grup acak secara otomatis tiap interval.\n\nCommands:\n- .autoroast on [menit]\n- .autoroast off\n- .autoroast status\n- .autoroast now",
+      `${usedPrefix}autoroast on 30`
+    ));
   } catch (e) {
     console.error("[Auto Roast]", e);
-    m.reply(claraWrap("Auto Roast", "Error: " + e.message));
+    m.reply(novaError("Auto Roast", "Terjadi kendala: " + (e.message || "coba lagi nanti ya")));
   }
 }
 
