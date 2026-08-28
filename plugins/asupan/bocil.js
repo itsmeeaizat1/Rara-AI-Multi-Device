@@ -3,7 +3,7 @@ import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
 import { f } from '../../src/lib/nova-http.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'bocil',
     alias: ["bocil"],
@@ -31,7 +31,7 @@ function loadJsonData(filename) {
 }
 
 async function handler(m, { sock }) {
-    m.react('🕐')
+    m.react('🕒')
     
     try {
         const data = loadJsonData('bocil.json')
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, item.url, null, m, {
             type: 'video'
         })
-        m.react('✅')
+        
         
     } catch (error) {
         m.reply(claraWrap("Error", `❌ *ᴇʀʀᴏʀ*\n\nVideo tidak ditemukan`))

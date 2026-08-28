@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import instagramDownloader from "../../src/scraper/ig.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "instagramdl",
   alias: ["instagramdl"],
@@ -44,12 +44,17 @@ async function handler(m, { sock }) {
     }
 
     const isStory = url.includes("/stories/");
-    let caption = `📸 *Instagram ${isStory ? "Story" : "Downloader"}*\n`;
-    if (result.username && result.username !== "-")
-      caption += `👤 @${result.username}\n`;
-    if (result.likes && result.likes !== "-") caption += `❤️ ${result.likes}\n`;
-    if (result.comment && result.comment !== "-")
-      caption += `💬 ${result.comment}\n`;
+    const caption = mediaCaption({
+      platformIcon: "📸",
+      platformName: isStory ? "Instagram Story" : "Instagram",
+      title: result.title || "Instagram Media",
+      author: result.username && result.username !== "-" ? result.username : null,
+      likes: result.likes && result.likes !== "-" ? result.likes : null,
+      comments: result.comment && result.comment !== "-" ? result.comment : null,
+      uploadDate: result.taken_at && result.taken_at !== "-" ? result.taken_at : null,
+      format: result.media.length > 1 ? `${result.media.length} Media` : "Media",
+      method: "Nova AI",
+    });
 
     for (const item of result.media) {
       if (item.type === "video" || item.type === "mp4") {

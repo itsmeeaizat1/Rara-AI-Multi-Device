@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { AIRich } from "../../src/lib/nova-builder.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 
 async function tiktokDl(url) {
   function formatNumber(integer) {
@@ -134,25 +134,32 @@ async function handler(m, { sock }) {
     const builder = new AIRich(sock);
 
     if (result.durations > 0 && result.duration !== "0 Seconds") {
-      const builder = new AIRich(sock);
-      let zann = await result.data.find(
+      let zann = result.data.find(
         (e) => e.type == "nowatermark_hd" || e.type == "nowatermark",
       );
-      builder.addVideo(zann.url);
 
-      const authorText = `👤 *ᴀᴜᴛʜᴏʀ:* ${result.author.nickname} (@${result.author.fullname})\n`;
-      const descText = `📝 *ᴄᴀᴘᴛɪᴏɴ:* ${result.title || "-"}\n`;
-      const musicText = `🎵 *ᴍᴜꜱɪᴄ:* ${result.music_info.title} - ${result.music_info.author}\n`;
-      const durationText = result.durations > 0 ? `⏱️ *ᴅᴜʀᴀᴛɪᴏɴ:* ${result.duration}\n` : "";
-      const infoText = `📅 *ᴜᴘʟᴏᴀᴅᴇᴅ:* ${result.taken_at}\n${durationText}> 🌎 *ʀᴇɢɪᴏɴ:* ${result.region}`;
-      builder.addText("# TIKTOK DOWNLOADER\n\n" + authorText + descText + musicText + infoText);
+      const caption = mediaCaption({
+        platformIcon: "🎵",
+        platformName: "TikTok",
+        title: result.title || "TikTok Video",
+        author: result.author?.nickname || null,
+        authorHandle: result.author?.fullname || null,
+        duration: result.duration || null,
+        uploadDate: result.taken_at || null,
+        views: result.stats?.views || null,
+        likes: result.stats?.likes || null,
+        comments: result.stats?.comment || null,
+        shares: result.stats?.share || null,
+        downloads: result.stats?.download || null,
+        description: `🎵 ${result.music_info?.title || ""} - ${result.music_info?.author || ""}`,
+        format: "Video HD (No Watermark)",
+        method: "tikwm",
+      });
 
-      builder.addTable([
-        ["👀 Views", "❤️ Likes", "💬 Comments", "🔁 Shares", "📥 Downloads"],
-        [result.stats.views, result.stats.likes, result.stats.comment, result.stats.share, result.stats.download]
-      ]);
-
-      const aiMsg = await builder.send(m.chat, { quoted: m });
+      await sock.sendMessage(m.chat, {
+        video: { url: zann.url },
+        caption,
+      }, { quoted: m });
 
       await sock.sendMessage(
         m.chat,

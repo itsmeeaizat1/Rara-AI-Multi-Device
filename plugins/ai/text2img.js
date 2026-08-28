@@ -3,7 +3,7 @@ import axios from "axios";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "text2imgv2",
   alias: ["text2imgv2"],
@@ -35,9 +35,17 @@ async function handler(m, { sock }) {
     const content = data.data.data.output_url;
 
     m.react("🐣");
-    await sock.sendMedia(m.chat, content, text, m, {
-      type: "image",
+    const caption = mediaCaption({
+      platformIcon: "🎨",
+      platformName: "AI Image",
+      title: text.slice(0, 60),
+      format: "Image",
+      method: "Nova AI",
     });
+    await sock.sendMessage(m.chat, {
+      image: { url: content },
+      caption,
+    }, { quoted: m });
   } catch (error) {
     console.error(error);
     m.reply(claraWrap("text2imgv2", te(m.prefix, m.command, m.pushName), "error"));

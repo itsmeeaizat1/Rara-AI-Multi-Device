@@ -3,7 +3,7 @@ import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
 import { f } from '../../src/lib/nova-http.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'asupan',
     alias: ["asupan"],
@@ -39,7 +39,7 @@ function loadJsonData() {
 }
 
 async function handler(m, { sock }) {
-    m.react('🕐')
+    m.react('🕒')
     
     try {
         const urls = loadJsonData()
@@ -52,11 +52,20 @@ async function handler(m, { sock }) {
         
         const res = await f(url, 'arrayBuffer')
         
-        m.react('✅')
+        m.react('🐣')
         
-        await sock.sendMedia(m.chat, Buffer.from(res), null, m, {
-            type: 'video'
+        const caption = mediaCaption({
+            platformIcon: '🌸',
+            platformName: 'Asupan',
+            title: 'Random Video Asupan',
+            format: 'Video',
+            method: 'Nova AI',
         })
+        
+        await sock.sendMessage(m.chat, {
+            video: Buffer.from(res),
+            caption,
+        }, { quoted: m })
         
     } catch (error) {
         m.reply(claraWrap("Error", `❌ *ᴇʀʀᴏʀ*\n\nVideo asupan tidak ditemukan`))

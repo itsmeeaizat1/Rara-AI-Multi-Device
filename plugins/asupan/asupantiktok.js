@@ -3,7 +3,7 @@ import axios from "axios";
 import config from "../../config.js";
 import { f } from "../../src/lib/nova-http.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "asupantiktok",
   alias: ["asupantiktok"],

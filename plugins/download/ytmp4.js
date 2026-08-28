@@ -2,7 +2,7 @@
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import config from "../../config.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ytmp4",
   alias: ["ytmp4"],
@@ -63,9 +63,27 @@ async function handler(m, { sock }) {
   try {
     const downloadUrl = await getVideoDownloadUrl(url);
 
-    await sock.sendMedia(m.chat, downloadUrl, null, m, {
-      type: "video",
+    // Ambil metadata YouTube via oEmbed
+    let ytMeta = {};
+    try {
+      const { data: oe } = await axios.get(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`, { timeout: 8000 });
+      ytMeta = { author: oe?.author_name, thumbnail: oe?.thumbnail_url, title: oe?.title };
+    } catch {}
+
+    const caption = mediaCaption({
+      platformIcon: "▶️",
+      platformName: "YouTube",
+      title: ytMeta.title || "YouTube Video",
+      author: ytMeta.author || null,
+      format: "📹 Video HD",
+      method: "Firefly",
     });
+
+    await sock.sendMessage(m.chat, {
+      video: { url: downloadUrl },
+      caption,
+      contextInfo: { externalAdReply: { title: ytMeta.title || "YouTube Video", body: "Nova AI Downloader", thumbnailUrl: ytMeta.thumbnail, sourceUrl: url } },
+    }, { quoted: m });
     m.react("🐣");
   } catch (err) {
     console.error("[YTMP4]", err);

@@ -21,7 +21,7 @@ import { getSaveNowKey } from "../../src/lib/config/env-loader.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { sendMenuPreview } from "../../src/lib/send-menu.js";
-import { claraWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, toSC, bracketBox, tipText, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "alldl",
@@ -239,6 +239,7 @@ async function handler(m, { sock }) {
             download_url: picked.url,
             type: picked.type,
             format: picked.quality || format,
+            aioResult: aioResult,
           };
         }
       } catch (aioErr) {
@@ -294,11 +295,28 @@ async function handler(m, { sock }) {
     const title = (result.title || "Downloaded").slice(0, 60);
     const methodTag = usedMethod === "savenow" ? "SaveNow" : "AIO";
 
-    const caption = bracketBox(platform.icon, `${toSC("Download")} — ${toSC(platform.name)}`, [
-      `${toSC("Judul")}: ${toSC(title)}`,
-      `${toSC("Format")}: ${isAudio ? "🎵 MP3" : isImage ? "🖼️ Image" : `📹 ${result.format}p`}`,
-      `${toSC("Via")}: ${toSC(methodTag)}`,
-    ]);
+    const formatLabel = isAudio ? "🎵 MP3" : isImage ? "🖼️ Image" : `📹 ${result.format}p`;
+
+    // Ambil metadata dari AIO result kalau ada
+    const aioMeta = usedMethod === "aio" ? (result.aioResult || {}) : {};
+
+    const caption = mediaCaption({
+      platformIcon: platform.icon,
+      platformName: platform.name,
+      title: title,
+      author: aioMeta.author || null,
+      authorHandle: aioMeta.authorHandle || null,
+      duration: aioMeta.duration || null,
+      uploadDate: aioMeta.uploadDate || null,
+      views: aioMeta.views || null,
+      likes: aioMeta.likes || null,
+      comments: aioMeta.comments || null,
+      shares: aioMeta.shares || null,
+      downloads: aioMeta.downloads || null,
+      description: aioMeta.description || null,
+      format: formatLabel,
+      method: methodTag,
+    });
 
     try {
       if (result.type === "audio" || isAudio) {
