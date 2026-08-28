@@ -229,7 +229,7 @@ alquran, hadisnabi, hafalan, motivasiislam, murrotal, niatdoa, quran, quranv3, s
 jpm
 
 ### 🏠 Main (27+ plugin)
-aboutnova, allmenu, autoreaction, belanja, benefitowner, benefitpremium, block, buyprem, buysewa, carifitur, channelnovaofficial, daftarsewa, fun, infov2, jadibot, leaderboard, leaderboardrpg, topcinta, menu, menu2, menukategori, owner, premium, ping, ping2, rules, sc, stats, stopjadibot, system, totalfitur, tqto
+aboutnova, allmenu, autoreaction, belanja, benefitowner, benefitpremium, block, buyprem, buysewa, carifitur, channelnovaofficial, daftarsewa, fun, infov2, jadibot, leaderboard, topcinta, topkoin, topexp, topenergi, aktifitas, menu, menu2, menukategori, owner, premium, ping, ping2, rules, sc, stats, stopjadibot, system, totalfitur, tqto
 
 ### 🛠️ Maker (7 plugin)
 captionig, certmaker, image.jpg, lyricscard, mask.png, nowm, profilecard, quotemaker, watermark
@@ -473,7 +473,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 ## 🏆 Leaderboard Aktivitas Grup
 
 - `.aktifitas` — Tampilkan top 10 member paling aktif minggu ini
-- Alias: `.aktif`, `.topaktif`, `.activity`
+- Alias: `.aktif`, `.topaktif`, `.activity` (via .leaderboard group)
 - Sistem points: 1 pt/msg, 2 pt/command, 5 pt/media
 - Auto-reset setiap Senin 00:00 WIB
 - `.aktifitas on/off` — aktifkan/nonaktifkan tracking (admin only)
