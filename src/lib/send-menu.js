@@ -90,7 +90,12 @@ export async function sendMenuPreview(sock, m, {
     payload.footer = footerText;
   }
 
-  if (templateButtons.length > 0) {
+  // WhatsApp Channel (saluran/newsletter) TIDAK support template buttons
+  // (type:1 buttonsMessage) sama sekali — follower akan lihat "Anda menerima
+  // info saluran, tetapi versi WhatsApp Anda tidak mendukungnya. Perbarui
+  // WhatsApp". Link-preview (externalAdReply) tetap aman dikirim ke channel.
+  const isNewsletter = m.chat && m.chat.endsWith("@newsletter");
+  if (templateButtons.length > 0 && !isNewsletter) {
     payload.buttons = templateButtons;
   }
 
