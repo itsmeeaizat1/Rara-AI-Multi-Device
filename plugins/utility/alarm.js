@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  claraHeader, separator, tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  claraHeader, separator, tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "alarm", alias: ["alarm"], category: "utility",
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!global.alarms) global.alarms = {};
       const myAlarms = global.alarms[m.sender] || [];
       if (!myAlarms.length) {
-        await m.reply(claraWrap("Alarm", ["│ Tidak ada alarm aktif"].join("\n")));
+        await m.reply(novaError("Alarm", ["│ Tidak ada alarm aktif"].join("\n")));
         return { handled: true };
       }
       let text = claraHeader("Alarm Aktif", "⏰") + "\n\n";
@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!global.alarms) global.alarms = {};
       if (!global.alarms[m.sender]) global.alarms[m.sender] = [];
       global.alarms[m.sender].splice(idx, 1);
-      await m.reply(claraWrap("Alarm", [`│ Alarm #${idx+1} dihapus`].join("\n")));
+      await m.reply(novaError("Alarm", [`│ Alarm #${idx+1} dihapus`].join("\n")));
       return { handled: true };
     }
     const time = args[0];
@@ -52,7 +52,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!global.alarms) global.alarms = {};
     if (!global.alarms[m.sender]) global.alarms[m.sender] = [];
     global.alarms[m.sender].push({ time, message, active: true });
-    await m.reply(claraWrap("Alarm", [`│ Waktu: *${time}*`, `│ Pesan: *${message}*`,
+    await m.reply(novaError("Alarm", [`│ Waktu: *${time}*`, `│ Pesan: *${message}*`,
       `│ Total alarm: *${global.alarms[m.sender].length}*`].join("\n")) + "\n" + tipText("Alarm berjalan selama bot online"));
   } catch (e) {
     await m.reply(claraWrap("Gagal nih", [`│ ${e.message}`].join("\n")));

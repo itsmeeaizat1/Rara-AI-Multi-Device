@@ -34,7 +34,7 @@ const SERIAL_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 import axios from "axios";
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 let cachedThumb = null;
 let cachedDoc = null;

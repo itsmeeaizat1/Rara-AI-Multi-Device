@@ -34,7 +34,7 @@ async function handler(m, { text, args }) {
             const json = await fetchJSON(API_BASE);
             const surahs = json?.data || [];
             if (!surahs.length) {
-                throw new Error("Gagal mengambil daftar surat Al-Quran.");
+                throw new Error("Gagal ambil nih daftar surat Al-Quran.");
             }
 
             let lines = [];

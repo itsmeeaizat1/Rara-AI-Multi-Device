@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "countdown", alias: ["countdown"], category: "utility",
@@ -29,7 +29,7 @@ async function handler(m, { sock, config: botConfig }) {
     const now = new Date();
     const diff = target - now;
     if (diff < 0) {
-      await m.reply(claraWrap("Countdown", [`│ Target: *${target.toLocaleDateString("id-ID")}*`,
+      await m.reply(novaError("Countdown", [`│ Target: *${target.toLocaleDateString("id-ID")}*`,
         "│ Tanggal sudah lewat!"].join("\n")));
       return { handled: true };
     }
@@ -37,7 +37,7 @@ async function handler(m, { sock, config: botConfig }) {
     const hours = Math.floor((diff % 86400000) / 3600000);
     const mins = Math.floor((diff % 3600000) / 60000);
     const secs = Math.floor((diff % 60000) / 1000);
-    await m.reply(claraWrap("Countdown", [`│ Target: *${target.toLocaleDateString("id-ID")}*`,
+    await m.reply(novaError("Countdown", [`│ Target: *${target.toLocaleDateString("id-ID")}*`,
       `│ Sisa: *${days} hari, ${hours} jam, ${mins} menit, ${secs} detik*`].join("\n")) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`));
   } catch (e) {
     await m.reply(claraWrap("Gagal nih", [`│ ${e.message}`].join("\n")));
