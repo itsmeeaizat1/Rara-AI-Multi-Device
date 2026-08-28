@@ -53,24 +53,24 @@ function generateDigest(stats) {
   const users = Object.entries(stats.users || {}).sort((a, b) => b[1] - a[1]).slice(0, 5)
 
   let text = "╭──「 Bot Activity Digest 」\n"
-  text += "├── Periode: " + timeAgo(elapsed) + " terakhir\n"
-  text += "├── Total pesan: " + (stats.messages || 0) + "\n"
-  text += "├── Total command: " + Object.values(stats.commands || {}).reduce((a, b) => a + b, 0) + "\n"
-  text += "├── Errors: " + (stats.errors || 0) + "\n"
-  text += "├──\n"
+  text += "│ Periode: " + timeAgo(elapsed) + " terakhir\n"
+  text += "│ Total pesan: " + (stats.messages || 0) + "\n"
+  text += "│ Total command: " + Object.values(stats.commands || {}).reduce((a, b) => a + b, 0) + "\n"
+  text += "│ Errors: " + (stats.errors || 0) + "\n"
+  text += "│\n"
   if (commands.length) {
-    text += "├── Top Commands:\n"
-    commands.forEach(([cmd, count], i) => { text += "├── " + (i + 1) + ". ." + cmd + " (" + count + "x)\n" })
-    text += "├──\n"
+    text += "│ Top Commands:\n"
+    commands.forEach(([cmd, count], i) => { text += "" + (i + 1) + ". ." + cmd + " (" + count + "x)\n" })
+    text += "│\n"
   }
   if (groups.length) {
-    text += "├── Grup Aktif:\n"
-    groups.forEach(([gid, count], i) => { text += "├── " + (i + 1) + ". " + gid.slice(0, 15) + "... (" + count + ")\n" })
-    text += "├──\n"
+    text += "│ Grup Aktif:\n"
+    groups.forEach(([gid, count], i) => { text += "" + (i + 1) + ". " + gid.slice(0, 15) + "... (" + count + ")\n" })
+    text += "│\n"
   }
   if (users.length) {
-    text += "├── User Aktif:\n"
-    users.forEach(([uid, count], i) => { text += "├── " + (i + 1) + ". " + uid.split("@")[0] + " (" + count + ")\n" })
+    text += "│ User Aktif:\n"
+    users.forEach(([uid, count], i) => { text += "" + (i + 1) + ". " + uid.split("@")[0] + " (" + count + ")\n" })
   }
   text += "╰──────────❀"
   return text
@@ -86,14 +86,14 @@ async function handler(m, { sock }) {
     if (subCmd === "auto") {
       const toggle = args[1]?.toLowerCase()
       if (toggle === "on") { cfg.autoEnabled = true; save(db); await m.react("🐣")
-        return m.reply("╭──「 Smart Digest 」\n├── Auto-digest: ON\n├── Jam kirim: " + cfg.sendTime + " WIB\n├── Dikirim ke PM owner otomatis\n╰──────────❀") }
+        return m.reply("╭──「 Smart Digest 」\n│ Auto-digest: ON\n│ Jam kirim: " + cfg.sendTime + " WIB\n│ Dikirim ke PM owner otomatis\n╰──────────❀") }
       if (toggle === "off") { cfg.autoEnabled = false; save(db); await m.react("🐣")
-        return m.reply("╭──「 Smart Digest 」\n├── Auto-digest: OFF\n╰──────────❀") }
+        return m.reply("╭──「 Smart Digest 」\n│ Auto-digest: OFF\n╰──────────❀") }
     }
 
     if (subCmd === "settime") {
       cfg.sendTime = args[1] || "08:00"; save(db); await m.react("🐣")
-      return m.reply("╭──「 Smart Digest 」\n├── Jam kirim: " + cfg.sendTime + " WIB\n╰──────────❀")
+      return m.reply("╭──「 Smart Digest 」\n│ Jam kirim: " + cfg.sendTime + " WIB\n╰──────────❀")
     }
 
     if (subCmd === "reset") {
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
         messages: 0, errors: 0, newMembers: 0, startedAt: Date.now(),
       }
       save(db); await m.react("🐣")
-      return m.reply("╭──「 Smart Digest 」\n├── Stats direset.\n╰──────────❀")
+      return m.reply("╭──「 Smart Digest 」\n│ Stats direset.\n╰──────────❀")
     }
 
     // Default: now
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("[smartdigest] error:", e.message)
     await m.react("🐣")
-    return m.reply("╭──「 Error 」\n├── " + (e.message || "Terjadi kesalahan") + "\n╰──────────❀")
+    return m.reply("╭──「 Error 」\n" + (e.message || "Terjadi kesalahan") + "\n╰──────────❀")
   }
 }
 

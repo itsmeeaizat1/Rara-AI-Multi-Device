@@ -22,18 +22,18 @@ async function handler(m, { sock }) {
         const { data } = await axios.get('https://v2.jokeapi.dev/joke/Any?safe-mode')
         let text = '╭──「 😂 Random Joke 」\n'
         if (data.type === 'twopart') {
-            text += '├── ' + data.setup + '\n'
-            text += '├── ' + data.delivery + '\n'
+            text += '│ ' + data.setup + '\n'
+            text += '│ ' + data.delivery + '\n'
         } else {
-            text += '├── ' + data.joke + '\n'
+            text += '│ ' + data.joke + '\n'
         }
-        text += '├──\n'
-        text += '├── 💡 Semoga bikin ngakak!\n'
+        text += '│\n'
+        text += '│ 💡 Semoga bikin ngakak!\n'
         text += '╰──────────❀'
         await m.reply(text)
         await m.react("😂")
     } catch (e) {
-        await m.reply('╭──「 😂 Joke 」\n├── ❌ Gagal mengambil joke\n├── API mungkin sedang down\n╰──────────❀')
+        await m.reply('╭──「 😂 Joke 」\n│ ❌ Gagal mengambil joke\n│ API mungkin sedang down\n╰──────────❀')
         await m.react("❌")
     }
 }

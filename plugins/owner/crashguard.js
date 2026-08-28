@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
     if (subCmd === "on" || subCmd === "off") {
       cfg.enabled = subCmd === "on"; save(db)
       await m.react("🐣")
-      return m.reply("╭──「 Crash Guard 」\n├── Status: " + (cfg.enabled ? "ON (monitoring)" : "OFF") + "\n├── Max restarts: " + cfg.maxRestarts + " per " + (cfg.restartWindow / 60000) + " min\n╰──────────❀")
+      return m.reply("╭──「 Crash Guard 」\n│ Status: " + (cfg.enabled ? "ON (monitoring)" : "OFF") + "\n│ Max restarts: " + cfg.maxRestarts + " per " + (cfg.restartWindow / 60000) + " min\n╰──────────❀")
     }
 
     if (subCmd === "restart") {
@@ -83,23 +83,23 @@ async function handler(m, { sock }) {
         cfg.lastRestart = Date.now()
         save(db)
         await m.react("🐣")
-        return m.reply("╭──「 Crash Guard 」\n├── PM2 \"" + procName + "\" berhasil di-restart\n╰──────────❀")
+        return m.reply("╭──「 Crash Guard 」\n│ PM2 \"" + procName + "\" berhasil di-restart\n╰──────────❀")
       } catch (e) {
         await m.react("🐣")
-        return m.reply("╭──「 Crash Guard 」\n├── Gagal restart: " + e.message.slice(0, 100) + "\n╰──────────❀")
+        return m.reply("╭──「 Crash Guard 」\n│ Gagal restart: " + e.message.slice(0, 100) + "\n╰──────────❀")
       }
     }
 
     if (subCmd === "history") {
       const history = cfg.restartHistory || []
       await m.react("🐣")
-      if (!history.length) return m.reply("╭──「 Crash Guard 」\n├── Belum ada history.\n╰──────────❀")
+      if (!history.length) return m.reply("╭──「 Crash Guard 」\n│ Belum ada history.\n╰──────────❀")
       let text = "╭──「 Crash Guard History 」\n"
       history.slice(0, 10).forEach((h, i) => {
         const icon = h.success ? "✅" : "❌"
-        text += "├── " + (i + 1) + ". " + icon + " " + h.action + " — " + (h.process || "?") + "\n"
-        text += "├── " + new Date(h.time).toLocaleString("id-ID") + "\n"
-        if (i < 9) text += "├──\n"
+        text += "" + (i + 1) + ". " + icon + " " + h.action + " — " + (h.process || "?") + "\n"
+        text += "" + new Date(h.time).toLocaleString("id-ID") + "\n"
+        if (i < 9) text += "│\n"
       })
       text += "╰──────────❀"
       return m.reply(text)
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
     if (subCmd === "clear") {
       cfg.restartHistory = []; save(db)
       await m.react("🐣")
-      return m.reply("╭──「 Crash Guard 」\n├── History dihapus.\n╰──────────❀")
+      return m.reply("╭──「 Crash Guard 」\n│ History dihapus.\n╰──────────❀")
     }
 
     if (subCmd === "set") {
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
       if (key === "process" && val) cfg.processName = val
       if (key === "maxrestart" && val) cfg.maxRestarts = parseInt(val) || 5
       save(db); await m.react("🐣")
-      return m.reply("╭──「 Crash Guard 」\n├── Config updated.\n├── Process: " + cfg.processName + "\n├── Max restarts: " + cfg.maxRestarts + "\n╰──────────❀")
+      return m.reply("╭──「 Crash Guard 」\n│ Config updated.\n│ Process: " + cfg.processName + "\n│ Max restarts: " + cfg.maxRestarts + "\n╰──────────❀")
     }
 
     // Default: status
@@ -124,26 +124,26 @@ async function handler(m, { sock }) {
     const lastRestart = cfg.lastRestart ? timeAgo(Date.now() - cfg.lastRestart) : "never"
     await m.react("🐣")
     let text = "╭──「 Crash Guard 」\n"
-    text += "├── Status: " + (cfg.enabled ? "ON (monitoring)" : "OFF") + "\n"
-    text += "├── Last restart: " + lastRestart + "\n"
-    text += "├── Events: " + (cfg.restartHistory?.length || 0) + "\n"
-    text += "├──\n"
+    text += "│ Status: " + (cfg.enabled ? "ON (monitoring)" : "OFF") + "\n"
+    text += "│ Last restart: " + lastRestart + "\n"
+    text += "│ Events: " + (cfg.restartHistory?.length || 0) + "\n"
+    text += "│\n"
     if (pm2.length) {
-      text += "├── PM2 Processes:\n"
+      text += "│ PM2 Processes:\n"
       pm2.forEach(p => {
         const icon = p.status === "online" ? "✅" : "❌"
         const up = p.uptime ? timeAgo(Date.now() - p.uptime) : "?"
-        text += "├── " + icon + " " + p.name + " — " + p.status + "\n"
-        text += "├── Restarts: " + p.restarts + " | Up: " + up + " | CPU: " + p.cpu + "% | RAM: " + p.memory + "MB\n"
-        if (p.unstable > 0) text += "├── ⚠️ Unstable: " + p.unstable + "\n"
+        text += "" + icon + " " + p.name + " — " + p.status + "\n"
+        text += "│ Restarts: " + p.restarts + " | Up: " + up + " | CPU: " + p.cpu + "% | RAM: " + p.memory + "MB\n"
+        if (p.unstable > 0) text += "│ ⚠️ Unstable: " + p.unstable + "\n"
       })
-    } else { text += "├── PM2 tidak terdeteksi\n" }
+    } else { text += "│ PM2 tidak terdeteksi\n" }
     text += "╰──────────❀"
     return m.reply(text)
   } catch (e) {
     console.error("[crashguard] error:", e.message)
     await m.react("🐣")
-    return m.reply("╭──「 Error 」\n├── " + (e.message || "Terjadi kesalahan") + "\n╰──────────❀")
+    return m.reply("╭──「 Error 」\n" + (e.message || "Terjadi kesalahan") + "\n╰──────────❀")
   }
 }
 

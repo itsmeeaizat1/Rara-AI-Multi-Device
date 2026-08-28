@@ -83,9 +83,9 @@ async function handler(m, { sock }) {
         await m.reply(
             `🎤 *ᴛʀᴀɴꜱᴋʀɪᴘ*\n\n` +
             `╭──「 *HAsIL* 」\n` +
-            `│ \n` +
+            `│\n` +
             `│ ${text}\n` +
-            `│ \n` +
+            `│\n` +
             `╰──────────❀\n\n` +
             `🤖 Model: Whisper Large V3\n` +
             `🌐 Bahasa: Indonesia\n` +

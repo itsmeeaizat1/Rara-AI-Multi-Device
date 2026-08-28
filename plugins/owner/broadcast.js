@@ -44,9 +44,9 @@ async function handler(m, { sock, config: botConfig }) {
     if (!groupJids.length) {
       await m.reply(
         "╭──「 📢 Broadcast 」\n" +
-        "├──\n" +
-        "├── ❌ Tidak ada grup terdaftar\n" +
-        "├── Status: Dibatalkan\n" +
+        "│\n" +
+        "│ ❌ Tidak ada grup terdaftar\n" +
+        "│ Status: Dibatalkan\n" +
         "╰──────────❀"
       );
       return { handled: true };
@@ -75,23 +75,23 @@ async function handler(m, { sock, config: botConfig }) {
 
     const result =
       "╭──「 📢 Broadcast Selesai 」\n" +
-      "├──\n" +
-      "├── 📝 Pesan: " + message.slice(0, 50) + (message.length > 50 ? "..." : "") + "\n" +
-      "├── 🎯 Target: " + groupJids.length + " Grup\n" +
-      "├── ✅ Berhasil: " + success.length + "\n" +
-      "├── ❌ Gagal: " + failed.length + "\n" +
-      "├── 📊 Sukses Rate: " + Math.round((success.length / groupJids.length) * 100) + "%\n" +
-      "├──\n" +
-      "├── 🏷️ " + botName + "\n" +
+      "│\n" +
+      "│ 📝 Pesan: " + message.slice(0, 50) + (message.length > 50 ? "..." : "") + "\n" +
+      "│ 🎯 Target: " + groupJids.length + " Grup\n" +
+      "│ ✅ Berhasil: " + success.length + "\n" +
+      "│ ❌ Gagal: " + failed.length + "\n" +
+      "│ 📊 Sukses Rate: " + Math.round((success.length / groupJids.length) * 100) + "%\n" +
+      "│\n" +
+      "│ 🏷️ " + botName + "\n" +
       "╰──────────❀";
 
     await m.reply(result);
   } catch (error) {
     const text =
       "╭──「 📢 Broadcast — Error 」\n" +
-      "├──\n" +
-      "├── ❌ Gagal mengirim broadcast\n" +
-      "├── Alasan: " + error.message + "\n" +
+      "│\n" +
+      "│ ❌ Gagal mengirim broadcast\n" +
+      "│ Alasan: " + error.message + "\n" +
       "╰──────────❀";
 
     await m.reply(text, "broadcast");

@@ -86,11 +86,11 @@ async function handler(m, { sock }) {
       if (toggle === "on") {
         cfg.alertEnabled = true; save(db)
         await m.react("🐣")
-        return m.reply("╭──「 VPS Monitor 」\n├── Auto-alert: ON\n├── Cek tiap 60 detik, alert ke PM owner\n├── Threshold: CPU " + cfg.cpuThreshold + "% / RAM " + cfg.ramThreshold + "% / Disk " + cfg.diskThreshold + "%\n╰──────────❀")
+        return m.reply("╭──「 VPS Monitor 」\n│ Auto-alert: ON\n│ Cek tiap 60 detik, alert ke PM owner\n│ Threshold: CPU " + cfg.cpuThreshold + "% / RAM " + cfg.ramThreshold + "% / Disk " + cfg.diskThreshold + "%\n╰──────────❀")
       } else if (toggle === "off") {
         cfg.alertEnabled = false; save(db)
         await m.react("🐣")
-        return m.reply("╭──「 VPS Monitor 」\n├── Auto-alert: OFF\n╰──────────❀")
+        return m.reply("╭──「 VPS Monitor 」\n│ Auto-alert: OFF\n╰──────────❀")
       }
     }
 
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
         if (key === "disk" && val) cfg.diskThreshold = val
       }
       save(db); await m.react("🐣")
-      return m.reply("╭──「 VPS Monitor 」\n├── Threshold updated:\n├── CPU: " + cfg.cpuThreshold + "%\n├── RAM: " + cfg.ramThreshold + "%\n├── Disk: " + cfg.diskThreshold + "%\n╰──────────❀")
+      return m.reply("╭──「 VPS Monitor 」\n│ Threshold updated:\n│ CPU: " + cfg.cpuThreshold + "%\n│ RAM: " + cfg.ramThreshold + "%\n│ Disk: " + cfg.diskThreshold + "%\n╰──────────❀")
     }
 
     if (subCmd === "test") {
@@ -115,8 +115,8 @@ async function handler(m, { sock }) {
       if (ram >= cfg.ramThreshold) alerts.push("⚠️ RAM " + ram + "% >= " + cfg.ramThreshold + "%")
       if (disk >= cfg.diskThreshold) alerts.push("⚠️ Disk " + disk + "% >= " + cfg.diskThreshold + "%")
       await m.react("🐣")
-      if (alerts.length) return m.reply("╭──「 VPS Alert Test 」\n" + alerts.map(a => "├── " + a).join("\n") + "\n╰──────────❀")
-      return m.reply("╭──「 VPS Alert Test 」\n├── Semua normal. Tidak ada alert.\n├── CPU " + cpu + "% | RAM " + ram + "% | Disk " + disk + "%\n╰──────────❀")
+      if (alerts.length) return m.reply("╭──「 VPS Alert Test 」\n" + alerts.map(a => "" + a).join("\n") + "\n╰──────────❀")
+      return m.reply("╭──「 VPS Alert Test 」\n│ Semua normal. Tidak ada alert.\n│ CPU " + cpu + "% | RAM " + ram + "% | Disk " + disk + "%\n╰──────────❀")
     }
 
     // Default: status
@@ -127,27 +127,27 @@ async function handler(m, { sock }) {
     const pm2 = await getPM2Status()
 
     let text = "╭──「 VPS Monitor 」\n"
-    text += "├── CPU: " + cpu + "% (" + os.cpus().length + " cores)\n"
-    text += "├── RAM: " + ram + "% (" + Math.round(usedMem / 1024 / 1024) + "MB / " + Math.round(totalMem / 1024 / 1024) + "MB)\n"
-    text += "├── Disk: " + disk + "%\n"
-    text += "├── Uptime: " + formatUptime(os.uptime()) + "\n"
-    text += "├── Load: " + os.loadavg().map(l => l.toFixed(2)).join(", ") + "\n"
-    text += "├── Alert: " + (cfg.alertEnabled ? "ON ✅" : "OFF ❌") + "\n"
-    text += "├──\n"
+    text += "│ CPU: " + cpu + "% (" + os.cpus().length + " cores)\n"
+    text += "│ RAM: " + ram + "% (" + Math.round(usedMem / 1024 / 1024) + "MB / " + Math.round(totalMem / 1024 / 1024) + "MB)\n"
+    text += "│ Disk: " + disk + "%\n"
+    text += "│ Uptime: " + formatUptime(os.uptime()) + "\n"
+    text += "│ Load: " + os.loadavg().map(l => l.toFixed(2)).join(", ") + "\n"
+    text += "│ Alert: " + (cfg.alertEnabled ? "ON ✅" : "OFF ❌") + "\n"
+    text += "│\n"
     if (pm2.length) {
-      text += "├── PM2 Processes:\n"
+      text += "│ PM2 Processes:\n"
       pm2.forEach(p => {
         const icon = p.status === "online" ? "✅" : "❌"
-        text += "├── " + icon + " " + p.name + " — " + p.status + " (" + p.restarts + " restarts, " + p.memory + "MB)\n"
+        text += "" + icon + " " + p.name + " — " + p.status + " (" + p.restarts + " restarts, " + p.memory + "MB)\n"
       })
-    } else { text += "├── PM2: tidak terdeteksi\n" }
+    } else { text += "│ PM2: tidak terdeteksi\n" }
     text += "╰──────────❀"
     await m.react("🐣")
     return m.reply(text)
   } catch (e) {
     console.error("[servermonitor] error:", e.message)
     await m.react("🐣")
-    return m.reply("╭──「 Error 」\n├── " + (e.message || "Terjadi kesalahan") + "\n╰──────────❀")
+    return m.reply("╭──「 Error 」\n" + (e.message || "Terjadi kesalahan") + "\n╰──────────❀")
   }
 }
 

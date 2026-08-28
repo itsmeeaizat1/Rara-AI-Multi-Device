@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
       `│  ✦ Announce : *${isAnnounce}*\n` +
       `│  ✦ Join Mode  : *${joinMode}*\n` +
       `│  ✦ Deskripsi  : ${descPreview}\n` +
-      `╰──────────────⬣\n\n` +
+      `╰──────────❀\n\n` +
       `.☘︎ ݁˖ © ${config.bot?.name || "Nova-AI"}`;
 
     const buttons = [

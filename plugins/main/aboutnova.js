@@ -49,7 +49,7 @@ ${prefix}menu untuk melihat semua fitur`;
     await m.react("🐣");
   } catch (e) {
     console.error("[aboutnova] handler error:", e.message);
-    try { await m.reply("╭──「 About 」\n├── ❌ Terjadi error\n├── Coba lagi nanti ya\n╰──────────❀"); } catch {}
+    try { await m.reply("╭──「 About 」\n│ ❌ Terjadi error\n│ Coba lagi nanti ya\n╰──────────❀"); } catch {}
     await m.react("❌");
   }
 }

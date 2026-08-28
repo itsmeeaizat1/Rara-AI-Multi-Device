@@ -41,7 +41,7 @@ export async function handler(m, { sock }) {
   try {
     const quote = getRandomBucin();
     if (!quote) {
-      await m.reply("╭──「 💕 Bucin 」\n├── ❌ Data tidak tersedia\n├── Coba lagi nanti ya\n╰──────────❀");
+      await m.reply("╭──「 💕 Bucin 」\n│ ❌ Data tidak tersedia\n│ Coba lagi nanti ya\n╰──────────❀");
       return;
     }
 
@@ -50,7 +50,7 @@ export async function handler(m, { sock }) {
       "│",
       "│ ```" + quote + "```",
       "│",
-      "├── 💕 Semoga harimu makin manis",
+      "│ 💕 Semoga harimu makin manis",
       "╰──────────❀",
     ].join("\n");
 
@@ -60,7 +60,7 @@ export async function handler(m, { sock }) {
     console.error("[bucin] Error:", e.message);
     try {
       await m.react("❌");
-      await m.reply("╭──「 💕 Bucin 」\n├── ❌ Terjadi error\n├── Coba lagi nanti ya\n╰──────────❀");
+      await m.reply("╭──「 💕 Bucin 」\n│ ❌ Terjadi error\n│ Coba lagi nanti ya\n╰──────────❀");
     } catch {}
   }
 }

@@ -144,7 +144,7 @@ ${toSC("Nova AI WhatsApp Bot")}`;
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[info] handler error:", e.message);
-    try { await m.reply(`╭──「 ${toSC("Info")} 」\n├── ❌ ${toSC("Gagal menampilkan info")}\n├── ${toSC("Coba lagi nanti ya")}\n╰──────────❀`); } catch {}
+    try { await m.reply(`╭──「 ${toSC("Info")} 」\n│ ❌ ${toSC("Gagal menampilkan info")}\n│ ${toSC("Coba lagi nanti ya")}\n╰──────────❀`); } catch {}
   }
 
   return { handled: true };

@@ -39,7 +39,7 @@ ${cmdLines}│ *Total: ${funCmds.length} Fitur*
     await m.react("🐣");
   } catch (e) {
     console.error("[fun] handler error:", e.message);
-    try { await m.reply("╭──「 Fun 」\n├── ❌ Terjadi error\n├── Coba lagi nanti\n╰──────────❀"); } catch {}
+    try { await m.reply("╭──「 Fun 」\n│ ❌ Terjadi error\n│ Coba lagi nanti\n╰──────────❀"); } catch {}
     await m.react("❌");
   }
 }

@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim();
 
     if (!query) {
-        const usageText = `╭──「 Game Search 」\n├── 📌 *Penggunaan:* ${pluginConfig.usage}\n├── 💡 *Contoh:* ${pluginConfig.example}\n╰──────────❀`;
+        const usageText = `╭──「 Game Search 」\n│ 📌 *Penggunaan:* ${pluginConfig.usage}\n│ 💡 *Contoh:* ${pluginConfig.example}\n╰──────────❀`;
         return m.reply(usageText);
     }
 
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
 
         if (!games.length) {
             m.react?.('🐣');
-            const noResultText = `╭──「 Game Search 」\n├── ❌ Game "${query}" tidak ditemukan.\n╰──────────❀`;
+            const noResultText = `╭──「 Game Search 」\n│ ❌ Game "${query}" tidak ditemukan.\n╰──────────❀`;
             return m.reply(noResultText);
         }
 
@@ -58,13 +58,13 @@ async function handler(m, { sock }) {
                 ? g.genres.map(gn => gn.name).filter(Boolean).join(', ')
                 : 'N/A';
 
-            resultText += `├── ${index + 1}. ${name} (${releasedYear})\n`;
-            resultText += `├── ⭐ ${rating} | Metacritic: ${metacritic}\n`;
-            resultText += `├── 🎮 ${platforms}\n`;
-            resultText += `├── 🏷 ${genres}\n`;
+            resultText += `│ ${index + 1}. ${name} (${releasedYear})\n`;
+            resultText += `│ ⭐ ${rating} | Metacritic: ${metacritic}\n`;
+            resultText += `│ 🎮 ${platforms}\n`;
+            resultText += `│ 🏷 ${genres}\n`;
 
             if (index < list.length - 1) {
-                resultText += `├──\n`;
+                resultText += `│\n`;
             }
         });
 
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     } catch (error) {
         m.react?.('🐣');
         const errorMsg = error.response?.data?.error || error.message || 'Terjadi kesalahan saat menghubungi API RAWG.';
-        const errorText = `╭──「 Game Search Error 」\n├── ❌ ${errorMsg}\n╰──────────❀`;
+        const errorText = `╭──「 Game Search Error 」\n│ ❌ ${errorMsg}\n╰──────────❀`;
         return m.reply(errorText);
     }
 }

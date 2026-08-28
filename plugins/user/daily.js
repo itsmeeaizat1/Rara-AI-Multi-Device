@@ -43,10 +43,10 @@ async function handler(m, { sock }) {
     const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
     return m.reply(
       "╭──「 🎁 Daily Claim 」\n" +
-      "├──\n" +
-      "├── 🕖 Cooldown\n" +
-      "├── Kamu sudah klaim hari ini\n" +
-      "├── Tunggu: *" + hours + " jam " + minutes + " menit* lagi\n" +
+      "│\n" +
+      "│ 🕖 Cooldown\n" +
+      "│ Kamu sudah klaim hari ini\n" +
+      "│ Tunggu: *" + hours + " jam " + minutes + " menit* lagi\n" +
       "╰──────────❀"
     );
   }
@@ -98,22 +98,22 @@ async function handler(m, { sock }) {
   const greeting = getTimeGreeting();
 
   let txt = "╭──「 🎁 Daily Claim 」\n";
-  txt += "├──\n";
-  txt += "├── " + greeting + ", @"+ m.sender.split("@")[0] +"!\n";
-  txt += "├── 🔥 Streak: *" + streak + " hari*\n";
+  txt += "│\n";
+  txt += "" + greeting + ", @"+ m.sender.split("@")[0] +"!\n";
+  txt += "│ 🔥 Streak: *" + streak + " hari*\n";
   if (streakMultiplier > 1) {
-    txt += "├── ⚡ Bonus Streak: *" + (Math.round(streakMultiplier * 100) / 100) + "x*\n";
+    txt += "│ ⚡ Bonus Streak: *" + (Math.round(streakMultiplier * 100) / 100) + "x*\n";
   }
-  txt += "├──\n";
+  txt += "│\n";
   txt += "├──「 *Hadiah* 」\n";
-  txt += "├── 🚄 Exp: *+" + formatNum(expReward) + "*\n";
-  txt += "├── 🪙 Koin: *+" + formatNum(koinReward) + "*\n";
-  txt += "├── 💰 Gold: *+" + formatNum(goldReward) + "*\n";
-  if (gemsReward > 0) txt += "├── 💎 Gems: *+" + gemsReward + "*\n";
-  if (diamondsReward > 0) txt += "├── ♦️ Diamonds: *+" + diamondsReward + "*\n";
-  txt += "├── 🥤 Potion: *+" + potionReward + "*\n";
-  txt += "├──\n";
-  txt += "├── 💡 Klaim lagi besok untuk lanjutkan streak!\n";
+  txt += "│ 🚄 Exp: *+" + formatNum(expReward) + "*\n";
+  txt += "│ 🪙 Koin: *+" + formatNum(koinReward) + "*\n";
+  txt += "│ 💰 Gold: *+" + formatNum(goldReward) + "*\n";
+  if (gemsReward > 0) txt += "│ 💎 Gems: *+" + gemsReward + "*\n";
+  if (diamondsReward > 0) txt += "│ ♦️ Diamonds: *+" + diamondsReward + "*\n";
+  txt += "│ 🥤 Potion: *+" + potionReward + "*\n";
+  txt += "│\n";
+  txt += "│ 💡 Klaim lagi besok untuk lanjutkan streak!\n";
   txt += "╰──────────❀";
 
   await m.react("🐣");

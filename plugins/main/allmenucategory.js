@@ -270,7 +270,7 @@ async function handler(m, { sock, db }) {
     });
   } catch (e) {
     console.error("[allmenucategory] handler error:", e.message);
-    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n├── ❌ ${toSC("Gagal menampilkan kategori")}\n├── ${toSC("Coba lagi nanti")}\n╰──────────❀`); } catch {}
+    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ❌ ${toSC("Gagal menampilkan kategori")}\n│ ${toSC("Coba lagi nanti")}\n╰──────────❀`); } catch {}
     await m.react("❌");
   }
 }

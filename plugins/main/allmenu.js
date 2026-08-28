@@ -323,7 +323,7 @@ ${weatherBlock}${readMore}
     try { await sendMenuAudio(sock, m, db, true); } catch {}
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);
-    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n├── ❌ ${toSC("Gagal menampilkan menu")}\n├── ${toSC("Coba lagi nanti")}\n╰──────────❀`); } catch {}
+    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ❌ ${toSC("Gagal menampilkan menu")}\n│ ${toSC("Coba lagi nanti")}\n╰──────────❀`); } catch {}
     await m.react("❌");
   }
 }

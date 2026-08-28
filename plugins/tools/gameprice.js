@@ -37,11 +37,11 @@ async function handler(m, { sock }) {
         let boxText = `╭──「 Game Deals 」\n`;
         deals.forEach((game, index) => {
             const savingsFormatted = Math.round(parseFloat(game.savings || 0));
-            boxText += `├── ${index + 1}. ${game.title}\n`;
-            boxText += `├── 💰 $${game.salePrice} (was $${game.normalPrice})\n`;
-            boxText += `├── 📉 ${savingsFormatted}% OFF | Rating: ${game.dealRating}/10\n`;
+            boxText += `│ ${index + 1}. ${game.title}\n`;
+            boxText += `│ 💰 $${game.salePrice} (was $${game.normalPrice})\n`;
+            boxText += `│ 📉 ${savingsFormatted}% OFF | Rating: ${game.dealRating}/10\n`;
             if (index < deals.length - 1) {
-                boxText += `├──\n`;
+                boxText += `│\n`;
             }
         });
         boxText += `╰──────────❀`;
@@ -79,8 +79,8 @@ async function handler(m, { sock }) {
         await m.react?.("🐣");
         const errorBox = [
             `╭──「 Error 」`,
-            `├── Gagal mengambil data diskon game!`,
-            `├── Alasan: ${error.message || "Terjadi kesalahan"}`,
+            `│ Gagal mengambil data diskon game!`,
+            `│ Alasan: ${error.message || "Terjadi kesalahan"}`,
             `╰──────────❀`
         ].join("\n");
         await m.reply(errorBox);

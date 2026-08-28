@@ -24,9 +24,9 @@ async function handler(m, { sock }) {
 
   if (!query) {
     return m.reply(`╭──「 🔞 XNXX Search 」
-├── Masukkan query pencarian
-├──
-├── 💡 *Contoh:* \`${m.prefix}xnxx amateur\`
+│ Masukkan query pencarian
+│
+│ 💡 *Contoh:* \`${m.prefix}xnxx amateur\`
 ╰──────────❀`, "xnxx");
   }
 
@@ -40,15 +40,15 @@ async function handler(m, { sock }) {
 
     if (!res.data?.status || !res.data?.data || res.data.data.length === 0) {
       return m.reply(`╭──「 🔞 XNXX Search 」
-├── ❌ Tidak ditemukan untuk: ${query}
-├── Coba keyword lain
+│ ❌ Tidak ditemukan untuk: ${query}
+│ Coba keyword lain
 ╰──────────❀`, "xnxx");
     }
 
     const results = res.data.data.slice(0, 5);
     let text = `╭──「 🔞 XNXX Search 」
-├── Query: ${query}
-├──
+│ Query: ${query}
+│
 `;
     for (let i = 0; i < results.length; i++) {
       const r = results[i];

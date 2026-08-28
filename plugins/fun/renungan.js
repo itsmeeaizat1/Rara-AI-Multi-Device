@@ -46,15 +46,15 @@ export async function handler(m, { sock }) {
   try {
     const imgUrl = getRandomRenungan();
     if (!imgUrl) {
-      await m.reply("╭──「 🤲 Renungan 」\n├── ❌ Data tidak tersedia\n├── Coba lagi nanti ya\n╰──────────❀");
+      await m.reply("╭──「 🤲 Renungan 」\n│ ❌ Data tidak tersedia\n│ Coba lagi nanti ya\n╰──────────❀");
       return;
     }
 
     const caption = [
       "╭──「 🤲 *Renungan Harian* 」",
       "│",
-      "├── 💡 Semoga renungan hari ini bermanfaat",
-      "├── 🤲 Semoga kita selalu dalam lindungan-Nya",
+      "│ 💡 Semoga renungan hari ini bermanfaat",
+      "│ 🤲 Semoga kita selalu dalam lindungan-Nya",
       "╰──────────❀",
     ].join("\n");
 
@@ -82,7 +82,7 @@ export async function handler(m, { sock }) {
     console.error("[renungan] Error:", e.message);
     try {
       await m.react("❌");
-      await m.reply("╭──「 🤲 Renungan 」\n├── ❌ Terjadi error\n├── Coba lagi nanti ya\n╰──────────❀");
+      await m.reply("╭──「 🤲 Renungan 」\n│ ❌ Terjadi error\n│ Coba lagi nanti ya\n╰──────────❀");
     } catch {}
   }
 }

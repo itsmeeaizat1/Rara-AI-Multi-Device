@@ -56,11 +56,11 @@ async function handler(m, { sock }) {
   const story = await generateRomantis(names);
 
   if (!story) {
-    return m.reply("╭──「 💕 Romance Story 」\n├── ❌ Gagal generate cerita\n├── Coba lagi nanti\n╰──────────❀", "romantis");
+    return m.reply("╭──「 💕 Romance Story 」\n│ ❌ Gagal generate cerita\n│ Coba lagi nanti\n╰──────────❀", "romantis");
   }
 
   const header = "💕 *ʀᴏᴍᴀɴᴄᴇ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";
-  const footer = "\n├──\n├── ✨ Dibuat oleh Nova AI\n╰──────────❀";
+  const footer = "\n│\n│ ✨ Dibuat oleh Nova AI\n╰──────────❀";
 
   await m.react("🐣");
   return m.reply( header + story + footer, "romantis");

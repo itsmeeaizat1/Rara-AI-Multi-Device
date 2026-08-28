@@ -92,124 +92,124 @@ async function handler(m, { sock }) {
 
   // Header
   caption += "╭──「 👤 Profile User 」\n";
-  caption += "├──\n";
+  caption += "│\n";
 
   // Personal Info
   caption += "├──「 *Identitas* 」\n";
-  caption += "├── 🏷️ Nama: *" + (user.name || m.pushName || "User") + "*\n";
+  caption += "│ 🏷️ Nama: *" + (user.name || m.pushName || "User") + "*\n";
   if (user.isRegistered && user.regName) {
-    caption += "├── 📝 Daftar: " + user.regName + " (" + (user.regAge || "?") + " thn, " + (user.regGender || "?") + ")\n";
+    caption += "│ 📝 Daftar: " + user.regName + " (" + (user.regAge || "?") + " thn, " + (user.regGender || "?") + ")\n";
   }
-  caption += "├── 🆔 Tag: @" + phone + "\n";
-  caption += "├── 📊 Status: " + (isOwnerUser ? "👑 Owner" : isPremiumUser ? "💎 Premium" : "🆓 Free") + "\n";
-  if (user.isBanned) caption += "├── 🚫 Banned: Ya\n";
-  caption += "├──\n";
+  caption += "│ 🆔 Tag: @" + phone + "\n";
+  caption += "│ 📊 Status: " + (isOwnerUser ? "👑 Owner" : isPremiumUser ? "💎 Premium" : "🆓 Free") + "\n";
+  if (user.isBanned) caption += "│ 🚫 Banned: Ya\n";
+  caption += "│\n";
 
   // Level & EXP
   caption += "├──「 *Level & EXP* 」\n";
-  caption += "├── ⭐ Level: *" + userLevel + "*\n";
-  caption += "├── 🎖️ Role: " + role + "\n";
-  caption += "├── 🚄 Total EXP: *" + formatNumber(userExp) + "*\n";
-  caption += "├── 📊 Progress: " + getLevelBar(expInLevel, expNeeded) + "\n";
-  caption += "├── ↳ " + formatNumber(expInLevel) + " / " + formatNumber(expNeeded) + " XP\n";
-  if (user.rpg.title) caption += "├── 👑 Title: " + user.rpg.title + "\n";
-  caption += "├──\n";
+  caption += "│ ⭐ Level: *" + userLevel + "*\n";
+  caption += "│ 🎖️ Role: " + role + "\n";
+  caption += "│ 🚄 Total EXP: *" + formatNumber(userExp) + "*\n";
+  caption += "│ 📊 Progress: " + getLevelBar(expInLevel, expNeeded) + "\n";
+  caption += "│ ↳ " + formatNumber(expInLevel) + " / " + formatNumber(expNeeded) + " XP\n";
+  if (user.rpg.title) caption += "│ 👑 Title: " + user.rpg.title + "\n";
+  caption += "│\n";
 
   // Currencies
   caption += "├──「 *Aset & Currency* 」\n";
-  caption += "├── 🪙 Koin: " + formatNumber(user.koin || 0) + "\n";
-  caption += "├── 💵 Saldo: " + formatNumber(user.saldo || 0) + "\n";
-  caption += "├── 💰 Gold: " + formatNumber(user.rpg.gold || 0) + "\n";
-  caption += "├── 💎 Gems: " + formatNumber(user.rpg.gems || 0) + "\n";
-  caption += "├── ♦️ Diamonds: " + formatNumber(user.rpg.diamonds || 0) + "\n";
-  caption += "├── 🎟️ Tokens: " + formatNumber(user.rpg.tokens || 0) + "\n";
-  caption += "├── ⚡ Energi Bot: " + (isOwnerUser || isPremiumUser ? "∞ Unlimited" : (user.energi ?? 25)) + "\n";
-  caption += "├──\n";
+  caption += "│ 🪙 Koin: " + formatNumber(user.koin || 0) + "\n";
+  caption += "│ 💵 Saldo: " + formatNumber(user.saldo || 0) + "\n";
+  caption += "│ 💰 Gold: " + formatNumber(user.rpg.gold || 0) + "\n";
+  caption += "│ 💎 Gems: " + formatNumber(user.rpg.gems || 0) + "\n";
+  caption += "│ ♦️ Diamonds: " + formatNumber(user.rpg.diamonds || 0) + "\n";
+  caption += "│ 🎟️ Tokens: " + formatNumber(user.rpg.tokens || 0) + "\n";
+  caption += "│ ⚡ Energi Bot: " + (isOwnerUser || isPremiumUser ? "∞ Unlimited" : (user.energi ?? 25)) + "\n";
+  caption += "│\n";
 
   // Vital Stats
   caption += "├──「 *Vital Stats* 」\n";
-  caption += "├── ❤️ HP: " + formatNumber(user.rpg.hp || user.rpg.health || 0) + " / " + formatNumber(user.rpg.maxHp || 100) + "\n";
-  caption += "├── 💧 Mana: " + formatNumber(user.rpg.mana || 0) + " / " + formatNumber(user.rpg.maxMana || 50) + "\n";
-  caption += "├── ⚡ Energy: " + formatNumber(user.rpg.energy || 0) + " / " + formatNumber(user.rpg.maxEnergy || 100) + "\n";
-  caption += "├── 🏃 Stamina: " + formatNumber(user.rpg.stamina || 0) + " / " + formatNumber(user.rpg.maxStamina || 100) + "\n";
-  caption += "├──\n";
+  caption += "│ ❤️ HP: " + formatNumber(user.rpg.hp || user.rpg.health || 0) + " / " + formatNumber(user.rpg.maxHp || 100) + "\n";
+  caption += "│ 💧 Mana: " + formatNumber(user.rpg.mana || 0) + " / " + formatNumber(user.rpg.maxMana || 50) + "\n";
+  caption += "│ ⚡ Energy: " + formatNumber(user.rpg.energy || 0) + " / " + formatNumber(user.rpg.maxEnergy || 100) + "\n";
+  caption += "│ 🏃 Stamina: " + formatNumber(user.rpg.stamina || 0) + " / " + formatNumber(user.rpg.maxStamina || 100) + "\n";
+  caption += "│\n";
 
   // Combat Stats
   caption += "├──「 *Combat* 」\n";
-  caption += "├── ⚔️ ATK: " + formatNumber(user.rpg.atk || 10) + "\n";
-  caption += "├── 🛡️ DEF: " + formatNumber(user.rpg.def || 5) + "\n";
-  caption += "├── 💨 SPD: " + formatNumber(user.rpg.spd || 10) + "\n";
-  caption += "├── 🎯 Crit Rate: " + (user.rpg.critRate || 5) + "%\n";
-  caption += "├── 💥 Crit DMG: " + (user.rpg.critDmg || 50) + "%\n";
-  caption += "├── 🌀 Evasion: " + (user.rpg.evasion || 3) + "%\n";
-  caption += "├── 🎯 Accuracy: " + (user.rpg.accuracy || 95) + "%\n";
-  caption += "├── 🧛 Lifesteal: " + (user.rpg.lifesteal || 0) + "%\n";
-  caption += "├── 🔱 Penetration: " + (user.rpg.penetration || 0) + "%\n";
-  caption += "├──\n";
+  caption += "│ ⚔️ ATK: " + formatNumber(user.rpg.atk || 10) + "\n";
+  caption += "│ 🛡️ DEF: " + formatNumber(user.rpg.def || 5) + "\n";
+  caption += "│ 💨 SPD: " + formatNumber(user.rpg.spd || 10) + "\n";
+  caption += "│ 🎯 Crit Rate: " + (user.rpg.critRate || 5) + "%\n";
+  caption += "│ 💥 Crit DMG: " + (user.rpg.critDmg || 50) + "%\n";
+  caption += "│ 🌀 Evasion: " + (user.rpg.evasion || 3) + "%\n";
+  caption += "│ 🎯 Accuracy: " + (user.rpg.accuracy || 95) + "%\n";
+  caption += "│ 🧛 Lifesteal: " + (user.rpg.lifesteal || 0) + "%\n";
+  caption += "│ 🔱 Penetration: " + (user.rpg.penetration || 0) + "%\n";
+  caption += "│\n";
 
   // Luck & Bonus
   caption += "├──「 *Luck & Bonus* 」\n";
-  caption += "├── 🍀 Luck: " + formatNumber(user.rpg.luck || 0) + "\n";
-  caption += "├── 📦 Drop Bonus: " + (user.rpg.dropBonus || 0) + "%\n";
-  caption += "├── 💰 Gold Find: " + (user.rpg.goldFind || 0) + "%\n";
-  caption += "├── 🚄 EXP Bonus: " + (user.rpg.expBonus || 0) + "%\n";
-  caption += "├──\n";
+  caption += "│ 🍀 Luck: " + formatNumber(user.rpg.luck || 0) + "\n";
+  caption += "│ 📦 Drop Bonus: " + (user.rpg.dropBonus || 0) + "%\n";
+  caption += "│ 💰 Gold Find: " + (user.rpg.goldFind || 0) + "%\n";
+  caption += "│ 🚄 EXP Bonus: " + (user.rpg.expBonus || 0) + "%\n";
+  caption += "│\n";
 
   // Equipment
   caption += "├──「 *Equipment* 」\n";
-  caption += "├── ⚔️ Weapon: " + (user.rpg.equipWeapon ? user.rpg.equipWeapon.name + " +" + (user.rpg.equipWeapon.enchant || 0) : "Kosong") + "\n";
-  caption += "├── 🛡️ Armor: " + (user.rpg.equipArmor ? user.rpg.equipArmor.name + " +" + (user.rpg.equipArmor.enchant || 0) : "Kosong") + "\n";
-  caption += "├── 🪖 Helmet: " + (user.rpg.equipHelmet ? user.rpg.equipHelmet.name + " +" + (user.rpg.equipHelmet.enchant || 0) : "Kosong") + "\n";
-  caption += "├── 👢 Boots: " + (user.rpg.equipBoots ? user.rpg.equipBoots.name + " +" + (user.rpg.equipBoots.enchant || 0) : "Kosong") + "\n";
-  caption += "├── 💍 Accessory: " + (user.rpg.equipAccessory ? user.rpg.equipAccessory.name + " +" + (user.rpg.equipAccessory.enchant || 0) : "Kosong") + "\n";
-  caption += "├── 💍 Ring: " + (user.rpg.equipRing ? user.rpg.equipRing.name + " +" + (user.rpg.equipRing.enchant || 0) : "Kosong") + "\n";
-  caption += "├── 🛡️ Shield: " + (user.rpg.equipShield ? user.rpg.equipShield.name + " +" + (user.rpg.equipShield.enchant || 0) : "Kosong") + "\n";
-  caption += "├──\n";
+  caption += "│ ⚔️ Weapon: " + (user.rpg.equipWeapon ? user.rpg.equipWeapon.name + " +" + (user.rpg.equipWeapon.enchant || 0) : "Kosong") + "\n";
+  caption += "│ 🛡️ Armor: " + (user.rpg.equipArmor ? user.rpg.equipArmor.name + " +" + (user.rpg.equipArmor.enchant || 0) : "Kosong") + "\n";
+  caption += "│ 🪖 Helmet: " + (user.rpg.equipHelmet ? user.rpg.equipHelmet.name + " +" + (user.rpg.equipHelmet.enchant || 0) : "Kosong") + "\n";
+  caption += "│ 👢 Boots: " + (user.rpg.equipBoots ? user.rpg.equipBoots.name + " +" + (user.rpg.equipBoots.enchant || 0) : "Kosong") + "\n";
+  caption += "│ 💍 Accessory: " + (user.rpg.equipAccessory ? user.rpg.equipAccessory.name + " +" + (user.rpg.equipAccessory.enchant || 0) : "Kosong") + "\n";
+  caption += "│ 💍 Ring: " + (user.rpg.equipRing ? user.rpg.equipRing.name + " +" + (user.rpg.equipRing.enchant || 0) : "Kosong") + "\n";
+  caption += "│ 🛡️ Shield: " + (user.rpg.equipShield ? user.rpg.equipShield.name + " +" + (user.rpg.equipShield.enchant || 0) : "Kosong") + "\n";
+  caption += "│\n";
 
   // Profession
   caption += "├──「 *Profession* 」\n";
-  caption += "├── 🎓 Job: " + (user.rpg.job || "novice") + "\n";
-  caption += "├── 📈 Job Level: " + formatNumber(user.rpg.jobLevel || 1) + "\n";
-  caption += "├── ✨ Skill Points: " + formatNumber(user.rpg.skillPoints || 0) + "\n";
-  caption += "├── 📚 Skills: " + (user.rpg.skills || []).length + "\n";
-  caption += "├──\n";
+  caption += "│ 🎓 Job: " + (user.rpg.job || "novice") + "\n";
+  caption += "│ 📈 Job Level: " + formatNumber(user.rpg.jobLevel || 1) + "\n";
+  caption += "│ ✨ Skill Points: " + formatNumber(user.rpg.skillPoints || 0) + "\n";
+  caption += "│ 📚 Skills: " + (user.rpg.skills || []).length + "\n";
+  caption += "│\n";
 
   // Records
   caption += "├──「 *Records* 」\n";
-  caption += "├── ⚔️ PvP: " + formatNumber(user.rpg.pvpWins || 0) + "W / " + formatNumber(user.rpg.pvpLosses || 0) + "L\n";
-  caption += "├── 📊 PvP Rating: " + formatNumber(user.rpg.pvpRating || 1000) + "\n";
-  caption += "├── 🔥 PvP Streak: " + formatNumber(user.rpg.pvpStreak || 0) + " (Best: " + formatNumber(user.rpg.pvpBestStreak || 0) + ")\n";
-  caption += "├── 💀 Total Kills: " + formatNumber(user.rpg.totalKills || 0) + "\n";
-  caption += "├── 🐉 Boss Kills: " + formatNumber(user.rpg.bossKills || 0) + "\n";
-  caption += "├── 🏰 Dungeon Clears: " + formatNumber(user.rpg.dungeonClears || 0) + "\n";
-  caption += "├──\n";
+  caption += "│ ⚔️ PvP: " + formatNumber(user.rpg.pvpWins || 0) + "W / " + formatNumber(user.rpg.pvpLosses || 0) + "L\n";
+  caption += "│ 📊 PvP Rating: " + formatNumber(user.rpg.pvpRating || 1000) + "\n";
+  caption += "│ 🔥 PvP Streak: " + formatNumber(user.rpg.pvpStreak || 0) + " (Best: " + formatNumber(user.rpg.pvpBestStreak || 0) + ")\n";
+  caption += "│ 💀 Total Kills: " + formatNumber(user.rpg.totalKills || 0) + "\n";
+  caption += "│ 🐉 Boss Kills: " + formatNumber(user.rpg.bossKills || 0) + "\n";
+  caption += "│ 🏰 Dungeon Clears: " + formatNumber(user.rpg.dungeonClears || 0) + "\n";
+  caption += "│\n";
 
   // Misc
   caption += "├──「 *Misc* 」\n";
-  caption += "├── 📅 Daily Streak: " + formatNumber(user.rpg.dailyStreak || 0) + " hari\n";
-  caption += "├── 🏆 Achievements: " + (user.rpg.achievements || []).length + " (Points: " + formatNumber(user.rpg.achievementPoints || 0) + ")\n";
-  caption += "├── 🎒 Inventory: " + (user.inventory ? Object.keys(user.inventory).filter(k => user.inventory[k] > 0).length : 0) + " jenis item\n";
+  caption += "│ 📅 Daily Streak: " + formatNumber(user.rpg.dailyStreak || 0) + " hari\n";
+  caption += "│ 🏆 Achievements: " + (user.rpg.achievements || []).length + " (Points: " + formatNumber(user.rpg.achievementPoints || 0) + ")\n";
+  caption += "│ 🎒 Inventory: " + (user.inventory ? Object.keys(user.inventory).filter(k => user.inventory[k] > 0).length : 0) + " jenis item\n";
   if (user.rpg.rebirthCount) {
-    caption += "├── 🔄 Rebirth: " + formatNumber(user.rpg.rebirthCount) + "x (Bonus: " + (user.rpg.permBonus || 0) + "%)\n";
+    caption += "│ 🔄 Rebirth: " + formatNumber(user.rpg.rebirthCount) + "x (Bonus: " + (user.rpg.permBonus || 0) + "%)\n";
   }
   if (user.rpg.spouse) {
-    caption += "├── 💕 Spouse: @" + user.rpg.spouse.split("@")[0] + "\n";
+    caption += "│ 💕 Spouse: @" + user.rpg.spouse.split("@")[0] + "\n";
   }
   if (user.clanId) {
-    caption += "├── 🏛️ Clan: " + user.clanId + "\n";
+    caption += "│ 🏛️ Clan: " + user.clanId + "\n";
   }
   if (user.registeredAt) {
-    caption += "├── 📝 Registered: " + new Date(user.registeredAt).toLocaleDateString("id-ID") + "\n";
+    caption += "│ 📝 Registered: " + new Date(user.registeredAt).toLocaleDateString("id-ID") + "\n";
   }
-  caption += "├──\n";
+  caption += "│\n";
 
   // Unlocked Features
   if (user.unlockedFeatures && user.unlockedFeatures.length > 0) {
     caption += "├──「 *Fitur Premium* 」\n";
     user.unlockedFeatures.forEach(fitur => {
-      caption += "├── 🔓 " + fitur + "\n";
+      caption += "│ 🔓 " + fitur + "\n";
     });
-    caption += "├──\n";
+    caption += "│\n";
   }
 
   // Inventory items
@@ -218,9 +218,9 @@ async function handler(m, { sock }) {
     if (invItems.length > 0) {
       caption += "├──「 *Inventory* 」\n";
       invItems.forEach(([item, qty]) => {
-        caption += "├── " + item.charAt(0).toUpperCase() + item.slice(1) + ": " + qty + "\n";
+        caption += "" + item.charAt(0).toUpperCase() + item.slice(1) + ": " + qty + "\n";
       });
-      caption += "├──\n";
+      caption += "│\n";
     }
   }
 

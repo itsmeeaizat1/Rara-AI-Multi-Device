@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
         const query = m.text?.trim() || m.args?.join(" ")?.trim() || ""
 
         if (!query) {
-            const usageText = `╭──「 Anime Search 」\n├── ❌ *Masukkan nama anime!*\n├── \n├── 💡 *Penggunaan:* ${pluginConfig.usage}\n├── 📝 *Contoh:* ${pluginConfig.example}\n╰──────────❀`
+            const usageText = `╭──「 Anime Search 」\n│ ❌ *Masukkan nama anime!*\n│\n│ 💡 *Penggunaan:* ${pluginConfig.usage}\n│ 📝 *Contoh:* ${pluginConfig.example}\n╰──────────❀`
             return m.reply(usageText)
         }
 
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
 
         if (!animeList || animeList.length === 0) {
             if (m.react) await m.react("❌")
-            const notFoundText = `╭──「 Anime Search 」\n├── ❌ Tidak ditemukan hasil untuk: *${query}*\n╰──────────❀`
+            const notFoundText = `╭──「 Anime Search 」\n│ ❌ Tidak ditemukan hasil untuk: *${query}*\n╰──────────❀`
             return m.reply(notFoundText)
         }
 
@@ -58,11 +58,11 @@ async function handler(m, { sock }) {
                 synopsis = synopsis.slice(0, 100) + '...'
             }
 
-            listText += `├── ${index + 1}. ${title} (${year})\n`
-            listText += `├── ⭐ ${score} | ${episodes} eps | ${status}\n`
-            listText += `├── ${synopsis}\n`
+            listText += `│ ${index + 1}. ${title} (${year})\n`
+            listText += `│ ⭐ ${score} | ${episodes} eps | ${status}\n`
+            listText += `│ ${synopsis}\n`
             if (index < top5.length - 1) {
-                listText += `├──\n`
+                listText += `│\n`
             }
         })
         listText += "╰──────────❀"
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
     } catch (error) {
         console.error("[animev2] error:", error?.message || error)
         if (m.react) await m.react("❌")
-        const errorText = `╭──「 Error 」\n├── ❌ Terjadi kesalahan saat mencari anime.\n├── ${error.response?.data?.message || error.message || 'Unknown error'}\n╰──────────❀`
+        const errorText = `╭──「 Error 」\n│ ❌ Terjadi kesalahan saat mencari anime.\n│ ${error.response?.data?.message || error.message || 'Unknown error'}\n╰──────────❀`
         return m.reply(errorText)
     }
 }
