@@ -382,3 +382,23 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - Strategy: SaveNow API (primary) → AIO scraper (fallback)
 - Session 3 menit (link disimpan sementara saat user pilih format)
 - Contoh: `.alldl https://youtu.be/xxx` → klik tombol → download
+
+## 📊 Auto Report Harian
+
+- `.autoreport <on/off/status/now> [HH:MM]` — Auto daily report ke owner
+- Alias: `.ar`, `.laporan`
+- Tiap hari di jam tertentu, bot kirim ringkasan ke owner via DM
+- Isi: total user, user baru hari ini, total grup, command terpopuler, error count, uptime, memory
+- Default: 23:00 WIB
+- Contoh: `.autoreport on 23:00`
+
+## 🎂 Auto Birthday Reminder
+
+- `.autoulah <on/off/status/now> [HH:MM]` — Auto birthday reminder (owner)
+- Alias: `.autobday`, `.autobirthday`
+- Cek tiap hari, kirim ucapan selamat ulang tahun ke user yang ultah
+- Default cek: 08:00 WIB
+- `.setultah DD-MM` atau `DD-MM-YYYY` — User set tanggal lahir
+- Alias: `.setbirthday`, `.ultah`
+- Bot kirim ucapan via DM ke user yang ultah hari ini
+- Contoh: `.autoulah on 08:00`, `.setultah 15-08-2005`

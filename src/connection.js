@@ -24,6 +24,8 @@ import {
   isLidConverted,
 } from "./lib/nova-lid.js";
 import { initAutoBackup } from "./lib/nova-auto-backup.js";
+import { initAutoReport } from "./lib/nova-auto-report.js";
+import { initAutoBirthday } from "./lib/nova-auto-birthday.js";
 import { getAuthKey, verifyAuth, getOwnerContact } from "./lib/auth/auth.js";
 import { trackMessage as pulseTrack } from "../plugins/future/autopulse.js";
 const groupCache = new NodeCache({ stdTTL: 5 * 60, useClones: false });
@@ -654,6 +656,16 @@ async function startConnection(options = {}) {
 
       try {
         initAutoBackup(sock);
+      try {
+        initAutoReport(sock);
+      } catch (e) {
+        colors.logger.debug("report", "skipped: " + e.message);
+      }
+      try {
+        initAutoBirthday(sock);
+      } catch (e) {
+        colors.logger.debug("birthday", "skipped: " + e.message);
+      }
       } catch (e) {
         colors.logger.debug("backup", "skipped: " + e.message);
       }
