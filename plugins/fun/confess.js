@@ -5,7 +5,7 @@
 
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 function trackConfess(senderJid, targetJid, isAnonim) {
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
   if (!rawNumber || !message) {
     return m.reply(
       `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n` +
-      `│ ❌ Format salah!\n\n` +
+      `│ Format salah nih!\n\n` +
       `  *ᴀɴᴏɴɪᴍ:*\n│ \`${m.prefix}confess nomor|pesan\`\n` +
       `  *ɴᴏɴ-ᴀɴᴏɴɪᴍ:*\n│ \`${m.prefix}confess nomor|pesan|nama\`\n\n` +
       `╰──────────❀`
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
   if (targetNumber.length < 10 || targetNumber.length > 15) {
     return m.reply(
       `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n` +
-      `│ ❌ Nomor tujuan nggak valid!\n\n` +
+      `│ Nomor tujuan gak valid nih!\n\n` +
       `╰──────────❀`
     );
   }
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
   if (message.length < 5) {
     return m.reply(
       `╭──「 *ᴄᴏɴꜰᴇss* 」\n\n` +
-      `│ ❌ Pesan kependekan! Minimal 5 karakter.\n\n` +
+      `│ Pesan kependekan nih! Minimal 5 karakter.\n\n` +
       `╰──────────❀`
     );
   }

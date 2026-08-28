@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Berita Lengkap — 10 sumber berita Indonesia via Andaraz API
 // Source: antaranews, bbc, beritajakarta, bola, cnn, detik, idx, kompas, okezone, sindonews
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "beritalengkap",
@@ -51,7 +51,7 @@ async function fetchBerita(sourceKey) {
 
   const data = await res.json();
   if (!data.status) {
-    throw new Error(data.message || "Gagal mengambil berita");
+    throw new Error(data.message || "Gagal ambil berita nih");
   }
 
   const articles = data.data || data.result || [];

@@ -3,6 +3,7 @@
 // Disimpan di db.setting("confesswall") per-grup
 
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "confesswall",
@@ -82,7 +83,7 @@ async function handler(m, { sock }) {
       const text = args.slice(1).join(" ").trim();
       if (!text || text.length < 5) {
         let msg = buildHeader();
-        msg += `│ ❌ Pesan kependekan! Minimal 5 karakter.\n`;
+        msg += `│ Pesan kependekan nih! Minimal 5 karakter.\n`;
         msg += `│ \`${m.prefix}confesswall post <confess kamu>\`\n`;
         msg += buildFooter();
         await m.reply(msg);
@@ -90,7 +91,7 @@ async function handler(m, { sock }) {
       }
       if (text.length > 500) {
         let msg = buildHeader();
-        msg += `│ ❌ Pesan kepanjangan! Maksimal 500 karakter.\n`;
+        msg += `│ Pesan kepanjangan nih! Maksimal 500 karakter.\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -157,7 +158,7 @@ async function handler(m, { sock }) {
       const post = (wall.posts || []).find((p) => p.id === id);
       if (!post) {
         let msg = buildHeader();
-        msg += `│ ❌ Post #${id} tidak ditemukan!\n`;
+        msg += `│ Post #${id} gak nemu nih!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -200,7 +201,7 @@ async function handler(m, { sock }) {
 
       if (!post) {
         let msg = buildHeader();
-        msg += `│ ❌ Post #${id} tidak ditemukan!\n`;
+        msg += `│ Post #${id} gak nemu nih!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -270,7 +271,7 @@ async function handler(m, { sock }) {
 
       if (!post) {
         let msg = buildHeader();
-        msg += `│ ❌ Post #${id} tidak ditemukan!\n`;
+        msg += `│ Post #${id} gak nemu nih!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -356,7 +357,7 @@ async function handler(m, { sock }) {
       const post = (wall.posts || []).find((p) => p.id === id);
       if (!post) {
         let msg = buildHeader();
-        msg += `│ ❌ Post #${id} tidak ditemukan!\n`;
+        msg += `│ Post #${id} gak nemu nih!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;
@@ -384,7 +385,7 @@ async function handler(m, { sock }) {
       const idx = (wall.posts || []).findIndex((p) => p.id === id);
       if (idx === -1) {
         let msg = buildHeader();
-        msg += `│ ❌ Post #${id} tidak ditemukan!\n`;
+        msg += `│ Post #${id} gak nemu nih!\n`;
         msg += buildFooter();
         await m.reply(msg);
         return;

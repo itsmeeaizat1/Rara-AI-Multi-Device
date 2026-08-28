@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pohon",
@@ -83,7 +83,7 @@ Aturan:
     await m.react("🐣");
   } catch (error) {
     console.error("pohon error:", error);
-    m.reply(claraWrap("Pohon", `Gagal: ${error.message || "error"}`));
+    m.reply(novaError("Pohon", `Gagal nih: ${error.message || "error"}`));
   }
 
   return { handled: true };

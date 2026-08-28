@@ -2,7 +2,7 @@
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 
-import {  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gag",
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
 
     const data = res.data;
     if (!data.status || !data.result) {
-      return m.reply(claraWrap("gag", "⚠️ Gagal mengambil informasi Grow a Garden saat ini."));
+      return m.reply(novaError("GAG", "Gagal ambil info Grow a Garden nih"));
     }
 
     const r = data.result;
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
 
   } catch (error) {
     console.error("[GAG Info]", error.message);
-    m.reply(claraWrap("gag", "😔 Terjadi kesalahan saat mengambil data GAG."));
+    m.reply(novaError("GAG", "Ada error nih, coba lagi ya"));
   }
 }
 

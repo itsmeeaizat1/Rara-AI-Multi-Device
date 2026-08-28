@@ -2,7 +2,7 @@
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 
-import {  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "harilibur",
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
 
     const data = res.data;
     if (!data.status || !data.result) {
-      return m.reply(claraWrap("harilibur", "⚠️ Gagal mengambil informasi hari libur saat ini."));
+      return m.reply(novaError("HariLibur", "Gagal ambil info hari libur nih"));
     }
 
     const r = data.result;
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
 
   } catch (error) {
     console.error("[Hari Libur]", error.message);
-    m.reply(claraWrap("harilibur", "😔 Terjadi kesalahan saat mengambil data hari libur."));
+    m.reply(novaError("HariLibur", "Ada error nih, coba lagi ya"));
   }
 }
 

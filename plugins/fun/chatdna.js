@@ -5,7 +5,7 @@
 
 import fs from "fs";
 import path from "path";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const DB_FILE = path.join(process.cwd(), "database", "chat_dna.json");
 
@@ -572,7 +572,7 @@ async function handler(m, { sock }) {
       if (!result) {
         const fail = claraWrap(
           "DNA Match",
-          "Salah satu user belum cukup data chat (minimal 5 pesan). Coba lagi nanti setelah mereka lebih aktif."
+          "Salah satu user belum cukup data chat nih (minimal 5 pesan). Coba lagi setelah mereka lebih aktif ya"
         );
         await m.reply( fail, { commandName: "dnamatch" });
         await m.react("🐣");

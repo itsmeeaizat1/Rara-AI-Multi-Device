@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "mbti",
@@ -78,7 +78,7 @@ async function handler(m, { sock, args }) {
       await m.react("🕒");
       try {
         const res = await apiGet("/questions?locale=en");
-        if (res.status !== 200 || !res.data?.questions) throw new Error("Gagal mengambil pertanyaan");
+        if (res.status !== 200 || !res.data?.questions) throw new Error("Gagal ambil pertanyaan nih");
 
         sessions.set(sender, {
           questions: res.data.questions,
@@ -101,7 +101,7 @@ async function handler(m, { sock, args }) {
         await m.react("🐣");
       } catch (e) {
         console.error("[MBTI] Error:", e.message);
-        await m.reply(claraWrap("mbti", `Gagal memulai test MBTI!\n\nError: ${e.message}`));
+        await m.reply(novaError("MBTI", `Gagal mulai test MBTI nih: ${e.message}`));
       }
       return;
     }
@@ -141,7 +141,7 @@ async function handler(m, { sock, args }) {
         save: false,
       });
 
-      if (res.status !== 200 || !res.data?.result) throw new Error("Gagal menghitung hasil");
+      if (res.status !== 200 || !res.data?.result) throw new Error("Gagal hitung hasil nih");
 
       const r = res.data.result;
       const ti = r.typeInfo || {};
@@ -187,7 +187,7 @@ async function handler(m, { sock, args }) {
       await m.react("🐣");
     } catch (e) {
       console.error("[MBTI] Calculate error:", e.message);
-      await m.reply(claraWrap("mbti", `Gagal menghitung hasil!\n\nError: ${e.message}`));
+      await m.reply(novaError("MBTI", `Gagal hitung hasil nih: ${e.message}`));
     }
     sessions.delete(sender);
     return;
