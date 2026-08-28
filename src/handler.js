@@ -273,6 +273,75 @@ async function messageHandler(msg, sock) {
     }
   }
 
+
+  // === Quiz Verification Check (anti-spam bot) ===
+  // Check if sender has pending quiz verification in this group
+  if (m.isGroup && !m.fromMe && m.body && !m.isNewsletter) {
+    try {
+      const { checkMessageVerification } = await import("./lib/nova-quiz-verify.js");
+      const verifyResult = checkMessageVerification(m.chat, m.sender, m.body);
+      if (verifyResult.wasPending) {
+        if (verifyResult.verified) {
+          // Verified successfully — let them know
+          await sock.sendMessage(m.chat, {
+            text: "✅ Verifikasi berhasil! Selamat datang di grup.",
+          }, { quoted: m });
+          return; // Don't process further this message
+        } else if (verifyResult.kicked) {
+          // Max attempts reached — kick
+          try {
+            await sock.groupParticipantsUpdate(m.chat, [m.sender], "remove");
+          } catch {}
+          await sock.sendMessage(m.chat, {
+            text: "❌ Gagal verifikasi 3x! Member dikeluarkan.",
+          });
+          return;
+        } else if (verifyResult.timedOut) {
+          try {
+            await sock.groupParticipantsUpdate(m.chat, [m.sender], "remove");
+          } catch {}
+          await sock.sendMessage(m.chat, {
+            text: "⏰ Waktu verifikasi habis! Member dikeluarkan.",
+          });
+          return;
+        } else if (verifyResult.shouldDelete) {
+          // Wrong answer — delete message and remind
+          try {
+            await sock.sendMessage(m.chat, { delete: m.key });
+          } catch {}
+          await sock.sendMessage(m.chat, {
+            text: verifyResult.message,
+          });
+          return;
+        }
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("quizverify", e.message);
+    }
+  }
+
+  // === Activity Tracker ===
+  if (m.isGroup && !m.fromMe && !m.isNewsletter) {
+    try {
+      const { trackActivity } = await import("./lib/nova-activity-tracker.js");
+      trackActivity(m, { messageType: m.type || "text" });
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("activity", e.message);
+    }
+  }
+
+  // === Auto-Translate ===
+  if (m.isGroup && !m.isCommand && !m.fromMe && !m.isNewsletter && m.body && m.body.length >= 5) {
+    try {
+      const { handleAutoTranslateMessage } = await import("./lib/nova-autotranslate.js");
+      if (typeof handleAutoTranslateMessage === "function") {
+        await handleAutoTranslateMessage(m, sock);
+      }
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("autotranslate", e.message);
+    }
+  }
+
   // AI Grup: catat aktivitas grup + bot nimbrung otomatis (skip in self mode)
   if (!m.isCommand && !m.fromMe && !m.isNewsletter && m.isGroup && !__novaSelfModeSkip) {
     try {
@@ -918,6 +987,16 @@ async function groupHandler(update, sock) {
               metadata = await sock.groupMetadata(update.id);
             } catch {}
             await sendWelcomeMessage(sock, update.id, participantJid, metadata);
+
+        // === Quiz Verification for new member ===
+        try {
+          const { handleNewMemberQuiz } = await import("./lib/nova-quiz-verify.js");
+          if (typeof handleNewMemberQuiz === "function") {
+            await handleNewMemberQuiz(sock, update.id, [participantJid]);
+          }
+        } catch (e) {
+          if (config.dev?.debugLog) logger.error("quizverify-join", e.message);
+        }
           }
         } catch {}
 
