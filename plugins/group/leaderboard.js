@@ -11,12 +11,12 @@ import {
 } from "../../src/lib/nova-activity-tracker.js";
 
 const pluginConfig = {
-  name: "leaderboard",
-  alias: ["leaderboard", "lb", "topaktif"],
+  name: "aktifitas",
+  alias: ["aktifitas", "aktif", "topaktif", "activity"],
   category: "group",
   description: "Papan peringkat keaktifan member grup minggu ini",
-  usage: ".leaderboard [on/off|me|reset|stats]",
-  example: ".leaderboard",
+  usage: ".aktifitas [on/off|me|reset|stats]",
+  example: ".aktifitas",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -54,7 +54,7 @@ async function handler(m, { sock, args = [] }) {
   };
 
   try {
-    // 1. .leaderboard on / off — Toggle tracking (admin only)
+    // 1. .aktifitas on / off — Toggle tracking (admin only)
     if (subCommand === "on" || subCommand === "off" || subCommand === "enable" || subCommand === "disable") {
       const isAdmin = await checkAdmin();
       if (!isAdmin) {
@@ -81,12 +81,12 @@ async function handler(m, { sock, args = [] }) {
         bracketBox("⚙️", "Status Activity Tracker", [
           `Status : *${statusStr}*`,
           descStr,
-        ]) + "\n" + tipText("Ketik .leaderboard untuk melihat papan peringkat.")
+        ]) + "\n" + tipText("Ketik .aktifitas untuk melihat papan peringkat.")
       );
       return;
     }
 
-    // 2. .leaderboard me — Show sender rank and stats
+    // 2. .aktifitas me — Show sender rank and stats
     if (subCommand === "me" || subCommand === "saya" || subCommand === "my") {
       const userRank = getRank(m.chat, m.sender);
 
@@ -128,7 +128,7 @@ async function handler(m, { sock, args = [] }) {
       return;
     }
 
-    // 3. .leaderboard reset — Reset group leaderboard (admin only)
+    // 3. .aktifitas reset — Reset group leaderboard (admin only)
     if (subCommand === "reset" || subCommand === "clear") {
       const isAdmin = await checkAdmin();
       if (!isAdmin) {
@@ -154,7 +154,7 @@ async function handler(m, { sock, args = [] }) {
       return;
     }
 
-    // 4. .leaderboard stats — Show group activity stats
+    // 4. .aktifitas stats — Show group activity stats
     if (subCommand === "stats" || subCommand === "stat" || subCommand === "info") {
       const stats = getWeeklyStats(m.chat);
       const topName = stats.topMember ? stats.topMember.name || stats.topMember.jid.split("@")[0] : "-";
@@ -181,12 +181,12 @@ async function handler(m, { sock, args = [] }) {
 
       await m.reply(
         bracketBox("📈", "Statistik Keaktifan Grup", lines) +
-        "\n" + tipText("Gunakan .leaderboard untuk melihat top 10 member.")
+        "\n" + tipText("Gunakan .aktifitas untuk melihat top 10 member.")
       );
       return;
     }
 
-    // 5. Default: .leaderboard — Top 10 most active members
+    // 5. Default: .aktifitas — Top 10 most active members
     const status = getActivityStatus(m.chat);
     if (!status.trackingEnabled) {
       if (typeof m.react === "function") {
@@ -195,7 +195,7 @@ async function handler(m, { sock, args = [] }) {
       await m.reply(
         bracketBox("⚠️", "Leaderboard Nonaktif", [
           "Pelacakan keaktifan di grup ini sedang dinonaktifkan.",
-          "Admin dapat mengaktifkannya kembali dengan .leaderboard on",
+          "Admin dapat mengaktifkannya kembali dengan .aktifitas on",
         ])
       );
       return;
@@ -228,7 +228,7 @@ async function handler(m, { sock, args = [] }) {
 
     await m.reply(
       bracketBox("🏆", "Leaderboard Keaktifan Minggu Ini", lines) +
-      "\n" + tipText("Poin: 1/pesan, 2/command, 5/media | .leaderboard me untuk rank Anda")
+      "\n" + tipText("Poin: 1/pesan, 2/command, 5/media | .aktifitas me untuk rank Anda")
     );
 
   } catch (error) {

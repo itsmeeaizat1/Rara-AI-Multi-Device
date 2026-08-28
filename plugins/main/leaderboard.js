@@ -5,8 +5,8 @@ import fs from 'fs'
 import path from 'path'
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-    name: "leaderboard2",
-    alias: ["leaderboard2", "topkoin", "topexp", "topenergi", "toplevel", "topbalance"],
+    name: "leaderboard",
+    alias: ["leaderboard", "topkoin", "topexp", "topenergi", "toplevel", "topbalance"],
     category: 'main',
     description: 'Lihat leaderboard global (koin, exp, energi)',
     usage: '.leaderboard',
