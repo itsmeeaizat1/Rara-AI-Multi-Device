@@ -36,15 +36,15 @@ async function handler(m, { sock }) {
     help += `│ 💡 *Contoh:* \`${m.prefix}stickerfilter blur\`\n`;
     help += "│ (Reply sticker dulu)\n";
     help += "╰──────────❀";
-    return m.reply(help, "stickerfilter");
+    return m.reply(novaGuide("Sticker Filter", "Mau filter sticker? Pilih filter-nya ya!", `${m.prefix}stickerfilter blur`));
   }
 
   if (!FILTERS.includes(filter)) {
-    return m.reply(`╭──「 🎨 Sticker Filter 」\n│ ❌ Filter tidak valid\n│ Pilih: ${FILTERS.join(", ")}\n╰──────────❀`, "stickerfilter");
+    return m.reply(novaNoInput("Sticker Filter", `Filternya gak valid, pilih: ${FILTERS.join(", ")}`, `${m.prefix}stickerfilter blur`));
   }
 
   if (!m.quoted || !m.quoted.sticker) {
-    return m.reply("╭──「 🎨 Sticker Filter 」\n│ ❌ Reply sticker dulu\n│ Yang mau difilter\n╰──────────❀", "stickerfilter");
+    return m.reply(novaNoQuoted("Sticker Filter", "sticker"));
   }
 
   await m.react("🕒");
@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
   try {
     const stickerBuffer = await m.quoted.download();
     if (!stickerBuffer || stickerBuffer.length < 100) {
-      return m.reply("╭──「 🎨 Sticker Filter 」\n│ ❌ Gagal download sticker\n│ Coba lagi nanti\n╰──────────❀", "stickerfilter");
+      return m.reply(novaError("Sticker Filter", "Gagal download sticker-nya"));
     }
 
     const apiUrl = `https://api.siputzx.my.id/api/canvas/${filter}?image`;
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
 
     const buf = Buffer.from(res.data);
     if (buf.length < 100) {
-      return m.reply("╭──「 🎨 Sticker Filter 」\n│ ❌ Gagal apply filter\n│ Coba lagi nanti\n╰──────────❀", "stickerfilter");
+      return m.reply(novaError("Sticker Filter", "Gagal apply filter ke sticker"));
     }
 
     const exifBuf = await addExifToWebp(buf, "Nova AI", "Sticker Filter");

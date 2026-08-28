@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // spotifyv2.js — Info track Spotify via spotify-url-info (parse URL)
 import spotifyUrlInfo from 'spotify-url-info'
+import { novaError, novaEmpty, novaNoInput, novaGuide } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
     name: "spotifyv2",
@@ -23,17 +24,7 @@ async function handler(m, { sock }) {
         const url = (m.text || "").trim()
 
         if (!url || !url.includes("spotify.com")) {
-            return m.reply(
-                "╭──「 Spotify v2 」\n" +
-                "│ Info detail track dari URL Spotify\n" +
-                "│\n" +
-                "│ 📌 *Cara Pakai:*\n" +
-                "" + pluginConfig.usage + "\n" +
-                "│\n" +
-                "│ 💡 *Contoh:*\n" +
-                "" + pluginConfig.example + "\n" +
-                "╰──────────❀"
-            )
+            return m.reply(novaGuide('Spotify v2', 'Kirim link Spotify track yang mau kamu intip detailnya ya!', pluginConfig.example))
         }
 
         await m.react("🕒")
@@ -43,11 +34,7 @@ async function handler(m, { sock }) {
 
         if (!data) {
             await m.react("🐣")
-            return m.reply(
-                "╭──「 Spotify v2 」\n" +
-                "│ Gagal mengambil info track.\n" +
-                "╰──────────❀"
-            )
+            return m.reply(novaEmpty('Spotify v2', 'Gak dapet info track-nya nih 🧐 Pastiin link Spotify valid ya!'))
         }
 
         const track = data.type === "track" ? data : (data.tracks?.items?.[0] || data)
@@ -97,12 +84,7 @@ async function handler(m, { sock }) {
     } catch (e) {
         console.error("[spotifyv2] error:", e.message)
         await m.react("🐣")
-        return m.reply(
-            "╭──「 Error 」\n" +
-            "│ Gagal mengambil info Spotify.\n" +
-            "" + (e.message || "Terjadi kesalahan") + "\n" +
-            "╰──────────❀"
-        )
+        return m.reply(novaError('Spotify v2', e.message))
     }
 }
 

@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // rss.js — Generic RSS feed reader (rss-parser, no API key)
 import RSSParser from 'rss-parser'
+import { novaGuide, novaEmpty, novaError } from "../../src/lib/nova-menu-style.js"
 
 const pluginConfig = {
     name: "rss",
@@ -23,28 +24,11 @@ async function handler(m, { sock }) {
         const url = (m.text || "").trim()
 
         if (!url || (!url.startsWith("http://") && !url.startsWith("https://"))) {
-            return m.reply(
-                "╭──「 RSS Reader 」\n" +
-                "│ Baca RSS feed dari URL mana pun\n" +
-                "│\n" +
-                "│ 📌 *Cara Pakai:*\n" +
-                "" + pluginConfig.usage + "\n" +
-                "│\n" +
-                "│ 💡 *Contoh:*\n" +
-                "" + pluginConfig.example + "\n" +
-                "│\n" +
-                "│ Bisa juga pakai shortcut:\n" +
-                "│ .rss detik = Detik News\n" +
-                "│ .rss kompas = Kompas\n" +
-                "│ .rss cnn = CNN Indonesia\n" +
-                "│ .rss tribun = Tribun News\n" +
-                "╰──────────❀"
-            )
+            return m.reply(novaGuide("RSS Reader", "Mau baca RSS feed? Kirim URL-nya ya! Bisa juga pakai shortcut: detik, kompas, cnn, tribun.", `${m.prefix}rss detik`))
         }
 
         await m.react("🕒")
 
-        // Shortcut RSS Indonesia
         const SHORTCUTS = {
             detik: "https://rss.detik.com/index.php/detiknews",
             kompas: "https://www.kompas.com/getrss",
@@ -65,18 +49,14 @@ async function handler(m, { sock }) {
 
         if (!feed.items || !feed.items.length) {
             await m.react("🐣")
-            return m.reply(
-                "╭──「 RSS Reader 」\n" +
-                "│ Feed kosong atau tidak bisa dibaca.\n" +
-                "╰──────────❀"
-            )
+            return m.reply(novaEmpty("RSS Reader", "Feed-nya kosong atau gak bisa dibaca nih"))
         }
 
         const feedTitle = feed.title || "RSS Feed"
         const items = feed.items.slice(0, 8)
 
         let text = "╭──「 " + feedTitle + " 」\n"
-        text += "" + items.length + " artikel terbaru\n"
+        text += "│ " + items.length + " artikel terbaru\n"
         text += "│\n"
 
         items.forEach((item, i) => {
@@ -86,9 +66,9 @@ async function handler(m, { sock }) {
             }) : ""
             const link = item.link || ""
 
-            text += "" + (i + 1) + ". " + title + "\n"
-            if (pubDate) text += "" + pubDate + "\n"
-            if (link) text += "" + link + "\n"
+            text += "│ " + (i + 1) + ". " + title + "\n"
+            if (pubDate) text += "│   " + pubDate + "\n"
+            if (link) text += "│   " + link + "\n"
             if (i < items.length - 1) text += "│\n"
         })
 
@@ -99,12 +79,7 @@ async function handler(m, { sock }) {
     } catch (e) {
         console.error("[rss] error:", e.message)
         await m.react("🐣")
-        return m.reply(
-            "╭──「 Error 」\n" +
-            "│ Gagal membaca RSS feed.\n" +
-            "" + (e.message || "Terjadi kesalahan") + "\n" +
-            "╰──────────❀"
-        )
+        return m.reply(novaError("RSS Reader", e.message))
     }
 }
 

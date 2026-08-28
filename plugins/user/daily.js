@@ -44,9 +44,9 @@ async function handler(m, { sock }) {
     return m.reply(
       "╭──「 🎁 Daily Claim 」\n" +
       "│\n" +
-      "│ 🕖 Cooldown\n" +
-      "│ Kamu sudah klaim hari ini\n" +
-      "│ Tunggu: *" + hours + " jam " + minutes + " menit* lagi\n" +
+      "│ 🕖 Sabar ya, cooldown nih!\n" +
+      "│ Udah klaim hari ini 👀\n" +
+      "│ Tunggu *" + hours + " jam " + minutes + " menit* lagi ya\n" +
       "╰──────────❀"
     );
   }
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
 
   let txt = "╭──「 🎁 Daily Claim 」\n";
   txt += "│\n";
-  txt += "" + greeting + ", @"+ m.sender.split("@")[0] +"!\n";
+  txt += "* " + greeting + ", @" + m.sender.split("@")[0] + "!* 👋\n";
   txt += "│ 🔥 Streak: *" + streak + " hari*\n";
   if (streakMultiplier > 1) {
     txt += "│ ⚡ Bonus Streak: *" + (Math.round(streakMultiplier * 100) / 100) + "x*\n";
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
   if (diamondsReward > 0) txt += "│ ♦️ Diamonds: *+" + diamondsReward + "*\n";
   txt += "│ 🥤 Potion: *+" + potionReward + "*\n";
   txt += "│\n";
-  txt += "│ 💡 Klaim lagi besok untuk lanjutkan streak!\n";
+  txt += "│ 💡 Besok klaim lagi ya, jangan sampai putus streak-nya!\n";
   txt += "╰──────────❀";
 
   await m.react("🐣");

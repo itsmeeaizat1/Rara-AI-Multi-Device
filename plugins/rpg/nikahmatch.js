@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
     if (!cinta.spouse) {
       return m.reply(
         `╭──「 *ʀᴘɢ ɴɪᴋᴀʜ* 」\n` +
-        `│ ❌ Kamu belum berpacaran!\n` +
+        `│ ❌ Belum punya pacar, mau nikah sama siapa? 🗿\n` +
         `│ Gunakan \`${m.prefix}rpgcouple @tag\` dulu\n\n` +
         `╰──────────❀`
       );

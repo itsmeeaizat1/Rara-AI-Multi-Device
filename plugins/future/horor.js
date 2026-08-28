@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
   const story = await generateHoror(names);
 
   if (!story) {
-    return m.reply("╭──「 👻 Horror Story 」\n│ ❌ Gagal generate cerita\n│ Coba lagi nanti\n╰──────────❀", "horor");
+    return m.reply("╭──「 👻 Horror Story 」\n│ ❌ Yah, gagal bikin ceritanya nih 😵\n│ Coba lagi yuk!\n╰──────────❀", "horor");
   }
 
   const header = "👻 *ʜᴏʀʀᴏʀ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";

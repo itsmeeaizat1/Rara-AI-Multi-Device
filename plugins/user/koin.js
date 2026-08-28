@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
   txt += "│\n";
   txt += "│ 👤 User: *" + targetName + "*\n";
   txt += "│ 💰 Koin: *" + formatKoin(user.koin || 0) + "*\n";
-  txt += "│ 💎 Status: " + (isOwner ? "Owner" : isPremium ? "Premium" : "Free") + "\n";
+  txt += "│ 💎 Status: *" + (isOwner ? "👑 Owner" : isPremium ? "⭐ Premium" : "🆓 Free") + "*\n";
 
   if (isSelf && !isOwner) {
     txt += "│\n";
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     txt += "│ `.buyenergi <jml>` (1 = 100 koin)\n";
     txt += "│ `.buyfitur` (1 = 3000 koin)\n";
     txt += "│\n";
-    txt += "│ 🎮 Main game untuk dapat koin!\n";
+    txt += "│ 🎮 Mau tambah koin? Main game aja!\n";
   }
   txt += "╰──────────❀";
 

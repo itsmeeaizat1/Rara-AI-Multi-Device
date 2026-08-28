@@ -1,5 +1,6 @@
 import config from '../../config.js';
 import axios from 'axios';
+import { novaError, novaEmpty, novaNoInput, novaGuide } from '../../src/lib/nova-menu-style.js';
 
 const pluginConfig = {
     name: "rawg",
@@ -21,8 +22,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim();
 
     if (!query) {
-        const usageText = `╭──「 Game Search 」\n│ 📌 *Penggunaan:* ${pluginConfig.usage}\n│ 💡 *Contoh:* ${pluginConfig.example}\n╰──────────❀`;
-        return m.reply(usageText);
+        return m.reply(novaGuide('Game Search', 'Mau nyari info game apa nih? Ketik nama gamenya ya!', pluginConfig.example));
     }
 
     m.react?.('🕒');
@@ -36,8 +36,7 @@ async function handler(m, { sock }) {
 
         if (!games.length) {
             m.react?.('🐣');
-            const noResultText = `╭──「 Game Search 」\n│ ❌ Game "${query}" tidak ditemukan.\n╰──────────❀`;
-            return m.reply(noResultText);
+            return m.reply(novaEmpty('Game Search', `Gak nemu game "${query}" 🧐`));
         }
 
         const list = games.slice(0, 5);
@@ -89,8 +88,7 @@ async function handler(m, { sock }) {
     } catch (error) {
         m.react?.('🐣');
         const errorMsg = error.response?.data?.error || error.message || 'Terjadi kesalahan saat menghubungi API RAWG.';
-        const errorText = `╭──「 Game Search Error 」\n│ ❌ ${errorMsg}\n╰──────────❀`;
-        return m.reply(errorText);
+        return m.reply(novaError('Game Search', errorMsg));
     }
 }
 
