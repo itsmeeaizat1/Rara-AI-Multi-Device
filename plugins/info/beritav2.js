@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT - BERITAV2 PLUGIN
 import axios from 'axios';
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import * as cheerio from 'cheerio';
 
 const pluginConfig = {
@@ -158,8 +159,8 @@ function renderNewsBox(sourceName, items) {
 function renderErrorBox(sourceName, errorMsg) {
     return [
         "╭──「 Error Berita 」",
-        `│ ❌ Gagal mengambil berita ${sourceName ? `dari ${sourceName}` : ""}`,
-        `│ Detail: ${errorMsg || "Terjadi kesalahan sistem"}`,
+        `│ Gagal ambil berita ${sourceName ? `dari ${sourceName}` : ""}`,
+        `│ Detail: ${errorMsg || "Ada error nih"}`,
         "│ ",
         "│ Silakan coba sumber lain: detik, kompas, cnn, tribun",
         "╰──────────❀"

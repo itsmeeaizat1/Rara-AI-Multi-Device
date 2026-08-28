@@ -8,7 +8,7 @@ import path from "path";
 import os from "os";
 import { exec } from "child_process";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 import fs2 from "fs";
 const MOOD_DB = path.join(process.cwd(), "database", "moodtrack.json");
@@ -868,7 +868,7 @@ async function handler(m, { sock }) {
     }
 
     if (!mediaBuffer) {
-      await m.reply(claraWrap("Mood Check", "Gagal mengunduh voice note. Coba reply ulang VN-nya."));
+      await m.reply(novaError("MoodCheck", "Gagal download VN nih, coba reply ulang"));
       return;
     }
 

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gempa",
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
     txt += "Sumber: data.bmkg.go.id (API resmi BMKG)";
     return m.reply(claraWrap("gempa", txt));
   } catch (error) {
-    return m.reply(claraWrap("Error", "\u274c " + error.message + "\n\nCoba lagi nanti."));
+    return m.reply(novaError("Gempa", "Ada error nih, coba lagi ya"));
   }
 }
 

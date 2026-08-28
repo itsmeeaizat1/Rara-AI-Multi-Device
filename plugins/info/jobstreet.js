@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // JobStreet — Cari lowongan kerja & lihat detail via Andaraz JobStreet API
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "jobstreet",
@@ -53,7 +53,7 @@ async function getJobDetail(jobId) {
 
   const data = await res.json();
   if (!data.status) {
-    throw new Error(data.message || data.error || "Gagal mengambil detail");
+    throw new Error(data.message || data.error || "Gagal ambil detail nih");
   }
   return data;
 }
@@ -204,7 +204,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     // Handle 403 specifically
     if (errMsg.includes("403")) {
-      errMsg = "JobStreet sedang memblokir permintaan (403). Search endpoint mungkin sementara diblokir. Coba lagi nanti atau gunakan .jobstreet detail <id> untuk lihat lowongan tertentu.";
+      errMsg = "JobStreet lagi blokir nih. Coba lagi nanti atau pakai .jobstreet detail <id>";
     }
 
     m.reply(claraWrap("JobStreet", [
@@ -212,7 +212,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "",
       "Kemungkinan penyebab:",
       "1. JobStreet sedang memblokir API (403)",
-      "2. Keyword tidak valid",
+      "2. Keyword gak valid nih",
       "3. Koneksi timeout",
       "",
       "Tips: Gunakan .jobstreet detail <id> untuk lihat detail lowongan tertentu",

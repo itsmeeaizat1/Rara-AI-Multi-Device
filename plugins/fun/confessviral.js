@@ -71,6 +71,7 @@ function buildMessage(mode, pesan, targetName) {
 if (!global.confessViralData) global.confessViralData = new Map();
 
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 function trackViral(senderJid, targetJid, mode) {
   try {
@@ -129,7 +130,7 @@ async function handler(m, { sock }) {
     if (parts.length < 3) {
       await m.reply(
         `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n` +
-        `│ ❌ Format salah! Butuh 3 bagian\n` +
+        `│ Format salah! Butuh 3 bagian nih\n` +
         `│ \`${m.prefix}confessviral nomor|mode|pesan\`\n\n` +
         `╰──────────❀`
       );
@@ -144,7 +145,7 @@ async function handler(m, { sock }) {
     if (!number) {
       await m.reply(
         `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n` +
-        `│ ❌ Nomor tujuan kosong!\n\n` +
+        `│ Nomor tujuan kosong nih!\n\n` +
         `╰──────────❀`
       );
       return;
@@ -152,7 +153,7 @@ async function handler(m, { sock }) {
 
     if (!MODES[mode]) {
       let txt = `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n`
-      txt += `│ ❌ Mode tidak valid: \`${mode}\`\n\n`;
+      txt += `│ Mode gak valid nih: \`${mode}\`\n\n`;
       txt += `  *ᴍᴏᴅᴇ ᴛᴇʀsᴇᴅɪᴀ:*\n`;
       Object.entries(MODES).forEach(([k, v]) => {
         txt += `│ ${v.emoji} \`${k}\`\n`;
@@ -165,7 +166,7 @@ async function handler(m, { sock }) {
     if (!pesan || pesan.length < 5) {
       await m.reply(
         `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n` +
-        `│ ❌ Pesan kosong atau kependekan! Minimal 5 karakter.\n\n` +
+        `│ Pesan kosong atau kependekan nih! Minimal 5 karakter.\n\n` +
         `╰──────────❀`
       );
       return;

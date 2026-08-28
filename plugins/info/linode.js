@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -49,11 +49,11 @@ Ketik ${prefix}menu untuk kembali`;
     await m.reply(claraWrap("linode", text));
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
-    let text = `╭──「 *Server Error* 」\n│ *ꜱᴛᴀᴛᴜꜱ:* Gagal
+    let text = `╭──「 *Server Error* 」\n│ *Status:* Gagal
 │ *ᴀʟᴀꜱᴀɴ:* ${error.message}
 ╰──────────❀
 
-Coba lagi nanti atau hubungi owner`;
+Coba lagi ya`;
 
     await m.reply( text, "linode");
   }

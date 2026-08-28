@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { GoogleSearch } from "../../src/scraper/google.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -79,7 +79,7 @@ Aturan:
     if (part.text) text += part.text;
   }
 
-  if (!text) throw new Error("AI mengembalikan respon kosong");
+  if (!text) throw new Error("AI balas kosong nih");
 
   // Extract grounding sources if available
   const groundingMetadata = candidate?.groundingMetadata;

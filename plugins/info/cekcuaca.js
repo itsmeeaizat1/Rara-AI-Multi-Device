@@ -5,7 +5,7 @@ import {
   getWeatherStatus,
   resolveWeatherLocation,
 } from "../../src/lib/nova-weather-scheduler.js";
-import {  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "cekcuaca",
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     return await m.reply(claraWrap("cekcuaca", claraWrap(_lines)));
   } catch (error) {
     return m.reply(claraWrap("cekcuaca", [
-        "Gagal mengambil cuaca",
+        "Gagal ambil cuaca nih",
         error.message,
         "",
         `Contoh: ${m.prefix}cekcuaca Jakarta`,

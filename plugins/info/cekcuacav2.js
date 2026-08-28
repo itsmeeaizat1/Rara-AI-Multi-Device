@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // cekcuacav2.js — Cuaca via OpenWeather API (needs API key)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import config from "../../config.js";
 
@@ -41,7 +41,7 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     if (!apiKey) {
       return m.reply(claraWrap("Cuaca v2", [
-        "API key OpenWeather belum diset.",
+        "API key OpenWeather belum diset nih",
         "",
         "Dapatkan gratis di: https://openweathermap.org/api",
         "Set di config.js: openWeatherKey: \"YOUR_KEY\"",

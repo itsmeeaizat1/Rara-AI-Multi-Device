@@ -11,7 +11,7 @@ import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getAllPlugins, getCategories, getCommandsByCategory } from "../../src/lib/nova-plugins.js";
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
-import { claraWrap, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
 
 const pluginConfig = {
@@ -339,7 +339,7 @@ async function handler(m, { sock, config: botConfig, db }) {
       claraWrap("Premium", [
         "Status: *GAGAL*",
         "Alasan: *" + (error.message || "Unknown error") + "*",
-        "Coba lagi nanti atau hubungi owner",
+        "Coba lagi ya",
       ].join("\n")),
       "premium",
     );

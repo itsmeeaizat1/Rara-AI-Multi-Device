@@ -3,7 +3,7 @@ import axios from 'axios'
 import config from '../../config.js'
 import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
 
 const pluginConfig = {
@@ -28,7 +28,7 @@ async function handler(m, { sock }) {
         const res = await f(`https://api.neoxr.eu/api/senja?apikey=${NEOXR_APIKEY}`)
         
         if (!res.status || !res.data?.text) {
-            return m.reply(claraWrap("senja", `❌ Gagal mengambil kata senja`))
+            return m.reply(novaError("Senja", "Gagal ambil kata senja nih"))
         }
         await m.reply(res.data.text)
         m.react('✅')

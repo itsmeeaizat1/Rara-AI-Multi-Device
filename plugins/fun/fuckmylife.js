@@ -3,7 +3,7 @@ import axios from 'axios'
 import config from '../../config.js'
 import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || 'Milik-Bot-NovaMD'
 
 const pluginConfig = {
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
         const data = await f(`https://api.neoxr.eu/api/fml?apikey=${NEOXR_APIKEY}`)
         
         if (!data?.status || !data?.data?.text) {
-            return m.reply(claraWrap("fuckmylife", `❌ Gagal mengambil FML story`))
+            return m.reply(novaError("FML", "Gagal ambil FML story nih"))
         }    
         await m.reply(data.data.text)
         m.react('✅')

@@ -3,7 +3,7 @@ import axios from "axios";
 import config from "../../config.js";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
-import {  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "jadwalbola",
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     }
 
     if (matches.length === 0) {
-      return m.reply(`❌ Tidak ditemukan jadwal untuk: \`${filter}\``);
+      return m.reply(`Gak nemu jadwal untuk: ${filter} nih`);
     }
 
     const grouped = {};

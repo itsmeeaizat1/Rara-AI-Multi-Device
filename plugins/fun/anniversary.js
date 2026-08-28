@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import moment from "moment-timezone";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "anniversary",
@@ -196,13 +196,13 @@ async function handler(m, { sock }) {
     const year = parseInt(parts[2]);
 
     if (isNaN(day) || isNaN(month) || isNaN(year)) {
-      return m.reply(claraWrap("Anniversary", "Format tanggal tidak valid. Gunakan angka: DD/MM/YYYY"));
+      return m.reply(novaError("Anniversary", "Format tanggal gak valid nih! Gunakan: DD/MM/YYYY"));
     }
 
     const anniDate = moment.tz({ day, month, year }, TZ);
 
     if (!anniDate.isValid()) {
-      return m.reply(claraWrap("Anniversary", "Tanggal tidak valid. Cek lagi formatnya: DD/MM/YYYY"));
+      return m.reply(novaError("Anniversary", "Tanggal gak valid nih! Cek format: DD/MM/YYYY"));
     }
 
     if (anniDate.isAfter(moment().tz(TZ), "day")) {
@@ -276,7 +276,7 @@ async function handler(m, { sock }) {
 
       return m.reply(claraWrap("anniversary", txt));
     } catch (e) {
-      return m.reply("Gagal mengambil data anniversary: " + e.message);
+      return m.reply(novaError("Anniversary", "Gagal ambil data nih: " + e.message));
     }
   }
 

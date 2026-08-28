@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
  * .cuacav2 — cek cuaca rinci BMKG-style untuk kota apapun.
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
     return await m.reply(claraWrap("cuacav2", txt));
   } catch (error) {
     return m.reply(
-      "Gagal mengambil data cuaca\n" + error.message + "\n\n" +
+      "Gagal ambil data cuaca nih\n" + error.message + "\n\n" +
       "Contoh: .cuacav2 Jakarta"
     );
   }
