@@ -472,15 +472,15 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## 🏆 Leaderboard Aktivitas Grup
 
-- `.leaderboard` — Tampilkan top 10 member paling aktif minggu ini
-- Alias: `.lb`, `.topaktif`
+- `.aktifitas` — Tampilkan top 10 member paling aktif minggu ini
+- Alias: `.aktif`, `.topaktif`, `.activity`
 - Sistem points: 1 pt/msg, 2 pt/command, 5 pt/media
 - Auto-reset setiap Senin 00:00 WIB
-- `.leaderboard on/off` — aktifkan/nonaktifkan tracking (admin only)
-- `.leaderboard me` — lihat rank dan stats kamu
-- `.leaderboard reset` — reset leaderboard (admin only)
-- `.leaderboard stats` — statistik aktivitas grup mingguan
-- Contoh: `.leaderboard`, `.leaderboard me`, `.leaderboard stats`
+- `.aktifitas on/off` — aktifkan/nonaktifkan tracking (admin only)
+- `.aktifitas me` — lihat rank dan stats kamu
+- `.aktifitas reset` — reset leaderboard (admin only)
+- `.aktifitas stats` — statistik aktivitas grup mingguan
+- Contoh: `.leaderboard`, `.aktifitas me`, `.aktifitas stats`
 
 ## 🌐 Auto-Translate Pesan Grup
 
