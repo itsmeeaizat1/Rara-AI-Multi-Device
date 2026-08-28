@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'pin',
     alias: ["pin"],
@@ -20,11 +20,7 @@ const pluginConfig = {
 
 async function handler(m, { sock, args }) {
     if (!m.quoted || !m.quoted.key || !m.quoted.key.id) {
-        await m.reply(claraWrap("Validasi Gagal", `⚠️ *ᴠᴀʟɪᴅᴀꜱɪ ɢᴀɢᴀʟ*\n\n` +
-            `Reply pesan yang ingin di-pin!\n\n` +
-            `*ᴄᴀʀᴀ ᴘᴇɴɢɢᴜɴᴀᴀɴ:*\n` +
-            `Reply pesan → ketik \`.pin\`\n` +
-            `Optional: \`.pin 24\` (pin 24 jam)`));
+        await m.reply(novaGuide('Pin', 'Reply pesan yang mau di-pin dulu!', '.pin (reply pesan)'));
         return;
     }
     
@@ -58,9 +54,7 @@ async function handler(m, { sock, args }) {
         await m.reply(claraWrap("pin", successMsg))
         
     } catch (error) {
-        await m.reply(claraWrap("Error", `❌ *ᴇʀʀᴏʀ*\n\n` +
-            `Gagal mem-pin pesan.\n` +
-            `_${error.message}_`));
+        await m.reply(novaError('Pin', 'Gagal pin pesan nih'));
     }
 }
 

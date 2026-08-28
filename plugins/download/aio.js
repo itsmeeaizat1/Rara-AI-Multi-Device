@@ -1,8 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { aiodl } from "../../src/scraper/aio.js";
-import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aio",
@@ -25,23 +24,11 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return m.reply( `📥 *ᴀʟʟ ɪɴ ᴏɴᴇ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\n` +
-        `Download dari berbagai platform!\n\n` +
-        `╭──「 🌐 *ᴘʟᴀᴛꜰᴏʀᴍ* 」\n` +
-        `│ • Instagram\n` +
-        `│ • TikTok\n` +
-        `│ • Facebook\n` +
-        `│ • Twitter/X\n` +
-        `│ • YouTube\n` +
-        `│ • Pinterest\n` +
-        `│ • CapCut\n` +
-        `│ • Threads / Reddit\n` +
-        `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:* ${m.prefix}aio https://instagram.com/p/xxx`, "aio");
+    return m.reply(novaGuide('AIO', 'Download dari berbagai platform! Kasih linknya ya!', `${m.prefix}aio https://instagram.com/p/xxx`));
   }
 
   if (!url.startsWith("http")) {
-    { const __navText = `❌ URL tidak valid! Harus dimulai dengan http/https`; return await m.reply(__navText); };
+    return m.reply(novaGuide('AIO', 'URL-nya gak valid nih! Harus diawali http/https', `${m.prefix}aio https://instagram.com/p/xxx`));
   }
 
   await m.react("🕒");
@@ -50,7 +37,7 @@ async function handler(m, { sock }) {
     const result = await aiodl(url);
 
     if (!result?.media?.length) {
-      return m.reply(claraWrap("aio", `❌ Gagal mengambil media. Pastikan URL valid.`));
+      return m.reply(novaError('AIO', 'Gagal ambil media — pastikan URL valid ya'));
     }
 
     const ctxInfo = saluranCtx();
@@ -82,7 +69,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
   } catch (error) {
-    m.reply(claraWrap("aio", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaError('AIO', 'Ada error nih, coba lagi ya'));
   }
 }
 

@@ -2,6 +2,7 @@
 // autotranslate.js — Auto-translate foreign messages in groups
 
 import {
+  novaError,
   toSC,
   bracketBox,
   tipText,
@@ -158,12 +159,7 @@ async function handler(m, { sock, args }) {
   } catch (e) {
     console.error("[AutoTranslate] Error:", e.message);
     await m.react("❌");
-    return m.reply(
-      bracketBox("❌", toSC("Error"), [
-        toSC("Gagal menjalankan perintah!"),
-        `${e.message}`,
-      ])
-    );
+    return m.reply(novaError("AutoTranslate", "Gagal jalankan perintah nih"));
   }
 }
 

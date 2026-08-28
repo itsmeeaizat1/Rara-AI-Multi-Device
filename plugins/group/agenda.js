@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { CronJob } from "cron";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -566,7 +566,7 @@ export default {
         await m.react("🐣");
       } else {
         await m.reply(claraWrap("Agenda", [
-          `│ Gagal menghapus acara.`,
+          `│ Gagal hapus acara nih`,
         ].join("\n")));
         await m.react("❌");
       }
@@ -657,7 +657,7 @@ export default {
 
     if (!eventTime) {
       await m.reply(claraWrap("Agenda", [
-        `│ Format tanggal tidak valid: *${dateTimeStr}*`,
+        `│ Format tanggal gak valid nih: *${dateTimeStr}*`,
         ``,
         `│ Format yang didukung:`,
         `│ 25 Aug 2026 20:00`,

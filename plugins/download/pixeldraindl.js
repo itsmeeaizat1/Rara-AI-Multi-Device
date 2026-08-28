@@ -6,7 +6,7 @@ import path from 'path'
 import fs from 'fs'
 import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
 const pluginConfig = {
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
 
     if (!data?.status || !data?.data) {
       return m.reply(
-        "❌ *ɢᴀɢᴀʟ*\n\nFile tidak ditemukan atau link tidak valid",
+        novaError("PixelDrain", "File gak nemu nih — cek linknya ya"),
       );
     }
 
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
 
     m.react("🐣");
   } catch (error) {
-    m.reply(claraWrap("pixeldraindl", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaError("PixelDrain", "Ada error nih, coba lagi ya"));
   }
 }
 
