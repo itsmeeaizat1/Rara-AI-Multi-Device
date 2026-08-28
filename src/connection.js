@@ -681,6 +681,9 @@ async function startConnection(options = {}) {
         initRefill(sock);
       try {
         initRenewalReminder(sock);
+        try { const { initQuizVerify } = await import("./lib/nova-quiz-verify.js"); initQuizVerify(sock); } catch (e) { colors.logger.error("init", "QuizVerify init failed: " + e.message); }
+        try { const { initActivityTracker } = await import("./lib/nova-activity-tracker.js"); initActivityTracker(); } catch (e) { colors.logger.error("init", "ActivityTracker init failed: " + e.message); }
+        try { const { initAutoTranslate } = await import("./lib/nova-autotranslate.js"); initAutoTranslate(); } catch (e) { colors.logger.error("init", "AutoTranslate init failed: " + e.message); }
       } catch (e) {
         colors.logger.debug("renewal", "skipped: " + e.message);
       }

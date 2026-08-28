@@ -455,3 +455,42 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - Butuh: REPLICATE_API_TOKEN di environment (opsional — tanpa token tetap jalan pakai Sharp)
 - Cooldown: 20s, Energi: 2
 - Contoh: `.reminiv2` (reply gambar), `.reminiv2 4x doc`
+
+## 🛡️ Quiz Verification (Anti-Spam Bot)
+
+- `.quizverify on/off` — Aktifkan/nonaktifkan verifikasi member baru (admin only)
+- Alias: `.verifyquiz`, `.captchaverify`
+- Member baru harus jawab quiz/captcha sebelum bisa chat di grup
+- `.quizverify status` — cek status verifikasi
+- `.quizverify difficulty easy/medium/hard` — atur tingkat kesulitan quiz
+- `.quizverify timeout <menit>` — atur waktu verifikasi (default 5 menit)
+- `.quizverify list` — lihat daftar member pending verifikasi
+- Max 3x salah jawab → auto-kick
+- Timeout tidak verifikasi → auto-kick
+- Auto-cleanup pending verifikasi yang expired
+- Contoh: `.quizverify on`, `.quizverify difficulty medium`, `.quizverify timeout 10`
+
+## 🏆 Leaderboard Aktivitas Grup
+
+- `.leaderboard` — Tampilkan top 10 member paling aktif minggu ini
+- Alias: `.lb`, `.topaktif`
+- Sistem points: 1 pt/msg, 2 pt/command, 5 pt/media
+- Auto-reset setiap Senin 00:00 WIB
+- `.leaderboard on/off` — aktifkan/nonaktifkan tracking (admin only)
+- `.leaderboard me` — lihat rank dan stats kamu
+- `.leaderboard reset` — reset leaderboard (admin only)
+- `.leaderboard stats` — statistik aktivitas grup mingguan
+- Contoh: `.leaderboard`, `.leaderboard me`, `.leaderboard stats`
+
+## 🌐 Auto-Translate Pesan Grup
+
+- `.autotranslate on/off` — Aktifkan/nonaktifkan auto-translate di grup (admin only)
+- Alias: `.atranslate`, `.autotr`
+- Deteksi bahasa asing otomatis (Jepang, Korea, Arab, China, Thailand, Rusia, Inggris, dll)
+- Translate ke bahasa target (default: Indonesian) pakai MyMemory API (gratis, no key)
+- `.autotranslate status` — cek status
+- `.autotranslate lang <kode>` — atur target bahasa (id, en, ja, ar, ko, zh, th, ru, fr, de, es, pt, vi)
+- `.autotranslate test <teks>` — tes terjemahan
+- Rate limit: 1 translate per 10 detik per grup (anti-spam)
+- Ignore command, bot message, media-only, <5 karakter
+- Contoh: `.autotranslate on`, `.autotranslate lang en`, `.autotranslate test Hello world`
