@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // fun.js — List command kategori fun
 import { getCommandsByCategory } from "../../src/lib/nova-plugins.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "fun",
@@ -39,7 +40,7 @@ ${cmdLines}│ *Total: ${funCmds.length} Fitur*
     await m.react("🐣");
   } catch (e) {
     console.error("[fun] handler error:", e.message);
-    try { await m.reply("╭──「 Fun 」\n│ ❌ Terjadi error\n│ Coba lagi nanti\n╰──────────❀"); } catch {}
+    try { await m.reply("╭──「 Fun 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────❀"); } catch {}
     await m.react("❌");
   }
 }

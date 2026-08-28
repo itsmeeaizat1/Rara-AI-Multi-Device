@@ -19,7 +19,7 @@ import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
-import { toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, toSC } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "menu",
@@ -271,7 +271,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[menu] handler error:", e.message);
-    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ❌ ${toSC("Gagal menampilkan menu")}\n│ ${toSC("Coba lagi nanti")}\n╰──────────❀`); } catch {}
+    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────❀`); } catch {}
     await m.react("❌");
   }
 }

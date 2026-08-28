@@ -84,7 +84,7 @@ async function fetchSurahList() {
     headers: { Accept: "application/json" },
   });
   const data = await res.json();
-  if (data.code !== 200) throw new Error("Gagal mengambil daftar surat");
+  if (data.code !== 200) throw new Error("Gagal ambil nih daftar surat");
   return data.data;
 }
 
@@ -94,7 +94,7 @@ async function fetchSurahDetail(nomor) {
     headers: { Accept: "application/json" },
   });
   const data = await res.json();
-  if (data.code !== 200) throw new Error("Gagal mengambil detail surat");
+  if (data.code !== 200) throw new Error("Gagal ambil nih detail surat");
   return data.data;
 }
 
@@ -104,7 +104,7 @@ async function fetchTafsir(nomor) {
     headers: { Accept: "application/json" },
   });
   const data = await res.json();
-  if (data.code !== 200) throw new Error("Gagal mengambil tafsir");
+  if (data.code !== 200) throw new Error("Gagal ambil nih tafsir");
   return data.data;
 }
 

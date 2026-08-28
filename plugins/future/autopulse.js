@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { CronJob } from "cron";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 
@@ -444,7 +444,7 @@ async function handler(m, { sock, db }) {
     // Validate cron format (basic)
     const parts = cronExpr.split(/\s+/);
     if (parts.length < 5 || parts.length > 6) {
-      await m.reply(claraWrap("AutoPulse", "Format cron tidak valid! Harus 5-6 field.", "error"));
+      await m.reply(novaError("AutoPulse", "Format cron gak valid nih! Harus 5-6 field"));
       return { handled: true };
     }
 

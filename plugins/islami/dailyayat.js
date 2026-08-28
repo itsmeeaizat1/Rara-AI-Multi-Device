@@ -66,7 +66,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     surahData = res.data;
 
     if (!surahData || !surahData.ayat) {
-      return m.reply(claraWrap("Daily Ayat", "Gagal mengambil ayat."));
+      return m.reply(claraWrap("Daily Ayat", "Gagal ambil nih ayat."));
     }
 
     const randomAyat = surahData.ayat[Math.floor(Math.random() * surahData.ayat.length)];

@@ -6,7 +6,7 @@ import path from "path";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { fileURLToPath } from "url";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const pluginConfig = {
@@ -200,7 +200,7 @@ async function handler(m, { sock }) {
     matches.sort((a, b) => b.score - a.score);
     if (matches.length === 0) {
       return m.reply(
-        `🔍 *ʜᴀꜱɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ*\n\nTidak ditemukan fitur dengan keyword \`${keyword}\``,
+        `🔍 *ʜᴀꜱɪʟ ᴘᴇɴᴄᴀʀɪᴀɴ*\n\nGak nemu fitur dengan keyword nih \`${keyword}\``,
       );
     }
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";

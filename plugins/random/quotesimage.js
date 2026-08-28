@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
         const res = await f(`https://api.neoxr.eu/api/quotesimage?apikey=${NEOXR_APIKEY}`)
         
         if (!res.status || !res.data?.url) {
-            return m.reply(claraWrap("quotesimage", `❌ Gagal mengambil quotes image`))
+            return m.reply(claraWrap("quotesimage", `Gagal mengambil quotes image`))
         }
         
         await sock.sendMedia(m.chat, res.data.url, null, m, {

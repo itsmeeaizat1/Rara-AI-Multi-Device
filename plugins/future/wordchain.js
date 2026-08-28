@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wordchain",
@@ -111,7 +111,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     if (!isValidWord(word)) {
-      await m.reply(claraWrap("Word Chain", "Kata tidak valid! Hanya huruf, min 2 karakter."));
+      await m.reply(novaError("WordChain", "Kata gak valid nih! Hanya huruf, min 2 karakter"));
       return { handled: true };
     }
     if (game.lastUser === m.sender) {

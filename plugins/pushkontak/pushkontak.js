@@ -622,7 +622,7 @@ async function startPush(m, sock, text) {
       if (global.stoppush) {
         delete global.stoppush;
         delete global.statuspush;
-        await m.reply(claraWrap("Push Dihentikan", `✅ Berhasil: ${success}\n❌ Gagal: ${failed}\n⏸️ Sisa: ${participants.length - success - failed}`));
+        await m.reply(claraWrap("Push Dihentikan", `✅ Berhasil: ${success}\nGagal: ${failed}\n⏸️ Sisa: ${participants.length - success - failed}`));
         if (saved.length > 0 && s.autoVcf) {
           const vcfTarget = s.vcfTarget === "group" ? m.chat : m.sender;
           await sendVcf(sock, vcfTarget, saved, metadata.subject);

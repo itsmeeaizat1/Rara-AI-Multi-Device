@@ -78,7 +78,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     });
 
     const items = parseRSS(res.data, 10);
-    if (!items.length) return m.reply(claraWrap("CNN Indonesia", "Gagal mengambil berita. Coba lagi nanti."));
+    if (!items.length) return m.reply(claraWrap("CNN Indonesia", "Gagal ambil nih berita. Coba lagi nanti."));
 
     const catName = input && CATEGORIES[input] ? input : "terbaru";
     let newsText = [];
@@ -94,7 +94,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     return m.reply(claraWrap("CNN News", newsText.join("\n")));
   } catch (e) {
     console.error("cnnnews error:", e.message);
-    return m.reply(claraWrap("CNN Indonesia", "Gagal mengambil berita: " + e.message));
+    return m.reply(claraWrap("CNN Indonesia", "Gagal ambil nih berita: " + e.message));
   }
 }
 

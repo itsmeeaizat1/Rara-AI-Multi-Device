@@ -406,7 +406,7 @@ async function runBroadcast(
     if (global.stopjpm) {
       delete global.stopjpm;
       delete global.statusjpm;
-      await m.reply(claraWrap("JPM Dihentikan", `✅ Berhasil: ${successCount}\n❌ Gagal: ${failedCount}\n⏸️ Sisa: ${groupIds.length - successCount - failedCount}`));
+      await m.reply(claraWrap("JPM Dihentikan", `✅ Berhasil: ${successCount}\nGagal: ${failedCount}\n⏸️ Sisa: ${groupIds.length - successCount - failedCount}`));
       return;
     }
 
@@ -450,7 +450,7 @@ async function runBroadcast(
 
   delete global.statusjpm;
   m.react("🐣");
-  await m.reply(claraWrap(`JPM ${modeLabel} Selesai`, `✅ Berhasil: ${successCount}\n❌ Gagal: ${failedCount}\n📊 Total: ${groupIds.length}`));
+  await m.reply(claraWrap(`JPM ${modeLabel} Selesai`, `✅ Berhasil: ${successCount}\nGagal: ${failedCount}\n📊 Total: ${groupIds.length}`));
 }
 
 function showHelp(m) {
@@ -806,7 +806,7 @@ async function handleJpmChannelWithContent(
       if (global.stopjpm) {
         delete global.stopjpm;
         delete global.statusjpm;
-        await m.reply(claraWrap("JPM Channel Dihentikan", `✅ Berhasil: ${successCount}\n❌ Gagal: ${failedCount}`));
+        await m.reply(claraWrap("JPM Channel Dihentikan", `✅ Berhasil: ${successCount}\nGagal: ${failedCount}`));
         return;
       }
       try {
@@ -828,7 +828,7 @@ async function handleJpmChannelWithContent(
 
     delete global.statusjpm;
     m.react("🐣");
-    await m.reply(claraWrap("JPM Channel Selesai", `✅ Berhasil: ${successCount}\n❌ Gagal: ${failedCount}\n📊 Total: ${channelIds.length}`));
+    await m.reply(claraWrap("JPM Channel Selesai", `✅ Berhasil: ${successCount}\nGagal: ${failedCount}\n📊 Total: ${channelIds.length}`));
   } catch (error) {
     delete global.statusjpm;
     m.reply(claraWrap("jpm", te(m.prefix, m.command, m.pushName), "error"));
@@ -901,7 +901,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
         delete global.statusjpm;
         await m.reply( `⏹️ *ᴊᴘᴍ ᴜᴘᴅᴀᴛᴇ ᴅɪʜᴇɴᴛɪᴋᴀɴ*\n\n` +
             `✅ Berhasil: *${successCount}*\n` +
-            `❌ Gagal: *${failedCount}*\n` +
+            `Gagal: *${failedCount}*\n` +
             `⏸️ Sisa: *${groupIds.length - successCount - failedCount}*`, "jpm");
         return;
       }
@@ -921,7 +921,7 @@ async function handleJpmUpdateWithContent(m, sock, db, input) {
     m.react("🐣");
     await m.reply( `✅ *JPM Update Selesai!*\n\n` +
         `✅ Sukses: *${successCount}*\n` +
-        `❌ Gagal: *${failedCount}*\n` +
+        `Gagal: *${failedCount}*\n` +
         `📊 Total: *${groupIds.length}*`, "jpm");
   } catch (error) {
     delete global.statusjpm;

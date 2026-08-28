@@ -315,7 +315,7 @@ async function handler(m, { sock, config: botConfig }) {
       timings = await fetchPrayerTimes(city);
     } catch (apiError) {
       const text =
-        claraWrap("Gagal", ["│ Status: *ɢᴀɢᴀʟ ᴍᴇɴɢᴀᴍʙɪʟ ᴅᴀᴛᴀ*",
+        novaError("Religi", ["│ Status: *ɢᴀɢᴀʟ ᴍᴇɴɢᴀᴍʙɪʟ ᴅᴀᴛᴀ*",
           `│ Alasan: *${apiError.message}*`].join("\n")) +
         "\n" +
         tipText("Pastikan nama kota benar dan coba lagi");
@@ -369,7 +369,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(claraWrap("sholat", text));
   } catch (error) {
     const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
+      novaError("Religi", [`│ Status: *ɢᴀɢᴀʟ*`,
         `│ Alasan: *${error.message}*`].join("\n")) +
       "\n" +
       tipText(`Coba lagi nanti atau hubungi owner`);

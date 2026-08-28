@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
                         })
                         return m.reply(claraWrap("islami", message))
                     } else {
-                        return m.reply('❌ Gagal mengambil data artikel.')
+                        return m.reply('Gagal mengambil data artikel.')
                     }
                 } catch (error) {
                     return m.reply('❌ Terjadi kesalahan saat mengambil data.')

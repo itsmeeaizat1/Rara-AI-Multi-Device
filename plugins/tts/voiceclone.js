@@ -4,7 +4,7 @@
 // Fallback: edge-tts + FFmpeg pitch/formant shift (tanpa API key)
 import { getApiKeys } from "../../src/lib/config/env-loader.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import { getApiKey } from "../../src/lib/nova-api-keys.js";
 import fs from "fs";

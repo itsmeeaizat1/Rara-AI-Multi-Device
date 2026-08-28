@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { startJadibot, isJadibotActive } from '../../src/lib/nova-jadibot-manager.js'
 import { getJadibotAccess } from '../owner/setjadibot.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
@@ -54,7 +54,7 @@ function canUseJadibot(sender) {
 
 async function handler(m, { sock }) {
     const sender = m.sender
-    if (!sender) { const __navText = claraWrap("jadibot", 'Gagal mengidentifikasi nomor kamu'); return await m.reply(__navText); }
+    if (!sender) { const __navText = novaError("JadiBot", "Gagal identifikasi nomor kamu nih"); return await m.reply(__navText); }
 
     // Cek akses jadibot
     const access = canUseJadibot(sender)
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
     } catch (e) {
         await m.reply(
             `*ᴊᴀᴅɪʙᴏᴛ ɢᴀɢᴀʟ*\n\n` +
-            `${e.message || 'Terjadi kesalahan'}\n\n` +
+            `${e.message || "Ada error nih"}\n\n` +
             `Coba lagi dalam beberapa menit.`
         )
     }

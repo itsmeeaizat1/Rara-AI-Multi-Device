@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "dailyquest",
@@ -111,7 +111,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const amount = parseInt(args[3] || "0", 10);
     const quest = cfg.questPool.find(q => q.id === qid);
     if (!quest) {
-      await m.reply(claraWrap("Daily Quest", "Quest ID tidak valid. Ketik " + prefix + "dailyquest list untuk lihat."));
+      await m.reply(novaError("DailyQuest", "Quest ID gak valid nih! Ketik " + prefix + "dailyquest list"));
       return { handled: true };
     }
     if ((udata.progress[qid] || 0) >= quest.target) {
@@ -196,7 +196,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const qid = (args[2] || "").toLowerCase();
     const quest = cfg.questPool.find(q => q.id === qid);
     if (!quest) {
-      await m.reply(claraWrap("Daily Quest", "Quest ID tidak valid."));
+      await m.reply(novaError("DailyQuest", "Quest ID gak valid nih"));
       return { handled: true };
     }
     udata.progress[qid] = quest.target;

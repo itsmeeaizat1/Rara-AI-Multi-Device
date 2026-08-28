@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "secretmsg",
@@ -104,7 +104,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   if (sub === "inbox" || sub === "kotak") {
     if (!cfg.inbox || !cfg.inbox[m.sender] || cfg.inbox[m.sender].length === 0) {
-      await m.reply(claraWrap("SecretMsg", "Inbox kosong. Belum ada pesan anonim."));
+      await m.reply(novaError("SecretMsg", "Inbox kosong nih, belum ada pesan anonim"));
       return { handled: true };
     }
     const unread = cfg.inbox[m.sender].filter(msg => !msg.read);
@@ -124,7 +124,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "read" || sub === "baca") {
     const id = parseInt(args[2] || "0", 10);
     if (!cfg.inbox || !cfg.inbox[m.sender]) {
-      await m.reply(claraWrap("SecretMsg", "Inbox kosong."));
+      await m.reply(novaError("SecretMsg", "Inbox kosong nih"));
       return { handled: true };
     }
     const msg = cfg.inbox[m.sender].find(mm => mm.id === id);
@@ -154,7 +154,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     if (!cfg.inbox || !cfg.inbox[m.sender]) {
-      await m.reply(claraWrap("SecretMsg", "Inbox kosong."));
+      await m.reply(novaError("SecretMsg", "Inbox kosong nih"));
       return { handled: true };
     }
     const msg = cfg.inbox[m.sender].find(mm => mm.id === id);

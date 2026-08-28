@@ -40,7 +40,7 @@ function handler(m, { sock }) {
   );
 
   if (!hasAccess && !m.isOwner) {
-    return m.reply(claraWrap("Gagal", `❌ *ɢᴀɢᴀʟ*\n\nKamu tidak memiliki akses ke CPanel!`));
+    return m.reply(novaError("Panel", `❌ *ɢᴀɢᴀʟ*\n\nKamu tidak memiliki akses ke CPanel!`));
   }
 
   const db = getDatabase();

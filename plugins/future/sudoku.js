@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sudoku",
@@ -222,7 +222,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         }
       }
     }
-    await m.reply(claraWrap("Sudoku", "Tidak ada kotak kosong."));
+    await m.reply(novaError("Sudoku", "Gak ada kotak kosong nih"));
     return { handled: true };
   }
 

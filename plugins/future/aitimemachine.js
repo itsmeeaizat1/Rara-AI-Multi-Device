@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aitimemachine",
@@ -119,7 +119,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const idx = parseInt(args[2] || "0", 10) - 1;
     const events = getTimeline(db, gid);
     if (isNaN(idx) || idx < 0 || idx >= events.length) {
-      await m.reply(claraWrap("Time Machine", "Nomor tidak valid. Ketik " + prefix + "timemachine list untuk lihat."));
+      await m.reply(novaError("AITimeMachine", "Nomor gak valid nih! Ketik " + prefix + "timemachine list"));
       return { handled: true };
     }
     const removed = events.splice(idx, 1)[0];

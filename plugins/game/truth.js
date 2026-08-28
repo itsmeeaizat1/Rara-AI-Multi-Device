@@ -2,6 +2,7 @@
 // Truth or Dare — Truth command
 
 import fs from "fs";
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import path from "path";
 import { fileURLToPath } from "url";
 

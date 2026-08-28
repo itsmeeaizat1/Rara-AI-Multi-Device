@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "astrologi",
@@ -90,7 +90,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
   const date = new Date(dateStr + "T00:00:00+07:00");
   if (isNaN(date)) {
-    await m.reply(claraWrap("Astrologi", "Tanggal tidak valid."));
+    await m.reply(novaError("Astrologi", "Tanggal gak valid nih"));
     return { handled: true };
   }
 

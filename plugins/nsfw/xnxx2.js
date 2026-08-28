@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data) {
-      return m.reply("╭──「 🔞 XNXX Downloader 」\n│ ❌ Gagal download\n│ URL mungkin tidak valid\n╰──────────❀", "xnxx2");
+      return m.reply("╭──「 🔞 XNXX Downloader 」\n│ Gagal download\n│ URL mungkin tidak valid\n╰──────────❀", "xnxx2");
     }
 
     const d = res.data.data;

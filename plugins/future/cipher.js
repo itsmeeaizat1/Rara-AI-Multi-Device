@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "cipher",
@@ -86,7 +86,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (!text) {
-    await m.reply(claraWrap("Cipher", "Teks tidak boleh kosong."));
+    await m.reply(novaError("Cipher", "Teks gak boleh kosong nih"));
     return { handled: true };
   }
 

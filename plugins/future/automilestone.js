@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "automilestone",
@@ -93,7 +93,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const idx = parseInt(args[2] || "0", 10) - 1;
     if (isNaN(idx) || idx < 0 || idx >= cfg.milestones.length) {
-      await m.reply(claraWrap("Auto Milestone", "Nomor tidak valid."));
+      await m.reply(novaError("AutoMilestone", "Nomor gak valid nih"));
       return { handled: true };
     }
     const removed = cfg.milestones.splice(idx, 1)[0];

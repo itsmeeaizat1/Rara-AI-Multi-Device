@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aboutnova.js — Info singkat bot + list command kategori main
 import { getCommandsByCategory } from "../../src/lib/nova-plugins.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aboutnova",
@@ -49,7 +50,7 @@ ${prefix}menu untuk melihat semua fitur`;
     await m.react("🐣");
   } catch (e) {
     console.error("[aboutnova] handler error:", e.message);
-    try { await m.reply("╭──「 About 」\n│ ❌ Terjadi error\n│ Coba lagi nanti ya\n╰──────────❀"); } catch {}
+    try { await m.reply("╭──「 About 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────❀"); } catch {}
     await m.react("❌");
   }
 }

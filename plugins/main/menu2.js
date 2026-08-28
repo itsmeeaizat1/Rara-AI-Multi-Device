@@ -7,7 +7,7 @@ import {
 import { getCasesByCategory } from "../../case/nova.js";
 import path from "path";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
-import { listBox, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, listBox, toSC } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "menu2",
@@ -73,7 +73,7 @@ async function handler(m, { sock, config: botConfig }) {
 
   } catch (e) {
     console.error("[menu2] handler error:", e.message);
-    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ❌ ${toSC("Gagal menampilkan menu")}\n│ ${toSC("Coba lagi nanti")}\n╰──────────❀`); } catch {}
+    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────❀`); } catch {}
     await m.react("❌");
   }
 }

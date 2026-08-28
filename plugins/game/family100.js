@@ -5,7 +5,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { novaUsage } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaUsage } from "../../src/lib/nova-menu-style.js";
 import { normalizeAnswer, getSimilarity, isReplyToGame } from "../../src/lib/nova-game-engine.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { addExpWithLevelCheck } from "../../src/lib/nova-level.js";

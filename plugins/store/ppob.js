@@ -51,7 +51,7 @@ const PROVIDERS = {
         { headers: { "Content-Type": "application/json" }, timeout: 25000 }
       );
       if (res.data?.data && Array.isArray(res.data.data)) return res.data.data;
-      throw new Error(res.data?.data?.message || "Gagal mengambil daftar harga");
+      throw new Error(res.data?.data?.message || "Gagal ambil nih daftar harga");
     },
     async topup(cred, sku, customerNo, refId) {
       const res = await axios.post(
@@ -141,7 +141,7 @@ const PROVIDERS = {
       );
       if (res.data?.code === 200 && Array.isArray(res.data.data))
         return res.data.data;
-      throw new Error(res.data?.message || "Gagal mengambil daftar layanan");
+      throw new Error(res.data?.message || "Gagal ambil nih daftar layanan");
     },
     async topup(cred, sku, customerNo, refId) {
       const res = await axios.post(
@@ -227,7 +227,7 @@ const PROVIDERS = {
         { headers: { "Content-Type": "application/json" }, timeout: 25000 }
       );
       if (res.data?.data && Array.isArray(res.data.data)) return res.data.data;
-      throw new Error(res.data?.message || "Gagal mengambil daftar harga");
+      throw new Error(res.data?.message || "Gagal ambil nih daftar harga");
     },
     async topup(cred, sku, customerNo, refId) {
       const res = await axios.post(
@@ -307,7 +307,7 @@ const PROVIDERS = {
         { headers: { "Content-Type": "application/json" }, timeout: 25000 }
       );
       if (res.data?.data && Array.isArray(res.data.data)) return res.data.data;
-      throw new Error(res.data?.message || "Gagal mengambil daftar layanan");
+      throw new Error(res.data?.message || "Gagal ambil nih daftar layanan");
     },
     async topup(cred, sku, customerNo, refId) {
       const res = await axios.post(

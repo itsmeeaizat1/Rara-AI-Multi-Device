@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -19,7 +19,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
     const buffer = await m.download();
-    if (!buffer) throw new Error("Gagal download gambar");
+    if (!buffer) throw new Error("Gagal download gambar nih");
     const base64 = buffer.toString("base64");
     const result = await callAI("Analisis makanan dalam gambar ini. Estimasi nama makanan, kalori, protein, karbohidrat, lemak. Bahasa Indonesia.", {
       systemPrompt: "Kamu adalah ahli gizi. Berikan estimasi yang realistis.",
