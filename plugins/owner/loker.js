@@ -18,7 +18,7 @@ import {
 } from "../../src/lib/nova-loker-scheduler.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "loker",

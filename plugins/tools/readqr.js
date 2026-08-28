@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (!result) throw new Error("QR tidak terbaca");
     await m.reply(claraWrap("Read QR", [`│ Isi QR: *${result}*`].join("\n")));
   } catch (e) {
-    await m.reply(claraWrap("Gagal", [`│ ${e.message}`].join("\n")));
+    await m.reply(novaError("Tools", "Gagal nih"));
   }
   return { handled: true };
 }

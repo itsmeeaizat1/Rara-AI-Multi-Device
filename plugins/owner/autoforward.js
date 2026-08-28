@@ -2,6 +2,7 @@
 // autoforward.js — Auto-forward pesan berdasarkan keyword ke PM owner
 // Integrated with automation hub (checkAutoForward hook)
 import { getDatabase } from '../../src/lib/nova-database.js'
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoforward",
@@ -82,7 +83,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("[autoforward] error:", e.message)
     await m.react("🐣")
-    return m.reply("╭──「 Error 」\n" + (e.message || "Terjadi kesalahan") + "\n╰──────────❀")
+    return m.reply("╭──「 Error 」\n" + (e.message || "Ada error nih") + "\n╰──────────❀")
   }
 }
 

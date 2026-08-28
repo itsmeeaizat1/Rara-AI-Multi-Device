@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Photo Collage — Gabung 2-4 foto jadi satu grid (local via sharp, no API)
 import sharp from "sharp";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "photocollage",
@@ -195,7 +195,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const result = await makeCollage(images.slice(0, needed), layout);
 
     if (!result || result.length === 0) {
-      return m.reply(claraWrap("Photo Collage", "Gagal membuat collage.", "warn"));
+      return m.reply(claraWrap("Photo Collage", "Gagal bikin nih collage.", "warn"));
     }
 
     await conn.sendMessage(

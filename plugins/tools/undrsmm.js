@@ -2,7 +2,7 @@
 import axios from "axios";
 import fs from "fs";
 import path from "path";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // ============================================================
 // UndrCtrl SMM - Social Media Services
@@ -67,19 +67,19 @@ async function getServices(data, force = false) {
     saveData(data);
     return result;
   }
-  throw new Error(result.error || "Gagal mengambil layanan");
+  throw new Error(result.error || "Gagal ambil nih layanan");
 }
 
 async function getServicesV3() {
   const res = await axios.get(UNDR_V3, { headers: { "Content-Type": "application/json" }, timeout: 20000 });
   if (Array.isArray(res.data)) return res.data;
-  throw new Error("Gagal mengambil layanan v3");
+  throw new Error("Gagal ambil nih layanan v3");
 }
 
 async function addOrder(data, service, link, quantity) {
   const result = await undrPost("add", { key: data.apiKey, service: String(service), link: String(link), quantity: String(quantity) });
   if (result.order) return { id: String(result.order) };
-  throw new Error(result.error || "Gagal membuat order");
+  throw new Error(result.error || "Gagal bikin nih order");
 }
 
 async function orderStatus(data, orderId) {

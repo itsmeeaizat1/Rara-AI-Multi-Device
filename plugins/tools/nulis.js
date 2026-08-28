@@ -8,7 +8,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import axios from "axios";
 import config from "../../config.js";
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "nulis",
   alias: ["nulis"],

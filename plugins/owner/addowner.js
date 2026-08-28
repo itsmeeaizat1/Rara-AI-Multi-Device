@@ -15,7 +15,7 @@ import {
   isLidConverted,
 } from "../../src/lib/nova-lid.js";
 import { getGroupMode } from "../group/botmode.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "addowner",
   alias: ["addowner"],

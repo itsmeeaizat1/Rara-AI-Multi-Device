@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // servermonitor.js — VPS Health Monitor + Auto-Alert (integrated with automation hub)
 import os from 'os'
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import { getDatabase } from '../../src/lib/nova-database.js'
@@ -147,7 +148,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("[servermonitor] error:", e.message)
     await m.react("🐣")
-    return m.reply("╭──「 Error 」\n" + (e.message || "Terjadi kesalahan") + "\n╰──────────❀")
+    return m.reply("╭──「 Error 」\n" + (e.message || "Ada error nih") + "\n╰──────────❀")
   }
 }
 

@@ -3,7 +3,7 @@ import { PDFDocument, rgb } from "pdf-lib";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 async function saveTemp(buffer, ext) {
   const tmpdir = os.tmpdir();

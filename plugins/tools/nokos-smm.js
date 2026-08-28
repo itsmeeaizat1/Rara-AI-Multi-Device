@@ -2,7 +2,7 @@
 import axios from "axios";
 import fs from "fs";
 import path from "path";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // ============================================================
 // NexusSMM - SMM Services (Followers, Likes, Views)
@@ -38,7 +38,7 @@ async function getServices(data, force = false) {
     return data.servicesCache;
   }
   const result = await nexusRequest("/api/services", { api_id: data.apiId, api_key: data.apiKey });
-  if (!result.status) throw new Error(result.data || "Gagal mengambil layanan");
+  if (!result.status) throw new Error(result.data || "Gagal ambil nih layanan");
   data.servicesCache = result.data;
   data.servicesCacheAt = Date.now();
   saveData(data);
@@ -50,7 +50,7 @@ async function createOrder(data, serviceId, target, quantity) {
     api_id: data.apiId, api_key: data.apiKey,
     service: String(serviceId), target: String(target), quantity: String(quantity)
   });
-  if (!result.status) throw new Error(result.data || "Gagal membuat order");
+  if (!result.status) throw new Error(result.data || "Gagal bikin nih order");
   return { id: result.data.order_id || result.data.id || "", status: result.data.status || "PENDING" };
 }
 

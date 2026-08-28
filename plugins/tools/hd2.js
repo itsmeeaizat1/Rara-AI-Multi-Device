@@ -11,7 +11,7 @@ import FormData from "form-data";
 import path from "path";
 import fs from "fs";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "hd2tool",
   alias: ["hd2tool"],

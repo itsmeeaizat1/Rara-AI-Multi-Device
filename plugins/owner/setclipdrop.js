@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setclipdrop",
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     const masked = key ? key.substring(0, 8) + "..." + key.substring(key.length - 4) : "(belum diset)";
     return m.reply(claraWrap("ClipDrop API Status", [
       "API Key: " + masked,
-      "Status: " + (key ? "Aktif" : "Belum diset"),
+      "Status: " + (key ? "Aktif" : "Belum diset nih"),
       "Credits: " + (key ? "Cek via .nowm" : "-"),
       "",
       "Tanpa API key, .nowm pakai local mode (hasil lebih kasar).",
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
       config.clipdropApiKey = "";
       return m.reply(claraWrap("ClipDrop API", "API key berhasil dihapus. .nowm sekarang pakai local mode."));
     }
-    return m.reply(claraWrap("ClipDrop API", "Gagal menghapus API key. Coba lagi."));
+    return m.reply(claraWrap("ClipDrop API", "Gagal hapus nih API key. Coba lagi."));
   }
 
   // Set key
@@ -124,7 +124,7 @@ async function handler(m, { sock }) {
   }
 
   m.react("❌");
-  return m.reply(claraWrap("ClipDrop API", "Gagal menyimpan API key. Pastikan config.js writable."));
+  return m.reply(claraWrap("ClipDrop API", "Gagal simpan nih API key. Pastikan config.js writable."));
 }
 
 export { pluginConfig as config, handler };

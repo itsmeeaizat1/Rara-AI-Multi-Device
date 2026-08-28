@@ -3,7 +3,7 @@ import axios from "axios";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // ============================================================
 // FMPulsa - Pulsa, Paket Data, Token PLN, Topup Game
@@ -57,7 +57,7 @@ async function getServices(data, force = false) {
     data.serviceCache = result.data; data.serviceCacheAt = Date.now(); saveData(data);
     return result.data;
   }
-  throw new Error(result.message || "Gagal mengambil daftar layanan");
+  throw new Error(result.message || "Gagal ambil nih daftar layanan");
 }
 
 async function placeOrder(data, serviceCode, dataNo, refId) {
@@ -66,7 +66,7 @@ async function placeOrder(data, serviceCode, dataNo, refId) {
     service: serviceCode, data_no: dataNo, ref_id: refId,
   });
   if (result.code === 200) return result.data;
-  throw new Error(result.message || "Gagal membuat order");
+  throw new Error(result.message || "Gagal bikin nih order");
 }
 
 async function checkStatus(data, refId) {

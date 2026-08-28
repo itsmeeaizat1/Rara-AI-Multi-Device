@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // automod.js — Group Auto-Moderation (integrated with automation hub)
 import { getDatabase } from '../../src/lib/nova-database.js'
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "automod",
@@ -118,7 +119,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("[automod] error:", e.message)
     await m.react("🐣")
-    return m.reply("╭──「 Error 」\n" + (e.message || "Terjadi kesalahan") + "\n╰──────────❀")
+    return m.reply("╭──「 Error 」\n" + (e.message || "Ada error nih") + "\n╰──────────❀")
   }
 }
 

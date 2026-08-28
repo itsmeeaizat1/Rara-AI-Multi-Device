@@ -12,7 +12,7 @@ import {
   IQAMAH_DELAY,
 } from "../../src/lib/nova-sholat-scheduler.js";
 import te from "../../src/lib/nova-error.js";
-import { claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraLine } from "../../src/lib/nova-menu-style.js";
 import { initSholatScheduler, stopSholatScheduler } from "../../src/lib/nova-sholat-scheduler.js";
 
 function claraWrap(title, text) {

@@ -2,7 +2,7 @@
 // Auto-Translate Voice Note — Real-time VN detection, transcribe, translate, respond VN
 // Toggle: .toggleautovn on/off  (owner only)
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, tipText, separator } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText, separator } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {

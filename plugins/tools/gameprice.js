@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "gameprice",
@@ -29,7 +30,7 @@ async function handler(m, { sock }) {
         });
 
         if (response.status !== 200 || !Array.isArray(response.data) || response.data.length === 0) {
-            throw new Error("Gagal mengambil data dari API CheapShark");
+            throw new Error("Gagal ambil nih data dari API CheapShark");
         }
 
         const deals = response.data.slice(0, 5);
@@ -80,7 +81,7 @@ async function handler(m, { sock }) {
         const errorBox = [
             `╭──「 Error 」`,
             `│ Gagal mengambil data diskon game!`,
-            `│ Alasan: ${error.message || "Terjadi kesalahan"}`,
+            `│ Alasan: ${error.message || "Ada error nih"}`,
             `╰──────────❀`
         ].join("\n");
         await m.reply(errorBox);

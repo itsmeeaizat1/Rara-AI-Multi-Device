@@ -3,7 +3,7 @@ import axios from "axios";
 import fs from "fs";
 import path from "path";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // ============================================================
 // Nokos Beli v3 - Multi-Tier Pricing
@@ -428,7 +428,7 @@ async function nexusRequest(endpoint, params) {
 
 async function nexusServices(data) {
   const result = await nexusRequest("/api/otp_services", { api_id: data.apiId, api_key: data.apiKey });
-  if (!result.status) throw new Error(result.data || "Gagal mengambil layanan");
+  if (!result.status) throw new Error(result.data || "Gagal ambil nih layanan");
   return result.data;
 }
 
