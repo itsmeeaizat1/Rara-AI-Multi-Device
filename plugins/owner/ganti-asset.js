@@ -2,7 +2,7 @@
 import config from '../../config.js';
 import { updateAssetUrl } from '../../src/lib/nova-uploader.js';
 import te from '../../src/lib/nova-error.js';
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'ganti-asset',

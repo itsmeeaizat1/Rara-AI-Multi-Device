@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { removeBgLocal } from "../../src/scraper/removebg-v2.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -141,9 +141,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[RemoveBG V2 Error]", error);
     const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message || "Unknown error"}*`].join("\n")) + "\n" +
-      tipText("Coba lagi nanti atau hubungi owner");
+      novaError("Tools", "Gagal nih, coba lagi ya");
 
     await m.reply(claraWrap("removebgv2", text));
     return { handled: true };

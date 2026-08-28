@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tolakgabung",
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
       groupId = info.id;
       groupName = info.subject || "Grup";
     } catch (e) {
-      return m.reply(claraWrap("tolakgabung", "Gagal mendapatkan info grup dari link.\n\n" +
+      return m.reply(claraWrap("tolakgabung", "Gagal dapet nih info grup dari link.\n\n" +
         "Error: " + (e.message || "Unknown error")));
     }
   }

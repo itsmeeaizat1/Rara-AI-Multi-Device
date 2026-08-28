@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Unified Switch: Dispatcher untuk semua toggle on/off (channel, group, auto, fitur)
 import { getDatabase } from '../../src/lib/nova-database.js'
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { pluginStore } from '../../src/lib/nova-plugins.js'
 import {
   NOTIFY_EVENTS, getAllNotifyStatus, setNotifyEnabled
@@ -296,7 +297,7 @@ async function handleChannel(m, { sock, config: cfg }) {
   if (!subCmd || subCmd === 'status' || subCmd === 'cek') {
     const statuses = getAllNotifyStatus()
     let onCount = 0, offCount = 0
-    let text = claraWrap("Switch Channel", `│ Channel: *${cfg?.saluran?.name || "Belum diset"}*\n│ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\n" + toSC("STATUS TOGGLE") + ":\n\n"
+    let text = claraWrap("Switch Channel", `│ Channel: *${cfg?.saluran?.name || "Belum diset nih"}*\n│ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\n" + toSC("STATUS TOGGLE") + ":\n\n"
 
     for (const [key, info] of Object.entries(statuses)) {
       const emoji = info.enabled ? "🟢" : "🔴"

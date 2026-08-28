@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // crashguard.js — PM2 Crash Monitor + Auto-Restart (integrated with automation hub)
 import { exec } from 'child_process'
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { promisify } from 'util'
 import { getDatabase } from '../../src/lib/nova-database.js'
 
@@ -143,7 +144,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("[crashguard] error:", e.message)
     await m.react("🐣")
-    return m.reply("╭──「 Error 」\n" + (e.message || "Terjadi kesalahan") + "\n╰──────────❀")
+    return m.reply("╭──「 Error 」\n" + (e.message || "Ada error nih") + "\n╰──────────❀")
   }
 }
 

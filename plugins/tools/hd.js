@@ -4,7 +4,7 @@
 import sharp from "sharp";
 import te from "../../src/lib/nova-error.js";
 import cfg from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "remini",

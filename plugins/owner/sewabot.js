@@ -3,7 +3,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import fs from "fs";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "sewabot",
   alias: ["sewabot"],

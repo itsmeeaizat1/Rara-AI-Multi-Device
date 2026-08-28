@@ -2,7 +2,7 @@
 // TempMail V2 — CatchMail.io API (https://api.catchmail.io)
 // Free disposable email, no auth required, custom domain support
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tempmailv2",

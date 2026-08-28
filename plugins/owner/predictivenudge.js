@@ -8,7 +8,7 @@
 // .predictivenudge voice on/off — Nudge pakai VN suara neural atau teks
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import { exec } from "child_process";
 import { promisify } from "util";

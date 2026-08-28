@@ -9,7 +9,7 @@ import axios from "axios";
 import { createWriteStream, createReadStream } from "node:fs";
 import { createGzip, createGunzip } from "node:zlib";
 import { pipeline } from "node:stream/promises";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "arsipfile",
@@ -161,7 +161,7 @@ async function createZip(m, sock) {
 
     cleanup(tmpDir);
   } catch (e) {
-    return m.reply("Gagal membuat ZIP: " + e.message);
+    return m.reply("Gagal bikin nih ZIP: " + e.message);
   }
 }
 
@@ -276,7 +276,7 @@ async function createTar(m, sock) {
 
     cleanup(tmpDir);
   } catch (e) {
-    return m.reply("Gagal membuat TAR.GZ: " + e.message);
+    return m.reply("Gagal bikin nih TAR.GZ: " + e.message);
   }
 }
 
@@ -380,7 +380,7 @@ async function createGz(m, sock) {
 
     cleanup(tmpDir);
   } catch (e) {
-    return m.reply("Gagal membuat GZIP: " + e.message);
+    return m.reply("Gagal bikin nih GZIP: " + e.message);
   }
 }
 

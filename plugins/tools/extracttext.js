@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "node:fs";
 import path from "node:path";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 // pdf-parse lazy loader (avoid crash if not installed)
 let _PDFParse = null;
@@ -413,7 +413,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     await m.reply(claraWrap("Extract Text", [
       `❌ *ɢᴀɢᴀʟ*`,
       ``,
-      `${error.message || "Terjadi kesalahan"}`,
+      `${error.message || "Ada error nih"}`,
     ].join("\n")));
     await m.react("🐣");
   }

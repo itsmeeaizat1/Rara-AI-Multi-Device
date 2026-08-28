@@ -5,7 +5,7 @@
 // Auto aktif di grup: deteksi VN marah/sedih/debat -> respon empatik
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { getApiKey, hasApiKey } from "../../src/lib/nova-api-keys.js";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";

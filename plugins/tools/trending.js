@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraHeader, separator, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -19,13 +19,13 @@ async function handler(m, { sock, config: botConfig }) {
     // Parse RSS items
     const items = (data.match(/<title>([^<]+)<\/title>/g) || []).slice(1, 11)
       .map(t => t.replace(/<\/?title>/g, ""));
-    if (!items.length) throw new Error("Gagal mengambil trending");
+    if (!items.length) throw new Error("Gagal ambil nih trending");
     let text = claraWrap("Trending Indonesia", "📈") + "\n\n";
     items.forEach((item, i) => { text += `${i+1}. *${item}*\n`; });
     text += "\n" + separator("━", 22) + "\n" + tipText(`Sumber: Google Trends Indonesia`);
     await m.reply(claraWrap("trending", text));
   } catch (e) {
-    await m.reply(claraWrap("Gagal", [`│ ${e.message}`].join("\n")));
+    await m.reply(novaError("Tools", "Gagal nih"));
   }
   return { handled: true };
 }

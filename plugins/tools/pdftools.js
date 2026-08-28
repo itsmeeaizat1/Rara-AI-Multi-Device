@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import axios from "axios";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pdftools",
@@ -172,7 +172,7 @@ async function imgToPdf(m, sock) {
     }
 
     if (processed === 0) {
-      return m.reply(claraWrap("pdftools", "Gagal memproses gambar. Pastikan gambar valid."));
+      return m.reply(claraWrap("pdftools", "Gagal proses nih gambar. Pastikan gambar valid."));
     }
 
     const pdfBytes = await pdfDoc.save();
@@ -188,7 +188,7 @@ async function imgToPdf(m, sock) {
     cleanupTemp(filepath);
   } catch (e) {
     console.error("[pdftools img2pdf] Error:", e.message);
-    return m.reply("Gagal membuat PDF: " + e.message);
+    return m.reply("Gagal bikin nih PDF: " + e.message);
   }
 }
 

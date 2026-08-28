@@ -1,4 +1,4 @@
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
 import { exec } from "child_process";
 import { promisify } from "util";
 import fs from "fs";
@@ -221,9 +221,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[Vid2GIF Error]", error);
     const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ ᴄᴏɴᴠᴇʀᴛ*`,
-        `│ Alasan: *${error.message || "Unknown error"}*`].join("\n")) + "\n" +
-      tipText("Coba video lain atau durasi lebih pendek");
+      novaError("Tools", "Gagal nih, coba lagi ya");
 
     await m.reply(claraWrap("vid2gif", text));
     return { handled: true };

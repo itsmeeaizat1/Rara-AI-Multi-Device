@@ -3,7 +3,7 @@ import axios from "axios";
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // ============================================================
 // DigiPulsa - Pulsa, Paket Data, Token PLN, Topup Game
@@ -60,7 +60,7 @@ async function getPriceList(data, force = false) {
     data.priceCache = result.data; data.priceCacheAt = Date.now(); saveData(data);
     return result.data;
   }
-  throw new Error(result.data?.message || "Gagal mengambil daftar harga");
+  throw new Error(result.data?.message || "Gagal ambil nih daftar harga");
 }
 
 async function topup(data, sku, customerNo, refId) {

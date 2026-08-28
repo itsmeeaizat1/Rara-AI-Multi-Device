@@ -2,7 +2,7 @@
 // UnblurImage AI — Unblur & upscale gambar via unblurimage.ai API, no token needed
 // Tested: v1 PASS (53KB->4.1MB), v2 PASS (53KB->663KB), v3 FAIL (Cloudflare block)
 import crypto from "node:crypto";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "unblurimg",
@@ -74,7 +74,7 @@ async function unblurImage(imageBuffer, scaleFactor, model, mime) {
   const jobId = createData?.result?.job_id;
   if (!jobId) {
     const errMsg = createData?.message?.en || createData?.message?.id || JSON.stringify(createData).substring(0, 200);
-    throw new Error("Gagal membuat job: " + errMsg);
+    throw new Error("Gagal bikin nih job: " + errMsg);
   }
 
   // Step 2: Poll for result
@@ -104,7 +104,7 @@ async function unblurImage(imageBuffer, scaleFactor, model, mime) {
 
     // Error codes
     if (ERROR_CODES.includes(pollData.code)) {
-      const errMsg = pollData.message?.en || pollData.message?.id || "Gagal memproses gambar";
+      const errMsg = pollData.message?.en || pollData.message?.id || "Gagal proses nih gambar";
       throw new Error("API error (code " + pollData.code + "): " + errMsg);
     }
 
