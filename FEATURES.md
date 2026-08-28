@@ -442,3 +442,16 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - Owner juga dapat laporan ringkasan siapa yang akan expired
 - `.autorenewal list` — lihat daftar premium user yang akan expired
 - Contoh: `.autorenewal on 09:00 3`
+
+## 🖼️ Remini V2 — AI Photo Enhance
+
+- `.reminiv2 (reply gambar)` — Enhance gambar jadi HD pakai AI
+- Alias: `.enhance2`, `.reminiai`
+- Engine: Replicate Real-ESRGAN (AI upscaler + face enhance)
+- Auto fallback ke Sharp Lanczos3 (local) kalau API down atau token belum diset
+- Upload temp: Uguu.se (primary), GoFile (fallback), data URI (last resort)
+- `.reminiv2 4x` — custom scale 2-4x
+- `.reminiv2 doc` — kirim hasil sebagai dokumen
+- Butuh: REPLICATE_API_TOKEN di environment (opsional — tanpa token tetap jalan pakai Sharp)
+- Cooldown: 20s, Energi: 2
+- Contoh: `.reminiv2` (reply gambar), `.reminiv2 4x doc`
