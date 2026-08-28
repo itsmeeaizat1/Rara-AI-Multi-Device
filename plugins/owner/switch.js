@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Unified Switch: Dispatcher untuk semua toggle on/off (saluran, group, auto, fitur)
+// Unified Switch: Dispatcher untuk semua toggle on/off (channel, group, auto, fitur)
 import { getDatabase } from '../../src/lib/nova-database.js'
 import { pluginStore } from '../../src/lib/nova-plugins.js'
 import {
@@ -34,9 +34,9 @@ const pluginConfig = {
     "autobroadcastchannel", "autobackupdrive"
   ],
   category: "owner",
-  description: 'Switch on/off semua fitur (saluran, group, auto, command)',
-  usage: '.switch [saluran|group|auto|fitur]',
-  example: '.switch saluran\n.switch group welcome\n.switch auto autobackup on\n.switch fitur off rpg',
+  description: 'Switch on/off semua fitur (channel, group, auto, command)',
+  usage: '.switch [channel|group|auto|fitur]',
+  example: '.switch channel\n.switch group welcome\n.switch auto autobackup on\n.switch fitur off rpg',
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -256,8 +256,8 @@ const AUTO_ALIASES = {
   autobday: "autoulah", autobirthday: "autoulah",
   apicheck: "autohealth", aphealth: "autohealth",
   autocuacav2: "autocuaca",
-  autobcsaluran: "autobroadcastchannel", autobc: "autobroadcastchannel",
-  autobroadcast: "autobroadcastchannel", autosaluran: "autobroadcastchannel",
+  autobcchannel: "autobroadcastchannel", autobc: "autobroadcastchannel",
+  autobroadcast: "autobroadcastchannel", autochannel: "autobroadcastchannel",
   autobcchannel: "autobroadcastchannel",
   autostatusview: "autoreadsw", // autostatusview = gabungan autoreadsw + autoreactsw
 }
@@ -274,7 +274,7 @@ function getMode(cmd, args) {
   if (autoAlias) return `auto:${autoAlias}`
 
   const a = (args[0] || '').toLowerCase()
-  if (a === 'saluran') return 'saluran'
+  if (a === 'channel') return 'channel'
   if (a === 'group' || a === 'grup') return 'group'
   if (a === 'auto') {
     const sub = (args[1] || '').toLowerCase()
@@ -288,7 +288,7 @@ function getMode(cmd, args) {
 // ═══════════════════════════════════════════════════════════
 // SALURAN HANDLER
 // ═══════════════════════════════════════════════════════════
-async function handleSaluran(m, { sock, config: cfg }) {
+async function handleChannel(m, { sock, config: cfg }) {
   const prefix = cfg?.command?.prefix || '.'
   const args = m.args || []
   const subCmd = args[1]?.toLowerCase()
@@ -296,26 +296,26 @@ async function handleSaluran(m, { sock, config: cfg }) {
   if (!subCmd || subCmd === 'status' || subCmd === 'cek') {
     const statuses = getAllNotifyStatus()
     let onCount = 0, offCount = 0
-    let text = claraWrap("Switch Saluran", `│ Saluran: *${cfg?.saluran?.name || "Belum diset"}*\n│ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\n" + toSC("STATUS TOGGLE") + ":\n\n"
+    let text = claraWrap("Switch Channel", `│ Channel: *${cfg?.saluran?.name || "Belum diset"}*\n│ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\n" + toSC("STATUS TOGGLE") + ":\n\n"
 
     for (const [key, info] of Object.entries(statuses)) {
       const emoji = info.enabled ? "🟢" : "🔴"
       text += `${emoji} *${info.label}*\n`
-      text += `Status: *${info.enabled ? "ON" : "OFF"}* | \`${prefix}switch saluran ${key}\`\n\n`
+      text += `Status: *${info.enabled ? "ON" : "OFF"}* | \`${prefix}switch channel ${key}\`\n\n`
       if (info.enabled) onCount++; else offCount++
     }
-    text += separator("━", 22) + "\n" + tipText(`ON: ${onCount} | OFF: ${offCount}`) + "\n" + tipText(`Toggle semua: \`${prefix}switch saluran all on/off\``)
+    text += separator("━", 22) + "\n" + tipText(`ON: ${onCount} | OFF: ${offCount}`) + "\n" + tipText(`Toggle semua: \`${prefix}switch channel all on/off\``)
     return m.reply(text)
   }
 
   if (subCmd === 'all') {
     const action = args[2]?.toLowerCase()
     if (action !== 'on' && action !== 'off')
-      return m.reply(claraWrap("Switch Saluran", `Gunakan: \`${prefix}switch saluran all on\` atau \`${prefix}switch saluran all off\``))
+      return m.reply(claraWrap("Switch Channel", `Gunakan: \`${prefix}switch channel all on\` atau \`${prefix}switch channel all off\``))
     const enabled = action === 'on'
     let count = 0
     for (const key of Object.keys(NOTIFY_EVENTS)) { setNotifyEnabled(key, enabled); count++ }
-    return m.reply(claraWrap("Switch Saluran", "🔔") + "\n\n" + claraWrap(toSC("SEMUA EVENT"), `│ Status: *${enabled ? "ALL ON" : "ALL OFF"}*\n│ Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch saluran\``))
+    return m.reply(claraWrap("Switch Channel", "🔔") + "\n\n" + claraWrap(toSC("SEMUA EVENT"), `│ Status: *${enabled ? "ALL ON" : "ALL OFF"}*\n│ Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch channel\``))
   }
 
   if (NOTIFY_EVENTS[subCmd]) {
@@ -323,12 +323,12 @@ async function handleSaluran(m, { sock, config: cfg }) {
     const current = statuses[subCmd].enabled
     const newVal = !current
     setNotifyEnabled(subCmd, newVal)
-    return m.reply(claraWrap("Switch Saluran", "🔔") + "\n\n" + claraWrap(toSC("TOGGLE BERHASIL"), `│ Event: *${NOTIFY_EVENTS[subCmd]}*\n│ Status: *${newVal ? "ON" : "OFF"}*`) + "\n\n" + tipText(newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan") + "\n" + tipText(`Cek semua: \`${prefix}switch saluran\``))
+    return m.reply(claraWrap("Switch Channel", "🔔") + "\n\n" + claraWrap(toSC("TOGGLE BERHASIL"), `│ Event: *${NOTIFY_EVENTS[subCmd]}*\n│ Status: *${newVal ? "ON" : "OFF"}*`) + "\n\n" + tipText(newVal ? "Notifikasi akan dikirim ke channel" : "Notifikasi dimatikan") + "\n" + tipText(`Cek semua: \`${prefix}switch channel\``))
   }
 
   let list = ""
   for (const [key, label] of Object.entries(NOTIFY_EVENTS)) list += `\`${key}\` — ${label}\n`
-  return m.reply(claraWrap("Switch Saluran", `Event: *${subCmd}*\nTidak ada dalam daftar toggle`) + "\n" + toSC("EVENT TERSEDIA") + ":\n\n" + list + "\n" + tipText(`Contoh: \`${prefix}switch saluran sewaRegister\``))
+  return m.reply(claraWrap("Switch Channel", `Event: *${subCmd}*\nTidak ada dalam daftar toggle`) + "\n" + toSC("EVENT TERSEDIA") + ":\n\n" + list + "\n" + tipText(`Contoh: \`${prefix}switch channel sewaRegister\``))
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -564,7 +564,7 @@ async function showMenu(m, sock) {
 │
 ├── 📢 *${toSC('SALURAN')}*
 │   ${toSC('Notifikasi event ke channel WhatsApp')}
-│   \`${prefix}switch saluran\`
+│   \`${prefix}switch channel\`
 │
 ├── 🏠 *${toSC('GROUP')}*
 │   ${toSC('Fitur grup (welcome, antilink, anti-toxic, dll)')}
@@ -586,7 +586,7 @@ ${toSC('Alias lama masih works')}: .enable .disable .togglefitur .autoread .auto
     const thumb = fs.readFileSync(path.join(process.cwd(), 'assets', 'images', 'nova.jpg'))
     await sock.sendButton(m.chat, thumb, text, m, {
       buttons: [
-        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '📢 Saluran', id: `${prefix}switch saluran` }) },
+        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '📢 Channel', id: `${prefix}switch channel` }) },
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '🏠 Group', id: `${prefix}switch group` }) },
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '⚡ Auto', id: `${prefix}switch auto` }) },
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '⚙️ Fitur', id: `${prefix}switch fitur` }) },
@@ -607,7 +607,7 @@ async function handler(m, { sock, config: cfg }) {
     const mode = getMode(cmd, args)
 
     if (mode === 'menu') return showMenu(m, sock)
-    if (mode === 'saluran') return handleSaluran(m, { sock, config: cfg })
+    if (mode === 'channel') return handleChannel(m, { sock, config: cfg })
     if (mode === 'group') return handleGroup(m, { sock, config: cfg })
     if (mode === 'group:on') return handleGroup(m, { sock, config: cfg })
     if (mode === 'group:off') return handleGroup(m, { sock, config: cfg, forceOff: true })
