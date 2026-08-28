@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
         return m.reply("╭──「 Crash Guard 」\n│ PM2 \"" + procName + "\" berhasil di-restart\n╰──────────❀")
       } catch (e) {
         await m.react("🐣")
-        return m.reply("╭──「 Crash Guard 」\n│ Gagal restart: " + e.message.slice(0, 100) + "\n╰──────────❀")
+        return m.reply("╭──「 🛡️ Crash Guard 」\n│ ❌ Gagal restart: " + e.message.slice(0, 100) + "\n╰──────────❀")
       }
     }
 

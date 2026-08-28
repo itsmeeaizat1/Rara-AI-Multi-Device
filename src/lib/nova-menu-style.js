@@ -414,3 +414,142 @@ function mediaCaption({
 }
 
 export { mediaCaption };
+
+// ═══════════════════════════════════════════════
+// NOVA REPLY — Pesan reply natural & menarik
+// ═══════════════════════════════════════════════
+
+const NOVA_REPLIES = {
+  empty: [
+    "Hmm, kosong nih 🗿 Coba pakai keyword lain yuk!",
+    "Yah, gak nemu apa-apa 😵 Mind aku ulang?",
+    "Duh, hasilnya kosong 🫠 Coba kata kunci yang lebih spesifik?",
+    "Waduh, gak ada hasil nih 🥲 Mungkin coba lagi nanti ya",
+  ],
+  error: [
+    "Yah, ada yang error nih 😵 Coba lagi beberapa detik yuk!",
+    "Duh, system-nya lagi ngelag kayaknya 🫠 Ulang lagi ya",
+    "Hmm, kayaknya API-nya lagi turun 🥲 Coba lagi nanti",
+    "Waduh, gagal terus nih 😭 Sabar ya, coba lagi bentar",
+  ],
+  notFound: [
+    "Gak nemu nih 🧐 Coba kata lain?",
+    "Hmm, gak ketemu hasilnya 🫠 Mungkin typo?",
+    "Yah, gak ada yang cocok 😵 Coba keyword lain yuk!",
+  ],
+  noInput: [
+    "Eh, input-nya mana nih 🗄️ Isi dulu dong",
+    "Kosong banget 😭 Kasih teks/link dong",
+    "Bentar, teksnya mana? 🫠 Jangan lupa diisi ya",
+  ],
+  noQuoted: [
+    "Reply pesannya dong 📿 Bukan komen stand-alone",
+    "Eh, reply media yang mau diproses ya 🫠",
+    "Harus reply image/sticker/video-nya 🗄️ Coba ulang",
+  ],
+  cooldown: [
+    "Sabar ya, lagi cooldown nih 🐣 Tunggu sebentar lagi",
+    "Hmm, terlalu cepat nih 🫠 Tunggu cooldown-nya habis",
+  ],
+  noPermission: [
+    "Khusus owner nih 🚫 Jangan sok asik",
+    "Maaf ya, fitur ini cuma buat owner 🫠",
+  ],
+};
+
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+/**
+ * Pesan error natural dalam box style
+ * @param {string} commandName - nama command
+ * @param {string} [detail] - detail error opsional
+ */
+function novaError(commandName, detail) {
+  const msg = pickRandom(NOVA_REPLIES.error);
+  const lines = [msg];
+  if (detail) lines.push(`_${scLine(detail)}_`);
+  return bracketBox('❌', commandName, lines);
+}
+
+/**
+ * Pesan kosong/not found natural dalam box style
+ * @param {string} commandName - nama command
+ * @param {string} [detail] - detail opsional
+ */
+function novaEmpty(commandName, detail) {
+  const msg = pickRandom(NOVA_REPLIES.empty);
+  const lines = [msg];
+  if (detail) lines.push(`_${scLine(detail)}_`);
+  return bracketBox('🔍', commandName, lines);
+}
+
+/**
+ * Pesan "butuh input" natural dalam box style
+ * @param {string} commandName - nama command
+ * @param {string} [hint] - hint cara pakai
+ * @param {string} [example] - contoh command
+ */
+function novaNoInput(commandName, hint, example) {
+  const msg = pickRandom(NOVA_REPLIES.noInput);
+  const lines = [msg];
+  if (hint) {
+    lines.push("");
+    lines.push(`📌 *${toSC("Cara Pakai")}:*`);
+    lines.push(scLine(hint));
+  }
+  if (example) {
+    lines.push("");
+    lines.push(`💡 *${toSC("Contoh")}:*`);
+    lines.push(`\`${example}\``);
+  }
+  return bracketBox('⚠️', commandName, lines);
+}
+
+/**
+ * Pesan "reply media dulu" natural
+ * @param {string} commandName
+ * @param {string} [mediaType] - "image" | "sticker" | "video" | "audio"
+ */
+function novaNoQuoted(commandName, mediaType) {
+  const msg = pickRandom(NOVA_REPLIES.noQuoted);
+  const lines = [msg];
+  if (mediaType) {
+    lines.push(`_${scLine(`Butuh: ${mediaType}`)}_`);
+  }
+  return bracketBox('⚠️', commandName, lines);
+}
+
+/**
+ * Pesan sukses natural dalam box style
+ * @param {string} commandName
+ * @param {string} message - pesan sukses
+ */
+function novaSuccess(commandName, message) {
+  const lines = [scLine(message)];
+  return bracketBox('✅', commandName, lines);
+}
+
+/**
+ * Pesan info/guide natural dalam box style
+ * @param {string} commandName
+ * @param {string} intro - kalimat pembuka natural
+ * @param {string} [example] - contoh
+ * @param {string} [note] - catatan tambahan
+ */
+function novaGuide(commandName, intro, example, note) {
+  const lines = [scLine(intro)];
+  if (example) {
+    lines.push("");
+    lines.push(`💡 *${toSC("Contoh")}:*`);
+    lines.push(`\`${example}\``);
+  }
+  if (note) {
+    lines.push("");
+    lines.push(`_${scLine(note)}_`);
+  }
+  return bracketBox('i', commandName, lines);
+}
+
+export { novaError, novaEmpty, novaNoInput, novaNoQuoted, novaSuccess, novaGuide, pickRandom };

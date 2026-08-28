@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
     if (cinta.spouse) {
       return m.reply(
         `╭──「 *ʀᴘɢ ᴄᴏᴜᴘʟᴇ* 」\n` +
-        `│ ❤️ Kamu sudah berpacaran dengan *${cinta.spouseName}*\n` +
+        `│ ❤️ Eh udah punya pacar nih! Sama *${cinta.spouseName}*\n` +
         `│ 💕 Affection: *${cinta.affection || 0}*\n` +
         `│ Putus? \`${m.prefix}rpgcerai\`\n\n` +
         `╰──────────❀`
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     if ((rpg.level || 1) < DATING_MIN_LEVEL) {
       return m.reply(
         `╭──「 *ʀᴘɢ ᴄᴏᴜᴘʟᴇ* 」\n` +
-        `│ ❌ Level minimal *${DATING_MIN_LEVEL}* untuk berpacaran!\n` +
+        `│ ❌ Levelmu belum cukup nih! Butuh minimal *${DATING_MIN_LEVEL}*\n` +
         `│ Level kamu: *${rpg.level || 1}*\n\n` +
         `╰──────────❀`
       );
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
 
     if (!targetJid) {
       return m.reply(
-        `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
+        `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n│ Mau jadian? Tag orangnya atau reply pesannya ya!\n\n` +
         `│ \`${m.prefix}rpgcouple @tag\`\n` +
         `│ Reply pesan + \`${m.prefix}rpgcouple\`\n\n` +
         `╰──────────❀`

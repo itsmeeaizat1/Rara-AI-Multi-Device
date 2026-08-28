@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
+import { novaError, novaEmpty, novaNoInput, novaGuide } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
     name: "animev2",
@@ -22,8 +23,7 @@ async function handler(m, { sock }) {
         const query = m.text?.trim() || m.args?.join(" ")?.trim() || ""
 
         if (!query) {
-            const usageText = `╭──「 Anime Search 」\n│ ❌ *Masukkan nama anime!*\n│\n│ 💡 *Penggunaan:* ${pluginConfig.usage}\n│ 📝 *Contoh:* ${pluginConfig.example}\n╰──────────❀`
-            return m.reply(usageText)
+            return m.reply(novaGuide('Anime Search', 'Mau nyari anime apa nih? Ketik nama animenya ya!', pluginConfig.example))
         }
 
         if (m.react) await m.react("🕒")
@@ -39,9 +39,8 @@ async function handler(m, { sock }) {
         const animeList = response.data?.data || []
 
         if (!animeList || animeList.length === 0) {
-            if (m.react) await m.react("❌")
-            const notFoundText = `╭──「 Anime Search 」\n│ ❌ Tidak ditemukan hasil untuk: *${query}*\n╰──────────❀`
-            return m.reply(notFoundText)
+            if (m.react) await m.react("🐣")
+            return m.reply(novaEmpty('Anime Search', `Gak nemu anime "${query}" 🧐`))
         }
 
         const top5 = animeList.slice(0, 5)
@@ -67,7 +66,7 @@ async function handler(m, { sock }) {
         })
         listText += "╰──────────❀"
 
-        if (m.react) await m.react("✅")
+        if (m.react) await m.react("🐣")
 
         const imageUrl = top5[0]?.images?.jpg?.image_url || top5[0]?.images?.jpg?.large_image_url || null
 
@@ -98,9 +97,9 @@ async function handler(m, { sock }) {
 
     } catch (error) {
         console.error("[animev2] error:", error?.message || error)
-        if (m.react) await m.react("❌")
-        const errorText = `╭──「 Error 」\n│ ❌ Terjadi kesalahan saat mencari anime.\n│ ${error.response?.data?.message || error.message || 'Unknown error'}\n╰──────────❀`
-        return m.reply(errorText)
+        if (m.react) await m.react("🐣")
+        const errorMsg = error.response?.data?.message || error.message || 'Unknown error'
+        return m.reply(novaError('Anime Search', errorMsg))
     }
 }
 

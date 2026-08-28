@@ -41,7 +41,7 @@ export async function handler(m, { sock }) {
   try {
     const truth = getRandomTruth();
     if (!truth) {
-      await m.reply("╭──「 🎭 Truth 」\n│ ❌ Data tidak tersedia\n│ Coba lagi nanti ya\n╰──────────❀");
+      await m.reply("╭──「 🎭 Truth 」\n│ ❌ Hmm, truth-nya lagi kosong nih 🫠\n│ Coba lagi yuk!\n╰──────────❀");
       return;
     }
 
@@ -63,7 +63,7 @@ export async function handler(m, { sock }) {
     console.error("[truth] Error:", e.message);
     try {
       await m.react("❌");
-      await m.reply("╭──「 🎭 Truth 」\n│ ❌ Terjadi error\n│ Coba lagi nanti ya\n╰──────────❀");
+      await m.reply("╭──「 🎭 Truth 」\n│ ❌ Yah, ada error nih 😵\n│ Coba lagi bentar ya\n╰──────────❀");
     } catch {}
   }
 }

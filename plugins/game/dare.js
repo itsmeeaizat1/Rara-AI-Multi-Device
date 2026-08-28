@@ -41,7 +41,7 @@ export async function handler(m, { sock }) {
   try {
     const dare = getRandomDare();
     if (!dare) {
-      await m.reply("╭──「 🔥 Dare 」\n│ ❌ Data tidak tersedia\n│ Coba lagi nanti ya\n╰──────────❀");
+      await m.reply("╭──「 🔥 Dare 」\n│ ❌ Hmm, dare-nya lagi kosong nih 🫠\n│ Coba lagi yuk!\n╰──────────❀");
       return;
     }
 
@@ -63,7 +63,7 @@ export async function handler(m, { sock }) {
     console.error("[dare] Error:", e.message);
     try {
       await m.react("❌");
-      await m.reply("╭──「 🔥 Dare 」\n│ ❌ Terjadi error\n│ Coba lagi nanti ya\n╰──────────❀");
+      await m.reply("╭──「 🔥 Dare 」\n│ ❌ Yah, ada error nih 😵\n│ Coba lagi bentar ya\n╰──────────❀");
     } catch {}
   }
 }

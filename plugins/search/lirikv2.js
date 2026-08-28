@@ -3,6 +3,7 @@
 import { Client as GeniusClient } from 'genius-lyrics'
 import axios from 'axios'
 import config from '../../config.js'
+import { novaError, novaEmpty, novaNoInput, novaGuide } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
     name: "lirikv2",
@@ -60,17 +61,7 @@ async function handler(m, { sock }) {
         const query = (m.text || "").trim()
 
         if (!query) {
-            return m.reply(
-                "╭──「 Lirik v2 」\n" +
-                "│ Cari lirik lagu dari Genius/nexray\n" +
-                "│\n" +
-                "│ 📌 *Cara Pakai:*\n" +
-                "" + pluginConfig.usage + "\n" +
-                "│\n" +
-                "│ 💡 *Contoh:*\n" +
-                "" + pluginConfig.example + "\n" +
-                "╰──────────❀"
-            )
+            return m.reply(novaGuide('Lirik v2', 'Mau nyari lirik lagu? Ketik judulnya ya!', pluginConfig.example))
         }
 
         await m.react("🕒")
@@ -98,11 +89,7 @@ async function handler(m, { sock }) {
 
         if (!result) {
             await m.react("🐣")
-            return m.reply(
-                "╭──「 Lirik v2 」\n" +
-                "│ Lagu \"" + query + "\" tidak ditemukan.\n" +
-                "╰──────────❀"
-            )
+            return m.reply(novaEmpty('Lirik v2', `Gak nemu lagu "${query}" 🧐`))
         }
 
         // Format lyrics
@@ -139,12 +126,7 @@ async function handler(m, { sock }) {
     } catch (e) {
         console.error("[lirikv2] error:", e.message)
         await m.react("🐣")
-        return m.reply(
-            "╭──「 Error 」\n" +
-            "│ Gagal mencari lirik.\n" +
-            "" + (e.message || "Terjadi kesalahan") + "\n" +
-            "╰──────────❀"
-        )
+        return m.reply(novaError('Lirik v2', e.message))
     }
 }
 

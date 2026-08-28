@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     help += "│\n";
     help += `│ 💡 *Contoh:* \`${m.prefix}voicemaker Halo semuanya\`\n`;
     help += "╰──────────❀";
-    return m.reply(help, "voicemaker");
+    return m.reply(novaGuide("VoiceMaker", "Mau bikin voice dari teks? Pilih voice-nya ya!", `${m.prefix}voicemaker id-ArdiNeural Halo dunia`));
   }
 
   let voice = "id-ID-ArdiNeural";
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
   }
 
   if (!ttsText || ttsText.length > 500) {
-    return m.reply("╭──「 🎙️ VoiceMaker 」\n│ ❌ Teks kosong atau terlalu panjang\n│ Maksimal 500 karakter\n╰──────────❀", "voicemaker");
+    return m.reply(novaError("VoiceMaker", "Teks kosong atau kepanjangan, max 500 karakter ya!"));
   }
 
   await m.react("🕒");
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
 
     const buf = Buffer.from(res.data);
     if (buf.length < 100) {
-      return m.reply("╭──「 🎙️ VoiceMaker 」\n│ ❌ Gagal generate voice\n│ Coba lagi nanti\n╰──────────❀", "voicemaker");
+      return m.reply(novaError("VoiceMaker", "Gagal generate voice-nya nih"));
     }
 
     await sock.sendMessage(
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     console.error("[VoiceMaker] Error:", err.message);
     await m.react("❌");
-    return m.reply(te(m.prefix, m.command, m.pushName), "voicemaker");
+    return m.reply(novaError("VoiceMaker", e.message));
   }
 }
 

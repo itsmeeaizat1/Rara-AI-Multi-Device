@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
+import { bracketBox, novaError } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: "joke",
@@ -20,20 +21,16 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     try {
         const { data } = await axios.get('https://v2.jokeapi.dev/joke/Any?safe-mode')
-        let text = '╭──「 😂 Random Joke 」\n'
-        if (data.type === 'twopart') {
-            text += '│ ' + data.setup + '\n'
-            text += '│ ' + data.delivery + '\n'
-        } else {
-            text += '│ ' + data.joke + '\n'
-        }
-        text += '│\n'
-        text += '│ 💡 Semoga bikin ngakak!\n'
-        text += '╰──────────❀'
+        const jokeLines = data.type === 'twopart'
+            ? [data.setup, data.delivery]
+            : [data.joke];
+        jokeLines.push("", "💡 Semoga bikin ngakak!");
+        
+        const text = bracketBox('😂', 'Random Joke', jokeLines);
         await m.reply(text)
         await m.react("😂")
     } catch (e) {
-        await m.reply('╭──「 😂 Joke 」\n│ ❌ Gagal mengambil joke\n│ API mungkin sedang down\n╰──────────❀')
+        await m.reply(novaError('Joke', 'Gagal mengambil joke, API mungkin sedang down'))
         await m.react("❌")
     }
 }
