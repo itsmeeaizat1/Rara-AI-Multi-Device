@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'add',
     alias: ["add"],
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
                 const groupInfo = await sock.groupGetInviteInfo(linkMatch[1])
                 targetGroup = groupInfo.id
             } catch (e) {
-                return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nLink grup tidak valid atau sudah expired!`))
+                return m.reply(novaError("Add", "Link grup gak valid atau expired nih"))
             }
         } else if (arg.includes('@g.us')) {
             targetGroup = arg
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     }
     
     if (targetNumbers.length === 0) {
-        return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nMasukkan nomor yang valid!`))
+        return m.reply(novaError("Add", "Nomor gak valid nih"))
     }
     
     if (!targetGroup) {
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
         )
         
         if (!botParticipant || !['admin', 'superadmin'].includes(botParticipant.admin)) {
-            return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nBot bukan admin di grup *${groupMeta.subject}*!`))
+            return m.reply(novaError("Add", "Bot bukan admin di grup " + groupMeta.subject))
         }
         
         if (!m.isGroup) {
@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
             )
             
             if (!senderParticipant || !['admin', 'superadmin'].includes(senderParticipant.admin)) {
-                return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nKamu bukan admin di grup *${groupMeta.subject}*!`))
+                return m.reply(novaError("Add", "Kamu bukan admin di grup " + groupMeta.subject))
             }
         }
         

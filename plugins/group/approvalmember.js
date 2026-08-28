@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { novaError, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 function claraWrap(title, text) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
@@ -107,11 +108,7 @@ async function handler(m, { sock }) {
 
     return await formatAndReply( text, "approvalmember");
   } catch (error) {
-    return m.reply(
-      "Gagal mengubah pengaturan persetujuan member.\n\n" +
-      "Error: " + (error.message || "Unknown error") + "\n\n" +
-      "Pastikan bot adalah admin grup."
-    );
+    return m.reply(novaError("ApprovalMember", "Gagal ubah pengaturan nih — pastikan bot admin grup"));
   }
 }
 
