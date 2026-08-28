@@ -2,7 +2,7 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "android1-get",
   alias: ["android1-get"],
@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url || !url.includes("an1.com")) {
-    return m.reply(claraWrap("Android1-get", `❌ URL tidak valid! Harus URL dari an1.com`));
+    return m.reply(novaError("Android1Get", "URL gak valid nih! Harus dari an1.com"));
   }
 
   m.react("🕒");
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     );
 
     if (!data?.status || !data?.data) {
-      throw new Error("Gagal mengambil detail APK");
+      throw new Error("Gagal ambil detail APK nih");
     }
 
     const app = data.data;

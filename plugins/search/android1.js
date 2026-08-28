@@ -5,7 +5,7 @@ import config from "../../config.js";
 import fs from "fs";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "android1",
   alias: ["android1"],
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     );
 
     if (!data?.status || !data?.data?.length) {
-      return m.reply(`❌ Tidak ditemukan hasil untuk: \`${text}\``);
+      return m.reply(`Gak nemu hasil untuk: ${text} nih`);
     }
 
     const apps = data.data.slice(0, 10);

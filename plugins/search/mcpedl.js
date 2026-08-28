@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
         const items = result.results.slice(0, 10)
 
         if (items.length === 0) {
-            return m.reply(claraWrap("mcpedl", `❌ Tidak ditemukan hasil MCPEDL untuk: ${query}`))
+            return m.reply(novaError("MCPEDL", `Gak nemu hasil untuk: ${query} nih`))
         }
 
         let caption = '🧱 *ᴍᴄᴘᴇᴅʟ ꜱᴇᴀʀᴄʜ*\n\n'

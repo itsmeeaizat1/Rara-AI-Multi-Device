@@ -12,7 +12,7 @@ import {
 } from "nova";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const execAsync = promisify(exec);
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data?.length) {
-      return m.reply(claraWrap("pinvid", `❌ Tidak ditemukan video untuk: ${query}`));
+      return m.reply(novaError("PinVid", `Gak nemu video untuk: ${query} nih`));
     }
 
     const videos = res.data.data.slice(0, 5);
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
     }
 
     if (mediaList.length === 0) {
-      return m.reply(claraWrap("pinvid", `❌ Gagal mengunduh video`));
+      return m.reply(novaError("PinVid", "Gagal download video nih"));
     }
 
 

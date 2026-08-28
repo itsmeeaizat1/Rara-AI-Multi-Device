@@ -10,7 +10,7 @@ import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo } from "../../src/scraper/nova-ytdlp.js";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "playvideo",
@@ -169,7 +169,7 @@ async function handler(m, { sock }) {
     m.reply(
       claraWrap(
         "playvideo",
-        "Gagal mengunduh video. Coba lagi nanti ya",
+        "Gagal download video nih, coba lagi ya",
       ),
     );
   }

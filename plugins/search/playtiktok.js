@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "playtiktok",
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
   try {
     const videos = await tiktokSearchVideo(query);
     if (!videos || videos.length === 0) {
-      return m.reply(claraWrap("playtiktok", `❌ Tidak ditemukan video untuk: ${query}`));
+      return m.reply(novaError("PlayTikTok", `Gak nemu video untuk: ${query} nih`));
     }
 
     const video = videos[0];

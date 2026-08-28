@@ -2,7 +2,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "wikipedia",
@@ -191,7 +191,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ") || m.text?.trim();
 
   if (!query) {
-    return m.reply(claraWrap("Wikipedia", "❌ Masukkan kata kunci pencarian Wikipedia.\n\n💡 *Contoh:* `.wikipedia Indonesia`"));
+    return m.reply(novaGuide("Wikipedia", "Masukin kata kunci pencarian nih!", ".wikipedia Indonesia"));
   }
 
   await m.react("🕒");
@@ -238,7 +238,7 @@ async function handler(m, { sock }) {
 
   } catch (error) {
     console.error("[Wikipedia Search]", error.message);
-    m.reply(claraWrap("wikipedia", "😔 Terjadi kesalahan saat mencari artikel di Wikipedia."));
+    m.reply(novaError("Wikipedia", "Ada error nih, coba lagi ya"));
   }
 }
 

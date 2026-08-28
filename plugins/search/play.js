@@ -10,7 +10,7 @@
 import yts from "yt-search";
 import axios from "axios";
 import config from "../../config.js";
-import { claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
 import { downloadAudio, downloadVideo } from "../../src/scraper/nova-ytdlp.js";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
 import { generateWAMessageFromContent } from "nova";
@@ -79,7 +79,7 @@ async function getAudioDownloadCuki(url, quality = "128") {
     };
   }
 
-  throw new Error(fallback?.mess || "Gagal mendapatkan audio download URL");
+  throw new Error(fallback?.mess || "Gagal dapet audio download URL nih");
 }
 
 /**

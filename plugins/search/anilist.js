@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // anilist.js — AniList GraphQL: search, seasonal, top, detail (no API key)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -70,7 +70,7 @@ async function handler(m, { sock, config, db }) {
       const list = data?.Page?.media || [];
       if (!list.length) {
         await m.react("🐣");
-        return m.reply(claraWrap("AniList", `Tidak ditemukan anime untuk: "${query}"`));
+        return m.reply(novaError("AniList", `Gak nemu anime untuk: "${query}" nih`));
       }
       text = `Hasil pencarian: "${query}"\n\n` + list.map(fmtAnime).join("\n\n");
     }
@@ -101,7 +101,7 @@ async function handler(m, { sock, config, db }) {
       const id = parseInt(query);
       if (!id) {
         await m.react("🐣");
-        return m.reply(claraWrap("AniList", `ID tidak valid. Contoh: ${m.prefix}anilist detail 21`));
+        return m.reply(novaGuide("AniList", "ID gak valid nih!", ".anilist detail 21"));
       }
       const data = await gql(
         `query($id: Int) { Media(id: $id, type: ANIME) { id title { romaji english } description averageScore episodes status format duration genres studios { nodes { name } } } }`,

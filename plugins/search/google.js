@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { GoogleSearch } from "../../src/scraper/google.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "google",
@@ -37,13 +37,13 @@ async function handler(m, { sock }) {
     const result = await GoogleSearch(query);
 
     if (!result.status) {
-      return m.reply(claraWrap("google", `❌ *ɢᴏᴏɢʟᴇ ɢᴀɢᴀʟ*\n\n${result.error}`));
+      return m.reply(novaError("Google", result.error || "Gagal cari nih"));
     }
 
     const items = result.results.slice(0, 10);
 
     if (items.length === 0) {
-      { const __navText = `❌ Nggak nemu hasil buat: *${query}*`; return await m.reply(__navText); };
+      return m.reply(novaError("Google", `Gak nemu hasil untuk: ${query} nih`));
     }
 
     let txt = `🔍 *ɢᴏᴏɢʟᴇ ɴᴇᴡꜱ*\n\n`;
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
     m.react("🐣");
   } catch (e) {
     console.error(e);
-    m.reply(claraWrap("google", "❌ Gagal mencari di Google, coba lagi nanti"));
+    m.reply(novaError("Google", "Gagal cari di Google nih, coba lagi ya"));
   }
 }
 

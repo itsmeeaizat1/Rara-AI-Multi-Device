@@ -3,7 +3,7 @@ import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { generateWAMessageFromContent } from "nova";
 import sharp from "sharp";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -24,7 +24,7 @@ const pluginConfig = {
 
 async function handler(m, { sock, text }) {
   if (!text) {
-    return m.reply( claraWrap("Spotify", "❌ *Waduh, kata kuncinya mana nih?*\n\nKamu harus memasukkan judul lagu atau nama artis yang ingin dicari di Spotify. \n\nContoh penggunaan: `.spotify bruno mars`"), { commandName: "spotify" });
+    return m.reply( novaGuide("Spotify", "Kata kuncinya mana nih?", ".spotify bruno mars"), { commandName: "spotify" });
   }
 
   await m.react("🕒");
@@ -104,7 +104,7 @@ async function handler(m, { sock, text }) {
 
   } catch (err) {
     console.error("[Spotify Search]", err.message);
-    m.reply(claraWrap("spotify", "😔 *Aduh, sepertinya API sedang bermasalah.* \n\nTerjadi kesalahan fatal saat mencoba memproses pencarian Spotify. Silakan coba lagi nanti ya!"));
+    m.reply(novaError("Spotify", "API lagi bermasalah nih, coba lagi ya"));
   }
 }
 

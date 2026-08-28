@@ -7,7 +7,7 @@ import {
 } from "nova";
 import te from "../../src/lib/nova-error.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ttsearch",
   alias: ["ttsearch"],
@@ -43,7 +43,7 @@ Usage: \`${m.prefix}ttsearch <query>\`
     const videos = await tiktokSearchVideo(query);
 
     if (!videos || videos.length === 0) {
-      return m.reply(claraWrap("ttsearch", `❌ Tidak ditemukan video untuk: ${query}`));
+      return m.reply(novaError("TTSearch", `Gak nemu video untuk: ${query} nih`));
     }
 
     const maxShow = Math.min(videos.length, 5);

@@ -6,7 +6,7 @@ import {
 } from "nova";
 import te from "../../src/lib/nova-error.js";
 import { f } from "../../src/lib/nova-http.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pap",
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
   const validTypes = ["cewe", "cowo", "femboy"];
 
   if (!arg || !validTypes.includes(arg)) {
-    return m.reply( claraWrap("Pap", "❌ Pilih salah satu tipe pap yang tersedia: `cewe`, `cowo`, atau `femboy`.\n\n💡 *Contoh:* `.pap cewe`"), { commandName: "pap" });
+    return m.reply( novaGuide("Pap", "Pilih tipe pap: cewe, cowo, atau femboy", ".pap cewe"), { commandName: "pap" });
   }
 
   await m.react("🕒");
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
 
     const results = data?.data;
     if (!results || results.length === 0) {
-      return m.reply(claraWrap("Pap", `❌ Waduh, pap ${query} lagi kosong nih. Coba lagi nanti.`));
+      return m.reply(novaError("Pap", `Pap ${query} lagi kosong nih, coba lagi ya`));
     }
 
     const randomItem = results[Math.floor(Math.random() * results.length)];
@@ -134,7 +134,7 @@ async function handler(m, { sock }) {
 
   } catch (error) {
     console.error("[PAP Search]", error.message);
-    m.reply(claraWrap("pap", "😔 Gagal memuat PAP. Server Pinterest mungkin sedang bermasalah."));
+    m.reply(novaError("Pap", "Gagal load PAP nih, server lagi bermasalah"));
   }
 }
 

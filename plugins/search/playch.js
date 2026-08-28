@@ -11,7 +11,7 @@ import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const run = promisify(exec);
 const pluginConfig = {
   name: "playch",
@@ -56,7 +56,7 @@ async function getPlayChAudioDownload(url) {
     return { download: fallback.dl, title: fallback.title, isFallback: true };
   }
 
-  throw new Error(fallback?.mess || "Gagal mendapatkan audio saluran URL");
+  throw new Error(fallback?.mess || "Gagal dapet audio saluran nih");
 }
 
 async function toOggOpus(mp3Buf) {
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
   try {
     const { videos } = await yts(q);
     const video = pickVideo({ videos });
-    if (!video) return m.reply(claraWrap("Playch", `❌ Video tidak ditemukan`));
+    if (!video) return m.reply(novaError("PlayCh", "Video gak nemu nih"));
 
     const ytChannel = video.author?.name || video.author?.username || "Unknown";
 
