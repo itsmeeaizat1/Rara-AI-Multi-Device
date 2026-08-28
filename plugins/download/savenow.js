@@ -5,7 +5,7 @@
 import axios from "axios";
 import { getSaveNowKey } from "../../src/lib/config/env-loader.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "savenow",
@@ -156,30 +156,13 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
 
   if (!text) {
-    const helpText =
-      "╭──「 SaveNow Downloader 」\n" +
-      "│ Download video/audio dari berbagai platform\n" +
-      "│ via savenow.to (4kdownload.to)\n" +
-      "│\n" +
-      "├──「 Format Tersedia 」\n" +
-      "│ mp3 — Audio saja\n" +
-      "│ 360 — Video 360p\n" +
-      "│ 480 — Video 480p\n" +
-      "│ 720 — Video 720p\n" +
-      "│ 1080 — Video 1080p\n" +
-      "│\n" +
-      "├──「 Platform Support 」\n" +
-      "│ YouTube, Instagram, TikTok\n" +
-      "│ Facebook, Twitter/X, Pinterest\n" +
-      "│ Threads, Reddit, Dailymotion\n" +
-      "│\n" +
-      '│ 📌 Contoh:\n' +
-      `│ ${m.prefix}savenow https://youtu.be/xxx\n` +
-      `│ ${m.prefix}savenow https://youtu.be/xxx mp3\n` +
-      `│ ${m.prefix}savenow https://youtu.be/xxx 720\n` +
-      `│ ${m.prefix}sn https://ig reel/xxx 1080\n` +
-      "╰──────────❀";
-    return m.reply(helpText);
+    return m.reply(
+      novaGuide(
+        "SaveNow",
+        "Masukkan URL media yang mau kamu download ya!\nFormat: mp3, 360, 480, 720, 1080 (default: mp3)",
+        `${m.prefix}savenow https://youtu.be/xxx 720`
+      )
+    );
   }
 
   const { url, format } = parseArgs(text);
@@ -187,7 +170,7 @@ async function handler(m, { sock }) {
   if (!url || !url.startsWith("http")) {
     await m.react("❗");
     return m.reply(
-      claraWrap("SaveNow", "URL tidak valid!\nKirim URL dari YouTube, IG, TikTok, FB, dll")
+      novaGuide("SaveNow", "URL-nya tidak valid nih! Kirim link dari YouTube, IG, TikTok, FB, dll", `${m.prefix}savenow https://youtu.be/xxx`)
     );
   }
 
@@ -195,7 +178,7 @@ async function handler(m, { sock }) {
   if (!apiKey) {
     await m.react("❌");
     return m.reply(
-      claraWrap("SaveNow", "API key savenow.to belum di-set.\nHubungi owner untuk konfigurasi.")
+      novaError("SaveNow", "API key savenow.to belum terkonfigurasi. Hubungi owner bot ya!")
     );
   }
 
@@ -233,11 +216,7 @@ async function handler(m, { sock }) {
       // Kalau buffer terlalu besar, kirim URL aja
       if (dlErr?.code === "ERR_BAD_RESPONSE" || String(dlErr).includes("maxContentLength")) {
         return m.reply(
-          "╭──「 " + platformIcon + " SaveNow 」\n" +
-          "│ File terlalu besar untuk dikirim langsung\n" +
-          "│ Download manual:\n" +
-          "" + result.download_url + "\n" +
-          "╰──────────❀"
+          novaError("SaveNow", `File terlalu besar untuk dikirim langsung. Download manual:\n${result.download_url}`)
         );
       }
       throw dlErr;
@@ -283,11 +262,9 @@ async function handler(m, { sock }) {
     console.error("[savenow.js]:", error.message);
     await m.react("❌");
     m.reply(
-      claraWrap(
+      novaError(
         "SaveNow",
-        "Gagal download: " + (error.message || "unknown error").slice(0, 100) +
-        "\nCoba lagi nanti atau ganti format",
-        "error"
+        "Gagal download — coba ganti format atau coba lagi nanti ya!"
       )
     );
   }

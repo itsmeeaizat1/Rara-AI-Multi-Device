@@ -8,7 +8,7 @@ import path from "path";
 import https from "https";
 import http from "http";
 import { URL } from "url";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const DB_FILE = path.join(process.cwd(), "database", "checklink.json");
 
@@ -453,7 +453,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Auto-Shield ON ───
     if (command === "checklinkon") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Perintah ini khusus Owner bot."));
+        await m.reply(novaError("Link Shield", "Fitur ini khusus Owner bot aja ya!"));
         return;
       }
       await m.react("🕒");
@@ -470,7 +470,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Auto-Shield OFF ───
     if (command === "checklinkoff") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Perintah ini khusus Owner bot."));
+        await m.reply(novaError("Link Shield", "Fitur ini khusus Owner bot aja ya!"));
         return;
       }
       await m.react("🕒");
@@ -486,7 +486,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Auto-Delete ON ───
     if (command === "checklinkdelon") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Perintah ini khusus Owner bot."));
+        await m.reply(novaError("Link Shield", "Fitur ini khusus Owner bot aja ya!"));
         return;
       }
       await m.react("🕒");
@@ -503,7 +503,7 @@ async function handler(m, { sock }) {
     // ─── Toggle: Auto-Delete OFF ───
     if (command === "checklinkdeloff") {
       if (!isOwner) {
-        await m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Perintah ini khusus Owner bot."));
+        await m.reply(novaError("Link Shield", "Fitur ini khusus Owner bot aja ya!"));
         return;
       }
       await m.react("🕒");
@@ -575,22 +575,7 @@ async function handler(m, { sock }) {
       }
 
       if (!urlToCheck) {
-        const help = claraWrap(
-          "Link Shield",
-          [
-            "Cara pakai:",
-            "",
-            "1. .checklink <url> - Cek link manual",
-            "2. Reply pesan yang ada link, ketik .checklink",
-            "3. .checklinkon - Auto-shield on (owner)",
-            "4. .checklinkoff - Auto-shield off (owner)",
-            "5. .checklinkdelon - Auto-delete on (owner)",
-            "6. .checklinkdeloff - Auto-delete off (owner)",
-            "",
-            "Contoh: .checklink https://example.com",
-          ].join("\n")
-        );
-        await m.reply( help, { commandName: "checklink" });
+        await m.reply(novaNoInput("Link Shield", "Ketik .checklink <url> atau reply pesan berisi link yang ingin dicek.\nContoh: .checklink https://example.com"));
         await m.react("🐣");
         return;
       }
@@ -627,7 +612,7 @@ async function handler(m, { sock }) {
     }
   } catch (e) {
     console.error("Checklink error:", e.message);
-    await m.reply(claraWrap("Link Shield", "Terjadi error saat menganalisis link. Coba lagi nanti."));
+    await m.reply(novaError("Link Shield", "Terjadi kendala saat menganalisis link, coba lagi nanti ya!"));
   }
 }
 

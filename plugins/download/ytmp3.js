@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ytmp3",
   alias: ["ytmp3"],
@@ -36,10 +36,24 @@ async function getAudioDownload(url) {
 
 async function handler(m, { sock }) {
   const url = m.text?.trim();
-  if (!url)
-    return m.reply( claraWrap("Ytmp3", `Contoh: ${m.prefix}ytmp4 https://youtube.com/watch?v=xxx`), { commandName: "ytmp3" });
-  if (!url.includes("youtube.com") && !url.includes("youtu.be"))
-    { const __navText = "❌ URL harus YouTube"; return await m.reply(__navText); };
+  if (!url) {
+    return m.reply(
+      novaGuide(
+        "YTmp3",
+        "Kirim URL YouTube yang ingin kamu konversi ke audio MP3!",
+        `${m.prefix}ytmp3 https://youtube.com/watch?v=xxx`
+      )
+    );
+  }
+  if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
+    return await m.reply(
+      novaGuide(
+        "YTmp3",
+        "Link-nya harus URL YouTube yang valid ya!",
+        `${m.prefix}ytmp3 https://youtu.be/xxx`
+      )
+    );
+  }
 
   m.react("🕒");
 
@@ -87,8 +101,8 @@ async function handler(m, { sock }) {
     await m.reply(caption);
     m.react("🐣");
   } catch (err) {
-    console.error("[YTMP4]", err);
-    m.reply(claraWrap("ytmp3", "Gagal mengunduh video."));
+    console.error("[YTMP3]", err);
+    m.reply(novaError("YTmp3", "Gagal mengunduh audio YouTube — coba lagi nanti atau ganti link ya!"));
   }
 }
 

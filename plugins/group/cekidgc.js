@@ -4,7 +4,7 @@ import config from "../../config.js";
 import axios from "axios";
 import { generateWAMessageFromContent, proto } from "nova";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "cekidgc",
@@ -48,40 +48,33 @@ async function handler(m, { sock }) {
         ?.split(/[\s?]/)[0];
 
       if (!inviteCode) {
-        return m.reply(claraWrap("Cekidgc", `── .✦ ──\n\nLink grup tidak valid .☘︎ ݁˖`));
+        return m.reply(novaError("Cek ID Grup", "Link grup yang kamu masukkan gak valid nih!"));
       }
 
       try {
         groupMeta = await sock.groupGetInviteInfo(inviteCode);
         groupJid = groupMeta?.id;
       } catch {
-        return m.reply(
-          `── .✦ ──\n\nLink grup tidak valid atau sudah expired .☘︎ ݁˖`,
-        );
+        return m.reply(novaError("Cek ID Grup", "Link grup gak valid atau udah expired nih!"));
       }
     } else if (input && input.endsWith("@g.us")) {
       groupJid = input;
       try {
         groupMeta = await sock.groupMetadata(groupJid);
       } catch {
-        return m.reply(
-          `── .✦ ──\n\nTidak bisa mengakses grup tersebut .☘︎ ݁˖`,
-        );
+        return m.reply(novaError("Cek ID Grup", "Gak bisa mengakses grup tersebut nih!"));
       }
     } else if (m.isGroup) {
       groupJid = m.chat;
       groupMeta = await sock.groupMetadata(groupJid);
     } else {
       return m.reply(
-        `── .✦ 𝗖𝗘𝗞 𝗜𝗗 𝗚𝗥𝗨𝗣 ✦. ── 𝜗ৎ\n\n` +
-          `Gunakan di grup atau masukkan link grup\n\n` +
-          `\`${m.prefix}cekidgc\` — di dalam grup\n` +
-          `\`${m.prefix}cekidgc https://chat.whatsapp.com/xxx\``,
+        novaNoInput("Cek ID Grup", `Gunakan perintah ini di dalam grup atau masukkan link/ID grup ya!\n\nContoh:\n${m.prefix}cekidgc\n${m.prefix}cekidgc https://chat.whatsapp.com/xxx`)
       );
     }
 
     if (!groupMeta || !groupJid) {
-      return m.reply(claraWrap("Cekidgc", `── .✦ ──\n\nTidak dapat menemukan info grup .☘︎ ݁˖`));
+      return m.reply(novaEmpty("Cek ID Grup", "Data info grup gak ditemukan nih."));
     }
 
     const groupName = groupMeta.subject || "Unknown";
@@ -250,7 +243,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (error) {
     console.error("[CekIdGc] Error:", error.message);
-    m.reply(claraWrap("cekidgc", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaError("Cek ID Grup", "Terjadi kendala saat memproses info grup, coba lagi nanti ya!"));
   }
 }
 

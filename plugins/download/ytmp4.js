@@ -2,7 +2,7 @@
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import config from "../../config.js";
-import { claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ytmp4",
   alias: ["ytmp4"],
@@ -53,10 +53,24 @@ async function getVideoDownloadUrl(url) {
 
 async function handler(m, { sock }) {
   const url = m.text?.trim();
-  if (!url)
-    return m.reply( claraWrap("Ytmp4", `Contoh: ${m.prefix}ytmp4 https://youtube.com/watch?v=xxx`), { commandName: "ytmp4" });
-  if (!url.includes("youtube.com") && !url.includes("youtu.be"))
-    { const __navText = "❌ URL harus YouTube"; return await m.reply(__navText); };
+  if (!url) {
+    return m.reply(
+      novaGuide(
+        "YTmp4",
+        "Kirim URL video YouTube yang mau kamu download!",
+        `${m.prefix}ytmp4 https://youtube.com/watch?v=xxx`
+      )
+    );
+  }
+  if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
+    return await m.reply(
+      novaGuide(
+        "YTmp4",
+        "Link-nya harus URL YouTube yang valid ya!",
+        `${m.prefix}ytmp4 https://youtu.be/xxx`
+      )
+    );
+  }
 
   m.react("🕒");
 
@@ -87,7 +101,7 @@ async function handler(m, { sock }) {
     m.react("🐣");
   } catch (err) {
     console.error("[YTMP4]", err);
-    m.reply(claraWrap("ytmp4", "Gagal mengunduh video."));
+    m.reply(novaError("YTmp4", "Gagal mengunduh video YouTube — coba lagi nanti atau ganti link ya!"));
   }
 }
 

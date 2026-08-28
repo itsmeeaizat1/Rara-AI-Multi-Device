@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
     name: 'antiphising',
@@ -28,14 +28,7 @@ function handler(m, { sock }) {
     if (!option) {
         const status = groupData.antiphising || 'off'
         const mode = groupData.antiphisingMode || 'remove'
-        return m.reply( `🎣 *Antiphising*\n\n` +
-            `Status: *${status.toUpperCase()}*\n` +
-            `Mode: *${mode.toUpperCase()}*\n\n` +
-            `Deteksi pesan phising seperti klik link, verifikasi akun, login palsu, shortener mencurigakan, URL IP, punycode, dan pola sejenis.\n\n` +
-            `\`${m.prefix}antiphising on\`\n` +
-            `\`${m.prefix}antiphising off\`\n` +
-            `\`${m.prefix}antiphising metode kick\`\n` +
-            `\`${m.prefix}antiphising metode remove\``, "antiphising")
+        return m.reply(novaGuide("Anti-Phishing", `Status: ${status.toUpperCase()} | Mode: ${mode.toUpperCase()}\n\nDeteksi link phishing, verifikasi palsu, dan scam URL di grup.`, `${m.prefix}antiphising on`))
     }
 
     if (option === 'on') {
@@ -58,7 +51,7 @@ function handler(m, { sock }) {
             db.setGroup(m.chat, { antiphising: 'on', antiphisingMode: 'remove' })
             return m.reply(claraWrap("Antiphising", '✅ *AntiPhising mode DELETE diaktifkan*'))
         }
-        return m.reply(claraWrap("Antiphising", '❌ Metode tidak valid! Gunakan: `kick` atau `remove`'))
+        return m.reply(novaError("Anti-Phishing", "Metode penanganan tidak valid! Gunakan: kick atau remove"))
     }
 
     if (option === 'kick') {
@@ -71,7 +64,7 @@ function handler(m, { sock }) {
         return m.reply(claraWrap("Antiphising", '✅ *AntiPhising mode DELETE diaktifkan*'))
     }
 
-    return m.reply(claraWrap("Antiphising", '❌ Opsi tidak valid! Gunakan: `on`, `off`, `metode kick`, `metode remove`'))
+    return m.reply(novaError("Anti-Phishing", "Opsi tidak valid nih! Gunakan: on, off, metode kick, atau metode remove"))
 }
 
 export { pluginConfig as config, handler }

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, novaCaption, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ytmp3v2",
@@ -39,13 +39,13 @@ async function rlGet(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(novaCaption({
-  emoji: "🎵",
-  name: "ytmp3v2",
-  description: "Download YouTube MP3 via (V2)",
-  usage: `${m.prefix}ytmp3v2 <url>`,
-  example: `${m.prefix}ytmp3v2 https://youtu.be/xxx`,
-}), "ytmp3v2")
+    return m.reply(
+      novaGuide(
+        "YTmp3 v2",
+        "Kirim URL YouTube yang mau kamu download audionya!",
+        `${m.prefix}ytmp3v2 https://youtu.be/xxx`
+      )
+    );
   }
   m.react("🕒");
   try {
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
     m.react("🐣");
   } catch (e) {
     console.error("[YTMP3V2]", e.message);
-    m.reply(claraWrap("Ytmp3v2", `Gagal mengambil audio.\n>${e.message}`));
+    m.reply(novaError("YTmp3 v2", "Gagal mengambil audio YouTube — coba lagi nanti ya!"));
   }
 }
 export { pluginConfig as config, handler };

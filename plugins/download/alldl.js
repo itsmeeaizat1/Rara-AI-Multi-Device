@@ -21,7 +21,7 @@ import { getSaveNowKey } from "../../src/lib/config/env-loader.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { sendMenuPreview } from "../../src/lib/send-menu.js";
-import { claraWrap, toSC, bracketBox, tipText, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, bracketBox, tipText, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "alldl",
@@ -176,7 +176,9 @@ async function handler(m, { sock }) {
     const session = dlSessions.get(m.sender);
     if (!session) {
       await m.react("❗");
-      return m.reply(claraWrap("alldl", `${toSC("Sesi download sudah kedaluwarsa")}\n${toSC("Kirim ulang link dengan")} ${prefix}alldl <url>`));
+      return m.reply(
+        novaGuide("AllDL", "Sesi download sudah kedaluwarsa nih! Silakan kirim ulang linknya ya.", `${prefix}alldl <url>`)
+      );
     }
 
     const { url, platform } = session;
@@ -256,11 +258,9 @@ async function handler(m, { sock }) {
       // Clear session
       dlSessions.delete(m.sender);
       return m.reply(
-        claraWrap(
-          "alldl",
-          `${toSC("Gagal download dari")} ${platform.name}\n` +
-          `${toSC("Coba lagi nanti atau pilih format lain")}`,
-          "error"
+        novaError(
+          "AllDL",
+          `Gagal download media dari ${platform.name} — coba lagi nanti atau pilih format lain ya!`
         )
       );
     }
@@ -277,11 +277,10 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       dlSessions.delete(m.sender);
       return m.reply(
-        bracketBox(platform.icon, `${toSC("Download")} — ${toSC(platform.name)}`, [
-          `${toSC("File terlalu besar untuk dikirim langsung")}`,
-          `${toSC("Download manual")}:`,
-          result.download_url,
-        ])
+        novaError(
+          "AllDL",
+          `File terlalu besar untuk dikirim langsung. Download manual di:\n${result.download_url}`
+        )
       );
     }
 
@@ -290,19 +289,16 @@ async function handler(m, { sock }) {
       try { await sock.sendMessage(m.chat, { delete: progressMsg.key }); } catch {}
     }
 
-    // Kirim media
+    // Format metadata kaya jika dari AIO
     const ctxInfo = saluranCtx();
-    const title = (result.title || "Downloaded").slice(0, 60);
-    const methodTag = usedMethod === "savenow" ? "SaveNow" : "AIO";
+    const title = result.title || "Downloaded";
+    const formatLabel = isAudio ? "🎵 MP3" : isImage ? "🖼️ Image" : `📹 ${result.format || "HD"}`;
+    const methodTag = usedMethod === "savenow" ? "SaveNow" : "AIO Scraper";
 
-    const formatLabel = isAudio ? "🎵 MP3" : isImage ? "🖼️ Image" : `📹 ${result.format}p`;
-
-    // Ambil metadata dari AIO result kalau ada
-    const aioMeta = usedMethod === "aio" ? (result.aioResult || {}) : {};
-
+    const aioMeta = result.aioResult || {};
     const caption = mediaCaption({
+      platform: platform.name,
       platformIcon: platform.icon,
-      platformName: platform.name,
       title: title,
       author: aioMeta.author || null,
       authorHandle: aioMeta.authorHandle || null,
@@ -355,7 +351,7 @@ async function handler(m, { sock }) {
     } catch (sendErr) {
       console.error("[alldl] Send error:", sendErr.message);
       await m.react("❌");
-      m.reply(claraWrap("alldl", `${toSC("Gagal mengirim media")}: ${sendErr.message.slice(0, 80)}`, "error"));
+      m.reply(novaError("AllDL", `Gagal mengirim media ke WhatsApp: ${sendErr.message.slice(0, 80)}`));
     }
 
     // Clear session
@@ -367,20 +363,12 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
 
   if (!text) {
-    const platformList = PLATFORM_MAP.map((p) => `${p.icon} ${toSC(p.name)}`).join("  ");
-    const helpBox = bracketBox("📥", "All Downloader", [
-      `${toSC("Paste link apapun, bot otomatis detect!")}`,
-      `${toSC("Pilih format mau video, audio, atau image")}`,
-    ]);
-    const supportBox = bracketBox("🌐", toSC("Platform Support"), platformList.split(/\s{2,}/).filter(Boolean).map((s) => s.trim()));
-    const exampleBox = bracketBox("💡", toSC("Contoh"), [
-      `${prefix}alldl https://youtu.be/xxx`,
-      `${prefix}alldl https://vt.tiktok.com/xxx`,
-      `${prefix}dl https://ig reel/xxx`,
-    ]);
-
     return m.reply(
-      helpBox + "\n\n" + supportBox + "\n\n" + exampleBox + "\n\n" + tipText(toSC("Cukup paste link, pilih format, download!"))
+      novaGuide(
+        "AllDL",
+        "Kirim link media dari YouTube, TikTok, IG, FB, dll. Nanti kamu bisa pilih mau download Video, Audio, atau Foto!",
+        `${prefix}alldl https://youtu.be/xxx`
+      )
     );
   }
 
@@ -388,7 +376,13 @@ async function handler(m, { sock }) {
   const url = text.split(/\s+/).find((p) => p.startsWith("http"));
   if (!url) {
     await m.react("❗");
-    return m.reply(claraWrap("alldl", `${toSC("URL tidak valid!")} ${toSC("Kirim link dari YouTube, TikTok, IG, FB, dll")}`));
+    return m.reply(
+      novaGuide(
+        "AllDL",
+        "URL-nya tidak valid nih! Kirim link dari YouTube, TikTok, IG, FB, dll.",
+        `${prefix}alldl https://youtu.be/xxx`
+      )
+    );
   }
 
   // Detect platform

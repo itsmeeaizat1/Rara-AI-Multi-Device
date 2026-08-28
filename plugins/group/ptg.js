@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -124,15 +124,14 @@ async function getGroupMembers(sock, groupId) {
 
 export default {
   config: {
-  name: "ptg",
-  alias: ["ptg"],
-  category: "group",
-  desc: "Split Bill & Patungan Pintar Grup - Bagi tagihan otomatis, tracking siapa belum bayar, rekap lengkap",
-  usage: ".ptg <total> | <orang> | <keterangan>\n.ptg list - Lihat patungan aktif\n.ptg status <id> - Cek siapa belum bayar\n.ptg bayar <id> - Tandai sudah bayar\n.ptg lunas <id> @tag - (owner) Tandai orang sudah bayar\n.ptg close <id> - (owner) Tutup patungan\n.ptgon / .ptgoff - Toggle (owner)\n.ptghistory - Riwayat patungan",
-  example: ".ptg 150000 | 5 | Makan Warkop\n.ptg 300000 | @Budi @Siti | Sewa villa\n.ptg list\n.ptg bayar PTG3A2",
-  wait: "🕐",
-  error: "❌",
-
+    name: "ptg",
+    alias: ["ptg"],
+    category: "group",
+    desc: "Split Bill & Patungan Pintar Grup - Bagi tagihan otomatis, tracking siapa belum bayar, rekap lengkap",
+    usage: ".ptg <total> | <orang> | <keterangan>\n.ptg list - Lihat patungan aktif\n.ptg status <id> - Cek siapa belum bayar\n.ptg bayar <id> - Tandai sudah bayar\n.ptg lunas <id> @tag - (owner) Tandai orang sudah bayar\n.ptg close <id> - (owner) Tutup patungan\n.ptgon / .ptgoff - Toggle (owner)\n.ptghistory - Riwayat patungan",
+    example: ".ptg 150000 | 5 | Makan Warkop\n.ptg 300000 | @Budi @Siti | Sewa villa\n.ptg list\n.ptg bayar PTG3A2",
+    wait: "🕐",
+    error: "❌",
   },
   async handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
@@ -154,11 +153,7 @@ export default {
     // .ptgon
     if (new RegExp(`^${prefix}ptgon\\b`, "i").test(raw)) {
       if (!isOwner) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
-          ``,
-          `│ Hanya owner yang bisa mengatur fitur ini.`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan On", "Akses ditolak! Cuma owner yang bisa atur fitur ini."));
         return { handled: true };
       }
       toggleOn(groupId);
@@ -175,11 +170,7 @@ export default {
     // .ptgoff
     if (new RegExp(`^${prefix}ptgoff\\b`, "i").test(raw)) {
       if (!isOwner) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
-          ``,
-          `│ Hanya owner yang bisa mengatur fitur ini.`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan Off", "Akses ditolak! Cuma owner yang bisa atur fitur ini."));
         return { handled: true };
       }
       toggleOff(groupId);
@@ -197,14 +188,12 @@ export default {
     if (new RegExp(`^${prefix}ptghistory\\b`, "i").test(raw)) {
       const allBills = getAllBills(groupId);
       if (allBills.length === 0) {
-        await m.reply(claraWrap("Patungan - Riwayat", [
-          `│ Belum ada riwayat patungan di grup ini.`,
-        ].join("\n")));
+        await m.reply(novaEmpty("Patungan History", "Belum ada riwayat patungan di grup ini nih."));
         return { handled: true };
       }
 
       const lines = [`│ Total: *${allBills.length}* patungan`, ``];
-      allBills.slice(-10).reverse().forEach((b, i) => {
+      allBills.slice(-10).reverse().forEach((b) => {
         const paidCount = b.members.filter(mb => mb.paid).length;
         const status = b.status === "active" ? "🟢" : b.status === "closed" ? "✅" : "🔴";
         lines.push(
@@ -222,11 +211,7 @@ export default {
 
     // Check if feature is enabled
     if (!isPtgOn(groupId)) {
-      await m.reply(claraWrap("Patungan", [
-        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
-        ``,
-        `│ Owner: ketik *${prefix}ptgon* untuk mengaktifkan.`,
-      ].join("\n")));
+      await m.reply(novaError("Patungan", `Fitur patungan belum aktif di grup ini. Ketik *${prefix}ptgon* untuk mengaktifkan.`));
       return { handled: true };
     }
 
@@ -234,11 +219,7 @@ export default {
     if (subCmd && subCmd[1] === "list") {
       const active = getActiveBills(groupId);
       if (active.length === 0) {
-        await m.reply(claraWrap("Patungan - Aktif", [
-          `│ Tidak ada patungan aktif.`,
-          ``,
-          `│ Bikin baru: *${prefix}ptg <total> | <orang> | <keterangan>*`,
-        ].join("\n")));
+        await m.reply(novaEmpty("Patungan List", `Gak ada patungan yang aktif saat ini. Ketik *${prefix}ptg <total> | <orang> | <keterangan>* untuk buat baru!`));
         return { handled: true };
       }
 
@@ -266,21 +247,13 @@ export default {
       const billId = idMatch ? idMatch[1].toUpperCase() : "";
 
       if (!billId) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Format: *${prefix}ptg status <id>*`,
-          `│ 💡 *Contoh:* *${prefix}ptg status PTG3A2*`,
-          ``,
-          `│ Ketik *${prefix}ptg list* untuk lihat ID aktif.`,
-        ].join("\n")));
+        await m.reply(novaNoInput("Patungan Status", "Masukkan ID patungan yang mau dicek", `${prefix}ptg status PTG3A2`));
         return { handled: true };
       }
 
       const bill = findBill(groupId, billId);
       if (!bill) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Patungan *${billId}* tidak ditemukan.`,
-          `│ Ketik *${prefix}ptg list* untuk lihat yang aktif.`,
-        ].join("\n")));
+        await m.reply(novaEmpty("Patungan Status", `Patungan dengan ID *${billId}* gak ditemuin nih. Cek *${prefix}ptg list* ya!`));
         return { handled: true };
       }
 
@@ -348,42 +321,29 @@ export default {
       const billId = idMatch ? idMatch[1].toUpperCase() : "";
 
       if (!billId) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Format: *${prefix}ptg bayar <id>*`,
-          `│ 💡 *Contoh:* *${prefix}ptg bayar PTG3A2*`,
-        ].join("\n")));
+        await m.reply(novaNoInput("Patungan Bayar", "Masukkan ID patungan yang mau dibayar", `${prefix}ptg bayar PTG3A2`));
         return { handled: true };
       }
 
       const bill = findBill(groupId, billId);
       if (!bill) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Patungan *${billId}* tidak ditemukan.`,
-        ].join("\n")));
+        await m.reply(novaEmpty("Patungan Bayar", `Patungan dengan ID *${billId}* gak ditemuin nih.`));
         return { handled: true };
       }
 
       if (bill.status !== "active") {
-        await m.reply(claraWrap("Patungan", [
-          `│ Patungan *${billId}* sudah ditutup.`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan Bayar", `Patungan *${billId}* udah ditutup nih.`));
         return { handled: true };
       }
 
       const member = bill.members.find(mb => mb.jid === sender);
       if (!member) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Kamu tidak terdaftar di patungan *${billId}*.`,
-          `│ Patungan ini hanya untuk yang di-tag saat dibuat.`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan Bayar", `Kamu gak terdaftar di patungan *${billId}* nih. Fitur ini hanya untuk yang terdaftar saat dibuat.`));
         return { handled: true };
       }
 
       if (member.paid) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Kamu sudah menandai bayar untuk *${billId}*.`,
-          `│ ${bill.perPerson} - ${bill.description}`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan Bayar", `Kamu udah menandai bayar untuk *${billId}* sebelumnya kok!`));
         return { handled: true };
       }
 
@@ -428,12 +388,7 @@ export default {
     // ─── .ptg lunas <id> @tag ─── (owner marks someone as paid)
     if (subCmd && subCmd[1] === "lunas") {
       if (!isOwner) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
-          ``,
-          `│ Hanya owner yang bisa menandai orang lain sebagai lunas.`,
-          `│ Kalau kamu yang mau bayar, ketik *${prefix}ptg bayar <id>*`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan Lunas", "Hanya owner yang bisa menandai orang lain sebagai lunas."));
         return { handled: true };
       }
 
@@ -442,25 +397,18 @@ export default {
       const mentionedJids = m.mentionedJid || parseMentions(raw);
 
       if (!billId || mentionedJids.length === 0) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Format: *${prefix}ptg lunas <id> @tag*`,
-          `│ 💡 *Contoh:* *${prefix}ptg lunas PTG3A2 @62812...*`,
-        ].join("\n")));
+        await m.reply(novaNoInput("Patungan Lunas", "Masukkan ID patungan dan tag anggotanya", `${prefix}ptg lunas PTG3A2 @62812...`));
         return { handled: true };
       }
 
       const bill = findBill(groupId, billId);
       if (!bill) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Patungan *${billId}* tidak ditemukan.`,
-        ].join("\n")));
+        await m.reply(novaEmpty("Patungan Lunas", `Patungan *${billId}* gak ditemuin nih.`));
         return { handled: true };
       }
 
       if (bill.status !== "active") {
-        await m.reply(claraWrap("Patungan", [
-          `│ Patungan *${billId}* sudah ditutup.`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan Lunas", `Patungan *${billId}* udah ditutup.`));
         return { handled: true };
       }
 
@@ -485,10 +433,7 @@ export default {
       }
 
       if (markedCount === 0) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Tidak ada anggota yang ditandai.`,
-          `│ Mungkin sudah bayar semua atau tidak terdaftar.`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan Lunas", "Gak ada anggota yang ditandai (mungkin udah lunas atau gak terdaftar)."));
         return { handled: true };
       }
 
@@ -519,11 +464,7 @@ export default {
     // ─── .ptg close <id> ───
     if (subCmd && subCmd[1] === "close") {
       if (!isOwner) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
-          ``,
-          `│ Hanya owner yang bisa menutup patungan.`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan Close", "Hanya owner yang bisa menutup patungan."));
         return { handled: true };
       }
 
@@ -531,25 +472,18 @@ export default {
       const billId = idMatch ? idMatch[1].toUpperCase() : "";
 
       if (!billId) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Format: *${prefix}ptg close <id>*`,
-          `│ 💡 *Contoh:* *${prefix}ptg close PTG3A2*`,
-        ].join("\n")));
+        await m.reply(novaNoInput("Patungan Close", "Masukkan ID patungan yang mau ditutup", `${prefix}ptg close PTG3A2`));
         return { handled: true };
       }
 
       const bill = findBill(groupId, billId);
       if (!bill) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Patungan *${billId}* tidak ditemukan.`,
-        ].join("\n")));
+        await m.reply(novaEmpty("Patungan Close", `Patungan *${billId}* gak ditemuin nih.`));
         return { handled: true };
       }
 
       if (bill.status === "closed") {
-        await m.reply(claraWrap("Patungan", [
-          `│ Patungan *${billId}* sudah ditutup sebelumnya.`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan Close", `Patungan *${billId}* udah ditutup sebelumnya.`));
         return { handled: true };
       }
 
@@ -577,44 +511,32 @@ export default {
       const billId = idMatch ? idMatch[1].toUpperCase() : "";
 
       if (!billId) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Format: *${prefix}ptg join <id>*`,
-          `│ 💡 *Contoh:* *${prefix}ptg join PTG3A2*`,
-        ].join("\n")));
+        await m.reply(novaNoInput("Patungan Join", "Masukkan ID patungan yang mau di-join", `${prefix}ptg join PTG3A2`));
         return { handled: true };
       }
 
       const bill = findBill(groupId, billId);
       if (!bill) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Patungan *${billId}* tidak ditemukan.`,
-        ].join("\n")));
+        await m.reply(novaEmpty("Patungan Join", `Patungan *${billId}* gak ditemuin nih.`));
         return { handled: true };
       }
 
       if (bill.status !== "active") {
-        await m.reply(claraWrap("Patungan", [
-          `│ Patungan *${billId}* sudah ditutup.`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan Join", `Patungan *${billId}* udah ditutup.`));
         return { handled: true };
       }
 
       // Check if already in the bill
       const existing = bill.members.find(mb => mb.jid === sender);
       if (existing) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Kamu sudah terdaftar di patungan *${billId}*.`,
-          `│ Ketik *${prefix}ptg bayar ${billId}* untuk tandai bayar.`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan Join", `Kamu udah terdaftar di patungan *${billId}*. Ketik *${prefix}ptg bayar ${billId}* untuk tandai bayar.`));
         return { handled: true };
       }
 
       // Find open slot
       const openSlot = bill.members.find(mb => mb.isSlot && !mb.jid);
       if (!openSlot) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Semua slot patungan *${billId}* sudah penuh.`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan Join", `Semua slot patungan *${billId}* udah penuh nih.`));
         return { handled: true };
       }
 
@@ -641,36 +563,11 @@ export default {
 
     // ─── .ptg help ───
     if (subCmd && (subCmd[1] === "help" || subCmd[1] === "bantu")) {
-      await m.reply(claraWrap("Patungan - Bantuan", [
-        `│ 📌 *Cara Pakai:*`,
-        ``,
-        `│ 1. Bikin patungan baru:`,
-        `│ *${prefix}ptg <total> | <orang> | <keterangan>*`,
-        ``,
-        `│ 2. Dengan tag anggota:`,
-        `│ *${prefix}ptg 150000 | @Budi @Siti | Makan*`,
-        ``,
-        `│ 3. Lihat patungan aktif:`,
-        `│ *${prefix}ptg list*`,
-        ``,
-        `│ 4. Cek status:`,
-        `│ *${prefix}ptg status <id>*`,
-        ``,
-        `│ 5. Tandai sudah bayar:`,
-        `│ *${prefix}ptg bayar <id>*`,
-        ``,
-        `│ 6. Owner tandai orang lunas:`,
-        `│ *${prefix}ptg lunas <id> @tag*`,
-        ``,
-        `│ 7. Tutup patungan (owner):`,
-        `│ *${prefix}ptg close <id>*`,
-        ``,
-        `│ 8. Riwayat:`,
-        `│ *${prefix}ptghistory*`,
-        ``,
-        `│ 9. Toggle (owner):`,
-        `│ *${prefix}ptgon* / *${prefix}ptgoff*`,
-      ].join("\n")));
+      await m.reply(novaGuide(
+        "Patungan Guide",
+        "Sistem Split Bill & Patungan Pintar Grup",
+        `${prefix}ptg 150000 | 5 | Makan Warkop\n${prefix}ptg 300000 | @Budi @Siti | Sewa Villa\n${prefix}ptg list\n${prefix}ptg status PTG3A2\n${prefix}ptg bayar PTG3A2\n${prefix}ptg lunas PTG3A2 @tag\n${prefix}ptg close PTG3A2\n${prefix}ptghistory`
+      ));
       await m.react("🐣");
       return { handled: true };
     }
@@ -680,23 +577,11 @@ export default {
     const body = raw.replace(new RegExp(`^${prefix}ptg\\s+`, "i"), "").trim();
 
     if (!body) {
-      await m.reply(claraWrap("Patungan - Bantuan", [
-        `│ 📌 *Cara Pakai:*`,
-        ``,
-        `│ *${prefix}ptg <total> | <orang> | <keterangan>*`,
-        ``,
-        `│ 💡 *Contoh:*`,
-        `│ *${prefix}ptg 150000 | 5 | Makan Warkop*`,
-        `│ *${prefix}ptg 300000 | @Budi @Siti | Sewa Villa*`,
-        ``,
-        `│ Sub-command:`,
-        `│ *${prefix}ptg list* - Patungan aktif`,
-        `│ *${prefix}ptg status <id>* - Cek siapa belum bayar`,
-        `│ *${prefix}ptg bayar <id>* - Tandai sudah bayar`,
-        `│ *${prefix}ptg lunas <id> @tag* - (owner) Tandai orang bayar`,
-        `│ *${prefix}ptg close <id>* - (owner) Tutup patungan`,
-        `│ *${prefix}ptghistory* - Riwayat patungan`,
-      ].join("\n")));
+      await m.reply(novaGuide(
+        "Patungan Guide",
+        "Sistem Split Bill & Patungan Pintar Grup",
+        `${prefix}ptg 150000 | 5 | Makan Warkop\n${prefix}ptg 300000 | @Budi @Siti | Sewa Villa\n${prefix}ptg list\n${prefix}ptg status PTG3A2\n${prefix}ptg bayar PTG3A2\n${prefix}ptg lunas PTG3A2 @tag\n${prefix}ptg close PTG3A2`
+      ));
       return { handled: true };
     }
 
@@ -704,13 +589,7 @@ export default {
     const parts = body.split("|").map(p => p.trim()).filter(p => p);
 
     if (parts.length < 2) {
-      await m.reply(claraWrap("Patungan", [
-        `│ Format kurang lengkap.`,
-        ``,
-        `│ Format: *${prefix}ptg <total> | <orang> | <keterangan>*`,
-        `│ 💡 *Contoh:* *${prefix}ptg 150000 | 5 | Makan Warkop*`,
-        `│ *${prefix}ptg 300000 | @Budi @Siti | Sewa Villa*`,
-      ].join("\n")));
+      await m.reply(novaNoInput("Patungan", "Format patungan kurang lengkap! Gunakan pemisah '|'", `${prefix}ptg 150000 | 5 | Makan Warkop`));
       return { handled: true };
     }
 
@@ -721,17 +600,12 @@ export default {
     const total = parseInt(totalStr, 10);
 
     if (!total || total < 1) {
-      await m.reply(claraWrap("Patungan", [
-        `│ Total harga tidak valid: *${parts[0]}*`,
-        `│ Gunakan angka, contoh: 150000`,
-      ].join("\n")));
+      await m.reply(novaError("Patungan", `Total harga tidak valid: *${parts[0]}*. Gunakan angka positif, contoh: 150000`));
       return { handled: true };
     }
 
     if (total > 999999999999) {
-      await m.reply(claraWrap("Patungan", [
-        `│ Total terlalu besar. Maksimal Rp999.999.999.999`,
-      ].join("\n")));
+      await m.reply(novaError("Patungan", "Total terlalu besar! Maksimal Rp999.999.999.999"));
       return { handled: true };
     }
 
@@ -745,7 +619,6 @@ export default {
 
     if (mentionedJids.length > 0) {
       // Tag-based: use mentioned JIDs
-      // Get group metadata for names
       const groupMembers = await getGroupMembers(sock, groupId);
       for (const jid of mentionedJids) {
         const gMember = groupMembers.find(gm => gm.jid === jid);
@@ -760,17 +633,13 @@ export default {
       // Numeric count: divide equally, members tracked by self-registration
       const count = parseInt(peopleStr.replace(/[^0-9]/g, ""), 10);
       if (!count || count < 1 || count > 100) {
-        await m.reply(claraWrap("Patungan", [
-          `│ Jumlah orang tidak valid: *${peopleStr}*`,
-          `│ Gunakan angka (1-100) atau tag @anggota`,
-        ].join("\n")));
+        await m.reply(novaError("Patungan", `Jumlah orang tidak valid: *${peopleStr}*. Gunakan angka (1-100) atau tag @anggota`));
         await m.react("❌");
         return { handled: true };
       }
       isNumericCount = true;
 
       // For numeric mode: create placeholder slots
-      // The creator is auto-added as member 1
       members.push({
         jid: sender,
         name: senderName,
@@ -778,10 +647,9 @@ export default {
         paidAt: null,
       });
 
-      // Remaining slots are open (anyone can claim)
       for (let i = 1; i < count; i++) {
         members.push({
-          jid: null, // open slot
+          jid: null,
           name: `(Slot ${i + 1} - kosong)`,
           paid: false,
           paidAt: null,
@@ -827,7 +695,6 @@ export default {
       `│ Daftar Anggota:`,
     ];
 
-    // If numeric mode with open slots, show instructions
     if (isNumericCount) {
       members.forEach((mb, i) => {
         if (mb.isSlot) {
@@ -847,7 +714,6 @@ export default {
         `│ ketik *${prefix}ptg join ${billId}* untuk isi slot`,
       );
     } else {
-      // Tag mode: list all tagged members
       members.forEach((mb, i) => {
         lines.push(`│ ${i + 1}. ${mb.name}`);
       });
@@ -863,7 +729,6 @@ export default {
         `│ Ketik *${prefix}ptg status ${billId}*`,
       );
 
-      // Send with mentions
       const text = claraWrap("Patungan - Baru", lines.join("\n")) +
         "\n" +
         tipText(`${prefix}ptg status ${billId} untuk cek siapa belum bayar`);

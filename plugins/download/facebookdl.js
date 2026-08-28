@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { fbdown } from 'btch-downloader'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "facebookdl",
     alias: ["facebookdl"],
@@ -22,16 +22,11 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
     
     if (!url) {
-        return m.reply(
-            `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `\`${m.prefix}facebookdl <url>\`\n\n` +
-            `Contoh:\n` +
-            `\`${m.prefix}fbdown https://www.facebook.com/watch?v=xxx\``
-        )
+        return m.reply(novaGuide("Facebook DL", "Masukkan URL video Facebook yang mau diunduh!", `${m.prefix}fbdown https://www.facebook.com/watch?v=xxx`))
     }
     
     if (!url.match(/facebook\.com|fb\.watch/i)) {
-        return m.reply(claraWrap("Facebookdl", `❌ URL tidak valid. Gunakan link Facebook.`))
+        return m.reply(novaError("Facebook DL", "URL tidak valid nih! Pastikan gunakan link Facebook yang benar."))
     }
     
     await m.react('🕐')
@@ -40,13 +35,13 @@ async function handler(m, { sock }) {
         const data = await fbdown(url)
         
         if (!data?.status) {
-            return m.reply(claraWrap("facebookdl", `❌ Gagal mengambil video. Coba link lain.`))
+            return m.reply(novaError("Facebook DL", "Gagal mengambil video dari Facebook. Coba gunakan link lain ya!"))
         }
         
         const videoUrl = data.HD || data.Normal_video
         
         if (!videoUrl) {
-            { const __navText = claraWrap("facebookdl", `❌ Video tidak ditemukan.`); return await m.reply(__navText); }
+            return m.reply(novaEmpty("Facebook DL", "Video Facebook tidak ditemukan atau mungkin dibatasi privat."))
         }
         
         const quality = data.HD ? 'HD' : 'SD'
@@ -60,7 +55,7 @@ async function handler(m, { sock }) {
         })
         
     } catch (err) {
-        return m.reply(claraWrap("facebookdl", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(novaError("Facebook DL", `Gagal mengunduh video — ${err.message || 'terjadi kesalahan, coba lagi nanti ya'}`))
     }
 }
 
