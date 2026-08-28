@@ -2,7 +2,7 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { sendOtpEmail, isEmailConfigured, getEmailUser, setEmailDb } from "../../src/lib/nova-email.js";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "regmail",
@@ -94,7 +94,7 @@ async function handler(m, { args, sock }) {
   }
 
   if (!isEmailConfigured()) {
-    let txt = `❌ Sistem registrasi email belum dikonfigurasi!\n\n`;
+    let txt = `Sistem registrasi email belum dikonfigurasi nih\n\n`;
     txt += `Owner perlu set email SMTP dulu dengan:\n`;
     txt += `\`${m.prefix}setemail <email> <app-password>\`\n\n`;
     txt += `Atau gunakan \`${m.prefix}daftar\` untuk daftar tanpa email.`;
@@ -122,7 +122,7 @@ async function handler(m, { args, sock }) {
 
   const input = args.join(" ").split(",");
   if (input.length < 2) {
-    let txt = `❌ Format salah!\n\n`;
+    let txt = `Format salah nih!\n\n`;
     txt += `\`${m.prefix}regmail <nama>, <email>\`\n`;
     txt += `Contoh: \`${m.prefix}regmail Aizat, aizat@gmail.com\``;
     return await m.reply( txt, { commandName: "regmail" });
@@ -132,17 +132,17 @@ async function handler(m, { args, sock }) {
   const email = input[1].trim().toLowerCase();
 
   if (name.length < 2 || name.length > 30) {
-    return await m.reply(claraWrap("regmail", "❌ Nama harus 2-30 karakter!"));
+    return await m.reply(novaError("RegMail", "Nama harus 2-30 karakter ya"));
   }
 
   if (!validateEmail(email)) {
-    return await m.reply(claraWrap("regmail", "❌ Email tidak valid! Contoh: nama@gmail.com"));
+    return await m.reply(novaError("RegMail", "Email gak valid! Contoh: nama@gmail.com"));
   }
 
   const existingUsers = db.data?.users || {};
   for (const [uid, u] of Object.entries(existingUsers)) {
     if (u.regEmail?.toLowerCase() === email && u.isRegistered) {
-      return await m.reply(claraWrap("regmail", "❌ Email ini sudah terdaftar! Gunakan email lain."));
+      return await m.reply(novaError("RegMail", "Email ini sudah terdaftar! Pakai email lain ya"));
     }
   }
 
@@ -167,7 +167,7 @@ async function handler(m, { args, sock }) {
   } catch (e) {
     console.error("[Regmail] Error:", e.message);
     clearOtpSession(m.sender);
-    let txt = `❌ Gagal mengirim OTP ke email!\n\n`;
+    let txt = `Gagal kirim OTP ke email nih!\n\n`;
     txt += `Error: ${e.message}\n\n`;
     txt += `Pastikan email valid dan SMTP terkonfigurasi dengan benar.`;
     await m.reply(claraWrap("regmail", txt));

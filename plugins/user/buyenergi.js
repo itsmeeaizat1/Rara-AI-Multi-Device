@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'buyenergi',
@@ -43,10 +43,7 @@ async function handler(m, { sock }) {
     const user = db.getUser(m.sender) || db.setUser(m.sender)
     
     if ((user.koin || 0) < totalPrice) {
-        return m.reply( claraWrap("Gagal", `❌ *ɢᴀɢᴀʟ*\n\n` +
-            `Koin tidak cukup!\n` +
-            `Butuh: *${formatNumber(totalPrice)}*\n` +
-            `Kamu punya: *${formatNumber(user.koin || 0)}*`), "buyenergi")
+        return m.reply( novaError("BuyEnergi", `Koin gak cukup nih! Butuh ${formatNumber(totalPrice)}, kamu punya ${formatNumber(user.koin || 0)}`))
     }
     
     db.updateKoin(m.sender, -totalPrice, sock, m.chat)

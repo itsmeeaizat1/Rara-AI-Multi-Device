@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 import { getDatabase } from '../../src/lib/nova-database.js'
 import config from '../../config.js'
@@ -49,19 +49,19 @@ async function handler(m, { sock }) {
     const match = input.match(dateRegex)
     
     if (!match) {
-        return m.reply(claraWrap("setbirthday", `❌ Format salah! Gunakan: DD-MM\n\n💡 *Contoh:* ${m.prefix}setbirthday 25-12`))
+        return m.reply(claraWrap("setbirthday", `Format salah! Gunakan: DD-MM\n\nContoh: ${m.prefix}setbirthday 25-12`))
     }
     
     const day = parseInt(match[1])
     const month = parseInt(match[2])
     
     if (month < 1 || month > 12) {
-        return m.reply(claraWrap("setbirthday", `❌ Bulan tidak valid! (1-12)`))
+        return m.reply(claraWrap("setbirthday", `Bulan gak valid! (1-12)`))
     }
     
     const daysInMonth = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     if (day < 1 || day > daysInMonth[month - 1]) {
-        return m.reply(claraWrap("setbirthday", `❌ Tanggal tidak valid untuk bulan ${month}!`))
+        return m.reply(claraWrap("setbirthday", `Tanggal gak valid untuk bulan ${month} nih!`))
     }
     
     const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}`

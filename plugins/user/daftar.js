@@ -12,7 +12,7 @@ import {
 } from "../../src/lib/nova-lid.js";
 import config from "../../config.js";
 import { notifyUserRegister } from "../../src/lib/nova-saluran-broadcast.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "daftar",
@@ -345,10 +345,10 @@ async function handler(m, { sock }) {
       const age = Number(parts[1]);
 
       if (name.length < 2 || name.length > 30) {
-        return m.reply(claraWrap("daftar", "❌ Nama harus 2-30 karakter!"));
+        return m.reply(novaError("Daftar", "Nama harus 2-30 karakter ya"));
       }
       if (!/^\d+$/.test(String(parts[1])) || Number.isNaN(age) || age < 1 || age > 100) {
-        return m.reply(claraWrap("daftar", "❌ Umur tidak valid! Masukkan angka 1-100."));
+        return m.reply(novaError("Daftar", "Umur gak valid! Masukin angka 1-100 ya"));
       }
 
       const gender = parts[2] ? (parts[2].trim()) : null;
@@ -485,7 +485,7 @@ async function registrationAnswerHandler(m, sock) {
     const name = normalizeRegistrationName(text);
 
     if (name.length < 2 || name.length > 30) {
-      await m.reply(claraWrap("daftar", `❌ Nama harus 2-30 karakter!`));
+      await m.reply(novaError("Daftar", "Nama harus 2-30 karakter ya"));
       return true;
     }
 
@@ -512,7 +512,7 @@ async function registrationAnswerHandler(m, sock) {
 
     if (!/^\d+$/.test(text) || Number.isNaN(age) || age < 1 || age > 100) {
       await m.reply(
-        `❌ Umur tidak valid!\n\nMasukkan angka umur dari *1 - 100* tahun`,
+        `Umur gak valid! Masukin angka 1-100 ya`,
       );
       return true;
     }
@@ -545,7 +545,7 @@ async function registrationAnswerHandler(m, sock) {
 
     if (!gender) {
       await m.reply(
-        `❌ Gender tidak valid!\n\n` +
+        `Gender gak valid nih!\n\n` +
         `Balas dengan: *ᴄᴏᴡᴏ* / *ᴄᴏᴡᴏᴋ* / *ʟᴀᴋɪ-ʟᴀᴋɪ* / *L*\n` +
         `Atau: *ᴄᴇᴡᴇ* / *ᴄᴇᴡᴇᴋ* / *ᴘᴇʀᴇᴍᴘᴜᴀɴ* / *P*`,
       );
@@ -570,7 +570,7 @@ async function registrationAnswerHandler(m, sock) {
     const name = normalizeRegistrationName(text);
 
     if (name.length < 2 || name.length > 30) {
-      await m.reply(claraWrap("daftar", `❌ Nama harus 2-30 karakter!`));
+      await m.reply(novaError("Daftar", "Nama harus 2-30 karakter ya"));
       return true;
     }
 
@@ -593,7 +593,7 @@ async function registrationAnswerHandler(m, sock) {
 
     if (!/^\d+$/.test(text) || Number.isNaN(age) || age < 1 || age > 100) {
       await m.reply(
-        `❌ Umur tidak valid!\n\nMasukkan angka umur dari *1 - 100* tahun`,
+        `Umur gak valid! Masukin angka 1-100 ya`,
       );
       return true;
     }
@@ -623,7 +623,7 @@ async function registrationAnswerHandler(m, sock) {
 
     if (!gender) {
       await m.reply(
-        `❌ Gender tidak valid!\n\n` +
+        `Gender gak valid nih!\n\n` +
         `Balas dengan: *ᴄᴏᴡᴏ* / *ᴄᴏᴡᴏᴋ* / *ʟᴀᴋɪ-ʟᴀᴋɪ* / *L*\n` +
         `Atau: *ᴄᴇᴡᴇ* / *ᴄᴇᴡᴇᴋ* / *ᴘᴇʀᴇᴍᴘᴜᴀɴ* / *P*`,
       );
