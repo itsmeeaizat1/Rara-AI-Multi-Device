@@ -483,6 +483,42 @@ async function extendSocket(sock) {
     quoted,
     options = {},
   ) {
+    // WhatsApp Channel (saluran/newsletter) TIDAK support interactive/template
+    // button message sama sekali — follower akan lihat "Anda menerima info
+    // saluran, tetapi versi WhatsApp Anda tidak mendukungnya. Perbarui WhatsApp".
+    // Fallback: kirim media+caption biasa (tanpa header/footer/buttons).
+    if (jid && jid.endsWith("@newsletter")) {
+      const plainMsg = {};
+      if (source) {
+        let data = source;
+        const mediaType = options.type || options.mediaType || "image";
+        if (Buffer.isBuffer(source)) {
+        } else if (typeof source === "string" && /^https?:\/\//.test(source))
+          data = { url: source };
+        else if (typeof source === "string" && fs.existsSync(source))
+          data = fs.readFileSync(source);
+        else if (source === null) data = null;
+        if (mediaType === "image" && data) {
+          plainMsg.image = data;
+          if (text !== null) plainMsg.caption = text;
+        } else if (mediaType === "video" && data) {
+          plainMsg.video = data;
+          plainMsg.mimetype = options.mimetype || "video/mp4";
+          if (text !== null) plainMsg.caption = text;
+        } else if (mediaType === "audio" && data) {
+          plainMsg.audio = data;
+          plainMsg.mimetype = options.mimetype || "audio/mpeg";
+        } else if (mediaType === "document" && data) {
+          plainMsg.document = data;
+          plainMsg.mimetype = options.mimetype || "application/octet-stream";
+          if (options.fileName) plainMsg.fileName = options.fileName;
+          if (text !== null) plainMsg.caption = text;
+        }
+      }
+      if (!Object.keys(plainMsg).length && text !== null) plainMsg.text = text;
+      return sock.sendMessage(jid, plainMsg, { quoted });
+    }
+
     const msg = {};
     if (options.header) msg.header = options.header;
     if (options.contextInfo) msg.contextInfo = options.contextInfo;
