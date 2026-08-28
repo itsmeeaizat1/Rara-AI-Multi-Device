@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
     return;
   }
 
-  await m.reply(claraWrap("AntiRvo", `Pilihan tidak valid. Ketik ${m.prefix}antirvo on atau ${m.prefix}antirvo off`));
+  await m.reply(novaGuide("AntiRvo", "Pilihan gak valid nih!", m.prefix + "antirvo on/off"));
 }
 
 export { pluginConfig as config, handler };

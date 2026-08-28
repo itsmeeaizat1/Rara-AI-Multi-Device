@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { capcut } from 'btch-downloader'
-import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'capcutdl',
     alias: ["capcutdl"],
@@ -22,23 +21,20 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
 
     if (!url) {
-        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `\`${m.prefix}ccdl <url>\`\n\n` +
-            `Contoh:\n` +
-            `\`${m.prefix}ccdl https://www.capcut.com/t/xxx\``, "capcutdl")
+        return m.reply(novaGuide('CapCut', 'Mau download video CapCut? Kasih linknya ya!', `${m.prefix}ccdl https://www.capcut.com/t/xxx`))
     }
 
     if (!url.match(/capcut\.com/i)) {
-        return m.reply(claraWrap("Capcutdl", `❌ URL tidak valid. Gunakan link CapCut.`))
+        return m.reply(novaGuide('CapCut', 'URL-nya gak valid nih! Pakai link CapCut ya.', `${m.prefix}ccdl https://www.capcut.com/t/xxx`))
     }
 
-    await m.react('🕐')
+    await m.react('🕒')
 
     try {
         const data = await capcut(url)
 
         if (!data?.status || !data?.originalVideoUrl) {
-            { const __navText = `❌ Gagal mengambil video. Coba link lain.`; return await m.reply(__navText); }
+            return m.reply(novaError('CapCut', 'Gagal ambil video — coba link lain ya'))
         }
 
         await sock.sendMedia(m.chat, data.originalVideoUrl, null, m, {
@@ -50,7 +46,7 @@ async function handler(m, { sock }) {
         })
 
     } catch (err) {
-        return m.reply(claraWrap("capcutdl", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(novaError('CapCut', 'Ada error nih, coba lagi ya'))
     }
 }
 

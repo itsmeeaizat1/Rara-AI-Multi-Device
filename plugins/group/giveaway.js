@@ -4,7 +4,7 @@ import * as timeHelper from "../../src/lib/nova-time.js";
 import { CronJob } from "cron";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { fetchGroupsSafe } from "../../src/lib/nova-jpm-helper.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 function generateGiveawayId() {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -134,7 +134,7 @@ async function handleSession(m, sock) {
     } catch (e) {
       session.groupId = currentGroup;
       session.step = "q3";
-      await m.reply(claraWrap("quick_reply", "⚠️ Gagal mengambil daftar grup. Menggunakan grup ini."));
+      await m.reply(novaError("Giveaway", "Gagal ambil daftar grup — pakai grup ini"));
       await askPrizeDetails(m, sock, session);
     }
     return true;
@@ -174,7 +174,7 @@ async function askPrizeDetails(m, sock, session) {
       { quoted: m },
     );
   } catch (e) {
-    await m.reply(claraWrap("quick_reply", "⚠️ Gagal mengirim PM. Silakan chat bot dulu lalu ulangi."));
+    await m.reply(novaError("Giveaway", "Gagal kirim PM — chat bot dulu lalu ulangi"));
     createSessions.delete(session.adminJid);
   }
 }

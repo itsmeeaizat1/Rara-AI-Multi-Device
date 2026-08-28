@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -409,7 +409,7 @@ export default {
 
       if (!amount || amount < 1) {
         await m.reply(claraWrap("Donasi", [
-          `│ Jumlah tidak valid. Minimal Rp1`,
+          `│ Jumlah gak valid nih. Minimal Rp1`,
         ].join("\n")));
         return { handled: true };
       }
@@ -741,7 +741,7 @@ export default {
 
     if (!target || target < 1) {
       await m.reply(claraWrap("Donasi", [
-        `│ Target tidak valid: *${parts[0]}*`,
+        `│ Target gak valid nih: *${parts[0]}*`,
         `│ Gunakan angka, contoh: 5000000`,
       ].join("\n")));
       return { handled: true };

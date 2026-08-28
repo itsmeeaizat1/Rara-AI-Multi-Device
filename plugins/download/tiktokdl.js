@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { AIRich } from "../../src/lib/nova-builder.js";
-import { claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 
 async function tiktokDl(url) {
   function formatNumber(integer) {
@@ -208,7 +208,7 @@ async function handler(m, { sock }) {
     m.react("🐣");
   } catch (e) {
     console.error(e);
-    m.reply(claraWrap("Error", "\u274c Coba lagi nanti, atau bisa coba " + m.prefix + "tt2"));
+    m.reply(novaError("TikTok", "Gagal download — coba lagi atau pakai .tt2 ya"));
   }
 }
 

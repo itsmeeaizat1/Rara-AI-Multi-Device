@@ -2,7 +2,7 @@
 
 import { getQuotedStickerHash, addStickerCommand, listStickerCommands } from '../../src/lib/nova-sticker-command.js'
 import { getPlugin } from '../../src/lib/nova-plugins.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addcmdsticker',
     alias: ["addcmdsticker"],
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
     
     if (!plugin) {
         return m.reply(
-            `❌ Command \`${cleanCmd}\` tidak ditemukan!\n\n` +
+            `❌ Command \`${cleanCmd}\` gak nemu nih!\n\n` +
             `Pastikan command yang ingin dijadikan shortcut valid.`
         )
     }
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
             `_Kirim sticker tersebut untuk menjalankan command!_`
         )
     } else {
-        await m.reply('❌ Gagal menyimpan sticker command!')
+        await m.reply(novaError('AddCmdSticker', 'Gagal simpan sticker command nih'))
     }
 }
 

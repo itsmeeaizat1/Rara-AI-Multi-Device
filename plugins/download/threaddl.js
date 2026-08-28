@@ -2,7 +2,7 @@
 import axios from "axios";
 import he from "he";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const BASE_URL = "https://workers-playground-cool-wood-c008.accoutydusra.workers.dev";
 
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
     const result = normalizeResult(info);
 
     if (res.status >= 300 || data.success !== true || result.length === 0) {
-      return m.reply(claraWrap("threaddl", `⚠️ *Aduh, gagal mengambil data dari Threads!*\n\nMungkin postingan ini bersifat privat, sudah dihapus, atau link yang kamu berikan kurang tepat.\n\nAlasan sistem: ${data.message || data.error || "Tidak diketahui"}`));
+      return m.reply(novaError("Threads", "Gagal ambil data — mungkin privat atau sudah dihapus"));
     }
 
     const captionText = `✨ *ᴛʜʀᴇᴀᴅꜱ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ* ✨
@@ -127,7 +127,7 @@ Halo! Ini hasil unduhan Threads yang kamu minta:
 
   } catch (err) {
     console.error("[ThreadsDL]", err.message);
-    m.reply(claraWrap("threaddl", "😔 *ꜱᴇᴘᴇʀᴛɪɴʏᴀ ᴀᴅᴀ ɢᴀɴɢɢᴜᴀɴ ᴅɪ ꜱɪꜱᴛᴇᴍᴋᴜ.* \n\nTerjadi kesalahan fatal saat mencoba memproses link Threads tersebut. Silakan coba lagi nanti ya!"));
+    m.reply(novaError("Threads", "Ada error nih, coba lagi ya"));
   }
 }
 

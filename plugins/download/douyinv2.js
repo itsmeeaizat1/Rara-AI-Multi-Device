@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "douyinv2",
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
     m.react("🐣");
   } catch (e) {
     console.error("[DOUYINV2] Error:", e.message);
-    m.reply(claraWrap("Douyinv2", `Gagal mengambil data Douyin.\n>${e.message || "Coba lagi nanti"}`));
+    m.reply(novaError("Douyin", "Gagal ambil data — coba lagi ya"));
   }
 }
 

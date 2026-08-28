@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { cocofun } from 'btch-downloader'
-import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cocofundl',
     alias: ["cocofundl"],
@@ -22,30 +21,27 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
     
     if (!url) {
-        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `\`${m.prefix}cfdl <url>\`\n\n` +
-            `Contoh:\n` +
-            `\`${m.prefix}cfdl https://www.cocofun.com/share/post/xxx\``, "cocofundl")
+        return m.reply(novaGuide('CocoFun', 'Mau download video CocoFun? Kasih linknya ya!', `${m.prefix}cfdl https://www.cocofun.com/share/post/xxx`))
     }
     
     if (!url.match(/cocofun\.com/i)) {
-        return m.reply(claraWrap("Cocofundl", `❌ URL tidak valid. Gunakan link CocoFun.`))
+        return m.reply(novaGuide('CocoFun', 'URL-nya gak valid nih! Pakai link CocoFun ya.', `${m.prefix}cfdl https://www.cocofun.com/share/post/xxx`))
     }
     
-    await m.react('🕐')
+    await m.react('🕒')
     
     try {
         const data = await cocofun(url)
         
         if (!data?.status || !data?.result) {
-            return m.reply(claraWrap("cocofundl", `❌ Gagal mengambil video. Coba link lain.`))
+            return m.reply(novaError('CocoFun', 'Gagal ambil video — coba link lain ya'))
         }
         
         const result = data.result
         const videoUrl = result.no_watermark || result.watermark
         
         if (!videoUrl) {
-            return m.reply(claraWrap("Cocofundl", `❌ Video tidak ditemukan.`))
+            return m.reply(novaEmpty('CocoFun', 'Video-nya gak nemu nih'))
         }
         
         await sock.sendMedia(m.chat, videoUrl, null, m, {
@@ -57,7 +53,7 @@ async function handler(m, { sock }) {
         })
         
     } catch (err) {
-        return m.reply(claraWrap("cocofundl", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(novaError('CocoFun', 'Ada error nih, coba lagi ya'))
     }
 }
 

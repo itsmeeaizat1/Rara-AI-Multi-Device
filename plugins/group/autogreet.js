@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autogreet",
@@ -67,7 +67,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           `Contoh: ${usedPrefix}autogreet set pagi Halo semuanya, semangat pagi!`,
         ].join("\n")));
       }
-      if (!msg) return m.reply(claraWrap("Usage", `Pesan tidak boleh kosong. Contoh: ${usedPrefix}autogreet set ${slot} Pesan kamu`));
+      if (!msg) return m.reply(novaGuide("AutoGreet", "Pesan tidak boleh kosong nih!", usedPrefix + "autogreet set " + slot + " Pesan kamu"));
       data.greetings[slot] = msg;
       await db.save();
       return m.reply(claraWrap("Auto Greet", `Pesan ${slot} diupdate:\n"${msg}"`));
