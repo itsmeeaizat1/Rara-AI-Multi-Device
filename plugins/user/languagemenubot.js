@@ -4,7 +4,7 @@
 // Owner aktifkan dulu via .languagemenubot on (owner only)
 // Setelah aktif, user bisa set bahasa mereka sendiri
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { separator, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, separator, tipText } from "../../src/lib/nova-menu-style.js";
 import {
   SUPPORTED_LANGUAGES,
   getUserLanguage,
@@ -119,7 +119,7 @@ async function handler(m, { sock, config: botConfig }) {
           "Semua response AI akan kembali ke Bahasa Indonesia",
         ].join("\n")) + "\n\n" + `Set bahasa lain: ${prefix}languagemenubot <code>`, "languagemenubot");
       }
-      return formatAndReply(m, "Gagal reset bahasa. Coba lagi.", "languagemenubot");
+      return formatAndReply(m, "Gagal reset bahasa nih, coba lagi ya", "languagemenubot");
     }
 
     // Set bahasa
@@ -132,7 +132,7 @@ async function handler(m, { sock, config: botConfig }) {
           : `Status: *${langInfo.native} (${langInfo.name})*\nBot akan merespons dalam ${langInfo.name}`;
         return formatAndReply(m, claraWrap("Language Menu Bot", responseMsg) + "\n\n" + `Reset: ${prefix}languagemenubot reset\n` + `Ganti bahasa: ${prefix}languagemenubot <code>`, "languagemenubot");
       }
-      return formatAndReply(m, "Gagal set bahasa. Coba lagi.", "languagemenubot");
+      return formatAndReply(m, "Gagal set bahasa nih, coba lagi ya", "languagemenubot");
     }
 
     // Unknown language

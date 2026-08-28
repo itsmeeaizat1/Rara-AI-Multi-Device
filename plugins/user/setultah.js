@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, bracketBox, tipText } from "../../src/lib/nova-menu-style.js";
 import { getBirthday, setBirthday } from "../../src/lib/nova-auto-birthday.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
@@ -65,14 +65,14 @@ async function handler(m, { sock }) {
   // Validate
   if (monthNum < 1 || monthNum > 12) {
     await m.react("❗");
-    return m.reply(claraWrap("setultah", toSC("Bulan tidak valid! (1-12)")));
+    return m.reply(claraWrap("setultah", "Bulan gak valid! (1-12)"));
   }
 
   // Simple day validation
   const maxDays = new Date(yearNum || 2000, monthNum, 0).getDate();
   if (dayNum < 1 || dayNum > maxDays) {
     await m.react("❗");
-    return m.reply(claraWrap("setultah", toSC("Tanggal tidak valid!")));
+    return m.reply(claraWrap("setultah", "Tanggal gak valid nih!"));
   }
 
   // Validate year if provided
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
     const currentYear = new Date().getFullYear();
     if (yearNum < 1900 || yearNum > currentYear) {
       await m.react("❗");
-      return m.reply(claraWrap("setultah", toSC("Tahun tidak valid!")));
+      return m.reply(claraWrap("setultah", "Tahun gak valid nih!"));
     }
   }
 
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
 
   if (!result.success) {
     await m.react("❌");
-    return m.reply(claraWrap("setultah", toSC("Gagal menyimpan tanggal lahir")));
+    return m.reply(claraWrap("setultah", "Gagal simpan tanggal lahir nih"));
   }
 
   await m.react("🐣");

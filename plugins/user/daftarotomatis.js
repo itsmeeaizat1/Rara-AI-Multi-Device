@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import fs from "fs"
 import path from "path"
 import axios from "axios"
@@ -390,7 +390,7 @@ async function captchaAnswerHandler(m, sock) {
   // Cancel
   if (["batal", "cancel", "batalkan"].includes(lowText)) {
     clearCaptchaSession(m.sender)
-    await m.reply("❌ Pendaftaran dibatalkan.\n\nMulai lagi dengan: `" + m.prefix + "daftarotomatis`")
+    await m.reply("Pendaftaran dibatalkan nih.\n\nMulai lagi dengan: `" + m.prefix + "daftarotomatis`")
     return true
   }
 
@@ -405,14 +405,14 @@ async function captchaAnswerHandler(m, sock) {
       if (session.attempts >= MAX_ATTEMPTS) {
         clearCaptchaSession(m.sender)
         await m.reply(
-          "❌ *Captcha salah " + MAX_ATTEMPTS + "x!*\n\n" +
+          "Captcha salah " + MAX_ATTEMPTS + "x!*\n\n" +
           "│ Sesi dibatalkan.\nCoba lagi: `" + m.prefix + "daftarotomatis`"
         )
         return true
       }
 
       var remaining = MAX_ATTEMPTS - session.attempts
-      await m.reply("❌ *Jawaban salah!*\n\nSisa percobaan: " + remaining + "x\nReply pesan captcha untuk mencoba lagi")
+      await m.reply("Jawaban salah!\n\nSisa percobaan: " + remaining + "x\nReply pesan captcha untuk mencoba lagi")
       return true
     }
 
@@ -492,7 +492,7 @@ async function captchaAnswerHandler(m, sock) {
   if (session.step === "age") {
     var age = Number(text)
     if (!/^\d+$/.test(text) || Number.isNaN(age) || age < 1 || age > 100) {
-      await m.reply(claraWrap("daftarotomatis", "❌ Umur tidak valid! Masukkan angka 1-100."))
+      await m.reply(novaError("DaftarOtomatis", "Umur gak valid! Masukin angka 1-100 ya"))
       return true
     }
     session.age = age
@@ -512,7 +512,7 @@ async function captchaAnswerHandler(m, sock) {
     else if (/^(perempuan|cewek?|cewe|p|female|wanita)$/.test(low)) gender = "Perempuan"
 
     if (!gender) {
-      await m.reply(claraWrap("daftarotomatis", "❌ Gender tidak valid!\n\n*Cowo / Cowok / Laki-laki / L*\n*Cewe / Cewek / Perempuan / P*"))
+      await m.reply(novaError("DaftarOtomatis", "Gender gak valid nih!\n\n*Cowo / Cowok / Laki-laki / L*\n*Cewe / Cewek / Perempuan / P*"))
       return true
     }
 

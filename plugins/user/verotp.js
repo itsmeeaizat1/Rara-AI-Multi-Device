@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "verotp",
@@ -56,7 +56,7 @@ async function handler(m, { args, sock }) {
 
   const session = getOtpSession(m.sender);
   if (!session) {
-    let txt = `❌ Tidak ada sesi OTP aktif!\n\n`;
+    let txt = `Gak ada sesi OTP aktif nih!\n\n`;
     txt += `Daftar dulu dengan: \`${m.prefix}regmail <nama>, <email>\``;
     return await m.reply( txt, { commandName: "verotp" });
   }
@@ -78,7 +78,7 @@ async function handler(m, { args, sock }) {
 
     if (session.attempts >= MAX_ATTEMPTS) {
       clearOtpSession(m.sender);
-      let txt = `❌ Kode OTP salah ${MAX_ATTEMPTS}x!\n\n`;
+      let txt = `Kode OTP salah ${MAX_ATTEMPTS}x!\n\n`;
       txt += `Sesi dibatalkan. Silakan daftar ulang:\n`;
       txt += `\`${m.prefix}regmail <nama>, <email>\``;
       await m.reply(claraWrap("verotp", txt));
@@ -86,7 +86,7 @@ async function handler(m, { args, sock }) {
     }
 
     const remaining = MAX_ATTEMPTS - session.attempts;
-    let txt = `❌ Kode OTP salah!\n\n`;
+    let txt = `Kode OTP salah!\n\n`;
     txt += `Sisa percobaan: *${remaining}x*\n`;
     txt += `Ketik: \`${m.prefix}verotp <kode>\``;
     await m.reply(claraWrap("verotp", txt));
@@ -147,7 +147,7 @@ async function handler(m, { args, sock }) {
     await m.react("🐣");
   } catch (e) {
     console.error("[VerOTP] Error:", e.message);
-    await m.reply(claraWrap("verotp", "❌ Terjadi kesalahan saat verifikasi. Coba lagi nanti."));
+    await m.reply(novaError("VerOTP", "Ada error saat verifikasi nih, coba lagi ya"));
   }
 }
 
