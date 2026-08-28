@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'jadwalgroup',
@@ -41,6 +41,7 @@ function formatTime(hours, minutes) {
 async function handler(m, { sock, db }) {
     const args = m.args || []
     const action = args[0]?.toLowerCase();
+    const pfx = m.prefix || ".";
     
     let time = args[1];
     if (args.length >= 4 && args[2] === ':') {
@@ -54,30 +55,14 @@ async function handler(m, { sock, db }) {
         const openTime = group.scheduleOpen || null;
         const closeTime = group.scheduleClose || null;
         
-        let scheduleInfo = `⏰ *ᴊᴀᴅᴡᴀʟ ɢʀᴜᴘ*
-
-「 📋 *ꜱᴛᴀᴛᴜꜱ*
-🔓 Open: *${openTime || 'Tidak aktif'}*
-🔒 Close: *${closeTime || 'Tidak aktif'}*
-
-*ᴄᴀʀᴀ ᴘᴇɴɢɢᴜɴᴀᴀɴ:*
-\`.jadwalgroup open 06:00\`
-\`.jadwalgroup close 22:00\`
-\`.jadwalgroup hapus open\`
-\`.jadwalgroup hapus close\``;
-        
-        await m.reply( scheduleInfo, "jadwalgroup");
-        return;
+        return m.reply(novaGuide("Jadwal Grup", `Jadwal Otomatis Grup Saat Ini:\n🔓 Open: ${openTime || 'Tidak aktif'}\n🔒 Close: ${closeTime || 'Tidak aktif'}`, `${pfx}jadwalgroup open 06:00\n${pfx}jadwalgroup close 22:00\n${pfx}jadwalgroup hapus open`));
     }
     
     if (action === 'hapus' || action === 'delete' || action === 'remove') {
         const type = args[1]?.toLowerCase();
         
         if (type !== 'open' && type !== 'close') {
-            await m.reply(`⚠️ *ᴠᴀʟɪᴅᴀꜱɪ ɢᴀɢᴀʟ*\n\n` +
-                `Gunakan: \`.jadwalgroup hapus open\`\n` +
-                `atau: \`.jadwalgroup hapus close\``);
-            return;
+            return m.reply(novaGuide("Hapus Jadwal Grup", "Pilih tipe jadwal yang ingin dihapus (open atau close)!", `${pfx}jadwalgroup hapus open\n${pfx}jadwalgroup hapus close`));
         }
         
         const group = db.getGroup(m.chat) || {};
@@ -86,42 +71,27 @@ async function handler(m, { sock, db }) {
             delete group.scheduleOpen;
             db.setGroup(m.chat, group);
             
-            await m.reply(claraWrap("jadwalgroup", `✅ *ʙᴇʀʜᴀꜱɪʟ*\n\n` +
-                `Jadwal *ʙᴜᴋᴀ ɢʀᴜᴘ* otomatis telah dihapus.`));
+            await m.reply(claraWrap("jadwalgroup", `✅ *BERHASIL*\n\nJadwal *BUKA GRUP* otomatis telah dihapus.`));
         } else {
             delete group.scheduleClose;
             db.setGroup(m.chat, group);
             
-            await m.reply(claraWrap("jadwalgroup", `✅ *ʙᴇʀʜᴀꜱɪʟ*\n\n` +
-                `Jadwal *ᴛᴜᴛᴜᴘ ɢʀᴜᴘ* otomatis telah dihapus.`));
+            await m.reply(claraWrap("jadwalgroup", `✅ *BERHASIL*\n\nJadwal *TUTUP GRUP* otomatis telah dihapus.`));
         }
         return;
     }
     
     if (action !== 'open' && action !== 'close') {
-        await m.reply(`⚠️ *ᴠᴀʟɪᴅᴀꜱɪ ɢᴀɢᴀʟ*\n\n` +
-            `Action harus \`open\` atau \`close\`!\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
-            `\`.jadwalgroup open 06:00\`\n` +
-            `\`.jadwalgroup close 22:00\``);
-        return;
+        return m.reply(novaGuide("Jadwal Grup", "Aksi harus berupa 'open' atau 'close'!", `${pfx}jadwalgroup open 06:00\n${pfx}jadwalgroup close 22:00`));
     }
     
     if (!time) {
-        await m.reply( `⚠️ *ᴠᴀʟɪᴅᴀꜱɪ ɢᴀɢᴀʟ*\n\n` +
-            `Waktu harus diisi!\n\n` +
-            `*ꜰᴏʀᴍᴀᴛ:* \`HH:MM\` (24 jam)\n` +
-            `*ᴄᴏɴᴛᴏʜ:* \`.jadwalgroup ${action} 08:00\``, "jadwalgroup");
-        return;
+        return m.reply(novaNoInput("Jadwal Grup", `Jam belum diisi! Gunakan format HH:MM (24 Jam).\nContoh: \`${pfx}jadwalgroup ${action} 08:00\``));
     }
     
     const parsed = parseTime(time);
     if (!parsed) {
-        await m.reply( `⚠️ *ᴠᴀʟɪᴅᴀꜱɪ ɢᴀɢᴀʟ*\n\n` +
-            `Format waktu tidak valid!\n\n` +
-            `*ꜰᴏʀᴍᴀᴛ:* \`HH:MM\` (24 jam)\n` +
-            `*ᴄᴏɴᴛᴏʜ:* \`06:00\`, \`22:30\`, \`08:15\``, "jadwalgroup");
-        return;
+        return m.reply(novaError("Jadwal Grup", "Format waktu tidak valid! Gunakan format 24 jam (HH:MM), contoh: 06:00 atau 22:30."));
     }
     
     const group = db.getGroup(m.chat) || {};
@@ -138,12 +108,12 @@ async function handler(m, { sock, db }) {
     const actionText = action === 'open' ? 'BUKA' : 'TUTUP';
     const emoji = action === 'open' ? '🔓' : '🔒';
     
-    const successMsg = `✅ *ᴊᴀᴅᴡᴀʟ ᴅɪꜱɪᴍᴘᴀɴ*
+    const successMsg = `✅ *JADWAL DISIMPAN*
 
-╭──「 ⏰ *ꜱᴇᴛᴛɪɴɢ*
+╭──「 ⏰ *SETTING*
 │ ${emoji} Aksi: *${actionText}*
 │ ⏱️ Waktu: *${formattedTime} WIB*
-│ 📡 sTatus: *🟢 Aktif*
+│ 📡 Status: *🟢 Aktif*
 ╰──────────❀
 
 │ _Grup akan otomatis ${action === 'open' ? 'dibuka' : 'ditutup'}_

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import instagramDownloader from "../../src/scraper/ig.js";
-import { claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "instagramdl",
   alias: ["instagramdl"],
@@ -23,15 +23,11 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url) {
-    return m.reply( `📸 *ɪɴꜱᴛᴀɢʀᴀᴍ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\n` +
-        `\`${m.prefix}igdl <url>\`\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `\`${m.prefix}igdl https://www.instagram.com/reel/xxx\`\n` +
-        `\`${m.prefix}igdl https://www.instagram.com/p/xxx\``, "instagramdl");
+    return m.reply(novaNoInput("Instagram DL", "Kirim URL postingan, reel, atau story Instagram!", `${m.prefix}igdl https://www.instagram.com/reel/xxx`));
   }
 
   if (!IG_REGEX.test(url)) {
-    return m.reply(claraWrap("Instagramdl", `❌ URL tidak valid. Gunakan link Instagram (reel/post/story).`));
+    return m.reply(novaGuide("Instagram DL", "URL-nya gak valid nih! Gunakan link Instagram (reel/post/story).", `${m.prefix}igdl https://www.instagram.com/reel/xxx`));
   }
 
   await m.react("🕒");
@@ -40,11 +36,11 @@ async function handler(m, { sock }) {
     const result = await instagramDownloader(url);
 
     if (!result?.media?.length) {
-      return m.reply(claraWrap("instagramdl", `❌ Gagal mengambil media. Coba link lain.`));
+      return m.reply(novaEmpty("Instagram DL", "Gagal mengambil media dari Instagram. Coba link lain ya!"));
     }
 
     const isStory = url.includes("/stories/");
-    const caption = mediaCaption({
+    let caption = mediaCaption({
       platformIcon: "📸",
       platformName: isStory ? "Instagram Story" : "Instagram",
       title: result.title || "Instagram Media",
@@ -75,7 +71,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
   } catch (err) {
-    return m.reply(claraWrap("Instagramdl", `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴᴅᴜʜ*\n\n${err.message}`));
+    return m.reply(novaError("Instagram DL", `Gagal mengunduh media Instagram: ${err.message}`));
   }
 }
 

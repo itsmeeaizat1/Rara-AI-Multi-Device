@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setgroupname",
@@ -24,18 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     const name = m.text?.trim();
 
     if (!name) {
-      const text =
-        novaCaption({
-  emoji: "👥",
-  name: "setgroupname",
-  description: "Ganti nama grup",
-  usage: `${prefix}setgroupname <nama baru>`,
-  example: `${prefix}setgroupname Grup RPG Nova`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply( text, "setgroupname");
+      await m.reply(novaNoInput("SetGroupName", "Masukkan nama baru untuk grup ini", `${prefix}setgroupname Grup RPG Nova`));
       return { handled: true };
     }
 
@@ -50,13 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply(claraWrap("setgroupname", text));
   } catch (error) {
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply( text, "setgroupname");
+    await m.reply(novaError("SetGroupName", `Gagal ganti nama grup: ${error.message}`));
   }
 
   return { handled: true };

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "douyindl",
@@ -36,12 +36,7 @@ async function douyinFetch(url, retries = 3) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply( `🎵 *ᴅᴏᴜʏɪɴ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*\n\n` +
-        `Download video atau audio dari Douyin (TikTok China).\n\n` +
-        `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
-        `*${m.prefix}douyindl <link>*\n\n` +
-        `*ᴄᴏɴᴛᴏʜ:*\n` +
-        `*${m.prefix}douyindl https://v.douyin.com/xxx*`, "douyindl");
+    return m.reply(novaNoInput("Douyin DL", "Kirim URL Douyin (TikTok China) yang mau didownload!", `${m.prefix}douyindl https://v.douyin.com/xxx`));
   }
 
   m.react("🕒");
@@ -67,7 +62,7 @@ async function handler(m, { sock }) {
     m.react("🐣");
   } catch (e) {
     console.error(e);
-    m.reply(claraWrap("Douyindl", "❌ Gagal mengambil data Douyin, coba lagi nanti"));
+    m.reply(novaError("Douyin DL", "Gagal mengambil data Douyin. Coba lagi nanti ya!"));
   }
 }
 

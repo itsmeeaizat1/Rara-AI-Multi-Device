@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { getQuotedStickerHash, deleteStickerCommand, listStickerCommands, findByCommand } from '../../src/lib/nova-sticker-command.js'
+
 const pluginConfig = {
     name: 'delstickercmd',
     alias: ["delstickercmd"],
@@ -22,27 +22,27 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const args = m.args || []
     const commandName = args[0]
+    const pfx = m.prefix || ".";
+
     if (!commandName && !m.quoted) {
         const existingCmds = listStickerCommands()
         if (existingCmds.length === 0) {
             return m.reply(
-                `🖼️ *ꜱᴛɪᴄᴋᴇʀ ᴄᴏᴍᴍᴀɴᴅꜱ*\n\n` +
-                `Tidak ada sticker command yang terdaftar.\n` +
-                `Tambahkan dengan \`.addcmdsticker\``
+                novaEmpty("DelStickerCmd", `Tidak ada sticker command yang terdaftar saat ini.\nTambahkan dulu dengan \`${pfx}addcmdsticker\``)
             )
         }
         
-        let txt = `🖼️ *ꜱᴛɪᴄᴋᴇʀ ᴄᴏᴍᴍᴀɴᴅꜱ*\n\n`
-        txt += `╭──「 📋 *ᴅᴀꜰᴛᴀʀ* 」\n`
+        let txt = `🖼️ *STICKER COMMANDS*\n\n`
+        txt += `╭──「 📋 *DAFTAR* 」\n`
         
         for (const cmd of existingCmds) {
             txt += `│ 🖼️ → \`.${cmd.command}\`\n`
         }
         txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`
         
-        txt += `*ʜᴀᴘᴜꜱ ᴅᴇɴɢᴀɴ:*\n`
-        txt += `\`.delstickercmd <command>\`\n`
-        txt += `atau reply sticker + \`.delstickercmd\``
+        txt += `*HAPUS DENGAN:*\n`
+        txt += `\`${pfx}delstickercmd <command>\`\n`
+        txt += `atau reply sticker + \`${pfx}delstickercmd\``
         
         return await m.reply(claraWrap("delstickercmd", txt))
     }
@@ -71,8 +71,7 @@ async function handler(m, { sock }) {
             }
         } else {
             return m.reply(
-                `❌ Sticker command \`${cleanCmd}\` tidak ditemukan!\n\n` +
-                `Lihat daftar dengan \`.delstickercmd\``
+                novaEmpty("DelStickerCmd", `Command sticker \`${cleanCmd}\` tidak ditemukan nih!\nKetik \`${pfx}delstickercmd\` untuk lihat daftar.`)
             )
         }
     }
@@ -80,14 +79,12 @@ async function handler(m, { sock }) {
     if (deleted) {
         await m.react('✅')
         await m.reply(
-            `✅ *ꜱᴛɪᴄᴋᴇʀ ᴄᴏᴍᴍᴀɴᴅ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
+            `✅ *STICKER COMMAND DIHAPUS*\n\n` +
             `🗑️ \`${deletedCmd}\` telah dihapus.`
         )
     } else {
         await m.reply(
-            `❌ Gagal menghapus!\n\n` +
-            `Reply sticker yang ingin dihapus, atau\n` +
-            `Ketik nama command: \`.delstickercmd menu\``
+            novaError("DelStickerCmd", `Gagal menghapus sticker command!\nReply stiker yang mau dihapus, atau ketik nama command: \`${pfx}delstickercmd menu\``)
         )
     }
 }

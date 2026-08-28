@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getParticipantJid, getParticipantJids } from "../../src/lib/nova-lid.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { delay } from "../../src/lib/nova-utils.js";
 
 const pluginConfig = {
@@ -56,7 +56,7 @@ async function handler(m, { sock, text: args }) {
     const participants = groupMeta?.participants || [];
 
     if (participants.length === 0) {
-      await m.reply(claraWrap("Pick Me", "Gagal mendapatkan data member grup."));
+      await m.reply(novaError("Pick Me", "Gagal mengambil daftar member grup nih."));
       return { handled: true };
     }
 
@@ -76,28 +76,7 @@ async function handler(m, { sock, text: args }) {
 
     // .pickme help
     if (argStr.toLowerCase() === "help" || argStr === "?") {
-      const helpText = [
-        "CARA PAKAI PICK ME:",
-        "",
-        `1. ${prefix}pickme`,
-        "   Pilih 1 member acak dari semua member",
-        "",
-        `2. ${prefix}pickme 5`,
-        "   Pilih 5 member acak",
-        "",
-        `3. ${prefix}pickme @tag1 @tag2 @tag3`,
-        "   Pilih dari member yang di-tag saja",
-        "",
-        `4. ${prefix}pickme team 2`,
-        "   Bagi jadi 2 tim secara acak",
-        "",
-        `5. ${prefix}pickme exclude @tag`,
-        "   Pilih acak, kecuali yang di-tag",
-        "",
-        `6. ${prefix}pickme reroll`,
-        "   Pilih ulang dari pool terakhir",
-      ].join("\n");
-      await m.reply(claraWrap("Pick Me", helpText));
+      await m.reply(novaGuide("Pick Me", "Pilih member grup secara acak untuk tugas/kelompok!", `${prefix}pickme [jumlah]\n${prefix}pickme @tag1 @tag2\n${prefix}pickme team 2`));
       return { handled: true };
     }
 
@@ -120,7 +99,7 @@ async function handler(m, { sock, text: args }) {
         const rerollKey = `pickme_last_${m.chat}`;
         const lastPool = global[rerollKey];
         if (!lastPool || lastPool.length === 0) {
-          await m.reply(claraWrap("Pick Me", "Tidak ada pool sebelumnya untuk di-reroll."));
+          await m.reply(novaEmpty("Pick Me Reroll", "Belum ada riwayat undian sebelumnya buat di-reroll nih."));
           return { handled: true };
         }
         const picked = randomPick(lastPool, 1);
@@ -152,7 +131,7 @@ async function handler(m, { sock, text: args }) {
     }
 
     if (pool.length === 0) {
-      await m.reply(claraWrap("Pick Me", "Tidak ada member yang bisa dipilih."));
+      await m.reply(novaEmpty("Pick Me", "Gak ada member yang bisa dipilih nih."));
       return { handled: true };
     }
 
@@ -242,7 +221,7 @@ async function handler(m, { sock, text: args }) {
     return { handled: true };
   } catch (error) {
     console.error("pickme error:", error);
-    await m.reply(claraWrap("Pick Me", "Terjadi error saat memilih member."));
+    await m.reply(novaError("Pick Me", `Terjadi kesalahan saat memilih member: ${error.message || error}`));
     return { handled: true };
   }
 }

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "mostlikely",
@@ -60,6 +60,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const groupId = m.key.remoteJid;
     const sender = m.key.participant || m.sender;
     const sub = (args[0] || "").toLowerCase();
+    const pfx = usedPrefix || m.prefix || ".";
 
     if (!db.data.mostLikely) db.data.mostLikely = {};
     if (!db.data.mostLikely[groupId]) {
@@ -71,7 +72,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // START
     if (sub === "start") {
       if (game.active) {
-        return m.reply(claraWrap("Most Likely", "Game lagi jalan!\nKetik .mostlikely stop untuk hentikan."));
+        return m.reply(novaError("Most Likely", `Game lagi berjalan nih!\nKetik \`${pfx}mostlikely stop\` untuk menghentikan.`));
       }
 
       const question = QUESTIONS[Math.floor(Math.random() * QUESTIONS.length)];
@@ -90,25 +91,25 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         "",
         "Tag orang yang menurutmu paling mungkin!",
         "",
-        "Ketik: .mostlikely vote @user",
-        "Lihat hasil: .mostlikely result",
-        "Stop: .mostlikely stop",
+        `Ketik: ${pfx}mostlikely vote @user`,
+        `Lihat hasil: ${pfx}mostlikely result`,
+        `Stop: ${pfx}mostlikely stop`,
       ], "success"));
     }
 
     // VOTE
     if (sub === "vote") {
       if (!game.active) {
-        return m.reply(claraWrap("Most Likely", "Gak ada game aktif. Ketik .mostlikely start."));
+        return m.reply(novaEmpty("Most Likely", `Gak ada game yang lagi aktif nih. Mulai dulu dengan \`${pfx}mostlikely start\``));
       }
 
       const target = m.mentionedJid?.[0] || (args[1] ? args[1].replace("@", "") + "@s.whatsapp.net" : null);
       if (!target) {
-        return m.reply(claraWrap("Most Likely", "Tag orangnya!\n💡 *Contoh:* .mostlikely vote @Budi"));
+        return m.reply(novaNoInput("Most Likely", `Tag member yang mau kamu vote ya!\nContoh: \`${pfx}mostlikely vote @user\``));
       }
 
       if (game.voters[sender]) {
-        return m.reply(claraWrap("Most Likely", "Kamu sudah vote ronde ini!"));
+        return m.reply(novaError("Most Likely", "Kamu sudah memberikan vote di ronde ini!"));
       }
 
       game.votes[target] = (game.votes[target] || 0) + 1;
@@ -125,17 +126,16 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // RESULT
     if (sub === "result" || sub === "hasil") {
       if (!game.active && !game.question) {
-        return m.reply(claraWrap("Most Likely", "Belum ada game. Ketik .mostlikely start."));
+        return m.reply(novaEmpty("Most Likely", `Belum ada sesi game. Mulai game baru dengan \`${pfx}mostlikely start\``));
       }
 
       if (Object.keys(game.votes).length === 0) {
-        return m.reply(claraWrap("Most Likely", "Belum ada yang vote!\nKetik .mostlikely vote @user"));
+        return m.reply(novaEmpty("Most Likely", `Belum ada member yang memberikan vote nih!\nKetik \`${pfx}mostlikely vote @user\``));
       }
 
       const sorted = Object.entries(game.votes).sort((a, b) => b[1] - a[1]);
       let result = "Pertanyaan: " + game.question + "\n\nHasil vote:\n";
       sorted.forEach(([user, count], i) => {
-        const medal = i === 0 ? "Paling banyak dipilih" : i + 2 + " vote";
         result += (i + 1) + ". @" + user.split("@")[0] + " — " + count + " vote\n";
       });
 
@@ -145,7 +145,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // STOP
     if (sub === "stop") {
       if (!game.active) {
-        return m.reply(claraWrap("Most Likely", "Gak ada game aktif."));
+        return m.reply(novaEmpty("Most Likely", "Gak ada game yang lagi aktif untuk dihentikan."));
       }
       game.active = false;
       await db.save();
@@ -163,22 +163,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     // DEFAULT - help
-    return m.reply(claraWrap("Most Likely", [
-      "Siapa paling mungkin... — voting member grup seru",
-      "",
-      "CARA PAKAI:",
-      usedPrefix + "mostlikely start — Mulai ronde baru",
-      usedPrefix + "mostlikely vote @user — Vote member",
-      usedPrefix + "mostlikely result — Lihat hasil vote",
-      usedPrefix + "mostlikely stop — Hentikan game",
-      "",
-      "CONTOH:",
-      usedPrefix + "mostlikely start",
-      usedPrefix + "mostlikely vote @6281234567890",
-    ]));
+    return m.reply(novaGuide("Most Likely", "Siapa paling mungkin... — Game voting member grup yang seru!", `${pfx}mostlikely start | vote @user | result | stop`));
   } catch (e) {
     console.error("[Most Likely]", e);
-    m.reply(claraWrap("Most Likely", "Error: " + e.message));
+    return m.reply(novaError("Most Likely", `Terjadi kesalahan pada game: ${e.message}`));
   }
 }
 
