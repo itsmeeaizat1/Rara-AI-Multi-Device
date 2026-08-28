@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from "fs";
 import path from "path";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 // ─── Frame definitions ───
 const FRAMES = {
@@ -742,7 +742,7 @@ export default {
       }
     } catch (e) {
       await m.reply(claraWrap("StikerFrame", [
-        `│ Gagal mengunduh foto.`,
+        `│ Gagal download foto nih.`,
         `│ Coba kirim ulang ya.`,
       ].join("\n")));
       await m.react("❌");
@@ -751,7 +751,7 @@ export default {
 
     if (!imgBuffer || imgBuffer.length === 0) {
       await m.reply(claraWrap("StikerFrame", [
-        `│ Foto kosong, coba ulangi.`,
+        `│ Foto kosong nih, coba ulangi.`,
       ].join("\n")));
       await m.react("❌");
       return { handled: true };

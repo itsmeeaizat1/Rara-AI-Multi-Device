@@ -9,7 +9,7 @@ function getSharp() {
 }
 import te from "../../src/lib/nova-error.js";
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "stickerpack",
@@ -30,7 +30,7 @@ const pluginConfig = {
 class StickerAPI {
   async search(query, page = 1) {
     try {
-      if (!query) throw new Error("Query kosong");
+      if (!query) throw new Error("Query kosong nih");
       const res = await axios
         .post("https://getstickerpack.com/api/v1/stickerdb/search", {
           query,
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
     const detail = await api.detail(randPick.url);
 
     if (!detail.status || !detail.stickers?.length) {
-      return m.reply(claraWrap("stickerpack", `── .✦ ──\n\nGagal mengambil detail sticker pack .☘︎ ݁˖`));
+      return m.reply(novaError("StickerPack", "Gagal ambil detail sticker pack nih"));
     }
 
     await m.reply(
@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
     }
 
     if (!stickerBuffers.length) {
-      return m.reply(claraWrap("stickerpack", `── .✦ ──\n\nGagal mendownload sticker .☘︎ ݁˖`));
+      return m.reply(novaError("StickerPack", "Gagal download sticker nih"));
     }
 
     const packname = randPick.name || config.sticker?.packname || "Nova-AI";
@@ -197,7 +197,7 @@ async function handler(m, { sock }) {
           `── .✦ ──\n\nBerhasil kirim *${sent}* sticker dari *${packname}* .☘︎ ݁˖`,
         );
       } else {
-        { const __navText = `── .✦ ──\n\nGagal mengirim sticker .☘︎ ݁˖`; await m.reply(__navText); };
+        await m.reply(novaError("StickerPack", "Gagal kirim sticker nih"));
       }
     }
   } catch (error) {

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { addExifToWebp } from '../../src/lib/nova-exif.js'
 import axios from 'axios'
 import config from '../../config.js'
@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
             `Contoh: \`${m.prefix}attp Hello World\``, "attp")
     }
     if (text.length > 100) {
-        { const __navText = `❌ Teks terlalu panjang! Maksimal 100 karakter.`; return await m.reply(__navText); }
+        { const __navText = `Teks terlalu panjang nih! Maksimal 100 karakter.`; return await m.reply(__navText); }
     }
     m.react('🕐')
     try {
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
         }
         const stickerUrl = data.data.url
         const stickerRes = await f(stickerUrl, 'buffer')
-        if (!stickerRes) throw new Error('Gagal mengunduh sticker dari server')
+        if (!stickerRes) throw new Error('Gagal download sticker dari server nih')
         let finalSticker = stickerRes
         try {
             finalSticker = await addExifToWebp(stickerRes, {

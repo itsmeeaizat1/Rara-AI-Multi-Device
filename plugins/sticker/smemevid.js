@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
         }
 
         if (!mediaBuffer) {
-            return m.reply(claraWrap("smemevid", `❌ *ɢᴀɢᴀʟ*\n\nGagal mengunduh video`))
+            return m.reply(novaError("SmemeVid", "Gagal download video nih"))
         }
 
         const tempId = Date.now()
@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
         } catch (e) { console.error('[smemevid.js]:', e.message); }
 
     } catch (error) {
-        m.reply(claraWrap("smemevid", `❌ *ɢᴀɢᴀʟ*\n\nTerjadi kesalahan saat memproses video`))
+        m.reply(novaError("SmemeVid", "Ada error saat proses video nih"))
     }
 }
 

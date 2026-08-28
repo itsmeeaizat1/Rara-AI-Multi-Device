@@ -5,7 +5,7 @@ import { exec } from 'child_process'
 import { promisify } from 'util'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const execAsync = promisify(exec)
 
 const pluginConfig = {
@@ -150,7 +150,7 @@ async function handler(m, { sock, config: botConfig }) {
         }
         
         if (!buffer) {
-            { const __navText = '❌ Gagal mendownload media!'; await m.reply( __navText, "sticker"); }
+            await m.reply(novaError("Sticker", "Gagal download media nih"))
             return
         }
         
@@ -168,7 +168,7 @@ async function handler(m, { sock, config: botConfig }) {
                 const duration = parseFloat(stdout.trim())
                 
                 if (duration > 10) {
-                    await m.reply(claraWrap("Sticker", `❌ Video terlalu panjang!\n\nDurasi: ${duration.toFixed(1)} detik\nMaksimal: 10 detik`))
+                    await m.reply(novaError("Sticker", `Video terlalu panjang! ${duration.toFixed(1)} detik, maksimal 10 detik`))
                     if (fs.existsSync(tempVideo)) fs.unlinkSync(tempVideo)
                     return
                 }

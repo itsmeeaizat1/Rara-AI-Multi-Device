@@ -5,7 +5,7 @@ import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import { f } from "../../src/lib/nova-http.js";
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 function getSharp() {
   return _sharp;
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
     const results = data?.data?.slice(0, MAX_STICKERS);
 
     if (!results || results.length === 0) {
-      return m.reply(claraWrap("Pinpack", `── .✦ ──\n\nTidak ditemukan hasil untuk: *${query}* .☘︎ ݁˖`));
+      return m.reply(novaError("PinPack", `Gak nemu hasil untuk: ${query} nih`));
     }
 
     await m.reply(
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
     }
 
     if (!stickerBuffers.length) {
-      return m.reply(claraWrap("pinpack", `── .✦ ──\n\nGagal mendownload gambar .☘︎ ݁˖`));
+      return m.reply(novaError("PinPack", "Gagal download gambar nih"));
     }
 
     const packname = `Pinterest: ${query}`;
@@ -147,7 +147,7 @@ async function handler(m, { sock }) {
           `── .✦ ──\n\nBerhasil kirim *${sent}* sticker dari *${packname}* .☘︎ ݁˖`,
         );
       } else {
-        { const __navText = `── .✦ ──\n\nGagal mengirim sticker .☘︎ ݁˖`; await m.reply(__navText); };
+        await m.reply(novaError("PinPack", "Gagal kirim sticker nih"));
       }
     }
   } catch (error) {

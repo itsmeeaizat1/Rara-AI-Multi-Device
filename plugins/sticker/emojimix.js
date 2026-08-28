@@ -3,7 +3,7 @@
 // Tenor Google API sudah discontinued, ganti dengan direct Google CDN
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { toUnicode, checkSupported } from 'emoji-mixer';
 
 const pluginConfig = {
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
     const emojis = text.match(emojiRegex)
     
     if (!emojis || emojis.length < 2) {
-        return m.reply( claraWrap("Emojimix", `❌ Masukkan minimal 2 emoji!\n\n💡 *Contoh:* ${m.prefix}emojimix 😂🔥`), { commandName: "emojimix" })
+        return m.reply( novaError("EmojiMix", "Masukin minimal 2 emoji ya!"), { commandName: "emojimix" })
     }
     
     const emoji1 = emojis[0]
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
         
         if (!imageUrl) {
             return m.reply(claraWrap("Emojimix", [
-                `❌ Kombinasi ${emoji1} + ${emoji2} tidak tersedia di Emoji Kitchen.`,
+                `Kombinasi ${emoji1} + ${emoji2} gak tersedia nih!`,
                 "",
                 "Coba kombinasi emoji lain ya!"
             ].join("\n")));
@@ -91,9 +91,9 @@ async function handler(m, { sock }) {
         const res = await fetch(imageUrl);
         if (!res.ok) {
             return m.reply(claraWrap("Emojimix", [
-                `❌ Gagal mengunduh emoji mix.`,
+                `Gagal download emoji mix nih.`,
                 "",
-                "Coba lagi nanti ya!"
+                "Coba lagi ya!"
             ].join("\n")));
         }
         
