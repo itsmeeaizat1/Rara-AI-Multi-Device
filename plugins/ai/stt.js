@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import {  
+import { novaError, novaEmpty, novaGuide, novaNoInput,  
   separator,
   tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 

@@ -2,7 +2,7 @@
 import { ClaudeHaiku } from "../../src/scraper/claudehaiku.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "claudehaiku",
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const result = await ClaudeHaiku(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("Claude Haiku Gagal", `❌ *ᴄʟᴀᴜᴅᴇ ʜᴀɪᴋᴜ ɢᴀɢᴀʟ*\n\n${result.error || "Gagal mendapatkan respons"}`));
+      return m.reply(claraWrap("Claude Haiku Gagal", `❌ *ᴄʟᴀᴜᴅᴇ ʜᴀɪᴋᴜ ɢᴀɢᴀʟ*\n\n${result.error || "Gagal dapet respons nih"}`));
     }
 
     await m.react("🐣");

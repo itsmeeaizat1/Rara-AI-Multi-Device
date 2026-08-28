@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // aihelp.js — AI help berdasarkan command yang ada
 import { getAllPlugins, getPluginInfo } from "../../src/lib/nova-plugins.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aihelp",
@@ -60,7 +61,7 @@ ${prefix}aihelp group
     if (matches.length === 0) {
       await m.reply(`╭──「 *Aɪ Hᴇʟᴘ* 」
 │
-│ ❌ Tidak ada command untuk "${keyword}"
+│ Gak ada command untuk "${keyword}" nih
 │ 💡 Coba keyword lain ya!
 │ Contoh: download, sticker, game, rpg
 ╰──────────❀`);
@@ -83,7 +84,7 @@ ${cmdLines}╰──────────❀`;
     await m.react("🐣");
   } catch (e) {
     console.error("[aihelp] handler error:", e.message);
-    try { await m.reply("╭──「 AI Help 」\n│ ❌ Terjadi error\n│ Coba lagi nanti ya\n╰──────────❀"); } catch {}
+    try { await m.reply("╭──「 AI Help 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────❀"); } catch {}
     await m.react("❌");
   }
 }

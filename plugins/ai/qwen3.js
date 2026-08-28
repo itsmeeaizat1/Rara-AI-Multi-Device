@@ -2,7 +2,7 @@
 import { Qwen3 } from "../../src/scraper/qwen3.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "qwen3",
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
     const result = await Qwen3(text);
 
     if (!result.status) {
-      return m.reply(claraWrap("Qwen3 Gagal", `❌ *Qwen3 Gagal*\n\n${result.error || "Gagal mendapatkan respons"}`));
+      return m.reply(claraWrap("Qwen3 Gagal", `❌ *Qwen3 Gagal*\n\n${result.error || "Gagal dapet respons nih"}`));
     }
 
     await m.react("🐣");
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {
     console.error(e);
-    m.reply(claraWrap("qwen3", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaError("Qwen3", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

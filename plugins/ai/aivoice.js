@@ -7,7 +7,7 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 const execAsync = promisify(exec);
-import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -95,7 +95,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
 
-    if (!buffer) throw new Error("Gagal generate suara dari semua endpoint (Zeks/Miaou/edge-tts semua gagal).");
+    if (!buffer) throw new Error("Gagal generate suara nih");
 
     const filePath = tempPath(".mp3");
     fs.writeFileSync(filePath, buffer);
@@ -118,10 +118,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`│ Status: *Gagal*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
+      novaError("AIVoice", "Gagal nih, coba lagi ya");
 
     await m.reply(text);
   }

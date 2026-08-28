@@ -4,7 +4,7 @@
 //   One-shot (all users): .ocrsolve — reply ke foto, analisis sekali
 //   Persistent (owner): .toggleocrsolve on/off — auto detect tiap foto masuk
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {

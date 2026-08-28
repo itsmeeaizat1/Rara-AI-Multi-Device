@@ -2,7 +2,7 @@
 import { f } from '../../src/lib/nova-http.js'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'anime-gen',
     alias: ["anime-gen"],
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         const data = await f(apiUrl)
         
         if (!data?.status || !data?.data?.url) {
-            return m.reply('❌ *Gagal*\n\nGagal generate gambar. Coba lagi nanti!')
+            return m.reply('Gagal generate gambar nih, coba lagi ya!')
         }
         
         const result = data.data  

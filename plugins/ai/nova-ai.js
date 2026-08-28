@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nova-ai.js — Chat dengan Nova AI (Tio API, terhubung sistem bot + auto-execute)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 import { bracketBox } from "../../src/lib/nova-menu-style.js";
 import { getCommandsByCategory, getCategories, getAllCommandNames, getPlugin } from "../../src/lib/nova-plugins.js";
@@ -245,7 +245,7 @@ async function executeCommand(action, m, sock, botConfig) {
     return { success: true, message: null };
   } catch (e) {
     console.error(`[nova-ai] auto-execute error:`, e.message);
-    return { success: false, message: `Gagal menjalankan command: ${e.message}` };
+    return { success: false, message: `Gagal jalanin command nih: ${e.message}` };
   }
 }
 

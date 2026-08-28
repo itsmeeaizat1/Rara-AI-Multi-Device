@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
  * plugins/ai/deepseekv4flashxemoz.js
@@ -84,7 +84,7 @@ async function callWithRetry(pesan, session, reset) {
     if (attempt < MAX_RETRIES) await sleep(RETRY_DELAY);
   }
 
-  throw lastError || new Error("Response AI kosong setelah beberapa percobaan.");
+  throw lastError || new Error("AI balas kosong nih, udah dicoba beberapa kali");
 }
 
 async function handler(m, { sock }) {
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("DeepSeek V4 Flash", result.answer));
   } catch (error) {
     await m.react("🐣");
-    return m.reply(claraWrap("DeepSeek V4 Flash Error", error.message || "Gagal menghubungi AI."));
+    return m.reply(claraWrap("DeepSeek V4 Flash Error", error.message || "Gagal hubungin AI nih"));
   }
 }
 

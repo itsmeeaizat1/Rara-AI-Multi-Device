@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 /**
  * plugins/ai/puter.js
@@ -127,7 +127,7 @@ async function callPuter(token, modelId, messages) {
   }
 
   const reply = data?.choices?.[0]?.message?.content || "";
-  if (!reply) throw new Error("Response AI kosong.");
+  if (!reply) throw new Error("AI balas kosong nih");
 
   return reply;
 }
@@ -231,7 +231,7 @@ async function handler(m, { sock, config: botConfig }) {
     // Hapus pesan user yang gagal dari session
     session.messages.pop();
 
-    let errMsg = error.message || "Gagal menghubungi AI.";
+    let errMsg = error.message || "Gagal hubungin AI nih";
 
     if (errMsg.includes("401") || errMsg.includes("auth") || errMsg.includes("token")) {
       errMsg += "\n\nToken tidak valid. Set ulang: .puter setkey <token>";

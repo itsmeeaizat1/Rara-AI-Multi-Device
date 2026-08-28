@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "sologo",
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
 
     const data = res.data;
     if (!data.status || !data.result || data.result.length === 0) {
-      return m.reply(claraWrap("sologo", "⚠️ AI gagal membuat logo. Coba gunakan prompt (deskripsi) yang lain."));
+      return m.reply(novaError("SoLogo", "⚠️ AI gagal membuat logo. Coba gunakan prompt (deskripsi) yang lain."));
     }
 
     const logo = data.result[0];
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
 
   } catch (error) {
     console.error("[SoLogo AI]", error.message);
-    m.reply(claraWrap("sologo", "😔 Terjadi kesalahan saat memproses permintaan ke AI."));
+    m.reply(novaError("SoLogo", "😔 Terjadi kesalahan saat memproses permintaan ke AI."));
   }
 }
 

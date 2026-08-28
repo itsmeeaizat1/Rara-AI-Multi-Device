@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // multi-ai.js — OpenRouter-style: pilih provider + model lewat chat
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { callAI, DEFAULT_PROVIDERS } from "../../src/lib/nova-ai-service.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
@@ -143,7 +143,7 @@ ${lines}├──「 Cara Pakai 」
     });
 
     if (!reply || reply.trim() === "") {
-      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Status:* Gagal
+      const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Status:* Gagal nih
 │ *Alasan:* AI tidak memberikan respons
 │ Cek API key di *${prefix}ai-set apiKey <key>*
 ╰──────────❀`;
@@ -167,7 +167,7 @@ ${lines}├──「 Cara Pakai 」
   } catch (error) {
     console.error('[multi-ai.js]:', error.message);
     const prefix = botConfig.command?.prefix || ".";
-    const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Status:* Gagal
+    const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Status:* Gagal nih
 │ *Alasan:* ${error.message}
 │ Cek API key: *${prefix}ai-set apiKey <key>*
 ╰──────────❀`;

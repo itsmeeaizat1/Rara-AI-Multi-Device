@@ -3,7 +3,7 @@ import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { getPlugin } from "../../src/lib/nova-plugins.js";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ai",
@@ -380,7 +380,7 @@ async function handler(m, { sock }) {
     // Check permissions
     const perm = checkAssistantPermission(m, intent, userInput);
     if (!perm.allowed) {
-      return m.reply(claraWrap("Ai", `❌ ${perm.reason}`));
+      return m.reply(novaError("AI", perm.reason));
     }
 
     // Get the plugin
