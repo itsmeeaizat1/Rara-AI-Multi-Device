@@ -56,13 +56,19 @@ async function handler(m, { sock }) {
     const videoUrl = r.media || (r.video && r.video[0]?.url) || null;
     if (!videoUrl) throw new Error("Video tidak ditemukan");
 
-    let caption = `╭──「 FACEBOOK V2 」\n`;
-    caption += `│ Title: ${r.title || "Facebook Video"}\n`;
-    if (r.duration) caption += `│ Durasi: ${r.duration}\n`;
-    caption += `│ Source: API V2\n`;
-    caption += `╰──────────❀`;
+    const caption = mediaCaption({
+        platformIcon: "👥",
+        platformName: "Facebook",
+        title: r.title || "Facebook Video",
+        duration: r.duration || null,
+        format: "Video",
+        method: "API V2",
+    });
 
-    await sock.sendMedia(m.chat, videoUrl, caption, m, { type: "video" });
+    await sock.sendMessage(m.chat, {
+        video: { url: videoUrl },
+        caption,
+    }, { quoted: m });
     m.react("🐣");
   } catch (e) {
     console.error("[FBV2]", e.message);

@@ -53,10 +53,13 @@ async function handler(m, { sock }) {
     const r = res.data?.result || res.data?.data;
     if (!r?.download) throw new Error("Gagal mengambil audio YouTube");
 
-    let caption = `╭──「 YTMP3 V2 」\n`;
-    caption += `│ Title: ${r.title || "YouTube Audio"}\n`;
-    caption += `│ Source: API V2\n`;
-    caption += `╰──────────❀`;
+    const caption = mediaCaption({
+        platformIcon: "▶️",
+        platformName: "YouTube",
+        title: r.title || "YouTube Audio",
+        format: "🎵 MP3",
+        method: "API V2",
+    });
 
     await sock.sendMedia(m.chat, r.download, caption, m, {
       type: "audio", mimetype: "audio/mpeg",

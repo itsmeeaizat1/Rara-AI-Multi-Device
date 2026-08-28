@@ -53,16 +53,22 @@ async function handler(m, { sock }) {
     const r = res.data?.result || res.data?.data;
     if (!r?.play) throw new Error("Gagal mengambil video TikTok");
 
-    let caption = `╭──「 TIKTOK V2 」\n`;
-    caption += `│ Title: ${r.title || "TikTok Video"}\n`;
-    caption += `│ Author: ${r.author?.nickname || "Unknown"}\n`;
-    if (r.duration) caption += `│ Durasi: ${r.duration}s\n`;
-    caption += `│ Views: ${(r.play_count || 0).toLocaleString()}\n`;
-    caption += `│ Likes: ${(r.digg_count || 0).toLocaleString()}\n`;
-    caption += `│ Source: API V2\n`;
-    caption += `╰──────────❀`;
+    const caption = mediaCaption({
+        platformIcon: "🎵",
+        platformName: "TikTok V2",
+        title: r.title || "TikTok Video",
+        author: r.author?.nickname || null,
+        duration: r.duration ? `${r.duration}s` : null,
+        views: (r.play_count || 0).toLocaleString(),
+        likes: (r.digg_count || 0).toLocaleString(),
+        format: "Video HD",
+        method: "API V2",
+    });
 
-    await sock.sendMedia(m.chat, r.play, caption, m, { type: "video" });
+    await sock.sendMessage(m.chat, {
+        video: { url: r.play },
+        caption,
+    }, { quoted: m });
     m.react("🐣");
   } catch (e) {
     console.error("[TIKTOKV2]", e.message);
