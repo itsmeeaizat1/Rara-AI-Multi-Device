@@ -72,11 +72,11 @@ function handler(m, { sock }) {
     const pteroConfig = config.pterodactyl
     
     if (!hasAccess(m.sender, m.isOwner, pteroConfig)) {
-        return m.reply(claraWrap("addseller", `❌ *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\nFitur ini hanya untuk Owner atau Owner Panel.`))
+        return m.reply(claraWrap("addseller", novaError("Panel", "Akses ditolak nih! Khusus Owner")))
     }
     
     if (!pteroConfig) {
-        return m.reply(claraWrap("addseller", `❌ Konfigurasi pterodactyl tidak ditemukan di config.js`))
+        return m.reply(claraWrap("addseller", novaError("Panel", "Config pterodactyl gak ada nih!")))
     }
     
     if (!pteroConfig.sellers) {
@@ -144,7 +144,7 @@ function handler(m, { sock }) {
                 `╰──────────❀${roleChanged}`)
         } else {
             pteroConfig.sellers = pteroConfig.sellers.filter(s => s !== targetUser)
-            return m.reply(claraWrap("addseller", `❌ Gagal menyimpan ke config.js`))
+            return m.reply(claraWrap("addseller", `Gagal menyimpan ke config.js`))
         }
     }
     
@@ -161,7 +161,7 @@ function handler(m, { sock }) {
                 `Nomor: \`${targetUser}\`\n` +
                 `Total: *${pteroConfig.sellers.length}* seller`)
         } else {
-            return m.reply(claraWrap("addseller", `❌ Gagal menyimpan ke config.js`))
+            return m.reply(claraWrap("addseller", `Gagal menyimpan ke config.js`))
         }
     }
 }

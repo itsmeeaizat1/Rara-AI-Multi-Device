@@ -7,7 +7,7 @@ import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { getPluginCount, getCategories } from "../../src/lib/nova-plugins.js";
 import { getCaseCount } from "../../case/nova.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, toSC } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "info",
@@ -144,7 +144,7 @@ ${toSC("Nova AI WhatsApp Bot")}`;
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[info] handler error:", e.message);
-    try { await m.reply(`╭──「 ${toSC("Info")} 」\n│ ❌ ${toSC("Gagal menampilkan info")}\n│ ${toSC("Coba lagi nanti ya")}\n╰──────────❀`); } catch {}
+    try { await m.reply(`╭──「 ${toSC("Info")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────❀`); } catch {}
   }
 
   return { handled: true };

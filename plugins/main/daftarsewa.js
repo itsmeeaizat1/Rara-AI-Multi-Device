@@ -2,7 +2,7 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
 import { broadcastToSaluran, notifySewaRegister } from "../../src/lib/nova-saluran-broadcast.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
 
 const pluginConfig = {
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
     case "umur":
       const umur = parseInt(text.replace(/\D/g, ""));
       if (!umur || umur < 10 || umur > 100) {
-        return m.reply(claraWrap("Daftarsewa", "Umur tidak valid. Ketik angka 10-100, contoh: 18."));
+        return m.reply(novaError("DaftarSewa", "Umur gak valid nih! Ketik angka 10-100, contoh: 18"));
       }
       session.data.age = umur;
       session.step = "asal";

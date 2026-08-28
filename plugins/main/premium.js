@@ -7,7 +7,7 @@
  */
 
 import config from "../../config.js";
-import { bracketBox, tipText, toSC, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, bracketBox, tipText, toSC, claraWrap } from "../../src/lib/nova-menu-style.js";
 import path from "path";
 import fs from "fs";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
@@ -141,7 +141,7 @@ async function handler(m, { sock, config: botConfig, db }) {
   } catch (e) {
     console.error("[premium] handler error:", e.message);
     try {
-      await m.reply(claraWrap("premium", `❌ ${toSC("Gagal menampilkan list premium")}\n${toSC("Coba lagi nanti")}`, "error"));
+      await m.reply(novaError("Premium", "Gagal tampilkan list premium nih, coba lagi ya"));
     } catch {}
     await m.react("❌");
   }

@@ -4,7 +4,7 @@ import config from '../../config.js'
 import os from 'os'
 import { exec } from 'child_process'
 import { promisify } from 'util'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const execAsync = promisify(exec);
 const pluginConfig = {
     name: "system",
@@ -51,7 +51,7 @@ async function getDiskUsage() {
             return `💿 *ᴅɪꜱᴋ ᴜꜱᴀɢᴇ*\nTotal: ${parts[1]}\nUsed: ${parts[2]}\nFree: ${parts[3]}\nUse%: ${parts[4]}`;
         }
     } catch (e) {
-        return '❌ Gagal mengambil info disk';
+        return 'Gagal ambil info disk nih';
     }
 }
 
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
         }
     } catch (e) {
         console.error('System Plugin Error:', e);
-        m.reply(claraWrap('Error', '❌ Terjadi kesalahan mengambil data sistem.'));
+        m.reply(novaError('System', 'Ada error nih saat ambil data sistem'));
     }
 }
 

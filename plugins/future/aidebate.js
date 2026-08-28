@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { delay } from "../../src/lib/nova-utils.js";
 
@@ -222,7 +222,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         debate.verdict = verdict;
         saveDebate(db, gid, debate);
         await m.react("🐣");
-        await m.reply(claraWrap("AI Debate Verdict", "Topik: " + debate.topic + "\n\n" + (verdict || "Gagal menilai.")));
+        await m.reply(claraWrap("AI Debate Verdict", "Topik: " + debate.topic + "\n\n" + (verdict || "Gagal menilai nih")));
         return { handled: true };
       } else {
         debate.round++;

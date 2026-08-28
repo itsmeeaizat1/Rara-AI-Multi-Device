@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import {  claraHeader, separator, tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  claraHeader, separator, tipText, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
     const prompt = `Buat polling dengan topik "${topic}". Berikan 4 pilihan singkat (maks 20 karakter per pilihan). Format: pilihan1|pilihan2|pilihan3|pilihan4. Hanya jawaban dalam format itu.`;
     const result = await callAI(prompt);
     const choices = result.split("|").map(s => s.trim()).filter(Boolean).slice(0, 4);
-    if (choices.length < 2) throw new Error("Gagal membuat polling");
+    if (choices.length < 2) throw new Error("Gagal bikin polling nih");
     const pollMsg = claraHeader("AI Poll: " + topic, "📊") + "\n\n";
     let text = pollMsg;
     choices.forEach((c, i) => { text += `${["1️⃣","2️⃣","3️⃣","4️⃣"][i]} ${c}\n`; });

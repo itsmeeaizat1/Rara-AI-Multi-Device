@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
   } catch (error) {
     await m.react("🐣");
-    return m.reply(claraWrap("Tribunnews Error", error.message || "Gagal mengambil berita."));
+    return m.reply(claraWrap("Tribunnews Error", error.message || "Gagal ambil nih berita."));
   }
 }
 

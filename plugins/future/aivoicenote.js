@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -19,7 +19,7 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
     const buffer = await m.download();
-    if (!buffer) throw new Error("Gagal download audio");
+    if (!buffer) throw new Error("Gagal download audio nih");
     await m.react("🕒");
     // Use free transcription API
     await m.react("🐣");

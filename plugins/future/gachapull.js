@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gachapull",
@@ -157,7 +157,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   if (sub === "collection" || sub === "koleksi" || sub === "inv") {
     const owned = Object.values(gdata.collection);
     if (owned.length === 0) {
-      await m.reply(claraWrap("Gacha", "Koleksi kosong. Ketik " + prefix + "gachapull buat mulai."));
+      await m.reply(novaError("GachaPull", "Koleksi kosong nih! Ketik " + prefix + "gachapull buat mulai"));
       return { handled: true };
     }
     const sorted = owned.sort((a, b) => b.stars - a.stars);

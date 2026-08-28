@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "detective",
@@ -137,7 +137,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const num = parseInt(args[2] || "0", 10) - 1;
     if (isNaN(num) || num < 0 || num >= game.caseData.suspects.length) {
-      await m.reply(claraWrap("Detective", "Nomor tersangka tidak valid."));
+      await m.reply(novaError("Detective", "Nomor tersangka gak valid nih"));
       return { handled: true };
     }
     const suspect = game.caseData.suspects[num];
@@ -176,7 +176,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const num = parseInt(args[2] || "0", 10) - 1;
     if (isNaN(num) || num < 0 || num >= game.caseData.suspects.length) {
-      await m.reply(claraWrap("Detective", "Nomor tersangka tidak valid."));
+      await m.reply(novaError("Detective", "Nomor tersangka gak valid nih"));
       return { handled: true };
     }
     game.attempts++;

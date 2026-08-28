@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autocountdown",
@@ -78,7 +78,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     const idx = parseInt(args[2] || "0", 10) - 1;
     if (isNaN(idx) || idx < 0 || idx >= cfg.events.length) {
-      await m.reply(claraWrap("Auto Countdown", "Nomor tidak valid."));
+      await m.reply(novaError("AutoCountdown", "Nomor gak valid nih"));
       return { handled: true };
     }
     const removed = cfg.events.splice(idx, 1)[0];

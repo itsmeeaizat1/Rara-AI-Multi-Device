@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "hallfame",
@@ -73,7 +73,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     try {
       groupMeta = await sock.groupMetadata(gid);
     } catch {
-      await m.reply(claraWrap("Hall of Fame", "Gagal mengambil data grup."));
+      await m.reply(novaError("HallOfFame", "Gagal ambil data grup nih"));
       return { handled: true };
     }
 

@@ -257,7 +257,7 @@ async function handler(m, { sock }) {
       );
     }
   } catch (e) {
-    return m.reply(claraWrap("Panel", `❌ Gagal validasi nomor WhatsApp.`));
+    return m.reply(claraWrap("Panel", `Gagal validasi nomor WhatsApp.`));
   }
 
   const specs = RAM_SPECS[ram];

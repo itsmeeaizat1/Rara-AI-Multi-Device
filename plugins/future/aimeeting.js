@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 
 const pluginConfig = {
@@ -93,7 +93,7 @@ async function handler(m, { sock, db, config: botConfig }) {
         "Catatan:\n" + chatLog.slice(0, 3000);
 
       const result = await UnlimitedAI(prompt, "nova-ai");
-      const notulen = result?.success ? result.response : "Gagal generate notulen.";
+      const notulen = result?.success ? result.response : "Gagal generate notulen nih";
 
       meeting.active = false;
       meeting.notulen = notulen;
@@ -104,7 +104,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       await m.reply(claraWrap("AI Meeting Notulen", "Topik: " + meeting.topic + "\nPesan: " + meeting.messages.length + "\n\n" + notulen));
     } catch {
       await m.react("❌");
-      await m.reply(claraWrap("AI Meeting", "Gagal generate notulen."));
+      await m.reply(claraWrap("AI Meeting", "Gagal generate notulen nih"));
     }
     return { handled: true };
   }

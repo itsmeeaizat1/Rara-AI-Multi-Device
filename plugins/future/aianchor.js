@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { CronJob } from "cron";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 
@@ -416,7 +416,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
       if (!voiceResult) {
         await m.react("❌");
-        await m.reply(claraWrap("AI Anchor", "Gagal generate suara. Coba lagi nanti.", "error"));
+        await m.reply(novaError("AIAnchor", "Gagal generate suara nih, coba lagi ya"));
         return { handled: true };
       }
 
@@ -492,7 +492,7 @@ async function handler(m, { sock, db, config: botConfig }) {
 
     if (!voiceResult) {
       await m.react("❌");
-      await m.reply(claraWrap("AI Anchor", "Gagal generate suara. Coba lagi nanti.", "error"));
+      await m.reply(novaError("AIAnchor", "Gagal generate suara nih, coba lagi ya"));
       return { handled: true };
     }
 

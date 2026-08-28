@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
@@ -82,7 +82,7 @@ async function handler(m, { sock, db, config: botConfig }) {
     const data = await checkBMKG();
     await m.react("🐣");
     if (!data) {
-      await m.reply(claraWrap("Auto Weather", "Gagal fetch BMKG. Coba lagi nanti."));
+      await m.reply(novaError("AutoWeather", "Gagal fetch BMKG nih, coba lagi ya"));
       return { handled: true };
     }
     const warnings = Array.isArray(data) ? data : (data?.warnings || data?.list || []);

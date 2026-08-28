@@ -44,7 +44,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const res = await axios.get(API_URL + "/" + input, { timeout: 10000 });
 
     if (!res.data || !res.data.nabi) {
-      return m.reply(claraWrap("Kisah Nabi", "Gagal mengambil kisah."));
+      return m.reply(claraWrap("Kisah Nabi", "Gagal ambil nih kisah."));
     }
 
     const d = res.data.nabi;

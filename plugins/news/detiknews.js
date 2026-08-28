@@ -80,7 +80,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     });
 
     const items = parseRSS(res.data, 10);
-    if (!items.length) return m.reply(claraWrap("Detik.com", "Gagal mengambil berita. Coba lagi nanti."));
+    if (!items.length) return m.reply(claraWrap("Detik.com", "Gagal ambil nih berita. Coba lagi nanti."));
 
     const catName = input && CATEGORIES[input] ? input : "terbaru";
     let newsText = [];
@@ -96,7 +96,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     return m.reply(claraWrap("Detik News", newsText.join("\n")));
   } catch (e) {
     console.error("detiknews error:", e.message);
-    return m.reply(claraWrap("Detik.com", "Gagal mengambil berita: " + e.message));
+    return m.reply(claraWrap("Detik.com", "Gagal ambil nih berita: " + e.message));
   }
 }
 
