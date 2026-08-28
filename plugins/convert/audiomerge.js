@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
 import { getDatabase } from '../../src/lib/nova-database.js'
 import fs from 'fs'
@@ -76,7 +77,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await queueFFmpeg(`ffmpeg -y ${filterCmd}`);
 
       if (!fs.existsSync(outputPath)) {
-        return m.reply(claraWrap("Audio Merge", "Gagal merge audio. Coba lagi."));
+        return m.reply(novaError("AudioMerge", "Gagal merge audio nih, coba lagi ya"));
       }
 
       const buffer = fs.readFileSync(outputPath);
@@ -95,7 +96,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
 
     if (sub === "list") {
-      if (data.queue.length === 0) return m.reply(claraWrap("Audio Merge", "Queue kosong."));
+      if (data.queue.length === 0) return m.reply(novaError("AudioMerge", "Queue kosong nih"));
       const list = data.queue.map((q, i) => `${i + 1}. ${q.name} (@${q.addedBy.split("@")[0]})`).join("\n");
       return m.reply(claraWrap("Audio Merge", [`Queue (${data.queue.length}):`, "", list, "", `Gap: ${data.gap} detik`].join("\n")));
     }

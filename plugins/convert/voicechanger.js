@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { spawn } from 'child_process'
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import fs from 'fs'
 import path from 'path'
@@ -265,11 +266,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
           message: quoted,
         });
       } catch (e) {
-        return m.reply(claraWrap("Voice Changer", "Gagal download audio. Coba reply ulang."));
+        return m.reply(novaError("VoiceChanger", "Gagal download audio nih, coba reply ulang"));
       }
 
       if (!audioBuffer || audioBuffer.length < 100) {
-        return m.reply(claraWrap("Voice Changer", "Audio tidak valid atau terlalu kecil."));
+        return m.reply(novaError("VoiceChanger", "Audio gak valid atau kekecilan nih"));
       }
 
       // Convert to WAV first (RVC expects WAV)
@@ -303,7 +304,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       });
 
       const uploadedPath = uploadRes.data[0];
-      if (!uploadedPath) throw new Error('Gagal upload ke RVC server');
+      if (!uploadedPath) throw new Error('Gagal upload ke RVC server nih');
 
       // Join queue with character fn_index
       const sessionHash = 'nova_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
@@ -327,7 +328,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       }, { timeout: 15000 });
 
       const eventId = queueRes.data.event_id;
-      if (!eventId) throw new Error('Gagal join queue RVC');
+      if (!eventId) throw new Error('Gagal join queue RVC nih');
 
       // Poll for result
       let resultUrl = null;
@@ -441,11 +442,11 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         message: quoted,
       });
     } catch (e) {
-      return m.reply(claraWrap("Voice Changer", "Gagal download audio. Coba reply ulang."));
+      return m.reply(novaError("VoiceChanger", "Gagal download audio nih, coba reply ulang"));
     }
 
     if (!audioBuffer || audioBuffer.length < 100) {
-      return m.reply(claraWrap("Voice Changer", "Audio tidak valid atau terlalu kecil."));
+      return m.reply(novaError("VoiceChanger", "Audio gak valid atau kekecilan nih"));
     }
 
     const tmpDir = path.join(os.tmpdir(), 'nova-vc-local');

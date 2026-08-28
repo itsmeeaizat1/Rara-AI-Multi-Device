@@ -7,7 +7,7 @@ import * as _canvas from '@napi-rs/canvas'
 
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakestory3",
   alias: ["fakestory3"],
@@ -262,7 +262,7 @@ async function handler(m, { sock }) {
     const avatarBuffer = await getAvatarBuffer(sock, m.sender);
     const isImage = m.isImage || (m.quoted && m.quoted.isImage);
     if (!isImage) {
-      return m.reply(claraWrap("Fakestory3", `❌ *ɢᴀɢᴀʟ*\n\nReply gambar untuk membuat fake story!`));
+      return m.reply(novaError("FakeStory3", "Reply gambar dulu nih!"));
     }
     let imageBuffer;
     if (m.isImage && m.download) {
@@ -271,7 +271,7 @@ async function handler(m, { sock }) {
       imageBuffer = await m.quoted.download();
     }
     if (!imageBuffer) {
-      return m.reply(claraWrap("Fakestory3", `❌ *ɢᴀɢᴀʟ*\n\nTidak bisa download gambar`));
+      return m.reply(novaError("FakeStory3", "Gagal download gambar nih"));
     }
     const resultBuffer = await createFakeStory(
       username,

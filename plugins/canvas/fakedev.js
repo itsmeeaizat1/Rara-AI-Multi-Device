@@ -8,7 +8,7 @@ import fs from "fs";
 
 import { uploadTo0x0 } from "../../src/lib/nova-tmpfiles.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakedev",
   alias: ["fakedev"],
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
     }
   }
   if (!buffer) {
-    return m.reply(claraWrap("Fakedev", `❌ Kirim/reply gambar untuk dijadikan avatar!`));
+    return m.reply(novaError("FakeDev", "Kirim/reply gambar dulu nih!"));
   }
   m.react("🕒");
   try {

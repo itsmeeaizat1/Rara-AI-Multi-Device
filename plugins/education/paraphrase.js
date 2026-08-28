@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "paraphrase",
@@ -229,7 +229,7 @@ async function handler(m, { sock, args }) {
     await m.react("🐣");
   } catch (e) {
     console.error("[PARAPHRASE] Error:", e.message);
-    await m.reply(claraWrap("paraphrase", `Gagal memparafrase!\n\nError: ${e.message}`));
+    await m.reply(novaError("Paraphrase", `Gagal parafrase nih: ${e.message}`));
   }
 }
 

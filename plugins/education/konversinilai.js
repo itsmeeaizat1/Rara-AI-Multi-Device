@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "konversinilai",
@@ -95,7 +95,7 @@ async function handler(m, { sock, args }) {
     // === CONVERT SINGLE VALUE ===
     const score = parseFloat(input);
     if (isNaN(score)) {
-      return m.reply(`Input "${input}" tidak valid!\n\nMasukkan angka 0-100 atau ketik \`${m.prefix}konversi tabel\``);
+      return m.reply(`Input gak valid nih! Masukin angka 0-100 atau ketik ${m.prefix}konversi tabel`);
     }
 
     if (score < 0 || score > 100) {

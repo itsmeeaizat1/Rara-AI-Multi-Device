@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kalkulatornilai",
@@ -83,10 +83,10 @@ async function handler(m, { sock, args }) {
         const score = parseFloat(inputArgs[i]);
         const weight = parseFloat(inputArgs[i + 1]);
         if (isNaN(score) || score < 0 || score > 100) {
-          return m.reply(claraWrap("Kalkulatornilai", `Nilai "${inputArgs[i]}" tidak valid! Harus 0-100.`));
+          return m.reply(novaError("KalkulatorNilai", `Nilai gak valid nih! Harus 0-100`));
         }
         if (isNaN(weight) || weight < 0) {
-          return m.reply(claraWrap("Kalkulatornilai", `Bobot "${inputArgs[i + 1]}" tidak valid!`));
+          return m.reply(novaError("KalkulatorNilai", `Bobot gak valid nih!`));
         }
         totalWeighted += score * weight;
         totalWeight += weight;
@@ -165,7 +165,7 @@ async function handler(m, { sock, args }) {
 
       const gpa = GRADE_MAP[grade];
       if (gpa === undefined) {
-        return m.reply(claraWrap("Kalkulatornilai", `Nilai "${grade}" tidak valid!\n\nPilihan: A, AB, B, BC, C, CD, D, E`));
+        return m.reply(novaError("KalkulatorNilai", `Nilai gak valid nih! Pilihan: A, AB, B, BC, C, CD, D, E`));
       }
 
       let txt = `Konversi Nilai\n\n`;

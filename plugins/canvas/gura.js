@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 import mime from "mime-types";
 import { downloadMediaMessage, getContentType } from "nova";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "gura",
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
     media = await downloadMediaMessage(m, "buffer", {});
   }
 
-  if (!media) { const __navText = "❌ Gagal membaca media, coba lagi!"; return await m.reply(__navText, "gura"); };
+  if (!media) return m.reply(novaError("Gura", "Gagal baca media nih, coba lagi ya"));
 
   await m.react("🕒");
 

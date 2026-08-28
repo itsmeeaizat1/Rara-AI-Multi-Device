@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -85,7 +85,7 @@ Pilih 4-6 konsep utama yang paling penting, masing-masing dengan 2-3 sub-konsep.
 
     return m.reply( claraWrap("Mindmap", `${input.substring(0, 50)}${input.length > 50 ? "..." : ""}\n\n${mindmapText}`), { commandName: "mindmap" });
   } catch (e) {
-    return m.reply( claraWrap("Error", `Gagal generate: ${e.message}`), { commandName: "mindmap" });
+    return m.reply( novaError("MindMap", `Gagal generate nih: ${e.message}`), { commandName: "mindmap" });
   }
 }
 

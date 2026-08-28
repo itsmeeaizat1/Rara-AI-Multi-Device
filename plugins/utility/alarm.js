@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(claraWrap("Alarm", [`│ Waktu: *${time}*`, `│ Pesan: *${message}*`,
       `│ Total alarm: *${global.alarms[m.sender].length}*`].join("\n")) + "\n" + tipText("Alarm berjalan selama bot online"));
   } catch (e) {
-    await m.reply(claraWrap("Gagal", [`│ ${e.message}`].join("\n")));
+    await m.reply(claraWrap("Gagal nih", [`│ ${e.message}`].join("\n")));
   }
   return { handled: true };
 }

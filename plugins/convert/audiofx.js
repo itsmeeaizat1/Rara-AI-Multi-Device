@@ -3,7 +3,7 @@ import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
 import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
-import {  claraWrap, bracketBox, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, bracketBox, novaCaption } from "../../src/lib/nova-menu-style.js";
 
 const EFFECTS = {
     bass:      { emoji: '🔊', filter: 'bass=g=20:f=110:w=0.6', desc: 'Bass boost' },
@@ -144,14 +144,14 @@ async function handler(m, { sock }) {
     try {
         const buffer = await media.download()
         if (!buffer?.length) {
-            return m.reply(claraWrap("Error", "❌ Gagal download media"))
+            return m.reply(novaError("AudioFX", "Gagal download media nih"))
         }
 
         fs.writeFileSync(inputPath, buffer)
         await queueFFmpeg('ffmpeg -y -i "' + inputPath + '" -af "' + fx.filter + '" -vn "' + outputPath + '"')
 
         if (!fs.existsSync(outputPath)) {
-            return m.reply(claraWrap("Error", "❌ Gagal memproses audio"))
+            return m.reply(novaError("AudioFX", "Gagal proses audio nih"))
         }
 
         const audioBuffer = fs.readFileSync(outputPath)

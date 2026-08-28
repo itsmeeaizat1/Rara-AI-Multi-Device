@@ -8,7 +8,7 @@ import fs from "fs";
 
 import { uploadTo0x0 } from "../../src/lib/nova-tmpfiles.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakeml",
   alias: ["fakeml"],
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     }
   }
   if (!buffer) {
-    { const __navText = claraWrap("fakeml", `❌ Kirim/reply gambar untuk dijadikan avatar!`); return await m.reply(__navText, "fakeml"); };
+    return m.reply(novaError("FakeML", "Kirim/reply gambar dulu nih!"));
   }
   m.react("🕒");
   try {

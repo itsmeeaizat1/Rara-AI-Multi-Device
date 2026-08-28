@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "carijurnal",
@@ -56,7 +56,7 @@ async function handler(m, { sock, args }) {
       headers: { "User-Agent": "Mozilla/5.0" },
     });
 
-    if (res.status !== 200 || !res.data?.results) throw new Error("Gagal mencari paper");
+    if (res.status !== 200 || !res.data?.results) throw new Error("Gagal cari paper nih");
 
     const results = res.data.results;
     const total = res.data.meta?.count || results.length;
@@ -104,7 +104,7 @@ async function handler(m, { sock, args }) {
     await m.react("🐣");
   } catch (e) {
     console.error("[CARIJURNAL] Error:", e.message);
-    await m.reply(claraWrap("carijurnal", `Gagal mencari jurnal!\n\nError: ${e.message}`));
+    await m.reply(novaError("CariJurnal", `Gagal cari jurnal nih: ${e.message}`));
   }
 }
 

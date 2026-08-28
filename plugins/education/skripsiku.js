@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
@@ -55,7 +55,7 @@ Kriteria:
       const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
       return m.reply( claraWrap("Skripsiku - Ide Judul", `${input}\n\n${result}`), { commandName: "skripsiku" });
     } catch (e) {
-      return m.reply( claraWrap("Error", `Gagal generate: ${e.message}`), { commandName: "skripsiku" });
+      return m.reply( novaError("Skripsiku", `Gagal generate nih: ${e.message}`), { commandName: "skripsiku" });
     }
   }
 
@@ -86,7 +86,7 @@ Sesuaikan dengan standar skripsi Indonesia. Bab 3 harus sesuai jenis penelitian 
       const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
       return m.reply( claraWrap("Skripsiku - Outline", `${input}\n\n${result}`), { commandName: "skripsiku" });
     } catch (e) {
-      return m.reply( claraWrap("Error", `Gagal generate: ${e.message}`), { commandName: "skripsiku" });
+      return m.reply( novaError("Skripsiku", `Gagal generate nih: ${e.message}`), { commandName: "skripsiku" });
     }
   }
 
@@ -118,7 +118,7 @@ Format:
       const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah reviewer skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
       return m.reply( claraWrap("Skripsiku - Review", result), { commandName: "skripsiku" });
     } catch (e) {
-      return m.reply( claraWrap("Error", `Gagal review: ${e.message}`), { commandName: "skripsiku" });
+      return m.reply( novaError("Skripsiku", `Gagal review nih: ${e.message}`), { commandName: "skripsiku" });
     }
   }
 
@@ -146,7 +146,7 @@ Minimal 3 referensi jurnal internasional, sisanya bebas (buku/web akademik).`;
       const result = await callAI({ messages: [{ role: "user", content: prompt }], systemPrompt: "Kamu adalah dosen pembimbing skripsi di Indonesia. Gunakan bahasa Indonesia formal." });
       return m.reply( claraWrap("Skripsiku - Referensi", `${input}\n\n${result}`), { commandName: "skripsiku" });
     } catch (e) {
-      return m.reply( claraWrap("Error", `Gagal: ${e.message}`), { commandName: "skripsiku" });
+      return m.reply( novaError("Skripsiku", `Gagal nih: ${e.message}`), { commandName: "skripsiku" });
     }
   }
 

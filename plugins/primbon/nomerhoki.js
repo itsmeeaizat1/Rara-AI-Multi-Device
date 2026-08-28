@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         const { data } = await axios.get(url, { timeout: 30000 })
         
         if (!data?.status || !data?.data) {
-            return m.reply(claraWrap("nomerhoki", `❌ *ɢᴀɢᴀʟ*\n\nGagal menganalisa nomor`))
+            return m.reply(novaError("NomerHoki", "Gagal analisa nomor nih"))
         }
         
         const r = data.data
