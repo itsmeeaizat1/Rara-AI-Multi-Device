@@ -1,195 +1,113 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { getDatabase } from '../../src/lib/nova-database.js'
-import config from '../../config.js'
+// Dispatcher: .leaderboard → menu pilihan RPG / Group
 import fs from 'fs'
 import path from 'path'
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { getPlugin } from '../../src/lib/nova-plugins.js'
+import config from '../../config.js'
+import { toSC } from '../../src/lib/nova-menu-style.js'
+
 const pluginConfig = {
-    name: "leaderboard",
-    alias: ["leaderboard", "topkoin", "topexp", "topenergi", "toplevel", "topbalance"],
-    category: 'main',
-    description: 'Lihat leaderboard global (koin, exp, energi)',
-    usage: '.leaderboard',
-    example: '.topkoin',
-    isOwner: false,
-    isPremium: false,
-    isGroup: false,
-    isPrivate: false,
-    cooldown: 10,
-    energi: 0,
-    isEnabled: true
+  name: "leaderboard",
+  alias: ["leaderboard"],
+  category: 'main',
+  description: 'Pusat leaderboard — pilih RPG atau Group',
+  usage: '.leaderboard [rpg|group]',
+  example: '.leaderboard rpg',
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 5,
+  energi: 0,
+  isEnabled: true
 }
 
-function formatNumber(num) {
-    if (num >= 1000000000000) return (num / 1000000000000).toFixed(2) + 'T'
-    if (num >= 1000000000) return (num / 1000000000).toFixed(2) + 'B'
-    if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M'
-    if (num >= 1000) return (num / 1000).toFixed(2) + 'K'
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-}
+async function handler(m, { sock, config: cfg }) {
+  const args = m.args || []
+  const sub = args[0]?.toLowerCase()
 
-const MEDALS = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
-
-async function handler(m, { sock }) {
-    const db = getDatabase()
-    const cmd = m.command.toLowerCase()
-    const args = m.args || []
-    
-    let type = 'overview'
-    
-    if (cmd.includes('koin') || cmd.includes('coin') || cmd.includes('bal') || cmd.includes('money')) {
-        type = 'koin'
-    } else if (cmd.includes('exp') || cmd.includes('xp') || cmd.includes('level')) {
-        type = 'exp'
-    } else if (cmd.includes('energi') || cmd.includes('energy')) {
-        type = 'energi'
-    } else if (args[0]) {
-        const argType = args[0].toLowerCase()
-        if (['koin', 'coin', 'bal', 'balance', 'money'].includes(argType)) type = 'koin'
-        else if (['exp', 'xp', 'level'].includes(argType)) type = 'exp'
-        else if (['energi', 'energy'].includes(argType)) type = 'energi'
-    }
-    
-    const dbData = db.data?.users || db.getAllUsers?.() || {}
-    const users = []
-    
-    for (const [jid, userData] of Object.entries(dbData)) {
-        if (!jid || jid === 'undefined') continue
-        if (jid.length > 15 || jid.startsWith('120')) continue
-        
-        users.push({
-            jid,
-            koin: userData.koin || 0,
-            exp: userData.rpg?.exp || userData.exp || 0,
-            energi: userData.energi || 0,
-            level: userData.rpg?.level || userData.level || 1,
-            name: userData.name || jid.split('@')[0]
-        })
-    }
-    
-    if (users.length === 0) {
-        return m.reply(`╭──「 *Leaderboard* 」\n│ Belum ada data user terdaftar
-╰──────────❀`)
-    }
-    
-    const senderJid = m.sender.replace('@s.whatsapp.net', '')
-    
-    if (type === 'overview') {
-        const totalUsers = users.length
-        const maxBalUser = users.reduce((a, b) => a.koin > b.koin ? a : b, users[0])
-        const maxExpUser = users.reduce((a, b) => a.exp > b.exp ? a : b, users[0])
-        const maxEnergiUser = users.reduce((a, b) => a.energi > b.energi ? a : b, users[0])
-        
-        const mentions = [
-            maxBalUser.jid.includes('@') ? maxBalUser.jid : maxBalUser.jid + "@s.whatsapp.net",
-            maxExpUser.jid.includes('@') ? maxExpUser.jid : maxExpUser.jid + "@s.whatsapp.net",
-            maxEnergiUser.jid.includes('@') ? maxEnergiUser.jid : maxEnergiUser.jid + "@s.whatsapp.net"
-        ]
-        
-        const overviewText = `╭──「 *Leaderboard* 」\n│ Total User: ${formatNumber(users.length)}
-│ Koin Teratas: ${formatNumber(maxBalUser.koin)} (@${maxBalUser.jid.split('@')[0]})
-│ EXP Teratas: ${formatNumber(maxExpUser.exp)} (@${maxExpUser.jid.split('@')[0]})
-│ Energi Teratas: ${formatNumber(maxEnergiUser.energi)} (@${maxEnergiUser.jid.split('@')[0]})
-╰──────────❀
-
-│ Pilih tombol di bawah untuk melihat ranking!`
-            try {
-                await sock.sendButton(m.chat, fs.readFileSync(path.join(process.cwd(), 'assets', 'images', 'nova.jpg')), overviewText, m, {
-                    buttons: [
-                    {
-                        name: 'quick_reply',
-                        buttonParamsJson: JSON.stringify({
-                            display_text: 'Top Koin',
-                            id: `${m.prefix}topkoin`
-                        })
-                    },
-                    {
-                        name: 'quick_reply',
-                        buttonParamsJson: JSON.stringify({
-                            display_text: 'Top EXP',
-                            id: `${m.prefix}topexp`
-                        })
-                    },
-                    {
-                        name: 'quick_reply',
-                        buttonParamsJson: JSON.stringify({
-                            display_text: 'Top Energi',
-                            id: `${m.prefix}topenergi`
-                        })
-                    }
-                ,
-                  {
-                    name: "quick_reply",
-                    buttonParamsJson: JSON.stringify({
-                      display_text: "Kembali",
-                      id: m.prefix + "menu"
-                    })
-                  },
-                  {
-                    name: "quick_reply",
-                    buttonParamsJson: JSON.stringify({
-                      display_text: "Tanya AI",
-                      id: m.prefix + "aihelp"
-                    })
-                  }
-                ],
-            })
-            return
-        } catch (e) {
-            return m.reply(claraWrap("leaderboard2", overviewText, { mentions }))
-        }
-    }
-    
-    let title, emoji, field, formatValue
-    
-    if (type === 'koin') {
-        title = 'TOP GLOBAL KOIN'
-        emoji = '💰'
-        field = 'koin'
-        formatValue = (u) => `Rp ${formatNumber(u.koin)}`
-    } else if (type === 'exp') {
-        title = 'TOP GLOBAL LEVEL'
-        emoji = '✨'
-        field = 'exp'
-        formatValue = (u) => `Lv. ${u.level} (${formatNumber(u.exp)} XP)`
-    } else if (type === 'energi') {
-        title = 'TOP GLOBAL ENERGI'
-        emoji = '⚡'
-        field = 'energi'
-        formatValue = (u) => `${formatNumber(u.energi)} Energi`
-    }
-    
-    users.sort((a, b) => b[field] - a[field])
-    
-    const top10 = users.slice(0, 10)
-    const totalField = users.reduce((sum, u) => sum + (u[field] || 0), 0)
-    
-    let text = `╭──「 *${title}* 」`
-    
-    const mentions = []
-    
-    top10.forEach((u, i) => {
-        const medal = MEDALS[i] || `${i + 1}.`
-        const pct = totalField > 0 ? ((u[field] / totalField) * 100).toFixed(1) : 0
-        const isMe = u.jid === senderJid ? " *(You)*" : ""
-        
-        text += `│ ${medal} @${u.jid.split('@')[0]}${isMe}\n`
-        text += `│   ${formatValue(u)} (${pct}%)\n`
-        
-        if (i < top10.length - 1) 
-        mentions.push(u.jid.includes('@') ? u.jid : u.jid + "@s.whatsapp.net")
-    })
-    
-    text += `╰──────────❀\n\n`
-    
-    const myRankIndex = users.findIndex(u => u.jid === senderJid)
-    if (myRankIndex !== -1) {
-        text += `Posisi kamu: *#${myRankIndex + 1}* dari *${formatNumber(users.length)}* user.`
+  // ── .leaderboard rpg → langsung ke RPG leaderboard ──
+  if (sub === 'rpg' || sub === 'rpg2') {
+    const rpgPlugin = getPlugin('leaderboardrpg')
+    if (rpgPlugin && rpgPlugin.handler) {
+      const origCommand = m.command
+      m.command = 'leaderboardrpg'
+      try {
+        await rpgPlugin.handler(m, { sock, config: cfg || config })
+      } finally {
+        m.command = origCommand
+      }
     } else {
-        text += `Kamu belum terdaftar di database.`
+      await m.reply('❌ RPG leaderboard belum tersedia.')
     }
-    
-    await m.reply(claraWrap("leaderboard2", text, { mentions }))
+    return
+  }
+
+  // ── .leaderboard group → langsung ke Group leaderboard ──
+  if (sub === 'group' || sub === 'grup' || sub === 'aktif' || sub === 'aktifitas') {
+    const groupPlugin = getPlugin('aktifitas')
+    if (groupPlugin && groupPlugin.handler) {
+      if (!m.isGroup) {
+        await m.reply('❌ Leaderboard grup hanya bisa digunakan di dalam grup.')
+        return
+      }
+      const origCommand = m.command
+      m.command = 'aktifitas'
+      try {
+        await groupPlugin.handler(m, { sock, config: cfg || config })
+      } finally {
+        m.command = origCommand
+      }
+    } else {
+      await m.reply('❌ Group leaderboard belum tersedia.')
+    }
+    return
+  }
+
+  // ── .leaderboard (tanpa arg) → tampilkan menu pilihan ──
+  const thumbPath = path.join(process.cwd(), 'assets', 'images', 'nova.jpg')
+  let thumb
+  try {
+    thumb = fs.readFileSync(thumbPath)
+  } catch {
+    thumb = Buffer.alloc(0)
+  }
+
+  const menuText = `╭──「 *${toSC('Leaderboard')}* 」
+├── ${toSC('Pilih jenis leaderboard')}:
+│
+├── 🎮 *${toSC('RPG')}*
+│   ${toSC('Koin, EXP, Energi — global semua user')}
+│
+├── 👥 *${toSC('Group')}*
+│   ${toSC('Aktivitas member grup minggu ini')}
+│
+╰──❀
+
+${toSC('Ketik')} *${m.prefix}leaderboard rpg* ${toSC('atau')} *${m.prefix}leaderboard group*`
+
+  try {
+    await sock.sendButton(m.chat, thumb, menuText, m, {
+      buttons: [
+        {
+          name: 'quick_reply',
+          buttonParamsJson: JSON.stringify({
+            display_text: '🎮 RPG Leaderboard',
+            id: `${m.prefix}leaderboardrpg`
+          })
+        },
+        {
+          name: 'quick_reply',
+          buttonParamsJson: JSON.stringify({
+            display_text: '👥 Group Leaderboard',
+            id: `${m.prefix}aktifitas`
+          })
+        }
+      ]
+    })
+  } catch {
+    await m.reply(menuText)
+  }
 }
 
 export { pluginConfig as config, handler }
