@@ -389,6 +389,12 @@ games.register('tebakprofesi', { emoji: '👷', title: 'TEBAK PROFESI', descript
 games.register('tebaktebakan', { emoji: '❓', title: 'TEBAK TEBAKAN', description: 'Tebak tebakan seru', timeout: 60000, alias: [] });
 games.register('tekateki', { emoji: '🧩', title: 'TEKA TEKI', description: 'Teka teki rumit', timeout: 60000, alias: [] });
 games.register('trivia', { emoji: '💡', title: 'TRIVIA', description: 'Pertanyaan trivia umum', dataFile: 'trivia2.json', timeout: 60000, alias: [] });
+games.register('quizbattle', { emoji: '⚔️', title: 'QUIZ BATTLE', description: 'Quiz battle pengetahuan umum', questionField: 'q', answerField: 'a', timeout: 60000, alias: ['qbattle'] });
+games.register('tebakkapital', { emoji: '🏛️', title: 'TEBAK IBUKOTA', description: 'Tebak ibukota negara', timeout: 60000, alias: ['tebakibu'] });
+games.register('tebaklogika', { emoji: '🧩', title: 'TEBAK LOGIKA', description: 'Tebak tebakan logika dan riddle', timeout: 60000, alias: ['logika'] });
+games.register('tebakbahasa', { emoji: '📖', title: 'TEBAK PERIBAHASA', description: 'Tebak arti peribahasa', timeout: 60000, alias: ['peribahasa'] });
+games.register('asahotak2', { emoji: '🔥', title: 'ASAH OTAK PRO', description: 'Asah otak level lebih sulit', timeout: 60000, alias: ['asahotakpro'] });
+games.register('tebakpahlawan', { emoji: '🦸', title: 'TEBAK PAHLAWAN', description: 'Tebak pahlawan nasional Indonesia', timeout: 60000, alias: ['pahlawan'] });
 games.register('tebakasmaulhusna', { emoji: '📿', title: 'TEBAK ASMAUL HUSNA', description: 'Tebak 99 nama Allah', questionField: 'translation_id', answerField: 'latin', dataFile: 'asmaulhusna.json', timeout: 60000, alias: ['tebakasma'] });
 
 // IMAGE GAMES

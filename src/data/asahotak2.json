@@ -1,0 +1,102 @@
+[
+  {
+    "soal": "Jika 1=5, 2=25, 3=125, 4=625, maka 5=?",
+    "jawaban": "1"
+  },
+  {
+    "soal": "Berapa jumlah sudut dalam segitiga?",
+    "jawaban": "180"
+  },
+  {
+    "soal": "Jika A=1, B=2, C=3, ..., maka CAT = ?",
+    "jawaban": "24"
+  },
+  {
+    "soal": "Angka berikutnya: 1, 1, 2, 3, 5, 8, 13, ?",
+    "jawaban": "21"
+  },
+  {
+    "soal": "Jika 5+3=28, 9+1=810, maka 7+2=?",
+    "jawaban": "59"
+  },
+  {
+    "soal": "Berapa jumlah angka 0-9?",
+    "jawaban": "45"
+  },
+  {
+    "soal": "Berapa hasil 8x8-8+8/8?",
+    "jawaban": "57"
+  },
+  {
+    "soal": "Selesai: 2, 6, 12, 20, 30, ?",
+    "jawaban": "42"
+  },
+  {
+    "soal": "Angka berikutnya: 1, 4, 9, 16, 25, ?",
+    "jawaban": "36"
+  },
+  {
+    "soal": "Jika 3+4=21, 5+2=35, maka 4+6=?",
+    "jawaban": "46"
+  },
+  {
+    "soal": "Sapi punya 2, kuda punya 4, ayam punya 2. Maksud?",
+    "jawaban": "kaki"
+  },
+  {
+    "soal": "Urutkan: 1, 2, 4, 8, 16, ?",
+    "jawaban": "32"
+  },
+  {
+    "soal": "3 orang selesai makan 3 pizza dalam 3 menit. 9 orang butuh berapa menit untuk 9 pizza?",
+    "jawaban": "3"
+  },
+  {
+    "soal": "Selesai: 100, 50, 25, 12.5, ?",
+    "jawaban": "6.25"
+  },
+  {
+    "soal": "Jika 7 orang bertemu dan salaman, berapa total jabat tangan?",
+    "jawaban": "21"
+  },
+  {
+    "soal": "Angka berikutnya: 2, 3, 5, 7, 11, 13, ?",
+    "jawaban": "17"
+  },
+  {
+    "soal": "Hasil 1+2+3+...+100?",
+    "jawaban": "5050"
+  },
+  {
+    "soal": "Selesai: 1, 3, 6, 10, 15, ?",
+    "jawaban": "21"
+  },
+  {
+    "soal": "Jika hari ini Senin, 100 hari lagi hari apa?",
+    "jawaban": "rabu"
+  },
+  {
+    "soal": "Berapa derajat jumlah sudut segiempat?",
+    "jawaban": "360"
+  },
+  {
+    "soal": "Berapa sisi segitiga sama sisi?",
+    "jawaban": "3"
+  },
+  {
+    "soal": "Jam 15:00, sudut jarum jam dan menit berapa derajat?",
+    "jawaban": "90"
+  },
+  {
+    "soal": "1+1+1+1+1+1+1+1+1+1+1+1x0 = ?",
+    "jawaban": "11"
+  },
+  {
+    "soal": "Deret: 1, 8, 27, 64, ?",
+    "jawaban": "125"
+  },
+  {
+    "soal": "Jika AB=4, BC=3, sudut B=90, berapa AC?",
+    "jawaban": "5"
+  }
+]

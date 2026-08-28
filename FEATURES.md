@@ -87,6 +87,12 @@ binderbyteKey: ""   // Binderbyte cek resi
 
 ### Game Baru (No API Key)
 - `.trivia` — fun — Quiz trivia multiple choice (Open Trivia DB + The Trivia API fallback)
+- `.quizbattle` — game — Quiz battle pengetahuan umum (280 soal lokal, no API)
+- `.tebakkapital` — game — Tebak ibukota negara (50 soal)
+- `.tebaklogika` — game — Tebak tebakan logika dan riddle (30 soal)
+- `.tebakbahasa` — game — Tebak arti peribahasa Indonesia (30 soal)
+- `.asahotak2` — game — Asah otak level lebih sulit (25 soal matematika & logika)
+- `.tebakpahlawan` — game — Tebak pahlawan nasional Indonesia (25 soal)
 - `.wouldyourather` — fun — Dilema Would You Rather (API + 20 local fallback)
 - `.tictactoe` — game — Tic Tac Toe 2 player (X vs O, balas nomor 1-9)
 - `.wordle` — game — Tebak kata 5 huruf (ID + EN, 6 percobaan, 🟩🟨⬛)
