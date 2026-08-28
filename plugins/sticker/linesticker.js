@@ -2,7 +2,7 @@
 import axios from 'axios'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'linesticker',
     alias: ["linesticker"],
@@ -41,14 +41,14 @@ async function handler(m, { sock }) {
     try {
         const apikey = config.APIkey?.neoxr
         if (!apikey) {
-            return m.reply(claraWrap("linesticker", `❌ API Key Neoxr tidak ditemukan di config!`))
+            return m.reply(novaError("LineSticker", "API Key Neoxr gak ada di config nih!"))
         }
         
         const apiUrl = `https://api.neoxr.eu/api/linesticker?url=${encodeURIComponent(url)}&apikey=${apikey}`
         const res = await axios.get(apiUrl, { timeout: 60000 })
         
         if (!res.data?.status || !res.data?.data) {
-            return m.reply(claraWrap("linesticker", `❌ Gagal mengambil sticker dari URL tersebut!`))
+            return m.reply(novaError("LineSticker", "Gagal ambil sticker dari URL nih!"))
         }
         
         const data = res.data.data
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
             : data.sticker_url || []
         
         if (!stickerUrls.length) {
-            return m.reply(claraWrap("Linesticker", `❌ Tidak ada sticker ditemukan!`))
+            return m.reply(novaError("LineSticker", "Gak ada sticker nemu nih!"))
         }
         
         await m.reply(
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
             await m.react('✅')
             await m.reply(claraWrap("Linesticker", `✅ Berhasil kirim ${sent}/${stickerUrls.length} sticker`))
         } else {
-            await m.reply(claraWrap("linesticker", `❌ Gagal mengirim sticker`))
+            await m.reply(novaError("LineSticker", "Gagal kirim sticker nih"))
         }
         
     } catch (error) {

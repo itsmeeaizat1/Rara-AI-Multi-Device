@@ -10,7 +10,7 @@ import fs from "fs";
 import path from "path";
 import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "smeme",
   alias: ["smeme"],
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
       mediaBuffer = await m.download();
     }
     if (!mediaBuffer) {
-      return m.reply(claraWrap("smeme", `❌ *ɢᴀɢᴀʟ*\n\nGagal mengunduh media`));
+      return m.reply(novaError("Smeme", "Gagal download media nih"));
     }
     let imageBuffer;
     try {
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
       }
     }
     if (!imageUrl) {
-      return m.reply(claraWrap("smeme", `❌ *ɢᴀɢᴀʟ*\n\nGagal upload gambar, coba lagi nanti`));
+      return m.reply(novaError("Smeme", "Gagal upload gambar nih, coba lagi ya"));
     }
     console.log("[SMEME] Image uploaded:", imageUrl);
     const encodeText = (text) => {

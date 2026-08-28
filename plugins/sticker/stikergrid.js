@@ -4,7 +4,7 @@ import path from "path";
 import sharp from "sharp";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "stikergrid",
@@ -181,7 +181,7 @@ async function handler(m, { sock, db }) {
       }
 
       if (!buffer) {
-        await m.reply(claraWrap("Stiker Grid", "Gagal mengunduh foto. Coba kirim ulang."));
+        await m.reply(novaError("StikerGrid", "Gagal download foto nih, coba kirim ulang"));
         return;
       }
 

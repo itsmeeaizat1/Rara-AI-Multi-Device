@@ -9,7 +9,7 @@ import { Canvas, loadImage, FontLibrary } from "skia-canvas";
 import sharp from "sharp";
 import { config } from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 // Register Anton font (Impact-like, free Google Font)
 const FONT_PATH = path.join(process.cwd(), "assets", "fonts", "Anton.ttf");
@@ -186,7 +186,7 @@ async function handler(m, { sock }) {
     }
 
     if (!mediaBuffer) {
-      await m.reply(claraWrap("smemev2", "Gagal mengunduh media. Coba reply ke gambar/sticker-nya lagi."));
+      await m.reply(novaError("SmemeV2", "Gagal download media nih, coba reply ulang"));
       return;
     }
 
@@ -205,7 +205,7 @@ async function handler(m, { sock }) {
       memeBuffer = await generateMeme(mediaBuffer, topText, bottomText);
     } catch (e) {
       console.error("[SMEMEV2] Generate failed:", e.message);
-      await m.reply(claraWrap("smemev2", "Gagal generate meme. Mungkin format gambar tidak didukung."));
+      await m.reply(novaError("SmemeV2", "Gagal generate meme nih, mungkin format gak didukung"));
       return;
     }
 
