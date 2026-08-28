@@ -2,7 +2,7 @@
 import http from "http";
 import https from "https";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "searchthatsong",
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ") || m.text?.trim();
 
   if (!query) {
-    { const __navText = "❌ Masukkan potongan lirik atau nama lagu yang ingin dicari.\n\n💡 *Contoh:* `.sts ku menangis membayangkan`"; return await m.reply( __navText, "searchthatsong"); };
+    return m.reply(novaGuide("SearchThatSong", "Masukin potongan lirik atau nama lagu nih!", ".sts ku menangis membayangkan"));
   }
 
   await m.react("🕒");
@@ -163,7 +163,7 @@ async function handler(m, { sock }) {
 
   } catch (error) {
     console.error("[SearchThatSong]", error.message);
-    m.reply(claraWrap("searchthatsong", "😔 Terjadi kesalahan saat mencari lagu. Server mungkin sedang bermasalah."));
+    m.reply(novaError("SearchThatSong", "Ada error nih, coba lagi ya"));
   }
 }
 

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
         const res = await axios.get(`https://api.nexray.web.id/search/applemusic?q=${encodeURIComponent(query)}`)
         
         if (!res.data?.result?.length) {
-            { const __navText = `❌ Tidak ditemukan hasil untuk: ${query}`; return await m.reply(__navText); }
+            return m.reply(novaError("AppleMusic", `Gak nemu hasil untuk: ${query} nih`));
         }
         
         const tracks = res.data.result.slice(0, 5)

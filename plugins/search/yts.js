@@ -3,7 +3,7 @@ import yts from "yt-search";
 import { generateWAMessageFromContent, proto } from "nova";
 import axios from "axios";
 import sharp from "sharp";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "yts",
@@ -23,7 +23,7 @@ const pluginConfig = {
 
 async function handler(m, { sock, text }) {
   if (!text) {
-    return m.reply( claraWrap("Yts", "❌ *Waduh, kata kuncinya kosong!*\n\nKamu harus memasukkan kata kunci judul video yang ingin dicari ya. \n\nContoh penggunaan: `.yts lagu galau indonesia`"), { commandName: "yts" });
+    return m.reply( novaGuide("YTS", "Kata kuncinya kosong nih! Kasih judul video yang dicari", ".yts lagu galau indonesia"), { commandName: "yts" });
   }
 
   await m.react("🕒");
@@ -106,7 +106,7 @@ Pilih salah satu tombol di bawah ini untuk langsung mengunduh hasil video atau a
 
   } catch (error) {
     console.error(error);
-    m.reply(claraWrap("yts", "😔 *Aduh, sepertinya ada masalah di sistemku.* \n\nTerjadi kesalahan saat mencoba mencari video tersebut di YouTube. Mohon tunggu beberapa saat dan coba lagi nanti ya!"));
+    m.reply(novaError("YTS", "Ada error nih, coba lagi ya"));
   }
 }
 

@@ -2,7 +2,7 @@
 import axios from "axios";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "apkmod-get",
   alias: ["apkmod-get"],
@@ -27,7 +27,7 @@ async function handler(m, { sock }) {
   const query = args.slice(1).join(" ");
 
   if (!no || !query) {
-    { const __navText = `❌ Format: \`${m.prefix}apkmod-get <no> <query>\``; return await m.reply( __navText, "apkmod-get"); };
+    return m.reply(novaGuide("ApkModGet", "Format-nya salah nih!", m.prefix + "apkmod-get <no> <query>"));
   }
 
   m.react("🕒");
@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     );
 
     if (!data?.status || !data?.data) {
-      throw new Error("Gagal mengambil detail APK");
+      throw new Error("Gagal ambil detail APK nih");
     }
 
     const app = data.data;

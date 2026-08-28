@@ -2,7 +2,7 @@
 import { scSearch } from "./soundcloud.js";
 import scdl from "../../src/scraper/soundclouddl.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "playsoundcloud",
@@ -36,7 +36,7 @@ async function handler(m, { args, sock }) {
   try {
     const searchResults = await scSearch(args.join(" "));
     if (!searchResults.length) {
-      return m.reply(claraWrap("Playsoundcloud", `❌ Yah kak, lagunya nggak ketemu! Coba cari dengan judul lain ya. 😭`));
+      return m.reply(novaError("PlaySoundcloud", "Lagunya gak nemu nih! Coba judul lain ya"));
     }
 
     const track = searchResults[0];
@@ -58,7 +58,7 @@ async function handler(m, { args, sock }) {
 
     await m.react("🐣");
   } catch (e) {
-    m.reply(claraWrap("playsoundcloud", `❌ Gagal mendownload lagu kak! 😭\nError: ${e.message}`));
+    m.reply(novaError("PlaySoundcloud", `Gagal download lagu nih: ${e.message}`));
   }
 }
 

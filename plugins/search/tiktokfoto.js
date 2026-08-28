@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 import axios from 'axios'
 import crypto from 'crypto'
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
         const images = Array.isArray(post?.images) ? post.images.slice(0, 10) : []
 
         if (!post || images.length === 0) {
-            return m.reply(claraWrap("tiktokfoto", `❌ Tidak ditemukan foto TikTok untuk: ${query}`))
+            return m.reply(novaError("TikTokFoto", `Gak nemu foto TikTok untuk: ${query} nih`))
         }
 
         let caption = '📸 *ᴛɪᴋᴛᴏᴋ ꜰᴏᴛᴏ ꜱᴇᴀʀᴄʜ*\n\n'
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
         }
 
         if (mediaList.length === 0) {
-            return m.reply('❌ Gagal memuat foto TikTok')
+            return m.reply(novaError("TikTokFoto", "Gagal load foto nih"))
         }
 
         try {

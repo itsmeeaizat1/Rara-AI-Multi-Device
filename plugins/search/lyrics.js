@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 async function fetchLyrics(judul) {
   try {
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
         m.react('✅')
         
     } catch (error) {
-        m.reply(claraWrap("Lirik", `Yah, server liriknya lagi ngambek nih kak 😭 Coba lagi nanti ya! 🛠️✨`))
+        m.reply(novaError("Lyrics", "Server lirik lagi ngambek nih, coba lagi ya"))
     }
 }
 

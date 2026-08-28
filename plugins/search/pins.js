@@ -9,7 +9,7 @@ import crypto from "crypto";
 import te from "../../src/lib/nova-error.js";
 import { f } from "../../src/lib/nova-http.js";
 import { AIRich } from "../../src/lib/nova-builder.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pins",
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
 
     const results = data?.data?.slice(0, 10);
     if (!results || results.length === 0) {
-      return m.reply(claraWrap("pins", `❌ Tidak ditemukan hasil untuk: ${query}`));
+      return m.reply(novaError("Pins", `Gak nemu hasil untuk: ${query} nih`));
     }
 
     const mediaList = [];
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
     }
 
     if (mediaList.length === 0) {
-      return m.reply(claraWrap("pins", "❌ Gagal memuat gambar"));
+      return m.reply(novaError("Pins", "Gagal load gambar nih"));
     }
 
     try {

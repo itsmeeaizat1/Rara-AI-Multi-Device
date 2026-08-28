@@ -2,7 +2,7 @@
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "melolo",
@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
   }
 
   if (!config.APIkey?.covenant) {
-    { const __navText = "❌ API key covenant tidak dikonfigurasi!"; return await m.reply(__navText); };
+    return m.reply(novaError("Melolo", "API key covenant belum dikonfigurasi nih!"));
   }
 
   m.react("🕒");
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
 
     if (items.length === 0) {
       return m.reply(
-        `❌ Tidak ditemukan hasil Melolo untuk kategori: ${category}`,
+        `Gak nemu hasil Melolo untuk: ${category} nih`,
       );
     }
 
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
   } catch (error) {
     const message = error?.response?.data?.message || error?.message;
     if (message) {
-      return m.reply(claraWrap("melolo", `❌ ${message}`));
+      return m.reply(novaError("Melolo", message));
     }
     m.reply(claraWrap("melolo", te(m.prefix, m.command, m.pushName), "error"));
   }

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // kitsu.js — Kitsu API: search anime & manga (no API key)
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -76,7 +76,7 @@ async function handler(m, { sock, config, db }) {
 
     if (!results.length) {
       await m.react("🐣");
-      return m.reply(claraWrap("Kitsu", `Tidak ditemukan ${type} untuk: "${query}"`));
+      return m.reply(novaError("Kitsu", `Gak nemu ${type} untuk: "${query}" nih`));
     }
 
     const text = `Hasil pencarian ${type}: "${query}"\n\n` + results.map(item => fmtEntry(item, type)).join("\n\n");
