@@ -402,3 +402,32 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - Alias: `.setbirthday`, `.ultah`
 - Bot kirim ucapan via DM ke user yang ultah hari ini
 - Contoh: `.autoulah on 08:00`, `.setultah 15-08-2005`
+
+## 🩺 Auto API Health Check
+
+- `.autohealth <on/off/status/now/list> [interval_menit]` — Auto API health monitor
+- Alias: `.apicheck`, `.aphealth`
+- Cek API eksternal tiap interval (default 30 menit)
+- Notif owner kalau ada API down atau recovered
+- API yang dicek: Tio AI, Open-Meteo, SaveNow
+- `.autohealth list` — lihat daftar API yang dimonitor
+- Contoh: `.autohealth on 30`
+
+## 👋 Auto Re-engagement
+
+- `.autoreengage <on/off/status/now/reset> [HH:MM] [threshold_hari]` — Auto follow-up user inactive
+- Alias: `.followup`, `.reengage`
+- Kirim pesan personal ke user yang sudah lama tidak aktif (default 7 hari)
+- Pesan: "Kangen nih, ada fitur baru lho!" + daftar fitur
+- `.autoreengage reset` — reset list yang sudah dikontak (biar bisa kirim ulang)
+- Anti-spam: tiap user cuma dikirimi 1x (sampai di-reset)
+- Contoh: `.autoreengage on 10:00 7`
+
+## 🔋 Auto Refill Notification
+
+- `.autorefill <on/off/status/now> [HH:MM]` — Auto refill + notif energi harian
+- Alias: `.refill`, `.restock`
+- Reset energi semua user + kirim notif "Energi di-refill!" ke tiap user
+- Owner juga dapat laporan ringkasan (total user, total notif terkirim)
+- Default jam 00:00 WIB (tengah malam)
+- Contoh: `.autorefill on 00:00`
