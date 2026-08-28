@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { queueFFmpeg } from '../../src/lib/nova-ffmpeg.js'
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
 import fs from 'fs'
 import path from 'path'
@@ -49,7 +50,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       const outputPath = path.join(tmpDir, `trimmed_${Date.now()}.mp3`);
       await queueFFmpeg(`ffmpeg -y -i "${inputPath}" -ss ${startSec} -t ${duration} -c:a libopus -b:a 64k "${outputPath}"`);
 
-      if (!fs.existsSync(outputPath)) return m.reply(claraWrap("Audio Split", "Gagal trim audio."));
+      if (!fs.existsSync(outputPath)) return m.reply(novaError("AudioSplit", "Gagal trim audio nih"));
       const buf = fs.readFileSync(outputPath);
       await conn.sendMessage(m.key.remoteJid, {
         audio: buf, mimetype: "audio/ogg; codecs=opus", ptt: false,
@@ -64,7 +65,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await queueFFmpeg(`ffmpeg -y -i "${inputPath}" 2>"${probePath}"`);
       const probe = fs.readFileSync(probePath, 'utf8');
       const durMatch = probe.match(/Duration:\s(\d{2}):(\d{2}):(\d{2})/);
-      if (!durMatch) return m.reply(claraWrap("Audio Split", "Gagal deteksi durasi audio."));
+      if (!durMatch) return m.reply(novaError("AudioSplit", "Gagal deteksi durasi nih"));
       const totalSec = parseInt(durMatch[1]) * 3600 + parseInt(durMatch[2]) * 60 + parseInt(durMatch[3]);
       const halfSec = Math.floor(totalSec / 2);
 
@@ -86,7 +87,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         fs.unlinkSync(out1);
         fs.unlinkSync(out2);
       } else {
-        return m.reply(claraWrap("Audio Split", "Gagal split audio."));
+        return m.reply(novaError("AudioSplit", "Gagal split audio nih"));
       }
       fs.unlinkSync(inputPath);
       try { fs.unlinkSync(probePath); } catch (e) { console.error('[audiosplit.js]:', e.message); }
@@ -102,7 +103,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       await queueFFmpeg(`ffmpeg -y -i "${inputPath}" 2>"${probePath}"`);
       const probe = fs.readFileSync(probePath, 'utf8');
       const durMatch = probe.match(/Duration:\s(\d{2}):(\d{2}):(\d{2})/);
-      if (!durMatch) return m.reply(claraWrap("Audio Split", "Gagal deteksi durasi."));
+      if (!durMatch) return m.reply(novaError("AudioSplit", "Gagal deteksi durasi nih"));
       const totalSec = parseInt(durMatch[1]) * 3600 + parseInt(durMatch[2]) * 60 + parseInt(durMatch[3]);
       const partDur = Math.floor(totalSec / parts);
 

@@ -2,7 +2,7 @@
 import { downloadMediaMessage, getContentType } from "nova";
 import { ImageUploadService } from "node-upload-images";
 import axios from "axios";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "musiccard",
@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
   if (m.quoted?.message) {
     const type = getContentType(m.quoted.message);
     if (type !== "imageMessage") {
-      return m.reply(claraWrap("Musiccard", "❌ *Waduh, itu bukan gambar!*\n\nKamu harus me-reply (membalas) pesan berupa *ɢᴀᴍʙᴀʀ* dengan format `.musiccard <judul>|<nama>`.\n\n💡 *Contoh:* \nBalas gambar temanmu, lalu ketik: `.musiccard Perfect|Ed Sheeran`"));
+      return m.reply(novaGuide("MusicCard", "Itu bukan gambar nih! Reply gambar dulu", ".musiccard Perfect|Ed Sheeran"));
     }
     try {
       mediaBuffer = await downloadMediaMessage(
@@ -39,12 +39,12 @@ async function handler(m, { sock }) {
       );
       mimetype = m.quoted.message[type]?.mimetype;
     } catch (e) {
-      return m.reply(claraWrap("Gagal mendownload gambar.", "😔 *ɢᴀɢᴀʟ ᴍᴇɴᴅᴏᴡɴʟᴏᴀᴅ ɢᴀᴍʙᴀʀ.* Coba kirim ulang gambarnya ya."));
+      return m.reply(novaError("MusicCard", "Gagal download gambar nih, coba kirim ulang"));
     }
   } else if (m.message) {
     const type = getContentType(m.message);
     if (type !== "imageMessage") {
-      return m.reply(claraWrap("Musiccard", "❌ *Waduh, gambarnya mana nih?*\n\nKamu harus mengirim sebuah gambar dengan caption (teks pelengkap) `.musiccard <judul>|<nama>` atau reply gambar yang sudah ada.\n\n💡 *Contoh:* \nKirim gambar dengan caption: `.musiccard Perfect|Ed Sheeran`"));
+      return m.reply(novaGuide("MusicCard", "Gambarnya mana nih? Kirim gambar dengan caption", ".musiccard Perfect|Ed Sheeran"));
     }
     try {
       mediaBuffer = await downloadMediaMessage(
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
       );
       mimetype = m.message[type]?.mimetype;
     } catch (e) {
-      return m.reply(claraWrap("Gagal mendownload gambar.", "😔 *ɢᴀɢᴀʟ ᴍᴇɴᴅᴏᴡɴʟᴏᴀᴅ ɢᴀᴍʙᴀʀ.* Coba kirim ulang gambarnya ya."));
+      return m.reply(novaError("MusicCard", "Gagal download gambar nih, coba kirim ulang"));
     }
   }
 

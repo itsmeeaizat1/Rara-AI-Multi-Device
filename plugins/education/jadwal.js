@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -97,17 +97,17 @@ async function handler(m, { sock, args }) {
 
       const day = parts[0].toLowerCase();
       if (!DAYS.includes(day)) {
-        return m.reply(claraWrap("Jadwal", `Hari "${parts[0]}" tidak valid!\n\nPilih: ${DAYS.join(", ")}`));
+        return m.reply(novaError("Jadwal", `Hari gak valid nih! Pilih: ${DAYS.join(", ")}`));
       }
 
       const startTime = parseTime(parts[1]);
       if (!startTime) {
-        return m.reply(claraWrap("Jadwal", `Jam mulai "${parts[1]}" tidak valid!\n\nFormat: HH.MM atau HH:MM (contoh: 08.00)`));
+        return m.reply(novaError("Jadwal", `Jam mulai gak valid nih! Format: HH.MM atau HH:MM`));
       }
 
       const endTime = parseTime(parts[2]);
       if (!endTime) {
-        return m.reply(claraWrap("Jadwal", `Jam selesai "${parts[2]}" tidak valid!\n\nFormat: HH.MM atau HH:MM (contoh: 09.30)`));
+        return m.reply(novaError("Jadwal", `Jam selesai gak valid nih! Format: HH.MM atau HH:MM`));
       }
 
       if (timeToMinutes(endTime) <= timeToMinutes(startTime)) {
@@ -237,7 +237,7 @@ async function handler(m, { sock, args }) {
     else if (cmd === "hari") {
       const day = cmdArgs[0]?.toLowerCase();
       if (!day || !DAYS.includes(day)) {
-        return m.reply(claraWrap("Jadwal", `Hari tidak valid!\n\nPilih: ${DAYS.join(", ")}`));
+        return m.reply(novaError("Jadwal", `Hari gak valid nih! Pilih: ${DAYS.join(", ")}`));
       }
 
       const schedule = getSchedule(db, sender);

@@ -9,7 +9,7 @@ import { promisify } from "util";
 import fetch from "node-fetch";
 import te from "../../src/lib/nova-error.js";
 import config from "../../config.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -338,7 +338,7 @@ async function encodeVideo(concatPath, outputPath, configObj) {
 async function createBratVideo(text, template) {
   const frames = buildRevealFrames(text, VIDEO_CONFIG);
   if (!frames.length) {
-    throw new Error("Teks kosong");
+    throw new Error("Teks kosong nih");
   }
 
   const tmpDir = await fsp.mkdtemp(path.join(os.tmpdir(), "bratvid-"));
@@ -409,7 +409,7 @@ async function handler(m, { sock }) {
       template = TEMPLATES.vermeil;
       isVideo = true;
     } else {
-      throw new Error("Command tidak valid");
+      throw new Error("Command gak valid nih");
     }
 
     const inputText = normalizeText(text);

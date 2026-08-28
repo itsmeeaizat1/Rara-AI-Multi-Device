@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from '../../src/lib/nova-menu-style.js'
+import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "angkanaas",
@@ -139,7 +140,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       return m.reply(claraWrap("Angka Weton", lines.join("\n")))
     }
 
-    return m.reply(claraWrap("Angka Naas", "Jenis tidak valid: " + input + "\nGunakan: kedutan, mimpi, atau weton"))
+    return m.reply(novaError("AngkaNaas", "Jenis gak valid nih! Gunakan: kedutan, mimpi, atau weton"))
   } catch (e) {
     return m.reply(claraWrap("Angka Naas", "Error: " + e.message))
   }

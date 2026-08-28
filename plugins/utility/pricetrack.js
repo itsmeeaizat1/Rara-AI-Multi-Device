@@ -31,7 +31,7 @@ async function handler(m, { sock, config: botConfig }) {
       `│ Harga: *${price}*`,
       `│ URL: ${url.substring(0,60)}...`].join("\n")) + "\n" + tipText("Harga bisa berubah sewaktu-waktu"));
   } catch (e) {
-    await m.reply(claraWrap("Gagal", [`│ ${e.message}`].join("\n")));
+    await m.reply(claraWrap("Gagal nih", [`│ ${e.message}`].join("\n")));
   }
   return { handled: true };
 }

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "soalessay",
@@ -330,7 +330,7 @@ async function handler(m, { sock, args }) {
 
   // Validate jenjang
   if (!JENJANG_NAMES[jenjang]) {
-    return m.reply(claraWrap("Soalessay", `Jenjang tidak valid!\n\nPilih: sd, smp, sma, smk`));
+    return m.reply(novaError("SoalEssay", "Jenjang gak valid nih! Pilih: sd, smp, sma, smk"));
   }
 
   if (jumlah < 1 || jumlah > 10) {
@@ -376,7 +376,7 @@ async function handler(m, { sock, args }) {
     await m.react("🐣");
   } catch (e) {
     console.error("[SOALESSAY] Error:", e.message);
-    await m.reply(claraWrap("soalessay", `Gagal membuat soal essay!\n\nError: ${e.message}`));
+    await m.reply(novaError("SoalEssay", `Gagal bikin soal nih: ${e.message}`));
   }
 }
 

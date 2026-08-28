@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "magang",
@@ -217,7 +217,7 @@ async function handler(m, { sock, args, config: botConfig }) {
     txt += tipText("Cek link untuk detail & cara apply");
     return m.reply( txt, { commandName: "magang" });
   } catch (e) {
-    return m.reply( claraWrap("Error", `Gagal mencari: ${e.message}`), { commandName: "magang" });
+    return m.reply( novaError("Magang", `Gagal cari nih: ${e.message}`), { commandName: "magang" });
   }
 }
 

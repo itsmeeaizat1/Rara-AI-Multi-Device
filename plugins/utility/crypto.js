@@ -89,7 +89,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const coins = res.data || [];
       if (!coins.length) {
-        return m.reply(claraWrap("Crypto Tracker", "Gagal ambil data top coins", "error"));
+        return m.reply(claraWrap("Crypto Tracker", "Gagal nih ambil data top coins", "error"));
       }
 
       const lines = coins.map((c, i) => {
@@ -112,7 +112,7 @@ async function handler(m, { sock, config: botConfig }) {
 
       const coins = (res.data?.coins || []).slice(0, 7);
       if (!coins.length) {
-        return m.reply(claraWrap("Crypto Tracker", "Gagal ambil trending coins", "error"));
+        return m.reply(claraWrap("Crypto Tracker", "Gagal nih ambil trending coins", "error"));
       }
 
       const lines = coins.map((c, i) => {

@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(claraWrap("Countdown", [`│ Target: *${target.toLocaleDateString("id-ID")}*`,
       `│ Sisa: *${days} hari, ${hours} jam, ${mins} menit, ${secs} detik*`].join("\n")) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`));
   } catch (e) {
-    await m.reply(claraWrap("Gagal", [`│ ${e.message}`].join("\n")));
+    await m.reply(claraWrap("Gagal nih", [`│ ${e.message}`].join("\n")));
   }
   return { handled: true };
 }

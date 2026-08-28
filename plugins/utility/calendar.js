@@ -46,7 +46,7 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply(text);
     }
   } catch (e) {
-    await m.reply(claraWrap("Gagal", [`│ ${e.message}`].join("\n")));
+    await m.reply(claraWrap("Gagal nih", [`│ ${e.message}`].join("\n")));
   }
   return { handled: true };
 }

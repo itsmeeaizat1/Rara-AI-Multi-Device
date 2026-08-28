@@ -2,7 +2,7 @@
 import te from "../../src/lib/nova-error.js";
 import moment from "moment-timezone";
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "iqc",
@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     });
 
     if (res.headers["content-type"] && !res.headers["content-type"].includes("image")) {
-      throw new Error("Gagal membuat IQC, format bukan gambar");
+      throw new Error("Gagal bikin IQC nih, format bukan gambar");
     }
 
     const cardBuffer = Buffer.from(res.data);
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     await sock.sendMessage(m.chat, { image: cardBuffer, caption: "" }, { quoted: m });
   } catch (error) {
     console.error("[IQC]", error.message);
-    m.reply(claraWrap("Gagal membuat gambar chat.", "😔 *ɢᴀɢᴀʟ ᴍᴇᴍʙᴜᴀᴛ ɢᴀᴍʙᴀʀ ᴄʜᴀᴛ.* \n\nSistem gagal menghubungi server pembuat chat. Silakan coba beberapa saat lagi ya."));
+    m.reply(novaError("IQC", "Gagal bikin gambar chat nih, coba lagi ya"));
   }
 }
 

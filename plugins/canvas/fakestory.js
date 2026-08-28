@@ -8,7 +8,7 @@ import axios from "axios";
 import fs from "fs";
 import path from "path";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "fakestory",
   alias: ["fakestory"],
@@ -226,7 +226,7 @@ async function handler(m, { sock }) {
       imageBottomBuffer = imageTopBuffer;
     }
     if (!imageTopBuffer) {
-      return m.reply(claraWrap("Fakestory", `❌ *ɢᴀɢᴀʟ*\n\nTidak bisa download gambar`));
+      return m.reply(novaError("FakeStory", "Gagal download gambar nih"));
     }
     const resultBuffer = await createFakeStory(
       username,
