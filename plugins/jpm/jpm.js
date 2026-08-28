@@ -24,7 +24,7 @@ import axios from "axios";
 import path from "path";
 import fs from "fs";
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
-import { claraWrap, broadcastFormat } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, broadcastFormat } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "jpm",
