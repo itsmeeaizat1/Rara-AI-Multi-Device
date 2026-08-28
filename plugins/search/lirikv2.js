@@ -62,13 +62,13 @@ async function handler(m, { sock }) {
         if (!query) {
             return m.reply(
                 "╭──「 Lirik v2 」\n" +
-                "├── Cari lirik lagu dari Genius/nexray\n" +
-                "├──\n" +
-                "├── 📌 *Cara Pakai:*\n" +
-                "├── " + pluginConfig.usage + "\n" +
-                "├──\n" +
-                "├── 💡 *Contoh:*\n" +
-                "├── " + pluginConfig.example + "\n" +
+                "│ Cari lirik lagu dari Genius/nexray\n" +
+                "│\n" +
+                "│ 📌 *Cara Pakai:*\n" +
+                "" + pluginConfig.usage + "\n" +
+                "│\n" +
+                "│ 💡 *Contoh:*\n" +
+                "" + pluginConfig.example + "\n" +
                 "╰──────────❀"
             )
         }
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
             await m.react("🐣")
             return m.reply(
                 "╭──「 Lirik v2 」\n" +
-                "├── Lagu \"" + query + "\" tidak ditemukan.\n" +
+                "│ Lagu \"" + query + "\" tidak ditemukan.\n" +
                 "╰──────────❀"
             )
         }
@@ -111,12 +111,12 @@ async function handler(m, { sock }) {
             lyrics = lyrics.slice(0, 3500) + "\n\n... (lirik dipotong)"
         }
 
-        const lines = lyrics.split("\n").map(l => "├── " + l).join("\n")
+        const lines = lyrics.split("\n").map(l => "" + l).join("\n")
         const text =
             "╭──「 Lirik v2 (via " + source + ") 」\n" +
-            "├── " + (result.title || "Unknown") + "\n" +
-            "├── by " + (result.artist || "Unknown") + "\n" +
-            "├──\n" +
+            "" + (result.title || "Unknown") + "\n" +
+            "│ by " + (result.artist || "Unknown") + "\n" +
+            "│\n" +
             lines + "\n" +
             "╰──────────❀"
 
@@ -141,8 +141,8 @@ async function handler(m, { sock }) {
         await m.react("🐣")
         return m.reply(
             "╭──「 Error 」\n" +
-            "├── Gagal mencari lirik.\n" +
-            "├── " + (e.message || "Terjadi kesalahan") + "\n" +
+            "│ Gagal mencari lirik.\n" +
+            "" + (e.message || "Terjadi kesalahan") + "\n" +
             "╰──────────❀"
         )
     }

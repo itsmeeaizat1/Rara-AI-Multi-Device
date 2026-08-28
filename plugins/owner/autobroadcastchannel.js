@@ -8,7 +8,7 @@ import {
 
 function modBox(title, lines) {
   const body = Array.isArray(lines) ? lines.join("\n") : lines;
-  return "╭──「 " + title + " 」\n├──\n" + body.split("\n").map(l => "├── " + l).join("\n") + "\n╰──────────❀";
+  return "╭──「 " + title + " 」\n│\n" + body.split("\n").map(l => "" + l).join("\n") + "\n╰──────────❀";
 }
 
 const pluginConfig = {
@@ -39,23 +39,23 @@ async function handler(m, { sock, config: botConfig }) {
     let offCount = 0;
 
     let text = "╭──「 📡 AutoBroadcastChannel 」\n";
-    text += "├──\n";
-    text += "├── 📺 Saluran: *" + (botConfig.saluran?.name || "-") + "*\n";
-    text += "├── 📋 Total Event: *" + Object.keys(NOTIFY_EVENTS).length + "*\n";
-    text += "├──\n";
+    text += "│\n";
+    text += "│ 📺 Saluran: *" + (botConfig.saluran?.name || "-") + "*\n";
+    text += "│ 📋 Total Event: *" + Object.keys(NOTIFY_EVENTS).length + "*\n";
+    text += "│\n";
     text += "├──「 *Status Toggle* 」\n";
 
     for (const [key, info] of Object.entries(statuses)) {
       const icon = info.enabled ? "✅" : "❌";
-      text += "├── " + icon + " *" + info.label + "*\n";
-      text += "├── ↳ `" + prefix + "autobroadcastchannel " + key + " on/off`\n";
+      text += "" + icon + " *" + info.label + "*\n";
+      text += "│ ↳ `" + prefix + "autobroadcastchannel " + key + " on/off`\n";
       if (info.enabled) onCount++;
       else offCount++;
     }
 
-    text += "├──\n";
-    text += "├── 📊 ON: " + onCount + " | OFF: " + offCount + "\n";
-    text += "├── 🔧 All toggle: `" + prefix + "autobroadcastchannel all on/off`\n";
+    text += "│\n";
+    text += "│ 📊 ON: " + onCount + " | OFF: " + offCount + "\n";
+    text += "│ 🔧 All toggle: `" + prefix + "autobroadcastchannel all on/off`\n";
     text += "╰──────────❀";
 
     return m.reply(text);
@@ -80,11 +80,11 @@ async function handler(m, { sock, config: botConfig }) {
 
     return m.reply(
       "╭──「 📡 AutoBroadcastChannel 」\n" +
-      "├──\n" +
-      "├── ✅ Status: *" + (enabled ? "ALL ON" : "ALL OFF") + "*\n" +
-      "├── 📊 Total: *" + count + " event*\n" +
-      "├──\n" +
-      "├── 💡 Cek status: `" + prefix + "autobroadcastchannel`\n" +
+      "│\n" +
+      "│ ✅ Status: *" + (enabled ? "ALL ON" : "ALL OFF") + "*\n" +
+      "│ 📊 Total: *" + count + " event*\n" +
+      "│\n" +
+      "│ 💡 Cek status: `" + prefix + "autobroadcastchannel`\n" +
       "╰──────────❀"
     );
   }
@@ -104,12 +104,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     return m.reply(
       "╭──「 📡 AutoBroadcastChannel 」\n" +
-      "├──\n" +
-      "├── 📌 Event: *" + NOTIFY_EVENTS[subCmd] + "*\n" +
-      "├── " + (newVal ? "✅ ON" : "❌ OFF") + "\n" +
-      "├──\n" +
-      "├── " + (newVal ? "📢 Notifikasi akan dikirim ke saluran" : "🔕 Notifikasi dimatikan") + "\n" +
-      "├── 💡 Cek semua: `" + prefix + "autobroadcastchannel`\n" +
+      "│\n" +
+      "│ 📌 Event: *" + NOTIFY_EVENTS[subCmd] + "*\n" +
+      "" + (newVal ? "✅ ON" : "❌ OFF") + "\n" +
+      "│\n" +
+      "" + (newVal ? "📢 Notifikasi akan dikirim ke saluran" : "🔕 Notifikasi dimatikan") + "\n" +
+      "│ 💡 Cek semua: `" + prefix + "autobroadcastchannel`\n" +
       "╰──────────❀"
     );
   }
@@ -117,18 +117,18 @@ async function handler(m, { sock, config: botConfig }) {
   // Unknown event
   let availableList = "";
   for (const [key, label] of Object.entries(NOTIFY_EVENTS)) {
-    availableList += "├── " + key + " — " + label + "\n";
+    availableList += "" + key + " — " + label + "\n";
   }
 
   return m.reply(
     "╭──「 📡 AutoBroadcastChannel 」\n" +
-    "├──\n" +
-    "├── ❌ Event: *" + subCmd + "* tidak ada dalam daftar\n" +
-    "├──\n" +
+    "│\n" +
+    "│ ❌ Event: *" + subCmd + "* tidak ada dalam daftar\n" +
+    "│\n" +
     "├──「 *Event Tersedia* 」\n" +
     availableList +
-    "├──\n" +
-    "├── 💡 *Contoh:* `" + prefix + "autobroadcastchannel userBanned on`\n" +
+    "│\n" +
+    "│ 💡 *Contoh:* `" + prefix + "autobroadcastchannel userBanned on`\n" +
     "╰──────────❀"
   );
 }

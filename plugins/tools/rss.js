@@ -25,19 +25,19 @@ async function handler(m, { sock }) {
         if (!url || (!url.startsWith("http://") && !url.startsWith("https://"))) {
             return m.reply(
                 "╭──「 RSS Reader 」\n" +
-                "├── Baca RSS feed dari URL mana pun\n" +
-                "├──\n" +
-                "├── 📌 *Cara Pakai:*\n" +
-                "├── " + pluginConfig.usage + "\n" +
-                "├──\n" +
-                "├── 💡 *Contoh:*\n" +
-                "├── " + pluginConfig.example + "\n" +
-                "├──\n" +
-                "├── Bisa juga pakai shortcut:\n" +
-                "├── .rss detik = Detik News\n" +
-                "├── .rss kompas = Kompas\n" +
-                "├── .rss cnn = CNN Indonesia\n" +
-                "├── .rss tribun = Tribun News\n" +
+                "│ Baca RSS feed dari URL mana pun\n" +
+                "│\n" +
+                "│ 📌 *Cara Pakai:*\n" +
+                "" + pluginConfig.usage + "\n" +
+                "│\n" +
+                "│ 💡 *Contoh:*\n" +
+                "" + pluginConfig.example + "\n" +
+                "│\n" +
+                "│ Bisa juga pakai shortcut:\n" +
+                "│ .rss detik = Detik News\n" +
+                "│ .rss kompas = Kompas\n" +
+                "│ .rss cnn = CNN Indonesia\n" +
+                "│ .rss tribun = Tribun News\n" +
                 "╰──────────❀"
             )
         }
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
             await m.react("🐣")
             return m.reply(
                 "╭──「 RSS Reader 」\n" +
-                "├── Feed kosong atau tidak bisa dibaca.\n" +
+                "│ Feed kosong atau tidak bisa dibaca.\n" +
                 "╰──────────❀"
             )
         }
@@ -76,8 +76,8 @@ async function handler(m, { sock }) {
         const items = feed.items.slice(0, 8)
 
         let text = "╭──「 " + feedTitle + " 」\n"
-        text += "├── " + items.length + " artikel terbaru\n"
-        text += "├──\n"
+        text += "" + items.length + " artikel terbaru\n"
+        text += "│\n"
 
         items.forEach((item, i) => {
             const title = item.title || "No title"
@@ -86,10 +86,10 @@ async function handler(m, { sock }) {
             }) : ""
             const link = item.link || ""
 
-            text += "├── " + (i + 1) + ". " + title + "\n"
-            if (pubDate) text += "├── " + pubDate + "\n"
-            if (link) text += "├── " + link + "\n"
-            if (i < items.length - 1) text += "├──\n"
+            text += "" + (i + 1) + ". " + title + "\n"
+            if (pubDate) text += "" + pubDate + "\n"
+            if (link) text += "" + link + "\n"
+            if (i < items.length - 1) text += "│\n"
         })
 
         text += "╰──────────❀"
@@ -101,8 +101,8 @@ async function handler(m, { sock }) {
         await m.react("🐣")
         return m.reply(
             "╭──「 Error 」\n" +
-            "├── Gagal membaca RSS feed.\n" +
-            "├── " + (e.message || "Terjadi kesalahan") + "\n" +
+            "│ Gagal membaca RSS feed.\n" +
+            "" + (e.message || "Terjadi kesalahan") + "\n" +
             "╰──────────❀"
         )
     }

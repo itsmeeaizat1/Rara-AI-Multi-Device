@@ -158,26 +158,26 @@ async function handler(m, { sock }) {
   if (!text) {
     const helpText =
       "╭──「 SaveNow Downloader 」\n" +
-      "├── Download video/audio dari berbagai platform\n" +
-      "├── via savenow.to (4kdownload.to)\n" +
-      "├──\n" +
+      "│ Download video/audio dari berbagai platform\n" +
+      "│ via savenow.to (4kdownload.to)\n" +
+      "│\n" +
       "├──「 Format Tersedia 」\n" +
-      "├── mp3 — Audio saja\n" +
-      "├── 360 — Video 360p\n" +
-      "├── 480 — Video 480p\n" +
-      "├── 720 — Video 720p\n" +
-      "├── 1080 — Video 1080p\n" +
-      "├──\n" +
+      "│ mp3 — Audio saja\n" +
+      "│ 360 — Video 360p\n" +
+      "│ 480 — Video 480p\n" +
+      "│ 720 — Video 720p\n" +
+      "│ 1080 — Video 1080p\n" +
+      "│\n" +
       "├──「 Platform Support 」\n" +
-      "├── YouTube, Instagram, TikTok\n" +
-      "├── Facebook, Twitter/X, Pinterest\n" +
-      "├── Threads, Reddit, Dailymotion\n" +
-      "├──\n" +
-      '├── 📌 Contoh:\n' +
-      `├── ${m.prefix}savenow https://youtu.be/xxx\n` +
-      `├── ${m.prefix}savenow https://youtu.be/xxx mp3\n` +
-      `├── ${m.prefix}savenow https://youtu.be/xxx 720\n` +
-      `├── ${m.prefix}sn https://ig reel/xxx 1080\n` +
+      "│ YouTube, Instagram, TikTok\n" +
+      "│ Facebook, Twitter/X, Pinterest\n" +
+      "│ Threads, Reddit, Dailymotion\n" +
+      "│\n" +
+      '│ 📌 Contoh:\n' +
+      `│ ${m.prefix}savenow https://youtu.be/xxx\n` +
+      `│ ${m.prefix}savenow https://youtu.be/xxx mp3\n` +
+      `│ ${m.prefix}savenow https://youtu.be/xxx 720\n` +
+      `│ ${m.prefix}sn https://ig reel/xxx 1080\n` +
       "╰──────────❀";
     return m.reply(helpText);
   }
@@ -210,9 +210,9 @@ async function handler(m, { sock }) {
     // Kirim info sedang diproses
     let progressMsg = await m.reply(
       "╭──「 " + platformIcon + " SaveNow 」\n" +
-      "├── " + FORMAT_LABELS[format] + "\n" +
-      "├── " + (request.title || "Tanpa Judul").slice(0, 60) + "\n" +
-      "├── ⏳ Sedang diproses server...\n" +
+      "" + FORMAT_LABELS[format] + "\n" +
+      "" + (request.title || "Tanpa Judul").slice(0, 60) + "\n" +
+      "│ ⏳ Sedang diproses server...\n" +
       "╰──────────❀"
     );
 
@@ -234,9 +234,9 @@ async function handler(m, { sock }) {
       if (dlErr?.code === "ERR_BAD_RESPONSE" || String(dlErr).includes("maxContentLength")) {
         return m.reply(
           "╭──「 " + platformIcon + " SaveNow 」\n" +
-          "├── File terlalu besar untuk dikirim langsung\n" +
-          "├── Download manual:\n" +
-          "├── " + result.download_url + "\n" +
+          "│ File terlalu besar untuk dikirim langsung\n" +
+          "│ Download manual:\n" +
+          "" + result.download_url + "\n" +
           "╰──────────❀"
         );
       }
@@ -269,8 +269,8 @@ async function handler(m, { sock }) {
           video: buffer,
           caption:
             "╭──「 " + platformIcon + " SaveNow 」\n" +
-            "├── " + FORMAT_LABELS[format] + "\n" +
-            "├── " + (result.title || "Tanpa Judul").slice(0, 60) + "\n" +
+            "" + FORMAT_LABELS[format] + "\n" +
+            "" + (result.title || "Tanpa Judul").slice(0, 60) + "\n" +
             "╰──────────❀",
           contextInfo: ctxInfo,
         },

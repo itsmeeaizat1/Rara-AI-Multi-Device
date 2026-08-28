@@ -31,16 +31,16 @@ async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
     let help = "╭──「 🎙️ VoiceMaker TTS 」\n";
-    help += "├── 📌 *Cara Pakai:*\n";
-    help += `├── \`${m.prefix}voicemaker <teks>\` — Default (Ardi)\n`;
-    help += `├── \`${m.prefix}voicemaker <voice>|<teks>\` — Pilih voice\n`;
-    help += "├──\n";
-    help += "├── *Voice tersedia:*\n";
+    help += "│ 📌 *Cara Pakai:*\n";
+    help += `│ \`${m.prefix}voicemaker <teks>\` — Default (Ardi)\n`;
+    help += `│ \`${m.prefix}voicemaker <voice>|<teks>\` — Pilih voice\n`;
+    help += "│\n";
+    help += "│ *Voice tersedia:*\n";
     for (const v of VOICES) {
-      help += `├── • ${v.id} — ${v.name}\n`;
+      help += `│ • ${v.id} — ${v.name}\n`;
     }
-    help += "├──\n";
-    help += `├── 💡 *Contoh:* \`${m.prefix}voicemaker Halo semuanya\`\n`;
+    help += "│\n";
+    help += `│ 💡 *Contoh:* \`${m.prefix}voicemaker Halo semuanya\`\n`;
     help += "╰──────────❀";
     return m.reply(help, "voicemaker");
   }
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
   }
 
   if (!ttsText || ttsText.length > 500) {
-    return m.reply("╭──「 🎙️ VoiceMaker 」\n├── ❌ Teks kosong atau terlalu panjang\n├── Maksimal 500 karakter\n╰──────────❀", "voicemaker");
+    return m.reply("╭──「 🎙️ VoiceMaker 」\n│ ❌ Teks kosong atau terlalu panjang\n│ Maksimal 500 karakter\n╰──────────❀", "voicemaker");
   }
 
   await m.react("🕒");
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
 
     const buf = Buffer.from(res.data);
     if (buf.length < 100) {
-      return m.reply("╭──「 🎙️ VoiceMaker 」\n├── ❌ Gagal generate voice\n├── Coba lagi nanti\n╰──────────❀", "voicemaker");
+      return m.reply("╭──「 🎙️ VoiceMaker 」\n│ ❌ Gagal generate voice\n│ Coba lagi nanti\n╰──────────❀", "voicemaker");
     }
 
     await sock.sendMessage(

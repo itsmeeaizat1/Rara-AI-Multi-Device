@@ -32,9 +32,9 @@ async function handler(m, { sock }) {
 
   if (!username) {
     return m.reply(`╭──「 🐦 Twitter/X Stalker 」
-├── Masukkan username Twitter/X
-├──
-├── 💡 *Contoh:* \`${m.prefix}twitterstalk elonmusk\`
+│ Masukkan username Twitter/X
+│
+│ 💡 *Contoh:* \`${m.prefix}twitterstalk elonmusk\`
 ╰──────────❀`, "twitterstalk");
   }
 
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data) {
-      return m.reply(`╭──「 🐦 Twitter/X Stalker 」\n├── ❌ Akun @${username} tidak ditemukan\n╰──────────❀`, "twitterstalk");
+      return m.reply(`╭──「 🐦 Twitter/X Stalker 」\n│ ❌ Akun @${username} tidak ditemukan\n╰──────────❀`, "twitterstalk");
     }
 
     const d = res.data.data;

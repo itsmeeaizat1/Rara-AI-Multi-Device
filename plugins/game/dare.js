@@ -41,19 +41,19 @@ export async function handler(m, { sock }) {
   try {
     const dare = getRandomDare();
     if (!dare) {
-      await m.reply("╭──「 🔥 Dare 」\n├── ❌ Data tidak tersedia\n├── Coba lagi nanti ya\n╰──────────❀");
+      await m.reply("╭──「 🔥 Dare 」\n│ ❌ Data tidak tersedia\n│ Coba lagi nanti ya\n╰──────────❀");
       return;
     }
 
     const text = [
       "╭──「 🔥 *Truth or Dare* 」",
       "│",
-      "├── *Mode:* DARE 🔥",
-      "├──",
+      "│ *Mode:* DARE 🔥",
+      "│ ",
       "│ ```" + dare + "```",
-      "├──",
-      "├── 💡 Berani lakuin?",
-      "├── Atau ketik .truth buat ganti ke pertanyaan",
+      "│ ",
+      "│ 💡 Berani lakuin?",
+      "│ Atau ketik .truth buat ganti ke pertanyaan",
       "╰──────────❀",
     ].join("\n");
 
@@ -63,7 +63,7 @@ export async function handler(m, { sock }) {
     console.error("[dare] Error:", e.message);
     try {
       await m.react("❌");
-      await m.reply("╭──「 🔥 Dare 」\n├── ❌ Terjadi error\n├── Coba lagi nanti ya\n╰──────────❀");
+      await m.reply("╭──「 🔥 Dare 」\n│ ❌ Terjadi error\n│ Coba lagi nanti ya\n╰──────────❀");
     } catch {}
   }
 }

@@ -45,11 +45,11 @@ async function handler(m, { sock }) {
   const role = getRole(level);
 
   let txt = "╭──「 ⭐ EXP Info 」\n";
-  txt += "├──\n";
-  txt += "├── 👤 User: *" + targetName + "*\n";
-  txt += "├── ⭐ Exp: *" + formatNumber(exp) + "*\n";
-  txt += "├── 🏆 Level: *" + level + "*\n";
-  txt += "├── 🎖️ Role: " + role + "\n";
+  txt += "│\n";
+  txt += "│ 👤 User: *" + targetName + "*\n";
+  txt += "│ ⭐ Exp: *" + formatNumber(exp) + "*\n";
+  txt += "│ 🏆 Level: *" + level + "*\n";
+  txt += "│ 🎖️ Role: " + role + "\n";
   txt += "╰──────────❀";
 
   await m.reply(txt, { mentions: [targetJid] });

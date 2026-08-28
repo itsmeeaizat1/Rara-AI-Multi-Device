@@ -23,10 +23,10 @@ async function handler(m, { sock }) {
         
         await sock.sendMessage(m.chat, {
             image: { url: data.url },
-            caption: '╭──「 Random Meme 」\n├── ' + data.title + '\n├── r/' + data.subreddit + ' — u/' + data.author + '\n╰──────────❀'
+            caption: '╭──「 Random Meme 」\n│ ' + data.title + '\n│ r/' + data.subreddit + ' — u/' + data.author + '\n╰──────────❀'
         }, { quoted: m })
     } catch (e) {
-        await m.reply('╭──「 Error 」\n├── Gagal mengambil meme: ' + (e.message || e) + '\n╰──────────❀')
+        await m.reply('╭──「 Error 」\n│ Gagal mengambil meme: ' + (e.message || e) + '\n╰──────────❀')
     }
 }
 

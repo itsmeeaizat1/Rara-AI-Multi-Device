@@ -25,13 +25,13 @@ async function handler(m, { sock }) {
         if (!query) {
             return m.reply(
                 "╭──「 YouTube v2 」\n" +
-                "├── Search video YouTube via Innertube\n" +
-                "├──\n" +
-                "├── 📌 *Cara Pakai:*\n" +
-                "├── " + pluginConfig.usage + "\n" +
-                "├──\n" +
-                "├── 💡 *Contoh:*\n" +
-                "├── " + pluginConfig.example + "\n" +
+                "│ Search video YouTube via Innertube\n" +
+                "│\n" +
+                "│ 📌 *Cara Pakai:*\n" +
+                "" + pluginConfig.usage + "\n" +
+                "│\n" +
+                "│ 💡 *Contoh:*\n" +
+                "" + pluginConfig.example + "\n" +
                 "╰──────────❀"
             )
         }
@@ -49,14 +49,14 @@ async function handler(m, { sock }) {
             await m.react("🐣")
             return m.reply(
                 "╭──「 YouTube v2 」\n" +
-                "├── Tidak ada hasil untuk \"" + query + "\"\n" +
+                "│ Tidak ada hasil untuk \"" + query + "\"\n" +
                 "╰──────────❀"
             )
         }
 
         let text = "╭──「 YouTube Search 」\n"
-        text += "├── Query: " + query + "\n"
-        text += "├──\n"
+        text += "│ Query: " + query + "\n"
+        text += "│\n"
 
         for (let i = 0; i < videos.length; i++) {
             const v = videos[i]
@@ -66,10 +66,10 @@ async function handler(m, { sock }) {
             const views = v.view_count?.text || v.short_view_count?.text || "?"
             const id = v.id || v.video_id || ""
 
-            text += "├── " + (i + 1) + ". " + title + "\n"
-            text += "├── " + channel + " | " + duration + " | " + views + "\n"
-            if (id) text += "├── https://youtube.com/watch?v=" + id + "\n"
-            if (i < videos.length - 1) text += "├──\n"
+            text += "" + (i + 1) + ". " + title + "\n"
+            text += "" + channel + " | " + duration + " | " + views + "\n"
+            if (id) text += "│ https://youtube.com/watch?v=" + id + "\n"
+            if (i < videos.length - 1) text += "│\n"
         }
 
         text += "╰──────────❀"
@@ -97,8 +97,8 @@ async function handler(m, { sock }) {
         await m.react("🐣")
         return m.reply(
             "╭──「 Error 」\n" +
-            "├── Gagal mencari video YouTube.\n" +
-            "├── " + (e.message || "Terjadi kesalahan") + "\n" +
+            "│ Gagal mencari video YouTube.\n" +
+            "" + (e.message || "Terjadi kesalahan") + "\n" +
             "╰──────────❀"
         )
     }

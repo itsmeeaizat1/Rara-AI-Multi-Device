@@ -39,21 +39,21 @@ async function handler(m, { text, args }) {
 
             let lines = [];
             lines.push("╭──「 Daftar Surat Al-Quran 」");
-            lines.push("├── Total: 114 Surat");
-            lines.push("├──");
+            lines.push("│ Total: 114 Surat");
+            lines.push("│ ");
 
             const limit = Math.min(surahs.length, 10);
             for (let i = 0; i < limit; i++) {
                 const s = surahs[i];
-                lines.push(`├── ${s.nomor}. ${s.namaLatin} (${s.arti}) - ${s.jumlahAyat} ayat`);
+                lines.push(`│ ${s.nomor}. ${s.namaLatin} (${s.arti}) - ${s.jumlahAyat} ayat`);
             }
 
-            lines.push("├──");
-            lines.push(`├── ... dan ${surahs.length - limit} surat lainnya.`);
-            lines.push("├──");
-            lines.push("├── 💡 *Cara Pakai:*");
-            lines.push("├── Ketik .quranv4 <nomor_surat> untuk membaca.");
-            lines.push("├── Contoh: .quranv4 1");
+            lines.push("│ ");
+            lines.push(`│ ... dan ${surahs.length - limit} surat lainnya.`);
+            lines.push("│ ");
+            lines.push("│ 💡 *Cara Pakai:*");
+            lines.push("│ Ketik .quranv4 <nomor_surat> untuk membaca.");
+            lines.push("│ Contoh: .quranv4 1");
             lines.push("╰──────────❀");
 
             return await m.reply(lines.join("\n"));
@@ -63,7 +63,7 @@ async function handler(m, { text, args }) {
         if (isNaN(surahNum) || surahNum < 1 || surahNum > 114) {
             return await m.reply(
                 "╭──「 Error 」\n" +
-                "├── Nomor surat tidak valid! Harap masukkan nomor 1 sampai 114.\n" +
+                "│ Nomor surat tidak valid! Harap masukkan nomor 1 sampai 114.\n" +
                 "╰──────────❀"
             );
         }
@@ -77,24 +77,24 @@ async function handler(m, { text, args }) {
 
         let lines = [];
         lines.push(`╭──「 Surat ${surah.namaLatin} (${surah.arti}) 」`);
-        lines.push(`├── ${surah.jumlahAyat} ayat | ${surah.tempatTurun}`);
-        lines.push("├──");
+        lines.push(`│ ${surah.jumlahAyat} ayat | ${surah.tempatTurun}`);
+        lines.push("│ ");
 
         const ayatList = surah.ayat;
         const maxAyat = Math.min(ayatList.length, 20);
 
         for (let i = 0; i < maxAyat; i++) {
             const a = ayatList[i];
-            lines.push(`├── ${a.nomorAyat}. ${a.teksArab}`);
-            lines.push(`├── ${a.teksIndonesia}`);
-            lines.push("├──");
+            lines.push(`│ ${a.nomorAyat}. ${a.teksArab}`);
+            lines.push(`│ ${a.teksIndonesia}`);
+            lines.push("│ ");
         }
 
         if (ayatList.length > 20) {
-            lines.push(`├── 📌 *Catatan:* Menampilkan 20 dari ${surah.jumlahAyat} ayat.`);
+            lines.push(`│ 📌 *Catatan:* Menampilkan 20 dari ${surah.jumlahAyat} ayat.`);
         } else {
             // Hapus baris pemisah kosong terakhir jika tidak dipotong
-            if (lines[lines.length - 1] === "├──") {
+            if (lines[lines.length - 1] === "│ ") {
                 lines.pop();
             }
         }
@@ -105,7 +105,7 @@ async function handler(m, { text, args }) {
     } catch (error) {
         return await m.reply(
             "╭──「 Error 」\n" +
-            `├── ${error.message || "Gagal memproses permintaan Al-Quran."}\n` +
+            `│ ${error.message || "Gagal memproses permintaan Al-Quran."}\n` +
             "╰──────────❀"
         );
     }

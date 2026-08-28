@@ -37,23 +37,23 @@ async function handler(m, { sock }) {
     const jeda = db.setting("jedaBcpc") || 5000;
     return m.reply(
       "╭──「 📢 Broadcast Private 」\n" +
-      "├──\n" +
-      "├── 📋 Broadcast pesan + media ke semua kontak PC\n" +
-      "├── ⏱️ Jeda: " + jeda + "ms\n" +
-      "├──\n" +
-      "├── 📌 *Cara Pakai:*\n" +
-      "├── Kirim teks/foto/video, lalu reply dengan `" + m.prefix + "bcpc`\n" +
-      "├──\n" +
-      "├── 💡 *Contoh:*\n" +
-      "├── `" + m.prefix + "bcpc Info: bot update besok`\n" +
-      "├── `" + m.prefix + "stopbcpc` — Hentikan broadcast\n" +
-      "├── `" + m.prefix + "bcpcjeda 5s` — Atur jeda\n" +
+      "│\n" +
+      "│ 📋 Broadcast pesan + media ke semua kontak PC\n" +
+      "│ ⏱️ Jeda: " + jeda + "ms\n" +
+      "│\n" +
+      "│ 📌 *Cara Pakai:*\n" +
+      "│ Kirim teks/foto/video, lalu reply dengan `" + m.prefix + "bcpc`\n" +
+      "│\n" +
+      "│ 💡 *Contoh:*\n" +
+      "│ `" + m.prefix + "bcpc Info: bot update besok`\n" +
+      "│ `" + m.prefix + "stopbcpc` — Hentikan broadcast\n" +
+      "│ `" + m.prefix + "bcpcjeda 5s` — Atur jeda\n" +
       "╰──────────❀"
     );
   }
 
   if (global.statusBcpc) {
-    return m.reply("╭──「 📢 Broadcast Private 」\n├──\n├── 🔄 Sedang berjalan\n├── ⏹️ Ketik `" + m.prefix + "stopbcpc` untuk hentikan\n╰──────────❀");
+    return m.reply("╭──「 📢 Broadcast Private 」\n│\n│ 🔄 Sedang berjalan\n│ ⏹️ Ketik `" + m.prefix + "stopbcpc` untuk hentikan\n╰──────────❀");
   }
 
   try {
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
     }
 
     if (privateJids.size === 0) {
-      return m.reply("╭──「 📢 Broadcast Private 」\n├──\n├── ❌ Tidak ada kontak ditemukan\n├── Pastikan bot sudah pernah menerima pesan dari kontak tersebut\n╰──────────❀");
+      return m.reply("╭──「 📢 Broadcast Private 」\n│\n│ ❌ Tidak ada kontak ditemukan\n│ Pastikan bot sudah pernah menerima pesan dari kontak tersebut\n╰──────────❀");
     }
 
     const filtered = [...privateJids];
@@ -123,15 +123,15 @@ async function handler(m, { sock }) {
       {
         text:
           "╭──「 📢 Broadcast Private Dimulai 」\n" +
-          "├──\n" +
-          "├── 📝 Pesan: " + input.substring(0, 50) + (input.length > 50 ? "..." : "") + "\n" +
-          "├── 🎬 Media: " + (mediaBuffer ? mediaType : "Tidak ada") + "\n" +
-          "├── 🎯 Target: " + filtered.length + " kontak\n" +
-          "├── ⏱️ Jeda: " + jeda + "ms\n" +
-          "├── 📊 Estimasi: " + Math.ceil((filtered.length * jeda) / 60000) + " menit\n" +
-          "├──\n" +
-          "├── 🔄 Sedang mengirim ke semua kontak...\n" +
-          "├── ⏹️ Hentikan: `" + m.prefix + "stopbcpc`\n" +
+          "│\n" +
+          "│ 📝 Pesan: " + input.substring(0, 50) + (input.length > 50 ? "..." : "") + "\n" +
+          "│ 🎬 Media: " + (mediaBuffer ? mediaType : "Tidak ada") + "\n" +
+          "│ 🎯 Target: " + filtered.length + " kontak\n" +
+          "│ ⏱️ Jeda: " + jeda + "ms\n" +
+          "│ 📊 Estimasi: " + Math.ceil((filtered.length * jeda) / 60000) + " menit\n" +
+          "│\n" +
+          "│ 🔄 Sedang mengirim ke semua kontak...\n" +
+          "│ ⏹️ Hentikan: `" + m.prefix + "stopbcpc`\n" +
           "╰──────────❀",
         contextInfo: ctx,
       },
@@ -184,13 +184,13 @@ async function handler(m, { sock }) {
       {
         text:
           "╭──「 📢 Broadcast Private Selesai 」\n" +
-          "├──\n" +
-          "├── ✅ Berhasil: " + success + "\n" +
-          "├── ❌ Gagal: " + failed + "\n" +
-          "├── 📊 Total: " + filtered.length + " kontak\n" +
-          "├── 📈 Sukses Rate: " + Math.round((success / filtered.length) * 100) + "%\n" +
-          "├──\n" +
-          "├── 🏷️ " + (config.bot?.name || "Nova AI") + "\n" +
+          "│\n" +
+          "│ ✅ Berhasil: " + success + "\n" +
+          "│ ❌ Gagal: " + failed + "\n" +
+          "│ 📊 Total: " + filtered.length + " kontak\n" +
+          "│ 📈 Sukses Rate: " + Math.round((success / filtered.length) * 100) + "%\n" +
+          "│\n" +
+          "│ 🏷️ " + (config.bot?.name || "Nova AI") + "\n" +
           "╰──────────❀",
         contextInfo: ctx,
       },
@@ -198,7 +198,7 @@ async function handler(m, { sock }) {
     );
   } catch (e) {
     delete global.statusBcpc;
-    m.reply("╭──「 📢 Broadcast Private — Error 」\n├──\n├── ❌ Gagal: " + e.message + "\n╰──────────❀");
+    m.reply("╭──「 📢 Broadcast Private — Error 」\n│\n│ ❌ Gagal: " + e.message + "\n╰──────────❀");
   }
 }
 

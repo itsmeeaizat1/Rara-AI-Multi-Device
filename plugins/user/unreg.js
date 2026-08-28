@@ -54,16 +54,16 @@ async function handler(m, { sock }) {
   await m.react("🐣");
 
   let txt = "╭──「 ❌ Batal Daftar 」\n";
-  txt += "├──\n";
-  txt += "├── ✅ Data pendaftaran berhasil dihapus\n";
-  txt += "├──\n";
+  txt += "│\n";
+  txt += "│ ✅ Data pendaftaran berhasil dihapus\n";
+  txt += "│\n";
   txt += "├──「 *Data Dihapus* 」\n";
-  txt += "├── 📛 Nama: " + prevName + "\n";
-  txt += "├── 🔑 SN: " + prevSerial + "\n";
-  txt += "├── 📅 Batal pada: " + new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) + " WIB\n";
-  txt += "├──\n";
-  txt += "├── 💡 Daftar ulang kapan saja dengan `.daftar`\n";
-  txt += "├── ⚠️ Reward daftar tidak bisa diklaim ulang\n";
+  txt += "│ 📛 Nama: " + prevName + "\n";
+  txt += "│ 🔑 SN: " + prevSerial + "\n";
+  txt += "│ 📅 Batal pada: " + new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) + " WIB\n";
+  txt += "│\n";
+  txt += "│ 💡 Daftar ulang kapan saja dengan `.daftar`\n";
+  txt += "│ ⚠️ Reward daftar tidak bisa diklaim ulang\n";
   txt += "╰──────────❀";
 
   await sock.sendMessage(m.chat, { text: txt }, { quoted: m });

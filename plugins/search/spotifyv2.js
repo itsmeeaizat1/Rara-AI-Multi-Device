@@ -25,13 +25,13 @@ async function handler(m, { sock }) {
         if (!url || !url.includes("spotify.com")) {
             return m.reply(
                 "╭──「 Spotify v2 」\n" +
-                "├── Info detail track dari URL Spotify\n" +
-                "├──\n" +
-                "├── 📌 *Cara Pakai:*\n" +
-                "├── " + pluginConfig.usage + "\n" +
-                "├──\n" +
-                "├── 💡 *Contoh:*\n" +
-                "├── " + pluginConfig.example + "\n" +
+                "│ Info detail track dari URL Spotify\n" +
+                "│\n" +
+                "│ 📌 *Cara Pakai:*\n" +
+                "" + pluginConfig.usage + "\n" +
+                "│\n" +
+                "│ 💡 *Contoh:*\n" +
+                "" + pluginConfig.example + "\n" +
                 "╰──────────❀"
             )
         }
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
             await m.react("🐣")
             return m.reply(
                 "╭──「 Spotify v2 」\n" +
-                "├── Gagal mengambil info track.\n" +
+                "│ Gagal mengambil info track.\n" +
                 "╰──────────❀"
             )
         }
@@ -64,16 +64,16 @@ async function handler(m, { sock }) {
 
         let text =
             "╭──「 Spotify Track 」\n" +
-            "├── " + name + "\n" +
-            "├── by " + artists + "\n" +
-            "├──\n" +
-            "├── Album: " + album + "\n" +
-            "├── Rilis: " + releaseDate + "\n" +
-            "├── Durasi: " + durStr + "\n" +
-            "├── Popularitas: " + popularity + "\n"
+            "" + name + "\n" +
+            "│ by " + artists + "\n" +
+            "│\n" +
+            "│ Album: " + album + "\n" +
+            "│ Rilis: " + releaseDate + "\n" +
+            "│ Durasi: " + durStr + "\n" +
+            "│ Popularitas: " + popularity + "\n"
 
         if (track.external_urls?.spotify) {
-            text += "├── URL: " + track.external_urls.spotify + "\n"
+            text += "│ URL: " + track.external_urls.spotify + "\n"
         }
 
         text += "╰──────────❀"
@@ -99,8 +99,8 @@ async function handler(m, { sock }) {
         await m.react("🐣")
         return m.reply(
             "╭──「 Error 」\n" +
-            "├── Gagal mengambil info Spotify.\n" +
-            "├── " + (e.message || "Terjadi kesalahan") + "\n" +
+            "│ Gagal mengambil info Spotify.\n" +
+            "" + (e.message || "Terjadi kesalahan") + "\n" +
             "╰──────────❀"
         )
     }

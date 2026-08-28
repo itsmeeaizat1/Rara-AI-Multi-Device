@@ -46,19 +46,19 @@ async function handler(m, { sock }) {
   if (!input) {
     return m.reply(
       "╭──「 ⏱️ Jeda Broadcast Private 」\n" +
-      "├──\n" +
-      "├── ⏱️ Jeda saat ini: " + formatDelay(current) + " (" + current + "ms)\n" +
-      "├──\n" +
-      "├── 📌 *Cara Pakai:*\n" +
-      "├── `" + m.prefix + "bcpcjeda <angka><satuan>`\n" +
-      "├──\n" +
-      "├── 💡 *Satuan:*\n" +
-      "├── s — detik | m — menit | h — jam | d — hari\n" +
-      "├──\n" +
-      "├── 💡 *Contoh:*\n" +
-      "├── `" + m.prefix + "bcpcjeda 5s` → 5 detik\n" +
-      "├── `" + m.prefix + "bcpcjeda 2m` → 2 menit\n" +
-      "├── `" + m.prefix + "bcpcjeda 1h` → 1 jam\n" +
+      "│\n" +
+      "│ ⏱️ Jeda saat ini: " + formatDelay(current) + " (" + current + "ms)\n" +
+      "│\n" +
+      "│ 📌 *Cara Pakai:*\n" +
+      "│ `" + m.prefix + "bcpcjeda <angka><satuan>`\n" +
+      "│\n" +
+      "│ 💡 *Satuan:*\n" +
+      "│ s — detik | m — menit | h — jam | d — hari\n" +
+      "│\n" +
+      "│ 💡 *Contoh:*\n" +
+      "│ `" + m.prefix + "bcpcjeda 5s` → 5 detik\n" +
+      "│ `" + m.prefix + "bcpcjeda 2m` → 2 menit\n" +
+      "│ `" + m.prefix + "bcpcjeda 1h` → 1 jam\n" +
       "╰──────────❀"
     )
   }
@@ -67,9 +67,9 @@ async function handler(m, { sock }) {
   if (!ms || ms < 1000) {
     return m.reply(
       "╭──「 ⏱️ Jeda Broadcast Private 」\n" +
-      "├──\n" +
-      "├── ❌ Format salah\n" +
-      "├── 💡 Contoh: `5s`, `2m`, `1h`, `1d`\n" +
+      "│\n" +
+      "│ ❌ Format salah\n" +
+      "│ 💡 Contoh: `5s`, `2m`, `1h`, `1d`\n" +
       "╰──────────❀"
     )
   }
@@ -79,12 +79,12 @@ async function handler(m, { sock }) {
 
   return m.reply(
     "╭──「 ⏱️ Jeda Broadcast Private 」\n" +
-    "├──\n" +
-    "├── ✅ Jeda berhasil diubah\n" +
-    "├── 📌 Sebelumnya: " + formatDelay(prev) + "\n" +
-    "├── 📌 Sekarang: " + formatDelay(ms) + "\n" +
-    "├──\n" +
-    "├── 📊 Estimasi 100 kontak: " + Math.ceil((100 * ms) / 60000) + " menit\n" +
+    "│\n" +
+    "│ ✅ Jeda berhasil diubah\n" +
+    "│ 📌 Sebelumnya: " + formatDelay(prev) + "\n" +
+    "│ 📌 Sekarang: " + formatDelay(ms) + "\n" +
+    "│\n" +
+    "│ 📊 Estimasi 100 kontak: " + Math.ceil((100 * ms) / 60000) + " menit\n" +
     "╰──────────❀"
   )
 }

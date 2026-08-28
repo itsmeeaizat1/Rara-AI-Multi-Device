@@ -60,9 +60,9 @@ ${prefix}aihelp group
     if (matches.length === 0) {
       await m.reply(`╭──「 *Aɪ Hᴇʟᴘ* 」
 │
-├── ❌ Tidak ada command untuk "${keyword}"
-├── 💡 Coba keyword lain ya!
-├── Contoh: download, sticker, game, rpg
+│ ❌ Tidak ada command untuk "${keyword}"
+│ 💡 Coba keyword lain ya!
+│ Contoh: download, sticker, game, rpg
 ╰──────────❀`);
       await m.react("❌");
       return;
@@ -83,7 +83,7 @@ ${cmdLines}╰──────────❀`;
     await m.react("🐣");
   } catch (e) {
     console.error("[aihelp] handler error:", e.message);
-    try { await m.reply("╭──「 AI Help 」\n├── ❌ Terjadi error\n├── Coba lagi nanti ya\n╰──────────❀"); } catch {}
+    try { await m.reply("╭──「 AI Help 」\n│ ❌ Terjadi error\n│ Coba lagi nanti ya\n╰──────────❀"); } catch {}
     await m.react("❌");
   }
 }

@@ -56,7 +56,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       "├─────────────────────",
       "│",
       "│  ┌─────────────────┐",
-      "│  │ " + pesan,
+      "│  " + pesan,
       "│  └─────────────────┘",
       "│              " + jam + " " + tick,
       "│",

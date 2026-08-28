@@ -340,12 +340,12 @@ async function showMenu(m, sock) {
   try { thumb = fs.readFileSync(thumbPath) } catch { thumb = Buffer.alloc(0) }
 
   const text = `╭──「 *${toSC('Leaderboard')}* 」
-├── ${toSC('Pilih jenis leaderboard')}:
+│ ${toSC('Pilih jenis leaderboard')}:
 │
-├── 🎮 *${toSC('RPG')}*
+│ 🎮 *${toSC('RPG')}*
 │   ${toSC('Koin, EXP, Energi, Cinta — global semua user')}
 │
-├── 👥 *${toSC('Group')}*
+│ 👥 *${toSC('Group')}*
 │   ${toSC('Aktivitas member grup minggu ini')}
 │
 ╰──❀

@@ -49,9 +49,9 @@ async function handler(m, { sock }) {
     if (!featureName) {
         const unlockedFeatures = user.unlockedFeatures || []
         
-        let text = `╭━━━━━━━━━━━━━━━━━╮\n`
+        let text = `╭──「 🛒 Buy Fitur 」\n`
         text += `│  🛒 *ʙᴜʏ ꜰɪᴛᴜʀ*\n`
-        text += `╰━━━━━━━━━━━━━━━━━╯\n\n`
+        text += `╰──────────❀\n\n`
         
         text += `Harga: *${formatNumber(PRICE_PER_FEATURE)}* bal/fitur\n`
         text += `Koin: *${formatNumber(user.koin || 0)}*\n\n`
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
             text += `│ ${status} *${feature.name}*\n`
             text += `│    _${feature.desc}_\n`
             text += `│    ID: \`${feature.id}\`\n`
-            text += `┃\n`
+            text += `│\n`
         }
         
         text += `╰┈┈┈┈┈┈┈┈⬡\n\n`

@@ -46,18 +46,18 @@ async function handler(m, { sock }) {
   const isPremium = user.isPremium;
 
   let txt = "╭──「 💰 Koin Info 」\n";
-  txt += "├──\n";
-  txt += "├── 👤 User: *" + targetName + "*\n";
-  txt += "├── 💰 Koin: *" + formatKoin(user.koin || 0) + "*\n";
-  txt += "├── 💎 Status: " + (isOwner ? "Owner" : isPremium ? "Premium" : "Free") + "\n";
+  txt += "│\n";
+  txt += "│ 👤 User: *" + targetName + "*\n";
+  txt += "│ 💰 Koin: *" + formatKoin(user.koin || 0) + "*\n";
+  txt += "│ 💎 Status: " + (isOwner ? "Owner" : isPremium ? "Premium" : "Free") + "\n";
 
   if (isSelf && !isOwner) {
-    txt += "├──\n";
+    txt += "│\n";
     txt += "├──「 *Shop* 」\n";
-    txt += "├── `.buyenergi <jml>` (1 = 100 koin)\n";
-    txt += "├── `.buyfitur` (1 = 3000 koin)\n";
-    txt += "├──\n";
-    txt += "├── 🎮 Main game untuk dapat koin!\n";
+    txt += "│ `.buyenergi <jml>` (1 = 100 koin)\n";
+    txt += "│ `.buyfitur` (1 = 3000 koin)\n";
+    txt += "│\n";
+    txt += "│ 🎮 Main game untuk dapat koin!\n";
   }
   txt += "╰──────────❀";
 
