@@ -29,6 +29,7 @@ import { initAutoBirthday } from "./lib/nova-auto-birthday.js";
 import { initHealthCheck } from "./lib/nova-auto-api-health.js";
 import { initReengage } from "./lib/nova-auto-reengage.js";
 import { initRefill } from "./lib/nova-auto-refill.js";
+import { initRenewalReminder } from "./lib/nova-auto-renewal.js";
 import { getAuthKey, verifyAuth, getOwnerContact } from "./lib/auth/auth.js";
 import { trackMessage as pulseTrack } from "../plugins/future/autopulse.js";
 const groupCache = new NodeCache({ stdTTL: 5 * 60, useClones: false });
@@ -678,6 +679,11 @@ async function startConnection(options = {}) {
       }
       try {
         initRefill(sock);
+      try {
+        initRenewalReminder(sock);
+      } catch (e) {
+        colors.logger.debug("renewal", "skipped: " + e.message);
+      }
       } catch (e) {
         colors.logger.debug("refill", "skipped: " + e.message);
       }
