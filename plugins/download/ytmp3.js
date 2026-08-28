@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ytmp3",
   alias: ["ytmp3"],
@@ -46,6 +46,22 @@ async function handler(m, { sock }) {
   try {
     const result = await getAudioDownload(url);
 
+    // Ambil metadata YouTube via oEmbed
+    let ytMeta = {};
+    try {
+      const { data: oe } = await axios.get(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`, { timeout: 8000 });
+      ytMeta = { author: oe?.author_name, thumbnail: oe?.thumbnail_url };
+    } catch {}
+
+    const caption = mediaCaption({
+      platformIcon: "▶️",
+      platformName: "YouTube",
+      title: result.title || "YouTube Audio",
+      author: ytMeta.author || null,
+      format: "🎵 MP3",
+      method: result.isFallback ? "ytdl" : "Nexray",
+    });
+
     if (result.isFallback) {
       const mp3Buffer = await fallbackToMp3Buffer(result.download);
       await sock.sendMessage(
@@ -55,6 +71,7 @@ async function handler(m, { sock }) {
           mimetype: "audio/mpeg",
           ptt: false,
           fileName: `${result.title || "audio"}.mp3`,
+          contextInfo: { externalAdReply: { title: result.title || "YouTube MP3", body: "Nova AI Downloader", thumbnailUrl: ytMeta.thumbnail, sourceUrl: url } },
         },
         { quoted: m },
       );
@@ -66,6 +83,8 @@ async function handler(m, { sock }) {
         fileName: result.title || "audio.mp3",
       });
     }
+    // Kirim caption setelah audio
+    await m.reply(caption);
     m.react("🐣");
   } catch (err) {
     console.error("[YTMP4]", err);

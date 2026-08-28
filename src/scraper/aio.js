@@ -25,6 +25,36 @@ function detectPlatform(url) {
   return null;
 }
 
+// Format numbers (e.g. 1234567 → 1.2M)
+function fmt(n) {
+  if (!n || isNaN(n)) return null;
+  n = Number(n);
+  if (n >= 1e9) return (n / 1e9).toFixed(1) + "B";
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + "M";
+  if (n >= 1e3) return (n / 1e3).toFixed(1) + "K";
+  return String(n);
+}
+
+// Format duration from seconds
+function fmtDur(s) {
+  if (!s || s <= 0) return null;
+  s = Math.floor(s);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2, "0")}:${String(sec).padStart(2, "0")}`;
+  return `${m}:${String(sec).padStart(2, "0")}`;
+}
+
+// Format timestamp
+function fmtDate(ts) {
+  if (!ts) return null;
+  try {
+    const d = new Date(ts * 1000);
+    return d.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+  } catch { return null; }
+}
+
 async function handleInstagram(url) {
   const result = await instagramDownloader(url);
   const media = (result.media || []).map((item) => ({
@@ -35,6 +65,10 @@ async function handleInstagram(url) {
     platform: "instagram",
     title: result.title || result.username || "Instagram",
     thumbnail: result.thumbnail || null,
+    author: result.username || null,
+    likes: result.likes || null,
+    comments: result.comment || null,
+    uploadDate: result.taken_at || null,
     media,
   };
 }
@@ -43,26 +77,39 @@ async function handleYoutube(url) {
   const yt = new Youtube();
   const videoResult = await yt.download(url, "mp4");
   const audioResult = await yt.download(url, "mp3");
+  const title = videoResult?.results?.title || audioResult?.results?.title || "YouTube";
+
+  // Fetch YouTube metadata via oEmbed
+  let meta = {};
+  try {
+    const { data: oe } = await axios.get(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`, { timeout: 8000 });
+    meta = {
+      author: oe?.author_name || null,
+      thumbnail: oe?.thumbnail_url || null,
+    };
+  } catch {}
+
+  // Try to get more metadata via Innertube/noembed
+  try {
+    const { data: ne } = await axios.get(`https://noembed.com/embed?url=${encodeURIComponent(url)}`, { timeout: 8000 });
+    if (ne?.author_name) meta.author = ne.author_name;
+    if (ne?.thumbnail_url) meta.thumbnail = ne.thumbnail_url;
+    if (ne?.title) meta.title = ne.title;
+  } catch {}
+
   const media = [];
   if (videoResult?.results?.download) {
-    media.push({
-      type: "video",
-      url: videoResult.results.download,
-      quality: "mp4",
-    });
+    media.push({ type: "video", url: videoResult.results.download, quality: "mp4" });
   }
   if (audioResult?.results?.download) {
-    media.push({
-      type: "audio",
-      url: audioResult.results.download,
-      quality: "mp3",
-    });
+    media.push({ type: "audio", url: audioResult.results.download, quality: "mp3" });
   }
+
   return {
     platform: "youtube",
-    title:
-      videoResult?.results?.title || audioResult?.results?.title || "YouTube",
-    thumbnail: null,
+    title: meta.title || title,
+    thumbnail: meta.thumbnail || null,
+    author: meta.author || null,
     media,
   };
 }
@@ -93,17 +140,9 @@ async function handleTiktok(url) {
     (res.images || []).forEach((v) => media.push({ type: "image", url: v }));
   } else {
     if (res?.hdplay)
-      media.push({
-        type: "video",
-        url: "https://www.tikwm.com" + res.hdplay,
-        quality: "HD",
-      });
+      media.push({ type: "video", url: "https://www.tikwm.com" + res.hdplay, quality: "HD" });
     if (res?.play)
-      media.push({
-        type: "video",
-        url: "https://www.tikwm.com" + res.play,
-        quality: "NoWM",
-      });
+      media.push({ type: "video", url: "https://www.tikwm.com" + res.play, quality: "NoWM" });
   }
 
   return {
@@ -111,6 +150,15 @@ async function handleTiktok(url) {
     title: res?.title || "TikTok",
     thumbnail: res?.cover ? "https://www.tikwm.com" + res.cover : null,
     author: res?.author?.nickname || null,
+    authorHandle: res?.author?.unique_id || null,
+    duration: fmtDur(res?.duration),
+    uploadDate: fmtDate(res?.create_time),
+    views: fmt(res?.play_count),
+    likes: fmt(res?.digg_count),
+    comments: fmt(res?.comment_count),
+    shares: fmt(res?.share_count),
+    downloads: fmt(res?.download_count),
+    description: res?.title || null,
     media,
   };
 }
@@ -153,6 +201,7 @@ async function handleCapcut(url) {
     platform: "capcut",
     title: data.title || "CapCut",
     thumbnail: data.thumbnail || null,
+    author: data.author || null,
     media: [{ type: "video", url: data.originalVideoUrl }],
   };
 }
