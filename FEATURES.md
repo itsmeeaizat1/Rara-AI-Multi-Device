@@ -229,7 +229,7 @@ alquran, hadisnabi, hafalan, motivasiislam, murrotal, niatdoa, quran, quranv3, s
 jpm
 
 ### 🏠 Main (27+ plugin)
-aboutnova, allmenu, autoreaction, belanja, benefitowner, benefitpremium, block, buyprem, buysewa, carifitur, channelnovaofficial, daftarsewa, fun, infov2, jadibot, leaderboard, leaderboardrpg, menu, menu2, menukategori, owner, premium, ping, ping2, rules, sc, stats, stopjadibot, system, totalfitur, tqto
+aboutnova, allmenu, autoreaction, belanja, benefitowner, benefitpremium, block, buyprem, buysewa, carifitur, channelnovaofficial, daftarsewa, fun, infov2, jadibot, leaderboard, leaderboardrpg, topcinta, menu, menu2, menukategori, owner, premium, ping, ping2, rules, sc, stats, stopjadibot, system, totalfitur, tqto
 
 ### 🛠️ Maker (7 plugin)
 captionig, certmaker, image.jpg, lyricscard, mask.png, nowm, profilecard, quotemaker, watermark
@@ -480,7 +480,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - `.aktifitas me` — lihat rank dan stats kamu
 - `.aktifitas reset` — reset leaderboard (admin only)
 - `.aktifitas stats` — statistik aktivitas grup mingguan
-- Contoh: `.leaderboard rpg`, `.leaderboard group`, `.aktifitas me`
+- Contoh: `.leaderboard rpg`, `.leaderboard group`, `.topcinta`
 
 ## 🌐 Auto-Translate Pesan Grup
 

@@ -77,7 +77,7 @@ async function handler(m, { sock, config: cfg }) {
 ├── ${toSC('Pilih jenis leaderboard')}:
 │
 ├── 🎮 *${toSC('RPG')}*
-│   ${toSC('Koin, EXP, Energi — global semua user')}
+│   ${toSC('Koin, EXP, Energi, Cinta — global semua user')}
 │
 ├── 👥 *${toSC('Group')}*
 │   ${toSC('Aktivitas member grup minggu ini')}
