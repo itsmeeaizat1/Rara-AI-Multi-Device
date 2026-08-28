@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // report.js — Laporkan masalah ke owner (kirim langsung ke WA owner + simpan DB)
-import { claraWrap, novaCaption, tipText } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaCaption, tipText, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -34,16 +34,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     if (!message) {
-      return m.reply(claraWrap("Report", [
-        "Laporkan masalah ke owner bot",
-        "",
-        "📌 *Cara Pakai:*",
-        `${prefix}report <pesan>`,
-        `${prefix}report (reply pesan yang mau dilaporkan)`,
-        "",
-        "💡 *Contoh:*",
-        `${prefix}report Ada spam di grup`,
-      ]));
+      return m.reply(novaGuide("Report", "Laporkan masalah atau kendala langsung ke owner bot!", `${prefix}report Ada spam di grup`));
     }
 
     // Save to database
@@ -110,7 +101,7 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     console.error("[report] error:", error.message);
     await m.react("❌");
-    return m.reply(te(m.prefix, m.command, m.pushName), "report");
+    return m.reply(novaError("Report", `Gagal mengirim laporan: ${error.message || "terjadi kesalahan"}`));
   }
 
   return { handled: true };

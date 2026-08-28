@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,14 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const media = extractImage(m);
     if (!media) {
-      const text =
-        claraWrap("Set Group PP", ["│ Cara 1: *Kirim gambar + caption .setgrouppp*",
-          "│ Cara 2: *ʀᴇᴘʟʏ ɢᴀᴍʙᴀʀ ᴅᴇɴɢᴀɴ .ꜱᴇᴛɢʀᴏᴜᴘᴘᴘ*",
-          "│ Format: *JPG, PNG, WEBP*"].join("\n")) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply( text, "setgrouppp");
+      await m.reply(novaGuide('SetGroupPP', 'Kirim gambar dengan caption atau reply gambar yang ingin dijadikan foto profil grup!', `${prefix}setgrouppp`));
       return { handled: true };
     }
 
@@ -57,16 +50,9 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 
-    await m.reply(claraWrap("setgrouppp", text));
+    await m.reply(text);
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply( text, "setgrouppp");
+    await m.reply(novaError('SetGroupPP', `Gagal mengganti foto profil grup: ${error.message}`));
   }
 
   return { handled: true };

@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,18 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     const url = m.text?.trim();
 
     if (!url) {
-      const text =
-        novaCaption({
-  emoji: "📥",
-  name: "videy2",
-  description: "Download video dari Videy",
-  usage: `${prefix}videy <link>`,
-  example: `${prefix}videy https://videy.co/video/xxxx`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply( text, "videy");
+      await m.reply(novaNoInput("Videy Downloader", "Masukkan URL video Videy yang mau kamu download!", `${prefix}videy https://videy.co/video/xxxx`));
       return { handled: true };
     }
 
@@ -44,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
     try {
       response = await axios.get(apiUrl, { timeout: 10000 });
     } catch (apiErr) {
-      throw new Error("API Videy sedang down. Coba lagi nanti atau gunakan .tiktok / .igdl untuk download.");
+      throw new Error("API Videy sedang bermasalah nih. Coba lagi nanti atau gunakan downloader lain.");
     }
     const data = response.data;
     const result = data?.result || data;
@@ -59,16 +48,9 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
-    await m.reply(claraWrap("videy2", text));
+    await m.reply(text);
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply( text, "videy");
+    await m.reply(novaError("Videy Downloader", error.message || "Gagal mengambil video dari Videy"));
   }
 
   return { handled: true };
@@ -90,4 +72,4 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler };

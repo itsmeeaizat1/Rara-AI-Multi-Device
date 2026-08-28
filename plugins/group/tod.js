@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, tipText, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -278,11 +278,7 @@ export default {
     // ─── Toggle commands ───
     if (new RegExp(`^${prefix}todon\\b`, "i").test(raw)) {
       if (!isOwner) {
-        await m.reply(claraWrap("Truth or Dare", [
-          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
-          ``,
-          `│ Hanya owner yang bisa mengatur fitur ini.`,
-        ].join("\n")));
+        await m.reply(novaError("Truth or Dare", "Hanya owner yang bisa mengatur fitur ini ya!"));
         return { handled: true };
       }
       toggleOn(groupId);
@@ -298,9 +294,7 @@ export default {
 
     if (new RegExp(`^${prefix}todoff\\b`, "i").test(raw)) {
       if (!isOwner) {
-        await m.reply(claraWrap("Truth or Dare", [
-          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
-        ].join("\n")));
+        await m.reply(novaError("Truth or Dare", "Hanya owner yang bisa mematikan fitur ini ya!"));
         return { handled: true };
       }
       toggleOff(groupId);
@@ -333,20 +327,13 @@ export default {
 
     // ─── Check if enabled ───
     if (!isTodOn(groupId)) {
-      await m.reply(claraWrap("Truth or Dare", [
-        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
-        ``,
-        `│ Owner: ketik *${prefix}todon* untuk mengaktifkan.`,
-      ].join("\n")));
+      await m.reply(novaError("Truth or Dare", `Fitur ToD belum aktif di grup ini nih! Owner ketik *${prefix}todon* untuk mengaktifkan.`));
       return { handled: true };
     }
 
     // ─── Group only check ───
     if (!groupId.endsWith("@g.us")) {
-      await m.reply(claraWrap("Truth or Dare", [
-        `│ Fitur ini khusus untuk grup.`,
-        `│ Ajak teman kamu main di grup!`,
-      ].join("\n")));
+      await m.reply(novaError("Truth or Dare", "Fitur ini khusus untuk grup ya! Ajak teman kamu main di grup."));
       return { handled: true };
     }
 
@@ -396,10 +383,7 @@ export default {
     // ─── Target mode: point at random member ───
     if (subCmd === "target") {
       if (members.length === 0) {
-        await m.reply(claraWrap("Truth or Dare", [
-          `│ Tidak ada member lain yang bisa ditunjuk.`,
-          `│ Coba lagi nanti ya!`,
-        ].join("\n")));
+        await m.reply(novaEmpty("Truth or Dare", "Tidak ada member lain yang bisa ditunjuk nih. Coba lagi nanti ya!"));
         await m.react("🐣");
         return { handled: true };
       }

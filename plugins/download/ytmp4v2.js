@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ytmp4v2",
@@ -39,13 +39,7 @@ async function rlGet(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(novaCaption({
-  emoji: "🎬",
-  name: "ytmp4v2",
-  description: "Download YouTube MP4 via (V2)",
-  usage: `${m.prefix}ytmp4v2 <url>`,
-  example: `${m.prefix}ytmp4v2 https://youtu.be/xxx`,
-}), "ytmp4v2")
+    return m.reply(novaNoInput("YT MP4 V2", "Masukkan link YouTube video yang ingin kamu download!", `${m.prefix}ytmp4v2 https://youtu.be/xxx`));
   }
   m.react("🕒");
   try {
@@ -53,19 +47,13 @@ async function handler(m, { sock }) {
     const r = res.data?.result || res.data?.data;
     if (!r?.download) throw new Error("Gagal mengambil video YouTube");
 
-    const caption = mediaCaption({
-        platformIcon: "▶️",
-        platformName: "YouTube",
-        title: r.title || "YouTube Video",
-        format: "📹 Video HD",
-        method: "API V2",
-    });
+    const caption = `╭──「 YouTube MP4 」\n│ Title: ${r.title || "YouTube Video"}\n╰──────────❀`;
 
     await sock.sendMedia(m.chat, r.download, caption, m, { type: "video" });
     m.react("🐣");
   } catch (e) {
     console.error("[YTMP4V2]", e.message);
-    m.reply(claraWrap("Ytmp4v2", `Gagal mengambil video.\n>${e.message}`));
+    m.reply(novaError("YT MP4 V2", e.message || "Gagal mengambil video YouTube"));
   }
 }
 export { pluginConfig as config, handler };

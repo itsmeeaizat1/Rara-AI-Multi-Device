@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -24,18 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     const args = m.text?.trim().toLowerCase();
 
     if (!["on", "off"].includes(args)) {
-      const text =
-        novaCaption({
-  emoji: "👥",
-  name: "welcome2",
-  description: "Pesan welcome saat member join grup",
-  usage: `${prefix}welcome on/off`,
-  example: `${prefix}welcome on`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply(claraWrap("welcome2", text));
+      await m.reply(novaGuide('Welcome', 'Aktifkan atau matikan pesan sambutan (welcome) untuk member baru.', `${prefix}welcome on`));
       return { handled: true };
     }
 
@@ -53,14 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply(claraWrap("welcome2", text));
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply( text, "welcome");
+    await m.reply(novaError('Welcome', `Gagal memproses pengaturan welcome: ${error.message}`));
   }
 
   return { handled: true };

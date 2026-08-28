@@ -1,7 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
     name: 'acc',
     alias: ["acc"],
@@ -37,14 +38,7 @@ async function handler(m, { sock }) {
     const option = args.slice(1).join(' ')?.trim()
 
     if (!sub || !['list', 'approve', 'reject'].includes(sub)) {
-        return m.reply(claraWrap("Join ReQUest Manager", `📋 *ᴊᴏɪɴ ʀᴇqᴜᴇꜱᴛ ᴍᴀɴᴀɢᴇʀ*\n\n` +
-            `╭──「 📌 *ᴄᴏᴍᴍᴀɴᴅ* 」\n` +
-            `│ ${m.prefix}acc list\n` +
-            `│ ${m.prefix}acc approve all\n` +
-            `│ ${m.prefix}acc reject all\n` +
-            `│ ${m.prefix}acc approve 1|2|3\n` +
-            `│ ${m.prefix}acc reject 1|2|3\n` +
-            `╰┈┈┈┈┈┈┈┈⬡`))
+        return m.reply(novaGuide('Join Request Manager', 'Kelola permintaan bergabung di grup ini.', `${m.prefix}acc list`))
     }
 
     await m.react('🕐')
@@ -53,7 +47,7 @@ async function handler(m, { sock }) {
         const pendingList = await sock.groupRequestParticipantsList(m.chat)
 
         if (!pendingList?.length) {
-            return m.reply(claraWrap("Acc", `📭 Tidak ada permintaan masuk yang tertunda.`))
+            return m.reply(novaEmpty('Acc', 'Tidak ada permintaan masuk yang tertunda saat ini.'))
         }
 
         if (sub === 'list') {
@@ -90,7 +84,7 @@ async function handler(m, { sock }) {
 
             const label = action === 'approve' ? 'Diterima' : 'Ditolak'
             await m.react('✅')
-            return m.reply(claraWrap("${label.toUpperCase()} SEMUA", `✅ *${label.toUpperCase()} SEMUA*\n\n` +
+            return m.reply(claraWrap(`${label.toUpperCase()} SEMUA`, `✅ *${label.toUpperCase()} SEMUA*\n\n` +
                 `✅ Berhasil: ${success}\n` +
                 `❌ Gagal: ${failed}\n` +
                 `📊 Total: ${results.length}`))
@@ -99,11 +93,7 @@ async function handler(m, { sock }) {
         const indices = option.split('|').map(n => parseInt(n.trim()) - 1).filter(n => !isNaN(n) && n >= 0 && n < pendingList.length)
 
         if (!indices.length) {
-            return m.reply(
-                `❌ Nomor tidak valid.\n\n` +
-                `Gunakan \`${m.prefix}acc list\` untuk melihat daftar.\n` +
-                `Contoh: \`${m.prefix}acc ${action} 1|2|3\``
-            )
+            return m.reply(novaGuide('Acc', 'Nomor urut tidak valid. Silakan cek nomor dari list terlebih dahulu.', `${m.prefix}acc ${action} 1`))
         }
 
         const targets = indices.map(i => pendingList[i])
@@ -133,7 +123,7 @@ async function handler(m, { sock }) {
             `✅ ${successCount}/${targets.length} berhasil`
         )
     } catch (error) {
-        m.reply(claraWrap("acc", te(m.prefix, m.command, m.pushName), "error"))
+        m.reply(novaError('Acc', `Gagal memproses permintaan masuk: ${error.message || 'Terjadi kesalahan'}`))
     }
 }
 

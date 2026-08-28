@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "storyrelay",
@@ -28,7 +28,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // START
     if (sub === "start") {
       if (game.active) {
-        return m.reply(claraWrap("Story Relay", "Cerita lagi berjalan!\nKetik .storyrelay read untuk baca.\nKetik .storyrelay stop untuk hentikan."));
+        return m.reply(novaError("Story Relay", `Cerita lagi berjalan nih!\nKetik \`${usedPrefix || "."}storyrelay read\` untuk baca.\nKetik \`${usedPrefix || "."}storyrelay stop\` untuk hentikan.`));
       }
       game.active = true;
       game.story = [];
@@ -53,10 +53,10 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // READ
     if (sub === "read") {
       if (!game.active && game.story.length === 0) {
-        return m.reply(claraWrap("Story Relay", "Belum ada cerita.\nKetik .storyrelay start untuk mulai."));
+        return m.reply(novaEmpty("Story Relay", `Belum ada cerita yang dibuat nih.\nKetik \`${usedPrefix || "."}storyrelay start\` untuk mulai!`));
       }
       if (game.story.length === 0) {
-        return m.reply(claraWrap("Story Relay", "Cerita kosong. Tunggu orang pertama menulis."));
+        return m.reply(novaEmpty("Story Relay", "Cerita masih kosong nih. Tunggu kontribusi orang pertama ya!"));
       }
       let full = "";
       game.story.forEach((entry) => {
@@ -70,7 +70,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     // STOP
     if (sub === "stop") {
       if (!game.active) {
-        return m.reply(claraWrap("Story Relay", "Gak ada cerita yang berjalan."));
+        return m.reply(novaEmpty("Story Relay", "Gak ada sesi cerita yang lagi berjalan nih."));
       }
       game.active = false;
       await db.save();
@@ -90,20 +90,20 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
 
     // ADD SENTENCE
     if (!game.active) {
-      return m.reply(claraWrap("Story Relay", "Gak ada game aktif.\nKetik .storyrelay start untuk mulai."));
+      return m.reply(novaEmpty("Story Relay", `Gak ada game aktif nih.\nKetik \`${usedPrefix || "."}storyrelay start\` untuk mulai!`));
     }
 
     const sentence = text.trim();
     if (!sentence || sentence.length < 3) {
-      return m.reply(claraWrap("Story Relay", "Kalimat terlalu pendek!\nKetik .storyrelay <kalimat>"));
+      return m.reply(novaNoInput("Story Relay", `Kalimat terlalu pendek nih!\nKetik: \`${usedPrefix || "."}storyrelay <kalimat>\``));
     }
 
     if (sentence.toLowerCase().startsWith("start") || sentence.toLowerCase().startsWith("stop") || sentence.toLowerCase().startsWith("read")) {
-      return m.reply(claraWrap("Story Relay", "Itu perintah, bukan kalimat cerita.\nKetik: .storyrelay <kalimat ceritamu>"));
+      return m.reply(novaGuide("Story Relay", "Itu perintah menu, bukan kalimat cerita ya!", `${usedPrefix || "."}storyrelay <kalimat ceritamu>`));
     }
 
     if (game.lastSender === sender) {
-      return m.reply(claraWrap("Story Relay", "Kamu baru saja menulis! Tunggu orang lain dulu."));
+      return m.reply(novaError("Story Relay", "Kamu baru saja kirim kalimat! Tunggu orang lain dulu ya."));
     }
 
     game.story.push({ sender, text: sentence });
@@ -124,7 +124,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     ]));
   } catch (e) {
     console.error("[Story Relay]", e);
-    m.reply(claraWrap("Story Relay", "Error: " + e.message));
+    m.reply(novaError("Story Relay", `Terjadi kesalahan: ${e.message}`));
   }
 }
 

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "tiktokv2",
@@ -39,13 +39,7 @@ async function rlGet(url) {
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    return m.reply(novaCaption({
-  emoji: "🎵",
-  name: "tiktokv2",
-  description: "Download TikTok tanpa watermark via (V2)",
-  usage: `${m.prefix}tiktokv2 <url>`,
-  example: `${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`,
-}), "tiktokv2")
+    return m.reply(novaNoInput("TikTok V2", "Masukkan link video TikTok yang mau kamu download!", `${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`));
   }
   m.react("🕒");
   try {
@@ -53,17 +47,7 @@ async function handler(m, { sock }) {
     const r = res.data?.result || res.data?.data;
     if (!r?.play) throw new Error("Gagal mengambil video TikTok");
 
-    const caption = mediaCaption({
-        platformIcon: "🎵",
-        platformName: "TikTok V2",
-        title: r.title || "TikTok Video",
-        author: r.author?.nickname || null,
-        duration: r.duration ? `${r.duration}s` : null,
-        views: (r.play_count || 0).toLocaleString(),
-        likes: (r.digg_count || 0).toLocaleString(),
-        format: "Video HD",
-        method: "API V2",
-    });
+    const caption = `╭──「 TikTok V2 」\n│ Title: ${r.title || "TikTok Video"}\n│ Author: ${r.author?.nickname || "-"}\n╰──────────❀`;
 
     await sock.sendMessage(m.chat, {
         video: { url: r.play },
@@ -72,7 +56,7 @@ async function handler(m, { sock }) {
     m.react("🐣");
   } catch (e) {
     console.error("[TIKTOKV2]", e.message);
-    m.reply(claraWrap("Tiktokv2", `Gagal mengambil video.\n>${e.message}`));
+    m.reply(novaError("TikTok V2", e.message || "Gagal mengambil video TikTok"));
   }
 }
 export { pluginConfig as config, handler };

@@ -1,10 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import fs from "fs";
+import path from "path";
 import ttdown from "../../src/scraper/tiktok.js";
 import axios from "axios";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import {  claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const pluginConfig = {
@@ -82,17 +84,11 @@ async function handler(m, { sock }) {
   };
 
   if (!url) {
-    return m.reply(novaCaption({
-  emoji: "🎵",
-  name: "ttmp3",
-  description: "Download audio TikTok",
-  usage: `${m.prefix}ttmp3 <url>`,
-  example: `${m.prefix}ttmp3 https://vt.tiktok.com/xxx`,
-}), "ttmp3")
+    return m.reply(novaNoInput("TikTok Audio", "Kirim link TikTok yang ingin kamu ambil lagunya!", `${m.prefix}ttmp3 https://vt.tiktok.com/xxx`));
   }
 
   if (!url.match(/tiktok\.com|vt\.tiktok/i)) {
-    return m.reply(claraWrap("Ttmp3", "❌ URL tidak valid. Gunakan link TikTok."));
+    return m.reply(novaGuide("TikTok Audio", "Link yang kamu masukkan bukan link TikTok valid!", `${m.prefix}ttmp3 https://vt.tiktok.com/xxx`));
   }
 
   m.react("🕒");
@@ -129,7 +125,7 @@ async function handler(m, { sock }) {
   } catch (err) {
     cleanupTempFiles();
     console.error("[TikTokDL] Error:", err);
-    m.reply(claraWrap("Ttmp3", `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴᴅᴜʜ*\n\n${err.message}`));
+    m.reply(novaError("TikTok Audio", err.message || "Gagal mengunduh audio TikTok"));
   }
 }
 

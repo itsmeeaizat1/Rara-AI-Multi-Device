@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,18 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
     const targetRaw = m.text?.trim();
 
     if (!targetRaw) {
-      const text =
-        novaCaption({
-  emoji: "👥",
-  name: "unban2",
-  description: "Unban member grup",
-  usage: `${prefix}unban <@target>`,
-  example: `${prefix}unban @username`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply( text, "unban");
+      await m.reply(novaGuide('Unban', 'Tag atau sebutkan member yang ingin di-unban dari grup/bot!', `${prefix}unban @user`));
       return { handled: true };
     }
 
@@ -50,14 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply(claraWrap("unban2", text));
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply( text, "unban");
+    await m.reply(novaError('Unban', `Gagal membuka ban member: ${error.message}`));
   }
 
   return { handled: true };
