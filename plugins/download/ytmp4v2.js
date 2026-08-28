@@ -53,10 +53,13 @@ async function handler(m, { sock }) {
     const r = res.data?.result || res.data?.data;
     if (!r?.download) throw new Error("Gagal mengambil video YouTube");
 
-    let caption = `╭──「 YTMP4 V2 」\n`;
-    caption += `│ Title: ${r.title || "YouTube Video"}\n`;
-    caption += `│ Source: API V2\n`;
-    caption += `╰──────────❀`;
+    const caption = mediaCaption({
+        platformIcon: "▶️",
+        platformName: "YouTube",
+        title: r.title || "YouTube Video",
+        format: "📹 Video HD",
+        method: "API V2",
+    });
 
     await sock.sendMedia(m.chat, r.download, caption, m, { type: "video" });
     m.react("🐣");
