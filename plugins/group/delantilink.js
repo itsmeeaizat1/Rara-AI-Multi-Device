@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'delantilink',
     alias: ["delantilink"],
@@ -27,7 +27,7 @@ function handler(m, { sock }) {
         const antilinkList = groupData.antilinkList || []
         
         if (antilinkList.length === 0) {
-            return m.reply(claraWrap("Delantilink", `📋 Daftar antilink kosong!`))
+            return m.reply(novaEmpty('DelAntiLink', 'Daftar antilink di grup ini masih kosong nih!'))
         }
         
         let txt = `🔗 *ᴅᴀꜰᴛᴀʀ ᴀɴᴛɪʟɪɴᴋ*\n\n`
@@ -46,7 +46,7 @@ function handler(m, { sock }) {
     const index = antilinkList.findIndex(l => l === link)
     
     if (index === -1) {
-        return m.reply(`⚠️ Link \`${link}\` tidak ditemukan di daftar antilink!`)
+        return m.reply(novaEmpty('DelAntiLink', `Link \`${link}\` tidak ditemukan di daftar antilink!`))
     }
     
     antilinkList.splice(index, 1)
