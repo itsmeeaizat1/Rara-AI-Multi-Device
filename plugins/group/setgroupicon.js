@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setgroupicon",
@@ -24,18 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     const icon = m.text?.trim();
 
     if (!icon) {
-      const text =
-        novaCaption({
-  emoji: "👥",
-  name: "setgroupicon",
-  description: "Ganti icon/emoji grup",
-  usage: `${prefix}setgroupicon <emoji>`,
-  example: `${prefix}setgroupicon 🎮`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply( text, "setgroupicon");
+      await m.reply(novaNoInput("SetGroupIcon", "Masukkan emoji/icon baru untuk grup ini", `${prefix}setgroupicon 🎮`));
       return { handled: true };
     }
 
@@ -50,13 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply(claraWrap("setgroupicon", text));
   } catch (error) {
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply( text, "setgroupicon");
+    await m.reply(novaError("SetGroupIcon", `Gagal ganti icon grup: ${error.message}`));
   }
 
   return { handled: true };

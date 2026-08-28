@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { toVoiceNote } from "../../src/lib/nova-ffmpeg.js";
 import { downloadContentFromMessage } from 'nova'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "openvo",
     alias: ["openvo"],
@@ -22,33 +22,23 @@ async function handler(m, { sock }) {
     const quoted = m.quoted
 
     if (!quoted) {
-        await m.reply( `❌ *ɢᴀɢᴀʟ*\n\n` +
-            `Balas pesan 1x lihat dengan perintah ini!\n` +
-            `Gunakan: \`${m.prefix}openvo\` (reply pesan 1x lihat)`, "rvo")
-        return
+        return m.reply(novaNoInput("Open VO", `Balas pesan 1x lihat (View Once) dengan perintah ini!\nContoh: Reply foto/video 1x lihat lalu ketik \`${m.prefix || "."}openvo\``))
     }
 
     const quotedMsg = quoted.message
     if (!quotedMsg) {
-        await m.reply( `❌ *ᴘᴇꜱᴀɴ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n` +
-            `Tidak dapat membaca pesan yang di-reply.`, "rvo")
-        return
+        return m.reply(novaEmpty("Open VO", "Tidak dapat membaca struktur pesan yang di-reply nih."))
     }
 
     const type = Object.keys(quotedMsg)[0]
     const content = quotedMsg[type]
 
     if (!content) {
-        await m.reply( `❌ *ᴋᴏɴᴛᴇɴ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n` +
-            `Konten pesan tidak dapat dibaca.`, "rvo")
-        return
+        return m.reply(novaEmpty("Open VO", "Konten pesan yang di-reply tidak ditemukan atau kosong."))
     }
 
     if (!content.viewOnce) {
-        await m.reply(claraWrap("openvo", `❌ *ʙᴜᴋᴀɴ ᴠɪᴇᴡᴏɴᴄᴇ*\n\n` +
-            `Pesan yang di-reply bukan pesan 1x lihat!\n` +
-            `Balas pesan dengan ikon 1x lihat (👁️).`))
-        return
+        return m.reply(novaError("Open VO", "Pesan yang kamu reply bukan pesan 1x lihat (View Once)!"))
     }
 
     await m.react('🕐')
@@ -64,8 +54,7 @@ async function handler(m, { sock }) {
         }
 
         if (!mediaType) {
-            m.reply(claraWrap("Rvo", `Tipenya gak didukung, hanya support image, video, audio`))
-            return
+            return m.reply(novaError("Open VO", "Tipe media tidak didukung! Hanya mendukung foto, video, atau audio."))
         }
 
         const stream = await downloadContentFromMessage(content, mediaType)
@@ -76,23 +65,20 @@ async function handler(m, { sock }) {
         }
 
         if (!buffer || buffer.length < 100) {
-            await m.reply( `❌ *ɢᴀɢᴀʟ ᴍᴇɴɢᴜɴᴅᴜʜ*\n\n` +
-                `Tidak dapat mengunduh media.\n` +
-                `Media mungkin sudah kadaluarsa.`, "rvo")
-            return
+            return m.reply(novaError("Open VO", "Gagal mengunduh media 1x lihat. Media mungkin sudah kadaluarsa atau rusak."))
         }
-        const quoted = m.quoted ? m.quoted : m
+        const targetQuoted = m.quoted ? m.quoted : m
 
         if (mediaType === 'image') {
-            await sock.sendMedia(m.chat, buffer, null, quoted, {
+            await sock.sendMedia(m.chat, buffer, null, targetQuoted, {
                 type: 'image'
             })
         } else if (mediaType === 'video') {
-            await sock.sendMedia(m.chat, buffer, null, quoted, {
+            await sock.sendMedia(m.chat, buffer, null, targetQuoted, {
                 type: 'video'
             })
         } else if (mediaType === 'audio') {
-            await sock.sendMedia(m.chat, buffer, null, quoted, {
+            await sock.sendMedia(m.chat, buffer, null, targetQuoted, {
                 type: 'audio',
                 mimetype: 'audio/ogg; codecs=opus',
                 ptt: true
@@ -100,11 +86,7 @@ async function handler(m, { sock }) {
         }
 
     } catch (error) {
-        await m.reply(
-            `❌ *ᴇʀʀᴏʀ*\n\n` +
-            `Gagal membuka pesan 1x lihat.\n` +
-            `_${error.message}_`
-        )
+        return m.reply(novaError("Open VO", `Gagal membuka pesan 1x lihat: ${error.message}`))
     }
 }
 

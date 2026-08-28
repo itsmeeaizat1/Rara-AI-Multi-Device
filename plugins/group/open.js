@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "open",
     alias: ["open", "opengc"],
@@ -24,9 +24,7 @@ async function handler(m, { sock }) {
         
         if (!groupMeta.announce) {
             await m.reply(
-                `⚠️ *ᴠᴀʟɪᴅᴀꜱɪ ɢᴀɢᴀʟ*\n\n` +
-                `Grup sudah dalam keadaan \`terbuka\`.\n` +
-                `Semua member sudah bisa mengirim pesan.`
+                novaError("Open Group", "Grup sudah dalam keadaan terbuka kok! Semua member sudah bisa kirim pesan.")
             );
             return;
         }
@@ -40,7 +38,7 @@ async function handler(m, { sock }) {
         await m.reply(successMsg, { mentions: [m.sender] });
         
     } catch (error) {
-        await m.reply(claraWrap("Error", ["Gagal membuka grup.", `_${error.message}_`].join("\n")));
+        await m.reply(novaError("Open Group", `Gagal membuka grup: ${error.message}`));
     }
 }
 

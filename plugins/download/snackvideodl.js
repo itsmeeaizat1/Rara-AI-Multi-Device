@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { snackvideo } from 'btch-downloader'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "snackvideodl",
     alias: ["snackvideodl"],
@@ -22,14 +22,11 @@ async function handler(m, { sock }) {
     const url = m.text?.trim()
     
     if (!url) {
-        return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `\`${m.prefix}svdl <url>\`\n\n` +
-            `Contoh:\n` +
-            `\`${m.prefix}svdl https://www.snackvideo.com/@xxx/video/xxx\``, "snackvideodl")
+        return m.reply(novaNoInput("SnackVideo", "Kirim URL SnackVideo yang mau didownload!", `${m.prefix}svdl https://www.snackvideo.com/@xxx/video/xxx`))
     }
     
     if (!url.match(/snackvideo\.com/i)) {
-        return m.reply(claraWrap("Snackvideodl", `❌ URL tidak valid. Gunakan link SnackVideo.`))
+        return m.reply(novaGuide("SnackVideo", "URL-nya gak valid nih! Pastikan dari SnackVideo ya.", `${m.prefix}svdl https://www.snackvideo.com/@xxx/video/xxx`))
     }
     
     await m.react('🕐')
@@ -38,7 +35,7 @@ async function handler(m, { sock }) {
         const data = await snackvideo(url)
         
         if (!data?.status || !data?.result?.videoUrl) {
-            return m.reply(claraWrap("snackvideodl", `❌ Gagal mengambil video. Coba link lain.`))
+            return m.reply(novaEmpty("SnackVideo", "Gagal mengambil video SnackVideo. Coba link lain ya!"))
         }
         
         const result = data.result
@@ -52,7 +49,7 @@ async function handler(m, { sock }) {
         })
         
     } catch (err) {
-        return m.reply(claraWrap("snackvideodl", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(novaError("SnackVideo", "Gagal memproses video SnackVideo. Coba lagi nanti!"))
     }
 }
 

@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "shopeedl",
@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
   const url = m.args[0] || m.text?.trim();
 
   if (!url || !url.includes("shopee")) {
-    { const __navText = "❌ Masukkan link video Shopee yang valid.\n\n💡 *Contoh:* `.shopeedl https://shopee.co.id/...`"; return await m.reply( __navText, "shopeedl"); };
+    return await m.reply(novaGuide("Shopee DL", "Masukkan link video Shopee yang valid ya!", `${m.prefix || '.'}shopeedl https://shopee.co.id/...`));
   }
 
   await m.react("🕒");
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
   try {
     const data = await extract(url);
     if (!data || !data.streams_array || data.streams_array.length === 0) {
-      return m.reply(claraWrap("shopeedl", "⚠️ Gagal mengekstrak video. Pastikan link video Shopee sudah benar dan bersifat publik."));
+      return m.reply(novaEmpty("Shopee DL", "Gagal mengekstrak video. Pastikan link video Shopee publik dan benar ya!"));
     }
 
     const best = bestStream(data.streams_array);
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
 
   } catch (error) {
     console.error("[Shopee DL]", error.message);
-    m.reply(claraWrap("shopeedl", "😔 Gagal mengunduh video dari Shopee."));
+    m.reply(novaError("Shopee DL", "Gagal mengunduh video dari Shopee. Coba lagi nanti!"));
   }
 }
 

@@ -6,6 +6,10 @@ import {
   toSC,
   bracketBox,
   tipText,
+  novaError,
+  novaEmpty,
+  novaGuide,
+  novaNoInput,
 } from "../../src/lib/nova-menu-style.js";
 import {
   enableQuizVerify,
@@ -55,9 +59,7 @@ async function handler(m, { sock, args }) {
       if (!isAdmin) {
         await m.react("🚫");
         return m.reply(
-          bracketBox("🚫", toSC("Akses Ditolak"), [
-            toSC("Hanya admin grup yang bisa mengatur fitur ini!"),
-          ])
+          novaError("Akses Ditolak", "Cuma admin grup yang boleh ngatur fitur Quiz Verify ini!")
         );
       }
     }
@@ -106,12 +108,7 @@ async function handler(m, { sock, args }) {
         const level = (args[1] || "").toLowerCase();
         if (!["easy", "medium", "hard"].includes(level)) {
           return m.reply(
-            bracketBox("❗", toSC("Invalid Difficulty"), [
-              toSC("Pilih: easy, medium, atau hard"),
-              `📌 ${prefix}quizverify difficulty easy`,
-              `📌 ${prefix}quizverify difficulty medium`,
-              `📌 ${prefix}quizverify difficulty hard`,
-            ])
+            novaGuide("Difficulty Quiz", "Pilih tingkat kesulitan kuis yang valid ya!", `${prefix}quizverify difficulty easy | medium | hard`)
           );
         }
         setDifficulty(groupId, level);
@@ -129,11 +126,7 @@ async function handler(m, { sock, args }) {
         const minutes = parseInt(args[1]);
         if (!minutes || minutes < 1 || minutes > 30) {
           return m.reply(
-            bracketBox("❗", toSC("Invalid Timeout"), [
-              toSC("Masukkan 1-30 menit"),
-              `📌 ${prefix}quizverify timeout 5`,
-              `📌 ${prefix}quizverify timeout 10`,
-            ])
+            novaGuide("Timeout Quiz", "Masukkan durasi batas waktu kuis antara 1 sampai 30 menit ya!", `${prefix}quizverify timeout 5`)
           );
         }
         setTimeoutMinutes(groupId, minutes);
@@ -151,9 +144,7 @@ async function handler(m, { sock, args }) {
         const pending = getPendingUsers(groupId);
         if (pending.length === 0) {
           return m.reply(
-            bracketBox("🛡️", toSC("Pending Verifications"), [
-              toSC("Tidak ada member yang pending verifikasi"),
-            ])
+            novaEmpty("Quiz Verify", "Gak ada member yang lagi pending verifikasi saat ini~")
           );
         }
         const lines = pending.map((p, i) => {
@@ -168,26 +159,14 @@ async function handler(m, { sock, args }) {
 
       default:
         return m.reply(
-          bracketBox("🛡️", toSC("Quiz Verify — Commands"), [
-            `📌 ${prefix}quizverify on — ${toSC("aktifkan")}`,
-            `📌 ${prefix}quizverify off — ${toSC("nonaktifkan")}`,
-            `📌 ${prefix}quizverify status — ${toSC("cek status")}`,
-            `📌 ${prefix}quizverify difficulty <level> — ${toSC("atur kesulitan")}`,
-            `📌 ${prefix}quizverify timeout <menit> — ${toSC("atur timeout")}`,
-            `📌 ${prefix}quizverify list — ${toSC("lihat pending")}`,
-            "",
-            tipText(toSC("Member baru harus jawab quiz untuk verifikasi!")),
-          ])
+          novaGuide("Quiz Verify", "Verifikasi member baru lewat kuis anti-spam!", `${prefix}quizverify on | off | status | difficulty <level> | timeout <menit> | list`)
         );
     }
   } catch (e) {
     console.error("[QuizVerify] Error:", e.message);
     await m.react("❌");
     return m.reply(
-      bracketBox("❌", toSC("Error"), [
-        toSC("Gagal menjalankan perintah!"),
-        `${e.message}`,
-      ])
+      novaError("Quiz Verify", `Gagal memproses verifikasi kuis: ${e.message}`)
     );
   }
 }

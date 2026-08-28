@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,18 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     const url = m.text?.trim();
 
     if (!url) {
-      const text =
-        novaCaption({
-  emoji: "🎬",
-  name: "mp4",
-  description: "Download file MP4 dari link",
-  usage: `${prefix}mp4 <link>`,
-  example: `${prefix}mp4 https://example.com/video.mp4`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply( text, "mp4");
+      await m.reply(novaNoInput("MP4 Downloader", "Masukkan link langsung video MP4!", `${prefix}mp4 https://example.com/video.mp4`));
       return { handled: true };
     }
 
@@ -55,16 +44,9 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
-    await m.reply(claraWrap("mp4", text));
+    await m.reply(text);
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply( text, "mp4");
+    await m.reply(novaError("MP4 Downloader", `Gagal mengunduh MP4: ${error.message}`));
   }
 
   return { handled: true };

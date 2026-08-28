@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import likee from '../../src/scraper/likee.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'likeedl',
     alias: ["likeedl"],
@@ -23,15 +23,12 @@ async function handler(m, { sock }) {
     
     if (!url) {
         return m.reply(
-            `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `\`${m.prefix}lkdl <url>\`\n\n` +
-            `Contoh:\n` +
-            `\`${m.prefix}lkdl https://likee.video/@xxx\``
+            novaNoInput("Likee DL", "Kirim URL video Likee yang mau didownload!", `${m.prefix}lkdl https://likee.video/@xxx`)
         )
     }
     
     if (!url.match(/likee\.(video|com)/i)) {
-        return m.reply(claraWrap("Likeedl", `❌ URL tidak valid. Gunakan link Likee.`))
+        return m.reply(novaGuide("Likee DL", "URL-nya gak valid nih! Pastikan link dari Likee.", `${m.prefix}lkdl https://likee.video/@xxx`))
     }
     
     await m.react('🕐')
@@ -40,13 +37,13 @@ async function handler(m, { sock }) {
         const data = await likee(url)
         
         if (!data) {
-            return m.reply(claraWrap("likeedl", `❌ Gagal mengambil video. Coba link lain.`))
+            return m.reply(novaEmpty("Likee DL", "Gagal mengambil video. Coba link lain ya!"))
         }
         
         const videoUrl = data.without_watermark || data.with_watermark
         
         if (!videoUrl) {
-            { const __navText = claraWrap("likeedl", `❌ Video tidak ditemukan.`); return await m.reply(__navText); }
+            return await m.reply(novaEmpty("Likee DL", "Video tidak ditemukan di link ini."));
         }
         
         await sock.sendMedia(m.chat, videoUrl, null, m, {
@@ -60,7 +57,7 @@ async function handler(m, { sock }) {
         await m.react('✅')
         
     } catch (err) {
-        return m.reply(claraWrap("likeedl", te(m.prefix, m.command, m.pushName), "error"))
+        return m.reply(novaError("Likee DL", "Gagal memproses video Likee. Coba lagi nanti!"))
     }
 }
 

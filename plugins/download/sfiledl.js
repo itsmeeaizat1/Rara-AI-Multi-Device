@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,18 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     const url = m.text?.trim();
 
     if (!url) {
-      const text =
-        novaCaption({
-  emoji: "📥",
-  name: "sfiledl2",
-  description: "Download file dari SFile",
-  usage: `${prefix}sfiledl <link>`,
-  example: `${prefix}sfiledl https://sfile.mobi/xxxx`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply( text, "sfiledl");
+      await m.reply(novaNoInput("SFile DL", "Kirim link SFile yang mau didownload!", `${prefix}sfiledl https://sfile.mobi/xxxx`));
       return { handled: true };
     }
 
@@ -59,16 +48,9 @@ async function handler(m, { sock, config: botConfig }) {
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
-    await m.reply(claraWrap("sfiledl2", text));
+    await m.reply(text);
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply( text, "sfiledl");
+    await m.reply(novaError("SFile DL", `Gagal mengunduh file: ${error.message}`));
   }
 
   return { handled: true };

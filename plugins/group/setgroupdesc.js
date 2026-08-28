@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 
-import {  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "setgroupdesc",
@@ -24,18 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     const desc = m.text?.trim();
 
     if (!desc) {
-      const text =
-        novaCaption({
-  emoji: "👥",
-  name: "setgroupdesc",
-  description: "Ganti deskripsi grup",
-  usage: `${prefix}setgroupdesc <deskripsi>`,
-  example: `${prefix}setgroupdesc Grup RPG Nova Official`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply( text, "setgroupdesc");
+      await m.reply(novaNoInput("SetGroupDesc", "Masukkan deskripsi baru untuk grup ini", `${prefix}setgroupdesc Grup RPG Nova Official`));
       return { handled: true };
     }
 
@@ -50,13 +39,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.reply(claraWrap("setgroupdesc", text));
   } catch (error) {
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply( text, "setgroupdesc");
+    await m.reply(novaError("SetGroupDesc", `Gagal ganti deskripsi grup: ${error.message}`));
   }
 
   return { handled: true };
