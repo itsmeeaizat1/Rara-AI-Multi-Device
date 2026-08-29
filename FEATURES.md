@@ -3,7 +3,7 @@
 > Daftar lengkap fitur per kategori. Update file ini setiap kali ada perubahan fitur.
 
 ## Statistik
-- **Total Plugin:** 1.614
+- **Total Plugin:** 1.624
 - **Total Command:** 2.118+
 - **Total Kategori:** 39
 - **Versi:** 21.8.0
@@ -68,6 +68,16 @@
 - `.rebirthrpg` — rpg — Reinkarnasi: reset level untuk permanent +5% stats
 - `.adventure` — rpg — Petualangan acak (treasure/monster/trap/shrine)
 - `.cookrpg` — rpg — Masak makanan dari bahan mentah (instant effect)
+- `.hilorpg` — rpg — Tebak kartu lebih tinggi/rendah (multi-round, up to 32x)
+- `.begalrpg` — rpg — Rampok gold player lain (success rate by level diff)
+- `.rafflerpg` — rpg — Lotere tiket (jackpot 50.000 gold, gems bonus)
+- `.sabungayam` — rpg — Sabung ayam (bet gold, AI vs AI combat)
+- `.berdagang` — rpg — Dagang barang antar desa (buy low sell high)
+- `.berkebon` — rpg — Tanam & panen hasil kebun (grow time system)
+- `.nebang` — rpg — Menebang pohon (5 jenis, scaling by level)
+- `.sampah` — rpg — Kumpulkan sampah untuk daur ulang (eco mode)
+- `.nguli` — rpg — Jadi buruh — gold stabil tanpa resiko (streak bonus)
+- `.ojekrpg` — rpg — Jadi driver ojek — antar penumpang untuk gold + tip
 
 
 ## 🆕 Fitur Baru v21.5.0
@@ -374,7 +384,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## ✅ Status Audit (Update Terakhir)
 
-- **Total Plugin:** 1.614 (12 plugin dibikin ulang setelah dihapus AI agent lain)
+- **Total Plugin:** 1.624 (12 plugin dibikin ulang setelah dihapus AI agent lain)
 - **Syntax Check:** 0 error
 - **Broken Import:** 0
 - **api.neoxr.eu:** 0 (semua diganti)

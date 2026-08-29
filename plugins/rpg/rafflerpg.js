@@ -1,0 +1,151 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// RPG Raffle — Lottery ticket for a chance at big jackpot
+
+import {
+  ensureRpg, addGold, removeGold, addGems, addExp,
+  checkCooldown, setCooldown, formatTime
+} from "../../src/lib/nova-rpg-service.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/nova-error.js";
+
+const pluginConfig = {
+  name: "rafflerpg",
+  alias: ["rafflerpg", "raffle", "lotere"],
+  category: "rpg",
+  description: "Beli tiket lotere — jackpot hingga 50.000 gold",
+  usage: ".rafflerpg <buy|cek>",
+  example: ".rafflerpg buy",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 5,
+  energi: 0,
+  isEnabled: true,
+};
+
+const TICKET_PRICE = 100;
+const RAFFLE_COOLDOWN = 60 * 1000;
+
+// Prize tiers
+const PRIZES = [
+  { chance: 0.5, type: "jackpot", gold: 50000, label: "JACKPOT!" },
+  { chance: 2, type: "big", gold: 10000, label: "Big Win!" },
+  { chance: 8, type: "medium", gold: 2000, label: "Medium Win" },
+  { chance: 25, type: "small", gold: 500, label: "Small Win" },
+  { chance: 40, type: "tiny", gold: 150, label: "Tiny Win" },
+  // 24.5% = zonk
+];
+
+async function handler(m, { sock }) {
+  try {
+    const rpg = ensureRpg(m, m.pushName);
+    if (!rpg) return m.reply(claraWrap("rafflerpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+
+    const args = m.text?.trim().split(/\s+/) || [];
+    const action = args[0]?.toLowerCase();
+
+    if (!action || action === "cek" || action === "info") {
+      let msg = `╭──「 *ʀᴀғғʟᴇ* 」\n`;
+      msg += `│ 🎫 Lotere RPG — Coba keberuntunganmu!\n`;
+      msg += `│\n`;
+      msg += `│ 💵 Harga tiket: *${TICKET_PRICE} gold*\n`;
+      msg += `│ 💼 Gold kamu: *${rpg.gold}*\n`;
+      msg += `│\n`;
+      msg += `│ 📊 *ᴘʀɪᴢᴇ ᴛɪᴇʀs*\n`;
+      msg += `│ 🎯 Jackpot: *50.000 gold* (0.5%)\n`;
+      msg += `│ 🥇 Big Win: *10.000 gold* (2%)\n`;
+      msg += `│ 🥈 Medium: *2.000 gold* (8%)\n`;
+      msg += `│ 🥉 Small: *500 gold* (25%)\n`;
+      msg += `│ 🎁 Tiny: *150 gold* (40%)\n`;
+      msg += `│ 💀 Zonk: *nothing* (24.5%)\n`;
+      msg += `│\n`;
+      msg += `│ 📌 .rafflerpg buy — beli & buka tiket\n`;
+      msg += `╰──────────`;
+
+      return m.reply(msg);
+    }
+
+    if (action !== "buy" && action !== "beli") {
+      return m.reply(claraWrap("rafflerpg", "Gunakan .rafflerpg buy atau .rafflerpg cek", "warn"));
+    }
+
+    const cd = checkCooldown(m, "lastRaffle");
+    if (cd) {
+      await m.react("🚫");
+      return m.reply(claraWrap("rafflerpg", `Cooldown raffle tersisa *${formatTime(cd)}*`, "warn"));
+    }
+
+    if (rpg.gold < TICKET_PRICE) {
+      await m.react("🚫");
+      return m.reply(claraWrap("rafflerpg", `Gold tidak cukup! Tiket harga *${TICKET_PRICE}*, kamu punya *${rpg.gold}*.`, "warn"));
+    }
+
+    await m.react("🕒");
+
+    removeGold(m, TICKET_PRICE, sock);
+
+    // Roll prize
+    let roll = Math.random() * 100;
+    let prize = null;
+    for (const p of PRIZES) {
+      if (roll < p.chance) {
+        prize = p;
+        break;
+      }
+      roll -= p.chance;
+    }
+
+    setCooldown(m, "lastRaffle", RAFFLE_COOLDOWN);
+
+    if (!prize) {
+      // Zonk
+      await m.react("🐣");
+      let msg = `╭──「 *ʀᴀғғʟᴇ* 」\n`;
+      msg += `│ 🎫 Tiket: *${TICKET_PRICE} gold*\n`;
+      msg += `│ 🎰 Membuka tiket...\n`;
+      msg += `│\n`;
+      msg += `│ 💀 *ᴢᴏɴᴋ!* Tidak menang apapun\n`;
+      msg += `│ Coba lagi ya! Jackpot 50.000 gold menunggu\n`;
+      msg += `╰──────────`;
+
+      return m.reply(msg);
+    }
+
+    // Give prize
+    addGold(m, prize.gold);
+    const expGain = Math.floor(prize.gold / 10);
+    addExp(m, expGain);
+
+    // Jackpot bonus: gems
+    let gemText = "";
+    if (prize.type === "jackpot") {
+      addGems(m, 10);
+      gemText = `\n│ 💎 Bonus: *+10 gems*!\n`;
+    } else if (prize.type === "big") {
+      addGems(m, 3);
+      gemText = `\n│ 💎 Bonus: *+3 gems*!\n`;
+    }
+
+    await m.react("🐣");
+    let msg = `╭──「 *ʀᴀғғʟᴇ* 」\n`;
+    msg += `│ 🎫 Tiket: *${TICKET_PRICE} gold*\n`;
+    msg += `│ 🎰 Membuka tiket...\n`;
+    msg += `│\n`;
+    msg += `│ 🎉 *${prize.label}*\n`;
+    msg += `│ 💰 Menang: *${prize.gold} gold*\n`;
+    msg += `│ ✦ EXP: *+${expGain}*\n`;
+    if (gemText) msg += gemText;
+    msg += `│\n`;
+    msg += `│ 💼 Gold: *${rpg.gold - TICKET_PRICE + prize.gold}*\n`;
+    msg += `╰──────────`;
+
+    return m.reply(msg);
+  } catch (err) {
+    console.error("rafflerpg error:", err);
+    await m.react("❌");
+    return m.reply(claraWrap("rafflerpg", te(m.prefix, m.command, m.pushName), "error"));
+  }
+}
+
+export { pluginConfig as config, handler };
