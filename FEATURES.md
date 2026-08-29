@@ -3,7 +3,7 @@
 > Daftar lengkap fitur per kategori. Update file ini setiap kali ada perubahan fitur.
 
 ## Statistik
-- **Total Plugin:** 1.624
+- **Total Plugin:** 1.630
 - **Total Command:** 2.118+
 - **Total Kategori:** 39
 - **Versi:** 21.8.0
@@ -78,6 +78,12 @@
 - `.sampah` — rpg — Kumpulkan sampah untuk daur ulang (eco mode)
 - `.nguli` — rpg — Jadi buruh — gold stabil tanpa resiko (streak bonus)
 - `.ojekrpg` — rpg — Jadi driver ojek — antar penumpang untuk gold + tip
+- `.casinov2` — rpg — Casino v2: 4 game (Slot/Dice/Coinflip/Roulette, up to 36x)
+- `.dungeonv2` — rpg — Dungeon v2: 7 floor, boss room, gems + rare drops
+- `.adventurev2` — rpg — Adventure v2: 10 event types (treasure/monster/shrine/fairy/scroll)
+- `.berburuv2` — rpg — Berburu v2: rare monsters, combo kills, bonus drops
+- `.miningv2` — rpg — Mining v2: gem finds, cave-in, streak bonus
+- `.arenav3` — rpg — Arena v3: PvP ranked/casual/AI, ELO rating, leaderboard
 
 
 ## 🆕 Fitur Baru v21.5.0
@@ -384,7 +390,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## ✅ Status Audit (Update Terakhir)
 
-- **Total Plugin:** 1.624 (12 plugin dibikin ulang setelah dihapus AI agent lain)
+- **Total Plugin:** 1.630 (12 plugin dibikin ulang setelah dihapus AI agent lain)
 - **Syntax Check:** 0 error
 - **Broken Import:** 0
 - **api.neoxr.eu:** 0 (semua diganti)

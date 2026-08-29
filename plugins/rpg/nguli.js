@@ -2,7 +2,7 @@
 // RPG Nguli — Casual labor for steady gold (low risk, low reward)
 
 import {
-  ensureRpg, addExp, addGold, useEnergy,
+  ensureRpg, saveRpg, addExp, addGold, useEnergy,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
