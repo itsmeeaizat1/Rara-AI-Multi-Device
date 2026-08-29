@@ -198,10 +198,21 @@ binderbyteKey: ""   // Binderbyte cek resi
 - `.listonline` — group — Cek daftar member online/aktif di grup (alias: .liston)
 ## 📂 Daftar Kategori & Command
 
-### 🤖 AI (114 plugin)
+### 🤖 AI (125 plugin)
 nova-ai, nova-ai-addprovider, nova-ai-blog, nova-ai-code, nova-ai-copilot, nova-ai-detector, nova-ai-email, nova-ai-essay, nova-ai-explainer, nova-ai-image, nova-ai-ocr, nova-ai-prompt, nova-ai-providers, nova-ai-review, nova-ai-set, nova-ai-social, nova-ai-story, nova-ai-translate, nova-ai-web, nova-ai4chat, aianalyze, aiavatar, aibrowse, aicaption, aichat, aichat-history, aichat-model, aigrup, aihelp, aiidea, aiimggen, aimath, aiseo, aiset, aitimewarp, aivoice, anime-gen, audio.wav, automemegenerator, claudehaiku, deepai, deepaixemoz, deepseek, deepseekv2, deepseekv2xemoz, deepseekv4flash, deepseekv4flashxemoz, dolphin, enhance, feelbetter, gita, gpt4o, gpt5, gpt5v2xemoz, gpt5xemoz, jokowi-nova-ai, kobo-nova-ai, matematika, multi-nova-ai, musicmaker, muslimai, nova-nova-ai, novabanana, novabanana2, ocrsolve, openrouter, parallelai, prabowo-nova-ai, puter, paraphrase, qwen3, rewrite, simi, slangtranslate, sologo, stt, summarize, tanyadokter, text2img2, text2img, to3d, toanime, toblack, tocartoon, tocermin, tochibi, toemotebatu, tofigure, tofigurev2, toghibli, tohijab, toisland, tojapanese, tomanga, tomekah, tooilpainting, txt2img2, vision, waguri-nova-ai, zai
 roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, pujianai, sarkasai, cegpt
 
+- .lirikai - ai - AI generator lirik lagu dari tema
+- .hashtagai - ai - AI generator hashtag viral Instagram/TikTok
+- .artinama - ai - AI arti nama dan analisis kepribadian
+- .kepribadianai - ai - AI analisis kepribadian MBTI
+- .workoutai - ai - AI rencana workout personal
+- .gombalai - ai - AI generator gombalan/pickup lines
+- .alasanai - ai - AI generator alasan kreatif
+- .faktaai - ai - AI generator fakta menarik
+- .editimg - ai - Edit gambar dengan AI (text-to-image editing)
+- .aipr - ai - Foto soal/PR → AI baca dan jawab
+- .aichatimg - ai - Chat AI bisa lihat gambar + generate gambar
 ### 🌸 Anime (14 plugin)
 animechar, animecouple, animegenre, animemanga, animemoments, animepowerlevel, animequote, animerec, animestudio, animetop, animevillain, autoanimewinbu, otakudict, wallpaperanime
 
