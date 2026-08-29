@@ -126,9 +126,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const totalCases = getCaseCount();
     const totalFeatures = totalCommands + totalCases;
 
-    let userRole = "User", roleEmoji = "👤";
-    if (m.isOwner) { userRole = "Owner"; roleEmoji = "👑"; }
-    else if (m.isPremium) { userRole = "Premium"; roleEmoji = "💎"; }
+    let userRole = "User";
+    if (m.isOwner) { userRole = "Owner"; }
+    else if (m.isPremium) { userRole = "Premium"; }
 
     let weatherBlock = "";
     try {
@@ -200,7 +200,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ *${toSC("Energi")}:* ${m.isOwner || m.isPremium ? toSC("∞ Unlimited") : (user?.energi ?? 25)}
 │ *${toSC("Koin")}:* ${(user?.koin ?? 0).toLocaleString()}
 │ *${toSC("Limit")}:* ${m.isOwner || m.isPremium ? toSC("Unlimited") : (user?.limit ?? "-")}
-│ *${toSC("Role")}:* ${roleEmoji} ${toSC(userRole)}
+│ *${toSC("Role")}:* ${toSC(userRole)}
 │ *${toSC("Level")}:* ${userLevel}
 │ *${toSC("Xp")}:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
 │ *${toSC("Total Xp")}:* ${userExp.toLocaleString()}
