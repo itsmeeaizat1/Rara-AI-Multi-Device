@@ -364,7 +364,7 @@ async function handleAntiNSFW(m, sock, db) {
                             '┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n' +
                             '┃ 🔍 Terdeteksi: ' + matchesStr + '\n' +
                             '┃ ❌ Aksi: KICK OTOMATIS\n' +
-                            '╰──────────❀\n' +
+                            '╰──────────\n' +
                             '_User telah dikeluarkan karena mencapai batas peringatan_',
                         mentions: [m.sender],
                     })
@@ -377,7 +377,7 @@ async function handleAntiNSFW(m, sock, db) {
                             '┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n' +
                             '┃ 🔍 Terdeteksi: ' + matchesStr + '\n' +
                             '┃ ⚠️ Aksi: WARN (bot bukan admin)\n' +
-                            '╰──────────❀\n' +
+                            '╰──────────\n' +
                             '_Bot tidak bisa kick karena bukan admin_',
                         mentions: [m.sender],
                     })
@@ -391,7 +391,7 @@ async function handleAntiNSFW(m, sock, db) {
                         '┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n' +
                         '┃ 🔍 Terdeteksi: ' + matchesStr + '\n' +
                         '┃ 📌 Auto-kick: OFF (mode warn only)\n' +
-                        '╰──────────❀\n' +
+                        '╰──────────\n' +
                         '_User mencapai batas peringatan, tapi auto-kick dimatikan_',
                     mentions: [m.sender],
                 })
@@ -404,7 +404,7 @@ async function handleAntiNSFW(m, sock, db) {
                     '┃ 🏷️ Pelanggaran: ' + typeLabel + '\n' +
                     '┃ ⚠️ Warn: ' + currentWarn + '/' + maxWarn + '\n' +
                     '┃ 🔍 Terdeteksi: ' + matchesStr + '\n' +
-                    '╰──────────❀\n' +
+                    '╰──────────\n' +
                     '_Tolong hentikan! ' + (maxWarn - currentWarn) + ' peringatan lagi = kick_',
                 mentions: [m.sender],
             })
@@ -464,7 +464,7 @@ async function handler(m, { sock }) {
         txt += '┃ `' + m.prefix + 'anti18plus delete on/off`\n'
         txt += '┃ `' + m.prefix + 'anti18plus reset @user`\n'
         txt += '┃ `' + m.prefix + 'anti18plus resetall`\n'
-        txt += '╰──────────❀'
+        txt += '╰──────────'
 
         return await m.reply(claraWrap("anti18plus", txt))
     }
@@ -478,7 +478,7 @@ async function handler(m, { sock }) {
             '┃ Sistem: Warn 3x lalu kick\n' +
             '┃ Auto-delete: ON\n' +
             '┃ Auto-kick: ON\n' +
-            '╰──────────❀\n' +
+            '╰──────────\n' +
             '_Ketik `' + m.prefix + 'anti18plus` untuk lihat pengaturan_'
         )
     }
@@ -488,7 +488,7 @@ async function handler(m, { sock }) {
         return m.reply(
             '╭──「 *ANTI 18+ MATI* 」\n│\n' +
             '┃ Deteksi konten 18+ dinonaktifkan\n' +
-            '╰──────────❀'
+            '╰──────────'
         )
     }
 
@@ -503,7 +503,7 @@ async function handler(m, { sock }) {
                 '┃ Sistem: Warn 3x lalu kick\n' +
                 '┃ Auto-delete: ON\n' +
                 '┃ Auto-kick: ON\n' +
-                '╰──────────❀\n' +
+                '╰──────────\n' +
                 '_Ketik `' + m.prefix + 'anti18plus` untuk lihat pengaturan_'
             )
         }
@@ -512,7 +512,7 @@ async function handler(m, { sock }) {
             return m.reply(
                 '╭──「 *ANTI JUDI MATI* 」\n│\n' +
                 '┃ Deteksi konten judi dinonaktifkan\n' +
-                '╰──────────❀'
+                '╰──────────'
             )
         }
         return m.reply('❌ Gunakan: `' + m.prefix + 'anti18plus judi on` atau `' + m.prefix + 'anti18plus judi off`')
@@ -529,7 +529,7 @@ async function handler(m, { sock }) {
             '╭──「 *MAX WARN DIUBAH* 」\n│\n' +
             '┃ Max peringatan: *' + count + 'x*\n' +
             '┃ Berlaku untuk: Anti 18+ & Anti Judi\n' +
-            '╰──────────❀'
+            '╰──────────'
         )
     }
 
@@ -542,7 +542,7 @@ async function handler(m, { sock }) {
                 '╭──「 *AUTO-KICK ON* 」\n│\n' +
                 '┃ Auto-kick diaktifkan\n' +
                 '┃ User yang mencapai max warn akan di-kick\n' +
-                '╰──────────❀'
+                '╰──────────'
             )
         }
         if (kickOpt === 'off') {
@@ -553,7 +553,7 @@ async function handler(m, { sock }) {
                 '┃ Auto-kick dimatikan\n' +
                 '┃ User yang mencapai max warn hanya diberi peringatan\n' +
                 '┃ Tidak akan di-kick otomatis\n' +
-                '╰──────────❀'
+                '╰──────────'
             )
         }
         return m.reply('❌ Gunakan: `' + m.prefix + 'anti18plus kick on` atau `' + m.prefix + 'anti18plus kick off`')
@@ -567,7 +567,7 @@ async function handler(m, { sock }) {
             return m.reply(
                 '╭──「 *AUTO-DELETE ON* 」\n│\n' +
                 '┃ Pesan yang terdeteksi 18+/judi akan auto-delete\n' +
-                '╰──────────❀'
+                '╰──────────'
             )
         }
         if (delOpt === 'off') {
@@ -577,7 +577,7 @@ async function handler(m, { sock }) {
                 '╭──「 *AUTO-DELETE OFF* 」\n│\n' +
                 '┃ Pesan tidak akan dihapus\n' +
                 '┃ Tapi tetap terdeteksi dan diberi warn\n' +
-                '╰──────────❀'
+                '╰──────────'
             )
         }
         return m.reply('❌ Gunakan: `' + m.prefix + 'anti18plus delete on` atau `' + m.prefix + 'anti18plus delete off`')
@@ -601,7 +601,7 @@ async function handler(m, { sock }) {
             '┃ 👤 User: @' + targetTag + '\n' +
             '┃ Warn 18+: Direset\n' +
             '┃ Warn Judi: Direset\n' +
-            '╰──────────❀',
+            '╰──────────',
             { mentions: [target] }
         )
     }
@@ -615,7 +615,7 @@ async function handler(m, { sock }) {
         return m.reply(
             '╭──「 *SEMUA WARN DIRESET* 」\n│\n' +
             '┃ Semua warn 18+ dan judi di-reset\n' +
-            '╰──────────❀'
+            '╰──────────'
         )
     }
 

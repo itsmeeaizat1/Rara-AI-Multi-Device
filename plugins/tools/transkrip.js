@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
             `│\n` +
             `│ ${text}\n` +
             `│\n` +
-            `╰──────────❀\n\n` +
+            `╰──────────\n\n` +
             `🤖 Model: Whisper Large V3\n` +
             `🌐 Bahasa: Indonesia\n` +
             `📊 Ukuran: ~${(buffer.length / 1024).toFixed(1)} KB`

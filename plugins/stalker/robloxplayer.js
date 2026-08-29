@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
             if (player.previousUsernames?.length > 0) {
                 text += `│ 📜 Previous: ${player.previousUsernames.join(', ')}\n`
             }
-            text += `╰──────────❀\n\n`
+            text += `╰──────────\n\n`
         })
         
         text += `_Gunakan \`.robloxstalk <username>\` untuk info detail_`

@@ -133,7 +133,7 @@ function renderSelectionBox(prefix = ".") {
         `│ 4. ${prefix}beritav2 tribun  - Tribunnews`,
         "│ ",
         `│ Contoh: ${prefix}beritav2 detik`,
-        "╰──────────❀"
+        "╰──────────"
     ].join("\n");
 }
 
@@ -152,7 +152,7 @@ function renderNewsBox(sourceName, items) {
         }
     });
     
-    lines.push("╰──────────❀");
+    lines.push("╰──────────");
     return lines.join("\n");
 }
 
@@ -163,7 +163,7 @@ function renderErrorBox(sourceName, errorMsg) {
         `│ Detail: ${errorMsg || "Ada error nih"}`,
         "│ ",
         "│ Silakan coba sumber lain: detik, kompas, cnn, tribun",
-        "╰──────────❀"
+        "╰──────────"
     ].join("\n");
 }
 

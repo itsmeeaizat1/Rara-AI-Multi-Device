@@ -34,7 +34,7 @@ async function handler(m, { sock, db }) {
 │  1. \`${prefix}setmenuimage asset\` → pakai gambar lokal
 │  2. \`${prefix}setmenuimage asset nova2\` → ganti key asset
 │  3. \`${prefix}setmenuimage url https://link-gambar.jpg\` → pakai URL
-╰──────────❀`;
+╰──────────`;
     await m.reply(claraWrap("setmenuimage", txt));
     await m.react("🐣");
     return;
@@ -44,7 +44,7 @@ async function handler(m, { sock, db }) {
     const assetKey = args[1] || config.bot?.menuImage?.asset || "nova";
     if (!config.assets?.[assetKey]) {
       await m.reply(
-        `╭──「 *Error* 」\n│ Asset key \`${assetKey}\` tidak ditemukan di config\n│ Cek daftar asset di config.js\n╰──────────❀`
+        `╭──「 *Error* 」\n│ Asset key \`${assetKey}\` tidak ditemukan di config\n│ Cek daftar asset di config.js\n╰──────────`
       );
       await m.react("❌");
       return;
@@ -54,7 +54,7 @@ async function handler(m, { sock, db }) {
     db.setSetting("menuImageAsset", assetKey);
     await db.save();
     await m.reply(
-      `╭──「 *Berhasil* 」\n│ Mode: *asset*\n│ Asset: *${assetKey}*\n│ Path: \`${config.assets[assetKey]}\`\n╰──────────❀`
+      `╭──「 *Berhasil* 」\n│ Mode: *asset*\n│ Asset: *${assetKey}*\n│ Path: \`${config.assets[assetKey]}\`\n╰──────────`
     );
     await m.react("🐣");
     return;
@@ -64,7 +64,7 @@ async function handler(m, { sock, db }) {
     const url = args.slice(1).join(" ").trim();
     if (!url || !url.startsWith("http")) {
       await m.reply(
-        `╭──「 *Error* 」\n│ URL tidak valid\n│ Contoh: \`${prefix}setmenuimage url https://example.com/banner.jpg\`\n╰──────────❀`
+        `╭──「 *Error* 」\n│ URL tidak valid\n│ Contoh: \`${prefix}setmenuimage url https://example.com/banner.jpg\`\n╰──────────`
       );
       await m.react("❌");
       return;
@@ -78,12 +78,12 @@ async function handler(m, { sock, db }) {
       db.setSetting("menuImageUrl", url);
       await db.save();
       await m.reply(
-        `╭──「 *Berhasil* 」\n│ Mode: *url*\n│ URL: ${url}\n│ Gambar akan di-cache otomatis\n╰──────────❀`
+        `╭──「 *Berhasil* 」\n│ Mode: *url*\n│ URL: ${url}\n│ Gambar akan di-cache otomatis\n╰──────────`
       );
       await m.react("🐣");
     } catch (e) {
       await m.reply(
-        `╭──「 *Error* 」\n│ Gagal fetch URL: ${e.message}\n╰──────────❀`
+        `╭──「 *Error* 」\n│ Gagal fetch URL: ${e.message}\n╰──────────`
       );
       await m.react("❌");
     }

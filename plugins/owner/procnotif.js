@@ -28,7 +28,7 @@ async function handler(m, { sock, db }) {
 │ Kategori: ai, canvas, image, maker, sticker, convert, tools, download, tts, anime
 │ \`${prefix}procnotif on\` → aktifkan
 │ \`${prefix}procnotif off\` → nonaktifkan
-╰──────────❀`;
+╰──────────`;
     return m.reply(claraWrap("procnotif", txt));
   }
 

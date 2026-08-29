@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
     if (data.album) caption += `│ Album: ${data.album}\n`;
     if (data.durasi && data.durasi > 0) caption += `│ Durasi: ${formatDuration(data.durasi)}\n`;
     if (data.size) caption += `│ Size: ${formatSize(data.size)}\n`;
-    caption += `╰──────────❀`;
+    caption += `╰──────────`;
 
     // Send thumbnail if available
     if (data.image) {

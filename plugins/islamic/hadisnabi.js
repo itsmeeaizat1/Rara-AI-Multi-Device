@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
 
     if (!bookKey) {
       let txt = "╭──「 *Cara pakai:* 」\n│\n";
-      txt += "╰──────────❀\n\n";
+      txt += "╰──────────\n\n";
       let i = 1;
       for (const [key, book] of Object.entries(BOOKS)) {
         txt += i + ". *" + book.name + "*\n";
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
     const sectionName = indoData.metadata?.section?.[sectionNum] || "Unknown";
 
     let txt = "╭──「 *HADIS NABI* 」\n│\n";
-    txt += "╰──────────❀\n";
+    txt += "╰──────────\n";
     txt += "Kitab: *" + book.name + "*\n";
     txt += "Bab: " + sectionName + "\n";
     txt += "No. Hadis: " + hadis.hadithnumber + "\n\n";

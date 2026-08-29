@@ -326,7 +326,7 @@ Mungkin kakaknya sedikit typo atau salah ketik? 😅👇`
     // msg += `┃ ${confidence.emoji} *Confidence:* ${topPercent}% (${confidence.text})\n\n`
     // msg += `╰━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n`
     
-    // msg += `╭┈┈⬡「 💡 *sAran Command* 」`
+    // msg += `╭┈┈「 💡 *sAran Command* 」`
     
     // suggestions.forEach((s, i) => {
     //     const matchPercent = Math.round(s.similarity * 100)
@@ -340,13 +340,13 @@ Mungkin kakaknya sedikit typo atau salah ketik? 😅👇`
     //     msg += `┃   └ 📏 Jarak: ${s.distance} karakter\n`
     // })
     
-    // msg += `╰┈┈⬡\n\n`
+    // msg += `╰┈┈\n\n`
     
-    // msg += `╭┈┈⬡「 ℹ️ *Tips* 」\n`
+    // msg += `╭┈┈「 ℹ️ *Tips* 」\n`
     // msg += `┃ • Pilih command dari daftar di atas\n`
     // msg += `┃ • Ketik \`${prefix}menu\` untuk daftar lengkap\n`
     // msg += `┃ • Ketik \`${prefix}help <cmd>\` untuk bantuan\n`
-    // msg += `╰┈┈⬡`
+    // msg += `╰┈┈`
     
     // return msg
 }

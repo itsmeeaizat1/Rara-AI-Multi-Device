@@ -62,10 +62,10 @@ async function handler(m, { sock }) {
     
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
     
-    let text = `╭──「 🎂 Daftar Ultah 」\n`
+    let text = `╭──「 Daftar Ultah 」\n`
     text += `│  🎂 *DaғTar Ultah*\n`
-    text += `╰──────────❀\n\n`
-    text += `╭──「 📋 *${birthdays.length} Member* 」\n`
+    text += `╰──────────\n\n`
+    text += `╭──「 *${birthdays.length} Member* 」\n`
     
     const mentions = []
     
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
         text += `│ ... dan ${birthdays.length - 15} lainnya\n`
     }
     
-    text += `╰┈┈┈┈┈┈┈┈⬡\n\n`
+    text += `╰┈┈┈┈┈┈┈┈\n\n`
     text += `Set birthday: .setbirthday DD-MM`
     
     await m.reply(claraWrap("birthdaylist", text), { mentions });

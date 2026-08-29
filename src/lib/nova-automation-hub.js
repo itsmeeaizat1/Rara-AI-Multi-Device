@@ -121,7 +121,7 @@ async function checkVPSHealth() {
     alerts.forEach(a => text += "├── " + a + "\n")
     text += "├──\n"
     text += "├── Cek detail: .servermonitor status\n"
-    text += "╰──────────❀"
+    text += "╰──────────"
 
     await sendToOwner(text)
     console.log("[automation-hub] VPS alert sent")
@@ -160,7 +160,7 @@ async function checkCrashGuard() {
             "├── Restart manual diperlukan.\n" +
             "├──\n" +
             "├── .crashguard restart " + p.name + "\n" +
-            "╰──────────❀"
+            "╰──────────"
           )
         }
         continue
@@ -180,7 +180,7 @@ async function checkCrashGuard() {
           "├── " + new Date().toLocaleString("id-ID") + "\n" +
           "├── PM2 \"" + p.name + "\" was DOWN — auto-restarted\n" +
           "├── Restarts in window: " + (recentRestarts.length + 1) + "/" + maxRestarts + "\n" +
-          "╰──────────❀"
+          "╰──────────"
         )
         console.log("[automation-hub] Auto-restarted PM2:", p.name)
       } catch (e) {
@@ -189,7 +189,7 @@ async function checkCrashGuard() {
           "╭──「 Crash Guard Failed 」\n" +
           "├── Gagal auto-restart PM2 \"" + p.name + "\"\n" +
           "├── " + e.message.slice(0, 100) + "\n" +
-          "╰──────────❀"
+          "╰──────────"
         )
       }
     }
@@ -260,7 +260,7 @@ async function checkSmartDigest() {
       text += "├── " + (i + 1) + ". " + uid.split("@")[0] + " (" + count + ")\n"
     })
   }
-  text += "╰──────────❀"
+  text += "╰──────────"
 
   await sendToOwner(text)
   console.log("[automation-hub] Daily digest sent")
@@ -309,7 +309,7 @@ export async function checkAutoForward(m, sock) {
     forwardText += "├──\n"
     forwardText += "├── Pesan:\n"
     forwardText += "├── " + originalText.slice(0, 500) + "\n"
-    forwardText += "╰──────────❀"
+    forwardText += "╰──────────"
 
     await sock.sendMessage(ownerJid, { text: forwardText })
 
@@ -375,13 +375,13 @@ export async function checkAutoMod(m, sock) {
     if (action === "delete") {
       try { await sock.sendMessage(chat, { delete: m.key }) } catch {}
       await sock.sendMessage(chat, {
-        text: "╭──「 Auto Mod 」\n├── Pesan dihapus: " + violation + "\n├── by @" + sender.split("@")[0] + "\n╰──────────❀",
+        text: "╭──「 Auto Mod 」\n├── Pesan dihapus: " + violation + "\n├── by @" + sender.split("@")[0] + "\n╰──────────",
         mentions: [sender]
       })
     } else if (action === "warn") {
       const warns = groupCfg.warnings[sender] || 1
       await sock.sendMessage(chat, {
-        text: "╭──「 Auto Mod Warning 」\n├── @" + sender.split("@")[0] + " — " + violation + "\n├── Warning " + warns + "/3\n╰──────────❀",
+        text: "╭──「 Auto Mod Warning 」\n├── @" + sender.split("@")[0] + " — " + violation + "\n├── Warning " + warns + "/3\n╰──────────",
         mentions: [sender]
       })
       // Auto-kick after 3 warnings
@@ -389,7 +389,7 @@ export async function checkAutoMod(m, sock) {
         try {
           await sock.groupParticipantsUpdate(chat, [sender], "remove")
           await sock.sendMessage(chat, {
-            text: "╭──「 Auto Mod 」\n├── @" + sender.split("@")[0] + " dikeluarkan (3 warnings)\n╰──────────❀",
+            text: "╭──「 Auto Mod 」\n├── @" + sender.split("@")[0] + " dikeluarkan (3 warnings)\n╰──────────",
             mentions: [sender]
           })
         } catch {}
@@ -399,7 +399,7 @@ export async function checkAutoMod(m, sock) {
         await sock.sendMessage(chat, { delete: m.key })
         await sock.groupParticipantsUpdate(chat, [sender], "remove")
         await sock.sendMessage(chat, {
-          text: "╭──「 Auto Mod 」\n├── @" + sender.split("@")[0] + " dikeluarkan: " + violation + "\n╰──────────❀",
+          text: "╭──「 Auto Mod 」\n├── @" + sender.split("@")[0] + " dikeluarkan: " + violation + "\n╰──────────",
           mentions: [sender]
         })
       } catch {}

@@ -269,13 +269,13 @@ async function handler(m, { sock }) {
 
     const data = loadData();
     if (!data || data.length === 0) {
-      await m.reply("╭──「 🔢 Family 100 」\n│ ❌ Soalnya lagi kosong nih 🫠\n│ Coba lagi nanti ya!\n╰──────────❀");
+      await m.reply("╭──「 Family 100 」\n│ ❌ Soalnya lagi kosong nih 🫠\n│ Coba lagi nanti ya!\n╰──────────");
       return;
     }
 
     const questionData = data[Math.floor(Math.random() * data.length)];
     if (!questionData || !questionData.jawaban || questionData.jawaban.length === 0) {
-      await m.reply("╭──「 🔢 Family 100 」\n│ ❌ Soalnya rusak nih 😵\n│ Coba ulang ya!\n╰──────────❀");
+      await m.reply("╭──「 Family 100 」\n│ ❌ Soalnya rusak nih 😵\n│ Coba ulang ya!\n╰──────────");
       return;
     }
 

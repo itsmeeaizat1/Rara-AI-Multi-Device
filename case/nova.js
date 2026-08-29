@@ -100,11 +100,11 @@ async function handleCommand(m, sock) {
 
           const text =
             `⚡ *CASE SYSTEM PING*\n\n` +
-            `╭┈┈⬡「 📊 *sᴛᴀᴛᴜs* 」\n` +
+            `╭┈┈「 📊 *sᴛᴀᴛᴜs* 」\n` +
             `┃ ◦ Latency: *${latency}ms*\n` +
             `┃ ◦ Process: *${processTime}ms*\n` +
             `┃ ◦ Status: ${pingStatus}\n` +
-            `╰┈┈⬡`;
+            `╰┈┈`;
 
           await m.reply(text);
           await m.react("✅");
@@ -149,17 +149,17 @@ async function handleCommand(m, sock) {
           let text = `╔══════════════════╗\n`;
           text += `   📦 *${toSmallCaps("CASE LIST")}*\n`;
           text += `╚══════════════════╝\n\n`;
-          text += `╭┈┈⬡「 📊 *ɪɴꜰᴏ* 」\n`;
+          text += `╭┈┈「 📊 *ɪɴꜰᴏ* 」\n`;
           text += `┃ ◦ Total: *${totalCases}* cases\n`;
           text += `┃ ◦ Kategori: *${Object.keys(casesByCategory).length}*\n`;
-          text += `╰┈┈⬡\n\n`;
+          text += `╰┈┈\n\n`;
 
           for (const category in casesByCategory) {
             const commands = casesByCategory[category];
             const emoji = CATEGORY_EMOJIS[category] || "📌";
             const categoryName = toSmallCaps(category);
 
-            text += `╭┈┈⬡「 ${emoji} *${categoryName}* 」\n`;
+            text += `╭┈┈「 ${emoji} *${categoryName}* 」\n`;
             commands.forEach((cmd, i) => {
               const prefix = m.prefix || ".";
               const aliases = caseAliases[cmd]
@@ -167,7 +167,7 @@ async function handleCommand(m, sock) {
                 : "";
               text += `┃ ${i + 1}. ${prefix}${cmd}${aliases}\n`;
             });
-            text += `╰┈┈⬡\n\n`;
+            text += `╰┈┈\n\n`;
           }
 
           text += `*━━━━━━━━━━━━━━━*\n`;
@@ -223,17 +223,17 @@ async function handleCommand(m, sock) {
           }
 
           if (totalPlugins === 0) {
-            await m.reply("╭──「 ⚠️ Menu 」\n├── Belum ada plugin yang dimuat\n├── Coba restart bot dulu ya\n╰──────────❀");
+            await m.reply("╭──「 Menu 」\n├── Belum ada plugin yang dimuat\n├── Coba restart bot dulu ya\n╰──────────");
             return { handled: true };
           }
 
           let text = `╔══════════════════╗\n`;
           text += `   🔌 *${toSmallCaps("PLUGIN LIST")}*\n`;
           text += `╚══════════════════╝\n\n`;
-          text += `╭┈┈⬡「 📊 *ɪɴꜰᴏ* 」\n`;
+          text += `╭┈┈「 📊 *ɪɴꜰᴏ* 」\n`;
           text += `┃ ◦ Total: *${totalPlugins}* plugins\n`;
           text += `┃ ◦ Kategori: *${categories.length}*\n`;
-          text += `╰┈┈⬡\n\n`;
+          text += `╰┈┈\n\n`;
 
           for (const category of categories.sort()) {
             const commands = commandsByCategory[category] || [];
@@ -242,7 +242,7 @@ async function handleCommand(m, sock) {
             const emoji = CATEGORY_EMOJIS[category] || "📌";
             const categoryName = toSmallCaps(category);
 
-            text += `╭┈┈⬡「 ${emoji} *${categoryName}* 」\n`;
+            text += `╭┈┈「 ${emoji} *${categoryName}* 」\n`;
 
             commands.sort().forEach((cmd, i) => {
               const plugin = pluginStore.commands.get(cmd);
@@ -255,7 +255,7 @@ async function handleCommand(m, sock) {
               }
             });
 
-            text += `╰┈┈⬡\n\n`;
+            text += `╰┈┈\n\n`;
           }
 
           text += `*━━━━━━━━━━━━━━━*\n`;

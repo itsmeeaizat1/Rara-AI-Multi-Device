@@ -61,51 +61,51 @@ async function handler(m, { sock }) {
         for (const ver of VALID_SERVERS) {
             txt += `│ \`${prefix}addowner${ver}\` | \`${prefix}delowner${ver}\` | \`${prefix}listowner${ver}\`\n`
         }
-        txt += `╰──────────❀\n\n`
+        txt += `╰──────────\n\n`
         
         txt += `╭──「 *ᴄᴇᴏ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
         for (const ver of VALID_SERVERS) {
             txt += `│ \`${prefix}addceo${ver}\` | \`${prefix}delceo${ver}\` | \`${prefix}listceo${ver}\`\n`
         }
-        txt += `╰──────────❀\n\n`
+        txt += `╰──────────\n\n`
         
         txt += `╭──「 *ʀᴇꜱᴇʟʟᴇʀ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
         for (const ver of VALID_SERVERS) {
             txt += `│ \`${prefix}addreseller${ver}\` | \`${prefix}delreseller${ver}\` | \`${prefix}listreseller${ver}\`\n`
         }
-        txt += `╰──────────❀\n\n`
+        txt += `╰──────────\n\n`
     }
     
     txt += `╭──「 *ᴄʀᴇᴀᴛᴇ ꜱᴇʀᴠᴇʀ* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `│ \`${prefix}1gb${ver}\` - \`${prefix}10gb${ver}\` | \`${prefix}unli${ver}\`\n`
     }
-    txt += `╰──────────❀\n\n`
+    txt += `╰──────────\n\n`
     
     txt += `╭──「 *ᴀᴅᴍɪɴ ᴘᴀɴᴇʟ* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `│ \`${prefix}cadmin${ver}\` | \`${prefix}deladmin${ver}\` | \`${prefix}listadmin${ver}\`\n`
     }
-    txt += `╰──────────❀\n\n`
+    txt += `╰──────────\n\n`
     
     txt += `╭──「 *ꜱᴇʀᴠᴇʀ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `│ \`${prefix}listserver${ver}\` | \`${prefix}delserver${ver}\` | \`${prefix}serverinfo${ver}\`\n`
     }
-    txt += `╰──────────❀\n\n`
+    txt += `╰──────────\n\n`
     
     txt += `╭──「 *ᴜꜱᴇʀ ᴍᴀɴᴀɢᴇᴍᴇɴᴛ* 」\n`
     for (const ver of VALID_SERVERS) {
         txt += `│ \`${prefix}listuser${ver}\`\n`
     }
-    txt += `╰──────────❀\n\n`
+    txt += `╰──────────\n\n`
     
     if (!isResellerOnly) {
         txt += `╭──「 *ɢᴄ ꜱᴇʟʟᴇʀ ᴘᴀɴᴇʟ* 」\n`
         for (const ver of VALID_SERVERS) {
             txt += `│ \`${prefix}addgcseller${ver}\` | \`${prefix}resetgcseller${ver}\`\n`
         }
-        txt += `╰──────────❀\n\n`
+        txt += `╰──────────\n\n`
         
         const doConfig = config.digitalocean || {}
         const doHasToken = doConfig.token ? '✅' : '❌'
@@ -124,7 +124,7 @@ async function handler(m, { sock }) {
         txt += `┃\n`
         txt += `│ Kontrol:\n`
         txt += `│ \`${prefix}turnon\` | \`${prefix}turnoff\` | \`${prefix}restartvps\`\n`
-        txt += `╰──────────❀\n\n`
+        txt += `╰──────────\n\n`
     }
     
     txt += `_Powered by ${config.info?.website || 'NovaAI'}_`

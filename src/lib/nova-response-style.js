@@ -22,7 +22,7 @@ function smartGreeting(prefix = ".", userName = "") {
   else if (hour >= 14 && hour < 18) timeGreeting = "Selamat sore";
 
   const namePart = userName ? `, ${userName}` : "";
-  return `╭──「\n│\n  │ ${timeGreeting}${namePart}! Ada yang bisa aku bantu?\n│\n╰──────────❀`;
+  return `╭──「\n│\n  │ ${timeGreeting}${namePart}! Ada yang bisa aku bantu?\n│\n╰──────────`;
 }
 
 function previewBlock(items = [], title = "Preview") {
@@ -30,7 +30,7 @@ function previewBlock(items = [], title = "Preview") {
     const val = typeof value === "undefined" || value === null ? "tidak diketahui" : value;
     return `  │ *${label}:* ${val}`;
   });
-  return `╭──「 ${title}\n│\n${lines.join("\n")}\n│\n╰──────────❀`;
+  return `╭──「 ${title}\n│\n${lines.join("\n")}\n│\n╰──────────`;
 }
 
 function resultBlock(title, items = [], prefix = ".") {
@@ -42,7 +42,7 @@ function resultBlock(title, items = [], prefix = ".") {
     const alias = Array.isArray(item.alias) && item.alias.length ? ` (${item.alias.slice(0, 2).join(", ")})` : "";
     return `  │ ${i + 1}. ${prefix}${name}${alias}`;
   });
-  return [`╭──「 ${title} 」`, `│`, ...body, `│`, `╰──────────❀`].join("\n");
+  return [`╭──「 ${title} 」`, `│`, ...body, `│`, `╰──────────`].join("\n");
 }
 
 function aiChatBlock(role, text) {
@@ -58,7 +58,7 @@ function chatBubble(role, text) {
 
 function infoBlock(title, lines = []) {
   const body = lines.map((line) => `  │ ${line}`);
-  return [`╭──「 ${title} 」`, `│`, ...body, `│`, `╰──────────❀`].join("\n");
+  return [`╭──「 ${title} 」`, `│`, ...body, `│`, `╰──────────`].join("\n");
 }
 
 function userInfoBlock(name, id, role = "User") {

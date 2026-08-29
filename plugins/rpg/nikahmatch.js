@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
         `╭──「 *ʀᴘɢ ɴɪᴋᴀʜ* 」\n` +
         `│ ❌ Belum punya pacar, mau nikah sama siapa? 🗿\n` +
         `│ Gunakan \`${m.prefix}rpgcouple @tag\` dulu\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       return m.reply(
         `╭──「 *ʀᴘɢ ɴɪᴋᴀʜ* 」\n` +
         `│ 💍 Kamu sudah menikah dengan *${cinta.spouseName}*\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
         `│ Butuh: *${MARRIAGE_MIN_AFFECTION}* affection\n` +
         `│ Punya: *${cinta.affection || 0}* affection\n` +
         `│ Kencan lebih banyak dengan \`${m.prefix}rpgkencan\`\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
         `│ ❌ Belum cukup lama pacaran!\n` +
         `│ Butuh minimal *${MARRIAGE_MIN_DATING_DAYS} hari*\n` +
         `│ Sudah: *${datingDays} hari*\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
         `│ ❌ Gold tidak cukup untuk biaya nikah!\n` +
         `│ Biaya: *${MARRIAGE_COST} gold*\n` +
         `│ Punya: *${rpg.gold || 0} gold*\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
       `│ ⏱️ Berlaku *1 jam*\n\n` +
       `_Balas *terima* atau *tolak*_\n` +
       `Atau \`${m.prefix}rpgterimanikah\` / \`${m.prefix}rpgtolaknikah\`\n\n` +
-      `╰──────────❀`
+      `╰──────────`
     );
     await m.react("💍");
   } catch (e) {
@@ -138,12 +138,12 @@ async function answerHandler(m, sock) {
       delete global.rpgNikahSessions[sessKey];
       await m.react("💍");
       await m.reply(
-        `╭──「 *sᴇʟᴀᴍᴀᴛ ᴍᴇɴɪᴋᴀʜ 💍* 」\n` +
+        `╭──「 *sᴇʟᴀᴍᴀᴛ ᴍᴇɴɪᴋᴀʜ * 」\n` +
         `│ 💒 @${m.sender.split("@")[0]} dan @${proposer.split("@")[0]} resmi menikah!\n` +
         `│ 💰 Biaya: *${MARRIAGE_COST} gold*\n` +
         `│ 💕 Semoga sakinah, mawaddah, warahmah 🤲\n` +
         `│ ⚡ Marriage bonus aktif untuk RPG battle!\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
       return true;
     }
@@ -152,10 +152,10 @@ async function answerHandler(m, sock) {
       delete global.rpgNikahSessions[sessKey];
       await m.react("💔");
       await m.reply(
-        `╭──「 *ʟᴀᴍᴀʀᴀɴ ᴅɪᴛᴏʟᴀᴋ 💔* 」\n` +
+        `╭──「 *ʟᴀᴍᴀʀᴀɴ ᴅɪᴛᴏʟᴀᴋ * 」\n` +
         `│ 💔 @${m.sender.split("@")[0]} menolak @${proposer.split("@")[0]}\n` +
         `│ Sabar ya, jodoh tidak kemana! 🤲\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
       return true;
     }

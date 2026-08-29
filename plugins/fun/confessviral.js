@@ -64,7 +64,7 @@ function buildMessage(mode, pesan, targetName) {
   text += `  ${outro}\n\n`;
   text += `  🔒 _Pesan ini dikirim secara anonim_\n`;
   text += `  ✉️ _Balas pesan ini untuk membalas_\n\n`;
-  text += `╰──────────❀`;
+  text += `╰──────────`;
   return text;
 }
 
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
       txt += `\n  *ᴄᴏɴᴛᴏʜ:*\n`;
       txt += `│ \`${m.prefix}confessviral 6281234567890|nembak|Aku suka kamu\`\n\n`;
       txt += `  🤫 _Identitas 100% anonim dan aman_\n\n`;
-      txt += `╰──────────❀`;
+      txt += `╰──────────`;
       await m.reply(txt);
       return;
     }
@@ -132,7 +132,7 @@ async function handler(m, { sock }) {
         `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n` +
         `│ Format salah! Butuh 3 bagian nih\n` +
         `│ \`${m.prefix}confessviral nomor|mode|pesan\`\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
       return;
     }
@@ -146,7 +146,7 @@ async function handler(m, { sock }) {
       await m.reply(
         `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n` +
         `│ Nomor tujuan kosong nih!\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
       return;
     }
@@ -158,7 +158,7 @@ async function handler(m, { sock }) {
       Object.entries(MODES).forEach(([k, v]) => {
         txt += `│ ${v.emoji} \`${k}\`\n`;
       });
-      txt += `\n╰──────────❀`;
+      txt += `\n╰──────────`;
       await m.reply(txt);
       return;
     }
@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
       await m.reply(
         `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n` +
         `│ Pesan kosong atau kependekan nih! Minimal 5 karakter.\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
       return;
     }
@@ -176,7 +176,7 @@ async function handler(m, { sock }) {
       await m.reply(
         `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n` +
         `│ ❌ Pesan kepanjangan! Maksimal 1000 karakter.\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
       return;
     }
@@ -191,7 +191,7 @@ async function handler(m, { sock }) {
       await m.reply(
         `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n` +
         `│ ❌ Nomor tidak valid!\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
       return;
     }
@@ -202,7 +202,7 @@ async function handler(m, { sock }) {
       await m.reply(
         `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n` +
         `│ 😂 Nggak bisa confess ke diri sendiri!\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
       return;
     }
@@ -215,7 +215,7 @@ async function handler(m, { sock }) {
         await m.reply(
           `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n` +
           `│ ❌ Nomor \`${targetNumber}\` nggak terdaftar di WhatsApp!\n\n` +
-          `╰──────────❀`
+          `╰──────────`
         );
         return;
       }
@@ -257,7 +257,7 @@ async function handler(m, { sock }) {
       if (targetName) receipt += `│ 👤 Nama: *${targetName}*\n`;
       receipt += `│ 🔒 Status: *Anonim*\n\n`;
       receipt += `  _Kalau dia balas, otomatis diterusin ke sini_\n\n`;
-      receipt += `╰──────────❀`;
+      receipt += `╰──────────`;
 
       await m.reply(receipt);
       await m.react(md.emoji);
@@ -266,7 +266,7 @@ async function handler(m, { sock }) {
       await m.reply(
         `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n` +
         `│ ❌ Gagal kirim: ${sendErr.message}\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
       try { await m.react("❌"); } catch {}
     }
@@ -298,7 +298,7 @@ async function replyHandler(m, { sock }) {
     replyText += `  💬 *ɪsɪ ʙᴀʟᴀsᴀɴ:*\n`;
     replyText += `  \`\`\`${replyMessage}\`\`\`\n\n`;
     replyText += `  🔒 _Identitas kamu tetap anonim_\n\n`;
-    replyText += `╰──────────❀`;
+    replyText += `╰──────────`;
 
     await sock.sendMessage(info.senderChat, {
       text: replyText,
@@ -309,7 +309,7 @@ async function replyHandler(m, { sock }) {
       text:
         `╭──「 *ᴄᴏɴꜰᴇss ᴠɪʀᴀʟ* 」\n\n` +
         `│ ✅ Balasan terkirim ke pengirim!\n\n` +
-        `╰──────────❀`,
+        `╰──────────`,
     });
 
     global.confessViralData.delete(quotedId);

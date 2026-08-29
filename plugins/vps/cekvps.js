@@ -65,14 +65,14 @@ async function handler(m, { sock }) {
 │ *ꜱᴛᴀᴛᴜꜱ:* ${status}
 │ *IPv4:* ${ip}
 │ *IPv6:* ${ipv6}
-╰──────────❀
+╰──────────
 
 ╭──「 *Spec* 」\n│ *ʀᴀᴍ:* ${droplet.memory} MB
 │ *ᴄᴘᴜ:* ${droplet.vcpus} vCPU
 │ *ᴅɪꜱᴋ:* ${droplet.disk} GB
 │ *ʀᴇɢɪᴏɴ:* ${droplet.region?.name || droplet.region?.slug}
 │ *OS:* ${droplet.image?.distribution} ${droplet.image?.name}
-╰──────────❀
+╰──────────
 
 Created: ${timeHelper.fromTimestamp(droplet.created_at, "DD MMMM YYYY HH:mm:ss")}`;
 

@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
             if (i < videos.length - 1) text += "│\n"
         }
 
-        text += "╰──────────❀"
+        text += "╰──────────"
 
         // Kirim dengan thumbnail
         const thumb = videos[0]?.thumbnails?.[0]?.url || videos[0]?.thumbnail?.[0]?.url

@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
 │
 Usage: \`${m.prefix}ttsearch <query>\`
 │
-╰──────────❀
+╰──────────
 
 │ \`Contoh: ${m.prefix}ttsearch anime\``, "ttsearch");
   }

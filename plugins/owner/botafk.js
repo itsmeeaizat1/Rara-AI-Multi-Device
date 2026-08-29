@@ -30,10 +30,10 @@ async function handler(m, { sock }) {
         const duration = formatDuration(afkDuration)
         
         return m.reply(claraWrap("Bot Kembali Online", `✅ *Bot Kembali Online*\n\n` +
-            `╭──「 📊 *sTatistik Afk* 」\n` +
+            `╭──「 *sTatistik Afk* 」\n` +
             `│ ⏱️ Durasi: \`${duration}\`\n` +
             `│ 📝 Alasan: \`${currentAfk.reason || '-'}\`\n` +
-            `╰──────────❀\n\n` +
+            `╰──────────\n\n` +
             `Bot siap menerima command!`))
     } else {
         const reason = m.args.join(' ') || 'AFK'
@@ -45,15 +45,15 @@ async function handler(m, { sock }) {
         })
         
         return m.reply( claraWrap("Bot Afk Aktif", `💤 *Bot Afk Aktif*\n\n` +
-            `╭──「 📋 *Info* 」\n` +
+            `╭──「 *Info* 」\n` +
             `│ 📝 Alasan: \`${reason}\`\n` +
             `│ ⏰ sEjak: \`${moment().tz('Asia/Jakarta').format('HH:mm:ss')}\`\n` +
-            `╰──────────❀\n\n` +
-            `╭──「 🔒 *Akses* 」\n` +
+            `╰──────────\n\n` +
+            `╭──「 *Akses* 」\n` +
             `│ ✅ Owner bot\n` +
             `│ ✅ Bot sendiri (fromMe)\n` +
             `│ ❌ Semua user lain\n` +
-            `╰──────────❀\n\n` +
+            `╰──────────\n\n` +
             `User lain akan dapat pesan AFK\n` +
             `Ketik \`${m.prefix}botafk\` untuk kembali online`), "botafk")
     }

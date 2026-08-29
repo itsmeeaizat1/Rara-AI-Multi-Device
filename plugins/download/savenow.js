@@ -196,7 +196,7 @@ async function handler(m, { sock }) {
       "" + FORMAT_LABELS[format] + "\n" +
       "" + (request.title || "Tanpa Judul").slice(0, 60) + "\n" +
       "│ ⏳ Sedang diproses server...\n" +
-      "╰──────────❀"
+      "╰──────────"
     );
 
     // Step 2: Poll progress
@@ -250,7 +250,7 @@ async function handler(m, { sock }) {
             "╭──「 " + platformIcon + " SaveNow 」\n" +
             "" + FORMAT_LABELS[format] + "\n" +
             "" + (result.title || "Tanpa Judul").slice(0, 60) + "\n" +
-            "╰──────────❀",
+            "╰──────────",
           contextInfo: ctxInfo,
         },
         { quoted: m }

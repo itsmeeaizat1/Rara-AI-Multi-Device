@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
     caption += `│ Author: ${data.author}\n`;
     if (data.duration > 0) caption += `│ Durasi: ${data.duration}s\n`;
     caption += `│ Source: ${data.source} API\n`;
-    caption += `╰──────────❀`;
+    caption += `╰──────────`;
 
     await sock.sendMedia(m.chat, data.video, caption, m, { type: "video" });
 

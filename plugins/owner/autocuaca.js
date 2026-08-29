@@ -171,7 +171,7 @@ async function handler(m, { sock }) {
       if (subAction === "list" || !subAction) {
         const status = getCuacaStatus();
         let txt = "╭──「 *DAFTAR LOKASI CUACA* 」\n│\n";
-        txt += "╰──────────❀\n\n";
+        txt += "╰──────────\n\n";
         for (let i = 0; i < status.locations.length; i++) {
           const loc = status.locations[i];
           txt += (i + 1) + ". " + loc.name;
@@ -200,7 +200,7 @@ async function handler(m, { sock }) {
     if (action === "status" || action === "list" || !action) {
       const status = getCuacaStatus();
       let txt = "╭──「 *AUTO CUACA BMKG STYLE* 」\n│\n";
-      txt += "╰──────────❀\n\n";
+      txt += "╰──────────\n\n";
       txt += "Status: *" + (status.enabled ? "ON" : "OFF") + "*\n";
       txt += "Jadwal: " + formatSchedule(status.schedules) + " WIB\n";
       txt += "Lokasi: " + status.locations.length + " kota\n\n";

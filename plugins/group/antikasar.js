@@ -233,7 +233,7 @@ async function handleAntiKasar(m, sock, db) {
 │ ⚠️ Warn: ${currentWarn}/${maxWarn}
 │ 🔍 Terdeteksi: ${matchesStr}
 │ ❌ Aksi: KICK OTOMATIS
-╰──────────❀
+╰──────────
 _User dikeluarkan karena kata kata kasar_`,
                         mentions: [m.sender]
                     })
@@ -244,7 +244,7 @@ _User dikeluarkan karena kata kata kasar_`,
 │ 🏷️ Pelanggaran: 🤬 Kata Kasar
 │ ⚠️ Warn: ${currentWarn}/${maxWarn}
 │ ⚠️ Aksi: Bot bukan admin
-╰──────────❀`,
+╰──────────`,
                         mentions: [m.sender]
                     })
                 }
@@ -255,7 +255,7 @@ _User dikeluarkan karena kata kata kasar_`,
 │ 🏷️ Pelanggaran: 🤬 Kata Kasar
 │ ⚠️ Warn: ${currentWarn}/${maxWarn}
 │ 📌 Auto-kick: OFF
-╰──────────❀
+╰──────────
 _Kata kasar berlebihan tapi auto-kick dimatikan_`,
                     mentions: [m.sender]
                 })
@@ -267,7 +267,7 @@ _Kata kasar berlebihan tapi auto-kick dimatikan_`,
 │ 🏷️ Pelanggaran: 🤬 Kata Kasar
 │ ⚠️ Warn: ${currentWarn}/${maxWarn}
 │ 🔍 Terdeteksi: ${matchesStr}
-╰──────────❀
+╰──────────
 _Jaga perkataan! ${maxWarn - currentWarn} lagi = kick_`,
                 mentions: [m.sender]
             })
@@ -311,7 +311,7 @@ async function handler(m, { sock }) {
         txt += '┃ `' + m.prefix + 'antikasar delete on/off`\n'
         txt += '┃ `' + m.prefix + 'antikasar reset @user`\n'
         txt += '┃ `' + m.prefix + 'antikasar resetall`\n'
-        txt += '╰──────────❀'
+        txt += '╰──────────'
         return await m.reply(claraWrap("antikasar", txt))
     }
 
@@ -321,13 +321,13 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Antikasar", `╭──「 *ANTI KASAR AKTIF* 」
 │ Deteksi kata kasar diaktifkan
 │ Sistem: Warn 3x lalu kick
-╰──────────❀`))
+╰──────────`))
     }
     if (sub === 'off') {
         db.setGroup(m.chat, { antikasar: 'off' })
         return m.reply(claraWrap("Antikasar", `╭──「 *ANTI KASAR MATI* 」
 │ Deteksi kata kasar dinonaktifkan
-╰──────────❀`))
+╰──────────`))
     }
     if (sub === 'warn') {
         const count = parseInt(args[1])
@@ -336,7 +336,7 @@ async function handler(m, { sock }) {
         m.react('✅')
         return m.reply(`╭──「 *MAX WARN* 」
 │ Max peringatan: *${count}x*
-╰──────────❀`)
+╰──────────`)
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
@@ -360,14 +360,14 @@ async function handler(m, { sock }) {
         return m.reply(`╭──「 *WARN DIRESET* 」
 │ 👤 User: @${target.split('@')[0]}
 │ Warn Kasar: Direset
-╰──────────❀`, { mentions: [target] })
+╰──────────`, { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
         updated.kasarWarns = {}
         db.setGroup(m.chat, updated)
         m.react('✅')
-        return m.reply(claraWrap("Antikasar", '╭──「 *SEMUA WARN DIRESET* 」\n│\n╰──────────❀'))
+        return m.reply(claraWrap("Antikasar", '╭──「 *SEMUA WARN DIRESET* 」\n│\n╰──────────'))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antikasar` untuk daftar command')
 }

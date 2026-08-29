@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
             text += "│ URL: " + track.external_urls.spotify + "\n"
         }
 
-        text += "╰──────────❀"
+        text += "╰──────────"
 
         // Kirim dengan thumbnail album jika ada
         if (cover) {

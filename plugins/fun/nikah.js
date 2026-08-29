@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `│ \`${m.prefix}nikah @tag\`\n` +
         `│ Reply pesan pasangan + \`${m.prefix}nikah\`\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
       `│ ⏱️ Berlaku *1 jam*\n\n` +
       `_Balas pesan ini dengan *terima* atau *tolak*_\n` +
       `Atau gunakan \`${m.prefix}terimanikah\` / \`${m.prefix}tolaknikah\`\n\n` +
-      `╰──────────❀`
+      `╰──────────`
     );
     await m.react("💍");
   } catch (e) {

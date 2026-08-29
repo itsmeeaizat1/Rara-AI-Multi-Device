@@ -41,7 +41,7 @@ async function handler(m, { args, prefix }) {
       `┊\n` +
       `┊ Ketik ${prefix}tebakangka <angka>\n` +
       `┊ Contoh: ${prefix}tebakangka 50\n` +
-      `╰──────────❀`
+      `╰──────────`
     );
   }
 
@@ -69,7 +69,7 @@ async function handler(m, { args, prefix }) {
       `┊ 🎉 Benar! Angkanya ${game.target}\n` +
       `┊ 🔄 Tebakan ke-${game.attempts} dari ${game.maxAttempts}\n` +
       `┊ 🏆 +${expGain} EXP\n` +
-      `╰──────────❀`
+      `╰──────────`
     );
   }
 
@@ -80,7 +80,7 @@ async function handler(m, { args, prefix }) {
       `┊ 😭 Kesempatan habis!\n` +
       `┊ Angkanya: ${game.target}\n` +
       `┊ Coba lagi: ${prefix}tebakangka mulai\n` +
-      `╰──────────❀`
+      `╰──────────`
     );
   }
 
@@ -91,7 +91,7 @@ async function handler(m, { args, prefix }) {
     `┊ 📊 Tebakan: ${guess}\n` +
     `┊ 💡 Hint: ${hint}\n` +
     `┊ 🔄 Sisa: ${sisa} kesempatan\n` +
-    `╰──────────❀`
+    `╰──────────`
   );
 }
 

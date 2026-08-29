@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
       if (cinta.divorceCount) msg += `│ 💔 Total Cerai: *${cinta.divorceCount}x*\n`;
     }
 
-    msg += `\n╰──────────❀`;
+    msg += `\n╰──────────`;
 
     await m.reply(msg);
     await m.react("💑");

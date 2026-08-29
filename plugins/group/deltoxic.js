@@ -43,10 +43,10 @@ async function handler(m, { sock }) {
     m.react('✅')
     
     await m.reply(claraWrap("Kata Toxic Dihapus", `✅ *ᴋᴀᴛᴀ ᴛᴏxɪᴄ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
-        `╭──「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
+        `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `│ 📝 Kata: \`${word}\`\n` +
         `│ 📊 sIsa: \`${toxicWords.length}\` kata\n` +
-        `╰──────────❀`))
+        `╰──────────`))
 }
 
 export { pluginConfig as config, handler }

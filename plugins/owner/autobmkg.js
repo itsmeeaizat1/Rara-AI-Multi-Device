@@ -23,18 +23,18 @@ function claraWrap(title, text) {
     if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:")) return line;
     return toSC(line);
   }).join("\n");
-  return `❀°˖ ${toSC(title)} ˖°❀\n\n${scBody}`;
+  return `${toSC(title)}\n\n${scBody}`;
 }
 async function formatAndReply( text, cmdName) {
   const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
   const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
   // Convert all text to small caps, skip command lines
   text = text.split("\n").map(line => {
-    if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:") || line.includes("❀°˖") || line.includes("❀⋆｡˚")) return line;
+    if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:") || line.includes("°˖") || line.includes("⋆｡˚")) return line;
     return toSC(line);
   }).join("\n");
-  if (!text.includes("╰──────────❀")) {
-    text = text + "\n\n╰──────────❀";
+  if (!text.includes("╰──────────")) {
+    text = text + "\n\n╰──────────";
   }
   return await m.reply(text);
 }
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
       const { fetchGempaTerkini } = await import("../../src/lib/nova-bmkg-scheduler.js");
       const g = await fetchGempaTerkini();
       let txt = "╭──「 *" + g.Tanggal + "* 」\n│\n";
-      txt += "╰──────────❀\n\n";
+      txt += "╰──────────\n\n";
       txt += "Status: *" + (status.enabled ? "ON" : "OFF") + "*\n";
       txt += "Jadwal: " + formatSchedule(status.schedules) + " WIB\n";
       txt += "Min Magnitude: M" + (status.minMagnitude || 0) + "\n";

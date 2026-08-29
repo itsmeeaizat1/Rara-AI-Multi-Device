@@ -38,7 +38,7 @@ ${prefix}aihelp download
 ${prefix}aihelp sticker
 ${prefix}aihelp group
 
-╰──────────❀`);
+╰──────────`);
       await m.react("🐣");
       return;
     }
@@ -64,7 +64,7 @@ ${prefix}aihelp group
 │ Gak ada command untuk "${keyword}" nih
 │ 💡 Coba keyword lain ya!
 │ Contoh: download, sticker, game, rpg
-╰──────────❀`);
+╰──────────`);
       await m.react("❌");
       return;
     }
@@ -78,13 +78,13 @@ ${prefix}aihelp group
     const text = `╭──「 *Aɪ Hᴇʟᴘ* 」\n│ *Keyword:* ${keyword}
 │ *Ditemukan:* ${matches.length} command
 ├──「 Hasil 」
-${cmdLines}╰──────────❀`;
+${cmdLines}╰──────────`;
 
     await m.reply(text);
     await m.react("🐣");
   } catch (e) {
     console.error("[aihelp] handler error:", e.message);
-    try { await m.reply("╭──「 AI Help 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────❀"); } catch {}
+    try { await m.reply("╭──「 AI Help 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────"); } catch {}
     await m.react("❌");
   }
 }

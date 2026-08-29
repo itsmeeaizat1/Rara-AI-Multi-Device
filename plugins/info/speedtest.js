@@ -153,17 +153,17 @@ async function handler(m, { sock }) {
     let text = `╭──「 *Speedtest* 」\n│ *ʜᴏꜱᴛ:* ${hostname}
 │ *ᴘʟᴀᴛꜰᴏʀᴍ:* ${platform} (${arch})
 │ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
-╰──────────❀
+╰──────────
 
 ╭──「 *CPU & RAM* 」\n│ *ᴄᴘᴜ:* ${cpuModel}
 │ *ᴄᴏʀᴇꜱ:* ${cpuCores}
 │ *ʀᴀᴍ:* ${(usedMem / 1000000).toFixed(0)} / ${(totalMem / 1000000).toFixed(0)} MB (${memUsage}%)
-╰──────────❀
+╰──────────
 
 ╭──「 *Network* 」\n│ *ᴘɪɴɢ:* ${result.ping}
 │ *ᴅᴏᴡɴʟᴏᴀᴅ:* ${result.download}
 │ *ᴜᴘʟᴏᴀᴅ:* ${result.upload}
-╰──────────❀
+╰──────────
 
 │ Metode: ${result.method}`;
 
@@ -171,7 +171,7 @@ async function handler(m, { sock }) {
     await m.reply(claraWrap("speedtest", text));
   } catch (err) {
     await m.reply(`╭──「 *Speedtest Error* 」\n│ ${err.message || "Unknown error"}
-╰──────────❀`);
+╰──────────`);
   }
 }
 

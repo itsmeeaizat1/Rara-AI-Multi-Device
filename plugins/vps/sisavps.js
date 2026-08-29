@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
         let txt = `╭──「 *Kuota DigitalOcean* 」\n│ *ʟɪᴍɪᴛ:* ${dropletLimit} droplet
 │ *ᴛᴇʀᴘᴀᴋᴀɪ:* ${dropletsUsed} droplet
 │ *ꜱɪꜱᴀ:* ${dropletsRemaining} droplet
-╰──────────❀
+╰──────────
 
 Email: ${account.email}
 Status: ${account.status}`

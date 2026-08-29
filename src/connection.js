@@ -630,7 +630,7 @@ async function startConnection(options = {}) {
             "├── Waktu: " + waktu,
             "├── Host: " + hostname,
             "├── Platform: " + platform + " | Node: " + nodeVer,
-            "╰──────────❀",
+            "╰──────────",
             "",
             isFirstPair
               ? "_Bot baru saja tersambung untuk pertama kali._"
@@ -861,7 +861,7 @@ async function startConnection(options = {}) {
             `├──\n` +
             `├── Ketik *${prefix}menu* untuk lihat fitur\n` +
             `├── Ketik *${prefix}help* untuk bantuan\n` +
-            `╰──────────❀`;
+            `╰──────────`;
 
           const ctxInfo = {
             mentionedJid: inviter ? [inviter] : [],

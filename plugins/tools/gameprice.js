@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
                 boxText += `│\n`;
             }
         });
-        boxText += `╰──────────❀`;
+        boxText += `╰──────────`;
 
         const thumbUrl = deals[0]?.thumb;
         let imageBuffer = null;
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
             `╭──「 Error 」`,
             `│ Gagal mengambil data diskon game!`,
             `│ Alasan: ${error.message || "Ada error nih"}`,
-            `╰──────────❀`
+            `╰──────────`
         ].join("\n");
         await m.reply(errorBox);
     }

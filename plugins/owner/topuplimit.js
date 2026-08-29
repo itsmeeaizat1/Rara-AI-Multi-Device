@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
       `│ User: *${targetJid.split("@")[0]}*\n` +
       `│ Sebelum: *${formatNumber(beforeEnergi)}*\n` +
       `│ Sesudah: *∞ Unlimited*\n` +
-      `╰──────────❀`, "topuplimit");
+      `╰──────────`, "topuplimit");
   }
 
   // Tambah limit
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
   msg += `│ Sebelum: *${formatNumber(beforeEnergi)}*\n`;
   msg += `│ Tambah: *+${formatNumber(amount)}*\n`;
   msg += `│ Sesudah: *${formatNumber(afterEnergi)}*\n`;
-  msg += `╰──────────❀`;
+  msg += `╰──────────`;
 
   return m.reply( msg, "topuplimit");
 }

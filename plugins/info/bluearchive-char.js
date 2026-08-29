@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
       caption += `${char.bio.substring(0, 200)}${char.bio.length > 200 ? "..." : ""}\n\n`;
     }
 
-    caption += `╭──「 📋 *ᴘʀᴏꜰɪʟᴇ* 」\n`;
+    caption += `╭──「 *ᴘʀᴏꜰɪʟᴇ* 」\n`;
     if (char.profile?.familyName)
       caption += `│ 👤 Family: *${char.profile.familyName}*\n`;
     if (char.profile?.age) caption += `│ 🎂 Age: *${char.profile.age}*\n`;
@@ -116,9 +116,9 @@ async function handler(m, { sock }) {
     if (char.profile?.club) caption += `│ 🎯 Club: *${char.profile.club}*\n`;
     if (char.profile?.hobby) caption += `│ ⭐ Hobby: *${char.profile.hobby}*\n`;
     if (char.profile?.CV) caption += `│ 🎤 CV: *${char.profile.CV}*\n`;
-    caption += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
+    caption += `╰┈┈┈┈┈┈┈┈\n\n`;
 
-    caption += `╭──「 ⚔️ *ʙᴀᴛᴛʟᴇ* 」\n`;
+    caption += `╭──「 *ʙᴀᴛᴛʟᴇ* 」\n`;
     if (char.type) caption += `│ 🏷️ Type: *${char.type}*\n`;
     if (char.role) caption += `│ 🎭 Role: *${char.role}*\n`;
     if (char.position) caption += `│ 📍 Position: *${char.position}*\n`;
@@ -126,14 +126,14 @@ async function handler(m, { sock }) {
       caption += `│ 🔫 Weapon: *${char.profile.weaponType}*\n`;
     if (char.profile?.weaponName)
       caption += `│ ⚔️ Weapon Name: *${char.profile.weaponName}*\n`;
-    caption += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
+    caption += `╰┈┈┈┈┈┈┈┈\n\n`;
 
     if (char.skills && char.skills.length > 0) {
-      caption += `╭──「 ✨ *ꜱᴋɪʟʟꜱ* 」\n`;
+      caption += `╭──「 *ꜱᴋɪʟʟꜱ* 」\n`;
       for (const skill of char.skills.slice(0, 4)) {
         caption += `│ 🔹 *${skill.name}* (${skill.type})\n`;
       }
-      caption += `╰┈┈┈┈┈┈┈┈⬡`;
+      caption += `╰┈┈┈┈┈┈┈┈`;
     }
 
     if (char.img) {

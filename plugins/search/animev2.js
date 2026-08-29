@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
                 listText += `│\n`
             }
         })
-        listText += "╰──────────❀"
+        listText += "╰──────────"
 
         if (m.react) await m.react("🐣")
 

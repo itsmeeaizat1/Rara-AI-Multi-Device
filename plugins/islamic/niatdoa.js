@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
 
   if (!action) {
     let txt = "╭──「 *Niat Sholat:* 」\n│\n";
-    txt += "╰──────────❀\n";
+    txt += "╰──────────\n";
     txt += "*" + sholat.toUpperCase() + "*\n\n";
     txt += "Arab:\n" + niat.arab + "\n\n";
     txt += "Latin:\n" + niat.latin + "\n\n";
@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
   }
 
   let txt = "╭──「 *" + doa.title.toUpperCase() + "* 」\n│\n";
-  txt += "╰──────────❀\n\n";
+  txt += "╰──────────\n\n";
   txt += "Arab:\n" + doa.arab + "\n\n";
   txt += "Latin:\n" + doa.latin + "\n\n";
   txt += "Arti:\n" + doa.arti;

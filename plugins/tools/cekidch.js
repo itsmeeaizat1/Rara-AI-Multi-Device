@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
             `│  ✦ sTATUs     : *${chVerified}*\n` +
             `│  ✦ DIBUAT      : *${chCreated}*\n` +
             `│  ✦ DEsKRIPsI  : ${descPreview}\n` +
-            `╰──────────❀❖`
+            `╰──────────`
 
         const buttons = [
             {

@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     const r = res.data?.result || res.data?.data;
     if (!r?.download) throw new Error("Gagal mengambil video YouTube");
 
-    const caption = `╭──「 YouTube MP4 」\n│ Title: ${r.title || "YouTube Video"}\n╰──────────❀`;
+    const caption = `╭──「 YouTube MP4 」\n│ Title: ${r.title || "YouTube Video"}\n╰──────────`;
 
     await sock.sendMedia(m.chat, r.download, caption, m, { type: "video" });
     m.react("🐣");

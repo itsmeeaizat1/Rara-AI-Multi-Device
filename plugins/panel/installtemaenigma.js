@@ -66,8 +66,8 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply( `╭──「 🎨 *ɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ ᴇɴɪɢᴍᴀ* 」
-│ Usage: \`${m.prefix}installtemaenigma <ip>|<password>|<link_wa>|<link_group>|<link_channel>\`\n╰──────────❀\n\nContoh:\n\`${m.prefix}installtemaenigma 192.168.1.1|pass|https://wa.me/628xxx|https://t.me/group|https://t.me/channel\``, "installtemaenigma")
+        return m.reply( `╭──「 *ɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ ᴇɴɪɢᴍᴀ* 」
+│ Usage: \`${m.prefix}installtemaenigma <ip>|<password>|<link_wa>|<link_group>|<link_channel>\`\n╰──────────\n\nContoh:\n\`${m.prefix}installtemaenigma 192.168.1.1|pass|https://wa.me/628xxx|https://t.me/group|https://t.me/channel\``, "installtemaenigma")
     }
 
     const parts = text.split('|')
@@ -112,9 +112,9 @@ function handler(m, { sock }) {
             await execSSH(conn, BUILD_CMD)
 
             m.react('✅')
-            await m.reply(claraWrap("installtemaenigma", `╭──「 ✅ *ᴛᴇᴍᴀ ᴇɴɪɢᴍᴀ* 」
+            await m.reply(claraWrap("installtemaenigma", `╭──「 *ᴛᴇᴍᴀ ᴇɴɪɢᴍᴀ* 」
 │ sTatus: *ᴛᴇʀɪɴꜱᴛᴀʟʟ*
-│ Ip: ${ipvps}\n╰──────────❀\n\n_Tema Enigma + dependencies berhasil diinstall!_`))
+│ Ip: ${ipvps}\n╰──────────\n\n_Tema Enigma + dependencies berhasil diinstall!_`))
         } catch (err) {
             m.reply(claraWrap("installtemaenigma", te(m.prefix, m.command, m.pushName), "error"))
         } finally {

@@ -54,7 +54,7 @@ async function handler(m, { text, args }) {
             lines.push("│ 💡 *Cara Pakai:*");
             lines.push("│ Ketik .quranv4 <nomor_surat> untuk membaca.");
             lines.push("│ Contoh: .quranv4 1");
-            lines.push("╰──────────❀");
+            lines.push("╰──────────");
 
             return await m.reply(lines.join("\n"));
         }
@@ -64,7 +64,7 @@ async function handler(m, { text, args }) {
             return await m.reply(
                 "╭──「 Error 」\n" +
                 "│ Nomor surat tidak valid! Harap masukkan nomor 1 sampai 114.\n" +
-                "╰──────────❀"
+                "╰──────────"
             );
         }
 
@@ -99,14 +99,14 @@ async function handler(m, { text, args }) {
             }
         }
 
-        lines.push("╰──────────❀");
+        lines.push("╰──────────");
 
         return await m.reply(lines.join("\n"));
     } catch (error) {
         return await m.reply(
             "╭──「 Error 」\n" +
             `│ ${error.message || "Gagal memproses permintaan Al-Quran."}\n` +
-            "╰──────────❀"
+            "╰──────────"
         );
     }
 }

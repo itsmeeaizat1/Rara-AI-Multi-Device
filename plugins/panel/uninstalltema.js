@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
                 await m.reply(claraWrap("root", `╭──「 ✅ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ*
 │ sTatus: *ʙᴇʀʜᴀꜱɪʟ*
 │ Ip: ${ipvps}
-╰──────────❀
+╰──────────
 
 │ _Tema berhasil diuninstall!_`))
                 ress.end()

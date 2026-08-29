@@ -92,14 +92,14 @@ class NovaGames {
           if (session && session.gameType === gameType) {
             const remaining = getRemainingTime(chatId);
             const answer = session.question[cfg.answerField];
-            let text = `❀°˖ *${cfg.title} — GAME BERJALAN* ˖°❀\n\n`;
+            let text = `*${cfg.title} — GAME BERJALAN*\n\n`;
             if (cfg.questionField && session.question[cfg.questionField]) {
               text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
             }
             text += `│ ❏ Hint: *${getHint(answer, cfg.hintCount)}*\n`;
             text += `│ ❏ Sisa waktu: *${formatRemainingTime(remaining)}*\n\n`;
             text += `_Reply pesan game ini untuk jawab atau ketik "nyerah"_`;
-            text += `\n╰──────────❀`;
+            text += `\n╰──────────`;
             await m.reply(text);
             return;
           }
@@ -138,7 +138,7 @@ class NovaGames {
           caption += `│ ❏ Waktu: *${cfg.timeout / 1000} detik*\n`;
           caption += `│ ❏ Hadiah: *Limit, Koin, EXP (random)*\n\n`;
           caption += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
-          caption += `╰──────────❀`;
+          caption += `╰──────────`;
 
           sentMsg = await sock.sendMessage(
             chatId,
@@ -156,7 +156,7 @@ class NovaGames {
           text += `│ ❏ Waktu: *${cfg.timeout / 1000} detik*\n`;
           text += `│ ❏ Hadiah: *Limit, Koin, EXP (random)*\n\n`;
           text += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
-          text += `╰──────────❀`;
+          text += `╰──────────`;
 
           sentMsg = await m.reply(text);
         }
@@ -168,7 +168,7 @@ class NovaGames {
         setSessionTimer(chatId, async () => {
           try {
             let text = `${pick(TIMEOUT_MESSAGES)}\n\n`;
-            text += `❀°˖ *${cfg.title}* ˖°❀\n\n`;
+            text += `*${cfg.title}*\n\n`;
             if (cfg.questionField && question[cfg.questionField]) {
               text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
             }
@@ -177,7 +177,7 @@ class NovaGames {
               text += `│ ❏ Info: ${question.deskripsi}\n`;
             }
             text += `\n_Gak ada yang bisa jawab nih~_\n`;
-            text += `╰──────────❀`;
+            text += `╰──────────`;
             await sock.sendMessage(chatId, { text });
           } catch (e) {
             console.error(`[${gameType}] Timeout error:`, e.message);
@@ -211,7 +211,7 @@ class NovaGames {
         if (isSurrender(userAnswer)) {
           endSession(chatId);
           let text = `${pick(SURRENDER_MESSAGES)}\n\n`;
-          text += `❀°˖ *${cfg.title}* ˖°❀\n\n`;
+          text += `*${cfg.title}*\n\n`;
           if (cfg.questionField && session.question[cfg.questionField]) {
             text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
           }
@@ -220,7 +220,7 @@ class NovaGames {
             text += `│ ❏ Info: ${session.question.deskripsi}\n`;
           }
           text += `\n_@${m.sender.split("@")[0]} menyerah_\n`;
-          text += `╰──────────❀`;
+          text += `╰──────────`;
           try {
             await sock.sendMessage(chatId, {
               text,
@@ -261,7 +261,7 @@ class NovaGames {
           db.save();
 
           let text = `${pick(WIN_MESSAGES)}\n\n`;
-          text += `❀°˖ *${cfg.title}* ˖°❀\n\n`;
+          text += `*${cfg.title}*\n\n`;
           text += `│ ❏ Jawaban: *${answer}*\n`;
           text += `│ ❏ Pemenang: *@${m.sender.split("@")[0]}*\n`;
           text += `│ ❏ Percobaan: *${session.attempts}x*\n\n`;
@@ -278,7 +278,7 @@ class NovaGames {
             text += `\n│ ❏ Info: ${session.question.deskripsi}\n`;
           }
 
-          text += `\n╰──────────❀`;
+          text += `\n╰──────────`;
 
           try {
             await sock.sendMessage(chatId, {

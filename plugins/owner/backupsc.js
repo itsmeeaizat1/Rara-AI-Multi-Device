@@ -193,12 +193,12 @@ async function handler(m, { sock }) {
         mimetype: "application/zip",
         caption:
           `✅ *Backup sElesai*\n\n` +
-          `╭──「 📋 *Detail* 」\n` +
+          `╭──「 *Detail* 」\n` +
           `│ 📝 Nama: \`${zipFileName}\`\n` +
           `│ 📊 sIze: \`${fileSizeMB} MB\`\n` +
           `│ 📁 File: \`${fileCount}\`\n` +
           `│ 📅 Tanggal: \`${moment().tz("Asia/Jakarta").format("DD/MM/YYYY")}\`\n` +
-          `╰──────────❀`,
+          `╰──────────`,
         contextInfo: {
           forwardingScore: 0,
           isForwarded: false,

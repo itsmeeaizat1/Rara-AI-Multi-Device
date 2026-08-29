@@ -81,11 +81,11 @@ async function handler(m, { sock }) {
 
     await m.reply(
         `🚫 *User Dibanned*\n\n` +
-        `╭──「 📋 *Detail* 」\n` +
+        `╭──「 *Detail* 」\n` +
         `│ 📱 Nomor: \`${targetNumber}\`\n` +
         `│ 🚫 sTatus: \`Banned\`\n` +
         `│ 📊 Total: \`${bannedList.length}\` User\n` +
-        `╰──────────❀`
+        `╰──────────`
     )
 }
 

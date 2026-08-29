@@ -202,7 +202,7 @@ async function handleAntiRibut(m, sock, db) {
 │ ⚠️ Warn: ${currentWarn}/${maxWarn}
 │ 🔍 Terdeteksi: ${matchesStr}
 │ ❌ Aksi: KICK OTOMATIS
-╰──────────❀
+╰──────────
 _User dikeluarkan karena membuat keributan_`,
                         mentions: [m.sender]
                     })
@@ -213,7 +213,7 @@ _User dikeluarkan karena membuat keributan_`,
 │ 🏷️ Pelanggaran: ⚔️ Keributan
 │ ⚠️ Warn: ${currentWarn}/${maxWarn}
 │ ⚠️ Aksi: Bot bukan admin
-╰──────────❀`,
+╰──────────`,
                         mentions: [m.sender]
                     })
                 }
@@ -224,7 +224,7 @@ _User dikeluarkan karena membuat keributan_`,
 │ 🏷️ Pelanggaran: ⚔️ Keributan
 │ ⚠️ Warn: ${currentWarn}/${maxWarn}
 │ 📌 Auto-kick: OFF
-╰──────────❀
+╰──────────
 _Keributan terus tapi auto-kick dimatikan_`,
                     mentions: [m.sender]
                 })
@@ -236,7 +236,7 @@ _Keributan terus tapi auto-kick dimatikan_`,
 │ 🏷️ Pelanggaran: ⚔️ Keributan
 │ ⚠️ Warn: ${currentWarn}/${maxWarn}
 │ 🔍 Terdeteksi: ${matchesStr}
-╰──────────❀
+╰──────────
 _Jaga suasana! ${maxWarn - currentWarn} lagi = kick_`,
                 mentions: [m.sender]
             })
@@ -280,7 +280,7 @@ async function handler(m, { sock }) {
         txt += '┃ `' + m.prefix + 'antiribut delete on/off`\n'
         txt += '┃ `' + m.prefix + 'antiribut reset @user`\n'
         txt += '┃ `' + m.prefix + 'antiribut resetall`\n'
-        txt += '╰──────────❀'
+        txt += '╰──────────'
         return await m.reply(claraWrap("antiribut", txt))
     }
 
@@ -290,13 +290,13 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Antiribut", `╭──「 *ANTI RIBUT AKTIF* 」
 │ Deteksi keributan diaktifkan
 │ Sistem: Warn 3x lalu kick
-╰──────────❀`))
+╰──────────`))
     }
     if (sub === 'off') {
         db.setGroup(m.chat, { antiribut: 'off' })
         return m.reply(claraWrap("Antiribut", `╭──「 *ANTI RIBUT MATI* 」
 │ Deteksi keributan dinonaktifkan
-╰──────────❀`))
+╰──────────`))
     }
     if (sub === 'warn') {
         const count = parseInt(args[1])
@@ -305,7 +305,7 @@ async function handler(m, { sock }) {
         m.react('✅')
         return m.reply(`╭──「 *MAX WARN* 」
 │ Max peringatan: *${count}x*
-╰──────────❀`)
+╰──────────`)
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
@@ -329,14 +329,14 @@ async function handler(m, { sock }) {
         return m.reply(`╭──「 *WARN DIRESET* 」
 │ 👤 User: @${target.split('@')[0]}
 │ Warn Ribut: Direset
-╰──────────❀`, { mentions: [target] })
+╰──────────`, { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
         updated.ributWarns = {}
         db.setGroup(m.chat, updated)
         m.react('✅')
-        return m.reply(claraWrap("Antiribut", '╭──「 *SEMUA WARN DIRESET* 」\n│\n╰──────────❀'))
+        return m.reply(claraWrap("Antiribut", '╭──「 *SEMUA WARN DIRESET* 」\n│\n╰──────────'))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antiribut` untuk daftar command')
 }

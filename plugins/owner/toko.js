@@ -149,7 +149,7 @@ async function handler(m, { sock }) {
     if (products.length === 0) return m.reply(claraWrap("Info", "Belum ada produk" + (cat ? " di kategori " + cat : "")));
 
     let txt = "╭──「 *DAFTAR PRODUK* 」\n│\n";
-    txt += "╰──────────❀\n\n";
+    txt += "╰──────────\n\n";
     for (const p of products) {
       txt += p.id + "\n";
       txt += "  " + p.name + " — " + formatRupiah(p.price) + "\n";
@@ -182,7 +182,7 @@ async function handler(m, { sock }) {
     if (orders.length === 0) return m.reply(claraWrap("Info", "Tidak ada pesanan" + (filter !== "all" ? " dengan status " + filter : "")));
 
     let txt = "╭──「 *PESANAN — " + filter.toUpperCase() + "* 」\n│\n";
-    txt += "╰──────────❀\n\n";
+    txt += "╰──────────\n\n";
     for (const o of orders) {
       txt += o.id + "\n";
       txt += "  " + o.productName + " (" + o.qty + "x) = " + formatRupiah(o.total) + "\n";
@@ -267,7 +267,7 @@ async function handler(m, { sock }) {
     // list
     const cats = listCategories();
     let txt = "╭──「 *KATEGORI* 」\n│\n";
-    txt += "╰──────────❀\n\n";
+    txt += "╰──────────\n\n";
     cats.forEach((c, i) => { txt += (i + 1) + ". " + c + "\n"; });
     txt += "\nTambah: .toko kategori add <nama>\nHapus: .toko kategori del <nama>";
     return await m.reply(claraWrap("tokobase3", txt));
@@ -311,7 +311,7 @@ async function handler(m, { sock }) {
     const doneCount = data.orders.filter((o) => o.status === "done").length;
 
     let txt = "╭──「 *NOVA STORE* 」\n│\n";
-    txt += "╰──────────❀\n\n";
+    txt += "╰──────────\n\n";
     txt += "Nama: " + (config.storeName || "Nova Store") + "\n";
     txt += "Deskripsi: " + (config.storeDesc || "-") + "\n";
     txt += "Notif Buyer: " + (config.autoNotify ? "ON" : "OFF") + "\n";

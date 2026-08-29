@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
       `│ 📝 JUDUL: *${api_paste_name}*\n` +
       `│ 📊 UKURAN: *${text.length} chars*\n` +
       `│ 🔗 LINK: ${url}\n` +
-      `╰──────────❀\n\n` +
+      `╰──────────\n\n` +
       `Paste akan expired sesuai pengaturan Pastebin.`;
     await sendToolsPreview(
       sock,

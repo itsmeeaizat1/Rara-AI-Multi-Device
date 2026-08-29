@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
 │ 🔗 URL
 │ https://${domain}
 │
-╰──────────❀`))
+╰──────────`))
 
     } catch (error) {
 
@@ -145,7 +145,7 @@ async function handler(m, { sock }) {
 │
 │ ❌ ${err}
 │
-╰──────────❀`
+╰──────────`
         )
     }
 }

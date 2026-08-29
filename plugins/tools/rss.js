@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
             if (i < items.length - 1) text += "│\n"
         })
 
-        text += "╰──────────❀"
+        text += "╰──────────"
 
         await m.react("🐣")
         return m.reply(text)

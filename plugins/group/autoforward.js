@@ -27,9 +27,9 @@ function handler(m, { sock }) {
     if (!option) {
         const status = group.autoforward ? '✅ ON' : '❌ OFF'
         return m.reply( `🔄 *ᴀᴜᴛᴏ ꜰᴏʀᴡᴀʀᴅ*\n\n` +
-            `╭──「 📋 *ɪɴꜰᴏ* 」\n` +
+            `╭──「 *ɪɴꜰᴏ* 」\n` +
             `│ │ Status: *${status}*\n` +
-            `╰──────────❀\n\n` +
+            `╰──────────\n\n` +
             `Gunakan: \`${m.prefix}autoforward on/off\`\n\n` +
             `_Fitur ini akan meneruskan semua pesan ke grup ini_`, "autoforward")
     }
@@ -38,9 +38,9 @@ function handler(m, { sock }) {
         db.setGroup(groupId, { ...group, autoforward: true })
         m.react('✅')
         return m.reply(claraWrap("autoforward", `🔄 *ᴀᴜᴛᴏ ꜰᴏʀᴡᴀʀᴅ*\n\n` +
-            `╭──「 ✅ *ᴀᴋᴛɪꜰ* 」\n` +
+            `╭──「 *ᴀᴋᴛɪꜰ* 」\n` +
             `│ │ Status: *ON*\n` +
-            `╰──────────❀\n\n` +
+            `╰──────────\n\n` +
             `_Semua pesan akan di-forward_`))
     }
     
@@ -48,9 +48,9 @@ function handler(m, { sock }) {
         db.setGroup(groupId, { ...group, autoforward: false })
         return m.reply(
             `🔄 *ᴀᴜᴛᴏ ꜰᴏʀᴡᴀʀᴅ*\n\n` +
-            `╭──「 ❌ *ɴᴏɴᴀᴋᴛɪꜰ* 」\n` +
+            `╭──「 *ɴᴏɴᴀᴋᴛɪꜰ* 」\n` +
             `│ │ Status: *ᴏꜰꜰ*\n` +
-            `╰──────────❀`
+            `╰──────────`
         )
     }
     

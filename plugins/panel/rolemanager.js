@@ -111,12 +111,12 @@ function handler(m, { sock }) {
         
         m.react('✅')
         return m.reply(`✅ *${roleLabel.toUpperCase()} Ditambahkan*\n\n` +
-            `╭──「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
+            `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
             `│ 📱 Nomor: \`${targetUser}\`\n` +
             `│ 🏷️ Role: \`${roleLabel}\`\n` +
             `│ 🖥️ sErver: \`${serverLabel}\`\n` +
             `│ 📊 Total: \`${listByRole(server, role).length}\` ${role}\n` +
-            `╰──────────❀`)
+            `╰──────────`)
     }
     
     if (action === 'del') {
