@@ -4,7 +4,7 @@ import { Client } from 'ssh2'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: ['uinstalltema', 'uninstalltema', 'removetema', 'hapustema'],
-    alias: ["uinstalltema", "uninstalltema", "removetema", "hapustema"],
+    alias: ["root", "uinstalltema", "uninstalltema", "removetema", "hapustema"],
     category: 'panel',
     description: 'Uninstall tema Pterodactyl via SSH',
     usage: '.uinstalltema <ip>|<password>',

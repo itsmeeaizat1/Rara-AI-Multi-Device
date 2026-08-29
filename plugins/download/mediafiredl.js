@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "mediafiredl",
-  alias: ["mediafiredl"],
+  alias: ["mediafiredl", "mfdl"],
   category: "download",
   description: "Download file dari MediaFire",
   usage: ".mfdl <url>",

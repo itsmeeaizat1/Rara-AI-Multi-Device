@@ -4,7 +4,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "koinuser",
-  alias: ["koinuser"],
+  alias: ["koinuser", "koin"],
   category: "user",
   description: "Cek koin user",
   usage: ".koin [@user]",

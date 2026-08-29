@@ -7,7 +7,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from
 const FRAMES = {
   polaroid: {
     name: "Polaroid",
-    alias: ["Polaroid"],
+    alias: ["Polaroid", "stikerframe"],
     desc: "Bingkai putih klasik ala foto polaroid dengan ruang teks di bawah",
     emoji: "📸",
   },
@@ -38,7 +38,7 @@ const FRAMES = {
   },
   blur: {
     name: "Blur Border",
-    alias: ["Polaroid"],
+    alias: ["Polaroid", "stikerframe"],
     desc: "Versi blur dari foto sebagai background border",
     emoji: "🌫️",
   },
@@ -659,7 +659,7 @@ async function processFrame(frameType, imgBuffer, extra) {
 export default {
   config: {
   name: "stikerframe",
-  alias: ["sf", "frame", "bingkai", "stikerbingkai"],
+  alias: ["Polaroid", "stikerframe"],
   category: "sticker",
   desc: "Stiker Frame - Tambah bingkai estetik ke foto lalu jadi stiker. 12 jenis bingkai: polaroid, neon, rounded, vintage, film, shadow, blur, gradient, minimal, heart, circle, sticker cut.",
   usage: ".stikerframe [jenis] - Kirim/reply foto dengan caption\n.stikerframe list - Lihat semua jenis bingkai\n.stikerframe neon [warna] - Neon dengan warna pilihan\n.stikerframe random - Bingkai acak",

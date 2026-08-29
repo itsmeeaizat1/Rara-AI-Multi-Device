@@ -7,7 +7,7 @@ import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
 
 const pluginConfig = {
   name: "daftarsewa2",
-  alias: ["daftarsewa2"],
+  alias: ["daftarsewa2", "daftarsewa"],
   category: "main",
   description: "Daftar sewa bot - isi data diri + link grup",
   usage: ".daftarsewa",

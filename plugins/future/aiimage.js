@@ -3,8 +3,8 @@ import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption }
 import axios from "axios";
 
 const pluginConfig = {
-  name: "aiimagev2", alias: ["aiimagev2"], category: "future",
-  alias: ["aiimagev2"],
+  name: "aiimagev2", alias: ["aiimagev2", "aiimage"], category: "future",
+  alias: ["aiimagev2", "aiimage"],
   description: "Generate gambar dari teks dengan AI", usage: ".aiimage <deskripsi>",
   example: ".aiimage kucing astronaut di bulan", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 30, energi: 5, isEnabled: true,

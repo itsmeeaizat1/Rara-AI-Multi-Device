@@ -89,7 +89,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "ai-image",
-  alias: ["ai-image"],
+  alias: ["ai-image", "ai"],
   category: "ai",
   description: "Generate gambar dari teks",
   usage: ".ai-image <prompt>",

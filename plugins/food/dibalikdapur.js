@@ -130,7 +130,7 @@ const NUTRI_GRADE = {
 
 const pluginConfig = {
   name: "dibalikdapur",
-  alias: ["dibalikdapur"],
+  alias: ["dibalikdapur", "dapur"],
   category: "food",
   description: "Tips dapur, konversi ukuran, substitusi bahan, suhu masak, penyimpanan makanan, scan barcode produk",
   usage: ".dapur <subkomandan>",

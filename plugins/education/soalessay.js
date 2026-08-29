@@ -4,7 +4,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 
 const pluginConfig = {
   name: "soalessay",
-  alias: ["soalessay"],
+  alias: ["soalessay", "essay"],
   category: "education",
   description: "Latihan soal essay/uraian SD/SMP/SMA/SMK - jawab terbuka + kunci jawaban",
   usage: ".essay <jenjang> <mapel> [jumlah]",

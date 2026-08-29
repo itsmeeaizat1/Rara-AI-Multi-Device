@@ -4,7 +4,7 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
   name: "autoreactionemoji",
-  alias: ["autoreactionemoji"],
+  alias: ["autoreactionemoji", "autoreaction"],
   category: "group",
   description: "Auto reaction pesan di grup",
   usage: ".autoreaction on/off",

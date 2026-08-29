@@ -4,7 +4,7 @@ import { getTimeGreeting } from "../../src/lib/nova-formatter.js";
 
 const pluginConfig = {
   name: "dailyuser",
-  alias: ["dailyuser"],
+  alias: ["dailyuser", "daily"],
   category: "user",
   description: "Claim hadiah harian (Exp, Koin, Gold, Gems)",
   usage: ".daily",

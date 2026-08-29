@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 
 const pluginConfig = {
   name: "waguri-ai",
-  alias: ["waguri-ai"],
+  alias: ["waguri-ai", "waguri"],
   category: "ai",
   description: "Chat dengan Waguri-san — Gadis pemalu yang lupa kacamata",
   usage: ".waguri-ai <pertanyaan>",

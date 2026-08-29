@@ -6,7 +6,7 @@ import { updateAssetUrl } from '../../src/lib/nova-uploader.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ganti-nova.jpg',
-    alias: ["ganti-nova.jpg"],
+    alias: ["ganti-nova.jpg", "ganti"],
     category: 'owner',
     description: 'Ganti gambar nova.jpg (thumbnail menu)',
     usage: '.ganti-nova.jpg (reply/kirim gambar)',

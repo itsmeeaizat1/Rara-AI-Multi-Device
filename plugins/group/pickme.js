@@ -5,7 +5,7 @@ import { delay } from "../../src/lib/nova-utils.js";
 
 const pluginConfig = {
   name: "pickmegc",
-  alias: ["pickmegc"],
+  alias: ["pickmegc", "pickme"],
   category: "group",
   description: "Pilih member grup secara acak untuk tugas/assignment",
   usage: ".pickme [jumlah] atau .pickme @tag1 @tag2 atau .pickme team 2",

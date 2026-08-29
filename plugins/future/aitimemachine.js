@@ -4,7 +4,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 
 const pluginConfig = {
   name: "aitimemachine",
-  alias: ["aitimemachine"],
+  alias: ["aitimemachine", "timemachine"],
   category: "future",
   description: "On this day - inget momen penting grup",
   usage: ".timemachine <command>",

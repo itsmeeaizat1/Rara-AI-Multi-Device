@@ -44,7 +44,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "leave2",
-  alias: ["leave2"],
+  alias: ["leave2", "leave"],
   category: "owner",
   description: "Bot keluar dari grup (owner only)",
   usage: ".leave",

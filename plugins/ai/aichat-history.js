@@ -4,7 +4,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 
 const pluginConfig = {
   name: "aichat-history",
-  alias: ["aichat-history"],
+  alias: ["aichat-history", "aichat"],
   category: "ai",
   description: "Lihat riwayat percakapan AI di chat ini",
   usage: ".aichat-history",

@@ -55,7 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "terabox2",
-  alias: ["terabox2"],
+  alias: ["terabox2", "terabox"],
   category: "download",
   description: "Download file dari Terabox",
   usage: ".terabox <link>",

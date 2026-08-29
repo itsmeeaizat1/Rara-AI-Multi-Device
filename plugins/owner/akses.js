@@ -4,7 +4,7 @@ import ms from "ms";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "akses",
-  alias: ["akses"],
+  alias: ["akses", "addakses"],
   category: "owner",
   description: "Grant temporary/permanent command access to users",
   usage: ".addakses <cmd> <duration> <user>",

@@ -160,7 +160,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
 const pluginConfig = {
   name: "kontraktool",
-  alias: ["kontraktool"],
+  alias: ["kontraktool", "kontrak"],
   category: "tools",
   description: "AI Generator Kontrak/Perjanjian → PDF (kerja, MoU, jasa, sewa, NDA)",
   usage: ".kontrak <jenis> <detail pihak & ketentuan>",

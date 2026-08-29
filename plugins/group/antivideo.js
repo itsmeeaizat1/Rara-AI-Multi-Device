@@ -5,7 +5,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "antivid",
-  alias: ["antivid"],
+  alias: ["antivid", "antivideo"],
   category: "group",
   description: "Blokir video di grup",
   usage: ".antivideo <on/off>",

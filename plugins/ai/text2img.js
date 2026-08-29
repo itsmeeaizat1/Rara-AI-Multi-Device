@@ -6,7 +6,7 @@ import config from "../../config.js";
 import { claraWrap, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "text2imgv2",
-  alias: ["text2imgv2"],
+  alias: ["text2imgv2", "text2img"],
   category: "ai",
   description: "Buat gambar dari teks",
   usage: ".text2img <teks>",

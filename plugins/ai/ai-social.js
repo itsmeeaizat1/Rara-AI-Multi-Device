@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-social",
-  alias: ["ai-social"],
+  alias: ["ai-social", "ai"],
   category: "ai",
   description: "Buat caption/post sosial media dengan AI",
   usage: ".ai-social <topik/platform>",

@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "aimath",
-  alias: ["aimath"],
+  alias: ["aimath", "ai"],
   category: "ai",
   description: "Selesaikan soal matematika dengan AI",
   usage: ".ai-math <soal>",

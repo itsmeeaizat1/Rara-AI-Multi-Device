@@ -3,8 +3,8 @@ import {  claraHeader, separator, claraWrap, novaCaption } from "../../src/lib/n
 import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
-  name: "aicodev2", alias: ["aicodev2"], category: "future",
-  alias: ["aicodev2"],
+  name: "aicodev2", alias: ["aicodev2", "aicode"], category: "future",
+  alias: ["aicodev2", "aicode"],
   description: "AI review kode kamu", usage: ".aicode <kode> atau reply kode",
   example: ".aicode function hello() { return 'hi' }", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 5, isEnabled: true,

@@ -4,8 +4,8 @@ import {  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
 import axios from "axios";
 
 const pluginConfig = {
-  name: "aivoicefuture", alias: ["aivoicefuture"], category: "future",
-  alias: ["aivoicefuture"],
+  name: "aivoicefuture", alias: ["aivoicefuture", "aivoice"], category: "future",
+  alias: ["aivoicefuture", "aivoice"],
   description: "Text ke suara realistik multi-bahasa", usage: ".aivoice <text>",
   example: ".aivoice halo semuanya", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,

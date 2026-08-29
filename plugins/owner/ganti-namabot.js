@@ -5,7 +5,7 @@ import path from 'path'
 import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "gantinamabot",
-    alias: ["gantinamabot"],
+    alias: ["gantinamabot", "ganti"],
     category: 'owner',
     description: 'Ganti nama bot di config.js',
     usage: '.ganti-namabot <nama baru>',

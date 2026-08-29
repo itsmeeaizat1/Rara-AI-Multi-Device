@@ -4,8 +4,8 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 import axios from "axios";
 
 const pluginConfig = {
-  name: "aiquran2", alias: ["aiquran2"], category: "future",
-  alias: ["aiquran2"],
+  name: "aiquran2", alias: ["aiquran2", "aiquran"], category: "future",
+  alias: ["aiquran2", "aiquran"],
   description: "Cari ayat Quran dengan bahasa natural", usage: ".aiquran <topik>",
   example: ".aiquran ayat tentang sabar", isOwner: false, isPremium: true,
   isGroup: false, isPrivate: false, cooldown: 15, energi: 3, isEnabled: true,

@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 
 const pluginConfig = {
   name: "ai-addprovider",
-  alias: ["ai-addprovider"],
+  alias: ["ai-addprovider", "ai"],
   category: "ai",
   description: "Tambah provider AI custom lewat chat",
   usage: ".ai-addprovider <nama> <endpoint> <model> <apiKey?>",

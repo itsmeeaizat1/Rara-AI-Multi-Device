@@ -64,7 +64,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "join2",
-  alias: ["join2"],
+  alias: ["join2", "join"],
   category: "owner",
   description: "Bot join ke grup via link",
   usage: ".join <link grup>",

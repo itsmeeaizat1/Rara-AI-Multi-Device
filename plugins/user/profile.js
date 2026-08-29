@@ -6,7 +6,7 @@ import { getDevice } from "nova";
 
 const pluginConfig = {
   name: "profileuser",
-  alias: ["profileuser"],
+  alias: ["profileuser", "profile"],
   category: "user",
   description: "Melihat profil user dengan RPG stats lengkap",
   usage: ".profile [@user]",

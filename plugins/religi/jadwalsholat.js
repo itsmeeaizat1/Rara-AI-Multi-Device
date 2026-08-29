@@ -12,7 +12,7 @@ import { saluranCtx } from "../../src/lib/nova-context.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "jadwalsholat2",
-  alias: ["jadwalsholat2"],
+  alias: ["jadwalsholat2", "jadwalsholat"],
   category: "religi",
   description: "Menampilkan jadwal sholat real-time dari myquran.com",
   usage: ".jadwalsholat <kota>",

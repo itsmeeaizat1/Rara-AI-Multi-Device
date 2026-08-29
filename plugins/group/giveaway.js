@@ -401,7 +401,7 @@ const rerollCmds = ["giveawayreroll", "gareroll", "ulangigiveaway"];
 
 const plugin = {
   name: ["giveaway", ...createCmds, ...listCmds, ...deleteCmds, ...rerollCmds],
-  alias: ["giveaway"],
+  alias: ["quick_reply", "giveaway"],
   alias: "ga",
   category: "group",
   description: "Sistem giveaway dengan interactive buttons",

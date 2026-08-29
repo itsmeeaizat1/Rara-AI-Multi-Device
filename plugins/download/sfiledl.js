@@ -58,7 +58,7 @@ async function handler(m, { sock, config: botConfig }) {
 
 const pluginConfig = {
   name: "sfiledl2",
-  alias: ["sfiledl2"],
+  alias: ["sfiledl2", "sfiledl"],
   category: "download",
   description: "Download file dari SFile",
   usage: ".sfiledl <link>",

@@ -4,7 +4,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 
 const pluginConfig = {
     name: 'menuwithmusic',
-    alias: ["menuwithmusic"],
+    alias: ["menuwithmusic", "aktifaudiomenu"],
     category: 'owner',
     description: 'Toggle audio saat menampilkan menu',
     usage: '.aktifaudiomenu ya/gak',

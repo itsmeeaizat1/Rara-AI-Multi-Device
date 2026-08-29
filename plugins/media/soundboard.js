@@ -9,7 +9,7 @@ import { claraWrap } from '../../src/lib/nova-menu-style.js'
 
 const pluginConfig = {
   name: "soundboard",
-  alias: ["soundboard"],
+  alias: ["soundboard", "sfx"],
   aliases: ["soundboard", "sfx", "soundfx", "boardfx"],
   category: "media",
   description: "Sound effect board (anime, meme, button, bruh, dll) - kirim VN sound effect",

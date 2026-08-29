@@ -6,7 +6,7 @@ import { updateAssetUrl } from '../../src/lib/nova-uploader.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ganti-nova.mp4',
-    alias: ["ganti-nova.mp4"],
+    alias: ["ganti-nova.mp4", "ganti"],
     category: 'owner',
     description: 'Ganti video nova.mp4',
     usage: '.ganti-nova.mp4 (reply/kirim video)',

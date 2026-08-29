@@ -3,7 +3,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, nov
 
 const pluginConfig = {
   name: "block2",
-  alias: ["block2"],
+  alias: ["block2", "block"],
   category: "owner",
   description: "Blokir user",
   usage: ".block <@target>",
