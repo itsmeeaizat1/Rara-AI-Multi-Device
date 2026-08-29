@@ -60,7 +60,7 @@ function checkPermission(m, pluginConfig) {
   }
 
   if (pluginConfig.isPartner && !m.isPartner && !m.isOwner && !hasAccess) {
-    return { allowed: false, reason: "╭──「 🤝 Partner Only 」\n├── Fitur ini khusus Partner bot\n╰──────────❀" };
+    return { allowed: false, reason: "╭──「 Partner Only 」\n├── Fitur ini khusus Partner bot\n╰──────────" };
   }
 
   if (
@@ -118,7 +118,7 @@ function checkPermission(m, pluginConfig) {
         if (!m.isAdmin && !m.isOwner && !hasAccess) {
           return {
             allowed: false,
-            reason: "╭──「 🎮 Game Disabled 」\n├── Fitur Game sedang dinonaktifkan\n├── di grup ini oleh Admin\n╰──────────❀",
+            reason: "╭──「 Game Disabled 」\n├── Fitur Game sedang dinonaktifkan\n├── di grup ini oleh Admin\n╰──────────",
           };
         }
       }
@@ -126,7 +126,7 @@ function checkPermission(m, pluginConfig) {
         if (!m.isAdmin && !m.isOwner && !hasAccess) {
           return {
             allowed: false,
-            reason: "╭──「 ⚔️ RPG Disabled 」\n├── Fitur RPG sedang dinonaktifkan\n├── di grup ini oleh Admin\n╰──────────❀",
+            reason: "╭──「 RPG Disabled 」\n├── Fitur RPG sedang dinonaktifkan\n├── di grup ini oleh Admin\n╰──────────",
           };
         }
       }
@@ -156,11 +156,11 @@ function checkMode(m, getActiveJadibots) {
       allowed: false,
       isAfk: true,
       afkMessage:
-        `╭──「 💤 AFK 」\n` +
+        `╭──「 AFK 」\n` +
         `├── Bot sedang AFK\n` +
         `├── Alasan: ${botAfk.reason || "AFK"}\n` +
         `├── Sejak: ${duration} yang lalu\n` +
-        `╰──────────❀`,
+        `╰──────────`,
     };
   }
 
@@ -176,14 +176,14 @@ function checkMode(m, getActiveJadibots) {
         allowed: false,
         isOnlyThisGroup: true,
         onlyThisGroupMessage:
-          `╭──「 🔒 Akses Ditolak 」\n` +
+          `╭──「 Akses Ditolak 」\n` +
           `├── Bot hanya bisa diakses di Grup Utama:\n` +
           `├── *${onlyThisGroup.name}*\n` +
           `├──\n` +
           `├── 🔗 ${onlyThisGroup.link}\n` +
           `├──\n` +
           `├── Setelah bergabung, bebas pakai semua fitur\n` +
-          `╰──────────❀`
+          `╰──────────`
       };
     }
   }
@@ -215,11 +215,11 @@ function checkMode(m, getActiveJadibots) {
         allowed: false,
         hasJadibots: true,
         jadibotMessage:
-          `╭──「 🔒 Mode Private 」\n` +
+          `╭──「 Mode Private 」\n` +
           `├── Bot utama dalam mode private\n` +
           `├── Bot turunan yang tersedia:\n` +
           `${jadibotList}` +
-          `╰──────────❀`,
+          `╰──────────`,
         jadibotMentions: mentions,
       };
     }

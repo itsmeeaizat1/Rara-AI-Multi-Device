@@ -112,12 +112,12 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     return m.reply(
       `✅ *PLUGIN DITAMBAH*\n\n` +
-        `╭─〔 *DETAIL* 〕───⬣\n` +
+        `╭─〔 *DETAIL* 〕───\n` +
         `│ File: \`${fileName}.js\`\n` +
         `│ Folder: \`${folderName}\`\n` +
         `│ Size: \`${code.length} bytes\`\n` +
         `│ Hot Reload: ${reloadResult.success ? "✅ Sukses" : "⚠️ Pending"}\n` +
-        `╰───────⬣\n\n` +
+        `╰───────\n\n` +
         `Plugin sudah aktif dan siap digunakan!`,
     );
   } catch (error) {

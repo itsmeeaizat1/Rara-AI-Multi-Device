@@ -247,7 +247,7 @@ function buildFooter(normalized) {
     `│ *${toSC("Tutupan awan")}:* ${fmt(normalized.cloud_cover, "%")} ☁️`,
     `│ *${toSC("UV index")}:* ${uvText(normalized.uv_index)} ☀️`,
     `│ *${toSC("Curah hujan")}:* ${fmt(normalized.precipitation, " mm")} 🌧️`,
-    `╰──────────❀`,
+    `╰──────────`,
   ];
 
   return lines.join("\n");

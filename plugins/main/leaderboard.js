@@ -109,7 +109,7 @@ async function showRpgLeaderboard(m, sock, subType) {
   }
 
   if (users.length === 0)
-    return m.reply(`╭──「 *${toSC('Leaderboard')}* 」\n│ ${toSC('Belum ada data user')}\n╰──────────❀`)
+    return m.reply(`╭──「 *${toSC('Leaderboard')}* 」\n│ ${toSC('Belum ada data user')}\n╰──────────`)
 
   // ── Overview ──
   if (subType === 'overview') {
@@ -134,7 +134,7 @@ async function showRpgLeaderboard(m, sock, subType) {
 │ ✨ ${toSC('EXP Teratas')}: ${formatNumber(maxExp.exp)} (@${maxExp.jid.split('@')[0]})
 │ ⚡ ${toSC('Energi Teratas')}: ${formatNumber(maxNrg.energi)} (@${maxNrg.jid.split('@')[0]})
 ${maxCinta ? `│ ❤️ ${toSC('Cinta Teratas')}: ${formatNumber(maxCinta.lovePower)} LP (@${maxCinta.jid.split('@')[0]})` : `│ ❤️ ${toSC('Cinta')}: ${toSC('Belum ada couple')}`}
-╰──────────❀
+╰──────────
 
 ${toSC('Pilih tombol di bawah untuk melihat ranking')}!`
 
@@ -158,13 +158,13 @@ ${toSC('Pilih tombol di bawah untuk melihat ranking')}!`
   if (subType === 'cinta') {
     const cintaUsers = users.filter(u => u.hasSpouse)
     if (cintaUsers.length === 0)
-      return m.reply(`╭──「 *${toSC('Top Cinta')}* 」\n│ ${toSC('Belum ada couple terdaftar')}\n│ ${toSC('Mulai berpacaran dengan')} .jadian\n╰──────────❀`)
+      return m.reply(`╭──「 *${toSC('Top Cinta')}* 」\n│ ${toSC('Belum ada couple terdaftar')}\n│ ${toSC('Mulai berpacaran dengan')} .jadian\n╰──────────`)
 
     cintaUsers.sort((a, b) => b.lovePower - a.lovePower)
     const top10 = cintaUsers.slice(0, 10)
     const mentions = []
 
-    let text = `╭──「 *${toSC('TOP CINTA')}* ❤️ 」`
+    let text = `╭──「 *${toSC('TOP CINTA')}*  」`
     top10.forEach((u, i) => {
       const medal = MEDALS[i] || `${i + 1}.`
       const isMe = u.jid === senderJid ? " *(You)*" : ""
@@ -172,7 +172,7 @@ ${toSC('Pilih tombol di bawah untuk melihat ranking')}!`
       text += `\n│   ❤️ ${toSC('Affection')}: ${formatNumber(u.cinta)} | 💪 LP: ${formatNumber(u.lovePower)}`
       mentions.push(u.jid.includes('@') ? u.jid : u.jid + '@s.whatsapp.net')
     })
-    text += `\n╰──────────❀\n`
+    text += `\n╰──────────\n`
 
     const myRank = cintaUsers.findIndex(u => u.jid === senderJid)
     if (myRank !== -1) text += `\n${toSC('Posisi kamu')}: *#${myRank + 1}* ${toSC('dari')} *${formatNumber(cintaUsers.length)}* couple.`
@@ -209,7 +209,7 @@ ${toSC('Pilih tombol di bawah untuk melihat ranking')}!`
     text += `\n│   ${formatVal(u)} (${pct}%)`
     mentions.push(u.jid.includes('@') ? u.jid : u.jid + '@s.whatsapp.net')
   })
-  text += `\n╰──────────❀\n`
+  text += `\n╰──────────\n`
 
   const myRank = users.findIndex(u => u.jid === senderJid)
   if (myRank !== -1) text += `\n${toSC('Posisi kamu')}: *#${myRank + 1}* ${toSC('dari')} *${formatNumber(users.length)}* user.`
@@ -223,7 +223,7 @@ ${toSC('Pilih tombol di bawah untuk melihat ranking')}!`
 // ═══════════════════════════════════════════════════════════
 async function showGroupLeaderboard(m, sock) {
   if (!m.isGroup)
-    return m.reply(`╭──「 *${toSC('Leaderboard Grup')}* 」\n│ ${toSC('Hanya bisa digunakan di dalam grup')}\n╰──────────❀`)
+    return m.reply(`╭──「 *${toSC('Leaderboard Grup')}* 」\n│ ${toSC('Hanya bisa digunakan di dalam grup')}\n╰──────────`)
 
   if (typeof m.react === 'function') { try { await m.react('🕒'); } catch {} }
 
@@ -348,7 +348,7 @@ async function showMenu(m, sock) {
 │ 👥 *${toSC('Group')}*
 │   ${toSC('Aktivitas member grup minggu ini')}
 │
-╰──❀
+╰──
 
 ${toSC('Ketik')} *${m.prefix}leaderboard rpg* ${toSC('atau')} *${m.prefix}leaderboard group*`
 

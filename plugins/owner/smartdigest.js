@@ -73,7 +73,7 @@ function generateDigest(stats) {
     text += "│ User Aktif:\n"
     users.forEach(([uid, count], i) => { text += "" + (i + 1) + ". " + uid.split("@")[0] + " (" + count + ")\n" })
   }
-  text += "╰──────────❀"
+  text += "╰──────────"
   return text
 }
 
@@ -87,14 +87,14 @@ async function handler(m, { sock }) {
     if (subCmd === "auto") {
       const toggle = args[1]?.toLowerCase()
       if (toggle === "on") { cfg.autoEnabled = true; save(db); await m.react("🐣")
-        return m.reply("╭──「 Smart Digest 」\n│ Auto-digest: ON\n│ Jam kirim: " + cfg.sendTime + " WIB\n│ Dikirim ke PM owner otomatis\n╰──────────❀") }
+        return m.reply("╭──「 Smart Digest 」\n│ Auto-digest: ON\n│ Jam kirim: " + cfg.sendTime + " WIB\n│ Dikirim ke PM owner otomatis\n╰──────────") }
       if (toggle === "off") { cfg.autoEnabled = false; save(db); await m.react("🐣")
-        return m.reply("╭──「 Smart Digest 」\n│ Auto-digest: OFF\n╰──────────❀") }
+        return m.reply("╭──「 Smart Digest 」\n│ Auto-digest: OFF\n╰──────────") }
     }
 
     if (subCmd === "settime") {
       cfg.sendTime = args[1] || "08:00"; save(db); await m.react("🐣")
-      return m.reply("╭──「 Smart Digest 」\n│ Jam kirim: " + cfg.sendTime + " WIB\n╰──────────❀")
+      return m.reply("╭──「 Smart Digest 」\n│ Jam kirim: " + cfg.sendTime + " WIB\n╰──────────")
     }
 
     if (subCmd === "reset") {
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
         messages: 0, errors: 0, newMembers: 0, startedAt: Date.now(),
       }
       save(db); await m.react("🐣")
-      return m.reply("╭──「 Smart Digest 」\n│ Stats direset.\n╰──────────❀")
+      return m.reply("╭──「 Smart Digest 」\n│ Stats direset.\n╰──────────")
     }
 
     // Default: now
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("[smartdigest] error:", e.message)
     await m.react("🐣")
-    return m.reply("╭──「 Error 」\n" + (e.message || "Ada error nih") + "\n╰──────────❀")
+    return m.reply("╭──「 Error 」\n" + (e.message || "Ada error nih") + "\n╰──────────")
   }
 }
 

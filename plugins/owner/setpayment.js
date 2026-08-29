@@ -243,7 +243,7 @@ async function handler(m, { sock }) {
     const cash = data.cash || { enabled: false, info: "" };
 
     let txt = "╭──「 *PAYMENT INFO* 」\n│\n";
-    txt += "╰──────────❀\n\n";
+    txt += "╰──────────\n\n";
 
     // Cash
     txt += "CASH: " + (cash.enabled ? "ON" : "OFF") + "\n";

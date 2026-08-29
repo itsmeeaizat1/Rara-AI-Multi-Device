@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `│ Reply pesan lamaran + \`${m.prefix}tolaknikah\`\n` +
         `│ Atau \`${m.prefix}tolaknikah @tag\`\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 

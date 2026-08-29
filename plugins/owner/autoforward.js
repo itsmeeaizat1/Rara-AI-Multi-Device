@@ -39,28 +39,28 @@ async function handler(m, { sock }) {
 
     if (subCmd === "add") {
       const keyword = args.slice(1).join(" ").toLowerCase().trim()
-      if (!keyword) { await m.react("🐣"); return m.reply("╭──「 Auto Forward 」\n│ Masukkan keyword!\n│ .autoforward add <keyword>\n╰──────────❀") }
-      if (cfg.keywords.includes(keyword)) { await m.react("🐣"); return m.reply("╭──「 Auto Forward 」\n│ Keyword sudah ada.\n╰──────────❀") }
+      if (!keyword) { await m.react("🐣"); return m.reply("╭──「 Auto Forward 」\n│ Masukkan keyword!\n│ .autoforward add <keyword>\n╰──────────") }
+      if (cfg.keywords.includes(keyword)) { await m.react("🐣"); return m.reply("╭──「 Auto Forward 」\n│ Keyword sudah ada.\n╰──────────") }
       cfg.keywords.push(keyword); save(db); await m.react("🐣")
-      return m.reply("╭──「 Auto Forward 」\n│ Keyword ditambah: \"" + keyword + "\"\n│ Total: " + cfg.keywords.length + "\n│ Status: " + (cfg.enabled ? "ON" : "OFF") + "\n╰──────────❀")
+      return m.reply("╭──「 Auto Forward 」\n│ Keyword ditambah: \"" + keyword + "\"\n│ Total: " + cfg.keywords.length + "\n│ Status: " + (cfg.enabled ? "ON" : "OFF") + "\n╰──────────")
     }
 
     if (subCmd === "del") {
       const keyword = args.slice(1).join(" ").toLowerCase().trim()
       cfg.keywords = cfg.keywords.filter(k => k !== keyword); save(db); await m.react("🐣")
-      return m.reply("╭──「 Auto Forward 」\n│ Keyword dihapus: \"" + keyword + "\"\n│ Sisa: " + cfg.keywords.length + "\n╰──────────❀")
+      return m.reply("╭──「 Auto Forward 」\n│ Keyword dihapus: \"" + keyword + "\"\n│ Sisa: " + cfg.keywords.length + "\n╰──────────")
     }
 
     if (subCmd === "on" || subCmd === "off") {
       cfg.enabled = subCmd === "on"; save(db); await m.react("🐣")
-      return m.reply("╭──「 Auto Forward 」\n│ Status: " + (cfg.enabled ? "ON" : "OFF") + "\n│ Scope: " + cfg.scope + "\n│ Keywords: " + cfg.keywords.length + "\n╰──────────❀")
+      return m.reply("╭──「 Auto Forward 」\n│ Status: " + (cfg.enabled ? "ON" : "OFF") + "\n│ Scope: " + cfg.scope + "\n│ Keywords: " + cfg.keywords.length + "\n╰──────────")
     }
 
     if (subCmd === "scope") {
       const scope = args[1]?.toLowerCase()
       if (scope === "all" || scope === "gc" || scope === "pc") {
         cfg.scope = scope; save(db); await m.react("🐣")
-        return m.reply("╭──「 Auto Forward 」\n│ Scope: " + scope + "\n│ all=semua, gc=grup, pc=private\n╰──────────❀")
+        return m.reply("╭──「 Auto Forward 」\n│ Scope: " + scope + "\n│ all=semua, gc=grup, pc=private\n╰──────────")
       }
     }
 
@@ -78,12 +78,12 @@ async function handler(m, { sock }) {
       text += "│ Belum ada keyword.\n"
       text += "│ .autoforward add <keyword>\n"
     }
-    text += "╰──────────❀"
+    text += "╰──────────"
     return m.reply(text)
   } catch (e) {
     console.error("[autoforward] error:", e.message)
     await m.react("🐣")
-    return m.reply("╭──「 Error 」\n" + (e.message || "Ada error nih") + "\n╰──────────❀")
+    return m.reply("╭──「 Error 」\n" + (e.message || "Ada error nih") + "\n╰──────────")
   }
 }
 

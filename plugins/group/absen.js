@@ -38,12 +38,12 @@ async function handler(m, { sock }) {
         .join('\n')
     await m.reply(claraWrap("MANTAP, @${m.sender.split('@')[0]} HADIRR", `✅ *MANTAP, @${m.sender.split('@')[0]} HADIRR*\n` +
             `TUJUAN ABSEN: ${absen.keterangan}\n` +
-            `╭──「 📋 INFO LAIN 」\n` +
+            `╭──「 INFO LAIN 」\n` +
             `│ 📅 ${dateStr}\n` +
             `│ 👥 Total: ${absen.peserta.length}\n` +
-            `├┈┈⬡「 📝 *DaғTar Hadir* 」\n` +
+            `├┈┈「 📝 *DaғTar Hadir* 」\n` +
             `${list}\n` +
-            `╰┈┈┈┈┈┈┈┈⬡\n\n` +
+            `╰┈┈┈┈┈┈┈┈\n\n` +
             `_Ketik *${m.prefix}absen* untuk hadir_\n` +
             `_Ketik *${m.prefix}cekabsen* untuk melihat daftar_`))
 }

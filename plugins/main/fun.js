@@ -34,13 +34,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     const text = `╭──「 *Fᴜɴ
 ${cmdLines}│ *Total: ${funCmds.length} Fitur*
-╰──────────❀`;
+╰──────────`;
 
     await m.reply(text);
-    await m.react("🐣");
+    await m.react("");
   } catch (e) {
     console.error("[fun] handler error:", e.message);
-    try { await m.reply("╭──「 Fun 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────❀"); } catch {}
+    try { await m.reply("╭──「 Fun 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────"); } catch {}
     await m.react("❌");
   }
 }

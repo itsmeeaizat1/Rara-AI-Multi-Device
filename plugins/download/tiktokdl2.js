@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
             `│ Views: ${result.views || '-'} | Likes: ${result.likes || '-'}\n` +
             `│ Comments: ${result.comments || '-'} | Shares: ${result.shares || '-'}\n` +
             `│ Duration: ${result.duration || '-'}\n` +
-            `╰──────────❀`
+            `╰──────────`
 
         if (result.type === 'video' && result.downloads.nowm.length > 0) {
             const videoRes = await axios.get(result.downloads.nowm[0], {

@@ -20,7 +20,7 @@ import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, commandListLine, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, commandListLine, toSC, closeBoxRight } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "allmenu",
@@ -249,7 +249,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ *${toSC("Load Avg")}:* ${loadAvg}
 │ *${toSC("RAM")}:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
 │ *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
-╰──────────❀
+╰──────────
 ${weatherBlock}${readMore}
 ╭──「 *${toSC("Keterangan")}* 」\n│ Ⓞ = ${toSC("Hanya untuk owner")}
 │ ⓟ = ${toSC("Hanya untuk premium")}
@@ -257,7 +257,7 @@ ${weatherBlock}${readMore}
 │ Ⓐ = ${toSC("Hanya untuk admin")}
 │ Ⓖ = ${toSC("Hanya di dalam grup")}
 │ Ⓟ = ${toSC("Hanya di private chat")}
-╰──────────❀
+╰──────────
 `;
 
     // ── Category commands (Clara-MD box style) ──
@@ -297,7 +297,7 @@ ${weatherBlock}${readMore}
       }
     }
 
-    txt += `╰──────────❀\n\n${toSC("Nova AI WhatsApp Bot")}`;
+    txt += `╰──────────╯\n\n${toSC("Nova AI WhatsApp Bot")}`;
 
     // ── Send: nativeFlowMessage buttons (proven pattern) + real image header ──
     // "Kategori" pakai single_select → klik buka popup list semua kategori
@@ -313,7 +313,7 @@ ${weatherBlock}${readMore}
     await m.react("🐣");
 
     await sendMenuCard(sock, m, {
-      text: txt,
+      text: closeBoxRight(txt),
       footer: "",
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
       buttons: navButtons,
@@ -323,7 +323,7 @@ ${weatherBlock}${readMore}
     try { await sendMenuAudio(sock, m, db, true); } catch {}
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);
-    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────❀`); } catch {}
+    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────`); } catch {}
     await m.react("❌");
   }
 }

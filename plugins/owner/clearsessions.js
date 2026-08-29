@@ -62,7 +62,7 @@ async function handler(m, { sock })  {
 │ sKipped: *${skipped}* file
 │ Note: creds.json tidak dihapus
 │
-╰──────────❀
+╰──────────
 
 │ _Session files berhasil dibersihkan!_
 │ _Restart bot jika diperlukan._`))

@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         : "*ON (default)*";
 
       let txt = "╭──「 *MENU NAV* 」\n│\n";
-      txt += "╰──────────❀\n\n";
+      txt += "╰──────────\n\n";
       txt += "*Status Global:* " + globalText + "\n";
 
       if (isGroup) {

@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
     if (r.duration) caption += `│ Durasi: ${r.duration}s\n`;
     if (r.thumbnail) caption += `│ Thumb: tersedia\n`;
     caption += `│ Quality: ${medias.length} opsi tersedia\n`;
-    caption += `╰──────────❀`;
+    caption += `╰──────────`;
 
     // Pick best quality (usually last in array)
     const best = medias[medias.length - 1];

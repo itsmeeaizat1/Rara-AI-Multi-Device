@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
             }
         });
 
-        resultText += `╰──────────❀`;
+        resultText += `╰──────────`;
 
         m.react?.('🐣');
 

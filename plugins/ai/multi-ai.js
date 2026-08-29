@@ -78,7 +78,7 @@ ${lines}├──「 Cara Pakai 」
 │ ${prefix}multi-ai gemini apa itu AI
 │ ${prefix}multi-ai openai gpt-4o-mini jelaskan kuantum
 │ ${prefix}multi-ai groq buat puisi
-╰──────────❀`;
+╰──────────`;
 
       await m.reply(text);
       await m.react("🐣");
@@ -91,7 +91,7 @@ ${lines}├──「 Cara Pakai 」
     if (!provider) {
       const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ Provider *${providerArg}* tidak ditemukan
 │ Ketik *${prefix}multi-ai list* untuk lihat daftar
-╰──────────❀`;
+╰──────────`;
       await m.reply(text);
       await m.react("❌");
       return { handled: true };
@@ -115,7 +115,7 @@ ${lines}├──「 Cara Pakai 」
 │
 │ 📌 *Cara Pakai:* *${prefix}multi-ai ${providerArg} [model] <pesan>*
 │ 💡 *Contoh:* *${prefix}multi-ai ${providerArg} ${model} apa itu AI*
-╰──────────❀`;
+╰──────────`;
       await m.reply(text);
       await m.react("❌");
       return { handled: true };
@@ -146,7 +146,7 @@ ${lines}├──「 Cara Pakai 」
       const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Status:* Gagal nih
 │ *Alasan:* AI tidak memberikan respons
 │ Cek API key di *${prefix}ai-set apiKey <key>*
-╰──────────❀`;
+╰──────────`;
       await m.reply(text);
       await m.react("❌");
       return { handled: true };
@@ -160,7 +160,7 @@ ${lines}├──「 Cara Pakai 」
 │ *Kamu:* ${trimmedMsg}
 ├──「 Respons 」
 │ ${trimmedReply}
-╰──────────❀`;
+╰──────────`;
 
     await m.reply(text);
     await m.react("🐣");
@@ -170,7 +170,7 @@ ${lines}├──「 Cara Pakai 」
     const text = `╭──「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Status:* Gagal nih
 │ *Alasan:* ${error.message}
 │ Cek API key: *${prefix}ai-set apiKey <key>*
-╰──────────❀`;
+╰──────────`;
     await m.reply(text);
     await m.react("❌");
   }

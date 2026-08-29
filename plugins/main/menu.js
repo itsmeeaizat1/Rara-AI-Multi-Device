@@ -19,7 +19,7 @@ import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, toSC, closeBoxRight } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "menu",
@@ -210,7 +210,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ *${toSC("Load Avg")}:* ${loadAvg}
 │ *${toSC("RAM")}:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
 │ *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
-╰──────────❀
+╰──────────╯
 ${weatherBlock}${readMore}
 ╭──「 *${toSC("Menu")}* 」\n│ ${prefix}menu
 │ ${prefix}allmenu
@@ -225,11 +225,11 @@ ${weatherBlock}${readMore}
 │ ${prefix}sewa
 │ ${prefix}payment
 │ ${prefix}listban
-╰──────────❀
+╰──────────╯
 
 *${toSC("Total")}: ${totalFitur} ${toSC("Fitur")}*
 
-${toSC(getTimeGreeting())} *${toSC(m.pushName || "User")}* 👋
+${toSC(getTimeGreeting())} *${toSC(m.pushName || "User")}* 
 
 ${toSC("Ketik")} *${prefix}allmenu* ${toSC("untuk melihat semua fitur")}
 
@@ -261,7 +261,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     await m.react("🐣");
 
     await sendMenuCard(sock, m, {
-      text,
+      text: closeBoxRight(text),
       footer: "",
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
       buttons: navButtons,
@@ -271,7 +271,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[menu] handler error:", e.message);
-    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────❀`); } catch {}
+    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────╯`); } catch {}
     await m.react("❌");
   }
 }

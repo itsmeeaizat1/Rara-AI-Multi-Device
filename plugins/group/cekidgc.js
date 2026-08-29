@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
 
     const infoText =
       `── .✦ 𝗚𝗥𝗢𝗨𝗣 𝗜𝗡𝗙𝗢 ✦. ── 𝜗ৎ\n\n` +
-      `╭─〔 ${groupName} 〕───⬣\n` +
+      `╭─〔 ${groupName} 〕───\n` +
       `│  ✦ Nama        : *${groupName}*\n` +
       `│  ✦ Id             : \`${groupJid}\`\n` +
       `│  ✦ Member     : *${memberCount}*\n` +
@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
       `│  ✦ Announce : *${isAnnounce}*\n` +
       `│  ✦ Join Mode  : *${joinMode}*\n` +
       `│  ✦ Deskripsi  : ${descPreview}\n` +
-      `╰──────────❀\n\n` +
+      `╰──────────\n\n` +
       `.☘︎ ݁˖ © ${config.bot?.name || "Nova-AI"}`;
 
     const buttons = [

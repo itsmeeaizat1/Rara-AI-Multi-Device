@@ -94,7 +94,7 @@ async function notifyOwner(sock, m, data) {
   const buyerNumber = m.sender?.replace(/[^0-9]/g, "") || "";
   const buyerName = m.pushName || "Unknown";
 
-  const notifText = `╭──「 💎 ${toSC("PEMBELIAN PREMIUM BARU")} 」
+  const notifText = `╭──「 ${toSC("PEMBELIAN PREMIUM BARU")} 」
 │ ${toSC("Pembeli")}: *${toSC(buyerName)}*
 │ ${toSC("Nomor")}: ${buyerNumber}
 │ ${toSC("Paket")}: *${toSC(data.label)}*
@@ -102,7 +102,7 @@ async function notifyOwner(sock, m, data) {
 │ ${toSC("Harga")}: *${toSC(data.price)}*
 │ ${toSC("Status")}: *${toSC("MENUNGGU PEMBAYARAN")}*
 │ ${toSC("Waktu")}: ${new Date().toLocaleString("id-ID")}
-╰──────────❀
+╰──────────
 
 ${toSC("User ini menunggu konfirmasi pembayaran.")}
 ${toSC("Jika sudah bayar, ketik")}: *.addprem ${buyerNumber} ${data.days}*`;

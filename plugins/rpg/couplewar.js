@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
         `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ* 」\n` +
         `│ 💔 Kamu belum punya pasangan!\n` +
         `│ Jomblo mau war sama siapa? 😂\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `│ \`${m.prefix}couplewar @target\`\n` +
         `│ Tag salah satu pasangan lawan\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
       return m.reply(
         `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ* 」\n` +
         `│ ❌ War sama diri sendiri? Itu skizofrenia 😂\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
       return m.reply(
         `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ* 」\n` +
         `│ ❌ Nggak bisa war sama pasangan sendiri! 😅\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
         `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ* 」\n` +
         `│ 💔 @${targetJid.split("@")[0]} belum punya pasangan!\n` +
         `│ Jomblo vs jomblo namanya duel bukan couple war 😂\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
       return m.reply(
         `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ* 」\n` +
         `│ ⏳ Cooldown: *${formatDurasi(cd)}* lagi\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -170,7 +170,7 @@ async function handler(m, { sock }) {
     const winnerTeam = iWin ? `${myName} & ${myPartnerName}` : `${targetName} & ${targetPartnerName}`;
     const loserTeam = iWin ? `${targetName} & ${targetPartnerName}` : `${myName} & ${myPartnerName}`;
 
-    let msg = `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ ⚔️* 」\n`;
+    let msg = `╭──「 *ᴄᴏᴜᴘʟᴇ ᴡᴀʀ * 」\n`;
     msg += `  🏠 *Team 1: ${myName} & ${myPartnerName}*\n`;
     msg += `│ ⚔️ Couple Power: *${myCouplePower}*\n`;
     msg += `│ 🎲 Roll: *+${myRoll}*\n`;
@@ -188,7 +188,7 @@ async function handler(m, { sock }) {
     msg += `│ 💕 Affection: *${lossAff}*\n`;
     msg += `│ ✨ EXP: *+${lossExp}*\n`;
     msg += `│ 💰 Gold: *+${lossGold}*\n\n`;
-    msg += `╰──────────❀`;
+    msg += `╰──────────`;
 
     await m.reply(msg);
     await m.react(iWin ? "🏆" : "💥");

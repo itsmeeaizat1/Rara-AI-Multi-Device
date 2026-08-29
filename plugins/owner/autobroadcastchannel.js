@@ -8,7 +8,7 @@ import {
 
 function modBox(title, lines) {
   const body = Array.isArray(lines) ? lines.join("\n") : lines;
-  return "╭──「 " + title + " 」\n│\n" + body.split("\n").map(l => "" + l).join("\n") + "\n╰──────────❀";
+  return "╭──「 " + title + " 」\n│\n" + body.split("\n").map(l => "" + l).join("\n") + "\n╰──────────";
 }
 
 const pluginConfig = {
@@ -38,7 +38,7 @@ async function handler(m, { sock, config: botConfig }) {
     let onCount = 0;
     let offCount = 0;
 
-    let text = "╭──「 📡 AutoBroadcastChannel 」\n";
+    let text = "╭──「 AutoBroadcastChannel 」\n";
     text += "│\n";
     text += "│ 📺 Saluran: *" + (botConfig.saluran?.name || "-") + "*\n";
     text += "│ 📋 Total Event: *" + Object.keys(NOTIFY_EVENTS).length + "*\n";
@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
     text += "│\n";
     text += "│ 📊 ON: " + onCount + " | OFF: " + offCount + "\n";
     text += "│ 🔧 All toggle: `" + prefix + "autobroadcastchannel all on/off`\n";
-    text += "╰──────────❀";
+    text += "╰──────────";
 
     return m.reply(text);
   }
@@ -79,13 +79,13 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     return m.reply(
-      "╭──「 📡 AutoBroadcastChannel 」\n" +
+      "╭──「 AutoBroadcastChannel 」\n" +
       "│\n" +
       "│ ✅ Status: *" + (enabled ? "ALL ON" : "ALL OFF") + "*\n" +
       "│ 📊 Total: *" + count + " event*\n" +
       "│\n" +
       "│ 💡 Cek status: `" + prefix + "autobroadcastchannel`\n" +
-      "╰──────────❀"
+      "╰──────────"
     );
   }
 
@@ -103,14 +103,14 @@ async function handler(m, { sock, config: botConfig }) {
     setNotifyEnabled(subCmd, newVal);
 
     return m.reply(
-      "╭──「 📡 AutoBroadcastChannel 」\n" +
+      "╭──「 AutoBroadcastChannel 」\n" +
       "│\n" +
       "│ 📌 Event: *" + NOTIFY_EVENTS[subCmd] + "*\n" +
       "" + (newVal ? "✅ ON" : "❌ OFF") + "\n" +
       "│\n" +
       "" + (newVal ? "📢 Notifikasi akan dikirim ke saluran" : "🔕 Notifikasi dimatikan") + "\n" +
       "│ 💡 Cek semua: `" + prefix + "autobroadcastchannel`\n" +
-      "╰──────────❀"
+      "╰──────────"
     );
   }
 
@@ -121,7 +121,7 @@ async function handler(m, { sock, config: botConfig }) {
   }
 
   return m.reply(
-    "╭──「 📡 AutoBroadcastChannel 」\n" +
+    "╭──「 AutoBroadcastChannel 」\n" +
     "│\n" +
     "│ ❌ Event: *" + subCmd + "* tidak ada dalam daftar\n" +
     "│\n" +
@@ -129,7 +129,7 @@ async function handler(m, { sock, config: botConfig }) {
     availableList +
     "│\n" +
     "│ 💡 *Contoh:* `" + prefix + "autobroadcastchannel userBanned on`\n" +
-    "╰──────────❀"
+    "╰──────────"
   );
 }
 

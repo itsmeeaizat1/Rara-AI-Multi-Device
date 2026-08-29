@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
   if (isWeekend && !isPremium && !isOwner) {
     msg += `│ Bonus weekend: *+${formatNumber(weekendBonus)} limit*\n`;
   }
-  msg += `╰──────────❀\n\n`;
+  msg += `╰──────────\n\n`;
   msg += `Beli limit? Ketik \`.buyenergi <jumlah>\``;
 
   return m.reply( msg, "mylimit");

@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Gantiscraper", `📂 Folder src/scraper kosong`));
     }
 
-    let text = `📂 *DAFTAR SCRAPER*\n\n` + `╭─〔 *src/scraper* 〕───⬣\n`;
+    let text = `📂 *DAFTAR SCRAPER*\n\n` + `╭─〔 *src/scraper* 〕───\n`;
 
     scrapers.forEach((s, i) => {
       const stat = fs.statSync(path.join(SCRAPER_DIR, `${s}.js`));
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
     });
 
     text +=
-      `╰───────⬡\n\n` +
+      `╰───────\n\n` +
       `Total: ${scrapers.length} scraper\n\n` +
       `Gunakan \`${m.prefix}gantiscraper <nama>\` dengan reply code`;
 
@@ -250,7 +250,7 @@ async function handler(m, { sock }) {
 
     let replyText =
       `✅ *SCRAPER ${isNewFile ? "DITAMBAH" : "DIGANTI"}*\n\n` +
-      `╭─〔 *DETAIL* 〕───⬡\n` +
+      `╭─〔 *DETAIL* 〕───\n` +
       `│ File: \`${fileName}.js\`\n` +
       `│ Folder: \`src/scraper\`\n` +
       `│ Size: \`${code.length} bytes\`\n`;
@@ -259,7 +259,7 @@ async function handler(m, { sock }) {
       replyText += `│ Old Size: \`${oldSize} bytes\`\n`;
     }
 
-    replyText += `╰───────⬡\n\n`;
+    replyText += `╰───────\n\n`;
 
     if (backupPath) {
       const relBackup = path.relative(process.cwd(), backupPath);

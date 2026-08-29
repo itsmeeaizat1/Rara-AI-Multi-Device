@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
       return m.reply(
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `│ \`${m.prefix}soulmatematch @tag\`\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
       return m.reply(
         `╭──「 *sᴏᴜʟᴍᴀᴛᴄʜ* 」\n` +
         `│ 😅 Cek compatibility sama diri sendiri? 100% narcisist!\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
       msg += `│ Affection: *${myCinta.affection || 0}*\n`;
     }
 
-    msg += `\n╰──────────❀`;
+    msg += `\n╰──────────`;
 
     await m.reply(msg);
     await m.react(tier.emoji);

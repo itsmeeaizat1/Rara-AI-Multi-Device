@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
 
   // No args — show help
   if (args.length === 0) {
-    let txt = "╭──「 🎮 Cheat RPG 」\n";
+    let txt = "╭──「 Cheat RPG 」\n";
     txt += "│\n";
     txt += "│ 👑 Owner only command\n";
     txt += "│ Tambah RPG stats ke user langsung\n";
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
     txt += "│\n";
     txt += "│ 💡 Jumlah bisa negatif untuk kurang\n";
     txt += "│ Contoh: `.cheatrpg exp 999999999 @user`\n";
-    txt += "╰──────────❀";
+    txt += "╰──────────";
     return m.reply(txt);
   }
 
@@ -131,23 +131,23 @@ async function handler(m, { sock }) {
   const targetJid = extractTarget(m) || m.sender;
 
   if (!cheatType || !CHEAT_TYPES[cheatType]) {
-    let txt = "╭──「 ❌ Type Tidak Valid 」\n";
+    let txt = "╭──「 Type Tidak Valid 」\n";
     txt += "│\n";
     txt += "│ Type: `" + (cheatType || "kosong") + "` tidak ditemukan\n";
     txt += "│\n";
     txt += "│ 💡 Ketik `.cheatrpg` untuk lihat daftar lengkap\n";
-    txt += "╰──────────❀";
+    txt += "╰──────────";
     return m.reply(txt);
   }
 
   if (amount === 0) {
-    let txt = "╭──「 ❌ Jumlah Invalid 」\n";
+    let txt = "╭──「 Jumlah Invalid 」\n";
     txt += "│\n";
     txt += "│ Jumlah harus lebih dari 0\n";
     txt += "│ Bisa negatif untuk mengurangi\n";
     txt += "│\n";
     txt += "│ 💡 Contoh: `.cheatrpg " + cheatType + " 999999 @user`\n";
-    txt += "╰──────────❀";
+    txt += "╰──────────";
     return m.reply(txt);
   }
 
@@ -205,7 +205,7 @@ async function handler(m, { sock }) {
   const isAdd = amount > 0;
   const sign = isAdd ? "+" : "";
 
-  let txt = "╭──「 🎮 Cheat RPG 」\n";
+  let txt = "╭──「 Cheat RPG 」\n";
   txt += "│\n";
   txt += "│ ✅ Berhasil " + (isAdd ? "menambah" : "mengurangi") + " stats\n";
   txt += "│\n";
@@ -220,7 +220,7 @@ async function handler(m, { sock }) {
   txt += "│ Selisih: *" + sign + formatNumber(amount) + "*\n";
   txt += "│\n";
   txt += "│ 👑 Cheated by: " + (config.owner?.name || "Owner") + "\n";
-  txt += "╰──────────❀";
+  txt += "╰──────────";
 
   await m.react("🐣");
   await sock.sendMessage(m.chat, { text: txt, mentions: [targetJid] }, { quoted: m });

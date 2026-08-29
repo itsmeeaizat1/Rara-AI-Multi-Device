@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
 
   const caption = `╭──「 *Script Bot* 」\n│ *ʙᴏᴛ:* ${botName}
 │ *ᴜꜱᴇʀ:* ${m.pushName}
-╰──────────❀
+╰──────────
 
 │ Untuk asli dari bot ini, kamu bisa
 │ dapatkan melalui link di bawah.

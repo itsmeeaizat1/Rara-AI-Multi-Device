@@ -37,27 +37,27 @@ async function handler(m, { sock }) {
     const message = 
         `⭐ *Apa Itu Premium?*\n\n` +
         `Premium adalah *ᴜꜱᴇʀ ʙᴇʀʙᴀʏᴀʀ* yang mendapatkan akses ke fitur eksklusif dan keuntungan lebih.\n\n` +
-        `╭──「 💎 *ᴋᴇᴜɴᴛᴜɴɢᴀɴ ᴘʀᴇᴍɪᴜᴍ* 」\n` +
+        `╭──「 *ᴋᴇᴜɴᴛᴜɴɢᴀɴ ᴘʀᴇᴍɪᴜᴍ* 」\n` +
         `│ ✦ \`\`\`Limit harian: ${premiumLimit}x (vs ${defaultLimit}x user biasa)\`\`\`\n` +
         `│ ✦ \`\`\`Cooldown lebih rendah\`\`\`\n` +
         `│ ✦ \`\`\`Akses fitur eksklusif\`\`\`\n` +
         `│ ✦ \`\`\`Prioritas response\`\`\`\n` +
         `│ ✦ \`\`\`No watermark di beberapa fitur\`\`\`\n` +
         `│ ✦ \`\`\`Support prioritas\`\`\`\n` +
-        `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `╭──「 ⚙️ *ᴄᴀʀᴀ ᴍᴇɴᴅᴀᴘᴀᴛᴋᴀɴ* 」\n` +
+        `╰┈┈┈┈┈┈┈┈\n\n` +
+        `╭──「 *ᴄᴀʀᴀ ᴍᴇɴᴅᴀᴘᴀᴛᴋᴀɴ* 」\n` +
         `│ \`Premium didapatkan melalui:\`\n` +
         `│ • Hubungi owner bot\n` +
         `│ • \`\`\`${prefix}addprem <nomor> <durasi>\`\`\`\n` +
         `│ • Contoh: .addprem 628xxx 30d\n` +
-        `╰┈┈┈┈┈┈┈┈⬡\n\n` +
-        `╭──「 📋 *ᴅᴀꜰᴛᴀʀ ᴄᴏᴍᴍᴀɴᴅ ᴘʀᴇᴍɪᴜᴍ* 」\n` +
+        `╰┈┈┈┈┈┈┈┈\n\n` +
+        `╭──「 *ᴅᴀꜰᴛᴀʀ ᴄᴏᴍᴍᴀɴᴅ ᴘʀᴇᴍɪᴜᴍ* 」\n` +
         `│ \`Total: ${totalCommands} command\`\n` +
         `┃\n` +
         (totalCommands > 0 
             ? commandList.map(c => `│ ${commandListLine(prefix, c.name, c.usage)}`).join('\n')
             : `│ Semua command bisa diakses user biasa`) +
-        `\n╰┈┈┈┈┈┈┈┈⬡\n\n` +
+        `\n╰┈┈┈┈┈┈┈┈\n\n` +
         `Mau Upgrade? silahkan hubungi owner bot\n${config.owner.number.map(num => `- wa.me/${num}`).join('\n') }`
 
     await m.reply(claraWrap("benefitpremium", message))

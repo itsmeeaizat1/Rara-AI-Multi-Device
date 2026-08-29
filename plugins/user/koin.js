@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
   const isOwner = config.isOwner(targetJid);
   const isPremium = user.isPremium;
 
-  let txt = "╭──「 💰 Koin Info 」\n";
+  let txt = "╭──「 Koin Info 」\n";
   txt += "│\n";
   txt += "│ 👤 User: *" + targetName + "*\n";
   txt += "│ 💰 Koin: *" + formatKoin(user.koin || 0) + "*\n";
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     txt += "│\n";
     txt += "│ 🎮 Mau tambah koin? Main game aja!\n";
   }
-  txt += "╰──────────❀";
+  txt += "╰──────────";
 
   await m.reply(txt, { mentions: [targetJid] });
 }

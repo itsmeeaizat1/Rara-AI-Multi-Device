@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
       return m.reply(
         `╭──「 *ᴘᴜᴛᴜs ᴍᴀᴛᴄʜ* 」\n` +
         `│ 💔 Kamu tidak punya pasangan!\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
     msg += `\n  📊 *Penalty:*\n`;
     msg += `│ 💰 Gold: *-${goldLost}*\n`;
     msg += `│ 💔 Affection direset ke *0*\n\n`;
-    msg += `╰──────────❀`;
+    msg += `╰──────────`;
 
     await m.reply(msg);
     await m.react("💔");

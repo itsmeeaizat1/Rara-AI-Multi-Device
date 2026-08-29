@@ -1,6 +1,6 @@
 // === Nova AI Menu Style (v8 — Unified Box) ===
 // Aesthetic khas bot WhatsApp dev Indonesia:
-// ╭──「 」 box drawing, │ clean body lines, ├── sub-section, ╰───❀ footer
+// ╭──「 」 box drawing, │ clean body lines, ├── sub-section, ╰─── footer
 // + modern data: ▰▱ progress bars, ● status dots, system info
 // SEMUA text pakai smallcaps font (toSC diterapkan ke header + body)
 // Semua fungsi lama tetap export dengan signature sama.
@@ -11,7 +11,7 @@
 // │─ Empty:    │
 // │─ Sub:      ├──「 Sub Title 」
 // │─ Content:  │ content
-// │─ Footer:   ╰──────────❀
+// │─ Footer:   ╰──────────
 
 // Small caps map (q & x tidak ada di Unicode smallcaps, tetap as-is)
 const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
@@ -20,7 +20,7 @@ const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'
 const toSC = (s) => String(s).replace(/[a-zA-Z]/g, c => SC_MAP[c.toLowerCase()] || c);
 
 // scLine: apply smallcaps to text content, tapi preserve:
-// - box drawing chars (╭╮╰╯│├─┊❀┃━)
+// - box drawing chars (╭╮╰╯│├─┊┃━)
 // - emoji & special symbols (📌💡⚠️🐦 dll)
 // - markdown markers (* ` _)
 // - URLs (http/https jangan di-convert)
@@ -52,32 +52,47 @@ const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
  * Empty: pass "" as a line.
  */
 function buildBox(headerTitle, lines = []) {
-  const header = `╭──「 ${headerTitle} 」`;
+  const headerCore = `╭──「 ${headerTitle} 」`;
+  let maxW = headerCore.length;
+  for (const line of lines) {
+    let len;
+    if (line === "---" || line === "─" || line === "---separator---") continue;
+    else if (typeof line === "object" && line.subHeader) len = `├──「 ${line.subHeader} 」`.length;
+    else if (!line || !String(line).trim()) continue;
+    else {
+      const clean = String(line).replace(/^[•┊╎❏➶╭╰│┃]\s*/g, '');
+      len = `│ ${scLine(clean)}`.length;
+    }
+    if (len > maxW) maxW = len;
+  }
+  const W = Math.max(maxW + 3, 24);
+  const header = headerCore + "─".repeat(W - headerCore.length) + "╮";
   const body = [];
   for (const line of lines) {
     if (line === "---" || line === "─" || line === "---separator---") {
-      body.push("├───");
+      body.push("├" + "─".repeat(W - 2) + "┤");
     } else if (typeof line === "object" && line.subHeader) {
-      body.push(`├──「 ${line.subHeader} 」`);
+      const sub = `├──「 ${line.subHeader} 」`;
+      body.push(sub + "─".repeat(Math.max(0, W - sub.length - 1)) + "┤");
     } else if (!line || !String(line).trim()) {
-      body.push("│");
+      body.push("│" + " ".repeat(W - 2) + "│");
     } else {
       const clean = String(line)
         .replace(/^╎❏\s*/, '')
         .replace(/^╎\s*$/, '')
         .replace(/^┊\s+➶\s*/, '')
         .replace(/^[•┊╎❏➶╭╰│┃]\s*/g, '');
-      body.push(`│ ${scLine(clean)}`);
+      const text = scLine(clean);
+      body.push(`│ ${text}` + " ".repeat(Math.max(1, W - 3 - text.length)) + "│");
     }
   }
-  const footer = `╰──────────❀`;
+  const footer = "╰" + "─".repeat(W - 2) + "╯";
   return [header, ...body, footer].join("\n");
 }
 
 // novaCaption: caption panduan pakai fitur (no-input guide) — pakai buildBox modern style
 function novaCaption({ emoji = "", name = "", description = "", usage = "", example = "", note = "" } = {}) {
-  const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
-  const title = name ? `${emojiStr}${toSC(name)}` : toSC("Guide");
+  const title = name ? toSC(name) : toSC("Guide");
   const lines = [];
 
   if (description) {
@@ -122,7 +137,7 @@ function botHeader(botName) {
 }
 
 function botSignature(botName) {
-  return `╰──────────❀`;
+  return `╰──────────╯`;
 }
 
 function sectionBox(emoji, title, lines = []) {
@@ -148,15 +163,20 @@ function kv(key, value, padTo = 10) {
 }
 
 function categoryBox(emoji, name, commands, prefix, perLine = 3) {
-  const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
-  const header = `╭──「 ${emojiStr}${toSC(name)} (${commands.length}) 」`;
+  const headerCore = `╭──「 ${toSC(name)} (${commands.length}) 」`;
   const lines = [];
+  let maxW = headerCore.length;
   for (let i = 0; i < commands.length; i += perLine) {
     const chunk = commands.slice(i, i + perLine);
-    lines.push(`│ ${chunk.map(c => `${prefix}${toSC(c)}`).join("  ")}`);
+    const line = `│ ${chunk.map(c => `${prefix}${toSC(c)}`).join("  ")}`;
+    if (line.length > maxW) maxW = line.length;
+    lines.push(line);
   }
-  const footer = `╰──────────❀`;
-  return [header, ...lines, footer].join("\n");
+  const W = Math.max(maxW + 3, 24);
+  const header = headerCore + "─".repeat(W - headerCore.length) + "╮";
+  const body = lines.map(l => l + " ".repeat(Math.max(1, W - l.length - 1)) + "│");
+  const footer = "╰" + "─".repeat(W - 2) + "╯";
+  return [header, ...body, footer].join("\n");
 }
 
 // ═══════════════════════════════════════════════
@@ -175,7 +195,7 @@ function sectionItem(text) {
 }
 
 function sectionClose() {
-  return `╰──────────❀`;
+  return `╰──────────╯`;
 }
 
 function sectionSpacer() {
@@ -183,12 +203,15 @@ function sectionSpacer() {
 }
 
 function buildSection(title, items = []) {
-  const lines = [sectionHeader(title)];
-  for (const item of items) {
-    lines.push(sectionItem(item));
-  }
-  lines.push(sectionClose());
-  return lines.join("\n");
+  const header = sectionHeader(title);
+  let maxW = header.length;
+  const bodyLines = items.map(item => sectionItem(item));
+  for (const l of bodyLines) if (l.length > maxW) maxW = l.length;
+  const W = Math.max(maxW + 3, 24);
+  const closedHeader = header + "─".repeat(W - header.length) + "╮";
+  const closedBody = bodyLines.map(l => l + " ".repeat(Math.max(1, W - l.length - 1)) + "│");
+  const closedFooter = "╰" + "─".repeat(W - 2) + "╯";
+  return [closedHeader, ...closedBody, closedFooter].join("\n");
 }
 
 function claraHeader(title, emoji = "") {
@@ -302,6 +325,40 @@ function infoBox(title, { intro, sections = [] } = {}) {
 function listBox(title, items = []) {
   const lines = items.map(item => scLine(item));
   return buildBox(toSC(title), lines);
+}
+
+// closeBoxRight: tambah closing │/╮/╯/┤ di sisi kanan box
+// Untuk right-align box output di allmenu/menu
+function closeBoxRight(text) {
+  const lines = text.split("\n");
+  let maxW = 0;
+  for (const l of lines) {
+    const trimmed = l.replace(/\x1b\[[0-9;]*m/g, "");
+    if (trimmed.length > maxW) maxW = trimmed.length;
+  }
+  const W = Math.max(maxW + 3, 24);
+  const out = [];
+  for (const l of lines) {
+    const t = l.trim();
+    if (t.startsWith("╭──「") || t.startsWith("╭── 「")) {
+      out.push(l + "─".repeat(Math.max(0, W - l.length)) + "╮");
+    } else if (t.startsWith("├──「") || t.startsWith("├── 「")) {
+      out.push(l + "─".repeat(Math.max(0, W - l.length - 1)) + "┤");
+    } else if (t.startsWith("├───") || t.startsWith("├── ")) {
+      out.push("├" + "─".repeat(W - 2) + "┤");
+    } else if (t.startsWith("│") || l.trim() === "│") {
+      if (l.trim() === "│" || l.trim() === "") {
+        out.push("│" + " ".repeat(W - 2) + "│");
+      } else {
+        out.push(l + " ".repeat(Math.max(1, W - l.length - 1)) + "│");
+      }
+    } else if (t.startsWith("╰──")) {
+      out.push("╰" + "─".repeat(W - 2) + "╯");
+    } else {
+      out.push(l);
+    }
+  }
+  return out.join("\n");
 }
 
 // ═══════════════════════════════════════════════

@@ -132,7 +132,7 @@ async function sendStoreBackup(sock) {
             `  │ ❏ *Files:* ${backupInfo.fileCount}\n` +
             `  │ ❏ *Schema:* v${SCHEMA_VERSION}\n` +
             `│\n` +
-            `❀⋆｡˚ ${config.bot?.name || 'Nova-AI'} ˚｡⋆❀`
+            `${config.bot?.name || 'Nova-AI'}`
         
         await sock.sendMessage(ownerJid, {
             document: { url: backupInfo.path },

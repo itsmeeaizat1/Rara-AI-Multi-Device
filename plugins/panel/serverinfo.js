@@ -110,24 +110,24 @@ async function handler(m, { sock }) {
         const features = s.feature_limits || {}
         
         let txt = `📊 *Info sErver [${serverLabel}]*\n\n`
-        txt += `╭──「 📋 *ᴅᴇᴛᴀɪʟ* 」\n`
+        txt += `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n`
         txt += `│ 🆔 \`Id\`: *${s.id}*\n`
         txt += `│ 📛 \`Nama\`: *${s.name}*\n`
         txt += `│ 👤 \`Owner Id\`: *${s.user}*\n`
         txt += `│ 📝 \`Deskripsi\`: *${s.description || '-'}*\n`
         txt += `│ 📊 \`sTatus\`: *${s.suspended ? '⛔ Suspended' : '✅ Active'}*\n`
-        txt += `╰──────────❀\n\n`
-        txt += `╭──「 🧠 *ꜱᴘᴇꜱɪꜰɪᴋᴀꜱɪ* 」\n`
+        txt += `╰──────────\n\n`
+        txt += `╭──「 *ꜱᴘᴇꜱɪꜰɪᴋᴀꜱɪ* 」\n`
         txt += `│ 💾 \`Ram\`: *${formatBytes(limits.memory)}*\n`
         txt += `│ ⚡ \`Cpu\`: *${limits.cpu === 0 ? 'Unlimited' : limits.cpu + '%'}*\n`
         txt += `│ 📦 \`Disk\`: *${formatBytes(limits.disk)}*\n`
         txt += `│ 🔄 \`sWap\`: *${limits.swap} MB*\n`
-        txt += `╰──────────❀\n\n`
-        txt += `╭──「 📦 *ꜰᴇᴀᴛᴜʀᴇ ʟɪᴍɪᴛꜱ* 」\n`
+        txt += `╰──────────\n\n`
+        txt += `╭──「 *ꜰᴇᴀᴛᴜʀᴇ ʟɪᴍɪᴛꜱ* 」\n`
         txt += `│ 🗄️ \`Database\`: *${features.databases}*\n`
         txt += `│ 💾 \`Backup\`: *${features.backups}*\n`
         txt += `│ 🔌 \`Allocations\`: *${features.allocations}*\n`
-        txt += `╰──────────❀`
+        txt += `╰──────────`
         
         return m.reply(claraWrap("serverinfo", txt))
         

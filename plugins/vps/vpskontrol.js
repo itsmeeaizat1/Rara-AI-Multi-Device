@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
         await m.reply(`╭──「 *Aksi Berhasil* 」\n│ *ᴠᴘꜱ:* ${dropletId}
 │ *ᴀᴋꜱɪ:* ${action.text}
 │ *ꜱᴛᴀᴛᴜꜱ:* ${actionResult.status}
-╰──────────❀`)
+╰──────────`)
         
     } catch (err) {
         return m.reply(te(m.prefix, m.command, m.pushName))

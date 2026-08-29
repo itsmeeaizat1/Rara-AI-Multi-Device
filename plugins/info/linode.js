@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
 │ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
 │ *ᴄᴘᴜ:* ${cpu}
 │ *ʀᴀᴍ:* ${ram}
-╰──────────❀
+╰──────────
 
 Ketik ${prefix}menu untuk kembali`;
 
@@ -51,7 +51,7 @@ Ketik ${prefix}menu untuk kembali`;
     const prefix = botConfig.command?.prefix || ".";
     let text = `╭──「 *Server Error* 」\n│ *Status:* Gagal
 │ *ᴀʟᴀꜱᴀɴ:* ${error.message}
-╰──────────❀
+╰──────────
 
 Coba lagi ya`;
 

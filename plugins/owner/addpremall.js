@@ -77,12 +77,12 @@ async function handler(m, { sock }) {
         }
         
         await m.reply(`💎 *Add Premium All*\n\n` +
-            `╭──「 📋 *Hasil* 」\n` +
+            `╭──「 *Hasil* 」\n` +
             `│ 👥 Total Member: \`${participants.length}\`\n` +
             `│ ✅ Ditambahkan: \`${addedCount}\`\n` +
             `│ ⏭️ sUdah Premium: \`${alreadyPremCount}\`\n` +
             `│ 💎 Total Premium: \`${db.data.premium.length}\`\n` +
-            `╰──────────❀\n\n` +
+            `╰──────────\n\n` +
             `Grup: ${groupMeta.subject}`)
         
     } catch (error) {

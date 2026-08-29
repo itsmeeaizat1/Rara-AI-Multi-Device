@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
             "│ by " + (result.artist || "Unknown") + "\n" +
             "│\n" +
             lines + "\n" +
-            "╰──────────❀"
+            "╰──────────"
 
         // Kirim dengan thumbnail jika ada
         if (result.thumbnail) {

@@ -69,11 +69,11 @@ async function handler(m, { sock }) {
     await m.react('✅')
 
     await m.reply(claraWrap("User Diunban", `✅ *User Diunban*\n\n` +
-        `╭──「 📋 *Detail* 」\n` +
+        `╭──「 *Detail* 」\n` +
         `│ 📱 Nomor: \`${targetNumber}\`\n` +
         `│ ✅ sTatus: \`Unbanned\`\n` +
         `│ 📊 Total: \`${bannedList.length}\` User\n` +
-        `╰──────────❀`))
+        `╰──────────`))
 }
 
 export { pluginConfig as config, handler }

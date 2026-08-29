@@ -47,7 +47,7 @@ const CHARS = {
   cornerTopLeft: "╭",
   cornerTopRight: "─",
   cornerBottomLeft: "╰",
-  cornerBottomRight: "❀",
+  cornerBottomRight: "",
   horizontal: "─",
   vertical: "│",
   arrow: "❏",
@@ -200,7 +200,7 @@ function createHeader(title, width = 20) {
  * createFooter(); // "╰────────────────────╯"
  */
 function createFooter(width = 20) {
-  return `╰──────────❀`;
+  return `╰──────────`;
 }
 
 /**

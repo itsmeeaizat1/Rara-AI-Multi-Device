@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
 ╭──「 📍 *${lokasi}*
 │ 📅 ${today}
 │ 🗺️ ${daerah}
-╰──────────❀
+╰──────────
 ╭──「 ⏰ *ᴡᴀᴋᴛᴜ ꜱʜᴏʟᴀᴛ*
 │ 🌙 Imsak: \`${times.imsak}\`
 │ 🌅 sUbuh: \`${times.subuh}\`
@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
 │ 🌇 Ashar: \`${times.ashar}\`
 │ 🌆 Maghrib: \`${times.maghrib}\`
 │ 🌃 Isya: \`${times.isya}\`
-╰──────────❀
+╰──────────
 │ _Sumber: myquran.com | Jangan lupa sholat ya! 🤲_`;
     const adzanUrl = "https://media.vocaroo.com/mp3/1ofLT2YUJAjQ";
     let adzanBuffer;

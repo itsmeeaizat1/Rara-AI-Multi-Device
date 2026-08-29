@@ -82,11 +82,11 @@ async function handler(m, { sock }) {
     db.setGroup(m.chat, { ...groupData, mutedMembers })
 
     await m.reply(`🔇 *ᴍᴇᴍʙᴇʀ ᴅɪᴍᴜᴛᴇ*\n\n` +
-        `╭──「 📋 *ᴅᴇᴛᴀɪʟ* 」\n` +
+        `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `│ 👤 Member: @${targetNumber}\n` +
         `│ 🔇 sTatus: \`Muted\`\n` +
         `│ 📊 Total Mute: \`${mutedMembers.length}\` Member\n` +
-        `╰──────────❀\n\n` +
+        `╰──────────\n\n` +
         `Semua pesan dari member ini akan dihapus otomatis\n` +
         `Gunakan \`${m.prefix}unmutemember\` untuk unmute`)
 }

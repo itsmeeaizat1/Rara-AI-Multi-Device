@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
       }
     }
 
-    msg += `\n╰──────────❀`;
+    msg += `\n╰──────────`;
 
     await m.reply(msg);
     await m.react("💑");

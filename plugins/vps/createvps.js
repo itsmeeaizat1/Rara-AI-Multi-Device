@@ -130,13 +130,13 @@ ssh_pwauth: True`,
 │ *IP:* ${ip}
 │ *ᴜꜱᴇʀ:* root
 │ *ᴘᴀꜱꜱᴡᴏʀᴅ:* ${password}
-╰──────────❀
+╰──────────
 
 ╭──「 *Spec* 」\n│ *ʀᴀᴍ:* ${spec.ram}
 │ *ᴄᴘᴜ:* ${spec.cpu}
 │ *ʀᴇɢɪᴏɴ:* ${region}
 │ *OS:* Ubuntu 22.04
-╰──────────❀
+╰──────────
 
 Simpan data ini baik-baik!`
         

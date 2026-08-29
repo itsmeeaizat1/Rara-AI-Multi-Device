@@ -35,9 +35,9 @@ async function handler(m, { sock }) {
             text += `Birthday kamu: *${currentBday}*\n\n`
         }
         
-        text += `╭──「 📋 *ғOrmat* 」\n`
+        text += `╭──「 *ғOrmat* 」\n`
         text += `│ ${m.prefix}setbirthday DD-MM\n`
-        text += `╰┈┈┈┈┈┈┈┈⬡\n\n`
+        text += `╰┈┈┈┈┈┈┈┈\n\n`
         text += `*ᴄᴏɴᴛᴏʜ:*\n`
         text += `${m.prefix}setbirthday 25-12\n`
         text += `${m.prefix}setbirthday 01-01`
@@ -76,10 +76,10 @@ async function handler(m, { sock }) {
     
     await m.reply(
         `✅ *Birthday Disimpan!*\n\n` +
-        `╭──「 🎂 *ᴅᴇᴛᴀɪʟ* 」\n` +
+        `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `│ 📅 Tanggal: *${day} ${months[month - 1]}*\n` +
         `│ 👤 User: @${cleanJid}\n` +
-        `╰┈┈┈┈┈┈┈┈⬡\n\n` +
+        `╰┈┈┈┈┈┈┈┈\n\n` +
         `Bot akan mengucapkan selamat\n` +
         `ulang tahun di hari spesialmu! 🎉`,
         { mentions: [userJid] }

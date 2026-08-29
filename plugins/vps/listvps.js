@@ -52,11 +52,11 @@ async function handler(m, { sock }) {
         
         if (droplets.length === 0) {
             return m.reply(`╭──「 *List VPS* 」\n│ Tidak ada VPS yang tersedia
-╰──────────❀`)
+╰──────────`)
         }
         
         let txt = `╭──「 *List VPS* 」\n│ Total: ${droplets.length} droplet
-╰──────────❀
+╰──────────
 `
         
         for (const droplet of droplets) {
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
 │ *ᴄᴘᴜ:* ${droplet.vcpus} vCPU
 │ *ᴅɪꜱᴋ:* ${droplet.disk} GB
 │ *ʀᴇɢɪᴏɴ:* ${droplet.region?.slug || '-'}
-╰──────────❀
+╰──────────
 `
         }
         

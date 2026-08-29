@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
         m.react('✅')
         await m.reply(`╭──「 *VPS Dihapus* 」\n│ *ID:* ${dropletId}
 │ *ꜱᴛᴀᴛᴜꜱ:* Berhasil dihapus
-╰──────────❀`)
+╰──────────`)
         
     } catch (err) {
         return m.reply(te(m.prefix, m.command, m.pushName))

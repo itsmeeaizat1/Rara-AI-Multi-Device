@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         `╭──「 *ʀᴘɢ ᴋᴇɴᴄᴀɴ* 」\n` +
         `│ 💔 Kamu belum punya pasangan!\n` +
         `│ Gunakan \`${m.prefix}rpgcouple @tag\` dulu\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
       return m.reply(
         `╭──「 *ʀᴘɢ ᴋᴇɴᴄᴀɴ* 」\n` +
         `│ ⏳ Cooldown: *${formatDurasi(cd)}* lagi\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
         msg += `│     💕 +${a.affection} affection | ✨ +${a.exp} exp\n\n`;
       });
       msg += `  Ketik: \`${m.prefix}rpgkencan <nomor>\`\n\n`;
-      msg += `╰──────────❀`;
+      msg += `╰──────────`;
       return m.reply(msg);
     }
 
@@ -77,7 +77,7 @@ async function handler(m, { sock }) {
         `│ ❌ Gold tidak cukup!\n` +
         `│ Butuh: *${activity.cost} gold*\n` +
         `│ Punya: *${rpg.gold || 0} gold*\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
         `╭──「 *ʀᴘɢ ᴋᴇɴᴄᴀɴ* 」\n` +
         `│ ❌ Energy tidak cukup!\n` +
         `│ Butuh: *${activity.energy} energy*\n\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
 
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
     msg += `│ ✨ EXP: *+${activity.exp}*\n`;
     msg += `│ 💰 Gold: *-${activity.cost}*\n`;
     msg += `│ ⚡ Energy: *-${activity.energy}*\n\n`;
-    msg += `╰──────────❀`;
+    msg += `╰──────────`;
 
     await m.reply(msg);
     await m.react(activity.emoji);

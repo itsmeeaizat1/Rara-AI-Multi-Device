@@ -126,18 +126,18 @@ async function handler(m, { args, sock }) {
     await db.save();
     clearOtpSession(m.sender);
 
-    let txt = `╭──「 ✅ *ᴠᴇʀɪꜰɪᴇᴅ* 」\n`;
+    let txt = `╭──「 *ᴠᴇʀɪꜰɪᴇᴅ* 」\n`;
     txt += `│ 📛 Nama: *${session.name}*\n`;
     txt += `│ 📧 Email: *${session.email}*\n`;
     txt += `│ 🔑 SN: *${serial}*\n`;
-    txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
+    txt += `╰┈┈┈┈┈┈┈┈\n\n`;
 
     if (!alreadyClaimed) {
-      txt += `╭──「 🎁 *ʀᴇᴡᴀʀᴅꜱ* 」\n`;
+      txt += `╭──「 *ʀᴇᴡᴀʀᴅꜱ* 」\n`;
       txt += `│ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin\n`;
       txt += `│ ⚡ +${rewards.energi} Energi\n`;
       txt += `│ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n`;
-      txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
+      txt += `╰┈┈┈┈┈┈┈┈\n\n`;
     }
 
     txt += `Selamat datang di ${config.bot?.name || "Nova AI"}!\n`;

@@ -67,7 +67,7 @@ function buildHeader() {
 }
 
 function buildFooter() {
-  return `\n╰──────────❀`;
+  return `\n╰──────────`;
 }
 
 async function handler(m, { sock }) {

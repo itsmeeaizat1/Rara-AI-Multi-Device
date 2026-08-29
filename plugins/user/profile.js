@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
   let caption = "";
 
   // Header
-  caption += "╭──「 👤 Profile User 」\n";
+  caption += "╭──「 Profile User 」\n";
   caption += "│\n";
 
   // Personal Info
@@ -224,7 +224,7 @@ async function handler(m, { sock }) {
     }
   }
 
-  caption += "╰──────────❀";
+  caption += "╰──────────";
 
   const mentions = [target];
   if (user.rpg.spouse) mentions.push(user.rpg.spouse);

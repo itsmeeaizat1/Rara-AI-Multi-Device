@@ -40,14 +40,14 @@ async function handler(m, { sock }) {
   const saluranId = config.saluran?.id || "120363400911374213@newsletter";
   const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
   await m.reply(claraWrap("DAFTAR YANG UDAH ABSEN", `📋 *ᴅᴀꜰᴛᴀʀ ʏᴀɴɢ ᴜᴅᴀʜ ᴀʙꜱᴇɴ*\n\n` +
-      `╭──「 📋 *ɪɴꜰᴏ* 」\n` +
+      `╭──「 *ɪɴꜰᴏ* 」\n` +
       `│ 📝 ${absen.keterangan}\n` +
       `│ 📅 ${dateStr}\n` +
       `│ ⏰ Dimulai: ${timeStr}\n` +
       `│ 👑 Dibuat: @${absen.createdBy.split("@")[0]}\n` +
-      `├┈┈⬡「 👥 *PESERTA (${absen.peserta.length})* 」\n` +
+      `├┈┈「 👥 *PESERTA (${absen.peserta.length})* 」\n` +
       `${list}\n` +
-      `╰┈┈┈┈┈┈┈┈⬡\n\n` +
+      `╰┈┈┈┈┈┈┈┈\n\n` +
       `Ketik *${m.prefix}absen* untuk hadir`));
 }
 export { pluginConfig as config, handler };

@@ -256,10 +256,10 @@ async function handler(m, { sock }) {
       db.save();
       return m.reply(
         `🌐 *Auto Ai Global DiaktiғKan*\n\n` +
-          `╭──「 📋 *InғO* 」\n` +
+          `╭──「 *InғO* 」\n` +
           `│ 🎭 Karakter: *${characterName}*\n` +
           `│ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n` +
-          `╰┈┈┈┈┈┈┈┈⬡\n\n` +
+          `╰┈┈┈┈┈┈┈┈\n\n` +
           `ℹ️ AutoAI aktif di seluruh grup\n` +
           `ℹ️ Grup yang sudah punya config tetap pakai config sendiri\n` +
           `ℹ️ Ketik *.autoai global off* untuk menonaktifkan`,
@@ -335,12 +335,12 @@ async function handler(m, { sock }) {
     };
     db.save();
     let txt = `🤖 *Auto Ai DiaktiғKan*\n\n`;
-    txt += `╭──「 📋 *InғO* 」\n`;
+    txt += `╭──「 *InғO* 」\n`;
     txt += `│ 🎭 Karakter: *ᴄᴜꜱᴛᴏᴍ*\n`;
     txt += `│ 🧠 Logic: ${customLogic.substring(0, 100)}${customLogic.length > 100 ? "..." : ""}\n`;
     txt += `│ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
     txt += `│ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
-    txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
+    txt += `╰┈┈┈┈┈┈┈┈\n\n`;
     txt += `ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
     txt += `ℹ️ Bot respond ketika di-reply atau di-tag\n`;
     txt +=
@@ -365,11 +365,11 @@ async function handler(m, { sock }) {
     };
     db.save();
     let txt = `🤖 *Auto Ai DiaktiғKan*\n\n`;
-    txt += `╭──「 📋 *InғO* 」\n`;
+    txt += `╭──「 *InғO* 」\n`;
     txt += `│ 🎭 Karakter: *${customPersona.name}* (custom)\n`;
     txt += `│ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
     txt += `│ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
-    txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
+    txt += `╰┈┈┈┈┈┈┈┈\n\n`;
     txt += `ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
     txt += `ℹ️ Bot respond ketika di-reply atau di-tag\n`;
     txt +=
@@ -404,11 +404,11 @@ async function handler(m, { sock }) {
   db.save();
 
   let txt = `🤖 *Auto Ai DiaktiғKan*\n\n`;
-  txt += `╭──「 📋 *InғO* 」\n`;
+  txt += `╭──「 *InғO* 」\n`;
   txt += `│ 🎭 Karakter: *${characters[charKey].name}*\n`;
   txt += `│ 📢 Response: *${responseType === "voice" ? "🎤 Voice Note" : "💬 Text"}*\n`;
   txt += `│ 👤 Diaktifkan: @${m.sender.split("@")[0]}\n`;
-  txt += `╰┈┈┈┈┈┈┈┈⬡\n\n`;
+  txt += `╰┈┈┈┈┈┈┈┈\n\n`;
   txt += `ℹ️ Semua command (kecuali owner) dinonaktifkan\n`;
   txt += `ℹ️ Bot respond ketika di-reply atau di-tag\n`;
   txt +=

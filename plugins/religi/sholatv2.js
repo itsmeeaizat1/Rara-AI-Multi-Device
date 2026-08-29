@@ -44,7 +44,7 @@ async function handler(m, { sock, config, db } = {}) {
         return m.reply(`╭──「 Usage 」
 │ Usage: ${pluginConfig.usage}
 │ Contoh: ${pluginConfig.example}
-╰──────────❀`);
+╰──────────`);
     }
 
     try {
@@ -88,7 +88,7 @@ async function handler(m, { sock, config, db } = {}) {
 │
 │ Hint / Kota Mirip:
 ${hintList}
-╰──────────❀`);
+╰──────────`);
         }
 
         // Cari kota terbaik
@@ -112,7 +112,7 @@ ${hintList}
         if (!jadwal) {
             return m.reply(`╭──「 Error 」
 │ Gagal mengambil jadwal sholat untuk ${selectedCity.lokasi}.
-╰──────────❀`);
+╰──────────`);
         }
 
         const lokasiStr = dataJadwal.lokasi || selectedCity.lokasi;
@@ -127,7 +127,7 @@ ${hintList}
 │ Ashar: ${jadwal.ashar}
 │ Maghrib: ${jadwal.maghrib}
 │ Isya: ${jadwal.isya}
-╰──────────❀`;
+╰──────────`;
 
         return m.reply(resultText);
 
@@ -135,7 +135,7 @@ ${hintList}
         console.error("[sholatv2] Error:", error);
         return m.reply(`╭──「 Error 」
 │ Terjadi kesalahan: ${error.message}
-╰──────────❀`);
+╰──────────`);
     }
 }
 

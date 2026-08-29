@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
       `│ Tanya dokter AI tentang kesehatan\n` +
       `│ Gejala, penyakit, gizi, obat, tips\n` +
       `│ *Gratis* — via API Xemoz\n` +
-      `╰──────────❀\n\n` +
+      `╰──────────\n\n` +
       `*Cara pakai:*\n` +
       `${m.prefix}tanyadokter <pertanyaan>\n\n` +
       `*Contoh:*\n` +
@@ -107,14 +107,14 @@ async function handler(m, { sock }) {
         `\n` +
         `│ Sesi percakapan direset\n` +
         `│ Kirim pertanyaan baru untuk mulai\n` +
-        `╰──────────❀`
+        `╰──────────`
       );
     }
     return m.reply(
       `╭──「 *Konsultasi Dokter AI* 」\n` +
       `\n` +
       `│ Tidak ada sesi aktif untuk direset\n` +
-      `╰──────────❀`
+      `╰──────────`
     );
   }
 
@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
 
     // Tambah disclaimer di akhir
     reply +=
-      `\n\n╰──────────❀\n` +
+      `\n\n╰──────────\n` +
       `_Catatan: Ini adalah saran kesehatan umum dari AI. Untuk diagnosis pasti, konsultasi langsung dengan dokter._`;
 
     // Potong jika terlalu panjang
@@ -150,7 +150,7 @@ async function handler(m, { sock }) {
       `╭──「 *Dokter AI Error* 」\n` +
       `\n` +
       `│ *Error:* ${error.message || "Gagal menghubungi dokter AI"}\n` +
-      `╰──────────❀\n\n` +
+      `╰──────────\n\n` +
       `Coba lagi beberapa saat.`
     );
   }
