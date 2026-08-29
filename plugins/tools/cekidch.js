@@ -1,109 +1,119 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, toSC } from "../../src/lib/nova-menu-style.js";
+import config from "../../config.js";
 
 const pluginConfig = {
-    name: "cekidch",
-    alias: ["cekidch"],
-    category: 'tools',
-    description: 'Cek ID dan info lengkap channel dari link',
-    usage: '.cekidch <link channel>',
-    example: '.cekidch https://whatsapp.com/channel/xxxxx',
-    isOwner: false,
-    isPremium: false,
-    isGroup: false,
-    isPrivate: false,
-    cooldown: 5,
-    energi: 0,
-    isEnabled: true
+  name: "cekidch",
+  alias: ["cekidch", "idch"],
+  category: "tools",
+  description: "Cek ID dan info channel WhatsApp dari link",
+  usage: ".cekidch <link channel>",
+  example: ".cekidch https://whatsapp.com/channel/xxxxx",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 5,
+  energi: 0,
+  isEnabled: true,
 }
 
 function formatDate(timestamp) {
-    if (!timestamp) return '—'
-    const d = new Date(typeof timestamp === 'number' && timestamp < 1e12 ? timestamp * 1000 : timestamp)
-    const pad = n => String(n).padStart(2, '0')
-    return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+  if (!timestamp) return "—";
+  const ts = typeof timestamp === "number" && timestamp < 1e12 ? timestamp * 1000 : timestamp;
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return "—";
+  const pad = n => String(n).padStart(2, "0");
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
 function formatSubs(count) {
-    if (!count || count === 0) return '0'
-    if (count >= 1_000_000) return (count / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M'
-    if (count >= 1_000) return (count / 1_000).toFixed(1).replace(/\.0$/, '') + 'K'
-    return String(count)
+  if (!count || count === 0) return "0";
+  if (count >= 1_000_000) return (count / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (count >= 1_000) return (count / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+  return String(count);
 }
 
-async function handler(m, { sock }) {
-    const text = m.text?.trim()
+async function handler(m, { sock, args }) {
+  const text = (m.text || "").trim();
 
-    if (!text) {
-        return m.reply( `── .✦ 𝗖𝗘𝗞 𝗜𝗗 𝗖𝗛𝗔𝗡𝗡𝗘𝗟 ✦. ── 𝜗ৎ\n\n` +
-            `Masukkan link channel WhatsApp\n\n` +
-            `\`${m.prefix}cekidch https://whatsapp.com/channel/xxxxx\``, "cekidch")
+  if (!text) {
+    await m.reply(claraWrap("Cek ID Channel", [
+      `📌 ${toSC("Cara Pakai")}:`,
+      "",
+      "`.cekidch https://whatsapp.com/channel/xxxxx`",
+      "",
+      `💡 ${toSC("Kirim link channel WhatsApp untuk cek info & ID")}`,
+    ], "info"));
+    return;
+  }
+
+  if (!text.includes("https://whatsapp.com/channel/")) {
+    await m.reply(claraWrap("Cek ID Channel", "❌ Link tidak valid. Pastikan link dimulai dengan https://whatsapp.com/channel/", "error"));
+    return;
+  }
+
+  // Extract invite code dari link
+  const result = text.split("https://whatsapp.com/channel/")[1].trim();
+
+  try {
+    const res = await sock.newsletterMetadata("invite", result);
+
+    if (!res || !res.id) {
+      await m.reply(claraWrap("Cek ID Channel", "❌ Channel tidak ditemukan. Pastikan link valid dan channel masih aktif.", "error"));
+      return;
     }
 
-    if (!text.includes('https://whatsapp.com/channel/')) {
-        return m.reply(claraWrap("Cekidch", `── .✦ ──\n\nLink channel tidak valid .☘︎ ݁˖`))
+    const chId = res.id;
+    const chName = res.name || "Unknown";
+    const chSubs = formatSubs(res.subscribers ?? 0);
+    const chVerified = res.verification === "VERIFIED" ? "Terverifikasi" : "Tidak";
+    const chCreated = formatDate(res.creation_time);
+    const chDesc = res.description || "—";
+    const chPicUrl = res.picture?.url || "";
+
+    // Format text dengan smallcaps
+    const lines = [
+      `🆔 ${toSC("ID")}: \`${chId}\``,
+      `🗒️ ${toSC("Nama")}: ${toSC(chName)}`,
+      `👥 ${toSC("Pengikut")}: ${chSubs}`,
+      `✅ ${toSC("Verifikasi")}: ${toSC(chVerified)}`,
+      `📅 ${toSC("Dibuat")}: ${toSC(chCreated)}`,
+    ];
+
+    if (chDesc && chDesc !== "—") {
+      const descPreview = chDesc.length > 100 ? chDesc.slice(0, 100) + "..." : chDesc;
+      lines.push(`📝 ${toSC("Deskripsi")}: ${toSC(descPreview)}`);
     }
 
-    m.react('🕐')
+    const infoText = claraWrap(`📢 ${toSC("Channel Info")}`, lines, "success");
 
-    try {
-        const metadata = await sock.cekIDSaluran(text)
- 
-        if (!metadata?.id) {
-            { const __navText = `── .✦ ──\n\nChannel tidak ditemukan .☘︎ ݁˖`; return await m.reply(__navText); }
-        }
+    // Kirim dengan tombol copy ID + buka channel
+    const buttons = [
+      {
+        name: "cta_copy",
+        buttonParamsJson: JSON.stringify({
+          display_text: toSC("Salin ID Channel"),
+          copy_code: chId,
+        }),
+      },
+      {
+        name: "cta_url",
+        buttonParamsJson: JSON.stringify({
+          display_text: toSC("Buka Channel"),
+          url: text,
+        }),
+      },
+    ];
 
-        const chName = metadata.name || 'Unknown'
-        const chId = metadata.id
-        const chSubs = metadata.subscribers ?? metadata.subscribers_count ?? 0
-        const chDesc = metadata.description || '—'
-        const chVerified = metadata.verification === 'VERIFIED' ? '✓ Verified' : 'Unverified'
-        const chCreated = formatDate(metadata.creation_time)
-        const chPicUrl = metadata.preview === "https://mmg.whatsapp.net" ? "https://athars.space/uploads/de11c461.jpg" : metadata.preview
-
-        const descPreview = chDesc.length > 120 ? chDesc.slice(0, 120) + '...' : chDesc
-
-        const infoText =
-            `── .✦ 𝗖𝗛𝗔𝗡𝗡𝗘𝗟 𝗜𝗡𝗙𝗢 ✦. ──\n\n` +
-            `╭──「 *${chName}* 」\n` +
-            `│  ✦ NAMA       : *${chName}*\n` +
-            `│  ✦ ID            : \`${chId}\`\n` +
-            `│  ✦ sUBsCRIBER : *${formatSubs(chSubs)}*\n` +
-            `│  ✦ sTATUs     : *${chVerified}*\n` +
-            `│  ✦ DIBUAT      : *${chCreated}*\n` +
-            `│  ✦ DEsKRIPsI  : ${descPreview}\n` +
-            `╰──────────`
-
-        const buttons = [
-            {
-                name: 'cta_copy',
-                buttonParamsJson: JSON.stringify({
-                    display_text: '✦ Copy ID Channel',
-                    copy_code: chId
-                })
-            },
-            {
-                name: 'cta_url',
-                buttonParamsJson: JSON.stringify({
-                    display_text: '✦ Buka Channel',
-                    url: text
-                })
-            }
-        ]
-
-        await sock.sendButton(m.chat, chPicUrl, infoText, m, {
-            buttons: buttons,
-            footer: `© ${config.bot?.name || 'Nova-AI'}`,
-        })
-
-        m.react('✅')
-
-    } catch (error) {
-        console.error('[CekIdCh] Error:', error.message)
-        m.reply(claraWrap("cekidch", te(m.prefix, m.command, m.pushName), "error"))
-    }
+    await sock.sendButton(m.chat, chPicUrl || null, infoText, m, {
+      buttons,
+      footer: config.bot?.name || "Nova-AI",
+    });
+  } catch (e) {
+    console.error("[cekidch] Error:", e.message);
+    await m.reply(claraWrap("Cek ID Channel", "❌ Terjadi kesalahan saat mengambil info channel. Coba lagi nanti.", "error"));
+  }
 }
 
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler };

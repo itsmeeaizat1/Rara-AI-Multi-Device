@@ -152,6 +152,8 @@ binderbyteKey: ""   // Binderbyte cek resi
 - `.automod action <groupId> delete/warn/kick` — Set action violation
 - `.automod rules <groupId>` — Lihat rules per grup
 
+- `.cekidch` — tools — Cek ID dan info channel WhatsApp dari link (alias: .idch)
+- `.listonline` — group — Cek daftar member online/aktif di grup (alias: .liston)
 ## 📂 Daftar Kategori & Command
 
 ### 🤖 AI (103 plugin)
@@ -226,7 +228,7 @@ asahotak, caklontong, family100, fishing, kataacak, kuis, kyubigame, mathquiz, m
 - .tekateki - game - Teka teki rumit
 - .trivia - game - Pertanyaan trivia umum
 
-### 👥 Group (182+ plugin)
+### 👥 Group (183+ plugin)
 absen, absenv2, acc, add, addantilink, addcmdsticker, addtoxic, afk, agenda, anti18plus, antibucin, antibug, anticaps, anticulik, anticustom, antidocument, antiflood, antiforward, antifoto, antighost, antihotword, antijudol, antikasar, antilinkall, antilinkgc, antimedia, antinomorluar, antiphising, antipollspam, antipromote, antiremove, antiribut, antirvo, antispam, antisticker, antiswgc, antitagsw, antitoxic, antivideo, antivn, approvalmember, autoai, autochatsummary, automeme, automute, autoreaction, autoreply, autosticker, autotips, banchat, bingo, botmode, bounty, cekabsen, cekfakta-v2, cekidgc, cekonline, checklink, checksewa, close, delantilink, delete, delppgc, delstickercmd, deltoxic, demote, donasi, emojiguess, eventrsvp, game, getpp, goodbye, groupinfo, groupmemory, grupdashboard, grupshop, hapusabsen, hidetag, hidetag2, intro, jadwalgroup, kick, kickall, lelang, linkgc, linkgroup, listadmin, listantilink, listtoxic, listwarn, mostlikely, motw, mulaiabsen, mute, mutegc, mutemember, nhie, notifclosegroup, notifdemote, notifgantitag, notifmakan, notifopengroup, notifpromote, notifsholat, notiftidur, open, openvo, pickme, pin, poll, promote, ptg, publicthisgc, rapbattle, rateuser, reaction, reactionrole, report, resetgoodbye, resetintro, resetlinkgc, resetrulesgrup, resetwarn, resetwelcome, roastbattle, rpg, rulesgrup, selfthisgc, setdeskgc, setgoodbye, setgroupdesc, setgroupicon, setgroupname, setgrouppp, setgrouptitle, setintro, setnamegc, setppgc, setrulesgrup, setwelcome, sewainfo, slowmode, smartremind, smartreply, spinbottle, statscard, storybuild, storyrelay, tagall, tam, tod, topchat, totag, truth, typingrace, unban, unmute, unmutegc, unmutemember, warn, welcome, wordbomb, wyr
 
 ### ℹ️ Info (20 plugin)
@@ -286,7 +288,7 @@ attp, bratlocal, emojimix, linesticker, meme, s, sticker, stickerfilter, sticker
 ### 🏪 Store (16 plugin)
 list, add, delete, buy, sell, payment, transaction, dll
 
-### 🛠️ Tools (176 plugin)
+### 🛠️ Tools (177 plugin)
 emojitoanimasi, emojitoimage, invoicemaker, musikapaini, dan ratusan tool lainnya (audio editor, image editor, text tools, QR, dll)
 
 ### 🔊 TTS (4 plugin)
