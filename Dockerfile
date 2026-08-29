@@ -2,6 +2,31 @@ FROM node:22-slim
 
 WORKDIR /app
 
+# Install chromium dependencies for puppeteer
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    chromium \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxi6 \
+    libxtst6 \
+    libnss3 \
+    libcups2 \
+    libxss1 \
+    libxrandr2 \
+    libasound2 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libpangocairo-1.0-0 \
+    libgtk-3-0 \
+    fonts-liberation \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Tell puppeteer to use system chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
 # Install dependencies first (better layer caching)
 COPY package.json package-lock.json* ./
 RUN npm ci --production || npm install --production
