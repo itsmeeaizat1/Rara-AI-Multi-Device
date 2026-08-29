@@ -2,7 +2,7 @@
 // RPG Begal — Rob other players for gold (risky)
 
 import {
-  ensureRpg, saveRpg, addGold, removeGold,
+  ensureRpg, saveRpg, addGold, removeGold, addExp,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
