@@ -66,9 +66,6 @@ async function handler(m, { sock, args }) {
   if (!hasKey()) {
     return m.reply(`Sunnah.com API butuh API key!\n\nRequest di: https://github.com/sunnah-com/api/issues\n\nAtau gunakan \`${m.prefix}ummah\` (UmmahAPI, free, no key) untuk 36,000+ hadiths.`);
   }
-
-  await m.react("🕒");
-
   try {
     // === SET API KEY (owner only) ===
     if (cmd === "setkey" || cmd === "setapi") {
@@ -78,7 +75,6 @@ async function handler(m, { sock, args }) {
       const key = cmdArgs[0];
       if (!key) return m.reply(claraWrap("Sunnah", "Masukkan API key!\n\n💡 *Contoh:* `.sunnah setkey YOUR_KEY`"));
       await m.reply(claraWrap("Sunnah", `API key diterima! Set environment variable:\n\nSUNNAH_API_KEY=${key}\n\nDi Pterodactyl, tambahkan di server settings.`));
-      await m.react("🐣");
     }
 
     // === LIST COLLECTIONS ===
@@ -96,7 +92,6 @@ async function handler(m, { sock, args }) {
         txt += `   \`${m.prefix}sunnah books ${c.name}\`\n\n`;
       }
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === COLLECTION DETAIL ===
@@ -116,7 +111,6 @@ async function handler(m, { sock, args }) {
       if (c.hasChapters) txt += `Chapters: Available\n`;
       txt += `\n\`${m.prefix}sunnah books ${collection}\``;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === BOOKS of a collection ===
@@ -137,7 +131,6 @@ async function handler(m, { sock, args }) {
       }
       if (books.length > 20) txt += `...dan ${books.length - 20} buku lainnya.`;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === BOOK DETAIL ===
@@ -157,7 +150,6 @@ async function handler(m, { sock, args }) {
       txt += `\n\`${m.prefix}sunnah bookhadiths ${collection} ${bookNumber}\`\n`;
       txt += `\`${m.prefix}sunnah chapters ${collection} ${bookNumber}\``;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === CHAPTERS of a book ===
@@ -179,7 +171,6 @@ async function handler(m, { sock, args }) {
       }
       if (chapters.length > 20) txt += `...dan ${chapters.length - 20} bab lainnya.`;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === HADITHS of a book (with pagination) ===
@@ -207,7 +198,6 @@ async function handler(m, { sock, args }) {
 
       txt += `Halaman ${page} | Next: \`${m.prefix}sunnah bookhadiths ${collection} ${bookNumber} ${page + 1}\``;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === SPECIFIC HADITH ===
@@ -229,7 +219,6 @@ async function handler(m, { sock, args }) {
       if (h.english?.text) txt += `English:\n${h.english.text}\n`;
       txt += `\n\`${m.prefix}sunnah hadith ${collection} ${number - 1}\` <- -> \`${m.prefix}sunnah hadith ${collection} ${number + 1}\``;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     else {

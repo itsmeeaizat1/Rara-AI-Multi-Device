@@ -62,9 +62,6 @@ async function handler(m, { sock, args }) {
     const scaleArg = argList.find((a) => /^\d+x$/.test(a));
     let scale = scaleArg ? parseInt(scaleArg.replace("x", "")) : 2;
     scale = Math.max(2, Math.min(8, scale || 2));
-
-    await m.react("🕒");
-
     const buffer = await m.download();
     if (!buffer) {
       return await m.reply(claraWrap("remini", "Gagal download gambar! Coba lagi."));
@@ -72,9 +69,6 @@ async function handler(m, { sock, args }) {
 
     const { buffer: resultBuffer, width: outW, height: outH } = await upscaleImage(buffer, scale);
     const sizeMB = (resultBuffer.length / (1024 * 1024)).toFixed(2);
-
-    await m.react("🐣");
-
     let caption = `╭──「 *HD ENHANCED* 」\n`;
     caption += `│ Scale: ${scale}x (${outW}x${outH})\n`;
     caption += `│ Size: ${sizeMB}MB\n`;
@@ -104,7 +98,6 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[HD/Remini] Error:", e.message);
-    await m.react("❌");
     let txt = `╭──「 *ERROR* 」\n`;
     txt += `│ Gagal enhance gambar!\n`;
     txt += `│ ${e.message}\n`;

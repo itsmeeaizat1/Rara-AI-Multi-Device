@@ -50,9 +50,6 @@ async function handler(m, { sock }) {
   if (!url || !url.includes("shopee")) {
     return await m.reply(novaGuide("Shopee DL", "Masukkan link video Shopee yang valid ya!", `${m.prefix || '.'}shopeedl https://shopee.co.id/...`));
   }
-
-  await m.react("🕒");
-
   try {
     const data = await extract(url);
     if (!data || !data.streams_array || data.streams_array.length === 0) {
@@ -71,9 +68,6 @@ async function handler(m, { sock }) {
       video: { url: videoUrl },
       caption: caption
     }, { quoted: m });
-
-    await m.react("🐣");
-
   } catch (error) {
     console.error("[Shopee DL]", error.message);
     m.reply(novaError("Shopee DL", "Gagal mengunduh video dari Shopee. Coba lagi nanti!"));

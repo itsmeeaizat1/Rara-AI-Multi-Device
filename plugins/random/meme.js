@@ -23,13 +23,11 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-    m.react('🕐') 
     try {
         const { data } = await f(`https://api.neoxr.eu/api/meme?apikey=${NEOXR_APIKEY}`)
         await sock.sendMedia(m.chat, data.url, data.title, m, {
             type: 'image'
         })
-        m.react('✅')
     } catch (err) {
         return m.reply(claraWrap("meme", te(m.prefix, m.command, m.pushName), "error"))}
 }

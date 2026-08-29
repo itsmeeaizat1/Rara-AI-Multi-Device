@@ -38,9 +38,6 @@ async function handler(m, { sock, args }) {
     txt += `4. \`${m.prefix}text2img <text> --enhance\``;
     return await m.reply( txt, { commandName: "text2img" });
   }
-
-  await m.react("🕒");
-
   try {
     // Parse options from prompt
     let model = "flux";
@@ -103,9 +100,6 @@ async function handler(m, { sock, args }) {
     }
 
     const resultBuffer = Buffer.from(res.data);
-
-    await m.react("🐣");
-
     let caption = `Text2Img - Pollinations AI\n`;
     caption += `Prompt: ${cleanPrompt}\n`;
     caption += `Model: ${model}\n`;

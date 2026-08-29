@@ -26,8 +26,6 @@ async function handler(m, { sock }) {
     if (!isImage) {
         { const __navText = claraWrap("Figure sTyle", `🎭 *ꜰɪɢᴜʀᴇ ꜱᴛʏʟᴇ*\n\nKirim/reply gambar untuk diubah ke style Figure\n\n\`${m.prefix}tofigure\``); return await m.reply(__navText, "tofigure"); }
     }
-    
-    m.react('🕐')
     try {
         let buffer
         if (m.quoted && m.quoted.isMedia) {
@@ -44,9 +42,6 @@ async function handler(m, { sock }) {
         
         const apiUrl = `https://api-faa.my.id/faa/tofigura?url=${encodeURIComponent(imageUrl)}`
         const res = await axios.get(apiUrl, { responseType: 'arraybuffer' })
-        
-        m.react('✅')
-        
         await sock.sendMedia(m.chat, Buffer.from(res.data), null, m, {
             type: 'image',
         })

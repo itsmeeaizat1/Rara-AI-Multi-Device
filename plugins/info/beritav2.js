@@ -194,7 +194,6 @@ async function handler(m, extra = {}) {
 
     try {
         if (typeof m.react === "function") {
-            await m.react("🕒");
         }
 
         const data = await fetchRssFeed(sourceKey);
@@ -207,7 +206,6 @@ async function handler(m, extra = {}) {
         return m.reply(resultText);
     } catch (err) {
         if (typeof m.react === "function") {
-            await m.react("❌");
         }
 
         const errorText = renderErrorBox(SOURCES[sourceKey]?.name || sourceKey, err.message);

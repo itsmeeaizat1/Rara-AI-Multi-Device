@@ -30,9 +30,6 @@ async function handler(m, { sock }) {
   if (!isImage) {
     return m.reply( claraWrap("Novabanana", `🍌 *ɴᴀɴᴏ ʙᴀɴᴀɴᴀ*\n\nReply atau kirim gambar dengan caption`), { commandName: "novabanana" });
   }
-
-  m.react("🕒");
-
   try {
     let mediaBuffer;
     if (m.isImage && m.download) {
@@ -48,9 +45,6 @@ async function handler(m, { sock }) {
     const resultBuffer = await live3d(mediaBuffer, prompt).then(
       (res) => res.image,
     );
-
-    m.react("🐣");
-
     await sock.sendMedia(m.chat, resultBuffer, null, m, {
       type: "image",
     });

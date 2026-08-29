@@ -100,7 +100,6 @@ async function handler(m, { sock, config: botConfig }) {
     }
   } catch (error) {
     console.error("[report] error:", error.message);
-    await m.react("❌");
     return m.reply(novaError("Report", `Gagal mengirim laporan: ${error.message || "terjadi kesalahan"}`));
   }
 

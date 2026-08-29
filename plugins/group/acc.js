@@ -40,9 +40,6 @@ async function handler(m, { sock }) {
     if (!sub || !['list', 'approve', 'reject'].includes(sub)) {
         return m.reply(novaGuide('Join Request Manager', 'Kelola permintaan bergabung di grup ini.', `${m.prefix}acc list`))
     }
-
-    await m.react('🕐')
-
     try {
         const pendingList = await sock.groupRequestParticipantsList(m.chat)
 
@@ -83,7 +80,6 @@ async function handler(m, { sock }) {
             const failed = results.length - success
 
             const label = action === 'approve' ? 'Diterima' : 'Ditolak'
-            await m.react('✅')
             return m.reply(claraWrap(`${label.toUpperCase()} SEMUA`, `✅ *${label.toUpperCase()} SEMUA*\n\n` +
                 `✅ Berhasil: ${success}\n` +
                 `❌ Gagal: ${failed}\n` +
@@ -115,8 +111,6 @@ async function handler(m, { sock }) {
                 text += `❌ ${number} — Error\n`
             }
         }
-
-        await m.react('✅')
         return m.reply(
             `📋 *Hasil ${label.toUpperCase()}*\n\n` +
             text + `\n` +

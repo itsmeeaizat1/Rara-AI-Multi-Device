@@ -137,7 +137,6 @@ async function handler(m, { sock }) {
     await m.react(tier.emoji);
   } catch (e) {
     console.error("[soulmatematch] Error:", e.message);
-    try { await m.react("❌"); } catch {}
   }
 }
 

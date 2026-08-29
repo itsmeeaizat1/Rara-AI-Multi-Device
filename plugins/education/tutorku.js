@@ -147,8 +147,6 @@ async function handler(m, { sock, args, config: botConfig }) {
       `Contoh: ${prefix}tutorku ${subject.key} <pertanyaan>`,
     ].join("\n")), { commandName: "tutorku" });
   }
-
-  await m.react("🕒");
   try {
     const prompt = `Pertanyaan mahasiswa: "${question}"
 

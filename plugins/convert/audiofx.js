@@ -131,9 +131,6 @@ async function handler(m, { sock }) {
                 'Contoh: reply audio lalu ketik *' + prefix + 'audiofun ' + effectName + '*'),
             "audiofun")
     }
-
-    await m.react('🕐')
-
     const tempDir = path.join(process.cwd(), 'temp')
     if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true })
 
@@ -159,10 +156,7 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, audioBuffer, null, m, {
             type: 'audio'
         })
-
-        await m.react('✅')
     } catch (error) {
-        await m.react("🐣");
         m.reply(te(m.prefix, m.command, m.pushName))
     } finally {
         try { fs.existsSync(inputPath) && fs.unlinkSync(inputPath) } catch (e) { console.error('[audiofx.js]:', e.message); }

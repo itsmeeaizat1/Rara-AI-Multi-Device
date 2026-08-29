@@ -41,7 +41,6 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply(novaNoInput("TikTok V2", "Masukkan link video TikTok yang mau kamu download!", `${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`));
   }
-  m.react("🕒");
   try {
     const res = await rlGet(`${API_BASE}/download/tiktok?apikey=${API_KEY}&url=${encodeURIComponent(text)}`);
     const r = res.data?.result || res.data?.data;
@@ -53,7 +52,6 @@ async function handler(m, { sock }) {
         video: { url: r.play },
         caption,
     }, { quoted: m });
-    m.react("🐣");
   } catch (e) {
     console.error("[TIKTOKV2]", e.message);
     m.reply(novaError("TikTok V2", e.message || "Gagal mengambil video TikTok"));

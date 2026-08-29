@@ -80,8 +80,6 @@ async function handler(m, { sock }) {
     stockItems[itemNo].updatedAt = new Date().toISOString()
 
     db.setting('storeProducts', products)
-    await m.react('✅')
-
     return m.reply(`✅ *ꜱᴛᴏᴋ ᴅɪᴘᴇʀʙᴀʀᴜɪ*\n\n` +
         `🏷️ Produk: *${product.name}*\n` +
         `🔑 Item #${itemNo + 1}\n\n` +

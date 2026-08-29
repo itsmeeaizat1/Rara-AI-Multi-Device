@@ -32,9 +32,6 @@ async function handler(m, { sock }) {
             `Kirim/reply gambar untuk efek cermin\n\n` +
             `\`${m.prefix}tocermin\``, "tocermin")
     }
-    
-    m.react('🕐')
-    
     try {
         let buffer
         if (m.quoted && m.quoted.isMedia) {
@@ -48,9 +45,6 @@ async function handler(m, { sock }) {
         }
         
         const result = await live3d(buffer, PROMPT)
-        
-        m.react('✅')
-        
         await sock.sendMedia(m.chat, result.image, null, m, {
             type: 'image',
         })

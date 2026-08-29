@@ -41,9 +41,6 @@ async function handler(m, { sock, db }) {
     }
 
     const { rawContent, groups, tempFile } = pending;
-
-    await m.react("🕒");
-
     let content = {};
     if (rawContent.image)
       content = { image: rawContent.image, caption: rawContent.caption || "" };
@@ -99,7 +96,6 @@ async function handler(m, { sock, db }) {
     }
 
     await m.reply(report);
-    await m.react("🐣");
     return;
   }
 

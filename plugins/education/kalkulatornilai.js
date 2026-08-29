@@ -64,9 +64,6 @@ async function handler(m, { sock, args }) {
     txt += `Bobot dalam persen (total 100). Skala nilai 0-100.`;
     return await m.reply( txt, { commandName: "kalkulatornilai" });
   }
-
-  await m.react("🕒");
-
   try {
     // === FINAL GRADE ===
     if (cmd === "final" || cmd === "akhir" || cmd === "hitung") {
@@ -111,7 +108,6 @@ async function handler(m, { sock, args }) {
       txt += `Ekuivalen IPK: *${grade.gpa}*\n`;
       txt += `Predikat: *${getPredicate(finalScore)}*`;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === NEEDED GRADE ===
@@ -153,7 +149,6 @@ async function handler(m, { sock, args }) {
         txt += `_Semangat belajar! target ${target} masih bisa dicapai_`;
       }
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === CONVERT ===
@@ -180,7 +175,6 @@ async function handler(m, { sock, args }) {
       else if (grade === "D") txt += `Rentang: 30-39\n`;
       else if (grade === "E") txt += `Rentang: 0-29`;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     else {

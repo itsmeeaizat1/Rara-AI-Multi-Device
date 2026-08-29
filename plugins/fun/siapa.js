@@ -27,7 +27,6 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     const command = m.command?.toLowerCase()
-    m.react('🕐')
     try {
         const groupMeta = m.groupMetadata
         const participants = groupMeta.participants || []
@@ -43,7 +42,6 @@ async function handler(m, { sock }) {
         const emoji = isPositive ? '✨' : '😏'
         const label = isPositive ? 'Yang paling' : 'Anak'
         await m.reply(claraWrap("Siapa", `*${label} ${command} di sini adalah* @${randomMember.split('@')[0]}`))
-        m.react('✅')
     } catch (error) {
         m.reply(claraWrap("siapa", te(m.prefix, m.command, m.pushName), "error"))
     }

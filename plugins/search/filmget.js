@@ -120,8 +120,6 @@ async function handler(m, { sock }) {
     }
 
     await sock.sendMessage(m.chat, msgContent, { quoted: m });
-
-    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("filmget", te(m.prefix, m.command, m.pushName), "error"));
   }

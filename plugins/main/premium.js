@@ -54,7 +54,6 @@ function buildPaymentMethods() {
 
 async function handler(m, { sock, config: botConfig, db }) {
   try {
-    await m.react("🕒");
     const prefix = botConfig.command?.prefix || ".";
 
     // Cek apakah user sudah premium
@@ -127,9 +126,6 @@ async function handler(m, { sock, config: botConfig, db }) {
       { id: `${prefix}sewa`, text: toSC("Sewa Bot") },
       { id: `${prefix}owner`, text: toSC("Owner") },
     ];
-
-    await m.react("🐣");
-
     // Kirim dengan menu card + thumbnail
     await sendMenuCard(sock, m, {
       text: fullText,
@@ -143,7 +139,6 @@ async function handler(m, { sock, config: botConfig, db }) {
     try {
       await m.reply(novaError("Premium", "Gagal tampilkan list premium nih, coba lagi ya"));
     } catch {}
-    await m.react("❌");
   }
 }
 

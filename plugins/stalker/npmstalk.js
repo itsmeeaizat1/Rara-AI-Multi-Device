@@ -35,9 +35,6 @@ async function handler(m, { sock }) {
     if (!username) {
         { const __navText = `📦 *ɴᴘᴍ ꜱᴛᴀʟᴋ*\n\nMasukkan username NPM\n\n\`Contoh: ${m.prefix}npmstalk aizat\``; return await m.reply( __navText, "npmstalk"); }
     }
-    
-    m.react('🕐')
-    
     try {
         const res = await axios.get(`https://firefly.maiku.my.id/api/stalk-npm?apikey=${config.APIkey.firefly}&username=${encodeURIComponent(username)}`, {
             timeout: 30000
@@ -66,9 +63,6 @@ async function handler(m, { sock }) {
                 caption += `📝 ${pkg.description}\n\n`
             })
         }
-        
-        m.react('✅')
-        
         await sock.sendMessage(m.chat, {
             image: { url: d.avatar },
             caption

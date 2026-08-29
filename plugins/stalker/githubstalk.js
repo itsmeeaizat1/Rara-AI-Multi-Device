@@ -26,9 +26,6 @@ async function handler(m, { sock }) {
     if (!username) {
         { const __navText = `🐙 *ɢɪᴛʜᴜʙ ꜱᴛᴀʟᴋ*\n\nMasukkan username GitHub\n\n\`Contoh: ${m.prefix}githubstalk torvalds\``; return await m.reply( __navText, "githubstalk"); }
     }
-    
-    m.react('🕐')
-    
     try {
         const res = await axios.get(`https://firefly.maiku.my.id/api/stalk-github?apikey=${config.APIkey.firefly}&username=${encodeURIComponent(username)}`, {
             timeout: 30000
@@ -50,9 +47,6 @@ async function handler(m, { sock }) {
             `👤 *ꜰᴏʟʟᴏᴡɪɴɢ:* ${d.following}\n\n` +
             `📝 *ʙɪᴏ:*\n${d.bio || '-'}\n\n` +
             `🔗 ${d.url}`
-        
-        m.react('✅')
-        
         await sock.sendMessage(m.chat, {
             image: { url: d.avatar },
             caption

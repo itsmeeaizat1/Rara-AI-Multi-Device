@@ -32,9 +32,6 @@ async function handler(m, { sock }) {
   if (!query) {
     return m.reply( `🎵 *ᴘʟᴀʏ ᴛɪᴋᴛᴏᴋ*\n\nContoh:\n\`${m.prefix}playtiktok cewe tiktok\``, "playtiktok");
   }
-
-  m.react("🕒");
-
   try {
     const videos = await tiktokSearchVideo(query);
     if (!videos || videos.length === 0) {
@@ -60,8 +57,6 @@ async function handler(m, { sock }) {
         isForwarded: false,
       },
     });
-
-    m.react("🐣");
   } catch (error) {
     console.log(error);
     m.reply(claraWrap("playtiktok", te(m.prefix, m.command, m.pushName), "error"));

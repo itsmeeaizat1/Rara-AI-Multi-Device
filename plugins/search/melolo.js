@@ -71,9 +71,6 @@ async function handler(m, { sock }) {
   if (!config.APIkey?.covenant) {
     return m.reply(novaError("Melolo", "API key covenant belum dikonfigurasi nih!"));
   }
-
-  m.react("🕒");
-
   try {
     const result = await fetchMelolo(category);
     const items = normalizeResults(result.data).slice(0, 10);
@@ -106,8 +103,6 @@ async function handler(m, { sock }) {
     } else {
       await m.reply(caption.trim());
     }
-
-    m.react("🐣");
   } catch (error) {
     const message = error?.response?.data?.message || error?.message;
     if (message) {

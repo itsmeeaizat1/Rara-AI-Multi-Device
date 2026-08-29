@@ -37,9 +37,6 @@ async function handler(m, { sock }) {
         `Contoh:\n` +
         `\`${m.prefix}android1 Subway Surfer\``, "android1");
   }
-
-  m.react("🕒");
-
   try {
     const { data } = await axios.get(
       `https://api.neoxr.eu/api/an1?q=${encodeURIComponent(text)}&apikey=${NEOXR_APIKEY}`,
@@ -82,8 +79,6 @@ async function handler(m, { sock }) {
       description: `${app.developer} • ⭐${app.rating}`,
       id: `${m.prefix}android1-get ${app.url}`,
     }));
-
-    m.react("🐣");
     await sock.sendButton(
       m.chat,
       getAssetBuffer("nova"),

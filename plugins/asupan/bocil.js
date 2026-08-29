@@ -31,8 +31,6 @@ function loadJsonData(filename) {
 }
 
 async function handler(m, { sock }) {
-    m.react('🕒')
-    
     try {
         const data = loadJsonData('bocil.json')
         

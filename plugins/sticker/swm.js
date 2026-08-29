@@ -56,9 +56,6 @@ async function handler(m, { sock, config: botConfig }) {
         packname = input
         author = ''
     }
-    
-    m.react('🕐')
-    
     try {
         const buffer = await quoted.download()
         
@@ -87,9 +84,6 @@ async function handler(m, { sock, config: botConfig }) {
                 await sock.sendImageAsSticker(m.chat, buffer, m, exifOpts)
             }
         }
-        
-        m.react('✅')
-        
     } catch (error) {
         console.error('[SWM] Error:', error.message)
         m.reply(claraWrap("swm", te(m.prefix, m.command, m.pushName), "error"))

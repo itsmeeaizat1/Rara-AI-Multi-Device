@@ -135,8 +135,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply( help, "surat");
   }
-
-  await m.react("🕒");
   m.reply(claraWrap("Surat", "│ AI lagi nyusun surat resmi..."));
 
   try {
@@ -161,12 +159,9 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     let preview = aiResult.trim();
     if (preview.length > 2000) preview = preview.substring(0, 2000) + "\n\n... (lihat PDF untuk versi lengkap)";
     await m.reply(claraWrap("Surat — Preview", preview));
-
-    await m.react("🐣");
   } catch (error) {
     console.error("surat error:", error);
     m.reply(claraWrap("Surat", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
-    await m.react("🐣");
   }
 
   return { handled: true };

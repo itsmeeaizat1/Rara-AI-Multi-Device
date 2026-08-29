@@ -70,12 +70,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "on") {
       setEnabled(TOGGLE_KEYS.notifyOwner, true);
       setEnabled(TOGGLE_KEYS.notifyAdmin, true);
-      await m.react("🐣");
       return m.reply(claraWrap("togglejoinreq", "Semua notifikasi join request *DINYALAKAN*\n\n1. Notify Owner: *ON*\n2. Notify Admin Grup: *ON*"));
     } else if (action === "off") {
       setEnabled(TOGGLE_KEYS.notifyOwner, false);
       setEnabled(TOGGLE_KEYS.notifyAdmin, false);
-      await m.react("🐣");
       return m.reply(claraWrap("togglejoinreq", "Semua notifikasi join request *DIMATIKAN*\n\n1. Notify Owner: *OFF*\n2. Notify Admin Grup: *OFF*"));
     }
     return m.reply(claraWrap("Usage", "Format: " + prefix + "togglejoinreq all on/off"));
@@ -85,7 +83,6 @@ async function handler(m, { sock, config: botConfig }) {
     const current = isEnabled(TOGGLE_KEYS.notifyOwner);
     setEnabled(TOGGLE_KEYS.notifyOwner, !current);
     const status = !current ? "ON" : "OFF";
-    await m.react("🐣");
     return m.reply(
       "Notify Owner: *" + status + "*\n\n" +
       (!current
@@ -98,7 +95,6 @@ async function handler(m, { sock, config: botConfig }) {
     const current = isEnabled(TOGGLE_KEYS.notifyAdmin);
     setEnabled(TOGGLE_KEYS.notifyAdmin, !current);
     const status = !current ? "ON" : "OFF";
-    await m.react("🐣");
     return m.reply(
       "Notify Admin Grup: *" + status + "*\n\n" +
       (!current

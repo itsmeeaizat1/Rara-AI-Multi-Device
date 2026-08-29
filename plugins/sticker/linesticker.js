@@ -35,9 +35,6 @@ async function handler(m, { sock }) {
             `*ᴄᴏɴᴛᴏʜ:*\n` +
             `${m.prefix}linesticker https://store.line.me/stickershop/product/9801/en`, "linesticker")
     }
-    
-    await m.react('🕐')
-    
     try {
         const apikey = config.APIkey?.neoxr
         if (!apikey) {
@@ -102,7 +99,6 @@ async function handler(m, { sock }) {
         }
         
         if (sent > 0) {
-            await m.react('✅')
             await m.reply(claraWrap("Linesticker", `✅ Berhasil kirim ${sent}/${stickerUrls.length} sticker`))
         } else {
             await m.reply(novaError("LineSticker", "Gagal kirim sticker nih"))

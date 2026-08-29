@@ -32,9 +32,6 @@ async function handler(m, { sock }) {
             `\`${m.prefix}robloxplayer linkmon\``
         )
     }
-    
-    m.react('🕐')
-    
     try {
         const res = await axios.get(`https://api.neoxr.eu/api/roblox-search?q=${encodeURIComponent(query)}&apikey=${NEOXR_APIKEY}`, {
             timeout: 30000
@@ -65,8 +62,6 @@ async function handler(m, { sock }) {
         text += `_Gunakan \`.robloxstalk <username>\` untuk info detail_`
         
         await m.reply(text)
-        m.react('✅')
-        
     } catch (err) {
         console.error('[RobloxPlayer] Error:', err.message)
         return m.reply(claraWrap("robloxplayer", te(m.prefix, m.command, m.pushName), "error"))

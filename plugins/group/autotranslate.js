@@ -61,9 +61,7 @@ async function handler(m, { sock, args }) {
 
     switch (subCmd) {
       case "on": {
-        await m.react("🕒");
         enableAutoTranslate(groupId);
-        await m.react("🐣");
         return m.reply(
           bracketBox("🌐", toSC("Auto Translate ON"), [
             toSC("Pesan bahasa asing akan diterjemahkan otomatis"),
@@ -75,9 +73,7 @@ async function handler(m, { sock, args }) {
       }
 
       case "off": {
-        await m.react("🕒");
         disableAutoTranslate(groupId);
-        await m.react("🐣");
         return m.reply(
           bracketBox("🌐", toSC("Auto Translate OFF"), [
             toSC("Pesan tidak akan diterjemahkan otomatis"),
@@ -111,7 +107,6 @@ async function handler(m, { sock, args }) {
           );
         }
         setTargetLang(groupId, lang);
-        await m.react("🐣");
         return m.reply(
           bracketBox("🌐", toSC("Target Language Updated"), [
             `${toSC("Target")}: ${lang}`,
@@ -131,10 +126,8 @@ async function handler(m, { sock, args }) {
             ])
           );
         }
-        await m.react("🕒");
         const detected = detectLanguage(text);
         const translated = await translateMessage(text, "id", detected);
-        await m.react("🐣");
         return m.reply(
           bracketBox("🌐", toSC("Test Translate"), [
             `${toSC("Original")} (${detected}): ${text.slice(0, 100)}`,
@@ -158,7 +151,6 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[AutoTranslate] Error:", e.message);
-    await m.react("❌");
     return m.reply(novaError("AutoTranslate", "Gagal jalankan perintah nih"));
   }
 }

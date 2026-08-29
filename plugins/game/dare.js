@@ -63,7 +63,6 @@ export async function handler(m, { sock }) {
   } catch (e) {
     console.error("[dare] Error:", e.message);
     try {
-      await m.react("❌");
       await m.reply("╭──「 Dare 」\n│ ❌ Yah, ada error nih 😵\n│ Coba lagi bentar ya\n╰──────────");
     } catch {}
   }

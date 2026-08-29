@@ -25,8 +25,6 @@ async function handler(m, { sock }) {
     return m.reply( `*LINK NGL NYA MANA ??*\n💡 *Contoh:* \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
   if (!kata)
     return m.reply( `*KATA KATA NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}sendngl https://ngl.link/xxxx | hai`, "sendngl");
-  m.react("🕒");
-
   try {
     await novaApi.cuki.sendNgl(
       {
@@ -37,9 +35,6 @@ async function handler(m, { sock }) {
         timeout: 30000,
       },
     );
-
-    m.react("🐣");
-
     await sock.sendMessage(
       m.chat,
       {

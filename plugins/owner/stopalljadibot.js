@@ -24,14 +24,8 @@ async function handler(m, { sock }) {
     if (active.length === 0) {
         { const __navText = `❌ Tidak ada jadibot yang aktif`; return await m.reply(__navText); }
     }
-
-    await m.react('🕐')
-
     try {
         const stopped = await stopAllJadibots()
-
-        await m.react('✅')
-
         const names = stopped.map(id => `@${id}`).join(', ')
 
         await sock.sendMessage(m.chat, {

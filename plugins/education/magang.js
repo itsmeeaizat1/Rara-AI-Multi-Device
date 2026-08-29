@@ -167,8 +167,6 @@ async function handler(m, { sock, args, config: botConfig }) {
     ].join("\n")) + "\n" + tipText("Hasil dari arbeitnow + remotive + DuckDuckGo");
     return m.reply( txt, { commandName: "magang" });
   }
-
-  await m.react("🕒");
   try {
     // Parse: bisa keyword + location
     let keyword = "";

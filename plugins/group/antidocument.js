@@ -56,7 +56,6 @@ async function handler(m, { sock }) {
 
     if (action === 'on') {
         db.setGroup(m.chat, { antidocument: true })
-        m.react('✅')
         { const __navText = `✅ *ᴀɴᴛɪᴅᴏᴄᴜᴍᴇɴᴛ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`; await m.reply(__navText); }
         return
     }

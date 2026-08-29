@@ -218,9 +218,6 @@ async function handler(m, { sock }) {
   if (!text || !/open\.spotify\.com\/track/i.test(text)) {
     return m.reply(novaGuide("Spotify DL", "Masukkan link lagu Spotify yang valid!", `${m.prefix}spotifydl https://open.spotify.com/track/3RY0NyQQXxuAiyk5eAS4fC`));
   }
-
-  await m.react("🕒");
-
   try {
     const parsed = parseSpotify(text);
     const cleanUrl = parsed.raw;
@@ -277,9 +274,6 @@ async function handler(m, { sock }) {
       fileName: filename,
       ptt: false
     }, { quoted: m });
-
-    await m.react("🐣");
-
   } catch (error) {
     console.error(error);
     m.reply(novaError("Spotify DL", `Gagal memproses lagu Spotify — ${error.message || 'terjadi kesalahan sistem'}`));

@@ -39,9 +39,6 @@ async function handler(m, { sock }) {
             `Coba deh ketik perintahnya begini: *${m.prefix}lirik sempurna andra and the backbone* 🎶\n\n` +
             `Yuk, masukin judulnya biar kita bisa nyanyi bareng! 🎤🔥`, "lirik")
     }
-    
-    m.react('🕐')
-    
     try {
         const data = await fetchLyrics(query)
         
@@ -68,9 +65,6 @@ async function handler(m, { sock }) {
         } else {
             { const __navText = (texts); await m.reply(__navText); }
         }
-        
-        m.react('✅')
-        
     } catch (error) {
         m.reply(novaError("Lyrics", "Server lirik lagi ngambek nih, coba lagi ya"))
     }

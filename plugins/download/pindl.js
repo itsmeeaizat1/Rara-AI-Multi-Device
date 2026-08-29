@@ -31,7 +31,6 @@ async function handler(m, { sock }) {
   if (!url.includes("pinterest") && !url.includes("pin.it")) {
     return m.reply(novaError("Pinterest DL", "URL tidak valid. Pastikan pakai link Pinterest (pin.it atau pinterest.com)!"));
   }
-  m.react("🕒");
   try {
     const result = await pinterestdl(url);
     if (!result || !result.media || result.media.length === 0) {
@@ -91,7 +90,6 @@ async function handler(m, { sock }) {
         }
       }
     }
-    m.react("🐣");
   } catch (error) {
     console.error("[PinDL] Error:", error);
     m.reply(novaError("Pinterest DL", `Gagal mengunduh media Pinterest — ${error.message || 'terjadi kesalahan'}`));

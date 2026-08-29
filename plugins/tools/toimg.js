@@ -57,9 +57,6 @@ async function handler(m, { sock }) {
             `Gunakan \`${m.prefix}tovideo\` untuk mengubahnya.`)
         return
     }
-
-    await m.react('🕐')
-
     try {
         const buffer = await downloadFn()
 

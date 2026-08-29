@@ -268,9 +268,6 @@ async function handler(m, { sock }) {
   if (!img) {
     return m.reply( `*🪄 BEAUTYPLUS ENHANCER*\nReply gambar untuk di-HD-kan\n\n\`\`\`${m.prefix}hd3\`\`\``, "hd3");
   }
-
-  m.react("🕒");
-
   try {
     let buffer = m.quoted?.isMedia ? await m.quoted.download() : await m.download();
     
@@ -296,15 +293,11 @@ async function handler(m, { sock }) {
 
     if (dlRes.status !== 200 || !dlRes.data) {
       // Fallback: kirim via URL
-      await m.react("🐣");
       return await sock.sendMedia(m.chat, resultUrl, null, m, { type: "image" });
     }
 
     const resultBuffer = Buffer.from(dlRes.data);
     const sizeMB = (resultBuffer.length / (1024 * 1024)).toFixed(2);
-
-    await m.react("🐣");
-
     const caption = `*ʜᴅ ᴇɴʜᴀɴᴄᴇᴅ*\nSize: ${sizeMB}MB\nSource: BeautyPlus\nQuality: Full HD`;
 
     if (resultBuffer.length > 5 * 1024 * 1024) {

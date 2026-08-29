@@ -83,9 +83,6 @@ async function handler(m, { sock }) {
   example: `${m.prefix}douyinv2 https://v.douyin.com/xxx`,
 }), "douyinv2")
   }
-
-  m.react("🕒");
-
   try {
     let data;
     try {
@@ -113,8 +110,6 @@ async function handler(m, { sock }) {
         });
       } catch (e) { console.error('[douyinv2.js]:', e.message); }
     }
-
-    m.react("🐣");
   } catch (e) {
     console.error("[DOUYINV2] Error:", e.message);
     m.reply(novaError("Douyin", "Gagal ambil data — coba lagi ya"));

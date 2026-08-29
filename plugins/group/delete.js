@@ -47,8 +47,6 @@ async function handler(m, { sock }) {
         }
 
         await sock.sendMessage(m.chat, { delete: key })
-        await m.react('✅')
-
     } catch (err) {
         return m.reply(novaError("Delete", `Gagal hapus pesan nih: ${err.message || "Pesan mungkin sudah terhapus atau terlalu lama."}`))
     }

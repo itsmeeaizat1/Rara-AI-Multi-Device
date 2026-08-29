@@ -122,9 +122,6 @@ async function handler(m, { sock, config: botConfig }) {
     const robotsUrl = text.startsWith("http")
       ? text.replace(/\/$/, "") + "/robots.txt"
       : "https://" + text.replace(/\/$/, "") + "/robots.txt";
-
-    await m.react("🕒");
-
     const res = await fetch(robotsUrl, {
       headers: { "User-Agent": "Mozilla/5.0 (Nova Bot)" },
       signal: AbortSignal.timeout(10000),
@@ -133,14 +130,12 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!res.ok) {
       if (res.status === 404) {
-        await m.react("🐣");
         return m.reply(claraWrap("Robots.txt: " + baseDomain, [
           "Status: 404 Not Found",
           "Tidak ada robots.txt",
           "Bot boleh crawl semua halaman (no restrictions)",
         ].join("\n")));
       }
-      await m.react("❌");
       return m.reply(claraWrap("Robots.txt", "Gagal fetch: " + res.status + " " + res.statusText));
     }
 
@@ -196,12 +191,9 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("  " + (c.length > 60 ? c.substring(0, 60) + "..." : c));
       }
     }
-
-    await m.react("🐣");
     return m.reply(claraWrap("Robots.txt: " + baseDomain, lines.join("\n")));
   } catch (e) {
     console.error("robots error:", e);
-    await m.react("❌");
     return m.reply(claraWrap("Robots", "Error: " + e.message));
   }
 }

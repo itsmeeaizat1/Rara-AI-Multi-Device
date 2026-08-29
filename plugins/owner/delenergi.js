@@ -63,9 +63,6 @@ async function handler(m, { sock }) {
     }
     
     const newEnergi = db.updateEnergi(targetJid, -amount)
-    
-    await m.react('✅')
-    
     await m.reply(claraWrap("delenergi", `✅ *Energi Dikurangi*\n\n` +
         `╭──「 *Detail* 」\n` +
         `│ 👤 User: @${targetJid.split('@')[0]}\n` +

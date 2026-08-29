@@ -233,23 +233,18 @@ async function handler(m, { sock, args }) {
     const scaleArg = argList.find((a) => /^\d+x?$/.test(a));
     let scale = scaleArg ? parseInt(scaleArg.replace("x", "")) : 2;
     scale = Math.max(2, Math.min(4, scale || 2)); // Replicate max 4x
-
-    await m.react("🕒");
-
     // Download gambar dari WhatsApp
     const buffer = m.quoted?.isMedia
       ? await m.quoted.download()
       : await m.download();
 
     if (!buffer || buffer.length === 0) {
-      await m.react("❌");
       return m.reply(bracketBox("❌", toSC("Error"), [toSC("Gagal download gambar! Coba lagi.")]));
     }
 
     // Cek size — Replicate max ~10MB input
     const sizeMB = (buffer.length / (1024 * 1024)).toFixed(2);
     if (buffer.length > 10 * 1024 * 1024) {
-      await m.react("❌");
       return m.reply(bracketBox("❌", toSC("File Terlalu Besar"), [
         `${toSC("Ukuran")}: ${sizeMB}MB`,
         `${toSC("Maksimal")}: 10MB`,
@@ -302,9 +297,6 @@ async function handler(m, { sock, args }) {
       engineUsed = fb.engine;
       apiStatus = "ℹ️";
     }
-
-    await m.react("🐣");
-
     const outSizeMB = (result.buffer.length / (1024 * 1024)).toFixed(2);
 
     const caption = bracketBox("🖼️", toSC("HD Enhanced"), [
@@ -334,7 +326,6 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[ReminiV2] Error:", e.message);
-    await m.react("❌");
     m.reply(bracketBox("❌", toSC("Error"), [
       toSC("Gagal enhance gambar!"),
       `${e.message}`,

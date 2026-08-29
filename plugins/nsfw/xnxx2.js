@@ -30,9 +30,6 @@ async function handler(m, { sock }) {
 │ 💡 *Contoh:* \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\`
 ╰──────────`, "xnxx2");
   }
-
-  await m.react("🕒");
-
   try {
     const res = await axios.get(
       `https://api.siputzx.my.id/api/s/xnxxdl?url=${encodeURIComponent(url)}`,
@@ -60,7 +57,6 @@ async function handler(m, { sock }) {
       const buf = Buffer.from(vidRes.data);
       if (buf.length > 1000) {
         await sock.sendMessage(m.chat, { video: buf, caption: d.title || "" }, { quoted: m });
-        await m.react("🐣");
         return;
       }
     }
@@ -68,7 +64,6 @@ async function handler(m, { sock }) {
     return m.reply("╭──「 XNXX Downloader 」\n│ ❌ File gagal diunduh\n│ Coba lagi nanti\n╰──────────", "xnxx2");
   } catch (err) {
     console.error("[XNXX2] Error:", err.message);
-    await m.react("❌");
     return m.reply( te(m.prefix, m.command, m.pushName), "xnxx2");
   }
 }

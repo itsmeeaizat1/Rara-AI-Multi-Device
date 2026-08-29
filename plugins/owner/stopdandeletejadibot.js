@@ -60,14 +60,8 @@ async function handler(m, { sock }) {
     if (!session) {
         { const __navText = claraWrap("@${id}", `❌ Session jadibot untuk *@${id}* tidak ditemukan`); return await m.reply(__navText); }
     }
-
-    await m.react('🕐')
-
     try {
         await stopJadibot(target, true)
-
-        await m.react('✅')
-
         await sock.sendMessage(m.chat, {
             text: ` *Jadibot Dihapus*\n\n` +
                 `📱 Nomor: *@${id}*\n` +

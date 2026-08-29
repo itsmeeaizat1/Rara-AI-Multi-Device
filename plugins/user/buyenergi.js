@@ -49,7 +49,6 @@ async function handler(m, { sock }) {
     db.updateKoin(m.sender, -totalPrice, sock, m.chat)
     
     if (user.energi === -1) {
-        m.react('✅')
         return m.reply(claraWrap("Pembelian Berhasil", `✅ *ᴘᴇᴍʙᴇʟɪᴀɴ ʙᴇʀʜᴀꜱɪʟ*\n\n` +
             `Tapi kamu sudah punya unlimited energi!\n` +
             `Koin dikembalikan.`))
@@ -57,9 +56,6 @@ async function handler(m, { sock }) {
     
     const newEnergi = db.updateEnergi(m.sender, amount)
     const newKoin = db.getUser(m.sender).koin
-    
-    m.react('✅')
-    
     await m.reply( claraWrap("Pembelian Berhasil", `✅ *ᴘᴇᴍʙᴇʟɪᴀɴ ʙᴇʀʜᴀꜱɪʟ*\n\n` +
         `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `│ ⚡ Energi: *+${formatNumber(amount)}*\n` +

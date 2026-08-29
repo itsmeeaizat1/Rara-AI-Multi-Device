@@ -194,7 +194,6 @@ async function handler(m, { sock }) {
     await m.react(iWin ? "🏆" : "💥");
   } catch (e) {
     console.error("[couplewar] Error:", e.message);
-    try { await m.react("❌"); } catch {}
   }
 }
 

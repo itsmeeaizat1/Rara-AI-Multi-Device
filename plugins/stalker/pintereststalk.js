@@ -25,9 +25,6 @@ async function handler(m, { sock }) {
   if (!username) {
     return m.reply(claraWrap("pintereststalk", "❌ *Waduh, username Pinterest-nya belum dimasukkan!*\n\nKamu harus mengetikkan username Pinterest yang ingin di-stalk. \n\n💡 *Contoh:* `.pintereststalk dims`"));
   }
-
-  await m.react("🕒");
-
   try {
     const res = await axios.get(`https://api.nexray.eu.cc/stalker/pinterest?username=${encodeURIComponent(username)}`, {
       timeout: 30000,
@@ -75,9 +72,6 @@ async function handler(m, { sock }) {
     } else {
       await m.reply(caption);
     }
-
-    await m.react("🐣");
-
   } catch (error) {
     console.error("[Pinterest Stalk]", error.message);
     m.reply(claraWrap("pintereststalk", "😔 *ᴛᴇʀᴊᴀᴅɪ ᴍᴀꜱᴀʟᴀʜ ᴅɪ ꜱɪꜱᴛᴇᴍ ᴋᴀᴍɪ.* \n\nSistem gagal menarik data dari server Pinterest. Silakan coba beberapa saat lagi ya."));

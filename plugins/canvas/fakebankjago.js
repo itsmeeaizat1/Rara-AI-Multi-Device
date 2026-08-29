@@ -83,8 +83,6 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("FAKE BANK", `*ꜰᴀᴋᴇ ʙᴀɴᴋ*\n\nMasukkan teks untuk chat\n\n\`Contoh: ${m.prefix}fakebank Aizat,10000\``), "fakebankjago")
     }
     if(isNaN(nominal)) { const __navText = `*ʜᴀʀᴀᴘ ᴍᴀꜱᴜᴋᴋᴀɴ ᴀɴɢᴋᴀ*`; return await m.reply(__navText); }
-    m.react('🕐')
-    
     try {
         const saldo = Number(nominal.replace(/[^0-9]/g, '')).toLocaleString('id-ID')
         const hour = new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta', hour: '2-digit', hour12: false })
@@ -97,8 +95,6 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, fake, null, m, {
             type: 'image',
         })
-        m.react('✅')
-        
     } catch (error) {
         m.reply(claraWrap("fakebankjago", te(m.prefix, m.command, m.pushName), "error"))
     }

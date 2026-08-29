@@ -36,9 +36,6 @@ async function handler(m, { sock }) {
         `*${m.prefix}dailymotiondl https://www.dailymotion.com/video/xxx*\n\n` +
         `_Proses konversi mungkin agak lama_`, "dailymotiondl");
   }
-
-  m.react("🕒");
-
   try {
     const result = await DailymotionDL(text);
 
@@ -91,8 +88,6 @@ async function handler(m, { sock }) {
         { quoted: m },
       );
     }
-
-    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply(novaError("Dailymotion", "Gagal ambil data — coba lagi ya"));

@@ -51,9 +51,6 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply(novaNoInput("AIO Downloader V2", "Masukkan URL sosmed yang mau kamu download!", `${m.prefix}aiov2 https://vt.tiktok.com/xxx`));
   }
-
-  m.react("🕒");
-
   try {
     const res = await rlGet(
       `${API_BASE}/download/aio?apikey=${API_KEY}&url=${encodeURIComponent(text)}`
@@ -91,8 +88,6 @@ async function handler(m, { sock }) {
     } else {
       await sock.sendMedia(m.chat, mediaUrl, caption, m, { type: "video" });
     }
-
-    m.react("🐣");
   } catch (e) {
     console.error("[AIOV2] Error:", e.message);
     m.reply(novaError("AIO Downloader V2", e.message || "Gagal mengambil media dari URL tersebut"));

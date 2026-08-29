@@ -24,14 +24,10 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply(claraWrap("Gpt-4O", `🧠 *Gpt-4O*\n\nMasukkan pertanyaan\n\n\`Contoh: ${m.prefix}gpt4o Hai apa kabar?\``), "gpt4o");
   }
-
-  m.react("🕒");
-
   try {
     const data = `https://api.cuki.biz.id/api/ai/gpt?apikey=${config.APIkey.cuki}&question=${encodeURIComponent(text)}`
     const res = await fetch(data)
     const json = await res.json()
-    m.react("🐣");
     { const __navText = `${json.results}`; await m.reply(__navText); };
   } catch (error) {
     console.log(error);

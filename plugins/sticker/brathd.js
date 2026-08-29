@@ -26,16 +26,12 @@ async function handler(m, { sock }) {
     if (!text) {
         { const __navText = `🖼️ *ʙʀᴀᴛ ʜᴅ ꜱᴛɪᴄᴋᴇʀ*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}brathd hello world\``; return await m.reply( __navText, "brathd"); }
     }
-    
-    m.react('🕐')
-    
     try {
         const url = `https://api.nova.my.id/api/brat-hd?text=${encodeURIComponent(text)}`
         await sock.sendImageAsSticker(m.chat, url, m, {
             packname: config.sticker.packname,
             author: config.sticker.author
         })
-        m.react('✅')
     } catch (error) {
         m.reply(claraWrap("brathd", te(m.prefix, m.command, m.pushName), "error"))
     }

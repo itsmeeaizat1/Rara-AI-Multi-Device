@@ -24,8 +24,6 @@ const API_BASE = sankaConfig.baseUrl;
 const API_KEY = sankaConfig.apikey;
 
 async function handler(m, { sock }) {
-  await m.react("🕒");
-
   try {
     const url = `${API_BASE}/anime/cp?apikey=${API_KEY}`;
 
@@ -65,8 +63,6 @@ async function handler(m, { sock }) {
       image: cweBuf,
       caption: "Anime Couple (Cewe)",
     });
-
-    await m.react("🐣");
   } catch (e) {
     console.error("[CPSANKA] Error:", e.message);
     let txt = `Gagal mengambil couple image!\n\n`;

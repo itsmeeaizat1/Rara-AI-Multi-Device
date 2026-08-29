@@ -126,9 +126,6 @@ async function handler(m, { sock }) {
             },
             { quoted: fakeQuoted }
         )
-
-        m.react('✅')
-
     } catch (err) {
         m.reply(claraWrap("hidetag2", te(m.prefix, m.command, m.pushName), "error"))
     }

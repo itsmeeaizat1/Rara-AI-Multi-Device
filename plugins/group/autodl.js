@@ -40,7 +40,6 @@ function handler(m, { sock }) {
     
     if (args === 'on') {
         db.setGroup(m.chat, { ...groupData, autodl: true })
-        m.react('✅')
         return m.reply(claraWrap("autodl", `✅ *ᴀᴜᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ᴀᴋᴛɪꜰ*\n\n` +
             `Kirim link sosmed dan bot akan auto download!\n` +
             `Support: TikTok, IG, FB, YouTube, Twitter/X`))

@@ -421,7 +421,6 @@ async function handler(m, { sock, args }) {
     db.db.data.eduScores = {};
     db.write();
     await m.reply(claraWrap("Eduleaderboard", "Leaderboard belajar direset!"));
-    await m.react("🐣");
     return;
   }
 

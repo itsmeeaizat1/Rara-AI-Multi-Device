@@ -26,7 +26,6 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, api, null, m, {
             type: 'image'
         })
-        await m.react('✅')
     } catch (e) {
         m.reply(claraWrap("cecanvietnam", te(m.prefix, m.command, m.pushName), "error"))}
 }

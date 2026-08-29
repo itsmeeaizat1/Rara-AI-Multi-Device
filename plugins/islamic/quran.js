@@ -72,9 +72,6 @@ async function handler(m, { sock }) {
         `\`Contoh: ${m.prefix}quran al fatihah\`\n` +
         `\`Contoh: ${m.prefix}quran al baqarah\``, "quran");
   }
-
-  m.react("🕒");
-
   try {
     const data = await quran(query);
 
@@ -86,9 +83,6 @@ async function handler(m, { sock }) {
     for (const i of data.ayat) {
       teks += `${i.arab}\n${i.latin}\n_${i.arti}_\n\n`;
     }
-
-    m.react("🐣");
-
     const trimmed = teks.trim();
     if (trimmed.length > 60000) {
       const chunks = [];

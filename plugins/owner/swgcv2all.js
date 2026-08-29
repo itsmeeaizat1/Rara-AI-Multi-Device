@@ -88,9 +88,6 @@ async function handler(m, { sock }) {
       `╰┈┈┈┈┈┈┈┈`
     );
   }
-
-  await m.react("🕒");
-
   try {
     const groups = await sock.groupFetchAllParticipating();
     const groupIds = Object.keys(groups);
@@ -167,8 +164,6 @@ async function handler(m, { sock }) {
         failCount++;
       }
     }
-
-    await m.react("🐣");
     await m.reply(claraWrap("swgcv2all", `✅ *sWgcv2 All sElesai*\n\n` +
       `╭──「 *ʀᴇꜱᴜʟᴛ* 」\n` +
       `│ 🌐 Total Grup: *${groupIds.length}*\n` +

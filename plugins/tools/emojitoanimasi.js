@@ -27,9 +27,6 @@ async function handler(m, { sock }) {
         `*ᴄᴏɴᴛᴏʜ:*\n` +
         `\`${m.prefix}emojitoanimasi 😳\``, "emojitoanimasi");
   }
-
-  m.react("🕒");
-
   try {
     const apiUrl = `https://api.neoxr.eu/api/emojito?q=${encodeURIComponent(emoji)}&apikey=${NEOXR_APIKEY}`;
     const { data } = await axios.get(apiUrl, { timeout: 15000 });
@@ -54,8 +51,6 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
-
-    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("emojitoanimasi", te(m.prefix, m.command, m.pushName), "error"));
   }

@@ -26,9 +26,6 @@ async function handler(m, { sock }) {
     if (!text) {
         return m.reply(claraWrap("Math Gpt", `📐 *ᴍᴀᴛʜ ɢᴘᴛ*\n\nMasukkan soal matematika\n\n\`Contoh: ${m.prefix}matematika 2+2 berapa?\``), "matematika")
     }
-
-    m.react('🕐')
-
     try {
         const url = `https://api.nexray.eu.cc/ai/mathgpt?text=${encodeURIComponent(text)}`
         
@@ -44,8 +41,6 @@ async function handler(m, { sock }) {
         }
 
         const answer = data.result
-
-        m.react('✅')
         { const __navText = `${answer}`; await m.reply(__navText); }
 
     } catch (error) {

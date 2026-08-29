@@ -102,9 +102,6 @@ async function handler(m, { sock }) {
 
   if (!durationMs)
     return m.reply(claraWrap("Renewsewa", `❌ Format durasi tidak valid\n💡 *Contoh:* 7d, 1m, 1y, lifetime`));
-
-  await m.react("🕒");
-
   try {
     const result = await resolveGroupId(sock, input);
     if (!result) {
@@ -158,9 +155,6 @@ async function handler(m, { sock }) {
       isLifetime: existing.isLifetime,
       totalGroups: Object.keys(db.db.data.sewa.groups).length,
     }).catch((e) => { console.error('[renewsewa.js]:', e.message); });
-
-    await m.react("🐣");
-
     let text = `✅ *SEWA DIPERPANJANG*\n\n`;
     text += `Grup: *${groupName}*\n`;
     text += `Tambahan: *${formatDuration(durationStr)}*\n`;

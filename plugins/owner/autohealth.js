@@ -71,8 +71,6 @@ async function handler(m, { sock }) {
       if (!result.success) {
         return m.reply(claraWrap("autohealth", `❌ ${toSC(result.error)}`));
       }
-
-      await m.react("🐣");
       return m.reply(
         bracketBox("✅", toSC("API Health Check Diaktifkan"), [
           `${toSC("Interval")}: ${interval} ${toSC("menit")}`,
@@ -86,7 +84,6 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableHealthCheck();
-      await m.react("🐣");
       return m.reply(claraWrap("autohealth", toSC("API Health Check dinonaktifkan")));
     }
 
@@ -119,13 +116,10 @@ async function handler(m, { sock }) {
     case "manual":
     case "check":
     case "trigger": {
-      await m.react("🕒");
       try {
         await triggerManualCheck(sock);
-        await m.react("🐣");
         return m.reply(claraWrap("autohealth", toSC("Health check selesai! Lihat notif di DM owner.")));
       } catch (error) {
-        await m.react("❌");
         return m.reply(claraWrap("autohealth", te(m.prefix, m.command, m.pushName), "error"));
       }
     }

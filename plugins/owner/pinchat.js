@@ -46,7 +46,6 @@ async function handler(m, { sock }) {
 
     try {
         await sock.chatModify({ pin }, targetJid)
-        await m.react('✅')
         const target = targetJid.split('@')[0]
         return m.reply(pin
                 ? `📌 *Chat Dipin*\n\nTarget: ${target}`

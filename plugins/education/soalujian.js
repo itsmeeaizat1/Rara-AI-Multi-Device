@@ -520,7 +520,6 @@ async function handler(m, { sock, args }) {
       if (xpGain > 0) { const _eduDb = getDatabase(); const _eduU = _eduDb.db.data.eduScores?.[sender]; txt += `\n+${xpGain} XP | Lv.${_eduU?.level || 1} | Streak ${_eduU?.streak || 1}x`; }
       quizSessions.delete(sender);
       await m.reply(txt);
-      await m.react("🐣");
       return;
     }
 
@@ -541,7 +540,6 @@ async function handler(m, { sock, args }) {
     txt += `\nKetik *ꜱᴋɪᴘ* untuk lewati, *ꜱᴛᴏᴘ* untuk berhenti`;
 
     await m.reply(txt);
-    await m.react("🐣");
     return;
   }
 
@@ -562,7 +560,6 @@ async function handler(m, { sock, args }) {
       txt += `\n\nQuiz selesai! Total: ${session.questions.length} soal`;
       quizSessions.delete(sender);
       await m.reply(txt);
-      await m.react("🐣");
       return;
     }
 
@@ -580,7 +577,6 @@ async function handler(m, { sock, args }) {
     }
     txt += `\nskip / stop`;
     await m.reply(txt);
-    await m.react("🐣");
     return;
   }
 
@@ -588,7 +584,6 @@ async function handler(m, { sock, args }) {
   if (["stop", "batal", "cancel"].includes(jenjang)) {
     if (session) {
       quizSessions.delete(sender);
-      await m.react("🐣");
       return m.reply(claraWrap("Soalujian", "Quiz dibatalkan."));
     }
     return m.reply(claraWrap("Soalujian", "Tidak ada quiz berjalan."));
@@ -621,7 +616,6 @@ async function handler(m, { sock, args }) {
       txt += `${name}: ${getAvailableSubjects(k).join(", ")}\n`;
     }
     await m.reply(txt);
-    await m.react("🐣");
     return;
   }
 
@@ -645,8 +639,6 @@ async function handler(m, { sock, args }) {
   if (!dailyCheck.allowed) {
     return m.reply(claraWrap("Info", "\u23f3 Kamu sudah main " + MAX_QUIZ_PER_DAY + " quiz hari ini!\n\nKembali besok untuk lanjut belajar.\n\nKetik .edulb untuk lihat ranking"));
   }
-  await m.react("🕒");
-
   try {
     let questions = [];
     const mcBank = MC_BANK[jenjang]?.[mapel];
@@ -737,7 +729,6 @@ async function handler(m, { sock, args }) {
     txt += `\nKetik *ꜱᴋɪᴘ* / *ꜱᴛᴏᴘ*`;
 
     await m.reply(txt);
-    await m.react("🐣");
   } catch (e) {
     console.error("[SOALUJIAN] Error:", e.message);
     await m.reply(novaError("SoalUjian", `Gagal bikin soal nih: ${e.message}`));

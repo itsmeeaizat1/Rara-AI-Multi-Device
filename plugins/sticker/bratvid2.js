@@ -25,16 +25,12 @@ async function handler(m, { sock }) {
     if (!text) {
         { const __navText = `🎬 *Brat Video V2*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratvid2 hello world\``; return await m.reply( __navText, "bratvid2"); }
     }
-    
-    m.react('🕐')
-    
     try {
         const url = `https://api-faa.my.id/faa/bratvid?text=${encodeURIComponent(text)}`
         await sock.sendVideoAsSticker(m.chat, url, m, {
             packname: config.sticker.packname,
             author: config.sticker.author
         })
-        m.react('✅')
     } catch (error) {
         m.reply(claraWrap("bratvid2", te(m.prefix, m.command, m.pushName), "error"))
     }

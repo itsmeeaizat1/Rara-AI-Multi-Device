@@ -176,8 +176,6 @@ async function handler(m, { sock }) {
     }
 
     delete global.statusBcpc;
-    m.react("🐣");
-
     // Hasil ke owner — Modern Box
     await sock.sendMessage(
       m.chat,

@@ -904,8 +904,8 @@ async function messageHandler(msg, sock) {
 
     await plugin.handler(m, { sock, conn: sock, config, db: getDatabase(), args: m.args || [], text: m.text || '', uptime: process.uptime() * 1000 });
 
-    // React 🐣 after processing completes
-    if (procNotifOn && !m.isNewsletter) {
+    // React 🐣 after processing completes (skip if plugin set custom reaction)
+    if (procNotifOn && !m.isNewsletter && !m.__customReact) {
       try { await m.react("🐣"); } catch {}
     }
 

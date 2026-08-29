@@ -81,9 +81,6 @@ async function handler(m, { sock }) {
             image: { url: apiUrl },
             caption: `📱 *qʀ ᴄᴏᴅᴇ*\n${data.substring(0, 50)}${data.length > 50 ? '...' : ''}`
         }, { quoted: m })
-        
-        m.react('🕐')
-        
     } catch (err) {
         return m.reply(claraWrap("logo.png", te(m.prefix, m.command, m.pushName), "error"))
     }

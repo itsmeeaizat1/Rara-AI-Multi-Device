@@ -20,7 +20,6 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, db }) {
-  await m.react("🕒");
   const prefix = config.command?.prefix || ".";
   const args = m.args || [];
   const mode = args[0]?.toLowerCase();
@@ -36,7 +35,6 @@ async function handler(m, { sock, db }) {
 │  3. \`${prefix}setmenuimage url https://link-gambar.jpg\` → pakai URL
 ╰──────────`;
     await m.reply(claraWrap("setmenuimage", txt));
-    await m.react("🐣");
     return;
   }
 
@@ -46,7 +44,6 @@ async function handler(m, { sock, db }) {
       await m.reply(
         `╭──「 *Error* 」\n│ Asset key \`${assetKey}\` tidak ditemukan di config\n│ Cek daftar asset di config.js\n╰──────────`
       );
-      await m.react("❌");
       return;
     }
     setMenuImageMode("asset", "", assetKey);
@@ -56,7 +53,6 @@ async function handler(m, { sock, db }) {
     await m.reply(
       `╭──「 *Berhasil* 」\n│ Mode: *asset*\n│ Asset: *${assetKey}*\n│ Path: \`${config.assets[assetKey]}\`\n╰──────────`
     );
-    await m.react("🐣");
     return;
   }
 
@@ -66,7 +62,6 @@ async function handler(m, { sock, db }) {
       await m.reply(
         `╭──「 *Error* 」\n│ URL tidak valid\n│ Contoh: \`${prefix}setmenuimage url https://example.com/banner.jpg\`\n╰──────────`
       );
-      await m.react("❌");
       return;
     }
 
@@ -80,12 +75,10 @@ async function handler(m, { sock, db }) {
       await m.reply(
         `╭──「 *Berhasil* 」\n│ Mode: *url*\n│ URL: ${url}\n│ Gambar akan di-cache otomatis\n╰──────────`
       );
-      await m.react("🐣");
     } catch (e) {
       await m.reply(
         `╭──「 *Error* 」\n│ Gagal fetch URL: ${e.message}\n╰──────────`
       );
-      await m.react("❌");
     }
     return;
   }

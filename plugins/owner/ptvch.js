@@ -46,8 +46,6 @@ async function handler(m, { sock }) {
             gifPlayback: true,
             ptv: true
         })
-        
-        await m.react('✅')
         { const __navText = `✅ *sUkses*\n\nVideo berhasil dikirim ke channel sebagai PTV.`; return await m.reply(__navText); }
         
     } catch (err) {

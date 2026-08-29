@@ -30,9 +30,6 @@ async function handler(m, { sock }) {
 │ 💡 *Contoh:* \`${m.prefix}xnxx amateur\`
 ╰──────────`, "xnxx");
   }
-
-  await m.react("🕒");
-
   try {
     const res = await axios.get(
       `https://api.siputzx.my.id/api/s/xnxxsearch?query=${encodeURIComponent(query)}`,
@@ -60,10 +57,8 @@ async function handler(m, { sock }) {
     }
     text += `_NSFW content - 18+ only_`;
     await m.reply( text, "xnxx");
-    await m.react("🐣");
   } catch (err) {
     console.error("[XNXX] Error:", err.message);
-    await m.react("❌");
     return m.reply( te(m.prefix, m.command, m.pushName), "xnxx");
   }
 }

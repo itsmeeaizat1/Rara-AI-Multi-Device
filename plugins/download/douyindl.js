@@ -38,9 +38,6 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply(novaNoInput("Douyin DL", "Kirim URL Douyin (TikTok China) yang mau didownload!", `${m.prefix}douyindl https://v.douyin.com/xxx`));
   }
-
-  m.react("🕒");
-
   try {
     const data = await douyinFetch(text);
     const result = data.result;
@@ -58,8 +55,6 @@ async function handler(m, { sock }) {
         type: "audio",
       });
     }
-
-    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply(novaError("Douyin DL", "Gagal mengambil data Douyin. Coba lagi nanti ya!"));

@@ -150,8 +150,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   if (!kopData.instansi) {
     return m.reply(claraWrap("Kop", `❌ Minimal isi instansi= \n\n💡 *Contoh:* ${prefix}kop instansi=PT Maju Jaya alamat=Jl. Merdeka 1 Jakarta`));
   }
-
-  await m.react("🕒");
   m.reply(claraWrap("Kop", "│ Tambah kop surat ke PDF..."));
 
   try {
@@ -167,12 +165,9 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       mimetype: "application/pdf",
       fileName: `kop_${Date.now()}.pdf`,
     }, { quoted: m });
-
-    await m.react("🐣");
   } catch (error) {
     console.error("kop error:", error);
     m.reply(claraWrap("Kop", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
-    await m.react("🐣");
   }
 
   return { handled: true };

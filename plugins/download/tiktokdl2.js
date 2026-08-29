@@ -129,9 +129,6 @@ async function handler(m, { sock }) {
     if (!url.match(/tiktok\.com|vt\.tiktok/i)) {
         return m.reply(novaGuide("TikTok DL 2", "URL tidak valid! Kirim link TikTok ya.", `${m.prefix}tiktok2 https://vt.tiktok.com/xxx`));
     }
-
-    m.react('🕐')
-
     try {
         const result = await savett(url)
 
@@ -162,8 +159,6 @@ async function handler(m, { sock }) {
                 },
                 { quoted: m }
             )
-
-            m.react('✅')
             return
         }
 
@@ -243,8 +238,6 @@ async function handler(m, { sock }) {
                     { quoted: m }
                 )
             }
-
-            m.react('✅')
             return
         }
 
@@ -258,7 +251,6 @@ async function handler(m, { sock }) {
                 },
                 { quoted: m }
             )
-            m.react('✅')
             return
         }
 

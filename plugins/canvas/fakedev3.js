@@ -65,7 +65,6 @@ async function handler(m, { sock }) {
   if (!buffer) {
     return m.reply(novaError("FakeDev3", "Kirim/reply gambar dulu nih!"));
   }
-  m.react("🕒");
   try {
     const gmbr = await uploadTo0x0(buffer, {
       filename: "image.jpg",
@@ -80,7 +79,6 @@ async function handler(m, { sock }) {
         type: "image",
       },
     );
-    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("fakedev3", `Coba lagi`));
   }

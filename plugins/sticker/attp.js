@@ -38,7 +38,6 @@ async function handler(m, { sock }) {
     if (text.length > 100) {
         { const __navText = `Teks terlalu panjang nih! Maksimal 100 karakter.`; return await m.reply(__navText); }
     }
-    m.react('🕐')
     try {
         const color = getRandomColor()
         const url = `https://api.neoxr.eu/api/attp3?text=${encodeURIComponent(text)}&color=${color}&apikey=${NEOXR_APIKEY}`
@@ -59,7 +58,6 @@ async function handler(m, { sock }) {
             console.log('Exif error:', e)
         }
         await sock.sendMessage(m.chat, { sticker: finalSticker }, { quoted: m })
-        m.react('✅')
     } catch (err) {
         m.reply(claraWrap("attp", te(m.prefix, m.command, m.pushName), "error"))
     }

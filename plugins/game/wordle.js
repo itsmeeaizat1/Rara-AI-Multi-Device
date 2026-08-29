@@ -193,8 +193,6 @@ async function handler(m, { sock, config, db }) {
           sessions.delete(m.chat);
         }
       }, 300000);
-
-      await m.react("🐣");
       return m.reply(claraWrap("Wordle", [
         `Game dimulai! Bahasa: ${lang === "id" ? "Indonesia" : "English"}`,
         `Tebak kata 5 huruf dalam ${session.maxAttempts} percobaan`,
@@ -207,13 +205,11 @@ async function handler(m, { sock, config, db }) {
     const session = sessions.get(m.chat);
 
     if (!session || !session.active) {
-      await m.react("🐣");
       return m.reply(claraWrap("Wordle", `Belum ada game aktif. Ketik "${m.prefix}wordle start" untuk mulai.`));
     }
 
     if (input === "hint") {
       const revealed = session.answer[0] + " _ _ _ _";
-      await m.react("🐣");
       return m.reply(claraWrap("Wordle", [
         "Petunjuk:",
         `Huruf pertama: "${session.answer[0]}"`,
@@ -223,20 +219,17 @@ async function handler(m, { sock, config, db }) {
 
     if (input === "giveup" || input === "end") {
       sessions.delete(m.chat);
-      await m.react("🐣");
       return m.reply(claraWrap("Wordle", `Kata yang benar: ${session.answer}`));
     }
 
     // Check if input is a 5-letter word (the guess)
     const guess = (m.args?.[0] || "").toUpperCase();
     if (guess.length !== 5 || !/^[A-Z]+$/.test(guess)) {
-      await m.react("🐣");
       return m.reply(claraWrap("Wordle", "Ketik 5 huruf untuk menebak. Contoh: HALUS"));
     }
 
     if (session.attempts.length >= session.maxAttempts) {
       sessions.delete(m.chat);
-      await m.react("🐣");
       return m.reply(claraWrap("Wordle", `Kesempatan habis! Jawaban: ${session.answer}`));
     }
 
@@ -248,7 +241,6 @@ async function handler(m, { sock, config, db }) {
 
     if (guess === session.answer) {
       sessions.delete(m.chat);
-      await m.react("🐣");
       return m.reply(claraWrap("Wordle", [
         `🎉 Benar! Jawaban: ${session.answer}`,
         `Percobaan: ${session.attempts.length}/${session.maxAttempts}`,
@@ -259,15 +251,12 @@ async function handler(m, { sock, config, db }) {
 
     if (session.attempts.length >= session.maxAttempts) {
       sessions.delete(m.chat);
-      await m.react("🐣");
       return m.reply(claraWrap("Wordle", [
         `Kesempatan habis! Jawaban: ${session.answer}`,
         "",
         boardText,
       ]));
     }
-
-    await m.react("🐣");
     return m.reply(claraWrap("Wordle", [
       `Sisa: ${remaining} percobaan`,
       "",
@@ -275,7 +264,6 @@ async function handler(m, { sock, config, db }) {
     ]));
   } catch (e) {
     console.error("[wordle] error:", e.message);
-    await m.react("❌");
     return m.reply(te(m.prefix, m.command, m.pushName), "wordle");
   }
 }

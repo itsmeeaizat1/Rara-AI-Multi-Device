@@ -194,9 +194,6 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}paraphrase Penelitian ini menggunakan metode kualitatif...\``;
     return await m.reply( txt, { commandName: "paraphrase" });
   }
-
-  await m.react("🕒");
-
   try {
     let intensity = 0.5;
     let inputText = text;
@@ -226,7 +223,6 @@ async function handler(m, { sock, args }) {
     txt += `_Tip: baca ulang hasil parafrase, sesuaikan konteks kalimat jika perlu_`;
 
     await m.reply(txt);
-    await m.react("🐣");
   } catch (e) {
     console.error("[PARAPHRASE] Error:", e.message);
     await m.reply(novaError("Paraphrase", `Gagal parafrase nih: ${e.message}`));

@@ -39,8 +39,6 @@ async function handler(m, { sock }) {
         if (participants.length === 0) {
             return m.reply(claraWrap("Addenergiall", `❌ *Gagal*\n\nTidak ada member di grup ini`))
         }
-        
-        await m.react('🕐')
         const db = getDatabase()
         let successCount = 0
         

@@ -156,7 +156,6 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "on") {
       smartReply.enabled = true;
       db.setGroup(m.chat, { ...groupData, smartReply });
-      await m.react("🐣");
       const text =
         claraWrap("Smart Reply", [`│ Status: *ᴀᴋᴛɪꜰ*`,
           `│ Provider: *${smartReply.provider.toUpperCase()}*`,
@@ -171,7 +170,6 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "off") {
       smartReply.enabled = false;
       db.setGroup(m.chat, { ...groupData, smartReply });
-      await m.react("🐣");
       const text =
         claraWrap("Smart Reply", [`│ Status: *ɴᴏɴᴀᴋᴛɪꜰ*`,
           `│ Topics tersimpan, bisa diaktifkan lagi`].join("\n")) + "\n" +
@@ -210,8 +208,6 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       db.setGroup(m.chat, { ...groupData, smartReply });
-
-      await m.react("🐣");
       const text =
         claraWrap("Smart Reply", [`│ Keyword: *${keyword}*`,
           `│ Context: *${context.slice(0, 80)}${context.length > 80 ? "..." : ""}*`,
@@ -242,8 +238,6 @@ async function handler(m, { sock, config: botConfig }) {
 
       smartReply.topics.splice(idx, 1);
       db.setGroup(m.chat, { ...groupData, smartReply });
-
-      await m.react("🐣");
       const text =
         claraWrap("Smart Reply", [`│ Keyword: *${keyword}*`,
           `│ Sisa topics: *${smartReply.topics.length}*`].join("\n")) + "\n" +
@@ -285,8 +279,6 @@ async function handler(m, { sock, config: botConfig }) {
 
       smartReply.provider = model;
       db.setGroup(m.chat, { ...groupData, smartReply });
-
-      await m.react("🐣");
       const text =
         claraWrap("Smart Reply", [`│ Provider: *${model.toUpperCase()}*`,
           `${model === "tio" ? "│ Pastikan API key Tio AI sudah di-set di config" : "│ Free, no API key needed"}`].join("\n")) + "\n" +
@@ -299,8 +291,6 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "reset") {
       smartReply.topics = [];
       db.setGroup(m.chat, { ...groupData, smartReply });
-
-      await m.react("🐣");
       const text =
         claraWrap("Smart Reply", [`│ Semua topic dihapus`,
           `│ Smart Reply: *${smartReply.enabled ? "Aktif" : "Nonaktif"}*`].join("\n")) + "\n" +

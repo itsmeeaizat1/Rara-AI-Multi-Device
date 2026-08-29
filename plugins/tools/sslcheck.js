@@ -91,13 +91,9 @@ async function handler(m, { sock, config: botConfig }) {
     if (!domain) {
       return m.reply(claraWrap("SSL", "Domain tidak boleh kosong!"));
     }
-
-    await m.react("🕒");
-
     const result = await checkSSL(domain);
 
     if (result.error) {
-      await m.react("❌");
       return m.reply(claraWrap("SSL Error", [
         "Domain: " + domain,
         "Error: " + result.error,
@@ -113,8 +109,6 @@ async function handler(m, { sock, config: botConfig }) {
       sanList = result.san.replace(/DNS:/g, "").split(",").map((s) => s.trim()).join(", ");
       if (sanList.length > 100) sanList = sanList.substring(0, 100) + "...";
     }
-
-    await m.react("🐣");
     return m.reply(claraWrap("SSL Check: " + domain, [
       "Status: " + status,
       "Subject: " + result.subject,
@@ -129,7 +123,6 @@ async function handler(m, { sock, config: botConfig }) {
     ].join("\n")));
   } catch (e) {
     console.error("sslcheck error:", e);
-    await m.react("❌");
     return m.reply(claraWrap("SSL", "Error: " + e.message));
   }
 }

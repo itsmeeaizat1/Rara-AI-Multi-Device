@@ -25,9 +25,6 @@ async function handler(m, { sock }) {
     if (!isImage) {
         return m.reply(claraWrap("Nova-large", `🖼️ *ɴᴏᴠᴀ ʟᴀʀɢᴇ ᴘʀᴇꜱᴇᴛ*\n\nKirim/reply gambar untuk mengganti kumpulan foto besar (nova.jpg, nova-v8.jpg, nova-v10.jpg) sekaligus.\nPastikan rasio gambar sesuai dengan yang diinginkan.`))
     }
-    
-    await m.react('🕐')
-    
     try {
         let buffer
         if (m.quoted && m.quoted.isMedia) {
@@ -55,8 +52,6 @@ async function handler(m, { sock }) {
             const targetPath = path.join(assetsDir, imgName)
             fs.writeFileSync(targetPath, buffer)
         }
-        
-        await m.react('✅')
         { const __navText = `✅ *ʙᴇʀʜᴀꜱɪʟ*\n\nGambar bundle *ɴᴏᴠᴀ-ʟᴀʀɢᴇ* berhasil diganti secara massal.\nMencakup: ${targetImages.join(', ')}\nRestart bot jika gambar tidak langsung berubah.`; await m.reply(__navText); }
         
     } catch (error) {

@@ -46,9 +46,6 @@ async function handler(m, { sock }) {
         `Masukkan query pencarian\n\n` +
         `\`${m.prefix}pinvid anime\``, "pinvid");
   }
-
-  m.react("🕒");
-
   try {
     const res = await axios.get(
       `https://firefly.maiku.my.id/api/pinterestvideo?apikey=${config.APIkey.firefly}&q=${encodeURIComponent(query)}`,
@@ -62,9 +59,6 @@ async function handler(m, { sock }) {
     }
 
     const videos = res.data.data.slice(0, 5);
-
-    m.react("🕒");
-
     const tempDir = path.join(process.cwd(), "temp");
     if (!fs.existsSync(tempDir)) {
       fs.mkdirSync(tempDir, { recursive: true });
@@ -173,8 +167,6 @@ async function handler(m, { sock }) {
           messageId: msg.key.id,
         });
       }
-
-      m.react("🐣");
     } catch (albumErr) {
       console.log(
         "[PinVid] Album message failed, sending individually:",
@@ -199,8 +191,6 @@ async function handler(m, { sock }) {
           { quoted: m },
         );
       }
-
-      m.react("🐣");
     }
   } catch (error) {
     console.error("[PinVid] Error:", error.message);

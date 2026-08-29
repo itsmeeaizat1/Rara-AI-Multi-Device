@@ -113,8 +113,6 @@ async function handler(m, { sock, db, config: botConfig }) {
       await m.reply(claraWrap("Mood Track", "Butuh minimal 3 hari data untuk analisis. Kamu baru: " + udata.entries.length + " hari."));
       return { handled: true };
     }
-    await m.react("🕒");
-
     // Calculate stats
     const avg = (udata.entries.reduce((s, e) => s + e.score, 0) / udata.entries.length).toFixed(1);
     const highest = udata.entries.reduce((max, e) => e.score > max.score ? e : max);
@@ -131,8 +129,6 @@ async function handler(m, { sock, db, config: botConfig }) {
       const result = await UnlimitedAI(prompt, "nova-ai");
       aiInsight = result?.success ? result.response : null;
     } catch (e) { console.error('[moodtrack.js]:', e.message); }
-
-    await m.react("🐣");
     await m.reply(claraWrap("Mood Insight", [
       "@" + m.sender.split("@")[0],
       "",

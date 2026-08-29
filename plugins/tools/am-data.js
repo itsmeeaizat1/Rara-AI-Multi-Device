@@ -42,9 +42,6 @@ async function handler(m, { sock }) {
         `\`${m.prefix}am-data <url>\``,
     );
   }
-
-  m.react("🕒");
-
   try {
     const r = await fetch(API, {
       method: "POST",
@@ -65,9 +62,6 @@ async function handler(m, { sock }) {
         `📱 *ɢᴀɢᴀʟ ᴍᴇᴍʙᴀᴄᴀ ᴅᴀᴛᴀ*\n\n` + `- Pastikan URL share valid`,
       );
     }
-
-    m.react("🐣");
-
     const projects =
       info.projects
         ?.map((p) => `  - *${p.title}* (${p.type}, ${fmtSize(p.size)})`)

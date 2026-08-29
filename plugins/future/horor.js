@@ -52,8 +52,6 @@ async function handler(m, { sock }) {
     names = [m.pushName || "Kamu"];
   }
   if (names.length < 2) names.push("Teman");
-
-  await m.react("🕒");
   const story = await generateHoror(names);
 
   if (!story) {
@@ -62,8 +60,6 @@ async function handler(m, { sock }) {
 
   const header = "👻 *ʜᴏʀʀᴏʀ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";
   const footer = "\n│\n│ ✨ Dibuat oleh Nova AI\n╰──────────";
-
-  await m.react("🐣");
   return m.reply( header + story + footer, "horor");
 }
 

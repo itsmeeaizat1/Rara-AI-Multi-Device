@@ -170,8 +170,6 @@ async function handler(m, { sock, db }) {
 
   // ─── Mode: koleksi foto sedang aktif ───
   if (session && isImage && !m.text?.toLowerCase().includes("stikergrid")) {
-    await m.react("🕒");
-
     try {
       let buffer;
       if (m.quoted && m.quoted.isMedia) {
@@ -239,8 +237,6 @@ async function handler(m, { sock, db }) {
   }
 
   // ─── Mulai sesi baru ───
-  await m.react("🕒");
-
   const newSession = createSession(chatJid, m.sender, sock, m);
 
   // Kalau command disertai image, langsung kumpul foto pertama
@@ -266,7 +262,6 @@ async function handler(m, { sock, db }) {
       `Mode kolase stiker aktif.\n\nKirim ${MIN_PHOTOS}-${MAX_PHOTOS} foto untuk digabung jadi satu stiker grid.\n\nFoto terkumpul: ${collected}/${MIN_PHOTOS}\n\nKetik *ꜱᴇʟᴇꜱᴀɪ* untuk buat stiker (min ${MIN_PHOTOS} foto).\nKetik *ʙᴀᴛᴀʟ* untuk membatalkan.\nSesi otomatis berakhir dalam 45 detik.`
     )
   );
-  await m.react("🐣");
 }
 
 // ─── Process collage & send sticker ───

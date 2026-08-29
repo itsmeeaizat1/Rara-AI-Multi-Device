@@ -90,7 +90,6 @@ function handler(m, { sock }) {
     }
 
 
-
     const newGroupData = {
         ...groupData,
         botMode: mode
@@ -105,9 +104,6 @@ function handler(m, { sock }) {
 
     db.setGroup(m.chat, newGroupData)
     db.save()
-
-    m.react('✅')
-
     let extraInfo = ''
     if (mode === 'store') {
         const products = newGroupData.storeConfig?.products || []

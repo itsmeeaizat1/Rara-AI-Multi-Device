@@ -62,7 +62,6 @@ async function handler(m, { sock }) {
     }
 
     try {
-        await m.react('🕐')
         const group = await sock.groupCreate(name, participants)
         
         let successTxt = `👥 *GRUP BERHASIL DIBUAT* 👥\n\n`
@@ -99,8 +98,6 @@ async function handler(m, { sock }) {
                 }
             }, durationMs)
         }
-
-        await m.react('✅')
     } catch (err) {
         return m.reply(claraWrap("buatgrup", `❌ Maaf kak, gagal membuat grup! 😭\nError: ${err.message}`))
     }

@@ -27,9 +27,6 @@ async function handler(m, { sock }) {
     if (!url.match(/cocofun\.com/i)) {
         return m.reply(novaGuide('CocoFun', 'URL-nya gak valid nih! Pakai link CocoFun ya.', `${m.prefix}cfdl https://www.cocofun.com/share/post/xxx`))
     }
-    
-    await m.react('🕒')
-    
     try {
         const data = await cocofun(url)
         

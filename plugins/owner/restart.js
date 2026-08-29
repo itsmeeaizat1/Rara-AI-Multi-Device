@@ -21,8 +21,6 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     try {
-        await m.react('🕐')
-        
         const startTime = Date.now()
         
         await sock.sendMessage(m.chat, {

@@ -28,7 +28,6 @@ async function handler(m, { sock }) {
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
-        await m.react('✅')
         return m.reply('✅ *Onlyadmin Aktif*\n\n' +
             '╭──「 *Akses* 」\n' +
             '┃ ✅ Admin grup\n' +
@@ -46,7 +45,6 @@ async function handler(m, { sock }) {
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
-        await m.react('✅')
         return m.reply('✅ *Onlyadmin Aktif*\n\n' +
             '╭──「 *Akses* 」\n' +
             '┃ ✅ Admin grup\n' +
@@ -71,7 +69,6 @@ async function handler(m, { sock }) {
         db.setting('onlyAdmin', true)
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
-        await m.react('✅')
         return m.reply('✅ *Onlyadmin Aktif*\n\n' +
             '╭──「 *Akses* 」\n' +
             '┃ ✅ Admin grup\n' +

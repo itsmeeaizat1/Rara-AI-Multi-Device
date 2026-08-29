@@ -51,8 +51,6 @@ async function handler(m, { sock }) {
             `├ Malapetaka: ${en.malapetaka}\n` +
             `└ Kehancuran: ${en.kehancuran}\n\n` +
             `Status: ${r.analisis.status ? '✅ HOKI' : '❌ TIDAK HOKI'}`
-        
-        m.react('✅')
         await m.reply(response)
         
     } catch (error) {

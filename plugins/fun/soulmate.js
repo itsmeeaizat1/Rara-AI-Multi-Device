@@ -79,9 +79,6 @@ async function handler(m, { sock }) {
     if (!nama1 || !nama2) {
         return m.reply(`❌ Masukkan 2 nama dengan format: \`${m.prefix}soulmatch nama1|nama2\``)
     }
-    
-    await m.react('🕐')
-    
     const seed1 = Date.now() % 100
     const seed2 = (Date.now() + 50) % 100
     const soul1 = generateSoulData(nama1, seed1)
@@ -110,7 +107,6 @@ async function handler(m, { sock }) {
     txt += `│\n`
     txt += `╰──────────`
     await m.reply(claraWrap("soulmate", txt))
-    m.react('✅')
 }
 
 export { pluginConfig as config, handler }

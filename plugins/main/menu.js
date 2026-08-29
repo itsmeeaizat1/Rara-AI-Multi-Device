@@ -242,7 +242,6 @@ ${toSC("Nova AI WhatsApp Bot")}`;
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   try {
-    await m.react("🕒");
     const prefix = botConfig.command?.prefix || ".";
     const text = await buildMenuText(m, botConfig, db, uptime, sock);
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
@@ -257,9 +256,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       { id: `${prefix}info`, text: toSC("Info") },
       { id: `${prefix}owner`, text: toSC("Owner") },
     ];
-
-    await m.react("🐣");
-
     await sendMenuCard(sock, m, {
       text: closeBoxRight(text),
       footer: "",
@@ -272,7 +268,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
   } catch (e) {
     console.error("[menu] handler error:", e.message);
     try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────╯`); } catch {}
-    await m.react("❌");
   }
 }
 

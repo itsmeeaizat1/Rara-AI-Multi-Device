@@ -117,9 +117,6 @@ async function handler(m, { sock }) {
       `╰──────────`
     );
   }
-
-  await m.react("🕒");
-
   try {
     const key = sessionKey(m);
     const sessionUuid = sessions.get(key) || "";
@@ -129,9 +126,6 @@ async function handler(m, { sock }) {
     if (result.sessionUuid) {
       sessions.set(key, result.sessionUuid);
     }
-
-    await m.react("🐣");
-
     let reply = result.response || "Maaf, tidak ada response dari dokter AI.";
 
     // Tambah disclaimer di akhir

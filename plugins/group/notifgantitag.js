@@ -33,7 +33,6 @@ async function handler(m, { sock }) {
     if (!m.isOwner) {
       return m.reply(claraWrap("Notifgantitag", `❌ Hanya owner yang bisa menggunakan fitur ini!`));
     }
-    m.react("🕒");
     try {
       const groups = await sock.groupFetchAllParticipating();
       const groupIds = Object.keys(groups);
@@ -42,7 +41,6 @@ async function handler(m, { sock }) {
         db.setGroup(groupId, { notifLabelChange: true });
         count++;
       }
-      m.react("🐣");
       return m.reply(claraWrap("notifgantitag", `✅ *ɴᴏᴛɪꜰ ʟᴀʙᴇʟ ɢʟᴏʙᴀʟ ᴏɴ*\n\n` +
           `Notifikasi ganti label diaktifkan di *${count}* grup!`));
     } catch (err) {
@@ -53,7 +51,6 @@ async function handler(m, { sock }) {
     if (!m.isOwner) {
       return m.reply(claraWrap("Notifgantitag", `❌ Hanya owner yang bisa menggunakan fitur ini!`));
     }
-    m.react("🕒");
     try {
       const groups = await sock.groupFetchAllParticipating();
       const groupIds = Object.keys(groups);
@@ -62,7 +59,6 @@ async function handler(m, { sock }) {
         db.setGroup(groupId, { notifLabelChange: false });
         count++;
       }
-      m.react("🐣");
       return m.reply(claraWrap("notifgantitag", `❌ *ɴᴏᴛɪꜰ ʟᴀʙᴇʟ ɢʟᴏʙᴀʟ ᴏꜰꜰ*\n\n` +
           `Notifikasi ganti label dinonaktifkan di *${count}* grup!`));
     } catch (err) {

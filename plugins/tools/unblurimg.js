@@ -167,8 +167,6 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         "Source: unblurimage.ai",
       ]));
     }
-
-    await m.react("🕒");
     // Download image
     const imageBuffer = await q.download();
     if (!imageBuffer || imageBuffer.length === 0) {
@@ -214,7 +212,6 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     }
   } catch (e) {
     console.error("[UnblurImage AI]", e);
-    await m.react("🐣");
     m.reply(claraWrap("UnblurImage AI", [
       "Error: " + e.message,
       "",

@@ -77,10 +77,8 @@ async function handler(m, { sock, config, db }) {
     if (input === "end" || input === "stop") {
       if (sessions.has(m.chat)) {
         sessions.delete(m.chat);
-        await m.react("🐣");
         return m.reply(claraWrap("Typing Race", "Sesi diakhiri."));
       }
-      await m.react("🐣");
       return m.reply(claraWrap("Typing Race", "Tidak ada sesi aktif."));
     }
 
@@ -109,8 +107,6 @@ async function handler(m, { sock, config, db }) {
           sessions.delete(m.chat);
         }
       }, 120000);
-
-      await m.react("🐣");
       return m.reply(claraWrap("Typing Race", [
         `Level: ${DIFFICULTY[difficulty].label}`,
         `Penulis: ${quote.author}`,
@@ -126,7 +122,6 @@ async function handler(m, { sock, config, db }) {
     // Check if there's an active session and user typed something
     const session = sessions.get(m.chat);
     if (!session || !session.active) {
-      await m.react("🐣");
       return m.reply(claraWrap("Typing Race", `Belum ada sesi aktif. Ketik "${m.prefix}typingrace start" untuk mulai.`));
     }
 
@@ -141,8 +136,6 @@ async function handler(m, { sock, config, db }) {
       const chars = session.text.length;
 
       sessions.delete(m.chat);
-
-      await m.react("🐣");
       return m.reply(claraWrap("Typing Race", [
         "🎉 Sempurna!",
         `WPM: ${wpm}`,
@@ -164,8 +157,6 @@ async function handler(m, { sock, config, db }) {
       const wpm = Math.round((words / elapsed) * 60);
 
       sessions.delete(m.chat);
-
-      await m.react("🐣");
       return m.reply(claraWrap("Typing Race", [
         "Hasil typing:",
         `WPM: ${wpm}`,
@@ -177,7 +168,6 @@ async function handler(m, { sock, config, db }) {
     }
   } catch (e) {
     console.error("[typingrace] error:", e.message);
-    await m.react("❌");
     return m.reply(te(m.prefix, m.command, m.pushName), "typingrace");
   }
 }

@@ -278,9 +278,6 @@ async function handler(m, { sock }) {
       await m.reply("╭──「 Family 100 」\n│ ❌ Soalnya rusak nih 😵\n│ Coba ulang ya!\n╰──────────");
       return;
     }
-
-    await m.react("🕒");
-
     let text = `╭──「 *FAMILY 100* 」\n`;
     text += `│  ➥ *${questionData.soal}*\n`;
     text += `│\n`;
@@ -299,8 +296,6 @@ async function handler(m, { sock }) {
     text += `╰─`;
 
     const sentMsg = await m.reply(text);
-    await m.react("🐣");
-
     const session = createSession(
       chatId,
       questionData,
@@ -335,7 +330,6 @@ async function handler(m, { sock }) {
   } catch (e) {
     console.error("[family100] Handler error:", e.message);
     try {
-      await m.react("❌");
       await m.reply("❌ *Terjadi error saat memulai game!*");
     } catch {}
   }
@@ -417,9 +411,6 @@ async function answerHandler(m, sock) {
       session.scores[sender].correct++;
       const points = session.totalAnswers - result.answer.index;
       session.scores[sender].points += points;
-
-      await m.react("✅");
-
       let replyText = `✅ *BENAR!*\n`;
       replyText += `*@${sender.split("@")[0]}* menebak: *${result.answer.text.toUpperCase()}*\n`;
       replyText += `│ Dapat *${points} poin*\n`;
@@ -511,7 +502,6 @@ async function answerHandler(m, sock) {
 
     if (result.status === "wrong") {
       const remaining = getRemainingTime(chatId);
-      await m.react("❌");
       try {
         await m.reply(
           `❌ *Belum ada yang cocok!*\n_Sisa: *${formatTime(remaining)}*_`

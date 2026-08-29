@@ -304,9 +304,6 @@ async function handler(m, { sock, args }) {
       `*ᴄᴏɴᴛᴏʜ:* \`.audio-quran audio sudais 1\``
     );
   }
-
-  m.react("🕒");
-
   try {
     const mode = args[0].toLowerCase();
     
@@ -343,8 +340,6 @@ async function handler(m, { sock, args }) {
         mimetype: "audio/mpeg",
         ptt: false,
       }, { quoted: m });
-      
-      m.react("🐣");
       return;
     }
     
@@ -377,8 +372,6 @@ async function handler(m, { sock, args }) {
         txt += `- #${rd.id} *${rd.name}*\n  Link: ${rd.url}\n`;
       }
     }
-    
-    m.react("🐣");
     return await m.reply(claraWrap("audioquran", txt));
     
   } catch (err) {

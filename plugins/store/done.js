@@ -200,9 +200,6 @@ async function handler(m, { sock }) {
       );
     }
   }
-
-  await m.react("🐣");
-
   let confirmTxt = `✅ *ᴛʀᴀɴꜱᴀᴋꜱɪ ᴅɪᴋᴏɴꜰɪʀᴍᴀꜱɪ*\n\n`;
   confirmTxt += `🧾 TRX: \`${trxId}\`\n`;
   confirmTxt += `${typeIcon} Produk: *${trx.productName}*\n`;

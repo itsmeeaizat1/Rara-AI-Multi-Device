@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
 }), "aiimage");
       return { handled: true };
     }
-    { await m.react("🕒"); };
+    { };
     const { data } = await axios.get("https://image.pollinations.ai/prompt/" + encodeURIComponent(prompt), {
       timeout: 60000, responseType: "arraybuffer",
     });

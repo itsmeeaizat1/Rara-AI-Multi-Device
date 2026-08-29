@@ -68,8 +68,6 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const url = text.trim();
-    await m.react("🕒");
-
     const result = await checkSite(url);
 
     if (result.online) {
@@ -92,11 +90,8 @@ async function handler(m, { sock, config: botConfig }) {
       if (result.redirected) {
         lines.push("Final URL: " + (result.finalUrl.length > 60 ? result.finalUrl.substring(0, 60) + "..." : result.finalUrl));
       }
-
-      await m.react("🐣");
       return m.reply(claraWrap("Site Check: " + url.replace(/^https?:\/\//, ""), lines.join("\n")));
     } else {
-      await m.react("❌");
       return m.reply(claraWrap("Site Check: " + url.replace(/^https?:\/\//, ""), [
         "Status: DOWN",
         "Error: " + result.error,
@@ -105,7 +100,6 @@ async function handler(m, { sock, config: botConfig }) {
     }
   } catch (e) {
     console.error("sitedown error:", e);
-    await m.react("❌");
     return m.reply(claraWrap("SiteDown", "Error: " + e.message));
   }
 }

@@ -114,9 +114,6 @@ async function handler(m, { sock }) {
 
     lists.push(newList)
     db.setting('storeLists', lists)
-
-    await m.react('✅')
-
     let reply = `✅ *ɪɴꜰᴏʀᴍᴀꜱɪ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n`
     reply += `🏷️ Nama: *${name}*\n`
     if (imageUrl) reply += `🖼️ Media: ✅ Gambar\n`

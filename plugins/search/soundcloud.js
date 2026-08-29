@@ -67,9 +67,6 @@ async function handler(m, { args, sock }) {
     txt += `\`${m.prefix}soundcloud Only We Know\``;
     return await m.reply(claraWrap("soundcloud", txt));
   }
-
-  await m.react("🕒");
-
   try {
     const data = await scSearch(args.join(" "));
     if (!data.length) {
@@ -96,7 +93,6 @@ async function handler(m, { args, sock }) {
     } else {
       await m.reply(txt.trim());
     }
-    await m.react("🐣");
   } catch (e) {
     m.reply(claraWrap("soundcloud", `❌ Maaf kak, terjadi kesalahan sistem!\nError: ${e.message}`));
   }

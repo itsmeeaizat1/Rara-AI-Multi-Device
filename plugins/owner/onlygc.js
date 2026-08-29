@@ -36,7 +36,6 @@ async function handler(m, { sock }) {
   if (option === "on") {
     db.setting("onlyGc", true);
     db.setting("onlyPc", false);
-    await m.react("🐣");
     return m.reply(claraWrap("onlygc", `🏘️ *Only Group Aktif*\n\n` +
         `Bot hanya bisa diakses di grup\n` +
         `Mode Only Private dinonaktifkan`));

@@ -90,9 +90,6 @@ async function handler(m, { sock, config: botConfig }) {
     const help = `Wallhaven Wallpaper\n\nCara pakai:\n.wh <kata kunci> — Cari wallpaper\n.wh anime <karakter> — Wallpaper anime\n.wh <kata kunci> hd — HD 1920x1080+\n.wh <kata kunci> 2k — 2K 2560x1440+\n.wh <kata kunci> 4k — 4K 3840x2160+\n.wh <kata kunci> mobile — Portrait HP\n.wh random — Wallpaper acak\n.wh anime random — Anime acak\n\nContoh:\n.wh mekkah hd\n.wh anime miku\n.wh nature 4k\n.wh anime gojo mobile\n.wh mosque\n.wh space 2k`;
     return m.reply( claraWrap("Wallhaven", help));
   }
-
-  await m.react("🕒");
-
   try {
     let query = text;
     let category = "111"; // Default: semua kategori
@@ -124,7 +121,6 @@ async function handler(m, { sock, config: botConfig }) {
     const data = await searchWallhaven(query, category, minRes);
 
     if (!data || data.data.length === 0) {
-      await m.react("🐣");
       const catLabel = category === "010" ? "anime" : category === "100" ? "general" : "semua";
       return m.reply(claraWrap("Wallhaven", `Tidak ada wallpaper untuk "${query || "random"}" (kategori: ${catLabel}).\n\nCoba kata kunci lain.`));
     }
@@ -145,10 +141,7 @@ async function handler(m, { sock, config: botConfig }) {
       image: imageBuffer,
       caption: claraWrap("Wallhaven Wallpaper", caption),
     }, { quoted: m });
-
-    await m.react("🐣");
   } catch (error) {
-    await m.react("🐣");
     return m.reply(claraWrap("Wallhaven Error", error.message || "Gagal mencari wallpaper."));
   }
 }

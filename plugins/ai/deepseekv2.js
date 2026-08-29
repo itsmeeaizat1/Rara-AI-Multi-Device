@@ -55,15 +55,10 @@ async function handler(m, { sock }) {
     const help = `Kirim pertanyaan setelah command.\n💡 *Contoh:* .deepseekv2 jelaskan black hole`;
     return m.reply( claraWrap("DeepSeek v3.2", help));
   }
-
-  await m.react("🕒");
-
   try {
     const reply = await callDeepSeekV2(text);
-    await m.react("🐣");
     return m.reply(claraWrap("DeepSeek v3.2", reply));
   } catch (error) {
-    await m.react("🐣");
     return m.reply(claraWrap("DeepSeek v3.2 Error", error.message || "Gagal hubungin AI nih"));
   }
 }

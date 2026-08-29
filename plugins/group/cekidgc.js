@@ -35,8 +35,6 @@ function formatDate(timestamp) {
 }
 
 async function handler(m, { sock }) {
- await m.react("🕒");
-
  try {
  const input = m.text?.trim();
  let groupJid = null;
@@ -239,8 +237,6 @@ async function handler(m, { sock }) {
 
  await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
  }
-
- await m.react("🐣");
  } catch (error) {
  console.error("[CekIdGc] Error:", error.message);
  m.reply(novaError("Cek ID Grup", "Terjadi kendala saat memproses info grup, coba lagi nanti ya!"));

@@ -50,9 +50,6 @@ async function handler(m, { sock }) {
   if (!text.startsWith("http")) {
     text = "https://" + text;
   }
-
-  await m.react("🕒");
-
   try {
     const imageBuffer = await ssweb(text, mode);
 
@@ -62,8 +59,6 @@ async function handler(m, { sock }) {
     await sock.sendMedia(m.chat, imageBuffer, null, m, {
       type: "image",
     });
-
-    await m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("ssweb", te(m.prefix, m.command, m.pushName), "error"));
   }

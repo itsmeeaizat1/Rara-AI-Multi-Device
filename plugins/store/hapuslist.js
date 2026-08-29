@@ -41,8 +41,6 @@ async function handler(m, { sock }) {
 
     const deleted = lists.splice(idx, 1)[0]
     db.setting('storeLists', lists)
-
-    await m.react('✅')
     return m.reply(
         `🗑️ *ɪɴꜰᴏʀᴍᴀꜱɪ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
         `🏷️ Nama: *${deleted.name}*\n\n` +

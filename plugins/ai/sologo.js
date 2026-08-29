@@ -25,9 +25,6 @@ async function handler(m, { sock }) {
   if (!prompt) {
     { const __navText = "❌ Masukkan deskripsi logo yang ingin dibuat.\n\n💡 *Contoh:* `.sologo robot keren warna merah`"; return await m.reply(__navText, "sologo"); };
   }
-
-  await m.react("🕒");
-
   try {
     const apiUrl = `https://api.nexray.eu.cc/ai/sologo?prompt=${encodeURIComponent(prompt)}`;
     const res = await axios.get(apiUrl, {
@@ -54,9 +51,6 @@ async function handler(m, { sock }) {
       image: { url: logo.thumbnail },
       caption: caption
     }, { quoted: m });
-
-    await m.react("🐣");
-
   } catch (error) {
     console.error("[SoLogo AI]", error.message);
     m.reply(novaError("SoLogo", "😔 Terjadi kesalahan saat memproses permintaan ke AI."));

@@ -37,9 +37,6 @@ async function handler(m, { sock }) {
     txt += `⚠️ _Fitur Premium, proses bisa memakan waktu tergantung ukuran ya kak!_`;
     return await m.reply( txt, "hdvid");
   }
-
-  await m.react("🕒");
-
   try {
     const videoBuffer = (await m?.quoted?.download?.()) || (await m.download?.());
 
@@ -50,8 +47,6 @@ async function handler(m, { sock }) {
     if (videoBuffer.length > 50 * 1024 * 1024) {
       return m.reply(claraWrap("hdvid", `❌ *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*\n\nMaaf kak, maksimal ukuran video cuma 50MB ya!`));
     }
-
-    await m.react("🕒");
     const tempDir = os.tmpdir();
     const inputPath = path.join(tempDir, `input-hd-${Date.now()}.mp4`);
     const outputPath = path.join(tempDir, `output-hd-${Date.now()}.mp4`);
@@ -77,9 +72,6 @@ async function handler(m, { sock }) {
       mimetype: "video/mp4",
       fileName: `HDVID-${Date.now()}.mp4`,
     });
-
-    await m.react("🐣");
-
     try {
         fs.unlinkSync(inputPath);
         fs.unlinkSync(outputPath);

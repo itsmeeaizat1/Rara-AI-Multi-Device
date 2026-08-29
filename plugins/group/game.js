@@ -41,8 +41,6 @@ async function handler(m, { sock }) {
 
   group.game = isEnable;
   db.setGroup(m.chat, group);
-
-  await m.react("🐣");
   return m.reply( `✅ Berhasil *${isEnable ? "MENGAKTIFKAN" : "MENONAKTIFKAN"}* fitur game di grup ini!\n\n` +
     (isEnable
       ? `Member sekarang bisa menggunakan semua perintah di menu game.`

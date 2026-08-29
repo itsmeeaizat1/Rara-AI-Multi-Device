@@ -25,9 +25,6 @@ async function handler(m, { sock, text }) {
   if (!text) {
     return m.reply( novaGuide("YTS", "Kata kuncinya kosong nih! Kasih judul video yang dicari", ".yts lagu galau indonesia"), { commandName: "yts" });
   }
-
-  await m.react("🕒");
-
   try {
     const searchResults = await yts(text);
     const videos = searchResults.videos;
@@ -102,8 +99,6 @@ Pilih salah satu tombol di bawah ini untuk langsung mengunduh hasil video atau a
     });
 
     await sock.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
-    await m.react("🐣");
-
   } catch (error) {
     console.error(error);
     m.reply(novaError("YTS", "Ada error nih, coba lagi ya"));

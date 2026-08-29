@@ -28,7 +28,6 @@ async function formatAndReply( text, cmdName) {
 }
 
 
-
 const pluginConfig = {
   name: "approvalmember",
   alias: ["approvalmember"],
@@ -75,9 +74,6 @@ async function handler(m, { sock }) {
     if (!botParticipant || !botParticipant.admin) {
       return formatAndReply(claraWrap("approvalmember", "Bot bukan admin di grup ini.\n\nJadikan bot admin dulu untuk menggunakan fitur ini."));
     }
-
-    await m.react("🕒");
-
     // WhatsApp group setting: membership_approval_mode
     // Baileys: groupSettingUpdate with memberApprovalMode
     const isOn = action === "on";
@@ -93,9 +89,6 @@ async function handler(m, { sock }) {
     };
 
     await sock.groupSettingUpdate(m.chat, patch);
-
-    await m.react("🐣");
-
     let text = "PERSETUJUAN MEMBER: " + (isOn ? "*ᴀᴋᴛɪꜰ*" : "*ɴᴏɴᴀᴋᴛɪꜰ*") + "\n\n";
     if (isOn) {
       text += "Sekarang member yang mau gabung harus di-approve admin dulu.\n\n";

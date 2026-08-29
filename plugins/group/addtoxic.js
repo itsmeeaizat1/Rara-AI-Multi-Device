@@ -45,9 +45,6 @@ async function handler(m, { sock }) {
     
     toxicWords.push(word)
     db.setGroup(m.chat, { toxicWords })
-    
-    m.react('✅')
-    
     await m.reply(
         `✅ *ᴋᴀᴛᴀ ᴛᴏxɪᴄ ᴅɪᴛᴀᴍʙᴀʜ*\n\n` +
         `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +

@@ -135,7 +135,6 @@ async function handler(m, { sock }) {
     await m.react(activity.emoji);
   } catch (e) {
     console.error("[rpgkencan] Error:", e.message);
-    try { await m.react("❌"); } catch {}
   }
 }
 

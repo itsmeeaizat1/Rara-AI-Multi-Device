@@ -85,9 +85,6 @@ const usernames = [
 async function handler(m, { sock }) {
   const query =
     m.text?.trim() || usernames[Math.floor(Math.random() * usernames.length)];
-
-  m.react("🕒");
-
   try {
     const { data } = await f(
       `https://api.neoxr.eu/api/asupan?username=${query}&apikey=${config.APIkey.neoxr}`,
@@ -98,9 +95,6 @@ async function handler(m, { sock }) {
     }
 
     const video = data;
-
-    m.react("🐣");
-
     const videoUrl = video.video.url;
 
     await sock.sendMedia(m.chat, videoUrl, `${video.caption}`, m, {

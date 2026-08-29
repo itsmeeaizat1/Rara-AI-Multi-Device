@@ -163,7 +163,6 @@ export default {
         `│ Fitur Split Bill & Patungan dinyalakan.`,
         `│ Ketik *${prefix}ptg <total> | <orang> | <keterangan>*`,
       ].join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -180,7 +179,6 @@ export default {
         `│ Fitur Patungan dimatikan.`,
         `│ Ketik *${prefix}ptgon* untuk aktifkan lagi.`,
       ].join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -205,7 +203,6 @@ export default {
       });
 
       await m.reply(claraWrap("Patungan - Riwayat", lines.join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -237,7 +234,6 @@ export default {
       });
 
       await m.reply(claraWrap("Patungan - Daftar Aktif", lines.join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -310,8 +306,6 @@ export default {
           tipText(`${prefix}ptg close ${bill.shortId} untuk tutup (owner)`);
         await m.reply(text);
       }
-
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -381,7 +375,6 @@ export default {
       }
 
       await m.reply(claraWrap("Patungan - Bayar", lines.join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -457,7 +450,6 @@ export default {
         text: claraWrap("Patungan - Lunas (Owner)", lines.join("\n")),
         mentions: mentionedJids,
       });
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -501,7 +493,6 @@ export default {
       ];
 
       await m.reply(claraWrap("Patungan - Tutup", lines.join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -557,7 +548,6 @@ export default {
         ``,
         `│ Ketik *${prefix}ptg bayar ${billId}* untuk tandai bayar`,
       ].join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -568,7 +558,6 @@ export default {
         "Sistem Split Bill & Patungan Pintar Grup",
         `${prefix}ptg 150000 | 5 | Makan Warkop\n${prefix}ptg 300000 | @Budi @Siti | Sewa Villa\n${prefix}ptg list\n${prefix}ptg status PTG3A2\n${prefix}ptg bayar PTG3A2\n${prefix}ptg lunas PTG3A2 @tag\n${prefix}ptg close PTG3A2\n${prefix}ptghistory`
       ));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -608,9 +597,6 @@ export default {
       await m.reply(novaError("Patungan", "Total terlalu besar! Maksimal Rp999.999.999.999"));
       return { handled: true };
     }
-
-    await m.react("🕒");
-
     // Parse people: could be a number or @tags
     let members = [];
     let isNumericCount = false;
@@ -634,7 +620,6 @@ export default {
       const count = parseInt(peopleStr.replace(/[^0-9]/g, ""), 10);
       if (!count || count < 1 || count > 100) {
         await m.reply(novaError("Patungan", `Jumlah orang tidak valid: *${peopleStr}*. Gunakan angka (1-100) atau tag @anggota`));
-        await m.react("❌");
         return { handled: true };
       }
       isNumericCount = true;
@@ -737,7 +722,6 @@ export default {
         text,
         mentions: unpaidJids,
       });
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -746,7 +730,6 @@ export default {
       tipText(`${prefix}ptg status ${billId} untuk cek siapa belum bayar`);
 
     await m.reply(text);
-    await m.react("🐣");
     return { handled: true };
   },
 };

@@ -61,9 +61,6 @@ async function handler(m, { sock }) {
     if (!query) {
         return m.reply(`📸 *ᴛɪᴋᴛᴏᴋ ꜰᴏᴛᴏ ꜱᴇᴀʀᴄʜ*\n\nContoh:\n\`${m.prefix}tiktokfoto cosplay\``)
     }
-
-    m.react('🕐')
-
     try {
         const result = await fetchTiktokFoto(query)
         const post = result.results[0]
@@ -151,8 +148,6 @@ async function handler(m, { sock }) {
                 await sock.sendMessage(m.chat, content, { quoted: m })
             }
         }
-
-        m.react('✅')
     } catch (error) {
         console.log(error)
         m.reply(claraWrap("tiktokfoto", te(m.prefix, m.command, m.pushName), "error"))

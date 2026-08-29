@@ -31,9 +31,6 @@ async function handler(m, { sock }) {
   if (!arg || !validTypes.includes(arg)) {
     return m.reply( novaGuide("Pap", "Pilih tipe pap: cewe, cowo, atau femboy", ".pap cewe"), { commandName: "pap" });
   }
-
-  await m.react("🕒");
-
   try {
     const query = arg;
     
@@ -129,9 +126,6 @@ async function handler(m, { sock }) {
     await sock.relayMessage(m.chat, msg.message, {
       messageId: msg.key.id,
     });
-
-    await m.react("🐣");
-
   } catch (error) {
     console.error("[PAP Search]", error.message);
     m.reply(novaError("Pap", "Gagal load PAP nih, server lagi bermasalah"));

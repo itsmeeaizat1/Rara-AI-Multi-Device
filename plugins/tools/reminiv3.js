@@ -33,9 +33,6 @@ async function handler(m, { sock, args }) {
     txt += `3. \`${m.prefix}reminiv3 enhance\` (enhance + upscale)`;
     return await m.reply( txt, { commandName: "reminiv3" });
   }
-
-  await m.react("🕒");
-
   try {
     const buffer = m.quoted?.isMedia
       ? await m.quoted.download()
@@ -80,9 +77,6 @@ async function handler(m, { sock, args }) {
     }
 
     const resultBuffer = Buffer.from(res.data);
-
-    await m.react("🐣");
-
     let caption = `HD V3 - Done\n`;
     caption += `Engine: Pollinations AI (flux)\n`;
     caption += `Source: image.pollinations.ai\n`;

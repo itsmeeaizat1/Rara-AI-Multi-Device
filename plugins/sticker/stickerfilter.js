@@ -46,9 +46,6 @@ async function handler(m, { sock }) {
   if (!m.quoted || !m.quoted.sticker) {
     return m.reply(novaNoQuoted("Sticker Filter", "sticker"));
   }
-
-  await m.react("🕒");
-
   try {
     const stickerBuffer = await m.quoted.download();
     if (!stickerBuffer || stickerBuffer.length < 100) {
@@ -72,10 +69,8 @@ async function handler(m, { sock }) {
 
     const exifBuf = await addExifToWebp(buf, "Nova AI", "Sticker Filter");
     await sock.sendMessage(m.chat, { sticker: exifBuf }, { quoted: m });
-    await m.react("🐣");
   } catch (err) {
     console.error("[StickerFilter] Error:", err.message);
-    await m.react("❌");
     return m.reply(te(m.prefix, m.command, m.pushName), "stickerfilter");
   }
 }

@@ -26,14 +26,10 @@ async function handler(m, { sock }) {
         if (!url || !url.includes("spotify.com")) {
             return m.reply(novaGuide('Spotify v2', 'Kirim link Spotify track yang mau kamu intip detailnya ya!', pluginConfig.example))
         }
-
-        await m.react("🕒")
-
         const spotify = spotifyUrlInfo("https://open.spotify.com")
         const data = await spotify.getData(url)
 
         if (!data) {
-            await m.react("🐣")
             return m.reply(novaEmpty('Spotify v2', 'Gak dapet info track-nya nih 🧐 Pastiin link Spotify valid ya!'))
         }
 
@@ -72,18 +68,14 @@ async function handler(m, { sock }) {
                     image: { url: cover },
                     caption: text
                 }, { quoted: m })
-                await m.react("🐣")
                 return
             } catch {
                 // Fallback ke text saja
             }
         }
-
-        await m.react("🐣")
         return m.reply(text)
     } catch (e) {
         console.error("[spotifyv2] error:", e.message)
-        await m.react("🐣")
         return m.reply(novaError('Spotify v2', e.message))
     }
 }

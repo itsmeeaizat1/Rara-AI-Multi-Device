@@ -21,9 +21,6 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   if (!m.fullArgs) { const __navText = `Silahkan masukkan prompt.\n💡 *Contoh:* ${m.prefix + m.command} car`; return await m.reply(__navText); }
-
-  await m.react('🕐')
-
   try {
     const url = `https://api-abztech.zone.id/ai/genimg?text=${encodeURIComponent(m.fullArgs)}`
     const response = await axios.get(url, {
@@ -38,7 +35,6 @@ async function handler(m, { sock }) {
     }
 
     await sock.sendMedia(m.chat, response.data, m.fullArgs, m, { type: 'image' })
-    await m.react('✅')
   } catch (e) {
     console.error(e)
     return m.reply(claraWrap("text2img2", te(m.prefix, m.command, m.pushName), "error"))

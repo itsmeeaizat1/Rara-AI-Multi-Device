@@ -18,8 +18,6 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-    m.react('🕐')
-    
     try {
         const groupMetadata = m.groupMetadata
         const participants = m.groupMembers
@@ -27,8 +25,6 @@ async function handler(m, { sock }) {
         if (participants.length === 0) {
             return m.reply(claraWrap("cekonline", `❌ *ɢᴀɢᴀʟ*\n\nTidak bisa mendapatkan data member grup`))
         }
-        
-        await m.react("🐣");
         await m.reply(claraWrap("Cekonline", `🔍 *ᴍᴇɴᴄᴀʀɪ ᴍᴇᴍʙᴇʀ ᴏɴʟɪɴᴇ...*\n\nMenunggu response dari ${participants.length} member\nEstimasi: 5-10 detik`))
         
         const presences = {}
@@ -98,8 +94,6 @@ async function handler(m, { sock }) {
             text += `╰──────────\n\n`
             text += `🟢 Online | ⌨️ Mengetik | 🎤 Rekam Audio`
         }
-        
-        m.react('✅')
         await m.reply(text, { mentions });
         
     } catch (error) {

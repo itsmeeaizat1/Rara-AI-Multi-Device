@@ -21,15 +21,10 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-    m.react('🕐')
-    
     try {
         const code = await sock.groupInviteCode(m.chat)
         const urlGrup = `https://chat.whatsapp.com/${code}`
         { const __navText = `Link grup grup ini\n${urlGrup}`; await m.reply(__navText); }
-        
-        m.react('✅')
-        
     } catch (err) {
         m.reply(claraWrap("linkgc", te(m.prefix, m.command, m.pushName), "error"))
     }

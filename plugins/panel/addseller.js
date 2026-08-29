@@ -134,7 +134,6 @@ function handler(m, { sock }) {
         pteroConfig.sellers.push(targetUser)
         
         if (saveConfig()) {
-            m.react('✅')
             return m.reply(`✅ *ꜱᴇʟʟᴇʀ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
                 `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
                 `│ 📱 Nomor: \`${targetUser}\`\n` +
@@ -156,7 +155,6 @@ function handler(m, { sock }) {
         pteroConfig.sellers = pteroConfig.sellers.filter(s => s !== targetUser)
         
         if (saveConfig()) {
-            m.react('✅')
             return m.reply(`✅ *ꜱᴇʟʟᴇʀ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
                 `Nomor: \`${targetUser}\`\n` +
                 `Total: *${pteroConfig.sellers.length}* seller`)

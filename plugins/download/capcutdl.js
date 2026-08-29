@@ -27,9 +27,6 @@ async function handler(m, { sock }) {
     if (!url.match(/capcut\.com/i)) {
         return m.reply(novaGuide('CapCut', 'URL-nya gak valid nih! Pakai link CapCut ya.', `${m.prefix}ccdl https://www.capcut.com/t/xxx`))
     }
-
-    await m.react('🕒')
-
     try {
         const data = await capcut(url)
 

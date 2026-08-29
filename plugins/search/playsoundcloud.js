@@ -30,9 +30,6 @@ async function handler(m, { args, sock }) {
     txt += `\`${m.prefix}playsc Only We Know\``;
     return await m.reply(claraWrap("playsoundcloud", txt));
   }
-
-  await m.react("🕒");
-
   try {
     const searchResults = await scSearch(args.join(" "));
     if (!searchResults.length) {
@@ -55,8 +52,6 @@ async function handler(m, { args, sock }) {
 
     await sock.sendMedia(m.chat, downloadInfo.thumbnail || track.artwork, txt.trim(), m, { type: "image" });
     await sock.sendMedia(m.chat, downloadInfo.download_url, downloadInfo.title, m, { type: "audio" });
-
-    await m.react("🐣");
   } catch (e) {
     m.reply(novaError("PlaySoundcloud", `Gagal download lagu nih: ${e.message}`));
   }

@@ -36,9 +36,6 @@ async function handler(m, { sock }) {
         if (!isMedia) {
             return m.reply( `🖼️ *Ganti Asset*\n\nSilakan reply media (gambar/video/audio/document) dengan pesan \`${m.prefix}ganti-asset\``, "ganti-asset");
         }
-
-        m.react('🕐');
-
         let buffer;
         if (m.quoted && m.quoted.isMedia) {
             buffer = await m.quoted.download();
@@ -130,8 +127,6 @@ async function handler(m, { sock }) {
                 delete global.gantiAssetSessions[m.chat];
             }
         }, 120000);
-
-        m.react('✅');
     } catch (error) {
         await m.reply(claraWrap("ganti-asset", te(m.prefix, m.command, m.pushName), "error"));
     }
@@ -185,14 +180,10 @@ async function gantiAssetAnswerHandler(m, sock) {
     else if (isFontUpload) ext = '.ttf';
 
     const filename = selectedKey + ext;
-
-    await m.react('🕐');
-
     try {
         const newPath = await updateAssetUrl(selectedKey, session.buffer, filename);
         { const __navText = `✅ *BERHASIL*\n\nAsset *${selectedKey}* telah diganti ke:\n${newPath}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); };
         delete global.gantiAssetSessions[m.chat];
-        await m.react('✅');
     } catch (e) {
         await m.reply(claraWrap("ganti-asset", `❌ Gagal mengganti asset: ${e.message}`));
     }

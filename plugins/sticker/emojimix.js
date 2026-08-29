@@ -72,9 +72,6 @@ async function handler(m, { sock }) {
     
     const emoji1 = emojis[0]
     const emoji2 = emojis[1]
-    
-    m.react('🕐')
-    
     try {
         // Cari URL dari Google Emoji Kitchen (tanpa API key)
         const imageUrl = getEmojiKitchenUrl(emoji1, emoji2);
@@ -104,9 +101,6 @@ async function handler(m, { sock }) {
             packname: config.sticker.packname,
             author: config.sticker.author
         })
-        
-        m.react('✅')
-        
     } catch (err) {
         console.error('[emojimix] Error:', err.message);
         m.reply(claraWrap("Emojimix", te(m.prefix, m.command, m.pushName), "error"))

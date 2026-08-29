@@ -51,8 +51,6 @@ async function handler(m, { sock }) {
   await db.save();
 
   // Reaksi loading
-  await m.react("🐣");
-
   let txt = "╭──「 Batal Daftar 」\n";
   txt += "│\n";
   txt += "│ ✅ Data pendaftaran berhasil dihapus\n";

@@ -95,13 +95,11 @@ async function searchAnime(m, sock, query) {
           image: buf,
           caption: txt,
         }, { quoted: m });
-        await m.react("🐣");
         return;
       }
     } catch (e) { /* fall through to text */ }
   }
   await m.reply(claraWrap("animesearch", txt));
-  await m.react("🐣");
 }
 
 async function searchManga(m, sock, query) {
@@ -147,13 +145,11 @@ async function searchManga(m, sock, query) {
           image: buf,
           caption: txt,
         }, { quoted: m });
-        await m.react("🐣");
         return;
       }
     } catch (e) { /* fall through */ }
   }
   await m.reply(claraWrap("animesearch", txt));
-  await m.react("🐣");
 }
 
 async function searchCharacter(m, sock, query) {
@@ -190,13 +186,11 @@ async function searchCharacter(m, sock, query) {
           image: buf,
           caption: txt,
         }, { quoted: m });
-        await m.react("🐣");
         return;
       }
     } catch (e) { /* fall through */ }
   }
   await m.reply(claraWrap("animesearch", txt));
-  await m.react("🐣");
 }
 
 async function handler(m, { sock, args }) {
@@ -218,9 +212,6 @@ async function handler(m, { sock, args }) {
     txt += `Alias: .mal, .carianime, .animefind`;
     return await m.reply( txt, { commandName: "animesearch" });
   }
-
-  await m.react("🕒");
-
   try {
     if (type === "anime" || type === "a") {
       await searchAnime(m, sock, query);

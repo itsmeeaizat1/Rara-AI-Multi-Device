@@ -60,8 +60,6 @@ async function handler(m, { sock }) {
   if (!mediaMessage) {
     return m.reply(claraWrap("Converter", `❌ Reply file yang mau diconvert!`));
   }
-
-  m.react("🕒");
   await m.reply(claraWrap("Converter", `🕕 *MENGUNDUH ғILE...*`));
 
   try {
@@ -113,8 +111,6 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
-
-    m.react("🐣");
   } catch (err) {
     console.error("[Converter] Error:", err.message);
     return m.reply(claraWrap("converter", te(m.prefix, m.command, m.pushName), "error"));

@@ -41,7 +41,6 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply(novaGuide("Facebook V2", "Masukkan URL video Facebook yang mau diunduh!", `${m.prefix}facebookv2 https://www.facebook.com/watch?v=xxx`));
   }
-  m.react("🕒");
   try {
     const res = await rlGet(`${API_BASE}/download/facebook?apikey=${API_KEY}&url=${encodeURIComponent(text)}`);
     const r = res.data?.result || res.data?.data;
@@ -67,7 +66,6 @@ async function handler(m, { sock }) {
         video: { url: videoUrl },
         caption,
     }, { quoted: m });
-    m.react("🐣");
   } catch (e) {
     console.error("[FBV2]", e.message);
     m.reply(novaError("Facebook V2", `Gagal mengunduh video Facebook — ${e.message || 'terjadi kesalahan'}`));

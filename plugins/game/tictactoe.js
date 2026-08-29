@@ -74,7 +74,6 @@ async function handler(m, { sock, config, db }) {
     if (games.has(m.chat)) {
       const existing = games.get(m.chat);
       if (!existing.ended) {
-        await m.react("🐣");
         return m.reply(claraWrap("Tic Tac Toe", [
           "Masih ada game yang sedang berlangsung!",
           `Pemain: ${existing.p1Name} (❌) vs ${existing.p2Name} (⭕)`,
@@ -89,7 +88,6 @@ async function handler(m, { sock, config, db }) {
     if (m.text?.toLowerCase().includes("end")) {
       if (games.has(m.chat)) {
         games.delete(m.chat);
-        await m.react("🐣");
         return m.reply(claraWrap("Tic Tac Toe", "Game diakhiri."));
       }
     }
@@ -127,9 +125,6 @@ async function handler(m, { sock, config, db }) {
         games.delete(m.chat);
       }
     }, 300000);
-
-    await m.react("🐣");
-
     const turnName = p1Sym === "X" ? p1Name : p2Name;
     return m.reply(claraWrap("Tic Tac Toe", [
       `${p1Name} (${p1Sym === "X" ? "❌" : "⭕"}) vs ${p2Name} (${p2Sym === "X" ? "❌" : "⭕"})`,
@@ -141,7 +136,6 @@ async function handler(m, { sock, config, db }) {
     ]));
   } catch (e) {
     console.error("[tictactoe] error:", e.message);
-    await m.react("❌");
     return m.reply(te(m.prefix, m.command, m.pushName), "tictactoe");
   }
 }

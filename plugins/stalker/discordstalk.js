@@ -37,9 +37,6 @@ async function handler(m, { sock }) {
   if (!/^\d+$/.test(userId)) {
     return m.reply(claraWrap("discordstalk", `❌ User ID harus berupa angka. Contoh: 297574907510784000`));
   }
-
-  m.react("🕒");
-
   try {
     const res = await axios.get(
       `https://api.neoxr.eu/api/dcstalk?id=${userId}&apikey=${NEOXR_APIKEY}`,
@@ -66,9 +63,6 @@ async function handler(m, { sock }) {
       `🆔 *ᴜꜱᴇʀ ɪᴅ:* ${d.id}\n\n` +
       `📅 *ᴅɪʙᴜᴀᴛ:* ${createdDate}\n\n` +
       `_Discord User Lookup_`;
-
-    m.react("🐣");
-
     if (d.avatar_url) {
       await sock.sendMessage(
         m.chat,

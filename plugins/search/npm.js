@@ -28,9 +28,6 @@ async function handler(m, { sock }) {
         `\`${m.prefix}npm axios\``,
     );
   }
-
-  await m.react("🕒");
-
   try {
     const res = await fetch(
       `https://registry.npmjs.com/-/v1/search?text=${encodeURIComponent(query)}&size=10`,
@@ -62,8 +59,6 @@ async function handler(m, { sock }) {
       }
       text += `⭐ Score: ${score}%`;
     });
-
-    await m.react("🐣");
     await m.reply(claraWrap("npm", text));
   } catch (e) {
     m.reply(claraWrap("npm", te(m.prefix, m.command, m.pushName), "error"));

@@ -246,9 +246,6 @@ async function handler(m, { sock }) {
   const input = m.text?.trim().toLowerCase() || "";
   const position = POSITIONS[input] ? input : null;
   const apiKey = config.ai?.clipdropApiKey || config.clipdropApiKey || "";
-
-  m.react("🕒");
-
   try {
     const imageBuffer = await qmsg.download();
     if (!imageBuffer) {
@@ -298,9 +295,6 @@ async function handler(m, { sock }) {
     if (!resultBuffer) {
       return m.reply(claraWrap("Watermark Remover", "Gagal memproses gambar. Coba gambar lain."));
     }
-
-    m.react("🐣");
-
     await sock.sendMessage(
       m.chat,
       {
@@ -317,7 +311,6 @@ async function handler(m, { sock }) {
       { quoted: m },
     );
   } catch (e) {
-    m.react("❌");
     m.reply(claraWrap("Watermark Remover", "Gagal: " + e.message));
   }
 }

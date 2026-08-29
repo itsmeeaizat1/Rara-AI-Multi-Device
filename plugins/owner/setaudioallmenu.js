@@ -36,11 +36,8 @@ async function handler(m, { sock }) {
     if (isNaN(newStyle) || newStyle < 1 || newStyle > 4) {
         return m.reply(claraWrap("setaudioallmenu", `❌ *GAGAL*\n\nPilihan varian audio harus berupa angka 1 sampai 4.\n💡 *Contoh:* *${m.prefix}setaudioallmenu 2*`));
     }
-
-    await m.react("🕒");
     db.setting("allmenuAudioStyle", newStyle);
     await m.reply(claraWrap("Setaudioallmenu", `✅ *BERHASIL*\n\nGaya audio All Menu telah sukses diubah menjadi *Varian ${newStyle}*. Silakan tes dengan mengetik *${m.prefix}allmenu*.`));
-    await m.react("🐣");
 }
 
 export { pluginConfig as config, handler };

@@ -26,9 +26,6 @@ async function handler(m, { sock }) {
     if (!username) {
         { const __navText = `📺 *ʏᴏᴜᴛᴜʙᴇ ꜱᴛᴀʟᴋ*\n\nMasukkan username YouTube\n\n\`Contoh: ${m.prefix}ytstalk mrbeast\``; return await m.reply( __navText, "ytstalk"); }
     }
-    
-    m.react('🕐')
-    
     try {
         const res = await axios.get(`https://firefly.maiku.my.id/api/stalk-youtube?apikey=${config.APIkey.firefly}&username=${encodeURIComponent(username)}`, {
             timeout: 30000
@@ -48,9 +45,6 @@ async function handler(m, { sock }) {
             `🎬 *ᴛᴏᴛᴀʟ ᴠɪᴅᴇᴏ:* ${c.video_count}\n\n` +
             `📝 *ᴅᴇꜱᴋʀɪᴘꜱɪ:*\n${c.about || '-'}\n\n` +
             `🔗 ${c.url}`
-            
-        m.react('✅')
-        
         await sock.sendMessage(m.chat, {
             image: { url: c.thumbnail },
             caption

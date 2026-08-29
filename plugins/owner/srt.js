@@ -65,15 +65,12 @@ async function handler(m, { sock, args }) {
             const count = global.srtSession[m.chat].count;
             delete global.srtSession[m.chat];
             const totalImages = countShuffleImages();
-            await m.react("🐣");
             await m.reply(claraWrap("Srt", `✅ *SESI TANGKAPAN GAMBAR SELESAI*\n\nSesi telah dihentikan dan seluruh gambar telah diproses.\n- Total gambar baru yang ditambahkan: *${count}*\n- Total keseluruhan gambar di sistem: *${totalImages}*`));
         } 
         else if (action === 'list') {
             if (!fs.existsSync(SHUFFLE_DIR)) return m.reply('❌ Belum ada satu pun gambar yang tersimpan di dalam direktori *shuffle*. Silakan lakukan penangkapan gambar terlebih dahulu.');
             const files = fs.readdirSync(SHUFFLE_DIR).filter(f => f.endsWith('.jpg') || f.endsWith('.png') || f.endsWith('.jpeg'));
             if (files.length === 0) return m.reply(claraWrap("Srt", '❌ Direktori *shuffle* masih kosong. Silakan gunakan perintah tangkapan gambar untuk mulai menambahkan.'));
-            
-            await m.react("🕒");
             try {
                 const opener = generateWAMessageFromContent(
                     m.chat,
@@ -141,7 +138,6 @@ async function srtAnswerHandler(m, sock) {
     if (!isImage) return false;
 
     try {
-        await m.react('🕐');
         let buffer;
         if (m.quoted && m.quoted.isImage) {
             buffer = await m.quoted.download();
@@ -165,7 +161,6 @@ async function srtAnswerHandler(m, sock) {
                 { const __navText = claraWrap("GAMBAR BERHASIL DISIMPAN", `✅ *GAMBAR BERHASIL DISIMPAN*\n\nGambar telah diamankan ke dalam penyimpanan lokal bot.\n- Total gambar ditambahkan pada sesi ini: *${session.count}*`); await m.reply(__navText); };
             }
         }
-        await m.react('✅');
         return true;
     } catch (e) {
         await m.reply('❌ Terjadi kesalahan fatal saat mencoba mengunduh dan menyimpan gambar tersebut.');

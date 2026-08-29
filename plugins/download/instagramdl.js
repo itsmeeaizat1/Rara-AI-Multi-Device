@@ -29,9 +29,6 @@ async function handler(m, { sock }) {
   if (!IG_REGEX.test(url)) {
     return m.reply(novaGuide("Instagram DL", "URL-nya gak valid nih! Gunakan link Instagram (reel/post/story).", `${m.prefix}igdl https://www.instagram.com/reel/xxx`));
   }
-
-  await m.react("🕒");
-
   try {
     const result = await instagramDownloader(url);
 
@@ -68,8 +65,6 @@ async function handler(m, { sock }) {
       }
       caption = "";
     }
-
-    await m.react("🐣");
   } catch (err) {
     return m.reply(novaError("Instagram DL", `Gagal mengunduh media Instagram: ${err.message}`));
   }

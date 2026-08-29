@@ -25,9 +25,6 @@ async function handler(m, { sock }) {
   if (!text) {
     { const __navText = "❌ Masukkan teks yang ingin disempurnakan.\n\n💡 *Contoh:* `.quilbot Saya sedang makan nasi di rumah`"; return await m.reply(__navText, "quilbot"); };
   }
-
-  await m.react("🕒");
-
   try {
     const apiUrl = `https://api.nexray.eu.cc/ai/quillbot?text=${encodeURIComponent(text)}`;
     const res = await axios.get(apiUrl, {
@@ -43,8 +40,6 @@ async function handler(m, { sock }) {
     }
 
     await m.reply(data.result);
-    await m.react("🐣");
-
   } catch (error) {
     console.error("[Quillbot]", error.message);
     m.reply(claraWrap("quilbot", "😔 Terjadi kesalahan saat memproses teks ke Quillbot."));

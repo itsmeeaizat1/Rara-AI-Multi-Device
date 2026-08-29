@@ -26,9 +26,6 @@ async function handler(m, { sock }) {
     if (!isImage) {
         { const __navText = claraWrap("Mekah sTyle", `🕋 *ᴍᴇᴋᴀʜ ꜱᴛʏʟᴇ*\n\nKirim/reply gambar\n\n\`${m.prefix}tomekah\``); return await m.reply(__navText, "tomekah"); }
     }
-    
-    m.react('🕐')
-    
     try {
         let buffer
         if (m.quoted && m.quoted.isMedia) {
@@ -45,9 +42,6 @@ async function handler(m, { sock }) {
         
         const url = `https://api-faa.my.id/faa/tomekah?url=${encodeURIComponent(imageUrl)}`
         const res = await f(url, 'arrayBuffer')
-        
-        m.react('✅')
-        
         await sock.sendMedia(m.chat, Buffer.from(res), null, m, {
             type: 'image',
         })

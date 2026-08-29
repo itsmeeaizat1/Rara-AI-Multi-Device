@@ -77,7 +77,6 @@ async function handler(m, { sock }) {
     }
     
     if (deleted) {
-        await m.react('✅')
         await m.reply(
             `✅ *STICKER COMMAND DIHAPUS*\n\n` +
             `🗑️ \`${deletedCmd}\` telah dihapus.`

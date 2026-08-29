@@ -373,7 +373,6 @@ export default {
         `│ Fitur Smart Agenda dinyalakan.`,
         `│ Ketik *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
       ].join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -391,7 +390,6 @@ export default {
         `│ Fitur Agenda dimatikan.`,
         `│ Ketik *${prefix}agendaon* untuk aktifkan lagi.`,
       ].join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -417,7 +415,6 @@ export default {
       });
 
       await m.reply(claraWrap("Agenda - Riwayat", lines.join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -464,7 +461,6 @@ export default {
       lines.push(`│ Ketik *${prefix}agenda status <id>* untuk detail.`);
 
       await m.reply(claraWrap("Agenda - Daftar Aktif", lines.join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -523,7 +519,6 @@ export default {
         tipText(`${prefix}agenda hapus ${event.shortId} untuk hapus (owner)`);
 
       await m.reply(text);
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -563,12 +558,10 @@ export default {
           `│ ✅ Acara *${event.shortId}* dihapus.`,
           `│ ${event.name}`,
         ].join("\n")));
-        await m.react("🐣");
       } else {
         await m.reply(claraWrap("Agenda", [
           `│ Gagal hapus acara nih`,
         ].join("\n")));
-        await m.react("❌");
       }
       return { handled: true };
     }
@@ -605,7 +598,6 @@ export default {
         `│ 📌 Auto-reminder: H-1 hari & H-1 jam`,
         `│ 📌 Auto-ping semua member saat waktunya tiba`,
       ].join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -676,9 +668,6 @@ export default {
       ].join("\n")));
       return { handled: true };
     }
-
-    await m.react("🕒");
-
     const eventId = genId();
     const dateStr = new Date().toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
 
@@ -721,7 +710,6 @@ export default {
       tipText(`${prefix}agenda status ${eventId} untuk cek countdown`);
 
     await m.reply(text);
-    await m.react("🐣");
     return { handled: true };
   },
 };

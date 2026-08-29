@@ -120,9 +120,6 @@ async function handler(m, { sock }) {
             `1. Kirim sticker + caption \`${m.prefix}tovideo\`\n` +
             `2. Reply sticker dengan \`${m.prefix}tovideo\``, "tovideo")
     }
-
-    await m.react('🕐')
-
     try {
         const buffer = await downloadFn()
 
@@ -139,7 +136,6 @@ async function handler(m, { sock }) {
                 image: pngBuffer,
                 caption: `✅ *ʙᴇʀʜᴀꜱɪʟ*\n\nSticker statis → gambar`
             }, { quoted: m })
-            await m.react('✅')
             return
         }
         const gifBuffer = await webpToGif(buffer)
@@ -156,8 +152,6 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, mp4Buffer, null, m, {
             type: 'video'
         })
-        await m.react('✅')
-
     } catch (error) {
         console.error('[ToVideo] Error:', error.message)
         m.reply(claraWrap("tovideo", te(m.prefix, m.command, m.pushName), "error"))

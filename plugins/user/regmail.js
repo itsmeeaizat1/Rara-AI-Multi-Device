@@ -145,9 +145,6 @@ async function handler(m, { args, sock }) {
       return await m.reply(novaError("RegMail", "Email ini sudah terdaftar! Pakai email lain ya"));
     }
   }
-
-  await m.react("🕒");
-
   try {
     const botName = config.bot?.name || "Nova AI";
     const session = createOtpSession(m.sender, name, email);
@@ -163,7 +160,6 @@ async function handler(m, { args, sock }) {
     txt += `Contoh: \`${m.prefix}verotp 123456\``;
 
     await m.reply( txt, { commandName: "regmail" });
-    await m.react("🐣");
   } catch (e) {
     console.error("[Regmail] Error:", e.message);
     clearOtpSession(m.sender);

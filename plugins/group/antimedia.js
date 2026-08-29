@@ -57,7 +57,6 @@ async function handler(m, { sock }) {
 
   if (action === "on") {
     db.setGroup(m.chat, { antimedia: true });
-    m.react("🐣");
     { const __navText = `✅ *ᴀɴᴛɪᴍᴇᴅɪᴀ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`; await m.reply(__navText); };
     return;
   }

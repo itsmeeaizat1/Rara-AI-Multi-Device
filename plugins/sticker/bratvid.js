@@ -29,9 +29,6 @@ async function handler(m, { sock }) {
     if (!text) {
         { const __navText = `🎬 *ʙʀᴀᴛ ᴀɴɪᴍᴀᴛᴇᴅ*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratvid Hai semua\``; return await m.reply( __navText, "bratvid"); }
     }
-    
-    m.react('🕐')
-    
     try {
         const tempFile = path.join(os.tmpdir(), `brat-${Date.now()}.webp`)
         const url = await bratVid(text, {
@@ -43,7 +40,6 @@ async function handler(m, { sock }) {
             author: config.sticker.author
         })
         await fs.promises.unlink(tempFile)
-        m.react('✅')
     } catch (error) {
         m.reply(claraWrap("bratvid", te(m.prefix, m.command, m.pushName), "error"))
     }

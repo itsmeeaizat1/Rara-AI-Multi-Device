@@ -25,9 +25,6 @@ async function handler(m, { sock }) {
   if (!uid) {
     return m.reply(claraWrap("ffstalk", "❌ *Waduh, ID Free Fire-nya belum dimasukkan!*\n\nKamu harus mengetikkan UID pemain Free Fire yang ingin di-stalk. \n\n💡 *Contoh:* `.ffstalk 470699855`"));
   }
-
-  await m.react("🕒");
-
   try {
     const res = await axios.get(`https://api.nexray.eu.cc/stalker/freefire?uid=${uid}`, {
       timeout: 30000,
@@ -91,9 +88,6 @@ async function handler(m, { sock }) {
     } else {
       await m.reply(caption);
     }
-
-    await m.react("🐣");
-
   } catch (error) {
     console.error("[FFStalk]", error.message);
     m.reply(claraWrap("ffstalk", "😔 *ᴛᴇʀᴊᴀᴅɪ ᴍᴀꜱᴀʟᴀʜ ᴅɪ ꜱɪꜱᴛᴇᴍ ᴋᴀᴍɪ.* \n\nSistem gagal menarik data dari server Free Fire. Silakan coba beberapa saat lagi ya."));

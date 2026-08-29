@@ -29,17 +29,12 @@ async function handler(m, { sock }) {
         `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}kobo-ai Kobo lagi apa?*`, "kobo-ai");
   }
-
-  await m.react("🕒");
-
   try {
     const result = await UnlimitedAI(text, "kobo-ai");
 
     if (!result.status) {
       { const __navText = `❌ *ᴋᴏʙᴏ ᴀɪ ᴇʀʀᴏʀ*\n\n${result.error || "Gagal dapet respons nih"}`; return await m.reply(__navText); };
     }
-
-    await m.react("🐣");
     const reply = result.answer;
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {

@@ -174,9 +174,6 @@ async function handler(m, { sock }) {
       await m.reply( help, { commandName: "smemev2" });
       return;
     }
-
-    await m.react("🕒");
-
     // Download media
     let mediaBuffer;
     if (m.quoted) {
@@ -222,7 +219,6 @@ async function handler(m, { sock }) {
     } catch (e) {
       console.error("[SMEMEV2] Sticker resize failed:", e.message);
       await sock.sendMessage(m.chat, { image: memeBuffer, caption: "Meme (fallback mode)" }, { quoted: m });
-      await m.react("🐣");
       return;
     }
 
@@ -231,8 +227,6 @@ async function handler(m, { sock }) {
       packname: config.sticker?.packname || "Nova-AI",
       author: config.sticker?.author || "Bot",
     });
-
-    await m.react("🐣");
   } catch (error) {
     console.error("[SMEMEV2] Error:", error.message);
     await m.reply(claraWrap("smemev2", te(m.prefix, m.command, m.pushName), "error"));

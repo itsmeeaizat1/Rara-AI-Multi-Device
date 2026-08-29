@@ -152,7 +152,6 @@ async function handler(m, { sock }) {
     const result = scanUrl(url);
 
     if (result.error) {
-      await m.react("❌");
       return m.reply(claraWrap("Link Scanner", "Error: " + result.error));
     }
 
@@ -192,7 +191,6 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Link Scanner", lines));
   } catch (e) {
     console.error("[Link Scanner]", e);
-    await m.react("❌");
     return m.reply(claraWrap("Link Scanner", "Error: " + e.message));
   }
 }

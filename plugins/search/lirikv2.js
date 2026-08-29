@@ -63,9 +63,6 @@ async function handler(m, { sock }) {
         if (!query) {
             return m.reply(novaGuide('Lirik v2', 'Mau nyari lirik lagu? Ketik judulnya ya!', pluginConfig.example))
         }
-
-        await m.react("🕒")
-
         let result = null
         let source = ""
 
@@ -88,7 +85,6 @@ async function handler(m, { sock }) {
         }
 
         if (!result) {
-            await m.react("🐣")
             return m.reply(novaEmpty('Lirik v2', `Gak nemu lagu "${query}" 🧐`))
         }
 
@@ -114,18 +110,14 @@ async function handler(m, { sock }) {
                     image: { url: result.thumbnail },
                     caption: text
                 }, { quoted: m })
-                await m.react("🐣")
                 return
             } catch {
                 // Fallback ke text
             }
         }
-
-        await m.react("🐣")
         return m.reply(text)
     } catch (e) {
         console.error("[lirikv2] error:", e.message)
-        await m.react("🐣")
         return m.reply(novaError('Lirik v2', e.message))
     }
 }

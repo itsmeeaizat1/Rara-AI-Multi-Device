@@ -39,8 +39,6 @@ async function handler(m, { sock }) {
             `Nama: *${result.nama}*\n\n` +
             `${result.arti}\n\n` +
             `_${result.catatan}_`
-        
-        m.react('✅')
         await m.reply(response)
         
     } catch (error) {

@@ -591,9 +591,6 @@ async function handler(m, { sock }) {
   if (!media || media.length === 0) {
     return m.reply(claraWrap("Tourl", "❌ Waduh kak, medianya nggak kebaca. Coba kirim ulang deh!"));
   }
-
-  await m.react("🕒");
-
   const results = [];
   const failed = [];
 
@@ -690,8 +687,6 @@ async function handler(m, { sock }) {
   } catch (err) {
     await m.reply(claraWrap("tourl", text));
   }
-
-  await m.react("🐣");
 }
 
 export { pluginConfig as config, handler };

@@ -46,8 +46,6 @@ async function handler(m, { sock }) {
         if (r.total > 10) {
             response += `_...dan ${r.total - 10} hasil lainnya_`
         }
-        
-        m.react('✅')
         await m.reply(response)
         
     } catch (error) {

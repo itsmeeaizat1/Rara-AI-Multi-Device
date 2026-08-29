@@ -33,9 +33,6 @@ async function handler(m, { sock, args }) {
     txt += `_OpenAlex: 250M+ paper, free, no API key_`;
     return await m.reply( txt, { commandName: "carijurnal" });
   }
-
-  await m.react("🕒");
-
   try {
     let limit = 5;
     const lastArg = parseInt(args[args.length - 1]);
@@ -101,7 +98,6 @@ async function handler(m, { sock, args }) {
     txt += `_Sortir by cited count | OpenAlex API_`;
 
     await m.reply(txt);
-    await m.react("🐣");
   } catch (e) {
     console.error("[CARIJURNAL] Error:", e.message);
     await m.reply(novaError("CariJurnal", `Gagal cari jurnal nih: ${e.message}`));

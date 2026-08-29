@@ -84,8 +84,6 @@ async function handler(m, { sock }) {
       if (!result.success) {
         return m.reply(claraWrap("autoreport", `❌ ${toSC(result.error || "Gagal mengaktifkan")}`));
       }
-
-      await m.react("🐣");
       return m.reply(
         bracketBox("✅", toSC("Auto Report Diaktifkan"), [
           `${toSC("Jadwal")}: ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")} WIB`,
@@ -99,7 +97,6 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableAutoReport();
-      await m.react("🐣");
       return m.reply(claraWrap("autoreport", toSC("Auto Report dinonaktifkan")));
     }
 
@@ -121,13 +118,10 @@ async function handler(m, { sock }) {
     case "now":
     case "manual":
     case "trigger": {
-      await m.react("🕒");
       try {
         await triggerManualReport(sock);
-        await m.react("🐣");
         return m.reply(claraWrap("autoreport", toSC("Report harian dikirim ke owner!")));
       } catch (error) {
-        await m.react("❌");
         return m.reply(claraWrap("autoreport", te(m.prefix, m.command, m.pushName), "error"));
       }
     }

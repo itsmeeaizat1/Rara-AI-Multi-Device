@@ -35,8 +35,6 @@ async function handler(m, { sock, args, config: botConfig }) {
         `${prefix}skripsiku ide Manajemen Pemasaran`,
       ].join("\n")), { commandName: "skripsiku" });
     }
-
-    await m.react("🕒");
     try {
       const prompt = `Kamu adalah dosen pembimbing skripsi berpengalaman di Indonesia. 
 Generate 7 ide judul skripsi untuk bidang: "${input}".
@@ -70,8 +68,6 @@ Kriteria:
         `${prefix}skripsiku outline pengaruh media sosial terhadap minat belajar`,
       ].join("\n")), { commandName: "skripsiku" });
     }
-
-    await m.react("🕒");
     try {
       const prompt = `Buat outline skripsi lengkap (Bab 1-5) untuk topik: "${input}".
 
@@ -100,8 +96,6 @@ Sesuaikan dengan standar skripsi Indonesia. Bab 3 harus sesuai jenis penelitian 
         `${prefix}skripsiku review <tempel paragraf>`,
       ].join("\n")), { commandName: "skripsiku" });
     }
-
-    await m.react("🕒");
     try {
       const prompt = `Review paragraf skripsi berikut. Beri penilaian dan saran perbaikan.
 
@@ -132,8 +126,6 @@ Format:
         `${prefix}skripsiku referensi deep learning`,
       ].join("\n")), { commandName: "skripsiku" });
     }
-
-    await m.react("🕒");
     try {
       const prompt = `Beri 7 saran referensi (jurnal, buku, atau website) untuk topik: "${input}".
 

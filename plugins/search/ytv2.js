@@ -26,9 +26,6 @@ async function handler(m, { sock }) {
         if (!query) {
             return m.reply(novaGuide('YouTube v2', 'Mau nyari video YouTube apa nih? Ketik judul atau kata kuncinya ya!', pluginConfig.example))
         }
-
-        await m.react("🕒")
-
         const yt = await Innertube.create()
         const search = await yt.search(query)
 
@@ -37,7 +34,6 @@ async function handler(m, { sock }) {
             .slice(0, 5)
 
         if (!videos.length) {
-            await m.react("🐣")
             return m.reply(novaEmpty('YouTube v2', `Gak nemu hasil buat "${query}" 🧐`))
         }
 
@@ -70,18 +66,14 @@ async function handler(m, { sock }) {
                     image: { url: thumb },
                     caption: text
                 }, { quoted: m })
-                await m.react("🐣")
                 return
             } catch {
                 // Fallback ke text
             }
         }
-
-        await m.react("🐣")
         return m.reply(text)
     } catch (e) {
         console.error("[ytv2] error:", e.message)
-        await m.react("🐣")
         return m.reply(novaError('YouTube v2', e.message))
     }
 }

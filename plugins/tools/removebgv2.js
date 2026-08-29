@@ -41,9 +41,6 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "removebgv2");
       return { handled: true };
     }
-
-    await m.react("🕒");
-
     // Download gambar
     let mediaBuffer;
     if (m.isImage && m.download) {
@@ -107,9 +104,6 @@ async function handler(m, { sock, config: botConfig }) {
     const resultSize = resultBuffer.length;
     const resultMB = resultSize / 1024 / 1024;
     const useDoc = wantDoc || resultMB > 5;
-
-    await m.react("🐣");
-
     // Kirim hasil
     if (useDoc) {
       await sock.sendMessage(m.chat, {

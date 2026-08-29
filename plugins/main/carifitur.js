@@ -150,7 +150,6 @@ async function handler(m, { sock }) {
       `\`${m.prefix}carifitur download\`\n` +
       `\`${m.prefix}carifitur game\``, "carifitur");
   }
-  m.react("🕒");
   try {
     const allPlugins = await loadAllPlugins();
     const matches = [];
@@ -229,7 +228,6 @@ async function handler(m, { sock }) {
       description: `${p.category} • ${p.description.slice(0, 40)}`,
       id: `${m.prefix}${p.name}`,
     }));
-    m.react("🐣");
     await sock.sendButton(
       m.chat,
       getAssetBuffer("nova"),

@@ -24,8 +24,6 @@ const API_BASE = sankaConfig.baseUrl;
 const API_KEY = sankaConfig.apikey;
 
 async function handler(m, { sock }) {
-  await m.react("🕒");
-
   try {
     const url = `${API_BASE}/anime/quote?apikey=${API_KEY}`;
 
@@ -69,7 +67,6 @@ async function handler(m, { sock }) {
             image: buf,
             caption: txt,
           }, { quoted: m });
-          await m.react("🐣");
           return;
         }
       } catch (e) { /* fall through to text */ }
@@ -77,7 +74,6 @@ async function handler(m, { sock }) {
 
     // Tanpa image, kirim text saja
     await m.reply( txt, { commandName: "quoteanimesanka" });
-    await m.react("🐣");
   } catch (e) {
     console.error("[QUOTEANIMESANKA] Error:", e.message);
     let txt = `Gagal mengambil quote anime!\n\n`;

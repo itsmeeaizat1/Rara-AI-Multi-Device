@@ -39,7 +39,6 @@ ${prefix}aihelp sticker
 ${prefix}aihelp group
 
 ╰──────────`);
-      await m.react("🐣");
       return;
     }
 
@@ -65,7 +64,6 @@ ${prefix}aihelp group
 │ 💡 Coba keyword lain ya!
 │ Contoh: download, sticker, game, rpg
 ╰──────────`);
-      await m.react("❌");
       return;
     }
 
@@ -81,11 +79,9 @@ ${prefix}aihelp group
 ${cmdLines}╰──────────`;
 
     await m.reply(text);
-    await m.react("🐣");
   } catch (e) {
     console.error("[aihelp] handler error:", e.message);
     try { await m.reply("╭──「 AI Help 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────"); } catch {}
-    await m.react("❌");
   }
 }
 

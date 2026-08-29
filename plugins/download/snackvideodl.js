@@ -28,9 +28,6 @@ async function handler(m, { sock }) {
     if (!url.match(/snackvideo\.com/i)) {
         return m.reply(novaGuide("SnackVideo", "URL-nya gak valid nih! Pastikan dari SnackVideo ya.", `${m.prefix}svdl https://www.snackvideo.com/@xxx/video/xxx`))
     }
-    
-    await m.react('🕐')
-    
     try {
         const data = await snackvideo(url)
         

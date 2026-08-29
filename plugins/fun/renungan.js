@@ -82,7 +82,6 @@ export async function handler(m, { sock }) {
   } catch (e) {
     console.error("[renungan] Error:", e.message);
     try {
-      await m.react("❌");
       await m.reply("╭──「 Renungan 」\n│ Yah, ada error nih 😵\n│ Coba lagi beberapa detik ya\n╰──────────");
     } catch {}
   }

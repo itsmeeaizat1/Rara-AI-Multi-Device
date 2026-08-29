@@ -139,7 +139,6 @@ async function handler(m, { sock, config, db }) {
     if (activeTrivia.has(m.chat)) {
       const existing = activeTrivia.get(m.chat);
       if (Date.now() - existing.startTime < 60000) {
-        await m.react("🐣");
         return m.reply(claraWrap("Trivia Quiz", [
           "Masih ada soal yang belum dijawab!",
           "",
@@ -149,9 +148,6 @@ async function handler(m, { sock, config, db }) {
         ]));
       }
     }
-
-    await m.react("🕒");
-
     let quiz = null;
     let source = "";
 
@@ -174,7 +170,6 @@ async function handler(m, { sock, config, db }) {
     }
 
     if (!quiz) {
-      await m.react("🐣");
       return m.reply(novaError("Trivia", "Gagal ambil soal nih, coba lagi ya"));
     }
 
@@ -209,12 +204,9 @@ async function handler(m, { sock, config, db }) {
       text += `${letters[i]}. ${opt}\n`;
     });
     text += `\nBalas dengan A/B/C/D atau "${m.prefix}trivia skip" untuk lewati`;
-
-    await m.react("🐣");
     return m.reply(claraWrap("Trivia Quiz", text));
   } catch (e) {
     console.error("[trivia] error:", e.message);
-    await m.react("❌");
     return m.reply(te(m.prefix, m.command, m.pushName), "trivia");
   }
 }

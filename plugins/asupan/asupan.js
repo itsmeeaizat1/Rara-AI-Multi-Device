@@ -39,8 +39,6 @@ function loadJsonData() {
 }
 
 async function handler(m, { sock }) {
-    m.react('🕒')
-    
     try {
         const urls = loadJsonData()
         
@@ -51,9 +49,6 @@ async function handler(m, { sock }) {
         const url = urls[Math.floor(Math.random() * urls.length)]
         
         const res = await f(url, 'arrayBuffer')
-        
-        m.react('🐣')
-        
         const caption = mediaCaption({
             platformIcon: '🌸',
             platformName: 'Asupan',

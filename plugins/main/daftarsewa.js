@@ -154,9 +154,6 @@ async function handler(m, { sock }) {
         return m.reply("Format durasi salah!\n\n" +
           "Pilihan: 30i, 12h, 7d, 1m, 1y, lifetime");
       }
-
-      await m.react("🕒");
-
       try {
         const inviteCode = linkInput.split("chat.whatsapp.com/")[1]?.split(/[\s?]/)[0];
         let groupName = "Unknown";
@@ -214,8 +211,6 @@ async function handler(m, { sock }) {
         db.db.write();
 
         regSessions.delete(sender);
-        await m.react("🐣");
-
         // Reply to registrant with their data
         const expiredPreview = formatDuration(durationStr);
         let replyText = "PENDAFTARAN SEWA BERHASIL\n\n";
@@ -269,7 +264,6 @@ async function handler(m, { sock }) {
         });
 
       } catch (error) {
-        await m.react("🕒");
         return m.reply(
           "Gagal mendaftar. Coba lagi atau hubungi owner.\n\n" +
           "Error: " + (error.message || "Unknown error")

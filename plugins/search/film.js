@@ -96,8 +96,6 @@ async function handler(m, { sock }) {
         footer: "🎬 Film Search",
       },
     );
-
-    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("film", te(m.prefix, m.command, m.pushName), "error"));
   }

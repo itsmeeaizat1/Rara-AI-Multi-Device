@@ -31,7 +31,6 @@ async function handler(m, { sock }) {
         await m.react("😂")
     } catch (e) {
         await m.reply(novaError('Joke', 'Gagal mengambil joke, API mungkin sedang down'))
-        await m.react("❌")
     }
 }
 

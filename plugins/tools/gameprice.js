@@ -19,8 +19,6 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
-    await m.react?.("🕒");
-
     try {
         const response = await axios.get("https://www.cheapshark.com/api/1.0/deals?storeID=1&pageSize=5", {
             timeout: 15000,
@@ -67,8 +65,6 @@ async function handler(m, { sock }) {
             }
         }
 
-        await m.react?.("🐣");
-
         if (imageBuffer) {
             await sock.sendMessage(m.chat, { image: imageBuffer, caption: boxText }, { quoted: m });
         } else if (thumbUrl) {
@@ -77,7 +73,6 @@ async function handler(m, { sock }) {
             await m.reply(boxText);
         }
     } catch (error) {
-        await m.react?.("🐣");
         const errorBox = [
             `╭──「 Error 」`,
             `│ Gagal mengambil data diskon game!`,

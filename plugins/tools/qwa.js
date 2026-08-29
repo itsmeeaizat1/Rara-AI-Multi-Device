@@ -58,7 +58,6 @@ async function handler(m, { sock }) {
         if (!textToQuote && !mainMsg.isMedia) {
             { const __navText = `❌ *ꜰᴏʀᴍᴀᴛ ꜱᴀʟᴀʜ*\n\nKirim perintah \`.qwa <teks>\` atau reply pesan orang lain dengan \`.qwa\`.`; return await m.reply( __navText, "qwa"); }
         }
-        await m.react('🕐')
         const msgTime = mainMsg.messageTimestamp ? new Date(mainMsg.messageTimestamp * 1000) : new Date()
         const timeStr = `${String(msgTime.getHours()).padStart(2, '0')}.${String(msgTime.getMinutes()).padStart(2, '0')}`
         let mainImage = null
@@ -123,8 +122,6 @@ async function handler(m, { sock }) {
             image: Buffer.from(res.data),
             caption: `✅ Berhasil membuat quote WhatsApp!`
         }, { quoted: m })
-
-        await m.react('✅')
     } catch (error) {
         console.error("Error QWA:", error)
         m.reply(claraWrap("qwa", `❌ *ɢᴀɢᴀʟ ᴍᴇᴍʙᴜᴀᴛ qᴜᴏᴛᴇ*\n\nTerjadi kesalahan atau API sedang bermasalah.`))

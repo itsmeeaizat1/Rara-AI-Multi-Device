@@ -82,11 +82,7 @@ async function handler(m, { sock, db, config: botConfig }) {
       const num = jid.split("@")[0];
       return num.slice(-4);
     });
-
-    await m.react("🕒");
     const story = await generateFanfic(names, genre);
-    await m.react("🐣");
-
     if (!story) {
       await m.reply(novaError("Fanfic", "Gagal generate nih, coba lagi ya"));
       return { handled: true };

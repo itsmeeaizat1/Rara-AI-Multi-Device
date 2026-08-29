@@ -105,9 +105,6 @@ async function handler(m, { sock }) {
     db.setUser(m.sender, { unlockedFeatures })
     
     const newKoin = db.getUser(m.sender).koin
-    
-    m.react('✅')
-    
     await m.reply(
         `✅ *ꜰɪᴛᴜʀ ᴅɪ-ᴜɴʟᴏᴄᴋ*\n\n` +
         `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +

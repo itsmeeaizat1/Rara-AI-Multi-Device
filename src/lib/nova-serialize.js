@@ -1304,7 +1304,14 @@ END:VCARD`;
    * @param {string} emoji - Emoji untuk react
    * @returns {Promise<Object>} Result
    */
+  // Track custom reactions set by plugins — handler skips 🐣 if plugin already reacted
+  m.__customReact = false;
   m.react = async (emoji) => {
+    // 🕒 and 🕐 are loading reactions from handler — don't mark as custom
+    // 🐣 and ✅ are "done" reactions — mark as custom (plugin handles its own done state)
+    if (emoji && emoji !== "🕒" && emoji !== "🕐") {
+      m.__customReact = true;
+    }
     try {
       return await sock.sendMessage(m.chat, {
         react: {

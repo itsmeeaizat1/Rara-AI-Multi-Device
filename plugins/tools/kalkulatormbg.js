@@ -98,9 +98,6 @@ async function handler(m, { sock,  args }) {
     txt += `\`${m.prefix}kkmbg 1000000000\``;
     return await m.reply(claraWrap("kalkulatormbg", txt));
   }
-
-  await m.react("🕒");
-
   try {
     const uang = Number(args[0].replace(/[^0-9]/g, ''));
     if (isNaN(uang) || uang <= 0) {
@@ -134,7 +131,6 @@ async function handler(m, { sock,  args }) {
     txt += contentTxt.trim().split("\n").map(line => line.trim() ? `${line}` : ``).join("\n");
 
     await m.reply(claraWrap("kalkulatormbg", txt));
-    await m.react("🐣");
   } catch (e) {
     m.reply(claraWrap("kalkulatormbg", `❌ Maaf kak, terjadi kesalahan saat menghitung! 😭\nError: ${e.message}`));
   }

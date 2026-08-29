@@ -91,7 +91,6 @@ async function handler(m, { sock }) {
     await m.react("💔");
   } catch (e) {
     console.error("[tolak] Error:", e.message);
-    try { await m.react("❌"); } catch {}
   }
 }
 

@@ -158,10 +158,8 @@ async function handler(m, { sock }) {
         `Masukkan nomor yang ingin dicek!\n\nContoh:\n.nokos cek 08123456789\n.nokos cek 628123456789`
       ), "nokos");
     }
-    await m.react("🕒");
     try {
       const [res] = await sock.onWhatsApp(toJID(num));
-      await m.react("🐣");
       const disp = toDisplay(num);
       const prov = providerOf(num);
       const registered = res?.exists === true;
@@ -194,7 +192,6 @@ async function handler(m, { sock }) {
     let count = parseInt(arg2) || 10;
     if (count > 30) count = 30;
     if (count < 1) count = 1;
-    await m.react("🕒");
     try {
       const nums = [];
       for (let i = 0; i < count; i++) nums.push(genNumber(prefix));
@@ -213,7 +210,6 @@ async function handler(m, { sock }) {
       } else {
         body += `Semua nomor terdaftar. Coba lagi!\n.nokos prefix ${prefix} ${count}`;
       }
-      await m.react("🐣");
       return m.reply( claraWrap("Nomor Kosong", body), "nokos");
     } catch {
       return m.reply(claraWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));
@@ -222,7 +218,6 @@ async function handler(m, { sock }) {
 
   // --- SAVE ---
   if (sub === "save") {
-    await m.react("🕒");
     try {
       const count = parseInt(arg1) || 10;
       const prov = arg2?.toLowerCase() || "all";
@@ -239,7 +234,6 @@ async function handler(m, { sock }) {
       data.numbers.push(...newNums);
       data.lastUpdate = new Date().toISOString();
       saveSaved(data);
-      await m.react("🐣");
       return m.reply( claraWrap("Nomor Kosong",
         `Hasil Save Nomor Kosong\n\nDicek: ${count} nomor\nDitemukan kosong: ${kosong.length}\nBaru disimpan: ${newNums.length}\nTotal tersimpan: ${data.numbers.length}\n\nGunakan .nokos list untuk melihat semua nomor tersimpan.`
       ), "nokos");
@@ -250,10 +244,8 @@ async function handler(m, { sock }) {
 
   // --- LIST ---
   if (sub === "list") {
-    await m.react("🕒");
     const data = loadSaved();
     if (data.numbers.length === 0) {
-      await m.react("🐣");
       return m.reply( claraWrap("Nomor Kosong",
         `Belum ada nomor kosong tersimpan.\n\nGunakan .nokos save [jumlah] [provider] untuk mulai menyimpan.`
       ), "nokos");
@@ -266,14 +258,12 @@ async function handler(m, { sock }) {
     });
     if (data.numbers.length > 30) body += `\n...dan ${data.numbers.length - 30} nomor lainnya.`;
     body += `\n\n.nokos clear untuk hapus semua\n.nokos export untuk export ke txt`;
-    await m.react("🐣");
     return m.reply( claraWrap("Nomor Kosong", body), "nokos");
   }
 
   // --- CLEAR ---
   if (sub === "clear") {
     saveSaved({ numbers: [], lastUpdate: null });
-    await m.react("🐣");
     return m.reply( claraWrap("Nomor Kosong",
       `Database nomor kosong berhasil dihapus.`
     ), "nokos");
@@ -281,10 +271,8 @@ async function handler(m, { sock }) {
 
   // --- EXPORT ---
   if (sub === "export") {
-    await m.react("🕒");
     const data = loadSaved();
     if (data.numbers.length === 0) {
-      await m.react("🐣");
       return m.reply( claraWrap("Nomor Kosong",
         `Tidak ada nomor untuk diexport.`
       ), "nokos");
@@ -300,12 +288,10 @@ async function handler(m, { sock }) {
         mimetype: "text/plain",
         fileName: `nokos_${data.numbers.length}nums_${Date.now()}.txt`,
       }, { quoted: m });
-      await m.react("🐣");
     } catch {
       let body = `Export Nomor Kosong (${data.numbers.length} nomor)\n\n`;
       body += data.numbers.map((n, i) => `${i + 1}. ${n}`).join("\n");
       body += `\n\nKirim file gagal. Copy manual di atas.`;
-      await m.react("🐣");
       return m.reply( claraWrap("Nomor Kosong", body), "nokos");
     }
     return;
@@ -332,7 +318,6 @@ async function handler(m, { sock }) {
   if (count > 30) count = 30;
   if (count < 1) count = 1;
   const prefixes = PROVIDERS[prov] || Object.values(PROVIDERS).flat();
-  await m.react("🕒");
   try {
     const nums = [];
     for (let i = 0; i < count; i++) {
@@ -356,7 +341,6 @@ async function handler(m, { sock }) {
     } else {
       body += `Semua nomor terdaftar. Coba lagi!\n.nokos ${count} ${prov}`;
     }
-    await m.react("🐣");
     return m.reply( claraWrap("Nomor Kosong", body), "nokos");
   } catch {
     return m.reply(claraWrap("nokos", te(m.prefix, m.command, m.pushName), "error"));

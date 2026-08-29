@@ -132,9 +132,6 @@ async function handler(m, { sock }) {
 
     products.push(newProduct)
     db.setting('storeProducts', products)
-
-    await m.react('✅')
-
     const typeIcon = type === 'digital' ? '🔑' : '📦'
     const typeLabel = type === 'digital' ? 'Digital' : 'Fisik'
 

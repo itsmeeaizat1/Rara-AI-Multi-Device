@@ -471,7 +471,6 @@ async function handler(m, { sock }) {
 
     if (sub === 'on') {
         db.setGroup(m.chat, { anti18plus: 'on' })
-        m.react('✅')
         return m.reply(
             '╭──「 *ANTI 18+ AKTIF* 」\n│\n' +
             '┃ Deteksi konten 18+ diaktifkan\n' +
@@ -496,7 +495,6 @@ async function handler(m, { sock }) {
         const judiOpt = args[1]?.toLowerCase()
         if (judiOpt === 'on') {
             db.setGroup(m.chat, { antijudolWarn: 'on' })
-            m.react('✅')
             return m.reply(
                 '╭──「 *ANTI JUDI AKTIF* 」\n│\n' +
                 '┃ Deteksi konten judi diaktifkan\n' +
@@ -524,7 +522,6 @@ async function handler(m, { sock }) {
             return m.reply('❌ Masukkan angka 1-10\n💡 *Contoh:* `' + m.prefix + 'anti18plus warn 5`')
         }
         db.setGroup(m.chat, { nsfwMaxWarn: count, judiMaxWarn: count })
-        m.react('✅')
         return m.reply(
             '╭──「 *MAX WARN DIUBAH* 」\n│\n' +
             '┃ Max peringatan: *' + count + 'x*\n' +
@@ -537,7 +534,6 @@ async function handler(m, { sock }) {
         const kickOpt = args[1]?.toLowerCase()
         if (kickOpt === 'on') {
             db.setGroup(m.chat, { nsfwKickMode: 'on', judiKickMode: 'on' })
-            m.react('✅')
             return m.reply(
                 '╭──「 *AUTO-KICK ON* 」\n│\n' +
                 '┃ Auto-kick diaktifkan\n' +
@@ -547,7 +543,6 @@ async function handler(m, { sock }) {
         }
         if (kickOpt === 'off') {
             db.setGroup(m.chat, { nsfwKickMode: 'off', judiKickMode: 'off' })
-            m.react('✅')
             return m.reply(
                 '╭──「 *AUTO-KICK OFF* 」\n│\n' +
                 '┃ Auto-kick dimatikan\n' +
@@ -563,7 +558,6 @@ async function handler(m, { sock }) {
         const delOpt = args[1]?.toLowerCase()
         if (delOpt === 'on') {
             db.setGroup(m.chat, { nsfwDeleteMode: 'on', judiDeleteMode: 'on' })
-            m.react('✅')
             return m.reply(
                 '╭──「 *AUTO-DELETE ON* 」\n│\n' +
                 '┃ Pesan yang terdeteksi 18+/judi akan auto-delete\n' +
@@ -572,7 +566,6 @@ async function handler(m, { sock }) {
         }
         if (delOpt === 'off') {
             db.setGroup(m.chat, { nsfwDeleteMode: 'off', judiDeleteMode: 'off' })
-            m.react('✅')
             return m.reply(
                 '╭──「 *AUTO-DELETE OFF* 」\n│\n' +
                 '┃ Pesan tidak akan dihapus\n' +
@@ -595,7 +588,6 @@ async function handler(m, { sock }) {
         db.setGroup(m.chat, updated)
 
         const targetTag = target.split('@')[0]
-        m.react('✅')
         return m.reply(
             '╭──「 *WARN DIRESET* 」\n│\n' +
             '┃ 👤 User: @' + targetTag + '\n' +
@@ -611,7 +603,6 @@ async function handler(m, { sock }) {
         updated.nsfwWarns = {}
         updated.judiWarns = {}
         db.setGroup(m.chat, updated)
-        m.react('✅')
         return m.reply(
             '╭──「 *SEMUA WARN DIRESET* 」\n│\n' +
             '┃ Semua warn 18+ dan judi di-reset\n' +

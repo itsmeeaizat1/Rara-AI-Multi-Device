@@ -301,9 +301,6 @@ async function handler(m, { sock, config: botConfig, db }) {
       }
       return m.reply(bracketBox("i", "Nova AI", [`Tidak ada sesi aktif`]));
     }
-
-    await m.react("🕒");
-
     // Build messages dengan history sesi
     const key = sessionKey(m);
     const history = getSession(key);
@@ -331,9 +328,6 @@ async function handler(m, { sock, config: botConfig, db }) {
 
     // Parse AI response untuk [ACTION] marker
     const { text: visibleText, action } = parseAIResponse(reply);
-
-    await m.react("🐣");
-
     // Kirim balasan teks AI dulu
     const finalReply = visibleText.length > 4096 ? visibleText.slice(0, 4096) + "..." : visibleText;
     if (finalReply) {
@@ -353,7 +347,6 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
   } catch (e) {
     console.error("[nova-ai] error:", e.message);
-    await m.react("❌");
     m.reply(te(prefix, m.command, m.pushName), "nova-ai");
   }
 }

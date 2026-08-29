@@ -78,8 +78,6 @@ async function handler(m, { sock }) {
       if (!result.success) {
         return m.reply(claraWrap("autorefill", `❌ ${toSC(result.error)}`));
       }
-
-      await m.react("🐣");
       return m.reply(
         bracketBox("✅", toSC("Auto Refill Diaktifkan"), [
           `${toSC("Jadwal")}: ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")} WIB`,
@@ -93,7 +91,6 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableRefill();
-      await m.react("🐣");
       return m.reply(claraWrap("autorefill", toSC("Auto Refill dinonaktifkan")));
     }
 
@@ -115,13 +112,10 @@ async function handler(m, { sock }) {
     case "now":
     case "manual":
     case "trigger": {
-      await m.react("🕒");
       try {
         await triggerManualRefill(sock);
-        await m.react("🐣");
         return m.reply(claraWrap("autorefill", toSC("Refill dijalankan! Energi semua user sudah di-reset + notif dikirim.")));
       } catch (error) {
-        await m.react("❌");
         return m.reply(claraWrap("autorefill", te(m.prefix, m.command, m.pushName), "error"));
       }
     }

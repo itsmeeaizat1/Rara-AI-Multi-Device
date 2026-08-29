@@ -20,9 +20,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
     const buffer = await m.download();
     if (!buffer) throw new Error("Gagal download audio nih");
-    await m.react("🕒");
     // Use free transcription API
-    await m.react("🐣");
     await m.reply(claraWrap("AI Voice Note", ["│ Audio diterima", "│ Transcribe membutuhkan API key AssemblyAI",
       "│ Fitur ini butuh konfigurasi tambahan"].join("\n")));
   } catch (e) {

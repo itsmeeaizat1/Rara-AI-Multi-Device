@@ -209,9 +209,6 @@ async function handler(m, { sock, args }) {
     txt += `_Otomatis ambil metadata dari halaman web_`;
     return await m.reply( txt, { commandName: "sitasi" });
   }
-
-  await m.react("🕒");
-
   try {
     let targetStyle = STYLES.includes(style) ? style : "apa";
     let isURL = false;
@@ -256,7 +253,6 @@ async function handler(m, { sock, args }) {
     txt += `\n_Salin sitasi di atas ke daftar pustaka_`;
 
     await m.reply(txt);
-    await m.react("🐣");
   } catch (e) {
     console.error("[SITASI] Error:", e.message);
     await m.reply(novaError("Sitasi", `Gagal bikin sitasi nih: ${e.message}`));

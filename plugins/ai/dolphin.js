@@ -83,15 +83,9 @@ async function handler(m, { sock }) {
     if (!text) {
         return m.reply(claraWrap("Dolphin", `❌ Masukkan pertanyaan!`))
     }
-    
-    await m.react('🕐')
-    
     try {
         const result = await dolphinAI(text, template)
         await m.reply(result)
-        
-        await m.react('✅')
-        
     } catch (error) {
         m.reply(claraWrap("dolphin", te(m.prefix, m.command, m.pushName), "error"))
     }

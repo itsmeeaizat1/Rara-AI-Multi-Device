@@ -34,7 +34,6 @@ async function handler(m, { sock, db }) {
             }
             db.setting('audioMenu', true)
             await db.save()
-            await m.react('✅')
             return m.reply(`✅ Audio menu *ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*!\n\nSekarang ketika ada yang ketik \`.menu\`, audio akan muncul.`)
         }
 
@@ -44,7 +43,6 @@ async function handler(m, { sock, db }) {
             }
             db.setting('audioMenu', false)
             await db.save()
-            await m.react('✅')
             return m.reply(`❌ Audio menu *ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*!\n\nSekarang \`.menu\` tidak akan ada audio.`)
         }
 

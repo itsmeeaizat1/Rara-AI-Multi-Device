@@ -30,9 +30,6 @@ async function handler(m, { args, sock }) {
     txt += `👉 \`${m.prefix}izen https://sfl.gl/xxxxx\``;
     return await m.reply(claraWrap("izen", txt));
   }
-
-  await m.react("🕒");
-  
   try {
     const res = await fetch(`https://anabot.my.id/api/tools/izenLOL?url=${encodeURIComponent(args[0])}&apikey=${config.APIkey.anabot || 'freeApikey'}`);
     const json = await res.json();
@@ -49,7 +46,6 @@ async function handler(m, { args, sock }) {
     ]);
     
     await m.reply(claraWrap("izen", txt));
-    await m.react("🐣");
   } catch (e) {
     m.reply(claraWrap("izen", `❌ Maaf kak, terjadi kesalahan sistem! 😭\nError: ${e.message}`));
   }

@@ -27,9 +27,6 @@ async function handler(m, { sock }) {
   if (!url || !url.includes("an1.com")) {
     return m.reply(novaError("Android1Get", "URL gak valid nih! Harus dari an1.com"));
   }
-
-  m.react("🕒");
-
   try {
     const { data } = await axios.get(
       `https://api.neoxr.eu/api/an1-get?url=${encodeURIComponent(url)}&apikey=${NEOXR_APIKEY}`,
@@ -59,8 +56,6 @@ async function handler(m, { sock }) {
         },
         { quoted: m },
       );
-
-      m.react("🐣");
     } else {
       let caption = `⚠️ Download URL tidak tersedia`;
 

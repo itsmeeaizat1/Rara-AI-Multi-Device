@@ -41,9 +41,6 @@ async function handler(m, { sock }) {
             forward: m.quoted.fakeObj || m.quoted,
             mentions: users
         })
-        
-        m.react('✅')
-        
     } catch (err) {
         m.reply(novaError("Totag", `Gagal melakukan totag: ${err.message || "terjadi kesalahan"}`))
     }

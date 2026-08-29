@@ -34,9 +34,6 @@ async function handler(m, { sock }) {
             `\`${m.prefix}chord perjalanan terindah\``
         )
     }
-    
-    m.react('🕐')
-    
     try {
         const { data } = await axios.get(`https://api.neoxr.eu/api/chord?q=${encodeURIComponent(text)}&apikey=${NEOXR_APIKEY}`, {
             timeout: 30000
@@ -50,8 +47,6 @@ async function handler(m, { sock }) {
 
         const caption = `${chord}`
         await m.reply(claraWrap("chords", caption))
-        m.react('✅')
-        
     } catch (err) {
         return m.reply(claraWrap("chords", te(m.prefix, m.command, m.pushName), "error"))
     }

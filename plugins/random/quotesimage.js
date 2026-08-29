@@ -23,8 +23,6 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-    m.react('🕐')
-    
     try {
         const res = await f(`https://api.neoxr.eu/api/quotesimage?apikey=${NEOXR_APIKEY}`)
         
@@ -35,9 +33,6 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, res.data.url, null, m, {
             type: 'image'
         })
-        
-        m.react('✅')
-        
     } catch (err) {
         return m.reply(claraWrap("quotesimage", te(m.prefix, m.command, m.pushName), "error"))
     }

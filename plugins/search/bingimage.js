@@ -27,9 +27,6 @@ async function handler(m, { sock }) {
     if (!query) {
       return m.reply( claraWrap("Bingimage", `❌ *Masukkan kata kunci pencarian!*\n\n💡 *Contoh:* ${m.prefix}carigambar rem`), { commandName: "bingimage" });
     }
-
-    await m.react("🕒");
-
     const apikey = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
     const data = await novaApi.apiFaa.get(
       "/faa/google-image",

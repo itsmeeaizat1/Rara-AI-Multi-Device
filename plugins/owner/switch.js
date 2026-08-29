@@ -383,7 +383,6 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
 
   if (forceOff) {
     db.setGroup(m.chat, { [feature.dbKey]: feature.off })
-    if (typeof m.react === 'function') { try { await m.react('🐣'); } catch {} }
     return m.reply(`╭──「 *${toSC('SWITCH GROUP')}* 」\n│ 🔴 ${toSC(feature.label)}: OFF\n╰──────────`)
   }
 
@@ -394,8 +393,6 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
     update[feature.extraKey] = mode
 
   db.setGroup(m.chat, update)
-  if (typeof m.react === 'function') { try { await m.react('🐣'); } catch {} }
-
   let txt = `╭──「 *${toSC('SWITCH GROUP')}* 」\n│ 🟢 ${toSC(feature.label)}: ON`
   if (feature.modes) {
     const newMode = mode && feature.modes.includes(mode) ? mode : (groupData[feature.modeKey] || feature.modes[0])
@@ -455,7 +452,6 @@ async function handleAuto(m, { sock, config: cfg, autoKey }) {
   const enable = action === 'on'
   try {
     reg.toggle(enable)
-    if (typeof m.react === 'function') { try { await m.react('🐣'); } catch {} }
     return m.reply(`╭──「 *${toSC('SWITCH AUTO')}* 」\n│ ${enable ? "🟢" : "🔴"} ${toSC(reg.label)}: ${enable ? "ON" : "OFF"}\n╰──────────`)
   } catch (e) {
     return m.reply(`╭──「 *${toSC('SWITCH AUTO')}* 」\n│ ❌ ${e.message || e}\n╰──────────`)

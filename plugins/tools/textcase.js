@@ -68,7 +68,6 @@ async function handler(m, { sock, config: botConfig }) {
         const result = v.fn(inputText);
         lines.push(v.desc + ": " + (result.length > 60 ? result.substring(0, 60) + "..." : result));
       }
-      await m.react("🐣");
       return m.reply(claraWrap("Text Case (All Modes)", lines.join("\n")));
     }
 
@@ -77,8 +76,6 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const result = MODES[mode].fn(inputText);
-
-    await m.react("🐣");
     return m.reply(claraWrap("Text Case Convert", [
       "Mode: " + MODES[mode].desc,
       "Input: " + (inputText.length > 60 ? inputText.substring(0, 60) + "..." : inputText),

@@ -44,13 +44,7 @@ async function handler(m, { sock }) {
         if (!buffer) {
             return m.reply(claraWrap("to3d", `❌ Gagal mendownload gambar`))
         }
-        
-        await m.react('🕐')
-        
         const result = await live3d(buffer, PROMPT)
-        
-        m.react('✅')
-        
         await sock.sendMedia(m.chat, result.image, null, m, {
             type: 'image'
         })

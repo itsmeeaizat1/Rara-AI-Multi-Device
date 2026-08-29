@@ -46,7 +46,6 @@ async function handler(m, { sock }) {
 
     try {
         await sock.chatModify({ mute: mute ? 1 : null }, targetJid)
-        await m.react('✅')
         const target = targetJid.split('@')[0]
         return m.reply(mute
                 ? `🔇 *Chat Dimute*\n\nTarget: ${target}`

@@ -75,7 +75,6 @@ function getThumb() {
 
 async function handler(m, { sock, db }) {
   try {
-    await m.react("🕒");
     const prefix = config.command?.prefix || ".";
     const args = m.args || [];
     const categoryArg = args[0]?.toLowerCase();
@@ -168,9 +167,6 @@ async function handler(m, { sock, db }) {
         { id: `${prefix}info`, text: toSC("Info") },
         { id: `${prefix}owner`, text: toSC("Owner") },
       ];
-
-      await m.react("🐣");
-
       await sendMenuCard(sock, m, {
         text: txt,
         footer: "",
@@ -190,7 +186,6 @@ async function handler(m, { sock, db }) {
       await m.reply(
         `╭──「 *Error* 」\n│ Kategori \`${categoryArg}\` tidak ditemukan\n│ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰──────────`
       );
-      await m.react("❌");
       return;
     }
 
@@ -201,7 +196,6 @@ async function handler(m, { sock, db }) {
       await m.reply(
         `╭──「 *${toSC("Akses Ditolak")}* 」\n│ ${toSC("Kategori ini hanya untuk owner")}\n╰──────────`
       );
-      await m.react("❌");
       return;
     }
 
@@ -213,7 +207,6 @@ async function handler(m, { sock, db }) {
       await m.reply(
         `╭──「 *Kosong* 」\n│ Kategori \`${matchedCat}\` tidak ada command\n╰──────────`
       );
-      await m.react("❌");
       return;
     }
 
@@ -258,9 +251,6 @@ async function handler(m, { sock, db }) {
       { id: `${prefix}info`, text: toSC("Info") },
       { id: `${prefix}owner`, text: toSC("Owner") },
     ];
-
-    await m.react("🐣");
-
     await sendMenuCard(sock, m, {
       text: txt,
       footer: "",
@@ -271,7 +261,6 @@ async function handler(m, { sock, db }) {
   } catch (e) {
     console.error("[allmenucategory] handler error:", e.message);
     try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ❌ ${toSC("Gagal menampilkan kategori")}\n│ ${toSC("Coba lagi nanti")}\n╰──────────`); } catch {}
-    await m.react("❌");
   }
 }
 

@@ -84,9 +84,6 @@ async function handler(m, { sock }) {
   if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
     return m.reply("URL harus YouTube");
   }
-
-  m.react("🕒");
-
   try {
     let audioResult = null;
 
@@ -132,7 +129,6 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
-    m.react("🐣");
   } catch (err) {
     console.error("[PlayAudio]", err);
     m.reply(

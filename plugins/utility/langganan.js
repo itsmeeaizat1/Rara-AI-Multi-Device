@@ -168,8 +168,6 @@ async function handler(m, { sock, config: botConfig }) {
 
       subs.push(sub);
       saveSubs(db, sender, subs);
-
-      await m.react("🐣");
       return m.reply(claraWrap("Langganan",
         "Langganan ditambahkan!\n" +
         "Nama: *" + name + "*\n" +
@@ -270,7 +268,6 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       saveSubs(db, sender, subs);
-      await m.react("🐣");
       return m.reply(claraWrap("Langganan", "Langganan *" + sub.name + "* diperbarui!\nField: " + field + " -> " + value));
     }
 
@@ -290,8 +287,6 @@ async function handler(m, { sock, config: botConfig }) {
       const removed = subs[idx];
       subs.splice(idx, 1);
       saveSubs(db, sender, subs);
-
-      await m.react("🐣");
       return m.reply(claraWrap("Langganan", "Langganan *" + removed.name + "* (`" + subId + "`) dihapus"));
     }
 
@@ -324,8 +319,6 @@ async function handler(m, { sock, config: botConfig }) {
       sub.paid = false;
 
       saveSubs(db, sender, subs);
-
-      await m.react("🐣");
       return m.reply(claraWrap("Langganan",
         "Pembayaran tercatat!\n" +
         "Nama: *" + sub.name + "*\n" +

@@ -99,8 +99,6 @@ async function handler(m, { sock, config: botConfig }) {
       if (!result) {
         return m.reply(claraWrap("Morse", "Tidak bisa decode. Pastikan format morse valid."));
       }
-
-      await m.react("🐣");
       return m.reply(claraWrap("Morse Decode", [
         "Input: " + (morse.length > 60 ? morse.substring(0, 60) + "..." : morse),
         "Hasil: " + result,
@@ -110,8 +108,6 @@ async function handler(m, { sock, config: botConfig }) {
       if (!result) {
         return m.reply(claraWrap("Morse", "Tidak ada karakter yg bisa di-encode!"));
       }
-
-      await m.react("🐣");
       return m.reply(claraWrap("Morse Encode", [
         "Input: " + (text.length > 60 ? text.substring(0, 60) + "..." : text),
         "Hasil: " + result,

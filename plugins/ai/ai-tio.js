@@ -312,7 +312,6 @@ async function handler(m, { sock, config: botConfig }) {
       : fmt.endpoint;
 
     // Call AI
-    m.react("🕒");
     const reply = await callAI({
       providerKey: fmt.providerKey,
       model: model,
@@ -337,7 +336,6 @@ async function handler(m, { sock, config: botConfig }) {
     );
 
     await m.reply(text);
-    m.react("🐣");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

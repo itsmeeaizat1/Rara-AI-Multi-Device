@@ -78,9 +78,6 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}comicsanka berwarna 1\``;
     return await m.reply( txt, { commandName: "comicsanka" });
   }
-
-  await m.react("🕒");
-
   try {
     // === SEARCH ===
     if (cmd === "search" || cmd === "cari" || cmd === "s") {
@@ -103,7 +100,6 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     // === DETAIL ===
@@ -143,13 +139,11 @@ async function handler(m, { sock, args }) {
           if (imgRes.status === 200) {
             const buf = Buffer.from(imgRes.data);
             await sock.sendMessage(m.chat, { image: buf, caption: txt }, { quoted: m });
-            await m.react("🐣");
             return;
           }
         } catch (e) { console.error('[comicsanka.js]:', e.message); }
       }
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     // === CHAPTER (baca) ===
@@ -184,7 +178,6 @@ async function handler(m, { sock, args }) {
       if (images.length > 10) {
         await m.reply(`Tersisa ${images.length - 10} halaman lagi. Ketik \`${m.prefix}comicsanka chapter ${slug} 11\` untuk lanjut (soon).`);
       }
-      await m.react("🐣");
     }
 
     // === TERBARU ===
@@ -207,7 +200,6 @@ async function handler(m, { sock, args }) {
       }
       txt += `Halaman ${page} | Next: \`${m.prefix}comicsanka terbaru ${page + 1}\``;
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     // === POPULER ===
@@ -227,7 +219,6 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     // === TRENDING ===
@@ -246,7 +237,6 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     // === RANDOM ===
@@ -270,13 +260,11 @@ async function handler(m, { sock, args }) {
           if (imgRes.status === 200) {
             const buf = Buffer.from(imgRes.data);
             await sock.sendMessage(m.chat, { image: buf, caption: txt }, { quoted: m });
-            await m.react("🐣");
             return;
           }
         } catch (e) { console.error('[comicsanka.js]:', e.message); }
       }
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     // === RECOMMENDATIONS ===
@@ -296,7 +284,6 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     // === HOMEPAGE ===
@@ -334,7 +321,6 @@ async function handler(m, { sock, args }) {
       }
 
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     // === GENRES (list) ===
@@ -355,7 +341,6 @@ async function handler(m, { sock, args }) {
       }
       if (genres.length > 30) txt += `\n...dan ${genres.length - 30} genre lainnya.`;
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     // === GENRE (by name) ===
@@ -377,7 +362,6 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     // === TYPE (manga/manhwa/manhua) ===
@@ -403,7 +387,6 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     // === BERWARNA ===
@@ -425,7 +408,6 @@ async function handler(m, { sock, args }) {
       }
       txt += `Halaman ${page} | Next: \`${m.prefix}comicsanka berwarna ${page + 1}\``;
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     // === PUSTAKA ===
@@ -449,7 +431,6 @@ async function handler(m, { sock, args }) {
       }
       txt += `Halaman ${page} | Next: \`${m.prefix}comicsanka pustaka ${page + 1}\``;
       await m.reply(claraWrap("comicsanka", txt));
-      await m.react("🐣");
     }
 
     else {

@@ -106,9 +106,6 @@ async function handler(m, { sock }) {
             `_Hasil pencarian akan menampilkan film yang paling relevan dengan judul yang kamu cari_`
         )
     }
-
-    m.react("🕒")
-
     try {
         const movies = await searchMovies(query)
 
@@ -146,9 +143,6 @@ async function handler(m, { sock }) {
         txt += formatDownloads(detail.downloads)
 
         txt += `🔗 ${movie.post_link}`
-
-        m.react("🐣")
-
         const poster = detail.poster || movie.post_image
         if (poster) {
             await sock.sendMessage(m.chat, {

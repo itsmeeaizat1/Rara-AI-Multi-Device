@@ -28,9 +28,6 @@ async function handler(m, { sock }) {
         if (participants.length === 0) {
             return m.reply(claraWrap("Addpremall", `❌ *Gagal*\n\nTidak ada member di grup ini`))
         }
-        
-        await m.react('🕐')
-        
         const db = getDatabase()
         if (!db.data.premium) db.data.premium = []
         

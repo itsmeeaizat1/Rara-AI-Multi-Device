@@ -97,7 +97,6 @@ function getBackupOutputDir(projectRoot) {
 }
 
 async function handler(m, { sock }) {
-  await m.react("🕒");
   try {
     const projectRoot = process.cwd();
     const timestamp = moment().tz("Asia/Jakarta").format("YYYY-MM-DD_HH-mm-ss");
@@ -206,9 +205,6 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
-
-    await m.react("🐣");
-
     try {
       fs.unlinkSync(zipFilePath);
     } catch (e) { console.error('[backupsc.js]:', e.message); }

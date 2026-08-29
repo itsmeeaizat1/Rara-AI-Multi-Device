@@ -110,9 +110,6 @@ async function handler(m, { sock }) {
         if (validNumbers.length === 0) {
             return m.reply(claraWrap("Add", `❌ *ɢᴀɢᴀʟ*\n\nSemua nomor sudah ada di grup!`))
         }
-        
-        m.react('🕐')
-        
         const results = await sock.groupParticipantsUpdate(targetGroup, validNumbers, 'add')
         
         let successList = []

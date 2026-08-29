@@ -167,7 +167,6 @@ async function handler(m, { sock }) {
     const result = analyzeEmail(email);
 
     if (!result.valid) {
-      await m.react("❌");
       return m.reply(claraWrap("Email Guard", [
         "Email: " + email,
         "Status: *ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*",
@@ -217,7 +216,6 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Email Guard", lines));
   } catch (e) {
     console.error("[Email Guard]", e);
-    await m.react("❌");
     return m.reply(claraWrap("Email Guard", "Error: " + e.message));
   }
 }

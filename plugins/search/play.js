@@ -205,9 +205,6 @@ async function handler(m, { sock, text }) {
       ].join("\n")),
     );
   }
-
-  m.react("🕒");
-
   try {
     const search = await yts(query);
     if (!search.videos.length) throw "Video tidak ditemukan";
@@ -216,8 +213,6 @@ async function handler(m, { sock, text }) {
 
     // Tampilkan info + tombol pilihan audio/video
     await sendChoiceButtons(sock, m, video);
-
-    m.react("🐣");
   } catch (err) {
     console.error("[Play]", err);
     m.reply(

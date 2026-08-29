@@ -209,7 +209,6 @@ async function handler(m, { sock }) {
 
     // Sub-command: list
     if (subCmd === 'list') {
-        await m.react('🕐')
         try {
             const { sftp, cfg } = await getSFTPClient()
             const remotePath = cfg.remotePath || '/'
@@ -218,7 +217,6 @@ async function handler(m, { sock }) {
 
             if (list.length === 0) {
                 await sftp.end()
-                await m.react('✅')
                 return m.reply(claraWrap("Upload SFTP",
                     "*ꜱꜰᴛᴘ ꜰɪʟᴇꜱ*\n\nFolder `" + remotePath + "` kosong."
                 ))
@@ -232,7 +230,6 @@ async function handler(m, { sock }) {
             })
 
             await sftp.end()
-            await m.react('✅')
             return m.reply(claraWrap("Upload SFTP", body))
         } catch (err) {
             return m.reply(claraWrap("Upload SFTP", "GAGAL\n\n" + err.message))
@@ -247,7 +244,6 @@ async function handler(m, { sock }) {
                 "*ᴄʀᴇᴀᴛᴇ ʀᴇᴍᴏᴛᴇ ᴅɪʀᴇᴄᴛᴏʀʏ*\n\nUsage: `.uploadsftp mkdir /path/to/dir`"
             ))
         }
-        await m.react('🕐')
         try {
             const { sftp, cfg } = await getSFTPClient()
             const basePath = cfg.remotePath || ''
@@ -256,7 +252,6 @@ async function handler(m, { sock }) {
             await ensureRemoteDir(sftp, fullPath)
 
             await sftp.end()
-            await m.react('✅')
             return m.reply(claraWrap("Upload SFTP",
                 "BERHASIL\n\nDirectory dibuat: `" + fullPath + "`"
             ))
@@ -273,7 +268,6 @@ async function handler(m, { sock }) {
                 "*ᴅᴇʟᴇᴛᴇ ʀᴇᴍᴏᴛᴇ ꜰɪʟᴇ*\n\nUsage: `.uploadsftp delete <filename>`"
             ))
         }
-        await m.react('🕐')
         try {
             const { sftp, cfg } = await getSFTPClient()
             const basePath = cfg.remotePath || ''
@@ -282,7 +276,6 @@ async function handler(m, { sock }) {
             await sftp.delete(fullPath)
 
             await sftp.end()
-            await m.react('✅')
             return m.reply(claraWrap("Upload SFTP",
                 "BERHASIL\n\nFile `" + fileName + "` dihapus."
             ))
@@ -305,9 +298,6 @@ async function handler(m, { sock }) {
             "│ `" + m.prefix + "uploadsftp mkdir <path>` - Buat folder remote\n" +
             "│ `" + m.prefix + "uploadsftp delete <name>` - Hapus file remote", "uploadsftp")
     }
-
-    await m.react('🕐')
-
     try {
         const downloadFn = m.quoted ? m.quoted.download : m.download
         const buffer = await downloadFn()
@@ -345,9 +335,6 @@ async function handler(m, { sock }) {
 
         // Cleanup local temp
         try { fs.unlinkSync(filePath) } catch (e) { console.error('[uploadsftp.js]:', e.message); }
-
-        await m.react('✅')
-
         let body = "BERHASIL UPLOAD\n\n"
         body += "*ꜱꜰᴛᴘ ᴜᴘʟᴏᴀᴅ*\n\n"
         body += "Nama: " + fileName + "\n"

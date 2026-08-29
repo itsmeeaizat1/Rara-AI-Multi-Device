@@ -16,7 +16,6 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     await sock.readMessages([m.key]);
-    await m.react("🐣");
     return m.reply(claraWrap("Baca", "📖 *Pesan ditandai sudah dibaca*"));
   } catch (err) {
     return m.reply(claraWrap("baca", `❌ Gagal: ${err.message}`));

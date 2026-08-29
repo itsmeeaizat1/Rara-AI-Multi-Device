@@ -31,9 +31,6 @@ async function handler(m, { sock }) {
   example: `${m.prefix}ptvsearch jj epep`,
 }), "ptvsearch")
   }
-
-  m.react("🕒");
-
   try {
     const videos = await tiktokSearchVideo(query);
 
@@ -48,8 +45,6 @@ async function handler(m, { sock }) {
       mimetype: "video/mp4",
       ptv: true,
     });
-
-    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("ptvsearch", te(m.prefix, m.command, m.pushName), "error"));
   }

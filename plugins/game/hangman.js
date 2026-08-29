@@ -109,8 +109,6 @@ async function handler(m, { sock, config, db }) {
           sessions.delete(m.chat);
         }
       }, 180000);
-
-      await m.react("🐣");
       return m.reply(claraWrap("Hangman", [
         `Game dimulai! Bahasa: ${lang === "id" ? "Indonesia" : "English"}`,
         `Panjang kata: ${word.length} huruf`,
@@ -126,13 +124,11 @@ async function handler(m, { sock, config, db }) {
     const session = sessions.get(m.chat);
 
     if (!session || !session.active) {
-      await m.react("🐣");
       return m.reply(claraWrap("Hangman", `Belum ada game aktif. Ketik "${m.prefix}hangman start"`));
     }
 
     if (input === "END" || input === "GIVEUP") {
       sessions.delete(m.chat);
-      await m.react("🐣");
       return m.reply(claraWrap("Hangman", `Game diakhiri. Jawaban: ${session.word}`));
     }
 
@@ -141,7 +137,6 @@ async function handler(m, { sock, config, db }) {
       const letter = input;
 
       if (session.guessed.has(letter)) {
-        await m.react("🐣");
         return m.reply(claraWrap("Hangman", `Huruf "${letter}" sudah ditebak! Pilih huruf lain.`));
       }
 
@@ -154,7 +149,6 @@ async function handler(m, { sock, config, db }) {
         if (!masked.includes("_")) {
           // Won!
           sessions.delete(m.chat);
-          await m.react("🐣");
           return m.reply(claraWrap("Hangman", [
             `🎉 Selamat! Kata: ${session.word}`,
             `Salah: ${session.wrong}/${MAX_WRONG}`,
@@ -164,8 +158,6 @@ async function handler(m, { sock, config, db }) {
             masked,
           ]));
         }
-
-        await m.react("🐣");
         return m.reply(claraWrap("Hangman", [
           `✅ "${letter}" benar!`,
           "",
@@ -181,15 +173,12 @@ async function handler(m, { sock, config, db }) {
 
         if (session.wrong >= session.maxWrong) {
           sessions.delete(m.chat);
-          await m.react("🐣");
           return m.reply(claraWrap("Hangman", [
             `💀 Game over! Kata: ${session.word}`,
             "",
             HANGMAN_STAGES[MAX_WRONG],
           ]));
         }
-
-        await m.react("🐣");
         return m.reply(claraWrap("Hangman", [
           `❌ "${letter}" tidak ada!`,
           `Sisa: ${session.maxWrong - session.wrong}`,
@@ -207,7 +196,6 @@ async function handler(m, { sock, config, db }) {
     if (input.length > 1) {
       if (input === session.word) {
         sessions.delete(m.chat);
-        await m.react("🐣");
         return m.reply(claraWrap("Hangman", [
           `🎉 Benar! Kata: ${session.word}`,
           `Salah: ${session.wrong}/${MAX_WRONG}`,
@@ -216,14 +204,12 @@ async function handler(m, { sock, config, db }) {
         session.wrong++;
         if (session.wrong >= session.maxWrong) {
           sessions.delete(m.chat);
-          await m.react("🐣");
           return m.reply(claraWrap("Hangman", [
             `💀 Game over! Kata: ${session.word}`,
             "",
             HANGMAN_STAGES[MAX_WRONG],
           ]));
         }
-        await m.react("🐣");
         return m.reply(claraWrap("Hangman", [
           `❌ Bukan "${input}"! Sisa: ${session.maxWrong - session.wrong}`,
           "",
@@ -231,12 +217,9 @@ async function handler(m, { sock, config, db }) {
         ]));
       }
     }
-
-    await m.react("🐣");
     return m.reply(claraWrap("Hangman", `Ketik 1 huruf atau kata penuh. Contoh: ${m.prefix}hangman a`));
   } catch (e) {
     console.error("[hangman] error:", e.message);
-    await m.react("❌");
     return m.reply(te(m.prefix, m.command, m.pushName), "hangman");
   }
 }

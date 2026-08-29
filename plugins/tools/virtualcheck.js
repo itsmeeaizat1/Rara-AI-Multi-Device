@@ -257,7 +257,6 @@ async function handler(m, { sock }) {
     return m.reply(claraWrap("Virtual Check", lines));
   } catch (e) {
     console.error("[Virtual Check]", e);
-    await m.react("❌");
     return m.reply(claraWrap("Virtual Check", "Error: " + e.message));
   }
 }

@@ -121,9 +121,6 @@ async function handler(m, { sock }) {
         `\`Contoh: ${m.prefix}robloxstalk Linkmon99\``,
     );
   }
-
-  m.react("🕒");
-
   try {
     const res = await Roblox(username);
 
@@ -195,9 +192,6 @@ async function handler(m, { sock }) {
       `🏆 *ʙᴀᴅɢᴇꜱ* (${res.badges?.length || 0}):\n${topBadges}\n` +
       `🎒 *ɪɴᴠᴇɴᴛᴏʀʏ*:\n${topInventory}\n` +
       `🔗 https://roblox.com/users/${res.id}/profile`;
-
-    m.react("🐣");
-
     if (res.avatar) {
       await sock.sendMessage(
         m.chat,

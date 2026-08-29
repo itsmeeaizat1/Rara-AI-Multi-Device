@@ -56,9 +56,6 @@ async function handler(m, { sock }) {
     const expToAdd = levels * 20000
     
     const addResult = addExpWithLevelCheck(sock, m, db, user, expToAdd)
-    
-    await m.react('✅')
-    
     await m.reply(claraWrap("Addlevel", `✅ Berhasil menambahkan level *@${targetJid.split('@')[0]}* sebanyak *${levels} Level*\n\nKini dia mempunyai *${addResult.newLevel || calculateLevel(user.exp)}* level. dan memiliki role *${getRole(addResult.newLevel || calculateLevel(user.exp))}*`))
 }
 

@@ -65,9 +65,6 @@ async function handler(m, { sock }) {
     const user = db.getUser(targetJid) || db.setUser(targetJid)
  
     await levelHelper.addExpWithLevelCheck(sock, m, db, user, amount)
-    
-    await m.react('✅')
-    
     await m.reply(claraWrap("Addexp", `✅ Berhasil menambahkan exp *${formatNumber(amount)}* ke *@${targetJid.split('@')[0]}*`))
 }
 

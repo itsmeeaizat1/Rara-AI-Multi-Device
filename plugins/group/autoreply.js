@@ -45,7 +45,6 @@ async function handler(m, { sock }) {
         
         if (subAction === 'on') {
             db.setting('autoreplyPrivate', true)
-            m.react('✅')
             return m.reply(claraWrap("Autoreply", `✅ *ᴀᴜᴛᴏʀᴇᴘʟʏ ᴘʀɪᴠᴀᴛᴇ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*\n\nBot akan merespon otomatis di private chat`))
         }
         
@@ -97,8 +96,6 @@ async function handler(m, { sock }) {
             
             db.setting('globalCustomReplies', globalCustomReplies)
             await db.save()
-            
-            m.react('✅')
             return m.reply(
                 `✅ *ɢʟᴏʙᴀʟ ᴀᴜᴛᴏʀᴇᴘʟʏ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
                 `Trigger: *${trigger.trim()}*\n` +
@@ -210,7 +207,6 @@ async function handler(m, { sock }) {
     
     if (action === 'on') {
         db.setGroup(m.chat, { ...groupData, autoreply: true })
-        m.react('✅')
         return m.reply(claraWrap("Autoreply", `✅ *ᴀᴜᴛᴏʀᴇᴘʟʏ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*\n\nBot akan merespon otomatis di grup ini`))
     }
     
@@ -301,9 +297,6 @@ async function handler(m, { sock }) {
         }
         
         db.setGroup(m.chat, { ...groupData, customReplies })
-        
-        m.react('✅')
-        
         let successMsg = `✅ *ᴀᴜᴛᴏʀᴇᴘʟʏ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n`
         successMsg += `*ᴅᴇᴛᴀɪʟ:*\n`
         successMsg += `Trigger: *${trigger.trim()}*\n`

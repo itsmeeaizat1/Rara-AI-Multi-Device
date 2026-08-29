@@ -84,8 +84,6 @@ async function handler(m, { sock }) {
       if (!result.success) {
         return m.reply(claraWrap("autoreengage", `❌ ${toSC(result.error)}`));
       }
-
-      await m.react("🐣");
       return m.reply(
         bracketBox("✅", toSC("Re-engagement Diaktifkan"), [
           `${toSC("Jadwal")}: ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")} WIB`,
@@ -99,7 +97,6 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableReengage();
-      await m.react("🐣");
       return m.reply(claraWrap("autoreengage", toSC("Re-engagement dinonaktifkan")));
     }
 
@@ -140,20 +137,16 @@ async function handler(m, { sock }) {
     case "now":
     case "manual":
     case "trigger": {
-      await m.react("🕒");
       try {
         await triggerManualReengage(sock);
-        await m.react("🐣");
         return m.reply(claraWrap("autoreengage", toSC("Re-engagement dijalankan! Cek DM untuk laporan.")));
       } catch (error) {
-        await m.react("❌");
         return m.reply(claraWrap("autoreengage", te(m.prefix, m.command, m.pushName), "error"));
       }
     }
 
     case "reset": {
       resetContacted();
-      await m.react("🐣");
       return m.reply(claraWrap("autoreengage", toSC("List contacted di-reset. User bisa dikirimi pesan re-engage lagi.")));
     }
 

@@ -146,7 +146,6 @@ async function handler(m, { sock }) {
             const hasMedia = m.quoted?.isMedia && (m.quoted?.isImage || m.quoted?.type === 'imageMessage')
             const isDirectImage = m.isImage
             if (!hasMedia && !isDirectImage) return m.reply(claraWrap("editproduk", `🖼️ *ʀᴇᴘʟʏ ᴀᴛᴀᴜ ᴋɪʀɪᴍ ɢᴀᴍʙᴀʀ ʙᴀʀᴜ.*\n\nKirim gambar lalu reply dengan command ini.`))
-            await m.react("🕒")
             try {
                 const buffer = hasMedia ? await m.quoted.download() : await m.download()
                 if (buffer) {
@@ -163,7 +162,6 @@ async function handler(m, { sock }) {
             const hasMedia = m.quoted?.isMedia && (m.quoted?.isVideo || m.quoted?.type === 'videoMessage')
             const isDirectVideo = m.isVideo
             if (!hasMedia && !isDirectVideo) return m.reply(claraWrap("editproduk", `🎬 *ʀᴇᴘʟʏ ᴀᴛᴀᴜ ᴋɪʀɪᴍ ᴠɪᴅᴇᴏ ʙᴀʀᴜ.*\n\nKirim video lalu reply dengan command ini.`))
-            await m.react("🕒")
             try {
                 const buffer = hasMedia ? await m.quoted.download() : await m.download()
                 if (buffer) {
@@ -181,8 +179,6 @@ async function handler(m, { sock }) {
     }
 
     db.setting('storeProducts', products)
-    await m.react('✅')
-
     const typeIcon = product.type === 'fisik' ? '📦' : '🔑'
     const typeLabel = product.type === 'fisik' ? 'Fisik' : 'Digital'
 

@@ -136,9 +136,6 @@ async function handler(m, { sock, config: botConfig }) {
         )
         return
     }
-    
-    await m.react('🕐')
-    
     const options = parseOptions(m.args || [])
     
     try {
@@ -212,9 +209,6 @@ async function handler(m, { sock, config: botConfig }) {
         } else if (isVideo) {
             await sock.sendVideoAsSticker(m.chat, buffer, m, { packname, author })
         }
-        
-        await m.react('✅')
-        
     } catch (error) {
         m.reply(claraWrap("sticker", te(m.prefix, m.command, m.pushName), "error"))
     }

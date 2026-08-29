@@ -52,9 +52,6 @@ async function handler(m, { sock }) {
     if (cleanNum.length < 10 || cleanNum.length > 15) {
         { const __navText = `❌ Nomor yang kamu masukkan tidak valid, pastikan nomor tersebut merupakan nomor XL atau Axis yang benar ya`; return await m.reply(__navText); }
     }
-
-    m.react("🕒")
-
     try {
         const { data } = await axios.get(
             `https://xl-ku.my.id/end.php?check=package&number=${cleanNum}&version=2`,
@@ -112,8 +109,6 @@ async function handler(m, { sock }) {
                 }
             }
         }
-
-        m.react("🐣")
         await m.reply(txt.trim())
 
     } catch (error) {

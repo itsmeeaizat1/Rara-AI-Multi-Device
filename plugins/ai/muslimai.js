@@ -67,14 +67,9 @@ async function handler(m, { sock }) {
     if (!text) {
         return m.reply(`☪️ *ᴍᴜꜱʟɪᴍ ᴀɪ*\n\nMasukkan pertanyaan tentang Islam\n\n\`Contoh: ${m.prefix}muslimai Apa itu sholat?\``)
     }
-
-    m.react('🕐')
-
     try {
         const data = await new MuslimAI().chat(`${text}`)
         let response = `${data}`
-
-        m.react('✅')
         await m.reply(response)
 
     } catch (error) {

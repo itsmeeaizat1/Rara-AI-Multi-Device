@@ -25,10 +25,8 @@ async function handler(m, { sock }) {
     if (!text) {
         return m.reply(claraWrap("Aichat", `🤖 *ᴀɪᴄʜᴀᴛ*\n\nMasukkan pertanyaan\n\n\`Contoh: ${m.prefix}ai4chat Apa itu JavaScript?\``), "ai4chat")
     }
-    m.react('🕐')
     try {
         const data = await axios.get(`https://firefly.maiku.my.id/api/deepaichat?apikey=${config.APIkey.firefly}&text=${encodeURIComponent(text)}`)
-        m.react('✅')
         { const __navText = `${data.data.data}`; await m.reply(__navText); }
     } catch (error) {
         console.log(error)

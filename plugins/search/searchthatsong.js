@@ -119,9 +119,6 @@ async function handler(m, { sock }) {
   if (!query) {
     return m.reply(novaGuide("SearchThatSong", "Masukin potongan lirik atau nama lagu nih!", ".sts ku menangis membayangkan"));
   }
-
-  await m.react("🕒");
-
   try {
     const result = await search(query);
 
@@ -158,9 +155,6 @@ async function handler(m, { sock }) {
         ptt: false
       }, { quoted: m });
     }
-
-    await m.react("🐣");
-
   } catch (error) {
     console.error("[SearchThatSong]", error.message);
     m.reply(novaError("SearchThatSong", "Ada error nih, coba lagi ya"));

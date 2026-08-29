@@ -65,8 +65,6 @@ async function handler(m, { sock, args }) {
     }
 
     await db.save();
-    await m.react("🐣");
-
     let onTxt = "✅ AUTOREACTVN DIAKTIFKAN\n\nBot akan auto-reply dengan VN\nsaat user kirim kata trigger";
     if (seeded > 0) {
       onTxt += "\n\nTrigger default otomatis diset (" + seeded + "):\n";
@@ -176,9 +174,6 @@ async function handler(m, { sock, args }) {
 
     db.setting("autoreactvnTriggers", triggers);
     await db.save();
-
-    await m.react("🐣");
-
     let resultTxt = "✅ VN TRIGGER DISET\n\n";
     resultTxt += "VN File: " + fileName + "\n";
     resultTxt += "Size: " + (buffer.length / 1024).toFixed(1) + " KB\n";
@@ -255,7 +250,6 @@ async function handler(m, { sock, args }) {
 
     db.setting("autoreactvnJedaPrivate", seconds * 1000);
     await db.save();
-    await m.react("🐣");
     return m.reply(
       "✅ JEDA PRIVATE DISET\n\n" +
       "Private: " + seconds + " detik\n" +
@@ -282,7 +276,6 @@ async function handler(m, { sock, args }) {
 
     db.setting("autoreactvnJedaGrup", seconds * 1000);
     await db.save();
-    await m.react("🐣");
     return m.reply(
       "✅ JEDA GRUP DISET\n\n" +
       "Grup: " + seconds + " detik\n" +

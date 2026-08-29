@@ -30,9 +30,6 @@ async function handler(m, { sock }) {
         `Kirim/reply video lalu caption \`${m.prefix}wink\`\n\n` +
         `⚠️ _Fitur Premium, proses estimasi 1-5 menit tergantung durasi video_`, "wink");
   }
-
-  await m.react("🕒");
-
   try {
     const videoBuffer = (await m?.quoted?.download?.()) || (await m.download?.());
 
@@ -43,9 +40,6 @@ async function handler(m, { sock }) {
     if (videoBuffer.length > 50 * 1024 * 1024) {
       return m.reply(claraWrap("Wink", `❌ *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*\n\nMaksimal ukuran video cuma *50MB* ya!`));
     }
-
-    await m.react("🕒");
-
     const result = await winkEnhance(videoBuffer, {
       filename: `wink-${Date.now()}.mp4`,
     });
@@ -55,8 +49,6 @@ async function handler(m, { sock }) {
       mimetype: "video/mp4",
       fileName: `WINK-HD-${Date.now()}.mp4`,
     });
-
-    await m.react("🐣");
   } catch (err) {
     console.log(err);
     await m.reply(claraWrap("wink", `❌ Proses Wink enhance gagal! Coba lagi nanti ya 😭`));

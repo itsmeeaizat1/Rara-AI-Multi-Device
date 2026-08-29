@@ -123,8 +123,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply( help, "sppd");
   }
-
-  await m.react("🕒");
   m.reply(claraWrap("SPPD", "│ AI lagi menyusun SPPD..."));
 
   try {
@@ -149,12 +147,9 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       mimetype: "application/pdf",
       fileName: `sppd_${Date.now()}.pdf`,
     }, { quoted: m });
-
-    await m.react("🐣");
   } catch (error) {
     console.error("sppd error:", error);
     m.reply(claraWrap("SPPD", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
-    await m.react("🐣");
   }
 
   return { handled: true };

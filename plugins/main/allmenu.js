@@ -103,7 +103,6 @@ function getThumb() {
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   try {
-    await m.react("🕒");
     const prefix = botConfig.command?.prefix || ".";
     const user = db.getUser(m.sender);
     const now = new Date();
@@ -309,9 +308,6 @@ ${weatherBlock}${readMore}
       { id: `${prefix}info`, text: toSC("Info") },
       { id: `${prefix}owner`, text: toSC("Owner") },
     ];
-
-    await m.react("🐣");
-
     await sendMenuCard(sock, m, {
       text: closeBoxRight(txt),
       footer: "",
@@ -324,7 +320,6 @@ ${weatherBlock}${readMore}
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);
     try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────`); } catch {}
-    await m.react("❌");
   }
 }
 

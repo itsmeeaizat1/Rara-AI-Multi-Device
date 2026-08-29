@@ -77,9 +77,6 @@ async function handler(m, { sock }) {
         `Reply audio dengan \`${m.prefix}musikapaini\`\n` +
         `Atau kirim audio + caption command`, "musikapaini");
   }
-
-  m.react("🕒");
-
   try {
     const audioUrl = await uploadTo0x0(audioBuffer, filename);
 
@@ -153,8 +150,6 @@ async function handler(m, { sock }) {
     }
 
     await sock.sendMessage(m.chat, msgContent, { quoted: m });
-
-    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("musikapaini", te(m.prefix, m.command, m.pushName), "error"));
   }

@@ -198,9 +198,6 @@ async function handler(m, { sock }) {
   if (!fileName) {
     return m.reply(claraWrap("gantiscraper", `❌ *GAGAL*\n\nNama file tidak valid`));
   }
-
-  await m.react("🕒");
-
   try {
     if (!fs.existsSync(SCRAPER_DIR)) {
       fs.mkdirSync(SCRAPER_DIR, { recursive: true });
@@ -245,9 +242,6 @@ async function handler(m, { sock }) {
       }
       throw reloadError;
     }
-
-    await m.react("🐣");
-
     let replyText =
       `✅ *SCRAPER ${isNewFile ? "DITAMBAH" : "DIGANTI"}*\n\n` +
       `╭─〔 *DETAIL* 〕───\n` +

@@ -101,8 +101,6 @@ function handler(m, { sock }) {
         }
 
         saveGcSeller(version, m.chat)
-        m.react('✅')
-
         let txt = `✅ *Gc sEller ${serverLabel} Ditambahkan*\n\n`
         txt += `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n`
         txt += `│ 🖥️ sErver: \`${serverLabel}\`\n`
@@ -123,7 +121,6 @@ function handler(m, { sock }) {
         }
 
         saveGcSeller(version, null)
-        m.react('✅')
         return m.reply(`✅ *Gc sEller ${serverLabel} Direset*\n\n` +
             `Grup: \`${current}\`\n` +
             `Server *${serverLabel}* tidak lagi terhubung ke grup manapun.`)

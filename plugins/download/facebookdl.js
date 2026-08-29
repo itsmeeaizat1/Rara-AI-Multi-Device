@@ -28,9 +28,6 @@ async function handler(m, { sock }) {
     if (!url.match(/facebook\.com|fb\.watch/i)) {
         return m.reply(novaError("Facebook DL", "URL tidak valid nih! Pastikan gunakan link Facebook yang benar."))
     }
-    
-    await m.react('🕐')
-    
     try {
         const data = await fbdown(url)
         

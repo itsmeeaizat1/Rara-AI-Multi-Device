@@ -70,30 +70,25 @@ async function handler(m, { sock }) {
 
     if (subCmd === "on" || subCmd === "off") {
       cfg.enabled = subCmd === "on"; save(db)
-      await m.react("🐣")
       return m.reply("╭──「 Crash Guard 」\n│ Status: " + (cfg.enabled ? "ON (monitoring)" : "OFF") + "\n│ Max restarts: " + cfg.maxRestarts + " per " + (cfg.restartWindow / 60000) + " min\n╰──────────")
     }
 
     if (subCmd === "restart") {
       const procName = args[1] || cfg.processName
-      await m.react("🕒")
       try {
         await execAsync("pm2 restart " + (procName === "all" ? "all" : procName) + " 2>&1")
         cfg.restartHistory.unshift({ time: Date.now(), action: "manual_restart", process: procName, success: true })
         cfg.restartHistory = cfg.restartHistory.slice(0, 20)
         cfg.lastRestart = Date.now()
         save(db)
-        await m.react("🐣")
         return m.reply("╭──「 Crash Guard 」\n│ PM2 \"" + procName + "\" berhasil di-restart\n╰──────────")
       } catch (e) {
-        await m.react("🐣")
         return m.reply("╭──「 Crash Guard 」\n│ ❌ Gagal restart: " + e.message.slice(0, 100) + "\n╰──────────")
       }
     }
 
     if (subCmd === "history") {
       const history = cfg.restartHistory || []
-      await m.react("🐣")
       if (!history.length) return m.reply("╭──「 Crash Guard 」\n│ Belum ada history.\n╰──────────")
       let text = "╭──「 Crash Guard History 」\n"
       history.slice(0, 10).forEach((h, i) => {
@@ -108,7 +103,6 @@ async function handler(m, { sock }) {
 
     if (subCmd === "clear") {
       cfg.restartHistory = []; save(db)
-      await m.react("🐣")
       return m.reply("╭──「 Crash Guard 」\n│ History dihapus.\n╰──────────")
     }
 
@@ -116,14 +110,13 @@ async function handler(m, { sock }) {
       const key = args[1]?.toLowerCase(), val = args[2]
       if (key === "process" && val) cfg.processName = val
       if (key === "maxrestart" && val) cfg.maxRestarts = parseInt(val) || 5
-      save(db); await m.react("🐣")
+      save(db);
       return m.reply("╭──「 Crash Guard 」\n│ Config updated.\n│ Process: " + cfg.processName + "\n│ Max restarts: " + cfg.maxRestarts + "\n╰──────────")
     }
 
     // Default: status
     const pm2 = await getPM2Info()
     const lastRestart = cfg.lastRestart ? timeAgo(Date.now() - cfg.lastRestart) : "never"
-    await m.react("🐣")
     let text = "╭──「 Crash Guard 」\n"
     text += "│ Status: " + (cfg.enabled ? "ON (monitoring)" : "OFF") + "\n"
     text += "│ Last restart: " + lastRestart + "\n"
@@ -143,7 +136,6 @@ async function handler(m, { sock }) {
     return m.reply(text)
   } catch (e) {
     console.error("[crashguard] error:", e.message)
-    await m.react("🐣")
     return m.reply("╭──「 Error 」\n" + (e.message || "Ada error nih") + "\n╰──────────")
   }
 }

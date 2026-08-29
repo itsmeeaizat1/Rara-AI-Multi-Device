@@ -59,13 +59,11 @@ async function handler(m, { sock, config: botConfig, db }) {
     const courierCode = courier === "j&t" ? "jnt" : courier;
 
     if (!awb) {
-      await m.react("🐣");
       return m.reply(claraWrap("Cek Resi", `Masukkan nomor resi. Contoh: ${m.prefix}cekresi ${courier} 123456789`));
     }
 
     const validCourier = COURIERS.find(c => c.code === courierCode);
     if (!validCourier) {
-      await m.react("🐣");
       return m.reply(claraWrap("Cek Resi", [
         `Kurir "${courier}" tidak dikenal.`,
         `Lihat daftar kurir: ${m.prefix}cekresi list`,
@@ -82,9 +80,6 @@ async function handler(m, { sock, config: botConfig, db }) {
         "Set di config.js: binderbyteKey: \"YOUR_KEY\"",
       ]));
     }
-
-    await m.react("🕒");
-
     const res = await fetch(
       `https://api.binderbyte.com/v1/track?api_key=${apiKey}&courier=${courierCode}&awb=${encodeURIComponent(awb)}`
     );
@@ -93,7 +88,6 @@ async function handler(m, { sock, config: botConfig, db }) {
     const json = await res.json();
 
     if (json.code !== 200 || !json.data) {
-      await m.react("🐣");
       return m.reply(claraWrap("Cek Resi", `Resi tidak ditemukan. Cek kembali kurir & nomor resi.\nKurir: ${validCourier.name}\nResi: ${awb}`));
     }
 
@@ -114,12 +108,9 @@ async function handler(m, { sock, config: botConfig, db }) {
         text += `\n• ${h.date || ""}\n  ${h.desc || ""}\n  ${h.location || ""}`;
       }
     }
-
-    await m.react("🐣");
     return m.reply(claraWrap("Cek Resi", text));
   } catch (e) {
     console.error("[cekresi] error:", e.message);
-    await m.react("❌");
     return m.reply(te(m.prefix, m.command, m.pushName), "cekresi");
   }
 }

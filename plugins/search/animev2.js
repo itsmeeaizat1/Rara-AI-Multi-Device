@@ -26,8 +26,6 @@ async function handler(m, { sock }) {
             return m.reply(novaGuide('Anime Search', 'Mau nyari anime apa nih? Ketik nama animenya ya!', pluginConfig.example))
         }
 
-        if (m.react) await m.react("🕒")
-
         const url = `https://api.jikan.moe/v4/anime?q=${encodeURIComponent(query)}&limit=5`
         const response = await axios.get(url, {
             timeout: 15000,
@@ -39,7 +37,6 @@ async function handler(m, { sock }) {
         const animeList = response.data?.data || []
 
         if (!animeList || animeList.length === 0) {
-            if (m.react) await m.react("🐣")
             return m.reply(novaEmpty('Anime Search', `Gak nemu anime "${query}" 🧐`))
         }
 
@@ -65,8 +62,6 @@ async function handler(m, { sock }) {
             }
         })
         listText += "╰──────────"
-
-        if (m.react) await m.react("🐣")
 
         const imageUrl = top5[0]?.images?.jpg?.image_url || top5[0]?.images?.jpg?.large_image_url || null
 
@@ -97,7 +92,6 @@ async function handler(m, { sock }) {
 
     } catch (error) {
         console.error("[animev2] error:", error?.message || error)
-        if (m.react) await m.react("🐣")
         const errorMsg = error.response?.data?.message || error.message || 'Unknown error'
         return m.reply(novaError('Anime Search', errorMsg))
     }

@@ -43,8 +43,6 @@ async function handler(m, { sock }) {
   if (!url.match(/mediafire\.com/i)) {
     return m.reply(claraWrap("Mediafiredl", `❌ *ᴜʀʟ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ. ɢᴜɴᴀᴋᴀɴ ʟɪɴᴋ ᴍᴇᴅɪᴀꜰɪʀᴇ.*`));
   }
-  await m.react("🕒");
-
   try {
     const result = await mediafire(url);
     await sock.sendMessage(

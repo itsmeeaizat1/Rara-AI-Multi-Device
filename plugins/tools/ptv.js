@@ -49,9 +49,6 @@ async function handler(m, { sock }) {
             gifPlayback: true,
             ptv: true
         }, { quoted: m })
-        
-        m.react('✅')
-        
     } catch (err) {
         return m.reply(claraWrap("ptv", te(m.prefix, m.command, m.pushName), "error"))
     }

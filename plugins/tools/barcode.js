@@ -81,9 +81,6 @@ async function handler(m, { sock, config: botConfig }) {
     if (!typeInfo.validate(data)) {
       return m.reply(claraWrap("Barcode", "Data tidak valid untuk type " + typeInfo.name + "!\n" + typeInfo.desc));
     }
-
-    await m.react("🕒");
-
     // Generate barcode via QuickChart API
     const apiUrl = "https://quickchart.io/barcode?type=" + type +
       "&text=" + encodeURIComponent(data) +
@@ -100,9 +97,6 @@ async function handler(m, { sock, config: botConfig }) {
     if (buffer.length < 100) {
       throw new Error("Buffer too small, mungkin data invalid");
     }
-
-    await m.react("🐣");
-
     // Send barcode image
     await sock.sendMessage(m.chat, {
       image: buffer,
@@ -121,7 +115,6 @@ async function handler(m, { sock, config: botConfig }) {
     return { handled: true };
   } catch (e) {
     console.error("barcode error:", e);
-    await m.react("❌");
     return m.reply(claraWrap("Barcode", "Error: " + e.message));
   }
 }

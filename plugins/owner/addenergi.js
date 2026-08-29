@@ -75,13 +75,9 @@ async function handler(m, { sock }) {
 
     if (isUnlimited) {
         db.setUser(targetJid, { energi: -1 })
-
-        await m.react('✅')
         await m.reply(claraWrap("Addenergi", `✅ *Energi @${targetJid.split('@')[0]} sekarang unlimited / tidak terbatas*`))
     } else {
         const newEnergi = db.updateEnergi(targetJid, amount)
-
-        await m.react('✅')
         await m.reply(claraWrap("Addenergi", `✅ Energi *@${targetJid.split('@')[0]}* berhasil di tambahkan sebanyak *${formatNumber(amount)}*!\nSekarang dia mempunyai *${formatNumber(newEnergi)}* energi`))
     }
 }

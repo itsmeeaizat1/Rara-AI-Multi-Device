@@ -32,9 +32,6 @@ async function handler(m, { sock }) {
         `Contoh:\n` +
         `\`${m.prefix}apkmod vpn\``, "apkmod");
   }
-
-  m.react("🕒");
-
   try {
     const { data } = await axios.get(
       `https://api.neoxr.eu/api/apkmod?q=${encodeURIComponent(text)}&apikey=${NEOXR_APIKEY}`,
@@ -72,9 +69,6 @@ async function handler(m, { sock }) {
       query: text,
       timestamp: Date.now(),
     };
-
-    m.react("🐣");
-
     await sock.sendButton(
       m.chat,
       getAssetBuffer("nova"),

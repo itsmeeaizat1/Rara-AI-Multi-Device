@@ -197,7 +197,6 @@ async function handler(m, { sock, db, config: botConfig }) {
       ].join("\n")));
       delConfig(db, gid);
     } else {
-      await m.react("❌");
       if (game.attempts >= 3) {
         game.status = "failed";
         saveConfig(db, gid, game);

@@ -150,13 +150,9 @@ async function handler(m, { sock, config: botConfig }) {
     if (!domain) {
       return m.reply(claraWrap("WhoisHistory", "Domain tidak boleh kosong!"));
     }
-
-    await m.react("🕒");
-
     const raw = await getWhois(domain);
 
     if (raw.error) {
-      await m.react("❌");
       return m.reply(claraWrap("WhoisHistory", raw.error));
     }
 
@@ -224,12 +220,9 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("  " + ev.action + ": " + ev.date);
       }
     }
-
-    await m.react("🐣");
     return m.reply(claraWrap("WHOIS: " + domain, lines.join("\n")));
   } catch (e) {
     console.error("whoishistory error:", e);
-    await m.react("❌");
     return m.reply(claraWrap("WhoisHistory", "Error: " + e.message));
   }
 }

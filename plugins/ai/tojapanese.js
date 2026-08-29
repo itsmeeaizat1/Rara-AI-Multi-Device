@@ -26,9 +26,6 @@ async function handler(m, { sock }) {
     if (!isImage) {
         { const __navText = claraWrap("Japanese sTyle", `🎌 *ᴊᴀᴘᴀɴᴇꜱᴇ ꜱᴛʏʟᴇ*\n\nKirim/reply gambar untuk diubah ke style Japanese\n\n\`${m.prefix}tojapanese\``); return await m.reply(__navText, "tojapanese"); }
     }
-    
-    m.react('🕐')
- 
     try {
         let buffer
         if (m.quoted && m.quoted.isMedia) {
@@ -45,9 +42,6 @@ async function handler(m, { sock }) {
         
         const url = `https://api-faa.my.id/faa/tojapanese?url=${encodeURIComponent(imageUrl)}`
         const res = await f(url, 'arrayBuffer')
-        
-        m.react('✅')
-        
         await sock.sendMedia(m.chat, Buffer.from(res), null, m, {
             type: 'image',
         })

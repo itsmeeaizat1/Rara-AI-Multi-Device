@@ -141,9 +141,6 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply(text, "aicaption");
       return { handled: true };
     }
-
-    await m.react("🕒");
-
     // Download gambar
     let mediaBuffer;
     if (m.isImage && m.download) {
@@ -211,9 +208,6 @@ async function handler(m, { sock, config: botConfig }) {
     if (!captionResult || captionResult.trim().length === 0) {
       throw new Error("AI tidak menghasilkan caption. Coba foto lain.");
     }
-
-    await m.react("🐣");
-
     const styleLabel = useStyle === "default" ? "Mix" : useStyle.charAt(0).toUpperCase() + useStyle.slice(1);
 
     const result =

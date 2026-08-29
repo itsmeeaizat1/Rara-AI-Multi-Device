@@ -39,8 +39,6 @@ async function handler(m, { sock }) {
     if (!hasAccess(m.sender, m.isOwner)) {
         return m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Fitur ini hanya untuk Owner/Seller."))
     }
-    
-    await m.react("🕒")
     try {
         const [accountRes, dropletsRes] = await Promise.all([
             axios.get('https://api.digitalocean.com/v2/account', {
@@ -64,8 +62,6 @@ async function handler(m, { sock }) {
 
 Email: ${account.email}
 Status: ${account.status}`
-        
-        m.react("🐣")
         await m.reply(txt)
         
     } catch (err) {

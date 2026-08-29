@@ -236,8 +236,6 @@ async function handler(m, { sock }) {
         "",
         "Sudah waktunya!",
       ]);
-
-      await m.react("🐣");
       await sock.sendMessage(chatId, {
         text: alertText,
         mentions: [sender],

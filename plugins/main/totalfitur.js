@@ -48,9 +48,6 @@ async function handler(m, { sock }) {
                 enabled++
             }
         }
-
-        await m.react('🕐')
-
         const sorted = Object.entries(cats).sort((a, b) => b[1].total - a[1].total)
 
         const tableData = sorted.map(([cat, data]) => {

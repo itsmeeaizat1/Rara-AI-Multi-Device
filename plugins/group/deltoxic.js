@@ -39,9 +39,6 @@ async function handler(m, { sock }) {
     
     toxicWords.splice(index, 1)
     db.setGroup(m.chat, { toxicWords })
-    
-    m.react('✅')
-    
     await m.reply(claraWrap("Kata Toxic Dihapus", `✅ *ᴋᴀᴛᴀ ᴛᴏxɪᴄ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
         `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `│ 📝 Kata: \`${word}\`\n` +
