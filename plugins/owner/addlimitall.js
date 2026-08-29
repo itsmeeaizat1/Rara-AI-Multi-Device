@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, novaCaption } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'addenergiall',
-    alias: ["addenergiall"],
+    alias: ["addlimitall", "addenergiall"],
     category: 'owner',
     description: 'Menambahkan limit/energi ke semua member grup',
     usage: '.addenergiall <jumlah>',

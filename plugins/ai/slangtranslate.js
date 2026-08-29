@@ -41,7 +41,7 @@ async function transcribeAudio(wavBuffer, groqKey) {
 export default {
   config: {
   name: "slangtranslate",
-  alias: ["audio.wav", "slangtranslate"],
+  alias: ["slangtranslate", "slangtr"],
   category: "ai",
   desc: "Auto-Translator & Cultural Slang Contextualizer - Terjemahkan slang/idiom/bahasa gaul dengan konteks budaya. Support teks & voice note.",
   usage: ".slangtranslate (reply teks/VN yang ingin diterjemahkan)\n.slangtranslate <teks langsung>",

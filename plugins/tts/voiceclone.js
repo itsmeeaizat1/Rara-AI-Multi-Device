@@ -27,7 +27,7 @@ const BASE_VOICES = {
 
 const pluginConfig = {
   name: "voiceclone",
-  alias: ["Ardi (Pria ID, hangat)", "voiceclone"],
+  alias: ["voiceclone", "clonevoice"],
   category: "tts",
   description: "Voice Clone — simpan sample suara & generate TTS (Fish Audio API + edge-tts fallback)",
   usage: ".voiceclone set <nama> (reply VN) | .voiceclone <teks> | .voiceclone status | .voiceclone list | .voiceclone use <nama> | .voiceclone del <nama> | .voiceclone apikey <key>",
