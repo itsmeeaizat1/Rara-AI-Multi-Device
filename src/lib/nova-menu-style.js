@@ -74,6 +74,45 @@ function buildBox(headerTitle, lines = []) {
   return [header, ...body, footer].join("\n");
 }
 
+// novaCaption: caption panduan pakai fitur (no-input guide) — pakai buildBox modern style
+function novaCaption({ emoji = "", name = "", description = "", usage = "", example = "", note = "" } = {}) {
+  const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
+  const title = name ? `${emojiStr}${toSC(name)}` : toSC("Guide");
+  const lines = [];
+
+  if (description) {
+    lines.push(description);
+    lines.push("");
+  }
+
+  if (usage) {
+    lines.push(`📌 *${toSC("Cara Pakai")}:*`);
+    lines.push(`\`${usage}\``);
+    lines.push("");
+  }
+
+  if (example) {
+    lines.push(`💡 *${toSC("Contoh")}:*`);
+    if (example.includes("\n")) {
+      for (const line of example.split("\n")) {
+        lines.push(`\`${line.trim()}\``);
+      }
+    } else {
+      lines.push(`\`${example}\``);
+    }
+    lines.push("");
+  }
+
+  if (note) {
+    lines.push(`📝 _${note}_`);
+  }
+
+  // Remove trailing empty line
+  while (lines.length && !lines[lines.length - 1]) lines.pop();
+
+  return buildBox(title, lines);
+}
+
 // ═══════════════════════════════════════════════
 // INDO DEV STYLE FUNCTIONS (untuk menu/allmenu/allmenucategory)
 // ═══════════════════════════════════════════════
@@ -303,7 +342,7 @@ const CATEGORY_EMOJIS = {
 
 export {
   toSC, scLine, isRealEmoji,
-  buildBox,
+  buildBox, novaCaption,
   botHeader, botSignature, sectionBox,
   progressBar, statusDot, kv,
   categoryBox,

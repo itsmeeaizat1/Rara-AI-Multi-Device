@@ -519,36 +519,101 @@ async function extendSocket(sock) {
       return sock.sendMessage(jid, plainMsg, { quoted });
     }
 
-    const msg = {};
-    if (options.header) msg.header = options.header;
-    if (options.contextInfo) msg.contextInfo = options.contextInfo;
-    if (text !== null) msg.caption = text;
-    if (options.footer) msg.footer = options.footer;
-    if (options.buttons) msg.interactiveButtons = options.buttons;
-    if (!options.footer) msg.footer = config.bot?.name || "Nova-AI";
+    // Pattern PROVEN JALAN (sama seperti nova-menu-card.js / cekidgc.js):
+    // interactiveMessage dibungkus viewOnceMessage + dikirim via relayMessage,
+    // BUKAN via sock.sendMessage dengan field interactiveButtons ditempel flat
+    // ke object image/caption — itulah yang bikin WhatsApp versi lama/tertentu
+    // menolak render pesan ("...tidak mendukungnya. Perbarui WhatsApp").
+    let headerMedia = null;
     if (source) {
       let data = source;
-      const mediaType = options.type || options.mediaType || "image";
       if (Buffer.isBuffer(source)) {
-      } else if (typeof source === "string" && /^https?:\/\//.test(source))
-        data = { url: source };
-      else if (typeof source === "string" && fs.existsSync(source))
+        // already a buffer
+      } else if (typeof source === "string" && /^https?:\/\//.test(source)) {
+        try {
+          data = await downloadBuffer(source);
+        } catch {
+          data = null;
+        }
+      } else if (typeof source === "string" && fs.existsSync(source)) {
         data = fs.readFileSync(source);
-      else if (source === null) data = null;
-      if (mediaType === "image" && data) msg.image = data;
-      else if (mediaType === "video" && data) {
-        msg.video = data;
-        msg.mimetype = options.mimetype || "video/mp4";
-      } else if (mediaType === "audio" && data) {
-        msg.audio = data;
-        msg.mimetype = options.mimetype || "audio/mpeg";
-      } else if (mediaType === "document" && data) {
-        msg.document = data;
-        msg.mimetype = options.mimetype || "application/octet-stream";
-        if (options.fileName) msg.fileName = options.fileName;
+      } else if (source === null) {
+        data = null;
+      }
+      const mediaType = options.type || options.mediaType || "image";
+      if (data) {
+        try {
+          if (mediaType === "image") {
+            const resized = await sharp(data)
+              .resize(640, 360, { fit: "cover" })
+              .jpeg({ quality: 85 })
+              .toBuffer();
+            headerMedia = await prepareWAMessageMedia(
+              { image: resized },
+              { upload: sock.waUploadToServer },
+            );
+          } else if (mediaType === "video") {
+            headerMedia = await prepareWAMessageMedia(
+              { video: data },
+              { upload: sock.waUploadToServer },
+            );
+          }
+        } catch (e) {
+          console.error("[sendButton] Gagal proses/upload media:", e.message);
+        }
       }
     }
-    return sock.sendMessage(jid, msg, { quoted });
+
+    const interactiveObj = {
+      body: proto.Message.InteractiveMessage.Body.fromObject({ text: text || "" }),
+      footer: proto.Message.InteractiveMessage.Footer.fromObject({
+        text: options.footer || config.bot?.name || "Nova-AI",
+      }),
+      nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+        buttons: options.buttons || [],
+      }),
+      contextInfo: options.contextInfo || {
+        mentionedJid: options.mentions || [],
+        forwardingScore: 0,
+        isForwarded: false,
+      },
+    };
+
+    if (headerMedia) {
+      interactiveObj.header = proto.Message.InteractiveMessage.Header.fromObject({
+        title: options.header || "",
+        hasMediaAttachment: true,
+        ...headerMedia,
+      });
+    } else if (options.header) {
+      interactiveObj.header = proto.Message.InteractiveMessage.Header.fromObject({
+        title: options.header,
+        hasMediaAttachment: false,
+      });
+    }
+
+    try {
+      const waMsg = generateWAMessageFromContent(
+        jid,
+        {
+          viewOnceMessage: {
+            message: {
+              messageContextInfo: {
+                deviceListMetadata: {},
+                deviceListMetadataVersion: 2,
+              },
+              interactiveMessage: proto.Message.InteractiveMessage.fromObject(interactiveObj),
+            },
+          },
+        },
+        { userJid: sock.user?.id, quoted },
+      );
+      await sock.relayMessage(jid, waMsg.message, { messageId: waMsg.key.id });
+      return waMsg;
+    } catch (e) {
+      console.error("[sendButton] Gagal kirim interactive message, fallback ke text biasa:", e.message);
+      return sock.sendMessage(jid, { text: text || "" }, { quoted });
+    }
   };
 
   const _originalProfilePictureUrl = sock.profilePictureUrl.bind(sock);
