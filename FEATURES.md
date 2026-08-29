@@ -3,10 +3,10 @@
 > Daftar lengkap fitur per kategori. Update file ini setiap kali ada perubahan fitur.
 
 ## Statistik
-- **Total Plugin:** 1.591
+- **Total Plugin:** 1.614
 - **Total Command:** 2.118+
 - **Total Kategori:** 39
-- **Versi:** 21.6.0
+- **Versi:** 21.8.0
 
 ---
 
@@ -43,6 +43,32 @@
 - Win game: +3-8 Limit, +500-2000 Koin, +1000-3000 EXP, +100-500 Gold
 - 5% chance: +5-15 Gems, 3% chance: +1-3 Diamonds (jackpot)
 - Daily: EXP + Koin + Gold + chance Gems/Diamonds + Potion
+
+### RPG Gameplay v21.8.0
+- `.berburu` — rpg — Berburu monster untuk EXP, Gold, dan item drop (combat system)
+- `.mining` — rpg — Menambang ore (copper, iron, gold, mithril) untuk material
+- `.mancing` — rpg — Memancing ikan dan pearl untuk material
+- `.kerja` — rpg — Bekerja untuk gold dan EXP, scaling dengan job level
+- `.heal` — rpg — Recover HP, Energy, Mana dengan potion atau istirahat
+- `.invrpg` — rpg — Cek inventory RPG (item, material, equipment)
+- `.shoprpg` — rpg — Beli/jual item RPG (potion, equipment, keys)
+- `.dungeon` — rpg — Jelajahi dungeon (3-5 stage, high risk/reward, butuh Lv.10+)
+- `.duelrpg` — rpg — PvP 1v1 melawan player lain untuk EXP, Gold, rating
+- `.casinorpg` — rpg — Slot machine gambling gold (multiplier up to 50x)
+- `.tfgold` — rpg — Transfer gold ke player lain (5% tax)
+- `.toprpg` — rpg — Papan peringkat RPG (level, gold, pvp, gems)
+- `.equiprpg` — rpg — Equip/unequip item RPG dari inventory
+- `.bankrpg` — rpg — Bank simpan/tarik gold dengan bunga 5% harian
+- `.investrpg` — rpg — Investasi gold (70% profit, 30% rugi, 1 jam)
+- `.craftrpg` — rpg — Craft item dari material mentah (9 resep)
+- `.bossraid` — rpg — Raid boss untuk hadiah epic (Lv.40+, gems + rebirth stone)
+- `.jobrpg` — rpg — Lihat/ganti job class + unlock/upgrade skill
+- `.enchantrpg` — rpg — Enchant equipment untuk tambah stats (mithril)
+- `.guildrpg` — rpg — Sistem guild: create/join/leave/list (Lv.20+)
+- `.rebirthrpg` — rpg — Reinkarnasi: reset level untuk permanent +5% stats
+- `.adventure` — rpg — Petualangan acak (treasure/monster/trap/shrine)
+- `.cookrpg` — rpg — Masak makanan dari bahan mentah (instant effect)
+
 
 ## 🆕 Fitur Baru v21.5.0
 
@@ -348,7 +374,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## ✅ Status Audit (Update Terakhir)
 
-- **Total Plugin:** 1.591 (12 plugin dibikin ulang setelah dihapus AI agent lain)
+- **Total Plugin:** 1.614 (12 plugin dibikin ulang setelah dihapus AI agent lain)
 - **Syntax Check:** 0 error
 - **Broken Import:** 0
 - **api.neoxr.eu:** 0 (semua diganti)
