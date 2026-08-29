@@ -30,9 +30,6 @@ async function handler(m, { sock }) {
     if (!url.match(/likee\.(video|com)/i)) {
         return m.reply(novaGuide("Likee DL", "URL-nya gak valid nih! Pastikan link dari Likee.", `${m.prefix}lkdl https://likee.video/@xxx`))
     }
-    
-    await m.react('🕐')
-    
     try {
         const data = await likee(url)
         
@@ -53,9 +50,6 @@ async function handler(m, { sock }) {
                 isForwarded: false
             }
         })
-        
-        await m.react('✅')
-        
     } catch (err) {
         return m.reply(novaError("Likee DL", "Gagal memproses video Likee. Coba lagi nanti!"))
     }

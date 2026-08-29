@@ -50,8 +50,6 @@ async function handler(m, { sock }) {
   db.setting("storeProducts", products);
 
   const typeIcon = deleted.type === "fisik" ? "📦" : "🔑";
-
-  await m.react("🐣");
   return m.reply(
     `🗑️ *ᴘʀᴏᴅᴜᴋ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
       `${typeIcon} Nama: *${deleted.name}*\n` +

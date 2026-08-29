@@ -232,13 +232,10 @@ async function handler(m, { sock, config: botConfig }) {
 
   // Sub-command: list
   if (text.toLowerCase() === "list" || text.toLowerCase() === "surahlist") {
-    await m.react("🕒");
     try {
       const surahs = await fetchSurahList();
-      await m.react("🐣");
       return m.reply( claraWrap("Daftar Surat", formatSurahList(surahs)));
     } catch (e) {
-      await m.react("🐣");
       return m.reply(claraWrap("Error", e.message));
     }
   }
@@ -250,13 +247,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (!num || num < 1 || num > 114) {
       return m.reply(claraWrap("AI Islam", "Nomor surat tidak valid.\nKetik .aiislam list untuk daftar surat."));
     }
-    await m.react("🕒");
     try {
       const surah = await fetchSurahDetail(num);
-      await m.react("🐣");
       return m.reply( claraWrap(`${surah.namaLatin}`, formatSurahContent(surah)));
     } catch (e) {
-      await m.react("🐣");
       return m.reply(claraWrap("Error", e.message));
     }
   }
@@ -271,18 +265,14 @@ async function handler(m, { sock, config: botConfig }) {
     if (!surahNum || surahNum < 1 || surahNum > 114 || !ayahNum) {
       return m.reply(claraWrap("AI Islam", "Format tidak valid. Contoh: .aiislam ayah 2:255"));
     }
-    await m.react("🕒");
     try {
       const surah = await fetchSurahDetail(surahNum);
       const formatted = formatAyahContent(surah, ayahNum);
       if (!formatted) {
-        await m.react("🐣");
         return m.reply(claraWrap("AI Islam", `Ayat ${ayahNum} tidak ditemukan di ${surah.namaLatin}. Surat ini punya ${surah.jumlahAyat} ayat.`));
       }
-      await m.react("🐣");
       return m.reply( claraWrap(`${surah.namaLatin}:${ayahNum}`, formatted));
     } catch (e) {
-      await m.react("🐣");
       return m.reply(claraWrap("Error", e.message));
     }
   }
@@ -297,18 +287,14 @@ async function handler(m, { sock, config: botConfig }) {
     if (!surahNum || !ayahNum) {
       return m.reply(claraWrap("AI Islam", "Format tidak valid. Contoh: .aiislam tafsir 1:1"));
     }
-    await m.react("🕒");
     try {
       const tafsirData = await fetchTafsir(surahNum);
       const formatted = formatTafsirContent(tafsirData, ayahNum);
       if (!formatted) {
-        await m.react("🐣");
         return m.reply(claraWrap("AI Islam", `Tafsir ayat ${ayahNum} tidak ditemukan di ${tafsirData.namaLatin}.`));
       }
-      await m.react("🐣");
       return m.reply( claraWrap(`Tafsir ${tafsirData.namaLatin}:${ayahNum}`, formatted));
     } catch (e) {
-      await m.react("🐣");
       return m.reply(claraWrap("Error", e.message));
     }
   }
@@ -326,7 +312,6 @@ async function handler(m, { sock, config: botConfig }) {
     if (!token) {
       return m.reply(claraWrap("AI Islam", "AI butuh token Puter. Set: .puter setkey <token>"));
     }
-    await m.react("🕒");
     try {
       // Ambil ayat + tafsir Kemenag
       const [surah, tafsirData] = await Promise.all([
@@ -336,7 +321,6 @@ async function handler(m, { sock, config: botConfig }) {
       const ayah = surah.ayat.find(a => a.nomorAyat === ayahNum);
       const tafsir = tafsirData.tafsir.find(t => t.ayat === ayahNum);
       if (!ayah) {
-        await m.react("🐣");
         return m.reply(claraWrap("AI Islam", `Ayat ${ayahNum} tidak ditemukan di ${surah.namaLatin}.`));
       }
 
@@ -345,10 +329,8 @@ async function handler(m, { sock, config: botConfig }) {
       const prompt = `Jelaskan tafsir ayat berikut dengan bahasa sederhana dan mudah dipahami:\n\nSurah ${surah.namaLatin} (QS ${surah.nomor}:${ayahNum})\nTeks Arab: ${ayah.teksArab}\nTransliterasi: ${ayah.teksLatin}\nTerjemahan: ${ayah.teksIndonesia}\n\nTafsir Kemenag: ${tafsirText}\n\nTolong jelaskan dengan bahasa yang lebih sederhana, berikan contoh penerapan dalam kehidupan sehari-hari jika relevan.`;
 
       const reply = await callPuterAI(token, [{ role: "user", content: prompt }]);
-      await m.react("🐣");
       return m.reply(claraWrap(`AI Tafsir ${surah.namaLatin}:${ayahNum}`, reply));
     } catch (e) {
-      await m.react("🐣");
       return m.reply(claraWrap("Error", e.message));
     }
   }
@@ -361,17 +343,13 @@ async function handler(m, { sock, config: botConfig }) {
     if (!surahNum || surahNum < 1 || surahNum > 114) {
       return m.reply(claraWrap("AI Islam", "Format: .aiislam audio <surah> <qari>\nQari: 01-06\n💡 *Contoh:* .aiislam audio 1 05"));
     }
-    await m.react("🕒");
     try {
       const surah = await fetchSurahDetail(surahNum);
       const qariName = QARI_LIST[qariId] || QARI_LIST["05"];
       const audioFull = surah.audioFull?.[qariId] || surah.audioFull?.["05"];
       if (!audioFull) {
-        await m.react("🐣");
         return m.reply(claraWrap("AI Islam", "Audio tidak ditemukan."));
       }
-      await m.react("🐣");
-
       // Kirim audio
       const audioRes = await fetch(audioFull, { signal: AbortSignal.timeout(30000) });
       if (audioRes.ok) {
@@ -385,7 +363,6 @@ async function handler(m, { sock, config: botConfig }) {
       }
       return m.reply(claraWrap("AI Islam", `Audio: ${audioFull}\nQari: ${qariName}`));
     } catch (e) {
-      await m.react("🐣");
       return m.reply(claraWrap("Error", e.message));
     }
   }
@@ -409,8 +386,6 @@ async function handler(m, { sock, config: botConfig }) {
   }
 
   // Chat AI
-  await m.react("🕒");
-
   try {
     session.messages.push({ role: "user", content: text });
 
@@ -421,11 +396,8 @@ async function handler(m, { sock, config: botConfig }) {
     const reply = await callPuterAI(token, session.messages);
 
     session.messages.push({ role: "assistant", content: reply });
-
-    await m.react("🐣");
     return m.reply(claraWrap("AI Islam", reply));
   } catch (error) {
-    await m.react("🐣");
     session.messages.pop();
 
     let errMsg = error.message || "Gagal menghubungi AI.";

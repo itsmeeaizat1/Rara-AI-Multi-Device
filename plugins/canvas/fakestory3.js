@@ -257,7 +257,6 @@ async function handler(m, { sock }) {
   const username = parts[0] || m.pushName || "User";
   const text1 = parts[1] || "";
   const text2 = parts[2] || "";
-  m.react("🕒");
   try {
     const avatarBuffer = await getAvatarBuffer(sock, m.sender);
     const isImage = m.isImage || (m.quoted && m.quoted.isImage);
@@ -289,7 +288,6 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
-    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("fakestory3", te(m.prefix, m.command, m.pushName), "error"));
   }

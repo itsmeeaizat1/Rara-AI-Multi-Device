@@ -224,9 +224,6 @@ ${toSC('Pilih tombol di bawah untuk melihat ranking')}!`
 async function showGroupLeaderboard(m, sock) {
   if (!m.isGroup)
     return m.reply(`╭──「 *${toSC('Leaderboard Grup')}* 」\n│ ${toSC('Hanya bisa digunakan di dalam grup')}\n╰──────────`)
-
-  if (typeof m.react === 'function') { try { await m.react('🕒'); } catch {} }
-
   trackActivity(m, { isCommand: true })
   const args = m.args || []
   const sub = args[0]?.toLowerCase()
@@ -242,11 +239,10 @@ async function showGroupLeaderboard(m, sock) {
     if (['on', 'off', 'enable', 'disable'].includes(sub)) {
       const isAdmin = await checkAdmin()
       if (!isAdmin) {
-        if (typeof m.react === 'function') { try { await m.react('❌'); } catch {} }
+        if (typeof m.react === 'function') { try { } catch {} }
         return m.reply(bracketBox('❌', 'Akses Ditolak', ['Fitur ini hanya dapat diubah oleh Admin Grup.']))
       }
       setActivityTracking(m.chat, sub === 'on' || sub === 'enable')
-      if (typeof m.react === 'function') { try { await m.react('🐣'); } catch {} }
       const status = sub === 'on' || sub === 'enable' ? 'Aktif' : 'Nonaktif'
       const desc = sub === 'on' || sub === 'enable' ? 'Pelacakan keaktifan diaktifkan.' : 'Pelacakan keaktifan dimatikan.'
       return m.reply(bracketBox('⚙️', 'Status Activity Tracker', [`Status: *${status}*`, desc]) + '\n' + tipText(`Ketik .aktifitas untuk melihat papan peringkat.`))
@@ -256,7 +252,6 @@ async function showGroupLeaderboard(m, sock) {
     if (['me', 'saya', 'my'].includes(sub)) {
       const userRank = getRank(m.chat, m.sender)
       if (!userRank || !userRank.memberStats) {
-        if (typeof m.react === 'function') { try { await m.react('🐣'); } catch {} }
         return m.reply(bracketBox('📊', 'Statistik Keaktifan Anda', ['Belum ada data aktivitas minggu ini.', 'Kirim pesan untuk mulai mengumpulkan poin!']) + '\n' + tipText('Poin: 1/pesan, 2/command, 5/media'))
       }
       const { rank, totalMembers, memberStats, topPercentage } = userRank
@@ -268,7 +263,6 @@ async function showGroupLeaderboard(m, sock) {
         `Command: ${formatNumber(memberStats.commandCount || 0)}x`,
         `Media: ${formatNumber(memberStats.mediaCount || 0)}x`,
       ]
-      if (typeof m.react === 'function') { try { await m.react('🐣'); } catch {} }
       return m.reply(bracketBox('📊', 'Statistik Keaktifan Anda', lines) + '\n' + tipText('Kirim lebih banyak pesan & media untuk menaikkan peringkat!'))
     }
 
@@ -276,11 +270,10 @@ async function showGroupLeaderboard(m, sock) {
     if (['reset', 'clear'].includes(sub)) {
       const isAdmin = await checkAdmin()
       if (!isAdmin) {
-        if (typeof m.react === 'function') { try { await m.react('❌'); } catch {} }
+        if (typeof m.react === 'function') { try { } catch {} }
         return m.reply(bracketBox('❌', 'Akses Ditolak', ['Hanya Admin Grup yang dapat mereset leaderboard.']))
       }
       resetWeekly(m.chat)
-      if (typeof m.react === 'function') { try { await m.react('🐣'); } catch {} }
       return m.reply(bracketBox('🔄', 'Reset Leaderboard', ['Leaderboard keaktifan grup berhasil direset.', 'Semua poin dikembalikan ke awal.']) + '\n' + tipText('Periode mingguan baru dimulai sekarang.'))
     }
 
@@ -300,20 +293,18 @@ async function showGroupLeaderboard(m, sock) {
         `Member Aktif: ${formatNumber(stats.activeMembers)} / ${stats.totalMembersTracked}`,
         `Top Member: ${topName} (${topPts} pts)`,
       ]
-      if (typeof m.react === 'function') { try { await m.react('🐣'); } catch {} }
       return m.reply(bracketBox('📈', 'Statistik Keaktifan Grup', lines) + '\n' + tipText('Gunakan .aktifitas untuk melihat top 10 member.'))
     }
 
     // default: top 10
     const status = getActivityStatus(m.chat)
     if (!status.trackingEnabled) {
-      if (typeof m.react === 'function') { try { await m.react('❌'); } catch {} }
+      if (typeof m.react === 'function') { try { } catch {} }
       return m.reply(bracketBox('⚠️', 'Leaderboard Nonaktif', ['Pelacakan keaktifan di grup ini dinonaktifkan.', 'Admin dapat mengaktifkannya: .aktifitas on']))
     }
 
     const lb = getLeaderboard(m.chat, 10)
     if (!lb || lb.length === 0) {
-      if (typeof m.react === 'function') { try { await m.react('🐣'); } catch {} }
       return m.reply(bracketBox('🏆', 'Leaderboard Keaktifan Minggu Ini', ['Belum ada data keaktifan member minggu ini.', 'Mulai kirim pesan untuk mencatatkan poin!']) + '\n' + tipText('Poin: 1/pesan, 2/command, 5/media'))
     }
 
@@ -322,11 +313,10 @@ async function showGroupLeaderboard(m, sock) {
       const name = item.name || item.jid.split('@')[0]
       return `${icon} ${name} — *${formatNumber(item.points)} pts* (${formatNumber(item.messageCount)} pesan)`
     })
-    if (typeof m.react === 'function') { try { await m.react('🐣'); } catch {} }
     return m.reply(bracketBox('🏆', 'Leaderboard Keaktifan Minggu Ini', lines) + '\n' + tipText('Poin: 1/pesan, 2/command, 5/media | .aktifitas me untuk rank Anda'))
 
   } catch (error) {
-    if (typeof m.react === 'function') { try { await m.react('❌'); } catch {} }
+    if (typeof m.react === 'function') { try { } catch {} }
     return m.reply(bracketBox('❌', 'Error Leaderboard', [`Terjadi kesalahan: ${error.message}`]))
   }
 }

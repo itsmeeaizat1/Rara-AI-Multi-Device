@@ -73,7 +73,6 @@ async function handler(m, { sock }) {
     const success = addStickerCommand(stickerHash, cleanCmd, m.sender)
     
     if (success) {
-        await m.react('✅')
         await m.reply(
             `✅ *ꜱᴛɪᴄᴋᴇʀ ᴄᴏᴍᴍᴀɴᴅ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
             `🖼️ Sticker → \`.${cleanCmd}\`\n\n` +

@@ -90,9 +90,6 @@ async function handler(m, { sock }) {
   if (!url.match(/tiktok\.com|vt\.tiktok/i)) {
     return m.reply(novaGuide("TikTok Audio", "Link yang kamu masukkan bukan link TikTok valid!", `${m.prefix}ttmp3 https://vt.tiktok.com/xxx`));
   }
-
-  m.react("🕒");
-
   try {
     const result = await ttdown(url);
     const audioDownload = result.downloads.find((d) => d.type === "mp3");
@@ -117,9 +114,6 @@ async function handler(m, { sock }) {
       mimetype: "audio/mpeg",
       fileName: `TikTok_Audio_${Date.now()}.mp3`,
     });
-
-    m.react("🐣");
-
     // cleanup
     cleanupTempFiles();
   } catch (err) {

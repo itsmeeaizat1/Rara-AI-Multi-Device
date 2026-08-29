@@ -78,9 +78,7 @@ async function handler(m, { sock, db, config: botConfig }) {
   }
 
   if (sub === "cek" || sub === "check") {
-    await m.react("🕒");
     const data = await checkBMKG();
-    await m.react("🐣");
     if (!data) {
       await m.reply(novaError("AutoWeather", "Gagal fetch BMKG nih, coba lagi ya"));
       return { handled: true };

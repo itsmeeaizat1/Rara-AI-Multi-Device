@@ -86,7 +86,6 @@ async function handler(m, { sock }) {
 
     fs.unlinkSync(wavPath);
     fs.unlinkSync(opusPath);
-    m.react("🐣");
   } catch (err) {
     m.reply(claraWrap("ttselon", te(m.prefix, m.command, m.pushName), "error"));
   }

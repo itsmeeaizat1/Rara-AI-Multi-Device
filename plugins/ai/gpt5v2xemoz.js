@@ -55,15 +55,10 @@ async function handler(m, { sock }) {
     const help = `Kirim pertanyaan setelah command.\n💡 *Contoh:* .gpt5v2xemoz jelaskan kuantum computing`;
     return m.reply( claraWrap("GPT-5.5", help));
   }
-
-  await m.react("🕒");
-
   try {
     const reply = await callGPT5(text);
-    await m.react("🐣");
     return m.reply(claraWrap("GPT-5.5", reply));
   } catch (error) {
-    await m.react("🐣");
     return m.reply(claraWrap("GPT-5.5 Error", error.message || "Gagal hubungin AI nih"));
   }
 }

@@ -26,8 +26,6 @@ async function handler(m, { sock }) {
     if(!kata) return m.reply( `*KATA KATA NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
     if(!jumlah) return m.reply( `*JUMLAH NYA MANA ??*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`, "spamngl")
     if(isNaN(jumlah)) { const __navText = `*ᴊᴜᴍʟᴀʜ ɴʏᴀ ʜᴀʀᴜꜱ ᴀɴɢᴋᴀ*\n\n💡 *Contoh:* \`${m?.prefix}spamngl https://ngl.link/xxxx | hai | 10`; return await m.reply(__navText); }
-    m.react('🕐')
-    
     try {
         for(let i = 0; i < jumlah; i++) {
             axios.get(`https://api.cuki.biz.id/api/tools/sendngl?apikey=${config.APIkey.cuki}&link=${encodeURIComponent(link)}&text=${encodeURIComponent(kata)}`, {
@@ -35,7 +33,6 @@ async function handler(m, { sock }) {
             })
             await new Promise(resolve => setTimeout(resolve, 4000))
         }
-        await m.react('✅')
         await sock.sendMessage(m.chat, {
             text: `✅ *ᴅᴏɴᴇ*\n\nBerhasil mengirim spam NGL Message!\nTarget: ${link}\nPesan: ${kata} (${jumlah}x)`
         }, { quoted: m })

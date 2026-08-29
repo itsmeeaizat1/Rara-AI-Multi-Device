@@ -24,8 +24,6 @@ async function handler(m, { sock }) {
     
     if (currentAfk && currentAfk.active) {
         db.setting('botAfk', { active: false })
-        await m.react('✅')
-        
         const afkDuration = Date.now() - currentAfk.since
         const duration = formatDuration(afkDuration)
         

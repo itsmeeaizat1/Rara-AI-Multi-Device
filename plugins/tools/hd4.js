@@ -166,9 +166,6 @@ async function handler(m, { sock, args }) {
       m.prefix + "reminiv2 2 fx — 2x + face enhance",
     ].join("\n")), "reminiv2");
   }
-
-  await m.react("🕒");
-
   try {
     const buffer = m.quoted?.isMedia
       ? await m.quoted.download()
@@ -269,9 +266,6 @@ async function handler(m, { sock, args }) {
           .toBuffer();
       }
     }
-
-    m.react("🐣");
-
     const sizeKB = (processedBuffer.length / 1024).toFixed(0);
     const sizeMB = (processedBuffer.length / (1024 * 1024)).toFixed(2);
     const sizeLabel = sizeKB > 1024 ? sizeMB + "MB" : sizeKB + "KB";
@@ -306,7 +300,6 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[ReminiV2] Error:", e.message);
-    m.react("❌");
     m.reply(claraWrap("Remini V2", [
       "Gagal: " + e.message,
       "",

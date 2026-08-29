@@ -490,11 +490,9 @@ async function handler(m, { sock }) {
       const parts = key.split(":");
       if (parts.length < 2) return m.reply( claraWrap("Nokos Beli", "Format NexusSMM:\n.nokosbeli setkey nexus <api_id>:<api_key>\n\nContoh:\n.nokosbeli setkey nexus SHizVS9:531446-ed17f7"), "nokosbeli");
       data.provider = prov; data.apiId = parts[0]; data.apiKey = parts.slice(1).join(":"); saveData(data);
-      await m.react("🐣");
       return m.reply( claraWrap("Nokos Beli", "API Key tersimpan!\nProvider: " + prov + "\nAPI ID: " + parts[0].slice(0,6) + "..." + "\nAPI Key: " + data.apiKey.slice(0,6) + "..." + data.apiKey.slice(-4)), "nokosbeli");
     }
     data.provider = prov; data.apiKey = key; saveData(data);
-    await m.react("🐣");
     return m.reply( claraWrap("Nokos Beli", "API Key tersimpan!\nProvider: " + prov + "\nKey: " + key.slice(0,6) + "..." + key.slice(-4)), "nokosbeli");
   }
 
@@ -508,7 +506,6 @@ async function handler(m, { sock }) {
     }
     const targetUser = getUser(data, target + "@s.whatsapp.net");
     targetUser.balance += amount; saveData(data);
-    await m.react("🐣");
     return m.reply( claraWrap("Nokos Beli", "Topup Berhasil!\n\nUser: " + target + "\nJumlah: " + formatRupiah(amount) + "\nSaldo: " + formatRupiah(targetUser.balance)), "nokosbeli");
   }
 
@@ -521,7 +518,6 @@ async function handler(m, { sock }) {
     }
     const cData = COUNTRIES[parseInt(country)];
     if (cData) cData[service] = price;
-    await m.react("🐣");
     return m.reply( claraWrap("Nokos Beli", "Harga diupdate!\n" + (cData ? cData.name : country) + " - " + service.toUpperCase() + "\nStandard: " + formatRupiah(price) + "\nBudget: " + formatRupiah(calcPrice(price, "budget")) + "\nPremium: " + formatRupiah(calcPrice(price, "premium"))), "nokosbeli");
   }
 
@@ -539,7 +535,6 @@ async function handler(m, { sock }) {
     }
     if (!TIERS[choice]) return m.reply( claraWrap("Nokos Beli", "Tier tidak valid!\nPilihan: budget, standard, premium"), "nokosbeli");
     user.tier = choice; saveData(data);
-    await m.react("🐣");
     const t = TIERS[choice];
     const indoWa = calcPrice(COUNTRIES[6] ? COUNTRIES[6].wa : 5000, choice);
     return m.reply( claraWrap("Nokos Beli", "Tier: " + t.name + "\n\n" + t.desc + "\n" + t.note + "\n\nWA Indo: " + formatRupiah(indoWa) + "\n\n.nokosbeli harga 6 wa"), "nokosbeli");
@@ -547,7 +542,6 @@ async function handler(m, { sock }) {
 
   // SALDO
   if (sub === "saldo" || sub === "balance") {
-    await m.react("🐣");
     let body = "Saldo Nokos Beli\n\nSaldo: " + formatRupiah(user.balance) + "\nTier: " + (TIERS[tier] ? TIERS[tier].name : "Budget") + "\nTotal order: " + user.totalOrders + "\nTotal spent: " + formatRupiah(user.totalSpent);
     if (isOwner && data.apiKey) {
       body += "\n\n--- Owner ---\nProvider: " + data.provider + "\n";
@@ -581,7 +575,6 @@ async function handler(m, { sock }) {
     }
     const service = (arg1 || "wa").toLowerCase();
     const country = arg2 || "6";
-    await m.react("🕒");
     try {
       if (data.provider === "wn1") {
         const sCode = WN_SERVICES_S1[service];
@@ -596,7 +589,6 @@ async function handler(m, { sock }) {
             body += c.name + ": Rp" + p + " (stok: " + (c.pricelist && c.pricelist[0] ? c.pricelist[0].stock : 0) + ")\n";
           });
           if (countries.length > 20) body += "\n... dan " + (countries.length - 20) + " negara lain";
-          await m.react("🐣");
           return m.reply( claraWrap("Nokos Beli", body), "nokosbeli");
         }
         let body = "Harga WarungNokos S1\n\n" + match.name + " - " + (SERVICES[service] || service) + "\n\n";
@@ -611,14 +603,12 @@ async function handler(m, { sock }) {
           body += "  Stok: " + p.stock + "\n\n";
         });
         body += "Beli: .nokosbeli buy " + country + " " + service;
-        await m.react("🐣");
         return m.reply( claraWrap("Nokos Beli", body), "nokosbeli");
       } else {
         const sId = WN_SERVICES_S2[service];
         if (!sId) return m.reply( claraWrap("Nokos Beli", "Layanan tidak ada di WN Server 2"), "nokosbeli");
         const products = await wn2GetProducts(data.apiKey, sId, parseInt(country));
         if (!products || products.length === 0) {
-          await m.react("🐣");
           return m.reply( claraWrap("Nokos Beli", "Tidak ada stok untuk negara ini di WN Server 2\n\nCoba negara lain atau gunakan WN Server 1"), "nokosbeli");
         }
         let body = "Harga WarungNokos S2 - " + (SERVICES[service] || service) + "\n\n";
@@ -632,11 +622,9 @@ async function handler(m, { sock }) {
           body += "   Stok: " + p.available + "\n\n";
         });
         body += "Beli: .nokosbeli buy " + country + " " + service;
-        await m.react("🐣");
         return m.reply( claraWrap("Nokos Beli", body), "nokosbeli");
       }
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("Nokos Beli", "Error: " + err.message + "\n\nCek API key atau coba lagi."), "nokosbeli");
     }
   }
@@ -647,13 +635,11 @@ async function handler(m, { sock }) {
     }
     const keyword = (arg1 || "whatsapp").toLowerCase();
     const countryFilter = arg2 ? arg2.toLowerCase() : "";
-    await m.react("🕒");
     try {
       const services = await nexusServices(data);
       let filtered = services.filter(s => (s.product || "").toLowerCase().includes(keyword));
       if (countryFilter) filtered = filtered.filter(s => (s.country || "").toLowerCase().includes(countryFilter));
       if (filtered.length === 0) {
-        await m.react("🐣");
         return m.reply( claraWrap("Nokos Beli", "Tidak ada layanan untuk: " + keyword + (countryFilter ? " di " + countryFilter : "") + "\n\nCoba keyword lain, contoh:\n.nokosbeli nexusharga whatsapp indonesia\n.nokosbeli nexusharga telegram\n.nokosbeli nexusharga gmail"), "nokosbeli");
       }
       filtered.sort((a, b) => parseInt(a.price_idr) - parseInt(b.price_idr));
@@ -666,10 +652,8 @@ async function handler(m, { sock }) {
       });
       if (filtered.length > 20) body += "... dan " + (filtered.length - 20) + " layanan lain\n";
       body += "\nBeli: .nokosbeli nexusbuy <service_id>\n💡 *Contoh:* .nokosbeli nexusbuy " + filtered[0].id;
-      await m.react("🐣");
       return m.reply( claraWrap("Nokos Beli", body), "nokosbeli");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("Nokos Beli", "Error: " + err.message + "\n\nCek API key atau coba lagi."), "nokosbeli");
     }
   }
@@ -680,7 +664,6 @@ async function handler(m, { sock }) {
     }
     const serviceId = arg1;
     if (!serviceId) return m.reply( claraWrap("Nokos Beli", "Masukkan Service ID!\n💡 *Contoh:* .nokosbeli nexusbuy 5320448\n\nCari ID: .nokosbeli nexusharga whatsapp indonesia"), "nokosbeli");
-    await m.react("🕒");
     try {
       const services = await nexusServices(data);
       const svc = services.find(s => String(s.id) === String(serviceId));
@@ -689,16 +672,13 @@ async function handler(m, { sock }) {
       const priceBase = parseInt(svc.price_idr) || 0;
       const price = Math.round(priceBase * t.multiplier / 100) * 100;
       if (user.balance < price) {
-        await m.react("🐣");
         return m.reply( claraWrap("Nokos Beli", "Saldo tidak cukup!\n\nHarga (" + t.name + "): " + formatRupiah(price) + "\nSaldo: " + formatRupiah(user.balance) + "\nKurang: " + formatRupiah(price - user.balance) + "\n\nMinta topup:\n.nokosbeli topup " + sender.split("@")[0] + " <jumlah>"), "nokosbeli");
       }
       const token = genToken();
       data.pendingPayments[token] = { sender, country: "nexus", service: serviceId, price, tier, nexusService: true, nexusName: (svc.product || "Unknown") + " - " + (svc.country || "?"), createdAt: Date.now(), expiresAt: Date.now() + 300000 };
       saveData(data);
-      await m.react("🐣");
       return m.reply( claraWrap("Nokos Beli", "Konfirmasi Pembelian NexusSMM\n\nLayanan: " + (svc.product || "?") + "\nNegara: " + (svc.country || "?") + "\nHarga API: Rp" + priceBase + "\nTier: " + t.name + "\nHarga: " + formatRupiah(price) + "\nSaldo: " + formatRupiah(user.balance) + "\nSisa: " + formatRupiah(user.balance - price) + "\n\nToken: " + token + "\n\nBayar: .nokosbeli bayar " + token + "\nExpired: 5 menit"), "nokosbeli");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("Nokos Beli", "Error: " + err.message), "nokosbeli");
     }
   }
@@ -719,7 +699,6 @@ async function handler(m, { sock }) {
     const token = genToken();
     data.pendingPayments[token] = { sender, country, service, price, tier, createdAt: Date.now(), expiresAt: Date.now() + 300000 };
     saveData(data);
-    await m.react("🐣");
     return m.reply( claraWrap("Nokos Beli", "Konfirmasi Pembelian\n\nNegara: " + cData.name + " (" + country + ")\nLayanan: " + (SERVICES[service] || service) + "\nTier: " + TIERS[tier].name + "\nHarga: " + formatRupiah(price) + "\nSaldo: " + formatRupiah(user.balance) + "\nSisa: " + formatRupiah(user.balance - price) + "\n\nToken: " + token + "\n\nBayar: .nokosbeli bayar " + token + "\nExpired: 5 menit"), "nokosbeli");
   }
 
@@ -733,7 +712,6 @@ async function handler(m, { sock }) {
     if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("Nokos Beli", "Token expired!\nBeli: .nokosbeli buy " + pending.country + " " + pending.service), "nokosbeli"); }
     const u = getUser(data, sender);
     if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("Nokos Beli", "Saldo tidak cukup!"), "nokosbeli"); }
-    await m.react("🕒");
     u.balance -= pending.price; u.totalSpent += pending.price;
     try {
       const order = pending.type === "rent" ? await rentNumber(data, pending.country, pending.service, pending.tier) : await buyNumber(data, pending.country, pending.service, pending.tier);
@@ -741,12 +719,10 @@ async function handler(m, { sock }) {
       data.orders.push({ id: String(order.id), phone: order.phone, country: pending.country, service: pending.service, price: pending.price, tier: pending.tier, sender, status: "WAITING", createdAt: new Date().toISOString() });
       if (data.orders.length > 100) data.orders = data.orders.slice(-100);
       u.totalOrders += 1; delete data.pendingPayments[token]; saveData(data);
-      await m.react("🐣");
       const rentInfo = pending.type === "rent" ? "\nRental aktif 12 jam - OTP bisa berkali-kali!" : "\nOTP ulang kalau miss: .nokosbeli retry " + order.id;
       return m.reply( claraWrap("Nokos Beli", "Pembelian Berhasil!\n\nNomor: " + phone + "\nNegara: " + (COUNTRIES[parseInt(pending.country)] ? COUNTRIES[parseInt(pending.country)].name : pending.country) + "\nLayanan: " + (pending.nexusName || pending.service.toUpperCase()) + "\nTipe: " + (pending.type === "rent" ? "RENTAL (12 jam)" : "SEKALI PAKAI") + "\nTier: " + (TIERS[pending.tier] ? TIERS[pending.tier].name : "Budget") + "\nHarga: " + formatRupiah(pending.price) + "\nSisa: " + formatRupiah(u.balance) + "\nOrder ID: " + order.id + "\n" + rentInfo + "\n\nCek OTP:\n.nokosbeli otp " + order.id + "\n\nBatal:\n.nokosbeli batal " + order.id), "nokosbeli");
     } catch (err) {
       u.balance += pending.price; u.totalSpent -= pending.price; delete data.pendingPayments[token]; saveData(data);
-      await m.react("🐣");
       return m.reply( claraWrap("Nokos Beli", "Gagal beli! Saldo di-refund: " + formatRupiah(pending.price) + "\n\nError: " + err.message + "\n\nCoba tier/negara lain."), "nokosbeli");
     }
   }
@@ -756,10 +732,8 @@ async function handler(m, { sock }) {
     const orderId = arg1;
     if (!orderId) return m.reply( claraWrap("Nokos Beli", "Masukkan Order ID!\n💡 *Contoh:* .nokosbeli otp 12345\nLihat: .nokosbeli list"), "nokosbeli");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
-    await m.react("🕒");
     try {
       const result = await checkOrder(data, orderId);
-      await m.react("🐣");
       let body = "Order #" + orderId + "\n\nNomor: +" + (result.phone || (order ? order.phone : "??")) + "\nStatus: " + result.status + "\n";
       if (result.sms && result.sms.length > 0) {
         body += "\nOTP diterima:\n";
@@ -774,7 +748,6 @@ async function handler(m, { sock }) {
       }
       return m.reply( claraWrap("Nokos Beli", body), "nokosbeli");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("Nokos Beli", "Error: " + err.message), "nokosbeli");
     }
   }
@@ -785,10 +758,8 @@ async function handler(m, { sock }) {
     if (!orderId) return m.reply( claraWrap("Nokos Beli", "Masukkan Order ID!\n💡 *Contoh:* .nokosbeli retry 12345"), "nokosbeli");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("Nokos Beli", "Order tidak ditemukan!"), "nokosbeli");
-    await m.react("🕒");
     try {
       const result = await retryOrder(data, orderId);
-      await m.react("🐣");
       if (result.success) {
         saveData(data);
         return m.reply( claraWrap("Nokos Beli", "Permintaan OTP ulang dikirim!\n\nNomor: +" + (order.phone || "??") + "\nOrder ID: " + orderId + "\n\nOTP baru akan datang dalam 1-3 menit.\nCek: .nokosbeli otp " + orderId), "nokosbeli");
@@ -796,7 +767,6 @@ async function handler(m, { sock }) {
         return m.reply( claraWrap("Nokos Beli", "Gagal minta OTP ulang.\n\nKemungkinan:\n1. Nomor sudah tidak aktif (expired)\n2. Provider tidak support retry\n3. OTP pertama belum masuk\n\nSolusi: Beli nomor baru\n.nokosbeli buy " + (order.country || 6) + " " + (order.service || "wa")), "nokosbeli");
       }
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("Nokos Beli", "Error: " + err.message), "nokosbeli");
     }
   }
@@ -816,7 +786,6 @@ async function handler(m, { sock }) {
     const token = genToken();
     data.pendingPayments[token] = { sender, country, service, price, tier, type: "rent", createdAt: Date.now(), expiresAt: Date.now() + 300000 };
     saveData(data);
-    await m.react("🐣");
     return m.reply( claraWrap("Nokos Beli", "Konfirmasi Rental Nomor\n\nNegara: " + cData.name + " (" + country + ")\nLayanan: " + (SERVICES[service] || service) + "\nDurasi: 12 jam\nHarga: " + formatRupiah(price) + "\nSaldo: " + formatRupiah(user.balance) + "\nSisa: " + formatRupiah(user.balance - price) + "\n\nKeuntungan rental:\n- Bisa terima OTP berkali-kali\n- Nomor aktif 12 jam\n- Cocok untuk login yang butuh verifikasi ulang\n\nToken: " + token + "\n\nBayar: .nokosbeli bayar " + token + "\nExpired: 5 menit"), "nokosbeli");
   }
   // BATAL
@@ -825,17 +794,14 @@ async function handler(m, { sock }) {
     if (!orderId) return m.reply( claraWrap("Nokos Beli", "Masukkan Order ID!\n💡 *Contoh:* .nokosbeli batal 12345"), "nokosbeli");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("Nokos Beli", "Order tidak ditemukan!"), "nokosbeli");
-    await m.react("🕒");
     try {
       const result = await cancelOrderApi(data, orderId);
-      await m.react("🐣");
       const refund = Math.floor((order ? order.price : 0) * 0.5);
       if (order && refund > 0) { const u = getUser(data, sender); u.balance += refund; }
       if (order) order.status = "CANCELED";
       saveData(data);
       return m.reply( claraWrap("Nokos Beli", result.success ? "Order #" + orderId + " dibatalkan.\nRefund 50%: " + formatRupiah(refund) + "\nSaldo: " + formatRupiah(user.balance + refund) : "Gagal batalkan. OTP mungkin sudah masuk."), "nokosbeli");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("Nokos Beli", "Error: " + err.message), "nokosbeli");
     }
   }

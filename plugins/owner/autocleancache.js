@@ -115,16 +115,13 @@ async function handler(m, { sock }) {
 
     // Clean now (manual one-time)
     if (action === "now") {
-      await m.react("🕒");
       const result = runCleanup();
       if (result.totalCleaned > 0) {
         let txt = "Cache dibersihkan!\n\n";
         for (const d of result.details) txt += d + "\n";
         txt += "\nTotal: " + result.totalCleaned + " file | " + formatSize(result.totalFreed) + " dibebaskan";
-        await m.react("🐣");
         return m.reply(claraWrap("autocleancache", txt));
       } else {
-        await m.react("🐣");
         return m.reply(claraWrap("Autocleancache", "Cache sudah bersih, tidak ada file yang perlu dihapus."));
       }
     }

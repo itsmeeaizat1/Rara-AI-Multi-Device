@@ -51,9 +51,6 @@ async function handler(m, { sock }) {
     if (!query) {
         { const __navText = `🧱 *ᴍᴄᴘᴇᴅʟ ꜱᴇᴀʀᴄʜ*\n\nContoh:\n\`${m.prefix}mcpe survival\``; return await m.reply( __navText, "mcpedl"); }
     }
-
-    m.react('🕐')
-
     try {
         const result = await fetchMcpe(query)
         const items = result.results.slice(0, 10)
@@ -81,8 +78,6 @@ async function handler(m, { sock }) {
         } else {
             await m.reply(caption.trim())
         }
-
-        m.react('✅')
     } catch (error) {
         console.log(error)
         m.reply(claraWrap("mcpedl", te(m.prefix, m.command, m.pushName), "error"))

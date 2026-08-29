@@ -30,13 +30,8 @@ async function handler(m, { sock }) {
         }
 
         pendingReset.delete(m.sender)
-        await m.react('🕐')
-
         const db = getDatabase()
         const result = db.resetToDefaults()
-
-        await m.react('✅')
-
         await sock.sendMessage(m.chat, {
             text:
                 `🗑️ *Data Direset*\n\n` +

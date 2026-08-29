@@ -25,8 +25,6 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
   const city = (m.args || []).join(" ").trim();
-  await m.react("🕒");
-
   try {
     const settings = getWeatherStatus();
     const location = city
@@ -38,8 +36,6 @@ async function handler(m, { sock }) {
       { ...settings, location },
       { label: "Sekarang" },
     );
-
-    await m.react("🐣");
     const _lines = message.split("\n").filter(l => l.trim());
     return await m.reply(claraWrap("cekcuaca", claraWrap(_lines)));
   } catch (error) {

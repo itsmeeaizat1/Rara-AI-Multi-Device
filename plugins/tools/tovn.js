@@ -73,8 +73,6 @@ async function handler(m, { sock }) {
     const ext = isVideo ? 'mp4' : 'mp3'
     const inputPath = path.join(tempDir, `input_${timestamp}.${ext}`)
     const outputPath = path.join(tempDir, `vn_${timestamp}.ogg`)
-
-    await m.react('🕐')
     try {
         const buffer = await downloadFn()
 
@@ -114,9 +112,6 @@ async function handler(m, { sock }) {
             type: 'audio', mimetype: 'audio/ogg; codecs=opus',
             ptt: true
         })
-
-        await m.react('✅')
-
     } catch (error) {
         await m.reply(claraWrap("ERROR", `❌ *ᴇʀʀᴏʀ*\n\n` +
             `Terjadi kesalahan saat memproses.\n` +

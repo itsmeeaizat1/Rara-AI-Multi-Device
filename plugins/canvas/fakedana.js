@@ -56,16 +56,12 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("FAKE DANA", `*ꜰᴀᴋᴇ ᴅᴀɴᴀ*\n\n\`Contoh: ${m.prefix}fakedana 10000\``), "fakedana")
     }
     if(isNaN(nominal)) { const __navText = `*ʜᴀʀᴀᴘ ᴍᴀꜱᴜᴋᴋᴀɴ ᴀɴɢᴋᴀ*`; return await m.reply(__navText); }
-    m.react('🕐')
-    
     try {
         const saldo = Number(nominal.replace(/[^0-9]/g, '')).toLocaleString('id-ID')
         const fake = await generate(saldo)
         await sock.sendMedia(m.chat, fake, null, m, {
             type: 'image',
         })
-        m.react('✅')
-        
     } catch (error) {
         m.reply(claraWrap("fakedana", te(m.prefix, m.command, m.pushName), "error"))
     }

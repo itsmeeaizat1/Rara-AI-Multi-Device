@@ -104,17 +104,14 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     const bab = args.slice(2).join(" ").trim() || "Bab 1";
-    await m.react("🕒");
     try {
       const prompt = "Buku: " + club.title + "\nBuat 3 pertanyaan diskusi menarik untuk " + bab + ". Singkat, provoking, dalam bahasa Indonesia. Hanya 3 pertanyaan dengan nomor.";
       const result = await UnlimitedAI(prompt, "nova-ai");
       const questions = result?.success ? result.response : "Gagal generate pertanyaan nih, coba lagi ya";
       club.discussions.push({ bab, questions, ts: Date.now(), by: m.sender });
       saveClub(db, gid, club);
-      await m.react("🐣");
       await m.reply(claraWrap("Book Club Discussion", "Buku: " + club.title + "\n" + bab + "\n\n" + questions));
     } catch {
-      await m.react("❌");
       await m.reply(novaError("AIBookClub", "Gagal generate pertanyaan nih"));
     }
     return { handled: true };

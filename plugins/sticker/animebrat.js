@@ -25,16 +25,12 @@ async function handler(m, { sock }) {
     if (!text) {
         { const __navText = `🖼️ *ʙʀᴀᴛ ᴀɴɪᴍᴇ ꜱᴛɪᴄᴋᴇʀ*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}animebrat Hai semua\``; return await m.reply( __navText, "bratanime"); }
     }
-    
-    m.react('🕐')
-    
     try {
         const url = `https://api.nexray.web.id/maker/bratanime?text=${encodeURIComponent(text)}`
         await sock.sendImageAsSticker(m.chat, url, m, {
             packname: config.sticker.packname,
             author: config.sticker.author
         })
-        m.react('✅')
     } catch (error) {
         m.reply(claraWrap("animebrat", te(m.prefix, m.command, m.pushName), "error"))
     }

@@ -133,7 +133,6 @@ async function handler(m, { sock }) {
 
     if (subCommand === 'on') {
         db.setGroup(m.chat, { antitoxic: true })
-        m.react('✅')
         await m.reply(claraWrap("Antitoxic", `✅ *ᴀɴᴛɪᴛᴏxɪᴄ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`))
         return
     }
@@ -150,7 +149,6 @@ async function handler(m, { sock }) {
             return m.reply(`❌ Masukkan angka 1-10\n💡 *Contoh:* \`.antitoxic warn 5\``)
         }
         db.setGroup(m.chat, { toxicMaxWarn: count })
-        m.react('✅')
         await m.reply(claraWrap("Antitoxic", `✅ Max peringatan diubah ke *${count}*`))
         return
     }
@@ -161,7 +159,6 @@ async function handler(m, { sock }) {
             return m.reply(`❌ Pilih metode: *ᴋɪᴄᴋ* atau *ᴅᴇʟᴇᴛᴇ*\n💡 *Contoh:* \`.antitoxic metode kick\``)
         }
         db.setGroup(m.chat, { toxicMethod: method })
-        m.react('✅')
         await m.reply(claraWrap("Antitoxic", `✅ Metode diubah ke *${method}*`))
         return
     }

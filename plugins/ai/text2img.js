@@ -25,16 +25,11 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply(claraWrap("Text To Image", `📿 *ᴛᴇxᴛ ᴛᴏ ɪᴍᴀɢᴇ*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}text2img Buat gambar dari teks\``), "text2img");
   }
-
-  m.react("🕒");
-
   try {
     const url = `https://firefly.maiku.my.id/api/deepai?apikey=${config.APIkey.firefly}&prompt=${encodeURIComponent(text)}`;
     const data = await axios.get(url);
 
     const content = data.data.data.output_url;
-
-    m.react("🐣");
     const caption = mediaCaption({
       platformIcon: "🎨",
       platformName: "AI Image",

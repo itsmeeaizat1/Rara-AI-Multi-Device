@@ -187,9 +187,6 @@ async function handler(m, { sock, config: botConfig }) {
     if (!textA || !textB) {
       return m.reply(claraWrap("Diff", "Kedua teks tidak boleh kosong!"));
     }
-
-    await m.react("🕒");
-
     let diffs;
 
     if (mode === "word") {
@@ -212,8 +209,6 @@ async function handler(m, { sock, config: botConfig }) {
 
     const output = formatDiff(diffs, mode);
     const modeLabel = mode === "word" ? "Word Level" : "Line Level";
-
-    await m.react("🐣");
     return m.reply(claraWrap("Diff Result (" + modeLabel + ")", output));
   } catch (e) {
     console.error("diff error:", e);

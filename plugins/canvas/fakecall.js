@@ -55,9 +55,6 @@ async function handler(m, { sock }) {
     if (!nama) {
         return m.reply(novaError("FakeCall", "Nama gak boleh kosong nih!"));
     }
-    
-    await m.react('🕐')
-    
     try {
         let avatar = 'https://files.catbox.moe/nwvkbt.png'
         

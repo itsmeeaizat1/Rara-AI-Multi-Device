@@ -29,9 +29,6 @@ async function handler(m, { sock, command }) {
     if (isNaN(num) || num < 1 || num > 65) {
         { const __navText = `🎵 *ᴍᴜꜱɪᴄ ᴄᴏʟʟᴇᴄᴛɪᴏɴ*\n\nTersedia: .music1 - .music65`; return await m.reply(__navText); }
     }
-    
-    m.react('🕐')
-    
     const musicUrl = `https://raw.githubusercontent.com/Rez4-3yz/Music-rd/master/music/music${num}.mp3`
     try {
         await sock.sendMedia(m.chat, musicUrl, null, m, {
@@ -39,9 +36,6 @@ async function handler(m, { sock, command }) {
             mimetype: 'audio/mpeg',
             ptt: false
         })
-        
-        m.react('✅')
-        
     } catch (err) {
         m.reply(claraWrap("music", `❌ *ᴇʀʀᴏʀ*\n\nMusik tidak ditemukan atau gagal diambil.`))
     }

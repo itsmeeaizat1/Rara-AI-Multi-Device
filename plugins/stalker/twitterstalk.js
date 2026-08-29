@@ -37,9 +37,6 @@ async function handler(m, { sock }) {
 │ 💡 *Contoh:* \`${m.prefix}twitterstalk elonmusk\`
 ╰──────────`, "twitterstalk");
   }
-
-  await m.react("🕒");
-
   try {
     const res = await axios.get(
       `https://api.siputzx.my.id/api/s/twitterstalk?username=${encodeURIComponent(username)}`,
@@ -69,7 +66,6 @@ async function handler(m, { sock }) {
         });
         const ppBuf = Buffer.from(ppRes.data);
         await sock.sendMessage(m.chat, { image: ppBuf, caption: text }, { quoted: m });
-        await m.react("🐣");
         return;
       } catch {
         text += `\n_PP gagal dimuat_`;
@@ -77,10 +73,8 @@ async function handler(m, { sock }) {
     }
     text += `\n_Link: https://x.com/${d.username || username}_`;
     await m.reply( text, "twitterstalk");
-    await m.react("🐣");
   } catch (err) {
     console.error("[TwitterStalk] Error:", err.message);
-    await m.react("❌");
     return m.reply( te(m.prefix, m.command, m.pushName), "twitterstalk");
   }
 }

@@ -32,18 +32,12 @@ async function handler(m, { sock }) {
         `*${m.prefix}deepseek Buat kode sorting algorithm*\n\n` +
         `_Bot akan mikir dulu, baru jawab — jadi agak lama sedikit_`));
   }
-
-  await m.react("🕒");
-
   try {
     const result = await DeepSeekThinking(text);
 
     if (!result.success) {
       return m.reply(novaError("DeepSeek", "Gagal dapet respons nih"));
     }
-
-    await m.react("🐣");
-
     let reply = ``;
 
     if (result.reasoning) {

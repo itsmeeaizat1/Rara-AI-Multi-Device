@@ -64,9 +64,6 @@ async function handler(m, { sock }) {
         `- Masukkan 16 digit angka NIK\n\n` +
         `\`${m.prefix}nikparser 3517072109020003\``, "nikparser");
   }
-
-  m.react("🕒");
-
   try {
     const r = await fetch(`${API}?nik=${nik}`, {
       headers: {
@@ -84,9 +81,6 @@ async function handler(m, { sock }) {
           `- Pastikan 16 digit angka benar`,
       );
     }
-
-    m.react("🐣");
-
     const bDay = new Date(data.birthISO);
     const bFormatted = bDay.toLocaleDateString("id-ID", {
       weekday: "long",

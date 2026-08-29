@@ -193,9 +193,6 @@ async function handler(m, { sock }) {
   if (!query) {
     return m.reply(novaGuide("Wikipedia", "Masukin kata kunci pencarian nih!", ".wikipedia Indonesia"));
   }
-
-  await m.react("🕒");
-
   try {
     const search = await searchWikipedia(query);
 
@@ -233,9 +230,6 @@ async function handler(m, { sock }) {
     } else {
       await m.reply(claraWrap("wikipedia", text));
     }
-
-    await m.react("🐣");
-
   } catch (error) {
     console.error("[Wikipedia Search]", error.message);
     m.reply(novaError("Wikipedia", "Ada error nih, coba lagi ya"));

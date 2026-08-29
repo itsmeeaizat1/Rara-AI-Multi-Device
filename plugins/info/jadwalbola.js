@@ -47,9 +47,6 @@ function getLeagueEmoji(league) {
 
 async function handler(m, { sock }) {
   const filter = m.args.join(" ").toLowerCase().trim();
-
-  m.react("🕒");
-
   try {
     const data = await f(
       `https://api.neoxr.eu/api/bola?apikey=${NEOXR_APIKEY}`,
@@ -101,9 +98,6 @@ async function handler(m, { sock }) {
     }
 
     text += `Total: *${matches.length}* pertandingan`;
-
-    m.react("🐣");
-
     await m.reply(claraWrap(text.split("\n").filter(l => l.trim())));
   } catch (err) {
     return m.reply(claraWrap("jadwalbola", te(m.prefix, m.command, m.pushName), "error"));

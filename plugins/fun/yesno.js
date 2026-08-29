@@ -69,9 +69,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply(help, "yesno");
   }
-
-  await m.react("🕒");
-
   await new Promise(r => setTimeout(r, 1200));
 
   const answer = pickAnswer();
@@ -89,8 +86,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   ].join("\n");
 
   await m.reply(claraWrap("YesNo", result));
-  await m.react("🐣");
-
   return { handled: true };
 }
 

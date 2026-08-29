@@ -233,9 +233,6 @@ async function handler(m, { sock, config: botConfig }) {
     const help = `Model aktif: ${currentModel}\n\nCara pakai:\n.openrouter <pesan> — Chat dengan model aktif\n.openrouter model <nama> — Ganti model\n.openrouter list — Lihat semua model\n.openrouter reset — Reset sesi`;
     return m.reply( claraWrap("OpenRouter", help));
   }
-
-  await m.react("🕒");
-
   try {
     // Resolve model ID
     const model = resolveModel(session.model) || FREE_MODELS[DEFAULT_MODEL];
@@ -254,12 +251,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     // Simpan reply AI ke session
     session.messages.push({ role: "assistant", content: reply });
-
-    await m.react("🐣");
     return m.reply(claraWrap(`OpenRouter | ${model.label}`, reply));
   } catch (error) {
-    await m.react("🐣");
-
     // Hapus pesan user yang gagal dari session
     session.messages.pop();
 

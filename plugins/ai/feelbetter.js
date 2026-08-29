@@ -32,18 +32,12 @@ async function handler(m, { sock }) {
         `*${m.prefix}feelbetter aku capek banget belakangan*\n\n` +
         `_Bot ini bukan pengganti profesional, tapi bisa jadi tempat curhat yang aman_`, "feelbetter");
   }
-
-  await m.react("🕒");
-
   try {
     const result = await FeelBetter(text);
 
     if (!result.status) {
       return m.reply(claraWrap("FeelBetter Gagal", `❌ *ꜰᴇᴇʟʙᴇᴛᴛᴇʀ ɢᴀɢᴀʟ*\n\n${result.error || "Gagal dapet respons nih"}`));
     }
-
-    await m.react("🐣");
-
     const reply = `${result.answer}`;
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {

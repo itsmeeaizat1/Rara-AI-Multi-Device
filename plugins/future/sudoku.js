@@ -146,14 +146,11 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     if (num !== cfg.current.solution[row][col]) {
-      await m.react("❌");
       await m.reply(claraWrap("Sudoku", "Salah! Angka untuk (" + (row + 1) + "," + (col + 1) + ") bukan " + num + "."));
       return { handled: true };
     }
     cfg.current.puzzle[row][col] = num;
     saveConfig(db, gid, cfg);
-    await m.react("🐣");
-
     // Check if solved
     let solved = true;
     for (let r = 0; r < 9; r++) {

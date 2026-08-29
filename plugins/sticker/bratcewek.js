@@ -24,16 +24,12 @@ async function handler(m, { sock }) {
     if (!text) {
         { const __navText = `🖼️ *ʙʀᴀᴛ ᴄᴇᴡᴇᴋ ꜱᴛɪᴄᴋᴇʀ*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratcewek Hai semua\``; return await m.reply( __navText, "bratcewek"); }
     }
-    
-    m.react('🕐')
-    
     try {
         const url = `https://api.deline.web.id/maker/cewekbrat?text=${encodeURIComponent(text)}`
         await sock.sendImageAsSticker(m.chat, url, m, {
             packname: config.sticker.packname,
             author: config.sticker.author
         })
-        m.react('✅')
     } catch (error) {
         m.reply(claraWrap("bratcewek", te(m.prefix, m.command, m.pushName), "error"))
     }

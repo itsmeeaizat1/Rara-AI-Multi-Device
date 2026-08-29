@@ -48,7 +48,6 @@ function formatUptime(ms) {
 }
 
 async function handler(m, { sock, db }) {
-  await m.react("🕒");
   const prefix = config.command?.prefix || ".";
   const saluran = config.saluran || {};
   const channelId = saluran?.id || "@newsletter";
@@ -248,7 +247,6 @@ async function handler(m, { sock, db }) {
   }
 
   await m.reply(claraWrap("Saluran Resmi", lines.join("\n")), { contextInfo });
-  await m.react("🐣");
 }
 
 export default { config: pluginConfig, handler };

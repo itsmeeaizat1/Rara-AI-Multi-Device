@@ -67,9 +67,6 @@ async function handler(m, { sock, db }) {
         const meta = await sock.groupMetadata(targetGroupId);
         groupName = meta.subject;
       } catch (e) { console.error('[swgcv2.js]:', e.message); }
-
-      await m.react("🕒");
-
       const rawContent = pendingData.rawContent;
 
       let baseContent = {};

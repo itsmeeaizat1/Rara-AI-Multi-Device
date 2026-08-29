@@ -202,9 +202,6 @@ async function handler(m, { sock, config: botConfig }) {
     const help = `Model aktif: ${currentModel}\n\nCara pakai:\n.puter <pesan> — Chat dengan model aktif\n.puter model <id> — Ganti model\n.puter list — Lihat semua model\n.puter reset — Reset sesi`;
     return m.reply( claraWrap("Puter", help));
   }
-
-  await m.react("🕒");
-
   try {
     const modelId = session.model;
 
@@ -221,13 +218,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     // Simpan reply AI ke session
     session.messages.push({ role: "assistant", content: reply });
-
-    await m.react("🐣");
     const label = MODELS[modelId]?.label || modelId;
     return m.reply(claraWrap(`Puter | ${label}`, reply));
   } catch (error) {
-    await m.react("🐣");
-
     // Hapus pesan user yang gagal dari session
     session.messages.pop();
 

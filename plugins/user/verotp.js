@@ -70,9 +70,6 @@ async function handler(m, { args, sock }) {
   }
 
   const inputOtp = args[0].trim();
-
-  await m.react("🕒");
-
   if (inputOtp !== session.otp) {
     session.attempts++;
 
@@ -144,7 +141,6 @@ async function handler(m, { args, sock }) {
     txt += `Ketik \`${m.prefix}menu\` untuk melihat fitur`;
 
     await m.reply( txt, { commandName: "verotp" });
-    await m.react("🐣");
   } catch (e) {
     console.error("[VerOTP] Error:", e.message);
     await m.reply(novaError("VerOTP", "Ada error saat verifikasi nih, coba lagi ya"));

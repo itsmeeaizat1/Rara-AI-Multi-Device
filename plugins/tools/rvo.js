@@ -30,9 +30,6 @@ async function handler(m, { sock }) {
   if (!quoted.isViewOnce && !quoted.isMedia) {
     return m.reply(claraWrap("Rvo", "❌ Reply pesan view once (sekali lihat) untuk membukanya."));
   }
-
-  m.react("🕒");
-
   try {
     let originalCaption = "";
     if (quoted.message?.[quoted.type]?.caption) {
@@ -88,8 +85,6 @@ async function handler(m, { sock }) {
         { quoted: m },
       );
     }
-
-    m.react("🐣");
   } catch (e) {
     let msg = e.message;
     if (

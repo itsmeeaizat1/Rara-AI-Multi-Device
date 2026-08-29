@@ -20,12 +20,8 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-    m.react('🕐')
-    
     try {
         await sock.groupRevokeInvite(m.chat)
-        
-        m.react('✅')
         { const __navText = `✅ *ʟɪɴᴋ ɢʀᴜᴘ ᴅɪʀᴇꜱᴇᴛ*\nLink grup lama sudah tidak berlaku.\nGunakan \`${m.prefix}linkgc\` untuk mendapatkan link baru.`; await m.reply(__navText); }
         
     } catch (err) {

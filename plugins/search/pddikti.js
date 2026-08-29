@@ -154,9 +154,6 @@ async function handler(m, { sock,  args }) {
       `*ᴄᴏɴᴛᴏʜ:* \`.pddikti mhs Gibran Rakabuming\``
     );
   }
-
-  m.react("🕒");
-
   try {
     const mode = args[0].toLowerCase();
     
@@ -180,8 +177,6 @@ async function handler(m, { sock,  args }) {
       txt += `- 📅 Tgl Masuk     : *${r.tanggalMasuk}*\n`;
       txt += `- 📊 Status        : *${r.statusSaatIni}*\n`;
       txt += `- 💼 Jenis Daftar  : *${r.jenisDaftar}*\n`;
-      
-      m.react("🐣");
       return await m.reply(claraWrap("pddikti", txt));
     }
     
@@ -243,8 +238,6 @@ async function handler(m, { sock,  args }) {
       }
       if (r.count > 10) txt += `... +${r.count - 10} hasil lainnya.\n`;
     }
-    
-    m.react("🐣");
     return m.reply(txt.trim());
     
   } catch (err) {

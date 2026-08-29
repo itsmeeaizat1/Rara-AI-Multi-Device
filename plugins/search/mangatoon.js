@@ -51,9 +51,6 @@ async function handler(m, { sock }) {
     if (!query) {
         { const __navText = `📚 *ᴍᴀɴɢᴀᴛᴏᴏɴ ꜱᴇᴀʀᴄʜ*\n\nContoh:\n\`${m.prefix}mangatoon love\``; return await m.reply( __navText, "mangatoon"); }
     }
-
-    m.react('🕐')
-
     try {
         const result = await fetchMangatoon(query)
         const komikGroups = Array.isArray(result.results?.komik) ? result.results.komik : []
@@ -81,8 +78,6 @@ async function handler(m, { sock }) {
         } else {
             await m.reply(caption.trim())
         }
-
-        m.react('✅')
     } catch (error) {
         console.log(error)
         m.reply(claraWrap("mangatoon", te(m.prefix, m.command, m.pushName), "error"))

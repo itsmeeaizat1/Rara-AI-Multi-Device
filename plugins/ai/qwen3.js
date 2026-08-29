@@ -32,18 +32,12 @@ async function handler(m, { sock }) {
         `*${m.prefix}qwen3 Buat resep masakan Indonesia*\n\n` +
         `_Model 80B, jadi agak lama tapi jawabannya mantap_`, "qwen3");
   }
-
-  await m.react("🕒");
-
   try {
     const result = await Qwen3(text);
 
     if (!result.status) {
       return m.reply(claraWrap("Qwen3 Gagal", `❌ *Qwen3 Gagal*\n\n${result.error || "Gagal dapet respons nih"}`));
     }
-
-    await m.react("🐣");
-
     const reply = `${result.answer}`;
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {

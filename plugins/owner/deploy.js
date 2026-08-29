@@ -43,9 +43,6 @@ async function handler(m, { sock }) {
     if (!token) {
         { const __navText = claraWrap("Vercel token belum diset", '❌ *Vercel token belum diset*'); return await m.reply(__navText); }
     }
-
-    m.react('🕐')
-
     let htmlContent
 
     try {
@@ -119,9 +116,6 @@ async function handler(m, { sock }) {
         } catch {
             // fallback tetap ke default domain
         }
-
-        m.react('✅')
-
         await m.reply(claraWrap("Deploy", `╭──「 *DEPLOY SUCCESS* 」
 │
 │ 🌐 Nama     : ${name}

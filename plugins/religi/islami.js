@@ -112,7 +112,6 @@ async function handler(m, { sock }) {
                             `📄 Ayat: ${hasil.ayat}\n` +
                             `🔤 Latin: ${hasil.latin}\n` +
                             `🌍 Artinya: ${hasil.artinya}`
-                        await m.react("🐣");
                         m.reply(tks)
                     } else {
                          m.reply('❌ Doa yang kamu cari tidak ditemukan. Cek lagi nama doanya!')

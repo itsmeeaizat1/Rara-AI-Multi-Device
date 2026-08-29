@@ -92,12 +92,8 @@ async function handler(m, { sock }) {
   const result = setBirthday(m.sender, birthdayStr);
 
   if (!result.success) {
-    await m.react("❌");
     return m.reply(claraWrap("setultah", "Gagal simpan tanggal lahir nih"));
   }
-
-  await m.react("🐣");
-
   const lines = [
     `${toSC("Tanggal lahir tersimpan!")}: ${birthdayStr}`,
     "",

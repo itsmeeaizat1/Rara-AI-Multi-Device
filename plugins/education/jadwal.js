@@ -83,9 +83,6 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}jadwal today\``;
     return await m.reply( txt, { commandName: "jadwal" });
   }
-
-  await m.react("🕒");
-
   try {
     // === ADD ===
     if (cmd === "add" || cmd === "tambah") {
@@ -128,7 +125,6 @@ async function handler(m, { sock, args }) {
       txt += `Matkul: ${subject}\n`;
       if (room) txt += `Ruang: ${room}\n`;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === LIST ALL ===
@@ -152,7 +148,6 @@ async function handler(m, { sock, args }) {
         txt += `\n`;
       }
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === TODAY ===
@@ -181,7 +176,6 @@ async function handler(m, { sock, args }) {
         txt += `${status}\n`;
       }
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === NEXT CLASS ===
@@ -230,7 +224,6 @@ async function handler(m, { sock, args }) {
         txt += `Dimulai dalam: ${hoursUntil > 0 ? hoursUntil + " jam " : ""}${minsRem} menit`;
       }
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === BY DAY ===
@@ -254,7 +247,6 @@ async function handler(m, { sock, args }) {
         txt += ` [${c.id}]\n`;
       }
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === DELETE ===
@@ -266,14 +258,12 @@ async function handler(m, { sock, args }) {
 
       const removed = schedule.splice(idx, 1)[0];
       await m.reply(claraWrap("Jadwal", `Jadwal dihapus!\n\n${removed.subject} - ${formatDay(removed.day)} ${removed.startTime}`));
-      await m.react("🐣");
     }
 
     // === CLEAR ===
     else if (cmd === "clear" || cmd === "reset") {
       scheduleStore.set(sender, []);
       await m.reply(claraWrap("Jadwal", "Semua jadwal dihapus!"));
-      await m.react("🐣");
     }
 
     else {

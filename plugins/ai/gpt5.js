@@ -32,18 +32,12 @@ async function handler(m, { sock }) {
         `*${m.prefix}gpt5 Buat puisi tentang Indonesia*\n\n` +
         `_Jawaban bisa agak lama, sabar ya_`, "gpt5");
   }
-
-  await m.react("🕒");
-
   try {
     const result = await GPT5(text);
 
     if (!result.status) {
       return m.reply(claraWrap("GPT-5 Gagal", `❌ *GPT-5 Gagal*\n\n${result.error || "Gagal dapet respons nih"}`));
     }
-
-    await m.react("🐣");
-
     const reply = `${result.answer}`;
 
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);

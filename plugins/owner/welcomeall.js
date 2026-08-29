@@ -32,9 +32,6 @@ async function handler(m, { sock }) {
   example: `${m.prefix}welcomeall on`,
 }), "welcomeall");
     }
-    
-    await m.react('🕐')
-    
     try {
         const groups = await sock.groupFetchAllParticipating()
         const groupIds = Object.keys(groups)
@@ -45,9 +42,6 @@ async function handler(m, { sock }) {
             db.setGroup(groupId, { welcome: status })
             count++
         }
-        
-        await m.react('✅')
-        
         if (status) {
             return m.m.reply(claraWrap("welcomeall", `✅ *Welcome Global On*\n\n` +
                 `╭──「 *Result* 」\n` +

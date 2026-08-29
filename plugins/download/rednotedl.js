@@ -28,9 +28,6 @@ async function handler(m, { sock }) {
         `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}rednotedl https://www.xiaohongshu.com/xxx*`, "rednotedl");
   }
-
-  m.react("🕒");
-
   try {
     const result = await RedNoteDL(text);
 
@@ -54,8 +51,6 @@ async function handler(m, { sock }) {
         );
       }
     }
-
-    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply(novaError("RedNote", "Gagal ambil data — coba lagi ya"));

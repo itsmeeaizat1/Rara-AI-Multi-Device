@@ -32,7 +32,6 @@ async function handler(m, { sock }) {
   if (!isImage) {
     return m.reply( `✨ *HD ENHANCE V2*\n\nKirim/reply gambar untuk di-enhance\n\n\`${m.prefix}hd2\`\n\n🕕 Proses membutuhkan waktu ±1 menit`, "hd2");
   }
-  m.react("🕒");
   try {
     let buffer;
     if (m.quoted && m.quoted.isMedia) {
@@ -43,7 +42,6 @@ async function handler(m, { sock }) {
     if (!buffer) {
       return m.reply(claraWrap("hd2tool", `❌ Gagal mendownload gambar`));
     }
-    await m.react("🕒");
     const temp = path.join(process.cwd(), "temp", "hd.jpg");
     fs.writeFileSync(temp, buffer);
     const codes = await upload(temp);
@@ -51,7 +49,6 @@ async function handler(m, { sock }) {
     const uplot = codes.code;
     await new Promise((resolve) => setTimeout(resolve, 10000));
     let result = await get(uplot);
-    await m.react("🐣");
     while (result.status === "waiting") {
       await new Promise((resolve) => setTimeout(resolve, 6000));
       result = await get(uplot);
@@ -59,7 +56,6 @@ async function handler(m, { sock }) {
     if (!result) {
       return m.reply(claraWrap("hd2tool", `❌ Gagal enhance gambar. Coba lagi nanti.`));
     }
-    m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {

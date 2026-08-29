@@ -77,13 +77,11 @@ async function handler(m, { sock }) {
   if (action === "on") {
     const prefix = prefixArg || groupData.nomorluarBlock || "60";
     db.setGroup(m.chat, { antinomorluar: true, nomorluarBlock: prefix });
-    m.react("🐣");
     return m.reply(claraWrap("Antinomorluar", `Anti Nomor Luar diaktifkan\nPrefix diblokir: ${prefix}`));
   }
 
   if (action === "off") {
     db.setGroup(m.chat, { antinomorluar: false });
-    m.react("🐣");
     return m.reply(claraWrap("Antinomorluar", `Anti Nomor Luar dinonaktifkan`));
   }
 
@@ -92,7 +90,6 @@ async function handler(m, { sock }) {
       return m.reply(`Masukkan prefix nomor!\n💡 *Contoh:* \`${m.prefix}antinomorluar set 60\``);
     }
     db.setGroup(m.chat, { nomorluarBlock: prefixArg });
-    m.react("🐣");
     const isOn = groupData.antinomorluar;
     return m.reply(claraWrap("Antinomorluar", `Prefix diblokir diubah ke: ${prefixArg}\nStatus: ${isOn ? "ON" : "OFF"}`));
   }

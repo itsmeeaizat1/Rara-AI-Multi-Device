@@ -27,18 +27,12 @@ async function handler(m, { sock }) {
             `\`${m.prefix}pakustad <pertanyaan>\`\n\n` +
             `Contoh: \`${m.prefix}pakustad kenapa aku ganteng\``, "pakustad")
     }
-    
-    await m.react('🕐')
-    
     try {
         const apiUrl = `https://api.cuki.biz.id/api/canvas/ustadz?apikey=${config.APIkey.cuki}&text=${encodeURIComponent(text)}`
         const { results } = await f(apiUrl)
         await sock.sendMedia(m.chat, results.url, text, m, {
             type: 'image'
         })
-        
-        m.react('✅')
-        
     } catch (err) {
         return m.reply(claraWrap("pakustad", te(m.prefix, m.command, m.pushName), "error"))
     }

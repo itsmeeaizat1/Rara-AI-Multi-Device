@@ -26,9 +26,6 @@ async function handler(m, { sock }) {
         if (!url || (!url.startsWith("http://") && !url.startsWith("https://"))) {
             return m.reply(novaGuide("RSS Reader", "Mau baca RSS feed? Kirim URL-nya ya! Bisa juga pakai shortcut: detik, kompas, cnn, tribun.", `${m.prefix}rss detik`))
         }
-
-        await m.react("🕒")
-
         const SHORTCUTS = {
             detik: "https://rss.detik.com/index.php/detiknews",
             kompas: "https://www.kompas.com/getrss",
@@ -48,7 +45,6 @@ async function handler(m, { sock }) {
         const feed = await parser.parseURL(feedUrl)
 
         if (!feed.items || !feed.items.length) {
-            await m.react("🐣")
             return m.reply(novaEmpty("RSS Reader", "Feed-nya kosong atau gak bisa dibaca nih"))
         }
 
@@ -73,12 +69,9 @@ async function handler(m, { sock }) {
         })
 
         text += "╰──────────"
-
-        await m.react("🐣")
         return m.reply(text)
     } catch (e) {
         console.error("[rss] error:", e.message)
-        await m.react("🐣")
         return m.reply(novaError("RSS Reader", e.message))
     }
 }

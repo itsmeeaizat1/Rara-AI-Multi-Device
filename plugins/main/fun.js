@@ -41,7 +41,6 @@ ${cmdLines}│ *Total: ${funCmds.length} Fitur*
   } catch (e) {
     console.error("[fun] handler error:", e.message);
     try { await m.reply("╭──「 Fun 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────"); } catch {}
-    await m.react("❌");
   }
 }
 

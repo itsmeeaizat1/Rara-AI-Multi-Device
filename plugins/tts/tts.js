@@ -41,7 +41,6 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
-    m.react("🐣");
   } catch (err) {
     m.reply(claraWrap("tts", te(m.prefix, m.command, m.pushName), "error"));
   }

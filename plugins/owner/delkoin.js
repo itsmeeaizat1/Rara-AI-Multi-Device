@@ -62,9 +62,6 @@ async function handler(m, { sock }) {
     }
     
     const newKoin = db.updateKoin(targetJid, -amount)
-    
-    await m.react('✅')
-    
     await m.reply(claraWrap("delkoin", `✅ *Koin Dikurangi*\n\n` +
         `╭──「 *Detail* 」\n` +
         `│ 👤 User: @${targetJid.split('@')[0]}\n` +

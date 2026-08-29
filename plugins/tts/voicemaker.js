@@ -62,9 +62,6 @@ async function handler(m, { sock }) {
   if (!ttsText || ttsText.length > 500) {
     return m.reply(novaError("VoiceMaker", "Teks kosong atau kepanjangan, max 500 karakter ya!"));
   }
-
-  await m.react("🕒");
-
   try {
     const res = await axios.get(
       `https://api.siputzx.my.id/api/s/tts?text=${encodeURIComponent(ttsText)}&voice=${encodeURIComponent(voice)}`,
@@ -81,10 +78,8 @@ async function handler(m, { sock }) {
       { audio: buf, mimetype: "audio/mpeg", ptt: true },
       { quoted: m }
     );
-    await m.react("🐣");
   } catch (err) {
     console.error("[VoiceMaker] Error:", err.message);
-    await m.react("❌");
     return m.reply(novaError("VoiceMaker", e.message));
   }
 }

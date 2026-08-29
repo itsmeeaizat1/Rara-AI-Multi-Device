@@ -51,13 +51,9 @@ async function handler(m, { sock }) {
       `Masukkan link Pastebin yang valid\n\n` +
       `Contoh: \`${m.prefix}getpaste https://pastebin.com/Gu8RZaqv\``, "getpaste");
   }
-
-  m.react("🕒");
-
   try {
     const data = await new GetPastebin().fetch(text);
     await m.reply(claraWrap("Get Paste", data.split("\n").filter(l => l.trim())));
-    m.react("🐣");
   } catch (err) {
     m.reply(claraWrap("getpaste", te(m.prefix, m.command, m.pushName), "error"))
   }

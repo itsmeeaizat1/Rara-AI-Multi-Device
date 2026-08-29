@@ -26,9 +26,6 @@ async function handler(m, { sock }) {
         if (!isImage) {
             return m.reply(claraWrap("Removebg", '❌ *ɢᴀᴍʙᴀʀ ᴅɪʙᴜᴛᴜʜᴋᴀɴ*\n\nReply atau kirim gambar dengan caption .removebg'));
         }
-        
-        await m.react('🕐')
-        
         let mediaBuffer;
         if (m.isImage && m.download) {
             mediaBuffer = await m.download();

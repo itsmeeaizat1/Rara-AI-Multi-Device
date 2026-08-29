@@ -46,8 +46,6 @@ async function handler(m, { sock }) {
         })
         
         response += `⚠️ _${data.data.peringatan}_`
-        
-        m.react('✅')
         await m.reply(response)
         
     } catch (error) {

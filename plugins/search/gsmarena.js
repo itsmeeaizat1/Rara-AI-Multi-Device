@@ -26,9 +26,6 @@ async function handler(m, { sock }) {
         `Cari spesifikasi HP lengkap\n\n` +
         `\`Contoh: ${m.prefix}gsmarena samsung galaxy s25\``, "gsmarena");
   }
-
-  m.react("🕒");
-
   try {
     const results = await gsmarena.search.search(text);
 
@@ -38,11 +35,8 @@ async function handler(m, { sock }) {
 
     if (results.length === 1) {
       const device = await gsmarena.catalog.getDevice(results[0].id);
-      m.react("🐣");
       return m.reply(formatDetail(device));
     }
-
-    m.react("🐣");
     return m.reply(formatList(results, text, m.prefix));
   } catch (error) {
     console.log(error);

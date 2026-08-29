@@ -103,9 +103,6 @@ async function handler(m, { sock }) {
  example: `${m.prefix}stickerpack anime`,
 }), "stickerpack");
  }
-
- await m.react("🕒");
-
  try {
  const api = new StickerAPI();
  const search = await api.search(query);
@@ -158,7 +155,6 @@ async function handler(m, { sock }) {
  description: `Sticker pack: ${packname}`,
  emojis: ["❤"],
  });
- await m.react("🐣");
  } catch (packErr) {
  console.error("[StickerPack] Pack send failed:", packErr.message);
  await m.reply(
@@ -192,7 +188,6 @@ async function handler(m, { sock }) {
  }
 
  if (sent > 0) {
- await m.react("🐣");
  await m.reply(
  `── . ──\n\nBerhasil kirim *${sent}* sticker dari *${packname}* `,
  );

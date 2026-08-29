@@ -131,7 +131,6 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
       }
     } else if (isDel) {
       if (removeJadibotPremium(jadibotId, targetNumber)) {
-        await m.react("🐣");
         return m.reply(
           `✅ Berhasil menghapus *${targetNumber}* dari premium jadibot`,
         );
@@ -229,7 +228,6 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     }
 
     db.save();
-    await m.react("🐣");
     { const __navText = `✅ Berhasil menghapus *${targetNumber}* dari premium`; return await m.reply(__navText); };
   }
 }

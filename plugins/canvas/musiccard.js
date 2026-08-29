@@ -74,9 +74,6 @@ async function handler(m, { sock }) {
     judul = parts[0].trim();
     nama = parts[1].trim() || m.pushName;
   }
-
-  await m.react("🕒");
-
   try {
 
     const service = new ImageUploadService("pixhost.to");
@@ -103,9 +100,6 @@ async function handler(m, { sock }) {
       image: cardBuffer,
       caption: `✨ *MUSIC CARD BERHASIL DIBUAT!* ✨\n\n🎧 *ᴊᴜᴅᴜʟ*: ${judul}\n🎤 *ᴀʀᴛɪꜱ*: ${nama}\n\nKeren banget kan hasilnya? Pamerin ke teman-temanmu yuk! 🚀`
     }, { quoted: m });
-
-    await m.react("🐣");
-
   } catch (err) {
     console.error("[Music Card]", err.message);
     m.reply(claraWrap("Terjadi masalah di sistem kami.", "😔 *ᴛᴇʀᴊᴀᴅɪ ᴍᴀꜱᴀʟᴀʜ ᴅɪ ꜱɪꜱᴛᴇᴍ ᴋᴀᴍɪ.* \n\nSistem gagal menghubungi server pembuat kartu. Silakan coba beberapa saat lagi ya."));

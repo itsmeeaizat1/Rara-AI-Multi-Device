@@ -86,14 +86,14 @@ async function handler(m, { sock }) {
 
     if (subCmd === "auto") {
       const toggle = args[1]?.toLowerCase()
-      if (toggle === "on") { cfg.autoEnabled = true; save(db); await m.react("🐣")
+      if (toggle === "on") { cfg.autoEnabled = true; save(db);
         return m.reply("╭──「 Smart Digest 」\n│ Auto-digest: ON\n│ Jam kirim: " + cfg.sendTime + " WIB\n│ Dikirim ke PM owner otomatis\n╰──────────") }
-      if (toggle === "off") { cfg.autoEnabled = false; save(db); await m.react("🐣")
+      if (toggle === "off") { cfg.autoEnabled = false; save(db);
         return m.reply("╭──「 Smart Digest 」\n│ Auto-digest: OFF\n╰──────────") }
     }
 
     if (subCmd === "settime") {
-      cfg.sendTime = args[1] || "08:00"; save(db); await m.react("🐣")
+      cfg.sendTime = args[1] || "08:00"; save(db);
       return m.reply("╭──「 Smart Digest 」\n│ Jam kirim: " + cfg.sendTime + " WIB\n╰──────────")
     }
 
@@ -102,16 +102,14 @@ async function handler(m, { sock }) {
         commands: {}, groups: {}, users: {},
         messages: 0, errors: 0, newMembers: 0, startedAt: Date.now(),
       }
-      save(db); await m.react("🐣")
+      save(db);
       return m.reply("╭──「 Smart Digest 」\n│ Stats direset.\n╰──────────")
     }
 
     // Default: now
-    await m.react("🐣")
     return m.reply(generateDigest(getStats(db)))
   } catch (e) {
     console.error("[smartdigest] error:", e.message)
-    await m.react("🐣")
     return m.reply("╭──「 Error 」\n" + (e.message || "Ada error nih") + "\n╰──────────")
   }
 }

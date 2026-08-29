@@ -85,9 +85,6 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply( text, "vid2gif");
       return { handled: true };
     }
-
-    await m.react("🕒");
-
     // Download video
     let mediaBuffer;
     if (m.isVideo && m.download) {
@@ -182,9 +179,6 @@ async function handler(m, { sock, config: botConfig }) {
     // Cleanup input
     try { fs.unlinkSync(inputPath); } catch (e) { console.error('[vid2gif.js]:', e.message); }
     try { fs.unlinkSync(outputPath); } catch (e) { console.error('[vid2gif.js]:', e.message); }
-
-    await m.react("🐣");
-
     const durLabel = duration === 0 ? "Full video" : actualDuration + "s";
 
     // Kirim sebagai dokumen (GIF lebih efisien sebagai file)

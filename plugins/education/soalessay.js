@@ -247,7 +247,6 @@ async function handler(m, { sock, args }) {
       txt += `\n_Skor berdasarkan kata kunci dalam jawabanmu. Tetap pelajari kunci jawaban untuk jawaban yang lebih lengkap._`;
       essaySessions.delete(sender);
       await m.reply(txt);
-      await m.react("🐣");
       return;
     }
 
@@ -258,7 +257,6 @@ async function handler(m, { sock, args }) {
     txt += `${nextQ.q}\n\n`;
     txt += `Tulis jawabanmu atau ketik *ꜱᴋɪᴘ* untuk lewati`;
     await m.reply(txt);
-    await m.react("🐣");
     return;
   }
 
@@ -274,7 +272,6 @@ async function handler(m, { sock, args }) {
       txt += `Quiz Essay Selesai!\n\nTotal: ${total} | Dijawab: ${answered} | Dilewati: ${total - answered}`;
       essaySessions.delete(sender);
       await m.reply(txt);
-      await m.react("🐣");
       return;
     }
 
@@ -284,7 +281,6 @@ async function handler(m, { sock, args }) {
     txt += `${nextQ.q}\n\n`;
     txt += `Tulis jawabanmu atau ketik *ꜱᴋɪᴘ* untuk lewati`;
     await m.reply(txt);
-    await m.react("🐣");
     return;
   }
 
@@ -292,7 +288,6 @@ async function handler(m, { sock, args }) {
   if (jenjang === "stop" || jenjang === "batal" || jenjang === "cancel") {
     if (session) {
       essaySessions.delete(sender);
-      await m.react("🐣");
       return m.reply(claraWrap("Soalessay", "Quiz essay dibatalkan."));
     }
     return m.reply(claraWrap("Soalessay", "Tidak ada quiz essay yang sedang berjalan."));
@@ -307,7 +302,6 @@ async function handler(m, { sock, args }) {
         txt += `${jenjangName}: ${subjects.join(", ")}\n`;
       }
       await m.reply(txt);
-      await m.react("🐣");
       return;
     }
 
@@ -342,9 +336,6 @@ async function handler(m, { sock, args }) {
   if (!_eduDb.db.data.eduRegistered[m.sender]) {
     return m.reply("Kamu belum terdaftar sebagai siswa!\n\nDaftar dulu: " + m.prefix + "daftarsiswa <nama>\n\n💡 *Contoh:* " + m.prefix + "daftarsiswa Andi Pratama");
   }
-
-  await m.react("🕒");
-
   try {
     const bank = ESSAY_BANK[jenjang]?.[mapel];
     if (!bank || bank.length === 0) {
@@ -373,7 +364,6 @@ async function handler(m, { sock, args }) {
     txt += `Tulis jawabanmu di bawah ini`;
 
     await m.reply(txt);
-    await m.react("🐣");
   } catch (e) {
     console.error("[SOALESSAY] Error:", e.message);
     await m.reply(novaError("SoalEssay", `Gagal bikin soal nih: ${e.message}`));

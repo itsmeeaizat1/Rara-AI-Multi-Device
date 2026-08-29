@@ -41,7 +41,6 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply(novaNoInput("YT MP4 V2", "Masukkan link YouTube video yang ingin kamu download!", `${m.prefix}ytmp4v2 https://youtu.be/xxx`));
   }
-  m.react("🕒");
   try {
     const res = await rlGet(`${API_BASE}/download/ytmp4?apikey=${API_KEY}&url=${encodeURIComponent(text)}`);
     const r = res.data?.result || res.data?.data;
@@ -50,7 +49,6 @@ async function handler(m, { sock }) {
     const caption = `╭──「 YouTube MP4 」\n│ Title: ${r.title || "YouTube Video"}\n╰──────────`;
 
     await sock.sendMedia(m.chat, r.download, caption, m, { type: "video" });
-    m.react("🐣");
   } catch (e) {
     console.error("[YTMP4V2]", e.message);
     m.reply(novaError("YT MP4 V2", e.message || "Gagal mengambil video YouTube"));

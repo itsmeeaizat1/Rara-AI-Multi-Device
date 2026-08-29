@@ -176,15 +176,12 @@ async function handler(m, { sock }) {
 
   const apiKey = getSaveNowKey();
   if (!apiKey) {
-    await m.react("❌");
     return m.reply(
       novaError("SaveNow", "API key savenow.to belum terkonfigurasi. Hubungi owner bot ya!")
     );
   }
 
   // Loading reaksi
-  await m.react("🕒");
-
   try {
     // Step 1: Request download
     const request = await requestDownload(url, format, apiKey);
@@ -256,11 +253,8 @@ async function handler(m, { sock }) {
         { quoted: m }
       );
     }
-
-    await m.react("🐣");
   } catch (error) {
     console.error("[savenow.js]:", error.message);
-    await m.react("❌");
     m.reply(
       novaError(
         "SaveNow",

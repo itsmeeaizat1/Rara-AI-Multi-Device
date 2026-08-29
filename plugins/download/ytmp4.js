@@ -71,9 +71,6 @@ async function handler(m, { sock }) {
       )
     );
   }
-
-  m.react("🕒");
-
   try {
     const downloadUrl = await getVideoDownloadUrl(url);
 
@@ -98,7 +95,6 @@ async function handler(m, { sock }) {
       caption,
       contextInfo: { externalAdReply: { title: ytMeta.title || "YouTube Video", body: "Nova AI Downloader", thumbnailUrl: ytMeta.thumbnail, sourceUrl: url } },
     }, { quoted: m });
-    m.react("🐣");
   } catch (err) {
     console.error("[YTMP4]", err);
     m.reply(novaError("YTmp4", "Gagal mengunduh video YouTube — coba lagi nanti atau ganti link ya!"));

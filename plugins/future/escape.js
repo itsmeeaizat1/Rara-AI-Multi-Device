@@ -112,8 +112,6 @@ async function handler(m, { sock, db, config: botConfig }) {
       puzzle.solved = true;
       if (!game.players[m.sender]) game.players[m.sender] = 0;
       game.players[m.sender]++;
-      await m.react("🐣");
-
       if (game.current + 1 >= game.puzzles.length) {
         // Game complete
         const time = Math.floor((Date.now() - game.startedAt) / 1000);
@@ -144,7 +142,6 @@ async function handler(m, { sock, db, config: botConfig }) {
         ].join("\n")));
       }
     } else {
-      await m.react("❌");
       await m.reply(claraWrap("Escape Room", "Salah! Coba lagi.\nTeka-teki " + (game.current + 1) + ": " + puzzle.q));
     }
     saveConfig(db, gid, game);

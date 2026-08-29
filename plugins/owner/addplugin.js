@@ -82,9 +82,6 @@ async function handler(m, { sock }) {
   if (!fileName) {
     return m.reply(claraWrap("Addplugin", `❌ *GAGAL*\n\nNama file tidak valid`));
   }
-
-  await m.react("🕒");
-
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");
     const folderPath = path.join(pluginsDir, folderName);
@@ -108,8 +105,6 @@ async function handler(m, { sock }) {
     try {
       reloadResult = (await hotReloadPlugin(filePath)) || { success: true };
     } catch (e) { console.error('[addplugin.js]:', e.message); }
-
-    await m.react("🐣");
     return m.reply(
       `✅ *PLUGIN DITAMBAH*\n\n` +
         `╭─〔 *DETAIL* 〕───\n` +

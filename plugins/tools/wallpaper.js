@@ -104,9 +104,6 @@ async function handler(m, { sock, config: botConfig }) {
     const help = `Unduh Wallpaper HD\n\nCara pakai:\n.wallpaper <kata kunci> — Cari wallpaper\n.wallpaper random — Wallpaper acak\n.wallpaper <kata kunci> hd — HD 1920x1080+\n.wallpaper <kata kunci> 2k — 2K 2560x1440+\n.wallpaper <kata kunci> 4k — 4K 3840x2160+\n.wallpaper <kata kunci> mobile — Untuk HP (portrait)\n\nContoh:\n.wallpaper mekkah hd\n.wallpaper mosque\n.wallpaper nature 4k\n.wallpaper anime mobile\n\nKata kunci populer:\nmosque, mecca, islamic, nature, mountain, space, galaxy, ocean, city, sunset, anime, gaming, cyberpunk, minimalist, flowers, ramadan, masjid, kaaba`;
     return m.reply( claraWrap("Wallpaper", help));
   }
-
-  await m.react("🕒");
-
   try {
     // Parse input: cek ada keyword resolusi atau tidak
     let query = text;
@@ -134,7 +131,6 @@ async function handler(m, { sock, config: botConfig }) {
     const wallpapers = data.data;
 
     if (wallpapers.length === 0) {
-      await m.react("🐣");
       return m.reply(claraWrap("Wallpaper", `Tidak ada wallpaper untuk "${query}".\n\nCoba kata kunci lain:\nmosque, nature, space, anime, city`));
     }
 
@@ -153,10 +149,7 @@ async function handler(m, { sock, config: botConfig }) {
       image: imageBuffer,
       caption: claraWrap("Wallpaper HD", caption),
     }, { quoted: m });
-
-    await m.react("🐣");
   } catch (error) {
-    await m.react("🐣");
     let errMsg = error.message || "Gagal mencari wallpaper.";
 
     if (errMsg.includes("Tidak ada wallpaper")) {

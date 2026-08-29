@@ -109,7 +109,6 @@ async function handler(m, { sock, config: botConfig }) {
     }
   } catch (error) {
     console.error("[bugreport] error:", error.message);
-    await m.react("❌");
     return m.reply(te(m.prefix, m.command, m.pushName), "bugreport");
   }
 

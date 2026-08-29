@@ -40,8 +40,6 @@ async function handler(m, { sock }) {
             `Lahir: *${r.hari_lahir}*\n\n` +
             `📊 *ᴀɴᴀʟɪꜱᴀ:*\n${r.usaha}\n\n` +
             `_${r.catatan}_`
-        
-        m.react('✅')
         await m.reply(response)
         
     } catch (error) {

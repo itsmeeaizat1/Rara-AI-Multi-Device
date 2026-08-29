@@ -60,9 +60,6 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}konversi 72\``;
     return await m.reply( txt, { commandName: "konversinilai" });
   }
-
-  await m.react("🕒");
-
   try {
     // === TABLE 8-tier ===
     if (input === "tabel" || input === "table" || input === "full") {
@@ -74,7 +71,6 @@ async function handler(m, { sock, args }) {
       }
       txt += `\n_Sistem 8-tier (A, AB, B, BC, C, CD, D, E)_`;
       await m.reply(claraWrap(txt.split("\n").filter(l => l.trim())));
-      await m.react("🐣");
       return;
     }
 
@@ -88,7 +84,6 @@ async function handler(m, { sock, args }) {
       }
       txt += `\n_Sistem 4-tier (A, B, C, D, E) - beberapa kampus_`;
       await m.reply(claraWrap(txt.split("\n").filter(l => l.trim())));
-      await m.react("🐣");
       return;
     }
 
@@ -117,7 +112,6 @@ async function handler(m, { sock, args }) {
     txt += `_8-tier: A/AB/B/BC/C/CD/D/E\n4-tier: A/B/C/D/E_`;
 
     await m.reply(claraWrap(txt.split("\n").filter(l => l.trim())));
-    await m.react("🐣");
   } catch (e) {
     console.error("[KONVERSINILAI] Error:", e.message);
     await m.reply(claraWrap("konversinilai", `Error: ${e.message}`));

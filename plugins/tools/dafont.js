@@ -67,9 +67,6 @@ async function handler(m, { sock }) {
         `_Setelah daftar muncul, reply pesan bot dengan nomor font buat download_`
     );
   }
-
-  m.react("🕒");
-
   try {
     const result = await DaFont(text);
 
@@ -95,7 +92,6 @@ async function handler(m, { sock }) {
     session.chat = m.chat;
 
     await m.reply(claraWrap("dafont", txt));
-    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply(claraWrap("dafont", "❌ Gagal mencari font, coba lagi nanti"));

@@ -90,9 +90,6 @@ function handler(m, { sock }) {
     }
 
     const conn = new Client()
-
-    m.react('🕐')
-
     conn.on('ready', async () => {
         try {
             await m.reply(claraWrap("installtemaenigma", `🕕 *[1/3] Install Dependencies...*\n\nMenginstall Node.js, Yarn, Composer...`))
@@ -110,8 +107,6 @@ function handler(m, { sock }) {
 
             await m.reply(claraWrap("installtemaenigma", `🕕 *[3/3] Build Assets...*\n\nCompiling panel assets...`))
             await execSSH(conn, BUILD_CMD)
-
-            m.react('✅')
             await m.reply(claraWrap("installtemaenigma", `╭──「 *ᴛᴇᴍᴀ ᴇɴɪɢᴍᴀ* 」
 │ sTatus: *ᴛᴇʀɪɴꜱᴛᴀʟʟ*
 │ Ip: ${ipvps}\n╰──────────\n\n_Tema Enigma + dependencies berhasil diinstall!_`))

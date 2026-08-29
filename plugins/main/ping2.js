@@ -59,8 +59,6 @@ function getNetwork() {
 
 async function handler(m, { sock }) {
     const execStart = performance.now()
-    await m.react('🕐')
-
     try {
         const t0 = m.messageTimestamp ? (m.messageTimestamp * 1000) : Date.now()
         const waRoundtrip = Math.max(1, Date.now() - t0)
@@ -139,8 +137,6 @@ async function handler(m, { sock }) {
                 footer: '🍃 Realtime Monitoring'
             }
         )
-
-        await m.react('✅')
     } catch (error) {
         m.reply(claraWrap("ping2", te(m.prefix, m.command, m.pushName), "error"))}
 }

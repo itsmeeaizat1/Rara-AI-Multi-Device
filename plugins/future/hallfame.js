@@ -269,8 +269,6 @@ async function handler(m, { sock, db, config: botConfig }) {
     await m.reply(claraWrap("Hall of Fame", "Tracking bulan ini direset."));
     return { handled: true };
   }
-
-  await m.react("🐣");
   await m.reply(claraWrap("Hall of Fame", [
     "HALL OF FAME GRUP",
     "",

@@ -204,11 +204,9 @@ async function handler(m, { sock }) {
     }
 
     if (subCmd === 'list') {
-        await m.react('🕐')
         try {
             const files = await listDriveFiles(10)
             if (files.length === 0) {
-                await m.react('✅')
                 return m.reply(claraWrap("Upload GDrive", "*ɢᴅʀɪᴠᴇ ꜰɪʟᴇꜱ*\n\nBelum ada file di Drive."))
             }
             let body = "*GDrive Files (" + files.length + ")*\n\n"
@@ -217,7 +215,6 @@ async function handler(m, { sock }) {
                 body += "   Size: " + formatBytes(parseInt(f.size || 0)) + "\n"
                 body += "   Link: " + (f.webViewLink || 'N/A') + "\n\n"
             })
-            await m.react('✅')
             return m.reply(claraWrap("Upload GDrive", body))
         } catch (err) {
             return m.reply(claraWrap("Upload GDrive", "GAGAL\n\n" + err.message))
@@ -233,10 +230,8 @@ async function handler(m, { sock }) {
                 "│ Lihat fileId: `.uploadgdrive list`"
             ))
         }
-        await m.react('🕐')
         try {
             await deleteDriveFile(fileId)
-            await m.react('✅')
             return m.reply(claraWrap("Upload GDrive", "BERHASIL\n\nFile `" + fileId + "` berhasil dihapus."))
         } catch (err) {
             return m.reply(claraWrap("Upload GDrive", "GAGAL\n\n" + err.message))
@@ -273,9 +268,6 @@ async function handler(m, { sock }) {
             "│ `" + m.prefix + "uploadgdrive setfolder <id>` - Set folder tujuan\n" +
             "│ `" + m.prefix + "uploadgdrive delete <id>` - Hapus file", "uploadgdrive")
     }
-
-    await m.react('🕐')
-
     try {
         const downloadFn = m.quoted ? m.quoted.download : m.download
         const buffer = await downloadFn()
@@ -293,9 +285,6 @@ async function handler(m, { sock }) {
         const result = await uploadToDrive(filePath, fileName, folderId)
 
         try { fs.unlinkSync(filePath) } catch (e) { console.error('[uploadgdrive.js]:', e.message); }
-
-        await m.react('✅')
-
         let body = "BERHASIL UPLOAD\n\n"
         body += "*ɢᴏᴏɢʟᴇ ᴅʀɪᴠᴇ*\n\n"
         body += "Nama: " + result.name + "\n"

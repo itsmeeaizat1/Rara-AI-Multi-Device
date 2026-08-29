@@ -90,9 +90,6 @@ async function handler(m, { sock }) {
   if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
     return m.reply("URL harus YouTube");
   }
-
-  m.react("🕒");
-
   try {
     let videoBuffer = null;
     let videoTitle = "Video";
@@ -162,8 +159,6 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
-
-    m.react("🐣");
   } catch (err) {
     console.error("[PlayVideo]", err);
     m.reply(

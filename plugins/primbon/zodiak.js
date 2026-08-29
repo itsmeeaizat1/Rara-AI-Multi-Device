@@ -27,9 +27,6 @@ async function handler(m, { sock }) {
     if (!zodiac || !validZodiacs.includes(zodiac)) {
         return m.reply(`⭐ *ᴢᴏᴅɪᴀᴋ*\n\nMasukkan nama zodiak:\n\n${validZodiacs.map(z => `${z}`).join('\n')}\n\n\`Contoh: ${m.prefix}zodiak aries\``)
     }
-    
-    m.react('🕐')
-    
     try {
         const url = `https://api.siputzx.my.id/api/primbon/zodiak?zodiak=${zodiac}`
         const { data } = await axios.get(url, { timeout: 30000 })
@@ -48,8 +45,6 @@ async function handler(m, { sock }) {
             `🔥 *ᴇʟᴇᴍᴇɴ:* ${r.elemen_keberuntungan}\n` +
             `🪐 *ᴘʟᴀɴᴇᴛ:* ${r.planet_yang_mengitari}\n` +
             `💕 *ᴘᴀꜱᴀɴɢᴀɴ:* ${r.pasangan_zodiak}`
-        
-        m.react('✅')
         await m.reply(response)
         
     } catch (error) {

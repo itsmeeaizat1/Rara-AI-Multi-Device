@@ -133,7 +133,6 @@ async function handler(m, { sock }) {
           "Saran: Pakai .passwordgen untuk generate password baru.",
         ], "warn"));
       } else {
-        await m.react("🐣");
         // Strength check
         let strength = 0;
         if (password.length >= 8) strength += 25;
@@ -157,7 +156,6 @@ async function handler(m, { sock }) {
         ], "success"));
       }
     } catch (e) {
-      await m.react("❌");
       return m.reply(claraWrap("Breach Check", "Error: " + e.message + "\n\nMungkin API HIBP sedang down. Coba lagi nanti."));
     }
   }
@@ -174,7 +172,6 @@ async function handler(m, { sock }) {
     const validation = validateEmail(email);
 
     if (!validation.valid) {
-      await m.react("❌");
       return m.reply(claraWrap("Breach Check", "Format email tidak valid!\n💡 *Contoh:* user@domain.com"));
     }
 
@@ -217,7 +214,6 @@ async function handler(m, { sock }) {
     lines.push("Tidak ada breach yang diketahui untuk domain ini");
     lines.push("");
     lines.push("Tetap aktifkan 2FA untuk keamanan ekstra.");
-    await m.react("🐣");
     return m.reply(claraWrap("Breach Check", lines, "success"));
   }
 

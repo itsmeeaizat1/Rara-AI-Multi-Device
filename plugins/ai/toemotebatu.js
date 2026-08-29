@@ -25,9 +25,6 @@ async function handler(m, { sock }) {
     if (!isImage) {
         { const __navText = claraWrap("Emote Batu", `🗿 *ᴇᴍᴏᴛᴇ ʙᴀᴛᴜ*\n\nKirim/reply gambar\n\n\`${m.prefix}toemotebatu\``); return await m.reply(__navText, "toemotebatu"); }
     }
-    
-    m.react('🕐')
-    
     try {
         let buffer
         if (m.quoted && m.quoted.isMedia) {
@@ -44,9 +41,6 @@ async function handler(m, { sock }) {
         
         const url = `https://api-faa.my.id/faa/tomoai?url=${encodeURIComponent(imageUrl)}`
         const res = await f(url, 'arrayBuffer')
-        
-        m.react('✅')
-        
         await sock.sendMedia(m.chat, Buffer.from(res), null, m, {
             type: 'image'
         })

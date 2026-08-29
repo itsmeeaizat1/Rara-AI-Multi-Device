@@ -35,9 +35,6 @@ async function handler(m, { sock }) {
     if (!username) {
         { const __navText = `🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴛᴀʟᴋ*\n\nMasukkan username TikTok\n\n\`Contoh: ${m.prefix}tiktokstalk mrbeast\``; return await m.reply( __navText, "tiktokstalk"); }
     }
-    
-    m.react('🕐')
-    
     try {
         const res = await axios.get(`https://firefly.maiku.my.id/api/stalk-tiktok?apikey=${config.APIkey.firefly}&username=${encodeURIComponent(username)}`, {
             timeout: 30000
@@ -61,9 +58,6 @@ async function handler(m, { sock }) {
             `🎬 *ᴠɪᴅᴇᴏꜱ:* ${shortNum(s.videos)}\n\n` +
             `📝 *ʙɪᴏ:*\n${d.signature || '-'}\n\n` +
             `🔗 https://tiktok.com/@${d.username}`
-        
-        m.react('✅')
-        
         await sock.sendMessage(m.chat, {
             image: { url: d.avatar },
             caption

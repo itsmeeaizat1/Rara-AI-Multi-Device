@@ -29,9 +29,6 @@ async function handler(m, { sock }) {
   if (!no || !query) {
     return m.reply(novaGuide("ApkModGet", "Format-nya salah nih!", m.prefix + "apkmod-get <no> <query>"));
   }
-
-  m.react("🕒");
-
   try {
     const { data } = await axios.get(
       `https://api.neoxr.eu/api/apkmod?q=${encodeURIComponent(query)}&no=${no}&apikey=${NEOXR_APIKEY}`,
@@ -64,8 +61,6 @@ async function handler(m, { sock }) {
         },
         { quoted: m },
       );
-
-      m.react("🐣");
     } else {
       let caption = `⚠️ Download URL tidak tersedia`;
       await sock.sendMessage(

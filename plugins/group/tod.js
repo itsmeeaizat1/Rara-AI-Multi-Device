@@ -288,7 +288,6 @@ export default {
         `│ Truth or Dare dinyalakan di grup ini.`,
         `│ Ketik *${prefix}tod* untuk mulai main!`,
       ].join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -304,7 +303,6 @@ export default {
         `│ Truth or Dare dimatikan.`,
         `│ Ketik *${prefix}todon* untuk aktifkan lagi.`,
       ].join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -321,7 +319,6 @@ export default {
         `│ Status: ${isTodOn(groupId) ? "*ᴀᴋᴛɪꜰ* 🟢" : "*ɴᴏɴᴀᴋᴛɪꜰ* 🔴"}`,
       ];
       await m.reply(claraWrap("Tod - Statistik", lines.join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -336,9 +333,6 @@ export default {
       await m.reply(novaError("Truth or Dare", "Fitur ini khusus untuk grup ya! Ajak teman kamu main di grup."));
       return { handled: true };
     }
-
-    await m.react("🕒");
-
     // ─── Parse sub-command ───
     const subMatch = raw.toLowerCase().match(
       new RegExp(`^${prefix}tod\\s+(truth|dare|confess|confession|target|help|bantu)\\b`, "i")
@@ -369,7 +363,6 @@ export default {
         `│ 📌 Mainnya jujur ya, jangan skip!`,
         `│ 📌 Kalau dapat dare, lakuin ya, gak boleh kabur!`,
       ].join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -384,7 +377,6 @@ export default {
     if (subCmd === "target") {
       if (members.length === 0) {
         await m.reply(novaEmpty("Truth or Dare", "Tidak ada member lain yang bisa ditunjuk nih. Coba lagi nanti ya!"));
-        await m.react("🐣");
         return { handled: true };
       }
 
@@ -421,7 +413,6 @@ export default {
       } catch (e) {
         await m.reply(text);
       }
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -511,7 +502,6 @@ export default {
     } else {
       await m.reply(text);
     }
-    await m.react("🐣");
     return { handled: true };
   },
 };

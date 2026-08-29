@@ -99,9 +99,6 @@ async function handler(m, { sock, config: botConfig }) {
     if (!domain || !domain.includes(".")) {
       return m.reply(claraWrap("DomainCheck", "Domain tidak valid!\n💡 *Contoh:* " + prefix + "domaincheck example.com"));
     }
-
-    await m.react("🕒");
-
     const result = await checkDomain(domain);
     const tld = domain.split(".").pop();
 
@@ -166,12 +163,9 @@ async function handler(m, { sock, config: botConfig }) {
         lines.push("Terdaftar (detail terbatas)");
       }
     }
-
-    await m.react("🐣");
     return m.reply(claraWrap("Domain Check: " + domain, lines.join("\n")));
   } catch (e) {
     console.error("domaincheck error:", e);
-    await m.react("❌");
     return m.reply(claraWrap("DomainCheck", "Error: " + e.message));
   }
 }

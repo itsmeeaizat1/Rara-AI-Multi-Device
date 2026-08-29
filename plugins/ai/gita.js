@@ -25,16 +25,11 @@ async function handler(m, { sock }) {
     if (!text) {
         return m.reply(claraWrap("Gita Gpt", `📿 *ɢɪᴛᴀ ɢᴘᴛ*\n\nMasukkan pertanyaan\n\n\`Contoh: ${m.prefix}gita What is dharma?\``), "gita")
     }
-
-    m.react('🕐')
-
     try {
         const url = `https://api.cuki.biz.id/api/ai/gita?apikey=${config.APIkey.cuki}&q=${encodeURIComponent(text)}`
         const data = await f(url)
 
         const content = data.results
-
-        m.react('✅')
         { const __navText = `${content?.trim()}`; await m.reply(__navText); }
 
     } catch (error) {

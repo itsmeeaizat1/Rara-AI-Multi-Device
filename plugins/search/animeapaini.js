@@ -69,9 +69,6 @@ async function handler(m, { sock }) {
             `⚠️ *ᴄᴀᴛᴀᴛᴀɴ:* Video tidak didukung, hanya gambar/screenshot`
         )
     }
-    
-    m.react('🕐')
-    
     try {
         if (!imageBuffer && imageMsg) {
             const stream = await downloadContentFromMessage(imageMsg, 'image')
@@ -85,9 +82,6 @@ async function handler(m, { sock }) {
         if (!imageBuffer || imageBuffer.length < 100) {
             return m.reply(novaError("AnimeApaini", "Gagal ambil gambar nih, coba kirim ulang"))
         }
-        
-        await m.react('🕐')
-        
         const imageUrl = await uploadToTempfiles(imageBuffer)
         
         const res = await axios.get(`https://api.neoxr.eu/api/whatanime?url=${encodeURIComponent(imageUrl)}&apikey=${NEOXR_APIKEY}`, {
@@ -121,9 +115,6 @@ async function handler(m, { sock }) {
             `  │ To: \`${formatTime(d.to)}\`\n\n` +
             `📊 *ꜱɪᴍɪʟᴀʀɪᴛʏ:* ${similarity}%\n\n` +
             `🔗 https://anilist.co/anime/${d.anilist || ''}`
-        
-        m.react('✅')
-        
         if (d.image) {
             await sock.sendMedia(m.chat, d.image, caption, m, {
                 type: 'image'

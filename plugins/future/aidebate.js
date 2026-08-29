@@ -215,13 +215,11 @@ async function handler(m, { sock, db, config: botConfig }) {
         // Final - judge
         debate.status = "judging";
         saveDebate(db, gid, debate);
-        await m.react("🕒");
         await m.reply(claraWrap("AI Debate", "Semua ronde selesai! AI Judge sedang menilai..."));
         const verdict = await aiJudge(debate.topic, debate.proArgs.join("\n"), debate.conArgs.join("\n"));
         debate.status = "done";
         debate.verdict = verdict;
         saveDebate(db, gid, debate);
-        await m.react("🐣");
         await m.reply(claraWrap("AI Debate Verdict", "Topik: " + debate.topic + "\n\n" + (verdict || "Gagal menilai nih")));
         return { handled: true };
       } else {

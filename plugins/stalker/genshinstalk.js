@@ -25,9 +25,6 @@ async function handler(m, { sock }) {
   if (!uid) {
     return m.reply(claraWrap("genshinstalk", "❌ *UID Genshin-nya mana nih?*\n\nKamu harus memasukkan UID pemain Genshin Impact yang ingin di-stalk. \n\n💡 *Contoh:* `.genshinstalk 856012067`"));
   }
-
-  await m.react("🕒");
-
   try {
     const res = await axios.get(`https://api.nexray.eu.cc/stalker/genshin?id=${uid}`, {
       timeout: 30000,
@@ -71,9 +68,6 @@ async function handler(m, { sock }) {
     } else {
       await m.reply(caption);
     }
-
-    await m.react("🐣");
-
   } catch (error) {
     console.error("[Genshin Stalk]", error.message);
     m.reply(claraWrap("genshinstalk", "😔 *ᴛᴇʀᴊᴀᴅɪ ᴍᴀꜱᴀʟᴀʜ ᴅɪ ꜱɪꜱᴛᴇᴍ ᴋᴀᴍɪ.* \n\nSistem gagal menarik data dari server Genshin Impact. Silakan coba beberapa saat lagi ya."));

@@ -41,8 +41,6 @@ async function handler(m, { sock }) {
             `📊 *ᴇʟᴇᴍᴇɴ:*\n${result.sektor}\n\n` +
             `⚠️ *ᴘᴏᴛᴇɴꜱɪ:*\n${result.elemen}\n\n` +
             `_${result.catatan}_`
-        
-        m.react('✅')
         await m.reply(response)
         
     } catch (error) {

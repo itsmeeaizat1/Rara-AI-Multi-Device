@@ -25,8 +25,6 @@ async function handler(m, { sock }) {
   if (!nama || nama.length < 2) {
     return m.reply( claraWrap("Fakeffduo", `*ꜰᴀᴋᴇ ꜰꜰ ᴅᴜᴏ*\n\n💡 *Contoh:* ${m.prefix}fakeffduo nama1|nama2`), { commandName: "fakeffduo" });
   }
-  m.react("🕒");
-
   try {
     await sock.sendMedia(
       m.chat,
@@ -37,8 +35,6 @@ async function handler(m, { sock }) {
         type: "image",
       },
     );
-
-    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("fakeffduo", te(m.prefix, m.command, m.pushName), "error"));
   }

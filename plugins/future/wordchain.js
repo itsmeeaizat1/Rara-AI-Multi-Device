@@ -115,17 +115,14 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     if (game.lastUser === m.sender) {
-      await m.react("🕒");
     }
     const expected = getLastChar(game.lastWord);
     const actual = getFirstChar(word);
     if (actual !== expected) {
-      await m.react("❌");
       await m.reply(claraWrap("Word Chain", "Salah! Kata harus mulai dari huruf " + expected.toUpperCase() + "\nKata kamu: " + word + " (mulai dari " + actual.toUpperCase() + ")"));
       return { handled: true };
     }
     if (game.chain.includes(word)) {
-      await m.react("❌");
       await m.reply(claraWrap("Word Chain", "Kata \"" + word + "\" sudah dipakai sebelumnya! Carikan kata lain."));
       return { handled: true };
     }
@@ -136,8 +133,6 @@ async function handler(m, { sock, db, config: botConfig }) {
     if (!game.scores[m.sender]) game.scores[m.sender] = 0;
     game.scores[m.sender]++;
     saveConfig(db, gid, game);
-    await m.react("🐣");
-
     const nextChar = getLastChar(word).toUpperCase();
     await m.reply(claraWrap("Word Chain", [
       "Benar! +" + 1 + " poin",

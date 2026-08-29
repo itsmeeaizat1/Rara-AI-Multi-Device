@@ -181,7 +181,6 @@ async function handler(m, { sock }) {
 
     // Notify registrant
     try {
-      await m.react("🐣");
       await sock.sendMessage(regData.sender, {
         text:
           "SEWA DIAPPROVE!\n\n" +

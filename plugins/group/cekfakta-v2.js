@@ -209,7 +209,6 @@ export default {
         ``,
         `│ Anggota grup: reply pesan + *${prefix}cekfakta*`,
       ].join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -230,7 +229,6 @@ export default {
         `│ Fitur Cek Fakta dimatikan.`,
         `│ Ketik *${prefix}cekfaktaon* untuk aktifkan lagi.`,
       ].join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -251,7 +249,6 @@ export default {
         `│ ${prefix}cekfaktaon - Aktifkan`,
         `│ ${prefix}cekfaktaoff - Matikan`,
       ].join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -305,9 +302,6 @@ export default {
     }
 
     if (claimText.length > 3000) claimText = claimText.slice(0, 3000);
-
-    await m.react("🕒");
-
     // ─── Step 1: Local pattern quick-check ───
     const localCheck = quickLocalCheck(claimText);
     const localNote = localCheck
@@ -486,8 +480,6 @@ Aturan:
         tipText(`Reply klaim lain + ${prefix}cekfakta untuk cek lagi`);
 
       await m.reply(text);
-      await m.react("🐣");
-
       // Update stats
       incrementStats(groupId, verdictColor);
     } catch (error) {
@@ -499,7 +491,6 @@ Aturan:
           `│ Cek AI API key: *${prefix}aihelp*`,
         ].join("\n"));
       await m.reply(text);
-      await m.react("❌");
     }
 
     return { handled: true };

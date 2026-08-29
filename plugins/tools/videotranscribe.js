@@ -106,9 +106,6 @@ async function handler(m, { sock,  args }) {
       `*📝 VIDEO TRANSCRIBE*\n\n\`\`\`${m.prefix}video-transcribe <url_video> [bahasa]\`\`\`\n\nContoh:\n\`${m.prefix}video-transcribe https://youtu.be/... id\``
     );
   }
-
-  m.react("🕒");
-
   try {
     const result = await transcriber(url, lang);
     
@@ -118,8 +115,6 @@ async function handler(m, { sock,  args }) {
     }
 
     const info = claraWrap("Video Transcribe", [`*ᴛɪᴛʟᴇ:* ${result.title}`, `*ʟᴀɴɢᴜᴀɢᴇ:* ${lang.toUpperCase()}`, `*ꜱᴇɢᴍᴇɴᴛꜱ:* ${result.total}`, ``, `*ᴛʀᴀɴꜱᴄʀɪᴘᴛ:*`, transcript].join("\n"));
-
-    m.react("🐣");
     await m.reply(info);
   } catch (err) {
     console.error("[VideoTranscribe]", err.message);

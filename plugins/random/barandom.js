@@ -21,13 +21,10 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     const api = 'https://api.nexray.web.id/random/ba'
-    await m.react('🕐')
     try {
         await sock.sendMedia(m.chat, api, null, m, {
             type: 'image'
         })
-        
-        await m.react('✅')
     } catch (e) {
         m.reply(claraWrap("barandom", te(m.prefix, m.command, m.pushName), "error"))}
 }

@@ -74,8 +74,6 @@ async function handler(m, { sock, args }) {
       if (m.isGroup) {
         return m.reply(claraWrap("Mbti", "MBTI test hanya bisa dijalankan di private chat (DM) karena membutuhkan sesi interaktif.\n\nChat gw langsung untuk mulai test MBTI!"));
       }
-
-      await m.react("🕒");
       try {
         const res = await apiGet("/questions?locale=en");
         if (res.status !== 200 || !res.data?.questions) throw new Error("Gagal ambil pertanyaan nih");
@@ -98,7 +96,6 @@ async function handler(m, { sock, args }) {
         txt += `Balas dengan *A* atau *B*`;
 
         await m.reply(claraWrap(txt.split("\n").filter(l => l.trim())));
-        await m.react("🐣");
       } catch (e) {
         console.error("[MBTI] Error:", e.message);
         await m.reply(novaError("MBTI", `Gagal mulai test MBTI nih: ${e.message}`));
@@ -112,7 +109,6 @@ async function handler(m, { sock, args }) {
   // Cancel test
   if (lowerText === "cancel" || lowerText === "batal" || lowerText === "stop" || lowerText === ".mbti cancel") {
     sessions.delete(sender);
-    await m.react("🐣");
     return m.reply(claraWrap("Mbti", "Test MBTI dibatalkan. Ketik `.mbti` untuk mulai lagi."));
   }
 
@@ -133,7 +129,6 @@ async function handler(m, { sock, args }) {
 
   // Check if test complete
   if (session.current >= session.questions.length) {
-    await m.react("🕒");
     try {
       const res = await apiPost("/calculate", {
         answers: session.answers,
@@ -184,7 +179,6 @@ async function handler(m, { sock, args }) {
       txt += `_Test selesai! 32/32 pertanyaan terjawab_`;
 
       await m.reply(claraWrap(txt.split("\n").filter(l => l.trim())));
-      await m.react("🐣");
     } catch (e) {
       console.error("[MBTI] Calculate error:", e.message);
       await m.reply(novaError("MBTI", `Gagal hitung hasil nih: ${e.message}`));
@@ -203,7 +197,6 @@ async function handler(m, { sock, args }) {
   txt += `Ketik *ᴄᴀɴᴄᴇʟ* untuk batal`;
 
   await m.reply(claraWrap(txt.split("\n").filter(l => l.trim())));
-  await m.react("🐣");
 }
 
 export { pluginConfig as config, handler };

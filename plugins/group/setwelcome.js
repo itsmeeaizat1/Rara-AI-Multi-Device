@@ -44,9 +44,6 @@ async function handler(m, { sock }) {
 
   db.setGroup(m.chat, { welcomeMsg: text, welcome: true });
   db.save();
-
-  m.react("🐣");
-
   await m.reply(claraWrap("Setwelcome", `✅ Welcome berhasil di set menjadi *${text}*\nMau reset? ketik ${m.prefix}resetwelcome`));
 }
 

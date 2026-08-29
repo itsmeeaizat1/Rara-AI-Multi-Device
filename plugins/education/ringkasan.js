@@ -119,9 +119,6 @@ async function handler(m, { sock, args }) {
     txt += `_Extractive summarization - pilih kalimat terpenting berdasarkan frekuensi kata_`;
     return await m.reply( txt, { commandName: "ringkasan" });
   }
-
-  await m.react("🕒");
-
   try {
     // Check for custom number of points
     let numPoints = 5;
@@ -157,7 +154,6 @@ async function handler(m, { sock, args }) {
     txt += `_Ringkas dengan ${numPoints} poin_`;
 
     await m.reply(txt);
-    await m.react("🐣");
   } catch (e) {
     console.error("[RINGKASAN] Error:", e.message);
     await m.reply(novaError("Ringkasan", `Gagal rangkum nih: ${e.message}`));

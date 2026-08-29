@@ -23,9 +23,6 @@ async function handler(m, { sock }) {
     if (!kategori) {
         return m.reply(`\`Contoh: ${m.prefix}top orang pintar\``, "top")
     }
-    
-    m.react('🕐')
-    
     try {
         const groupMeta = m.groupMetadata
         const participants = groupMeta.participants || []
@@ -49,7 +46,6 @@ async function handler(m, { sock }) {
         })
         
         await m.reply(claraWrap("Top", `🏆 *Top 5 ${kategori.toUpperCase()}*\n${list}`))
-        m.react('✅')
     } catch (error) {
         m.reply(claraWrap("topfun", te(m.prefix, m.command, m.pushName), "error"))
     }

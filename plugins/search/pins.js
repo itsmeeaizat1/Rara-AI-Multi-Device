@@ -34,8 +34,6 @@ async function handler(m, { sock }) {
       `Contoh:\n` +
       `\`${m.prefix}pins Zhao Lusi\``, "pins");
   }
-  m.react("🕒");
-
   try {
     const data = await f(
       `https://api.siputzx.my.id/api/s/pinterest?query=${encodeURIComponent(query)}`,
@@ -109,8 +107,6 @@ async function handler(m, { sock }) {
           messageId: msg.key.id,
         });
       }
-
-      m.react("🐣");
     } catch (albumErr) {
       console.log("[Pins] Album gagal, kirim satu-satu:", albumErr.message);
 
@@ -132,7 +128,6 @@ async function handler(m, { sock }) {
         );
       }
     }
-    m.react("🐣");
   } catch (err) {
     console.error("[Pins] Error:", err.message);
     m.reply(claraWrap("pins", te(m.prefix, m.command, m.pushName), "error"));

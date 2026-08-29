@@ -111,7 +111,6 @@ async function handler(m, { sock }) {
     config.clipdropApiKey = key;
 
     const masked = key.substring(0, 8) + "..." + key.substring(key.length - 4);
-    m.react("🐣");
     return m.reply(claraWrap("ClipDrop API", [
       "API key berhasil disimpan!",
       "Key: " + masked,
@@ -122,8 +121,6 @@ async function handler(m, { sock }) {
       "Coba: reply gambar + .nowm",
     ].join("\n")));
   }
-
-  m.react("❌");
   return m.reply(claraWrap("ClipDrop API", "Gagal simpan nih API key. Pastikan config.js writable."));
 }
 

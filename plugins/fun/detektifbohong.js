@@ -83,9 +83,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply(help, "detektifbohong");
   }
-
-  await m.react("🕒");
-
   const percent = randomPercent();
   const verdict = getVerdict(percent);
 
@@ -109,8 +106,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   ].join("\n");
 
   await m.reply(claraWrap("DetektifBohong", result));
-  await m.react("🐣");
-
   return { handled: true };
 }
 

@@ -390,9 +390,6 @@ async function handler(m, { sock }) {
   if (!text) {
     { const __navText = `⚠️ Harap masukkan teksnya!\n💡 *Contoh:* \`${m.prefix}${m.command} Halo semuanya\``; return await m.reply(__navText, "bratlocal"); };
   }
-
-  await m.react("🕒");
-
   try {
     const cmd = m.command.toLowerCase();
     let template;
@@ -432,8 +429,6 @@ async function handler(m, { sock }) {
         author: config.sticker.author
       });
     }
-
-    await m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("bratlocal", te(m.prefix, m.command, m.pushName), "error"));
   }

@@ -31,7 +31,6 @@ async function handler(m, { sock }) {
 
     try {
         await sock.newsletterDelete(targetJid)
-        await m.react('✅')
         return m.reply(claraWrap("Hapussaluran", `🗑️ *Saluran dihapus*\n\nID: ${targetJid}`))
     } catch (err) {
         return m.reply(claraWrap("hapussaluran", `❌ Gagal menghapus saluran: ${err.message}`))

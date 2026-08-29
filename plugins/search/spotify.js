@@ -26,9 +26,6 @@ async function handler(m, { sock, text }) {
   if (!text) {
     return m.reply( novaGuide("Spotify", "Kata kuncinya mana nih?", ".spotify bruno mars"), { commandName: "spotify" });
   }
-
-  await m.react("🕒");
-
   try {
     const res = await axios.get(`https://api.cuki.biz.id/api/search/spotify?apikey=${config.APIkey.cuki}&query=${encodeURIComponent(text)}&limit=5`);
     const data = res.data;
@@ -99,9 +96,6 @@ async function handler(m, { sock, text }) {
     } else {
       await m.reply(contentText);
     }
-
-    await m.react("🐣");
-
   } catch (err) {
     console.error("[Spotify Search]", err.message);
     m.reply(novaError("Spotify", "API lagi bermasalah nih, coba lagi ya"));

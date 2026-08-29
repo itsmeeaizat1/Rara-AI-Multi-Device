@@ -221,8 +221,6 @@ async function handler(m, { sock }) {
   txt += "│\n";
   txt += "│ 👑 Cheated by: " + (config.owner?.name || "Owner") + "\n";
   txt += "╰──────────";
-
-  await m.react("🐣");
   await sock.sendMessage(m.chat, { text: txt, mentions: [targetJid] }, { quoted: m });
 }
 

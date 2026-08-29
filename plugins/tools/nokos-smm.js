@@ -104,20 +104,16 @@ async function handler(m, { sock }) {
     }
     const parts = key.split(":");
     data.apiId = parts[0]; data.apiKey = parts.slice(1).join(":"); saveData(data);
-    await m.react("🐣");
     return m.reply( claraWrap("NexusSMM", "API Key tersimpan!\nAPI ID: " + data.apiId.slice(0,6) + "...\nAPI Key: " + data.apiKey.slice(0,6) + "..." + data.apiKey.slice(-4)), "smm");
   }
 
   // SALDO
   if (sub === "saldo" || sub === "balance") {
     if (!data.apiId) return m.reply( claraWrap("NexusSMM", "Belum setup!\nOwner: .smm setkey <api_id>:<api_key>"), "smm");
-    await m.react("🕒");
     try {
       const profile = await getProfile(data);
-      await m.react("🐣");
       return m.reply(claraWrap("NexusSMM", `Profil NexusSMM\n\nUsername: nokos-smm\nNama: ${profile.full_name}\nLevel: ${profile.level}\nSaldo: ${formatRupiah(parseInt(profile.balance) || 0)}\nTerdaftar: ${profile.registered || "-"}`), "smm");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("NexusSMM", "Error: " + err.message), "smm");
     }
   }
@@ -128,7 +124,6 @@ async function handler(m, { sock }) {
     const keyword = (arg1 || "").toLowerCase();
     const categoryFilter = arg2 ? arg2.toLowerCase() : "";
     if (!keyword) return m.reply( claraWrap("NexusSMM", "Cari Layanan SMM\n\n.smm cari <keyword> [kategori]\n\nContoh:\n.smm cari instagram follower\n.smm cari telegram views\n.smm cari tiktok likes\n.smm cari youtube\n\nKategori populer: Instagram, Telegram, TikTok, YouTube, Facebook, Twitter"), "smm");
-    await m.react("🕒");
     try {
       const services = await getServices(data);
       let filtered = services.filter(s =>
@@ -137,7 +132,6 @@ async function handler(m, { sock }) {
       );
       if (categoryFilter) filtered = filtered.filter(s => (s.category || "").toLowerCase().includes(categoryFilter));
       if (filtered.length === 0) {
-        await m.react("🐣");
         return m.reply( claraWrap("NexusSMM", "Tidak ada layanan untuk: " + keyword + "\n\nCoba keyword lain:\n.smm cari instagram\n.smm cari telegram\n.smm cari tiktok\n.smm cari youtube"), "smm");
       }
       filtered.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
@@ -148,10 +142,8 @@ async function handler(m, { sock }) {
       });
       if (filtered.length > 15) body += "... dan " + (filtered.length - 15) + " layanan lain\n";
       body += "\nBeli: .smm beli <service_id> <target> <qty>\n💡 *Contoh:* .smm beli " + filtered[0].service_id + " @username 100";
-      await m.react("🐣");
       return m.reply( claraWrap("NexusSMM", body), "smm");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("NexusSMM", "Error: " + err.message), "smm");
     }
   }
@@ -165,18 +157,15 @@ async function handler(m, { sock }) {
     if (!serviceId || !target || !quantity) {
       return m.reply( claraWrap("NexusSMM", "Format beli SMM\n\n.smm beli <service_id> <target> <qty>\n\nContoh:\n.smm beli 11010 https://t.me/test 100\n.smm beli 5320448 @username 500\n\nCari service_id:\n.smm cari instagram follower"), "smm");
     }
-    await m.react("🕒");
     try {
       const services = await getServices(data);
       const svc = services.find(s => String(s.service_id) === String(serviceId));
       if (!svc) {
-        await m.react("🐣");
         return m.reply( claraWrap("NexusSMM", "Service ID tidak ditemukan: " + serviceId + "\n\nCari: .smm cari <keyword>"), "smm");
       }
       const minQ = parseInt(svc.min) || 1;
       const maxQ = parseInt(svc.max) || 999999;
       if (quantity < minQ || quantity > maxQ) {
-        await m.react("🐣");
         return m.reply( claraWrap("NexusSMM", "Quantity tidak valid!\n\nMin: " + minQ + "\nMax: " + maxQ + "\nInput: " + quantity), "smm");
       }
       const pricePerUnit = parseFloat(svc.price) || 0;
@@ -184,10 +173,8 @@ async function handler(m, { sock }) {
       const token = genToken();
       data.pendingPayments[token] = { sender, serviceId, target, quantity, serviceName: svc.name, category: svc.category, price: totalPrice, createdAt: Date.now(), expiresAt: Date.now() + 300000 };
       saveData(data);
-      await m.react("🐣");
       return m.reply( claraWrap("NexusSMM", "Konfirmasi Order SMM\n\nLayanan: " + svc.name + "\nKategori: " + svc.category + "\nTarget: " + target + "\nQuantity: " + quantity + "\n\nHarga: " + formatRupiah(totalPrice) + "\n\nToken: " + token + "\n\nBayar: .smm bayar " + token + "\nExpired: 5 menit\n\nCatatan: Pastikan target benar. Order yang sudah berjalan tidak bisa dibatalkan."), "smm");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("NexusSMM", "Error: " + err.message), "smm");
     }
   }
@@ -200,17 +187,14 @@ async function handler(m, { sock }) {
     if (!pending) return m.reply( claraWrap("NexusSMM", "Token tidak ditemukan!"), "smm");
     if (pending.sender !== sender) return m.reply( claraWrap("NexusSMM", "Bukan token kamu!"), "smm");
     if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("NexusSMM", "Token expired!"), "smm"); }
-    await m.react("🕒");
     try {
       const order = await createOrder(data, pending.serviceId, pending.target, pending.quantity);
       data.orders.push({ id: String(order.id), serviceId: pending.serviceId, serviceName: pending.serviceName, category: pending.category, target: pending.target, quantity: pending.quantity, price: pending.price, sender, status: "PENDING", createdAt: new Date().toISOString() });
       if (data.orders.length > 100) data.orders = data.orders.slice(-100);
       delete data.pendingPayments[token]; saveData(data);
-      await m.react("🐣");
       return m.reply( claraWrap("NexusSMM", "Order Berhasil!\n\nOrder ID: " + order.id + "\nLayanan: " + pending.serviceName + "\nTarget: " + pending.target + "\nQuantity: " + pending.quantity + "\nHarga: " + formatRupiah(pending.price) + "\n\nCek status:\n.smm cek " + order.id + "\n\nCatatan: SMM order butuh waktu 0-1 jam untuk mulai."), "smm");
     } catch (err) {
       delete data.pendingPayments[token]; saveData(data);
-      await m.react("🐣");
       return m.reply( claraWrap("NexusSMM", "Gagal order! Saldo NexusSMM tidak dipotong di sistem ini.\n\nError: " + err.message + "\n\nSaldo NexusSMM dibebankan langsung oleh provider.\nCek saldo: .smm saldo"), "smm");
     }
   }
@@ -221,10 +205,8 @@ async function handler(m, { sock }) {
     if (!orderId) return m.reply( claraWrap("NexusSMM", "Masukkan Order ID!\n💡 *Contoh:* .smm cek 12345"), "smm");
     const order = data.orders.find(o => o.id === orderId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("NexusSMM", "Order tidak ditemukan!"), "smm");
-    await m.react("🕒");
     try {
       const result = await checkStatus(data, orderId);
-      await m.react("🐣");
       let body = "Order SMM #" + orderId + "\n\nLayanan: " + (order ? order.serviceName : "?") + "\nTarget: " + (order ? order.target : "?") + "\nQuantity: " + (order ? order.quantity : "?") + "\n\n";
       if (typeof result === "object") {
         body += "Status: " + (result.status || "UNKNOWN") + "\n";
@@ -236,7 +218,6 @@ async function handler(m, { sock }) {
       }
       return m.reply( claraWrap("NexusSMM", body), "smm");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("NexusSMM", "Error: " + err.message), "smm");
     }
   }
@@ -256,7 +237,6 @@ async function handler(m, { sock }) {
   // KATEGORI - Show available categories
   if (sub === "kategori" || sub === "category") {
     if (!data.apiId) return m.reply( claraWrap("NexusSMM", "Belum setup!\nOwner: .smm setkey <api_id>:<api_key>"), "smm");
-    await m.react("🕒");
     try {
       const services = await getServices(data);
       const categories = {};
@@ -266,10 +246,8 @@ async function handler(m, { sock }) {
         body += cat + " (" + count + ")\n";
       });
       body += "\nCari layanan:\n.smm cari <keyword>";
-      await m.react("🐣");
       return m.reply( claraWrap("NexusSMM", body), "smm");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("NexusSMM", "Error: " + err.message), "smm");
     }
   }

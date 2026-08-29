@@ -54,9 +54,6 @@ async function handler(m, { sock }) {
       )
     );
   }
-
-  m.react("🕒");
-
   try {
     const result = await getAudioDownload(url);
 
@@ -99,7 +96,6 @@ async function handler(m, { sock }) {
     }
     // Kirim caption setelah audio
     await m.reply(caption);
-    m.react("🐣");
   } catch (err) {
     console.error("[YTMP3]", err);
     m.reply(novaError("YTmp3", "Gagal mengunduh audio YouTube — coba lagi nanti atau ganti link ya!"));

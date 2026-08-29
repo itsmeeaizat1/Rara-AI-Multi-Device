@@ -58,7 +58,6 @@ async function handler(m, { sock }) {
   if (!inputUrl) {
     return m.reply(claraWrap("Nulis", `❌ *ᴛᴇᴍᴘʟᴀᴛᴇ ᴛɪᴅᴀᴋ ᴀᴅᴀ*\n\nFile template kertas tidak ditemukan di config.assets`));
   }
-  await m.react("🕒");
   await m.reply(claraWrap("Nulis", `🕕 *ᴍᴇᴍᴘʀᴏꜱᴇꜱ...*\n\nMembuat tulisan tangan...`));
   try {
     const { createCanvas, loadImage, GlobalFonts } = _canvas;
@@ -95,7 +94,6 @@ async function handler(m, { sock }) {
       ctx.fillText(line, startX, startY + i * lineHeight);
     });
     const buffer = canvas.toBuffer("image/jpeg");
-    await m.react("🐣");
     await sock.sendMedia(
       m.chat,
       buffer,

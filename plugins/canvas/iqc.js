@@ -25,9 +25,6 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply(claraWrap("Iqc Chat", `📱 *ɪqᴄ ᴄʜᴀᴛ*\n\nMasukkan teks untuk chat\n\n\`Contoh: ${m.prefix}iqc Hai cantik\``), "iqc");
   }
-
-  m.react("🕒");
-
   try {
     const now = new Date();
     const time = moment(now).tz("Asia/Jakarta").format("HH:mm");
@@ -44,8 +41,6 @@ async function handler(m, { sock }) {
     }
 
     const cardBuffer = Buffer.from(res.data);
-
-    m.react("🐣");
     await sock.sendMessage(m.chat, { image: cardBuffer, caption: "" }, { quoted: m });
   } catch (error) {
     console.error("[IQC]", error.message);

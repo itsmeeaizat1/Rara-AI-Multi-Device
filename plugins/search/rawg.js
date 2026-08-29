@@ -24,9 +24,6 @@ async function handler(m, { sock }) {
     if (!query) {
         return m.reply(novaGuide('Game Search', 'Mau nyari info game apa nih? Ketik nama gamenya ya!', pluginConfig.example));
     }
-
-    m.react?.('🕒');
-
     try {
         const apiKey = config.APIkey?.rawg || 'DEMO_KEY';
         const url = `https://api.rawg.io/api/games?key=${apiKey}&search=${encodeURIComponent(query)}&page_size=5`;
@@ -35,7 +32,6 @@ async function handler(m, { sock }) {
         const games = response.data?.results || [];
 
         if (!games.length) {
-            m.react?.('🐣');
             return m.reply(novaEmpty('Game Search', `Gak nemu game "${query}" 🧐`));
         }
 
@@ -68,9 +64,6 @@ async function handler(m, { sock }) {
         });
 
         resultText += `╰──────────`;
-
-        m.react?.('🐣');
-
         const thumbnail = list.find(g => g.background_image)?.background_image;
 
         if (thumbnail) {
@@ -86,7 +79,6 @@ async function handler(m, { sock }) {
             return await m.reply(resultText);
         }
     } catch (error) {
-        m.react?.('🐣');
         const errorMsg = error.response?.data?.error || error.message || 'Terjadi kesalahan saat menghubungi API RAWG.';
         return m.reply(novaError('Game Search', errorMsg));
     }

@@ -45,7 +45,6 @@ function formatUptime(ms) {
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
   try {
-    await m.react("🕒");
     const prefix = botConfig.command?.prefix || ".";
     const botName = botConfig.bot?.name || "Nova AI WhatsApp Bot";
 
@@ -130,9 +129,6 @@ ${toSC("Nova AI WhatsApp Bot")}`;
       { id: `${prefix}allmenu`, text: toSC("All Menu") },
       { id: `${prefix}owner`, text: toSC("Owner") },
     ];
-
-    await m.react("🐣");
-
     await sendMenuCard(sock, m, {
       text,
       footer: "",

@@ -105,7 +105,6 @@ async function handler(m, { sock }) {
     const [username, apiKey] = cred.split(":");
     data.username = username; data.apiKey = apiKey; data.priceCache = null;
     saveData(data);
-    await m.react("🐣");
     return m.reply(claraWrap("DigiPulsa", `Credentials tersimpan!\nUsername: digipulsa\nAPI Key: ${apiKey.slice(0,6)}...${apiKey.slice(-4)}\n\nCek saldo: .dg saldo`), "digipulsa");
   }
 
@@ -117,7 +116,6 @@ async function handler(m, { sock }) {
       return m.reply( claraWrap("DigiPulsa", "Set Markup (Owner)\n\n.dg setmarkup <persen>\n\nContoh:\n.dg setmarkup 5 (tambah 5%)\n.dg setmarkup 0 (harga pas)\n\nMarkup aktif: " + markup + "%"), "digipulsa");
     }
     data.markup = pct; saveData(data);
-    await m.react("🐣");
     return m.reply( claraWrap("DigiPulsa", "Markup: " + pct + "%\n\n💡 *Contoh:* Pulsa 50k harga API Rp49.000\nHarga jual: " + formatRupiah(49000 * (1 + pct/100))), "digipulsa");
   }
 
@@ -131,24 +129,20 @@ async function handler(m, { sock }) {
     }
     const targetUser = getUser(data, target + "@s.whatsapp.net");
     targetUser.balance += amount; saveData(data);
-    await m.react("🐣");
     return m.reply( claraWrap("DigiPulsa", "Topup Berhasil!\nUser: " + target + "\nJumlah: " + formatRupiah(amount) + "\nSaldo: " + formatRupiah(targetUser.balance)), "digipulsa");
   }
 
   // SALDO
   if (sub === "saldo" || sub === "balance") {
     if (!data.username || !data.apiKey) return m.reply( claraWrap("DigiPulsa", "Belum setup!\nOwner: .dg setkey <username>:<apiKey>"), "digipulsa");
-    await m.react("🕒");
     try {
       const saldo = await cekSaldo(data);
-      await m.react("🐣");
       let body = "Saldo DigiPulsa\n\n";
       body += "Saldo API: " + formatRupiah(saldo) + "\n";
       body += "Saldo Bot: " + formatRupiah(user.balance) + "\n";
       body += "Markup: " + markup + "%";
       return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
     }
   }
@@ -156,7 +150,6 @@ async function handler(m, { sock }) {
   // KATEGORI
   if (sub === "kategori" || sub === "category") {
     if (!data.username || !data.apiKey) return m.reply( claraWrap("DigiPulsa", "Belum setup!\nOwner: .dg setkey <username>:<apiKey>"), "digipulsa");
-    await m.react("🕒");
     try {
       const products = await getPriceList(data);
       const cats = {};
@@ -171,10 +164,8 @@ async function handler(m, { sock }) {
         body += cat + " (" + count + " produk)\n";
       });
       body += "\nCari produk:\n.dg cari <keyword>";
-      await m.react("🐣");
       return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
     }
   }
@@ -186,7 +177,6 @@ async function handler(m, { sock }) {
     if (!keyword) {
       return m.reply( claraWrap("DigiPulsa", "Cari Produk\n\n.dg cari <keyword>\n\nContoh:\n.dg cari telkomsel\n.dg cari pln\n.dg cari mobile legend\n.dg cari free fire\n.dg cari genshin\n.dg cari dana\n.dg cari wifi\n\nLihat kategori: .dg kategori"), "digipulsa");
     }
-    await m.react("🕒");
     try {
       const products = await getPriceList(data);
       let filtered = products.filter(p =>
@@ -199,7 +189,6 @@ async function handler(m, { sock }) {
         )
       );
       if (filtered.length === 0) {
-        await m.react("🐣");
         return m.reply( claraWrap("DigiPulsa", "Tidak ada: " + keyword + "\n\nCoba:\n.dg cari telkomsel\n.dg cari pln\n.dg cari mobile legend\n.dg cari dana"), "digipulsa");
       }
       filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
@@ -217,10 +206,8 @@ async function handler(m, { sock }) {
       });
       if (filtered.length > 15) body += "... dan " + (filtered.length - 15) + " produk lain\n";
       body += "\nBeli: .dg beli <sku_code> <nomor>\n💡 *Contoh:* .dg beli " + filtered[0].buyer_sku_code + " 08123456789";
-      await m.react("🐣");
       return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
     }
   }
@@ -232,21 +219,17 @@ async function handler(m, { sock }) {
     if (!sku || !customerNo) {
       return m.reply( claraWrap("DigiPulsa", "Format Beli\n\n.dg beli <sku_code> <nomor_tujuan>\n\nContoh:\n.dg beli S5 08123456789 (Pulsa Tsel 5k)\n.dg beli PLN20 12345678901 (Token PLN 20k)\n.dg beli ML5 123456789 (ML Diamond 5)\n.dg beli DANA5000 08123456789 (Topup DANA 5k)\n\nCari SKU:\n.dg cari <keyword>"), "digipulsa");
     }
-    await m.react("🕒");
     try {
       const products = await getPriceList(data);
       const prod = products.find(p => p.buyer_sku_code === sku);
       if (!prod) {
-        await m.react("🐣");
         return m.reply( claraWrap("DigiPulsa", "SKU tidak ditemukan: " + sku + "\n\nCari: .dg cari <keyword>"), "digipulsa");
       }
       if (!prod.buyer_product_status || !prod.seller_product_status) {
-        await m.react("🐣");
         return m.reply( claraWrap("DigiPulsa", "Produk sedang gangguan!\n\nProduk: " + prod.product_name), "digipulsa");
       }
       const price = calcPrice(prod.price, markup);
       if (user.balance < price) {
-        await m.react("🐣");
         return m.reply( claraWrap("DigiPulsa", "Saldo tidak cukup!\n\nHarga: " + formatRupiah(price) + "\nSaldo: " + formatRupiah(user.balance) + "\nKurang: " + formatRupiah(price - user.balance) + "\n\nMinta topup:\n.dg topup " + sender.split("@")[0] + " <jumlah>"), "digipulsa");
       }
       const token = genToken();
@@ -256,7 +239,6 @@ async function handler(m, { sock }) {
         refId: genRefId(), createdAt: Date.now(), expiresAt: Date.now() + 300000,
       };
       saveData(data);
-      await m.react("🐣");
       let body = "Konfirmasi Order DigiPulsa\n\n";
       body += "Produk: " + prod.product_name + "\n";
       body += "Kategori: " + (prod.category || "?") + "\n";
@@ -269,7 +251,6 @@ async function handler(m, { sock }) {
       body += "\nToken: " + token + "\n\nBayar: .dg bayar " + token + "\nExpired: 5 menit";
       return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
     }
   }
@@ -284,7 +265,6 @@ async function handler(m, { sock }) {
     if (Date.now() > pending.expiresAt) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("DigiPulsa", "Token expired!"), "digipulsa"); }
     const u = getUser(data, sender);
     if (u.balance < pending.price) { delete data.pendingPayments[token]; saveData(data); return m.reply( claraWrap("DigiPulsa", "Saldo tidak cukup!"), "digipulsa"); }
-    await m.react("🕒");
     try {
       u.balance -= pending.price;
       u.totalSpent += pending.price;
@@ -300,7 +280,6 @@ async function handler(m, { sock }) {
       u.totalOrders += 1;
       delete data.pendingPayments[token];
       saveData(data);
-      await m.react("🐣");
       let body = "Order DigiPulsa\n\n";
       body += "Ref ID: " + pending.refId + "\n";
       body += "Produk: " + pending.productName + "\n";
@@ -327,7 +306,6 @@ async function handler(m, { sock }) {
       u.totalSpent -= pending.price;
       delete data.pendingPayments[token];
       saveData(data);
-      await m.react("🐣");
       return m.reply( claraWrap("DigiPulsa", "Gagal order! Saldo di-refund.\n\nError: " + err.message), "digipulsa");
     }
   }
@@ -338,7 +316,6 @@ async function handler(m, { sock }) {
     if (!refId) return m.reply( claraWrap("DigiPulsa", "Masukkan Ref ID!\n💡 *Contoh:* .dg cek DG1234ABC"), "digipulsa");
     const order = data.orders.find(o => o.refId === refId && o.sender === sender);
     if (!order && !isOwner) return m.reply( claraWrap("DigiPulsa", "Order tidak ditemukan!"), "digipulsa");
-    await m.react("🕒");
     try {
       const result = await topup(data, order ? order.sku : "", order ? order.customerNo : "", refId);
       if (order) {
@@ -354,7 +331,6 @@ async function handler(m, { sock }) {
         }
         saveData(data);
       }
-      await m.react("🐣");
       let body = "Status Order " + refId + "\n\n";
       body += "Produk: " + (order ? order.productName : "?") + "\n";
       body += "Tujuan: " + (order ? order.customerNo : "?") + "\n";
@@ -367,7 +343,6 @@ async function handler(m, { sock }) {
       else if (result.status === "Gagal") body += "\nGagal. Saldo di-refund.";
       return m.reply( claraWrap("DigiPulsa", body), "digipulsa");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
     }
   }
@@ -390,13 +365,10 @@ async function handler(m, { sock }) {
   if (sub === "refresh" || sub === "sync") {
     if (!isOwner) return m.reply(claraWrap("digipulsa", "Khusus owner!"));
     if (!data.username || !data.apiKey) return m.reply( claraWrap("DigiPulsa", "Belum setup!"), "digipulsa");
-    await m.react("🕒");
     try {
       const products = await getPriceList(data, true);
-      await m.react("🐣");
       return m.reply( claraWrap("DigiPulsa", "Cache di-refresh!\nTotal produk: " + products.length), "digipulsa");
     } catch (err) {
-      await m.react("🐣");
       return m.reply( claraWrap("DigiPulsa", "Error: " + err.message), "digipulsa");
     }
   }

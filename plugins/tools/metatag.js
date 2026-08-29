@@ -89,8 +89,6 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const url = text.startsWith("http") ? text : "https://" + text;
-    await m.react("🕒");
-
     const res = await fetch(url, {
       headers: { "User-Agent": "Mozilla/5.0 (Nova Bot)" },
       signal: AbortSignal.timeout(10000),
@@ -98,13 +96,11 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     if (!res.ok) {
-      await m.react("❌");
       return m.reply(claraWrap("MetaTag", "Gagal fetch: " + res.status + " " + res.statusText));
     }
 
     const contentType = res.headers.get("content-type") || "";
     if (!contentType.includes("text/html")) {
-      await m.react("❌");
       return m.reply(claraWrap("MetaTag", "Bukan halaman HTML! Content-Type: " + contentType));
     }
 
@@ -177,12 +173,9 @@ async function handler(m, { sock, config: botConfig }) {
     if (lines.length > 40) {
       lines.splice(40, lines.length - 40, "... (output dipotong)");
     }
-
-    await m.react("🐣");
     return m.reply(claraWrap("Meta Tags: " + url.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     console.error("metatag error:", e);
-    await m.react("❌");
     return m.reply(claraWrap("MetaTag", "Error: " + e.message));
   }
 }

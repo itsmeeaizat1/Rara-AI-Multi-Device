@@ -126,8 +126,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply( help, "word2pdf");
   }
-
-  await m.react("🕒");
   m.reply(claraWrap("Word2Pdf", "│ Konversi .docx ke PDF..."));
 
   try {
@@ -152,12 +150,9 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     let preview = textPreview.trim();
     if (preview.length > 1500) preview = preview.substring(0, 1500) + "\n\n... (lihat PDF untuk lengkap)";
     await m.reply(claraWrap("Word2Pdf — Preview", preview));
-
-    await m.react("🐣");
   } catch (error) {
     console.error("word2pdf error:", error);
     m.reply(claraWrap("Word2Pdf", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
-    await m.react("🐣");
   }
 
   return { handled: true };

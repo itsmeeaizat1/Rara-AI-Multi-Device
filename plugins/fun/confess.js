@@ -208,7 +208,6 @@ async function handler(m, { sock }) {
       `│ ❌ Gagal kirim pesan!\n│ ${error.message}\n\n` +
       `╰──────────`
     );
-    try { await m.react("❌"); } catch {}
   }
 }
 

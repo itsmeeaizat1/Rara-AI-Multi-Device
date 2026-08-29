@@ -406,7 +406,6 @@ async function handleSetJeda(m, sock) {
   }
 
   db.setting("jedaPush", val);
-  m.react("🐣");
   return m.reply(claraWrap("Jeda Push", `✅ Jeda diubah menjadi ${val}ms (${(val / 1000).toFixed(1)} detik)`));
 }
 
@@ -647,9 +646,6 @@ async function startPush(m, sock, text) {
       const vcfTarget = s.vcfTarget === "group" ? m.chat : m.sender;
       await sendVcf(sock, vcfTarget, saved, metadata.subject);
     }
-
-    m.react("🐣");
-
     const doneButtons = [
       {
         name: "quick_reply",

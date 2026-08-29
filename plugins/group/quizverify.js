@@ -66,9 +66,7 @@ async function handler(m, { sock, args }) {
 
     switch (subCmd) {
       case "on": {
-        await m.react("🕒");
         enableQuizVerify(groupId);
-        await m.react("🐣");
         return m.reply(
           bracketBox("🛡️", toSC("Quiz Verification ON"), [
             toSC("Member baru harus jawab quiz untuk verifikasi"),
@@ -81,9 +79,7 @@ async function handler(m, { sock, args }) {
       }
 
       case "off": {
-        await m.react("🕒");
         disableQuizVerify(groupId);
-        await m.react("🐣");
         return m.reply(
           bracketBox("🛡️", toSC("Quiz Verification OFF"), [
             toSC("Member baru bebas chat tanpa verifikasi"),
@@ -112,7 +108,6 @@ async function handler(m, { sock, args }) {
           );
         }
         setDifficulty(groupId, level);
-        await m.react("🐣");
         return m.reply(
           bracketBox("🛡️", toSC("Difficulty Updated"), [
             `${toSC("Difficulty")}: ${level}`,
@@ -130,7 +125,6 @@ async function handler(m, { sock, args }) {
           );
         }
         setTimeoutMinutes(groupId, minutes);
-        await m.react("🐣");
         return m.reply(
           bracketBox("🛡️", toSC("Timeout Updated"), [
             `${toSC("Timeout")}: ${minutes} ${toSC("menit")}`,
@@ -164,7 +158,6 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[QuizVerify] Error:", e.message);
-    await m.react("❌");
     return m.reply(
       novaError("Quiz Verify", `Gagal memproses verifikasi kuis: ${e.message}`)
     );

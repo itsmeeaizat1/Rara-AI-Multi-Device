@@ -29,9 +29,6 @@ async function handler(m, { sock }) {
         `\`Contoh: ${m.prefix}murrotal al fatihah\`\n` +
         `\`Contoh: ${m.prefix}murrotal ar rahman\``, "murrotal");
   }
-
-  m.react("🕒");
-
   try {
 
     const res = await fetch("https://islamipedia.id/murottal/");
@@ -55,9 +52,6 @@ async function handler(m, { sock }) {
     if (!find || !find.audio) {
       return m.reply(claraWrap("murrotal", `❌ Surah *${query}* tidak ditemukan`));
     }
-
-    m.react("🐣");
-
     await sock.sendMedia(m.chat, find.audio, null, m, {
       type: "audio",
     });

@@ -95,9 +95,6 @@ export default {
         await m.reply(text);
         return { handled: true };
       }
-
-      await m.react("🕒");
-
       const tmpDir = os.tmpdir();
       const inputPath = path.join(tmpDir, `slangtr_${Date.now()}.ogg`);
       const wavPath = path.join(tmpDir, `slangtr_${Date.now()}.wav`);
@@ -110,7 +107,6 @@ export default {
             `│ Status: *Gagal*`,
             `│ Audio terlalu kecil atau gagal diunduh.`,
           ].join("\n")));
-          await m.react("❌");
           return { handled: true };
         }
 
@@ -133,7 +129,6 @@ export default {
             `│ Tidak dapat mendeteksi suara dari voice note.`,
             `│ Pastikan audio jelas dan tidak terlalu pendek.`,
           ].join("\n")));
-          await m.react("❌");
           return { handled: true };
         }
 
@@ -157,7 +152,6 @@ export default {
             `│ Cek Groq API key di config.js.`,
           ].join("\n"));
         await m.reply(text);
-        await m.react("❌");
         return { handled: true };
       }
 
@@ -213,8 +207,7 @@ export default {
       inputText = inputText.slice(0, 2000);
     }
 
-    if (!isAudio) await m.react("🕒");
-
+    if (!isAudio) { return m.reply("Format tidak didukung. Gunakan teks atau audio."); }
     // ─── AI Slang Translation ───
     const systemPrompt = `Kamu adalah ahli linguistik budaya dan penerjemah slang. Tugasmu menganalisis teks yang mengandung slang, idiom, bahasa gaul, atau dialek daerah, lalu memberikan terjemahan beserta konteks budayanya.
 
@@ -322,7 +315,6 @@ Aturan:
         tipText(`Reply teks/VN lain + ${prefix}slangtranslate untuk terjemahkan lagi`);
 
       await m.reply(text);
-      await m.react("🐣");
     } catch (error) {
       const text =
         claraWrap("Slang Translator - Error", [
@@ -333,7 +325,6 @@ Aturan:
           `│ Owner: *${prefix}aihelp* untuk cek konfigurasi.`,
         ].join("\n"));
       await m.reply(text);
-      await m.react("❌");
     }
 
     return { handled: true };

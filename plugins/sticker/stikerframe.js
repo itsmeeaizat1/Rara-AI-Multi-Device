@@ -714,7 +714,6 @@ export default {
       );
 
       await m.reply(claraWrap("StikerFrame", lines.join("\n")));
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -726,12 +725,8 @@ export default {
         ``,
         `│ Ketik *${prefix}stikerframe list* untuk lihat semua bingkai.`,
       ].join("\n")));
-      await m.react("❌");
       return { handled: true };
     }
-
-    await m.react("🕒");
-
     // ─── Download image ───
     let imgBuffer;
     try {
@@ -745,7 +740,6 @@ export default {
         `│ Gagal download foto nih.`,
         `│ Coba kirim ulang ya.`,
       ].join("\n")));
-      await m.react("❌");
       return { handled: true };
     }
 
@@ -753,7 +747,6 @@ export default {
       await m.reply(claraWrap("StikerFrame", [
         `│ Foto kosong nih, coba ulangi.`,
       ].join("\n")));
-      await m.react("❌");
       return { handled: true };
     }
 
@@ -775,7 +768,6 @@ export default {
         ``,
         `│ Ketik *${prefix}stikerframe list* untuk lihat semua pilihan.`,
       ].join("\n")));
-      await m.react("❌");
       return { handled: true };
     }
 
@@ -799,15 +791,12 @@ export default {
         isAvatar: true,
         contextInfo: { isForwarded: false, forwardingScore: 0, premium: 1 },
       }, { quoted: m });
-
-      await m.react("🐣");
     } catch (e) {
       console.log("[StikerFrame] Error:", e.message);
       await m.reply(claraWrap("StikerFrame", [
         `│ Gagal memproses bingkai: ${e.message}`,
         `│ Coba jenis bingkai lain ya.`,
       ].join("\n")));
-      await m.react("❌");
     }
 
     return { handled: true };

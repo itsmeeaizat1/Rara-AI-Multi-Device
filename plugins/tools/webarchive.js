@@ -90,14 +90,10 @@ async function handler(m, { sock, config: botConfig }) {
 
     url = url.startsWith("http") ? url : "https://" + url;
     const baseDomain = url.replace(/^https?:\/\//, "").replace(/\/.*$/, "");
-
-    await m.react("🕒");
-
     if (mode === "latest") {
       const data = await checkArchive(url);
 
       if (!data.archived_snapshots || !data.archived_snapshots.closest) {
-        await m.react("🐣");
         return m.reply(claraWrap("WebArchive: " + baseDomain, [
           "URL: " + url,
           "Status: No snapshots found",
@@ -118,8 +114,6 @@ async function handler(m, { sock, config: botConfig }) {
         "Archive URL:",
         archiveUrl,
       ];
-
-      await m.react("🐣");
       return m.reply(claraWrap("Wayback Machine: " + baseDomain, lines.join("\n")));
     }
 
@@ -127,7 +121,6 @@ async function handler(m, { sock, config: botConfig }) {
     const snapshots = await listSnapshots(url);
 
     if (!snapshots || snapshots.length < 2) {
-      await m.react("🐣");
       return m.reply(claraWrap("WebArchive: " + baseDomain, "Tidak ada snapshot ditemukan"));
     }
 
@@ -155,12 +148,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     lines.push("");
     lines.push("Full archive: https://web.archive.org/web/*/" + url);
-
-    await m.react("🐣");
     return m.reply(claraWrap("Wayback Machine: " + baseDomain, lines.join("\n")));
   } catch (e) {
     console.error("webarchive error:", e);
-    await m.react("❌");
     return m.reply(claraWrap("WebArchive", "Error: " + e.message));
   }
 }

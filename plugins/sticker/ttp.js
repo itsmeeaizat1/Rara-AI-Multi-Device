@@ -25,9 +25,6 @@ async function handler(m, { sock }) {
   if (!text) {
     { const __navText = "❌ *Waduh, teksnya mana nih?*\n\nKamu harus memasukkan teks yang ingin dijadikan stiker.\n\n💡 *Contoh:* `.ttp Hai Cantik`"; return await m.reply( __navText, "ttp"); };
   }
-
-  await m.react("🕒");
-
   try {
     const apiUrl = `https://api.nexray.eu.cc/maker/ttp?text=${encodeURIComponent(text)}`;
 
@@ -42,9 +39,6 @@ async function handler(m, { sock }) {
       packname: config.sticker.packname,
       author: config.sticker.author,
     });
-
-    await m.react("🐣");
-
   } catch (err) {
     console.error("[TTP Maker]", err.message);
     m.reply(claraWrap("ttp", "😔 *ᴛᴇʀᴊᴀᴅɪ ᴍᴀꜱᴀʟᴀʜ ᴅɪ ꜱɪꜱᴛᴇᴍ ᴋᴀᴍɪ.* \n\nSistem gagal menghubungi server pembuat stiker. Silakan coba beberapa saat lagi ya."));

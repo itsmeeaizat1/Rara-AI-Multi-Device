@@ -23,8 +23,6 @@ const pluginConfig = {
 }
 
 async function handler(m, { sock }) {
-    m.react('🕐')
-    
     try {
         const data = await f(`https://api.neoxr.eu/api/fml?apikey=${NEOXR_APIKEY}`)
         
@@ -32,8 +30,6 @@ async function handler(m, { sock }) {
             return m.reply(novaError("FML", "Gagal ambil FML story nih"))
         }    
         await m.reply(data.data.text)
-        m.react('✅')
-        
     } catch (err) {
         return m.reply(claraWrap("fuckmylife", te(m.prefix, m.command, m.pushName), "error"))
     }

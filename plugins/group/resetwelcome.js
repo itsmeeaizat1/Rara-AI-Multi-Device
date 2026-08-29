@@ -27,9 +27,6 @@ async function handler(m, { sock }) {
     }
     
     db.setGroup(m.chat, { welcomeMsg: null })
-    
-    m.react('✅')
-    
     { const __navText = claraWrap("Welcome Direset", `✅ *ᴡᴇʟᴄᴏᴍᴇ ᴅɪʀᴇꜱᴇᴛ*\n\nKembali ke pesan default`); await m.reply(__navText); }
 }
 

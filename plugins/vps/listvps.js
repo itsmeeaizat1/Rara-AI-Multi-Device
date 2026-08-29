@@ -39,8 +39,6 @@ async function handler(m, { sock }) {
     if (!hasAccess(m.sender, m.isOwner)) {
         return m.reply(claraWrap("Akses Ditolak", "\U0001f6ab Fitur ini hanya untuk Owner/Seller."))
     }
-    
-    await m.react("🕒")
     await m.reply(claraWrap("VPS", "\u23f3 Mengambil data VPS..."))
     
     try {
@@ -74,8 +72,6 @@ async function handler(m, { sock }) {
 ╰──────────
 `
         }
-        
-        m.react("🐣")
         await m.reply(txt)
         
     } catch (err) {

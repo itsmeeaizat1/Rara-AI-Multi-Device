@@ -192,7 +192,6 @@ async function handler(m, { sock, db, config: botConfig }) {
       return { handled: true };
     }
     if (game.arguments.length === 0) {
-      await m.react("🕒");
     }
     game.phase = "vote";
     saveConfig(db, gid, game);
@@ -291,8 +290,6 @@ async function handler(m, { sock, db, config: botConfig }) {
     ].join("\n")));
     return { handled: true };
   }
-
-  await m.react("🐣");
   await m.reply(claraWrap("Debate Club", [
     "DEBATE CLUB",
     "",

@@ -51,9 +51,6 @@ async function handler(m, { sock }) {
         `*Contoh:*\n` +
         `\`${m.prefix}delplugin bliblidl\``, "delplugin");
   }
-
-  await m.react("🕒");
-
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");
     const found = findPluginFile(pluginsDir, name);
@@ -68,8 +65,6 @@ async function handler(m, { sock }) {
     } catch (e) { console.error('[delplugin.js]:', e.message); }
 
     fs.unlinkSync(found.path);
-
-    await m.react("🐣");
     return m.reply(
       `✅ *PLUGIN DIHAPUS*\n\n` +
         `╭─〔 *DETAIL* 〕───\n` +

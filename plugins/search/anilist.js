@@ -57,9 +57,6 @@ async function handler(m, { sock, config, db }) {
         `${m.prefix}anilist detail <id> — detail by ID`,
       ]));
     }
-
-    await m.react("🕒");
-
     let text = "";
 
     if (sub === "search" && query) {
@@ -69,7 +66,6 @@ async function handler(m, { sock, config, db }) {
       );
       const list = data?.Page?.media || [];
       if (!list.length) {
-        await m.react("🐣");
         return m.reply(novaError("AniList", `Gak nemu anime untuk: "${query}" nih`));
       }
       text = `Hasil pencarian: "${query}"\n\n` + list.map(fmtAnime).join("\n\n");
@@ -85,7 +81,6 @@ async function handler(m, { sock, config, db }) {
       );
       const list = data?.Page?.media || [];
       if (!list.length) {
-        await m.react("🐣");
         return m.reply(claraWrap("AniList", "Tidak ada anime musim ini."));
       }
       text = `Anime Musim ${season} ${year}\n\n` + list.map(fmtAnime).join("\n\n");
@@ -100,7 +95,6 @@ async function handler(m, { sock, config, db }) {
     else if (sub === "detail" && query) {
       const id = parseInt(query);
       if (!id) {
-        await m.react("🐣");
         return m.reply(novaGuide("AniList", "ID gak valid nih!", ".anilist detail 21"));
       }
       const data = await gql(
@@ -109,7 +103,6 @@ async function handler(m, { sock, config, db }) {
       );
       const a = data?.Media;
       if (!a) {
-        await m.react("🐣");
         return m.reply(claraWrap("AniList", `Anime dengan ID ${id} tidak ditemukan.`));
       }
       const title = a.title?.romaji || a.title?.english || "Unknown";
@@ -119,18 +112,14 @@ async function handler(m, { sock, config, db }) {
       text = `${title}\n\n★ ${a.averageScore || "N/A"}/100\n${a.format || "?"} | ${a.episodes || "?"} eps | ${a.duration || "?"} min/eps\nStatus: ${a.status || "?"}\nGenre: ${genres}\nStudio: ${studio}\n\n${desc}...`;
     }
     else {
-      await m.react("🐣");
       return m.reply(claraWrap("AniList", [
         "Command tidak dikenal.",
         `Lihat: ${m.prefix}anilist help`,
       ]));
     }
-
-    await m.react("🐣");
     return m.reply(claraWrap("AniList", text));
   } catch (e) {
     console.error("[anilist] error:", e.message);
-    await m.react("❌");
     return m.reply(te(m.prefix, m.command, m.pushName), "anilist");
   }
 }

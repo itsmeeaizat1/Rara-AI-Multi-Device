@@ -56,7 +56,6 @@ async function handler(m, { sock }) {
 
     if (action === 'on') {
         db.setGroup(m.chat, { antisticker: true })
-        m.react('✅')
         { const __navText = `✅ *ᴀɴᴛɪꜱᴛɪᴄᴋᴇʀ ᴅɪᴀᴋᴛɪꜰᴋᴀɴ*`; await m.reply(__navText); }
         return
     }

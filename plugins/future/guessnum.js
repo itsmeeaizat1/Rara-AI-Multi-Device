@@ -137,7 +137,6 @@ async function handler(m, { sock, db, config: botConfig }) {
       db.setUser(m.sender, user);
       delConfig(db, gid);
       db.save();
-      await m.react("🐣");
       await m.reply(claraWrap("Guess Number - MENANG!", [
         "@" + m.sender.split("@")[0],
         "",
@@ -151,7 +150,6 @@ async function handler(m, { sock, db, config: botConfig }) {
 
     if (game.attempts <= 0) {
       delConfig(db, gid);
-      await m.react("❌");
       await m.reply(claraWrap("Guess Number - KALAH", [
         "@" + m.sender.split("@")[0],
         "",

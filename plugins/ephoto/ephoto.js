@@ -132,18 +132,12 @@ async function handler(m, { sock }) {
     if (!effectUrl) {
         return m.reply(claraWrap("ephoto", `❌ Efek tidak ditemukan`))
     }
-    
-    await m.react('🕐')
-
     try {
         const imageUrl = await ephoto(effectUrl, text)
     
         await sock.sendMedia(m.chat, imageUrl, null, m, {
             type: 'image'
         })
-        
-        await m.react('✅')
-        
     } catch (error) {
         m.reply(claraWrap("ephoto", te(m.prefix, m.command, m.pushName), "error"))
     }

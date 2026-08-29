@@ -117,7 +117,6 @@ async function handler(m, { sock }) {
     await m.react("🔍");
   } catch (e) {
     console.error("[cekpacar] Error:", e.message);
-    try { await m.react("❌"); } catch {}
   }
 }
 

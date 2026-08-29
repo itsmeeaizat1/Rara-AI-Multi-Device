@@ -90,7 +90,6 @@ async function handler(m, { sock, command, args }) {
             }
             
             const linodeId = createData.id
-            await m.react("🕒");
             await new Promise(resolve => setTimeout(resolve, 60000))
             
             const infoRes = await fetch(`https://api.linode.com/v4/linode/instances/${linodeId}`, {
@@ -113,7 +112,6 @@ async function handler(m, { sock, command, args }) {
                 `📍 Region: ap-south`
             
             await m.reply(claraWrap("linode", msg))
-            m.react('✅')
             return
         }
         
@@ -144,7 +142,6 @@ async function handler(m, { sock, command, args }) {
             })
             
             await m.reply(msg.trim())
-            m.react('✅')
             return
         }
         
@@ -163,7 +160,6 @@ async function handler(m, { sock, command, args }) {
             
             if (res.ok) {
                 await m.reply(`✅ Linode ID \`${linodeId}\` berhasil dihidupkan!`)
-                m.react('✅')
             } else {
                 const data = await res.json()
                 throw new Error(data.errors?.[0]?.reason || 'Gagal menghidupkan')
@@ -186,7 +182,6 @@ async function handler(m, { sock, command, args }) {
             
             if (res.ok) {
                 await m.reply(`✅ Linode ID \`${linodeId}\` berhasil dimatikan!`)
-                m.react('✅')
             } else {
                 const data = await res.json()
                 throw new Error(data.errors?.[0]?.reason || 'Gagal mematikan')
@@ -197,9 +192,6 @@ async function handler(m, { sock, command, args }) {
         if (cmd === 'rebootlinode') {
             const linodeId = args[0]
             if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}rebootlinode 12345`), "linode2gb")
-            
-            m.react('🕐')
-            
             const res = await fetch(`https://api.linode.com/v4/linode/instances/${linodeId}/reboot`, {
                 method: 'POST',
                 headers: {
@@ -210,7 +202,6 @@ async function handler(m, { sock, command, args }) {
             
             if (res.ok) {
                 await m.reply(`✅ Linode ID \`${linodeId}\` berhasil di-reboot!`)
-                m.react('✅')
             } else {
                 const data = await res.json()
                 throw new Error(data.errors?.[0]?.reason || 'Gagal reboot')
@@ -240,7 +231,6 @@ async function handler(m, { sock, command, args }) {
             
             if (res.ok) {
                 await m.reply(`✅ Linode ID \`${linodeId}\` berhasil di-rebuild!\n\n🔑 Password baru: \`${rootPass}\`\n🖼️ Image: ${image}`)
-                m.react('✅')
             } else {
                 const data = await res.json()
                 throw new Error(data.errors?.[0]?.reason || 'Gagal rebuild')
@@ -263,7 +253,6 @@ async function handler(m, { sock, command, args }) {
             
             if (res.ok) {
                 await m.reply(`✅ Linode ID \`${linodeId}\` berhasil dihapus!`)
-                m.react('✅')
             } else {
                 const data = await res.json()
                 throw new Error(data.errors?.[0]?.reason || 'Gagal menghapus')
@@ -293,13 +282,10 @@ async function handler(m, { sock, command, args }) {
                 `🎁 Credit: $${credit.toFixed(2)}`
             
             await m.reply(claraWrap("linode", msg))
-            m.react('✅')
             return
         }
         
         if (cmd === 'sisalinode') {
-            m.react('🕐')
-            
             const res = await fetch('https://api.linode.com/v4/linode/instances', {
                 method: 'GET',
                 headers: {
@@ -314,16 +300,12 @@ async function handler(m, { sock, command, args }) {
             
             const total = data.data?.length || 0
             await m.reply(claraWrap("linode", `📊 *Total Linode Aktiғ*\n\n${total} VPS`))
-            m.react('✅')
             return
         }
         
         if (cmd === 'cekvpslinode') {
             const linodeId = args[0]
             if (!linodeId) return m.reply( claraWrap("linode2gb", `❌ Masukkan ID Linode!\n\n💡 *Contoh:* ${m.prefix}cekvpslinode 12345`), "linode2gb")
-            
-            m.react('🕐')
-            
             const res = await fetch(`https://api.linode.com/v4/linode/instances/${linodeId}`, {
                 method: 'GET',
                 headers: {
@@ -345,11 +327,8 @@ async function handler(m, { sock, command, args }) {
                 `🌐 IP: \`${l.ipv4?.join(', ') || '-'}\``
             
             await m.reply(claraWrap("linode", msg))
-            m.react('✅')
             return
         }
-        
-        await m.react("🐣");
         await m.reply(claraWrap("linode", `☁️ *ʟɪɴᴏᴅᴇ ᴄᴏᴍᴍᴀɴᴅꜱ*\n\n` +
             `.linode2gb <label> - Buat VPS 2GB\n` +
             `.linode4gb <label> - Buat VPS 4GB\n` +

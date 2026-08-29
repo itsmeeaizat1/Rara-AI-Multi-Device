@@ -33,8 +33,6 @@ async function handler(m, { sock }) {
   if (!ipRegex.test(ip)) {
     return m.reply(`❌ *ғORMAT TIDAK VALID*\n\n💡 *Contoh:* \`8.8.8.8\``);
   }
-
-  await m.react("🕒");
   await m.reply(claraWrap("Ipwho", `🕕 *ᴍᴇɴᴄᴀʀɪ ɪɴꜰᴏ ɪᴘ...*`));
 
   try {
@@ -79,8 +77,6 @@ async function handler(m, { sock }) {
       `│ 🌐 Proxy: ${data.security?.proxy ? "✅ Yes" : "❌ No"}\n` +
       `│ 🤖 Tor: ${data.security?.tor ? "✅ Yes" : "❌ No"}\n` +
       `╰┈┈┈┈┈┈┈┈`;
-
-    await m.react("🐣");
     await sendToolsPreview(sock, m.chat, text, "🌐 *ɪᴘ ʟᴏᴏᴋᴜᴘ*", data.country, {
       quoted: m,
     });

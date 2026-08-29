@@ -29,9 +29,6 @@ async function handler(m, { sock }) {
     
     const textL = parts[0]
     const textR = parts[1]
-    
-    m.react('🕐')
-    
     try {
         const apiUrl = `https://api.nexray.web.id/maker/balogo?text=${encodeURIComponent(textL)} ${encodeURIComponent(textR)}`
         const response = await f(apiUrl, 'arrayBuffer')
@@ -39,9 +36,6 @@ async function handler(m, { sock }) {
         await sock.sendMedia(m.chat, Buffer.from(response), null, m, {
             type: 'image',
         })
-        
-        m.react('✅')
-        
     } catch (error) {
         m.reply(claraWrap("balogo", te(m.prefix, m.command, m.pushName), "error"))
     }

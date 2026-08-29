@@ -25,15 +25,9 @@ async function handler(m, { sock }) {
         `Buat gambar dengan AI\n\n` +
         `\`Contoh: ${m.prefix}novabanana2 make a cat\``, "novabanana2");
   }
-
-  m.react("🕒");
-
   try {
     const result = await fluxImage(prompt, "1:1");
     const imageUrl = result.url;
-
-    m.react("🐣");
-
     await sock.sendMedia(m.chat, imageUrl, null, m, {
       type: "image",
     });

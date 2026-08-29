@@ -1477,15 +1477,12 @@ async function handler(m, { sock, config: botConfig }) {
       // AI-generated CV
       const userInput = afterFlags.replace(/^aicv\s+|^cvai\s+/i, "").trim();
       if (!userInput || userInput.length < 3) {
-        await m.react("❌");
         return m.reply(claraWrap("TxtToPDF AI", "Kasih info buat CV!\n💡 *Contoh:* .txttopdf aicv buatkan cv lamaran ke restoran. Nama Andi, pengalaman cafe 2 thn, skill: masak, pelayanan pelanggan"));
       }
-      await m.react("🕒");
       await m.reply(claraWrap("Joki CV AI", "AI lagi nulis CV kamu...\n\nInfo: " + userInput.substring(0, 100) + "..."));
       try {
         const aiResult = await UnlimitedAI(CV_PROMPT.replace("__INPUT__", userInput), "nova-ai");
         if (!aiResult || aiResult.status === false) {
-          await m.react("❌");
           return m.reply(claraWrap("TxtToPDF AI", "AI gagal generate CV. Coba lagi nanti."));
         }
         const aiText = typeof aiResult === "string" ? aiResult : (aiResult.answer || "");
@@ -1493,7 +1490,6 @@ async function handler(m, { sock, config: botConfig }) {
         format = "cv";
         aiGenerated = true;
       } catch (aiErr) {
-        await m.react("❌");
         return m.reply(claraWrap("TxtToPDF AI", "Error AI: " + aiErr.message));
       }
     } else if (lowerInput.startsWith("aiporto ") || lowerInput.startsWith("aiporto\n") ||
@@ -1502,15 +1498,12 @@ async function handler(m, { sock, config: botConfig }) {
       // AI-generated Portfolio
       const userInput = afterFlags.replace(/^aiporto\s+|^portoai\s+|^aiportofolio\s+/i, "").trim();
       if (!userInput || userInput.length < 3) {
-        await m.react("❌");
         return m.reply(claraWrap("TxtToPDF AI", "Kasih info buat portofolio!\n💡 *Contoh:* .txttopdf aiporto buatkan portofolio web dev. Nama Sari, proyek: website company, app laundry, design poster"));
       }
-      await m.react("🕒");
       await m.reply(claraWrap("Joki Portofolio AI", "AI lagi nulis portofolio kamu...\n\nInfo: " + userInput.substring(0, 100) + "..."));
       try {
         const aiResult = await UnlimitedAI(PORTO_PROMPT.replace("__INPUT__", userInput), "nova-ai");
         if (!aiResult || aiResult.status === false) {
-          await m.react("❌");
           return m.reply(claraWrap("TxtToPDF AI", "AI gagal generate portofolio. Coba lagi nanti."));
         }
         const aiText = typeof aiResult === "string" ? aiResult : (aiResult.answer || "");
@@ -1518,7 +1511,6 @@ async function handler(m, { sock, config: botConfig }) {
         format = "cv";
         aiGenerated = true;
       } catch (aiErr) {
-        await m.react("❌");
         return m.reply(claraWrap("TxtToPDF AI", "Error AI: " + aiErr.message));
       }
     } else if (lowerInput.startsWith("word ") || lowerInput.startsWith("word\n") ||
@@ -1538,9 +1530,6 @@ async function handler(m, { sock, config: botConfig }) {
     if (content.length > 8000) {
       return m.reply(claraWrap("TxtToPDF", "Teks terlalu panjang!\nMaksimal 8000 karakter."));
     }
-
-    await m.react("🕒");
-
     const timestamp = Date.now();
     const tmpDir = "/tmp";
 
@@ -1563,8 +1552,6 @@ async function handler(m, { sock, config: botConfig }) {
       const tplName = format === "cv" && opts.tpl ? " (" + (CV_TEMPLATES[opts.tpl] ? CV_TEMPLATES[opts.tpl].name : "Professional") + ")" : "";
       const formatLabel = (aiGenerated ? "AI Generated " : "") + (format === "cv" ? "CV Template" + tplName : format === "surat" ? "Surat Template" : "Standard PDF");
       const imgLabel = opts.img > 0 ? "\nUpscale: " + opts.img + "x HD image" : "";
-
-      await m.react("🐣");
       await sock.sendMessage(m.chat, {
         document: { url: filePath },
         fileName: "dokumen_" + timestamp + ".pdf",
@@ -1631,8 +1618,6 @@ async function handler(m, { sock, config: botConfig }) {
       const stats = fs.statSync(filePath);
       const sizeKB = (stats.size / 1024).toFixed(1);
       const wordCount = content.split(/\s+/).length;
-
-      await m.react("🐣");
       await sock.sendMessage(m.chat, {
         document: { url: filePath },
         fileName: "dokumen_" + timestamp + ".doc",
@@ -1691,7 +1676,6 @@ async function handler(m, { sock, config: botConfig }) {
     }
   } catch (e) {
     console.error("txttopdf error:", e);
-    await m.react("❌");
     return m.reply(claraWrap("TxtToPDF", "Error: " + e.message));
   }
 }

@@ -30,8 +30,6 @@ async function handler(m, { sock }) {
                 star: !unstar
             }
         }, m.chat)
-
-        await m.react('🕐')
         return m.reply(unstar
                 ? '❌ *Bintang dihapus dari pesan*'
                 : '⭐ *Pesan ditandai bintang*')

@@ -83,9 +83,6 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply(novaGuide("Spotify Play", "Masukkan judul lagu atau link Spotify yang mau dicari!", `${m.prefix}spotifyplay blinding lights the weeknd`));
   }
-
-  m.react("🕒");
-
   try {
     let data;
     const isSpotifyUrl = text.match(/open\.spotify\.com\/(track|album|playlist)/i);
@@ -144,8 +141,6 @@ async function handler(m, { sock }) {
       mimetype: "audio/mpeg",
       fileName: `${safeTitle} - ${safeArtist}.mp3`,
     });
-
-    m.react("🐣");
   } catch (e) {
     console.error("[SPOTIFYPLAY] Error:", e.message);
     m.reply(novaError("Spotify Play", `Gagal mengambil data Spotify — ${e.message || "coba lagi nanti ya"}`));

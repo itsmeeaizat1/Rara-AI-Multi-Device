@@ -57,7 +57,6 @@ export async function handler(m, { sock }) {
   } catch (e) {
     console.error("[bucin] Error:", e.message);
     try {
-      await m.react("❌");
       await m.reply(novaError("Bucin", "Gagal mengambil quotes bucin, coba lagi nanti"));
     } catch {}
   }

@@ -41,8 +41,6 @@ async function handler(m) {
             fs.rmSync(filePath, { recursive: true, force: true })
             deleted++
         }
-
-        await m.react('✅')
         await m.reply(claraWrap("sampah", `🗑️ *TEMP CLEANED!*\n\n` +
             `Total file/folder dihapus: *${deleted}*`))
 

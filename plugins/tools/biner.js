@@ -100,26 +100,19 @@ async function handler(m, { sock, config: botConfig }) {
     if (!validation.valid) {
       return m.reply(claraWrap("Biner", validation.error));
     }
-
-    await m.react("🕒");
-
     // If target specified, convert only to that
     if (toKey) {
       const toBase = BASES[toKey] || (toKey === "binary" ? BASES.bin : null) ||
         (toKey === "decimal" ? BASES.dec : null) || (toKey === "hexadecimal" ? BASES.hex : null) ||
         (toKey === "octal" ? BASES.oct : null);
       if (!toBase) {
-        await m.react("❌");
         return m.reply(claraWrap("Biner", "Base target tidak dikenal!\nValid: bin, oct, dec, hex"));
       }
 
       const conv = convertBase(value, fromBase.radix, toBase.radix);
       if (conv.error) {
-        await m.react("❌");
         return m.reply(claraWrap("Biner", conv.error));
       }
-
-      await m.react("🐣");
       return m.reply(claraWrap("Base Convert", [
         "Input: " + value + " (" + fromBase.name + ")",
         "Hasil: " + conv.result + " (" + toBase.name + ")",
@@ -143,12 +136,9 @@ async function handler(m, { sock, config: botConfig }) {
         }
       }
     }
-
-    await m.react("🐣");
     return m.reply(claraWrap("Base Convert (All)", lines.join("\n")));
   } catch (e) {
     console.error("biner error:", e);
-    await m.react("❌");
     return m.reply(claraWrap("Biner", "Error: " + e.message));
   }
 }

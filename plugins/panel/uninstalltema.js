@@ -50,9 +50,6 @@ async function handler(m, { sock }) {
     
     const command = `bash <(curl -s https://raw.githubusercontent.com/veryLinh/Theme-Autoinstaller/main/install.sh)`
     const ress = new Client()
-    
-    m.react('🕐')
-    await m.react("🕒");
     ress.on('ready', () => {
         ress.exec(command, (err, stream) => {
             if (err) {
@@ -60,8 +57,6 @@ async function handler(m, { sock }) {
             }
             
             stream.on('close', async () => {
-                m.react('✅')
-                await m.react("🐣");
                 await m.reply(claraWrap("root", `╭──「 ✅ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ*
 │ sTatus: *ʙᴇʀʜᴀꜱɪʟ*
 │ Ip: ${ipvps}

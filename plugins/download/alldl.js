@@ -187,9 +187,6 @@ async function handler(m, { sock }) {
     const isAudio = isAudioChoice(choice);
     const isImage = isImageChoice(choice);
     const apiKey = getSaveNowKey();
-
-    await m.react("🕒");
-
     // Kirim info proses
     let progressMsg = await m.reply(
       bracketBox(platform.icon, `${toSC("Downloading")} — ${toSC(platform.name)}`, [
@@ -254,7 +251,6 @@ async function handler(m, { sock }) {
       if (progressMsg?.key) {
         try { await sock.sendMessage(m.chat, { delete: progressMsg.key }); } catch {}
       }
-      await m.react("❌");
       // Clear session
       dlSessions.delete(m.sender);
       return m.reply(
@@ -274,7 +270,6 @@ async function handler(m, { sock }) {
       if (progressMsg?.key) {
         try { await sock.sendMessage(m.chat, { delete: progressMsg.key }); } catch {}
       }
-      await m.react("🐣");
       dlSessions.delete(m.sender);
       return m.reply(
         novaError(
@@ -347,10 +342,8 @@ async function handler(m, { sock }) {
           { quoted: m }
         );
       }
-      await m.react("🐣");
     } catch (sendErr) {
       console.error("[alldl] Send error:", sendErr.message);
-      await m.react("❌");
       m.reply(novaError("AllDL", `Gagal mengirim media ke WhatsApp: ${sendErr.message.slice(0, 80)}`));
     }
 
@@ -387,8 +380,6 @@ async function handler(m, { sock }) {
 
   // Detect platform
   const platform = detectInfo(url);
-  await m.react("🕒");
-
   // Simpan session
   dlSessions.set(m.sender, { url, platform, startedAt: Date.now() });
   setTimeout(() => dlSessions.delete(m.sender), SESSION_TIMEOUT);
@@ -403,9 +394,6 @@ async function handler(m, { sock }) {
     "",
     `${toSC("URL")}: ${url.slice(0, 50)}${url.length > 50 ? "..." : ""}`,
   ]);
-
-  await m.react("🐣");
-
   await sendMenuPreview(sock, m, {
     text: infoText,
     footer: "╰─",

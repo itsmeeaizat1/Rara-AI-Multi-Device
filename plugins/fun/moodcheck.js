@@ -552,14 +552,12 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
-      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].tracking = true;
       db.groups[groupId].trackEnabledAt = Date.now();
       saveMoodDB(db);
       await m.reply(claraWrap("Mood Track", "Mood Tracking untuk grup ini sudah DINYALAKAN.\n\nSetiap hasil .moodcheck akan tersimpan di database untuk riwayat mood.\n\nLihat riwayat: .moodhistory"));
-      await m.react("🐣");
       return;
     }
 
@@ -569,13 +567,11 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
-      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].tracking = false;
       saveMoodDB(db);
       await m.reply(claraWrap("Mood Track", "Mood Tracking untuk grup ini sudah DIMATIKAN.\n\nHasil .moodcheck tetap berfungsi tapi tidak disimpan ke database."));
-      await m.react("🐣");
       return;
     }
 
@@ -585,14 +581,12 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
-      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodSuggest = true;
       db.groups[groupId].suggEnabledAt = Date.now();
       saveMoodDB(db);
       await m.reply(claraWrap("Mood Suggest", "Auto Mood Suggest sudah DINYALAKAN untuk grup ini.\n\nKalau seseorang 3x berturut-turut terdeteksi mood negatif (Sedih, Stres, Marah, Gugup), bot akan kirim pesan support otomatis.\n\nCatatan: Mood Tracking juga harus ON (.moodtrackon) agar fitur ini berfungsi."));
-      await m.react("🐣");
       return;
     }
 
@@ -602,13 +596,11 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
-      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodSuggest = false;
       saveMoodDB(db);
       await m.reply(claraWrap("Mood Suggest", "Auto Mood Suggest sudah DIMATIKAN untuk grup ini.\n\nBot berhenti mengirim pesan support otomatis. Mood tracking tetap berjalan kalau masih ON."));
-      await m.react("🐣");
       return;
     }
 
@@ -618,14 +610,12 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
-      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodAI = true;
       db.groups[groupId].moodAIEnabledAt = Date.now();
       saveMoodDB(db);
       await m.reply(claraWrap("Mood AI Connect", "Mood AI Connect sudah DINYALAKAN untuk grup ini.\n\nKalau seseorang 3x berturut-turut terdeteksi mood negatif, bot akan menghubungkan mereka ke AI untuk ngobrol interaktif.\n\n*ᴄᴏᴏʟᴅᴏᴡɴ:* Default 30 menit per user. Bisa diubah dengan .moodaiset <menit>.\n\n*ꜱʏᴀʀᴀᴛ:* Mood Tracking juga harus ON (.moodtrackon) dan AI config harus terisi (apiKey di .aihelp)."));
-      await m.react("🐣");
       return;
     }
 
@@ -635,13 +625,11 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("Akses Ditolak", "🚫 Perintah ini khusus Owner bot."));
         return;
       }
-      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
       db.groups[groupId].moodAI = false;
       saveMoodDB(db);
       await m.reply(claraWrap("Mood AI Connect", "Mood AI Connect sudah DIMATIKAN untuk grup ini.\n\nBot berhenti menghubungkan user ke AI otomatis. Mood Suggest (pesan statis) tetap berjalan kalau masih ON."));
-      await m.react("🐣");
       return;
     }
 
@@ -658,8 +646,6 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("Mood AI Cooldown", "Format: .moodaiset <menit>\n\nContoh:\n.moodaiset 15 - Set cooldown 15 menit\n.moodaiset 60 - Set cooldown 1 jam\n.moodaiset 0 - Reset ke default (30 menit)\n\nRange: 1-1440 menit (24 jam max)"));
         return;
       }
-
-      await m.react("🕒");
       const db = loadMoodDB();
       if (!db.groups[groupId]) db.groups[groupId] = {};
 
@@ -675,13 +661,11 @@ async function handler(m, { sock }) {
         const display = hours > 0 ? `${hours} jam ${mins > 0 ? mins + " menit" : ""}` : `${minutes} menit`;
         await m.reply(claraWrap("Mood AI Cooldown", `Cooldown AI Connect untuk grup ini diset ke *${display}*.\n\nSetiap user hanya bisa di-trigger AI maksimal 1x per ${display}.`));
       }
-      await m.react("🐣");
       return;
     }
 
     // ─── Tracking Status ───
     if (command === "moodtrackstatus") {
-      await m.react("🕒");
       const db = loadMoodDB();
       const groupData = db.groups[groupId] || {};
       const trackStatus = groupData.tracking ? "ON" : "OFF";
@@ -731,13 +715,11 @@ async function handler(m, { sock }) {
         `│ 10. .moodhistory @user - Lihat mood orang lain (owner)`,
       ].join("\n");
       await m.reply(claraWrap("Mood Track Status", statusBody));
-      await m.react("🐣");
       return;
     }
 
     // ─── Mood History ───
     if (command === "moodhistory") {
-      await m.react("🕒");
       const db = loadMoodDB();
 
       // Determine target user
@@ -759,7 +741,6 @@ async function handler(m, { sock }) {
 
       if (history.length === 0) {
         await m.reply(claraWrap("Mood History", "Belum ada riwayat mood untuk user ini.\n\nGunakan .moodcheck dulu untuk mulai rekam, dan pastikan mood tracking sudah ON (.moodtrackon)."));
-        await m.react("🐣");
         return;
       }
 
@@ -817,7 +798,6 @@ async function handler(m, { sock }) {
       ].join("\n");
 
       await m.reply(claraWrap("Mood History", body));
-      await m.react("🐣");
       return;
     }
 
@@ -856,9 +836,6 @@ async function handler(m, { sock }) {
       await m.reply( help, { commandName: "moodcheck" });
       return;
     }
-
-    await m.react("🕒");
-
     // Download voice note
     let mediaBuffer;
     if (m.quoted) {
@@ -937,7 +914,6 @@ async function handler(m, { sock }) {
       }
 
       await m.reply(claraWrap(`Mood Check - ${analysis.moodLabels[analysis.topMood[0]]}`, report));
-      await m.react("🐣");
     } finally {
       // Cleanup
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[moodcheck.js]:', e.message); }

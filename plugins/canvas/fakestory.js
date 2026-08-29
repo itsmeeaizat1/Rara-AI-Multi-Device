@@ -205,7 +205,6 @@ async function getAvatarBuffer(sock, jid) {
 }
 async function handler(m, { sock }) {
   const username = m.args.join(" ").trim() || m.pushName || "User";
-  m.react("🕒");
   try {
     let avatarBuffer;
     let imageTopBuffer;
@@ -237,7 +236,6 @@ async function handler(m, { sock }) {
     await sock.sendMedia(m.chat, resultBuffer, null, m, {
       type: "image",
     });
-    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("fakestory", te(m.prefix, m.command, m.pushName), "error"));
   }

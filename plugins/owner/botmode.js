@@ -96,8 +96,6 @@ async function handler(m, { sock }) {
     }
 
     db.save()
-    await m.react('✅')
-
     let extraInfo = ''
     if (mode === 'store' && m.isGroup) {
         extraInfo = `\n\n📋 *Manual mode*\nAdmin perlu confirm order manual`

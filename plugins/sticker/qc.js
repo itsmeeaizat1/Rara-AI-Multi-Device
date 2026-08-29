@@ -116,9 +116,6 @@ async function handler(m, { sock }) {
     if (message.length > 80) {
         return m.reply(claraWrap("Qc", `❌ *ᴇʀʀᴏʀ*\n\nMaksimal 80 karakter! (Saat ini: ${message.length})`))
     }
-    
-    m.react('🕐')
-    
     try {
         const username = m.pushName || 'User'
         const avatar = await getProfilePicture(sock, m.sender)
@@ -170,9 +167,6 @@ async function handler(m, { sock }) {
             packname: config.sticker?.packname || 'Nova-AI',
             author: config.sticker?.author || 'Bot'
         })
-        
-        m.react('✅')
-        
     } catch (error) {
         m.reply(claraWrap("qc", te(m.prefix, m.command, m.pushName), "error"))
     }

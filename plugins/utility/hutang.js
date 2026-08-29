@@ -109,8 +109,6 @@ async function handler(m, { sock, config: botConfig }) {
 
       debts.push(debt);
       saveDebts(db, sender, debts);
-
-      await m.react("🐣");
       let lines = [
         "Hutang dicatat!",
         "Kepada: *" + person + "*",
@@ -169,8 +167,6 @@ async function handler(m, { sock, config: botConfig }) {
 
       debts.push(debt);
       saveDebts(db, sender, debts);
-
-      await m.react("🐣");
       let lines = [
         "Piutang dicatat!",
         "Dari: *" + person + "*",
@@ -254,8 +250,6 @@ async function handler(m, { sock, config: botConfig }) {
       debt.settled = true;
       debt.settledAt = Date.now();
       saveDebts(db, sender, debts);
-
-      await m.react("🐣");
       const typeLabel = debt.type === "hutang" ? "Hutang ke" : "Piutang dari";
       return m.reply(claraWrap("Lunas",
         "Berhasil dilunasi!\n" +
@@ -322,8 +316,6 @@ async function handler(m, { sock, config: botConfig }) {
       const removed = debts[idx];
       debts.splice(idx, 1);
       saveDebts(db, sender, debts);
-
-      await m.react("🐣");
       return m.reply(claraWrap("Hutang", "Record *" + removed.person + "* (" + formatRupiah(removed.amount) + ") dihapus"));
     }
 

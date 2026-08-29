@@ -50,9 +50,6 @@ async function handler(m, { sock }) {
     if (!repo) {
         { const __navText = claraWrap("Repo Dibutuhkan", `❌ *ʀᴇᴘᴏ ᴅɪʙᴜᴛᴜʜᴋᴀɴ*\n\nMasukkan nama repository`); return await m.reply( __navText, "githubdl"); }
     }
-    
-    await m.react('🕐')
-
     try {
         const repoInfo = await fetch(`https://api.github.com/repos/${username}/${repo}`)
         
@@ -80,9 +77,6 @@ async function handler(m, { sock }) {
                 isForwarded: false
             }
         })
-        
-        await m.react('✅')
-        
     } catch (e) {
         m.reply(claraWrap("githubdl", te(m.prefix, m.command, m.pushName), "error"))
     }

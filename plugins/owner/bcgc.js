@@ -256,7 +256,6 @@ async function handler(m, { sock }) {
     }
 
     delete global.statusBcgc;
-    m.react("🐣");
     await m.reply(
       "╭──「 Broadcast Grup Selesai 」\n" +
       "│\n" +

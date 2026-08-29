@@ -133,9 +133,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply( help, "ttd");
   }
-
-  await m.react("🕒");
-
   try {
     // Download the PDF from replied message
     const pdfBuffer = await m.quoted.download();
@@ -198,12 +195,9 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       mimetype: "application/pdf",
       fileName: `ttd_${Date.now()}.pdf`,
     }, { quoted: m });
-
-    await m.react("🐣");
   } catch (error) {
     console.error("ttd error:", error);
     m.reply(claraWrap("Ttd", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
-    await m.react("🐣");
   }
 
   return { handled: true };

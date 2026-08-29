@@ -75,13 +75,9 @@ async function handler(m, { sock }) {
             `  🎵 Audio/VN\n` +
             `  📝 Teks (tanpa media)`, "upch")
     }
-
-    await m.react("🕒")
-
     try {
         if (!isMedia && caption) {
             await sock.sendMessage(chId, { text: caption })
-            await m.react("🐣")
             return m.reply(claraWrap("Upch", `✅ Teks berhasil dikirim ke saluran`))
         }
 
@@ -93,7 +89,6 @@ async function handler(m, { sock }) {
                 image: mediaBuf,
                 caption: caption || undefined
             })
-            await m.react("🐣")
             return m.reply(claraWrap("Upch", "✅ Gambar berhasil dikirim ke saluran"))
         }
 
@@ -102,7 +97,6 @@ async function handler(m, { sock }) {
                 video: mediaBuf,
                 caption: caption || undefined
             })
-            await m.react("🐣")
             return m.reply(claraWrap("Upch", "✅ Video berhasil dikirim ke saluran"))
         }
 
@@ -116,7 +110,6 @@ async function handler(m, { sock }) {
                 ptt: true,
                 waveform: Array.from(waveform)
             })
-            await m.react("🐣")
             return m.reply(claraWrap("Upch", "✅ Audio berhasil dikirim ke saluran"))
         }
 

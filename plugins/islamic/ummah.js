@@ -76,9 +76,6 @@ async function handler(m, { sock, args }) {
     txt += `\`${m.prefix}ummah bukhari 1\``;
     return await m.reply( txt, { commandName: "ummah" });
   }
-
-  await m.react("🕒");
-
   try {
     // === DAILY HADITH ===
     if (cmd === "daily" || cmd === "harian" || cmd === "today") {
@@ -100,7 +97,6 @@ async function handler(m, { sock, args }) {
       txt += `\n_Hadith ini dipilih otomatis setiap hari_`;
 
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === TOPICS LIST ===
@@ -113,7 +109,6 @@ async function handler(m, { sock, args }) {
       }
       txt += `\n💡 *Contoh:* \`${m.prefix}ummah topic zakat\``;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === HADITH BY TOPIC ===
@@ -155,7 +150,6 @@ async function handler(m, { sock, args }) {
 
       if (allResults.length > 5) txt += `...dan ${allResults.length - 5} hadith lainnya.`;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === RANDOM ===
@@ -175,7 +169,6 @@ async function handler(m, { sock, args }) {
       if (h.english) txt += `${h.english}\n`;
 
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === SEARCH ===
@@ -201,7 +194,6 @@ async function handler(m, { sock, args }) {
 
       if (results.length > 5) txt += `...dan ${results.length - 5} hadith lainnya.`;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === GRADE DETAIL ===
@@ -232,7 +224,6 @@ async function handler(m, { sock, args }) {
       if (h.english) txt += `${h.english.slice(0, 300)}...\n`;
 
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === LIST COLLECTIONS ===
@@ -254,7 +245,6 @@ async function handler(m, { sock, args }) {
       }
       txt += `Total: ${total.toLocaleString()} hadiths`;
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     // === SPECIFIC HADITH ===
@@ -274,7 +264,6 @@ async function handler(m, { sock, args }) {
       txt += `\n\`${m.prefix}ummah ${collection} ${number - 1}\` <- -> \`${m.prefix}ummah ${collection} ${number + 1}\``;
 
       await m.reply(txt);
-      await m.react("🐣");
     }
 
     else {

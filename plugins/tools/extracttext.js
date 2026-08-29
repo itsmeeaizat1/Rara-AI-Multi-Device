@@ -348,9 +348,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     await m.reply( helpText, "extracttext");
     return { handled: true };
   }
-
-  await m.react("🕒");
-
   try {
     let buffer;
     if (m.quoted && m.quoted.isMedia) {
@@ -368,7 +365,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
     if (isImage) {
       modeLabel = "AI Vision";
-      await m.react("🕒");
     } else if (isPdf || pdfMime.includes("pdf")) {
       if (useAI) {
         modeLabel = "AI Vision";
@@ -406,8 +402,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
         : "";
       await m.reply(header + footer);
     }
-
-    await m.react("🐣");
   } catch (error) {
     console.error("extracttext error:", error);
     await m.reply(claraWrap("Extract Text", [
@@ -415,7 +409,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       ``,
       `${error.message || "Ada error nih"}`,
     ].join("\n")));
-    await m.react("🐣");
   }
 
   return { handled: true };

@@ -87,8 +87,6 @@ async function handler(m, { sock }) {
       if (!result.success) {
         return m.reply(claraWrap("autoulah", `❌ ${toSC(result.error || "Gagal")}`));
       }
-
-      await m.react("🐣");
       return m.reply(
         bracketBox("✅", toSC("Auto Birthday Diaktifkan"), [
           `${toSC("Jadwal cek")}: ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")} WIB`,
@@ -102,7 +100,6 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableAutoBirthday();
-      await m.react("🐣");
       return m.reply(claraWrap("autoulah", toSC("Auto Birthday dinonaktifkan")));
     }
 
@@ -138,13 +135,10 @@ async function handler(m, { sock }) {
     case "now":
     case "manual":
     case "trigger": {
-      await m.react("🕒");
       try {
         await triggerManualBirthday(sock);
-        await m.react("🐣");
         return m.reply(claraWrap("autoulah", toSC("Cek birthday dijalankan! User yang ultah hari ini sudah dikirim ucapan.")));
       } catch (error) {
-        await m.react("❌");
         return m.reply(claraWrap("autoulah", te(m.prefix, m.command, m.pushName), "error"));
       }
     }

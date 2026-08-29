@@ -76,9 +76,6 @@ function handler(m, { sock }) {
     
     db.setting('panelCreateJeda', jedaMs)
     db.setting('panelCreateLastUsed', 0)
-    
-    m.react('✅')
-    
     if (jedaMs === 0) {
         return m.reply(claraWrap("jedacreate", `✅ *ᴊᴇᴅᴀ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ*\n\n` +
             `Panel create sekarang tanpa jeda`))

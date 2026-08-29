@@ -81,7 +81,6 @@ ${lines}├──「 Cara Pakai 」
 ╰──────────`;
 
       await m.reply(text);
-      await m.react("🐣");
       return { handled: true };
     }
 
@@ -93,7 +92,6 @@ ${lines}├──「 Cara Pakai 」
 │ Ketik *${prefix}multi-ai list* untuk lihat daftar
 ╰──────────`;
       await m.reply(text);
-      await m.react("❌");
       return { handled: true };
     }
 
@@ -117,13 +115,10 @@ ${lines}├──「 Cara Pakai 」
 │ 💡 *Contoh:* *${prefix}multi-ai ${providerArg} ${model} apa itu AI*
 ╰──────────`;
       await m.reply(text);
-      await m.react("❌");
       return { handled: true };
     }
 
     // Panggil AI
-    await m.react("🕒");
-
     const aiConfig = botConfig.aiHelp || {};
     const apiKey = String(aiConfig.apiKey || "");
     const apiEndpoint = String(
@@ -148,7 +143,6 @@ ${lines}├──「 Cara Pakai 」
 │ Cek API key di *${prefix}ai-set apiKey <key>*
 ╰──────────`;
       await m.reply(text);
-      await m.react("❌");
       return { handled: true };
     }
 
@@ -163,7 +157,6 @@ ${lines}├──「 Cara Pakai 」
 ╰──────────`;
 
     await m.reply(text);
-    await m.react("🐣");
   } catch (error) {
     console.error('[multi-ai.js]:', error.message);
     const prefix = botConfig.command?.prefix || ".";
@@ -172,7 +165,6 @@ ${lines}├──「 Cara Pakai 」
 │ Cek API key: *${prefix}ai-set apiKey <key>*
 ╰──────────`;
     await m.reply(text);
-    await m.react("❌");
   }
 
   return { handled: true };

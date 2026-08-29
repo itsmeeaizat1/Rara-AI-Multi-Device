@@ -62,7 +62,6 @@ async function handler(m, { sock }) {
             `Set di config.js → APIkey.groq\n` +
             `Gratis di https://console.groq.com`, "transkrip");
     }
-    m.react('🕐');
     const tmpDir = path.join(process.cwd(), 'tmp');
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
     const inputFile = path.join(tmpDir, `stt_${Date.now()}.ogg`);
@@ -91,7 +90,6 @@ async function handler(m, { sock }) {
             `🌐 Bahasa: Indonesia\n` +
             `📊 Ukuran: ~${(buffer.length / 1024).toFixed(1)} KB`
         );
-        m.react('✅');
     } catch (error) {
         if (error.response?.status === 401) {
             return m.reply('❌ API Key Groq invalid. Cek config.js → APIkey.groq');

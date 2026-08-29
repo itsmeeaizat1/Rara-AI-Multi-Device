@@ -111,17 +111,11 @@ async function handler(m, { sock }) {
   if (!media || media.length === 0) {
     return m.reply(claraWrap("UploadTmpFiles", "Media tidak terbaca. Coba kirim ulang."));
   }
-
-  await m.react("🕒");
-
   try {
     const result = await uploadToXemoz(media, filename);
-    await m.react("🐣");
-
     const response = `*ᴜᴘʟᴏᴀᴅ ᴛᴍᴘꜰɪʟᴇꜱ*\n\nFile: ${filename}\nSize: ${formatBytes(media.length)}\nURL: ${result.url}`;
     return m.reply(claraWrap("UploadTmpFiles", response));
   } catch (error) {
-    await m.react("🐣");
     return m.reply(claraWrap("UploadTmpFiles Error", error.message || "Gagal upload file."));
   }
 }

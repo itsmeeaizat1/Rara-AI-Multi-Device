@@ -108,8 +108,6 @@ function handler(m, { sock }) {
         if (!result.success) {
             return m.reply(claraWrap("rolemanager", `❌ *ɢᴀɢᴀʟ*\n\n${result.error}`))
         }
-        
-        m.react('✅')
         return m.reply(`✅ *${roleLabel.toUpperCase()} Ditambahkan*\n\n` +
             `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
             `│ 📱 Nomor: \`${targetUser}\`\n` +
@@ -124,8 +122,6 @@ function handler(m, { sock }) {
         if (!result.success) {
             return m.reply(claraWrap("rolemanager", `❌ *ɢᴀɢᴀʟ*\n\n${result.error}`))
         }
-        
-        m.react('✅')
         return m.reply(`✅ *${roleLabel.toUpperCase()} Dihapus*\n\n` +
             `Nomor: \`${targetUser}\`\n` +
             `Server: *${serverLabel}*\n` +

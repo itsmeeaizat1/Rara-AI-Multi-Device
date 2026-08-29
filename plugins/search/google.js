@@ -30,9 +30,6 @@ async function handler(m, { sock }) {
         `*${m.prefix}google gempa hari ini*\n` +
         `*${m.prefix}google teknologi terbaru*`, "google");
   }
-
-  m.react("🕒");
-
   try {
     const result = await GoogleSearch(query);
 
@@ -57,7 +54,6 @@ async function handler(m, { sock }) {
     });
 
     m.reply(txt.trim());
-    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply(novaError("Google", "Gagal cari di Google nih, coba lagi ya"));

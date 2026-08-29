@@ -70,9 +70,6 @@ async function handler(m, { sock }) {
 
   const total =
     parseInt(totalRaw) || itemsArr.reduce((sum, i) => sum + i.price, 0);
-
-  m.react("🕒");
-
   try {
     const qrImage = "https://i.ibb.co.com/kt5fyrg/qr.jpg";
 
@@ -127,8 +124,6 @@ async function handler(m, { sock }) {
       },
       { quoted: m },
     );
-
-    m.react("🐣");
   } catch (err) {
     return m.reply(claraWrap("invoicemaker", te(m.prefix, m.command, m.pushName), "error"));
   }

@@ -176,8 +176,6 @@ async function handler(m, { sock, text: args }) {
     const picked = randomPick(pool, actualCount);
 
     // Suspense animation
-    await m.react("🕒");
-
     const suspenseMsgs = [
       "Memilih secara acak...",
       "Mengocok nama...",
@@ -216,8 +214,6 @@ async function handler(m, { sock, text: args }) {
 
       await m.reply(claraWrap("Pick Me", pickText, "success"), { mentions: picked });
     }
-
-    await m.react("🐣");
     return { handled: true };
   } catch (error) {
     console.error("pickme error:", error);

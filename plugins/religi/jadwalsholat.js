@@ -87,7 +87,6 @@ async function handler(m, { sock }) {
         { quoted: m },
       );
     }
-    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("jadwalsholat2", te(m.prefix, m.command, m.pushName), "error"));
   }

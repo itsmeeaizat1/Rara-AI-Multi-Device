@@ -65,9 +65,6 @@ async function handler(m, { sock }) {
     bannedList.splice(index, 1)
     db.setting('bannedUsers', bannedList)
     config.bannedUsers = bannedList
-
-    await m.react('✅')
-
     await m.reply(claraWrap("User Diunban", `✅ *User Diunban*\n\n` +
         `╭──「 *Detail* 」\n` +
         `│ 📱 Nomor: \`${targetNumber}\`\n` +

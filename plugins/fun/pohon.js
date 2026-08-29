@@ -41,9 +41,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply(help, "pohon");
   }
-
-  await m.react("🕒");
-
   try {
     const prompt = `Kamu adalah generator silsilah keluarga komedi Indonesia. Buat silsilah keluarga absurd dan lucu untuk "${name}".
 
@@ -80,7 +77,6 @@ Aturan:
     }
 
     await m.reply(claraWrap(`Pohon Keluarga - ${name}`, result.trim()));
-    await m.react("🐣");
   } catch (error) {
     console.error("pohon error:", error);
     m.reply(novaError("Pohon", `Gagal nih: ${error.message || "error"}`));

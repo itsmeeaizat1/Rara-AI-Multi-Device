@@ -102,9 +102,6 @@ async function sendNewsImage(sock, m, article, index, total) {
 async function handler(m, { sock }) {
   const text = m.args.join(" ").trim();
   const search = text || "";
-
-  await m.react("🕒");
-
   try {
     const result = await fetchTribunNews(search);
     if (!result) throw new Error("Data berita kosong.");
@@ -113,7 +110,6 @@ async function handler(m, { sock }) {
     const articles = getAllArticles(data);
 
     if (articles.length === 0) {
-      await m.react("🐣");
       return m.reply(claraWrap("Tribunnews", `Tidak ada berita ditemukan untuk "${search}".`));
     }
 
@@ -129,10 +125,7 @@ async function handler(m, { sock }) {
     for (let i = 0; i < toSend.length; i++) {
       await sendNewsImage(sock, m, toSend[i], i, toSend.length);
     }
-
-    await m.react("🐣");
   } catch (error) {
-    await m.react("🐣");
     return m.reply(claraWrap("Tribunnews Error", error.message || "Gagal ambil nih berita."));
   }
 }

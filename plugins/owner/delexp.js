@@ -61,9 +61,6 @@ async function handler(m, { sock }) {
     }
     
     const newExp = db.updateExp(targetJid, -amount)
-    
-    await m.react('✅')
-    
     await m.reply(claraWrap("delexp", `✅ *Exp Dikurangi*\n\n` +
         `╭──「 *Detail* 」\n` +
         `│ 👤 User: @${targetJid.split('@')[0]}\n` +

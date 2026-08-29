@@ -40,9 +40,6 @@ async function handler(m, { sock }) {
     if (!content.viewOnce) {
         return m.reply(novaError("Open VO", "Pesan yang kamu reply bukan pesan 1x lihat (View Once)!"))
     }
-
-    await m.react('🕐')
-
     try {
         let mediaType = null
         if (type.includes('image')) {

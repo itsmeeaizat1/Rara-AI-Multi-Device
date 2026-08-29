@@ -38,9 +38,6 @@ async function handler(m, { sock }) {
     }
 
     const [top, bottom] = input.split('|').map(s => s.trim().toUpperCase())
-
-    m.react('🕐')
-
     try {
         let mediaBuffer
         if (m.quoted) {
@@ -133,9 +130,6 @@ async function handler(m, { sock }) {
             packname: stickerConfig.packname,
             author: stickerConfig.author
         })
-
-        m.react('✅')
-
         try {
             fs.unlinkSync(inputVideo)
             fs.unlinkSync(outputVideo)

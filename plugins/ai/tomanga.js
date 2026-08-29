@@ -32,9 +32,6 @@ async function handler(m, { sock }) {
             `Kirim/reply gambar untuk diubah ke gaya manga\n\n` +
             `\`${m.prefix}tomanga\``, "tomanga")
     }
-    
-    m.react('🕐')
-    
     try {
         let buffer
         if (m.quoted && m.quoted.isMedia) {
@@ -48,9 +45,6 @@ async function handler(m, { sock }) {
         }
         
         const result = await live3d(buffer, PROMPT)
-        
-        m.react('✅')
-        
         await sock.sendMedia(m.chat, result.image, null, m, {
             type: 'image',
         })

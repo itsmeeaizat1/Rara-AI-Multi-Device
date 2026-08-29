@@ -33,17 +33,12 @@ async function handler(m, { sock }) {
 
     const [prompt, styleInput] = input.split('|').map(s => s.trim())
     const style = STYLES.includes(styleInput) ? styleInput : 'anime'
-
-    m.react('🕐')
-
     try {
         const { data } = await f(`https://api.neoxr.eu/api/stablediff?prompt=${encodeURIComponent(prompt)}&model=default&orientation=potrait&apikey=${config.APIkey.neoxr}`)
 
         await sock.sendMedia(m.chat, data.url, null, m, {
             type: 'image'
         })
-        m.react('✅')
-
     } catch (error) {
         m.reply(claraWrap("text2img3", te(m.prefix, m.command, m.pushName), "error"))
     }

@@ -33,9 +33,6 @@ async function handler(m, { sock }) {
 
     const grupPattern = /chat\.whatsapp\.com\/([\w\d]*)/
     const saluranPattern = /whatsapp\.com\/channel\/([\w\d]*)/
-
-    m.react('🕐')
-
     try {
         if (grupPattern.test(text)) {
             const inviteCode = text.match(grupPattern)[1]
@@ -84,8 +81,6 @@ async function handler(m, { sock }) {
             if (groupInfo.participants) {
                 groupInfo.participants.filter(p => p.admin).forEach(a => mentions.push(a.id))
             }
-
-            m.react('✅')
             return sock.sendMessage(m.chat, { text: teks, mentions }, { quoted: m })
 
         } else if (saluranPattern.test(text) || text.endsWith('@newsletter') || !isNaN(text)) {
@@ -104,8 +99,6 @@ async function handler(m, { sock }) {
                 `│ ✅ Verification: ${channelInfo.thread_metadata?.verification || '-'}\n` +
                 `╰──────────\n\n` +
                 `📝 *ᴅᴇꜱᴄʀɪᴘᴛɪᴏɴ:*\n${channelInfo.thread_metadata?.description?.text || 'No description'}`
-
-            m.react('✅')
             return await m.reply(teks)
 
         } else {

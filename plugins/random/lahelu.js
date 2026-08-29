@@ -21,8 +21,6 @@ const pluginConfig = {
 
 async function handler(m, { sock }) {
     const api = 'https://api.cuki.biz.id/api/random/lahelu?apikey=${config.APIkey.cuki}'
-    await m.react('🕐')
-    
     try {
         const res = (await axios.get(api)).data
         const random = res.data[Math.floor(Math.random() * res.data.length)]
@@ -35,7 +33,6 @@ async function handler(m, { sock }) {
                 type: 'image'
             })
         }
-        await m.react('✅')
     } catch (e) {
         m.reply(claraWrap("lahelu", te(m.prefix, m.command, m.pushName), "error"))}
 }

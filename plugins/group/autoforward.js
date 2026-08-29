@@ -36,7 +36,6 @@ function handler(m, { sock }) {
     
     if (option === 'on') {
         db.setGroup(groupId, { ...group, autoforward: true })
-        m.react('✅')
         return m.reply(claraWrap("autoforward", `🔄 *ᴀᴜᴛᴏ ꜰᴏʀᴡᴀʀᴅ*\n\n` +
             `╭──「 *ᴀᴋᴛɪꜰ* 」\n` +
             `│ │ Status: *ON*\n` +

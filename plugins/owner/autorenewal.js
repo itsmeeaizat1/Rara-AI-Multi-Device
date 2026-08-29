@@ -82,8 +82,6 @@ async function handler(m, { sock }) {
       if (!result.success) {
         return m.reply(claraWrap("autorenewal", `❌ ${toSC(result.error)}`));
       }
-
-      await m.react("🐣");
       return m.reply(
         bracketBox("✅", toSC("Renewal Reminder Diaktifkan"), [
           `${toSC("Jadwal")}: ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")} WIB`,
@@ -98,7 +96,6 @@ async function handler(m, { sock }) {
     case "disable":
     case "stop": {
       disableRenewalReminder();
-      await m.react("🐣");
       return m.reply(claraWrap("autorenewal", toSC("Renewal Reminder dinonaktifkan")));
     }
 
@@ -131,13 +128,10 @@ async function handler(m, { sock }) {
     case "manual":
     case "trigger":
     case "check": {
-      await m.react("🕒");
       try {
         await triggerManualRenewal(sock);
-        await m.react("🐣");
         return m.reply(claraWrap("autorenewal", toSC("Renewal check dijalankan! Cek DM untuk laporan.")));
       } catch (error) {
-        await m.react("❌");
         return m.reply(claraWrap("autorenewal", te(m.prefix, m.command, m.pushName), "error"));
       }
     }

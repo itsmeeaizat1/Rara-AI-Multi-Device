@@ -78,8 +78,6 @@ async function handler(m, { sock, db, config: botConfig }) {
       await m.reply(claraWrap("AI Meeting", "Terlalu sedikit pesan untuk dibuat notulen. Minimal 3 pesan."));
       return { handled: true };
     }
-
-    await m.react("🕒");
     await m.reply(claraWrap("AI Meeting", "Menggenerate notulen dari " + meeting.messages.length + " pesan..."));
 
     try {
@@ -99,11 +97,8 @@ async function handler(m, { sock, db, config: botConfig }) {
       meeting.notulen = notulen;
       meeting.endTime = Date.now();
       saveMeeting(db, gid, meeting);
-
-      await m.react("🐣");
       await m.reply(claraWrap("AI Meeting Notulen", "Topik: " + meeting.topic + "\nPesan: " + meeting.messages.length + "\n\n" + notulen));
     } catch {
-      await m.react("❌");
       await m.reply(claraWrap("AI Meeting", "Gagal generate notulen nih"));
     }
     return { handled: true };

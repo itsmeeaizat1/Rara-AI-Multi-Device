@@ -99,13 +99,9 @@ async function handler(m, { sock, config: botConfig }) {
         { title: "Redirect Chain Tracer" }
       );
     }
-
-    await m.react("🕒");
-
     const hops = await traceRedirects(text);
 
     if (hops.length === 0) {
-      await m.react("❌");
       return m.reply(claraWrap("Redirect", "Tidak ada response"));
     }
 
@@ -145,12 +141,9 @@ async function handler(m, { sock, config: botConfig }) {
     const totalTime = hops.reduce((s, h) => s + (h.time || 0), 0);
     lines.push("");
     lines.push("Total time: " + totalTime + "ms");
-
-    await m.react("🐣");
     return m.reply(claraWrap("Redirect Trace: " + text.replace(/^https?:\/\//, ""), lines.join("\n")));
   } catch (e) {
     console.error("redirect error:", e);
-    await m.react("❌");
     return m.reply(claraWrap("Redirect", "Error: " + e.message));
   }
 }

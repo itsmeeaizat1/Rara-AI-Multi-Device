@@ -115,8 +115,6 @@ async function handler(m, { sock }) {
   txt += "│\n";
   txt += "│ 💡 Besok klaim lagi ya, jangan sampai putus streak-nya!\n";
   txt += "╰──────────";
-
-  await m.react("🐣");
   await sock.sendMessage(m.chat, { text: txt, mentions: [m.sender] }, { quoted: m });
 }
 

@@ -25,15 +25,10 @@ async function handler(m, { sock }) {
     if(!nama) {
         { const __navText = claraWrap("FAKE FF 2", `*FAKE FF 2*\n\n💡 *Contoh:* ${m.prefix}fakeff nama1`); return await m.reply(__navText, "fakeff2"); }
     }
-    m.react('🕐')
-    
     try {
         await sock.sendMedia(m.chat, `https://api.nova.my.id/api/fake-free-fire-2?text=${encodeURIComponent(nama)}&bg=random`, null, m, {
             type: 'image',
         })
-        
-        m.react('✅')
-        
     } catch (error) {
         m.reply(claraWrap("fakeff2", te(m.prefix, m.command, m.pushName), "error"))
     }

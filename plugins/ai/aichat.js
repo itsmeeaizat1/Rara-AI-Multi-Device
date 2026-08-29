@@ -109,8 +109,6 @@ async function handler(m, { sock, config: botConfig }) {
       ...history.slice(-20).map((item) => ({ role: item.role, content: item.content })),
       { role: "user", content: message },
     ];
-
-    m.react("🕒");
     const reply = await callAI({
       providerKey: "openai",
       model: "gpt-4o-mini",
@@ -131,7 +129,6 @@ async function handler(m, { sock, config: botConfig }) {
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
     await m.reply(text);
-    m.react("🐣");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

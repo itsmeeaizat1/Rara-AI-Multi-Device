@@ -36,9 +36,6 @@ Usage: \`${m.prefix}ttsearch <query>\`
 
 │ \`Contoh: ${m.prefix}ttsearch anime\``, "ttsearch");
   }
-
-  m.react("🕒");
-
   try {
     const videos = await tiktokSearchVideo(query);
 
@@ -111,8 +108,6 @@ Usage: \`${m.prefix}ttsearch <query>\`
         await sock.sendMessage(m.chat, content, { quoted: m });
       }
     }
-
-    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("ttsearch", te(m.prefix, m.command, m.pushName), "error"));
   }

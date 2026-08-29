@@ -54,8 +54,6 @@ async function handler(m, { sock })  {
                 deleted++
             } catch (e) { console.error('[clearsessions.js]:', e.message); }
         }
-        
-        await m.react('✅')
         await m.reply(claraWrap("Clearsessions", `╭──「 🗑️ *Clear sEssions*
 │
 │ Deleted: *${deleted}* file

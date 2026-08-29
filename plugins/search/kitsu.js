@@ -66,26 +66,18 @@ async function handler(m, { sock, config, db }) {
     }
 
     if (!query) {
-      await m.react("🐣");
       return m.reply(claraWrap("Kitsu", `Masukkan judul ${type}. Contoh: ${m.prefix}kitsu ${type} Naruto`));
     }
-
-    await m.react("🕒");
-
     const results = await kitsuSearch(type, query);
 
     if (!results.length) {
-      await m.react("🐣");
       return m.reply(novaError("Kitsu", `Gak nemu ${type} untuk: "${query}" nih`));
     }
 
     const text = `Hasil pencarian ${type}: "${query}"\n\n` + results.map(item => fmtEntry(item, type)).join("\n\n");
-
-    await m.react("🐣");
     return m.reply(claraWrap("Kitsu", text));
   } catch (e) {
     console.error("[kitsu] error:", e.message);
-    await m.react("🐣");
     return m.reply(te(m.prefix, m.command, m.pushName), "kitsu");
   }
 }

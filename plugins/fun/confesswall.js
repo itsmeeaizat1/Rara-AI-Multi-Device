@@ -418,7 +418,6 @@ async function handler(m, { sock }) {
     await m.reply(msg);
   } catch (e) {
     console.error("[confesswall] Handler error:", e.message);
-    try { await m.react("❌"); } catch {}
   }
 }
 

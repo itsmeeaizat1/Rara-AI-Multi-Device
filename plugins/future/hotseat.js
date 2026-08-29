@@ -175,7 +175,6 @@ async function handler(m, { sock, db, config: botConfig }) {
     }
     lastAnswer.voters[m.sender] = emoji;
     saveConfig(db, gid, game);
-    await m.react("🐣");
     return { handled: true };
   }
 

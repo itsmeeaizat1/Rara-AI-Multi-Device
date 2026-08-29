@@ -40,9 +40,6 @@ async function handler(m, { sock }) {
             `\`Contoh: ${m.prefix}igstalk cristiano\``
         )
     }
-    
-    m.react('🕐')
-    
     try {
         const res = await axios.get(
             `https://firefly.maiku.my.id/api/stalk-instagram?apikey=${config.APIkey.firefly}&username=${encodeURIComponent(username)}`,
@@ -64,9 +61,6 @@ async function handler(m, { sock }) {
             `📷 *ᴘᴏꜱᴛɪɴɢᴀɴ:* ${shortNum(d.stats?.posts)}\n\n` +
             `📝 *ʙɪᴏ:*\n${d.bio || '-'}\n\n` +
             `🔗 https://instagram.com/${d.username}`
-        
-        m.react('✅')
-        
         const profilePic = d.profile_pic
         if (profilePic) {
             await sock.sendMessage(m.chat, {

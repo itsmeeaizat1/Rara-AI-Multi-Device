@@ -69,8 +69,6 @@ async function handler(m, { sock }) {
     await sock.relayMessage(targetJid, waMsg.message, {
       messageId: waMsg.key.id,
     });
-
-    await m.react("🐣");
   } catch (err) {
     console.error("[sprem]", err.message);
     return m.reply(claraWrap("sprem", `❌ Gagal: ${err.message}`));

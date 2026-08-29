@@ -76,9 +76,6 @@ async function handler(m, { sock }) {
     }
     return m.reply(claraWrap("DeepAI Chat", "Tidak ada sesi aktif untuk direset."));
   }
-
-  await m.react("🕒");
-
   try {
     const key = sessionKey(m);
     const sessionUuid = sessions.get(key) || "";
@@ -87,11 +84,8 @@ async function handler(m, { sock }) {
     if (result.sessionUuid) {
       sessions.set(key, result.sessionUuid);
     }
-
-    await m.react("🐣");
     return m.reply(claraWrap("DeepAI", result.response || "Tidak ada response."));
   } catch (error) {
-    await m.react("🐣");
     return m.reply(claraWrap("DeepAI Error", error.message || "Gagal hubungin AI nih"));
   }
 }

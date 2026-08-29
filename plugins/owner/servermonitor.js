@@ -86,11 +86,9 @@ async function handler(m, { sock }) {
       const toggle = args[1]?.toLowerCase()
       if (toggle === "on") {
         cfg.alertEnabled = true; save(db)
-        await m.react("🐣")
         return m.reply("╭──「 VPS Monitor 」\n│ ✅ Auto-alert: *ON*\n│ ⏱️ Cek tiap 60 detik, alert ke PM owner\n│ 📊 Threshold: CPU *" + cfg.cpuThreshold + "%* / RAM *" + cfg.ramThreshold + "%* / Disk *" + cfg.diskThreshold + "%*\n╰──────────")
       } else if (toggle === "off") {
         cfg.alertEnabled = false; save(db)
-        await m.react("🐣")
         return m.reply("╭──「 VPS Monitor 」\n│ ❌ Auto-alert: *OFF*\n│ Monitoring dimatikan\n╰──────────")
       }
     }
@@ -103,7 +101,7 @@ async function handler(m, { sock }) {
         if (key === "ram" && val) cfg.ramThreshold = val
         if (key === "disk" && val) cfg.diskThreshold = val
       }
-      save(db); await m.react("🐣")
+      save(db);
       return m.reply("╭──「 VPS Monitor 」\n│ ✅ Threshold diupdate!\n│ 📊 CPU: *" + cfg.cpuThreshold + "%*\n│ 📊 RAM: *" + cfg.ramThreshold + "%*\n│ 📊 Disk: *" + cfg.diskThreshold + "%*\n╰──────────")
     }
 
@@ -115,7 +113,6 @@ async function handler(m, { sock }) {
       if (cpu >= cfg.cpuThreshold) alerts.push("⚠️ CPU " + cpu + "% >= " + cfg.cpuThreshold + "%")
       if (ram >= cfg.ramThreshold) alerts.push("⚠️ RAM " + ram + "% >= " + cfg.ramThreshold + "%")
       if (disk >= cfg.diskThreshold) alerts.push("⚠️ Disk " + disk + "% >= " + cfg.diskThreshold + "%")
-      await m.react("🐣")
       if (alerts.length) return m.reply("╭──「 VPS Alert Test 」\n" + alerts.map(a => "" + a).join("\n") + "\n╰──────────")
       return m.reply("╭──「 VPS Alert Test 」\n│ Semua normal. Tidak ada alert.\n│ CPU " + cpu + "% | RAM " + ram + "% | Disk " + disk + "%\n╰──────────")
     }
@@ -143,11 +140,9 @@ async function handler(m, { sock }) {
       })
     } else { text += "│ PM2: tidak terdeteksi\n" }
     text += "╰──────────"
-    await m.react("🐣")
     return m.reply(text)
   } catch (e) {
     console.error("[servermonitor] error:", e.message)
-    await m.react("🐣")
     return m.reply("╭──「 Error 」\n" + (e.message || "Ada error nih") + "\n╰──────────")
   }
 }

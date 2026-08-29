@@ -163,8 +163,6 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
         game.scores[sender] = (game.scores[sender] || 0) + 1;
         game.round++;
         await db.save();
-
-        await m.react("🐣");
         m.reply(claraWrap("Word Bomb", "Betul! +1 poin\nKata: " + word + "\nTotal: " + game.scores[sender] + " poin", "success"));
 
         if (game.round >= game.maxRounds) {

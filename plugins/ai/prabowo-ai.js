@@ -29,17 +29,12 @@ async function handler(m, { sock }) {
         `*ᴄᴏɴᴛᴏʜ:*\n` +
         `*${m.prefix}prabowo-ai Saudara, kita harus berdaulat!*`, "prabowo-ai");
   }
-
-  await m.react("🕒");
-
   try {
     const result = await UnlimitedAI(text, "prabowo-ai");
 
     if (!result.status) {
       { const __navText = `❌ *ᴘʀᴀʙᴏᴡᴏ ᴀɪ ᴇʀʀᴏʀ*\n\n${result.error || "Gagal dapet respons nih"}`; return await m.reply(__navText); };
     }
-
-    await m.react("🐣");
     const reply = result.answer;
     await m.reply(reply.length > 4096 ? reply.slice(0, 4096) + "..." : reply);
   } catch (e) {

@@ -135,9 +135,6 @@ async function handler(m, { sock, config: botConfig }) {
     const help = `Unduh Wallpaper Anime HD\n\nCara pakai:\n.wallpaperanime <karakter> — Cari wallpaper\n.wallpaperanime random — Anime acak\n.wallpaperanime <karakter> hd — HD 1920x1080+\n.wallpaperanime <karakter> 4k — 4K 3840x2160+\n.wallpaperanime <karakter> mobile — Portrait HP\n.wallpaperanime list — Karakter populer\n\nContoh:\n.wallpaperanime naruto hd\n.wallpaperanime zero two\n.wallpaperanime rem mobile\n.wallpaperanime genshin impact 4k\n\nSource: Wallhaven (99rb+ anime) + Konachan (Jepang)`;
     return m.reply( claraWrap("Wallpaper Anime", help));
   }
-
-  await m.react("🕒");
-
   try {
     // Parse input: cek keyword resolusi
     let query = text;
@@ -179,7 +176,6 @@ async function handler(m, { sock, config: botConfig }) {
 
     // 3. Kalau semua kosong
     if (!results || results.length === 0) {
-      await m.react("🐣");
       return m.reply(claraWrap("Wallpaper Anime", `Tidak ada wallpaper anime untuk "${query}".\n\nCoba kata kunci lain:\nnaruto, one piece, demon slayer, gojo, rem\n\nAtau lihat: .wallpaperanime list`));
     }
 
@@ -198,10 +194,7 @@ async function handler(m, { sock, config: botConfig }) {
       image: imageBuffer,
       caption: claraWrap("Wallpaper Anime", caption),
     }, { quoted: m });
-
-    await m.react("🐣");
   } catch (error) {
-    await m.react("🐣");
     let errMsg = error.message || "Gagal mencari wallpaper anime.";
     return m.reply(claraWrap("Wallpaper Anime Error", errMsg));
   }

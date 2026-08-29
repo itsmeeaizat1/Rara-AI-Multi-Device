@@ -26,9 +26,6 @@ async function handler(m, { sock }) {
     if (!isImage) {
         { const __navText = claraWrap("Ghibli sTyle", `🎨 *ɢʜɪʙʟɪ ꜱᴛʏʟᴇ*\n\nKirim/reply gambar untuk diubah ke style Ghibli\n\n\`${m.prefix}toghibli\``); return await m.reply(__navText, "toghibli"); }
     }
-    
-    m.react('🕐')
-    
     try {
         let buffer
         if (m.quoted && m.quoted.isMedia) {
@@ -44,9 +41,6 @@ async function handler(m, { sock }) {
         const imageUrl = await uploadImage(buffer, 'image.jpg')
         
         const res = await f(`https://api-faa.my.id/faa/toghibli?url=${encodeURIComponent(imageUrl)}`, 'arrayBuffer')
-        
-        m.react('✅')
-        
         await sock.sendMedia(m.chat, Buffer.from(res), null, m, {
             type: 'image',
         })

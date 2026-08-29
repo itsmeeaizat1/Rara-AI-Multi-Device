@@ -131,9 +131,6 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply( text, "berita");
     return;
   }
-
-  await m.react("🕒");
-
   let headlines = [];
   let aiResult = null;
 
@@ -174,7 +171,6 @@ async function handler(m, { sock, config: botConfig }) {
       }
 
       await m.reply(claraWrap("Berita AI", output));
-      await m.react("🐣");
       return;
     }
 
@@ -190,7 +186,6 @@ async function handler(m, { sock, config: botConfig }) {
       });
       output += "\n(AI summarizer sedang tidak tersedia, menampilkan headline mentah)";
       await m.reply(claraWrap("Berita AI", output));
-      await m.react("🐣");
       return;
     }
 

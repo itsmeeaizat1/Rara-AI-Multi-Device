@@ -92,9 +92,6 @@ async function handler(m, { sock }) {
         `\`${m.prefix}splugin sticker\`\n` +
         `\`${m.prefix}splugin menu\``, "searchplugin");
   }
-
-  m.react("🕒");
-
   try {
     let info = findPluginInfo(name);
 
@@ -124,8 +121,6 @@ async function handler(m, { sock }) {
     const isPremium = info.isPremium ? "✅ Ya" : "❌ Tidak";
     const isGroup = info.isGroup ? "✅ Ya" : "❌ Tidak";
     const isAdmin = info.isAdmin ? "✅ Ya" : "❌ Tidak";
-
-    await m.react("🐣");
     return m.reply(
       `📋 *Info Plugin*\n\n` +
         `╭──「 *Detail* 」\n` +

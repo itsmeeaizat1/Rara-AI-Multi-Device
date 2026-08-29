@@ -121,8 +121,6 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply( help, "kontrak");
   }
-
-  await m.react("🕒");
   m.reply(claraWrap("Kontrak", "│ AI lagi menyusun draft kontrak..."));
 
   try {
@@ -147,12 +145,9 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       mimetype: "application/pdf",
       fileName: `kontrak_${Date.now()}.pdf`,
     }, { quoted: m });
-
-    await m.react("🐣");
   } catch (error) {
     console.error("kontrak error:", error);
     m.reply(claraWrap("Kontrak", `❌ Gagal: ${error.message || "error tidak diketahui"}`));
-    await m.react("🐣");
   }
 
   return { handled: true };

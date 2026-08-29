@@ -24,18 +24,12 @@ async function handler(m, { sock }) {
     if (!text) {
         { const __navText = `📱 *ᴛᴇxᴛ ᴛᴏ qʀ*\n\nMasukkan teks/URL\n\n\`Contoh: ${m.prefix}txt2qr https://google.com\``; return await m.reply( __navText, "txt2qr"); }
     }
-    
-    m.react('🕐')
-    
     try {
         const url = `https://api-faa.my.id/faa/qr-create?text=${encodeURIComponent(text)}`
         const res = await axios.get(url, {
             responseType: 'arraybuffer',
             timeout: 30000
         })
-        
-        m.react('✅')
-        
         await sock.sendMessage(m.chat, {
             image: Buffer.from(res.data),
             caption: `📱 *qʀ ᴄᴏᴅᴇ*\n\n${text.substring(0, 100)}${text.length > 100 ? '...' : ''}`

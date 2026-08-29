@@ -122,8 +122,6 @@ async function handler(m, { sock }) {
     }
     
     try {
-        m.react("🕒")
-        
         const servers = await fetchAllServers(serverConfig)
         
         if (servers.length === 0) {

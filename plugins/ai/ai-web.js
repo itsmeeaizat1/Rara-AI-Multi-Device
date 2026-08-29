@@ -38,8 +38,6 @@ async function handler(m, { sock, config: botConfig }) {
       await m.reply(text, "ai-web");
       return { handled: true };
     }
-
-    m.react("🕒");
     const reply = await callAI({
       providerKey: "openai",
       model: "gpt-4o-mini",
@@ -60,7 +58,6 @@ async function handler(m, { sock, config: botConfig }) {
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 
     await m.reply(text);
-    m.react("🐣");
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =

@@ -30,9 +30,6 @@ async function handler(m, { sock }) {
       `*${m.prefix}txt2img2 Kucing lucu pakai topi*\n\n` +
       `_Proses generate agak lama, sekitar 30-60 detik_`, "text2img4");
   }
-
-  m.react("🕒");
-
   try {
     const result = await Txt2Img2(text);
 
@@ -43,8 +40,6 @@ async function handler(m, { sock }) {
     await sock.sendMedia(m.chat, result.url, `🎨 *Flux Klein 4B*\n\nPrompt: *${result.prompt}*`, m, {
       type: "image",
     });
-
-    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply(novaError("Txt2Img2", "❌ Gagal generate gambar, coba lagi nanti"));

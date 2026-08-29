@@ -71,9 +71,6 @@ async function handler(m, { sock }) {
             `*ᴄᴏɴᴛᴏʜ:*\n` +
             `\`${m.prefix}carbon console.log("Halo")\``, "carbon")
     }
-
-    await m.react("🕒")
-
     try {
         const config = {
             code: text,

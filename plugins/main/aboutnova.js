@@ -51,7 +51,6 @@ ${prefix}menu untuk melihat semua fitur`;
   } catch (e) {
     console.error("[aboutnova] handler error:", e.message);
     try { await m.reply("╭──「 About 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────"); } catch {}
-    await m.react("❌");
   }
 }
 

@@ -45,9 +45,6 @@ async function handler(m, { sock }) {
   }
 
   const validStyle = STYLES.includes(style) ? style : "apple";
-
-  m.react("🕒");
-
   try {
     const apiUrl = `https://api.neoxr.eu/api/emoimg?q=${encodeURIComponent(emoji)}&style=${validStyle}&apikey=${NEOXR_APIKEY}`;
     const { data } = await axios.get(apiUrl, { timeout: 15000 });
@@ -65,8 +62,6 @@ async function handler(m, { sock }) {
       m,
       { type: "image", contextInfo: saluranCtx() },
     );
-
-    m.react("🐣");
   } catch (error) {
     m.reply(claraWrap("emojitoimage", te(m.prefix, m.command, m.pushName), "error"));
   }

@@ -56,16 +56,11 @@ async function handler(m, { sock, config: botConfig }) {
     if (!jsonStr) {
       return m.reply(claraWrap("JSON", "Input JSON tidak boleh kosong!"));
     }
-
-    await m.react("🕒");
-
     // Parse JSON
     let parsed;
     try {
       parsed = JSON.parse(jsonStr);
     } catch (e) {
-      await m.react("❌");
-
       // For check mode, show detailed error
       if (mode === "check") {
         return m.reply(claraWrap("JSON Validation", [
@@ -91,7 +86,6 @@ async function handler(m, { sock, config: botConfig }) {
         if (result.length > 1500) {
           result = result.substring(0, 1500) + "\n... (dipotong)";
         }
-        await m.react("🐣");
         return m.reply(claraWrap("JSON Beautify", "```\n" + result + "\n```"));
       }
 
@@ -100,7 +94,6 @@ async function handler(m, { sock, config: botConfig }) {
         if (result.length > 1500) {
           result = result.substring(0, 1500) + "...";
         }
-        await m.react("🐣");
         return m.reply(claraWrap("JSON Minify", "```\n" + result + "\n```"));
       }
 
@@ -120,8 +113,6 @@ async function handler(m, { sock, config: botConfig }) {
           lines.push("Value: " + String(parsed));
           lines.push("Size: " + JSON.stringify(parsed).length + " bytes");
         }
-
-        await m.react("🐣");
         return m.reply(claraWrap("JSON Validation", lines.join("\n")));
       }
 
@@ -136,7 +127,6 @@ async function handler(m, { sock, config: botConfig }) {
           const valType = Array.isArray(val) ? "array" : typeof val;
           lines.push((i + 1) + ". " + k + " (" + valType + ")");
         });
-        await m.react("🐣");
         return m.reply(claraWrap("JSON Keys", lines.join("\n")));
       }
 
@@ -151,7 +141,6 @@ async function handler(m, { sock, config: botConfig }) {
           const valStr = typeof val === "object" ? JSON.stringify(val) : String(val);
           lines.push((i + 1) + ". " + k + " = " + (valStr.length > 50 ? valStr.substring(0, 50) + "..." : valStr));
         });
-        await m.react("🐣");
         return m.reply(claraWrap("JSON Values", lines.join("\n")));
       }
 
@@ -170,7 +159,6 @@ async function handler(m, { sock, config: botConfig }) {
           const valType = Array.isArray(val) ? "array" : typeof val;
           lines.push(k + ": " + valType);
         });
-        await m.react("🐣");
         return m.reply(claraWrap("JSON Type Analysis", lines.join("\n")));
       }
 
@@ -179,7 +167,6 @@ async function handler(m, { sock, config: botConfig }) {
     }
   } catch (e) {
     console.error("json error:", e);
-    await m.react("❌");
     return m.reply(claraWrap("JSON", "Error: " + e.message));
   }
 }

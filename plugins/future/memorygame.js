@@ -115,8 +115,6 @@ async function handler(m, { sock, db, config: botConfig }) {
 
     if (correct) {
       game.score += game.level * 10;
-      await m.react("🐣");
-
       // Next round - add 1 more symbol
       if (game.round >= game.maxRound) {
         // Game complete
@@ -161,7 +159,6 @@ async function handler(m, { sock, db, config: botConfig }) {
         "Jawab: " + prefix + "memorygame answer " + seqDisplay.replace(/\s+/g, ""),
       ].join("\n")));
     } else {
-      await m.react("❌");
       const isBest = game.score > (game.bestScore || 0);
       if (isBest) {
         game.bestScore = game.score;

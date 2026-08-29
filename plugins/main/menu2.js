@@ -38,7 +38,6 @@ const QUICK_LINKS = [
 
 async function handler(m, { sock, config: botConfig }) {
   try {
-    await m.react("🕒");
     const prefix = botConfig.command?.prefix || ".";
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
@@ -61,8 +60,6 @@ async function handler(m, { sock, config: botConfig }) {
       { id: `${prefix}allmenu`, text: "📋 All Menu" },
       { id: `${prefix}owner`, text: "👑 Owner" },
     ];
-
-    await m.react("🐣");
     await sendMenuCard(sock, m, {
       text,
       footer: botName,
@@ -74,7 +71,6 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (e) {
     console.error("[menu2] handler error:", e.message);
     try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────`); } catch {}
-    await m.react("❌");
   }
 }
 

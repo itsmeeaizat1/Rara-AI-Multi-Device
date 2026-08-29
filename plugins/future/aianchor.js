@@ -408,22 +408,17 @@ async function handler(m, { sock, db, config: botConfig }) {
       await m.reply(claraWrap("AI Anchor", `Format: ${prefix}aianchor news <topik>\n💡 *Contoh:* ${prefix}aianchor news gempa terkini`, "warn"));
       return { handled: true };
     }
-
-    await m.react("🕒");
     try {
       const content = await generateNewsContent(topic, sock);
       const voiceResult = await generateVoice(content, { tone: "netral" });
 
       if (!voiceResult) {
-        await m.react("❌");
         await m.reply(novaError("AIAnchor", "Gagal generate suara nih, coba lagi ya"));
         return { handled: true };
       }
 
       const filePath = tempPath(voiceResult.ext);
       fs.writeFileSync(filePath, voiceResult.buffer);
-
-      await m.react("🐣");
       await sock.sendMessage(m.chat, {
         audio: await toVoiceNote(fs.readFileSync(filePath)),
         mimetype: "audio/ogg; codecs=opus",
@@ -438,7 +433,6 @@ async function handler(m, { sock, db, config: botConfig }) {
 
       try { fs.unlinkSync(filePath); } catch (e) { console.error('[aianchor.js]:', e.message); }
     } catch (err) {
-      await m.react("❌");
       await m.reply(claraWrap("AI Anchor", `Error: ${err.message}`, "error"));
     }
     return { handled: true };
@@ -484,23 +478,16 @@ async function handler(m, { sock, db, config: botConfig }) {
       `Nada tidak valid: ${tone}\nTersedia: netral, lembut, marah, sedih, semangat, serius, ramah, dramatis`, "warn"));
     return { handled: true };
   }
-
-  await m.react("🕒");
-
   try {
     const voiceResult = await generateVoice(text, { tone, voice });
 
     if (!voiceResult) {
-      await m.react("❌");
       await m.reply(novaError("AIAnchor", "Gagal generate suara nih, coba lagi ya"));
       return { handled: true };
     }
 
     const filePath = tempPath(voiceResult.ext);
     fs.writeFileSync(filePath, voiceResult.buffer);
-
-    await m.react("🐣");
-
     // Send as voice note (PTT)
     await sock.sendMessage(m.chat, {
       audio: await toVoiceNote(fs.readFileSync(filePath)),
@@ -517,7 +504,6 @@ async function handler(m, { sock, db, config: botConfig }) {
 
     try { fs.unlinkSync(filePath); } catch (e) { console.error('[aianchor.js]:', e.message); }
   } catch (err) {
-    await m.react("❌");
     await m.reply(claraWrap("AI Anchor", `Error: ${err.message}`, "error"));
   }
 

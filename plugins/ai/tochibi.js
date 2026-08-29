@@ -26,9 +26,6 @@ async function handler(m, { sock }) {
     if (!isImage) {
         { const __navText = claraWrap("Chibi sTyle", `🎀 *ᴄʜɪʙɪ ꜱᴛʏʟᴇ*\n\nKirim/reply gambar untuk diubah ke style Chibi\n\n\`${m.prefix}tochibi\``); return await m.reply(__navText, "tochibi"); }
     }
-    
-    m.react('🕐')
-
     try {
         let buffer
         if (m.quoted && m.quoted.isMedia) {
@@ -44,9 +41,6 @@ async function handler(m, { sock }) {
         const PROMPT = `Transform into chibi style, big head and small body proportions, cute expression, big sparkling eyes, smooth shading, soft lighting, highly detailed, high quality`
         
         const result = await live3d(buffer, PROMPT)
-        
-        m.react('✅')
-        
         await sock.sendMedia(m.chat, result.image, null, m, {
             type: 'image'
         })

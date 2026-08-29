@@ -30,9 +30,6 @@ async function handler(m, { sock }) {
   if (!url.startsWith("http")) {
     return m.reply(novaGuide('AIO', 'URL-nya gak valid nih! Harus diawali http/https', `${m.prefix}aio https://instagram.com/p/xxx`));
   }
-
-  await m.react("🕒");
-
   try {
     const result = await aiodl(url);
 
@@ -66,8 +63,6 @@ async function handler(m, { sock }) {
       }
       break;
     }
-
-    await m.react("🐣");
   } catch (error) {
     m.reply(novaError('AIO', 'Ada error nih, coba lagi ya'));
   }

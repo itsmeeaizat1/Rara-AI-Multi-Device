@@ -286,7 +286,6 @@ async function handler(m, { sock }) {
 
     if (sub === 'on') {
         db.setGroup(m.chat, { antiribut: 'on' })
-        m.react('✅')
         return m.reply(claraWrap("Antiribut", `╭──「 *ANTI RIBUT AKTIF* 」
 │ Deteksi keributan diaktifkan
 │ Sistem: Warn 3x lalu kick
@@ -302,7 +301,6 @@ async function handler(m, { sock }) {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) return m.reply(claraWrap("Antiribut", '❌ Masukkan angka 1-10'))
         db.setGroup(m.chat, { ributMaxWarn: count })
-        m.react('✅')
         return m.reply(`╭──「 *MAX WARN* 」
 │ Max peringatan: *${count}x*
 ╰──────────`)
@@ -325,7 +323,6 @@ async function handler(m, { sock }) {
         const updated = groupData
         if (updated.ributWarns?.[target]) delete updated.ributWarns[target]
         db.setGroup(m.chat, updated)
-        m.react('✅')
         return m.reply(`╭──「 *WARN DIRESET* 」
 │ 👤 User: @${target.split('@')[0]}
 │ Warn Ribut: Direset
@@ -335,7 +332,6 @@ async function handler(m, { sock }) {
         const updated = groupData
         updated.ributWarns = {}
         db.setGroup(m.chat, updated)
-        m.react('✅')
         return m.reply(claraWrap("Antiribut", '╭──「 *SEMUA WARN DIRESET* 」\n│\n╰──────────'))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antiribut` untuk daftar command')

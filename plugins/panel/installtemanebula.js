@@ -91,9 +91,6 @@ function handler(m, { sock }) {
     }
 
     const conn = new Client()
-
-    m.react('🕐')
-
     conn.on('ready', async () => {
         try {
             await m.reply(claraWrap("installtemanebula", `🕕 *[1/3] Preparing Environment...*\n\nMenginstall Node.js 22, Yarn, dan dependencies...`))
@@ -104,8 +101,6 @@ function handler(m, { sock }) {
 
             await m.reply(claraWrap("installtemanebula", `🕕 *[3/3] Install Nebula...*\n\nMenginstall tema Nebula (Auto-Confirm)...`))
             await execSSH(conn, CMD_NEBULA)
-
-            m.react('✅')
             await m.reply(claraWrap("installtemanebula", `╭──「 *ᴛᴇᴍᴀ ɴᴇʙᴜʟᴀ* 」
 │ sTatus: *ᴛᴇʀɪɴꜱᴛᴀʟʟ*
 │ Ip: ${ipvps}\n╰──────────\n\n_Tema Nebula berhasil diinstall!_`))

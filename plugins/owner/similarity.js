@@ -29,11 +29,9 @@ async function handler(m, { sock }) {
     
     if (mode === 'on') {
         db.setting('similarity', true)
-        await m.react('✅')
         await m.reply(claraWrap("Similarity", `✅ *sUkses*\n\nFitur similarity command *DIAKTIFKAN*`))
     } else if (mode === 'off') {
         db.setting('similarity', false)
-        await m.react('✅')
         await m.reply(claraWrap("Similarity", `✅ *sUkses*\n\nFitur similarity command *DIMATIKAN*`))
     } else {
         { const __navText = `⚠️ *Cara Pakai*\n\n\`.similarity on\` - Aktifkan\n\`.similarity off\` - Matikan`; return await m.reply(__navText); }

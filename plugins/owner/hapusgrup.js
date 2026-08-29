@@ -35,7 +35,6 @@ async function handler(m, { sock }) {
         const groupName = metadata?.subject || targetJid
 
         await sock.groupLeave(targetJid)
-        await m.react('✅')
         return m.reply(
             `🗑️ *Bot Keluar Dari Grup*\n\n` +
             `Grup: ${groupName}\n` +

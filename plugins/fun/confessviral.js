@@ -268,11 +268,9 @@ async function handler(m, { sock }) {
         `│ ❌ Gagal kirim: ${sendErr.message}\n\n` +
         `╰──────────`
       );
-      try { await m.react("❌"); } catch {}
     }
   } catch (e) {
     console.error("[confessviral] Handler error:", e.message);
-    try { await m.react("❌"); } catch {}
   }
 }
 

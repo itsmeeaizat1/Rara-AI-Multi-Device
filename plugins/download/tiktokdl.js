@@ -128,7 +128,6 @@ async function handler(m, { sock }) {
   if (!text) {
     return m.reply( claraWrap("Quick_reply", `📌 Contoh: *${prefix + command} https://vt.tiktok.com/...*`), { commandName: "tiktok" });
   }
-  m.react("🕒");
   try {
     const result = await tiktokDl(text);
     const builder = new AIRich(sock);
@@ -205,7 +204,6 @@ async function handler(m, { sock }) {
         { quoted: m },
       );
     }
-    m.react("🐣");
   } catch (e) {
     console.error(e);
     m.reply(novaError("TikTok", "Gagal download — coba lagi atau pakai .tt2 ya"));

@@ -101,9 +101,6 @@ async function handler(m, { sock }) {
   }
 
   if (!media) return m.reply(novaError("ToPixel", "Gagal baca media nih, coba lagi ya"));
-
-  await m.react("🕒");
-
   try {
     const pixelatedBuffer = await pixelArt(media, level);
     
@@ -115,8 +112,6 @@ async function handler(m, { sock }) {
       }, 
       { quoted: m }
     );
-    
-    await m.react("🐣");
   } catch (err) {
     m.reply(claraWrap("topixel", te(m.prefix, m.command, m.pushName), "error"));
   }

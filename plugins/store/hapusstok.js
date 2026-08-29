@@ -55,7 +55,6 @@ async function handler(m, { sock }) {
         if (product.stock !== -1) {
             product.stock = Math.max(0, product.stock - reduceCount)
             db.setting('storeProducts', products)
-            await m.react('✅')
             return m.reply( `📦 *ꜱᴛᴏᴋ ꜰɪꜱɪᴋ ᴅɪᴋᴜʀᴀɴɢɪ*\n\n` +
                 `🏷️ Produk: *${product.name}*\n` +
                 `➖ Dikurangi: *${reduceCount} pcs*\n` +
@@ -73,8 +72,6 @@ async function handler(m, { sock }) {
     const deleted = stockItems.splice(itemNo, 1)[0]
     product.stock = stockItems.length
     db.setting('storeProducts', products)
-
-    await m.react('✅')
     return m.reply( `🗑️ *ꜱᴛᴏᴋ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
         `🏷️ Produk: *${product.name}*\n` +
         `🔑 Item: \`${deleted.detail.replace(/\n/g, ' ').substring(0, 50)}\`\n` +
