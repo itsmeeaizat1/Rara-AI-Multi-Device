@@ -1,0 +1,99 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// AI Fortune — AI fortune teller with personality
+
+import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/nova-error.js";
+
+const pluginConfig = {
+  name: "ramalanai",
+  alias: ["ramalanai", "airamal", "fortuneai", "dukunai"],
+  category: "ai",
+  description: "AI dukun/paranormal — ramal masa depan, zodiak, cinta, karir",
+  usage: ".ramalanai <topik>",
+  example: ".ramalanai cinta\n.ramalanai karir\n.ramalanai keuangan",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 10,
+  energi: 1,
+  isEnabled: true,
+};
+
+const TOPICS = {
+  cinta: "Cinta dan kehidupan romantis",
+  karir: "Karir dan pekerjaan",
+  keuangan: "Keuangan dan rezeki",
+  kesehatan: "Kesehatan dan energi",
+  hoki: "Hoki dan keberuntungan",
+  jodoh: "Jodoh dan soulmate",
+};
+
+async function handler(m, { sock }) {
+  try {
+    const text = m.args.join(" ").trim().toLowerCase();
+    const topic = TOPICS[text] || "Kehidupan secara umum";
+
+    await m.react("🕒");
+
+    const prompt = `Kamu adalah seorang dukun/paranormal yang ramalannya sering akurat tapi lucu dan santai. Buatkan ramalan untuk seseorang tentang "${topic}". Format:
+
+BINTANG: [rating keberuntungan hari ini 1-5 ⭐]
+RAMALAN: [ramalan utama, 2-3 kalimat]
+PERINGATAN: [hal yang harus dihindari, 1 kalimat]
+KEBERUNTUNGAN: [angka/hari keberuntungan]
+PESAN: [pesan motivasi dari dukun, 1 kalimat]
+
+Gunakan bahasa Indonesia santai. Ramalan harus positif, jangan menakut-nakuti.`;
+
+    const result = await UnlimitedAI(prompt, "kobo-ai");
+
+    if (!result.status || !result.answer) {
+      await m.react("❌");
+      return m.reply(claraWrap("ramalanai", "Dukunnya lagi sholat 🕌", "error"));
+    }
+
+    const lines = result.answer.trim().split("\n");
+    let formatted = "";
+
+    for (const line of lines) {
+      const t = line.trim();
+      if (!t) continue;
+
+      if (t.startsWith("BINTANG:")) {
+        formatted += `│ ${t.replace("BINTANG:", "").trim()}\n│\n`;
+      } else if (t.startsWith("RAMALAN:")) {
+        formatted += `│ 🔮 *ʀᴀᴍᴀʟᴀɴ*\n│ ${t.replace("RAMALAN:", "").trim()}\n│\n`;
+      } else if (t.startsWith("PERINGATAN:")) {
+        formatted += `│ ⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ*\n│ ${t.replace("PERINGATAN:", "").trim()}\n│\n`;
+      } else if (t.startsWith("KEBERUNTUNGAN:")) {
+        formatted += `│ 🍀 *ᴋᴇʙᴇʀᴜɴᴛᴜɴɢᴀɴ*\n│ ${t.replace("KEBERUNTUNGAN:", "").trim()}\n│\n`;
+      } else if (t.startsWith("PESAN:")) {
+        formatted += `│ 💬 *ᴘᴇsᴀɴ ᴅᴜᴋᴜɴ*\n│ ${t.replace("PESAN:", "").trim()}\n`;
+      } else {
+        formatted += `│ ${t}\n`;
+      }
+    }
+
+    if (!formatted) {
+      formatted = `│ ${result.answer.trim()}\n`;
+    }
+
+    await m.react("🐣");
+    let msg = `╭──「 *ʀᴀᴍᴀʟᴀɴ ᴀɪ* 」\n`;
+    msg += `│ 📌 Topik: *${topic}*\n`;
+    msg += `│\n`;
+    msg += formatted;
+    msg += `│\n`;
+    msg += `│ ⚠️ Ramalan untuk hiburan, jangan diambil serius 😄\n`;
+    msg += `╰──────────`;
+    return m.reply(msg);
+  } catch (err) {
+    console.error("ramalanai error:", err);
+    await m.react("❌");
+    return m.reply(claraWrap("ramalanai", te(m.prefix, m.command, m.pushName), "error"));
+  }
+}
+
+export { pluginConfig as config, handler };
