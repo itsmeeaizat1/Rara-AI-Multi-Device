@@ -1,131 +1,84 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
+// vision — Analisis gambar dengan Gemini Vision (gratis, pakai API key Gemini)
+import { GeminiVision } from "../../src/scraper/geminiVision.js";
+import { novaCaption, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/nova-error.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const TMP_DIR = path.join(process.cwd(), "tmp");
-
-function ensureTmp() {
-  if (!fs.existsSync(TMP_DIR)) fs.mkdirSync(TMP_DIR, { recursive: true });
-}
-
-function tempPath(ext) {
-  ensureTmp();
-  return path.join(TMP_DIR, `vision_${Date.now()}_${Math.random().toString(16).slice(2)}${ext}`);
-}
+const pluginConfig = {
+  name: "vision",
+  alias: ["vision", "gv", "gemvision", "analisis"],
+  category: "ai",
+  description: "Analisis gambar dengan Gemini Vision AI (gratis)",
+  usage: ".vision <pertanyaan> (reply/attach foto)",
+  example: ".vision apa yang ada di foto ini?\n.vision baca teks di gambar ini\n.vision identifikasi tanaman ini",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 10,
+  energi: 1,
+  isEnabled: true,
+};
 
 async function handler(m, { sock, config: botConfig }) {
   try {
     const prefix = botConfig.command?.prefix || ".";
 
+    // Cek apakah ada gambar (attach atau reply)
     const media = m.msg?.imageMessage || m.quoted?.msg?.imageMessage;
     if (!media) {
-      const text =
-        novaCaption({
-  emoji: "🤖",
-  name: "vision",
-  description: "Analisis gambar dengan AI",
-  usage: `${prefix}vision <pertanyaan> (reply foto)`,
-  example: `${prefix}vision apa yang ada di foto ini?`,
-}) +
-        "\n" +
-        tipText(`Ketik ${prefix}menu untuk kembali`);
-
-      await m.reply(text, "vision");
-      return { handled: true };
+      const guide = novaCaption({
+        emoji: "🔍",
+        name: "vision",
+        description: "Analisis gambar dengan Gemini Vision",
+        usage: `${prefix}vision <pertanyaan> (reply/attach foto)`,
+        example: `${prefix}vision apa yang ada di foto ini?\n${prefix}vision baca teks di gambar\n${prefix}vision identifikasi tanaman ini`,
+      }) + "\n" + tipText(`Kirim/reply foto dengan caption pertanyaan`);
+      return m.reply(guide, "vision");
     }
 
-    const prompt = m.text?.trim() || "Deskripsikan gambar ini secara detail dalam bahasa Indonesia.";
+    await m.react("🕒");
+
+    // Download gambar
     const buffer = await sock.downloadMediaMessage(m.quoted || m);
-    const base64 = Buffer.from(buffer).toString("base64");
-    const dataUrl = `data:image/png;base64,${base64}`;
-
-    const aiConfig = botConfig.aiHelp || {};
-    const apiKey = String(aiConfig.apiKey || "");
-    const apiEndpoint = String(aiConfig.apiEndpoint || "https://api.openai.com/v1/chat/completions");
-    const model = String(aiConfig.model || "gpt-4o-mini");
-
-    if (!apiKey) {
-      const text =
-        claraWrap("Gagal", ["│ Status: *ɢᴀɢᴀʟ*",
-          "│ Alasan: *ᴀᴘɪ ᴋᴇʏ ᴀɪ ʙᴇʟᴜᴍ ᴅɪɪꜱɪ.*"].join("\n")) +
-        "\n" +
-        tipText("Isi `botConfig.aiHelp.apiKey` dulu, lalu coba lagi.");
-
-      await m.reply(text, "vision");
-      return { handled: true };
+    if (!buffer || buffer.length === 0) {
+      await m.react("❌");
+      return m.reply(claraWrap("vision", "Gagal download gambar. Coba kirim ulang.", "error"));
     }
 
-    const response = await fetch(apiEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          {
-            role: "user",
-            content: [
-              { type: "text", text: prompt },
-              { type: "image_url", image_url: { url: dataUrl } },
-            ],
-          },
-        ],
-        max_tokens: 1000,
-      }),
+    // Get prompt dari text message
+    const prompt = m.text?.trim() || m.args?.join(" ").trim() || "Deskripsikan gambar ini secara detail dalam bahasa Indonesia.";
+
+    // Call Gemini Vision
+    const result = await GeminiVision({
+      imageBuffer: buffer,
+      prompt: prompt,
+      instruction: "Kamu adalah asisten AI vision yang ahli. Analisis gambar dengan detail dan akurat. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia.",
     });
 
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(`AI error ${response.status}: ${text}`);
+    if (!result.status) {
+      await m.react("❌");
+      return m.reply(claraWrap("vision", result.error || "Gagal menganalisis gambar", "error"));
     }
 
-    const data = await response.json();
-    const reply = data?.choices?.[0]?.message?.content || "Tidak ada respon dari AI.";
+    await m.react("🐣");
 
-    const out =
-      claraWrap("Vision", [`│ Pertanyaan: *${prompt}*`,
-        `│ Hasil: *${reply}*`].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}vision <pertanyaan> untuk analisis lain`) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
+    let msg = `╭──「 *ɢᴇᴍɪɴɪ ᴠɪsɪᴏɴ* 」\n`;
+    msg += `│ 📸 Model: *${result.model}*\n`;
+    msg += `│\n`;
+    msg += `│ Pertanyaan:\n`;
+    msg += `│ "${prompt}"\n`;
+    msg += `│\n`;
+    msg += `│ Hasil Analisis:\n`;
+    msg += `│ ${result.text.replace(/\n/g, "\n│ ")}\n`;
+    msg += `╰──────────`;
 
-    await m.reply(out);
-  } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
-      "\n" +
-      tipText(`Coba lagi nanti atau hubungi owner`);
-
-    await m.reply(text, "vision");
+    return m.reply(msg);
+  } catch (err) {
+    console.error("vision error:", err);
+    await m.react("❌");
+    return m.reply(claraWrap("vision", err.message || te(m.prefix, m.command, m.pushName), "error"));
   }
-
-  return { handled: true };
 }
 
-const pluginConfig = {
-  name: "vision",
-  alias: ["vision"],
-  category: "ai",
-  description: "Analisis gambar dengan AI",
-  usage: ".vision <pertanyaan> (reply foto)",
-  example: ".vision apa yang ada di foto ini?",
-  isOwner: false,
-  isPremium: false,
-  isGroup: true,
-  isPrivate: false,
-  cooldown: 10,
-  energi: 0,
-  isEnabled: true,
-};
-
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler };
