@@ -44,20 +44,20 @@ import * as timeHelper from './nova-time.js'
  * @constant
  */
 const CHARS = {
-  cornerTopLeft: "╭",
-  cornerTopRight: "─",
-  cornerBottomLeft: "╰",
-  cornerBottomRight: "",
-  horizontal: "─",
-  vertical: "│",
-  arrow: "❏",
-  bullet: "❏",
-  star: "✦",
-  diamond: "◇",
-  dot: "•",
-  check: "",
-  cross: "✗",
-  line: "─",
+ cornerTopLeft: "╭",
+ cornerTopRight: "─",
+ cornerBottomLeft: "╰",
+ cornerBottomRight: "",
+ horizontal: "─",
+ vertical: "│",
+ arrow: "❏",
+ bullet: "❏",
+ star: "",
+ diamond: "◇",
+ dot: "•",
+ check: "",
+ cross: "✗",
+ line: "─",
 };
 
 /**
@@ -65,35 +65,35 @@ const CHARS = {
  * @constant
  */
 const EMOJIS = {
-  dashboard: "📊",
-  info: "ℹ️",
-  user: "👤",
-  bot: "🤖",
-  owner: "👑",
-  premium: "💎",
-  free: "🆓",
-  public: "🌐",
-  self: "🔒",
-  commands: "🖥️",
-  utilities: "🔧",
-  fun: "🎮",
-  group: "👥",
-  time: "⏰",
-  uptime: "⏱️",
-  version: "📌",
-  speed: "⚡",
-  limit: "📊",
-  status: "📋",
-  mode: "🔄",
-  name: "📝",
-  number: "📱",
-  developer: "👨‍💻",
-  total: "📈",
-  tip: "💡",
-  warning: "⚠️",
-  success: "✅",
-  error: "❌",
-  loading: "🕕",
+ dashboard: "📊",
+ info: "ℹ️",
+ user: "👤",
+ bot: "🤖",
+ owner: "👑",
+ premium: "💎",
+ free: "🆓",
+ public: "🌐",
+ self: "🔒",
+ commands: "🖥️",
+ utilities: "🔧",
+ fun: "🎮",
+ group: "👥",
+ time: "⏰",
+ uptime: "⏱️",
+ version: "📌",
+ speed: "⚡",
+ limit: "📊",
+ status: "📋",
+ mode: "🔄",
+ name: "📝",
+ number: "📱",
+ developer: "👨‍💻",
+ total: "📈",
+ tip: "💡",
+ warning: "⚠️",
+ success: "✅",
+ error: "❌",
+ loading: "🕕",
 };
 
 /**
@@ -105,18 +105,18 @@ const EMOJIS = {
  * formatUptime(86400000); // "1d 0h 0m"
  */
 function formatUptime(ms) {
-  const seconds = Math.floor((ms / 1000) % 60);
-  const minutes = Math.floor((ms / (1000 * 60)) % 60);
-  const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
-  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+ const seconds = Math.floor((ms / 1000) % 60);
+ const minutes = Math.floor((ms / (1000 * 60)) % 60);
+ const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
+ const days = Math.floor(ms / (1000 * 60 * 60 * 24));
 
-  const parts = [];
-  if (days > 0) parts.push(`${days}d`);
-  if (hours > 0) parts.push(`${hours}h`);
-  if (minutes > 0) parts.push(`${minutes}m`);
-  if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`);
+ const parts = [];
+ if (days > 0) parts.push(`${days}d`);
+ if (hours > 0) parts.push(`${hours}h`);
+ if (minutes > 0) parts.push(`${minutes}m`);
+ if (seconds > 0 || parts.length === 0) parts.push(`${seconds}s`);
 
-  return parts.join(" ");
+ return parts.join(" ");
 }
 
 /**
@@ -127,7 +127,7 @@ function formatUptime(ms) {
  * formatDate(new Date()); // "17/12/2024, 12:30:45"
  */
 function formatDate(date) {
-  return timeHelper.fromTimestamp(date, "DD/MM/YYYY HH:mm:ss");
+ return timeHelper.fromTimestamp(date, "DD/MM/YYYY HH:mm:ss");
 }
 
 /**
@@ -138,17 +138,17 @@ function formatDate(date) {
  * formatNumber('6281234567890'); // '62 812-3456-7890'
  */
 function formatNumber(number) {
-  if (!number) return "";
-  const cleaned = number.replace(/[^0-9]/g, "");
-  if (cleaned.length < 10) return cleaned;
+ if (!number) return "";
+ const cleaned = number.replace(/[^0-9]/g, "");
+ if (cleaned.length < 10) return cleaned;
 
-  if (cleaned.startsWith("62")) {
-    const withoutCode = cleaned.slice(2);
-    const formatted = withoutCode.replace(/(\d{3})(\d{4})(\d+)/, "$1-$2-$3");
-    return `62 ${formatted}`;
-  }
+ if (cleaned.startsWith("62")) {
+ const withoutCode = cleaned.slice(2);
+ const formatted = withoutCode.replace(/(\d{3})(\d{4})(\d+)/, "$1-$2-$3");
+ return `62 ${formatted}`;
+ }
 
-  return cleaned;
+ return cleaned;
 }
 
 /**
@@ -160,13 +160,13 @@ function formatNumber(number) {
  * formatFileSize(1048576); // "1.00 MB"
  */
 function formatFileSize(bytes) {
-  if (bytes === 0) return "0 Bytes";
+ if (bytes === 0) return "0 Bytes";
 
-  const k = 1024;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+ const k = 1024;
+ const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+ const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+ return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
 
 /**
@@ -176,7 +176,7 @@ function formatFileSize(bytes) {
  * @returns {string} String garis
  */
 function createLine(length = 20, char = CHARS.horizontal) {
-  return char.repeat(length);
+ return char.repeat(length);
 }
 
 /**
@@ -189,7 +189,7 @@ function createLine(length = 20, char = CHARS.horizontal) {
  * // "╭─「 DASHBOARD 」─────╮"
  */
 function createHeader(title, width = 20) {
-  return `╭──「 ${title} 」`;
+ return `╭──「 ${title} 」`;
 }
 
 /**
@@ -200,7 +200,7 @@ function createHeader(title, width = 20) {
  * createFooter(); // "╰────────────────────╯"
  */
 function createFooter(width = 20) {
-  return `╰──────────`;
+ return `╰──────────`;
 }
 
 /**
@@ -211,7 +211,7 @@ function createFooter(width = 20) {
  * @returns {string} Formatted body line
  */
 function createBodyLine(text, prefix = CHARS.vertical, bullet = CHARS.bullet) {
-  return `  ${prefix}  ${bullet} ${text}`;
+ return ` ${prefix} ${bullet} ${text}`;
 }
 
 /**
@@ -223,7 +223,7 @@ function createBodyLine(text, prefix = CHARS.vertical, bullet = CHARS.bullet) {
  * createArrowLine('Nama', 'Nova-AI'); // "│ ➣ Nama: Nova-AI"
  */
 function createArrowLine(label, value) {
-  return `  ${CHARS.vertical}  ${CHARS.arrow} *${label}:* ${value}`;
+ return ` ${CHARS.vertical} ${CHARS.arrow} *${label}:* ${value}`;
 }
 
 /**
@@ -232,27 +232,27 @@ function createArrowLine(label, value) {
  * @returns {string} Formatted dashboard string
  */
 function createDashboard(data) {
-  const {
-    userName = "User",
-    userStatus = "Free User",
-    mode = "Public",
-    totalUsers = 0,
-    userLimit = 25,
-  } = data;
+ const {
+ userName = "User",
+ userStatus = "Free User",
+ mode = "Public",
+ totalUsers = 0,
+ userLimit = 25,
+ } = data;
 
-  const lines = [
-    createHeader("Dashboard"),
-    `${CHARS.vertical}`,
-    createArrowLine("Nama", userName),
-    createArrowLine("Status User", userStatus),
-    createArrowLine("Mode", mode),
-    createArrowLine("Pengguna", totalUsers.toString()),
-    createArrowLine("Limit", userLimit.toString()),
-    `${CHARS.vertical}`,
-    createFooter(),
-  ];
+ const lines = [
+ createHeader("Dashboard"),
+ `${CHARS.vertical}`,
+ createArrowLine("Nama", userName),
+ createArrowLine("Status User", userStatus),
+ createArrowLine("Mode", mode),
+ createArrowLine("Pengguna", totalUsers.toString()),
+ createArrowLine("Limit", userLimit.toString()),
+ `${CHARS.vertical}`,
+ createFooter(),
+ ];
 
-  return lines.join("\n");
+ return lines.join("\n");
 }
 
 /**
@@ -261,30 +261,30 @@ function createDashboard(data) {
  * @returns {string} Formatted bot info string
  */
 function createBotInfo(data) {
-  const {
-    botName = config.bot?.name || "Nova-AI",
-    developer = config.owner?.name || "Owner",
-    version = config.bot?.version || "1.0.0",
-    uptime = "0s",
-    totalFeatures = 0,
-    mode = config.mode || "public",
-    platform = "Node.js",
-  } = data;
+ const {
+ botName = config.bot?.name || "Nova-AI",
+ developer = config.owner?.name || "Owner",
+ version = config.bot?.version || "1.0.0",
+ uptime = "0s",
+ totalFeatures = 0,
+ mode = config.mode || "public",
+ platform = "Node.js",
+ } = data;
 
-  const lines = [
-    `${CHARS.horizontal} *Informasi Bot* ${CHARS.horizontal}`,
-    ``,
-    `${CHARS.dot} Nama-Bot : ${botName} 🌿`,
-    `${CHARS.dot} Developer : ${developer}`,
-    `${CHARS.dot} Mode : ${mode.charAt(0).toUpperCase() + mode.slice(1)}`,
-    `${CHARS.dot} Version : ${version}`,
-    `${CHARS.dot} Uptime : ${uptime}`,
-    `${CHARS.dot} Total-Fitur : ${totalFeatures}`,
-    `${CHARS.dot} Platform : ${platform}`,
-    ``,
-  ];
+ const lines = [
+ `${CHARS.horizontal} *Informasi Bot* ${CHARS.horizontal}`,
+ ``,
+ `${CHARS.dot} Nama-Bot : ${botName} 🌿`,
+ `${CHARS.dot} Developer : ${developer}`,
+ `${CHARS.dot} Mode : ${mode.charAt(0).toUpperCase() + mode.slice(1)}`,
+ `${CHARS.dot} Version : ${version}`,
+ `${CHARS.dot} Uptime : ${uptime}`,
+ `${CHARS.dot} Total-Fitur : ${totalFeatures}`,
+ `${CHARS.dot} Platform : ${platform}`,
+ ``,
+ ];
 
-  return lines.join("\n");
+ return lines.join("\n");
 }
 
 /**
@@ -293,35 +293,35 @@ function createBotInfo(data) {
  * @returns {string} Formatted user profile string
  */
 function createUserProfile(data) {
-  const {
-    name = "User",
-    number = "",
-    status = "Free",
-    limit = 25,
-    registeredAt = "",
-  } = data;
+ const {
+ name = "User",
+ number = "",
+ status = "Free",
+ limit = 25,
+ registeredAt = "",
+ } = data;
 
-  const statusEmoji =
-    status === "Owner"
-      ? EMOJIS.owner
-      : status === "Premium"
-        ? EMOJIS.premium
-        : EMOJIS.free;
+ const statusEmoji =
+ status === "Owner"
+ ? EMOJIS.owner
+ : status === "Premium"
+ ? EMOJIS.premium
+ : EMOJIS.free;
 
-  const lines = [
-    `【 USER PROFILE 】`,
-    `${EMOJIS.name} Nama   : ${name}`,
-    `${EMOJIS.number} Nomor  : ${formatNumber(number)}`,
-    `${statusEmoji} Status : ${status}`,
-    `${EMOJIS.limit} Limit  : ${limit}`,
-    ``,
-  ];
+ const lines = [
+ `【 USER PROFILE 】`,
+ `${EMOJIS.name} Nama : ${name}`,
+ `${EMOJIS.number} Nomor : ${formatNumber(number)}`,
+ `${statusEmoji} Status : ${status}`,
+ `${EMOJIS.limit} Limit : ${limit}`,
+ ``,
+ ];
 
-  if (registeredAt) {
-    lines.splice(5, 0, `${EMOJIS.time} Daftar : ${registeredAt}`);
-  }
+ if (registeredAt) {
+ lines.splice(5, 0, `${EMOJIS.time} Daftar : ${registeredAt}`);
+ }
 
-  return lines.join("\n");
+ return lines.join("\n");
 }
 
 /**
@@ -330,27 +330,27 @@ function createUserProfile(data) {
  * @returns {string} Formatted bot status string
  */
 function createBotStatus(data) {
-  const {
-    botName = config.bot?.name || "Nova-AI",
-    uptime = "0s",
-    mode = "Public",
-    totalCommands = 0,
-    totalUsers = 0,
-    speed = "0.00s",
-  } = data;
+ const {
+ botName = config.bot?.name || "Nova-AI",
+ uptime = "0s",
+ mode = "Public",
+ totalCommands = 0,
+ totalUsers = 0,
+ speed = "0.00s",
+ } = data;
 
-  const lines = [
-    `【 BOT STATUS 】`,
-    `${EMOJIS.bot} Bot      : ${botName}`,
-    `${EMOJIS.uptime} Uptime   : ${uptime}`,
-    `${EMOJIS.mode} Mode     : ${mode}`,
-    `${EMOJIS.commands} Commands : ${totalCommands} fitur`,
-    `${EMOJIS.user} Pengguna : ${totalUsers} users`,
-    `${EMOJIS.speed} Speed    : ${speed}`,
-    ``,
-  ];
+ const lines = [
+ `【 BOT STATUS 】`,
+ `${EMOJIS.bot} Bot : ${botName}`,
+ `${EMOJIS.uptime} Uptime : ${uptime}`,
+ `${EMOJIS.mode} Mode : ${mode}`,
+ `${EMOJIS.commands} Commands : ${totalCommands} fitur`,
+ `${EMOJIS.user} Pengguna : ${totalUsers} users`,
+ `${EMOJIS.speed} Speed : ${speed}`,
+ ``,
+ ];
 
-  return lines.join("\n");
+ return lines.join("\n");
 }
 
 /**
@@ -360,19 +360,19 @@ function createBotStatus(data) {
  * @returns {string} Formatted category menu
  */
 function createCategoryMenu(category, prefix = config.command?.prefix || ".") {
-  const { name, emoji, description = "", commands = [] } = category;
+ const { name, emoji, description = "", commands = [] } = category;
 
-  if (commands.length === 0) {
-    return "";
-  }
+ if (commands.length === 0) {
+ return "";
+ }
 
-  const header = `${emoji} *${name}*`;
-  const commandList = commands
-    .map((cmd) => `${CHARS.vertical} ${prefix}${cmd}`)
-    .join("\n");
-  const footer = `${CHARS.cornerBottomLeft}${createLine(15)}`;
+ const header = `${emoji} *${name}*`;
+ const commandList = commands
+ .map((cmd) => `${CHARS.vertical} ${prefix}${cmd}`)
+ .join("\n");
+ const footer = `${CHARS.cornerBottomLeft}${createLine(15)}`;
 
-  return `${header}\n${commandList}\n${footer}`;
+ return `${header}\n${commandList}\n${footer}`;
 }
 
 /**
@@ -381,16 +381,16 @@ function createCategoryMenu(category, prefix = config.command?.prefix || ".") {
  * @returns {string} Formatted category section
  */
 function createCategorySection(data) {
-  const { emoji, title, command, description, prefix = "." } = data;
+ const { emoji, title, command, description, prefix = "." } = data;
 
-  const lines = [
-    `${emoji} *${title}*`,
-    `  Ketik: ${prefix}${command}`,
-    `  ${CHARS.vertical} ( ${description} )`,
-    ``,
-  ];
+ const lines = [
+ `${emoji} *${title}*`,
+ ` Ketik: ${prefix}${command}`,
+ ` ${CHARS.vertical} ( ${description} )`,
+ ``,
+ ];
 
-  return lines.join("\n");
+ return lines.join("\n");
 }
 
 /**
@@ -399,42 +399,42 @@ function createCategorySection(data) {
  * @returns {string} Formatted main menu string
  */
 function createMainMenu(data) {
-  const {
-    greeting = "",
-    userName = "User",
-    userStatus = "Free User",
-    categories = [],
-    botInfo = {},
-    prefix = config.command?.prefix || ".",
-  } = data;
+ const {
+ greeting = "",
+ userName = "User",
+ userStatus = "Free User",
+ categories = [],
+ botInfo = {},
+ prefix = config.command?.prefix || ".",
+ } = data;
 
-  const parts = [];
+ const parts = [];
 
-  if (greeting) {
-    parts.push(greeting);
-    parts.push("");
-  }
+ if (greeting) {
+ parts.push(greeting);
+ parts.push("");
+ }
 
-  parts.push(createDashboard({ userName, userStatus, ...data }));
-  parts.push("");
+ parts.push(createDashboard({ userName, userStatus, ...data }));
+ parts.push("");
 
-  parts.push(createBotInfo(botInfo));
-  parts.push("");
+ parts.push(createBotInfo(botInfo));
+ parts.push("");
 
-  for (const category of categories) {
-    parts.push(
-      createCategorySection({
-        ...category,
-        prefix,
-      }),
-    );
-  }
+ for (const category of categories) {
+ parts.push(
+ createCategorySection({
+ ...category,
+ prefix,
+ }),
+ );
+ }
 
-  parts.push(`${EMOJIS.tip} *Tips:* Jika kamu tidak tahu cara menggunakan Bot`);
-  parts.push(`Kamu bisa tanya ke owner`);
-  parts.push(`${CHARS.vertical} Mode: ${data.mode || "Public"}`);
+ parts.push(`${EMOJIS.tip} *Tips:* Jika kamu tidak tahu cara menggunakan Bot`);
+ parts.push(`Kamu bisa tanya ke owner`);
+ parts.push(`${CHARS.vertical} Mode: ${data.mode || "Public"}`);
 
-  return parts.join("\n");
+ return parts.join("\n");
 }
 
 /**
@@ -445,21 +445,21 @@ function createMainMenu(data) {
  * @returns {string} Formatted command list
  */
 function createCommandList(categoryName, commands, prefix = ".") {
-  const emoji = config.categoryEmojis?.[categoryName.toLowerCase()] || "📋";
+ const emoji = config.categoryEmojis?.[categoryName.toLowerCase()] || "📋";
 
-  const lines = [
-    `${CHARS.cornerTopLeft}${CHARS.horizontal}❏ ${emoji} *${categoryName.toUpperCase()}*`,
-    "",
-  ];
+ const lines = [
+ `${CHARS.cornerTopLeft}${CHARS.horizontal}❏ ${emoji} *${categoryName.toUpperCase()}*`,
+ "",
+ ];
 
-  for (const cmd of commands) {
-    lines.push(`${CHARS.vertical} ${prefix}${cmd}`);
-  }
+ for (const cmd of commands) {
+ lines.push(`${CHARS.vertical} ${prefix}${cmd}`);
+ }
 
-  lines.push("");
-  lines.push(`${CHARS.cornerBottomLeft}${createLine(20)}`);
+ lines.push("");
+ lines.push(`${CHARS.cornerBottomLeft}${createLine(20)}`);
 
-  return lines.join("\n");
+ return lines.join("\n");
 }
 
 /**
@@ -468,7 +468,7 @@ function createCommandList(categoryName, commands, prefix = ".") {
  * @returns {string} Formatted wait message
  */
 function createWaitMessage(message = "Diproses...") {
-  return `${EMOJIS.loading} *${message}*`;
+ return `${EMOJIS.loading} *${message}*`;
 }
 
 /**
@@ -477,7 +477,7 @@ function createWaitMessage(message = "Diproses...") {
  * @returns {string} Formatted success message
  */
 function createSuccessMessage(message = "Berhasil!") {
-  return `${EMOJIS.success} *${message}*`;
+ return `${EMOJIS.success} *${message}*`;
 }
 
 /**
@@ -486,7 +486,7 @@ function createSuccessMessage(message = "Berhasil!") {
  * @returns {string} Formatted error message
  */
 function createErrorMessage(message = "Terjadi kesalahan!") {
-  return `${EMOJIS.error} *${message}*`;
+ return `${EMOJIS.error} *${message}*`;
 }
 
 /**
@@ -495,7 +495,7 @@ function createErrorMessage(message = "Terjadi kesalahan!") {
  * @returns {string} Formatted warning message
  */
 function createWarningMessage(message) {
-  return `${EMOJIS.warning} *${message}*`;
+ return `${EMOJIS.warning} *${message}*`;
 }
 
 /**
@@ -505,12 +505,12 @@ function createWarningMessage(message) {
  * getTimeGreeting(); // "Selamat Pagi" (jika pagi hari)
  */
 function getTimeGreeting() {
-  const hour = timeHelper.getHour();
+ const hour = timeHelper.getHour();
 
-  if (hour >= 4 && hour < 10) return "Selamat Pagi 🌅";
-  if (hour >= 10 && hour < 15) return "Selamat Siang ☀️";
-  if (hour >= 15 && hour < 18) return "Selamat Sore 🌇";
-  return "Selamat Malam 🌙";
+ if (hour >= 4 && hour < 10) return "Selamat Pagi 🌅";
+ if (hour >= 10 && hour < 15) return "Selamat Siang ☀️";
+ if (hour >= 15 && hour < 18) return "Selamat Sore 🌇";
+ return "Selamat Malam 🌙";
 }
 
 /**
@@ -521,8 +521,8 @@ function getTimeGreeting() {
  * capitalize('hello world'); // "Hello World"
  */
 function capitalize(str) {
-  if (!str) return "";
-  return str.replace(/\b\w/g, (char) => char.toUpperCase());
+ if (!str) return "";
+ return str.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 /**
@@ -533,8 +533,8 @@ function capitalize(str) {
  * @returns {string} Truncated text
  */
 function truncate(text, maxLength, suffix = "...") {
-  if (!text || text.length <= maxLength) return text;
-  return text.slice(0, maxLength - suffix.length) + suffix;
+ if (!text || text.length <= maxLength) return text;
+ return text.slice(0, maxLength - suffix.length) + suffix;
 }
 
 export { CHARS, EMOJIS, formatUptime, formatDate, formatNumber, formatFileSize, createLine, createHeader, createFooter, createBodyLine, createArrowLine, createDashboard, createBotInfo, createUserProfile, createBotStatus, createCategoryMenu, createCategorySection, createMainMenu, createCommandList, createWaitMessage, createSuccessMessage, createErrorMessage, createWarningMessage, getTimeGreeting, capitalize, truncate, getImportantDay }
@@ -545,74 +545,74 @@ export { CHARS, EMOJIS, formatUptime, formatDate, formatNumber, formatFileSize, 
  * @returns {Promise<string>} Nama hari penting atau "Tidak ada"
  */
 async function getImportantDay(date = new Date()) {
-  const mm = String(date.getMonth() + 1).padStart(2, "0");
-  const dd = String(date.getDate()).padStart(2, "0");
-  const yyyy = date.getFullYear();
-  const key = `${mm}-${dd}`;
+ const mm = String(date.getMonth() + 1).padStart(2, "0");
+ const dd = String(date.getDate()).padStart(2, "0");
+ const yyyy = date.getFullYear();
+ const key = `${mm}-${dd}`;
 
-  // Daftar hari penting nasional & internasional (fix date)
-  const hariPenting = {
-    "01-01": "Tahun Baru Masehi",
-    "01-25": "Hari Nutrisi Nasional",
-    "02-04": "Hari Kanker Sedunia",
-    "02-09": "Hari Pers Nasional",
-    "02-14": "Hari Emansipasi Wanita",
-    "03-08": "Hari Wanita Sedunia",
-    "03-21": "Hari Down Syndrome Sedunia",
-    "04-07": "Hari Kesehatan Nasional",
-    "04-21": "Hari Kartini",
-    "04-22": "Hari Bumi",
-    "05-01": "Hari Buruh Internasional",
-    "05-02": "Hari Pendidikan Nasional (Hardiknas)",
-    "05-20": "Hari Kebangkitan Nasional",
-    "05-31": "Hari Anti Tembakau Sedunia",
-    "06-01": "Hari Lahir Pancasila",
-    "06-29": "Hari Bakti TNI AU",
-    "07-22": "Hari Sumpah Pemuda",
-    "08-17": "Hari Kemerdekaan RI",
-    "09-01": "Hari Polisi Internasional",
-    "09-30": "Hari Penghapusan Ekstrimisme",
-    "10-01": "Hari Kesaktian Pancasila",
-    "10-02": "Hari Batik Nasional",
-    "10-05": "Hari TNI",
-    "10-10": "Hari Mental Sedunia",
-    "10-28": "Hari Sumpah Pemuda",
-    "11-10": "Hari Pahlawan",
-    "11-20": "Hari Anak Sedunia",
-    "12-01": "Hari AIDS Sedunia",
-    "12-22": "Hari Ibu",
-    "12-25": "Hari Raya Natal",
-  };
+ // Daftar hari penting nasional & internasional (fix date)
+ const hariPenting = {
+ "01-01": "Tahun Baru Masehi",
+ "01-25": "Hari Nutrisi Nasional",
+ "02-04": "Hari Kanker Sedunia",
+ "02-09": "Hari Pers Nasional",
+ "02-14": "Hari Emansipasi Wanita",
+ "03-08": "Hari Wanita Sedunia",
+ "03-21": "Hari Down Syndrome Sedunia",
+ "04-07": "Hari Kesehatan Nasional",
+ "04-21": "Hari Kartini",
+ "04-22": "Hari Bumi",
+ "05-01": "Hari Buruh Internasional",
+ "05-02": "Hari Pendidikan Nasional (Hardiknas)",
+ "05-20": "Hari Kebangkitan Nasional",
+ "05-31": "Hari Anti Tembakau Sedunia",
+ "06-01": "Hari Lahir Pancasila",
+ "06-29": "Hari Bakti TNI AU",
+ "07-22": "Hari Sumpah Pemuda",
+ "08-17": "Hari Kemerdekaan RI",
+ "09-01": "Hari Polisi Internasional",
+ "09-30": "Hari Penghapusan Ekstrimisme",
+ "10-01": "Hari Kesaktian Pancasila",
+ "10-02": "Hari Batik Nasional",
+ "10-05": "Hari TNI",
+ "10-10": "Hari Mental Sedunia",
+ "10-28": "Hari Sumpah Pemuda",
+ "11-10": "Hari Pahlawan",
+ "11-20": "Hari Anak Sedunia",
+ "12-01": "Hari AIDS Sedunia",
+ "12-22": "Hari Ibu",
+ "12-25": "Hari Raya Natal",
+ };
 
-  // Cek dari daftar statis dulu
-  if (hariPenting[key]) {
-    return `${dd} ${getMonthName(mm)} ${yyyy} - ${hariPenting[key]}`;
-  }
+ // Cek dari daftar statis dulu
+ if (hariPenting[key]) {
+ return `${dd} ${getMonthName(mm)} ${yyyy} - ${hariPenting[key]}`;
+ }
 
-  // Fallback: cek dari API online (api-harilibur) - dengan timeout 5 detik
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
-    const res = await fetch(
-      `https://api-harilibur.vercel.app/api?year=${yyyy}&month=${parseInt(mm)}`,
-      { signal: controller.signal }
-    );
-    clearTimeout(timeoutId);
-    if (res.ok) {
-      const data = await res.json();
-      const today = `${yyyy}-${mm}-${dd}`;
-      const match = data.find((h) => h.holiday_date === today && h.is_national_holiday);
-      if (match) return `${dd} ${getMonthName(mm)} ${yyyy} - ${match.holiday_name}`;
-    }
-  } catch {
-    // API unreachable atau timeout, return default
-  }
+ // Fallback: cek dari API online (api-harilibur) - dengan timeout 5 detik
+ try {
+ const controller = new AbortController();
+ const timeoutId = setTimeout(() => controller.abort(), 5000);
+ const res = await fetch(
+ `https://api-harilibur.vercel.app/api?year=${yyyy}&month=${parseInt(mm)}`,
+ { signal: controller.signal }
+ );
+ clearTimeout(timeoutId);
+ if (res.ok) {
+ const data = await res.json();
+ const today = `${yyyy}-${mm}-${dd}`;
+ const match = data.find((h) => h.holiday_date === today && h.is_national_holiday);
+ if (match) return `${dd} ${getMonthName(mm)} ${yyyy} - ${match.holiday_name}`;
+ }
+ } catch {
+ // API unreachable atau timeout, return default
+ }
 
-  return "";
+ return "";
 }
 
 // Helper untuk nama bulan dalam bahasa Indonesia
 function getMonthName(mm) {
-  const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-  return months[parseInt(mm) - 1] || mm;
+ const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+ return months[parseInt(mm) - 1] || mm;
 }
