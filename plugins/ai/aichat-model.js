@@ -6,7 +6,7 @@ import { DEFAULT_PROVIDERS, resolveProvider } from "../../src/lib/nova-ai-servic
 
 const pluginConfig = {
   name: "aichat-model",
-  alias: ["aichat-model"],
+  alias: ["aichat-model", "aichat"],
   category: "ai",
   description: "Cek atau ganti model AI untuk chat",
   usage: ".aichat-model list | .aichat-model <provider> <model>",

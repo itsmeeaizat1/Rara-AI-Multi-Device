@@ -6,7 +6,7 @@ import { delay } from "../../src/lib/nova-utils.js";
 
 const pluginConfig = {
   name: "aidebate",
-  alias: ["aidebate"],
+  alias: ["aidebate", "debate"],
   category: "future",
   description: "AI Debate Mode - debat pro vs kontra dengan AI judge",
   usage: ".debate <command>",

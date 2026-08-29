@@ -5,7 +5,7 @@ import { DEFAULT_PROVIDERS } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-providers",
-  alias: ["ai-providers"],
+  alias: ["ai-providers", "ai"],
   category: "ai",
   description: "Lihat semua provider AI yang tersedia",
   usage: ".ai-providers",

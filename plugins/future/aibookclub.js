@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 
 const pluginConfig = {
   name: "aibookclub",
-  alias: ["aibookclub"],
+  alias: ["aibookclub", "bookclub"],
   category: "future",
   description: "Baca buku bareng di grup - AI book club",
   usage: ".bookclub <command>",

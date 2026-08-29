@@ -14,7 +14,7 @@ import te from "../../src/lib/nova-error.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "hd2tool",
-  alias: ["hd2tool"],
+  alias: ["hd2tool", "hd2"],
   category: "tools",
   description: "Enhance gambar menjadi HD dengan AI (V3)",
   usage: ".hd2 (reply gambar)",

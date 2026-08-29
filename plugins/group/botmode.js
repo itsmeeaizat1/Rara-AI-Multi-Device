@@ -3,7 +3,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: "botmodegc",
-    alias: ["botmodegc"],
+    alias: ["botmodegc", "botmode"],
     category: 'group',
     description: 'Atur mode bot untuk grup ini',
     usage: '.botmode <md/cpanel/pushkontak/store/otp/all>',

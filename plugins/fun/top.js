@@ -3,7 +3,7 @@ import te from '../../src/lib/nova-error.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "topfun",
-    alias: ["topfun"],
+    alias: ["topfun", "top"],
     category: 'fun',
     description: 'Random top 5 member untuk kategori tertentu',
     usage: '.top <kategori>',

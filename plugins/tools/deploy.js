@@ -3,7 +3,7 @@ import config from '../../config.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "deploytool",
-    alias: ["deploytool"],
+    alias: ["deploytool", "deploy"],
     category: 'owner',
     description: 'Deploy HTML ke Vercel (reply code / file)',
     usage: '.deploy <namawebsite>',

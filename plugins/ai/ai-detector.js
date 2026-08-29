@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-detector",
-  alias: ["ai-detector"],
+  alias: ["ai-detector", "ai"],
   category: "ai",
   description: "Deteksi apakah teks/materi berpotensi AI-generated",
   usage: ".ai-detector <teks> | reply teks",

@@ -4,7 +4,7 @@ import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "eduleaderboard",
-  alias: ["eduleaderboard"],
+  alias: ["eduleaderboard", "edulb"],
   category: "education",
   description: "Leaderboard game belajar - ranking PG dan essay dipisah",
   usage: ".edulb [command]",

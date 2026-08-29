@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 
 const pluginConfig = {
   name: "kobo-ai",
-  alias: ["kobo-ai"],
+  alias: ["kobo-ai", "kobo"],
   category: "ai",
   description: "Chat dengan Kobo Kanaeru — VTuber Hololive ID",
   usage: ".kobo-ai <pertanyaan>",

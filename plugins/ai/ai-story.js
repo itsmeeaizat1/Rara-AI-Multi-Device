@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-story",
-  alias: ["ai-story"],
+  alias: ["ai-story", "ai"],
   category: "ai",
   description: "Tulis cerita pendek dengan AI",
   usage: ".ai-story <tema>",

@@ -3,7 +3,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 
 const pluginConfig = {
   name: "fontstyle",
-  alias: ["fontstyle"],
+  alias: ["fontstyle", "font"],
   category: "tools",
   description: "Konversi teks ke berbagai font aesthetic Unicode",
   usage: ".font <style> <teks>\n.font list — lihat semua style tersedia",

@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kampuskampus",
-  alias: ["kampuskampus"],
+  alias: ["kampuskampus", "kamus"],
   category: "education",
   description: "Kamus istilah akademik kampus - cari arti istilah perkuliahan",
   usage: ".kamus <istilah>",

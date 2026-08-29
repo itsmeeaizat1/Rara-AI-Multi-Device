@@ -6,7 +6,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 
 const pluginConfig = {
     name: 'ganti-asset',
-    alias: ["ganti-asset"],
+    alias: ["ganti-asset", "ganti"],
     category: 'owner',
     description: 'All-in-one tools untuk ganti asset secara interaktif',
     usage: '.ganti-asset (reply media)',

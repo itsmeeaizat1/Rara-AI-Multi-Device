@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
 
   // SETKEY
   if (sub === "setkey" || sub === "setapi") {
-    if (!isOwner) return m.reply(claraWrap(" + username + ", "Khusus owner!"));
+    if (!isOwner) return m.reply(claraWrap("digipulsa", "Khusus owner!"));
     const cred = arg1;
     if (!cred || !cred.includes(":")) {
       return m.reply( claraWrap("DigiPulsa", "Set API (Owner)\n\n.dg setkey <username>:<apiKey>\n\nContoh:\n.dg setkey user123:abc123def456\n\nDaftar: https://digiflazz.com\nAPI settings: Profile > Koneksi API"), "digipulsa");
@@ -106,12 +106,12 @@ async function handler(m, { sock }) {
     data.username = username; data.apiKey = apiKey; data.priceCache = null;
     saveData(data);
     await m.react("🐣");
-    return m.reply( claraWrap("DigiPulsa", "Credentials tersimpan!\nUsername: " + username + "\nAPI Key: " + apiKey.slice(0,6) + "..." + apiKey.slice(-4) + "\n\nCek saldo: .dg saldo"), "digipulsa");
+    return m.reply(claraWrap("DigiPulsa", `Credentials tersimpan!\nUsername: digipulsa\nAPI Key: ${apiKey.slice(0,6)}...${apiKey.slice(-4)}\n\nCek saldo: .dg saldo`), "digipulsa");
   }
 
   // SETMARKUP
   if (sub === "setmarkup" || sub === "markup") {
-    if (!isOwner) return m.reply(claraWrap(" + username + ", "Khusus owner!"));
+    if (!isOwner) return m.reply(claraWrap("digipulsa", "Khusus owner!"));
     const pct = parseInt(arg1);
     if (isNaN(pct) || pct < 0 || pct > 100) {
       return m.reply( claraWrap("DigiPulsa", "Set Markup (Owner)\n\n.dg setmarkup <persen>\n\nContoh:\n.dg setmarkup 5 (tambah 5%)\n.dg setmarkup 0 (harga pas)\n\nMarkup aktif: " + markup + "%"), "digipulsa");
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
 
   // TOPUP
   if (sub === "topup") {
-    if (!isOwner) return m.reply(claraWrap(" + username + ", "Khusus owner!"));
+    if (!isOwner) return m.reply(claraWrap("digipulsa", "Khusus owner!"));
     const target = (arg1 || "").replace(/[^0-9]/g, "");
     const amount = parseInt(arg2) || 0;
     if (!target || amount < 100) {
@@ -388,7 +388,7 @@ async function handler(m, { sock }) {
 
   // REFRESH
   if (sub === "refresh" || sub === "sync") {
-    if (!isOwner) return m.reply(claraWrap(" + username + ", "Khusus owner!"));
+    if (!isOwner) return m.reply(claraWrap("digipulsa", "Khusus owner!"));
     if (!data.username || !data.apiKey) return m.reply( claraWrap("DigiPulsa", "Belum setup!"), "digipulsa");
     await m.react("🕒");
     try {

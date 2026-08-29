@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 
 const pluginConfig = {
   name: "soalujian",
-  alias: ["soalujian"],
+  alias: ["soalujian", "soal"],
   category: "education",
   description: "Latihan soal ulangan SD/SMP/SMA/SMK - pilihan ganda + essay digabung",
   usage: ".soal <jenjang> <mapel> [jumlah] [mode]",

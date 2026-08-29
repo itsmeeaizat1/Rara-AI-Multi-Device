@@ -6,7 +6,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 
 const pluginConfig = {
   name: "playsoundcloud",
-  alias: ["playsoundcloud"],
+  alias: ["playsoundcloud", "playsc"],
   category: "search",
   description: "Cari dan download lagu dari SoundCloud",
   usage: ".playsc judul",

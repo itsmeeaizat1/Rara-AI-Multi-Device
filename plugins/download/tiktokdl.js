@@ -107,7 +107,7 @@ async function tiktokDl(url) {
 
 const pluginConfig = {
   name: ["tiktok", "tt", "ttmp4"],
-  alias: ["tiktok", "tt", "ttmp4"],
+  alias: ["quick_reply", "tiktok", "tt", "ttmp4"],
   category: "download",
   description: "Download video/slide TikTok tanpa watermark",
   usage: ".tiktok <url>",

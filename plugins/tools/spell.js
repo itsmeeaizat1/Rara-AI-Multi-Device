@@ -3,8 +3,8 @@ import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption }
 import axios from "axios";
 
 const pluginConfig = {
-  name: "spellcheck", alias: ["spellcheck"], category: "tools",
-  alias: ["spellcheck"],
+  name: "spellcheck", alias: ["spellcheck", "spell"], category: "tools",
+  alias: ["spellcheck", "spell"],
   description: "Cek ejaan kata", usage: ".spell <kata>",
   example: ".spell recieve", isOwner: false, isPremium: false,
   isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

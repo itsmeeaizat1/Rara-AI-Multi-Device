@@ -3,7 +3,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 
 const pluginConfig = {
   name: "reminder",
-  alias: ["reminder"],
+  alias: ["reminder", "remind"],
   category: "tools",
   description: "Reminder pribadi - bot nge-tag kamu pas waktunya tiba",
   usage: ".remind <durasi> <pesan>",

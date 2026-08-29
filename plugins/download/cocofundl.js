@@ -3,7 +3,7 @@ import { cocofun } from 'btch-downloader'
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'cocofundl',
-    alias: ["cocofundl"],
+    alias: ["cocofundl", "cfdl"],
     category: 'download',
     description: 'Download video CocoFun',
     usage: '.cfdl <url>',

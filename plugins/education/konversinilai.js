@@ -3,7 +3,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 
 const pluginConfig = {
   name: "konversinilai",
-  alias: ["konversinilai"],
+  alias: ["konversinilai", "konversi"],
   category: "education",
   description: "Konversi nilai - tabel lengkap huruf ke angka, IPK, persentase, predikat",
   usage: ".konversi [nilai]",

@@ -29,7 +29,7 @@ const TIERS = {
   },
   premium: {
     name: "Premium",
-    alias: ["Budget"],
+    alias: ["Budget", "nokosbeli"],
     desc: "Success rate tinggi, nomor private",
     multiplier: 1.8,
     note: "Success rate tinggi, nomor exclusive",
@@ -126,7 +126,7 @@ function getUser(data, sender) {
 
 const pluginConfig = {
   name: ["nokosbeli", "belinomor", "vnum"],
-  alias: ["nokosbeli", "belinomor", "vnum"],
+  alias: ["Budget", "nokosbeli"],
   category: "tools",
   description: "Beli nomor virtual + OTP (multi-tier: budget/standard/premium)",
   usage: ".nokosbeli\n.nokosbeli tier <budget|standard|premium>\n.nokosbeli harga [negara] [layanan]\n.nokosbeli buy [negara] [layanan]\n.nokosbeli bayar <token>\n.nokosbeli otp <order_id>\n.nokosbeli batal <order_id>\n.nokosbeli saldo\n.nokosbeli list\n.nokosbeli negara\n.nokosbeli layanan",

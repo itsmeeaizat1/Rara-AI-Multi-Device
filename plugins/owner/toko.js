@@ -27,7 +27,7 @@ import {
 
 const pluginConfig = {
   name: "tokobase3",
-  alias: ["tokobase3"],
+  alias: ["tokobase3", "toko"],
   category: "owner",
   description: "Kelola toko: produk, pesanan, kategori, pengaturan",
   usage: ".toko <perintah> [args]",

@@ -51,7 +51,7 @@ async function handler(m, { sock, config: botConfig }) {
 export default {
   config: {
     name: "welcome2",
-    alias: ["welcome2"],
+    alias: ["welcome2", "welcome"],
     category: "group",
     description: "Pesan welcome saat member join grup",
     usage: ".welcome on/off",

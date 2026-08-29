@@ -3,7 +3,7 @@ import { capcut } from 'btch-downloader'
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'capcutdl',
-    alias: ["capcutdl"],
+    alias: ["capcutdl", "ccdl"],
     category: 'download',
     description: 'Download video CapCut',
     usage: '.ccdl <url>',

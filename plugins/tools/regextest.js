@@ -3,7 +3,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 
 const pluginConfig = {
   name: "regextest",
-  alias: ["regextest"],
+  alias: ["regextest", "regex"],
   category: "tools",
   description: "Test regex pattern terhadap teks, highlight match & capture groups",
   usage: ".regex <pattern> | <teks>  atau  .regex flags <flags> <pattern> | <teks>",

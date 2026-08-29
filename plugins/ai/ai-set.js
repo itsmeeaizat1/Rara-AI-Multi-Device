@@ -7,7 +7,7 @@ import { DEFAULT_PROVIDERS, resolveProvider } from "../../src/lib/nova-ai-servic
 
 const pluginConfig = {
   name: "ai-set",
-  alias: ["ai-set"],
+  alias: ["ai-set", "ai"],
   category: "ai",
   description: "Set pengaturan AI lewat chat (apiKey, endpoint, model, provider)",
   usage: ".ai-set <aksi> <nilai>",

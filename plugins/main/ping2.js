@@ -9,7 +9,7 @@ import te from '../../src/lib/nova-error.js'
 
 const pluginConfig = {
     name: "ping2bot",
-    alias: ["ping2bot"],
+    alias: ["ping2bot", "ping2"],
     category: 'main',
     description: 'Cek performa dan status sistem bot secara real-time',
     usage: '.ping2',

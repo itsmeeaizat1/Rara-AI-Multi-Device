@@ -4,14 +4,14 @@ import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, nov
 
 const pluginConfig = {
   name: "calculator",
-  alias: ["calculator"],
+  alias: ["calculator", "calc"],
   category: "tools",
   description: "Kalkulator matematika",
   usage: ".calc <ekspresi>",
   example: ".calc 5 + 3 * 2",
   isOwner: false,
   isPremium: false,
-  isGroup: true,
+  isGroup: false,
   isPrivate: false,
   cooldown: 5,
   energi: 0,

@@ -5,7 +5,7 @@ import { delay } from "../../src/lib/nova-utils.js";
 
 const pluginConfig = {
   name: "aigrouppet",
-  alias: ["aigrouppet"],
+  alias: ["aigrouppet", "grouppet"],
   category: "future",
   description: "Pet virtual kolaboratif yang tumbuh dari aktivitas grup",
   usage: ".grouppet <command>",

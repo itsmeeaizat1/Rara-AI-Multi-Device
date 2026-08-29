@@ -4,7 +4,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-translate",
-  alias: ["ai-translate"],
+  alias: ["ai-translate", "ai"],
   category: "ai",
   description: "Terjemahkan teks dengan AI",
   usage: ".ai-translate <teks> | .ai-translate <bahasa> <teks>",

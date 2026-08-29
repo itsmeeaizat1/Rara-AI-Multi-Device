@@ -4,7 +4,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 
 const pluginConfig = {
   name: "animestream2",
-  alias: ["animestream2"],
+  alias: ["animestream2", "animestream"],
   category: "tools",
   description: "Cari & streaming anime dari 14+ situs (Otakudesu, Samehadaku, dll)",
   usage: ".animestream <command> [args]",

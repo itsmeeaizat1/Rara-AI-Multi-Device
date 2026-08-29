@@ -9,7 +9,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "automemegenerator",
-  alias: ["automemegenerator"],
+  alias: ["automemegenerator", "automeme"],
   category: "ai",
   description: "Meme Generator — AI Vision auto teks meme dari foto\nOne-shot: .automeme (reply foto)\nToggle: .toggleautomeme on/off (owner)",
   usage: ".automeme — One-shot generate meme (reply foto)\n.automeme top/bottom/full/auto — One-shot style\n.toggleautomeme on/off — Persistent (owner)\n.toggleautomeme style <style> — Set style\n.toggleautomeme status — Cek status",

@@ -76,7 +76,7 @@ function genToken() {
 
 const pluginConfig = {
   name: ["nokossmm", "smm", "suntik"],
-  alias: ["nokossmm", "smm", "suntik"],
+  alias: ["nokos-smm", "nokossmm", "smm", "suntik"],
   category: "tools",
   description: "Beli SMM services (followers, likes, views) via NexusSMM",
   usage: ".smm\n.smm setkey <api_id>:<api_key>\n.smm saldo\n.smm cari <keyword>\n.smm beli <service_id> <target> <qty>\n.smm bayar <token>\n.smm cek <order_id>\n.smm list",
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
     try {
       const profile = await getProfile(data);
       await m.react("🐣");
-      return m.reply( claraWrap("NexusSMM", "Profil NexusSMM\n\nUsername: " + profile.username + "\nNama: " + profile.full_name + "\nLevel: " + profile.level + "\nSaldo: " + formatRupiah(parseInt(profile.balance) || 0) + "\nTerdaftar: " + (profile.registered || "-")), "smm");
+      return m.reply(claraWrap("NexusSMM", `Profil NexusSMM\n\nUsername: nokos-smm\nNama: ${profile.full_name}\nLevel: ${profile.level}\nSaldo: ${formatRupiah(parseInt(profile.balance) || 0)}\nTerdaftar: ${profile.registered || "-"}`), "smm");
     } catch (err) {
       await m.react("🐣");
       return m.reply( claraWrap("NexusSMM", "Error: " + err.message), "smm");

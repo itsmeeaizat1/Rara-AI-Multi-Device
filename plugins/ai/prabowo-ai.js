@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 
 const pluginConfig = {
   name: "prabowo-ai",
-  alias: ["prabowo-ai"],
+  alias: ["prabowo-ai", "prabowo"],
   category: "ai",
   description: "Chat dengan Pak Prabowo — Pria Sawit",
   usage: ".prabowo-ai <pertanyaan>",

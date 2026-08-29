@@ -13,7 +13,7 @@ function modBox(title, lines) {
 
 const pluginConfig = {
   name: "autobroadcastchannel",
-  alias: ["autobcsaluran", "autobc", "autobroadcast", "autosaluran", "autobcchannel"],
+  alias: ["autobroadcastchannel", "autobcsaluran", "autobc", "autobroadcast", "autosaluran", "autobcchannel"],
   category: "owner",
   description: "Auto broadcast saluran — toggle on/off semua event notifikasi saluran",
   usage: ".autobroadcastchannel (lihat status)\n.autobroadcastchannel all on/off\n.autobroadcastchannel <event> on/off",

@@ -4,7 +4,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 
 const pluginConfig = {
   name: "aitimewarp",
-  alias: ["aitimewarp"],
+  alias: ["aitimewarp", "timewarp"],
   category: "ai",
   description: "Mode Chat Lintas Waktu — AI roleplay dari masa depan/lalu",
   usage: ".timewarp <tahun/era> [pertanyaan] | .timewarp off | .timewarp status",

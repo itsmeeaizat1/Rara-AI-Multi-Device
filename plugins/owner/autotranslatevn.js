@@ -7,7 +7,7 @@ import { callAI } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "autotranslatevn",
-  alias: ["autotranslatevn"],
+  alias: ["autotranslatevn", "toggleautovn"],
   category: "owner",
   description: "Toggle on/off auto-translate voice note (real-time VN detection)",
   usage: ".toggleautovn on/off — Toggle auto VN translate\n.toggleautovn status — Cek status\n.toggleautovn lang <kode> — Set bahasa target (id, en, su, jv)",
