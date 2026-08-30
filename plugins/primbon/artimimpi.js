@@ -2,7 +2,7 @@
 // artimimpi.js — Arti mimpi
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "artimimpi",
@@ -25,11 +25,11 @@ async function handler(m, { sock }) {
     const d = res.data?.data;
     if (!d) return m.reply(claraWrap("artimimpi", "Mimpi tidak ditemukan!", "error"));
 
-    let msg = `╭──「 *ARTI MIMPI* 」\n`;
-    msg += `│ Mimpi: ${d.mimpi || text}\n`;
-    msg += `│ Arti: ${d.arti || "-"}\n`;
-    if (d.solusi) msg += `│ Solusi: ${d.solusi}\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`Mimpi: ${d.mimpi || text}`);
+      _lines.push(`Arti: ${d.arti || "-"}`);
+    let msg = novaBox("ARTI MIMPI", _lines);
+    if (d.solusi) _lines.push(`Solusi: ${d.solusi}`);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

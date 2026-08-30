@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // bacaansholat.js — Bacaan sholat
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const BACAAN = [
   { id: 1, name: "Bacaan Iftitah", arabic: "اللَّهُ أَكْبَرُ كَبِيرًا وَالْحَمْدُ لِلَّهِ كَثِيرًا", latin: "Alloohu akbar kabiirow wal hamdu lillaahi katsiiroo", terjemahan: "Allah Maha Besar dengan sebesar-besarnya, segala puji bagi Allah dengan pujian yang banyak" },
@@ -27,16 +27,15 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     await m.react("🕒");
-    let msg = `╭──「 *BACAAN SHOLAT* 」\n`;
-    msg += `│\n`;
+    let _lines = [];
     BACAAN.forEach(b => {
-      msg += `│ ${b.id}. ${b.name}\n`;
-      msg += `│ Arabic: ${b.arabic}\n`;
-      msg += `│ Latin: ${b.latin}\n`;
-      msg += `│ Arti: ${b.terjemahan}\n`;
-      msg += `│\n`;
+      _lines.push(`${b.id}. ${b.name}`);
+      _lines.push(`Arabic: ${b.arabic}`);
+      _lines.push(`Latin: ${b.latin}`);
+      _lines.push(`Arti: ${b.terjemahan}`);
+      _lines.push(``);
     });
-    msg += `╰──────────`;
+    let msg = novaBox("BACAAN SHOLAT", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

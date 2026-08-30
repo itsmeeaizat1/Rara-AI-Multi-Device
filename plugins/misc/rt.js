@@ -2,7 +2,7 @@
 // rt.js — Bot runtime info
 import os from "os";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const startTime = Date.now();
 
@@ -37,13 +37,13 @@ async function handler(m, { sock }) {
     const uptime = Date.now() - startTime;
     const mem = process.memoryUsage();
 
-    let msg = `╭──「 *RUNTIME* 」\n`;
-    msg += `│ ⏱️ Uptime: ${formatUptime(uptime)}\n`;
-    msg += `│ 🖥️ Platform: ${os.platform()} ${os.arch()}\n`;
-    msg += `│ 💾 RAM: ${(mem.rss / 1024 / 1024).toFixed(1)} MB\n`;
-    msg += `│ ⚡ CPU: ${os.loadavg()[0].toFixed(2)}\n`;
-    msg += `│ 🕐 Time: ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })}\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`⏱️ Uptime: ${formatUptime(uptime)}`);
+      _lines.push(`🖥️ Platform: ${os.platform()} ${os.arch()}`);
+      _lines.push(`💾 RAM: ${(mem.rss / 1024 / 1024).toFixed(1)} MB`);
+      _lines.push(`⚡ CPU: ${os.loadavg()[0].toFixed(2)}`);
+      _lines.push(`🕐 Time: ${new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" })}`);
+    let msg = novaBox("RUNTIME", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

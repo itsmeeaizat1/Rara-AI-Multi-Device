@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // fakedana.js — Fake DANA transfer receipt
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "fakedana",
@@ -22,21 +22,19 @@ async function handler(m, { sock }) {
     const date = new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" });
     const name = m.pushName || "User";
 
-    let msg = `╭──「 *DANA TRANSFER* 」\n`;
-    msg += `│\n`;
-    msg += `│  💰 Transfer Berhasil\n`;
-    msg += `│  ─────────────────\n`;
-    msg += `│  Tujuan: ${name}\n`;
-    msg += `│  Jumlah: Rp ${amount.toLocaleString("id-ID")}\n`;
-    msg += `│  Berita: Transfer\n`;
-    msg += `│  Ref: ${ref}\n`;
-    msg += `│  Waktu: ${date}\n`;
-    msg += `│  ─────────────────\n`;
-    msg += `│  Saldo: Rp ${(Math.floor(Math.random() * 9000000) + 1000000).toLocaleString("id-ID")}\n`;
-    msg += `│\n`;
-    msg += `│  ⚠️ INI HANYA PRANK\n`;
-    msg += `│  Bukan struk asli dari DANA\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`💰 Transfer Berhasil`);
+      _lines.push(`─────────────────`);
+      _lines.push(`Tujuan: ${name}`);
+      _lines.push(`Jumlah: Rp ${amount.toLocaleString("id-ID")}`);
+      _lines.push(`Berita: Transfer`);
+      _lines.push(`Ref: ${ref}`);
+      _lines.push(`Waktu: ${date}`);
+      _lines.push(`─────────────────`);
+      _lines.push(`Saldo: Rp ${(Math.floor(Math.random() * 9000000) + 1000000).toLocaleString("id-ID")}`);
+      _lines.push(`⚠️ INI HANYA PRANK`);
+      _lines.push(`Bukan struk asli dari DANA`);
+    let msg = novaBox("DANA TRANSFER", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

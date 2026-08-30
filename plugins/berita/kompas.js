@@ -2,7 +2,7 @@
 // kompas.js — Berita Kompas
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "kompas",
@@ -25,17 +25,13 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("kompas", "Gagal mengambil berita!", "error"));
     }
 
-    let msg = `╭──「 *BERITA KOMPAS* 」──┐
-`;
+    let _lines = [];
     data.slice(0, 8).forEach((item, i) => {
-      msg += `│ ${i + 1}. ${item.title || item.judul || "Unknown"}
-`;
-      if (item.url || item.link) msg += `│    ${item.url || item.link}
-`;
-      msg += `│
-`;
+      _lines.push(`${i + 1}. ${item.title || item.judul || "Unknown"}`);
+      if (item.url || item.link) _lines.push(`${item.url || item.link}`);
+      _lines.push(``);
     });
-    msg += `╰──────────`;
+    let msg = novaBox("BERITA KOMPAS", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

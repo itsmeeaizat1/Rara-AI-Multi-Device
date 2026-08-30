@@ -2,7 +2,7 @@
 // alquran.js — Ayat Al-Quran
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "alquran",
@@ -26,14 +26,12 @@ async function handler(m, { sock }) {
     const d = res.data?.data;
     if (!d) return m.reply(claraWrap("alquran", "Ayat tidak ditemukan!", "error"));
 
-    let msg = `╭──「 *AL-QURAN* 」\n`;
-    msg += `│ 📖 ${d.surah?.name} (${d.surah?.englishName})\n`;
-    msg += `│ Ayat: ${d.numberInSurah}\n`;
-    msg += `│\n`;
-    msg += `│ Arabic:\n│ ${d.text}\n`;
-    msg += `│\n`;
-    msg += `│ Arti:\n│ ${d.edition?.text || d.text}\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`📖 ${d.surah?.name} (${d.surah?.englishName})`);
+      _lines.push(`Ayat: ${d.numberInSurah}`);
+      _lines.push(`Arabic:│ ${d.text}`);
+      _lines.push(`Arti:│ ${d.edition?.text || d.text}`);
+    let msg = novaBox("AL-QURAN", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

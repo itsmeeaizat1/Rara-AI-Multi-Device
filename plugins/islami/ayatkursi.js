@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ayatkursi.js — Ayat Kursi
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ayatkursi",
@@ -17,23 +17,19 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     await m.react("🕒");
-    let msg = `╭──「 *AYAT KURSI* 」\n`;
-    msg += `│\n`;
-    msg += `│ اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ\n`;
-    msg += `│ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ\n`;
-    msg += `│ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ\n`;
-    msg += `│\n`;
-    msg += `│ Latin:\n`;
-    msg += `│ "Alloohu laa ilaaha illaa huwal hayyul qoyyuum,\n`;
-    msg += `│  laa ta'khudzuhuu sinatuw walaa naum...\n`;
-    msg += `│\n`;
-    msg += `│ Artinya:\n`;
-    msg += `│ Allah, tidak ada Tuhan (yang berhak disembah)\n`;
-    msg += `│ melainkan Dia Yang Hidup kekal lagi terus\n`;
-    msg += `│ menerus mengurus (makhluk-Nya)...\n`;
-    msg += `│\n`;
-    msg += `│ (QS. Al-Baqarah: 255)\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ`);
+      _lines.push(`لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ`);
+      _lines.push(`لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ`);
+      _lines.push(`Latin:`);
+      _lines.push(`"Alloohu laa ilaaha illaa huwal hayyul qoyyuum,`);
+      _lines.push(`laa ta'khudzuhuu sinatuw walaa naum...`);
+      _lines.push(`Artinya:`);
+      _lines.push(`Allah, tidak ada Tuhan (yang berhak disembah)`);
+      _lines.push(`melainkan Dia Yang Hidup kekal lagi terus`);
+      _lines.push(`menerus mengurus (makhluk-Nya)...`);
+      _lines.push(`(QS. Al-Baqarah: 255)`);
+    let msg = novaBox("AYAT KURSI", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

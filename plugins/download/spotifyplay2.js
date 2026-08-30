@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // spotifyplay2.js — Spotify Play v2 (nexray API + spotify search)
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spotifyplay2",
@@ -121,15 +121,14 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let msg = `╭──「 *sᴘᴏᴛɪғʏ ᴘʟᴀʏ v2* 」\n`;
-    msg += `│ Judul: *${dl.title || title}*\n`;
-    msg += `│ Artist: *${dl.artist || artist}*\n`;
-    if (dl.album || album) msg += `│ Album: *${dl.album || album}*\n`;
-    msg += `│ Durasi: *${duration}*\n`;
-    msg += `│ Size: *${(buffer.length / 1024 / 1024).toFixed(1)} MB*\n`;
-    msg += `│ Engine: nexray API\n`;
-    msg += `╰──────────`;
-
+    let _lines = [];
+      _lines.push(`Judul: *${dl.title || title}*`);
+      _lines.push(`Artist: *${dl.artist || artist}*`);
+    let msg = novaBox("sᴘᴏᴛɪғʏ ᴘʟᴀʏ v2", _lines);
+    if (dl.album || album) _lines.push(`Album: *${dl.album || album}*`);
+    _lines.push(`Durasi: *${duration}*`);
+    _lines.push(`Size: *${(buffer.length / 1024 / 1024).toFixed(1)} MB*`);
+    _lines.push(`Engine: nexray API`);
     await sock.sendMessage(m.chat, {
       audio: buffer,
       mimetype: "audio/mp4",

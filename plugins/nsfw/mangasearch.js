@@ -2,7 +2,7 @@
 // mangasearch.js — Search manga (NSFW)
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "mangasearch",
@@ -25,15 +25,12 @@ async function handler(m, { sock }) {
     const data = res.data?.data || [];
     if (!data.length) return m.reply(claraWrap("mangasearch", "Manga tidak ditemukan!", "error"));
 
-    let msg = `╭──「 *MANGA SEARCH* 」──┐
-`;
+    let _lines = [];
     data.slice(0, 8).forEach((item, i) => {
-      msg += `│ ${i + 1}. ${item.title || item.name || "Unknown"}
-`;
-      if (item.url) msg += `│    ${item.url}
-`;
+      _lines.push(`${i + 1}. ${item.title || item.name || "Unknown"}`);
+      if (item.url) _lines.push(`${item.url}`);
     });
-    msg += `╰──────────`;
+    let msg = novaBox("MANGA SEARCH", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

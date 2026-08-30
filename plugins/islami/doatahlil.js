@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // doatahlil.js — Doa Tahlil
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const DOA_TAHLIL = [
   { title: "Al-Fatihah", arabic: "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ. الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ", translation: "Dengan menyebut nama Allah Yang Maha Pengasih lagi Maha Penyayang. Segala puji bagi Allah, Tuhan semesta alam" },
@@ -24,15 +24,14 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     await m.react("🕒");
-    let msg = `╭──「 *DOA TAHLIL* 」\n`;
-    msg += `│\n`;
+    let _lines = [];
     DOA_TAHLIL.forEach((v, i) => {
-      msg += `│ ${i + 1}. ${v.title}\n`;
-      msg += `│ Arabic: ${v.arabic}\n`;
-      msg += `│ Arti: ${v.translation}\n`;
-      msg += `│\n`;
+      _lines.push(`${i + 1}. ${v.title}`);
+      _lines.push(`Arabic: ${v.arabic}`);
+      _lines.push(`Arti: ${v.translation}`);
+      _lines.push(``);
     });
-    msg += `╰──────────`;
+    let msg = novaBox("DOA TAHLIL", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

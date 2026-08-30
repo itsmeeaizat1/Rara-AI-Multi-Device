@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "jadwalsholat",
@@ -44,17 +44,16 @@ async function handler(m, { sock }) {
     const hijriDate = `${hijri.day} ${hijri.month.en} ${hijri.year} H`;
 
     await m.react("🐣");
-    let msg = `╭──「 *ᴊᴀᴅᴡᴀʟ ꜱʜᴏʟᴀᴛ* 」\n`;
-    msg += `│ 📍 Kota: *${city}*\n`;
-    msg += `│ 📅 ${hijriDate}\n`;
-    msg += `│ 📆 ${masehi}\n`;
-    msg += `│\n`;
-    msg += `│ 🌅 Subuh    : ${timings.Fajr}\n`;
-    msg += `│ ☀️ Dzuhur  : ${timings.Dhuhr}\n`;
-    msg += `│ 🌤️ Ashar   : ${timings.Asr}\n`;
-    msg += `│ 🌇 Maghrib : ${timings.Maghrib}\n`;
-    msg += `│ 🌙 Isya     : ${timings.Isha}\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`📍 Kota: *${city}*`);
+      _lines.push(`📅 ${hijriDate}`);
+      _lines.push(`📆 ${masehi}`);
+      _lines.push(`🌅 Subuh    : ${timings.Fajr}`);
+      _lines.push(`☀️ Dzuhur  : ${timings.Dhuhr}`);
+      _lines.push(`🌤️ Ashar   : ${timings.Asr}`);
+      _lines.push(`🌇 Maghrib : ${timings.Maghrib}`);
+      _lines.push(`🌙 Isya     : ${timings.Isha}`);
+    let msg = novaBox("ᴊᴀᴅᴡᴀʟ ꜱʜᴏʟᴀᴛ", _lines);
     return m.reply(msg);
   } catch (err) {
     console.error("jadwalsholat error:", err);

@@ -2,7 +2,7 @@
 // googlesearch.js — Google search
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "googlesearch",
@@ -25,16 +25,15 @@ async function handler(m, { sock }) {
     const data = res.data?.data || res.data?.result || [];
     if (!data.length) return m.reply(claraWrap("googlesearch", "Tidak ada hasil!", "error"));
 
-    let msg = `╭──「 *GOOGLE SEARCH* 」\n`;
-    msg += `│ Query: ${query}\n`;
-    msg += `│\n`;
+    let _lines = [];
+      _lines.push(`Query: ${query}`);
     data.slice(0, 5).forEach((item, i) => {
-      msg += `│ ${i + 1}. ${item.title || "Unknown"}\n`;
-      if (item.desc) msg += `│    ${item.desc.substring(0, 100)}\n`;
-      if (item.url) msg += `│    ${item.url}\n`;
-      msg += `│\n`;
+      _lines.push(`${i + 1}. ${item.title || "Unknown"}`);
+      if (item.desc) _lines.push(`${item.desc.substring(0, 100)}`);
+      if (item.url) _lines.push(`${item.url}`);
+      _lines.push(``);
     });
-    msg += `╰──────────`;
+    let msg = novaBox("GOOGLE SEARCH", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

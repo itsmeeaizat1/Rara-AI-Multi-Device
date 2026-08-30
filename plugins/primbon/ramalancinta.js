@@ -2,7 +2,7 @@
 // ramalancinta.js — Ramalan cinta
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ramalancinta",
@@ -26,11 +26,11 @@ async function handler(m, { sock }) {
     const d = res.data?.data;
     if (!d) return m.reply(claraWrap("ramalancinta", "Data tidak ditemukan!", "error"));
 
-    let msg = `\u256d\u2500\u2500\u300c *RAMALANCINTA* \u300d\u2500\u2500\u2510\n`;
+    let _lines = [];
     Object.entries(d).forEach(([k, v]) => {
-      msg += `\u2502 ${k}: ${v}\n`;
+      _lines.push(`${k}: ${v}`);
     });
-    msg += `\u2570\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500`;
+    let msg = novaBox("RAMALANCINTA", _lines);
     await m.react("\U0001F423");
     return m.reply(msg);
   } catch (err) {

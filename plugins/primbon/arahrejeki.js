@@ -2,7 +2,7 @@
 // arahrejeki.js — Arah rejeki
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "arahrejeki",
@@ -27,12 +27,12 @@ async function handler(m, { sock }) {
     const d = res.data?.data;
     if (!d) return m.reply(claraWrap("arahrejeki", "Data tidak ditemukan!", "error"));
 
-    let msg = `╭──「 *ARAH REJEKI* 」\n`;
-    msg += `│ 📅 Hari Lahir: ${d.hari_lahir || "-"}\n`;
-    msg += `│ 📆 Tanggal: ${d.tgl_lahir || "-"}\n`;
-    msg += `│ 🧭 Arah Rezeki: ${d.arah_rejeki || "-"}\n`;
-    msg += `│ 📝 Catatan: ${d.catatan || "-"}\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`📅 Hari Lahir: ${d.hari_lahir || "-"}`);
+      _lines.push(`📆 Tanggal: ${d.tgl_lahir || "-"}`);
+      _lines.push(`🧭 Arah Rezeki: ${d.arah_rejeki || "-"}`);
+      _lines.push(`📝 Catatan: ${d.catatan || "-"}`);
+    let msg = novaBox("ARAH REJEKI", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

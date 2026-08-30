@@ -2,7 +2,7 @@
 // alkitab.js — Ayat Alkitab
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "alkitab",
@@ -23,12 +23,10 @@ async function handler(m, { sock }) {
     if (query) url = `https://beeble.vercel.app/bible/v1/GetVerse?verse=${encodeURIComponent(query)}`;
     const res = await axios.get(url);
     const d = res.data;
-    let msg = `╭──「 *ALKITAB* 」\n`;
-    msg += `│ 📖 ${d.book || "Unknown"} ${d.chapter || ""}:${d.verse || ""}\n`;
-    msg += `│\n`;
-    msg += `│  "${d.text || d.content || "Tidak ditemukan"}"\n`;
-    msg += `│\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`📖 ${d.book || "Unknown"} ${d.chapter || ""}:${d.verse || ""}`);
+      _lines.push(`"${d.text || d.content || "Tidak ditemukan"}"`);
+    let msg = novaBox("ALKITAB", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {
