@@ -373,6 +373,7 @@ async function main() {
           { name: "Store", fn: () => import("./src/lib/nova-store.js").then(m => m.setSock?.(sock)) },
           { name: "APICheck", fn: () => import("./plugins/owner/autoapicheck.js").then(m => m.startMonitor?.(sock)) },
           { name: "PluginHealth", fn: () => import("./plugins/owner/autoplugin.js").then(m => m.startPluginMonitor?.(sock)) },
+          { name: "WeeklyReport", fn: () => import("./plugins/owner/autoweeklyreport.js").then(m => m.startWeeklyReport?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {
           try {

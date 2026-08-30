@@ -517,6 +517,22 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - Contoh: `.autoapicheck on` lalu `.autoapicheck now`
 
 
+
+## 📊 Auto Weekly Group Insights
+
+- `autoweeklyreport <on/off/now/addgc/delgc/listgc/settime/sendto/snapshot/reset>` — Laporan mingguan per grup otomatis
+- Alias: `.weeklyreport`, `.weeklyinsights`, `.groupinsights`
+- Auto-generate laporan tiap Senin: top member aktif, command king, media star
+- Engagement trend (Naik/Turun/Stabil) dari daily snapshot
+- Kirim ke grup atau PM owner (configurable)
+- Daily snapshot tiap 23:59 WIB untuk trend analysis
+- `.autoweeklyreport now` — Generate report untuk grup saat ini
+- `.autoweeklyreport addgc <groupId>` — Tambah grup ke auto-report
+- `.autoweeklyreport settime 09:00` — Set jam kirim Senin
+- `.autoweeklyreport sendto owner` — Kirim ke PM owner instead of grup
+- `.autoweeklyreport snapshot now` — Take daily snapshot manual
+- Contoh: `.autoweeklyreport on` lalu `.autoweeklyreport addgc 120xxx@g.us`
+
 ## 🩺 Auto Plugin Health Monitor
 
 - `autoplugin <on/off/status/report/threshold/window/cooldown/whitelist/enable/disable/reset/notify>` — Auto plugin crash monitor
