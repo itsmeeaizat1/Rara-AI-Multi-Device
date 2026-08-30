@@ -612,3 +612,22 @@ Download Upgrades:
 - .snackvideov2 - download - SnackVideo v2 (siputzx API)
 - .teraboxv2 - download - Terabox v2 (nekolabs + teraboxdl.site)
 - .spotifyplay2 - download - Spotify play v2 (nexray + spotifydown fallback)
+
+Batch 3: High Priority Features from Alya:
+- .mlstalk - stalker - Mobile Legends stalker (velyn.mom + nexray)
+- .twittertrend - search - Trending Twitter/X (getdaytrends.com)
+- .redeem - rpg - Redeem/gift code system (owner create, user claim)
+- .gachawaifu - rpg - Gacha waifu dengan rarity + marry system (30 waifu, UR-SSR-SR-R-N)
+- .qrgen - tools - QR Code generator (local, qrcode npm)
+- .locationsearch - tools - Cari lokasi + kirim pin map (OpenStreetMap)
+
+RPG Expansion (46 → 57):
+- .arenapvp - rpg - Arena PvP dengan auto matchmaking & rank system
+- .pet - rpg - Pet system (adopsi, feed, level up, battle)
+- .dailyreward - rpg - Daily login reward dengan streak system (7 hari)
+- .fishing - rpg - Fishing RPG (pancing ikan, rarity, sell)
+- .crafting2 - rpg - Crafting system v2 (8 recipe, material gathering)
+- .achievement - rpg - Achievement system (10 badges & rewards)
+- .trading - rpg - Trading/market system (jual beli antar player)
+- .questboard - rpg - Daily quest board (5 quest random, reward progresif)
+- .tournament - rpg - Weekly tournament (leaderboard, prize pool, entry fee)
