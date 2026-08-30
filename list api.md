@@ -1030,3 +1030,100 @@
 ---
 
 *Updated by Nova AI • 30 Agustus 2026*
+
+---
+
+## 📌 Detail Endpoint & Contoh API Utama
+
+### 1. Siputzx API — `api.siputzx.my.id`
+
+API gratis paling lengkap untuk bot Indonesia.
+
+| Endpoint | Contoh | Keterangan |
+|----------|--------|-----------|
+| Maker Brat | `api.siputzx.my.id/api/maker/brat?text=hello` | Brat text image |
+| Canvas Welcome | `api.siputzx.my.id/api/canvas/welcomev5` | Welcome banner image |
+| Canvas Goodbye | `api.siputzx.my.id/api/canvas/goodbyev2` | Goodbye banner image |
+| Canvas Fake xnxx | `api.siputzx.my.id/api/canvas/fake-xnxx` | Fake screenshot |
+| Download SnackVideo | `api.siputzx.my.id/api/d/snackvideo` | SnackVideo DL |
+| Search TikTok | `api.siputzx.my.id/api/s/tiktok` | TikTok search |
+| Search GSMArena | `api.siputzx.my.id/api/s/gsmarena` | Spek HP |
+| Jadwal Bola | `api.siputzx.my.id/api/s/matches` | Jadwal pertandingan |
+| Klasemen | `api.siputzx.my.id/api/s/standings` | Klasemen liga |
+| NIK Checker | `api.siputzx.my.id/api/tools/nik-checker` | Cek NIK KTP |
+| YouTube DL | `youtubedl.siputzx.my.id` | YouTube downloader |
+| Brat Image | `brat.siputzx.my.id/image` | Brat static image |
+| Brat Video | `brat.siputzx.my.id/mp4` | Brat video MP4 |
+| Brat Quoted | `brat.siputzx.my.id/quoted` | Brat quoted style |
+
+### 2. API-FAA — `api-faa.my.id`
+
+API maker & converter berbasis Indonesia.
+
+| Endpoint | Contoh | Keterangan |
+|----------|--------|-----------|
+| Brat | `api-faa.my.id/faa/brat?text=hello` | Brat text image |
+| Brat Video | `api-faa.my.id/faa/bratvid?text=hello` | Brat video MP4 |
+| To Ghibli | `api-faa.my.id/faa/toghibli` | Foto → style Ghibli |
+| To Hijab | `api-faa.my.id/faa/tohijab` | Tambah hijab |
+| To Japanese | `api-faa.my.id/faa/tojapanese` | Style Japanese |
+| To Mekah | `api-faa.my.id/faa/tomekah` | Style Mekah |
+| To Moai | `api-faa.my.id/faa/tomoai` | Moai meme |
+| To Figura | `api-faa.my.id/faa/tofigura` | Figura style |
+| To Figura V3 | `api-faa.my.id/faa/tofigurav3` | Figura v3 |
+| Nano Banana | `api-faa.my.id/faa/nano-banana` | Nano banana effect |
+| QR Create | `api-faa.my.id/faa/qr-create` | QR code generator |
+| AIO Download | `api-faa.my.id/faa/aio` | All-in-one downloader |
+| HD Video | `api-faa.my.id/faa/hdvid` | HD video download |
+
+### 3. Vreden API — `api.vreden.my.id`
+
+API multi-fitur: downloader, Spotify, YouTube, Islamic, tools.
+
+| Kategori | Keterangan |
+|----------|-----------|
+| Downloader | YouTube, TikTok, Instagram DL |
+| Spotify | Search & download track |
+| Islamic | Fitur keislaman |
+| Tools | Utility & image tools |
+
+### 4. Kanata API — `api.kanata.web.id`
+
+API tools & jaringan.
+
+| Kategori | Keterangan |
+|----------|-----------|
+| YouTube Downloader | Download video YouTube |
+| IP Info | Info detail alamat IP |
+| Check Host | Cek status host/server |
+| Network Tools | Tools jaringan lainnya |
+
+### 5. API.my.id — `api.my.id`
+
+API publik Indonesia dengan playground interaktif.
+
+| URL | Keterangan |
+|-----|-----------|
+| `api.my.id/playground.html` | Playground untuk test endpoint |
+| Berbagai endpoint | Tools, maker, downloader |
+
+### 6. Apocalypse API — `api.apocalypse.web.id`
+
+| Endpoint | Keterangan |
+|----------|-----------|
+| `api.apocalypse.web.id/search/buildml` | Build MLBB (hero, item, counter) |
+| Downloader | Berbagai platform download |
+| Canvas | Image canvas maker |
+
+### 7. ZenzXZ API — `api.zenzxz.my.id`
+
+| Kategori | Keterangan |
+|----------|-----------|
+| Stalker | Info player game |
+| Search | Pencarian multi-platform |
+| Maker | Image & text effect |
+| Tools | Utility bot |
+
+---
+
+*Updated by Nova AI • 30 Agustus 2026*
