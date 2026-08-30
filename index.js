@@ -371,6 +371,7 @@ async function main() {
           { name: "BMKG", fn: () => import("./src/lib/nova-bmkg-scheduler.js").then(m => m.initBmkgScheduler?.(sock)) },
           { name: "BMKG-Cuaca", fn: () => import("./src/lib/nova-bmkg-cuaca-scheduler.js").then(m => m.initCuacaScheduler?.(sock)) },
           { name: "Store", fn: () => import("./src/lib/nova-store.js").then(m => m.setSock?.(sock)) },
+          { name: "APICheck", fn: () => import("./plugins/owner/autoapicheck.js").then(m => m.startMonitor?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {
           try {
