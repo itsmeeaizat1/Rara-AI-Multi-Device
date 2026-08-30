@@ -1,6 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// rankkerja.js — Ranking pemain berdasarkan gold
-import { getLeaderboard, ensureRpg } from "../../src/lib/nova-rpg-service.js";
+// Rank Kerja RPG — Player ranking by total gold
+
+import {
+  ensureRpg, getLeaderboard
+} from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -11,29 +14,43 @@ const pluginConfig = {
   description: "Ranking pemain berdasarkan total gold",
   usage: ".rankkerja",
   example: ".rankkerja",
-  isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
-  cooldown: 5, energi: 0, isEnabled: true,
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 0,
+  energi: 0,
+  isEnabled: true,
 };
 
 async function handler(m, { sock }) {
   try {
     await m.react("🕒");
+
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("rankkerja", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
-    const board = getLeaderboard("gold", 10);
-    if (!board || board.length === 0) return m.reply(claraWrap("rankkerja", "Belum ada data pemain.", "error"));
+    const leaderboard = getLeaderboard("gold", 10);
+    if (!leaderboard || leaderboard.length === 0) {
+      await m.react("🐣");
+      return m.reply(claraWrap("rankkerja", "Belum ada pemain RPG yang terdaftar.", "info"));
+    }
 
-    const medals = ["🥇", "🥈", "🥉"];
-    let msg = `╭──「 *HALL OF FAME* 」\n`;
-    msg += `│ 🏆 Top 10 Richest Players\n`;
-    msg += `│\n`;
-    board.forEach((u, i) => {
-      const badge = medals[i] || `#${i + 1}`;
-      msg += `│ ${badge} ${u.name || "Unknown"}\n`;
-      msg += `│    Lv.${u.level || 1} | 💰 ${(u.gold || 0).toLocaleString("id-ID")}\n`;
+    const medal = ["🥇", "🥈", "🥉"];
+    let msg = `╭──「 *RANK KERJA* 」\n`;
+    msg += `│ 🏆 *TOP 10 PEMAIN TERKAYA*\n│\n`;
+
+    leaderboard.forEach((player, i) => {
+      const rank = medal[i] || `${i + 1}.`;
+      const name = player.name || player.number || "Unknown";
+      const gold = (player.value || 0).toLocaleString("id-ID");
+      const level = player.rpg?.level || 1;
+      msg += `│ ${rank} *${name}*\n`;
+      msg += `│    💰 Rp${gold} | ⚔️ Lv.${level}\n`;
     });
-    msg += `╰──────────`;
+
+    msg += `│\n╰──────────`;
+
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

@@ -724,3 +724,28 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - .bomb - Game jinakkan bom (potong kabel yang benar)
 - .koboy - Game tembak koboy (tebak posisi musuh)
 - .ulartangga - Game ular tangga (snake & ladders multiplayer)
+
+## Download (9 plugin baru)
+- .an1 - Search game mod dari AN1
+- .happymod - Search mod apps di HappyMod
+- .igmp3 - Download audio dari Instagram
+- .imdb - Info film dari IMDB (OMDB API)
+- .ringtone - Search & download ringtone
+- .songs - Cari & preview lagu (iTunes)
+- .ptv - Download video dari Pinterest
+- .twitterdl - Download video dari Twitter/X
+- .googlesearch - Google search
+
+## Misc (12 plugin baru)
+- .alkitab - Ayat Alkitab (Beeble API)
+- .carimusik - Cari judul lagu dari audio (AUDD)
+- .cekkhodam - Cek khodam (fun)
+- .doggo - Random foto anjing (Dog CEO)
+- .fakedana - Fake DANA receipt (prank)
+- .fakegc - Fake group chat (prank)
+- .fitnah - Fake chat fitnah (prank)
+- .mlhero - Info hero Mobile Legends
+- .myip - Cek info IP address
+- .rt - Bot runtime info
+- .ttp - Text to PNG sticker
+- .volume - Adjust audio volume (ffmpeg)
