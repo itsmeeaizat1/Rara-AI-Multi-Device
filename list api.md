@@ -1378,3 +1378,242 @@ https://upscayl.org
 ---
 
 *Updated by Nova AI • 30 Agustus 2026*
+
+---
+
+## 🌏 API Luar Negeri (Jepang, China, US) — Bahan Fitur Bot
+
+### 🇯🇵 Jepang — Anime, Manga & Light Novel
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| MyAnimeList | `api.myanimelist.net/v2/anime?q=<query>` | Search anime/manga resmi MAL | ⚠️ Key (free) |
+| MangaDex | `api.mangadex.org/manga?title=<query>` | Baca manga gratis (multi-lang) | ✅ Free |
+| MangaUpdates | `api.mangaupdates.com/v1/releases/search` | Info rilis manga | ✅ Free |
+| NovelUpdates | `api.novelupdates.com/` | Info light novel & web novel | ✅ Scrape |
+| Syosetu (小説家になろう) | `api.syosetu.com/n/<code>/api` | Web novel Jepang (Narou) | ✅ Free |
+| Kakuyomu (カクヨム) | `api.kakuyomu.jp/api/v1/works` | Web novel Kakuyomu | ✅ Free |
+| Aozora Bunko (青空文庫) | `api.aozora.gr.jp/` | Buku klasik Jepang gratis | ✅ Free |
+| DLSite | `api.dlsite.com/v1/product` | Doujin, game indie Jepang | ⚠️ Key |
+| Pixiv | `api.pixiv.net/` | Illustration & art Jepang | ⚠️ Token |
+| NicoNico | `api.nicovideo.jp/v1/video/search` | Video Jepang (NicoNico Douga) | ⚠️ Token |
+| AbemaTV | `api.abema.tv/v1/video/series` | Streaming anime Jepang | ✅ Scrape |
+| DAZN JP | `api.dazn.com/v1/events` | Streaming olahraga Jepang | ⚠️ Token |
+| U-NEXT | `api.unext.jp/api/v1/titles` | Streaming film/anime Jepang | ⚠️ Token |
+| Gyao Yahoo | `api.gyao.yahoo.co.jp/api/v1/videos` | Streaming gratis Yahoo Japan | ✅ Scrape |
+
+### 🇯🇵 Jepang — News & Info
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| NHK News | `api.nhk.or.jp/v2/news/json` | Berita NHK Jepang | ✅ Free |
+| Yahoo Japan News | `news.yahoo.co.jp/rss` | RSS berita Yahoo Japan | ✅ Free |
+| Goo News | `api.goo.ne.jp/news/` | Berita Goo Japan | ✅ Free |
+| NHK World | `api.nhk.or.jp/nhkworld/` | Berita NHK World (English) | ✅ Free |
+| TV Guide JP | `api.tvguide.or.jp/` | Jadwal TV Jepang | ✅ Scrape |
+
+### 🇯🇵 Jepang — Transportation & Weather
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Ekispert | `api.ekispert.jp/v1/json/search` | Rute kereta Jepang (JR) | ⚠️ Key (free tier) |
+| Tokyo Metro | `api.tokyometro.jp/api/v2/` | Info subway Tokyo | ⚠️ Key (free) |
+| Jorudan | `api.jorudan.co.jp/` | Navigasi kereta Jepang | ⚠️ Key |
+| Navitime | `api.navitime.co.jp/` | Navigasi & transport Jepang | ⚠️ Key |
+| Hyperdia | `api.hyperdia.com/` | Jadwal kereta Jepang | ✅ Scrape |
+| Tenki.jp | `api.tenki.jp/` | Cuaca Jepang detail | ✅ Scrape |
+| JMA (気象庁) | `api.jma.go.jp/` | Cuaca resmi Badan Meteorologi JP | ✅ Free |
+
+### 🇯🇵 Jepang — Shopping & E-Commerce
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Rakuten | `api.rakuten.co.jp/v2/api/product` | Search produk Rakuten | ⚠️ Key (free) |
+| Amazon JP | `api.amazon.co.jp/` | Search produk Amazon Japan | ⚠️ Key |
+| Yodobashi | `api.yodobashi.com/` | Elektronik Yodobashi | ✅ Scrape |
+| Amiami | `api.amiami.com/` | Figure & anime goods | ✅ Scrape |
+| Animate | `api.animate.co.jp/` | Anime merchandise store | ✅ Scrape |
+| Gamers | `api.gamers.co.jp/` | Anime & game store | ✅ Scrape |
+| Melonbooks | `api.melonbooks.co.jp/` | Doujin & manga store | ✅ Scrape |
+| Toranoana | `api.toranoana.jp/` | Doujin store | ✅ Scrape |
+| Suruga-ya | `api.suruga-ya.jp/` | Anime figure & goods | ✅ Scrape |
+| Mandarake | `api.mandarake.co.jp/` | Manga & anime used goods | ✅ Scrape |
+
+### 🇯🇵 Jepang — Library & Academic
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| CiNii | `api.cinii.ac.jp/v1/search` | Paper akademik Jepang | ⚠️ Key (free) |
+| NII | `api.nii.ac.jp/` | Database institut Jepang | ✅ Free |
+| JST | `api.jst.go.jp/` | Japan Science & Technology | ✅ Free |
+| Calil | `api.calil.jp/v1/search` | Search buku perpustakaan Jepang | ✅ Free |
+
+### 🇨🇳 China — Video & Sosial Media
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Bilibili | `api.bilibili.com/x/web-interface/search` | Search video Bilibili | ✅ Free |
+| Bilibili Intl | `api.bilibili.tv/intl/search` | Bilibili international | ✅ Free |
+| Douyin (抖音) | `api.douyin.com/aweme/v1/web/search` | TikTok China version | ✅ Scrape |
+| Kuaishou (快手) | `api.kuaishou.com/graphql` | Short video China | ✅ Scrape |
+| Weibo (微博) |api.weibo.com/2/statuses/public_timeline` | Sosial media China | ⚠️ Key |
+| Xiaohongshu (小红书) | `api.xiaohongshu.com/` | Life style & review China | ✅ Scrape |
+
+### 🇨🇳 China — Music & Audio
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| NetEase Cloud Music | `music.163.com/api/search/get?s=<query>` | Search lagu (网易云音乐) | ✅ Free |
+| QQ Music | `api.y.qq.com/soso/fcgi-bin/search` | Search lagu QQ Music | ✅ Free |
+| Kugou (酷狗) | `api.kugou.com/v1/search` | Search lagu Kugou | ✅ Free |
+| Kuwo (酷我) `api.kuwo.cn/api/www/search` | Search lagu Kuwo | ✅ Free |
+| Migu Music (咪咕) | `api.music.migu.cn/v3/search` | Search lagu Migu | ✅ Free |
+
+### 🇨🇳 China — E-Commerce
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| JD.com (京东) | `api.jd.com/api/search?keyword=<query>` | Search produk JD | ⚠️ Key |
+| Taobao (淘宝) | `api.taobao.com/rest/api` | Search produk Taobao | ⚠️ Key |
+| Tmall (天猫) | `api.tmall.com/` | Search produk Tmall | ⚠️ Key |
+| Pinduoduo (拼多多) | `api.pinduoduo.com/` | Search produk PDD | ⚠️ Key |
+
+### 🇨🇳 China — Academic & Data
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| CNKI (中国知网) | `api.cnki.net/` | Paper akademik China | ⚠️ Key |
+| Wanfang Data | `api.wanfangdata.com.cn/` | Database akademik China | ⚠️ Key |
+| CQVIP | `api.cqvip.com/` | Jurnal akademik China | ⚠️ Key |
+| X-MOL | `api.x-mol.com/` | Paper kimia & sains China | ✅ Free |
+
+### 🇺🇸 US — Anime & Manga
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Jikan (MAL) | `api.jikan.moe/v4/anime?q=<query>` | Anime database MyAnimeList | ✅ Free |
+| AniList | `graphql.anilist.co` | Anime & manga GraphQL API | ✅ Free |
+| Kitsu | `kitsu.io/api/edge/anime` | Anime & manga database | ✅ Free |
+| MangaDex | `api.mangadex.org/manga` | Manga reader multi-language | ✅ Free |
+| NovelUpdates | `api.novelupdates.com/` | Light novel database | ✅ Scrape |
+| PokeAPI | `pokeapi.co/api/v2/pokemon/<name>` | Pokemon database lengkap | ✅ Free |
+| Yu-Gi-Oh API | `db.ygoprodeck.com/api/v7/cardinfo.php` | Kartu Yu-Gi-Oh | ✅ Free |
+
+### 🇺🇸 US — News & Media
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| NYT API | `api.nytimes.com/svc/search/v2/articlesearch.json` | Berita New York Times | ⚠️ Key (free) |
+| BBC | `api.bbc.com/news` | Berita BBC | ✅ Scrape |
+| BBC RSS | `feeds.bbci.co.uk/news/rss.xml` | RSS BBC News | ✅ Free |
+| Guardian | `api.guardian.co.uk/v2/search` | Berita The Guardian | ⚠️ Key (free) |
+| Reuters | `api.reuters.com/` | Berita Reuters | ✅ Scrape |
+| Al Jazeera | `api.aljazeera.com/v1/articles` | Berita Al Jazeera English | ✅ Free |
+| NASA APOD | `api.nasa.gov/planetary/apod?api_key=<key>` | Astronomy Picture of the Day | ⚠️ Key (free) |
+| NASA Mars | `api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos` | Foto Mars dari rover | ⚠️ Key (free) |
+| Hacker News | `hacker-news.firebaseio.com/v0/topstories.json` | Berita tech startup | ✅ Free |
+| Reddit | `api.reddit.com/r/<subreddit>/hot` | Reddit posts by subreddit | ✅ Free |
+| Product Hunt | `api.producthunt.com/v2/api/graphql` | Produk & startup baru | ⚠️ Key (free) |
+
+### 🇺🇸 US — Social & Creative
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Reddit | `api.reddit.com/r/<subreddit>/` | Post, meme, thread Reddit | ✅ Free |
+| Giphy | `api.giphy.com/v1/gifs/trending?api_key=<key>` | GIF search & trending | ⚠️ Key (free) |
+| Tenor | `g.tenor.com/v1/search?q=<query>&key=<key>` | GIF search Tenor | ⚠️ Key (free) |
+| Imgur | `api.imgur.com/3/gallery/search` | Image gallery & meme | ⚠️ Key (free) |
+| DeviantArt | `api.deviantart.com/api/v1/oauth2/search` | Digital art search | ⚠️ Key (free) |
+| ArtStation | `api.artstation.com/v2/search` | Digital art & 3D portfolio | ✅ Scrape |
+| Behance | `api.behance.net/v2/projects?q=<query>` | Design portfolio search | ⚠️ Key (free) |
+| Dribbble | `api.dribbble.com/v2/shots` | Design shots | ⚠️ Key |
+| Flickr | `api.flickr.com/services/rest/?method=flickr.photos.search` | Photo search | ⚠️ Key (free) |
+| Unsplash | `api.unsplash.com/search/photos?query=<query>` | Stock photo HD | ⚠️ Key (free) |
+| Pexels | `api.pexels.com/v1/search?query=<query>` | Stock photo & video | ⚠️ Key (free) |
+| Pixabay | `pixabay.com/api/?key=<key>&q=<query>` | Stock photo & video | ⚠️ Key (free) |
+
+### 🇺🇸 US — Gaming & Esports
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Epic Games | `api.epicgames.dev/v1/store` | Info game Epic Games Store | ✅ Scrape |
+| Steam | `api.steampowered.com/api/appdetails?appids=<id>` | Info game Steam | ⚠️ Key (free) |
+| Steam Community | `steamcommunity.com/market/search` | Steam market price | ✅ Scrape |
+| Supercell | `api.supercell.com/v1/` | Clash Royale, CoC, Brawl | ⚠️ Key |
+| OpenDota | `api.opendota.com/api/players/<id>` | Stats Dota 2 | ✅ Free |
+| Stratz | `api.stratz.com/graphql` | Dota 2 GraphQL | ✅ Free |
+| Chess.com | `api.chess.com/pub/player/<username>` | Stats catur | ✅ Free |
+| Lichess | `api.lichess.org/api/user/<username>` | Stats catur | ✅ Free |
+| NHL API | `api.nhle.com/v1/schedule` | Jadwal & skor NHL | ✅ Free |
+| CoinGecko | `api.coingecko.com/api/v3/coins/markets` | Harga crypto real-time | ✅ Free |
+
+### 🇺🇸 US — Academic & Science
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| arXiv | `export.arxiv.org/api/query?search_query=<query>` | Paper sains & tech (gratis) | ✅ Free |
+| CrossRef | `api.crossref.org/works?query=<query>` | DOI & paper lookup | ✅ Free |
+| Semantic Scholar | `api.semanticscholar.org/v1/paper/search?query=<query>` | AI-powered paper search | ✅ Free |
+| OpenAlex | `api.openalex.org/works?search=<query>` | Database jurnal global | ✅ Free |
+| DOAJ | `api.doaj.org/v2/search/articles/<query>` | Directory of Open Access Journals | ✅ Free |
+| CORE | `api.core.ac.uk/v3/search/works` | Open access papers | ✅ Free |
+| PubMed | `api.ncbi.nlm.nih.gov/lit/entrez2/esearch` | Paper medis & biomedis | ✅ Free |
+| PubChem | `pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/<name>` | Info senyawa kimia | ✅ Free |
+| ChemSpider | `api.chemspider.com/InChI.asmx` | Database senyawa kimia | ⚠️ Key (free) |
+| UniProt | `rest.uniprot.org/uniprotkb/search?query=<query>` | Database protein | ✅ Free |
+| RCSB PDB | `data.rcsb.org/rest/v1/core/entry/<id>` | Struktur protein 3D | ✅ Free |
+
+### 🇺🇸 US — Productivity & Platform
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Trello | `api.trello.com/1/boards/<id>/cards` | Task management board | ⚠️ Key (free) |
+| Notion | `api.notion.com/v1/databases/<id>/query` | Database & notes | ⚠️ Key (free) |
+| Slack | `api.slack.com/web/api` | Team messaging | ⚠️ Token |
+| Discord | `api.discord.com/api/v10` | Server info & user | ⚠️ Token |
+
+---
+
+## 💡 Ide Fitur Bot dari API Luar Negeri
+
+### 🇯🇵 Jepang — Priority Tinggi
+1. **.jptrain <from> <to>** — Rute kereta Jepang (Ekispert)
+2. **.jpweather <city>** — Cuaca Jepang detail (JMA/Tenki.jp)
+3. **.nhknews** — Berita NHK Jepang terbaru
+4. **.syosetu <code>** — Baca web novel Jepang (Narou)
+5. **.kakuyomu <id>** — Baca web novel Kakuyomu
+6. **.aozora <title>** — Buku klasik Jepang (Aozora Bunko)
+7. **.calil <book>** — Cari buku di perpustakaan Jepang
+8. **.niconico <query>** — Search video NicoNico
+9. **.rakuten <product>** — Search produk di Rakuten Japan
+10. **.amiami <figure>** — Cari figure anime di Amiami
+
+### 🇨🇳 China — Priority Tinggi
+1. **.bilibili <query>** — Search video Bilibili
+2. **.douyin <query>** — Search video Douyin (TikTok China)
+3. **.netease <query>** — Search lagu NetEase Cloud Music
+4. **.qqmusic <query>** — Search lagu QQ Music
+5. **.kugou <query>** — Search lagu Kugou Music
+6. **.xiaohongshu <query>** — Search post Xiaohongshu (Little Red Book)
+7. **.weibo <query>** — Search trending Weibo
+
+### 🇺🇸 US — Priority Tinggi
+1. **.nasapod** — Astronomy Picture of the Day (NASA)
+2. **.marsphoto** — Foto terbaru dari Mars rover
+3. **.hn (Hacker News)** — Top stories Hacker News
+4. **.reddit <subreddit>** — Top post dari subreddit
+5. **.arxiv <query>** — Cari paper sains/tech gratis
+6. **.semantic <query>** — AI-powered paper search
+7. **.pubchem <compound>** — Info senyawa kimia
+8. **.uniprot <protein>** — Info protein database
+9. **.coingecko <coin>** — Harga crypto real-time
+10. **.nytimes <query>** — Berita New York Times
+11. **.bbcnews** — Berita BBC World
+12. **.guardian <query>** — Berita The Guardian
+13. **.producthunt** — Produk & startup terbaru
+14. **.lichess <username>** — Stats catur Lichess
+15. **.chesscom <username>** — Stats catur Chess.com
+
+---
+
+*Updated by Nova AI • 30 Agustus 2026*
