@@ -2,7 +2,7 @@
 
 > Dokumentasi semua API endpoint yang digunakan di Nova AI WhatsApp Bot
 > Total: 200+ API endpoint dari 100+ provider
-> Last updated: 30 Agustus 2026
+> Last updated: 31 Agustus 2026
 
 ---
 
@@ -95,6 +95,7 @@
 | SFile | `sfile.mobi` / `sfile.co` | sfiledl | ✅ Free |
 | GitHub DL | `github.com` / `raw.githubusercontent.com` | githubdl | ✅ Free |
 | SF Converter | `du.sf-converter.com` | audio convert | ✅ Free |
+| IkyyXD | `api.ikyyxd.my.id` | tiktok, ytmp3, ytmp4, instagram, facebook, twitter, spotify, soundcloud, mediafire, pinterest, gdrive, telegraph, snackvideo, likee, zippyshare, threads, capcut, dailymotion, yt | ✅ Free |
 
 ---
 
@@ -1374,6 +1375,7 @@ https://upscayl.org
 | Hash | `api.hashify.net/sha256/value?value=<text>` | Hash generator | ✅ Free |
 | URL Shortener | `is.gd/create.php?format=simple&url=<url>` | Short link (no key) | ✅ Free |
 | CleanURI | `cleanuri.com/api/v1/shorten` | Short link (no key) | ✅ Free |
+| IkyyXD Tools | `api.ikyyxd.my.id/api/tools/ssweb?url=<url>` | Screenshot web | ✅ Free |
 
 ---
 
