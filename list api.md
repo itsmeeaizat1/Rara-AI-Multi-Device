@@ -1164,3 +1164,217 @@ https://upscayl.org
 ---
 
 *Updated by Nova AI • 30 Agustus 2026*
+
+---
+
+## 🆕 API Tambahan yang Belum Terpakai (Bahan Fitur Baru)
+
+### 🎮 Game Stalker & Stats (API Resmi)
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Tracker.gg | `api.tracker.gg/v2/<game>/stats/player/<id>` | Stats Valorant, Apex, Fortnite | ⚠️ Key |
+| Fortnite Tracker | `api.fortnitetracker.com/v1/profile/<platform>/<name>` | Stats Fortnite player | ⚠️ Key |
+| PUBG API | `api.pubg.com/shards/<region>/players` | Stats PUBG player | ⚠️ Key |
+| Faceit API | `api.faceit.com/` | Stats CS2/Valorant tournament | ⚠️ Key |
+| OP.GG | `api.op.gg/` | Stats LoL, Valorant | ✅ Free (scrape) |
+| Opendota | `api.opendota.com/api/players/<id>` | Stats Dota 2 (free, no key) | ✅ Free |
+| Stratz | `api.stratz.com/graphql` | Stats Dota 2 GraphQL | ✅ Free |
+| Chess.com | `api.chess.com/pub/player/<username>` | Stats catur | ✅ Free |
+| Lichess | `api.lichess.org/api/user/<username>` | Stats catur | ✅ Free |
+| Clash Royale | `api.clashroyale.com/v1/players/{tag}` | Stats CR player | ⚠️ Key |
+| Clash of Clans | `api.clashofclans.com/v1/players/{tag}` | Stats CoC player | ⚠️ Key |
+| Brawl Stars | `api.brawlstars.com/v1/players/{tag}` | Stats BS player | ⚠️ Key |
+| Hypixel | `api.hypixel.net/v2/player` | Stats Minecraft Hypixel | ⚠️ Key |
+| NameMC | `api.namemc.com/v1/profile/<name>` | Profil Minecraft player | ✅ Free |
+| Steam API | `api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/` | Info Steam player | ⚠️ Key |
+| Battlefield | `battlelog.battlefield.com` | Stats Battlefield | ✅ Scrape |
+| Xbox | `account.xbox.com` / `xapi.us` | Info Xbox profile | ✅ Free |
+| PlayStation | `psn-api.achievements.app` | Info PSN profile | ⚠️ Token |
+
+### ⚽ Sports & Jadwal Bola
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Football-Data | `api.football-data.org/v4/matches` | Jadwal & skor bola Eropa | ⚠️ Key (free tier) |
+| APIFootball | `apiv3.apifootball.com/api/` | Jadwal, skor, prediksi | ⚠️ Key (free tier) |
+| TheSportsDB | `www.thesportsdb.com/api/v1/json/3/` | Jadwal, tim, player | ✅ Free (key test) |
+| ESPN | `site.api.espn.com/apis/site/v2/sports/` | ESPN scores & news | ✅ Free |
+| SofaScore | `api.sofascore.com/api/v1/` | Live score semua sport | ✅ Scrape |
+| SportMonks | `api.sportmonks.com/v3/` | Jadwal & statistik | ⚠️ Key |
+
+### 🎵 Music & Lirik
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Deezer | `api.deezer.com/search?q=<query>` | Search lagu, album, artist | ✅ Free |
+| Genius | `api.genius.com/search?q=<query>` | Lirik + annotation lagu | ⚠️ Key (free tier) |
+| Musixmatch | `api.musixmatch.com/ws/1.1/` | Lirik lengkap + sync | ⚠️ Key (free tier) |
+| Last.fm | `api.last.fm/2.0/?method=track.getInfo` | Info lagu, scrobble | ⚠️ Key (free) |
+| LRCLib | `lrclib.net/api/search?q=<query>` | Lirik synced gratis | ✅ Free |
+| Songkick | `api.songkick.com/api/3.0/` | Jadwal konser | ⚠️ Key |
+| Setlist.fm | `api.setlist.fm/rest/1.0/` | Setlist konser | ⚠️ Key |
+| BandInTown | `rest.bandsintown.com/artists/<name>` | Info konser artist | ✅ Free |
+| Spotify Web | `api.spotify.com/v1/search` | Search track/album/artist | ⚠️ Token |
+
+### 🌍 Geolocation & Maps
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Nominatim | `nominatim.openstreetmap.org/search?q=<query>` | Search alamat, koordinat | ✅ Free |
+| Overpass API | `overpass-api.de/api/interpreter` | Query data peta OSM | ✅ Free |
+| OpenRouteService | `api.openrouteservice.org/v2/directions` | Rute & directions | ⚠️ Key (free tier) |
+| Mapbox | `api.mapbox.com/geocoding/v5/` | Geocoding & maps | ⚠️ Key (free tier) |
+| TomTom | `api.tomtom.com/search/2/geocode/` | Geocoding & search | ⚠️ Key (free tier) |
+| HERE Maps | `geocode.search.hereapi.com/v1/geocode` | Geocoding HERE | ⚠️ Key (free tier) |
+| Foursquare | `api.foursquare.com/v2/venues/search` | Search tempat/restoran | ⚠️ Key (free tier) |
+| GeoNames | `api.geonames.org/searchJSON` | Database lokasi dunia | ✅ Free (username) |
+| RestCountries | `restcountries.com/v3.1/name/<country>` | Info negara (bendera, ibukota, dll) | ✅ Free |
+| IPInfo | `ipinfo.io/<ip>/json` | Info IP detail (lokasi, ISP) | ⚠️ Key (free tier) |
+| IP-API | `ip-api.com/json/<ip>` | Info IP geolocation | ✅ Free (45/min) |
+| ipapi.co | `ipapi.co/<ip>/json/` | IP geolocation + timezone | ✅ Free (1k/day) |
+
+### 📡 COVID & Data Kesehatan
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| KawalCOVID | `api.kawalcorona.com/indonesia` | Data COVID Indonesia | ✅ Free |
+| KawalCovid19 | `api.kawalcovid19.id/cases/` | Data COVID per provinsi | ✅ Free |
+| COVID19 API | `api.covid19api.com/live/country/indonesia` | Data COVID global | ✅ Free |
+| Mathdro COVID | `covid19.mathdro.id/api/countries/indonesia` | Data COVID ringkas | ✅ Free |
+| Data COVID RI | `data.covid19.go.id/public/api/` | Data resmi pemerintah RI | ✅ Free |
+
+### 💬 Meme & Quote
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Memegen | `api.memegen.link/images/custom/<text>` | Custom meme generator | ✅ Free |
+| Meme API Live | `api.memeapi.live/v1/memes` | Random meme from Reddit | ✅ Free |
+| Imgflip | `api.imgflip.com/get_memes` | Meme template list | ✅ Free |
+| Quotable | `api.quotable.io/random` | Random quote | ✅ Free |
+| ZenQuotes | `zenquotes.io/api/random` | Random inspirational quote | ✅ Free |
+| Forismatic | `api.forismatic.com/api/1.0/` | Quote of the day | ✅ Free |
+| FavQs | `favqs.com/api/qotd` | Quote of the day | ✅ Free |
+
+### 🌸 Anime Image (Alternatif Baru)
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Waifu.im | `api.waifu.im/search/?tags=<tag>` | Random anime image (filter tag) | ✅ Free |
+| Nekos.best | `nekos.best/api/v2/<category>` | Anime image + GIF (HD quality) | ✅ Free |
+| Nekos.fun | `nekos.fun/api/v2/<category>` | Anime image random | ✅ Free |
+| Waifu.pics | `api.waifu.pics/sfw/<category>` | Anime reaction GIF | ✅ Free |
+| Danbooru | `danbooru.donmai.us/posts.json?tags=<tags>` | Anime image board (API) | ✅ Free |
+| Gelbooru | `gelbooru.com/index.php?page=dapi&q=index` | Anime image board (API) | ✅ Free |
+| Yande.re | `yande.re/post.json?tags=<tags>` | Anime image board | ✅ Free |
+| Rule34 | `api.rule34.xxx/index.php?page=dapi` | NSFW anime board | ✅ Free |
+| Safebooru | `safebooru.org/index.php?page=dapi` | Safe anime image | ✅ Free |
+| Konachan | `konachan.net/post.json?tags=<tags>` | Anime wallpaper board | ✅ Free |
+| ZeroChan | `www.zerochan.net/search?q=<query>` | Anime image search | ✅ Scrape |
+
+### 🔍 IP, Network & OSINT
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Shodan | `api.shodan.io/shodan/host/<ip>?key=<key>` | Scan device IoT/server | ⚠️ Key |
+| Censys | `api.censys.io/api/v2/hosts/<ip>` | Scan host & cert | ⚠️ Key |
+| HackerTarget | `api.hackertarget.com/whois/?q=<domain>` | WHOIS lookup | ✅ Free (50/day) |
+| RDAP | `rdap.org/domain/<domain>` | Domain registration data | ✅ Free |
+| crt.sh | `crt.sh/?q=<domain>&output=json` | SSL cert transparency | ✅ Free |
+| IPInfo | `ipinfo.io/<ip>/json` | IP geolocation | ✅ Free (50k/month) |
+| IP-API | `ip-api.com/json/<ip>` | IP location (free 45/min) | ✅ Free |
+| ProxyNova | `api.proxynova.com/proxy/` | Proxy list | ✅ Free |
+
+### 📊 Data & Database
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| JSONBin | `api.jsonbin.io/v3/b` | JSON storage cloud | ⚠️ Key (free) |
+| npoint | `api.npoint.io/<id>` | JSON storage simple | ✅ Free |
+| Mocki | `api.mocki.io/v1/<id>` | Mock JSON API | ✅ Free |
+| CountAPI | `api.countapi.xyz/hit/<namespace>/<key>` | Counter storage | ✅ Free |
+| World Bank | `api.worldbank.org/v2/country/` | Data ekonomi dunia | ✅ Free |
+| OpenAlex | `api.openalex.org/works?search=<query>` | Jurnal & paper akademik | ✅ Free |
+
+### 📱 WhatsApp / Messaging API
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| UltraMsg | `api.ultramsg.com/instance<id>/messages/chat` | WA Gateway API | ⚠️ Paid |
+| Whapi | `api.whapi.cloud/v1/messages/text` | WA Cloud API | ⚠️ Freemium |
+| Maytapi | `api.maytapi.com/api/<product_id>/<phone>/sendMessage` | WA Multi-device API | ⚠️ Paid |
+| Green API | `api.green-api.com/waInstance<id>/sendMessage` | WA API gratis tier | ⚠️ Freemium |
+| Chat API | `api.chat-api.com/instance<id>/sendMessage` | WA Gateway | ⚠️ Paid |
+| Twilio | `api.twilio.com/2010-04-01/Accounts/<sid>/Messages.json` | SMS/WA Gateway | ⚠️ Paid |
+
+### 💳 Payment & Topup (API Resmi)
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Digiflazz | `api.digiflazz.com/v1/transaction` | Pulsa, token, voucher | ⚠️ Key |
+| Mobile Pulsa | `api.mobilepulsa.net/v1/legacy` | Pulsa & topup | ⚠️ Key |
+| Duniagames | `api.duniagames.co.id/api/transaction` | Topup game | ⚠️ Key |
+| Codashop | `order.codashop.com/v3/payment` | Topup game | ✅ Scrape |
+| VocaGame | `api.vocagame.com/v1` | Voucher game | ⚠️ Key |
+| PakAsir | `app.pakasir.com` | Transaksi & pembayaran | ⚠️ Key |
+
+### 🧠 AI Image & Text (Alternatif Baru)
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| DeepAI | `api.deepai.org/api/text2img` | Text to image (free tier) | ⚠️ Key (free) |
+| HuggingFace | `api-inference.huggingface.co/models/<model>` | AI inference (text, image, audio) | ⚠️ Key (free tier) |
+| Together AI | `api.together.xyz/v1/images/generations` | AI image generation | ⚠️ Key (free) |
+| Pollinations | `image.pollinations.ai/prompt/<prompt>` | Text to image gratis | ✅ Free |
+| Unrestricted AI | `unrestrictedaiimagegenerator.com/api` | AI image no filter | ✅ Free |
+| ImagePrompt | `imageprompt.org/api/` | Image to prompt AI | ✅ Free |
+
+### 🎲 Fun & Random
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| Trivia API | `the-trivia-api.com/v2/questions` | Trivia quiz (category, difficulty) | ✅ Free |
+| OpenTDB | `opentdb.com/api.php?amount=10` | Trivia quiz classic | ✅ Free |
+| JokeAPI | `v2.jokeapi.dev/joke/Any` | Random joke (safe, programming, dll) | ✅ Free |
+| Yes/No | `yesno.wtf/api` | Random yes/no dengan GIF | ✅ Free |
+| Bored API | `www.boredapi.com/api/activity` | Sarana aktivitas saat bosan | ✅ Free |
+| Advice Slip | `api.adviceslip.com/advice` | Random advice | ✅ Free |
+| Useless Facts | `uselessfacts.jsph.pl/api/v2/facts/today` | Random useless fact | ✅ Free |
+| Dog CEO | `dog.ceo/api/breeds/image/random` | Random dog photo | ✅ Free |
+| Cat API | `api.thecatapi.com/v1/images/search` | Random cat photo | ✅ Free |
+| Rick & Morty | `rickandmortyapi.com/api/character` | Karakter R&M | ✅ Free |
+| Star Wars | `swapi.dev/api/people/` | Karakter Star Wars | ✅ Free |
+| Pokemon | `pokeapi.co/api/v2/pokemon/<name>` | Info Pokemon lengkap | ✅ Free |
+| Jikan | `api.jikan.moe/v4/anime` | Anime database (MAL) | ✅ Free |
+
+### 📰 News & Berita
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| CNN Indonesia RSS | `rss.cnnindonesia.com/nasional` | Berita nasional | ✅ Free |
+| Detik RSS | `rss.detik.com/index.php/detiknews` | Berita terkini | ✅ Free |
+| Kompas RSS | `rss.kompas.com/news.xml` | Berita Kompas | ✅ Free |
+| Google News | `news.google.com/rss/search?q=<query>` | Berita by keyword | ✅ Free |
+| Berita MetroTV | `www.metrotvnews.com/rss` | Berita MetroTV | ✅ Free |
+| Merdeka | `www.merdeka.com/rss/feed.xml` | Berita Merdeka | ✅ Free |
+
+### 🔧 Tools & Utility
+
+| API | Endpoint | Bisa Buat Fitur | Status |
+|-----|----------|----------------|--------|
+| QR Server | `api.qrserver.com/v1/create-qr-code/?data=<text>&size=300x300` | QR code generator | ✅ Free |
+| QR Read | `api.qrserver.com/v1/read-qr-code/?fileurl=<url>` | QR code reader | ✅ Free |
+| Carbon | `carbon.now.sh/api/code` | Code to image | ✅ Free |
+| QuickChart | `quickchart.io/chart?c=<config>` | Chart & graph generator | ✅ Free |
+| Dicebear | `api.dicebear.com/7.x/<style>/svg?seed=<name>` | Avatar generator | ✅ Free |
+| Identicon | `identicons.represent.com/<name>.png` | Identicon generator | ✅ Free |
+| Lorem Ipsum | `loripsum.net/api/<paragraphs>` | Lorem ipsum generator | ✅ Free |
+| Random User | `randomuser.me/api/` | Fake user data generator | ✅ Free |
+| UUID | `uuid-generator.com/api/uuid` | UUID generator | ✅ Free |
+| Hash | `api.hashify.net/sha256/value?value=<text>` | Hash generator | ✅ Free |
+| URL Shortener | `is.gd/create.php?format=simple&url=<url>` | Short link (no key) | ✅ Free |
+| CleanURI | `cleanuri.com/api/v1/shorten` | Short link (no key) | ✅ Free |
+
+---
+
+*Updated by Nova AI • 30 Agustus 2026*
