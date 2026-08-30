@@ -2,7 +2,7 @@
 // ringtone.js — Search & download ringtone
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ringtone",
@@ -25,14 +25,13 @@ async function handler(m, { sock }) {
     const data = res.data?.data || res.data?.result || [];
     if (!data.length) return m.reply(claraWrap("ringtone", "Ringtone tidak ditemukan!", "error"));
 
-    let msg = `╭──「 *RINGTONE* 」\n`;
-    msg += `│ Hasil: ${query}\n`;
-    msg += `│\n`;
+    let _lines = [];
+      _lines.push(`Hasil: ${query}`);
     data.slice(0, 10).forEach((item, i) => {
-      msg += `│ ${i + 1}. ${item.title || item.name || "Unknown"}\n`;
-      if (item.audio) msg += `│    Audio: ${item.audio}\n`;
+      _lines.push(`${i + 1}. ${item.title || item.name || "Unknown"}`);
+      if (item.audio) _lines.push(`Audio: ${item.audio}`);
     });
-    msg += `╰──────────`;
+    let msg = novaBox("RINGTONE", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

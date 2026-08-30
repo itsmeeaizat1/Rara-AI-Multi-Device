@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // niatsholat.js — Niat sholat 5 waktu
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const NIAT = [
   { name: "Subuh", arabic: "أُصَلِّي فَرْضَ الصُّبْحِ رَكْعَتَيْنِ مُسْتَقِبِلَ الْقِبْلَةِ لِلَّهِ تَعَالَى", latin: "Usholli fardhol subhi rak'ataini mustaqbilal qiblati lillaahi ta'aalaa", arti: "Aku berniat sholat fardu Subuh 2 rakaat menghadap qiblat karena Allah Ta'ala" },
@@ -25,16 +25,15 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     await m.react("🕒");
-    let msg = `╭──「 *NIAT SHOLAT* 」\n`;
-    msg += `│\n`;
+    let _lines = [];
     NIAT.forEach(n => {
-      msg += `│ Sholat ${n.name}\n`;
-      msg += `│ Arabic: ${n.arabic}\n`;
-      msg += `│ Latin: ${n.latin}\n`;
-      msg += `│ Arti: ${n.arti}\n`;
-      msg += `│\n`;
+      _lines.push(`Sholat ${n.name}`);
+      _lines.push(`Arabic: ${n.arabic}`);
+      _lines.push(`Latin: ${n.latin}`);
+      _lines.push(`Arti: ${n.arti}`);
+      _lines.push(``);
     });
-    msg += `╰──────────`;
+    let msg = novaBox("NIAT SHOLAT", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

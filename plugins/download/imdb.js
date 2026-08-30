@@ -2,7 +2,7 @@
 // imdb.js — Info film dari IMDB
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "imdb",
@@ -26,16 +26,16 @@ async function handler(m, { sock }) {
     const d = res.data;
     if (d.Response === "False") return m.reply(claraWrap("imdb", `Film "${query}" tidak ditemukan!`, "error"));
 
-    let msg = `╭──「 *IMDB* 」\n`;
-    msg += `│ 🎬 Title: ${d.Title}\n`;
-    msg += `│ 📅 Year: ${d.Year}\n`;
-    msg += `│ ⭐ Rating: ${d.imdbRating}/10 (${d.imdbVotes} votes)\n`;
-    msg += `│ 🎭 Genre: ${d.Genre}\n`;
-    msg += `│ 🎬 Director: ${d.Director}\n`;
-    msg += `│ 🎭 Actors: ${d.Actors}\n`;
-    msg += `│ 📝 Plot: ${d.Plot}\n`;
-    msg += `│ ⏱️ Runtime: ${d.Runtime}\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`🎬 Title: ${d.Title}`);
+      _lines.push(`📅 Year: ${d.Year}`);
+      _lines.push(`⭐ Rating: ${d.imdbRating}/10 (${d.imdbVotes} votes)`);
+      _lines.push(`🎭 Genre: ${d.Genre}`);
+      _lines.push(`🎬 Director: ${d.Director}`);
+      _lines.push(`🎭 Actors: ${d.Actors}`);
+      _lines.push(`📝 Plot: ${d.Plot}`);
+      _lines.push(`⏱️ Runtime: ${d.Runtime}`);
+    let msg = novaBox("IMDB", _lines);
 
     if (d.Poster && d.Poster !== "N/A") {
       await sock.sendMessage(from, { image: { url: d.Poster }, caption: msg }, { quoted: m });

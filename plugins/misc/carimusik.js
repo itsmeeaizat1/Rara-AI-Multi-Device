@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // carimusik.js — Cari musik (audio recognition)
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "carimusik",
@@ -41,14 +41,14 @@ async function handler(m, { sock }) {
     }
 
     const r = data.result;
-    let msg = `╭──「 *MUSIC FOUND* 」\n`;
-    msg += `│ 🎵 Judul: ${r.title || "Unknown"}\n`;
-    msg += `│ 🎤 Artis: ${r.artist || "Unknown"}\n`;
-    msg += `│ 💿 Album: ${r.album || "Unknown"}\n`;
-    if (r.release_date) msg += `│ 📅 Rilis: ${r.release_date}\n`;
-    if (r.apple_music?.url) msg += `│ 🍎 Apple Music: ${r.apple_music.url}\n`;
-    if (r.spotify?.external_urls?.spotify) msg += `│ 🟢 Spotify: ${r.spotify.external_urls.spotify}\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`🎵 Judul: ${r.title || "Unknown"}`);
+      _lines.push(`🎤 Artis: ${r.artist || "Unknown"}`);
+      _lines.push(`💿 Album: ${r.album || "Unknown"}`);
+    let msg = novaBox("MUSIC FOUND", _lines);
+    if (r.release_date) _lines.push(`📅 Rilis: ${r.release_date}`);
+    if (r.apple_music?.url) _lines.push(`🍎 Apple Music: ${r.apple_music.url}`);
+    if (r.spotify?.external_urls?.spotify) _lines.push(`🟢 Spotify: ${r.spotify.external_urls.spotify}`);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

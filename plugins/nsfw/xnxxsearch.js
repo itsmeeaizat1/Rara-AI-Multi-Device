@@ -25,21 +25,16 @@ async function handler(m, { sock }) {
     const data = res.data?.data || res.data?.result || [];
     if (!data.length) return m.reply(claraWrap("xnxxsearch", "Tidak ada hasil!", "error"));
 
-    let msg = `╭──「 *XNXX SEARCH* 」──┐
-`;
-    msg += `│ Query: ${query}
-│
-`;
+    let _lines = [];
+    _lines.push(`Query: ${query}`);
     data.slice(0, 8).forEach((item, i) => {
-      msg += `│ ${i + 1}. ${item.title || "Unknown"}
-`;
-      if (item.url) msg += `│    ${item.url}
-`;
-      msg += `│
-`;
+      _lines.push(`${i + 1}. ${item.title || "Unknown"}`);
+      if (item.url) _lines.push(`   ${item.url}`);
+      _lines.push(``);
     });
-    msg += `╰──────────`;
+
     await m.react("🐣");
+    let msg = novaBox("XNXX SEARCH", _lines);
     return m.reply(msg);
   } catch (err) {
     console.error("xnxxsearch error:", err);

@@ -2,7 +2,7 @@
 // songs.js — Cari & play lagu (iTunes)
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "songs",
@@ -36,14 +36,13 @@ async function handler(m, { sock }) {
       }, { quoted: m });
     }
 
-    let msg = `╭──「 *SONGS* 」\n`;
-    msg += `│ Hasil: ${query}\n`;
-    msg += `│\n`;
+    let _lines = [];
+      _lines.push(`Hasil: ${query}`);
     results.forEach((t, i) => {
-      msg += `│ ${i + 1}. ${t.trackName} - ${t.artistName}\n`;
-      msg += `│    Album: ${t.collectionName || "Unknown"}\n`;
+      _lines.push(`${i + 1}. ${t.trackName} - ${t.artistName}`);
+      _lines.push(`Album: ${t.collectionName || "Unknown"}`);
     });
-    msg += `╰──────────`;
+    let msg = novaBox("SONGS", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

@@ -2,7 +2,7 @@
 // asmaulhusna.js — Asmaul Husna
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "asmaulhusna",
@@ -26,23 +26,22 @@ async function handler(m, { sock }) {
     if (num && num >= 1 && num <= 99) {
       const item = list.find(v => v.number === num);
       if (!item) return m.reply(claraWrap("asmaulhusna", "Nomor tidak valid!", "error"));
-      let msg = `╭──「 *ASMAUL HUSNA* 」\n`;
-      msg += `│ No: ${item.number}\n`;
-      msg += `│ Arabic: ${item.name}\n`;
-      msg += `│ Latin: ${item.transliteration}\n`;
-      msg += `│ Arti: ${item.en.meaning}\n`;
-      msg += `╰──────────`;
+      let _lines = [];
+        _lines.push(`No: ${item.number}`);
+        _lines.push(`Arabic: ${item.name}`);
+        _lines.push(`Latin: ${item.transliteration}`);
+        _lines.push(`Arti: ${item.en.meaning}`);
+      let msg = novaBox("ASMAUL HUSNA", _lines);
       await m.react("🐣");
       return m.reply(msg);
     }
 
-    let msg = `╭──「 *99 ASMAUL HUSNA* 」\n`;
+    let _lines = [];
     list.slice(0, 20).forEach((item) => {
-      msg += `│ ${item.number}. ${item.transliteration}\n`;
+      _lines.push(`${item.number}. ${item.transliteration}`);
     });
-    msg += `│\n`;
-    msg += `│ Lihat detail: .asmaulhusna <nomor>\n`;
-    msg += `╰──────────`;
+      _lines.push(`Lihat detail: .asmaulhusna <nomor>`);
+    let msg = novaBox("99 ASMAUL HUSNA", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

@@ -2,7 +2,7 @@
 // mlhero.js — Mobile Legends hero info
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const HEROES = [
   "Layla", "Miya", "Zilong", "Sabre", "Alice", "Tigreal", "Balmond",
@@ -32,13 +32,11 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const query = m.args?.join(" ").trim();
     if (!query) {
-      let msg = `╭──「 *ML HERO LIST* 」\n`;
-      msg += `│ Hero tersedia:\n`;
-      msg += `│\n`;
-      HEROES.forEach((h, i) => { msg += `│ ${i + 1}. ${h}\n`; });
-      msg += `│\n`;
-      msg += `│ Cara: .mlhero <nama_hero>\n`;
-      msg += `╰──────────`;
+      let _lines = [];
+        _lines.push(`Hero tersedia:`);
+      HEROES.forEach((h, i) => { _lines.push(`${i + 1}. ${h}`); });
+        _lines.push(`Cara: .mlhero <nama_hero>`);
+      let msg = novaBox("ML HERO LIST", _lines);
       await m.react("🐣");
       return m.reply(msg);
     }
@@ -51,12 +49,12 @@ async function handler(m, { sock }) {
     const diff = DIFFICULTY[Math.floor(Math.random() * DIFFICULTY.length)];
     const power = Math.floor(Math.random() * 500) + 100;
 
-    let msg = `╭──「 *ML HERO* 」\n`;
-    msg += `│ 🎮 Hero: *${hero}*\n`;
-    msg += `│ 🏷️ Role: ${role}\n`;
-    msg += `│ ⚡ Difficulty: ${diff}\n`;
-    msg += `│ 💪 Power: ${power}\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`🎮 Hero: *${hero}*`);
+      _lines.push(`🏷️ Role: ${role}`);
+      _lines.push(`⚡ Difficulty: ${diff}`);
+      _lines.push(`💪 Power: ${power}`);
+    let msg = novaBox("ML HERO", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

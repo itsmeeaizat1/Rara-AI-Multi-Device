@@ -2,7 +2,7 @@
 // happymod.js — Search mod apps di HappyMod
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "happymod",
@@ -25,15 +25,14 @@ async function handler(m, { sock }) {
     const data = res.data?.data || res.data?.result || [];
     if (!data.length) return m.reply(claraWrap("happymod", "Aplikasi tidak ditemukan!", "error"));
 
-    let msg = `╭──「 *HAPPYMOD* 」\n`;
-    msg += `│ Hasil: ${query}\n`;
-    msg += `│\n`;
+    let _lines = [];
+      _lines.push(`Hasil: ${query}`);
     data.slice(0, 8).forEach((item, i) => {
-      msg += `│ ${i + 1}. ${item.title || item.name || "Unknown"}\n`;
-      if (item.rating) msg += `│    Rating: ${item.rating}\n`;
-      if (item.url) msg += `│    Link: ${item.url}\n`;
+      _lines.push(`${i + 1}. ${item.title || item.name || "Unknown"}`);
+      if (item.rating) _lines.push(`Rating: ${item.rating}`);
+      if (item.url) _lines.push(`Link: ${item.url}`);
     });
-    msg += `╰──────────`;
+    let msg = novaBox("HAPPYMOD", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

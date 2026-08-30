@@ -20,7 +20,7 @@ import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, commandListLine, toSC, closeBoxRight } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, commandListLine, toSC, closeBoxRight, novaBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "allmenu",
@@ -277,6 +277,8 @@ ${weatherBlock}${readMore}
 
     const excludeCategories = modeExcludeMap[botMode] || [];
 
+    // ── Category commands: box terpisah per kategori ──
+    let categoryBoxes = [];
     for (const category of sortedCategories) {
       if (category === "owner" && !m.isOwner) continue;
       if (excludeCategories.includes(category.toLowerCase())) continue;
@@ -286,17 +288,24 @@ ${weatherBlock}${readMore}
       if (allCmds.length === 0) continue;
       const catName = CATEGORY_NAMES[category] || category.charAt(0).toUpperCase() + category.slice(1);
 
-      txt += `├──「 *${toSC(catName)}* 」\n`;
+      const boxLines = [];
       for (let i = 0; i < allCmds.length; i++) {
         const cmd = allCmds[i];
         const symbols = getCommandSymbols(cmd);
         const pinfo = getPlugin(cmd);
         const usage = pinfo?.config?.usage || "";
-        txt += `│ ${commandListLine(prefix, cmd, usage, symbols)}\n`;
+        // Clean the commandListLine output (strip leading │ )
+        const rawLine = commandListLine(prefix, cmd, usage, symbols).replace(/^│\s*/, "");
+        boxLines.push(rawLine);
       }
+      categoryBoxes.push(novaBox(toSC(catName), boxLines));
     }
 
-    txt += `╰──────────╯\n\n${toSC("Nova AI WhatsApp Bot")}`;
+    // Join all category boxes with double newline
+    txt += categoryBoxes.join("\n\n\n");
+
+    txt += `\n\n${toSC("Nova AI WhatsApp Bot")}`;
+
 
     // ── Send: nativeFlowMessage buttons (proven pattern) + real image header ──
     // "Kategori" pakai single_select → klik buka popup list semua kategori

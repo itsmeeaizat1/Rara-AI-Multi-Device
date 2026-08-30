@@ -2,7 +2,7 @@
 // ytmp4v3.js — YouTube MP4 v3 (@distube/ytdl-core, direct engine)
 import ytdl from "@distube/ytdl-core";
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ytmp4v3",
@@ -54,14 +54,14 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let msg = `╭──「 *ʏᴏᴜᴛᴜʙᴇ ᴍᴘ4 v3* 」\n`;
-    msg += `│ Judul: *${title}*\n`;
-    msg += `│ Channel: *${author}*\n`;
-    msg += `│ Durasi: *${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, "0")}*\n`;
-    msg += `│ Quality: *${format.qualityLabel || "unknown"}*\n`;
-    msg += `│ Size: *${(buffer.length / 1024 / 1024).toFixed(1)} MB*\n`;
-    msg += `│ Engine: @distube/ytdl-core\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`Judul: *${title}*`);
+      _lines.push(`Channel: *${author}*`);
+      _lines.push(`Durasi: *${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, "0")}*`);
+      _lines.push(`Quality: *${format.qualityLabel || "unknown"}*`);
+      _lines.push(`Size: *${(buffer.length / 1024 / 1024).toFixed(1)} MB*`);
+      _lines.push(`Engine: @distube/ytdl-core`);
+    let msg = novaBox("ʏᴏᴜᴛᴜʙᴇ ᴍᴘ4 v3", _lines);
 
     await sock.sendMessage(m.chat, {
       video: buffer,

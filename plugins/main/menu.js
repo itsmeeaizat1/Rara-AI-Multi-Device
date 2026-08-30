@@ -19,7 +19,7 @@ import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, toSC, closeBoxRight } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, toSC, closeBoxRight, novaBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "menu",
@@ -212,20 +212,25 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
 ╰──────────╯
 ${weatherBlock}${readMore}
-╭──「 *${toSC("Menu")}* 」\n│ ${prefix}menu
-│ ${prefix}allmenu
-│ ${prefix}allmenucategory ${toSC("<kategori>")}
-│ ${prefix}tanyaai
-├──「 *${toSC("Info")}*
-│ ${prefix}info
-│ ${prefix}owner
-│ ${prefix}rules
-│ ${prefix}donasi
-├──「 *${toSC("Store")}*
-│ ${prefix}sewa
-│ ${prefix}payment
-│ ${prefix}listban
-╰──────────╯
+${novaBox(toSC("Menu"), [
+  `♦ ${prefix}menu`,
+  `♦ ${prefix}allmenu`,
+  `♦ ${prefix}allmenucategory ${toSC("<kategori>")}`,
+  `♦ ${prefix}tanyaai`,
+])}
+
+${novaBox(toSC("Info"), [
+  `♦ ${prefix}info`,
+  `♦ ${prefix}owner`,
+  `♦ ${prefix}rules`,
+  `♦ ${prefix}donasi`,
+])}
+
+${novaBox(toSC("Store"), [
+  `♦ ${prefix}sewa`,
+  `♦ ${prefix}payment`,
+  `♦ ${prefix}listban`,
+])}
 
 *${toSC("Total")}: ${totalFitur} ${toSC("Fitur")}*
 

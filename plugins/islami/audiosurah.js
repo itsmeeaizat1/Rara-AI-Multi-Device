@@ -2,7 +2,7 @@
 // audiosurah.js — Audio murattal surah
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const SURAH_LIST = {
   1: "Al-Fatihah", 2: "Al-Baqarah", 3: "Ali Imran", 4: "An-Nisa", 5: "Al-Maidah",
@@ -28,14 +28,13 @@ async function handler(m, { sock }) {
     await m.react("🕒");
     const num = parseInt(m.args?.[0]);
     if (!num || num < 1 || num > 114) {
-      let msg = `╭──「 *AUDIO SURAH* 」\n`;
-      msg += `│ Masukkan nomor surah (1-114)\n`;
-      msg += `│\n`;
+      let _lines = [];
+        _lines.push(`Masukkan nomor surah (1-114)`);
       Object.entries(SURAH_LIST).slice(0, 10).forEach(([n, name]) => {
-        msg += `│ ${n}. ${name}\n`;
+        _lines.push(`${n}. ${name}`);
       });
-      msg += `│ ...\n`;
-      msg += `╰──────────`;
+        _lines.push(`...`);
+      let msg = novaBox("AUDIO SURAH", _lines);
       return m.reply(msg);
     }
 

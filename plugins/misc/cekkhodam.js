@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // cekkhodam.js — Cek khodam (fun)
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const KHODAM = [
   "Naga Hitam", "Macan Tutul", "Kuda Sembrani", "Burung Garuda",
@@ -45,15 +45,13 @@ async function handler(m, { sock }) {
     const desc = KHODAM_DESC[Math.floor(Math.random() * KHODAM_DESC.length)];
     const power = Math.floor(Math.random() * 100) + 1;
 
-    let msg = `╭──「 *CEK KHODAM* 」\n`;
-    msg += `│ 👤 ${name}\n`;
-    msg += `│\n`;
-    msg += `│ 🔮 Khodam: *${khodam}*\n`;
-    msg += `│ 💬 ${desc}\n`;
-    msg += `│ ⚡ Power: ${power}%\n`;
-    msg += `│\n`;
-    msg += `│ ⚠️ Ini hanya untuk hiburan, bukan takhayat!\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`👤 ${name}`);
+      _lines.push(`🔮 Khodam: *${khodam}*`);
+      _lines.push(`💬 ${desc}`);
+      _lines.push(`⚡ Power: ${power}%`);
+      _lines.push(`⚠️ Ini hanya untuk hiburan, bukan takhayat!`);
+    let msg = novaBox("CEK KHODAM", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

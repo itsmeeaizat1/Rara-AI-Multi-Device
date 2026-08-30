@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // teraboxv2.js — Terabox Downloader v2 (nekolabs + teraboxdl.site)
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "teraboxv2",
@@ -73,15 +73,14 @@ async function handler(m, { sock }) {
     await m.react("🐣");
 
     // Kirim link saja karena Terabox file biasanya besar
-    let msg = `╭──「 *ᴛᴇʀᴀʙᴏx v2* 」\n`;
-    msg += `│ File: *${fileName}*\n`;
-    if (fileSize) msg += `│ Size: *${fileSize}*\n`;
-    if (r.thumb || r.thumbnail) msg += `│ Thumbnail: ${r.thumb || r.thumbnail}\n`;
-    msg += `│\n`;
-    msg += `│ Download:\n${fileUrl}\n`;
-    msg += `│ Engine: nekolabs + teraboxdl.site\n`;
-    msg += `╰──────────`;
-
+    let _lines = [];
+      _lines.push(`File: *${fileName}*`);
+    let msg = novaBox("ᴛᴇʀᴀʙᴏx v2", _lines);
+    if (fileSize) _lines.push(`Size: *${fileSize}*`);
+    if (r.thumb || r.thumbnail) _lines.push(`Thumbnail: ${r.thumb || r.thumbnail}`);
+    _lines.push(``);
+    _lines.push(`Download:\n${fileUrl}`);
+    _lines.push(`Engine: nekolabs + teraboxdl.site`);
     // Kalau thumbnail ada, kirim dengan image
     if (r.thumb || r.thumbnail) {
       try {

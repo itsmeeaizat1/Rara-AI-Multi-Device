@@ -48,13 +48,11 @@ async function handler(m, { sock }) {
     const buffer = Buffer.from(vidRes.data);
 
     let msg = `╭──「 *sɴᴀᴄᴋ ᴠɪᴅᴇᴏ v2* 」\n`;
-    if (r.title || r.caption) msg += `│ Judul: *${(r.title || r.caption).slice(0, 80)}*\n`;
-    if (r.author || r.username) msg += `│ Author: *@${r.author || r.username}*\n`;
-    if (r.likes) msg += `│ Likes: *${r.likes}*\n`;
-    msg += `│ Size: *${(buffer.length / 1024 / 1024).toFixed(1)} MB*\n`;
-    msg += `│ Engine: siputzx API\n`;
-    msg += `╰──────────`;
-
+    if (r.title || r.caption) _lines.push(`Judul: *${(r.title || r.caption).slice(0, 80)}*`);
+    if (r.author || r.username) _lines.push(`Author: *@${r.author || r.username}*`);
+    if (r.likes) _lines.push(`Likes: *${r.likes}*`);
+    _lines.push(`Size: *${(buffer.length / 1024 / 1024).toFixed(1)} MB*`);
+    _lines.push(`Engine: siputzx API`);
     return await sock.sendMessage(m.chat, { video: buffer, caption: msg });
   } catch (err) {
     console.error("snackvideov2 error:", err);

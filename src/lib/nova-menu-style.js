@@ -649,3 +649,48 @@ function novaGuide(commandName, intro, example, note) {
 }
 
 export { novaError, novaEmpty, novaNoInput, novaNoQuoted, novaSuccess, novaGuide, pickRandom };
+
+// ═══════════════════════════════════════════════
+// novaBox — Universal box builder dengan right border konsisten
+// ═══════════════════════════════════════════════
+/**
+ * Build box dengan header + body + footer, right border konsisten.
+ * @param {string} header - Title (akan di-smallcaps)
+ * @param {Array} lines - Body lines. String untuk content, "---" untuk separator, {sub: "Title"} untuk sub-header
+ * @param {object} opts - { sc: true (default, smallcaps), padding: 1 }
+ * @returns {string} Box text siap dikirim
+ */
+export function novaBox(header, lines = [], opts = {}) {
+  const useSC = opts.sc !== false;
+  const hdr = useSC ? toSC(header) : header;
+  const headerStr = `╭──「 ${hdr} 」`;
+  let maxW = headerStr.length;
+  const processed = lines.map(l => {
+    if (l === "---" || l === "─") return { type: "sep" };
+    if (typeof l === "object" && l.sub) {
+      const subStr = `├──「 ${useSC ? toSC(l.sub) : l.sub} 」`;
+      if (subStr.length > maxW) maxW = subStr.length;
+      return { type: "sub", raw: subStr };
+    }
+    if (!l || !String(l).trim()) return { type: "empty" };
+    const text = String(l);
+    const len = `│ ${text}`.length;
+    if (len > maxW) maxW = len;
+    return { type: "line", raw: text };
+  });
+  const W = Math.max(maxW + 4, 24);
+  let out = headerStr + "─".repeat(Math.max(0, W - headerStr.length)) + "╮\n";
+  for (const item of processed) {
+    if (item.type === "sep") {
+      out += "├" + "─".repeat(W - 2) + "┤\n";
+    } else if (item.type === "sub") {
+      out += item.raw + "─".repeat(Math.max(0, W - item.raw.length - 1)) + "┤\n";
+    } else if (item.type === "empty") {
+      out += "│" + " ".repeat(W - 2) + "│\n";
+    } else {
+      out += `│ ${item.raw}` + " ".repeat(Math.max(1, W - 3 - item.raw.length)) + "│\n";
+    }
+  }
+  out += "╰" + "─".repeat(W - 2) + "╯";
+  return out;
+}

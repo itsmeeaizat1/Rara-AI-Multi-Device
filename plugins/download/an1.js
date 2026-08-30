@@ -2,7 +2,7 @@
 // an1.js — Download game mod dari AN1
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "an1",
@@ -25,14 +25,13 @@ async function handler(m, { sock }) {
     const data = res.data?.data || res.data?.result || [];
     if (!data.length) return m.reply(claraWrap("an1", "Game tidak ditemukan!", "error"));
 
-    let msg = `╭──「 *AN1 SEARCH* 」\n`;
-    msg += `│ Hasil pencarian: ${query}\n`;
-    msg += `│\n`;
+    let _lines = [];
+      _lines.push(`Hasil pencarian: ${query}`);
     data.slice(0, 8).forEach((item, i) => {
-      msg += `│ ${i + 1}. ${item.title || item.name || "Unknown"}\n`;
-      if (item.url) msg += `│    Link: ${item.url}\n`;
+      _lines.push(`${i + 1}. ${item.title || item.name || "Unknown"}`);
+      if (item.url) _lines.push(`Link: ${item.url}`);
     });
-    msg += `╰──────────`;
+    let msg = novaBox("AN1 SEARCH", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

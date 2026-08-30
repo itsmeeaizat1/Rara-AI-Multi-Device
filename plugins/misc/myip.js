@@ -2,7 +2,7 @@
 // myip.js — Cek IP address
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "myip",
@@ -23,16 +23,16 @@ async function handler(m, { sock }) {
     const res = await axios.get(url);
     const d = res.data;
 
-    let msg = `╭──「 *IP INFO* 」\n`;
-    msg += `│ 🌐 IP: ${d.ip || "Unknown"}\n`;
-    msg += `│ 🏙️ City: ${d.city || "Unknown"}\n`;
-    msg += `│ 🗺️ Region: ${d.region || "Unknown"}\n`;
-    msg += `│ 🇮🇩 Country: ${d.country_name || "Unknown"}\n`;
-    msg += `│ 📮 Postal: ${d.postal || "Unknown"}\n`;
-    msg += `│ 🏢 ISP: ${d.org || "Unknown"}\n`;
-    msg += `│ 📍 Lat: ${d.latitude || "?"} Lon: ${d.longitude || "?"}\n`;
-    msg += `│ 🕐 Timezone: ${d.timezone || "Unknown"}\n`;
-    msg += `╰──────────`;
+    let _lines = [];
+      _lines.push(`🌐 IP: ${d.ip || "Unknown"}`);
+      _lines.push(`🏙️ City: ${d.city || "Unknown"}`);
+      _lines.push(`🗺️ Region: ${d.region || "Unknown"}`);
+      _lines.push(`🇮🇩 Country: ${d.country_name || "Unknown"}`);
+      _lines.push(`📮 Postal: ${d.postal || "Unknown"}`);
+      _lines.push(`🏢 ISP: ${d.org || "Unknown"}`);
+      _lines.push(`📍 Lat: ${d.latitude || "?"} Lon: ${d.longitude || "?"}`);
+      _lines.push(`🕐 Timezone: ${d.timezone || "Unknown"}`);
+    let msg = novaBox("IP INFO", _lines);
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {
