@@ -661,3 +661,51 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - .rangerpost - rpg - Ranger Post (daily check-in, patrol duty, salary)
 - .staminabar - rpg - Stamina system (manage energy, regen, buy)
 - .legendaryquest - rpg - Legendary Quest chain (7-stage epic quest)
+
+## Quotes (10 plugin)
+- .quotesbijak - Random kata bijak
+- .quotesbucin - Random kata bucin
+- .quotesgalau - Random kata galau
+- .quotesgombal - Random kata gombal
+- .quotesbacot - Random kata bacot
+- .quoteshacker - Random quotes hacker
+- .quotesislami - Random quotes islami
+- .quotesmotivasi - Random quotes motivasi
+- .quotesanime - Random quotes anime (AnimeChan API)
+- .quotechat - Random chat lucu
+
+## Anime Reactions V2 (25 reaction)
+- .animeawoo/.animebonk/.animebully/.animecringe - waifu.pics
+- .animeglomp/.animekill/.animelick/.animemegumin - waifu.pics
+- .animeshinobu/.animesmug/.animespank/.animetickle - waifu.pics
+- .animeyeet/.animecuddle/.animewaifu2/.animesmile - waifu.pics
+- .animefeed/.animefoxgirl/.animegecg/.animegoose - nekos.life
+- .animelizard/.animemeow/.animewoof/.animeavatar - nekos.life
+- .animewallpaper2/.anime8ball - nekos.life
+
+## Asupan (13 plugin baru)
+- .cosplay - Random cosplay photo
+- .blackpink - Random Blackpink photo
+- .justina - Random Justina photo
+- .ryujin - Random Ryujin photo
+- .rosebp - Random Rose BP photo
+- .pubg - Random PUBG photo
+- .boneka - Random boneka photo
+- .car - Random car photo
+- .bike - Random motorcycle photo
+- .ulzzangboy - Random ulzzang boy
+- .ulzzanggirl - Random ulzzang girl
+- .couplepp - Random couple PP
+- .profilepic - Generate PP dari nama (DiceBear)
+
+## Tools (10 plugin baru)
+- .fliptext - Balik teks upside down
+- .tinyurl - Short URL
+- .define - Kamus Inggris
+- .styletext - 9 gaya fancy text
+- .qr - QR code generator
+- .nobg - Remove background
+- .toaud - Convert video ke audio
+- .tomp4 - Convert sticker ke MP4
+- .toprompt - Image to AI prompt
+- .text2image - Text to image (Pollinations AI)
