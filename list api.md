@@ -977,3 +977,56 @@
 ---
 
 *Updated by Nova AI • 30 Agustus 2026*
+
+---
+
+## 📋 API Tambahan (dari Source Alya & Lainnya)
+
+### 📥 Downloader & Pencarian
+
+| API | Endpoint | Keterangan | Baru? |
+|-----|----------|-----------|-------|
+| Kanata API | `api.kanata.web.id` | Downloader & search multi-platform | 🆕 |
+| Vreden API | `api.vreden.my.id` | Downloader & tools | 🆕 |
+| DinzAPI | `dinzapi-sweager.vercel.app` | Downloader & pencarian | 🆕 |
+| DLSrv | `embed.dlsrv.online` | Embed downloader | 🆕 |
+| YouTube DL Siputzx | `youtubedl.siputzx.my.id` | YouTube downloader | 🆕 |
+| InstaSave | `api.instasave.website` | Instagram download API | 🆕 |
+| TikWM | `api.tikwm.com` | TikTok downloader (no watermark) | 🆕 |
+
+### 🤖 AI, Maker, Gambar & Tools
+
+| API | Endpoint | Keterangan | Baru? |
+|-----|----------|-----------|-------|
+| Baguss XYZ | `api.baguss.xyz` | AI & tools maker | 🆕 |
+| OCR Space | `api.ocr.space` | OCR image to text | 🆕 |
+| ImgBB | `api.imgbb.com` | Image upload & hosting | 🆕 |
+| EzRemove AI | `api.ezremove.ai` | AI remove background alternatif | 🆕 |
+| Bot Lyo | `bot.lyo.su` | AI chat & maker | 🆕 |
+
+### 💳 Payment, AI Model, Database & Upload
+
+| API | Endpoint | Keterangan | Baru? |
+|-----|----------|-----------|-------|
+| PakAsir | `app.pakasir.com` | Transaksi & cek pembayaran | 🆕 |
+| DeepSeek v2 (GCP) | `deepseekv2-qbvg2hl3qq-uc.a.run.app` | AI endpoint tambahan (Google Cloud Run) | 🆕 |
+| Cloud CodeTeam | `cloud.codeteam.my.id` | Uploader & media hosting | 🆕 |
+| CloudKu | `cloudku.us.kg` | Audio & konten islami | 🆕 |
+
+### 🌐 Website Scraper / Downloader (Non-API)
+
+| Website | URL | Keterangan |
+|---------|-----|-----------|
+| YouTube | `www.youtube.com` | Video download via scraper |
+| Facebook | `www.facebook.com` | Video/photo via scraper |
+| Instagram | `www.instagram.com` | Story/post/reel via scraper |
+| TikTok | `www.tiktok.com` | Video via scraper |
+| Pinterest | `www.pinterest.com` | Image/board via scraper |
+| MediaFire | `www.mediafire.com` | File download via scraper |
+| Spotify | `open.spotify.com` | Track/playlist via scraper |
+| Google Drive | `drive.google.com` | File download via scraper |
+| Ephoto360 | `ephoto360.com` | Text effect via scraper |
+
+---
+
+*Updated by Nova AI • 30 Agustus 2026*
