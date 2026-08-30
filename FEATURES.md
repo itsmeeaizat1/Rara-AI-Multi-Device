@@ -582,3 +582,16 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - Rate limit: 1 translate per 10 detik per grup (anti-spam)
 - Ignore command, bot message, media-only, <5 karakter
 - Contoh: `.autotranslate on`, `.autotranslate lang en`, `.autotranslate test Hello world`
+
+- .fakethreads - canvas - Fake Threads screenshot generator (nexray)
+- .buildml - search - Build hero Mobile Legends (emblem, spell, item)
+- .jadwalsholat - islami - Jadwal sholat berdasarkan kota (Aladhan API)
+- .animereact - anime - Anime reaction GIF (hug, kiss, cry, blush, dll 15+)
+- .wallpaper - search - Cari wallpaper HD (wallpaperflare)
+- .tebaksurah - game - Game tebak nama surah Al-Quran
+- .shazam - tools - Recognize lagu dari audio (audd.io)
+- .toreal - tools - AI image enhancement ke realistic (nexray)
+- .gtts - tts - Google Text-to-Speech multi bahasa
+- .nexraybrat - maker - Brat text generator (nexray v2)
+- .nexraynulis - maker - Nulis tulisan tangan (nexray v2)
+- .nexrayupscale - tools - Upscale image HD (nexray v2)
