@@ -518,6 +518,25 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 
 
+
+## 🚨 Auto Churn Detection & Re-engagement
+
+- `autochurn <on/off/scan/send/threshold/cooldown/message/exclude/list/reset/settime/sendto>` — Detect & re-engage user tidak aktif
+- Alias: `.churndetect`, `.churnalert`, `.reengage`
+- Detect user yang udah lama gak pakai bot berdasarkan lastSeen
+- 3 tier: warning (7d), churn (14d), critical (30d) — configurable
+- Auto-kirim re-engagement message per tier dengan variable {name} {days}
+- Cooldown per user (default 14 hari) — gak spam user yang udah di-contact
+- Exclude owner, premium, banned, dan custom JID dari detection
+- `.autochurn scan` — dry-run scan, lihat siapa yang churn tanpa kirim
+- `.autochurn send` — kirim re-engagement ke semua churned users
+- `.autochurn threshold critical 30` — Set threshold per tier
+- `.autochurn message churn Hey {name}, kangen?` — Custom message per tier
+- `.autochurn cooldown 14` — Set re-contact cooldown
+- `.autochurn exclude add 628xxx` — Exclude user dari detection
+- `.autochurn list` — Lihat daftar user churn saat ini
+- Contoh: `.autochurn on` lalu `.autochurn scan`
+
 ## 📊 Auto Weekly Group Insights
 
 - `autoweeklyreport <on/off/now/addgc/delgc/listgc/settime/sendto/snapshot/reset>` — Laporan mingguan per grup otomatis

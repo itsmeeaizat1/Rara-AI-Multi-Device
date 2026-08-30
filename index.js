@@ -374,6 +374,7 @@ async function main() {
           { name: "APICheck", fn: () => import("./plugins/owner/autoapicheck.js").then(m => m.startMonitor?.(sock)) },
           { name: "PluginHealth", fn: () => import("./plugins/owner/autoplugin.js").then(m => m.startPluginMonitor?.(sock)) },
           { name: "WeeklyReport", fn: () => import("./plugins/owner/autoweeklyreport.js").then(m => m.startWeeklyReport?.(sock)) },
+          { name: "ChurnMonitor", fn: () => import("./plugins/owner/autochurn.js").then(m => m.startChurnMonitor?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {
           try {
