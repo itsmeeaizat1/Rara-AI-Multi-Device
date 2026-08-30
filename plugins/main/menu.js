@@ -213,23 +213,23 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 ╰──────────╯
 ${weatherBlock}${readMore}
 ${novaBox(toSC("Menu"), [
-  `♦ ${prefix}menu`,
-  `♦ ${prefix}allmenu`,
-  `♦ ${prefix}allmenucategory ${toSC("<kategori>")}`,
-  `♦ ${prefix}tanyaai`,
+  `${prefix}menu`,
+  `${prefix}allmenu`,
+  `${prefix}allmenucategory ${toSC("<kategori>")}`,
+  `${prefix}tanyaai`,
 ])}
 
 ${novaBox(toSC("Info"), [
-  `♦ ${prefix}info`,
-  `♦ ${prefix}owner`,
-  `♦ ${prefix}rules`,
-  `♦ ${prefix}donasi`,
+  `${prefix}info`,
+  `${prefix}owner`,
+  `${prefix}rules`,
+  `${prefix}donasi`,
 ])}
 
 ${novaBox(toSC("Store"), [
-  `♦ ${prefix}sewa`,
-  `♦ ${prefix}payment`,
-  `♦ ${prefix}listban`,
+  `${prefix}sewa`,
+  `${prefix}payment`,
+  `${prefix}listban`,
 ])}
 
 *${toSC("Total")}: ${totalFitur} ${toSC("Fitur")}*

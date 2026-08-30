@@ -229,7 +229,7 @@ function commandListLine(prefix, cmdName, usage = "", symbols = "") {
   const paramMatches = usage ? String(usage).match(/<[^>]+>/g) : null;
   const paramPart = paramMatches ? " " + toSC(paramMatches.join(" ")) : "";
   const symbolPart = symbols ? " " + String(symbols).trim() : "";
-  return `│ ♦ ${prefix}${toSC(String(cmdName))}${paramPart}${symbolPart}`;
+  return `│ ${prefix}${toSC(String(cmdName))}${paramPart}${symbolPart}`;
 }
 
 function separator(char = "─", repeat = 20) {
