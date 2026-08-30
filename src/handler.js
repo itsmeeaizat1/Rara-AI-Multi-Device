@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { serialize } from "./lib/nova-serialize.js";
 import { getPlugin, pluginStore } from "./lib/nova-plugins.js";
+import { recordPluginExecution, postExecutionCheck } from "./lib/nova-plugin-health-hook.js";
 import { getDatabase } from "./lib/nova-database.js";
 import { checkPermission, checkMode } from "./lib/nova-middleware.js";
 import { handleAntiRemoveFromUpsert as _handleAntiRemove } from "./lib/nova-group-protection.js";
@@ -903,6 +904,8 @@ async function messageHandler(msg, sock) {
     }
 
     await plugin.handler(m, { sock, conn: sock, config, db: getDatabase(), args: m.args || [], text: m.text || '', uptime: process.uptime() * 1000 });
+    recordPluginExecution(command, true, null);
+    try { await postExecutionCheck(command, sock); } catch {}
 
     // React 🐣 after processing completes (skip if plugin set custom reaction)
     if (procNotifOn && !m.isNewsletter && !m.__customReact) {
@@ -943,6 +946,7 @@ async function messageHandler(msg, sock) {
     }
   } catch (error) {
     logger.error("plugin", `${command}: ${error.message}`);
+    recordPluginExecution(command, false, error.message);
     if (config.dev?.debugLog) console.error(c.gray(error.stack));
     if (!m.isNewsletter) { try { await m.react("❌"); } catch {} }
     try {
