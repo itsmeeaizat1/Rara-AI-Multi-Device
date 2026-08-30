@@ -501,6 +501,21 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - `.autohealth list` — lihat daftar API yang dimonitor
 - Contoh: `.autohealth on 30`
 
+
+## 🔬 Auto API Health Monitor v2 (Advanced)
+
+- `autoapicheck <on/off/now/status/interval/add/del/notify/list>` — Advanced API health monitor dengan 21+ API
+- Alias: `.apimonitor`, `.apiscan`, `.apisurgeon`
+- Cek 21+ API endpoint (primary, AI, download, islamic, info, stalker, maker, tools, search)
+- Notifikasi owner otomatis saat API down + info backup API
+- `.autoapicheck now` — Cek semua API sekarang dengan laporan per kategori
+- `.autoapicheck add <nama> <url> [backup_url] [kategori]` — Tambah custom API
+- `.autoapicheck del <nama>` — Hapus custom API
+- `.autoapicheck interval <menit>` — Set interval cek (min 5, max 1440 menit)
+- `.autoapicheck notify on/off` — Toggle notifikasi owner
+- `.autoapicheck list` — Lihat semua API yang dimonitor + last status
+- Contoh: `.autoapicheck on` lalu `.autoapicheck now`
+
 ## 👋 Auto Re-engagement
 
 - `.autoreengage <on/off/status/now/reset> [HH:MM] [threshold_hari]` — Auto follow-up user inactive
