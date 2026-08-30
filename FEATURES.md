@@ -604,3 +604,11 @@ V2 Upgrades (from Alya API endpoints):
 - .gsmarena2 - search - GSM Arena v2 (siputzx API, no npm dep)
 - .ocr2 - tools - OCR v2 cloud (ocr.space, multi-bahasa)
 - .nulis2 - maker - Nulis tulisan tangan v2 (nexray maker API)
+
+Download Upgrades:
+- .ytmp3v3 - download - YouTube MP3 v3 (@distube/ytdl-core direct engine)
+- .ytmp4v3 - download - YouTube MP4 v3 (@distube/ytdl-core direct engine)
+- .tiktokv3 - download - TikTok v3 (nexray API, support slideshow)
+- .snackvideov2 - download - SnackVideo v2 (siputzx API)
+- .teraboxv2 - download - Terabox v2 (nekolabs + teraboxdl.site)
+- .spotifyplay2 - download - Spotify play v2 (nexray + spotifydown fallback)
