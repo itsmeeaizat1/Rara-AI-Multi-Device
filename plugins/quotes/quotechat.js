@@ -12,7 +12,10 @@ const quotes = [
   "Dokter: Berapa jari ini? Pasien: Tiga. Dokter: Salah! Itu jari kamu yang sehat.",
   "A: Besok aku ultah. B: Mau hadiah apa? A: Kamu. B: Maaf, aku bukan barang.",
   "Guru: Kenapa telat? Siswa: Macet pak. Guru: Naik apa? Siswa: Naik kaki pak.",
-  "A: Kamu itu penting buat aku. B: Kenapa? A: Karena kamu yang bantu PR aku."
+  "A: Kamu itu penting buat aku. B: Kenapa? A: Karena kamu yang bantu PR aku.",
+  "A: Sayang, kamu pilih aku atau game? B: Pilih game lah, kan bisa dimainkan kapan aja.",
+  "Pembeli: Bang, es teh satu manis ya. Penjual: Nggak bisa mas, yang manis cuma senyuman mantan.",
+  "A: Bro, pacar lu mana? B: Di surga. A: Innalillahi... B: Belum lahir maksudnya."
 ];
 
 const pluginConfig = {
@@ -22,7 +25,9 @@ const pluginConfig = {
   description: "Random chat lucu",
   usage: ".quotechat",
   example: ".quotechat",
-  cooldown: 3, energi: 1, isEnabled: true,
+  cooldown: 3,
+  energi: 1,
+  isEnabled: true,
 };
 
 async function handler(m, { sock }) {

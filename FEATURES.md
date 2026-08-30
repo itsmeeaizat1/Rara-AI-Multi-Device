@@ -709,3 +709,18 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - .tomp4 - Convert sticker ke MP4
 - .toprompt - Image to AI prompt
 - .text2image - Text to image (Pollinations AI)
+
+## RPG (8 plugin baru)
+- .gajian - Menerima gaji harian (cooldown 45 menit, +50k gold + 100 EXP)
+- .rankkerja - Ranking pemain berdasarkan gold
+- .bansos - Korupsi dana bansos (high risk, +/-3.5M gold)
+- .blackinvest - Investasi black market (min 20M, 2-4x return)
+- .selectskill - Pilih skill RPG (swordmaster, necromancer, witch, dll)
+- .levelinfo - Lihat info level dan stats RPG
+- .resetlevel - Reset RPG (owner only)
+- .referal - Sistem referral RPG (dapatkan EXP dari referral)
+
+## Game (3 plugin baru)
+- .bomb - Game jinakkan bom (potong kabel yang benar)
+- .koboy - Game tembak koboy (tebak posisi musuh)
+- .ulartangga - Game ular tangga (snake & ladders multiplayer)
