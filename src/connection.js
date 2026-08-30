@@ -1661,7 +1661,7 @@ async function startConnection(options = {}) {
             await sock.rejectCall(call.id, call.from);
 
             // Skip reject message in self mode
-            const __callBotMode = getDatabase().setting("botMode") || config.config?.mode || "public";
+            const __callBotMode = getDatabase().setting("botMode") || config.mode || "public";
             if (__callBotMode !== "self") {
               await sock.sendMessage(call.from, {
                 text: config.messages?.rejectCall,

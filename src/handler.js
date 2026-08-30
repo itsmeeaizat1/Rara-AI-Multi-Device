@@ -76,7 +76,7 @@ async function messageHandler(msg, sock) {
   // === Self mode guard for non-command features ===
   // In self mode, only owner/fromMe can trigger non-command auto-features (AI grup, auto-AI, etc.)
   // Anti-detection (anti-NSFW, anti-kasar, etc.) still runs regardless of mode for group safety.
-  const __novaBotMode = db.setting("botMode") || config.config?.mode || "public";
+  const __novaBotMode = db.setting("botMode") || config.mode || "public";
   const __novaIsSelfMode = __novaBotMode === "self";
   // Cek juga publicGroups & selfGroups untuk akurasi skip
   const __novaPublicGroups = db.setting("publicGroups") || [];
@@ -960,7 +960,7 @@ async function groupHandler(update, sock) {
   const db = getDatabase();
   
   // Skip welcome/goodbye in self mode
-  const __ghBotMode = db.setting("botMode") || config.config?.mode || "public";
+  const __ghBotMode = db.setting("botMode") || config.mode || "public";
   if (__ghBotMode === "self") return;
 
   const action = update.action;
@@ -1058,7 +1058,7 @@ async function messageUpdateHandler(updates, sock) {
   const db = getDatabase();
   
   // Skip anti-delete in self mode
-  const __muBotMode = db.setting("botMode") || config.config?.mode || "public";
+  const __muBotMode = db.setting("botMode") || config.mode || "public";
   if (__muBotMode === "self") return;
 
   for (const update of updates) {
@@ -1096,7 +1096,7 @@ async function groupSettingsHandler(update, sock) {
   const db = getDatabase();
   
   // Skip in self mode
-  const __gsBotMode = db.setting("botMode") || config.config?.mode || "public";
+  const __gsBotMode = db.setting("botMode") || config.mode || "public";
   if (__gsBotMode === "self") return;
 
   try {
