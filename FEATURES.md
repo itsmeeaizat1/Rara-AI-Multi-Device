@@ -749,3 +749,73 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - .rt - Bot runtime info
 - .ttp - Text to PNG sticker
 - .volume - Adjust audio volume (ffmpeg)
+
+## Islamic (8 plugin baru)
+- .alquran - Ayat Al-Quran (surah:ayat, Alquran Cloud API)
+- .asmaulhusna - 99 Asmaul Husna (Alquran Cloud API)
+- .audiosurah - Audio murattal surah
+- .ayatkursi - Ayat Kursi (QS. Al-Baqarah: 255)
+- .bacaansholat - Bacaan-bacaan dalam sholat
+- .doatahlil - Doa Tahlil lengkap
+- .niatsholat - Niat sholat 5 waktu
+- .quotesislami - Random quotes Islami
+
+## Primbon (22 plugin baru)
+- .arahrejeki - Arah rejeki berdasarkan tanggal lahir
+- .artimimpi - Arti mimpi menurut primbon
+- .artitarot - Arti kartu tarot
+- .fengshui - Perhitungan feng shui
+- .harinaas - Hari naas
+- .harisangar - Hari sangar taliwangke
+- .jadianpernikahan - Tanggal jadian pernikahan
+- .keberuntungan - Potensi keberuntungan
+- .kecocokannama - Kecocokan nama
+- .kecocokanpasangan - Kecocokan pasangan
+- .masasubur - Masa subur
+- .memancing - Waktu memancing
+- .nagahari - Naga hari
+- .pekerjaan - Pekerjaan cocok weton
+- .peruntungan - Peruntungan
+- .ramalancinta - Ramalan cinta
+- .ramalanjodohbali - Ramalan jodoh bali
+- .ramalannasib - Ramalan nasib
+- .rejeki - Rejeki weton
+- .sifat - Sifat weton
+- .sifatusaha - Sifat usaha
+- .suamiistri - Sifat suami istri
+
+## Berita (19 plugin baru)
+- .antara - Berita Antara News
+- .beritabola - Berita Bola
+- .cnbc - Berita CNBC Indonesia
+- .cnn - Berita CNN Indonesia
+- .dailynews - Daily News Indonesia
+- .detiknews - Berita Detik News
+- .indozone - Berita Indozone
+- .inews - Berita iNews
+- .infobola - Info Bola
+- .jalantikus - Berita Jalan Tikus
+- .kompas - Berita Kompas
+- .kontan - Berita Kontan Finance
+- .layarkaca - Berita Layarkaca
+- .merdeka - Berita Merdeka
+- .okezone - Berita Okezone
+- .sindo - Berita Sindo News
+- .tempo - Berita Tempo
+- .tribun - Berita Tribun News
+- .viral - Berita Viral Indonesia
+
+## NSFW (13 plugin baru)
+- .animespank - Anime spank (NSFW)
+- .ass - Random ass (NSFW)
+- .gasm - Random gasm (NSFW)
+- .gifblowjob - GIF blowjob (NSFW)
+- .hentai-neko - Hentai neko (NSFW)
+- .hentai-waifu - Hentai waifu (NSFW)
+- .hentaivid - Hentai video (NSFW)
+- .mangasearch - Search manga/hentai
+- .milf - Random MILF (NSFW)
+- .xnxxdl - Download video NSFW
+- .xnxxsearch - Search video NSFW
+- .yuri - Yuri (NSFW)
+- .zettai - Zettai ryouiki (NSFW)
