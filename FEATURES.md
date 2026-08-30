@@ -516,6 +516,25 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - `.autoapicheck list` — Lihat semua API yang dimonitor + last status
 - Contoh: `.autoapicheck on` lalu `.autoapicheck now`
 
+
+## 🩺 Auto Plugin Health Monitor
+
+- `autoplugin <on/off/status/report/threshold/window/cooldown/whitelist/enable/disable/reset/notify>` — Auto plugin crash monitor
+- Alias: `.pluginhealth`, `.pluginmonitor`, `.plugincheck`
+- Track error/crash rate tiap plugin real-time
+- Auto-disable plugin dengan crash rate di atas threshold (default 50%)
+- Auto-re-enable plugin setelah cooldown period (default 30 menit)
+- Notifikasi owner saat plugin auto-disabled
+- Whitelist plugin critical (menu, owner, self, public, dll) tidak bisa di-auto-disable
+- `.autoplugin report` — Full health report: top errors, crash rate, per plugin
+- `.autoplugin threshold 50` — Set crash rate threshold (10-100%)
+- `.autoplugin window 20` — Set sample window size (5-100 executions)
+- `.autoplugin cooldown 30` — Set auto-re-enable cooldown (1-1440 menit)
+- `.autoplugin whitelist add/del <plugin>` — Manage critical plugin whitelist
+- `.autoplugin enable/disable <plugin>` — Manual enable/disable plugin
+- `.autoplugin reset <plugin|all>` — Reset error counter
+- Contoh: `.autoplugin on` lalu `.autoplugin report`
+
 ## 👋 Auto Re-engagement
 
 - `.autoreengage <on/off/status/now/reset> [HH:MM] [threshold_hari]` — Auto follow-up user inactive
