@@ -980,7 +980,8 @@ async function groupHandler(update, sock) {
       if (action === "add" || action === "invite") {
         // Welcome message
         try {
-          const { sendWelcomeMessage } = await import("../plugins/group/welcome.js");
+          const welcomeModule = await import("../plugins/group/welcome.js");
+          const sendWelcomeMessage = welcomeModule.default?.sendWelcomeMessage || welcomeModule.sendWelcomeMessage;
           if (sendWelcomeMessage) {
             let metadata = null;
             try {
@@ -1010,7 +1011,8 @@ async function groupHandler(update, sock) {
       } else if (action === "remove" || action === "leave") {
         // Goodbye message
         try {
-          const { sendGoodbyeMessage } = await import("../plugins/group/goodbye.js");
+          const goodbyeModule = await import("../plugins/group/goodbye.js");
+          const sendGoodbyeMessage = goodbyeModule.default?.sendGoodbyeMessage || goodbyeModule.sendGoodbyeMessage;
           if (sendGoodbyeMessage) {
             let metadata = null;
             try {
