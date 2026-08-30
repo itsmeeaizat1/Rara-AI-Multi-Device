@@ -1,13 +1,13 @@
 <div align="center">
   <h1>🌟 Nova-Ai WhatsApp Bot MD 🌟</h1>
-  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 2.100+ Command, 1.521 Plugin & 39 Kategori!</b></p>
+  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 2.657+ Command, 1.693 Plugin & 43 Kategori!</b></p>
 </div>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-21.4.0-orange?style=flat-square&logo=git&logoColor=white">
-  <img src="https://img.shields.io/badge/Total_Plugin-1521-blue?style=flat-square&logo=fire">
-  <img src="https://img.shields.io/badge/Total_Command-2100%2B-blueviolet?style=flat-square&logo=terminal">
-  <img src="https://img.shields.io/badge/Kategori-39-green?style=flat-square&logo=folder">
+  <img src="https://img.shields.io/badge/Version-21.8.0-orange?style=flat-square&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/Total_Plugin-1693-blue?style=flat-square&logo=fire">
+  <img src="https://img.shields.io/badge/Total_Command-2657%2B-blueviolet?style=flat-square&logo=terminal">
+  <img src="https://img.shields.io/badge/Kategori-43-green?style=flat-square&logo=folder">
   <img src="https://img.shields.io/badge/Node.js-20--22-green?style=flat-square&logo=node.js">
   <img src="https://img.shields.io/badge/Baileys-MultiDevice-blue?style=flat-square&logo=whatsapp">
 </p>
@@ -37,13 +37,13 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20RPG%20mega%20expansion%2057%E2%86%9285%20%2B%20list%20api.md-success?style=for-the-badge)
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20Auto%20API%20Monitor%20%2B%20Weekly%20Insights%20%2B%20Plugin%20Health%20%2B%20Churn%20Detection-success?style=for-the-badge)
 > *Commit: "feat: RPG mega expansion 57→85 (full Alya RPG parity) — 28 new RPG plugins"*
 <!--END_SECTION:latest-update-->
 
 ---
 
-## ✨ Fitur Unggulan v21.4.0
+## ✨ Fitur Unggulan v21.8.0
 
 ### 🤖 AI & Automation
 
@@ -354,13 +354,13 @@ Automation:
 
 ---
 
-## 📊 Statistik Bot v21.4.0
+## 📊 Statistik Bot v21.8.0
 
 | Metric | Count |
 |--------|-------|
-| Total Plugin | 1.521 |
-| Total Command | 2.100+ |
-| Kategori | 39 |
+| Total Plugin | 1.693 |
+| Total Command | 2.657+ |
+| Kategori | 43 |
 | RPG Module | 85 |
 | AI Model | 34 |
 | Tools Plugin | 149+ |
