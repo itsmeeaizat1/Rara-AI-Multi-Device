@@ -595,3 +595,12 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - .nexraybrat - maker - Brat text generator (nexray v2)
 - .nexraynulis - maker - Nulis tulisan tangan (nexray v2)
 - .nexrayupscale - tools - Upscale image HD (nexray v2)
+V2 Upgrades (from Alya API endpoints):
+- .ytstalk2 - stalker - YouTube stalker v2 (nexray API)
+- .tiktokstalk2 - stalker - TikTok stalker v2 (nexray API)
+- .ffstalk2 - stalker - Free Fire stalker v2 (nexray API)
+- .robloxstalk2 - stalker - Roblox stalker v2 (velyn.mom API)
+- .nikparser2 - tools - NIK parser v2 (siputzx API + manual fallback)
+- .gsmarena2 - search - GSM Arena v2 (siputzx API, no npm dep)
+- .ocr2 - tools - OCR v2 cloud (ocr.space, multi-bahasa)
+- .nulis2 - maker - Nulis tulisan tangan v2 (nexray maker API)
