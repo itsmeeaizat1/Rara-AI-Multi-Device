@@ -1127,3 +1127,40 @@ API publik Indonesia dengan playground interaktif.
 ---
 
 *Updated by Nova AI • 30 Agustus 2026*
+
+---
+
+## 📌 Image Upscaler & Enhancer — Detail Endpoint
+
+| API | Endpoint | Keterangan | Baru? |
+|-----|----------|-----------|-------|
+| ImgUpscaler API | `api.imgupscaler.ai/api/common/upload/upload-image` | Upload image untuk upscale 2x/4x | Sudah ada |
+| ImgUpscaler CDN | `cdn.imgupscaler.ai/` | CDN hasil upscale | 🆕 |
+| Cloudinary Enhancer | `cloudinary.com/tools/image-enhancer` | AI image enhancer online (free tool) | 🆕 |
+| Upscayl | `upscayl.org` | Open-source AI upscaler (desktop & cloud) | 🆕 |
+
+### Contoh Penggunaan
+
+**ImgUpscaler API:**
+```text
+POST https://api.imgupscaler.ai/api/common/upload/upload-image
+Body: form-data (image file)
+Response: { url: "https://cdn.imgupscaler.ai/..." }
+```
+
+**Cloudinary Enhancer:**
+```text
+https://cloudinary.com/tools/image-enhancer
+→ Web-based AI enhancer, upload foto → auto enhance
+```
+
+**Upscayl:**
+```text
+https://upscayl.org
+→ Open-source AI upscaler, gratis download
+→ Cloud version: https://upscayl.org/#cloud
+```
+
+---
+
+*Updated by Nova AI • 30 Agustus 2026*
