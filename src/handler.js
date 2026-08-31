@@ -332,6 +332,12 @@ async function messageHandler(msg, sock) {
     try {
       const { trackActivity } = await import("./lib/nova-activity-tracker.js");
       trackActivity(m, { messageType: m.type || "text" });
+      try {
+        const { logMessageForSummary } = await import("../plugins/owner/autosummary.js");
+        logMessageForSummary(m);
+      } catch (e) {
+        if (config.dev?.debugLog) logger.error("autosummary-log", e.message);
+      }
     } catch (e) {
       if (config.dev?.debugLog) logger.error("activity", e.message);
     }

@@ -526,6 +526,32 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 
 
+
+## 📋 Auto-Smart Summary (Daily Group Digest)
+
+- `autosummary <command>` — AI ringkasan obrolan grup harian otomatis
+- Alias: `.autodigest`, `.groupsummary`, `.gsummary`, `.adigest`
+- Setiap malem bot auto-summarize semua obrolan grup hari ini jadi 1 pesan ringkas
+- AI generate ringkasan: siapa ngobrolin apa, topik panas, keputusan, mood grup
+- 2 mode: full (detail per topik) atau brief (sangat singkat 3-5 baris)
+- Message buffer: simpan pesan sepanjang hari (max 500 per grup), summarize di jam tertentu
+- Top 3 member paling aktif, top topics, key moments, vibe grup
+- Per-grup toggle, custom waktu kirim (default 22:00 WIB)
+- Kirim ke grup atau PM owner
+- Summary history (last 14 days)
+- Stats: total summaries, messages summarized, AI vs fallback rate, per-group
+- Fallback ke stats-based summary (keyword frequency + top senders) kalau AI gagal
+- `.autosummary on/off` — Aktifkan/matikan
+- `.autosummary mode <full/brief>` — Pilih mode summary
+- `.autosummary time HH:MM` — Set jam kirim (default 22:00)
+- `.autosummary sendto group/owner` — Kirim ke grup atau PM owner
+- `.autosummary addgc/delgc <gid>` — Manage grup aktif
+- `.autosummary now [gid]` — Generate summary sekarang
+- `.autosummary history` — Lihat history summary
+- `.autosummary stats` — Statistik
+- `.autosummary reset` — Reset stats & buffer
+- Contoh: `.autosummary on` lalu `.autosummary mode full`
+
 ## ⚖️ Auto-Conflict Detector & De-escalation
 
 - `autoconflict <command>` — AI deteksi konflik/grup & auto de-eskalasi
