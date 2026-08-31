@@ -96,6 +96,7 @@
 | GitHub DL | `github.com` / `raw.githubusercontent.com` | githubdl | ✅ Free |
 | SF Converter | `du.sf-converter.com` | audio convert | ✅ Free |
 | IkyyXD | `api.ikyyxd.my.id` | tiktok, ytmp3, ytmp4, instagram, facebook, twitter, spotify, soundcloud, mediafire, pinterest, gdrive, telegraph, snackvideo, likee, zippyshare, threads, capcut, dailymotion, yt | ✅ Free |
+| AliceE APIs | `aliceeapis.my.id` | API multi-fitur (download, stalker, tools, AI) | ✅ Free |
 
 ---
 
