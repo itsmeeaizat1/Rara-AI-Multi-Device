@@ -25,6 +25,7 @@ import {
   getActivePayments, formatRupiah, formatStock, formatDate, statusText,
   getOwnerJid, formatReceipt, applyPromo,
   KATEGORI_TOKO,
+  trackResi, getResi, KURIR_LIST,
 } from "../../src/lib/nova-toko2.js";
 import config from "../../config.js";
 import fs from "fs";
@@ -44,6 +45,29 @@ const pluginConfig = {
   energi: 1,
   isEnabled: true,
 };
+
+async function sendTrackResult(m, result, resiNumber) {
+  if (result.error) return m.reply(claraWrap("Beli2", result.error));
+  const lines = [""];
+  if (result.summary) {
+    lines.push(toSC("Resi") + ": " + (result.summary.awb || resiNumber));
+    lines.push(toSC("Kurir") + ": " + (result.summary.courier || "-"));
+    lines.push(toSC("Status") + ": " + (result.summary.status || "-"));
+    if (result.summary.service) lines.push(toSC("Service") + ": " + result.summary.service);
+    lines.push("");
+  }
+  if (result.history && result.history.length) {
+    lines.push("---");
+    lines.push("");
+    for (const h of result.history.slice(-8)) {
+      const time = h.timestamp ? formatDate(h.timestamp) : (h.date || "-");
+      lines.push((h.status || h.event || "") + " — " + time);
+      if (h.message || h.desc) lines.push("  " + (h.message || h.desc));
+      lines.push("");
+    }
+  }
+  return m.reply(novaBox("LACAK RESI", lines));
+}
 
 async function handler(m, { sock }) {
   try {
@@ -322,6 +346,48 @@ async function handler(m, { sock }) {
     }
 
     // ============================================================
+    // LACAK — user cek resi paket
+    // ============================================================
+    if (action === "lacak" || action === "track" || action === "cekresi") {
+      const resiNumber = args[0] || "";
+      const kurir = (args[1] || "").toLowerCase();
+
+      if (!resiNumber) {
+        // Cek dari invoice user yang sudah ada resi
+        const invoices = getInvoicesByBuyer(jid);
+        const withResi = invoices.filter((inv) => inv.resi);
+        if (!withResi.length) {
+          return m.reply(claraWrap("Beli2", toSC("Belum ada resi untuk Anda.") + "\n\nFormat: .beli2 lacak <nomor_resi> <kurir>"));
+        }
+        const lines = [""];
+        for (const inv of withResi) {
+          lines.push(inv.code + " — " + inv.productName);
+          lines.push(toSC("Resi") + ": " + inv.resi + " | " + toSC("Kurir") + ": " + (inv.kurir || "-"));
+          lines.push("");
+        }
+        lines.push(toSC("Lacak: .beli2 lacak <resi> <kurir>"));
+        return m.reply(novaBox("RESI ANDA", lines));
+      }
+
+      if (!kurir) {
+        // Coba cari kurir dari invoice user
+        const invoices = getInvoicesByBuyer(jid);
+        const found = invoices.find((inv) => inv.resi === resiNumber);
+        if (found && found.kurir) {
+          const result = await trackResi(resiNumber, found.kurir);
+          return sendTrackResult(m, result, resiNumber);
+        }
+        return m.reply(claraWrap("Beli2",
+          toSC("Format: .beli2 lacak <nomor_resi> <kurir>") + "\n\n" +
+          "Kurir: " + Object.keys(KURIR_LIST).join(", ")
+        ));
+      }
+
+      const result = await trackResi(resiNumber, kurir);
+      return sendTrackResult(m, result, resiNumber);
+    }
+
+    // ============================================================
     // RIWAYAT — purchase history
     // ============================================================
     if (action === "riwayat" || action === "history") {
@@ -387,6 +453,7 @@ async function handler(m, { sock }) {
       p + "beli2 metode — lihat metode bayar",
       p + "beli2 bayar <inv> <metode> — pilih bayar",
       p + "beli2 cek <inv> — cek status",
+      p + "beli2 lacak <resi> <kurir> — lacak paket",
       p + "beli2 riwayat — riwayat belanja",
     ]));
   } catch (error) {

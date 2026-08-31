@@ -24,6 +24,7 @@
  */
 
 import { claraWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import { getDatabase } from "../../src/lib/nova-database.js";
 import {
   getProducts, addProduct, getProduct, updateProduct, deleteProduct, updateStock,
   listByCategory, getCategories, searchProducts,
@@ -32,6 +33,7 @@ import {
   formatReceipt,
   getPromos, getPromo, addPromo, togglePromo, deletePromo,
   KATEGORI_TOKO, seedKategori, seedAll,
+  addResi, getResi, trackResi, updateTrackingStatus, KURIR_LIST,
 } from "../../src/lib/nova-toko2.js";
 
 const pluginConfig = {
@@ -425,6 +427,114 @@ async function handler(m, { sock }) {
         ".toko2 promo on/off <kode>\n" +
         ".toko2 promo del <kode>"
       ));
+    }
+
+    // ============================================================
+    // RESI — Owner tambah resi ke invoice
+    // ============================================================
+    if (action === "resi" || action === "kirimresi") {
+      const kode = (args[0] || "").toUpperCase();
+      const resiNumber = args[1] || "";
+      const kurir = (args[2] || "").toLowerCase();
+
+      if (!kode || !resiNumber || !kurir) {
+        // Show kurir list if no args
+        if (!kode) {
+          const kList = Object.entries(KURIR_LIST).map(([k, v]) => k + " (" + v.name + ")").join(", ");
+          return m.reply(claraWrap("Toko2",
+            "Format: .toko2 resi <invoice> <nomor_resi> <kurir>\n\n" +
+            "Kurir tersedia:\n" + kList
+          ));
+        }
+        return m.reply(claraWrap("Toko2", "Format: .toko2 resi <invoice> <nomor_resi> <kurir>"));
+      }
+
+      if (!KURIR_LIST[kurir]) {
+        return m.reply(claraWrap("Toko2", toSC("Kurir tidak dikenal.") + " Tersedia: " + Object.keys(KURIR_LIST).join(", ")));
+      }
+
+      const result = addResi(kode, resiNumber, kurir);
+      if (result.error) return m.reply(claraWrap("Toko2", result.error));
+
+      // Notify buyer
+      try {
+        const kurirName = KURIR_LIST[kurir].name;
+        const buyerLines = [
+          "",
+          toSC("Kode") + ": " + kode,
+          toSC("Resi") + ": " + resiNumber,
+          toSC("Kurir") + ": " + kurirName,
+          "",
+          toSC("Paket sedang dalam pengiriman."),
+          toSC("Cek status: .beli2 lacak " + resiNumber + " " + kurir),
+        ];
+        await sock.sendMessage(result.invoice.buyerJid, { text: novaBox("RESI DIKIRIM", buyerLines) });
+      } catch {}
+
+      return m.reply(claraWrap("Toko2",
+        toSC("Resi ditambah") + "\n\n" +
+        toSC("Invoice") + ": " + kode + "\n" +
+        toSC("Resi") + ": " + resiNumber + "\n" +
+        toSC("Kurir") + ": " + KURIR_LIST[kurir].name + "\n" +
+        toSC("Notifikasi dikirim ke pembeli")
+      ));
+    }
+
+    // ============================================================
+    // TRACK — Owner cek resi
+    // ============================================================
+    if (action === "track" || action === "cekresi") {
+      const resiNumber = args[0] || "";
+      const kurir = (args[1] || "").toLowerCase();
+
+      if (!resiNumber || !kurir) {
+        return m.reply(claraWrap("Toko2", "Format: .toko2 track <nomor_resi> <kurir>"));
+      }
+
+      const loading = await m.react("\u{1F551}").catch(() => {});
+      const result = await trackResi(resiNumber, kurir);
+      await m.react("\u{1F423}").catch(() => {});
+
+      if (result.error) return m.reply(claraWrap("Toko2", result.error));
+
+      const lines = [""];
+      if (result.summary) {
+        lines.push(toSC("Resi") + ": " + (result.summary.awb || resiNumber));
+        lines.push(toSC("Kurir") + ": " + (result.summary.courier || kurir));
+        lines.push(toSC("Status") + ": " + (result.summary.status || "-"));
+        if (result.summary.service) lines.push(toSC("Service") + ": " + result.summary.service);
+        lines.push("");
+      }
+      if (result.history && result.history.length) {
+        lines.push("---");
+        lines.push("");
+        for (const h of result.history.slice(-8)) {
+          const time = h.timestamp ? formatDate(h.timestamp) : (h.date || "-");
+          lines.push((h.status || h.event || "") + " — " + time);
+          if (h.message || h.desc) lines.push("  " + (h.message || h.desc));
+          lines.push("");
+        }
+      }
+      lines.push(toSC("Sumber") + ": " + (result.source || "manual"));
+      return m.reply(novaBox("LACAK RESI", lines));
+    }
+
+    // ============================================================
+    // SETKEY — Set Binderbyte API key untuk auto-track
+    // ============================================================
+    if (action === "setkey" || action === "setapikey") {
+      const key = args[0] || "";
+      if (!key) {
+        return m.reply(claraWrap("Toko2",
+          toSC("Set Binderbyte API key untuk auto-track resi") + "\n\n" +
+          "Format: .toko2 setkey <key>\n\n" +
+          "Daftar gratis: binderbyte.com"
+        ));
+      }
+      const db = getDatabase();
+      db.setting("binderbyteKey", key);
+      db.save();
+      return m.reply(claraWrap("Toko2", toSC("Binderbyte API key disimpan.")));
     }
 
     // ============================================================
