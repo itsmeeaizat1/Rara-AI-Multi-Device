@@ -340,7 +340,7 @@ barandom, cecanchina, cecanindo, cecanjepang, cecankorea, cecanthai, cecanvietna
 ### 🛐 Religi (6 plugin)
 asmaulhusna, audioquran, hadith, islami, jadwalsholat, sholat
 
-### ⚔️ RPG (237 plugin)
+### ⚔️ RPG (251 plugin)
 Sistem RPG lengkap dengan mining, farming, hunting, cooking, economy, jobs, mini-games, clans, bosses, dungeons, items, pets, dan lebih banyak lagi. Lihat folder `plugins/rpg/` untuk detail.
 
 ### 🔎 Search (41 plugin)
