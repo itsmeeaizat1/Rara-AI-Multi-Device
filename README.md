@@ -380,17 +380,19 @@ Automation:
 
 | Resource | Minimum | Rekomendasi |
 |----------|---------|-------------|
-| CPU | 1 vCore | 2 vCore |
-| RAM | 512 MB | 1 GB |
-| Disk | 500 MB | 1 GB |
+| CPU | 200% (2 vCore) | 400% (4 vCore) |
+| RAM | 3 GB | 4 GB |
+| Swap | 2 GB | 4 GB |
+| Disk | 1 GB | 2 GB |
 | Node.js | v20 | v22 (LTS) |
 
 ### Optimal (5-10 jadibot)
 
 | Resource | Minimum | Rekomendasi |
 |----------|---------|-------------|
-| CPU | 2 vCore | 4 vCore |
-| RAM | 1 GB | 2 GB |
+| CPU | 200% (2 vCore) | 400% (4 vCore) |
+| RAM | 3 GB | 4 GB |
+| Swap | 2 GB | 4 GB |
 | Disk | 1 GB | 2 GB |
 | Node.js | v20 | v22 (LTS) |
 
@@ -398,13 +400,15 @@ Automation:
 
 | Resource | Minimum | Rekomendasi |
 |----------|---------|-------------|
-| CPU | 4 vCore | 8 vCore |
-| RAM | 2 GB | 4 GB |
+| CPU | 200% (2 vCore) | 400% (4 vCore) |
+| RAM | 3 GB | 4 GB |
+| Swap | 2 GB | 4 GB |
 | Disk | 2 GB | 5 GB |
 | Node.js | v22 (LTS) | v22 (LTS) |
 
 ### Catatan Resource
 
+- ⚠️ **Minimum mutlak: 3 GB RAM + 2 GB Swap + 200% CPU (2 vCore)** — bot gak akan jalan stabil di bawah ini
 - Ukuran repo: ~24 MB (tanpa node_modules)
 - Ukuran plugins: ~4 MB (1.521 file .js)
 - Dependencies: 50+ package npm
