@@ -441,7 +441,9 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
   - .autoweather — owner — Unified Auto Weather (cuaca biasa + alert ekstrem + BMKG mode)
   - .toko2 — market — Alfamart Shop (admin: produk, stok, kategori, seed, resi, promo, invoice)
   - .beli2 — market — Alfamart Shopping (katalog, keranjang, checkout, promo, bayar, riwayat)
-  - .market — market — Menu utama Alfamart (katalog, keranjang, invoice, resi, promo)
+  - .market — market — Menu utama Alfamart (katalog, keranjang, invoice, resi, promo, PPOB)
+  # Kategori MARKET = Alfamart lengkap (PPOB API, keranjang, resi, promo, kategori template)
+  # Kategori STORE = Toko biasa (manual produk, 1 produk = 1 transaksi)
   - .toko2 seed — market — Isi katalog template: sembako, ppob, apppremium, akun, game
   - .toko2 resi — market — Tambah nomor resi + kurir ke invoice (auto-notif buyer)
   - .toko2 track — market — Cek resi via Binderbyte API atau manual tracking

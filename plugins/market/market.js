@@ -71,6 +71,13 @@ async function handler(m, { sock }) {
     lines.push(p + "beli2 cek <inv> — cek invoice");
     lines.push(p + "beli2 riwayat — history belanja");
     lines.push("");
+    lines.push("📌 " + toSC("PPOB (API DigiFlazz)"));
+    lines.push(p + "ppob kategori — menu PPOB");
+    lines.push(p + "ppob cari <keyword> — cari produk");
+    lines.push(p + "ppob beli <sku> <nomor> — beli PPOB");
+    lines.push(p + "ppob premium — app premium");
+    lines.push(p + "ppob riwayat — history order");
+    lines.push("");
 
     // Promo info
     const promoLines = [];
