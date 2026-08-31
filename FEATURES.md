@@ -3,7 +3,7 @@
 > Daftar lengkap fitur per kategori. Update file ini setiap kali ada perubahan fitur.
 
 ## Statistik
-- **Total Plugin:** 1.630
+- **Total Plugin:** 1.635
 - **Total Command:** 2.118+
 - **Total Kategori:** 39
 - **Versi:** 21.8.0
@@ -262,7 +262,7 @@ akankah, anniversary, apakah, asahotak, bagaimana, berapa, bisakah, bucin, bucin
 ### 🔮 Future (90+ plugin)
 aianchor, aiarisan, aibookclub, aicode, aicrowdfund, aidebate, aidescribe, aidiet, aidoc, aiemergency, aiexpense, aifatwa, aigift, aigrouppet, aihabit, aihadith, aiimage, ailearn, aimeeting, aimentor, aipoll, aiquran, aitimemachine, aivoice, aivoicenote, aksi, astrologi, auracheck, autoabsen, autobirthday, autocountdown, autodigest, autoevent, autofactcheck, autoholiday, autolanguage, automilestone, autopulse, autoquote, autorekap, autostreak, autosurvey, autotodo, autotranslate, autoweather, barista, blinddate, breathing, bucketlist, chatsummary, chord, cipher, compliment, confesswall, dailyquest, debateclub, detective, drama, ecocalendar, escape, expensetrack, fanfic, fortunecookie, futureme, gachapull, gkarma, groupanalytics, guessnum, hallfame, horor, hotseat, isekai, karaoke, komedi, lostfound, memorygame, moodtrack, mysterybox, osint, personacard, podcast, rizzmeter, romantis, secretmsg, sentiment, shipname, sleepcoach, smartbriefing, smartmoderation, smartreply, sudoku, topicdetector, tribe, wheelroulette, wordchain, wordle
 
-### 🎲 Game (70+ plugin)
+### 🎲 Game (75+ plugin)
 asahotak, caklontong, family100, fishing, kataacak, kuis, kyubigame, mathquiz, merge, ppcouple, quizbattle, riddle, siapakahaku, suitpvp, susunkata, tebak, tebakangka, tebakasmaulhusna, tebakbendera, tebakbendera2, tebakdrakor, tebakepep, tebakfilm, tebakgambar, tebakgambarv2, tebakhewan, tebakjkt48, tebakkabupaten, tebakkalimat, tebakkata, tebakkimia, tebaklagu, tebaklirik, tebaklogo, tebakmakanan, tebaknegara, tebakprofesi, tebaktebakan, tekateki, tictactoe, trivia, truthordare, ulartangga, werewolf, wwkill, wwprotect, wwsee, wwsorcerer
 - .asahotak - game - Tebak tebakan asah otak
 - .caklontong - game - Tebak caklontong lucu
@@ -295,6 +295,11 @@ asahotak, caklontong, family100, fishing, kataacak, kuis, kyubigame, mathquiz, m
 - .tekateki - game - Teka teki rumit
 - .trivia - game - Pertanyaan trivia umum
 
+- .catur - game - Sistem catur multiplayer (28 sub-command)
+- .uno - game - Game UNO multiplayer di grup
+- .gaple - game - Game domino (gaple) multiplayer
+- .dadu - game - Kocok dadu acak (sticker)
+- .werewolf - game - Werewolf social deduction (5-15 pemain)
 ### 👥 Group (183+ plugin)
 absen, absenv2, acc, add, addantilink, addcmdsticker, addtoxic, afk, agenda, anti18plus, antibucin, antibug, anticaps, anticulik, anticustom, antidocument, antiflood, antiforward, antifoto, antighost, antihotword, antijudol, antikasar, antilinkall, antilinkgc, antimedia, antinomorluar, antiphising, antipollspam, antipromote, antiremove, antiribut, antirvo, antispam, antisticker, antiswgc, antitagsw, antitoxic, antivideo, antivn, approvalmember, autoai, autochatsummary, automeme, automute, autoreaction, autoreply, autosticker, autotips, banchat, bingo, botmode, bounty, cekabsen, cekfakta-v2, cekidgc, cekonline, checklink, checksewa, close, delantilink, delete, delppgc, delstickercmd, deltoxic, demote, donasi, emojiguess, eventrsvp, game, getpp, goodbye, groupinfo, groupmemory, grupdashboard, grupshop, hapusabsen, hidetag, hidetag2, intro, jadwalgroup, kick, kickall, lelang, linkgc, linkgroup, listadmin, listantilink, listtoxic, listwarn, mostlikely, motw, mulaiabsen, mute, mutegc, mutemember, nhie, notifclosegroup, notifdemote, notifgantitag, notifmakan, notifopengroup, notifpromote, notifsholat, notiftidur, open, openvo, pickme, pin, poll, promote, ptg, publicthisgc, rapbattle, rateuser, reaction, reactionrole, report, resetgoodbye, resetintro, resetlinkgc, resetrulesgrup, resetwarn, resetwelcome, roastbattle, rpg, rulesgrup, selfthisgc, setdeskgc, setgoodbye, setgroupdesc, setgroupicon, setgroupname, setgrouppp, setgrouptitle, setintro, setnamegc, setppgc, setrulesgrup, setwelcome, sewainfo, slowmode, smartremind, smartreply, spinbottle, statscard, storybuild, storyrelay, tagall, tam, tod, topchat, totag, truth, typingrace, unban, unmute, unmutegc, unmutemember, warn, welcome, wordbomb, wyr
 
@@ -415,7 +420,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## ✅ Status Audit (Update Terakhir)
 
-- **Total Plugin:** 1.630 (12 plugin dibikin ulang setelah dihapus AI agent lain)
+- **Total Plugin:** 1.635 (12 plugin dibikin ulang setelah dihapus AI agent lain)
 - **Syntax Check:** 0 error
 - **Broken Import:** 0
 - **api.neoxr.eu:** 0 (semua diganti)
