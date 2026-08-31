@@ -521,6 +521,30 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 
 
+
+## 📅 Auto-Content Scheduler
+
+- `autocontent <command>` — Schedule konten otomatis ke grup pada jam optimal
+- Alias: `.autoschedule`, `.contentbot`, `.autoscheduler`
+- AI-generated content (bukan template statis) — fresh tiap kali
+- Content types: islamic, quote, motivasi, cuaca, news, facts, hadist, doa, tips
+- Custom content dengan AI prompt bebas + template variable ({group}, {date}, {time})
+- Auto-detect jam aktivitas grup & rekomendasi waktu kirim terbaik
+- Multi-target: kirim ke multiple grup sekaligus
+- Interval: daily, weekly, monthly (configurable per schedule)
+- Smart delay antar grup (anti blast bersamaan)
+- Statistics: total sent, failed, per-type, per-group
+- Per-grup schedule (setiap grup bisa beda content & jam)
+- `.autocontent add <type> <HH:MM> <gid>` — Tambah schedule
+- `.autocontent custom <HH:MM> <gid> <prompt>` — Custom AI content
+- `.autocontent del <id>` — Hapus schedule
+- `.autocontent list` — Lihat semua schedule
+- `.autocontent types` — Lihat daftar content types
+- `.autocontent run <id>` — Test run schedule sekarang
+- `.autocontent analyze <gid>` — Analisis jam aktif grup
+- `.autocontent interval <id> <daily/weekly/monthly>` — Set interval
+- Contoh: `.autocontent add islamic 05:00 120363xxx@g.us`
+
 ## 🧠 Auto-Smart Moderation (AI-Powered)
 
 - `autosmartmod <command>` — AI-powered moderation: detect toxic, spam, scam, bullying dengan pattern recognition
