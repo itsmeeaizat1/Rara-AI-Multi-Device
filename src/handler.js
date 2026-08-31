@@ -993,6 +993,17 @@ async function groupHandler(update, sock) {
             } catch {}
             await sendWelcomeMessage(sock, update.id, participantJid, metadata);
 
+            // === Auto-Smart Welcome (AI Personalized) ===
+            try {
+              const smartWelcomeModule = await import("../plugins/owner/autosmartwelcome.js");
+              const sendSmartWelcome = smartWelcomeModule.sendSmartWelcome;
+              if (sendSmartWelcome) {
+                await sendSmartWelcome(sock, update.id, participantJid, metadata);
+              }
+            } catch (e) {
+              if (config.dev?.debugLog) logger.error("smart-welcome", e.message);
+            }
+
         // === Quiz Verification for new member ===
         try {
           const { handleNewMemberQuiz } = await import("./lib/nova-quiz-verify.js");

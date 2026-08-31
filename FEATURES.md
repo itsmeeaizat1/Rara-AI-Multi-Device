@@ -524,6 +524,32 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 
 
+
+## 🎯 Auto-Smart Welcome (AI Personalized)
+
+- `autosmartwelcome <command>` — AI personalized welcome message per member baru
+- Alias: `.smartwelcome`, `.aiwelcome`, `.autowelcomeai`, `.swelcome`
+- AI analisis profil member baru: nama, nomor, asal negara (prefix detection), bio, foto profil
+- Generate welcome personal yang relevan — bukan template static
+- 3 mode: v1 (teks personal), v2 (canvas image + AI caption), v3 (full AI teks panjang)
+- Custom personality: atur gaya welcome (ramah, lucu, formal, dll)
+- Region detection: 28+ country prefix (Indonesia, Malaysia, Singapore, India, dll)
+- Lucky number extraction dari nomor member
+- Per-grup toggle: pilih grup mana yang aktif
+- Anti-spam: cooldown 5 detik per member
+- Welcome history tracking (last 50)
+- Stats: total welcome, AI rate, fallback rate, per-group
+- Fallback ke welcome biasa kalau AI gagal
+- `.autosmartwelcome on/off` — Aktifkan/matikan
+- `.autosmartwelcome mode <1/2/3>` — Pilih mode welcome
+- `.autosmartwelcome personality <teks>` — Set personality welcome
+- `.autosmartwelcome test` — Test generate welcome untuk diri sendiri
+- `.autosmartwelcome history` — Lihat welcome history
+- `.autosmartwelcome addgc/delgc <gid>` — Manage grup aktif
+- `.autosmartwelcome stats` — Statistik welcome
+- `.autosmartwelcome reset` — Reset stats & history
+- Contoh: `.autosmartwelcome on` lalu `.autosmartwelcome mode 3`
+
 ## 🔄 Auto-Failover API Router
 
 - `autofailover <command>` — Monitor API health real-time & auto-switch ke backup kalau down

@@ -380,6 +380,7 @@ async function main() {
           { name: "AutoContent", fn: () => import("./plugins/owner/autocontent.js").then(m => m.startAutoContent?.(sock)) },
           { name: "AutoPredict", fn: () => import("./plugins/owner/autopredict.js").then(m => m.startAutoPredict?.(sock)) },
           { name: "AutoFailover", fn: () => import("./plugins/owner/autofailover.js").then(m => m.startAutoFailover?.(sock)) },
+          { name: "AutoSmartWelcome", fn: () => import("./plugins/owner/autosmartwelcome.js").then(m => m.startAutoSmartWelcome?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {
           try {
