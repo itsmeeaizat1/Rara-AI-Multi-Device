@@ -24,6 +24,23 @@
  */
 
 import { claraWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
+import axios from "axios";
+import FormData from "form-data";
+
+async function uploadToCatbox(buffer, filename = "file.jpg") {
+  try {
+    const form = new FormData();
+    form.append("fileToUpload", buffer, { filename });
+    form.append("reqtype", "fileupload");
+    const res = await axios.post("https://catbox.moe/user/api.php", form, {
+      headers: form.getHeaders(),
+      timeout: 30000,
+    });
+    return res.data?.startsWith("http") ? res.data : null;
+  } catch {
+    return null;
+  }
+}
 import { getDatabase } from "../../src/lib/nova-database.js";
 import {
   getProducts, addProduct, getProduct, updateProduct, deleteProduct, updateStock,
@@ -59,6 +76,7 @@ function help(m) {
     "",
     "📌 " + toSC("Kelola Produk"),
     p + "toko2 add <nama>|<harga>|<stok>|<desc>|<kategori>",
+    p + "toko2 edit <kode> gambar (reply gambar) — upload ke Catbox",
     p + "toko2 list [kategori]",
     p + "toko2 stok <kode> <jumlah>",
     p + "toko2 del <kode>",
@@ -101,7 +119,8 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Toko2",
           "Format: .toko2 add <nama>|<harga>|<stok>|<desc>|<kategori>\n" +
           "Contoh: .toko2 add Spotify Premium|25000|10|Akun 1 bulan|digital\n\n" +
-          "Stok -1 = unlimited. Kategori opsional."
+          "Stok -1 = unlimited. Kategori opsional.\n" +
+          "Gambar opsional: reply gambar + command, atau .toko2 edit <kode> gambar (reply gambar)"
         ));
       }
       const parts = raw.split("|").map((s) => s.trim());
@@ -117,16 +136,32 @@ async function handler(m, { sock }) {
       if (!name || isNaN(price) || price < 0) return m.reply(claraWrap("Toko2", "Nama & harga harus valid."));
       if (isNaN(stock) || stock < -1) return m.reply(claraWrap("Toko2", "Stok harus angka (-1 = unlimited)."));
 
-      const product = addProduct({ name, price, stock, desc, category });
-      return m.reply(claraWrap("Toko2",
-        toSC("Produk ditambah") + "\n\n" +
+      // Upload gambar ke Catbox (opsional — reply/kirim gambar dengan command)
+      let imageUrl = null;
+      const hasQuotedMedia = m.quoted?.isMedia && (m.quoted?.isImage || m.quoted?.type === "imageMessage");
+      const isDirectImage = m.isMedia && m.isImage;
+      if (hasQuotedMedia || isDirectImage) {
+        try {
+          const buffer = hasQuotedMedia ? await m.quoted.download() : await m.download();
+          if (buffer) {
+            imageUrl = await uploadToCatbox(buffer, "image.jpg");
+          }
+        } catch (e) {
+          console.error("[toko2] Upload error:", e.message);
+        }
+      }
+
+      const product = addProduct({ name, price, stock, desc, category, image: imageUrl || "" });
+      let reply = toSC("Produk ditambah") + "\n\n" +
         toSC("Kode") + ": " + product.id + "\n" +
         toSC("Nama") + ": " + product.name + "\n" +
         toSC("Harga") + ": " + formatRupiah(product.price) + "\n" +
         toSC("Stok") + ": " + formatStock(product.stock) + "\n" +
-        toSC("Kategori") + ": " + product.category +
-        (desc ? "\n" + toSC("Desc") + ": " + desc : "")
-      ));
+        toSC("Kategori") + ": " + product.category;
+      if (desc) reply += "\n" + toSC("Desc") + ": " + desc;
+      if (imageUrl) reply += "\n" + toSC("Gambar") + ": OK (Catbox)";
+      else reply += "\n" + toSC("Gambar") + ": - (opsional)";
+      return m.reply(claraWrap("Toko2", reply));
     }
 
     // ============================================================
@@ -221,16 +256,37 @@ async function handler(m, { sock }) {
       const kode = args[0] || "";
       const field = (args[1] || "").toLowerCase();
       const nilai = args.slice(2).join(" ").trim();
-      if (!kode || !field || !nilai) return m.reply(claraWrap("Toko2", "Format: .toko2 edit <kode> <nama|harga|desc|kategori> <nilai>"));
+      if (!kode || !field) return m.reply(claraWrap("Toko2", "Format: .toko2 edit <kode> <nama|harga|desc|kategori|gambar> <nilai>"));
       const product = getProduct(kode);
       if (!product) return m.reply(claraWrap("Toko2", toSC("Produk tidak ditemukan.")));
+
+      // Gambar: reply gambar + .toko2 edit <kode> gambar
+      if (field === "gambar" || field === "image") {
+        const hasQuotedMedia = m.quoted?.isMedia && (m.quoted?.isImage || m.quoted?.type === "imageMessage");
+        const isDirectImage = m.isMedia && m.isImage;
+        if (!hasQuotedMedia && !isDirectImage) {
+          return m.reply(claraWrap("Toko2", "Reply/kirim gambar lalu ketik .toko2 edit <kode> gambar"));
+        }
+        try {
+          const buffer = hasQuotedMedia ? await m.quoted.download() : await m.download();
+          if (!buffer) return m.reply(claraWrap("Toko2", "Gagal download gambar."));
+          const imageUrl = await uploadToCatbox(buffer, "image.jpg");
+          if (!imageUrl) return m.reply(claraWrap("Toko2", "Gagal upload ke Catbox."));
+          updateProduct(kode, { image: imageUrl });
+          return m.reply(claraWrap("Toko2", toSC("Gambar diperbarui") + ": " + kode + "\nURL: " + imageUrl));
+        } catch (e) {
+          return m.reply(claraWrap("Toko2", "Error upload: " + e.message));
+        }
+      }
+
+      if (!nilai) return m.reply(claraWrap("Toko2", "Format: .toko2 edit <kode> <nama|harga|desc|kategori> <nilai>"));
 
       let updates = {};
       if (field === "nama" || field === "name") updates.name = nilai;
       else if (field === "harga" || field === "price") updates.price = parseInt(nilai);
       else if (field === "desc" || field === "deskripsi") updates.desc = nilai;
       else if (field === "kategori" || field === "category") updates.category = nilai;
-      else return m.reply(claraWrap("Toko2", "Field: nama, harga, desc, kategori"));
+      else return m.reply(claraWrap("Toko2", "Field: nama, harga, desc, kategori, gambar"));
 
       updateProduct(kode, updates);
       return m.reply(claraWrap("Toko2", toSC("Produk diperbarui") + ": " + kode + " (" + field + " = " + nilai + ")"));
