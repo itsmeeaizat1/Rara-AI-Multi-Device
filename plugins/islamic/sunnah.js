@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 const pluginConfig = {
   name: "sunnah",
   alias: ["sunnah"],
-  category: "islamic",
+  category: "islami",
   description: "Sunnah - Hadith via official sunnah.com API (requires API key)",
   usage: ".sunnah <command> [args]",
   example: ".sunnah list",

@@ -11,7 +11,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "tribunnewsxemoz",
   alias: ["tribunnewsxemoz"],
-  category: "news",
+  category: "berita",
   description: "Berita Tribunnews via API xemoz",
   usage: ".tribunnewsxemoz <kata kunci>\n.tribunnewsxemoz (tanpa argumen = headline)",
   example: ".tribunnewsxemoz olahraga",

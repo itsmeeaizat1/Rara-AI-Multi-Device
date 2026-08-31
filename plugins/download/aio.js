@@ -6,7 +6,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova
 const pluginConfig = {
   name: "aio",
   alias: ["aio"],
-  category: "downloader",
+  category: "download",
   description:
     "All in one downloader (IG, TikTok, FB, Twitter, YouTube, Pinterest, CapCut, dll)",
   usage: ".aio <url>",

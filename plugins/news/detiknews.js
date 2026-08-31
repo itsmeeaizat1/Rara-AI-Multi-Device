@@ -7,7 +7,7 @@ const pluginConfig = {
   name: "detiknews",
   alias: ["detiknews"],
   aliases: ["detiknews", "detik", "detikcom"],
-  category: "news",
+  category: "berita",
   description: "Berita terbaru Detik.com (RSS scraping, no API key)",
   usage: ".detiknews | .detiknews <kategori> | .detiknews list",
   example: ".detiknews | .detiknews detiknews | .detiknews list",

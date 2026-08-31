@@ -4,7 +4,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "motivasiislam",
   alias: ["motivasiislam"],
-  category: "islamic",
+  category: "islami",
   description: "Motivasi Islami dari ayat Al-Quran random + tafsir (API online)",
   usage: ".motivasiislam",
   example: ".motivasiislam",

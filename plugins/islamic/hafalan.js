@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from
 const pluginConfig = {
   name: "hafalan",
   alias: ["hafalan"],
-  category: "islamic",
+  category: "islami",
   description: "Tracker hafalan Al-Quran - catat, review, spaced repetition",
   usage: ".hafalan <add/list/review/progress/remove/streak>",
   example: ".hafalan add Al-Fatihah 1-7",

@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "quranv3",
   alias: ["quranv3"],
-  category: "islamic",
+  category: "islami",
   description: "Al-Quran lengkap: baca surat, ayat, audio murottal, dan random ayat (Arab + Indonesia)",
   usage: ".quranv3 [subcommand] [args]",
   example: ".quranv3 1\n.quranv3 2 255\n.quranv3 audio 1\n.quranv3 random",

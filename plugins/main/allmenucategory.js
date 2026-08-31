@@ -106,11 +106,30 @@ async function handler(m, { sock, db }) {
       const excludeCategories = modeExcludeMap[botMode] || modeExcludeMap.md;
 
       const categoryOrder = [
-        "ai", "sticker", "download", "fun", "canvas", "tools",
-        "game", "rpg", "media", "search", "group", "main",
-        "utility", "religi", "info", "cek", "economy", "user",
-        "random", "premium", "ephoto", "jpm", "pushkontak",
-        "panel", "owner", "store",
+        // Core Bot
+        "ai", "sticker", "group", "download", "tools",
+        // Media & Kreatif
+        "canvas", "convert", "maker", "ephoto", "fun", "game",
+        // Game & RPG
+        "rpg", "rpg cinta", "clan", "turnamen",
+        // Search & Info
+        "search", "stalker", "anime", "asupan", "cecan", "nsfw",
+        // Entertainment
+        "media", "tts", "quotes", "primbon",
+        // Knowledge
+        "education", "food", "info", "cek", "berita",
+        // Religion
+        "islami", "religi",
+        // System & User
+        "main", "user", "premium", "future",
+        // Store
+        "store", "market",
+        // Misc
+        "misc", "random", "utility", "clean",
+        // Admin
+        "vps", "linode", "panel", "jpm", "pushkontak", "kerja",
+        "sekolah", "umum", "general", "date", "primary",
+        "owner",
       ];
 
       const allCats = [...new Set([...categories, ...Object.keys(casesByCategory)])];

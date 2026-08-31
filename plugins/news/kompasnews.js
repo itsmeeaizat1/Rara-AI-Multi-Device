@@ -7,7 +7,7 @@ const pluginConfig = {
   name: "kompasnews",
   alias: ["kompasnews"],
   aliases: ["kompasnews", "kompas", "kompascom"],
-  category: "news",
+  category: "berita",
   description: "Berita terbaru Kompas.com (RSS scraping, no API key)",
   usage: ".kompasnews | .kompasnews <kategori> | .kompasnews list",
   example: ".kompasnews | .kompasnews nasional | .kompasnews list",

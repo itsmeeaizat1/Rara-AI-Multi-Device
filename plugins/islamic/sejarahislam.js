@@ -4,7 +4,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 const pluginConfig = {
   name: "sejarahislam",
   alias: ["sejarahislam"],
-  category: "islamic",
+  category: "islami",
   description: "Sejarah Islam & info surat Al-Quran dari API online",
   usage: ".sejarahislam <topik>",
   example: ".sejarahislam info 2",

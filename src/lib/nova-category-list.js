@@ -15,43 +15,65 @@ import { getCommandsByCategory, getCategories } from "./nova-plugins.js";
 import { getCasesByCategory } from "../../case/nova.js";
 
 const CATEGORY_NAMES = {
-  ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
-  canvas: "Canvas", tools: "Tools", rpg: "RPG", "rpg cinta": "RPG Cinta",
-  media: "Media", search: "Search", group: "Group", main: "Main",
-  utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
-  economy: "Economy", user: "User", random: "Random", premium: "Premium",
-  ephoto: "Ephoto", jpm: "JPM", pushkontak: "Push Kontak",
-  panel: "Panel", owner: "Owner", store: "Store",
-  anime: "Anime", asupan: "Asupan", clan: "Clan", convert: "Convert",
-  downloader: "Downloader", education: "Education", food: "Food",
-  future: "Future", islami: "Islami", islamic: "Islamic", menu: "Menu",
-  maker: "Maker", news: "News", nsfw: "NSFW", linode: "Linode",
-  primbon: "Primbon", cecan: "Cecan", stalker: "Stalker", tts: "TTS",
-  vps: "VPS",
+  ai: "AI", sticker: "Sticker", group: "Group", download: "Download",
+  tools: "Tools", canvas: "Canvas", fun: "Fun", game: "Game",
+  rpg: "RPG", "rpg cinta": "RPG Cinta", clan: "Clan",
+  search: "Search", stalker: "Stalker", anime: "Anime",
+  asupan: "Asupan", cecan: "Cecan", nsfw: "NSFW",
+  convert: "Convert", maker: "Maker", ephoto: "Ephoto",
+  media: "Media", tts: "TTS", quotes: "Quotes",
+  education: "Education", food: "Food", primbon: "Primbon",
+  info: "Info", cek: "Cek", berita: "Berita",
+  islami: "Islami", religi: "Religi",
+  main: "Main", user: "User", premium: "Premium",
+  store: "Store", market: "Market",
+  future: "Future", misc: "Misc", random: "Random",
+  utility: "Utility", vps: "VPS", linode: "Linode",
+  panel: "Panel", jpm: "JPM", pushkontak: "Push Kontak",
+  owner: "Owner",
 };
 
 const CATEGORY_ORDER = [
-  "ai", "sticker", "download", "fun", "canvas", "tools",
-  "rpg", "rpg cinta", "media", "search", "group", "main",
-  "utility", "religi", "info", "cek", "economy", "user",
-  "random", "premium", "ephoto", "jpm", "pushkontak",
-  "panel", "owner", "store",
+  // Core Bot
+  "ai", "sticker", "group", "download", "tools",
+  // Media & Kreatif
+  "canvas", "convert", "maker", "ephoto", "fun", "game",
+  // Game & RPG
+  "rpg", "rpg cinta", "clan", "turnamen",
+  // Search & Info
+  "search", "stalker", "anime", "asupan", "cecan", "nsfw",
+  // Entertainment
+  "media", "tts", "quotes", "primbon",
+  // Knowledge
+  "education", "food", "info", "cek", "berita",
+  // Religion
+  "islami", "religi",
+  // System & User
+  "main", "user", "premium", "future",
+  // Store
+  "store", "market",
+  // Misc
+  "misc", "random", "utility", "clean",
+  // Admin
+  "vps", "linode", "panel", "jpm", "pushkontak", "kerja",
+  "sekolah", "umum", "general", "date", "primary",
+  "owner",
 ];
 
 const CATEGORY_EMOJI = {
-  ai: "🤖", sticker: "🖼️", download: "⬇️", fun: "🎉",
-  canvas: "🎨", tools: "🛠️", rpg: "🎮", "rpg cinta": "❤️",
-  media: "🎬", search: "🔍", group: "👥", main: "🏠",
-  utility: "🧰", religi: "🕌", info: "ℹ️", cek: "🔎",
-  economy: "💰", user: "👤", random: "🎲", premium: "💎",
-  ephoto: "📸", jpm: "📦", pushkontak: "📲",
-  panel: "🖥️", owner: "👑", store: "🏬",
-  anime: "🎌", asupan: "😍", clan: "🛡️", convert: "🔄",
-  downloader: "📥", education: "📚", food: "🍔",
-  future: "🌌", islami: "☪️", islamic: "🕋", menu: "📋",
-  maker: "🖌️", news: "📰", nsfw: "🔞", linode: "☁️",
-  primbon: "🔮", cecan: "💃", stalker: "🕵️", tts: "🔊",
-  vps: "🖧",
+  ai: "🤖", sticker: "🖼️", group: "👥", download: "⬇️", tools: "🛠️",
+  canvas: "🎨", convert: "🔄", maker: "🖌️", ephoto: "📸",
+  fun: "🎉", game: "🎮", rpg: "⚔️", "rpg cinta": "❤️", clan: "🛡️", turnamen: "🏆",
+  search: "🔍", stalker: "🕵️", anime: "🎌", asupan: "😍", cecan: "💃", nsfw: "🔞",
+  media: "🎬", tts: "🔊", quotes: "💬", primbon: "🔮",
+  education: "📚", food: "🍔", info: "ℹ️", cek: "🔎", berita: "📰",
+  islami: "☪️", religi: "🕌",
+  main: "🏠", user: "👤", premium: "💎", future: "🌌",
+  store: "🏬", market: "🛒",
+  misc: "📦", random: "🎲", utility: "🧰", clean: "🧹",
+  vps: "🖧", linode: "☁️", panel: "🖥️", jpm: "📡", pushkontak: "📲",
+  owner: "👑",
+  kerja: "💼", sekolah: "🎓", umum: "📂", general: "⚙️", date: "📅", primary: "⭐",
 };
 
 /**

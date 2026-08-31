@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 const pluginConfig = {
   name: "ummah",
   alias: ["ummah"],
-  category: "islamic",
+  category: "islami",
   description: "Ummah Hadith - 36,000+ hadiths dari 10 collections (UmmahAPI, free)",
   usage: ".ummah <command> [args]",
   example: ".ummah random",
