@@ -443,6 +443,7 @@ async function handler(m, { sock }) {
       toSC("Alfamart-style Shopping"),
       "",
       p + "beli2 katalog [kategori] — lihat produk",
+      p + "beli2 lihat <kode> — lihat gambar produk",
       p + "beli2 cari <query> — cari produk",
       p + "beli2 <kode> [qty] — tambah ke keranjang",
       p + "beli2 keranjang — lihat keranjang",

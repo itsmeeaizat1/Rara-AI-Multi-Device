@@ -448,6 +448,11 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
   - .toko2 resi — market — Tambah nomor resi + kurir ke invoice (auto-notif buyer)
   - .toko2 track — market — Cek resi via Binderbyte API atau manual tracking
   - .beli2 lacak — market — User lacak paket berdasarkan nomor resi + kurir (18 kurir)
+  - .beli2 lihat <kode> — market — Lihat gambar produk (upload via Catbox)
+  - .toko2 edit <kode> gambar — market — Upload/ganti gambar produk ke Catbox (reply gambar)
+  - .toko2 add — market — Support reply gambar → auto-upload Catbox (opsional)
+  - .lihatproduk — store — Lihat gambar produk toko (upload via Catbox)
+  # Gambar produk: upload ke Catbox URL (tidak tersimpan di storage lokal), 1 gambar per produk, opsional
   - .switch auto — toggle semua fitur auto (autoread, autobackup, autoweather, dll)
   - Alias auto*: .autoread .autotyping .autojoingc .autoreadsw .autoreactsw .autobackup .autohealth dll (on/off)
 

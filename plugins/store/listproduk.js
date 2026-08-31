@@ -101,12 +101,14 @@ async function handler(m, { sock }) {
     txt += `   🏷️ Tipe: ${typeLabel}\n`;
     if (p.kategori && p.kategori !== "umum")
       txt += `   📂 Kategori: ${p.kategori}\n`;
+    if (p.image) txt += `   🖼️ Gambar: Tersedia (.lihatproduk ${realIdx + 1})\n`;
     if (p.description)
       txt += `   📝 _${p.description.substring(0, 60)}${p.description.length > 60 ? "..." : ""}_\n`;
     txt += `\n`;
   }
 
-  txt += `💡 _Ketik \`${m.prefix}beli <nomor>\` untuk memesan produk_`;
+  txt += `💡 _Ketik \`${m.prefix}beli <nomor>\` untuk memesan_\n`;
+  txt += `🖼️ _Ketik \`${m.prefix}lihatproduk <nomor>\` untuk lihat gambar_`;
 
   if (m.isGroup) {
     const saluranId = config.saluran?.id || "120363400911374213@newsletter";
