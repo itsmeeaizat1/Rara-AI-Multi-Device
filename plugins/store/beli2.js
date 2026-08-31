@@ -24,6 +24,7 @@ import {
   checkout, getInvoice, updateInvoice, getInvoicesByBuyer,
   getActivePayments, formatRupiah, formatStock, formatDate, statusText,
   getOwnerJid, formatReceipt, applyPromo,
+  KATEGORI_TOKO,
 } from "../../src/lib/nova-toko2.js";
 import config from "../../config.js";
 import fs from "fs";
@@ -61,7 +62,23 @@ async function handler(m, { sock }) {
       }
       const cats = getCategories();
       const lines = [""];
-      if (cats.length > 1) lines.push(toSC("Kategori") + ": " + cats.join(", "), "");
+      if (!cat || cat === "all") {
+        // Show category browser
+        if (cats.length > 1) {
+          lines.push(toSC("Kategori Tersedia"), "");
+          for (const c of cats) {
+            const label = KATEGORI_TOKO[c]?.label || c;
+            const count = getProducts().filter((p) => p.category === c).length;
+            lines.push(c + " — " + label + " (" + count + ")");
+          }
+          lines.push("");
+          lines.push(toSC("Lihat: .beli2 katalog <kategori>"), "");
+          lines.push("---", "");
+        }
+      } else {
+        const label = KATEGORI_TOKO[cat]?.label || cat;
+        lines.push(toSC("Kategori") + ": " + label, "");
+      }
       for (const p of products) {
         const available = p.stock > 0 || p.stock === -1;
         lines.push(p.id + " — " + p.name + (available ? "" : " (Habis)"));

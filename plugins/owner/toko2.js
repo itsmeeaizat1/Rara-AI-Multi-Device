@@ -31,6 +31,7 @@ import {
   getActivePayments, formatRupiah, formatStock, formatDate, statusText, getOwnerJid,
   formatReceipt,
   getPromos, getPromo, addPromo, togglePromo, deletePromo,
+  KATEGORI_TOKO, seedKategori, seedAll,
 } from "../../src/lib/nova-toko2.js";
 
 const pluginConfig = {
@@ -423,6 +424,39 @@ async function handler(m, { sock }) {
         ".toko2 promo list\n" +
         ".toko2 promo on/off <kode>\n" +
         ".toko2 promo del <kode>"
+      ));
+    }
+
+    // ============================================================
+    // SEED — isi katalog dari template
+    // ============================================================
+    if (action === "seed" || action === "isi") {
+      const kategori = (args[0] || "").toLowerCase();
+
+      if (!kategori || kategori === "list" || kategori === "daftar") {
+        const lines = [""];
+        for (const [key, cat] of Object.entries(KATEGORI_TOKO)) {
+          lines.push(key + " — " + cat.label + " (" + cat.items.length + " produk)");
+        }
+        lines.push("");
+        lines.push(toSC("Isi semua: .toko2 seed all"));
+        lines.push(toSC("Isi 1 kategori: .toko2 seed <nama>"));
+        return m.reply(novaBox("SEED KATALOG", lines));
+      }
+
+      if (kategori === "all" || kategori === "semua") {
+        const result = seedAll();
+        return m.reply(claraWrap("Toko2",
+          toSC("Katalog diisi") + "\n\n" + toSC("Ditambah") + ": " + result.totalAdded + " produk\n" + toSC("Skip (sudah ada)") + ": " + result.totalSkipped + " produk"
+        ));
+      }
+
+      const result = seedKategori(kategori);
+      if (result.error) return m.reply(claraWrap("Toko2", result.error));
+      return m.reply(claraWrap("Toko2",
+        toSC("Kategori diisi") + ": " + result.label + "\n\n" +
+        toSC("Ditambah") + ": " + result.added + " produk\n" +
+        toSC("Skip") + ": " + result.skipped + " produk"
       ));
     }
 

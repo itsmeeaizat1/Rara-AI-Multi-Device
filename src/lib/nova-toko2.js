@@ -468,3 +468,118 @@ export function formatReceipt(inv) {
 
   return lines;
 }
+
+// ============================================================
+// KATALOG TEMPLATE — Pre-built categories for Alfamart shop
+// ============================================================
+export const KATEGORI_TOKO = {
+  sembako: {
+    label: "Sembako",
+    items: [
+      "Beras 5kg|55000|50|Beras premium kualitas super|sembako",
+      "Minyak Goreng 2L|38000|30|Minyak goreng kemasan|sembako",
+      "Gula Pasir 1kg|18000|40|Gula pasir putih premium|sembako",
+      "Telur 1kg|28000|25|Telur ayam segar|sembako",
+      "Tepung Terigu 1kg|12000|35|Tepung terigu serbaguna|sembako",
+      "Mie Instan 1 dus|35000|20|Mie instan isi 40 pcs|sembako",
+      "Kopi Sachet 1 dus|30000|15|Kopi sachet assorted|sembako",
+      "Garam 1kg|8000|30|Garam halus beryodium|sembako",
+      "Susu UHT 1L|25000|20|Susu UHT full cream|sembako",
+      "Sarden Kaleng|15000|40|Sarden kaleng 425g|sembako",
+    ],
+  },
+  ppob: {
+    label: "PPOB",
+    items: [
+      "Pulsa Telkomsel 10k|10500|100|Pulsa Telkomsel 10.000|ppob",
+      "Pulsa Indosat 10k|10500|100|Pulsa Indosat 10.000|ppob",
+      "Pulsa XL 10k|10500|100|Pulsa XL 10.000|ppob",
+      "Pulsa Tri 10k|10500|100|Pulsa Tri 10.000|ppob",
+      "Paket Data Telkomsel 25GB|30000|50|Data Telkomsel 25GB 30 hari|ppob",
+      "Paket Data Indosat 25GB|28000|50|Data Indosat 25GB 30 hari|ppob",
+      "Paket Data XL 25GB|29000|50|Data XL 25GB 30 hari|ppob",
+      "Token PLN 20k|20500|100|Token listrik PLN 20.000|ppob",
+      "Token PLN 50k|50500|100|Token listrik PLN 50.000|ppob",
+      "Token PLN 100k|100500|100|Token listrik PLN 100.000|ppob",
+    ],
+  },
+  apppremium: {
+    label: "App Premium",
+    items: [
+      "Spotify Premium 1 Bulan|25000|20|Akun Spotify Premium private 30 hari|apppremium",
+      "Netflix Premium 1 Bulan|45000|15|Share Netflix Premium 4K 30 hari|apppremium",
+      "Disney+ Hotstar 1 Bulan|30000|15|Disney+ Hotstar Premium 30 hari|apppremium",
+      "YouTube Premium 1 Bulan|25000|20|YouTube Premium no ads 30 hari|apppremium",
+      "Canva Pro 1 Bulan|20000|25|Canva Pro premium features 30 hari|apppremium",
+      "Vidio Premier 1 Bulan|35000|15|Vidio.com Premier League 30 hari|apppremium",
+      "Wetv Premium 1 Bulan|20000|20|WeTV VIP premium 30 hari|apppremium",
+      "Viu Premium 1 Bulan|20000|20|Viu Premium 30 hari|apppremium",
+    ],
+  },
+  akun: {
+    label: "Jual Beli Akun",
+    items: [
+      "Akun Genshin Impact AR55+|150000|5|Akun Gensgin AR55+ dengan karakter 5 star|akun",
+      "Akun Mobile Legends Mythic|200000|3|Akun ML Mythic 200+ skin epic|akun",
+      "Akun Free Fire MAX|100000|5|Akun FF MAX rank heroik skin lengkap|akun",
+      "Akun PUBGM Conqueror|180000|3|Akun PUBG Mobile Conqueror skin mythic|akun",
+      "Akun Valorant Diamond|120000|5|Akun Valorant Diamond skin weapons|akun",
+      "Akun Garena 5 Tahun|50000|10|Akun Garena 5 tahun aman full access|akun",
+      "Jual Akun Custom|0|-1|Konsultasi jual akun game/sosmed|akun",
+    ],
+  },
+  game: {
+    label: "Voucher Game",
+    items: [
+      "Mobile Legends 86 Diamond|22000|100|Top up ML 86 diamond|game",
+      "Mobile Legends 172 Diamond|44000|100|Top up ML 172 diamond|game",
+      "Mobile Legends 257 Diamond|65000|100|Top up ML 257 diamond|game",
+      "Free Fire 70 Diamond|10000|100|Top up FF 70 diamond|game",
+      "Free Fire 140 Diamond|20000|100|Top up FF 140 diamond|game",
+      "Free Fire 355 Diamond|50000|100|Top up FF 355 diamond|game",
+      "Genshin Impact 60 Genesis|16000|100|Top up Genshin 60 genesis crystal|game",
+      "Genshin Impact 330 Genesis|88000|50|Top up Genshin 330 genesis crystal|game",
+      "Genshin Impact 1090 Genesis|280000|20|Top up Genshin 1090 genesis crystal|game",
+      "Higgs Domino Ml-d100|100000|10|Top up Higgs Domino Ml-d100|game",
+    ],
+  },
+};
+
+export function seedKategori(namaKategori) {
+  const cat = KATEGORI_TOKO[namaKategori.toLowerCase()];
+  if (!cat) return { error: "Kategori tidak ditemukan. Tersedia: " + Object.keys(KATEGORI_TOKO).join(", ") };
+
+  let added = 0;
+  let skipped = 0;
+  for (const item of cat.items) {
+    const parts = item.split("|");
+    const name = parts[0];
+    const price = parseInt(parts[1]);
+    const stock = parseInt(parts[2]);
+    const desc = parts[3] || "";
+    const category = parts[4] || namaKategori;
+
+    // Cek apakah sudah ada
+    const existing = getProduct(name);
+    if (existing) { skipped++; continue; }
+
+    addProduct({ name, price, stock, desc, category });
+    added++;
+  }
+  return { success: true, added, skipped, label: cat.label };
+}
+
+export function seedAll() {
+  let totalAdded = 0;
+  let totalSkipped = 0;
+  const results = {};
+  for (const [key, cat] of Object.entries(KATEGORI_TOKO)) {
+    const result = seedKategori(key);
+    if (result.success) {
+      totalAdded += result.added;
+      totalSkipped += result.skipped;
+      results[key] = result;
+    }
+  }
+  return { totalAdded, totalSkipped, results };
+}
