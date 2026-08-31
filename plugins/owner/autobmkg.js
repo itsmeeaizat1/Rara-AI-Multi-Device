@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
     if (action === "on") {
       const settings = updateBmkgSettings((cur) => ({
         ...cur,
-        enabled: true,
+        enabled: false,
         targets: cur.targets.includes(jid) ? cur.targets : [...cur.targets, jid],
       }));
       startBmkgJobs(settings);

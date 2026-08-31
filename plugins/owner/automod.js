@@ -34,7 +34,7 @@ function save(db) { db.markDirty("settings"); db.db.write?.() }
 
 function ensureGroup(cfg, gid) {
   if (!cfg.groups[gid]) {
-    cfg.groups[gid] = { enabled: true, rules: { ...DEFAULT_RULES }, badwords: [], action: "warn", warnings: {}, violations: 0 }
+    cfg.groups[gid] = { enabled: false, rules: { ...DEFAULT_RULES }, badwords: [], action: "warn", warnings: {}, violations: 0 }
   }
   return cfg.groups[gid]
 }
@@ -78,6 +78,13 @@ async function handler(m, { sock }) {
       const gid = args[1], word = args.slice(2).join(" ").toLowerCase().trim()
       if (cfg.groups[gid]) { cfg.groups[gid].badwords = cfg.groups[gid].badwords.filter(w => w !== word); save(db) }
       return m.reply("╭──「 Auto Mod 」\n│ Badword dihapus: \"" + word + "\"\n╰──────────")
+    }
+
+    if (subCmd === "on" || subCmd === "off") {
+      const gid = args[1] || (m.isGroup ? m.chat : "")
+      if (!gid?.includes("@g.us")) { return m.reply("╭──「 Auto Mod 」\n│ Gunakan di grup atau: .automod " + subCmd + " <groupId>\n╰──────────") }
+      ensureGroup(cfg, gid); cfg.groups[gid].enabled = subCmd === "on"; save(db)
+      return m.reply("╭──「 Auto Mod 」\n│ Status: " + (subCmd === "on" ? "ON" : "OFF") + "\n│ Grup: " + gid.slice(0, 20) + "...\n╰──────────")
     }
 
     if (subCmd === "action") {
