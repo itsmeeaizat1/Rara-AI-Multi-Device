@@ -519,6 +519,29 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 
 
+
+## 🌐 Auto Language Detect & Translate
+
+- `autolang <command>` — Auto-detect bahasa & translate pesan asing otomatis
+- Alias: `.autolanguage`, `.autotranslate2`, `.langdetect`
+- Deteksi bahasa real-time menggunakan Google Translate API (100+ bahasa)
+- Auto-translate pesan asing ke bahasa target (default: Bahasa Indonesia)
+- Bot respond dalam bahasa user yang terdeteksi (toggleable)
+- Smart mode: hanya translate jika confidence >= threshold (default 70%)
+- Whitelist/blacklist bahasa tertentu
+- Per-grup toggle dengan target bahasa custom
+- Cooldown per user untuk anti-spam
+- Daily report statistik deteksi ke owner
+- Statistics tracking (total detected, translated, per-language, per-group)
+- `.autolang test <teks>` — Test deteksi bahasa
+- `.autolang target <kode>` — Set bahasa target (id, en, ja, ar, dll)
+- `.autolang group on/off` — Toggle per-grup
+- `.autolang smart on/off` — Smart mode (confidence threshold)
+- `.autolang confidence <0-100>` — Set confidence threshold
+- `.autolang whitelist add/del <kode>` — Hanya translate bahasa tertentu
+- `.autolang blacklist add/del <kode>` — Skip bahasa tertentu
+- Contoh: `.autolang on` lalu `.autolang test Hello world`
+
 ## 🚨 Auto Churn Detection & Re-engagement
 
 - `autochurn <on/off/scan/send/threshold/cooldown/message/exclude/list/reset/settime/sendto>` — Detect & re-engage user tidak aktif
