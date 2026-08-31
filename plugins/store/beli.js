@@ -46,7 +46,9 @@ async function handler(m, { sock }) {
         p.type === "fisik"
           ? p.stock > 0 || p.stock === -1
           : p.stockItems?.length > 0 || p.stock === -1;
-      txt += `${typeIcon} *${i + 1}.* ${p.name} — ${formatPrice(p.price)} ${isAvailable ? "✅" : "❌"}\n`;
+      txt += `${typeIcon} *${i + 1}.* ${p.name} — ${formatPrice(p.price)} ${isAvailable ? "✅" : "❌"}`;
+      if (p.kategori && p.kategori !== "umum") txt += ` [${p.kategori}]`;
+      txt += `\n`;
     }
     return m.reply(claraWrap("belistore", txt));
   }
@@ -102,6 +104,7 @@ async function handler(m, { sock }) {
   txt += `📦 *ᴅᴇᴛᴀɪʟ ᴘᴇꜱᴀɴᴀɴ:*\n`;
   txt += `${typeIcon} Produk: *${product.name}*\n`;
   txt += `🏷️ Tipe: *${typeLabel}*\n`;
+  if (product.kategori && product.kategori !== "umum") txt += `📂 Kategori: *${product.kategori}*\n`;
   txt += `💰 Harga: *${formatPrice(product.price)}*\n`;
   if (product.originalPrice)
     txt += `🏷️ ~~${formatPrice(product.originalPrice)}~~\n`;

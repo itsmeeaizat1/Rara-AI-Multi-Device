@@ -10,8 +10,8 @@ const pluginConfig = {
     alias: ["addproduk"],
     category: 'store',
     description: '➕ Tambah produk baru ke toko (hanya di private chat)',
-    usage: '.addproduk <nama>|<harga>|<tipe>|<stok>|<deskripsi>',
-    example: '.addproduk Spotify Premium|25000|digital|10|Akun Premium 1 Bulan',
+    usage: '.addproduk <nama>|<harga>|<tipe>|<stok>|<deskripsi>|<kategori>',
+    example: '.addproduk Spotify Premium|25000|digital|10|Akun Premium 1 Bulan|app',
     isOwner: true,
     isPremium: false,
     isGroup: false,
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
             `🚫 *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*\n\n` +
             `Untuk menjaga privasi dan keamanan data produk 🛡️, penambahan produk hanya dapat dilakukan di *ᴘʀɪᴠᴀᴛᴇ ᴄʜᴀᴛ*.\n\n` +
             `Silakan chat bot secara langsung 📱, lalu ketik:\n` +
-            `\`${m.prefix}addproduk <nama>|<harga>|<tipe>|<stok>|<deskripsi>\``
+            `\`${m.prefix}addproduk <nama>|<harga>|<tipe>|<stok>|<deskripsi>|<kategori>\``
         )
     }
 
@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
             `*ʜᴀʀɢᴀ* — Harga dalam Rupiah (min. 1.000)\n` +
             `*ᴛɪᴘᴇ* — \`digital\` 🔑 atau \`fisik\` 📦 (opsional, default: digital)\n` +
             `*ꜱᴛᴏᴋ* — Jumlah stok atau \`unlimited\` (opsional, default: 999)\n` +
-            `*ᴅᴇꜱᴋʀɪᴘꜱɪ* — Deskripsi singkat (opsional)\n\n` +
+            `*ᴅᴇꜱᴋʀɪᴘꜱɪ* — Deskripsi singkat (opsional)\n*ᴋᴀᴛᴇɢᴏʀɪ* — Kategori produk (opsional, default: umum)\n   Contoh: app, game, sembako, ppob, digital, fisik, umum\n\n` +
             `🔑 *ᴅɪɢɪᴛᴀʟ* = Produk berupa akun/key/data unik per item\n` +
             `📦 *ꜰɪꜱɪᴋ* = Produk berupa barang, stok berupa jumlah\n\n` +
             `📝 *ᴄᴏɴᴛᴏʜ:*\n` +
@@ -80,6 +80,7 @@ async function handler(m, { sock }) {
     const typeStr = (parts[2] || 'digital').toLowerCase()
     const stockStr = parts[3] || ''
     const description = (parts[4] || '').replace(/;;/g, '\n')
+    const kategori = (parts[5] || 'umum').toLowerCase().trim()
 
     if (!name || name.length < 2) {
         return m.reply(claraWrap("addproduk", `❌ *ɴᴀᴍᴀ ᴘʀᴏᴅᴜᴋ ᴛᴇʀʟᴀʟᴜ ᴘᴇɴᴅᴇᴋ.*\n\nMinimal 2 karakter diperlukan agar mudah dikenali pelanggan 📝`))
@@ -124,6 +125,7 @@ async function handler(m, { sock }) {
         stock,
         stockItems: [],
         description,
+        kategori,
         detail: '',
         image: imageUrl,
         video: videoUrl,
@@ -141,6 +143,7 @@ async function handler(m, { sock }) {
     reply += `${typeIcon} Tipe: *${typeLabel}*\n`
     reply += `📊 Stok: *${stock === -1 ? 'Unlimited ♾️' : stock}*\n`
     if (description) reply += `📝 Deskripsi: _${description}_\n`
+    reply += `📂 Kategori: *${kategori}*\n`
     if (imageUrl) reply += `🖼️ Thumbnail: ✅ Gambar\n`
     if (videoUrl) reply += `🎬 Thumbnail: ✅ Video\n`
     reply += `\n📌 *ʟᴀɴɢᴋᴀʜ ꜱᴇʟᴀɴᴊᴜᴛɴʏᴀ:*\n`

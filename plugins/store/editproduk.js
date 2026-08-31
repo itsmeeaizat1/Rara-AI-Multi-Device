@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     }
 
     const text = m.text?.trim() || ''
-    const match = text.match(/^(\d+)\s+(nama|harga|diskon|stok|deskripsi|detail|gambar|video|tipe)\s*(.*)/i)
+    const match = text.match(/^(\d+)\s+(nama|harga|diskon|stok|deskripsi|detail|gambar|video|tipe|kategori)\s*(.*)/i)
 
     if (!match) {
         return m.reply(
@@ -65,14 +65,15 @@ async function handler(m, { sock }) {
             `*ᴅɪꜱᴋᴏɴ* 🏷️ — Harga asli/coret (angka, 0 untuk hapus)\n` +
             `*ꜱᴛᴏᴋ* 📊 — Jumlah stok atau \`unlimited\`\n` +
             `*ᴛɪᴘᴇ* 🔑📦 — \`digital\` atau \`fisik\`\n` +
-            `*ᴅᴇꜱᴋʀɪᴘꜱɪ* 📝 — Deskripsi produk\n` +
+            `*ᴅᴇꜱᴋʀɪᴘꜱɪ* 📝 — Deskripsi produk\n*ᴋᴀᴛᴇɢᴏʀɪ* 📂 — Kategori produk (app, game, sembako, ppob, umum)\n` +
             `*ᴅᴇᴛᴀɪʟ* 🔒 — Info rahasia (dikirim setelah beli)\n` +
             `*ɢᴀᴍʙᴀʀ* 🖼️ — Upload gambar baru (reply gambar)\n` +
             `*ᴠɪᴅᴇᴏ* 🎬 — Upload video baru (reply video)\n\n` +
             `📝 *ᴄᴏɴᴛᴏʜ:*\n` +
             `\`${m.prefix}editproduk 1 harga 30000\`\n` +
             `\`${m.prefix}editproduk 1 diskon 40000\`\n` +
-            `\`${m.prefix}editproduk 1 tipe fisik\`\n` +
+            `\`${m.prefix}editproduk 1 kategori app\`\n` +
+`\`${m.prefix}editproduk 1 tipe fisik\`\n` +
             `\`${m.prefix}editproduk 1 nama Netflix Premium\`\n` +
             `\`${m.prefix}editproduk 1 deskripsi Akun sharing 1 bulan\`\n` +
             `\`${m.prefix}editproduk 1 gambar\` (reply gambar 🖼️)\n\n` +
@@ -134,6 +135,11 @@ async function handler(m, { sock }) {
             if (newType === 'fisik' && !product.stock) product.stock = 0
             break
         }
+        case 'kategori': {
+            if (!value || value.length < 2) return m.reply(claraWrap("editproduk", `❌ *ᴋᴀᴛᴇɢᴏʀɪ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.* Minimal 2 karakter 📂`))
+            product.kategori = value.toLowerCase().trim()
+            break
+        }
         case 'deskripsi': {
             product.description = value.replace(/;;/g, '\n')
             break
@@ -189,6 +195,7 @@ async function handler(m, { sock }) {
     reply += `\n`
     reply += `${typeIcon} Tipe: *${typeLabel}*\n`
     reply += `📊 Stok: *${product.stock === -1 ? '♾️ Unlimited' : product.stock}*\n`
+    if (product.kategori) reply += `📂 Kategori: *${product.kategori}*\n`
     if (field === 'gambar') reply += `🖼️ Gambar: ✅\n`
     if (field === 'video') reply += `🎬 Video: ✅\n`
     reply += `\n👀 _Lihat perubahan: \`${m.prefix}listproduk\`_`
