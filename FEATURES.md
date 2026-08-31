@@ -439,8 +439,8 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
   - .switch group — toggle fitur grup (welcome, antilink, dll)
   - .switch fitur — toggle command/kategori plugin
   - .autoweather — owner — Unified Auto Weather (cuaca biasa + alert ekstrem + BMKG mode)
-  - .toko2 — owner — Advanced Shop (add produk, stok, invoice, konfirmasi, notifikasi)
-  - .beli2 — store — Beli produk + invoice code + pilih metode pembayaran
+  - .toko2 — owner — Alfamart-style Shop (produk, stok, kategori, promo, invoice, keranjang, notifikasi)
+  - .beli2 — store — Alfamart Shopping (katalog, keranjang, checkout, promo, bayar, riwayat)
   - .switch auto — toggle semua fitur auto (autoread, autobackup, autoweather, dll)
   - Alias auto*: .autoread .autotyping .autojoingc .autoreadsw .autoreactsw .autobackup .autohealth dll (on/off)
 
