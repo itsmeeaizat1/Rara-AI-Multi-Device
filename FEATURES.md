@@ -522,6 +522,30 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 
 
+
+## 🔮 Auto-Predictive Insights
+
+- `autopredict <command>` — AI analisis pola grup & prediksi tren minggu depan
+- Alias: `.predictinsight`, `.autopredictinsight`, `.autopredictive`, `.insightai`
+- AI-powered prediction: siapa yang mungkin inactive, topik yang naik, jam tersibuk
+- Engagement forecast: naik/turun/stabil berdasarkan trend week-over-week
+- Churn risk score per member (high/medium/low) berdasarkan aktivitas
+- Health score per grup (0-100) — gabungan active ratio, messages, commands, media, points
+- Topic trend detection (apa yang lagi ramai dibahas)
+- Peak hour prediction untuk setiap grup
+- Historical comparison (week over week)
+- Actionable recommendations dari AI
+- Auto kirim insight ke owner setiap Senin pagi
+- Per-grup toggle & on-demand generation
+- `.autopredict now [gid]` — Generate insight sekarang
+- `.autopredict health [gid]` — Health score grup
+- `.autopredict churn [gid]` — Churn risk per member
+- `.autopredict trend [gid]` — Engagement trend week-over-week
+- `.autopredict peak [gid]` — Peak hour prediction
+- `.autopredict forecast [gid]` — Full AI forecast minggu depan
+- `.autopredict addgc/delgc <gid>` — Manage grup monitored
+- Contoh: `.autopredict now` lalu `.autopredict forecast`
+
 ## 📅 Auto-Content Scheduler
 
 - `autocontent <command>` — Schedule konten otomatis ke grup pada jam optimal
