@@ -442,6 +442,9 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
   - .toko2 — owner — Alfamart-style Shop (produk, stok, kategori, promo, seed, invoice, notifikasi)
   - .beli2 — store — Alfamart Shopping (katalog, keranjang, checkout, promo, bayar, riwayat)
   - .toko2 seed — owner — Isi katalog template: sembako, ppob, apppremium, akun, game
+  - .toko2 resi — owner — Tambah nomor resi + kurir ke invoice (auto-notif buyer)
+  - .toko2 track — owner — Cek resi via Binderbyte API atau manual tracking
+  - .beli2 lacak — store — User lacak paket berdasarkan nomor resi + kurir (18 kurir)
   - .switch auto — toggle semua fitur auto (autoread, autobackup, autoweather, dll)
   - Alias auto*: .autoread .autotyping .autojoingc .autoreadsw .autoreactsw .autobackup .autohealth dll (on/off)
 

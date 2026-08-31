@@ -583,3 +583,133 @@ export function seedAll() {
   }
   return { totalAdded, totalSkipped, results };
 }
+
+// ============================================================
+// RESI / TRACKING SYSTEM
+// ============================================================
+import axios from "axios";
+
+export const KURIR_LIST = {
+  jne: { name: "JNE", api_code: "jne" },
+  jnt: { name: "J&T Express", api_code: "jnt" },
+  sicepat: { name: "SiCepat", api_code: "sicepat" },
+  anteraja: { name: "AnterAja", api_code: "anteraja" },
+  pos: { name: "POS Indonesia", api_code: "pos" },
+  tiki: { name: "TIKI", api_code: "tiki" },
+  wahana: { name: "Wahana", api_code: "wahana" },
+  jnt_cargo: { name: "J&T Cargo", api_code: "jnt_cargo" },
+  lion: { name: "Lion Parcel", api_code: "lion" },
+  ninja: { name: "Ninja Xpress", api_code: "ninja" },
+  paxel: { name: "Paxel", api_code: "paxel" },
+  rpx: { name: "RPX Holdings", api_code: "rpx" },
+  sentral: { name: "Sentral Cargo", api_code: "sentral" },
+  sls: { name: "SLS Express", api_code: "sls" },
+  dse: { name: "DSE Express", api_code: "dse" },
+  first: { name: "First Logistics", api_code: "first" },
+  fast: { name: "FAST Express", api_code: "fast" },
+  idl: { name: "IDL Cargo", api_code: "idl" },
+  sas: { name: "SAS Express", api_code: "sas" },
+  // tambah kurir lain nanti
+};
+
+export function addResi(code, resiNumber, kurir) {
+  const inv = getInvoice(code);
+  if (!inv) return { error: "Invoice tidak ditemukan" };
+  if (inv.status !== "confirmed" && inv.status !== "done") {
+    return { error: "Invoice harus status confirmed. Sekarang: " + statusText(inv.status) };
+  }
+  const updated = updateInvoice(code, {
+    resi: resiNumber,
+    kurir: kurir,
+    resiAddedAt: Date.now(),
+    trackingHistory: [{
+      status: "resi_ditambahkan",
+      message: "Nomor resi ditambahkan oleh admin",
+      timestamp: Date.now(),
+    }],
+  });
+  return { success: true, invoice: updated };
+}
+
+export function getResi(code) {
+  const inv = getInvoice(code);
+  if (!inv) return null;
+  if (!inv.resi) return null;
+  return { resi: inv.resi, kurir: inv.kurir, addedAt: inv.resiAddedAt };
+}
+
+export async function trackResi(resiNumber, kurirCode) {
+  const kurir = KURIR_LIST[kurirCode?.toLowerCase()];
+  if (!kurir) {
+    return { error: "Kurir tidak dikenal. Tersedia: " + Object.keys(KURIR_LIST).join(", ") };
+  }
+
+  // Coba Binderbyte API (butuh key, dari apikeys.json atau .env)
+  const db = getDatabase();
+  const binderbyteKey = process.env.BINDERBYTE_API_KEY || db.setting("binderbyteKey") || "";
+
+  if (binderbyteKey) {
+    try {
+      const res = await axios.get("https://api.binderbyte.com/v1/track", {
+        params: {
+          api_key: binderbyteKey,
+          courier: kurir.api_code,
+          awb: resiNumber,
+        },
+        timeout: 10000,
+      });
+      if (res.data?.code === 200 && res.data?.data) {
+        return {
+          success: true,
+          source: "binderbyte",
+          summary: res.data.data.summary,
+          detail: res.data.data.detail,
+          history: res.data.data.history,
+        };
+      }
+      return { error: res.data?.message || "Gagal track via API" };
+    } catch (err) {
+      // Fallback ke manual tracking
+    }
+  }
+
+  // Fallback: return manual status dari invoice
+  const invoices = getInvoices();
+  let foundInv = null;
+  for (const inv of Object.values(invoices)) {
+    if (inv.resi === resiNumber) {
+      foundInv = inv;
+      break;
+    }
+  }
+
+  if (foundInv) {
+    return {
+      success: true,
+      source: "manual",
+      resi: resiNumber,
+      kurir: kurir.name,
+      summary: {
+        status: foundInv.status === "done" ? "delivered" : "shipped",
+        awb: resiNumber,
+        courier: kurir.name,
+        date: foundInv.resiAddedAt ? formatDate(foundInv.resiAddedAt) : "-",
+      },
+      history: foundInv.trackingHistory || [{
+        status: "shipped",
+        message: "Paket dikirim dengan " + kurir.name,
+        timestamp: foundInv.resiAddedAt || foundInv.createdAt,
+      }],
+    };
+  }
+
+  return { error: "Resi tidak ditemukan. Tidak ada API key untuk auto-track." };
+}
+
+export function updateTrackingStatus(code, status, message) {
+  const inv = getInvoice(code);
+  if (!inv) return { error: "Invoice tidak ditemukan" };
+  const history = inv.trackingHistory || [];
+  history.push({ status, message, timestamp: Date.now() });
+  return updateInvoice(code, { trackingHistory: history });
+}
