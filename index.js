@@ -377,6 +377,7 @@ async function main() {
           { name: "ChurnMonitor", fn: () => import("./plugins/owner/autochurn.js").then(m => m.startChurnMonitor?.(sock)) },
           { name: "AutoLang", fn: () => import("./plugins/owner/autolang.js").then(m => m.startAutoLang?.(sock)) },
           { name: "SmartMod", fn: () => import("./plugins/owner/autosmartmod.js").then(m => m.startSmartMod?.(sock)) },
+          { name: "AutoContent", fn: () => import("./plugins/owner/autocontent.js").then(m => m.startAutoContent?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {
           try {
