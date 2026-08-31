@@ -520,6 +520,33 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 
 
+
+## 🧠 Auto-Smart Moderation (AI-Powered)
+
+- `autosmartmod <command>` — AI-powered moderation: detect toxic, spam, scam, bullying dengan pattern recognition
+- Alias: `.smartmod`, `.aimod`, `.automod2`
+- AI menganalisis setiap pesan untuk klasifikasi: clean, minor, moderate, severe
+- Bukan keyword filter biasa — pakai AI untuk understanding context & intent
+- Support Indonesian slang & mixed language detection
+- Auto-escalation: 3 minor -> moderate, 5 violations -> severe
+- Sensitivity level per grup: low, medium, high, strict
+- Action per severity: warn, mute, kick, delete (configurable)
+- Confidence threshold per severity level (0-100%)
+- Whitelist user untuk skip moderation
+- Case tracking dengan ID unik, status open/resolved/dismissed
+- Appeal system untuk false positive
+- Daily moderation report ke owner (default 21:00 WIB)
+- `.autosmartmod test <teks>` — Test AI detection
+- `.autosmartmod sensitivity <level>` — Set sensitivity (low/medium/high/strict)
+- `.autosmartmod action <severity> <action>` — Set action per severity
+- `.autosmartmod threshold <severity> <0-100>` — Set confidence threshold
+- `.autosmartmod cases` — Lihat case terbuka
+- `.autosmartmod case <id>` — Detail case
+- `.autosmartmod resolve <id> <action>` — Resolve case (dismiss/warn/kick/whitelist)
+- `.autosmartmod whitelist add/del <nomor>` — Whitelist user
+- `.autosmartmod stats` — Statistik moderasi
+- Contoh: `.autosmartmod on` lalu `.autosmartmod test kamu jelek banget sih`
+
 ## 🌐 Auto Language Detect & Translate
 
 - `autolang <command>` — Auto-detect bahasa & translate pesan asing otomatis

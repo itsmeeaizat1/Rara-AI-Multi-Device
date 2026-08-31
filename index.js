@@ -376,6 +376,7 @@ async function main() {
           { name: "WeeklyReport", fn: () => import("./plugins/owner/autoweeklyreport.js").then(m => m.startWeeklyReport?.(sock)) },
           { name: "ChurnMonitor", fn: () => import("./plugins/owner/autochurn.js").then(m => m.startChurnMonitor?.(sock)) },
           { name: "AutoLang", fn: () => import("./plugins/owner/autolang.js").then(m => m.startAutoLang?.(sock)) },
+          { name: "SmartMod", fn: () => import("./plugins/owner/autosmartmod.js").then(m => m.startSmartMod?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {
           try {
