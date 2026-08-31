@@ -525,6 +525,37 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 
 
+
+## ⚖️ Auto-Conflict Detector & De-escalation
+
+- `autoconflict <command>` — AI deteksi konflik/grup & auto de-eskalasi
+- Alias: `.conflictdetector`, `.autoresolve`, `.aconflict`, `.antikonflik`
+- AI real-time analisis pesan grup untuk deteksi konflik/perdebatan
+- Tracking tension level per grup (0-100) dengan decay dinamis
+- Deteksi: adu mulut, bullying, provokasi, drama, sara, toxic escalation
+- Auto-intervensi dengan pesan netral/fakta/humor untuk de-eskalasi
+- 3 intervention style: calm (tenang), humor (humor), fact (fakta netral)
+- 3 sensitivity level: low (65+), medium (50+), high (35+)
+- Cooldown intervention per grup (anti-spam intervensi)
+- 25+ conflict keywords (customizable)
+- Per-grup toggle: pilih grup mana yang aktif
+- Notifikasi owner saat tension level critical (85+)
+- Conflict history tracking (last 30)
+- Stats: total analyzed, conflicts, interventions, de-escalated, per-group
+- Message buffer: 10 pesan terakhir untuk context AI
+- Fallback intervensi kalau AI gagal
+- `.autoconflict on/off` — Aktifkan/matikan
+- `.autoconflict sensitivity <low/medium/high>` — Set sensitivitas deteksi
+- `.autoconflict style <calm/humor/fact>` — Set style intervensi
+- `.autoconflict cooldown <menit>` — Set cooldown intervensi
+- `.autoconflict notify on/off` — Notifikasi owner saat critical
+- `.autoconflict addgc/delgc <gid>` — Manage grup aktif
+- `.autoconflict status` — Lihat tension level semua grup
+- `.autoconflict history` — Conflict history
+- `.autoconflict addword/delword <kata>` — Manage conflict keywords
+- `.autoconflict reset` — Reset stats & tension
+- Contoh: `.autoconflict on` lalu `.autoconflict style humor`
+
 ## 🎯 Auto-Smart Welcome (AI Personalized)
 
 - `autosmartwelcome <command>` — AI personalized welcome message per member baru

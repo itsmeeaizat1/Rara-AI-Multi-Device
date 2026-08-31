@@ -127,6 +127,12 @@ async function messageHandler(msg, sock) {
       await handleAntiRibut(m, sock, db);
     } catch (e) {
       if (config.dev?.debugLog) logger.error("antiribut", e.message);
+    try {
+      const { processConflictMessage } = await import("../plugins/owner/autoconflict.js");
+      await processConflictMessage(m, sock);
+    } catch (e) {
+      if (config.dev?.debugLog) logger.error("autoconflict", e.message);
+    }
     }
     try {
       const { handleAntiVn } = await import("../plugins/group/antivn.js");
