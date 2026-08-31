@@ -1,12 +1,12 @@
 <div align="center">
   <h1>🌟 Nova-Ai WhatsApp Bot MD 🌟</h1>
-  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 2.681+ Command, 1.699 Plugin & 43 Kategori!</b></p>
+  <p><b>🚀 Bot WhatsApp Multi-Device berbasis Baileys (Node.js) dengan 2.686+ Command, 1.700 Plugin & 43 Kategori!</b></p>
 </div>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-21.14.0-orange?style=flat-square&logo=git&logoColor=white">
-  <img src="https://img.shields.io/badge/Total_Plugin-1699-blue?style=flat-square&logo=fire">
-  <img src="https://img.shields.io/badge/Total_Command-2681%2B-blueviolet?style=flat-square&logo=terminal">
+  <img src="https://img.shields.io/badge/Version-21.15.0-orange?style=flat-square&logo=git&logoColor=white">
+  <img src="https://img.shields.io/badge/Total_Plugin-1700-blue?style=flat-square&logo=fire">
+  <img src="https://img.shields.io/badge/Total_Command-2686%2B-blueviolet?style=flat-square&logo=terminal">
   <img src="https://img.shields.io/badge/Kategori-43-green?style=flat-square&logo=folder">
   <img src="https://img.shields.io/badge/Node.js-20--22-green?style=flat-square&logo=node.js">
   <img src="https://img.shields.io/badge/Baileys-MultiDevice-blue?style=flat-square&logo=whatsapp">
@@ -43,7 +43,7 @@ Automation:
 
 ---
 
-## ✨ Fitur Unggulan v21.14.0
+## ✨ Fitur Unggulan v21.15.0
 
 ### 🤖 AI & Automation
 
@@ -354,12 +354,12 @@ Automation:
 
 ---
 
-## 📊 Statistik Bot v21.14.0
+## 📊 Statistik Bot v21.15.0
 
 | Metric | Count |
 |--------|-------|
-| Total Plugin | 1.699 |
-| Total Command | 2.681+ |
+| Total Plugin | 1.700 |
+| Total Command | 2.686+ |
 | Kategori | 43 |
 | RPG Module | 85 |
 | AI Model | 34 |
