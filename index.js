@@ -379,6 +379,7 @@ async function main() {
           { name: "SmartMod", fn: () => import("./plugins/owner/autosmartmod.js").then(m => m.startSmartMod?.(sock)) },
           { name: "AutoContent", fn: () => import("./plugins/owner/autocontent.js").then(m => m.startAutoContent?.(sock)) },
           { name: "AutoPredict", fn: () => import("./plugins/owner/autopredict.js").then(m => m.startAutoPredict?.(sock)) },
+          { name: "AutoFailover", fn: () => import("./plugins/owner/autofailover.js").then(m => m.startAutoFailover?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {
           try {

@@ -523,6 +523,30 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 
 
+
+## 🔄 Auto-Failover API Router
+
+- `autofailover <command>` — Monitor API health real-time & auto-switch ke backup kalau down
+- Alias: `.failover`, `.apirouter`, `.apifailover`, `.autofo`
+- Real-time API health monitoring (ping HTTP + latency check)
+- Auto-switch: kalau API A down -> semua request redirect ke API B/C (backup chain)
+- User gak ngerasa downtime — failover seamless
+- Circuit breaker: 3 consecutive failures -> circuit OPEN (skip 30 min)
+- Auto-recovery: kalau API kembali up -> circuit CLOSE -> restore ke primary
+- Per-category routing: download, stalker, berita, tools, ai, maker, islamic, search
+- API chain per category: PRIMARY -> FALLBACK 1 -> FALLBACK 2 -> ...
+- Uptime tracking (last 100 checks per API)
+- Stats: total checks, failovers, recoveries, avg latency per API
+- Notify owner saat failover triggered & saat recovery
+- `.autofailover now` — Health check semua API sekarang
+- `.autofailover routes` — Lihat routing table
+- `.autofailover add <category> <primary_url> <backup_url>` — Tambah route
+- `.autofailover status <api_name>` — Detail status 1 API
+- `.autofailover test <category>` — Test failover untuk category
+- `.autofailover reset <api_name>` — Reset circuit breaker
+- `.autofailover stats` — Statistik failover
+- Contoh: `.autofailover on` lalu `.autofailover now`
+
 ## 🔮 Auto-Predictive Insights
 
 - `autopredict <command>` — AI analisis pola grup & prediksi tren minggu depan
