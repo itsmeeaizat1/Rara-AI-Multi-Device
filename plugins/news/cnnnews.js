@@ -7,7 +7,7 @@ const pluginConfig = {
   name: "cnnnews",
   alias: ["cnnnews"],
   aliases: ["cnnnews", "cnnews", "cnnindonesia"],
-  category: "news",
+  category: "berita",
   description: "Berita terbaru CNN Indonesia (RSS scraping, no API key)",
   usage: ".cnnnews | .cnnnews <kategori> | .cnnnews list",
   example: ".cnnnews | .cnnnews nasional | .cnnnews list",

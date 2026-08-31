@@ -28,7 +28,7 @@ const pluginConfig = {
   alias: ["alldl", "dl", "download", "get",
     // Alias untuk button click response
     "alldl_video", "alldl_audio", "alldl_image", "alldl_hd"],
-  category: "downloader",
+  category: "download",
   description: "All-in-one downloader — paste link, pilih format, download",
   usage: ".alldl <url>",
   example: ".alldl https://youtu.be/xxx",

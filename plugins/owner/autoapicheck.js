@@ -58,8 +58,8 @@ const DEFAULT_APIS = [
   { name: "fastdl-yt", url: "https://api-wh.fastdl.app/api/ytdl?url=test", category: "download", backup: null },
   { name: "cobalt", url: "https://api.cobalt.tools/api/json", category: "download", backup: null },
 
-  { name: "aladhan", url: "https://api.aladhan.com/v1/status", category: "islamic", backup: null },
-  { name: "alquran-cloud", url: "https://api.alquran.cloud/v1/status", category: "islamic", backup: null },
+  { name: "aladhan", url: "https://api.aladhan.com/v1/status", category: "islami", backup: null },
+  { name: "alquran-cloud", url: "https://api.alquran.cloud/v1/status", category: "islami", backup: null },
 
   { name: "bmkg", url: "https://data.bmkg.go.id/DataMKG/TEWS/autogempa.json", category: "info", backup: null },
   { name: "cnn-news", url: "https://api-xemoz-official.my.id/api/news/news-cnn", category: "info", backup: null },
@@ -72,7 +72,7 @@ const DEFAULT_APIS = [
   { name: "tinyurl", url: "https://tinyurl.com/api-create.php?url=https://example.com", category: "tools", backup: "https://is.gd/create.php?format=simple&url=https://example.com" },
   { name: "1pt-co", url: "https://api.1pt.co/add", category: "tools", backup: null },
 
-  { name: "hadith-galih", url: "https://api-hadith-api.vercel.app", category: "islamic", backup: null },
+  { name: "hadith-galih", url: "https://api-hadith-api.vercel.app", category: "islami", backup: null },
   { name: "anilist", url: "https://graphql.anilist.co", category: "search", backup: null },
 ];
 

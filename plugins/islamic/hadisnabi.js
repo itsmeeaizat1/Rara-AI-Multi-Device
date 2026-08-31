@@ -4,7 +4,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "hadisnabi",
   alias: ["hadisnabi"],
-  category: "islamic",
+  category: "islami",
   description: "Hadis Nabi dari 9 perawi (API online, terjemahan Indonesia)",
   usage: ".hadisnabi <perawi> [range/random]",
   example: ".hadisnabi bukhari",

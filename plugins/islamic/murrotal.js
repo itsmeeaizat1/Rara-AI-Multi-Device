@@ -7,7 +7,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "murrotal",
   alias: ["murrotal"],
-  category: "islamic",
+  category: "islami",
   description: "Dengarkan audio murottal Al-Quran berdasarkan surah",
   usage: ".murrotal <nama surah>",
   example: ".murrotal al fatihah",

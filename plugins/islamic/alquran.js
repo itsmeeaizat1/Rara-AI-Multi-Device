@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 const pluginConfig = {
   name: "alquran",
   alias: ["alquran"],
-  category: "islamic",
+  category: "islami",
   description: "Baca & dengar Al-Quran surat & ayat dengan terjemahan + audio (API online)",
   usage: ".alquran <surat> [ayat] atau .alquran audio <surat> <ayat>",
   example: ".alquran 2 255",

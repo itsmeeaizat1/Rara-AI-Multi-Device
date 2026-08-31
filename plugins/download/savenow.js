@@ -10,7 +10,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova
 const pluginConfig = {
   name: "savenow",
   alias: ["savenow", "sn", "snnow"],
-  category: "downloader",
+  category: "download",
   description: "Download video/audio dari YouTube, IG, TikTok, FB (via savenow.to)",
   usage: ".savenow <url> [format]",
   example: ".savenow https://youtube.com/watch?v=xxx mp3\n.savenow https://youtube.com/watch?v=xxx 720\n.savenow https://instagram.com/reel/xxx",
