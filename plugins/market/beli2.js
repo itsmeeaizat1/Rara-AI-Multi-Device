@@ -33,7 +33,7 @@ import fs from "fs";
 const pluginConfig = {
   name: "beli2",
   alias: ["beli2"],
-  category: "store",
+  category: "market",
   description: "Alfamart-style Shopping — keranjang, checkout, invoice, pembayaran",
   usage: ".beli2 <katalog/cari/keranjang/checkout/bayar/cek>",
   example: ".beli2 katalog",
