@@ -383,6 +383,7 @@ async function main() {
           { name: "AutoSmartWelcome", fn: () => import("./plugins/owner/autosmartwelcome.js").then(m => m.startAutoSmartWelcome?.(sock)) },
           { name: "AutoConflict", fn: () => import("./plugins/owner/autoconflict.js").then(m => m.processConflictMessage?.(null, sock)) },
           { name: "AutoSummary", fn: () => import("./plugins/owner/autosummary.js").then(m => m.startAutoSummary?.(sock)) },
+          { name: "AutoResource", fn: () => import("./plugins/owner/autoresource.js").then(m => m.startAutoResource?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {
           try {

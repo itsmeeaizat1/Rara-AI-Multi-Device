@@ -527,6 +527,39 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 
 
+
+## ⚙️ Auto-Resource Optimizer
+
+- `autoresource <command>` — Monitor & auto-optimize CPU/RAM/API dengan threshold custom
+- Alias: `.autoopt`, `.resourceoptimizer`, `.aropt`, `.autooptimize`
+- Monitor CPU, RAM, event loop lag, API response time real-time
+- Threshold PERSEN BISA DIATUR SENDIRI oleh owner
+- Auto-optimize: clear cache, force GC, throttle, switch API, restart
+- Action per-metric bisa di-custom: ram→clear+gc, cpu→throttle, loop→throttle, api→switch
+- Monitor interval configurable (default: tiap 5 menit)
+- Notifikasi owner saat resource critical
+- Resource history (last 50 snapshots)
+- Action log: setiap optimasi yang dijalankan (last 30)
+- Manual trigger: clear cache, force GC, live status
+- Integrasi dengan autofailover: kalau API latency critical → trigger API switch
+- `.autoresource on/off` — Aktifkan/matikan monitoring
+- `.autoresource set ram 80` — Set RAM threshold 80%
+- `.autoresource set cpu 90` — Set CPU threshold 90%
+- `.autoresource set loop 500` — Set event loop lag threshold 500ms
+- `.autoresource set api 3000` — Set API latency threshold 3000ms
+- `.autoresource action ram clear+gc` — Set action untuk RAM
+- `.autoresource action cpu throttle` — Set action untuk CPU
+- `.autoresource action api switch` — Set action untuk API (trigger failover)
+- `.autoresource interval 5` — Set interval monitoring 5 menit
+- `.autoresource notify on/off` — Notifikasi owner saat critical
+- `.autoresource now` — Cek resource sekarang (live)
+- `.autoresource clear` — Clear cache manual
+- `.autoresource gc` — Force garbage collection manual
+- `.autoresource history` — Lihat resource history
+- `.autoresource actions` — Lihat action log
+- `.autoresource reset` — Reset stats & history
+- Contoh: `.autoresource on` lalu `.autoresource set ram 75`
+
 ## 📋 Auto-Smart Summary (Daily Group Digest)
 
 - `autosummary <command>` — AI ringkasan obrolan grup harian otomatis
