@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     if (action === "on") {
       const settings = updateCuacaSettings((cur) => ({
         ...cur,
-        enabled: true,
+        enabled: false,
         targets: cur.targets.includes(jid) ? cur.targets : [...cur.targets, jid],
       }));
       startCuacaJobs(settings);

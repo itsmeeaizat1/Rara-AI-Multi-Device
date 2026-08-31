@@ -26,7 +26,7 @@ const NOTIFY_EVENTS = {
   warningGiven: "Peringatan User",
 };
 
-// Cek apakah event ini enabled (default: true)
+// Cek apakah event ini enabled (default: OFF)
 function isNotifyEnabled(eventType) {
   try {
     const db = getDatabase();

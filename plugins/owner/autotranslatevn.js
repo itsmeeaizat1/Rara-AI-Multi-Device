@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
     const args = arg.split(/\s+/);
 
     if (args[0] === "on") {
-      cfg[gid] = { enabled: true, lang: cfg[gid]?.lang || "id" };
+      cfg[gid] = { enabled: false, lang: cfg[gid]?.lang || "id" };
       db.db.write();
       const text = claraWrap("Auto VN Translate", [
         "Status: ON",
