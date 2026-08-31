@@ -439,12 +439,13 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
   - .switch group — toggle fitur grup (welcome, antilink, dll)
   - .switch fitur — toggle command/kategori plugin
   - .autoweather — owner — Unified Auto Weather (cuaca biasa + alert ekstrem + BMKG mode)
-  - .toko2 — owner — Alfamart-style Shop (produk, stok, kategori, promo, seed, invoice, notifikasi)
-  - .beli2 — store — Alfamart Shopping (katalog, keranjang, checkout, promo, bayar, riwayat)
-  - .toko2 seed — owner — Isi katalog template: sembako, ppob, apppremium, akun, game
-  - .toko2 resi — owner — Tambah nomor resi + kurir ke invoice (auto-notif buyer)
-  - .toko2 track — owner — Cek resi via Binderbyte API atau manual tracking
-  - .beli2 lacak — store — User lacak paket berdasarkan nomor resi + kurir (18 kurir)
+  - .toko2 — market — Alfamart Shop (admin: produk, stok, kategori, seed, resi, promo, invoice)
+  - .beli2 — market — Alfamart Shopping (katalog, keranjang, checkout, promo, bayar, riwayat)
+  - .market — market — Menu utama Alfamart (katalog, keranjang, invoice, resi, promo)
+  - .toko2 seed — market — Isi katalog template: sembako, ppob, apppremium, akun, game
+  - .toko2 resi — market — Tambah nomor resi + kurir ke invoice (auto-notif buyer)
+  - .toko2 track — market — Cek resi via Binderbyte API atau manual tracking
+  - .beli2 lacak — market — User lacak paket berdasarkan nomor resi + kurir (18 kurir)
   - .switch auto — toggle semua fitur auto (autoread, autobackup, autoweather, dll)
   - Alias auto*: .autoread .autotyping .autojoingc .autoreadsw .autoreactsw .autobackup .autohealth dll (on/off)
 

@@ -39,7 +39,7 @@ import {
 const pluginConfig = {
   name: "toko2",
   alias: ["toko2"],
-  category: "owner",
+  category: "market",
   description: "Alfamart-style Shop — produk, keranjang, invoice, promo, notifikasi",
   usage: ".toko2 <add/list/stok/del/edit/cari/kategori/invoice/confirm/done/cancel/promo>",
   example: ".toko2 add Spotify Premium|25000|10|Akun 1 bulan|digital",
