@@ -520,7 +520,7 @@ async function sendQrImage(sock, chatId, imageUrl, caption, quoted) {
 const pluginConfig = {
   name: ["ppob"],
   alias: ["DigiFlazz", "ppob"],
-  category: "store",
+  category: "market",
   description:
     "PPOB - Pulsa, Paket Data, Token PLN, Topup Game, Voucher (Multi-Provider)",
   usage:
