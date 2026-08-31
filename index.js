@@ -382,6 +382,7 @@ async function main() {
           { name: "AutoFailover", fn: () => import("./plugins/owner/autofailover.js").then(m => m.startAutoFailover?.(sock)) },
           { name: "AutoSmartWelcome", fn: () => import("./plugins/owner/autosmartwelcome.js").then(m => m.startAutoSmartWelcome?.(sock)) },
           { name: "AutoConflict", fn: () => import("./plugins/owner/autoconflict.js").then(m => m.processConflictMessage?.(null, sock)) },
+          { name: "AutoSummary", fn: () => import("./plugins/owner/autosummary.js").then(m => m.startAutoSummary?.(sock)) },
         ];
         for (const { name, fn } of schedulerInits) {
           try {
