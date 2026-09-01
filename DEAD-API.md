@@ -86,7 +86,7 @@
 | Plugin | Dead API | Migrasi Ke | Method |
 |---|---|---|---|
 | ytmp3.js | nexray.eu.cc | Sanka AIO + ytdl-core | API + lokal |
-| ytmp4.js | firefly.maiku.my.id | Sanka AIO + ytdl-core | API + lokal |
+| ytmp4.js | firefly.maiku.my.id | Sanka AIO + ytdl-core (firefly ytdown CF blocked) | API + lokal |
 | twitterdl.js | siputzx.my.id | Sanka + ssstwitter scrape | API + scrape |
 | tiktokv3.js | nexray.web.id | Sanka + tikwm.com | API + scrape |
 | spotifydl.js | spotisaver.net | spotifydown.org | Scrape |
