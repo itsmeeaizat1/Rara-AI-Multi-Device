@@ -334,7 +334,7 @@ clancreate, claninfo, claninvite, clanjoin, clankick, clanleaderboard, clanleave
 voicechanger, audio.wav, audio8d, audioconvert, audioeq, audiofade, audiofx, audioloop, audiomerge, audionormalize, audiopitch, audiospeed, audiosplit, audiovol, mp4toaudio, videoconvert, toblur, tozombie, tovintage, tomirror, tojepang, totato, topacar, totua, bratvideo, toimage, toptv, togif, vocalremover, tocase, tocode
 
 ### 📥 Download (30 plugin)
-beli2, aio, aiov2, capcutdl, cocofundl, dailymotiondl, douyindl, douyinv2, facebookdl, facebookv2, githubdl, instagramdl, likeedl, mediafiredl, mp4, pindl, pixeldraindl, rednotedl, sfiledl, shopeedl, snackvideodl, spotifydl, spotifyplay, terabox, threaddl, tiktokv2, videy, ytmp3, ytmp3v2, ytmp4, ytmp4v2
+beli2, aio, capcutdl, cocofundl, dailymotiondl, douyindl, facebookdl, githubdl, instagramdl, likeedl, mediafiredl, mp4, pindl, pixeldraindl, rednotedl, sfiledl, shopeedl, snackvideodl, spotifydl, terabox, threaddl, tiktokv2, videy, ytmp3, ytmp4
 
 ### 📚 Education (25 plugin)
 beasiswa, carijurnal, daftarsiswa, eduleaderboard, faktaunik, flashcard, ipk, jadwalku, kalkulatornilai, kampuskampus, katabijak, konversinilai, magang, mindmap, paraphrase, pengingatukt, pomodoro, ringkasan, sitasi, skripsiku, soalessay, soalujian, tipsharian, tugas, tutorku
@@ -556,10 +556,8 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## 💾 SaveNow Downloader v21.7.0
 
-- `.savenow <url> [format]` — Download video/audio dari YouTube, IG, TikTok, FB, Twitter, dll
 - Alias: `.sn`, `.snnow`
 - Format: mp3 (audio), 360/480/720/1080 (video)
-- API: savenow.to (4kdownload.to)
 - Polling progress system dengan auto-download buffer
 
 
@@ -1037,7 +1035,6 @@ Download Upgrades:
 - .ytmp3v3 - download - YouTube MP3 v3 (@distube/ytdl-core direct engine)
 - .ytmp4v3 - download - YouTube MP4 v3 (@distube/ytdl-core direct engine)
 - .tiktokv3 - download - TikTok v3 (nexray API, support slideshow)
-- .snackvideov2 - download - SnackVideo v2 (siputzx API)
 - .teraboxv2 - download - Terabox v2 (nekolabs + teraboxdl.site)
 - .spotifyplay2 - download - Spotify play v2 (nexray + spotifydown fallback)
 
