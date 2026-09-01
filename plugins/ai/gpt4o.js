@@ -3,6 +3,7 @@ import te from "../../src/lib/nova-error.js";
 import novaApi from "../../src/lib/nova-apimanager.js";
 import config from "../../config.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 const pluginConfig = {
   name: "gpt4o",
   alias: ["gpt4o"],
@@ -30,6 +31,14 @@ async function handler(m, { sock }) {
     const json = await res.json()
     { const __navText = `${json.results}`; await m.reply(__navText); };
   } catch (error) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[gpt4o.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
     console.log(error);
     m.reply(claraWrap("gpt4o", te(m.prefix, m.command, m.pushName), "error"));
   }

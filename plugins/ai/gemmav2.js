@@ -2,6 +2,7 @@
 // gemmav2 — Gemma AI v2 (gemma-2-9b-it via velyn.biz.id)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "gemmav2", alias: ["gemmav2"], aliases: ["gemmav2", "gemmaaiv2"],
@@ -20,6 +21,14 @@ async function handler(m, { sock }) {
     if (data?.status) { await m.reply(data.data); await m.react("🐣"); }
     else { await m.reply(claraWrap("gemmav2", "Gagal mendapatkan data.", "error")); }
   } catch (e) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[gemmav2.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
     console.error("gemmav2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("gemmav2", te(m.prefix, m.command, m.pushName), "error"));

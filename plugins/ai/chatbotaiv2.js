@@ -2,6 +2,7 @@
 // chatbotaiv2 — ChatBot AI v2 (abella.icu)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "chatbotaiv2", alias: ["chatbotaiv2"], aliases: ["chatbotaiv2", "cbotv2"],
@@ -20,6 +21,14 @@ async function handler(m, { sock }) {
     if (data?.data?.answer?.data) { await m.reply(data.data.answer.data); await m.react("🐣"); }
     else { await m.reply(claraWrap("chatbotaiv2", "Tidak menemukan jawaban.", "error")); }
   } catch (e) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[chatbotaiv2.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
     console.error("chatbotaiv2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("chatbotaiv2", te(m.prefix, m.command, m.pushName), "error"));

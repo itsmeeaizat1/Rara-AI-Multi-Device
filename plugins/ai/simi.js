@@ -2,6 +2,7 @@
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "simi",
@@ -41,6 +42,14 @@ async function handler(m, { sock }) {
 
     await m.reply(data.result);
   } catch (error) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[simi.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
     console.error("[SimiSimi]", error.message);
     m.reply(claraWrap("simi", "😔 Simi gagal membalas pesanmu."));
   }

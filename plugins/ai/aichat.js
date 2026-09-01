@@ -4,7 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -109,14 +109,20 @@ async function handler(m, { sock, config: botConfig }) {
       ...history.slice(-20).map((item) => ({ role: item.role, content: item.content })),
       { role: "user", content: message },
     ];
-    const reply = await callAI({
-      providerKey: "openai",
-      model: "gpt-4o-mini",
-      messages,
-      systemPrompt,  // callAI akan inject mood otomatis via global.__novaMoodSender
-      apiKey: aiConfig.apiKey,
-      apiEndpoint: aiConfig.apiEndpoint,
-    });
+    let reply;
+    try {
+      reply = await callIkyy(message, { systemPrompt, senderJid: m.sender, model: "gemini" });
+    } catch (ikyyErr) {
+      console.error("[aichat] IkyyXD failed, falling back to OpenAI:", ikyyErr.message);
+      reply = await callAI({
+        providerKey: "openai",
+        model: "gpt-4o-mini",
+        messages,
+        systemPrompt,
+        apiKey: aiConfig.apiKey,
+        apiEndpoint: aiConfig.apiEndpoint,
+      });
+    }
 
     appendHistory(chatId, "assistant", reply);
 

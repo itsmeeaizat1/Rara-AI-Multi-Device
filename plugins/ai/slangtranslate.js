@@ -5,7 +5,7 @@ import { exec } from "child_process";
 import FormData from "form-data";
 import axios from "axios";
 import { novaError, novaEmpty, novaGuide, novaNoInput, tipText, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 import config from "../../config.js";
 
 // ─── Convert audio to WAV for transcription ───
@@ -239,7 +239,7 @@ Aturan:
 
     try {
       const reply = await callAI({
-        providerKey: "openai",
+        providerKey: "ikyy_gemini",
         model: aiConfig.model || "gpt-4o-mini",
         messages: [
           { role: "system", content: systemPrompt },

@@ -1,8 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { Qwen3 } from "../../src/scraper/qwen3.js";
+// Qwen3 replaced with callIkyy (ikyyxd qwen endpoint)
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import te from "../../src/lib/nova-error.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "qwen3",
@@ -33,7 +34,7 @@ async function handler(m, { sock }) {
         `_Model 80B, jadi agak lama tapi jawabannya mantap_`, "qwen3");
   }
   try {
-    const result = await Qwen3(text);
+    const result = await callIkyy(text, {});
 
     if (!result.status) {
       return m.reply(claraWrap("Qwen3 Gagal", `❌ *Qwen3 Gagal*\n\n${result.error || "Gagal dapet respons nih"}`));

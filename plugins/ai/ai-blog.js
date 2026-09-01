@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-blog",
@@ -40,8 +40,8 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
     const reply = await callAI({
-      providerKey: "openai",
-      model: "gpt-4o-mini",
+      providerKey: "ikyy_gemini",
+      model: "gemini",
       messages: [
         { role: "system", content: "Kamu adalah penulis blog profesional. Tulis artikel yang informatif, engaging, mudah dibaca, dan cocok untuk publikasi blog dalam bahasa Indonesia." },
         { role: "user", content: `Tulis artikel blog tentang: ${topic}` },

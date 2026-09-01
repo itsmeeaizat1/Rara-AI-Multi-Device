@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 /**
  * plugins/ai/deepseekv4flash.js
@@ -87,6 +88,14 @@ async function callWithRetry(pesan, session, reset) {
       // Empty answer on normal call — might be temp server issue
       lastError = new Error("AI sedang memproses, coba lagi...");
     } catch (error) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[deepseekv4flash.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
       lastError = error;
     }
 

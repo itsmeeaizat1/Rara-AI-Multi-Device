@@ -2,8 +2,9 @@
 // aichatimg — Chat AI yang bisa terima gambar + kirim gambar balik
 // Gabungan Gemini Vision (baca gambar) + UnlimitedAI (jawab) + Image gen (kirim gambar)
 import { GeminiVision } from "../../src/scraper/geminiVision.js";
-import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
+// UnlimitedAI replaced with callIkyy (ikyyxd API)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -89,7 +90,7 @@ async function handler(m, { sock }) {
 
       // Fallback: kalau Gemini key belum set, pakai UnlimitedAI tanpa gambar
       const fallbackPrompt = `User mengirim gambar dengan pertanyaan: "${text}". Karena sistem vision sedang tidak tersedia, jelaskan bahwa untuk analisis gambar, user perlu set Gemini API key dengan .setkey gemini <key>. Tapi tetap coba bantu user dengan pertanyaan teksnya sebisanya.`;
-      const res = await UnlimitedAI(fallbackPrompt, "nova-ai");
+      const res = await callIkyy(prompt, {});
       if (res.status) {
         await m.react("🐣");
         let msg = `Mode text-only (Gemini Vision belum aktif)\nAktifkan: ${prefix}setkey gemini <key>\nGratis: aistudio.google.com/apikey\n\n${res.answer}`;
@@ -113,7 +114,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🕒");
-    const result = await UnlimitedAI(text, "nova-ai");
+    const result = await callIkyy(prompt, {});
     if (!result.status || !result.answer) {
       await m.react("❌");
       return m.reply(claraWrap("aichatimg", "AI lagi offline nih 🤖", "error"));
