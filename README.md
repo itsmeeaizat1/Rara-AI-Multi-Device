@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20update%20helper%20functions%20to%20pla-success?style=for-the-badge)
-> *Commit: "refactor: update helper functions to plain-text reply format"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tambah%20API%20ikyyxd.my.id%20%26%20albyoffc-success?style=for-the-badge)
+> *Commit: "feat: tambah API ikyyxd.my.id & albyoffc.my.id ke list api.md"*
 <!--END_SECTION:latest-update-->
 
 ---
