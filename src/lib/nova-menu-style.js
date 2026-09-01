@@ -230,14 +230,21 @@ function tipText(text) {
 }
 
 function claraWrap(title, body, type = "info") {
-  const typeLabel = type === "error" ? " — Error" : type === "success" ? " — Success" : type === "warn" ? " — Warning" : "";
+  if (type === "guide") {
+    const raw = Array.isArray(body) ? body : String(body).split("\n");
+    const lines = raw.filter(l => l.trim());
+    return bracketBox(type, title, lines);
+  }
   const raw = Array.isArray(body) ? body : String(body).split("\n");
-  const lines = raw.filter(l => l.trim());
-  return bracketBox(type, title + typeLabel, lines);
+  const text = raw.filter(l => l.trim()).join("\n");
+  if (type === "error") return `❌ Gagal: ${text}`;
+  if (type === "success") return `✅ ${text}`;
+  if (type === "warn") return `⚠ ${text}`;
+  return text;
 }
 
 function claraLine(title, text) {
-  return bracketBox("i", title, [text]);
+  return String(text || "");
 }
 
 const alyaHeader = claraHeader;
@@ -539,40 +546,24 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
  * @param {boolean} opts.sc - Apply smallcaps (default: true)
  */
 function novaReply({ title = "", info = [], status = "", content = "", sc = true } = {}) {
-  const scFn = sc ? toSC : (s) => String(s);
-  let out = `╭─「 ✦ ${scFn(title)} ✦ 」\n`;
-  out += `│\n`;
-  
-  if (info && info.length > 0) {
-    let maxLabel = 0;
-    for (const item of info) {
-      if (item && item.label !== undefined) {
-        const labelLen = scFn(item.label).length;
-        if (labelLen > maxLabel) maxLabel = labelLen;
-      }
-    }
-    maxLabel = Math.max(maxLabel, 4);
-    
-    for (const item of info) {
-      if (item && item.label !== undefined) {
-        const label = scFn(item.label).padEnd(maxLabel);
-        const value = item.value !== undefined ? String(item.value) : "";
-        out += `│ • ${label} : ${value}\n`;
-      }
-    }
-    out += `│\n`;
-  }
-  
+  const lines = [];
   if (status) {
-    out += `│ ${status}\n`;
+    lines.push(status);
+  } else if (title) {
+    lines.push(`✅ ${title}`);
   }
-  
+  if (info && info.length > 0) {
+    for (const item of info) {
+      if (item && item.label !== undefined) {
+        const value = item.value !== undefined ? String(item.value) : "";
+        lines.push(`${item.label}: ${value}`);
+      }
+    }
+  }
   if (content) {
-    out += `${content}\n`;
+    lines.push(String(content));
   }
-  
-  out += `╰────  •  ────`;
-  return out;
+  return lines.join("\n");
 }
 
 
@@ -624,71 +615,31 @@ export {
 function mediaCaption({
   platformIcon = "📥",
   platformName = "Download",
-  title,
-  author,
-  authorHandle,
-  duration,
-  uploadDate,
-  views,
-  likes,
-  comments,
-  shares,
-  downloads,
-  subscribers,
-  description,
-  format,
-  method,
+  title, author, authorHandle, duration, uploadDate,
+  views, likes, comments, shares, downloads, subscribers,
+  description, format, method,
 } = {}) {
   const lines = [];
-
-  // Title — selalu ada
-  if (title) lines.push(`📌 *${toSC("Judul")}:* ${scLine(title.slice(0, 80))}`);
-
-  // Author
+  if (title) lines.push(`Title: ${String(title).slice(0, 80)}`);
   let authorStr = "";
-  if (author && authorHandle) {
-    authorStr = `${scLine(author)} (@${scLine(authorHandle)})`;
-  } else if (author) {
-    authorStr = scLine(author);
-  } else if (authorHandle) {
-    authorStr = `@${scLine(authorHandle)}`;
-  }
-  if (authorStr) lines.push(`👤 *${toSC("Author")}:* ${authorStr}`);
-
-  // Duration
-  if (duration) lines.push(`⏱️ *${toSC("Durasi")}:* ${scLine(String(duration))}`);
-
-  // Upload date
-  if (uploadDate) lines.push(`📅 *${toSC("Upload")}:* ${scLine(String(uploadDate))}`);
-
-  // Stats — views, likes, comments, shares, downloads
-  const stats = [];
-  if (views) stats.push(`👀 ${scLine(String(views))}`);
-  if (likes) stats.push(`❤️ ${scLine(String(likes))}`);
-  if (comments) stats.push(`💬 ${scLine(String(comments))}`);
-  if (shares) stats.push(`🔁 ${scLine(String(shares))}`);
-  if (downloads) stats.push(`📥 ${scLine(String(downloads))}`);
-  if (stats.length > 0) {
-    lines.push(`📊 *${toSC("Stats")}:* ${stats.join("  ")}`);
-  }
-
-  // Subscribers (YouTube channel)
-  if (subscribers) lines.push(`🔔 *${toSC("Subs")}:* ${scLine(String(subscribers))}`);
-
-  // Description (max 100 chars)
+  if (author && authorHandle) authorStr = `${author} (@${authorHandle})`;
+  else if (author) authorStr = String(author);
+  else if (authorHandle) authorStr = `@${authorHandle}`;
+  if (authorStr) lines.push(`Author: ${authorStr}`);
+  if (duration) lines.push(`Duration: ${String(duration)}`);
+  if (uploadDate) lines.push(`Upload: ${String(uploadDate)}`);
+  if (views) lines.push(`Views: ${String(views)}`);
+  if (likes) lines.push(`Likes: ${String(likes)}`);
+  if (comments) lines.push(`Comments: ${String(comments)}`);
+  if (shares) lines.push(`Shares: ${String(shares)}`);
+  if (downloads) lines.push(`Downloads: ${String(downloads)}`);
+  if (subscribers) lines.push(`Subs: ${String(subscribers)}`);
   if (description && String(description).trim()) {
-    const desc = String(description).trim().slice(0, 120);
-    lines.push(`📝 *${toSC("Desc")}:* ${scLine(desc)}`);
+    lines.push(`Desc: ${String(description).trim().slice(0, 120)}`);
   }
-
-  // Separator before technical info
-  lines.push("---");
-
-  // Format & method
-  if (format) lines.push(`🎵 *${toSC("Format")}:* ${scLine(format)}`);
-  if (method) lines.push(`📥 *${toSC("Via")}:* ${scLine(method)}`);
-
-  return buildBox(`${platformIcon} ${toSC(platformName)}`, lines);
+  if (format) lines.push(`Format: ${format}`);
+  if (method) lines.push(`Source: ${method}`);
+  return lines.join("\n");
 }
 
 export { mediaCaption };
@@ -745,13 +696,9 @@ function pickRandom(arr) {
  * @param {string} [detail] - detail error opsional
  */
 function novaError(commandName, detail) {
-  let out = `╭─「 ✦ ${toSC("ERROR")} ✦ 」\n`;
-  out += `│\n`;
-  out += `│ ❌ ${scLine(pickRandom(NOVA_REPLIES.error))}\n`;
-  if (detail) out += `│ _${scLine(detail)}_\n`;
-  out += `│\n`;
-  out += `╰────  •  ────`;
-  return out;
+  let msg = `❌ Gagal`;
+  if (detail) msg += `: ${detail}`;
+  return msg;
 }
 
 /**
@@ -760,13 +707,9 @@ function novaError(commandName, detail) {
  * @param {string} [detail] - detail opsional
  */
 function novaEmpty(commandName, detail) {
-  let out = `╭─「 ✦ ${toSC("KOSONG")} ✦ 」\n`;
-  out += `│\n`;
-  out += `│ 🔍 ${scLine(pickRandom(NOVA_REPLIES.empty))}\n`;
-  if (detail) out += `│ _${scLine(detail)}_\n`;
-  out += `│\n`;
-  out += `╰────  •  ────`;
-  return out;
+  let msg = `❌ Kosong`;
+  if (detail) msg += `: ${detail}`;
+  return msg;
 }
 
 /**
@@ -807,12 +750,7 @@ function novaNoQuoted(commandName, mediaType) {
  * @param {string} message - pesan sukses
  */
 function novaSuccess(commandName, message) {
-  let out = `╭─「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
-  out += `│\n`;
-  out += `│ ✅ ${scLine(message)}\n`;
-  out += `│\n`;
-  out += `╰────  •  ────`;
-  return out;
+  return `✅ ${message || "Berhasil!"}`;
 }
 
 /**
