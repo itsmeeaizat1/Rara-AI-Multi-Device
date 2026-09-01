@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20update%20Gemini%20model%20ke%20gemini-3.5--success?style=for-the-badge)
-> *Commit: "feat: update Gemini model ke gemini-3.5-flash-lite (flash-lite terbaru)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20auto-latest%20Gemini%20model%20resolver%20-success?style=for-the-badge)
+> *Commit: "feat: auto-latest Gemini model resolver — otomatis pakai model flash-lite terbaru"*
 <!--END_SECTION:latest-update-->
 
 ---
