@@ -35,14 +35,14 @@ function handler(m, { sock }) {
     
     let txt = `🔗 *ᴅᴀꜰᴛᴀʀ ᴀɴᴛɪʟɪɴᴋ*\n\n`
     
-    txt += `╭──「 *ᴅᴇꜰᴀᴜʟᴛ* 」\n`
+    txt += `╭─「 *ᴅᴇꜰᴀᴜʟᴛ* 」\n`
     DEFAULT_BLOCKED_LINKS.forEach((l, i) => {
         txt += `│ ${i + 1}. \`${l}\`\n`
     })
     txt += `╰┈┈┈┈┈┈┈┈\n\n`
     
     if (customList.length > 0) {
-        txt += `╭──「 *ᴄᴜꜱᴛᴏᴍ* 」\n`
+        txt += `╭─「 *ᴄᴜꜱᴛᴏᴍ* 」\n`
         customList.forEach((l, i) => {
             txt += `│ ${i + 1}. \`${l}\`\n`
         })

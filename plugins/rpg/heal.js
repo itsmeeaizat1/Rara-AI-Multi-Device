@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     const freshRpg = ensureRpg(m, m.pushName);
-    let msg = `╭──「 *ʜᴇᴀʟ* 」\n`;
+    let msg = `╭─「 *ʜᴇᴀʟ* 」\n`;
     if (usedItems.length > 0) {
       msg += `│ 🧪 Menggunakan: *${usedItems.join(", ")}*\n`;
     } else {

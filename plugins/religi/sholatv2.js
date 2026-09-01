@@ -41,7 +41,7 @@ async function handler(m, { sock, config, db } = {}) {
     const cityInput = (m.text || m.args?.join(" ") || "").trim();
 
     if (!cityInput) {
-        return m.reply(`╭──「 Usage 」
+        return m.reply(`╭─「 Usage 」
 │ Usage: ${pluginConfig.usage}
 │ Contoh: ${pluginConfig.example}
 ╰──────────`);
@@ -83,7 +83,7 @@ async function handler(m, { sock, config, db } = {}) {
             }
 
             const hintList = hints.map(c => `│ • ${c.lokasi}`).join("\n");
-            return m.reply(`╭──「 Kota Tidak Ditemukan 」
+            return m.reply(`╭─「 Kota Tidak Ditemukan 」
 │ Kota "${cityInput}" tidak ditemukan.
 │
 │ Hint / Kota Mirip:
@@ -110,7 +110,7 @@ ${hintList}
         const jadwal = dataJadwal?.jadwal;
 
         if (!jadwal) {
-            return m.reply(`╭──「 Error 」
+            return m.reply(`╭─「 Error 」
 │ Gagal mengambil jadwal sholat untuk ${selectedCity.lokasi}.
 ╰──────────`);
         }
@@ -118,7 +118,7 @@ ${hintList}
         const lokasiStr = dataJadwal.lokasi || selectedCity.lokasi;
         const tanggalStr = jadwal.tanggal || `${tanggal}/${bulan}/${tahun}`;
 
-        const resultText = `╭──「 Jadwal Sholat 」
+        const resultText = `╭─「 Jadwal Sholat 」
 │ ${lokasiStr} — ${tanggalStr}
 │
 │ Subuh: ${jadwal.subuh}
@@ -133,7 +133,7 @@ ${hintList}
 
     } catch (error) {
         console.error("[sholatv2] Error:", error);
-        return m.reply(`╭──「 Error 」
+        return m.reply(`╭─「 Error 」
 │ Terjadi kesalahan: ${error.message}
 ╰──────────`);
     }

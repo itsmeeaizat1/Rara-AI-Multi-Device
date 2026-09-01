@@ -48,7 +48,7 @@ Tiap gombalan maksimal 2-3 kalimat. Bahasa Indonesia. Buat yang original, jangan
     }
 
     await m.react("🐣");
-    let msg = `╭──「 *ɢᴏᴍʙᴀʟᴀɴ ɢᴇɴᴇʀᴀᴛᴏʀ* 」\n`;
+    let msg = `╭─「 *ɢᴏᴍʙᴀʟᴀɴ ɢᴇɴᴇʀᴀᴛᴏʀ* 」\n`;
     msg += `│ 💕 Untuk: *${text}*\n`;
     msg += `│\n`;
     msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;

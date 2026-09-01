@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBegal", BEGAL_COOLDOWN);
 
       await m.react("🐣");
-      let msg = `╭──「 *ʙᴇɢᴀʟ* 」\n`;
+      let msg = `╭─「 *ʙᴇɢᴀʟ* 」\n`;
       msg += `│ 🗡️ ${m.pushName} merampok ${targetJid.split("@")[0]}\n`;
       msg += `│\n`;
       msg += `│ ✅ Berhasil rampok!\n`;
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBegal", BEGAL_COOLDOWN);
 
       await m.react("❌");
-      let msg = `╭──「 *ʙᴇɢᴀʟ* 」\n`;
+      let msg = `╭─「 *ʙᴇɢᴀʟ* 」\n`;
       msg += `│ 🗡️ ${m.pushName} mencoba rampok ${targetJid.split("@")[0]}\n`;
       msg += `│\n`;
       msg += `│ ❌ Ketahuan! Kamu ditangkap!\n`;

@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage"));
     if (!isImage) {
       return m.reply(
-        `╭──「 *ᴇᴅɪᴛ ɢᴀᴍʙᴀʀ ᴀɪ* 」\n` +
+        `╭─「 *ᴇᴅɪᴛ ɢᴀᴍʙᴀʀ ᴀɪ* 」\n` +
         `│ 🎨 Edit gambar dengan AI\n` +
         `│\n` +
         `│ 📌 Cara pakai:\n` +
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
 
     // Kirim hasil
-    let caption = `╭──「 *ʜᴀsɪʟ ᴇᴅɪᴛ* 」\n`;
+    let caption = `╭─「 *ʜᴀsɪʟ ᴇᴅɪᴛ* 」\n`;
     caption += `│ 🎨 Instruksi: *${prompt}*\n`;
     caption += `│ ⚙️ Engine: *${usedApi}*\n`;
     caption += `╰──────────`;

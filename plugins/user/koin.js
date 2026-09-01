@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
   const isOwner = config.isOwner(targetJid);
   const isPremium = user.isPremium;
 
-  let txt = "╭──「 Koin Info 」\n";
+  let txt = "╭─「 Koin Info 」\n";
   txt += "│\n";
   txt += "│ 👤 User: *" + targetName + "*\n";
   txt += "│ 💰 Koin: *" + formatKoin(user.koin || 0) + "*\n";
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
 
   if (isSelf && !isOwner) {
     txt += "│\n";
-    txt += "├──「 *Shop* 」\n";
+    txt += "│ 「 *Shop* 」\n";
     txt += "│ `.buyenergi <jml>` (1 = 100 koin)\n";
     txt += "│ `.buyfitur` (1 = 3000 koin)\n";
     txt += "│\n";

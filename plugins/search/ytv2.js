@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
             return m.reply(novaEmpty('YouTube v2', `Gak nemu hasil buat "${query}" 🧐`))
         }
 
-        let text = "╭──「 YouTube Search 」\n"
+        let text = "╭─「 YouTube Search 」\n"
         text += "│ Query: " + query + "\n"
         text += "│\n"
 

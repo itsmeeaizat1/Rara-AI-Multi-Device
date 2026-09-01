@@ -189,7 +189,7 @@ function createLine(length = 20, char = CHARS.horizontal) {
  * // "╭─「 DASHBOARD 」─────╮"
  */
 function createHeader(title, width = 20) {
- return `╭──「 ${title} 」`;
+ return `╭─「 ${title} 」`;
 }
 
 /**

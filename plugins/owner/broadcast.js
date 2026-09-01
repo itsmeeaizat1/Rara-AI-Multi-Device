@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!groupJids.length) {
       await m.reply(
-        "╭──「 Broadcast 」\n" +
+        "╭─「 Broadcast 」\n" +
         "│\n" +
         "│ ❌ Tidak ada grup terdaftar\n" +
         "│ Status: Dibatalkan\n" +
@@ -74,7 +74,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const result =
-      "╭──「 Broadcast Selesai 」\n" +
+      "╭─「 Broadcast Selesai 」\n" +
       "│\n" +
       "│ 📝 Pesan: " + message.slice(0, 50) + (message.length > 50 ? "..." : "") + "\n" +
       "│ 🎯 Target: " + groupJids.length + " Grup\n" +
@@ -88,7 +88,7 @@ async function handler(m, { sock, config: botConfig }) {
     await m.reply(result);
   } catch (error) {
     const text =
-      "╭──「 Broadcast — Error 」\n" +
+      "╭─「 Broadcast — Error 」\n" +
       "│\n" +
       "│ ❌ Gagal mengirim broadcast\n" +
       "│ Alasan: " + error.message + "\n" +

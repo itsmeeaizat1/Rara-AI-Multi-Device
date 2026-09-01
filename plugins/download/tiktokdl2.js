@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
         const result = await savett(url)
 
         const caption =
-            `╭──「 TikTok DL 」\n` +
+            `╭─「 TikTok DL 」\n` +
             `│ Author: ${result.username || '-'}\n` +
             `│ Views: ${result.views || '-'} | Likes: ${result.likes || '-'}\n` +
             `│ Comments: ${result.comments || '-'} | Shares: ${result.shares || '-'}\n` +

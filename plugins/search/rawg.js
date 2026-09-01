@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
 
         const list = games.slice(0, 5);
 
-        let resultText = `╭──「 Game Search 」\n`;
+        let resultText = `╭─「 Game Search 」\n`;
 
         list.forEach((g, index) => {
             const name = g.name || 'Unknown';

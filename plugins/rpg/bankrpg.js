@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
     }
 
     if (!action || action === "cek") {
-      let msg = `╭──「 *ʙᴀɴᴋ ʀᴘɢ* 」\n`;
+      let msg = `╭─「 *ʙᴀɴᴋ ʀᴘɢ* 」\n`;
       msg += `│ 👤 ${m.pushName || "Player"}\n`;
       msg += `│\n`;
       msg += `│ 💰 Gold di tangan: *${rpg.gold}*\n`;
@@ -94,7 +94,7 @@ async function handler(m, { sock }) {
       saveRpg(m, { bank });
 
       await m.react("🐣");
-      let msg = `╭──「 *ʙᴀɴᴋ ʀᴘɢ* 」\n`;
+      let msg = `╭─「 *ʙᴀɴᴋ ʀᴘɢ* 」\n`;
       msg += `│ ✅ Berhasil menabung!\n`;
       msg += `│\n`;
       msg += `│ 💵 Setor: *${amount} gold*\n`;
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
       saveRpg(m, { bank });
 
       await m.react("🐣");
-      let msg = `╭──「 *ʙᴀɴᴋ ʀᴘɢ* 」\n`;
+      let msg = `╭─「 *ʙᴀɴᴋ ʀᴘɢ* 」\n`;
       msg += `│ ✅ Berhasil menarik!\n`;
       msg += `│\n`;
       msg += `│ 💵 Tarik: *${amount} gold*\n`;

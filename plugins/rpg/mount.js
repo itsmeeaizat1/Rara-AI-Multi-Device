@@ -39,7 +39,7 @@ async function handler(m, { sock, text, command }) {
       rpg.mount.lastFeed = Date.now();
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭──「 *ᴍᴏᴜɴᴛ ғᴇᴇᴅ* 」\n│ 🍎 Tunggangan *" + mount.name + "* diberi makan!\n│ 💚 Happiness: " + rpg.mount.happiness + "/100\n╰──────────");
+      return m.reply("╭─「 *ᴍᴏᴜɴᴛ ғᴇᴇᴅ* 」\n│ 🍎 Tunggangan *" + mount.name + "* diberi makan!\n│ 💚 Happiness: " + rpg.mount.happiness + "/100\n╰──────────");
     }
 
     const args = (text || "").trim().split(/\s+/);
@@ -48,13 +48,13 @@ async function handler(m, { sock, text, command }) {
     if (!action || action === "info") {
       if (rpg.mount) {
         const mount = MOUNTS[rpg.mount.id];
-        return m.reply("╭──「 *ᴍᴏᴜɴᴛ* 」\n│ 🐾 Tunggangan: *" + mount.name + "*\n│ 💚 Happiness: " + (rpg.mount.happiness || 50) + "/100\n│ ⚡ SPD Bonus: +" + mount.spd + "\n" + (mount.atk ? "│ 💪 ATK Bonus: +" + mount.atk + "\n" : "") + (mount.def ? "│ 🛡️ DEF Bonus: +" + mount.def + "\n" : "") + "│\n│ 📌 .mount feed — beri makan\n╰──────────");
+        return m.reply("╭─「 *ᴍᴏᴜɴᴛ* 」\n│ 🐾 Tunggangan: *" + mount.name + "*\n│ 💚 Happiness: " + (rpg.mount.happiness || 50) + "/100\n│ ⚡ SPD Bonus: +" + mount.spd + "\n" + (mount.atk ? "│ 💪 ATK Bonus: +" + mount.atk + "\n" : "") + (mount.def ? "│ 🛡️ DEF Bonus: +" + mount.def + "\n" : "") + "│\n│ 📌 .mount feed — beri makan\n╰──────────");
       }
-      return m.reply("╭──「 *ᴍᴏᴜɴᴛ* 」\n│ 📌 Kamu belum punya tunggangan\n│ 📌 .mount list — liftar tunggangan\n│ 📌 .mount pilih <nama> — pilih tunggangan\n╰──────────");
+      return m.reply("╭─「 *ᴍᴏᴜɴᴛ* 」\n│ 📌 Kamu belum punya tunggangan\n│ 📌 .mount list — liftar tunggangan\n│ 📌 .mount pilih <nama> — pilih tunggangan\n╰──────────");
     }
 
     if (action === "list") {
-      let msg = "╭──「 *ᴍᴏᴜɴᴛ ʟɪsᴛ* 」\n";
+      let msg = "╭─「 *ᴍᴏᴜɴᴛ ʟɪsᴛ* 」\n";
       msg += "│ Pilih tunggangan:\n│\n";
       for (const [id, mount] of Object.entries(MOUNTS)) {
         const owned = rpg.mount?.id === id;
@@ -81,7 +81,7 @@ async function handler(m, { sock, text, command }) {
       if (mount.def) rpg.def = (rpg.def || 5) + mount.def;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭──「 *ᴍᴏᴜɴᴛ* 」\n│ 🐎 Kamu membeli *" + mount.name + "*!\n│ ⚡ SPD +" + mount.spd + "\n│ 💰 Sisa gold: " + (rpg.gold || 0) + "\n╰──────────");
+      return m.reply("╭─「 *ᴍᴏᴜɴᴛ* 」\n│ 🐎 Kamu membeli *" + mount.name + "*!\n│ ⚡ SPD +" + mount.spd + "\n│ 💰 Sisa gold: " + (rpg.gold || 0) + "\n╰──────────");
     }
   } catch (e) {
     console.error("mount error:", e.message);

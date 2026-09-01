@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
         const dropletsUsed = droplets.length
         const dropletsRemaining = dropletLimit - dropletsUsed
         
-        let txt = `╭──「 *Kuota DigitalOcean* 」\n│ *ʟɪᴍɪᴛ:* ${dropletLimit} droplet
+        let txt = `╭─「 *Kuota DigitalOcean* 」\n│ *ʟɪᴍɪᴛ:* ${dropletLimit} droplet
 │ *ᴛᴇʀᴘᴀᴋᴀɪ:* ${dropletsUsed} droplet
 │ *ꜱɪꜱᴀ:* ${dropletsRemaining} droplet
 ╰──────────

@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
       rpg.ref_count = 0;
       addExp(m, XP_FIRST_TIME);
       await m.react("🐣");
-      let msg = `╭──「 *REFERRAL BERHASIL* 」\n`;
+      let msg = `╭─「 *REFERRAL BERHASIL* 」\n`;
       msg += `│ ✅ Kamu menggunakan kode referral!\n`;
       msg += `│ ✨ +${XP_FIRST_TIME.toLocaleString("id-ID")} EXP\n`;
       msg += `╰──────────`;
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
     const botNumber = sock.user?.id?.split("@")[0] || "";
     const refLink = `wa.me/${botNumber}?text=.referal%20${rpg.ref_code}`;
     await m.react("🐣");
-    let msg = `╭──「 *REFERRAL CODE* 」\n`;
+    let msg = `╭─「 *REFERRAL CODE* 」\n`;
     msg += `│ 🎫 Kode: *${rpg.ref_code}*\n`;
     msg += `│ 👥 Total referral: ${rpg.ref_count || 0}\n`;
     msg += `│\n`;

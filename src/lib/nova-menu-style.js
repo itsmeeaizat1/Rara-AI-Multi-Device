@@ -1,15 +1,15 @@
 // === Nova AI Menu Style (v8 — Unified Box) ===
 // Aesthetic khas bot WhatsApp dev Indonesia:
-// ╭──「 」 box drawing, │ clean body lines, ├── sub-section, ╰─── footer
+// ╭─「 」 box drawing, │ clean body lines, │ sub-section, ╰─── footer
 // + modern data: ▰▱ progress bars, ● status dots, system info
 // SEMUA text pakai smallcaps font (toSC diterapkan ke header + body)
 // Semua fungsi lama tetap export dengan signature sama.
 //
 // STYLE GUIDE (wajib konsisten di semua plugin):
-// ┌─ Header:   ╭──「 Title 」
+// ┌─ Header:   ╭─「 Title 」
 // │─ Body:     │ content
 // │─ Empty:    │
-// │─ Sub:      ├──「 Sub Title 」
+// │─ Sub:      │ 「 Sub Title 」
 // │─ Content:  │ content
 // │─ Footer:   ╰──────────
 
@@ -52,12 +52,12 @@ const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
  * Empty: pass "" as a line.
  */
 function buildBox(headerTitle, lines = []) {
-  const headerCore = `╭──「 ${headerTitle} 」`;
+  const headerCore = `╭─「 ${headerTitle} 」`;
   let maxW = headerCore.length;
   for (const line of lines) {
     let len;
     if (line === "---" || line === "─" || line === "---separator---") continue;
-    else if (typeof line === "object" && line.subHeader) len = `├──「 ${line.subHeader} 」`.length;
+    else if (typeof line === "object" && line.subHeader) len = `│ 「 ${line.subHeader} 」`.length;
     else if (!line || !String(line).trim()) continue;
     else {
       const clean = String(line).replace(/^[•┊╎❏➶╭╰│┃]\s*/g, '');
@@ -72,7 +72,7 @@ function buildBox(headerTitle, lines = []) {
     if (line === "---" || line === "─" || line === "---separator---") {
       body.push("├" + "─".repeat(W - 2) + "┤");
     } else if (typeof line === "object" && line.subHeader) {
-      const sub = `├──「 ${line.subHeader} 」`;
+      const sub = `│ 「 ${line.subHeader} 」`;
       body.push(sub + "─".repeat(Math.max(0, W - sub.length - 1)) + "┤");
     } else if (!line || !String(line).trim()) {
       body.push("│" + " ".repeat(W - 2) + "│");
@@ -133,7 +133,7 @@ function novaCaption({ emoji = "", name = "", description = "", usage = "", exam
 // ═══════════════════════════════════════════════
 
 function botHeader(botName) {
-  return `╭──「 *${toSC(botName)}* 」`;
+  return `╭─「 *${toSC(botName)}* 」`;
 }
 
 function botSignature(botName) {
@@ -163,7 +163,7 @@ function kv(key, value, padTo = 10) {
 }
 
 function categoryBox(emoji, name, commands, prefix, perLine = 3) {
-  const headerCore = `╭──「 ${toSC(name)} (${commands.length}) 」`;
+  const headerCore = `╭─「 ${toSC(name)} (${commands.length}) 」`;
   const lines = [];
   let maxW = headerCore.length;
   for (let i = 0; i < commands.length; i += perLine) {
@@ -186,7 +186,7 @@ function categoryBox(emoji, name, commands, prefix, perLine = 3) {
 // ═══════════════════════════════════════════════
 
 function sectionHeader(title) {
-  return `╭──「 *${toSC(title)}* 」`;
+  return `╭─「 *${toSC(title)}* 」`;
 }
 
 function sectionItem(text) {
@@ -215,8 +215,8 @@ function buildSection(title, items = []) {
 }
 
 function claraHeader(title, emoji = "") {
-  if (isRealEmoji(emoji)) return `╭──「 ${emoji} ${toSC(title)} 」`;
-  return `╭──「 *${toSC(title)}* 」`;
+  if (isRealEmoji(emoji)) return `╭─「 ${emoji} ${toSC(title)} 」`;
+  return `╭─「 *${toSC(title)}* 」`;
 }
 
 function bracketBox(emoji, label, lines = []) {
@@ -340,11 +340,11 @@ function closeBoxRight(text) {
   const out = [];
   for (const l of lines) {
     const t = l.trim();
-    if (t.startsWith("╭──「") || t.startsWith("╭── 「")) {
+    if (t.startsWith("╭─「") || t.startsWith("╭─「 ")) {
       out.push(l + "─".repeat(Math.max(0, W - l.length)) + "╮");
-    } else if (t.startsWith("├──「") || t.startsWith("├── 「")) {
+    } else if (t.startsWith("│ 「") || t.startsWith("│ 「 ")) {
       out.push(l + "─".repeat(Math.max(0, W - l.length - 1)) + "┤");
-    } else if (t.startsWith("├───") || t.startsWith("├── ")) {
+    } else if (t.startsWith("│─") || t.startsWith("│ ")) {
       out.push("├" + "─".repeat(W - 2) + "┤");
     } else if (t.startsWith("│") || l.trim() === "│") {
       if (l.trim() === "│" || l.trim() === "") {
@@ -397,8 +397,68 @@ const CATEGORY_EMOJIS = {
   vps: "🖥️",
 };
 
+// ═══════════════════════════════════════════════
+// novaInfoBox — Info box simpel (╭│╰ kiri, tanpa cabang ├──)
+// Untuk notifikasi, welcome, AI reply, dll
+// ═══════════════════════════════════════════════
+/**
+ * @param {string} title - Header title (auto smallcaps)
+ * @param {Array<{label: string, value: string}>|Array<string>} items - Content
+ *   - {label, value} → "│ Label     value" (label di-pad ke kanan)
+ *   - string → "│ string" (plain line)
+ *   - "---" → separator line
+ * @param {object} opts - { sc: true }
+ * @returns {string}
+ */
+function novaInfoBox(title, items = [], opts = {}) {
+  const useSC = opts.sc !== false;
+  const hdr = useSC ? toSC(title) : title;
+  const headerStr = `╭─「 ${hdr} 」`;
+  const lines = [];
+  let maxW = headerStr.length;
+  
+  for (const item of items) {
+    if (item === "---" || item === "─") {
+      lines.push({ type: "sep", text: "" });
+      continue;
+    }
+    if (typeof item === "string") {
+      const text = useSC ? toSC(item) : item;
+      const line = `│ ${text}`;
+      if (line.length > maxW) maxW = line.length;
+      lines.push({ type: "text", text: line });
+      continue;
+    }
+    if (item && item.label !== undefined) {
+      const label = useSC ? toSC(item.label) : item.label;
+      const value = item.value !== undefined ? String(item.value) : "";
+      // Pad label ke width yang konsisten (min 10 char)
+      const labelW = Math.max(10, label.length + 2);
+      const padded = label.padEnd(labelW);
+      const line = `│ ${padded}${value}`;
+      if (line.length > maxW) maxW = line.length;
+      lines.push({ type: "kv", text: line });
+      continue;
+    }
+  }
+  
+  const W = Math.max(maxW + 3, 24);
+  let out = headerStr + "─".repeat(Math.max(0, W - headerStr.length)) + "\n";
+  for (const line of lines) {
+    if (line.type === "sep") {
+      out += "│" + "─".repeat(Math.max(0, W - 1)) + "\n";
+    } else {
+      out += line.text + " ".repeat(Math.max(0, W - line.text.length)) + "\n";
+    }
+  }
+  out += "╰" + "─".repeat(Math.max(0, W - 1));
+  return out;
+}
+
+
 export {
   toSC, scLine, isRealEmoji,
+  novaInfoBox,
   buildBox, novaCaption,
   botHeader, botSignature, sectionBox,
   progressBar, statusDot, kv,
@@ -663,12 +723,12 @@ export { novaError, novaEmpty, novaNoInput, novaNoQuoted, novaSuccess, novaGuide
 export function novaBox(header, lines = [], opts = {}) {
   const useSC = opts.sc !== false;
   const hdr = useSC ? toSC(header) : header;
-  const headerStr = `╭──「 ${hdr} 」`;
+  const headerStr = `╭─「 ${hdr} 」`;
   let maxW = headerStr.length;
   const processed = lines.map(l => {
     if (l === "---" || l === "─") return { type: "sep" };
     if (typeof l === "object" && l.sub) {
-      const subStr = `├──「 ${useSC ? toSC(l.sub) : l.sub} 」`;
+      const subStr = `│ 「 ${useSC ? toSC(l.sub) : l.sub} 」`;
       if (subStr.length > maxW) maxW = subStr.length;
       return { type: "sub", raw: subStr };
     }

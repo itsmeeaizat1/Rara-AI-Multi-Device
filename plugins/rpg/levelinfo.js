@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("levelinfo", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
-    let msg = `╭──「 *LEVEL INFO* 」\n`;
+    let msg = `╭─「 *LEVEL INFO* 」\n`;
     msg += `│ 👤 ${m.pushName || "Player"}\n`;
     msg += `│\n`;
     msg += `│ 📊 Level: ${rpg.level || 1}\n`;

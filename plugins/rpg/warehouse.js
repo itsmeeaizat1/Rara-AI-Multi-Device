@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
     }
 
     // LIST (default)
-    let msg = `╭──「 *ɢᴜᴅᴀɴɢ* 」\n`;
+    let msg = `╭─「 *ɢᴜᴅᴀɴɢ* 」\n`;
     msg += `│ Kapasitas: *${data.items?.length || 0}/${data.slots}*\n`;
     msg += `│\n`;
     if (data.items && data.items.length > 0) {

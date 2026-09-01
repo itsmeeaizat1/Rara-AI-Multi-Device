@@ -192,7 +192,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     // ── Info section (Full SmallCaps Style v7) — open box, perlu closeBoxRight sendiri ──
     const openBox = `
-╭──「 *${toSC("Info Profil")}* 」
+╭─「 *${toSC("Info Profil")}* 」
 │ *${toSC("Nama")}:*  ${toSC(m.pushName || "User")}
 │ *${toSC("Nomor")}:* @${m.sender.split("@")[0]}
 │ *${toSC("Premium")}:* ${toSC(m.isPremium ? "Aktif" : "Free")}
@@ -204,14 +204,14 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ *${toSC("Xp")}:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
 │ *${toSC("Total Xp")}:* ${userExp.toLocaleString()}
 │ *${toSC("Status")}:* ${toSC(user?.banned ? "Banned" : "Aktif")}
-├──「 *${toSC("Info Waktu")}*
+│ 「 *${toSC("Info Waktu")}*
 │ *${toSC("Waktu")}:* ${timeStr} ${toSC("WIB")}
 │ *${toSC("Hari")}:* ${toSC(dayName)} ${toSC(weton)}
 │ *${toSC("Tanggal")}:* ${dateStr}
 │ *${toSC("Tanggal Islam")}:* ${islamicDate}
 │ *${toSC("Zona")}:* ${toSC("Asia/Jakarta")}
 │ *${toSC("Hari Penting")}:* ${toSC(importantDay)}
-├──「 *${toSC("Info Bot")}*
+│ 「 *${toSC("Info Bot")}*
 │ *${toSC("Bot Name")}:* ${toSC(botConfig.bot?.name || botName)}
 │ *${toSC("Bot Nomor")}:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : toSC("Unknown")}
 │ *${toSC("Version")}:* ${botConfig.bot?.version || "-"}
@@ -223,7 +223,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ *${toSC("Total Registrasi")}:* ${totalRegistered}
 │ *${toSC("Premium User")}:* ${totalPremium}
 │ *${toSC("Total Fitur")}:* ${totalFeatures}
-├──「 *${toSC("Info Database")}*
+│ 「 *${toSC("Info Database")}*
 │ *${toSC("Total User")}:* ${totalUsers}
 │ *${toSC("Terdaftar")}:* ${totalRegistered}
 │ *${toSC("Premium")}:* ${totalPremium}
@@ -236,7 +236,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ *${toSC("Command Run")}:* ${totalCommandsRun > 0 ? totalCommandsRun.toLocaleString() : '-'}
 │ *${toSC("Sticker Dibuat")}:* ${totalStickerMade > 0 ? totalStickerMade.toLocaleString() : '-'}
 │ *${toSC("Download")}:* ${totalDownloads > 0 ? totalDownloads.toLocaleString() : '-'}
-├──「 *${toSC("Info Server")}*
+│ 「 *${toSC("Info Server")}*
 │ *${toSC("Platform")}:* ${toSC(platform)}
 │ *${toSC("Hostname")}:* ${toSC(hostname)}
 │ *${toSC("Type")}:* ${toSC("Node.Js")}
@@ -249,7 +249,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ *${toSC("RAM")}:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
 │ *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
 ╰──────────
-╭──「 *${toSC("Keterangan")}* 」\n│ Ⓞ = ${toSC("Hanya untuk owner")}
+╭─「 *${toSC("Keterangan")}* 」\n│ Ⓞ = ${toSC("Hanya untuk owner")}
 │ ⓟ = ${toSC("Hanya untuk premium")}
 │ Ⓛ = ${toSC("Membutuhkan limit")}
 │ Ⓐ = ${toSC("Hanya untuk admin")}
@@ -330,7 +330,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     try { await sendMenuAudio(sock, m, db, true); } catch {}
   } catch (e) {
     console.error("[allmenu] handler error:", e.message);
-    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────`); } catch {}
+    try { await m.reply(`╭─「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────`); } catch {}
   }
 }
 

@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
     }
 
     // STATUS (default)
-    let msg = `╭──「 *sᴜʀᴠɪᴠᴀʟ* 」\n`;
+    let msg = `╭─「 *sᴜʀᴠɪᴠᴀʟ* 」\n`;
     msg += `│ ❤️ HP:      [${bar(data.hp, MAX_HP)}] ${data.hp}/${MAX_HP}\n`;
     msg += `│ 🍖 Hunger:  [${bar(data.hunger, MAX_HUNGER)}] ${data.hunger}/${MAX_HUNGER}\n`;
     msg += `│ 💧 Thirst:  [${bar(data.thirst, MAX_THIRST)}] ${data.thirst}/${MAX_THIRST}\n`;

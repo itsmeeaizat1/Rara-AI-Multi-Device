@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     const hours = Math.floor(remaining / (1000 * 60 * 60));
     const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
     return m.reply(
-      "╭──「 Daily Claim 」\n" +
+      "╭─「 Daily Claim 」\n" +
       "│\n" +
       "│ 🕖 Sabar ya, cooldown nih!\n" +
       "│ Udah klaim hari ini 👀\n" +
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
 
   const greeting = getTimeGreeting();
 
-  let txt = "╭──「 Daily Claim 」\n";
+  let txt = "╭─「 Daily Claim 」\n";
   txt += "│\n";
   txt += "* " + greeting + ", @" + m.sender.split("@")[0] + "!* 👋\n";
   txt += "│ 🔥 Streak: *" + streak + " hari*\n";
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
     txt += "│ ⚡ Bonus Streak: *" + (Math.round(streakMultiplier * 100) / 100) + "x*\n";
   }
   txt += "│\n";
-  txt += "├──「 *Hadiah* 」\n";
+  txt += "│ 「 *Hadiah* 」\n";
   txt += "│ 🚄 Exp: *+" + formatNum(expReward) + "*\n";
   txt += "│ 🪙 Koin: *+" + formatNum(koinReward) + "*\n";
   txt += "│ 💰 Gold: *+" + formatNum(goldReward) + "*\n";

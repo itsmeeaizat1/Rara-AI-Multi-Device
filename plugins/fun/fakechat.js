@@ -48,12 +48,12 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
     const tick = Math.random() > 0.3 ? "✓✓" : "✓";
 
     const chatText = [
-      "╭── 「 FAKE CHAT 」",
+      "╭─「  FAKE CHAT 」",
       "│",
       "│  " + nama,
       "│  " + online,
       "│",
-      "├─────────────────────",
+      "│───────────────────",
       "│",
       "│  ┌─────────────────┐",
       "│  " + pesan,

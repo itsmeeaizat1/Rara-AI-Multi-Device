@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "achievements", allData.achievements);
 
       await m.react("🐣");
-      let msg = `╭──「 *ᴀᴄʜɪᴇᴠᴇᴍᴇɴᴛ ᴄʟᴀɪᴍ* 」\n`;
+      let msg = `╭─「 *ᴀᴄʜɪᴇᴠᴇᴍᴇɴᴛ ᴄʟᴀɪᴍ* 」\n`;
       msg += `│ ${ach.emoji} *${ach.name}*\n`;
       msg += `│ ${ach.desc}\n`;
       msg += `│\n`;
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
     }
 
     // LIST all achievements
-    let msg = `╭──「 *ᴀᴄʜɪᴇᴠᴇᴍᴇɴᴛs* 」\n`;
+    let msg = `╭─「 *ᴀᴄʜɪᴇᴠᴇᴍᴇɴᴛs* 」\n`;
     let unlocked = 0;
     let canClaim = 0;
 

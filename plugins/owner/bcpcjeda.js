@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
 
   if (!input) {
     return m.reply(
-      "╭──「 Jeda Broadcast Private 」\n" +
+      "╭─「 Jeda Broadcast Private 」\n" +
       "│\n" +
       "│ ⏱️ Jeda saat ini: " + formatDelay(current) + " (" + current + "ms)\n" +
       "│\n" +
@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
   const ms = parseDelay(input)
   if (!ms || ms < 1000) {
     return m.reply(
-      "╭──「 Jeda Broadcast Private 」\n" +
+      "╭─「 Jeda Broadcast Private 」\n" +
       "│\n" +
       "│ ❌ Format salah\n" +
       "│ 💡 Contoh: `5s`, `2m`, `1h`, `1d`\n" +
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
   db.setting('jedaBcpc', ms)
 
   return m.reply(
-    "╭──「 Jeda Broadcast Private 」\n" +
+    "╭─「 Jeda Broadcast Private 」\n" +
     "│\n" +
     "│ ✅ Jeda berhasil diubah\n" +
     "│ 📌 Sebelumnya: " + formatDelay(prev) + "\n" +

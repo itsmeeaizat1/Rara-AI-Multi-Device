@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage"));
     if (!isImage) {
       return m.reply(
-        `╭──「 *ᴀɪ ᴘʀ sᴏʟᴠᴇʀ* 」\n` +
+        `╭─「 *ᴀɪ ᴘʀ sᴏʟᴠᴇʀ* 」\n` +
         `│ 📚 Foto soal → AI jawab + jelasin\n` +
         `│\n` +
         `│ 📌 Cara pakai:\n` +
@@ -86,7 +86,7 @@ Jika gambar bukan soal, jelaskan apa isi gambar.`;
       if (res.status) {
         await m.react("🐣");
         return m.reply(
-          `╭──「 *ᴀɪ ᴘʀ sᴏʟᴠᴇʀ* 」\n` +
+          `╭─「 *ᴀɪ ᴘʀ sᴏʟᴠᴇʀ* 」\n` +
           `│ ⚠️ Gemini Vision belum aktif\n` +
           `│ 💡 Set API key: ${prefix}setkey gemini <key>\n` +
           `│ 🔑 Gratis: aistudio.google.com/apikey\n` +
@@ -121,7 +121,7 @@ Gunakan bahasa Indonesia.`;
       // Kalpa AI solver gagal, kirim transkrip aja
       await m.react("🐣");
       return m.reply(
-        `╭──「 *ᴛʀᴀɴsᴋʀɪᴘ sᴏᴀʟ* 」\n` +
+        `╭─「 *ᴛʀᴀɴsᴋʀɪᴘ sᴏᴀʟ* 」\n` +
         `│ 📸 Berhasil baca soal, tapi AI solver lagi down\n` +
         `│\n` +
         `│ ${visionResult.text.replace(/\n/g, "\n│ ")}\n` +
@@ -133,7 +133,7 @@ Gunakan bahasa Indonesia.`;
 
     await m.react("🐣");
 
-    let msg = `╭──「 *ᴀɪ ᴘʀ sᴏʟᴠᴇʀ* 」\n`;
+    let msg = `╭─「 *ᴀɪ ᴘʀ sᴏʟᴠᴇʀ* 」\n`;
     if (subject) msg += `│ 📚 Mapel: *${subject}*\n`;
     msg += `│ 📸 Status: *Soal berhasil dibaca*\n`;
     msg += `│\n`;

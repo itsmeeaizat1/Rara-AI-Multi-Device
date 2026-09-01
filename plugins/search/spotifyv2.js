@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
         const cover = track.album?.images?.[0]?.url
 
         let text =
-            "╭──「 Spotify Track 」\n" +
+            "╭─「 Spotify Track 」\n" +
             "" + name + "\n" +
             "│ by " + artists + "\n" +
             "│\n" +

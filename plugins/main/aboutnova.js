@@ -36,13 +36,13 @@ async function handler(m, { sock, config: botConfig }) {
       cmdLines += `│ ${prefix}${mainCmds[i]}\n`;
     }
 
-    const text = `╭──「 *Aʙᴏᴜᴛ Nᴏᴠᴀ* 」\n│ *ɴᴀᴍᴀ:* ${toSC(botName)}
+    const text = `╭─「 *Aʙᴏᴜᴛ Nᴏᴠᴀ* 」\n│ *ɴᴀᴍᴀ:* ${toSC(botName)}
 │ *ᴠᴇʀꜱɪᴏɴ:* ${version}
 │ *ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${toSC(developer)}
 │ *ᴘʟᴀᴛꜰᴏʀᴍ:* WhatsApp Multi Device
 │ *ʟɪʙʀᴀʀʏ:* Baileys (nova-baileys)
 │ *ʀᴜɴᴛɪᴍᴇ:* Node.js ${process.version}
-├──「 *Mᴀɪɴ Cᴏᴍᴍᴀɴᴅs
+│ 「 *Mᴀɪɴ Cᴏᴍᴍᴀɴᴅs
 ${cmdLines}╰──────────
 ${prefix}menu untuk melihat semua fitur`;
 
@@ -50,7 +50,7 @@ ${prefix}menu untuk melihat semua fitur`;
     await m.react("");
   } catch (e) {
     console.error("[aboutnova] handler error:", e.message);
-    try { await m.reply("╭──「 About 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────"); } catch {}
+    try { await m.reply("╭─「 About 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────"); } catch {}
   }
 }
 

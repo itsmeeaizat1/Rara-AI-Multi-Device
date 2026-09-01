@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
   db.save();
 
   const targetName = targetJid.split("@")[0];
-  let msg = `╭──「 *TRANSFER LIMIT* 」\n`;
+  let msg = `╭─「 *TRANSFER LIMIT* 」\n`;
   msg += `│ Dari: *${m.pushName || m.sender.split("@")[0]}*\n`;
   msg += `│ Ke: *${targetName}*\n`;
   msg += `│ Jumlah: *${formatNumber(diterima)} limit*\n`;

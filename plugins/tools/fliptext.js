@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let result = `╭──「 *FLIP TEXT* 」\n`;
+    let result = `╭─「 *FLIP TEXT* 」\n`;
     result += `│ ${flipped}\n`;
     result += `╰──────────`;
     return m.reply(result);

@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastHilo", HILO_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭──「 *ʜɪ-ʟᴏ* 」\n`;
+    let msg = `╭─「 *ʜɪ-ʟᴏ* 」\n`;
     msg += `│ 🃏 Tebak: *${isHigh ? "TINGGI" : "RENDAH"}*\n`;
     msg += `│ 💵 Bet: *${bet} gold*\n`;
     msg += `│\n`;

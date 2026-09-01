@@ -42,12 +42,12 @@ export async function handler(m, { sock }) {
   try {
     const truth = getRandomTruth();
     if (!truth) {
-      await m.reply("╭──「 Truth 」\n│ ❌ Hmm, truth-nya lagi kosong nih 🫠\n│ Coba lagi yuk!\n╰──────────");
+      await m.reply("╭─「 Truth 」\n│ ❌ Hmm, truth-nya lagi kosong nih 🫠\n│ Coba lagi yuk!\n╰──────────");
       return;
     }
 
     const text = [
-      "╭──「 *Truth or Dare* 」",
+      "╭─「 *Truth or Dare* 」",
       "│",
       `│ *Mode:* TRUTH 🎭`,
       "│ ",
@@ -63,7 +63,7 @@ export async function handler(m, { sock }) {
   } catch (e) {
     console.error("[truth] Error:", e.message);
     try {
-      await m.reply("╭──「 Truth 」\n│ ❌ Yah, ada error nih 😵\n│ Coba lagi bentar ya\n╰──────────");
+      await m.reply("╭─「 Truth 」\n│ ❌ Yah, ada error nih 😵\n│ Coba lagi bentar ya\n╰──────────");
     } catch {}
   }
 }

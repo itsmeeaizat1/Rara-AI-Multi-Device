@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
     const safeArtist = (data.artis || "Unknown").replace(/[^\w\s-]/g, "").trim() || "Unknown";
 
     // Build caption
-    let caption = `╭──「 SPOTIFY PLAY 」\n`;
+    let caption = `╭─「 SPOTIFY PLAY 」\n`;
     caption += `│ Judul: ${data.title || "Unknown"}\n`;
     caption += `│ Artist: ${data.artis || "Unknown"}\n`;
     if (data.album) caption += `│ Album: ${data.album}\n`;

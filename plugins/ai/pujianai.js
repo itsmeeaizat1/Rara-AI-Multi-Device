@@ -44,7 +44,7 @@ Gunakan bahasa Indonesia santai. Pujian harus bikin senyum, bukan cringe.`;
     }
 
     await m.react("🐣");
-    let msg = `╭──「 *ᴘᴜᴊɪᴀɴ ᴀɪ* 」\n`;
+    let msg = `╭─「 *ᴘᴜᴊɪᴀɴ ᴀɪ* 」\n`;
     msg += `│ 💕 Untuk: *${target}*\n`;
     msg += `│\n`;
     msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;

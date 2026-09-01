@@ -70,7 +70,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply( `╭──「 *ɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ ɴᴇʙᴜʟᴀ* 」
+        return m.reply( `╭─「 *ɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ ɴᴇʙᴜʟᴀ* 」
 │ Usage: \`${m.prefix}installtemanebula <ip>|<password>\`\n╰──────────\n\n\`Contoh: ${m.prefix}installtemanebula 192.168.1.1|secretpass\``, "installtemanebula")
     }
 
@@ -101,7 +101,7 @@ function handler(m, { sock }) {
 
             await m.reply(claraWrap("installtemanebula", `🕕 *[3/3] Install Nebula...*\n\nMenginstall tema Nebula (Auto-Confirm)...`))
             await execSSH(conn, CMD_NEBULA)
-            await m.reply(claraWrap("installtemanebula", `╭──「 *ᴛᴇᴍᴀ ɴᴇʙᴜʟᴀ* 」
+            await m.reply(claraWrap("installtemanebula", `╭─「 *ᴛᴇᴍᴀ ɴᴇʙᴜʟᴀ* 」
 │ sTatus: *ᴛᴇʀɪɴꜱᴛᴀʟʟ*
 │ Ip: ${ipvps}\n╰──────────\n\n_Tema Nebula berhasil diinstall!_`))
         } catch (err) {

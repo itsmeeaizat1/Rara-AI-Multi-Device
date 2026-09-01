@@ -28,10 +28,10 @@ async function handler(m, { sock }) {
 
   if (!text || !text.includes("|")) {
     return m.reply( `🧾 *ɪɴᴠᴏɪᴄᴇ ᴍᴀᴋᴇʀ*\n\n` +
-        `╭──「 *FORMAT* 」\n` +
+        `╭─「 *FORMAT* 」\n` +
         `│ \`${m.prefix}invoicemaker <toko>|<invoice>|<tanggal>|<status>|<items>|<total>\`\n` +
         `╰──────────\n\n` +
-        `╭──「 *PARAMETER* 」\n` +
+        `╭─「 *PARAMETER* 」\n` +
         `│ • toko: Nama toko\n` +
         `│ • invoice: Nomor invoice\n` +
         `│ • tanggal: Format DD/MM/YYYY\n` +
@@ -97,14 +97,14 @@ async function handler(m, { sock }) {
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     let caption = `🧾 *ɪɴᴠᴏɪᴄᴇ ɢᴇɴᴇʀᴀᴛᴇᴅ*\n\n`;
-    caption += `╭──「 *DETAIL* 」\n`;
+    caption += `╭─「 *DETAIL* 」\n`;
     caption += `│ 🏪 Toko: *${data.store}*\n`;
     caption += `│ 🔢 Invoice: *${data.invoice}*\n`;
     caption += `│ 📅 Tanggal: *${data.date}*\n`;
     caption += `│ 📌 Status: *${data.status === "paid" ? "✅ LUNAS" : "❌ BELUM LUNAS"}*\n`;
     caption += `╰──────────\n\n`;
 
-    caption += `╭──「 *ITEMs* 」\n`;
+    caption += `╭─「 *ITEMs* 」\n`;
     data.items.forEach((item, i) => {
       caption += `│ ${i + 1}. ${item.name} (${item.unit}) - Rp${item.price.toLocaleString("id-ID")}\n`;
     });

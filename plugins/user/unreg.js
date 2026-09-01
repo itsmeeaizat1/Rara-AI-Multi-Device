@@ -51,11 +51,11 @@ async function handler(m, { sock }) {
   await db.save();
 
   // Reaksi loading
-  let txt = "╭──「 Batal Daftar 」\n";
+  let txt = "╭─「 Batal Daftar 」\n";
   txt += "│\n";
   txt += "│ ✅ Data pendaftaran berhasil dihapus\n";
   txt += "│\n";
-  txt += "├──「 *Data Dihapus* 」\n";
+  txt += "│ 「 *Data Dihapus* 」\n";
   txt += "│ 📛 Nama: " + prevName + "\n";
   txt += "│ 🔑 SN: " + prevSerial + "\n";
   txt += "│ 📅 Batal pada: " + new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) + " WIB\n";

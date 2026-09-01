@@ -94,7 +94,7 @@ async function notifyOwner(sock, m, data) {
   const buyerNumber = m.sender?.replace(/[^0-9]/g, "") || "";
   const buyerName = m.pushName || "Unknown";
 
-  const notifText = `╭──「 ${toSC("PEMBELIAN PREMIUM BARU")} 」
+  const notifText = `╭─「 ${toSC("PEMBELIAN PREMIUM BARU")} 」
 │ ${toSC("Pembeli")}: *${toSC(buyerName)}*
 │ ${toSC("Nomor")}: ${buyerNumber}
 │ ${toSC("Paket")}: *${toSC(data.label)}*

@@ -125,7 +125,7 @@ async function sendVideo(sock, m, videoBuffer, title, quality, videoMeta) {
  * Build interactive buttons message dengan pilihan Audio/Video + kbps
  */
 async function sendChoiceButtons(sock, m, video) {
-  const info = `╭──「 *Now Playing* 」
+  const info = `╭─「 *Now Playing* 」
 │
 │ 📌 *Judul:* ${video.title}
 │ 👤 *Channel:* ${video.author.name}

@@ -47,7 +47,7 @@ Gunakan bahasa Indonesia. Jika nama tidak dikenal, buat analisis berdasarkan bun
     }
 
     await m.react("🐣");
-    let msg = `╭──「 *ᴀʀᴛɪ ɴᴀᴍᴀ* 」\n`;
+    let msg = `╭─「 *ᴀʀᴛɪ ɴᴀᴍᴀ* 」\n`;
     msg += `│ 📛 Nama: *${text}*\n`;
     msg += `│\n`;
     msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;

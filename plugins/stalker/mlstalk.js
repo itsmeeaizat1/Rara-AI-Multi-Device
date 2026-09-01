@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     const r = data.result || data.data || data;
     await m.react("🐣");
 
-    let msg = `╭──「 *ᴍᴏʙɪʟᴇ ʟᴇɢᴇɴᴅs* 」\n`;
+    let msg = `╭─「 *ᴍᴏʙɪʟᴇ ʟᴇɢᴇɴᴅs* 」\n`;
     msg += `│ ID: *${playerId}*\n`;
     if (serverId) msg += `│ Server: *${serverId}*\n`;
     if (r.username || r.name || r.nick) msg += `│ Username: *${r.username || r.name || r.nick}*\n`;

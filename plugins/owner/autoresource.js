@@ -348,7 +348,7 @@ async function runResourceCheck(sock) {
         const ownerJid = ownerNum.replace(/[^0-9]/g, "") + "@s.whatsapp.net";
         const actionLines = actions.map((a) => `│ ${a.metric}: ${a.value} (threshold: ${a.threshold}) → ${a.action}`).join("\n");
         const notifyMsg =
-          `╭──「 ᴀᴜᴛᴏ-ʀᴇꜱᴏᴜʀᴄᴇ 」\n` +
+          `╭─「 ᴀᴜᴛᴏ-ʀᴇꜱᴏᴜʀᴄᴇ 」\n` +
           `│ ${criticalCount} metric critical!\n` +
           `${actionLines}\n` +
           `│\n` +

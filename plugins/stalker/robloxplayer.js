@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
         text += `Ditemukan: *${players.length}* player\n\n`
         
         players.forEach((player, i) => {
-            text += `╭──「 ${i + 1}. *${player.displayName}* 」\n`
+            text += `╭─「 ${i + 1}. *${player.displayName}* 」\n`
             text += `│ 🆔 ID: \`${player.id}\`\n`
             text += `│ 👤 Username: \`${player.name}\`\n`
             text += `│ 📛 Display: *${player.displayName}*\n`

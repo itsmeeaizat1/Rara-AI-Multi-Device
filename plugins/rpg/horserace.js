@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     if (typeof wallet.gold !== "number") wallet.gold = 2000;
 
     if (subCmd === "list" || !subCmd) {
-      let msg = `╭──「 *HORSE RACING ARENA* 」\n`;
+      let msg = `╭─「 *HORSE RACING ARENA* 」\n`;
       msg += `│ 💰 Gold Kamu: *${wallet.gold}*\n│\n`;
       msg += `│ Daftar Kuda Pertandingan:\n│\n`;
 
@@ -119,7 +119,7 @@ async function handler(m, { sock }) {
 
       await db.setPlayerData?.(sender, "horserace", wallet);
 
-      let msg = `╭──「 *HORSE RACE RESULT* 」\n`;
+      let msg = `╭─「 *HORSE RACE RESULT* 」\n`;
       msg += `│ 🏁 Balapan Kuda Selesai!\n`;
       msg += `│  \n`;
       msg += `│ Papan Lintasan Balap:\n`;

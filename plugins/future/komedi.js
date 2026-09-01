@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
   const story = await generateKomedi(names);
 
   if (!story) {
-    return m.reply("╭──「 Comedy Story 」\n│ ❌ Yah, gagal bikin ceritanya nih 😵\n│ Coba lagi yuk!\n╰──────────", "komedi");
+    return m.reply("╭─「 Comedy Story 」\n│ ❌ Yah, gagal bikin ceritanya nih 😵\n│ Coba lagi yuk!\n╰──────────", "komedi");
   }
 
   const header = "😂 *ᴄᴏᴍᴇᴅʏ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";

@@ -35,7 +35,7 @@ async function handler(m, { sock, command }) {
 
     if (command === "rumor") {
       const rumor = RUMORS[Math.floor(Math.random() * RUMORS.length)];
-      return m.reply("╭──「 *ʀᴜᴍᴏʀ* 」\n│ 💬 *RUMOR TERSEBAR:*\n│\n│ " + rumor + "\n╰──────────");
+      return m.reply("╭─「 *ʀᴜᴍᴏʀ* 」\n│ 💬 *RUMOR TERSEBAR:*\n│\n│ " + rumor + "\n╰──────────");
     }
 
     if (command === "savepoint" || command === "save") {
@@ -46,7 +46,7 @@ async function handler(m, { sock, command }) {
       rpg.savedGold = rpg.gold;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭──「 *sᴀᴠᴇ ᴘᴏɪɴᴛ* 」\n│ 💾 Kamu menyentuh *Save Point*!\n│ Progres disimpan:\n│ 📊 Lv." + rpg.level + " | 💰 " + (rpg.gold || 0) + " Gold\n╰──────────");
+      return m.reply("╭─「 *sᴀᴠᴇ ᴘᴏɪɴᴛ* 」\n│ 💾 Kamu menyentuh *Save Point*!\n│ Progres disimpan:\n│ 📊 Lv." + rpg.level + " | 💰 " + (rpg.gold || 0) + " Gold\n╰──────────");
     }
   } catch (e) {
     console.error("rumor error:", e.message);

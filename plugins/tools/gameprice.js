@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
 
         const deals = response.data.slice(0, 5);
 
-        let boxText = `╭──「 Game Deals 」\n`;
+        let boxText = `╭─「 Game Deals 」\n`;
         deals.forEach((game, index) => {
             const savingsFormatted = Math.round(parseFloat(game.savings || 0));
             boxText += `│ ${index + 1}. ${game.title}\n`;
@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
         }
     } catch (error) {
         const errorBox = [
-            `╭──「 Error 」`,
+            `╭─「 Error 」`,
             `│ Gagal mengambil data diskon game!`,
             `│ Alasan: ${error.message || "Ada error nih"}`,
             `╰──────────`

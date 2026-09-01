@@ -55,7 +55,7 @@ function handler(m, { sock }) {
     if (!input) {
         const currentJeda = db.setting('panelCreateJeda') ?? DEFAULT_JEDA
         return m.reply( `⏱️ *ᴊᴇᴅᴀ ᴘᴀɴᴇʟ ᴄʀᴇᴀᴛᴇ*\n\n` +
-            `╭──「 *ɪɴꜰᴏ* 」\n` +
+            `╭─「 *ɪɴꜰᴏ* 」\n` +
             `│ │ Jeda saat ini: *${formatTime(currentJeda)}*\n` +
             `│ │ Default: *5 menit*\n` +
             `╰──────────\n\n` +
@@ -82,7 +82,7 @@ function handler(m, { sock }) {
     }
     
     return m.reply(claraWrap("jedacreate", `✅ *ᴊᴇᴅᴀ ᴅɪꜱᴇᴛ*\n\n` +
-        `╭──「 *ᴋᴏɴꜰɪɢ* 」\n` +
+        `╭─「 *ᴋᴏɴꜰɪɢ* 」\n` +
         `│ │ Jeda: *${formatTime(jedaMs)}*\n` +
         `╰──────────\n\n` +
         `Setelah panel dibuat, SEMUA user harus menunggu ${formatTime(jedaMs)} sebelum bisa create lagi.`))

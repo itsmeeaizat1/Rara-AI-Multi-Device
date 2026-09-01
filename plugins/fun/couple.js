@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     const name = data.name || targetJid.split("@")[0];
     const now = Date.now();
 
-    let msg = `╭──「 *ᴄᴏᴜᴘʟᴇ ɪɴғᴏ* 」\n`;
+    let msg = `╭─「 *ᴄᴏᴜᴘʟᴇ ɪɴғᴏ* 」\n`;
     msg += `│ 👤 Nama: *${name}*\n`;
 
     if (data.fun.pasangan) {

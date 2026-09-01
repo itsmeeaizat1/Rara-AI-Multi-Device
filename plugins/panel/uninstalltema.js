@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
             }
             
             stream.on('close', async () => {
-                await m.reply(claraWrap("root", `╭──「 ✅ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ*
+                await m.reply(claraWrap("root", `╭─「 ✅ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ*
 │ sTatus: *ʙᴇʀʜᴀꜱɪʟ*
 │ Ip: ${ipvps}
 ╰──────────

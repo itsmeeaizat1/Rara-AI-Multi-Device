@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
  if (!pluginName) {
  return m.reply( `📦 *Get Plugin*\n\n` +
  `Dapatkan source code plugin\n\n` +
- `╭──「 *ғOrmat* 」\n` +
+ `╭─「 *ғOrmat* 」\n` +
  `│ .getplugin <nama>\n` +
  `╰┈┈┈┈┈┈┈┈\n\n` +
  `*Contoh:*\n` +

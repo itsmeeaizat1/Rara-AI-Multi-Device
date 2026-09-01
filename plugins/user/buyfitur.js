@@ -49,14 +49,14 @@ async function handler(m, { sock }) {
     if (!featureName) {
         const unlockedFeatures = user.unlockedFeatures || []
         
-        let text = `╭──「 Buy Fitur 」\n`
+        let text = `╭─「 Buy Fitur 」\n`
         text += `│  🛒 *ʙᴜʏ ꜰɪᴛᴜʀ*\n`
         text += `╰──────────\n\n`
         
         text += `Harga: *${formatNumber(PRICE_PER_FEATURE)}* bal/fitur\n`
         text += `Koin: *${formatNumber(user.koin || 0)}*\n\n`
         
-        text += `╭──「 *ꜰɪᴛᴜʀ* 」\n`
+        text += `╭─「 *ꜰɪᴛᴜʀ* 」\n`
         
         for (const feature of PREMIUM_FEATURES) {
             const isUnlocked = unlockedFeatures.includes(feature.id)
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
     const newKoin = db.getUser(m.sender).koin
     await m.reply(
         `✅ *ꜰɪᴛᴜʀ ᴅɪ-ᴜɴʟᴏᴄᴋ*\n\n` +
-        `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
+        `╭─「 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `│ 🎁 Fitur: *${feature.name}*\n` +
         `│ 💵 Harga: *-${formatNumber(PRICE_PER_FEATURE)}* bal\n` +
         `│ 💰 sIsa: *${formatNumber(newKoin)}*\n` +

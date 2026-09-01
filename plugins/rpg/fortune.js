@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
 
     await db.setPlayerData?.(sender, "fortune", player);
 
-    let msg = `╭──「 *FORTUNE WHEEL* 」\n`;
+    let msg = `╭─「 *FORTUNE WHEEL* 」\n`;
     msg += `│ 🎰 Memutar Roda Keberuntungan...\n`;
     msg += `│  \n`;
     msg += `│ 🎡 [ 500g | 100g | 50⚡ | 💎1 | 1000g | 10⭐ | 🏆5000g | 💀ZONK ]\n`;

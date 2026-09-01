@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
       await saveQuestData(db, m.sender, data);
 
       await m.react("🐣");
-      let msg = `╭──「 *ǫᴜᴇsᴛ ᴄʟᴀɪᴍ* 」\n`;
+      let msg = `╭─「 *ǫᴜᴇsᴛ ᴄʟᴀɪᴍ* 」\n`;
       msg += `│ ${quest.emoji} *${quest.name}*\n`;
       msg += `│\n`;
       msg += `│ Reward:\n`;
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
     }
     const quests = data.quests || [];
 
-    let msg = `╭──「 *ᴅᴀɪʟʏ ǫᴜᴇsᴛ ʙᴏᴀʀᴅ* 」\n`;
+    let msg = `╭─「 *ᴅᴀɪʟʏ ǫᴜᴇsᴛ ʙᴏᴀʀᴅ* 」\n`;
     msg += `│ Date: *${getTodayKey()}*\n`;
     msg += `│\n`;
 

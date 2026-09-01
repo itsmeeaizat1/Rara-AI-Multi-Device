@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("arenav3", "Belum ada player di arena.", "info"));
       }
 
-      let msg = `╭──「 *ᴀʀᴇɴᴀ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ* 」\n`;
+      let msg = `╭─「 *ᴀʀᴇɴᴀ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ* 」\n`;
       msg += `│ 📊 Top 10 Arena Players\n`;
       msg += `│\n`;
       const medal = ["🥇", "🥈", "🥉"];
@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
 
     // Need mode
     if (!mode || !["ranked", "casual", "ai", "bot"].includes(mode)) {
-      let msg = `╭──「 *ᴀʀᴇɴᴀ ᴠ3* 」\n`;
+      let msg = `╭─「 *ᴀʀᴇɴᴀ ᴠ3* 」\n`;
       msg += `│ 📊 Rating: *${rpg.pvpRating || 1000}*\n`;
       msg += `│ 🏆 W:${rpg.arenaWins || 0} L:${rpg.arenaLosses || 0}\n`;
       msg += `│\n`;
@@ -239,7 +239,7 @@ async function handler(m, { sock }) {
     const freshRpg = ensureRpg(m, m.pushName);
 
     await m.react("🐣");
-    let out = `╭──「 *ᴀʀᴇɴᴀ ᴠ3* 」\n`;
+    let out = `╭─「 *ᴀʀᴇɴᴀ ᴠ3* 」\n`;
     out += `│ ⚔️ ${player.name} vs ${opponent.name}\n`;
     out += `│ 📊 Mode: *${mode.toUpperCase()}*\n`;
     out += `│\n`;

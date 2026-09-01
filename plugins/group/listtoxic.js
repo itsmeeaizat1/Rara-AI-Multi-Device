@@ -30,14 +30,14 @@ async function handler(m, { sock }) {
     let text = `📋 *ᴅᴀꜰᴛᴀʀ ᴋᴀᴛᴀ ᴛᴏxɪᴄ*\n\n`
     
     if (customWords.length > 0) {
-        text += `╭──「 *ᴄᴜꜱᴛᴏᴍ* (${customWords.length}) 」\n`
+        text += `╭─「 *ᴄᴜꜱᴛᴏᴍ* (${customWords.length}) 」\n`
         for (let i = 0; i < customWords.length; i++) {
             text += `│ ${i + 1}. ${customWords[i]}\n`
         }
         text += `╰┈┈┈┈┈┈┈┈\n\n`
     }
     
-    text += `╭──「 *ᴅᴇꜰᴀᴜʟᴛ* (${defaultWords.length}) 」\n`
+    text += `╭─「 *ᴅᴇꜰᴀᴜʟᴛ* (${defaultWords.length}) 」\n`
     
     for (let i = 0; i < defaultWords.length; i++) {
         text += `│ ${i + 1}. ${defaultWords[i]}\n`

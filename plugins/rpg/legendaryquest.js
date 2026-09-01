@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
         await db.setPlayerData?.(m.sender, "legendaryquest", progress);
 
         await m.react("🐣");
-        let msg = `╭──「 *ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ ᴄᴏᴍᴘʟᴇᴛᴇ!* 」\n`;
+        let msg = `╭─「 *ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ ᴄᴏᴍᴘʟᴇᴛᴇ!* 」\n`;
         msg += `│ 🏆 🐉 Final Boss dikalahkan!\n`;
         msg += `│\n`;
         msg += `│ Title: *LEGENDARY HERO*\n`;
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "legendaryquest", progress);
 
       await m.react("🐣");
-      let msg = `╭──「 *sᴛᴀɢᴇ ᴄʟᴀɪᴍ* 」\n`;
+      let msg = `╭─「 *sᴛᴀɢᴇ ᴄʟᴀɪᴍ* 」\n`;
       msg += `│ ${stage.emoji} Stage ${stage.id}: *${stage.name}*\n`;
       msg += `│ ✅ Berhasil diklaim!\n`;
       msg += `│\n`;
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
 
     // PROGRESS (default)
     if (progress.completed) {
-      let msg = `╭──「 *ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ* 」\n`;
+      let msg = `╭─「 *ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ* 」\n`;
       msg += `│ 🏆 *COMPLETED!*\n`;
       msg += `│ Title: *LEGENDARY HERO*\n`;
       msg += `│ Semua 7 stage selesai!\n`;
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
     }
 
     const currentStage = STAGES.find(s => s.id === progress.currentStage);
-    let msg = `╭──「 *ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ* 」\n`;
+    let msg = `╭─「 *ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ* 」\n`;
     msg += `│ Progress: *${progress.currentStage - 1}/7* stages\n`;
     msg += `│\n`;
 

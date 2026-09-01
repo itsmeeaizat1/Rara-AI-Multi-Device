@@ -236,7 +236,7 @@ function buildFooter(normalized) {
   const emoji = symbolFor(normalized.weather_code);
 
   const lines = [
-    `╭──「 *${toSC("Cuaca")}* 」`,
+    `╭─「 *${toSC("Cuaca")}* 」`,
     `│ *${toSC("Lokasi")}:* ${toSC(location.name || "Lokasi")} 📍`,
     `│ *${toSC("Kondisi")}:* ${toSC(normalized.description)} ${emoji}`,
     `│ *${toSC("Suhu")}:* ${fmt(normalized.temperature_2m, "°C")} 🌡️`,

@@ -124,7 +124,7 @@ async function fetchRssFeed(sourceKey) {
 
 function renderSelectionBox(prefix = ".") {
     return [
-        "╭──「 Pilihan Sumber Berita 」",
+        "╭─「 Pilihan Sumber Berita 」",
         "│ Silakan pilih sumber berita yang ingin dibaca:",
         "│ ",
         `│ 1. ${prefix}beritav2 detik   - Detik News`,
@@ -138,7 +138,7 @@ function renderSelectionBox(prefix = ".") {
 }
 
 function renderNewsBox(sourceName, items) {
-    const lines = [`╭──「 Berita ${sourceName} 」`];
+    const lines = [`╭─「 Berita ${sourceName} 」`];
     
     items.slice(0, 5).forEach((item, index) => {
         const num = index + 1;
@@ -158,7 +158,7 @@ function renderNewsBox(sourceName, items) {
 
 function renderErrorBox(sourceName, errorMsg) {
     return [
-        "╭──「 Error Berita 」",
+        "╭─「 Error Berita 」",
         `│ Gagal ambil berita ${sourceName ? `dari ${sourceName}` : ""}`,
         `│ Detail: ${errorMsg || "Ada error nih"}`,
         "│ ",
