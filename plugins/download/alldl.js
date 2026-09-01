@@ -19,6 +19,7 @@
 import axios from "axios";
 import { getSaveNowKey } from "../../src/lib/config/env-loader.js";
 import { aiodl } from "../../src/scraper/aio.js";
+import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { sendMenuPreview } from "../../src/lib/send-menu.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, toSC, bracketBox, tipText, mediaCaption } from "../../src/lib/nova-menu-style.js";
@@ -196,10 +197,39 @@ async function handler(m, { sock }) {
     );
 
     let result = null;
-    let usedMethod = "savenow";
+    let usedMethod = "ikyy";
 
-    // TRY 1: SaveNow (untuk video & audio)
-    if (apiKey && !isImage) {
+    // TRY 1: IkyyXD all-in-one (primary)
+    if (!isImage) {
+      try {
+        const ikyyResult = await ikyyAio(url);
+        if (ikyyResult?.medias?.length) {
+          const videoMedia = ikyyResult.medias.find((x) => x.type === "video");
+          const audioMedia = ikyyResult.medias.find((x) => x.type === "audio");
+
+          let picked;
+          if (isAudio) picked = audioMedia || videoMedia;
+          else picked = videoMedia || audioMedia;
+
+          if (picked) {
+            result = {
+              title: ikyyResult.title || "Downloaded",
+              download_url: picked.url,
+              type: picked.type,
+              format: picked.quality || format,
+            };
+          }
+        }
+      } catch (ikyyErr) {
+        console.error("[alldl] IkyyXD failed:", ikyyErr.message);
+        usedMethod = "savenow";
+      }
+    } else {
+      usedMethod = "savenow";
+    }
+
+    // TRY 2: SaveNow (untuk video & audio, fallback dari IkyyXD)
+    if (!result && apiKey && !isImage) {
       try {
         const req = await savenowDownload(url, format, apiKey);
         const polled = await savenowPoll(req.progress_url, req.title, req.thumbnail_url);
@@ -217,7 +247,7 @@ async function handler(m, { sock }) {
       usedMethod = "aio";
     }
 
-    // TRY 2: AIO scraper (fallback atau untuk image)
+    // TRY 3: AIO scraper (fallback terakhir atau untuk image)
     if (!result) {
       try {
         const aioResult = await aiodl(url);
