@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20tambah%20cooldown%205%20detik%20untuk%20comma-success?style=for-the-badge)
-> *Commit: "fix: tambah cooldown 5 detik untuk command not found suggestion"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20smart%20anti-spam%20untuk%20command%20not%20-success?style=for-the-badge)
+> *Commit: "feat: smart anti-spam untuk command not found dengan progressive escalation"*
 <!--END_SECTION:latest-update-->
 
 ---
