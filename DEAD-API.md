@@ -75,3 +75,43 @@
 - smeme.js: upload migrasi ke catbox.moe (primary) + telegraph (fallback)
 - 5 plugin dead API sticker sudah diperbaiki: 2x lokal canvas, 2x scrape, 1x lokal render
 - 21 plugin lainnya clean, tidak ada issue
+
+---
+
+## Kategori Downloader — Dead API Migrated
+
+> 18 plugin downloader dengan API mati telah dimigrasi ke scrape lokal atau API alternatif.
+> Tanggal migrasi: 2026-09-01
+
+| Plugin | Dead API | Migrasi Ke | Method |
+|---|---|---|---|
+| ytmp3.js | nexray.eu.cc | Sanka AIO + ytdl-core | API + lokal |
+| ytmp4.js | firefly.maiku.my.id | Sanka AIO + ytdl-core | API + lokal |
+| twitterdl.js | siputzx.my.id | Sanka + ssstwitter scrape | API + scrape |
+| tiktokv3.js | nexray.web.id | Sanka + tikwm.com | API + scrape |
+| spotifydl.js | spotisaver.net | spotifydown.org | Scrape |
+| spotifyplay2.js | nexray.web.id | spotifydown.org | Scrape |
+| an1.js | siputzx.my.id | an1.com direct scrape | Scrape (cheerio) |
+| googlesearch.js | siputzx.my.id | DuckDuckGo HTML scrape | Scrape (POST) |
+| ringtone.js | siputzx.my.id | meloboom.com scrape | Scrape (cheerio) |
+| happymod.js | siputzx.my.id | happymod.com scrape | Scrape (cheerio) |
+| igmp3.js | siputzx.my.id | ig.js scraper lokal | Scrape (lokal) |
+| ptv.js | siputzx.my.id | pindl.js scraper lokal | Scrape (lokal) |
+| snackvideov2.js | siputzx.my.id | tikwm.com scrape | Scrape |
+| teraboxv2.js | nekolabs.web.id | terabox.js scraper lokal | Scrape (lokal) |
+| videy.js | zeks.xyz | cdn.videy.co direct CDN | Direct CDN |
+| shopeedl.js | shopeenowatermark.com | shopeenowatermark + ishop.id | Scrape |
+| savenow.js | savenow.to | Sanka AIO + ytdl-core | API + lokal |
+| twitterdl.js (old) | siputzx.my.id | Sanka + ssstwitter | API + scrape |
+
+### Scraper Alice yang di-port:
+- **meloboom.com** → ringtone (scrape + cheerio) ✅ WORK
+- **an1.com** → AN1 search (scrape + cheerio) ✅ WORK
+- **DuckDuckGo** → googlesearch (POST scrape) ✅ WORK
+- **tikwm.com** → tiktok/snackvideo (API gratis, no key) ✅ WORK
+
+### Scraper Alice yang DEAD (tidak di-port):
+- **SaveTube (savetube.su)** → Timeout dari sandbox ❌
+- **fdown.net** → 403 Forbidden ❌
+- **oceansaver.in** → DNS tidak resolve ❌
+- **pinterestdownloader.io** → 404 ❌

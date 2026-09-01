@@ -1,41 +1,57 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// ptv.js — Pinterest video download
-import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+// ptv.js — Download video Pinterest (pakai scraper pindl.js lokal)
+import { PinDL } from "../../src/scraper/pindl.js";
+import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ptv",
-  alias: ["ptv", "pinterestvideo", "pinvid"],
+  alias: ["ptv", "pinterestvideo"],
   category: "download",
   description: "Download video dari Pinterest",
   usage: ".ptv <url_pinterest>",
-  example: ".ptv https://pinterest.com/pin/xxx",
+  example: ".ptv https://pin.it/xxx",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
-  cooldown: 15, energi: 3, isEnabled: true,
+  cooldown: 10, energi: 2, isEnabled: true,
 };
 
 async function handler(m, { sock }) {
   try {
-    const from = m.key.remoteJid;
+    const url = m.text?.trim();
+    if (!url || (!url.includes("pinterest.") && !url.includes("pin.it"))) {
+      return m.reply(novaGuide("Pinterest Video", "Kirim URL Pinterest yang valid!", ".ptv https://pin.it/xxx"));
+    }
+
     await m.react("🕒");
-    const url = m.args?.[0]?.trim();
-    if (!url || !url.includes("pin")) return m.reply(claraWrap("ptv", `Masukkan URL Pinterest!\n\nContoh: .ptv https://pinterest.com/pin/xxx`, "guide"));
 
-    const res = await axios.get(`https://api.siputzx.my.id/api/d/pin?url=${encodeURIComponent(url)}`);
-    const data = res.data?.data || res.data;
-    const videoUrl = data?.url || data?.video || data?.medias?.[0]?.url;
-    if (!videoUrl) return m.reply(claraWrap("ptv", "Gagal mengambil video!", "error"));
+    const result = await PinDL(url);
+    if (!result || result.error) {
+      await m.react("❌");
+      return m.reply(novaError("Pinterest Video", result?.error || "Gagal download video Pinterest!"));
+    }
 
-    await sock.sendMessage(from, {
-      video: { url: videoUrl },
-      caption: "Pinterest Video ~"
+    const mediaUrl = result.url || result.download;
+    if (!mediaUrl) {
+      await m.react("❌");
+      return m.reply(novaError("Pinterest Video", "Media tidak ditemukan!"));
+    }
+
+    const caption = mediaCaption({
+      platformIcon: "📌",
+      platformName: "Pinterest",
+      title: result.title || "Pinterest Video",
+      format: "📹 Video",
+      method: "Scraper Lokal",
+    });
+
+    await sock.sendMessage(m.chat, {
+      video: { url: mediaUrl },
+      caption,
     }, { quoted: m });
     await m.react("🐣");
   } catch (err) {
-    console.error("ptv error:", err);
+    console.error("[PTV]", err);
     await m.react("❌");
-    return m.reply(claraWrap("ptv", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaError("Pinterest Video", "Gagal download. Pastikan URL valid dan berisi video!"));
   }
 }
 

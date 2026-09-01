@@ -1,7 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// ytmp3.js — Download audio YouTube (Sanka AIO + ytdl fallback)
 import axios from "axios";
 import ytdl, { fallbackToMp3Buffer } from "../../src/scraper/ytdl.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { getSankaConfig } from "../../src/lib/config/env-loader.js";
+
 const pluginConfig = {
   name: "ytmp3",
   alias: ["ytmp3"],
@@ -14,18 +17,24 @@ const pluginConfig = {
   isEnabled: true,
 };
 
+const sankaConfig = getSankaConfig();
+
 async function getAudioDownload(url) {
+  // Method 1: Sanka AIO API
   try {
     const { data } = await axios.get(
-      `https://api.nexray.eu.cc/downloader/v1/ytmp3?url=${encodeURIComponent(url)}`,
+      `${sankaConfig.baseUrl}/download/aio?apikey=${sankaConfig.apikey}&url=${encodeURIComponent(url)}`,
+      { timeout: 30000 }
     );
-    const download = data?.result?.url;
-    const title = data?.result?.title;
-    if (download) {
-      return { download, title };
+    if (data?.status && data?.result) {
+      const r = data.result;
+      // AIO biasanya return audio URL di mp3/hd/audio/dl
+      const dl = r.mp3 || r.audio || r.dl || r.url || (r.medias?.find(m => m.type?.includes("audio"))?.url);
+      if (dl) return { download: dl, title: r.title || r.meta?.title };
     }
-  } catch (e) { console.error('[ytmp3.js]:', e.message); }
+  } catch (e) { console.error('[ytmp3.js] Sanka:', e.message); }
 
+  // Method 2: ytdl-core (fallback lokal)
   const fallback = await ytdl(url, "mp3");
   if (fallback?.status && fallback?.dl) {
     return { download: fallback.dl, title: fallback.title, isFallback: true };
@@ -37,27 +46,14 @@ async function getAudioDownload(url) {
 async function handler(m, { sock }) {
   const url = m.text?.trim();
   if (!url) {
-    return m.reply(
-      novaGuide(
-        "YTmp3",
-        "Kirim URL YouTube yang ingin kamu konversi ke audio MP3!",
-        `${m.prefix}ytmp3 https://youtube.com/watch?v=xxx`
-      )
-    );
+    return m.reply(novaGuide("YTmp3", "Kirim URL YouTube yang ingin kamu konversi ke audio MP3!", `${m.prefix}ytmp3 https://youtube.com/watch?v=xxx`));
   }
   if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
-    return await m.reply(
-      novaGuide(
-        "YTmp3",
-        "Link-nya harus URL YouTube yang valid ya!",
-        `${m.prefix}ytmp3 https://youtu.be/xxx`
-      )
-    );
+    return m.reply(novaGuide("YTmp3", "Link-nya harus URL YouTube yang valid ya!", `${m.prefix}ytmp3 https://youtu.be/xxx`));
   }
   try {
     const result = await getAudioDownload(url);
 
-    // Ambil metadata YouTube via oEmbed
     let ytMeta = {};
     try {
       const { data: oe } = await axios.get(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`, { timeout: 8000 });
@@ -70,22 +66,18 @@ async function handler(m, { sock }) {
       title: result.title || "YouTube Audio",
       author: ytMeta.author || null,
       format: "🎵 MP3",
-      method: result.isFallback ? "ytdl" : "Nexray",
+      method: result.isFallback ? "ytdl" : "Sanka",
     });
 
     if (result.isFallback) {
       const mp3Buffer = await fallbackToMp3Buffer(result.download);
-      await sock.sendMessage(
-        m.chat,
-        {
-          audio: mp3Buffer,
-          mimetype: "audio/mpeg",
-          ptt: false,
-          fileName: `${result.title || "audio"}.mp3`,
-          contextInfo: { externalAdReply: { title: result.title || "YouTube MP3", body: "Nova AI Downloader", thumbnailUrl: ytMeta.thumbnail, sourceUrl: url } },
-        },
-        { quoted: m },
-      );
+      await sock.sendMessage(m.chat, {
+        audio: mp3Buffer,
+        mimetype: "audio/mpeg",
+        ptt: false,
+        fileName: `${result.title || "audio"}.mp3`,
+        contextInfo: { externalAdReply: { title: result.title || "YouTube MP3", body: "Nova AI Downloader", thumbnailUrl: ytMeta.thumbnail, sourceUrl: url } },
+      }, { quoted: m });
     } else {
       await sock.sendMedia(m.chat, result.download, null, m, {
         type: "audio",
@@ -94,7 +86,6 @@ async function handler(m, { sock }) {
         fileName: result.title || "audio.mp3",
       });
     }
-    // Kirim caption setelah audio
     await m.reply(caption);
   } catch (err) {
     console.error("[YTMP3]", err);

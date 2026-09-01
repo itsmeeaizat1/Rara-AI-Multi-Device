@@ -1,101 +1,76 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// teraboxv2.js — Terabox Downloader v2 (nekolabs + teraboxdl.site)
-import axios from "axios";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+// teraboxv2.js — Download TeraBox v2 (pakai scraper terabox.js lokal)
+import { TeraBoxDL } from "../../src/scraper/terabox.js";
+import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "teraboxv2",
-  alias: ["teraboxv2", "tbx2", "teraboxdl2"],
+  alias: ["teraboxv2", "tbdl2", "tb2"],
   category: "download",
-  description: "Download Terabox file v2 (nekolabs + teraboxdl.site)",
-  usage: ".teraboxv2 <url Terabox>",
-  example: ".teraboxv2 https://terabox.com/s/xxxx",
+  description: "Download dari TeraBox v2 (scraper lokal)",
+  usage: ".teraboxv2 <url_terabox>",
+  example: ".teraboxv2 https://terabox.com/s/xxx",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
-  cooldown: 15, energi: 2, isEnabled: true,
+  cooldown: 15, energi: 3, isEnabled: true,
 };
-
-async function tryNekolabs(url) {
-  try {
-    const { data } = await axios.get(`https://api.nekolabs.web.id/downloader/terabox?url=${encodeURIComponent(url)}`, {
-      timeout: 20000, headers: { "User-Agent": "Mozilla/5.0" },
-    });
-    if (data && (data.status || data.success) && (data.result || data.data)) {
-      return data.result || data.data;
-    }
-  } catch (e) {
-    console.error("teraboxv2 nekolabs:", e.message);
-  }
-  return null;
-}
-
-async function tryTeraboxDl(url) {
-  try {
-    const { data } = await axios.post("https://teraboxdl.site/api/json-api", { url }, {
-      timeout: 20000,
-      headers: { "Content-Type": "application/json", "User-Agent": "Mozilla/5.0" },
-    });
-    if (data && data.success !== false && (data.downloadLink || data.direct_link || data.dlink)) {
-      return data;
-    }
-  } catch (e) {
-    console.error("teraboxv2 teraboxdl.site:", e.message);
-  }
-  return null;
-}
 
 async function handler(m, { sock }) {
   try {
-    const url = m.args.join(" ").trim();
-    if (!url || !url.match(/terabox\.com|teraboxapp\.com|1024terabox/i)) {
-      return m.reply(claraWrap("teraboxv2", `Kirim URL Terabox yang valid.\n\nContoh: ${m.prefix}teraboxv2 https://terabox.com/s/xxxx`, "guide"));
+    const url = m.text?.trim();
+    if (!url || (!url.includes("terabox") && !url.includes("teraboxapp"))) {
+      return m.reply(novaGuide("TeraBox v2", "Kirim URL TeraBox yang valid!", ".teraboxv2 https://terabox.com/s/xxx"));
     }
 
     await m.react("🕒");
 
-    // Coba nekolabs dulu, fallback ke teraboxdl.site
-    let r = await tryNekolabs(url);
-    if (!r) r = await tryTeraboxDl(url);
-
-    if (!r) {
+    const result = await TeraBoxDL(url);
+    if (!result || result.status === false || result.error) {
       await m.react("❌");
-      return m.reply(claraWrap("teraboxv2", "Gagal download. API mungkin down atau URL invalid.", "error"));
+      return m.reply(novaError("TeraBox v2", result?.error || "Gagal download dari TeraBox!"));
     }
 
-    const fileUrl = r.direct_link || r.downloadLink || r.dlink || r.url || r.link;
-    const fileName = r.filename || r.file_name || r.name || "file";
-    const fileSize = r.size || r.file_size || "";
-
-    if (!fileUrl) {
+    const dlUrl = result.download || result.url || result.dl;
+    if (!dlUrl) {
       await m.react("❌");
-      return m.reply(claraWrap("teraboxv2", "Link download tidak ditemukan.", "error"));
+      return m.reply(novaError("TeraBox v2", "Link download tidak ditemukan!"));
+    }
+
+    const axios = (await import("axios")).default;
+    const fileRes = await axios.get(dlUrl, {
+      responseType: "arraybuffer", timeout: 120000,
+      headers: { "User-Agent": "Mozilla/5.0" },
+    });
+    const buffer = Buffer.from(fileRes.data);
+
+    const caption = mediaCaption({
+      platformIcon: "📁",
+      platformName: "TeraBox",
+      title: result.title || result.filename || "TeraBox File",
+      format: result.type || "File",
+      method: "Scraper Lokal",
+    });
+
+    // Cek apakah video atau file
+    const isVideo = (result.type || result.filename || "").match(/mp4|avi|mkv|mov/i);
+    if (isVideo) {
+      await sock.sendMessage(m.chat, {
+        video: buffer,
+        caption,
+      }, { quoted: m });
+    } else {
+      await sock.sendMessage(m.chat, {
+        document: buffer,
+        fileName: result.title || result.filename || "terabox_file",
+        mimetype: result.mimetype || "application/octet-stream",
+        caption,
+      }, { quoted: m });
     }
 
     await m.react("🐣");
-
-    // Kirim link saja karena Terabox file biasanya besar
-    let _lines = [];
-      _lines.push(`File: *${fileName}*`);
-    let msg = novaBox("ᴛᴇʀᴀʙᴏx v2", _lines);
-    if (fileSize) _lines.push(`Size: *${fileSize}*`);
-    if (r.thumb || r.thumbnail) _lines.push(`Thumbnail: ${r.thumb || r.thumbnail}`);
-    _lines.push(``);
-    _lines.push(`Download:\n${fileUrl}`);
-    _lines.push(`Engine: nekolabs + teraboxdl.site`);
-    // Kalau thumbnail ada, kirim dengan image
-    if (r.thumb || r.thumbnail) {
-      try {
-        const imgUrl = r.thumb || r.thumbnail;
-        if (imgUrl.startsWith("http")) {
-          const imgRes = await axios.get(imgUrl, { responseType: "arraybuffer", timeout: 15000, headers: { "User-Agent": "Mozilla/5.0" } });
-          return await sock.sendMessage(m.chat, { image: Buffer.from(imgRes.data), caption: msg });
-        }
-      } catch {}
-    }
-    return m.reply(msg);
   } catch (err) {
-    console.error("teraboxv2 error:", err);
+    console.error("[TeraBox v2]", err);
     await m.react("❌");
-    return m.reply(claraWrap("teraboxv2", err.message || "Error", "error"));
+    m.reply(novaError("TeraBox v2", "Gagal download dari TeraBox. Coba lagi nanti!"));
   }
 }
 
