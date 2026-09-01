@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20redesign%20ulang%20box-drawing%20di%20-success?style=for-the-badge)
-> *Commit: "refactor: redesign ulang box-drawing di seluruh bot (449 file)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20redesign%20menu%20%26%20allmenu%20%E2%80%94%20continuo-success?style=for-the-badge)
+> *Commit: "feat: redesign menu & allmenu — continuous flow box style"*
 <!--END_SECTION:latest-update-->
 
 ---
