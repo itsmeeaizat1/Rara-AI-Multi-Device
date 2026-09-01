@@ -667,8 +667,8 @@ async function startJadibot(sock, m, userJid, usePairing = true) {
       if (m && m.chat) {
         let thumbnail = null;
         try {
-          if (!!getAssetBuffer("example")) {
-            thumbnail = getAssetBuffer("example");
+          if (!!getAssetBuffer("jadibot-thumb")) {
+            thumbnail = getAssetBuffer("jadibot-thumb");
           }
         } catch { }
 

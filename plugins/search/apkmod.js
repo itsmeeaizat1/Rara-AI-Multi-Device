@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
     };
     await sock.sendButton(
       m.chat,
-      getAssetBuffer("example"),
+      getAssetBuffer("search-thumb"),
       caption,
       m,
       {

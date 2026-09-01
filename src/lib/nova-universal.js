@@ -25,7 +25,7 @@ function getGoodbyeThumbnail() {
 }
 
 function getGroupThumbnail() {
-  return resolveAsset("nova", "./assets/image/example.jpg");
+  return resolveAsset("group-thumb", "./assets/image/group-thumb.jpg");
 }
 
 async function prepareThumbnail(sock, preferredPath) {
