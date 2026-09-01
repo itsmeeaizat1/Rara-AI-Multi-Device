@@ -284,7 +284,7 @@ async function handler(m, { sock, db }) {
 
     let thumbnail = null;
     try {
-      thumbnail = getAssetBuffer("nova2");
+      thumbnail = getAssetBuffer("example");
     } catch (e) { console.error('[swgcv2.js]:', e.message); }
 
     await sock.sendMessage(m.chat, {

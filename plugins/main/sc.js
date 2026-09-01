@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
 │ Cari kata kunci *ɴᴏᴠᴀ ᴍᴅ*`;
 
   return await sock.sendMessage(m.chat, {
-    image: getAssetBuffer("nova"),
+    image: getAssetBuffer("example"),
     caption: caption,
     footer: `Link ini mengarahkan kamu ke Youtube Nova AI`,
     interactiveButtons: [

@@ -123,7 +123,7 @@ async function sendBratMenu(m, sock, text) {
 
   await sock.sendButton(
     m.chat,
-    getAssetBuffer("nova"),
+    getAssetBuffer("example"),
     caption,
     m,
     {

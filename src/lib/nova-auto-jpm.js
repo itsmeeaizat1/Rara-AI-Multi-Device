@@ -15,8 +15,8 @@ let isSending = false;
 let cachedThumb = null;
 
 try {
-  if (!!getAssetBuffer("nova2")) {
-    cachedThumb = getAssetBuffer("nova2");
+  if (!!getAssetBuffer("example")) {
+    cachedThumb = getAssetBuffer("example");
   }
 } catch (e) {}
 
