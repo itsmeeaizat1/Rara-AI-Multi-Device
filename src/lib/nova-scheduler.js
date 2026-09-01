@@ -62,11 +62,16 @@ function startDailyLimitReset(options = {}) {
             const ownerJids = new Set(ownerNumbers.map(n => n + "@s.whatsapp.net"));
 
             const notifText =
-              `\u267B\uFE0F *Limit Harian Direset*\n\n` +
-              `Limit kamu sudah direset!\n` +
-              `\u2022 User gratis: ${defaultLimit} limit\n` +
-              `\u2022 User premium: ${premiumLimit} limit\n\n` +
-              `${resetCount} user telah direset`;
+              `╭─「 ✦ Limit Reset ✦ 」\n` +
+              `│\n` +
+              `│ ♻️ Limit harian sudah direset!\n` +
+              `│\n` +
+              `│ • Gratis  : ${defaultLimit} limit\n` +
+              `│ • Premium : ${premiumLimit} limit\n` +
+              `│\n` +
+              `│ ${resetCount} user telah direset\n` +
+              `│\n` +
+              `╰────  •  ────`;
 
             let sent = 0;
             for (const jid of Object.keys(users)) {

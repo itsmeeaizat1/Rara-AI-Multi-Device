@@ -18,9 +18,11 @@ async function handleAntiRemoveFromUpsert(msg, sock, db) {
 
 // Simple inline wrapper for anti-spam DM messages
 function simpleWrap(title, lines) {
-  const body = lines.map(l => l.startsWith("│") || l === "" ? l : "│ " + l).join("\n");
+  const body = lines.map(l => l === "" ? "│" : l.startsWith("│") ? l : "│ " + l).join("\n");
   return "╭─「 ✦ " + title + " ✦ 」\n" +
+    "│\n" +
     body + "\n" +
+    "│\n" +
     "╰────  •  ────";
 }
 
@@ -291,7 +293,7 @@ async function messageHandler(msg, sock) {
         if (verifyResult.verified) {
           // Verified successfully — let them know
           await sock.sendMessage(m.chat, {
-            text: "✅ Verifikasi berhasil! Selamat datang di grup.",
+            text: "╭─「 ✦ Verifikasi ✦ 」\n│\n│ ✅ Verifikasi berhasil!\n│ Selamat datang di grup\n│\n╰────  •  ────",
           }, { quoted: m });
           return; // Don't process further this message
         } else if (verifyResult.kicked) {
@@ -300,7 +302,7 @@ async function messageHandler(msg, sock) {
             await sock.groupParticipantsUpdate(m.chat, [m.sender], "remove");
           } catch {}
           await sock.sendMessage(m.chat, {
-            text: "❌ Gagal verifikasi 3x! Member dikeluarkan.",
+            text: "╭─「 ✦ Verifikasi ✦ 」\n│\n│ ❌ Gagal verifikasi 3x!\n│ Member dikeluarkan\n│\n╰────  •  ────",
           });
           return;
         } else if (verifyResult.timedOut) {
@@ -308,7 +310,7 @@ async function messageHandler(msg, sock) {
             await sock.groupParticipantsUpdate(m.chat, [m.sender], "remove");
           } catch {}
           await sock.sendMessage(m.chat, {
-            text: "⏰ Waktu verifikasi habis! Member dikeluarkan.",
+            text: "╭─「 ✦ Verifikasi ✦ 」\n│\n│ ⏰ Waktu verifikasi habis!\n│ Member dikeluarkan\n│\n╰────  •  ────",
           });
           return;
         } else if (verifyResult.shouldDelete) {
@@ -395,7 +397,7 @@ async function messageHandler(msg, sock) {
       const { verifyVnCaptcha, hasVnCaptchaChallenge, isVnCaptchaBlocked } = await import("../plugins/owner/vncaptcha.js");
       const senderJid = m.key?.remoteJid || m.sender;
       if (typeof isVnCaptchaBlocked === "function" && isVnCaptchaBlocked(senderJid)) {
-        await sock.sendMessage(senderJid, { text: "╭─「 ✦ Diblokir 24 Jam ✦ 」\n│ Gagal verifikasi suara\n│ Coba lagi besok\n╰────  •  ────" });
+        await sock.sendMessage(senderJid, { text: "╭─「 ✦ Diblokir 24 Jam ✦ 」\n│\n│ ❌ Gagal verifikasi suara\n│ Coba lagi besok\n│\n╰────  •  ────" });
         return;
       }
       if (typeof hasVnCaptchaChallenge === "function" && hasVnCaptchaChallenge(senderJid)) {
@@ -793,7 +795,7 @@ async function messageHandler(msg, sock) {
         ? "Jangan spam " + label + "! Tunggu " + spamResult.remainSec + " detik lagi"
         : "Tunggu " + spamResult.remainSec + " detik sebelum pakai " + label + " lagi";
       if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
-      await m.reply("╭─「 ✦ Anti-Spam ✦ 」\n│ " + msg + "\n╰────  •  ────");
+      await m.reply("╭─「 ✦ Anti-Spam ✦ 」\n│\n│ ⚠ " + msg + "\n│\n╰────  •  ────");
       return;
     }
   } catch (e) {
@@ -805,7 +807,7 @@ async function messageHandler(msg, sock) {
     if (!m.isNewsletter) {
       try {
         if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
-        await m.reply("╭─「 ✦ Nonaktif ✦ 」\n│ Command ini sedang dinonaktifkan\n╰────  •  ────");
+        await m.reply("╭─「 ✦ Nonaktif ✦ 」\n│\n│ ⚠ Command ini sedang dinonaktifkan\n│\n╰────  •  ────");
       } catch {}
     }
     return;
@@ -822,7 +824,7 @@ async function messageHandler(msg, sock) {
       if (!m.isNewsletter) {
         try {
           if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
-          await m.reply("╭─「 ✦ Nonaktif ✦ 」\n│ Fitur ini sedang dinonaktifkan oleh owner\n│ Ketik .togglefitur untuk melihat status\n╰────  •  ────");
+          await m.reply("╭─「 ✦ Nonaktif ✦ 」\n│\n│ ⚠ Fitur ini sedang dinonaktifkan oleh owner\n│ Ketik .togglefitur untuk melihat status\n│\n╰────  •  ────");
         } catch {}
       }
       return;
@@ -874,7 +876,7 @@ async function messageHandler(msg, sock) {
             if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
           await m.reply(
               (config.messages?.energiExceeded ||
-               "╭─「 ✦ Energi Habis ✦ 」\n│ Energi kamu sudah habis!\n│ Tunggu reset besok atau beli Premium.\n╰────  •  ────")
+               "╭─「 ✦ Energi Habis ✦ 」\n│\n│ ⚠ Energi kamu sudah habis!\n│ Tunggu reset besok atau beli Premium\n│\n╰────  •  ────")
             );
           } catch {}
         }
@@ -962,7 +964,7 @@ async function messageHandler(msg, sock) {
     if (config.dev?.debugLog) console.error(c.gray(error.stack));
     if (!m.isNewsletter) { try { await m.react("❌"); } catch {} }
     try {
-      await m.reply("╭─「 ✦ Error ✦ 」\n│ " + error.message + "\n╰────  •  ────");
+      await m.reply("╭─「 ✦ Error ✦ 」\n│\n│ ❌ " + error.message + "\n│\n╰────  •  ────");
     } catch {}
   }
 }

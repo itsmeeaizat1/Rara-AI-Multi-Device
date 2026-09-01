@@ -513,7 +513,7 @@ class Database {
     // Notif saat koin dipotong (amount negatif)
     if (amount < 0 && sock && chatId) {
       try {
-        sock.sendMessage(chatId, { text: Math.abs(amount) + " Koin terpakai" }).catch(() => {});
+        sock.sendMessage(chatId, { text: "╭─「 ✦ Koin ✦ 」\n│\n│ • Terpakai : " + Math.abs(amount) + " Koin\n│\n╰────  •  ────" }).catch(() => {});
       } catch {}
     }
     return user.koin;

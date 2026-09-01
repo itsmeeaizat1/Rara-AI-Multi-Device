@@ -48,10 +48,13 @@ function startWatchdog(reconnectFn, options) {
   watchdogTimer = setInterval(() => {
     const silentMs = Date.now() - lastMessageReceived;
     if (silentMs > WATCHDOG_TIMEOUT && connectionState.isReady) {
-      colors.logger.warn(
-        "watchdog",
-        `Pesan tidak terdeteksi, maka sistem akan me restart, supaya fresh`,
-      );
+      console.log("");
+      console.log("╭─「 ✦ WATCHDOG ✦ 」");
+      console.log("│");
+      console.log("│ ⚠ Pesan tidak terdeteksi, sistem akan restart");
+      console.log("│");
+      console.log("╰────  •  ────");
+      console.log("");
       connectionState.isReady = false;
       connectionState.isConnected = false;
       try {
@@ -343,7 +346,11 @@ async function startConnection(options = {}) {
       attempts++;
       const remaining = maxAttempts - attempts;
       if (remaining > 0) {
-        colors.logger.error("pairing", `Sandi salah! Sisa percobaan: ${remaining}`);
+        console.log("╭─「 ✦ PAIRING ✦ 」");
+        console.log("│");
+        console.log(`│ ❌ Sandi salah! Sisa percobaan: ${remaining}`);
+        console.log("│");
+        console.log("╰────  •  ────");
       } else {
         console.log("╭─「 ✦ PAIRING ✦ 」");
       console.log("│");
@@ -382,7 +389,11 @@ async function startConnection(options = {}) {
 
     if (isPlaceholder) {
       console.log("");
-      colors.logger.warn("pairing", "nomor pairing belum diatur (config)");
+      console.log("╭─「 ✦ PAIRING ✦ 」");
+      console.log("│");
+      console.log("│ ⚠ Nomor pairing belum diatur (config)");
+      console.log("│");
+      console.log("╰────  •  ────");
       console.log("");
 
       phoneNumber = await askQuestion(
@@ -392,7 +403,11 @@ async function startConnection(options = {}) {
       );
 
       if (!phoneNumber) {
-        colors.logger.error("pairing", "Nomor tidak diinput. Pairing dibatalkan.");
+        console.log("╭─「 ✦ PAIRING ✦ 」");
+        console.log("│");
+        console.log("│ ❌ Nomor tidak diinput. Pairing dibatalkan.");
+        console.log("│");
+        console.log("╰────  •  ────");
         return null;
       }
     }
@@ -401,11 +416,19 @@ async function startConnection(options = {}) {
 
     // Validasi nomor setelah input
     if (!phoneNumber || phoneNumber.length < 8) {
-      colors.logger.error("pairing", "nomor tidak valid, minimal 8 digit. pairing dibatalkan.");
+      console.log("╭─「 ✦ PAIRING ✦ 」");
+      console.log("│");
+      console.log("│ ❌ Nomor tidak valid, minimal 8 digit. Pairing dibatalkan.");
+      console.log("│");
+      console.log("╰────  •  ────");
       return null;
     }
 
-    colors.logger.info("pairing", `meminta kode untuk ${phoneNumber}`);
+    console.log("╭─「 ✦ PAIRING ✦ 」");
+    console.log("│");
+    console.log(`│ ⏳ Meminta kode untuk ${phoneNumber}...`);
+    console.log("│");
+    console.log("╰────  •  ────");
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 5000));
@@ -428,13 +451,29 @@ async function startConnection(options = {}) {
     } catch (error) {
       const msg = error?.message || String(error);
       if (msg.includes("8 chars")) {
-        colors.logger.error("pairing", "Custom pairing code harus 8 karakter. Periksa konfigurasi.");
+        console.log("╭─「 ✦ PAIRING ✦ 」");
+        console.log("│");
+        console.log("│ ❌ Custom pairing code harus 8 karakter");
+        console.log("│");
+        console.log("╰────  •  ────");
       } else if (msg.includes("rate") || msg.includes("428")) {
-        colors.logger.error("pairing", "Rate limited. Tunggu 5-10 menit sebelum coba lagi.");
+        console.log("╭─「 ✦ PAIRING ✦ 」");
+        console.log("│");
+        console.log("│ ❌ Rate limited. Tunggu 5-10 menit");
+        console.log("│");
+        console.log("╰────  •  ────");
       } else if (msg.includes("banned") || msg.includes("blocked")) {
-        colors.logger.error("pairing", "Nomor diblokir WhatsApp. Gunakan nomor lain.");
+        console.log("╭─「 ✦ PAIRING ✦ 」");
+        console.log("│");
+        console.log("│ ❌ Nomor diblokir WhatsApp. Gunakan nomor lain");
+        console.log("│");
+        console.log("╰────  •  ────");
       } else {
-        colors.logger.error("pairing", `gagal: ${msg}`);
+        console.log("╭─「 ✦ PAIRING ✦ 」");
+        console.log("│");
+        console.log(`│ ❌ Gagal: ${msg}`);
+        console.log("│");
+        console.log("╰────  •  ────");
       }
     }
   }
@@ -638,7 +677,9 @@ async function startConnection(options = {}) {
         }, 8e3);
       }
 
-      colors.logger.success("whatsapp", "siap menerima pesan");
+      console.log("│");
+      console.log("│ ✅ Siap menerima pesan");
+      console.log("│");
 
       // === Owner Notification: Bot Online ===
       // Kirim notifikasi ke owner SETIAP KALI bot connect (bukan cuma first-pair)
@@ -657,12 +698,14 @@ async function startConnection(options = {}) {
 
           const notifText = [
             "╭─「 ✦ Bot Online" + (isFirstPair ? " — First Pair" : "") + " ✦ 」",
-            "│ Bot       " + (config.bot?.name || "Nova-AI"),
-            "│ Versi     " + (config.bot?.version || "v20.0.0"),
-            "│ Nomor     " + botNum,
-            "│ Waktu     " + waktu,
-            "│ Host      " + hostname,
-            "│ Platform  " + platform + " | Node: " + nodeVer,
+            "│",
+            "│ • Bot      : " + (config.bot?.name || "Nova-AI"),
+            "│ • Versi    : " + (config.bot?.version || "v20.0.0"),
+            "│ • Nomor    : " + botNum,
+            "│ • Waktu    : " + waktu,
+            "│ • Host     : " + hostname,
+            "│ • Platform : " + platform + " | Node: " + nodeVer,
+            "│",
             "╰────  •  ────",
             "",
             isFirstPair
@@ -883,17 +926,19 @@ async function startConnection(options = {}) {
 
           const welcomeText =
             `╭─「 ✦ Welcome ✦ 」\n` +
+            `│\n` +
             `│ Hai, Salam Kenal!\n` +
             `│ Aku *${config.bot?.name || "Nova-AI"}*\n` +
             `│ Terima kasih sudah undang aku ke *${groupName}*!\n` +
             `│ Diundang oleh ${inviterMention}\n` +
             `│\n` +
-            `│ Developer: ${config.bot?.developer || "Aizat"}\n` +
-            `│ Prefix: ${prefix}\n` +
-            `│ Support: ${config.bot?.support || "-"}\n` +
+            `│ • Developer : ${config.bot?.developer || "Aizat"}\n` +
+            `│ • Prefix    : ${prefix}\n` +
+            `│ • Support   : ${config.bot?.support || "-"}\n` +
             `│\n` +
             `│ Ketik *${prefix}menu* untuk lihat fitur\n` +
             `│ Ketik *${prefix}help* untuk bantuan\n` +
+            `│\n` +
             `╰────  •  ────`;
 
           const ctxInfo = {
@@ -906,7 +951,12 @@ async function startConnection(options = {}) {
             contextInfo: ctxInfo,
           });
 
-          colors.logger.success("grup", `bot bergabung: ${groupName}`);
+          console.log("");
+          console.log("╭─「 ✦ GROUP JOIN ✦ 」");
+          console.log("│");
+          console.log(`│ ✅ Bot bergabung: ${groupName}`);
+          console.log("│");
+          console.log("╰────  •  ────");
         } catch (e) {
           colors.logger.error(
             "BotJoin",
