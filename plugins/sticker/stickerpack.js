@@ -1,196 +1,173 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// Scrape Telegram sticker pack via combot.org (tanpa API key)
 import _sharp from 'sharp'
-import axios from "axios";
-import config from "../../config.js";
+import axios from "axios"
+import config from "../../config.js"
+import te from "../../src/lib/nova-error.js"
+import { addExifToWebp } from "../../src/lib/nova-exif.js"
+import { novaError, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js"
 
-function getSharp() {
+function getSharp() { return _sharp }
 
- return _sharp;
-}
-import te from "../../src/lib/nova-error.js";
-import { addExifToWebp } from "../../src/lib/nova-exif.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-
-const pluginConfig = {
- name: "stickerpack",
- alias: ["stickerpack"],
- category: "sticker",
- description: "Cari dan kirim sticker pack",
- usage: ".stickerpack <query>",
- example: ".stickerpack anime",
- isOwner: false,
- isPremium: false,
- isGroup: false,
- isPrivate: false,
- cooldown: 20,
- energi: 2,
- isEnabled: true,
-};
-
-class StickerAPI {
- async search(query, page = 1) {
- try {
- if (!query) throw new Error("Query kosong nih");
- const res = await axios
- .post("https://getstickerpack.com/api/v1/stickerdb/search", {
- query,
- page,
- })
- .then((r) => r.data);
- const data = res.data.map((item) => ({
- name: item.title,
- slug: item.slug,
- url: `https://getstickerpack.com/stickers/${item.slug}`,
- image: `https://s3.getstickerpack.com/${item.cover_image || item.tray_icon_large}`,
- download: item.download_counter,
- }));
- return { status: true, data, total: res.meta.total };
- } catch (e) {
- return { status: false, msg: e.message };
- }
- }
-
- async detail(slug) {
- try {
- const match = slug.match(/stickers\/([a-zA-Z0-9-]+)$/);
- const id = match ? match[1] : slug;
- const res = await axios
- .get(`https://getstickerpack.com/api/v1/stickerdb/stickers/${id}`)
- .then((r) => r.data.data);
- const stickers = res.images.map((item) => ({
- index: item.sticker_index,
- image: `https://s3.getstickerpack.com/${item.url}`,
- animated: item.is_animated !== 0,
- }));
- return { status: true, title: res.title, stickers };
- } catch (e) {
- return { status: false, msg: e.message };
- }
- }
-}
-
-const MAX_STICKERS = 20;
-const DOWNLOAD_DELAY = 700;
+const MAX_STICKERS = 20
+const DOWNLOAD_DELAY = 500
 
 async function downloadBuffer(url) {
- const res = await axios.get(url, {
- responseType: "arraybuffer",
- timeout: 15000,
- headers: { "User-Agent": "Mozilla/5.0" },
- });
- return Buffer.from(res.data);
+    const res = await axios.get(url, {
+        responseType: "arraybuffer",
+        timeout: 15000,
+        headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" },
+    })
+    return Buffer.from(res.data)
 }
 
 async function toWebpSticker(buffer) {
- return (await getSharp())(buffer)
- .resize(512, 512, {
- fit: "contain",
- background: { r: 0, g: 0, b: 0, alpha: 0 },
- })
- .webp({ quality: 80 })
- .toBuffer();
+    // cdn.combot.online sudah format webp, tinggal resize
+    return (await getSharp())(buffer)
+        .resize(512, 512, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .webp({ quality: 80 })
+        .toBuffer()
+}
+
+// Scrape combot.org untuk cari sticker pack
+async function searchStickerPacks(query) {
+    const url = `https://combot.org/telegram/stickers?q=${encodeURIComponent(query)}`
+    const res = await axios.get(url, {
+        headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" },
+        timeout: 15000,
+    })
+    const html = res.data
+    // Extract sticker set names dari href="/stickers/<name>"
+    const matches = [...html.matchAll(/href="\/stickers\/([a-zA-Z0-9_]+)"/g)]
+    // Deduplicate
+    const seen = new Set()
+    const packs = []
+    for (const m of matches) {
+        const name = m[1]
+        if (!seen.has(name)) {
+            seen.add(name)
+            packs.push(name)
+        }
+    }
+    return packs
+}
+
+// Scrape individual sticker set page untuk dapat URL gambar
+async function getStickerSetUrls(setName) {
+    const url = `https://combot.org/stickers/${setName}`
+    const res = await axios.get(url, {
+        headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" },
+        timeout: 15000,
+    })
+    const html = res.data
+    // Extract sticker image URLs dari data-src atau src
+    const matches = [...html.matchAll(/(?:data-src|src)="(https:\/\/cdn\.combot\.online\/[^"]+\.webp)"/g)]
+    const urls = matches.map(m => m[1])
+    // Deduplicate
+    return [...new Set(urls)]
+}
+
+const pluginConfig = {
+    name: "stickerpack",
+    alias: ["stickerpack"],
+    category: "sticker",
+    description: "Cari dan kirim sticker pack Telegram (scrape combot.org)",
+    usage: ".stickerpack <query>",
+    example: ".stickerpack anime",
+    isOwner: false,
+    isPremium: false,
+    isGroup: false,
+    isPrivate: false,
+    cooldown: 20,
+    energi: 2,
+    isEnabled: true,
 }
 
 async function handler(m, { sock }) {
- const query = m.args?.join(" ")?.trim();
+    const query = m.args?.join(" ")?.trim()
 
- if (!query) {
- return m.reply(novaCaption({
- emoji: "🖼️",
- name: "stickerpack",
- description: "Cari dan kirim sticker pack",
- usage: `${m.prefix}stickerpack <query>`,
- example: `${m.prefix}stickerpack anime`,
-}), "stickerpack");
- }
- try {
- const api = new StickerAPI();
- const search = await api.search(query);
+    if (!query) {
+        return m.reply(novaCaption({
+            emoji: "🖼️",
+            name: "stickerpack",
+            description: "Cari dan kirim sticker pack Telegram",
+            usage: `${m.prefix}stickerpack <query>`,
+            example: `${m.prefix}stickerpack anime`,
+        }), "stickerpack")
+    }
 
- if (!search.status || !search.data?.length) {
- return m.reply(claraWrap("stickerpack", "Tidak ada sticker pack untuk: *" + query + "*"));
- }
+    try {
+        // Step 1: Search sticker packs
+        const packs = await searchStickerPacks(query)
+        if (!packs.length) {
+            return m.reply(claraWrap("stickerpack", `Tidak ada sticker pack untuk: *${query}*`))
+        }
 
- const randPick =
- search.data[Math.floor(Math.random() * search.data.length)];
- const detail = await api.detail(randPick.url);
+        // Step 2: Pick random pack
+        const randomPack = packs[Math.floor(Math.random() * packs.length)]
+        await m.reply(claraWrap("stickerpack", `Mengunduh sticker pack: *${randomPack}*\nMencari gambar...`))
 
- if (!detail.status || !detail.stickers?.length) {
- return m.reply(novaError("StickerPack", "Gagal ambil detail sticker pack nih"));
- }
+        // Step 3: Get sticker URLs from pack page
+        const stickerUrls = await getStickerSetUrls(randomPack)
+        if (!stickerUrls.length) {
+            return m.reply(novaError("StickerPack", "Gagal ambil sticker dari pack nih"))
+        }
 
- await m.reply(claraWrap("stickerpack", "Mengunduh *" + randPick.name + "*\n" + Math.min(detail.stickers.length, MAX_STICKERS) + " sticker"));
+        const limited = stickerUrls.slice(0, MAX_STICKERS)
+        await m.reply(claraWrap("stickerpack", `Ditemukan *${stickerUrls.length}* sticker\nMengunduh *${limited.length}* sticker...`))
 
- const limited = detail.stickers.slice(0, MAX_STICKERS);
- const stickerBuffers = [];
+        // Step 4: Download & convert stickers
+        const stickerBuffers = []
+        for (const url of limited) {
+            try {
+                const buf = await downloadBuffer(url)
+                const webp = await toWebpSticker(buf)
+                stickerBuffers.push(webp)
+                await new Promise((r) => setTimeout(r, DOWNLOAD_DELAY))
+            } catch { continue }
+        }
 
- for (const s of limited) {
- try {
- const buf = await downloadBuffer(s.image);
- const webp = await toWebpSticker(buf);
- stickerBuffers.push(webp);
- await new Promise((r) => setTimeout(r, DOWNLOAD_DELAY));
- } catch {
- continue;
- }
- }
+        if (!stickerBuffers.length) {
+            return m.reply(novaError("StickerPack", "Gagal download sticker nih"))
+        }
 
- if (!stickerBuffers.length) {
- return m.reply(novaError("StickerPack", "Gagal download sticker nih"));
- }
+        // Step 5: Send sticker pack
+        const packname = randomPack.replace(/_/g, " ")
+        const author = config.bot?.developer || config.sticker?.author || "Bot"
 
- const packname = randPick.name || config.sticker?.packname || "Nova-AI";
- const author = config.bot?.developer || config.sticker?.author || "Bot";
+        try {
+            await sock.sendStickerPack(m.chat, stickerBuffers, m, {
+                name: packname, packname, publisher: author, author,
+                description: `Sticker pack: ${packname}`,
+                emojis: ["❤"],
+            })
+        } catch (packErr) {
+            console.error("[StickerPack] Pack send failed:", packErr.message)
+            await m.reply(claraWrap("stickerpack", "Pack gagal, mengirim satu per satu..."))
 
- try {
- await sock.sendStickerPack(m.chat, stickerBuffers, m, {
- name: packname,
- packname,
- publisher: author,
- author,
- description: `Sticker pack: ${packname}`,
- emojis: ["❤"],
- });
- } catch (packErr) {
- console.error("[StickerPack] Pack send failed:", packErr.message);
- await m.reply(claraWrap("stickerpack", "Pack gagal, mengirim satu per satu..."));
+            let sent = 0
+            for (const buf of stickerBuffers) {
+                try {
+                    let exifBuf = buf
+                    try {
+                        exifBuf = await addExifToWebp(buf, { packname, author, emojis: ["❤"] })
+                    } catch (e) { console.error('[stickerpack.js]:', e.message) }
+                    await sock.sendMessage(m.chat, { sticker: exifBuf, contextInfo: { isForwarded: false, forwardingScore: 0 } }, { quoted: m })
+                    sent++
+                    await new Promise((r) => setTimeout(r, 500))
+                } catch { continue }
+            }
 
- let sent = 0;
- for (const buf of stickerBuffers) {
- try {
- let exifBuf = buf;
- try {
- exifBuf = await addExifToWebp(buf, {
- packname,
- author,
- emojis: ["❤"],
- });
- } catch (e) { console.error('[stickerpack.js]:', e.message); }
- await sock.sendMessage(
- m.chat,
- {
- sticker: exifBuf,
- contextInfo: { isForwarded: false, forwardingScore: 0 },
- },
- { quoted: m },
- );
- sent++;
- await new Promise((r) => setTimeout(r, 500));
- } catch {
- continue;
- }
- }
-
- if (sent > 0) {
- await m.reply(claraWrap("stickerpack", "Berhasil kirim *" + sent + "* sticker dari *" + packname + "*"));
- } else {
- await m.reply(novaError("StickerPack", "Gagal kirim sticker nih"));
- }
- }
- } catch (error) {
- console.error("[StickerPack] Error:", error.message);
- m.reply(claraWrap("stickerpack", te(m.prefix, m.command, m.pushName), "error"));
- }
+            if (sent > 0) {
+                await m.reply(claraWrap("stickerpack", `Berhasil kirim *${sent}* sticker dari *${packname}*`))
+            } else {
+                await m.reply(novaError("StickerPack", "Gagal kirim sticker nih"))
+            }
+        }
+    } catch (error) {
+        console.error("[StickerPack] Error:", error.message)
+        m.reply(claraWrap("stickerpack", te(m.prefix, m.command, m.pushName), "error"))
+    }
 }
 
-export { pluginConfig as config, handler };
+export { pluginConfig as config, handler }
