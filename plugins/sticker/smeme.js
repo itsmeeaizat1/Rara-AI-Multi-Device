@@ -71,20 +71,27 @@ async function handler(m, { sock }) {
     });
     let imageUrl;
     try {
-      const uploadRes = await axios.post(
-        "https://c.termai.cc/api/upload?key=" + config.APIkey.termai,
-        form,
+      const catboxForm = new FormData();
+      catboxForm.append('reqtype', 'fileupload');
+      catboxForm.append('fileToUpload', imageBuffer, {
+        filename: "meme.png",
+        contentType: "image/png",
+      });
+      const catboxRes = await axios.post(
+        "https://catbox.moe/user/api.php",
+        catboxForm,
         {
-          headers: form.getHeaders(),
+          headers: catboxForm.getHeaders(),
           timeout: 30000,
         },
       );
-      if (uploadRes.data?.status && uploadRes.data?.path) {
-        imageUrl = uploadRes.data.path;
+      if (catboxRes.data && catboxRes.data.startsWith('http')) {
+        imageUrl = catboxRes.data;
       }
     } catch (e) {
-      console.log("[SMEME] Termai failed:", e.response?.data || e.message, "Trying telegraph...");
+      console.log("[SMEME] Catbox failed:", e.message);
     }
+    // Fallback: telegraph
     if (!imageUrl) {
       try {
         const form2 = new FormData();
