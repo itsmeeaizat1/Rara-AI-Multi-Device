@@ -9,7 +9,8 @@ import { checkPermission, checkMode } from "./lib/nova-middleware.js";
 import { handleAntiRemoveFromUpsert as _handleAntiRemove } from "./lib/nova-group-protection.js";
 import config from "../config.js";
 import { c, logger, logMessage } from "./lib/nova-logger.js";
-import { trackNotFound, getNotFoundReply, isNotFoundMuted, resetNotFoundTracker } from "./lib/nova-notfound-antispam.js";
+import { trackNotFound, isNotFoundMuted, resetNotFoundTracker } from "./lib/nova-notfound-antispam.js";
+import { buildNotFoundReply } from "./lib/nova-notfound-info.js";
 
 // Re-export handleAntiRemoveFromUpsert from group-protection
 async function handleAntiRemoveFromUpsert(msg, sock, db) {
@@ -736,12 +737,15 @@ async function messageHandler(msg, sock) {
 
       if (!m.isNewsletter) {
         try {
-          const replyText = getNotFoundReply(
-            m.prefix, command, closest,
+          const replyText = await buildNotFoundReply(
+            m, { sock, config, db: getDatabase(), uptime: process.uptime() * 1000 },
+            command, closest,
             spamResult.level, spamResult.totalHits
           );
           if (replyText) await m.reply(replyText);
-        } catch {}
+        } catch (e) {
+          if (config.dev?.debugLog) logger.error("notFound reply", e.message);
+        }
       }
     }
     return;
