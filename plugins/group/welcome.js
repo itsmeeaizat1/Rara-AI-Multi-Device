@@ -46,7 +46,7 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   const groupData = db.getGroup(groupJid) || {};
 
   // Kalau welcome off di grup ini, skip
-  if (groupData.welcome === false) return;
+  if (!groupData.welcome) return;
 
   // Ambil info
   const groupName = metadata?.subject || "Grup";

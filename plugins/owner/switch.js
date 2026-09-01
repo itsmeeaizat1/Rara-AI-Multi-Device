@@ -342,12 +342,19 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
   let featureName, mode
 
   if (forceOff) {
+    // Dari .switch off <fitur> atau .disable <fitur>
     featureName = (args[0] || '').toLowerCase()
     mode = null
   } else {
     featureName = (args[1] || '').toLowerCase()
     mode = (args[2] || '').toLowerCase()
-    if (featureName === 'off') {
+    // Handle ".switch group goodbye off" — off di belakang
+    if (mode === 'off' || mode === 'false' || mode === '0') {
+      forceOff = true
+      mode = null
+    }
+    // Handle ".switch group off goodbye" — off di depan fitur
+    if (featureName === 'off' || featureName === 'false') {
       forceOff = true
       featureName = mode
       mode = null
@@ -368,8 +375,8 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
       }
       txt += `\n`
     }
-    txt += `╰────  •  ────\n`
-    txt += tipText(`ON: \`${prefix}switch group <fitur>\` | OFF: \`${prefix}switch group off <fitur>\``)
+    txt += `╰────  •  ────`
+    txt += tipText(`ON: \`${prefix}switch group <fitur>\` | OFF: \`${prefix}switch group <fitur> off\``)
     return m.reply(txt)
   }
 

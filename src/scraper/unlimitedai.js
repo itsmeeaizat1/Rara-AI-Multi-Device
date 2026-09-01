@@ -1,44 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import crypto from "node:crypto";
-
-const API = "https://app.unlimitedai.chat/api/chat";
-
-const ua =
-  "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Mobile Safari/537.36";
-
-function parseSetCookie(headers) {
-  const result = {};
-  const setCookie =
-    typeof headers.getSetCookie === "function"
-      ? headers.getSetCookie()
-      : headers.get("set-cookie")
-        ? [headers.get("set-cookie")]
-        : [];
-  for (const item of setCookie) {
-    const first = item.split(";")[0];
-    const index = first.indexOf("=");
-    if (index !== -1) {
-      result[first.slice(0, index).trim()] = first.slice(index + 1).trim();
-    }
-  }
-  return result;
-}
-
-function buildCookie(deviceId, chatId, cookies = {}) {
-  return Object.entries({
-    NEXT_LOCALE: "id",
-    u_device_id: deviceId,
-    home_chat_id: chatId,
-    ...cookies,
-  })
-    .map(([k, v]) => `${k}=${v}`)
-    .join("; ");
-}
+// Migrated from UnlimitedAI.chat → Google Gemini API (better data freshness)
+// Same export interface: UnlimitedAI(prompt, character) returns { status, answer, character, model }
+import { callGemini } from "../lib/nova-ai-service.js";
 
 const CHARACTERS = {
   "nova-ai": {
     name: "Nova AI",
-    prompt: `Kamu adalah Nova AI, asisten WhatsApp bot yang ramah, cerdas, dan responsif. Kamu menjawab dalam bahasa Indonesia dengan gaya santai tapi tetap informatif. Kamu ahli dalam teknologi, programming, dan hal-hal umum. Jawab dengan singkat, jelas, dan natural. Gunakan emoji secukupnya untuk membuat percakapan lebih hidup.`,
+    prompt: `Kamu adalah Nova AI, asisten WhatsApp bot yang ramah, cerdas, dan responsif. Kamu menjawab dalam bahasa Indonesia dengan gaya santai tapi tetap informatif. Kamu ahli dalam teknologi, programming, dan hal-hal umum. Jawab dengan singkat, jelas, dan natural. Gunakan emoji secukupnya untuk membuat percakapan lebih hidup. Kamu menyadari tanggal dan waktu saat ini. Selalu jawab dengan informasi yang akurat dan terkini.`,
   },
   "kobo-ai": {
     name: "Kobo Kanaeru",
@@ -58,107 +26,34 @@ const CHARACTERS = {
   },
 };
 
+/**
+ * UnlimitedAI — sekarang pakai Google Gemini API
+ * @param {string} prompt - Pertanyaan/pesan user
+ * @param {string} character - Character key (nova-ai, kobo-ai, waguri-ai, jokowi-ai, prabowo-ai)
+ * @returns {Promise<{status: boolean, answer: string, character: string, model: string}>}
+ */
 async function UnlimitedAI(prompt, character = "nova-ai") {
-  const chatId = crypto.randomUUID();
-  const deviceId = crypto.randomUUID();
   const char = CHARACTERS[character] || CHARACTERS["nova-ai"];
-
-  const systemPrompt = `${char.prompt}\n\nPertanyaan user: ${prompt}`;
-
-  const createdAt = new Date().toISOString();
-
-  const messages = [
-    {
-      id: crypto.randomUUID(),
-      role: "user",
-      content: systemPrompt,
-      parts: [{ type: "text", text: systemPrompt }],
-      createdAt,
-    },
-    {
-      id: crypto.randomUUID(),
-      role: "assistant",
-      content: "",
-      parts: [{ type: "text", text: "" }],
-      createdAt,
-    },
-  ];
-
-  const body = {
-    chatId,
-    messages,
-    selectedChatModel: "chat-model-reasoning",
-    selectedCharacter: null,
-    selectedStory: null,
-    deviceId,
-    locale: "id",
-  };
-
-  const headers = {
-    "sec-ch-ua-platform": `"Android"`,
-    "user-agent": ua,
-    "sec-ch-ua": `"Google Chrome";v="147", "Not.A/Brand";v="8", "Chromium";v="147"`,
-    "content-type": "application/json",
-    "sec-ch-ua-mobile": "?1",
-    "x-next-intl-locale": "id",
-    accept: "*/*",
-    origin: "https://app.unlimitedai.chat",
-    referer: "https://app.unlimitedai.chat/id",
-    "accept-language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
-    cookie: buildCookie(deviceId, chatId),
-    priority: "u=1, i",
-  };
-
-  const response = await fetch(API, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
+  try {
+    const answer = await callGemini(prompt, {
+      systemPrompt: char.prompt,
+    });
+    return {
+      status: true,
+      code: 200,
+      character: char.name,
+      model: "gemini-2.5-flash",
+      answer,
+    };
+  } catch (error) {
     return {
       status: false,
-      code: response.status,
-      error: text,
+      code: 500,
+      character: char.name,
+      model: "gemini-2.5-flash",
+      error: error.message,
     };
   }
-
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-
-  let buffer = "";
-  let answer = "";
-
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-
-    buffer += decoder.decode(value, { stream: true });
-
-    const lines = buffer.split("\n");
-    buffer = lines.pop() || "";
-
-    for (const rawLine of lines) {
-      const line = rawLine.trim();
-      if (!line) continue;
-
-      try {
-        const json = JSON.parse(line);
-        if (json.type === "delta" && typeof json.delta === "string") {
-          answer += json.delta;
-        }
-      } catch {}
-    }
-  }
-
-  return {
-    status: true,
-    code: response.status,
-    character: char.name,
-    model: "chat-model-reasoning",
-    answer,
-  };
 }
 
 export { UnlimitedAI, CHARACTERS };

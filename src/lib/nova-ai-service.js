@@ -20,20 +20,26 @@ const DEFAULT_PROVIDERS = {
   },
   gemini: {
     name: "Google Gemini",
-    models: ["gemini-2.0-flash", "gemini-1.5-pro", "gemini-1.5-flash"],
-    defaultModel: "gemini-2.0-flash",
+    models: ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro", "gemini-1.5-flash"],
+    defaultModel: "gemini-2.5-flash",
     chatEndpoint: (model) => `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=__API_KEY__`,
     authHeader: () => ({}),
-    buildBody: ({ messages }) => ({
-      contents: messages.map((m) => ({
-        role: m.role === "assistant" ? "model" : "user",
-        parts: [{ text: m.content }],
-      })),
-      generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
-    }),
+    buildBody: ({ messages, systemPrompt }) => {
+      const contents = messages
+        .filter((m) => m.role !== "system")
+        .map((m) => ({
+          role: m.role === "assistant" ? "model" : "user",
+          parts: [{ text: m.content }],
+        }));
+      const body = { contents, generationConfig: { temperature: 0.7, maxOutputTokens: 8192 } };
+      if (systemPrompt) {
+        body.systemInstruction = { parts: [{ text: systemPrompt }] };
+      }
+      return body;
+    },
     parseResponse: (data) => data?.candidates?.[0]?.content?.parts?.[0]?.text || "",
     supportsVision: true,
-    supportsSystem: false,
+    supportsSystem: true,
   },
   anthropic: {
     name: "Anthropic Claude",
@@ -321,9 +327,47 @@ async function callAI(firstArg, secondArg) {
   return text;
 }
 
+
+/**
+ * Helper: callGemini — panggil Google Gemini dengan API key dari config
+ * Auto-inject API key dari apikeys.json (google) atau config.aiHelp.geminiApiKey
+ * @param {string} prompt - User prompt
+ * @param {object} opts - { systemPrompt, model, temperature, maxTokens, senderJid }
+ */
+async function callGemini(prompt, opts = {}) {
+  // Resolve API key: prioritaskan opts.apiKey > config.aiHelp.geminiApiKey > apikeys.json (google)
+  let apiKey = opts.apiKey || "";
+  if (!apiKey) {
+    try {
+      const config = (await import("../../config.js")).default;
+      apiKey = config.aiHelp?.geminiApiKey || config.geminiApiKey || "";
+    } catch {}
+  }
+  if (!apiKey) {
+    try {
+      const { getApiKeys } = await import("./config/env-loader.js");
+      const keys = getApiKeys();
+      apiKey = keys.google || keys.gemini || "";
+    } catch {}
+  }
+  if (!apiKey) throw new Error("Gemini API key belum diset. Dapatkan gratis di https://aistudio.google.com/apikey lalu set via .ai-set apiKey <key> atau update apikeys.json (field: google)");
+
+  return callAI({
+    providerKey: "gemini",
+    apiKey,
+    model: opts.model || "gemini-2.5-flash",
+    messages: [{ role: "user", content: prompt }],
+    systemPrompt: opts.systemPrompt || "",
+    temperature: opts.temperature ?? 0.7,
+    maxTokens: opts.maxTokens ?? 8192,
+    senderJid: opts.senderJid || "",
+  });
+}
+
 export {
   DEFAULT_PROVIDERS,
   resolveProvider,
   callAI,
+  callGemini,
   normalizeMessages,
 };
