@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tambah%20intro%20box%20di%20menu%20dan%20allme-success?style=for-the-badge)
-> *Commit: "feat: tambah intro box di menu dan allmenu"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20rapikan%20assets%2Fimage%20ke%20subfol-success?style=for-the-badge)
+> *Commit: "refactor: rapikan assets/image ke subfolder kategori + hapus thumbnail tidak terpakai"*
 <!--END_SECTION:latest-update-->
 
 ---
