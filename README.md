@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20standardisasi%20tampilan%20connection%20-success?style=for-the-badge)
-> *Commit: "feat: standardisasi tampilan connection handler ke box-drawing style"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20standardisasi%20box-drawing%20design%20d-success?style=for-the-badge)
+> *Commit: "feat: standardisasi box-drawing design di handler, connection, dan lib files"*
 <!--END_SECTION:latest-update-->
 
 ---
