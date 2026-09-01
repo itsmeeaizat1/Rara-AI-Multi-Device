@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20standardisasi%20tampilan%20reply%20d-success?style=for-the-badge)
-> *Commit: "refactor: standardisasi tampilan reply di seluruh plugin (378 file)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20standardisasi%20reply%20design%20%E2%80%94%20%E2%9C%A6%20hea-success?style=for-the-badge)
+> *Commit: "feat: standardisasi reply design — ✦ header + ╰──── • ──── close"*
 <!--END_SECTION:latest-update-->
 
 ---
