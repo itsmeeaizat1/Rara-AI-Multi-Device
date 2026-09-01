@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // bardai — Google Bard AI (pakai Gemini API + fallback unlimitedai)
-import { GeminiChat } from "../../src/scraper/gemini.js";
+import { chat as GeminiChat } from "../../src/scraper/gemini.js";
 import { UnlimitedAI } from "../../src/scraper/unlimitedai.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
@@ -35,8 +35,8 @@ async function handler(m, { sock }) {
     // Coba Gemini scraper dulu
     try {
       const geminiResult = await GeminiChat(text);
-      if (geminiResult) {
-        result = { status: true, answer: geminiResult };
+      if (geminiResult && geminiResult.text) {
+        result = { status: true, answer: geminiResult.text };
       }
     } catch (e) {
       console.error("bardai gemini:", e.message);
