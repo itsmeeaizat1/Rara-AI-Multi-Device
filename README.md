@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20smart%20anti-spam%20untuk%20command%20not%20-success?style=for-the-badge)
-> *Commit: "feat: smart anti-spam untuk command not found dengan progressive escalation"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20owner%20toggle%20untuk%20smart%20anti-spam-success?style=for-the-badge)
+> *Commit: "feat: owner toggle untuk smart anti-spam not-found suggestion"*
 <!--END_SECTION:latest-update-->
 
 ---
