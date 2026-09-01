@@ -79,6 +79,26 @@ export function getTioKey() {
   return apikeysData.tioApiKey || "";
 }
 
+/**
+ * Ambil DeepSeek API key dari apikeys.json
+ * 🔹 AI AGENT: dipakai oleh aiagent.js sebagai provider utama
+ * Isi di src/lib/apikey/apikeys.json: "deepseekkey": "sk-..."
+ * Dapatkan di: https://platform.deepseek.com
+ */
+export function getDeepSeekKey() {
+  return apikeysData.deepseekkey || "";
+}
+
+/**
+ * Ambil Groq API key dari apikeys.json
+ * 🔹 AI AGENT: dipakai oleh aiagent.js sebagai fallback ketiga (opsional)
+ * Isi di src/lib/apikey/apikeys.json: "groqkey": "gsk_..."
+ * Dapatkan di: https://console.groq.com
+ */
+export function getGroqKey() {
+  return apikeysData.groqkey || "";
+}
+
 export function getPteroConfig() {
   return {
     server1: {
