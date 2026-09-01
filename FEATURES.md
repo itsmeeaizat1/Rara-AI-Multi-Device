@@ -3,7 +3,7 @@
 > Daftar lengkap fitur per kategori. Update file ini setiap kali ada perubahan fitur.
 
 ## Statistik
-- **Total Plugin:** 1.661
+- **Total Plugin:** 1720
 - **Total Command:** 2.118+
 - **Total Kategori:** 39
 - **Versi:** 21.8.0
@@ -252,6 +252,65 @@ roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, puji
 - .polyaiv2 - ai - Poly AI v2 (polybuzz.ai)
 - .aliceaiv2 - ai - Alice AI v2 (chat + TikTok + image)
 - .chatewherev2 - ai - ChatEverywhere AI v2
+- .classrpg - rpg - Pilih kelas (knight/mage/archer)
+- .buildrpg - rpg - Bangun markas (+DEF, +safezone)
+- .travelrpg - rpg - Pindah lokasi RPG
+- .maprpg - rpg - Tampilkan peta dunia
+- .weatherrpg - rpg - Cuaca dunia RPG
+- .whereamirpg - rpg - Cek lokasi pemain
+- .blessrpg - rpg - Blessing harian (random buff)
+- .buffrpg - rpg - Buff ATK +10 (mana)
+- .debuffrpg - rpg - Debuff musuh burn (reply)
+- .comborpg - rpg - Combo attack berdasar kelas
+- .curserpg - rpg - Kutuk musuh (reply target)
+- .wardrpg - rpg - Ward proteksi dari trap/curse
+- .traprpg - rpg - Pasang jebakan
+- .defendrpg - rpg - Perkuat markas DEF +50
+- .spyrpg - rpg - Intai target (reply)
+- .scoutrpg - rpg - Intai lokasi musuh (reply)
+- .statrpg - rpg - Statistik karakter
+- .medalrpg - rpg - Tampilkan medali
+- .lorerpg - rpg - Lore dunia RPG
+- .riddlerpg - rpg - Teka-teki RPG harian
+- .narratorrpg - rpg - Bisikan narator
+- .roleplayrpg - rpg - Aksi roleplay
+- .panduanrpg - rpg - Panduan lengkap RPG
+- .spiritrpg - rpg - Panggil roh petarung (DMG +20)
+- .mutaterpg - rpg - Mutasi skill random
+- .timetravelrpg - rpg - Perjalanan waktu harian
+- .reincarnaterpg - rpg - Reinkarnasi (bonus permanen)
+- .distortionrpg - rpg - Zona distorsi (random loot)
+- .worldeventrpg - rpg - Trigger event dunia (owner)
+- .zombieeventrpg - rpg - Wabah zombie (owner)
+- .darkmoderpg - rpg - Mode gelap RPG
+- .deathrpg - rpg - Cek & proses kematian
+- .reviverpg - rpg - Bangkit dari kematian
+- .savepointrpg - rpg - Simpan progres
+- .finaltrialrpg - rpg - Ujian akhir (min level 99)
+- .partyrpg - rpg - Kelola party RPG
+- .profilerpg - rpg - Profil RPG lengkap
+- .questmaprpg - rpg - Peta quest dunia
+- .codexrpg - rpg - Kodex item RPG
+- .codexitemrpg - rpg - Detail item RPG
+- .npcrpg - rpg - Bicara dengan NPC
+- .learnskillrpg - rpg - Pelajari skill baru
+- .fortifyrpg - rpg - Perkuat markas DEF +10
+- .huntwildrpg - rpg - Berburu hewan liar
+- .trapwildrpg - rpg - Pasang jebakan hewan
+- .itemuserpg - rpg - Gunakan item dari inventory
+- .lootrpg - rpg - Loot item dari musuh (reply)
+- .exchangerpg - rpg - Tukar item jadi gold
+- .stashallrpg - rpg - Pindah semua item ke storage
+- .aimrpg - rpg - Bidik & serang target (reply)
+- .sellrpg - rpg - Jual item (100 gold)
+- .buyrpg - rpg - Beli item dari toko
+- .marketrpg - rpg - Marketplace antar pemain
+- .atmallrpg - rpg - Leaderboard bank terkaya
+- .gbankrpg - rpg - Guild Bank (saldo bersama)
+- .escrowrpg - rpg - Escrow titipan aman
+- .blessnpcrpg - rpg - Blessing dari NPC
+- .talentrpg - rpg - Lihat talent berdasar kelas
+- .passiverpg - rpg - Lihat skill pasif
 ### 🌸 Anime (14 plugin)
 animechar, animecouple, animegenre, animemanga, animemoments, animepowerlevel, animequote, animerec, animestudio, animetop, animevillain, autoanimewinbu, otakudict, wallpaperanime
 
@@ -446,7 +505,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## ✅ Status Audit (Update Terakhir)
 
-- **Total Plugin:** 1.661 (12 plugin dibikin ulang setelah dihapus AI agent lain)
+- **Total Plugin:** 1720 (12 plugin dibikin ulang setelah dihapus AI agent lain)
 - **Syntax Check:** 0 error
 - **Broken Import:** 0
 - **api.neoxr.eu:** 0 (semua diganti)
