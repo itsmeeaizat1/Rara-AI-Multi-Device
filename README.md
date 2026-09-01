@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20remove%208%20dead%20Sanka-dependent%20-success?style=for-the-badge)
-> *Commit: "refactor: remove 8 dead Sanka-dependent downloader plugins"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20group%20audit%20fix%20%E2%80%94%20remove%206%20dup-success?style=for-the-badge)
+> *Commit: "refactor: group audit fix — remove 6 duplicates + fix 12 auto defaults"*
 <!--END_SECTION:latest-update-->
 
 ---
