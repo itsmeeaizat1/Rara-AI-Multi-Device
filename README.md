@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20split%20AI%20Image%20category%20%2B%20add%204%20ne-success?style=for-the-badge)
-> *Commit: "feat: split AI Image category + add 4 new IkyyXD image edit plugins"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20add%207%20new%20IkyyXD%20AI%20image%20plugins-success?style=for-the-badge)
+> *Commit: "feat: add 7 new IkyyXD AI image plugins"*
 <!--END_SECTION:latest-update-->
 
 ---
