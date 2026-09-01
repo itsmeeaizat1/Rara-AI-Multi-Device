@@ -368,7 +368,7 @@ export default {
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Agenda", [
-        `│ Status: *ᴀᴋᴛɪꜰ* 🟢`,
+        `│ Status: *Aktif*`,
         ``,
         `│ Fitur Smart Agenda dinyalakan.`,
         `│ Ketik *${prefix}agenda tambah | <nama> | <tanggal jam>*`,
@@ -385,7 +385,7 @@ export default {
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Agenda", [
-        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
+        `│ Status: *Nonaktif*`,
         ``,
         `│ Fitur Agenda dimatikan.`,
         `│ Ketik *${prefix}agendaon* untuk aktifkan lagi.`,
@@ -405,7 +405,7 @@ export default {
 
       const lines = [`│ Total: *${all.length}* acara`, ``];
       all.slice(-10).reverse().forEach((e) => {
-        const status = e.status === "active" ? "🟢" : e.status === "done" ? "✅" : "🔴";
+        const status = e.status === "active" ? "Aktif" : e.status === "done" ? "Selesai" : "Nonaktif";
         lines.push(
           `│ ${status} ${e.shortId} - ${e.name}`,
           `│ ${formatDate(e.eventTime)}`,
@@ -509,7 +509,7 @@ export default {
       } else if (diff <= 0) {
         lines.push(``, `│ Status: *Waktunya tiba!* 🔔`);
       } else {
-        lines.push(``, `│ Status: *ᴀᴋᴛɪꜰ* 🟢`);
+        lines.push(``, `│ Status: *Aktif*`);
         if (event.reminded1d) lines.push(`│ Pengingat H-1 hari: ✅ terkirim`);
         if (event.reminded1h) lines.push(`│ Pengingat H-1 jam: ✅ terkirim`);
       }

@@ -113,7 +113,7 @@ async function handler(m, { sock, db }) {
 ╭─「 ✦ ⏰ *SETTING*
 │ ${emoji} Aksi: *${actionText}*
 │ ⏱️ Waktu: *${formattedTime} WIB*
-│ 📡 Status: *🟢 Aktif*
+│ • Status: *Aktif*
 ╰────  •  ────
 │ _Grup akan otomatis ${action === 'open' ? 'dibuka' : 'ditutup'}_
 │ _setiap hari pada jam *${formattedTime}* WIB._`;

@@ -33,13 +33,13 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Listjadibotaktif", `❌ Tidak ada jadibot yang aktif saat ini`))
     }
 
-    let txt = `🟢 *Jadibot Aktif*\n\n`
+    let txt = `*Jadibot Aktif*\n\n`
     txt += `📊 Total: *${active.length}* bot aktif\n\n`
 
     active.forEach((s, i) => {
         const uptime = formatUptime(Date.now() - s.startedAt)
         const owner = s.ownerJid?.split('@')[0] || 'Unknown'
-        txt += `*${i + 1}.* 🟢 @${s.id}\n`
+        txt += `*${i + 1}.*  @${s.id}\n`
         txt += `   ⏱️ *${uptime}* — 👤 @${owner}\n\n`
     })
 

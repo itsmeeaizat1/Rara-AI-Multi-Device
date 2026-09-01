@@ -180,7 +180,7 @@ export default {
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Donasi", [
-        `│ Status: *ᴀᴋᴛɪꜰ* 🟢`,
+        `│ Status: *Aktif*`,
         ``,
         `│ Fitur Donasi & Sedekah dinyalakan.`,
         `│ Ketik *${prefix}donasi <target> | <keterangan>* untuk mulai.`,
@@ -199,7 +199,7 @@ export default {
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Donasi", [
-        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
+        `│ Status: *Nonaktif*`,
         ``,
         `│ Fitur Donasi dimatikan.`,
         `│ Ketik *${prefix}donasion* untuk aktifkan lagi.`,
@@ -219,7 +219,7 @@ export default {
 
       const lines = [`│ Total: *${all.length}* kampanye`, ``];
       all.slice(-10).reverse().forEach((c) => {
-        const status = c.status === "active" ? "🟢" : c.status === "closed" ? "✅" : "🔴";
+        const status = c.status === "active" ? "Aktif" : c.status === "closed" ? "Selesai" : "Nonaktif";
         const pct = c.target > 0 ? Math.round((c.raised / c.target) * 100) : 0;
         lines.push(
           `│ ${status} ${c.shortId} - ${c.description}`,

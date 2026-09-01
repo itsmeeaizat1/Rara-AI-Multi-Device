@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
     txt += `Offline: *${sessions.length - active.length}*\n\n`
 
     sessions.forEach((s, i) => {
-        const status = s.isActive ? '🟢' : '⚫'
+        const status = s.isActive ? 'Aktif' : 'Expired'
         const label = s.isActive ? 'Online' : 'Offline'
         txt += `${status} *${i + 1}.* @${s.id} — _${label}_\n`
     })
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
             {
                 name: 'quick_reply',
                 buttonParamsJson: JSON.stringify({
-                    display_text: '🟢 Lihat Aktif',
+                    display_text: 'Lihat Aktif',
                     id: `${m.prefix}listjadibotaktif`
                 })
             },

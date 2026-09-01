@@ -65,8 +65,8 @@ async function safeReact(m, sock, emoji) {
 
 // ==================== Status emojis ====================
 const STATUS = {
-  OPEN: "🟢 OPEN",
-  CLAIMED: "🟡 CLAIMED",
+  OPEN: "OPEN",
+  CLAIMED: "CLAIMED",
   DONE: "✅ DONE",
   CANCELLED: "❌ CANCELLED",
 };

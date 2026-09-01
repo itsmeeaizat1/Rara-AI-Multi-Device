@@ -202,7 +202,7 @@ async function handleKelola(m, sock) {
             highlight_label: s.autoVcf ? "ON" : "OFF",
             rows: [
               {
-                title: `${s.autoVcf ? "🔴" : "🟢"} Auto VCF: ${s.autoVcf ? "Matikan" : "Nyalakan"}`,
+                title: `Auto VCF: ${s.autoVcf ? "Matikan" : "Nyalakan"}`,
                 id: `${p}${s.autoVcf ? "autovcf_off" : "autovcf_on"}`,
                 description: "Simpan kontak ke VCF otomatis setelah push",
               },
@@ -213,7 +213,7 @@ async function handleKelola(m, sock) {
             highlight_label: s.kodeUnik ? "ON" : "OFF",
             rows: [
               {
-                title: `${s.kodeUnik ? "🔴" : "🟢"} Kode Unik: ${s.kodeUnik ? "Matikan" : "Nyalakan"}`,
+                title: `Kode Unik: ${s.kodeUnik ? "Matikan" : "Nyalakan"}`,
                 id: `${p}${s.kodeUnik ? "kodeunik_off" : "kodeunik_on"}`,
                 description: "Tambah kode random di akhir pesan",
               },
@@ -240,7 +240,7 @@ async function handleKelola(m, sock) {
             highlight_label: s.skipAdmin ? "ON" : "OFF",
             rows: [
               {
-                title: `${s.skipAdmin ? "🔴" : "🟢"} Skip Admin: ${s.skipAdmin ? "Matikan" : "Nyalakan"}`,
+                title: `Skip Admin: ${s.skipAdmin ? "Matikan" : "Nyalakan"}`,
                 id: `${p}${s.skipAdmin ? "skipadmin_off" : "skipadmin_on"}`,
                 description: "Lewati admin grup saat push",
               },
@@ -325,7 +325,7 @@ async function handleSettingToggle(m, settingKey, label, onVal, offVal) {
   const cmd = m.command?.toLowerCase();
   const isOn = cmd.endsWith("_on");
   db.setting(settingKey, isOn ? onVal : offVal);
-  await m.reply(claraWrap("Pushkontak", `${isOn ? "✅" : "🔴"} ${label} ${isOn ? "dinyalakan" : "dimatikan"}\n\n⚙️ ${label}: ${isOn ? "ON" : "OFF"}`));
+  await m.reply(claraWrap("Pushkontak", `${label} ${isOn ? "dinyalakan" : "dimatikan"}\n\n⚙️ ${label}: ${isOn ? "ON" : "OFF"}`));
 }
 
 async function handleSetJeda(m, sock) {

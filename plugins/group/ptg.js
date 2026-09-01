@@ -158,7 +158,7 @@ export default {
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Patungan", [
-        `│ Status: *ᴀᴋᴛɪꜰ* 🟢`,
+        `│ Status: *Aktif*`,
         ``,
         `│ Fitur Split Bill & Patungan dinyalakan.`,
         `│ Ketik *${prefix}ptg <total> | <orang> | <keterangan>*`,
@@ -174,7 +174,7 @@ export default {
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Patungan", [
-        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
+        `│ Status: *Nonaktif*`,
         ``,
         `│ Fitur Patungan dimatikan.`,
         `│ Ketik *${prefix}ptgon* untuk aktifkan lagi.`,
@@ -193,7 +193,7 @@ export default {
       const lines = [`│ Total: *${allBills.length}* patungan`, ``];
       allBills.slice(-10).reverse().forEach((b) => {
         const paidCount = b.members.filter(mb => mb.paid).length;
-        const status = b.status === "active" ? "🟢" : b.status === "closed" ? "✅" : "🔴";
+        const status = b.status === "active" ? "Aktif" : b.status === "closed" ? "Selesai" : "Nonaktif";
         lines.push(
           `│ ${status} ${b.shortId} - ${b.description}`,
           `│ ${formatRupiah(b.total)} | ${b.perPerson}/orang`,
