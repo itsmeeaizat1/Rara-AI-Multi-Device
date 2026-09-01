@@ -456,9 +456,76 @@ function novaInfoBox(title, items = [], opts = {}) {
 }
 
 
+// ═══════════════════════════════════════════════
+// novaMenuLayout — Menu design baru (continuous flow)
+// ╭─「 ✦ Info ✦ 」     ← open
+// │ • Label : value     ← info bullet
+// ╰─「 CategoryName 」   ← close + next section
+// │
+// ├ ✦ .command          ← command item
+// └────  •  ────        ← final close
+// ═══════════════════════════════════════════════
+/**
+ * @param {object} opts
+ * @param {string} opts.infoTitle - Info section title (default: "Info")
+ * @param {Array} opts.info - Info items. String = plain line, {label, value} = bullet
+ * @param {Array<{name: string, commands: string[]}>} opts.categories - Category sections
+ * @param {string} opts.prefix - Command prefix (default: ".")
+ * @param {boolean} opts.sc - Apply smallcaps (default: true)
+ * @returns {string}
+ */
+function novaMenuLayout({ infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true } = {}) {
+  const scFn = sc ? toSC : (s) => String(s);
+  
+  // ── Info section ──
+  let out = `╭─「 ✦ ${scFn(infoTitle)} ✦ 」\n`;
+  
+  // Hitung max label width untuk alignment
+  let maxLabel = 0;
+  for (const item of info) {
+    if (item && item.label) {
+      const labelLen = scFn(item.label).length;
+      if (labelLen > maxLabel) maxLabel = labelLen;
+    }
+  }
+  maxLabel = Math.max(maxLabel, 6); // min 6 char
+  
+  for (const item of info) {
+    if (typeof item === "string") {
+      out += `│ ${scFn(item)}\n`;
+    } else if (item && item.label !== undefined) {
+      const label = scFn(item.label).padEnd(maxLabel);
+      const value = item.value !== undefined ? String(item.value) : "";
+      out += `│ • ${label} : ${value}\n`;
+    }
+  }
+  
+  // ── Category sections ──
+  for (let i = 0; i < categories.length; i++) {
+    const cat = categories[i];
+    const catName = scFn(cat.name).toUpperCase();
+    
+    // Transition: ╰─「 CategoryName 」
+    out += `╰─「 ${catName} 」\n`;
+    out += `│\n`;
+    
+    // Commands: ├ ✦ .command
+    for (const cmd of cat.commands) {
+      out += `├ ✦ ${prefix}${cmd}\n`;
+    }
+  }
+  
+  // ── Final close ──
+  out += `└────  •  ────`;
+  
+  return out;
+}
+
+
 export {
   toSC, scLine, isRealEmoji,
   novaInfoBox,
+  novaMenuLayout,
   buildBox, novaCaption,
   botHeader, botSignature, sectionBox,
   progressBar, statusDot, kv,
