@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
         `│ 📦 Plugin: *${plugin.config.name}*\n` +
         `│ 📁 Category: *${category}*\n` +
         `│ 📄 File: *${file}*\n` +
-        `│ 🟢 Status: *Enabled*\n` +
+        `│ • Status: *Enabled*\n` +
         `╰────  •  ────\n\n` +
         `Restart bot atau gunakan hot reload untuk apply.`));
   } catch (error) {

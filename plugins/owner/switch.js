@@ -300,9 +300,8 @@ async function handleChannel(m, { sock, config: cfg }) {
     let text = claraWrap("Switch Channel", `│ Channel: *${cfg?.saluran?.name || "Belum diset nih"}*\n│ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\n" + toSC("STATUS TOGGLE") + ":\n\n"
 
     for (const [key, info] of Object.entries(statuses)) {
-      const emoji = info.enabled ? "🟢" : "🔴"
-      text += `${emoji} *${info.label}*\n`
-      text += `Status: *${info.enabled ? "ON" : "OFF"}* | \`${prefix}switch channel ${key}\`\n\n`
+      text += `│ • ${info.label} — *${info.enabled ? "ON" : "OFF"}*\n`
+      text += `│   \`${prefix}switch channel ${key}\`\n\n`
       if (info.enabled) onCount++; else offCount++
     }
     text += separator("━", 22) + "\n" + tipText(`ON: ${onCount} | OFF: ${offCount}`) + "\n" + tipText(`Toggle semua: \`${prefix}switch channel all on/off\``)
@@ -371,7 +370,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
         if (!f) continue
         const current = groupData[f.dbKey]
         const active = isOn(current, f.on)
-        txt += `│   ${active ? "🟢" : "🔴"} ${feat}\n`
+        txt += `│   ${active ? "ON" : "OFF"}  ${feat}\n`
       }
       txt += `\n`
     }
@@ -390,7 +389,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
 
   if (forceOff) {
     db.setGroup(m.chat, { [feature.dbKey]: feature.off })
-    return m.reply(`╭─「 ✦ ${toSC('SWITCH GROUP')} ✦ 」\n│ 🔴 ${toSC(feature.label)}: OFF\n╰────  •  ────`)
+    return m.reply(`╭─「 ✦ ${toSC('SWITCH GROUP')} ✦ 」\n│ • ${toSC(feature.label)}: *OFF*\n╰────  •  ────`)
   }
 
   let update = { [feature.dbKey]: feature.on }
@@ -400,7 +399,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
     update[feature.extraKey] = mode
 
   db.setGroup(m.chat, update)
-  let txt = `╭─「 ✦ ${toSC('SWITCH GROUP')} ✦ 」\n│ 🟢 ${toSC(feature.label)}: ON`
+  let txt = `╭─「 ✦ ${toSC('SWITCH GROUP')} ✦ 」\n│ • ${toSC(feature.label)}: *ON*`
   if (feature.modes) {
     const newMode = mode && feature.modes.includes(mode) ? mode : (groupData[feature.modeKey] || feature.modes[0])
     txt += `\n│ ${toSC('Mode')}: ${newMode}`
@@ -436,7 +435,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey }) {
         const reg = AUTO_REGISTRY[key]
         if (!reg) continue
         const enabled = reg.getStatus()
-        txt += `│   ${enabled ? "🟢" : "🔴"} ${key}\n`
+        txt += `│   ${enabled ? "ON" : "OFF"}  ${key}\n`
       }
       txt += `\n`
     }
@@ -452,14 +451,14 @@ async function handleAuto(m, { sock, config: cfg, autoKey }) {
   // No action — show status + usage
   if (!action || (action !== 'on' && action !== 'off')) {
     const current = reg.getStatus()
-    return m.reply(`╭─「 ✦ ${toSC('SWITCH AUTO')} ✦ 」\n│ ${current ? "🟢" : "🔴"} ${toSC(reg.label)}: ${current ? "ON" : "OFF"}\n│ \`${prefix}switch auto ${autoKey} on\` — ${toSC('aktifkan')}\n│ \`${prefix}switch auto ${autoKey} off\` — ${toSC('matikan')}\n╰────  •  ────`)
+    return m.reply(`╭─「 ✦ ${toSC('SWITCH AUTO')} ✦ 」\n│ • ${toSC(reg.label)}: *${current ? "ON" : "OFF"}*\n│ \`${prefix}switch auto ${autoKey} on\` — ${toSC('aktifkan')}\n│ \`${prefix}switch auto ${autoKey} off\` — ${toSC('matikan')}\n╰────  •  ────`)
   }
 
   // Toggle
   const enable = action === 'on'
   try {
     reg.toggle(enable)
-    return m.reply(`╭─「 ✦ ${toSC('SWITCH AUTO')} ✦ 」\n│ ${enable ? "🟢" : "🔴"} ${toSC(reg.label)}: ${enable ? "ON" : "OFF"}\n╰────  •  ────`)
+    return m.reply(`╭─「 ✦ ${toSC('SWITCH AUTO')} ✦ 」\n│ • ${toSC(reg.label)}: *${enable ? "ON" : "OFF"}*\n╰────  •  ────`)
   } catch (e) {
     return m.reply(`╭─「 ✦ ${toSC('SWITCH AUTO')} ✦ 」\n│ ❌ ${e.message || e}\n╰────  •  ────`)
   }
@@ -491,9 +490,9 @@ async function handleFitur(m, { sock, config: cfg }) {
     text += `│ • \`${prefix}switch fitur off rpg\` → ${toSC('matikan kategori')}\n`
     text += `│ • \`${prefix}switch fitur on kencanmatch\` → ${toSC('hidupkan command')}\n`
     text += `│ • \`${prefix}switch fitur list\` → ${toSC('lihat semua status')}\n\n`
-    text += `│ 🔴 ${toSC('Kategori Nonaktif')}:\n`
+    text += `│ ▸ ${toSC('Kategori Nonaktif')} (OFF):\n`
     text += disabledCats.length > 0 ? `│   ${disabledCats.map(c => "`" + c + "`").join(", ")}\n` : `│   (${toSC('semua kategori aktif')})\n`
-    text += `\n│ 🔴 ${toSC('Command Nonaktif')}:\n`
+    text += `\n│ ▸ ${toSC('Command Nonaktif')} (OFF):\n`
     text += disabledCmds.length > 0 ? `│   ${disabledCmds.map(c => "`" + c + "`").join(", ")}\n` : `│   (${toSC('semua command aktif')})\n`
     text += `\n╰────  •  ────`
     return m.reply(text)
@@ -505,11 +504,11 @@ async function handleFitur(m, { sock, config: cfg }) {
     text += `│ 📂 ${toSC('KATEGORI')} (${allCats.length})\n`
     for (const cat of allCats) {
       const isOff = disabledCats.includes(cat)
-      text += `│   ${isOff ? "🔴" : "🟢"} ${cat}\n`
+      text += `│   ${isOff ? "OFF" : "ON"}  ${cat}\n`
     }
     if (disabledCmds.length > 0) {
       text += `\n│ ⚙️ ${toSC('COMMAND NONAKTIF')} (${disabledCmds.length})\n`
-      for (const cmd of disabledCmds) text += `│   🔴 ${cmd}\n`
+      for (const cmd of disabledCmds) text += `│   OFF  ${cmd}\n`
     }
     text += `\n╰────  •  ────`
     return m.reply(text)
@@ -544,7 +543,7 @@ async function handleFitur(m, { sock, config: cfg }) {
     else return m.reply(`╭─「 ✦ ${toSC('SWITCH FITUR')} ✦ 」\n│ ✅ ${toSC(type)} ${name} ${toSC('sudah aktif')}\n╰────  •  ────`)
   } else if (mode === 'off') {
     if (!isCurrentlyOff) { list.push(name); newState = true }
-    else return m.reply(`╭─「 ✦ ${toSC('SWITCH FITUR')} ✦ 」\n│ 🔴 ${toSC(type)} ${name} ${toSC('sudah nonaktif')}\n╰────  •  ────`)
+    else return m.reply(`╭─「 ✦ ${toSC('SWITCH FITUR')} ✦ 」\n│ • ${toSC(type)} \`${name}\` ${toSC('sudah nonaktif')}\n╰────  •  ────`)
   } else {
     if (isCurrentlyOff) { list.splice(idx, 1); newState = false }
     else { list.push(name); newState = true }
@@ -553,9 +552,8 @@ async function handleFitur(m, { sock, config: cfg }) {
   if (isCategory) db.setting("disabledCategories", disabledCats)
   else db.setting("disabledCommands", disabledCmds)
 
-  const status = newState ? "🔴 Nonaktif" : "🟢 Aktif"
-  const emoji = newState ? "⏸️" : "▶️"
-  return m.reply(`╭─「 ✦ ${toSC('SWITCH FITUR')} ✦ 」\n\n│ ${emoji} ${toSC(type.charAt(0).toUpperCase() + type.slice(1))}: *${name}*\n│ ${toSC('Status')}: ${status}\n\n╰────  •  ────`)
+  const status = newState ? "Nonaktif" : "Aktif"
+  return m.reply(`╭─「 ✦ ${toSC('SWITCH FITUR')} ✦ 」\n\n│ • ${toSC(type.charAt(0).toUpperCase() + type.slice(1))}: *${name}*\n│ ${toSC('Status')}: ${status}\n\n╰────  •  ────`)
 }
 
 // ═══════════════════════════════════════════════════════════
