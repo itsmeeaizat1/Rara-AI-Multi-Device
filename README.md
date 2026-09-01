@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20pindah%20const%20prefix%20ke%20luar%20try%7B%7D%20d-success?style=for-the-badge)
-> *Commit: "fix: pindah const prefix ke luar try{} di 201 plugin — fix ReferenceError saat catch block"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20switch%20group%20off%20parsing%2C%20welcome%2Fg-success?style=for-the-badge)
+> *Commit: "fix: switch group off parsing, welcome/goodbye default OFF saat pairing, migrasi UnlimitedAI ke Gemini API"*
 <!--END_SECTION:latest-update-->
 
 ---
