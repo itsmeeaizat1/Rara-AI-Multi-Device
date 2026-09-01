@@ -1,0 +1,82 @@
+// NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// nanobanana — Edit gambar dengan prompt via Nano Banana (IkyyXD)
+import axios from "axios";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import te from "../../src/lib/nova-error.js";
+
+const pluginConfig = {
+  name: "nanobanana",
+  alias: ["nanobanana"],
+  category: "ai image",
+  description: "Edit gambar dengan prompt via Nano Banana AI",
+  usage: ".nanobanana <prompt> (reply/kirim foto)",
+  example: ".nanobanana ubah jadi lukisan (reply foto)\n.nanobanana tambahkan kucing (reply foto)",
+  isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
+  cooldown: 30, energi: 5, isEnabled: true,
+};
+
+const IKYY_BASE = "https://api.ikyyxd.my.id";
+
+async function handler(m, { sock }) {
+  try {
+    const prefix = m.prefix || ".";
+    const text = m.text?.trim() || m.args?.join(" ").trim() || "";
+
+    if (!text) {
+      return m.reply(claraWrap("NanoBanana", [
+        "Edit gambar dengan prompt via Nano Banana AI",
+        "",
+        "CARA PAKAI:",
+        `${prefix}nanobanana <prompt> (reply/kirim foto)`,
+        "",
+        "Contoh:",
+        `${prefix}nanobanana ubah jadi lukisan (reply foto)`,
+      ].join("\n"), "guide"));
+    }
+
+    let imageUrl = null;
+    if (m.quoted?.message?.imageMessage || m.message?.imageMessage) {
+      const imageBuffer = m.quoted?.message?.imageMessage ? await m.quoted.download() : await m.download();
+      if (imageBuffer) {
+        const FormData = (await import("form-data")).default;
+        const form = new FormData();
+        form.append("reqtype", "fileupload");
+        form.append("fileToUpload", imageBuffer, "image.jpg");
+        const uploadRes = await axios.post("https://catbox.moe/user/api.php", form, {
+          headers: form.getHeaders(), maxContentLength: Infinity, timeout: 30000,
+        });
+        imageUrl = uploadRes.data?.trim();
+      }
+    }
+
+    if (!imageUrl) {
+      return m.reply(claraWrap("NanoBanana", "Reply/kirim foto dengan prompt .nanobanana untuk mengedit gambar."));
+    }
+
+    await m.react("🕒");
+
+    const res = await axios.get(`${IKYY_BASE}/edit/nanobanana`, {
+      params: { image: imageUrl, prompt: text },
+      timeout: 120000,
+    });
+
+    const data = res.data;
+    if (data?.status && data?.result) {
+      const resultUrl = typeof data.result === "string" ? data.result : data.result?.url || data.result?.result_url;
+      await m.react("🐣");
+      await sock.sendMessage(m.chat, {
+        image: { url: resultUrl },
+        caption: claraWrap("NanoBanana", `Prompt: ${text}`),
+      }, { quoted: m });
+    } else {
+      await m.react("❌");
+      await m.reply(claraWrap("NanoBanana", data?.message?.error || data?.error || data?.message || "Gagal memproses. Coba foto/prompt lain."));
+    }
+  } catch (e) {
+    console.error("[nanobanana.js]:", e.message);
+    await m.react("❌");
+    return m.reply(claraWrap("NanoBanana", te(m.prefix, m.command, m.pushName), "error"));
+  }
+}
+
+export { pluginConfig as config, handler };
