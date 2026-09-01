@@ -63,14 +63,15 @@
 
 # Dead API Endpoints — Kategori Sticker
 
-| Domain | Status | Plugin | Command |
-|---|---|---|---|
-| `api.nexray.web.id` | Timeout | animebrat.js | .animebrat |
-| `api-faa.my.id` | Timeout | bratvid2.js | .bratvid2 |
-| `api.siputzx.my.id` | Timeout | pinpack.js | .pinpack |
-| `brat.siputzx.my.id` | HTTP 500 | qc.js | .qc |
-| `getstickerpack.com` | HTTP 403 | stickerpack.js | .stickerpack |
+| Domain | Status | Plugin | Command | Fix |
+|---|---|---|---|---|
+| `api.nexray.web.id` | Timeout | animebrat.js | .animebrat | ✅ Migrasi ke brat-canvas lokal |
+| `api-faa.my.id` | Timeout | bratvid2.js | .bratvid2 | ✅ Migrasi ke brat-canvas/video lokal |
+| `api.siputzx.my.id` | Timeout | pinpack.js | .pinpack | ✅ Scrape Pinterest langsung |
+| `brat.siputzx.my.id` | HTTP 500 | qc.js | .qc | ✅ Render lokal @napi-rs/canvas |
+| `getstickerpack.com` | HTTP 403 | stickerpack.js | .stickerpack | ✅ Scrape combot.org (Telegram stickers) |
 
 ## Catatan
 - smeme.js: upload migrasi ke catbox.moe (primary) + telegraph (fallback)
+- 5 plugin dead API sticker sudah diperbaiki: 2x lokal canvas, 2x scrape, 1x lokal render
 - 21 plugin lainnya clean, tidak ada issue
