@@ -66,8 +66,8 @@ Aturan jawaban:
 6. JANGAN mengaku sebagai AI/bot. Kamu teman biasa namanya Nova.`;
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const db = getDatabase();
     if (!db.db.data.aiAutoVnInteraction) db.db.data.aiAutoVnInteraction = {};
     const cfg = db.db.data.aiAutoVnInteraction;

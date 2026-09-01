@@ -40,8 +40,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
 
     let buffer = null;
     for (const baseUrl of ENDPOINTS) {

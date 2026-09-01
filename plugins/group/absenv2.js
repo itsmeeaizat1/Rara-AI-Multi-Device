@@ -133,8 +133,8 @@ function autoClose(db, sock) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const args = (m.text || "").trim().split(/\s+/);
     const action = args[0]?.toLowerCase() || "list";
     const db = getDatabase();

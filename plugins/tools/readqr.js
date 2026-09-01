@@ -11,8 +11,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!quoted) {
       { const __navText = (claraWrap("Read QR", [`│ Reply gambar QR code dengan *${prefix}readqr*`,

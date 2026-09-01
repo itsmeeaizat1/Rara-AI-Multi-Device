@@ -62,8 +62,8 @@ function buildMemoryBook(prefix, groupName) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
 
     const text = buildMemoryBook(prefix, m.chatName || m.subject || "Grup ini");
 

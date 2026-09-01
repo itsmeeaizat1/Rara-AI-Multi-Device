@@ -102,8 +102,8 @@ function getThumb() {
 }
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const user = db.getUser(m.sender);
     const now = new Date();
 

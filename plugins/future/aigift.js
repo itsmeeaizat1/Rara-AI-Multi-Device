@@ -11,8 +11,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const info = m.text?.trim();
     if (!info) {
       await m.reply( novaCaption({

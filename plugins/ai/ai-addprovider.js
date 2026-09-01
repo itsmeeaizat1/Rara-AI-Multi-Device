@@ -44,8 +44,8 @@ function setCustomProviders(providers) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const raw = (m.text || "").trim();
     const parts = raw.split(/[ \t]+/).filter(Boolean);
     const action = (parts[1] || "").toLowerCase();

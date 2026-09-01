@@ -19,8 +19,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const raw = m.text?.trim() || "";
     const text = m.quoted?.text ? m.quoted.text : raw.replace(/^\.ai-detector\s+/i, "").trim();
 

@@ -24,8 +24,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const args = (m.text || "").trim().split(/\s+/);
     const keyName = (args[0] || "").toLowerCase();
     const keyValue = args.slice(1).join(" ").trim();

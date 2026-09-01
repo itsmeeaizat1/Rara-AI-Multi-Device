@@ -127,8 +127,8 @@ async function tryPuterFallback(imageBase64, prompt) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
 
     const isImage =
       m.isImage || (m.quoted && (m.quoted.isImage || m.quoted?.type === "imageMessage"));

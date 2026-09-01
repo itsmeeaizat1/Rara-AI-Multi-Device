@@ -40,8 +40,8 @@ function hslToHex(h,s,l) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     let hex = m.text?.trim() || `#${Math.random().toString(16).slice(2,8)}`;
     if (!hex.startsWith("#")) hex = "#" + hex;
     if (!/^#[0-9a-fA-F]{6}$/.test(hex)) throw new Error("Format: #RRGGBB");

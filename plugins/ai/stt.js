@@ -21,8 +21,8 @@ function tempPath(ext) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
 
     const quoted = m.quoted?.text ? m.quoted : m.msg?.text ? m : null;
     if (!quoted) {

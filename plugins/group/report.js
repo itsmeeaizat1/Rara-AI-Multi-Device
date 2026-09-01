@@ -21,8 +21,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const raw = m.text?.trim() || "";
 
     // Extract message — handle both quoted reply and plain text

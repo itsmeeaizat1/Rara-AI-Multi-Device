@@ -37,8 +37,8 @@ const QUICK_LINKS = [
 ];
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
     const items = QUICK_LINKS.map((q) => `${q.emoji} ${prefix}${q.cmd} — ${q.label}`);

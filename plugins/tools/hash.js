@@ -11,8 +11,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const args = (m.text || "").trim().split(/\s+/);
     const algo = args[0]?.toLowerCase() || "sha256";
     const text = args.slice(1).join(" ");

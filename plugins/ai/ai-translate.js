@@ -19,8 +19,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const raw = m.text?.trim() || "";
     const parts = raw.split(/[ \t]+/).filter(Boolean);
     const lang = parts[0] && !parts[0].startsWith(".") ? parts[0] : "English";

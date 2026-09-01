@@ -270,8 +270,8 @@ function appendSession(key, role, content) {
 }
 
 async function handler(m, { sock, config: botConfig, db }) {
+  const prefix = botConfig.command?.prefix || ".";
   try {
-    const prefix = botConfig.command?.prefix || ".";
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
     const text = m.args?.join(" ").trim() || m.text?.replace(/^\.nova-ai\s+/i, "").replace(/^\.tanyaai\s+/i, "").trim();
 

@@ -133,8 +133,8 @@ function buildBonusInfo() {
 }
 
 async function handler(m, { sock, config: botConfig, db }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
 
     // Ambil data sewa grup (kalau ada)
     const database = db || getDatabase();

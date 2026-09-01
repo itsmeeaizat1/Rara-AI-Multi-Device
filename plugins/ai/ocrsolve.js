@@ -160,8 +160,8 @@ async function doOcrAnalysis(m, sock, mode) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const db = getDatabase();
     if (!db.db.data.autoOcrSolve) db.db.data.autoOcrSolve = {};
     const cfg = db.db.data.autoOcrSolve;

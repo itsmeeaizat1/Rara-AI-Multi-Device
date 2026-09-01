@@ -10,8 +10,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const input = m.text?.trim();
     if (!input || !input.includes("#")) {
       const colors = ["#"+Math.random().toString(16).slice(2,8), "#"+Math.random().toString(16).slice(2,8)];

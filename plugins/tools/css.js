@@ -19,8 +19,8 @@ const TEMPLATES = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const tpl = m.text?.trim()?.toLowerCase();
     if (!tpl) {
       { const __navText = (novaCaption({

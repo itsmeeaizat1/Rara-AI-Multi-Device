@@ -11,8 +11,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const text = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!text || text.length < 50) {
       await m.reply( claraWrap("AI Doc", [`│ Reply teks panjang dengan *${prefix}aidoc*`,

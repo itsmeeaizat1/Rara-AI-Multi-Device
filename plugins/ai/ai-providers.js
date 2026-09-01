@@ -20,8 +20,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const lines = Object.entries(DEFAULT_PROVIDERS).map(([key, provider]) => {
       const models = (provider.models || []).slice(0, 5).join(", ");
       const vision = provider.supportsVision ? "Ya" : "Tidak";

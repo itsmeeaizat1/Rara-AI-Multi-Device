@@ -322,8 +322,8 @@ export async function sendSmartWelcome(sock, groupJid, participantJid, metadata)
 // HANDLER
 // ============================================================
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const settings = getSettings();
     const db = getDatabase();
     const arg = (m.text || "").trim();

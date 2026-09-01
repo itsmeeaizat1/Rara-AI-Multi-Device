@@ -1394,8 +1394,8 @@ function cleanAIOutput(text) {
 
 // ─── Handler ───
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const text = (m.text || "").trim();
 
     let inputText = text;

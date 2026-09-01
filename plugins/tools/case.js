@@ -19,8 +19,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const desc = m.text?.trim();
 
     if (!desc) {

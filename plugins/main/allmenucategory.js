@@ -75,8 +75,8 @@ function getThumb() {
 }
 
 async function handler(m, { sock, db }) {
-  try {
     const prefix = config.command?.prefix || ".";
+  try {
     const args = m.args || [];
     const categoryArg = args[0]?.toLowerCase();
     const categories = getCategories();

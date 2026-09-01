@@ -41,8 +41,8 @@ const LOCAL_QUOTES = [
 ];
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     let quote = null;
     let author = "";
     let source = "";

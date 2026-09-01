@@ -19,8 +19,8 @@ function tempPath(ext) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const prompt = m.text?.trim();
 
     if (!prompt) {

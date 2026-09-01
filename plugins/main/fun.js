@@ -22,8 +22,8 @@ const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'
 const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c);
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const cmds = getCommandsByCategory();
     const funCmds = (cmds["fun"] || []).map(c => c.command || c).sort();
 

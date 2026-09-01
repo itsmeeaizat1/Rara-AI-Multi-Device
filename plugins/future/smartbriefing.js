@@ -11,8 +11,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const city = m.text?.trim() || "Jakarta";
     let text = claraWrap("🌅 Briefing Pagi", "🌅") + "\n\n";
     

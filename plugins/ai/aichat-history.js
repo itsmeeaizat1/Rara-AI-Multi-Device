@@ -19,8 +19,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const chatId = m.chat;
     const { getDatabase } = await import("../../src/lib/nova-database.js");
     const db = getDatabase();

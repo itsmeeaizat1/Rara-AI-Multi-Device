@@ -41,8 +41,8 @@ const COPILOT_PROMPTS = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const raw = m.text?.trim() || "";
     const parts = raw.split(/[ \t]+/).filter(Boolean);
     const mode = (parts[1] || "").toLowerCase();

@@ -13,8 +13,8 @@ const pluginConfig = {
 const BAD_WORDS = ["anjing","kontol","memek","bangsat","goblok","tolol","babi","setan","pepek","ngentot","fuck","shit","bitch","damn"];
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const arg = (m.text || "").trim().toLowerCase();
     const db = getDatabase();
     if (!db.smartMod) db.smartMod = {};

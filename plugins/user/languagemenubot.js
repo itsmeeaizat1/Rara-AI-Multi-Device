@@ -58,8 +58,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const args = m.args || [];
     const subCmd = args[0]?.toLowerCase();
     const sender = m.sender || m.key?.participant || m.key?.remoteJid || "";

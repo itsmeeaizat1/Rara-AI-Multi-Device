@@ -67,8 +67,8 @@ function getRandomSentence() {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const db = getDatabase();
     if (!db.db.data.vnCaptcha) db.db.data.vnCaptcha = {};
     const cfg = db.db.data.vnCaptcha;

@@ -143,8 +143,8 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 }
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const text = await buildMenuText(m, botConfig, db, uptime, sock);
     const botName = botConfig.bot?.name || "Nova AI Whatsapp Bot";
 
