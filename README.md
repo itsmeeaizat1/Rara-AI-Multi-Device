@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20redesign%20menu%20%26%20allmenu%20%E2%80%94%20continuo-success?style=for-the-badge)
-> *Commit: "feat: redesign menu & allmenu — continuous flow box style"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20standardisasi%20tampilan%20reply%20d-success?style=for-the-badge)
+> *Commit: "refactor: standardisasi tampilan reply di seluruh plugin (378 file)"*
 <!--END_SECTION:latest-update-->
 
 ---
