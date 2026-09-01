@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // ZAI — Chat dengan Z.ai AI assistant (GLM-5.2) via direct API, no Puppeteer needed
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "zai",

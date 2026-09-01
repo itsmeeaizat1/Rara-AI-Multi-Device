@@ -2,7 +2,7 @@
 // zerogptv2 — ZeroGPT AI v2 (zerogptai.org)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import { callIkyy } from "../../src/lib/nova-ai-service.js";
+import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "zerogptv2", alias: ["zerogptv2"], aliases: ["zerogptv2", "zgptv2"],
@@ -16,6 +16,37 @@ async function handler(m, { sock }) {
     const text = m.args.join(" ").trim();
     if (!text) return m.reply(claraWrap("zerogptv2", `Mau nanya apa?\nContoh: ${m.prefix}zerogptv2 jelaskan quantum mechanics`, "guide"));
     await m.react("🕒");
+    // IkyyXD zerogpt (primary) — AI detector
+    let usedDetector = false;
+    try {
+      const detectRes = await callAI({
+        providerKey: "ikyy_zerogpt",
+        apiKey: "kyzz",
+        messages: [{ role: "user", content: text }],
+        senderJid: m.sender,
+      });
+      if (detectRes) {
+        await m.react("🐣");
+        await m.reply(claraWrap("ZeroGPT Detector", detectRes));
+        return;
+      }
+    } catch (ikyyErr) {
+      console.error("[zerogptv2.js] IkyyXD zerogpt failed, trying chat fallback:", ikyyErr.message);
+    }
+
+    // Fallback: use callIkyy as chat AI
+    try {
+      const ikyyReply = await callIkyy(text, {});
+      if (ikyyReply) {
+        await m.react("🐣");
+        await m.reply(ikyyReply);
+        return;
+      }
+    } catch (chatErr) {
+      console.error("[zerogptv2.js] chat fallback failed:", chatErr.message);
+    }
+
+    // Last resort: zerogptai.org direct
     const id = () => Math.random().toString(36).slice(2, 18);
     const res = await fetch("https://zerogptai.org/wp-json/mwai-ui/v1/chats/submit", {
       method: "POST",
