@@ -5,7 +5,7 @@ import { live3d } from '../../src/scraper/seaart.js'
 const pluginConfig = {
     name: "toanime",
     alias: ["toanime"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah foto menjadi gaya anime/Ghibli Studio',
     usage: '.toanime (reply/kirim gambar)',
     example: '.toanime',

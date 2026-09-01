@@ -7,7 +7,7 @@ import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'tojapanese',
     alias: ["tojapanese"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah gambar ke style Japanese',
     usage: '.tojapanese (reply gambar)',
     example: '.tojapanese',

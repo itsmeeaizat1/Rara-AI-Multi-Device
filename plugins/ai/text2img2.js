@@ -6,7 +6,7 @@ import { claraWrap, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js"
 const pluginConfig = {
   name: "text2img2",
   alias: ["text2img2"],
-  category: 'ai',
+  category: 'ai image',
   description: 'Generate image from text using AI',
   usage: '.text2img2 <prompt>',
   example: '.text2img2 a futuristic city in mars',

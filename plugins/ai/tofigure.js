@@ -7,7 +7,7 @@ import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'tofigure',
     alias: ["tofigure"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah gambar ke style Figure/Action',
     usage: '.tofigure (reply gambar)',
     example: '.tofigure',

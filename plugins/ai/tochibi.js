@@ -7,7 +7,7 @@ import { live3d } from '../../src/scraper/seaart.js'
 const pluginConfig = {
     name: 'tochibi',
     alias: ["tochibi"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah gambar ke style Chibi',
     usage: '.tochibi (reply gambar)',
     example: '.tochibi',

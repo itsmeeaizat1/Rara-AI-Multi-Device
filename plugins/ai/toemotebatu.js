@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'toemotebatu',
     alias: ["toemotebatu"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah gambar ke emote batu 🗿',
     usage: '.toemotebatu (reply gambar)',
     example: '.toemotebatu',

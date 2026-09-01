@@ -8,7 +8,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, mediaCaption, 
 const pluginConfig = {
   name: "toblack",
   alias: ["toblack"],
-  category: "ai",
+  category: 'ai image',
   description: "Ubah gambar ke skin tone lebih gelap",
   usage: ".toblack (reply gambar)",
   example: ".toblack",

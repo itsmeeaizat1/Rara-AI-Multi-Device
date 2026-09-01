@@ -5,7 +5,7 @@ import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'tooilpainting',
     alias: ["tooilpainting"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah foto menjadi gaya lukisan minyak (oil painting)',
     usage: '.tooilpainting (reply/kirim gambar)',
     example: '.tooilpainting',

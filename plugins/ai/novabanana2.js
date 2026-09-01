@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 const pluginConfig = {
   name: "novabanana2",
   alias: ["novabanana2"],
-  category: "ai",
+  category: 'ai image',
   description: "Buat gambar dengan AI menggunakan prompt",
   usage: ".novabanana2 <prompt>",
   example: ".novabanana2 make it anime style",

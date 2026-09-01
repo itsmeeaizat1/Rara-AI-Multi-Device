@@ -7,7 +7,7 @@ import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: "toghibli",
     alias: ["toghibli"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah gambar ke style Ghibli',
     usage: '.toghibli (reply gambar)',
     example: '.toghibli',

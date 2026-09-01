@@ -198,9 +198,10 @@ binderbyteKey: ""   // Binderbyte cek resi
 - `.listonline` — group — Cek daftar member online/aktif di grup (alias: .liston)
 ## 📂 Daftar Kategori & Command
 
-### 🤖 AI (164 plugin)
-nova-ai, nova-ai-addprovider, nova-ai-blog, nova-ai-code, nova-ai-copilot, nova-ai-detector, nova-ai-email, nova-ai-essay, nova-ai-explainer, nova-ai-image, nova-ai-ocr, nova-ai-prompt, nova-ai-providers, nova-ai-review, nova-ai-set, nova-ai-social, nova-ai-story, nova-ai-translate, nova-ai-web, nova-ai4chat, aianalyze, aiavatar, aibrowse, aicaption, aichat, aichat-history, aichat-model, aigrup, aihelp, aiidea, aiimggen, aimath, aiseo, aiset, aitimewarp, aivoice, anime-gen, audio.wav, automemegenerator, claudehaiku, deepai, deepaixemoz, deepseek, deepseekv2, deepseekv2xemoz, deepseekv4flash, deepseekv4flashxemoz, dolphin, enhance, feelbetter, gita, gpt4o, gpt5, gpt5v2xemoz, gpt5xemoz, jokowi-nova-ai, kobo-nova-ai, matematika, multi-nova-ai, musicmaker, muslimai, nova-nova-ai, novabanana, novabanana2, ocrsolve, openrouter, parallelai, prabowo-nova-ai, puter, paraphrase, qwen3, rewrite, simi, slangtranslate, sologo, stt, summarize, tanyadokter, text2img2, text2img, to3d, toanime, toblack, tocartoon, tocermin, tochibi, toemotebatu, tofigure, tofigurev2, toghibli, tohijab, toisland, tojapanese, tomanga, tomekah, tooilpainting, txt2img2, vision, waguri-nova-ai, zai
+### 🤖 AI (85 plugin)
+nova-ai, nova-ai-addprovider, nova-ai-blog, nova-ai-code, nova-ai-copilot, nova-ai-detector, nova-ai-email, nova-ai-essay, nova-ai-explainer, nova-ai-image, nova-ai-ocr, nova-ai-prompt, nova-ai-providers, nova-ai-review, nova-ai-set, nova-ai-social, nova-ai-story, nova-ai-translate, nova-ai-web, nova-ai4chat, aianalyze, aiavatar, aibrowse, aicaption, aichat, aichat-history, aichat-model, aigrup, aihelp, aiidea, aimath, aiseo, aiset, aitimewarp, aivoice, audio.wav, automemegenerator, claudehaiku, deepai, deepaixemoz, deepseek, deepseekv2, deepseekv2xemoz, deepseekv4flash, deepseekv4flashxemoz, dolphin, feelbetter, gita, gpt4o, gpt5, gpt5v2xemoz, gpt5xemoz, jokowi-nova-ai, kobo-nova-ai, matematika, multi-nova-ai, musicmaker, muslimai, nova-nova-ai, ocrsolve, openrouter, parallelai, prabowo-nova-ai, puter, paraphrase, qwen3, rewrite, simi, slangtranslate, stt, summarize, tanyadokter, vision, waguri-nova-ai, zai
 roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, pujianai, sarkasai, cegpt
+
 
 - .lirikai - ai - AI generator lirik lagu dari tema
 - .hashtagai - ai - AI generator hashtag viral Instagram/TikTok
@@ -210,7 +211,7 @@ roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, puji
 - .gombalai - ai - AI generator gombalan/pickup lines
 - .alasanai - ai - AI generator alasan kreatif
 - .faktaai - ai - AI generator fakta menarik
-- .editimg - ai - Edit gambar dengan AI (text-to-image editing)
+- .editimg - ai image - Edit gambar dengan AI (text-to-image editing)
 - .aipr - ai - Foto soal/PR → AI baca dan jawab
 - .aichatimg - ai - Chat AI bisa lihat gambar + generate gambar
 - .characterai - ai - Chat AI bergaya karakter (Nobita, Doraemon, Joker, dll)
@@ -219,8 +220,8 @@ roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, puji
 - .alyamind - ai - Chat dengan AlyaMind AI (nexray API)
 - .nayaai - ai - Chat dengan Naya AI (cuki API)
 - .blackbox - ai - Chat dengan Blackbox AI (gratis, no key)
-- .sdxl - ai - Stable Diffusion XL image generation (gratis)
-- .dalleai - ai - DALL-E style image generation (gratis, flux)
+- .sdxl - ai image - Stable Diffusion XL image generation (gratis)
+- .dalleai - ai image - DALL-E style image generation (gratis, flux)
 - .ai4chatv2 - ai - AI4Chat v2 (multi API fallback)
 - .aimathv2 - ai - AI Math Solver v2 (multi API fallback)
 - .claudev2 - ai - Claude AI v2 (multi fallback engine)
@@ -311,6 +312,9 @@ roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, puji
 - .blessnpcrpg - rpg - Blessing dari NPC
 - .talentrpg - rpg - Lihat talent berdasar kelas
 - .passiverpg - rpg - Lihat skill pasif
+### 🎨 AI Image (29 plugin)
+aiimggen, anime-gen, enhance, novabanana, novabanana2, sologo, text2img2, text2img, to3d, toanime, toblack, tocartoon, tocermin, tochibi, toemotebatu, tofigure, tofigurev2, toghibli, tohijab, toisland, tojapanese, tomanga, tomekah, tooilpainting, txt2img2, anime2real, faceswap, flux2pro, fluxkontext
+
 ### 🌸 Anime (14 plugin)
 animechar, animecouple, animegenre, animemanga, animemoments, animepowerlevel, animequote, animerec, animestudio, animetop, animevillain, autoanimewinbu, otakudict, wallpaperanime
 

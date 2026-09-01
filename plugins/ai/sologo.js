@@ -7,7 +7,7 @@ import { callIkyy } from "../../src/lib/nova-ai-service.js";
 const pluginConfig = {
   name: "sologo",
   alias: ["sologo"],
-  category: "ai",
+  category: 'ai image',
   description: "Membuat logo menggunakan AI dari teks (prompt)",
   usage: ".sologo <prompt>",
   example: ".sologo Kucing lucu warna biru",

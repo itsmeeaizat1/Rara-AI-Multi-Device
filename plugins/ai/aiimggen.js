@@ -27,7 +27,7 @@ const ENDPOINTS = [
 const pluginConfig = {
   name: "aiimggen2",
   alias: ["aiimggen2", "aiimggen"],
-  category: "ai",
+  category: 'ai image',
   description: "Generate gambar dari teks",
   usage: ".aiimggen <prompt>",
   example: ".aiimggen sunset over mountains",

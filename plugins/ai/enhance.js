@@ -92,7 +92,7 @@ async function handler(m, { sock, config: botConfig }) {
 const pluginConfig = {
   name: "enhance2",
   alias: ["enhance2", "enhance"],
-  category: "ai",
+  category: 'ai image',
   description: "Enhance kualitas foto/video",
   usage: ".enhance (reply media)",
   example: ".enhance (reply foto)",

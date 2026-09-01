@@ -15,7 +15,8 @@ import { getCommandsByCategory, getCategories } from "./nova-plugins.js";
 import { getCasesByCategory } from "../../case/nova.js";
 
 const CATEGORY_NAMES = {
-  ai: "AI", sticker: "Sticker", group: "Group", download: "Download",
+  ai: "AI",
+  "ai image": "AI Image", sticker: "Sticker", group: "Group", download: "Download",
   tools: "Tools", canvas: "Canvas", fun: "Fun", game: "Game",
   rpg: "RPG", "rpg couple": "RPG Couple", clan: "Clan",
   search: "Search", stalker: "Stalker", anime: "Anime",
@@ -35,7 +36,7 @@ const CATEGORY_NAMES = {
 
 const CATEGORY_ORDER = [
   // Core Bot
-  "ai", "sticker", "group", "download", "tools",
+  "ai", "ai image", "sticker", "group", "download", "tools",
   // Media & Kreatif
   "canvas", "convert", "maker", "ephoto", "fun", "game",
   // Game & RPG
@@ -61,7 +62,8 @@ const CATEGORY_ORDER = [
 ];
 
 const CATEGORY_EMOJI = {
-  ai: "🤖", sticker: "🖼️", group: "👥", download: "⬇️", tools: "🛠️",
+  ai: "🤖",
+  "ai image": "🎨", sticker: "🖼️", group: "👥", download: "⬇️", tools: "🛠️",
   canvas: "🎨", convert: "🔄", maker: "🖌️", ephoto: "📸",
   fun: "🎉", game: "🎮", rpg: "⚔️", "rpg couple": "❤️", clan: "🛡️", turnamen: "🏆",
   search: "🔍", stalker: "🕵️", anime: "🎌", asupan: "😍", cecan: "💃", nsfw: "🔞",

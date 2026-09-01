@@ -7,7 +7,7 @@ import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'tomekah',
     alias: ["tomekah"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah background gambar ke Mekah',
     usage: '.tomekah (reply gambar)',
     example: '.tomekah',
