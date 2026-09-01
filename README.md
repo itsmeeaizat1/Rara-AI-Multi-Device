@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20aktifkan%20captcha%20flow%20daftarotomat-success?style=for-the-badge)
-> *Commit: "feat: aktifkan captcha flow daftarotomatis (API->Canvas->Math), fix sticker plugin ke desain box, fix stickerpack raw reply"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20pindah%20const%20prefix%20ke%20luar%20try%7B%7D%20d-success?style=for-the-badge)
+> *Commit: "fix: pindah const prefix ke luar try{} di 201 plugin — fix ReferenceError saat catch block"*
 <!--END_SECTION:latest-update-->
 
 ---
