@@ -345,7 +345,7 @@ function closeBoxRight(text) {
 
 const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", download: "Download", fun: "Fun",
-  canvas: "Canvas", tools: "Tools", rpg: "RPG", "rpg cinta": "RPG Cinta",
+  canvas: "Canvas", tools: "Tools", rpg: "RPG", "rpg couple": "RPG Couple",
   media: "Media", search: "Search", group: "Group", main: "Main",
   utility: "Utility", religi: "Religi", info: "Info", cek: "Cek",
   economy: "Economy", user: "User", random: "Random", premium: "Premium",
@@ -361,7 +361,7 @@ const CATEGORY_NAMES = {
 
 const CATEGORY_EMOJIS = {
   ai: "🤖", sticker: "🖼️", download: "📥", fun: "🎮",
-  canvas: "🎨", tools: "🛠️", rpg: "🎯", "rpg cinta": "❤️",
+  canvas: "🎨", tools: "🛠️", rpg: "🎯", "rpg couple": "❤️",
   media: "🎬", search: "🔍", group: "👥", main: "🏠",
   utility: "🔧", religi: "☪️", info: "ℹ️", cek: "📋",
   economy: "💰", user: "📊", random: "🎲", premium: "💎",
