@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "summon",
-  alias: ["summon", "summonspirit", "panggilspirit", "spirit"],
+  alias: ["summon", "summonspirit", "panggilspirit", "fire", "api"],
   category: "rpg",
   description: "Sistem Pemanggilan Spirit Elementalis untuk mendapatkan buff sementara (30 Menit)",
   usage: ".summon list\n.summon <nama_spirit>\n.summon status",

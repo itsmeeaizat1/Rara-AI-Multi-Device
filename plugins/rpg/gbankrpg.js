@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, removeGold, addGold } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "gbankrpg", alias: ["gbankrpg"], aliases: ["gbankrpg", "gbank"],
+  name: "gbankrpg", alias: ["gbankrpg", "gbank"],
   category: "rpg", description: "Guild Bank — saldo bersama guild",
   usage: ".gbankrpg saldo/setor/tarik <jumlah>",
   example: ".gbankrpg setor 500",

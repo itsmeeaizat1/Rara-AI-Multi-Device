@@ -1,6 +1,6 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "npcrpg", alias: ["npcrpg"], aliases: ["npcrpg", "npc"],
+  name: "npcrpg", alias: ["npcrpg", "npc"],
   category: "rpg", description: "Bicara dengan NPC",
   usage: ".npcrpg <nama>", example: ".npcrpg penjaga",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

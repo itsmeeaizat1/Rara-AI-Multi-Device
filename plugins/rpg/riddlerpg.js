@@ -3,7 +3,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "riddlerpg", alias: ["riddlerpg"], aliases: ["riddlerpg", "riddle", "tebak"],
+  name: "riddlerpg", alias: ["riddlerpg", "riddle", "tebak"],
   category: "rpg", description: "Teka-teki RPG harian",
   usage: ".riddlerpg", example: ".riddlerpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

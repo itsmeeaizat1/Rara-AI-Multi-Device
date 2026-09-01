@@ -2,14 +2,12 @@
 // RPG Mailbox — Mail system + medal display
 
 import { ensureRpg, saveRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "mailbox",
-  alias: ["mailbox"],
-  aliases: ["mailbox", "mail", "medal", "kotaksurat"],
+  alias: ["mailbox", "mail", "kotaksurat"],
   category: "rpg",
   description: "Kotak surat RPG dan tampilan medali",
   usage: ".mailbox | .medal | .mail send <@target> <item>",

@@ -7,8 +7,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "invasion",
-  alias: ["invasion"],
-  aliases: ["invasion", "serangwilayah"],
+  alias: ["invasion", "serangwilayah"],
   category: "rpg",
   description: "Invasi wilayah musuh, dapat loot & exp",
   usage: ".invasion",

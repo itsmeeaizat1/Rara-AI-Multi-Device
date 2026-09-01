@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, removeItem, addGold, getItemCount } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "exchangerpg", alias: ["exchangerpg"], aliases: ["exchangerpg", "exchange", "tukar"],
+  name: "exchangerpg", alias: ["exchangerpg", "exchange", "tukar"],
   category: "rpg", description: "Tukar item jadi 200 gold",
   usage: ".exchangerpg <item>", example: ".exchangerpg tulang",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

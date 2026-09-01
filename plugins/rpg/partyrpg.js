@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "partyrpg", alias: ["partyrpg"], aliases: ["partyrpg", "party", "tim"],
+  name: "partyrpg", alias: ["partyrpg", "party", "tim"],
   category: "rpg", description: "Kelola party RPG (lihat/tambah anggota via reply)",
   usage: ".partyrpg (atau reply untuk add)", example: ".partyrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 5, isEnabled: true,

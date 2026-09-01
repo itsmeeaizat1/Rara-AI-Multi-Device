@@ -4,7 +4,7 @@ import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "maprpg", alias: ["maprpg"], aliases: ["maprpg", "map", "peta"],
+  name: "maprpg", alias: ["maprpg", "map", "peta"],
   category: "rpg", description: "Tampilkan peta dunia RPG",
   usage: ".maprpg", example: ".maprpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

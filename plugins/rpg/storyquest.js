@@ -7,8 +7,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "storyquest",
-  alias: ["storyquest"],
-  aliases: ["storyquest", "narrator", "npc", "nextquest"],
+  alias: ["storyquest", "nextquest"],
   category: "rpg",
   description: "Story quest chain, narator, dan interaksi NPC",
   usage: ".storyquest | .nextquest | .narrator | .npc <nama>",

@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg, useMana, getRpgData } from "../../src/lib/nova-rpg-
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "debuffrpg", alias: ["debuffrpg"], aliases: ["debuffrpg", "debuff"],
+  name: "debuffrpg", alias: ["debuffrpg", "debuff"],
   category: "rpg", description: "Beri debuff burn ke musuh (reply target, biaya 15 mana)",
   usage: ".debuffrpg (reply target)", example: ".debuffrpg (reply pesan target)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 20, energi: 5, isEnabled: true,

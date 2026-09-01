@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, getRpgData, useEnergy } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "aimrpg", alias: ["aimrpg"], aliases: ["aimrpg", "aim", "bidik"],
+  name: "aimrpg", alias: ["aimrpg", "aim", "bidik"],
   category: "rpg", description: "Bidik & serang target (reply musuh, -50 HP, 10 energy)",
   usage: ".aimrpg (reply target)", example: ".aimrpg (reply pesan target)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 10, isEnabled: true,

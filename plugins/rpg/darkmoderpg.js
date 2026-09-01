@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "darkmoderpg", alias: ["darkmoderpg"], aliases: ["darkmoderpg", "darkmode"],
+  name: "darkmoderpg", alias: ["darkmoderpg", "darkmode"],
   category: "rpg", description: "Aktifkan dark mode RPG (efek negatif meningkat di malam hari)",
   usage: ".darkmoderpg", example: ".darkmoderpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 30, energi: 0, isEnabled: true,

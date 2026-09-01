@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, removeItem, addGold, getItemCount } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "sellrpg", alias: ["sellrpg"], aliases: ["sellrpg", "sell", "jual"],
+  name: "sellrpg", alias: ["sellrpg", "sell", "jual"],
   category: "rpg", description: "Jual item dari inventory (100 gold per item)",
   usage: ".sellrpg <item>", example: ".sellrpg ramuan",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

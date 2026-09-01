@@ -7,8 +7,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "forage",
-  alias: ["forage"],
-  aliases: ["forage", "cariherba", "gather"],
+  alias: ["forage", "cariherba", "gather"],
   category: "rpg",
   description: "Cari tanaman dan herba di alam",
   usage: ".forage",

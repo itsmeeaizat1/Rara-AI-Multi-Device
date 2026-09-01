@@ -7,8 +7,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "bossfight",
-  alias: ["bossfight"],
-  aliases: ["bossfight", "finaltrial", "worldboss"],
+  alias: ["bossfight", "finaltrial", "worldboss"],
   category: "rpg",
   description: "Global world boss (semua player serang bareng) dan final trial",
   usage: ".bossfight | .finaltrial",

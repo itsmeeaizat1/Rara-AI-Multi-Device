@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "blessrpg", alias: ["blessrpg"], aliases: ["blessrpg", "bless", "berkat"],
+  name: "blessrpg", alias: ["blessrpg", "bless", "berkat"],
   category: "rpg", description: "Terima blessing harian (random buff)",
   usage: ".blessrpg", example: ".blessrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 30, energi: 0, isEnabled: true,

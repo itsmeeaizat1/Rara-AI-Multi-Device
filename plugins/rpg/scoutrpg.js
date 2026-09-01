@@ -4,7 +4,7 @@ import { getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "scoutrpg", alias: ["scoutrpg"], aliases: ["scoutrpg", "scout"],
+  name: "scoutrpg", alias: ["scoutrpg", "scout"],
   category: "rpg", description: "Intai lokasi musuh (reply target)",
   usage: ".scoutrpg (reply target)", example: ".scoutrpg (reply pesan target)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 5, isEnabled: true,

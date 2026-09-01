@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg, removeGold } from "../../src/lib/nova-rpg-service.j
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "reviverpg", alias: ["reviverpg"], aliases: ["reviverpg", "revive", "bangkit"],
+  name: "reviverpg", alias: ["reviverpg", "revive", "bangkit"],
   category: "rpg", description: "Bangkit dari kematian (biaya 200 gold)",
   usage: ".reviverpg", example: ".reviverpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,

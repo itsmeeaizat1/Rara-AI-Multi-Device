@@ -8,7 +8,6 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "recycle",
   alias: ["recycle"],
-  aliases: ["recycle", "exchange", "stashall"],
   category: "rpg",
   description: "Daur ulang item jadi fragmen, tukar item jadi koin, pindah semua ke storage",
   usage: ".recycle <item> | .exchange <item> | .stashall",

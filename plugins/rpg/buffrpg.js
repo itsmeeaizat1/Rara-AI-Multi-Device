@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg, useMana } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "buffrpg", alias: ["buffrpg"], aliases: ["buffrpg", "buff"],
+  name: "buffrpg", alias: ["buffrpg", "buff"],
   category: "rpg", description: "Buff ATK +10 (biaya 10 mana)",
   usage: ".buffrpg", example: ".buffrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 15, energi: 5, isEnabled: true,

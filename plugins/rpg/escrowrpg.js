@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, removeGold, addGold } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "escrowrpg", alias: ["escrowrpg"], aliases: ["escrowrpg", "escrow", "titipan"],
+  name: "escrowrpg", alias: ["escrowrpg", "escrow", "titipan"],
   category: "rpg", description: "Escrow — titipan aman antar pemain",
   usage: ".escrowrpg buat <jumlah> / cek / konfirmasi / batal",
   example: ".escrowrpg buat 500 (dengan tag @user)",

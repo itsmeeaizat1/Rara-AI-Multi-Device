@@ -8,7 +8,6 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "rift",
   alias: ["rift"],
-  aliases: ["rift", "distortion", "timetravel"],
   category: "rpg",
   description: "Portal dimensi, distortion zone, dan perjalanan waktu",
   usage: ".rift | .distortion | .timetravel",

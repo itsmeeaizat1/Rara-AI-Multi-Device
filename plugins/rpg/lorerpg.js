@@ -3,7 +3,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "lorerpg", alias: ["lorerpg"], aliases: ["lorerpg", "lore"],
+  name: "lorerpg", alias: ["lorerpg", "lore"],
   category: "rpg", description: "Baca lore dunia RPG",
   usage: ".lorerpg", example: ".lorerpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

@@ -7,8 +7,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "element",
-  alias: ["element"],
-  aliases: ["element", "elemen", "setelement", "pilihelemen"],
+  alias: ["element", "elemen", "setelement", "pilihelemen"],
   category: "rpg",
   description: "Pilih elemen (api/air/tanah/angin) dan cek kelemahan elemen",
   usage: ".element <api|air|tanah|angin> | .element info | .element weak",

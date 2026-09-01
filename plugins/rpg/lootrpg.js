@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, getRpgData, addItem } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "lootrpg", alias: ["lootrpg"], aliases: ["lootrpg", "loot", "ramtas"],
+  name: "lootrpg", alias: ["lootrpg", "loot", "ramtas"],
   category: "rpg", description: "Loot item dari musuh yang mati (reply target)",
   usage: ".lootrpg (reply target)", example: ".lootrpg (reply pesan target)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 5, isEnabled: true,

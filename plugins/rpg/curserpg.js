@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg, useMana, getRpgData } from "../../src/lib/nova-rpg-
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "curserpg", alias: ["curserpg"], aliases: ["curserpg", "curse", "kutuk"],
+  name: "curserpg", alias: ["curserpg", "curse", "kutuk"],
   category: "rpg", description: "Kutuk musuh dengan efek negatif (reply target, 20 mana)",
   usage: ".curserpg (reply target)", example: ".curserpg (reply pesan target)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 30, energi: 5, isEnabled: true,

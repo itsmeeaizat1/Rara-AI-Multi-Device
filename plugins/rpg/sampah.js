@@ -10,7 +10,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "sampah",
-  alias: ["sampah", "buangsampah", "recycle"],
+  alias: ["sampah", "buangsampah"],
   category: "rpg",
   description: "Kumpulkan sampah untuk didaur ulang — gold kecil tapi EXP lumayan",
   usage: ".sampah",

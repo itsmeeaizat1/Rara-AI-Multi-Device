@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "reincarnaterpg", alias: ["reincarnaterpg"], aliases: ["reincarnaterpg", "reincarnate"],
+  name: "reincarnaterpg", alias: ["reincarnaterpg", "reincarnate"],
   category: "rpg", description: "Reinkarnasi — reset level untuk bonus permanen (min level 30)",
   usage: ".reincarnaterpg", example: ".reincarnaterpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 50, isEnabled: true,

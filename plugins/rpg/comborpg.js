@@ -4,7 +4,7 @@ import { ensureRpg, useEnergy } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "comborpg", alias: ["comborpg"], aliases: ["comborpg", "combo"],
+  name: "comborpg", alias: ["comborpg", "combo"],
   category: "rpg", description: "Combo attack (biaya 15 energy, damage berdasar kelas)",
   usage: ".comborpg", example: ".comborpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 15, isEnabled: true,

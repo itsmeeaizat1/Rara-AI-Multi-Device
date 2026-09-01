@@ -11,7 +11,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "mancing",
-  alias: ["mancing", "fish", "memancing"],
+  alias: ["mancing", "fish"],
   category: "rpg",
   description: "Memancing ikan untuk material dan gold",
   usage: ".mancing",

@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, removeItem, regenHP, regenMana, getItemCount } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "itemuserpg", alias: ["itemuserpg"], aliases: ["itemuserpg", "itemuse", "pakai"],
+  name: "itemuserpg", alias: ["itemuserpg", "itemuse"],
   category: "rpg", description: "Gunakan item dari inventory",
   usage: ".itemuserpg <item>", example: ".itemuserpg ramuan",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

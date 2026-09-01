@@ -7,8 +7,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "mount",
-  alias: ["mount"],
-  aliases: ["mount", "mountfeed", "tunggangan", "naikkuda"],
+  alias: ["mount", "mountfeed", "tunggangan", "naikkuda"],
   category: "rpg",
   description: "Pilih tunggangan, beri makan, bonus kecepatan",
   usage: ".mount <list|pilih <nama>|feed>",

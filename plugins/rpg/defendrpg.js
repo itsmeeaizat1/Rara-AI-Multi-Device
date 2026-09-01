@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "defendrpg", alias: ["defendrpg"], aliases: ["defendrpg", "defend", "pertahanan"],
+  name: "defendrpg", alias: ["defendrpg", "defend", "pertahanan"],
   category: "rpg", description: "Perkuat markas. DEF +50 (butuh markas)",
   usage: ".defendrpg", example: ".defendrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 30, energi: 20, isEnabled: true,

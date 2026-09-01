@@ -8,7 +8,6 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "rumor",
   alias: ["rumor"],
-  aliases: ["rumor", "savepoint", "save"],
   category: "rpg",
   description: "Rumor dunia RPG dan save point",
   usage: ".rumor | .savepoint",

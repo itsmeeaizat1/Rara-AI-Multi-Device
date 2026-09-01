@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, removeItem, addGold, removeGold, addItem, getItemCount } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "marketrpg", alias: ["marketrpg"], aliases: ["marketrpg", "market", "pasar"],
+  name: "marketrpg", alias: ["marketrpg", "market"],
   category: "rpg", description: "Marketplace RPG — jual/beli item dari pemain lain",
   usage: ".marketrpg jual <item> <harga> / .marketrpg beli <item>",
   example: ".marketrpg jual pedang 200",

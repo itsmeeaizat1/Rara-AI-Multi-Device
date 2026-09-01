@@ -1,6 +1,6 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "questmaprpg", alias: ["questmaprpg"], aliases: ["questmaprpg", "questmap"],
+  name: "questmaprpg", alias: ["questmaprpg", "questmap"],
   category: "rpg", description: "Peta quest dunia RPG",
   usage: ".questmaprpg", example: ".questmaprpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

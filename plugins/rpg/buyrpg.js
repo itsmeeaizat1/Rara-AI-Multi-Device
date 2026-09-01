@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, removeGold, addItem } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "buyrpg", alias: ["buyrpg"], aliases: ["buyrpg", "buy", "beli"],
+  name: "buyrpg", alias: ["buyrpg", "buy", "beli"],
   category: "rpg", description: "Beli item dari toko RPG",
   usage: ".buyrpg <item>", example: ".buyrpg scrollclass",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

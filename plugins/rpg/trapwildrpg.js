@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "trapwildrpg", alias: ["trapwildrpg"], aliases: ["trapwildrpg", "trapwild", "jebakanwild"],
+  name: "trapwildrpg", alias: ["trapwildrpg", "trapwild", "jebakanwild"],
   category: "rpg", description: "Pasang jebakan hewan liar",
   usage: ".trapwildrpg", example: ".trapwildrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 20, energi: 10, isEnabled: true,

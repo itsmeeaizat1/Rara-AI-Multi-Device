@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg, removeGold } from "../../src/lib/nova-rpg-service.j
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "buildrpg", alias: ["buildrpg"], aliases: ["buildrpg", "build", "markas"],
+  name: "buildrpg", alias: ["buildrpg", "build", "markas"],
   category: "rpg", description: "Bangun markas (biaya 500 gold, +DEF, +safezone)",
   usage: ".buildrpg", example: ".buildrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,

@@ -8,7 +8,6 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "prestige",
   alias: ["prestige"],
-  aliases: ["prestige", "reincarnate", "reinkarnasi"],
   category: "rpg",
   description: "Prestige (reset Lv.50+) & reinkarnasi (reset Lv.30+) untuk bonus permanen",
   usage: ".prestige | .reincarnate",
