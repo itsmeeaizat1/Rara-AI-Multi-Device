@@ -6,7 +6,7 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "tictactoe",
   alias: ["tictactoe"],
-  category: "rpg",
+  category: "game",
   description: "Game Tic Tac Toe (X vs O) — 2 player di grup",
   usage: ".tictactoe @tag [X/O]",
   example: ".tictactoe @user\n.tictactoe @user X",

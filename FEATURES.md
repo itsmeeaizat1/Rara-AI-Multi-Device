@@ -430,8 +430,11 @@ barandom, cecanchina, cecanindo, cecanjepang, cecankorea, cecanthai, cecanvietna
 ### 🛐 Religi (6 plugin)
 asmaulhusna, audioquran, hadith, islami, jadwalsholat, sholat
 
-### ⚔️ RPG (251 plugin)
+### ⚔️ RPG (244 plugin)
 Sistem RPG lengkap dengan mining, farming, hunting, cooking, economy, jobs, mini-games, clans, bosses, dungeons, items, pets, dan lebih banyak lagi. Lihat folder `plugins/rpg/` untuk detail.
+
+### 💕 RPG Cinta (7 plugin)
+cintainfo, couplewar, jadianmatch, kencanmatch, nikahmatch, putusmatch, soulmatematch — Sistem RPG cinta: jadian, kencan, nikah, putus, soulmate. Lihat folder `plugins/rpg-cinta/` untuk detail.
 
 ### 🔎 Search (41 plugin)
 android1, android1-get, animeapaini, apkmod, apkmod-get, chords, film, filmget, lyrics, nerdfont, pap, pixiv, pins, shopeedl, xnxx, xnxx2, yts, dan lainnya
