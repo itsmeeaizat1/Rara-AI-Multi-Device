@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20audit%20semua%20API%20key%20%E2%80%94%20update%20neoxr%2C-success?style=for-the-badge)
-> *Commit: "fix: audit semua API key — update neoxr, mark dead APIs"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20welcome%2Fgoodbye%20V3%20%E2%80%94%20autoresbot%20AP-success?style=for-the-badge)
+> *Commit: "feat: welcome/goodbye V3 — autoresbot API bg + vertical layout"*
 <!--END_SECTION:latest-update-->
 
 ---
