@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20info%20section%20lengkap%20di%20not-found%20-success?style=for-the-badge)
-> *Commit: "feat: info section lengkap di not-found reply (user/bot/server/database/weather)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20info%20section%20lengkap%20di%20menu%2C%20allm-success?style=for-the-badge)
+> *Commit: "feat: info section lengkap di menu, allmenu, allmenucategory"*
 <!--END_SECTION:latest-update-->
 
 ---
