@@ -16,11 +16,11 @@ import {
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, commandListLine, toSC, closeBoxRight, novaBox, novaMenuLayout } from "../../src/lib/nova-menu-style.js";
+import { buildMenuInfo } from "../../src/lib/nova-info-section.js";
 
 const pluginConfig = {
   name: "allmenu",
@@ -129,11 +129,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     if (m.isOwner) { userRole = "Owner"; }
     else if (m.isPremium) { userRole = "Premium"; }
 
-    let weatherBlock = "";
-    try {
-      const wf = await getWeatherFooter();
-      if (wf) weatherBlock = `\n${wf}\n`;
-    } catch {}
+    // Weather sudah dihandle oleh buildMenuInfo
 
     const runtimeStr = formatUptime(uptime);
     const platform = process.platform;
@@ -190,20 +186,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
-    // ── Info section (compact, novaMenuLayout) ──
-    const info = [
-      `${getTimeGreeting()}, ${m.pushName || "User"}`,
-      { label: "Uptime", value: runtimeStr },
-      { label: "Mode", value: (botConfig.mode || "public").toUpperCase() },
-      { label: "Prefix", value: prefix },
-      { label: "User", value: `${totalUsers} (${totalPremium} Premium)` },
-      { label: "Grup", value: `${totalActiveGroups} / ${totalGroups}` },
-      { label: "Terdaftar", value: `${totalRegistered}` },
-      { label: "Diblokir", value: `${totalBanned}` },
-      { label: "Total Fitur", value: `${totalFeatures}` },
-      { label: "Role", value: userRole },
-      { label: "Energi", value: m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25) },
-    ];
+    // ── Info section lengkap (user, bot, database, server, weather) ──
+    const { info: menuInfo, weatherStr } = await buildMenuInfo(m, { db, config: botConfig, uptime });
+    const info = menuInfo;
 
     // ── Category sections ──
     const sortedCategories = [...categories].sort((a, b) => {
@@ -261,6 +246,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       categories: menuCats,
       prefix,
     });
+
+    let finalText = txt;
+    if (weatherStr) finalText += "\n" + weatherStr;
 
 
 
