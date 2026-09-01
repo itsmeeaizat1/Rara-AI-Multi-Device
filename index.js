@@ -445,8 +445,13 @@ async function main() {
         startTempCleaner();
         startDailyPruner();
         initCacheCleaner();
-        logger.success("ready", `All subsystems are fully operational${devLabel}`);
-        divider();
+        console.log("");
+        console.log("╭─「 ✦ NOVA AI ✦ 」");
+        console.log("│");
+        console.log("│ ✅ All subsystems fully operational" + (config.dev?.enabled ? " • dev" : ""));
+        console.log("│");
+        console.log("╰────  •  ────");
+        console.log("");
       }
     },
   });

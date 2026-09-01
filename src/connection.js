@@ -311,7 +311,11 @@ async function startConnection(options = {}) {
   const _sysAuthKey = getAuthKey();
   if (_sysAuthKey && !sock.authState.creds.registered) {
     console.log("");
-    colors.logger.info("pairing", "Sandi diperlukan untuk pairing. Masukkan sandi untuk lanjut.");
+    console.log("╭─「 ✦ PAIRING ✦ 」");
+    console.log("│");
+    console.log("│ 🔒 Sandi diperlukan untuk pairing");
+    console.log("│");
+    console.log("╰────  •  ────");
     console.log("");
 
     let attempts = 0;
@@ -326,7 +330,11 @@ async function startConnection(options = {}) {
       if (verifyAuth(input)) {
         authorized = true;
         console.log("");
-        colors.logger.success("pairing", "Sandi benar, melanjutkan pairing...");
+        console.log("╭─「 ✦ PAIRING ✦ 」");
+        console.log("│");
+        console.log("│ ✅ Sandi benar, melanjutkan pairing...");
+        console.log("│");
+        console.log("╰────  •  ────");
         console.log(getOwnerContact());
         console.log("");
         break;
@@ -337,12 +345,21 @@ async function startConnection(options = {}) {
       if (remaining > 0) {
         colors.logger.error("pairing", `Sandi salah! Sisa percobaan: ${remaining}`);
       } else {
-        colors.logger.error("pairing", "Sandi salah 3x! Akses diblokir.");
+        console.log("╭─「 ✦ PAIRING ✦ 」");
+      console.log("│");
+      console.log("│ ❌ Sandi salah 3x! Akses diblokir.");
+      console.log("│");
+      console.log("╰────  •  ────");
       }
     }
 
     if (!authorized) {
-      colors.logger.error("pairing", "Sandi salah 3x! Pairing dibatalkan.");
+      console.log("");
+      console.log("╭─「 ✦ PAIRING ✦ 」");
+      console.log("│");
+      console.log("│ ❌ Sandi salah 3x! Pairing dibatalkan.");
+      console.log("│");
+      console.log("╰────  •  ────");
       console.log("");
       console.log(getOwnerContact());
       console.log("");
@@ -398,12 +415,10 @@ async function startConnection(options = {}) {
         colors.createBanner(
           [
             "",
-            "   PAIRING CODE   ",
-            "",
             `   ${colors.chalk.bold(colors.chalk.greenBright(code))}   `,
             "",
-            "  Masukkan kode ini di WhatsApp  ",
-            "  Settings > Linked Devices > Link a Device  ",
+            "Masukkan kode ini di WhatsApp",
+            "Settings > Linked Devices > Link a Device",
             "",
           ],
           "green",
@@ -474,12 +489,19 @@ async function startConnection(options = {}) {
       };
 
       const statusMsg = STATUS_MESSAGES[sc] || `❔ Unknown (kode: ${sc})`;
-      colors.logger.warn("whatsapp", `terputus — ${statusMsg}`);
+      console.log("");
+      console.log("╭─「 ✦ DISCONNECTED ✦ 」");
+      console.log("│");
+      console.log(`│ ❌ ${statusMsg}`);
+      console.log("│");
+      console.log("╰────  •  ────");
+      console.log("");
       if (sc === DisconnectReason.loggedOut || sc === 401) {
-        colors.logger.error(
-          "whatsapp",
-          "sesi habis — hapus folder storage lalu restart",
-        );
+        console.log("╭─「 ✦ SESSION ✦ 」");
+        console.log("│");
+        console.log("│ ❌ Sesi habis — hapus folder storage lalu restart");
+        console.log("│");
+        console.log("╰────  •  ────");
         connectionState.reconnectAttempts = 0;
         return;
       }
@@ -487,16 +509,19 @@ async function startConnection(options = {}) {
       if (sc === 440) {
         connectionState.reconnectAttempts++;
         if (connectionState.reconnectAttempts <= 3) {
-          colors.logger.info(
-            "whatsapp",
-            `percobaan sambung ulang ${connectionState.reconnectAttempts}/3 dalam 10 detik`,
-          );
+          console.log("╭─「 ✦ RECONNECT ✦ 」");
+          console.log("│");
+          console.log(`│ ⏳ Percobaan ${connectionState.reconnectAttempts}/3 dalam 10 detik`);
+          console.log("│");
+          console.log("╰────  •  ────");
           setTimeout(() => startConnection(options), 1e4);
         } else {
-          colors.logger.error(
-            "whatsapp",
-            "konflik sesi — perangkat lain terdeteksi, matikan bot yang lain",
-          );
+          console.log("╭─「 ✦ RECONNECT ✦ 」");
+          console.log("│");
+          console.log("│ ❌ Konflik sesi — perangkat lain terdeteksi");
+          console.log("│    Matikan bot yang lain");
+          console.log("│");
+          console.log("╰────  •  ────");
           connectionState.reconnectAttempts = 0;
         }
         return;
@@ -506,19 +531,21 @@ async function startConnection(options = {}) {
         connectionState.reconnectAttempts++;
         const m = config.session?.maxReconnectAttempts || 5;
         if (connectionState.reconnectAttempts <= m) {
-          colors.logger.info(
-            "whatsapp",
-            `percobaan sambung ulang ${connectionState.reconnectAttempts}/${m}`,
-          );
+          console.log("╭─「 ✦ RECONNECT ✦ 」");
+          console.log("│");
+          console.log(`│ ⏳ Percobaan ${connectionState.reconnectAttempts}/${m}`);
+          console.log("│");
+          console.log("╰────  •  ────");
           setTimeout(
             () => startConnection(options),
             config.session?.reconnectInterval || 15e3,
           );
         } else {
-          colors.logger.error(
-            "whatsapp",
-            `gagal sambung ulang setelah ${m} percobaan`,
-          );
+          console.log("╭─「 ✦ RECONNECT ✦ 」");
+          console.log("│");
+          console.log(`│ ❌ Gagal sambung ulang setelah ${m} percobaan`);
+          console.log("│");
+          console.log("╰────  •  ────");
         }
       } else {
         connectionState.reconnectAttempts = 0;
@@ -535,10 +562,16 @@ async function startConnection(options = {}) {
 
       n && setBotNumber(n);
 
-      colors.logger.info(
-        "bot",
-        `${config.bot?.name || "Nova-AI"} (${n || "?"}) · WA v${version.join(".")}`,
-      );
+      console.log("");
+      console.log("╭─「 ✦ NOVA AI ✦ 」");
+      console.log("│");
+      console.log(`│ • Bot    : ${config.bot?.name || "Nova-AI"}`);
+      console.log(`│ • Nomor  : ${n || "?"}`);
+      console.log(`│ • Versi  : WA v${version.join(".")}`);
+      console.log("│");
+      console.log("│ ✅ Bot siap digunakan");
+      console.log("╰────  •  ────");
+      console.log("");
 
       setTimeout(async () => {
         try {
