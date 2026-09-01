@@ -49,28 +49,26 @@ async function handler(m, { sock }) {
         const droplets = response.data.droplets || []
         
         if (droplets.length === 0) {
-            return m.reply(`╭─「 List VPS 」\n│ Tidak ada VPS yang tersedia
-╰──────────`)
+            return m.reply(`╭─「 ✦ List VPS ✦ 」\n│ Tidak ada VPS yang tersedia
+╰────  •  ────`)
         }
         
-        let txt = `╭─「 List VPS 」\n│ Total: ${droplets.length} droplet
-╰──────────
-`
+        let txt = `╭─「 ✦ List VPS ✦ 」\n│ Total: ${droplets.length} droplet
+╰────  •  ────`
         
         for (const droplet of droplets) {
             const ip = droplet.networks?.v4?.find(n => n.type === 'public')?.ip_address || '-'
             const status = droplet.status === 'active' ? 'Active' : 'Off'
             
             txt += `
-╭─「 ${droplet.name} 」\n│ *ꜱᴛᴀᴛᴜꜱ:* ${status}
+╭─「 ✦ ${droplet.name} ✦ 」\n│ *ꜱᴛᴀᴛᴜꜱ:* ${status}
 │ *ID:* ${droplet.id}
 │ *IP:* ${ip}
 │ *ʀᴀᴍ:* ${droplet.memory} MB
 │ *ᴄᴘᴜ:* ${droplet.vcpus} vCPU
 │ *ᴅɪꜱᴋ:* ${droplet.disk} GB
 │ *ʀᴇɢɪᴏɴ:* ${droplet.region?.slug || '-'}
-╰──────────
-`
+╰────  •  ────`
         }
         await m.reply(txt)
         

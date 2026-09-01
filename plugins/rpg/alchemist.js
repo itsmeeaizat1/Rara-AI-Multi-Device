@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
     }
 
     if (subCmd === "list") {
-      let msg = `╭─「 ALCHEMIST RECIPES 」\n`;
+      let msg = `╭─「 ✦ ALCHEMIST RECIPES ✦ 」\n`;
       msg += `│ Daftar Resep Potion & Bahan:\n│\n`;
       for (const [key, item] of Object.entries(RECIPES)) {
         msg += `│ 🧪 *${item.name}* (\`${key}\`)\n`;
@@ -83,13 +83,13 @@ async function handler(m, { sock }) {
       }
       msg += `│ Cara Meracik:\n`;
       msg += `│ ${m.prefix}alchemist brew <nama_potion>\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       await m.react('🐣');
       return m.reply(msg);
     }
 
     if (subCmd === "inventory" || subCmd === "inv") {
-      let msg = `╭─「 ALCHEMIST INVENTORY 」\n`;
+      let msg = `╭─「 ✦ ALCHEMIST INVENTORY ✦ 」\n`;
       msg += `│ 💰 Gold: ${data.gold || 0}\n│\n`;
       msg += `│ 🌿 *Bahan Herbal & Material:*\n`;
       msg += `│   • Herb: ${data.materials.herb || 0}\n`;
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
       msg += `│   • Mana Potion: ${data.potions.mana_potion || 0}\n`;
       msg += `│   • Stamina Potion: ${data.potions.stamina_potion || 0}\n`;
       msg += `│   • Antidote: ${data.potions.antidote || 0}\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       await m.react('🐣');
       return m.reply(msg);
     }
@@ -160,13 +160,13 @@ async function handler(m, { sock }) {
       data.potions[potionKey] = (data.potions[potionKey] || 0) + 1;
       await db.setPlayerData?.(sender, "alchemist", data);
 
-      let msg = `╭─「 BREWING SUCCESS 」\n`;
+      let msg = `╭─「 ✦ BREWING SUCCESS ✦ 」\n`;
       msg += `│ ⚗️ Berhasil meracik *${recipe.name}*!\n`;
       msg += `│  \n`;
       msg += `│ 💰 Biaya: -${recipe.gold} Gold\n`;
       msg += `│ ✨ Efek: ${recipe.effect}\n`;
       msg += `│ 🧪 Total Potion: ${data.potions[potionKey]}\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       await m.react('🐣');
       return m.reply(msg);

@@ -39,14 +39,14 @@ async function handler(m, { sock }) {
 
     // List karakter
     if (text.toLowerCase() === "list" || !text) {
-      let list = "╭─「 ᴄʜᴀʀᴀᴄᴛᴇʀ ᴀɪ 」\n";
+      let list = "╭─「 ✦ ᴄʜᴀʀᴀᴄᴛᴇʀ ᴀɪ ✦ 」\n";
       list += "│ 🎭 Pilih karakter:\n│\n";
       const keys = Object.keys(CHARACTERS);
       for (let i = 0; i < keys.length; i++) {
         list += `│ ${i + 1}. *${keys[i]}* — ${CHARACTERS[keys[i]].name}\n`;
       }
       list += `│\n│ 💡 Contoh: ${m.prefix}characterai ${keys[0]} halo!\n`;
-      list += "╰──────────";
+      list += "╰────  •  ────";
       return m.reply(list);
     }
 
@@ -84,11 +84,11 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ${CHARACTERS[charKey].name} 」\n`;
+    let msg = `╭─「 ✦ ${CHARACTERS[charKey].name} ✦ 」\n`;
     msg += `│ 🎭 Karakter: *${CHARACTERS[charKey].name}*\n`;
     msg += `│\n`;
     msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("characterai error:", err);

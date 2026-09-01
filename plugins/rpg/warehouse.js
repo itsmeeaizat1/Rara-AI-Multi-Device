@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
     }
 
     // LIST (default)
-    let msg = `╭─「 ɢᴜᴅᴀɴɢ 」\n`;
+    let msg = `╭─「 ✦ ɢᴜᴅᴀɴɢ ✦ 」\n`;
     msg += `│ Kapasitas: *${data.items?.length || 0}/${data.slots}*\n`;
     msg += `│\n`;
     if (data.items && data.items.length > 0) {
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
     msg += `│ ${m.prefix}warehouse store <item> - simpan\n`;
     msg += `│ ${m.prefix}warehouse take <item> - ambil\n`;
     msg += `│ ${m.prefix}warehouse expand - perluas (${EXPAND_COST}g)\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("warehouse error:", err);

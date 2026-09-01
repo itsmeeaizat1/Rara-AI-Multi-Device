@@ -88,13 +88,13 @@ Gunakan bahasa Indonesia. Sesuaikan jumlah hari dengan yang diminta. Praktis dan
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ᴛʀᴀᴠᴇʟ ᴀɪ 」\n`;
+    let msg = `╭─「 ✦ ᴛʀᴀᴠᴇʟ ᴀɪ ✦ 」\n`;
     msg += `│ 🗺️ Tujuan: *${text}*\n`;
     msg += `│\n`;
     msg += formatted;
     msg += `│\n`;
     msg += `│ Selamat liburan! 🌴\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("travelai error:", err);

@@ -623,14 +623,14 @@ async function startConnection(options = {}) {
           const isFirstPair = !fs.existsSync(path.join(process.cwd(), "storage", ".first_pair_done"));
 
           const notifText = [
-            "╭─「 Bot Online" + (isFirstPair ? " — First Pair" : "") + " 」",
+            "╭─「 ✦ Bot Online" + (isFirstPair ? " — First Pair" : "") + " ✦ 」",
             "│ Bot       " + (config.bot?.name || "Nova-AI"),
             "│ Versi     " + (config.bot?.version || "v20.0.0"),
             "│ Nomor     " + botNum,
             "│ Waktu     " + waktu,
             "│ Host      " + hostname,
             "│ Platform  " + platform + " | Node: " + nodeVer,
-            "╰──────────────────────",
+            "╰────  •  ────",
             "",
             isFirstPair
               ? "_Bot baru saja tersambung untuk pertama kali._"
@@ -849,7 +849,7 @@ async function startConnection(options = {}) {
             config.saluran?.name || config.bot?.name || "Nova-AI";
 
           const welcomeText =
-            `╭─「 Welcome 」\n` +
+            `╭─「 ✦ Welcome ✦ 」\n` +
             `│ Hai, Salam Kenal!\n` +
             `│ Aku *${config.bot?.name || "Nova-AI"}*\n` +
             `│ Terima kasih sudah undang aku ke *${groupName}*!\n` +
@@ -861,7 +861,7 @@ async function startConnection(options = {}) {
             `│\n` +
             `│ Ketik *${prefix}menu* untuk lihat fitur\n` +
             `│ Ketik *${prefix}help* untuk bantuan\n` +
-            `╰──────────`;
+            `╰────  •  ────`;
 
           const ctxInfo = {
             mentionedJid: inviter ? [inviter] : [],

@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
     }
 
     // STATUS (default)
-    let msg = `╭─「 sᴜʀᴠɪᴠᴀʟ 」\n`;
+    let msg = `╭─「 ✦ sᴜʀᴠɪᴠᴀʟ ✦ 」\n`;
     msg += `│ ❤️ HP:      [${bar(data.hp, MAX_HP)}] ${data.hp}/${MAX_HP}\n`;
     msg += `│ 🍖 Hunger:  [${bar(data.hunger, MAX_HUNGER)}] ${data.hunger}/${MAX_HUNGER}\n`;
     msg += `│ 💧 Thirst:  [${bar(data.thirst, MAX_THIRST)}] ${data.thirst}/${MAX_THIRST}\n`;
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
     msg += `│ ${m.prefix}survival drink - minum\n`;
     msg += `│ ${m.prefix}survival rest - istirahat (+HP)\n`;
     msg += `│ ${m.prefix}survival hunt - berburu (+hunger)\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("survival error:", err);

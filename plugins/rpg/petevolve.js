@@ -118,14 +118,14 @@ async function handler(m, { sock }) {
 
     // If max stage
     if (pet.stage >= 3) {
-      let text = `╭─「 PET MAX EVOLUTION 」\n`;
+      let text = `╭─「 ✦ PET MAX EVOLUTION ✦ 」\n`;
       text += `│ ${currentData.emoji} Name : *${pet.name || currentData.name}*\n`;
       text += `│ 🌟 Stage : *Stage 3 (MAX GOD TIER)*\n`;
       text += `│ ⚔️ ATK : ${pet.atk || currentData.atk}\n`;
       text += `│ 🛡️ DEF : ${pet.def || currentData.def}\n`;
       text += `│\n`;
       text += `│ 🏆 Pet kamu telah mencapai kekuatan evolusi tertinggi!\n`;
-      text += `╰──────────`;
+      text += `╰────  •  ────`;
       await m.react("🐣");
       return m.reply(text);
     }
@@ -171,7 +171,7 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(sender, "pet", pet);
 
       // Evolution Animation Box Output
-      let animText = `╭─「 ANIMASI EVOLUSI PET 」\n`;
+      let animText = `╭─「 ✦ ANIMASI EVOLUSI PET ✦ 」\n`;
       animText += `│ ⚡ Pet kamu menyerap energi sihir kuno...\n`;
       animText += `│ ✨ Tubuh *${oldName}* dipenuhi aura cahaya terang!\n`;
       animText += `│ 💥 *BOOM! EVOLUSI BERHASIL!*\n`;
@@ -180,14 +180,14 @@ async function handler(m, { sock }) {
       animText += `│ 🌟 Tier Stage : *Stage ${pet.stage}*\n`;
       animText += `│ ⚔️ ATK Baru : *${pet.atk}* (+50% bonus)\n`;
       animText += `│ 🛡️ DEF Baru : *${pet.def}* (+50% bonus)\n`;
-      animText += `╰──────────`;
+      animText += `╰────  •  ────`;
 
       await m.react("🐣");
       return m.reply(animText);
     }
 
     // Default: Show evolution progress & requirements
-    let statusText = `╭─「 INFO EVOLUSI PET 」\n`;
+    let statusText = `╭─「 ✦ INFO EVOLUSI PET ✦ 」\n`;
     statusText += `│ 🐾 Pet Saat Ini : ${currentData.emoji} *${pet.name || currentData.name}*\n`;
     statusText += `│ 📊 Stage : *Stage ${pet.stage}/3*\n`;
     statusText += `│ ⚔️ ATK: ${pet.atk || currentData.atk} | 🛡️ DEF: ${pet.def || currentData.def}\n`;
@@ -203,7 +203,7 @@ async function handler(m, { sock }) {
     }
     statusText += `│\n`;
     statusText += `│ 📌 Ketik *${prefix}petevolve do* untuk melakukan evolusi!\n`;
-    statusText += `╰──────────`;
+    statusText += `╰────  •  ────`;
 
     await m.react("🐣");
     return m.reply(statusText);

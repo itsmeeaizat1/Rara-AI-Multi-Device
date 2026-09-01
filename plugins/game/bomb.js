@@ -55,14 +55,14 @@ async function handler(m, { sock }) {
       const colors = game.start();
       games.set(from, game);
       await m.react("🕒");
-      let msg = `╭─「 BOMB GAME 」\n`;
+      let msg = `╭─「 ✦ BOMB GAME ✦ 」\n`;
       msg += `│ 🧨 Bom telah dipasang!\n`;
       msg += `│ Potong 4 kabel yang aman!\n`;
       msg += `│\n`;
       colors.forEach((c, i) => { msg += `│ ${i + 1}. ${c}\n`; });
       msg += `│\n`;
       msg += `│ Cara main: .bomb potong <nomor>\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       await m.reply(msg);
       await m.react("🐣");
       return;
@@ -79,31 +79,31 @@ async function handler(m, { sock }) {
       if (!result.success) {
         games.delete(from);
         await m.react("💥");
-        let msg = `╭─「 BOMB EXPLODED 」\n`;
+        let msg = `╭─「 ✦ BOMB EXPLODED ✦ 」\n`;
         msg += `│ 💥 BOOM!\n`;
         msg += `│ Kamu memotong kabel ${result.color}\n`;
         msg += `│ Itu kabel bom! Kamu kalah!\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
         return m.reply(msg);
       }
       if (game.state === "defused") {
         games.delete(from);
         await m.react("🐣");
-        let msg = `╭─「 BOMB DIFFUSED 」\n`;
+        let msg = `╭─「 ✦ BOMB DIFFUSED ✦ 」\n`;
         msg += `│ ✅ Berhasil jinakkan bom!\n`;
         msg += `│ Kabel aman: ${game.cutCards.join(", ")}\n`;
         msg += `│ 🎉 Selamat! Kamu menang!\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
         return m.reply(msg);
       }
-      let msg = `╭─「 BOMB SAFE 」\n`;
+      let msg = `╭─「 ✦ BOMB SAFE ✦ 」\n`;
       msg += `│ ✅ Kabel ${result.color} aman!\n`;
       msg += `│ Sudah dipotong: ${game.cutCards.length}/${game.totalSafeNeeded}\n`;
       msg += `│ Sisa kabel:\n`;
       game.colors.forEach((c, i) => {
         if (!game.cutCards.includes(c)) msg += `│   ${i + 1}. ${c}\n`;
       });
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       await m.reply(msg);
       await m.react("🐣");
     }

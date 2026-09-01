@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     const input = (m.args.join(" ") || "").toLowerCase().trim();
 
     if (!input || input === "list") {
-      let listMsg = `╭─「 TREASURE HUNT LOCATIONS 」\n`;
+      let listMsg = `╭─「 ✦ TREASURE HUNT LOCATIONS ✦ 」\n`;
       listMsg += `│ Pilih lokasi berburu harta karun:\n│\n`;
       LOCATIONS.forEach((loc, idx) => {
         listMsg += `│ ${idx + 1}. *${loc.name}*\n`;
@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
       });
       listMsg += `│\n│ 💡 *Penggunaan:* ${m.prefix}treasurehunt <nama_lokasi>\n`;
       listMsg += `│ 📝 *Contoh:* ${m.prefix}treasurehunt pantai\n`;
-      listMsg += `╰──────────`;
+      listMsg += `╰────  •  ────`;
       await m.react("🐣");
       return m.reply(listMsg);
     }
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
     }
 
     const roll = Math.floor(Math.random() * 100) + 1;
-    let msg = `╭─「 TREASURE HUNT 」\n`;
+    let msg = `╭─「 ✦ TREASURE HUNT ✦ 」\n`;
     msg += `│ 📍 Lokasi: *${loc.name}*\n`;
     msg += `│ ⛏️ *Penggalian:* ${loc.digText}\n│\n`;
 
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
 
     msg += `│\n│ ⚡ Sisa Energi: *${profile.energi}*\n`;
     msg += `│ 💰 Total Gold: *${(profile.gold || 0).toLocaleString()}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     await db.setPlayerData?.(sender, "profile", profile);
     await db.setPlayerData?.(sender, "inventory", inventory);

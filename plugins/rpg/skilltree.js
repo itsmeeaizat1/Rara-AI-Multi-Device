@@ -72,7 +72,7 @@ async function handler(m, { sock, text, command }) {
     if (command === "skilltree") {
       const job = rpg.job || "novice";
       const tree = SKILL_PATHS[job] || SKILL_PATHS.warrior;
-      let msg = "╭─「 sᴋɪʟʟ ᴛʀᴇᴇ 」\n";
+      let msg = "╭─「 ✦ sᴋɪʟʟ ᴛʀᴇᴇ ✦ 」\n";
       msg += "│ 👤 " + (m.pushName || "Player") + " | Job: " + job + "\n";
       msg += "│\n";
       for (let i = 0; i < tree.length; i++) {
@@ -86,7 +86,7 @@ async function handler(m, { sock, text, command }) {
       msg += "│\n";
       msg += "│ 📌 .learnskill <nama> — pelajari skill\n";
       msg += "│ 📌 .talent — lihat talent class\n";
-      msg += "╰──────────";
+      msg += "╰────  •  ────";
       return m.reply(msg);
     }
 
@@ -94,14 +94,14 @@ async function handler(m, { sock, text, command }) {
     if (command === "talent") {
       const job = rpg.job || "novice";
       const talent = TALENTS[job] || TALENTS.novice;
-      let msg = "╭─「 ᴛᴀʟᴇɴᴛ 」\n";
+      let msg = "╭─「 ✦ ᴛᴀʟᴇɴᴛ ✦ 」\n";
       msg += "│ 👔 Class: " + job + "\n";
       msg += "│\n";
       msg += "│ 💡 " + talent.name + "\n";
       msg += "│ " + talent.desc + "\n";
       msg += "│\n";
       msg += "│ 📌 Talent aktif otomatis sesuai job\n";
-      msg += "╰──────────";
+      msg += "╰────  •  ────";
       return m.reply(msg);
     }
 
@@ -126,7 +126,7 @@ async function handler(m, { sock, text, command }) {
       rpg.skillPoints = (rpg.skillPoints || 0) - 1;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 sᴋɪʟʟ 」\n│ ✅ Kamu mempelajari *" + skillDef.name + "*!\n│ ⚡ MP Cost: " + skillDef.mpCost + "\n│ 💪 Power: " + skillDef.power + "x\n│ 📉 SP tersisa: " + rpg.skillPoints + "\n╰──────────");
+      return m.reply("╭─「 ✦ sᴋɪʟʟ ✦ 」\n│ ✅ Kamu mempelajari *" + skillDef.name + "*!\n│ ⚡ MP Cost: " + skillDef.mpCost + "\n│ 💪 Power: " + skillDef.power + "x\n│ 📉 SP tersisa: " + rpg.skillPoints + "\n╰────  •  ────");
     }
 
     // .research — upgrade skill yang sudah ada
@@ -141,7 +141,7 @@ async function handler(m, { sock, text, command }) {
       rpg.skillPoints = (rpg.skillPoints || 0) - 1;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ʀᴇsᴇᴀʀᴄʜ 」\n│ 🔬 Skill *" + firstSkill.name + "* di-upgrade!\n│ Lv." + firstSkill.level + " | Power: " + firstSkill.power + "x\n│ 📉 SP tersisa: " + rpg.skillPoints + "\n╰──────────");
+      return m.reply("╭─「 ✦ ʀᴇsᴇᴀʀᴄʜ ✦ 」\n│ 🔬 Skill *" + firstSkill.name + "* di-upgrade!\n│ Lv." + firstSkill.level + " | Power: " + firstSkill.power + "x\n│ 📉 SP tersisa: " + rpg.skillPoints + "\n╰────  •  ────");
     }
 
     // .mutate — random skill mutation
@@ -155,7 +155,7 @@ async function handler(m, { sock, text, command }) {
       rpg.skills[0] = { id: newSkillId, name: newSkillDef.name, level: 1, mpCost: newSkillDef.mpCost, power: newSkillDef.power };
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ᴍᴜᴛᴀᴛᴇ 」\n│ 🧬 Skill *" + oldName + "* bermutasi jadi *" + newSkillDef.name + "*!\n│ ⚡ MP: " + newSkillDef.mpCost + " | Power: " + newSkillDef.power + "x\n╰──────────");
+      return m.reply("╭─「 ✦ ᴍᴜᴛᴀᴛᴇ ✦ 」\n│ 🧬 Skill *" + oldName + "* bermutasi jadi *" + newSkillDef.name + "*!\n│ ⚡ MP: " + newSkillDef.mpCost + " | Power: " + newSkillDef.power + "x\n╰────  •  ────");
     }
   } catch (e) {
     console.error("skilltree error:", e.message);

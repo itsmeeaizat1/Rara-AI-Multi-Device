@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     const r = data.result || data.data || data;
     await m.react("🐣");
 
-    let msg = `╭─「 ғʀᴇᴇ ғɪʀᴇ ꜱᴛᴀʟᴋᴇʀ v2 」\n`;
+    let msg = `╭─「 ✦ ғʀᴇᴇ ғɪʀᴇ ꜱᴛᴀʟᴋᴇʀ v2 ✦ 」\n`;
     msg += `│ ID: *${uid}*\n`;
     if (r.username || r.name || r.nickname) msg += `│ Nama: *${r.username || r.name || r.nickname}*\n`;
     if (r.level) msg += `│ Level: *${r.level}*\n`;
@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
     if (r.bio) msg += `│ Bio: ${r.bio.slice(0, 80)}\n`;
     if (r.like || r.likes) msg += `│ Likes: *${r.like || r.likes}*\n`;
     if (r.exp || r.exploit) msg += `│ EXP: *${r.exp || r.exploit}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     const avatarUrl = r.avatar || r.profile_picture || r.banner_image;
     if (avatarUrl && avatarUrl.startsWith("http")) {

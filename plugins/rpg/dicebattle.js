@@ -66,7 +66,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let msg = `╭─「 ᴅɪᴄᴇ ʙᴀᴛᴛʟᴇ 」\n`;
+    let msg = `╭─「 ✦ ᴅɪᴄᴇ ʙᴀᴛᴛʟᴇ ✦ 」\n`;
     msg += `│ Bet: *${bet} gold*\n`;
     msg += `│\n`;
     msg += `│ 🎲 Kamu: ${DICE_EMOJI[p1-1]} ${DICE_EMOJI[p2-1]} = *${pTotal}*${isDouble ? " (DOUBLE!)" : ""}\n`;
@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
     } else {
       msg += `│ 🤝 *SERI!* Bet dikembalikan.\n`;
     }
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("dicebattle error:", err);

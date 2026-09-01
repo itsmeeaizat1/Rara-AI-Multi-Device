@@ -43,10 +43,10 @@ async function handler(m, { sock }) {
         const buffer = Buffer.from(res.data);
 
         await m.react("🐣");
-        let caption = `╭─「 ᴀɪ ɪᴍᴀɢᴇ 」\n`;
+        let caption = `╭─「 ✦ ᴀɪ ɪᴍᴀɢᴇ ✦ 」\n`;
         caption += `│ 🎨 Prompt: *${prompt}*\n`;
         caption += `│ ⚙️ Engine: *pollinations*\n`;
-        caption += `╰──────────`;
+        caption += `╰────  •  ────`;
         return await sock.sendMedia(m.chat, buffer, null, m, { type: "image", caption });
       } catch (e) {
         await m.react("❌");
@@ -87,11 +87,11 @@ async function handler(m, { sock }) {
 
       if (visionResult.status) {
         await m.react("🐣");
-        let msg = `╭─「 ᴀɪ ᴠɪsɪᴏɴ ᴄʜᴀᴛ 」\n`;
+        let msg = `╭─「 ✦ ᴀɪ ᴠɪsɪᴏɴ ᴄʜᴀᴛ ✦ 」\n`;
         msg += `│ 👁️ Status: *Gambar dianalisis*\n`;
         msg += `│\n`;
         msg += `│ ${visionResult.text.replace(/\n/g, "\n│ ")}\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
         return m.reply(msg);
       }
 
@@ -100,13 +100,13 @@ async function handler(m, { sock }) {
       const res = await UnlimitedAI(fallbackPrompt, "nova-ai");
       if (res.status) {
         await m.react("🐣");
-        let msg = `╭─「 ᴀɪ ᴄʜᴀᴛ 」\n`;
+        let msg = `╭─「 ✦ ᴀɪ ᴄʜᴀᴛ ✦ 」\n`;
         msg += `│ ⚠️ Mode text-only (Gemini Vision belum aktif)\n`;
         msg += `│ 🔑 Aktifkan: ${prefix}setkey gemini <key>\n`;
         msg += `│ 🆓 Gratis: aistudio.google.com/apikey\n`;
         msg += `│\n`;
         msg += `│ ${res.answer.replace(/\n/g, "\n│ ")}\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
         return m.reply(msg);
       }
     }
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
     // Mode: chat teks biasa
     if (!text) {
       return m.reply(
-        `╭─「 ᴀɪ ᴄʜᴀᴛ+ɪᴍɢ 」\n` +
+        `╭─「 ✦ ᴀɪ ᴄʜᴀᴛ+ɪᴍɢ ✦ 」\n` +
         `│ 🤖 Chat AI yang bisa lihat gambar & generate gambar\n` +
         `│\n` +
         `│ 📌 Cara pakai:\n` +
@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
         `│ ${prefix}aichatimg apa di foto ini? (reply foto)\n` +
         `│ ${prefix}aichatimg gambar kucing astronot\n` +
         `│ ${prefix}aichatimg jelaskan teori relativitas\n` +
-        `╰──────────`
+        `╰────  •  ────`
       );
     }
 
@@ -138,9 +138,9 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ᴀɪ ᴄʜᴀᴛ 」\n`;
+    let msg = `╭─「 ✦ ᴀɪ ᴄʜᴀᴛ ✦ 」\n`;
     msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("aichatimg error:", err);

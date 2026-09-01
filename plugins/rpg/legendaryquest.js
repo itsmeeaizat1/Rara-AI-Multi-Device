@@ -62,14 +62,14 @@ async function handler(m, { sock }) {
         await db.setPlayerData?.(m.sender, "legendaryquest", progress);
 
         await m.react("🐣");
-        let msg = `╭─「 ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ ᴄᴏᴍᴘʟᴇᴛᴇ! 」\n`;
+        let msg = `╭─「 ✦ ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ ᴄᴏᴍᴘʟᴇᴛᴇ! ✦ 」\n`;
         msg += `│ 🏆 🐉 Final Boss dikalahkan!\n`;
         msg += `│\n`;
         msg += `│ Title: *LEGENDARY HERO*\n`;
         msg += `│ Reward:\n`;
         if (stage.reward.gold) msg += `│ 💰 +${stage.reward.gold} Gold\n`;
         if (stage.reward.energi) msg += `│ ⚡ +${stage.reward.energi} Energi\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
         return m.reply(msg);
       }
 
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "legendaryquest", progress);
 
       await m.react("🐣");
-      let msg = `╭─「 sᴛᴀɢᴇ ᴄʟᴀɪᴍ 」\n`;
+      let msg = `╭─「 ✦ sᴛᴀɢᴇ ᴄʟᴀɪᴍ ✦ 」\n`;
       msg += `│ ${stage.emoji} Stage ${stage.id}: *${stage.name}*\n`;
       msg += `│ ✅ Berhasil diklaim!\n`;
       msg += `│\n`;
@@ -103,22 +103,22 @@ async function handler(m, { sock }) {
         msg += `│ Next: ${next.emoji} *${next.name}*\n`;
         msg += `│ ${next.desc}\n`;
       }
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
 
     // PROGRESS (default)
     if (progress.completed) {
-      let msg = `╭─「 ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ 」\n`;
+      let msg = `╭─「 ✦ ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ ✦ 」\n`;
       msg += `│ 🏆 *COMPLETED!*\n`;
       msg += `│ Title: *LEGENDARY HERO*\n`;
       msg += `│ Semua 7 stage selesai!\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
 
     const currentStage = STAGES.find(s => s.id === progress.currentStage);
-    let msg = `╭─「 ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ 」\n`;
+    let msg = `╭─「 ✦ ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ ✦ 」\n`;
     msg += `│ Progress: *${progress.currentStage - 1}/7* stages\n`;
     msg += `│\n`;
 
@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
 
     msg += `│\n`;
     msg += `│ Reward akhir: *50,000g + 200 energi + Title*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("legendaryquest error:", err);

@@ -58,12 +58,12 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ᴏᴄʀ v2 」\n`;
+    let msg = `╭─「 ✦ ᴏᴄʀ v2 ✦ 」\n`;
     msg += `│ Bahasa: *${lang}*\n`;
     msg += `│ Engine: ocr.space cloud\n`;
     msg += `│\n`;
     msg += `│ Teks:\n${extracted}\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("ocr2 error:", err);

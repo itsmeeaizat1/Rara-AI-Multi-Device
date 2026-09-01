@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     const db = await getDatabase();
 
     if (!targetName) {
-      let msg = `╭─「 ʜᴇɪsᴛ ᴛᴀʀɢᴇᴛs 」\n`;
+      let msg = `╭─「 ✦ ʜᴇɪsᴛ ᴛᴀʀɢᴇᴛs ✦ 」\n`;
       TARGETS.forEach(t => {
         msg += `│ ${t.emoji} ${t.name} [${t.difficulty}]\n`;
         msg += `│   Success: ${Math.round(t.successRate*100)}% | Reward: ${t.reward[0]}-${t.reward[1]}g\n`;
@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
       });
       msg += `│\n`;
       msg += `│ ${m.prefix}heist <target>\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
 
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ʜᴇɪsᴛ ʀᴇsᴜʟᴛ 」\n`;
+    let msg = `╭─「 ✦ ʜᴇɪsᴛ ʀᴇsᴜʟᴛ ✦ 」\n`;
     msg += `│ Target: ${target.emoji} *${target.name}*\n`;
     msg += `│\n`;
     msg += `│ ${narrative}\n`;
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
       msg += `│ 💀 *TERTANGKAP!*\n`;
       msg += `│ Denda: *-${target.fine} gold*\n`;
     }
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("heist error:", err);

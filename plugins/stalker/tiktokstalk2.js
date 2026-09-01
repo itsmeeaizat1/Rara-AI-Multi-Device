@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     const r = data.result || data.data || data;
     await m.react("🐣");
 
-    let msg = `╭─「 ᴛɪᴋᴛᴏᴋ ꜱᴛᴀʟᴋᴇʀ v2 」\n`;
+    let msg = `╭─「 ✦ ᴛɪᴋᴛᴏᴋ ꜱᴛᴀʟᴋᴇʀ v2 ✦ 」\n`;
     msg += `│ Username: *@${r.username || username}*\n`;
     if (r.nickname || r.name) msg += `│ Nama: *${r.nickname || r.name}*\n`;
     if (r.signature || r.bio) msg += `│ Bio: ${(r.signature || r.bio).slice(0, 100)}\n`;
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     if (r.video_count || r.videoCount) msg += `│ Total Video: *${r.video_count || r.videoCount}*\n`;
     if (r.verified !== undefined) msg += `│ Verified: ${r.verified ? "✅" : "❌"}\n`;
     if (r.url || r.link) msg += `│ URL: ${r.url || r.link}\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     const avatarUrl = r.avatar || r.profile_picture || r.avatarUrl;
     if (avatarUrl && avatarUrl.startsWith("http")) {

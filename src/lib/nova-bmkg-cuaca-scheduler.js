@@ -197,8 +197,8 @@ function formatDetailedWeather(data, location, label) {
   const isDay = c.is_day === 1;
 
   // Current conditions
-  let txt = "╭─「 CUACA RINCI — BMKG STYLE  │ \n 」";
-  txt += "╰──────────\n";
+  let txt = "╭─「 ✦ CUACA RINCI — BMKG STYLE  │ \n ✦ 」";
+  txt += "╰────  •  ────\n";
   txt += "Lokasi: *" + location.name + "*";
   if (location.province) txt += " (" + location.province + ")";
   txt += "\n";

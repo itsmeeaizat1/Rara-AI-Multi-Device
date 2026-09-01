@@ -67,19 +67,19 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "achievements", allData.achievements);
 
       await m.react("🐣");
-      let msg = `╭─「 ᴀᴄʜɪᴇᴠᴇᴍᴇɴᴛ ᴄʟᴀɪᴍ 」\n`;
+      let msg = `╭─「 ✦ ᴀᴄʜɪᴇᴠᴇᴍᴇɴᴛ ᴄʟᴀɪᴍ ✦ 」\n`;
       msg += `│ ${ach.emoji} *${ach.name}*\n`;
       msg += `│ ${ach.desc}\n`;
       msg += `│\n`;
       msg += `│ Reward:\n`;
       if (ach.reward.gold) msg += `│ 💰 +${ach.reward.gold} Gold\n`;
       if (ach.reward.energi) msg += `│ ⚡ +${ach.reward.energi} Energi\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
 
     // LIST all achievements
-    let msg = `╭─「 ᴀᴄʜɪᴇᴠᴇᴍᴇɴᴛs 」\n`;
+    let msg = `╭─「 ✦ ᴀᴄʜɪᴇᴠᴇᴍᴇɴᴛs ✦ 」\n`;
     let unlocked = 0;
     let canClaim = 0;
 
@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
     msg += `│ Can claim: *${canClaim}*\n`;
     if (canClaim > 0) msg += `│\n`;
     if (canClaim > 0) msg += `│ ${m.prefix}achievement claim <id>\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("achievement error:", err);

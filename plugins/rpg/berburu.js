@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
       }
 
       await m.react("🐣");
-      let msg = `╭─「 ʙᴇʀʙᴜʀᴜ 」\n`;
+      let msg = `╭─「 ✦ ʙᴇʀʙᴜʀᴜ ✦ 」\n`;
       msg += `│ 🎯 Monster: *${monster.name}* (Lv.${monster.minLv}-${monster.maxLv})\n`;
       msg += `│ ⚔️ Pertarungan: *${rounds} ronde*\n`;
       msg += `│ 💥 DMG diterima: *${playerDmgTaken}*\n`;
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
       msg += `│ ✦ EXP: *+${expGain}*\n`;
       msg += `│ 💰 Gold: *+${goldGain}*\n`;
       if (dropText) msg += dropText + "\n";
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     } else {
@@ -133,14 +133,14 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastHunt", HUNT_COOLDOWN);
 
       await m.react("❌");
-      let msg = `╭─「 ʙᴇʀʙᴜʀᴜ 」\n`;
+      let msg = `╭─「 ✦ ʙᴇʀʙᴜʀᴜ ✦ 」\n`;
       msg += `│ 😵 Kamu kalah melawan *${monster.name}*!\n`;
       msg += `│ 💥 DMG diterima: *${playerDmgTaken}*\n`;
       msg += `│ ❤️ HP tersisa: *${newHp}/${rpg.maxHp}*\n`;
       msg += `│\n`;
       msg += `│ 💡 Tingkatkan equipment atau level dulu\n`;
       msg += `│ sebelum berburu monster yang lebih kuat\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }

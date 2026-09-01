@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     const senderName = m.pushName || "kamu";
-    const caption = `╭─「 ᴀɴɪᴍᴇ ʀᴇᴀᴄᴛɪᴏɴ 」\n│ ${senderName} ${label} ${target} 💕\n╰──────────`;
+    const caption = `╭─「 ✦ ᴀɴɪᴍᴇ ʀᴇᴀᴄᴛɪᴏɴ ✦ 」\n│ ${senderName} ${label} ${target} 💕\n╰────  •  ────`;
     return await sock.sendMessage(m.chat, { image: buffer, caption, mentions });
   } catch (err) {
     console.error("animereact error:", err);

@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.react("🐣");
 
-    let msg = `╭─「 ɢᴇᴍɪɴɪ ᴠɪsɪᴏɴ 」\n`;
+    let msg = `╭─「 ✦ ɢᴇᴍɪɴɪ ᴠɪsɪᴏɴ ✦ 」\n`;
     msg += `│ 📸 Model: *${result.model}*\n`;
     msg += `│\n`;
     msg += `│ Pertanyaan:\n`;
@@ -71,7 +71,7 @@ async function handler(m, { sock, config: botConfig }) {
     msg += `│\n`;
     msg += `│ Hasil Analisis:\n`;
     msg += `│ ${result.text.replace(/\n/g, "\n│ ")}\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     return m.reply(msg);
   } catch (err) {

@@ -179,7 +179,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastPvP", PVP_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 ᴅᴜᴇʟ ʀᴘɢ 」\n`;
+    let msg = `╭─「 ✦ ᴅᴜᴇʟ ʀᴘɢ ✦ 」\n`;
     msg += `│ ⚔️ ${m.pushName} vs ${targetJid.split("@")[0]}\n`;
     msg += `│\n`;
 
@@ -205,7 +205,7 @@ async function handler(m, { sock }) {
     }
     msg += `│\n`;
     msg += `│ ❤️ HP kamu: *${Math.max(1, myHp)}/${rpg.maxHp}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     return m.reply(msg);
   } catch (err) {

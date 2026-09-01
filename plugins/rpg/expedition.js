@@ -85,13 +85,13 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(sender, "expedition", data);
       try { await db.addGold?.(sender, rewardGold); } catch {}
 
-      let text = `╭─「 EKSPEDISI SELESAI 」\n`;
+      let text = `╭─「 ✦ EKSPEDISI SELESAI ✦ 」\n`;
       text += `│ 🎉 Party kamu telah kembali dari *${completedLoc}*!\n`;
       text += `│\n`;
       text += `│ 💰 Reward Gold : +${rewardGold.toLocaleString()} Gold\n`;
       text += `│ 📊 Total Ekspedisi : ${data.totalCompleted}x\n`;
       text += `│ 🏆 Total Pendapatan : ${data.totalEarned.toLocaleString()} Gold\n`;
-      text += `╰──────────`;
+      text += `╰────  •  ────`;
 
       await m.react("🐣");
       return m.reply(text);
@@ -156,7 +156,7 @@ async function handler(m, { sock }) {
 
       await db.setPlayerData?.(sender, "expedition", data);
 
-      let text = `╭─「 EKSPEDISI DIMULAI 」\n`;
+      let text = `╭─「 ✦ EKSPEDISI DIMULAI ✦ 」\n`;
       text += `│ ${loc.emoji} Lokasi : *${loc.name}*\n`;
       text += `│ ⏱️ Durasi : ${loc.durationStr}\n`;
       text += `│ 💰 Est. Reward : ${loc.minGold} - ${loc.maxGold} Gold\n`;
@@ -164,7 +164,7 @@ async function handler(m, { sock }) {
       text += `│\n`;
       text += `│ 💡 Ketik *${prefix}expedition* untuk cek status.\n`;
       text += `│ 💡 Ketik *${prefix}expedition claim* setelah waktu habis.\n`;
-      text += `╰──────────`;
+      text += `╰────  •  ────`;
 
       await m.react("🐣");
       return m.reply(text);
@@ -176,7 +176,7 @@ async function handler(m, { sock }) {
       const isDone = elapsed >= data.active.duration;
       const remaining = Math.max(0, data.active.duration - elapsed);
 
-      let text = `╭─「 STATUS EKSPEDISI 」\n`;
+      let text = `╭─「 ✦ STATUS EKSPEDISI ✦ 」\n`;
       text += `│ ${data.active.emoji} Lokasi : *${data.active.name}*\n`;
       text += `│ 💰 Est. Reward : ${data.active.minGold.toLocaleString()} - ${data.active.maxGold.toLocaleString()} Gold\n`;
       text += `│ ⏳ Sisa Waktu : *${isDone ? "SIAP DIKLAIM! 🎉" : formatTime(remaining)}*\n`;
@@ -186,14 +186,14 @@ async function handler(m, { sock }) {
       } else {
         text += `│ ℹ️ Tunggu hingga timer selesai untuk klaim reward.\n`;
       }
-      text += `╰──────────`;
+      text += `╰────  •  ────`;
 
       await m.react("🐣");
       return m.reply(text);
     }
 
     // No active expedition: show locations menu
-    let menu = `╭─「 DAFTAR EKSPEDISI 」\n`;
+    let menu = `╭─「 ✦ DAFTAR EKSPEDISI ✦ 」\n`;
     menu += `│ Kirim party kamu untuk menjelajahi wilayah!\n`;
     menu += `│\n`;
     LOCATIONS.forEach((l) => {
@@ -205,7 +205,7 @@ async function handler(m, { sock }) {
     menu += `│ 📌 Cara Memulai:\n`;
     menu += `│ Ketik *${prefix}expedition start <1-5>*\n`;
     menu += `│ Contoh: *${prefix}expedition start 1*\n`;
-    menu += `╰──────────`;
+    menu += `╰────  •  ────`;
 
     await m.react("🐣");
     return m.reply(menu);

@@ -62,7 +62,7 @@ class GameFactory {
           if (existing && existing.gameType === gameType) {
             const remaining = getRemainingTime(chatId);
             const answer = existing.question[cfg.answerField];
-            let text = `╭─「 ${cfg.title} — GAME BERJALAN 」\n\n`;
+            let text = `╭─「 ✦ ${cfg.title} — GAME BERJALAN ✦ 」\n\n`;
             if (cfg.questionField && existing.question[cfg.questionField]) {
               text += `\`\`\`${existing.question[cfg.questionField]}\`\`\`\n\n`;
             }
@@ -71,7 +71,7 @@ class GameFactory {
             }
             text += `│ ❏ Sisa waktu: *${formatTime(remaining)}*\n\n`;
             text += `_Reply pesan game ini untuk jawab atau ketik "nyerah"_\n`;
-            text += `╰─`;
+            text += `╰────  •  ────`;
             await m.reply(text);
             return;
           }
@@ -102,7 +102,7 @@ class GameFactory {
             return;
           }
 
-          let caption = `╭─「 ${cfg.title} 」\n\n`;
+          let caption = `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             caption += `\`\`\`${question[cfg.questionField]}\`\`\`\n`;
           }
@@ -112,11 +112,11 @@ class GameFactory {
           caption += `│ ❏ Waktu: *${cfg.timeout / 1000} detik*\n`;
           caption += `│ ❏ Hadiah: *Limit, Koin, EXP (random)*\n\n`;
           caption += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
-          caption += `╰─`;
+          caption += `╰────  •  ────`;
 
           sentMsg = await sock.sendMessage(chatId, { image: imageBuffer, caption }, { quoted: m });
         } else {
-          let text = `╭─「 ${cfg.title} 」\n\n`;
+          let text = `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
           }
@@ -126,7 +126,7 @@ class GameFactory {
           text += `│ ❏ Waktu: *${cfg.timeout / 1000} detik*\n`;
           text += `│ ❏ Hadiah: *Limit, Koin, EXP (random)*\n\n`;
           text += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
-          text += `╰─`;
+          text += `╰────  •  ────`;
 
           sentMsg = await sock.sendMessage(chatId, { text }, { quoted: m });
         }
@@ -141,7 +141,7 @@ class GameFactory {
         setSessionTimer(chatId, async () => {
           try {
             let text = `${pick(TIMEOUT_MSGS)}\n\n`;
-            text += `╭─「 ${cfg.title} 」\n\n`;
+            text += `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
             if (cfg.questionField && question[cfg.questionField]) {
               text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
             }
@@ -150,7 +150,7 @@ class GameFactory {
               text += `│ ❏ Info: ${question.deskripsi}\n`;
             }
             text += `\n_Gak ada yang bisa jawab nih~_\n`;
-            text += `╰─`;
+            text += `╰────  •  ────`;
             await sock.sendMessage(chatId, { text });
           } catch (e) {
             console.error(`[${gameType}] Timeout error:`, e.message);
@@ -191,7 +191,7 @@ class GameFactory {
           endSession(chatId);
 
           let text = `${pick(SURRENDER_MSGS)}\n\n`;
-          text += `╭─「 ${cfg.title} 」\n\n`;
+          text += `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
           if (cfg.questionField && session.question[cfg.questionField]) {
             text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
           }
@@ -200,7 +200,7 @@ class GameFactory {
             text += `│ ❏ Info: ${session.question.deskripsi}\n`;
           }
           text += `\n_@${m.sender.split('@')[0]} menyerah_\n`;
-          text += `╰─`;
+          text += `╰────  •  ────`;
 
           try {
             await sock.sendMessage(chatId, {
@@ -254,7 +254,7 @@ class GameFactory {
           }
 
           let text = `${pick(WIN_MSGS)}\n\n`;
-          text += `╭─「 ${cfg.title} 」\n\n`;
+          text += `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
           text += `│ ❏ Jawaban: *${answer}*\n`;
           text += `│ ❏ Pemenang: *@${m.sender.split('@')[0]}*\n`;
           text += `│ ❏ Percobaan: *${session.attempts}x*\n\n`;
@@ -272,7 +272,7 @@ class GameFactory {
             text += `\n│ ❏ Info: ${session.question.deskripsi}\n`;
           }
 
-          text += `\n╰─`;
+          text += `\n╰────  •  ────`;
 
           try {
             await sock.sendMessage(chatId, { text, mentions: [m.sender] });
@@ -308,7 +308,7 @@ class GameFactory {
         // Max attempts atau waktu habis
         endSession(chatId);
         let text = `${pick(TIMEOUT_MSGS)}\n\n`;
-        text += `╭─「 ${cfg.title} 」\n\n`;
+        text += `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
         if (cfg.questionField && session.question[cfg.questionField]) {
           text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
         }
@@ -316,7 +316,7 @@ class GameFactory {
         if (session.question.deskripsi) {
           text += `│ ❏ Info: ${session.question.deskripsi}\n`;
         }
-        text += `\n╰─`;
+        text += `\n╰────  •  ────`;
         try {
           await sock.sendMessage(chatId, { text });
         } catch {}

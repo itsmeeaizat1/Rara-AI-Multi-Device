@@ -144,7 +144,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastSabung", SABUNG_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 sᴀʙᴜɴɢ ᴀʏᴀᴍ 」\n`;
+    let msg = `╭─「 ✦ sᴀʙᴜɴɢ ᴀʏᴀᴍ ✦ 」\n`;
     msg += `│ 🐓 Ayam Kamu vs ${enemyName}\n`;
     msg += `│ 💵 Bet: *${bet} gold*\n`;
     msg += `│\n`;
@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
 
     msg += `│\n`;
     msg += `│ 💼 Gold: *${rpg.gold - bet + payout}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     return m.reply(msg);
   } catch (err) {

@@ -42,12 +42,12 @@ async function handler(m, { sock }) {
     const hours = Math.floor(remaining / (1000 * 60 * 60));
     const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
     return m.reply(
-      "╭─「 Daily Claim 」\n" +
+      "╭─「 ✦ Daily Claim ✦ 」\n" +
       "│\n" +
       "│ 🕖 Sabar ya, cooldown nih!\n" +
       "│ Udah klaim hari ini 👀\n" +
       "│ Tunggu *" + hours + " jam " + minutes + " menit* lagi ya\n" +
-      "╰──────────"
+      "╰────  •  ────"
     );
   }
 
@@ -97,7 +97,7 @@ async function handler(m, { sock }) {
 
   const greeting = getTimeGreeting();
 
-  let txt = "╭─「 Daily Claim 」\n";
+  let txt = "╭─「 ✦ Daily Claim ✦ 」\n";
   txt += "│\n";
   txt += "* " + greeting + ", @" + m.sender.split("@")[0] + "!* 👋\n";
   txt += "│ 🔥 Streak: *" + streak + " hari*\n";
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
   txt += "│ 🥤 Potion: *+" + potionReward + "*\n";
   txt += "│\n";
   txt += "│ 💡 Besok klaim lagi ya, jangan sampai putus streak-nya!\n";
-  txt += "╰──────────";
+  txt += "╰────  •  ────";
   await sock.sendMessage(m.chat, { text: txt, mentions: [m.sender] }, { quoted: m });
 }
 

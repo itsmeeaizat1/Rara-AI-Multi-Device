@@ -40,10 +40,10 @@ async function handler(m, { sock }) {
     toxicWords.splice(index, 1)
     db.setGroup(m.chat, { toxicWords })
     await m.reply(claraWrap("Kata Toxic Dihapus", `✅ *ᴋᴀᴛᴀ ᴛᴏxɪᴄ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
-        `╭─「 ᴅᴇᴛᴀɪʟ 」\n` +
+        `╭─「 ✦ ᴅᴇᴛᴀɪʟ ✦ 」\n` +
         `│ 📝 Kata: \`${word}\`\n` +
         `│ 📊 sIsa: \`${toxicWords.length}\` kata\n` +
-        `╰──────────`))
+        `╰────  •  ────`))
 }
 
 export { pluginConfig as config, handler }

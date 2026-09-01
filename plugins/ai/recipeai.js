@@ -86,11 +86,11 @@ Gunakan bahasa Indonesia. Resep harus praktis dan bisa dibuat di rumah.`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ʀᴇsᴇᴘ ᴀɪ 」\n`;
+    let msg = `╭─「 ✦ ʀᴇsᴇᴘ ᴀɪ ✦ 」\n`;
     msg += `│ 🥘 Bahan: *${text}*\n`;
     msg += `│\n`;
     msg += formatted;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("recipeai error:", err);

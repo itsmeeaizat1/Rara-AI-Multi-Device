@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   const filter = m.args[0]?.toLowerCase();
 
   if (!filter) {
-    let help = "╭─「 Sticker Filter 」\n";
+    let help = "╭─「 ✦ Sticker Filter ✦ 」\n";
     help += "│ Reply sticker dengan filter:\n";
     help += "│\n";
     help += "│ *Filter tersedia:*\n";
@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     help += "│\n";
     help += `│ 💡 *Contoh:* \`${m.prefix}stickerfilter blur\`\n`;
     help += "│ (Reply sticker dulu)\n";
-    help += "╰──────────";
+    help += "╰────  •  ────";
     return m.reply(novaGuide("Sticker Filter", "Mau filter sticker? Pilih filter-nya ya!", `${m.prefix}stickerfilter blur`));
   }
 

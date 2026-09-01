@@ -181,7 +181,7 @@ function logMessage(info) {
   console.log(`  ${cGray("│")} ${cWhite("📅 Waktu:")} ${cGray(date)} ${cWhite(time)}`);
   console.log(`  ${cGray("│")} ${cWhite("💬 Tipe:")} ${cGray(`[${typeTag}]`)}`);
   console.log(`  ${cGray("│")} ${cWhite("💬 " + msg)}`);
-  console.log(`  ${cGray("╰───────")}`);
+  console.log(`  ${cGray("╰────  •  ────")}`);
 }
 
 function logPlugin(name, category) {

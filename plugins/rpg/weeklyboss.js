@@ -86,14 +86,14 @@ async function handler(m, { sock }) {
       const hpPct = Math.floor((bossState.hp / bossState.maxHp) * 100);
       const hpBar = "█".repeat(Math.floor(hpPct/10)) + "░".repeat(10 - Math.floor(hpPct/10));
 
-      let msg = `╭─「 ʙᴏss ʀᴀɪᴅ 」\n`;
+      let msg = `╭─「 ✦ ʙᴏss ʀᴀɪᴅ ✦ 」\n`;
       msg += `│ Boss: ${bossState.boss.emoji} *${bossState.boss.name}*\n`;
       msg += `│ HP: [${hpBar}] ${bossState.hp.toLocaleString()}/${bossState.maxHp.toLocaleString()}\n`;
       msg += `│\n`;
       msg += `│ ⚔️ Damage: *${damage}*${crit ? " 💥 CRITICAL!" : ""}\n`;
       msg += `│ 🛡️ Boss counter: *-${bossDmg} gold*\n`;
       msg += `│ Total kontribusi: *${current.damage.toLocaleString()}* (${current.hits} hits)\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       // Check if defeated
       if (bossState.hp === 0) {
@@ -101,14 +101,14 @@ async function handler(m, { sock }) {
         // Reward top 3
         const sorted = [...bossState.contributors.entries()].sort((a, b) => b[1].damage - a[1].damage);
         const prizePool = 50000;
-        let bonusMsg = `\n\n╭─「 ʙᴏss ᴅᴇғᴇᴀᴛᴇᴅ! 」\n`;
+        let bonusMsg = `\n\n╭─「 ✦ ʙᴏss ᴅᴇғᴇᴀᴛᴇᴅ! ✦ 」\n`;
         bonusMsg += `│ 🏆 Top Contributors:\n`;
         sorted.slice(0, 3).forEach(([id, c], i) => {
           const reward = [20000, 10000, 5000][i];
           bonusMsg += `│ ${i+1}. ${c.name} - ${c.damage.toLocaleString()} dmg (+${reward}g)\n`;
           if (id === m.sender) { try { db.addGold?.(id, reward); } catch {} }
         });
-        bonusMsg += `╰──────────`;
+        bonusMsg += `╰────  •  ────`;
         return m.reply(msg + bonusMsg);
       }
       return m.reply(msg);
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
     const hpPct = Math.floor((bossState.hp / bossState.maxHp) * 100);
     const hpBar = "█".repeat(Math.floor(hpPct/10)) + "░".repeat(10 - Math.floor(hpPct/10));
 
-    let msg = `╭─「 ᴡᴇᴇᴋʟʏ ʙᴏss 」\n`;
+    let msg = `╭─「 ✦ ᴡᴇᴇᴋʟʏ ʙᴏss ✦ 」\n`;
     msg += `│ Boss: ${bossState.boss.emoji} *${bossState.boss.name}*\n`;
     msg += `│ ATK: *${bossState.boss.atk}*\n`;
     msg += `│ HP: [${hpBar}] ${bossState.hp.toLocaleString()}/${bossState.maxHp.toLocaleString()}\n`;
@@ -132,7 +132,7 @@ async function handler(m, { sock }) {
     }
     msg += `│\n`;
     msg += `│ ${m.prefix}weeklyboss attack - serang! (20 energi)\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("weeklyboss error:", err);

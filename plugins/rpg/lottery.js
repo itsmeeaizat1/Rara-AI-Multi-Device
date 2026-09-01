@@ -43,14 +43,14 @@ async function handler(m, { sock }) {
       const prizePool = Math.floor(totalRevenue * 0.7);
       const myTickets = lottery.tickets.filter((t) => t.sender === sender).length;
 
-      let msg = `╭─「 ROYAL LOTTERY 」\n`;
+      let msg = `╭─「 ✦ ROYAL LOTTERY ✦ 」\n`;
       msg += `│ 🎟️ *Harga Tiket:* ${ticketPrice} Gold\n`;
       msg += `│ 📊 *Total Tiket Terjual:* ${totalTickets} Tiket\n`;
       msg += `│ 🏆 *Total Hadiah (70%):* ${prizePool} Gold\n`;
       msg += `│ 🎫 *Tiket Milikmu:* ${myTickets} Tiket\n│\n`;
       msg += `│ Cara Membeli Tiket:\n`;
       msg += `│ ${m.prefix}lottery buy <jumlah_tiket>\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       await m.react('🐣');
       return m.reply(msg);
@@ -93,13 +93,13 @@ async function handler(m, { sock }) {
 
       const myTickets = lottery.tickets.filter((t) => t.sender === sender).length;
 
-      let msg = `╭─「 LOTTERY PURCHASE 」\n`;
+      let msg = `╭─「 ✦ LOTTERY PURCHASE ✦ 」\n`;
       msg += `│ 🎟️ Berhasil membeli *${count}* tiket lotre!\n`;
       msg += `│  \n`;
       msg += `│ 💰 Total Biaya: -${totalCost} Gold\n`;
       msg += `│ 🎫 Total Tiket Kamu Saat Ini: *${myTickets} Tiket*\n`;
       msg += `│ 👛 Sisa Gold: *${userWallet.gold} Gold*\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       await m.react('🐣');
       return m.reply(msg);
@@ -149,7 +149,7 @@ async function handler(m, { sock }) {
       winnerWallet.gold = (winnerWallet.gold || 0) + prizePool;
       await db.setPlayerData?.(winnerSender, "wallet", winnerWallet);
 
-      let msg = `╭─「 LOTTERY DRAW WINNER 」\n`;
+      let msg = `╭─「 ✦ LOTTERY DRAW WINNER ✦ 」\n`;
       msg += `│ 🎊 *PENGUNDIAN LOTRE SAKRAL* 🎊\n`;
       msg += `│  \n`;
       msg += `│ 🎟️ Total Tiket Terundi: ${totalTickets} Tiket\n`;
@@ -157,7 +157,7 @@ async function handler(m, { sock }) {
       msg += `│ 👑 *Pemenang Utama:* @${winnerName}\n`;
       msg += `│  \n`;
       msg += `│ Selamat kepada pemenang! Hadiah telah dikirim ke dompet.\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       await m.react('🐣');
       return m.reply(msg);

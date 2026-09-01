@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
         text:
           `📊 *sTatistik Daftar*\n\n` +
           `Status sistem: ${currentStatus ? "✅ ON (Wajib Daftar)" : "❌ OFF"}\n\n` +
-          `╭─「 sTats 」\n` +
+          `╭─「 ✦ sTats ✦ 」\n` +
           `│ Total registered: *${stats.totalRegistered}*\n` +
           `│ Register hari ini: *${stats.registeredToday}*\n` +
           `│ Unreg hari ini: *${stats.unregisteredToday}*\n` +

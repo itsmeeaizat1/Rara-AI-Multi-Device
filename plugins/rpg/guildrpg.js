@@ -35,13 +35,13 @@ async function handler(m, { sock }) {
     // Default: show guild info
     if (!action || action === "info") {
       if (!rpg.guildId) {
-        let msg = `╭─「 ɢᴜɪʟᴅ 」\n`;
+        let msg = `╭─「 ✦ ɢᴜɪʟᴅ ✦ 」\n`;
         msg += `│ Kamu belum bergabung guild\n`;
         msg += `│\n`;
         msg += `│ 📌 .guildrpg create <nama> — buat guild (Lv.20+)\n`;
         msg += `│ 📌 .guildrpg list — lihat guild tersedia\n`;
         msg += `│ 📌 .guildrpg join <id> — join guild\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
         return m.reply(msg);
       }
 
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("guildrpg", "Guild tidak ditemukan (mungkin sudah dihapus).", "warn"));
       }
 
-      let msg = `╭─「 ɢᴜɪʟᴅ ɪɴғᴏ 」\n`;
+      let msg = `╭─「 ✦ ɢᴜɪʟᴅ ɪɴғᴏ ✦ 」\n`;
       msg += `│ 🏰 Nama: *${guild.name}*\n`;
       msg += `│ 👑 Leader: *${guild.leader?.split("@")[0] || "Unknown"}*\n`;
       msg += `│ 👥 Members: *${guild.members.length}/50*\n`;
@@ -75,7 +75,7 @@ async function handler(m, { sock }) {
 
       msg += `│\n`;
       msg += `│ 📌 .guildrpg leave — keluar dari guild\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
 
       if (result.success) {
         await m.react("🐣");
-        let msg = `╭─「 ɢᴜɪʟᴅ ᴄʀᴇᴀᴛᴇ 」\n`;
+        let msg = `╭─「 ✦ ɢᴜɪʟᴅ ᴄʀᴇᴀᴛᴇ ✦ 」\n`;
         msg += `│ ✅ Guild berhasil dibuat!\n`;
         msg += `│\n`;
         msg += `│ 🏰 Nama: *${result.name}*\n`;
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
         msg += `│\n`;
         msg += `│ Share ID guild untuk ajak orang join:\n`;
         msg += `│ ID: *${result.guildId}*\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
         return m.reply(msg);
       } else {
         return m.reply(claraWrap("guildrpg", result.reason || "Gagal buat guild.", "warn"));
@@ -117,7 +117,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("guildrpg", "Belum ada guild yang dibuat. Jadilah yang pertama! Ketik .guildrpg create <nama>", "info"));
       }
 
-      let msg = `╭─「 ɢᴜɪʟᴅ ʟɪsᴛ 」\n`;
+      let msg = `╭─「 ✦ ɢᴜɪʟᴅ ʟɪsᴛ ✦ 」\n`;
       msg += `│ Total guild: *${guildList.length}*\n`;
       msg += `│\n`;
 
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
 
       msg += `│\n`;
       msg += `│ 📌 .guildrpg join <id> untuk join\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }
@@ -143,11 +143,11 @@ async function handler(m, { sock }) {
 
       if (result.success) {
         await m.react("🐣");
-        let msg = `╭─「 ɢᴜɪʟᴅ ᴊᴏɪɴ 」\n`;
+        let msg = `╭─「 ✦ ɢᴜɪʟᴅ ᴊᴏɪɴ ✦ 」\n`;
         msg += `│ ✅ Berhasil join guild!\n`;
         msg += `│ 🏰 *${result.guild.name}*\n`;
         msg += `│ 👥 Members: ${result.guild.members.length}/50\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
         return m.reply(msg);
       } else {
         return m.reply(claraWrap("guildrpg", result.reason || "Gagal join guild.", "warn"));
@@ -160,9 +160,9 @@ async function handler(m, { sock }) {
 
       if (result.success) {
         await m.react("🐣");
-        let msg = `╭─「 ɢᴜɪʟᴅ ʟᴇᴀᴠᴇ 」\n`;
+        let msg = `╭─「 ✦ ɢᴜɪʟᴅ ʟᴇᴀᴠᴇ ✦ 」\n`;
         msg += `│ ✅ Kamu keluar dari guild\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
         return m.reply(msg);
       } else {
         return m.reply(claraWrap("guildrpg", result.reason || "Tidak ada guild untuk ditinggalkan.", "warn"));

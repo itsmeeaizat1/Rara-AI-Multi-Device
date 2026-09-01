@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     });
 
     await m.react("🐣");
-    const caption = `╭─「 ǫʀ ᴄᴏᴅᴇ 」\n│ Content: ${text.slice(0, 60)}${text.length > 60 ? "..." : ""}\n│ Engine: qrcode (local)\n╰──────────`;
+    const caption = `╭─「 ✦ ǫʀ ᴄᴏᴅᴇ ✦ 」\n│ Content: ${text.slice(0, 60)}${text.length > 60 ? "..." : ""}\n│ Engine: qrcode (local)\n╰────  •  ────`;
     return await sock.sendMessage(m.chat, { image: buffer, caption });
   } catch (err) {
     console.error("qrgen error:", err);

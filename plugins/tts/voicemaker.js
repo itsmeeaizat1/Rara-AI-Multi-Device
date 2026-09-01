@@ -31,7 +31,7 @@ const VOICES = [
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    let help = "╭─「 VoiceMaker TTS 」\n";
+    let help = "╭─「 ✦ VoiceMaker TTS ✦ 」\n";
     help += "│ 📌 *Cara Pakai:*\n";
     help += `│ \`${m.prefix}voicemaker <teks>\` — Default (Ardi)\n`;
     help += `│ \`${m.prefix}voicemaker <voice>|<teks>\` — Pilih voice\n`;
@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     }
     help += "│\n";
     help += `│ 💡 *Contoh:* \`${m.prefix}voicemaker Halo semuanya\`\n`;
-    help += "╰──────────";
+    help += "╰────  •  ────";
     return m.reply(novaGuide("VoiceMaker", "Mau bikin voice dari teks? Pilih voice-nya ya!", `${m.prefix}voicemaker id-ArdiNeural Halo dunia`));
   }
 

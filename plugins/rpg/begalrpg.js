@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBegal", BEGAL_COOLDOWN);
 
       await m.react("🐣");
-      let msg = `╭─「 ʙᴇɢᴀʟ 」\n`;
+      let msg = `╭─「 ✦ ʙᴇɢᴀʟ ✦ 」\n`;
       msg += `│ 🗡️ ${m.pushName} merampok ${targetJid.split("@")[0]}\n`;
       msg += `│\n`;
       msg += `│ ✅ Berhasil rampok!\n`;
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
       msg += `│ ✦ EXP: *+${expGain}*\n`;
       msg += `│\n`;
       msg += `│ ⚠️ Rampok lagi = makin besar cooldown\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     } else {
@@ -123,14 +123,14 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBegal", BEGAL_COOLDOWN);
 
       await m.react("❌");
-      let msg = `╭─「 ʙᴇɢᴀʟ 」\n`;
+      let msg = `╭─「 ✦ ʙᴇɢᴀʟ ✦ 」\n`;
       msg += `│ 🗡️ ${m.pushName} mencoba rampok ${targetJid.split("@")[0]}\n`;
       msg += `│\n`;
       msg += `│ ❌ Ketahuan! Kamu ditangkap!\n`;
       msg += `│ 💸 Denda: *-${actualFine} gold*\n`;
       msg += `│\n`;
       msg += `│ 💡 Level lebih tinggi dari target = success rate lebih besar\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }

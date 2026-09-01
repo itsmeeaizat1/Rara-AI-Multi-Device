@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
   await db.save();
 
   // Reaksi loading
-  let txt = "╭─「 Batal Daftar 」\n";
+  let txt = "╭─「 ✦ Batal Daftar ✦ 」\n";
   txt += "│\n";
   txt += "│ ✅ Data pendaftaran berhasil dihapus\n";
   txt += "│\n";
@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
   txt += "│\n";
   txt += "│ 💡 Daftar ulang kapan saja dengan `.daftar`\n";
   txt += "│ ⚠️ Reward daftar tidak bisa diklaim ulang\n";
-  txt += "╰──────────";
+  txt += "╰────  •  ────";
 
   await sock.sendMessage(m.chat, { text: txt }, { quoted: m });
 }

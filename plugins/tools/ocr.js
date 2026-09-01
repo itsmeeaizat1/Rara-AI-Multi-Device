@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
     }
     const responseText =
       `📖 *ᴏᴄʀ ʀᴇꜱᴜʟᴛ*\n\n` +
-      `╭─「 TEKs 」\n` +
+      `╭─「 ✦ TEKs ✦ 」\n` +
       `${extractedText
         .split("\n")
         .map((l) => `│ ${l}`)

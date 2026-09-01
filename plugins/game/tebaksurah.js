@@ -34,11 +34,11 @@ async function handler(m, { sock, db }) {
         sessions.delete(groupId);
 
         await m.react("🐣");
-        let msg = `╭─「 ᴛᴇʙᴀᴋ ꜱᴜʀᴀʜ 」\n`;
+        let msg = `╭─「 ✦ ᴛᴇʙᴀᴋ ꜱᴜʀᴀʜ ✦ 」\n`;
         msg += `│ ✅ Benar! Jawaban: *${session.surahData.englishName}*\n`;
         msg += `│ (${session.surahData.englishNameTranslation})\n`;
         msg += `│ 🎉 Bonus: +5 energi\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
 
         // Bonus energi
         try {
@@ -70,7 +70,7 @@ async function handler(m, { sock, db }) {
     const revelation = surah.revelationType === "Meccan" ? "Makkiyah" : "Madaniyah";
 
     await m.react("🐣");
-    let msg = `╭─「 ᴛᴇʙᴀᴋ ꜱᴜʀᴀʜ 」\n`;
+    let msg = `╭─「 ✦ ᴛᴇʙᴀᴋ ꜱᴜʀᴀʜ ✦ 」\n`;
     msg += `│ 📖 Surah ke-*${surah.number}*\n`;
     msg += `│ Jumlah ayat: *${surah.numberOfAyahs}*\n`;
     msg += `│ Revelation: *${revelation}*\n`;
@@ -78,7 +78,7 @@ async function handler(m, { sock, db }) {
     msg += `│\n`;
     msg += `│ Tebak nama surahnya!\n`;
     msg += `│ Waktu: 60 detik\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     await m.reply(msg);
 
     // Set session
@@ -88,7 +88,7 @@ async function handler(m, { sock, db }) {
         sessions.delete(groupId);
         try {
           await sock.sendMessage(groupId, {
-            text: `╭─「 ᴛᴇʙᴀᴋ ꜱᴜʀᴀʜ 」\n│ ⏰ Waktu habis!\n│ Jawaban: *${s.surahData.englishName}*\n│ (${s.surahData.englishNameTranslation})\n╰──────────`,
+            text: `╭─「 ✦ ᴛᴇʙᴀᴋ ꜱᴜʀᴀʜ ✦ 」\n│ ⏰ Waktu habis!\n│ Jawaban: *${s.surahData.englishName}*\n│ (${s.surahData.englishNameTranslation})\n╰────  •  ────`,
           });
         } catch {}
       }

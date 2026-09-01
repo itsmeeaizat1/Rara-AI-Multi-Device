@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     const buffer = Buffer.from(imgRes.data);
 
     await m.react("🐣");
-    const caption = `╭─「 ᴡᴀʟʟᴘᴀᴘᴇʀ 」\n│ Query: *${query}*\n│ Source: wallpaperflare\n╰──────────`;
+    const caption = `╭─「 ✦ ᴡᴀʟʟᴘᴀᴘᴇʀ ✦ 」\n│ Query: *${query}*\n│ Source: wallpaperflare\n╰────  •  ────`;
     return await sock.sendMessage(m.chat, { image: buffer, caption });
   } catch (err) {
     console.error("wallpaper error:", err);

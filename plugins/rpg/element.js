@@ -35,7 +35,7 @@ async function handler(m, { sock, text }) {
     // .element info — tampilkan elemen saat ini
     if (!action || action === "info") {
       const elem = rpg.element ? ELEMENTS[rpg.element] : null;
-      let msg = "╭─「 ᴇʟᴇᴍᴇɴᴛ 」\n";
+      let msg = "╭─「 ✦ ᴇʟᴇᴍᴇɴᴛ ✦ 」\n";
       msg += "│ 👤 " + (m.pushName || "Player") + " | Lv." + rpg.level + "\n";
       msg += "│\n";
       if (elem) {
@@ -47,20 +47,20 @@ async function handler(m, { sock, text }) {
         msg += "│\n";
         msg += "│ 📌 Pilih: .element <api|air|tanah|angin>\n";
       }
-      msg += "╰──────────";
+      msg += "╰────  •  ────";
       return m.reply(msg);
     }
 
     // .element weak — chart kelemahan
     if (action === "weak" || action === "kelemahan") {
-      let msg = "╭─「 ᴄʜᴀʀᴛ ᴋᴇʟᴇᴍᴀʜᴀɴ 」\n";
+      let msg = "╭─「 ✦ ᴄʜᴀʀᴛ ᴋᴇʟᴇᴍᴀʜᴀɴ ✦ 」\n";
       msg += "│\n";
       for (const [id, el] of Object.entries(ELEMENTS)) {
         msg += "│ " + el.name + "\n";
         msg += "│   💪 Kuat vs: " + el.strong.map(e => ELEMENTS[e].name).join(", ") + "\n";
         msg += "│   🛡️ Lemah vs: " + el.weak.map(e => ELEMENTS[e].name).join(", ") + "\n";
       }
-      msg += "╰──────────";
+      msg += "╰────  •  ────";
       return m.reply(msg);
     }
 
@@ -81,12 +81,12 @@ async function handler(m, { sock, text }) {
     await m.react("🐣");
 
     const elem = ELEMENTS[action];
-    let msg = "╭─「 ᴇʟᴇᴍᴇɴᴛ 」\n";
+    let msg = "╭─「 ✦ ᴇʟᴇᴍᴇɴᴛ ✦ 」\n";
     msg += "│ ✅ Elemenmu kini: *" + elem.name + "*\n";
     msg += "│ 💪 Kuat vs: " + elem.strong.map(e => ELEMENTS[e].name).join(", ") + "\n";
     msg += "│ 🛡️ Lemah vs: " + elem.weak.map(e => ELEMENTS[e].name).join(", ") + "\n";
     msg += "│ ⭐ Bonus element DMG: +10%\n";
-    msg += "╰──────────";
+    msg += "╰────  •  ────";
     return m.reply(msg);
   } catch (e) {
     console.error("element error:", e.message);

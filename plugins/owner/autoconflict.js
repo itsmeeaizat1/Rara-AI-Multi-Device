@@ -379,12 +379,12 @@ export async function processConflictMessage(m, sock) {
         if (ownerNum) {
           const ownerJid = ownerNum.replace(/[^0-9]/g, "") + "@s.whatsapp.net";
           const notifyMsg =
-            `╭─「 ᴀᴜᴛᴏ-ᴄᴏɴꜰʟɪᴄᴛ 」\n` +
+            `╭─「 ✦ ᴀᴜᴛᴏ-ᴄᴏɴꜰʟɪᴄᴛ ✦ 」\n` +
             `│ Grup: ${groupName}\n` +
             `│ Tension: ${gt.level}/100\n` +
             `│ Type: ${aiResult?.type || "unknown"}\n` +
             `│ Intervention: ${interventionMsg ? "AI" : "Fallback"}\n` +
-            `╰──────────`;
+            `╰────  •  ────`;
           await sock.sendMessage(ownerJid, { text: notifyMsg });
         }
       } catch {}

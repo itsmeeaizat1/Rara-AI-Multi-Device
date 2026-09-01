@@ -54,24 +54,24 @@ async function handler(m, { sock }) {
       game.over = true;
       game.hits++;
       await m.react("🐣");
-      let msg = `╭─「 KOBOY 」\n`;
+      let msg = `╭─「 ✦ KOBOY ✦ 」\n`;
       msg += `│ ${display}\n`;
       msg += `│\n`;
       msg += `│ 🎯 HEADSHOT! Kamu menang!\n`;
       msg += `│ Round: ${game.round} | Hits: ${game.hits}\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       games.delete(from);
       return m.reply(msg);
     } else {
       game.round++;
       game.enemyPos = positions[Math.floor(Math.random() * 3)];
       await m.react("🐣");
-      let msg = `╭─「 KOBOY 」\n`;
+      let msg = `╭─「 ✦ KOBOY ✦ 」\n`;
       msg += `│ ${display}\n`;
       msg += `│\n`;
       msg += `│ 😵 Meleset! Musuh pindah posisi.\n`;
       msg += `│ Round: ${game.round}\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
   } catch (err) {

@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
             text += `Birthday kamu: *${currentBday}*\n\n`
         }
         
-        text += `╭─「 ғOrmat 」\n`
+        text += `╭─「 ✦ ғOrmat ✦ 」\n`
         text += `│ ${m.prefix}setbirthday DD-MM\n`
         text += `╰┈┈┈┈┈┈┈┈\n\n`
         text += `*ᴄᴏɴᴛᴏʜ:*\n`
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     
     await m.reply(
         `✅ *Birthday Disimpan!*\n\n` +
-        `╭─「 ᴅᴇᴛᴀɪʟ 」\n` +
+        `╭─「 ✦ ᴅᴇᴛᴀɪʟ ✦ 」\n` +
         `│ 📅 Tanggal: *${day} ${months[month - 1]}*\n` +
         `│ 👤 User: @${cleanJid}\n` +
         `╰┈┈┈┈┈┈┈┈\n\n` +

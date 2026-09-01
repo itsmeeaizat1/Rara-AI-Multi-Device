@@ -155,7 +155,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[menu] handler error:", e.message);
-    try { await m.reply(`╭─「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────`); } catch {}
+    try { await m.reply(`╭─「 ✦ ${toSC("Menu")} ✦ 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰────  •  ────`); } catch {}
   }
 }
 

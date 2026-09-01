@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
         `│ File: \`${found.file}\`\n` +
         `│ Folder: \`${found.folder}\`\n` +
         `│ Unload: ${unloadResult.success ? "✅ Sukses" : "⚠️ Pending"}\n` +
-        `╰───────\n\n` +
+        `╰────  •  ────\n\n` +
         `Plugin sudah dihapus dan tidak aktif!`,
     );
   } catch (error) {

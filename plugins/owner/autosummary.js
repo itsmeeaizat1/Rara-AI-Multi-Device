@@ -219,7 +219,7 @@ function generateFallbackSummary(groupName, messages) {
     .join(", ");
 
   return (
-    `╭─「 ᴅᴀɪʟʏ ꜱᴜᴍᴍᴀʀʏ 」\n` +
+    `╭─「 ✦ ᴅᴀɪʟʏ ꜱᴜᴍᴍᴀʀʏ ✦ 」\n` +
     `│ Grup: ${groupName}\n` +
     `│ Tanggal: ${new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Jakarta" })}\n` +
     `│ Total pesan: ${messages.length}\n` +
@@ -231,7 +231,7 @@ function generateFallbackSummary(groupName, messages) {
     `│ Topik sering: ${topWords || "tidak terdeteksi"}\n` +
     `│\n` +
     `│ Vibe: ${messages.length > 100 ? "Sangat rame" : messages.length > 50 ? "Ramai" : messages.length > 20 ? "Cukup aktif" : "Tenang"}\n` +
-    `╰──────────`
+    `╰────  •  ────`
   );
 }
 
@@ -276,11 +276,11 @@ async function generateAndSendSummary(sock, groupJid, isManual = false) {
   }
 
   const header =
-    `╭─「 ᴅᴀɪʟʏ ꜱᴜᴍᴍᴀʀʏ 」\n` +
+    `╭─「 ✦ ᴅᴀɪʟʏ ꜱᴜᴍᴍᴀʀʏ ✦ 」\n` +
     `│ Grup: ${groupName}\n` +
     `│ Tanggal: ${new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Jakarta" })}\n` +
     `│ Pesan: ${messages.length} | Mode: ${usedAI ? "AI" : "Stats"}\n` +
-    `╰──────────\n\n`;
+    `╰────  •  ────\n\n`;
 
   try {
     await sock.sendMessage(targetJid, { text: header + summary });

@@ -62,12 +62,12 @@ function handler(m, { sock }) {
   }
 
   let text = `⏱️ *ꜱᴛᴀᴛᴜꜱ ᴊᴇᴅᴀ ᴘᴀɴᴇʟ*\n\n`;
-  text += `╭─「 ꜱᴛᴀᴛᴜꜱ 」\n`;
+  text += `╭─「 ✦ ꜱᴛᴀᴛᴜꜱ ✦ 」\n`;
   text += `│ ${status}\n`;
   text += `│ ${statusDesc}\n`;
-  text += `╰──────────\n\n`;
+  text += `╰────  •  ────\n\n`;
 
-  text += `╭─「 ᴋᴏɴꜰɪɢ 」\n`;
+  text += `╭─「 ✦ ᴋᴏɴꜰɪɢ ✦ 」\n`;
   text += `│ │ Jeda: *${jedaMs === 0 ? "OFF" : formatTime(jedaMs)}*\n`;
   text += `│ │ Default: *5 menit*\n`;
 
@@ -80,7 +80,7 @@ function handler(m, { sock }) {
     text += `│ │ Sisa: *${formatTime(remaining)}*\n`;
   }
 
-  text += `╰──────────\n\n`;
+  text += `╰────  •  ────\n\n`;
 
   if (m.isOwner) {
     text += `_Owner: gunakan \`${m.prefix}jedacreate\` untuk setting_`;

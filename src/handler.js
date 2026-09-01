@@ -19,9 +19,9 @@ async function handleAntiRemoveFromUpsert(msg, sock, db) {
 // Simple inline wrapper for anti-spam DM messages
 function simpleWrap(title, lines) {
   const body = lines.map(l => l.startsWith("│") || l === "" ? l : "│ " + l).join("\n");
-  return "╭─「 " + title + " 」\n" +
+  return "╭─「 ✦ " + title + " ✦ 」\n" +
     body + "\n" +
-    "╰──────────";
+    "╰────  •  ────";
 }
 
 // Track cooldowns per user per command
@@ -395,7 +395,7 @@ async function messageHandler(msg, sock) {
       const { verifyVnCaptcha, hasVnCaptchaChallenge, isVnCaptchaBlocked } = await import("../plugins/owner/vncaptcha.js");
       const senderJid = m.key?.remoteJid || m.sender;
       if (typeof isVnCaptchaBlocked === "function" && isVnCaptchaBlocked(senderJid)) {
-        await sock.sendMessage(senderJid, { text: "╭─「 Diblokir 24 Jam 」\n│ Gagal verifikasi suara\n│ Coba lagi besok\n╰──────────" });
+        await sock.sendMessage(senderJid, { text: "╭─「 ✦ Diblokir 24 Jam ✦ 」\n│ Gagal verifikasi suara\n│ Coba lagi besok\n╰────  •  ────" });
         return;
       }
       if (typeof hasVnCaptchaChallenge === "function" && hasVnCaptchaChallenge(senderJid)) {
@@ -720,14 +720,14 @@ async function messageHandler(msg, sock) {
       }
       if (!m.isNewsletter) {
         try {
-          let notFoundText = `╭─「 Not Found 」\n`;
+          let notFoundText = `╭─「 ✦ Not Found ✦ 」\n`;
           notFoundText += `│ Command *${m.prefix}${command}* tidak ditemukan\n`;
           if (closest) {
             notFoundText += `│ Mungkin maksudmu: *${m.prefix}${closest}* ?\n`;
           }
           notFoundText += `│\n`;
           notFoundText += `│ 💡 Ketik *${m.prefix}tanyaai* untuk tanya AI\n`;
-          notFoundText += `╰──────────`;
+          notFoundText += `╰────  •  ────`;
           await m.reply(notFoundText);
         } catch {}
       }
@@ -793,7 +793,7 @@ async function messageHandler(msg, sock) {
         ? "Jangan spam " + label + "! Tunggu " + spamResult.remainSec + " detik lagi"
         : "Tunggu " + spamResult.remainSec + " detik sebelum pakai " + label + " lagi";
       if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
-      await m.reply("╭─「 Anti-Spam 」\n│ " + msg + "\n╰──────────");
+      await m.reply("╭─「 ✦ Anti-Spam ✦ 」\n│ " + msg + "\n╰────  •  ────");
       return;
     }
   } catch (e) {
@@ -805,7 +805,7 @@ async function messageHandler(msg, sock) {
     if (!m.isNewsletter) {
       try {
         if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
-        await m.reply("╭─「 Nonaktif 」\n│ Command ini sedang dinonaktifkan\n╰──────────");
+        await m.reply("╭─「 ✦ Nonaktif ✦ 」\n│ Command ini sedang dinonaktifkan\n╰────  •  ────");
       } catch {}
     }
     return;
@@ -822,7 +822,7 @@ async function messageHandler(msg, sock) {
       if (!m.isNewsletter) {
         try {
           if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
-          await m.reply("╭─「 Nonaktif 」\n│ Fitur ini sedang dinonaktifkan oleh owner\n│ Ketik .togglefitur untuk melihat status\n╰──────────");
+          await m.reply("╭─「 ✦ Nonaktif ✦ 」\n│ Fitur ini sedang dinonaktifkan oleh owner\n│ Ketik .togglefitur untuk melihat status\n╰────  •  ────");
         } catch {}
       }
       return;
@@ -874,7 +874,7 @@ async function messageHandler(msg, sock) {
             if (!m.isNewsletter) { try { await m.react("❗"); } catch {} }
           await m.reply(
               (config.messages?.energiExceeded ||
-               "╭─「 Energi Habis 」\n│ Energi kamu sudah habis!\n│ Tunggu reset besok atau beli Premium.\n╰──────────")
+               "╭─「 ✦ Energi Habis ✦ 」\n│ Energi kamu sudah habis!\n│ Tunggu reset besok atau beli Premium.\n╰────  •  ────")
             );
           } catch {}
         }
@@ -932,11 +932,11 @@ async function messageHandler(msg, sock) {
     if (energiCost > 0 && !m.isNewsletter && !m.isOwner) {
       try {
         const usedAmount = isUnlimited ? energiCost : energiDeducted;
-        let notifText = "╭─「 Limit 」\n│ " + usedAmount + " limit terpakai";
+        let notifText = "╭─「 ✦ Limit ✦ 」\n│ " + usedAmount + " limit terpakai";
         if (!isUnlimited) {
           notifText += "\n│ Sisa limit: " + sisaEnergi;
         }
-        notifText += "\n╰──────────";
+        notifText += "\n╰────  •  ────";
         await sock.sendMessage(m.chat, { text: notifText });
 
         // === WARNING LIMIT RENDAH (tetap dikirim jika sisa limit menipis) ===
@@ -947,7 +947,7 @@ async function messageHandler(msg, sock) {
               try {
                 await sock.sendMessage(
                   m.chat,
-                  { text: "╭─「 Limit Menipis 」\n│ Sisa limit kamu tinggal " + sisaEnergi + "\n│ Ketik .buyenergi <jumlah> untuk beli\n│ atau upgrade Premium\n╰──────────" }
+                  { text: "╭─「 ✦ Limit Menipis ✦ 」\n│ Sisa limit kamu tinggal " + sisaEnergi + "\n│ Ketik .buyenergi <jumlah> untuk beli\n│ atau upgrade Premium\n╰────  •  ────" }
                 );
               } catch {}
               break;
@@ -962,7 +962,7 @@ async function messageHandler(msg, sock) {
     if (config.dev?.debugLog) console.error(c.gray(error.stack));
     if (!m.isNewsletter) { try { await m.react("❌"); } catch {} }
     try {
-      await m.reply("╭─「 Error 」\n│ " + error.message + "\n╰──────────");
+      await m.reply("╭─「 ✦ Error ✦ 」\n│ " + error.message + "\n╰────  •  ────");
     } catch {}
   }
 }
@@ -1054,7 +1054,7 @@ async function groupHandler(update, sock) {
           const promoteNotify = db.setting("promoteNotify");
           if (promoteNotify && promoteNotify.jid === update.id) {
             await sock.sendMessage(update.id, {
-              text: "╭─「 Promote 」\n│ @" + participantJid.replace(/@.+/g, "") + " telah di-promote menjadi admin\n╰──────────",
+              text: "╭─「 ✦ Promote ✦ 」\n│ @" + participantJid.replace(/@.+/g, "") + " telah di-promote menjadi admin\n╰────  •  ────",
               mentions: [participantJid],
             });
           }
@@ -1065,7 +1065,7 @@ async function groupHandler(update, sock) {
           const demoteNotify = db.setting("demoteNotify");
           if (demoteNotify && demoteNotify.jid === update.id) {
             await sock.sendMessage(update.id, {
-              text: "╭─「 Demote 」\n│ @" + participantJid.replace(/@.+/g, "") + " telah di-demit dari admin\n╰──────────",
+              text: "╭─「 ✦ Demote ✦ 」\n│ @" + participantJid.replace(/@.+/g, "") + " telah di-demit dari admin\n╰────  •  ────",
               mentions: [participantJid],
             });
           }
@@ -1133,8 +1133,8 @@ async function groupSettingsHandler(update, sock) {
       if (announceNotify && announceNotify.jid === update.id) {
         await sock.sendMessage(update.id, {
           text: update.announce
-            ? "╭─「 Announcement Only 」\n│ Grup telah diubah menjadi Announcement Only\n│ Hanya admin yang bisa kirim pesan\n╰──────────"
-            : "╭─「 All Members 」\n│ Grup telah diubah menjadi All Members Can Send\n│ Semua member bisa kirim pesan\n╰──────────",
+            ? "╭─「 ✦ Announcement Only ✦ 」\n│ Grup telah diubah menjadi Announcement Only\n│ Hanya admin yang bisa kirim pesan\n╰────  •  ────"
+            : "╭─「 ✦ All Members ✦ 」\n│ Grup telah diubah menjadi All Members Can Send\n│ Semua member bisa kirim pesan\n╰────  •  ────",
         });
       }
     }
@@ -1145,8 +1145,8 @@ async function groupSettingsHandler(update, sock) {
       if (lockNotify && lockNotify.jid === update.id) {
         await sock.sendMessage(update.id, {
           text: update.locked
-            ? "╭─「 Grup Dikunci 」\n│ Settingan grup telah dikunci oleh admin\n╰──────────"
-            : "╭─「 Grup Dibuka 」\n│ Settingan grup telah dibuka oleh admin\n╰──────────",
+            ? "╭─「 ✦ Grup Dikunci ✦ 」\n│ Settingan grup telah dikunci oleh admin\n╰────  •  ────"
+            : "╭─「 ✦ Grup Dibuka ✦ 」\n│ Settingan grup telah dibuka oleh admin\n╰────  •  ────",
         });
       }
     }
@@ -1156,7 +1156,7 @@ async function groupSettingsHandler(update, sock) {
       const nameNotify = db.setting("nameNotify");
       if (nameNotify && nameNotify.jid === update.id) {
         await sock.sendMessage(update.id, {
-          text: "╭─「 Nama Grup 」\n│ Nama grup diubah menjadi: *" + update.subject + "*\n╰──────────",
+          text: "╭─「 ✦ Nama Grup ✦ 」\n│ Nama grup diubah menjadi: *" + update.subject + "*\n╰────  •  ────",
         });
       }
     }

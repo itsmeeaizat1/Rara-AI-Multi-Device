@@ -139,11 +139,11 @@ async function handler(m, { sock }) {
     if (srcDuration < SRC_MIN_DURATION) {
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(
-        `╭─「 Video Terlalu Pendek 」\n` +
+        `╭─「 ✦ Video Terlalu Pendek ✦ 」\n` +
         `\n` +
         `│ *ᴅᴜʀᴀꜱɪ ᴠɪᴅᴇᴏ:* ${srcDuration.toFixed(1)}s\n` +
         `│ *ᴍɪɴɪᴍᴀʟ ᴡᴀᴊɪʙ:* ${SRC_MIN_DURATION}s\n` +
-        `╰──────────\n\n` +
+        `╰────  •  ────\n\n` +
         `Video sumber terlalu pendek! Minimal ${SRC_MIN_DURATION}s biar efek live-nya kelihatan dan pas.`
       );
     }
@@ -174,11 +174,11 @@ async function handler(m, { sock }) {
     if (duration < OUT_MIN_DURATION) {
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(
-        `╭─「 Durasi Output Terlalu Pendek 」\n` +
+        `╭─「 ✦ Durasi Output Terlalu Pendek ✦ 」\n` +
         `\n` +
         `│ *ᴅɪᴍɪɴᴛᴀ:* ${duration}s\n` +
         `│ *ᴍɪɴɪᴍᴀʟ:* ${OUT_MIN_DURATION}s (wajib)\n` +
-        `╰──────────\n\n` +
+        `╰────  •  ────\n\n` +
         `Durasi output minimal ${OUT_MIN_DURATION}s wajib biar efek live pas!`
       );
     }
@@ -187,11 +187,11 @@ async function handler(m, { sock }) {
     if (duration > OUT_MAX_DURATION) {
       try { fs.unlinkSync(inputPath); } catch (e) { console.error('[fotolive.js]:', e.message); }
       return m.reply(
-        `╭─「 Durasi Output Terlalu Panjang 」\n` +
+        `╭─「 ✦ Durasi Output Terlalu Panjang ✦ 」\n` +
         `\n` +
         `│ *ᴅɪᴍɪɴᴛᴀ:* ${duration}s\n` +
         `│ *ᴍᴀᴋꜱɪᴍᴀʟ:* ${OUT_MAX_DURATION}s\n` +
-        `╰──────────\n\n` +
+        `╰────  •  ────\n\n` +
         `Durasi output maksimal ${OUT_MAX_DURATION}s untuk performa optimal.`
       );
     }
@@ -251,14 +251,14 @@ async function handler(m, { sock }) {
       video: liveBuffer,
       gifPlayback: true,
       caption:
-        `╭─「 Live Photo 」\n` +
+        `╭─「 ✦ Live Photo ✦ 」\n` +
         `\n` +
         `│ *ᴅᴜʀᴀꜱɪ:* ${durLabel}\n` +
         `│ *ʀᴇꜱᴏʟᴜꜱɪ:* ${resolution}p\n` +
         `│ *ꜰᴘꜱ:* ${fps}\n` +
         `│ *ᴜᴋᴜʀᴀɴ:* ${formatSize(liveSize)}\n` +
         (wasTrimmed ? `│ *ᴛʀɪᴍᴍᴇᴅ:* ${srcDuration.toFixed(1)}s → ${durLabel}\n` : '') +
-        `╰──────────`,
+        `╰────  •  ────`,
     }, { quoted: m });
 
     // Cleanup output
@@ -272,10 +272,10 @@ async function handler(m, { sock }) {
     if (errMsg.length > 150) errMsg = errMsg.slice(0, 150) + "...";
 
     await m.reply(
-      `╭─「 Live Photo Error 」\n` +
+      `╭─「 ✦ Live Photo Error ✦ 」\n` +
       `\n` +
       `│ *ᴇʀʀᴏʀ:* ${errMsg}\n` +
-      `╰──────────\n\n` +
+      `╰────  •  ────\n\n` +
       `Coba video lain atau durasi lebih pendek.`
     );
     return { handled: true };

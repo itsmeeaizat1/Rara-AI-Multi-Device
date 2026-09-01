@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
 
     // List
     if (!action || action === "list") {
-      let msg = `╭─「 ᴄᴏᴏᴋ ʀᴘɢ 」\n`;
+      let msg = `╭─「 ✦ ᴄᴏᴏᴋ ʀᴘɢ ✦ 」\n`;
       msg += `│ 📋 Resep masakan\n`;
       msg += `│\n`;
 
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
       msg += `│\n`;
       msg += `│ 📌 Ketik .cookrpg <id> untuk masak\n`;
       msg += `│ Makanan langsung dikonsumsi (instant effect)\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     const freshRpg = ensureRpg(m, m.pushName);
 
-    let msg = `╭─「 ᴄᴏᴏᴋ ʀᴘɢ 」\n`;
+    let msg = `╭─「 ✦ ᴄᴏᴏᴋ ʀᴘɢ ✦ 」\n`;
     msg += `│ ✅ Berhasil masak & makan!\n`;
     msg += `│\n`;
     msg += `│ 🍽️ *${recipe.name}*\n`;
@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
     msg += `│ ❤️ HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
     msg += `│ ⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
     msg += `│ 💧 Mana: *${freshRpg.mana}/${freshRpg.maxMana}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     return m.reply(msg);
   } catch (err) {

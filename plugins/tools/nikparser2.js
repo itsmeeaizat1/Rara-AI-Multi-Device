@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ɴɪᴋ ᴘᴀʀꜱᴇʀ v2 」\n`;
+    let msg = `╭─「 ✦ ɴɪᴋ ᴘᴀʀꜱᴇʀ v2 ✦ 」\n`;
     msg += `│ NIK: *${r.nik || nik}*\n`;
     msg += `│ Provinsi: *${r.provinsi || r.province || "-"}*\n`;
     if (r.kabupaten || r.kota) msg += `│ Kab/Kota: *${r.kabupaten || r.kota}*\n`;
@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
     if (r.tanggal_lahir || r.tglLahir) msg += `│ Tgl Lahir: *${r.tanggal_lahir || r.tglLahir}*\n`;
     if (r.jenis_kelamin || r.gender) msg += `│ Gender: *${r.jenis_kelamin || r.gender}*\n`;
     if (r.pas_foto || r.foto) msg += `│ Foto: Tersedia ✅\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("nikparser2 error:", err);

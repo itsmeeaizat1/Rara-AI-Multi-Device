@@ -52,31 +52,31 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBansosJail", JAIL_TIME);
       setCooldown(m, "lastBansos", BANSOS_CD);
       await m.react("😭");
-      let msg = `╭─「 EKSEKUSI GAGAL 」\n`;
+      let msg = `╭─「 ✦ EKSEKUSI GAGAL ✦ 」\n`;
       msg += `│ 🕴️❌ Kamu tertangkap!\n`;
       msg += `│ 💸 Denda: Rp 3.500.000\n`;
       msg += `│ ⛔ Penjara: 4 jam\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     } else if (randomaku < randomkamu) {
       // Success
       addGold(m, 3000000);
       setCooldown(m, "lastBansos", BANSOS_CD);
       await m.react("🐣");
-      let msg = `╭─「 EKSEKUSI BERHASIL 」\n`;
+      let msg = `╭─「 ✦ EKSEKUSI BERHASIL ✦ 」\n`;
       msg += `│ 🕴️💰 Berhasil korupsi!\n`;
       msg += `│ 💰 +Rp 3.000.000\n`;
       msg += `│ Cepat cuci uangnya!\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     } else {
       // Escape
       setCooldown(m, "lastBansos", BANSOS_CD);
       await m.react("🏃");
-      let msg = `╭─「 HAMPIR TERCIDUK 」\n`;
+      let msg = `╭─「 ✦ HAMPIR TERCIDUK ✦ 」\n`;
       msg += `│ 🏃‍♂️ Gagal korupsi tapi berhasil kabur!\n`;
       msg += `│ Tidak ada hasil, tapi kamu selamat.\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
   } catch (err) {

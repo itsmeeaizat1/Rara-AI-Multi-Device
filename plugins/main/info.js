@@ -92,7 +92,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       if (wf) weatherBlock = `${wf}\n\n`;
     } catch {}
 
-    const text = `${weatherBlock}╭─「 ${toSC("Bot Info")} 」
+    const text = `${weatherBlock}╭─「 ✦ ${toSC("Bot Info")} ✦ 」
 │
 │ 「 ${toSC("Identitas")} 」
 │ *${toSC("Nama")}:* ${toSC(botName)}
@@ -120,8 +120,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
 │ *${toSC("Uptime Server")}:* ${serverUptime}
 │ *${toSC("Uptime Bot")}:* ${botUptime}
-╰──────────
-
+╰────  •  ────
 ${toSC("Nova AI WhatsApp Bot")}`;
 
     const navButtons = [
@@ -140,7 +139,7 @@ ${toSC("Nova AI WhatsApp Bot")}`;
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[info] handler error:", e.message);
-    try { await m.reply(`╭─「 ${toSC("Info")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────`); } catch {}
+    try { await m.reply(`╭─「 ✦ ${toSC("Info")} ✦ 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰────  •  ────`); } catch {}
   }
 
   return { handled: true };

@@ -147,7 +147,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let output = `╭─「 SLOT MACHINE 」\n`;
+    let output = `╭─「 ✦ SLOT MACHINE ✦ 」\n`;
     output += `│ 🎰 [ ${top1} | ${top2} | ${top3} ]\n`;
     output += `│ 🎰 [ ${r1} | ${r2} | ${r3} ] ◄ LINE\n`;
     output += `│ 🎰 [ ${bot1} | ${bot2} | ${bot3} ]\n`;
@@ -160,7 +160,7 @@ async function handler(m, { sock }) {
       output += `│ 💸 Kalah: *-${bet} gold*\n`;
     }
     output += `│ 💼 Sisa Gold: *${updatedGold} gold*\n`;
-    output += `╰──────────`;
+    output += `╰────  •  ────`;
 
     return m.reply(output);
   } catch (err) {

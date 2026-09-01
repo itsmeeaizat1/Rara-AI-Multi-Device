@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `│ Reply pesan tembakan + \`${m.prefix}tolak\`\n` +
         `│ Atau \`${m.prefix}tolak @tag\`\n\n` +
-        `╰──────────`
+        `╰────  •  ────`
       );
     }
 
