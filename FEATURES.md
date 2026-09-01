@@ -568,6 +568,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 ## 📥 All Downloader
 
 - `.alldl <url>` — All-in-one downloader dengan pilihan format interaktif
+- `.downloader <platform> <format> <url/keyword>` — Unified downloader (youtube, tiktok, facebook, instagram, twitter, pinterest, soundcloud, spotify, mediafire, dll)
 - Alias: `.dl`, `.download`, `.get`
 - Flow: paste link → bot detect platform → pilih format (tombol) → download
 - Pilihan: Video HD, Video SD, Audio MP3, Image/Foto (sesuai platform)
