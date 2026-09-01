@@ -181,7 +181,8 @@ const config = {
     dailyLimitReset: true,
     smartTriggers: false,
     commandSuggestion: true, // Tampilkan saran saat command tidak ditemukan
-    commandSuggestionCooldown: 5, // Cooldown (detik) per user untuk not-found suggestion
+    commandSuggestionCooldown: 5, // Base cooldown (detik) untuk not-found suggestion
+    commandSuggestionSmart: true, // Progressive escalation (makin spam makin lama cooldown)
   },
 
   registration: {
