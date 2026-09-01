@@ -178,13 +178,7 @@ async function messageHandler(msg, sock) {
     } catch (e) {
       if (config.dev?.debugLog) logger.error("antidocument", e.message);
     }
-    try {
-      const { handleAntiVirtex } = await import("../plugins/group/antivirtex.js");
-      await handleAntiVirtex(m, sock, db);
-    } catch (e) {
-      if (config.dev?.debugLog) logger.error("antivirtex", e.message);
-    }
-    try {
+try {
       const { handleAntiBug } = await import("../plugins/group/antibug.js");
       await handleAntiBug(m, sock, db);
     } catch (e) {
