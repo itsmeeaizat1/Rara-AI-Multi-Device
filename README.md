@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20smeme.js%20migrasi%20upload%20ke%20catbox.m-success?style=for-the-badge)
-> *Commit: "fix: smeme.js migrasi upload ke catbox.moe + list dead API sticker"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20migrasi%205%20plugin%20sticker%20dead%20API%20k-success?style=for-the-badge)
+> *Commit: "fix: migrasi 5 plugin sticker dead API ke lokal/scrape"*
 <!--END_SECTION:latest-update-->
 
 ---
