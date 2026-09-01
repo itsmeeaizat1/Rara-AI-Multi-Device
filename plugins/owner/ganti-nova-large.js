@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
             'nova-v10.jpg'
         ]
         
-        const assetsDir = path.join(process.cwd(), 'assets', 'images')
+        const assetsDir = path.join(process.cwd(), 'assets', 'image')
         if (!fs.existsSync(assetsDir)) {
             fs.mkdirSync(assetsDir, { recursive: true })
         }

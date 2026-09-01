@@ -56,12 +56,12 @@ function formatBytes(b) {
   return (b / 1024 / 1024 / 1024).toFixed(2) + " GB";
 }
 
-// Thumbnail: menu.jpg — cached once
+// Thumbnail: menu/menuthumbnail.jpg — cached once
 let _thumbCache = null;
 function getThumb() {
   if (_thumbCache) return _thumbCache;
   try {
-    const p = path.join(process.cwd(), "assets", "image", "menu.jpg");
+    const p = path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
     if (fs.existsSync(p)) {
       _thumbCache = fs.readFileSync(p);
       console.log("[menu] ✅ Thumbnail loaded: " + _thumbCache.length + " bytes");
@@ -167,7 +167,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     await sendMenuCard(sock, m, {
       text: text,
       footer: "",
-      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
+      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg"),
       buttons: navButtons,
       title: botName,
     });

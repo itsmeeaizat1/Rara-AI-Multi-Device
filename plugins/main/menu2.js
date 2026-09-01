@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
     await sendMenuCard(sock, m, {
       text,
       footer: botName,
-      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
+      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg"),
       buttons: navButtons,
       title: "Quick Menu",
     });

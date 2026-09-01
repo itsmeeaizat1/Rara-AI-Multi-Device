@@ -26,7 +26,7 @@ async function ensureThumbLoaded() {
     if (!menuThumb) {
       // Fallback: direct fs.readFileSync lalu resize manual pakai sharp
       const sharp = (await import('sharp')).default;
-      const thumbPath = path.join(process.cwd(), 'assets', 'image', 'menu.jpg');
+      const thumbPath = path.join(process.cwd(), 'assets', 'image', 'menu', 'menuthumbnail.jpg');
       if (fs.existsSync(thumbPath)) {
         menuThumb = await sharp(fs.readFileSync(thumbPath))
           .resize(100, 100, { fit: 'cover' })
