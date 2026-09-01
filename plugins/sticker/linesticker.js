@@ -1,113 +1,124 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import axios from 'axios'
-import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+// linesticker.js — Download sticker pack LINE (direct scrape store.line.me, no API)
+import axios from "axios";
+import * as cheerio from "cheerio";
+import config from "../../config.js";
+import { claraWrap, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
-    name: 'linesticker',
-    alias: ["linesticker"],
-    category: 'sticker',
-    description: 'Download sticker pack LINE',
-    usage: '.linesticker <url>',
-    example: '.linesticker https://store.line.me/stickershop/product/9801/en',
-    isOwner: false,
-    isPremium: false,
-    isGroup: false,
-    isPrivate: false,
-    cooldown: 25,
-    energi: 1,
-    isEnabled: true
+  name: "linesticker",
+  alias: ["linesticker", "linedl"],
+  category: "sticker",
+  description: "Download sticker pack LINE (direct scrape)",
+  usage: ".linesticker <url>",
+  example: ".linesticker https://store.line.me/stickershop/product/9801/en",
+  isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
+  cooldown: 25, energi: 1, isEnabled: true,
+};
+
+async function scrapeLineStickers(url) {
+  // Extract product ID from URL
+  const idMatch = url.match(/product\/(\d+)/);
+  if (!idMatch) throw new Error("ID produk LINE tidak ditemukan dari URL");
+  const productId = idMatch[1];
+
+  // Scrape LINE sticker store page
+  const { data } = await axios.get(url, {
+    headers: { "User-Agent": "Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36" },
+    timeout: 15000,
+  });
+
+  const $ = cheerio.load(data);
+  const title = $("title").text().trim() || $(".mdCMN38Item01Txt").first().text().trim() || "LINE Sticker";
+  const author = $(".mdCMN38Item01Txt, .mdCMN04 .mdCMN04Item01Author").first().text().trim() || "Unknown";
+
+  // Extract sticker URLs from preview images
+  const stickerUrls = [];
+  $(".mdCMN09Image, .FnStickerPreviewItem img").each((i, el) => {
+    const src = $(el).attr("src") || $(el).attr("data-src");
+    if (src && src.includes("stickershop")) {
+      // Get higher quality version
+      stickerUrls.push(src);
+    }
+  });
+
+  // Fallback: construct sticker URLs from product ID
+  if (stickerUrls.length === 0) {
+    // LINE sticker preview pattern: https://stickershop.line-scdn.net/stickershop/v1/product/{id}/iPhone/base/sticker{num}.png
+    for (let i = 1; i <= 40; i++) {
+      stickerUrls.push(`https://stickershop.line-scdn.net/stickershop/v1/product/${productId}/iPhone/base/sticker${i}.png`);
+    }
+  }
+
+  // Try to get animated stickers
+  const isAnimated = url.includes("animation") || data.includes("animation");
+
+  return { title, author, stickerUrls: stickerUrls.slice(0, 20), isAnimated };
 }
 
 async function handler(m, { sock }) {
-    const url = m.args?.[0]?.trim()
-    
-    if (!url || !url.includes('store.line.me')) {
-        return m.reply( `🎨 *ʟɪɴᴇ ꜱᴛɪᴄᴋᴇʀ ᴘᴀᴄᴋ*\n\n` +
-            `Download LINE sticker pack\n\n` +
-            `╭─「 ✦ ᴄᴀʀᴀ ᴘᴀᴋᴀɪ ✦ 」\n` +
-            `│ ${m.prefix}linesticker <url>\n` +
-            `╰┈┈┈┈┈┈┈┈\n\n` +
-            `*ᴄᴀʀᴀ ᴅᴀᴘᴀᴛ ᴜʀʟ:*\n` +
-            `1. Buka https://store.line.me\n` +
-            `2. Pilih sticker pack\n` +
-            `3. Copy URL dari browser\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
-            `${m.prefix}linesticker https://store.line.me/stickershop/product/9801/en`, "linesticker")
+  const url = m.args?.[0]?.trim();
+
+  if (!url || !url.includes("store.line.me")) {
+    return m.reply(claraWrap("linesticker", `Download LINE sticker pack!\n\nContoh: ${m.prefix}linesticker https://store.line.me/stickershop/product/9801/en`, "guide"));
+  }
+
+  try {
+    await m.react("🕒");
+    const data = await scrapeLineStickers(url);
+
+    if (!data.stickerUrls.length) {
+      await m.react("❌");
+      return m.reply(novaError("LineSticker", "Tidak ada sticker ditemukan di URL tersebut!"));
     }
-    try {
-        const apikey = config.APIkey?.neoxr
-        if (!apikey) {
-            return m.reply(novaError("LineSticker", "API Key Neoxr gak ada di config nih!"))
-        }
-        
-        const apiUrl = `https://api.neoxr.eu/api/linesticker?url=${encodeURIComponent(url)}&apikey=${apikey}`
-        const res = await axios.get(apiUrl, { timeout: 60000 })
-        
-        if (!res.data?.status || !res.data?.data) {
-            return m.reply(novaError("LineSticker", "Gagal ambil sticker dari URL nih!"))
-        }
-        
-        const data = res.data.data
-        const title = data.title || 'LINE Sticker'
-        const author = data.author || 'Unknown'
-        const isAnimated = data.animated || false
-        
-        const stickerUrls = isAnimated && data.sticker_animation_url?.length
-            ? data.sticker_animation_url
-            : data.sticker_url || []
-        
-        if (!stickerUrls.length) {
-            return m.reply(novaError("LineSticker", "Gak ada sticker nemu nih!"))
-        }
-        
-        await m.reply(
-            `🎨 *ʟɪɴᴇ ꜱᴛɪᴄᴋᴇʀ ᴘᴀᴄᴋ*\n\n` +
-            `╭─「 ✦ ɪɴꜰᴏ ✦ 」\n` +
-            `│ 📝 *ᴛɪᴛʟᴇ:* ${title}\n` +
-            `│ 👤 *ᴀᴜᴛʜᴏʀ:* ${author}\n` +
-            `│ 🎬 *ᴀɴɪᴍᴀᴛᴇᴅ:* ${isAnimated ? 'Ya' : 'Tidak'}\n` +
-            `│ 📊 *ᴛᴏᴛᴀʟ:* ${stickerUrls.length}\n` +
-            `╰┈┈┈┈┈┈┈┈\n\n` +
-            `🕕 Mengirim sticker...`
-        )
-        
-        const maxStickers = Math.min(stickerUrls.length, 10)
-        const packname = title
-        const packAuthor = author
-        
-        let sent = 0
-        for (let i = 0; i < maxStickers; i++) {
-            try {
-                const response = await axios.get(stickerUrls[i], {
-                    responseType: 'arraybuffer',
-                    timeout: 30000,
-                    headers: { 'User-Agent': 'Mozilla/5.0' }
-                })
-                const buffer = Buffer.from(response.data)
-                
-                if (isAnimated) {
-                    await sock.sendVideoAsSticker(m.chat, buffer, m, { packname, author: packAuthor })
-                } else {
-                    await sock.sendImageAsSticker(m.chat, buffer, m, { packname, author: packAuthor })
-                }
-                sent++
-                await new Promise(r => setTimeout(r, 600))
-            } catch (e) {
-                console.error('[LineSticker] Sticker error:', e.message)
-            }
-        }
-        
-        if (sent > 0) {
-            await m.reply(claraWrap("Linesticker", `✅ Berhasil kirim ${sent}/${stickerUrls.length} sticker`))
-        } else {
-            await m.reply(novaError("LineSticker", "Gagal kirim sticker nih"))
-        }
-        
-    } catch (error) {
-        console.error('[LineSticker] Error:', error.message)
-        m.reply(claraWrap("linesticker", te(m.prefix, m.command, m.pushName), "error"))
+
+    // Send info
+    await m.reply(claraWrap("LINE Sticker", [
+      `Title: ${data.title}`,
+      `Author: ${data.author}`,
+      `Animated: ${data.isAnimated ? "Ya" : "Tidak"}`,
+      `Total: ${data.stickerUrls.length} sticker`,
+      "",
+      "Mengirim sticker...",
+    ].join("\n")));
+
+    // Send stickers (max 10 to avoid spam)
+    const maxStickers = Math.min(data.stickerUrls.length, 10);
+    let sent = 0;
+
+    for (let i = 0; i < maxStickers; i++) {
+      try {
+        const response = await axios.get(data.stickerUrls[i], {
+          responseType: "arraybuffer",
+          timeout: 15000,
+          headers: { "User-Agent": "Mozilla/5.0" },
+        });
+        const buffer = Buffer.from(response.data);
+        if (buffer.length < 100) continue;
+
+        await sock.sendImageAsSticker(m.chat, buffer, m, {
+          packname: data.title,
+          author: data.author,
+        });
+        sent++;
+        await new Promise((r) => setTimeout(r, 600));
+      } catch (e) {
+        console.error("[LineSticker] sticker", e.message);
+      }
     }
+
+    if (sent > 0) {
+      await m.reply(claraWrap("Linesticker", `Berhasil kirim ${sent}/${data.stickerUrls.length} sticker`));
+      await m.react("🐣");
+    } else {
+      await m.react("❌");
+      m.reply(novaError("LineSticker", "Gagal mengirim sticker!"));
+    }
+  } catch (err) {
+    console.error("[LineSticker]", err);
+    await m.react("❌");
+    m.reply(claraWrap("linesticker", "Gagal download sticker LINE. Pastikan URL valid!", "error"));
+  }
 }
 
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler };
