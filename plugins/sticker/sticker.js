@@ -119,21 +119,14 @@ async function handler(m, { sock, config: botConfig }) {
     const isVideo = m.isVideo || (m.quoted && m.quoted.type === 'videoMessage')
     
     if (!isImage && !isVideo) {
-        await m.reply(
-            `🖼️ *ꜱᴛɪᴄᴋᴇʀ ᴍᴀᴋᴇʀ*\n\n` +
-            `Kirim/reply gambar atau video dengan caption:\n` +
-            `\`${m.prefix}s\`\n\n` +
-            `*ᴏᴘꜱɪ:*\n` +
-            `\`--crop\` - Crop jadi kotak\n` +
-            `\`--resize WxH\` - Resize ke ukuran\n` +
-            `\`--circle\` - Bentuk lingkaran\n` +
-            `\`--rounded\` - Sudut melengkung\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:*\n` +
-            `\`${m.prefix}s --crop\`\n` +
-            `\`${m.prefix}s --resize 256x256\`\n` +
-            `\`${m.prefix}s --circle\`\n` +
-            `\`${m.prefix}s PackName Author\``
-        )
+        await m.reply(novaCaption({
+            emoji: "🖼️",
+            name: "Sticker Maker",
+            description: "Membuat sticker dari gambar atau video",
+            usage: m.prefix + "s [--crop] [--resize WxH] [--circle] [--rounded]",
+            example: m.prefix + "s --crop\n" + m.prefix + "s --resize 256x256\n" + m.prefix + "s --circle\n" + m.prefix + "s PackName Author",
+            note: "Kirim atau reply gambar/video dengan caption command di atas",
+        }))
         return
     }
     const options = parseOptions(m.args || [])

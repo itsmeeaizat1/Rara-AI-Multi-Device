@@ -108,9 +108,7 @@ async function handler(m, { sock }) {
  const search = await api.search(query);
 
  if (!search.status || !search.data?.length) {
- return m.reply(
- `── . ──\n\nTidak ada sticker pack untuk: *${query}* `,
- );
+ return m.reply(claraWrap("stickerpack", "Tidak ada sticker pack untuk: *" + query + "*"));
  }
 
  const randPick =
@@ -121,9 +119,7 @@ async function handler(m, { sock }) {
  return m.reply(novaError("StickerPack", "Gagal ambil detail sticker pack nih"));
  }
 
- await m.reply(
- `── . ──\n\nMengunduh *${randPick.name}*\n${Math.min(detail.stickers.length, MAX_STICKERS)} sticker `,
- );
+ await m.reply(claraWrap("stickerpack", "Mengunduh *" + randPick.name + "*\n" + Math.min(detail.stickers.length, MAX_STICKERS) + " sticker"));
 
  const limited = detail.stickers.slice(0, MAX_STICKERS);
  const stickerBuffers = [];
@@ -157,9 +153,7 @@ async function handler(m, { sock }) {
  });
  } catch (packErr) {
  console.error("[StickerPack] Pack send failed:", packErr.message);
- await m.reply(
- `── . ──\n\nPack gagal, mengirim satu per satu... `,
- );
+ await m.reply(claraWrap("stickerpack", "Pack gagal, mengirim satu per satu..."));
 
  let sent = 0;
  for (const buf of stickerBuffers) {
@@ -188,9 +182,7 @@ async function handler(m, { sock }) {
  }
 
  if (sent > 0) {
- await m.reply(
- `── . ──\n\nBerhasil kirim *${sent}* sticker dari *${packname}* `,
- );
+ await m.reply(claraWrap("stickerpack", "Berhasil kirim *" + sent + "* sticker dari *" + packname + "*"));
  } else {
  await m.reply(novaError("StickerPack", "Gagal kirim sticker nih"));
  }
