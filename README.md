@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20standardisasi%20box-drawing%20design%20d-success?style=for-the-badge)
-> *Commit: "feat: standardisasi box-drawing design di handler, connection, dan lib files"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tambah%20intro%20box%20di%20menu%20dan%20allme-success?style=for-the-badge)
+> *Commit: "feat: tambah intro box di menu dan allmenu"*
 <!--END_SECTION:latest-update-->
 
 ---
