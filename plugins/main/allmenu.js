@@ -20,7 +20,7 @@ import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, commandListLine, toSC, closeBoxRight, novaBox } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, commandListLine, toSC, closeBoxRight, novaBox, novaMenuLayout } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "allmenu",
@@ -190,78 +190,22 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
-    // ── Info section (Full SmallCaps Style v7) — open box, perlu closeBoxRight sendiri ──
-    const openBox = `
-╭─「 *${toSC("Info Profil")}* 」
-│ *${toSC("Nama")}:*  ${toSC(m.pushName || "User")}
-│ *${toSC("Nomor")}:* @${m.sender.split("@")[0]}
-│ *${toSC("Premium")}:* ${toSC(m.isPremium ? "Aktif" : "Free")}
-│ *${toSC("Energi")}:* ${m.isOwner || m.isPremium ? toSC("∞ Unlimited") : (user?.energi ?? 25)}
-│ *${toSC("Koin")}:* ${(user?.koin ?? 0).toLocaleString()}
-│ *${toSC("Limit")}:* ${m.isOwner || m.isPremium ? toSC("Unlimited") : (user?.limit ?? "-")}
-│ *${toSC("Role")}:* ${toSC(userRole)}
-│ *${toSC("Level")}:* ${userLevel}
-│ *${toSC("Xp")}:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
-│ *${toSC("Total Xp")}:* ${userExp.toLocaleString()}
-│ *${toSC("Status")}:* ${toSC(user?.banned ? "Banned" : "Aktif")}
-│ 「 *${toSC("Info Waktu")}*
-│ *${toSC("Waktu")}:* ${timeStr} ${toSC("WIB")}
-│ *${toSC("Hari")}:* ${toSC(dayName)} ${toSC(weton)}
-│ *${toSC("Tanggal")}:* ${dateStr}
-│ *${toSC("Tanggal Islam")}:* ${islamicDate}
-│ *${toSC("Zona")}:* ${toSC("Asia/Jakarta")}
-│ *${toSC("Hari Penting")}:* ${toSC(importantDay)}
-│ 「 *${toSC("Info Bot")}*
-│ *${toSC("Bot Name")}:* ${toSC(botConfig.bot?.name || botName)}
-│ *${toSC("Bot Nomor")}:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : toSC("Unknown")}
-│ *${toSC("Version")}:* ${botConfig.bot?.version || "-"}
-│ *${toSC("Developer")}:* ${toSC(botConfig.bot?.developer || "-")}
-│ *${toSC("Mode")}:* ${toSC((botConfig.mode || "public").toUpperCase())}
-│ *${toSC("Prefix")}:* [ *${prefix}* ]
-│ *${toSC("Uptime")}:* ${runtimeStr}
-│ *${toSC("Total User")}:* ${totalUsers}
-│ *${toSC("Total Registrasi")}:* ${totalRegistered}
-│ *${toSC("Premium User")}:* ${totalPremium}
-│ *${toSC("Total Fitur")}:* ${totalFeatures}
-│ 「 *${toSC("Info Database")}*
-│ *${toSC("Total User")}:* ${totalUsers}
-│ *${toSC("Terdaftar")}:* ${totalRegistered}
-│ *${toSC("Premium")}:* ${totalPremium}
-│ *${toSC("Diblokir")}:* ${totalBanned}
-│ *${toSC("Batal Daftar")}:* ${totalUnregistered}
-│ *${toSC("Kena Warn")}:* ${totalWarned}
-│ *${toSC("Grup Aktif")}:* ${totalActiveGroups} / ${totalGroups}
-│ *${toSC("Pesan Masuk")}:* ${totalMessagesIn > 0 ? totalMessagesIn.toLocaleString() : '-'}
-│ *${toSC("Pesan Keluar")}:* ${totalMessagesOut > 0 ? totalMessagesOut.toLocaleString() : '-'}
-│ *${toSC("Command Run")}:* ${totalCommandsRun > 0 ? totalCommandsRun.toLocaleString() : '-'}
-│ *${toSC("Sticker Dibuat")}:* ${totalStickerMade > 0 ? totalStickerMade.toLocaleString() : '-'}
-│ *${toSC("Download")}:* ${totalDownloads > 0 ? totalDownloads.toLocaleString() : '-'}
-│ 「 *${toSC("Info Server")}*
-│ *${toSC("Platform")}:* ${toSC(platform)}
-│ *${toSC("Hostname")}:* ${toSC(hostname)}
-│ *${toSC("Type")}:* ${toSC("Node.Js")}
-│ *${toSC("Baileys")}:* ${toSC("Multi Device")}
-│ *${toSC("Node.js")}:* ${process.version}
-│ *${toSC("Server Uptime")}:* ${serverUptime}
-│ *${toSC("CPU")}:* ${cpuModel}
-│ *${toSC("Cores")}:* ${cpuCores} ${toSC("threads")} @ ${cpuSpeed} MHz
-│ *${toSC("Load Avg")}:* ${loadAvg}
-│ *${toSC("RAM")}:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
-│ *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
-╰──────────
-╭─「 *${toSC("Keterangan")}* 」\n│ Ⓞ = ${toSC("Hanya untuk owner")}
-│ ⓟ = ${toSC("Hanya untuk premium")}
-│ Ⓛ = ${toSC("Membutuhkan limit")}
-│ Ⓐ = ${toSC("Hanya untuk admin")}
-│ Ⓖ = ${toSC("Hanya di dalam grup")}
-│ Ⓟ = ${toSC("Hanya di private chat")}
-╰──────────`;
+    // ── Info section (compact, novaMenuLayout) ──
+    const info = [
+      `${getTimeGreeting()}, ${m.pushName || "User"}`,
+      { label: "Uptime", value: runtimeStr },
+      { label: "Mode", value: (botConfig.mode || "public").toUpperCase() },
+      { label: "Prefix", value: prefix },
+      { label: "User", value: `${totalUsers} (${totalPremium} Premium)` },
+      { label: "Grup", value: `${totalActiveGroups} / ${totalGroups}` },
+      { label: "Terdaftar", value: `${totalRegistered}` },
+      { label: "Diblokir", value: `${totalBanned}` },
+      { label: "Total Fitur", value: `${totalFeatures}` },
+      { label: "Role", value: userRole },
+      { label: "Energi", value: m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25) },
+    ];
 
-    // closeBoxRight HANYA diterapkan ke openBox — weatherBlock & category boxes (novaBox)
-    // sudah closed sendiri, jangan ikut diproses biar lebarnya gak ikut melar
-    let txt = closeBoxRight(openBox) + `\n${weatherBlock}${readMore}\n`;
-
-    // ── Category commands (Clara-MD box style) ──
+    // ── Category sections ──
     const sortedCategories = [...categories].sort((a, b) => {
       const ia = CATEGORY_ORDER.indexOf(a); const ib = CATEGORY_ORDER.indexOf(b);
       return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
@@ -279,8 +223,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     const excludeCategories = modeExcludeMap[botMode] || [];
 
-    // ── Category commands: box terpisah per kategori ──
-    let categoryBoxes = [];
+    const menuCats = [];
     for (const category of sortedCategories) {
       if (category === "owner" && !m.isOwner) continue;
       if (excludeCategories.includes(category.toLowerCase())) continue;
@@ -289,24 +232,16 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       const allCmds = [...pluginCmds, ...caseCmds];
       if (allCmds.length === 0) continue;
       const catName = CATEGORY_NAMES[category] || category.charAt(0).toUpperCase() + category.slice(1);
-
-      const boxLines = [];
-      for (let i = 0; i < allCmds.length; i++) {
-        const cmd = allCmds[i];
-        const symbols = getCommandSymbols(cmd);
-        const pinfo = getPlugin(cmd);
-        const usage = pinfo?.config?.usage || "";
-        // Clean the commandListLine output (strip leading │ )
-        const rawLine = commandListLine(prefix, cmd, usage, symbols).replace(/^│\s*/, "");
-        boxLines.push(rawLine);
-      }
-      categoryBoxes.push(novaBox(toSC(catName), boxLines));
+      menuCats.push({ name: catName, commands: allCmds });
     }
 
-    // Join all category boxes with double newline
-    txt += categoryBoxes.join("\n\n\n");
+    const txt = novaMenuLayout({
+      infoTitle: "Info",
+      info,
+      categories: menuCats,
+      prefix,
+    });
 
-    txt += `\n\n${toSC("Nova AI WhatsApp Bot")}`;
 
 
     // ── Send: nativeFlowMessage buttons (proven pattern) + real image header ──
