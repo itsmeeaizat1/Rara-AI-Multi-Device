@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
     const indoText = indoRes.data.text;
     const tafsirText = tafsirRes?.data?.text || "";
 
-    let txt = "╭─「 *MOTIVASI ISLAMI* 」\n│\n";
+    let txt = "╭─「 MOTIVASI ISLAMI 」\n│\n";
     txt += "╰──────────\n";
     txt += "Tema: *" + topic.tag + "*\n";
     txt += "QS. " + surah.englishName + ":" + topic.ayat + "\n\n";

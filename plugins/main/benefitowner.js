@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
  const message = 
  `👑 *Apa Itu Owner?*\n\n` +
  `Owner adalah *ᴘᴇᴍɪʟɪᴋ ʙᴏᴛ* yang memiliki akses penuh ke semua fitur dan kontrol sistem.\n\n` +
- `╭─「 *Keuntungan Owner* 」\n` +
+ `╭─「 Keuntungan Owner 」\n` +
  `│ \`\`\`Akses semua command tanpa batasan\`\`\`\n` +
  `│ \`\`\`Limit tidak terbatas (-1)\`\`\`\n` +
  `│ \`\`\`Bypass semua cooldown\`\`\`\n` +
@@ -43,12 +43,12 @@ async function handler(m, { sock }) {
  `│ \`\`\`Manajemen user & group\`\`\`\n` +
  `│ \`\`\`Akses panel & server\`\`\`\n` +
  `╰┈┈┈┈┈┈┈┈\n\n` +
- `╭─「 *Cara Kerja* 」\n` +
+ `╭─「 Cara Kerja 」\n` +
  `│ \`Owner ditambahkan melalui:\`\n` +
  `│ • \`\`\`${prefix}addowner <nomor>\`\`\`\n` +
  `│ • Atau langsung di config.js\n` +
  `╰┈┈┈┈┈┈┈┈\n\n` +
- `╭─「 *Daftar Command Owner* 」\n` +
+ `╭─「 Daftar Command Owner 」\n` +
  `│ \`Total: ${totalCommands} command\`\n` +
  `┃\n` +
  commandList.map(c => `│ ${commandListLine(prefix, c.name, c.usage)}`).join('\n') +

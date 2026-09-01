@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     const wordName = entry.word || word;
     const phonetic = entry.phonetic || (entry.phonetics && entry.phonetics.find(p => p.text)?.text) || "-";
 
-    let text = `╭─「 *DICTIONARY DEFINE* 」\n`;
+    let text = `╭─「 DICTIONARY DEFINE 」\n`;
     text += `│ Word: ${wordName}\n`;
     text += `│ Phonetic: ${phonetic}\n`;
     text += `╰──────────\n\n`;

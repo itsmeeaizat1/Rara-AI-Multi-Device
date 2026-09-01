@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastSampah", SAMPAH_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 *sᴀᴍᴘᴀʜ* 」\n`;
+    let msg = `╭─「 sᴀᴍᴘᴀʜ 」\n`;
     msg += `│ 🗑️ Kamu mengumpulkan sampah...\n`;
     msg += `│\n`;
     msg += `│ 📦 *ʜᴀsɪʟ ᴋᴜʟᴇᴛsᴀᴍᴘᴀʜ*\n`;

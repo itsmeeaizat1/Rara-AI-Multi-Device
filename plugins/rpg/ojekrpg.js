@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastOjek", OJEK_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 *ᴏᴊᴇᴋ* 」\n`;
+    let msg = `╭─「 ᴏᴊᴇᴋ 」\n`;
     msg += `│ 🏍️ Penumpang: *${passenger.name}*\n`;
     msg += `│ 📍 Jarak: *${distance} km*\n`;
     msg += `│\n`;

@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastDagang", DAGANG_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 *ʙᴇʀᴅᴀɢᴀɴɢ* 」\n`;
+    let msg = `╭─「 ʙᴇʀᴅᴀɢᴀɴɢ 」\n`;
     msg += `│ 🏘️ Dari: *${buyVillage.name}*\n`;
     msg += `│ 📍 Ke: *${sellVillage.name}*\n`;
     msg += `│ 📦 Barang: *${good.name}* x${qty}\n`;

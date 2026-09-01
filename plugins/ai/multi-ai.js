@@ -69,7 +69,7 @@ async function handler(m, { sock, config: botConfig }) {
         lines += `│ ${provider.name || key} (${key})\n${modelList}\n`;
       }
 
-      const text = `╭─「 *Mᴜʟᴛɪ AI* 」\n│ Router AI — Pilih Provider & Model
+      const text = `╭─「 Mᴜʟᴛɪ AI 」\n│ Router AI — Pilih Provider & Model
 │ 「 Providers 」
 ${lines}│ 「 Cara Pakai 」
 │ ${prefix}multi-ai <provider> <pesan>
@@ -88,7 +88,7 @@ ${lines}│ 「 Cara Pakai 」
     const providers = getAllProviders();
     const provider = providers[providerArg];
     if (!provider) {
-      const text = `╭─「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ Provider *${providerArg}* tidak ditemukan
+      const text = `╭─「 Aɪ Rᴏᴜᴛᴇʀ 」\n│ Provider *${providerArg}* tidak ditemukan
 │ Ketik *${prefix}multi-ai list* untuk lihat daftar
 ╰──────────`;
       await m.reply(text);
@@ -108,7 +108,7 @@ ${lines}│ 「 Cara Pakai 」
     }
 
     if (!userMessage) {
-      const text = `╭─「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Provider:* ${toSC(provider.name || providerArg)}
+      const text = `╭─「 Aɪ Rᴏᴜᴛᴇʀ 」\n│ *Provider:* ${toSC(provider.name || providerArg)}
 │ *Model:* ${model}
 │
 │ 📌 *Cara Pakai:* *${prefix}multi-ai ${providerArg} [model] <pesan>*
@@ -138,7 +138,7 @@ ${lines}│ 「 Cara Pakai 」
     });
 
     if (!reply || reply.trim() === "") {
-      const text = `╭─「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Status:* Gagal nih
+      const text = `╭─「 Aɪ Rᴏᴜᴛᴇʀ 」\n│ *Status:* Gagal nih
 │ *Alasan:* AI tidak memberikan respons
 │ Cek API key di *${prefix}ai-set apiKey <key>*
 ╰──────────`;
@@ -149,7 +149,7 @@ ${lines}│ 「 Cara Pakai 」
     const trimmedMsg = userMessage.length > 200 ? userMessage.slice(0, 200) + "..." : userMessage;
     const trimmedReply = reply.length > 3000 ? reply.slice(0, 3000) + "..." : reply;
 
-    const text = `╭─「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Provider:* ${toSC(provider.name || providerArg)}
+    const text = `╭─「 Aɪ Rᴏᴜᴛᴇʀ 」\n│ *Provider:* ${toSC(provider.name || providerArg)}
 │ *Model:* ${model}
 │ *Kamu:* ${trimmedMsg}
 │ 「 Respons 」
@@ -160,7 +160,7 @@ ${lines}│ 「 Cara Pakai 」
   } catch (error) {
     console.error('[multi-ai.js]:', error.message);
     const prefix = botConfig.command?.prefix || ".";
-    const text = `╭─「 *Aɪ Rᴏᴜᴛᴇʀ* 」\n│ *Status:* Gagal nih
+    const text = `╭─「 Aɪ Rᴏᴜᴛᴇʀ 」\n│ *Status:* Gagal nih
 │ *Alasan:* ${error.message}
 │ Cek API key: *${prefix}ai-set apiKey <key>*
 ╰──────────`;

@@ -168,7 +168,7 @@ async function handler(m, { sock, db }) {
       }
 
       let txt = `${weatherBlock}
-╭─「 *${toSC("Daftar Kategori")}* 」
+╭─「 ${toSC("Daftar Kategori")} 」
 │ *${toSC("Total")}:* ${catEntries.length} ${toSC("kategori")}
 │ *${toSC("Total Fitur")}:* ${totalAllCmds} ${toSC("command")}
 │
@@ -203,7 +203,7 @@ async function handler(m, { sock, db }) {
 
     if (!matchedCat) {
       await m.reply(
-        `╭─「 *Error* 」\n│ Kategori \`${categoryArg}\` tidak ditemukan\n│ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰──────────`
+        `╭─「 Error 」\n│ Kategori \`${categoryArg}\` tidak ditemukan\n│ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰──────────`
       );
       return;
     }
@@ -213,7 +213,7 @@ async function handler(m, { sock, db }) {
 
     if (matchedCat === "owner" && !m.isOwner) {
       await m.reply(
-        `╭─「 *${toSC("Akses Ditolak")}* 」\n│ ${toSC("Kategori ini hanya untuk owner")}\n╰──────────`
+        `╭─「 ${toSC("Akses Ditolak")} 」\n│ ${toSC("Kategori ini hanya untuk owner")}\n╰──────────`
       );
       return;
     }
@@ -224,7 +224,7 @@ async function handler(m, { sock, db }) {
 
     if (allCommands.length === 0) {
       await m.reply(
-        `╭─「 *Kosong* 」\n│ Kategori \`${matchedCat}\` tidak ada command\n╰──────────`
+        `╭─「 Kosong 」\n│ Kategori \`${matchedCat}\` tidak ada command\n╰──────────`
       );
       return;
     }

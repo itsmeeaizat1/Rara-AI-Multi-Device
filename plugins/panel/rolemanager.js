@@ -109,7 +109,7 @@ function handler(m, { sock }) {
             return m.reply(claraWrap("rolemanager", `❌ *ɢᴀɢᴀʟ*\n\n${result.error}`))
         }
         return m.reply(`✅ *${roleLabel.toUpperCase()} Ditambahkan*\n\n` +
-            `╭─「 *ᴅᴇᴛᴀɪʟ* 」\n` +
+            `╭─「 ᴅᴇᴛᴀɪʟ 」\n` +
             `│ 📱 Nomor: \`${targetUser}\`\n` +
             `│ 🏷️ Role: \`${roleLabel}\`\n` +
             `│ 🖥️ sErver: \`${serverLabel}\`\n` +

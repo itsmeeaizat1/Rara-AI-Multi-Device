@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     let text = `╭─「 Daftar Ultah 」\n`
     text += `│  🎂 *DaғTar Ultah*\n`
     text += `╰──────────\n\n`
-    text += `╭─「 *${birthdays.length} Member* 」\n`
+    text += `╭─「 ${birthdays.length} Member 」\n`
     
     const mentions = []
     

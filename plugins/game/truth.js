@@ -47,7 +47,7 @@ export async function handler(m, { sock }) {
     }
 
     const text = [
-      "╭─「 *Truth or Dare* 」",
+      "╭─「 Truth or Dare 」",
       "│",
       `│ *Mode:* TRUTH 🎭`,
       "│ ",

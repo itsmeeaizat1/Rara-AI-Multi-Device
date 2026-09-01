@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
       saveRpg(m, { invest: rpg.invest });
 
       await m.react("🐣");
-      let msg = `╭─「 *ɪɴᴠᴇsᴛᴀsɪ* 」\n`;
+      let msg = `╭─「 ɪɴᴠᴇsᴛᴀsɪ 」\n`;
       msg += `│ 📈 Investasi selesai!\n`;
       msg += `│\n`;
       msg += `│ 💵 Modal: *${investAmount} gold*\n`;
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
         const remaining = rpg.invest.endTime - Date.now();
         const mins = Math.floor(remaining / 60000);
         const secs = Math.floor((remaining % 60000) / 1000);
-        let msg = `╭─「 *ɪɴᴠᴇsᴛᴀsɪ* 」\n`;
+        let msg = `╭─「 ɪɴᴠᴇsᴛᴀsɪ 」\n`;
         msg += `│ 📈 Investasi aktif!\n`;
         msg += `│ 💵 Modal: *${rpg.invest.amount} gold*\n`;
         msg += `│ ⏰ Selesai dalam: *${mins}m ${secs}s*\n`;
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
         return m.reply(msg);
       }
 
-      let msg = `╭─「 *ɪɴᴠᴇsᴛᴀsɪ* 」\n`;
+      let msg = `╭─「 ɪɴᴠᴇsᴛᴀsɪ 」\n`;
       msg += `│ 💰 Gold: *${rpg.gold}*\n`;
       msg += `│\n`;
       msg += `│ 📌 Cara: .investrpg <jumlah>\n`;
@@ -134,7 +134,7 @@ async function handler(m, { sock }) {
     saveRpg(m, { invest: rpg.invest });
 
     await m.react("🐣");
-    let msg = `╭─「 *ɪɴᴠᴇsᴛᴀsɪ* 」\n`;
+    let msg = `╭─「 ɪɴᴠᴇsᴛᴀsɪ 」\n`;
     msg += `│ ✅ Investasi dimulai!\n`;
     msg += `│\n`;
     msg += `│ 💵 Modal: *${amount} gold*\n`;

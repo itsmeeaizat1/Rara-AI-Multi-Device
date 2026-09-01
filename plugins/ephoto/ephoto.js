@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
         const effectList = Object.keys(EFFECT_URLS).map(e => `\`${m.prefix}${e}\``).join('\n')
         return m.reply(`🎨 *ᴇᴘʜᴏᴛᴏ ᴇꜰꜰᴇᴄᴛꜱ*\n\n` +
             `Buat efek text keren!\n\n` +
-            `╭─「 *ᴅᴀꜰᴛᴀʀ ᴇꜰᴇᴋ* 」\n${effectList}\n╰┈┈┈┈┈┈┈┈\n\n` +
+            `╭─「 ᴅᴀꜰᴛᴀʀ ᴇꜰᴇᴋ 」\n${effectList}\n╰┈┈┈┈┈┈┈┈\n\n` +
             `*ᴄᴏɴᴛᴏʜ:* ${m.prefix}glitchtext Nova-AI`)
     }
     

@@ -123,14 +123,14 @@ ssh_pwauth: True`,
         const ipv4 = dropletInfo.networks?.v4?.find(n => n.type === 'public')
         const ip = ipv4?.ip_address || 'Tidak tersedia'
         
-        const detailTxt = `╭─「 *VPS Berhasil Dibuat* 」\n│ *ID:* ${dropletId}
+        const detailTxt = `╭─「 VPS Berhasil Dibuat 」\n│ *ID:* ${dropletId}
 │ *ʜᴏꜱᴛɴᴀᴍᴇ:* ${hostname}
 │ *IP:* ${ip}
 │ *ᴜꜱᴇʀ:* root
 │ *ᴘᴀꜱꜱᴡᴏʀᴅ:* ${password}
 ╰──────────
 
-╭─「 *Spec* 」\n│ *ʀᴀᴍ:* ${spec.ram}
+╭─「 Spec 」\n│ *ʀᴀᴍ:* ${spec.ram}
 │ *ᴄᴘᴜ:* ${spec.cpu}
 │ *ʀᴇɢɪᴏɴ:* ${region}
 │ *OS:* Ubuntu 22.04

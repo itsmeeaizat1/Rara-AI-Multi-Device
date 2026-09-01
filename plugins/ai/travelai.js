@@ -88,7 +88,7 @@ Gunakan bahasa Indonesia. Sesuaikan jumlah hari dengan yang diminta. Praktis dan
     }
 
     await m.react("🐣");
-    let msg = `╭─「 *ᴛʀᴀᴠᴇʟ ᴀɪ* 」\n`;
+    let msg = `╭─「 ᴛʀᴀᴠᴇʟ ᴀɪ 」\n`;
     msg += `│ 🗺️ Tujuan: *${text}*\n`;
     msg += `│\n`;
     msg += formatted;

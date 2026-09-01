@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
 
     // No game specified — show menu
     if (!game || game === "menu" || game === "list") {
-      let msg = `╭─「 *ᴄᴀsɪɴᴏ ᴠ2* 」\n`;
+      let msg = `╭─「 ᴄᴀsɪɴᴏ ᴠ2 」\n`;
       msg += `│ 💰 Gold: *${rpg.gold}*\n`;
       msg += `│\n`;
       msg += `│ 📋 *ɢᴀᴍᴇs*\n`;
@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
       case "slot": {
         result = playSlot(bet);
         if (result.payout > 0) { addGold(m, result.payout); addExp(m, Math.floor(result.payout / 20)); }
-        msg = `╭─「 *sʟᴏᴛ ᴠ2* 」\n`;
+        msg = `╭─「 sʟᴏᴛ ᴠ2 」\n`;
         msg += `│ 🎰 ${result.s1} | ${result.s2} | ${result.s3}\n`;
         msg += `│ 📊 ${result.result}\n`;
         msg += `│\n`;
@@ -162,7 +162,7 @@ async function handler(m, { sock }) {
         }
         result = playDice(bet, guess);
         if (result.win) { addGold(m, result.payout); addExp(m, 20); }
-        msg = `╭─「 *ᴅɪᴄᴇ ᴠ2* 」\n`;
+        msg = `╭─「 ᴅɪᴄᴇ ᴠ2 」\n`;
         msg += `│ 🎲 Kamu tebak: *${guess}*\n`;
         msg += `│ 🎲 Hasil: *${result.roll}*\n`;
         msg += `│\n`;
@@ -184,7 +184,7 @@ async function handler(m, { sock }) {
         const normalized = ["kepala", "heads"].includes(guess) ? "heads" : "tails";
         result = playCoinflip(bet, normalized);
         if (result.win) { addGold(m, result.payout); addExp(m, 10); }
-        msg = `╭─「 *ᴄᴏɪɴғʟɪᴘ ᴠ2* 」\n`;
+        msg = `╭─「 ᴄᴏɪɴғʟɪᴘ ᴠ2 」\n`;
         msg += `│ 🪙 Kamu pilih: *${normalized}*\n`;
         msg += `│ 🪙 Hasil: *${result.result}*\n`;
         msg += `│\n`;
@@ -206,7 +206,7 @@ async function handler(m, { sock }) {
         result = playRoulette(bet, betType);
         if (result.win) { addGold(m, result.payout); addExp(m, Math.floor(result.payout / 30)); }
         const colorEmoji = { red: "🔴", black: "⚫", green: "🟢" }[result.color];
-        msg = `╭─「 *ʀᴏᴜʟᴇᴛᴛᴇ ᴠ2* 」\n`;
+        msg = `╭─「 ʀᴏᴜʟᴇᴛᴛᴇ ᴠ2 」\n`;
         msg += `│ 🎡 Hasil: *${colorEmoji} ${result.number}*\n`;
         msg += `│ 📌 Bet: *${betType}*\n`;
         msg += `│\n`;

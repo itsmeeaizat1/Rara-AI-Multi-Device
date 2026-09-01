@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastNguli", NGULI_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 *ɴɢᴜʟɪ* 」\n`;
+    let msg = `╭─「 ɴɢᴜʟɪ 」\n`;
     msg += `│ 👷 Pekerjaan: ${job.name}\n`;
     msg += `│\n`;
     msg += `│ 📦 *ʜᴀsɪʟ* ${streak > 1 ? `(streak: ${streak})` : ""}\n`;

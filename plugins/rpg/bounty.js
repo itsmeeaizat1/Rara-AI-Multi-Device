@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     if (typeof player.energi !== "number") player.energi = 100;
 
     if (subCmd === "list" || !subCmd) {
-      let msg = `╭─「 *BOUNTY BOARD* 」\n`;
+      let msg = `╭─「 BOUNTY BOARD 」\n`;
       msg += `│ ⚡ Energi Kamu: *${player.energi}*\n│\n`;
       msg += `│ Daftar Buronan NPC Aktif:\n│\n`;
 
@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
 
         await db.setPlayerData?.(sender, "bounty", player);
 
-        let msg = `╭─「 *BOUNTY VICTORY* 」\n`;
+        let msg = `╭─「 BOUNTY VICTORY 」\n`;
         msg += `│ ⚔️ Berhasil mengalahkan *${target.name}*!\n`;
         msg += `│  \n`;
         msg += `│ 💀 Tingkat Kesulitan: ${target.difficulty}\n`;
@@ -154,7 +154,7 @@ async function handler(m, { sock }) {
       } else {
         await db.setPlayerData?.(sender, "bounty", player);
 
-        let msg = `╭─「 *BOUNTY DEFEAT* 」\n`;
+        let msg = `╭─「 BOUNTY DEFEAT 」\n`;
         msg += `│ 💥 Kamu kalah bertarung melawan *${target.name}*!\n`;
         msg += `│  \n`;
         msg += `│ 🩹 Buronan melarikan diri dan melukaimu.\n`;

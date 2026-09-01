@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 *ᴀɪ ᴍᴀᴛʜ ᴠ2* 」\n`;
+    let msg = `╭─「 ᴀɪ ᴍᴀᴛʜ ᴠ2 」\n`;
     msg += `│ 🧮 Soal: *${text}*\n`;
     msg += `│\n`;
     msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;

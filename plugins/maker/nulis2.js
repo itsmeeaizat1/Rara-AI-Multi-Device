@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    const caption = `╭─「 *ɴᴜʟɪs v2* 」\n│ Teks: ${text.slice(0, 80)}${text.length > 80 ? "..." : ""}\n│ Engine: nexray maker\n╰──────────`;
+    const caption = `╭─「 ɴᴜʟɪs v2 」\n│ Teks: ${text.slice(0, 80)}${text.length > 80 ? "..." : ""}\n│ Engine: nexray maker\n╰──────────`;
     return await sock.sendMessage(m.chat, { image: result.buffer, caption });
   } catch (err) {
     console.error("nulis2 error:", err);

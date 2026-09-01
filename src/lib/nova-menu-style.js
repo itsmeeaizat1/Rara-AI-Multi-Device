@@ -66,16 +66,16 @@ function buildBox(headerTitle, lines = []) {
     if (len > maxW) maxW = len;
   }
   const W = Math.max(maxW + 3, 24);
-  const header = headerCore + "─".repeat(W - headerCore.length) + "╮";
+  const header = headerCore + "─".repeat(Math.max(0, W - headerCore.length));
   const body = [];
   for (const line of lines) {
     if (line === "---" || line === "─" || line === "---separator---") {
-      body.push("├" + "─".repeat(W - 2) + "┤");
+      body.push("├" + "─".repeat(Math.max(0, W - 1)));
     } else if (typeof line === "object" && line.subHeader) {
       const sub = `│ 「 ${line.subHeader} 」`;
-      body.push(sub + "─".repeat(Math.max(0, W - sub.length - 1)) + "┤");
+      body.push(sub);
     } else if (!line || !String(line).trim()) {
-      body.push("│" + " ".repeat(W - 2) + "│");
+      body.push("│");
     } else {
       const clean = String(line)
         .replace(/^╎❏\s*/, '')
@@ -83,10 +83,10 @@ function buildBox(headerTitle, lines = []) {
         .replace(/^┊\s+➶\s*/, '')
         .replace(/^[•┊╎❏➶╭╰│┃]\s*/g, '');
       const text = scLine(clean);
-      body.push(`│ ${text}` + " ".repeat(Math.max(1, W - 3 - text.length)) + "│");
+      body.push(`│ ${text}`);
     }
   }
-  const footer = "╰" + "─".repeat(W - 2) + "╯";
+  const footer = "╰" + "─".repeat(Math.max(0, W - 1));
   return [header, ...body, footer].join("\n");
 }
 
@@ -133,11 +133,11 @@ function novaCaption({ emoji = "", name = "", description = "", usage = "", exam
 // ═══════════════════════════════════════════════
 
 function botHeader(botName) {
-  return `╭─「 *${toSC(botName)}* 」`;
+  return `╭─「 ${toSC(botName)} 」`;
 }
 
 function botSignature(botName) {
-  return `╰──────────╯`;
+  return `╰──────────`;
 }
 
 function sectionBox(emoji, title, lines = []) {
@@ -173,9 +173,9 @@ function categoryBox(emoji, name, commands, prefix, perLine = 3) {
     lines.push(line);
   }
   const W = Math.max(maxW + 3, 24);
-  const header = headerCore + "─".repeat(W - headerCore.length) + "╮";
-  const body = lines.map(l => l + " ".repeat(Math.max(1, W - l.length - 1)) + "│");
-  const footer = "╰" + "─".repeat(W - 2) + "╯";
+  const header = headerCore + "─".repeat(Math.max(0, W - headerCore.length));
+  const body = lines;
+  const footer = "╰" + "─".repeat(Math.max(0, W - 1));
   return [header, ...body, footer].join("\n");
 }
 
@@ -186,7 +186,7 @@ function categoryBox(emoji, name, commands, prefix, perLine = 3) {
 // ═══════════════════════════════════════════════
 
 function sectionHeader(title) {
-  return `╭─「 *${toSC(title)}* 」`;
+  return `╭─「 ${toSC(title)} 」`;
 }
 
 function sectionItem(text) {
@@ -195,7 +195,7 @@ function sectionItem(text) {
 }
 
 function sectionClose() {
-  return `╰──────────╯`;
+  return `╰──────────`;
 }
 
 function sectionSpacer() {
@@ -208,20 +208,20 @@ function buildSection(title, items = []) {
   const bodyLines = items.map(item => sectionItem(item));
   for (const l of bodyLines) if (l.length > maxW) maxW = l.length;
   const W = Math.max(maxW + 3, 24);
-  const closedHeader = header + "─".repeat(W - header.length) + "╮";
-  const closedBody = bodyLines.map(l => l + " ".repeat(Math.max(1, W - l.length - 1)) + "│");
-  const closedFooter = "╰" + "─".repeat(W - 2) + "╯";
+  const closedHeader = header + "─".repeat(Math.max(0, W - header.length));
+  const closedBody = bodyLines;
+  const closedFooter = "╰" + "─".repeat(Math.max(0, W - 1));
   return [closedHeader, ...closedBody, closedFooter].join("\n");
 }
 
 function claraHeader(title, emoji = "") {
   if (isRealEmoji(emoji)) return `╭─「 ${emoji} ${toSC(title)} 」`;
-  return `╭─「 *${toSC(title)}* 」`;
+  return `╭─「 ${toSC(title)} 」`;
 }
 
 function bracketBox(emoji, label, lines = []) {
   const emojiStr = isRealEmoji(emoji) ? `${emoji} ` : "";
-  return buildBox(`${emojiStr}*${toSC(label)}*`, lines);
+  return buildBox(`${emojiStr}${toSC(label)}`, lines);
 }
 
 // commandListLine: baris command di list menu (allmenu/allmenucategory)
@@ -327,33 +327,22 @@ function listBox(title, items = []) {
   return buildBox(toSC(title), lines);
 }
 
-// closeBoxRight: tambah closing │/╮/╯/┤ di sisi kanan box
-// Untuk right-align box output di allmenu/menu
+// closeBoxRight: no-op (open-box style, no right borders)
+// Kept for backward compat — just returns text unchanged
 function closeBoxRight(text) {
   const lines = text.split("\n");
-  let maxW = 0;
-  for (const l of lines) {
-    const trimmed = l.replace(/\x1b\[[0-9;]*m/g, "");
-    if (trimmed.length > maxW) maxW = trimmed.length;
-  }
-  const W = Math.max(maxW + 3, 24);
   const out = [];
   for (const l of lines) {
     const t = l.trim();
-    if (t.startsWith("╭─「") || t.startsWith("╭─「 ")) {
-      out.push(l + "─".repeat(Math.max(0, W - l.length)) + "╮");
-    } else if (t.startsWith("│ 「") || t.startsWith("│ 「 ")) {
-      out.push(l + "─".repeat(Math.max(0, W - l.length - 1)) + "┤");
-    } else if (t.startsWith("│─") || t.startsWith("│ ")) {
-      out.push("├" + "─".repeat(W - 2) + "┤");
-    } else if (t.startsWith("│") || l.trim() === "│") {
-      if (l.trim() === "│" || l.trim() === "") {
-        out.push("│" + " ".repeat(W - 2) + "│");
-      } else {
-        out.push(l + " ".repeat(Math.max(1, W - l.length - 1)) + "│");
-      }
-    } else if (t.startsWith("╰──")) {
-      out.push("╰" + "─".repeat(W - 2) + "╯");
+    // Strip existing right borders if any
+    if (t.endsWith("╮")) {
+      out.push(l.replace(/╮$/, ""));
+    } else if (t.endsWith("╯")) {
+      out.push(l.replace(/╯$/, ""));
+    } else if (t.endsWith("┤")) {
+      out.push(l.replace(/┤$/, ""));
+    } else if (t.endsWith("│") && !t.startsWith("│") && l.trim() !== "│") {
+      out.push(l.replace(/│$/, ""));
     } else {
       out.push(l);
     }
@@ -806,18 +795,18 @@ export function novaBox(header, lines = [], opts = {}) {
     return { type: "line", raw: text };
   });
   const W = Math.max(maxW + 4, 24);
-  let out = headerStr + "─".repeat(Math.max(0, W - headerStr.length)) + "╮\n";
+  let out = headerStr + "─".repeat(Math.max(0, W - headerStr.length)) + "\n";
   for (const item of processed) {
     if (item.type === "sep") {
-      out += "├" + "─".repeat(W - 2) + "┤\n";
+      out += "├" + "─".repeat(Math.max(0, W - 1)) + "\n";
     } else if (item.type === "sub") {
-      out += item.raw + "─".repeat(Math.max(0, W - item.raw.length - 1)) + "┤\n";
+      out += item.raw + "\n";
     } else if (item.type === "empty") {
-      out += "│" + " ".repeat(W - 2) + "│\n";
+      out += "│\n";
     } else {
-      out += `│ ${item.raw}` + " ".repeat(Math.max(1, W - 3 - item.raw.length)) + "│\n";
+      out += `│ ${item.raw}` + "\n";
     }
   }
-  out += "╰" + "─".repeat(W - 2) + "╯";
+  out += "╰" + "─".repeat(Math.max(0, W - 1));
   return out;
 }

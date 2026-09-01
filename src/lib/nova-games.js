@@ -128,7 +128,7 @@ class NovaGames {
             return;
           }
 
-          let caption = `╭─「 *${cfg.title}* 」\n\n`;
+          let caption = `╭─「 ${cfg.title} 」\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             caption += `\`\`\`${question[cfg.questionField]}\`\`\`\n`;
           }
@@ -146,7 +146,7 @@ class NovaGames {
             { quoted: m }
           );
         } else {
-          let text = `╭─「 *${cfg.title}* 」\n\n`;
+          let text = `╭─「 ${cfg.title} 」\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
           }

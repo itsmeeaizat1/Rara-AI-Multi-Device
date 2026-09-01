@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     }
 
     // STATUS (default)
-    let msg = `╭─「 *sᴛᴀᴍɪɴᴀ* 」\n`;
+    let msg = `╭─「 sᴛᴀᴍɪɴᴀ 」\n`;
     msg += `│ ⚡ [${bar(data.stamina || 0, MAX_STAMINA)}] ${data.stamina || 0}/${MAX_STAMINA}\n`;
     msg += `│\n`;
     msg += `│ Regenerasi: +1 per 5 menit (passive)\n`;

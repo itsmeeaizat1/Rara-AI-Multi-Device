@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
       const prizePool = Math.floor(totalRevenue * 0.7);
       const myTickets = lottery.tickets.filter((t) => t.sender === sender).length;
 
-      let msg = `╭─「 *ROYAL LOTTERY* 」\n`;
+      let msg = `╭─「 ROYAL LOTTERY 」\n`;
       msg += `│ 🎟️ *Harga Tiket:* ${ticketPrice} Gold\n`;
       msg += `│ 📊 *Total Tiket Terjual:* ${totalTickets} Tiket\n`;
       msg += `│ 🏆 *Total Hadiah (70%):* ${prizePool} Gold\n`;
@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
 
       const myTickets = lottery.tickets.filter((t) => t.sender === sender).length;
 
-      let msg = `╭─「 *LOTTERY PURCHASE* 」\n`;
+      let msg = `╭─「 LOTTERY PURCHASE 」\n`;
       msg += `│ 🎟️ Berhasil membeli *${count}* tiket lotre!\n`;
       msg += `│  \n`;
       msg += `│ 💰 Total Biaya: -${totalCost} Gold\n`;
@@ -149,7 +149,7 @@ async function handler(m, { sock }) {
       winnerWallet.gold = (winnerWallet.gold || 0) + prizePool;
       await db.setPlayerData?.(winnerSender, "wallet", winnerWallet);
 
-      let msg = `╭─「 *LOTTERY DRAW WINNER* 」\n`;
+      let msg = `╭─「 LOTTERY DRAW WINNER 」\n`;
       msg += `│ 🎊 *PENGUNDIAN LOTRE SAKRAL* 🎊\n`;
       msg += `│  \n`;
       msg += `│ 🎟️ Total Tiket Terundi: ${totalTickets} Tiket\n`;

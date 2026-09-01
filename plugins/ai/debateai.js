@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     ]);
 
     await m.react("🐣");
-    let msg = `╭─「 *ᴅᴇʙᴀᴛ ᴀɪ* 」\n`;
+    let msg = `╭─「 ᴅᴇʙᴀᴛ ᴀɪ 」\n`;
     msg += `│ 📌 Topik: *${text}*\n`;
     msg += `│\n`;
     msg += `│ ${DEBATERS[0].emoji} *${DEBATERS[0].name} (PRO):*\n`;

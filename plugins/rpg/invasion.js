@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     const result = INVASION_RESULTS[Math.floor(Math.random() * INVASION_RESULTS.length)];
     rpg.energy = (rpg.energy || 0) - 30;
 
-    let msg = "╭─「 *ɪɴᴠᴀsɪᴏɴ* 」\n│ ⚔️ Kamu memulai invasi ke wilayah musuh!\n│\n";
+    let msg = "╭─「 ɪɴᴠᴀsɪᴏɴ 」\n│ ⚔️ Kamu memulai invasi ke wilayah musuh!\n│\n";
 
     if (result.win) {
       if (result.reward.gold) { rpg.gold = (rpg.gold || 0) + result.reward.gold; msg += "│ " + result.text + "\n│ 💰 +" + result.reward.gold + " Gold\n"; }

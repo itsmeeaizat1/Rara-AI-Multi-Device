@@ -148,17 +148,17 @@ async function handler(m, { sock }) {
     // Jalankan speedtest
     const result = await runSpeedtest();
 
-    let text = `╭─「 *Speedtest* 」\n│ *ʜᴏꜱᴛ:* ${hostname}
+    let text = `╭─「 Speedtest 」\n│ *ʜᴏꜱᴛ:* ${hostname}
 │ *ᴘʟᴀᴛꜰᴏʀᴍ:* ${platform} (${arch})
 │ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
 ╰──────────
 
-╭─「 *CPU & RAM* 」\n│ *ᴄᴘᴜ:* ${cpuModel}
+╭─「 CPU & RAM 」\n│ *ᴄᴘᴜ:* ${cpuModel}
 │ *ᴄᴏʀᴇꜱ:* ${cpuCores}
 │ *ʀᴀᴍ:* ${(usedMem / 1000000).toFixed(0)} / ${(totalMem / 1000000).toFixed(0)} MB (${memUsage}%)
 ╰──────────
 
-╭─「 *Network* 」\n│ *ᴘɪɴɢ:* ${result.ping}
+╭─「 Network 」\n│ *ᴘɪɴɢ:* ${result.ping}
 │ *ᴅᴏᴡɴʟᴏᴀᴅ:* ${result.download}
 │ *ᴜᴘʟᴏᴀᴅ:* ${result.upload}
 ╰──────────
@@ -166,7 +166,7 @@ async function handler(m, { sock }) {
 │ Metode: ${result.method}`;
     await m.reply(claraWrap("speedtest", text));
   } catch (err) {
-    await m.reply(`╭─「 *Speedtest Error* 」\n│ ${err.message || "Unknown error"}
+    await m.reply(`╭─「 Speedtest Error 」\n│ ${err.message || "Unknown error"}
 ╰──────────`);
   }
 }

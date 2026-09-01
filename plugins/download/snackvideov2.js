@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     });
     const buffer = Buffer.from(vidRes.data);
 
-    let msg = `╭─「 *sɴᴀᴄᴋ ᴠɪᴅᴇᴏ v2* 」\n`;
+    let msg = `╭─「 sɴᴀᴄᴋ ᴠɪᴅᴇᴏ v2 」\n`;
     if (r.title || r.caption) _lines.push(`Judul: *${(r.title || r.caption).slice(0, 80)}*`);
     if (r.author || r.username) _lines.push(`Author: *@${r.author || r.username}*`);
     if (r.likes) _lines.push(`Likes: *${r.likes}*`);

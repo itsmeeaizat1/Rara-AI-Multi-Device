@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    const caption = `╭─「 *ᴛᴏ ʀᴇᴀʟ* 」\n│ ✨ Image enhanced to realistic\n│ Engine: nexray AI\n╰──────────`;
+    const caption = `╭─「 ᴛᴏ ʀᴇᴀʟ 」\n│ ✨ Image enhanced to realistic\n│ Engine: nexray AI\n╰──────────`;
     return await sock.sendMessage(m.chat, { image: result.buffer, caption });
   } catch (err) {
     console.error("toreal error:", err);

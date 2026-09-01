@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
       address = place.display_name.slice(0, 200);
     }
 
-    let msg = `╭─「 *ʟᴏᴋᴀsɪ ᴅɪᴛᴇᴍᴜᴋᴀɴ* 」\n`;
+    let msg = `╭─「 ʟᴏᴋᴀsɪ ᴅɪᴛᴇᴍᴜᴋᴀɴ 」\n`;
     msg += `│ Nama: *${place.name || query}*\n`;
     msg += `│ Alamat: ${address}\n`;
     msg += `│ Koordinat: *${lat.toFixed(4)}, ${lon.toFixed(4)}*\n`;

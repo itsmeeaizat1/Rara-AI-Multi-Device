@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
 
     // Subcommand: INVENTORY
     if (subCmd === "inventory" || subCmd === "inv" || subCmd === "bahan") {
-      let text = `╭─「 *INVENTORY BAHAN MASAK* 」\n`;
+      let text = `╭─「 INVENTORY BAHAN MASAK 」\n`;
       text += `│ Bahan-bahan yang kamu miliki dari berburu, memancing & bertani:\n`;
       text += `│\n`;
       let count = 0;
@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
 
       await db.setPlayerData?.(sender, "cookingv2", data);
 
-      let text = `╭─「 *HASIL PENCARIAN BAHAN* 」\n`;
+      let text = `╭─「 HASIL PENCARIAN BAHAN 」\n`;
       text += `│ 🌲 Kamu berhasil mengumpulkan bahan masak:\n`;
       found.forEach((f) => {
         text += `│  • ${f}\n`;
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
 
     // Subcommand: LIST
     if (subCmd === "list" || subCmd === "resep") {
-      let text = `╭─「 *DAFTAR 10 RESEP COOKING V2* 」\n`;
+      let text = `╭─「 DAFTAR 10 RESEP COOKING V2 」\n`;
       text += `│ Pilih makanan untuk dimasak & dapatkan efek buff!\n│\n`;
       RECIPES.forEach((r, idx) => {
         const reqStr = Object.entries(r.ingredients)
@@ -205,7 +205,7 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(sender, "cookingv2", data);
 
       // Cooking Animation Box Output
-      let animText = `╭─「 *PROSES MEMASAK... 🍳* 」\n`;
+      let animText = `╭─「 PROSES MEMASAK... 🍳 」\n`;
       animText += `│ 🔪 Memotong bahan & meracik bumbu rahasia...\n`;
       animText += `│ 🔥 Memasak ${recipe.name} di atas tungku api membara...\n`;
       animText += `│ ✨ *MEMASAK BERHASIL!* 🎉\n`;

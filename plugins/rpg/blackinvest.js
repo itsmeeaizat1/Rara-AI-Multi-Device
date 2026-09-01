@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
     if (roll < 0.5) {
       // Lose all
       await m.react("💸");
-      let msg = `╭─「 *BLACK MARKET GAGAL* 」\n`;
+      let msg = `╭─「 BLACK MARKET GAGAL 」\n`;
       msg += `│ 🚨 Uang disita semua!\n`;
       msg += `│ 💸 Rugi: ${amount.toLocaleString("id-ID")} gold\n`;
       msg += `╰──────────`;
@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
       // Jailed
       setCooldown(m, "lastBansosJail", 10 * 60 * 1000);
       await m.react("🚓");
-      let msg = `╭─「 *RAZIA POLISI* 」\n`;
+      let msg = `╭─「 RAZIA POLISI 」\n`;
       msg += `│ 🚓 Kau dipenjara 10 menit!\n`;
       msg += `│ 💸 Modal hangus: ${amount.toLocaleString("id-ID")}\n`;
       msg += `╰──────────`;
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
       const hasil = Math.floor(amount * (2 + Math.random() * 2));
       addGold(m, hasil);
       await m.react("🐣");
-      let msg = `╭─「 *BLACK MARKET SUKSES* 」\n`;
+      let msg = `╭─「 BLACK MARKET SUKSES 」\n`;
       msg += `│ 🔥 Investasi berhasil!\n`;
       msg += `│ 💸 Modal: ${amount.toLocaleString("id-ID")}\n`;
       msg += `│ 💰 Hasil: ${hasil.toLocaleString("id-ID")}\n`;

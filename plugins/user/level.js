@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
   txt += "│ 👤 User: *" + targetName + "*\n";
   txt += "│ 🆔 Tag: @" + targetJid.split("@")[0] + "\n";
   txt += "│\n";
-  txt += "│ 「 *Stats* 」\n";
+  txt += "│ 「 Stats 」\n";
   txt += "│ 📊 Level: *" + level + "*\n";
   txt += "│ 🎖️ Role: " + role + "\n";
   txt += "│ 🚄 Exp: *" + formatNumber(exp) + "*\n";

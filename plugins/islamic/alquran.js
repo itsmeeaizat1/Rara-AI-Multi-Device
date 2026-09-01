@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
 
     // MENU
     if (!subCmd || subCmd === "help" || subCmd === "menu") {
-      let txt = "╭─「 *Cara pakai:* 」\n│\n";
+      let txt = "╭─「 Cara pakai: 」\n│\n";
       txt += "╰──────────\n\n";
       let i = 1;
       for (const [key, qari] of Object.entries(QARIS)) {
@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
         const audioUrl = audioRes.data.audio;
         const indoText = indoRes.data.text;
 
-        let txt = "╭─「 *" + surah.englishName + "* 」\n│\n";
+        let txt = "╭─「 " + surah.englishName + " 」\n│\n";
         txt += "╰──────────\n";
         txt += "Surat: *" + surah.englishName + "* (" + surah.name + ")\n";
         txt += "Total Ayat: " + surah.numberOfAyahs + "\n";
@@ -161,7 +161,7 @@ async function handler(m, { sock }) {
       const indoAyah = indoRes.data;
       const audioUrl = audioRes.data.audio;
 
-      let txt = "╭─「 *" + surah.englishName + "* 」\n│\n";
+      let txt = "╭─「 " + surah.englishName + " 」\n│\n";
       txt += "╰──────────\n";
       txt += "Surat: *" + surah.englishName + "* (" + surah.name + ")\n";
       txt += "Arti: " + surah.englishNameTranslation + "\n";

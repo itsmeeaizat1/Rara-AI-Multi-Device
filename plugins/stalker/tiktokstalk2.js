@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     const r = data.result || data.data || data;
     await m.react("🐣");
 
-    let msg = `╭─「 *ᴛɪᴋᴛᴏᴋ ꜱᴛᴀʟᴋᴇʀ v2* 」\n`;
+    let msg = `╭─「 ᴛɪᴋᴛᴏᴋ ꜱᴛᴀʟᴋᴇʀ v2 」\n`;
     msg += `│ Username: *@${r.username || username}*\n`;
     if (r.nickname || r.name) msg += `│ Nama: *${r.nickname || r.name}*\n`;
     if (r.signature || r.bio) msg += `│ Bio: ${(r.signature || r.bio).slice(0, 100)}\n`;

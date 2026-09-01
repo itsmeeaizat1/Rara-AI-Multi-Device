@@ -93,7 +93,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let msg = `╭─「 *ᴛʀᴇɴᴅɪɴɢ ᴛᴡɪᴛᴛᴇʀ* 」\n`;
+    let msg = `╭─「 ᴛʀᴇɴᴅɪɴɢ ᴛᴡɪᴛᴛᴇʀ 」\n`;
     msg += `│ Region: *${country}*\n`;
     msg += `│ Source: getdaytrends.com\n`;
     msg += `│\n`;

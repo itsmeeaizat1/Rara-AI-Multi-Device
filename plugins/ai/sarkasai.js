@@ -51,7 +51,7 @@ Jangan pakai kata-kata kotor atau SARA.`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 *sᴀʀᴋᴀs ᴀɪ* 」\n`;
+    let msg = `╭─「 sᴀʀᴋᴀs ᴀɪ 」\n`;
     msg += `│ 🗯️ Situasi: *${text}*\n`;
     msg += `│\n`;
     msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;

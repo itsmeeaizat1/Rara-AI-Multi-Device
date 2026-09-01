@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
       if (action !== "panen") {
         const crop = CROPS.find(c => c.id === rpg.farm.crop);
         if (crop) {
-          let msg = `╭─「 *ᴋᴇʙᴏɴ* 」\n`;
+          let msg = `╭─「 ᴋᴇʙᴏɴ 」\n`;
           msg += `│ 🌱 Tanaman siap dipanen!\n`;
           msg += `│ 📦 ${crop.name} — ketik *.berkebon panen*\n`;
           msg += `╰──────────`;
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
     }
 
     if (!action || action === "cek") {
-      let msg = `╭─「 *ᴋᴇʙᴏɴ* 」\n`;
+      let msg = `╭─「 ᴋᴇʙᴏɴ 」\n`;
 
       if (rpg.farm.crop) {
         const crop = CROPS.find(c => c.id === rpg.farm.crop);
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
       saveRpg(m, { farm: rpg.farm });
 
       await m.react("🐣");
-      let msg = `╭─「 *ᴋᴇʙᴏɴ* 」\n`;
+      let msg = `╭─「 ᴋᴇʙᴏɴ 」\n`;
       msg += `│ ✅ Berhasil tanam!\n`;
       msg += `│ 🌱 Tanaman: *${crop.name}*\n`;
       msg += `│ ⏰ Grow time: *${crop.growTime / 60000} menit*\n`;
@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
       saveRpg(m, { farm: rpg.farm });
 
       await m.react("🐣");
-      let msg = `╭─「 *ᴋᴇʙᴏɴ* 」\n`;
+      let msg = `╭─「 ᴋᴇʙᴏɴ 」\n`;
       msg += `│ ✅ Panen berhasil!\n`;
       msg += `│ 🌾 Tanaman: *${crop.name}*\n`;
       msg += `│\n`;

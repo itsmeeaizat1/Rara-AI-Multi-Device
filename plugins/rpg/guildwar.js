@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     if (subCmd === "declare" || subCmd === "serang" || subCmd === "war") {
       const enemyName = m.args.slice(1).join(" ").trim();
       if (!enemyName) {
-        let msg = `╭─「 *ᴇɴᴇᴍʏ ɢᴜɪʟᴅs* 」\n`;
+        let msg = `╭─「 ᴇɴᴇᴍʏ ɢᴜɪʟᴅs 」\n`;
         ENEMY_GUILDS.forEach(g => {
           msg += `│ ${g.emoji} ${g.name} — Power: ${g.power.toLocaleString()} | Treasury: ${g.treasury.toLocaleString()}g\n`;
         });
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "guild", guildData);
 
       await m.react("🐣");
-      let msg = `╭─「 *ɢᴜɪʟᴅ ᴡᴀʀ* 」\n`;
+      let msg = `╭─「 ɢᴜɪʟᴅ ᴡᴀʀ 」\n`;
       msg += `│ ${guildData.emoji || "🏰"} ${guildData.name}\n`;
       msg += `│ vs\n`;
       msg += `│ ${enemy.emoji} ${enemy.name}\n`;
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
     }
 
     // INFO (default)
-    let msg = `╭─「 *ɢᴜɪʟᴅ ᴡᴀʀ* 」\n`;
+    let msg = `╭─「 ɢᴜɪʟᴅ ᴡᴀʀ 」\n`;
     msg += `│ Guild: ${guildData.emoji || "🏰"} *${guildData.name}*\n`;
     msg += `│ Power: *${(guildData.power || 3000).toLocaleString()}*\n`;
     msg += `│ Record: *${guildData.wins || 0}W / ${guildData.losses || 0}L*\n`;

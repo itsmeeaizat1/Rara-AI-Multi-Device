@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
             
             return sock.sendMessage(m.chat, {
                 text: `✅ *ɢʀᴜᴘ ᴅɪ-ᴜɴʙᴀɴ*\n\n` +
-                    `╭─「 *ᴅᴇᴛᴀɪʟ* 」\n` +
+                    `╭─「 ᴅᴇᴛᴀɪʟ 」\n` +
                     `│ 📛 Grup: *${groupName}*\n` +
                     `│ 📊 sTatus: *✅ AKTIF*\n` +
                     `│ 👤 Unban Oleh: @${m.sender.split('@')[0]}\n` +
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
         db.setGroup(m.chat, { ...groupData, isBanned: true })
         
         await m.reply(claraWrap("banchat", `🚫 *ɢʀᴜᴘ ᴅɪʙᴀɴ*\n\n` +
-                `╭─「 *ᴅᴇᴛᴀɪʟ* 」\n` +
+                `╭─「 ᴅᴇᴛᴀɪʟ 」\n` +
                 `│ 📛 Grup: *${groupName}*\n` +
                 `│ 📊 sTatus: *🔴 BANNED*\n` +
                 `│ 👤 Ban Oleh: @${m.sender.split('@')[0]}\n` +

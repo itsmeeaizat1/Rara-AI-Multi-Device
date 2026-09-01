@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     if (subCmd === "rank") {
       const data = await db.getPlayerData?.(m.sender, "arena") || { points: 0, wins: 0, losses: 0 };
       const rank = getRank(data.points || 0);
-      let msg = `╭─「 *ᴀʀᴇɴᴀ ʀᴀɴᴋ* 」\n`;
+      let msg = `╭─「 ᴀʀᴇɴᴀ ʀᴀɴᴋ 」\n`;
       msg += `│ Rank: ${rank.emoji} *${rank.name}*\n`;
       msg += `│ Points: *${data.points || 0}*\n`;
       msg += `│ Wins: *${data.wins || 0}* | Losses: *${data.losses || 0}*\n`;
@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
     } catch {}
 
     await m.react("🐣");
-    let msg = `╭─「 *ᴀʀᴇɴᴀ ᴘᴠᴘ* 」\n`;
+    let msg = `╭─「 ᴀʀᴇɴᴀ ᴘᴠᴘ 」\n`;
     msg += `│ Lawan: *${enemyName}*\n`;
     msg += `│ Enemy Power: *${enemyPower}*\n`;
     msg += `│ Your Power: *${playerPower}*\n`;

@@ -187,13 +187,13 @@ function handler(m, { sock }) {
             const configPref = config.command?.prefix || '.'
             
             let text = `📋 *List PreғIx*\n\n`
-            text += `╭─「 *ConғIg* 」\n`
+            text += `╭─「 ConғIg 」\n`
             text += `│ Default: \`${configPref}\`\n`
             text += `│ Noprefix: ${data.noprefix ? '✅ Aktif' : '❌ Nonaktif'}\n`
             text += `╰┈┈┈┈┈┈┈┈\n\n`
             
             if (data.prefixes.length > 0) {
-                text += `╭─「 *Database* 」\n`
+                text += `╭─「 Database 」\n`
                 data.prefixes.forEach((p, i) => {
                     text += `│ ${i + 1}. \`${p}\`\n`
                 })

@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
       }
       await db.setPlayerData?.(m.sender, "rangerpost", data);
       await m.react("🐣");
-      let msg = `╭─「 *ʀᴀɴɢᴇʀ ᴄʜᴇᴄᴋ-ɪɴ* 」\n`;
+      let msg = `╭─「 ʀᴀɴɢᴇʀ ᴄʜᴇᴄᴋ-ɪɴ 」\n`;
       msg += `│ 🎖️ Daily Check-in Berhasil!\n`;
       msg += `│ Salary: *+${salary} gold*\n`;
       msg += `│ Days: *${data.days}*\n`;
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "rangerpost", data);
 
       await m.react("🐣");
-      let msg = `╭─「 *ʀᴀɴɢᴇʀ ᴛᴀsᴋ* 」\n`;
+      let msg = `╭─「 ʀᴀɴɢᴇʀ ᴛᴀsᴋ 」\n`;
       msg += `│ ${task.emoji} *${task.name}*\n`;
       msg += `│ ${task.desc}\n`;
       msg += `│\n`;
@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
     }
 
     // STATUS (default)
-    let msg = `╭─「 *ʀᴀɴɢᴇʀ ᴘᴏsᴛ* 」\n`;
+    let msg = `╭─「 ʀᴀɴɢᴇʀ ᴘᴏsᴛ 」\n`;
     msg += `│ Ranger Level: *${data.level || 1}*\n`;
     msg += `│ Total Days: *${data.days || 0}*\n`;
     msg += `│ Total Gold: *${data.totalGold || 0}*\n`;

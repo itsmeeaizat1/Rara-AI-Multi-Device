@@ -19,7 +19,7 @@ async function handler(m, { sock }) {
     await sock.sendMessage(from, { react: { text: "🕒", key: m.key } });
     const res = await axios.get("https://animechan.xyz/api/random");
     const { quote, character, anime } = res.data;
-    let result = `╭─「 *QUOTES ANIME* 」\n`;
+    let result = `╭─「 QUOTES ANIME 」\n`;
     result += `│\n`;
     result += `│  "${quote}"\n`;
     result += `│  — ${character} (${anime})\n`;

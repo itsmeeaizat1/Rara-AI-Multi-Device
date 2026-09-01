@@ -58,7 +58,7 @@ Gunakan bahasa Indonesia. Sesuaikan dengan level yang disebutkan. Realistis dan 
     }
 
     await m.react("🐣");
-    let msg = `╭─「 *ᴡᴏʀᴋᴏᴜᴛ ᴘʟᴀɴ* 」\n`;
+    let msg = `╭─「 ᴡᴏʀᴋᴏᴜᴛ ᴘʟᴀɴ 」\n`;
     msg += `│ 💪 Target: *${text}*\n`;
     msg += `│\n`;
     msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;

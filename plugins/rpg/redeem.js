@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
         maxClaims: 100,
       });
 
-      let msg = `╭─「 *ʀᴇᴅᴇᴇᴍ ᴄᴏᴅᴇ* 」\n`;
+      let msg = `╭─「 ʀᴇᴅᴇᴇᴍ ᴄᴏᴅᴇ 」\n`;
       msg += `│ Code: *${code}*\n`;
       msg += `│ Reward: *${amount} ${rewardType}*\n`;
       msg += `│ Max Claims: *100*\n`;
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
       if (redeemCodes.size === 0) {
         return m.reply(claraWrap("redeem", "Belum ada redeem code aktif.", "error"));
       }
-      let msg = `╭─「 *ʀᴇᴅᴇᴇᴍ ʟɪsᴛ* 」\n`;
+      let msg = `╭─「 ʀᴇᴅᴇᴇᴍ ʟɪsᴛ 」\n`;
       for (const [code, info] of redeemCodes) {
         msg += `│ ${code} - ${info.amount} ${info.type} (${info.claimed.size}/${info.maxClaims} claimed)\n`;
       }
@@ -126,7 +126,7 @@ async function handler(m, { sock }) {
       rewardMsg = `+${redeem.amount} ${redeem.type} (applied)`;
     }
 
-    let msg = `╭─「 *ʀᴇᴅᴇᴇᴍ sᴜᴄᴄᴇss* 」\n`;
+    let msg = `╭─「 ʀᴇᴅᴇᴇᴍ sᴜᴄᴄᴇss 」\n`;
     msg += `│ Code: *${code}*\n`;
     msg += `│ Reward: *${rewardMsg}*\n`;
     msg += `│ Status: ✅ Berhasil diklaim\n`;
