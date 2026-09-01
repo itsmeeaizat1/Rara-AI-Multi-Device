@@ -1,11 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// welcome.js — Welcome v1 (teks) + v2 (canvas image) + sendWelcomeMessage
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { tipText, claraWrap, novaCaption, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+// welcome.js — V1 (teks) + V2 (canvas hexagon) + V3 (autoresbot API bg + vertical)
+import { tipText, claraWrap, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { createWideDiscordCard } from "../../src/lib/nova-welcome-card.js";
+import { createWideDiscordCard, createWelcomeCardV3 } from "../../src/lib/nova-welcome-card.js";
 import config from "../../config.js";
 
 async function handler(m, { sock, config: botConfig }) {
@@ -26,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
         `Status: *${args === "on" ? "ON" : "OFF"}*`,
         `Group: *${m.chat}*`].join("\n")) +
       "\n" +
-      tipText(`Ketik ${prefix}setwelcometype v1 atau v2 untuk pilih tipe`);
+      tipText(`Ketik ${prefix}setwelcometype v1/v2/v3 untuk pilih tipe`);
 
     await m.reply(claraWrap("welcome2", text));
   } catch (error) {
@@ -38,17 +35,15 @@ async function handler(m, { sock, config: botConfig }) {
 
 /**
  * sendWelcomeMessage — dipanggil oleh handler.js saat member baru join
- * v1 = teks biasa (bawaan), v2 = canvas image banner
+ * v1 = teks biasa, v2 = canvas hexagon, v3 = autoresbot API bg + vertical layout
  */
 async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   const db = getDatabase();
   const welcomeType = db.setting("welcomeType") || 1;
   const groupData = db.getGroup(groupJid) || {};
 
-  // Kalau welcome off di grup ini, skip
   if (!groupData.welcome) return;
 
-  // Ambil info
   const groupName = metadata?.subject || "Grup";
   const memberCount = metadata?.participants?.length || 0;
   const ppUrl = await sock.profilePictureUrl(participantJid, "image").catch(() => null);
@@ -58,15 +53,11 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   // ===== V1: TEKS BAWAAN =====
   if (welcomeType === 1) {
     const welcomeText =
-      "" +
       `Halo @${username}!\n` +
       `Selamat datang di *${groupName}*\n` +
-      `Kamu member ke-*${memberCount}*\n` +
-      `
-` +
+      `Kamu member ke-*${memberCount}*\n\n` +
       `Ketik *${prefix}menu* untuk lihat fitur\n` +
-      `Ketik *${prefix}help* untuk bantuan\n` +
-      "";
+      `Ketik *${prefix}help* untuk bantuan`;
 
     await sock.sendMessage(groupJid, {
       text: welcomeText,
@@ -75,25 +66,16 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
     return;
   }
 
-  // ===== V2: CANVAS IMAGE =====
+  // ===== V2: CANVAS HEXAGON =====
   if (welcomeType === 2) {
     try {
-      const buffer = await createWideDiscordCard(
-        username,
-        ppUrl,
-        groupName,
-        memberCount
-      );
+      const buffer = await createWideDiscordCard(username, ppUrl, groupName, memberCount);
 
       const caption =
-        "" +
         `Halo @${username}!\n` +
         `Selamat datang di *${groupName}*\n` +
-        `Member ke-*${memberCount}*\n` +
-        `
-` +
-        `Ketik *${prefix}menu* untuk lihat fitur\n` +
-        "";
+        `Member ke-*${memberCount}*\n\n` +
+        `Ketik *${prefix}menu* untuk lihat fitur`;
 
       await sock.sendMessage(groupJid, {
         image: buffer,
@@ -103,34 +85,51 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
       return;
     } catch (err) {
       console.error("welcome v2 canvas error:", err.message);
-      // Fallback ke v1 jika canvas gagal
-      const fallbackText =
-        "" +
-        `Halo @${username}!\n` +
-        `Selamat datang di *${groupName}*\n` +
-        `Kamu member ke-*${memberCount}*\n` +
-        `
-` +
-        `Ketik *${prefix}menu* untuk lihat fitur\n` +
-        "";
-      await sock.sendMessage(groupJid, {
-        text: fallbackText,
-        mentions: [participantJid],
-      });
-      return;
     }
   }
 
-  // ===== V3-V7: Tipe lain (fallback ke teks) =====
+  // ===== V3: AUTORESBOT API BG + VERTICAL LAYOUT =====
+  if (welcomeType === 3) {
+    try {
+      const apiKey = config.APIkey?.autoresbot || "";
+      const buffer = await createWelcomeCardV3(username, ppUrl, groupName, memberCount, apiKey);
+
+      const caption =
+        `Halo @${username}!\n` +
+        `Selamat datang di *${groupName}*\n` +
+        `Member ke-*${memberCount}*\n\n` +
+        `Ketik *${prefix}menu* untuk lihat fitur`;
+
+      await sock.sendMessage(groupJid, {
+        image: buffer,
+        caption,
+        mentions: [participantJid],
+      });
+      return;
+    } catch (err) {
+      console.error("welcome v3 autoresbot error:", err.message);
+      // Fallback ke V2 jika V3 gagal
+      try {
+        const buffer = await createWideDiscordCard(username, ppUrl, groupName, memberCount);
+        await sock.sendMessage(groupJid, {
+          image: buffer,
+          caption: `Halo @${username}!\nSelamat datang di *${groupName}*\nMember ke-*${memberCount}*\n\nKetik *${prefix}menu* untuk lihat fitur`,
+          mentions: [participantJid],
+        });
+        return;
+      } catch (err2) {
+        console.error("welcome v3 fallback error:", err2.message);
+      }
+    }
+  }
+
+  // ===== V4+: Fallback ke teks =====
   const welcomeText =
-    "" +
     `Halo @${username}!\n` +
     `Selamat datang di *${groupName}*\n` +
-    `Kamu member ke-*${memberCount}*\n` +
-    `
-` +
+    `Kamu member ke-*${memberCount}*\n\n` +
     `Ketik *${prefix}menu* untuk lihat fitur\n` +
-    "";
+    `Ketik *${prefix}help* untuk bantuan`;
 
   await sock.sendMessage(groupJid, {
     text: welcomeText,
@@ -143,8 +142,8 @@ export default {
     name: "welcome2",
     alias: ["welcome2", "welcome"],
     category: "group",
-    description: "Pesan welcome saat member join grup (v1 teks / v2 canvas image)",
-    usage: ".welcome on/off\n.setwelcometype v1 (teks) / v2 (gambar)",
+    description: "Pesan welcome saat member join grup (v1 teks / v2 canvas / v3 autoresbot API)",
+    usage: ".welcome on/off\n.setwelcometype v1 (teks) / v2 (canvas) / v3 (API bg)",
     example: ".welcome on",
     isOwner: true,
     isPremium: false,

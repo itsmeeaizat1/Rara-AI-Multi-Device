@@ -1,9 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getAssetBuffer } from "../../src/lib/nova-asset-manager.js";
-import fs from "fs";
-import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
   name: "setwelcometype",
   alias: ["setwelcometype"],
@@ -19,40 +18,30 @@ const pluginConfig = {
   energi: 0,
   isEnabled: true,
 };
+
 const VARIANTS = {
-  1: {
-    name: "Canvas Image",
-    desc: "Gambar canvas dengan foto profil",
-    emoji: "🎨",
-  },
-  2: {
-    name: "Carousel Cards",
-    desc: "Kartu carousel interaktif dengan tombol",
-    emoji: "🃏",
-  },
-  3: {
-    name: "Text Only",
-    desc: "Pesan teks minimalis tanpa gambar",
-    emoji: "📝",
-  },
-  4: { name: "Group", desc: "ContextInfo group style", emoji: "👥" },
-  5: { name: "Simple", desc: "Pesan teks simple + foto profile", emoji: "✨" },
-  6: { name: "Video", desc: "Kirim video perkenalan", emoji: "🎥" },
-  7: { name: "Interactive Quoted", desc: "Interactive message dengan fake quoted", emoji: "💬" },
+  1: { name: "Text Only", desc: "Pesan teks biasa tanpa gambar", emoji: "📝" },
+  2: { name: "Canvas Hexagon", desc: "Gambar canvas lokal dengan hexagon avatar (dark blue)", emoji: "🎨" },
+  3: { name: "API Thumbnail", desc: "Background autoresbot API + PP user + total member (vertical layout)", emoji: "🖼️" },
+  4: { name: "Glassmorphism", desc: "Glass card style dengan foto profil bulat", emoji: "✨" },
+  5: { name: "Simple", desc: "Pesan teks simple + foto profile", emoji: "📄" },
 };
+
 async function handler(m, { sock, db }) {
   const args = m.args || [];
   const variant = args[0]?.toLowerCase();
   const current = db.setting("welcomeType") || 1;
-  if (variant && /^v?[1-7]$/.test(variant)) {
+
+  if (variant && /^v?[1-5]$/.test(variant)) {
     const id = parseInt(variant.replace("v", ""));
     db.setting("welcomeType", id);
     await db.save();
-    await m.reply(claraWrap("WELCOME TYPE DIUBAH", `✅ *WELCOME TYPE DIUBAH*\n\n` +
+    await m.reply(claraWrap("WELCOME TYPE", `✅ *WELCOME TYPE DIUBAH*\n\n` +
         `${VARIANTS[id].emoji} *V${id} — ${VARIANTS[id].name}*\n` +
         `_${VARIANTS[id].desc}_`));
     return;
   }
+
   const rows = [];
   for (const [id, val] of Object.entries(VARIANTS)) {
     const mark = parseInt(id) === current ? " ✓" : "";
@@ -62,28 +51,28 @@ async function handler(m, { sock, db }) {
       id: `${m.prefix}setwelcometype v${id}`,
     });
   }
+
   const buttons = [
     {
       name: "single_select",
       buttonParamsJson: JSON.stringify({
-        title: "👋 Pilih Tipe Welcome",
+        title: "Pilih Tipe Welcome",
         sections: [{ title: "Daftar Tipe Welcome", rows }],
       }),
     },
   ];
+
   const bodyText =
-    `👋🎨 *WELCOME TYPE*\n\n` +
-    `Atur tampilan pesan welcome saat member baru masuk grup 🚪✨\n` +
-    `Tipe aktif saat ini: *V${current} — ${VARIANTS[current].name}* 🎯\n\n` +
-    `*PENJELASAN TIPE:*\n\n` +
-    `- *V1 Canvas Image* 🎨 — Bot membuat gambar canvas otomatis berisi foto profil dan nama member yang baru join, lalu dikirim sebagai gambar\n\n` +
-    `- *V2 Carousel Cards* 🃏 — Menampilkan kartu carousel interaktif yang bisa di-swipe lengkap dengan tombol action, cocok untuk grup yang ingin tampilan modern\n\n` +
-    `- *V3 Text Only* 📝 — Pesan teks biasa tanpa gambar sama sekali, ringan dan minimalis\n\n` +
-    `- *V4 Group* 👥 — Menggunakan contextInfo bergaya group forward, tampilan rapi dengan label newsletter\n\n` +
-    `- *V5 Simple* ✨ — Pesan teks sederhana disertai foto profile member yang join, tidak terlalu mencolok namun informatif\n\n` +
-    `- *V6 Video* 🎥 — Mengirimkan video sambutan menarik dilengkapi caption selamat datang untuk member\n\n` +
-    `- *V7 Interactive Quoted* 💬 — Mengirimkan pesan interaktif dan fake quoted dari orang yang join\n\n` +
-    `Pilih tipe welcome dari tombol di bawah 👇`;
+    `🎨 *WELCOME TYPE*\n\n` +
+    `Atur tampilan pesan welcome saat member baru masuk grup\n` +
+    `Tipe aktif: *V${current} — ${VARIANTS[current]?.name || "Text"}*\n\n` +
+    `*V1 Text Only* 📝 — Pesan teks biasa tanpa gambar\n\n` +
+    `*V2 Canvas Hexagon* 🎨 — Gambar canvas lokal dengan hexagon avatar, dark blue style\n\n` +
+    `*V3 API Thumbnail* 🖼️ — Background dari autoresbot API, layout vertikal: judul → "Selamat datang di (group)" → PP user di tengah → "Member: total" di bawah\n\n` +
+    `*V4 Glassmorphism* ✨ — Glass card style dengan foto profil bulat\n\n` +
+    `*V5 Simple* 📄 — Pesan teks simple + foto profile\n\n` +
+    `Pilih tipe welcome dari tombol di bawah`;
+
   await sock.sendButton(
     m.chat,
     getAssetBuffer("settings-thumb"),
@@ -92,4 +81,5 @@ async function handler(m, { sock, db }) {
     { buttons },
   );
 }
+
 export { pluginConfig as config, handler };
