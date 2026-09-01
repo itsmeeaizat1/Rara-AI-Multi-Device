@@ -115,3 +115,28 @@
 - **fdown.net** → 403 Forbidden ❌
 - **oceansaver.in** → DNS tidak resolve ❌
 - **pinterestdownloader.io** → 404 ❌
+
+---
+
+## Kategori Sticker — Dead API Migrated
+
+> 5 plugin sticker dengan API mati telah dimigrasi ke local canvas atau scrape alternatif.
+> Tanggal migrasi: 2026-09-01
+
+| Plugin | Dead API | Migrasi Ke | Method |
+|---|---|---|---|
+| attp.js | api.neoxr.eu (butuh API key) | @napi-rs/canvas + ffmpeg | Local canvas (ported dari Alice) |
+| ttp.js | api.nexray.eu.cc (return false) | @napi-rs/canvas | Local canvas (ported dari Alice) |
+| emojimix.js | gstatic emoji kitchen (404) | oiapi.net + gstatic CDN | API alternatif (correct date) |
+| stickerfilter.js | api.siputzx.my.id (404) | @napi-rs/canvas (pixel manipulation) | Local canvas (7 filter) |
+| linesticker.js | api.neoxr.eu (butuh API key) | store.line.me direct scrape | Scrape (cheerio) |
+
+### Alice sticker yang di-port:
+- **ATTP/TTP** → @napi-rs/canvas + ffmpeg (100% lokal, zero dependency) ✅
+- **SMEME** → sudah ada smemev2.js yang local canvas di Nova ✅
+
+### Alice sticker yang DEAD (tidak di-port):
+- **FastRestApis (emojimix)** → DNS dead ❌
+- **anomali-api (bratvid)** → 404 ❌
+- **Telegram Bot Token (telesticker)** → Unauthorized ❌
+- **getstickerpack (sticker-search)** → 403 ❌
