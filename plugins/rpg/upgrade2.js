@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
     equipData.accessory = equipData.accessory || 0;
 
     if (!input || input === "list" || input === "status") {
-      let listMsg = `╭─「 *EQUIPMENT UPGRADE V2* 」\n`;
+      let listMsg = `╭─「 EQUIPMENT UPGRADE V2 」\n`;
       listMsg += `│ Status Equipment Kamu:\n│\n`;
       for (const [key, info] of Object.entries(EQUIP_TYPES)) {
         const lvl = equipData[key] || 0;
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
     const roll = Math.floor(Math.random() * 100) + 1;
     const isSuccess = roll <= rate;
 
-    let msg = `╭─「 *BLACKSMITH FORGE V2* 」\n`;
+    let msg = `╭─「 BLACKSMITH FORGE V2 」\n`;
     msg += `│ 🔨 *Tempat Penempaan Besi*\n`;
     msg += `│ ${EQUIP_TYPES[type].emoji} Target: *${EQUIP_TYPES[type].name}*\n`;
     msg += `│ 📊 Tingkat: *Lvl ${currentLvl}* ➔ *Lvl ${targetLvl}*\n`;

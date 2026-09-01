@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
             `Data group\n` +
             `Data clan\n` +
             `Semua statistik\n\n` +
-            `╭─「 *KonғIrmasi* 」\n` +
+            `╭─「 KonғIrmasi 」\n` +
             `│ Ketik: *.resetdb confirm*\n` +
             `│ dalam 60 detik\n` +
             `╰┈┈┈┈┈┈┈┈\n\n` +
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
         await db.save()
         
         await m.reply(`✅ *Database Direset!*\n\n` +
-            `╭─「 *Data Dihapus* 」\n` +
+            `╭─「 Data Dihapus 」\n` +
             `│ 👤 Users: ${userCount}\n` +
             `│ 👥 Groups: ${groupCount}\n` +
             `│ ⚔️ Clans: ${clanCount}\n` +

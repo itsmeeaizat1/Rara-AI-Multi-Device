@@ -74,7 +74,7 @@ Pastikan soal menantang tapi tidak terlalu sulit. Hanya 1 soal saja.`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 *ǫᴜɪᴢ ᴀɪ* 」\n`;
+    let msg = `╭─「 ǫᴜɪᴢ ᴀɪ 」\n`;
     msg += `│ 📚 Kategori: *${category}*\n`;
     msg += `│\n`;
     msg += formatted;

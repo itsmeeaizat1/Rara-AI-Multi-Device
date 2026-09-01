@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
 
     // List karakter
     if (text.toLowerCase() === "list" || !text) {
-      let list = "╭─「 *ᴄʜᴀʀᴀᴄᴛᴇʀ ᴀɪ* 」\n";
+      let list = "╭─「 ᴄʜᴀʀᴀᴄᴛᴇʀ ᴀɪ 」\n";
       list += "│ 🎭 Pilih karakter:\n│\n";
       const keys = Object.keys(CHARACTERS);
       for (let i = 0; i < keys.length; i++) {
@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 *${CHARACTERS[charKey].name}* 」\n`;
+    let msg = `╭─「 ${CHARACTERS[charKey].name} 」\n`;
     msg += `│ 🎭 Karakter: *${CHARACTERS[charKey].name}*\n`;
     msg += `│\n`;
     msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;

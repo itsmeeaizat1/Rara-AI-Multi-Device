@@ -38,7 +38,7 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply( `╭─「 *ɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ ꜱᴛᴇʟʟᴀʀ* 」
+        return m.reply( `╭─「 ɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ ꜱᴛᴇʟʟᴀʀ 」
 │ Usage: \`${m.prefix}installtemastellar <ip>|<password>\`\n╰──────────\n\n\`Contoh: ${m.prefix}installtemastellar 192.168.1.1|secretpass\``, "installtemastellar")
     }
 
@@ -69,7 +69,7 @@ function handler(m, { sock }) {
 
             await m.reply(claraWrap("installtemastellar", `🕕 *[3/3] Build Assets...*\n\nCompiling panel assets...`))
             await execSSH(conn, BUILD_CMD)
-            await m.reply(claraWrap("installtemastellar", `╭─「 *ᴛᴇᴍᴀ ꜱᴛᴇʟʟᴀʀ* 」
+            await m.reply(claraWrap("installtemastellar", `╭─「 ᴛᴇᴍᴀ ꜱᴛᴇʟʟᴀʀ 」
 │ sTatus: *ᴛᴇʀɪɴꜱᴛᴀʟʟ*
 │ Ip: ${ipvps}\n╰──────────\n\n_Tema Stellar + dependencies berhasil diinstall!_`))
         } catch (err) {

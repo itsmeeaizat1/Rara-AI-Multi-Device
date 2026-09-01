@@ -58,7 +58,7 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   // ===== V1: TEKS BAWAAN =====
   if (welcomeType === 1) {
     const welcomeText =
-      `╭─「 *ᴡᴇʟᴄᴏᴍᴇ* 」\n` +
+      `╭─「 ᴡᴇʟᴄᴏᴍᴇ 」\n` +
       `│ Halo @${username}!\n` +
       `│ Selamat datang di *${groupName}*\n` +
       `│ Kamu member ke-*${memberCount}*\n` +
@@ -85,7 +85,7 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
       );
 
       const caption =
-        `╭─「 *ᴡᴇʟᴄᴏᴍᴇ* 」\n` +
+        `╭─「 ᴡᴇʟᴄᴏᴍᴇ 」\n` +
         `│ Halo @${username}!\n` +
         `│ Selamat datang di *${groupName}*\n` +
         `│ Member ke-*${memberCount}*\n` +
@@ -103,7 +103,7 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
       console.error("welcome v2 canvas error:", err.message);
       // Fallback ke v1 jika canvas gagal
       const fallbackText =
-        `╭─「 *ᴡᴇʟᴄᴏᴍᴇ* 」\n` +
+        `╭─「 ᴡᴇʟᴄᴏᴍᴇ 」\n` +
         `│ Halo @${username}!\n` +
         `│ Selamat datang di *${groupName}*\n` +
         `│ Kamu member ke-*${memberCount}*\n` +
@@ -120,7 +120,7 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
 
   // ===== V3-V7: Tipe lain (fallback ke teks) =====
   const welcomeText =
-    `╭─「 *ᴡᴇʟᴄᴏᴍᴇ* 」\n` +
+    `╭─「 ᴡᴇʟᴄᴏᴍᴇ 」\n` +
     `│ Halo @${username}!\n` +
     `│ Selamat datang di *${groupName}*\n` +
     `│ Kamu member ke-*${memberCount}*\n` +

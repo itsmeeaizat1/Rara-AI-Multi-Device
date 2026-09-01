@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     }
 
     let text = `🎬 *${film.title || "Film"}*\n\n`;
-    text += `╭─「 *ɪɴꜰᴏ* 」\n`;
+    text += `╭─「 ɪɴꜰᴏ 」\n`;
     text += `│ ⭐ Rating: ${film.rating || "-"}\n`;
     text += `│ 📺 Quality: ${film.quality || "-"}\n`;
     text += `│ ⏱️ Duration: ${film.duration || "-"}\n`;

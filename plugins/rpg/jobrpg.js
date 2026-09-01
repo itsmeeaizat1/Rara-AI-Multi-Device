@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     // Default: show current job + skills
     if (!action || action === "info") {
       const currentJob = JOB_DB[rpg.job] || { name: "Pemula" };
-      let msg = `╭─「 *ᴊᴏʙ ᴄʟᴀss* 」\n`;
+      let msg = `╭─「 ᴊᴏʙ ᴄʟᴀss 」\n`;
       msg += `│ 👤 ${m.pushName || "Player"} | Lv.${rpg.level}\n`;
       msg += `│\n`;
       msg += `│ 👔 Job: *${currentJob.name}*\n`;
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
 
     // List all jobs
     if (action === "list") {
-      let msg = `╭─「 *ᴊᴏʙ ʟɪsᴛ* 」\n`;
+      let msg = `╭─「 ᴊᴏʙ ʟɪsᴛ 」\n`;
       msg += `│ Pilih job (butuh Lv.10 untuk ganti)\n`;
       msg += `│\n`;
 
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
 
       if (result.success) {
         await m.react("🐣");
-        let msg = `╭─「 *ᴊᴏʙ ᴄʜᴀɴɢᴇ* 」\n`;
+        let msg = `╭─「 ᴊᴏʙ ᴄʜᴀɴɢᴇ 」\n`;
         msg += `│ ✅ Job berhasil diganti!\n`;
         msg += `│\n`;
         msg += `│ 👔 Job baru: *${result.job.name}*\n`;
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
         const available = getAvailableSkills(m);
         const mySkills = rpg.skills || [];
 
-        let msg = `╭─「 *sᴋɪʟʟs* 」\n`;
+        let msg = `╭─「 sᴋɪʟʟs 」\n`;
         msg += `│ ✨ Skill Points: *${rpg.skillPoints || 0}*\n`;
         msg += `│ 👔 Job: *${JOB_DB[rpg.job]?.name || "Pemula"}*\n`;
         msg += `│\n`;
@@ -178,7 +178,7 @@ async function handler(m, { sock }) {
 
         if (result.success) {
           await m.react("🐣");
-          let msg = `╭─「 *sᴋɪʟʟ ᴜɴʟᴏᴄᴋ* 」\n`;
+          let msg = `╭─「 sᴋɪʟʟ ᴜɴʟᴏᴄᴋ 」\n`;
           msg += `│ ✅ Skill berhasil dibuka!\n`;
           msg += `│ ⚡ ${result.skill.name} (${skillId})\n`;
           msg += `│ MP: ${result.skill.mpCost} | Power: ${result.skill.power}x\n`;
@@ -199,7 +199,7 @@ async function handler(m, { sock }) {
 
         if (result.success) {
           await m.react("🐣");
-          let msg = `╭─「 *sᴋɪʟʟ ᴜᴘɢʀᴀᴅᴇ* 」\n`;
+          let msg = `╭─「 sᴋɪʟʟ ᴜᴘɢʀᴀᴅᴇ 」\n`;
           msg += `│ ✅ Skill berhasil di-upgrade!\n`;
           msg += `│ ⚡ ${result.skill.name} → Lv.${result.skill.level}\n`;
           msg += `│ Power: ${result.skill.power}x | MP: ${result.skill.mpCost}\n`;

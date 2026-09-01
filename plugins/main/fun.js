@@ -32,8 +32,8 @@ async function handler(m, { sock, config: botConfig }) {
       cmdLines += `│ ${prefix}${funCmds[i]}\n`;
     }
 
-    const text = `╭─「 *Fᴜɴ
-${cmdLines}│ *Total: ${funCmds.length} Fitur*
+    const text = `╭─「 Fᴜɴ
+${cmdLines}│ Total: ${funCmds.length} Fitur*
 ╰──────────`;
 
     await m.reply(text);

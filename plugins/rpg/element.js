@@ -35,7 +35,7 @@ async function handler(m, { sock, text }) {
     // .element info — tampilkan elemen saat ini
     if (!action || action === "info") {
       const elem = rpg.element ? ELEMENTS[rpg.element] : null;
-      let msg = "╭─「 *ᴇʟᴇᴍᴇɴᴛ* 」\n";
+      let msg = "╭─「 ᴇʟᴇᴍᴇɴᴛ 」\n";
       msg += "│ 👤 " + (m.pushName || "Player") + " | Lv." + rpg.level + "\n";
       msg += "│\n";
       if (elem) {
@@ -53,7 +53,7 @@ async function handler(m, { sock, text }) {
 
     // .element weak — chart kelemahan
     if (action === "weak" || action === "kelemahan") {
-      let msg = "╭─「 *ᴄʜᴀʀᴛ ᴋᴇʟᴇᴍᴀʜᴀɴ* 」\n";
+      let msg = "╭─「 ᴄʜᴀʀᴛ ᴋᴇʟᴇᴍᴀʜᴀɴ 」\n";
       msg += "│\n";
       for (const [id, el] of Object.entries(ELEMENTS)) {
         msg += "│ " + el.name + "\n";
@@ -81,7 +81,7 @@ async function handler(m, { sock, text }) {
     await m.react("🐣");
 
     const elem = ELEMENTS[action];
-    let msg = "╭─「 *ᴇʟᴇᴍᴇɴᴛ* 」\n";
+    let msg = "╭─「 ᴇʟᴇᴍᴇɴᴛ 」\n";
     msg += "│ ✅ Elemenmu kini: *" + elem.name + "*\n";
     msg += "│ 💪 Kuat vs: " + elem.strong.map(e => ELEMENTS[e].name).join(", ") + "\n";
     msg += "│ 🛡️ Lemah vs: " + elem.weak.map(e => ELEMENTS[e].name).join(", ") + "\n";

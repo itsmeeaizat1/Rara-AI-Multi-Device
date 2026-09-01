@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     const r = data.data || data.result || data;
     await m.react("🐣");
 
-    let msg = `╭─「 *ɢꜱᴍᴀʀᴇɴᴀ v2* 」\n`;
+    let msg = `╭─「 ɢꜱᴍᴀʀᴇɴᴀ v2 」\n`;
     if (r.name || r.title) msg += `│ Nama: *${r.name || r.title}*\n`;
     if (r.brand) msg += `│ Brand: *${r.brand}*\n`;
     if (r.url) msg += `│ URL: ${r.url}\n`;

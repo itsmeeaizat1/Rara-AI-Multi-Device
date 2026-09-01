@@ -45,7 +45,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (!games.has(chatId)) {
       games.set(chatId, { players: [], deck: createDeck(), discardPile: [], currentPlayer: 0, direction: 1, currentCard: null, drawStack: 0, stopVotes: new Set(), awaitingColorChoice: false });
-      return m.reply("╭─「 *ᴜɴᴏ* 」\n│ 🎴 Permainan UNO dimulai!\n│ 📌 .uno join — bergabung\n│ 📌 .uno start — mulai (min 2)\n╰──────────");
+      return m.reply("╭─「 ᴜɴᴏ 」\n│ 🎴 Permainan UNO dimulai!\n│ 📌 .uno join — bergabung\n│ 📌 .uno start — mulai (min 2)\n╰──────────");
     }
 
     const game = games.get(chatId);
@@ -53,7 +53,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     if (sub === "join") {
       if (game.players.find(p => p.id === sender)) return m.reply(claraWrap("uno", "Kamu sudah bergabung.", "info"));
       game.players.push({ id: sender, hand: [] });
-      return m.reply("╭─「 *ᴜɴᴏ* 」\n│ ✅ @" + sender.split("@")[0] + " bergabung!\n│ 📊 Total: " + game.players.length + " pemain\n╰──────────", { mentions: [sender] });
+      return m.reply("╭─「 ᴜɴᴏ 」\n│ ✅ @" + sender.split("@")[0] + " bergabung!\n│ 📊 Total: " + game.players.length + " pemain\n╰──────────", { mentions: [sender] });
     }
 
     if (sub === "start") {
@@ -66,7 +66,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     }
 
     if (sub === "info") {
-      return m.reply("╭─「 *ᴘᴀɴᴅᴜᴀɴ ᴜɴᴏ* 」\n│ 🎴 .uno join — Gabung\n│ 🎮 .uno start — Mulai (min 2)\n│ 🃏 .uno play <no> — Main kartu\n│ 📥 .uno draw — Ambil kartu\n│ ✋ .uno pass — Lewati\n│ 📋 .uno hand — Lihat kartu (DM)\n│ 🎨 .uno color <red|yellow|green|blue> — Pilih warna\n│ ⏹️ .uno stop — Hentikan\n╰──────────");
+      return m.reply("╭─「 ᴘᴀɴᴅᴜᴀɴ ᴜɴᴏ 」\n│ 🎴 .uno join — Gabung\n│ 🎮 .uno start — Mulai (min 2)\n│ 🃏 .uno play <no> — Main kartu\n│ 📥 .uno draw — Ambil kartu\n│ ✋ .uno pass — Lewati\n│ 📋 .uno hand — Lihat kartu (DM)\n│ 🎨 .uno color <red|yellow|green|blue> — Pilih warna\n│ ⏹️ .uno stop — Hentikan\n╰──────────");
     }
 
     if (sub === "hand") {
@@ -104,7 +104,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       else if (card.value === "10") game.currentPlayer = getNextPlayer(game);
       else if (card.value === "11") game.direction *= -1;
       game.currentCard = card; game.discardPile.push(card); p.hand.splice(idx, 1);
-      if (p.hand.length === 0) { games.delete(chatId); return m.reply("╭─「 *ᴜɴᴏ* 」\n│ 🎉 @" + sender.split("@")[0] + " MENANG!\n╰──────────", { mentions: [sender] }); }
+      if (p.hand.length === 0) { games.delete(chatId); return m.reply("╭─「 ᴜɴᴏ 」\n│ 🎉 @" + sender.split("@")[0] + " MENANG!\n╰──────────", { mentions: [sender] }); }
       game.currentPlayer = getNextPlayer(game);
       return sendStatus(m, sock, game);
     }
@@ -146,7 +146,7 @@ async function sendStatus(m, sock, game) {
   const cardText = "Kartu saat ini: " + game.currentCard.color + " " + game.currentCard.value;
   const hands = game.players.map((p, i) => i + ": @" + p.id.split("@")[0] + " (" + p.hand.length + ")").join("\n");
   const curr = game.players[game.currentPlayer];
-  let t = "╭─「 *ᴜɴᴏ* 」\n";
+  let t = "╭─「 ᴜɴᴏ 」\n";
   t += "│ " + cardText + "\n";
   t += "│ Giliran: @" + (curr?.id.split("@")[0] || "-") + "\n";
   t += "│\n│ 📊 Kartu pemain:\n│ " + hands.replace(/\n/g, "\n│ ") + "\n";

@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
       let dropText = drops.length > 0 ? drops.map(d => `+${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join(", ") : "";
 
       await m.react("🐣");
-      let out = `╭─「 *ʙᴇʀʙᴜʀᴜ ᴠ2* 」\n`;
+      let out = `╭─「 ʙᴇʀʙᴜʀᴜ ᴠ2 」\n`;
       out += `│ 👹 Monster: *${monster.name}*${monster.isRare ? " [RARE!]" : ""}\n`;
       out += `│ ⚔️ ${rounds} ronde bertarung\n`;
       out += `│\n`;
@@ -174,7 +174,7 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastHuntV2", HUNT_COOLDOWN);
 
       await m.react("❌");
-      let out = `╭─「 *ʙᴇʀʙᴜʀᴜ ᴠ2* 」\n`;
+      let out = `╭─「 ʙᴇʀʙᴜʀᴜ ᴠ2 」\n`;
       out += `│ 👹 Monster: *${monster.name}*${monster.isRare ? " [RARE!]" : ""}\n`;
       out += `│ ⚔️ ${rounds} ronde bertarung\n`;
       out += `│\n`;

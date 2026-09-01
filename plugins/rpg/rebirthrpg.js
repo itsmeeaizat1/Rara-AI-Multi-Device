@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     const canRebirth = rpg.level >= 100 && hasStone;
 
     if (!canRebirth) {
-      let msg = `╭─「 *ʀᴇɪɴᴋᴀʀɴᴀsɪ* 」\n`;
+      let msg = `╭─「 ʀᴇɪɴᴋᴀʀɴᴀsɪ 」\n`;
       msg += `│ 🔄 Reinkarnasi = reset level untuk permanent bonus\n`;
       msg += `│\n`;
       msg += `│ 📋 *sʏᴀʀᴀᴛ*\n`;
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
     const confirm = args[0]?.toLowerCase();
 
     if (confirm !== "confirm" && confirm !== "ya") {
-      let msg = `╭─「 *ʀᴇɪɴᴋᴀʀɴᴀsɪ* 」\n`;
+      let msg = `╭─「 ʀᴇɪɴᴋᴀʀɴᴀsɪ 」\n`;
       msg += `│ ⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ*\n`;
       msg += `│\n`;
       msg += `│ Kamu akan kehilalian:\n`;
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
 
     if (result.success) {
       await m.react("🐣");
-      let msg = `╭─「 *ʀᴇɪɴᴋᴀʀɴᴀsɪ* 」\n`;
+      let msg = `╭─「 ʀᴇɪɴᴋᴀʀɴᴀsɪ 」\n`;
       msg += `│ 🎉 Reinkarnasi berhasil!\n`;
       msg += `│\n`;
       msg += `│ 📊 Rebirth Count: *${result.rebirthCount}*\n`;

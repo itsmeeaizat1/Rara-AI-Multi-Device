@@ -193,7 +193,7 @@ async function handler(m, { sock }) {
       properties.push("Angka Nol (0)");
     }
 
-    let output = `╭─「 *ROULETTE* 」\n`;
+    let output = `╭─「 ROULETTE 」\n`;
     output += `│ 🎡 Hasil Spin: ${winningColor} *${winningNumber}* (${properties.join(" / ")})\n`;
     output += `│ 🎯 Taruhan: *${betTypeInput.toUpperCase()}*\n`;
     output += `│ 💵 Jumlah Bet: *${bet} gold*\n`;

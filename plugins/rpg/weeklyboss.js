@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
       const hpPct = Math.floor((bossState.hp / bossState.maxHp) * 100);
       const hpBar = "█".repeat(Math.floor(hpPct/10)) + "░".repeat(10 - Math.floor(hpPct/10));
 
-      let msg = `╭─「 *ʙᴏss ʀᴀɪᴅ* 」\n`;
+      let msg = `╭─「 ʙᴏss ʀᴀɪᴅ 」\n`;
       msg += `│ Boss: ${bossState.boss.emoji} *${bossState.boss.name}*\n`;
       msg += `│ HP: [${hpBar}] ${bossState.hp.toLocaleString()}/${bossState.maxHp.toLocaleString()}\n`;
       msg += `│\n`;
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
         // Reward top 3
         const sorted = [...bossState.contributors.entries()].sort((a, b) => b[1].damage - a[1].damage);
         const prizePool = 50000;
-        let bonusMsg = `\n\n╭─「 *ʙᴏss ᴅᴇғᴇᴀᴛᴇᴅ!* 」\n`;
+        let bonusMsg = `\n\n╭─「 ʙᴏss ᴅᴇғᴇᴀᴛᴇᴅ! 」\n`;
         bonusMsg += `│ 🏆 Top Contributors:\n`;
         sorted.slice(0, 3).forEach(([id, c], i) => {
           const reward = [20000, 10000, 5000][i];
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
     const hpPct = Math.floor((bossState.hp / bossState.maxHp) * 100);
     const hpBar = "█".repeat(Math.floor(hpPct/10)) + "░".repeat(10 - Math.floor(hpPct/10));
 
-    let msg = `╭─「 *ᴡᴇᴇᴋʟʏ ʙᴏss* 」\n`;
+    let msg = `╭─「 ᴡᴇᴇᴋʟʏ ʙᴏss 」\n`;
     msg += `│ Boss: ${bossState.boss.emoji} *${bossState.boss.name}*\n`;
     msg += `│ ATK: *${bossState.boss.atk}*\n`;
     msg += `│ HP: [${hpBar}] ${bossState.hp.toLocaleString()}/${bossState.maxHp.toLocaleString()}\n`;

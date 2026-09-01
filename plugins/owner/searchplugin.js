@@ -123,7 +123,7 @@ async function handler(m, { sock }) {
     const isAdmin = info.isAdmin ? "✅ Ya" : "❌ Tidak";
     return m.reply(
       `📋 *Info Plugin*\n\n` +
-        `╭─「 *Detail* 」\n` +
+        `╭─「 Detail 」\n` +
         `│ 📛 Nama: \`${info.name || "-"}\`\n` +
         `│ 🏷️ Alias: \`${aliases}\`\n` +
         `│ 📁 Category: \`${info.category || "-"}\`\n` +
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
         `│ 📝 Usage: \`${info.usage || "-"}\`\n` +
         `│ 📌 Example: \`${info.example || "-"}\`\n` +
         `╰──────────\n\n` +
-        `╭─「 *sEttings* 」\n` +
+        `╭─「 sEttings 」\n` +
         `│ 🔓 Enabled: ${isEnabled}\n` +
         `│ 👑 Owner Only: ${isOwner}\n` +
         `│ 💎 Premium: ${isPremium}\n` +

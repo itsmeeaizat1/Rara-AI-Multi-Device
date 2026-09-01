@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
       });
       const buffer = Buffer.from(vidRes.data);
 
-      let msg = `╭─「 *ᴛɪᴋᴛᴏᴋ v3* 」\n`;
+      let msg = `╭─「 ᴛɪᴋᴛᴏᴋ v3 」\n`;
       if (r.title || r.desc) _lines.push(`Judul: *${(r.title || r.desc).slice(0, 80)}*`);
       if (r.author || r.username) _lines.push(`Author: *@${r.author || r.username}*`);
       _lines.push(`Size: *${(buffer.length / 1024 / 1024).toFixed(1)} MB*`);
@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
       return await sock.sendMessage(m.chat, { video: buffer, caption: msg });
     } else if (r.images && Array.isArray(r.images) && r.images.length > 0) {
       // Slideshow/image gallery
-      let msg = `╭─「 *ᴛɪᴋᴛᴏᴋ v3* 」\n`;
+      let msg = `╭─「 ᴛɪᴋᴛᴏᴋ v3 」\n`;
       if (r.title || r.desc) _lines.push(`Judul: *${(r.title || r.desc).slice(0, 80)}*`);
       if (r.author || r.username) _lines.push(`Author: *@${r.author || r.username}*`);
       _lines.push(`Type: Slideshow (${r.images.length} foto)`);

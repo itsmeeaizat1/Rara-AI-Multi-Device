@@ -36,7 +36,7 @@ async function handler(m, { sock, config: botConfig }) {
       cmdLines += `│ ${prefix}${mainCmds[i]}\n`;
     }
 
-    const text = `╭─「 *Aʙᴏᴜᴛ Nᴏᴠᴀ* 」\n│ *ɴᴀᴍᴀ:* ${toSC(botName)}
+    const text = `╭─「 Aʙᴏᴜᴛ Nᴏᴠᴀ 」\n│ *ɴᴀᴍᴀ:* ${toSC(botName)}
 │ *ᴠᴇʀꜱɪᴏɴ:* ${version}
 │ *ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${toSC(developer)}
 │ *ᴘʟᴀᴛꜰᴏʀᴍ:* WhatsApp Multi Device

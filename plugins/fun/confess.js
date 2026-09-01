@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
   const input = m.fullArgs?.trim() || m.text?.trim();
 
   if (!input || !input.includes("|")) {
-    let txt = `╭─「 *ᴄᴏɴꜰᴇss* 」\n\n`
+    let txt = `╭─「 ᴄᴏɴꜰᴇss 」\n\n`
     txt += `│ Kirim pesan rahasia ke seseorang\n`;
     txt += `│ 2 mode: *anonim* & *non-anonim*\n\n`;
     txt += `  *ᴍᴏᴅᴇ ᴀɴᴏɴɪᴍ (ʀᴀʜᴀsɪᴀ):*\n`;
@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
 
   if (!rawNumber || !message) {
     return m.reply(
-      `╭─「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `╭─「 ᴄᴏɴꜰᴇss 」\n\n` +
       `│ Format salah nih!\n\n` +
       `  *ᴀɴᴏɴɪᴍ:*\n│ \`${m.prefix}confess nomor|pesan\`\n` +
       `  *ɴᴏɴ-ᴀɴᴏɴɪᴍ:*\n│ \`${m.prefix}confess nomor|pesan|nama\`\n\n` +
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
 
   if (targetNumber.length < 10 || targetNumber.length > 15) {
     return m.reply(
-      `╭─「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `╭─「 ᴄᴏɴꜰᴇss 」\n\n` +
       `│ Nomor tujuan gak valid nih!\n\n` +
       `╰──────────`
     );
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
 
   if (targetNumber === senderNumber) {
     return m.reply(
-      `╭─「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `╭─「 ᴄᴏɴꜰᴇss 」\n\n` +
       `│ 😂 Nggak bisa confess ke diri sendiri!\n\n` +
       `╰──────────`
     );
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
     const [onWa] = await sock.onWhatsApp(targetNumber);
     if (!onWa?.exists) {
       return m.reply(
-        `╭─「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+        `╭─「 ᴄᴏɴꜰᴇss 」\n\n` +
         `│ ❌ Nomor \`${targetNumber}\` nggak terdaftar di WhatsApp!\n\n` +
         `╰──────────`
       );
@@ -124,7 +124,7 @@ async function handler(m, { sock }) {
 
   if (message.length < 5) {
     return m.reply(
-      `╭─「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `╭─「 ᴄᴏɴꜰᴇss 」\n\n` +
       `│ Pesan kependekan nih! Minimal 5 karakter.\n\n` +
       `╰──────────`
     );
@@ -132,7 +132,7 @@ async function handler(m, { sock }) {
 
   if (message.length > 1000) {
     return m.reply(
-      `╭─「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `╭─「 ᴄᴏɴꜰᴇss 」\n\n` +
       `│ ❌ Pesan kepanjangan! Maksimal 1000 karakter.\n\n` +
       `╰──────────`
     );
@@ -142,7 +142,7 @@ async function handler(m, { sock }) {
   let confessText;
   if (isAnonim) {
     confessText =
-      `╭─「 *ᴘᴇssᴀɴ ʀᴀʜᴀsɪᴀ* 」\n\n` +
+      `╭─「 ᴘᴇssᴀɴ ʀᴀʜᴀsɪᴀ 」\n\n` +
       `│ 💌 Ada seseorang yang ngirim pesan buat kamu\n\n` +
       `  💬 *ɪsɪ ᴘᴇsᴀɴ:*\n` +
       `  \`\`\`${message}\`\`\`\n\n` +
@@ -152,7 +152,7 @@ async function handler(m, { sock }) {
       `╰──────────`;
   } else {
     confessText =
-      `╭─「 *ᴘᴇsᴀɴ ᴄᴏɴꜰᴇss* 」\n\n` +
+      `╭─「 ᴘᴇsᴀɴ ᴄᴏɴꜰᴇss 」\n\n` +
       `│ 💌 *${senderName}* ngirim pesan buat kamu\n\n` +
       `  💬 *ɪsɪ ᴘᴇsᴀɴ:*\n` +
       `  \`\`\`${message}\`\`\`\n\n` +
@@ -188,7 +188,7 @@ async function handler(m, { sock }) {
     }, 24 * 60 * 60 * 1000);
 
     let successTxt =
-      `╭─「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `╭─「 ᴄᴏɴꜰᴇss 」\n\n` +
       `│ ✅ Pesan terkirim!\n` +
       `│ 📱 Ke: \`${targetNumber}\`\n`;
     if (isAnonim) {
@@ -204,7 +204,7 @@ async function handler(m, { sock }) {
   } catch (error) {
     console.error("[confess.js] Send error:", error.message);
     await m.reply(
-      `╭─「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+      `╭─「 ᴄᴏɴꜰᴇss 」\n\n` +
       `│ ❌ Gagal kirim pesan!\n│ ${error.message}\n\n` +
       `╰──────────`
     );
@@ -229,7 +229,7 @@ async function replyHandler(m, { sock }) {
     let replyText;
     if (confessInfo.isAnonim) {
       replyText =
-        `╭─「 *ʙᴀʟᴀsᴀɴ ᴄᴏɴꜰᴇss* 」\n\n` +
+        `╭─「 ʙᴀʟᴀsᴀɴ ᴄᴏɴꜰᴇss 」\n\n` +
         `│ 💕 Orang yang kamu confess balas pesanmu!\n\n` +
         `  💬 *ɪsɪ ʙᴀʟᴀsᴀɴ:*\n` +
         `  \`\`\`${replyMessage}\`\`\`\n\n` +
@@ -237,7 +237,7 @@ async function replyHandler(m, { sock }) {
         `╰──────────`;
     } else {
       replyText =
-        `╭─「 *ʙᴀʟᴀsᴀɴ ᴄᴏɴꜰᴇss* 」\n\n` +
+        `╭─「 ʙᴀʟᴀsᴀɴ ᴄᴏɴꜰᴇss 」\n\n` +
         `│ 💕 *${confessInfo.senderName}* — orang yang kamu confess balas!\n\n` +
         `  💬 *ɪsɪ ʙᴀʟᴀsᴀɴ:*\n` +
         `  \`\`\`${replyMessage}\`\`\`\n\n` +
@@ -255,7 +255,7 @@ async function replyHandler(m, { sock }) {
 
     await sock.sendMessage(m.chat, {
       text:
-        `╭─「 *ᴄᴏɴꜰᴇss* 」\n\n` +
+        `╭─「 ᴄᴏɴꜰᴇss 」\n\n` +
         `│ ✅ Balasan terkirim ke pengirim!\n\n` +
         `╰──────────`,
     });

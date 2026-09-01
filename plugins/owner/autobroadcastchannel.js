@@ -43,7 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
     text += "│ 📺 Saluran: *" + (botConfig.saluran?.name || "-") + "*\n";
     text += "│ 📋 Total Event: *" + Object.keys(NOTIFY_EVENTS).length + "*\n";
     text += "│\n";
-    text += "│ 「 *Status Toggle* 」\n";
+    text += "│ 「 Status Toggle 」\n";
 
     for (const [key, info] of Object.entries(statuses)) {
       const icon = info.enabled ? "✅" : "❌";
@@ -125,7 +125,7 @@ async function handler(m, { sock, config: botConfig }) {
     "│\n" +
     "│ ❌ Event: *" + subCmd + "* tidak ada dalam daftar\n" +
     "│\n" +
-    "│ 「 *Event Tersedia* 」\n" +
+    "│ 「 Event Tersedia 」\n" +
     availableList +
     "│\n" +
     "│ 💡 *Contoh:* `" + prefix + "autobroadcastchannel userBanned on`\n" +

@@ -239,7 +239,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 *ᴘᴇᴛᴜᴀʟᴀɴɢ* 」\n`;
+    let msg = `╭─「 ᴘᴇᴛᴜᴀʟᴀɴɢ 」\n`;
     msg += `│ 🗺️ ${message}\n`;
     msg += `│\n`;
 

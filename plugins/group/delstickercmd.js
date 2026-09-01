@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
         }
         
         let txt = `🖼️ *STICKER COMMANDS*\n\n`
-        txt += `╭─「 *DAFTAR* 」\n`
+        txt += `╭─「 DAFTAR 」\n`
         
         for (const cmd of existingCmds) {
             txt += `│ 🖼️ → \`.${cmd.command}\`\n`

@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
         return m.reply('✅ *Onlyadmin Aktif*\n\n' +
-            '╭─「 *Akses* 」\n' +
+            '╭─「 Akses 」\n' +
             '┃ ✅ Admin grup\n' +
             '┃ ✅ Owner bot\n' +
             '┃ ❌ Member biasa\n' +
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
         return m.reply('✅ *Onlyadmin Aktif*\n\n' +
-            '╭─「 *Akses* 」\n' +
+            '╭─「 Akses 」\n' +
             '┃ ✅ Admin grup\n' +
             '┃ ✅ Owner bot\n' +
             '┃ ✅ Private chat (semua)\n' +
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
         db.setting('selfAdmin', false)
         db.setting('publicAdmin', false)
         return m.reply('✅ *Onlyadmin Aktif*\n\n' +
-            '╭─「 *Akses* 」\n' +
+            '╭─「 Akses 」\n' +
             '┃ ✅ Admin grup\n' +
             '┃ ✅ Owner bot\n' +
             '┃ ✅ Private chat (semua)\n' +

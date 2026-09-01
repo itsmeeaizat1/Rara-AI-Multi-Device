@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
         const duration = Math.ceil(buffer.length / 4000);
         await m.reply(
             `🎤 *ᴛʀᴀɴꜱᴋʀɪᴘ*\n\n` +
-            `╭─「 *HAsIL* 」\n` +
+            `╭─「 HAsIL 」\n` +
             `│\n` +
             `│ ${text}\n` +
             `│\n` +

@@ -74,7 +74,7 @@ Gunakan bahasa Indonesia yang santai dan mudah dimengerti.`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 *ᴛᴜᴛᴏʀ ᴀɪ* 」\n`;
+    let msg = `╭─「 ᴛᴜᴛᴏʀ ᴀɪ 」\n`;
     msg += `│ 📚 Topik: *${text}*\n`;
     msg += `│\n`;
     msg += formatted;

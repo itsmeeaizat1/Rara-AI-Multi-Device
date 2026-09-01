@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
     txt += "│ ⚡ Bonus Streak: *" + (Math.round(streakMultiplier * 100) / 100) + "x*\n";
   }
   txt += "│\n";
-  txt += "│ 「 *Hadiah* 」\n";
+  txt += "│ 「 Hadiah 」\n";
   txt += "│ 🚄 Exp: *+" + formatNum(expReward) + "*\n";
   txt += "│ 🪙 Koin: *+" + formatNum(koinReward) + "*\n";
   txt += "│ 💰 Gold: *+" + formatNum(goldReward) + "*\n";

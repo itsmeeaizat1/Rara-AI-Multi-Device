@@ -52,7 +52,7 @@ export async function handler(m, { sock }) {
     }
 
     const caption = [
-      "╭─「 *Renungan Harian* 」",
+      "╭─「 Renungan Harian 」",
       "│",
       "│ 💡 Semoga renungan hari ini bermanfaat",
       "│ 🤲 Semoga kita selalu dalam lindungan-Nya",

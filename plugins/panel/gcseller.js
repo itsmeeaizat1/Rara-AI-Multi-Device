@@ -102,7 +102,7 @@ function handler(m, { sock }) {
 
         saveGcSeller(version, m.chat)
         let txt = `✅ *Gc sEller ${serverLabel} Ditambahkan*\n\n`
-        txt += `╭─「 *ᴅᴇᴛᴀɪʟ* 」\n`
+        txt += `╭─「 ᴅᴇᴛᴀɪʟ 」\n`
         txt += `│ 🖥️ sErver: \`${serverLabel}\`\n`
         txt += `│ 👥 Grup: \`${m.groupName || m.chat}\`\n`
         txt += `│ 🔓 Akses: \`1gb${version}\` - \`10gb${version}\`, \`unli${version}\`\n`

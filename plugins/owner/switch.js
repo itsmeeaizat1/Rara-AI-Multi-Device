@@ -356,7 +356,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
 
   if (!featureName) {
     const groupData = db.getGroup(m.chat) || {}
-    let txt = `╭─「 *${toSC('SWITCH GROUP')}* 」\n\n`
+    let txt = `╭─「 ${toSC('SWITCH GROUP')} 」\n\n`
     for (const [cat, features] of Object.entries(GROUP_CATEGORIES)) {
       txt += `│ *${toSC(cat)}*\n`
       for (const feat of features) {
@@ -377,13 +377,13 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
   const feature = GROUP_FEATURES[resolved]
 
   if (!feature)
-    return m.reply(`╭─「 *${toSC('Switch Group')}* 」\n│ ❌ ${toSC('Fitur tidak ditemukan')}: ${featureName}\n│ ${toSC('Ketik')} \`${prefix}switch group\` ${toSC('untuk melihat daftar')}\n╰──────────`)
+    return m.reply(`╭─「 ${toSC('Switch Group')} 」\n│ ❌ ${toSC('Fitur tidak ditemukan')}: ${featureName}\n│ ${toSC('Ketik')} \`${prefix}switch group\` ${toSC('untuk melihat daftar')}\n╰──────────`)
 
   const groupData = db.getGroup(m.chat) || {}
 
   if (forceOff) {
     db.setGroup(m.chat, { [feature.dbKey]: feature.off })
-    return m.reply(`╭─「 *${toSC('SWITCH GROUP')}* 」\n│ 🔴 ${toSC(feature.label)}: OFF\n╰──────────`)
+    return m.reply(`╭─「 ${toSC('SWITCH GROUP')} 」\n│ 🔴 ${toSC(feature.label)}: OFF\n╰──────────`)
   }
 
   let update = { [feature.dbKey]: feature.on }
@@ -393,7 +393,7 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
     update[feature.extraKey] = mode
 
   db.setGroup(m.chat, update)
-  let txt = `╭─「 *${toSC('SWITCH GROUP')}* 」\n│ 🟢 ${toSC(feature.label)}: ON`
+  let txt = `╭─「 ${toSC('SWITCH GROUP')} 」\n│ 🟢 ${toSC(feature.label)}: ON`
   if (feature.modes) {
     const newMode = mode && feature.modes.includes(mode) ? mode : (groupData[feature.modeKey] || feature.modes[0])
     txt += `\n│ ${toSC('Mode')}: ${newMode}`
@@ -422,7 +422,7 @@ async function handleAuto(m, { sock, config: cfg, autoKey }) {
 
   // No specific key — show all auto features status
   if (!autoKey) {
-    let txt = `╭─「 *${toSC('SWITCH AUTO')}* 」\n\n`
+    let txt = `╭─「 ${toSC('SWITCH AUTO')} 」\n\n`
     for (const [cat, features] of Object.entries(AUTO_CATEGORIES)) {
       txt += `│ *${toSC(cat)}*\n`
       for (const key of features) {
@@ -440,21 +440,21 @@ async function handleAuto(m, { sock, config: cfg, autoKey }) {
 
   const reg = AUTO_REGISTRY[autoKey]
   if (!reg)
-    return m.reply(`╭─「 *${toSC('SWITCH AUTO')}* 」\n│ ❌ ${toSC('Fitur tidak ditemukan')}: ${autoKey}\n│ ${toSC('Ketik')} \`${prefix}switch auto\` ${toSC('untuk melihat daftar')}\n╰──────────`)
+    return m.reply(`╭─「 ${toSC('SWITCH AUTO')} 」\n│ ❌ ${toSC('Fitur tidak ditemukan')}: ${autoKey}\n│ ${toSC('Ketik')} \`${prefix}switch auto\` ${toSC('untuk melihat daftar')}\n╰──────────`)
 
   // No action — show status + usage
   if (!action || (action !== 'on' && action !== 'off')) {
     const current = reg.getStatus()
-    return m.reply(`╭─「 *${toSC('SWITCH AUTO')}* 」\n│ ${current ? "🟢" : "🔴"} ${toSC(reg.label)}: ${current ? "ON" : "OFF"}\n│ \`${prefix}switch auto ${autoKey} on\` — ${toSC('aktifkan')}\n│ \`${prefix}switch auto ${autoKey} off\` — ${toSC('matikan')}\n╰──────────`)
+    return m.reply(`╭─「 ${toSC('SWITCH AUTO')} 」\n│ ${current ? "🟢" : "🔴"} ${toSC(reg.label)}: ${current ? "ON" : "OFF"}\n│ \`${prefix}switch auto ${autoKey} on\` — ${toSC('aktifkan')}\n│ \`${prefix}switch auto ${autoKey} off\` — ${toSC('matikan')}\n╰──────────`)
   }
 
   // Toggle
   const enable = action === 'on'
   try {
     reg.toggle(enable)
-    return m.reply(`╭─「 *${toSC('SWITCH AUTO')}* 」\n│ ${enable ? "🟢" : "🔴"} ${toSC(reg.label)}: ${enable ? "ON" : "OFF"}\n╰──────────`)
+    return m.reply(`╭─「 ${toSC('SWITCH AUTO')} 」\n│ ${enable ? "🟢" : "🔴"} ${toSC(reg.label)}: ${enable ? "ON" : "OFF"}\n╰──────────`)
   } catch (e) {
-    return m.reply(`╭─「 *${toSC('SWITCH AUTO')}* 」\n│ ❌ ${e.message || e}\n╰──────────`)
+    return m.reply(`╭─「 ${toSC('SWITCH AUTO')} 」\n│ ❌ ${e.message || e}\n╰──────────`)
   }
 }
 
@@ -479,7 +479,7 @@ async function handleFitur(m, { sock, config: cfg }) {
   const disabledCats = db.setting("disabledCategories") || []
 
   if (!action) {
-    let text = `╭─「 *${toSC('SWITCH FITUR')}* 」\n\n`
+    let text = `╭─「 ${toSC('SWITCH FITUR')} 」\n\n`
     text += `│ 📋 ${toSC('Panduan')}:\n`
     text += `│ • \`${prefix}switch fitur off rpg\` → ${toSC('matikan kategori')}\n`
     text += `│ • \`${prefix}switch fitur on kencanmatch\` → ${toSC('hidupkan command')}\n`
@@ -494,7 +494,7 @@ async function handleFitur(m, { sock, config: cfg }) {
 
   if (action === 'list') {
     const allCats = [...(pluginStore.categories?.keys() || [])].sort()
-    let text = `╭─「 *${toSC('DAFTAR FITUR')}* 」\n\n`
+    let text = `╭─「 ${toSC('DAFTAR FITUR')} 」\n\n`
     text += `│ 📂 ${toSC('KATEGORI')} (${allCats.length})\n`
     for (const cat of allCats) {
       const isOff = disabledCats.includes(cat)
@@ -514,7 +514,7 @@ async function handleFitur(m, { sock, config: cfg }) {
   else { mode = 'toggle'; name = action }
 
   if (!name)
-    return m.reply(`╭─「 *${toSC('SWITCH FITUR')}* 」\n│ ${toSC('Contoh')}: \`${prefix}switch fitur off rpg\`\n│ ${toSC('Contoh')}: \`${prefix}switch fitur on kencanmatch\`\n╰──────────`)
+    return m.reply(`╭─「 ${toSC('SWITCH FITUR')} 」\n│ ${toSC('Contoh')}: \`${prefix}switch fitur off rpg\`\n│ ${toSC('Contoh')}: \`${prefix}switch fitur on kencanmatch\`\n╰──────────`)
 
   const allCats = [...(pluginStore.categories?.keys() || [])].sort()
   const allCmds = [...(pluginStore.commands?.keys() || [])].sort()
@@ -522,9 +522,9 @@ async function handleFitur(m, { sock, config: cfg }) {
   const isCommand = allCmds.includes(name)
 
   if (!isCategory && !isCommand)
-    return m.reply(`╭─「 *${toSC('SWITCH FITUR')}* 」\n│ ❌ ${toSC('Tidak ditemukan')}: ${name}\n│ ${toSC('Ketik')} \`${prefix}switch fitur list\`\n╰──────────`)
+    return m.reply(`╭─「 ${toSC('SWITCH FITUR')} 」\n│ ❌ ${toSC('Tidak ditemukan')}: ${name}\n│ ${toSC('Ketik')} \`${prefix}switch fitur list\`\n╰──────────`)
   if (isCommand && name === 'switch')
-    return m.reply(`╭─「 *${toSC('SWITCH FITUR')}* 」\n│ ❌ ${toSC('Tidak bisa menonaktifkan command ini')}\n╰──────────`)
+    return m.reply(`╭─「 ${toSC('SWITCH FITUR')} 」\n│ ❌ ${toSC('Tidak bisa menonaktifkan command ini')}\n╰──────────`)
 
   const type = isCategory ? "kategori" : "command"
   const list = isCategory ? disabledCats : disabledCmds
@@ -534,10 +534,10 @@ async function handleFitur(m, { sock, config: cfg }) {
 
   if (mode === 'on') {
     if (isCurrentlyOff) { list.splice(idx, 1); newState = false }
-    else return m.reply(`╭─「 *${toSC('SWITCH FITUR')}* 」\n│ ✅ ${toSC(type)} ${name} ${toSC('sudah aktif')}\n╰──────────`)
+    else return m.reply(`╭─「 ${toSC('SWITCH FITUR')} 」\n│ ✅ ${toSC(type)} ${name} ${toSC('sudah aktif')}\n╰──────────`)
   } else if (mode === 'off') {
     if (!isCurrentlyOff) { list.push(name); newState = true }
-    else return m.reply(`╭─「 *${toSC('SWITCH FITUR')}* 」\n│ 🔴 ${toSC(type)} ${name} ${toSC('sudah nonaktif')}\n╰──────────`)
+    else return m.reply(`╭─「 ${toSC('SWITCH FITUR')} 」\n│ 🔴 ${toSC(type)} ${name} ${toSC('sudah nonaktif')}\n╰──────────`)
   } else {
     if (isCurrentlyOff) { list.splice(idx, 1); newState = false }
     else { list.push(name); newState = true }
@@ -548,7 +548,7 @@ async function handleFitur(m, { sock, config: cfg }) {
 
   const status = newState ? "🔴 Nonaktif" : "🟢 Aktif"
   const emoji = newState ? "⏸️" : "▶️"
-  return m.reply(`╭─「 *${toSC('SWITCH FITUR')}* 」\n\n│ ${emoji} ${toSC(type.charAt(0).toUpperCase() + type.slice(1))}: *${name}*\n│ ${toSC('Status')}: ${status}\n\n╰──────────`)
+  return m.reply(`╭─「 ${toSC('SWITCH FITUR')} 」\n\n│ ${emoji} ${toSC(type.charAt(0).toUpperCase() + type.slice(1))}: *${name}*\n│ ${toSC('Status')}: ${status}\n\n╰──────────`)
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -556,7 +556,7 @@ async function handleFitur(m, { sock, config: cfg }) {
 // ═══════════════════════════════════════════════════════════
 async function showMenu(m, sock) {
   const prefix = m.prefix || '.'
-  const text = `╭─「 *${toSC('SWITCH')}* 」
+  const text = `╭─「 ${toSC('SWITCH')} 」
 │ ${toSC('Pilih kategori toggle')}:
 │
 │ 📢 *${toSC('SALURAN')}*
@@ -617,7 +617,7 @@ async function handler(m, { sock, config: cfg }) {
 
     return showMenu(m, sock)
   } catch (e) {
-    return m.reply(`╭─「 *${toSC('SWITCH')}* 」\n│ ❌ ${e.message || e}\n╰──────────`)
+    return m.reply(`╭─「 ${toSC('SWITCH')} 」\n│ ❌ ${e.message || e}\n╰──────────`)
   }
 }
 

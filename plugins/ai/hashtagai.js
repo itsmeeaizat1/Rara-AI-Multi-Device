@@ -46,7 +46,7 @@ Pisahkan dengan koma, langsung copy-paste ready. Hashtag dalam bahasa Indonesia 
     }
 
     await m.react("🐣");
-    let msg = `╭─「 *ʜᴀsʜᴛᴀɢ ɢᴇɴᴇʀᴀᴛᴏʀ* 」\n`;
+    let msg = `╭─「 ʜᴀsʜᴛᴀɢ ɢᴇɴᴇʀᴀᴛᴏʀ 」\n`;
     msg += `│ #️⃣ Topik: *${text}*\n`;
     msg += `│\n`;
     msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;

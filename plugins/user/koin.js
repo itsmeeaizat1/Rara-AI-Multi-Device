@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
 
   if (isSelf && !isOwner) {
     txt += "│\n";
-    txt += "│ 「 *Shop* 」\n";
+    txt += "│ 「 Shop 」\n";
     txt += "│ `.buyenergi <jml>` (1 = 100 koin)\n";
     txt += "│ `.buyfitur` (1 = 3000 koin)\n";
     txt += "│\n";

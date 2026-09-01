@@ -81,7 +81,7 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
   // ===== V1: TEKS BAWAAN =====
   if (goodbyeType === 1) {
     const goodbyeText =
-      `╭─「 *ɢᴏᴏᴅʙʏᴇ* 」\n` +
+      `╭─「 ɢᴏᴏᴅʙʏᴇ 」\n` +
       `│ @${username} telah keluar\n` +
       `│ Dari grup: *${groupName}*\n` +
       `│ Sisa member: *${memberCount}*\n` +
@@ -105,7 +105,7 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
       );
 
       const caption =
-        `╭─「 *ɢᴏᴏᴅʙʏᴇ* 」\n` +
+        `╭─「 ɢᴏᴏᴅʙʏᴇ 」\n` +
         `│ @${username} telah keluar\n` +
         `│ Dari: *${groupName}*\n` +
         `│ Sisa: *${memberCount} member*\n` +
@@ -121,7 +121,7 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
       console.error("goodbye v2 canvas error:", err.message);
       // Fallback ke v1
       const fallbackText =
-        `╭─「 *ɢᴏᴏᴅʙʏᴇ* 」\n` +
+        `╭─「 ɢᴏᴏᴅʙʏᴇ 」\n` +
         `│ @${username} telah keluar\n` +
         `│ Dari grup: *${groupName}*\n` +
         `│ Sisa member: *${memberCount}*\n` +
@@ -136,7 +136,7 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
 
   // ===== V3+: Fallback teks =====
   const goodbyeText =
-    `╭─「 *ɢᴏᴏᴅʙʏᴇ* 」\n` +
+    `╭─「 ɢᴏᴏᴅʙʏᴇ 」\n` +
     `│ @${username} telah keluar\n` +
     `│ Dari grup: *${groupName}*\n` +
     `│ Sisa member: *${memberCount}*\n` +

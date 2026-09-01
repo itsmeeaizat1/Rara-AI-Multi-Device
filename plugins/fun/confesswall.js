@@ -63,7 +63,7 @@ function formatTime(ts) {
 }
 
 function buildHeader() {
-  return `╭─「 *ᴄᴏɴꜰᴇss ᴡᴀʟʟ* 」\n\n`
+  return `╭─「 ᴄᴏɴꜰᴇss ᴡᴀʟʟ 」\n\n`
 }
 
 function buildFooter() {

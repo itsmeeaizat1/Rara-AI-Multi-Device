@@ -63,7 +63,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     await m.react("🐣");
 
-    let msg = `╭─「 *ɢᴇᴍɪɴɪ ᴠɪsɪᴏɴ* 」\n`;
+    let msg = `╭─「 ɢᴇᴍɪɴɪ ᴠɪsɪᴏɴ 」\n`;
     msg += `│ 📸 Model: *${result.model}*\n`;
     msg += `│\n`;
     msg += `│ Pertanyaan:\n`;

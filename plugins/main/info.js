@@ -92,9 +92,9 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       if (wf) weatherBlock = `${wf}\n\n`;
     } catch {}
 
-    const text = `${weatherBlock}╭─「 *${toSC("Bot Info")}* 」
+    const text = `${weatherBlock}╭─「 ${toSC("Bot Info")} 」
 │
-│ 「 *${toSC("Identitas")}* 」
+│ 「 ${toSC("Identitas")} 」
 │ *${toSC("Nama")}:* ${toSC(botName)}
 │ *${toSC("Nomor")}:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : toSC("Unknown")}
 │ *${toSC("Versi")}:* ${botConfig.bot?.version || "1.0.0"}
@@ -102,14 +102,14 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ *${toSC("Platform")}:* ${toSC("Node.js + Baileys")}
 │ *${toSC("Mode")}:* ${toSC((botConfig.mode || "public").toUpperCase())}
 │ *${toSC("Prefix")}:* [ *${prefix}* ]
-│ 「 *${toSC("Info Database")}* 」
+│ 「 ${toSC("Info Database")} 」
 │ *${toSC("Total User")}:* ${totalUsers}
 │ *${toSC("Total Grup")}:* ${totalGroups}
 │ *${toSC("User Terdaftar")}:* ${totalRegistered}
 │ *${toSC("Premium User")}:* ${totalPremium}
 │ *${toSC("Total Fitur")}:* ${totalFeatures}
 │ *${toSC("Total Kategori")}:* ${totalCategories}
-│ 「 *${toSC("Server")}* 」
+│ 「 ${toSC("Server")} 」
 │ *${toSC("OS")}:* ${os.platform()} ${os.arch()}
 │ *${toSC("Hostname")}:* ${toSC(os.hostname())}
 │ *${toSC("Node.js")}:* ${process.version}
