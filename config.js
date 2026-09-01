@@ -476,7 +476,7 @@ const config = {
 
   // NOTE: kalau mau command "autoai" nya berfungsi, ini gak wajib di isi yak
   // ambil apikey di: https://aistudio.google.com/apikey
-  geminiApiKey: "",
+  geminiApiKey: "Ab8RN6I9akckrF9inEsfCm-I1KyihGlYDNSoZ_b8nNgAIB-aDg",
 
   autoaiPersonas: {
     Nova: `- Nama kamu adalah Nova.

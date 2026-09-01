@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import os from "os";
+import fs from "fs";
 import path from "path";
 import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
@@ -68,7 +69,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     let cpuModel = os.cpus()[0]?.model || "Unknown";
     if ((!cpuSpeed || cpuSpeed === 0) || cpuModel === "Unknown") {
       try {
-        const fs = require("fs");
+        // fs already imported at top
         const cpuinfo = fs.readFileSync("/proc/cpuinfo", "utf8");
         const mhzMatch = cpuinfo.match(/cpu MHz\s*:\s*([\d.]+)/i);
         if (mhzMatch) cpuSpeed = Math.round(parseFloat(mhzMatch[1]));

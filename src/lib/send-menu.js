@@ -3,6 +3,7 @@
 // Pattern: sendMessage + text + buttons (template type:1) + contextInfo.externalAdReply (thumbnail)
 // NO interactiveMessage, NO nativeFlowMessage — pakai template buttons yang support preview card
 import fs from 'fs';
+import stream from 'stream';
 import path from 'path';
 import { getAssetBuffer, getStaticThumbnail } from './nova-asset-manager.js';
 
@@ -182,7 +183,7 @@ async function ensureMenuAudioLoaded() {
 
         _menuAudioPtt = await new Promise((resolve, reject) => {
           const chunks = [];
-          const stream = require('stream');
+          // stream already imported at top
           const passThrough = new stream.PassThrough();
 
           ffmpeg({ source: path.join(process.cwd(), 'assets', 'audio', 'cinta-terbaik-cassandra.mp3') })
