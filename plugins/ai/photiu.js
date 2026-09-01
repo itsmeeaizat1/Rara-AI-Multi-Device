@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// photiu — Generate gambar dari teks via Photiu AI (IkyyXD)
+// photiu — Generate gambar dari teks via GPT Image (IkyyXD)
+// Original /ai/photiu down, redirected to /ai/gptimage
 import axios from "axios";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
@@ -36,22 +37,29 @@ async function handler(m, { sock }) {
 
     await m.react("🕒");
 
-    const res = await axios.get(`${IKYY_BASE}/ai/photiu`, {
-      params: { prompt: text },
+    // gptimage returns binary JPEG directly
+    const res = await axios.get(`${IKYY_BASE}/ai/gptimage`, {
+      params: { text },
       timeout: 120000,
+      responseType: "arraybuffer",
     });
 
-    const data = res.data;
-    if (data?.status && data?.result) {
-      const resultUrl = typeof data.result === "string" ? data.result : data.result?.url || data.result?.result_url;
+    const contentType = res.headers["content-type"] || "";
+    if (contentType.includes("image") || res.data?.length > 1000) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
-        image: { url: resultUrl },
+        image: Buffer.from(res.data),
         caption: claraWrap("Photiu", `Prompt: ${text}`),
       }, { quoted: m });
     } else {
-      await m.react("❌");
-      await m.reply(claraWrap("Photiu", data?.message || data?.error || "Gagal generate gambar. Coba prompt lain."));
+      try {
+        const errData = JSON.parse(res.data.toString());
+        await m.react("❌");
+        await m.reply(claraWrap("Photiu", errData?.error || errData?.message || "Gagal generate gambar."));
+      } catch {
+        await m.react("❌");
+        await m.reply(claraWrap("Photiu", "Gagal generate gambar. Coba prompt lain."));
+      }
     }
   } catch (e) {
     console.error("[photiu.js]:", e.message);

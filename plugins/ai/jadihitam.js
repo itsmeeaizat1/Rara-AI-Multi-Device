@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// jadihitam — Ubah skin tone menjadi lebih gelap via IkyyXD
+// jadihitam — Ubah skin tone lebih gelap via Gemini Flash (IkyyXD)
 import axios from "axios";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
@@ -16,6 +16,7 @@ const pluginConfig = {
 };
 
 const IKYY_BASE = "https://api.ikyyxd.my.id";
+const PROMPT = "Transform the skin tone of the person in this photo to a darker complexion. Maintain all facial features, realistic shadows, natural skin texture, and no distortion.";
 
 async function handler(m, { sock }) {
   try {
@@ -47,8 +48,8 @@ async function handler(m, { sock }) {
 
     await m.react("🕒");
 
-    const res = await axios.get(`${IKYY_BASE}/edit/jadihitam`, {
-      params: { url: imageUrl },
+    const res = await axios.get(`${IKYY_BASE}/edit/gemini-flash`, {
+      params: { prompt: PROMPT, url: imageUrl },
       timeout: 120000,
     });
 
@@ -58,11 +59,11 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: claraWrap("JadiHitam", "Berhasil: Ubah skin tone menjadi lebih gelap"),
+        caption: claraWrap("JadiHitam", "Berhasil mengubah skin tone"),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(claraWrap("JadiHitam", data?.error?.message || data?.error || data?.message || "Gagal memproses. Coba foto lain."));
+      await m.reply(claraWrap("JadiHitam", data?.error || data?.message || "Gagal memproses. Coba foto lain."));
     }
   } catch (e) {
     console.error("[jadihitam.js]:", e.message);

@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// jadihijab — Tambahkan hijab ke foto via IkyyXD
+// jadihijab — Tambahkan hijab ke foto via Gemini Flash (IkyyXD)
 import axios from "axios";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
@@ -10,12 +10,13 @@ const pluginConfig = {
   category: "ai image",
   description: "Tambahkan hijab ke foto",
   usage: ".jadihijab (reply/kirim foto)",
-  example: ".jadihijab (reply foto)",
+  example: ".jadihijab (reply foto wajah)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
   cooldown: 20, energi: 3, isEnabled: true,
 };
 
 const IKYY_BASE = "https://api.ikyyxd.my.id";
+const PROMPT = "Add a hijab (Islamic headscarf) to the person in this photo. Make it look natural, covering the hair properly while keeping the face visible. Use a neutral or elegant color.";
 
 async function handler(m, { sock }) {
   try {
@@ -47,8 +48,8 @@ async function handler(m, { sock }) {
 
     await m.react("🕒");
 
-    const res = await axios.get(`${IKYY_BASE}/edit/jadihijab`, {
-      params: { url: imageUrl },
+    const res = await axios.get(`${IKYY_BASE}/edit/gemini-flash`, {
+      params: { prompt: PROMPT, url: imageUrl },
       timeout: 120000,
     });
 
@@ -58,11 +59,11 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: claraWrap("JadiHijab", "Berhasil: Tambahkan hijab ke foto"),
+        caption: claraWrap("JadiHijab", "Berhasil menambahkan hijab"),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(claraWrap("JadiHijab", data?.error?.message || data?.error || data?.message || "Gagal memproses. Coba foto lain."));
+      await m.reply(claraWrap("JadiHijab", data?.error || data?.message || "Gagal memproses. Coba foto lain."));
     }
   } catch (e) {
     console.error("[jadihijab.js]:", e.message);

@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// nanobanana — Edit gambar dengan prompt via Nano Banana (IkyyXD)
+// nanobanana — Edit gambar dengan prompt via Gemini Flash (IkyyXD)
+// Original /edit/nanobanana failed all models, redirected to /edit/gemini-flash
 import axios from "axios";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
@@ -55,8 +56,8 @@ async function handler(m, { sock }) {
 
     await m.react("🕒");
 
-    const res = await axios.get(`${IKYY_BASE}/edit/nanobanana`, {
-      params: { image: imageUrl, prompt: text },
+    const res = await axios.get(`${IKYY_BASE}/edit/gemini-flash`, {
+      params: { prompt: text, url: imageUrl },
       timeout: 120000,
     });
 
@@ -70,7 +71,7 @@ async function handler(m, { sock }) {
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(claraWrap("NanoBanana", data?.message?.error || data?.error || data?.message || "Gagal memproses. Coba foto/prompt lain."));
+      await m.reply(claraWrap("NanoBanana", data?.error || data?.message || "Gagal memproses. Coba foto/prompt lain."));
     }
   } catch (e) {
     console.error("[nanobanana.js]:", e.message);
