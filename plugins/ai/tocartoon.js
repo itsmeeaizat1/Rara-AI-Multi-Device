@@ -5,7 +5,7 @@ import { live3d } from '../../src/scraper/seaart.js'
 const pluginConfig = {
     name: 'tocartoon',
     alias: ["tocartoon"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah foto menjadi gaya kartun',
     usage: '.tocartoon (reply/kirim gambar)',
     example: '.tocartoon',

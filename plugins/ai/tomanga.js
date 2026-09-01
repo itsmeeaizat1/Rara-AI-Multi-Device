@@ -5,7 +5,7 @@ import { live3d } from '../../src/scraper/seaart.js'
 const pluginConfig = {
     name: 'tomanga',
     alias: ["tomanga"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah foto menjadi gaya manga Jepang',
     usage: '.tomanga (reply/kirim gambar)',
     example: '.tomanga',

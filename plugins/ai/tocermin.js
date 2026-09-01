@@ -6,7 +6,7 @@ import { live3d } from '../../src/scraper/seaart.js'
 const pluginConfig = {
     name: 'tocermin',
     alias: ["tocermin"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah foto menjadi efek cermin (mirror reflection)',
     usage: '.tocermin (reply/kirim gambar)',
     example: '.tocermin',

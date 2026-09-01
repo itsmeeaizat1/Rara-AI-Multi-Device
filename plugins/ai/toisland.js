@@ -6,7 +6,7 @@ import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'toisland',
     alias: ["toisland"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah foto menjadi suasana pulau tropis',
     usage: '.toisland (reply/kirim gambar)',
     example: '.toisland',

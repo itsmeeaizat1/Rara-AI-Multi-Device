@@ -6,7 +6,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, claraLine, no
 const pluginConfig = {
     name: 'anime-gen',
     alias: ["anime-gen", "anime"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Generate AI anime art dari prompt',
     usage: '.anime-gen <prompt>',
     example: '.anime-gen girl, vibrant color, smilling',

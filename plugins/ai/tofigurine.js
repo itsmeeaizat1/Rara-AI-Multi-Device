@@ -5,7 +5,7 @@ import { live3d } from '../../src/scraper/seaart.js'
 const pluginConfig = {
     name: 'tofigure3',
     alias: ["tofigure3"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Ubah foto menjadi action figure/figurine koleksi',
     usage: '.tofigure3 (reply/kirim gambar)',
     example: '.tofigure3',

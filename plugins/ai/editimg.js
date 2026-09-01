@@ -8,7 +8,7 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "editimg",
   alias: ["editimg", "aiedit", "ai-edit", "editgambar", "imgedit"],
-  category: "ai",
+  category: 'ai image',
   description: "Edit gambar dengan AI — kirim foto + instruksi teks",
   usage: ".editimg <instruksi edit> (reply/kirim foto)",
   example: ".editimg ubah background jadi pantai (reply foto)\n.editimg tambahkan kacamata (reply foto)\n.editimg ubah rambut jadi merah (reply foto)",

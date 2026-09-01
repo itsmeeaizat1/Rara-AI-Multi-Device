@@ -7,7 +7,7 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "dalleai",
   alias: ["dalleai", "dalle", "dalle3", "dalle-gen"],
-  category: "ai",
+  category: 'ai image',
   description: "Generate gambar ala DALL-E (gratis, pakai flux engine)",
   usage: ".dalleai <prompt gambar>",
   example: ".dalleai a photorealistic mountain landscape with snow\n.dalleai potret pria pakai jas hitam, studio lighting",

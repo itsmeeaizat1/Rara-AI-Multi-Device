@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "txt2img2",
   alias: ["txt2img2"],
-  category: "ai",
+  category: 'ai image',
   description: "Buat gambar dari teks pakai Flux Klein 4B",
   usage: ".txt2img2 <deskripsi gambar>",
   example: ".txt2img2 Mobil Lamborghini revuelto",

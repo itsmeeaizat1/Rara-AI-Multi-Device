@@ -7,7 +7,7 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "sdxl",
   alias: ["sdxl", "stablediffusion", "sdai", "sdxlgen"],
-  category: "ai",
+  category: 'ai image',
   description: "Generate gambar dengan Stable Diffusion XL (gratis)",
   usage: ".sdxl <prompt gambar>",
   example: ".sdxl a futuristic city at sunset, cyberpunk style\n.sdxl kucing lucu berwarna pink, kartun",

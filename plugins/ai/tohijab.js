@@ -7,7 +7,7 @@ import te from '../../src/lib/nova-error.js'
 const pluginConfig = {
     name: 'tohijab',
     alias: ["tohijab"],
-    category: 'ai',
+    category: 'ai image',
     description: 'Tambahkan hijab ke gambar',
     usage: '.tohijab (reply gambar)',
     example: '.tohijab',
