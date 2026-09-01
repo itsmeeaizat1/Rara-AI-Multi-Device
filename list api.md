@@ -66,8 +66,7 @@
 | FGSI | `fgsi.dpdns.org` | wastalk | ✅ Free |
 | Android1 | `an1.com` | android1, android1-get | ✅ Free |
 
-| IkyyXD | `api.ikyyxd.my.id` | stalker, search, tools | ✅ Free |
-| AlbyOffc | `api.albyoffc.my.id` | stalker, search, tools | ✅ Free |
+| AlbyOffc | `api.albyoffc.my.id` | — | ❌ DEAD (Vercel 404) |
 ---
 
 ## 📥 Download / Media API
@@ -97,7 +96,7 @@
 | SFile | `sfile.mobi` / `sfile.co` | sfiledl | ✅ Free |
 | GitHub DL | `github.com` / `raw.githubusercontent.com` | githubdl | ✅ Free |
 | SF Converter | `du.sf-converter.com` | audio convert | ✅ Free |
-| IkyyXD | `api.ikyyxd.my.id` | tiktok, ytmp3, ytmp4, instagram, facebook, twitter, spotify, soundcloud, mediafire, pinterest, gdrive, telegraph, snackvideo, likee, zippyshare, threads, capcut, dailymotion, yt | ✅ Free |
+| IkyyXD | `api.ikyyxd.my.id` | ytstalk, tiktokstalk, ffstalk, mlstalk, nikparser, gsmarena, lirik, ssweb, buatserti, qrcode, base64, tiktok, ytmp3, ytmp4, instagram, facebook, twitter, spotify, soundcloud, mediafire, pinterest, gdrive, telegraph, snackvideo, likee, zippyshare, threads, capcut, dailymotion, yt | ⚠️ IP block (test di VPS) |
 | AliceE APIs | `aliceeapis.my.id` | API multi-fitur (download, stalker, tools, AI) | ✅ Free |
 
 ---
