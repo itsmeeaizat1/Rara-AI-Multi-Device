@@ -1,38 +1,56 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import axios from 'axios'
-import config from '../../config.js'
-import te from '../../src/lib/nova-error.js'
+import { bratGen } from "brat-canvas";
+import fs from "fs";
+import path from "path";
+import os from "os";
+import config from "../../config.js";
+import te from "../../src/lib/nova-error.js";
+import { novaReply } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
-    name: 'bratgreen',
-    alias: ["bratgreen", "brat2"],
-    category: 'sticker',
-    description: 'Membuat sticker brat ijo',
-    usage: '.brat2 <text>',
-    example: '.brat2 Hai semua',
-    isOwner: false,
-    isPremium: false,
-    isGroup: false,
-    isPrivate: false,
-    cooldown: 10,
-    energi: 1,
-    isEnabled: true
-}
+  name: "bratgreen",
+  alias: ["bratgreen", "brat2"],
+  category: "sticker",
+  description: "Membuat sticker brat ijo (lokal canvas)",
+  usage: ".bratgreen <text>",
+  example: ".bratgreen Hai semua",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 10,
+  energi: 1,
+  isEnabled: true,
+};
 
 async function handler(m, { sock }) {
-    const text = m.text
-    if (!text) {
-        { const __navText = `🖼️ *ʙʀᴀᴛ ɢʀᴇᴇɴ*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratgreen Hai semua\``; return await m.reply( __navText, "bratgreen"); }
-    }
-    try {
-        const url = `https://api.nova.my.id/api/brat-grenn?text=${encodeURIComponent(text)}`
-        await sock.sendImageAsSticker(m.chat, url, m, {
-            packname: config.sticker.packname,
-            author: config.sticker.author
-        })
-    } catch (error) {
-        m.reply(claraWrap("bratgreen", te(m.prefix, m.command, m.pushName), "error"))
-    }
+  const text = m.args.join(" ").trim();
+  if (!text) {
+    const msg = novaReply({
+      title: "bratgreen",
+      status: "⚠ Masukkan teks untuk generate brat sticker",
+      content: `│\n│ Contoh: ${m.prefix}bratgreen Hai semua`,
+    });
+    return await m.reply(msg);
+  }
+  const tempFile = path.join(os.tmpdir(), `brat-${Date.now()}.png`);
+  try {
+    const pngBuffer = await bratGen(text, { C_BG: "#8ac306", C_TEXT: "#000000" });
+    await fs.promises.writeFile(tempFile, pngBuffer);
+    await sock.sendImageAsSticker(m.chat, tempFile, m, {
+      packname: config.sticker.packname,
+      author: config.sticker.author,
+    });
+    await fs.promises.unlink(tempFile).catch(() => {});
+  } catch (error) {
+    await fs.promises.unlink(tempFile).catch(() => {});
+    console.error("[bratgreen] Error:", error.message);
+    const msg = novaReply({
+      title: "bratgreen",
+      status: `❌ Gagal generate: ${error.message}`,
+    });
+    await m.reply(msg);
+  }
 }
 
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler };
