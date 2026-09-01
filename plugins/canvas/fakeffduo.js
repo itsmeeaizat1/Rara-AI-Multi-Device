@@ -1,16 +1,13 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import axios from "axios";
-import config from "../../config.js";
-import { uploadTo0x0 } from "../../src/lib/nova-tmpfiles.js";
-import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaReply } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
   name: "fakeffduo",
   alias: ["fakeffduo"],
   category: "canvas",
-  description: "Membuat gambar ff",
-  usage: ".fakeffduo <text>",
-  example: ".fakeffduo Hai cantik",
+  description: "Membuat gambar FF Duo (API maintenance)",
+  usage: ".fakeffduo <nama1|nama2>",
+  example: ".fakeffduo nama1|nama2",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -21,23 +18,15 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
-  const nama = m.text?.split("|");
-  if (!nama || nama.length < 2) {
-    return m.reply( claraWrap("Fakeffduo", `*ꜰᴀᴋᴇ ꜰꜰ ᴅᴜᴏ*\n\n💡 *Contoh:* ${m.prefix}fakeffduo nama1|nama2`), { commandName: "fakeffduo" });
-  }
-  try {
-    await sock.sendMedia(
-      m.chat,
-      `https://api.nova.my.id/api/fake-ff-duo-2?name1=${encodeURIComponent(nama[0])}&name2=${encodeURIComponent(nama[1])}&bg=random`,
-      null,
-      m,
-      {
-        type: "image",
-      },
-    );
-  } catch (error) {
-    m.reply(claraWrap("fakeffduo", te(m.prefix, m.command, m.pushName), "error"));
-  }
+  const msg = novaReply({
+    title: "Fake FF Duo",
+    info: [
+      { label: "Status", value: "API nova.my.id OFFLINE" },
+    ],
+    status: "API sedang down, fitur ini sementara tidak tersedia",
+    content: "|\n| API nova.my.id DNS tidak resolve\n| Fitur akan kembali saat API aktif",
+  });
+  return await m.reply(msg);
 }
 
 export { pluginConfig as config, handler };

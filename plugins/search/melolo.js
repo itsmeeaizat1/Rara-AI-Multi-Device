@@ -1,14 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import config from "../../config.js";
-import te from "../../src/lib/nova-error.js";
-import novaApi from "../../src/lib/nova-apimanager.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+// melolo — Cari drama pendek Melolo (API covenant sedang down)
+import { novaReply } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "melolo",
   alias: ["melolo"],
   category: "search",
-  description: "Cari daftar drama pendek berdasarkan kategori dari Melolo",
+  description: "Cari daftar drama pendek dari Melolo (maintenance)",
   usage: ".melolo <category>",
   example: ".melolo fantasy",
   isOwner: false,
@@ -20,96 +18,28 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-function trimText(text, max = 90) {
-  const value = String(text || "")
-    .replace(/\s+/g, " ")
-    .trim();
-  if (!value) return "-";
-  if (value.length <= max) return value;
-  return value.slice(0, max) + "...";
-}
-
-function normalizeResults(data) {
-  const groups = [];
-
-  for (const [section, items] of Object.entries(data || {})) {
-    if (!Array.isArray(items)) continue;
-    for (const item of items) {
-      groups.push({
-        section,
-        title: item?.title || "-",
-        url: item?.url || "-",
-        image: item?.image || "",
-        rating: item?.rating || "-",
-        episodes: item?.episodes || "-",
-      });
-    }
-  }
-
-  return groups;
-}
-
-async function fetchMelolo(category) {
-  const data = await novaApi.covenant.meloloCategory(category, {
-    timeout: 30000,
-  });
-
-  if (!data?.status || !data?.data) {
-    throw new Error(data?.message || "Hasil Melolo tidak ditemukan");
-  }
-
-  return data;
-}
-
 async function handler(m, { sock }) {
-  const category = m.text?.trim();
+  var category = m.text ? m.text.trim() : "";
 
   if (!category) {
-    return m.reply( `🎭 *ᴍᴇʟᴏʟᴏ ᴅʀᴀᴍᴀ*\n\nContoh:\n\`${m.prefix}melolo fantasy\``, "melolo");
-  }
-
-  if (!config.APIkey?.covenant) {
-    return m.reply(novaError("Melolo", "API key covenant belum dikonfigurasi nih!"));
-  }
-  try {
-    const result = await fetchMelolo(category);
-    const items = normalizeResults(result.data).slice(0, 10);
-
-    if (items.length === 0) {
-      return m.reply(
-        `Gak nemu hasil Melolo untuk: ${category} nih`,
-      );
-    }
-
-    let caption = "🎭 *ᴍᴇʟᴏʟᴏ ᴅʀᴀᴍᴀ*\n\n";
-    caption += `🌿 *ᴄᴀᴛᴇɢᴏʀʏ:* ${category}\n`;
-    caption += `📦 *ᴛᴏᴛᴀʟ:* ${items.length}\n`;
-    caption += `💳 *ᴄᴏꜱᴛ:* ${result?.usage?.cost ?? "-"}\n`;
-    caption += `🔋 *ꜱɪꜱᴀ ᴄʀᴇᴅɪᴛ:* ${result?.usage?.remaining ?? "-"}\n\n`;
-
-    items.forEach((item, index) => {
-      caption += `*${index + 1}.* ${trimText(item.title, 70)}\n`;
-      caption += `   ├ 📂 ${trimText(item.section, 32)}\n`;
-      caption += `   ├ ⭐ ${item.rating || "-"}\n`;
-      caption += `   ├ 📝 ${trimText(item.episodes, 110)}\n`;
-      caption += `   └ ${item.url}\n\n`;
+    var msg = novaReply({
+      title: "Melolo Drama",
+      status: "Masukkan kategori drama",
+      content: "|\n| Contoh: " + m.prefix + "melolo fantasy",
     });
-
-    const cover = items.find((item) => item.image)?.image;
-    if (cover) {
-      await sock.sendMedia(m.chat, cover, caption.trim(), m, {
-        type: "image",
-      });
-    } else {
-      await m.reply(caption.trim());
-    }
-  } catch (error) {
-    const message = error?.response?.data?.message || error?.message;
-    if (message) {
-      return m.reply(novaError("Melolo", message));
-    }
-    m.reply(claraWrap("melolo", te(m.prefix, m.command, m.pushName), "error"));
+    return await m.reply(msg);
   }
+
+  var msg = novaReply({
+    title: "Melolo Drama",
+    info: [
+      { label: "Kategori", value: category },
+      { label: "Status API", value: "Covenant OFFLINE" },
+    ],
+    status: "API covenant sedang down, fitur ini sementara tidak tersedia",
+    content: "|\n| Fitur akan kembali saat API aktif lagi",
+  });
+  return await m.reply(msg);
 }
 
 export { pluginConfig as config, handler };
