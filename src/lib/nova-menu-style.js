@@ -735,10 +735,13 @@ function pickRandom(arr) {
  * @param {string} [detail] - detail error opsional
  */
 function novaError(commandName, detail) {
-  const msg = pickRandom(NOVA_REPLIES.error);
-  const lines = [msg];
-  if (detail) lines.push(`_${scLine(detail)}_`);
-  return bracketBox('❌', commandName, lines);
+  let out = `╭─「 ✦ ${toSC("ERROR")} ✦ 」\n`;
+  out += `│\n`;
+  out += `│ ❌ ${scLine(pickRandom(NOVA_REPLIES.error))}\n`;
+  if (detail) out += `│ _${scLine(detail)}_\n`;
+  out += `│\n`;
+  out += `╰────  •  ────`;
+  return out;
 }
 
 /**
@@ -747,10 +750,13 @@ function novaError(commandName, detail) {
  * @param {string} [detail] - detail opsional
  */
 function novaEmpty(commandName, detail) {
-  const msg = pickRandom(NOVA_REPLIES.empty);
-  const lines = [msg];
-  if (detail) lines.push(`_${scLine(detail)}_`);
-  return bracketBox('🔍', commandName, lines);
+  let out = `╭─「 ✦ ${toSC("KOSONG")} ✦ 」\n`;
+  out += `│\n`;
+  out += `│ 🔍 ${scLine(pickRandom(NOVA_REPLIES.empty))}\n`;
+  if (detail) out += `│ _${scLine(detail)}_\n`;
+  out += `│\n`;
+  out += `╰────  •  ────`;
+  return out;
 }
 
 /**
@@ -760,19 +766,14 @@ function novaEmpty(commandName, detail) {
  * @param {string} [example] - contoh command
  */
 function novaNoInput(commandName, hint, example) {
-  const msg = pickRandom(NOVA_REPLIES.noInput);
-  const lines = [msg];
-  if (hint) {
-    lines.push("");
-    lines.push(`📌 *${toSC("Cara Pakai")}:*`);
-    lines.push(scLine(hint));
-  }
-  if (example) {
-    lines.push("");
-    lines.push(`💡 *${toSC("Contoh")}:*`);
-    lines.push(`\`${example}\``);
-  }
-  return bracketBox('⚠️', commandName, lines);
+  let out = `╭─「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  out += `│\n`;
+  out += `│ ⚠ ${scLine(pickRandom(NOVA_REPLIES.noInput))}\n`;
+  if (hint) out += `│ ${scLine(hint)}\n`;
+  if (example) out += `│ Contoh: ${example}\n`;
+  out += `│\n`;
+  out += `╰────  •  ────`;
+  return out;
 }
 
 /**
@@ -781,12 +782,13 @@ function novaNoInput(commandName, hint, example) {
  * @param {string} [mediaType] - "image" | "sticker" | "video" | "audio"
  */
 function novaNoQuoted(commandName, mediaType) {
-  const msg = pickRandom(NOVA_REPLIES.noQuoted);
-  const lines = [msg];
-  if (mediaType) {
-    lines.push(`_${scLine(`Butuh: ${mediaType}`)}_`);
-  }
-  return bracketBox('⚠️', commandName, lines);
+  let out = `╭─「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  out += `│\n`;
+  out += `│ ⚠ ${scLine(pickRandom(NOVA_REPLIES.noQuoted))}\n`;
+  if (mediaType) out += `│ ${scLine(`Butuh: ${mediaType}`)}\n`;
+  out += `│\n`;
+  out += `╰────  •  ────`;
+  return out;
 }
 
 /**
@@ -795,8 +797,12 @@ function novaNoQuoted(commandName, mediaType) {
  * @param {string} message - pesan sukses
  */
 function novaSuccess(commandName, message) {
-  const lines = [scLine(message)];
-  return bracketBox('✅', commandName, lines);
+  let out = `╭─「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  out += `│\n`;
+  out += `│ ✅ ${scLine(message)}\n`;
+  out += `│\n`;
+  out += `╰────  •  ────`;
+  return out;
 }
 
 /**
@@ -807,17 +813,14 @@ function novaSuccess(commandName, message) {
  * @param {string} [note] - catatan tambahan
  */
 function novaGuide(commandName, intro, example, note) {
-  const lines = [scLine(intro)];
-  if (example) {
-    lines.push("");
-    lines.push(`💡 *${toSC("Contoh")}:*`);
-    lines.push(`\`${example}\``);
-  }
-  if (note) {
-    lines.push("");
-    lines.push(`_${scLine(note)}_`);
-  }
-  return bracketBox('i', commandName, lines);
+  let out = `╭─「 ✦ ${toSC(commandName.toUpperCase())} ✦ 」\n`;
+  out += `│\n`;
+  if (intro) out += `│ ${scLine(intro)}\n`;
+  if (example) out += `│ Contoh: ${example}\n`;
+  if (note) out += `│ ⚠ ${scLine(note)}\n`;
+  out += `│\n`;
+  out += `╰────  •  ────`;
+  return out;
 }
 
 export { novaError, novaEmpty, novaNoInput, novaNoQuoted, novaSuccess, novaGuide, pickRandom };
