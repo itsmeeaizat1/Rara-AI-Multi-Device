@@ -9,6 +9,7 @@ import { checkPermission, checkMode } from "./lib/nova-middleware.js";
 import { handleAntiRemoveFromUpsert as _handleAntiRemove } from "./lib/nova-group-protection.js";
 import config from "../config.js";
 import { c, logger, logMessage } from "./lib/nova-logger.js";
+import { trackNotFound, getNotFoundReply, isNotFoundMuted, resetNotFoundTracker } from "./lib/nova-notfound-antispam.js";
 
 // Re-export handleAntiRemoveFromUpsert from group-protection
 async function handleAntiRemoveFromUpsert(msg, sock, db) {
@@ -712,15 +713,14 @@ async function messageHandler(msg, sock) {
   if (!plugin) {
     // Command not found — check if suggestion feature is on (skip in self mode for non-owner)
     if (config.features?.commandSuggestion !== false && !__novaSelfModeSkip) {
-      // Cooldown per user untuk not-found suggestion
-      const nfKey = m.sender;
-      const nfNow = Date.now();
-      const nfLast = notFoundCooldownMap.get(nfKey);
-      if (nfLast && nfNow - nfLast < NOT_FOUND_COOLDOWN_MS) {
-        return;
-      }
-      notFoundCooldownMap.set(nfKey, nfNow);
+      // Smart anti-spam: track frequency, escalate response, progressive cooldown
+      const isMuted = isNotFoundMuted(m.sender);
+      if (isMuted) return;
 
+      const spamResult = trackNotFound(m.sender, command);
+      if (!spamResult.shouldReply) return;
+
+      // Cari closest match (levenstein)
       const { getAllCommandNames } = await import("./lib/nova-plugins.js");
       const allCommands = getAllCommandNames();
       const { levenshtein } = await import("./lib/nova-middleware.js");
@@ -733,17 +733,14 @@ async function messageHandler(msg, sock) {
           closest = cmd;
         }
       }
+
       if (!m.isNewsletter) {
         try {
-          let notFoundText = `╭─「 ✦ Not Found ✦ 」\n`;
-          notFoundText += `│ Command *${m.prefix}${command}* tidak ditemukan\n`;
-          if (closest) {
-            notFoundText += `│ Mungkin maksudmu: *${m.prefix}${closest}* ?\n`;
-          }
-          notFoundText += `│\n`;
-          notFoundText += `│ 💡 Ketik *${m.prefix}tanyaai* untuk tanya AI\n`;
-          notFoundText += `╰────  •  ────`;
-          await m.reply(notFoundText);
+          const replyText = getNotFoundReply(
+            m.prefix, command, closest,
+            spamResult.level, spamResult.totalHits
+          );
+          if (replyText) await m.reply(replyText);
         } catch {}
       }
     }
@@ -933,6 +930,8 @@ async function messageHandler(msg, sock) {
     await plugin.handler(m, { sock, conn: sock, config, db: getDatabase(), args: m.args || [], text: m.text || '', uptime: process.uptime() * 1000 });
     recordPluginExecution(command, true, null);
     try { await postExecutionCheck(command, sock); } catch {}
+    // Reset smart antispam — user berhasil pakai command valid
+    try { resetNotFoundTracker(m.sender); } catch {}
 
     // React 🐣 after processing completes (skip if plugin set custom reaction)
     if (procNotifOn && !m.isNewsletter && !m.__customReact) {
