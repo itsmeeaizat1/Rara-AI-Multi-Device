@@ -107,9 +107,14 @@ async function runLoader(text = "memuat", options = {}) {
 async function playBootSequence(info = {}) {
   const { name = "NOVA AI", version = "1.0.0", mode = "public" } = info;
   console.log("");
-  console.log(`${cGray("---")}`);
-  console.log(`${makeTag("BOOT", true)} ${cWhite(`Starting ${name} v${version}`)}`);
-  console.log(`${makeTag("INFO")} ${cGray(`Mode: ${mode}`)}`);
+  console.log(`${cGray("╭─「")} ${cWhite("✦ " + name.toUpperCase() + " ✦")} ${cGray("」")}`);
+  console.log(`${cGray("│")}`);
+  console.log(`${cGray("│")} ${cWhite("Version")} ${cGray("•")} ${cGreen(version)}`);
+  console.log(`${cGray("│")} ${cWhite("Mode")}     ${cGray("•")} ${cGreen(mode)}`);
+  console.log(`${cGray("│")}`);
+  console.log(`${cGray("│")} ${cGreen("Starting system...")}`);
+  console.log(`${cGray("╰────  •  ────")}`);
+  console.log("");
 }
 
 function getTypeTag(msgType, isNewsletter) {
@@ -175,32 +180,50 @@ function logMessage(info) {
   const senderName = pushName || num;
 
   console.log("");
-  console.log(`  ${cGray("╭─〔")} ${cWhite("Ini pesan dari")} ${chatType === "private" ? cWhite("Private Chat") : cWhite("grup")} ${cWhite(location)} ${cGray("〕───")}`);
-  console.log(`  ${cGray("│")} ${cWhite("👤 Nama:")} ${cWhite(senderName)}`);
-  console.log(`  ${cGray("│")} ${cWhite("📞 Nomor:")} ${cWhite("+" + num)}`);
-  console.log(`  ${cGray("│")} ${cWhite("📅 Waktu:")} ${cGray(date)} ${cWhite(time)}`);
-  console.log(`  ${cGray("│")} ${cWhite("💬 Tipe:")} ${cGray(`[${typeTag}]`)}`);
-  console.log(`  ${cGray("│")} ${cWhite("💬 " + msg)}`);
+  console.log(`  ${cGray("╭─「")} ${cWhite("✦ PESAN ✦")} ${cGray("」")}`);
+  console.log(`  ${cGray("│")}`);
+  console.log(`  ${cGray("│")} ${cWhite("• Tipe   :")} ${cGray(chatType === "private" ? "Private" : "Group")}`);
+  console.log(`  ${cGray("│")} ${cWhite("• Lokasi :")} ${cWhite(location)}`);
+  console.log(`  ${cGray("│")} ${cWhite("• Nama   :")} ${cWhite(senderName)}`);
+  console.log(`  ${cGray("│")} ${cWhite("• Nomor  :")} ${cWhite("+" + num)}`);
+  console.log(`  ${cGray("│")} ${cWhite("• Waktu  :")} ${cGray(date + " " + time)}`);
+  console.log(`  ${cGray("│")} ${cWhite("• Media  :")} ${cGray(`[${typeTag}]`)}`);
+  console.log(`  ${cGray("│")}`);
+  console.log(`  ${cGray("│")} ${cWhite(msg)}`);
   console.log(`  ${cGray("╰────  •  ────")}`);
 }
 
 function logPlugin(name, category) {
-  // Simple tree view for plugin
-  console.log(`  ${cGray("├─")} ${cWhite(name)} ${cGray(`[${category}]`)}`);
+  console.log(`  ${cGray("│")} ${cWhite(name)} ${cGray(`[${category}]`)}`);
 }
 
 function logConnection(status, info = "") {
   if (status === "connected") {
-    console.log(`${makeTag("OK", true)} ${cWhite("Connected")} ${cGray(info ? `— ${info}` : "")}`);
+    console.log(`${cGray("╭─「")} ${cGreen("✦ CONNECTED ✦")} ${cGray("」")}`);
+    console.log(`${cGray("│")}`);
+    console.log(`${cGray("│")} ${cGreen("✅")} ${cWhite(info || "Bot is online")}`);
+    console.log(`${cGray("╰────  •  ────")}`);
   } else if (status === "connecting") {
-    console.log(`${makeTag("WAIT")} ${cWhite("Connecting")} ${cGray(info ? `— ${info}` : "")}`);
+    console.log(`${cGray("╭─「")} ${cWhite("✦ CONNECTING ✦")} ${cGray("」")}`);
+    console.log(`${cGray("│")}`);
+    console.log(`${cGray("│")} ${cGray("⏳")} ${cGray(info || "Establishing connection...")}`);
+    console.log(`${cGray("╰────  •  ────")}`);
   } else {
-    console.log(`${makeTag("FAIL", false, true)} ${cWhite("Disconnected")} ${cGray(info ? `— ${info}` : "")}`);
+    console.log(`${cGray("╭─「")} ${cWhite("✦ DISCONNECTED ✦")} ${cGray("」")}`);
+    console.log(`${cGray("│")}`);
+    console.log(`${cGray("│")} ${cWhite("❌")} ${cGray(info || "Connection lost")}`);
+    console.log(`${cGray("╰────  •  ────")}`);
   }
 }
 
 function logErrorBox(title, message) {
-  console.log(`${makeTag("ERR", false, true)} ${cWhite(title)}: ${cGray(message)}`);
+  console.log("");
+  console.log(`${cGray("╭─「")} ${cWhite("✦ ERROR ✦")} ${cGray("」")}`);
+  console.log(`${cGray("│")}`);
+  console.log(`${cGray("│")} ${cWhite("❌")} ${cWhite(title || "Unknown error")}`);
+  if (message) console.log(`${cGray("│")} ${cGray("   " + message)}`);
+  console.log(`${cGray("╰────  •  ────")}`);
+  console.log("");
 }
 
 function printBanner(mini = false) {
@@ -243,7 +266,18 @@ function divider() {
 }
 
 function createBanner(lines, color = "green") {
-  return lines.map(l => `${cGray("│")} ${cWhite(l)}`).join("\n");
+  const colorFn = color === "green" ? cGreen : cWhite;
+  let out = `${cGray("╭─「")} ${colorFn("✦ PAIRING CODE ✦")} ${cGray("」")}\n`;
+  out += `${cGray("│")}\n`;
+  for (const line of lines) {
+    if (line.trim() === "") {
+      out += `${cGray("│")}\n`;
+    } else {
+      out += `${cGray("│")} ${cWhite(line)}\n`;
+    }
+  }
+  out += `${cGray("╰────  •  ────")}`;
+  return out;
 }
 
 function getTimestamp() {
