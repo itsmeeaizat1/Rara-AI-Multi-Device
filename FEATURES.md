@@ -403,8 +403,8 @@ jpm
 ### 🏠 Main (27+ plugin)
 aboutnova, allmenu, autoreaction, belanja, benefitowner, benefitpremium, block, buyprem, buysewa, carifitur, channelnovaofficial, daftarsewa, fun, infov2, jadibot, leaderboard, topcinta, topkoin, topexp, topenergi, aktifitas, menu, menu2, menukategori, owner, premium, ping, ping2, rules, sc, stats, stopjadibot, system, totalfitur, tqto
 
-### 🛠️ Maker (7 plugin)
-captionig, certmaker, image.jpg, lyricscard, mask.png, nowm, profilecard, quotemaker, watermark
+### 🛠️ Maker (8 plugin)
+captionig, certmaker, lyricscard, nowm, nulis2, profilecard, quotemaker, watermark
 
 ### 🎵 Media (2 plugin)
 music, soundboard
