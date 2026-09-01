@@ -283,7 +283,7 @@ export default {
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Truth or Dare", [
-        `│ Status: *ᴀᴋᴛɪꜰ* 🟢`,
+        `│ Status: *Aktif*`,
         ``,
         `│ Truth or Dare dinyalakan di grup ini.`,
         `│ Ketik *${prefix}tod* untuk mulai main!`,
@@ -298,7 +298,7 @@ export default {
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Truth or Dare", [
-        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
+        `│ Status: *Nonaktif*`,
         ``,
         `│ Truth or Dare dimatikan.`,
         `│ Ketik *${prefix}todon* untuk aktifkan lagi.`,
@@ -316,7 +316,7 @@ export default {
         `│ Truth diberikan: *${stats.truths}*`,
         `│ Dare diberikan: *${stats.dares}*`,
         ``,
-        `│ Status: ${isTodOn(groupId) ? "*ᴀᴋᴛɪꜰ* 🟢" : "*ɴᴏɴᴀᴋᴛɪꜰ* 🔴"}`,
+        `│ Status: *${isTodOn(groupId) ? "Aktif" : "Nonaktif"}*`,
       ];
       await m.reply(claraWrap("Tod - Statistik", lines.join("\n")));
       return { handled: true };

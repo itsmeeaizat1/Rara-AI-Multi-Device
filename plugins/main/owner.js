@@ -56,7 +56,7 @@ async function handler(m, { sock, config: botConfig }) {
     const ownerText = [
       `👨‍💻 *Owner:* ${ownerNames}`,
       `🤖 *Bot:* ${botName}`,
-      `🟢 *Status:* Online`,
+      `*Status:* Online`,
       `👥 *Total Admin:* ${totalOwners}`,
       ``,
       `💡 Butuh bantuan? Laporkan bug?`,

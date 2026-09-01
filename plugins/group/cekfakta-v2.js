@@ -202,7 +202,7 @@ export default {
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Cek Fakta", [
-        `│ Status: *ᴀᴋᴛɪꜰ* 🟢`,
+        `│ Status: *Aktif*`,
         ``,
         `│ Fitur Cek Fakta & Hoax Detector v2 dinyalakan.`,
         `│ AI + Web Search aktif untuk verifikasi real-time.`,
@@ -224,7 +224,7 @@ export default {
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Cek Fakta", [
-        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ* 🔴`,
+        `│ Status: *Nonaktif*`,
         ``,
         `│ Fitur Cek Fakta dimatikan.`,
         `│ Ketik *${prefix}cekfaktaon* untuk aktifkan lagi.`,
@@ -235,7 +235,7 @@ export default {
     // ─── .cekfaktastatus ───
     if (command === "cekfaktastatus") {
       const stats = getStats(groupId);
-      const statusText = stats.enabled ? "AKTIF 🟢" : "NONAKTIF 🔴";
+      const statusText = stats.enabled ? "AKTIF" : "NONAKTIF";
       await m.reply(claraWrap("Cek Fakta - Status", [
         `│ Status: *${statusText}*`,
         ``,

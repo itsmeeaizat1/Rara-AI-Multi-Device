@@ -97,7 +97,7 @@ async function handler(m, { sock, args }) {
             const groups = state.groups || []
 
             let txt = `📊 *ᴀᴜᴛᴏ ᴀɴɪᴍᴇ ꜱᴛᴀᴛᴜꜱ*\n\n`
-            txt += `🔄 Status: *${running ? '🟢 ON' : '🔴 OFF'}*\n`
+            txt += `🔄 Status: *${running ? 'ON' : 'OFF'}*\n`
             txt += `💾 Auto-start: *${state.enabled ? 'Ya' : 'Tidak'}*\n`
             txt += `📋 Sudah terkirim: *${sent.size}* episode\n`
             txt += `⏱️ Interval: *${state.interval || 5} menit*\n`
@@ -219,7 +219,7 @@ async function handler(m, { sock, args }) {
             const running = isRunning()
             return sock.sendMessage(m.chat, {
                 text: `🎬 *ᴀᴜᴛᴏ ᴀɴɪᴍᴇ ᴡɪɴʙᴜ*\n\n` +
-                    `Status: *${running ? '🟢 ON' : '🔴 OFF'}*\n\n` +
+                    `Status: *${running ? 'ON' : 'OFF'}*\n\n` +
                     `*ᴄᴏᴍᴍᴀɴᴅꜱ:*\n` +
                     `\`${m.prefix}aaw start\` — Mulai auto-check\n` +
                     `\`${m.prefix}aaw stop\` — Hentikan\n` +

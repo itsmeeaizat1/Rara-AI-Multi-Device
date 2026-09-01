@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
         txt += `Pilih target dengan mention atau reply:\n\n`
 
         sessions.forEach((s, i) => {
-            const status = s.isActive ? '🟢' : '⚫'
+            const status = s.isActive ? 'Aktif' : 'Expired'
             txt += `${status} *${i + 1}.* @${s.id}\n`
         })
 

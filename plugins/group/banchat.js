@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
         await m.reply(claraWrap("banchat", `🚫 *ɢʀᴜᴘ ᴅɪʙᴀɴ*\n\n` +
                 `╭─「 ✦ ᴅᴇᴛᴀɪʟ ✦ 」\n` +
                 `│ 📛 Grup: *${groupName}*\n` +
-                `│ 📊 sTatus: *🔴 BANNED*\n` +
+                `│ • Status: *BANNED*\n` +
                 `│ 👤 Ban Oleh: @${m.sender.split('@')[0]}\n` +
                 `╰────  •  ────\n\n` +
                 `Member biasa tidak bisa menggunakan bot di grup ini.\n` +

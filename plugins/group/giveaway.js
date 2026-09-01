@@ -491,7 +491,7 @@ async function handler(m, { sock }) {
 
     let text = "📋 *ᴅᴀꜰᴛᴀʀ ɢɪᴠᴇᴀᴡᴀʏ*\n\n";
     if (active.length > 0) {
-      text += "🟢 *ᴀᴋᴛɪꜰ:*\n";
+      text += "*Aktif:*\n";
       for (const g of active) {
         const endFmt = timeHelper.fromTimestamp(g.endTime, "DD/MM/YYYY HH:mm");
         text += `│ 🆔 \`${g.giveawayId}\` — ${g.title} (${g.participants.length} peserta, berakhir ${endFmt})\n`;
