@@ -462,11 +462,31 @@ function novaInfoBox(title, items = [], opts = {}) {
  * @param {boolean} opts.sc - Apply smallcaps (default: true)
  * @returns {string}
  */
-function novaMenuLayout({ infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true } = {}) {
+function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true } = {}) {
   const scFn = sc ? toSC : (s) => String(s);
   
+  let out = "";
+  
+  // ── Intro section (opsional) ──
+  if (intro) {
+    out += `╭─「 ✦ ${scFn(introTitle)} ✦ 」\n`;
+    out += `│\n`;
+    // intro bisa string (multi-line) atau array of lines
+    const introLines = Array.isArray(intro) ? intro : intro.split("\n");
+    for (const line of introLines) {
+      if (line === "" || line === " ") {
+        out += `│\n`;
+      } else {
+        // Intro tetap normal case (bukan smallcaps) — ini pesan personal
+        out += `│ ${line}\n`;
+      }
+    }
+    out += `│\n`;
+    out += `╰────  •  ────\n\n`;
+  }
+  
   // ── Info section ──
-  let out = `╭─「 ✦ ${scFn(infoTitle)} ✦ 」\n`;
+  out += `╭─「 ✦ ${scFn(infoTitle)} ✦ 」\n`;
   
   // Hitung max label width untuk alignment
   let maxLabel = 0;
