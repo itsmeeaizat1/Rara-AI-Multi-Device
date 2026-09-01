@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20unified%20downloader%20(.downloader)%20%2B-success?style=for-the-badge)
-> *Commit: "feat: unified downloader (.downloader) + SoundCloud API v2 scraper"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20merge%20duplicate%20aliases%20field%20in%2075-success?style=for-the-badge)
+> *Commit: "fix: merge duplicate aliases field in 75 RPG plugins + resolve 36 alias conflicts"*
 <!--END_SECTION:latest-update-->
 
 ---
