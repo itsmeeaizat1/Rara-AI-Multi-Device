@@ -140,3 +140,19 @@
 - **anomali-api (bratvid)** → 404 ❌
 - **Telegram Bot Token (telesticker)** → Unauthorized ❌
 - **getstickerpack (sticker-search)** → 403 ❌
+
+---
+
+## ❌ Community API Status (2 Sep 2026)
+
+| API | Status | Detail |
+|-----|--------|--------|
+| Firefly Maiku | ✅ Alive | Key: OurinNextGen — stalk-yt/ig/gh, deepaichat, pinterestvideo |
+| NeoXR | ⚠️ Rate-limited | Key: Milik-Bot-OurinMD (registered but limit) — 30 plugins |
+| LolHuman | ❌ Key not found | Both old & new keys rejected |
+| FGSI | ❌ BANNED | Key shared in bot SC, banned by admin |
+| Covenant | ❌ DEAD | DNS error 1033, domain down |
+| ObscuraWorks | ❌ DEAD | 404, API offline |
+| Betabotz | ❌ Key not found | Both Btz-67YfP & beta-gilang rejected |
+| Groq (new key) | ❌ Invalid | Key from user doesn't work |
+| Google (new key) | ❌ Leaked | Key reported as leaked by Google |
