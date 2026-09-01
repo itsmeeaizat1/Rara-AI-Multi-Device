@@ -154,7 +154,8 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const more = String.fromCharCode(8206);
     const readMore = more.repeat(4001);
 
-    return `
+    // ── Bagian "open box" (Info Profil) — belum ada penutup kanan, perlu closeBoxRight ──
+    const openBox = `
 ╭──「 *${toSC("Info Profil")}* 」
 │ *${toSC("Nama")}:*  ${toSC(m.pushName || "User")}
 │ *${toSC("Nomor")}:* @${m.sender.split("@")[0]}
@@ -210,7 +211,10 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ *${toSC("Load Avg")}:* ${loadAvg}
 │ *${toSC("RAM")}:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
 │ *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
-╰──────────╯
+╰──────────╯`;
+
+    // ── Bagian sisanya sudah pakai novaBox() yang closed sendiri — JANGAN diproses closeBoxRight lagi ──
+    const restBlock = `
 ${weatherBlock}${readMore}
 ${novaBox(toSC("Menu"), [
   `${prefix}menu`,
@@ -239,6 +243,9 @@ ${toSC(getTimeGreeting())} *${toSC(m.pushName || "User")}*
 ${toSC("Ketik")} *${prefix}allmenu* ${toSC("untuk melihat semua fitur")}
 
 ${toSC("Nova AI WhatsApp Bot")}`;
+
+    // closeBoxRight HANYA diterapkan ke openBox (biar box command novaBox() gak ikut melar)
+    return closeBoxRight(openBox) + restBlock;
   } catch (e) {
     console.error("[menu] buildMenuText error:", e.message);
     return "Menu error: " + e.message;
@@ -262,7 +269,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       { id: `${prefix}owner`, text: toSC("Owner") },
     ];
     await sendMenuCard(sock, m, {
-      text: closeBoxRight(text),
+      text: text,
       footer: "",
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
       buttons: navButtons,
