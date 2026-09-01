@@ -3,7 +3,7 @@
  * Nama Plugin: PlayVideo (dipanggil dari tombol .play)
  * Pembuat Code: Aizat
  * Fitur: Download video YouTube dengan kualitas spesifik
- * API: yt-dlp (primary, gratis no apikey) → ytdl.js (fallback) → firefly (last resort)
+ * API: IkyyXD ytmp4 (primary) → yt-dlp → ytdl.js (fallback) → firefly (last resort)
  */
 
 import axios from "axios";
@@ -94,7 +94,27 @@ async function handler(m, { sock }) {
     let videoBuffer = null;
     let videoTitle = "Video";
 
-    // 1. Try yt-dlp (free, no API key, supports quality selection)
+    // 0. Try IkyyXD ytmp4 (primary, uses "q" param)
+    try {
+      console.log("[PlayVideo] 🎥 IkyyXD ytmp4...");
+      const { data } = await axios.get("https://api.ikyyxd.my.id/download/ytmp4", {
+        params: { q: url },
+        timeout: 60000,
+      });
+      if (data?.status && data?.result) {
+        const r = data.result;
+        const dl = r.VideoUrl?.url || r.download_url || r.url;
+        if (dl) {
+          const { data: buf } = await axios.get(dl, { responseType: "arraybuffer", timeout: 120000 });
+          videoBuffer = Buffer.from(buf);
+          videoTitle = r.title || "Video";
+        }
+      }
+    } catch (err) {
+      console.error("[PlayVideo] IkyyXD error:", err.message);
+    }
+
+    // 1. Try yt-dlp (fallback dari IkyyXD) (free, no API key, supports quality selection)
     try {
       console.log(`[PlayVideo] 🎥 yt-dlp ${quality}p...`);
       const result = await downloadVideo(url, quality);
@@ -106,7 +126,7 @@ async function handler(m, { sock }) {
       console.error("[PlayVideo] yt-dlp failed:", err.message);
     }
 
-    // 2. Fallback: ytdl.js (no quality control)
+    // 2. Fallback: ytdl.js (fallback dari yt-dlp) (no quality control)
     if (!videoBuffer) {
       const ytdlResult = await getVideoYtdl(url);
       if (ytdlResult?.download) {
@@ -124,7 +144,7 @@ async function handler(m, { sock }) {
       }
     }
 
-    // 3. Last resort: firefly API
+    // 3. Last resort: firefly API (fallback dari ytdl)
     if (!videoBuffer) {
       const fireflyResult = await getVideoFirefly(url);
       if (fireflyResult?.download) {

@@ -1252,4 +1252,6 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - .dramaboxdl - download - Download video dari DramaBox via IkyyXD
 - .gdrivedl - download - Download file dari Google Drive via IkyyXD
 - .igv2 - download - Download video/foto Instagram V2 via IkyyXD (fallback: builtin ig.js)
-- .laheludl - download - Download video dari Lahelu via IkyyXD
+- .laheludl - download - Download video dari Lahelu via IkyyX
+- .tiktokv4 - download - Download video TikTok V4 via IkyyXD
+- .soundclouddl - download - Download lagu dari SoundCloud via IkyyXD (apikey)D

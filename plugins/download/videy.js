@@ -2,6 +2,7 @@
 // videy.js — Download video dari Videy.co (direct CDN, no API)
 import axios from "axios";
 import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 const pluginConfig = {
   name: "videy",
@@ -48,6 +49,16 @@ async function getVideyDownload(url) {
 
 async function handler(m, { sock }) {
   try {
+    // Try IkyyXD videy first
+    const ikyyResult = await ikyyDl("videy", url);
+    if (ikyyResult?.medias?.length) {
+      const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
+      await sock.sendMedia(m.chat, video.url, ikyyResult.title || "Videy", m, {
+        type: "video", contextInfo: { forwardingScore: 0, isForwarded: false }
+      });
+      return;
+    }
+
     const url = m.text?.trim();
     if (!url) {
       return m.reply(novaGuide("Videy", "Kirim URL video Videy yang mau kamu download!", ".videy https://videy.co/v?id=xxx"));

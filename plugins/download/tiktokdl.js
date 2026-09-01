@@ -2,6 +2,7 @@
 import axios from "axios";
 import { AIRich } from "../../src/lib/nova-builder.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
+import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 async function tiktokDl(url) {
   function formatNumber(integer) {
@@ -129,6 +130,25 @@ async function handler(m, { sock }) {
     return m.reply( claraWrap("Quick_reply", `📌 Contoh: *${prefix + command} https://vt.tiktok.com/...*`), { commandName: "tiktok" });
   }
   try {
+    // Try IkyyXD tiktok first (uses "query" param + apikey)
+    const ikyyResult = await ikyyDl("tiktok", text, { urlParam: "query", extraParams: { apikey: "kyzz" } });
+    if (ikyyResult?.medias?.length) {
+      const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
+      const caption = mediaCaption({
+        platformIcon: "🎵",
+        platformName: "TikTok",
+        title: ikyyResult.title || "TikTok Video",
+        format: "Video HD (No Watermark)",
+        method: "IkyyXD",
+      });
+      await sock.sendMessage(m.chat, {
+        video: { url: video.url },
+        caption,
+      }, { quoted: m });
+      return;
+    }
+
+    // Fallback to tikwm
     const result = await tiktokDl(text);
     const builder = new AIRich(sock);
 

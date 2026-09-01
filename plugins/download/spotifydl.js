@@ -3,6 +3,7 @@
 import path from "node:path";
 import axios from "axios";
 import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 const SPOTIFYDOWN_API = "https://api.spotifydown.org";
 const ua = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Mobile Safari/537.36";
@@ -52,6 +53,17 @@ async function handler(m, { sock }) {
   }
 
   try {
+    // Try IkyyXD spotifydl first
+    const ikyyResult = await ikyyDl("spotifydl", url);
+    if (ikyyResult?.medias?.length) {
+      const audio = ikyyResult.medias.find(m => m.type === "audio") || ikyyResult.medias[0];
+      await sock.sendMessage(m.chat, {
+        audio: { url: audio.url },
+        mimetype: "audio/mpeg",
+      }, { quoted: m });
+      return;
+    }
+
     await m.react("🕒");
     const trackId = await getTrackId(url);
     const meta = await getMetadata(trackId);

@@ -3,6 +3,7 @@
 import axios from "axios";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
+import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 const pluginConfig = {
   name: "tiktokv3",
@@ -50,6 +51,16 @@ async function tiktokDownload(url) {
 
 async function handler(m, { sock }) {
   try {
+    // Try IkyyXD tiktokv3 first
+    const ikyyResult = await ikyyDl("tiktokv3", text);
+    if (ikyyResult?.medias?.length) {
+      const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
+      await sock.sendMedia(m.chat, video.url, ikyyResult.title || "TikTok", m, {
+        type: "video", contextInfo: { forwardingScore: 0, isForwarded: false }
+      });
+      return;
+    }
+
     const url = m.args.join(" ").trim();
     if (!url || !url.match(/tiktok\.com|vt\.tiktok/i)) {
       return m.reply(claraWrap("tiktokv3", `Kirim URL TikTok yang valid.\n\nContoh: ${m.prefix}tiktokv3 https://www.tiktok.com/@user/video/123`, "guide"));
