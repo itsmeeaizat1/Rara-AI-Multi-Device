@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20placeholder%20thumbnail%20per%20kate-success?style=for-the-badge)
-> *Commit: "refactor: placeholder thumbnail per kategori, bukan universal fallback"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20migrasi%208%20brat%20variant%20ke%20brat-canv-success?style=for-the-badge)
+> *Commit: "fix: migrasi 8 brat variant ke brat-canvas lokal (eliminasi API yupra/nova yang down)"*
 <!--END_SECTION:latest-update-->
 
 ---
