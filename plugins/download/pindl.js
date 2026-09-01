@@ -3,6 +3,7 @@ import fs from "fs";
 import { pinterestdl } from "../../src/lib/nova-pinterest.js";
 import path from "path";
 import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
+import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
 import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
@@ -32,6 +33,22 @@ async function handler(m, { sock }) {
     return m.reply(novaError("Pinterest DL", "URL tidak valid. Pastikan pakai link Pinterest (pin.it atau pinterest.com)!"));
   }
   try {
+    // Try IkyyXD pindl first
+    const ikyyResult = await ikyyDl("pindl", url);
+    if (ikyyResult?.medias?.length) {
+      const ctxInfo = { forwardingScore: 0, isForwarded: false };
+      for (const item of ikyyResult.medias) {
+        if (item.type === "video") {
+          await sock.sendMedia(m.chat, item.url, ikyyResult.title || "Pinterest", m, { type: "video", contextInfo: ctxInfo });
+        } else {
+          await sock.sendMedia(m.chat, item.url, ikyyResult.title || "Pinterest", m, { type: "image", contextInfo: ctxInfo });
+        }
+        break;
+      }
+      return;
+    }
+
+    // Fallback to builtin scraper
     const result = await pinterestdl(url);
     if (!result || !result.media || result.media.length === 0) {
       return m.reply(novaEmpty("Pinterest DL", "Tidak ada media yang ditemukan dari link Pinterest tersebut."));

@@ -2,6 +2,7 @@
 // shopeedl.js — Download video Shopee (scrape shopeenowatermark.com)
 import axios from "axios";
 import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 const pluginConfig = {
   name: "shopeedl",
@@ -58,6 +59,16 @@ async function extract(url) {
 
 async function handler(m, { sock }) {
   try {
+    // Try IkyyXD shopeevid first
+    const ikyyResult = await ikyyDl("shopeevid", url);
+    if (ikyyResult?.medias?.length) {
+      const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
+      await sock.sendMedia(m.chat, video.url, ikyyResult.title || null, m, {
+        type: "video", contextInfo: { forwardingScore: 0, isForwarded: false }
+      });
+      return;
+    }
+
     const url = m.text?.trim();
     if (!url || !url.includes("shopee")) {
       return m.reply(novaGuide("Shopee DL", "Kirim URL video Shopee yang valid!", ".shopeedl https://shopee.co.id/..."));

@@ -3,6 +3,7 @@
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
@@ -47,6 +48,16 @@ async function twitterDownload(url) {
 
 async function handler(m, { sock }) {
   try {
+    // Try IkyyXD twitterdl first (apikey + url)
+    const ikyyResult = await ikyyDl("twitterdl", url, { extraParams: { apikey: "kyzz" } });
+    if (ikyyResult?.medias?.length) {
+      const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
+      await sock.sendMedia(m.chat, video.url, ikyyResult.title || "Twitter/X", m, {
+        type: "video", contextInfo: { forwardingScore: 0, isForwarded: false }
+      });
+      return;
+    }
+
     const from = m.key.remoteJid;
     await m.react("🕒");
     const url = m.args?.[0]?.trim();

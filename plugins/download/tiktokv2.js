@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 const pluginConfig = {
   name: "tiktokv2",
@@ -42,6 +43,16 @@ async function handler(m, { sock }) {
     return m.reply(novaNoInput("TikTok V2", "Masukkan link video TikTok yang mau kamu download!", `${m.prefix}tiktokv2 https://vt.tiktok.com/xxx`));
   }
   try {
+    // Try IkyyXD tiktokkv2 first
+    const ikyyResult = await ikyyDl("tiktokkv2", text);
+    if (ikyyResult?.medias?.length) {
+      const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
+      await sock.sendMedia(m.chat, video.url, ikyyResult.title || "TikTok", m, {
+        type: "video", contextInfo: { forwardingScore: 0, isForwarded: false }
+      });
+      return;
+    }
+
     const res = await rlGet(`${API_BASE}/download/tiktok?apikey=${API_KEY}&url=${encodeURIComponent(text)}`);
     const r = res.data?.result || res.data?.data;
     if (!r?.play) throw new Error("Gagal mengambil video TikTok");

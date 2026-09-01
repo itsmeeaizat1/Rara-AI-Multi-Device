@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
 import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,6 +22,16 @@ function tempPath(ext) {
 async function handler(m, { sock, config: botConfig }) {
     const prefix = botConfig.command?.prefix || ".";
   try {
+    // Try IkyyXD terabox first
+    const ikyyResult = await ikyyDl("terabox", url);
+    if (ikyyResult?.medias?.length) {
+      const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
+      await sock.sendMedia(m.chat, video.url, ikyyResult.title || "Terabox", m, {
+        type: "video", contextInfo: { forwardingScore: 0, isForwarded: false }
+      });
+      return;
+    }
+
     const url = m.text?.trim();
 
     if (!url) {
