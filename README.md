@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20migrasi%208%20brat%20variant%20ke%20brat-canv-success?style=for-the-badge)
-> *Commit: "fix: migrasi 8 brat variant ke brat-canvas lokal (eliminasi API yupra/nova yang down)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20migrasi%20plugin%20API%20down%20ke%20alternat-success?style=for-the-badge)
+> *Commit: "fix: migrasi plugin API down ke alternatif/graceful error"*
 <!--END_SECTION:latest-update-->
 
 ---
