@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20standardisasi%20reply%20design%20%E2%80%94%20%E2%9C%A6%20hea-success?style=for-the-badge)
-> *Commit: "feat: standardisasi reply design — ✦ header + ╰──── • ──── close"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20standardisasi%20error%2Fguide%20reply%20fo-success?style=for-the-badge)
+> *Commit: "feat: standardisasi error/guide reply format"*
 <!--END_SECTION:latest-update-->
 
 ---
