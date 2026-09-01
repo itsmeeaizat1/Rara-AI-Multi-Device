@@ -2,6 +2,7 @@
 // metav2 — Meta AI v2 (Llama 3.1 8B via hydrooo)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "metav2", alias: ["metav2"], aliases: ["metav2", "metaaiv2", "llamav2"],
@@ -23,6 +24,14 @@ async function handler(m, { sock }) {
     await m.reply(data?.result || data?.full_result || "Tidak ada jawaban.");
     await m.react("🐣");
   } catch (e) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[metav2.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
     console.error("metav2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("metav2", te(m.prefix, m.command, m.pushName), "error"));

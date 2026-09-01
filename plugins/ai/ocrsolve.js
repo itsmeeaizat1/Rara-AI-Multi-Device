@@ -5,7 +5,7 @@
 //   Persistent (owner): .toggleocrsolve on/off — auto detect tiap foto masuk
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ocrsolve",
@@ -128,7 +128,7 @@ async function doOcrAnalysis(m, sock, mode) {
     if (!aiResponse) {
       try {
         aiResponse = await callAI({
-          providerKey: "openai",
+          providerKey: "ikyy_gemini",
           model: model,
           messages: [
             { role: "system", content: systemPrompt },
@@ -339,7 +339,7 @@ export async function handleAutoOcrSolve(m, sock) {
     if (!aiResponse) {
       try {
         aiResponse = await callAI({
-          providerKey: "openai", model: model,
+          providerKey: "ikyy_gemini", model: model,
           messages: [{ role: "system", content: systemPrompt }, { role: "user", content: userPrompt + " (gambar tidak bisa dibaca)" }],
           apiKey: apiKey, apiEndpoint: apiEndpoint,
         });

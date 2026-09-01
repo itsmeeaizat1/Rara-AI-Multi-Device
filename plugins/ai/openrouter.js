@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 /**
  * plugins/ai/openrouter.js
@@ -253,6 +254,14 @@ async function handler(m, { sock, config: botConfig }) {
     session.messages.push({ role: "assistant", content: reply });
     return m.reply(claraWrap(`OpenRouter | ${model.label}`, reply));
   } catch (error) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[openrouter.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
     // Hapus pesan user yang gagal dari session
     session.messages.pop();
 

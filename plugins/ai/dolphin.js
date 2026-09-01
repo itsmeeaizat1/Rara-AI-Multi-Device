@@ -4,6 +4,7 @@ import axios from 'axios'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 const pluginConfig = {
     name: 'dolphin',
     alias: ["dolphin"],
@@ -87,6 +88,14 @@ async function handler(m, { sock }) {
         const result = await dolphinAI(text, template)
         await m.reply(result)
     } catch (error) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(m.text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[dolphin.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
         m.reply(claraWrap("dolphin", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

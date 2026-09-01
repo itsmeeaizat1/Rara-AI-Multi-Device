@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-tio",
@@ -27,7 +27,7 @@ const TIO_FORMATS = {
   openai: {
     label: "OpenAI",
     emoji: "🟢",
-    providerKey: "tio_openai",
+    providerKey: "ikyy_gemini",
     endpoint: "https://ai.tioo.eu.org/v1/chat/completions",
     defaultModel: "kilo-auto/free",
     apiKeyField: "openaiApiKey",
@@ -36,7 +36,7 @@ const TIO_FORMATS = {
   gemini: {
     label: "Gemini",
     emoji: "🔵",
-    providerKey: "tio_gemini",
+    providerKey: "ikyy_gemini",
     endpoint: null, // dynamic per model
     defaultModel: "kilo-auto/free",
     apiKeyField: "geminiApiKey",
@@ -45,7 +45,7 @@ const TIO_FORMATS = {
   anthropic: {
     label: "Anthropic",
     emoji: "🟣",
-    providerKey: "tio_anthropic",
+    providerKey: "ikyy_gemini",
     endpoint: "https://ai.tioo.eu.org/v1/messages",
     defaultModel: "kilo-auto/free",
     apiKeyField: "anthropicApiKey",

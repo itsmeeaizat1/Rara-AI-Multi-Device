@@ -3,6 +3,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 import te from '../../src/lib/nova-error.js'
 import axios from 'axios'
 import config from '../../config.js'
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
     name: "matematika",
@@ -44,6 +45,14 @@ async function handler(m, { sock }) {
         { const __navText = `${answer}`; await m.reply(__navText); }
 
     } catch (error) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[matematika.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
         m.reply(claraWrap("matematika", te(m.prefix, m.command, m.pushName), "error"))
     }
 }

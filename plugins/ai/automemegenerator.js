@@ -5,7 +5,7 @@
 //   Persistent (owner): .toggleautomeme on/off — auto generate tiap foto masuk (default ON)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, tipText } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "automemegenerator",
@@ -106,7 +106,7 @@ async function doMemeAnalysis(m, sock, style) {
     if (!memeText || memeText.length < 2) {
       try {
         memeText = await callAI({
-          providerKey: "openai", model: model,
+          providerKey: "ikyy_gemini", model: model,
           messages: [{ role: "system", content: systemPrompt }, { role: "user", content: "Buat teks meme lucu random (gambar tidak bisa dibaca)." }],
           apiKey: apiKey, apiEndpoint: apiEndpoint,
         });
@@ -355,7 +355,7 @@ export async function handleAutoMemeGen(m, sock) {
     if (!memeText || memeText.length < 2) {
       try {
         memeText = await callAI({
-          providerKey: "openai", model: model,
+          providerKey: "ikyy_gemini", model: model,
           messages: [{ role: "system", content: systemPrompt }, { role: "user", content: "Buat teks meme lucu random." }],
           apiKey: apiKey, apiEndpoint: apiEndpoint,
         });

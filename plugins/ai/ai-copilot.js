@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { novaError, novaEmpty, novaGuide, novaNoInput,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -69,8 +69,8 @@ async function handler(m, { sock, config: botConfig }) {
     const selectedMode = COPILOT_PROMPTS[mode] ? mode : "continue";
     const systemPrompt = COPILOT_PROMPTS[selectedMode];
     const reply = await callAI({
-      providerKey: "openai",
-      model: "gpt-4o-mini",
+      providerKey: "ikyy_gemini",
+      model: "gemini",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: code },

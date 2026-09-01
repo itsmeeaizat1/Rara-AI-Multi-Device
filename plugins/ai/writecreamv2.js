@@ -2,6 +2,7 @@
 // writecreamv2 — Writecream AI v2 (persona-based chat)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "writecreamv2", alias: ["writecreamv2"], aliases: ["writecreamv2", "wcprov2"],
@@ -26,6 +27,14 @@ async function handler(m, { sock }) {
     await m.reply(raw.trim());
     await m.react("🐣");
   } catch (e) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[writecreamv2.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
     console.error("writecreamv2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("writecreamv2", te(m.prefix, m.command, m.pushName), "error"));

@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // yuprav2 — AI chat v2 (Pollinations API — free, no key)
 import { novaReply } from "../../src/lib/nova-menu-style.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "yuprav2",
@@ -50,6 +51,14 @@ async function handler(m, { sock }) {
     await m.reply(answer.trim());
     await m.react("🐣");
   } catch (e) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[yuprav2.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
     console.error("yuprav2 error:", e.message);
     await m.react("❌");
     const msg = novaReply({

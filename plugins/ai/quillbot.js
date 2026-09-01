@@ -2,6 +2,7 @@
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "quilbot",
@@ -27,12 +28,7 @@ async function handler(m, { sock }) {
   }
   try {
     const apiUrl = `https://api.nexray.eu.cc/ai/quillbot?text=${encodeURIComponent(text)}`;
-    const res = await axios.get(apiUrl, {
-      timeout: 15000,
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-      }
-    });
+    const res = { data: { result: await callIkyy(text, {}) } };
 
     const data = res.data;
     if (!data.status || !data.result) {

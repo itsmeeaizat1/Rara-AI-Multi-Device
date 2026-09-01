@@ -4,6 +4,7 @@
  * Supports: OpenAI, Google Gemini, Anthropic Claude,
  *           Meta Llama, Blackbox AI, GitHub Models, Groq, Together AI,
  *           Tio AI (OpenAI/Gemini/Anthropic formats via ai.tioo.eu.org)
+ *           IkyyXD (gemini, cici, gpt-5-mini, google-gemma, unliai, publicai, perplexity, ai4chat via api.ikyyxd.my.id)
  */
 
 import { getDatabase } from "./nova-database.js";
@@ -164,6 +165,121 @@ const DEFAULT_PROVIDERS = {
     supportsVision: true,
     supportsSystem: true,
   },
+  // ═══ IkyyXD API (api.ikyyxd.my.id) — GET-based AI provider ═══
+  ikyy_gemini: {
+    name: "IkyyXD Gemini",
+    models: ["gemini"],
+    defaultModel: "gemini",
+    chatEndpoint: "https://api.ikyyxd.my.id/ai/gemini",
+    method: "GET",
+    authHeader: () => ({}),
+    buildParams: ({ messages, apiKey }) => {
+      const lastUser = [...messages].reverse().find(m => m.role === "user");
+      const text = lastUser?.content || "";
+      const sessionId = `nova_${Date.now()}`;
+      return { text, sessionsId: sessionId, apikey: apiKey };
+    },
+    parseResponse: (data) => data?.result || "",
+    supportsVision: false,
+    supportsSystem: false,
+  },
+  ikyy_cici: {
+    name: "IkyyXD Cici AI",
+    models: ["cici"],
+    defaultModel: "cici",
+    chatEndpoint: "https://api.ikyyxd.my.id/ai/cici",
+    method: "GET",
+    authHeader: () => ({}),
+    buildParams: ({ messages, apiKey }) => {
+      const lastUser = [...messages].reverse().find(m => m.role === "user");
+      const text = lastUser?.content || "";
+      return { prompt: text, apikey: apiKey };
+    },
+    parseResponse: (data) => data?.result?.reply || data?.result || "",
+    supportsVision: false,
+    supportsSystem: false,
+  },
+  ikyy_gpt5: {
+    name: "IkyyXD GPT-5 Mini",
+    models: ["gpt-5-mini"],
+    defaultModel: "gpt-5-mini",
+    chatEndpoint: "https://api.ikyyxd.my.id/ai/gpt-5-mini",
+    method: "GET",
+    authHeader: () => ({}),
+    buildParams: ({ messages, apiKey }) => {
+      const lastUser = [...messages].reverse().find(m => m.role === "user");
+      const text = lastUser?.content || "";
+      return { question: text, apikey: apiKey };
+    },
+    parseResponse: (data) => data?.result || "",
+    supportsVision: false,
+    supportsSystem: false,
+  },
+  ikyy_gemma: {
+    name: "IkyyXD Google Gemma",
+    models: ["google-gemma"],
+    defaultModel: "google-gemma",
+    chatEndpoint: "https://api.ikyyxd.my.id/ai/google-gemma",
+    method: "GET",
+    authHeader: () => ({}),
+    buildParams: ({ messages, apiKey }) => {
+      const lastUser = [...messages].reverse().find(m => m.role === "user");
+      const text = lastUser?.content || "";
+      const sessionId = `nova_${Date.now()}`;
+      return { text, sessionId, apikey: apiKey };
+    },
+    parseResponse: (data) => data?.result || "",
+    supportsVision: false,
+    supportsSystem: false,
+  },
+  ikyy_unliai: {
+    name: "IkyyXD Unlimited AI",
+    models: ["unliai"],
+    defaultModel: "unliai",
+    chatEndpoint: "https://api.ikyyxd.my.id/ai/unliai",
+    method: "GET",
+    authHeader: () => ({}),
+    buildParams: ({ messages, apiKey }) => {
+      const lastUser = [...messages].reverse().find(m => m.role === "user");
+      const text = lastUser?.content || "";
+      return { teks: text };
+    },
+    parseResponse: (data) => data?.result?.response || data?.result || "",
+    supportsVision: false,
+    supportsSystem: false,
+  },
+  ikyy_publicai: {
+    name: "IkyyXD Public AI",
+    models: ["publicai"],
+    defaultModel: "publicai",
+    chatEndpoint: "https://api.ikyyxd.my.id/ai/publicai",
+    method: "GET",
+    authHeader: () => ({}),
+    buildParams: ({ messages, apiKey }) => {
+      const lastUser = [...messages].reverse().find(m => m.role === "user");
+      const text = lastUser?.content || "";
+      return { q: text, apikey: apiKey };
+    },
+    parseResponse: (data) => data?.result || "",
+    supportsVision: false,
+    supportsSystem: false,
+  },
+  ikyy_perplexity: {
+    name: "IkyyXD Perplexity",
+    models: ["perplexity"],
+    defaultModel: "perplexity",
+    chatEndpoint: "https://api.ikyyxd.my.id/ai/perplexity",
+    method: "GET",
+    authHeader: () => ({}),
+    buildParams: ({ messages, apiKey }) => {
+      const lastUser = [...messages].reverse().find(m => m.role === "user");
+      const text = lastUser?.content || "";
+      return { query: text };
+    },
+    parseResponse: (data) => data?.result || "",
+    supportsVision: false,
+    supportsSystem: false,
+  },
   tio_anthropic: {
     name: "Tio AI (Anthropic)",
     models: ["claude-sonnet-4-20250514", "claude-3-5-haiku-20241022", "claude-3-haiku-20240307"],
@@ -306,6 +422,33 @@ async function callAI(firstArg, secondArg) {
 
   const url = apiEndpoint || (typeof provider.chatEndpoint === "function" ? provider.chatEndpoint(effectiveModel) : provider.chatEndpoint);
   const finalUrl = String(url || "").replace("__API_KEY__", encodeURIComponent(effectiveApiKey));
+
+  // ═══ GET-based providers (IkyyXD API) ═══
+  if (provider.method === "GET" && provider.buildParams) {
+    const params = provider.buildParams({ model: effectiveModel, messages: normalizedMessages, systemPrompt, apiKey: effectiveApiKey });
+    const queryString = new URLSearchParams(
+      Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== "")
+    ).toString();
+    const getUrl = `${finalUrl}?${queryString}`;
+
+    const res = await fetch(getUrl, {
+      method: "GET",
+      headers: { "User-Agent": "Mozilla/5.0", ...provider.authHeader(effectiveApiKey) },
+    });
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(`AI ${providerKey} error ${res.status}: ${errText}`);
+    }
+
+    const data = await res.json().catch(() => ({}));
+    if (!data?.status) throw new Error(`AI ${providerKey}: ${data?.message || " respon gagal"}`);
+    const text = provider.parseResponse(data);
+    if (!text) throw new Error("AI mengembalikan respon kosong.");
+    return text;
+  }
+
+  // ═══ POST-based providers (default) ═══
   const body = provider.buildBody({ model: effectiveModel, messages: normalizedMessages, systemPrompt });
 
   const res = await fetch(finalUrl, {
@@ -401,22 +544,134 @@ async function callGemini(prompt, opts = {}) {
       apiKey = config.geminiApiKey || config.aiHelp?.geminiApiKey || "";
     } catch {}
   }
-  if (!apiKey) throw new Error("Gemini API key belum diset. Dapatkan gratis di https://aistudio.google.com/apikey lalu set via .ai-set apiKey <key> atau update apikeys.json (field: google)");
+  // Try native Google Gemini first, fallback to IkyyXD gemini
+  if (apiKey) {
+    try {
+      return await callAI({
+        providerKey: "gemini",
+        apiKey,
+        model: opts.model || await resolveLatestGeminiModel(apiKey),
+        messages: [{ role: "user", content: prompt }],
+        systemPrompt: opts.systemPrompt || "",
+        temperature: opts.temperature ?? 0.7,
+        maxTokens: opts.maxTokens ?? 8192,
+        senderJid: opts.senderJid || "",
+      });
+    } catch (googleErr) {
+      console.error("[callGemini] Google API failed, falling back to IkyyXD:", googleErr.message);
+    }
+  }
 
-  return callAI({
-    providerKey: "gemini",
-    apiKey,
-    model: opts.model || await resolveLatestGeminiModel(apiKey),
-    messages: [{ role: "user", content: prompt }],
-    systemPrompt: opts.systemPrompt || "",
-    temperature: opts.temperature ?? 0.7,
-    maxTokens: opts.maxTokens ?? 8192,
-    senderJid: opts.senderJid || "",
-  });
+  // Fallback: IkyyXD Gemini API
+  return callIkyy(prompt, { ...opts, model: "gemini" });
+}
+
+
+
+// ═══════════════════════════════════════════════════════════
+// IKYYXD API HELPER
+// api.ikyyxd.my.id — GET-based AI API
+// Endpoints: gemini, cici, gpt-5-mini, google-gemma, ai4chat
+// Primary: gemini (most stable), Fallback: cici → gpt-5-mini
+// ═══════════════════════════════════════════════════════════
+
+/**
+ * callIkyy — panggil AI via IkyyXD API dengan fallback otomatis
+ * @param {string} prompt - User prompt
+ * @param {object} opts - { model, systemPrompt, senderJid }
+ * @returns {Promise<string>} AI response text
+ */
+async function callIkyy(prompt, opts = {}) {
+  let apiKey = opts.apiKey || "";
+  if (!apiKey) {
+    try {
+      const { getApiKeys } = await import("./config/env-loader.js");
+      const keys = getApiKeys();
+      apiKey = keys.ikyyxd || "kyzz";
+    } catch {
+      apiKey = "kyzz";
+    }
+  }
+
+  // Build messages with system prompt
+  const messages = [{ role: "user", content: prompt }];
+  if (opts.systemPrompt) {
+    messages.unshift({ role: "system", content: opts.systemPrompt });
+  }
+
+  // Model priority: gemini → cici → gpt-5-mini → google-gemma
+  const model = opts.model || "gemini";
+  const providerKey = `ikyy_${model}`;
+
+  try {
+    return await callAI({
+      providerKey,
+      apiKey,
+      messages,
+      systemPrompt: opts.systemPrompt || "",
+      senderJid: opts.senderJid || "",
+    });
+  } catch (geminiErr) {
+    console.error(`[callIkyy] ${model} failed:`, geminiErr.message);
+    // Fallback chain: cici → unliai → publicai → gpt-5-mini → google-gemma
+    const fallbackChain = [
+      { key: "ikyy_cici", label: "cici" },
+      { key: "ikyy_unliai", label: "unliai" },
+      { key: "ikyy_publicai", label: "publicai" },
+      { key: "ikyy_gpt5", label: "gpt-5-mini" },
+      { key: "ikyy_gemma", label: "google-gemma" },
+    ].filter(f => f.key !== `ikyy_${model}`);
+
+    for (const fb of fallbackChain) {
+      try {
+        return await callAI({
+          providerKey: fb.key,
+          apiKey,
+          messages,
+          senderJid: opts.senderJid || "",
+        });
+      } catch (fbErr) {
+        console.error(`[callIkyy] ${fb.label} fallback failed:`, fbErr.message);
+      }
+    }
+
+    throw new Error("Semua model IkyyXD API gagal. Coba lagi nanti.");
+  }
+}
+
+/**
+ * callIkyyImage — generate image via IkyyXD ai4chat/image endpoint
+ * @param {string} prompt - Image prompt
+ * @param {string} ratio - Aspect ratio (1:1, 16:9, etc)
+ * @returns {Promise<string>} Image URL or null
+ */
+async function callIkyyImage(prompt, ratio = "1:1") {
+  let apiKey = "kyzz";
+  try {
+    const { getApiKeys } = await import("./config/env-loader.js");
+    const keys = getApiKeys();
+    apiKey = keys.ikyyxd || "kyzz";
+  } catch {}
+
+  try {
+    const url = `https://api.ikyyxd.my.id/ai/ai4chat/image?apikey=${encodeURIComponent(apiKey)}&prompt=${encodeURIComponent(prompt)}&ratio=${encodeURIComponent(ratio)}`;
+    const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
+    const data = await res.json().catch(() => ({}));
+    if (data?.status) {
+      // Check for image URL in various response fields
+      return data?.url || data?.result || data?.image || null;
+    }
+    return null;
+  } catch (err) {
+    console.error("[callIkyyImage] failed:", err.message);
+    return null;
+  }
 }
 
 export {
   DEFAULT_PROVIDERS,
+  callIkyy,
+  callIkyyImage,
   resolveProvider,
   callAI,
   callGemini,

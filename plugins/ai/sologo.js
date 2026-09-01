@@ -2,6 +2,7 @@
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "sologo",
@@ -52,6 +53,14 @@ async function handler(m, { sock }) {
       caption: caption
     }, { quoted: m });
   } catch (error) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(prompt?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[sologo.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
     console.error("[SoLogo AI]", error.message);
     m.reply(novaError("SoLogo", "😔 Terjadi kesalahan saat memproses permintaan ke AI."));
   }

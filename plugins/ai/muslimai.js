@@ -3,6 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 const pluginConfig = {
     name: "muslimai",
     alias: ["muslimai"],
@@ -50,7 +51,15 @@ class MuslimAI {
             try {
                 const p = JSON.parse(l);
                 if (p.type === "text") txt += p.data;
-            } catch (e) { console.error('[muslimai.js]:', e.message); }
+            } catch (e) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[muslimai.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+ console.error('[muslimai.js]:', e.message); }
         }
         return txt || res;
     }

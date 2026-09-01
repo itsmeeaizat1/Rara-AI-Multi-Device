@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nova-ai.js — Chat dengan Nova AI (Tio API, terhubung sistem bot + auto-execute)
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 import { bracketBox } from "../../src/lib/nova-menu-style.js";
 import { getCommandsByCategory, getCategories, getAllCommandNames, getPlugin } from "../../src/lib/nova-plugins.js";
 import { getCasesByCategory } from "../../case/nova.js";
@@ -313,16 +313,22 @@ async function handler(m, { sock, config: botConfig, db }) {
       ...history.slice(-20).map((item) => ({ role: item.role, content: item.content })),
     ];
 
-    const reply = await callAI({
-      providerKey: "tio_openai",
-      model: aiConfig.openaiModel || "kilo-auto/free",
-      messages,
-      systemPrompt,
-      apiKey: aiConfig.openaiApiKey || aiConfig.apiKey || "",
-      apiEndpoint: aiConfig.apiEndpoint || "https://ai.tioo.eu.org/v1/chat/completions",
-      maxTokens: 4096,
-      senderJid: m.sender,
-    });
+    let reply;
+    try {
+      reply = await callIkyy(message, { systemPrompt, senderJid: m.sender, model: "gemini" });
+    } catch (ikyyErr) {
+      console.error("[nova-ai] IkyyXD failed, falling back to Tio:", ikyyErr.message);
+      reply = await callAI({
+        providerKey: "tio_openai",
+        model: aiConfig.openaiModel || "kilo-auto/free",
+        messages,
+        systemPrompt,
+        apiKey: aiConfig.openaiApiKey || aiConfig.apiKey || "",
+        apiEndpoint: aiConfig.apiEndpoint || "https://ai.tioo.eu.org/v1/chat/completions",
+        maxTokens: 4096,
+        senderJid: m.sender,
+      });
+    }
 
     appendSession(key, "assistant", reply);
 

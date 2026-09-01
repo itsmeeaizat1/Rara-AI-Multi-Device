@@ -26,8 +26,15 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Aichat", `🤖 *ᴀɪᴄʜᴀᴛ*\n\nMasukkan pertanyaan\n\n\`Contoh: ${m.prefix}ai4chat Apa itu JavaScript?\``), "ai4chat")
     }
     try {
-        const data = await axios.get(`https://firefly.maiku.my.id/api/deepaichat?apikey=${config.APIkey.firefly}&text=${encodeURIComponent(text)}`)
-        { const __navText = `${data.data.data}`; await m.reply(__navText); }
+        const apiKey = config.APIkey?.ikyyxd || "kyzz";
+        const response = await axios.get(`https://api.ikyyxd.my.id/ai/ai4chat/chat?apikey=${apiKey}&question=${encodeURIComponent(text)}`);
+        if (response.data?.status && response.data?.result) {
+          await m.reply(response.data.result);
+        } else {
+          // Fallback to gemini endpoint
+          const geminiRes = await axios.get(`https://api.ikyyxd.my.id/ai/gemini?text=${encodeURIComponent(text)}&sessionsId=nova_ai4chat&apikey=${apiKey}`);
+          await m.reply(geminiRes.data?.result || "AI tidak bisa menjawab saat ini.");
+        }
     } catch (error) {
         console.log(error)
         m.reply(claraWrap("ai4chat", te(m.prefix, m.command, m.pushName), "error"))

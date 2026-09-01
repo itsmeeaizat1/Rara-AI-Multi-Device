@@ -2,6 +2,7 @@
 // gptturbov2 — GPT Turbo v2 (restapii.rioooxdzz)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "gptturbov2", alias: ["gptturbov2"], aliases: ["gptturbov2", "gpttv2"],
@@ -23,6 +24,14 @@ async function handler(m, { sock }) {
     await m.reply(data?.result || data?.response || "Tidak ada jawaban.");
     await m.react("🐣");
   } catch (e) {
+    // IkyyXD fallback
+    try {
+      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
+      if (ikyyReply) return m.reply(ikyyReply);
+    } catch (ikyyErr) {
+      console.error("[gptturbov2.js] IkyyXD fallback failed:", ikyyErr.message);
+    }
+
     console.error("gptturbov2 error:", e.message);
     await m.react("❌");
     return m.reply(claraWrap("gptturbov2", te(m.prefix, m.command, m.pushName), "error"));

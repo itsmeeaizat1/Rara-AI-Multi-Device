@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { novaError, novaEmpty, novaGuide, novaNoInput,  tipText,  claraWrap, novaCaption } from "../../src/lib/nova-menu-style.js";
-import { callAI } from "../../src/lib/nova-ai-service.js";
+import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-translate",
@@ -44,8 +44,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     const prompt = `Terjemahkan teks berikut ke ${lang}. Hanya kirim hasil terjemahan tanpa penjelasan tambahan.\n\n${text.slice(0, 4000)}`;
     const reply = await callAI({
-      providerKey: "openai",
-      model: "gpt-4o-mini",
+      providerKey: "ikyy_gemini",
+      model: "gemini",
       messages: [{ role: "user", content: prompt }],
       apiKey: (botConfig.aiHelp || {}).apiKey,
       apiEndpoint: (botConfig.aiHelp || {}).apiEndpoint,
