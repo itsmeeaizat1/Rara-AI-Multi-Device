@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20add%20ikyy_zai%20(Zhipu%20GLM)%20and%20ikyy_-success?style=for-the-badge)
-> *Commit: "feat: add ikyy_zai (Zhipu GLM) and ikyy_zerogpt (AI detector) providers"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20split%20AI%20Image%20category%20%2B%20add%204%20ne-success?style=for-the-badge)
+> *Commit: "feat: split AI Image category + add 4 new IkyyXD image edit plugins"*
 <!--END_SECTION:latest-update-->
 
 ---
