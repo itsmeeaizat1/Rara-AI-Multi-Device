@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20migrasi%20plugin%20API%20down%20ke%20alternat-success?style=for-the-badge)
-> *Commit: "fix: migrasi plugin API down ke alternatif/graceful error"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20tambah%20cooldown%205%20detik%20untuk%20comma-success?style=for-the-badge)
+> *Commit: "fix: tambah cooldown 5 detik untuk command not found suggestion"*
 <!--END_SECTION:latest-update-->
 
 ---
