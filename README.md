@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20Auto%20API%20Monitor%20%2B%20Weekly%20Insights%20%2B%20Plugin%20Health%20%2B%20Churn%20Detection-success?style=for-the-badge)
-> *Commit: "feat: RPG mega expansion 57→85 (full Alya RPG parity) — 28 new RPG plugins"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20port%2026%20AI%20plugin%20v2%20dari%20Alice%20ke-success?style=for-the-badge)
+> *Commit: "feat: port 26 AI plugin v2 dari Alice ke Nova"*
 <!--END_SECTION:latest-update-->
 
 ---
