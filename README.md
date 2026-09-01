@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20welcome%2Fgoodbye%20V3%20%E2%80%94%20autoresbot%20AP-success?style=for-the-badge)
-> *Commit: "feat: welcome/goodbye V3 — autoresbot API bg + vertical layout"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20integrate%20IkyyXD%20API%20(api.ikyyxd.m-success?style=for-the-badge)
+> *Commit: "feat: integrate IkyyXD API (api.ikyyxd.my.id) as primary AI provider"*
 <!--END_SECTION:latest-update-->
 
 ---
