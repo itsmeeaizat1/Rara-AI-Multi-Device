@@ -98,7 +98,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
     // saluran, tetapi versi WhatsApp Anda tidak mendukungnya. Perbarui WhatsApp".
     // Fallback: kirim thumbnail sebagai image+caption biasa, tanpa tombol.
     if (m.chat && m.chat.endsWith("@newsletter")) {
-      const thumbPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu.jpg");
+      const thumbPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
       const rawBuffer = getThumbnailBuffer(thumbPath);
       if (rawBuffer) {
         await sock.sendMessage(m.chat, { image: rawBuffer, caption: text });
@@ -108,7 +108,7 @@ async function sendMenuCard(sock, m, { text, footer, thumbnailPath, buttons = []
       return true;
     }
 
-    const thumbPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu.jpg");
+    const thumbPath = thumbnailPath || path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
     const rawBuffer = getThumbnailBuffer(thumbPath);
 
     let headerMedia = null;

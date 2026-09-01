@@ -130,7 +130,7 @@ async function handler(m, { sock, config: botConfig, db }) {
     await sendMenuCard(sock, m, {
       text: fullText,
       footer: "",
-      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
+      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg"),
       buttons: navButtons,
       title: `${toSC(botConfig.bot?.name || "Nova AI")} — ${toSC("Premium")}`,
     });

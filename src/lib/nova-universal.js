@@ -17,15 +17,15 @@ function resolveAsset(key, fallbackPath) {
 }
 
 function getWelcomeThumbnail() {
-  return resolveAsset("nova-welcome", "./assets/image/nova-welcome.jpg");
+  return resolveAsset("nova-welcome", "./assets/image/welcome/wellcome.jpg");
 }
 
 function getGoodbyeThumbnail() {
-  return resolveAsset("nova-goodbye", "./assets/image/nova-goodbye.jpg");
+  return resolveAsset("nova-goodbye", "./assets/image/welcome/left.jpg");
 }
 
 function getGroupThumbnail() {
-  return resolveAsset("nova", "./assets/image/nova.png");
+  return resolveAsset("nova", "./assets/image/default.jpg");
 }
 
 async function prepareThumbnail(sock, preferredPath) {

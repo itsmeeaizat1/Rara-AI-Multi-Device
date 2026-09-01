@@ -35,36 +35,39 @@ const config = {
   },
 
   assets: {
-    "nova-daftar": "./assets/image/nova-daftar.png",
-    "nova-demote": "./assets/image/nova-demote.png",
-    "nova-fishit": "./assets/image/nova-fishit.jpg",
-    "nova-games": "./assets/image/nova-games.jpg",
-    "nova-landscape": "./assets/image/nova-landscape.jpg",
-    "nova-levelup": "./assets/image/nova-levelup.jpg",
-    "nova-minecraft": "./assets/image/nova-minecraft.jpg",
-    "nova-promote": "./assets/image/nova-promote.png",
-    "nova-rpg": "./assets/image/nova-rpg.jpg",
-    "nova-rules": "./assets/image/nova-rules.jpg",
-    "nova-store": "./assets/image/nova-store.png",
-    "nova-v8": "./assets/image/nova-v8.jpg",
-    "nova-winner": "./assets/image/nova-winner.jpg",
-    "nova": "./assets/image/nova.png",
+    // Menu thumbnails
+    "menu-thumb": "./assets/image/menu/menuthumbnail.jpg",
+    "allmenu-thumb": "./assets/image/menu/allmenuthumbnail.jpg",
+    "ownermenu-thumb": "./assets/image/menu/ownermenuthumbnail.jpg",
+    // Welcome & goodbye
+    "nova-welcome": "./assets/image/welcome/wellcome.jpg",
+    "nova-goodbye": "./assets/image/welcome/left.jpg",
+    // Default fallback
+    "nova": "./assets/image/default.jpg",
     "nova2": "./assets/image/nova2.jpg",
-    "nova-thumbnail-menu": "./assets/image/nova-thumbnail-menu.jpg",
-    "nova-thumbnail-allmenu": "./assets/image/nova-thumbnail-allmenu.jpg",
-    "nova-thumbnail": "./assets/image/nova-thumbnail.jpg",
     "nova3": "./assets/image/nova3.jpg",
+    // Game & RPG
+    "nova-games": "./assets/image/nova-games.jpg",
+    "nova-rpg": "./assets/image/nova-rpg.jpg",
+    "nova-winner": "./assets/image/nova-winner.jpg",
+    "nova-levelup": "./assets/image/nova-levelup.jpg",
+    // Group
+    "nova-rules": "./assets/image/nova-rules.jpg",
+    "nova-promote": "./assets/image/nova-promote.png",
+    "nova-demote": "./assets/image/nova-demote.png",
+    "channel-banner": "./assets/image/channel-banner.png",
+    // Store
+    "nova-store": "./assets/image/nova-store.png",
+    "aizat-store-qris": "./assets/image/aizat-store-qris.jpg",
+    // Canvas & tools
     "pp-kosong": "./assets/image/pp-kosong.jpg",
+    "nova-kertas": "./assets/image/nova-kertas.jpg",
+    "nova-daftar": "./assets/image/nova-daftar.png",
+    "nova-v8": "./assets/image/nova-v8.jpg",
+    // Non-image assets
     "nova-mp4": "./assets/video/nova-mp4.mp4",
     "nova-mp3": "./assets/audio/cinta-terbaik-cassandra.mp3",
     "nova-font": "./assets/nova-font.ttf",
-    "nova-kertas": "./assets/image/nova-kertas.jpg",
-    "nova-qr": "./assets/image/nova-qr.jpg",
-    "nova-goodbye": "./assets/image/nova-goodbye.jpg",
-    "nova-welcome": "./assets/image/nova-welcome.jpg",
-    "channel-banner": "./assets/image/channel-banner.png",
-    "test": "./assets/image/test.webp",
-    "aizat-store-qris": "./assets/image/aizat-store-qris.jpg"
   },
 
   mode: "self", // Default self pas pairing baru

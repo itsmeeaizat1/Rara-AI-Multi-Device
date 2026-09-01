@@ -64,7 +64,7 @@ let _thumbCache = null;
 function getThumb() {
   if (_thumbCache) return _thumbCache;
   try {
-    const p = path.join(process.cwd(), "assets", "image", "menu.jpg");
+    const p = path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg");
     if (fs.existsSync(p)) {
       _thumbCache = fs.readFileSync(p);
       console.log("[allmenucategory] ✅ Thumbnail loaded: " + _thumbCache.length + " bytes");
@@ -189,7 +189,7 @@ async function handler(m, { sock, db }) {
       await sendMenuCard(sock, m, {
         text: txt,
         footer: "",
-        thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
+        thumbnailPath: path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg"),
         buttons: navButtons,
         title: botName,
       });
@@ -273,7 +273,7 @@ async function handler(m, { sock, db }) {
     await sendMenuCard(sock, m, {
       text: txt,
       footer: "",
-      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
+      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg"),
       buttons: navButtons2,
       title: `${botName} — ${catName}`,
     });

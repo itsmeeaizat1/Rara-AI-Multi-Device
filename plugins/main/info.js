@@ -131,7 +131,7 @@ ${toSC("Nova AI WhatsApp Bot")}`;
     await sendMenuCard(sock, m, {
       text,
       footer: "",
-      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
+      thumbnailPath: path.join(process.cwd(), "assets", "image", "menu", "menuthumbnail.jpg"),
       buttons: navButtons,
       title: `${toSC(botName)} — ${toSC("Info")}`,
     });
