@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20auto-latest%20Gemini%20model%20resolver%20-success?style=for-the-badge)
-> *Commit: "feat: auto-latest Gemini model resolver — otomatis pakai model flash-lite terbaru"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20cleanup%20tocode%20ESM%2C%20update%20con-success?style=for-the-badge)
+> *Commit: "refactor: cleanup tocode ESM, update config, send-menu, ai-service, dan info plugin"*
 <!--END_SECTION:latest-update-->
 
 ---
