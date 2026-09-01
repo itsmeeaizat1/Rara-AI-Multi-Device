@@ -23,6 +23,10 @@ export function trackNotFound(sender, command) {
   const now = Date.now();
   const key = sender;
 
+  // Baca config dynamically (bisa diubah saat runtime oleh owner)
+  const smartEnabled = config.features?.commandSuggestionSmart !== false;
+  const baseCooldown = (config.features?.commandSuggestionCooldown || 5) * 1000;
+
   // Ambil history user
   let history = spamTracker.get(key) || [];
   // Filter hanya yang dalam window
@@ -35,24 +39,31 @@ export function trackNotFound(sender, command) {
 
   // Hitung level berdasarkan frequency dalam window
   const hitsInWindow = history.length;
-  let level = 0; // 0=normal, 1=warning, 2=annoyed, 3=ignore, 4=ai-smart
-  let cooldownMs = BASE_COOLDOWN_MS;
+  let level = 0;
+  let cooldownMs = baseCooldown;
 
-  if (hitsInWindow <= 2) {
-    level = 0;
-    cooldownMs = BASE_COOLDOWN_MS;
-  } else if (hitsInWindow <= 4) {
-    level = 1;
-    cooldownMs = BASE_COOLDOWN_MS * 2; // 10s
-  } else if (hitsInWindow <= 7) {
-    level = 2;
-    cooldownMs = BASE_COOLDOWN_MS * 4; // 20s
-  } else if (hitsInWindow <= 12) {
-    level = 3;
-    cooldownMs = BASE_COOLDOWN_MS * 8; // 40s — bot diam
+  if (smartEnabled) {
+    // Progressive escalation: makin sering spam, makin lama cooldown
+    if (hitsInWindow <= 2) {
+      level = 0;
+      cooldownMs = baseCooldown;
+    } else if (hitsInWindow <= 4) {
+      level = 1;
+      cooldownMs = baseCooldown * 2;
+    } else if (hitsInWindow <= 7) {
+      level = 2;
+      cooldownMs = baseCooldown * 4;
+    } else if (hitsInWindow <= 12) {
+      level = 3;
+      cooldownMs = baseCooldown * 8; // bot diam
+    } else {
+      level = 4;
+      cooldownMs = baseCooldown * 12; // AI smart response
+    }
   } else {
-    level = 4;
-    cooldownMs = BASE_COOLDOWN_MS * 12; // 60s — AI smart response
+    // Smart OFF — cooldown statis, selalu level 0
+    level = 0;
+    cooldownMs = baseCooldown;
   }
 
   // Cek escalation state
@@ -83,6 +94,10 @@ export function trackNotFound(sender, command) {
  * Level 4: AI smart response
  */
 export function getNotFoundReply(prefix, command, closest, level, totalHits) {
+  // Jika smart OFF, selalu pakai level 0 reply
+  const smartEnabled = config.features?.commandSuggestionSmart !== false;
+  if (!smartEnabled) level = 0;
+
   if (level === 0) {
     // Normal
     let text = "\u256D\u2500\u300C \u2726 Not Found \u2726 \u300D\n";

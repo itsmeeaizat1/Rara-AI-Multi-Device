@@ -1231,3 +1231,4 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - .xnxxsearch - Search video NSFW
 - .yuri - Yuri (NSFW)
 - .zettai - Zettai ryouiki (NSFW)
+- .setnotfound - owner - Atur smart anti-spam command not found (on/off/cooldown/smart/reset)
