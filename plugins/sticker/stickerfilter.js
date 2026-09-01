@@ -1,7 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { addExifToWebp } from "../../src/lib/nova-exif.js";
 import axios from "axios";
-import te from "../../src/lib/nova-error.js";
+import te from "../../src/lib/nova-error.js"
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaNoQuoted, claraWrap } from "../../src/lib/nova-menu-style.js";;
 
 const pluginConfig = {
   name: "stickerfilter",
@@ -71,7 +72,7 @@ async function handler(m, { sock }) {
     await sock.sendMessage(m.chat, { sticker: exifBuf }, { quoted: m });
   } catch (err) {
     console.error("[StickerFilter] Error:", err.message);
-    return m.reply(te(m.prefix, m.command, m.pushName), "stickerfilter");
+    return m.reply(claraWrap("stickerfilter", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 

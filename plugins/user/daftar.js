@@ -776,4 +776,6 @@ export {
   handler,
   registrationAnswerHandler,
   clearRegistrationSession,
+  generateSerialNumber,
+  buildSuccessRewardBlock,
 };

@@ -12,6 +12,7 @@ import {
   lidToJid,
 } from "../../src/lib/nova-lid.js"
 import { notifyUserRegister } from "../../src/lib/nova-saluran-broadcast.js"
+import { generateSerialNumber, buildSuccessRewardBlock } from "./daftar.js"
 
 const pluginConfig = {
   name: "daftarotomatis",
@@ -334,12 +335,11 @@ function clearCaptchaSession(jid) {
   delete global.captchaSessions[key]
 }
 
-function buildUserDataBlock(name, age, gender) {
+function buildUserDataBlock(name, age, gender, serial) {
   return (
     "╭─「 ✦ " + (name || "-") + " ✦ 」\n│ Umur: " + (age || "-") +
     "\n│ Gender: " + (gender || "-") +
-    "\n│ Bonus daftar sudah pernah diklaim" +
-    "\n│ Tidak ada reward tambahan" +
+    (serial ? "\n│ Serial: " + serial : "") +
     "\n╰────  •  ────"
   )
 }
@@ -362,15 +362,46 @@ async function handler(m, { sock }) {
     )
   }
 
-  // TODO: fitur captcha auto-register lagi dalam perbaikan (bug lama, bukan dari
-  // perubahan hari ini) — generate captcha & session belum lengkap di sini.
-  // Sementara arahkan ke .daftar (registrasi manual reply teks) yang udah pasti jalan.
-  return m.reply(
-    claraWrap(
-      "daftarotomatis",
-      "Fitur ini sedang diperbaiki. Silahkan pakai `" + m.prefix + "daftar` untuk daftar manual dulu ya.",
-    )
-  )
+  // Generate captcha (API -> Canvas -> Math fallback)
+  const captcha = await generateCaptcha()
+  if (!captcha) {
+    return m.reply(claraWrap("daftarotomatis", "Gagal membuat captcha. Coba lagi ya."))
+  }
+
+  // Create session
+  const session = createCaptchaSession(m.sender, m.chat, null, null, null)
+  session.captcha = captcha
+
+  // Send captcha to user
+  if (captcha.type === "image" && captcha.imageBuffer) {
+    await sock.sendMessage(m.chat, {
+      image: captcha.imageBuffer,
+      caption: claraWrap("daftarotomatis", [
+        "Selesaikan captcha di atas",
+        "Reply pesan ini dengan jawabanmu",
+        "",
+        "Ketik *batal* untuk membatalkan",
+      ]),
+    }, { quoted: m })
+  } else if (captcha.type === "text-api" && captcha.textCaptcha) {
+    await sock.sendMessage(m.chat, {
+      text: claraWrap("daftarotomatis", [
+        captcha.textCaptcha,
+        "",
+        "Reply pesan ini dengan jawabanmu",
+        "Ketik *batal* untuk membatalkan",
+      ]),
+    }, { quoted: m })
+  } else if (captcha.type === "math") {
+    await sock.sendMessage(m.chat, {
+      text: claraWrap("daftarotomatis", [
+        captcha.question,
+        "",
+        "Reply pesan ini dengan jawabanmu",
+        "Ketik *batal* untuk membatalkan",
+      ]),
+    }, { quoted: m })
+  }
 }
 
 async function captchaAnswerHandler(m, sock) {
@@ -482,7 +513,38 @@ async function captchaAnswerHandler(m, sock) {
     // Ask for name
     session.step = "name"
     await sock.sendMessage(m.chat, {
-      text: "✅ *Captcha benar!*\n\n╭─「 ✦ Pertanyaan 1/3 ✦ 」\n\n│ Halo *" + name + "* ✋\n\n│ *Pertanyaan 2/3*\n│ Berapa umurmu?\n\n│ Umur: 1-100 tahun\n│ Reply dengan angka\n╰────  •  ────",
+      text: claraWrap("daftarotomatis", [
+        "Captcha benar!",
+        "",
+        "Pertanyaan 1/3",
+        "Siapa nama kamu?",
+        "",
+        "Reply pesan ini dengan namamu",
+      ]),
+      contextInfo: getRegistrationContextInfo(),
+    }, { quoted: m })
+    return true
+  }
+
+  // Step: Name
+  if (session.step === "name") {
+    var name = text.trim()
+    if (!name || name.length < 2) {
+      await m.reply(novaError("DaftarOtomatis", "Nama gak valid! Masukin nama yang bener ya"))
+      return true
+    }
+    session.name = name
+    session.step = "age"
+    await sock.sendMessage(m.chat, {
+      text: claraWrap("daftarotomatis", [
+        "Halo " + name + "!",
+        "",
+        "Pertanyaan 2/3",
+        "Berapa umurmu?",
+        "",
+        "Umur: 1-100 tahun",
+        "Reply dengan angka",
+      ]),
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
     return true
