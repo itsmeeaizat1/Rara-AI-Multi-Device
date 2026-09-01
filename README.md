@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20isi%20placeholder%20valid%20untuk%20file%20ga-success?style=for-the-badge)
-> *Commit: "fix: isi placeholder valid untuk file gambar yang kosong (0 bytes)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20unify%20thumbnail%20fallback%20ke%20ex-success?style=for-the-badge)
+> *Commit: "refactor: unify thumbnail fallback ke example.jpg (hapus nova/nova2/nova3)"*
 <!--END_SECTION:latest-update-->
 
 ---
