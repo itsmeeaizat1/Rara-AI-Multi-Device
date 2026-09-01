@@ -212,6 +212,7 @@ roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, puji
 - .workoutai - ai - AI rencana workout personal
 - .gombalai - ai - AI generator gombalan/pickup lines
 - .alasanai - ai - AI generator alasan kreatif
+- .novaai - ai - AI Agent — ngatur fitur bot via bahasa natural (tutup/buka grup, kick, promote, setname, hidetag, ngobrol) — DeepSeek utama, Pollinations fallback, Groq opsional
 - .faktaai - ai - AI generator fakta menarik
 - .editimg - ai image - Edit gambar dengan AI (text-to-image editing)
 - .aipr - ai - Foto soal/PR → AI baca dan jawab
