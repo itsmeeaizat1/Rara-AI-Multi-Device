@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20cleanup%20tocode%20ESM%2C%20update%20con-success?style=for-the-badge)
-> *Commit: "refactor: cleanup tocode ESM, update config, send-menu, ai-service, dan info plugin"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20hapus%20baris%20pemblokir%20input%20teks%20di-success?style=for-the-badge)
+> *Commit: "fix: hapus baris pemblokir input teks di slangtranslate.js + dokumen dead API"*
 <!--END_SECTION:latest-update-->
 
 ---
