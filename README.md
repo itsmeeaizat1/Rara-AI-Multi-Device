@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20RPG%20animation%20system%20%E2%80%94%20progressive-success?style=for-the-badge)
-> *Commit: "feat: RPG animation system — progressive message animation untuk 50 plugin RPG"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20AI%20Agent%20.novaai%20%E2%80%94%20ngatur%20fitur%20bo-success?style=for-the-badge)
+> *Commit: "feat: AI Agent .novaai — ngatur fitur bot via bahasa natural"*
 <!--END_SECTION:latest-update-->
 
 ---
