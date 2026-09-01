@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20unify%20thumbnail%20fallback%20ke%20ex-success?style=for-the-badge)
-> *Commit: "refactor: unify thumbnail fallback ke example.jpg (hapus nova/nova2/nova3)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20placeholder%20thumbnail%20per%20kate-success?style=for-the-badge)
+> *Commit: "refactor: placeholder thumbnail per kategori, bukan universal fallback"*
 <!--END_SECTION:latest-update-->
 
 ---
