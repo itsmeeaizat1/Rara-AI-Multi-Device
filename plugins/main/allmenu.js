@@ -235,7 +235,27 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       menuCats.push({ name: catName, commands: allCmds });
     }
 
+    const intro = [
+      "Yoo, hai! 👋",
+      "Kenalin, aku Nova —",
+      "bot WhatsApp yang bakal",
+      "jadi partner setiamu.",
+      "",
+      "Aku gak cuma bot biasa.",
+      "Aku bisa jadi tempat kamu",
+      "download video terbaru,",
+      "ngubah momen jadi stiker,",
+      "nyari bahan tugas, atau",
+      "sekadar nemenin pas lagi",
+      "bosen.",
+      "",
+      "Gak perlu install apa-apa.",
+      "Cuma ketik .allmenu untuk melihat semua fitur ✨",
+    ];
+
     const txt = novaMenuLayout({
+      intro,
+      introTitle: "Nova",
       infoTitle: "Info",
       info,
       categories: menuCats,
