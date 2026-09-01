@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20box%20menu%2Fallmenu%20jadi%20melar%20%26%20comma-success?style=for-the-badge)
-> *Commit: "fix: box menu/allmenu jadi melar & command hilang gara-gara closeBoxRight global"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20redesign%20ulang%20box-drawing%20di%20-success?style=for-the-badge)
+> *Commit: "refactor: redesign ulang box-drawing di seluruh bot (449 file)"*
 <!--END_SECTION:latest-update-->
 
 ---
