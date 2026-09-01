@@ -95,7 +95,7 @@ async function handler(m, { sock, plugins }) {
         if (timeLeft > 0) {
           expiredTxt = "🕕 " + ms(timeLeft, { long: true });
         } else {
-          expiredTxt = "🔴 Expired";
+          expiredTxt = "Expired";
         }
       }
 

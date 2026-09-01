@@ -85,7 +85,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     let rank = 1;
     for (const p of top10) {
-      const status = p.isActive ? "🟢" : "⚫";
+      const status = p.isActive ? "Aktif" : "Expired";
       const num = p.number.length > 8
         ? p.number.slice(0, 4) + "..." + p.number.slice(-3)
         : p.number;
@@ -98,7 +98,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (rest.length > 0) {
       text += readMore + "\n";
       for (const p of rest) {
-        const status = p.isActive ? "🟢" : "⚫";
+        const status = p.isActive ? "Aktif" : "Expired";
         const num = p.number.length > 8
           ? p.number.slice(0, 4) + "..." + p.number.slice(-3)
           : p.number;
@@ -110,7 +110,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     text += "\n" + separator("━", 30) + "\n";
-    text += "🟢 Aktif  ⚫ Expired\n\n";
+    text += "Aktif — Expired\n\n";
     text += tipText(`Ketik ${prefix}listprem untuk list premium aktif`);
 
     await m.reply( text, "dashboardpremium");
