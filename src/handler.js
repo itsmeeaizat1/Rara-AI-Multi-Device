@@ -29,6 +29,10 @@ function simpleWrap(title, lines) {
 // Track cooldowns per user per command
 const cooldownMap = new Map();
 
+// Cooldown untuk "command not found" suggestion (default 5 detik)
+const notFoundCooldownMap = new Map();
+const NOT_FOUND_COOLDOWN_MS = (config.features?.commandSuggestionCooldown || 5) * 1000;
+
 function checkCooldown(m, plugin) {
   if (!plugin?.config?.cooldown || plugin.config.cooldown <= 0) return true;
   if (m.isOwner || m.fromMe) return true;
@@ -708,6 +712,15 @@ async function messageHandler(msg, sock) {
   if (!plugin) {
     // Command not found — check if suggestion feature is on (skip in self mode for non-owner)
     if (config.features?.commandSuggestion !== false && !__novaSelfModeSkip) {
+      // Cooldown per user untuk not-found suggestion
+      const nfKey = m.sender;
+      const nfNow = Date.now();
+      const nfLast = notFoundCooldownMap.get(nfKey);
+      if (nfLast && nfNow - nfLast < NOT_FOUND_COOLDOWN_MS) {
+        return;
+      }
+      notFoundCooldownMap.set(nfKey, nfNow);
+
       const { getAllCommandNames } = await import("./lib/nova-plugins.js");
       const allCommands = getAllCommandNames();
       const { levenshtein } = await import("./lib/nova-middleware.js");
