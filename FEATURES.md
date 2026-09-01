@@ -312,8 +312,8 @@ roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, puji
 - .blessnpcrpg - rpg - Blessing dari NPC
 - .talentrpg - rpg - Lihat talent berdasar kelas
 - .passiverpg - rpg - Lihat skill pasif
-### 🎨 AI Image (29 plugin)
-aiimggen, anime-gen, enhance, novabanana, novabanana2, sologo, text2img2, text2img, to3d, toanime, toblack, tocartoon, tocermin, tochibi, toemotebatu, tofigure, tofigurev2, toghibli, tohijab, toisland, tojapanese, tomanga, tomekah, tooilpainting, txt2img2, anime2real, faceswap, flux2pro, fluxkontext
+### 🎨 AI Image (36 plugin)
+aiimggen, anime-gen, anime2real, enhance, faceswap, flux2pro, fluxkontext, gemini-flash, gptimage, jadianime, jadigta, jadihijab, jadihitam, mewarnai, novabanana, novabanana2, sologo, text2img, text2img2, to3d, toanime, toblack, tocartoon, tocermin, tochibi, toemotebatu, tofigure, tofigurev2, toghibli, tohijab, toisland, tojapanese, tomanga, tomekah, tooilpainting, txt2img2
 
 ### 🌸 Anime (14 plugin)
 animechar, animecouple, animegenre, animemanga, animemoments, animepowerlevel, animequote, animerec, animestudio, animetop, animevillain, autoanimewinbu, otakudict, wallpaperanime
