@@ -20,8 +20,8 @@ const DEFAULT_PROVIDERS = {
   },
   gemini: {
     name: "Google Gemini",
-    models: ["gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro", "gemini-1.5-flash"],
-    defaultModel: "gemini-2.5-flash",
+    models: ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite"],
+    defaultModel: "gemini-3.5-flash-lite",
     chatEndpoint: (model) => `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=__API_KEY__`,
     authHeader: () => ({}),
     buildBody: ({ messages, systemPrompt }) => {
@@ -355,7 +355,7 @@ async function callGemini(prompt, opts = {}) {
   return callAI({
     providerKey: "gemini",
     apiKey,
-    model: opts.model || "gemini-2.5-flash",
+    model: opts.model || "gemini-3.5-flash-lite",
     messages: [{ role: "user", content: prompt }],
     systemPrompt: opts.systemPrompt || "",
     temperature: opts.temperature ?? 0.7,
