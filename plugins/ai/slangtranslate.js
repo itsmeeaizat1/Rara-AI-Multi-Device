@@ -207,7 +207,6 @@ export default {
       inputText = inputText.slice(0, 2000);
     }
 
-    if (!isAudio) { return m.reply("Format tidak didukung. Gunakan teks atau audio."); }
     // ─── AI Slang Translation ───
     const systemPrompt = `Kamu adalah ahli linguistik budaya dan penerjemah slang. Tugasmu menganalisis teks yang mengandung slang, idiom, bahasa gaul, atau dialek daerah, lalu memberikan terjemahan beserta konteks budayanya.
 
