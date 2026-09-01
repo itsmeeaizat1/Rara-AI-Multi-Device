@@ -158,10 +158,10 @@ export default {
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Patungan", [
-        `│ Status: *Aktif*`,
+        `Status: *Aktif*`,
         ``,
-        `│ Fitur Split Bill & Patungan dinyalakan.`,
-        `│ Ketik *${prefix}ptg <total> | <orang> | <keterangan>*`,
+        `Fitur Split Bill & Patungan dinyalakan.`,
+        `Ketik *${prefix}ptg <total> | <orang> | <keterangan>*`,
       ].join("\n")));
       return { handled: true };
     }
@@ -174,10 +174,10 @@ export default {
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Patungan", [
-        `│ Status: *Nonaktif*`,
+        `Status: *Nonaktif*`,
         ``,
-        `│ Fitur Patungan dimatikan.`,
-        `│ Ketik *${prefix}ptgon* untuk aktifkan lagi.`,
+        `Fitur Patungan dimatikan.`,
+        `Ketik *${prefix}ptgon* untuk aktifkan lagi.`,
       ].join("\n")));
       return { handled: true };
     }
@@ -190,14 +190,14 @@ export default {
         return { handled: true };
       }
 
-      const lines = [`│ Total: *${allBills.length}* patungan`, ``];
+      const lines = [`Total: *${allBills.length}* patungan`, ``];
       allBills.slice(-10).reverse().forEach((b) => {
         const paidCount = b.members.filter(mb => mb.paid).length;
         const status = b.status === "active" ? "Aktif" : b.status === "closed" ? "Selesai" : "Nonaktif";
         lines.push(
-          `│ ${status} ${b.shortId} - ${b.description}`,
-          `│ ${formatRupiah(b.total)} | ${b.perPerson}/orang`,
-          `│ Bayar: ${paidCount}/${b.members.length} | ${b.date}`,
+          `${status} ${b.shortId} - ${b.description}`,
+          `${formatRupiah(b.total)} | ${b.perPerson}/orang`,
+          `Bayar: ${paidCount}/${b.members.length} | ${b.date}`,
           ``
         );
       });
@@ -220,15 +220,15 @@ export default {
         return { handled: true };
       }
 
-      const lines = [`│ Patungan aktif: *${active.length}*`, ``];
+      const lines = [`Patungan aktif: *${active.length}*`, ``];
       active.forEach((b, i) => {
         const paidCount = b.members.filter(mb => mb.paid).length;
         const unpaidCount = b.members.length - paidCount;
         lines.push(
-          `│ ${i + 1}. ${b.shortId} - ${b.description}`,
-          `│ Total: ${formatRupiah(b.total)} | ${b.perPerson}/orang`,
-          `│ Lunas: ${paidCount}/${b.members.length} | Belum: ${unpaidCount}`,
-          `│ Ketik: *${prefix}ptg status ${b.shortId}*`,
+          `${i + 1}. ${b.shortId} - ${b.description}`,
+          `Total: ${formatRupiah(b.total)} | ${b.perPerson}/orang`,
+          `Lunas: ${paidCount}/${b.members.length} | Belum: ${unpaidCount}`,
+          `Ketik: *${prefix}ptg status ${b.shortId}*`,
           ``
         );
       });
@@ -258,38 +258,38 @@ export default {
       const unpaidJids = unpaidMembers.map(mb => mb.jid);
 
       const lines = [
-        `│ ${bill.shortId} - ${bill.description}`,
-        `│ Tanggal: ${bill.date}`,
-        `│ Dibuat oleh: ${bill.creator}`,
+        `${bill.shortId} - ${bill.description}`,
+        `Tanggal: ${bill.date}`,
+        `Dibuat oleh: ${bill.creator}`,
         ``,
-        `│ Total: *${formatRupiah(bill.total)}*`,
-        `│ Per orang: *${bill.perPerson}*`,
-        `│ Orang: *${bill.members.length}*`,
+        `Total: *${formatRupiah(bill.total)}*`,
+        `Per orang: *${bill.perPerson}*`,
+        `Orang: *${bill.members.length}*`,
         ``,
-        `│ ✅ Sudah Bayar (${paidMembers.length}):`,
+        `✅ Sudah Bayar (${paidMembers.length}):`,
       ];
 
       if (paidMembers.length > 0) {
         paidMembers.forEach(mb => {
-          lines.push(`│ ✓ ${mb.name} ${mb.paidAt ? `(${mb.paidAt})` : ""}`);
+          lines.push(`✓ ${mb.name} ${mb.paidAt ? `(${mb.paidAt})` : ""}`);
         });
       } else {
-        lines.push(`│ _Belum ada_`);
+        lines.push(`_Belum ada_`);
       }
 
-      lines.push(``, `│ ❌ Belum Bayar (${unpaidMembers.length}):`);
+      lines.push(``, `❌ Belum Bayar (${unpaidMembers.length}):`);
       if (unpaidMembers.length > 0) {
         unpaidMembers.forEach(mb => {
-          lines.push(`│ ✗ ${mb.name}`);
+          lines.push(`✗ ${mb.name}`);
         });
       } else {
-        lines.push(`│ _Semua sudah bayar!_ 🎉`);
+        lines.push(`_Semua sudah bayar!_ 🎉`);
       }
 
       // Add mention list for unpaid
       if (unpaidJids.length > 0) {
         const mentionText = unpaidJids.map(j => `@${j.split("@")[0]}`).join(" ");
-        lines.push(``, `│ 📢 Tag yang belum bayar:`, `│ ${mentionText}`);
+        lines.push(``, `📢 Tag yang belum bayar:`, `${mentionText}`);
 
         const text = claraWrap("Patungan - Status", lines.join("\n")) +
           "\n" +
@@ -300,7 +300,7 @@ export default {
           mentions: unpaidJids,
         });
       } else {
-        lines.push(``, `│ 🎉 Patungan LUNAS semua!`);
+        lines.push(``, `🎉 Patungan LUNAS semua!`);
         const text = claraWrap("Patungan - Status", lines.join("\n")) +
           "\n" +
           tipText(`${prefix}ptg close ${bill.shortId} untuk tutup (owner)`);
@@ -356,22 +356,22 @@ export default {
       const allPaid = paidCount === updatedBill.members.length;
 
       let lines = [
-        `│ ✅ *${member.name}* sudah bayar!`,
-        `│ Patungan: ${bill.shortId} - ${bill.description}`,
-        `│ Nominal: ${bill.perPerson}`,
+        `✅ *${member.name}* sudah bayar!`,
+        `Patungan: ${bill.shortId} - ${bill.description}`,
+        `Nominal: ${bill.perPerson}`,
         ``,
-        `│ Progress: ${paidCount}/${updatedBill.members.length} sudah bayar`,
+        `Progress: ${paidCount}/${updatedBill.members.length} sudah bayar`,
       ];
 
       if (allPaid) {
-        lines.push(``, `│ 🎉 Semua sudah bayar! Patungan LUNAS!`);
+        lines.push(``, `🎉 Semua sudah bayar! Patungan LUNAS!`);
         // Auto-close
         updateBill(groupId, bill.id, (b) => { b.status = "closed"; });
       } else {
         const unpaid = updatedBill.members.filter(mb => !mb.paid);
-        lines.push(``, `│ Belum bayar:`);
-        unpaid.forEach(mb => lines.push(`│ ✗ ${mb.name}`));
-        lines.push(``, `│ Ketik *${prefix}ptg bayar ${bill.shortId}* untuk tandai bayar`);
+        lines.push(``, `Belum bayar:`);
+        unpaid.forEach(mb => lines.push(`✗ ${mb.name}`));
+        lines.push(``, `Ketik *${prefix}ptg bayar ${bill.shortId}* untuk tandai bayar`);
       }
 
       await m.reply(claraWrap("Patungan - Bayar", lines.join("\n")));
@@ -435,14 +435,14 @@ export default {
       const allPaid = paidCount === updatedBill.members.length;
 
       const lines = [
-        `│ ✅ Owner menandai *${markedCount}* orang lunas:`,
-        `│ ${markedNames.join(", ")}`,
+        `✅ Owner menandai *${markedCount}* orang lunas:`,
+        `${markedNames.join(", ")}`,
         ``,
-        `│ Progress: ${paidCount}/${updatedBill.members.length} sudah bayar`,
+        `Progress: ${paidCount}/${updatedBill.members.length} sudah bayar`,
       ];
 
       if (allPaid) {
-        lines.push(``, `│ 🎉 Semua sudah bayar! Patungan LUNAS!`);
+        lines.push(``, `🎉 Semua sudah bayar! Patungan LUNAS!`);
         updateBill(groupId, bill.id, (b) => { b.status = "closed"; });
       }
 
@@ -483,13 +483,13 @@ export default {
 
       const paidCount = bill.members.filter(mb => mb.paid).length;
       const lines = [
-        `│ Patungan *${bill.shortId}* ditutup.`,
-        `│ ${bill.description}`,
+        `Patungan *${bill.shortId}* ditutup.`,
+        `${bill.description}`,
         ``,
-        `│ Total: ${formatRupiah(bill.total)}`,
-        `│ Per orang: ${bill.perPerson}`,
-        `│ Lunas: ${paidCount}/${bill.members.length}`,
-        `│ Status: CLOSED ✅`,
+        `Total: ${formatRupiah(bill.total)}`,
+        `Per orang: ${bill.perPerson}`,
+        `Lunas: ${paidCount}/${bill.members.length}`,
+        `Status: CLOSED ✅`,
       ];
 
       await m.reply(claraWrap("Patungan - Tutup", lines.join("\n")));
@@ -542,11 +542,11 @@ export default {
       });
 
       await m.reply(claraWrap("Patungan - Join", [
-        `│ ✅ *${senderName}* bergabung di patungan *${billId}*`,
-        `│ ${bill.description}`,
-        `│ Bagian kamu: *${bill.perPerson}*`,
+        `✅ *${senderName}* bergabung di patungan *${billId}*`,
+        `${bill.description}`,
+        `Bagian kamu: *${bill.perPerson}*`,
         ``,
-        `│ Ketik *${prefix}ptg bayar ${billId}* untuk tandai bayar`,
+        `Ketik *${prefix}ptg bayar ${billId}* untuk tandai bayar`,
       ].join("\n")));
       return { handled: true };
     }
@@ -669,49 +669,49 @@ export default {
 
     // Build output
     const lines = [
-      `│ ${billId} - ${description}`,
-      `│ Tanggal: ${dateStr}`,
-      `│ Dibuat oleh: ${senderName}`,
+      `${billId} - ${description}`,
+      `Tanggal: ${dateStr}`,
+      `Dibuat oleh: ${senderName}`,
       ``,
-      `│ Total: *${formatRupiah(total)}*`,
-      `│ Dibagi: *${memberCount}* orang`,
-      `│ Per orang: *${perPersonStr}*`,
+      `Total: *${formatRupiah(total)}*`,
+      `Dibagi: *${memberCount}* orang`,
+      `Per orang: *${perPersonStr}*`,
       ``,
-      `│ Daftar Anggota:`,
+      `Daftar Anggota:`,
     ];
 
     if (isNumericCount) {
       members.forEach((mb, i) => {
         if (mb.isSlot) {
-          lines.push(`│ ${i + 1}. ${mb.name}`);
+          lines.push(`${i + 1}. ${mb.name}`);
         } else {
-          lines.push(`│ ${i + 1}. ${mb.name} (creator)`);
+          lines.push(`${i + 1}. ${mb.name} (creator)`);
         }
       });
 
       lines.push(
         ``,
-        `│ 📌 Cara bayar:`,
-        `│ Ketik *${prefix}ptg bayar ${billId}*`,
-        `│ (Tandai diri sendiri sudah bayar)`,
+        `📌 Cara bayar:`,
+        `Ketik *${prefix}ptg bayar ${billId}*`,
+        `(Tandai diri sendiri sudah bayar)`,
         ``,
-        `│ 📌 Slot kosong: Anggota grup lain bisa`,
-        `│ ketik *${prefix}ptg join ${billId}* untuk isi slot`,
+        `📌 Slot kosong: Anggota grup lain bisa`,
+        `ketik *${prefix}ptg join ${billId}* untuk isi slot`,
       );
     } else {
       members.forEach((mb, i) => {
-        lines.push(`│ ${i + 1}. ${mb.name}`);
+        lines.push(`${i + 1}. ${mb.name}`);
       });
 
       const unpaidJids = members.map(mb => mb.jid).filter(j => j);
 
       lines.push(
         ``,
-        `│ 📌 Cara bayar:`,
-        `│ Ketik *${prefix}ptg bayar ${billId}*`,
+        `📌 Cara bayar:`,
+        `Ketik *${prefix}ptg bayar ${billId}*`,
         ``,
-        `│ 📌 Cek status:`,
-        `│ Ketik *${prefix}ptg status ${billId}*`,
+        `📌 Cek status:`,
+        `Ketik *${prefix}ptg status ${billId}*`,
       );
 
       const text = claraWrap("Patungan - Baru", lines.join("\n")) +

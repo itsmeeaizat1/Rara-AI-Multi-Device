@@ -45,7 +45,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     if (!games.has(chatId)) {
       games.set(chatId, { players: [], deck: createDeck(), table: [], currentPlayer: 0, stopVotes: [] });
-      return m.reply("╭─「 ✦ ɢᴀᴘʟᴇ ✦ 」\n│ 🀄 Permainan Gaple dimulai!\n│ 📌 .gaple join — bergabung\n│ 📌 .gaple start — mulai (min 2)\n╰────  •  ────");
+      return m.reply("🀄 Permainan Gaple dimulai!\n📌 .gaple join — bergabung\n📌 .gaple start — mulai (min 2)");
     }
 
     const game = games.get(chatId);
@@ -53,7 +53,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     if (sub === "join") {
       if (game.players.find(p => p.id === sender)) return m.reply(claraWrap("gaple", "Sudah bergabung.", "info"));
       game.players.push({ id: sender, hand: [] });
-      return m.reply("╭─「 ✦ ɢᴀᴘʟᴇ ✦ 」\n│ ✅ @" + sender.split("@")[0] + " bergabung!\n│ Total: " + game.players.length + " pemain\n╰────  •  ────", { mentions: [sender] });
+      return m.reply("✅ @" + sender.split("@")[0] + " bergabung!\nTotal: " + game.players.length + " pemain", { mentions: [sender] });
     }
 
     if (sub === "start") {
@@ -71,7 +71,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     }
 
     if (sub === "info") {
-      return m.reply("╭─「 ✦ ᴘᴀɴᴅᴜᴀɴ ɢᴀᴘʟᴇ ✦ 」\n│ 🀄 .gaple join — Gabung\n│ 🎮 .gaple start — Mulai (min 2)\n│ 🃏 .gaple play <no> <left|right> — Main kartu\n│ 📥 .gaple draw — Ambil kartu\n│ ✋ .gaple pass — Lewati\n│ 📋 .gaple hand — Lihat kartu (DM)\n│ ⏹️ .gaple stop — Hentikan\n╰────  •  ────");
+      return m.reply("🀄 .gaple join — Gabung\n🎮 .gaple start — Mulai (min 2)\n🃏 .gaple play <no> <left|right> — Main kartu\n📥 .gaple draw — Ambil kartu\n✋ .gaple pass — Lewati\n📋 .gaple hand — Lihat kartu (DM)\n⏹️ .gaple stop — Hentikan");
     }
 
     if (sub === "hand") {
@@ -91,7 +91,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       const card = p.hand[idx];
       if (!tryPlace(game.table, card, side)) return m.reply(claraWrap("gaple", "Kartu tidak cocok dengan ujung meja.", "info"));
       p.hand.splice(idx, 1);
-      if (p.hand.length === 0) { games.delete(chatId); return m.reply("╭─「 ✦ ɢᴀᴘʟᴇ ✦ 」\n│ 🎉 @" + sender.split("@")[0] + " MENANG!\n╰────  •  ────", { mentions: [sender] }); }
+      if (p.hand.length === 0) { games.delete(chatId); return m.reply("🎉 @" + sender.split("@")[0] + " MENANG!", { mentions: [sender] }); }
       game.currentPlayer = getNext(game);
       return sendStatus(m, sock, game);
     }
@@ -134,11 +134,10 @@ async function sendStatus(m, sock, game) {
   const meja = game.table.length ? game.table.map(c => "[" + c[0] + "|" + c[1] + "]").join(" - ") : "(kosong)";
   const hands = game.players.map((p, i) => i + ": @" + p.id.split("@")[0] + " (" + p.hand.length + ")").join("\n");
   const curr = game.players[game.currentPlayer];
-  let t = "╭─「 ✦ ɢᴀᴘʟᴇ ✦ 」\n";
-  t += "│ Meja: " + meja + "\n";
-  t += "│ Giliran: @" + (curr?.id.split("@")[0] || "-") + "\n";
-  t += "│\n│ 📊 Kartu pemain:\n│ " + hands.replace(/\n/g, "\n│ ") + "\n";
-  t += "╰────  •  ────";
+  let t = "";
+  t += "Meja: " + meja + "\n";
+  t += "Giliran: @" + (curr?.id.split("@")[0] || "-") + "\n";
+  t += "📊 Kartu pemain:\n" + hands.replace(/\n/g, "\n") + "\n";
   return m.reply(t, { mentions: game.players.map(p => p.id) });
 }
 

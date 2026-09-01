@@ -144,32 +144,34 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastSabung", SABUNG_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ sᴀʙᴜɴɢ ᴀʏᴀᴍ ✦ 」\n`;
-    msg += `│ 🐓 Ayam Kamu vs ${enemyName}\n`;
-    msg += `│ 💵 Bet: *${bet} gold*\n`;
-    msg += `│\n`;
-    msg += `│ 📊 *ᴘᴇʀᴛᴀʀᴜɴɢᴀɴ*\n`;
+    let msg = "";
+    msg += `🐓 Ayam Kamu vs ${enemyName}\n`;
+    msg += `💵 Bet: *${bet} gold*\n`;
+    msg += `
+`;
+    msg += `📊 *ᴘᴇʀᴛᴀʀᴜɴɢᴀɴ*\n`;
     for (const l of log.slice(-5)) {
-      msg += `│ ${l}\n`;
+      msg += `${l}\n`;
     }
-    msg += `│\n`;
+    msg += `
+`;
 
     if (won) {
-      msg += `│ 🏆 *ᴍᴇɴᴀɴɢ!*\n`;
-      msg += `│ 💰 Payout: *${payout} gold* (net +${payout - bet})\n`;
-      msg += `│ ✦ EXP: *+${expGain}*\n`;
+      msg += `🏆 *ᴍᴇɴᴀɴɢ!*\n`;
+      msg += `💰 Payout: *${payout} gold* (net +${payout - bet})\n`;
+      msg += `✦ EXP: *+${expGain}*\n`;
     } else if (draw) {
-      msg += `│ 🤝 *Seri!* Bet dikembalikan\n`;
-      msg += `│ 💰 Refund: *${payout} gold*\n`;
+      msg += `🤝 *Seri!* Bet dikembalikan\n`;
+      msg += `💰 Refund: *${payout} gold*\n`;
     } else {
-      msg += `│ 💀 *Kalah!*\n`;
-      msg += `│ 💸 Rugi: *-${bet} gold*\n`;
+      msg += `💀 *Kalah!*\n`;
+      msg += `💸 Rugi: *-${bet} gold*\n`;
     }
 
-    msg += `│\n`;
-    msg += `│ 💼 Gold: *${rpg.gold - bet + payout}*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `
+`;
+    msg += `💼 Gold: *${rpg.gold - bet + payout}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("sabungayam error:", err);

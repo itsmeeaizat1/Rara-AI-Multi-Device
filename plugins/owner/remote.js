@@ -22,8 +22,8 @@ async function handler(m, { sock, config: botConfig }) {
   try {
 
     const text =
-      claraWrap("Remote", ["│ Fitur remote control aktif.",
-        "│ Gunakan perintah yang valid."].join("\n")) +
+      claraWrap("Remote", ["Fitur remote control aktif.",
+        "Gunakan perintah yang valid."].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

@@ -41,11 +41,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴀɪ ᴍᴀᴛʜ ᴠ2 ✦ 」\n`;
-    msg += `│ 🧮 Soal: *${text}*\n`;
-    msg += `│\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `╰────  •  ────`;
+    let msg = `Soal: *${text}*\n\n${result.answer.trim()}`;
     return m.reply(msg);
   } catch (err) {
     console.error("aimathv2 error:", err);

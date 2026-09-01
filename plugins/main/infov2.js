@@ -26,18 +26,18 @@ async function handler(m, { sock, config: botConfig }) {
     const groups = Object.keys(db.groups || {}).length;
 
     const text =
-      "╭─「 ✦ " + toSC("Info Bot") + " ✦ 」\n│\n" +
+      
       "│ • " + toSC("Bot") + " : *" + (botConfig.bot?.name || "Nova AI") + "*\n" +
       "│ • " + toSC("Versi") + " : *" + (botConfig.bot?.version || "1.0.0") + "*\n" +
       "│ • " + toSC("Mode") + " : *" + (botConfig.mode || "public").toUpperCase() + "*\n" +
       "│ • " + toSC("Prefix") + " : *" + prefix + "*\n" +
       "│ • " + toSC("Users") + " : *" + users + "*\n" +
       "│ • " + toSC("Groups") + " : *" + groups + "*\n" +
-      "╰────  •  ────";
+      "";
 
     return m.reply(text);
   } catch (error) {
-    return m.reply("╭─「 ✦ InfoV2 ✦ 」\n│\n│ ❌ " + toSC("Gagal menampilkan info") + "\n│\n╰────  •  ────");
+    return m.reply("❌ Gagal menampilkan info");
   }
 }
 

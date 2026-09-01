@@ -69,10 +69,11 @@ async function handler(m, { sock, config: botConfig }) {
     if (!quote) quote = LOCAL_QUOTES[Math.floor(Math.random() * LOCAL_QUOTES.length)];
     if (!source) source = "Local";
 
-    const displayQuote = author ? `${quote}\n\n│ — ${author}` : quote;
+    const displayQuote = author ? `${quote}\n
+— ${author}` : quote;
     const text =
-      claraWrap("Quote", [`│ *${displayQuote}*`,
-        `│ Sumber: *${source}*`].join("\n")) +
+      claraWrap("Quote", [`*${displayQuote}*`,
+        `Sumber: *${source}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}quote untuk quote lain`) +
       "\n" +

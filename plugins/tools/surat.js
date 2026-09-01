@@ -119,23 +119,23 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!args || args.trim().length < 10) {
     const help = claraWrap("Surat", [
-      `│ Generator Surat Resmi → PDF`,
+      `Generator Surat Resmi → PDF`,
       ``,
-      `│ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  ${prefix}surat <jenis> <detail>`,
       ``,
-      `│ *ᴊᴇɴɪꜱ ꜱᴜʀᴀᴛ:*`,
+      `*ᴊᴇɴɪꜱ ꜱᴜʀᴀᴛ:*`,
       `  dinas, lamaran, keterangan, tugas, izin, undangan`,
       ``,
-      `│ *ᴄᴏɴᴛᴏʜ:*`,
+      `*ᴄᴏɴᴛᴏʜ:*`,
       `  ${prefix}surat dinas dari Bpk Andi kepala sekolah SDN 01 ke Dinas Pendidikan tentang permohonan bantuan dana`,
       `  ${prefix}surat lamaran Budi melamar ke PT Maju Jaya sebagai staff admin, S1 Ekonomi, pengalaman 2 tahun`,
       ``,
-      `│ Hasil: PDF siap print`,
+      `Hasil: PDF siap print`,
     ].join("\n"));
     return m.reply( help, "surat");
   }
-  m.reply(claraWrap("Surat", "│ AI lagi nyusun surat resmi..."));
+  m.reply(claraWrap("Surat", "AI lagi nyusun surat resmi..."));
 
   try {
     const aiResult = await UnlimitedAI(SURAT_PROMPT.replace("__INPUT__", args), "nova-ai");
@@ -144,7 +144,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       return m.reply(claraWrap("Surat", "❌ Gagal generate surat. Coba dengan detail yang lebih lengkap."));
     }
 
-    m.reply(claraWrap("Surat", "│ Surat selesai, lagi render ke PDF..."));
+    m.reply(claraWrap("Surat", "Surat selesai, lagi render ke PDF..."));
 
     const pdfBuffer = await renderSuratPDF(aiResult.trim());
     const filename = `surat_${Date.now()}.pdf`;

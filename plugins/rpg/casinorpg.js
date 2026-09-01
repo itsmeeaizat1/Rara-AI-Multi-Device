@@ -102,24 +102,25 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastGacha", CASINO_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴄᴀsɪɴᴏ ✦ 」\n`;
-    msg += `│ 🎰 ${s1} | ${s2} | ${s3}\n`;
-    msg += `│\n`;
-    msg += `│ 📊 Hasil: *${result}*\n`;
+    let msg = "";
+    msg += `🎰 ${s1} | ${s2} | ${s3}\n`;
+    msg += `
+`;
+    msg += `📊 Hasil: *${result}*\n`;
 
     if (payout > 0) {
-      msg += `│ 💰 Multiplier: *${multiplier}x*\n`;
-      msg += `│ 💵 Bet: *${bet} gold*\n`;
-      msg += `│ 🎉 Menang: *+${payout - bet} gold* (net)\n`;
+      msg += `💰 Multiplier: *${multiplier}x*\n`;
+      msg += `💵 Bet: *${bet} gold*\n`;
+      msg += `🎉 Menang: *+${payout - bet} gold* (net)\n`;
     } else {
-      msg += `│ 💵 Bet: *${bet} gold*\n`;
-      msg += `│ 💸 Kalah: *-${bet} gold*\n`;
+      msg += `💵 Bet: *${bet} gold*\n`;
+      msg += `💸 Kalah: *-${bet} gold*\n`;
     }
 
-    msg += `│\n`;
-    msg += `│ 💼 Gold: *${rpg.gold - bet + payout}*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `
+`;
+    msg += `💼 Gold: *${rpg.gold - bet + payout}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("casinorpg error:", err);

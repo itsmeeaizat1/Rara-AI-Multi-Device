@@ -55,38 +55,47 @@ Gunakan bahasa Indonesia, tafsir dengan bijak dan positif. Jangan menakut-nakuti
       if (!t) continue;
 
       if (t.startsWith("MAKNA UTAMA:")) {
-        formatted += `│ 🌙 *ᴍᴀᴋɴᴀ ᴜᴛᴀᴍᴀ*\n`;
-        formatted += `│ ${t.replace("MAKNA UTAMA:", "").trim()}\n│\n`;
+        formatted += `🌙 *ᴍᴀᴋɴᴀ ᴜᴛᴀᴍᴀ*\n`;
+        formatted += `${t.replace("MAKNA UTAMA:", "").trim()}
+
+`;
       } else if (t.startsWith("ASPEK PSIKOLOGIS:")) {
-        formatted += `│ 🧠 *ᴀsᴘᴇᴋ ᴘsɪᴋᴏʟᴏɢɪs*\n`;
-        formatted += `│ ${t.replace("ASPEK PSIKOLOGIS:", "").trim()}\n│\n`;
+        formatted += `🧠 *ᴀsᴘᴇᴋ ᴘsɪᴋᴏʟᴏɢɪs*\n`;
+        formatted += `${t.replace("ASPEK PSIKOLOGIS:", "").trim()}
+
+`;
       } else if (t.startsWith("ASPEK SPIRITUAL:")) {
-        formatted += `│ ✨ *ᴀsᴘᴇᴋ sᴘɪʀɪᴛᴜᴀʟ*\n`;
-        formatted += `│ ${t.replace("ASPEK SPIRITUAL:", "").trim()}\n│\n`;
+        formatted += `✨ *ᴀsᴘᴇᴋ sᴘɪʀɪᴛᴜᴀʟ*\n`;
+        formatted += `${t.replace("ASPEK SPIRITUAL:", "").trim()}
+
+`;
       } else if (t.startsWith("PREDIKSI:")) {
-        formatted += `│ 🔮 *ᴘʀᴇᴅɪᴋsɪ*\n`;
-        formatted += `│ ${t.replace("PREDIKSI:", "").trim()}\n│\n`;
+        formatted += `🔮 *ᴘʀᴇᴅɪᴋsɪ*\n`;
+        formatted += `${t.replace("PREDIKSI:", "").trim()}
+
+`;
       } else if (t.startsWith("SARAN:")) {
-        formatted += `│ 💡 *sᴀʀᴀɴ*\n`;
-        formatted += `│ ${t.replace("SARAN:", "").trim()}\n`;
+        formatted += `💡 *sᴀʀᴀɴ*\n`;
+        formatted += `${t.replace("SARAN:", "").trim()}\n`;
       } else {
-        formatted += `│ ${t}\n`;
+        formatted += `${t}\n`;
       }
     }
 
     if (!formatted) {
-      formatted = `│ ${result.answer.trim()}\n`;
+      formatted = `${result.answer.trim()}\n`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴛᴀғsɪʀ ᴍɪᴍᴘɪ ✦ 」\n`;
-    msg += `│ 💭 Mimpi: *${text}*\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `💭 Mimpi: *${text}*\n`;
+    msg += `
+`;
     msg += formatted;
-    msg += `│\n`;
-    msg += `│ ⚠️ Tafsir mimpi hanya referensi, bukan kepastian\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `⚠️ Tafsir mimpi hanya referensi, bukan kepastian\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("mimpiai error:", err);
     await m.react("❌");

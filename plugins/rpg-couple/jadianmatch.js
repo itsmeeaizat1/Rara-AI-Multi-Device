@@ -31,20 +31,20 @@ async function handler(m, { sock }) {
 
     if (cinta.spouse) {
       return m.reply(
-        `╭─「 ✦ ʀᴘɢ ᴄᴏᴜᴘʟᴇ ✦ 」\n` +
-        `│ ❤️ Eh udah punya pacar nih! Sama *${cinta.spouseName}*\n` +
-        `│ 💕 Affection: *${cinta.affection || 0}*\n` +
-        `│ Putus? \`${m.prefix}rpgcerai\`\n\n` +
-        `╰────  •  ────`
+        "" +
+        `❤️ Eh udah punya pacar nih! Sama *${cinta.spouseName}*\n` +
+        `💕 Affection: *${cinta.affection || 0}*\n` +
+        `Putus? \`${m.prefix}rpgcerai\`\n\n` +
+        ""
       );
     }
 
     if ((rpg.level || 1) < DATING_MIN_LEVEL) {
       return m.reply(
-        `╭─「 ✦ ʀᴘɢ ᴄᴏᴜᴘʟᴇ ✦ 」\n` +
-        `│ ❌ Levelmu belum cukup nih! Butuh minimal *${DATING_MIN_LEVEL}*\n` +
-        `│ Level kamu: *${rpg.level || 1}*\n\n` +
-        `╰────  •  ────`
+        "" +
+        `❌ Levelmu belum cukup nih! Butuh minimal *${DATING_MIN_LEVEL}*\n` +
+        `Level kamu: *${rpg.level || 1}*\n\n` +
+        ""
       );
     }
 
@@ -58,18 +58,19 @@ async function handler(m, { sock }) {
 
     if (!targetJid) {
       return m.reply(
-        `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n│ Mau jadian? Tag orangnya atau reply pesannya ya!\n\n` +
-        `│ \`${m.prefix}rpgcouple @tag\`\n` +
-        `│ Reply pesan + \`${m.prefix}rpgcouple\`\n\n` +
-        `╰────  •  ────`
+        `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n
+Mau jadian? Tag orangnya atau reply pesannya ya!\n\n` +
+        `\`${m.prefix}rpgcouple @tag\`\n` +
+        `Reply pesan + \`${m.prefix}rpgcouple\`\n\n` +
+        ""
       );
     }
 
     if (targetJid === m.sender) {
       return m.reply(
-        `╭─「 ✦ ʀᴘɢ ᴄᴏᴜᴘʟᴇ ✦ 」\n` +
-        `│ ❌ Tidak bisa pacaran dengan diri sendiri!\n\n` +
-        `╰────  •  ────`
+        "" +
+        `❌ Tidak bisa pacaran dengan diri sendiri!\n\n` +
+        ""
       );
     }
 
@@ -77,19 +78,19 @@ async function handler(m, { sock }) {
     const targetCinta = getCintaData({ sender: targetJid, pushName: targetJid.split("@")[0] });
     if (targetCinta.spouse) {
       return m.reply(
-        `╭─「 ✦ ʀᴘɢ ᴄᴏᴜᴘʟᴇ ✦ 」\n` +
-        `│ 💔 @${targetJid.split("@")[0]} sudah punya pasangan!\n\n` +
-        `╰────  •  ────`
+        "" +
+        `💔 @${targetJid.split("@")[0]} sudah punya pasangan!\n\n` +
+        ""
       );
     }
 
     const targetRpg = getRpgData({ sender: targetJid, pushName: targetJid.split("@")[0] });
     if ((targetRpg.level || 1) < DATING_MIN_LEVEL) {
       return m.reply(
-        `╭─「 ✦ ʀᴘɢ ᴄᴏᴜᴘʟᴇ ✦ 」\n` +
-        `│ ❌ Level @${targetJid.split("@")[0]} belum cukup!\n` +
-        `│ Butuh minimal level *${DATING_MIN_LEVEL}*\n\n` +
-        `╰────  •  ────`
+        "" +
+        `❌ Level @${targetJid.split("@")[0]} belum cukup!\n` +
+        `Butuh minimal level *${DATING_MIN_LEVEL}*\n\n` +
+        ""
       );
     }
 
@@ -102,12 +103,12 @@ async function handler(m, { sock }) {
       startDating({ sender: targetJid, pushName: targetName }, m.sender, m.pushName || "Player");
 
       return m.reply(
-        `╭─「 ✦ ʀᴘɢ ᴄᴏᴜᴘʟᴇ ✦ 」\n` +
-        `│ 💕 *CIE CIE!*\n` +
-        `│ @${m.sender.split("@")[0]} dan @${targetJid.split("@")[0]} resmi jadian!\n` +
-        `│ ❤️ Affection awal: *50*\n` +
-        `│ 📅 Mulai kencan dengan \`${m.prefix}rpgkencan\`\n\n` +
-        `╰────  •  ────`
+        "" +
+        `💕 *CIE CIE!*\n` +
+        `@${m.sender.split("@")[0]} dan @${targetJid.split("@")[0]} resmi jadian!\n` +
+        `❤️ Affection awal: *50*\n` +
+        `📅 Mulai kencan dengan \`${m.prefix}rpgkencan\`\n\n` +
+        ""
       );
     }
 
@@ -127,12 +128,12 @@ async function handler(m, { sock }) {
     };
 
     await m.reply(
-      `╭─「 ✦ ʀᴘɢ ᴄᴏᴜᴘʟᴇ ✦ 」\n` +
-      `│ 🏹 @${m.sender.split("@")[0]} mengajak @${targetJid.split("@")[0]} berpacaran\n` +
-      `│ ⏱️ Berlaku *1 jam*\n\n` +
+      "" +
+      `🏹 @${m.sender.split("@")[0]} mengajak @${targetJid.split("@")[0]} berpacaran\n` +
+      `⏱️ Berlaku *1 jam*\n\n` +
       `_Balas *terima* atau *tolak*_\n` +
       `Atau \`${m.prefix}rpgterima\` / \`${m.prefix}rpgtolak\`\n\n` +
-      `╰────  •  ────`
+      ""
     );
     await m.react("🏹");
   } catch (e) {
@@ -169,12 +170,12 @@ async function answerHandler(m, sock) {
       delete global.rpgCintaSessions[sessKey];
       await m.react("💕");
       await m.reply(
-        `╭─「 ✦ ʀᴘɢ ᴄᴏᴜᴘʟᴇ ✦ 」\n` +
-        `│ 💕 *CIE CIE!*\n` +
-        `│ @${m.sender.split("@")[0]} dan @${shooter.split("@")[0]} resmi jadian!\n` +
-        `│ ❤️ Affection awal: *50*\n` +
-        `│ 📅 Mulai kencan dengan \`${m.prefix}rpgkencan\`\n\n` +
-        `╰────  •  ────`
+        "" +
+        `💕 *CIE CIE!*\n` +
+        `@${m.sender.split("@")[0]} dan @${shooter.split("@")[0]} resmi jadian!\n` +
+        `❤️ Affection awal: *50*\n` +
+        `📅 Mulai kencan dengan \`${m.prefix}rpgkencan\`\n\n` +
+        ""
       );
       return true;
     }
@@ -189,10 +190,10 @@ async function answerHandler(m, sock) {
       delete global.rpgCintaSessions[sessKey];
       await m.react("💔");
       await m.reply(
-        `╭─「 ✦ ʀᴘɢ ᴄᴏᴜᴘʟᴇ ✦ 」\n` +
-        `│ 💔 @${m.sender.split("@")[0]} menolak @${shooter.split("@")[0]}\n` +
-        `│ Sabar ya, tingkatkan level dulu! 💪\n\n` +
-        `╰────  •  ────`
+        "" +
+        `💔 @${m.sender.split("@")[0]} menolak @${shooter.split("@")[0]}\n` +
+        `Sabar ya, tingkatkan level dulu! 💪\n\n` +
+        ""
       );
       return true;
     }

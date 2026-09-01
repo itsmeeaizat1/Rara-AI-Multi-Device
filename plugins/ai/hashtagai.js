@@ -46,13 +46,7 @@ Pisahkan dengan koma, langsung copy-paste ready. Hashtag dalam bahasa Indonesia 
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ʜᴀsʜᴛᴀɢ ɢᴇɴᴇʀᴀᴛᴏʀ ✦ 」\n`;
-    msg += `│ #️⃣ Topik: *${text}*\n`;
-    msg += `│\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `│\n`;
-    msg += `│ 💡 Copy langsung paste ke caption\n`;
-    msg += `╰────  •  ────`;
+    let msg = `Topik: *${text}*\n\n${result.answer.trim()}\n\nCopy langsung paste ke caption`;
     return m.reply(msg);
   } catch (err) {
     console.error("hashtagai error:", err);

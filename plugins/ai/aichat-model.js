@@ -38,7 +38,7 @@ async function handler(m, { sock, config: botConfig }) {
         claraWrap("AI Model", [...lines.flatMap((line, index) => [line, index < lines.length - 1 ? "" : null].join("\n")).filter(Boolean),
         ]) +
         "\n\n" +
-        claraWrap("Pakai", [`│ *${prefix}aichat-model list* — lihat daftar model`, `│ *${prefix}aichat-model <provider> <model>* — ganti model aktif`, `│ Contoh: *${prefix}aichat-model gemini gemini-1.5-pro*`].join("\n")) +
+        claraWrap("Pakai", [`*${prefix}aichat-model list* — lihat daftar model`, `*${prefix}aichat-model <provider> <model>* — ganti model aktif`, `Contoh: *${prefix}aichat-model gemini gemini-1.5-pro*`].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +
@@ -51,8 +51,8 @@ async function handler(m, { sock, config: botConfig }) {
     const provider = resolveProvider(providerArg, {});
     if (!provider) {
       const text =
-        claraWrap("Tidak Dikenal", [`│ Provider *${providerArg}* tidak dikenali.`,
-          `│ Ketik *${prefix}aichat-model list* untuk lihat daftar.`].join("\n")) +
+        claraWrap("Tidak Dikenal", [`Provider *${providerArg}* tidak dikenali.`,
+          `Ketik *${prefix}aichat-model list* untuk lihat daftar.`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -62,8 +62,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!modelArg || !(provider.models || []).includes(modelArg)) {
       const text =
-        claraWrap("Model Tidak Valid", [`│ Model *${modelArg || ""}* tidak tersedia untuk provider *${providerArg}*.`,
-          `│ Model tersedia: *${(provider.models || [].join("\n")).join(", ")}*`,
+        claraWrap("Model Tidak Valid", [`Model *${modelArg || ""}* tidak tersedia untuk provider *${providerArg}*.`,
+          `Model tersedia: *${(provider.models || [].join("\n")).join(", ")}*`,
         ]) +
         "\n\n" +
         separator("━", 22) +
@@ -78,8 +78,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!m.isOwner) {
       const text =
-        claraWrap("Ditolak", ["│ Status: *ᴅɪᴛᴏʟᴀᴋ*",
-          "│ Alasan: *ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇʟ ᴀɪ.*"].join("\n")) +
+        claraWrap("Ditolak", ["Status: *ᴅɪᴛᴏʟᴀᴋ*",
+          "Alasan: *ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇʟ ᴀɪ.*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -92,9 +92,9 @@ async function handler(m, { sock, config: botConfig }) {
     botConfig.aiHelp.model = modelArg;
 
     const text =
-      claraWrap("AI Model", [`│ Provider: *${providerArg}*`,
-        `│ Model: *${modelArg}*`,
-        "│ Perubahan akan berlaku setelah config reload."].join("\n")) +
+      claraWrap("AI Model", [`Provider: *${providerArg}*`,
+        `Model: *${modelArg}*`,
+        "Perubahan akan berlaku setelah config reload."].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 

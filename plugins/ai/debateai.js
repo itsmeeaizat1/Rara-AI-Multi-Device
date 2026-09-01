@@ -47,18 +47,20 @@ async function handler(m, { sock }) {
     ]);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴅᴇʙᴀᴛ ᴀɪ ✦ 」\n`;
-    msg += `│ 📌 Topik: *${text}*\n`;
-    msg += `│\n`;
-    msg += `│ ${DEBATERS[0].emoji} *${DEBATERS[0].name} (PRO):*\n`;
-    msg += `│ ${proResult.answer?.trim() || "Gagal merespon"}\n`;
-    msg += `│\n`;
-    msg += `│ ${DEBATERS[1].emoji} *${DEBATERS[1].name} (KONTRA):*\n`;
-    msg += `│ ${conResult.answer?.trim() || "Gagal merespon"}\n`;
-    msg += `│\n`;
-    msg += `│ 💡 Siapa yang menurutmu menang? 😄\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    let msg = "";
+    msg += `📌 Topik: *${text}*\n`;
+    msg += `
+`;
+    msg += `${DEBATERS[0].emoji} *${DEBATERS[0].name} (PRO):*\n`;
+    msg += `${proResult.answer?.trim() || "Gagal merespon"}\n`;
+    msg += `
+`;
+    msg += `${DEBATERS[1].emoji} *${DEBATERS[1].name} (KONTRA):*\n`;
+    msg += `${conResult.answer?.trim() || "Gagal merespon"}\n`;
+    msg += `
+`;
+    msg += `💡 Siapa yang menurutmu menang? 😄\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("debateai error:", err);
     await m.react("❌");

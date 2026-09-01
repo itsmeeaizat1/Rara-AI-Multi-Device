@@ -179,34 +179,36 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastPvP", PVP_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴅᴜᴇʟ ʀᴘɢ ✦ 」\n`;
-    msg += `│ ⚔️ ${m.pushName} vs ${targetJid.split("@")[0]}\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `⚔️ ${m.pushName} vs ${targetJid.split("@")[0]}\n`;
+    msg += `
+`;
 
     // Combat log (5 terakhir)
     const recentLog = log.slice(-5);
     for (const l of recentLog) {
-      msg += `│ ${l}\n`;
+      msg += `${l}\n`;
     }
-    msg += `│\n`;
+    msg += `
+`;
 
     if (draw) {
-      msg += `│ 🤝 *Hasil: Seri!* (Timeout ${maxRounds} ronde)\n`;
-      msg += `│ Tidak ada reward untuk kedua pihak\n`;
+      msg += `🤝 *Hasil: Seri!* (Timeout ${maxRounds} ronde)\n`;
+      msg += `Tidak ada reward untuk kedua pihak\n`;
     } else if (iWon) {
-      msg += `│ 🏆 *Hasil: ${m.pushName} Menang!*\n`;
-      msg += `│ ✦ EXP: *+${expGain}*\n`;
-      msg += `│ 💰 Gold: *+${goldGain}*\n`;
-      msg += `│ 📊 Rating: *${rpg.pvpRating + (iWon ? 15 : 0)}*\n`;
+      msg += `🏆 *Hasil: ${m.pushName} Menang!*\n`;
+      msg += `✦ EXP: *+${expGain}*\n`;
+      msg += `💰 Gold: *+${goldGain}*\n`;
+      msg += `📊 Rating: *${rpg.pvpRating + (iWon ? 15 : 0)}*\n`;
     } else {
-      msg += `│ 💀 *Hasil: ${m.pushName} Kalah!*\n`;
-      msg += `│ 💰 Gold: *${goldGain}*\n`;
-      msg += `│ 📊 Rating: *${rpg.pvpRating - 15}*\n`;
+      msg += `💀 *Hasil: ${m.pushName} Kalah!*\n`;
+      msg += `💰 Gold: *${goldGain}*\n`;
+      msg += `📊 Rating: *${rpg.pvpRating - 15}*\n`;
     }
-    msg += `│\n`;
-    msg += `│ ❤️ HP kamu: *${Math.max(1, myHp)}/${rpg.maxHp}*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `
+`;
+    msg += `❤️ HP kamu: *${Math.max(1, myHp)}/${rpg.maxHp}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("duelrpg error:", err);

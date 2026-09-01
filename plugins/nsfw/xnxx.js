@@ -24,11 +24,11 @@ async function handler(m, { sock }) {
   const query = m.text?.trim();
 
   if (!query) {
-    return m.reply(`╭─「 ✦ XNXX Search ✦ 」
+    return m.reply(`
 │ Masukkan query pencarian
 │
 │ 💡 *Contoh:* \`${m.prefix}xnxx amateur\`
-╰────  •  ────`, "xnxx");
+`, "xnxx");
   }
   try {
     const res = await axios.get(
@@ -37,14 +37,14 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data || res.data.data.length === 0) {
-      return m.reply(`╭─「 ✦ XNXX Search ✦ 」
+      return m.reply(`
 │ ❌ Tidak ditemukan untuk: ${query}
 │ Coba keyword lain
-╰────  •  ────`, "xnxx");
+`, "xnxx");
     }
 
     const results = res.data.data.slice(0, 5);
-    let text = `╭─「 ✦ XNXX Search ✦ 」
+    let text = `
 │ Query: ${query}
 │
 `;

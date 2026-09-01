@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const msg = novaReply({
       title: "Brat Cewek",
       status: "⚠ Masukkan teks untuk generate brat sticker",
-      content: `│\n│ Contoh: ${m.prefix}bratcewek Hai semua`,
+      content: `Contoh: ${m.prefix}bratcewek Hai semua`,
     });
     return await m.reply(msg);
   }

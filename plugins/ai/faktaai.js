@@ -41,11 +41,7 @@ Format nomor 1-7. Tiap fakta 2-3 kalimat. Bahasa Indonesia. Pilih fakta yang kur
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ғᴀᴋᴛᴀ ᴍᴇɴᴀʀɪᴋ ✦ 」\n`;
-    msg += `│ 📚 Topik: *${text}*\n`;
-    msg += `│\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `╰────  •  ────`;
+    let msg = `Topik: *${text}*\n\n${result.answer.trim()}`;
     return m.reply(msg);
   } catch (err) {
     console.error("faktaai error:", err);

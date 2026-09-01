@@ -59,20 +59,20 @@ async function handler(m, { sock }) {
       saveRpg(m, { invest: rpg.invest });
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ɪɴᴠᴇsᴛᴀsɪ ✦ 」\n`;
-      msg += `│ 📈 Investasi selesai!\n`;
-      msg += `│\n`;
-      msg += `│ 💵 Modal: *${investAmount} gold*\n`;
+      let msg = "";
+      msg += `📈 Investasi selesai!\n`;
+      msg += `
+`;
+      msg += `💵 Modal: *${investAmount} gold*\n`;
       if (profit >= 0) {
-        msg += `│ 📊 Return: *${returnValue} gold*\n`;
-        msg += `│ ✅ Profit: *+${profit} gold*\n`;
+        msg += `📊 Return: *${returnValue} gold*\n`;
+        msg += `✅ Profit: *+${profit} gold*\n`;
       } else {
-        msg += `│ 📊 Return: *${returnValue} gold*\n`;
-        msg += `│ ❌ Rugi: *${profit} gold*\n`;
+        msg += `📊 Return: *${returnValue} gold*\n`;
+        msg += `❌ Rugi: *${profit} gold*\n`;
       }
-      msg += `│ 💰 Gold sekarang: *${rpg.gold + returnValue}*\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `💰 Gold sekarang: *${rpg.gold + returnValue}*\n`;
+      
       return m.reply(msg);
     }
 
@@ -82,27 +82,28 @@ async function handler(m, { sock }) {
         const remaining = rpg.invest.endTime - Date.now();
         const mins = Math.floor(remaining / 60000);
         const secs = Math.floor((remaining % 60000) / 1000);
-        let msg = `╭─「 ✦ ɪɴᴠᴇsᴛᴀsɪ ✦ 」\n`;
-        msg += `│ 📈 Investasi aktif!\n`;
-        msg += `│ 💵 Modal: *${rpg.invest.amount} gold*\n`;
-        msg += `│ ⏰ Selesai dalam: *${mins}m ${secs}s*\n`;
-        msg += `│\n`;
-        msg += `│ Ketik .investrpg lagi saat waktu habis\n`;
-        msg += `│ untuk mengambil hasil investasi\n`;
-        msg += `╰────  •  ────`;
-        return m.reply(msg);
+        let msg = "";
+        msg += `📈 Investasi aktif!\n`;
+        msg += `💵 Modal: *${rpg.invest.amount} gold*\n`;
+        msg += `⏰ Selesai dalam: *${mins}m ${secs}s*\n`;
+        msg += `
+`;
+        msg += `Ketik .investrpg lagi saat waktu habis\n`;
+        msg += `untuk mengambil hasil investasi\n`;
+                return m.reply(msg);
       }
 
-      let msg = `╭─「 ✦ ɪɴᴠᴇsᴛᴀsɪ ✦ 」\n`;
-      msg += `│ 💰 Gold: *${rpg.gold}*\n`;
-      msg += `│\n`;
-      msg += `│ 📌 Cara: .investrpg <jumlah>\n`;
-      msg += `│ 💵 Min: *${MIN_INVEST}* | Max: *${MAX_INVEST}*\n`;
-      msg += `│\n`;
-      msg += `│ ⚠️ Risk: 70% profit, 30% rugi\n`;
-      msg += `│ 📊 Return: 80-120% dalam 1 jam\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `💰 Gold: *${rpg.gold}*\n`;
+      msg += `
+`;
+      msg += `📌 Cara: .investrpg <jumlah>\n`;
+      msg += `💵 Min: *${MIN_INVEST}* | Max: *${MAX_INVEST}*\n`;
+      msg += `
+`;
+      msg += `⚠️ Risk: 70% profit, 30% rugi\n`;
+      msg += `📊 Return: 80-120% dalam 1 jam\n`;
+            return m.reply(msg);
     }
 
     const amount = parseInt(action);
@@ -134,17 +135,18 @@ async function handler(m, { sock }) {
     saveRpg(m, { invest: rpg.invest });
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ɪɴᴠᴇsᴛᴀsɪ ✦ 」\n`;
-    msg += `│ ✅ Investasi dimulai!\n`;
-    msg += `│\n`;
-    msg += `│ 💵 Modal: *${amount} gold*\n`;
-    msg += `│ ⏰ Durasi: *1 jam*\n`;
-    msg += `│ 📊 Estimasi return: *${Math.floor(amount * 0.8)}-${Math.floor(amount * 1.2)} gold*\n`;
-    msg += `│\n`;
-    msg += `│ Ketik .investrpg lagi setelah 1 jam\n`;
-    msg += `│ untuk mengambil hasil investasi\n`;
-    msg += `╰────  •  ────`;
-
+    let msg = "";
+    msg += `✅ Investasi dimulai!\n`;
+    msg += `
+`;
+    msg += `💵 Modal: *${amount} gold*\n`;
+    msg += `⏰ Durasi: *1 jam*\n`;
+    msg += `📊 Estimasi return: *${Math.floor(amount * 0.8)}-${Math.floor(amount * 1.2)} gold*\n`;
+    msg += `
+`;
+    msg += `Ketik .investrpg lagi setelah 1 jam\n`;
+    msg += `untuk mengambil hasil investasi\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("investrpg error:", err);

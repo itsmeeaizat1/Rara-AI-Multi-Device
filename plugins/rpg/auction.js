@@ -79,22 +79,25 @@ async function handler(m, { sock }) {
     let userWallet = (await db.getPlayerData?.(sender, "wallet")) || { gold: 10000 };
 
     if (subCmd === "list" || !subCmd) {
-      let msg = `╭─「 ✦ AUCTION HOUSE ✦ 」\n`;
-      msg += `│ Daftar Lelang Aktif Saat Ini:\n│\n`;
+      let msg = "";
+      msg += `Daftar Lelang Aktif Saat Ini:
+
+`;
 
       auctionData.items.forEach((auc) => {
         const remaining = auc.endTime - Date.now();
-        msg += `│ 🏷️ *ID:* \`${auc.id}\`\n`;
-        msg += `│ 📦 *Item:* ${auc.item}\n`;
-        msg += `│ 👤 *Penjual:* ${auc.seller}\n`;
-        msg += `│ 💰 *Tawaran Tertinggi:* ${auc.currentBid} Gold (${auc.highestBidder})\n`;
-        msg += `│ ⏱️ *Sisa Waktu:* ${formatTimeRemaining(remaining)}\n│\n`;
+        msg += `🏷️ *ID:* \`${auc.id}\`\n`;
+        msg += `📦 *Item:* ${auc.item}\n`;
+        msg += `👤 *Penjual:* ${auc.seller}\n`;
+        msg += `💰 *Tawaran Tertinggi:* ${auc.currentBid} Gold (${auc.highestBidder})\n`;
+        msg += `⏱️ *Sisa Waktu:* ${formatTimeRemaining(remaining)}
+
+`;
       });
 
-      msg += `│ *Cara Bid:* ${m.prefix}auction bid <ID> <jumlah_gold>\n`;
-      msg += `│ *Cara Jual:* ${m.prefix}auction sell <nama_item> <harga_awal>\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `*Cara Bid:* ${m.prefix}auction bid <ID> <jumlah_gold>\n`;
+      msg += `*Cara Jual:* ${m.prefix}auction sell <nama_item> <harga_awal>\n`;
+      
       await m.react('🐣');
       return m.reply(msg);
     }
@@ -156,15 +159,14 @@ async function handler(m, { sock }) {
 
       await db.setPlayerData?.("global", "auctions", auctionData);
 
-      let msg = `╭─「 ✦ BID PLACED ✦ 」\n`;
-      msg += `│ 🎯 Berhasil menawar item lelang!\n`;
-      msg += `│  \n`;
-      msg += `│ 🏷️ *ID:* \`${targetAuction.id}\`\n`;
-      msg += `│ 📦 *Item:* ${targetAuction.item}\n`;
-      msg += `│ 💰 *Tawaran Baru:* ${bidAmount} Gold\n`;
-      msg += `│ 👑 *Penawar Tertinggi:* @${senderName}\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `🎯 Berhasil menawar item lelang!\n`;
+      msg += `\n`;
+      msg += `🏷️ *ID:* \`${targetAuction.id}\`\n`;
+      msg += `📦 *Item:* ${targetAuction.item}\n`;
+      msg += `💰 *Tawaran Baru:* ${bidAmount} Gold\n`;
+      msg += `👑 *Penawar Tertinggi:* @${senderName}\n`;
+      
       await m.react('🐣');
       return m.reply(msg);
     }
@@ -199,15 +201,14 @@ async function handler(m, { sock }) {
       auctionData.items.push(newAuction);
       await db.setPlayerData?.("global", "auctions", auctionData);
 
-      let msg = `╭─「 ✦ AUCTION CREATED ✦ 」\n`;
-      msg += `│ 📢 Barang berhasil didaftarkan ke Rumah Lelang!\n`;
-      msg += `│  \n`;
-      msg += `│ 🏷️ *ID Lelang:* \`${newId}\`\n`;
-      msg += `│ 📦 *Item:* ${itemName}\n`;
-      msg += `│ 💰 *Harga Awal:* ${startPrice} Gold\n`;
-      msg += `│ ⏱️ *Durasi:* 24 Jam Virtual\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `📢 Barang berhasil didaftarkan ke Rumah Lelang!\n`;
+      msg += `\n`;
+      msg += `🏷️ *ID Lelang:* \`${newId}\`\n`;
+      msg += `📦 *Item:* ${itemName}\n`;
+      msg += `💰 *Harga Awal:* ${startPrice} Gold\n`;
+      msg += `⏱️ *Durasi:* 24 Jam Virtual\n`;
+      
       await m.react('🐣');
       return m.reply(msg);
     }

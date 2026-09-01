@@ -110,24 +110,24 @@ async function handler(m, { sock, config: botConfig, text: args }) {
   // Check: is user replying to a PDF?
   if (!isPdfReplied && !pdfMime.includes("pdf")) {
     const help = claraWrap("Ttd", [
-      `│ Tanda Tangan Digital di PDF`,
+      `Tanda Tangan Digital di PDF`,
       ``,
-      `│ *Mode Gambar (ttd gambar):*`,
+      `*Mode Gambar (ttd gambar):*`,
       `  1. Reply pesan PDF`,
       `  2. Kirim gambar tanda tangan dengan caption:`,
       `     ${prefix}ttd`,
       ``,
-      `│ *Mode Teks (ttd nama):*`,
+      `*Mode Teks (ttd nama):*`,
       `  1. Reply pesan PDF`,
       `  2. Ketik: ${prefix}ttd Nama Lengkap`,
       ``,
-      `│ *ᴏᴘꜱɪ:*`,
+      `*ᴏᴘꜱɪ:*`,
       `  page=N (halaman ke-N, default: halaman terakhir)`,
       `  x=N y=N (posisi ttd, default: 50, 80)`,
       `  scale=N (ukuran gambar, default: 0.3)`,
       `  size=N (ukuran font, default: 28)`,
       ``,
-      `│ *ᴄᴏɴᴛᴏʜ:*`,
+      `*ᴄᴏɴᴛᴏʜ:*`,
       `  ${prefix}ttd Budi Santoso`,
       `  ${prefix}ttd Budi Santoso page=1 x=100 y=150`,
     ].join("\n"));
@@ -144,7 +144,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
     if (isImageMode) {
       // Image signature mode
-      m.reply(claraWrap("Ttd", "│ Stamp tanda tangan gambar ke PDF..."));
+      m.reply(claraWrap("Ttd", "Stamp tanda tangan gambar ke PDF..."));
       let sigBuffer;
       if (m.quoted && m.quoted.isMedia && m.quoted.type === "imageMessage") {
         // Signature is the quoted image, PDF is the quoted-of-quoted (not possible in WA)
@@ -180,7 +180,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
       }
     } else if (cleanArgs.length > 0) {
       // Text signature mode
-      m.reply(claraWrap("Ttd", "│ Tambah tanda tangan teks ke PDF..."));
+      m.reply(claraWrap("Ttd", "Tambah tanda tangan teks ke PDF..."));
       resultBuffer = await addTextSignaturePDF(pdfBuffer, cleanArgs, opts);
     } else {
       return m.reply(claraWrap("Ttd", `❌ Kirim gambar ttd atau ketik nama. Contoh: ${prefix}ttd Budi Santoso`));

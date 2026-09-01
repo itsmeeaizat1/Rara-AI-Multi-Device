@@ -52,13 +52,7 @@ Gunakan bahasa Indonesia. Analisis berdasarkan framework MBTI (Myers-Briggs Type
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴋᴇᴘʀɪʙᴀᴅɪᴀɴ ᴍʙᴛɪ ✦ 」\n`;
-    msg += `│ 🧠 Deskripsi: *${text}*\n`;
-    msg += `│\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `│\n`;
-    msg += `│ ⚠️ Analisis AI untuk hiburan, bukan diagnosis psikologi\n`;
-    msg += `╰────  •  ────`;
+    let msg = `Deskripsi: *${text}*\n\n${result.answer.trim()}\n\n⚠️ Analisis AI untuk hiburan, bukan diagnosis psikologi`;
     return m.reply(msg);
   } catch (err) {
     console.error("kepribadianai error:", err);

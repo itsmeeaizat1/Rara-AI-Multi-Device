@@ -40,24 +40,24 @@ async function handler(m, { sock, text, command }) {
       rpg.kingdomLevel = 1;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ᴋɪɴɢᴅᴏᴍ ✦ 」\n│ 🏯 Kamu mendirikan kerajaan *" + name + "*!\n│ 📌 Ketik .build untuk bangun markas\n╰────  •  ────");
+      return m.reply("🏯 Kamu mendirikan kerajaan *" + name + "*!\n📌 Ketik .build untuk bangun markas");
     }
 
     // .build — bangun/upgrade markas
     if (command === "build") {
       const currentBase = rpg.base || null;
       if (currentBase) {
-        return m.reply("╭─「 ✦ ʙᴜɪʟᴅ ✦ 」\n│ 🏠 Markasmu: *" + currentBase + "*\n│ 🛡️ DEF Bonus: " + (rpg.baseDef || 0) + "\n│ 📌 Ketik .build <tipe> untuk upgrade\n╰────  •  ────");
+        return m.reply("🏠 Markasmu: *" + currentBase + "*\n🛡️ DEF Bonus: " + (rpg.baseDef || 0) + "\n📌 Ketik .build <tipe> untuk upgrade");
       }
       const baseType = (text || "").trim().toLowerCase();
       if (!baseType) {
-        let msg = "╭─「 ✦ ʙᴜɪʟᴅ ✦ 」\n";
-        msg += "│ Pilih tipe markas:\n│\n";
+        let msg = "";
+        msg += "Pilih tipe markas:\n│\n";
         for (const [type, info] of Object.entries(BASE_TYPES)) {
-          msg += "│ 🏠 " + type + " — " + info.cost + " gold\n";
-          msg += "│    " + info.desc + " (DEF +" + info.def + ")\n";
+          msg += "🏠 " + type + " — " + info.cost + " gold\n";
+          msg += "   " + info.desc + " (DEF +" + info.def + ")\n";
         }
-        msg += "╰────  •  ────";
+        msg += "";
         return m.reply(msg);
       }
 
@@ -72,7 +72,7 @@ async function handler(m, { sock, text, command }) {
       rpg.def = (rpg.def || 5) + base.def;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ʙᴜɪʟᴅ ✦ 」\n│ 🧱 Kamu membangun *" + baseType + "*!\n│ 🛡️ DEF +" + base.def + "\n│ 💰 Sisa gold: " + (rpg.gold || 0) + "\n╰────  •  ────");
+      return m.reply("🧱 Kamu membangun *" + baseType + "*!\n🛡️ DEF +" + base.def + "\n💰 Sisa gold: " + (rpg.gold || 0) + "");
     }
 
     // .defend — perkuat markas
@@ -84,7 +84,7 @@ async function handler(m, { sock, text, command }) {
       rpg.def = (rpg.def || 5) + bonus;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ᴅᴇғᴇɴᴅ ✦ 」\n│ 🛡️ Markas diperkuat!\n│ DEF +" + bonus + "\n│ Total base DEF: " + rpg.baseDef + "\n╰────  •  ────");
+      return m.reply("🛡️ Markas diperkuat!\nDEF +" + bonus + "\nTotal base DEF: " + rpg.baseDef + "");
     }
   } catch (e) {
     console.error("kingdom error:", e.message);

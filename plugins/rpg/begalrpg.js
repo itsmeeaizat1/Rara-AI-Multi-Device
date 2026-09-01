@@ -98,17 +98,18 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBegal", BEGAL_COOLDOWN);
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ʙᴇɢᴀʟ ✦ 」\n`;
-      msg += `│ 🗡️ ${m.pushName} merampok ${targetJid.split("@")[0]}\n`;
-      msg += `│\n`;
-      msg += `│ ✅ Berhasil rampok!\n`;
-      msg += `│ 📊 Success rate: *${Math.floor(successRate)}%*\n`;
-      msg += `│ 💰 Dapat: *${actualStolen} gold*\n`;
-      msg += `│ ✦ EXP: *+${expGain}*\n`;
-      msg += `│\n`;
-      msg += `│ ⚠️ Rampok lagi = makin besar cooldown\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `🗡️ ${m.pushName} merampok ${targetJid.split("@")[0]}\n`;
+      msg += `
+`;
+      msg += `✅ Berhasil rampok!\n`;
+      msg += `📊 Success rate: *${Math.floor(successRate)}%*\n`;
+      msg += `💰 Dapat: *${actualStolen} gold*\n`;
+      msg += `✦ EXP: *+${expGain}*\n`;
+      msg += `
+`;
+      msg += `⚠️ Rampok lagi = makin besar cooldown\n`;
+      
       return m.reply(msg);
     } else {
       // Caught! Penalty
@@ -123,15 +124,16 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBegal", BEGAL_COOLDOWN);
 
       await m.react("❌");
-      let msg = `╭─「 ✦ ʙᴇɢᴀʟ ✦ 」\n`;
-      msg += `│ 🗡️ ${m.pushName} mencoba rampok ${targetJid.split("@")[0]}\n`;
-      msg += `│\n`;
-      msg += `│ ❌ Ketahuan! Kamu ditangkap!\n`;
-      msg += `│ 💸 Denda: *-${actualFine} gold*\n`;
-      msg += `│\n`;
-      msg += `│ 💡 Level lebih tinggi dari target = success rate lebih besar\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `🗡️ ${m.pushName} mencoba rampok ${targetJid.split("@")[0]}\n`;
+      msg += `
+`;
+      msg += `❌ Ketahuan! Kamu ditangkap!\n`;
+      msg += `💸 Denda: *-${actualFine} gold*\n`;
+      msg += `
+`;
+      msg += `💡 Level lebih tinggi dari target = success rate lebih besar\n`;
+      
       return m.reply(msg);
     }
   } catch (err) {

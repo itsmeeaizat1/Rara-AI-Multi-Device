@@ -49,12 +49,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ɢᴘᴛ-4ᴏ ᴍɪɴɪ ✦ 」\n`;
-    msg += `│ 🌐 via ChatEverywhere\n`;
-    msg += `│\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    return m.reply(result.answer.trim());
   } catch (err) {
     console.error("cegpt error:", err);
     await m.react("❌");

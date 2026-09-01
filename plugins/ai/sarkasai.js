@@ -51,13 +51,7 @@ Jangan pakai kata-kata kotor atau SARA.`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ sᴀʀᴋᴀs ᴀɪ ✦ 」\n`;
-    msg += `│ 🗯️ Situasi: *${text}*\n`;
-    msg += `│\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `│\n`;
-    msg += `│ 📌 Pilih satu dan kirim! 😏\n`;
-    msg += `╰────  •  ────`;
+    let msg = `Situasi: ${text}\n\n${result.answer.trim()}\n\nPilih satu dan kirim! 😏`;
     return m.reply(msg);
   } catch (err) {
     console.error("sarkasai error:", err);

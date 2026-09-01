@@ -51,8 +51,8 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      claraWrap("AI Prompt", [`│ Ide: *${prompt}*`,
-        `│ Prompt: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      claraWrap("AI Prompt", [`Ide: *${prompt}*`,
+        `Prompt: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}ai-prompt <ide> untuk prompt lain`) +
       "\n" +

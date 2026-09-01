@@ -55,12 +55,12 @@ async function handler(m, { sock }) {
         const dropletsUsed = droplets.length
         const dropletsRemaining = dropletLimit - dropletsUsed
         
-        let txt = `╭─「 ✦ Kuota DigitalOcean ✦ 」\n│ *ʟɪᴍɪᴛ:* ${dropletLimit} droplet
-│ *ᴛᴇʀᴘᴀᴋᴀɪ:* ${dropletsUsed} droplet
-│ *ꜱɪꜱᴀ:* ${dropletsRemaining} droplet
-╰────  •  ────
-Email: ${account.email}
-Status: ${account.status}`
+        let txt = `*Kuota DigitalOcean*\n\n` +
+            `Limit: ${dropletLimit} droplet\n` +
+            `Terpakai: ${dropletsUsed} droplet\n` +
+            `Sisa: ${dropletsRemaining} droplet\n` +
+            `Email: ${account.email}\n` +
+            `Status: ${account.status}`
         await m.reply(txt)
         
     } catch (err) {

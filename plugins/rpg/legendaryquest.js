@@ -62,15 +62,15 @@ async function handler(m, { sock }) {
         await db.setPlayerData?.(m.sender, "legendaryquest", progress);
 
         await m.react("🐣");
-        let msg = `╭─「 ✦ ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ ᴄᴏᴍᴘʟᴇᴛᴇ! ✦ 」\n`;
-        msg += `│ 🏆 🐉 Final Boss dikalahkan!\n`;
-        msg += `│\n`;
-        msg += `│ Title: *LEGENDARY HERO*\n`;
-        msg += `│ Reward:\n`;
-        if (stage.reward.gold) msg += `│ 💰 +${stage.reward.gold} Gold\n`;
-        if (stage.reward.energi) msg += `│ ⚡ +${stage.reward.energi} Energi\n`;
-        msg += `╰────  •  ────`;
-        return m.reply(msg);
+        let msg = "";
+        msg += `🏆 🐉 Final Boss dikalahkan!\n`;
+        msg += `
+`;
+        msg += `Title: *LEGENDARY HERO*\n`;
+        msg += `Reward:\n`;
+        if (stage.reward.gold) msg += `💰 +${stage.reward.gold} Gold\n`;
+        if (stage.reward.energi) msg += `⚡ +${stage.reward.energi} Energi\n`;
+                return m.reply(msg);
       }
 
       // Stages 1-6: check requirement
@@ -91,36 +91,37 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "legendaryquest", progress);
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ sᴛᴀɢᴇ ᴄʟᴀɪᴍ ✦ 」\n`;
-      msg += `│ ${stage.emoji} Stage ${stage.id}: *${stage.name}*\n`;
-      msg += `│ ✅ Berhasil diklaim!\n`;
-      msg += `│\n`;
-      if (stage.reward.gold) msg += `│ 💰 +${stage.reward.gold} Gold\n`;
-      if (stage.reward.energi) msg += `│ ⚡ +${stage.reward.energi} Energi\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `${stage.emoji} Stage ${stage.id}: *${stage.name}*\n`;
+      msg += `✅ Berhasil diklaim!\n`;
+      msg += `
+`;
+      if (stage.reward.gold) msg += `💰 +${stage.reward.gold} Gold\n`;
+      if (stage.reward.energi) msg += `⚡ +${stage.reward.energi} Energi\n`;
+      msg += `
+`;
       const next = STAGES.find(s => s.id === stageId + 1);
       if (next) {
-        msg += `│ Next: ${next.emoji} *${next.name}*\n`;
-        msg += `│ ${next.desc}\n`;
+        msg += `Next: ${next.emoji} *${next.name}*\n`;
+        msg += `${next.desc}\n`;
       }
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+            return m.reply(msg);
     }
 
     // PROGRESS (default)
     if (progress.completed) {
-      let msg = `╭─「 ✦ ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ ✦ 」\n`;
-      msg += `│ 🏆 *COMPLETED!*\n`;
-      msg += `│ Title: *LEGENDARY HERO*\n`;
-      msg += `│ Semua 7 stage selesai!\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `🏆 *COMPLETED!*\n`;
+      msg += `Title: *LEGENDARY HERO*\n`;
+      msg += `Semua 7 stage selesai!\n`;
+            return m.reply(msg);
     }
 
     const currentStage = STAGES.find(s => s.id === progress.currentStage);
-    let msg = `╭─「 ✦ ʟᴇɢᴇɴᴅᴀʀʏ ǫᴜᴇsᴛ ✦ 」\n`;
-    msg += `│ Progress: *${progress.currentStage - 1}/7* stages\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `Progress: *${progress.currentStage - 1}/7* stages\n`;
+    msg += `
+`;
 
     STAGES.forEach(s => {
       const isDone = progress.claimed?.includes(s.id);
@@ -131,17 +132,17 @@ async function handler(m, { sock }) {
       if (isDone) status = "✅";
       else if (isCurrent) status = isComplete ? "🎁" : "📋";
 
-      msg += `│ ${s.emoji} Stage ${s.id}: ${s.name} ${status}\n`;
-      msg += `│  ${s.desc}\n`;
+      msg += `${s.emoji} Stage ${s.id}: ${s.name} ${status}\n`;
+      msg += `${s.desc}\n`;
       if (isCurrent && isComplete) {
-        msg += `│  → ${m.prefix}legendaryquest claim\n`;
+        msg += `→ ${m.prefix}legendaryquest claim\n`;
       }
     });
 
-    msg += `│\n`;
-    msg += `│ Reward akhir: *50,000g + 200 energi + Title*\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `Reward akhir: *50,000g + 200 energi + Title*\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("legendaryquest error:", err);
     await m.react("❌");

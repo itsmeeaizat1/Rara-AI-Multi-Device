@@ -16,15 +16,15 @@ async function handler(m, { sock, config: botConfig }) {
     const text = m.text?.trim();
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!text || !quoted) {
-      { const __navText = (claraWrap("Image Text", [`│ Reply gambar dengan: *${prefix}imagetext <teks>*`,
-        "│ Bot akan menulis teks di atas gambar"].join("\n"))); await m.reply( __navText, "imagetext"); };
+      { const __navText = (claraWrap("Image Text", [`Reply gambar dengan: *${prefix}imagetext <teks>*`,
+        "Bot akan menulis teks di atas gambar"].join("\n"))); await m.reply( __navText, "imagetext"); };
       return { handled: true };
     }
     const buffer = await m.download();
     if (!buffer) throw new Error("Gagal download gambar");
     // Simple text overlay using canvas if available, else just return info
-    await m.reply(claraWrap("Image Text", [`│ Teks: *${text}*`, "│ Gambar diterima",
-      "│ Fitur ini butuh package 'canvas' untuk render"].join("\n")) + "\n" + tipText("Install canvas untuk hasil gambar"));
+    await m.reply(claraWrap("Image Text", [`Teks: *${text}*`, "Gambar diterima",
+      "Fitur ini butuh package 'canvas' untuk render"].join("\n")) + "\n" + tipText("Install canvas untuk hasil gambar"));
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

@@ -41,9 +41,9 @@ async function handler(m, { sock, config: botConfig }) {
       return { handled: true };
     }
     const result = await expand(url);
-    await m.reply(claraWrap("Expand URL", [`│ Input: ${url.substring(0,50)}`,
-      `│ Final: ${result.final.substring(0,80)}`,
-      `│ Redirect: *${result.redirects}x*`].join("\n")));
+    await m.reply(claraWrap("Expand URL", [`Input: ${url.substring(0,50)}`,
+      `Final: ${result.final.substring(0,80)}`,
+      `Redirect: *${result.redirects}x*`].join("\n")));
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

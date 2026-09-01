@@ -161,7 +161,8 @@ async function handler(m, { sock }) {
           title = event.type === "bandit" ? "sᴇʀᴀɴɢᴀɴ ʙᴀɴᴅɪᴛ" : "ᴇɴᴄᴏᴜɴᴛᴇʀ";
         } else {
           hpChange = -dmgTaken;
-          extraText = `\n│ 💀 Kalah dari musuh!\n`;
+          extraText = `
+💀 Kalah dari musuh!\n`;
           title = event.type === "bandit" ? "ʙᴀɴᴅɪᴛ" : "ᴍᴏɴsᴛᴇʀ";
         }
         break;
@@ -171,7 +172,8 @@ async function handler(m, { sock }) {
         hpChange = -Math.floor(rpg.maxHp * (0.1 + Math.random() * 0.15));
         expGain = Math.floor(Math.random() * (event.maxExp - event.minExp + 1)) + event.minExp;
         addExp(m, expGain);
-        extraText = `\n│ 💥 HP berkurang: *${Math.abs(hpChange)}*\n`;
+        extraText = `
+💥 HP berkurang: *${Math.abs(hpChange)}*\n`;
         title = "ᴊᴇʙᴀᴋᴀɴ";
         break;
       }
@@ -181,7 +183,8 @@ async function handler(m, { sock }) {
         const freeItem = items[Math.floor(Math.random() * items.length)];
         addItem(m, freeItem, 1);
         drops.push({ item: freeItem, qty: 1 });
-        extraText = `\n│ 🎁 Dapat *${ITEM_DB[freeItem]?.name || freeItem}* gratis!\n`;
+        extraText = `
+🎁 Dapat *${ITEM_DB[freeItem]?.name || freeItem}* gratis!\n`;
         title = "ᴘᴇᴅᴀɢᴀɴɢ";
         break;
       }
@@ -196,7 +199,8 @@ async function handler(m, { sock }) {
         expGain = 50 + Math.floor(Math.random() * 100);
         addExp(m, expGain);
         hpChange = heal;
-        extraText = `\n│ ✨ Blessing: HP +${heal} | Mana +${mana} | Energy +${energy}\n`;
+        extraText = `
+✨ Blessing: HP +${heal} | Mana +${mana} | Energy +${energy}\n`;
         title = "ᴋᴜɪʟ sᴀᴋʀᴀʟ";
         break;
       }
@@ -207,17 +211,20 @@ async function handler(m, { sock }) {
         if (buffType === 0) {
           gemGain = 2 + Math.floor(Math.random() * 3);
           addGems(m, gemGain);
-          extraText = `\n│ 🧚 Hadiah: *+${gemGain} gems*!\n`;
+          extraText = `
+🧚 Hadiah: *+${gemGain} gems*!\n`;
         } else if (buffType === 1) {
           expGain = 200 + Math.floor(Math.random() * 200);
           addExp(m, expGain);
-          extraText = `\n│ 🧚 Blessing: *+${expGain} EXP*!\n`;
+          extraText = `
+🧚 Blessing: *+${expGain} EXP*!\n`;
         } else {
           const rareItems = ["mithrilOre", "dragonScale", "rebirthStone"];
           const rareItem = rareItems[Math.floor(Math.random() * rareItems.length)];
           addItem(m, rareItem, 1);
           drops.push({ item: rareItem, qty: 1 });
-          extraText = `\n│ 🧚 Hadiah: *+1x ${ITEM_DB[rareItem]?.name || rareItem}*!\n`;
+          extraText = `
+🧚 Hadiah: *+1x ${ITEM_DB[rareItem]?.name || rareItem}*!\n`;
         }
         title = "ʙɪᴅᴀᴅᴀʀɪ";
         break;
@@ -230,12 +237,14 @@ async function handler(m, { sock }) {
         if (rpg.level >= 20 && Math.random() < 0.3) {
           rpg.skillPoints = (rpg.skillPoints || 0) + 1;
           saveRpg(m, { skillPoints: rpg.skillPoints });
-          extraText = `\n│ 📜 Gulungan kuno! *+1 Skill Point!*\n`;
+          extraText = `
+📜 Gulungan kuno! *+1 Skill Point!*\n`;
         } else {
           // Just exp + gold
           goldGain = 50 + Math.floor(Math.random() * 100);
           addGold(m, goldGain);
-          extraText = `\n│ 📜 Pengetahuan kuno! *+${expGain} EXP, +${goldGain} gold*\n`;
+          extraText = `
+📜 Pengetahuan kuno! *+${expGain} EXP, +${goldGain} gold*\n`;
         }
         title = "ɢᴜʟᴜɴɢᴀɴ ᴋᴜɴᴏ";
         break;
@@ -266,19 +275,20 @@ async function handler(m, { sock }) {
     const freshRpg = ensureRpg(m, m.pushName);
 
     await m.react("🐣");
-    let out = `╭─「 ✦ ${title} ✦ 」\n`;
-    out += `│ 🗺️ ${msg}\n`;
-    out += `│\n`;
-    if (expGain > 0) out += `│ ✦ EXP: *+${expGain}*\n`;
-    if (goldGain > 0) out += `│ 💰 Gold: *+${goldGain}*\n`;
-    if (gemGain > 0) out += `│ 💎 Gems: *+${gemGain}*\n`;
-    if (dropText) out += `│ 📦 Item: *${dropText}*\n`;
+    let out = "";
+    out += `🗺️ ${msg}\n`;
+    out += `
+`;
+    if (expGain > 0) out += `✦ EXP: *+${expGain}*\n`;
+    if (goldGain > 0) out += `💰 Gold: *+${goldGain}*\n`;
+    if (gemGain > 0) out += `💎 Gems: *+${gemGain}*\n`;
+    if (dropText) out += `📦 Item: *${dropText}*\n`;
     if (extraText) out += extraText;
-    out += `│\n`;
-    out += `│ ❤️ HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
-    out += `│ ⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
-    out += `╰────  •  ────`;
-
+    out += `
+`;
+    out += `❤️ HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
+    out += `⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
+    
     return m.reply(out);
   } catch (err) {
     console.error("adventurev2 error:", err);

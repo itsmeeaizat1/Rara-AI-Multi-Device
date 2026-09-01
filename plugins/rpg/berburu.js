@@ -108,22 +108,19 @@ async function handler(m, { sock }) {
 
       let dropText = "";
       if (drops.length > 0) {
-        dropText = drops.map(d => `+${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join("\n│ ");
-        dropText = "\n│ " + dropText;
+        dropText = drops.map(d => `+${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join("\n");
+        dropText = "\n" + dropText;
       }
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ʙᴇʀʙᴜʀᴜ ✦ 」\n`;
-      msg += `│ 🎯 Monster: *${monster.name}* (Lv.${monster.minLv}-${monster.maxLv})\n`;
-      msg += `│ ⚔️ Pertarungan: *${rounds} ronde*\n`;
-      msg += `│ 💥 DMG diterima: *${playerDmgTaken}*\n`;
-      msg += `│ ❤️ HP tersisa: *${newHp}/${rpg.maxHp}*\n`;
-      msg += `│\n`;
-      msg += `│ 📦 *ʀᴇᴡᴀʀᴅ*\n`;
-      msg += `│ ✦ EXP: *+${expGain}*\n`;
-      msg += `│ 💰 Gold: *+${goldGain}*\n`;
-      if (dropText) msg += dropText + "\n";
-      msg += `╰────  •  ────`;
+      let msg = `Monster: *${monster.name}* (Lv.${monster.minLv}-${monster.maxLv})\n`;
+      msg += `Pertarungan: *${rounds} ronde*\n`;
+      msg += `DMG Diterima: *${playerDmgTaken}*\n`;
+      msg += `HP Tersisa: *${newHp}/${rpg.maxHp}*\n\n`;
+      msg += `*Reward:*\n`;
+      msg += `EXP: *+${expGain}*\n`;
+      msg += `Gold: *+${goldGain}*`;
+      if (dropText) msg += dropText;
 
       return m.reply(msg);
     } else {
@@ -133,14 +130,10 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastHunt", HUNT_COOLDOWN);
 
       await m.react("❌");
-      let msg = `╭─「 ✦ ʙᴇʀʙᴜʀᴜ ✦ 」\n`;
-      msg += `│ 😵 Kamu kalah melawan *${monster.name}*!\n`;
-      msg += `│ 💥 DMG diterima: *${playerDmgTaken}*\n`;
-      msg += `│ ❤️ HP tersisa: *${newHp}/${rpg.maxHp}*\n`;
-      msg += `│\n`;
-      msg += `│ 💡 Tingkatkan equipment atau level dulu\n`;
-      msg += `│ sebelum berburu monster yang lebih kuat\n`;
-      msg += `╰────  •  ────`;
+      let msg = `❌ Kamu kalah melawan *${monster.name}*!\n`;
+      msg += `DMG Diterima: *${playerDmgTaken}*\n`;
+      msg += `HP Tersisa: *${newHp}/${rpg.maxHp}*\n\n`;
+      msg += `💡 Tingkatkan equipment atau level dulu sebelum berburu monster yang lebih kuat`;
 
       return m.reply(msg);
     }

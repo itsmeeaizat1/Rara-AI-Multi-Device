@@ -70,13 +70,13 @@ async function handler(m, { sock, config: botConfig, db }) {
         .join("\n");
 
       const text =
-        claraWrap("Cuaca Bot", [`│ Toggle: *${prefix}cuaca on|off*`,
-          `│ Provider: *${prefix}cuaca provider <nama>*`,
-          `│ Lokasi: *${prefix}cuaca lokasi <kota>*`,
-          `│ Cek: *${prefix}cuaca now*`,
-          `│ Bantuan: *${prefix}cuaca help*`].join("\n")) +
+        claraWrap("Cuaca Bot", [`Toggle: *${prefix}cuaca on|off*`,
+          `Provider: *${prefix}cuaca provider <nama>*`,
+          `Lokasi: *${prefix}cuaca lokasi <kota>*`,
+          `Cek: *${prefix}cuaca now*`,
+          `Bantuan: *${prefix}cuaca help*`].join("\n")) +
         "\n" +
-        claraWrap("sTATUs", [`│ Footer otomatis: *${enabled ? "ON" : "OFF"}*`, `│ Provider: *${currentProvider}*`].join("\n")) +
+        claraWrap("sTATUs", [`Footer otomatis: *${enabled ? "ON" : "OFF"}*`, `Provider: *${currentProvider}*`].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +
@@ -84,11 +84,11 @@ async function handler(m, { sock, config: botConfig, db }) {
         "\n\n" +
         separator("━", 22) +
         "\n" +
-        claraWrap("LOKAsI", [`│ Nama: *${currentLocation.name || "Jakarta"}*`, `│ Lat: *${currentLocation.latitude ?? -6.2088}*`, `│ Lon: *${currentLocation.longitude ?? 106.8456}*`].join("\n")) +
+        claraWrap("LOKAsI", [`Nama: *${currentLocation.name || "Jakarta"}*`, `Lat: *${currentLocation.latitude ?? -6.2088}*`, `Lon: *${currentLocation.longitude ?? 106.8456}*`].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +
-        claraWrap("KONFIG", [`│ Provider aktif: *${currentProvider}*`, `│ API key: *${current.apiKey ? "terpasang" : "belum diatur"}*`, `│ Location key: *${current.locationKey || "belum diatur"}*`].join("\n")) +
+        claraWrap("KONFIG", [`Provider aktif: *${currentProvider}*`, `API key: *${current.apiKey ? "terpasang" : "belum diatur"}*`, `Location key: *${current.locationKey || "belum diatur"}*`].join("\n")) +
         "\n\n" +
         separator("━", 22) +
         "\n" +
@@ -107,8 +107,8 @@ async function handler(m, { sock, config: botConfig, db }) {
         claraWrap("Cuaca Bot", "🌤️") +
           "\n\n" +
           claraWrap(enabled ? "DIAKTIFKAN" : "DINAsKAN", [
-            `│ Footer cuaca: *${enabled ? "ON" : "OFF"}*`,
-            enabled ? "│ Sekarang setiap pesan bot akan menambahkan footer cuaca" : "│ Footer cuaca tidak akan ditambahkan lagi",
+            `Footer cuaca: *${enabled ? "ON" : "OFF"}*`,
+            enabled ? "Sekarang setiap pesan bot akan menambahkan footer cuaca" : "Footer cuaca tidak akan ditambahkan lagi",
           ]) +
           "\n\n" +
           separator("━", 22) +
@@ -127,8 +127,8 @@ async function handler(m, { sock, config: botConfig, db }) {
           .map((k) => `${PROVIDERS[k].emoji} ${k}`)
           .join(", ");
         await m.reply(
-          claraWrap("Provider Cuaca", [`│ Provider *${target || "kosong"}* tidak dikenali`,
-              `│ Pilihan: *${available}*`].join("\n")) +
+          claraWrap("Provider Cuaca", [`Provider *${target || "kosong"}* tidak dikenali`,
+              `Pilihan: *${available}*`].join("\n")) +
             "\n" +
             tipText(`Contoh: ${prefix}cuaca provider open-meteo`) +
             "\n" +
@@ -140,9 +140,9 @@ async function handler(m, { sock, config: botConfig, db }) {
       const updated = setWeatherDb(db, { provider: target });
       const info = PROVIDERS[target];
       await m.reply(
-        claraWrap("Provider Cuaca", [`│ Provider: *${info.label}*`,
-            `│ Kebutuhan key: *${info.needsKey ? "perlu" : "tidak perlu"}*`,
-            `│ Catatan: *${info.note}*`].join("\n")) +
+        claraWrap("Provider Cuaca", [`Provider: *${info.label}*`,
+            `Kebutuhan key: *${info.needsKey ? "perlu" : "tidak perlu"}*`,
+            `Catatan: *${info.note}*`].join("\n")) +
           "\n" +
           tipText("Jika perlu API key, isi melalui .cuaca api atau edit config") +
           "\n" +
@@ -166,7 +166,7 @@ async function handler(m, { sock, config: botConfig, db }) {
 
       setWeatherDb(db, { location: { name: lokasi } });
       await m.reply(
-        claraWrap("Lokasi Cuaca", [`│ Lokasi disetel ke: *${lokasi}*`].join("\n")) +
+        claraWrap("Lokasi Cuaca", [`Lokasi disetel ke: *${lokasi}*`].join("\n")) +
           "\n" +
           tipText(`Ketik ${prefix}cuaca now untuk cek cuaca sekarang`) +
           "\n" +
@@ -180,8 +180,8 @@ async function handler(m, { sock, config: botConfig, db }) {
       const footer = await getWeatherFooter(true);
       if (!footer) {
         await m.reply(
-          claraWrap("Cuaca", ["│ Gagal mengambil data cuaca",
-              "│ Cek provider/lokasi/api key"].join("\n")) +
+          claraWrap("Cuaca", ["Gagal mengambil data cuaca",
+              "Cek provider/lokasi/api key"].join("\n")) +
             "\n" +
             tipText(`Ketik ${prefix}cuaca help untuk konfigurasi`)
         );
@@ -193,10 +193,10 @@ async function handler(m, { sock, config: botConfig, db }) {
     }
 
     await m.reply(
-      claraWrap("Cuaca Bot", [`│ Provider: *${prefix}cuaca provider <nama>*`,
-          `│ Lokasi: *${prefix}cuaca lokasi <kota>*`,
-          `│ Cek: *${prefix}cuaca now*`,
-          `│ Bantuan: *${prefix}cuaca help*`].join("\n")) +
+      claraWrap("Cuaca Bot", [`Provider: *${prefix}cuaca provider <nama>*`,
+          `Lokasi: *${prefix}cuaca lokasi <kota>*`,
+          `Cek: *${prefix}cuaca now*`,
+          `Bantuan: *${prefix}cuaca help*`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`)
     );

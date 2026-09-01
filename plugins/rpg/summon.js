@@ -40,35 +40,35 @@ async function handler(m, { sock }) {
     const now = Date.now();
 
     if (input === "status" || input === "info" || input === "cek") {
-      let msg = `╭─「 ✦ SPIRIT BUFF STATUS ✦ 」\n`;
+      let msg = "";
       if (summonData.activeSpirit && summonData.activeSpirit.expiresAt > now) {
         const remainingMs = summonData.activeSpirit.expiresAt - now;
         const mins = Math.floor(remainingMs / 60000);
         const secs = Math.floor((remainingMs % 60000) / 1000);
-        msg += `│ 🌟 Spirit Aktif: *${summonData.activeSpirit.name}* ${summonData.activeSpirit.emoji}\n`;
-        msg += `│ ✨ Efek Buff: *${summonData.activeSpirit.effect}*\n`;
-        msg += `│ ⏳ Sisa Durasi: *${mins}m ${secs}d*\n`;
+        msg += `🌟 Spirit Aktif: *${summonData.activeSpirit.name}* ${summonData.activeSpirit.emoji}\n`;
+        msg += `✨ Efek Buff: *${summonData.activeSpirit.effect}*\n`;
+        msg += `⏳ Sisa Durasi: *${mins}m ${secs}d*\n`;
       } else {
-        msg += `│ ❌ Tidak ada spirit buff yang aktif saat ini.\n`;
-        msg += `│ 💡 Ketik *${m.prefix}summon list* untuk memanggil spirit.\n`;
+        msg += `❌ Tidak ada spirit buff yang aktif saat ini.\n`;
+        msg += `💡 Ketik *${m.prefix}summon list* untuk memanggil spirit.\n`;
       }
-      msg += `╰────  •  ────`;
-      await m.react("🐣");
+            await m.react("🐣");
       return m.reply(msg);
     }
 
     if (!input || input === "list") {
-      let listMsg = `╭─「 ✦ SPIRIT SUMMONING SYSTEM ✦ 」\n`;
-      listMsg += `│ Biaya Pemanggilan: *${SUMMON_COST_GOLD} Gold* + *${SUMMON_COST_ENERGI} Energi*\n`;
-      listMsg += `│ Durasi Buff: *30 Menit*\n│\n`;
+      let listMsg = "";
+      listMsg += `Biaya Pemanggilan: *${SUMMON_COST_GOLD} Gold* + *${SUMMON_COST_ENERGI} Energi*\n`;
+      listMsg += `Durasi Buff: *30 Menit*
+
+`;
       SPIRITS.forEach((s, i) => {
-        listMsg += `│ ${i + 1}. *${s.name}* ${s.emoji}\n`;
-        listMsg += `│    ✨ Efek: *${s.effect}*\n`;
-        listMsg += `│    🔑 Perintah: *${m.prefix}summon ${s.id}*\n`;
+        listMsg += `${i + 1}. *${s.name}* ${s.emoji}\n`;
+        listMsg += `✨ Efek: *${s.effect}*\n`;
+        listMsg += `🔑 Perintah: *${m.prefix}summon ${s.id}*\n`;
       });
-      listMsg += `│\n│ 💡 *Cek Buff:* ${m.prefix}summon status\n`;
-      listMsg += `╰────  •  ────`;
-      await m.react("🐣");
+      listMsg += `💡 *Cek Buff:* ${m.prefix}summon status\n`;
+            await m.react("🐣");
       return m.reply(listMsg);
     }
 
@@ -105,19 +105,22 @@ async function handler(m, { sock }) {
       expiresAt: expiresAt,
     };
 
-    let msg = `╭─「 ✦ SPIRIT SUMMONING RITUAL ✦ 」\n`;
-    msg += `│ 🔮 *Ritual Pemanggilan Elementalis*\n`;
-    msg += `│ 🕯️ Menggambar lingkaran sihir di atas tanah...\n`;
-    msg += `│ ✨ Mengalirkan ${SUMMON_COST_GOLD} Gold & ${SUMMON_COST_ENERGI} Energi ke dalam altar...\n`;
-    msg += `│ 🌟 Cahaya berkilau! *${spirit.name}* ${spirit.emoji} berhasil dipanggil!\n│\n`;
-    msg += `│ 📜 *Buff Aktif:*\n`;
-    msg += `│  • Spirit: *${spirit.name}*\n`;
-    msg += `│  • Efek: *${spirit.effect}*\n`;
-    msg += `│  • Durasi: *30 Menit*\n│\n`;
-    msg += `│ ⚡ Sisa Energi: *${profile.energi}*\n`;
-    msg += `│ 💰 Sisa Gold: *${profile.gold.toLocaleString()}*\n`;
-    msg += `╰────  •  ────`;
+    let msg = "";
+    msg += `🔮 *Ritual Pemanggilan Elementalis*\n`;
+    msg += `🕯️ Menggambar lingkaran sihir di atas tanah...\n`;
+    msg += `✨ Mengalirkan ${SUMMON_COST_GOLD} Gold & ${SUMMON_COST_ENERGI} Energi ke dalam altar...\n`;
+    msg += `🌟 Cahaya berkilau! *${spirit.name}* ${spirit.emoji} berhasil dipanggil!
 
+`;
+    msg += `📜 *Buff Aktif:*\n`;
+    msg += `• Spirit: *${spirit.name}*\n`;
+    msg += `• Efek: *${spirit.effect}*\n`;
+    msg += `• Durasi: *30 Menit*
+
+`;
+    msg += `⚡ Sisa Energi: *${profile.energi}*\n`;
+    msg += `💰 Sisa Gold: *${profile.gold.toLocaleString()}*\n`;
+    
     await db.setPlayerData?.(sender, "profile", profile);
     await db.setPlayerData?.(sender, "summon", summonData);
 

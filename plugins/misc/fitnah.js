@@ -24,17 +24,19 @@ async function handler(m, { sock }) {
     const replyMsg = parts[2] || "Oh iya";
     const time = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
 
-    let result = `╭─「 ✦ FAKE CHAT ✦ 」\n`;
-    result += `│\n`;
-    result += `│ ${target} - ${time}\n`;
-    result += `│ ${targetMsg}\n`;
-    result += `│\n`;
-    result += `│ ${m.pushName || "Kamu"} - ${time}\n`;
-    result += `│ ${replyMsg}\n`;
-    result += `│\n`;
-    result += `│ ⚠️ Ini hanya prank/hiburan\n`;
-    result += `╰────  •  ────`;
-    await m.react("🐣");
+    let result = "";
+    result += `
+`;
+    result += `${target} - ${time}\n`;
+    result += `${targetMsg}\n`;
+    result += `
+`;
+    result += `${m.pushName || "Kamu"} - ${time}\n`;
+    result += `${replyMsg}\n`;
+    result += `
+`;
+    result += `⚠️ Ini hanya prank/hiburan\n`;
+        await m.react("🐣");
     return m.reply(result);
   } catch (err) {
     console.error("fitnah error:", err);

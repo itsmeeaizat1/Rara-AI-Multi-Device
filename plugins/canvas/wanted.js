@@ -58,8 +58,8 @@ async function handler(m, { sock, config: botConfig }) {
     fs.writeFileSync(filePath, buffer);
 
     const text =
-      claraWrap("Wanted", ["│ Efek: *ᴡᴀɴᴛᴇᴅ ᴘᴏꜱᴛᴇʀ*",
-        "│ Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
+      claraWrap("Wanted", ["Efek: *ᴡᴀɴᴛᴇᴅ ᴘᴏꜱᴛᴇʀ*",
+        "Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

@@ -71,8 +71,8 @@ async function handler(m, { sock, config: botConfig }) {
       } catch (e) { console.error('[aichat.js]:', e.message); }
 
       const text =
-        claraWrap("AI Chat", ["│ Status: *Dihapus*",
-          "│ Memori percakapan sudah direset."].join("\n")) +
+        claraWrap("AI Chat", ["Status: *Dihapus*",
+          "Memori percakapan sudah direset."].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}aichat <pesan> untuk mulai lagi`) +
         "\n" +
@@ -121,8 +121,8 @@ async function handler(m, { sock, config: botConfig }) {
     appendHistory(chatId, "assistant", reply);
 
     const text =
-      claraWrap("AI Chat", [`│ Kamu: *${message.slice(0, 200)}${message.length > 200 ? "..." : ""}*`,
-        `│ AI: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      claraWrap("AI Chat", [`Kamu: *${message.slice(0, 200)}${message.length > 200 ? "..." : ""}*`,
+        `AI: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aichat <pesan> untuk lanjut chat`) +
       "\n" +

@@ -50,19 +50,13 @@ async function handler(m, { sock }) {
   // Tidak mengambil kembali reward yang sudah diberikan (koin/exp/energi tetap)
   await db.save();
 
-  // Reaksi loading
-  let txt = "╭─「 ✦ Batal Daftar ✦ 」\n";
-  txt += "│\n";
-  txt += "│ ✅ Data pendaftaran berhasil dihapus\n";
-  txt += "│\n";
-  txt += "│ 「 Data Dihapus 」\n";
-  txt += "│ 📛 Nama: " + prevName + "\n";
-  txt += "│ 🔑 SN: " + prevSerial + "\n";
-  txt += "│ 📅 Batal pada: " + new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) + " WIB\n";
-  txt += "│\n";
-  txt += "│ 💡 Daftar ulang kapan saja dengan `.daftar`\n";
-  txt += "│ ⚠️ Reward daftar tidak bisa diklaim ulang\n";
-  txt += "╰────  •  ────";
+  let txt = "✅ Data pendaftaran berhasil dihapus\n\n";
+  txt += "「 Data Dihapus 」\n";
+  txt += "Nama: " + prevName + "\n";
+  txt += "SN: " + prevSerial + "\n";
+  txt += "Batal pada: " + new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }) + " WIB\n\n";
+  txt += "Daftar ulang kapan saja dengan `.daftar`\n";
+  txt += "Reward daftar tidak bisa diklaim ulang";
 
   await sock.sendMessage(m.chat, { text: txt }, { quoted: m });
 }

@@ -34,41 +34,42 @@ async function handler(m, { sock }) {
     const r = data.data || data.result || data;
     await m.react("🐣");
 
-    let msg = `╭─「 ✦ ɢꜱᴍᴀʀᴇɴᴀ v2 ✦ 」\n`;
-    if (r.name || r.title) msg += `│ Nama: *${r.name || r.title}*\n`;
-    if (r.brand) msg += `│ Brand: *${r.brand}*\n`;
-    if (r.url) msg += `│ URL: ${r.url}\n`;
-    msg += `│\n`;
+    let msg = "";
+    if (r.name || r.title) msg += `Nama: *${r.name || r.title}*\n`;
+    if (r.brand) msg += `Brand: *${r.brand}*\n`;
+    if (r.url) msg += `URL: ${r.url}\n`;
+    msg += `
+`;
 
     // Spec sections
     if (r.specs) {
       const specs = r.specs;
       for (const [category, items] of Object.entries(specs)) {
-        msg += `│ *${category}*\n`;
+        msg += `*${category}*\n`;
         if (Array.isArray(items)) {
           items.forEach(it => {
             if (typeof it === "object" && it.name && it.value) {
-              msg += `│  ${it.name}: ${it.value}\n`;
+              msg += `${it.name}: ${it.value}\n`;
             } else if (typeof it === "string") {
-              msg += `│  ${it}\n`;
+              msg += `${it}\n`;
             }
           });
         } else if (typeof items === "object") {
           for (const [k, v] of Object.entries(items)) {
-            msg += `│  ${k}: ${v}\n`;
+            msg += `${k}: ${v}\n`;
           }
         }
-        msg += `│\n`;
+        msg += `
+`;
       }
     } else {
       // Flat keys
       for (const [k, v] of Object.entries(r)) {
         if (["name", "brand", "title", "url", "image", "thumbnail"].includes(k)) continue;
-        msg += `│ ${k}: ${v}\n`;
+        msg += `${k}: ${v}\n`;
       }
     }
-    msg += `╰────  •  ────`;
-
+    
     const imgUrl = r.image || r.thumbnail || r.img;
     if (imgUrl && imgUrl.startsWith("http")) {
       try {

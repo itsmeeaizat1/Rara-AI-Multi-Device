@@ -38,12 +38,12 @@ function handler(m, { sock }) {
         }
 
         info += `\n*📋 Cara Pakai:*\n`
-        info += `│ \`${m.prefix}notiftidur on 22.00\`\n`
-        info += `│ \`${m.prefix}notiftidur on 22.00,23.30\`\n`
-        info += `│ \`${m.prefix}notiftidur edit 23.00\`\n`
-        info += `│ \`${m.prefix}notiftidur off\`\n`
+        info += `\`${m.prefix}notiftidur on 22.00\`\n`
+        info += `\`${m.prefix}notiftidur on 22.00,23.30\`\n`
+        info += `\`${m.prefix}notiftidur edit 23.00\`\n`
+        info += `\`${m.prefix}notiftidur off\`\n`
         info += `\n💡 _Jam bisa pakai titik atau titik dua (22.00 / 22:00)_\n`
-        info += `│ 💡 _Bisa multiple jam, pisahkan pakai koma_`
+        info += `💡 _Bisa multiple jam, pisahkan pakai koma_`
 
         return m.reply( info, "notiftidur")
     }
@@ -81,7 +81,7 @@ function handler(m, { sock }) {
         let reply = `✅ *Pengingat tidur aktif!* 🔔\n\n`
         reply += `⏰ *ᴊᴀᴅᴡᴀʟ:*\n`
         for (const j of jadwal) {
-            reply += `│ 🕐 *${j}* WIB\n`
+            reply += `🕐 *${j}* WIB\n`
         }
         reply += `\n💡 _Notifikasi akan dikirim ke chat ini setiap hari_`
 
@@ -108,7 +108,7 @@ function handler(m, { sock }) {
         let reply = `✅ *Jadwal tidur diperbarui!* ✏️\n\n`
         reply += `⏰ *ᴊᴀᴅᴡᴀʟ ʙᴀʀᴜ:*\n`
         for (const j of jadwal) {
-            reply += `│ 🕐 *${j}* WIB\n`
+            reply += `🕐 *${j}* WIB\n`
         }
 
         return m.reply(reply)

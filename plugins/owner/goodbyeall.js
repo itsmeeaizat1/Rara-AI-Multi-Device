@@ -44,15 +44,15 @@ async function handler(m, { sock }) {
         }
         if (status) {
             return m.reply(claraWrap("goodbyeall", `✅ *Goodbye Global On*\n\n` +
-                `╭─「 ✦ Result ✦ 」\n` +
-                `│ 🌐 Total Grup: *${count}*\n` +
-                `│ ✅ Goodbye: *AKTIF*\n` +
+                "" +
+                `🌐 Total Grup: *${count}*\n` +
+                `✅ Goodbye: *AKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈\n\n` +
                 `Member yang keluar akan dikirim pesan perpisahan!`))       } else {
             return m.reply(claraWrap("goodbyeall", `❌ *Goodbye Global Off*\n\n` +
-                `╭─「 ✦ Result ✦ 」\n` +
-                `│ 🌐 Total Grup: *${count}*\n` +
-                `│ ❌ Goodbye: *NONAKTIF*\n` +
+                "" +
+                `🌐 Total Grup: *${count}*\n` +
+                `❌ Goodbye: *NONAKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈\n\n` +
                 `Goodbye dinonaktifkan di semua grup.`))
         }

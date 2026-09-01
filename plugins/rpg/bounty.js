@@ -78,22 +78,27 @@ async function handler(m, { sock }) {
     if (typeof player.energi !== "number") player.energi = 100;
 
     if (subCmd === "list" || !subCmd) {
-      let msg = `╭─「 ✦ BOUNTY BOARD ✦ 」\n`;
-      msg += `│ ⚡ Energi Kamu: *${player.energi}*\n│\n`;
-      msg += `│ Daftar Buronan NPC Aktif:\n│\n`;
+      let msg = "";
+      msg += `⚡ Energi Kamu: *${player.energi}*
+
+`;
+      msg += `Daftar Buronan NPC Aktif:
+
+`;
 
       TARGETS.forEach((target) => {
-        msg += `│ 🎯 *ID:* \`${target.id}\` | *${target.name}*\n`;
-        msg += `│   • Kesulitan: *${target.difficulty}* (Peluang: ${target.winChance}%)\n`;
-        msg += `│   • Konsumsi Energi: *${target.energiCost}⚡*\n`;
-        msg += `│   • Imbalan: *${target.minGold} - ${target.maxGold} Gold*\n`;
-        msg += `│   • Deskripsi: ${target.desc}\n│\n`;
+        msg += `🎯 *ID:* \`${target.id}\` | *${target.name}*\n`;
+        msg += `• Kesulitan: *${target.difficulty}* (Peluang: ${target.winChance}%)\n`;
+        msg += `• Konsumsi Energi: *${target.energiCost}⚡*\n`;
+        msg += `• Imbalan: *${target.minGold} - ${target.maxGold} Gold*\n`;
+        msg += `• Deskripsi: ${target.desc}
+
+`;
       });
 
-      msg += `│ Cara Memburu:\n`;
-      msg += `│ ${m.prefix}bounty hunt <ID_Target>\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `Cara Memburu:\n`;
+      msg += `${m.prefix}bounty hunt <ID_Target>\n`;
+      
       await m.react('🐣');
       return m.reply(msg);
     }
@@ -141,27 +146,25 @@ async function handler(m, { sock }) {
 
         await db.setPlayerData?.(sender, "bounty", player);
 
-        let msg = `╭─「 ✦ BOUNTY VICTORY ✦ 」\n`;
-        msg += `│ ⚔️ Berhasil mengalahkan *${target.name}*!\n`;
-        msg += `│  \n`;
-        msg += `│ 💀 Tingkat Kesulitan: ${target.difficulty}\n`;
-        msg += `│ 💰 Imbalan Hadiah: *+${rewardGold} Gold*\n`;
-        msg += `│ ⚡ Sisa Energi: *${player.energi} Energi*\n`;
-        msg += `╰────  •  ────`;
-
+        let msg = "";
+        msg += `⚔️ Berhasil mengalahkan *${target.name}*!\n`;
+        msg += `\n`;
+        msg += `💀 Tingkat Kesulitan: ${target.difficulty}\n`;
+        msg += `💰 Imbalan Hadiah: *+${rewardGold} Gold*\n`;
+        msg += `⚡ Sisa Energi: *${player.energi} Energi*\n`;
+        
         await m.react('🐣');
         return m.reply(msg);
       } else {
         await db.setPlayerData?.(sender, "bounty", player);
 
-        let msg = `╭─「 ✦ BOUNTY DEFEAT ✦ 」\n`;
-        msg += `│ 💥 Kamu kalah bertarung melawan *${target.name}*!\n`;
-        msg += `│  \n`;
-        msg += `│ 🩹 Buronan melarikan diri dan melukaimu.\n`;
-        msg += `│ ⚡ Energi terpakai: -${target.energiCost} Energi\n`;
-        msg += `│ ⚡ Sisa Energi: *${player.energi} Energi*\n`;
-        msg += `╰────  •  ────`;
-
+        let msg = "";
+        msg += `💥 Kamu kalah bertarung melawan *${target.name}*!\n`;
+        msg += `\n`;
+        msg += `🩹 Buronan melarikan diri dan melukaimu.\n`;
+        msg += `⚡ Energi terpakai: -${target.energiCost} Energi\n`;
+        msg += `⚡ Sisa Energi: *${player.energi} Energi*\n`;
+        
         await m.react('❌');
         return m.reply(msg);
       }

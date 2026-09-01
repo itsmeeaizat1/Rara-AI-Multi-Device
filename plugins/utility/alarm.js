@@ -28,7 +28,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!global.alarms) global.alarms = {};
       const myAlarms = global.alarms[m.sender] || [];
       if (!myAlarms.length) {
-        await m.reply(novaError("Alarm", ["│ Tidak ada alarm aktif"].join("\n")));
+        await m.reply(novaError("Alarm", ["Tidak ada alarm aktif"].join("\n")));
         return { handled: true };
       }
       let text = claraHeader("Alarm Aktif", "⏰") + "\n\n";
@@ -42,7 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!global.alarms) global.alarms = {};
       if (!global.alarms[m.sender]) global.alarms[m.sender] = [];
       global.alarms[m.sender].splice(idx, 1);
-      await m.reply(novaError("Alarm", [`│ Alarm #${idx+1} dihapus`].join("\n")));
+      await m.reply(novaError("Alarm", [`Alarm #${idx+1} dihapus`].join("\n")));
       return { handled: true };
     }
     const time = args[0];
@@ -52,10 +52,10 @@ async function handler(m, { sock, config: botConfig }) {
     if (!global.alarms) global.alarms = {};
     if (!global.alarms[m.sender]) global.alarms[m.sender] = [];
     global.alarms[m.sender].push({ time, message, active: true });
-    await m.reply(novaError("Alarm", [`│ Waktu: *${time}*`, `│ Pesan: *${message}*`,
-      `│ Total alarm: *${global.alarms[m.sender].length}*`].join("\n")) + "\n" + tipText("Alarm berjalan selama bot online"));
+    await m.reply(novaError("Alarm", [`Waktu: *${time}*`, `Pesan: *${message}*`,
+      `Total alarm: *${global.alarms[m.sender].length}*`].join("\n")) + "\n" + tipText("Alarm berjalan selama bot online"));
   } catch (e) {
-    await m.reply(claraWrap("Gagal nih", [`│ ${e.message}`].join("\n")));
+    await m.reply(claraWrap("Gagal nih", [`${e.message}`].join("\n")));
   }
   return { handled: true };
 }

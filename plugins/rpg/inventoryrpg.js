@@ -51,10 +51,11 @@ async function handler(m, { sock }) {
       return (order[ra] || 5) - (order[rb] || 5);
     });
 
-    let msg = `╭─「 ✦ ɪɴᴠᴇɴᴛᴏʀʏ ʀᴘɢ ✦ 」\n`;
-    msg += `│ 👤 ${m.pushName || "Player"}\n`;
-    msg += `│ 📦 Total: *${items.length}* jenis item\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `👤 ${m.pushName || "Player"}\n`;
+    msg += `📦 Total: *${items.length}* jenis item\n`;
+    msg += `
+`;
 
     let materials = [];
     let consumables = [];
@@ -64,7 +65,7 @@ async function handler(m, { sock }) {
     for (const [id, data] of items) {
       const item = ITEM_DB[id];
       if (!item) {
-        others.push(`│ ${RARITY_EMOJI.common} ${id} x${data.qty}`);
+        others.push(`${RARITY_EMOJI.common} ${id} x${data.qty}`);
         continue;
       }
       const line = `${RARITY_EMOJI[item.rarity] || "⬜"} ${item.name} x${data.qty}`;
@@ -75,31 +76,34 @@ async function handler(m, { sock }) {
     }
 
     if (materials.length > 0) {
-      msg += `│ 📦 *ᴍᴀᴛᴇʀɪᴀʟ*\n`;
-      for (const l of materials) msg += `│ ${l}\n`;
-      msg += `│\n`;
+      msg += `📦 *ᴍᴀᴛᴇʀɪᴀʟ*\n`;
+      for (const l of materials) msg += `${l}\n`;
+      msg += `
+`;
     }
 
     if (consumables.length > 0) {
-      msg += `│ 🧪 *ᴄᴏɴsᴜᴍᴀʙʟᴇ*\n`;
-      for (const l of consumables) msg += `│ ${l}\n`;
-      msg += `│\n`;
+      msg += `🧪 *ᴄᴏɴsᴜᴍᴀʙʟᴇ*\n`;
+      for (const l of consumables) msg += `${l}\n`;
+      msg += `
+`;
     }
 
     if (equipment.length > 0) {
-      msg += `│ ⚔️ *ᴇϙᴜɪᴘᴍᴇɴᴛ*\n`;
-      for (const l of equipment) msg += `│ ${l}\n`;
-      msg += `│\n`;
+      msg += `⚔️ *ᴇϙᴜɪᴘᴍᴇɴᴛ*\n`;
+      for (const l of equipment) msg += `${l}\n`;
+      msg += `
+`;
     }
 
     if (others.length > 0) {
-      msg += `│ 📌 *ʟᴀɪɴɴʏᴀ*\n`;
-      for (const l of others) msg += `│ ${l}\n`;
-      msg += `│\n`;
+      msg += `📌 *ʟᴀɪɴɴʏᴀ*\n`;
+      for (const l of others) msg += `${l}\n`;
+      msg += `
+`;
     }
 
-    msg += `╰────  •  ────`;
-
+    
     return m.reply(msg);
   } catch (err) {
     console.error("inventory rpg error:", err);

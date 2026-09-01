@@ -70,8 +70,8 @@ function handler(m, { sock }) {
         let modeList = []
         for (const [key, val] of Object.entries(MODES)) {
             const isCurrent = key === currentMode ? ' ⬅️' : ''
-            modeList.push(`│ \`${m.prefix}botmode ${key}\`${isCurrent}`)
-            modeList.push(`│    ${val.desc}`)
+            modeList.push(`\`${m.prefix}botmode ${key}\`${isCurrent}`)
+            modeList.push(`${val.desc}`)
         }
 
         return m.reply(claraWrap("Bot Mode", [`Mode saat ini: *${currentMode.toUpperCase()}* (${MODES[currentMode]?.name || 'Unknown'})`,

@@ -84,12 +84,11 @@ async function handler(m, { sock }) {
     fs.writeFileSync(filePath, content);
 
     await m.reply(claraWrap("enableplugin", `✅ *Plugin Enabled*\n\n` +
-        `╭─「 ✦ Detail ✦ 」\n` +
-        `│ 📦 Plugin: *${plugin.config.name}*\n` +
-        `│ 📁 Category: *${category}*\n` +
-        `│ 📄 File: *${file}*\n` +
-        `│ • Status: *Enabled*\n` +
-        `╰────  •  ────\n\n` +
+        `📦 Plugin: *${plugin.config.name}*\n` +
+        `📁 Category: *${category}*\n` +
+        `📄 File: *${file}*\n` +
+        `• Status: *Enabled*\n` +
+        `\n` +
         `Restart bot atau gunakan hot reload untuk apply.`));
   } catch (error) {
     await m.reply(claraWrap("enableplugin", te(m.prefix, m.command, m.pushName), "error"));

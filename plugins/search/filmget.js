@@ -56,14 +56,13 @@ async function handler(m, { sock }) {
     }
 
     let text = `🎬 *${film.title || "Film"}*\n\n`;
-    text += `╭─「 ✦ ɪɴꜰᴏ ✦ 」\n`;
-    text += `│ ⭐ Rating: ${film.rating || "-"}\n`;
-    text += `│ 📺 Quality: ${film.quality || "-"}\n`;
-    text += `│ ⏱️ Duration: ${film.duration || "-"}\n`;
-    text += `│ 📅 Release: ${film.release || "-"}\n`;
-    text += `│ 🎭 Genre: ${film.tags || "-"}\n`;
-    text += `│ 🎬 Director: ${film.director || "-"}\n`;
-    text += `│ 👥 Actors: ${film.actors || "-"}\n`;
+        text += `⭐ Rating: ${film.rating || "-"}\n`;
+    text += `📺 Quality: ${film.quality || "-"}\n`;
+    text += `⏱️ Duration: ${film.duration || "-"}\n`;
+    text += `📅 Release: ${film.release || "-"}\n`;
+    text += `🎭 Genre: ${film.tags || "-"}\n`;
+    text += `🎬 Director: ${film.director || "-"}\n`;
+    text += `👥 Actors: ${film.actors || "-"}\n`;
     text += `╰┈┈┈┈┈┈┈┈\n\n`;
 
     text += `📝 *ꜱʏɴᴏᴘꜱɪꜱ:*\n`;

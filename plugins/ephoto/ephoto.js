@@ -118,14 +118,14 @@ async function handler(m, { sock }) {
     
     if (command === 'ephoto') {
         const effectList = Object.keys(EFFECT_URLS).map(e => `\`${m.prefix}${e}\``).join('\n')
-        return m.reply(`🎨 *ᴇᴘʜᴏᴛᴏ ᴇꜰꜰᴇᴄᴛꜱ*\n\n` +
+        return m.reply(`*Ephoto Effects*\n\n` +
             `Buat efek text keren!\n\n` +
-            `╭─「 ✦ ᴅᴀꜰᴛᴀʀ ᴇꜰᴇᴋ ✦ 」\n${effectList}\n╰┈┈┈┈┈┈┈┈\n\n` +
-            `*ᴄᴏɴᴛᴏʜ:* ${m.prefix}glitchtext Nova-AI`)
+            `Daftar Efek:\n${effectList}\n\n` +
+            `Contoh: ${m.prefix}glitchtext Nova-AI`)
     }
     
     if (!text) {
-        return m.reply( `❌ *ᴇʀʀᴏʀ*\n\nMasukkan text!\n*ᴄᴏɴᴛᴏʜ:* ${m.prefix}${command} Nova-AI`, "glitchtext")
+        return m.reply(`❌ Masukkan text!\nContoh: ${m.prefix}${command} Nova-AI`)
     }
     
     const effectUrl = EFFECT_URLS[command]

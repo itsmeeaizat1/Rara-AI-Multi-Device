@@ -35,11 +35,11 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
     if (!syns.size) {
-      await m.reply(claraWrap("Synonym", [`│ Kata: *${word}*`, "│ Sinonim tidak ditemukan"].join("\n")));
+      await m.reply(claraWrap("Synonym", [`Kata: *${word}*`, "Sinonim tidak ditemukan"].join("\n")));
       return { handled: true };
     }
     const list = [...syns].slice(0, 15).join(", ");
-    await m.reply(claraWrap("Synonym", [`│ Kata: *${word}*`, `│ Sinonim: ${list}`].join("\n")));
+    await m.reply(claraWrap("Synonym", [`Kata: *${word}*`, `Sinonim: ${list}`].join("\n")));
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

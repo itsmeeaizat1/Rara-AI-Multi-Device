@@ -40,23 +40,23 @@ async function handler(m, { sock, command }) {
       const effect = RIFT_EFFECTS[Math.floor(Math.random() * RIFT_EFFECTS.length)];
       rpg.energy = (rpg.energy || 0) - 20;
 
-      let resultText = "🌀 Kamu memasuki portal...\n";
+      let resultText = "Kamu memasuki portal...\n";
 
       if (effect.reward) {
-        if (effect.reward.gold) { rpg.gold = (rpg.gold || 0) + effect.reward.gold; resultText += "💰 +" + effect.reward.gold + " gold\n"; }
-        if (effect.reward.exp) { rpg.exp = (rpg.exp || 0) + effect.reward.exp; resultText += "⭐ +" + effect.reward.exp + " EXP\n"; }
+        if (effect.reward.gold) { rpg.gold = (rpg.gold || 0) + effect.reward.gold; resultText += "+" + effect.reward.gold + " gold\n"; }
+        if (effect.reward.exp) { rpg.exp = (rpg.exp || 0) + effect.reward.exp; resultText += "+" + effect.reward.exp + " EXP\n"; }
         if (effect.reward.item) {
           rpg.inventory = rpg.inventory || {};
           rpg.inventory[effect.reward.item] = (rpg.inventory[effect.reward.item] || 0) + (effect.reward.count || 1);
-          resultText += "🎒 +" + (effect.reward.count || 1) + "x " + effect.reward.item + "\n";
+          resultText += "+" + (effect.reward.count || 1) + "x " + effect.reward.item + "\n";
         }
       }
       if (effect.penalty) {
-        if (effect.penalty.hp) { rpg.hp = Math.max(1, (rpg.hp || 100) - effect.penalty.hp); resultText += "💔 -" + effect.penalty.hp + " HP\n"; }
+        if (effect.penalty.hp) { rpg.hp = Math.max(1, (rpg.hp || 100) - effect.penalty.hp); resultText += "-" + effect.penalty.hp + " HP\n"; }
       }
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ʀɪғᴛ ✦ 」\n│ " + effect.text + "\n│\n│ " + resultText + "│ ⚡ Sisa energi: " + rpg.energy + "\n╰────  •  ────");
+      return m.reply(effect.text + "\n\n" + resultText + "Sisa energi: " + rpg.energy);
     }
 
     if (command === "distortion") {
@@ -71,7 +71,7 @@ async function handler(m, { sock, command }) {
       for (let i = 0; i < count; i++) rpg.inventory[loot] = (rpg.inventory[loot] || 0) + 1;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ᴅɪsᴛᴏʀᴛɪᴏɴ ✦ 」\n│ " + flavor + "\n│\n│ 🎁 Kamu mendapat " + count + "x *" + loot + "* dari zona distorsi!\n╰────  •  ────");
+      return m.reply(flavor + "\n\nKamu mendapat " + count + "x *" + loot + "* dari zona distorsi!");
     }
 
     if (command === "timetravel") {
@@ -91,7 +91,7 @@ async function handler(m, { sock, command }) {
       else if (reward.includes("skill point")) { rpg.skillPoints = (rpg.skillPoints || 0) + 1; }
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ᴛɪᴍᴇ ᴛʀᴀᴠᴇʟ ✦ 」\n│ ⌛ Kamu menjelajah waktu...\n│ Efek: *" + effectText + "*\n╰────  •  ────");
+      return m.reply("Kamu menjelajah waktu...\nEfek: *" + effectText + "*");
     }
   } catch (e) {
     console.error("rift error:", e.message);

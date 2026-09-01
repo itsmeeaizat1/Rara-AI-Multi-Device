@@ -60,25 +60,26 @@ async function handler(m, { sock }) {
     await db.setPlayerData?.(m.sender, "daily", data);
     await m.react("🐣");
 
-    let msg = `╭─「 ✦ ᴅᴀɪʟʏ ʀᴇᴡᴀʀᴅ ✦ 」\n`;
-    msg += `│ Day: *${data.streak}/7*\n`;
-    msg += `│ Streak: *${data.totalClaims} hari total*\n`;
-    msg += `│\n`;
-    msg += `│ Reward:\n`;
-    msg += `│ 💰 +${reward.gold} Gold\n`;
-    msg += `│ ⚡ +${reward.energi} Energi\n`;
-    if (reward.item) msg += `│ 🎁 ${reward.item}\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `Day: *${data.streak}/7*\n`;
+    msg += `Streak: *${data.totalClaims} hari total*\n`;
+    msg += `
+`;
+    msg += `Reward:\n`;
+    msg += `💰 +${reward.gold} Gold\n`;
+    msg += `⚡ +${reward.energi} Energi\n`;
+    if (reward.item) msg += `🎁 ${reward.item}\n`;
+    msg += `
+`;
 
     // Preview next reward
     const nextDay = data.streak >= 7 ? 1 : data.streak + 1;
     const nextReward = REWARDS[nextDay - 1];
-    msg += `│ Besok (Day ${nextDay}):\n`;
-    msg += `│  💰 ${nextReward.gold} Gold | ⚡ ${nextReward.energi} Energi`;
+    msg += `Besok (Day ${nextDay}):\n`;
+    msg += `💰 ${nextReward.gold} Gold | ⚡ ${nextReward.energi} Energi`;
     if (nextReward.item) msg += ` | 🎁 ${nextReward.item}`;
     msg += `\n`;
-    msg += `╰────  •  ────`;
-
+    
     return m.reply(msg);
   } catch (err) {
     console.error("dailyreward error:", err);

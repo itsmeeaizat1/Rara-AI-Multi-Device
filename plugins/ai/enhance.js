@@ -60,8 +60,8 @@ async function handler(m, { sock, config: botConfig }) {
     fs.writeFileSync(resultPath, resultBuffer);
 
     const caption =
-      claraWrap("Enhance", ["│ Status: *Berhasil*",
-        "│ Model: *AI Enhancement*"].join("\n")) +
+      claraWrap("Enhance", ["Status: *Berhasil*",
+        "Model: *AI Enhancement*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}enhance untuk enhance media lain`) +
       "\n" +

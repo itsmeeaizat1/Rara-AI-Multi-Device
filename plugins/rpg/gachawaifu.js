@@ -99,20 +99,20 @@ async function handler(m, { sock }) {
         grouped[w.rarity].push(w);
       });
 
-      let msg = `╭─「 ✦ ᴋᴏʟᴇᴋsɪ ᴡᴀɪғᴜ ✦ 」\n`;
-      msg += `│ Total: *${data.collection.length}* waifu\n`;
-      msg += `│ Pulls: *${data.pulls || 0}*\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `Total: *${data.collection.length}* waifu\n`;
+      msg += `Pulls: *${data.pulls || 0}*\n`;
+      msg += `
+`;
       for (const rarity of ["UR", "SSR", "SR", "R", "N"]) {
         if (grouped[rarity]) {
-          msg += `│ ${RARITY_EMOJI[rarity]} ${rarity} (${grouped[rarity].length}):\n`;
+          msg += `${RARITY_EMOJI[rarity]} ${rarity} (${grouped[rarity].length}):\n`;
           grouped[rarity].forEach(w => {
-            msg += `│  ${w.emoji} ${w.name} [${w.anime}]\n`;
+            msg += `${w.emoji} ${w.name} [${w.anime}]\n`;
           });
         }
       }
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+            return m.reply(msg);
     }
 
     // MARRY waifu
@@ -141,15 +141,15 @@ async function handler(m, { sock }) {
       await saveWaifuData(db, m.sender, data);
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ᴡᴀɪғᴜ ᴍᴀʀʀɪᴇᴅ ✦ 」\n`;
-      msg += `│ ${waifu.emoji} *${waifu.name}*\n`;
-      msg += `│ Anime: ${waifu.anime}\n`;
-      msg += `│ Rarity: ${RARITY_EMOJI[waifu.rarity]} ${waifu.rarity}\n`;
-      msg += `│ Stars: ${"⭐".repeat(waifu.stars)}\n`;
-      msg += `│\n`;
-      msg += `│ 💍 Selamat! Kamu dan ${waifu.name} sekarang married!\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `${waifu.emoji} *${waifu.name}*\n`;
+      msg += `Anime: ${waifu.anime}\n`;
+      msg += `Rarity: ${RARITY_EMOJI[waifu.rarity]} ${waifu.rarity}\n`;
+      msg += `Stars: ${"⭐".repeat(waifu.stars)}\n`;
+      msg += `
+`;
+      msg += `💍 Selamat! Kamu dan ${waifu.name} sekarang married!\n`;
+            return m.reply(msg);
     }
 
     // DIVORCE
@@ -180,15 +180,15 @@ async function handler(m, { sock }) {
       if (!data.married || data.married.length === 0) {
         return m.reply(claraWrap("gachawaifu", `Kamu belum married dengan waifu manapun.`, "guide"));
       }
-      let msg = `╭─「 ✦ ᴡᴀɪғᴜ ᴍᴀʀʀɪᴇᴅ ✦ 」\n`;
-      msg += `│ Total: *${data.married.length}* waifu\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `Total: *${data.married.length}* waifu\n`;
+      msg += `
+`;
       data.married.forEach((w, i) => {
-        msg += `│ ${i + 1}. ${w.emoji} ${w.name} [${w.anime}]\n`;
-        msg += `│    ${RARITY_EMOJI[w.rarity]} ${w.rarity} ${"⭐".repeat(w.stars)}\n`;
+        msg += `${i + 1}. ${w.emoji} ${w.name} [${w.anime}]\n`;
+        msg += `${RARITY_EMOJI[w.rarity]} ${w.rarity} ${"⭐".repeat(w.stars)}\n`;
       });
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+            return m.reply(msg);
     }
 
     // PULL (default action)
@@ -217,19 +217,20 @@ async function handler(m, { sock }) {
 
     // Animasi pull
     const isRare = waifu.rarity === "SSR" || waifu.rarity === "UR";
-    let msg = `╭─「 ✦ ɢᴀᴄʜᴀ ᴡᴀɪғᴜ ✦ 」\n`;
-    msg += `│ ${isRare ? "✨ PULL BERHASIL! ✨" : "Pull selesai!"}\n`;
-    msg += `│\n`;
-    msg += `│ ${waifu.emoji} *${waifu.name}*\n`;
-    msg += `│ Anime: ${waifu.anime}\n`;
-    msg += `│ Rarity: ${RARITY_EMOJI[waifu.rarity]} *${waifu.rarity}*\n`;
-    msg += `│ ${"⭐".repeat(waifu.stars)}\n`;
-    msg += `│\n`;
-    msg += `│ Total koleksi: *${data.collection.length}*\n`;
-    msg += `│ Total pulls: *${data.pulls}*\n`;
-    if (waifu.rarity === "UR") msg += `│ 🎉 ULTRA RARE! (0.5% chance)\n`;
-    msg += `╰────  •  ────`;
-
+    let msg = "";
+    msg += `${isRare ? "✨ PULL BERHASIL! ✨" : "Pull selesai!"}\n`;
+    msg += `
+`;
+    msg += `${waifu.emoji} *${waifu.name}*\n`;
+    msg += `Anime: ${waifu.anime}\n`;
+    msg += `Rarity: ${RARITY_EMOJI[waifu.rarity]} *${waifu.rarity}*\n`;
+    msg += `${"⭐".repeat(waifu.stars)}\n`;
+    msg += `
+`;
+    msg += `Total koleksi: *${data.collection.length}*\n`;
+    msg += `Total pulls: *${data.pulls}*\n`;
+    if (waifu.rarity === "UR") msg += `🎉 ULTRA RARE! (0.5% chance)\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("gachawaifu error:", err);

@@ -40,7 +40,7 @@ async function handler(m, { sock, command }) {
       rpg[buff.stat] = (rpg[buff.stat] || 0) + buff.value;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ʙᴜғғ ✦ 」\n│ 🔆 Kamu menerima buff: *" + buff.name + "*\n│ ⏱️ Berlangsung 1 jam\n╰────  •  ────");
+      return m.reply("Kamu menerima buff: *" + buff.name + "*\nBerlangsung: 1 jam");
     }
 
     // .debuff — debuff target (reply)
@@ -56,7 +56,7 @@ async function handler(m, { sock, command }) {
       targetRpg.debuffs.push({ name: debuff, expires: Date.now() + 1800000 });
       saveRpg({ sender: target }, targetRpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ᴅᴇʙᴜғғ ✦ 」\n│ 🔥 Musuh terkena efek *" + debuff + "*!\n│ ⏱️ Berlangsung 30 menit\n╰────  •  ────");
+      return m.reply("Musuh terkena efek *" + debuff + "*!\nBerlangsung: 30 menit");
     }
 
     // .bless — daily random blessing
@@ -78,7 +78,7 @@ async function handler(m, { sock, command }) {
       else if (blessing.includes("EXP")) rpg.exp = (rpg.exp || 0) + 50;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ʙʟᴇss ✦ 」\n│ 💠 Kamu diberkati hari ini!\n│ Efek: *" + blessing + "*\n╰────  •  ────");
+      return m.reply("Kamu diberkati hari ini!\nEfek: *" + blessing + "*");
     }
 
     // .blessnpc — NPC blessing (random small bonus)
@@ -92,7 +92,7 @@ async function handler(m, { sock, command }) {
       else if (bonus.includes("EXP")) rpg.exp = (rpg.exp || 0) + 50;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ʙʟᴇss ɴᴘᴄ ✦ 」\n│ ✨ NPC memberkati kamu!\n│ Efek: *" + bonus + "*\n╰────  •  ────");
+      return m.reply("NPC memberkati kamu!\nEfek: *" + bonus + "*");
     }
 
     // .curse — curse target (reply)
@@ -107,7 +107,7 @@ async function handler(m, { sock, command }) {
       targetRpg.curseTime = Date.now() + 3600000;
       saveRpg({ sender: target }, targetRpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ᴄᴜʀsᴇ ✦ 」\n│ 👻 Target telah dikutuk!\n│ Efek negatif aktif selama 1 jam\n╰────  •  ────");
+      return m.reply("Target telah dikutuk!\nEfek negatif aktif selama 1 jam");
     }
 
     // .ward — protection from traps & curses
@@ -117,7 +117,7 @@ async function handler(m, { sock, command }) {
       rpg.wardTime = Date.now() + 3600000;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ᴡᴀʀᴅ ✦ 」\n│ 🔆 Ward aktif!\n│ Lokasimu aman dari trap & curse selama 1 jam\n╰────  •  ────");
+      return m.reply("Ward aktif!\nLokasimu aman dari trap & curse selama 1 jam");
     }
 
     // .trap — set trap
@@ -127,7 +127,7 @@ async function handler(m, { sock, command }) {
       rpg.trapTime = Date.now() + 1800000;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ᴛʀᴀᴘ ✦ 」\n│ 🕳️ Jebakan dipasang di lokasi saat ini!\n│ Aktif selama 30 menit\n╰────  •  ────");
+      return m.reply("Jebakan dipasang di lokasi saat ini!\nBerlangsung: 30 menit");
     }
   } catch (e) {
     console.error("combatmod error:", e.message);

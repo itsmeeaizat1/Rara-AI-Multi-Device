@@ -34,17 +34,17 @@ async function handler(m, { sock }) {
   let list = "┃ _Belum ada yang absen_";
   if (absen.peserta.length > 0) {
     list = absen.peserta
-      .map((jid, i) => `│ ${i + 1}. @${jid.split("@")[0]}`)
+      .map((jid, i) => `${i + 1}. @${jid.split("@")[0]}`)
       .join("\n");
   }
   const saluranId = config.saluran?.id || "120363400911374213@newsletter";
   const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
   await m.reply(claraWrap("DAFTAR YANG UDAH ABSEN", `📋 *ᴅᴀꜰᴛᴀʀ ʏᴀɴɢ ᴜᴅᴀʜ ᴀʙꜱᴇɴ*\n\n` +
-      `╭─「 ✦ ɪɴꜰᴏ ✦ 」\n` +
-      `│ 📝 ${absen.keterangan}\n` +
-      `│ 📅 ${dateStr}\n` +
-      `│ ⏰ Dimulai: ${timeStr}\n` +
-      `│ 👑 Dibuat: @${absen.createdBy.split("@")[0]}\n` +
+      "" +
+      `📝 ${absen.keterangan}\n` +
+      `📅 ${dateStr}\n` +
+      `⏰ Dimulai: ${timeStr}\n` +
+      `👑 Dibuat: @${absen.createdBy.split("@")[0]}\n` +
       `├┈┈「 👥 *PESERTA (${absen.peserta.length})* 」\n` +
       `${list}\n` +
       `╰┈┈┈┈┈┈┈┈\n\n` +

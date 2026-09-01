@@ -29,16 +29,7 @@ async function handler(m, { sock, config: botConfig }) {
     const keyword = args.join(" ").toLowerCase().trim();
 
     if (!keyword) {
-      await m.reply(`╭─「 ✦ Aɪ Hᴇʟᴘ ✦ 」
-
-Ketik *${prefix}aihelp <keyword>* untuk cari command.
-
-💡 *Contoh:*
-${prefix}aihelp download
-${prefix}aihelp sticker
-${prefix}aihelp group
-
-╰────  •  ────`);
+      await m.reply(`Ketik *${prefix}aihelp <keyword>* untuk cari command.\n\nContoh:\n${prefix}aihelp download\n${prefix}aihelp sticker\n${prefix}aihelp group`);
       return;
     }
 
@@ -58,30 +49,22 @@ ${prefix}aihelp group
     }
 
     if (matches.length === 0) {
-      await m.reply(`╭─「 ✦ Aɪ Hᴇʟᴘ ✦ 」
-│
-│ Gak ada command untuk "${keyword}" nih
-│ 💡 Coba keyword lain ya!
-│ Contoh: download, sticker, game, rpg
-╰────  •  ────`);
+      await m.reply(`❌ Gak ada command untuk "${keyword}" nih\nCoba keyword lain!\nContoh: download, sticker, game, rpg`);
       return;
     }
 
     let cmdLines = "";
     for (let i = 0; i < matches.length; i++) {
-      const desc = matches[i].description ? ` — ${toSC(matches[i].description)}` : "";
-      cmdLines += `│ ${prefix}${matches[i].name}${desc}\n`;
+      const desc = matches[i].description ? ` — ${matches[i].description}` : "";
+      cmdLines += `${prefix}${matches[i].name}${desc}\n`;
     }
 
-    const text = `╭─「 ✦ Aɪ Hᴇʟᴘ ✦ 」\n│ *Keyword:* ${keyword}
-│ *Ditemukan:* ${matches.length} command
-│ 「 Hasil 」
-${cmdLines}╰────  •  ────`;
+    const text = `Keyword: ${keyword}\nDitemukan: ${matches.length} command\n\n${cmdLines.trim()}`;
 
     await m.reply(text);
   } catch (e) {
     console.error("[aihelp] handler error:", e.message);
-    try { await m.reply("╭─「 ✦ AI Help ✦ 」\n│ Ada error nih\n│ Coba lagi ya\n╰────  •  ────"); } catch {}
+    try { await m.reply("❌ Ada error nih. Coba lagi ya"); } catch {}
   }
 }
 

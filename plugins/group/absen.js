@@ -34,13 +34,13 @@ async function handler(m, { sock }) {
     const now = moment().tz('Asia/Jakarta')
     const dateStr = now.format('D MMMM YYYY')
     const list = absen.peserta
-        .map((jid, i) => `│ ${i + 1}. @${jid.split('@')[0]}`)
+        .map((jid, i) => `${i + 1}. @${jid.split('@')[0]}`)
         .join('\n')
     await m.reply(claraWrap("MANTAP, @${m.sender.split('@')[0]} HADIRR", `✅ *MANTAP, @${m.sender.split('@')[0]} HADIRR*\n` +
             `TUJUAN ABSEN: ${absen.keterangan}\n` +
-            `╭─「 ✦ INFO LAIN ✦ 」\n` +
-            `│ 📅 ${dateStr}\n` +
-            `│ 👥 Total: ${absen.peserta.length}\n` +
+            "" +
+            `📅 ${dateStr}\n` +
+            `👥 Total: ${absen.peserta.length}\n` +
             `├┈┈「 📝 *DaғTar Hadir* 」\n` +
             `${list}\n` +
             `╰┈┈┈┈┈┈┈┈\n\n` +

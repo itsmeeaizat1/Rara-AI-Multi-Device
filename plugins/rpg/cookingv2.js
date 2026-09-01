@@ -71,19 +71,20 @@ async function handler(m, { sock }) {
 
     // Subcommand: INVENTORY
     if (subCmd === "inventory" || subCmd === "inv" || subCmd === "bahan") {
-      let text = `╭─「 ✦ INVENTORY BAHAN MASAK ✦ 」\n`;
-      text += `│ Bahan-bahan yang kamu miliki dari berburu, memancing & bertani:\n`;
-      text += `│\n`;
+      let text = "";
+      text += `Bahan-bahan yang kamu miliki dari berburu, memancing & bertani:\n`;
+      text += `
+`;
       let count = 0;
       for (const [itemKey, label] of Object.entries(INGREDIENT_NAMES)) {
         const qty = data.inventory[itemKey] || 0;
-        text += `│ ${label} : *${qty}* Pcs\n`;
+        text += `${label} : *${qty}* Pcs\n`;
         count++;
       }
-      text += `│\n`;
-      text += `│ 💡 Kumpulkan bahan baru dengan *${prefix}cookingv2 gather*\n`;
-      text += `╰────  •  ────`;
-
+      text += `
+`;
+      text += `💡 Kumpulkan bahan baru dengan *${prefix}cookingv2 gather*\n`;
+      
       await m.react("🐣");
       return m.reply(text);
     }
@@ -112,32 +113,32 @@ async function handler(m, { sock }) {
 
       await db.setPlayerData?.(sender, "cookingv2", data);
 
-      let text = `╭─「 ✦ HASIL PENCARIAN BAHAN ✦ 」\n`;
-      text += `│ 🌲 Kamu berhasil mengumpulkan bahan masak:\n`;
+      let text = "";
+      text += `🌲 Kamu berhasil mengumpulkan bahan masak:\n`;
       found.forEach((f) => {
-        text += `│  • ${f}\n`;
+        text += `• ${f}\n`;
       });
-      text += `╰────  •  ────`;
-
+      
       await m.react("🐣");
       return m.reply(text);
     }
 
     // Subcommand: LIST
     if (subCmd === "list" || subCmd === "resep") {
-      let text = `╭─「 ✦ DAFTAR 10 RESEP COOKING V2 ✦ 」\n`;
-      text += `│ Pilih makanan untuk dimasak & dapatkan efek buff!\n│\n`;
+      let text = "";
+      text += `Pilih makanan untuk dimasak & dapatkan efek buff!
+
+`;
       RECIPES.forEach((r, idx) => {
         const reqStr = Object.entries(r.ingredients)
           .map(([k, q]) => `${q}x ${(INGREDIENT_NAMES[k] || k).split(" ")[1] || k}`)
           .join(", ");
-        text += `│ *${idx + 1}. ${r.name}* (${r.id})\n`;
-        text += `│    ✨ Efek : ${r.effectStr}\n`;
-        text += `│    📦 Bahan : ${reqStr}\n`;
+        text += `*${idx + 1}. ${r.name}* (${r.id})\n`;
+        text += `✨ Efek : ${r.effectStr}\n`;
+        text += `📦 Bahan : ${reqStr}\n`;
       });
-      text += `│\n│ 📌 Cara memasak: *${prefix}cookingv2 cook <id_resep>*\n`;
-      text += `╰────  •  ────`;
-
+      text += `📌 Cara memasak: *${prefix}cookingv2 cook <id_resep>*\n`;
+      
       await m.react("🐣");
       return m.reply(text);
     }
@@ -205,18 +206,18 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(sender, "cookingv2", data);
 
       // Cooking Animation Box Output
-      let animText = `╭─「 ✦ PROSES MEMASAK... 🍳 ✦ 」\n`;
-      animText += `│ 🔪 Memotong bahan & meracik bumbu rahasia...\n`;
-      animText += `│ 🔥 Memasak ${recipe.name} di atas tungku api membara...\n`;
-      animText += `│ ✨ *MEMASAK BERHASIL!* 🎉\n`;
-      animText += `│\n`;
-      animText += `│ 🍽️ Hidangan : *${recipe.name}*\n`;
-      animText += `│ 🌟 Efek Diterima : *${recipe.effectStr}*\n`;
+      let animText = "";
+      animText += `🔪 Memotong bahan & meracik bumbu rahasia...\n`;
+      animText += `🔥 Memasak ${recipe.name} di atas tungku api membara...\n`;
+      animText += `✨ *MEMASAK BERHASIL!* 🎉\n`;
+      animText += `
+`;
+      animText += `🍽️ Hidangan : *${recipe.name}*\n`;
+      animText += `🌟 Efek Diterima : *${recipe.effectStr}*\n`;
       if (recipe.buff) {
-        animText += `│ ⚡ Buff ${recipe.buff.type} +${recipe.buff.value} telah diaktifkan!\n`;
+        animText += `⚡ Buff ${recipe.buff.type} +${recipe.buff.value} telah diaktifkan!\n`;
       }
-      animText += `╰────  •  ────`;
-
+      
       await m.react("🐣");
       return m.reply(animText);
     }

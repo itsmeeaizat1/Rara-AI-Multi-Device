@@ -48,81 +48,79 @@ async function handler(m, { sock }) {
 
     if (subCmd === "addgc") {
       const gid = args[1]
-      if (!gid?.includes("@g.us")) { return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ Format: .automod addgc <groupId>\n╰────  •  ────") }
+      if (!gid?.includes("@g.us")) { return m.reply("❌ Format: .automod addgc <groupId>") }
       ensureGroup(cfg, gid); save(db);
-      return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ Grup ditambah: " + gid.slice(0, 20) + "...\n│ Rules: antilink, antispam\n│ Action: warn\n╰────  •  ────")
+      return m.reply("✅ Grup ditambah: " + gid.slice(0, 20) + "...\nRules: antilink, antispam\nAction: warn")
     }
 
     if (subCmd === "delgc") {
       const gid = args[1]
       if (cfg.groups[gid]) { delete cfg.groups[gid]; save(db) }
-      return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ Grup dihapus: " + (gid || "?").slice(0, 20) + "...\n╰────  •  ────")
+      return m.reply("✅ Grup dihapus: " + (gid || "?").slice(0, 20) + "...")
     }
 
     if (subCmd === "setrule") {
       const gid = args[1], rule = args[2]?.toLowerCase(), toggle = args[3]?.toLowerCase()
       if (!cfg.groups[gid] || !DEFAULT_RULES.hasOwnProperty(rule)) {
-        return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ Grup belum terdaftar atau rule invalid.\n│ Rules: antilink, antispam, antibadword, antisticker, antivoice\n╰────  •  ────") }
+        return m.reply("❌ Grup belum terdaftar atau rule invalid.\nRules: antilink, antispam, antibadword, antisticker, antivoice") }
       cfg.groups[gid].rules[rule] = toggle === "on"; save(db);
-      return m.reply("╭─「 ✦ Auto Mod ✦ 」\n" + rule + ": " + (toggle === "on" ? "ON" : "OFF") + "\n│ Grup: " + gid.slice(0, 20) + "...\n╰────  •  ────")
+      return m.reply("✅ " + rule + ": " + (toggle === "on" ? "ON" : "OFF") + "\nGrup: " + gid.slice(0, 20) + "...")
     }
 
     if (subCmd === "addword") {
       const gid = args[1], word = args.slice(2).join(" ").toLowerCase().trim()
-      if (!cfg.groups[gid] || !word) { return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ .automod addword <groupId> <kata>\n╰────  •  ────") }
+      if (!cfg.groups[gid] || !word) { return m.reply("❌ Format: .automod addword <groupId> <kata>") }
       cfg.groups[gid].badwords.push(word); save(db);
-      return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ Badword: \"" + word + "\" ditambah\n│ Total: " + cfg.groups[gid].badwords.length + "\n╰────  •  ────")
+      return m.reply("✅ Badword: \"" + word + "\" ditambah\nTotal: " + cfg.groups[gid].badwords.length)
     }
 
     if (subCmd === "delword") {
       const gid = args[1], word = args.slice(2).join(" ").toLowerCase().trim()
       if (cfg.groups[gid]) { cfg.groups[gid].badwords = cfg.groups[gid].badwords.filter(w => w !== word); save(db) }
-      return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ Badword dihapus: \"" + word + "\"\n╰────  •  ────")
+      return m.reply("✅ Badword dihapus: \"" + word + "\"")
     }
 
     if (subCmd === "on" || subCmd === "off") {
       const gid = args[1] || (m.isGroup ? m.chat : "")
-      if (!gid?.includes("@g.us")) { return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ Gunakan di grup atau: .automod " + subCmd + " <groupId>\n╰────  •  ────") }
+      if (!gid?.includes("@g.us")) { return m.reply("❌ Gunakan di grup atau: .automod " + subCmd + " <groupId>") }
       ensureGroup(cfg, gid); cfg.groups[gid].enabled = subCmd === "on"; save(db)
-      return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ Status: " + (subCmd === "on" ? "ON" : "OFF") + "\n│ Grup: " + gid.slice(0, 20) + "...\n╰────  •  ────")
+      return m.reply("✅ Status: " + (subCmd === "on" ? "ON" : "OFF") + "\nGrup: " + gid.slice(0, 20) + "...")
     }
 
     if (subCmd === "action") {
       const gid = args[1], action = args[2]?.toLowerCase()
       if (!cfg.groups[gid] || !["delete", "warn", "kick"].includes(action)) {
-        return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ .automod action <groupId> delete/warn/kick\n╰────  •  ────") }
+        return m.reply("❌ Format: .automod action <groupId> delete/warn/kick") }
       cfg.groups[gid].action = action; save(db);
-      return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ Action: " + action + "\n│ Grup: " + gid.slice(0, 20) + "...\n╰────  •  ────")
+      return m.reply("✅ Action: " + action + "\nGrup: " + gid.slice(0, 20) + "...")
     }
 
     if (subCmd === "rules") {
       const gid = args[1]
-      if (!cfg.groups[gid]) { return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ Grup belum terdaftar.\n╰────  •  ────") }
+      if (!cfg.groups[gid]) { return m.reply("❌ Grup belum terdaftar.") }
       const g = cfg.groups[gid];
-      let text = "╭─「 ✦ Auto Mod Rules ✦ 」\n│ Grup: " + gid.slice(0, 25) + "...\n│ Status: " + (g.enabled ? "ON" : "OFF") + "\n│ Action: " + g.action + "\n│\n│ Rules:\n"
-      Object.entries(g.rules).forEach(([rule, on]) => { text += "" + (on ? "✅" : "❌") + " " + rule + "\n" })
-      text += "│\n│ Badwords: " + g.badwords.length + " | Violations: " + g.violations + "\n╰────  •  ────"
+      let text = "*Auto Mod Rules*\n\nGrup: " + gid.slice(0, 25) + "...\nStatus: " + (g.enabled ? "ON" : "OFF") + "\nAction: " + g.action + "\n\nRules:\n"
+      Object.entries(g.rules).forEach(([rule, on]) => { text += (on ? "✅ " : "❌ ") + rule + "\n" })
+      text += "\nBadwords: " + g.badwords.length + " | Violations: " + g.violations
       return m.reply(text)
     }
 
     // Default: list
     const gids = Object.keys(cfg.groups)
     if (!gids.length) {
-      return m.reply("╭─「 ✦ Auto Mod ✦ 」\n│ Belum ada grup terdaftar.\n│\n│ .automod addgc <groupId>\n│ .automod setrule <groupId> antilink on\n│ .automod action <groupId> delete/warn/kick\n│ .automod addword <groupId> <badword>\n╰────  •  ────")
+      return m.reply("Belum ada grup terdaftar.\n\n.automod addgc <groupId>\n.automod setrule <groupId> antilink on\n.automod action <groupId> delete/warn/kick\n.automod addword <groupId> <badword>")
     }
-    let text = "╭─「 ✦ Auto Mod ✦ 」\n│ Grup terdaftar: " + gids.length + "\n│\n"
+    let text = "*Auto Mod*\n\nGrup terdaftar: " + gids.length + "\n\n"
     gids.forEach((gid, i) => {
       const g = cfg.groups[gid]
       const active = Object.entries(g.rules).filter(([_, v]) => v).map(([k]) => k).join(", ")
-      text += "" + (i + 1) + ". " + gid.slice(0, 20) + "...\n"
-      text += "│ Rules: " + (active || "none") + " | Action: " + g.action + "\n"
-      if (i < gids.length - 1) text += "│\n"
+      text += (i + 1) + ". " + gid.slice(0, 20) + "...\n"
+      text += "Rules: " + (active || "none") + " | Action: " + g.action + "\n\n"
     })
-    text += "╰────  •  ────"
-    return m.reply(text)
+    return m.reply(text.trim())
   } catch (e) {
     console.error("[automod] error:", e.message)
-    return m.reply("╭─「 ✦ Error ✦ 」\n" + (e.message || "Ada error nih") + "\n╰────  •  ────")
+    return m.reply("❌ " + (e.message || "Ada error nih"))
   }
 }
 

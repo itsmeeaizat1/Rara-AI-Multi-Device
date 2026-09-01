@@ -43,8 +43,8 @@ async function handler(m, { sock }) {
     const name = data.name || targetJid.split("@")[0];
     const now = Date.now();
 
-    let msg = `╭─「 ✦ ᴄᴏᴜᴘʟᴇ ɪɴғᴏ ✦ 」\n`;
-    msg += `│ 👤 Nama: *${name}*\n`;
+    let msg = "";
+    msg += `👤 Nama: *${name}*\n`;
 
     if (data.fun.pasangan) {
       const partnerJid = data.fun.pasangan;
@@ -52,22 +52,22 @@ async function handler(m, { sock }) {
       const partnerName = partner.name || partnerJid.split("@")[0];
 
       if (partner.fun?.pasangan === targetJid) {
-        msg += `│ ❤️ Pasangan: *${partnerName}*\n`;
+        msg += `❤️ Pasangan: *${partnerName}*\n`;
 
         // Timeline
         if (data.fun.jadiPacar) {
           const pacarDurasi = now - data.fun.jadiPacar;
-          msg += `│ 💕 Pacaran: *${formatDurasi(pacarDurasi)}*\n`;
+          msg += `💕 Pacaran: *${formatDurasi(pacarDurasi)}*\n`;
         }
 
         if (data.fun.nikah === partnerJid && partner.fun?.nikah === targetJid) {
-          msg += `│ 💍 Status: *Menikah*\n`;
+          msg += `💍 Status: *Menikah*\n`;
           if (data.fun.nikahDate) {
             const nikahDurasi = now - data.fun.nikahDate;
-            msg += `│ 📅 Nikah: *${formatDurasi(nikahDurasi)}*\n`;
+            msg += `📅 Nikah: *${formatDurasi(nikahDurasi)}*\n`;
           }
         } else {
-          msg += `│ 💍 Status: *Belum menikah*\n`;
+          msg += `💍 Status: *Belum menikah*\n`;
         }
 
         // Stats bersama
@@ -78,21 +78,21 @@ async function handler(m, { sock }) {
         const totalLamar = (data.fun.lamarCount || 0);
         const totalCerai = (data.fun.ceraiCount || 0);
 
-        msg += `│ 🏹 Total tembak: *${totalTembak}x*\n`;
-        msg += `│ 💕 Total jadian: *${totalPacar}x*\n`;
-        msg += `│ 💔 Total putus: *${totalPutus}x*\n`;
-        msg += `│ 💍 Total lamar: *${totalLamar}x*\n`;
-        msg += `│ 💔 Total cerai: *${totalCerai}x*\n`;
+        msg += `🏹 Total tembak: *${totalTembak}x*\n`;
+        msg += `💕 Total jadian: *${totalPacar}x*\n`;
+        msg += `💔 Total putus: *${totalPutus}x*\n`;
+        msg += `💍 Total lamar: *${totalLamar}x*\n`;
+        msg += `💔 Total cerai: *${totalCerai}x*\n`;
       } else {
-        msg += `│ 💔 Status: *Ghosted* (pasangan tidak aktif)\n`;
+        msg += `💔 Status: *Ghosted* (pasangan tidak aktif)\n`;
       }
     } else if (data.fun.tembakTarget) {
       const target = db.getUser(data.fun.tembakTarget) || {};
       const targetName = target.name || data.fun.tembakTarget.split("@")[0];
-      msg += `│ 🏹 Status: *Menunggu jawaban*\n`;
-      msg += `│ 🎯 Target: *${targetName}*\n`;
+      msg += `🏹 Status: *Menunggu jawaban*\n`;
+      msg += `🎯 Target: *${targetName}*\n`;
     } else {
-      msg += `│ 💔 Status: *Jomblo* \n`;
+      msg += `💔 Status: *Jomblo* \n`;
     }
 
     // History
@@ -110,11 +110,11 @@ async function handler(m, { sock }) {
         else if (h.action === "nikah") icon = "💍";
         else if (h.action === "lamaran ditolak" || h.action === "menolak lamaran") icon = "🙅";
         else if (h.action === "ditolak" || h.action === "menolak") icon = "🙅";
-        msg += `│ ${icon} ${h.action} dengan ${partnerName} (${date})\n`;
+        msg += `${icon} ${h.action} dengan ${partnerName} (${date})\n`;
       }
     }
 
-    msg += `\n╰────  •  ────`;
+    msg += ``;
 
     await m.reply(msg);
     await m.react("💑");

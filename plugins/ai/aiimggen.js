@@ -87,8 +87,8 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const text =
-      claraWrap("AI Image", [`│ Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
-        "│ Status: *Berhasil*"].join("\n")) +
+      claraWrap("AI Image", [`Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
+        "Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aiimggen <prompt> untuk gambar lain`) +
       "\n" +

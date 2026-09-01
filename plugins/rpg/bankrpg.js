@@ -54,21 +54,22 @@ async function handler(m, { sock }) {
     }
 
     if (!action || action === "cek") {
-      let msg = `╭─「 ✦ ʙᴀɴᴋ ʀᴘɢ ✦ 」\n`;
-      msg += `│ 👤 ${m.pushName || "Player"}\n`;
-      msg += `│\n`;
-      msg += `│ 💰 Gold di tangan: *${rpg.gold}*\n`;
-      msg += `│ 🏦 Gold di bank: *${bank.deposit}*\n`;
+      let msg = "";
+      msg += `👤 ${m.pushName || "Player"}\n`;
+      msg += `
+`;
+      msg += `💰 Gold di tangan: *${rpg.gold}*\n`;
+      msg += `🏦 Gold di bank: *${bank.deposit}*\n`;
       if (interest > 0) {
-        msg += `│ ✨ Bunga diterima: *+${interest} gold*\n`;
+        msg += `✨ Bunga diterima: *+${interest} gold*\n`;
       }
-      msg += `│ 📈 Bunga: *5% per hari*\n`;
-      msg += `│\n`;
-      msg += `│ 📌 .bankrpg nabung <jumlah> — simpan\n`;
-      msg += `│ 📌 .bankrpg tarik <jumlah> — tarik\n`;
-      msg += `│ 📌 .bankrpg cek — cek saldo\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `📈 Bunga: *5% per hari*\n`;
+      msg += `
+`;
+      msg += `📌 .bankrpg nabung <jumlah> — simpan\n`;
+      msg += `📌 .bankrpg tarik <jumlah> — tarik\n`;
+      msg += `📌 .bankrpg cek — cek saldo\n`;
+      
       return m.reply(msg);
     }
 
@@ -94,15 +95,15 @@ async function handler(m, { sock }) {
       saveRpg(m, { bank });
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ʙᴀɴᴋ ʀᴘɢ ✦ 」\n`;
-      msg += `│ ✅ Berhasil menabung!\n`;
-      msg += `│\n`;
-      msg += `│ 💵 Setor: *${amount} gold*\n`;
-      msg += `│ 🏦 Saldo bank: *${bank.deposit} gold*\n`;
-      msg += `│ 💰 Sisa di tangan: *${rpg.gold - amount} gold*\n`;
-      msg += `│ 📈 Bunga 5% harian akan otomatis masuk\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `✅ Berhasil menabung!\n`;
+      msg += `
+`;
+      msg += `💵 Setor: *${amount} gold*\n`;
+      msg += `🏦 Saldo bank: *${bank.deposit} gold*\n`;
+      msg += `💰 Sisa di tangan: *${rpg.gold - amount} gold*\n`;
+      msg += `📈 Bunga 5% harian akan otomatis masuk\n`;
+      
       return m.reply(msg);
     }
 
@@ -123,14 +124,14 @@ async function handler(m, { sock }) {
       saveRpg(m, { bank });
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ʙᴀɴᴋ ʀᴘɢ ✦ 」\n`;
-      msg += `│ ✅ Berhasil menarik!\n`;
-      msg += `│\n`;
-      msg += `│ 💵 Tarik: *${amount} gold*\n`;
-      msg += `│ 🏦 Sisa saldo bank: *${bank.deposit} gold*\n`;
-      msg += `│ 💰 Gold di tangan: *${rpg.gold + amount} gold*\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `✅ Berhasil menarik!\n`;
+      msg += `
+`;
+      msg += `💵 Tarik: *${amount} gold*\n`;
+      msg += `🏦 Sisa saldo bank: *${bank.deposit} gold*\n`;
+      msg += `💰 Gold di tangan: *${rpg.gold + amount} gold*\n`;
+      
       return m.reply(msg);
     }
 

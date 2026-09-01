@@ -24,11 +24,7 @@ async function handler(m, { sock }) {
   const url = m.text?.trim();
 
   if (!url || (!url.includes("xnxx") && !url.includes("xvideos"))) {
-    return m.reply(`╭─「 ✦ XNXX Downloader ✦ 」
-│ Kirim URL video XNXX/XVideos
-│
-│ 💡 *Contoh:* \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\`
-╰────  •  ────`, "xnxx2");
+    return m.reply(`Kirim URL video XNXX/XVideos\n\nContoh: \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\``, "xnxx2");
   }
   try {
     const res = await axios.get(
@@ -37,17 +33,16 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data) {
-      return m.reply("╭─「 ✦ XNXX Downloader ✦ 」\n│ Gagal download\n│ URL mungkin tidak valid\n╰────  •  ────", "xnxx2");
+      return m.reply("❌ Gagal download\nURL mungkin tidak valid", "xnxx2");
     }
 
     const d = res.data.data;
-    let text = `🔞 *xɴxx ᴅᴏᴡɴʟᴏᴀᴅ*\n\n`;
-    text += `*ᴛɪᴛʟᴇ:* ${d.title || "-"}\n`;
-    text += `*ᴅᴜʀᴀᴛɪᴏɴ:* ${d.duration || "-"}\n`;
-    text += `*qᴜᴀʟɪᴛʏ:* ${d.quality || "-"}\n`;
-    text += `\nSedang mengirim video...`;
+    let text = `Title: ${d.title || "-"}\n`;
+    text += `Duration: ${d.duration || "-"}\n`;
+    text += `Quality: ${d.quality || "-"}\n\n`;
+    text += `Sedang mengirim video...`;
 
-    await m.reply( text, "xnxx2");
+    await m.reply(text, "xnxx2");
 
     if (d.url || d.downloadUrl) {
       const vidRes = await axios.get(d.url || d.downloadUrl, {
@@ -61,10 +56,10 @@ async function handler(m, { sock }) {
       }
     }
 
-    return m.reply("╭─「 ✦ XNXX Downloader ✦ 」\n│ ❌ File gagal diunduh\n│ Coba lagi nanti\n╰────  •  ────", "xnxx2");
+    return m.reply("❌ File gagal diunduh\nCoba lagi nanti", "xnxx2");
   } catch (err) {
     console.error("[XNXX2] Error:", err.message);
-    return m.reply( te(m.prefix, m.command, m.pushName), "xnxx2");
+    return m.reply(te(m.prefix, m.command, m.pushName), "xnxx2");
   }
 }
 

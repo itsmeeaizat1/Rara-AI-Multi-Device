@@ -45,9 +45,9 @@ function buildMemoryBook(prefix, groupName) {
   const topMembers = randomTopMembers();
 
   return (
-    claraWrap("Group Memory Book", [`│ Grup: *${groupName || "Grup ini"}*`,
-      `│ Vibe: *${vibe}*`,
-      `│ Momen: *${highlight}*`].join("\n")) +
+    claraWrap("Group Memory Book", [`Grup: *${groupName || "Grup ini"}*`,
+      `Vibe: *${vibe}*`,
+      `Momen: *${highlight}*`].join("\n")) +
     "\n" +
     claraWrap("Top Member", topMembers) +
     "\n\n" +

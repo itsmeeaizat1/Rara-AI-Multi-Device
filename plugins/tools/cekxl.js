@@ -75,10 +75,10 @@ async function handler(m, { sock }) {
             txt += `\n📦 *ᴅᴀꜰᴛᴀʀ ᴘᴀᴋᴇᴛ ᴀᴋᴛɪꜰ*\n\n`
             for (const pkg of data.packages) {
                 txt += `- *${pkg.name || pkg.packageName || "Paket"}*\n`
-                if (pkg.quota || pkg.remainingQuota) txt += `│ Sisa Kuota: *${pkg.remainingQuota || pkg.quota}*\n`
-                if (pkg.totalQuota) txt += `│ Total Kuota: *${pkg.totalQuota}*\n`
-                if (pkg.expireDate || pkg.validUntil) txt += `│ Berlaku Sampai: *${pkg.expireDate || pkg.validUntil}*\n`
-                if (pkg.type) txt += `│ Tipe: *${pkg.type}*\n`
+                if (pkg.quota || pkg.remainingQuota) txt += `Sisa Kuota: *${pkg.remainingQuota || pkg.quota}*\n`
+                if (pkg.totalQuota) txt += `Total Kuota: *${pkg.totalQuota}*\n`
+                if (pkg.expireDate || pkg.validUntil) txt += `Berlaku Sampai: *${pkg.expireDate || pkg.validUntil}*\n`
+                if (pkg.type) txt += `Tipe: *${pkg.type}*\n`
                 txt += `\n`
             }
         }

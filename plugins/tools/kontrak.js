@@ -105,23 +105,23 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!args || args.trim().length < 10) {
     const help = claraWrap("Kontrak", [
-      `│ AI Generator Kontrak/Perjanjian → PDF`,
+      `AI Generator Kontrak/Perjanjian → PDF`,
       ``,
-      `│ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  ${prefix}kontrak <jenis> <detail>`,
       ``,
-      `│ *ᴊᴇɴɪꜱ:*`,
+      `*ᴊᴇɴɪꜱ:*`,
       `  kerja, MoU, kerjasama, jasa, sewa, NDA`,
       ``,
-      `│ *ᴄᴏɴᴛᴏʜ:*`,
+      `*ᴄᴏɴᴛᴏʜ:*`,
       `  ${prefix}kontrak kerja PT Maju Jaya mereka Budi Santoso sebagai programmer, gaji 10jt/bln, kontrak 1 tahun mulai 1 Jan 2024`,
       `  ${prefix}kontrak MoU antara PT A dan PT B untuk kerjasama pengembangan aplikasi`,
       ``,
-      `│ *ʜᴀꜱɪʟ:* PDF dengan klausa standar, siap edit`,
+      `*ʜᴀꜱɪʟ:* PDF dengan klausa standar, siap edit`,
     ].join("\n"));
     return m.reply( help, "kontrak");
   }
-  m.reply(claraWrap("Kontrak", "│ AI lagi menyusun draft kontrak..."));
+  m.reply(claraWrap("Kontrak", "AI lagi menyusun draft kontrak..."));
 
   try {
     const result = await UnlimitedAI(KONTRAK_PROMPT.replace("__INPUT__", args), "nova-ai");
@@ -138,7 +138,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     await m.reply(claraWrap("Kontrak — Preview", preview));
 
     // PDF
-    m.reply(claraWrap("Kontrak", "│ Render kontrak ke PDF..."));
+    m.reply(claraWrap("Kontrak", "Render kontrak ke PDF..."));
     const pdfBuffer = await renderKontrakPDF(text);
     await sock.sendMessage(m.chat, {
       document: pdfBuffer,

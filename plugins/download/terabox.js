@@ -40,8 +40,8 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      claraWrap("Terabox", [`│ Link: *${url}*`,
-        "│ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+      claraWrap("Terabox", [`Link: *${url}*`,
+        "Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}terabox <link> untuk download file lain`);
 

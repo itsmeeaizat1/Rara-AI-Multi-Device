@@ -73,17 +73,18 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastNguli", NGULI_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ɴɢᴜʟɪ ✦ 」\n`;
-    msg += `│ 👷 Pekerjaan: ${job.name}\n`;
-    msg += `│\n`;
-    msg += `│ 📦 *ʜᴀsɪʟ* ${streak > 1 ? `(streak: ${streak})` : ""}\n`;
-    msg += `│ 💰 Gold: *+${goldGain}*\n`;
-    if (bonusGold > 0) msg += `│ ✨ Streak bonus: *+${bonusGold} gold*\n`;
-    msg += `│ ✦ EXP: *+${expGain}*\n`;
-    msg += `│\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy - NGULI_ENERGY}/${rpg.maxEnergy}*\n`;
-    msg += `╰────  •  ────`;
-
+    let msg = "";
+    msg += `👷 Pekerjaan: ${job.name}\n`;
+    msg += `
+`;
+    msg += `📦 *ʜᴀsɪʟ* ${streak > 1 ? `(streak: ${streak})` : ""}\n`;
+    msg += `💰 Gold: *+${goldGain}*\n`;
+    if (bonusGold > 0) msg += `✨ Streak bonus: *+${bonusGold} gold*\n`;
+    msg += `✦ EXP: *+${expGain}*\n`;
+    msg += `
+`;
+    msg += `⚡ Energy: *${rpg.energy - NGULI_ENERGY}/${rpg.maxEnergy}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("nguli error:", err);

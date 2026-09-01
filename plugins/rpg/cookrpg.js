@@ -68,22 +68,23 @@ async function handler(m, { sock }) {
 
     // List
     if (!action || action === "list") {
-      let msg = `╭─「 ✦ ᴄᴏᴏᴋ ʀᴘɢ ✦ 」\n`;
-      msg += `│ 📋 Resep masakan\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `📋 Resep masakan\n`;
+      msg += `
+`;
 
       for (const recipe of COOK_RECIPES) {
         const mats = recipe.materials.map(mat => `${mat.qty}x ${ITEM_DB[mat.id]?.name || mat.id}`).join(", ");
-        msg += `│ 🍳 *${recipe.name}* (${recipe.id})\n`;
-        msg += `│    Bahan: ${mats}\n`;
-        msg += `│    Efek: ${recipe.desc}\n`;
+        msg += `🍳 *${recipe.name}* (${recipe.id})\n`;
+        msg += `Bahan: ${mats}\n`;
+        msg += `Efek: ${recipe.desc}\n`;
       }
 
-      msg += `│\n`;
-      msg += `│ 📌 Ketik .cookrpg <id> untuk masak\n`;
-      msg += `│ Makanan langsung dikonsumsi (instant effect)\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `
+`;
+      msg += `📌 Ketik .cookrpg <id> untuk masak\n`;
+      msg += `Makanan langsung dikonsumsi (instant effect)\n`;
+      
       return m.reply(msg);
     }
 
@@ -130,21 +131,23 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     const freshRpg = ensureRpg(m, m.pushName);
 
-    let msg = `╭─「 ✦ ᴄᴏᴏᴋ ʀᴘɢ ✦ 」\n`;
-    msg += `│ ✅ Berhasil masak & makan!\n`;
-    msg += `│\n`;
-    msg += `│ 🍽️ *${recipe.name}*\n`;
-    msg += `│ ${recipe.desc}\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `✅ Berhasil masak & makan!\n`;
+    msg += `
+`;
+    msg += `🍽️ *${recipe.name}*\n`;
+    msg += `${recipe.desc}\n`;
+    msg += `
+`;
     for (const e of effects) {
-      msg += `│ ${e}\n`;
+      msg += `${e}\n`;
     }
-    msg += `│\n`;
-    msg += `│ ❤️ HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
-    msg += `│ ⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
-    msg += `│ 💧 Mana: *${freshRpg.mana}/${freshRpg.maxMana}*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `
+`;
+    msg += `❤️ HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
+    msg += `⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
+    msg += `💧 Mana: *${freshRpg.mana}/${freshRpg.maxMana}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("cookrpg error:", err);

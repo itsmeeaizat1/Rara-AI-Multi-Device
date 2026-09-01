@@ -91,23 +91,24 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     const freshRpg = ensureRpg(m, m.pushName);
-    let msg = `╭─「 ✦ ʜᴇᴀʟ ✦ 」\n`;
+    let msg = "";
     if (usedItems.length > 0) {
-      msg += `│ 🧪 Menggunakan: *${usedItems.join(", ")}*\n`;
+      msg += `🧪 Menggunakan: *${usedItems.join(", ")}*\n`;
     } else {
-      msg += `│ 💤 Kamu beristirahat sejenak...\n`;
+      msg += `💤 Kamu beristirahat sejenak...\n`;
     }
-    msg += `│\n`;
-    msg += `│ 📦 *ʀᴇᴄᴏᴠᴇʀʏ*\n`;
+    msg += `
+`;
+    msg += `📦 *ʀᴇᴄᴏᴠᴇʀʏ*\n`;
     for (const h of healed) {
-      msg += `│ ${h}\n`;
+      msg += `${h}\n`;
     }
-    msg += `│\n`;
-    msg += `│ ❤️ HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
-    msg += `│ ⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
-    msg += `│ 💧 Mana: *${freshRpg.mana}/${freshRpg.maxMana}*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `
+`;
+    msg += `❤️ HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
+    msg += `⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
+    msg += `💧 Mana: *${freshRpg.mana}/${freshRpg.maxMana}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("heal error:", err);

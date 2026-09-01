@@ -123,23 +123,20 @@ async function handler(m, { sock }) {
     const isAdmin = info.isAdmin ? "✅ Ya" : "❌ Tidak";
     return m.reply(
       `📋 *Info Plugin*\n\n` +
-        `╭─「 ✦ Detail ✦ 」\n` +
-        `│ 📛 Nama: \`${info.name || "-"}\`\n` +
-        `│ 🏷️ Alias: \`${aliases}\`\n` +
-        `│ 📁 Category: \`${info.category || "-"}\`\n` +
-        `│ 📄 Desc: ${info.description || "-"}\n` +
-        `│ 📝 Usage: \`${info.usage || "-"}\`\n` +
-        `│ 📌 Example: \`${info.example || "-"}\`\n` +
-        `╰────  •  ────\n\n` +
-        `╭─「 ✦ sEttings ✦ 」\n` +
-        `│ 🔓 Enabled: ${isEnabled}\n` +
-        `│ 👑 Owner Only: ${isOwner}\n` +
-        `│ 💎 Premium: ${isPremium}\n` +
-        `│ 👥 Group Only: ${isGroup}\n` +
-        `│ 🛡️ Admin Only: ${isAdmin}\n` +
-        `│ ⏱️ Cooldown: \`${info.cooldown || 0}s\`\n` +
-        `│ 🎫 Limit: \`${info.limit || 0}\`\n` +
-        `╰────  •  ────`,
+        `📛 Nama: \`${info.name || "-"}\`\n` +
+        `🏷️ Alias: \`${aliases}\`\n` +
+        `📁 Category: \`${info.category || "-"}\`\n` +
+        `📄 Desc: ${info.description || "-"}\n` +
+        `📝 Usage: \`${info.usage || "-"}\`\n` +
+        `📌 Example: \`${info.example || "-"}\`\n` +
+        `\n` +
+        `🔓 Enabled: ${isEnabled}\n` +
+        `👑 Owner Only: ${isOwner}\n` +
+        `💎 Premium: ${isPremium}\n` +
+        `👥 Group Only: ${isGroup}\n` +
+        `🛡️ Admin Only: ${isAdmin}\n` +
+        `⏱️ Cooldown: \`${info.cooldown || 0}s\`\n` +
+        `🎫 Limit: \`${info.limit || 0}\`\n`,
     );
   } catch (error) {
     console.log(error);

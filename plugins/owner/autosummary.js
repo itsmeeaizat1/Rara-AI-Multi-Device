@@ -193,7 +193,7 @@ function generateFallbackSummary(groupName, messages) {
   const topSenders = Object.entries(senderCount)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 3)
-    .map(([name, count], i) => `│ ${i + 1}. ${name} (${count} pesan)`)
+    .map(([name, count], i) => `${i + 1}. ${name} (${count} pesan)`)
     .join("\n");
 
   // Time range
@@ -219,19 +219,20 @@ function generateFallbackSummary(groupName, messages) {
     .join(", ");
 
   return (
-    `╭─「 ✦ ᴅᴀɪʟʏ ꜱᴜᴍᴍᴀʀʏ ✦ 」\n` +
-    `│ Grup: ${groupName}\n` +
-    `│ Tanggal: ${new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Jakarta" })}\n` +
-    `│ Total pesan: ${messages.length}\n` +
-    `│ Aktifitas: ${firstTime} — ${lastTime} WIB\n` +
-    `│\n` +
-    `│ Top Member:\n` +
+    `Grup: ${groupName}\n` +
+    `Tanggal: ${new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Jakarta" })}\n` +
+    `Total pesan: ${messages.length}\n` +
+    `Aktifitas: ${firstTime} — ${lastTime} WIB\n` +
+    `
+` +
+    `Top Member:\n` +
     `${topSenders}\n` +
-    `│\n` +
-    `│ Topik sering: ${topWords || "tidak terdeteksi"}\n` +
-    `│\n` +
-    `│ Vibe: ${messages.length > 100 ? "Sangat rame" : messages.length > 50 ? "Ramai" : messages.length > 20 ? "Cukup aktif" : "Tenang"}\n` +
-    `╰────  •  ────`
+    `
+` +
+    `Topik sering: ${topWords || "tidak terdeteksi"}\n` +
+    `
+` +
+    `Vibe: ${messages.length > 100 ? "Sangat rame" : messages.length > 50 ? "Ramai" : messages.length > 20 ? "Cukup aktif" : "Tenang"}\n`
   );
 }
 
@@ -276,11 +277,10 @@ async function generateAndSendSummary(sock, groupJid, isManual = false) {
   }
 
   const header =
-    `╭─「 ✦ ᴅᴀɪʟʏ ꜱᴜᴍᴍᴀʀʏ ✦ 」\n` +
-    `│ Grup: ${groupName}\n` +
-    `│ Tanggal: ${new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Jakarta" })}\n` +
-    `│ Pesan: ${messages.length} | Mode: ${usedAI ? "AI" : "Stats"}\n` +
-    `╰────  •  ────\n\n`;
+    `Grup: ${groupName}\n` +
+    `Tanggal: ${new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", timeZone: "Asia/Jakarta" })}\n` +
+    `Pesan: ${messages.length} | Mode: ${usedAI ? "AI" : "Stats"}\n` +
+    `\n`;
 
   try {
     await sock.sendMessage(targetJid, { text: header + summary });

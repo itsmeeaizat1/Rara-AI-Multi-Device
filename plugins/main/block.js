@@ -41,8 +41,8 @@ async function handler(m, { sock, config: botConfig }) {
     const targetName = targetRaw.replace(/^@+/, "") || targetRaw;
 
     const text =
-      claraWrap("Block", [`│ Target: *${targetName}*`,
-        "│ Status: *ʙᴇʀʜᴀꜱɪʟ ᴅɪʙʟᴏᴋɪʀ*"].join("\n")) +
+      claraWrap("Block", [`Target: *${targetName}*`,
+        "Status: *ʙᴇʀʜᴀꜱɪʟ ᴅɪʙʟᴏᴋɪʀ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

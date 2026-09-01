@@ -94,14 +94,11 @@ async function handler(m, { sock }) {
             lyrics = lyrics.slice(0, 3500) + "\n\n... (lirik dipotong)"
         }
 
-        const lines = lyrics.split("\n").map(l => "" + l).join("\n")
+        const lines = lyrics.split("\n").map(l => l).join("\n")
         const text =
-            "╭─「 ✦ Lirik v2 (via " + source + ") ✦ 」\n" +
-            "" + (result.title || "Unknown") + "\n" +
-            "│ by " + (result.artist || "Unknown") + "\n" +
-            "│\n" +
-            lines + "\n" +
-            "╰────  •  ────"
+            (result.title || "Unknown") + "\n" +
+            "by " + (result.artist || "Unknown") + "\n" +
+            lines + "\n"
 
         // Kirim dengan thumbnail jika ada
         if (result.thumbnail) {

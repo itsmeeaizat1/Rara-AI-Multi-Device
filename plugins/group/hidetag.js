@@ -40,7 +40,7 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const info =
-      claraWrap("Hidetag", [`│ Pesan: *${text}*`].join("\n")) +
+      claraWrap("Hidetag", [`Pesan: *${text}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

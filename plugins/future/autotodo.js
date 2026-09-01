@@ -14,8 +14,8 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const text = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!text) {
-      await m.reply( claraWrap("Auto Todo", ["│ Reply chat yang mengandung tugas",
-        "│ AI akan deteksi & list tugasnya"].join("\n")), "autotodo");
+      await m.reply( claraWrap("Auto Todo", ["Reply chat yang mengandung tugas",
+        "AI akan deteksi & list tugasnya"].join("\n")), "autotodo");
       return { handled: true };
     }
     const result = await callAI(`Dari teks berikut, deteksi semua tugas/to-do yang perlu dilakukan. List dengan format: 1. tugas\n2. tugas\n dst. Jika tidak ada tugas, jawab: TIDAK ADA TUGAS. Bahasa Indonesia.\n\n${text.substring(0, 500)}`, {

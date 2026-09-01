@@ -47,10 +47,9 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let result = `╭─「 ✦ FLIP TEXT ✦ 」\n`;
-    result += `│ ${flipped}\n`;
-    result += `╰────  •  ────`;
-    return m.reply(result);
+    let result = "";
+    result += `${flipped}\n`;
+        return m.reply(result);
   } catch (err) {
     console.error("fliptext error:", err);
     await m.react("❌");

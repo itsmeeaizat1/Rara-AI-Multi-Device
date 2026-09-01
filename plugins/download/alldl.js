@@ -396,7 +396,7 @@ async function handler(m, { sock }) {
   ]);
   await sendMenuPreview(sock, m, {
     text: infoText,
-    footer: "╰────  •  ────",
+    footer: "",
     buttons: options,
     title: `${toSC("Nova AI")} — ${toSC("Downloader")}`,
     body: toSC(platform.name),

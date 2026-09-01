@@ -41,21 +41,21 @@ async function handler(m, { sock }) {
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     const caption = `🕌 *ᴊᴀᴅᴡᴀʟ ꜱʜᴏʟᴀᴛ*
-╭─「 ✦ 📍 *${lokasi}*
-│ 📅 ${today}
-│ 🗺️ ${daerah}
-╰────  •  ────
-╭─「 ✦ ⏰ *ᴡᴀᴋᴛᴜ ꜱʜᴏʟᴀᴛ*
-│ 🌙 Imsak: \`${times.imsak}\`
-│ 🌅 sUbuh: \`${times.subuh}\`
-│ ☀️ Terbit: \`${times.terbit}\`
-│ 🌤️ Dhuha: \`${times.dhuha}\`
-│ 🌞 Dzuhur: \`${times.dzuhur}\`
-│ 🌇 Ashar: \`${times.ashar}\`
-│ 🌆 Maghrib: \`${times.maghrib}\`
-│ 🌃 Isya: \`${times.isya}\`
-╰────  •  ────
-│ _Sumber: myquran.com | Jangan lupa sholat ya! 🤲_`;
+📍 Lokasi: ${lokasi}
+📅 ${today}
+🗺️ ${daerah}
+
+Waktu Sholat:
+🌙 Imsak: \`${times.imsak}\`
+🌅 sUbuh: \`${times.subuh}\`
+☀️ Terbit: \`${times.terbit}\`
+🌤️ Dhuha: \`${times.dhuha}\`
+🌞 Dzuhur: \`${times.dzuhur}\`
+🌇 Ashar: \`${times.ashar}\`
+🌆 Maghrib: \`${times.maghrib}\`
+🌃 Isya: \`${times.isya}\`
+
+_Sumber: myquran.com | Jangan lupa sholat ya! 🤲_`;
     const adzanUrl = "https://media.vocaroo.com/mp3/1ofLT2YUJAjQ";
     let adzanBuffer;
     try {

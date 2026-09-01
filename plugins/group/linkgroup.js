@@ -34,9 +34,9 @@ async function handler(m, { sock, config: botConfig }) {
       : "https://chat.whatsapp.com/xxxxx";
 
     const text =
-      claraWrap("Link Group", [`│ Group: *${m.chatName || chat}*`,
-        `│ Link: *${link}*`,
-        "│ Status: *ᴀᴄᴛɪᴠᴇ*"].join("\n")) +
+      claraWrap("Link Group", [`Group: *${m.chatName || chat}*`,
+        `Link: *${link}*`,
+        "Status: *ᴀᴄᴛɪᴠᴇ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

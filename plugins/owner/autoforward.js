@@ -39,49 +39,46 @@ async function handler(m, { sock }) {
 
     if (subCmd === "add") {
       const keyword = args.slice(1).join(" ").toLowerCase().trim()
-      if (!keyword) { return m.reply("╭─「 ✦ Auto Forward ✦ 」\n│ Masukkan keyword!\n│ .autoforward add <keyword>\n╰────  •  ────") }
-      if (cfg.keywords.includes(keyword)) { return m.reply("╭─「 ✦ Auto Forward ✦ 」\n│ Keyword sudah ada.\n╰────  •  ────") }
+      if (!keyword) { return m.reply("❌ Masukkan keyword!\n.autoforward add <keyword>") }
+      if (cfg.keywords.includes(keyword)) { return m.reply("❌ Keyword sudah ada.") }
       cfg.keywords.push(keyword); save(db);
-      return m.reply("╭─「 ✦ Auto Forward ✦ 」\n│ Keyword ditambah: \"" + keyword + "\"\n│ Total: " + cfg.keywords.length + "\n│ Status: " + (cfg.enabled ? "ON" : "OFF") + "\n╰────  •  ────")
+      return m.reply("✅ Keyword ditambah: \"" + keyword + "\"\nTotal: " + cfg.keywords.length + "\nStatus: " + (cfg.enabled ? "ON" : "OFF"))
     }
 
     if (subCmd === "del") {
       const keyword = args.slice(1).join(" ").toLowerCase().trim()
       cfg.keywords = cfg.keywords.filter(k => k !== keyword); save(db);
-      return m.reply("╭─「 ✦ Auto Forward ✦ 」\n│ Keyword dihapus: \"" + keyword + "\"\n│ Sisa: " + cfg.keywords.length + "\n╰────  •  ────")
+      return m.reply("✅ Keyword dihapus: \"" + keyword + "\"\nSisa: " + cfg.keywords.length)
     }
 
     if (subCmd === "on" || subCmd === "off") {
       cfg.enabled = subCmd === "on"; save(db);
-      return m.reply("╭─「 ✦ Auto Forward ✦ 」\n│ Status: " + (cfg.enabled ? "ON" : "OFF") + "\n│ Scope: " + cfg.scope + "\n│ Keywords: " + cfg.keywords.length + "\n╰────  •  ────")
+      return m.reply("✅ Status: " + (cfg.enabled ? "ON" : "OFF") + "\nScope: " + cfg.scope + "\nKeywords: " + cfg.keywords.length)
     }
 
     if (subCmd === "scope") {
       const scope = args[1]?.toLowerCase()
       if (scope === "all" || scope === "gc" || scope === "pc") {
         cfg.scope = scope; save(db);
-        return m.reply("╭─「 ✦ Auto Forward ✦ 」\n│ Scope: " + scope + "\n│ all=semua, gc=grup, pc=private\n╰────  •  ────")
+        return m.reply("✅ Scope: " + scope + "\nall=semua, gc=grup, pc=private")
       }
     }
 
     // Default: list
-    let text = "╭─「 ✦ Auto Forward ✦ 」\n"
-    text += "│ Status: " + (cfg.enabled ? "ON" : "OFF") + "\n"
-    text += "│ Scope: " + cfg.scope + "\n"
-    text += "│ Forwarded: " + (cfg.forwardedCount || 0) + " pesan\n"
-    text += "│\n"
+    let text = "*Auto Forward*\n\n"
+    text += "Status: " + (cfg.enabled ? "ON" : "OFF") + "\n"
+    text += "Scope: " + cfg.scope + "\n"
+    text += "Forwarded: " + (cfg.forwardedCount || 0) + " pesan\n\n"
     if (cfg.keywords.length) {
-      text += "│ Keywords (" + cfg.keywords.length + "):\n"
-      cfg.keywords.forEach((k, i) => { text += "" + (i + 1) + ". " + k + "\n" })
+      text += "Keywords (" + cfg.keywords.length + "):\n"
+      cfg.keywords.forEach((k, i) => { text += (i + 1) + ". " + k + "\n" })
     } else {
-      text += "│ Belum ada keyword.\n"
-      text += "│ .autoforward add <keyword>\n"
+      text += "Belum ada keyword.\n.autoforward add <keyword>"
     }
-    text += "╰────  •  ────"
     return m.reply(text)
   } catch (e) {
     console.error("[autoforward] error:", e.message)
-    return m.reply("╭─「 ✦ Error ✦ 」\n" + (e.message || "Ada error nih") + "\n╰────  •  ────")
+    return m.reply("❌ " + (e.message || "Ada error nih"))
   }
 }
 

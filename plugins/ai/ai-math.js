@@ -51,8 +51,8 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      claraWrap("AI Math", [`│ Soal: *${prompt.slice(0, 200)}${prompt.length > 200 ? "..." : ""}*`,
-        `│ Jawaban: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      claraWrap("AI Math", [`Soal: *${prompt.slice(0, 200)}${prompt.length > 200 ? "..." : ""}*`,
+        `Jawaban: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}ai-math <soal> untuk soal lain`) +
       "\n" +

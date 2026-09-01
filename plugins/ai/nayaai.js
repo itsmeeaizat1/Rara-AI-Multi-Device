@@ -39,10 +39,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ɴᴀʏᴀ ᴀɪ ✦ 」\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    return m.reply(result.answer.trim());
   } catch (err) {
     console.error("nayaai error:", err);
     await m.react("❌");

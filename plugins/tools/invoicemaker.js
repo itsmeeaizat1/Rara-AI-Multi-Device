@@ -28,17 +28,15 @@ async function handler(m, { sock }) {
 
   if (!text || !text.includes("|")) {
     return m.reply( `🧾 *ɪɴᴠᴏɪᴄᴇ ᴍᴀᴋᴇʀ*\n\n` +
-        `╭─「 ✦ FORMAT ✦ 」\n` +
-        `│ \`${m.prefix}invoicemaker <toko>|<invoice>|<tanggal>|<status>|<items>|<total>\`\n` +
-        `╰────  •  ────\n\n` +
-        `╭─「 ✦ PARAMETER ✦ 」\n` +
-        `│ • toko: Nama toko\n` +
-        `│ • invoice: Nomor invoice\n` +
-        `│ • tanggal: Format DD/MM/YYYY\n` +
-        `│ • status: paid/unpaid\n` +
-        `│ • items: Nama:unit:harga (pisah koma)\n` +
-        `│ • total: Total harga\n` +
-        `╰────  •  ────\n\n` +
+        `\`${m.prefix}invoicemaker <toko>|<invoice>|<tanggal>|<status>|<items>|<total>\`\n` +
+        `\n` +
+        `• toko: Nama toko\n` +
+        `• invoice: Nomor invoice\n` +
+        `• tanggal: Format DD/MM/YYYY\n` +
+        `• status: paid/unpaid\n` +
+        `• items: Nama:unit:harga (pisah koma)\n` +
+        `• total: Total harga\n` +
+        `\n` +
         `Contoh:\n` +
         `\`${m.prefix}invoicemaker TokoKu|INV001|15/01/2026|paid|Nasi Goreng:1x:15000,Es Teh:2x:6000|21000\``, "invoicemaker");
   }
@@ -97,18 +95,16 @@ async function handler(m, { sock }) {
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     let caption = `🧾 *ɪɴᴠᴏɪᴄᴇ ɢᴇɴᴇʀᴀᴛᴇᴅ*\n\n`;
-    caption += `╭─「 ✦ DETAIL ✦ 」\n`;
-    caption += `│ 🏪 Toko: *${data.store}*\n`;
-    caption += `│ 🔢 Invoice: *${data.invoice}*\n`;
-    caption += `│ 📅 Tanggal: *${data.date}*\n`;
-    caption += `│ 📌 Status: *${data.status === "paid" ? "✅ LUNAS" : "❌ BELUM LUNAS"}*\n`;
-    caption += `╰────  •  ────\n\n`;
+        caption += `🏪 Toko: *${data.store}*\n`;
+    caption += `🔢 Invoice: *${data.invoice}*\n`;
+    caption += `📅 Tanggal: *${data.date}*\n`;
+    caption += `📌 Status: *${data.status === "paid" ? "✅ LUNAS" : "❌ BELUM LUNAS"}*\n`;
+    caption += `\n`;
 
-    caption += `╭─「 ✦ ITEMs ✦ 」\n`;
-    data.items.forEach((item, i) => {
-      caption += `│ ${i + 1}. ${item.name} (${item.unit}) - Rp${item.price.toLocaleString("id-ID")}\n`;
+        data.items.forEach((item, i) => {
+      caption += `${i + 1}. ${item.name} (${item.unit}) - Rp${item.price.toLocaleString("id-ID")}\n`;
     });
-    caption += `╰────  •  ────\n\n`;
+    caption += `\n`;
 
     caption += `💰 Total: *Rp${data.total.toLocaleString("id-ID")}*`;
 

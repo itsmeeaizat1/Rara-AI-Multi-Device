@@ -21,8 +21,8 @@ async function formatAndReply( text, cmdName) {
     if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:") || line.includes("°˖") || line.includes("⋆｡˚")) return line;
     return toSC(line);
   }).join("\n");
-  if (!text.includes("╰────  •  ────")) {
-    text = text + "\n\n╰────  •  ────";
+  if (!text.includes("")) {
+    text = text + "\n";
   }
   return await m.reply(text);
 }

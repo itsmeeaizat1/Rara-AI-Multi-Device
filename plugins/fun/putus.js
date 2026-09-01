@@ -98,13 +98,12 @@ async function handler(m, { sock }) {
     db.save();
 
     let msg = `💔 *ᴘᴜᴛᴜs*\n\n`;
-    msg += `│ @${m.sender.split("@")[0]} putus dengan @${partnerJid.split("@")[0]}\n`;
+    msg += `@${m.sender.split("@")[0]} putus dengan @${partnerJid.split("@")[0]}\n`;
     if (durasiHari > 0) {
-      msg += `│ Durasi pacaran: *${durasiHari} hari*\n`;
+      msg += `Durasi pacaran: *${durasiHari} hari*\n`;
     }
     msg += `\n  _Semoga kamu lebih bahagia kedepannya_ 🙏\n\n`;
-    msg += `╰────  •  ────`;
-
+    
     await m.reply(msg);
     await m.react("💔");
   } catch (e) {

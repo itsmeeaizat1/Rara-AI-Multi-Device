@@ -107,8 +107,8 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const out =
-      claraWrap("AI Voice", [`│ Teks: *${text.slice(0, 100)}${text.length > 100 ? "..." : ""}*`,
-        "│ Status: *Berhasil*"].join("\n")) +
+      claraWrap("AI Voice", [`Teks: *${text.slice(0, 100)}${text.length > 100 ? "..." : ""}*`,
+        "Status: *Berhasil*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aivoice <teks> untuk suara lain`) +
       "\n" +

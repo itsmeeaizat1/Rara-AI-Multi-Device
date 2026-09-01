@@ -29,15 +29,15 @@ const PRESETS = [
 
 function buildMenu(prefix) {
   return (
-    claraWrap("Time Capsule", ["│ Fitur: *ᴛɪᴍᴇ ᴄᴀᴘꜱᴜʟᴇ*",
-      "│ Konsep: *Pesan dikunci, terbuka nanti*",
-      "│ Cooldown: *10 detik*"].join("\n")) +
+    claraWrap("Time Capsule", ["Fitur: *ᴛɪᴍᴇ ᴄᴀᴘꜱᴜʟᴇ*",
+      "Konsep: *Pesan dikunci, terbuka nanti*",
+      "Cooldown: *10 detik*"].join("\n")) +
     "\n" +
     claraWrap("PreꜱEt Idea", PRESETS) +
     "\n\n" +
     separator("━", 22) +
     "\n" +
-    claraWrap("Pakai", [`│ ${prefix}timecapsule <hari>|<pesan>`, `│ Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
+    claraWrap("Pakai", [`${prefix}timecapsule <hari>|<pesan>`, `Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
     "\n\n" +
     separator("━", 22) +
     "\n" +
@@ -63,8 +63,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!Number.isInteger(days) || days <= 0 || !message) {
       const text =
-        claraWrap("Time Capsule", ["│ Alasan: *ꜰᴏʀᴍᴀᴛ ꜱᴀʟᴀʜ*",
-          `│ Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
+        claraWrap("Time Capsule", ["Alasan: *ꜰᴏʀᴍᴀᴛ ꜱᴀʟᴀʜ*",
+          `Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}timecapsule untuk melihat menu`);
 
@@ -76,9 +76,9 @@ async function handler(m, { sock, config: botConfig }) {
     openDate.setDate(openDate.getDate() + days);
 
     const text =
-      claraWrap("Time Capsule", [`│ Durasi: *${days} hari*`,
-        `│ Terbuka: *${openDate.toLocaleDateString("id-ID")}*`,
-        `│ Pesan: *"${message}"*`].join("\n")) +
+      claraWrap("Time Capsule", [`Durasi: *${days} hari*`,
+        `Terbuka: *${openDate.toLocaleDateString("id-ID")}*`,
+        `Pesan: *"${message}"*`].join("\n")) +
       "\n" +
       tipText("Catatan: ini versi UI dulu, belum ada timer real") +
       "\n" +

@@ -21,24 +21,26 @@ async function handler(m, { sock }) {
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("levelinfo", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
-    let msg = `╭─「 ✦ LEVEL INFO ✦ 」\n`;
-    msg += `│ 👤 ${m.pushName || "Player"}\n`;
-    msg += `│\n`;
-    msg += `│ 📊 Level: ${rpg.level || 1}\n`;
-    msg += `│ ✨ EXP: ${rpg.exp || 0}/${rpg.expNext || 100}\n`;
-    msg += `│ 💰 Gold: ${(rpg.gold || 0).toLocaleString("id-ID")}\n`;
-    msg += `│ 💎 Gems: ${rpg.gems || 0}\n`;
-    msg += `│\n`;
-    msg += `│ ❤️ HP: ${rpg.hp || 100}/${rpg.maxHp || 100}\n`;
-    msg += `│ 🔮 Mana: ${rpg.mana || 50}/${rpg.maxMana || 50}\n`;
-    msg += `│ ⚡ Energy: ${rpg.energy || 100}/${rpg.maxEnergy || 100}\n`;
-    msg += `│\n`;
-    msg += `│ 👔 Job: ${rpg.job || "novice"}\n`;
-    msg += `│ 📖 Job Lv: ${rpg.jobLevel || 1}\n`;
-    msg += `│ 📖 Job EXP: ${rpg.jobExp || 0}/${rpg.jobExpNext || 50}\n`;
-    if (rpg.skill) msg += `│ 🃏 Skill: ${rpg.skill}\n`;
-    msg += `╰────  •  ────`;
-    await m.react("🐣");
+    let msg = "";
+    msg += `👤 ${m.pushName || "Player"}\n`;
+    msg += `
+`;
+    msg += `📊 Level: ${rpg.level || 1}\n`;
+    msg += `✨ EXP: ${rpg.exp || 0}/${rpg.expNext || 100}\n`;
+    msg += `💰 Gold: ${(rpg.gold || 0).toLocaleString("id-ID")}\n`;
+    msg += `💎 Gems: ${rpg.gems || 0}\n`;
+    msg += `
+`;
+    msg += `❤️ HP: ${rpg.hp || 100}/${rpg.maxHp || 100}\n`;
+    msg += `🔮 Mana: ${rpg.mana || 50}/${rpg.maxMana || 50}\n`;
+    msg += `⚡ Energy: ${rpg.energy || 100}/${rpg.maxEnergy || 100}\n`;
+    msg += `
+`;
+    msg += `👔 Job: ${rpg.job || "novice"}\n`;
+    msg += `📖 Job Lv: ${rpg.jobLevel || 1}\n`;
+    msg += `📖 Job EXP: ${rpg.jobExp || 0}/${rpg.jobExpNext || 50}\n`;
+    if (rpg.skill) msg += `🃏 Skill: ${rpg.skill}\n`;
+        await m.react("🐣");
     return m.reply(msg);
   } catch (err) {
     console.error("levelinfo error:", err);

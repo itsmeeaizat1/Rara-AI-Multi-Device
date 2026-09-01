@@ -193,21 +193,21 @@ async function handler(m, { sock }) {
       properties.push("Angka Nol (0)");
     }
 
-    let output = `╭─「 ✦ ROULETTE ✦ 」\n`;
-    output += `│ 🎡 Hasil Spin: ${winningColor} *${winningNumber}* (${properties.join(" / ")})\n`;
-    output += `│ 🎯 Taruhan: *${betTypeInput.toUpperCase()}*\n`;
-    output += `│ 💵 Jumlah Bet: *${bet} gold*\n`;
-    output += `│\n`;
+    let output = "";
+    output += `🎡 Hasil Spin: ${winningColor} *${winningNumber}* (${properties.join(" / ")})\n`;
+    output += `🎯 Taruhan: *${betTypeInput.toUpperCase()}*\n`;
+    output += `💵 Jumlah Bet: *${bet} gold*\n`;
+    output += `
+`;
     if (won) {
-      output += `│ 🎉 *MENANG!* Multiplier: *${multiplier}x*\n`;
-      output += `│ 💰 Total Payout: *+${payout} gold* (Net: +${netProfit})\n`;
+      output += `🎉 *MENANG!* Multiplier: *${multiplier}x*\n`;
+      output += `💰 Total Payout: *+${payout} gold* (Net: +${netProfit})\n`;
     } else {
-      output += `│ ❌ *KALAH!* Bola mendarat di ${winningColor} ${winningNumber}\n`;
-      output += `│ 💸 Kerugian: *-${bet} gold*\n`;
+      output += `❌ *KALAH!* Bola mendarat di ${winningColor} ${winningNumber}\n`;
+      output += `💸 Kerugian: *-${bet} gold*\n`;
     }
-    output += `│ 💼 Sisa Gold: *${updatedGold} gold*\n`;
-    output += `╰────  •  ────`;
-
+    output += `💼 Sisa Gold: *${updatedGold} gold*\n`;
+    
     return m.reply(output);
   } catch (err) {
     console.error("roulette error:", err);

@@ -81,11 +81,12 @@ async function handler(m, { sock }) {
         const duration = Math.ceil(buffer.length / 4000);
         await m.reply(
             `🎤 *ᴛʀᴀɴꜱᴋʀɪᴘ*\n\n` +
-            `╭─「 ✦ HAsIL ✦ 」\n` +
-            `│\n` +
-            `│ ${text}\n` +
-            `│\n` +
-            `╰────  •  ────\n\n` +
+            `
+` +
+            `${text}\n` +
+            `
+` +
+            `\n` +
             `🤖 Model: Whisper Large V3\n` +
             `🌐 Bahasa: Indonesia\n` +
             `📊 Ukuran: ~${(buffer.length / 1024).toFixed(1)} KB`

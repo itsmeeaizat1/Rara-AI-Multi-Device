@@ -116,36 +116,37 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("arenav3", "Belum ada player di arena.", "info"));
       }
 
-      let msg = `╭─「 ✦ ᴀʀᴇɴᴀ ʟᴇᴀᴅᴇʀʙᴏᴀʀᴅ ✦ 」\n`;
-      msg += `│ 📊 Top 10 Arena Players\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `📊 Top 10 Arena Players\n`;
+      msg += `
+`;
       const medal = ["🥇", "🥈", "🥉"];
       for (let i = 0; i < players.length; i++) {
         const p = players[i];
         const rank = medal[i] || `${i + 1}.`;
         const wr = p.wins + p.losses > 0 ? Math.floor(p.wins / (p.wins + p.losses) * 100) : 0;
-        msg += `│ ${rank} ${p.name}\n`;
-        msg += `│     Rating: *${p.rating}* | W:${p.wins} L:${p.losses} (${wr}%)\n`;
+        msg += `${rank} ${p.name}\n`;
+        msg += `Rating: *${p.rating}* | W:${p.wins} L:${p.losses} (${wr}%)\n`;
       }
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+            return m.reply(msg);
     }
 
     // Need mode
     if (!mode || !["ranked", "casual", "ai", "bot"].includes(mode)) {
-      let msg = `╭─「 ✦ ᴀʀᴇɴᴀ ᴠ3 ✦ 」\n`;
-      msg += `│ 📊 Rating: *${rpg.pvpRating || 1000}*\n`;
-      msg += `│ 🏆 W:${rpg.arenaWins || 0} L:${rpg.arenaLosses || 0}\n`;
-      msg += `│\n`;
-      msg += `│ 📋 *ᴍᴏᴅᴇs*\n`;
-      msg += `│ 🤖 .arenav3 ai — lawan AI (casual, no rating)\n`;
-      msg += `│ ⚔️ .arenav3 ranked — lawan AI (rated, ELO)\n`;
-      msg += `│ 🎮 .arenav3 casual — lawan AI (no stake)\n`;
-      msg += `│ 📊 .arenav3 leaderboard — top players\n`;
-      msg += `│\n`;
-      msg += `│ ⚡ Cost: *${ARENA_ENERGY} energy*\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `📊 Rating: *${rpg.pvpRating || 1000}*\n`;
+      msg += `🏆 W:${rpg.arenaWins || 0} L:${rpg.arenaLosses || 0}\n`;
+      msg += `
+`;
+      msg += `📋 *ᴍᴏᴅᴇs*\n`;
+      msg += `🤖 .arenav3 ai — lawan AI (casual, no rating)\n`;
+      msg += `⚔️ .arenav3 ranked — lawan AI (rated, ELO)\n`;
+      msg += `🎮 .arenav3 casual — lawan AI (no stake)\n`;
+      msg += `📊 .arenav3 leaderboard — top players\n`;
+      msg += `
+`;
+      msg += `⚡ Cost: *${ARENA_ENERGY} energy*\n`;
+            return m.reply(msg);
     }
 
     // Check cooldown & energy
@@ -239,35 +240,37 @@ async function handler(m, { sock }) {
     const freshRpg = ensureRpg(m, m.pushName);
 
     await m.react("🐣");
-    let out = `╭─「 ✦ ᴀʀᴇɴᴀ ᴠ3 ✦ 」\n`;
-    out += `│ ⚔️ ${player.name} vs ${opponent.name}\n`;
-    out += `│ 📊 Mode: *${mode.toUpperCase()}*\n`;
-    out += `│\n`;
-    out += `│ 📋 *ᴄᴏᴍʙᴀᴛ ʟᴏɢ*\n`;
+    let out = "";
+    out += `⚔️ ${player.name} vs ${opponent.name}\n`;
+    out += `📊 Mode: *${mode.toUpperCase()}*\n`;
+    out += `
+`;
+    out += `📋 *ᴄᴏᴍʙᴀᴛ ʟᴏɢ*\n`;
     for (const l of combat.log.slice(-6)) {
-      out += `│ ${l}\n`;
+      out += `${l}\n`;
     }
-    out += `│\n`;
+    out += `
+`;
 
     if (won) {
-      out += `│ 🏆 *ᴠɪᴄᴛᴏʀʏ!*\n`;
-      out += `│ ✦ EXP: *+${expGain}*\n`;
-      out += `│ 💰 Gold: *+${goldGain}*\n`;
-      if (gemGain > 0) out += `│ 💎 Gems: *+${gemGain}*\n`;
-      if (ratingChange > 0) out += `│ 📈 Rating: *+${ratingChange}* (${freshRpg.pvpRating})\n`;
+      out += `🏆 *ᴠɪᴄᴛᴏʀʏ!*\n`;
+      out += `✦ EXP: *+${expGain}*\n`;
+      out += `💰 Gold: *+${goldGain}*\n`;
+      if (gemGain > 0) out += `💎 Gems: *+${gemGain}*\n`;
+      if (ratingChange > 0) out += `📈 Rating: *+${ratingChange}* (${freshRpg.pvpRating})\n`;
     } else if (draw) {
-      out += `│ 🤝 *ᴅʀᴀᴡ!*\n`;
-      out += `│ ✦ EXP: *+${expGain}*\n`;
+      out += `🤝 *ᴅʀᴀᴡ!*\n`;
+      out += `✦ EXP: *+${expGain}*\n`;
     } else {
-      out += `│ 💀 *ᴅᴇғᴇᴀᴛ!*\n`;
-      if (ratingChange < 0) out += `│ 📉 Rating: *${ratingChange}* (${freshRpg.pvpRating})\n`;
+      out += `💀 *ᴅᴇғᴇᴀᴛ!*\n`;
+      if (ratingChange < 0) out += `📉 Rating: *${ratingChange}* (${freshRpg.pvpRating})\n`;
     }
 
-    out += `│\n`;
-    out += `│ ❤️ HP: *${freshRpg.hp}/${rpg.maxHp}*\n`;
-    out += `│ ⚡ Energy: *${freshRpg.energy}/${rpg.maxEnergy}*\n`;
-    out += `╰────  •  ────`;
-
+    out += `
+`;
+    out += `❤️ HP: *${freshRpg.hp}/${rpg.maxHp}*\n`;
+    out += `⚡ Energy: *${freshRpg.energy}/${rpg.maxEnergy}*\n`;
+    
     return m.reply(out);
   } catch (err) {
     console.error("arenav3 error:", err);

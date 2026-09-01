@@ -26,15 +26,16 @@ async function handler(m, { sock }) {
     const skill = m.args?.[0]?.trim().toLowerCase();
     if (!skill || !SKILLS.includes(skill)) {
       await m.react("🚫");
-      let msg = `╭─「 ✦ SELECT SKILL ✦ 」\n`;
-      msg += `│ Pilih skill yang tersedia:\n`;
-      msg += `│\n`;
-      SKILLS.forEach(s => { msg += `│ › ${s}\n`; });
-      msg += `│\n`;
-      msg += `│ Cara: .selectskill <nama_skill>\n`;
-      msg += `│ Contoh: .selectskill necromancer\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `Pilih skill yang tersedia:\n`;
+      msg += `
+`;
+      SKILLS.forEach(s => { msg += `› ${s}\n`; });
+      msg += `
+`;
+      msg += `Cara: .selectskill <nama_skill>\n`;
+      msg += `Contoh: .selectskill necromancer\n`;
+            return m.reply(msg);
     }
 
     if (rpg.skill && rpg.skill !== "") {
@@ -45,11 +46,10 @@ async function handler(m, { sock }) {
     rpg.skill = skill;
     saveRpg(m, rpg);
     await m.react("🐣");
-    let msg = `╭─「 ✦ SKILL DIPILIH ✦ 」\n`;
-    msg += `│ ✅ Kamu memilih skill: *${skill}*\n`;
-    msg += `│ Skill tidak bisa diganti!\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    let msg = "";
+    msg += `✅ Kamu memilih skill: *${skill}*\n`;
+    msg += `Skill tidak bisa diganti!\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("selectskill error:", err);
     await m.react("❌");

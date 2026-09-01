@@ -116,20 +116,21 @@ async function handler(m, { sock }) {
     }
 
     // STATUS (default)
-    let msg = `╭─「 ✦ sᴜʀᴠɪᴠᴀʟ ✦ 」\n`;
-    msg += `│ ❤️ HP:      [${bar(data.hp, MAX_HP)}] ${data.hp}/${MAX_HP}\n`;
-    msg += `│ 🍖 Hunger:  [${bar(data.hunger, MAX_HUNGER)}] ${data.hunger}/${MAX_HUNGER}\n`;
-    msg += `│ 💧 Thirst:  [${bar(data.thirst, MAX_THIRST)}] ${data.thirst}/${MAX_THIRST}\n`;
-    msg += `│\n`;
-    msg += `│ Days: *${data.daysSurvived || 0}* | Deaths: *${data.deaths || 0}*\n`;
-    if (data.hunger < 20) msg += `│ ⚠️ Hunger kritis! Berburu segera.\n`;
-    if (data.thirst < 20) msg += `│ ⚠️ Thirst kritis! Minum segera.\n`;
-    msg += `│\n`;
-    msg += `│ ${m.prefix}survival drink - minum\n`;
-    msg += `│ ${m.prefix}survival rest - istirahat (+HP)\n`;
-    msg += `│ ${m.prefix}survival hunt - berburu (+hunger)\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    let msg = "";
+    msg += `❤️ HP:      [${bar(data.hp, MAX_HP)}] ${data.hp}/${MAX_HP}\n`;
+    msg += `🍖 Hunger:  [${bar(data.hunger, MAX_HUNGER)}] ${data.hunger}/${MAX_HUNGER}\n`;
+    msg += `💧 Thirst:  [${bar(data.thirst, MAX_THIRST)}] ${data.thirst}/${MAX_THIRST}\n`;
+    msg += `
+`;
+    msg += `Days: *${data.daysSurvived || 0}* | Deaths: *${data.deaths || 0}*\n`;
+    if (data.hunger < 20) msg += `⚠️ Hunger kritis! Berburu segera.\n`;
+    if (data.thirst < 20) msg += `⚠️ Thirst kritis! Minum segera.\n`;
+    msg += `
+`;
+    msg += `${m.prefix}survival drink - minum\n`;
+    msg += `${m.prefix}survival rest - istirahat (+HP)\n`;
+    msg += `${m.prefix}survival hunt - berburu (+hunger)\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("survival error:", err);
     await m.react("❌");

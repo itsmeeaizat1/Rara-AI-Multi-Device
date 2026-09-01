@@ -70,24 +70,26 @@ async function handler(m, { sock }) {
     if (Math.random() * 100 < tree.dropChance) {
       const qty = Math.floor(Math.random() * 3) + 1;
       addItem(m, tree.drop, qty);
-      dropText = `\n│ 🪵 +${qty}x ${ITEM_DB[tree.drop]?.name || tree.drop}`;
+      dropText = `
+🪵 +${qty}x ${ITEM_DB[tree.drop]?.name || tree.drop}`;
     }
 
     setCooldown(m, "lastNebang", NEBANG_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ɴᴇʙᴀɴɢ ✦ 」\n`;
-    msg += `│ 🌲 Pohon: *${tree.name}*\n`;
-    msg += `│ 🪓 Kamu menebang dengan susah payah...\n`;
-    msg += `│\n`;
-    msg += `│ 📦 *ʜᴀsɪʟ ɴᴇʙᴀɴɢ*\n`;
-    msg += `│ 💰 Gold: *+${goldGain}*\n`;
-    msg += `│ ✦ EXP: *+${expGain}*\n`;
+    let msg = "";
+    msg += `🌲 Pohon: *${tree.name}*\n`;
+    msg += `🪓 Kamu menebang dengan susah payah...\n`;
+    msg += `
+`;
+    msg += `📦 *ʜᴀsɪʟ ɴᴇʙᴀɴɢ*\n`;
+    msg += `💰 Gold: *+${goldGain}*\n`;
+    msg += `✦ EXP: *+${expGain}*\n`;
     if (dropText) msg += dropText + "\n";
-    msg += `│\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy - NEBANG_ENERGY}/${rpg.maxEnergy}*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `
+`;
+    msg += `⚡ Energy: *${rpg.energy - NEBANG_ENERGY}/${rpg.maxEnergy}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("nebang error:", err);

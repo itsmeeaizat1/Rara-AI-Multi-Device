@@ -22,8 +22,8 @@ async function handler(m, { sock }) {
     
     if (!text) {
         return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-            `│ \`${m.prefix}pakustad <pertanyaan>\`\n\n` +
-            `│ Contoh: \`${m.prefix}pakustad kenapa aku ganteng\``, "pakustad")
+            `\`${m.prefix}pakustad <pertanyaan>\`\n\n` +
+            `Contoh: \`${m.prefix}pakustad kenapa aku ganteng\``, "pakustad")
     }
     try {
         const apiUrl = `https://api.cuki.biz.id/api/canvas/ustadz?apikey=cuki-x&text=${encodeURIComponent(text)}`

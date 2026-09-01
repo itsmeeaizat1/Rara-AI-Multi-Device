@@ -25,7 +25,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!habit) throw new Error("Nama habit kosong nih");
       db.habits[sender].push({ name: habit, streak: 0, lastCheck: 0, created: Date.now() });
       db.write();
-      await m.reply(claraWrap("AI Habit", [`│ Habit: *${habit}*`, `│ Ketik *${prefix}aihabit done* untuk check-in`].join("\n")));
+      await m.reply(claraWrap("AI Habit", [`Habit: *${habit}*`, `Ketik *${prefix}aihabit done* untuk check-in`].join("\n")));
     } else if (action === "done") {
       const idx = parseInt(args[1] || "1") - 1;
       const habit = db.habits[sender][idx];
@@ -35,10 +35,10 @@ async function handler(m, { sock, config: botConfig }) {
       const yesterday = new Date(Date.now() - 86400000).toDateString();
       habit.streak = new Date(habit.lastCheck).toDateString() === yesterday ? habit.streak + 1 : 1;
       habit.lastCheck = Date.now(); db.write();
-      await m.reply(claraWrap("AI Habit", [`│ Habit: *${habit.name}*`, `│ Streak: *${habit.streak} hari* 🔥`].join("\n")));
+      await m.reply(claraWrap("AI Habit", [`Habit: *${habit.name}*`, `Streak: *${habit.streak} hari* 🔥`].join("\n")));
     } else {
       if (!db.habits[sender].length) {
-        await m.reply(claraWrap("AI Habit", ["│ Belum ada habit", `│ Ketik: *${prefix}aihabit add <nama>*`].join("\n")));
+        await m.reply(claraWrap("AI Habit", ["Belum ada habit", `Ketik: *${prefix}aihabit add <nama>*`].join("\n")));
         return { handled: true };
       }
       let text = claraWrap("Habit Tracker", "🎯") + "\n\n";

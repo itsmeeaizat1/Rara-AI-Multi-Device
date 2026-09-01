@@ -50,11 +50,10 @@ async function handler(m, { sock }) {
       rpg.ref_count = 0;
       addExp(m, XP_FIRST_TIME);
       await m.react("🐣");
-      let msg = `╭─「 ✦ REFERRAL BERHASIL ✦ 」\n`;
-      msg += `│ ✅ Kamu menggunakan kode referral!\n`;
-      msg += `│ ✨ +${XP_FIRST_TIME.toLocaleString("id-ID")} EXP\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `✅ Kamu menggunakan kode referral!\n`;
+      msg += `✨ +${XP_FIRST_TIME.toLocaleString("id-ID")} EXP\n`;
+            return m.reply(msg);
     }
 
     // Show own referral code
@@ -67,22 +66,24 @@ async function handler(m, { sock }) {
     const botNumber = sock.user?.id?.split("@")[0] || "";
     const refLink = `wa.me/${botNumber}?text=.referal%20${rpg.ref_code}`;
     await m.react("🐣");
-    let msg = `╭─「 ✦ REFERRAL CODE ✦ 」\n`;
-    msg += `│ 🎫 Kode: *${rpg.ref_code}*\n`;
-    msg += `│ 👥 Total referral: ${rpg.ref_count || 0}\n`;
-    msg += `│\n`;
-    msg += `│ 💡 Reward untuk pengguna baru: +${XP_FIRST_TIME.toLocaleString("id-ID")} EXP\n`;
-    msg += `│ 💡 Reward untuk kamu: +${XP_LINK_CREATOR.toLocaleString("id-ID")} EXP\n`;
-    msg += `│\n`;
-    msg += `│ 📤 Bagikan link:\n`;
-    msg += `│ ${refLink}\n`;
-    msg += `│\n`;
-    msg += `│ Bonus milestone:\n`;
+    let msg = "";
+    msg += `🎫 Kode: *${rpg.ref_code}*\n`;
+    msg += `👥 Total referral: ${rpg.ref_count || 0}\n`;
+    msg += `
+`;
+    msg += `💡 Reward untuk pengguna baru: +${XP_FIRST_TIME.toLocaleString("id-ID")} EXP\n`;
+    msg += `💡 Reward untuk kamu: +${XP_LINK_CREATOR.toLocaleString("id-ID")} EXP\n`;
+    msg += `
+`;
+    msg += `📤 Bagikan link:\n`;
+    msg += `${refLink}\n`;
+    msg += `
+`;
+    msg += `Bonus milestone:\n`;
     for (const [count, xp] of Object.entries(XP_BONUS)) {
-      msg += `│ ${count} orang = +${xp.toLocaleString("id-ID")} EXP\n`;
+      msg += `${count} orang = +${xp.toLocaleString("id-ID")} EXP\n`;
     }
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+        return m.reply(msg);
   } catch (err) {
     console.error("referal error:", err);
     await m.react("❌");

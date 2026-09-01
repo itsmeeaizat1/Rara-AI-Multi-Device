@@ -33,21 +33,21 @@ async function handler(m, { sock }) {
     const result = INVASION_RESULTS[Math.floor(Math.random() * INVASION_RESULTS.length)];
     rpg.energy = (rpg.energy || 0) - 30;
 
-    let msg = "╭─「 ✦ ɪɴᴠᴀsɪᴏɴ ✦ 」\n│ ⚔️ Kamu memulai invasi ke wilayah musuh!\n│\n";
+    let msg = "⚔️ Kamu memulai invasi ke wilayah musuh!\n\n";
 
     if (result.win) {
-      if (result.reward.gold) { rpg.gold = (rpg.gold || 0) + result.reward.gold; msg += "│ " + result.text + "\n│ 💰 +" + result.reward.gold + " Gold\n"; }
-      if (result.reward.exp) { rpg.exp = (rpg.exp || 0) + result.reward.exp; msg += "│ ⭐ +" + result.reward.exp + " EXP\n"; }
+      if (result.reward.gold) { rpg.gold = (rpg.gold || 0) + result.reward.gold; msg += "" + result.text + "\n💰 +" + result.reward.gold + " Gold\n"; }
+      if (result.reward.exp) { rpg.exp = (rpg.exp || 0) + result.reward.exp; msg += "⭐ +" + result.reward.exp + " EXP\n"; }
       if (result.reward.item) {
         rpg.inventory = rpg.inventory || {};
         rpg.inventory[result.reward.item] = (rpg.inventory[result.reward.item] || 0) + 1;
-        msg += "│ 🎎 +1x " + result.reward.item + "\n";
+        msg += "🎎 +1x " + result.reward.item + "\n";
       }
       rpg.totalKills = (rpg.totalKills || 0) + 5;
     } else {
-      if (result.penalty?.hp) { rpg.hp = Math.max(1, (rpg.hp || 100) - result.penalty.hp); msg += "│ " + result.text + "\n│ 💔 -" + result.penalty.hp + " HP\n"; }
+      if (result.penalty?.hp) { rpg.hp = Math.max(1, (rpg.hp || 100) - result.penalty.hp); msg += "" + result.text + "\n💔 -" + result.penalty.hp + " HP\n"; }
     }
-    msg += "│ ⚡ Sisa energi: " + rpg.energy + "\n╰────  •  ────";
+    msg += "⚡ Sisa energi: " + rpg.energy + "";
     saveRpg(m, rpg);
     await m.react("🐣");
     return m.reply(msg);

@@ -62,36 +62,40 @@ Gunakan bahasa Indonesia. Resep harus praktis dan bisa dibuat di rumah.`;
       if (!t) continue;
 
       if (t.startsWith("NAMA:")) {
-        formatted += `│ 🍳 *${t.replace("NAMA:", "").trim()}*\n│\n`;
+        formatted += `🍳 *${t.replace("NAMA:", "").trim()}*
+
+`;
       } else if (t.startsWith("WAKTU:")) {
-        formatted += `│ ⏰ ${t.replace("WAKTU:", "").trim()}\n│\n`;
+        formatted += `⏰ ${t.replace("WAKTU:", "").trim()}
+
+`;
       } else if (t.startsWith("BAHAN:")) {
         inSection = "bahan";
-        formatted += `│ 📋 *ʙᴀʜᴀɴ:*\n`;
+        formatted += `📋 *ʙᴀʜᴀɴ:*\n`;
       } else if (t.startsWith("LANGKAH:")) {
         inSection = "langkah";
-        formatted += `│ 📝 *ᴄᴀʀᴀ ᴍᴇᴍᴀsᴀᴋ:*\n`;
+        formatted += `📝 *ᴄᴀʀᴀ ᴍᴇᴍᴀsᴀᴋ:*\n`;
       } else if (t.startsWith("TIPS:")) {
         inSection = "";
-        formatted += `│\n│ 💡 *ᴛɪᴘs:* ${t.replace("TIPS:", "").trim()}\n`;
+        formatted += `💡 *ᴛɪᴘs:* ${t.replace("TIPS:", "").trim()}\n`;
       } else if (t.match(/^\d+\./) || t.startsWith("-")) {
-        formatted += `│ ${t}\n`;
+        formatted += `${t}\n`;
       } else {
-        formatted += `│ ${t}\n`;
+        formatted += `${t}\n`;
       }
     }
 
     if (!formatted) {
-      formatted = `│ ${result.answer.trim()}\n`;
+      formatted = `${result.answer.trim()}\n`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ʀᴇsᴇᴘ ᴀɪ ✦ 」\n`;
-    msg += `│ 🥘 Bahan: *${text}*\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `🥘 Bahan: *${text}*\n`;
+    msg += `
+`;
     msg += formatted;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+        return m.reply(msg);
   } catch (err) {
     console.error("recipeai error:", err);
     await m.react("❌");

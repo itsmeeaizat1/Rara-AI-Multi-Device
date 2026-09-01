@@ -23,11 +23,11 @@ async function handler(m, { sock, config: botConfig }) {
       if (!name || !date) throw new Error("Format: .autobirthday add <nama> <DD-MM>");
       db.birthdays.push({ name, date, by: m.sender, created: Date.now() });
       db.write();
-      await m.reply(claraWrap("Auto Birthday", [`│ Nama: *${name}*`, `│ Tanggal: *${date}*`,
-        "│ Bot akan ucapkan selamat ultah otomatis"].join("\n")));
+      await m.reply(claraWrap("Auto Birthday", [`Nama: *${name}*`, `Tanggal: *${date}*`,
+        "Bot akan ucapkan selamat ultah otomatis"].join("\n")));
     } else if (action === "list") {
       if (!db.birthdays.length) {
-        await m.reply(claraWrap("Auto Birthday", ["│ Belum ada ulang tahun tercatat", `│ Ketik: *${prefix}autobirthday add <nama> <DD-MM>*`].join("\n")));
+        await m.reply(claraWrap("Auto Birthday", ["Belum ada ulang tahun tercatat", `Ketik: *${prefix}autobirthday add <nama> <DD-MM>*`].join("\n")));
         return { handled: true };
       }
       let text = claraWrap("Birthday List", "🎂") + "\n\n";

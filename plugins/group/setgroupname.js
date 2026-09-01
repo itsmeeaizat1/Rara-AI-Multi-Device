@@ -31,9 +31,9 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.groupMetadataUpdate(m.chat, { subject: name });
 
     const text =
-      claraWrap("Set Group Name", [`│ Nama Baru: *${name}*`,
-        `│ Group: *${m.chat}*`,
-        "│ Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
+      claraWrap("Set Group Name", [`Nama Baru: *${name}*`,
+        `Group: *${m.chat}*`,
+        "Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

@@ -59,8 +59,8 @@ async function handler(m, { sock }) {
 
     // MENU
     if (!subCmd || subCmd === "help" || subCmd === "menu") {
-      let txt = "╭─「 ✦ Cara pakai: ✦ 」\n│\n";
-      txt += "╰────  •  ────\n\n";
+      let txt = "";
+      
       let i = 1;
       for (const [key, qari] of Object.entries(QARIS)) {
         txt += i + ". *" + qari.name + "*\n";
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
       if (!user.settings) user.settings = {};
       user.settings.qari = qariKey;
       db.save();
-      return m.reply(claraWrap("Info", "\u2705 Qari diset ke: *" + QARIS[qariKey].name + "*\nAudio sekarang pakai qari ini."));
+      return m.reply(claraWrap("Info", "✅ Qari diset ke: *" + QARIS[qariKey].name + "*\nAudio sekarang pakai qari ini."));
     }
 
     // AUDIO MODE
@@ -104,7 +104,7 @@ async function handler(m, { sock }) {
 
       if (ayatNum) {
         if (ayatNum < 1 || ayatNum > surah.numberOfAyahs) {
-          return m.reply(claraWrap("Info", "\u274c Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
+          return m.reply(claraWrap("Info", "❌ Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
         }
 
         const [audioRes, indoRes] = await Promise.all([
@@ -115,8 +115,8 @@ async function handler(m, { sock }) {
         const audioUrl = audioRes.data.audio;
         const indoText = indoRes.data.text;
 
-        let txt = "╭─「 ✦ " + surah.englishName + " ✦ 」\n│\n";
-        txt += "╰────  •  ────\n";
+        let txt = "*" + surah.englishName + "*\n\n";
+        
         txt += "Surat: *" + surah.englishName + "* (" + surah.name + ")\n";
         txt += "Total Ayat: " + surah.numberOfAyahs + "\n";
         txt += "Qari: " + qari.name + "\n\n";
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
         }
 
         if (surah.numberOfAyahs > 5) {
-          await m.reply(claraWrap("Info", "\u2139\ufe0f Hanya 5 ayat pertama dikirim.\nAyat spesifik: .alquran audio " + suratNum + " <ayat>"));
+          await m.reply(claraWrap("Info", "ℹ️ Hanya 5 ayat pertama dikirim.\nAyat spesifik: .alquran audio " + suratNum + " <ayat>"));
         }
         return;
       }
@@ -147,7 +147,7 @@ async function handler(m, { sock }) {
 
     if (ayatNum) {
       if (ayatNum < 1 || ayatNum > surah.numberOfAyahs) {
-        return m.reply(claraWrap("Info", "\u274c Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
+        return m.reply(claraWrap("Info", "❌ Ayat tidak valid! " + surah.englishName + " punya " + surah.numberOfAyahs + " ayat."));
       }
 
       // Fetch Arabic + Indonesian + audio
@@ -161,8 +161,8 @@ async function handler(m, { sock }) {
       const indoAyah = indoRes.data;
       const audioUrl = audioRes.data.audio;
 
-      let txt = "╭─「 ✦ " + surah.englishName + " ✦ 」\n│\n";
-      txt += "╰────  •  ────\n";
+      let txt = "*" + surah.englishName + "*\n\n";
+      
       txt += "Surat: *" + surah.englishName + "* (" + surah.name + ")\n";
       txt += "Arti: " + surah.englishNameTranslation + "\n";
       txt += "Ayat: " + surah.numberOfAyahs + "\n";
@@ -184,7 +184,7 @@ async function handler(m, { sock }) {
       return await m.reply(txt);
     }
   } catch (error) {
-    return m.reply(claraWrap("Error", "\u274c " + error.message + "\n\nCoba lagi nanti."));
+    return m.reply(claraWrap("Error", "❌ " + error.message + "\n\nCoba lagi nanti."));
   }
 }
 

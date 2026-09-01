@@ -33,12 +33,12 @@ async function handler(m, { sock, text, command }) {
     if (command === "medal") {
       rpg.medals = rpg.medals || [];
       if (rpg.medals.length === 0) return m.reply(claraWrap("medal", "Kamu belum punya medali.", "info"));
-      let msg = "╭─「 ✦ ᴍᴇᴅᴀʟɪ ✦ 」\n";
+      let msg = "";
       for (const medalId of rpg.medals) {
         const medal = MEDAL_TYPES[medalId];
         if (medal) msg += "│ 🏅 " + medal.name + " — " + medal.desc + "\n";
       }
-      msg += "╰────  •  ────";
+      msg += "";
       return m.reply(msg);
     }
 
@@ -67,20 +67,20 @@ async function handler(m, { sock, text, command }) {
         saveRpg(m, rpg);
         saveRpg({ sender: target }, targetRpg);
         await m.react("🐣");
-        return m.reply("╭─「 ✦ ᴍᴀɪʟ sᴇɴᴅ ✦ 」\n│ 💌 Item *" + item + "* dikirim ke target!\n╰────  •  ────");
+        return m.reply("💌 Item *" + item + "* dikirim ke target!");
       }
 
       // .mailbox — lihat kotak surat
       rpg.mailbox = rpg.mailbox || [];
       if (rpg.mailbox.length === 0) return m.reply(claraWrap("mailbox", "Kotak suratmu kosong.", "info"));
 
-      let msg = "╭─「 ✦ ᴍᴀɪʟʙᴏx ✦ 」\n";
+      let msg = "";
       for (let i = 0; i < rpg.mailbox.length; i++) {
         const mail = rpg.mailbox[i];
-        msg += "│ " + (i + 1) + ". Dari: " + mail.from + "\n";
-        msg += "│    📦 " + mail.item + "\n";
+        msg += (i + 1) + ". Dari: " + mail.from + "\n";
+        msg += "📦 " + mail.item + "\n";
       }
-      msg += "│\n│ 📌 .mail claim <nomor> — ambil item\n╰────  •  ────";
+      msg += "\n📌 .mail claim <nomor> — ambil item\n";
       return m.reply(msg);
     }
   } catch (e) {

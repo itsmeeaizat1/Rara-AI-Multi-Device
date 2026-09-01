@@ -85,7 +85,7 @@ async function handler(m, { sock, config: botConfig }) {
     const reply = data?.choices?.[0]?.message?.content || "Tidak ada teks terdeteksi.";
 
     const out =
-      claraWrap("AI OCR", [`│ Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      claraWrap("AI OCR", [`Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}ai-ocr untuk ekstrak teks lain`) +
       "\n" +

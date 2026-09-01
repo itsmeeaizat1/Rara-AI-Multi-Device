@@ -43,15 +43,15 @@ async function handler(m, { sock }) {
         maxClaims: 100,
       });
 
-      let msg = `╭─「 ✦ ʀᴇᴅᴇᴇᴍ ᴄᴏᴅᴇ ✦ 」\n`;
-      msg += `│ Code: *${code}*\n`;
-      msg += `│ Reward: *${amount} ${rewardType}*\n`;
-      msg += `│ Max Claims: *100*\n`;
-      msg += `│\n`;
-      msg += `│ Share code ini ke user:\n`;
-      msg += `│ .redeem ${code}\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `Code: *${code}*\n`;
+      msg += `Reward: *${amount} ${rewardType}*\n`;
+      msg += `Max Claims: *100*\n`;
+      msg += `
+`;
+      msg += `Share code ini ke user:\n`;
+      msg += `.redeem ${code}\n`;
+            return m.reply(msg);
     }
 
     // OWNER: list all codes
@@ -59,12 +59,11 @@ async function handler(m, { sock }) {
       if (redeemCodes.size === 0) {
         return m.reply(claraWrap("redeem", "Belum ada redeem code aktif.", "error"));
       }
-      let msg = `╭─「 ✦ ʀᴇᴅᴇᴇᴍ ʟɪsᴛ ✦ 」\n`;
+      let msg = "";
       for (const [code, info] of redeemCodes) {
-        msg += `│ ${code} - ${info.amount} ${info.type} (${info.claimed.size}/${info.maxClaims} claimed)\n`;
+        msg += `${code} - ${info.amount} ${info.type} (${info.claimed.size}/${info.maxClaims} claimed)\n`;
       }
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+            return m.reply(msg);
     }
 
     // USER: claim code
@@ -126,12 +125,11 @@ async function handler(m, { sock }) {
       rewardMsg = `+${redeem.amount} ${redeem.type} (applied)`;
     }
 
-    let msg = `╭─「 ✦ ʀᴇᴅᴇᴇᴍ sᴜᴄᴄᴇss ✦ 」\n`;
-    msg += `│ Code: *${code}*\n`;
-    msg += `│ Reward: *${rewardMsg}*\n`;
-    msg += `│ Status: ✅ Berhasil diklaim\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    let msg = "";
+    msg += `Code: *${code}*\n`;
+    msg += `Reward: *${rewardMsg}*\n`;
+    msg += `Status: ✅ Berhasil diklaim\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("redeem error:", err);
     await m.react("❌");

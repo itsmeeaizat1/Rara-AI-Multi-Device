@@ -227,47 +227,47 @@ async function handleAntiKasar(m, sock, db) {
                 try {
                     await sock.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
                     await sock.sendMessage(m.chat, {
-                        text: `╭─「 ✦ WARN LIMIT ✦ 」
+                        text: `
 │ 👤 User: @${senderTag}
 │ 🏷️ Pelanggaran: 🤬 Kata Kasar
 │ ⚠️ Warn: ${currentWarn}/${maxWarn}
 │ 🔍 Terdeteksi: ${matchesStr}
 │ ❌ Aksi: KICK OTOMATIS
-╰────  •  ────
+
 _User dikeluarkan karena kata kata kasar_`,
                         mentions: [m.sender]
                     })
                 } catch {
                     await sock.sendMessage(m.chat, {
-                        text: `╭─「 ✦ WARN LIMIT ✦ 」
+                        text: `
 │ 👤 User: @${senderTag}
 │ 🏷️ Pelanggaran: 🤬 Kata Kasar
 │ ⚠️ Warn: ${currentWarn}/${maxWarn}
 │ ⚠️ Aksi: Bot bukan admin
-╰────  •  ────`,
+`,
                         mentions: [m.sender]
                     })
                 }
             } else if (kickMode === 'off') {
                 await sock.sendMessage(m.chat, {
-                    text: `╭─「 ✦ PERINGATAN MAX ✦ 」
+                    text: `
 │ 👤 User: @${senderTag}
 │ 🏷️ Pelanggaran: 🤬 Kata Kasar
 │ ⚠️ Warn: ${currentWarn}/${maxWarn}
 │ 📌 Auto-kick: OFF
-╰────  •  ────
+
 _Kata kasar berlebihan tapi auto-kick dimatikan_`,
                     mentions: [m.sender]
                 })
             }
         } else {
             await sock.sendMessage(m.chat, {
-                text: `╭─「 ✦ PERINGATAN ✦ 」
+                text: `
 │ 👤 User: @${senderTag}
 │ 🏷️ Pelanggaran: 🤬 Kata Kasar
 │ ⚠️ Warn: ${currentWarn}/${maxWarn}
 │ 🔍 Terdeteksi: ${matchesStr}
-╰────  •  ────
+
 _Jaga perkataan! ${maxWarn - currentWarn} lagi = kick_`,
                 mentions: [m.sender]
             })
@@ -296,7 +296,7 @@ async function handler(m, { sock }) {
         const del = groupData.kasarDeleteMode || 'on'
         const warnCount = groupData.kasarWarns ? Object.keys(groupData.kasarWarns).length : 0
 
-        let txt = '╭─「 ✦ ANTI KATA KASAR ✦ 」\n│\n'
+        let txt = '│\n'
         txt += '┃\n'
         txt += '┃ Status: *' + status + '*\n'
         txt += '┃ Max Warn: *' + maxWarn + 'x*\n'
@@ -311,30 +311,30 @@ async function handler(m, { sock }) {
         txt += '┃ `' + m.prefix + 'antikasar delete on/off`\n'
         txt += '┃ `' + m.prefix + 'antikasar reset @user`\n'
         txt += '┃ `' + m.prefix + 'antikasar resetall`\n'
-        txt += '╰────  •  ────'
+        txt += ''
         return await m.reply(claraWrap("antikasar", txt))
     }
 
     if (sub === 'on') {
         db.setGroup(m.chat, { antikasar: 'on' })
-        return m.reply(claraWrap("Antikasar", `╭─「 ✦ ANTI KASAR AKTIF ✦ 」
+        return m.reply(claraWrap("Antikasar", `
 │ Deteksi kata kasar diaktifkan
 │ Sistem: Warn 3x lalu kick
-╰────  •  ────`))
+`))
     }
     if (sub === 'off') {
         db.setGroup(m.chat, { antikasar: 'off' })
-        return m.reply(claraWrap("Antikasar", `╭─「 ✦ ANTI KASAR MATI ✦ 」
+        return m.reply(claraWrap("Antikasar", `
 │ Deteksi kata kasar dinonaktifkan
-╰────  •  ────`))
+`))
     }
     if (sub === 'warn') {
         const count = parseInt(args[1])
         if (!count || count < 1 || count > 10) return m.reply(claraWrap("Antikasar", '❌ Masukkan angka 1-10'))
         db.setGroup(m.chat, { kasarMaxWarn: count })
-        return m.reply(`╭─「 ✦ MAX WARN ✦ 」
+        return m.reply(`
 │ Max peringatan: *${count}x*
-╰────  •  ────`)
+`)
     }
     if (sub === 'kick') {
         const opt = args[1]?.toLowerCase()
@@ -354,16 +354,16 @@ async function handler(m, { sock }) {
         const updated = groupData
         if (updated.kasarWarns?.[target]) delete updated.kasarWarns[target]
         db.setGroup(m.chat, updated)
-        return m.reply(`╭─「 ✦ WARN DIRESET ✦ 」
+        return m.reply(`
 │ 👤 User: @${target.split('@')[0]}
 │ Warn Kasar: Direset
-╰────  •  ────`, { mentions: [target] })
+`, { mentions: [target] })
     }
     if (sub === 'resetall') {
         const updated = groupData
         updated.kasarWarns = {}
         db.setGroup(m.chat, updated)
-        return m.reply(claraWrap("Antikasar", '╭─「 ✦ SEMUA WARN DIRESET ✦ 」\n│\n╰────  •  ────'))
+        return m.reply(claraWrap("Antikasar", '│'))
     }
     return m.reply('❌ Ketik `' + m.prefix + 'antikasar` untuk daftar command')
 }

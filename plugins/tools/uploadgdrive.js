@@ -191,8 +191,8 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("Upload GDrive",
                 "*ɢᴅʀɪᴠᴇ ꜰᴏʟᴅᴇʀ ɪᴅ*\n\n" +
                 "Current: `" + (current || 'none (root)') + "`\n\n" +
-                "│ Set folder: `.uploadgdrive setfolder <folderId>`\n" +
-                "│ Reset: `.uploadgdrive setfolder reset`"
+                "Set folder: `.uploadgdrive setfolder <folderId>`\n" +
+                "Reset: `.uploadgdrive setfolder reset`"
             ))
         }
         if (folderId.toLowerCase() === 'reset') {
@@ -226,8 +226,8 @@ async function handler(m, { sock }) {
         if (!fileId) {
             return m.reply(claraWrap("Upload GDrive",
                 "*ᴅᴇʟᴇᴛᴇ ɢᴅʀɪᴠᴇ ꜰɪʟᴇ*\n\n" +
-                "│\n│ 📌 *Cara Pakai:* `.uploadgdrive delete <fileId>`\n" +
-                "│ Lihat fileId: `.uploadgdrive list`"
+                "📌 *Cara Pakai:* `.uploadgdrive delete <fileId>`\n" +
+                "Lihat fileId: `.uploadgdrive list`"
             ))
         }
         try {
@@ -251,7 +251,7 @@ async function handler(m, { sock }) {
             "*ɢᴅʀɪᴠᴇ ꜱᴛᴀᴛᴜꜱ*\n\n" +
             "Credentials: " + (hasCreds ? 'Terpasang' : 'Belum ada') + credsInfo + "\n" +
             "Folder ID: `" + (getStoredFolderId() || 'root') + "`\n\n" +
-            "│ Setup: Taruh `gdrive-service-account.json` di folder `config/`"
+            "Setup: Taruh `gdrive-service-account.json` di folder `config/`"
         ))
     }
 
@@ -261,12 +261,12 @@ async function handler(m, { sock }) {
     if (!hasMedia) {
         return m.reply(
             "GAGAL\n\n" +
-            "│ Reply media/berkas dengan `" + m.prefix + "uploadgdrive`\n\n" +
+            "Reply media/berkas dengan `" + m.prefix + "uploadgdrive`\n\n" +
             "*ꜱᴜʙ-ᴄᴏᴍᴍᴀɴᴅꜱ:*\n" +
-            "│ `" + m.prefix + "uploadgdrive status` - Cek status\n" +
-            "│ `" + m.prefix + "uploadgdrive list` - List 10 file terakhir\n" +
-            "│ `" + m.prefix + "uploadgdrive setfolder <id>` - Set folder tujuan\n" +
-            "│ `" + m.prefix + "uploadgdrive delete <id>` - Hapus file", "uploadgdrive")
+            "`" + m.prefix + "uploadgdrive status` - Cek status\n" +
+            "`" + m.prefix + "uploadgdrive list` - List 10 file terakhir\n" +
+            "`" + m.prefix + "uploadgdrive setfolder <id>` - Set folder tujuan\n" +
+            "`" + m.prefix + "uploadgdrive delete <id>` - Hapus file", "uploadgdrive")
     }
     try {
         const downloadFn = m.quoted ? m.quoted.download : m.download
@@ -307,7 +307,7 @@ async function handler(m, { sock }) {
                 "4. Download JSON key\n" +
                 "5. Rename jadi `gdrive-service-account.json`\n" +
                 "6. Taruh di folder `config/`\n\n" +
-                "│ Lalu jalankan: `.uploadgdrive status`"
+                "Lalu jalankan: `.uploadgdrive status`"
             ))
         }
 

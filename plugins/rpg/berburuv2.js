@@ -141,29 +141,31 @@ async function handler(m, { sock }) {
       let dropText = drops.length > 0 ? drops.map(d => `+${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join(", ") : "";
 
       await m.react("🐣");
-      let out = `╭─「 ✦ ʙᴇʀʙᴜʀᴜ ᴠ2 ✦ 」\n`;
-      out += `│ 👹 Monster: *${monster.name}*${monster.isRare ? " [RARE!]" : ""}\n`;
-      out += `│ ⚔️ ${rounds} ronde bertarung\n`;
-      out += `│\n`;
+      let out = "";
+      out += `👹 Monster: *${monster.name}*${monster.isRare ? " [RARE!]" : ""}\n`;
+      out += `⚔️ ${rounds} ronde bertarung\n`;
+      out += `
+`;
       for (const l of log.slice(-4)) {
-        out += `│ ${l}\n`;
+        out += `${l}\n`;
       }
-      out += `│\n`;
-      out += `│ 🏆 *ᴠɪᴄᴛᴏʀʏ!*\n`;
-      out += `│ ✦ EXP: *+${expGain}*\n`;
-      out += `│ 💰 Gold: *+${goldGain}*\n`;
-      if (dropText) out += `│ 📦 Drops: *${dropText}*\n`;
-      out += `│\n`;
+      out += `
+`;
+      out += `🏆 *ᴠɪᴄᴛᴏʀʏ!*\n`;
+      out += `✦ EXP: *+${expGain}*\n`;
+      out += `💰 Gold: *+${goldGain}*\n`;
+      if (dropText) out += `📦 Drops: *${dropText}*\n`;
+      out += `
+`;
       if (combo > 1) {
-        out += `│ 🔥 Combo: *${combo}x* (bonus +${Math.floor(comboBonus * 100)}%)\n`;
+        out += `🔥 Combo: *${combo}x* (bonus +${Math.floor(comboBonus * 100)}%)\n`;
       }
       if (combo >= 5) {
-        out += `│ 🎯 Combo tinggi! Tetap berburu untuk bonus lebih besar!\n`;
+        out += `🎯 Combo tinggi! Tetap berburu untuk bonus lebih besar!\n`;
       }
-      out += `│ ❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-      out += `│ ⚡ Energy: *${rpg.energy - HUNT_ENERGY}/${rpg.maxEnergy}*\n`;
-      out += `╰────  •  ────`;
-
+      out += `❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
+      out += `⚡ Energy: *${rpg.energy - HUNT_ENERGY}/${rpg.maxEnergy}*\n`;
+      
       return m.reply(out);
     } else {
       // Defeat — combo resets
@@ -174,17 +176,18 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastHuntV2", HUNT_COOLDOWN);
 
       await m.react("❌");
-      let out = `╭─「 ✦ ʙᴇʀʙᴜʀᴜ ᴠ2 ✦ 」\n`;
-      out += `│ 👹 Monster: *${monster.name}*${monster.isRare ? " [RARE!]" : ""}\n`;
-      out += `│ ⚔️ ${rounds} ronde bertarung\n`;
-      out += `│\n`;
-      out += `│ 💀 *ᴅᴇғᴇᴀᴛᴇᴅ!*\n`;
-      out += `│ 💥 DMG: *${dmgTaken}*\n`;
-      out += `│ ❤️ HP: *${Math.max(1, rpg.hp - dmgTaken)}/${rpg.maxHp}*\n`;
-      out += `│\n`;
-      out += `│ 💡 Combo direset. Equip lebih kuat & coba lagi!\n`;
-      out += `╰────  •  ────`;
-
+      let out = "";
+      out += `👹 Monster: *${monster.name}*${monster.isRare ? " [RARE!]" : ""}\n`;
+      out += `⚔️ ${rounds} ronde bertarung\n`;
+      out += `
+`;
+      out += `💀 *ᴅᴇғᴇᴀᴛᴇᴅ!*\n`;
+      out += `💥 DMG: *${dmgTaken}*\n`;
+      out += `❤️ HP: *${Math.max(1, rpg.hp - dmgTaken)}/${rpg.maxHp}*\n`;
+      out += `
+`;
+      out += `💡 Combo direset. Equip lebih kuat & coba lagi!\n`;
+      
       return m.reply(out);
     }
   } catch (err) {

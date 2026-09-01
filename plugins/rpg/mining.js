@@ -82,23 +82,19 @@ async function handler(m, { sock }) {
 
     let dropText = "";
     if (drops.length > 0) {
-      dropText = drops.map(d => `+${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join("\n│ ");
-      dropText = "\n│ " + dropText;
+      dropText = drops.map(d => `+${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join("\n");
+      dropText = "\n" + dropText;
     } else {
-      dropText = "\n│ Tidak dapet ore kali ini 😅";
+      dropText = "\nTidak dapet ore kali ini 😅";
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴍɪɴɪɴɢ ✦ 」\n`;
-    msg += `│ ⛏️ Kamu menambang di gua...\n`;
-    msg += `│\n`;
-    msg += `│ 📦 *ʜᴀsɪʟ ᴛᴀᴍʙᴀɴɢ*\n`;
-    msg += `│ ✦ EXP: *+${expGain}*\n`;
-    msg += `│ 💰 Gold: *+${goldGain}*\n`;
-    msg += dropText + "\n";
-    msg += `│\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy - MINE_ENERGY}/${rpg.maxEnergy}*\n`;
-    msg += `╰────  •  ────`;
+    let msg = `Kamu menambang di gua...\n\n`;
+    msg += `Hasil Tambang:\n`;
+    msg += `EXP: +${expGain}\n`;
+    msg += `Gold: +${goldGain}`;
+    msg += dropText + "\n\n";
+    msg += `Energy: ${rpg.energy - MINE_ENERGY}/${rpg.maxEnergy}`;
 
     return m.reply(msg);
   } catch (err) {

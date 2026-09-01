@@ -34,17 +34,16 @@ async function handler(m, { sock }) {
     const r = data.result || data.data || data;
     await m.react("🐣");
 
-    let msg = `╭─「 ✦ ғʀᴇᴇ ғɪʀᴇ ꜱᴛᴀʟᴋᴇʀ v2 ✦ 」\n`;
-    msg += `│ ID: *${uid}*\n`;
-    if (r.username || r.name || r.nickname) msg += `│ Nama: *${r.username || r.name || r.nickname}*\n`;
-    if (r.level) msg += `│ Level: *${r.level}*\n`;
-    if (r.rank || r.ranking) msg += `│ Rank: *${r.rank || r.ranking}*\n`;
-    if (r.region || r.country) msg += `│ Region: *${r.region || r.country}*\n`;
-    if (r.bio) msg += `│ Bio: ${r.bio.slice(0, 80)}\n`;
-    if (r.like || r.likes) msg += `│ Likes: *${r.like || r.likes}*\n`;
-    if (r.exp || r.exploit) msg += `│ EXP: *${r.exp || r.exploit}*\n`;
-    msg += `╰────  •  ────`;
-
+    let msg = "";
+    msg += `ID: *${uid}*\n`;
+    if (r.username || r.name || r.nickname) msg += `Nama: *${r.username || r.name || r.nickname}*\n`;
+    if (r.level) msg += `Level: *${r.level}*\n`;
+    if (r.rank || r.ranking) msg += `Rank: *${r.rank || r.ranking}*\n`;
+    if (r.region || r.country) msg += `Region: *${r.region || r.country}*\n`;
+    if (r.bio) msg += `Bio: ${r.bio.slice(0, 80)}\n`;
+    if (r.like || r.likes) msg += `Likes: *${r.like || r.likes}*\n`;
+    if (r.exp || r.exploit) msg += `EXP: *${r.exp || r.exploit}*\n`;
+    
     const avatarUrl = r.avatar || r.profile_picture || r.banner_image;
     if (avatarUrl && avatarUrl.startsWith("http")) {
       try {

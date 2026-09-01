@@ -50,10 +50,10 @@ async function handler(m, { sock, config: botConfig }) {
     } catch (e) { console.error('[translate.js]:', e.message); }
 
     const replyText =
-      claraWrap("Translate", ["│ Dari: *id*",
-        `│ Ke: *${lang}*`,
-        `│ Teks Asli: *${text}*`,
-        `│ Hasil: *${translated}*`].join("\n")) +
+      claraWrap("Translate", ["Dari: *id*",
+        `Ke: *${lang}*`,
+        `Teks Asli: *${text}*`,
+        `Hasil: *${translated}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}translate <bahasa> <teks> untuk menerjemahkan lagi`) +
       "\n" +

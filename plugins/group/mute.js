@@ -41,8 +41,8 @@ async function handler(m, { sock, config: botConfig }) {
     const targetName = targetRaw.replace(/^@+/, "") || targetRaw;
 
     const text =
-      claraWrap("Mute", [`│ Target: *${targetName}*`,
-        "│ Status: *ʙᴇʀʜᴀꜱɪʟ ᴅɪᴍᴜᴛᴇ*"].join("\n")) +
+      claraWrap("Mute", [`Target: *${targetName}*`,
+        "Status: *ʙᴇʀʜᴀꜱɪʟ ᴅɪᴍᴜᴛᴇ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}mute <@target> untuk mute orang lain`) +
       "\n" +

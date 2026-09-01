@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, broadcastFormat, novaCaption } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, broadcastFormat, novaCaption, tipText } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import config from "../../config.js";
 
@@ -43,11 +43,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!groupJids.length) {
       await m.reply(
-        "╭─「 ✦ Broadcast ✦ 」\n" +
-        "│\n" +
-        "│ ❌ Tidak ada grup terdaftar\n" +
-        "│ Status: Dibatalkan\n" +
-        "╰────  •  ────"
+        "❌ Tidak ada grup terdaftar\nStatus: Dibatalkan"
       );
       return { handled: true };
     }
@@ -74,25 +70,18 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const result =
-      "╭─「 ✦ Broadcast Selesai ✦ 」\n" +
-      "│\n" +
-      "│ 📝 Pesan: " + message.slice(0, 50) + (message.length > 50 ? "..." : "") + "\n" +
-      "│ 🎯 Target: " + groupJids.length + " Grup\n" +
-      "│ ✅ Berhasil: " + success.length + "\n" +
-      "│ ❌ Gagal: " + failed.length + "\n" +
-      "│ 📊 Sukses Rate: " + Math.round((success.length / groupJids.length) * 100) + "%\n" +
-      "│\n" +
-      "│ 🏷️ " + botName + "\n" +
-      "╰────  •  ────";
+      "*Broadcast Selesai*\n\n" +
+      "📝 Pesan: " + message.slice(0, 50) + (message.length > 50 ? "..." : "") + "\n" +
+      "🎯 Target: " + groupJids.length + " Grup\n" +
+      "✅ Berhasil: " + success.length + "\n" +
+      "❌ Gagal: " + failed.length + "\n" +
+      "📊 Sukses Rate: " + Math.round((success.length / groupJids.length) * 100) + "%\n\n" +
+      "🏷️ " + botName;
 
     await m.reply(result);
   } catch (error) {
     const text =
-      "╭─「 ✦ Broadcast — Error ✦ 」\n" +
-      "│\n" +
-      "│ ❌ Gagal mengirim broadcast\n" +
-      "│ Alasan: " + error.message + "\n" +
-      "╰────  •  ────";
+      "❌ Gagal mengirim broadcast\nAlasan: " + error.message;
 
     await m.reply(text, "broadcast");
   }

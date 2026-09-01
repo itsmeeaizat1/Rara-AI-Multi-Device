@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    const caption = `╭─「 ✦ ғᴀᴋᴇ ᴛʜʀᴇᴀᴅs ✦ 」\n│ User: @${usernameClean}\n│ Likes: ${likes}\n│ Replies: ${replies}\n╰────  •  ────`;
+    const caption = `User: @${usernameClean}\nLikes: ${likes}\nReplies: ${replies}`;
     return await sock.sendMessage(m.chat, { image: result.buffer, caption });
   } catch (err) {
     console.error("fakethreads error:", err);

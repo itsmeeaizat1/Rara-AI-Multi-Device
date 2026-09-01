@@ -86,26 +86,31 @@ async function handler(m, { sock }) {
     const combined = nama1.toLowerCase() + nama2.toLowerCase()
     const baseScore = Array.from(combined).reduce((a, c) => a + c.charCodeAt(0), 0)
     const compatibility = (baseScore % 51) + 50 
-    let txt = `╭─「 ✦  SOUL MATCH ✦ 」\n`
-    txt += `│\n`
-    txt += `│ 👤 *${nama1}*\n`
-    txt += `│ ├ 🔮 Soul: ${soul1.soulType}\n`
-    txt += `│ ├ 🌟 Element: ${soul1.element}\n`
-    txt += `│ └ 🎯 Zodiac: ${soul1.zodiac}\n`
-    txt += `│\n`
-    txt += `│ 👤 *${nama2}*\n`
-    txt += `│ ├ 🔮 Soul: ${soul2.soulType}\n`
-    txt += `│ ├ 🌟 Element: ${soul2.element}\n`
-    txt += `│ └ 🎯 Zodiac: ${soul2.zodiac}\n`
-    txt += `│\n`
-    txt += `│ 💕 *ᴄᴏᴍᴘᴀᴛɪʙɪʟɪᴛʏ*\n`
-    txt += `│ ├ 📊 Score: *${compatibility}%*\n`
-    txt += `│ └ 🎭 Status: ${getMatchDescription(compatibility)}\n`
-    txt += `│\n`
-    txt += `│ 🔮 *ʀᴇᴀᴅɪɴɢ:*\n`
-    txt += `│ ${getReading(compatibility)}\n`
-    txt += `│\n`
-    txt += `╰────  •  ────`
+    let txt = ""
+    txt += `
+`
+    txt += `👤 *${nama1}*\n`
+    txt += `├ 🔮 Soul: ${soul1.soulType}\n`
+    txt += `├ 🌟 Element: ${soul1.element}\n`
+    txt += `└ 🎯 Zodiac: ${soul1.zodiac}\n`
+    txt += `
+`
+    txt += `👤 *${nama2}*\n`
+    txt += `├ 🔮 Soul: ${soul2.soulType}\n`
+    txt += `├ 🌟 Element: ${soul2.element}\n`
+    txt += `└ 🎯 Zodiac: ${soul2.zodiac}\n`
+    txt += `
+`
+    txt += `💕 *ᴄᴏᴍᴘᴀᴛɪʙɪʟɪᴛʏ*\n`
+    txt += `├ 📊 Score: *${compatibility}%*\n`
+    txt += `└ 🎭 Status: ${getMatchDescription(compatibility)}\n`
+    txt += `
+`
+    txt += `🔮 *ʀᴇᴀᴅɪɴɢ:*\n`
+    txt += `${getReading(compatibility)}\n`
+    txt += `
+`
+    txt += ""
     await m.reply(claraWrap("soulmate", txt))
 }
 

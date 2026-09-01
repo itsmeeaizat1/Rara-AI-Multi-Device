@@ -74,36 +74,42 @@ async function handler(m, { sock }) {
     }
 
     if (subCmd === "list") {
-      let msg = `╭─「 ✦ ALCHEMIST RECIPES ✦ 」\n`;
-      msg += `│ Daftar Resep Potion & Bahan:\n│\n`;
+      let msg = "";
+      msg += `Daftar Resep Potion & Bahan:
+
+`;
       for (const [key, item] of Object.entries(RECIPES)) {
-        msg += `│ 🧪 *${item.name}* (\`${key}\`)\n`;
-        msg += `│   • Bahan: ${item.desc}\n`;
-        msg += `│   • Efek: ${item.effect}\n│\n`;
+        msg += `🧪 *${item.name}* (\`${key}\`)\n`;
+        msg += `• Bahan: ${item.desc}\n`;
+        msg += `• Efek: ${item.effect}
+
+`;
       }
-      msg += `│ Cara Meracik:\n`;
-      msg += `│ ${m.prefix}alchemist brew <nama_potion>\n`;
-      msg += `╰────  •  ────`;
-      await m.react('🐣');
+      msg += `Cara Meracik:\n`;
+      msg += `${m.prefix}alchemist brew <nama_potion>\n`;
+            await m.react('🐣');
       return m.reply(msg);
     }
 
     if (subCmd === "inventory" || subCmd === "inv") {
-      let msg = `╭─「 ✦ ALCHEMIST INVENTORY ✦ 」\n`;
-      msg += `│ 💰 Gold: ${data.gold || 0}\n│\n`;
-      msg += `│ 🌿 *Bahan Herbal & Material:*\n`;
-      msg += `│   • Herb: ${data.materials.herb || 0}\n`;
-      msg += `│   • Water: ${data.materials.water || 0}\n`;
-      msg += `│   • Crystal: ${data.materials.crystal || 0}\n`;
-      msg += `│   • Mushroom: ${data.materials.mushroom || 0}\n`;
-      msg += `│   • Snake Venom: ${data.materials.snake_venom || 0}\n│\n`;
-      msg += `│ 🧪 *Hasil Ramuan (Potions):*\n`;
-      msg += `│   • Health Potion: ${data.potions.health_potion || 0}\n`;
-      msg += `│   • Mana Potion: ${data.potions.mana_potion || 0}\n`;
-      msg += `│   • Stamina Potion: ${data.potions.stamina_potion || 0}\n`;
-      msg += `│   • Antidote: ${data.potions.antidote || 0}\n`;
-      msg += `╰────  •  ────`;
-      await m.react('🐣');
+      let msg = "";
+      msg += `💰 Gold: ${data.gold || 0}
+
+`;
+      msg += `🌿 *Bahan Herbal & Material:*\n`;
+      msg += `• Herb: ${data.materials.herb || 0}\n`;
+      msg += `• Water: ${data.materials.water || 0}\n`;
+      msg += `• Crystal: ${data.materials.crystal || 0}\n`;
+      msg += `• Mushroom: ${data.materials.mushroom || 0}\n`;
+      msg += `• Snake Venom: ${data.materials.snake_venom || 0}
+
+`;
+      msg += `🧪 *Hasil Ramuan (Potions):*\n`;
+      msg += `• Health Potion: ${data.potions.health_potion || 0}\n`;
+      msg += `• Mana Potion: ${data.potions.mana_potion || 0}\n`;
+      msg += `• Stamina Potion: ${data.potions.stamina_potion || 0}\n`;
+      msg += `• Antidote: ${data.potions.antidote || 0}\n`;
+            await m.react('🐣');
       return m.reply(msg);
     }
 
@@ -160,14 +166,13 @@ async function handler(m, { sock }) {
       data.potions[potionKey] = (data.potions[potionKey] || 0) + 1;
       await db.setPlayerData?.(sender, "alchemist", data);
 
-      let msg = `╭─「 ✦ BREWING SUCCESS ✦ 」\n`;
-      msg += `│ ⚗️ Berhasil meracik *${recipe.name}*!\n`;
-      msg += `│  \n`;
-      msg += `│ 💰 Biaya: -${recipe.gold} Gold\n`;
-      msg += `│ ✨ Efek: ${recipe.effect}\n`;
-      msg += `│ 🧪 Total Potion: ${data.potions[potionKey]}\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `⚗️ Berhasil meracik *${recipe.name}*!\n`;
+      msg += `\n`;
+      msg += `💰 Biaya: -${recipe.gold} Gold\n`;
+      msg += `✨ Efek: ${recipe.effect}\n`;
+      msg += `🧪 Total Potion: ${data.potions[potionKey]}\n`;
+      
       await m.react('🐣');
       return m.reply(msg);
     }

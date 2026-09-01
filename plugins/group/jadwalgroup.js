@@ -110,13 +110,11 @@ async function handler(m, { sock, db }) {
     
     const successMsg = `✅ *JADWAL DISIMPAN*
 
-╭─「 ✦ ⏰ *SETTING*
-│ ${emoji} Aksi: *${actionText}*
-│ ⏱️ Waktu: *${formattedTime} WIB*
-│ • Status: *Aktif*
-╰────  •  ────
-│ _Grup akan otomatis ${action === 'open' ? 'dibuka' : 'ditutup'}_
-│ _setiap hari pada jam *${formattedTime}* WIB._`;
+${emoji} Aksi: *${actionText}*
+Waktu: *${formattedTime} WIB*
+Status: *Aktif*
+_Grup akan otomatis ${action === 'open' ? 'dibuka' : 'ditutup'}_
+_setiap hari pada jam *${formattedTime}* WIB._`;
     
     await m.reply(successMsg);
 }

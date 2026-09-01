@@ -125,9 +125,22 @@ async function handler(m, { sock }) {
   const action = args[0];
 
   if (!action) {
-    let txt = "╭─「 ✦ Niat Sholat: ✦ 」\n│\n";
-    txt += "╰────  •  ────\n";
-    txt += "*" + sholat.toUpperCase() + "*\n\n";
+    let txt = "*KUMPULAN NIAT SHOLAT & DOA*\n\n";
+    txt += "*Niat Sholat Fardhu:*\n";
+    for (const k of Object.keys(NIAT_SHOLAT)) {
+      txt += "• .niatdoa " + k + "\n";
+    }
+    txt += "\n*Doa Harian:*\n";
+    for (const [k, v] of Object.entries(DOAS)) {
+      txt += "• .niatdoa " + k + " (" + v.title + ")\n";
+    }
+    return await m.reply(txt);
+  }
+
+  // Niat sholat
+  if (NIAT_SHOLAT[action]) {
+    const niat = NIAT_SHOLAT[action];
+    let txt = "*NIAT SHOLAT " + action.toUpperCase() + "*\n\n";
     txt += "Arab:\n" + niat.arab + "\n\n";
     txt += "Latin:\n" + niat.latin + "\n\n";
     txt += "Arti:\n" + niat.arti;
@@ -137,11 +150,10 @@ async function handler(m, { sock }) {
   // Doa harian
   const doa = DOAS[action];
   if (!doa) {
-    return m.reply(claraWrap("niatdoa", "Doa tidak ditemukan!\nKetik .niatdoa buat lihat semua doa."));
+    return m.reply("❌ Doa tidak ditemukan!\nKetik .niatdoa buat lihat semua doa.");
   }
 
-  let txt = "╭─「 ✦ " + doa.title.toUpperCase() + " ✦ 」\n│\n";
-  txt += "╰────  •  ────\n\n";
+  let txt = "*" + doa.title.toUpperCase() + "*\n\n";
   txt += "Arab:\n" + doa.arab + "\n\n";
   txt += "Latin:\n" + doa.latin + "\n\n";
   txt += "Arti:\n" + doa.arti;

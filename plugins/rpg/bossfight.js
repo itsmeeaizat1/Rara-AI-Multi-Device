@@ -34,7 +34,7 @@ async function handler(m, { sock, command }) {
       if (!globalBoss || globalBoss.hp <= 0) {
         const bossDef = BOSS_LIST[Math.floor(Math.random() * BOSS_LIST.length)];
         globalBoss = { ...bossDef, maxHp: bossDef.hp, attackers: [] };
-        return m.reply("╭─「 ✦ ᴡᴏʀʟᴅ ʙᴏss ✦ 」\n│ 👹 Boss spawn: *" + globalBoss.name + "*\n│ ❤️ HP: " + globalBoss.hp + "/" + globalBoss.maxHp + "\n│ 💪 ATK: " + globalBoss.atk + "\n│\n│ 📌 Ketik .bossfight untuk serang!\n╰────  •  ────");
+        return m.reply("Boss Spawn: *" + globalBoss.name + "*\nHP: " + globalBoss.hp + "/" + globalBoss.maxHp + "\nATK: " + globalBoss.atk + "\n\nKetik .bossfight untuk serang!");
       }
 
       // Attack boss
@@ -63,12 +63,12 @@ async function handler(m, { sock, command }) {
         const bossName = globalBoss.name;
         const totalAttackers = globalBoss.attackers.length;
         globalBoss = null;
-        return m.reply("╭─「 ✦ ʙᴏss ᴅᴇғᴇᴀᴛᴇᴅ ✦ 」\n│ 👑 *" + bossName + "* dikalahkan!\n│ 📊 " + totalAttackers + " player ikut bertarung\n│\n│ 💰 +" + reward.gold + " Gold | ⭐ +" + reward.exp + " EXP\n│\n│ 📌 Boss baru akan spawn lain kali\n╰────  •  ────");
+        return m.reply("👑 *" + bossName + "* dikalahkan!\nPlayer Bertarung: " + totalAttackers + "\n\nGold: +" + reward.gold + "\nEXP: +" + reward.exp + "\n\nBoss baru akan spawn lain kali");
       }
 
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ʙᴏss ғɪɢʜᴛ ✦ 」\n│ ⚔️ Kamu menyerang *" + globalBoss.name + "*!\n│ 💥 Damage: " + dmg + (rpg.element ? " (Element Bonus!)" : "") + "\n│ ❤️ Boss HP: " + globalBoss.hp + "/" + globalBoss.maxHp + "\n│ ⚡ Sisa energi: " + rpg.energy + "\n╰────  •  ────");
+      return m.reply("Kamu menyerang *" + globalBoss.name + "*!\nDamage: " + dmg + (rpg.element ? " (Element Bonus!)" : "") + "\nBoss HP: " + globalBoss.hp + "/" + globalBoss.maxHp + "\nSisa Energi: " + rpg.energy);
     }
 
     if (command === "finaltrial") {
@@ -85,7 +85,7 @@ async function handler(m, { sock, command }) {
           rpg.hp = 1;
           saveRpg(m, rpg);
           await m.react("❌");
-          return m.reply("╭─「 ✦ ғɪɴᴀʟ ᴛʀɪᴀʟ ✦ 」\n│ ❌ Kamu gugur di trial ke-" + (i + 1) + "!\n│ 💔 HP tersisa: 1\n│ 📌 Coba lagi setelah .heal\n╰────  •  ────");
+          return m.reply("❌ Kamu gugur di trial ke-" + (i + 1) + "!\nHP Tersisa: 1\nCoba lagi setelah .heal");
         }
       }
       rpg.gold = (rpg.gold || 0) + totalReward;
@@ -93,7 +93,7 @@ async function handler(m, { sock, command }) {
       rpg.title = "Champion of the Final Trial";
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ғɪɴᴀʟ ᴛʀɪᴀʟ ✦ 」\n│ 🔥 Ujian selesai!\n│ 📊 3 boss dikalahkan\n│\n│ 💰 +" + totalReward + " Gold\n│ ⭐ +5000 EXP\n│ 👑 Title: Champion of the Final Trial\n╰────  •  ────");
+      return m.reply("🔥 Ujian selesai!\nBoss Dikalahkan: 3\n\nGold: +" + totalReward + "\nEXP: +5000\nTitle: Champion of the Final Trial");
     }
   } catch (e) {
     console.error("bossfight error:", e.message);

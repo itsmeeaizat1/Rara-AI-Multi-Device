@@ -95,22 +95,23 @@ async function handler(m, { sock }) {
 
     // No game specified — show menu
     if (!game || game === "menu" || game === "list") {
-      let msg = `╭─「 ✦ ᴄᴀsɪɴᴏ ᴠ2 ✦ 」\n`;
-      msg += `│ 💰 Gold: *${rpg.gold}*\n`;
-      msg += `│\n`;
-      msg += `│ 📋 *ɢᴀᴍᴇs*\n`;
-      msg += `│ 🎰 Slot — 3 reel, jackpot up to 50x\n`;
-      msg += `│   .casinov2 slot <bet>\n`;
-      msg += `│ 🎲 Dice — tebak angka 1-6 (5x payout)\n`;
-      msg += `│   .casinov2 dice <bet> <1-6>\n`;
-      msg += `│ 🪙 Coinflip — heads/tails (2x)\n`;
-      msg += `│   .casinov2 coinflip <bet> <heads|tails>\n`;
-      msg += `│ 🎡 Roulette — red/black/green/number (2-36x)\n`;
-      msg += `│   .casinov2 roulette <bet> <red|black|green|even|odd|low|high|0-36>\n`;
-      msg += `│\n`;
-      msg += `│ 💵 Min: *${MIN_BET}* | Max: *${MAX_BET}*\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `💰 Gold: *${rpg.gold}*\n`;
+      msg += `
+`;
+      msg += `📋 *ɢᴀᴍᴇs*\n`;
+      msg += `🎰 Slot — 3 reel, jackpot up to 50x\n`;
+      msg += `.casinov2 slot <bet>\n`;
+      msg += `🎲 Dice — tebak angka 1-6 (5x payout)\n`;
+      msg += `.casinov2 dice <bet> <1-6>\n`;
+      msg += `🪙 Coinflip — heads/tails (2x)\n`;
+      msg += `.casinov2 coinflip <bet> <heads|tails>\n`;
+      msg += `🎡 Roulette — red/black/green/number (2-36x)\n`;
+      msg += `.casinov2 roulette <bet> <red|black|green|even|odd|low|high|0-36>\n`;
+      msg += `
+`;
+      msg += `💵 Min: *${MIN_BET}* | Max: *${MAX_BET}*\n`;
+            return m.reply(msg);
     }
 
     if (!bet || bet < MIN_BET) {
@@ -141,15 +142,16 @@ async function handler(m, { sock }) {
       case "slot": {
         result = playSlot(bet);
         if (result.payout > 0) { addGold(m, result.payout); addExp(m, Math.floor(result.payout / 20)); }
-        msg = `╭─「 ✦ sʟᴏᴛ ᴠ2 ✦ 」\n`;
-        msg += `│ 🎰 ${result.s1} | ${result.s2} | ${result.s3}\n`;
-        msg += `│ 📊 ${result.result}\n`;
-        msg += `│\n`;
+        msg = "";
+        msg += `🎰 ${result.s1} | ${result.s2} | ${result.s3}\n`;
+        msg += `📊 ${result.result}\n`;
+        msg += `
+`;
         if (result.payout > 0) {
-          msg += `│ 💰 Multiplier: *${result.mult}x*\n`;
-          msg += `│ 💵 Payout: *${result.payout} gold*\n`;
+          msg += `💰 Multiplier: *${result.mult}x*\n`;
+          msg += `💵 Payout: *${result.payout} gold*\n`;
         } else {
-          msg += `│ 💸 Rugi: *-${bet} gold*\n`;
+          msg += `💸 Rugi: *-${bet} gold*\n`;
         }
         break;
       }
@@ -162,15 +164,16 @@ async function handler(m, { sock }) {
         }
         result = playDice(bet, guess);
         if (result.win) { addGold(m, result.payout); addExp(m, 20); }
-        msg = `╭─「 ✦ ᴅɪᴄᴇ ᴠ2 ✦ 」\n`;
-        msg += `│ 🎲 Kamu tebak: *${guess}*\n`;
-        msg += `│ 🎲 Hasil: *${result.roll}*\n`;
-        msg += `│\n`;
+        msg = "";
+        msg += `🎲 Kamu tebak: *${guess}*\n`;
+        msg += `🎲 Hasil: *${result.roll}*\n`;
+        msg += `
+`;
         if (result.win) {
-          msg += `│ 🎉 Menang! (5x payout)\n`;
-          msg += `│ 💰 Payout: *${result.payout} gold*\n`;
+          msg += `🎉 Menang! (5x payout)\n`;
+          msg += `💰 Payout: *${result.payout} gold*\n`;
         } else {
-          msg += `│ 💸 Rugi: *-${bet} gold*\n`;
+          msg += `💸 Rugi: *-${bet} gold*\n`;
         }
         break;
       }
@@ -184,15 +187,16 @@ async function handler(m, { sock }) {
         const normalized = ["kepala", "heads"].includes(guess) ? "heads" : "tails";
         result = playCoinflip(bet, normalized);
         if (result.win) { addGold(m, result.payout); addExp(m, 10); }
-        msg = `╭─「 ✦ ᴄᴏɪɴғʟɪᴘ ᴠ2 ✦ 」\n`;
-        msg += `│ 🪙 Kamu pilih: *${normalized}*\n`;
-        msg += `│ 🪙 Hasil: *${result.result}*\n`;
-        msg += `│\n`;
+        msg = "";
+        msg += `🪙 Kamu pilih: *${normalized}*\n`;
+        msg += `🪙 Hasil: *${result.result}*\n`;
+        msg += `
+`;
         if (result.win) {
-          msg += `│ 🎉 Menang! (2x payout)\n`;
-          msg += `│ 💰 Payout: *${result.payout} gold*\n`;
+          msg += `🎉 Menang! (2x payout)\n`;
+          msg += `💰 Payout: *${result.payout} gold*\n`;
         } else {
-          msg += `│ 💸 Rugi: *-${bet} gold*\n`;
+          msg += `💸 Rugi: *-${bet} gold*\n`;
         }
         break;
       }
@@ -206,15 +210,16 @@ async function handler(m, { sock }) {
         result = playRoulette(bet, betType);
         if (result.win) { addGold(m, result.payout); addExp(m, Math.floor(result.payout / 30)); }
         const colorEmoji = { red: "🔴", black: "⚫", green: "🟢" }[result.color];
-        msg = `╭─「 ✦ ʀᴏᴜʟᴇᴛᴛᴇ ᴠ2 ✦ 」\n`;
-        msg += `│ 🎡 Hasil: *${colorEmoji} ${result.number}*\n`;
-        msg += `│ 📌 Bet: *${betType}*\n`;
-        msg += `│\n`;
+        msg = "";
+        msg += `🎡 Hasil: *${colorEmoji} ${result.number}*\n`;
+        msg += `📌 Bet: *${betType}*\n`;
+        msg += `
+`;
         if (result.win) {
-          msg += `│ 🎉 Menang!\n`;
-          msg += `│ 💰 Payout: *${result.payout} gold*\n`;
+          msg += `🎉 Menang!\n`;
+          msg += `💰 Payout: *${result.payout} gold*\n`;
         } else {
-          msg += `│ 💸 Rugi: *-${bet} gold*\n`;
+          msg += `💸 Rugi: *-${bet} gold*\n`;
         }
         break;
       }
@@ -225,9 +230,8 @@ async function handler(m, { sock }) {
     }
 
     setCooldown(m, "lastCasinoV2", CASINO_CD);
-    msg += `│\n│ 💼 Gold: *${rpg.gold - bet + (result.payout || 0)}*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `💼 Gold: *${rpg.gold - bet + (result.payout || 0)}*\n`;
+    
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

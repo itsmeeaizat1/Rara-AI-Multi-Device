@@ -47,9 +47,9 @@ async function handler(m, { sock, config: botConfig }) {
     } catch (e) { console.error('[urlshortener.js]:', e.message); }
 
     const text =
-      claraWrap("URL Shortener", [`│ Original: *${url}*`,
-        `│ Short: *${short}*`,
-        "│ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+      claraWrap("URL Shortener", [`Original: *${url}*`,
+        `Short: *${short}*`,
+        "Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}urlshortener <link> untuk pendekkan lagi`) +
       "\n" +

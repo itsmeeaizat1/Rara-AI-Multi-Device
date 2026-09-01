@@ -28,12 +28,7 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `╭─「 ✦ 🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴇᴀʀᴄʜ*
-│
-Usage: \`${m.prefix}ttsearch <query>\`
-│
-╰────  •  ────
-│ \`Contoh: ${m.prefix}ttsearch anime\``, "ttsearch");
+    return m.reply(`Usage: \`${m.prefix}ttsearch <query>\`\nContoh: \`${m.prefix}ttsearch anime\``);
   }
   try {
     const videos = await tiktokSearchVideo(query);
@@ -46,12 +41,12 @@ Usage: \`${m.prefix}ttsearch <query>\`
     const mediaList = videos.slice(0, maxShow).map((video) => ({
       video: { url: video.link },
       mimetype: "video/mp4",
-      caption: `🎵 *ᴛɪᴋᴛᴏᴋ ꜱᴇᴀʀᴄʜ*
+      caption: `*TikTok Search*
 
-📌 ${video.title || "-"}
-👤 ${video.author?.nickname || "-"}
-👀 ${video.stats?.plays || 0} views
-❤️ ${video.stats?.likes || 0} likes`,
+Judul: ${video.title || "-"}
+Author: ${video.author?.nickname || "-"}
+Views: ${video.stats?.plays || 0}
+Likes: ${video.stats?.likes || 0}`,
       contextInfo: {
         forwardingScore: 0,
         isForwarded: false,

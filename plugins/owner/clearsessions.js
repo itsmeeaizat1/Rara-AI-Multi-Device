@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import te from '../../src/lib/nova-error.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
     name: 'clearsessions',
     alias: ["clearsessions"],
@@ -19,19 +20,18 @@ const pluginConfig = {
     isEnabled: true
 }
 
-async function handler(m, { sock })  {
+async function handler(m, { sock }) {
     const sessionsPath = path.join(process.cwd(), 'storage', 'sessions')
     
     if (!fs.existsSync(sessionsPath)) {
-        return m.reply(claraWrap("clearsessions", `❌ Folder sessions tidak ditemukan!`))
+        return m.reply(`❌ Folder sessions tidak ditemukan!`)
     }
-    
     
     try {
         const files = fs.readdirSync(sessionsPath)
         
         if (files.length === 0) {
-            { const __navText = `📁 Folder sessions sudah kosong!`; return await m.reply(__navText); }
+            return await m.reply(`Folder sessions sudah kosong!`);
         }
         
         let deleted = 0
@@ -54,15 +54,13 @@ async function handler(m, { sock })  {
                 deleted++
             } catch (e) { console.error('[clearsessions.js]:', e.message); }
         }
-        await m.reply(claraWrap("Clearsessions", `╭─「 ✦ 🗑️ *Clear sEssions*
-│
-│ Deleted: *${deleted}* file
-│ sKipped: *${skipped}* file
-│ Note: creds.json tidak dihapus
-│
-╰────  •  ────
-│ _Session files berhasil dibersihkan!_
-│ _Restart bot jika diperlukan._`))
+        await m.reply(
+            `Deleted: *${deleted}* file\n` +
+            `Skipped: *${skipped}* file\n` +
+            `Note: creds.json tidak dihapus\n\n` +
+            `Session files berhasil dibersihkan!\n` +
+            `Restart bot jika diperlukan.`
+        )
         
     } catch (error) {
         await m.reply(claraWrap("clearsessions", te(m.prefix, m.command, m.pushName), "error"))

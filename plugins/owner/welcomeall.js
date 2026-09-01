@@ -44,15 +44,15 @@ async function handler(m, { sock }) {
         }
         if (status) {
             return m.reply(claraWrap("welcomeall", `✅ *Welcome Global On*\n\n` +
-                `╭─「 ✦ Result ✦ 」\n` +
-                `│ 🌐 Total Grup: *${count}*\n` +
-                `│ ✅ Welcome: *AKTIF*\n` +
+                "" +
+                `🌐 Total Grup: *${count}*\n` +
+                `✅ Welcome: *AKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈\n\n` +
                 `Semua member baru akan disambut otomatis!`))       } else {
             return m.reply(claraWrap("welcomeall", `❌ *Welcome Global Off*\n\n` +
-                `╭─「 ✦ Result ✦ 」\n` +
-                `│ 🌐 Total Grup: *${count}*\n` +
-                `│ ❌ Welcome: *NONAKTIF*\n` +
+                "" +
+                `🌐 Total Grup: *${count}*\n` +
+                `❌ Welcome: *NONAKTIF*\n` +
                 `╰┈┈┈┈┈┈┈┈\n\n` +
                 `Welcome dinonaktifkan di semua grup.`))
         }

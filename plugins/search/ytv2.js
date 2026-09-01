@@ -37,9 +37,7 @@ async function handler(m, { sock }) {
             return m.reply(novaEmpty('YouTube v2', `Gak nemu hasil buat "${query}" 🧐`))
         }
 
-        let text = "╭─「 ✦ YouTube Search ✦ 」\n"
-        text += "│ Query: " + query + "\n"
-        text += "│\n"
+        let text = `YouTube Search\nQuery: ${query}\n\n`
 
         for (let i = 0; i < videos.length; i++) {
             const v = videos[i]
@@ -49,13 +47,11 @@ async function handler(m, { sock }) {
             const views = v.view_count?.text || v.short_view_count?.text || "?"
             const id = v.id || v.video_id || ""
 
-            text += "" + (i + 1) + ". " + title + "\n"
-            text += "" + channel + " | " + duration + " | " + views + "\n"
-            if (id) text += "│ https://youtube.com/watch?v=" + id + "\n"
-            if (i < videos.length - 1) text += "│\n"
+            text += `${i + 1}. ${title}\n`
+            text += `${channel} | ${duration} | ${views}\n`
+            if (id) text += `https://youtube.com/watch?v=${id}\n`
+            if (i < videos.length - 1) text += "\n"
         }
-
-        text += "╰────  •  ────"
 
         // Kirim dengan thumbnail
         const thumb = videos[0]?.thumbnails?.[0]?.url || videos[0]?.thumbnail?.[0]?.url

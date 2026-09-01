@@ -67,35 +67,40 @@ Gunakan bahasa Indonesia. Sesuaikan jumlah hari dengan yang diminta. Praktis dan
       if (!t) continue;
 
       if (t.startsWith("DESTINASI:")) {
-        formatted += `│ 🗺️ *${t.replace("DESTINASI:", "").trim()}*\n│\n`;
+        formatted += `🗺️ *${t.replace("DESTINASI:", "").trim()}*
+
+`;
       } else if (t.startsWith("ESTIMASI BIAYA:")) {
-        formatted += `│ 💰 ${t.replace("ESTIMASI BIAYA:", "").trim()}\n`;
+        formatted += `💰 ${t.replace("ESTIMASI BIAYA:", "").trim()}\n`;
       } else if (t.startsWith("WAKTU TERBAIK:")) {
-        formatted += `│ 📅 ${t.replace("WAKTU TERBAIK:", "").trim()}\n│\n`;
+        formatted += `📅 ${t.replace("WAKTU TERBAIK:", "").trim()}
+
+`;
       } else if (t.startsWith("HARI")) {
-        formatted += `│ 📌 *${t}*\n`;
+        formatted += `📌 *${t}*\n`;
       } else if (t.startsWith("TIPS:")) {
-        formatted += `│\n│ 💡 *ᴛɪᴘs:*\n`;
+        formatted += `💡 *ᴛɪᴘs:*\n`;
       } else if (t.startsWith("-")) {
-        formatted += `│   ${t}\n`;
+        formatted += `${t}\n`;
       } else {
-        formatted += `│ ${t}\n`;
+        formatted += `${t}\n`;
       }
     }
 
     if (!formatted) {
-      formatted = `│ ${result.answer.trim()}\n`;
+      formatted = `${result.answer.trim()}\n`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴛʀᴀᴠᴇʟ ᴀɪ ✦ 」\n`;
-    msg += `│ 🗺️ Tujuan: *${text}*\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `🗺️ Tujuan: *${text}*\n`;
+    msg += `
+`;
     msg += formatted;
-    msg += `│\n`;
-    msg += `│ Selamat liburan! 🌴\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `Selamat liburan! 🌴\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("travelai error:", err);
     await m.react("❌");

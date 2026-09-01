@@ -37,19 +37,21 @@ async function handler(m, { sock }) {
     }
 
     const medal = ["🥇", "🥈", "🥉"];
-    let msg = `╭─「 ✦ RANK KERJA ✦ 」\n`;
-    msg += `│ 🏆 *TOP 10 PEMAIN TERKAYA*\n│\n`;
+    let msg = "";
+    msg += `🏆 *TOP 10 PEMAIN TERKAYA*
+
+`;
 
     leaderboard.forEach((player, i) => {
       const rank = medal[i] || `${i + 1}.`;
       const name = player.name || player.number || "Unknown";
       const gold = (player.value || 0).toLocaleString("id-ID");
       const level = player.rpg?.level || 1;
-      msg += `│ ${rank} *${name}*\n`;
-      msg += `│    💰 Rp${gold} | ⚔️ Lv.${level}\n`;
+      msg += `${rank} *${name}*\n`;
+      msg += `💰 Rp${gold} | ⚔️ Lv.${level}\n`;
     });
 
-    msg += `│\n╰────  •  ────`;
+    msg += `│\n`;
 
     await m.react("🐣");
     return m.reply(msg);

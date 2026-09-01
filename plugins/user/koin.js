@@ -45,21 +45,17 @@ async function handler(m, { sock }) {
   const isOwner = config.isOwner(targetJid);
   const isPremium = user.isPremium;
 
-  let txt = "╭─「 ✦ Koin Info ✦ 」\n";
-  txt += "│\n";
-  txt += "│ 👤 User: *" + targetName + "*\n";
-  txt += "│ 💰 Koin: *" + formatKoin(user.koin || 0) + "*\n";
-  txt += "│ 💎 Status: *" + (isOwner ? "👑 Owner" : isPremium ? "⭐ Premium" : "🆓 Free") + "*\n";
+  let txt = "User: *" + targetName + "*\n";
+  txt += "Koin: *" + formatKoin(user.koin || 0) + "*\n";
+  txt += "Status: *" + (isOwner ? "Owner" : isPremium ? "Premium" : "Free") + "*";
 
   if (isSelf && !isOwner) {
-    txt += "│\n";
-    txt += "│ 「 Shop 」\n";
-    txt += "│ `.buyenergi <jml>` (1 = 100 koin)\n";
-    txt += "│ `.buyfitur` (1 = 3000 koin)\n";
-    txt += "│\n";
-    txt += "│ 🎮 Mau tambah koin? Main game aja!\n";
+    txt += "\n\n";
+    txt += "「 Shop 」\n";
+    txt += "`.buyenergi <jml>` (1 = 100 koin)\n";
+    txt += "`.buyfitur` (1 = 3000 koin)\n\n";
+    txt += "Mau tambah koin? Main game aja!";
   }
-  txt += "╰────  •  ────";
 
   await m.reply(txt, { mentions: [targetJid] });
 }

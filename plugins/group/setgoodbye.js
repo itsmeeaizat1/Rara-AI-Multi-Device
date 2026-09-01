@@ -24,19 +24,18 @@ async function handler(m, { sock }) {
 
   if (!text) {
     return m.reply( `📝 *ꜱᴇᴛ ɢᴏᴏᴅʙʏᴇ*\n\n` +
-        `╭─「 ✦ ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀ ✦ 」\n` +
-        `│ │ \`{user}\` - Nama member\n` +
-        `│ │ \`{number}\` - Nomor member\n` +
-        `│ │ \`{group}\` - Nama grup\n` +
-        `│ │ \`{desc}\` - Deskripsi grup\n` +
-        `│ │ \`{count}\` - Sisa member\n` +
-        `│ │ \`{owner}\` - Nama owner grup\n` +
-        `│ │ \`{date}\` - Tanggal (DD/MM/YYYY)\n` +
-        `│ │ \`{time}\` - Waktu (HH:mm WIB)\n` +
-        `│ │ \`{day}\` - Hari (Senin, Selasa, dll)\n` +
-        `│ │ \`{bot}\` - Nama bot\n` +
-        `│ │ \`{prefix}\` - Prefix bot\n` +
-        `╰────  •  ────\n\n` +
+        `\`{user}\` - Nama member\n` +
+        `\`{number}\` - Nomor member\n` +
+        `\`{group}\` - Nama grup\n` +
+        `\`{desc}\` - Deskripsi grup\n` +
+        `\`{count}\` - Sisa member\n` +
+        `\`{owner}\` - Nama owner grup\n` +
+        `\`{date}\` - Tanggal (DD/MM/YYYY)\n` +
+        `\`{time}\` - Waktu (HH:mm WIB)\n` +
+        `\`{day}\` - Hari (Senin, Selasa, dll)\n` +
+        `\`{bot}\` - Nama bot\n` +
+        `\`{prefix}\` - Prefix bot\n` +
+        `\n` +
         `\`Contoh:\`\n` +
         `\`${m.prefix}setgoodbye Bye {user}! 👋\`\n` +
         `\`Sampai jumpa lagi pada {day}, {date}\``, "setgoodbye");

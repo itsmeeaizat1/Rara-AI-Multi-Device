@@ -33,22 +33,23 @@ async function handler(m, { sock }) {
     const r = data.result || data.data || data;
     await m.react("🐣");
 
-    let msg = `╭─「 ✦ ʙᴜɪʟᴅ ᴍʟ ʙʙ ✦ 」\n`;
-    msg += `│ Hero: *${r.hero || r.name || hero}*\n`;
-    if (r.emblem) msg += `│ Emblem: *${r.emblem}*\n`;
-    if (r.spell || r.battle_spell) msg += `│ Battle Spell: *${r.spell || r.battle_spell}*\n`;
+    let msg = "";
+    msg += `Hero: *${r.hero || r.name || hero}*\n`;
+    if (r.emblem) msg += `Emblem: *${r.emblem}*\n`;
+    if (r.spell || r.battle_spell) msg += `Battle Spell: *${r.spell || r.battle_spell}*\n`;
     if (r.item || r.items) {
       const items = Array.isArray(r.item || r.items) ? (r.item || r.items) : [(r.item || r.items)];
-      msg += `│\n`;
-      msg += `│ Item Build:\n`;
-      items.forEach((it, i) => { msg += `│ ${i + 1}. ${typeof it === "string" ? it : it.name || it.item || JSON.stringify(it)}\n`; });
+      msg += `
+`;
+      msg += `Item Build:\n`;
+      items.forEach((it, i) => { msg += `${i + 1}. ${typeof it === "string" ? it : it.name || it.item || JSON.stringify(it)}\n`; });
     }
     if (r.tips || r.note) {
-      msg += `│\n`;
-      msg += `│ Tips: ${r.tips || r.note}\n`;
+      msg += `
+`;
+      msg += `Tips: ${r.tips || r.note}\n`;
     }
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+        return m.reply(msg);
   } catch (err) {
     console.error("buildml error:", err);
     await m.react("❌");

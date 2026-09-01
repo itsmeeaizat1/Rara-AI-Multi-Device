@@ -91,9 +91,9 @@ async function handler(m, { sock }) {
 
     await m.react("🕒");
 
-    let result = `╭─「 ✦ STYLE TEXT ✦ 」\n`;
-    result += `│ Teks: ${text}\n`;
-    result += `╰────  •  ────\n\n`;
+    let result = "";
+    result += `Teks: ${text}\n`;
+    result += `\n`;
 
     styles.forEach((st, idx) => {
       result += `*${idx + 1}. ${st.name}*\n${st.map(text)}\n\n`;

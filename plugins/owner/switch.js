@@ -163,12 +163,12 @@ const AUTO_REGISTRY = {
     toggle: (on) => { on ? enableHealthCheck() : disableHealthCheck() },
   },
   autoreengage: {
-    label: "Auto Re-engage",
+    label: "Auto Re-engage Users",
     getStatus: () => { try { return getReengageStatus()?.enabled ?? false } catch { return false } },
     toggle: (on) => { on ? enableReengage() : disableReengage() },
   },
   autorefill: {
-    label: "Auto Refill Notif",
+    label: "Auto Refill Limit/Energi",
     getStatus: () => { try { return getRefillStatus()?.enabled ?? false } catch { return false } },
     toggle: (on) => { on ? enableRefill() : disableRefill() },
   },
@@ -183,100 +183,139 @@ const AUTO_REGISTRY = {
     toggle: (on) => { on ? enableAutoReport() : disableAutoReport() },
   },
   autoulah: {
-    label: "Auto Birthday",
+    label: "Auto Ucapan Ulang Tahun",
     getStatus: () => { try { return getBirthdayStatus()?.enabled ?? false } catch { return false } },
     toggle: (on) => { on ? enableAutoBirthday() : disableAutoBirthday() },
   },
   autobmkg: {
-    label: "Auto BMKG Gempa",
+    label: "Auto Info Gempa BMKG",
     getStatus: () => { try { return getBmkgStatus()?.enabled ?? false } catch { return false } },
-    toggle: (on) => {
-      if (on) { const s = updateBmkgSettings(c => ({ ...c, enabled: true })); startBmkgJobs(s) }
-      else { updateBmkgSettings(c => ({ ...c, enabled: false })); stopBmkgJobs() }
-    },
+    toggle: (on) => { updateBmkgSettings({ enabled: on }); on ? startBmkgJobs() : stopBmkgJobs() },
   },
   autocuaca: {
-    label: "Auto Cuaca",
+    label: "Auto Info Cuaca BMKG",
     getStatus: () => { try { return getCuacaStatus()?.enabled ?? false } catch { return false } },
-    toggle: (on) => {
-      if (on) { const s = updateCuacaSettings(c => ({ ...c, enabled: true })); startCuacaJobs(s) }
-      else { updateCuacaSettings(c => ({ ...c, enabled: false })); stopCuacaJobs() }
-    },
+    toggle: (on) => { updateCuacaSettings({ enabled: on }); on ? startCuacaJobs() : stopCuacaJobs() },
   },
   autocleancache: {
-    label: "Auto Clean Cache",
+    label: "Auto Clean Cache & Temp",
     getStatus: () => { try { return getCleanSettings()?.enabled ?? false } catch { return false } },
-    toggle: (on) => {
-      if (on) { const s = updateCleanSettings({ enabled: true }); startCleaner(s) }
-      else { stopCleaner(); updateCleanSettings({ enabled: false }) }
-    },
+    toggle: (on) => { updateCleanSettings({ enabled: on }); on ? startCleaner() : stopCleaner() },
   },
   autoreactsticker: {
     label: "Auto React Sticker",
-    getStatus: () => { try { return getDatabase().setting("autoreactstickerEnabled") ?? false } catch { return false } },
-    toggle: (on) => { getDatabase().setting("autoreactstickerEnabled", on) },
+    getStatus: () => { try { return getDatabase().setting("autoReactSticker") ?? false } catch { return false } },
+    toggle: (on) => { getDatabase().setting("autoReactSticker", on) },
   },
   autoreactvn: {
-    label: "Auto React VN",
-    getStatus: () => { try { return getDatabase().setting("autoreactvnEnabled") ?? false } catch { return false } },
-    toggle: (on) => { getDatabase().setting("autoreactvnEnabled", on) },
+    label: "Auto React Voice Note",
+    getStatus: () => { try { return getDatabase().setting("autoReactVN") ?? false } catch { return false } },
+    toggle: (on) => { getDatabase().setting("autoReactVN", on) },
   },
   autosholat: {
-    label: "Auto Sholat",
+    label: "Auto Reminder Sholat",
     getStatus: () => { try { return getDatabase().setting("autoSholat") ?? false } catch { return false } },
     toggle: (on) => { getDatabase().setting("autoSholat", on) },
   },
+  autostatusview: {
+    label: "Auto View Status/Story",
+    getStatus: () => { try { return getDatabase().setting("autoStatusView") ?? false } catch { return false } },
+    toggle: (on) => { getDatabase().setting("autoStatusView", on) },
+  },
+  autotranslatevn: {
+    label: "Auto Translate VN (Speech-to-Text)",
+    getStatus: () => { try { return getDatabase().setting("autoTranslateVN") ?? false } catch { return false } },
+    toggle: (on) => { getDatabase().setting("autoTranslateVN", on) },
+  },
   autoforward: {
-    label: "Auto Forward",
-    getStatus: () => { try { const db = getDatabase(); if (!db.db?.data?.automation?.autoforward) return false; return db.db.data.automation.autoforward.enabled } catch { return false } },
-    toggle: (on) => { try { const db = getDatabase(); if (!db.db.data.automation) db.db.data.automation = {}; if (!db.db.data.automation.autoforward) db.db.data.automation.autoforward = { enabled: false, keywords: [], scope: "all", forwardedCount: 0 }; db.db.data.automation.autoforward.enabled = on; db.markDirty("settings"); db.db.write?.() } catch {} },
+    label: "Auto Forward Message",
+    getStatus: () => { try { return getDatabase().setting("autoForward") ?? false } catch { return false } },
+    toggle: (on) => { getDatabase().setting("autoForward", on) },
   },
   autosambut: {
-    label: "Auto Sambut (Owner)",
-    getStatus: () => { try { const db = getDatabase(); const g = db.getGroup(m?.chat) || {}; return g.autoSambut?.enabled ?? false } catch { return false } },
-    toggle: (on) => { try { const db = getDatabase(); const g = db.getGroup(m?.chat) || {}; db.setGroup(m?.chat, { autoSambut: { ...g.autoSambut, enabled: on } }) } catch {} },
+    label: "Auto Sambut Member Baru",
+    getStatus: () => { try { return getDatabase().setting("autoSambut") ?? false } catch { return false } },
+    toggle: (on) => { getDatabase().setting("autoSambut", on) },
+  },
+  automod: {
+    label: "Auto Moderation",
+    getStatus: () => { try { return getDatabase().setting("autoMod") ?? false } catch { return false } },
+    toggle: (on) => { getDatabase().setting("autoMod", on) },
+  },
+  autobroadcastchannel: {
+    label: "Auto Broadcast ke Saluran",
+    getStatus: () => { try { return getDatabase().setting("autoBroadcastChannel") ?? false } catch { return false } },
+    toggle: (on) => { getDatabase().setting("autoBroadcastChannel", on) },
+  },
+  autobackupdrive: {
+    label: "Auto Backup Google Drive",
+    getStatus: () => { try { return getDatabase().setting("autoBackupDrive") ?? false } catch { return false } },
+    toggle: (on) => { getDatabase().setting("autoBackupDrive", on) },
   },
 }
 
-// Kategori untuk tampilan
-const AUTO_CATEGORIES = {
-  "Pesan":      ["autoread", "autotyping", "autojoingc"],
-  "Story":      ["autoreadsw", "autoreactsw"],
-  "Sistem":     ["autobackup", "autohealth", "autocleancache", "autoreport"],
-  "Notifikasi": ["autorefill", "autorenewal", "autoreengage", "autoulah"],
-  "Info":       ["autobmkg", "autocuaca", "autosholat"],
-  "Reaksi":     ["autoreactsticker", "autoreactvn"],
-  "Grup":       ["autoforward", "autosambut"],
-}
-
-// ═══════════════════════════════════════════════════════════
-// ROUTING
-// ═══════════════════════════════════════════════════════════
-const AUTO_KEYS = Object.keys(AUTO_REGISTRY)
 const AUTO_ALIASES = {
-  autobday: "autoulah", autobirthday: "autoulah",
-  apicheck: "autohealth", aphealth: "autohealth",
-  autocuacav2: "autocuaca",
-  autobcchannel: "autobroadcastchannel", autobc: "autobroadcastchannel",
-  autobroadcast: "autobroadcastchannel", autochannel: "autobroadcastchannel",
-  autobcchannel: "autobroadcastchannel",
-  autostatusview: "autoreadsw", // autostatusview = gabungan autoreadsw + autoreactsw
+  read: "autoread", typing: "autotyping", join: "autojoingc", joingc: "autojoingc",
+  readsw: "autoreadsw", reactsw: "autoreactsw", backup: "autobackup",
+  health: "autohealth", reengage: "autoreengage", refill: "autorefill",
+  renewal: "autorenewal", report: "autoreport", ulah: "autoulah", birthday: "autoulah",
+  bmkg: "autobmkg", cuaca: "autocuaca", clean: "autocleancache", cleancache: "autocleancache",
+  reactsticker: "autoreactsticker", reactvn: "autoreactvn", sholat: "autosholat",
+  statusview: "autostatusview", translatevn: "autotranslatevn", forward: "autoforward",
+  sambut: "autosambut", mod: "automod", broadcastchannel: "autobroadcastchannel",
+  backupdrive: "autobackupdrive"
 }
 
+const AUTO_CATEGORIES = {
+  "Sistem & Respon": [
+    "autoread", "autotyping", "autojoingc", "autoreadsw", "autoreactsw",
+    "autostatusview", "autotranslatevn", "autoreactsticker", "autoreactvn"
+  ],
+  "Pemeliharaan": [
+    "autobackup", "autohealth", "autocleancache", "autobackupdrive"
+  ],
+  "Retensi & Finansial": [
+    "autoreengage", "autorefill", "autorenewal", "autoreport", "autoulah"
+  ],
+  "Info & Utilitas": [
+    "autobmkg", "autocuaca", "autosholat", "autoforward", "autosambut",
+    "automod", "autobroadcastchannel"
+  ]
+}
+
+const AUTO_KEYS = Object.keys(AUTO_REGISTRY)
+
+// ═══════════════════════════════════════════════════════════
+// PARSER INTENT & MODE
+// ═══════════════════════════════════════════════════════════
 function getMode(cmd, args) {
-  const c = (cmd || '').toLowerCase()
-  // Legacy alias routing
-  if (c === 'enable') return 'group:on'
-  if (c === 'disable') return 'group:off'
-  if (c === 'togglefitur' || c === 'onofffitur' || c === 'onoff') return 'fitur'
-
-  // Auto* direct aliases — kalau command本身就是 auto feature
-  const autoAlias = AUTO_ALIASES[c] || (AUTO_KEYS.includes(c) ? c : null)
-  if (autoAlias) return `auto:${autoAlias}`
-
+  const c = cmd.toLowerCase()
   const a = (args[0] || '').toLowerCase()
-  if (a === 'channel') return 'channel'
-  if (a === 'group' || a === 'grup') return 'group'
+
+  if (AUTO_KEYS.includes(c) || AUTO_ALIASES[c]) {
+    const key = AUTO_ALIASES[c] || c
+    return `auto:${key}`
+  }
+
+  if (c === 'enable' || c === 'on') {
+    if (a && GROUP_FEATURES[GROUP_ALIASES[a] || a]) return 'group:on'
+    if (a === 'auto') return 'auto'
+    if (a === 'channel') return 'channel'
+    return 'group:on'
+  }
+
+  if (c === 'disable' || c === 'off') {
+    if (a && GROUP_FEATURES[GROUP_ALIASES[a] || a]) return 'group:off'
+    if (a === 'auto') return 'auto'
+    if (a === 'channel') return 'channel'
+    return 'group:off'
+  }
+
+  if (c === 'togglefitur' || c === 'onofffitur') return 'fitur'
+
+  if (!a) return 'menu'
+  if (a === 'channel' || a === 'saluran') return 'channel'
+  if (a === 'group' || a === 'grup' || a === 'gc') return 'group'
   if (a === 'auto') {
     const sub = (args[1] || '').toLowerCase()
     const subResolved = AUTO_ALIASES[sub] || (AUTO_KEYS.includes(sub) ? sub : '')
@@ -297,11 +336,12 @@ async function handleChannel(m, { sock, config: cfg }) {
   if (!subCmd || subCmd === 'status' || subCmd === 'cek') {
     const statuses = getAllNotifyStatus()
     let onCount = 0, offCount = 0
-    let text = claraWrap("Switch Channel", `│ Channel: *${cfg?.saluran?.name || "Belum diset nih"}*\n│ Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\n" + toSC("STATUS TOGGLE") + ":\n\n"
+    let text = claraWrap("Switch Channel", `Channel: *${cfg?.saluran?.name || "Belum diset nih"}*
+Total Event: *${Object.keys(NOTIFY_EVENTS).length}*`) + "\nSTATUS TOGGLE:\n\n"
 
     for (const [key, info] of Object.entries(statuses)) {
-      text += `│ • ${info.label} — *${info.enabled ? "ON" : "OFF"}*\n`
-      text += `│   \`${prefix}switch channel ${key}\`\n\n`
+      text += `• ${info.label} — *${info.enabled ? "ON" : "OFF"}*\n`
+      text += `\`${prefix}switch channel ${key}\`\n\n`
       if (info.enabled) onCount++; else offCount++
     }
     text += separator("━", 22) + "\n" + tipText(`ON: ${onCount} | OFF: ${offCount}`) + "\n" + tipText(`Toggle semua: \`${prefix}switch channel all on/off\``)
@@ -315,7 +355,8 @@ async function handleChannel(m, { sock, config: cfg }) {
     const enabled = action === 'on'
     let count = 0
     for (const key of Object.keys(NOTIFY_EVENTS)) { setNotifyEnabled(key, enabled); count++ }
-    return m.reply(claraWrap("Switch Channel", "🔔") + "\n\n" + claraWrap(toSC("SEMUA EVENT"), `│ Status: *${enabled ? "ALL ON" : "ALL OFF"}*\n│ Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch channel\``))
+    return m.reply(claraWrap("Switch Channel", "🔔") + "\n\n" + claraWrap("SEMUA EVENT", `Status: *${enabled ? "ALL ON" : "ALL OFF"}*
+Total: *${count} event*`) + "\n\n" + tipText(`Cek status: \`${prefix}switch channel\``))
   }
 
   if (NOTIFY_EVENTS[subCmd]) {
@@ -323,12 +364,13 @@ async function handleChannel(m, { sock, config: cfg }) {
     const current = statuses[subCmd].enabled
     const newVal = !current
     setNotifyEnabled(subCmd, newVal)
-    return m.reply(claraWrap("Switch Channel", "🔔") + "\n\n" + claraWrap(toSC("TOGGLE BERHASIL"), `│ Event: *${NOTIFY_EVENTS[subCmd]}*\n│ Status: *${newVal ? "ON" : "OFF"}*`) + "\n\n" + tipText(newVal ? "Notifikasi akan dikirim ke channel" : "Notifikasi dimatikan") + "\n" + tipText(`Cek semua: \`${prefix}switch channel\``))
+    return m.reply(claraWrap("Switch Channel", "🔔") + "\n\n" + claraWrap("TOGGLE BERHASIL", `Event: *${NOTIFY_EVENTS[subCmd]}*
+Status: *${newVal ? "ON" : "OFF"}*`) + "\n\n" + tipText(newVal ? "Notifikasi akan dikirim ke channel" : "Notifikasi dimatikan") + "\n" + tipText(`Cek semua: \`${prefix}switch channel\``))
   }
 
   let list = ""
   for (const [key, label] of Object.entries(NOTIFY_EVENTS)) list += `\`${key}\` — ${label}\n`
-  return m.reply(claraWrap("Switch Channel", `Event: *${subCmd}*\nTidak ada dalam daftar toggle`) + "\n" + toSC("EVENT TERSEDIA") + ":\n\n" + list + "\n" + tipText(`Contoh: \`${prefix}switch channel sewaRegister\``))
+  return m.reply(claraWrap("Switch Channel", `Event: *${subCmd}*\nTidak ada dalam daftar toggle`) + "\nEVENT TERSEDIA:\n\n" + list + "\n" + tipText(`Contoh: \`${prefix}switch channel sewaRegister\``))
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -362,34 +404,33 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
 
   if (!featureName) {
     const groupData = db.getGroup(m.chat) || {}
-    let txt = `╭─「 ✦ ${toSC('SWITCH GROUP')} ✦ 」\n\n`
+    let txt = ""
     for (const [cat, features] of Object.entries(GROUP_CATEGORIES)) {
-      txt += `│ *${toSC(cat)}*\n`
+      txt += `*${cat}*\n`
       for (const feat of features) {
         const f = GROUP_FEATURES[feat]
         if (!f) continue
         const current = groupData[f.dbKey]
         const active = isOn(current, f.on)
-        txt += `│   ${active ? "ON" : "OFF"}  ${feat}\n`
+        txt += `${active ? "ON" : "OFF"}  ${feat}\n`
       }
       txt += `\n`
     }
-    txt += `╰────  •  ────`
     txt += tipText(`ON: \`${prefix}switch group <fitur>\` | OFF: \`${prefix}switch group <fitur> off\``)
-    return m.reply(txt)
+    return m.reply(txt.trim())
   }
 
   const resolved = GROUP_ALIASES[featureName] || featureName
   const feature = GROUP_FEATURES[resolved]
 
   if (!feature)
-    return m.reply(`╭─「 ✦ ${toSC('Switch Group')} ✦ 」\n│ ❌ ${toSC('Fitur tidak ditemukan')}: ${featureName}\n│ ${toSC('Ketik')} \`${prefix}switch group\` ${toSC('untuk melihat daftar')}\n╰────  •  ────`)
+    return m.reply(`❌ Fitur tidak ditemukan: ${featureName}\nKetik \`${prefix}switch group\` untuk melihat daftar`)
 
   const groupData = db.getGroup(m.chat) || {}
 
   if (forceOff) {
     db.setGroup(m.chat, { [feature.dbKey]: feature.off })
-    return m.reply(`╭─「 ✦ ${toSC('SWITCH GROUP')} ✦ 」\n│ • ${toSC(feature.label)}: *OFF*\n╰────  •  ────`)
+    return m.reply(`${feature.label}: *OFF*`)
   }
 
   let update = { [feature.dbKey]: feature.on }
@@ -399,12 +440,11 @@ async function handleGroup(m, { sock, config: cfg, forceOff }) {
     update[feature.extraKey] = mode
 
   db.setGroup(m.chat, update)
-  let txt = `╭─「 ✦ ${toSC('SWITCH GROUP')} ✦ 」\n│ • ${toSC(feature.label)}: *ON*`
+  let txt = `${feature.label}: *ON*`
   if (feature.modes) {
     const newMode = mode && feature.modes.includes(mode) ? mode : (groupData[feature.modeKey] || feature.modes[0])
-    txt += `\n│ ${toSC('Mode')}: ${newMode}`
+    txt += `\nMode: ${newMode}`
   }
-  txt += `\n╰────  •  ────`
   return m.reply(txt)
 }
 
@@ -428,39 +468,38 @@ async function handleAuto(m, { sock, config: cfg, autoKey }) {
 
   // No specific key — show all auto features status
   if (!autoKey) {
-    let txt = `╭─「 ✦ ${toSC('SWITCH AUTO')} ✦ 」\n\n`
+    let txt = ""
     for (const [cat, features] of Object.entries(AUTO_CATEGORIES)) {
-      txt += `│ *${toSC(cat)}*\n`
+      txt += `*${cat}*\n`
       for (const key of features) {
         const reg = AUTO_REGISTRY[key]
         if (!reg) continue
         const enabled = reg.getStatus()
-        txt += `│   ${enabled ? "ON" : "OFF"}  ${key}\n`
+        txt += `${enabled ? "ON" : "OFF"}  ${key}\n`
       }
       txt += `\n`
     }
-    txt += `╰────  •  ────\n`
     txt += tipText(`ON: \`${prefix}switch auto <nama> on\` | OFF: \`${prefix}switch auto <nama> off\``)
-    return m.reply(txt)
+    return m.reply(txt.trim())
   }
 
   const reg = AUTO_REGISTRY[autoKey]
   if (!reg)
-    return m.reply(`╭─「 ✦ ${toSC('SWITCH AUTO')} ✦ 」\n│ ❌ ${toSC('Fitur tidak ditemukan')}: ${autoKey}\n│ ${toSC('Ketik')} \`${prefix}switch auto\` ${toSC('untuk melihat daftar')}\n╰────  •  ────`)
+    return m.reply(`❌ Fitur tidak ditemukan: ${autoKey}\nKetik \`${prefix}switch auto\` untuk melihat daftar`)
 
   // No action — show status + usage
   if (!action || (action !== 'on' && action !== 'off')) {
     const current = reg.getStatus()
-    return m.reply(`╭─「 ✦ ${toSC('SWITCH AUTO')} ✦ 」\n│ • ${toSC(reg.label)}: *${current ? "ON" : "OFF"}*\n│ \`${prefix}switch auto ${autoKey} on\` — ${toSC('aktifkan')}\n│ \`${prefix}switch auto ${autoKey} off\` — ${toSC('matikan')}\n╰────  •  ────`)
+    return m.reply(`${reg.label}: *${current ? "ON" : "OFF"}*\n\`${prefix}switch auto ${autoKey} on\` — aktifkan\n\`${prefix}switch auto ${autoKey} off\` — matikan`)
   }
 
   // Toggle
   const enable = action === 'on'
   try {
     reg.toggle(enable)
-    return m.reply(`╭─「 ✦ ${toSC('SWITCH AUTO')} ✦ 」\n│ • ${toSC(reg.label)}: *${enable ? "ON" : "OFF"}*\n╰────  •  ────`)
+    return m.reply(`${reg.label}: *${enable ? "ON" : "OFF"}*`)
   } catch (e) {
-    return m.reply(`╭─「 ✦ ${toSC('SWITCH AUTO')} ✦ 」\n│ ❌ ${e.message || e}\n╰────  •  ────`)
+    return m.reply(`❌ ${e.message || e}`)
   }
 }
 
@@ -485,33 +524,29 @@ async function handleFitur(m, { sock, config: cfg }) {
   const disabledCats = db.setting("disabledCategories") || []
 
   if (!action) {
-    let text = `╭─「 ✦ ${toSC('SWITCH FITUR')} ✦ 」\n\n`
-    text += `│ 📋 ${toSC('Panduan')}:\n`
-    text += `│ • \`${prefix}switch fitur off rpg\` → ${toSC('matikan kategori')}\n`
-    text += `│ • \`${prefix}switch fitur on kencanmatch\` → ${toSC('hidupkan command')}\n`
-    text += `│ • \`${prefix}switch fitur list\` → ${toSC('lihat semua status')}\n\n`
-    text += `│ ▸ ${toSC('Kategori Nonaktif')} (OFF):\n`
-    text += disabledCats.length > 0 ? `│   ${disabledCats.map(c => "`" + c + "`").join(", ")}\n` : `│   (${toSC('semua kategori aktif')})\n`
-    text += `\n│ ▸ ${toSC('Command Nonaktif')} (OFF):\n`
-    text += disabledCmds.length > 0 ? `│   ${disabledCmds.map(c => "`" + c + "`").join(", ")}\n` : `│   (${toSC('semua command aktif')})\n`
-    text += `\n╰────  •  ────`
+    let text = `Panduan:\n`
+    text += `• \`${prefix}switch fitur off rpg\` → matikan kategori\n`
+    text += `• \`${prefix}switch fitur on kencanmatch\` → hidupkan command\n`
+    text += `• \`${prefix}switch fitur list\` → lihat semua status\n\n`
+    text += `Kategori Nonaktif (OFF):\n`
+    text += disabledCats.length > 0 ? `${disabledCats.map(c => "`" + c + "`").join(", ")}\n` : `(semua kategori aktif)\n`
+    text += `\nCommand Nonaktif (OFF):\n`
+    text += disabledCmds.length > 0 ? `${disabledCmds.map(c => "`" + c + "`").join(", ")}\n` : `(semua command aktif)`
     return m.reply(text)
   }
 
   if (action === 'list') {
     const allCats = [...(pluginStore.categories?.keys() || [])].sort()
-    let text = `╭─「 ✦ ${toSC('DAFTAR FITUR')} ✦ 」\n\n`
-    text += `│ 📂 ${toSC('KATEGORI')} (${allCats.length})\n`
+    let text = `KATEGORI (${allCats.length})\n`
     for (const cat of allCats) {
       const isOff = disabledCats.includes(cat)
-      text += `│   ${isOff ? "OFF" : "ON"}  ${cat}\n`
+      text += `${isOff ? "OFF" : "ON"}  ${cat}\n`
     }
     if (disabledCmds.length > 0) {
-      text += `\n│ ⚙️ ${toSC('COMMAND NONAKTIF')} (${disabledCmds.length})\n`
-      for (const cmd of disabledCmds) text += `│   OFF  ${cmd}\n`
+      text += `\nCOMMAND NONAKTIF (${disabledCmds.length})\n`
+      for (const cmd of disabledCmds) text += `OFF  ${cmd}\n`
     }
-    text += `\n╰────  •  ────`
-    return m.reply(text)
+    return m.reply(text.trim())
   }
 
   let mode = '', name = ''
@@ -520,7 +555,7 @@ async function handleFitur(m, { sock, config: cfg }) {
   else { mode = 'toggle'; name = action }
 
   if (!name)
-    return m.reply(`╭─「 ✦ ${toSC('SWITCH FITUR')} ✦ 」\n│ ${toSC('Contoh')}: \`${prefix}switch fitur off rpg\`\n│ ${toSC('Contoh')}: \`${prefix}switch fitur on kencanmatch\`\n╰────  •  ────`)
+    return m.reply(`Contoh: \`${prefix}switch fitur off rpg\`\nContoh: \`${prefix}switch fitur on kencanmatch\``)
 
   const allCats = [...(pluginStore.categories?.keys() || [])].sort()
   const allCmds = [...(pluginStore.commands?.keys() || [])].sort()
@@ -528,9 +563,9 @@ async function handleFitur(m, { sock, config: cfg }) {
   const isCommand = allCmds.includes(name)
 
   if (!isCategory && !isCommand)
-    return m.reply(`╭─「 ✦ ${toSC('SWITCH FITUR')} ✦ 」\n│ ❌ ${toSC('Tidak ditemukan')}: ${name}\n│ ${toSC('Ketik')} \`${prefix}switch fitur list\`\n╰────  •  ────`)
+    return m.reply(`❌ Tidak ditemukan: ${name}\nKetik \`${prefix}switch fitur list\``)
   if (isCommand && name === 'switch')
-    return m.reply(`╭─「 ✦ ${toSC('SWITCH FITUR')} ✦ 」\n│ ❌ ${toSC('Tidak bisa menonaktifkan command ini')}\n╰────  •  ────`)
+    return m.reply(`❌ Tidak bisa menonaktifkan command ini`)
 
   const type = isCategory ? "kategori" : "command"
   const list = isCategory ? disabledCats : disabledCmds
@@ -540,10 +575,10 @@ async function handleFitur(m, { sock, config: cfg }) {
 
   if (mode === 'on') {
     if (isCurrentlyOff) { list.splice(idx, 1); newState = false }
-    else return m.reply(`╭─「 ✦ ${toSC('SWITCH FITUR')} ✦ 」\n│ ✅ ${toSC(type)} ${name} ${toSC('sudah aktif')}\n╰────  •  ────`)
+    else return m.reply(`✅ ${type} ${name} sudah aktif`)
   } else if (mode === 'off') {
     if (!isCurrentlyOff) { list.push(name); newState = true }
-    else return m.reply(`╭─「 ✦ ${toSC('SWITCH FITUR')} ✦ 」\n│ • ${toSC(type)} \`${name}\` ${toSC('sudah nonaktif')}\n╰────  •  ────`)
+    else return m.reply(`${type} \`${name}\` sudah nonaktif`)
   } else {
     if (isCurrentlyOff) { list.splice(idx, 1); newState = false }
     else { list.push(name); newState = true }
@@ -553,7 +588,7 @@ async function handleFitur(m, { sock, config: cfg }) {
   else db.setting("disabledCommands", disabledCmds)
 
   const status = newState ? "Nonaktif" : "Aktif"
-  return m.reply(`╭─「 ✦ ${toSC('SWITCH FITUR')} ✦ 」\n\n│ • ${toSC(type.charAt(0).toUpperCase() + type.slice(1))}: *${name}*\n│ ${toSC('Status')}: ${status}\n\n╰────  •  ────`)
+  return m.reply(`${type.charAt(0).toUpperCase() + type.slice(1)}: *${name}*\nStatus: ${status}`)
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -561,27 +596,25 @@ async function handleFitur(m, { sock, config: cfg }) {
 // ═══════════════════════════════════════════════════════════
 async function showMenu(m, sock) {
   const prefix = m.prefix || '.'
-  const text = `╭─「 ✦ ${toSC('SWITCH')} ✦ 」
-│ ${toSC('Pilih kategori toggle')}:
-│
-│ 📢 *${toSC('SALURAN')}*
-│   ${toSC('Notifikasi event ke channel WhatsApp')}
-│   \`${prefix}switch channel\`
-│
-│ 🏠 *${toSC('GROUP')}*
-│   ${toSC('Fitur grup (welcome, antilink, anti-toxic, dll)')}
-│   \`${prefix}switch group\`
-│
-│ ⚡ *${toSC('AUTO')}*
-│   ${toSC('Semua fitur auto (backup, read, typing, BMKG, dll)')}
-│   \`${prefix}switch auto\`
-│
-│ ⚙️ *${toSC('FITUR')}*
-│   ${toSC('On/off command atau kategori plugin')}
-│   \`${prefix}switch fitur\`
-│
-╰────  •  ────
-${toSC('Alias lama masih works')}: .enable .disable .togglefitur .autoread .autobackup dll`
+  const text = `Pilih kategori toggle:
+
+📢 *SALURAN*
+   Notifikasi event ke channel WhatsApp
+   \`${prefix}switch channel\`
+
+🏠 *GROUP*
+   Fitur grup (welcome, antilink, anti-toxic, dll)
+   \`${prefix}switch group\`
+
+⚡ *AUTO*
+   Semua fitur auto (backup, read, typing, BMKG, dll)
+   \`${prefix}switch auto\`
+
+⚙️ *FITUR*
+   On/off command atau kategori plugin
+   \`${prefix}switch fitur\`
+
+Alias lama masih works: .enable .disable .togglefitur .autoread .autobackup dll`
 
   try {
     const thumb = fs.readFileSync(path.join(process.cwd(), 'assets', 'images', 'nova.jpg'))
@@ -621,7 +654,7 @@ async function handler(m, { sock, config: cfg }) {
 
     return showMenu(m, sock)
   } catch (e) {
-    return m.reply(`╭─「 ✦ ${toSC('SWITCH')} ✦ 」\n│ ❌ ${e.message || e}\n╰────  •  ────`)
+    return m.reply(`❌ ${e.message || e}`)
   }
 }
 

@@ -45,8 +45,8 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.groupAcceptInvite(inviteCode);
 
     const text =
-      claraWrap("Join", [`│ Link: *${url}*`,
-        "│ Status: *Joined*"].join("\n")) +
+      claraWrap("Join", [`Link: *${url}*`,
+        "Status: *Joined*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

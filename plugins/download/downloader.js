@@ -1,23 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // downloader.js — Unified Downloader
 // Format: .downloader <platform> <format> <url atau keyword>
-//
-// Contoh:
-//   .downloader youtube audio faded        → search YouTube "faded", download MP3
-//   .downloader youtube video faded         → search YouTube "faded", download MP4
-//   .downloader facebook <url>              → download video Facebook
-//   .downloader tiktok video <url>          → download video TikTok
-//   .downloader tiktok audio <url>          → download audio TikTok (MP3)
-//   .downloader instagram <url>             → download media Instagram
-//   .downloader twitter <url>              → download video Twitter/X
-//   .downloader pinterest <url>             → download image/video Pinterest
-//   .downloader soundcloud <url>            → download lagu SoundCloud
-//   .downloader spotify <url>               → download lagu Spotify
-//   .downloader mediafire <url>             → download file Mediafire
-//   .downloader capcut <url>                → download template CapCut
-//   .downloader reddit <url>                → download media Reddit
-//   .downloader threads <url>               → download media Threads
-//   .downloader dailymotion <url>           → download video Dailymotion
 
 import yts from "yt-search";
 import { aiodl, detectPlatform } from "../../src/scraper/aio.js";
@@ -73,7 +56,6 @@ function resolvePlatform(input) {
 
 function resolveFormat(input) {
   const lower = (input || "").toLowerCase().trim();
-  // Normalize: mp3 → audio, mp4 → video
   if (["mp3", "audio", "music", "song", "lagu"].includes(lower)) return "audio";
   if (["mp4", "video", "vid", "vidio"].includes(lower)) return "video";
   if (["hd", "720", "720p", "1080", "1080p"].includes(lower)) return "hd";
@@ -86,12 +68,10 @@ function resolveFormat(input) {
 
 // === YouTube: search + download ===
 async function handleYouTube(query, format, sock, m) {
-  // Jika input adalah URL YouTube, langsung download
   if (query.match(/youtube\.com|youtu\.be/i)) {
     return await downloadYouTube(query, format, sock, m);
   }
 
-  // Search YouTube
   const search = await yts(query);
   if (!search.videos?.length) throw new Error("Lagu/video tidak ditemukan di YouTube");
 
@@ -102,15 +82,7 @@ async function handleYouTube(query, format, sock, m) {
   const views = video.views > 1e6 ? (video.views / 1e6).toFixed(1) + "M" :
                 video.views > 1e3 ? (video.views / 1e3).toFixed(1) + "K" : String(video.views);
 
-  // Info box
-  const info = bracketBox("▶️", toSC("YouTube Downloader"), [
-    `${toSC("Judul")} : ${title}`,
-    `${toSC("Channel")} : ${channel}`,
-    `${toSC("Durasi")} : ${duration}`,
-    `${toSC("Views")} : ${views}`,
-    `${toSC("Format")} : ${format === "audio" ? "🎵 MP3" : "📹 MP4"}`,
-    `${toSC("Status")} : ⏳ Downloading...`,
-  ]);
+  const info = `Judul: ${title}\nChannel: ${channel}\nDurasi: ${duration}\nViews: ${views}\nFormat: ${format === "audio" ? "MP3" : "MP4"}\nStatus: Downloading...`;
   await m.reply(info);
 
   await downloadYouTube(video.url, format, sock, m, { title, channel, duration, views });
@@ -126,7 +98,6 @@ async function downloadYouTube(url, format, sock, m, meta = {}) {
       throw new Error(result?.mess || "Gagal mengunduh dari YouTube");
     }
 
-    // Download buffer
     const axios = (await import("axios")).default;
     const res = await axios.get(result.dl, {
       responseType: "arraybuffer",
@@ -168,7 +139,7 @@ async function downloadYouTube(url, format, sock, m, meta = {}) {
   }
 }
 
-// === Generic AIO handler (TikTok, IG, FB, Twitter, Pinterest, dll) ===
+// === Generic AIO handler ===
 async function handleAIO(url, format, platformName, sock, m) {
   const result = await aiodl(url);
   if (!result?.media?.length) throw new Error(`Gagal mengambil media dari ${platformName}`);
@@ -183,7 +154,6 @@ async function handleAIO(url, format, platformName, sock, m) {
   } else if (format === "hd") {
     picked = result.media.filter((x) => x.type === "video").sort((a, b) => (b.quality || 0) - (a.quality || 0))[0] || result.media[0];
   } else {
-    // video / default
     picked = result.media.find((x) => x.type === "video") || result.media[0];
   }
 
@@ -317,24 +287,20 @@ async function handler(m, { sock }) {
   const body = (m.body || "").trim();
   const args = body.split(/\s+/);
 
-  // args[0] = platform, args[1] = format (optional), args[2+] = url or query
   if (!args[0]) {
-    // Tampilkan panduan + list platform
     const platforms = Object.keys(PLATFORMS).map(k =>
-      `│ ${PLATFORMS[k].icon} ${toSC(k.padEnd(12))} ${prefix}downloader ${k} ${PLATFORMS[k].needsUrl ? "<url>" : "<keyword>"}`
+      `${k.padEnd(12)} ${prefix}downloader ${k} ${PLATFORMS[k].needsUrl ? "<url>" : "<keyword>"}`
     ).join("\n");
 
     return m.reply(
-      "╭─「 ✦ " + toSC("Unified Downloader") + " ✦ 」\n│\n" +
-      "│ " + toSC("Format") + ": " + prefix + "downloader <platform> <format> <url/keyword>\n│\n" +
-      "│ " + toSC("Platform tersedia") + ":\n" +
-      platforms + "\n│\n" +
-      "│ " + toSC("Format") + ": audio, video, image, hd, sd, file, all\n│\n" +
-      "│ 📌 " + toSC("Contoh") + ":\n" +
-      "│ " + prefix + "downloader youtube audio faded\n" +
-      "│ " + prefix + "downloader tiktok video <url>\n" +
-      "│ " + prefix + "downloader facebook <url>\n" +
-      "╰────  •  ────"
+      "Format: " + prefix + "downloader <platform> <format> <url/keyword>\n\n" +
+      "Platform tersedia:\n" +
+      platforms + "\n\n" +
+      "Format: audio, video, image, hd, sd, file, all\n\n" +
+      "Contoh:\n" +
+      prefix + "downloader youtube audio faded\n" +
+      prefix + "downloader tiktok video <url>\n" +
+      prefix + "downloader facebook <url>"
     );
   }
 
@@ -351,17 +317,12 @@ async function handler(m, { sock }) {
   let query = "";
 
   if (platform.needsUrl) {
-    // Platform yang butuh URL
-    // Format opsional — bisa .downloader facebook <url> atau .downloader facebook video <url>
     if (args[1] && args[1].startsWith("http")) {
-      // Tanpa format, langsung URL
       query = args.slice(1).join(" ");
     } else if (args[1] && resolveFormat(args[1])) {
-      // Dengan format
       format = resolveFormat(args[1]);
       query = args.slice(2).join(" ");
     } else if (args[1]) {
-      // Tidak ada format match, anggap semua args setelah platform = url/query
       query = args.slice(1).join(" ");
     }
 
@@ -371,13 +332,11 @@ async function handler(m, { sock }) {
       );
     }
 
-    // Validasi URL
     if (!query.match(/^https?:\/\//i)) {
       await m.react("❗");
       return m.reply(novaError("Downloader", `"${query.slice(0, 50)}" bukan URL yang valid.`));
     }
   } else {
-    // Platform yang bisa search (YouTube)
     if (args[1] && resolveFormat(args[1])) {
       format = resolveFormat(args[1]);
       query = args.slice(2).join(" ");
@@ -395,7 +354,6 @@ async function handler(m, { sock }) {
   await m.react("🕒");
 
   try {
-    // Route ke handler yang sesuai
     switch (platformName) {
       case "youtube":
         await handleYouTube(query, format, sock, m);
@@ -414,7 +372,6 @@ async function handler(m, { sock }) {
         break;
 
       default:
-        // TikTok, Facebook, Instagram, Twitter, Pinterest, CapCut, Reddit, Threads, Dailymotion, SnackVideo, Likee, Terabox
         await handleAIO(query, format, platformName, sock, m);
         break;
     }

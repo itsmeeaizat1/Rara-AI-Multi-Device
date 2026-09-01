@@ -76,18 +76,19 @@ async function handler(m, { sock }) {
     const activity = flavors[Math.floor(Math.random() * flavors.length)];
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴋᴇʀᴊᴀ ✦ 」\n`;
-    msg += `│ 👔 Pekerjaan: *${jobName}* (Lv.${jobLv})\n`;
-    msg += `│ 📋 Aktivitas: ${activity}\n`;
-    msg += `│\n`;
-    msg += `│ 📦 *ʜᴀsɪʟ ᴋᴇʀᴊᴀ*\n`;
-    msg += `│ ✦ EXP: *+${expGain}*\n`;
-    msg += `│ 💰 Gold: *+${goldGain}*\n`;
-    msg += `│ 📖 Job EXP: *+${jobExpGain}*\n`;
-    msg += `│\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy - WORK_ENERGY}/${rpg.maxEnergy}*\n`;
-    msg += `╰────  •  ────`;
-
+    let msg = "";
+    msg += `👔 Pekerjaan: *${jobName}* (Lv.${jobLv})\n`;
+    msg += `📋 Aktivitas: ${activity}\n`;
+    msg += `
+`;
+    msg += `📦 *ʜᴀsɪʟ ᴋᴇʀᴊᴀ*\n`;
+    msg += `✦ EXP: *+${expGain}*\n`;
+    msg += `💰 Gold: *+${goldGain}*\n`;
+    msg += `📖 Job EXP: *+${jobExpGain}*\n`;
+    msg += `
+`;
+    msg += `⚡ Energy: *${rpg.energy - WORK_ENERGY}/${rpg.maxEnergy}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("kerja error:", err);

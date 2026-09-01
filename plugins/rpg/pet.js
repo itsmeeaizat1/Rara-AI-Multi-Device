@@ -42,12 +42,11 @@ async function handler(m, { sock }) {
     if (subCmd === "adopt" || subCmd === "adopsi") {
       const petType = (m.args[1] || "").toLowerCase();
       if (!petType) {
-        let list = `╭─「 ✦ ᴀᴅᴏᴘsɪ ᴘᴇᴛ ✦ 」\n`;
+        let list = "";
         PET_TYPES.forEach(p => {
-          list += `│ ${p.emoji} ${p.type} - ${p.cost} gold (ATK:${p.baseAtk} DEF:${p.baseDef})\n`;
+          list += `${p.emoji} ${p.type} - ${p.cost} gold (ATK:${p.baseAtk} DEF:${p.baseDef})\n`;
         });
-        list += `╰────  •  ────`;
-        return m.reply(list);
+                return m.reply(list);
       }
 
       const petTemplate = PET_TYPES.find(p => p.type === petType);
@@ -167,35 +166,35 @@ async function handler(m, { sock }) {
       await savePetData(db, m.sender, pet);
       await m.react("🐣");
 
-      let msg = `╭─「 ✦ ᴘᴇᴛ ʙᴀᴛᴛʟᴇ ✦ 」\n`;
-      msg += `│ ${pet.emoji} ${pet.type} Lv.${pet.level} vs ${enemyPet.emoji} ${enemyPet.type} Lv.${enemyLevel}\n`;
-      msg += `│\n`;
-      msg += `│ ${won ? "🏆 MENANG!" : "💀 KALAH!"}\n`;
+      let msg = "";
+      msg += `${pet.emoji} ${pet.type} Lv.${pet.level} vs ${enemyPet.emoji} ${enemyPet.type} Lv.${enemyLevel}\n`;
+      msg += `
+`;
+      msg += `${won ? "🏆 MENANG!" : "💀 KALAH!"}\n`;
       if (won) {
-        msg += `│ Reward: +${200 + enemyLevel * 50} gold | +50 EXP\n`;
-        msg += `${pet.level > 1 ? `│ LEVEL UP! Lv.${pet.level}!\n` : ""}`;
+        msg += `Reward: +${200 + enemyLevel * 50} gold | +50 EXP\n`;
+        msg += `${pet.level > 1 ? `LEVEL UP! Lv.${pet.level}!\n` : ""}`;
       }
-      msg += `│ Hunger: -20 (${pet.hunger}/100)\n`;
-      msg += `│ Record: ${pet.wins}W/${pet.battles - pet.wins}L\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      msg += `Hunger: -20 (${pet.hunger}/100)\n`;
+      msg += `Record: ${pet.wins}W/${pet.battles - pet.wins}L\n`;
+            return m.reply(msg);
     }
 
     // INFO (default)
     const hungerBar = "█".repeat(Math.floor(pet.hunger / 10)) + "░".repeat(10 - Math.floor(pet.hunger / 10));
-    let msg = `╭─「 ✦ ᴍʏ ᴘᴇᴛ ✦ 」\n`;
-    msg += `│ ${pet.emoji} *${pet.type}*\n`;
-    msg += `│ Level: *${pet.level}*\n`;
-    msg += `│ EXP: *${pet.exp}/${pet.level * 100}*\n`;
-    msg += `│ ATK: *${pet.atk}* | DEF: *${pet.def}*\n`;
-    msg += `│ HP: *${pet.hp}*\n`;
-    msg += `│ Hunger: *${hungerBar}* ${pet.hunger}%\n`;
-    msg += `│ Battles: *${pet.battles}* (${pet.wins}W/${pet.battles - pet.wins}L)\n`;
-    msg += `│\n`;
-    msg += `│ ${m.prefix}pet feed - beri makan\n`;
-    msg += `│ ${m.prefix}pet battle - fight pet liar\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    let msg = "";
+    msg += `${pet.emoji} *${pet.type}*\n`;
+    msg += `Level: *${pet.level}*\n`;
+    msg += `EXP: *${pet.exp}/${pet.level * 100}*\n`;
+    msg += `ATK: *${pet.atk}* | DEF: *${pet.def}*\n`;
+    msg += `HP: *${pet.hp}*\n`;
+    msg += `Hunger: *${hungerBar}* ${pet.hunger}%\n`;
+    msg += `Battles: *${pet.battles}* (${pet.wins}W/${pet.battles - pet.wins}L)\n`;
+    msg += `
+`;
+    msg += `${m.prefix}pet feed - beri makan\n`;
+    msg += `${m.prefix}pet battle - fight pet liar\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("pet error:", err);
     await m.react("❌");

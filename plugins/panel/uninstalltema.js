@@ -57,11 +57,11 @@ async function handler(m, { sock }) {
             }
             
             stream.on('close', async () => {
-                await m.reply(claraWrap("root", `╭─「 ✦ ✅ *ᴜɴɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ*
-│ sTatus: *ʙᴇʀʜᴀꜱɪʟ*
-│ Ip: ${ipvps}
-╰────  •  ────
-│ _Tema berhasil diuninstall!_`))
+                await m.reply(`✅ Uninstall Tema
+Status: Berhasil
+IP: ${ipvps}
+
+Tema berhasil diuninstall!`)
                 ress.end()
             }).on('data', (data) => {
                 console.log('[UninstallTema]', data.toString())

@@ -39,15 +39,15 @@ async function handler(m, { sock }) {
     const data = await getData(db, m.sender);
 
     if (subCmd === "shop" || subCmd === "toko") {
-      let msg = `╭─「 ✦ ғᴀʀᴍ sʜᴏᴘ ✦ 」\n`;
+      let msg = "";
       CROPS.forEach(c => {
         const mins = c.growTime / 60000;
-        msg += `│ ${c.emoji} ${c.name} — Benih: ${c.seedCost}g | Jual: ${c.sellPrice}g | Tumbuh: ${mins >= 60 ? Math.floor(mins/60)+'j' : mins+'m'}\n`;
+        msg += `${c.emoji} ${c.name} — Benih: ${c.seedCost}g | Jual: ${c.sellPrice}g | Tumbuh: ${mins >= 60 ? Math.floor(mins/60)+'j' : mins+'m'}\n`;
       });
-      msg += `│\n`;
-      msg += `│ ${m.prefix}farmrpg plant <crop>\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      msg += `
+`;
+      msg += `${m.prefix}farmrpg plant <crop>\n`;
+            return m.reply(msg);
     }
 
     if (subCmd === "plant" || subCmd === "tanam") {
@@ -110,13 +110,13 @@ async function handler(m, { sock }) {
       await saveData(db, m.sender, data);
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ᴘᴀɴᴇɴ ʙᴇʀʜᴀsɪʟ ✦ 」\n`;
-      msg += `│ ${harvestedList.join(", ")}\n`;
-      msg += `│ Total: *${ready.length}* tanaman | *${totalValue}g* nilai\n`;
-      msg += `│\n`;
-      msg += `│ Jual: ${m.prefix}farmrpg sell\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `${harvestedList.join(", ")}\n`;
+      msg += `Total: *${ready.length}* tanaman | *${totalValue}g* nilai\n`;
+      msg += `
+`;
+      msg += `Jual: ${m.prefix}farmrpg sell\n`;
+            return m.reply(msg);
     }
 
     if (subCmd === "sell" || subCmd === "jual") {
@@ -134,29 +134,31 @@ async function handler(m, { sock }) {
 
     // VIEW FARM (default)
     const now = Date.now();
-    let msg = `╭─「 ✦ ᴋᴇʙᴜɴ ✦ 」\n`;
-    msg += `│ Plot: *${data.plots?.length || 0}/${MAX_PLOTS}*\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `Plot: *${data.plots?.length || 0}/${MAX_PLOTS}*\n`;
+    msg += `
+`;
     if (data.plots && data.plots.length > 0) {
       data.plots.forEach((p, i) => {
         const elapsed = now - p.planted;
         const isReady = elapsed >= p.growTime;
         const remaining = Math.max(0, Math.ceil((p.growTime - elapsed) / 60000));
-        msg += `│ ${i + 1}. ${p.emoji} ${p.crop} ${isReady ? "✅ SIAP!" : `⏳ ${remaining}m`}\n`;
+        msg += `${i + 1}. ${p.emoji} ${p.crop} ${isReady ? "✅ SIAP!" : `⏳ ${remaining}m`}\n`;
       });
     } else {
-      msg += `│ (Kebun kosong)\n`;
+      msg += `(Kebun kosong)\n`;
     }
     if (data.harvested?.length > 0) {
-      msg += `│\n`;
-      msg += `│ Hasil panen: *${data.harvested.length}* item\n`;
-      msg += `│ ${m.prefix}farmrpg sell - jual hasil\n`;
+      msg += `
+`;
+      msg += `Hasil panen: *${data.harvested.length}* item\n`;
+      msg += `${m.prefix}farmrpg sell - jual hasil\n`;
     }
-    msg += `│\n`;
-    msg += `│ ${m.prefix}farmrpg shop - beli benih\n`;
-    msg += `│ ${m.prefix}farmrpg plant <crop> - tanam\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `${m.prefix}farmrpg shop - beli benih\n`;
+    msg += `${m.prefix}farmrpg plant <crop> - tanam\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("farmrpg error:", err);
     await m.react("❌");

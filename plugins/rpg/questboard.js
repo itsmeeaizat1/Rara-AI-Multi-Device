@@ -84,14 +84,14 @@ async function handler(m, { sock }) {
       await saveQuestData(db, m.sender, data);
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ǫᴜᴇsᴛ ᴄʟᴀɪᴍ ✦ 」\n`;
-      msg += `│ ${quest.emoji} *${quest.name}*\n`;
-      msg += `│\n`;
-      msg += `│ Reward:\n`;
-      if (quest.reward.gold) msg += `│ 💰 +${quest.reward.gold} Gold\n`;
-      if (quest.reward.energi) msg += `│ ⚡ +${quest.reward.energi} Energi\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `${quest.emoji} *${quest.name}*\n`;
+      msg += `
+`;
+      msg += `Reward:\n`;
+      if (quest.reward.gold) msg += `💰 +${quest.reward.gold} Gold\n`;
+      if (quest.reward.energi) msg += `⚡ +${quest.reward.energi} Energi\n`;
+            return m.reply(msg);
     }
 
     // LIST quests (default)
@@ -100,9 +100,10 @@ async function handler(m, { sock }) {
     }
     const quests = data.quests || [];
 
-    let msg = `╭─「 ✦ ᴅᴀɪʟʏ ǫᴜᴇsᴛ ʙᴏᴀʀᴅ ✦ 」\n`;
-    msg += `│ Date: *${getTodayKey()}*\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `Date: *${getTodayKey()}*\n`;
+    msg += `
+`;
 
     let completed = 0;
     quests.forEach((q, i) => {
@@ -110,19 +111,19 @@ async function handler(m, { sock }) {
       const done = progress >= q.target;
       if (done && !q.claimed) completed++;
       const status = q.claimed ? "✅" : (done ? "🎁" : "📋");
-      msg += `│ ${i + 1}. ${q.emoji} *${q.name}* ${status}\n`;
-      msg += `│    ${q.desc} (${progress}/${q.target})\n`;
+      msg += `${i + 1}. ${q.emoji} *${q.name}* ${status}\n`;
+      msg += `${q.desc} (${progress}/${q.target})\n`;
       if (done && !q.claimed) {
-        msg += `│    → ${m.prefix}questboard claim ${i + 1}\n`;
+        msg += `→ ${m.prefix}questboard claim ${i + 1}\n`;
       }
     });
 
     const allDone = quests.every(q => q.claimed);
-    msg += `│\n`;
-    msg += `│ Completed: *${quests.filter(q => q.claimed).length}/${quests.length}*\n`;
-    if (allDone) msg += `│ 🎉 Semua quest selesai hari ini!\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `Completed: *${quests.filter(q => q.claimed).length}/${quests.length}*\n`;
+    if (allDone) msg += `🎉 Semua quest selesai hari ini!\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("questboard error:", err);
     await m.react("❌");

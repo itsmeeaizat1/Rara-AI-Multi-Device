@@ -94,13 +94,12 @@ async function handler(m, { sock }) {
 
     if (!data.video) throw new Error("Video URL tidak ditemukan");
 
-    let caption = `╭─「 ✦ DOUYIN V2 ✦ 」\n`;
-    caption += `│ Title: ${data.title}\n`;
-    caption += `│ Author: ${data.author}\n`;
-    if (data.duration > 0) caption += `│ Durasi: ${data.duration}s\n`;
-    caption += `│ Source: ${data.source} API\n`;
-    caption += `╰────  •  ────`;
-
+    let caption = "";
+    caption += `Title: ${data.title}\n`;
+    caption += `Author: ${data.author}\n`;
+    if (data.duration > 0) caption += `Durasi: ${data.duration}s\n`;
+    caption += `Source: ${data.source} API\n`;
+    
     await sock.sendMedia(m.chat, data.video, caption, m, { type: "video" });
 
     if (data.music) {

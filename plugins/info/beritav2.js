@@ -124,46 +124,46 @@ async function fetchRssFeed(sourceKey) {
 
 function renderSelectionBox(prefix = ".") {
     return [
-        "╭─「 ✦ Pilihan Sumber Berita ✦ 」",
-        "│ Silakan pilih sumber berita yang ingin dibaca:",
-        "│ ",
-        `│ 1. ${prefix}beritav2 detik   - Detik News`,
-        `│ 2. ${prefix}beritav2 kompas  - Kompas.com`,
-        `│ 3. ${prefix}beritav2 cnn     - CNN Indonesia`,
-        `│ 4. ${prefix}beritav2 tribun  - Tribunnews`,
-        "│ ",
-        `│ Contoh: ${prefix}beritav2 detik`,
-        "╰────  •  ────"
+        "",
+        "Silakan pilih sumber berita yang ingin dibaca:",
+        "",
+        `1. ${prefix}beritav2 detik   - Detik News`,
+        `2. ${prefix}beritav2 kompas  - Kompas.com`,
+        `3. ${prefix}beritav2 cnn     - CNN Indonesia`,
+        `4. ${prefix}beritav2 tribun  - Tribunnews`,
+        "",
+        `Contoh: ${prefix}beritav2 detik`,
+        ""
     ].join("\n");
 }
 
 function renderNewsBox(sourceName, items) {
-    const lines = [`╭─「 ✦ Berita ${sourceName} ✦ 」`];
+    const lines = [""];
     
     items.slice(0, 5).forEach((item, index) => {
         const num = index + 1;
-        lines.push(`│ ${num}. ${item.title}`);
+        lines.push(`${num}. ${item.title}`);
         if (item.pubDate) {
-            lines.push(`│ ${item.pubDate}`);
+            lines.push(`${item.pubDate}`);
         }
-        lines.push(`│ ${item.link}`);
+        lines.push(`${item.link}`);
         if (index < Math.min(items.length, 5) - 1) {
-            lines.push("│ ");
+            lines.push("");
         }
     });
     
-    lines.push("╰────  •  ────");
+    lines.push("");
     return lines.join("\n");
 }
 
 function renderErrorBox(sourceName, errorMsg) {
     return [
-        "╭─「 ✦ Error Berita ✦ 」",
-        `│ Gagal ambil berita ${sourceName ? `dari ${sourceName}` : ""}`,
-        `│ Detail: ${errorMsg || "Ada error nih"}`,
-        "│ ",
-        "│ Silakan coba sumber lain: detik, kompas, cnn, tribun",
-        "╰────  •  ────"
+        "",
+        `Gagal ambil berita ${sourceName ? `dari ${sourceName}` : ""}`,
+        `Detail: ${errorMsg || "Ada error nih"}`,
+        "",
+        "Silakan coba sumber lain: detik, kompas, cnn, tribun",
+        ""
     ].join("\n");
 }
 

@@ -69,7 +69,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     let text = claraWrap("Dashboard Premium", "💎") + "\n\n";
 
-    text += claraWrap("STATS", [`│ Total User: *${sorted.length}*`, `│ User Aktif: *${active.length}*`, `│ Total Pembelian: *${totalAll}x*`, `│ Total Hari: *${totalDays} hari*`].join("\n")) + "\n\n";
+    text += claraWrap("STATS", [`Total User: *${sorted.length}*`, `User Aktif: *${active.length}*`, `Total Pembelian: *${totalAll}x*`, `Total Hari: *${totalDays} hari*`].join("\n")) + "\n\n";
 
     // Readmore trick
     const more = String.fromCharCode(8206);

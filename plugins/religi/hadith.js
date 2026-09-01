@@ -28,20 +28,20 @@ async function handler(m, { sock, config: botConfig }) {
       params: { q: query, limit: 5 }, timeout: 10000,
     });
     if (!data?.data?.items?.length) {
-      await m.reply(claraWrap("Hadis", [`│ Kata kunci: *${query}*`, "│ Coba kata kunci lain"].join("\n")));
+      await m.reply(claraWrap("Hadis", [`Kata kunci: *${query}*`, "Coba kata kunci lain"].join("\n")));
       return { handled: true };
     }
     let text = claraWrap("Hasil Cari Hadis", "📖") + "\n\n";
     for (const item of data.data.items.slice(0, 5)) {
       text += claraWrap(item.book || "Hadis", [
-        `│ Nomor: *${item.number || item.hadithNumber || "-"}*`,
-        `│ Isi: ${item.arabic || item.text || "-"}`,
+        `Nomor: *${item.number || item.hadithNumber || "-"}*`,
+        `Isi: ${item.arabic || item.text || "-"}`,
       ]) + "\n\n";
     }
     text += separator("━", 22) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`);
     await m.reply(claraWrap("hadith", text));
   } catch (e) {
-    await m.reply(novaError("Religi", [`│ Alasan: *${e.message}*`].join("\n")));
+    await m.reply(novaError("Religi", [`Alasan: *${e.message}*`].join("\n")));
   }
   return { handled: true };
 }

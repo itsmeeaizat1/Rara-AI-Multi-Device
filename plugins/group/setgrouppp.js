@@ -45,8 +45,8 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.updateGroupPicture(m.chat, buffer);
 
     const text =
-      claraWrap("Set Group PP", [`│ Group: *${m.chat}*`,
-        "│ Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
+      claraWrap("Set Group PP", [`Group: *${m.chat}*`,
+        "Status: *ꜱᴜᴄᴄᴇꜱꜱ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

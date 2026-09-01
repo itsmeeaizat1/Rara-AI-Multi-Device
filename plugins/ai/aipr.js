@@ -29,18 +29,14 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage"));
     if (!isImage) {
       return m.reply(
-        `╭─「 ✦ ᴀɪ ᴘʀ sᴏʟᴠᴇʀ ✦ 」\n` +
-        `│ 📚 Foto soal → AI jawab + jelasin\n` +
-        `│\n` +
-        `│ 📌 Cara pakai:\n` +
-        `│ Kirim/reply foto soal + caption (opsional)\n` +
-        `│\n` +
-        `│ 💡 Contoh:\n` +
-        `│ ${prefix}aipr (reply foto soal)\n` +
-        `│ ${prefix}aipr matematika (reply foto)\n` +
-        `│ ${prefix}aipr fisika (reply foto)\n` +
-        `│ ${prefix}aipr b.inggris (reply foto)\n` +
-        `╰────  •  ────`
+        `Foto soal → AI jawab + jelasin\n\n` +
+        `Cara pakai:\n` +
+        `Kirim/reply foto soal + caption (opsional)\n\n` +
+        `Contoh:\n` +
+        `${prefix}aipr (reply foto soal)\n` +
+        `${prefix}aipr matematika (reply foto)\n` +
+        `${prefix}aipr fisika (reply foto)\n` +
+        `${prefix}aipr b.inggris (reply foto)`
       );
     }
 
@@ -86,13 +82,10 @@ Jika gambar bukan soal, jelaskan apa isi gambar.`;
       if (res.status) {
         await m.react("🐣");
         return m.reply(
-          `╭─「 ✦ ᴀɪ ᴘʀ sᴏʟᴠᴇʀ ✦ 」\n` +
-          `│ ⚠️ Gemini Vision belum aktif\n` +
-          `│ 💡 Set API key: ${prefix}setkey gemini <key>\n` +
-          `│ 🔑 Gratis: aistudio.google.com/apikey\n` +
-          `│\n` +
-          `│ ${res.answer.replace(/\n/g, "\n│ ")}\n` +
-          `╰────  •  ────`
+          `Gemini Vision belum aktif\n` +
+          `Set API key: ${prefix}setkey gemini <key>\n` +
+          `Gratis: aistudio.google.com/apikey\n\n` +
+          `${res.answer}`
         );
       }
       await m.react("❌");
@@ -121,27 +114,19 @@ Gunakan bahasa Indonesia.`;
       // Kalpa AI solver gagal, kirim transkrip aja
       await m.react("🐣");
       return m.reply(
-        `╭─「 ✦ ᴛʀᴀɴsᴋʀɪᴘ sᴏᴀʟ ✦ 」\n` +
-        `│ 📸 Berhasil baca soal, tapi AI solver lagi down\n` +
-        `│\n` +
-        `│ ${visionResult.text.replace(/\n/g, "\n│ ")}\n` +
-        `│\n` +
-        `│ 💡 Copy soal di atas, paste ke ${prefix}nova-ai untuk jawaban\n` +
-        `╰────  •  ────`
+        `Berhasil baca soal, tapi AI solver lagi down\n\n` +
+        `${visionResult.text}\n\n` +
+        `Copy soal di atas, paste ke ${prefix}nova-ai untuk jawaban`
       );
     }
 
     await m.react("🐣");
 
-    let msg = `╭─「 ✦ ᴀɪ ᴘʀ sᴏʟᴠᴇʀ ✦ 」\n`;
-    if (subject) msg += `│ 📚 Mapel: *${subject}*\n`;
-    msg += `│ 📸 Status: *Soal berhasil dibaca*\n`;
-    msg += `│\n`;
-    msg += `│ 📝 *Jawaban:*\n`;
-    msg += `│ ${solveResult.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `│\n`;
-    msg += `│ 💡 Butuh bantuan lebih? ${prefix}nova-ai <pertanyaan>\n`;
-    msg += `╰────  •  ────`;
+    let msg = "";
+    if (subject) msg += `Mapel: *${subject}*\n`;
+    msg += `Status: Soal berhasil dibaca\n\n`;
+    msg += `Jawaban:\n${solveResult.answer.trim()}\n\n`;
+    msg += `Butuh bantuan lebih? ${prefix}nova-ai <pertanyaan>`;
 
     return m.reply(msg);
   } catch (err) {

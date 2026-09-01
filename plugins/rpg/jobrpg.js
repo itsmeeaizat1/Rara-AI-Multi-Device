@@ -37,54 +37,57 @@ async function handler(m, { sock }) {
     // Default: show current job + skills
     if (!action || action === "info") {
       const currentJob = JOB_DB[rpg.job] || { name: "Pemula" };
-      let msg = `╭─「 ✦ ᴊᴏʙ ᴄʟᴀss ✦ 」\n`;
-      msg += `│ 👤 ${m.pushName || "Player"} | Lv.${rpg.level}\n`;
-      msg += `│\n`;
-      msg += `│ 👔 Job: *${currentJob.name}*\n`;
-      msg += `│ 📊 Job Level: *${rpg.jobLevel || 1}*\n`;
-      msg += `│ 📖 Job EXP: *${rpg.jobExp || 0}/${rpg.jobExpNext || 50}*\n`;
-      msg += `│ ✨ Skill Points: *${rpg.skillPoints || 0}*\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `👤 ${m.pushName || "Player"} | Lv.${rpg.level}\n`;
+      msg += `
+`;
+      msg += `👔 Job: *${currentJob.name}*\n`;
+      msg += `📊 Job Level: *${rpg.jobLevel || 1}*\n`;
+      msg += `📖 Job EXP: *${rpg.jobExp || 0}/${rpg.jobExpNext || 50}*\n`;
+      msg += `✨ Skill Points: *${rpg.skillPoints || 0}*\n`;
+      msg += `
+`;
 
       // Current skills
       if (rpg.skills && rpg.skills.length > 0) {
-        msg += `│ 📜 *sᴋɪʟʟ ᴀᴋᴛɪғ*\n`;
+        msg += `📜 *sᴋɪʟʟ ᴀᴋᴛɪғ*\n`;
         for (const skill of rpg.skills) {
           const sDef = SKILL_DB[skill.id];
           if (!sDef) continue;
-          msg += `│ ⚡ ${skill.name} (Lv.${skill.level})\n`;
-          msg += `│     MP: ${skill.mpCost} | Power: ${skill.power}x\n`;
+          msg += `⚡ ${skill.name} (Lv.${skill.level})\n`;
+          msg += `MP: ${skill.mpCost} | Power: ${skill.power}x\n`;
         }
       } else {
-        msg += `│ 📜 Belum ada skill aktif\n`;
+        msg += `📜 Belum ada skill aktif\n`;
       }
 
-      msg += `│\n`;
-      msg += `│ 📌 .jobrpg list — lihat semua job\n`;
-      msg += `│ 📌 .jobrpg change <job> — ganti job\n`;
-      msg += `│ 📌 .jobrpg skill list — lihat skill tersedia\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `
+`;
+      msg += `📌 .jobrpg list — lihat semua job\n`;
+      msg += `📌 .jobrpg change <job> — ganti job\n`;
+      msg += `📌 .jobrpg skill list — lihat skill tersedia\n`;
+      
       return m.reply(msg);
     }
 
     // List all jobs
     if (action === "list") {
-      let msg = `╭─「 ✦ ᴊᴏʙ ʟɪsᴛ ✦ 」\n`;
-      msg += `│ Pilih job (butuh Lv.10 untuk ganti)\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `Pilih job (butuh Lv.10 untuk ganti)\n`;
+      msg += `
+`;
 
       for (const [id, job] of Object.entries(JOB_DB)) {
         const isCurrent = id === rpg.job;
         const mark = isCurrent ? " ← *aktif*" : "";
-        msg += `│ ${isCurrent ? "✅" : "🔹"} *${job.name}* (${id})${mark}\n`;
-        msg += `│     ATK +${job.atkBonus} | DEF +${job.defBonus} | SPD +${job.spdBonus} | HP +${job.hpBonus} | MP +${job.mpBonus}\n`;
+        msg += `${isCurrent ? "✅" : "🔹"} *${job.name}* (${id})${mark}\n`;
+        msg += `ATK +${job.atkBonus} | DEF +${job.defBonus} | SPD +${job.spdBonus} | HP +${job.hpBonus} | MP +${job.mpBonus}\n`;
       }
 
-      msg += `│\n`;
-      msg += `│ 📌 .jobrpg change <nama_job> untuk ganti\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `
+`;
+      msg += `📌 .jobrpg change <nama_job> untuk ganti\n`;
+      
       return m.reply(msg);
     }
 
@@ -101,19 +104,20 @@ async function handler(m, { sock }) {
 
       if (result.success) {
         await m.react("🐣");
-        let msg = `╭─「 ✦ ᴊᴏʙ ᴄʜᴀɴɢᴇ ✦ 」\n`;
-        msg += `│ ✅ Job berhasil diganti!\n`;
-        msg += `│\n`;
-        msg += `│ 👔 Job baru: *${result.job.name}*\n`;
-        msg += `│ 📊 Stats bonus:\n`;
-        msg += `│   ATK +${result.job.atkBonus} | DEF +${result.job.defBonus}\n`;
-        msg += `│   SPD +${result.job.spdBonus} | HP +${result.job.hpBonus}\n`;
-        msg += `│   MP +${result.job.mpBonus}\n`;
-        msg += `│\n`;
-        msg += `│ ⚠️ Skill lama direset, skill points dikembalikan\n`;
-        msg += `│ Ketik .jobrpg skill list untuk lihat skill baru\n`;
-        msg += `╰────  •  ────`;
-
+        let msg = "";
+        msg += `✅ Job berhasil diganti!\n`;
+        msg += `
+`;
+        msg += `👔 Job baru: *${result.job.name}*\n`;
+        msg += `📊 Stats bonus:\n`;
+        msg += `ATK +${result.job.atkBonus} | DEF +${result.job.defBonus}\n`;
+        msg += `SPD +${result.job.spdBonus} | HP +${result.job.hpBonus}\n`;
+        msg += `MP +${result.job.mpBonus}\n`;
+        msg += `
+`;
+        msg += `⚠️ Skill lama direset, skill points dikembalikan\n`;
+        msg += `Ketik .jobrpg skill list untuk lihat skill baru\n`;
+        
         return m.reply(msg);
       } else {
         return m.reply(claraWrap("jobrpg", result.reason || "Gagal ganti job.", "warn"));
@@ -129,43 +133,45 @@ async function handler(m, { sock }) {
         const available = getAvailableSkills(m);
         const mySkills = rpg.skills || [];
 
-        let msg = `╭─「 ✦ sᴋɪʟʟs ✦ 」\n`;
-        msg += `│ ✨ Skill Points: *${rpg.skillPoints || 0}*\n`;
-        msg += `│ 👔 Job: *${JOB_DB[rpg.job]?.name || "Pemula"}*\n`;
-        msg += `│\n`;
+        let msg = "";
+        msg += `✨ Skill Points: *${rpg.skillPoints || 0}*\n`;
+        msg += `👔 Job: *${JOB_DB[rpg.job]?.name || "Pemula"}*\n`;
+        msg += `
+`;
 
         // Owned skills
         if (mySkills.length > 0) {
-          msg += `│ 📜 *sᴋɪʟʟ ᴍɪʟɪᴋ* (${mySkills.length})\n`;
+          msg += `📜 *sᴋɪʟʟ ᴍɪʟɪᴋ* (${mySkills.length})\n`;
           for (const s of mySkills) {
             const sDef = SKILL_DB[s.id];
             if (!sDef) continue;
-            msg += `│ ⚡ ${s.name} Lv.${s.level}/10\n`;
-            msg += `│     MP: ${s.mpCost} | Power: ${s.power}x | CD: ${s.cooldown}r\n`;
+            msg += `⚡ ${s.name} Lv.${s.level}/10\n`;
+            msg += `MP: ${s.mpCost} | Power: ${s.power}x | CD: ${s.cooldown}r\n`;
           }
-          msg += `│\n`;
+          msg += `
+`;
         }
 
         // Available to unlock
         if (available.length > 0) {
-          msg += `│ 📋 *ʙɪsᴀ ᴅɪʙᴜᴋᴀ*\n`;
+          msg += `📋 *ʙɪsᴀ ᴅɪʙᴜᴋᴀ*\n`;
           for (const s of available) {
             const sDef = SKILL_DB[s];
             if (!sDef) continue;
-            msg += `│ 🔹 ${sDef.name} (${s}) — Lv.${sDef.minLevel} | MP ${sDef.mpCost}\n`;
+            msg += `🔹 ${sDef.name} (${s}) — Lv.${sDef.minLevel} | MP ${sDef.mpCost}\n`;
           }
-          msg += `│\n`;
-          msg += `│ 📌 .jobrpg skill unlock <nama> — buka skill\n`;
+          msg += `
+`;
+          msg += `📌 .jobrpg skill unlock <nama> — buka skill\n`;
         } else {
-          msg += `│ 📋 Semua skill untuk job ini sudah dibuka\n`;
+          msg += `📋 Semua skill untuk job ini sudah dibuka\n`;
         }
 
         if (mySkills.length > 0) {
-          msg += `│ 📌 .jobrpg skill upgrade <nama> — upgrade skill\n`;
+          msg += `📌 .jobrpg skill upgrade <nama> — upgrade skill\n`;
         }
 
-        msg += `╰────  •  ────`;
-
+        
         return m.reply(msg);
       }
 
@@ -178,13 +184,12 @@ async function handler(m, { sock }) {
 
         if (result.success) {
           await m.react("🐣");
-          let msg = `╭─「 ✦ sᴋɪʟʟ ᴜɴʟᴏᴄᴋ ✦ 」\n`;
-          msg += `│ ✅ Skill berhasil dibuka!\n`;
-          msg += `│ ⚡ ${result.skill.name} (${skillId})\n`;
-          msg += `│ MP: ${result.skill.mpCost} | Power: ${result.skill.power}x\n`;
-          msg += `│ Sisa skill points: *${rpg.skillPoints - 1}*\n`;
-          msg += `╰────  •  ────`;
-          return m.reply(msg);
+          let msg = "";
+          msg += `✅ Skill berhasil dibuka!\n`;
+          msg += `⚡ ${result.skill.name} (${skillId})\n`;
+          msg += `MP: ${result.skill.mpCost} | Power: ${result.skill.power}x\n`;
+          msg += `Sisa skill points: *${rpg.skillPoints - 1}*\n`;
+                    return m.reply(msg);
         } else {
           return m.reply(claraWrap("jobrpg", result.reason || "Gagal unlock skill.", "warn"));
         }
@@ -199,12 +204,11 @@ async function handler(m, { sock }) {
 
         if (result.success) {
           await m.react("🐣");
-          let msg = `╭─「 ✦ sᴋɪʟʟ ᴜᴘɢʀᴀᴅᴇ ✦ 」\n`;
-          msg += `│ ✅ Skill berhasil di-upgrade!\n`;
-          msg += `│ ⚡ ${result.skill.name} → Lv.${result.skill.level}\n`;
-          msg += `│ Power: ${result.skill.power}x | MP: ${result.skill.mpCost}\n`;
-          msg += `╰────  •  ────`;
-          return m.reply(msg);
+          let msg = "";
+          msg += `✅ Skill berhasil di-upgrade!\n`;
+          msg += `⚡ ${result.skill.name} → Lv.${result.skill.level}\n`;
+          msg += `Power: ${result.skill.power}x | MP: ${result.skill.mpCost}\n`;
+                    return m.reply(msg);
         } else {
           return m.reply(claraWrap("jobrpg", result.reason || "Gagal upgrade skill.", "warn"));
         }

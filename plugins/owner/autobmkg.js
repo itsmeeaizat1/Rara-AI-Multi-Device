@@ -7,38 +7,11 @@
 
 import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 import {
-
   getBmkgStatus,
   updateBmkgSettings,
   startBmkgJobs,
   stopBmkgJobs,
 } from "../../src/lib/nova-bmkg-scheduler.js";
-
-function claraWrap(title, text) {
-  const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-  const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
-  const body = Array.isArray(text) ? text.join("\n") : text;
-  // Convert body to small caps tapi skip baris command (.xxx) dan preserve *bold*
-  const scBody = body.split("\n").map(line => {
-    if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:")) return line;
-    return toSC(line);
-  }).join("\n");
-  return `${toSC(title)}\n\n${scBody}`;
-}
-async function formatAndReply( text, cmdName) {
-  const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-  const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
-  // Convert all text to small caps, skip command lines
-  text = text.split("\n").map(line => {
-    if (line.trim().startsWith(".") || line.trim().startsWith("Toggle:") || line.includes("°˖") || line.includes("⋆｡˚")) return line;
-    return toSC(line);
-  }).join("\n");
-  if (!text.includes("╰────  •  ────")) {
-    text = text + "\n\n╰────  •  ────";
-  }
-  return await m.reply(text);
-}
-
 
 const pluginConfig = {
   name: "autobmkg",
@@ -100,7 +73,7 @@ async function handler(m, { sock }) {
     if (action === "off") {
       const settings = updateBmkgSettings((cur) => ({ ...cur, enabled: false }));
       stopBmkgJobs();
-      return formatAndReply(claraWrap("Autobmkg", "Auto-broadcast BMKG: *OFF*"));
+      return m.reply("Auto-broadcast BMKG: *OFF*");
     }
 
     if (action === "add") {
@@ -150,10 +123,10 @@ async function handler(m, { sock }) {
     if (action === "shakemap" || action === "peta") {
       const val = args[1];
       if (val !== "on" && val !== "off") {
-        return m.reply(claraWrap("Usage", "Format: .autobmkg shakemap <on/off>\nSaat ini: " + (getBmkgStatus().sendShakemap ? "ON" : "OFF")));
+        return m.reply("Format: .autobmkg shakemap <on/off>\nSaat ini: " + (getBmkgStatus().sendShakemap ? "ON" : "OFF"));
       }
       const settings = updateBmkgSettings((cur) => ({ ...cur, sendShakemap: val === "on" }));
-      return m.reply(claraWrap("Info", "\u2705 Shakemap (peta gempa): *" + (val === "on" ? "ON" : "OFF") + "*"));
+      return m.reply("✅ Shakemap (peta gempa): *" + (val === "on" ? "ON" : "OFF") + "*");
     }
 
     if (action === "minmag") {
@@ -169,12 +142,8 @@ async function handler(m, { sock }) {
     }
 
     if (action === "test" || action === "cek") {
-      // Test fetch gempa terkini
-      const { fetchGempaTerkini } = await import("../../src/lib/nova-bmkg-scheduler.js");
-      const g = await fetchGempaTerkini();
-      let txt = "╭─「 ✦ " + g.Tanggal + " ✦ 」\n│\n";
-      txt += "╰────  •  ────\n\n";
-      txt += "Status: *" + (status.enabled ? "ON" : "OFF") + "*\n";
+      const status = getBmkgStatus();
+      let txt = "Status: *" + (status.enabled ? "ON" : "OFF") + "*\n";
       txt += "Jadwal: " + formatSchedule(status.schedules) + " WIB\n";
       txt += "Min Magnitude: M" + (status.minMagnitude || 0) + "\n";
       txt += "Shakemap: " + (status.sendShakemap ? "ON" : "OFF") + "\n\n";
@@ -196,10 +165,10 @@ async function handler(m, { sock }) {
       txt += "7. .autobmkg minmag 5.0 — Filter magnitude minimum\n";
       txt += "8. .autobmkg test — Test fetch gempa terkini\n\n";
       txt += "Sumber: data.bmkg.go.id (BMKG resmi)";
-      return await m.reply(claraWrap("autobmkg", txt));
+      return await m.reply(txt);
     }
   } catch (error) {
-    return m.reply("Error: " + error.message);
+    return m.reply("❌ Error: " + error.message);
   }
 }
 

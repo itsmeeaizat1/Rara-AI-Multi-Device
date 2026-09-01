@@ -31,11 +31,7 @@ async function handler(m, { sock }) {
   const username = m.args[0]?.replace("@", "")?.trim();
 
   if (!username) {
-    return m.reply(`╭─「 ✦ Twitter/X Stalker ✦ 」
-│ Masukkan username Twitter/X
-│
-│ 💡 *Contoh:* \`${m.prefix}twitterstalk elonmusk\`
-╰────  •  ────`, "twitterstalk");
+    return m.reply(`Masukkan username Twitter/X\nContoh: \`${m.prefix}twitterstalk elonmusk\``, "twitterstalk");
   }
   try {
     const res = await axios.get(
@@ -44,20 +40,20 @@ async function handler(m, { sock }) {
     );
 
     if (!res.data?.status || !res.data?.data) {
-      return m.reply(`╭─「 ✦ Twitter/X Stalker ✦ 」\n│ ❌ Akun @${username} tidak ditemukan\n╰────  •  ────`, "twitterstalk");
+      return m.reply(`❌ Akun @${username} tidak ditemukan`, "twitterstalk");
     }
 
     const d = res.data.data;
-    let text = "🐦 *TWITTER/X STALK*\n\n";
-    text += `*ɴᴀᴍᴀ:* ${d.name || d.fullName || "-"}\n`;
-    text += `*ᴜꜱᴇʀɴᴀᴍᴇ:* @${d.username || username}\n`;
-    if (d.bio || d.description) text += `*ʙɪᴏ:* ${d.bio || d.description}\n`;
-    if (d.followers !== undefined) text += `*ꜰᴏʟʟᴏᴡᴇʀꜱ:* ${shortNum(d.followers)}\n`;
-    if (d.following !== undefined) text += `*ꜰᴏʟʟᴏᴡɪɴɢ:* ${shortNum(d.following)}\n`;
+    let text = "*Twitter/X Stalk*\n\n";
+    text += `Nama: ${d.name || d.fullName || "-"}\n`;
+    text += `Username: @${d.username || username}\n`;
+    if (d.bio || d.description) text += `Bio: ${d.bio || d.description}\n`;
+    if (d.followers !== undefined) text += `Followers: ${shortNum(d.followers)}\n`;
+    if (d.following !== undefined) text += `Following: ${shortNum(d.following)}\n`;
     if (d.tweets !== undefined || d.statuses_count !== undefined)
-      text += `*ᴛᴡᴇᴇᴛꜱ:* ${shortNum(d.tweets || d.statuses_count)}\n`;
-    if (d.verified) text += `*ᴠᴇʀɪꜰɪᴇᴅ:* ✅\n`;
-    if (d.createdAt || d.created_at) text += `*ᴊᴏɪɴᴇᴅ:* ${d.createdAt || d.created_at}\n`;
+      text += `Tweets: ${shortNum(d.tweets || d.statuses_count)}\n`;
+    if (d.verified) text += `Verified: ✅\n`;
+    if (d.createdAt || d.created_at) text += `Joined: ${d.createdAt || d.created_at}\n`;
     if (d.profilePicture || d.avatar) {
       try {
         const ppRes = await axios.get(d.profilePicture || d.avatar, {
@@ -72,10 +68,10 @@ async function handler(m, { sock }) {
       }
     }
     text += `\n_Link: https://x.com/${d.username || username}_`;
-    await m.reply( text, "twitterstalk");
+    await m.reply(text, "twitterstalk");
   } catch (err) {
     console.error("[TwitterStalk] Error:", err.message);
-    return m.reply( te(m.prefix, m.command, m.pushName), "twitterstalk");
+    return m.reply(te(m.prefix, m.command, m.pushName), "twitterstalk");
   }
 }
 
