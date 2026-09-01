@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20info%20section%20lengkap%20di%20menu%2C%20allm-success?style=for-the-badge)
-> *Commit: "feat: info section lengkap di menu, allmenu, allmenucategory"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20hapus%20dash-fill%20header%20buildBox%20yg%20-success?style=for-the-badge)
+> *Commit: "fix: hapus dash-fill header buildBox yg bikin wrap berantakan di WA, hapus tree-line └ di allmenucategory/botmode/cekschedule, fix undefined modeLines di botmode"*
 <!--END_SECTION:latest-update-->
 
 ---
