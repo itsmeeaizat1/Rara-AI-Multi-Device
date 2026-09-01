@@ -46,12 +46,12 @@
 | Siputzx | `api.siputzx.my.id` | nikparser, ffstalk, tiktokstalk, ytstalk2, primbon, brat | ✅ Free |
 | Velyn Mom | `velyn.mom` | mlstalk, robloxstalk2, ffstalk2, nikparser2 | ✅ Free |
 | Nexray | `api.nexray.web.id` / `api.nexray.eu.cc` | gsmarena2, nikparser2, nulis2, mlstalk fallback | ✅ Free |
-| LolHuman | `api.lolhuman.xyz` | ffstalk, tiktokstalk, wallpaper, lirik | ⚠️ Key required |
-| NeoXR | `api.neoxr.eu` | stalker, search | ✅ Free |
+| LolHuman | `api.lolhuman.xyz` | ffstalk, tiktokstalk, wallpaper, lirik | ❌ Key not found |
+| NeoXR | `api.neoxr.eu` | stalker, search | ⚠️ Key rate-limited |
 | Deline | `api.deline.web.id` | stalker, search | ✅ Free |
 | Nyxs | `api.nyxs.my.id` | stalker, tools | ✅ Free |
-| Covenant | `api.covenant.sbs` | stalker, search | ✅ Free |
-| ObscuraWorks | `api.obscuraworks.org` | stalker, search | ✅ Free |
+| Covenant | `api.covenant.sbs` | stalker, search | ❌ DEAD (DNS 1033) |
+| ObscuraWorks | `api.obscuraworks.org` | stalker, search | ❌ DEAD (404) |
 | ZenzXZ | `api.zenzxz.my.id` | stalker, search | ✅ Free |
 | Yupra | `api.yupra.my.id` | stalker, search | ✅ Free |
 | DenayRestAPI | `api.denayrestapi.xyz` | stalker, search | ✅ Free |
@@ -63,7 +63,7 @@
 | Nova API | `api.nova.my.id` | stalker, search | ✅ Free |
 | Roblox API | `roblox.com`, `users.roblox.com`, `friends.roblox.com`, `groups.roblox.com`, `inventory.roblox.com`, `badges.roblox.com`, `thumbnails.roblox.com`, `presence.roblox.com`, `games.roblox.com` | robloxstalk, robloxplayer | ✅ Free |
 | Binderbyte | `api.binderbyte.com` / `binderbyte.com` | ytstalk, gsmarena | ⚠️ Key required |
-| FGSI | `fgsi.dpdns.org` | wastalk | ✅ Free |
+| FGSI | `fgsi.dpdns.org` | wastalk | ❌ Key BANNED (shared in SC) |
 | Android1 | `an1.com` | android1, android1-get | ✅ Free |
 
 | AlbyOffc | `api.albyoffc.my.id` | — | ❌ DEAD (Vercel 404) |
