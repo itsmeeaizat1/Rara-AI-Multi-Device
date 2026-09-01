@@ -58,3 +58,19 @@
 - Total: 21 plugin terdampak (16 DEAD, 3 TIMEOUT, 2 butuh API key, 1 placeholder)
 - Solusi: migrate ke API alternatif yang alive atau set graceful error handling
 - Sebelum mendifikasi, selalu cek `list api.md` di root repo untuk API cadangan
+
+---
+
+# Dead API Endpoints — Kategori Sticker
+
+| Domain | Status | Plugin | Command |
+|---|---|---|---|
+| `api.nexray.web.id` | Timeout | animebrat.js | .animebrat |
+| `api-faa.my.id` | Timeout | bratvid2.js | .bratvid2 |
+| `api.siputzx.my.id` | Timeout | pinpack.js | .pinpack |
+| `brat.siputzx.my.id` | HTTP 500 | qc.js | .qc |
+| `getstickerpack.com` | HTTP 403 | stickerpack.js | .stickerpack |
+
+## Catatan
+- smeme.js: upload migrasi ke catbox.moe (primary) + telegraph (fallback)
+- 21 plugin lainnya clean, tidak ada issue
