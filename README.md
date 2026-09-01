@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20merge%20duplicate%20aliases%20field%20in%2075-success?style=for-the-badge)
-> *Commit: "fix: merge duplicate aliases field in 75 RPG plugins + resolve 36 alias conflicts"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20pisahkan%20kategori%20game%2C%20rpg%2C%20d-success?style=for-the-badge)
+> *Commit: "refactor: pisahkan kategori game, rpg, dan rpg cinta"*
 <!--END_SECTION:latest-update-->
 
 ---
