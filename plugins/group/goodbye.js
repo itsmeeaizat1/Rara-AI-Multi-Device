@@ -70,7 +70,7 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
   const groupData = db.getGroup(groupJid) || {};
 
   // Kalau goodbye off di grup ini, skip
-  if (groupData.goodbye === false) return;
+  if (!groupData.goodbye) return;
 
   const groupName = metadata?.subject || "Grup";
   const memberCount = metadata?.participants?.length || 0;
