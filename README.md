@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20switch%20group%20off%20parsing%2C%20welcome%2Fg-success?style=for-the-badge)
-> *Commit: "fix: switch group off parsing, welcome/goodbye default OFF saat pairing, migrasi UnlimitedAI ke Gemini API"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20update%20Gemini%20model%20ke%20gemini-3.5--success?style=for-the-badge)
+> *Commit: "feat: update Gemini model ke gemini-3.5-flash-lite (flash-lite terbaru)"*
 <!--END_SECTION:latest-update-->
 
 ---
