@@ -1,6 +1,10 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// instagramdl — Download video/foto Instagram
+// Primary: IkyyXD /download/instagram (apikey + query) → all-in-one | Fallback: builtin ig.js
+import { ikyyDownload, ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
 import { claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
   name: "instagramdl",
   alias: ["instagramdl"],
@@ -8,65 +12,118 @@ const pluginConfig = {
   description: "Download video/foto Instagram",
   usage: ".instagramdl <url>",
   example: ".instagramdl https://www.instagram.com/reel/xxx",
-  isOwner: false,
-  isPremium: false,
-  isGroup: false,
-  isPrivate: false,
-  cooldown: 10,
-  energi: 1,
-  isEnabled: true,
+  isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
+  cooldown: 10, energi: 1, isEnabled: true,
 };
-
-const IG_REGEX = /instagram\.com\/(p|reel|reels|stories|tv)\//i;
 
 async function handler(m, { sock }) {
   const url = m.text?.trim();
-
   if (!url) {
-    return m.reply(novaNoInput("Instagram DL", "Kirim URL postingan, reel, atau story Instagram!", `${m.prefix}igdl https://www.instagram.com/reel/xxx`));
+    return m.reply(novaGuide("Instagram DL", "Download video/foto Instagram! Kasih linknya ya!", `${m.prefix}instagramdl https://www.instagram.com/reel/xxx`));
+  }
+  if (!url.match(/instagram\.com|instagr\.am/i)) {
+    return m.reply(novaGuide("Instagram DL", "URL-nya gak valid nih! Pakai link Instagram ya.", `${m.prefix}instagramdl https://www.instagram.com/reel/xxx`));
   }
 
-  if (!IG_REGEX.test(url)) {
-    return m.reply(novaGuide("Instagram DL", "URL-nya gak valid nih! Gunakan link Instagram (reel/post/story).", `${m.prefix}igdl https://www.instagram.com/reel/xxx`));
-  }
   try {
-    const result = await instagramDownloader(url);
+    await m.react("🕒");
 
-    if (!result?.media?.length) {
-      return m.reply(novaEmpty("Instagram DL", "Gagal mengambil media dari Instagram. Coba link lain ya!"));
-    }
-
-    const isStory = url.includes("/stories/");
-    let caption = mediaCaption({
-      platformIcon: "📸",
-      platformName: isStory ? "Instagram Story" : "Instagram",
-      title: result.title || "Instagram Media",
-      author: result.username && result.username !== "-" ? result.username : null,
-      likes: result.likes && result.likes !== "-" ? result.likes : null,
-      comments: result.comment && result.comment !== "-" ? result.comment : null,
-      uploadDate: result.taken_at && result.taken_at !== "-" ? result.taken_at : null,
-      format: result.media.length > 1 ? `${result.media.length} Media` : "Media",
-      method: "Nova AI",
-    });
-
-    for (const item of result.media) {
-      if (item.type === "video" || item.type === "mp4") {
-        await sock.sendMessage(
-          m.chat,
-          { video: { url: item.url }, caption },
-          { quoted: m },
-        );
-      } else {
-        await sock.sendMessage(
-          m.chat,
-          { image: { url: item.url }, caption },
-          { quoted: m },
-        );
+    // Step 1: Try IkyyXD instagram endpoint (uses "query" param + apikey)
+    let result = null;
+    try {
+      const res = await import("axios");
+      const axiosMod = res.default;
+      const response = await axiosMod.get("https://api.ikyyxd.my.id/download/instagram", {
+        params: { apikey: "kyzz", query: url },
+        timeout: 60000,
+      });
+      const data = response.data;
+      if (data?.status && data?.result) {
+        const r = data.result;
+        const medias = [];
+        if (Array.isArray(r.medias) && r.medias.length) {
+          r.medias.forEach(item => medias.push({
+            url: item.url,
+            quality: item.quality || "default",
+            ext: item.extension || item.ext || "mp4",
+            type: item.type || (item.ext === "mp3" ? "audio" : "video"),
+          }));
+        } else if (Array.isArray(r) && r.length) {
+          r.forEach(item => medias.push({
+            url: item.url || item.video || item.download_url,
+            quality: item.quality || "default",
+            ext: item.ext || "mp4",
+            type: item.type || "video",
+          }));
+        } else if (r.url || r.video) {
+          medias.push({
+            url: r.url || r.video,
+            quality: r.quality || "default",
+            ext: r.ext || "mp4",
+            type: r.type || "video",
+          });
+        }
+        if (medias.length) {
+          result = {
+            title: r.title || r.author || "Instagram Media",
+            author: r.author || "",
+            thumbnail: r.thumbnail || "",
+            medias,
+          };
+        }
       }
-      caption = "";
+    } catch (e) {
+      console.error("[instagramdl.js] IkyyXD instagram failed:", e.message);
     }
-  } catch (err) {
-    return m.reply(novaError("Instagram DL", `Gagal mengunduh media Instagram: ${err.message}`));
+
+    // Step 2: Try IkyyXD all-in-one
+    if (!result) {
+      result = await ikyyAio(url);
+    }
+
+    // Step 3: Fallback to builtin ig.js scraper
+    if (!result || !result.medias?.length) {
+      console.log("[instagramdl.js] IkyyXD failed, falling back to builtin ig.js...");
+      try {
+        const igResult = await instagramDownloader(url);
+        if (igResult?.media?.length) {
+          result = {
+            title: igResult.title || "Instagram Media",
+            medias: igResult.media.map(item => ({
+              url: item.url,
+              quality: item.quality || "default",
+              ext: item.ext || (item.type === "image" ? "jpg" : "mp4"),
+              type: item.type || "video",
+            })),
+          };
+        }
+      } catch (e) {
+        console.error("[instagramdl.js] builtin fallback failed:", e.message);
+      }
+    }
+
+    if (!result || !result.medias?.length) {
+      await m.react("❌");
+      return m.reply(novaError("Instagram DL", "Gagal ambil media — pastikan URL valid dan akunnya publik ya"));
+    }
+
+    const ctxInfo = { forwardingScore: 0, isForwarded: false };
+    await m.react("🐣");
+
+    for (const item of result.medias) {
+      if (item.type === "video") {
+        await sock.sendMedia(m.chat, item.url, result.title || null, m, { type: "video", contextInfo: ctxInfo });
+      } else if (item.type === "audio") {
+        await sock.sendMessage(m.chat, { audio: { url: item.url }, mimetype: "audio/mpeg", contextInfo: ctxInfo }, { quoted: m });
+      } else {
+        await sock.sendMedia(m.chat, item.url, result.title || null, m, { type: "image", contextInfo: ctxInfo });
+      }
+      break;
+    }
+  } catch (error) {
+    console.error("[instagramdl.js]:", error.message);
+    await m.react("❌");
+    return m.reply(novaError("Instagram DL", "Ada error nih, coba lagi ya"));
   }
 }
 

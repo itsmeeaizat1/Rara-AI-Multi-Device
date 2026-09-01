@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// ikyydl.js — Shared helper for IkyyXD all-in-one downloader
-// Fallback chain: IkyyXD all-in-one → existing builtin scrapers
+// ikyydl.js — Shared helper for IkyyXD downloader endpoints
+// Fallback chain: IkyyXD specific → IkyyXD all-in-one → null (caller handles builtin)
 
 import axios from "axios";
 
@@ -10,9 +10,6 @@ const IKYY_BASE = "https://api.ikyyxd.my.id";
  * Download via IkyyXD all-in-one endpoint
  * @param {string} url - URL to download
  * @returns {object|null} Normalized result or null if failed
- * 
- * Return format:
- * { source, title, author, thumbnail, duration, medias: [{url, quality, ext, type}] }
  */
 export async function ikyyAio(url) {
   try {
@@ -49,16 +46,18 @@ export async function ikyyAio(url) {
 }
 
 /**
- * Download via IkyyXD specific endpoint (capcut, douyin, applemusic, etc.)
- * @param {string} endpoint - e.g. "capcut", "douyin", "applemusic"
+ * Download via IkyyXD specific endpoint
+ * @param {string} endpoint - e.g. "capcut", "douyin", "facebook", "instagram"
  * @param {string} url - URL to download
- * @param {object} extraParams - extra query params (e.g. { apikey: "kyzz" })
+ * @param {object} options - { extraParams: {}, urlParam: "url" (default) | "query" | "link" }
  * @returns {object|null} Normalized result or null if failed
  */
-export async function ikyyDl(endpoint, url, extraParams = {}) {
+export async function ikyyDl(endpoint, url, options = {}) {
+  const { extraParams = {}, urlParam = "url" } = options;
   try {
+    const params = { [urlParam]: url, ...extraParams };
     const res = await axios.get(`${IKYY_BASE}/download/${endpoint}`, {
-      params: { url, ...extraParams },
+      params,
       timeout: 60000,
     });
 
@@ -66,36 +65,28 @@ export async function ikyyDl(endpoint, url, extraParams = {}) {
     if (!data?.status || !data?.result) return null;
 
     const r = data.result;
-    // Normalize different response formats
     const medias = [];
 
-    if (r.medias?.length) {
-      // all-in-one style
+    if (Array.isArray(r.medias) && r.medias.length) {
       r.medias.forEach(m => medias.push({
         url: m.url,
         quality: m.quality || m.label || m.ext || "unknown",
         ext: m.extension || m.ext || "mp4",
         type: m.type || (m.ext === "mp3" ? "audio" : "video"),
       }));
-    } else if (r.url || r.video || r.audio || r.originalVideoUrl) {
-      // Single media style
-      if (r.originalVideoUrl || r.video) {
+    } else if (r.url || r.video || r.audio || r.originalVideoUrl || r.download_url) {
+      if (r.originalVideoUrl || r.video || r.download_url) {
         medias.push({
-          url: r.originalVideoUrl || r.video,
-          quality: "HD",
-          ext: "mp4",
+          url: r.originalVideoUrl || r.video || r.download_url,
+          quality: r.quality || "HD",
+          ext: r.ext || "mp4",
           type: "video",
         });
       }
       if (r.audio) {
-        medias.push({
-          url: r.audio,
-          quality: "audio",
-          ext: "mp3",
-          type: "audio",
-        });
+        medias.push({ url: r.audio, quality: "audio", ext: "mp3", type: "audio" });
       }
-      if (r.url && !r.video && !r.originalVideoUrl) {
+      if (r.url && !r.video && !r.originalVideoUrl && !r.download_url) {
         medias.push({
           url: r.url,
           quality: r.quality || "default",
@@ -103,13 +94,25 @@ export async function ikyyDl(endpoint, url, extraParams = {}) {
           type: r.type || "video",
         });
       }
+    } else if (Array.isArray(r) && r.length) {
+      // Some endpoints return array directly
+      r.forEach(item => {
+        if (item.url || item.video || item.download_url) {
+          medias.push({
+            url: item.url || item.video || item.download_url,
+            quality: item.quality || "default",
+            ext: item.ext || "mp4",
+            type: item.type || "video",
+          });
+        }
+      });
     }
 
     if (!medias.length) return null;
 
     return {
       source: r.source || r.platform || endpoint,
-      title: r.title || r.author || "Media",
+      title: r.title || r.author || r.name || "Media",
       author: r.author || "",
       thumbnail: r.thumbnail || r.image || "",
       duration: r.duration || 0,
@@ -127,18 +130,15 @@ export async function ikyyDl(endpoint, url, extraParams = {}) {
  * 2. Try IkyyXD all-in-one
  * 3. Return null (caller handles builtin fallback)
  */
-export async function ikyyDownload(url, specificEndpoint = null, extraParams = {}) {
-  // Step 1: Try specific endpoint if provided
+export async function ikyyDownload(url, specificEndpoint = null, options = {}) {
   if (specificEndpoint) {
-    const specific = await ikyyDl(specificEndpoint, url, extraParams);
+    const specific = await ikyyDl(specificEndpoint, url, options);
     if (specific) return specific;
     console.log(`[ikyydl.js] ${specificEndpoint} failed, trying all-in-one...`);
   }
 
-  // Step 2: Try all-in-one
   const aio = await ikyyAio(url);
   if (aio) return aio;
 
-  // Step 3: Return null — caller handles builtin fallback
   return null;
 }

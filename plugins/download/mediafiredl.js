@@ -1,7 +1,11 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// mediafiredl — Download file dari MediaFire
+// Primary: IkyyXD /download/mediafire | Fallback: builtin mediafire.js
+import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import te from "../../src/lib/nova-error.js";
 import mediafire from "../../src/scraper/mediafire.js";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "mediafiredl",
@@ -10,56 +14,60 @@ const pluginConfig = {
   description: "Download file dari MediaFire",
   usage: ".mfdl <url>",
   example: ".mfdl https://www.mediafire.com/file/xxx",
-  isOwner: false,
-  isPremium: false,
-  isGroup: false,
-  isPrivate: false,
-  cooldown: 15,
-  energi: 1,
-  isEnabled: true,
+  isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
+  cooldown: 10, energi: 1, isEnabled: true,
 };
-
-function getFileName(result) {
-  const directName = result?.meta?.title?.trim();
-  const urlName = decodeURIComponent(
-    result?.download?.link_download?.split("/").pop()?.split("?")[0] || "",
-  );
-  const extension = urlName.includes(".") ? `.${urlName.split(".").pop()}` : "";
-  if (directName && extension && !directName.includes("."))
-    return `${directName}${extension}`;
-  return directName || urlName || `mediafire_${Date.now()}${extension}`;
-}
 
 async function handler(m, { sock }) {
   const url = m.text?.trim();
-
   if (!url) {
-    return m.reply( `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `\`${m.prefix}mfdl <url>\`\n\n` +
-        `Contoh:\n` +
-        `\`${m.prefix}mfdl https://www.mediafire.com/file/xxx\``, "mediafiredl");
+    return m.reply(novaGuide("MediaFire DL", "Download file dari MediaFire! Kasih linknya ya!", `${m.prefix}mfdl https://www.mediafire.com/file/xxx`));
+  }
+  if (!url.match(/mediafire\.com/i)) {
+    return m.reply(novaGuide("MediaFire DL", "URL-nya gak valid nih! Pakai link MediaFire ya.", `${m.prefix}mfdl https://www.mediafire.com/file/xxx`));
   }
 
-  if (!url.match(/mediafire\.com/i)) {
-    return m.reply(claraWrap("Mediafiredl", `❌ *ᴜʀʟ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ. ɢᴜɴᴀᴋᴀɴ ʟɪɴᴋ ᴍᴇᴅɪᴀꜰɪʀᴇ.*`));
-  }
   try {
-    const result = await mediafire(url);
-    await sock.sendMessage(
-      m.chat,
-      {
-        document: { url: result.download.link_download },
-        fileName: getFileName(result),
-        mimetype: result.download.mimetype,
-        contextInfo: {
-          forwardingScore: 0,
-          isForwarded: false,
-        },
-      },
-      { quoted: m },
-    );
-  } catch (err) {
-    return m.reply(claraWrap("mediafiredl", te(m.prefix, m.command, m.pushName), "error"));
+    await m.react("🕒");
+
+    // Step 1: Try IkyyXD mediafire endpoint
+    const result = await ikyyDl("mediafire", url);
+
+    if (result?.medias?.length) {
+      const file = result.medias[0];
+      await m.react("🐣");
+      return await sock.sendMedia(m.chat, file.url, result.title || "MediaFire File", m, {
+        type: "file",
+        contextInfo: { forwardingScore: 0, isForwarded: false },
+      });
+    }
+
+    // Step 2: Fallback to builtin mediafire.js
+    console.log("[mediafiredl.js] IkyyXD failed, falling back to builtin...");
+    try {
+      const data = await mediafire(url);
+      if (data?.download_url || data?.link) {
+        await m.react("🐣");
+        let caption = claraWrap("MediaFire DL", [
+          data?.title || data?.name || "File",
+          data?.size ? `Size: ${data.size}` : "",
+          data?.ext ? `Type: ${data.ext}` : "",
+        ].filter(Boolean).join("\n"));
+        return await sock.sendMedia(m.chat, data.download_url || data.link, caption, m, {
+          type: "file",
+          contextInfo: { forwardingScore: 0, isForwarded: false },
+        });
+      }
+    } catch (e) {
+      console.error("[mediafiredl.js] builtin fallback failed:", e.message);
+    }
+
+    await m.react("❌");
+    return m.reply(novaError("MediaFire DL", "Gagal ambil file — pastikan URL valid ya"));
+  } catch (error) {
+    console.error("[mediafiredl.js]:", error.message);
+    await m.react("❌");
+    return m.reply(novaError("MediaFire DL", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
 
