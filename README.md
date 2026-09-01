@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20owner%20toggle%20untuk%20smart%20anti-spam-success?style=for-the-badge)
-> *Commit: "feat: owner toggle untuk smart anti-spam not-found suggestion"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20default%20pairing%20mode%20manual%20%2B%20comm-success?style=for-the-badge)
+> *Commit: "feat: default pairing mode manual + command mode manual/smart"*
 <!--END_SECTION:latest-update-->
 
 ---
