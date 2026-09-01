@@ -3,7 +3,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "weatherrpg", alias: ["weatherrpg"], aliases: ["weatherrpg", "cuacarpg"],
+  name: "weatherrpg", alias: ["weatherrpg", "cuacarpg"],
   category: "rpg", description: "Cek cuaca dunia RPG",
   usage: ".weatherrpg", example: ".weatherrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

@@ -3,7 +3,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "treasurehunt",
-  alias: ["treasurehunt", "berburuharta", "digtreasure", "harta"],
+  alias: ["treasurehunt", "berburuharta", "digtreasure", "harta", "pantai", "beach"],
   category: "rpg",
   description: "Berburu harta karun dengan menggali di 10 lokasi berbeda untuk mendapatkan reward acak",
   usage: ".treasurehunt list\n.treasurehunt <nama_lokasi>",

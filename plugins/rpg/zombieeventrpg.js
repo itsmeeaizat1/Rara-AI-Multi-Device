@@ -3,7 +3,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "zombieeventrpg", alias: ["zombieeventrpg"], aliases: ["zombieeventrpg", "zombieevent"],
+  name: "zombieeventrpg", alias: ["zombieeventrpg", "zombieevent"],
   category: "rpg", description: "Trigger wabah zombie — semua pemain -20 HP (owner only)",
   usage: ".zombieeventrpg", example: ".zombieeventrpg",
   isOwner: true, isPremium: false, isGroup: false, isPrivate: false, cooldown: 120, energi: 0, isEnabled: true,

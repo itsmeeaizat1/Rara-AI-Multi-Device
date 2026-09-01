@@ -1,7 +1,7 @@
 import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "passiverpg", alias: ["passiverpg"], aliases: ["passiverpg", "passive", "pasif"],
+  name: "passiverpg", alias: ["passiverpg", "passive", "pasif"],
   category: "rpg", description: "Lihat skill pasif",
   usage: ".passiverpg", example: ".passiverpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

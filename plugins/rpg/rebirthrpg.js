@@ -9,7 +9,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "rebirthrpg",
-  alias: ["rebirthrpg", "rebirth", "reinkarnasi"],
+  alias: ["rebirthrpg", "rebirth"],
   category: "rpg",
   description: "Reinkarnasi — reset level untuk permanent stat bonus (Lv.100+)",
   usage: ".rebirthrpg",

@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, removeGold } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "learnskillrpg", alias: ["learnskillrpg"], aliases: ["learnskillrpg", "learnskill", "belajarskill"],
+  name: "learnskillrpg", alias: ["learnskillrpg", "learnskill", "belajarskill"],
   category: "rpg", description: "Pelajari skill baru (biaya 200 gold)",
   usage: ".learnskillrpg <skill>", example: ".learnskillrpg fireball",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 10, isEnabled: true,

@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "travelrpg", alias: ["travelrpg"], aliases: ["travelrpg", "travel", "jelajah"],
+  name: "travelrpg", alias: ["travelrpg", "travel"],
   category: "rpg", description: "Pindah ke lokasi RPG",
   usage: ".travelrpg <lokasi>", example: ".travelrpg hutan",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 5, isEnabled: true,

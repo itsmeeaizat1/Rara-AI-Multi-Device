@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg, addItem, useEnergy } from "../../src/lib/nova-rpg-s
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "distortionrpg", alias: ["distortionrpg"], aliases: ["distortionrpg", "distortion"],
+  name: "distortionrpg", alias: ["distortionrpg", "distortion"],
   category: "rpg", description: "Masuk zona distorsi — dapat random loot (biaya 20 energy)",
   usage: ".distortionrpg", example: ".distortionrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 30, energi: 20, isEnabled: true,

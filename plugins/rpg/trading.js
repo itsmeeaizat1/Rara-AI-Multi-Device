@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "trading",
-  alias: ["trading", "marketrpg", "rpgmarket", "traderpg"],
+  alias: ["trading", "rpgmarket", "traderpg"],
   category: "rpg",
   description: "Trading system — jual beli item di market RPG",
   usage: ".trading (cek market)\n.trading sell <item> <price> (jual)\n.trading buy <id> (beli)",

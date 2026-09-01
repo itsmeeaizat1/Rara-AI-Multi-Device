@@ -1,7 +1,7 @@
 import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "talentrpg", alias: ["talentrpg"], aliases: ["talentrpg", "talent"],
+  name: "talentrpg", alias: ["talentrpg", "talent"],
   category: "rpg", description: "Lihat talent berdasar kelas",
   usage: ".talentrpg", example: ".talentrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

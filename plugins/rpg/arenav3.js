@@ -11,7 +11,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "arenav3",
-  alias: ["arenav3", "arena", "tournament"],
+  alias: ["arenav3"],
   category: "rpg",
   description: "Arena v3 — PvP 1v1 vs random player or AI, ELO rating, ranked",
   usage: ".arenav3 <ranked|casual|ai|leaderboard>",

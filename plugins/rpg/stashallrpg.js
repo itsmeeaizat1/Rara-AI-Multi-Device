@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, addItem, removeItem, getItemCount } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "stashallrpg", alias: ["stashallrpg"], aliases: ["stashallrpg", "stashall"],
+  name: "stashallrpg", alias: ["stashallrpg", "stashall"],
   category: "rpg", description: "Pindah semua item ke storage",
   usage: ".stashallrpg", example: ".stashallrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg, addItem, useEnergy, addExp } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "huntwildrpg", alias: ["huntwildrpg"], aliases: ["huntwildrpg", "huntwild"],
+  name: "huntwildrpg", alias: ["huntwildrpg", "huntwild"],
   category: "rpg", description: "Berburu hewan liar (10 energy)",
   usage: ".huntwildrpg", example: ".huntwildrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 15, energi: 10, isEnabled: true,

@@ -3,7 +3,7 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "panduanrpg", alias: ["panduanrpg"], aliases: ["panduanrpg", "rpgtutor", "tutorrpg"],
+  name: "panduanrpg", alias: ["panduanrpg", "rpgtutor", "tutorrpg"],
   category: "rpg", description: "Panduan lengkap perintah RPG",
   usage: ".panduanrpg", example: ".panduanrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg, useMana } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "spiritrpg", alias: ["spiritrpg"], aliases: ["spiritrpg", "spirit", "roh"],
+  name: "spiritrpg", alias: ["spiritrpg", "spirit", "roh"],
   category: "rpg", description: "Panggil roh petarung (DMG +20 selama 1 jam, 25 mana)",
   usage: ".spiritrpg", example: ".spiritrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 60, energi: 10, isEnabled: true,

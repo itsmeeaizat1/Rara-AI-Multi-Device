@@ -1,7 +1,7 @@
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "savepointrpg", alias: ["savepointrpg"], aliases: ["savepointrpg", "savepoint", "savedata"],
+  name: "savepointrpg", alias: ["savepointrpg", "savepoint", "savedata"],
   category: "rpg", description: "Simpan progres RPG",
   usage: ".savepointrpg", example: ".savepointrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,

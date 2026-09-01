@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "deathrpg", alias: ["deathrpg"], aliases: ["deathrpg", "death", "mati"],
+  name: "deathrpg", alias: ["deathrpg", "death", "mati"],
   category: "rpg", description: "Cek status kematian & penalti",
   usage: ".deathrpg", example: ".deathrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

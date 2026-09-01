@@ -1,7 +1,7 @@
 import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "finaltrialrpg", alias: ["finaltrialrpg"], aliases: ["finaltrialrpg", "finaltrial", "ujian"],
+  name: "finaltrialrpg", alias: ["finaltrialrpg", "ujian"],
   category: "rpg", description: "Ujian akhir — lawan 3 boss beruntun (min level 99)",
   usage: ".finaltrialrpg", example: ".finaltrialrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 30, energi: 50, isEnabled: true,

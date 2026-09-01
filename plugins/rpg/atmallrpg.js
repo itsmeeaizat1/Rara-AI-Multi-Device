@@ -1,7 +1,7 @@
 import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "atmallrpg", alias: ["atmallrpg"], aliases: ["atmallrpg", "atmall", "atmleaderboard"],
+  name: "atmallrpg", alias: ["atmallrpg", "atmall", "atmleaderboard"],
   category: "rpg", description: "Leaderboard bank terkaya",
   usage: ".atmallrpg", example: ".atmallrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 0, isEnabled: true,

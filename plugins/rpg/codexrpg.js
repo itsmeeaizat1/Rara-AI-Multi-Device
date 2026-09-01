@@ -1,6 +1,6 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "codexrpg", alias: ["codexrpg"], aliases: ["codexrpg", "codex"],
+  name: "codexrpg", alias: ["codexrpg", "codex"],
   category: "rpg", description: "Kodex item RPG",
   usage: ".codexrpg", example: ".codexrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 3, energi: 0, isEnabled: true,

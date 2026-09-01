@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "classrpg", alias: ["classrpg"], aliases: ["classrpg", "class", "kelas"],
+  name: "classrpg", alias: ["classrpg", "class", "kelas"],
   category: "rpg", description: "Pilih kelas RPG (knight, mage, archer)",
   usage: ".classrpg <knight/mage/archer>", example: ".classrpg mage",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 5, energi: 0, isEnabled: true,

@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg, removeGold } from "../../src/lib/nova-rpg-service.j
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "mutaterpg", alias: ["mutaterpg"], aliases: ["mutaterpg", "mutate"],
+  name: "mutaterpg", alias: ["mutaterpg", "mutate"],
   category: "rpg", description: "Mutasi skill random (biaya 300 gold)",
   usage: ".mutaterpg", example: ".mutaterpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 60, energi: 10, isEnabled: true,

@@ -4,7 +4,7 @@ import { ensureRpg, saveRpg, addGold } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "timetravelrpg", alias: ["timetravelrpg"], aliases: ["timetravelrpg", "timetravel"],
+  name: "timetravelrpg", alias: ["timetravelrpg", "timetravel"],
   category: "rpg", description: "Perjalanan waktu — dapat gold dari masa lalu (cooldown 24 jam)",
   usage: ".timetravelrpg", example: ".timetravelrpg",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 20, isEnabled: true,

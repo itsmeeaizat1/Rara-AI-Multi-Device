@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "farmrpg",
-  alias: ["farmrpg", "farm", "kebun", "tanam"],
+  alias: ["farmrpg", "farm", "kebun"],
   category: "rpg",
   description: "Farming system — tanam, panen, jual hasil tani",
   usage: ".farmrpg (cek kebun)\n.farmrpg plant <crop> (tanam)\n.farmrpg harvest (panen)\n.farmrpg shop (beli benih)",

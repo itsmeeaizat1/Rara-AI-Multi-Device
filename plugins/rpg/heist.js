@@ -5,7 +5,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "heist",
-  alias: ["heist", "rob", "rampok", "merampok"],
+  alias: ["heist", "rob", "merampok"],
   category: "rpg",
   description: "Heist — rampok toko/bank/museum, high risk high reward",
   usage: ".heist (list target)\n.heist <target>",

@@ -8,7 +8,6 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "combatmod",
   alias: ["combatmod"],
-  aliases: ["buff", "debuff", "bless", "blessnpc", "curse", "ward", "trap"],
   category: "rpg",
   description: "Buff/debuff combat, bless harian, curse musuh, ward & trap",
   usage: ".buff | .debuff (reply) | .bless | .curse (reply) | .ward | .trap",

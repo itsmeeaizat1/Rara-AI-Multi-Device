@@ -4,7 +4,7 @@ import { ensureRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "spyrpg", alias: ["spyrpg"], aliases: ["spyrpg", "spy", "intai"],
+  name: "spyrpg", alias: ["spyrpg", "spy", "intai"],
   category: "rpg", description: "Intai lokasi & info target (reply target)",
   usage: ".spyrpg (reply target)", example: ".spyrpg (reply pesan target)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false, cooldown: 10, energi: 5, isEnabled: true,

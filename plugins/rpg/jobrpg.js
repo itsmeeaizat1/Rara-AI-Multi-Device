@@ -10,7 +10,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "jobrpg",
-  alias: ["jobrpg", "classrpg", "setclass"],
+  alias: ["jobrpg", "setclass"],
   category: "rpg",
   description: "Lihat/ganti job class dan kelola skill RPG",
   usage: ".jobrpg <list|change <job|skill <list|unlock|upgrade>>",

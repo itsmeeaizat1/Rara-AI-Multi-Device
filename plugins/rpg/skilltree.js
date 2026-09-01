@@ -7,8 +7,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "skilltree",
-  alias: ["skilltree"],
-  aliases: ["skilltree", "talent", "learnskill", "research", "mutate"],
+  alias: ["skilltree", "research"],
   category: "rpg",
   description: "Skill tree, talent class, belajar skill, riset & mutasi skill",
   usage: ".skilltree | .talent | .learnskill <nama> | .research | .mutate",

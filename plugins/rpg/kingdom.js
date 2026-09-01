@@ -8,7 +8,6 @@ import te from "../../src/lib/nova-error.js";
 const pluginConfig = {
   name: "kingdom",
   alias: ["kingdom"],
-  aliases: ["kingdom", "build", "defend"],
   category: "rpg",
   description: "Dirikan kerajaan, bangun markas, dan pertahankan",
   usage: ".kingdom <nama> | .build | .defend",
