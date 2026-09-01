@@ -182,7 +182,7 @@ const config = {
     smartTriggers: false,
     commandSuggestion: true, // Tampilkan saran saat command tidak ditemukan
     commandSuggestionCooldown: 5, // Base cooldown (detik) untuk not-found suggestion
-    commandSuggestionSmart: true, // Progressive escalation (makin spam makin lama cooldown)
+    commandSuggestionSmart: false, // Default: manual (cooldown statis). Owner set ke true untuk smart mode
   },
 
   registration: {
