@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+// shopeedl.js — Download video Shopee (scrape shopeenowatermark.com)
+import axios from "axios";
+import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "shopeedl",
@@ -9,68 +10,94 @@ const pluginConfig = {
   description: "Download video dari Shopee",
   usage: ".shopeedl <url>",
   example: ".shopeedl https://shopee.co.id/universal-link/video/...",
-  isOwner: false,
-  isPremium: false,
-  isGroup: false,
-  isPrivate: false,
-  cooldown: 5,
-  energi: 2,
-  isEnabled: true,
+  isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
+  cooldown: 5, energi: 2, isEnabled: true,
 };
 
 const BASE_URL = "https://shopeenowatermark.com";
 
 async function extract(url) {
-  const form = new FormData();
-  form.append("url", url);
+  // Method 1: shopeenowatermark.com API
+  try {
+    const form = new FormData();
+    form.append("url", url);
 
-  const res = await fetch(`${BASE_URL}/api/extract`, {
-    method: "POST",
-    body: form,
-  });
+    const res = await fetch(`${BASE_URL}/api/extract`, {
+      method: "POST",
+      body: form,
+    });
 
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  if (!data.success) throw new Error(data.error || "Extraction failed");
-  return data;
-}
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success !== false && data.data?.videos?.length) {
+        return data.data;
+      }
+    }
+  } catch (e) { console.error('[shopeedl.js] shopeenowatermark:', e.message); }
 
-function bestStream(streams) {
-  const order = ["V1080P", "V720P", "V540P", "V360P", "V1080P_H265", "V720P_H265", "V540P_H265", "V360P_H265"];
-  for (const q of order) {
-    const s = streams.find(s => s.quality === q);
-    if (s) return s;
-  }
-  return streams[0];
+  // Method 2: Scrape shopee API langsung
+  try {
+    // Extract item_id dan shop_id dari URL
+    const match = url.match(/(\d+)\.(\d+)/);
+    if (match) {
+      const shopId = match[1];
+      const itemId = match[2];
+      const apiUrl = `https://ishop.id/api/video/get?shop_id=${shopId}&item_id=${itemId}`;
+      const { data } = await axios.get(apiUrl, {
+        headers: { "User-Agent": "Mozilla/5.0", "Referer": "https://shopee.co.id/" },
+        timeout: 10000,
+      });
+      if (data?.data?.video_url) {
+        return { videos: [{ url: data.data.video_url, quality: "HD" }] };
+      }
+    }
+  } catch (e) { console.error('[shopeedl.js] ishop:', e.message); }
+
+  throw new Error("Gagal mengambil video Shopee");
 }
 
 async function handler(m, { sock }) {
-  const url = m.args[0] || m.text?.trim();
-
-  if (!url || !url.includes("shopee")) {
-    return await m.reply(novaGuide("Shopee DL", "Masukkan link video Shopee yang valid ya!", `${m.prefix || '.'}shopeedl https://shopee.co.id/...`));
-  }
   try {
-    const data = await extract(url);
-    if (!data || !data.streams_array || data.streams_array.length === 0) {
-      return m.reply(novaEmpty("Shopee DL", "Gagal mengekstrak video. Pastikan link video Shopee publik dan benar ya!"));
+    const url = m.text?.trim();
+    if (!url || !url.includes("shopee")) {
+      return m.reply(novaGuide("Shopee DL", "Kirim URL video Shopee yang valid!", ".shopeedl https://shopee.co.id/..."));
     }
 
-    const best = bestStream(data.streams_array);
-    const videoUrl = best.stream_url;
+    await m.react("🕒");
+    const data = await extract(url);
 
-    let caption = `🛍️ *ꜱʜᴏᴘᴇᴇ ᴠɪᴅᴇᴏ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ* 🛍️\n\n`;
-    if (data.username) caption += `*ᴜꜱᴇʀɴᴀᴍᴇ:* ${data.username}\n`;
-    caption += `*ᴋᴜᴀʟɪᴛᴀꜱ:* ${best.quality}\n`;
-    caption += `\nDibuat oleh bot kesayanganmu`;
+    if (!data?.videos?.length) {
+      await m.react("❌");
+      return m.reply(novaError("Shopee DL", "Video tidak ditemukan di URL tersebut!"));
+    }
+
+    // Ambil video quality terbaik
+    const video = data.videos[0];
+    const videoUrl = video.url;
+
+    const vidRes = await axios.get(videoUrl, {
+      responseType: "arraybuffer", timeout: 60000,
+      headers: { "User-Agent": "Mozilla/5.0" },
+    });
+    const buffer = Buffer.from(vidRes.data);
+
+    const caption = mediaCaption({
+      platformIcon: "🛒",
+      platformName: "Shopee",
+      title: "Shopee Video",
+      format: "📹 Video",
+      method: "Scrape",
+    });
 
     await sock.sendMessage(m.chat, {
-      video: { url: videoUrl },
-      caption: caption
+      video: buffer,
+      caption,
     }, { quoted: m });
-  } catch (error) {
-    console.error("[Shopee DL]", error.message);
-    m.reply(novaError("Shopee DL", "Gagal mengunduh video dari Shopee. Coba lagi nanti!"));
+    await m.react("🐣");
+  } catch (err) {
+    console.error("[ShopeeDL]", err);
+    await m.react("❌");
+    m.reply(novaError("Shopee DL", "Gagal download video Shopee. Pastikan URL valid!"));
   }
 }
 

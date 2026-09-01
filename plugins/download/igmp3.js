@@ -1,42 +1,76 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// igmp3.js — Download audio dari Instagram
-import axios from "axios";
-import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+// igmp3.js — Download audio dari Instagram (pakai scraper ig.js lokal)
+import { PinDL } from "../../src/scraper/pindl.js";
+import { igDownload } from "../../src/scraper/ig.js";
+import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "igmp3",
-  alias: ["igmp3", "instagrammp3", "igaudio"],
+  alias: ["igmp3"],
   category: "download",
   description: "Download audio dari Instagram",
   usage: ".igmp3 <url_instagram>",
-  example: ".igmp3 https://instagram.com/reel/xxx",
+  example: ".igmp3 https://www.instagram.com/reel/xxx",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
-  cooldown: 15, energi: 3, isEnabled: true,
+  cooldown: 15, energi: 2, isEnabled: true,
 };
 
 async function handler(m, { sock }) {
   try {
-    const from = m.key.remoteJid;
+    const url = m.text?.trim();
+    if (!url || !url.includes("instagram.com")) {
+      return m.reply(novaGuide("IG MP3", "Kirim URL Instagram yang valid!", ".igmp3 https://www.instagram.com/reel/xxx"));
+    }
+
     await m.react("🕒");
-    const url = m.args?.[0]?.trim();
-    if (!url || !url.includes("instagram")) return m.reply(claraWrap("igmp3", `Masukkan URL Instagram!\n\nContoh: .igmp3 https://instagram.com/reel/xxx`, "guide"));
 
-    const res = await axios.get(`https://api.siputzx.my.id/api/d/ig?url=${encodeURIComponent(url)}`);
-    const data = res.data?.data || res.data;
-    const audioUrl = data?.audio?.[0]?.url || data?.mp3 || data?.audio_url;
-    if (!audioUrl) return m.reply(claraWrap("igmp3", "Gagal mengambil audio!", "error"));
+    // Pakai scraper IG lokal
+    let result;
+    try {
+      result = await igDownload(url);
+    } catch (e) {
+      console.error("[igmp3.js] ig scraper:", e.message);
+      await m.react("❌");
+      return m.reply(novaError("IG MP3", "Gagal mengunduh dari Instagram. Pastikan URL valid!"));
+    }
 
-    await sock.sendMessage(from, {
-      audio: { url: audioUrl },
+    if (!result || (!result.url && !result.download)) {
+      await m.react("❌");
+      return m.reply(novaError("IG MP3", "Media tidak ditemukan atau private!"));
+    }
+
+    const mediaUrl = result.url || result.download;
+    const title = result.title || "Instagram Audio";
+
+    // Download sebagai audio
+    const axios = (await import("axios")).default;
+    const audioRes = await axios.get(mediaUrl, {
+      responseType: "arraybuffer",
+      timeout: 60000,
+      headers: { "User-Agent": "Mozilla/5.0" },
+    });
+    const buffer = Buffer.from(audioRes.data);
+
+    const caption = mediaCaption({
+      platformIcon: "📸",
+      platformName: "Instagram",
+      title,
+      format: "🎵 Audio",
+      method: "Scraper Lokal",
+    });
+
+    await sock.sendMessage(m.chat, {
+      audio: buffer,
       mimetype: "audio/mpeg",
-      caption: "Instagram Audio ~"
+      ptt: false,
+      fileName: `${title}.mp3`,
     }, { quoted: m });
+    await m.reply(caption);
     await m.react("🐣");
   } catch (err) {
-    console.error("igmp3 error:", err);
+    console.error("[IG MP3]", err);
     await m.react("❌");
-    return m.reply(claraWrap("igmp3", te(m.prefix, m.command, m.pushName), "error"));
+    m.reply(novaError("IG MP3", "Gagal download audio Instagram. Coba lagi nanti!"));
   }
 }
 

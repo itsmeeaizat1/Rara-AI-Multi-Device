@@ -1,75 +1,87 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+// videy.js — Download video dari Videy.co (direct CDN, no API)
 import axios from "axios";
-import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const TMP_DIR = path.join(process.cwd(), "tmp");
-
-function ensureTmp() {
-  if (!fs.existsSync(TMP_DIR)) fs.mkdirSync(TMP_DIR, { recursive: true });
-}
-
-function tempPath(ext) {
-  ensureTmp();
-  return path.join(TMP_DIR, `videy_${Date.now()}_${Math.random().toString(16).slice(2)}${ext}`);
-}
-
-async function handler(m, { sock, config: botConfig }) {
-    const prefix = botConfig.command?.prefix || ".";
-  try {
-    const url = m.text?.trim();
-
-    if (!url) {
-      await m.reply(novaNoInput("Videy Downloader", "Masukkan URL video Videy yang mau kamu download!", `${prefix}videy https://videy.co/video/xxxx`));
-      return { handled: true };
-    }
-
-    const apiUrl = `https://api.zeks.xyz/api/videy?url=${encodeURIComponent(url)}`;
-    let response;
-    try {
-      response = await axios.get(apiUrl, { timeout: 10000 });
-    } catch (apiErr) {
-      throw new Error("API Videy sedang bermasalah nih. Coba lagi nanti atau gunakan downloader lain.");
-    }
-    const data = response.data;
-    const result = data?.result || data;
-    const videoUrl = result?.url || result?.link || url;
-
-    const text =
-      claraWrap("Videy", [`│ Link: *${url}*`,
-        `│ Result: *${videoUrl}*`,
-        "│ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}videy <link> untuk download video lain`) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
-
-    await m.reply(text);
-  } catch (error) {
-    await m.reply(novaError("Videy Downloader", error.message || "Gagal mengambil video dari Videy"));
-  }
-
-  return { handled: true };
-}
+import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "videy2",
-  alias: ["videy2", "videy"],
+  name: "videy",
+  alias: ["videy", "videydl"],
   category: "download",
-  description: "Download video dari Videy",
-  usage: ".videy <link>",
-  example: ".videy https://videy.co/video/xxxx",
-  isOwner: false,
-  isPremium: false,
-  isGroup: true,
-  isPrivate: false,
-  cooldown: 10,
-  energi: 0,
-  isEnabled: true,
+  description: "Download video dari Videy.co",
+  usage: ".videy <url_videy>",
+  example: ".videy https://videy.co/v?id=xxx",
+  isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
+  cooldown: 10, energi: 2, isEnabled: true,
 };
+
+async function getVideyDownload(url) {
+  // Extract video ID dari URL
+  let videoId;
+  const idMatch = url.match(/[?&]id=([a-zA-Z0-9]+)/) || url.match(/\/v\/([a-zA-Z0-9]+)/) || url.match(/videy\.co\/([a-zA-Z0-9]+)/);
+  if (idMatch) {
+    videoId = idMatch[1];
+  } else {
+    // Mungkin user kirim ID langsung
+    videoId = url.trim();
+  }
+
+  if (!videoId) throw new Error("ID video tidak ditemukan dari URL");
+
+  // Videy CDN pattern: https://cdn.videy.co/{id}.mp4
+  const cdnUrl = `https://cdn.videy.co/${videoId}.mp4`;
+
+  // Verify URL valid dengan HEAD request
+  try {
+    const headRes = await axios.head(cdnUrl, { timeout: 10000, headers: { "User-Agent": "Mozilla/5.0" } });
+    if (headRes.status === 200) return cdnUrl;
+  } catch (e) {
+    // Coba format .webm
+    try {
+      const cdnWebm = `https://cdn.videy.co/${videoId}.webm`;
+      const headRes2 = await axios.head(cdnWebm, { timeout: 10000, headers: { "User-Agent": "Mozilla/5.0" } });
+      if (headRes2.status === 200) return cdnWebm;
+    } catch {}
+  }
+
+  throw new Error("Video tidak ditemukan. Mungkin URL invalid atau video sudah dihapus.");
+}
+
+async function handler(m, { sock }) {
+  try {
+    const url = m.text?.trim();
+    if (!url) {
+      return m.reply(novaGuide("Videy", "Kirim URL video Videy yang mau kamu download!", ".videy https://videy.co/v?id=xxx"));
+    }
+
+    await m.react("🕒");
+
+    const videoUrl = await getVideyDownload(url);
+
+    // Download video buffer
+    const vidRes = await axios.get(videoUrl, {
+      responseType: "arraybuffer", timeout: 60000,
+      headers: { "User-Agent": "Mozilla/5.0" },
+    });
+    const buffer = Buffer.from(vidRes.data);
+
+    const caption = mediaCaption({
+      platformIcon: "🎬",
+      platformName: "Videy",
+      title: "Videy Video",
+      format: "📹 Video",
+      method: "Direct CDN",
+    });
+
+    await sock.sendMessage(m.chat, {
+      video: buffer,
+      caption,
+    }, { quoted: m });
+    await m.react("🐣");
+  } catch (err) {
+    console.error("[Videy]", err);
+    await m.react("❌");
+    m.reply(novaError("Videy", err.message || "Gagal download video Videy. Pastikan URL valid!"));
+  }
+}
 
 export { pluginConfig as config, handler };
