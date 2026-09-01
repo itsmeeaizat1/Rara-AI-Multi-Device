@@ -1248,3 +1248,8 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - .yuri - Yuri (NSFW)
 - .zettai - Zettai ryouiki (NSFW)
 - .setnotfound - owner - Atur smart anti-spam command not found (on/off/cooldown/smart/reset)
+
+- .dramaboxdl - download - Download video dari DramaBox via IkyyXD
+- .gdrivedl - download - Download file dari Google Drive via IkyyXD
+- .igv2 - download - Download video/foto Instagram V2 via IkyyXD (fallback: builtin ig.js)
+- .laheludl - download - Download video dari Lahelu via IkyyXD
