@@ -42,7 +42,7 @@ async function UnlimitedAI(prompt, character = "nova-ai") {
       status: true,
       code: 200,
       character: char.name,
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash-lite",
       answer,
     };
   } catch (error) {
@@ -50,7 +50,7 @@ async function UnlimitedAI(prompt, character = "nova-ai") {
       status: false,
       code: 500,
       character: char.name,
-      model: "gemini-2.5-flash",
+      model: "gemini-3.5-flash-lite",
       error: error.message,
     };
   }
