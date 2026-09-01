@@ -739,6 +739,14 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - Welcome history tracking (last 50)
 - Stats: total welcome, AI rate, fallback rate, per-group
 - Fallback ke welcome biasa kalau AI gagal
+
+### Welcome/Goodbye V3 — API Thumbnail (autoresbot)
+- `.setwelcometype v3` / `.setgoodbyetype v3`
+- Layout vertikal: judul (WELCOME/GOODBYE) → "Selamat datang di (group)" → PP user di tengah → "Member: total" di bawah
+- Background dari autoresbot API (`/api/maker/bg-default`)
+- Fallback otomatis ke local canvas (V2) jika API mati/Cloudflare block
+- Autoresbot key: set di `apikeys.json` field `autoresbot`
+
 - `.autosmartwelcome on/off` — Aktifkan/matikan
 - `.autosmartwelcome mode <1/2/3>` — Pilih mode welcome
 - `.autosmartwelcome personality <teks>` — Set personality welcome
