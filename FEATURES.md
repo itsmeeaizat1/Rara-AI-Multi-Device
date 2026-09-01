@@ -3,7 +3,7 @@
 > Daftar lengkap fitur per kategori. Update file ini setiap kali ada perubahan fitur.
 
 ## Statistik
-- **Total Plugin:** 1.635
+- **Total Plugin:** 1.661
 - **Total Command:** 2.118+
 - **Total Kategori:** 39
 - **Versi:** 21.8.0
@@ -198,7 +198,7 @@ binderbyteKey: ""   // Binderbyte cek resi
 - `.listonline` — group — Cek daftar member online/aktif di grup (alias: .liston)
 ## 📂 Daftar Kategori & Command
 
-### 🤖 AI (138 plugin)
+### 🤖 AI (164 plugin)
 nova-ai, nova-ai-addprovider, nova-ai-blog, nova-ai-code, nova-ai-copilot, nova-ai-detector, nova-ai-email, nova-ai-essay, nova-ai-explainer, nova-ai-image, nova-ai-ocr, nova-ai-prompt, nova-ai-providers, nova-ai-review, nova-ai-set, nova-ai-social, nova-ai-story, nova-ai-translate, nova-ai-web, nova-ai4chat, aianalyze, aiavatar, aibrowse, aicaption, aichat, aichat-history, aichat-model, aigrup, aihelp, aiidea, aiimggen, aimath, aiseo, aiset, aitimewarp, aivoice, anime-gen, audio.wav, automemegenerator, claudehaiku, deepai, deepaixemoz, deepseek, deepseekv2, deepseekv2xemoz, deepseekv4flash, deepseekv4flashxemoz, dolphin, enhance, feelbetter, gita, gpt4o, gpt5, gpt5v2xemoz, gpt5xemoz, jokowi-nova-ai, kobo-nova-ai, matematika, multi-nova-ai, musicmaker, muslimai, nova-nova-ai, novabanana, novabanana2, ocrsolve, openrouter, parallelai, prabowo-nova-ai, puter, paraphrase, qwen3, rewrite, simi, slangtranslate, sologo, stt, summarize, tanyadokter, text2img2, text2img, to3d, toanime, toblack, tocartoon, tocermin, tochibi, toemotebatu, tofigure, tofigurev2, toghibli, tohijab, toisland, tojapanese, tomanga, tomekah, tooilpainting, txt2img2, vision, waguri-nova-ai, zai
 roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, pujianai, sarkasai, cegpt
 
@@ -226,6 +226,32 @@ roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, puji
 - .claudev2 - ai - Claude AI v2 (multi fallback engine)
 - .gpt4v2 - ai - GPT-4 v2 (multi fallback engine)
 - .bardai - ai - Google Bard/Gemini AI (fallback unlimited)
+- .blackboxv2 - ai - Blackbox Pro AI v2 (abella.icu)
+- .cegptv2 - ai - GPT Logic v2 (chateverywhere.app)
+- .bardaiv2 - ai - Gemini Pro v2 (luminai.my.id)
+- .geminiimgv2 - ai - Gemini AI v2 dengan image recognition
+- .venicev2 - ai - Venice AI v2 (dolphin-3.0-mistral-24b)
+- .writecreamv2 - ai - Writecream AI v2 (persona custom)
+- .felov2 - ai - Felo AI v2 (jawaban dengan sumber)
+- .metav2 - ai - Meta AI v2 (Llama 3.1 8B)
+- .quantumv2 - ai - Quantum AI v2
+- .zerogptv2 - ai - ZeroGPT AI v2
+- .chataiv2 - ai - ChatAI v2 (chatai.org)
+- .chatbotaiv2 - ai - ChatBot AI v2 (abella.icu)
+- .aivelynv2 - ai - Aivelyn AI v2 (velyn.biz.id)
+- .gemmav2 - ai - Gemma AI v2 (gemma-2-9b-it)
+- .allamv2 - ai - Allam AI v2 (allam-2-7b)
+- .llamav2 - ai - Llama AI v2
+- .gptturbov2 - ai - GPT Turbo v2
+- .luminv2 - ai - Lumin AI v2 (luminai.my.id)
+- .yuprav2 - ai - Yupra AI v2 (yupradev.biz.id)
+- .logiceaiv2 - ai - Logic E-AI v2 (custom persona)
+- .aoyov2 - ai - Aoyo AI v2 (abella.icu)
+- .conciseaiv2 - ai - ConciseAI v2 (HMAC signed)
+- .typliv2 - ai - Typli AI v2 (text completion)
+- .polyaiv2 - ai - Poly AI v2 (polybuzz.ai)
+- .aliceaiv2 - ai - Alice AI v2 (chat + TikTok + image)
+- .chatewherev2 - ai - ChatEverywhere AI v2
 ### 🌸 Anime (14 plugin)
 animechar, animecouple, animegenre, animemanga, animemoments, animepowerlevel, animequote, animerec, animestudio, animetop, animevillain, autoanimewinbu, otakudict, wallpaperanime
 
@@ -420,7 +446,7 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 
 ## ✅ Status Audit (Update Terakhir)
 
-- **Total Plugin:** 1.635 (12 plugin dibikin ulang setelah dihapus AI agent lain)
+- **Total Plugin:** 1.661 (12 plugin dibikin ulang setelah dihapus AI agent lain)
 - **Syntax Check:** 0 error
 - **Broken Import:** 0
 - **api.neoxr.eu:** 0 (semua diganti)
