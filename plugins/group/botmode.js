@@ -67,17 +67,17 @@ function handler(m, { sock }) {
     const currentMode = groupData.botMode || 'all'
 
     if (!mode) {
-        let modeList = ''
+        let modeList = []
         for (const [key, val] of Object.entries(MODES)) {
             const isCurrent = key === currentMode ? ' ⬅️' : ''
-            modeList += `│ \`${m.prefix}botmode ${key}\`${isCurrent}\n`
-            modeList += `│ └ ${val.desc}\n`
+            modeList.push(`│ \`${m.prefix}botmode ${key}\`${isCurrent}`)
+            modeList.push(`│    ${val.desc}`)
         }
 
         return m.reply(claraWrap("Bot Mode", [`Mode saat ini: *${currentMode.toUpperCase()}* (${MODES[currentMode]?.name || 'Unknown'})`,
             "",
             "━━━ Pilihan ━━━",
-            ...modeLines,
+            ...modeList,
             "",
             `*ꜰʟᴀɢ ꜱᴛᴏʀᴇ:*`,
             `\`${m.prefix}botmode store\` - Manual order`,

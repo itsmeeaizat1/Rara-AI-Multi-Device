@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, tipText,  claraWrap } from "../../src/lib/nova-menu-style.js";
+import { toSC } from "../../src/lib/nova-menu-style.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 
 const pluginConfig = {
@@ -26,52 +26,19 @@ async function handler(m, { sock, config: botConfig }) {
     const groups = Object.keys(db.groups || {}).length;
 
     const text =
-      claraWrap("Info V2", [`│ Bot: *${botConfig.bot?.name || "Nova AI"}*`,
-        `│ Versi: *${botConfig.bot?.version || "1.0.0"}*`,
-        `│ Mode: *${(botConfig.mode || "public").toUpperCase()}*`,
-        `│ Prefix: *${prefix}*`,
-        `│ Users: *${users}*`,
-        `│ Groups: *${groups}*`].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali`) +
-      "\n" +
-      tipText(`Ketik ${prefix}aihelp untuk tanya AI`) +
-      "\n" +
-      tipText(`Ketik ${prefix}allmenu untuk all menu`);
+      "╭─「 ✦ " + toSC("Info Bot") + " ✦ 」\n│\n" +
+      "│ • " + toSC("Bot") + " : *" + (botConfig.bot?.name || "Nova AI") + "*\n" +
+      "│ • " + toSC("Versi") + " : *" + (botConfig.bot?.version || "1.0.0") + "*\n" +
+      "│ • " + toSC("Mode") + " : *" + (botConfig.mode || "public").toUpperCase() + "*\n" +
+      "│ • " + toSC("Prefix") + " : *" + prefix + "*\n" +
+      "│ • " + toSC("Users") + " : *" + users + "*\n" +
+      "│ • " + toSC("Groups") + " : *" + groups + "*\n" +
+      "╰────  •  ────";
 
-    await sock.sendMessage(m.chat, {
-      text,
-      buttons: [
-        {
-          type: 1,
-          buttonId: `menu_infov2_${Date.now()}`,
-          buttonText: { displayText: "📋 Menu" },
-          value: "menu",
-        },
-        {
-          type: 1,
-          buttonId: `aihelp_infov2_${Date.now()}`,
-          buttonText: { displayText: "💡 Tanya AI" },
-          value: "aihelp",
-        },
-        {
-          type: 1,
-          buttonId: `allmenu_infov2_${Date.now()}`,
-          buttonText: { displayText: "📌 All Menu" },
-          value: "allmenu",
-        },
-      ],
-      headerType: 1,
-    });
+    return m.reply(text);
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      novaError("InfoV2", "Gagal nih, coba lagi ya");
-
-    await m.reply(text, "infov2");
+    return m.reply("╭─「 ✦ InfoV2 ✦ 」\n│\n│ ❌ " + toSC("Gagal menampilkan info") + "\n│\n╰────  •  ────");
   }
-
-  return { handled: true };
 }
 
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler };
