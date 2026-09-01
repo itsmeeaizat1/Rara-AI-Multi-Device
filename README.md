@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20add%20RPG%20database%20wrapper%20methods%20%E2%80%94%20-success?style=for-the-badge)
-> *Commit: "fix: add RPG database wrapper methods — fix 145 silent-fail calls across 39 plugins"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20unified%20downloader%20(.downloader)%20%2B-success?style=for-the-badge)
+> *Commit: "feat: unified downloader (.downloader) + SoundCloud API v2 scraper"*
 <!--END_SECTION:latest-update-->
 
 ---
