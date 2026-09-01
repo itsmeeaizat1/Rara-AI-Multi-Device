@@ -24,7 +24,7 @@ function getRandomTruth() {
 export const config = {
   name: "truth",
   alias: ["truth"],
-  category: "rpg",
+  category: "game",
   description: "Truth or Dare — pertanyaan jujur",
   usage: ".truth",
   example: ".truth",
