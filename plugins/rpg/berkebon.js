@@ -53,17 +53,17 @@ async function handler(m, { sock }) {
       if (action !== "panen") {
         const crop = CROPS.find(c => c.id === rpg.farm.crop);
         if (crop) {
-          let msg = `╭─「 ᴋᴇʙᴏɴ 」\n`;
+          let msg = `╭─「 ✦ ᴋᴇʙᴏɴ ✦ 」\n`;
           msg += `│ 🌱 Tanaman siap dipanen!\n`;
           msg += `│ 📦 ${crop.name} — ketik *.berkebon panen*\n`;
-          msg += `╰──────────`;
+          msg += `╰────  •  ────`;
           return m.reply(msg);
         }
       }
     }
 
     if (!action || action === "cek") {
-      let msg = `╭─「 ᴋᴇʙᴏɴ 」\n`;
+      let msg = `╭─「 ✦ ᴋᴇʙᴏɴ ✦ 」\n`;
 
       if (rpg.farm.crop) {
         const crop = CROPS.find(c => c.id === rpg.farm.crop);
@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
         msg += `│ 📌 .berkebon tanam <id> untuk mulai\n`;
       }
 
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
 
@@ -123,14 +123,14 @@ async function handler(m, { sock }) {
       saveRpg(m, { farm: rpg.farm });
 
       await m.react("🐣");
-      let msg = `╭─「 ᴋᴇʙᴏɴ 」\n`;
+      let msg = `╭─「 ✦ ᴋᴇʙᴏɴ ✦ 」\n`;
       msg += `│ ✅ Berhasil tanam!\n`;
       msg += `│ 🌱 Tanaman: *${crop.name}*\n`;
       msg += `│ ⏰ Grow time: *${crop.growTime / 60000} menit*\n`;
       msg += `│\n`;
       msg += `│ Ketik .berkebon cek untuk cek progress\n`;
       msg += `│ Ketik .berkebon panen saat sudah siap\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }
@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
       saveRpg(m, { farm: rpg.farm });
 
       await m.react("🐣");
-      let msg = `╭─「 ᴋᴇʙᴏɴ 」\n`;
+      let msg = `╭─「 ✦ ᴋᴇʙᴏɴ ✦ 」\n`;
       msg += `│ ✅ Panen berhasil!\n`;
       msg += `│ 🌾 Tanaman: *${crop.name}*\n`;
       msg += `│\n`;
@@ -178,7 +178,7 @@ async function handler(m, { sock }) {
       msg += `│ 📦 Item: *+${itemQty}x ${ITEM_DB[crop.item]?.name || crop.item}*\n`;
       msg += `│\n`;
       msg += `│ 📌 Ketik .berkebon tanam <id> untuk tanam lagi\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }

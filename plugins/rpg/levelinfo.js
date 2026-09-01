@@ -21,7 +21,7 @@ async function handler(m, { sock }) {
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("levelinfo", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
-    let msg = `╭─「 LEVEL INFO 」\n`;
+    let msg = `╭─「 ✦ LEVEL INFO ✦ 」\n`;
     msg += `│ 👤 ${m.pushName || "Player"}\n`;
     msg += `│\n`;
     msg += `│ 📊 Level: ${rpg.level || 1}\n`;
@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     msg += `│ 📖 Job Lv: ${rpg.jobLevel || 1}\n`;
     msg += `│ 📖 Job EXP: ${rpg.jobExp || 0}/${rpg.jobExpNext || 50}\n`;
     if (rpg.skill) msg += `│ 🃏 Skill: ${rpg.skill}\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     await m.react("🐣");
     return m.reply(msg);
   } catch (err) {

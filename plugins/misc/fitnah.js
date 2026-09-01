@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const replyMsg = parts[2] || "Oh iya";
     const time = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
 
-    let result = `╭─「 FAKE CHAT 」\n`;
+    let result = `╭─「 ✦ FAKE CHAT ✦ 」\n`;
     result += `│\n`;
     result += `│ ${target} - ${time}\n`;
     result += `│ ${targetMsg}\n`;
@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     result += `│ ${replyMsg}\n`;
     result += `│\n`;
     result += `│ ⚠️ Ini hanya prank/hiburan\n`;
-    result += `╰──────────`;
+    result += `╰────  •  ────`;
     await m.react("🐣");
     return m.reply(result);
   } catch (err) {

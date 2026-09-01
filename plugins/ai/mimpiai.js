@@ -79,13 +79,13 @@ Gunakan bahasa Indonesia, tafsir dengan bijak dan positif. Jangan menakut-nakuti
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ᴛᴀғsɪʀ ᴍɪᴍᴘɪ 」\n`;
+    let msg = `╭─「 ✦ ᴛᴀғsɪʀ ᴍɪᴍᴘɪ ✦ 」\n`;
     msg += `│ 💭 Mimpi: *${text}*\n`;
     msg += `│\n`;
     msg += formatted;
     msg += `│\n`;
     msg += `│ ⚠️ Tafsir mimpi hanya referensi, bukan kepastian\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("mimpiai error:", err);

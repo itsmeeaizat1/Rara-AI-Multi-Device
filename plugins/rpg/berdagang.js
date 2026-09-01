@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastDagang", DAGANG_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 ʙᴇʀᴅᴀɢᴀɴɢ 」\n`;
+    let msg = `╭─「 ✦ ʙᴇʀᴅᴀɢᴀɴɢ ✦ 」\n`;
     msg += `│ 🏘️ Dari: *${buyVillage.name}*\n`;
     msg += `│ 📍 Ke: *${sellVillage.name}*\n`;
     msg += `│ 📦 Barang: *${good.name}* x${qty}\n`;
@@ -119,7 +119,7 @@ async function handler(m, { sock }) {
     msg += `│\n`;
     msg += `│ 💼 Gold: *${rpg.gold - cost + revenue}*\n`;
     msg += `│ ⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     return m.reply(msg);
   } catch (err) {

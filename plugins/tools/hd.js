@@ -46,13 +46,13 @@ async function handler(m, { sock, args }) {
   const img = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
 
   if (!img) {
-    let txt = `╭─「 HD ENHANCE 」\n`;
-    txt += `╰──────────\n`;
+    let txt = `╭─「 ✦ HD ENHANCE ✦ 」\n`;
+    txt += `╰────  •  ────\n`;
     txt += `│ Kirim/reply gambar dulu ya!\n`;
     txt += `│ Contoh: .remini (reply gambar)\n`;
     txt += `│ Custom scale: .remini 4x\n`;
     txt += `│ Kirim sebagai dokumen: .remini doc\n`;
-    txt += `╰──────────`;
+    txt += `╰────  •  ────`;
     return await m.reply( txt, "remini");
   }
 
@@ -69,11 +69,11 @@ async function handler(m, { sock, args }) {
 
     const { buffer: resultBuffer, width: outW, height: outH } = await upscaleImage(buffer, scale);
     const sizeMB = (resultBuffer.length / (1024 * 1024)).toFixed(2);
-    let caption = `╭─「 HD ENHANCED 」\n`;
+    let caption = `╭─「 ✦ HD ENHANCED ✦ 」\n`;
     caption += `│ Scale: ${scale}x (${outW}x${outH})\n`;
     caption += `│ Size: ${sizeMB}MB\n`;
     caption += `│ Engine: Sharp Lanczos3 (Local)\n`;
-    caption += `╰──────────`;
+    caption += `╰────  •  ────`;
 
     if (wantDoc || resultBuffer.length > 5 * 1024 * 1024) {
       await sock.sendMessage(
@@ -98,10 +98,10 @@ async function handler(m, { sock, args }) {
     }
   } catch (e) {
     console.error("[HD/Remini] Error:", e.message);
-    let txt = `╭─「 ERROR 」\n`;
+    let txt = `╭─「 ✦ ERROR ✦ 」\n`;
     txt += `│ Gagal enhance gambar!\n`;
     txt += `│ ${e.message}\n`;
-    txt += `╰──────────`;
+    txt += `╰────  •  ────`;
     await m.reply(claraWrap("remini", txt));
   }
 }

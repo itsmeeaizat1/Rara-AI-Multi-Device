@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
     const action = args[0]?.toLowerCase();
 
     if (!action || action === "cek" || action === "info") {
-      let msg = `╭─「 ʀᴀғғʟᴇ 」\n`;
+      let msg = `╭─「 ✦ ʀᴀғғʟᴇ ✦ 」\n`;
       msg += `│ 🎫 Lotere RPG — Coba keberuntunganmu!\n`;
       msg += `│\n`;
       msg += `│ 💵 Harga tiket: *${TICKET_PRICE} gold*\n`;
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
       msg += `│ 💀 Zonk: *nothing* (24.5%)\n`;
       msg += `│\n`;
       msg += `│ 📌 .rafflerpg buy — beli & buka tiket\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }
@@ -101,13 +101,13 @@ async function handler(m, { sock }) {
     if (!prize) {
       // Zonk
       await m.react("🐣");
-      let msg = `╭─「 ʀᴀғғʟᴇ 」\n`;
+      let msg = `╭─「 ✦ ʀᴀғғʟᴇ ✦ 」\n`;
       msg += `│ 🎫 Tiket: *${TICKET_PRICE} gold*\n`;
       msg += `│ 🎰 Membuka tiket...\n`;
       msg += `│\n`;
       msg += `│ 💀 *ᴢᴏɴᴋ!* Tidak menang apapun\n`;
       msg += `│ Coba lagi ya! Jackpot 50.000 gold menunggu\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ʀᴀғғʟᴇ 」\n`;
+    let msg = `╭─「 ✦ ʀᴀғғʟᴇ ✦ 」\n`;
     msg += `│ 🎫 Tiket: *${TICKET_PRICE} gold*\n`;
     msg += `│ 🎰 Membuka tiket...\n`;
     msg += `│\n`;
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
     if (gemText) msg += gemText;
     msg += `│\n`;
     msg += `│ 💼 Gold: *${rpg.gold - TICKET_PRICE + prize.gold}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     return m.reply(msg);
   } catch (err) {

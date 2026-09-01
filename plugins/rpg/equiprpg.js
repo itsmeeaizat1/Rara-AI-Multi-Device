@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
     // Show current equipment
     if (!itemId || command === "equiprpg" && itemId === "list") {
       const equip = getEquipStats(m);
-      let msg = `╭─「 ᴇϙᴜɪᴘᴍᴇɴᴛ 」\n`;
+      let msg = `╭─「 ✦ ᴇϙᴜɪᴘᴍᴇɴᴛ ✦ 」\n`;
       msg += `│ 👤 ${m.pushName || "Player"}\n`;
       msg += `│\n`;
 
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
       msg += `│\n`;
       msg += `│ 📌 .equiprpg <item> untuk equip\n`;
       msg += `│ 📌 .unequiprpg <slot> untuk unequip\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
 
       if (result.success) {
         await m.react("🐣");
-        let msg = `╭─「 ᴇϙᴜɪᴘ 」\n`;
+        let msg = `╭─「 ✦ ᴇϙᴜɪᴘ ✦ 」\n`;
         msg += `│ ✅ Berhasil equip!\n`;
         msg += `│\n`;
         msg += `│ 📦 Item: *${itemInfo.name}*\n`;
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
         if (itemInfo.critRate) msg += `│ 🎯 Crit: *+${itemInfo.critRate}%*\n`;
         if (itemInfo.critDmg) msg += `│ 💥 Crit DMG: *+${itemInfo.critDmg}%*\n`;
         if (itemInfo.evasion) msg += `│ 💨 Evasion: *+${itemInfo.evasion}%*\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
 
         return m.reply(msg);
       } else {
@@ -128,11 +128,11 @@ async function handler(m, { sock }) {
 
       if (result.success) {
         await m.react("🐣");
-        let msg = `╭─「 ᴜɴᴇϙᴜɪᴘ 」\n`;
+        let msg = `╭─「 ✦ ᴜɴᴇϙᴜɪᴘ ✦ 」\n`;
         msg += `│ ✅ Berhasil unequip!\n`;
         msg += `│ 📂 Slot: *${SLOT_NAMES[slot]}*\n`;
         msg += `│ 📦 Item dikembalikan ke inventory\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
 
         return m.reply(msg);
       } else {

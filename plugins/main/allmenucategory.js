@@ -168,7 +168,7 @@ async function handler(m, { sock, db }) {
       }
 
       let txt = `${weatherBlock}
-╭─「 ${toSC("Daftar Kategori")} 」
+╭─「 ✦ ${toSC("Daftar Kategori")} ✦ 」
 │ *${toSC("Total")}:* ${catEntries.length} ${toSC("kategori")}
 │ *${toSC("Total Fitur")}:* ${totalAllCmds} ${toSC("command")}
 │
@@ -176,7 +176,7 @@ async function handler(m, { sock, db }) {
       for (const entry of catEntries) {
         txt += `│ ${entry.emoji} \`\`${entry.catName}\`\` — ${entry.total} cmd\n`;
       }
-      txt += `│\n│ Ketik \`\`${prefix}allmenucategory <nama>\`\`\n│   atau klik tombol Kategori di bawah\n╰──────────\n\nNova AI WhatsApp Bot`;
+      txt += `│\n│ Ketik \`\`${prefix}allmenucategory <nama>\`\`\n│   atau klik tombol Kategori di bawah\n╰────  •  ────\n\nNova AI WhatsApp Bot`;
 
       const navButtons = [
         { id: `${prefix}menu`, text: toSC("Menu") },
@@ -203,7 +203,7 @@ async function handler(m, { sock, db }) {
 
     if (!matchedCat) {
       await m.reply(
-        `╭─「 Error 」\n│ Kategori \`${categoryArg}\` tidak ditemukan\n│ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰──────────`
+        `╭─「 ✦ Error ✦ 」\n│ Kategori \`${categoryArg}\` tidak ditemukan\n│ Ketik \`${prefix}allmenucategory\` untuk list kategori\n╰────  •  ────`
       );
       return;
     }
@@ -213,7 +213,7 @@ async function handler(m, { sock, db }) {
 
     if (matchedCat === "owner" && !m.isOwner) {
       await m.reply(
-        `╭─「 ${toSC("Akses Ditolak")} 」\n│ ${toSC("Kategori ini hanya untuk owner")}\n╰──────────`
+        `╭─「 ✦ ${toSC("Akses Ditolak")} ✦ 」\n│ ${toSC("Kategori ini hanya untuk owner")}\n╰────  •  ────`
       );
       return;
     }
@@ -224,7 +224,7 @@ async function handler(m, { sock, db }) {
 
     if (allCommands.length === 0) {
       await m.reply(
-        `╭─「 Kosong 」\n│ Kategori \`${matchedCat}\` tidak ada command\n╰──────────`
+        `╭─「 ✦ Kosong ✦ 」\n│ Kategori \`${matchedCat}\` tidak ada command\n╰────  •  ────`
       );
       return;
     }
@@ -241,7 +241,7 @@ async function handler(m, { sock, db }) {
     // Compact 2-column layout — beda dari allmenu yang dump semua kategori
     const emoji = CATEGORY_EMOJI?.[matchedCat] || "📋";
     let txt = `${weatherBlock2}
-╭─「 ${emoji} *${toSC(catName)}* 」
+╭─「 ✦ ${emoji} *${toSC(catName)}* ✦ 」
 │ *${toSC("Total")}:* ${totalFitur} ${toSC("fitur")}
 │
 `;
@@ -260,7 +260,7 @@ async function handler(m, { sock, db }) {
       }
     }
 
-    txt += `│\n╰──────────\n\n${toSC("Nova AI WhatsApp Bot")}`;
+    txt += `│\n╰────  •  ────\n\n${toSC("Nova AI WhatsApp Bot")}`;
 
     const navButtons2 = [
       buildCategoryButton(m, db, prefix, toSC("Kategori Lain")),
@@ -279,7 +279,7 @@ async function handler(m, { sock, db }) {
     });
   } catch (e) {
     console.error("[allmenucategory] handler error:", e.message);
-    try { await m.reply(`╭─「 ${toSC("Menu")} 」\n│ ❌ ${toSC("Gagal menampilkan kategori")}\n│ ${toSC("Coba lagi nanti")}\n╰──────────`); } catch {}
+    try { await m.reply(`╭─「 ✦ ${toSC("Menu")} ✦ 」\n│ ❌ ${toSC("Gagal menampilkan kategori")}\n│ ${toSC("Coba lagi nanti")}\n╰────  •  ────`); } catch {}
   }
 }
 

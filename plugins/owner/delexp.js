@@ -62,11 +62,11 @@ async function handler(m, { sock }) {
     
     const newExp = db.updateExp(targetJid, -amount)
     await m.reply(claraWrap("delexp", `✅ *Exp Dikurangi*\n\n` +
-        `╭─「 Detail 」\n` +
+        `╭─「 ✦ Detail ✦ 」\n` +
         `│ 👤 User: @${targetJid.split('@')[0]}\n` +
         `│ ➖ Kurang: *-${formatNumber(amount)}*\n` +
         `│ ⭐ sIsa: *${formatNumber(newExp)}*\n` +
-        `╰──────────`))
+        `╰────  •  ────`))
 }
 
 export { pluginConfig as config, handler }

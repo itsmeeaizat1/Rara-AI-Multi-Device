@@ -54,13 +54,13 @@ async function handler(m, { sock }) {
       });
 
       await m.react("🐣");
-      let msg = `╭─「 ᴍᴀʀᴋᴇᴛ - sᴇʟʟ 」\n`;
+      let msg = `╭─「 ✦ ᴍᴀʀᴋᴇᴛ - sᴇʟʟ ✦ 」\n`;
       msg += `│ Item: *${item.name || itemName}*\n`;
       msg += `│ Price: *${price} gold*\n`;
       msg += `│ ID: *${id}*\n`;
       msg += `│\n`;
       msg += `│ Item dipasang di market!\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
 
@@ -99,13 +99,13 @@ async function handler(m, { sock }) {
       market.delete(String(id));
 
       await m.react("🐣");
-      let msg = `╭─「 ᴍᴀʀᴋᴇᴛ - ʙᴜʏ 」\n`;
+      let msg = `╭─「 ✦ ᴍᴀʀᴋᴇᴛ - ʙᴜʏ ✦ 」\n`;
       msg += `│ Item: *${listing.item.name}*\n`;
       msg += `│ Price: *${listing.price} gold*\n`;
       msg += `│ Dari: ${listing.sellerName}\n`;
       msg += `│\n`;
       msg += `│ ✅ Berhasil dibeli!\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
 
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("trading", `Market kosong.\n\nJual item: ${m.prefix}trading sell <item> <price>`, "guide"));
     }
 
-    let msg = `╭─「 ʀᴘɢ ᴍᴀʀᴋᴇᴛ 」\n`;
+    let msg = `╭─「 ✦ ʀᴘɢ ᴍᴀʀᴋᴇᴛ ✦ 」\n`;
     let count = 0;
     for (const [id, listing] of market) {
       if (count >= 15) break;
@@ -124,7 +124,7 @@ async function handler(m, { sock }) {
     }
     msg += `│\n`;
     msg += `│ ${m.prefix}trading buy <id>\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("trading error:", err);

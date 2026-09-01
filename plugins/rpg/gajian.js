@@ -46,11 +46,11 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let msg = `╭─「 GAJIAN 」\n`;
+    let msg = `╭─「 ✦ GAJIAN ✦ 」\n`;
     msg += `│ 👤 ${m.pushName || "Player"}\n`;
     msg += `│ 💰 +Rp${GAJIAN_GOLD.toLocaleString("id-ID")}\n`;
     msg += `│ ✨ +${GAJIAN_EXP} EXP\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     return m.reply(msg);
   } catch (err) {

@@ -119,7 +119,7 @@ async function notifyOwner(sock, m, pkg, groupLink) {
   const buyerName = m.pushName || "Unknown";
   const groupName = m.isGroup ? (m.chat?.split("@")[0] || "Unknown") : "Unknown";
 
-  const notifText = `╭─「 ${toSC("PEMBELIAN SEWA BARU")} 」
+  const notifText = `╭─「 ✦ ${toSC("PEMBELIAN SEWA BARU")} ✦ 」
 │ ${toSC("Pembeli")}: *${toSC(buyerName)}*
 │ ${toSC("Nomor")}: ${buyerNumber}
 │ ${toSC("Paket")}: *${toSC(pkg.label)}*
@@ -128,8 +128,7 @@ async function notifyOwner(sock, m, pkg, groupLink) {
 │ ${toSC("Grup")}: ${groupLink || (m.isGroup ? m.chat : toSC("Belum ditentukan"))}
 │ ${toSC("Status")}: *${toSC("MENUNGGU PEMBAYARAN")}*
 │ ${toSC("Waktu")}: ${new Date().toLocaleString("id-ID")}
-╰──────────
-
+╰────  •  ────
 ${toSC("User ini menunggu konfirmasi pembayaran sewa.")}
 ${toSC("Jika sudah bayar, ketik")}: *.addsewa ${groupLink || "<link-grup>"} ${pkg.duration}*`;
 

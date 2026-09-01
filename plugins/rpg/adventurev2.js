@@ -266,7 +266,7 @@ async function handler(m, { sock }) {
     const freshRpg = ensureRpg(m, m.pushName);
 
     await m.react("🐣");
-    let out = `╭─「 ${title} 」\n`;
+    let out = `╭─「 ✦ ${title} ✦ 」\n`;
     out += `│ 🗺️ ${msg}\n`;
     out += `│\n`;
     if (expGain > 0) out += `│ ✦ EXP: *+${expGain}*\n`;
@@ -277,7 +277,7 @@ async function handler(m, { sock }) {
     out += `│\n`;
     out += `│ ❤️ HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
     out += `│ ⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
-    out += `╰──────────`;
+    out += `╰────  •  ────`;
 
     return m.reply(out);
   } catch (err) {

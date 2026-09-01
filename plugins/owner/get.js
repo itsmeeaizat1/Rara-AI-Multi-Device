@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
   let input = m.fullArgs?.trim() || m.text?.trim();
   if (!input) {
     return m.reply( `🌐 *HTTP REQUEST TOOL*\n\n` +
-        `╭─「 OPTIONS 」\n` +
+        `╭─「 ✦ OPTIONS ✦ 」\n` +
         `│ │ \`--method <GET|POST|PUT|PATCH|DELETE>\`\n` +
         `│ │ \`--json <body>\` — JSON body\n` +
         `│ │ \`--header \"Key: Value\"\` — Custom header\n` +
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
         `│ │ \`--verbose\` / \`-v\` — Show response headers\n` +
         `│ │ \`--timeout <ms>\` — Request timeout\n` +
         `│ │ \`--post\` — Shortcut for --method POST\n` +
-        `╰──────────\n\n` +
+        `╰────  •  ────\n\n` +
         `\`Examples:\`\n` +
         `.get https://api.example.com\n` +
         `.get https://api.example.com --post --json {\"key\":\"val\"}\n` +
@@ -238,19 +238,19 @@ async function handler(m, { sock }) {
 
     let header = `🌐 *HTTP RESPONSE*
 
-╭─「 INFO
+╭─「 ✦ INFO
 │ ${statusEmoji} Status: ${response.status} ${response.statusText}
 │ 📨 Method: ${method}
 │ ⏱️ Time: ${elapsed}ms
 │ 📦 Size: ${formatSize(size)}
 │ 📄 Type: ${mimeType || "unknown"}
-╰──────────`;
+╰────  •  ────`;
 
     if (isVerbose) {
       const respHeaders = Object.entries(response.headers)
         .map(([k, v]) => `│ ${k}: ${v}`)
         .join("\n");
-      header += `\n\n╭─「 📨 RESPONSE HEADERS 」\n${respHeaders}\n╰──────────`;
+      header += `\n\n╭─「 ✦ 📨 RESPONSE HEADERS ✦ 」\n${respHeaders}\n╰────  •  ────`;
     }
 
     if (category === "gif") {

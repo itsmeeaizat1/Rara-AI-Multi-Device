@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
         `│ Folder: \`${folderName}\`\n` +
         `│ Size: \`${code.length} bytes\`\n` +
         `│ Hot Reload: ${reloadResult.success ? "✅ Sukses" : "⚠️ Pending"}\n` +
-        `╰───────\n\n` +
+        `╰────  •  ────\n\n` +
         `Plugin sudah aktif dan siap digunakan!`,
     );
   } catch (error) {

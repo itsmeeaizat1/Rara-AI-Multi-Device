@@ -186,10 +186,10 @@ function createLine(length = 20, char = CHARS.horizontal) {
  * @returns {string} Header string
  * @example
  * createHeader('DASHBOARD');
- * // "╭─「 DASHBOARD 」─────"
+ * // "╭─「 ✦ DASHBOARD ✦ 」─────"
  */
 function createHeader(title, width = 20) {
- return `╭─「 ${title} 」`;
+ return `╭─「 ✦ ${title} ✦ 」`;
 }
 
 /**
@@ -197,10 +197,10 @@ function createHeader(title, width = 20) {
  * @param {number} [width=20] - Lebar box
  * @returns {string} Footer string
  * @example
- * createFooter(); // "╰────────────────────"
+ * createFooter(); // "╰────  •  ────"
  */
 function createFooter(width = 20) {
- return `╰──────────`;
+ return `╰────  •  ────`;
 }
 
 /**

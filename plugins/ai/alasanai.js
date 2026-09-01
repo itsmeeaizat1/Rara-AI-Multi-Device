@@ -48,13 +48,13 @@ Tiap alasan 1-2 kalimat. Bahasa Indonesia. Buat yang masuk akal dan tidak terlal
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ᴀʟᴀsᴀɴ ɢᴇɴᴇʀᴀᴛᴏʀ 」\n`;
+    let msg = `╭─「 ✦ ᴀʟᴀsᴀɴ ɢᴇɴᴇʀᴀᴛᴏʀ ✦ 」\n`;
     msg += `│ 🤔 Situasi: *${text}*\n`;
     msg += `│\n`;
     msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
     msg += `│\n`;
     msg += `│ 😏 Pilih yang paling meyakinkan!\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("alasanai error:", err);

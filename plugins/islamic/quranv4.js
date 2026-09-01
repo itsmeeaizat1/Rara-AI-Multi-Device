@@ -38,7 +38,7 @@ async function handler(m, { text, args }) {
             }
 
             let lines = [];
-            lines.push("╭─「 Daftar Surat Al-Quran 」");
+            lines.push("╭─「 ✦ Daftar Surat Al-Quran ✦ 」");
             lines.push("│ Total: 114 Surat");
             lines.push("│ ");
 
@@ -54,7 +54,7 @@ async function handler(m, { text, args }) {
             lines.push("│ 💡 *Cara Pakai:*");
             lines.push("│ Ketik .quranv4 <nomor_surat> untuk membaca.");
             lines.push("│ Contoh: .quranv4 1");
-            lines.push("╰──────────");
+            lines.push("╰────  •  ────");
 
             return await m.reply(lines.join("\n"));
         }
@@ -62,9 +62,9 @@ async function handler(m, { text, args }) {
         const surahNum = parseInt(rawInput, 10);
         if (isNaN(surahNum) || surahNum < 1 || surahNum > 114) {
             return await m.reply(
-                "╭─「 Error 」\n" +
+                "╭─「 ✦ Error ✦ 」\n" +
                 "│ Nomor surat tidak valid! Harap masukkan nomor 1 sampai 114.\n" +
-                "╰──────────"
+                "╰────  •  ────"
             );
         }
 
@@ -76,7 +76,7 @@ async function handler(m, { text, args }) {
         }
 
         let lines = [];
-        lines.push(`╭─「 Surat ${surah.namaLatin} (${surah.arti}) 」`);
+        lines.push(`╭─「 ✦ Surat ${surah.namaLatin} (${surah.arti}) ✦ 」`);
         lines.push(`│ ${surah.jumlahAyat} ayat | ${surah.tempatTurun}`);
         lines.push("│ ");
 
@@ -99,14 +99,14 @@ async function handler(m, { text, args }) {
             }
         }
 
-        lines.push("╰──────────");
+        lines.push("╰────  •  ────");
 
         return await m.reply(lines.join("\n"));
     } catch (error) {
         return await m.reply(
-            "╭─「 Error 」\n" +
+            "╭─「 ✦ Error ✦ 」\n" +
             `│ ${error.message || "Gagal memproses permintaan Al-Quran."}\n` +
-            "╰──────────"
+            "╰────  •  ────"
         );
     }
 }

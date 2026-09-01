@@ -25,11 +25,11 @@ async function handler(m, { sock }) {
         
         await sock.sendMessage(m.chat, {
             text: `🔄 *Restarting Bot...*\n\n` +
-                  `╭─「 Info 」\n` +
+                  `╭─「 ✦ Info ✦ 」\n` +
                   `│ ⏰ Time: ${new Date().toLocaleTimeString('id-ID')}\n` +
                   `│ 🔧 Method: Process Spawn\n` +
                   `│ 📦 PID: ${process.pid}\n` +
-                  `╰──────────\n\n` +
+                  `╰────  •  ────\n\n` +
                   `Bot akan restart dalam 2 detik...\n` +
                   `Proses mungkin memakan waktu 10-30 detik`
         }, { quoted: m })

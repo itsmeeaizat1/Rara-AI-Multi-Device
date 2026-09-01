@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
 
         const top5 = animeList.slice(0, 5)
 
-        let listText = "╭─「 Anime Search 」\n"
+        let listText = "╭─「 ✦ Anime Search ✦ 」\n"
         top5.forEach((item, index) => {
             const title = item.title || item.title_english || item.title_japanese || 'Unknown'
             const year = item.year || item.aired?.prop?.from?.year || 'N/A'
@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
                 listText += `│\n`
             }
         })
-        listText += "╰──────────"
+        listText += "╰────  •  ────"
 
         const imageUrl = top5[0]?.images?.jpg?.image_url || top5[0]?.images?.jpg?.large_image_url || null
 

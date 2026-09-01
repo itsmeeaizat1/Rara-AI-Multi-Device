@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
         `│ \`${m.prefix}jadian @tag\`\n` +
         `│ Reply pesan + \`${m.prefix}jadian\`\n\n` +
-        `╰──────────`
+        `╰────  •  ────`
       );
     }
 
@@ -136,7 +136,7 @@ async function handler(m, { sock }) {
       `│ ⏱️ Berlaku *1 jam*\n\n` +
       `_Balas pesan ini dengan *terima* atau *tolak*_\n` +
       `Atau gunakan \`${m.prefix}terima\` / \`${m.prefix}tolak\`\n\n` +
-      `╰──────────`
+      `╰────  •  ────`
     );
     await m.react("💘");
   } catch (e) {

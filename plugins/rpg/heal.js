@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     const freshRpg = ensureRpg(m, m.pushName);
-    let msg = `╭─「 ʜᴇᴀʟ 」\n`;
+    let msg = `╭─「 ✦ ʜᴇᴀʟ ✦ 」\n`;
     if (usedItems.length > 0) {
       msg += `│ 🧪 Menggunakan: *${usedItems.join(", ")}*\n`;
     } else {
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
     msg += `│ ❤️ HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
     msg += `│ ⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
     msg += `│ 💧 Mana: *${freshRpg.mana}/${freshRpg.maxMana}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     return m.reply(msg);
   } catch (err) {

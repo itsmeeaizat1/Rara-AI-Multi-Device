@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
     });
 
     text +=
-      `╰───────\n\n` +
+      `╰────  •  ────\n\n` +
       `Total: ${scrapers.length} scraper\n\n` +
       `Gunakan \`${m.prefix}gantiscraper <nama>\` dengan reply code`;
 
@@ -253,7 +253,7 @@ async function handler(m, { sock }) {
       replyText += `│ Old Size: \`${oldSize} bytes\`\n`;
     }
 
-    replyText += `╰───────\n\n`;
+    replyText += `╰────  •  ────\n\n`;
 
     if (backupPath) {
       const relBackup = path.relative(process.cwd(), backupPath);

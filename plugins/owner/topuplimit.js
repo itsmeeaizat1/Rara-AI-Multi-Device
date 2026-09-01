@@ -62,11 +62,11 @@ async function handler(m, { sock }) {
     db.setUser(targetJid, userData);
     db.save();
 
-    return m.reply( `╭─「 TOPUP LIMIT 」\n` +
+    return m.reply( `╭─「 ✦ TOPUP LIMIT ✦ 」\n` +
       `│ User: *${targetJid.split("@")[0]}*\n` +
       `│ Sebelum: *${formatNumber(beforeEnergi)}*\n` +
       `│ Sesudah: *∞ Unlimited*\n` +
-      `╰──────────`, "topuplimit");
+      `╰────  •  ────`, "topuplimit");
   }
 
   // Tambah limit
@@ -74,12 +74,12 @@ async function handler(m, { sock }) {
   db.save();
 
   const targetName = targetJid.split("@")[0];
-  let msg = `╭─「 TOPUP LIMIT 」\n`;
+  let msg = `╭─「 ✦ TOPUP LIMIT ✦ 」\n`;
   msg += `│ User: *${targetName}*\n`;
   msg += `│ Sebelum: *${formatNumber(beforeEnergi)}*\n`;
   msg += `│ Tambah: *+${formatNumber(amount)}*\n`;
   msg += `│ Sesudah: *${formatNumber(afterEnergi)}*\n`;
-  msg += `╰──────────`;
+  msg += `╰────  •  ────`;
 
   return m.reply( msg, "topuplimit");
 }

@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
 
     replyText +=
       ` │ 🔄 Hot Reload: ${reloadResult.success ? "✅ Sukses" : "⚠️ Pending"}\n` +
-      `╰───────\n\n`;
+      `╰────  •  ────\n\n`;
 
     if (backupPath) {
       const relBackup = path.relative(process.cwd(), backupPath);

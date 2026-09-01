@@ -29,7 +29,7 @@ async function handler(m, { sock, config: botConfig }) {
     const keyword = args.join(" ").toLowerCase().trim();
 
     if (!keyword) {
-      await m.reply(`╭─「 Aɪ Hᴇʟᴘ 」
+      await m.reply(`╭─「 ✦ Aɪ Hᴇʟᴘ ✦ 」
 
 Ketik *${prefix}aihelp <keyword>* untuk cari command.
 
@@ -38,7 +38,7 @@ ${prefix}aihelp download
 ${prefix}aihelp sticker
 ${prefix}aihelp group
 
-╰──────────`);
+╰────  •  ────`);
       return;
     }
 
@@ -58,12 +58,12 @@ ${prefix}aihelp group
     }
 
     if (matches.length === 0) {
-      await m.reply(`╭─「 Aɪ Hᴇʟᴘ 」
+      await m.reply(`╭─「 ✦ Aɪ Hᴇʟᴘ ✦ 」
 │
 │ Gak ada command untuk "${keyword}" nih
 │ 💡 Coba keyword lain ya!
 │ Contoh: download, sticker, game, rpg
-╰──────────`);
+╰────  •  ────`);
       return;
     }
 
@@ -73,15 +73,15 @@ ${prefix}aihelp group
       cmdLines += `│ ${prefix}${matches[i].name}${desc}\n`;
     }
 
-    const text = `╭─「 Aɪ Hᴇʟᴘ 」\n│ *Keyword:* ${keyword}
+    const text = `╭─「 ✦ Aɪ Hᴇʟᴘ ✦ 」\n│ *Keyword:* ${keyword}
 │ *Ditemukan:* ${matches.length} command
 │ 「 Hasil 」
-${cmdLines}╰──────────`;
+${cmdLines}╰────  •  ────`;
 
     await m.reply(text);
   } catch (e) {
     console.error("[aihelp] handler error:", e.message);
-    try { await m.reply("╭─「 AI Help 」\n│ Ada error nih\n│ Coba lagi ya\n╰──────────"); } catch {}
+    try { await m.reply("╭─「 ✦ AI Help ✦ 」\n│ Ada error nih\n│ Coba lagi ya\n╰────  •  ────"); } catch {}
   }
 }
 

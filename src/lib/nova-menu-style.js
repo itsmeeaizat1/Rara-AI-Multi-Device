@@ -1,18 +1,17 @@
 // === Nova AI Menu Style (v8 — Unified Box) ===
 // Aesthetic khas bot WhatsApp dev Indonesia:
-// ╭─「 」 box drawing, │ clean body lines, │ sub-section, ╰─── footer
+// ╭─「 ✦  ✦」 box drawing, │ clean body lines, │ sub-section, ╰────  •  ──── footer
 // + modern data: ▰▱ progress bars, ● status dots, system info
 // SEMUA text pakai smallcaps font (toSC diterapkan ke header + body)
 // Semua fungsi lama tetap export dengan signature sama.
 //
 // STYLE GUIDE (wajib konsisten di semua plugin):
-// ┌─ Header:   ╭─「 Title 」
+// ┌─ Header:   ╭─「 ✦ Title ✦ 」
 // │─ Body:     │ content
 // │─ Empty:    │
 // │─ Sub:      │ 「 Sub Title 」
 // │─ Content:  │ content
-// │─ Footer:   ╰──────────
-
+// │─ Footer:   ╰────  •  ────
 // Small caps map (q & x tidak ada di Unicode smallcaps, tetap as-is)
 const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
 
@@ -52,7 +51,7 @@ const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
  * Empty: pass "" as a line.
  */
 function buildBox(headerTitle, lines = []) {
-  const headerCore = `╭─「 ${headerTitle} 」`;
+  const headerCore = `╭─「 ✦ ${headerTitle} ✦ 」`;
   let maxW = headerCore.length;
   for (const line of lines) {
     let len;
@@ -86,7 +85,7 @@ function buildBox(headerTitle, lines = []) {
       body.push(`│ ${text}`);
     }
   }
-  const footer = "╰" + "─".repeat(Math.max(0, W - 1));
+  const footer = "╰────  •  ────";
   return [header, ...body, footer].join("\n");
 }
 
@@ -133,11 +132,11 @@ function novaCaption({ emoji = "", name = "", description = "", usage = "", exam
 // ═══════════════════════════════════════════════
 
 function botHeader(botName) {
-  return `╭─「 ${toSC(botName)} 」`;
+  return `╭─「 ✦ ${toSC(botName)} ✦ 」`;
 }
 
 function botSignature(botName) {
-  return `╰──────────`;
+  return `╰────  •  ────`;
 }
 
 function sectionBox(emoji, title, lines = []) {
@@ -163,7 +162,7 @@ function kv(key, value, padTo = 10) {
 }
 
 function categoryBox(emoji, name, commands, prefix, perLine = 3) {
-  const headerCore = `╭─「 ${toSC(name)} (${commands.length}) 」`;
+  const headerCore = `╭─「 ✦ ${toSC(name)} (${commands.length}) ✦ 」`;
   const lines = [];
   let maxW = headerCore.length;
   for (let i = 0; i < commands.length; i += perLine) {
@@ -175,7 +174,7 @@ function categoryBox(emoji, name, commands, prefix, perLine = 3) {
   const W = Math.max(maxW + 3, 24);
   const header = headerCore + "─".repeat(Math.max(0, W - headerCore.length));
   const body = lines;
-  const footer = "╰" + "─".repeat(Math.max(0, W - 1));
+  const footer = "╰────  •  ────";
   return [header, ...body, footer].join("\n");
 }
 
@@ -186,7 +185,7 @@ function categoryBox(emoji, name, commands, prefix, perLine = 3) {
 // ═══════════════════════════════════════════════
 
 function sectionHeader(title) {
-  return `╭─「 ${toSC(title)} 」`;
+  return `╭─「 ✦ ${toSC(title)} ✦ 」`;
 }
 
 function sectionItem(text) {
@@ -195,7 +194,7 @@ function sectionItem(text) {
 }
 
 function sectionClose() {
-  return `╰──────────`;
+  return `╰────  •  ────`;
 }
 
 function sectionSpacer() {
@@ -210,13 +209,13 @@ function buildSection(title, items = []) {
   const W = Math.max(maxW + 3, 24);
   const closedHeader = header + "─".repeat(Math.max(0, W - header.length));
   const closedBody = bodyLines;
-  const closedFooter = "╰" + "─".repeat(Math.max(0, W - 1));
+  const closedFooter = "╰────  •  ────";
   return [closedHeader, ...closedBody, closedFooter].join("\n");
 }
 
 function claraHeader(title, emoji = "") {
-  if (isRealEmoji(emoji)) return `╭─「 ${emoji} ${toSC(title)} 」`;
-  return `╭─「 ${toSC(title)} 」`;
+  if (isRealEmoji(emoji)) return `╭─「 ✦ ${emoji} ${toSC(title)} ✦ 」`;
+  return `╭─「 ✦ ${toSC(title)} ✦ 」`;
 }
 
 function bracketBox(emoji, label, lines = []) {
@@ -402,7 +401,7 @@ const CATEGORY_EMOJIS = {
 function novaInfoBox(title, items = [], opts = {}) {
   const useSC = opts.sc !== false;
   const hdr = useSC ? toSC(title) : title;
-  const headerStr = `╭─「 ${hdr} 」`;
+  const headerStr = `╭─「 ✦ ${hdr} ✦ 」`;
   const lines = [];
   let maxW = headerStr.length;
   
@@ -440,7 +439,7 @@ function novaInfoBox(title, items = [], opts = {}) {
       out += line.text + " ".repeat(Math.max(0, W - line.text.length)) + "\n";
     }
   }
-  out += "╰" + "─".repeat(Math.max(0, W - 1));
+  out += "╰────  •  ────";
   return out;
 }
 
@@ -511,10 +510,67 @@ function novaMenuLayout({ infoTitle = "Info", info = [], categories = [], prefix
 }
 
 
+// ═══════════════════════════════════════════════
+// novaReply — Standard reply format for all plugins
+// ╭─「 ✦ Title ✦ 」
+// │
+// │ • Label  : value
+// │ • Label2 : value2
+// │
+// │ ✅ Status message
+// ╰────  •  ────
+// ═══════════════════════════════════════════════
+/**
+ * @param {object} opts
+ * @param {string} opts.title - Reply title (e.g. "YTMP4", "Sticker")
+ * @param {Array} opts.info - Key-value items: {label, value}
+ * @param {string} opts.status - Status line (e.g. "✅ File berhasil dikirim")
+ * @param {string} opts.content - Extra content/caption after status
+ * @param {boolean} opts.sc - Apply smallcaps (default: true)
+ */
+function novaReply({ title = "", info = [], status = "", content = "", sc = true } = {}) {
+  const scFn = sc ? toSC : (s) => String(s);
+  let out = `╭─「 ✦ ${scFn(title)} ✦ 」\n`;
+  out += `│\n`;
+  
+  if (info && info.length > 0) {
+    let maxLabel = 0;
+    for (const item of info) {
+      if (item && item.label !== undefined) {
+        const labelLen = scFn(item.label).length;
+        if (labelLen > maxLabel) maxLabel = labelLen;
+      }
+    }
+    maxLabel = Math.max(maxLabel, 4);
+    
+    for (const item of info) {
+      if (item && item.label !== undefined) {
+        const label = scFn(item.label).padEnd(maxLabel);
+        const value = item.value !== undefined ? String(item.value) : "";
+        out += `│ • ${label} : ${value}\n`;
+      }
+    }
+    out += `│\n`;
+  }
+  
+  if (status) {
+    out += `│ ${status}\n`;
+  }
+  
+  if (content) {
+    out += `${content}\n`;
+  }
+  
+  out += `╰────  •  ────`;
+  return out;
+}
+
+
 export {
   toSC, scLine, isRealEmoji,
   novaInfoBox,
   novaMenuLayout,
+  novaReply,
   buildBox, novaCaption,
   botHeader, botSignature, sectionBox,
   progressBar, statusDot, kv,
@@ -779,7 +835,7 @@ export { novaError, novaEmpty, novaNoInput, novaNoQuoted, novaSuccess, novaGuide
 export function novaBox(header, lines = [], opts = {}) {
   const useSC = opts.sc !== false;
   const hdr = useSC ? toSC(header) : header;
-  const headerStr = `╭─「 ${hdr} 」`;
+  const headerStr = `╭─「 ✦ ${hdr} ✦ 」`;
   let maxW = headerStr.length;
   const processed = lines.map(l => {
     if (l === "---" || l === "─") return { type: "sep" };
@@ -807,6 +863,6 @@ export function novaBox(header, lines = [], opts = {}) {
       out += `│ ${item.raw}` + "\n";
     }
   }
-  out += "╰" + "─".repeat(Math.max(0, W - 1));
+  out += "╰────  •  ────";
   return out;
 }

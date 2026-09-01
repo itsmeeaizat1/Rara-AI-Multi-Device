@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
   const expNeeded = nextLevelExp - currentLevelExp;
   const progress = getLevelBar(expInLevel, expNeeded);
 
-  let txt = "╭─「 Level Info 」\n";
+  let txt = "╭─「 ✦ Level Info ✦ 」\n";
   txt += "│\n";
   txt += "│ 👤 User: *" + targetName + "*\n";
   txt += "│ 🆔 Tag: @" + targetJid.split("@")[0] + "\n";
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
   txt += "│ ↳ " + formatNumber(expInLevel) + " / " + formatNumber(expNeeded) + " XP\n";
   txt += "│\n";
   txt += "│ 💡 Next level: *" + formatNumber(expToNextLevel(exp)) + "* exp lagi!\n";
-  txt += "╰──────────";
+  txt += "╰────  •  ────";
 
   await m.reply(txt, { mentions: [targetJid] });
 }

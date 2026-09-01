@@ -100,13 +100,13 @@ function autoCloseExpired(db, sock) {
         auction.winner = winner;
         const winnerText =
           "🏆 *ʟᴇʟᴀɴɢ ʙᴇʀᴀᴋʜɪʀ*\n\n" +
-          "╭─「 ɪɴꜰᴏ 」\n" +
+          "╭─「 ✦ ɪɴꜰᴏ ✦ 」\n" +
           "│ Item: *" + auction.title + "*\n" +
           "│ ID: `" + id + "`\n" +
           "│ Pemenang: @" + winner.bidder.split("@")[0] + "\n" +
           "│ Bid Terakhir: *" + formatRupiah(winner.amount) + "*\n" +
           "│ Total Bid: " + auction.bids.length + "\n" +
-          "╰──────────\n\n" +
+          "╰────  •  ────\n\n" +
           "│ Hubungi penjual untuk penyerahan barang";
 
         sock.sendMessage(auction.chatId, {
@@ -117,11 +117,11 @@ function autoCloseExpired(db, sock) {
         sock.sendMessage(auction.chatId, {
           text:
             "😔 *ʟᴇʟᴀɴɢ ʙᴇʀᴀᴋʜɪʀ*\n\n" +
-            "╭─「 ɪɴꜰᴏ 」\n" +
+            "╭─「 ✦ ɪɴꜰᴏ ✦ 」\n" +
             "│ Item: *" + auction.title + "*\n" +
             "│ ID: `" + id + "`\n" +
             "│ Total Bid: 0\n" +
-            "╰──────────\n\n" +
+            "╰────  •  ────\n\n" +
             "│ Lelang berakhir tanpa peserta",
         }).catch((e) => { console.error('[lelang.js]:', e.message); });
       }

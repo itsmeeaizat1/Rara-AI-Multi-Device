@@ -57,14 +57,14 @@ async function handler(m, { sock }) {
       }
       const grouped = {};
       data.catches.forEach(f => { grouped[f.name] = (grouped[f.name] || 0) + 1; });
-      let msg = `╭─「 ғɪsʜ ɪɴᴠᴇɴᴛᴏʀʏ 」\n`;
+      let msg = `╭─「 ✦ ғɪsʜ ɪɴᴠᴇɴᴛᴏʀʏ ✦ 」\n`;
       msg += `│ Total: *${data.totalCaught}*\n`;
       msg += `│\n`;
       for (const [name, count] of Object.entries(grouped)) {
         const fish = FISH_TYPES.find(f => f.name === name);
         msg += `│ ${fish?.emoji || "🐟"} ${name} x${count} (${fish?.rarity || "?"})\n`;
       }
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
 
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     const isRare = fish.rarity === "S" || fish.rarity === "SS" || fish.rarity === "SSS";
-    let msg = `╭─「 ғɪsʜɪɴɢ 」\n`;
+    let msg = `╭─「 ✦ ғɪsʜɪɴɢ ✦ 」\n`;
     msg += `│ ${isRare ? "✨ TANGKAPAN BERHASIL! ✨" : "Berhasil menangkap!"}\n`;
     msg += `│\n`;
     msg += `│ ${fish.emoji} *${fish.name}*\n`;
@@ -119,7 +119,7 @@ async function handler(m, { sock }) {
     msg += `│ Best catch: *${data.bestCatch || "-"}*\n`;
     msg += `│\n`;
     msg += `│ ${m.prefix}fishing sell - jual semua ikan\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("fishing error:", err);

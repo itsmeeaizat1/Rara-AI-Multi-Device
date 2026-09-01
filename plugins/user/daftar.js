@@ -220,12 +220,12 @@ function buildConfirmationRewardBlock(user) {
   const rewards = getRegistrationRewards();
 
   if (user?.hasClaimedRegisterReward) {
-    return `╭─「 ʙᴏɴᴜꜱ 」
+    return `╭─「 ✦ ʙᴏɴᴜꜱ ✦ 」
 │ Bonus daftar pertama sudah pernah diambil
 │ Daftar ulang tidak mendapat reward lagi\n╰┈┈┈┈┈┈┈┈`;
   }
 
-  return `╭─「 ʀᴇᴡᴀʀᴅꜱ 」
+  return `╭─「 ✦ ʀᴇᴡᴀʀᴅꜱ ✦ 」
 │ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin
 │ ⚡ +${rewards.energi} Energi
 │ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈`;
@@ -235,12 +235,12 @@ function buildSuccessRewardBlock(alreadyClaimedReward, randomBonus) {
   const rewards = getRegistrationRewards();
 
   if (alreadyClaimedReward) {
-    return `╭─「 ʙᴏɴᴜꜱ 」
+    return `╭─「 ✦ ʙᴏɴᴜꜱ ✦ 」
 │ Bonus daftar sudah pernah diklaim
 │ Tidak ada reward tambahan kali ini\n╰┈┈┈┈┈┈┈┈`;
   }
 
-  return `╭─「 ʀᴇᴡᴀʀᴅꜱ 」
+  return `╭─「 ✦ ʀᴇᴡᴀʀᴅꜱ ✦ 」
 │ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin
 │ ⚡ +${rewards.energi} Energi
 │ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈`;
@@ -256,12 +256,12 @@ function generateSerialNumber() {
 
 function buildUserDataBlock(name, age, gender, serial) {
   return (
-    `╭─「 DATA REGISTRASI 」\n` +
+    `╭─「 ✦ DATA REGISTRASI ✦ 」\n` +
     `│ 📛 Nama: *${name || "-"}*\n` +
     `│ 🎂 Umur: *${age ? `${age} tahun` : "-"}*\n` +
     `│ 👤 Gender: *${gender || "-"}*\n` +
     `│ 🔑 SN: *${serial || "-"}*\n` +
-    `╰──────────`
+    `╰────  •  ────`
   );
 }
 
@@ -280,7 +280,7 @@ function buildWelcomeMessage(user, registrationRequired, prefix) {
   }
 
   return (
-    `╭─「 Menu Daftar 」` +
+    `╭─「 ✦ Menu Daftar ✦ 」` +
     `│ *Selamat datang di Menu Daftar!*\n\n` +
     `│ ✨ Dengan daftar, data akun kamu jadi lebih aman\n` +
     `│ dan pengalaman pakai bot jadi lebih lengkap.\n\n` +
@@ -294,7 +294,7 @@ function buildWelcomeMessage(user, registrationRequired, prefix) {
     `│ \`${prefix}daftar Nama, Umur\` - Daftar cepat\n` +
     `│ \`${prefix}daftarotomatis\` - Daftar via captcha (DM)\n` +
     `│ \`${prefix}regmail Nama, email\` - Daftar via email OTP\n` +
-    `╰──────────`
+    `╰────  •  ────`
   );
 }
 

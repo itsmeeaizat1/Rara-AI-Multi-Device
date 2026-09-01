@@ -239,7 +239,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ᴘᴇᴛᴜᴀʟᴀɴɢ 」\n`;
+    let msg = `╭─「 ✦ ᴘᴇᴛᴜᴀʟᴀɴɢ ✦ 」\n`;
     msg += `│ 🗺️ ${message}\n`;
     msg += `│\n`;
 
@@ -252,7 +252,7 @@ async function handler(m, { sock }) {
     const freshRpg = ensureRpg(m, m.pushName);
     msg += `│ ❤️ HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
     msg += `│ ⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     return m.reply(msg);
   } catch (err) {

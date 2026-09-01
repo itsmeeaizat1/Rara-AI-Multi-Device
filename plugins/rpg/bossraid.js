@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
       }
 
       await m.react("🐣");
-      let msg = `╭─「 ʙᴏss ʀᴀɪᴅ 」\n`;
+      let msg = `╭─「 ✦ ʙᴏss ʀᴀɪᴅ ✦ 」\n`;
       msg += `│ 🐉 Boss: *${boss.name}*\n`;
       msg += `│ 🔑 ${keyText}\n`;
       msg += `│ ⚔️ ${rounds} ronde bertarung\n`;
@@ -165,7 +165,7 @@ async function handler(m, { sock }) {
       msg += `│\n`;
       msg += `│ ❤️ HP: *${Math.max(1, rpg.hp - totalDmgTaken)}/${rpg.maxHp}*\n`;
       msg += `│ 📊 Boss kills: *${(rpg.bossKills || 0) + 1}*\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     } else {
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBossRaid", BOSS_COOLDOWN);
 
       await m.react("❌");
-      let msg = `╭─「 ʙᴏss ʀᴀɪᴅ 」\n`;
+      let msg = `╭─「 ✦ ʙᴏss ʀᴀɪᴅ ✦ 」\n`;
       msg += `│ 🐉 Boss: *${boss.name}*\n`;
       msg += `│ 🔑 ${keyText}\n`;
       msg += `│ ⚔️ ${rounds} ronde bertarung\n`;
@@ -184,7 +184,7 @@ async function handler(m, { sock }) {
       msg += `│\n`;
       msg += `│ 💡 Tingkatkan equipment & level dulu\n`;
       msg += `│ Gunakan .craftrpg untuk bikin item lebih kuat\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }

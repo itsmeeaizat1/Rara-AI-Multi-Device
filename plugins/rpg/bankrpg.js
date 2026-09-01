@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
     }
 
     if (!action || action === "cek") {
-      let msg = `╭─「 ʙᴀɴᴋ ʀᴘɢ 」\n`;
+      let msg = `╭─「 ✦ ʙᴀɴᴋ ʀᴘɢ ✦ 」\n`;
       msg += `│ 👤 ${m.pushName || "Player"}\n`;
       msg += `│\n`;
       msg += `│ 💰 Gold di tangan: *${rpg.gold}*\n`;
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
       msg += `│ 📌 .bankrpg nabung <jumlah> — simpan\n`;
       msg += `│ 📌 .bankrpg tarik <jumlah> — tarik\n`;
       msg += `│ 📌 .bankrpg cek — cek saldo\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }
@@ -94,14 +94,14 @@ async function handler(m, { sock }) {
       saveRpg(m, { bank });
 
       await m.react("🐣");
-      let msg = `╭─「 ʙᴀɴᴋ ʀᴘɢ 」\n`;
+      let msg = `╭─「 ✦ ʙᴀɴᴋ ʀᴘɢ ✦ 」\n`;
       msg += `│ ✅ Berhasil menabung!\n`;
       msg += `│\n`;
       msg += `│ 💵 Setor: *${amount} gold*\n`;
       msg += `│ 🏦 Saldo bank: *${bank.deposit} gold*\n`;
       msg += `│ 💰 Sisa di tangan: *${rpg.gold - amount} gold*\n`;
       msg += `│ 📈 Bunga 5% harian akan otomatis masuk\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }
@@ -123,13 +123,13 @@ async function handler(m, { sock }) {
       saveRpg(m, { bank });
 
       await m.react("🐣");
-      let msg = `╭─「 ʙᴀɴᴋ ʀᴘɢ 」\n`;
+      let msg = `╭─「 ✦ ʙᴀɴᴋ ʀᴘɢ ✦ 」\n`;
       msg += `│ ✅ Berhasil menarik!\n`;
       msg += `│\n`;
       msg += `│ 💵 Tarik: *${amount} gold*\n`;
       msg += `│ 🏦 Sisa saldo bank: *${bank.deposit} gold*\n`;
       msg += `│ 💰 Gold di tangan: *${rpg.gold + amount} gold*\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }

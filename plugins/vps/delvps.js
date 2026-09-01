@@ -51,9 +51,9 @@ async function handler(m, { sock }) {
         await axios.delete(`https://api.digitalocean.com/v2/droplets/${dropletId}`, {
             headers: { 'Authorization': `Bearer ${token}` }
         })
-        await m.reply(`╭─「 VPS Dihapus 」\n│ *ID:* ${dropletId}
+        await m.reply(`╭─「 ✦ VPS Dihapus ✦ 」\n│ *ID:* ${dropletId}
 │ *ꜱᴛᴀᴛᴜꜱ:* Berhasil dihapus
-╰──────────`)
+╰────  •  ────`)
         
     } catch (err) {
         return m.reply(te(m.prefix, m.command, m.pushName))

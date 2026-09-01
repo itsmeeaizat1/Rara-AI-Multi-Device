@@ -63,11 +63,11 @@ function formatTime(ts) {
 }
 
 function buildHeader() {
-  return `╭─「 ᴄᴏɴꜰᴇss ᴡᴀʟʟ 」\n\n`
+  return `╭─「 ✦ ᴄᴏɴꜰᴇss ᴡᴀʟʟ ✦ 」\n\n`
 }
 
 function buildFooter() {
-  return `\n╰──────────`;
+  return `\n╰────  •  ────`;
 }
 
 async function handler(m, { sock }) {

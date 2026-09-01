@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
       let dropText = drops.length > 0 ? drops.map(d => `+${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join(", ") : "";
 
       await m.react("🐣");
-      let out = `╭─「 ʙᴇʀʙᴜʀᴜ ᴠ2 」\n`;
+      let out = `╭─「 ✦ ʙᴇʀʙᴜʀᴜ ᴠ2 ✦ 」\n`;
       out += `│ 👹 Monster: *${monster.name}*${monster.isRare ? " [RARE!]" : ""}\n`;
       out += `│ ⚔️ ${rounds} ronde bertarung\n`;
       out += `│\n`;
@@ -162,7 +162,7 @@ async function handler(m, { sock }) {
       }
       out += `│ ❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
       out += `│ ⚡ Energy: *${rpg.energy - HUNT_ENERGY}/${rpg.maxEnergy}*\n`;
-      out += `╰──────────`;
+      out += `╰────  •  ────`;
 
       return m.reply(out);
     } else {
@@ -174,7 +174,7 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastHuntV2", HUNT_COOLDOWN);
 
       await m.react("❌");
-      let out = `╭─「 ʙᴇʀʙᴜʀᴜ ᴠ2 」\n`;
+      let out = `╭─「 ✦ ʙᴇʀʙᴜʀᴜ ᴠ2 ✦ 」\n`;
       out += `│ 👹 Monster: *${monster.name}*${monster.isRare ? " [RARE!]" : ""}\n`;
       out += `│ ⚔️ ${rounds} ronde bertarung\n`;
       out += `│\n`;
@@ -183,7 +183,7 @@ async function handler(m, { sock }) {
       out += `│ ❤️ HP: *${Math.max(1, rpg.hp - dmgTaken)}/${rpg.maxHp}*\n`;
       out += `│\n`;
       out += `│ 💡 Combo direset. Equip lebih kuat & coba lagi!\n`;
-      out += `╰──────────`;
+      out += `╰────  •  ────`;
 
       return m.reply(out);
     }

@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ᴍɪɴɪɴɢ 」\n`;
+    let msg = `╭─「 ✦ ᴍɪɴɪɴɢ ✦ 」\n`;
     msg += `│ ⛏️ Kamu menambang di gua...\n`;
     msg += `│\n`;
     msg += `│ 📦 *ʜᴀsɪʟ ᴛᴀᴍʙᴀɴɢ*\n`;
@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
     msg += dropText + "\n";
     msg += `│\n`;
     msg += `│ ⚡ Energy: *${rpg.energy - MINE_ENERGY}/${rpg.maxEnergy}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     return m.reply(msg);
   } catch (err) {

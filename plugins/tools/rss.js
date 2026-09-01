@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
         const feedTitle = feed.title || "RSS Feed"
         const items = feed.items.slice(0, 8)
 
-        let text = "╭─「 " + feedTitle + " 」\n"
+        let text = "╭─「 ✦ " + feedTitle + " ✦ 」\n"
         text += "│ " + items.length + " artikel terbaru\n"
         text += "│\n"
 
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
             if (i < items.length - 1) text += "│\n"
         })
 
-        text += "╰──────────"
+        text += "╰────  •  ────"
         return m.reply(text)
     } catch (e) {
         console.error("[rss] error:", e.message)

@@ -40,11 +40,11 @@ async function handler(m, { sock }) {
     const from = m.key.remoteJid;
     await sock.sendMessage(from, { react: { text: "🕒", key: m.key } });
     const q = quotes[Math.floor(Math.random() * quotes.length)];
-    let result = `╭─「 QUOTES GALAU 」\n`;
+    let result = `╭─「 ✦ QUOTES GALAU ✦ 」\n`;
     result += `│\n`;
     result += `│  "${q}"\n`;
     result += `│\n`;
-    result += `╰──────────`;
+    result += `╰────  •  ────`;
     await sock.sendMessage(from, { text: result }, { quoted: m });
     await sock.sendMessage(from, { react: { text: "🐣", key: m.key } });
   } catch (err) {

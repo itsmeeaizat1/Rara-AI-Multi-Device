@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     const now = Date.now();
 
     if (input === "status" || input === "info" || input === "cek") {
-      let msg = `╭─「 SPIRIT BUFF STATUS 」\n`;
+      let msg = `╭─「 ✦ SPIRIT BUFF STATUS ✦ 」\n`;
       if (summonData.activeSpirit && summonData.activeSpirit.expiresAt > now) {
         const remainingMs = summonData.activeSpirit.expiresAt - now;
         const mins = Math.floor(remainingMs / 60000);
@@ -52,13 +52,13 @@ async function handler(m, { sock }) {
         msg += `│ ❌ Tidak ada spirit buff yang aktif saat ini.\n`;
         msg += `│ 💡 Ketik *${m.prefix}summon list* untuk memanggil spirit.\n`;
       }
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       await m.react("🐣");
       return m.reply(msg);
     }
 
     if (!input || input === "list") {
-      let listMsg = `╭─「 SPIRIT SUMMONING SYSTEM 」\n`;
+      let listMsg = `╭─「 ✦ SPIRIT SUMMONING SYSTEM ✦ 」\n`;
       listMsg += `│ Biaya Pemanggilan: *${SUMMON_COST_GOLD} Gold* + *${SUMMON_COST_ENERGI} Energi*\n`;
       listMsg += `│ Durasi Buff: *30 Menit*\n│\n`;
       SPIRITS.forEach((s, i) => {
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
         listMsg += `│    🔑 Perintah: *${m.prefix}summon ${s.id}*\n`;
       });
       listMsg += `│\n│ 💡 *Cek Buff:* ${m.prefix}summon status\n`;
-      listMsg += `╰──────────`;
+      listMsg += `╰────  •  ────`;
       await m.react("🐣");
       return m.reply(listMsg);
     }
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
       expiresAt: expiresAt,
     };
 
-    let msg = `╭─「 SPIRIT SUMMONING RITUAL 」\n`;
+    let msg = `╭─「 ✦ SPIRIT SUMMONING RITUAL ✦ 」\n`;
     msg += `│ 🔮 *Ritual Pemanggilan Elementalis*\n`;
     msg += `│ 🕯️ Menggambar lingkaran sihir di atas tanah...\n`;
     msg += `│ ✨ Mengalirkan ${SUMMON_COST_GOLD} Gold & ${SUMMON_COST_ENERGI} Energi ke dalam altar...\n`;
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
     msg += `│  • Durasi: *30 Menit*\n│\n`;
     msg += `│ ⚡ Sisa Energi: *${profile.energi}*\n`;
     msg += `│ 💰 Sisa Gold: *${profile.gold.toLocaleString()}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     await db.setPlayerData?.(sender, "profile", profile);
     await db.setPlayerData?.(sender, "summon", summonData);

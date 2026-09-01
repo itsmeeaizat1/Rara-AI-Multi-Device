@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
     addGold({ sender: targetJid }, received);
 
     await m.react("🐣");
-    let msg = `╭─「 ᴛʀᴀɴsғᴇʀ ɢᴏʟᴅ 」\n`;
+    let msg = `╭─「 ✦ ᴛʀᴀɴsғᴇʀ ɢᴏʟᴅ ✦ 」\n`;
     msg += `│ ✅ Transfer berhasil!\n`;
     msg += `│\n`;
     msg += `│ 👤 Dari: *${m.pushName}*\n`;
@@ -82,7 +82,7 @@ async function handler(m, { sock }) {
     msg += `│ 💰 Diterima: *${received} gold*\n`;
     msg += `│\n`;
     msg += `│ 💼 Gold kamu: *${rpg.gold - amount}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     return m.reply(msg);
   } catch (err) {

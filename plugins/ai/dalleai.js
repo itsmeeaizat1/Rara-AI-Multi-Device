@@ -38,11 +38,11 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let caption = `╭─「 ᴅᴀʟʟ-ᴇ sᴛʏʟᴇ 」\n`;
+    let caption = `╭─「 ✦ ᴅᴀʟʟ-ᴇ sᴛʏʟᴇ ✦ 」\n`;
     caption += `│ 🎨 Prompt: *${text}*\n`;
     caption += `│ ⚙️ Engine: *${result.model}*\n`;
     caption += `│ 📐 Size: *1024x1024*\n`;
-    caption += `╰──────────`;
+    caption += `╰────  •  ────`;
 
     return await sock.sendMedia(m.chat, result.buffer, null, m, { type: "image", caption });
   } catch (err) {

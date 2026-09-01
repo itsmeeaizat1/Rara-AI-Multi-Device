@@ -69,7 +69,7 @@ async function handler(m, { sock }) {
     const data = await getData(db, m.sender);
 
     if (subCmd === "shop" || subCmd === "toko") {
-      let msg = `╭─「 ғɪsʜɪɴɢ sʜᴏᴘ 」\n`;
+      let msg = `╭─「 ✦ ғɪsʜɪɴɢ sʜᴏᴘ ✦ 」\n`;
       msg += `│ 🎣 *RODS:*\n`;
       RODS.forEach((r, i) => msg += `│ ${r.emoji} ${r.name} - ${r.price === 0 ? "FREE" : r.price + "g"} (+${r.bonus}% catch)\n`);
       msg += `│\n`;
@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
       msg += `│\n`;
       msg += `│ ${m.prefix}fishingv2 buy rod <nama>\n`;
       msg += `│ ${m.prefix}fishingv2 buy bait <nama> <qty>\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
 
@@ -118,7 +118,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "inv" || subCmd === "koleksi") {
       const rod = RODS[data.rod || 0];
-      let msg = `╭─「 ғɪsʜɪɴɢ ɪɴᴠ 」\n`;
+      let msg = `╭─「 ✦ ғɪsʜɪɴɢ ɪɴᴠ ✦ 」\n`;
       msg += `│ Rod: ${rod.emoji} *${rod.name}*\n`;
       msg += `│ Baits: 🪱Worm:${data.baits?.Worm||0} 🦐Shrimp:${data.baits?.Shrimp||0} ✨Golden:${data.baits?.["Golden Bait"]||0}\n`;
       msg += `│ Total Catch: *${data.totalCaught || 0}*\n`;
@@ -132,7 +132,7 @@ async function handler(m, { sock }) {
           msg += `│ ${fish?.emoji||"🐟"} ${name} x${count} [${fish?.rarity||"?"}]\n`;
         }
       }
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
 
@@ -157,14 +157,14 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     const isRare = ["S","SS","SSS"].includes(fish.rarity);
-    let msg = `╭─「 ғɪsʜɪɴɢ v2 」\n`;
+    let msg = `╭─「 ✦ ғɪsʜɪɴɢ v2 ✦ 」\n`;
     msg += `│ Rod: ${rod.emoji} ${rod.name} | Bait: ${activeBait.emoji} ${activeBait.name}\n`;
     msg += `│\n`;
     msg += `│ ${isRare ? "✨ TANGKAPAN LANGKA! ✨" : "Berhasil!"}\n`;
     msg += `│ ${fish.emoji} *${fish.name}*\n`;
     msg += `│ Rarity: *${fish.rarity}* | Price: *${fish.price}g*\n`;
     msg += `│ Total: *${data.totalCaught}* | Best: *${data.bestCatch}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("fishingv2 error:", err);

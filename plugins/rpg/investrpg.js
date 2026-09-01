@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
       saveRpg(m, { invest: rpg.invest });
 
       await m.react("🐣");
-      let msg = `╭─「 ɪɴᴠᴇsᴛᴀsɪ 」\n`;
+      let msg = `╭─「 ✦ ɪɴᴠᴇsᴛᴀsɪ ✦ 」\n`;
       msg += `│ 📈 Investasi selesai!\n`;
       msg += `│\n`;
       msg += `│ 💵 Modal: *${investAmount} gold*\n`;
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
         msg += `│ ❌ Rugi: *${profit} gold*\n`;
       }
       msg += `│ 💰 Gold sekarang: *${rpg.gold + returnValue}*\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
 
       return m.reply(msg);
     }
@@ -82,18 +82,18 @@ async function handler(m, { sock }) {
         const remaining = rpg.invest.endTime - Date.now();
         const mins = Math.floor(remaining / 60000);
         const secs = Math.floor((remaining % 60000) / 1000);
-        let msg = `╭─「 ɪɴᴠᴇsᴛᴀsɪ 」\n`;
+        let msg = `╭─「 ✦ ɪɴᴠᴇsᴛᴀsɪ ✦ 」\n`;
         msg += `│ 📈 Investasi aktif!\n`;
         msg += `│ 💵 Modal: *${rpg.invest.amount} gold*\n`;
         msg += `│ ⏰ Selesai dalam: *${mins}m ${secs}s*\n`;
         msg += `│\n`;
         msg += `│ Ketik .investrpg lagi saat waktu habis\n`;
         msg += `│ untuk mengambil hasil investasi\n`;
-        msg += `╰──────────`;
+        msg += `╰────  •  ────`;
         return m.reply(msg);
       }
 
-      let msg = `╭─「 ɪɴᴠᴇsᴛᴀsɪ 」\n`;
+      let msg = `╭─「 ✦ ɪɴᴠᴇsᴛᴀsɪ ✦ 」\n`;
       msg += `│ 💰 Gold: *${rpg.gold}*\n`;
       msg += `│\n`;
       msg += `│ 📌 Cara: .investrpg <jumlah>\n`;
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
       msg += `│\n`;
       msg += `│ ⚠️ Risk: 70% profit, 30% rugi\n`;
       msg += `│ 📊 Return: 80-120% dalam 1 jam\n`;
-      msg += `╰──────────`;
+      msg += `╰────  •  ────`;
       return m.reply(msg);
     }
 
@@ -134,7 +134,7 @@ async function handler(m, { sock }) {
     saveRpg(m, { invest: rpg.invest });
 
     await m.react("🐣");
-    let msg = `╭─「 ɪɴᴠᴇsᴛᴀsɪ 」\n`;
+    let msg = `╭─「 ✦ ɪɴᴠᴇsᴛᴀsɪ ✦ 」\n`;
     msg += `│ ✅ Investasi dimulai!\n`;
     msg += `│\n`;
     msg += `│ 💵 Modal: *${amount} gold*\n`;
@@ -143,7 +143,7 @@ async function handler(m, { sock }) {
     msg += `│\n`;
     msg += `│ Ketik .investrpg lagi setelah 1 jam\n`;
     msg += `│ untuk mengambil hasil investasi\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     return m.reply(msg);
   } catch (err) {

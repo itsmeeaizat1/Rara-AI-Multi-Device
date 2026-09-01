@@ -45,7 +45,7 @@ async function handler(m, { sock, text, command }) {
       if (ww[chatId]) return m.reply(claraWrap("werewolf", "Group masih dalam sesi permainan.", "info"));
       if (playerOnGame(sender, ww)) return m.reply(claraWrap("werewolf", "Kamu masih dalam sesi game lain.", "info"));
       ww[chatId] = { room: chatId, owner: sender, status: false, iswin: null, cooldown: 0, day: 0, time: "malem", player: [], dead: [], voting: false, seer: false, guardian: [] };
-      return m.reply("╭─「 ᴡᴇʀᴇᴡᴏʟғ 」\n│ Room dibuat!\n│ 📌 .ww join — bergabung\n│ 📌 .ww start — mulai (min 5)\n╰──────────");
+      return m.reply("╭─「 ✦ ᴡᴇʀᴇᴡᴏʟғ ✦ 」\n│ Room dibuat!\n│ 📌 .ww join — bergabung\n│ 📌 .ww start — mulai (min 5)\n╰────  •  ────");
     }
 
     // JOIN
@@ -56,10 +56,10 @@ async function handler(m, { sock, text, command }) {
       if (playerOnRoom(sender, chatId, ww)) return m.reply(claraWrap("werewolf", "Kamu sudah join.", "info"));
       if (playerOnGame(sender, ww)) return m.reply(claraWrap("werewolf", "Kamu masih dalam sesi lain.", "info"));
       ww[chatId].player.push({ id: sender, number: ww[chatId].player.length + 1, sesi: chatId, status: false, role: false, effect: [], vote: 0, isdead: false, isvote: false });
-      let t = "╭─「 ᴡᴇʀᴇᴡᴏʟғ ᴘʟᴀʏᴇʀ 」\n";
+      let t = "╭─「 ✦ ᴡᴇʀᴇᴡᴏʟғ ᴘʟᴀʏᴇʀ ✦ 」\n";
       const mentions = [];
       for (const p of ww[chatId].player) { t += "│ " + p.number + ". @" + p.id.split("@")[0] + "\n"; mentions.push(p.id); }
-      t += "│\n│ Min 5, Max 15 pemain\n╰──────────";
+      t += "│\n│ Min 5, Max 15 pemain\n╰────  •  ────";
       return m.reply(t, { mentions });
     }
 
@@ -76,7 +76,7 @@ async function handler(m, { sock, text, command }) {
       for (const p of ww[chatId].player) {
         await sock.sendMessage(p.id, { text: "🎭 *WEREWOLF ROLE*\n\nHalo @" + p.id.split("@")[0] + ", role kamu adalah *" + p.role.toUpperCase() + "* " + emoji_role(p.role) + "\n\nJangan kasih tau siapapun!", mentions: [p.id] });
       }
-      await m.reply("╭─「 ᴡᴇʀᴇᴡᴏʟғ 」\n│ 🎮 Game dimulai!\n│ Cek chat pribadi untuk role!\n╰──────────", { mentions: ww[chatId].player.map(p => p.id) });
+      await m.reply("╭─「 ✦ ᴡᴇʀᴇᴡᴏʟғ ✦ 」\n│ 🎮 Game dimulai!\n│ Cek chat pribadi untuk role!\n╰────  •  ────", { mentions: ww[chatId].player.map(p => p.id) });
       return await run(sock, chatId, ww);
     }
 
@@ -158,14 +158,14 @@ async function handler(m, { sock, text, command }) {
     // PLAYER LIST
     if (value === "player") {
       if (!ww[chatId]) return m.reply(claraWrap("werewolf", "Tidak ada sesi.", "info"));
-      let t = "╭─「 ʟɪsᴛ ᴘʟᴀʏᴇʀ 」\n";
+      let t = "╭─「 ✦ ʟɪsᴛ ᴘʟᴀʏᴇʀ ✦ 」\n";
       ww[chatId].player.forEach(p => { t += "│ " + p.number + ". @" + p.id.split("@")[0] + (p.isdead ? " ☠️" : "") + "\n"; });
-      t += "╰──────────";
+      t += "╰────  •  ────";
       return m.reply(t, { mentions: ww[chatId].player.map(p => p.id) });
     }
 
     // HELP / DEFAULT
-    let t = "╭─「 ᴡᴇʀᴇᴡᴏʟғ 」\n";
+    let t = "╭─「 ✦ ᴡᴇʀᴇᴡᴏʟғ ✦ 」\n";
     t += "│ 📌 .ww create — Buat room\n";
     t += "│ 📌 .ww join — Gabung\n";
     t += "│ 📌 .ww start — Mulai (min 5)\n";
@@ -178,7 +178,7 @@ async function handler(m, { sock, text, command }) {
     t += "│ 📌 .ww sorcerer <no> — Cek (sorcerer)\n";
     t += "│ 📌 .ww vote <no> — Vote\n";
     t += "│\n│ 5-15 pemain\n";
-    t += "╰──────────";
+    t += "╰────  •  ────";
     return m.reply(t);
   } catch (e) {
     console.error("werewolf error:", e.message);

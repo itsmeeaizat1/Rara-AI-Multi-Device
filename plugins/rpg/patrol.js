@@ -120,7 +120,7 @@ async function handler(m, { sock }) {
       eventDetail = `💚 HP pulih *+${hpHeal}* dan Energi pulih *+${energyRestored}*!`;
     }
 
-    let msg = `╭─「 RANGER PATROL 」\n`;
+    let msg = `╭─「 ✦ RANGER PATROL ✦ 」\n`;
     msg += `│ 🧭 *Patroli Wilayah*\n`;
     msg += `│ 📝 *Narasi:* ${event.narrative}\n│\n`;
     msg += `│ ${event.icon} *Event:* ${event.name}\n`;
@@ -129,7 +129,7 @@ async function handler(m, { sock }) {
     msg += `│ ❤️ HP: *${profile.hp}/${profile.maxHp}*\n`;
     msg += `│ ⚡ Energi: *${profile.energi}*\n`;
     msg += `│ 💰 Total Gold: *${profile.gold.toLocaleString()}*\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     await db.setPlayerData?.(sender, "profile", profile);
 

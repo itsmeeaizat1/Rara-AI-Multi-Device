@@ -41,11 +41,11 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ᴀɪ ᴍᴀᴛʜ ᴠ2 」\n`;
+    let msg = `╭─「 ✦ ᴀɪ ᴍᴀᴛʜ ᴠ2 ✦ 」\n`;
     msg += `│ 🧮 Soal: *${text}*\n`;
     msg += `│\n`;
     msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("aimathv2 error:", err);

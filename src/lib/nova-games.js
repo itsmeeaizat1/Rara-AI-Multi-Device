@@ -99,7 +99,7 @@ class NovaGames {
             text += `│ ❏ Hint: *${getHint(answer, cfg.hintCount)}*\n`;
             text += `│ ❏ Sisa waktu: *${formatRemainingTime(remaining)}*\n\n`;
             text += `_Reply pesan game ini untuk jawab atau ketik "nyerah"_`;
-            text += `\n╰──────────`;
+            text += `\n╰────  •  ────`;
             await m.reply(text);
             return;
           }
@@ -128,7 +128,7 @@ class NovaGames {
             return;
           }
 
-          let caption = `╭─「 ${cfg.title} 」\n\n`;
+          let caption = `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             caption += `\`\`\`${question[cfg.questionField]}\`\`\`\n`;
           }
@@ -138,7 +138,7 @@ class NovaGames {
           caption += `│ ❏ Waktu: *${cfg.timeout / 1000} detik*\n`;
           caption += `│ ❏ Hadiah: *Limit, Koin, EXP (random)*\n\n`;
           caption += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
-          caption += `╰──────────`;
+          caption += `╰────  •  ────`;
 
           sentMsg = await sock.sendMessage(
             chatId,
@@ -146,7 +146,7 @@ class NovaGames {
             { quoted: m }
           );
         } else {
-          let text = `╭─「 ${cfg.title} 」\n\n`;
+          let text = `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
           if (cfg.questionField && question[cfg.questionField]) {
             text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
           }
@@ -156,7 +156,7 @@ class NovaGames {
           text += `│ ❏ Waktu: *${cfg.timeout / 1000} detik*\n`;
           text += `│ ❏ Hadiah: *Limit, Koin, EXP (random)*\n\n`;
           text += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
-          text += `╰──────────`;
+          text += `╰────  •  ────`;
 
           sentMsg = await m.reply(text);
         }
@@ -177,7 +177,7 @@ class NovaGames {
               text += `│ ❏ Info: ${question.deskripsi}\n`;
             }
             text += `\n_Gak ada yang bisa jawab nih~_\n`;
-            text += `╰──────────`;
+            text += `╰────  •  ────`;
             await sock.sendMessage(chatId, { text });
           } catch (e) {
             console.error(`[${gameType}] Timeout error:`, e.message);
@@ -220,7 +220,7 @@ class NovaGames {
             text += `│ ❏ Info: ${session.question.deskripsi}\n`;
           }
           text += `\n_@${m.sender.split("@")[0]} menyerah_\n`;
-          text += `╰──────────`;
+          text += `╰────  •  ────`;
           try {
             await sock.sendMessage(chatId, {
               text,
@@ -278,7 +278,7 @@ class NovaGames {
             text += `\n│ ❏ Info: ${session.question.deskripsi}\n`;
           }
 
-          text += `\n╰──────────`;
+          text += `\n╰────  •  ────`;
 
           try {
             await sock.sendMessage(chatId, {

@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
         txt += `\`.addcmdsticker menu\`\n\n`
         
         if (existingCmds.length > 0) {
-            txt += `╭─「 ᴀᴋᴛɪꜰ 」\n`
+            txt += `╭─「 ✦ ᴀᴋᴛɪꜰ ✦ 」\n`
             for (const cmd of existingCmds.slice(0, 10)) {
                 txt += `│ 🖼️ → \`${cmd.command}\`\n`
             }

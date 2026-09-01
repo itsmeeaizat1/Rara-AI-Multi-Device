@@ -135,12 +135,12 @@ function handler(m, { sock }) {
         
         if (saveConfig()) {
             return m.reply(`✅ *ꜱᴇʟʟᴇʀ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
-                `╭─「 ᴅᴇᴛᴀɪʟ 」\n` +
+                `╭─「 ✦ ᴅᴇᴛᴀɪʟ ✦ 」\n` +
                 `│ 📱 Nomor: \`${targetUser}\`\n` +
                 `│ 🏷️ sTatus: \`Seller/Reseller\`\n` +
                 `│ 🔓 Akses: \`Create Server (1gb-10gb v1-v3)\`\n` +
                 `│ 📊 Total: \`${pteroConfig.sellers.length}\` seller\n` +
-                `╰──────────${roleChanged}`)
+                `╰────  •  ────${roleChanged}`)
         } else {
             pteroConfig.sellers = pteroConfig.sellers.filter(s => s !== targetUser)
             return m.reply(claraWrap("addseller", `Gagal menyimpan ke config.js`))

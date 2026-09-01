@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
             return m.reply(novaEmpty('YouTube v2', `Gak nemu hasil buat "${query}" 🧐`))
         }
 
-        let text = "╭─「 YouTube Search 」\n"
+        let text = "╭─「 ✦ YouTube Search ✦ 」\n"
         text += "│ Query: " + query + "\n"
         text += "│\n"
 
@@ -55,7 +55,7 @@ async function handler(m, { sock }) {
             if (i < videos.length - 1) text += "│\n"
         }
 
-        text += "╰──────────"
+        text += "╰────  •  ────"
 
         // Kirim dengan thumbnail
         const thumb = videos[0]?.thumbnails?.[0]?.url || videos[0]?.thumbnail?.[0]?.url

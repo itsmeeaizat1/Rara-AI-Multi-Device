@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     }
 
     // STATUS (default)
-    let msg = `╭─「 sᴛᴀᴍɪɴᴀ 」\n`;
+    let msg = `╭─「 ✦ sᴛᴀᴍɪɴᴀ ✦ 」\n`;
     msg += `│ ⚡ [${bar(data.stamina || 0, MAX_STAMINA)}] ${data.stamina || 0}/${MAX_STAMINA}\n`;
     msg += `│\n`;
     msg += `│ Regenerasi: +1 per 5 menit (passive)\n`;
@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
     msg += `│\n`;
     msg += `│ ${m.prefix}stamina rest - istirahat (+30, 10m CD)\n`;
     msg += `│ ${m.prefix}stamina buy <qty> - beli (${BUY_COST}g/10)\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("staminabar error:", err);

@@ -94,7 +94,7 @@ async function handler(m, { sock, store }) {
 
     await m.reply(
         `⚙️ *Exec Result*\n\n` +
-        `╭─「 Code 」\n` +
+        `╭─「 ✦ Code ✦ 」\n` +
         `│ \`${codePreview}\`\n` +
         `├┈┈「 📊 *Result* 」\n` +
         `│ ${status}\n` +

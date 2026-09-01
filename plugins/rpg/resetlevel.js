@@ -41,10 +41,10 @@ async function handler(m, { sock }) {
     saveRpg({ sender: target, key: { remoteJid: target } }, rpg);
 
     await m.react("🐣");
-    let msg = `╭─「 RESET RPG 」\n`;
+    let msg = `╭─「 ✦ RESET RPG ✦ 」\n`;
     msg += `│ ✅ RPG @${target.split("@")[0]} telah direset!\n`;
     msg += `│ Level: 1 | Gold: 0 | Job: novice\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("resetlevel error:", err);

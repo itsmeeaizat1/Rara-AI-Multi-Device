@@ -54,14 +54,13 @@ async function handler(m, { sock })  {
                 deleted++
             } catch (e) { console.error('[clearsessions.js]:', e.message); }
         }
-        await m.reply(claraWrap("Clearsessions", `╭─「 🗑️ *Clear sEssions*
+        await m.reply(claraWrap("Clearsessions", `╭─「 ✦ 🗑️ *Clear sEssions*
 │
 │ Deleted: *${deleted}* file
 │ sKipped: *${skipped}* file
 │ Note: creds.json tidak dihapus
 │
-╰──────────
-
+╰────  •  ────
 │ _Session files berhasil dibersihkan!_
 │ _Restart bot jika diperlukan._`))
         

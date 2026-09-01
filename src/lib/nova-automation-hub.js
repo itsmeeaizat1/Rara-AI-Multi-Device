@@ -114,14 +114,14 @@ async function checkVPSHealth() {
     saveAutomodData()
 
     const uptime = formatUptime(os.uptime())
-    let text = "╭─「 VPS Alert 」\n"
+    let text = "╭─「 ✦ VPS Alert ✦ 」\n"
     text += "│ " + new Date().toLocaleString("id-ID") + "\n"
     text += "│ Uptime: " + uptime + "\n"
     text += "│\n"
     alerts.forEach(a => text += "│ " + a + "\n")
     text += "│\n"
     text += "│ Cek detail: .servermonitor status\n"
-    text += "╰──────────"
+    text += "╰────  •  ────"
 
     await sendToOwner(text)
     console.log("[automation-hub] VPS alert sent")
@@ -153,14 +153,14 @@ async function checkCrashGuard() {
           guardCfg.lastRestartAlert = now
           saveAutomodData()
           await sendToOwner(
-            "╭─「 Crash Guard Alert 」\n" +
+            "╭─「 ✦ Crash Guard Alert ✦ 」\n" +
             "│ " + new Date().toLocaleString("id-ID") + "\n" +
             "│ PM2 \"" + p.name + "\" DOWN\n" +
             "│ Max restarts (" + maxRestarts + ") tercapai.\n" +
             "│ Restart manual diperlukan.\n" +
             "│\n" +
             "│ .crashguard restart " + p.name + "\n" +
-            "╰──────────"
+            "╰────  •  ────"
           )
         }
         continue
@@ -176,20 +176,20 @@ async function checkCrashGuard() {
         saveAutomodData()
 
         await sendToOwner(
-          "╭─「 Crash Guard Auto-Restart 」\n" +
+          "╭─「 ✦ Crash Guard Auto-Restart ✦ 」\n" +
           "│ " + new Date().toLocaleString("id-ID") + "\n" +
           "│ PM2 \"" + p.name + "\" was DOWN — auto-restarted\n" +
           "│ Restarts in window: " + (recentRestarts.length + 1) + "/" + maxRestarts + "\n" +
-          "╰──────────"
+          "╰────  •  ────"
         )
         console.log("[automation-hub] Auto-restarted PM2:", p.name)
       } catch (e) {
         console.error("[automation-hub] Restart failed:", e.message)
         await sendToOwner(
-          "╭─「 Crash Guard Failed 」\n" +
+          "╭─「 ✦ Crash Guard Failed ✦ 」\n" +
           "│ Gagal auto-restart PM2 \"" + p.name + "\"\n" +
           "│ " + e.message.slice(0, 100) + "\n" +
-          "╰──────────"
+          "╰────  •  ────"
         )
       }
     }
@@ -232,7 +232,7 @@ async function checkSmartDigest() {
   const elapsed = Date.now() - (stats.startedAt || Date.now())
   const elapsedStr = formatUptime(elapsed / 1000)
 
-  let text = "╭─「 Daily Digest 」\n"
+  let text = "╭─「 ✦ Daily Digest ✦ 」\n"
   text += "│ " + now.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long" }) + "\n"
   text += "│ Periode: " + elapsedStr + "\n"
   text += "│ Total pesan: " + (stats.messages || 0) + "\n"
@@ -260,7 +260,7 @@ async function checkSmartDigest() {
       text += "│ " + (i + 1) + ". " + uid.split("@")[0] + " (" + count + ")\n"
     })
   }
-  text += "╰──────────"
+  text += "╰────  •  ────"
 
   await sendToOwner(text)
   console.log("[automation-hub] Daily digest sent")
@@ -302,14 +302,14 @@ export async function checkAutoForward(m, sock) {
     const chatName = isGroup ? "Grup" : "Private"
     const originalText = m.text || m.message?.conversation || ""
 
-    let forwardText = "╭─「 Auto Forward 」\n"
+    let forwardText = "╭─「 ✦ Auto Forward ✦ 」\n"
     forwardText += "│ Dari: " + chatName + "\n"
     forwardText += "│ Sender: " + sender.split("@")[0] + "\n"
     forwardText += "│ Chat: " + chat.slice(0, 25) + "\n"
     forwardText += "│\n"
     forwardText += "│ Pesan:\n"
     forwardText += "│ " + originalText.slice(0, 500) + "\n"
-    forwardText += "╰──────────"
+    forwardText += "╰────  •  ────"
 
     await sock.sendMessage(ownerJid, { text: forwardText })
 
@@ -375,13 +375,13 @@ export async function checkAutoMod(m, sock) {
     if (action === "delete") {
       try { await sock.sendMessage(chat, { delete: m.key }) } catch {}
       await sock.sendMessage(chat, {
-        text: "╭─「 Auto Mod 」\n│ Pesan dihapus: " + violation + "\n│ by @" + sender.split("@")[0] + "\n╰──────────",
+        text: "╭─「 ✦ Auto Mod ✦ 」\n│ Pesan dihapus: " + violation + "\n│ by @" + sender.split("@")[0] + "\n╰────  •  ────",
         mentions: [sender]
       })
     } else if (action === "warn") {
       const warns = groupCfg.warnings[sender] || 1
       await sock.sendMessage(chat, {
-        text: "╭─「 Auto Mod Warning 」\n│ @" + sender.split("@")[0] + " — " + violation + "\n│ Warning " + warns + "/3\n╰──────────",
+        text: "╭─「 ✦ Auto Mod Warning ✦ 」\n│ @" + sender.split("@")[0] + " — " + violation + "\n│ Warning " + warns + "/3\n╰────  •  ────",
         mentions: [sender]
       })
       // Auto-kick after 3 warnings
@@ -389,7 +389,7 @@ export async function checkAutoMod(m, sock) {
         try {
           await sock.groupParticipantsUpdate(chat, [sender], "remove")
           await sock.sendMessage(chat, {
-            text: "╭─「 Auto Mod 」\n│ @" + sender.split("@")[0] + " dikeluarkan (3 warnings)\n╰──────────",
+            text: "╭─「 ✦ Auto Mod ✦ 」\n│ @" + sender.split("@")[0] + " dikeluarkan (3 warnings)\n╰────  •  ────",
             mentions: [sender]
           })
         } catch {}
@@ -399,7 +399,7 @@ export async function checkAutoMod(m, sock) {
         await sock.sendMessage(chat, { delete: m.key })
         await sock.groupParticipantsUpdate(chat, [sender], "remove")
         await sock.sendMessage(chat, {
-          text: "╭─「 Auto Mod 」\n│ @" + sender.split("@")[0] + " dikeluarkan: " + violation + "\n╰──────────",
+          text: "╭─「 ✦ Auto Mod ✦ 」\n│ @" + sender.split("@")[0] + " dikeluarkan: " + violation + "\n╰────  •  ────",
           mentions: [sender]
         })
       } catch {}

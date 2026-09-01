@@ -60,17 +60,17 @@ async function handler(m, { sock }) {
         const mentions = onlineMembers
         
         let text = `📊 *ᴄᴇᴋ ᴏɴʟɪɴᴇ*\n\n`
-        text += `╭─「 ɪɴꜰᴏ ɢʀᴜᴘ 」\n`
+        text += `╭─「 ✦ ɪɴꜰᴏ ɢʀᴜᴘ ✦ 」\n`
         text += `│ 👥 Nama: *${groupMetadata.subject}*\n`
         text += `│ 👤 Total: \`${participants.length}\` member\n`
         text += `│ 🟢 Online: \`${onlineMembers.length}\` member\n`
-        text += `╰──────────\n\n`
+        text += `╰────  •  ────\n\n`
         
         if (onlineMembers.length === 0) {
             text += `_Tidak ada member yang terdeteksi online_\n`
             text += `_Pastikan member telah membuka WA_`
         } else {
-            text += `╭─「 ᴍᴇᴍʙᴇʀ ᴏɴʟɪɴᴇ 」\n`
+            text += `╭─「 ✦ ᴍᴇᴍʙᴇʀ ᴏɴʟɪɴᴇ ✦ 」\n`
             
             let count = 0
             for (const jid of onlineMembers) {
@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
                 count++
             }
             
-            text += `╰──────────\n\n`
+            text += `╰────  •  ────\n\n`
             text += `🟢 Online | ⌨️ Mengetik | 🎤 Rekam Audio`
         }
         await m.reply(text, { mentions });

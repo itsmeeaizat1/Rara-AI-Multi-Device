@@ -81,13 +81,13 @@ Gunakan bahasa Indonesia santai. Ramalan harus positif, jangan menakut-nakuti.`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ʀᴀᴍᴀʟᴀɴ ᴀɪ 」\n`;
+    let msg = `╭─「 ✦ ʀᴀᴍᴀʟᴀɴ ᴀɪ ✦ 」\n`;
     msg += `│ 📌 Topik: *${topic}*\n`;
     msg += `│\n`;
     msg += formatted;
     msg += `│\n`;
     msg += `│ ⚠️ Ramalan untuk hiburan, jangan diambil serius 😄\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("ramalanai error:", err);

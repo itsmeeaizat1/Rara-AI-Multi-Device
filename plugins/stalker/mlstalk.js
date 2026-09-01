@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
     const r = data.result || data.data || data;
     await m.react("🐣");
 
-    let msg = `╭─「 ᴍᴏʙɪʟᴇ ʟᴇɢᴇɴᴅs 」\n`;
+    let msg = `╭─「 ✦ ᴍᴏʙɪʟᴇ ʟᴇɢᴇɴᴅs ✦ 」\n`;
     msg += `│ ID: *${playerId}*\n`;
     if (serverId) msg += `│ Server: *${serverId}*\n`;
     if (r.username || r.name || r.nick) msg += `│ Username: *${r.username || r.name || r.nick}*\n`;
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     if (r.stars) msg += `│ Stars: *${r.stars}*\n`;
     if (r.win_rate || r.winRate) msg += `│ Win Rate: *${r.win_rate || r.winRate}%*\n`;
     if (r.url || r.profile) msg += `│ Profile: ${r.url || r.profile}\n`;
-    msg += `╰──────────`;
+    msg += `╰────  •  ────`;
 
     const avatarUrl = r.avatar || r.profile_picture || r.icon;
     if (avatarUrl && avatarUrl.startsWith("http")) {
