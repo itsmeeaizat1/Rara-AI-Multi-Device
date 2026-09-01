@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20add%2013%20more%20IkyyXD%20downloader%20endp-success?style=for-the-badge)
-> *Commit: "feat: add 13 more IkyyXD downloader endpoints + integrate .play/.playvideo"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20remove%208%20dead%20Sanka-dependent%20-success?style=for-the-badge)
+> *Commit: "refactor: remove 8 dead Sanka-dependent downloader plugins"*
 <!--END_SECTION:latest-update-->
 
 ---
