@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20audit%20kategori%20maker%20-%20fix%20nexray%20d-success?style=for-the-badge)
-> *Commit: "fix: audit kategori maker - fix nexray domain + cleanup"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20add%20RPG%20database%20wrapper%20methods%20%E2%80%94%20-success?style=for-the-badge)
+> *Commit: "fix: add RPG database wrapper methods — fix 145 silent-fail calls across 39 plugins"*
 <!--END_SECTION:latest-update-->
 
 ---
