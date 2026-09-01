@@ -303,12 +303,14 @@ export async function checkAutoForward(m, sock) {
     const originalText = m.text || m.message?.conversation || ""
 
     let forwardText = "╭─「 ✦ Auto Forward ✦ 」\n"
-    forwardText += "│ Dari: " + chatName + "\n"
-    forwardText += "│ Sender: " + sender.split("@")[0] + "\n"
-    forwardText += "│ Chat: " + chat.slice(0, 25) + "\n"
+    forwardText += "│\n"
+    forwardText += "│ • Dari   : " + chatName + "\n"
+    forwardText += "│ • Sender : " + sender.split("@")[0] + "\n"
+    forwardText += "│ • Chat   : " + chat.slice(0, 25) + "\n"
     forwardText += "│\n"
     forwardText += "│ Pesan:\n"
     forwardText += "│ " + originalText.slice(0, 500) + "\n"
+    forwardText += "│\n"
     forwardText += "╰────  •  ────"
 
     await sock.sendMessage(ownerJid, { text: forwardText })

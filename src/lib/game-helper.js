@@ -47,7 +47,7 @@ export function createGameHandler(gameType, options = {}) {
 
       // Cek apakah user sudah ada game aktif
       if (gameManager.has(userJid)) {
-        await m.reply('⛔ Kamu masih ada game yang berjalan! Ketik *nyerah* untuk menyerah.');
+        await m.reply('╭─「 ✦ Game ✦ 」\n│\n│ ⚠ Kamu masih ada game yang berjalan!\n│ Ketik *nyerah* untuk menyerah\n│\n╰────  •  ────');
         return null;
       }
 
@@ -58,7 +58,7 @@ export function createGameHandler(gameType, options = {}) {
       }, timeout);
 
       if (!session) {
-        await m.reply('⛔ Gagal memulai game. Coba lagi.');
+        await m.reply('╭─「 ✦ Game ✦ 」\n│\n│ ❌ Gagal memulai game\n│ Coba lagi\n│\n╰────  •  ────');
         return null;
       }
 

@@ -1125,12 +1125,12 @@ async function handleAutoAI(m, sock) {
         const results = await executeAction(action, m, sock);
         for (const r of results) {
           if (!r.ok) {
-            await m.reply(`⚠️ ${r.msg}`);
+            await m.reply(`╭─「 ✦ Auto AI ✦ 」\n│\n│ ⚠ ${r.msg}\n│\n╰────  •  ────`);
           }
         }
       } catch (e) {
         console.error("[AutoAI Action Error]", action.type, e.message);
-        await m.reply(`❌ Gagal menjalankan ${action.type}: ${e.message}`);
+        await m.reply(`╭─「 ✦ Auto AI ✦ 」\n│\n│ ❌ Gagal menjalankan ${action.type}\n│ ${e.message}\n│\n╰────  •  ────`);
       }
     }
 

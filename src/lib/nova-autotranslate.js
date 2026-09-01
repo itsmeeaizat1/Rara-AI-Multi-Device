@@ -312,7 +312,7 @@ export async function handleAutoTranslateMessage(m, sock) {
     const srcName = langNames[detectedLang] || detectedLang.toUpperCase();
     const tgtName = langNames[targetLang] || targetLang.toUpperCase();
 
-    const resultMessage = `🌐 *[Auto Translate]* (${srcName} → ${tgtName})\n\n${translatedText}`;
+    const resultMessage = `╭─「 ✦ Auto Translate ✦ 」\n│\n│ • Dari : ${srcName}\n│ • Ke   : ${tgtName}\n│\n${translatedText}\n│\n╰────  •  ────`;
     await m.reply(resultMessage);
     return true;
   } catch (err) {
