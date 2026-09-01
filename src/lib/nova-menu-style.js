@@ -409,7 +409,7 @@ export {
   claraWrap, claraLine,
   alyaHeader,
   formatNumber, broadcastFormat,
-  novaUsage, infoBox, listBox,
+  novaUsage, infoBox, listBox, closeBoxRight,
   CATEGORY_NAMES, CATEGORY_EMOJIS,
 };
 

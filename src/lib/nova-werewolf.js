@@ -55,12 +55,17 @@ let thumb5 =
 let thumb6 =
     "https://user-images.githubusercontent.com/72728486/235365148-35b8def7-c1a2-451d-a2f2-6b6a911b37db.jpg";
 
-import jimp from "jimp"
+import { Jimp, JimpMime } from "jimp"
 
 const resize = async (image, width, height) => {
-    const read = await jimp.read(image);
-    const data = await read.resize(width, height).getBufferAsync(jimp.MIME_JPEG);
-    return data;
+    try {
+        const read = await Jimp.read(image);
+        const data = await read.resize({ w: width, h: height }).getBuffer(JimpMime.jpeg);
+        return data;
+    } catch (e) {
+        console.error("werewolf resize error:", e.message);
+        return image;
+    }
 };
 var a;
 var b;

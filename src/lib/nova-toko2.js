@@ -2,7 +2,7 @@
 // nova-toko2.js — Alfamart-style shop system with cart, categories, promo
 
 import { getDatabase } from "./nova-database.js";
-import config from "../config.js";
+import config from "../../config.js";
 import { toSC } from "./nova-menu-style.js";
 
 // ============================================================
