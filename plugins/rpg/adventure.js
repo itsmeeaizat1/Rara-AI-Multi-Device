@@ -7,6 +7,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animAdventure } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -239,18 +240,21 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `${message}\n\n`;
-
-    if (expGain > 0) msg += `EXP: *+${expGain}*\n`;
-    if (goldGain > 0) msg += `Gold: *+${goldGain}*\n`;
+    const freshRpg = ensureRpg(m, m.pushName);
+    let msg = `╭─「 ✦ ᴘᴇᴛᴜɴᴀɴɢᴀɴ ✦ 」\n`;
+    msg += `│ 🧭 Lokasi: ${biome}\n`;
+    msg += `│ 📝 ${message}\n`;
+    msg += `│\n`;
+    if (expGain > 0) msg += `│ ✦ EXP  : *+${expGain}*\n`;
+    if (goldGain > 0) msg += `│ 💰 Gold : *+${goldGain}*\n`;
     if (dropText) msg += dropText;
     if (extraText) msg += extraText;
+    msg += `│\n`;
+    msg += `│ ❤️ HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
+    msg += `│ ⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
+    msg += `╰──── • ────`;
 
-    const freshRpg = ensureRpg(m, m.pushName);
-    msg += `HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
-    msg += `Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*`;
-
-    return m.reply(msg.trim());
+    return m.reply(msg);
   } catch (err) {
     console.error("adventure error:", err);
     await m.react("❌");

@@ -2,6 +2,7 @@
 // legendaryquest.js — Legendary Quest chain (7-part epic quest)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "legendaryquest",
@@ -44,6 +45,8 @@ async function handler(m, { sock }) {
       // Stage 7 = Final Boss (auto battle)
       if (stage.id === 7 && !progress.claimed.includes(7)) {
         await m.react("🕒");
+    await m.reply("🌟 Memulai quest legendaris...");
+    await rpgSleep(900);
         await m.reply("🐉 Final Boss muncul... Memulai pertempuran...");
         await new Promise(r => setTimeout(r, 2000));
 

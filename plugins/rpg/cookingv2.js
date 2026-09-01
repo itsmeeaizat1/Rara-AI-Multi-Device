@@ -2,6 +2,7 @@
 // cookingv2.js — Cooking System v2 (10 recipes, buffs, ingredients, animation)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animCraft } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "cookingv2",

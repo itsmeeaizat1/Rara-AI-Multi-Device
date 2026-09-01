@@ -44,7 +44,9 @@
 - 5% chance: +5-15 Gems, 3% chance: +1-3 Diamonds (jackpot)
 - Daily: EXP + Koin + Gold + chance Gems/Diamonds + Potion
 
-### RPG Gameplay v21.8.0
+### RPG Gameplay v21.8.0 (Animated)
+- nova-rpg-anim.js: Helper animasi progressive message (kerja, battle, gather, slot, gacha, craft, dungeon, roulette)
+- 50/159 plugin RPG kini memiliki animasi (kerja, berburu, mining, dungeon, slot, roulette, gacha, adventure, fishing, dll)
 - `.berburu` — rpg — Berburu monster untuk EXP, Gold, dan item drop (combat system)
 - `.mining` — rpg — Menambang ore (copper, iron, gold, mithril) untuk material
 - `.mancing` — rpg — Memancing ikan dan pearl untuk material

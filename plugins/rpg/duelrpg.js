@@ -6,6 +6,7 @@ import {
   pvpResult, checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -87,6 +88,10 @@ async function handler(m, { sock }) {
     let rounds = 0;
     const maxRounds = 15;
     let firstAttacker = mySpd >= enemySpd ? "me" : "enemy";
+
+    // Battle animation
+    await m.reply("⚔️ Duel dimulai!");
+    await rpgSleep(800);
 
     while (myHp > 0 && enemyHp > 0 && rounds < maxRounds) {
       rounds++;

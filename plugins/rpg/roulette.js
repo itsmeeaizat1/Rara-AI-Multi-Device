@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animRoulette } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "roulette",
@@ -159,6 +160,9 @@ async function handler(m, { sock }) {
         )
       );
     }
+
+    // Roulette animation
+    await animRoulette(m, sock);
 
     const payout = won ? bet * multiplier : 0;
     const netProfit = payout - bet;

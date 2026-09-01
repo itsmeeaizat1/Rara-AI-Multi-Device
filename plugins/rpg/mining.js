@@ -1,11 +1,12 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// RPG Mining — Mine ore for materials and gold
+// RPG Mining — Mine ore for materials and gold (animated)
 
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy,
   addItem, ITEM_DB,
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
+import { animGather, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -58,7 +59,9 @@ async function handler(m, { sock }) {
 
     useEnergy(m, MINE_ENERGY, sock);
 
-    // Roll drops
+    // Animation: mining progress
+    await animGather(m, sock, "⛏️", "Menambang di gua...");
+
     const luckBonus = rpg.luck || 0;
     const dropBonus = rpg.dropBonus || 0;
     const drops = [];
@@ -72,30 +75,29 @@ async function handler(m, { sock }) {
       }
     }
 
-    // Gold & EXP
     const expGain = Math.floor(Math.random() * (EXP_RANGE[1] - EXP_RANGE[0] + 1)) + EXP_RANGE[0];
     const goldGain = Math.floor(Math.random() * (GOLD_RANGE[1] - GOLD_RANGE[0] + 1)) + GOLD_RANGE[0];
     addExp(m, expGain);
     addGold(m, goldGain);
-
     setCooldown(m, "lastMine", MINE_COOLDOWN);
 
     let dropText = "";
     if (drops.length > 0) {
-      dropText = drops.map(d => `+${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join("\n");
-      dropText = "\n" + dropText;
+      dropText = drops.map(d => `│ +${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join("\n");
     } else {
-      dropText = "\nTidak dapet ore kali ini 😅";
+      dropText = `│ Tidak dapet ore kali ini 😅`;
     }
 
     await m.react("🐣");
-    let msg = `Kamu menambang di gua...\n\n`;
-    msg += `Hasil Tambang:\n`;
-    msg += `EXP: +${expGain}\n`;
-    msg += `Gold: +${goldGain}`;
-    msg += dropText + "\n\n";
-    msg += `Energy: ${rpg.energy - MINE_ENERGY}/${rpg.maxEnergy}`;
-
+    let msg = `╭─「 ✦ ʜᴀsɪʟ ᴛᴀᴍʙᴀɴɢ ✦ 」\n`;
+    msg += `│ ⛏️ Lokasi: Gua\n`;
+    msg += `│\n`;
+    msg += `│ ✦ EXP  : *+${expGain}*\n`;
+    msg += `│ 💰 Gold : *+${goldGain}*\n`;
+    msg += `${dropText}\n`;
+    msg += `│\n`;
+    msg += `│ ⚡ Energy: *${rpg.energy - MINE_ENERGY}/${rpg.maxEnergy}*\n`;
+    msg += `╰──── • ────`;
     return m.reply(msg);
   } catch (err) {
     console.error("mining error:", err);

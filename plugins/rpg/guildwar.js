@@ -2,6 +2,7 @@
 // guildwar.js — Guild War (guild vs guild battle)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "guildwar",
@@ -54,6 +55,8 @@ async function handler(m, { sock }) {
       }
 
       await m.react("🕒");
+    await m.reply("⚔️ Guild war...");
+    await rpgSleep(900);
 
       // Calculate player guild power
       const playerPower = (guildData.power || guildData.totalPower || 3000) + Math.floor(Math.random() * 2000);

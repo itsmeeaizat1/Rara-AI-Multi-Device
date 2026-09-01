@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -134,6 +135,8 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🕒");
+    await m.reply("🎰 Casino spinning...");
+    await rpgSleep(800);
     removeGold(m, bet, sock);
 
     let result, msg = "";

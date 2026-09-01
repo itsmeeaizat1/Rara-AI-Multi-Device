@@ -3,6 +3,7 @@
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -36,6 +37,9 @@ async function handler(m, { sock }) {
     rpg.inventory = rpg.inventory || {};
     rpg.inventory[item.name] = (rpg.inventory[item.name] || 0) + 1;
     rpg.exp = (rpg.exp || 0) + 10;
+    // Animation
+    await animGather(m, sock, "🌿", "Mencari tanaman liar...");
+
     saveRpg(m, rpg);
     await m.react("🐣");
     return m.reply("🌿 Kamu mencari di alam...\n🎁 Mendapat: *" + item.name + "* (" + item.rarity + ")\n⭐ +10 EXP\n⚡ Sisa energi: " + rpg.energy);

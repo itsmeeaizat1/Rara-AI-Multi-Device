@@ -2,6 +2,7 @@
 // bansos.js — Korupsi dana bansos (high risk high reward)
 import { ensureRpg, addGold, removeGold, checkCooldown, setCooldown, formatTime } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -21,6 +22,8 @@ const JAIL_TIME = 4 * 60 * 60 * 1000;
 async function handler(m, { sock }) {
   try {
     await m.react("🕒");
+    await m.reply("🤲 Mengantri bansos...");
+    await rpgSleep(900);
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("bansos", "RPG belum siap. Ketik .daftar dulu.", "error"));
 

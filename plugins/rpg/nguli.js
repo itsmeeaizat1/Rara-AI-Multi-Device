@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -55,6 +56,9 @@ async function handler(m, { sock }) {
     }
 
     useEnergy(m, NGULI_ENERGY, sock);
+
+    // Animation
+    await animGather(m, sock, "👷", "Bekerja sebagai kuli...");
 
     const job = NGULI_JOBS[Math.floor(Math.random() * NGULI_JOBS.length)];
     const goldGain = Math.floor(Math.random() * (job.gold[1] - job.gold[0] + 1)) + job.gold[0];

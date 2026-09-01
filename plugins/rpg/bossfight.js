@@ -3,6 +3,7 @@
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -41,6 +42,8 @@ async function handler(m, { sock, command }) {
       if ((rpg.energy || 0) < 10) return m.reply(claraWrap("bossfight", "Energi tidak cukup. Butuh 10 energi.", "info"));
 
       await m.react("🕒");
+    await m.reply("⚔️ Menyerang boss...");
+    await rpgSleep(800);
       const baseDmg = (rpg.atk || 10) + Math.floor(Math.random() * 50);
       const elementBonus = rpg.element ? 1.1 : 1;
       const dmg = Math.floor(baseDmg * elementBonus);
