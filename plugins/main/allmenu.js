@@ -163,7 +163,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     // Fallback: baca /proc/cpuinfo kalau container tidak expose CPU info
     if ((!cpuSpeed || cpuSpeed === 0) || cpuModel === "Unknown") {
       try {
-        const fs = require("fs");
+        // fs already imported at top
         const cpuinfo = fs.readFileSync("/proc/cpuinfo", "utf8");
         const mhzMatch = cpuinfo.match(/cpu MHz\s*:\s*([\d.]+)/i);
         if (mhzMatch) cpuSpeed = Math.round(parseFloat(mhzMatch[1]));

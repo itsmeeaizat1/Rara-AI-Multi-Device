@@ -6,6 +6,8 @@
  *           Tio AI (OpenAI/Gemini/Anthropic formats via ai.tioo.eu.org)
  */
 
+import { getDatabase } from "./nova-database.js";
+
 const DEFAULT_PROVIDERS = {
   openai: {
     name: "OpenAI",
@@ -190,7 +192,6 @@ const DEFAULT_PROVIDERS = {
 
 function getCustomProviders() {
   try {
-    const { getDatabase } = require("./nova-database.js");
     const db = getDatabase();
     const data = db.get("aiCustomProviders");
     if (data && typeof data === "object") return data;
@@ -384,19 +385,20 @@ async function resolveLatestGeminiModel(apiKey) {
  * @param {object} opts - { systemPrompt, model, temperature, maxTokens, senderJid }
  */
 async function callGemini(prompt, opts = {}) {
-  // Resolve API key: prioritaskan opts.apiKey > config.aiHelp.geminiApiKey > apikeys.json (google)
+  // Resolve API key: opts.apiKey > apikeys.json (google = Google key asli) > config.geminiApiKey > config.aiHelp.geminiApiKey
+  // Note: config.aiHelp.geminiApiKey = getTioKey() = Tio key, BUKAN Google key
   let apiKey = opts.apiKey || "";
-  if (!apiKey) {
-    try {
-      const config = (await import("../../config.js")).default;
-      apiKey = config.aiHelp?.geminiApiKey || config.geminiApiKey || "";
-    } catch {}
-  }
   if (!apiKey) {
     try {
       const { getApiKeys } = await import("./config/env-loader.js");
       const keys = getApiKeys();
       apiKey = keys.google || keys.gemini || "";
+    } catch {}
+  }
+  if (!apiKey) {
+    try {
+      const config = (await import("../../config.js")).default;
+      apiKey = config.geminiApiKey || config.aiHelp?.geminiApiKey || "";
     } catch {}
   }
   if (!apiKey) throw new Error("Gemini API key belum diset. Dapatkan gratis di https://aistudio.google.com/apikey lalu set via .ai-set apiKey <key> atau update apikeys.json (field: google)");

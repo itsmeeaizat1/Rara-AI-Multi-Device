@@ -27,7 +27,7 @@ async function handler(m, { sock, text }) {
     let result;
     if (quotedType === "liveLocationMessage") {
       result = `
-let handler = async (m, { sock, prefix, reply }) => {
+export default async function handler(m, { sock, prefix, reply }) {
   sock.relayMessage(m.chat, {
     viewOnceMessage: {
       message: ${penis}
@@ -35,16 +35,10 @@ let handler = async (m, { sock, prefix, reply }) => {
   }, {})
 }
 
-handler.help = ["c${text}"]
-handler.tags = ['copy']
-handler.command = ["${text}"]
-handler.owner = true
-
-module.exports = handler
 `;
     } else {
       result = `
-let handler = async (m, { sock, prefix, reply }) => {
+export default async function handler(m, { sock, prefix, reply }) {
   sock.relayMessage(m.chat, {
     viewOnceMessage: {
       message: ${penis}
@@ -52,12 +46,6 @@ let handler = async (m, { sock, prefix, reply }) => {
   }, {})
 }
 
-handler.help = ["c${text}"]
-handler.tags = ['copy']
-handler.command = ["${text}"]
-handler.owner = true
-
-module.exports = handler
 `;
     }
 
