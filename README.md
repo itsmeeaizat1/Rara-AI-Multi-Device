@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20rapikan%20assets%2Fimage%20ke%20subfol-success?style=for-the-badge)
-> *Commit: "refactor: rapikan assets/image ke subfolder kategori + hapus thumbnail tidak terpakai"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20isi%20placeholder%20valid%20untuk%20file%20ga-success?style=for-the-badge)
+> *Commit: "fix: isi placeholder valid untuk file gambar yang kosong (0 bytes)"*
 <!--END_SECTION:latest-update-->
 
 ---
