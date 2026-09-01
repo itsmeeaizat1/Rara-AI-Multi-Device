@@ -5,6 +5,7 @@ import {
   ensureRpg, addItem, removeItem, ITEM_DB, getItemCount
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animCraft } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -171,6 +172,9 @@ async function handler(m, { sock }) {
     }
 
     // Add result
+    // Animation
+    await animCraft(m, sock, "item");
+
     addItem(m, recipe.result, recipe.qty);
 
     await m.react("🐣");

@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { rpgProgress } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -54,6 +55,13 @@ async function handler(m, { sock }) {
     }
 
     useEnergy(m, OJEK_ENERGY, sock);
+
+    // Animation
+    await rpgProgress(m, sock, [
+      "🛵 Ngebut ke lokasi penumpang...",
+      "⏳ Mengantar penumpang...",
+      "📦 Selesai mengantar...",
+    ], 900);
 
     const passenger = PASSENGERS[Math.floor(Math.random() * PASSENGERS.length)];
     const distance = Math.floor(Math.random() * (passenger.distance[1] - passenger.distance[0] + 1)) + passenger.distance[0];

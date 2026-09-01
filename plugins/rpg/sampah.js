@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGather } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -54,6 +55,9 @@ async function handler(m, { sock }) {
     }
 
     useEnergy(m, SAMPAH_ENERGY, sock);
+
+    // Animation
+    await animGather(m, sock, "🗑️", "Mengumpulkan sampah...");
 
     // Roll 1-3 items
     const found = [];

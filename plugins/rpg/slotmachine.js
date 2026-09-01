@@ -1,4 +1,5 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
+import { animSlot } from "../../src/lib/nova-rpg-anim.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -18,16 +19,7 @@ const pluginConfig = {
 };
 
 const SYMBOLS = ["🍒", "🍋", "🍊", "🔔", "⭐", "💎"];
-
-const MULTIPLIERS_3 = {
-  "🍒": 2,
-  "🍋": 3,
-  "🍊": 4,
-  "🔔": 5,
-  "⭐": 10,
-  "💎": 50,
-};
-
+const MULTIPLIERS_3 = { "🍒": 2, "🍋": 3, "🍊": 4, "🔔": 5, "⭐": 10, "💎": 50 };
 const MIN_BET = 50;
 const MAX_BET = 5000;
 
@@ -62,38 +54,18 @@ async function handler(m, { sock }) {
     const prefix = m.prefix || ".";
 
     if (!args[0] || isNaN(parseInt(args[0]))) {
-      return m.reply(
-        claraWrap(
-          "slotmachine",
-          `Masukkan jumlah taruhan valid! Min *${MIN_BET}*, Max *${MAX_BET}* gold.\nContoh: *${prefix}slotmachine 100*`,
-          "warn"
-        )
-      );
+      return m.reply(claraWrap("slotmachine", `Masukkan jumlah taruhan valid! Min *${MIN_BET}*, Max *${MAX_BET}* gold.\nContoh: *${prefix}slotmachine 100*`, "warn"));
     }
 
     const bet = parseInt(args[0]);
-
     if (bet < MIN_BET || bet > MAX_BET) {
-      return m.reply(
-        claraWrap(
-          "slotmachine",
-          `Jumlah taruhan harus antara *${MIN_BET}* dan *${MAX_BET}* gold!`,
-          "warn"
-        )
-      );
+      return m.reply(claraWrap("slotmachine", `Jumlah taruhan harus antara *${MIN_BET}* dan *${MAX_BET}* gold!`, "warn"));
     }
 
     const db = await getDatabase();
     const currentGold = await getPlayerGold(db, sender);
-
     if (currentGold < bet) {
-      return m.reply(
-        claraWrap(
-          "slotmachine",
-          `Gold kamu tidak cukup! Kamu memiliki *${currentGold} gold*, butuh *${bet} gold*.`,
-          "error"
-        )
-      );
+      return m.reply(claraWrap("slotmachine", `Gold kamu tidak cukup! Kamu memiliki *${currentGold} gold*, butuh *${bet} gold*.`, "error"));
     }
 
     // Spin reels
@@ -101,17 +73,8 @@ async function handler(m, { sock }) {
     const r2 = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
     const r3 = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
 
-    // Generate animation lines (previous & next visual reels)
-    const top1 = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-    const top2 = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-    const top3 = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-    const bot1 = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-    const bot2 = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-    const bot3 = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
-
     let multiplier = 0;
     let resultMsg = "";
-
     if (r1 === r2 && r2 === r3) {
       multiplier = MULTIPLIERS_3[r1] || 2;
       resultMsg = `🎉 JACKPOT 3 MATCH (${r1})! Multiplier: *${multiplier}x*`;
@@ -123,46 +86,32 @@ async function handler(m, { sock }) {
       resultMsg = `❌ ZONK! Semua simbol berbeda.`;
     }
 
+    // Slot spinning animation
+    await animSlot(m, sock, [r1, r2, r3]);
+
     const payout = Math.floor(bet * multiplier);
     const netProfit = payout - bet;
-
     await updatePlayerGold(db, sender, netProfit);
     const updatedGold = await getPlayerGold(db, sender);
 
-    // Save stats to playerData
-    let stats = (await db.getPlayerData?.(sender, "slotmachine")) || {
-      totalSpins: 0,
-      wins: 0,
-      losses: 0,
-      totalEarned: 0,
-    };
+    let stats = (await db.getPlayerData?.(sender, "slotmachine")) || { totalSpins: 0, wins: 0, losses: 0, totalEarned: 0 };
     stats.totalSpins += 1;
-    if (netProfit > 0) {
-      stats.wins += 1;
-      stats.totalEarned += netProfit;
-    } else {
-      stats.losses += 1;
-    }
+    if (netProfit > 0) { stats.wins += 1; stats.totalEarned += netProfit; } else { stats.losses += 1; }
     await db.setPlayerData?.(sender, "slotmachine", stats);
 
     await m.react("🐣");
-
-    let output = "";
-    output += `🎰 [ ${top1} | ${top2} | ${top3} ]\n`;
-    output += `🎰 [ ${r1} | ${r2} | ${r3} ] ◄ LINE\n`;
-    output += `🎰 [ ${bot1} | ${bot2} | ${bot3} ]\n`;
-    output += `
-`;
-    output += `📊 Status: ${resultMsg}\n`;
-    output += `💵 Taruhan: *${bet} gold*\n`;
+    let msg = `╭─「 ✦ sʟᴏᴛ ᴍᴀᴄʜɪɴᴇ ✦ 」\n`;
+    msg += `│ 📊 ${resultMsg}\n`;
+    msg += `│\n`;
+    msg += `│ 💵 Taruhan: *${bet} gold*\n`;
     if (netProfit > 0) {
-      output += `💰 Menang: *+${netProfit} gold*\n`;
+      msg += `│ 💰 Menang : *+${netProfit} gold*\n`;
     } else {
-      output += `💸 Kalah: *-${bet} gold*\n`;
+      msg += `│ 💸 Kalah  : *-${bet} gold*\n`;
     }
-    output += `💼 Sisa Gold: *${updatedGold} gold*\n`;
-    
-    return m.reply(output);
+    msg += `│ 💼 Sisa Gold: *${updatedGold} gold*\n`;
+    msg += `╰──── • ────`;
+    return m.reply(msg);
   } catch (err) {
     console.error("slotmachine error:", err);
     await m.react("❌");

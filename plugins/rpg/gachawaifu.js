@@ -2,6 +2,7 @@
 // gachawaifu.js — Gacha Waifu System (rarity + marry + collection)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGacha } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "gachawaifu",
@@ -203,6 +204,9 @@ async function handler(m, { sock }) {
       }
       await db.minEnergi?.(m.sender, PULL_COST);
     } catch {}
+
+    // Gacha animation
+    await animGacha(m, sock);
 
     const waifu = weightedPull();
     const data = await getWaifuData(db, m.sender);

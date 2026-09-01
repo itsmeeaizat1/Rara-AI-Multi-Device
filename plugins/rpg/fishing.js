@@ -2,6 +2,7 @@
 // fishing.js — Fishing RPG (pancing ikan, rarity, sell)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGather } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "fishing",

@@ -2,6 +2,7 @@
 // dicebattle.js — Dice Battle vs AI (2d6, bet gold)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "dicebattle",
@@ -40,6 +41,8 @@ async function handler(m, { sock }) {
     } catch {}
 
     await m.react("🕒");
+    await m.reply("🎲 Melempar dadu...");
+    await rpgSleep(900);
 
     // Roll
     const p1 = rollDice(), p2 = rollDice();

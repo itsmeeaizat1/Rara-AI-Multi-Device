@@ -2,6 +2,7 @@
 // rpg-arena.js — Arena PvP (auto-matchmaking, rank system)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "arena",
@@ -47,6 +48,8 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🕒");
+    await m.reply("⚔️ Arena PvP matchmaking...");
+    await rpgSleep(900);
 
     // Generate lawan AI
     const playerData = await db.getPlayerData?.(m.sender, "arena") || { points: 0, wins: 0, losses: 0 };

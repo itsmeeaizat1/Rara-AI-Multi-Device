@@ -1,5 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animCraft } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "blacksmith",

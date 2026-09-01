@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -44,6 +45,8 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🕒");
+    await m.reply("🦹 Mengintai target...");
+    await rpgSleep(900);
 
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("begalrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));

@@ -7,6 +7,7 @@ import {
   checkCooldown, setCooldown, formatTime, MONSTER_DB
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -90,6 +91,10 @@ async function handler(m, { sock }) {
     const maxRounds = 20;
     let totalDmgTaken = 0;
     const log = [];
+
+    // Boss battle intro
+    await m.reply("🐉 Boss muncul! Bersiap...");
+    await rpgSleep(1000);
 
     while (bossHp > 0 && playerHp - totalDmgTaken > 0 && rounds < maxRounds) {
       rounds++;

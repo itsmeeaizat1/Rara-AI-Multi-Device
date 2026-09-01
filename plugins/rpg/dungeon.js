@@ -7,6 +7,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animDungeon, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -62,6 +63,9 @@ async function handler(m, { sock }) {
 
     useEnergy(m, DG_ENERGY, sock);
 
+    // Animation: enter dungeon
+    await animDungeon(m, sock, hasKey ? 5 : 3);
+
     // Dungeon: 3 stage dengan monster makin kuat
     const equip = getEquipStats(m);
     const playerAtk = rpg.atk + equip.atk;
@@ -76,6 +80,8 @@ async function handler(m, { sock }) {
     const stageCount = hasKey ? 5 : 3; // Kunci = 5 stage, tanpa kunci = 3
 
     for (let stage = 1; stage <= stageCount; stage++) {
+      await m.reply(`🏰 Stage ${stage}/${stageCount} — ${hasKey ? "🔑" : ""} Musuh muncul...`);
+      await rpgSleep(800);
       const monster = getRandomMonster(baseLevel + stage * 5);
       if (!monster) break;
 
@@ -151,16 +157,18 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `Stage Cleared: *${stagesCleared}/${stageCount}*\n`;
-    msg += `${hasKey ? "🔑 Dungeon Key digunakan (+2 stage)" : "⚠️ Tanpa kunci (max 3 stage)"}\n\n`;
-    msg += `*Reward*\n`;
-    msg += `EXP: *+${totalExp}*\n`;
-    msg += `Gold: *+${totalGold}*`;
+    let msg = `╭─「 ✦ ᴅᴜɴɢᴇᴏɴ ✦ 」\n`;
+    msg += `│ 🏰 Stage: *${stagesCleared}/${stageCount}*\n`;
+    msg += `│ ${hasKey ? "🔑 Dungeon Key digunakan (+2 stage)" : "⚠️ Tanpa kunci (max 3 stage)"}\n`;
+    msg += `│\n`;
+    msg += `│ ✦ EXP  : *+${totalExp}*\n`;
+    msg += `│ 💰 Gold : *+${totalGold}*\n`;
     if (dropText) msg += dropText + "\n";
-    if (bossBonus) msg += bossBonus;
-    msg += `\n`;
-    msg += `HP: *${newHp}/${rpg.maxHp}*\n`;
-    msg += `Energy: *${rpg.energy - DG_ENERGY}/${rpg.maxEnergy}*`;
+    if (bossBonus) msg += `│ ${bossBonus}\n`;
+    msg += `│\n`;
+    msg += `│ ❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
+    msg += `│ ⚡ Energy: *${rpg.energy - DG_ENERGY}/${rpg.maxEnergy}*\n`;
+    msg += `╰──── • ────`;
 
     return m.reply(msg);
   } catch (err) {
