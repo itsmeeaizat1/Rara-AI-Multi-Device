@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20add%207%20new%20IkyyXD%20AI%20image%20plugins-success?style=for-the-badge)
-> *Commit: "feat: add 7 new IkyyXD AI image plugins"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20add%206%20new%20IkyyXD%20image%20plugins%20(na-success?style=for-the-badge)
+> *Commit: "feat: add 6 new IkyyXD image plugins (nanobanana, photiu, text2img, remove-clothes)"*
 <!--END_SECTION:latest-update-->
 
 ---
