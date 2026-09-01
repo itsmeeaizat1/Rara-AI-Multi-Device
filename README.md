@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20group%20audit%20fix%20%E2%80%94%20remove%206%20dup-success?style=for-the-badge)
-> *Commit: "refactor: group audit fix — remove 6 duplicates + fix 12 auto defaults"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20RPG%20animation%20system%20%E2%80%94%20progressive-success?style=for-the-badge)
+> *Commit: "feat: RPG animation system — progressive message animation untuk 50 plugin RPG"*
 <!--END_SECTION:latest-update-->
 
 ---
