@@ -28,24 +28,24 @@ async function handler(m, { sock }) {
         const db = getDatabase();
         const sholatEnabled = db.setting('autoSholat') || false;
 
-        let text = `📊 *sCheduler sTatus*\n\n`;
+        let text = `\n`;
 
         for (const sched of status.schedulers) {
             const statusIcon = sched.running ? '✅' : '❌';
             text += `${statusIcon} *${sched.name}*\n`;
-            text += `   └ Key: \`${sched.key}\`\n`;
-            text += `   └ ${sched.description}\n`;
+            text += `• Key: \`${sched.key}\`\n`;
+            text += `• ${sched.description}\n`;
 
             if (sched.lastRun && sched.lastRun !== '-' && sched.lastRun !== 'Never') {
-                text += `   └ Last: ${sched.lastRun}\n`;
+                text += `• Last: ${sched.lastRun}\n`;
             }
 
             if (sched.stats) {
                 if (sched.stats.totalResets) {
-                    text += `   └ Total Resets: ${sched.stats.totalResets}\n`;
+                    text += `• Total Resets: ${sched.stats.totalResets}\n`;
                 }
                 if (sched.stats.activeMessages !== undefined) {
-                    text += `   └ Active: ${sched.stats.activeMessages} | Sent: ${sched.stats.totalSent}\n`;
+                    text += `• Active: ${sched.stats.activeMessages} | Sent: ${sched.stats.totalSent}\n`;
                 }
             }
             text += `\n`;
@@ -53,12 +53,12 @@ async function handler(m, { sock }) {
 
         const sholatIcon = sholatEnabled ? '✅' : '❌';
         text += `${sholatIcon} *Sholat Scheduler*\n`;
-        text += `   └ Key: \`sholat\`\n`;
-        text += `   └ Notifikasi waktu sholat (real-time)\n`;
+        text += `• Key: \`sholat\`\n`;
+        text += `• Notifikasi waktu sholat (real-time)\n`;
 
         if (sholatEnabled) {
             const kotaSetting = db.setting('autoSholatKota') || { id: '1301', nama: 'KOTA JAKARTA' };
-            text += `   └ Lokasi: ${kotaSetting.nama}\n`;
+            text += `• Lokasi: ${kotaSetting.nama}\n`;
 
             try {
                 const { schedule } = await getTodaySchedule(kotaSetting.id);
@@ -82,9 +82,9 @@ async function handler(m, { sock }) {
                     nextTime = times.imsak;
                 }
 
-                text += `   └ Next: ${nextSholat} (${nextTime} WIB)\n`;
+                text += `• Next: ${nextSholat} (${nextTime} WIB)\n`;
             } catch {
-                text += `   └ _Gagal memuat jadwal_\n`;
+                text += `• _Gagal memuat jadwal_\n`;
             }
         }
 

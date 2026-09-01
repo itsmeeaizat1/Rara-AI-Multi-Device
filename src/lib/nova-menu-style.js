@@ -51,25 +51,15 @@ const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
  * Empty: pass "" as a line.
  */
 function buildBox(headerTitle, lines = []) {
+  // Header TIDAK di-stretch mengikuti panjang body — dash panjang tanpa spasi
+  // bikin WhatsApp hard-wrap jadi beberapa baris "──────" berantakan di HP.
+  // Header dipakai apa adanya, sama seperti style menu/allmenu yang disetujui owner.
   const headerCore = `╭─「 ✦ ${headerTitle} ✦ 」`;
-  let maxW = headerCore.length;
-  for (const line of lines) {
-    let len;
-    if (line === "---" || line === "─" || line === "---separator---") continue;
-    else if (typeof line === "object" && line.subHeader) len = `│ 「 ${line.subHeader} 」`.length;
-    else if (!line || !String(line).trim()) continue;
-    else {
-      const clean = String(line).replace(/^[•┊╎❏➶╭╰│┃]\s*/g, '');
-      len = `│ ${scLine(clean)}`.length;
-    }
-    if (len > maxW) maxW = len;
-  }
-  const W = Math.max(maxW + 3, 24);
-  const header = headerCore + "─".repeat(Math.max(0, W - headerCore.length));
+  const header = headerCore;
   const body = [];
   for (const line of lines) {
     if (line === "---" || line === "─" || line === "---separator---") {
-      body.push("├" + "─".repeat(Math.max(0, W - 1)));
+      body.push("├────  •  ────");
     } else if (typeof line === "object" && line.subHeader) {
       const sub = `│ 「 ${line.subHeader} 」`;
       body.push(sub);

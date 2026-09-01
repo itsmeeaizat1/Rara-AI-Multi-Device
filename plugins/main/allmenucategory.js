@@ -265,12 +265,7 @@ ${weatherBlock ? weatherBlock + "\n" : ""}╭─「 ✦ ${toSC("Daftar Kategori"
       const usage = pinfo?.config?.usage || "";
       const desc = pinfo?.config?.description || "";
       // Truncate description to keep it compact
-      const shortDesc = desc ? desc.slice(0, 40) : "";
-      if (shortDesc) {
-        txt += `│ ${commandListLine(prefix, cmd, usage, symbols)}\n│   └ ${shortDesc}\n`;
-      } else {
-        txt += `│ ${commandListLine(prefix, cmd, usage, symbols)}\n`;
-      }
+      txt += `│ ${commandListLine(prefix, cmd, usage, symbols)}\n`;
     }
 
     txt += `│\n╰────  •  ────\n\n${toSC("Nova AI WhatsApp Bot")}`;
