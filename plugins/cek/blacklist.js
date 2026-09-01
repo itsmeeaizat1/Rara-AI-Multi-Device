@@ -53,8 +53,8 @@ function saveBlacklist(db, data) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const args = (m.text || "").trim().split(/\s+/);
     const action = args[0]?.toLowerCase() || "help";
     const db = getDatabase();

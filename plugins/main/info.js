@@ -44,8 +44,8 @@ function formatUptime(ms) {
 }
 
 async function handler(m, { sock, config: botConfig, db, uptime }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const botName = botConfig.bot?.name || "Nova AI WhatsApp Bot";
 
     const dbInstance = getDatabase();

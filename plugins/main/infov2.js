@@ -19,8 +19,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const db = getDatabase();
     const users = Object.keys(db.users || {}).length;
     const groups = Object.keys(db.groups || {}).length;

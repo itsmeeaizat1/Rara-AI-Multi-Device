@@ -20,8 +20,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const raw = m.text?.trim() || "";
     const prompt = raw
       .replace(new RegExp(`^\\${prefix}(parallelai|parallel|paai|paraai)\\s+`, "i"), "")

@@ -20,8 +20,8 @@ async function geocode(q) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const input = m.text?.trim();
     if (!input || !input.includes("->")) {
       await m.reply( novaCaption({

@@ -48,8 +48,8 @@ function buildMenu(prefix) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const raw = m.text?.trim() ?? "";
 
     if (!raw) {

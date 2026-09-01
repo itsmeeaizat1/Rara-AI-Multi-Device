@@ -35,8 +35,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const userName = m.pushName || "Kamu";
     const month = new Date().getMonth() + 1;
     const isChristmasSeason = month === 12;

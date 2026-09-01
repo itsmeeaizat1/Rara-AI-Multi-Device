@@ -183,8 +183,8 @@ function buildPaymentMethods() {
 }
 
 async function handler(m, { sock, config: botConfig, db }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
 
     // ── Ambil data user ──
     const database = db || getDatabase();

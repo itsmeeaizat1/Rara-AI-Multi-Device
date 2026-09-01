@@ -16,8 +16,8 @@ const NUMS = "0123456789";
 const SYMS = "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const len = Math.min(Math.max(parseInt(m.text) || 12, 8), 64);
     const all = LOWER + UPPER + NUMS + SYMS;
     let pw = "";

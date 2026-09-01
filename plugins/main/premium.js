@@ -53,8 +53,8 @@ function buildPaymentMethods() {
 }
 
 async function handler(m, { sock, config: botConfig, db }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
 
     // Cek apakah user sudah premium
     const user = db.getUser(m.sender);

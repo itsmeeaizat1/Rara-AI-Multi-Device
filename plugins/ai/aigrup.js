@@ -124,8 +124,8 @@ function getKeyForFormat(aiHelp, fmtKey) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const raw = (m.text || "").replace(/^\.aigrup\s+/i, "").replace(/^\.aigroup\s+/i, "").replace(/^\.aig\s+/i, "").trim();
     const args = raw.split(/[ \t]+/).filter(Boolean);
 

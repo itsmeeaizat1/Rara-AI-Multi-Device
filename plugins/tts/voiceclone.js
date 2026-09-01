@@ -211,8 +211,8 @@ async function applyVoiceProfile(inputPath, outputPath, analysis) {
 
 // === Main handler ===
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const text = m.text?.trim() || "";
     const args = text.split(/\s+/);
     const action = args[0]?.toLowerCase();

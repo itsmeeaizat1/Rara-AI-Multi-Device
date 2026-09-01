@@ -141,8 +141,8 @@ function resolveChatTarget(m) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const raw = m.text?.trim() ?? "";
     const normalized = raw.toLowerCase().replace(/^\.(sholat|jadwalsholat|prayer|salat|adzan|iqamah|jamaah|muslimpro|lokasijadwalsholat|lokasisholat)\s+/i, "").trim();
     const isSholatCommand = /^\.(sholat|jadwalsholat|prayer|salat|adzan|iqamah|jamaah|muslimpro|lokasijadwalsholat|lokasisholat)\b/i.test(raw.trim());

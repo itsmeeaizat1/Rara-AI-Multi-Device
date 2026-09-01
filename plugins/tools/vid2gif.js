@@ -57,8 +57,8 @@ async function getVideoDuration(filePath) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
 
     const isVideo =
       m.isVideo || m.quoted?.isVideo ||

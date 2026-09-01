@@ -28,8 +28,8 @@ function extractImage(m) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
 
     const media = extractImage(m);
     if (!media) {

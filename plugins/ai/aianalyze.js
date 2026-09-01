@@ -30,8 +30,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
 
     const media = m.msg?.imageMessage || m.quoted?.msg?.imageMessage;
     if (!media) {

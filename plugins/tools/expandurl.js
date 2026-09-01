@@ -27,8 +27,8 @@ async function expand(url, maxRedirects = 10) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const url = m.text?.trim();
     if (!url || !url.startsWith("http")) {
       await m.reply( novaCaption({

@@ -36,8 +36,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const emoji = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
 
     const text =

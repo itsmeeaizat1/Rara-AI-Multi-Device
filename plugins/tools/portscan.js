@@ -71,8 +71,8 @@ function scanPort(host, port, timeout = 3000) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const text = (m.text || "").trim();
 
     if (!text) {

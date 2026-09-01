@@ -21,8 +21,8 @@ const pluginConfig = {
 const ALLOWED = /^[0-9+\-*/().% ]+$/;
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const expr = m.text?.trim();
 
     if (!expr) {

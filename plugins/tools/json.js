@@ -20,8 +20,8 @@ const pluginConfig = {
 const MODES = ["beautify", "minify", "check", "keys", "values", "type"];
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const text = (m.text || "").trim();
 
     if (!text) {

@@ -314,8 +314,8 @@ export function isMoodThemeEnabled(m) {
 // ═══════════════════════════════════════════════════════════════
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const db = getDatabase();
     if (!db.db.data.moodTheme) db.db.data.moodTheme = {};
     const cfg = db.db.data.moodTheme;

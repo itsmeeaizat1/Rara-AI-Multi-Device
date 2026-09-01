@@ -11,8 +11,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const arg = (m.text || "").trim().toLowerCase();
     const db = getDatabase();
     if (!db.autoTranslate) db.autoTranslate = {};

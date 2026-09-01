@@ -22,8 +22,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const db = getDatabase();
     if (!db.db.data.autoVnTranslate) db.db.data.autoVnTranslate = {};
     const cfg = db.db.data.autoVnTranslate;

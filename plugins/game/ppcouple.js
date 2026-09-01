@@ -19,8 +19,8 @@ function tempPath(ext) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const db = getDatabase();
     const couple = db?.getCouple?.(m.sender) || null;
 

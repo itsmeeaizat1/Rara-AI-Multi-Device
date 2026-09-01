@@ -139,8 +139,8 @@ function checkKeywordMatch(message, topics) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const db = getDatabase();
     const args = m.args || [];
     const action = args[0]?.toLowerCase();

@@ -11,8 +11,8 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const { data } = await axios.get("https://trends.google.com/trending/rss?geo=ID", {
       timeout: 10000, headers: {"User-Agent":"Mozilla/5.0"},
     });

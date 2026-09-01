@@ -398,8 +398,8 @@ export async function startAutoSummary(sock) {
 // HANDLER
 // ============================================================
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const settings = getSettings();
     const db = getDatabase();
     const arg = (m.text || "").trim();

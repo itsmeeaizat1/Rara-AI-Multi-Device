@@ -9,8 +9,8 @@ import { createWideDiscordCard } from "../../src/lib/nova-welcome-card.js";
 import config from "../../config.js";
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const args = m.text?.trim().toLowerCase();
 
     if (!["on", "off"].includes(args)) {

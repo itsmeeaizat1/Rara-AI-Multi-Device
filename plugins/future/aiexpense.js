@@ -20,8 +20,8 @@ function parseAmount(text) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const input = m.text?.trim();
     if (!input) {
       await m.reply(novaCaption({

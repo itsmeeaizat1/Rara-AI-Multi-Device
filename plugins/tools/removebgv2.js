@@ -22,8 +22,8 @@ const pluginConfig = {
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB limit
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const isImage =
       m.isImage || (m.quoted && (m.quoted.isImage || m.quoted?.type === "imageMessage"));
 

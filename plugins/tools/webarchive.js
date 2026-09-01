@@ -62,8 +62,8 @@ function formatDate(timestamp) {
 }
 
 async function handler(m, { sock, config: botConfig }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const text = (m.text || "").trim();
 
     if (!text) {

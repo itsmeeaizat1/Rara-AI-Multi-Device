@@ -50,8 +50,8 @@ function setWeatherDb(db, data = {}) {
 }
 
 async function handler(m, { sock, config: botConfig, db }) {
-  try {
     const prefix = botConfig.command?.prefix || ".";
+  try {
     const raw = (m.text?.trim() ?? "").toLowerCase();
     const parts = raw.replace(/^\.cuaca\s+/i, "").trim().split(/\s+/);
     const sub = (parts[0] || "").toLowerCase();
