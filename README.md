@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20rename%20kategori%20'rpg%20cinta'%20%E2%86%92%20-success?style=for-the-badge)
-> *Commit: "refactor: rename kategori 'rpg cinta' → 'rpg couple'"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20update%20helper%20functions%20to%20pla-success?style=for-the-badge)
+> *Commit: "refactor: update helper functions to plain-text reply format"*
 <!--END_SECTION:latest-update-->
 
 ---
