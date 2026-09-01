@@ -78,7 +78,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭──「 *ɴɪᴋ ᴘᴀʀꜱᴇʀ v2* 」\n`;
+    let msg = `╭─「 *ɴɪᴋ ᴘᴀʀꜱᴇʀ v2* 」\n`;
     msg += `│ NIK: *${r.nik || nik}*\n`;
     msg += `│ Provinsi: *${r.provinsi || r.province || "-"}*\n`;
     if (r.kabupaten || r.kota) msg += `│ Kab/Kota: *${r.kabupaten || r.kota}*\n`;

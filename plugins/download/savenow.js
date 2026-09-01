@@ -189,7 +189,7 @@ async function handler(m, { sock }) {
 
     // Kirim info sedang diproses
     let progressMsg = await m.reply(
-      "╭──「 " + platformIcon + " SaveNow 」\n" +
+      "╭─「 " + platformIcon + " SaveNow 」\n" +
       "" + FORMAT_LABELS[format] + "\n" +
       "" + (request.title || "Tanpa Judul").slice(0, 60) + "\n" +
       "│ ⏳ Sedang diproses server...\n" +
@@ -244,7 +244,7 @@ async function handler(m, { sock }) {
         {
           video: buffer,
           caption:
-            "╭──「 " + platformIcon + " SaveNow 」\n" +
+            "╭─「 " + platformIcon + " SaveNow 」\n" +
             "" + FORMAT_LABELS[format] + "\n" +
             "" + (result.title || "Tanpa Judul").slice(0, 60) + "\n" +
             "╰──────────",

@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
   const story = await generateDrama(names);
 
   if (!story) {
-    return m.reply("╭──「 Drama Story 」\n│ ❌ Yah, gagal bikin ceritanya nih 😵\n│ Coba lagi yuk!\n╰──────────", "drama");
+    return m.reply("╭─「 Drama Story 」\n│ ❌ Yah, gagal bikin ceritanya nih 😵\n│ Coba lagi yuk!\n╰──────────", "drama");
   }
 
   const header = "🎭 *ᴅʀᴀᴍᴀ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";

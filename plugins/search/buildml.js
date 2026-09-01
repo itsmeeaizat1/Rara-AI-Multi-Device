@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
     const r = data.result || data.data || data;
     await m.react("🐣");
 
-    let msg = `╭──「 *ʙᴜɪʟᴅ ᴍʟ ʙʙ* 」\n`;
+    let msg = `╭─「 *ʙᴜɪʟᴅ ᴍʟ ʙʙ* 」\n`;
     msg += `│ Hero: *${r.hero || r.name || hero}*\n`;
     if (r.emblem) msg += `│ Emblem: *${r.emblem}*\n`;
     if (r.spell || r.battle_spell) msg += `│ Battle Spell: *${r.spell || r.battle_spell}*\n`;

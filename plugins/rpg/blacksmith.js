@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
     const upgradeCost = Math.max(500, (currentLevel + 1) * 500);
 
     if (subCmd === "info" || !subCmd) {
-      let msg = `╭──「 *BLACKSMITH FORGE* 」\n`;
+      let msg = `╭─「 *BLACKSMITH FORGE* 」\n`;
       msg += `│ ⚔️ *Senjata:* ${weapon.name}\n`;
       msg += `│ 📊 *Level:* ${currentLevel} / ${maxLevel}\n`;
       msg += `│ 💥 *Total ATK:* ${currentAtk} (+${currentLevel * 5})\n`;
@@ -100,7 +100,7 @@ async function handler(m, { sock }) {
         const newAtk = weapon.baseAtk + weapon.level * 5;
         await db.setPlayerData?.(sender, "weapon", weapon);
 
-        let msg = `╭──「 *UPGRADE SUCCESS* 」\n`;
+        let msg = `╭─「 *UPGRADE SUCCESS* 」\n`;
         msg += `│ ⚒️ Berhasil menempa *${weapon.name}*!\n`;
         msg += `│  \n`;
         msg += `│ 📊 Level Baru: *+${weapon.level}* / ${maxLevel}\n`;
@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
       } else {
         await db.setPlayerData?.(sender, "weapon", weapon);
 
-        let msg = `╭──「 *UPGRADE FAILED* 」\n`;
+        let msg = `╭─「 *UPGRADE FAILED* 」\n`;
         msg += `│ 💥 Tempaan gagal! Percikan api membakar material.\n`;
         msg += `│  \n`;
         msg += `│ 🛡️ Senjata *${weapon.name}* tetap di Level *${currentLevel}*.\n`;

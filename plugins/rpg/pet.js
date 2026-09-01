@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     if (subCmd === "adopt" || subCmd === "adopsi") {
       const petType = (m.args[1] || "").toLowerCase();
       if (!petType) {
-        let list = `╭──「 *ᴀᴅᴏᴘsɪ ᴘᴇᴛ* 」\n`;
+        let list = `╭─「 *ᴀᴅᴏᴘsɪ ᴘᴇᴛ* 」\n`;
         PET_TYPES.forEach(p => {
           list += `│ ${p.emoji} ${p.type} - ${p.cost} gold (ATK:${p.baseAtk} DEF:${p.baseDef})\n`;
         });
@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
       await savePetData(db, m.sender, pet);
       await m.react("🐣");
 
-      let msg = `╭──「 *ᴘᴇᴛ ʙᴀᴛᴛʟᴇ* 」\n`;
+      let msg = `╭─「 *ᴘᴇᴛ ʙᴀᴛᴛʟᴇ* 」\n`;
       msg += `│ ${pet.emoji} ${pet.type} Lv.${pet.level} vs ${enemyPet.emoji} ${enemyPet.type} Lv.${enemyLevel}\n`;
       msg += `│\n`;
       msg += `│ ${won ? "🏆 MENANG!" : "💀 KALAH!"}\n`;
@@ -183,7 +183,7 @@ async function handler(m, { sock }) {
 
     // INFO (default)
     const hungerBar = "█".repeat(Math.floor(pet.hunger / 10)) + "░".repeat(10 - Math.floor(pet.hunger / 10));
-    let msg = `╭──「 *ᴍʏ ᴘᴇᴛ* 」\n`;
+    let msg = `╭─「 *ᴍʏ ᴘᴇᴛ* 」\n`;
     msg += `│ ${pet.emoji} *${pet.type}*\n`;
     msg += `│ Level: *${pet.level}*\n`;
     msg += `│ EXP: *${pet.exp}/${pet.level * 100}*\n`;

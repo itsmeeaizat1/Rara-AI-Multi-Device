@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastNebang", NEBANG_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭──「 *ɴᴇʙᴀɴɢ* 」\n`;
+    let msg = `╭─「 *ɴᴇʙᴀɴɢ* 」\n`;
     msg += `│ 🌲 Pohon: *${tree.name}*\n`;
     msg += `│ 🪓 Kamu menebang dengan susah payah...\n`;
     msg += `│\n`;

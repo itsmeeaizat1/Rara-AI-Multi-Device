@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
       }
       const grouped = {};
       data.catches.forEach(f => { grouped[f.name] = (grouped[f.name] || 0) + 1; });
-      let msg = `╭──「 *ғɪsʜ ɪɴᴠᴇɴᴛᴏʀʏ* 」\n`;
+      let msg = `╭─「 *ғɪsʜ ɪɴᴠᴇɴᴛᴏʀʏ* 」\n`;
       msg += `│ Total: *${data.totalCaught}*\n`;
       msg += `│\n`;
       for (const [name, count] of Object.entries(grouped)) {
@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     const isRare = fish.rarity === "S" || fish.rarity === "SS" || fish.rarity === "SSS";
-    let msg = `╭──「 *ғɪsʜɪɴɢ* 」\n`;
+    let msg = `╭─「 *ғɪsʜɪɴɢ* 」\n`;
     msg += `│ ${isRare ? "✨ TANGKAPAN BERHASIL! ✨" : "Berhasil menangkap!"}\n`;
     msg += `│\n`;
     msg += `│ ${fish.emoji} *${fish.name}*\n`;

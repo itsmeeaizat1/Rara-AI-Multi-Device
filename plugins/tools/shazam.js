@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
     const r = data.result;
     await m.react("🐣");
 
-    let msg = `╭──「 *sʜᴀᴢᴀᴍ* 」\n`;
+    let msg = `╭─「 *sʜᴀᴢᴀᴍ* 」\n`;
     msg += `│ 🎵 Judul: *${r.title || "Tidak diketahui"}*\n`;
     msg += `│ 🎤 Artist: *${r.artist || "Tidak diketahui"}*\n`;
     if (r.album) msg += `│ 💿 Album: *${r.album}*\n`;

@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
     const activity = flavors[Math.floor(Math.random() * flavors.length)];
 
     await m.react("🐣");
-    let msg = `╭──「 *ᴋᴇʀᴊᴀ* 」\n`;
+    let msg = `╭─「 *ᴋᴇʀᴊᴀ* 」\n`;
     msg += `│ 👔 Pekerjaan: *${jobName}* (Lv.${jobLv})\n`;
     msg += `│ 📋 Aktivitas: ${activity}\n`;
     msg += `│\n`;

@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
     const r = res.data?.result || res.data?.data;
     if (!r?.play) throw new Error("Gagal mengambil video TikTok");
 
-    const caption = `╭──「 TikTok V2 」\n│ Title: ${r.title || "TikTok Video"}\n│ Author: ${r.author?.nickname || "-"}\n╰──────────`;
+    const caption = `╭─「 TikTok V2 」\n│ Title: ${r.title || "TikTok Video"}\n│ Author: ${r.author?.nickname || "-"}\n╰──────────`;
 
     await sock.sendMessage(m.chat, {
         video: { url: r.play },

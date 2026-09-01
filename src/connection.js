@@ -623,14 +623,14 @@ async function startConnection(options = {}) {
           const isFirstPair = !fs.existsSync(path.join(process.cwd(), "storage", ".first_pair_done"));
 
           const notifText = [
-            "╭──「 Bot Online" + (isFirstPair ? " — First Pair" : "") + " 」",
-            "├── Bot: " + (config.bot?.name || "Nova-AI"),
-            "├── Versi: " + (config.bot?.version || "v20.0.0"),
-            "├── Nomor: " + botNum,
-            "├── Waktu: " + waktu,
-            "├── Host: " + hostname,
-            "├── Platform: " + platform + " | Node: " + nodeVer,
-            "╰──────────",
+            "╭─「 Bot Online" + (isFirstPair ? " — First Pair" : "") + " 」",
+            "│ Bot       " + (config.bot?.name || "Nova-AI"),
+            "│ Versi     " + (config.bot?.version || "v20.0.0"),
+            "│ Nomor     " + botNum,
+            "│ Waktu     " + waktu,
+            "│ Host      " + hostname,
+            "│ Platform  " + platform + " | Node: " + nodeVer,
+            "╰──────────────────────",
             "",
             isFirstPair
               ? "_Bot baru saja tersambung untuk pertama kali._"
@@ -849,18 +849,18 @@ async function startConnection(options = {}) {
             config.saluran?.name || config.bot?.name || "Nova-AI";
 
           const welcomeText =
-            `╭──「 Welcome 」\n` +
-            `├── Hai, Salam Kenal!\n` +
-            `├── Aku *${config.bot?.name || "Nova-AI"}*\n` +
-            `├── Terima kasih sudah undang aku ke *${groupName}*!\n` +
-            `├── Diundang oleh ${inviterMention}\n` +
-            `├──\n` +
-            `├── Developer: ${config.bot?.developer || "Aizat"}\n` +
-            `├── Prefix: ${prefix}\n` +
-            `├── Support: ${config.bot?.support || "-"}\n` +
-            `├──\n` +
-            `├── Ketik *${prefix}menu* untuk lihat fitur\n` +
-            `├── Ketik *${prefix}help* untuk bantuan\n` +
+            `╭─「 Welcome 」\n` +
+            `│ Hai, Salam Kenal!\n` +
+            `│ Aku *${config.bot?.name || "Nova-AI"}*\n` +
+            `│ Terima kasih sudah undang aku ke *${groupName}*!\n` +
+            `│ Diundang oleh ${inviterMention}\n` +
+            `│\n` +
+            `│ Developer: ${config.bot?.developer || "Aizat"}\n` +
+            `│ Prefix: ${prefix}\n` +
+            `│ Support: ${config.bot?.support || "-"}\n` +
+            `│\n` +
+            `│ Ketik *${prefix}menu* untuk lihat fitur\n` +
+            `│ Ketik *${prefix}help* untuk bantuan\n` +
             `╰──────────`;
 
           const ctxInfo = {

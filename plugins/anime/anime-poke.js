@@ -55,9 +55,9 @@ async function handler(m, { sock }) {
     if (mentioned && mentioned !== senderJid) {
       const targetName = `@${mentioned.split("@")[0]}`;
       mentions.push(mentioned);
-      caption = `╭──「 *ᴀɴɪᴍᴇ ᴘᴏᴋᴇ* 」\n│ ${senderName} mencolek-colek ${targetName} 💕\n╰──────────`;
+      caption = `╭─「 *ᴀɴɪᴍᴇ ᴘᴏᴋᴇ* 」\n│ ${senderName} mencolek-colek ${targetName} 💕\n╰──────────`;
     } else {
-      caption = `╭──「 *ᴀɴɪᴍᴇ ᴘᴏᴋᴇ* 」\n│ ${senderName} mencolek layar 💕\n╰──────────`;
+      caption = `╭─「 *ᴀɴɪᴍᴇ ᴘᴏᴋᴇ* 」\n│ ${senderName} mencolek layar 💕\n╰──────────`;
     }
 
     try {

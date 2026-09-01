@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
 
     const medal = ["🥇", "🥈", "🥉"];
 
-    let msg = `╭──「 *ᴛᴏᴘ ${typeLabel}* 」\n`;
+    let msg = `╭─「 *ᴛᴏᴘ ${typeLabel}* 」\n`;
     msg += `│ 📊 Top 10 Player\n`;
     msg += `│\n`;
 

@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
     }
 
     if (subCmd === "info" || subCmd === "prize") {
-      let msg = `╭──「 *ᴘʀɪᴢᴇ ᴘᴏᴏʟ* 」\n`;
+      let msg = `╭─「 *ᴘʀɪᴢᴇ ᴘᴏᴏʟ* 」\n`;
       msg += `│ Week: *${currentWeek}*\n`;
       msg += `│ Entry fee: 500 gold\n`;
       msg += `│\n`;
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
     // Sort by points
     const sorted = [...tournamentData.participants.entries()].sort((a, b) => b[1].points - a[1].points);
 
-    let msg = `╭──「 *ᴡᴇᴇᴋʟʏ ᴛᴏᴜʀɴᴀᴍᴇɴᴛ* 」\n`;
+    let msg = `╭─「 *ᴡᴇᴇᴋʟʏ ᴛᴏᴜʀɴᴀᴍᴇɴᴛ* 」\n`;
     msg += `│ Week: *${currentWeek}* | Peserta: *${tournamentData.participants.size}*\n`;
     msg += `│\n`;
 

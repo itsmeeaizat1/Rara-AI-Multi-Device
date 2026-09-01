@@ -64,7 +64,7 @@ async function handler(m, { sock }) {
     // ── STATUS ──
     if (!action || action === "status") {
       if (!rpg.dungeonV2.active) {
-        let msg = `╭──「 *ᴅᴜɴɢᴇᴏɴ ᴠ2* 」\n`;
+        let msg = `╭─「 *ᴅᴜɴɢᴇᴏɴ ᴠ2* 」\n`;
         msg += `│ 📋 Status: *Idle*\n`;
         msg += `│ 👤 Level: *${rpg.level}* (min: ${MIN_LEVEL})\n`;
         msg += `│ ⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}* (need: ${DG2_ENERGY})\n`;
@@ -79,7 +79,7 @@ async function handler(m, { sock }) {
         return m.reply(msg);
       }
 
-      let msg = `╭──「 *ᴅᴜɴɢᴇᴏɴ ᴠ2* 」\n`;
+      let msg = `╭─「 *ᴅᴜɴɢᴇᴏɴ ᴠ2* 」\n`;
       msg += `│ 📊 Status: *Active*\n`;
       msg += `│ Floor: *${rpg.dungeonV2.floor}/${MAX_FLOORS}*\n`;
       msg += `│ Nama: *${FLOOR_CONFIG[rpg.dungeonV2.floor - 1]?.name || "?"}*\n`;
@@ -227,7 +227,7 @@ async function handler(m, { sock }) {
         }
 
         await m.react("🐣");
-        let msg = `╭──「 *ᴅᴜɴɢᴇᴏɴ ᴠ2* 」\n`;
+        let msg = `╭─「 *ᴅᴜɴɢᴇᴏɴ ᴠ2* 」\n`;
         msg += `│ 🏰 Floor: *${rpg.dungeonV2.floor}/${MAX_FLOORS}* — ${floorConfig.name}\n`;
         msg += `│ 👹 Monster: *${monster.name}*\n`;
         msg += `│\n`;
@@ -264,7 +264,7 @@ async function handler(m, { sock }) {
         setCooldown(m, "lastDungeonV2", DG2_COOLDOWN);
 
         await m.react("❌");
-        let msg = `╭──「 *ᴅᴜɴɢᴇᴏɴ ᴠ2* 」\n`;
+        let msg = `╭─「 *ᴅᴜɴɢᴇᴏɴ ᴠ2* 」\n`;
         msg += `│ 🏰 Floor: *${rpg.dungeonV2.floor}/${MAX_FLOORS}* — ${floorConfig.name}\n`;
         msg += `│ 👹 Monster: *${monster.name}*\n`;
         msg += `│\n`;

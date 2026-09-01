@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
 
   if (!text) {
     return m.reply( `📝 *ꜱᴇᴛ ᴡᴇʟᴄᴏᴍᴇ*\n\n` +
-        `╭──「 *ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀ* 」\n` +
+        `╭─「 *ᴘʟᴀᴄᴇʜᴏʟᴅᴇʀ* 」\n` +
         `│ │ \`{user}\` - Nama member\n` +
         `│ │ \`{number}\` - Nomor member\n` +
         `│ │ \`{group}\` - Nama grup\n` +

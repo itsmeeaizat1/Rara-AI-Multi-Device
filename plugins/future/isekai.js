@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
   const story = await generateIsekai(names);
 
   if (!story) {
-    return m.reply("╭──「 Isekai Story 」\n│ ❌ Yah, gagal bikin ceritanya nih 😵\n│ Coba lagi yuk!\n╰──────────", "isekai");
+    return m.reply("╭─「 Isekai Story 」\n│ ❌ Yah, gagal bikin ceritanya nih 😵\n│ Coba lagi yuk!\n╰──────────", "isekai");
   }
 
   const header = "⚔️ *ɪꜱᴇᴋᴀɪ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";

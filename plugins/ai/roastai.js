@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭──「 *ʀᴏᴀsᴛ ᴀɪ* 」\n`;
+    let msg = `╭─「 *ʀᴏᴀsᴛ ᴀɪ* 」\n`;
     msg += `│ 🎯 Target: *${target}*\n`;
     msg += `│\n`;
     msg += `│ ${result.answer.trim()}\n`;

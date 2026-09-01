@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
 
         const lines = lyrics.split("\n").map(l => "" + l).join("\n")
         const text =
-            "╭──「 Lirik v2 (via " + source + ") 」\n" +
+            "╭─「 Lirik v2 (via " + source + ") 」\n" +
             "" + (result.title || "Unknown") + "\n" +
             "│ by " + (result.artist || "Unknown") + "\n" +
             "│\n" +

@@ -115,7 +115,7 @@ async function handler(m, { sock }) {
         } catch {
             // fallback tetap ke default domain
         }
-        await m.reply(claraWrap("Deploy", `╭──「 *DEPLOY SUCCESS* 」
+        await m.reply(claraWrap("Deploy", `╭─「 *DEPLOY SUCCESS* 」
 │
 │ 🌐 Nama     : ${name}
 │ ☁️ Platform : Vercel
@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
             error.message
 
         m.reply(
-`╭──「 *DEPLOY FAILED* 」
+`╭─「 *DEPLOY FAILED* 」
 │
 │ ❌ ${err}
 │

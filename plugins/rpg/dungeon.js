@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭──「 *ᴅᴜɴɢᴇᴏɴ* 」\n`;
+    let msg = `╭─「 *ᴅᴜɴɢᴇᴏɴ* 」\n`;
     msg += `│ 🏰 Stage cleared: *${stagesCleared}/${stageCount}*\n`;
     msg += `│ ${hasKey ? "🔑 Dungeon Key digunakan (+2 stage)" : "⚠️ Tanpa kunci (max 3 stage)"}\n`;
     msg += `│\n`;

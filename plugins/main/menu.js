@@ -156,7 +156,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 
     // ── Bagian "open box" (Info Profil) — belum ada penutup kanan, perlu closeBoxRight ──
     const openBox = `
-╭──「 *${toSC("Info Profil")}* 」
+╭─「 *${toSC("Info Profil")}* 」
 │ *${toSC("Nama")}:*  ${toSC(m.pushName || "User")}
 │ *${toSC("Nomor")}:* @${m.sender.split("@")[0]}
 │ *${toSC("Premium")}:* ${toSC(m.isPremium ? "Aktif" : "Free")}
@@ -168,14 +168,14 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ *${toSC("Xp")}:* ${expCurr.toLocaleString()} / ${(expMax - expMin).toLocaleString()}
 │ *${toSC("Total Xp")}:* ${userExp.toLocaleString()}
 │ *${toSC("Status")}:* ${toSC(user?.banned ? "Banned" : "Aktif")}
-├──「 *${toSC("Info Waktu")}*
+│ 「 *${toSC("Info Waktu")}*
 │ *${toSC("Waktu")}:* ${timeStr} ${toSC("WIB")}
 │ *${toSC("Hari")}:* ${toSC(dayName)} ${toSC(weton)}
 │ *${toSC("Tanggal")}:* ${dateStr}
 │ *${toSC("Tanggal Islam")}:* ${islamicDate}
 │ *${toSC("Zona")}:* ${toSC("Asia/Jakarta")}
 │ *${toSC("Hari Penting")}:* ${toSC(importantDay)}
-├──「 *${toSC("Info Bot")}*
+│ 「 *${toSC("Info Bot")}*
 │ *${toSC("Bot Name")}:* ${toSC(botConfig.bot?.name || "Nova AI Whatsapp Bot")}
 │ *${toSC("Bot Nomor")}:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : toSC("Unknown")}
 │ *${toSC("Version")}:* ${botConfig.bot?.version || "-"}
@@ -186,7 +186,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ *${toSC("Total User")}:* ${totalUsers}
 │ *${toSC("Total Registrasi")}:* ${totalRegistered}
 │ *${toSC("Premium User")}:* ${totalPremium}
-├──「 *${toSC("Info Database")}*
+│ 「 *${toSC("Info Database")}*
 │ *${toSC("Total User")}:* ${totalUsers}
 │ *${toSC("Terdaftar")}:* ${totalRegistered}
 │ *${toSC("Premium")}:* ${totalPremium}
@@ -199,7 +199,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
 │ *${toSC("Command Run")}:* ${totalCommandsRun > 0 ? totalCommandsRun.toLocaleString() : '-'}
 │ *${toSC("Sticker Dibuat")}:* ${totalStickerMade > 0 ? totalStickerMade.toLocaleString() : '-'}
 │ *${toSC("Download")}:* ${totalDownloads > 0 ? totalDownloads.toLocaleString() : '-'}
-├──「 *${toSC("Info Server")}*
+│ 「 *${toSC("Info Server")}*
 │ *${toSC("Platform")}:* ${toSC(platform)}
 │ *${toSC("Hostname")}:* ${toSC(hostname)}
 │ *${toSC("Type")}:* ${toSC("Node.Js")}
@@ -279,7 +279,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[menu] handler error:", e.message);
-    try { await m.reply(`╭──「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────╯`); } catch {}
+    try { await m.reply(`╭─「 ${toSC("Menu")} 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰──────────╯`); } catch {}
   }
 }
 

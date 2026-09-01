@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
   const level = calculateLevel(exp);
   const role = getRole(level);
 
-  let txt = "╭──「 EXP Info 」\n";
+  let txt = "╭─「 EXP Info 」\n";
   txt += "│\n";
   txt += "│ 👤 User: *" + targetName + "*\n";
   txt += "│ ⭐ Exp: *" + formatNumber(exp) + "*\n";

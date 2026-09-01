@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastGacha", CASINO_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭──「 *ᴄᴀsɪɴᴏ* 」\n`;
+    let msg = `╭─「 *ᴄᴀsɪɴᴏ* 」\n`;
     msg += `│ 🎰 ${s1} | ${s2} | ${s3}\n`;
     msg += `│\n`;
     msg += `│ 📊 Hasil: *${result}*\n`;

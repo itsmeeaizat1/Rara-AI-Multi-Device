@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
 
     // Show recipe list
     if (!action || action === "list") {
-      let msg = `╭──「 *ᴄʀᴀғᴛ ʀᴘɢ* 」\n`;
+      let msg = `╭─「 *ᴄʀᴀғᴛ ʀᴘɢ* 」\n`;
       msg += `│ 📋 Daftar resep crafting\n`;
       msg += `│\n`;
 
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
     addItem(m, recipe.result, recipe.qty);
 
     await m.react("🐣");
-    let msg = `╭──「 *ᴄʀᴀғᴛ ʀᴘɢ* 」\n`;
+    let msg = `╭─「 *ᴄʀᴀғᴛ ʀᴘɢ* 」\n`;
     msg += `│ ✅ Craft berhasil!\n`;
     msg += `│\n`;
     msg += `│ 📦 Hasil: *${recipe.name}* x${recipe.qty}\n`;

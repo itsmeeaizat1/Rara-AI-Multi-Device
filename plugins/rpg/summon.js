@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     const now = Date.now();
 
     if (input === "status" || input === "info" || input === "cek") {
-      let msg = `╭──「 *SPIRIT BUFF STATUS* 」\n`;
+      let msg = `╭─「 *SPIRIT BUFF STATUS* 」\n`;
       if (summonData.activeSpirit && summonData.activeSpirit.expiresAt > now) {
         const remainingMs = summonData.activeSpirit.expiresAt - now;
         const mins = Math.floor(remainingMs / 60000);
@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
     }
 
     if (!input || input === "list") {
-      let listMsg = `╭──「 *SPIRIT SUMMONING SYSTEM* 」\n`;
+      let listMsg = `╭─「 *SPIRIT SUMMONING SYSTEM* 」\n`;
       listMsg += `│ Biaya Pemanggilan: *${SUMMON_COST_GOLD} Gold* + *${SUMMON_COST_ENERGI} Energi*\n`;
       listMsg += `│ Durasi Buff: *30 Menit*\n│\n`;
       SPIRITS.forEach((s, i) => {
@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
       expiresAt: expiresAt,
     };
 
-    let msg = `╭──「 *SPIRIT SUMMONING RITUAL* 」\n`;
+    let msg = `╭─「 *SPIRIT SUMMONING RITUAL* 」\n`;
     msg += `│ 🔮 *Ritual Pemanggilan Elementalis*\n`;
     msg += `│ 🕯️ Menggambar lingkaran sihir di atas tanah...\n`;
     msg += `│ ✨ Mengalirkan ${SUMMON_COST_GOLD} Gold & ${SUMMON_COST_ENERGI} Energi ke dalam altar...\n`;

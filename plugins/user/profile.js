@@ -91,11 +91,11 @@ async function handler(m, { sock }) {
   let caption = "";
 
   // Header
-  caption += "╭──「 Profile User 」\n";
+  caption += "╭─「 Profile User 」\n";
   caption += "│\n";
 
   // Personal Info
-  caption += "├──「 *Identitas* 」\n";
+  caption += "│ 「 *Identitas* 」\n";
   caption += "│ 🏷️ Nama: *" + (user.name || m.pushName || "User") + "*\n";
   if (user.isRegistered && user.regName) {
     caption += "│ 📝 Daftar: " + user.regName + " (" + (user.regAge || "?") + " thn, " + (user.regGender || "?") + ")\n";
@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
   caption += "│\n";
 
   // Level & EXP
-  caption += "├──「 *Level & EXP* 」\n";
+  caption += "│ 「 *Level & EXP* 」\n";
   caption += "│ ⭐ Level: *" + userLevel + "*\n";
   caption += "│ 🎖️ Role: " + role + "\n";
   caption += "│ 🚄 Total EXP: *" + formatNumber(userExp) + "*\n";
@@ -116,7 +116,7 @@ async function handler(m, { sock }) {
   caption += "│\n";
 
   // Currencies
-  caption += "├──「 *Aset & Currency* 」\n";
+  caption += "│ 「 *Aset & Currency* 」\n";
   caption += "│ 🪙 Koin: " + formatNumber(user.koin || 0) + "\n";
   caption += "│ 💵 Saldo: " + formatNumber(user.saldo || 0) + "\n";
   caption += "│ 💰 Gold: " + formatNumber(user.rpg.gold || 0) + "\n";
@@ -127,7 +127,7 @@ async function handler(m, { sock }) {
   caption += "│\n";
 
   // Vital Stats
-  caption += "├──「 *Vital Stats* 」\n";
+  caption += "│ 「 *Vital Stats* 」\n";
   caption += "│ ❤️ HP: " + formatNumber(user.rpg.hp || user.rpg.health || 0) + " / " + formatNumber(user.rpg.maxHp || 100) + "\n";
   caption += "│ 💧 Mana: " + formatNumber(user.rpg.mana || 0) + " / " + formatNumber(user.rpg.maxMana || 50) + "\n";
   caption += "│ ⚡ Energy: " + formatNumber(user.rpg.energy || 0) + " / " + formatNumber(user.rpg.maxEnergy || 100) + "\n";
@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
   caption += "│\n";
 
   // Combat Stats
-  caption += "├──「 *Combat* 」\n";
+  caption += "│ 「 *Combat* 」\n";
   caption += "│ ⚔️ ATK: " + formatNumber(user.rpg.atk || 10) + "\n";
   caption += "│ 🛡️ DEF: " + formatNumber(user.rpg.def || 5) + "\n";
   caption += "│ 💨 SPD: " + formatNumber(user.rpg.spd || 10) + "\n";
@@ -148,7 +148,7 @@ async function handler(m, { sock }) {
   caption += "│\n";
 
   // Luck & Bonus
-  caption += "├──「 *Luck & Bonus* 」\n";
+  caption += "│ 「 *Luck & Bonus* 」\n";
   caption += "│ 🍀 Luck: " + formatNumber(user.rpg.luck || 0) + "\n";
   caption += "│ 📦 Drop Bonus: " + (user.rpg.dropBonus || 0) + "%\n";
   caption += "│ 💰 Gold Find: " + (user.rpg.goldFind || 0) + "%\n";
@@ -156,7 +156,7 @@ async function handler(m, { sock }) {
   caption += "│\n";
 
   // Equipment
-  caption += "├──「 *Equipment* 」\n";
+  caption += "│ 「 *Equipment* 」\n";
   caption += "│ ⚔️ Weapon: " + (user.rpg.equipWeapon ? user.rpg.equipWeapon.name + " +" + (user.rpg.equipWeapon.enchant || 0) : "Kosong") + "\n";
   caption += "│ 🛡️ Armor: " + (user.rpg.equipArmor ? user.rpg.equipArmor.name + " +" + (user.rpg.equipArmor.enchant || 0) : "Kosong") + "\n";
   caption += "│ 🪖 Helmet: " + (user.rpg.equipHelmet ? user.rpg.equipHelmet.name + " +" + (user.rpg.equipHelmet.enchant || 0) : "Kosong") + "\n";
@@ -167,7 +167,7 @@ async function handler(m, { sock }) {
   caption += "│\n";
 
   // Profession
-  caption += "├──「 *Profession* 」\n";
+  caption += "│ 「 *Profession* 」\n";
   caption += "│ 🎓 Job: " + (user.rpg.job || "novice") + "\n";
   caption += "│ 📈 Job Level: " + formatNumber(user.rpg.jobLevel || 1) + "\n";
   caption += "│ ✨ Skill Points: " + formatNumber(user.rpg.skillPoints || 0) + "\n";
@@ -175,7 +175,7 @@ async function handler(m, { sock }) {
   caption += "│\n";
 
   // Records
-  caption += "├──「 *Records* 」\n";
+  caption += "│ 「 *Records* 」\n";
   caption += "│ ⚔️ PvP: " + formatNumber(user.rpg.pvpWins || 0) + "W / " + formatNumber(user.rpg.pvpLosses || 0) + "L\n";
   caption += "│ 📊 PvP Rating: " + formatNumber(user.rpg.pvpRating || 1000) + "\n";
   caption += "│ 🔥 PvP Streak: " + formatNumber(user.rpg.pvpStreak || 0) + " (Best: " + formatNumber(user.rpg.pvpBestStreak || 0) + ")\n";
@@ -185,7 +185,7 @@ async function handler(m, { sock }) {
   caption += "│\n";
 
   // Misc
-  caption += "├──「 *Misc* 」\n";
+  caption += "│ 「 *Misc* 」\n";
   caption += "│ 📅 Daily Streak: " + formatNumber(user.rpg.dailyStreak || 0) + " hari\n";
   caption += "│ 🏆 Achievements: " + (user.rpg.achievements || []).length + " (Points: " + formatNumber(user.rpg.achievementPoints || 0) + ")\n";
   caption += "│ 🎒 Inventory: " + (user.inventory ? Object.keys(user.inventory).filter(k => user.inventory[k] > 0).length : 0) + " jenis item\n";
@@ -205,7 +205,7 @@ async function handler(m, { sock }) {
 
   // Unlocked Features
   if (user.unlockedFeatures && user.unlockedFeatures.length > 0) {
-    caption += "├──「 *Fitur Premium* 」\n";
+    caption += "│ 「 *Fitur Premium* 」\n";
     user.unlockedFeatures.forEach(fitur => {
       caption += "│ 🔓 " + fitur + "\n";
     });
@@ -216,7 +216,7 @@ async function handler(m, { sock }) {
   if (user.inventory && Object.keys(user.inventory).length > 0) {
     const invItems = Object.entries(user.inventory).filter(([_, qty]) => qty > 0);
     if (invItems.length > 0) {
-      caption += "├──「 *Inventory* 」\n";
+      caption += "│ 「 *Inventory* 」\n";
       invItems.forEach(([item, qty]) => {
         caption += "" + item.charAt(0).toUpperCase() + item.slice(1) + ": " + qty + "\n";
       });

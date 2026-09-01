@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
     await db.setPlayerData?.(m.sender, "daily", data);
     await m.react("🐣");
 
-    let msg = `╭──「 *ᴅᴀɪʟʏ ʀᴇᴡᴀʀᴅ* 」\n`;
+    let msg = `╭─「 *ᴅᴀɪʟʏ ʀᴇᴡᴀʀᴅ* 」\n`;
     msg += `│ Day: *${data.streak}/7*\n`;
     msg += `│ Streak: *${data.totalClaims} hari total*\n`;
     msg += `│\n`;

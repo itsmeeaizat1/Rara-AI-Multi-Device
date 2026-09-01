@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     const msg = msgParts.join("|") || "Halo!";
     const time = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
 
-    let result = `╭──「 *GROUP CHAT* 」\n`;
+    let result = `╭─「 *GROUP CHAT* 」\n`;
     result += `│ ${name || "Anonymous"} - ${time}\n`;
     result += `│ ${msg}\n`;
     result += `│\n`;

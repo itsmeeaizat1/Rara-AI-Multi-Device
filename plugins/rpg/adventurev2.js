@@ -266,7 +266,7 @@ async function handler(m, { sock }) {
     const freshRpg = ensureRpg(m, m.pushName);
 
     await m.react("🐣");
-    let out = `╭──「 *${title}* 」\n`;
+    let out = `╭─「 *${title}* 」\n`;
     out += `│ 🗺️ ${msg}\n`;
     out += `│\n`;
     if (expGain > 0) out += `│ ✦ EXP: *+${expGain}*\n`;

@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
 
     // Show shop list
     if (!action || action === "list") {
-      let msg = `╭──「 *sʜᴏᴘ ʀᴘɢ* 」\n`;
+      let msg = `╭─「 *sʜᴏᴘ ʀᴘɢ* 」\n`;
       msg += `│ 💰 Gold kamu: *${rpg.gold}*\n`;
       msg += `│\n`;
       msg += `│ 📦 *ᴄᴏɴsᴜᴍᴀʙʟᴇ*\n`;
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
       addItem(m, shopItem.id, qty);
 
       await m.react("🐣");
-      let msg = `╭──「 *sʜᴏᴘ ʀᴘɢ* 」\n`;
+      let msg = `╭─「 *sʜᴏᴘ ʀᴘɢ* 」\n`;
       msg += `│ ✅ Berhasil membeli!\n`;
       msg += `│\n`;
       msg += `│ 📦 Item: *${shopItem.name}*\n`;
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
       addGold(m, total);
 
       await m.react("🐣");
-      let msg = `╭──「 *sʜᴏᴘ ʀᴘɢ* 」\n`;
+      let msg = `╭─「 *sʜᴏᴘ ʀᴘɢ* 」\n`;
       msg += `│ ✅ Berhasil menjual!\n`;
       msg += `│\n`;
       msg += `│ 📦 Item: *${itemInfo.name}*\n`;

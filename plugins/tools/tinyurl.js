@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let result = `╭──「 *TINYURL SHORTENER* 」\n`;
+    let result = `╭─「 *TINYURL SHORTENER* 」\n`;
     result += `│ Original: ${url}\n`;
     result += `│ Short URL: ${shortUrl.trim()}\n`;
     result += `╰──────────`;

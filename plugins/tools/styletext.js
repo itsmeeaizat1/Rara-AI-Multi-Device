@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
 
     await m.react("🕒");
 
-    let result = `╭──「 *STYLE TEXT* 」\n`;
+    let result = `╭─「 *STYLE TEXT* 」\n`;
     result += `│ Teks: ${text}\n`;
     result += `╰──────────\n\n`;
 

@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
         const feedTitle = feed.title || "RSS Feed"
         const items = feed.items.slice(0, 8)
 
-        let text = "╭──「 " + feedTitle + " 」\n"
+        let text = "╭─「 " + feedTitle + " 」\n"
         text += "│ " + items.length + " artikel terbaru\n"
         text += "│\n"
 

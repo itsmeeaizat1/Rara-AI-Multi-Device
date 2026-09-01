@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
         const user = db.getUser(m.sender) || db.setUser(m.sender)
         
         return m.reply( claraWrap("Buy Energi", `🛒 *ʙᴜʏ ᴇɴᴇʀɢɪ*\n\n` +
-            `╭──「 *ɪɴꜰᴏ* 」\n` +
+            `╭─「 *ɪɴꜰᴏ* 」\n` +
             `│ 💵 Harga: *${PRICE_PER_ENERGI}* koin/energi\n` +
             `│ 💰 Koin Kamu: *${formatNumber(user.koin || 0)}*\n` +
             `╰──────────\n\n` +
@@ -57,11 +57,11 @@ async function handler(m, { sock }) {
     const newEnergi = db.updateEnergi(m.sender, amount)
     const newKoin = db.getUser(m.sender).koin
     await m.reply( claraWrap("Pembelian Berhasil", `✅ *ᴘᴇᴍʙᴇʟɪᴀɴ ʙᴇʀʜᴀꜱɪʟ*\n\n` +
-        `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
+        `╭─「 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `│ ⚡ Energi: *+${formatNumber(amount)}*\n` +
         `│ 💵 Harga: *-${formatNumber(totalPrice)}* koin\n` +
         `╰──────────\n\n` +
-        `╭──「 *ꜱᴀʟᴅᴏ* 」\n` +
+        `╭─「 *ꜱᴀʟᴅᴏ* 」\n` +
         `│ ⚡ Energi: *${formatNumber(newEnergi)}*\n` +
         `│ 💰 Koin: *${formatNumber(newKoin)}*\n` +
         `╰──────────`), "buyenergi")

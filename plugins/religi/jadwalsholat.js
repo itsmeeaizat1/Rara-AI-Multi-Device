@@ -41,11 +41,11 @@ async function handler(m, { sock }) {
     const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
     const caption = `🕌 *ᴊᴀᴅᴡᴀʟ ꜱʜᴏʟᴀᴛ*
-╭──「 📍 *${lokasi}*
+╭─「 📍 *${lokasi}*
 │ 📅 ${today}
 │ 🗺️ ${daerah}
 ╰──────────
-╭──「 ⏰ *ᴡᴀᴋᴛᴜ ꜱʜᴏʟᴀᴛ*
+╭─「 ⏰ *ᴡᴀᴋᴛᴜ ꜱʜᴏʟᴀᴛ*
 │ 🌙 Imsak: \`${times.imsak}\`
 │ 🌅 sUbuh: \`${times.subuh}\`
 │ ☀️ Terbit: \`${times.terbit}\`

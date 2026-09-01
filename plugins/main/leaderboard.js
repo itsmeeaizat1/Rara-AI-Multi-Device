@@ -109,7 +109,7 @@ async function showRpgLeaderboard(m, sock, subType) {
   }
 
   if (users.length === 0)
-    return m.reply(`╭──「 *${toSC('Leaderboard')}* 」\n│ ${toSC('Belum ada data user')}\n╰──────────`)
+    return m.reply(`╭─「 *${toSC('Leaderboard')}* 」\n│ ${toSC('Belum ada data user')}\n╰──────────`)
 
   // ── Overview ──
   if (subType === 'overview') {
@@ -128,7 +128,7 @@ async function showRpgLeaderboard(m, sock, subType) {
     ]
     if (maxCinta) mentions.push(maxCinta.jid.includes('@') ? maxCinta.jid : maxCinta.jid + '@s.whatsapp.net')
 
-    const text = `╭──「 *${toSC('Leaderboard')}* 」
+    const text = `╭─「 *${toSC('Leaderboard')}* 」
 │ ${toSC('Total User')}: ${formatNumber(users.length)}
 │ 💰 ${toSC('Koin Teratas')}: ${formatNumber(maxBal.koin)} (@${maxBal.jid.split('@')[0]})
 │ ✨ ${toSC('EXP Teratas')}: ${formatNumber(maxExp.exp)} (@${maxExp.jid.split('@')[0]})
@@ -158,13 +158,13 @@ ${toSC('Pilih tombol di bawah untuk melihat ranking')}!`
   if (subType === 'cinta') {
     const cintaUsers = users.filter(u => u.hasSpouse)
     if (cintaUsers.length === 0)
-      return m.reply(`╭──「 *${toSC('Top Cinta')}* 」\n│ ${toSC('Belum ada couple terdaftar')}\n│ ${toSC('Mulai berpacaran dengan')} .jadian\n╰──────────`)
+      return m.reply(`╭─「 *${toSC('Top Cinta')}* 」\n│ ${toSC('Belum ada couple terdaftar')}\n│ ${toSC('Mulai berpacaran dengan')} .jadian\n╰──────────`)
 
     cintaUsers.sort((a, b) => b.lovePower - a.lovePower)
     const top10 = cintaUsers.slice(0, 10)
     const mentions = []
 
-    let text = `╭──「 *${toSC('TOP CINTA')}*  」`
+    let text = `╭─「 *${toSC('TOP CINTA')}*  」`
     top10.forEach((u, i) => {
       const medal = MEDALS[i] || `${i + 1}.`
       const isMe = u.jid === senderJid ? " *(You)*" : ""
@@ -200,7 +200,7 @@ ${toSC('Pilih tombol di bawah untuk melihat ranking')}!`
   const totalField = users.reduce((s, u) => s + (u[field] || 0), 0)
   const mentions = []
 
-  let text = `╭──「 *${toSC(title)}* 」`
+  let text = `╭─「 *${toSC(title)}* 」`
   top10.forEach((u, i) => {
     const medal = MEDALS[i] || `${i + 1}.`
     const pct = totalField > 0 ? ((u[field] / totalField) * 100).toFixed(1) : 0
@@ -223,7 +223,7 @@ ${toSC('Pilih tombol di bawah untuk melihat ranking')}!`
 // ═══════════════════════════════════════════════════════════
 async function showGroupLeaderboard(m, sock) {
   if (!m.isGroup)
-    return m.reply(`╭──「 *${toSC('Leaderboard Grup')}* 」\n│ ${toSC('Hanya bisa digunakan di dalam grup')}\n╰──────────`)
+    return m.reply(`╭─「 *${toSC('Leaderboard Grup')}* 」\n│ ${toSC('Hanya bisa digunakan di dalam grup')}\n╰──────────`)
   trackActivity(m, { isCommand: true })
   const args = m.args || []
   const sub = args[0]?.toLowerCase()
@@ -329,7 +329,7 @@ async function showMenu(m, sock) {
   let thumb
   try { thumb = fs.readFileSync(thumbPath) } catch { thumb = Buffer.alloc(0) }
 
-  const text = `╭──「 *${toSC('Leaderboard')}* 」
+  const text = `╭─「 *${toSC('Leaderboard')}* 」
 │ ${toSC('Pilih jenis leaderboard')}:
 │
 │ 🎮 *${toSC('RPG')}*

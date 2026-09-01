@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
   const filter = m.args[0]?.toLowerCase();
 
   if (!filter) {
-    let help = "╭──「 Sticker Filter 」\n";
+    let help = "╭─「 Sticker Filter 」\n";
     help += "│ Reply sticker dengan filter:\n";
     help += "│\n";
     help += "│ *Filter tersedia:*\n";

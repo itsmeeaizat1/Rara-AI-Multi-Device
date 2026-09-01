@@ -81,7 +81,7 @@ Gunakan bahasa Indonesia santai. Ramalan harus positif, jangan menakut-nakuti.`;
     }
 
     await m.react("🐣");
-    let msg = `╭──「 *ʀᴀᴍᴀʟᴀɴ ᴀɪ* 」\n`;
+    let msg = `╭─「 *ʀᴀᴍᴀʟᴀɴ ᴀɪ* 」\n`;
     msg += `│ 📌 Topik: *${topic}*\n`;
     msg += `│\n`;
     msg += formatted;

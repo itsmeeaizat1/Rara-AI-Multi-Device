@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     const skill = m.args?.[0]?.trim().toLowerCase();
     if (!skill || !SKILLS.includes(skill)) {
       await m.react("🚫");
-      let msg = `╭──「 *SELECT SKILL* 」\n`;
+      let msg = `╭─「 *SELECT SKILL* 」\n`;
       msg += `│ Pilih skill yang tersedia:\n`;
       msg += `│\n`;
       SKILLS.forEach(s => { msg += `│ › ${s}\n`; });
@@ -45,7 +45,7 @@ async function handler(m, { sock }) {
     rpg.skill = skill;
     saveRpg(m, rpg);
     await m.react("🐣");
-    let msg = `╭──「 *SKILL DIPILIH* 」\n`;
+    let msg = `╭─「 *SKILL DIPILIH* 」\n`;
     msg += `│ ✅ Kamu memilih skill: *${skill}*\n`;
     msg += `│ Skill tidak bisa diganti!\n`;
     msg += `╰──────────`;

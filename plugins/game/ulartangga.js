@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
         started: false,
       });
       await m.react("🐣");
-      return m.reply(`╭──「 *ULAR TANGGA* 」\n│ 🎲 Game dimulai!\n│ Pemain: @${sender.split("@")[0]}\n│ Ketik .ulartangga join untuk ikut\n│ Ketik .ulartangga roll untuk mulai\n╰──────────`);
+      return m.reply(`╭─「 *ULAR TANGGA* 」\n│ 🎲 Game dimulai!\n│ Pemain: @${sender.split("@")[0]}\n│ Ketik .ulartangga join untuk ikut\n│ Ketik .ulartangga roll untuk mulai\n╰──────────`);
     }
 
     if (action === "join") {
@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
       game.players.push(sender);
       game.positions[sender] = 1;
       await m.react("🐣");
-      return m.reply(`╭──「 *ULAR TANGGA* 」\n│ ✅ @${sender.split("@")[0]} bergabung!\n│ Total pemain: ${game.players.length}\n╰──────────`);
+      return m.reply(`╭─「 *ULAR TANGGA* 」\n│ ✅ @${sender.split("@")[0]} bergabung!\n│ Total pemain: ${game.players.length}\n╰──────────`);
     }
 
     if (action === "roll") {
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
       if (LADDERS[pos]) {
         pos = LADDERS[pos];
         await m.react("🐣");
-        let msg = `╭──「 *ULAR TANGGA* 」\n`;
+        let msg = `╭─「 *ULAR TANGGA* 」\n`;
         msg += `│ 🎲 Dadu: ${dice}\n`;
         msg += `│ 🪜 Tangga! Naik ke ${pos}\n`;
         msg += `│ 📍 @${sender.split("@")[0]} di posisi ${pos}\n`;
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
       if (SNAKES[pos]) {
         pos = SNAKES[pos];
         await m.react("🐣");
-        let msg = `╭──「 *ULAR TANGGA* 」\n`;
+        let msg = `╭─「 *ULAR TANGGA* 」\n`;
         msg += `│ 🎲 Dadu: ${dice}\n`;
         msg += `│ 🐍 Ular! Turun ke ${pos}\n`;
         msg += `│ 📍 @${sender.split("@")[0]} di posisi ${pos}\n`;
@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
       game.positions[sender] = pos;
       game.turn++;
       await m.react("🐣");
-      let msg = `╭──「 *ULAR TANGGA* 」\n`;
+      let msg = `╭─「 *ULAR TANGGA* 」\n`;
       msg += `│ 🎲 Dadu: ${dice}\n`;
       msg += `│ 📍 @${sender.split("@")[0]} di posisi ${pos}/100\n`;
       if (pos >= 100) { msg += `│ 🏆 MENANG!\n`; games.delete(from); }
@@ -107,7 +107,7 @@ async function handler(m, { sock }) {
     if (action === "end") {
       games.delete(from);
       await m.react("🐣");
-      return m.reply(`╭──「 *ULAR TANGGA* 」\n│ Game dihentikan.\n╰──────────`);
+      return m.reply(`╭─「 *ULAR TANGGA* 」\n│ Game dihentikan.\n╰──────────`);
     }
   } catch (err) {
     console.error("ulartangga error:", err);

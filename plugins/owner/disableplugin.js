@@ -84,7 +84,7 @@ async function handler(m, { sock }) {
     fs.writeFileSync(filePath, content);
 
     await m.reply(claraWrap("disableplugin", `✅ *Plugin Disabled*\n\n` +
-        `╭──「 *Detail* 」\n` +
+        `╭─「 *Detail* 」\n` +
         `│ 📦 Plugin: *${plugin.config.name}*\n` +
         `│ 📁 Category: *${category}*\n` +
         `│ 📄 File: *${file}*\n` +

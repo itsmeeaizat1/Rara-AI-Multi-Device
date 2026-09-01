@@ -172,7 +172,7 @@ async function handler(m, { sock }) {
       // Test fetch gempa terkini
       const { fetchGempaTerkini } = await import("../../src/lib/nova-bmkg-scheduler.js");
       const g = await fetchGempaTerkini();
-      let txt = "╭──「 *" + g.Tanggal + "* 」\n│\n";
+      let txt = "╭─「 *" + g.Tanggal + "* 」\n│\n";
       txt += "╰──────────\n\n";
       txt += "Status: *" + (status.enabled ? "ON" : "OFF") + "*\n";
       txt += "Jadwal: " + formatSchedule(status.schedules) + " WIB\n";

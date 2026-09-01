@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
         return m.reply(
             `🐬 *Dolphin Ai*\n\n` +
             `Chat dengan Dolphin AI 24B Model\n\n` +
-            `╭──「 *Templates* 」\n` +
+            `╭─「 *Templates* 」\n` +
             `│ • \`logical\` - Jawaban logis\n` +
             `│ • \`creative\` - Jawaban kreatif\n` +
             `│ • \`summarize\` - Ringkasan\n` +

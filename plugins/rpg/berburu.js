@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
       }
 
       await m.react("🐣");
-      let msg = `╭──「 *ʙᴇʀʙᴜʀᴜ* 」\n`;
+      let msg = `╭─「 *ʙᴇʀʙᴜʀᴜ* 」\n`;
       msg += `│ 🎯 Monster: *${monster.name}* (Lv.${monster.minLv}-${monster.maxLv})\n`;
       msg += `│ ⚔️ Pertarungan: *${rounds} ronde*\n`;
       msg += `│ 💥 DMG diterima: *${playerDmgTaken}*\n`;
@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastHunt", HUNT_COOLDOWN);
 
       await m.react("❌");
-      let msg = `╭──「 *ʙᴇʀʙᴜʀᴜ* 」\n`;
+      let msg = `╭─「 *ʙᴇʀʙᴜʀᴜ* 」\n`;
       msg += `│ 😵 Kamu kalah melawan *${monster.name}*!\n`;
       msg += `│ 💥 DMG diterima: *${playerDmgTaken}*\n`;
       msg += `│ ❤️ HP tersisa: *${newHp}/${rpg.maxHp}*\n`;

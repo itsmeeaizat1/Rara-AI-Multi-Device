@@ -41,7 +41,7 @@ async function handler(m, { sock }) {
             
             let teks = 
                 `📋 *ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ ɢʀᴏᴜᴘ*\n\n` +
-                `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
+                `╭─「 *ᴅᴇᴛᴀɪʟ* 」\n` +
                 `│ 📝 Name: *${groupInfo.subject}*\n` +
                 `│ 🆔 Id: \`${groupInfo.id}\`\n` +
                 `│ 📅 Created: ${new Date(groupInfo.creation * 1000).toLocaleString('id-ID')}\n`
@@ -90,7 +90,7 @@ async function handler(m, { sock }) {
             
             const teks = 
                 `📺 *ɪɴꜰᴏʀᴍᴀᴛɪᴏɴ ᴄʜᴀɴɴᴇʟ*\n\n` +
-                `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
+                `╭─「 *ᴅᴇᴛᴀɪʟ* 」\n` +
                 `│ 🆔 Id: \`${channelInfo.id}\`\n` +
                 `│ 📌 sTate: ${channelInfo.state?.type || '-'}\n` +
                 `│ 📝 Name: *${channelInfo.thread_metadata?.name?.text || '-'}*\n` +

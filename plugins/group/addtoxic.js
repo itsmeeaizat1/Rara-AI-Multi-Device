@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
     db.setGroup(m.chat, { toxicWords })
     await m.reply(
         `✅ *ᴋᴀᴛᴀ ᴛᴏxɪᴄ ᴅɪᴛᴀᴍʙᴀʜ*\n\n` +
-        `╭──「 *ᴅᴇᴛᴀɪʟ* 」\n` +
+        `╭─「 *ᴅᴇᴛᴀɪʟ* 」\n` +
         `│ 📝 Kata: \`${word}\`\n` +
         `│ 📊 Total: \`${toxicWords.length}\` kata\n` +
         `╰──────────`

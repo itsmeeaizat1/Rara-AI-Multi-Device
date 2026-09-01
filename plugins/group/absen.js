@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
         .join('\n')
     await m.reply(claraWrap("MANTAP, @${m.sender.split('@')[0]} HADIRR", `✅ *MANTAP, @${m.sender.split('@')[0]} HADIRR*\n` +
             `TUJUAN ABSEN: ${absen.keterangan}\n` +
-            `╭──「 INFO LAIN 」\n` +
+            `╭─「 INFO LAIN 」\n` +
             `│ 📅 ${dateStr}\n` +
             `│ 👥 Total: ${absen.peserta.length}\n` +
             `├┈┈「 📝 *DaғTar Hadir* 」\n` +

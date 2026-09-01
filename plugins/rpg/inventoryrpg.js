@@ -51,7 +51,7 @@ async function handler(m, { sock }) {
       return (order[ra] || 5) - (order[rb] || 5);
     });
 
-    let msg = `╭──「 *ɪɴᴠᴇɴᴛᴏʀʏ ʀᴘɢ* 」\n`;
+    let msg = `╭─「 *ɪɴᴠᴇɴᴛᴏʀʏ ʀᴘɢ* 」\n`;
     msg += `│ 👤 ${m.pushName || "Player"}\n`;
     msg += `│ 📦 Total: *${items.length}* jenis item\n`;
     msg += `│\n`;

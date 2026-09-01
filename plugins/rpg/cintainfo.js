@@ -34,7 +34,7 @@ async function handler(m, { sock }) {
     const name = rpg.name || targetJid.split("@")[0];
     const now = Date.now();
 
-    let msg = `╭──「 *ᴄɪɴᴛᴀ ɪɴғᴏ* 」\n`;
+    let msg = `╭─「 *ᴄɪɴᴛᴀ ɪɴғᴏ* 」\n`;
     msg += `│ 👤 Nama: *${name}*\n`;
     msg += `│ ⭐ Level: *${rpg.level || 1}*\n`;
 

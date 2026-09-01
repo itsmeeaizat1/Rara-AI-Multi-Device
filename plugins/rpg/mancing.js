@@ -86,7 +86,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭──「 *ᴍᴀɴᴄɪɴɢ* 」\n`;
+    let msg = `╭─「 *ᴍᴀɴᴄɪɴɢ* 」\n`;
     msg += `│ 🎣 Kamu memancing di tepi danau...\n`;
     msg += `│\n`;
     msg += `│ 📦 *ʜᴀsɪʟ ᴍᴇᴍᴀɴᴄɪɴɢ*\n`;

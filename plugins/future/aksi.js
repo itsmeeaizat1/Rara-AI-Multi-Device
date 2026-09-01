@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
   const story = await generateAksi(names);
 
   if (!story) {
-    return m.reply("╭──「 Action Story 」\n│ ❌ Yah, gagal bikin ceritanya nih 😵\n│ Coba lagi yuk!\n╰──────────", "aksi");
+    return m.reply("╭─「 Action Story 」\n│ ❌ Yah, gagal bikin ceritanya nih 😵\n│ Coba lagi yuk!\n╰──────────", "aksi");
   }
 
   const header = "🔥 *ᴀᴄᴛɪᴏɴ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";

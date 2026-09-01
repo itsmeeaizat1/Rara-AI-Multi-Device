@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
     }
 
     if (subCmd === "list") {
-      let msg = `╭──「 *ALCHEMIST RECIPES* 」\n`;
+      let msg = `╭─「 *ALCHEMIST RECIPES* 」\n`;
       msg += `│ Daftar Resep Potion & Bahan:\n│\n`;
       for (const [key, item] of Object.entries(RECIPES)) {
         msg += `│ 🧪 *${item.name}* (\`${key}\`)\n`;
@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     }
 
     if (subCmd === "inventory" || subCmd === "inv") {
-      let msg = `╭──「 *ALCHEMIST INVENTORY* 」\n`;
+      let msg = `╭─「 *ALCHEMIST INVENTORY* 」\n`;
       msg += `│ 💰 Gold: ${data.gold || 0}\n│\n`;
       msg += `│ 🌿 *Bahan Herbal & Material:*\n`;
       msg += `│   • Herb: ${data.materials.herb || 0}\n`;
@@ -160,7 +160,7 @@ async function handler(m, { sock }) {
       data.potions[potionKey] = (data.potions[potionKey] || 0) + 1;
       await db.setPlayerData?.(sender, "alchemist", data);
 
-      let msg = `╭──「 *BREWING SUCCESS* 」\n`;
+      let msg = `╭─「 *BREWING SUCCESS* 」\n`;
       msg += `│ ⚗️ Berhasil meracik *${recipe.name}*!\n`;
       msg += `│  \n`;
       msg += `│ 💰 Biaya: -${recipe.gold} Gold\n`;

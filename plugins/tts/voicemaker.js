@@ -31,7 +31,7 @@ const VOICES = [
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    let help = "╭──「 VoiceMaker TTS 」\n";
+    let help = "╭─「 VoiceMaker TTS 」\n";
     help += "│ 📌 *Cara Pakai:*\n";
     help += `│ \`${m.prefix}voicemaker <teks>\` — Default (Ardi)\n`;
     help += `│ \`${m.prefix}voicemaker <voice>|<teks>\` — Pilih voice\n`;

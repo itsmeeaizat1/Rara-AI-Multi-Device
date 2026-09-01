@@ -110,7 +110,7 @@ async function handler(m, { sock, db }) {
     
     const successMsg = `✅ *JADWAL DISIMPAN*
 
-╭──「 ⏰ *SETTING*
+╭─「 ⏰ *SETTING*
 │ ${emoji} Aksi: *${actionText}*
 │ ⏱️ Waktu: *${formattedTime} WIB*
 │ 📡 Status: *🟢 Aktif*

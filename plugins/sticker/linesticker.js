@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     if (!url || !url.includes('store.line.me')) {
         return m.reply( `🎨 *ʟɪɴᴇ ꜱᴛɪᴄᴋᴇʀ ᴘᴀᴄᴋ*\n\n` +
             `Download LINE sticker pack\n\n` +
-            `╭──「 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
+            `╭─「 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
             `│ ${m.prefix}linesticker <url>\n` +
             `╰┈┈┈┈┈┈┈┈\n\n` +
             `*ᴄᴀʀᴀ ᴅᴀᴘᴀᴛ ᴜʀʟ:*\n` +
@@ -63,7 +63,7 @@ async function handler(m, { sock }) {
         
         await m.reply(
             `🎨 *ʟɪɴᴇ ꜱᴛɪᴄᴋᴇʀ ᴘᴀᴄᴋ*\n\n` +
-            `╭──「 *ɪɴꜰᴏ* 」\n` +
+            `╭─「 *ɪɴꜰᴏ* 」\n` +
             `│ 📝 *ᴛɪᴛʟᴇ:* ${title}\n` +
             `│ 👤 *ᴀᴜᴛʜᴏʀ:* ${author}\n` +
             `│ 🎬 *ᴀɴɪᴍᴀᴛᴇᴅ:* ${isAnimated ? 'Ya' : 'Tidak'}\n` +

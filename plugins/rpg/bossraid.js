@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
       }
 
       await m.react("🐣");
-      let msg = `╭──「 *ʙᴏss ʀᴀɪᴅ* 」\n`;
+      let msg = `╭─「 *ʙᴏss ʀᴀɪᴅ* 」\n`;
       msg += `│ 🐉 Boss: *${boss.name}*\n`;
       msg += `│ 🔑 ${keyText}\n`;
       msg += `│ ⚔️ ${rounds} ronde bertarung\n`;
@@ -173,7 +173,7 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBossRaid", BOSS_COOLDOWN);
 
       await m.react("❌");
-      let msg = `╭──「 *ʙᴏss ʀᴀɪᴅ* 」\n`;
+      let msg = `╭─「 *ʙᴏss ʀᴀɪᴅ* 」\n`;
       msg += `│ 🐉 Boss: *${boss.name}*\n`;
       msg += `│ 🔑 ${keyText}\n`;
       msg += `│ ⚔️ ${rounds} ronde bertarung\n`;

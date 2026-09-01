@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   if (!input) {
     const jeda = db.setting("jedaBcpc") || 5000;
     return m.reply(
-      "╭──「 Broadcast Private 」\n" +
+      "╭─「 Broadcast Private 」\n" +
       "│\n" +
       "│ 📋 Broadcast pesan + media ke semua kontak PC\n" +
       "│ ⏱️ Jeda: " + jeda + "ms\n" +
@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
   }
 
   if (global.statusBcpc) {
-    return m.reply("╭──「 Broadcast Private 」\n│\n│ 🔄 Sedang berjalan\n│ ⏹️ Ketik `" + m.prefix + "stopbcpc` untuk hentikan\n╰──────────");
+    return m.reply("╭─「 Broadcast Private 」\n│\n│ 🔄 Sedang berjalan\n│ ⏹️ Ketik `" + m.prefix + "stopbcpc` untuk hentikan\n╰──────────");
   }
 
   try {
@@ -110,7 +110,7 @@ async function handler(m, { sock }) {
     }
 
     if (privateJids.size === 0) {
-      return m.reply("╭──「 Broadcast Private 」\n│\n│ ❌ Tidak ada kontak ditemukan\n│ Pastikan bot sudah pernah menerima pesan dari kontak tersebut\n╰──────────");
+      return m.reply("╭─「 Broadcast Private 」\n│\n│ ❌ Tidak ada kontak ditemukan\n│ Pastikan bot sudah pernah menerima pesan dari kontak tersebut\n╰──────────");
     }
 
     const filtered = [...privateJids];
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
       m.chat,
       {
         text:
-          "╭──「 Broadcast Private Dimulai 」\n" +
+          "╭─「 Broadcast Private Dimulai 」\n" +
           "│\n" +
           "│ 📝 Pesan: " + input.substring(0, 50) + (input.length > 50 ? "..." : "") + "\n" +
           "│ 🎬 Media: " + (mediaBuffer ? mediaType : "Tidak ada") + "\n" +
@@ -181,7 +181,7 @@ async function handler(m, { sock }) {
       m.chat,
       {
         text:
-          "╭──「 Broadcast Private Selesai 」\n" +
+          "╭─「 Broadcast Private Selesai 」\n" +
           "│\n" +
           "│ ✅ Berhasil: " + success + "\n" +
           "│ ❌ Gagal: " + failed + "\n" +
@@ -196,7 +196,7 @@ async function handler(m, { sock }) {
     );
   } catch (e) {
     delete global.statusBcpc;
-    m.reply("╭──「 Broadcast Private — Error 」\n│\n│ ❌ Gagal: " + e.message + "\n╰──────────");
+    m.reply("╭─「 Broadcast Private — Error 」\n│\n│ ❌ Gagal: " + e.message + "\n╰──────────");
   }
 }
 

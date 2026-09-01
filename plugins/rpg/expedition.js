@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(sender, "expedition", data);
       try { await db.addGold?.(sender, rewardGold); } catch {}
 
-      let text = `╭──「 *EKSPEDISI SELESAI* 」\n`;
+      let text = `╭─「 *EKSPEDISI SELESAI* 」\n`;
       text += `│ 🎉 Party kamu telah kembali dari *${completedLoc}*!\n`;
       text += `│\n`;
       text += `│ 💰 Reward Gold : +${rewardGold.toLocaleString()} Gold\n`;
@@ -156,7 +156,7 @@ async function handler(m, { sock }) {
 
       await db.setPlayerData?.(sender, "expedition", data);
 
-      let text = `╭──「 *EKSPEDISI DIMULAI* 」\n`;
+      let text = `╭─「 *EKSPEDISI DIMULAI* 」\n`;
       text += `│ ${loc.emoji} Lokasi : *${loc.name}*\n`;
       text += `│ ⏱️ Durasi : ${loc.durationStr}\n`;
       text += `│ 💰 Est. Reward : ${loc.minGold} - ${loc.maxGold} Gold\n`;
@@ -176,7 +176,7 @@ async function handler(m, { sock }) {
       const isDone = elapsed >= data.active.duration;
       const remaining = Math.max(0, data.active.duration - elapsed);
 
-      let text = `╭──「 *STATUS EKSPEDISI* 」\n`;
+      let text = `╭─「 *STATUS EKSPEDISI* 」\n`;
       text += `│ ${data.active.emoji} Lokasi : *${data.active.name}*\n`;
       text += `│ 💰 Est. Reward : ${data.active.minGold.toLocaleString()} - ${data.active.maxGold.toLocaleString()} Gold\n`;
       text += `│ ⏳ Sisa Waktu : *${isDone ? "SIAP DIKLAIM! 🎉" : formatTime(remaining)}*\n`;
@@ -193,7 +193,7 @@ async function handler(m, { sock }) {
     }
 
     // No active expedition: show locations menu
-    let menu = `╭──「 *DAFTAR EKSPEDISI* 」\n`;
+    let menu = `╭─「 *DAFTAR EKSPEDISI* 」\n`;
     menu += `│ Kirim party kamu untuk menjelajahi wilayah!\n`;
     menu += `│\n`;
     LOCATIONS.forEach((l) => {

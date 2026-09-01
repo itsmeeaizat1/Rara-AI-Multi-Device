@@ -46,7 +46,7 @@ async function handler(m, { sock }) {
     const action = args[0]?.toLowerCase();
 
     if (!action || action === "cek" || action === "info") {
-      let msg = `╭──「 *ʀᴀғғʟᴇ* 」\n`;
+      let msg = `╭─「 *ʀᴀғғʟᴇ* 」\n`;
       msg += `│ 🎫 Lotere RPG — Coba keberuntunganmu!\n`;
       msg += `│\n`;
       msg += `│ 💵 Harga tiket: *${TICKET_PRICE} gold*\n`;
@@ -101,7 +101,7 @@ async function handler(m, { sock }) {
     if (!prize) {
       // Zonk
       await m.react("🐣");
-      let msg = `╭──「 *ʀᴀғғʟᴇ* 」\n`;
+      let msg = `╭─「 *ʀᴀғғʟᴇ* 」\n`;
       msg += `│ 🎫 Tiket: *${TICKET_PRICE} gold*\n`;
       msg += `│ 🎰 Membuka tiket...\n`;
       msg += `│\n`;
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭──「 *ʀᴀғғʟᴇ* 」\n`;
+    let msg = `╭─「 *ʀᴀғғʟᴇ* 」\n`;
     msg += `│ 🎫 Tiket: *${TICKET_PRICE} gold*\n`;
     msg += `│ 🎰 Membuka tiket...\n`;
     msg += `│\n`;

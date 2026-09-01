@@ -142,7 +142,7 @@ async function handler(m, { sock }) {
   const keyword = m.text;
   if (!keyword) {
     return m.reply( `🔍 *ᴄᴀʀɪ ꜰɪᴛᴜʀ*\n\n` +
-      `╭──「 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
+      `╭─「 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ* 」\n` +
       `│ \`${m.prefix}carifitur <keyword>\`\n` +
       `╰──────────\n\n` +
       `Contoh:\n` +

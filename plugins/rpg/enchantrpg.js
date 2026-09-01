@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
 
     if (!slot) {
       // Show current equipment + enchant levels
-      let msg = `╭──「 *ᴇɴᴄʜᴀɴᴛ* 」\n`;
+      let msg = `╭─「 *ᴇɴᴄʜᴀɴᴛ* 」\n`;
       msg += `│ 📋 Equipment & Enchant Level\n`;
       msg += `│\n`;
 
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
 
     if (result.success) {
       await m.react("🐣");
-      let msg = `╭──「 *ᴇɴᴄʜᴀɴᴛ* 」\n`;
+      let msg = `╭─「 *ᴇɴᴄʜᴀɴᴛ* 」\n`;
       msg += `│ ✅ Enchant berhasil!\n`;
       msg += `│\n`;
       msg += `│ 📂 Slot: *${SLOT_LABEL[slot]}*\n`;
@@ -114,7 +114,7 @@ async function handler(m, { sock }) {
       return m.reply(msg);
     } else {
       await m.react("❌");
-      let msg = `╭──「 *ᴇɴᴄʜᴀɴᴛ* 」\n`;
+      let msg = `╭─「 *ᴇɴᴄʜᴀɴᴛ* 」\n`;
       msg += `│ ❌ Enchant gagal!\n`;
       msg += `│\n`;
       msg += `│ 📂 Slot: *${SLOT_LABEL[slot]}*\n`;

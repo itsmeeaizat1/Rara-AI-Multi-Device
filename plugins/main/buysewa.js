@@ -119,7 +119,7 @@ async function notifyOwner(sock, m, pkg, groupLink) {
   const buyerName = m.pushName || "Unknown";
   const groupName = m.isGroup ? (m.chat?.split("@")[0] || "Unknown") : "Unknown";
 
-  const notifText = `╭──「 ${toSC("PEMBELIAN SEWA BARU")} 」
+  const notifText = `╭─「 ${toSC("PEMBELIAN SEWA BARU")} 」
 │ ${toSC("Pembeli")}: *${toSC(buyerName)}*
 │ ${toSC("Nomor")}: ${buyerNumber}
 │ ${toSC("Paket")}: *${toSC(pkg.label)}*

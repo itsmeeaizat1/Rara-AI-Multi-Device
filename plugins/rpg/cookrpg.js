@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
 
     // List
     if (!action || action === "list") {
-      let msg = `╭──「 *ᴄᴏᴏᴋ ʀᴘɢ* 」\n`;
+      let msg = `╭─「 *ᴄᴏᴏᴋ ʀᴘɢ* 」\n`;
       msg += `│ 📋 Resep masakan\n`;
       msg += `│\n`;
 
@@ -130,7 +130,7 @@ async function handler(m, { sock }) {
     await m.react("🐣");
     const freshRpg = ensureRpg(m, m.pushName);
 
-    let msg = `╭──「 *ᴄᴏᴏᴋ ʀᴘɢ* 」\n`;
+    let msg = `╭─「 *ᴄᴏᴏᴋ ʀᴘɢ* 」\n`;
     msg += `│ ✅ Berhasil masak & makan!\n`;
     msg += `│\n`;
     msg += `│ 🍽️ *${recipe.name}*\n`;

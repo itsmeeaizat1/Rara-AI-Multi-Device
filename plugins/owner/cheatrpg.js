@@ -89,16 +89,16 @@ async function handler(m, { sock }) {
 
   // No args — show help
   if (args.length === 0) {
-    let txt = "╭──「 Cheat RPG 」\n";
+    let txt = "╭─「 Cheat RPG 」\n";
     txt += "│\n";
     txt += "│ 👑 Owner only command\n";
     txt += "│ Tambah RPG stats ke user langsung\n";
     txt += "│\n";
-    txt += "├──「 *Cara Pakai* 」\n";
+    txt += "│ 「 *Cara Pakai* 」\n";
     txt += "│ `.cheatrpg <type> <jumlah> @user`\n";
     txt += "│ `.cheatrpg <type> <jumlah>` (ke diri sendiri)\n";
     txt += "│\n";
-    txt += "├──「 *Tersedia* 」\n";
+    txt += "│ 「 *Tersedia* 」\n";
     txt += "│ ⭐ exp — EXP\n";
     txt += "│ 🪙 koin — Koin\n";
     txt += "│ 💵 saldo — Saldo\n";
@@ -131,7 +131,7 @@ async function handler(m, { sock }) {
   const targetJid = extractTarget(m) || m.sender;
 
   if (!cheatType || !CHEAT_TYPES[cheatType]) {
-    let txt = "╭──「 Type Tidak Valid 」\n";
+    let txt = "╭─「 Type Tidak Valid 」\n";
     txt += "│\n";
     txt += "│ Type: `" + (cheatType || "kosong") + "` tidak ditemukan\n";
     txt += "│\n";
@@ -141,7 +141,7 @@ async function handler(m, { sock }) {
   }
 
   if (amount === 0) {
-    let txt = "╭──「 Jumlah Invalid 」\n";
+    let txt = "╭─「 Jumlah Invalid 」\n";
     txt += "│\n";
     txt += "│ Jumlah harus lebih dari 0\n";
     txt += "│ Bisa negatif untuk mengurangi\n";
@@ -205,16 +205,16 @@ async function handler(m, { sock }) {
   const isAdd = amount > 0;
   const sign = isAdd ? "+" : "";
 
-  let txt = "╭──「 Cheat RPG 」\n";
+  let txt = "╭─「 Cheat RPG 」\n";
   txt += "│\n";
   txt += "│ ✅ Berhasil " + (isAdd ? "menambah" : "mengurangi") + " stats\n";
   txt += "│\n";
-  txt += "├──「 *Detail* 」\n";
+  txt += "│ 「 *Detail* 」\n";
   txt += "│ 🎯 Target: @" + targetPhone + "\n";
   txt += "" + cfg.icon + " Type: *" + cfg.label + "*\n";
   txt += "│ 📝 Jumlah: *" + sign + formatNumber(amount) + "*\n";
   txt += "│\n";
-  txt += "├──「 *Perubahan* 」\n";
+  txt += "│ 「 *Perubahan* 」\n";
   txt += "│ Sebelum: *" + formatNumber(oldValue) + "*\n";
   txt += "│ Sekarang: *" + formatNumber(newValue) + "*\n";
   txt += "│ Selisih: *" + sign + formatNumber(amount) + "*\n";

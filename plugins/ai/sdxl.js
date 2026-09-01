@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let caption = `╭──「 *sᴅxʟ ɢᴇɴ* 」\n`;
+    let caption = `╭─「 *sᴅxʟ ɢᴇɴ* 」\n`;
     caption += `│ 🎨 Prompt: *${text}*\n`;
     caption += `│ ⚙️ Engine: *${result.model}*\n`;
     caption += `│ 📐 Size: *1024x1024*\n`;

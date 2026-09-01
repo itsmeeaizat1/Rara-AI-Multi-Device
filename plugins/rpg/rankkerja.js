@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
     }
 
     const medal = ["🥇", "🥈", "🥉"];
-    let msg = `╭──「 *RANK KERJA* 」\n`;
+    let msg = `╭─「 *RANK KERJA* 」\n`;
     msg += `│ 🏆 *TOP 10 PEMAIN TERKAYA*\n│\n`;
 
     leaderboard.forEach((player, i) => {
