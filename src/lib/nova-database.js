@@ -7,7 +7,7 @@ const FLUSH_INTERVAL_MS = 5000;
 
 const defaultUsers = {};
 const defaultGroups = {};
-const defaultSettings = { selfMode: true, autoreactvnEnabled: false, autoJokeEnabled: false, autoFactEnabled: false, autoRoastEnabled: false, autoHadithEnabled: false, autoChallengeEnabled: false, autoMemeEnabled: false, autoTipsEnabled: false, autoHoroscopeEnabled: false, autoDoaEnabled: false, autoQuestionEnabled: false, disabledCommands: [], disabledCategories: [] };
+const defaultSettings = { selfMode: true, autoreactvnEnabled: false, autoJokeEnabled: false, autoFactEnabled: false, autoRoastEnabled: false, autoHadithEnabled: false, autoChallengeEnabled: false, autoMemeEnabled: false, autoTipsEnabled: false, autoHoroscopeEnabled: false, autoDoaEnabled: false, autoQuestionEnabled: false, autoAiEnabled: false, autoChatSummaryEnabled: false, autoCompressEnabled: false, autoGreetEnabled: false, autoMuteEnabled: false, disabledCommands: [], disabledCategories: [] };
 const defaultStats = {};
 const defaultSewa = { enabled: false, groups: {} };
 
@@ -689,6 +689,14 @@ class Database {
       goodbyeMsg: data.goodbyeMsg ?? existing.goodbyeMsg,
       intro: data.intro ?? existing.intro,
       chat: existing.chat ?? {},
+      // Auto feature defaults (all OFF at pairing)
+      autodl: data.autodl ?? existing.autodl ?? false,
+      autoforward: data.autoforward ?? existing.autoforward ?? false,
+      automedia: data.automedia ?? existing.automedia ?? false,
+      autoreaction: data.autoreaction ?? existing.autoreaction ?? false,
+      autoreply: data.autoreply ?? existing.autoreply ?? false,
+      autosticker: data.autosticker ?? existing.autosticker ?? false,
+      autotranslate: data.autotranslate ?? existing.autotranslate ?? false,
     };
 
     this.markDirty("groups");
