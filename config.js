@@ -180,6 +180,8 @@ const config = {
     logMessage: false,
     dailyLimitReset: true,
     smartTriggers: false,
+    commandSuggestion: true, // Tampilkan saran saat command tidak ditemukan
+    commandSuggestionCooldown: 5, // Cooldown (detik) per user untuk not-found suggestion
   },
 
   registration: {
