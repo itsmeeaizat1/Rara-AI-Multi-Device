@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20pisahkan%20kategori%20game%2C%20rpg%2C%20d-success?style=for-the-badge)
-> *Commit: "refactor: pisahkan kategori game, rpg, dan rpg cinta"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20rename%20kategori%20'rpg%20cinta'%20%E2%86%92%20-success?style=for-the-badge)
+> *Commit: "refactor: rename kategori 'rpg cinta' → 'rpg couple'"*
 <!--END_SECTION:latest-update-->
 
 ---
