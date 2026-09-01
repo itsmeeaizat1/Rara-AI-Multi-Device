@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20integrate%20IkyyXD%20API%20(api.ikyyxd.m-success?style=for-the-badge)
-> *Commit: "feat: integrate IkyyXD API (api.ikyyxd.my.id) as primary AI provider"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20add%20ikyy_zai%20(Zhipu%20GLM)%20and%20ikyy_-success?style=for-the-badge)
+> *Commit: "feat: add ikyy_zai (Zhipu GLM) and ikyy_zerogpt (AI detector) providers"*
 <!--END_SECTION:latest-update-->
 
 ---
