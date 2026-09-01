@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20add%20IkyyXD%20all-in-one%20downloader%20a-success?style=for-the-badge)
-> *Commit: "feat: add IkyyXD all-in-one downloader as primary with builtin fallback"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20add%208%20more%20IkyyXD%20downloader%20endpo-success?style=for-the-badge)
+> *Commit: "feat: add 8 more IkyyXD downloader endpoints with builtin fallback"*
 <!--END_SECTION:latest-update-->
 
 ---
