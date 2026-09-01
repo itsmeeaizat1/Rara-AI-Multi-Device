@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// ikyy-text2img — Generate gambar dari teks via IkyyXD text2img
+// ikyy-text2img — Generate gambar dari teks via GPT Image (IkyyXD)
+// Original /ai/text2img down (text2video.aritek.app ENOTFOUND), redirected to /ai/gptimage
 import axios from "axios";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
@@ -36,22 +37,29 @@ async function handler(m, { sock }) {
 
     await m.react("🕒");
 
-    const res = await axios.get(`${IKYY_BASE}/ai/text2img`, {
-      params: { apikey: "kyzz", text },
+    // gptimage returns binary JPEG directly
+    const res = await axios.get(`${IKYY_BASE}/ai/gptimage`, {
+      params: { text },
       timeout: 120000,
+      responseType: "arraybuffer",
     });
 
-    const data = res.data;
-    if (data?.status && data?.result) {
-      const resultUrl = typeof data.result === "string" ? data.result : data.result?.url || data.result?.result_url;
+    const contentType = res.headers["content-type"] || "";
+    if (contentType.includes("image") || res.data?.length > 1000) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
-        image: { url: resultUrl },
+        image: Buffer.from(res.data),
         caption: claraWrap("Ikyy Text2Img", `Prompt: ${text}`),
       }, { quoted: m });
     } else {
-      await m.react("❌");
-      await m.reply(claraWrap("Ikyy Text2Img", data?.error || data?.message || "Gagal generate gambar. Coba lagi nanti."));
+      try {
+        const errData = JSON.parse(res.data.toString());
+        await m.react("❌");
+        await m.reply(claraWrap("Ikyy Text2Img", errData?.error || errData?.message || "Gagal generate gambar."));
+      } catch {
+        await m.react("❌");
+        await m.reply(claraWrap("Ikyy Text2Img", "Gagal generate gambar. Coba lagi nanti."));
+      }
     }
   } catch (e) {
     console.error("[ikyy-text2img.js]:", e.message);

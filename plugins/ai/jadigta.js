@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// jadigta — Ubah foto menjadi karakter GTA via IkyyXD
+// jadigta — Ubah foto menjadi karakter GTA via Gemini Flash (IkyyXD)
 import axios from "axios";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
@@ -8,7 +8,7 @@ const pluginConfig = {
   name: "jadigta",
   alias: ["jadigta"],
   category: "ai image",
-  description: "Ubah foto menjadi karakter GTA",
+  description: "Ubah foto menjadi karakter GTA style",
   usage: ".jadigta (reply/kirim foto)",
   example: ".jadigta (reply foto)",
   isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
@@ -16,6 +16,7 @@ const pluginConfig = {
 };
 
 const IKYY_BASE = "https://api.ikyyxd.my.id";
+const PROMPT = "Transform this photo into Grand Theft Auto (GTA) game art style. Make it look like a GTA character loading screen with cel-shaded realism, bold outlines, and that distinctive GTA aesthetic.";
 
 async function handler(m, { sock }) {
   try {
@@ -38,7 +39,7 @@ async function handler(m, { sock }) {
 
     if (!imageUrl) {
       return m.reply(claraWrap("JadiGTA", [
-        "Ubah foto menjadi karakter GTA",
+        "Ubah foto menjadi karakter GTA style",
         "",
         "CARA PAKAI:",
         `${prefix}jadigta (reply/kirim foto)`,
@@ -47,8 +48,8 @@ async function handler(m, { sock }) {
 
     await m.react("🕒");
 
-    const res = await axios.get(`${IKYY_BASE}/edit/jadigta`, {
-      params: { url: imageUrl },
+    const res = await axios.get(`${IKYY_BASE}/edit/gemini-flash`, {
+      params: { prompt: PROMPT, url: imageUrl },
       timeout: 120000,
     });
 
@@ -58,11 +59,11 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         image: { url: resultUrl },
-        caption: claraWrap("JadiGTA", "Berhasil: Ubah foto menjadi karakter GTA"),
+        caption: claraWrap("JadiGTA", "Berhasil mengubah foto ke GTA style"),
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(claraWrap("JadiGTA", data?.error?.message || data?.error || data?.message || "Gagal memproses. Coba foto lain."));
+      await m.reply(claraWrap("JadiGTA", data?.error || data?.message || "Gagal memproses. Coba foto lain."));
     }
   } catch (e) {
     console.error("[jadigta.js]:", e.message);

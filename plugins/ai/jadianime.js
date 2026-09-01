@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// jadianime — Ubah foto menjadi gaya anime via IkyyXD
+// jadianime — Ubah foto menjadi gaya anime via Gemini Flash (IkyyXD)
 import axios from "axios";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
@@ -16,6 +16,7 @@ const pluginConfig = {
 };
 
 const IKYY_BASE = "https://api.ikyyxd.my.id";
+const PROMPT = "Transform this photo into anime style. Keep the face structure but make it look like a Japanese anime character with big expressive eyes, smooth shading, and vibrant colors.";
 
 async function handler(m, { sock }) {
   try {
@@ -47,8 +48,8 @@ async function handler(m, { sock }) {
 
     await m.react("🕒");
 
-    const res = await axios.get(`${IKYY_BASE}/edit/jadianime`, {
-      params: { url: imageUrl },
+    const res = await axios.get(`${IKYY_BASE}/edit/gemini-flash`, {
+      params: { prompt: PROMPT, url: imageUrl },
       timeout: 120000,
     });
 
@@ -62,7 +63,7 @@ async function handler(m, { sock }) {
       }, { quoted: m });
     } else {
       await m.react("❌");
-      await m.reply(claraWrap("JadiAnime", data?.error?.message || data?.error || data?.message || "Gagal memproses. Coba foto lain."));
+      await m.reply(claraWrap("JadiAnime", data?.error || data?.message || "Gagal memproses. Coba foto lain."));
     }
   } catch (e) {
     console.error("[jadianime.js]:", e.message);
