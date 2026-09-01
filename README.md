@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20benerin%203%20plugin%20fail%20saat%20startup%20-success?style=for-the-badge)
-> *Commit: "fix: benerin 3 plugin fail saat startup (bardai, ytmp3v3, ytmp4v3)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20box%20menu%2Fallmenu%20jadi%20melar%20%26%20comma-success?style=for-the-badge)
+> *Commit: "fix: box menu/allmenu jadi melar & command hilang gara-gara closeBoxRight global"*
 <!--END_SECTION:latest-update-->
 
 ---
