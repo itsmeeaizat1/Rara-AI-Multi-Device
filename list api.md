@@ -66,6 +66,8 @@
 | FGSI | `fgsi.dpdns.org` | wastalk | ✅ Free |
 | Android1 | `an1.com` | android1, android1-get | ✅ Free |
 
+| IkyyXD | `api.ikyyxd.my.id` | stalker, search, tools | ✅ Free |
+| AlbyOffc | `api.albyoffc.my.id` | stalker, search, tools | ✅ Free |
 ---
 
 ## 📥 Download / Media API
@@ -978,7 +980,7 @@
 
 ---
 
-*Updated by Nova AI • 30 Agustus 2026*
+*Updated by Nova AI • 1 September 2026*
 
 ---
 
@@ -1031,7 +1033,7 @@
 
 ---
 
-*Updated by Nova AI • 30 Agustus 2026*
+*Updated by Nova AI • 1 September 2026*
 
 ---
 
@@ -1128,7 +1130,7 @@ API publik Indonesia dengan playground interaktif.
 
 ---
 
-*Updated by Nova AI • 30 Agustus 2026*
+*Updated by Nova AI • 1 September 2026*
 
 ---
 
@@ -1165,7 +1167,7 @@ https://upscayl.org
 
 ---
 
-*Updated by Nova AI • 30 Agustus 2026*
+*Updated by Nova AI • 1 September 2026*
 
 ---
 
@@ -1380,7 +1382,7 @@ https://upscayl.org
 
 ---
 
-*Updated by Nova AI • 30 Agustus 2026*
+*Updated by Nova AI • 1 September 2026*
 
 ---
 
@@ -1619,4 +1621,4 @@ https://upscayl.org
 
 ---
 
-*Updated by Nova AI • 30 Agustus 2026*
+*Updated by Nova AI • 1 September 2026*
