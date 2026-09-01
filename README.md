@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20migrasi%2017%20plugin%20downloader%20dead%20A-success?style=for-the-badge)
-> *Commit: "fix: migrasi 17 plugin downloader dead API ke scrape lokal/API alternatif"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20migrasi%205%20plugin%20sticker%20dead%20API%20k-success?style=for-the-badge)
+> *Commit: "fix: migrasi 5 plugin sticker dead API ke local canvas/scrape"*
 <!--END_SECTION:latest-update-->
 
 ---
