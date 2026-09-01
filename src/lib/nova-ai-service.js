@@ -4,7 +4,7 @@
  * Supports: OpenAI, Google Gemini, Anthropic Claude,
  *           Meta Llama, Blackbox AI, GitHub Models, Groq, Together AI,
  *           Tio AI (OpenAI/Gemini/Anthropic formats via ai.tioo.eu.org)
- *           IkyyXD (gemini, cici, gpt-5-mini, google-gemma, unliai, publicai, perplexity, ai4chat via api.ikyyxd.my.id)
+ *           IkyyXD (gemini, cici, gpt-5-mini, google-gemma, unliai, publicai, perplexity, zai, zerogpt, ai4chat via api.ikyyxd.my.id)
  */
 
 import { getDatabase } from "./nova-database.js";
@@ -277,6 +277,51 @@ const DEFAULT_PROVIDERS = {
       return { query: text };
     },
     parseResponse: (data) => data?.result || "",
+    supportsVision: false,
+    supportsSystem: false,
+  },
+  ikyy_zai: {
+    name: "IkyyXD ZAI (Zhipu GLM)",
+    models: ["zai"],
+    defaultModel: "zai",
+    chatEndpoint: "https://api.ikyyxd.my.id/ai/zai",
+    method: "GET",
+    authHeader: () => ({}),
+    buildParams: ({ messages, apiKey }) => {
+      const lastUser = [...messages].reverse().find(m => m.role === "user");
+      const text = lastUser?.content || "";
+      return { prompt: text };
+    },
+    parseResponse: (data) => {
+      // zai returns plain text, not JSON
+      if (typeof data === "string") return data;
+      return data?.result || data?.response || "";
+    },
+    supportsVision: false,
+    supportsSystem: false,
+  },
+  ikyy_zerogpt: {
+    name: "IkyyXD ZeroGPT (AI Detector)",
+    models: ["zerogpt"],
+    defaultModel: "zerogpt",
+    chatEndpoint: "https://api.ikyyxd.my.id/ai/zerogpt",
+    method: "GET",
+    authHeader: () => ({}),
+    buildParams: ({ messages, apiKey }) => {
+      const lastUser = [...messages].reverse().find(m => m.role === "user");
+      const text = lastUser?.content || "";
+      return { q: text };
+    },
+    parseResponse: (data) => {
+      // zerogpt returns AI detection result, not chat
+      const r = data?.result;
+      if (!r) return "";
+      return `Hasil Deteksi AI:\n` +
+        `Human: ${r.isHuman}%\n` +
+        `AI: ${r.isAI}%\n` +
+        `Fake: ${r.fakePercentage}%\n` +
+        `Feedback: ${r.feedback || "-"}`;
+    },
     supportsVision: false,
     supportsSystem: false,
   },
@@ -618,6 +663,7 @@ async function callIkyy(prompt, opts = {}) {
       { key: "ikyy_cici", label: "cici" },
       { key: "ikyy_unliai", label: "unliai" },
       { key: "ikyy_publicai", label: "publicai" },
+      { key: "ikyy_zai", label: "zai" },
       { key: "ikyy_gpt5", label: "gpt-5-mini" },
       { key: "ikyy_gemma", label: "google-gemma" },
     ].filter(f => f.key !== `ikyy_${model}`);
