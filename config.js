@@ -42,10 +42,8 @@ const config = {
     // Welcome & goodbye
     "nova-welcome": "./assets/image/welcome/wellcome.jpg",
     "nova-goodbye": "./assets/image/welcome/left.jpg",
-    // Default fallback
-    "nova": "./assets/image/default.jpg",
-    "nova2": "./assets/image/nova2.jpg",
-    "nova3": "./assets/image/nova3.jpg",
+    // Universal fallback thumbnail
+    "example": "./assets/image/example.jpg",
     // Game & RPG
     "nova-games": "./assets/image/nova-games.jpg",
     "nova-rpg": "./assets/image/nova-rpg.jpg",

@@ -198,7 +198,7 @@ async function handler(m, { sock, db }) {
 
     let thumbnail = null;
     try {
-      thumbnail = getAssetBuffer("nova2");
+      thumbnail = getAssetBuffer("example");
     } catch (e) { console.error('[swgcall.js]:', e.message); }
 
     const estimatedTime = Math.ceil(groupList.length * 1.5);

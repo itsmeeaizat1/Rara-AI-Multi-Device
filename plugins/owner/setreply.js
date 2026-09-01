@@ -112,7 +112,7 @@ async function handler(m, { sock, db }) {
 
   await sock.sendButton(
     m.chat,
-    getAssetBuffer("nova"),
+    getAssetBuffer("example"),
     bodys,
     m,
     { buttons },

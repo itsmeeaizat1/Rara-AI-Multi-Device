@@ -858,7 +858,7 @@ async function serialize(sock, msg, store = {}) {
           mimetype: "image/png",
           fileName: config.bot.name,
           fileLength: 99999999999999,
-          jpegThumbnail: srtImage ? await sharp(srtImage).resize(300, 300).toBuffer() : await sharp(getAssetBuffer("nova2"))
+          jpegThumbnail: srtImage ? await sharp(srtImage).resize(300, 300).toBuffer() : await sharp(getAssetBuffer("example"))
             .resize(300, 300)
             .toBuffer(),
           caption: text,
@@ -871,7 +871,7 @@ async function serialize(sock, msg, store = {}) {
       );
     } else if (replyVariant === 3) {
       const uptime = process.uptime();
-      const sss = getAssetBuffer("nova3");
+      const sss = getAssetBuffer("example");
       return sock.sendMessage(
         m.chat,
         {
@@ -887,7 +887,7 @@ async function serialize(sock, msg, store = {}) {
         },
       );
     } else if (replyVariant === 4) {
-      const thumbnail = srtImage || getAssetBuffer("nova");
+      const thumbnail = srtImage || getAssetBuffer("example");
       return sock.sendPreview(
         m.chat,
         {
@@ -909,7 +909,7 @@ async function serialize(sock, msg, store = {}) {
         },
       );
     } else if (replyVariant === 5) {
-      const thumbnailBuf = srtImage || getAssetBuffer("nova");
+      const thumbnailBuf = srtImage || getAssetBuffer("example");
       const fakeOrder = {
         key: {
           participant: "0@s.whatsapp.net",
@@ -954,7 +954,7 @@ async function serialize(sock, msg, store = {}) {
           mimetype: "image/png",
           fileName: config.bot.name,
           fileLength: 99999999999999,
-          jpegThumbnail: srtImage ? await sharp(srtImage).resize(300, 300).toBuffer() : await sharp(getAssetBuffer("nova2"))
+          jpegThumbnail: srtImage ? await sharp(srtImage).resize(300, 300).toBuffer() : await sharp(getAssetBuffer("example"))
             .resize(300, 300)
             .toBuffer(),
           caption: text,
@@ -966,7 +966,7 @@ async function serialize(sock, msg, store = {}) {
         },
       );
     } else if (replyVariant === 7) {
-      const thumbnailBuf = srtImage || getAssetBuffer("nova");
+      const thumbnailBuf = srtImage || getAssetBuffer("example");
       const weatherAddr = await getWeatherAddress();
 
       const msg = generateWAMessageFromContent(m.chat, {

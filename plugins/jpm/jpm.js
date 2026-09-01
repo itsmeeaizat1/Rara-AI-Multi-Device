@@ -47,7 +47,7 @@ const jpmSessions = {};
 
 let cachedThumb = null;
 try {
-  cachedThumb = getAssetBuffer("nova2");
+  cachedThumb = getAssetBuffer("example");
 } catch (e) { console.error('[jpm.js]:', e.message); }
 
 function getVerifiedQuoted() {
