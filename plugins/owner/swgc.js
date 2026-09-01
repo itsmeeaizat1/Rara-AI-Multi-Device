@@ -311,7 +311,7 @@ async function handler(m, { sock, db }) {
 
     let thumbnail = null;
     try {
-      thumbnail = getAssetBuffer("example");
+      thumbnail = getAssetBuffer("swgc-thumb");
     } catch (e) { console.error('[swgc.js]:', e.message); }
 
     await sock.sendMessage(m.chat, {

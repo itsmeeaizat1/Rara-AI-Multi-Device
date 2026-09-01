@@ -86,7 +86,7 @@ async function handler(m, { sock, db }) {
     `Pilih tipe welcome dari tombol di bawah 👇`;
   await sock.sendButton(
     m.chat,
-    getAssetBuffer("example"),
+    getAssetBuffer("settings-thumb"),
     bodyText,
     m,
     { buttons },

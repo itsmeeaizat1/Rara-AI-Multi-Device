@@ -15,8 +15,8 @@ let isSending = false;
 let cachedThumb = null;
 
 try {
-  if (!!getAssetBuffer("example")) {
-    cachedThumb = getAssetBuffer("example");
+  if (!!getAssetBuffer("jpm-thumb")) {
+    cachedThumb = getAssetBuffer("jpm-thumb");
   }
 } catch (e) {}
 

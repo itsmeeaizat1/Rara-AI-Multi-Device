@@ -42,7 +42,17 @@ const config = {
     // Welcome & goodbye
     "nova-welcome": "./assets/image/welcome/wellcome.jpg",
     "nova-goodbye": "./assets/image/welcome/left.jpg",
-    // Universal fallback thumbnail
+    // Thumbnail per kategori (placeholder — ganti dengan gambar asli)
+    "search-thumb": "./assets/image/search-thumb.jpg",
+    "sticker-thumb": "./assets/image/sticker-thumb.jpg",
+    "jpm-thumb": "./assets/image/jpm-thumb.jpg",
+    "pushkontak-thumb": "./assets/image/pushkontak-thumb.jpg",
+    "serialize-thumb": "./assets/image/serialize-thumb.jpg",
+    "jadibot-thumb": "./assets/image/jadibot-thumb.jpg",
+    "swgc-thumb": "./assets/image/swgc-thumb.jpg",
+    "settings-thumb": "./assets/image/settings-thumb.jpg",
+    "group-thumb": "./assets/image/group-thumb.jpg",
+    // Fallback
     "example": "./assets/image/example.jpg",
     // Game & RPG
     "nova-games": "./assets/image/nova-games.jpg",

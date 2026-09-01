@@ -39,8 +39,8 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 let cachedThumb = null;
 let cachedDoc = null;
 try {
-  if (getAssetBuffer("example")) {
-    cachedThumb = getAssetBuffer("example");
+  if (getAssetBuffer("pushkontak-thumb")) {
+    cachedThumb = getAssetBuffer("pushkontak-thumb");
   }
   cachedDoc = fs.readFileSync("./package.json");
 } catch (e) { console.error('[pushkontak.js]:', e.message); }
