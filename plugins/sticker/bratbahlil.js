@@ -1,13 +1,17 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import axios from "axios";
+import { bratGen } from "brat-canvas";
+import fs from "fs";
+import path from "path";
+import os from "os";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaReply } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
   name: "bratbahlil",
   alias: ["bratbahlil"],
   category: "sticker",
-  description: "Membuat sticker brat bahlil",
+  description: "Membuat sticker brat bahlil (lokal canvas)",
   usage: ".bratbahlil <text>",
   example: ".bratbahlil Hai semua",
   isOwner: false,
@@ -20,18 +24,32 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
-  const text = m.args.join(" ");
+  const text = m.args.join(" ").trim();
   if (!text) {
-    return m.reply( `🖼️ *ʙʀᴀᴛ ʙᴀʜʟɪʟ*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratbahlil Hai semua\``, "bratbahlil");
+    const msg = novaReply({
+      title: "bratbahlil",
+      status: "⚠ Masukkan teks untuk generate brat sticker",
+      content: `│\n│ Contoh: ${m.prefix}bratbahlil Hai semua`,
+    });
+    return await m.reply(msg);
   }
+  const tempFile = path.join(os.tmpdir(), `brat-${Date.now()}.png`);
   try {
-    const url = `https://api.nova.my.id/api/bratbahlil?text=${encodeURIComponent(text)}`;
-    await sock.sendImageAsSticker(m.chat, url, m, {
+    const pngBuffer = await bratGen(text, { C_BG: "#f5d142", C_TEXT: "#000000" });
+    await fs.promises.writeFile(tempFile, pngBuffer);
+    await sock.sendImageAsSticker(m.chat, tempFile, m, {
       packname: config.sticker.packname,
       author: config.sticker.author,
     });
+    await fs.promises.unlink(tempFile).catch(() => {});
   } catch (error) {
-    m.reply(claraWrap("bratbahlil", te(m.prefix, m.command, m.pushName), "error"));
+    await fs.promises.unlink(tempFile).catch(() => {});
+    console.error("[bratbahlil] Error:", error.message);
+    const msg = novaReply({
+      title: "bratbahlil",
+      status: `❌ Gagal generate: ${error.message}`,
+    });
+    await m.reply(msg);
   }
 }
 

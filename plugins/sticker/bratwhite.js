@@ -1,13 +1,17 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import axios from "axios";
+import { bratGen } from "brat-canvas";
+import fs from "fs";
+import path from "path";
+import os from "os";
 import config from "../../config.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaReply } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
   name: "bratwhite",
   alias: ["bratwhite"],
   category: "sticker",
-  description: "Membuat sticker brat white",
+  description: "Membuat sticker brat putih (lokal canvas)",
   usage: ".bratwhite <text>",
   example: ".bratwhite Hai semua",
   isOwner: false,
@@ -20,18 +24,32 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
-  const text = m.args.join(" ");
+  const text = m.args.join(" ").trim();
   if (!text) {
-    return m.reply( `🖼️ *ʙʀᴀᴛ ᴡʜɪᴛᴇ*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratwhite Hai semua\``, "bratwhite");
+    const msg = novaReply({
+      title: "bratwhite",
+      status: "⚠ Masukkan teks untuk generate brat sticker",
+      content: `│\n│ Contoh: ${m.prefix}bratwhite Hai semua`,
+    });
+    return await m.reply(msg);
   }
+  const tempFile = path.join(os.tmpdir(), `brat-${Date.now()}.png`);
   try {
-    const url = `https://api.nova.my.id/api/bratwhite?text=${encodeURIComponent(text)}`;
-    await sock.sendImageAsSticker(m.chat, url, m, {
+    const pngBuffer = await bratGen(text, { C_BG: "#ffffff", C_TEXT: "#000000" });
+    await fs.promises.writeFile(tempFile, pngBuffer);
+    await sock.sendImageAsSticker(m.chat, tempFile, m, {
       packname: config.sticker.packname,
       author: config.sticker.author,
     });
+    await fs.promises.unlink(tempFile).catch(() => {});
   } catch (error) {
-    m.reply(claraWrap("bratwhite", te(m.prefix, m.command, m.pushName), "error"));
+    await fs.promises.unlink(tempFile).catch(() => {});
+    console.error("[bratwhite] Error:", error.message);
+    const msg = novaReply({
+      title: "bratwhite",
+      status: `❌ Gagal generate: ${error.message}`,
+    });
+    await m.reply(msg);
   }
 }
 
