@@ -44,23 +44,24 @@ async function handler(m, { sock }) {
     equipData.accessory = equipData.accessory || 0;
 
     if (!input || input === "list" || input === "status") {
-      let listMsg = `╭─「 ✦ EQUIPMENT UPGRADE V2 ✦ 」\n`;
-      listMsg += `│ Status Equipment Kamu:\n│\n`;
+      let listMsg = "";
+      listMsg += `Status Equipment Kamu:
+
+`;
       for (const [key, info] of Object.entries(EQUIP_TYPES)) {
         const lvl = equipData[key] || 0;
         const status = lvl >= 10 ? "⚡ LEGENDARY ⚡" : `Lvl ${lvl}/10`;
-        listMsg += `│ ${info.emoji} *${info.name}*: ${status}\n`;
+        listMsg += `${info.emoji} *${info.name}*: ${status}\n`;
         if (lvl < 10) {
           const nextLvl = lvl + 1;
           const cost = nextLvl * nextLvl * 100;
           const rate = getSuccessRate(nextLvl);
-          listMsg += `│    ➔ Upgrade Lvl ${nextLvl}: *${cost.toLocaleString()} Gold* (Rate: *${rate}%*)\n`;
+          listMsg += `➔ Upgrade Lvl ${nextLvl}: *${cost.toLocaleString()} Gold* (Rate: *${rate}%*)\n`;
         }
       }
-      listMsg += `│\n│ 💡 *Penggunaan:* ${m.prefix}upgrade2 <weapon|armor|accessory>\n`;
-      listMsg += `│ 📝 *Contoh:* ${m.prefix}upgrade2 weapon\n`;
-      listMsg += `╰────  •  ────`;
-      await m.react("🐣");
+      listMsg += `💡 *Penggunaan:* ${m.prefix}upgrade2 <weapon|armor|accessory>\n`;
+      listMsg += `📝 *Contoh:* ${m.prefix}upgrade2 weapon\n`;
+            await m.react("🐣");
       return m.reply(listMsg);
     }
 
@@ -95,31 +96,34 @@ async function handler(m, { sock }) {
     const roll = Math.floor(Math.random() * 100) + 1;
     const isSuccess = roll <= rate;
 
-    let msg = `╭─「 ✦ BLACKSMITH FORGE V2 ✦ 」\n`;
-    msg += `│ 🔨 *Tempat Penempaan Besi*\n`;
-    msg += `│ ${EQUIP_TYPES[type].emoji} Target: *${EQUIP_TYPES[type].name}*\n`;
-    msg += `│ 📊 Tingkat: *Lvl ${currentLvl}* ➔ *Lvl ${targetLvl}*\n`;
-    msg += `│ 💰 Biaya: *${cost.toLocaleString()} Gold*\n`;
-    msg += `│ 🎯 Peluang Sukses: *${rate}%*\n│\n`;
-    msg += `│ 💥 *Animasi Penempaan:*\n`;
-    msg += `│ KELANG! KELANG! Api tempa membara dan palu menghantam besi murni...\n│\n`;
+    let msg = "";
+    msg += `🔨 *Tempat Penempaan Besi*\n`;
+    msg += `${EQUIP_TYPES[type].emoji} Target: *${EQUIP_TYPES[type].name}*\n`;
+    msg += `📊 Tingkat: *Lvl ${currentLvl}* ➔ *Lvl ${targetLvl}*\n`;
+    msg += `💰 Biaya: *${cost.toLocaleString()} Gold*\n`;
+    msg += `🎯 Peluang Sukses: *${rate}%*
+
+`;
+    msg += `💥 *Animasi Penempaan:*\n`;
+    msg += `KELANG! KELANG! Api tempa membara dan palu menghantam besi murni...
+
+`;
 
     if (isSuccess) {
       equipData[type] = targetLvl;
-      msg += `│ ✨ *HASIL: BERHASIL!* 🎉\n`;
+      msg += `✨ *HASIL: BERHASIL!* 🎉\n`;
       if (targetLvl === 10) {
-        msg += `│ ⚡ *CONGRATULATIONS!* Equipment telah mencapai status *⚡ LEGENDARY STATUS ⚡*!\n`;
+        msg += `⚡ *CONGRATULATIONS!* Equipment telah mencapai status *⚡ LEGENDARY STATUS ⚡*!\n`;
       } else {
-        msg += `│ 🌟 *${EQUIP_TYPES[type].name}* milikmu naik ke *Level ${targetLvl}*!\n`;
+        msg += `🌟 *${EQUIP_TYPES[type].name}* milikmu naik ke *Level ${targetLvl}*!\n`;
       }
     } else {
-      msg += `│ ❌ *HASIL: GAGAL!* 💥\n`;
-      msg += `│ 💨 Tempaan retak dan gagal berkilau. Level tetap di *Lvl ${currentLvl}*, namun Gold hangus!\n`;
+      msg += `❌ *HASIL: GAGAL!* 💥\n`;
+      msg += `💨 Tempaan retak dan gagal berkilau. Level tetap di *Lvl ${currentLvl}*, namun Gold hangus!\n`;
     }
 
-    msg += `│\n│ 💰 Sisa Gold: *${profile.gold.toLocaleString()} Gold*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `💰 Sisa Gold: *${profile.gold.toLocaleString()} Gold*\n`;
+    
     await db.setPlayerData?.(sender, "profile", profile);
     await db.setPlayerData?.(sender, "upgrade2", equipData);
 

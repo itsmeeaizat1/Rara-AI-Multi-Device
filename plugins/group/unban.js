@@ -30,8 +30,8 @@ async function handler(m, { sock, config: botConfig }) {
     const targetName = targetRaw.replace(/^@+/, "") || targetRaw;
 
     const text =
-      claraWrap("Unban", [`│ Target: *${targetName}*`,
-        "│ Status: *ʙᴇʀʜᴀꜱɪʟ ᴅɪ-ᴜɴʙᴀɴ*"].join("\n")) +
+      claraWrap("Unban", [`Target: *${targetName}*`,
+        "Status: *ʙᴇʀʜᴀꜱɪʟ ᴅɪ-ᴜɴʙᴀɴ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}unban <@target> untuk unban orang lain`) +
       "\n" +

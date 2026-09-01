@@ -93,35 +93,33 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       if (wf) weatherBlock = `${wf}\n\n`;
     } catch {}
 
-    const text = `${weatherBlock}╭─「 ✦ ${toSC("Bot Info")} ✦ 」
-│
-│ 「 ${toSC("Identitas")} 」
-│ *${toSC("Nama")}:* ${toSC(botName)}
-│ *${toSC("Nomor")}:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : toSC("Unknown")}
-│ *${toSC("Versi")}:* ${botConfig.bot?.version || "1.0.0"}
-│ *${toSC("Developer")}:* ${toSC(botConfig.bot?.developer || "-")}
-│ *${toSC("Platform")}:* ${toSC("Node.js + Baileys")}
-│ *${toSC("Mode")}:* ${toSC((botConfig.mode || "public").toUpperCase())}
-│ *${toSC("Prefix")}:* [ *${prefix}* ]
-│ 「 ${toSC("Info Database")} 」
-│ *${toSC("Total User")}:* ${totalUsers}
-│ *${toSC("Total Grup")}:* ${totalGroups}
-│ *${toSC("User Terdaftar")}:* ${totalRegistered}
-│ *${toSC("Premium User")}:* ${totalPremium}
-│ *${toSC("Total Fitur")}:* ${totalFeatures}
-│ *${toSC("Total Kategori")}:* ${totalCategories}
-│ 「 ${toSC("Server")} 」
-│ *${toSC("OS")}:* ${os.platform()} ${os.arch()}
-│ *${toSC("Hostname")}:* ${toSC(os.hostname())}
-│ *${toSC("Node.js")}:* ${process.version}
-│ *${toSC("CPU")}:* ${cpuModel}
-│ *${toSC("Cores")}:* ${cpuCores} ${toSC("threads")} @ ${cpuSpeed} MHz
-│ *${toSC("Load Avg")}:* ${loadAvg}
-│ *${toSC("RAM")}:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
-│ *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
-│ *${toSC("Uptime Server")}:* ${serverUptime}
-│ *${toSC("Uptime Bot")}:* ${botUptime}
-╰────  •  ────
+    const text = `${weatherBlock}「 ${toSC("Identitas")} 」
+*${toSC("Nama")}:* ${toSC(botName)}
+*${toSC("Nomor")}:* ${sock?.user?.jid ? sock.user.jid.split("@")[0] : toSC("Unknown")}
+*${toSC("Versi")}:* ${botConfig.bot?.version || "1.0.0"}
+*${toSC("Developer")}:* ${toSC(botConfig.bot?.developer || "-")}
+*${toSC("Platform")}:* ${toSC("Node.js + Baileys")}
+*${toSC("Mode")}:* ${toSC((botConfig.mode || "public").toUpperCase())}
+*${toSC("Prefix")}:* [ *${prefix}* ]
+「 ${toSC("Info Database")} 」
+*${toSC("Total User")}:* ${totalUsers}
+*${toSC("Total Grup")}:* ${totalGroups}
+*${toSC("User Terdaftar")}:* ${totalRegistered}
+*${toSC("Premium User")}:* ${totalPremium}
+*${toSC("Total Fitur")}:* ${totalFeatures}
+*${toSC("Total Kategori")}:* ${totalCategories}
+「 ${toSC("Server")} 」
+*${toSC("OS")}:* ${os.platform()} ${os.arch()}
+*${toSC("Hostname")}:* ${toSC(os.hostname())}
+*${toSC("Node.js")}:* ${process.version}
+*${toSC("CPU")}:* ${cpuModel}
+*${toSC("Cores")}:* ${cpuCores} ${toSC("threads")} @ ${cpuSpeed} MHz
+*${toSC("Load Avg")}:* ${loadAvg}
+*${toSC("RAM")}:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
+*${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
+*${toSC("Uptime Server")}:* ${serverUptime}
+*${toSC("Uptime Bot")}:* ${botUptime}
+
 ${toSC("Nova AI WhatsApp Bot")}`;
 
     const navButtons = [
@@ -140,7 +138,9 @@ ${toSC("Nova AI WhatsApp Bot")}`;
     try { await sendMenuAudio(sock, m, db, false); } catch {}
   } catch (e) {
     console.error("[info] handler error:", e.message);
-    try { await m.reply(`╭─「 ✦ ${toSC("Info")} ✦ 」\n│ ${toSC("Ada error nih")}\n│ ${toSC("Coba lagi ya")}\n╰────  •  ────`); } catch {}
+    try { await m.reply(`
+${toSC("Ada error nih")}
+${toSC("Coba lagi ya")}\n`); } catch {}
   }
 
   return { handled: true };

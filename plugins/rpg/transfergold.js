@@ -72,18 +72,19 @@ async function handler(m, { sock }) {
     addGold({ sender: targetJid }, received);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴛʀᴀɴsғᴇʀ ɢᴏʟᴅ ✦ 」\n`;
-    msg += `│ ✅ Transfer berhasil!\n`;
-    msg += `│\n`;
-    msg += `│ 👤 Dari: *${m.pushName}*\n`;
-    msg += `│ 👤 Ke: *${targetJid.split("@")[0]}*\n`;
-    msg += `│ 💵 Jumlah: *${amount} gold*\n`;
-    msg += `│ 📉 Tax (5%): *${tax} gold*\n`;
-    msg += `│ 💰 Diterima: *${received} gold*\n`;
-    msg += `│\n`;
-    msg += `│ 💼 Gold kamu: *${rpg.gold - amount}*\n`;
-    msg += `╰────  •  ────`;
-
+    let msg = "";
+    msg += `✅ Transfer berhasil!\n`;
+    msg += `
+`;
+    msg += `👤 Dari: *${m.pushName}*\n`;
+    msg += `👤 Ke: *${targetJid.split("@")[0]}*\n`;
+    msg += `💵 Jumlah: *${amount} gold*\n`;
+    msg += `📉 Tax (5%): *${tax} gold*\n`;
+    msg += `💰 Diterima: *${received} gold*\n`;
+    msg += `
+`;
+    msg += `💼 Gold kamu: *${rpg.gold - amount}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("tfgold error:", err);

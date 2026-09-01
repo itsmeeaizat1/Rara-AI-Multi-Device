@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
 import config from "../../config.js";
-import { toSC } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spotify",
@@ -22,7 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock, text }) {
   if (!text) {
     return m.reply(
-      "╭─「 ✦ Spotify ✦ 」\n│\n│ 📌 " + toSC("Cara Pakai") + ":\n│ " + m.prefix + "spotify <judul/artis>\n│\n│ 💡 " + toSC("Contoh") + ":\n│ " + m.prefix + "spotify bruno mars\n│\n╰────  •  ────",
+      `Cara Pakai: ${m.prefix}spotify <judul/artis>\nContoh: ${m.prefix}spotify bruno mars`
     );
   }
 
@@ -34,25 +33,24 @@ async function handler(m, { sock, text }) {
     const data = res.data;
 
     if (!data?.status || !data?.data?.results || data.data.results.length === 0) {
-      return m.reply("╭─「 ✦ Spotify ✦ 」\n│\n│ ❌ " + toSC("Lagu tidak ditemukan") + "\n│ " + toSC("Coba kata kunci lain") + "\n│\n╰────  •  ────");
+      return m.reply("❌ Lagu tidak ditemukan. Coba kata kunci lain.");
     }
 
     const results = data.data.results;
 
-    let reply = "╭─「 ✦ " + toSC("Hasil Pencarian Spotify") + " ✦ 」\n│\n";
+    let reply = "Hasil Pencarian Spotify:\n\n";
 
     results.forEach((t, i) => {
-      reply += "│ " + (i + 1) + ". *" + t.title + "*\n";
-      reply += "│    🎤 " + t.artist + " | ⏱️ " + t.duration + "\n";
+      reply += `${i + 1}. *${t.title}*\n`;
+      reply += `   Artis: ${t.artist} | Durasi: ${t.duration}\n`;
     });
 
-    reply += "│\n│ " + toSC("Download") + ": " + m.prefix + "spdl <link>\n";
-    reply += "╰────  •  ────";
+    reply += `\nDownload: ${m.prefix}spdl <link>`;
 
     return m.reply(reply);
   } catch (err) {
     console.error("[Spotify Search]", err.message);
-    return m.reply("╭─「 ✦ Spotify ✦ 」\n│\n│ ❌ " + toSC("API Spotify lagi bermasalah") + "\n│ " + toSC("Coba lagi nanti") + "\n│\n╰────  •  ────");
+    return m.reply("❌ API Spotify lagi bermasalah. Coba lagi nanti.");
   }
 }
 

@@ -47,28 +47,25 @@ async function handler(m, { args, prefix }) {
   let text = "";
   if (result === "menang") {
     const expGain = 5 + Math.floor(Math.random() * 10);
-    text = `╭─「 ✦ SUIT ✦ 」\n`;
+    text = "";
     text += `┊ Kamu: ${EMOJI[pilihan]} ${pilihan}\n`;
     text += `┊ Bot: ${EMOJI[botPick]} ${botPick}\n`;
     text += `┊\n`;
     text += `┊ 🎉 Kamu menang! +${expGain} EXP\n`;
-    text += `╰────  •  ────`;
-    try { await addExpWithLevelCheck(m.sender, expGain, m); } catch {}
+        try { await addExpWithLevelCheck(m.sender, expGain, m); } catch {}
   } else if (result === "kalah") {
-    text = `╭─「 ✦ SUIT ✦ 」\n`;
+    text = "";
     text += `┊ Kamu: ${EMOJI[pilihan]} ${pilihan}\n`;
     text += `┊ Bot: ${EMOJI[botPick]} ${botPick}\n`;
     text += `┊\n`;
     text += `┊ 😂 Kamu kalah! Coba lagi ya\n`;
-    text += `╰────  •  ────`;
-  } else {
-    text = `╭─「 ✦ SUIT ✦ 」\n`;
+      } else {
+    text = "";
     text += `┊ Kamu: ${EMOJI[pilihan]} ${pilihan}\n`;
     text += `┊ Bot: ${EMOJI[botPick]} ${botPick}\n`;
     text += `┊\n`;
     text += `┊ 🤝 Seri! Pilih lagi\n`;
-    text += `╰────  •  ────`;
-  }
+      }
 
   await m.reply(text);
 }

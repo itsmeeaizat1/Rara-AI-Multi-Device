@@ -34,12 +34,11 @@ async function handler(m, { sock, db }) {
         sessions.delete(groupId);
 
         await m.react("🐣");
-        let msg = `╭─「 ✦ ᴛᴇʙᴀᴋ ꜱᴜʀᴀʜ ✦ 」\n`;
-        msg += `│ ✅ Benar! Jawaban: *${session.surahData.englishName}*\n`;
-        msg += `│ (${session.surahData.englishNameTranslation})\n`;
-        msg += `│ 🎉 Bonus: +5 energi\n`;
-        msg += `╰────  •  ────`;
-
+        let msg = "";
+        msg += `✅ Benar! Jawaban: *${session.surahData.englishName}*\n`;
+        msg += `(${session.surahData.englishNameTranslation})\n`;
+        msg += `🎉 Bonus: +5 energi\n`;
+        
         // Bonus energi
         try {
           if (db && typeof db.addEnergi === "function") {
@@ -70,16 +69,16 @@ async function handler(m, { sock, db }) {
     const revelation = surah.revelationType === "Meccan" ? "Makkiyah" : "Madaniyah";
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴛᴇʙᴀᴋ ꜱᴜʀᴀʜ ✦ 」\n`;
-    msg += `│ 📖 Surah ke-*${surah.number}*\n`;
-    msg += `│ Jumlah ayat: *${surah.numberOfAyahs}*\n`;
-    msg += `│ Revelation: *${revelation}*\n`;
-    msg += `│ Arti: *${surah.englishNameTranslation}*\n`;
-    msg += `│\n`;
-    msg += `│ Tebak nama surahnya!\n`;
-    msg += `│ Waktu: 60 detik\n`;
-    msg += `╰────  •  ────`;
-    await m.reply(msg);
+    let msg = "";
+    msg += `📖 Surah ke-*${surah.number}*\n`;
+    msg += `Jumlah ayat: *${surah.numberOfAyahs}*\n`;
+    msg += `Revelation: *${revelation}*\n`;
+    msg += `Arti: *${surah.englishNameTranslation}*\n`;
+    msg += `
+`;
+    msg += `Tebak nama surahnya!\n`;
+    msg += `Waktu: 60 detik\n`;
+        await m.reply(msg);
 
     // Set session
     const timeout = setTimeout(async () => {
@@ -88,7 +87,7 @@ async function handler(m, { sock, db }) {
         sessions.delete(groupId);
         try {
           await sock.sendMessage(groupId, {
-            text: `╭─「 ✦ ᴛᴇʙᴀᴋ ꜱᴜʀᴀʜ ✦ 」\n│ ⏰ Waktu habis!\n│ Jawaban: *${s.surahData.englishName}*\n│ (${s.surahData.englishNameTranslation})\n╰────  •  ────`,
+            text: `⏰ Waktu habis!\nJawaban: *${s.surahData.englishName}*\n(${s.surahData.englishNameTranslation})`,
           });
         } catch {}
       }

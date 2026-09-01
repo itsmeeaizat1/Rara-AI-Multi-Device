@@ -52,9 +52,9 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const out =
-      claraWrap("Canvas", [`│ Teks: *${text.slice(0, 50)}${text.length > 50 ? "..." : ""}*`,
-        "│ Ukuran: *1080x1080*",
-        "│ Format: *ᴘɴɢ*"].join("\n")) +
+      claraWrap("Canvas", [`Teks: *${text.slice(0, 50)}${text.length > 50 ? "..." : ""}*`,
+        "Ukuran: *1080x1080*",
+        "Format: *ᴘɴɢ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}canvas <teks> untuk desain lain`) +
       "\n" +

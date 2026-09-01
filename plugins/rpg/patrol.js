@@ -93,7 +93,9 @@ async function handler(m, { sock }) {
       const expGain = Math.floor(Math.random() * 200) + 100;
       profile.gold += goldGain;
       profile.exp += expGain;
-      eventDetail = `🗡️ Kamu berhasil mengalahkan monster!\n│ 💰 +${goldGain.toLocaleString()} Gold\n│ ✨ +${expGain} EXP`;
+      eventDetail = `🗡️ Kamu berhasil mengalahkan monster!
+💰 +${goldGain.toLocaleString()} Gold
+✨ +${expGain} EXP`;
     } else if (event.type === "treasure") {
       const goldGain = Math.floor(Math.random() * 1200) + 800;
       profile.gold += goldGain;
@@ -120,17 +122,21 @@ async function handler(m, { sock }) {
       eventDetail = `💚 HP pulih *+${hpHeal}* dan Energi pulih *+${energyRestored}*!`;
     }
 
-    let msg = `╭─「 ✦ RANGER PATROL ✦ 」\n`;
-    msg += `│ 🧭 *Patroli Wilayah*\n`;
-    msg += `│ 📝 *Narasi:* ${event.narrative}\n│\n`;
-    msg += `│ ${event.icon} *Event:* ${event.name}\n`;
-    msg += `│ 📋 *Dampak Event:*\n│ ${eventDetail}\n│\n`;
-    msg += `│ 📊 *Status Karakter:*\n`;
-    msg += `│ ❤️ HP: *${profile.hp}/${profile.maxHp}*\n`;
-    msg += `│ ⚡ Energi: *${profile.energi}*\n`;
-    msg += `│ 💰 Total Gold: *${profile.gold.toLocaleString()}*\n`;
-    msg += `╰────  •  ────`;
+    let msg = "";
+    msg += `🧭 *Patroli Wilayah*\n`;
+    msg += `📝 *Narasi:* ${event.narrative}
 
+`;
+    msg += `${event.icon} *Event:* ${event.name}\n`;
+    msg += `📋 *Dampak Event:*
+${eventDetail}
+
+`;
+    msg += `📊 *Status Karakter:*\n`;
+    msg += `❤️ HP: *${profile.hp}/${profile.maxHp}*\n`;
+    msg += `⚡ Energi: *${profile.energi}*\n`;
+    msg += `💰 Total Gold: *${profile.gold.toLocaleString()}*\n`;
+    
     await db.setPlayerData?.(sender, "profile", profile);
 
     await m.react("🐣");

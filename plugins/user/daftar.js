@@ -220,12 +220,12 @@ function buildConfirmationRewardBlock(user) {
   const rewards = getRegistrationRewards();
 
   if (user?.hasClaimedRegisterReward) {
-    return `╭─「 ✦ ʙᴏɴᴜꜱ ✦ 」
+    return `
 │ Bonus daftar pertama sudah pernah diambil
 │ Daftar ulang tidak mendapat reward lagi\n╰┈┈┈┈┈┈┈┈`;
   }
 
-  return `╭─「 ✦ ʀᴇᴡᴀʀᴅꜱ ✦ 」
+  return `
 │ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin
 │ ⚡ +${rewards.energi} Energi
 │ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈`;
@@ -235,12 +235,12 @@ function buildSuccessRewardBlock(alreadyClaimedReward, randomBonus) {
   const rewards = getRegistrationRewards();
 
   if (alreadyClaimedReward) {
-    return `╭─「 ✦ ʙᴏɴᴜꜱ ✦ 」
+    return `
 │ Bonus daftar sudah pernah diklaim
 │ Tidak ada reward tambahan kali ini\n╰┈┈┈┈┈┈┈┈`;
   }
 
-  return `╭─「 ✦ ʀᴇᴡᴀʀᴅꜱ ✦ 」
+  return `
 │ 💰 +${rewards.koin.toLocaleString("id-ID")} Koin
 │ ⚡ +${rewards.energi} Energi
 │ ⭐ +${rewards.exp.toLocaleString("id-ID")} EXP\n╰┈┈┈┈┈┈┈┈`;
@@ -256,12 +256,10 @@ function generateSerialNumber() {
 
 function buildUserDataBlock(name, age, gender, serial) {
   return (
-    `╭─「 ✦ DATA REGISTRASI ✦ 」\n` +
-    `│ 📛 Nama: *${name || "-"}*\n` +
-    `│ 🎂 Umur: *${age ? `${age} tahun` : "-"}*\n` +
-    `│ 👤 Gender: *${gender || "-"}*\n` +
-    `│ 🔑 SN: *${serial || "-"}*\n` +
-    `╰────  •  ────`
+    `📛 Nama: *${name || "-"}*\n` +
+    `🎂 Umur: *${age ? `${age} tahun` : "-"}*\n` +
+    `👤 Gender: *${gender || "-"}*\n` +
+    `🔑 SN: *${serial || "-"}*\n`
   );
 }
 
@@ -280,21 +278,19 @@ function buildWelcomeMessage(user, registrationRequired, prefix) {
   }
 
   return (
-    `╭─「 ✦ Menu Daftar ✦ 」` +
-    `│ *Selamat datang di Menu Daftar!*\n\n` +
-    `│ ✨ Dengan daftar, data akun kamu jadi lebih aman\n` +
-    `│ dan pengalaman pakai bot jadi lebih lengkap.\n\n` +
-    `│ *ᴍᴀɴꜰᴀᴀᴛ ᴅᴀꜰᴛᴀʀ*\n` +
-    `${benefits.map((item) => `│ ${item}`).join("\n")}\n\n` +
-    `│ *Pertanyaan 1/4*\n` +
-    `│ Siapa nama kamu?\n\n` +
-    `│ *ᴡᴀᴊɪʙ ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ʏᴀ*\n` +
-    `│ Untuk batal: reply \`batal\` atau ketik \`${prefix}bataldaftar\`\n\n` +
-    `│ *ᴍᴇᴛᴏᴅᴇ ᴅᴀꜰᴛᴀʀ ʟᴀɪɴɴʏᴀ*\n` +
-    `│ \`${prefix}daftar Nama, Umur\` - Daftar cepat\n` +
-    `│ \`${prefix}daftarotomatis\` - Daftar via captcha (DM)\n` +
-    `│ \`${prefix}regmail Nama, email\` - Daftar via email OTP\n` +
-    `╰────  •  ────`
+    `*Selamat datang di Menu Daftar!*\n\n` +
+    `✨ Dengan daftar, data akun kamu jadi lebih aman\n` +
+    `dan pengalaman pakai bot jadi lebih lengkap.\n\n` +
+    `*ᴍᴀɴꜰᴀᴀᴛ ᴅᴀꜰᴛᴀʀ*\n` +
+    `${benefits.map((item) => `${item}`).join("\n")}\n\n` +
+    `*Pertanyaan 1/4*\n` +
+    `Siapa nama kamu?\n\n` +
+    `*ᴡᴀᴊɪʙ ʀᴇᴘʟʏ ᴘᴇꜱᴀɴ ɪɴɪ ʏᴀ*\n` +
+    `Untuk batal: reply \`batal\` atau ketik \`${prefix}bataldaftar\`\n\n` +
+    `*ᴍᴇᴛᴏᴅᴇ ᴅᴀꜰᴛᴀʀ ʟᴀɪɴɴʏᴀ*\n` +
+    `\`${prefix}daftar Nama, Umur\` - Daftar cepat\n` +
+    `\`${prefix}daftarotomatis\` - Daftar via captcha (DM)\n` +
+    `\`${prefix}regmail Nama, email\` - Daftar via email OTP\n`
   );
 }
 
@@ -525,8 +521,8 @@ async function registrationAnswerHandler(m, sock) {
       m,
       `❓ *Pertanyaan 3/4*\n\n` +
       `Kamu cowo atau cewe?\n\n` +
-      `│ 👦 *ᴄᴏᴡᴏ* / *ᴄᴏᴡᴏᴋ* / *ʟᴀᴋɪ-ʟᴀᴋɪ* / *L*\n` +
-      `│ 👧 *ᴄᴇᴡᴇ* / *ᴄᴇᴡᴇᴋ* / *ᴘᴇʀᴇᴍᴘᴜᴀɴ* / *P*\n\n` +
+      `👦 *ᴄᴏᴡᴏ* / *ᴄᴏᴡᴏᴋ* / *ʟᴀᴋɪ-ʟᴀᴋɪ* / *L*\n` +
+      `👧 *ᴄᴇᴡᴇ* / *ᴄᴇᴡᴇᴋ* / *ᴘᴇʀᴇᴍᴘᴜᴀɴ* / *P*\n\n` +
       `📩 Reply pesan ini dengan jawabanmu`,
     );
 
@@ -690,8 +686,8 @@ async function registrationAnswerHandler(m, sock) {
         m,
         `👤 *ʀᴇᴠɪꜱɪ ɢᴇɴᴅᴇʀ*\n\n` +
         `Pilih gender yang benar ya.\n\n` +
-        `│ 👦 *ᴄᴏᴡᴏ* / *ᴄᴏᴡᴏᴋ* / *ʟᴀᴋɪ-ʟᴀᴋɪ* / *L*\n` +
-        `│ 👧 *ᴄᴇᴡᴇ* / *ᴄᴇᴡᴇᴋ* / *ᴘᴇʀᴇᴍᴘᴜᴀɴ* / *P*\n\n` +
+        `👦 *ᴄᴏᴡᴏ* / *ᴄᴏᴡᴏᴋ* / *ʟᴀᴋɪ-ʟᴀᴋɪ* / *L*\n` +
+        `👧 *ᴄᴇᴡᴇ* / *ᴄᴇᴡᴇᴋ* / *ᴘᴇʀᴇᴍᴘᴜᴀɴ* / *P*\n\n` +
         `📩 Reply pesan ini dengan jawabanmu`,
       );
 

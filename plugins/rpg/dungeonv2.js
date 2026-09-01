@@ -64,35 +64,37 @@ async function handler(m, { sock }) {
     // ── STATUS ──
     if (!action || action === "status") {
       if (!rpg.dungeonV2.active) {
-        let msg = `╭─「 ✦ ᴅᴜɴɢᴇᴏɴ ᴠ2 ✦ 」\n`;
-        msg += `│ 📋 Status: *Idle*\n`;
-        msg += `│ 👤 Level: *${rpg.level}* (min: ${MIN_LEVEL})\n`;
-        msg += `│ ⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}* (need: ${DG2_ENERGY})\n`;
-        msg += `│\n`;
-        msg += `│ 📊 *ᴅᴜɴɢᴇᴏɴ ɪɴғᴏ*\n`;
-        msg += `│ Total floors: *${MAX_FLOORS}*\n`;
-        msg += `│ Makin dalam = makin kuat & makin banyak reward\n`;
-        msg += `│ Floor 7 = Boss Room (gems + rare drops)\n`;
-        msg += `│\n`;
-        msg += `│ 📌 .dungeonv2 enter — mulai dungeon\n`;
-        msg += `╰────  •  ────`;
-        return m.reply(msg);
+        let msg = "";
+        msg += `📋 Status: *Idle*\n`;
+        msg += `👤 Level: *${rpg.level}* (min: ${MIN_LEVEL})\n`;
+        msg += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}* (need: ${DG2_ENERGY})\n`;
+        msg += `
+`;
+        msg += `📊 *ᴅᴜɴɢᴇᴏɴ ɪɴғᴏ*\n`;
+        msg += `Total floors: *${MAX_FLOORS}*\n`;
+        msg += `Makin dalam = makin kuat & makin banyak reward\n`;
+        msg += `Floor 7 = Boss Room (gems + rare drops)\n`;
+        msg += `
+`;
+        msg += `📌 .dungeonv2 enter — mulai dungeon\n`;
+                return m.reply(msg);
       }
 
-      let msg = `╭─「 ✦ ᴅᴜɴɢᴇᴏɴ ᴠ2 ✦ 」\n`;
-      msg += `│ 📊 Status: *Active*\n`;
-      msg += `│ Floor: *${rpg.dungeonV2.floor}/${MAX_FLOORS}*\n`;
-      msg += `│ Nama: *${FLOOR_CONFIG[rpg.dungeonV2.floor - 1]?.name || "?"}*\n`;
-      msg += `│\n`;
-      msg += `│ 📋 *ᴄʟᴇᴀʀ ʟᴏɢ*\n`;
+      let msg = "";
+      msg += `📊 Status: *Active*\n`;
+      msg += `Floor: *${rpg.dungeonV2.floor}/${MAX_FLOORS}*\n`;
+      msg += `Nama: *${FLOOR_CONFIG[rpg.dungeonV2.floor - 1]?.name || "?"}*\n`;
+      msg += `
+`;
+      msg += `📋 *ᴄʟᴇᴀʀ ʟᴏɢ*\n`;
       for (const log of rpg.dungeonV2.clearLog.slice(-5)) {
-        msg += `│ ${log}\n`;
+        msg += `${log}\n`;
       }
-      msg += `│\n`;
-      msg += `│ 📌 .dungeonv2 enter — lanjut floor\n`;
-      msg += `│ 📌 .dungeonv2 leave — keluar (kalah)\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      msg += `
+`;
+      msg += `📌 .dungeonv2 enter — lanjut floor\n`;
+      msg += `📌 .dungeonv2 leave — keluar (kalah)\n`;
+            return m.reply(msg);
     }
 
     // ── LEAVE ──
@@ -227,35 +229,37 @@ async function handler(m, { sock }) {
         }
 
         await m.react("🐣");
-        let msg = `╭─「 ✦ ᴅᴜɴɢᴇᴏɴ ᴠ2 ✦ 」\n`;
-        msg += `│ 🏰 Floor: *${rpg.dungeonV2.floor}/${MAX_FLOORS}* — ${floorConfig.name}\n`;
-        msg += `│ 👹 Monster: *${monster.name}*\n`;
-        msg += `│\n`;
-        msg += `│ ⚔️ ${rounds} ronde bertarung\n`;
+        let msg = "";
+        msg += `🏰 Floor: *${rpg.dungeonV2.floor}/${MAX_FLOORS}* — ${floorConfig.name}\n`;
+        msg += `👹 Monster: *${monster.name}*\n`;
+        msg += `
+`;
+        msg += `⚔️ ${rounds} ronde bertarung\n`;
         for (const l of combatLog.slice(-4)) {
-          msg += `│ ${l}\n`;
+          msg += `${l}\n`;
         }
-        msg += `│\n`;
-        msg += `│ 🏆 *ᴠɪᴄᴛᴏʀʏ!*\n`;
-        msg += `│ ✦ EXP: *+${expGain}*\n`;
-        msg += `│ 💰 Gold: *+${goldGain}*\n`;
+        msg += `
+`;
+        msg += `🏆 *ᴠɪᴄᴛᴏʀʏ!*\n`;
+        msg += `✦ EXP: *+${expGain}*\n`;
+        msg += `💰 Gold: *+${goldGain}*\n`;
         if (floorConfig.isBoss) {
-          msg += `│ 💎 Gems: *+${3 + Math.floor(rpg.level / 10)}*\n`;
-          msg += `│ 🎉 *BOSS DEFEATED!*\n`;
+          msg += `💎 Gems: *+${3 + Math.floor(rpg.level / 10)}*\n`;
+          msg += `🎉 *BOSS DEFEATED!*\n`;
         }
-        if (dropText) msg += `│ 📦 Drops: *${dropText}*\n`;
-        msg += `│ ❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-        msg += `│\n`;
+        if (dropText) msg += `📦 Drops: *${dropText}*\n`;
+        msg += `❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
+        msg += `
+`;
 
         if (rpg.dungeonV2.floor < MAX_FLOORS) {
-          msg += `│ 📌 .dungeonv2 enter — lanjut floor ${rpg.dungeonV2.floor + 1}\n`;
+          msg += `📌 .dungeonv2 enter — lanjut floor ${rpg.dungeonV2.floor + 1}\n`;
         } else {
-          msg += `│ 🎉 *DUNGEON CLEARED!* Semua floor selesai!\n`;
+          msg += `🎉 *DUNGEON CLEARED!* Semua floor selesai!\n`;
           rpg.dungeonV2 = { active: false, floor: 0, clearLog: [] };
           saveRpg(m, { dungeonV2: rpg.dungeonV2 });
         }
-        msg += `╰────  •  ────`;
-        return m.reply(msg);
+                return m.reply(msg);
       } else {
         // Defeat — dungeon ends
         const newHp = Math.max(1, rpg.hp - dmgTaken);
@@ -264,17 +268,18 @@ async function handler(m, { sock }) {
         setCooldown(m, "lastDungeonV2", DG2_COOLDOWN);
 
         await m.react("❌");
-        let msg = `╭─「 ✦ ᴅᴜɴɢᴇᴏɴ ᴠ2 ✦ 」\n`;
-        msg += `│ 🏰 Floor: *${rpg.dungeonV2.floor}/${MAX_FLOORS}* — ${floorConfig.name}\n`;
-        msg += `│ 👹 Monster: *${monster.name}*\n`;
-        msg += `│\n`;
-        msg += `│ 💀 *ᴅᴇғᴇᴀᴛᴇᴅ!*\n`;
-        msg += `│ 💥 DMG diterima: *${dmgTaken}*\n`;
-        msg += `│ ❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-        msg += `│\n`;
-        msg += `│ 💡 Equip item & level up untuk dungeon lebih dalam\n`;
-        msg += `╰────  •  ────`;
-        return m.reply(msg);
+        let msg = "";
+        msg += `🏰 Floor: *${rpg.dungeonV2.floor}/${MAX_FLOORS}* — ${floorConfig.name}\n`;
+        msg += `👹 Monster: *${monster.name}*\n`;
+        msg += `
+`;
+        msg += `💀 *ᴅᴇғᴇᴀᴛᴇᴅ!*\n`;
+        msg += `💥 DMG diterima: *${dmgTaken}*\n`;
+        msg += `❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
+        msg += `
+`;
+        msg += `💡 Equip item & level up untuk dungeon lebih dalam\n`;
+                return m.reply(msg);
       }
     }
 

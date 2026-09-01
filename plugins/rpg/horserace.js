@@ -37,19 +37,24 @@ async function handler(m, { sock }) {
     if (typeof wallet.gold !== "number") wallet.gold = 2000;
 
     if (subCmd === "list" || !subCmd) {
-      let msg = `╭─「 ✦ HORSE RACING ARENA ✦ 」\n`;
-      msg += `│ 💰 Gold Kamu: *${wallet.gold}*\n│\n`;
-      msg += `│ Daftar Kuda Pertandingan:\n│\n`;
+      let msg = "";
+      msg += `💰 Gold Kamu: *${wallet.gold}*
+
+`;
+      msg += `Daftar Kuda Pertandingan:
+
+`;
 
       HORSES.forEach((horse) => {
-        msg += `│ 🐎 *#${horse.id} ${horse.name}*\n`;
-        msg += `│   • Odds: *${horse.odds}x* (${horse.tag})\n│\n`;
+        msg += `🐎 *#${horse.id} ${horse.name}*\n`;
+        msg += `• Odds: *${horse.odds}x* (${horse.tag})
+
+`;
       });
 
-      msg += `│ Perintah Taruhan:\n`;
-      msg += `│ ${m.prefix}horserace bet <Nomor_Kuda> <Jumlah_Gold>\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `Perintah Taruhan:\n`;
+      msg += `${m.prefix}horserace bet <Nomor_Kuda> <Jumlah_Gold>\n`;
+      
       await m.react('🐣');
       return m.reply(msg);
     }
@@ -119,30 +124,29 @@ async function handler(m, { sock }) {
 
       await db.setPlayerData?.(sender, "horserace", wallet);
 
-      let msg = `╭─「 ✦ HORSE RACE RESULT ✦ 」\n`;
-      msg += `│ 🏁 Balapan Kuda Selesai!\n`;
-      msg += `│  \n`;
-      msg += `│ Papan Lintasan Balap:\n`;
+      let msg = "";
+      msg += `🏁 Balapan Kuda Selesai!\n`;
+      msg += `\n`;
+      msg += `Papan Lintasan Balap:\n`;
 
       raceResults.forEach((h, index) => {
         const medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : "  ";
         const track = "═".repeat(h.progress) + "🐎" + "═".repeat(10 - h.progress);
-        msg += `│ ${medal} #${h.id} ${h.name.padEnd(14)} [🏁${track}]\n`;
+        msg += `${medal} #${h.id} ${h.name.padEnd(14)} [🏁${track}]\n`;
       });
 
-      msg += `│  \n`;
-      msg += `│ 🏆 *Pemenang:* #${winner.id} ${winner.name}\n`;
-      msg += `│ 🎯 *Pilihanmu:* #${selectedHorse.id} ${selectedHorse.name}\n`;
+      msg += `\n`;
+      msg += `🏆 *Pemenang:* #${winner.id} ${winner.name}\n`;
+      msg += `🎯 *Pilihanmu:* #${selectedHorse.id} ${selectedHorse.name}\n`;
 
       if (isWon) {
-        msg += `│ 🎉 *MENANG!* Kamu mendapatkan *+${winReward} Gold* (${selectedHorse.odds}x)\n`;
+        msg += `🎉 *MENANG!* Kamu mendapatkan *+${winReward} Gold* (${selectedHorse.odds}x)\n`;
       } else {
-        msg += `│ 💀 *KALAH!* Taruhan sebesar ${betAmount} Gold hangus.\n`;
+        msg += `💀 *KALAH!* Taruhan sebesar ${betAmount} Gold hangus.\n`;
       }
 
-      msg += `│ 💰 Total Gold Sekarang: *${wallet.gold} Gold*\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `💰 Total Gold Sekarang: *${wallet.gold} Gold*\n`;
+      
       if (isWon) {
         await m.react('🐣');
       } else {

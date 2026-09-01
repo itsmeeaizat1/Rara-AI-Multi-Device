@@ -89,39 +89,33 @@ async function handler(m, { sock }) {
 
   // No args — show help
   if (args.length === 0) {
-    let txt = "╭─「 ✦ Cheat RPG ✦ 」\n";
-    txt += "│\n";
-    txt += "│ 👑 Owner only command\n";
-    txt += "│ Tambah RPG stats ke user langsung\n";
-    txt += "│\n";
-    txt += "│ 「 Cara Pakai 」\n";
-    txt += "│ `.cheatrpg <type> <jumlah> @user`\n";
-    txt += "│ `.cheatrpg <type> <jumlah>` (ke diri sendiri)\n";
-    txt += "│\n";
-    txt += "│ 「 Tersedia 」\n";
-    txt += "│ ⭐ exp — EXP\n";
-    txt += "│ 🪙 koin — Koin\n";
-    txt += "│ 💵 saldo — Saldo\n";
-    txt += "│ ⚡ energi — Energi Bot\n";
-    txt += "│ 💰 gold — Gold RPG\n";
-    txt += "│ 💎 gems — Gems\n";
-    txt += "│ ♦️ diamonds — Diamonds\n";
-    txt += "│ 🎟️ tokens — Tokens\n";
-    txt += "│ ❤️ hp — HP\n";
-    txt += "│ 💧 mana — Mana\n";
-    txt += "│ 🏃 stamina — Stamina\n";
-    txt += "│ ⚔️ atk — Attack\n";
-    txt += "│ 🛡️ def — Defense\n";
-    txt += "│ 💨 spd — Speed\n";
-    txt += "│ 🎯 critrate — Crit Rate\n";
-    txt += "│ 💥 critdmg — Crit Damage\n";
-    txt += "│ 🍀 luck — Luck\n";
-    txt += "│ 📅 dailystreak — Daily Streak\n";
-    txt += "│ 📊 level — Set Level langsung\n";
-    txt += "│\n";
-    txt += "│ 💡 Jumlah bisa negatif untuk kurang\n";
-    txt += "│ Contoh: `.cheatrpg exp 999999999 @user`\n";
-    txt += "╰────  •  ────";
+    let txt = "Owner only command\n";
+    txt += "Tambah RPG stats ke user langsung\n\n";
+    txt += "Cara Pakai:\n";
+    txt += "`.cheatrpg <type> <jumlah> @user`\n";
+    txt += "`.cheatrpg <type> <jumlah>` (ke diri sendiri)\n\n";
+    txt += "Tersedia:\n";
+    txt += "exp — EXP\n";
+    txt += "koin — Koin\n";
+    txt += "saldo — Saldo\n";
+    txt += "energi — Energi Bot\n";
+    txt += "gold — Gold RPG\n";
+    txt += "gems — Gems\n";
+    txt += "diamonds — Diamonds\n";
+    txt += "tokens — Tokens\n";
+    txt += "hp — HP\n";
+    txt += "mana — Mana\n";
+    txt += "stamina — Stamina\n";
+    txt += "atk — Attack\n";
+    txt += "def — Defense\n";
+    txt += "spd — Speed\n";
+    txt += "critrate — Crit Rate\n";
+    txt += "critdmg — Crit Damage\n";
+    txt += "luck — Luck\n";
+    txt += "dailystreak — Daily Streak\n";
+    txt += "level — Set Level langsung\n\n";
+    txt += "Jumlah bisa negatif untuk kurang\n";
+    txt += "Contoh: `.cheatrpg exp 999999999 @user`";
     return m.reply(txt);
   }
 
@@ -131,23 +125,14 @@ async function handler(m, { sock }) {
   const targetJid = extractTarget(m) || m.sender;
 
   if (!cheatType || !CHEAT_TYPES[cheatType]) {
-    let txt = "╭─「 ✦ Type Tidak Valid ✦ 」\n";
-    txt += "│\n";
-    txt += "│ Type: `" + (cheatType || "kosong") + "` tidak ditemukan\n";
-    txt += "│\n";
-    txt += "│ 💡 Ketik `.cheatrpg` untuk lihat daftar lengkap\n";
-    txt += "╰────  •  ────";
+    let txt = "❌ Type `" + (cheatType || "kosong") + "` tidak ditemukan\n\n";
+    txt += "Ketik `.cheatrpg` untuk lihat daftar lengkap";
     return m.reply(txt);
   }
 
   if (amount === 0) {
-    let txt = "╭─「 ✦ Jumlah Invalid ✦ 」\n";
-    txt += "│\n";
-    txt += "│ Jumlah harus lebih dari 0\n";
-    txt += "│ Bisa negatif untuk mengurangi\n";
-    txt += "│\n";
-    txt += "│ 💡 Contoh: `.cheatrpg " + cheatType + " 999999 @user`\n";
-    txt += "╰────  •  ────";
+    let txt = "❌ Jumlah harus lebih dari 0 (bisa negatif untuk mengurangi)\n\n";
+    txt += "Contoh: `.cheatrpg " + cheatType + " 999999 @user`";
     return m.reply(txt);
   }
 
@@ -205,22 +190,14 @@ async function handler(m, { sock }) {
   const isAdd = amount > 0;
   const sign = isAdd ? "+" : "";
 
-  let txt = "╭─「 ✦ Cheat RPG ✦ 」\n";
-  txt += "│\n";
-  txt += "│ ✅ Berhasil " + (isAdd ? "menambah" : "mengurangi") + " stats\n";
-  txt += "│\n";
-  txt += "│ 「 Detail 」\n";
-  txt += "│ 🎯 Target: @" + targetPhone + "\n";
-  txt += "" + cfg.icon + " Type: *" + cfg.label + "*\n";
-  txt += "│ 📝 Jumlah: *" + sign + formatNumber(amount) + "*\n";
-  txt += "│\n";
-  txt += "│ 「 Perubahan 」\n";
-  txt += "│ Sebelum: *" + formatNumber(oldValue) + "*\n";
-  txt += "│ Sekarang: *" + formatNumber(newValue) + "*\n";
-  txt += "│ Selisih: *" + sign + formatNumber(amount) + "*\n";
-  txt += "│\n";
-  txt += "│ 👑 Cheated by: " + (config.owner?.name || "Owner") + "\n";
-  txt += "╰────  •  ────";
+  let txt = "✅ Berhasil " + (isAdd ? "menambah" : "mengurangi") + " stats\n\n";
+  txt += "Target: @" + targetPhone + "\n";
+  txt += "Type: " + cfg.label + "\n";
+  txt += "Jumlah: " + sign + formatNumber(amount) + "\n\n";
+  txt += "Sebelum: " + formatNumber(oldValue) + "\n";
+  txt += "Sekarang: " + formatNumber(newValue) + "\n";
+  txt += "Selisih: " + sign + formatNumber(amount) + "\n\n";
+  txt += "Cheated by: " + (config.owner?.name || "Owner");
   await sock.sendMessage(m.chat, { text: txt, mentions: [targetJid] }, { quoted: m });
 }
 

@@ -140,9 +140,9 @@ async function handler(m, { sock, plugins }) {
 
     await m.reply(
       `✅ *Akses Diberikan*\n\n` +
-        `│ 🔑 Cmd: \`${commandTarget}\`\n` +
-        `│ ⏱️ Durasi: *${durationTarget}*\n` +
-        `│ 👤 Target: @${target.split("@")[0]}\n`,
+        `🔑 Cmd: \`${commandTarget}\`\n` +
+        `⏱️ Durasi: *${durationTarget}*\n` +
+        `👤 Target: @${target.split("@")[0]}\n`,
       { mentions: [target] },
     );
   }

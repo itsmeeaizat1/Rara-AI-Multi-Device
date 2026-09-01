@@ -48,7 +48,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     const lines = groups.length
       ? groups.map((name, i) => `${i + 1}. ${name}`)
-      : ["│ Belum ada grup."];
+      : ["Belum ada grup."];
 
     const text =
       claraWrap("Grup Bot", "👥") +

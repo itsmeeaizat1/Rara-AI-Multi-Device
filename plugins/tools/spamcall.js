@@ -54,9 +54,9 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      claraWrap("Spam Call", [`│ Target: *@${targetClean}*`,
-        `│ Jumlah: *${count}x*`,
-        "│ Status: *ꜱᴇʟᴇꜱᴀɪ*"].join("\n")) +
+      claraWrap("Spam Call", [`Target: *@${targetClean}*`,
+        `Jumlah: *${count}x*`,
+        "Status: *ꜱᴇʟᴇꜱᴀɪ*"].join("\n")) +
       "\n" +
       tipText(`Gunakan dengan bijak`) +
       "\n" +

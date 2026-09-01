@@ -58,13 +58,13 @@ Gunakan bahasa Indonesia. Sesuaikan dengan level yang disebutkan. Realistis dan 
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴡᴏʀᴋᴏᴜᴛ ᴘʟᴀɴ ✦ 」\n`;
-    msg += `│ 💪 Target: *${text}*\n`;
+    let msg = `\n`;
+    msg += `💪 Target: *${text}*\n`;
     msg += `│\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
+    msg += `${result.answer.trim().replace(/\n/g, "\n")}\n`;
     msg += `│\n`;
-    msg += `│ ⚠️ Konsultasi dokter sebelum mulai program intensif\n`;
-    msg += `╰────  •  ────`;
+    msg += `⚠️ Konsultasi dokter sebelum mulai program intensif\n`;
+    msg += ``;
     return m.reply(msg);
   } catch (err) {
     console.error("workoutai error:", err);

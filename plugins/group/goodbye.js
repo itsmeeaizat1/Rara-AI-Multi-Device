@@ -46,9 +46,9 @@ async function handler(m, { sock, config: botConfig }) {
     db.setGroup(m.chat, { goodbye: args === "on" });
 
     const text =
-      claraWrap("Goodbye", ["│ Fitur: *ɢᴏᴏᴅʙʏᴇ ᴍᴇꜱꜱᴀɢᴇ*",
-        `│ Status: *${args === "on" ? "ON" : "OFF"}*`,
-        `│ Group: *${m.chat}*`].join("\n")) +
+      claraWrap("Goodbye", ["Fitur: *ɢᴏᴏᴅʙʏᴇ ᴍᴇꜱꜱᴀɢᴇ*",
+        `Status: *${args === "on" ? "ON" : "OFF"}*`,
+        `Group: *${m.chat}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}setgoodbyetype v1 atau v2 untuk pilih tipe`);
 
@@ -81,11 +81,11 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
   // ===== V1: TEKS BAWAAN =====
   if (goodbyeType === 1) {
     const goodbyeText =
-      `╭─「 ✦ ɢᴏᴏᴅʙʏᴇ ✦ 」\n` +
-      `│ @${username} telah keluar\n` +
-      `│ Dari grup: *${groupName}*\n` +
-      `│ Sisa member: *${memberCount}*\n` +
-      `╰────  •  ────`;
+      "" +
+      `@${username} telah keluar\n` +
+      `Dari grup: *${groupName}*\n` +
+      `Sisa member: *${memberCount}*\n` +
+      "";
 
     await sock.sendMessage(groupJid, {
       text: goodbyeText,
@@ -105,11 +105,11 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
       );
 
       const caption =
-        `╭─「 ✦ ɢᴏᴏᴅʙʏᴇ ✦ 」\n` +
-        `│ @${username} telah keluar\n` +
-        `│ Dari: *${groupName}*\n` +
-        `│ Sisa: *${memberCount} member*\n` +
-        `╰────  •  ────`;
+        "" +
+        `@${username} telah keluar\n` +
+        `Dari: *${groupName}*\n` +
+        `Sisa: *${memberCount} member*\n` +
+        "";
 
       await sock.sendMessage(groupJid, {
         image: buffer,
@@ -121,11 +121,11 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
       console.error("goodbye v2 canvas error:", err.message);
       // Fallback ke v1
       const fallbackText =
-        `╭─「 ✦ ɢᴏᴏᴅʙʏᴇ ✦ 」\n` +
-        `│ @${username} telah keluar\n` +
-        `│ Dari grup: *${groupName}*\n` +
-        `│ Sisa member: *${memberCount}*\n` +
-        `╰────  •  ────`;
+        "" +
+        `@${username} telah keluar\n` +
+        `Dari grup: *${groupName}*\n` +
+        `Sisa member: *${memberCount}*\n` +
+        "";
       await sock.sendMessage(groupJid, {
         text: fallbackText,
         mentions: [participantJid],
@@ -136,11 +136,11 @@ async function sendGoodbyeMessage(sock, groupJid, participantJid, metadata) {
 
   // ===== V3+: Fallback teks =====
   const goodbyeText =
-    `╭─「 ✦ ɢᴏᴏᴅʙʏᴇ ✦ 」\n` +
-    `│ @${username} telah keluar\n` +
-    `│ Dari grup: *${groupName}*\n` +
-    `│ Sisa member: *${memberCount}*\n` +
-    `╰────  •  ────`;
+    "" +
+    `@${username} telah keluar\n` +
+    `Dari grup: *${groupName}*\n` +
+    `Sisa member: *${memberCount}*\n` +
+    "";
 
   await sock.sendMessage(groupJid, {
     text: goodbyeText,

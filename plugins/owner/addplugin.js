@@ -34,8 +34,8 @@ async function handler(m, { sock }) {
   const quoted = m.quoted;
 
   if (!quoted) {
-    return m.reply( `📦 *ADD PLUGIN*\n\n` +
-        `Reply code plugin dengan caption:\n` +
+    return m.reply(
+      `Reply code plugin dengan caption:\n` +
         `\`${m.prefix}addplugin\` - Auto detect\n` +
         `\`${m.prefix}addplugin namafile\` - Custom nama\n` +
         `\`${m.prefix}addplugin namafile folder\` - Custom nama + folder`, "addplugin");
@@ -50,18 +50,18 @@ async function handler(m, { sock }) {
     try {
       code = (await quoted.download()).toString();
     } catch (e) {
-      return m.reply(claraWrap("addplugin", `❌ *GAGAL*\n\nGagal download file`));
+      return m.reply(claraWrap("addplugin", `❌ Gagal download file`));
     }
   }
 
   if (!code || code.length < 50) {
-    return m.reply(claraWrap("addplugin", `❌ *GAGAL*\n\nCode terlalu pendek atau tidak valid`));
+    return m.reply(claraWrap("addplugin", `❌ Code terlalu pendek atau tidak valid`));
   }
 
   const hasExport = code.includes("module.exports") || code.includes("export ");
   const hasConfig = code.includes("pluginConfig") || code.includes("config");
   if (!hasExport || !hasConfig) {
-    return m.reply(claraWrap("Addplugin", `❌ *GAGAL*\n\nCode bukan format plugin yang valid\nHarus ada export dan config`));
+    return m.reply(claraWrap("Addplugin", `❌ Code bukan format plugin yang valid\nHarus ada export dan config`));
   }
 
   const extracted = extractPluginInfo(code);
@@ -71,7 +71,7 @@ async function handler(m, { sock }) {
   let folderName = args[1] || extracted.category;
 
   if (!fileName) {
-    return m.reply( `❌ *GAGAL*\n\nTidak bisa mendeteksi nama plugin\nGunakan \`${m.prefix}addplugin <namafile>\``, "addplugin");
+    return m.reply(`❌ Tidak bisa mendeteksi nama plugin\nGunakan \`${m.prefix}addplugin <namafile>\``, "addplugin");
   }
 
   if (!folderName) folderName = "other";
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
   folderName = folderName.toLowerCase().replace(/[^a-z0-9\-_]/g, "");
 
   if (!fileName) {
-    return m.reply(claraWrap("Addplugin", `❌ *GAGAL*\n\nNama file tidak valid`));
+    return m.reply(claraWrap("Addplugin", `❌ Nama file tidak valid`));
   }
   try {
     const pluginsDir = path.join(process.cwd(), "plugins");
@@ -93,9 +93,8 @@ async function handler(m, { sock }) {
 
     if (fs.existsSync(filePath)) {
       return m.reply(
-        `❌ *GAGAL*\n\n` +
-          `File \`${fileName}.js\` sudah ada di folder \`${folderName}\`\n\n` +
-          `💡 Gunakan \`${m.prefix}ganticode ${fileName} ${folderName}\` untuk mengganti code yang sudah ada`,
+        `❌ File \`${fileName}.js\` sudah ada di folder \`${folderName}\`\n\n` +
+          `Gunakan \`${m.prefix}ganticode ${fileName} ${folderName}\` untuk mengganti code yang sudah ada`,
       );
     }
 
@@ -106,13 +105,11 @@ async function handler(m, { sock }) {
       reloadResult = (await hotReloadPlugin(filePath)) || { success: true };
     } catch (e) { console.error('[addplugin.js]:', e.message); }
     return m.reply(
-      `✅ *PLUGIN DITAMBAH*\n\n` +
-        `╭─〔 *DETAIL* 〕───\n` +
-        `│ File: \`${fileName}.js\`\n` +
-        `│ Folder: \`${folderName}\`\n` +
-        `│ Size: \`${code.length} bytes\`\n` +
-        `│ Hot Reload: ${reloadResult.success ? "✅ Sukses" : "⚠️ Pending"}\n` +
-        `╰────  •  ────\n\n` +
+      `✅ Plugin Ditambah\n\n` +
+        `File: \`${fileName}.js\`\n` +
+        `Folder: \`${folderName}\`\n` +
+        `Size: \`${code.length} bytes\`\n` +
+        `Hot Reload: ${reloadResult.success ? "✅ Sukses" : "⚠️ Pending"}\n\n` +
         `Plugin sudah aktif dan siap digunakan!`,
     );
   } catch (error) {

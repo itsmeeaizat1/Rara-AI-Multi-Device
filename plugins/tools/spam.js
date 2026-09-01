@@ -48,9 +48,9 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      claraWrap("Spam", [`│ Jumlah: *${count}x*`,
-        `│ Pesan: *${message}*`,
-        "│ Status: *ꜱᴇʟᴇꜱᴀɪ*"].join("\n")) +
+      claraWrap("Spam", [`Jumlah: *${count}x*`,
+        `Pesan: *${message}*`,
+        "Status: *ꜱᴇʟᴇꜱᴀɪ*"].join("\n")) +
       "\n" +
       tipText(`Gunakan dengan bijak, jangan spam di chat orang lain`) +
       "\n" +

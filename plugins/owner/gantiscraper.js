@@ -113,15 +113,15 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("Gantiscraper", `📂 Folder src/scraper kosong`));
     }
 
-    let text = `📂 *DAFTAR SCRAPER*\n\n` + `╭─〔 *src/scraper* 〕───\n`;
+    let text = `📂 *DAFTAR SCRAPER*\n\n` + ``;
 
     scrapers.forEach((s, i) => {
       const stat = fs.statSync(path.join(SCRAPER_DIR, `${s}.js`));
-      text += `│ ${i + 1}. \`${s}.js\` (${(stat.size / 1024).toFixed(1)} KB)\n`;
+      text += `${i + 1}. \`${s}.js\` (${(stat.size / 1024).toFixed(1)} KB)\n`;
     });
 
     text +=
-      `╰────  •  ────\n\n` +
+      `\n` +
       `Total: ${scrapers.length} scraper\n\n` +
       `Gunakan \`${m.prefix}gantiscraper <nama>\` dengan reply code`;
 
@@ -244,16 +244,16 @@ async function handler(m, { sock }) {
     }
     let replyText =
       `✅ *SCRAPER ${isNewFile ? "DITAMBAH" : "DIGANTI"}*\n\n` +
-      `╭─〔 *DETAIL* 〕───\n` +
-      `│ File: \`${fileName}.js\`\n` +
-      `│ Folder: \`src/scraper\`\n` +
-      `│ Size: \`${code.length} bytes\`\n`;
+      `` +
+      `File: \`${fileName}.js\`\n` +
+      `Folder: \`src/scraper\`\n` +
+      `Size: \`${code.length} bytes\`\n`;
 
     if (!isNewFile) {
-      replyText += `│ Old Size: \`${oldSize} bytes\`\n`;
+      replyText += `Old Size: \`${oldSize} bytes\`\n`;
     }
 
-    replyText += `╰────  •  ────\n\n`;
+    replyText += `\n`;
 
     if (backupPath) {
       const relBackup = path.relative(process.cwd(), backupPath);

@@ -83,19 +83,20 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastSampah", SAMPAH_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ sᴀᴍᴘᴀʜ ✦ 」\n`;
-    msg += `│ 🗑️ Kamu mengumpulkan sampah...\n`;
-    msg += `│\n`;
-    msg += `│ 📦 *ʜᴀsɪʟ ᴋᴜʟᴇᴛsᴀᴍᴘᴀʜ*\n`;
+    let msg = "";
+    msg += `🗑️ Kamu mengumpulkan sampah...\n`;
+    msg += `
+`;
+    msg += `📦 *ʜᴀsɪʟ ᴋᴜʟᴇᴛsᴀᴍᴘᴀʜ*\n`;
     for (const f of found) {
-      msg += `│ ♻️ ${f}\n`;
+      msg += `♻️ ${f}\n`;
     }
-    msg += `│\n`;
-    msg += `│ 💰 Total gold: *+${totalGold}*\n`;
-    msg += `│ ✦ Total EXP: *+${totalExp}*\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy - SAMPAH_ENERGY}/${rpg.maxEnergy}*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `
+`;
+    msg += `💰 Total gold: *+${totalGold}*\n`;
+    msg += `✦ Total EXP: *+${totalExp}*\n`;
+    msg += `⚡ Energy: *${rpg.energy - SAMPAH_ENERGY}/${rpg.maxEnergy}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("sampah error:", err);

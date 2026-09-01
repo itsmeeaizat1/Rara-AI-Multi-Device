@@ -132,7 +132,7 @@ async function handler(m, { sock }) {
       const bonusExp = totalExp * 2;
       addGold(m, bonusGold);
       addExp(m, bonusExp);
-      bossBonus = `\n│ 👑 *ʙᴏss ʙᴏɴᴜs* — Clear all stages!\n│ 💰 +${bonusGold} gold | ✦ +${bonusExp} EXP\n`;
+      bossBonus = `\n👑 *Boss Bonus* — Clear all stages!\nGold: +${bonusGold} | EXP: +${bonusExp}\n`;
     }
 
     // Save HP
@@ -146,24 +146,21 @@ async function handler(m, { sock }) {
       for (const d of totalDrops) {
         grouped[d.item] = (grouped[d.item] || 0) + d.qty;
       }
-      dropText = Object.entries(grouped).map(([item, qty]) => `+${qty}x ${ITEM_DB[item]?.name || item}`).join("\n│ ");
-      dropText = "\n│ " + dropText;
+      dropText = Object.entries(grouped).map(([item, qty]) => `+${qty}x ${ITEM_DB[item]?.name || item}`).join("\n");
+      dropText = "\n" + dropText;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴅᴜɴɢᴇᴏɴ ✦ 」\n`;
-    msg += `│ 🏰 Stage cleared: *${stagesCleared}/${stageCount}*\n`;
-    msg += `│ ${hasKey ? "🔑 Dungeon Key digunakan (+2 stage)" : "⚠️ Tanpa kunci (max 3 stage)"}\n`;
-    msg += `│\n`;
-    msg += `│ 📦 *ʀᴇᴡᴀʀᴅ*\n`;
-    msg += `│ ✦ EXP: *+${totalExp}*\n`;
-    msg += `│ 💰 Gold: *+${totalGold}*\n`;
+    let msg = `Stage Cleared: *${stagesCleared}/${stageCount}*\n`;
+    msg += `${hasKey ? "🔑 Dungeon Key digunakan (+2 stage)" : "⚠️ Tanpa kunci (max 3 stage)"}\n\n`;
+    msg += `*Reward*\n`;
+    msg += `EXP: *+${totalExp}*\n`;
+    msg += `Gold: *+${totalGold}*`;
     if (dropText) msg += dropText + "\n";
     if (bossBonus) msg += bossBonus;
-    msg += `│\n`;
-    msg += `│ ❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy - DG_ENERGY}/${rpg.maxEnergy}*\n`;
-    msg += `╰────  •  ────`;
+    msg += `\n`;
+    msg += `HP: *${newHp}/${rpg.maxHp}*\n`;
+    msg += `Energy: *${rpg.energy - DG_ENERGY}/${rpg.maxEnergy}*`;
 
     return m.reply(msg);
   } catch (err) {

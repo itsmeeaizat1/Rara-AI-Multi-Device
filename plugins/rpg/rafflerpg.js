@@ -46,23 +46,25 @@ async function handler(m, { sock }) {
     const action = args[0]?.toLowerCase();
 
     if (!action || action === "cek" || action === "info") {
-      let msg = `╭─「 ✦ ʀᴀғғʟᴇ ✦ 」\n`;
-      msg += `│ 🎫 Lotere RPG — Coba keberuntunganmu!\n`;
-      msg += `│\n`;
-      msg += `│ 💵 Harga tiket: *${TICKET_PRICE} gold*\n`;
-      msg += `│ 💼 Gold kamu: *${rpg.gold}*\n`;
-      msg += `│\n`;
-      msg += `│ 📊 *ᴘʀɪᴢᴇ ᴛɪᴇʀs*\n`;
-      msg += `│ 🎯 Jackpot: *50.000 gold* (0.5%)\n`;
-      msg += `│ 🥇 Big Win: *10.000 gold* (2%)\n`;
-      msg += `│ 🥈 Medium: *2.000 gold* (8%)\n`;
-      msg += `│ 🥉 Small: *500 gold* (25%)\n`;
-      msg += `│ 🎁 Tiny: *150 gold* (40%)\n`;
-      msg += `│ 💀 Zonk: *nothing* (24.5%)\n`;
-      msg += `│\n`;
-      msg += `│ 📌 .rafflerpg buy — beli & buka tiket\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `🎫 Lotere RPG — Coba keberuntunganmu!\n`;
+      msg += `
+`;
+      msg += `💵 Harga tiket: *${TICKET_PRICE} gold*\n`;
+      msg += `💼 Gold kamu: *${rpg.gold}*\n`;
+      msg += `
+`;
+      msg += `📊 *ᴘʀɪᴢᴇ ᴛɪᴇʀs*\n`;
+      msg += `🎯 Jackpot: *50.000 gold* (0.5%)\n`;
+      msg += `🥇 Big Win: *10.000 gold* (2%)\n`;
+      msg += `🥈 Medium: *2.000 gold* (8%)\n`;
+      msg += `🥉 Small: *500 gold* (25%)\n`;
+      msg += `🎁 Tiny: *150 gold* (40%)\n`;
+      msg += `💀 Zonk: *nothing* (24.5%)\n`;
+      msg += `
+`;
+      msg += `📌 .rafflerpg buy — beli & buka tiket\n`;
+      
       return m.reply(msg);
     }
 
@@ -101,14 +103,14 @@ async function handler(m, { sock }) {
     if (!prize) {
       // Zonk
       await m.react("🐣");
-      let msg = `╭─「 ✦ ʀᴀғғʟᴇ ✦ 」\n`;
-      msg += `│ 🎫 Tiket: *${TICKET_PRICE} gold*\n`;
-      msg += `│ 🎰 Membuka tiket...\n`;
-      msg += `│\n`;
-      msg += `│ 💀 *ᴢᴏɴᴋ!* Tidak menang apapun\n`;
-      msg += `│ Coba lagi ya! Jackpot 50.000 gold menunggu\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `🎫 Tiket: *${TICKET_PRICE} gold*\n`;
+      msg += `🎰 Membuka tiket...\n`;
+      msg += `
+`;
+      msg += `💀 *ᴢᴏɴᴋ!* Tidak menang apapun\n`;
+      msg += `Coba lagi ya! Jackpot 50.000 gold menunggu\n`;
+      
       return m.reply(msg);
     }
 
@@ -121,25 +123,28 @@ async function handler(m, { sock }) {
     let gemText = "";
     if (prize.type === "jackpot") {
       addGems(m, 10);
-      gemText = `\n│ 💎 Bonus: *+10 gems*!\n`;
+      gemText = `
+💎 Bonus: *+10 gems*!\n`;
     } else if (prize.type === "big") {
       addGems(m, 3);
-      gemText = `\n│ 💎 Bonus: *+3 gems*!\n`;
+      gemText = `
+💎 Bonus: *+3 gems*!\n`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ʀᴀғғʟᴇ ✦ 」\n`;
-    msg += `│ 🎫 Tiket: *${TICKET_PRICE} gold*\n`;
-    msg += `│ 🎰 Membuka tiket...\n`;
-    msg += `│\n`;
-    msg += `│ 🎉 *${prize.label}*\n`;
-    msg += `│ 💰 Menang: *${prize.gold} gold*\n`;
-    msg += `│ ✦ EXP: *+${expGain}*\n`;
+    let msg = "";
+    msg += `🎫 Tiket: *${TICKET_PRICE} gold*\n`;
+    msg += `🎰 Membuka tiket...\n`;
+    msg += `
+`;
+    msg += `🎉 *${prize.label}*\n`;
+    msg += `💰 Menang: *${prize.gold} gold*\n`;
+    msg += `✦ EXP: *+${expGain}*\n`;
     if (gemText) msg += gemText;
-    msg += `│\n`;
-    msg += `│ 💼 Gold: *${rpg.gold - TICKET_PRICE + prize.gold}*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `
+`;
+    msg += `💼 Gold: *${rpg.gold - TICKET_PRICE + prize.gold}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("rafflerpg error:", err);

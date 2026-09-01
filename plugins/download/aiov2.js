@@ -62,14 +62,13 @@ async function handler(m, { sock }) {
     const medias = r.medias || [];
     if (!medias.length) throw new Error("Media tidak ditemukan untuk URL ini");
 
-    let caption = `╭─「 ✦ AIO V2 ✦ 」\n`;
-    caption += `│ Title: ${r.title || "Media"}\n`;
-    caption += `│ Source: ${r.source || "Unknown"}\n`;
-    if (r.duration) caption += `│ Durasi: ${r.duration}s\n`;
-    if (r.thumbnail) caption += `│ Thumb: tersedia\n`;
-    caption += `│ Quality: ${medias.length} opsi tersedia\n`;
-    caption += `╰────  •  ────`;
-
+    let caption = "";
+    caption += `Title: ${r.title || "Media"}\n`;
+    caption += `Source: ${r.source || "Unknown"}\n`;
+    if (r.duration) caption += `Durasi: ${r.duration}s\n`;
+    if (r.thumbnail) caption += `Thumb: tersedia\n`;
+    caption += `Quality: ${medias.length} opsi tersedia\n`;
+    
     // Pick best quality (usually last in array)
     const best = medias[medias.length - 1];
     const mediaUrl = best?.url || best?.download || null;

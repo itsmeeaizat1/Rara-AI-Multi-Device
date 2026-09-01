@@ -68,10 +68,11 @@ async function handler(m, { sock }) {
       const buffer = Buffer.from(vidRes.data);
 
       let _lines = [];
-      if (r.title || r.desc) _lines.push(`Judul: *${(r.title || r.desc).slice(0, 80)}*`);
-      if (r.author || r.username) _lines.push(`Author: *@${r.author || r.username}*`);
-      _lines.push(`Size: *${(buffer.length / 1024 / 1024).toFixed(1)} MB*`);
-      _lines.push(`Engine: Sanka + tikwm`);
+      _lines.push("✅ Berhasil!");
+      if (r.title || r.desc) _lines.push(`Title: ${(r.title || r.desc).slice(0, 80)}`);
+      if (r.author || r.username) _lines.push(`Author: @${r.author || r.username}`);
+      _lines.push(`Size: ${(buffer.length / 1024 / 1024).toFixed(1)} MB`);
+      _lines.push(`Source: Sanka + tikwm`);
 
       await sock.sendMessage(m.chat, {
         video: buffer,

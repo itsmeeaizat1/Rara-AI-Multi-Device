@@ -29,15 +29,15 @@ async function handler(m, { sock, config: botConfig }) {
       headers: { "User-Agent": "NovaBot/1.0" },
     });
     if (!data?.length) {
-      await m.reply(claraWrap("Geocode", [`│ Tempat: *${query}*`].join("\n")));
+      await m.reply(claraWrap("Geocode", [`Tempat: *${query}*`].join("\n")));
       return { handled: true };
     }
     let text = claraWrap("Geocode", "📍") + "\n\n";
     data.forEach((r, i) => {
       text += claraWrap(`HAsIL ${i+1}`, [
-        `│ Nama: *${r.display_name.substring(0,60)}*`,
-        `│ Lat: *${r.lat}*`, `│ Lon: *${r.lon}*`,
-        `│ Peta: https://www.openstreetmap.org/?mlat=${r.lat}&mlon=${r.lon}`,
+        `Nama: *${r.display_name.substring(0,60)}*`,
+        `Lat: *${r.lat}*`, `Lon: *${r.lon}*`,
+        `Peta: https://www.openstreetmap.org/?mlat=${r.lat}&mlon=${r.lon}`,
       ]) + "\n\n";
     });
     text += separator("━", 22) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`);

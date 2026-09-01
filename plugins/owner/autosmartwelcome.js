@@ -214,13 +214,14 @@ function generateFallbackWelcome(participantJid, metadata) {
   const prefix = config.command?.prefix || ".";
 
   return (
-    `╭─「 ✦ ᴡᴇʟᴄᴏᴍᴇ ✦ 」\n` +
-    `│ Halo +${username} ${region.flag}\n` +
-    `│ Selamat datang di ${groupName}\n` +
-    `│ Kamu member ke-${memberCount}\n` +
-    `│\n` +
-    `│ Ketik ${prefix}menu untuk lihat fitur\n` +
-    `╰────  •  ────`
+    "" +
+    `Halo +${username} ${region.flag}\n` +
+    `Selamat datang di ${groupName}\n` +
+    `Kamu member ke-${memberCount}\n` +
+    `
+` +
+    `Ketik ${prefix}menu untuk lihat fitur\n` +
+    ""
   );
 }
 

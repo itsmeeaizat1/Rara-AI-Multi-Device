@@ -98,32 +98,32 @@ async function handler(m, { sock }) {
       `Berikut adalah detail spesifikasi dan performa server secara lengkap:\n\n` +
 
       `🖥️ *ɪɴꜰᴏʀᴍᴀꜱɪ ꜱɪꜱᴛᴇᴍ*\n` +
-      `│ *OS:* ${os.type()} (${os.release()})\n` +
-      `│ *ᴘʟᴀᴛꜰᴏʀᴍ:* ${os.platform()} (${os.arch()})\n` +
-      `│ *ʜᴏꜱᴛɴᴀᴍᴇ:* ${os.hostname()}\n` +
-      `│ *ɴᴏᴅᴇᴊꜱ:* ${process.version}\n` +
-      `│ *Engine V8:* ${process.versions.v8}\n\n` +
+      `*OS:* ${os.type()} (${os.release()})\n` +
+      `*ᴘʟᴀᴛꜰᴏʀᴍ:* ${os.platform()} (${os.arch()})\n` +
+      `*ʜᴏꜱᴛɴᴀᴍᴇ:* ${os.hostname()}\n` +
+      `*ɴᴏᴅᴇᴊꜱ:* ${process.version}\n` +
+      `*Engine V8:* ${process.versions.v8}\n\n` +
 
       `💻 *ɪɴꜰᴏʀᴍᴀꜱɪ ᴄᴘᴜ*\n` +
-      `│ *ᴍᴏᴅᴇʟ:* ${cpuModel.trim()}\n` +
-      `│ *ᴄᴏʀᴇꜱ:* ${cpuCores} Core(s)\n` +
-      `│ *ꜱᴘᴇᴇᴅ:* ${cpuSpeed} MHz\n` +
-      `│ *ʟᴏᴀᴅ ᴀᴠɢ:* ${load1m} (1m), ${load5m} (5m), ${load15m} (15m)\n\n` +
+      `*ᴍᴏᴅᴇʟ:* ${cpuModel.trim()}\n` +
+      `*ᴄᴏʀᴇꜱ:* ${cpuCores} Core(s)\n` +
+      `*ꜱᴘᴇᴇᴅ:* ${cpuSpeed} MHz\n` +
+      `*ʟᴏᴀᴅ ᴀᴠɢ:* ${load1m} (1m), ${load5m} (5m), ${load15m} (15m)\n\n` +
 
       `🧠 *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ ᴍᴇᴍᴏʀɪ*\n` +
-      `│ *ᴛᴏᴛᴀʟ ʀᴀᴍ:* ${fmtSize(totalMem)}\n` +
-      `│ *ᴅɪᴘᴀᴋᴀɪ:* ${fmtSize(usedMem)} (${memPct}%)\n` +
-      `│ *ꜱɪꜱᴀ ʙᴇʙᴀꜱ:* ${fmtSize(freeMem)}\n\n` +
+      `*ᴛᴏᴛᴀʟ ʀᴀᴍ:* ${fmtSize(totalMem)}\n` +
+      `*ᴅɪᴘᴀᴋᴀɪ:* ${fmtSize(usedMem)} (${memPct}%)\n` +
+      `*ꜱɪꜱᴀ ʙᴇʙᴀꜱ:* ${fmtSize(freeMem)}\n\n` +
 
       `📦 *ᴍᴇᴍᴏʀɪ ɴᴏᴅᴇᴊꜱ*\n` +
-      `│ *ʀꜱꜱ:* ${fmtSize(memoryUsage.rss)}\n` +
-      `│ *ʜᴇᴀᴘ ᴛᴏᴛᴀʟ:* ${fmtSize(memoryUsage.heapTotal)}\n` +
-      `│ *ʜᴇᴀᴘ ᴜꜱᴇᴅ:* ${fmtSize(memoryUsage.heapUsed)}\n` +
-      `│ *ᴇxᴛᴇʀɴᴀʟ:* ${fmtSize(memoryUsage.external)}\n\n` +
+      `*ʀꜱꜱ:* ${fmtSize(memoryUsage.rss)}\n` +
+      `*ʜᴇᴀᴘ ᴛᴏᴛᴀʟ:* ${fmtSize(memoryUsage.heapTotal)}\n` +
+      `*ʜᴇᴀᴘ ᴜꜱᴇᴅ:* ${fmtSize(memoryUsage.heapUsed)}\n` +
+      `*ᴇxᴛᴇʀɴᴀʟ:* ${fmtSize(memoryUsage.external)}\n\n` +
 
       `⏱️ *WAKTU AKTIF (UPTIME)*\n` +
-      `│ *ᴜᴘᴛɪᴍᴇ ꜱᴇʀᴠᴇʀ:* ${uptimeOS}\n` +
-      `│ *ᴜᴘᴛɪᴍᴇ ʙᴏᴛ:* ${uptimeBot}\n\n` +
+      `*ᴜᴘᴛɪᴍᴇ ꜱᴇʀᴠᴇʀ:* ${uptimeOS}\n` +
+      `*ᴜᴘᴛɪᴍᴇ ʙᴏᴛ:* ${uptimeBot}\n\n` +
 
       `Sistem berjalan stabil dan menyelesaikan kalkulasi dalam waktu eksekusi *${execTime}ms*.`
 

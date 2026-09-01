@@ -30,10 +30,10 @@ async function handler(m, { sock }) {
 
     if (!cinta.spouse) {
       return m.reply(
-        `╭─「 ✦ ʀᴘɢ ᴋᴇɴᴄᴀɴ ✦ 」\n` +
-        `│ 💔 Kamu belum punya pasangan!\n` +
-        `│ Gunakan \`${m.prefix}rpgcouple @tag\` dulu\n\n` +
-        `╰────  •  ────`
+        "" +
+        `💔 Kamu belum punya pasangan!\n` +
+        `Gunakan \`${m.prefix}rpgcouple @tag\` dulu\n\n` +
+        ""
       );
     }
 
@@ -41,9 +41,9 @@ async function handler(m, { sock }) {
     const cd = checkCooldown(m, "rpgkencan");
     if (cd) {
       return m.reply(
-        `╭─「 ✦ ʀᴘɢ ᴋᴇɴᴄᴀɴ ✦ 」\n` +
-        `│ ⏳ Cooldown: *${formatDurasi(cd)}* lagi\n\n` +
-        `╰────  •  ────`
+        "" +
+        `⏳ Cooldown: *${formatDurasi(cd)}* lagi\n\n` +
+        ""
       );
     }
 
@@ -52,20 +52,19 @@ async function handler(m, { sock }) {
 
     if (pick === null || isNaN(pick) || pick < 0 || pick >= KENCAN_ACTIVITIES.length) {
       // Tampilkan menu kencan
-      let msg = `╭─「 ✦ ʀᴘɢ ᴋᴇɴᴄᴀɴ ✦ 」\n`;
-      msg += `│ ❤️ Pasangan: *${cinta.spouseName || cinta.spouse.split("@")[0]}*\n`;
-      msg += `│ 💕 Affection: *${cinta.affection || 0}*\n`;
-      msg += `│ 💰 Gold: *${rpg.gold || 0}*\n`;
-      msg += `│ ⚡ Energy: *${rpg.energy || 0}/${rpg.maxEnergy || 100}*\n\n`;
+      let msg = "";
+      msg += `❤️ Pasangan: *${cinta.spouseName || cinta.spouse.split("@")[0]}*\n`;
+      msg += `💕 Affection: *${cinta.affection || 0}*\n`;
+      msg += `💰 Gold: *${rpg.gold || 0}*\n`;
+      msg += `⚡ Energy: *${rpg.energy || 0}/${rpg.maxEnergy || 100}*\n\n`;
       msg += `  📋 *Pilih Aktivitas Kencan:*\n\n`;
       KENCAN_ACTIVITIES.forEach((a, i) => {
-        msg += `│ ${i + 1}. ${a.emoji} ${a.name}\n`;
-        msg += `│     💰 ${a.cost} gold | ⚡ ${a.energy} energy\n`;
-        msg += `│     💕 +${a.affection} affection | ✨ +${a.exp} exp\n\n`;
+        msg += `${i + 1}. ${a.emoji} ${a.name}\n`;
+        msg += `💰 ${a.cost} gold | ⚡ ${a.energy} energy\n`;
+        msg += `💕 +${a.affection} affection | ✨ +${a.exp} exp\n\n`;
       });
       msg += `  Ketik: \`${m.prefix}rpgkencan <nomor>\`\n\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+            return m.reply(msg);
     }
 
     const activity = KENCAN_ACTIVITIES[pick];
@@ -73,21 +72,21 @@ async function handler(m, { sock }) {
     // Cek gold
     if ((rpg.gold || 0) < activity.cost) {
       return m.reply(
-        `╭─「 ✦ ʀᴘɢ ᴋᴇɴᴄᴀɴ ✦ 」\n` +
-        `│ ❌ Gold tidak cukup!\n` +
-        `│ Butuh: *${activity.cost} gold*\n` +
-        `│ Punya: *${rpg.gold || 0} gold*\n\n` +
-        `╰────  •  ────`
+        "" +
+        `❌ Gold tidak cukup!\n` +
+        `Butuh: *${activity.cost} gold*\n` +
+        `Punya: *${rpg.gold || 0} gold*\n\n` +
+        ""
       );
     }
 
     // Cek energy
     if (!useEnergy(m, activity.energy, sock)) {
       return m.reply(
-        `╭─「 ✦ ʀᴘɢ ᴋᴇɴᴄᴀɴ ✦ 」\n` +
-        `│ ❌ Energy tidak cukup!\n` +
-        `│ Butuh: *${activity.energy} energy*\n\n` +
-        `╰────  •  ────`
+        "" +
+        `❌ Energy tidak cukup!\n` +
+        `Butuh: *${activity.energy} energy*\n\n` +
+        ""
       );
     }
 
@@ -120,17 +119,16 @@ async function handler(m, { sock }) {
     ];
     const event = events[Math.floor(Math.random() * events.length)];
 
-    let msg = `╭─「 ✦ ʀᴘɢ ᴋᴇɴᴄᴀɴ ✦ 」\n`;
-    msg += `│ ${activity.emoji} Aktivitas: *${activity.name}*\n`;
-    msg += `│ 💬 "${event}"\n`;
-    msg += `│ ❤️ Bersama: *${cinta.spouseName || cinta.spouse.split("@")[0]}*\n\n`;
+    let msg = "";
+    msg += `${activity.emoji} Aktivitas: *${activity.name}*\n`;
+    msg += `💬 "${event}"\n`;
+    msg += `❤️ Bersama: *${cinta.spouseName || cinta.spouse.split("@")[0]}*\n\n`;
     msg += `  📊 *Hasil:*\n`;
-    msg += `│ 💕 Affection: *+${activity.affection}* (Total: ${myCinta.affection})\n`;
-    msg += `│ ✨ EXP: *+${activity.exp}*\n`;
-    msg += `│ 💰 Gold: *-${activity.cost}*\n`;
-    msg += `│ ⚡ Energy: *-${activity.energy}*\n\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `💕 Affection: *+${activity.affection}* (Total: ${myCinta.affection})\n`;
+    msg += `✨ EXP: *+${activity.exp}*\n`;
+    msg += `💰 Gold: *-${activity.cost}*\n`;
+    msg += `⚡ Energy: *-${activity.energy}*\n\n`;
+    
     await m.reply(msg);
     await m.react(activity.emoji);
   } catch (e) {

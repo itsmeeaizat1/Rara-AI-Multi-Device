@@ -49,11 +49,11 @@ async function handler(m, { sock, config: botConfig }) {
     const rpg = userData?.rpg || null;
 
     const lines = [
-      `│ Target: *${userName}*`,
-      rpg ? `│ Level: *${rpg.level || 0}*` : "│ Level: *-*",
-      rpg ? `│ Gold: *${rpg.gold ?? 0}*` : "│ Gold: *-*",
-      rpg ? `│ Exp: *${rpg.exp || 0}*` : "│ Exp: *-*",
-      "│ Status: *ʙᴇʀʜᴀꜱɪʟ*",
+      `Target: *${userName}*`,
+      rpg ? `Level: *${rpg.level || 0}*` : "Level: *-*",
+      rpg ? `Gold: *${rpg.gold ?? 0}*` : "Gold: *-*",
+      rpg ? `Exp: *${rpg.exp || 0}*` : "Exp: *-*",
+      "Status: *ʙᴇʀʜᴀꜱɪʟ*",
     ];
 
     const text =

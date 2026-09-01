@@ -38,12 +38,12 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ʀᴏᴀsᴛ ᴀɪ ✦ 」\n`;
-    msg += `│ 🎯 Target: *${target}*\n`;
-    msg += `│\n`;
-    msg += `│ ${result.answer.trim()}\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    let msg = "";
+    msg += `🎯 Target: *${target}*\n`;
+    msg += `
+`;
+    msg += `${result.answer.trim()}\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("roastai error:", err);
     await m.react("❌");

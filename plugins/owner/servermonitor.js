@@ -86,10 +86,10 @@ async function handler(m, { sock }) {
       const toggle = args[1]?.toLowerCase()
       if (toggle === "on") {
         cfg.alertEnabled = true; save(db)
-        return m.reply("╭─「 ✦ VPS Monitor ✦ 」\n│ ✅ Auto-alert: *ON*\n│ ⏱️ Cek tiap 60 detik, alert ke PM owner\n│ 📊 Threshold: CPU *" + cfg.cpuThreshold + "%* / RAM *" + cfg.ramThreshold + "%* / Disk *" + cfg.diskThreshold + "%*\n╰────  •  ────")
+        return m.reply("Auto-alert: *ON*\nCek tiap 60 detik, alert ke PM owner\nThreshold: CPU *" + cfg.cpuThreshold + "%* / RAM *" + cfg.ramThreshold + "%* / Disk *" + cfg.diskThreshold + "%*")
       } else if (toggle === "off") {
         cfg.alertEnabled = false; save(db)
-        return m.reply("╭─「 ✦ VPS Monitor ✦ 」\n│ ❌ Auto-alert: *OFF*\n│ Monitoring dimatikan\n╰────  •  ────")
+        return m.reply("Auto-alert: *OFF*\nMonitoring dimatikan")
       }
     }
 
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
         if (key === "disk" && val) cfg.diskThreshold = val
       }
       save(db);
-      return m.reply("╭─「 ✦ VPS Monitor ✦ 」\n│ ✅ Threshold diupdate!\n│ 📊 CPU: *" + cfg.cpuThreshold + "%*\n│ 📊 RAM: *" + cfg.ramThreshold + "%*\n│ 📊 Disk: *" + cfg.diskThreshold + "%*\n╰────  •  ────")
+      return m.reply("✅ Threshold diupdate!\nCPU: *" + cfg.cpuThreshold + "%*\nRAM: *" + cfg.ramThreshold + "%*\nDisk: *" + cfg.diskThreshold + "%*")
     }
 
     if (subCmd === "test") {
@@ -113,8 +113,8 @@ async function handler(m, { sock }) {
       if (cpu >= cfg.cpuThreshold) alerts.push("⚠️ CPU " + cpu + "% >= " + cfg.cpuThreshold + "%")
       if (ram >= cfg.ramThreshold) alerts.push("⚠️ RAM " + ram + "% >= " + cfg.ramThreshold + "%")
       if (disk >= cfg.diskThreshold) alerts.push("⚠️ Disk " + disk + "% >= " + cfg.diskThreshold + "%")
-      if (alerts.length) return m.reply("╭─「 ✦ VPS Alert Test ✦ 」\n" + alerts.map(a => "" + a).join("\n") + "\n╰────  •  ────")
-      return m.reply("╭─「 ✦ VPS Alert Test ✦ 」\n│ Semua normal. Tidak ada alert.\n│ CPU " + cpu + "% | RAM " + ram + "% | Disk " + disk + "%\n╰────  •  ────")
+      if (alerts.length) return m.reply(alerts.join("\n"))
+      return m.reply("Semua normal. Tidak ada alert.\nCPU " + cpu + "% | RAM " + ram + "% | Disk " + disk + "%")
     }
 
     // Default: status
@@ -124,26 +124,23 @@ async function handler(m, { sock }) {
     const disk = await getDiskUsage()
     const pm2 = await getPM2Status()
 
-    let text = "╭─「 ✦ VPS Monitor ✦ 」\n"
-    text += "│ CPU: " + cpu + "% (" + os.cpus().length + " cores)\n"
-    text += "│ RAM: " + ram + "% (" + Math.round(usedMem / 1024 / 1024) + "MB / " + Math.round(totalMem / 1024 / 1024) + "MB)\n"
-    text += "│ Disk: " + disk + "%\n"
-    text += "│ Uptime: " + formatUptime(os.uptime()) + "\n"
-    text += "│ Load: " + os.loadavg().map(l => l.toFixed(2)).join(", ") + "\n"
-    text += "│ Alert: " + (cfg.alertEnabled ? "ON ✅" : "OFF ❌") + "\n"
-    text += "│\n"
+    let text = "CPU: " + cpu + "% (" + os.cpus().length + " cores)\n"
+    text += "RAM: " + ram + "% (" + Math.round(usedMem / 1024 / 1024) + "MB / " + Math.round(totalMem / 1024 / 1024) + "MB)\n"
+    text += "Disk: " + disk + "%\n"
+    text += "Uptime: " + formatUptime(os.uptime()) + "\n"
+    text += "Load: " + os.loadavg().map(l => l.toFixed(2)).join(", ") + "\n"
+    text += "Alert: " + (cfg.alertEnabled ? "ON ✅" : "OFF ❌") + "\n"
     if (pm2.length) {
-      text += "│ PM2 Processes:\n"
+      text += "\nPM2 Processes:\n"
       pm2.forEach(p => {
         const icon = p.status === "online" ? "✅" : "❌"
-        text += "" + icon + " " + p.name + " — " + p.status + " (" + p.restarts + " restarts, " + p.memory + "MB)\n"
+        text += icon + " " + p.name + " — " + p.status + " (" + p.restarts + " restarts, " + p.memory + "MB)\n"
       })
-    } else { text += "│ PM2: tidak terdeteksi\n" }
-    text += "╰────  •  ────"
-    return m.reply(text)
+    } else { text += "PM2: tidak terdeteksi\n" }
+    return m.reply(text.trim())
   } catch (e) {
     console.error("[servermonitor] error:", e.message)
-    return m.reply("╭─「 ✦ Error ✦ 」\n" + (e.message || "Ada error nih") + "\n╰────  •  ────")
+    return m.reply("❌ " + (e.message || "Ada error nih"))
   }
 }
 

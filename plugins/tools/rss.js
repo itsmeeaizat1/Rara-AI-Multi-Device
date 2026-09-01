@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // rss.js — Generic RSS feed reader (rss-parser, no API key)
 import RSSParser from 'rss-parser'
-import { novaGuide, novaEmpty, novaError } from "../../src/lib/nova-menu-style.js"
+import { novaGuide } from "../../src/lib/nova-menu-style.js"
 
 const pluginConfig = {
     name: "rss",
@@ -45,15 +45,14 @@ async function handler(m, { sock }) {
         const feed = await parser.parseURL(feedUrl)
 
         if (!feed.items || !feed.items.length) {
-            return m.reply(novaEmpty("RSS Reader", "Feed-nya kosong atau gak bisa dibaca nih"))
+            return m.reply("❌ Feed kosong atau tidak dapat dibaca.")
         }
 
         const feedTitle = feed.title || "RSS Feed"
         const items = feed.items.slice(0, 8)
 
-        let text = "╭─「 ✦ " + feedTitle + " ✦ 」\n"
-        text += "│ " + items.length + " artikel terbaru\n"
-        text += "│\n"
+        let text = "✅ *" + feedTitle + "*\n"
+        text += items.length + " artikel terbaru\n\n"
 
         items.forEach((item, i) => {
             const title = item.title || "No title"
@@ -62,17 +61,16 @@ async function handler(m, { sock }) {
             }) : ""
             const link = item.link || ""
 
-            text += "│ " + (i + 1) + ". " + title + "\n"
-            if (pubDate) text += "│   " + pubDate + "\n"
-            if (link) text += "│   " + link + "\n"
-            if (i < items.length - 1) text += "│\n"
+            text += (i + 1) + ". " + title + "\n"
+            if (pubDate) text += "   " + pubDate + "\n"
+            if (link) text += "   " + link + "\n"
+            if (i < items.length - 1) text += "\n"
         })
 
-        text += "╰────  •  ────"
-        return m.reply(text)
+        return m.reply(text.trim())
     } catch (e) {
         console.error("[rss] error:", e.message)
-        return m.reply(novaError("RSS Reader", e.message))
+        return m.reply("❌ " + (e.message || "Gagal membaca RSS feed"))
     }
 }
 

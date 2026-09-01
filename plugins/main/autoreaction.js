@@ -44,9 +44,9 @@ async function handler(m, { sock, config: botConfig }) {
     db.setGroup(m.chat, { autoreaction: args === "on" });
 
     const text =
-      claraWrap("Autoreaction", ["│ Fitur: *ᴀᴜᴛᴏ ʀᴇᴀᴄᴛɪᴏɴ*",
-        `│ Status: *${args === "on" ? "ON" : "OFF"}*`,
-        `│ Group: *${m.chat}*`].join("\n")) +
+      claraWrap("Autoreaction", ["Fitur: *ᴀᴜᴛᴏ ʀᴇᴀᴄᴛɪᴏɴ*",
+        `Status: *${args === "on" ? "ON" : "OFF"}*`,
+        `Group: *${m.chat}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}autoreaction on/off untuk mengubah`) +
       "\n" +

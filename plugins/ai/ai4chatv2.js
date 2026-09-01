@@ -39,10 +39,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴀɪ4ᴄʜᴀᴛ ᴠ2 ✦ 」\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    return m.reply(result.answer.trim());
   } catch (err) {
     console.error("ai4chatv2 error:", err);
     await m.react("❌");

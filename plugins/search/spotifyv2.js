@@ -46,20 +46,16 @@ async function handler(m, { sock }) {
         const cover = track.album?.images?.[0]?.url
 
         let text =
-            "╭─「 ✦ Spotify Track ✦ 」\n" +
-            "" + name + "\n" +
-            "│ by " + artists + "\n" +
-            "│\n" +
-            "│ Album: " + album + "\n" +
-            "│ Rilis: " + releaseDate + "\n" +
-            "│ Durasi: " + durStr + "\n" +
-            "│ Popularitas: " + popularity + "\n"
+            `*${name}*\n` +
+            `by ${artists}\n\n` +
+            `Album: ${album}\n` +
+            `Rilis: ${releaseDate}\n` +
+            `Durasi: ${durStr}\n` +
+            `Popularitas: ${popularity}`
 
         if (track.external_urls?.spotify) {
-            text += "│ URL: " + track.external_urls.spotify + "\n"
+            text += `\nURL: ${track.external_urls.spotify}`
         }
-
-        text += "╰────  •  ────"
 
         // Kirim dengan thumbnail album jika ada
         if (cover) {

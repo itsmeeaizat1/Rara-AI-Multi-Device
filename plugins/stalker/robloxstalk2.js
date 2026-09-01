@@ -34,18 +34,17 @@ async function handler(m, { sock }) {
     const r = data.result || data.data || data;
     await m.react("🐣");
 
-    let msg = `╭─「 ✦ ʀᴏʙʟᴏx ꜱᴛᴀʟᴋᴇʀ v2 ✦ 」\n`;
-    msg += `│ Username: *${r.username || r.name || username}*\n`;
-    if (r.displayName || r.display_name) msg += `│ Display: *${r.displayName || r.display_name}*\n`;
-    if (r.id || r.userId) msg += `│ ID: *${r.id || r.userId}*\n`;
-    if (r.description || r.bio) msg += `│ Desc: ${(r.description || r.bio).slice(0, 100)}\n`;
-    if (r.followers || r.followerCount) msg += `│ Followers: *${(r.followers || r.followerCount).toLocaleString()}*\n`;
-    if (r.following || r.followingCount) msg += `│ Following: *${(r.following || r.followingCount).toLocaleString()}*\n`;
-    if (r.friends || r.friendCount) msg += `│ Friends: *${(r.friends || r.friendCount).toLocaleString()}*\n`;
-    if (r.created || r.joined) msg += `│ Joined: *${r.created || r.joined}*\n`;
-    if (r.url || r.profileUrl) msg += `│ URL: ${r.url || r.profileUrl}\n`;
-    msg += `╰────  •  ────`;
-
+    let msg = "";
+    msg += `Username: *${r.username || r.name || username}*\n`;
+    if (r.displayName || r.display_name) msg += `Display: *${r.displayName || r.display_name}*\n`;
+    if (r.id || r.userId) msg += `ID: *${r.id || r.userId}*\n`;
+    if (r.description || r.bio) msg += `Desc: ${(r.description || r.bio).slice(0, 100)}\n`;
+    if (r.followers || r.followerCount) msg += `Followers: *${(r.followers || r.followerCount).toLocaleString()}*\n`;
+    if (r.following || r.followingCount) msg += `Following: *${(r.following || r.followingCount).toLocaleString()}*\n`;
+    if (r.friends || r.friendCount) msg += `Friends: *${(r.friends || r.friendCount).toLocaleString()}*\n`;
+    if (r.created || r.joined) msg += `Joined: *${r.created || r.joined}*\n`;
+    if (r.url || r.profileUrl) msg += `URL: ${r.url || r.profileUrl}\n`;
+    
     const avatarUrl = r.avatar || r.thumbnail || r.profile_picture;
     if (avatarUrl && avatarUrl.startsWith("http")) {
       try {

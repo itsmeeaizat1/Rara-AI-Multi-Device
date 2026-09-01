@@ -39,9 +39,9 @@ async function handler(m, { sock }) {
     
     if (!targetJid || levels <= 0) {
         return m.reply( `📊 *Add Level*\n\n` +
-            `╭─「 ✦ Usage ✦ 」\n` +
-            `│ > \`.addlevel <jumlah>\` - ke diri sendiri\n` +
-            `│ > \`.addlevel <jumlah> @user\` - ke orang lain\n` +
+            "" +
+            `> \`.addlevel <jumlah>\` - ke diri sendiri\n` +
+            `> \`.addlevel <jumlah> @user\` - ke orang lain\n` +
             `╰┈┈┈┈┈┈┈┈\n\n` +
             `Contoh: \`${m.prefix}addlevel 5\``, "addlevel")
     }

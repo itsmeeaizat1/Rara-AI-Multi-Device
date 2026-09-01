@@ -66,23 +66,24 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let msg = `╭─「 ✦ ᴅɪᴄᴇ ʙᴀᴛᴛʟᴇ ✦ 」\n`;
-    msg += `│ Bet: *${bet} gold*\n`;
-    msg += `│\n`;
-    msg += `│ 🎲 Kamu: ${DICE_EMOJI[p1-1]} ${DICE_EMOJI[p2-1]} = *${pTotal}*${isDouble ? " (DOUBLE!)" : ""}\n`;
-    msg += `│ 🎲 AI:    ${DICE_EMOJI[e1-1]} ${DICE_EMOJI[e2-1]} = *${eTotal}*${isDoubleEnemy ? " (DOUBLE!)" : ""}\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `Bet: *${bet} gold*\n`;
+    msg += `
+`;
+    msg += `🎲 Kamu: ${DICE_EMOJI[p1-1]} ${DICE_EMOJI[p2-1]} = *${pTotal}*${isDouble ? " (DOUBLE!)" : ""}\n`;
+    msg += `🎲 AI:    ${DICE_EMOJI[e1-1]} ${DICE_EMOJI[e2-1]} = *${eTotal}*${isDoubleEnemy ? " (DOUBLE!)" : ""}\n`;
+    msg += `
+`;
     if (result === "MENANG") {
-      msg += `│ 🏆 *${result}!*\n`;
-      msg += `│ Reward: +${reward} gold${isDouble ? " (DOUBLE BONUS +50%)" : ""}\n`;
+      msg += `🏆 *${result}!*\n`;
+      msg += `Reward: +${reward} gold${isDouble ? " (DOUBLE BONUS +50%)" : ""}\n`;
     } else if (result === "KALAH") {
-      msg += `│ 💀 *${result}!*\n`;
-      msg += `│ Kehilangan: ${bet} gold\n`;
+      msg += `💀 *${result}!*\n`;
+      msg += `Kehilangan: ${bet} gold\n`;
     } else {
-      msg += `│ 🤝 *SERI!* Bet dikembalikan.\n`;
+      msg += `🤝 *SERI!* Bet dikembalikan.\n`;
     }
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+        return m.reply(msg);
   } catch (err) {
     console.error("dicebattle error:", err);
     await m.react("❌");

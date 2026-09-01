@@ -346,15 +346,16 @@ async function runResourceCheck(sock) {
       const ownerNum = config.owner?.number?.[0];
       if (ownerNum) {
         const ownerJid = ownerNum.replace(/[^0-9]/g, "") + "@s.whatsapp.net";
-        const actionLines = actions.map((a) => `│ ${a.metric}: ${a.value} (threshold: ${a.threshold}) → ${a.action}`).join("\n");
+        const actionLines = actions.map((a) => `${a.metric}: ${a.value} (threshold: ${a.threshold}) → ${a.action}`).join("\n");
         const notifyMsg =
-          `╭─「 ✦ ᴀᴜᴛᴏ-ʀᴇꜱᴏᴜʀᴄᴇ ✦ 」\n` +
-          `│ ${criticalCount} metric critical!\n` +
+          "" +
+          `${criticalCount} metric critical!\n` +
           `${actionLines}\n` +
-          `│\n` +
-          `│ RAM: ${ramUsage}% | CPU: ${cpuUsage}%\n` +
-          `│ Loop: ${eventLoopLag}ms | API: ${apiLatency}ms\n` +
-          `╰────  •  ────`;
+          `
+` +
+          `RAM: ${ramUsage}% | CPU: ${cpuUsage}%\n` +
+          `Loop: ${eventLoopLag}ms | API: ${apiLatency}ms\n` +
+          "";
         await sock.sendMessage(ownerJid, { text: notifyMsg });
       }
     } catch {}

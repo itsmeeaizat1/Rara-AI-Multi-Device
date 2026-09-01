@@ -170,14 +170,14 @@ async function triggerAIConversation(sock, groupId, userJid, pushName, mood, moo
 
     if (reply && reply.trim()) {
       const body = [
-        `│ *ᴍᴏᴏᴅ ꜱᴜᴘᴘᴏʀᴛ - ᴀɪ ᴄᴏɴɴᴇᴄᴛ*`,
+        `*ᴍᴏᴏᴅ ꜱᴜᴘᴘᴏʀᴛ - ᴀɪ ᴄᴏɴɴᴇᴄᴛ*`,
         ` `,
-        `│ Hai ${pushName},`,
+        `Hai ${pushName},`,
         ` `,
-        `│ ${reply.trim()}`,
+        `${reply.trim()}`,
         ` `,
-        `│ _AI terhubung otomatis karena 3x terakhir mood kamu: ${mood}_`,
-        `│ _Ketik .aichat <pesan> untuk lanjut ngobrol dengan AI_`,
+        `_AI terhubung otomatis karena 3x terakhir mood kamu: ${mood}_`,
+        `_Ketik .aichat <pesan> untuk lanjut ngobrol dengan AI_`,
       ].join("\n");
 
       await sock.sendMessage(groupId, {
@@ -191,13 +191,13 @@ async function triggerAIConversation(sock, groupId, userJid, pushName, mood, moo
     const moodKey = mood;
     const supportMsg = getSupportMessage(moodKey, pushName);
     const fallbackBody = [
-      `│ *ᴘᴇꜱᴀɴ ꜱᴜᴘᴘᴏʀᴛ ᴏᴛᴏᴍᴀᴛɪꜱ*`,
+      `*ᴘᴇꜱᴀɴ ꜱᴜᴘᴘᴏʀᴛ ᴏᴛᴏᴍᴀᴛɪꜱ*`,
       ` `,
-      `│ Hai ${pushName},`,
+      `Hai ${pushName},`,
       ` `,
-      `│ ${supportMsg}`,
+      `${supportMsg}`,
       ` `,
-      `│ _Pesan ini dikirim otomatis karena 3x terakhir mood kamu terdeteksi: ${mood}_`,
+      `_Pesan ini dikirim otomatis karena 3x terakhir mood kamu terdeteksi: ${mood}_`,
     ].join("\n");
     await sock.sendMessage(groupId, {
       text: claraWrap("Mood Support", fallbackBody),
@@ -487,36 +487,36 @@ function generateReport(analysis, pushName) {
     const pct = Math.min(100, score);
     const filled = Math.round(pct / 10);
     const bar = "█".repeat(filled) + "░".repeat(10 - filled);
-    return `│ ${moodEmojis[key]} ${moodLabels[key]}: ${bar} ${pct}%`;
+    return `${moodEmojis[key]} ${moodLabels[key]}: ${bar} ${pct}%`;
   }).join("\n");
 
   const report = [
-    `│ *ᴠᴏɪᴄᴇ ɴᴏᴛᴇ ᴍᴏᴏᴅ ᴀɴᴀʟʏᴢᴇʀ*`,
+    `*ᴠᴏɪᴄᴇ ɴᴏᴛᴇ ᴍᴏᴏᴅ ᴀɴᴀʟʏᴢᴇʀ*`,
     ` `,
-    `│ Pengirim: ${pushName || "Anonim"}`,
+    `Pengirim: ${pushName || "Anonim"}`,
     ` `,
-    `│ *ʜᴀꜱɪʟ ᴜᴛᴀᴍᴀ:*`,
-    `│ ${moodEmojis[topMoodKey]} ${moodLabels[topMoodKey]} (${topScore}%)`,
-    `│ Sekunder: ${moodEmojis[secondMoodKey]} ${moodLabels[secondMoodKey]} (${secondScore}%)`,
+    `*ʜᴀꜱɪʟ ᴜᴛᴀᴍᴀ:*`,
+    `${moodEmojis[topMoodKey]} ${moodLabels[topMoodKey]} (${topScore}%)`,
+    `Sekunder: ${moodEmojis[secondMoodKey]} ${moodLabels[secondMoodKey]} (${secondScore}%)`,
     ` `,
-    `│ *ᴀɴᴀʟɪꜱɪꜱ:*`,
-    `│ ${moodDescriptions[topMoodKey]}`,
+    `*ᴀɴᴀʟɪꜱɪꜱ:*`,
+    `${moodDescriptions[topMoodKey]}`,
     ` `,
-    `│ *ꜱᴀʀᴀɴ:*`,
-    `│ ${moodAdvice[topMoodKey]}`,
+    `*ꜱᴀʀᴀɴ:*`,
+    `${moodAdvice[topMoodKey]}`,
     ` `,
-    `│ *ᴅɪꜱᴛʀɪʙᴜꜱɪ ᴍᴏᴏᴅ:*`,
+    `*ᴅɪꜱᴛʀɪʙᴜꜱɪ ᴍᴏᴏᴅ:*`,
     bars,
     ` `,
-    `│ *ᴀᴜᴅɪᴏ ᴍᴇᴛʀɪᴄꜱ:*`,
-    `│ Durasi: ${metrics.duration.toFixed(1)}s`,
-    `│ Loudness: ${metrics.loudness}% (vol: ${metrics.meanVolume}dB)`,
-    `│ Pitch: ${metrics.pitchLevel}% (ZCR: ${metrics.zcr})`,
-    `│ Dynamic Range: ${metrics.dynamicRange}%`,
-    `│ Silence: ${metrics.silencePercent}%`,
-    `│ Max Volume: ${metrics.maxVolume}dB`,
+    `*ᴀᴜᴅɪᴏ ᴍᴇᴛʀɪᴄꜱ:*`,
+    `Durasi: ${metrics.duration.toFixed(1)}s`,
+    `Loudness: ${metrics.loudness}% (vol: ${metrics.meanVolume}dB)`,
+    `Pitch: ${metrics.pitchLevel}% (ZCR: ${metrics.zcr})`,
+    `Dynamic Range: ${metrics.dynamicRange}%`,
+    `Silence: ${metrics.silencePercent}%`,
+    `Max Volume: ${metrics.maxVolume}dB`,
     ` `,
-    `│ _Analisis berdasarkan parameter audio lokal (pitch, tempo, volume, dynamics, silence). Hasil bersifat estimasi dan untuk hiburan._`,
+    `_Analisis berdasarkan parameter audio lokal (pitch, tempo, volume, dynamics, silence). Hasil bersifat estimasi dan untuk hiburan._`,
   ].join("\n");
 
   return report;
@@ -686,33 +686,33 @@ async function handler(m, { sock }) {
       }
 
       const statusBody = [
-        `│ *ꜱᴛᴀᴛᴜꜱ ᴍᴏᴏᴅ ᴛʀᴀᴄᴋɪɴɢ*`,
+        `*ꜱᴛᴀᴛᴜꜱ ᴍᴏᴏᴅ ᴛʀᴀᴄᴋɪɴɢ*`,
         ` `,
-        `│ Tracking: ${trackStatus}`,
-        `│ Aktif Sejak: ${trackEnabledAt}`,
+        `Tracking: ${trackStatus}`,
+        `Aktif Sejak: ${trackEnabledAt}`,
         ` `,
-        `│ Mood Suggest: ${suggStatus}`,
-        `│ Aktif Sejak: ${suggEnabledAt}`,
+        `Mood Suggest: ${suggStatus}`,
+        `Aktif Sejak: ${suggEnabledAt}`,
         ` `,
-        `│ Mood AI Connect: ${aiStatus}`,
-        `│ Aktif Sejak: ${aiEnabledAt}`,
-        `│ Cooldown: ${groupData.aiCooldownMin ? groupData.aiCooldownMin + " menit" : "30 menit (default)"} per user`,
-        `│ Grup: ${groupId.split("@")[0]}`,
+        `Mood AI Connect: ${aiStatus}`,
+        `Aktif Sejak: ${aiEnabledAt}`,
+        `Cooldown: ${groupData.aiCooldownMin ? groupData.aiCooldownMin + " menit" : "30 menit (default)"} per user`,
+        `Grup: ${groupId.split("@")[0]}`,
         ` `,
-        `│ Total Records: ${totalRecords}`,
-        `│ Users Tracked: ${totalUsers}`,
+        `Total Records: ${totalRecords}`,
+        `Users Tracked: ${totalUsers}`,
         ` `,
-        `│ Perintah:`,
-        `│ 1. .moodtrackon - Nyalakan tracking (owner)`,
-        `│ 2. .moodtrackoff - Matikan tracking (owner)`,
-        `│ 3. .moodsuggon - Nyalakan auto-suggest (owner)`,
-        `│ 4. .moodsuggoff - Matikan auto-suggest (owner)`,
-        `│ 5. .moodaion - Nyalakan AI connect (owner)`,
-        `│ 6. .moodaioff - Matikan AI connect (owner)`,
-        `│ 7. .moodaiset <menit> - Set cooldown AI (owner)`,
-        `│ 8. .moodtrackstatus - Lihat status`,
-        `│ 9. .moodhistory - Lihat riwayat mood kamu`,
-        `│ 10. .moodhistory @user - Lihat mood orang lain (owner)`,
+        `Perintah:`,
+        `1. .moodtrackon - Nyalakan tracking (owner)`,
+        `2. .moodtrackoff - Matikan tracking (owner)`,
+        `3. .moodsuggon - Nyalakan auto-suggest (owner)`,
+        `4. .moodsuggoff - Matikan auto-suggest (owner)`,
+        `5. .moodaion - Nyalakan AI connect (owner)`,
+        `6. .moodaioff - Matikan AI connect (owner)`,
+        `7. .moodaiset <menit> - Set cooldown AI (owner)`,
+        `8. .moodtrackstatus - Lihat status`,
+        `9. .moodhistory - Lihat riwayat mood kamu`,
+        `10. .moodhistory @user - Lihat mood orang lain (owner)`,
       ].join("\n");
       await m.reply(claraWrap("Mood Track Status", statusBody));
       return;
@@ -764,14 +764,14 @@ async function handler(m, { sock }) {
           day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit",
         });
         const emoji = moodEmojis[r.mood] || "❓";
-        return `│ ${i + 1}. ${emoji} ${r.mood} (${r.score}%) - ${date}`;
+        return `${i + 1}. ${emoji} ${r.mood} (${r.score}%) - ${date}`;
       }).join("\n");
 
       // Build mood distribution
       const distLines = sortedMoods.slice(0, 5).map(([mood, count]) => {
         const emoji = moodEmojis[mood] || "❓";
         const pct = Math.round((count / history.length) * 100);
-        return `│ ${emoji} ${mood}: ${count}x (${pct}%)`;
+        return `${emoji} ${mood}: ${count}x (${pct}%)`;
       }).join("\n");
 
       // Build trend line (simple ASCII sparkline of scores)
@@ -782,18 +782,18 @@ async function handler(m, { sock }) {
       }).join("");
 
       const body = [
-        `│ *Mood History - ${targetName}*`,
+        `*Mood History - ${targetName}*`,
         ` `,
-        `│ Total Records: ${history.length}`,
-        `│ Mood Dominan: ${moodEmojis[dominantMood[0]] || ""} ${dominantMood[0]} (${dominantMood[1]}x)`,
+        `Total Records: ${history.length}`,
+        `Mood Dominan: ${moodEmojis[dominantMood[0]] || ""} ${dominantMood[0]} (${dominantMood[1]}x)`,
         ` `,
-        `│ *ᴛʀᴇɴᴅ ɪɴᴛᴇɴꜱɪᴛᴀꜱ:*`,
-        `│ ${sparkline}`,
+        `*ᴛʀᴇɴᴅ ɪɴᴛᴇɴꜱɪᴛᴀꜱ:*`,
+        `${sparkline}`,
         ` `,
-        `│ *ʀɪᴡᴀʏᴀᴛ ᴛᴇʀᴀᴋʜɪʀ:*`,
+        `*ʀɪᴡᴀʏᴀᴛ ᴛᴇʀᴀᴋʜɪʀ:*`,
         historyLines,
         ` `,
-        `│ *ᴅɪꜱᴛʀɪʙᴜꜱɪ ᴍᴏᴏᴅ:*`,
+        `*ᴅɪꜱᴛʀɪʙᴜꜱɪ ᴍᴏᴏᴅ:*`,
         distLines,
       ].join("\n");
 
@@ -894,13 +894,13 @@ async function handler(m, { sock }) {
             else if (isMoodSuggOn(groupId)) {
               const supportMsg = getSupportMessage(moodKey, m.pushName);
               const supportBody = [
-                `│ *ᴘᴇꜱᴀɴ ꜱᴜᴘᴘᴏʀᴛ ᴏᴛᴏᴍᴀᴛɪꜱ*`,
+                `*ᴘᴇꜱᴀɴ ꜱᴜᴘᴘᴏʀᴛ ᴏᴛᴏᴍᴀᴛɪꜱ*`,
                 ` `,
-                `│ Hai ${m.pushName || "Kamu"},`,
+                `Hai ${m.pushName || "Kamu"},`,
                 ` `,
-                `│ ${supportMsg}`,
+                `${supportMsg}`,
                 ` `,
-                `│ _Pesan ini dikirim otomatis karena 3x terakhir mood kamu terdeteksi: ${moodKey}_`,
+                `_Pesan ini dikirim otomatis karena 3x terakhir mood kamu terdeteksi: ${moodKey}_`,
               ].join("\n");
               await sock.sendMessage(groupId, {
                 text: claraWrap("Mood Support", supportBody),

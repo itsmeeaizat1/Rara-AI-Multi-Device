@@ -51,8 +51,8 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const text =
-      claraWrap("AI Email", [`│ Tujuan: *${prompt}*`,
-        `│ Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      claraWrap("AI Email", [`Tujuan: *${prompt}*`,
+        `Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}ai-email <tujuan> untuk tulis lagi`) +
       "\n" +

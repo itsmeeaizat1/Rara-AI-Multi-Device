@@ -101,24 +101,25 @@ async function handler(m, { sock }) {
     }
 
     // LIST (default)
-    let msg = `╭─「 ✦ ɢᴜᴅᴀɴɢ ✦ 」\n`;
-    msg += `│ Kapasitas: *${data.items?.length || 0}/${data.slots}*\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `Kapasitas: *${data.items?.length || 0}/${data.slots}*\n`;
+    msg += `
+`;
     if (data.items && data.items.length > 0) {
       const grouped = {};
       data.items.forEach(i => { grouped[i.name] = (grouped[i.name]||0) + 1; });
       for (const [name, count] of Object.entries(grouped)) {
-        msg += `│ 📦 ${name} x${count}\n`;
+        msg += `📦 ${name} x${count}\n`;
       }
     } else {
-      msg += `│ (Gudang kosong)\n`;
+      msg += `(Gudang kosong)\n`;
     }
-    msg += `│\n`;
-    msg += `│ ${m.prefix}warehouse store <item> - simpan\n`;
-    msg += `│ ${m.prefix}warehouse take <item> - ambil\n`;
-    msg += `│ ${m.prefix}warehouse expand - perluas (${EXPAND_COST}g)\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `${m.prefix}warehouse store <item> - simpan\n`;
+    msg += `${m.prefix}warehouse take <item> - ambil\n`;
+    msg += `${m.prefix}warehouse expand - perluas (${EXPAND_COST}g)\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("warehouse error:", err);
     await m.react("❌");

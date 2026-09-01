@@ -85,14 +85,14 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(sender, "expedition", data);
       try { await db.addGold?.(sender, rewardGold); } catch {}
 
-      let text = `╭─「 ✦ EKSPEDISI SELESAI ✦ 」\n`;
-      text += `│ 🎉 Party kamu telah kembali dari *${completedLoc}*!\n`;
-      text += `│\n`;
-      text += `│ 💰 Reward Gold : +${rewardGold.toLocaleString()} Gold\n`;
-      text += `│ 📊 Total Ekspedisi : ${data.totalCompleted}x\n`;
-      text += `│ 🏆 Total Pendapatan : ${data.totalEarned.toLocaleString()} Gold\n`;
-      text += `╰────  •  ────`;
-
+      let text = "";
+      text += `🎉 Party kamu telah kembali dari *${completedLoc}*!\n`;
+      text += `
+`;
+      text += `💰 Reward Gold : +${rewardGold.toLocaleString()} Gold\n`;
+      text += `📊 Total Ekspedisi : ${data.totalCompleted}x\n`;
+      text += `🏆 Total Pendapatan : ${data.totalEarned.toLocaleString()} Gold\n`;
+      
       await m.react("🐣");
       return m.reply(text);
     }
@@ -156,16 +156,16 @@ async function handler(m, { sock }) {
 
       await db.setPlayerData?.(sender, "expedition", data);
 
-      let text = `╭─「 ✦ EKSPEDISI DIMULAI ✦ 」\n`;
-      text += `│ ${loc.emoji} Lokasi : *${loc.name}*\n`;
-      text += `│ ⏱️ Durasi : ${loc.durationStr}\n`;
-      text += `│ 💰 Est. Reward : ${loc.minGold} - ${loc.maxGold} Gold\n`;
-      text += `│ 🕒 Selesai pada ETA : ${formatTime(loc.durationMs)}\n`;
-      text += `│\n`;
-      text += `│ 💡 Ketik *${prefix}expedition* untuk cek status.\n`;
-      text += `│ 💡 Ketik *${prefix}expedition claim* setelah waktu habis.\n`;
-      text += `╰────  •  ────`;
-
+      let text = "";
+      text += `${loc.emoji} Lokasi : *${loc.name}*\n`;
+      text += `⏱️ Durasi : ${loc.durationStr}\n`;
+      text += `💰 Est. Reward : ${loc.minGold} - ${loc.maxGold} Gold\n`;
+      text += `🕒 Selesai pada ETA : ${formatTime(loc.durationMs)}\n`;
+      text += `
+`;
+      text += `💡 Ketik *${prefix}expedition* untuk cek status.\n`;
+      text += `💡 Ketik *${prefix}expedition claim* setelah waktu habis.\n`;
+      
       await m.react("🐣");
       return m.reply(text);
     }
@@ -176,37 +176,38 @@ async function handler(m, { sock }) {
       const isDone = elapsed >= data.active.duration;
       const remaining = Math.max(0, data.active.duration - elapsed);
 
-      let text = `╭─「 ✦ STATUS EKSPEDISI ✦ 」\n`;
-      text += `│ ${data.active.emoji} Lokasi : *${data.active.name}*\n`;
-      text += `│ 💰 Est. Reward : ${data.active.minGold.toLocaleString()} - ${data.active.maxGold.toLocaleString()} Gold\n`;
-      text += `│ ⏳ Sisa Waktu : *${isDone ? "SIAP DIKLAIM! 🎉" : formatTime(remaining)}*\n`;
-      text += `│\n`;
+      let text = "";
+      text += `${data.active.emoji} Lokasi : *${data.active.name}*\n`;
+      text += `💰 Est. Reward : ${data.active.minGold.toLocaleString()} - ${data.active.maxGold.toLocaleString()} Gold\n`;
+      text += `⏳ Sisa Waktu : *${isDone ? "SIAP DIKLAIM! 🎉" : formatTime(remaining)}*\n`;
+      text += `
+`;
       if (isDone) {
-        text += `│ ✨ Ketik *${prefix}expedition claim* untuk mengambil hadiah!\n`;
+        text += `✨ Ketik *${prefix}expedition claim* untuk mengambil hadiah!\n`;
       } else {
-        text += `│ ℹ️ Tunggu hingga timer selesai untuk klaim reward.\n`;
+        text += `ℹ️ Tunggu hingga timer selesai untuk klaim reward.\n`;
       }
-      text += `╰────  •  ────`;
-
+      
       await m.react("🐣");
       return m.reply(text);
     }
 
     // No active expedition: show locations menu
-    let menu = `╭─「 ✦ DAFTAR EKSPEDISI ✦ 」\n`;
-    menu += `│ Kirim party kamu untuk menjelajahi wilayah!\n`;
-    menu += `│\n`;
+    let menu = "";
+    menu += `Kirim party kamu untuk menjelajahi wilayah!\n`;
+    menu += `
+`;
     LOCATIONS.forEach((l) => {
-      menu += `│ *${l.id}. ${l.emoji} ${l.name}*\n`;
-      menu += `│   ⏱️ Durasi : ${l.durationStr}\n`;
-      menu += `│   💰 Potensi : ${l.minGold.toLocaleString()} - ${l.maxGold.toLocaleString()} Gold\n`;
+      menu += `*${l.id}. ${l.emoji} ${l.name}*\n`;
+      menu += `⏱️ Durasi : ${l.durationStr}\n`;
+      menu += `💰 Potensi : ${l.minGold.toLocaleString()} - ${l.maxGold.toLocaleString()} Gold\n`;
     });
-    menu += `│\n`;
-    menu += `│ 📌 Cara Memulai:\n`;
-    menu += `│ Ketik *${prefix}expedition start <1-5>*\n`;
-    menu += `│ Contoh: *${prefix}expedition start 1*\n`;
-    menu += `╰────  •  ────`;
-
+    menu += `
+`;
+    menu += `📌 Cara Memulai:\n`;
+    menu += `Ketik *${prefix}expedition start <1-5>*\n`;
+    menu += `Contoh: *${prefix}expedition start 1*\n`;
+    
     await m.react("🐣");
     return m.reply(menu);
   } catch (err) {

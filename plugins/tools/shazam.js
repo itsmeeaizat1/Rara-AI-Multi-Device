@@ -62,22 +62,21 @@ async function handler(m, { sock }) {
     const r = data.result;
     await m.react("🐣");
 
-    let msg = `╭─「 ✦ sʜᴀᴢᴀᴍ ✦ 」\n`;
-    msg += `│ 🎵 Judul: *${r.title || "Tidak diketahui"}*\n`;
-    msg += `│ 🎤 Artist: *${r.artist || "Tidak diketahui"}*\n`;
-    if (r.album) msg += `│ 💿 Album: *${r.album}*\n`;
-    if (r.release_date) msg += `│ 📅 Release: *${r.release_date}*\n`;
+    let msg = "";
+    msg += `🎵 Judul: *${r.title || "Tidak diketahui"}*\n`;
+    msg += `🎤 Artist: *${r.artist || "Tidak diketahui"}*\n`;
+    if (r.album) msg += `💿 Album: *${r.album}*\n`;
+    if (r.release_date) msg += `📅 Release: *${r.release_date}*\n`;
     if (r.spotify) {
       const sp = typeof r.spotify === "object" ? r.spotify : null;
-      if (sp?.external_urls?.spotify) msg += `│ 🎧 Spotify: ${sp.external_urls.spotify}\n`;
-      else if (typeof r.spotify === "string") msg += `│ 🎧 Spotify: ${r.spotify}\n`;
+      if (sp?.external_urls?.spotify) msg += `🎧 Spotify: ${sp.external_urls.spotify}\n`;
+      else if (typeof r.spotify === "string") msg += `🎧 Spotify: ${r.spotify}\n`;
     }
     if (r.apple_music) {
       const am = typeof r.apple_music === "object" ? r.apple_music : null;
-      if (am?.url) msg += `│ 🍎 Apple Music: ${am.url}\n`;
+      if (am?.url) msg += `🍎 Apple Music: ${am.url}\n`;
     }
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+        return m.reply(msg);
   } catch (err) {
     console.error("shazam error:", err);
     await m.react("❌");

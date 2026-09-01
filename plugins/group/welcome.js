@@ -22,9 +22,9 @@ async function handler(m, { sock, config: botConfig }) {
     db.setGroup(m.chat, { welcome: args === "on" });
 
     const text =
-      claraWrap("Welcome", ["│ Fitur: *ᴡᴇʟᴄᴏᴍᴇ ᴍᴇꜱꜱᴀɢᴇ*",
-        `│ Status: *${args === "on" ? "ON" : "OFF"}*`,
-        `│ Group: *${m.chat}*`].join("\n")) +
+      claraWrap("Welcome", ["Fitur: *ᴡᴇʟᴄᴏᴍᴇ ᴍᴇꜱꜱᴀɢᴇ*",
+        `Status: *${args === "on" ? "ON" : "OFF"}*`,
+        `Group: *${m.chat}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}setwelcometype v1 atau v2 untuk pilih tipe`);
 
@@ -58,14 +58,15 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
   // ===== V1: TEKS BAWAAN =====
   if (welcomeType === 1) {
     const welcomeText =
-      `╭─「 ✦ ᴡᴇʟᴄᴏᴍᴇ ✦ 」\n` +
-      `│ Halo @${username}!\n` +
-      `│ Selamat datang di *${groupName}*\n` +
-      `│ Kamu member ke-*${memberCount}*\n` +
-      `│\n` +
-      `│ Ketik *${prefix}menu* untuk lihat fitur\n` +
-      `│ Ketik *${prefix}help* untuk bantuan\n` +
-      `╰────  •  ────`;
+      "" +
+      `Halo @${username}!\n` +
+      `Selamat datang di *${groupName}*\n` +
+      `Kamu member ke-*${memberCount}*\n` +
+      `
+` +
+      `Ketik *${prefix}menu* untuk lihat fitur\n` +
+      `Ketik *${prefix}help* untuk bantuan\n` +
+      "";
 
     await sock.sendMessage(groupJid, {
       text: welcomeText,
@@ -85,13 +86,14 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
       );
 
       const caption =
-        `╭─「 ✦ ᴡᴇʟᴄᴏᴍᴇ ✦ 」\n` +
-        `│ Halo @${username}!\n` +
-        `│ Selamat datang di *${groupName}*\n` +
-        `│ Member ke-*${memberCount}*\n` +
-        `│\n` +
-        `│ Ketik *${prefix}menu* untuk lihat fitur\n` +
-        `╰────  •  ────`;
+        "" +
+        `Halo @${username}!\n` +
+        `Selamat datang di *${groupName}*\n` +
+        `Member ke-*${memberCount}*\n` +
+        `
+` +
+        `Ketik *${prefix}menu* untuk lihat fitur\n` +
+        "";
 
       await sock.sendMessage(groupJid, {
         image: buffer,
@@ -103,13 +105,14 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
       console.error("welcome v2 canvas error:", err.message);
       // Fallback ke v1 jika canvas gagal
       const fallbackText =
-        `╭─「 ✦ ᴡᴇʟᴄᴏᴍᴇ ✦ 」\n` +
-        `│ Halo @${username}!\n` +
-        `│ Selamat datang di *${groupName}*\n` +
-        `│ Kamu member ke-*${memberCount}*\n` +
-        `│\n` +
-        `│ Ketik *${prefix}menu* untuk lihat fitur\n` +
-        `╰────  •  ────`;
+        "" +
+        `Halo @${username}!\n` +
+        `Selamat datang di *${groupName}*\n` +
+        `Kamu member ke-*${memberCount}*\n` +
+        `
+` +
+        `Ketik *${prefix}menu* untuk lihat fitur\n` +
+        "";
       await sock.sendMessage(groupJid, {
         text: fallbackText,
         mentions: [participantJid],
@@ -120,13 +123,14 @@ async function sendWelcomeMessage(sock, groupJid, participantJid, metadata) {
 
   // ===== V3-V7: Tipe lain (fallback ke teks) =====
   const welcomeText =
-    `╭─「 ✦ ᴡᴇʟᴄᴏᴍᴇ ✦ 」\n` +
-    `│ Halo @${username}!\n` +
-    `│ Selamat datang di *${groupName}*\n` +
-    `│ Kamu member ke-*${memberCount}*\n` +
-    `│\n` +
-    `│ Ketik *${prefix}menu* untuk lihat fitur\n` +
-    `╰────  •  ────`;
+    "" +
+    `Halo @${username}!\n` +
+    `Selamat datang di *${groupName}*\n` +
+    `Kamu member ke-*${memberCount}*\n` +
+    `
+` +
+    `Ketik *${prefix}menu* untuk lihat fitur\n` +
+    "";
 
   await sock.sendMessage(groupJid, {
     text: welcomeText,

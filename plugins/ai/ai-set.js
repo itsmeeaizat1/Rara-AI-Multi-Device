@@ -32,12 +32,12 @@ function buildProviderList(prefix) {
   });
 
   return [
-    `│ Berikut daftar provider bawaan:`,
+    `Berikut daftar provider bawaan:`,
     "",
     ...lines,
     "",
-    `│ Kamu juga bisa tambah provider custom dengan *${prefix}ai-addprovider*`,
-    `│ Untuk pakai: *${prefix}multi-ai <provider> <pesan>*`,
+    `Kamu juga bisa tambah provider custom dengan *${prefix}ai-addprovider*`,
+    `Untuk pakai: *${prefix}multi-ai <provider> <pesan>*`,
   ];
 }
 
@@ -58,17 +58,17 @@ async function handler(m, { sock, config: botConfig }) {
     if (!action || action === "list" || action === "daftar" || action === "status") {
       const maskedKey = aiHelpConfig.apiKey ? `${String(aiHelpConfig.apiKey).slice(0, 6)}...${String(aiHelpConfig.apiKey).slice(-4)}` : "Belum diisi";
       const text =
-        claraWrap("AI Settings", [`│ Status AI: *${enabled ? "ON" : "OFF"}*`,
-          `│ Provider: *${currentProvider}*`,
-          `│ Model: *${currentModel}*`,
-          `│ Endpoint: *${currentEndpoint}*`,
-          `│ API Key: *${maskedKey}*`,
-          `│ OpenAI Key: *${aiHelpConfig.openaiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
-          `│ Gemini Key: *${aiHelpConfig.geminiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
-          `│ Anthropic Key: *${aiHelpConfig.anthropicApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
-          `│ System Prompt: *${String(aiHelpConfig.systemPrompt || "").slice(0, 80)}...*`].join("\n")) +
+        claraWrap("AI Settings", [`Status AI: *${enabled ? "ON" : "OFF"}*`,
+          `Provider: *${currentProvider}*`,
+          `Model: *${currentModel}*`,
+          `Endpoint: *${currentEndpoint}*`,
+          `API Key: *${maskedKey}*`,
+          `OpenAI Key: *${aiHelpConfig.openaiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
+          `Gemini Key: *${aiHelpConfig.geminiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
+          `Anthropic Key: *${aiHelpConfig.anthropicApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
+          `System Prompt: *${String(aiHelpConfig.systemPrompt || "").slice(0, 80)}...*`].join("\n")) +
         claraWrap("Provider", buildProviderList(prefix)) +
-        claraWrap("Perintah", [`│ *${prefix}ai-set list* — lihat pengaturan AI`, `│ *${prefix}ai-set provider <nama>* — ganti provider`, `│ *${prefix}ai-set model <model>* — ganti model`, `│ *${prefix}ai-set apiKey <key>* — set API key (fallback)`, `│ *${prefix}ai-set apiKey openai <key>* — set OpenAI key`, `│ *${prefix}ai-set apiKey gemini <key>* — set Gemini key`, `│ *${prefix}ai-set apiKey anthropic <key>* — set Anthropic key`, `│ *${prefix}ai-set endpoint <url>* — set endpoint`, `│ *${prefix}ai-set prompt <teks>* — set system prompt`, `│ *${prefix}ai-set on/off* — nyalakan/matikan AI`, `│ *${prefix}ai-set mode offline/online* — ganti mode`, `│ *${prefix}ai-addprovider* — tambah provider custom`].join("\n")) +
+        claraWrap("Perintah", [`*${prefix}ai-set list* — lihat pengaturan AI`, `*${prefix}ai-set provider <nama>* — ganti provider`, `*${prefix}ai-set model <model>* — ganti model`, `*${prefix}ai-set apiKey <key>* — set API key (fallback)`, `*${prefix}ai-set apiKey openai <key>* — set OpenAI key`, `*${prefix}ai-set apiKey gemini <key>* — set Gemini key`, `*${prefix}ai-set apiKey anthropic <key>* — set Anthropic key`, `*${prefix}ai-set endpoint <url>* — set endpoint`, `*${prefix}ai-set prompt <teks>* — set system prompt`, `*${prefix}ai-set on/off* — nyalakan/matikan AI`, `*${prefix}ai-set mode offline/online* — ganti mode`, `*${prefix}ai-addprovider* — tambah provider custom`].join("\n")) +
         
         "\n" ;
 
@@ -83,9 +83,9 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (!provider) {
         const text =
-          claraWrap("Provider Tidak Valid", [`│ Provider *${value || ""}* tidak dikenali.`,
-            `│ Ketik *${prefix}ai-set list* untuk lihat provider bawaan.`,
-            `│ Atau tambah provider custom dengan *${prefix}ai-addprovider*.`].join("\n")) +
+          claraWrap("Provider Tidak Valid", [`Provider *${value || ""}* tidak dikenali.`,
+            `Ketik *${prefix}ai-set list* untuk lihat provider bawaan.`,
+            `Atau tambah provider custom dengan *${prefix}ai-addprovider*.`].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -97,9 +97,9 @@ async function handler(m, { sock, config: botConfig }) {
       botConfig.aiHelp.model = provider.defaultModel;
 
       const text =
-        claraWrap("AI Settings", [`│ Provider: *${providerArg}*`,
-          `│ Model: *${provider.defaultModel}*`,
-          "│ Perubahan akan berlaku setelah config reload."].join("\n")) +
+        claraWrap("AI Settings", [`Provider: *${providerArg}*`,
+          `Model: *${provider.defaultModel}*`,
+          "Perubahan akan berlaku setelah config reload."].join("\n")) +
         "\n"  +
         "\n" ;
 
@@ -111,8 +111,8 @@ async function handler(m, { sock, config: botConfig }) {
       const modelArg = String(value || "").trim();
       if (!modelArg) {
         const text =
-          claraWrap("Model Kosong", [`│ Model tidak boleh kosong.`,
-            `│ Contoh: *${prefix}ai-set model gpt-4o-mini*`].join("\n")) +
+          claraWrap("Model Kosong", [`Model tidak boleh kosong.`,
+            `Contoh: *${prefix}ai-set model gpt-4o-mini*`].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -123,8 +123,8 @@ async function handler(m, { sock, config: botConfig }) {
       botConfig.aiHelp.model = modelArg;
 
       const text =
-        claraWrap("AI Settings", [`│ Model: *${modelArg}*`,
-          "│ Perubahan akan berlaku setelah config reload."].join("\n")) +
+        claraWrap("AI Settings", [`Model: *${modelArg}*`,
+          "Perubahan akan berlaku setelah config reload."].join("\n")) +
         "\n"  +
         "\n" ;
 
@@ -145,9 +145,9 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (!apiKey) {
         const text =
-          claraWrap("API Key Kosong", [`│ API key tidak boleh kosong.`,
-            `│ Contoh: *${prefix}ai-set apiKey sk-xxx*`,
-            `│ Per format: *${prefix}ai-set apiKey openai sk-xxx*`].join("\n")) +
+          claraWrap("API Key Kosong", [`API key tidak boleh kosong.`,
+            `Contoh: *${prefix}ai-set apiKey sk-xxx*`,
+            `Per format: *${prefix}ai-set apiKey openai sk-xxx*`].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -163,8 +163,8 @@ async function handler(m, { sock, config: botConfig }) {
 
       const keyLabel = fmtKey ? fmtKey.charAt(0).toUpperCase() + fmtKey.slice(1) + " API Key" : "API Key";
       const text =
-        claraWrap("AI Settings", [`│ ${keyLabel}: *ᴅɪꜱᴇᴍʙᴜɴʏɪᴋᴀɴ*`,
-          "│ Perubahan akan berlaku setelah config reload."].join("\n")) +
+        claraWrap("AI Settings", [`${keyLabel}: *ᴅɪꜱᴇᴍʙᴜɴʏɪᴋᴀɴ*`,
+          "Perubahan akan berlaku setelah config reload."].join("\n")) +
         "\n"  +
         "\n" ;
 
@@ -176,8 +176,8 @@ async function handler(m, { sock, config: botConfig }) {
       const endpoint = String(value || "").trim();
       if (!endpoint) {
         const text =
-          claraWrap("Endpoint Kosong", [`│ Endpoint tidak boleh kosong.`,
-            `│ Contoh: *${prefix}ai-set endpoint https://api.openai.com/v1/chat/completions*`].join("\n")) +
+          claraWrap("Endpoint Kosong", [`Endpoint tidak boleh kosong.`,
+            `Contoh: *${prefix}ai-set endpoint https://api.openai.com/v1/chat/completions*`].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -188,8 +188,8 @@ async function handler(m, { sock, config: botConfig }) {
       botConfig.aiHelp.apiEndpoint = endpoint;
 
       const text =
-        claraWrap("AI Settings", [`│ Endpoint: *${endpoint}*`,
-          "│ Perubahan akan berlaku setelah config reload."].join("\n")) +
+        claraWrap("AI Settings", [`Endpoint: *${endpoint}*`,
+          "Perubahan akan berlaku setelah config reload."].join("\n")) +
         "\n"  +
         "\n" ;
 
@@ -201,8 +201,8 @@ async function handler(m, { sock, config: botConfig }) {
       const prompt = String(value || "").trim();
       if (!prompt) {
         const text =
-          claraWrap("Prompt Kosong", [`│ System prompt tidak boleh kosong.`,
-            `│ Contoh: *${prefix}ai-set prompt Kamu adalah asisten yang membantu.*`].join("\n")) +
+          claraWrap("Prompt Kosong", [`System prompt tidak boleh kosong.`,
+            `Contoh: *${prefix}ai-set prompt Kamu adalah asisten yang membantu.*`].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -213,8 +213,8 @@ async function handler(m, { sock, config: botConfig }) {
       botConfig.aiHelp.systemPrompt = prompt;
 
       const text =
-        claraWrap("AI Settings", [`│ System Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
-          "│ Perubahan akan berlaku setelah config reload."].join("\n")) +
+        claraWrap("AI Settings", [`System Prompt: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*`,
+          "Perubahan akan berlaku setelah config reload."].join("\n")) +
         "\n"  +
         "\n" ;
 
@@ -225,8 +225,8 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "on" || action === "off") {
       if (!m.isOwner) {
         const text =
-          claraWrap("Ditolak", ["│ Status: *ᴅɪᴛᴏʟᴀᴋ*",
-            "│ Alasan: *Hanya owner yang bisa menyalakan/mematikan AI.*"].join("\n")) +
+          claraWrap("Ditolak", ["Status: *ᴅɪᴛᴏʟᴀᴋ*",
+            "Alasan: *Hanya owner yang bisa menyalakan/mematikan AI.*"].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -237,8 +237,8 @@ async function handler(m, { sock, config: botConfig }) {
       botConfig.aiHelp.enabled = action === "on";
 
       const text =
-        claraWrap("AI Settings", [`│ Status: *${action === "on" ? "ON" : "OFF"}*`,
-          "│ Perubahan akan berlaku setelah config reload."].join("\n")) +
+        claraWrap("AI Settings", [`Status: *${action === "on" ? "ON" : "OFF"}*`,
+          "Perubahan akan berlaku setelah config reload."].join("\n")) +
         "\n"  +
         "\n" ;
 
@@ -249,8 +249,8 @@ async function handler(m, { sock, config: botConfig }) {
     if (action === "mode") {
       if (!m.isOwner) {
         const text =
-          claraWrap("Ditolak", ["│ Status: *ᴅɪᴛᴏʟᴀᴋ*",
-            "│ Alasan: *ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇ ᴀɪ.*"].join("\n")) +
+          claraWrap("Ditolak", ["Status: *ᴅɪᴛᴏʟᴀᴋ*",
+            "Alasan: *ʜᴀɴʏᴀ ᴏᴡɴᴇʀ ʏᴀɴɢ ʙɪꜱᴀ ᴍᴇɴɢɢᴀɴᴛɪ ᴍᴏᴅᴇ ᴀɪ.*"].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -260,8 +260,8 @@ async function handler(m, { sock, config: botConfig }) {
       const newMode = String(value || "").toLowerCase();
       if (!["offline", "online"].includes(newMode)) {
         const text =
-          claraWrap("Mode Tidak Valid", ["│ Mode yang tersedia: *ᴏꜰꜰʟɪɴᴇ* atau *ᴏɴʟɪɴᴇ*.",
-            `│ Contoh: *${prefix}ai-set mode online*`].join("\n")) +
+          claraWrap("Mode Tidak Valid", ["Mode yang tersedia: *ᴏꜰꜰʟɪɴᴇ* atau *ᴏɴʟɪɴᴇ*.",
+            `Contoh: *${prefix}ai-set mode online*`].join("\n")) +
           "\n" ;
 
         await m.reply(text);
@@ -272,8 +272,8 @@ async function handler(m, { sock, config: botConfig }) {
       botConfig.aiHelp.mode = newMode;
 
       const text =
-        claraWrap("AI Settings", [`│ Mode: *${newMode.toUpperCase()}*`,
-          "│ Perubahan akan berlaku setelah config reload."].join("\n")) +
+        claraWrap("AI Settings", [`Mode: *${newMode.toUpperCase()}*`,
+          "Perubahan akan berlaku setelah config reload."].join("\n")) +
         "\n"  +
         "\n" ;
 
@@ -282,16 +282,16 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      claraWrap("Tidak Dikenal", [`│ Aksi *${action}* tidak dikenali.`,
-        `│ Ketik *${prefix}ai-set list* untuk lihat opsi.`].join("\n")) +
+      claraWrap("Tidak Dikenal", [`Aksi *${action}* tidak dikenali.`,
+        `Ketik *${prefix}ai-set list* untuk lihat opsi.`].join("\n")) +
       "\n" ;
 
     await m.reply(text);
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Gagal", [`│ Status: *ɢᴀɢᴀʟ*`,
-        `│ Alasan: *${error.message}*`].join("\n")) +
+      claraWrap("Gagal", [`Status: *ɢᴀɢᴀʟ*`,
+        `Alasan: *${error.message}*`].join("\n")) +
       "\n" ;
 
     await m.reply(text);

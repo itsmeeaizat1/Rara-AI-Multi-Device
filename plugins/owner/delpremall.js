@@ -59,12 +59,11 @@ async function handler(m, { sock }) {
         
         
         await m.reply(`🗑️ *Del Premium All*\n\n` +
-            `╭─「 ✦ Hasil ✦ 」\n` +
-            `│ 👥 Total Member: \`${participants.length}\`\n` +
-            `│ ✅ Dihapus: \`${removedCount}\`\n` +
-            `│ ⏭️ Bukan Premium: \`${notPremCount}\`\n` +
-            `│ 💎 sIsa Premium: \`${db.data.premium.length}\`\n` +
-            `╰────  •  ────\n\n` +
+            `👥 Total Member: \`${participants.length}\`\n` +
+            `✅ Dihapus: \`${removedCount}\`\n` +
+            `⏭️ Bukan Premium: \`${notPremCount}\`\n` +
+            `💎 sIsa Premium: \`${db.data.premium.length}\`\n` +
+            `\n` +
             `Grup: ${groupMeta.subject}`)
         
     } catch (error) {

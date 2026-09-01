@@ -71,21 +71,17 @@ async function handler(m, { sock, text, command }) {
     if (command === "skilltree") {
       const job = rpg.job || "novice";
       const tree = SKILL_PATHS[job] || SKILL_PATHS.warrior;
-      let msg = "╭─「 ✦ sᴋɪʟʟ ᴛʀᴇᴇ ✦ 」\n";
-      msg += "│ 👤 " + (m.pushName || "Player") + " | Job: " + job + "\n";
-      msg += "│\n";
+      let msg = (m.pushName || "Player") + " | Job: " + job + "\n\n";
       for (let i = 0; i < tree.length; i++) {
         const skill = tree[i];
         const unlocked = rpg.skills?.some(s => s.name === skill.name);
         const mark = unlocked ? "✅" : "🔒";
-        msg += "│ " + mark + " [" + (i + 1) + "] " + skill.name + "\n";
-        msg += "│      " + skill.desc + "\n";
-        if (skill.next !== "MAX") msg += "│      ⬇️ → " + skill.next + "\n";
+        msg += mark + " [" + (i + 1) + "] " + skill.name + "\n";
+        msg += "   " + skill.desc + "\n";
+        if (skill.next !== "MAX") msg += "   -> " + skill.next + "\n";
       }
-      msg += "│\n";
-      msg += "│ 📌 .learnskill <nama> — pelajari skill\n";
-      msg += "│ 📌 .talent — lihat talent class\n";
-      msg += "╰────  •  ────";
+      msg += "\n.learnskill <nama> — pelajari skill\n";
+      msg += ".talent — lihat talent class";
       return m.reply(msg);
     }
 
@@ -93,14 +89,10 @@ async function handler(m, { sock, text, command }) {
     if (command === "talent") {
       const job = rpg.job || "novice";
       const talent = TALENTS[job] || TALENTS.novice;
-      let msg = "╭─「 ✦ ᴛᴀʟᴇɴᴛ ✦ 」\n";
-      msg += "│ 👔 Class: " + job + "\n";
-      msg += "│\n";
-      msg += "│ 💡 " + talent.name + "\n";
-      msg += "│ " + talent.desc + "\n";
-      msg += "│\n";
-      msg += "│ 📌 Talent aktif otomatis sesuai job\n";
-      msg += "╰────  •  ────";
+      let msg = "Class: " + job + "\n\n";
+      msg += talent.name + "\n";
+      msg += talent.desc + "\n\n";
+      msg += "Talent aktif otomatis sesuai job";
       return m.reply(msg);
     }
 
@@ -125,7 +117,7 @@ async function handler(m, { sock, text, command }) {
       rpg.skillPoints = (rpg.skillPoints || 0) - 1;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ sᴋɪʟʟ ✦ 」\n│ ✅ Kamu mempelajari *" + skillDef.name + "*!\n│ ⚡ MP Cost: " + skillDef.mpCost + "\n│ 💪 Power: " + skillDef.power + "x\n│ 📉 SP tersisa: " + rpg.skillPoints + "\n╰────  •  ────");
+      return m.reply("✅ Kamu mempelajari *" + skillDef.name + "*!\nMP Cost: " + skillDef.mpCost + "\nPower: " + skillDef.power + "x\nSP tersisa: " + rpg.skillPoints);
     }
 
     // .research — upgrade skill yang sudah ada
@@ -140,7 +132,7 @@ async function handler(m, { sock, text, command }) {
       rpg.skillPoints = (rpg.skillPoints || 0) - 1;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ʀᴇsᴇᴀʀᴄʜ ✦ 」\n│ 🔬 Skill *" + firstSkill.name + "* di-upgrade!\n│ Lv." + firstSkill.level + " | Power: " + firstSkill.power + "x\n│ 📉 SP tersisa: " + rpg.skillPoints + "\n╰────  •  ────");
+      return m.reply("Skill *" + firstSkill.name + "* di-upgrade!\nLv." + firstSkill.level + " | Power: " + firstSkill.power + "x\nSP tersisa: " + rpg.skillPoints);
     }
 
     // .mutate — random skill mutation
@@ -154,7 +146,7 @@ async function handler(m, { sock, text, command }) {
       rpg.skills[0] = { id: newSkillId, name: newSkillDef.name, level: 1, mpCost: newSkillDef.mpCost, power: newSkillDef.power };
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ᴍᴜᴛᴀᴛᴇ ✦ 」\n│ 🧬 Skill *" + oldName + "* bermutasi jadi *" + newSkillDef.name + "*!\n│ ⚡ MP: " + newSkillDef.mpCost + " | Power: " + newSkillDef.power + "x\n╰────  •  ────");
+      return m.reply("Skill *" + oldName + "* bermutasi jadi *" + newSkillDef.name + "*!\nMP: " + newSkillDef.mpCost + " | Power: " + newSkillDef.power + "x");
     }
   } catch (e) {
     console.error("skilltree error:", e.message);

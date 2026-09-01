@@ -150,9 +150,9 @@ async function handler(m, { sock }) {
       {
         video: videoBuffer,
         caption: claraWrap("play", [
-          `│ Judul: *${videoTitle}*`,
-          `│ Quality: *${quality}p*`,
-          `│ Format: *MP4*`,
+          `Judul: *${videoTitle}*`,
+          `Quality: *${quality}p*`,
+          `Format: *MP4*`,
         ].join("\n")),
         mimetype: "video/mp4",
         fileName: `${videoTitle}.mp4`,

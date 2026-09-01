@@ -24,9 +24,9 @@ async function handler(m, { sock, config: botConfig }) {
     await sock.groupLeave(m.chat);
 
     const text =
-      claraWrap("Leave", [`│ Group: *${m.chat}*`,
-        "│ Status: *Left*",
-        `│ Executor: *${m.pushName || "Owner"}*`].join("\n")) +
+      claraWrap("Leave", [`Group: *${m.chat}*`,
+        "Status: *Left*",
+        `Executor: *${m.pushName || "Owner"}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali`);
 

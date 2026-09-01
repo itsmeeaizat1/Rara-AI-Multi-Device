@@ -52,19 +52,19 @@ async function handler(m, { sock }) {
       }
     } catch (e) {
       await m.react("❌");
-      return m.reply(claraWrap("toreal", "Gagal download foto.", "error"));
+      return m.reply("❌ Gagal download foto.");
     }
 
     if (!imageBuffer) {
       await m.react("❌");
-      return m.reply(claraWrap("toreal", "Foto tidak ditemukan.", "error"));
+      return m.reply("❌ Foto tidak ditemukan.");
     }
 
     // Upload ke qu.ax
     const imageUrl = await uploadImage(imageBuffer);
     if (!imageUrl) {
       await m.react("❌");
-      return m.reply(claraWrap("toreal", "Gagal upload foto. Coba lagi.", "error"));
+      return m.reply("❌ Gagal upload foto. Coba lagi.");
     }
 
     // Upscale via nexray
@@ -72,16 +72,19 @@ async function handler(m, { sock }) {
 
     if (!result.status || !result.buffer) {
       await m.react("❌");
-      return m.reply(claraWrap("toreal", "Gagal enhance foto. API mungkin sedang down.", "error"));
+      return m.reply("❌ Gagal enhance foto. API mungkin sedang down.");
     }
 
     await m.react("🐣");
-    const caption = `╭─「 ✦ ᴛᴏ ʀᴇᴀʟ ✦ 」\n│ ✨ Image enhanced to realistic\n│ Engine: nexray AI\n╰────  •  ────`;
+    const caption = `✅ *TO REAL*
+
+✨ Image enhanced to realistic
+Engine: nexray AI`;
     return await sock.sendMessage(m.chat, { image: result.buffer, caption });
   } catch (err) {
     console.error("toreal error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("toreal", err.message || "Error", "error"));
+    return m.reply(`❌ ${err.message || "Error"}`);
   }
 }
 

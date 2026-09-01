@@ -43,8 +43,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!ALLOWED.test(expr)) {
       const text =
-        claraWrap("Calculator", [`│ Ekspresi: *${expr}*`,
-          "│ Status: *ᴇᴋꜱᴘʀᴇꜱɪ ᴛɪᴅᴀᴋ ᴅɪᴅᴜᴋᴜɴɢ*"].join("\n")) +
+        claraWrap("Calculator", [`Ekspresi: *${expr}*`,
+          "Status: *ᴇᴋꜱᴘʀᴇꜱɪ ᴛɪᴅᴀᴋ ᴅɪᴅᴜᴋᴜɴɢ*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}calc <ekspresi> untuk menghitung lagi`) +
         "\n" +
@@ -63,8 +63,8 @@ async function handler(m, { sock, config: botConfig }) {
     }
 
     const text =
-      claraWrap("Calculator", [`│ Ekspresi: *${expr}*`,
-        `│ Hasil: *${result}*`].join("\n")) +
+      claraWrap("Calculator", [`Ekspresi: *${expr}*`,
+        `Hasil: *${result}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}calc <ekspresi> untuk menghitung lagi`) +
       "\n" +

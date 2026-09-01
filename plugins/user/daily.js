@@ -42,12 +42,9 @@ async function handler(m, { sock }) {
     const hours = Math.floor(remaining / (1000 * 60 * 60));
     const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
     return m.reply(
-      "╭─「 ✦ Daily Claim ✦ 」\n" +
-      "│\n" +
-      "│ 🕖 Sabar ya, cooldown nih!\n" +
-      "│ Udah klaim hari ini 👀\n" +
-      "│ Tunggu *" + hours + " jam " + minutes + " menit* lagi ya\n" +
-      "╰────  •  ────"
+      "Sabar ya, cooldown nih!\n" +
+      "Udah klaim hari ini 👀\n" +
+      "Tunggu *" + hours + " jam " + minutes + " menit* lagi ya"
     );
   }
 
@@ -97,24 +94,20 @@ async function handler(m, { sock }) {
 
   const greeting = getTimeGreeting();
 
-  let txt = "╭─「 ✦ Daily Claim ✦ 」\n";
-  txt += "│\n";
-  txt += "* " + greeting + ", @" + m.sender.split("@")[0] + "!* 👋\n";
-  txt += "│ 🔥 Streak: *" + streak + " hari*\n";
+  let txt = "* " + greeting + ", @" + m.sender.split("@")[0] + "!* 👋\n";
+  txt += "Streak: *" + streak + " hari*\n";
   if (streakMultiplier > 1) {
-    txt += "│ ⚡ Bonus Streak: *" + (Math.round(streakMultiplier * 100) / 100) + "x*\n";
+    txt += "Bonus Streak: *" + (Math.round(streakMultiplier * 100) / 100) + "x*\n";
   }
-  txt += "│\n";
-  txt += "│ 「 Hadiah 」\n";
-  txt += "│ 🚄 Exp: *+" + formatNum(expReward) + "*\n";
-  txt += "│ 🪙 Koin: *+" + formatNum(koinReward) + "*\n";
-  txt += "│ 💰 Gold: *+" + formatNum(goldReward) + "*\n";
-  if (gemsReward > 0) txt += "│ 💎 Gems: *+" + gemsReward + "*\n";
-  if (diamondsReward > 0) txt += "│ ♦️ Diamonds: *+" + diamondsReward + "*\n";
-  txt += "│ 🥤 Potion: *+" + potionReward + "*\n";
-  txt += "│\n";
-  txt += "│ 💡 Besok klaim lagi ya, jangan sampai putus streak-nya!\n";
-  txt += "╰────  •  ────";
+  txt += "\n";
+  txt += "「 Hadiah 」\n";
+  txt += "Exp: *+" + formatNum(expReward) + "*\n";
+  txt += "Koin: *+" + formatNum(koinReward) + "*\n";
+  txt += "Gold: *+" + formatNum(goldReward) + "*\n";
+  if (gemsReward > 0) txt += "Gems: *+" + gemsReward + "*\n";
+  if (diamondsReward > 0) txt += "Diamonds: *+" + diamondsReward + "*\n";
+  txt += "Potion: *+" + potionReward + "*\n\n";
+  txt += "Besok klaim lagi ya, jangan sampai putus streak-nya!";
   await sock.sendMessage(m.chat, { text: txt, mentions: [m.sender] }, { quoted: m });
 }
 

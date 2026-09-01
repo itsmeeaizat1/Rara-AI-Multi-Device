@@ -93,19 +93,19 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let msg = `╭─「 ✦ ᴛʀᴇɴᴅɪɴɢ ᴛᴡɪᴛᴛᴇʀ ✦ 」\n`;
-    msg += `│ Region: *${country}*\n`;
-    msg += `│ Source: getdaytrends.com\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `Region: *${country}*\n`;
+    msg += `Source: getdaytrends.com\n`;
+    msg += `
+`;
 
     trends.slice(0, 15).forEach((t, i) => {
       const rank = String(i + 1).padStart(2, "0");
       const vol = t.volume ? ` (${t.volume})` : "";
-      msg += `│ ${rank}. #${t.name}${vol}\n`;
+      msg += `${rank}. #${t.name}${vol}\n`;
     });
 
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+        return m.reply(msg);
   } catch (err) {
     console.error("twittertrend error:", err);
     await m.react("❌");

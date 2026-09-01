@@ -34,18 +34,17 @@ async function handler(m, { sock }) {
     const r = data.result || data.data || data;
     await m.react("🐣");
 
-    let msg = `╭─「 ✦ ᴛɪᴋᴛᴏᴋ ꜱᴛᴀʟᴋᴇʀ v2 ✦ 」\n`;
-    msg += `│ Username: *@${r.username || username}*\n`;
-    if (r.nickname || r.name) msg += `│ Nama: *${r.nickname || r.name}*\n`;
-    if (r.signature || r.bio) msg += `│ Bio: ${(r.signature || r.bio).slice(0, 100)}\n`;
-    if (r.followers || r.followerCount) msg += `│ Followers: *${(r.followers || r.followerCount).toLocaleString()}*\n`;
-    if (r.following || r.followingCount) msg += `│ Following: *${(r.following || r.followingCount).toLocaleString()}*\n`;
-    if (r.likes || r.totalLikes || r.heart) msg += `│ Total Likes: *${(r.likes || r.totalLikes || r.heart).toLocaleString()}*\n`;
-    if (r.video_count || r.videoCount) msg += `│ Total Video: *${r.video_count || r.videoCount}*\n`;
-    if (r.verified !== undefined) msg += `│ Verified: ${r.verified ? "✅" : "❌"}\n`;
-    if (r.url || r.link) msg += `│ URL: ${r.url || r.link}\n`;
-    msg += `╰────  •  ────`;
-
+    let msg = "";
+    msg += `Username: *@${r.username || username}*\n`;
+    if (r.nickname || r.name) msg += `Nama: *${r.nickname || r.name}*\n`;
+    if (r.signature || r.bio) msg += `Bio: ${(r.signature || r.bio).slice(0, 100)}\n`;
+    if (r.followers || r.followerCount) msg += `Followers: *${(r.followers || r.followerCount).toLocaleString()}*\n`;
+    if (r.following || r.followingCount) msg += `Following: *${(r.following || r.followingCount).toLocaleString()}*\n`;
+    if (r.likes || r.totalLikes || r.heart) msg += `Total Likes: *${(r.likes || r.totalLikes || r.heart).toLocaleString()}*\n`;
+    if (r.video_count || r.videoCount) msg += `Total Video: *${r.video_count || r.videoCount}*\n`;
+    if (r.verified !== undefined) msg += `Verified: ${r.verified ? "✅" : "❌"}\n`;
+    if (r.url || r.link) msg += `URL: ${r.url || r.link}\n`;
+    
     const avatarUrl = r.avatar || r.profile_picture || r.avatarUrl;
     if (avatarUrl && avatarUrl.startsWith("http")) {
       try {

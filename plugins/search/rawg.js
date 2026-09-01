@@ -37,7 +37,7 @@ async function handler(m, { sock }) {
 
         const list = games.slice(0, 5);
 
-        let resultText = `╭─「 ✦ Game Search ✦ 」\n`;
+        let resultText = "";
 
         list.forEach((g, index) => {
             const name = g.name || 'Unknown';
@@ -53,18 +53,18 @@ async function handler(m, { sock }) {
                 ? g.genres.map(gn => gn.name).filter(Boolean).join(', ')
                 : 'N/A';
 
-            resultText += `│ ${index + 1}. ${name} (${releasedYear})\n`;
-            resultText += `│ ⭐ ${rating} | Metacritic: ${metacritic}\n`;
-            resultText += `│ 🎮 ${platforms}\n`;
-            resultText += `│ 🏷 ${genres}\n`;
+            resultText += `${index + 1}. ${name} (${releasedYear})\n`;
+            resultText += `⭐ ${rating} | Metacritic: ${metacritic}\n`;
+            resultText += `🎮 ${platforms}\n`;
+            resultText += `🏷 ${genres}\n`;
 
             if (index < list.length - 1) {
-                resultText += `│\n`;
+                resultText += `
+`;
             }
         });
 
-        resultText += `╰────  •  ────`;
-        const thumbnail = list.find(g => g.background_image)?.background_image;
+                const thumbnail = list.find(g => g.background_image)?.background_image;
 
         if (thumbnail) {
             try {

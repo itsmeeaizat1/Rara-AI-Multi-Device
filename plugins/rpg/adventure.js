@@ -180,7 +180,7 @@ async function handler(m, { sock }) {
           hpChange = -dmgTaken;
         } else {
           hpChange = -dmgTaken;
-          extraText = `\n│ 💀 Kamu kalah dari monster!\n`;
+          extraText = `\n💀 Kamu kalah dari monster!\n`;
         }
         break;
       }
@@ -189,7 +189,7 @@ async function handler(m, { sock }) {
         hpChange = -Math.floor(rpg.maxHp * (0.1 + Math.random() * 0.2));
         expGain = Math.floor(Math.random() * (event.maxExp - event.minExp + 1)) + event.minExp;
         addExp(m, expGain);
-        extraText = `\n│ 💥 HP berkurang: *${Math.abs(hpChange)}*\n`;
+        extraText = `\n💥 HP berkurang: *${Math.abs(hpChange)}*\n`;
         break;
       }
 
@@ -199,7 +199,7 @@ async function handler(m, { sock }) {
         const freeItem = freeItems[Math.floor(Math.random() * freeItems.length)];
         addItem(m, freeItem, 1);
         drops.push({ item: freeItem, qty: 1 });
-        extraText = `\n│ 🎁 Pedagang memberi *${ITEM_DB[freeItem]?.name || freeItem}* gratis!\n`;
+        extraText = `\n🎁 Pedagang memberi *${ITEM_DB[freeItem]?.name || freeItem}* gratis!\n`;
         break;
       }
 
@@ -213,7 +213,7 @@ async function handler(m, { sock }) {
         expGain = 50 + Math.floor(Math.random() * 100);
         addExp(m, expGain);
         hpChange = healAmount;
-        extraText = `\n│ ✨ Blessing: HP +${healAmount} | Mana +${manaAmount}\n`;
+        extraText = `\n✨ Blessing: HP +${healAmount} | Mana +${manaAmount}\n`;
         break;
       }
 
@@ -234,27 +234,23 @@ async function handler(m, { sock }) {
 
     let dropText = "";
     if (drops.length > 0) {
-      dropText = drops.map(d => `+${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join("\n│ ");
-      dropText = "\n│ " + dropText + "\n";
+      dropText = drops.map(d => `+${d.qty}x ${ITEM_DB[d.item]?.name || d.item}`).join("\n");
+      dropText = "\n" + dropText + "\n";
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴘᴇᴛᴜᴀʟᴀɴɢ ✦ 」\n`;
-    msg += `│ 🗺️ ${message}\n`;
-    msg += `│\n`;
+    let msg = `${message}\n\n`;
 
-    if (expGain > 0) msg += `│ ✦ EXP: *+${expGain}*\n`;
-    if (goldGain > 0) msg += `│ 💰 Gold: *+${goldGain}*\n`;
+    if (expGain > 0) msg += `EXP: *+${expGain}*\n`;
+    if (goldGain > 0) msg += `Gold: *+${goldGain}*\n`;
     if (dropText) msg += dropText;
     if (extraText) msg += extraText;
 
-    msg += `│\n`;
     const freshRpg = ensureRpg(m, m.pushName);
-    msg += `│ ❤️ HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
-    msg += `│ ⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
-    msg += `╰────  •  ────`;
+    msg += `HP: *${freshRpg.hp}/${freshRpg.maxHp}*\n`;
+    msg += `Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*`;
 
-    return m.reply(msg);
+    return m.reply(msg.trim());
   } catch (err) {
     console.error("adventure error:", err);
     await m.react("❌");

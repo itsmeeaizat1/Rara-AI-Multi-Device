@@ -29,8 +29,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!history.length) {
       const text =
-        claraWrap("AI History", ["│ Status: *Kosong*",
-          "│ Belum ada percakapan AI di chat ini."].join("\n")) +
+        claraWrap("AI History", ["Status: *Kosong*",
+          "Belum ada percakapan AI di chat ini."].join("\n")) +
         "\n" ;
 
       await m.reply(text);

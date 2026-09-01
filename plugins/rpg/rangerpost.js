@@ -60,20 +60,20 @@ async function handler(m, { sock }) {
       }
       await db.setPlayerData?.(m.sender, "rangerpost", data);
       await m.react("🐣");
-      let msg = `╭─「 ✦ ʀᴀɴɢᴇʀ ᴄʜᴇᴄᴋ-ɪɴ ✦ 」\n`;
-      msg += `│ 🎖️ Daily Check-in Berhasil!\n`;
-      msg += `│ Salary: *+${salary} gold*\n`;
-      msg += `│ Days: *${data.days}*\n`;
-      msg += `│ Ranger Level: *${data.level || 1}*\n`;
-      if (data.days % 7 === 0) msg += `│ ⭐ LEVEL UP! Ranger Lv.${data.level}\n`;
-      msg += `│\n`;
-      msg += `│ Tugas hari ini:\n`;
+      let msg = "";
+      msg += `🎖️ Daily Check-in Berhasil!\n`;
+      msg += `Salary: *+${salary} gold*\n`;
+      msg += `Days: *${data.days}*\n`;
+      msg += `Ranger Level: *${data.level || 1}*\n`;
+      if (data.days % 7 === 0) msg += `⭐ LEVEL UP! Ranger Lv.${data.level}\n`;
+      msg += `
+`;
+      msg += `Tugas hari ini:\n`;
       TASKS.forEach(t => {
         const done = data.tasksDone?.includes(t.id);
-        msg += `│ ${t.emoji} ${t.name} ${done ? "✅" : `→ ${m.prefix}rangerpost task ${t.id}`}\n`;
+        msg += `${t.emoji} ${t.name} ${done ? "✅" : `→ ${m.prefix}rangerpost task ${t.id}`}\n`;
       });
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+            return m.reply(msg);
     }
 
     if (subCmd === "task" || subCmd === "tugas") {
@@ -103,39 +103,40 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "rangerpost", data);
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ʀᴀɴɢᴇʀ ᴛᴀsᴋ ✦ 」\n`;
-      msg += `│ ${task.emoji} *${task.name}*\n`;
-      msg += `│ ${task.desc}\n`;
-      msg += `│\n`;
-      msg += `│ ${narrative}\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `${task.emoji} *${task.name}*\n`;
+      msg += `${task.desc}\n`;
+      msg += `
+`;
+      msg += `${narrative}\n`;
+      msg += `
+`;
       if (success) {
-        msg += `│ 🏆 *BERHASIL!*\n`;
-        msg += `│ Reward: +${task.reward} gold\n`;
+        msg += `🏆 *BERHASIL!*\n`;
+        msg += `Reward: +${task.reward} gold\n`;
       } else {
-        msg += `│ 💀 *GAGAL!*\n`;
-        msg += `│ Tidak ada reward\n`;
+        msg += `💀 *GAGAL!*\n`;
+        msg += `Tidak ada reward\n`;
       }
       const remaining = 3 - data.tasksDone.length;
-      msg += `│ Sisa tugas: *${remaining}*\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      msg += `Sisa tugas: *${remaining}*\n`;
+            return m.reply(msg);
     }
 
     // STATUS (default)
-    let msg = `╭─「 ✦ ʀᴀɴɢᴇʀ ᴘᴏsᴛ ✦ 」\n`;
-    msg += `│ Ranger Level: *${data.level || 1}*\n`;
-    msg += `│ Total Days: *${data.days || 0}*\n`;
-    msg += `│ Total Gold: *${data.totalGold || 0}*\n`;
-    msg += `│\n`;
-    msg += `│ Tugas hari ini (${data.tasksDone?.length || 0}/3):\n`;
+    let msg = "";
+    msg += `Ranger Level: *${data.level || 1}*\n`;
+    msg += `Total Days: *${data.days || 0}*\n`;
+    msg += `Total Gold: *${data.totalGold || 0}*\n`;
+    msg += `
+`;
+    msg += `Tugas hari ini (${data.tasksDone?.length || 0}/3):\n`;
     TASKS.forEach(t => {
       const done = data.tasksDone?.includes(t.id);
-      msg += `│ ${t.emoji} ${t.name} ${done ? "✅" : "📋"}\n`;
-      if (!done) msg += `│  Reward: ${t.reward}g | ${m.prefix}rangerpost task ${t.id}\n`;
+      msg += `${t.emoji} ${t.name} ${done ? "✅" : "📋"}\n`;
+      if (!done) msg += `Reward: ${t.reward}g | ${m.prefix}rangerpost task ${t.id}\n`;
     });
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+        return m.reply(msg);
   } catch (err) {
     console.error("rangerpost error:", err);
     await m.react("❌");

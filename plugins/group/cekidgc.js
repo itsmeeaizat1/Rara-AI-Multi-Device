@@ -112,19 +112,19 @@ async function handler(m, { sock }) {
 
  const infoText =
  `── . 𝗚𝗥𝗢𝗨𝗣 𝗜𝗡𝗙𝗢 . ── \n\n` +
- `╭─〔 ${groupName} 〕───\n` +
- `│ Nama : *${groupName}*\n` +
- `│ Id : \`${groupJid}\`\n` +
- `│ Member : *${memberCount}*\n` +
- `│ Admin : *${adminCount}*\n` +
- `│ Owner : @${groupOwner.replace(/@.+/g, "")}\n` +
- `│ Dibuat : *${createdAt}*\n` +
- `│ Komunitas : *${isCommunity}*\n` +
- `│ Edit Info : *${isRestrict}*\n` +
- `│ Announce : *${isAnnounce}*\n` +
- `│ Join Mode : *${joinMode}*\n` +
- `│ Deskripsi : ${descPreview}\n` +
- `╰────  •  ────\n\n` +
+ `` +
+ `Nama : *${groupName}*\n` +
+ `Id : \`${groupJid}\`\n` +
+ `Member : *${memberCount}*\n` +
+ `Admin : *${adminCount}*\n` +
+ `Owner : @${groupOwner.replace(/@.+/g, "")}\n` +
+ `Dibuat : *${createdAt}*\n` +
+ `Komunitas : *${isCommunity}*\n` +
+ `Edit Info : *${isRestrict}*\n` +
+ `Announce : *${isAnnounce}*\n` +
+ `Join Mode : *${joinMode}*\n` +
+ `Deskripsi : ${descPreview}\n` +
+ 
  ` © ${config.bot?.name || "Nova-AI"}`;
 
  const buttons = [

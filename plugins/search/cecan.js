@@ -76,8 +76,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!buffer) {
       const text =
-        claraWrap("Cecan", ["│ Status: *ɢᴀɢᴀʟ*",
-          "│ Alasan: *ᴇɴᴅᴘᴏɪɴᴛ ᴄᴇᴄᴀɴ ꜱᴀᴀᴛ ɪɴɪ ᴛɪᴅᴀᴋ ᴍᴇʀᴇꜱᴘᴏɴꜱ.*"].join("\n")) +
+        claraWrap("Cecan", ["Status: *ɢᴀɢᴀʟ*",
+          "Alasan: *ᴇɴᴅᴘᴏɪɴᴛ ᴄᴇᴄᴀɴ ꜱᴀᴀᴛ ɪɴɪ ᴛɪᴅᴀᴋ ᴍᴇʀᴇꜱᴘᴏɴꜱ.*"].join("\n")) +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
 
@@ -94,8 +94,8 @@ async function handler(m, { sock, config: botConfig }) {
     }, { quoted: m });
 
     const text =
-      claraWrap("Cecan", ["│ Sumber: *ᴀᴘɪ*",
-        "│ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+      claraWrap("Cecan", ["Sumber: *ᴀᴘɪ*",
+        "Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}cecan untuk hasil lain`) +
       "\n" +

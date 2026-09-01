@@ -135,21 +135,21 @@ async function handler(m, { sock, db }) {
 
   // ─── Body text: Info Saluran ───
   const lines = [
-    `│ *ʙᴏᴛ:* ${botName} v${botVersion}`,
-    `│ *ꜱᴀʟᴜʀᴀɴ:* ${channelName}`,
+    `*ʙᴏᴛ:* ${botName} v${botVersion}`,
+    `*ꜱᴀʟᴜʀᴀɴ:* ${channelName}`,
   ];
 
   if (followerCount !== null) {
-    lines.push(`│ *ᴘᴇɴɢɪᴋᴜᴛ:* ${Number(followerCount).toLocaleString("id-ID")}`);
+    lines.push(`*ᴘᴇɴɢɪᴋᴜᴛ:* ${Number(followerCount).toLocaleString("id-ID")}`);
   }
 
   if (postsCount !== null) {
-    lines.push(`│ *ᴛᴏᴛᴀʟ ᴘᴏꜱᴛɪɴɢᴀɴ:* ${Number(postsCount).toLocaleString("id-ID")}`);
+    lines.push(`*ᴛᴏᴛᴀʟ ᴘᴏꜱᴛɪɴɢᴀɴ:* ${Number(postsCount).toLocaleString("id-ID")}`);
   }
 
   if (createdAt) {
     const dateStr = formatDate(createdAt);
-    if (dateStr) lines.push(`│ *ᴅɪʙᴜᴀᴛ:* ${dateStr}`);
+    if (dateStr) lines.push(`*ᴅɪʙᴜᴀᴛ:* ${dateStr}`);
   }
 
   if (verifiedStatus !== null) {
@@ -158,17 +158,17 @@ async function handler(m, { sock, db }) {
       : verifiedStatus === false || verifiedStatus === "UNVERIFIED"
         ? "Belum Terverifikasi"
         : String(verifiedStatus);
-    lines.push(`│ *ᴠᴇʀɪꜰɪᴋᴀꜱɪ:* ${verifiedStr}`);
+    lines.push(`*ᴠᴇʀɪꜰɪᴋᴀꜱɪ:* ${verifiedStr}`);
   }
 
   if (channelState) {
     const stateStr = typeof channelState === "string" ? channelState : String(channelState);
-    lines.push(`│ *ꜱᴛᴀᴛᴜꜱ:* ${stateStr}`);
+    lines.push(`*ꜱᴛᴀᴛᴜꜱ:* ${stateStr}`);
   }
 
   if (privacyType) {
     const privacyStr = typeof privacyType === "string" ? privacyType : String(privacyType);
-    lines.push(`│ *ᴛɪᴘᴇ:* ${privacyStr}`);
+    lines.push(`*ᴛɪᴘᴇ:* ${privacyStr}`);
   }
 
   if (reactionSettings !== null && reactionSettings !== undefined) {
@@ -177,48 +177,48 @@ async function handler(m, { sock, db }) {
       : typeof reactionSettings === "object"
         ? (reactionSettings?.enabled ? "Aktif" : "Nonaktif")
         : String(reactionSettings);
-    lines.push(`│ *ʀᴇᴀᴄᴛɪᴏɴ:* ${reactStr}`);
+    lines.push(`*ʀᴇᴀᴄᴛɪᴏɴ:* ${reactStr}`);
   }
 
   if (channelDesc) {
     const descShort = channelDesc.length > 100 ? channelDesc.slice(0, 100) + "..." : channelDesc;
-    lines.push(`│ *ᴅᴇꜱᴋʀɪᴘꜱɪ:* ${descShort}`);
+    lines.push(`*ᴅᴇꜱᴋʀɪᴘꜱɪ:* ${descShort}`);
   }
 
   lines.push("");
-  lines.push(`│ Klik link di bawah untuk follow saluran:`);
-  lines.push(`│ ${channelLink}`);
+  lines.push(`Klik link di bawah untuk follow saluran:`);
+  lines.push(`${channelLink}`);
 
   // ─── Postingan Terakhir ───
   if (lastPostText) {
     const postShort = lastPostText.length > 150 ? lastPostText.slice(0, 150) + "..." : lastPostText;
     lines.push("");
-    lines.push(`│ *ᴘᴏꜱᴛɪɴɢᴀɴ ᴛᴇʀᴀᴋʜɪʀ:*`);
-    lines.push(`│ ${postShort}`);
+    lines.push(`*ᴘᴏꜱᴛɪɴɢᴀɴ ᴛᴇʀᴀᴋʜɪʀ:*`);
+    lines.push(`${postShort}`);
 
     if (lastPostTime) {
       const dateStr = formatDate(lastPostTime);
-      if (dateStr) lines.push(`│ *ᴡᴀᴋᴛᴜ:* ${dateStr}`);
+      if (dateStr) lines.push(`*ᴡᴀᴋᴛᴜ:* ${dateStr}`);
     }
   }
 
   // ─── Info Bot ───
   lines.push("");
-  lines.push(`│ *ᴏᴡɴᴇʀ:* ${ownerName}`);
+  lines.push(`*ᴏᴡɴᴇʀ:* ${ownerName}`);
   if (ownerNumber) {
     const ownerStr = String(ownerNumber).replace(/[^0-9]/g, "");
-    lines.push(`│ *ɴᴏᴍᴏʀ ᴏᴡɴᴇʀ:* ${ownerStr}`);
+    lines.push(`*ɴᴏᴍᴏʀ ᴏᴡɴᴇʀ:* ${ownerStr}`);
   }
 
   // Uptime bot
   try {
     const uptimeMs = process.uptime() * 1000;
-    lines.push(`│ *ᴜᴘᴛɪᴍᴇ:* ${formatUptime(uptimeMs)}`);
+    lines.push(`*ᴜᴘᴛɪᴍᴇ:* ${formatUptime(uptimeMs)}`);
   } catch (_) { console.error('[channelnovaofficial.js]:', _?.message || _); }
 
   lines.push("");
-  lines.push(`│ Ikuti saluran untuk update fitur terbaru,`);
-  lines.push(`│ info maintenance, dan pengumuman penting`);
+  lines.push(`Ikuti saluran untuk update fitur terbaru,`);
+  lines.push(`info maintenance, dan pengumuman penting`);
 
   // ─── Thumbnail via externalAdReply (banner dari asset) ───
   let thumbBuffer = null;

@@ -82,7 +82,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (caturData[chatId]) return m.reply(claraWrap("catur", "Masih ada game di chat ini.", "info"));
       caturData[chatId] = { player1: sender, player2: lawan, turn: "white", board: papanAwal(), status: "pending", winner: null, history: [] };
       saveCaturData(caturData);
-      return m.reply("╭─「 ✦ ᴄᴀᴛᴜʀ ✦ 」\n│ ♟️ Tantangan dikirim ke @" + lawan.split("@")[0] + "!\n│\n│ 📌 Balas dengan .caturterima untuk main\n│ 📌 .caturhelp untuk panduan\n╰────  •  ────", { mentions: [lawan] });
+      return m.reply("♟️ Tantangan dikirim ke @" + lawan.split("@")[0] + "!\n\n📌 Balas dengan .caturterima untuk main\n📌 .caturhelp untuk panduan", { mentions: [lawan] });
     }
 
     // ═══ CATURTERIMA ═══
@@ -92,7 +92,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (game.player2 !== sender) return m.reply(claraWrap("caturterima", "Kamu bukan yang ditantang.", "info"));
       game.status = "ongoing";
       saveCaturData(caturData);
-      return m.reply("╭─「 ✦ ᴄᴀᴛᴜʀ ✦ 」\n│ ♟️ Game dimulai!\n│ Giliran: *Putih* (" + (game.player1 === sender ? "Kamu" : "@" + game.player1.split("@")[0]) + ")\n│\n│ " + tampilkanPapan(game.board).replace(/\n/g, "\n│ ") + "\n╰────  •  ────", { mentions: [game.player1, game.player2] });
+      return m.reply("♟️ Game dimulai!\nGiliran: *Putih* (" + (game.player1 === sender ? "Kamu" : "@" + game.player1.split("@")[0]) + ")\n\n" + tampilkanPapan(game.board), { mentions: [game.player1, game.player2] });
     }
 
     // ═══ CATURTOLAK ═══
@@ -101,14 +101,14 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (!game || game.status !== "pending") return m.reply(claraWrap("caturtolak", "Tidak ada tantangan aktif.", "info"));
       if (game.player2 !== sender) return m.reply(claraWrap("caturtolak", "Kamu bukan yang ditantang.", "info"));
       delete caturData[chatId]; saveCaturData(caturData);
-      return m.reply("╭─「 ✦ ᴄᴀᴛᴜʀ ✦ 」\n│ ❌ Tantangan ditolak.\n╰────  •  ────");
+      return m.reply("❌ Tantangan ditolak.");
     }
 
     // ═══ CATURPAPAN ═══
     if (command === "caturpapan" || command === "caturboard") {
       const game = caturData[chatId];
       if (!game || game.status !== "ongoing") return m.reply(claraWrap("caturpapan", "Tidak ada game berjalan.", "info"));
-      return m.reply("╭─「 ✦ ᴄᴀᴛᴜʀ ✦ 」\n│ ♟️ Papan saat ini:\n│\n│ " + tampilkanPapan(game.board).replace(/\n/g, "\n│ ") + "\n│\n│ Giliran: *" + (game.turn === "white" ? "Putih" : "Hitam") + "*\n╰────  •  ────");
+      return m.reply("♟️ Papan saat ini:\n\n" + tampilkanPapan(game.board) + "\n\nGiliran: *" + (game.turn === "white" ? "Putih" : "Hitam") + "*");
     }
 
     // ═══ CATURLANGKAH ═══
@@ -132,7 +132,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       game.turn = isWhite ? "black" : "white";
       game.history.push(from + "-" + to);
       saveCaturData(caturData);
-      return m.reply("╭─「 ✦ ᴄᴀᴛᴜʀ ✦ 」\n│ ✅ Langkah berhasil!\n│\n│ " + tampilkanPapan(game.board).replace(/\n/g, "\n│ ") + "\n│\n│ Giliran: *" + (game.turn === "white" ? "Putih" : "Hitam") + "*\n╰────  •  ────");
+      return m.reply("✅ Langkah berhasil!\n\n" + tampilkanPapan(game.board) + "\n\nGiliran: *" + (game.turn === "white" ? "Putih" : "Hitam") + "*");
     }
 
     // ═══ CATURMENYERAH ═══
@@ -146,7 +146,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       skorData[sender] = skorData[sender] || { menang: 0, kalah: 0, seri: 0 };
       skorData[pemenang].menang++; skorData[sender].kalah++;
       saveCaturData(caturData); saveSkor(skorData);
-      return m.reply("╭─「 ✦ ᴄᴀᴛᴜʀ ✦ 」\n│ 🏳️ Pemain menyerah.\n│ 🏆 Pemenang: @" + pemenang.split("@")[0] + "\n╰────  •  ────", { mentions: [pemenang] });
+      return m.reply("🏳️ Pemain menyerah.\n🏆 Pemenang: @" + pemenang.split("@")[0], { mentions: [pemenang] });
     }
 
     // ═══ CATURSELESAI ═══
@@ -158,15 +158,14 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
 
     // ═══ CATURHELP ═══
     if (command === "caturhelp") {
-      let t = "╭─「 ✦ ᴘᴀɴᴅᴜᴀɴ ᴄᴀᴛᴜʀ ✦ 」\n";
-      t += "│ ♟️ Bermain catur langsung di grup!\n│\n";
-      t += "│ 🎮 Memulai:\n│ ➤ .catur @tag — Tantang pemain\n│ ➤ .caturterima — Terima tantangan\n│ ➤ .caturtolak — Tolak tantangan\n│\n";
-      t += "│ ⚙️ Kontrol:\n│ ➤ .caturlangkah e2 e4 — Pindah bidak\n│ ➤ .caturpapan — Lihat papan\n│ ➤ .caturmenyerah — Menyerah\n│ ➤ .caturdraw — Ajukan seri\n│ ➤ .caturskip — Lewati giliran\n│\n";
-      t += "│ 📊 Skor:\n│ ➤ .caturnilai — Skormu\n│ ➤ .caturrank — Ranking\n│ ➤ .caturtop10 — Top 10\n│ ➤ .caturskorreset — Reset skor (owner)\n│\n";
-      t += "│ ♟️ Info:\n│ ➤ .caturstatus — Status game\n│ ➤ .caturgiliran — Siapa giliran\n│ ➤ .caturhistory — Riwayat langkah\n│ ➤ .caturanalisa — Langkah terakhir\n│ ➤ .caturlawan — Lihat lawan\n│\n";
-      t += "│ ⏱️ Timer:\n│ ➤ .caturtimer — Timer giliran (3 min)\n│ ➤ .caturnotif — Notif AFK\n│ ➤ .caturafk — Batal karena AFK\n│\n";
-      t += "│ 📌 Lainnya:\n│ ➤ .caturrematch — Main ulang\n│ ➤ .caturhapus — Hapus game (admin)\n│ ➤ .caturreset — Reset semua (owner)\n";
-      t += "╰────  •  ────";
+      let t = "♟️ *Panduan Catur*\n";
+      t += "Bermain catur langsung di grup!\n\n";
+      t += "🎮 Memulai:\n➤ .catur @tag — Tantang pemain\n➤ .caturterima — Terima tantangan\n➤ .caturtolak — Tolak tantangan\n\n";
+      t += "⚙️ Kontrol:\n➤ .caturlangkah e2 e4 — Pindah bidak\n➤ .caturpapan — Lihat papan\n➤ .caturmenyerah — Menyerah\n➤ .caturdraw — Ajukan seri\n➤ .caturskip — Lewati giliran\n\n";
+      t += "📊 Skor:\n➤ .caturnilai — Skormu\n➤ .caturrank — Ranking\n➤ .caturtop10 — Top 10\n➤ .caturskorreset — Reset skor (owner)\n\n";
+      t += "♟️ Info:\n➤ .caturstatus — Status game\n➤ .caturgiliran — Siapa giliran\n➤ .caturhistory — Riwayat langkah\n➤ .caturanalisa — Langkah terakhir\n➤ .caturlawan — Lihat lawan\n\n";
+      t += "⏱️ Timer:\n➤ .caturtimer — Timer giliran (3 min)\n➤ .caturnotif — Notif AFK\n➤ .caturafk — Batal karena AFK\n\n";
+      t += "📌 Lainnya:\n➤ .caturrematch — Main ulang\n➤ .caturhapus — Hapus game (admin)\n➤ .caturreset — Reset semua (owner)";
       return m.reply(t);
     }
 
@@ -175,10 +174,9 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       const entries = Object.entries(skorData);
       if (!entries.length) return m.reply(claraWrap("caturrank", "Belum ada pemain yang punya skor.", "info"));
       const urut = entries.map(([jid, d]) => ({ jid, poin: (d.menang || 0) * 3 + (d.seri || 0), ...d })).sort((a, b) => b.poin - a.poin).slice(0, 10);
-      let t = "╭─「 ✦ ʀᴀɴᴋɪɴɢ ᴄᴀᴛᴜʀ ✦ 」\n";
-      urut.forEach((p, i) => { t += "│ " + (i + 1) + ". @" + p.jid.split("@")[0] + " | " + p.poin + " pts (W:" + (p.menang || 0) + " D:" + (p.seri || 0) + " L:" + (p.kalah || 0) + ")\n"; });
-      t += "╰────  •  ────";
-      return m.reply(t, { mentions: urut.map(p => p.jid) });
+      let t = "🏆 *Ranking Catur*\n";
+      urut.forEach((p, i) => { t += (i + 1) + ". @" + p.jid.split("@")[0] + " | " + p.poin + " pts (W:" + (p.menang || 0) + " D:" + (p.seri || 0) + " L:" + (p.kalah || 0) + ")\n"; });
+      return m.reply(t.trim(), { mentions: urut.map(p => p.jid) });
     }
 
     // ═══ CATURSTATUS ═══
@@ -186,13 +184,13 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       const game = caturData[chatId];
       if (!game) return m.reply(claraWrap("caturstatus", "Tidak ada game catur di chat ini.", "info"));
       const status = { pending: "🕐 Menunggu lawan menerima...", ongoing: "♟️ Sedang berlangsung", selesai: "🏁 Selesai — Pemenang: @" + (game.winner?.split("@")[0] || "Tidak diketahui") }[game.status] || "❓";
-      return m.reply("╭─「 ✦ sᴛᴀᴛᴜs ᴄᴀᴛᴜʀ ✦ 」\n│ P1: @" + game.player1.split("@")[0] + "\n│ P2: @" + game.player2.split("@")[0] + "\n│ Status: " + status + "\n╰────  •  ────", { mentions: [game.player1, game.player2] });
+      return m.reply("P1: @" + game.player1.split("@")[0] + "\nP2: @" + game.player2.split("@")[0] + "\nStatus: " + status, { mentions: [game.player1, game.player2] });
     }
 
     // ═══ CATURNILAI ═══
     if (command === "caturnilai") {
       const d = skorData[sender] || { menang: 0, kalah: 0, seri: 0 };
-      return m.reply("╭─「 ✦ sᴋᴏʀ ᴄᴀᴛᴜʀ ✦ 」\n│ 🏆 Menang: " + d.menang + "\n│ 🤝 Seri: " + (d.seri || 0) + "\n│ 💀 Kalah: " + d.kalah + "\n╰────  •  ────");
+      return m.reply("🏆 Menang: " + d.menang + "\n🤝 Seri: " + (d.seri || 0) + "\n💀 Kalah: " + d.kalah);
     }
 
     // ═══ CATURLAWAN ═══
@@ -201,7 +199,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (!game || game.status !== "ongoing") return m.reply(claraWrap("caturlawan", "Tidak ada game berlangsung.", "info"));
       const lawan = sender === game.player1 ? game.player2 : (sender === game.player2 ? game.player1 : null);
       if (!lawan) return m.reply(claraWrap("caturlawan", "Kamu bukan bagian dari game ini.", "info"));
-      return m.reply("╭─「 ✦ ʟᴀᴡᴀɴ ✦ 」\n│ 🎯 Lawan: @" + lawan.split("@")[0] + "\n╰────  •  ────", { mentions: [lawan] });
+      return m.reply("🎯 Lawan: @" + lawan.split("@")[0], { mentions: [lawan] });
     }
 
     // ═══ CATURGILIRAN / CATURNEXT ═══
@@ -210,7 +208,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (!game || game.status !== "ongoing") return m.reply(claraWrap("caturgiliran", "Tidak ada game berjalan.", "info"));
       const isWhite = game.turn === "white";
       const giliran = isWhite ? game.player1 : game.player2;
-      return m.reply("╭─「 ✦ ɢɪʟɪʀᴀɴ ✦ 」\n│ ⏳ @" + giliran.split("@")[0] + " (" + (isWhite ? "Putih" : "Hitam") + ")\n╰────  •  ────", { mentions: [giliran] });
+      return m.reply("⏳ @" + giliran.split("@")[0] + " (" + (isWhite ? "Putih" : "Hitam") + ")", { mentions: [giliran] });
     }
 
     // ═══ CATURREMATCH ═══
@@ -221,7 +219,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       const lawan = sender === game.player1 ? game.player2 : game.player1;
       caturData[chatId] = { player1: sender, player2: lawan, turn: "white", board: papanAwal(), status: "pending", winner: null, history: [] };
       saveCaturData(caturData);
-      return m.reply("╭─「 ✦ ʀᴇᴍᴀᴛᴄʜ ✦ 」\n│ 🔁 Rematch ke @" + lawan.split("@")[0] + "!\n│ 📌 .caturterima untuk main ulang\n╰────  •  ────", { mentions: [lawan] });
+      return m.reply("🔁 Rematch ke @" + lawan.split("@")[0] + "!\n📌 .caturterima untuk main ulang", { mentions: [lawan] });
     }
 
     // ═══ CATURAFK ═══
@@ -230,7 +228,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (!game || game.status !== "ongoing") return m.reply(claraWrap("caturafk", "Tidak ada game berjalan.", "info"));
       if (!isOwner && sender !== game.player1 && sender !== game.player2) return m.reply(claraWrap("caturafk", "Hanya pemain/owner.", "info"));
       delete caturData[chatId]; saveCaturData(caturData);
-      return m.reply("╭─「 ✦ ᴀғᴋ ✦ 」\n│ ⚠️ Game dibatalkan karena lawan AFK.\n╰────  •  ────");
+      return m.reply("⚠️ Game dibatalkan karena lawan AFK.");
     }
 
     // ═══ CATURWAKTU ═══
@@ -238,7 +236,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       if (!isOwner) return m.reply(claraWrap("caturwaktu", "Hanya owner.", "info"));
       const game = caturData[chatId];
       if (!game) return m.reply(claraWrap("caturwaktu", "Tidak ada game.", "info"));
-      return m.reply("╭─「 ✦ ᴡᴀᴋᴛᴜ ✦ 」\n│ ⏱️ Timer: " + (timers[chatId] ? "Aktif (3 min)" : "Tidak aktif") + "\n│ 📌 .caturtimer untuk toggle\n╰────  •  ────");
+      return m.reply("⏱️ Timer: " + (timers[chatId] ? "Aktif (3 min)" : "Tidak aktif") + "\n📌 .caturtimer untuk toggle");
     }
 
     // ═══ CATURRESET ═══
@@ -257,20 +255,20 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       const current = isWhite ? game.player1 : game.player2;
       if (sender !== current) return m.reply(claraWrap("caturskip", "Bukan giliranmu.", "info"));
       game.turn = isWhite ? "black" : "white"; saveCaturData(caturData);
-      return m.reply("╭─「 ✦ sᴋɪᴘ ✦ 」\n│ ⏩ Giliran dilewati.\n│ Giliran: *" + (game.turn === "white" ? "Putih" : "Hitam") + "*\n╰────  •  ────");
+      return m.reply("⏩ Giliran dilewati.\nGiliran: *" + (game.turn === "white" ? "Putih" : "Hitam") + "*");
     }
 
     // ═══ CATURDRAW ═══
     if (command === "caturdraw") {
       const game = caturData[chatId];
       if (!game || game.status !== "ongoing") return m.reply(claraWrap("caturdraw", "Tidak ada game.", "info"));
-      if (!game.drawRequest) { game.drawRequest = sender; saveCaturData(caturData); return m.reply("╭─「 ✦ ᴅʀᴀᴡ ✦ 」\n│ 🤝 Kamu mengajukan seri.\n│ Lawan ketik .caturdraw untuk setuju.\n╰────  •  ────"); }
+      if (!game.drawRequest) { game.drawRequest = sender; saveCaturData(caturData); return m.reply("🤝 Kamu mengajukan seri.\nLawan ketik .caturdraw untuk setuju."); }
       if (game.drawRequest !== sender) {
         skorData[game.drawRequest] = skorData[game.drawRequest] || { menang: 0, kalah: 0, seri: 0 };
         skorData[sender] = skorData[sender] || { menang: 0, kalah: 0, seri: 0 };
         skorData[game.drawRequest].seri++; skorData[sender].seri++;
         delete caturData[chatId]; saveCaturData(caturData); saveSkor(skorData);
-        return m.reply("╭─「 ✦ ᴅʀᴀᴡ ✦ 」\n│ 🤝 Pertandingan berakhir *Seri*.\n╰────  •  ────");
+        return m.reply("🤝 Pertandingan berakhir *Seri*.");
       }
       return m.reply(claraWrap("caturdraw", "Kamu sudah mengajukan, tunggu lawan.", "info"));
     }
@@ -309,10 +307,9 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
       const game = caturData[chatId];
       if (!game) return m.reply(claraWrap("caturhistory", "Tidak ada game.", "info"));
       if (!game.history?.length) return m.reply(claraWrap("caturhistory", "Belum ada langkah.", "info"));
-      let t = "╭─「 ✦ ʜɪsᴛᴏʀʏ ✦ 」\n";
-      game.history.forEach((mv, i) => { t += "│ " + (i + 1) + ". " + mv + "\n"; });
-      t += "╰────  •  ────";
-      return m.reply(t);
+      let t = "📜 *History*\n";
+      game.history.forEach((mv, i) => { t += (i + 1) + ". " + mv + "\n"; });
+      return m.reply(t.trim());
     }
 
     // ═══ CATURSKORRESET ═══
@@ -328,7 +325,7 @@ async function handler(m, { sock, text, command, isOwner, isAdmins }) {
     if (command === "caturanalisa") {
       const game = caturData[chatId];
       if (!game?.history?.length) return m.reply(claraWrap("caturanalisa", "Belum ada langkah.", "info"));
-      return m.reply("╭─「 ✦ ᴀɴᴀʟɪsᴀ ✦ 」\n│ 📊 Langkah terakhir: *" + game.history[game.history.length - 1] + "*\n╰────  •  ────");
+      return m.reply("📊 Langkah terakhir: *" + game.history[game.history.length - 1] + "*");
     }
 
     // ═══ CATURNOTIF ═══

@@ -73,9 +73,10 @@ async function handler(m, { sock }) {
 
     const medal = ["🥇", "🥈", "🥉"];
 
-    let msg = `╭─「 ✦ ᴛᴏᴘ ${typeLabel} ✦ 」\n`;
-    msg += `│ 📊 Top 10 Player\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `📊 Top 10 Player\n`;
+    msg += `
+`;
 
     top.forEach((player, i) => {
       const rank = medal[i] || `${i + 1}.`;
@@ -85,13 +86,13 @@ async function handler(m, { sock }) {
       else if (type === "pvp") value = `${player.pvpRating} rating`;
       else if (type === "gems") value = `${player.gems} gems`;
 
-      msg += `│ ${rank} ${player.name}\n`;
-      msg += `│     ${value}\n`;
+      msg += `${rank} ${player.name}\n`;
+      msg += `${value}\n`;
     });
 
-    msg += `│\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `
+`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("toprpg error:", err);

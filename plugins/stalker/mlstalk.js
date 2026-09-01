@@ -53,20 +53,19 @@ async function handler(m, { sock }) {
     const r = data.result || data.data || data;
     await m.react("🐣");
 
-    let msg = `╭─「 ✦ ᴍᴏʙɪʟᴇ ʟᴇɢᴇɴᴅs ✦ 」\n`;
-    msg += `│ ID: *${playerId}*\n`;
-    if (serverId) msg += `│ Server: *${serverId}*\n`;
-    if (r.username || r.name || r.nick) msg += `│ Username: *${r.username || r.name || r.nick}*\n`;
-    if (r.level) msg += `│ Level: *${r.level}*\n`;
-    if (r.rank || r.tier) msg += `│ Rank: *${r.rank || r.tier}*\n`;
-    if (r.region || r.country) msg += `│ Region: *${r.region || r.country}*\n`;
-    if (r.battle_points || r.bp) msg += `│ BP: *${(r.battle_points || r.bp).toLocaleString()}*\n`;
-    if (r.diamonds || r.diamond) msg += `│ Diamonds: *${(r.diamonds || r.diamond).toLocaleString()}*\n`;
-    if (r.stars) msg += `│ Stars: *${r.stars}*\n`;
-    if (r.win_rate || r.winRate) msg += `│ Win Rate: *${r.win_rate || r.winRate}%*\n`;
-    if (r.url || r.profile) msg += `│ Profile: ${r.url || r.profile}\n`;
-    msg += `╰────  •  ────`;
-
+    let msg = "";
+    msg += `ID: *${playerId}*\n`;
+    if (serverId) msg += `Server: *${serverId}*\n`;
+    if (r.username || r.name || r.nick) msg += `Username: *${r.username || r.name || r.nick}*\n`;
+    if (r.level) msg += `Level: *${r.level}*\n`;
+    if (r.rank || r.tier) msg += `Rank: *${r.rank || r.tier}*\n`;
+    if (r.region || r.country) msg += `Region: *${r.region || r.country}*\n`;
+    if (r.battle_points || r.bp) msg += `BP: *${(r.battle_points || r.bp).toLocaleString()}*\n`;
+    if (r.diamonds || r.diamond) msg += `Diamonds: *${(r.diamonds || r.diamond).toLocaleString()}*\n`;
+    if (r.stars) msg += `Stars: *${r.stars}*\n`;
+    if (r.win_rate || r.winRate) msg += `Win Rate: *${r.win_rate || r.winRate}%*\n`;
+    if (r.url || r.profile) msg += `Profile: ${r.url || r.profile}\n`;
+    
     const avatarUrl = r.avatar || r.profile_picture || r.icon;
     if (avatarUrl && avatarUrl.startsWith("http")) {
       try {

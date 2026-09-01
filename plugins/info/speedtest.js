@@ -148,23 +148,19 @@ async function handler(m, { sock }) {
     // Jalankan speedtest
     const result = await runSpeedtest();
 
-    let text = `╭─「 ✦ Speedtest ✦ 」\n│ *ʜᴏꜱᴛ:* ${hostname}
-│ *ᴘʟᴀᴛꜰᴏʀᴍ:* ${platform} (${arch})
-│ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
-╰────  •  ────
-╭─「 ✦ CPU & RAM ✦ 」\n│ *ᴄᴘᴜ:* ${cpuModel}
-│ *ᴄᴏʀᴇꜱ:* ${cpuCores}
-│ *ʀᴀᴍ:* ${(usedMem / 1000000).toFixed(0)} / ${(totalMem / 1000000).toFixed(0)} MB (${memUsage}%)
-╰────  •  ────
-╭─「 ✦ Network ✦ 」\n│ *ᴘɪɴɢ:* ${result.ping}
-│ *ᴅᴏᴡɴʟᴏᴀᴅ:* ${result.download}
-│ *ᴜᴘʟᴏᴀᴅ:* ${result.upload}
-╰────  •  ────
-│ Metode: ${result.method}`;
-    await m.reply(claraWrap("speedtest", text));
+    let text = `Host: ${hostname}
+Platform: ${platform} (${arch})
+Uptime: ${uptime}
+CPU: ${cpuModel}
+Cores: ${cpuCores}
+RAM: ${(usedMem / 1000000).toFixed(0)} / ${(totalMem / 1000000).toFixed(0)} MB (${memUsage}%)
+Ping: ${result.ping}
+Download: ${result.download}
+Upload: ${result.upload}
+Metode: ${result.method}`;
+    await m.reply(text);
   } catch (err) {
-    await m.reply(`╭─「 ✦ Speedtest Error ✦ 」\n│ ${err.message || "Unknown error"}
-╰────  •  ────`);
+    await m.reply(`❌ Speedtest error: ${err.message || "Unknown error"}`);
   }
 }
 

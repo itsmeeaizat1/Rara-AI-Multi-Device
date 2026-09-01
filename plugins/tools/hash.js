@@ -29,9 +29,9 @@ async function handler(m, { sock, config: botConfig }) {
     const valid = ["md5","sha1","sha256","sha512"];
     if (!valid.includes(algo)) throw new Error(`Algoritma tidak didukung. Pilih: ${valid.join(", ")}`);
     const hash = crypto.createHash(algo).update(text, "utf-8").digest("hex");
-    await m.reply(claraWrap("Hash", [`│ Algoritma: *${algo}*`,
-      `│ Input: *${text.substring(0,40)}*`,
-      `│ Hash: \`${hash}\``].join("\n")));
+    await m.reply(claraWrap("Hash", [`Algoritma: *${algo}*`,
+      `Input: *${text.substring(0,40)}*`,
+      `Hash: \`${hash}\``].join("\n")));
   } catch (e) {
     await m.reply("Error: " + e.message);
   }

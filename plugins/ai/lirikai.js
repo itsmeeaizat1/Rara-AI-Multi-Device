@@ -63,11 +63,11 @@ Lirik harus puitis, catchy, dan punya rima. Bahasa Indonesia, maksimal 3 verse +
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ʟɪʀɪᴋ ʟᴀɢᴜ ✦ 」\n`;
-    msg += `│ 🎵 Tema: *${text}*\n`;
+    let msg = `\n`;
+    msg += `🎵 Tema: *${text}*\n`;
     msg += `│\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `╰────  •  ────`;
+    msg += `${result.answer.trim().replace(/\n/g, "\n")}\n`;
+    msg += ``;
     return m.reply(msg);
   } catch (err) {
     console.error("lirikai error:", err);

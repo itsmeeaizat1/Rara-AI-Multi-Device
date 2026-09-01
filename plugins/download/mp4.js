@@ -35,12 +35,13 @@ async function handler(m, { sock, config: botConfig }) {
 
     await sock.sendMessage(m.chat, {
       video: fs.readFileSync(filePath),
-      caption: `│ URL: *${url}*\n│ Ukuran: *${(buffer.length / 1024 / 1024).toFixed(2)} MB*`,
+      caption: `URL: *${url}*
+Ukuran: *${(buffer.length / 1024 / 1024).toFixed(2)} MB*`,
     }, { quoted: m });
 
     const text =
-      claraWrap("MP4 Download", [`│ Link: *${url}*`,
-        "│ Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
+      claraWrap("MP4 Download", [`Link: *${url}*`,
+        "Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
 

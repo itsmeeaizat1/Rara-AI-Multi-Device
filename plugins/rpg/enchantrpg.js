@@ -61,27 +61,28 @@ async function handler(m, { sock }) {
 
     if (!slot) {
       // Show current equipment + enchant levels
-      let msg = `╭─「 ✦ ᴇɴᴄʜᴀɴᴛ ✦ 」\n`;
-      msg += `│ 📋 Equipment & Enchant Level\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `📋 Equipment & Enchant Level\n`;
+      msg += `
+`;
 
       for (const [key, label] of Object.entries(SLOT_LABEL)) {
         const item = rpg[key];
         if (item) {
           const enchantLv = item.enchant || 0;
           const itemName = ITEM_DB[item.id]?.name || item.id || "Unknown";
-          msg += `│ ${label}: *${itemName}* +${enchantLv}\n`;
+          msg += `${label}: *${itemName}* +${enchantLv}\n`;
         } else {
-          msg += `│ ${label}: *kosong*\n`;
+          msg += `${label}: *kosong*\n`;
         }
       }
 
-      msg += `│\n`;
-      msg += `│ 📌 .enchantrpg <slot> [material]\n`;
-      msg += `│ Material default: *Mithril Ore*\n`;
-      msg += `│ ⚠️ Semakin tinggi enchant, semakin rendah success rate\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `
+`;
+      msg += `📌 .enchantrpg <slot> [material]\n`;
+      msg += `Material default: *Mithril Ore*\n`;
+      msg += `⚠️ Semakin tinggi enchant, semakin rendah success rate\n`;
+      
       return m.reply(msg);
     }
 
@@ -102,27 +103,29 @@ async function handler(m, { sock }) {
 
     if (result.success) {
       await m.react("🐣");
-      let msg = `╭─「 ✦ ᴇɴᴄʜᴀɴᴛ ✦ 」\n`;
-      msg += `│ ✅ Enchant berhasil!\n`;
-      msg += `│\n`;
-      msg += `│ 📂 Slot: *${SLOT_LABEL[slot]}*\n`;
-      msg += `│ ⬆️ Enchant Level: *+${result.enchant}*\n`;
-      msg += `│ 📦 Material: *1x ${ITEM_DB[materialId]?.name || materialId}*\n`;
-      msg += `│\n`;
-      msg += `│ 💡 Stats equipment naik 10% per level\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `✅ Enchant berhasil!\n`;
+      msg += `
+`;
+      msg += `📂 Slot: *${SLOT_LABEL[slot]}*\n`;
+      msg += `⬆️ Enchant Level: *+${result.enchant}*\n`;
+      msg += `📦 Material: *1x ${ITEM_DB[materialId]?.name || materialId}*\n`;
+      msg += `
+`;
+      msg += `💡 Stats equipment naik 10% per level\n`;
+            return m.reply(msg);
     } else {
       await m.react("❌");
-      let msg = `╭─「 ✦ ᴇɴᴄʜᴀɴᴛ ✦ 」\n`;
-      msg += `│ ❌ Enchant gagal!\n`;
-      msg += `│\n`;
-      msg += `│ 📂 Slot: *${SLOT_LABEL[slot]}*\n`;
-      msg += `│ 📦 Material: *1x ${ITEM_DB[materialId]?.name || materialId}* (habis)\n`;
-      msg += `│\n`;
-      msg += `│ 💡 Success rate makin rendah tiap level\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `❌ Enchant gagal!\n`;
+      msg += `
+`;
+      msg += `📂 Slot: *${SLOT_LABEL[slot]}*\n`;
+      msg += `📦 Material: *1x ${ITEM_DB[materialId]?.name || materialId}* (habis)\n`;
+      msg += `
+`;
+      msg += `💡 Success rate makin rendah tiap level\n`;
+            return m.reply(msg);
     }
   } catch (err) {
     console.error("enchantrpg error:", err);

@@ -83,12 +83,11 @@ async function handler(m, { sock }) {
       if (!data.materials || Object.keys(data.materials).length === 0) {
         return m.reply(claraWrap("crafting2", `Belum ada bahan. Dapatkan dari:\n${m.prefix}mining - tambang iron, crystal, gold_ore\n${m.prefix}nebang - tebang wood\n${m.prefix}berburu - dapat leather, herb`, "guide"));
       }
-      let msg = `╭─「 ✦ ᴍᴀᴛᴇʀɪᴀʟs ✦ 」\n`;
+      let msg = "";
       for (const [mat, count] of Object.entries(data.materials)) {
-        msg += `│ ${mat}: *${count}*\n`;
+        msg += `${mat}: *${count}*\n`;
       }
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+            return m.reply(msg);
     }
 
     if (subCmd === "craft" || subCmd === "buat") {
@@ -140,29 +139,28 @@ async function handler(m, { sock }) {
       await saveCraftData(db, m.sender, data);
       await m.react("🐣");
 
-      let msg = `╭─「 ✦ ᴄʀᴀғᴛ sᴜᴄᴄᴇss ✦ 」\n`;
-      msg += `│ ${recipe.emoji} *${recipe.name}*\n`;
-      msg += `│ Rarity: *${recipe.rarity}*\n`;
-      if (recipe.result.atk) msg += `│ ATK: *+${recipe.result.atk}*\n`;
-      if (recipe.result.def) msg += `│ DEF: *+${recipe.result.def}*\n`;
-      if (recipe.result.hp) msg += `│ HP: *+${recipe.result.hp}*\n`;
-      msg += `│ Cost: ${recipe.goldCost} gold\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `${recipe.emoji} *${recipe.name}*\n`;
+      msg += `Rarity: *${recipe.rarity}*\n`;
+      if (recipe.result.atk) msg += `ATK: *+${recipe.result.atk}*\n`;
+      if (recipe.result.def) msg += `DEF: *+${recipe.result.def}*\n`;
+      if (recipe.result.hp) msg += `HP: *+${recipe.result.hp}*\n`;
+      msg += `Cost: ${recipe.goldCost} gold\n`;
+            return m.reply(msg);
     }
 
     // LIST RECIPES (default)
-    let msg = `╭─「 ✦ ᴄʀᴀғᴛ ʀᴇᴄɪᴘᴇs ✦ 」\n`;
+    let msg = "";
     RECIPES.forEach(r => {
       const mats = Object.entries(r.materials).map(([k, v]) => `${v} ${k}`).join(", ");
-      msg += `│ ${r.emoji} *${r.name}* [${r.rarity}]\n`;
-      msg += `│   Bahan: ${mats} | ${r.goldCost}g\n`;
+      msg += `${r.emoji} *${r.name}* [${r.rarity}]\n`;
+      msg += `Bahan: ${mats} | ${r.goldCost}g\n`;
     });
-    msg += `│\n`;
-    msg += `│ ${m.prefix}crafting2 craft <nama>\n`;
-    msg += `│ ${m.prefix}crafting2 materials\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `${m.prefix}crafting2 craft <nama>\n`;
+    msg += `${m.prefix}crafting2 materials\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("crafting2 error:", err);
     await m.react("❌");

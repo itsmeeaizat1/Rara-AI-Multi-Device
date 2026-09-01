@@ -72,10 +72,10 @@ async function handler(m, { sock }) {
         )
         
         const actionResult = response.data.action
-        await m.reply(`╭─「 ✦ Aksi Berhasil ✦ 」\n│ *ᴠᴘꜱ:* ${dropletId}
-│ *ᴀᴋꜱɪ:* ${action.text}
-│ *ꜱᴛᴀᴛᴜꜱ:* ${actionResult.status}
-╰────  •  ────`)
+        await m.reply(`✅ *Aksi Berhasil*\n\n` +
+            `VPS: ${dropletId}\n` +
+            `Aksi: ${action.text}\n` +
+            `Status: ${actionResult.status}`)
         
     } catch (err) {
         return m.reply(te(m.prefix, m.command, m.pushName))

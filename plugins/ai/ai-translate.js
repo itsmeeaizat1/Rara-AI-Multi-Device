@@ -52,8 +52,8 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     const out =
-      claraWrap("AI Translate", [`│ Bahasa: *${lang}*`,
-        `│ Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      claraWrap("AI Translate", [`Bahasa: *${lang}*`,
+        `Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}ai-translate <teks> untuk terjemahkan lagi`) +
       "\n" +

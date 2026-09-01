@@ -141,15 +141,15 @@ async function handler(m, { sock, config: botConfig }) {
     // ═══ No args → show menu ═══
     if (!body) {
       const text =
-        claraWrap("Tio AI (AIO)", [`│ 34 model AI via *ai.tioo.eu.org*`,
-          `│ 3 Format: OpenAI / Gemini / Anthropic`,
-          `│ OpenAI Key: *${aiHelp.openaiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
-          `│ Gemini Key: *${aiHelp.geminiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
-          `│ Anthropic Key: *${aiHelp.anthropicApiKey ? "Terpasang ✅" : "Belum ❌"}*`].join("\n")) +
+        claraWrap("Tio AI (AIO)", [`34 model AI via *ai.tioo.eu.org*`,
+          `3 Format: OpenAI / Gemini / Anthropic`,
+          `OpenAI Key: *${aiHelp.openaiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
+          `Gemini Key: *${aiHelp.geminiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
+          `Anthropic Key: *${aiHelp.anthropicApiKey ? "Terpasang ✅" : "Belum ❌"}*`].join("\n")) +
         claraWrap("Openai Format", [`  *${prefix}tio openai <pesan>*`, `  Endpoint: /v1/chat/completions`].join("\n")) +
         claraWrap("Gemini Format", [`  *${prefix}tio gemini <pesan>*`, `  Endpoint: /v1beta/models/{model}:generateContent`].join("\n")) +
         claraWrap("Anthropic Format", [`  *${prefix}tio anthropic <pesan>*`, `  Endpoint: /v1/messages`].join("\n")) +
-        claraWrap("Command Lain", [`│ *${prefix}tio model <format> <nama>* — ganti model`, `│ *${prefix}tio list* — lihat semua model`, `│ *${prefix}tio list free* — lihat model gratis`, `│ Set API key di config.js:`, `    aiHelp.openaiApiKey / geminiApiKey / anthropicApiKey`].join("\n")) +
+        claraWrap("Command Lain", [`*${prefix}tio model <format> <nama>* — ganti model`, `*${prefix}tio list* — lihat semua model`, `*${prefix}tio list free* — lihat model gratis`, `Set API key di config.js:`, `    aiHelp.openaiApiKey / geminiApiKey / anthropicApiKey`].join("\n")) +
         
         "\n" ;
 
@@ -212,12 +212,12 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (!fmtArg || !modelArg) {
         const text =
-          claraWrap("Ganti Model", [`│ *${prefix}tio model openai deepseek-v4-flash:free*`,
-            `│ *${prefix}tio model gemini kimi-k3:free*`,
-            `│ *${prefix}tio model anthropic auto*`,
-          `│ Set API key di config.js:`,
+          claraWrap("Ganti Model", [`*${prefix}tio model openai deepseek-v4-flash:free*`,
+            `*${prefix}tio model gemini kimi-k3:free*`,
+            `*${prefix}tio model anthropic auto*`,
+          `Set API key di config.js:`,
           `    aiHelp.openaiApiKey / geminiApiKey / anthropicApiKey`,
-            `│ *${prefix}tio list* — lihat semua model`].join("\n"));
+            `*${prefix}tio list* — lihat semua model`].join("\n"));
         await m.reply(text, "ai-tio");
         return { handled: true };
       }
@@ -225,8 +225,8 @@ async function handler(m, { sock, config: botConfig }) {
       const fmtKey = resolveFormat(fmtArg);
       if (!fmtKey) {
         const text =
-          claraWrap("Format Tidak Valid", [`│ Format *${fmtArg}* tidak dikenal`,
-            `│ Pilih: openai / gemini / anthropic`].join("\n"));
+          claraWrap("Format Tidak Valid", [`Format *${fmtArg}* tidak dikenal`,
+            `Pilih: openai / gemini / anthropic`].join("\n"));
         await m.reply(text, "ai-tio");
         return { handled: true };
       }
@@ -238,8 +238,8 @@ async function handler(m, { sock, config: botConfig }) {
 
       if (!found) {
         const text =
-          claraWrap("Model Tidak Ditemukan", [`│ Model *${modelArg}* tidak ada`,
-            `│ Ketik *${prefix}tio list* untuk lihat semua model`].join("\n"));
+          claraWrap("Model Tidak Ditemukan", [`Model *${modelArg}* tidak ada`,
+            `Ketik *${prefix}tio list* untuk lihat semua model`].join("\n"));
         await m.reply(text, "ai-tio");
         return { handled: true };
       }
@@ -248,11 +248,11 @@ async function handler(m, { sock, config: botConfig }) {
       botConfig.aiHelp[fmt.modelField || (fmtKey + "Model")] = found.id;
 
       const text =
-        claraWrap("Model Diganti", [`│ Format: *${fmt.label}*`,
-          `│ Model: *${found.label}*`,
-          `│ ID: *${found.id}*`,
-          `│ ${found.desc}`,
-          `│ Gratis: *${found.free ? "Ya ✅" : "Tidak 💎"}*`].join("\n")) +
+        claraWrap("Model Diganti", [`Format: *${fmt.label}*`,
+          `Model: *${found.label}*`,
+          `ID: *${found.id}*`,
+          `${found.desc}`,
+          `Gratis: *${found.free ? "Ya ✅" : "Tidak 💎"}*`].join("\n")) +
         "\n" ;
       await m.reply(text);
       return { handled: true };
@@ -263,9 +263,9 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!fmtKey) {
       const text =
-        claraWrap("Format Tidak Dikenal", [`│ Format *${parts[0]}* tidak dikenal`,
-          `│ Pilih: *openai* / *gemini* / *anthropic*`,
-          `│ Contoh: *${prefix}tio openai halo*`].join("\n")) +
+        claraWrap("Format Tidak Dikenal", [`Format *${parts[0]}* tidak dikenal`,
+          `Pilih: *openai* / *gemini* / *anthropic*`,
+          `Contoh: *${prefix}tio openai halo*`].join("\n")) +
         "\n" ;
       await m.reply(text, "ai-tio");
       return { handled: true };
@@ -276,8 +276,8 @@ async function handler(m, { sock, config: botConfig }) {
 
     if (!prompt) {
       const text = claraWrap("Tio AI - Kosong",
-        `│ Pesan tidak boleh kosong\n` +
-        `│ Contoh: *${prefix}tio ${fmtKey} halo*`,
+        `Pesan tidak boleh kosong\n` +
+        `Contoh: *${prefix}tio ${fmtKey} halo*`,
         "error"
       );
       await m.reply(text, "ai-tio");
@@ -288,9 +288,9 @@ async function handler(m, { sock, config: botConfig }) {
     const apiKey = getKeyForFormat(fmtKey);
     if (!apiKey) {
       const text =
-        claraWrap("API Key Belum Diisi", [`│ API Key untuk format *${fmt.label}* belum di-set`,
-          `│ Set di config.js: aiHelp.${fmt.apiKeyField}`,
-          `│ Atau pakai fallback: aiHelp.apiKey`].join("\n"));
+        claraWrap("API Key Belum Diisi", [`API Key untuk format *${fmt.label}* belum di-set`,
+          `Set di config.js: aiHelp.${fmt.apiKeyField}`,
+          `Atau pakai fallback: aiHelp.apiKey`].join("\n"));
       await m.reply(text, "ai-tio");
       return { handled: true };
     }
@@ -339,8 +339,8 @@ async function handler(m, { sock, config: botConfig }) {
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
     const text =
-      claraWrap("Tio AI Error", [`│ Status: *Gagal*`,
-        `│ Error: *${error.message || "Unknown error"}*`].join("\n")) +
+      claraWrap("Tio AI Error", [`Status: *Gagal*`,
+        `Error: *${error.message || "Unknown error"}*`].join("\n")) +
       "\n" ;
     await m.reply(text, "ai-tio");
   }

@@ -15,9 +15,9 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const text = m.text?.trim() || (m.quoted ? await m.quoted.text : "");
     if (!text || text.length < 50) {
-      await m.reply( claraWrap("AI Doc", [`│ Reply teks panjang dengan *${prefix}aidoc*`,
-        "│ AI akan rangkum poin-poin penting",
-        "│ Minimal 50 karakter"].join("\n")), "aidoc");
+      await m.reply( claraWrap("AI Doc", [`Reply teks panjang dengan *${prefix}aidoc*`,
+        "AI akan rangkum poin-poin penting",
+        "Minimal 50 karakter"].join("\n")), "aidoc");
       return { handled: true };
     }
     const prompt = `Rangkum teks berikut dalam 5 poin utama, dalam Bahasa Indonesia:\n\n${text.substring(0, 3000)}`;

@@ -29,8 +29,8 @@ async function handler(m, { sock, config: botConfig }) {
     await new Promise((resolve, reject) => {
       mod.request(url, { method: "HEAD", timeout: 10000 }, (res) => {
         let text = claraWrap("Header Scan", "🔍") + "\n\n" + claraWrap(url, [
-          `│ Status: *${res.statusCode} ${res.statusMessage}*`,
-          ...Object.entries(res.headers).slice(0, 12).map(([k,v]) => `│ ${k}: ${v}`),
+          `Status: *${res.statusCode} ${res.statusMessage}*`,
+          ...Object.entries(res.headers).slice(0, 12).map(([k,v]) => `${k}: ${v}`),
         ]) + "\n\n" + separator("━", 22);
         m.reply(claraWrap("headerscan", text)).then(() => resolve());
       }).on("error", reject).end();

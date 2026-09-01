@@ -53,7 +53,7 @@ async function handler(m, { sock, config: botConfig }) {
     const desc = input.replace(/\d+\s*(rb|ribu|k|jt|juta|k)?/gi, "").trim() || input;
     db.expenses[sender].push({ desc, amount, date: Date.now() });
     db.write();
-    await m.reply(claraWrap("AI Expense", [`│ Item: *${desc}*`, `│ Nominal: *Rp${amount.toLocaleString("id-ID")}*`].join("\n")));
+    await m.reply(claraWrap("AI Expense", [`Item: *${desc}*`, `Nominal: *Rp${amount.toLocaleString("id-ID")}*`].join("\n")));
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

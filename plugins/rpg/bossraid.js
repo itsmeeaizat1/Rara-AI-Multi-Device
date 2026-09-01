@@ -146,26 +146,23 @@ async function handler(m, { sock }) {
       if (drops.length > 0) {
         const grouped = {};
         for (const d of drops) grouped[d.item] = (grouped[d.item] || 0) + d.qty;
-        dropText = Object.entries(grouped).map(([item, qty]) => `+${qty}x ${ITEM_DB[item]?.name || item}`).join("\n│ ");
-        dropText = "\n│ " + dropText;
+        dropText = Object.entries(grouped).map(([item, qty]) => `+${qty}x ${ITEM_DB[item]?.name || item}`).join("\n");
+        dropText = "\n" + dropText;
       }
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ʙᴏss ʀᴀɪᴅ ✦ 」\n`;
-      msg += `│ 🐉 Boss: *${boss.name}*\n`;
-      msg += `│ 🔑 ${keyText}\n`;
-      msg += `│ ⚔️ ${rounds} ronde bertarung\n`;
-      msg += `│\n`;
-      msg += `│ 🏆 *ᴠɪᴄᴛᴏʀʏ!*\n`;
-      msg += `│ ✦ EXP: *+${expGain}*\n`;
-      msg += `│ 💰 Gold: *+${goldGain}*\n`;
-      msg += `│ 💎 Gems: *+${gemGain}*\n`;
-      if (dropText) msg += dropText + "\n";
-      if (Math.random() < 0.1) msg += `│ 🟨 Bonus: *+1x Batu Reinkarnasi!*\n`;
-      msg += `│\n`;
-      msg += `│ ❤️ HP: *${Math.max(1, rpg.hp - totalDmgTaken)}/${rpg.maxHp}*\n`;
-      msg += `│ 📊 Boss kills: *${(rpg.bossKills || 0) + 1}*\n`;
-      msg += `╰────  •  ────`;
+      let msg = `Boss: *${boss.name}*\n`;
+      msg += `${keyText}\n`;
+      msg += `Pertarungan: *${rounds} ronde*\n\n`;
+      msg += `🏆 *Victory!*\n`;
+      msg += `EXP: *+${expGain}*\n`;
+      msg += `Gold: *+${goldGain}*\n`;
+      msg += `Gems: *+${gemGain}*`;
+      if (dropText) msg += dropText;
+      if (Math.random() < 0.1) msg += `\nBonus: *+1x Batu Reinkarnasi*`;
+      msg += `\n\n`;
+      msg += `HP: *${Math.max(1, rpg.hp - totalDmgTaken)}/${rpg.maxHp}*\n`;
+      msg += `Boss Kills: *${(rpg.bossKills || 0) + 1}*`;
 
       return m.reply(msg);
     } else {
@@ -173,18 +170,13 @@ async function handler(m, { sock }) {
       setCooldown(m, "lastBossRaid", BOSS_COOLDOWN);
 
       await m.react("❌");
-      let msg = `╭─「 ✦ ʙᴏss ʀᴀɪᴅ ✦ 」\n`;
-      msg += `│ 🐉 Boss: *${boss.name}*\n`;
-      msg += `│ 🔑 ${keyText}\n`;
-      msg += `│ ⚔️ ${rounds} ronde bertarung\n`;
-      msg += `│\n`;
-      msg += `│ 💀 *ᴅᴇғᴇᴀᴛᴇᴅ!*\n`;
-      msg += `│ 💥 DMG diterima: *${totalDmgTaken}*\n`;
-      msg += `│ ❤️ HP tersisa: *${Math.max(1, rpg.hp - totalDmgTaken)}/${rpg.maxHp}*\n`;
-      msg += `│\n`;
-      msg += `│ 💡 Tingkatkan equipment & level dulu\n`;
-      msg += `│ Gunakan .craftrpg untuk bikin item lebih kuat\n`;
-      msg += `╰────  •  ────`;
+      let msg = `Boss: *${boss.name}*\n`;
+      msg += `${keyText}\n`;
+      msg += `Pertarungan: *${rounds} ronde*\n\n`;
+      msg += `💀 *Defeated!*\n`;
+      msg += `DMG Diterima: *${totalDmgTaken}*\n`;
+      msg += `HP Tersisa: *${Math.max(1, rpg.hp - totalDmgTaken)}/${rpg.maxHp}*\n\n`;
+      msg += `💡 Tingkatkan equipment & level dulu\nGunakan .craftrpg untuk bikin item lebih kuat`;
 
       return m.reply(msg);
     }

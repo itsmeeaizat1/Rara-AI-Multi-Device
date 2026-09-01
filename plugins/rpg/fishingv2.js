@@ -69,17 +69,18 @@ async function handler(m, { sock }) {
     const data = await getData(db, m.sender);
 
     if (subCmd === "shop" || subCmd === "toko") {
-      let msg = `╭─「 ✦ ғɪsʜɪɴɢ sʜᴏᴘ ✦ 」\n`;
-      msg += `│ 🎣 *RODS:*\n`;
-      RODS.forEach((r, i) => msg += `│ ${r.emoji} ${r.name} - ${r.price === 0 ? "FREE" : r.price + "g"} (+${r.bonus}% catch)\n`);
-      msg += `│\n`;
-      msg += `│ 🪱 *BAITS:*\n`;
-      BAITS.forEach(b => msg += `│ ${b.emoji} ${b.name} - ${b.price}g (+${b.bonus}% rarity)\n`);
-      msg += `│\n`;
-      msg += `│ ${m.prefix}fishingv2 buy rod <nama>\n`;
-      msg += `│ ${m.prefix}fishingv2 buy bait <nama> <qty>\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `🎣 *RODS:*\n`;
+      RODS.forEach((r, i) => msg += `${r.emoji} ${r.name} - ${r.price === 0 ? "FREE" : r.price + "g"} (+${r.bonus}% catch)\n`);
+      msg += `
+`;
+      msg += `🪱 *BAITS:*\n`;
+      BAITS.forEach(b => msg += `${b.emoji} ${b.name} - ${b.price}g (+${b.bonus}% rarity)\n`);
+      msg += `
+`;
+      msg += `${m.prefix}fishingv2 buy rod <nama>\n`;
+      msg += `${m.prefix}fishingv2 buy bait <nama> <qty>\n`;
+            return m.reply(msg);
     }
 
     if (subCmd === "buy" || subCmd === "beli") {
@@ -118,22 +119,22 @@ async function handler(m, { sock }) {
 
     if (subCmd === "inv" || subCmd === "koleksi") {
       const rod = RODS[data.rod || 0];
-      let msg = `╭─「 ✦ ғɪsʜɪɴɢ ɪɴᴠ ✦ 」\n`;
-      msg += `│ Rod: ${rod.emoji} *${rod.name}*\n`;
-      msg += `│ Baits: 🪱Worm:${data.baits?.Worm||0} 🦐Shrimp:${data.baits?.Shrimp||0} ✨Golden:${data.baits?.["Golden Bait"]||0}\n`;
-      msg += `│ Total Catch: *${data.totalCaught || 0}*\n`;
-      msg += `│ Best: *${data.bestCatch || "-"}*\n`;
+      let msg = "";
+      msg += `Rod: ${rod.emoji} *${rod.name}*\n`;
+      msg += `Baits: 🪱Worm:${data.baits?.Worm||0} 🦐Shrimp:${data.baits?.Shrimp||0} ✨Golden:${data.baits?.["Golden Bait"]||0}\n`;
+      msg += `Total Catch: *${data.totalCaught || 0}*\n`;
+      msg += `Best: *${data.bestCatch || "-"}*\n`;
       if (data.catches?.length > 0) {
-        msg += `│\n`;
+        msg += `
+`;
         const grouped = {};
         data.catches.forEach(f => { grouped[f.name] = (grouped[f.name]||0) + 1; });
         for (const [name, count] of Object.entries(grouped)) {
           const fish = FISH.find(f => f.name === name);
-          msg += `│ ${fish?.emoji||"🐟"} ${name} x${count} [${fish?.rarity||"?"}]\n`;
+          msg += `${fish?.emoji||"🐟"} ${name} x${count} [${fish?.rarity||"?"}]\n`;
         }
       }
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+            return m.reply(msg);
     }
 
     // FISHING (default)
@@ -157,15 +158,15 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
     const isRare = ["S","SS","SSS"].includes(fish.rarity);
-    let msg = `╭─「 ✦ ғɪsʜɪɴɢ v2 ✦ 」\n`;
-    msg += `│ Rod: ${rod.emoji} ${rod.name} | Bait: ${activeBait.emoji} ${activeBait.name}\n`;
-    msg += `│\n`;
-    msg += `│ ${isRare ? "✨ TANGKAPAN LANGKA! ✨" : "Berhasil!"}\n`;
-    msg += `│ ${fish.emoji} *${fish.name}*\n`;
-    msg += `│ Rarity: *${fish.rarity}* | Price: *${fish.price}g*\n`;
-    msg += `│ Total: *${data.totalCaught}* | Best: *${data.bestCatch}*\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    let msg = "";
+    msg += `Rod: ${rod.emoji} ${rod.name} | Bait: ${activeBait.emoji} ${activeBait.name}\n`;
+    msg += `
+`;
+    msg += `${isRare ? "✨ TANGKAPAN LANGKA! ✨" : "Berhasil!"}\n`;
+    msg += `${fish.emoji} *${fish.name}*\n`;
+    msg += `Rarity: *${fish.rarity}* | Price: *${fish.price}g*\n`;
+    msg += `Total: *${data.totalCaught}* | Best: *${data.bestCatch}*\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("fishingv2 error:", err);
     await m.react("❌");

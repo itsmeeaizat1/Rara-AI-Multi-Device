@@ -37,14 +37,14 @@ async function handler(m, { sock }) {
     if (subCmd === "declare" || subCmd === "serang" || subCmd === "war") {
       const enemyName = m.args.slice(1).join(" ").trim();
       if (!enemyName) {
-        let msg = `╭─「 ✦ ᴇɴᴇᴍʏ ɢᴜɪʟᴅs ✦ 」\n`;
+        let msg = "";
         ENEMY_GUILDS.forEach(g => {
-          msg += `│ ${g.emoji} ${g.name} — Power: ${g.power.toLocaleString()} | Treasury: ${g.treasury.toLocaleString()}g\n`;
+          msg += `${g.emoji} ${g.name} — Power: ${g.power.toLocaleString()} | Treasury: ${g.treasury.toLocaleString()}g\n`;
         });
-        msg += `│\n`;
-        msg += `│ ${m.prefix}guildwar declare <nama guild>\n`;
-        msg += `╰────  •  ────`;
-        return m.reply(msg);
+        msg += `
+`;
+        msg += `${m.prefix}guildwar declare <nama guild>\n`;
+                return m.reply(msg);
       }
 
       const enemy = ENEMY_GUILDS.find(g => g.name.toLowerCase().includes(enemyName.toLowerCase()));
@@ -76,36 +76,37 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(m.sender, "guild", guildData);
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ɢᴜɪʟᴅ ᴡᴀʀ ✦ 」\n`;
-      msg += `│ ${guildData.emoji || "🏰"} ${guildData.name}\n`;
-      msg += `│ vs\n`;
-      msg += `│ ${enemy.emoji} ${enemy.name}\n`;
-      msg += `│\n`;
-      msg += `│ Your Power: *${playerPower.toLocaleString()}*\n`;
-      msg += `│ Enemy Power: *${enemyPower.toLocaleString()}*\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `${guildData.emoji || "🏰"} ${guildData.name}\n`;
+      msg += `vs\n`;
+      msg += `${enemy.emoji} ${enemy.name}\n`;
+      msg += `
+`;
+      msg += `Your Power: *${playerPower.toLocaleString()}*\n`;
+      msg += `Enemy Power: *${enemyPower.toLocaleString()}*\n`;
+      msg += `
+`;
       if (won) {
-        msg += `│ 🏆 *VICTORY!*\n`;
-        msg += `│ Reward: *+${reward.toLocaleString()} gold*\n`;
-        msg += `│ Guild Power: +500\n`;
+        msg += `🏆 *VICTORY!*\n`;
+        msg += `Reward: *+${reward.toLocaleString()} gold*\n`;
+        msg += `Guild Power: +500\n`;
       } else {
-        msg += `│ 💀 *DEFEAT!*\n`;
-        msg += `│ Kerugian: *-${loss || 500} gold*\n`;
+        msg += `💀 *DEFEAT!*\n`;
+        msg += `Kerugian: *-${loss || 500} gold*\n`;
       }
-      msg += `│ Record: ${guildData.wins || 0}W / ${guildData.losses || 0}L\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      msg += `Record: ${guildData.wins || 0}W / ${guildData.losses || 0}L\n`;
+            return m.reply(msg);
     }
 
     // INFO (default)
-    let msg = `╭─「 ✦ ɢᴜɪʟᴅ ᴡᴀʀ ✦ 」\n`;
-    msg += `│ Guild: ${guildData.emoji || "🏰"} *${guildData.name}*\n`;
-    msg += `│ Power: *${(guildData.power || 3000).toLocaleString()}*\n`;
-    msg += `│ Record: *${guildData.wins || 0}W / ${guildData.losses || 0}L*\n`;
-    msg += `│\n`;
-    msg += `│ ${m.prefix}guildwar declare <enemy> - serang!\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    let msg = "";
+    msg += `Guild: ${guildData.emoji || "🏰"} *${guildData.name}*\n`;
+    msg += `Power: *${(guildData.power || 3000).toLocaleString()}*\n`;
+    msg += `Record: *${guildData.wins || 0}W / ${guildData.losses || 0}L*\n`;
+    msg += `
+`;
+    msg += `${m.prefix}guildwar declare <enemy> - serang!\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("guildwar error:", err);
     await m.react("❌");

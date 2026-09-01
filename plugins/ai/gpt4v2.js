@@ -46,10 +46,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ɢᴘᴛ-4 ᴠ2 ✦ 」\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    return m.reply(result.answer.trim());
   } catch (err) {
     console.error("gpt4v2 error:", err);
     await m.react("❌");

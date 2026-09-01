@@ -19,13 +19,13 @@ async function handler(m, { sock, config: botConfig }) {
     const gid = m.key?.remoteJid || "";
     if (arg === "on") {
       db.autoTranslate[gid] = "id"; db.write();
-      await m.reply(claraWrap("Auto Translate", ["│ Pesan asing akan auto-translate ke Indonesia"].join("\n")));
+      await m.reply(claraWrap("Auto Translate", ["Pesan asing akan auto-translate ke Indonesia"].join("\n")));
     } else if (arg === "off") {
       delete db.autoTranslate[gid]; db.write();
-      await m.reply(claraWrap("Auto Translate", ["│ Auto-translate dimatikan"].join("\n")));
+      await m.reply(claraWrap("Auto Translate", ["Auto-translate dimatikan"].join("\n")));
     } else {
-      await m.reply(claraWrap("Auto Translate", [`│ Status: *${db.autoTranslate[gid] ? "ON" : "OFF"}*`,
-        `│ Ketik: *${prefix}autotranslate on/off*`].join("\n")));
+      await m.reply(claraWrap("Auto Translate", [`Status: *${db.autoTranslate[gid] ? "ON" : "OFF"}*`,
+        `Ketik: *${prefix}autotranslate on/off*`].join("\n")));
     }
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };

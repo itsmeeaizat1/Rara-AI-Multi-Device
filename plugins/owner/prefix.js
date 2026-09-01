@@ -95,8 +95,7 @@ function handler(m, { sock }) {
             m.reply(`✅ *PreғIx Ditambahkan*\n\n` +
                 `Added: \`${newPrefixes.join('` `')}\`\n\n` +
                 `*Semua prefix aktif:*\n` +
-                `\`${getAllPrefixes().join('` `')}\`` +
-                `${data.noprefix ? '\n+ *noprefix* aktif' : ''}`)
+                `\`${getAllPrefixes().join('` `')}\`${data.noprefix ? '\n+ *noprefix* aktif' : ''}`)
             break
         }
         
@@ -177,8 +176,7 @@ function handler(m, { sock }) {
             m.reply(`✅ *PreғIx Dihapus*\n\n` +
                 `Deleted: \`${deleted.length > 0 ? deleted.join('` `') : 'None'}\`\n\n` +
                 `*Semua prefix aktif:*\n` +
-                `\`${getAllPrefixes().join('` `')}\`` +
-                `${data.noprefix ? '\n+ *noprefix* aktif' : ''}`)
+                `\`${getAllPrefixes().join('` `')}\`${data.noprefix ? '\n+ *noprefix* aktif' : ''}`)
             break
         }
         
@@ -187,15 +185,15 @@ function handler(m, { sock }) {
             const configPref = config.command?.prefix || '.'
             
             let text = `📋 *List PreғIx*\n\n`
-            text += `╭─「 ✦ ConғIg ✦ 」\n`
-            text += `│ Default: \`${configPref}\`\n`
-            text += `│ Noprefix: ${data.noprefix ? '✅ Aktif' : '❌ Nonaktif'}\n`
+            text += ""
+            text += `Default: \`${configPref}\`\n`
+            text += `Noprefix: ${data.noprefix ? '✅ Aktif' : '❌ Nonaktif'}\n`
             text += `╰┈┈┈┈┈┈┈┈\n\n`
             
             if (data.prefixes.length > 0) {
-                text += `╭─「 ✦ Database ✦ 」\n`
+                text += ""
                 data.prefixes.forEach((p, i) => {
-                    text += `│ ${i + 1}. \`${p}\`\n`
+                    text += `${i + 1}. \`${p}\`\n`
                 })
                 text += `╰┈┈┈┈┈┈┈┈\n\n`
             }

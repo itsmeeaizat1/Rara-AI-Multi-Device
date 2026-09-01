@@ -78,16 +78,17 @@ async function handler(m, { sock }) {
     }
 
     // STATUS (default)
-    let msg = `╭─「 ✦ sᴛᴀᴍɪɴᴀ ✦ 」\n`;
-    msg += `│ ⚡ [${bar(data.stamina || 0, MAX_STAMINA)}] ${data.stamina || 0}/${MAX_STAMINA}\n`;
-    msg += `│\n`;
-    msg += `│ Regenerasi: +1 per 5 menit (passive)\n`;
-    msg += `│ Total dibeli: *${data.totalBought || 0}*\n`;
-    msg += `│\n`;
-    msg += `│ ${m.prefix}stamina rest - istirahat (+30, 10m CD)\n`;
-    msg += `│ ${m.prefix}stamina buy <qty> - beli (${BUY_COST}g/10)\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    let msg = "";
+    msg += `⚡ [${bar(data.stamina || 0, MAX_STAMINA)}] ${data.stamina || 0}/${MAX_STAMINA}\n`;
+    msg += `
+`;
+    msg += `Regenerasi: +1 per 5 menit (passive)\n`;
+    msg += `Total dibeli: *${data.totalBought || 0}*\n`;
+    msg += `
+`;
+    msg += `${m.prefix}stamina rest - istirahat (+30, 10m CD)\n`;
+    msg += `${m.prefix}stamina buy <qty> - beli (${BUY_COST}g/10)\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("staminabar error:", err);
     await m.react("❌");

@@ -34,32 +34,32 @@ async function handler(m, { sock, text }) {
     // .element info — tampilkan elemen saat ini
     if (!action || action === "info") {
       const elem = rpg.element ? ELEMENTS[rpg.element] : null;
-      let msg = "╭─「 ✦ ᴇʟᴇᴍᴇɴᴛ ✦ 」\n";
-      msg += "│ 👤 " + (m.pushName || "Player") + " | Lv." + rpg.level + "\n";
+      let msg = "";
+      msg += "👤 " + (m.pushName || "Player") + " | Lv." + rpg.level + "\n";
       msg += "│\n";
       if (elem) {
-        msg += "│ 🔮 Elemen: *" + elem.name + "*\n";
-        msg += "│ 💪 Kuat vs: " + elem.strong.map(e => ELEMENTS[e].name).join(", ") + "\n";
-        msg += "│ 🛡️ Lemah vs: " + elem.weak.map(e => ELEMENTS[e].name).join(", ") + "\n";
+        msg += "🔮 Elemen: *" + elem.name + "*\n";
+        msg += "💪 Kuat vs: " + elem.strong.map(e => ELEMENTS[e].name).join(", ") + "\n";
+        msg += "🛡️ Lemah vs: " + elem.weak.map(e => ELEMENTS[e].name).join(", ") + "\n";
       } else {
-        msg += "│ 🔮 Elemen: *Belum dipilih*\n";
+        msg += "🔮 Elemen: *Belum dipilih*\n";
         msg += "│\n";
-        msg += "│ 📌 Pilih: .element <api|air|tanah|angin>\n";
+        msg += "📌 Pilih: .element <api|air|tanah|angin>\n";
       }
-      msg += "╰────  •  ────";
+      msg += "";
       return m.reply(msg);
     }
 
     // .element weak — chart kelemahan
     if (action === "weak" || action === "kelemahan") {
-      let msg = "╭─「 ✦ ᴄʜᴀʀᴛ ᴋᴇʟᴇᴍᴀʜᴀɴ ✦ 」\n";
+      let msg = "";
       msg += "│\n";
       for (const [id, el] of Object.entries(ELEMENTS)) {
-        msg += "│ " + el.name + "\n";
-        msg += "│   💪 Kuat vs: " + el.strong.map(e => ELEMENTS[e].name).join(", ") + "\n";
-        msg += "│   🛡️ Lemah vs: " + el.weak.map(e => ELEMENTS[e].name).join(", ") + "\n";
+        msg += el.name + "\n";
+        msg += "  💪 Kuat vs: " + el.strong.map(e => ELEMENTS[e].name).join(", ") + "\n";
+        msg += "  🛡️ Lemah vs: " + el.weak.map(e => ELEMENTS[e].name).join(", ") + "\n";
       }
-      msg += "╰────  •  ────";
+      msg += "";
       return m.reply(msg);
     }
 
@@ -80,12 +80,12 @@ async function handler(m, { sock, text }) {
     await m.react("🐣");
 
     const elem = ELEMENTS[action];
-    let msg = "╭─「 ✦ ᴇʟᴇᴍᴇɴᴛ ✦ 」\n";
-    msg += "│ ✅ Elemenmu kini: *" + elem.name + "*\n";
-    msg += "│ 💪 Kuat vs: " + elem.strong.map(e => ELEMENTS[e].name).join(", ") + "\n";
-    msg += "│ 🛡️ Lemah vs: " + elem.weak.map(e => ELEMENTS[e].name).join(", ") + "\n";
-    msg += "│ ⭐ Bonus element DMG: +10%\n";
-    msg += "╰────  •  ────";
+    let msg = "";
+    msg += "✅ Elemenmu kini: *" + elem.name + "*\n";
+    msg += "💪 Kuat vs: " + elem.strong.map(e => ELEMENTS[e].name).join(", ") + "\n";
+    msg += "🛡️ Lemah vs: " + elem.weak.map(e => ELEMENTS[e].name).join(", ") + "\n";
+    msg += "⭐ Bonus element DMG: +10%\n";
+    msg += "";
     return m.reply(msg);
   } catch (e) {
     console.error("element error:", e.message);

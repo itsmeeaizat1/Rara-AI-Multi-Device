@@ -49,18 +49,18 @@ async function handler(m, { sock, text, command }) {
     if (command === "storyquest") {
       const storyIndex = rpg.storyProgress || 0;
       const current = STORY[storyIndex % STORY.length];
-      let msg = "╭─「 ✦ sᴛᴏʀʏ ǫᴜᴇsᴛ ✦ 」\n";
-      msg += "│ 📜 Chapter " + (storyIndex + 1) + "/" + STORY.length + "\n";
+      let msg = "";
+      msg += "📜 Chapter " + (storyIndex + 1) + "/" + STORY.length + "\n";
       msg += "│\n";
-      msg += "│ " + current + "\n";
+      msg += "" + current + "\n";
       msg += "│\n";
       if (storyIndex < STORY.length - 1) {
-        msg += "│ 📌 Ketik .nextquest untuk lanjut cerita\n";
+        msg += "📌 Ketik .nextquest untuk lanjut cerita\n";
       } else {
-        msg += "│ ✅ Kamu telah menyelesaikan semua chapter!\n";
-        msg += "│ 📌 Ulangi dengan .nextquest untuk replay\n";
+        msg += "✅ Kamu telah menyelesaikan semua chapter!\n";
+        msg += "📌 Ulangi dengan .nextquest untuk replay\n";
       }
-      msg += "╰────  •  ────";
+      msg += "";
       return m.reply(msg);
     }
 
@@ -74,35 +74,35 @@ async function handler(m, { sock, text, command }) {
       rpg.gold = (rpg.gold || 0) + reward;
       saveRpg(m, rpg);
       await m.react("🐣");
-      let msg = "╭─「 ✦ ɴᴇxᴛ ǫᴜᴇsᴛ ✦ 」\n";
-      msg += "│ 📜 Chapter " + (nextIndex + 1) + "/" + STORY.length + "\n";
+      let msg = "";
+      msg += "📜 Chapter " + (nextIndex + 1) + "/" + STORY.length + "\n";
       msg += "│\n";
-      msg += "│ " + STORY[nextIndex] + "\n";
+      msg += "" + STORY[nextIndex] + "\n";
       msg += "│\n";
-      msg += "│ ⭐ +" + reward + " EXP | 💰 +" + reward + " Gold\n";
-      msg += "╰────  •  ────";
+      msg += "⭐ +" + reward + " EXP | 💰 +" + reward + " Gold\n";
+      msg += "";
       return m.reply(msg);
     }
 
     if (command === "narrator") {
       const line = NARRATOR_LINES[Math.floor(Math.random() * NARRATOR_LINES.length)];
-      return m.reply("╭─「 ✦ ɴᴀʀᴀᴛᴏʀ ✦ 」\n│ 🎙️ *Narator berbisik...*\n│\n│ \"" + line + "\"\n│\n│ 📌 .storyquest untuk menjelajah kisahmu\n╰────  •  ────");
+      return m.reply("🎙️ *Narator berbisik...*\n\n\"" + line + "\"\n\n📌 .storyquest untuk menjelajah kisahmu");
     }
 
     if (command === "npc") {
       const npcName = (text || "").trim().toLowerCase();
       if (!npcName) {
-        let msg = "╭─「 ✦ ɴᴘᴄ ✦ 」\n";
-        msg += "│ NPC yang bisa diajak bicara:\n│\n";
+        let msg = "";
+        msg += "NPC yang bisa diajak bicara:\n";
         for (const [id, line] of Object.entries(NPCS)) {
-          msg += "│ 🔹 " + id + "\n";
+          msg += "🔹 " + id + "\n";
         }
-        msg += "│\n│ 📌 .npc <nama> — bicara dengan NPC\n╰────  •  ────";
+        msg += "\n📌 .npc <nama> — bicara dengan NPC\n";
         return m.reply(msg);
       }
       const npc = NPCS[npcName];
       if (!npc) return m.reply(claraWrap("npc", "NPC tidak ditemukan. Tersedia: " + Object.keys(NPCS).join(", "), "guide"));
-      return m.reply("╭─「 ✦ ɴᴘᴄ ✦ 」\n│ " + npc + "\n╰────  •  ────");
+      return m.reply("" + npc + "");
     }
   } catch (e) {
     console.error("storyquest error:", e.message);

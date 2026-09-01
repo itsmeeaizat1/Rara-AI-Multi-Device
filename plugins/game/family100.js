@@ -257,9 +257,10 @@ async function handler(m, { sock }) {
       if (session) {
         const remaining = getRemainingTime(chatId);
         let text = `⚠️ *Game Family 100 masih berjalan!*\n\n`;
-        text += `╭─「 ✦ ${session.question} ✦ 」\n\n`;
+        text += `${session.question}\n\n`;
         text += renderBoard(session);
-        text += `\n\n│ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n`;
+        text += `\n
+Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n`;
         text += `│ Sisa waktu: *${formatTime(remaining)}*\n\n`;
         text += `_Ketik "nyerah" untuk menyerah dan lihat semua jawaban_`;
         await m.reply(text);
@@ -269,16 +270,16 @@ async function handler(m, { sock }) {
 
     const data = loadData();
     if (!data || data.length === 0) {
-      await m.reply("╭─「 ✦ Family 100 ✦ 」\n│ ❌ Soalnya lagi kosong nih 🫠\n│ Coba lagi nanti ya!\n╰────  •  ────");
+      await m.reply("❌ Soalnya lagi kosong nih 🫠\nCoba lagi nanti ya!");
       return;
     }
 
     const questionData = data[Math.floor(Math.random() * data.length)];
     if (!questionData || !questionData.jawaban || questionData.jawaban.length === 0) {
-      await m.reply("╭─「 ✦ Family 100 ✦ 」\n│ ❌ Soalnya rusak nih 😵\n│ Coba ulang ya!\n╰────  •  ────");
+      await m.reply("❌ Soalnya rusak nih 😵\nCoba ulang ya!");
       return;
     }
-    let text = `╭─「 ✦ FAMILY 100 ✦ 」\n`;
+    let text = ``;
     text += `│  ➥ *${questionData.soal}*\n`;
     text += `│\n`;
     text += renderBoard({
@@ -289,11 +290,12 @@ async function handler(m, { sock }) {
       })),
       totalAnswers: questionData.jawaban.length,
     });
-    text += `\n\n│ Total jawaban: *${questionData.jawaban.length}*\n`;
+    text += `\n
+Total jawaban: *${questionData.jawaban.length}*\n`;
     text += `│ Waktu: *${formatTime(120000)}*\n`;
     text += `│ Hadiah: *Limit, Koin, EXP (random per jawaban)*\n\n`;
     text += `_Balas pesan ini atau ketik jawaban langsung_\n_Ketik "nyerah" untuk menyerah_\n`;
-    text += `╰────  •  ────`;
+    text += ``;
 
     const sentMsg = await m.reply(text);
     const session = createSession(
@@ -306,7 +308,7 @@ async function handler(m, { sock }) {
     setSessionTimer(chatId, async () => {
       try {
         let endText = `${pick(TIMEOUT_MSGS)}\n\n`;
-        endText += `╭─「 ✦ ${session.question} ✦ 」\n\n`;
+        endText += `${session.question}\n\n`;
         endText += `📊 *JAWABAN LENGKAP:*\n\n`;
         for (let i = 0; i < session.answers.length; i++) {
           const ans = session.answers[i];
@@ -316,12 +318,13 @@ async function handler(m, { sock }) {
             endText += `│ ${i + 1}. *${ans.text.toUpperCase()}* ❌\n`;
           }
         }
-        endText += `\n│ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
+        endText += `
+Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
         const scores = renderScores(session);
         if (scores) {
           endText += `🏆 *SKOR AKHIR:*\n${scores}\n\n`;
         }
-        endText += `╰────  •  ────`;
+        endText += ``;
         await sock.sendMessage(chatId, { text: endText });
       } catch (e) {
         console.error("[family100] Timeout handler error:", e.message);
@@ -358,7 +361,7 @@ async function answerHandler(m, sock) {
     if (isSurrender(userAnswer)) {
       // Build reveal text BEFORE ending session
       let text = `${pick(SURRENDER_MSGS)}\n\n`;
-      text += `╭─「 ✦ ${session.question} ✦ 」\n\n`;
+      text += `${session.question}\n\n`;
       text += `📊 *JAWABAN LENGKAP:*\n\n`;
       for (let i = 0; i < session.answers.length; i++) {
         const ans = session.answers[i];
@@ -368,12 +371,13 @@ async function answerHandler(m, sock) {
           text += `│ ${i + 1}. *${ans.text.toUpperCase()}* ❌\n`;
         }
       }
-      text += `\n│ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
+      text += `
+Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
       const scores = renderScores(session);
       if (scores) {
         text += `🏆 *SKOR AKHIR:*\n${scores}\n\n`;
       }
-      text += `╰────  •  ────`;
+      text += ``;
 
       const mentionJids = Object.keys(session.scores).length > 0
         ? Object.keys(session.scores)
@@ -415,14 +419,15 @@ async function answerHandler(m, sock) {
       replyText += `*@${sender.split("@")[0]}* menebak: *${result.answer.text.toUpperCase()}*\n`;
       replyText += `│ Dapat *${points} poin*\n`;
       replyText += `│ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
-      replyText += `╭─「 ✦ ${session.question} ✦ 」\n\n`;
+      replyText += `${session.question}\n\n`;
       replyText += renderBoard(session);
-      replyText += `\n\n│ Sisa waktu: *${formatTime(getRemainingTime(chatId))}*\n`;
+      replyText += `\n
+Sisa waktu: *${formatTime(getRemainingTime(chatId))}*\n`;
       const scores = renderScores(session);
       if (scores) {
         replyText += `\n🏆 *SKOR:*\n${scores}\n`;
       }
-      replyText += `\n╰────  •  ────`;
+      replyText += `\n`;
 
       try {
         await sock.sendMessage(chatId, {
@@ -468,7 +473,7 @@ async function answerHandler(m, sock) {
           if (reward.exp > 0) winText += `│ +${reward.exp} EXP\n`;
         }
 
-        winText += `\n╰────  •  ────`;
+        winText += `\n`;
 
         // End session FIRST, then send
         endSession(chatId);

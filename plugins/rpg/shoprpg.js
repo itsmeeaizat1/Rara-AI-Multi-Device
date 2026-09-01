@@ -50,29 +50,32 @@ async function handler(m, { sock }) {
 
     // Show shop list
     if (!action || action === "list") {
-      let msg = `╭─「 ✦ sʜᴏᴘ ʀᴘɢ ✦ 」\n`;
-      msg += `│ 💰 Gold kamu: *${rpg.gold}*\n`;
-      msg += `│\n`;
-      msg += `│ 📦 *ᴄᴏɴsᴜᴍᴀʙʟᴇ*\n`;
+      let msg = "";
+      msg += `💰 Gold kamu: *${rpg.gold}*\n`;
+      msg += `
+`;
+      msg += `📦 *ᴄᴏɴsᴜᴍᴀʙʟᴇ*\n`;
       for (const item of SHOP_ITEMS.filter(i => i.type === "consumable")) {
-        msg += `│ ${item.name} — *${item.price} gold* (${item.id})\n`;
+        msg += `${item.name} — *${item.price} gold* (${item.id})\n`;
       }
-      msg += `│\n`;
-      msg += `│ ⚔️ *ᴇϙᴜɪᴘᴍᴇɴᴛ*\n`;
+      msg += `
+`;
+      msg += `⚔️ *ᴇϙᴜɪᴘᴍᴇɴᴛ*\n`;
       for (const item of SHOP_ITEMS.filter(i => i.type === "weapon" || i.type === "armor" || i.type === "helmet" || i.type === "boots")) {
-        msg += `│ ${item.name} — *${item.price} gold* (${item.id})\n`;
+        msg += `${item.name} — *${item.price} gold* (${item.id})\n`;
       }
-      msg += `│\n`;
-      msg += `│ 🔑 *ᴋᴇʏs*\n`;
+      msg += `
+`;
+      msg += `🔑 *ᴋᴇʏs*\n`;
       for (const item of SHOP_ITEMS.filter(i => i.type === "key")) {
-        msg += `│ ${item.name} — *${item.price} gold* (${item.id})\n`;
+        msg += `${item.name} — *${item.price} gold* (${item.id})\n`;
       }
-      msg += `│\n`;
-      msg += `│ 📌 Cara pakai:\n`;
-      msg += `│ .shoprpg buy <nama_item> [qty]\n`;
-      msg += `│ .shoprpg sell <nama_item> [qty]\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `
+`;
+      msg += `📌 Cara pakai:\n`;
+      msg += `.shoprpg buy <nama_item> [qty]\n`;
+      msg += `.shoprpg sell <nama_item> [qty]\n`;
+      
       return m.reply(msg);
     }
 
@@ -96,15 +99,15 @@ async function handler(m, { sock }) {
       addItem(m, shopItem.id, qty);
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ sʜᴏᴘ ʀᴘɢ ✦ 」\n`;
-      msg += `│ ✅ Berhasil membeli!\n`;
-      msg += `│\n`;
-      msg += `│ 📦 Item: *${shopItem.name}*\n`;
-      msg += `│ 🔢 Jumlah: *${qty}x*\n`;
-      msg += `│ 💰 Harga: *${total} gold*\n`;
-      msg += `│ 💼 Sisa gold: *${rpg.gold - total}*\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `✅ Berhasil membeli!\n`;
+      msg += `
+`;
+      msg += `📦 Item: *${shopItem.name}*\n`;
+      msg += `🔢 Jumlah: *${qty}x*\n`;
+      msg += `💰 Harga: *${total} gold*\n`;
+      msg += `💼 Sisa gold: *${rpg.gold - total}*\n`;
+      
       return m.reply(msg);
     }
 
@@ -131,15 +134,15 @@ async function handler(m, { sock }) {
       addGold(m, total);
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ sʜᴏᴘ ʀᴘɢ ✦ 」\n`;
-      msg += `│ ✅ Berhasil menjual!\n`;
-      msg += `│\n`;
-      msg += `│ 📦 Item: *${itemInfo.name}*\n`;
-      msg += `│ 🔢 Jumlah: *${qty}x*\n`;
-      msg += `│ 💰 Diterima: *${total} gold*\n`;
-      msg += `│ 💼 Total gold: *${rpg.gold + total}*\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `✅ Berhasil menjual!\n`;
+      msg += `
+`;
+      msg += `📦 Item: *${itemInfo.name}*\n`;
+      msg += `🔢 Jumlah: *${qty}x*\n`;
+      msg += `💰 Diterima: *${total} gold*\n`;
+      msg += `💼 Total gold: *${rpg.gold + total}*\n`;
+      
       return m.reply(msg);
     }
 

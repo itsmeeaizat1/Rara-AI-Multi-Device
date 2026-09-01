@@ -44,13 +44,7 @@ Gunakan bahasa Indonesia santai. Pujian harus bikin senyum, bukan cringe.`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴘᴜᴊɪᴀɴ ᴀɪ ✦ 」\n`;
-    msg += `│ 💕 Untuk: *${target}*\n`;
-    msg += `│\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `│\n`;
-    msg += `│ Semoga harimu jadi lebih baik! ✨\n`;
-    msg += `╰────  •  ────`;
+    let msg = `Untuk: ${target}\n\n${result.answer.trim()}\n\nSemoga harimu jadi lebih baik! ✨`;
     return m.reply(msg);
   } catch (err) {
     console.error("pujianai error:", err);

@@ -98,29 +98,31 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastDagang", DAGANG_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ʙᴇʀᴅᴀɢᴀɴɢ ✦ 」\n`;
-    msg += `│ 🏘️ Dari: *${buyVillage.name}*\n`;
-    msg += `│ 📍 Ke: *${sellVillage.name}*\n`;
-    msg += `│ 📦 Barang: *${good.name}* x${qty}\n`;
-    msg += `│\n`;
-    msg += `│ 💵 Beli: *${buyPrice} gold/pcs* (Total: ${cost})\n`;
-    msg += `│ 💰 Jual: *${sellPrice} gold/pcs* (Total: ${revenue})\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `🏘️ Dari: *${buyVillage.name}*\n`;
+    msg += `📍 Ke: *${sellVillage.name}*\n`;
+    msg += `📦 Barang: *${good.name}* x${qty}\n`;
+    msg += `
+`;
+    msg += `💵 Beli: *${buyPrice} gold/pcs* (Total: ${cost})\n`;
+    msg += `💰 Jual: *${sellPrice} gold/pcs* (Total: ${revenue})\n`;
+    msg += `
+`;
 
     if (profit > 0) {
-      msg += `│ ✅ Profit: *+${profit} gold*\n`;
+      msg += `✅ Profit: *+${profit} gold*\n`;
     } else if (profit < 0) {
-      msg += `│ ❌ Rugi: *${profit} gold*\n`;
+      msg += `❌ Rugi: *${profit} gold*\n`;
     } else {
-      msg += `│ 🟰 Break even: *0 gold*\n`;
+      msg += `🟰 Break even: *0 gold*\n`;
     }
 
-    msg += `│ ✦ EXP: *+${expGain}*\n`;
-    msg += `│\n`;
-    msg += `│ 💼 Gold: *${rpg.gold - cost + revenue}*\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `✦ EXP: *+${expGain}*\n`;
+    msg += `
+`;
+    msg += `💼 Gold: *${rpg.gold - cost + revenue}*\n`;
+    msg += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("berdagang error:", err);

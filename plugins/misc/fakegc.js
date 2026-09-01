@@ -22,14 +22,14 @@ async function handler(m, { sock }) {
     const msg = msgParts.join("|") || "Halo!";
     const time = new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
 
-    let result = `╭─「 ✦ GROUP CHAT ✦ 」\n`;
-    result += `│ ${name || "Anonymous"} - ${time}\n`;
-    result += `│ ${msg}\n`;
-    result += `│\n`;
-    result += `│ ${m.pushName || "Kamu"} - ${time}\n`;
-    result += `│ ↩️ ${msg}\n`;
-    result += `╰────  •  ────`;
-    await m.react("🐣");
+    let result = "";
+    result += `${name || "Anonymous"} - ${time}\n`;
+    result += `${msg}\n`;
+    result += `
+`;
+    result += `${m.pushName || "Kamu"} - ${time}\n`;
+    result += `↩️ ${msg}\n`;
+        await m.react("🐣");
     return m.reply(result);
   } catch (err) {
     console.error("fakegc error:", err);

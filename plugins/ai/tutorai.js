@@ -55,33 +55,47 @@ Gunakan bahasa Indonesia yang santai dan mudah dimengerti.`;
       if (!t) continue;
 
       if (t.startsWith("PENGERTIAN:")) {
-        formatted += `│ 📖 *ᴘᴇɴɢᴇʀᴛɪᴀɴ*\n│ ${t.replace("PENGERTIAN:", "").trim()}\n│\n`;
+        formatted += `📖 *ᴘᴇɴɢᴇʀᴛɪᴀɴ*
+${t.replace("PENGERTIAN:", "").trim()}
+
+`;
       } else if (t.startsWith("ANALOGI:")) {
-        formatted += `│ 💡 *ᴀɴᴀʟᴏɢɪ*\n│ ${t.replace("ANALOGI:", "").trim()}\n│\n`;
+        formatted += `💡 *ᴀɴᴀʟᴏɢɪ*
+${t.replace("ANALOGI:", "").trim()}
+
+`;
       } else if (t.startsWith("PENJELASAN:")) {
-        formatted += `│ 📝 *ᴘᴇɴᴊᴇʟᴀsᴀɴ*\n│ ${t.replace("PENJELASAN:", "").trim()}\n│\n`;
+        formatted += `📝 *ᴘᴇɴᴊᴇʟᴀsᴀɴ*
+${t.replace("PENJELASAN:", "").trim()}
+
+`;
       } else if (t.startsWith("CONTOH:")) {
-        formatted += `│ ✅ *ᴄᴏɴᴛᴏʜ*\n│ ${t.replace("CONTOH:", "").trim()}\n│\n`;
+        formatted += `✅ *ᴄᴏɴᴛᴏʜ*
+${t.replace("CONTOH:", "").trim()}
+
+`;
       } else if (t.startsWith("RANGKUMAN:")) {
-        formatted += `│ 📌 *ʀᴀɴɢᴋᴜᴍᴀɴ*\n│ ${t.replace("RANGKUMAN:", "").trim()}\n`;
+        formatted += `📌 *ʀᴀɴɢᴋᴜᴍᴀɴ*
+${t.replace("RANGKUMAN:", "").trim()}\n`;
       } else {
-        formatted += `│ ${t}\n`;
+        formatted += `${t}\n`;
       }
     }
 
     if (!formatted) {
-      formatted = `│ ${result.answer.trim()}\n`;
+      formatted = `${result.answer.trim()}\n`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴛᴜᴛᴏʀ ᴀɪ ✦ 」\n`;
-    msg += `│ 📚 Topik: *${text}*\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `📚 Topik: *${text}*\n`;
+    msg += `
+`;
     msg += formatted;
-    msg += `│\n`;
-    msg += `│ 📌 Mau tanya lagi? Ketik .tutorai <topik>\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `📌 Mau tanya lagi? Ketik .tutorai <topik>\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("tutorai error:", err);
     await m.react("❌");

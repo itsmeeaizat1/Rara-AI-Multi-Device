@@ -110,26 +110,25 @@ async function handler(m, { sock }) {
       await recipe.apply(db, m.sender);
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ᴄᴀᴜʟᴅʀᴏɴ sᴜᴄᴄᴇss ✦ 」\n`;
-      msg += `│ ${recipe.emoji} *${recipe.name}*\n`;
-      msg += `│ Effect: *${recipe.effect}*\n`;
-      msg += `│ Cost: ${recipe.goldCost}g\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `${recipe.emoji} *${recipe.name}*\n`;
+      msg += `Effect: *${recipe.effect}*\n`;
+      msg += `Cost: ${recipe.goldCost}g\n`;
+            return m.reply(msg);
     }
 
     // LIST (default)
-    let msg = `╭─「 ✦ ᴡɪᴛᴄʜ's ᴄᴀᴜʟᴅʀᴏɴ ✦ 」\n`;
+    let msg = "";
     RECIPES.forEach(r => {
       const mats = Object.entries(r.materials).map(([k, v]) => `${v} ${k}`).join(", ");
-      msg += `│ ${r.emoji} *${r.name}*\n`;
-      msg += `│   Bahan: ${mats} | ${r.goldCost}g\n`;
-      msg += `│   Effect: ${r.effect}\n`;
+      msg += `${r.emoji} *${r.name}*\n`;
+      msg += `Bahan: ${mats} | ${r.goldCost}g\n`;
+      msg += `Effect: ${r.effect}\n`;
     });
-    msg += `│\n`;
-    msg += `│ ${m.prefix}witchcauldron brew <recipe>\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `${m.prefix}witchcauldron brew <recipe>\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("witchcauldron error:", err);
     await m.react("❌");

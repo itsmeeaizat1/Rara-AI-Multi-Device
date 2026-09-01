@@ -22,7 +22,7 @@ async function handler(m, { sock }) {
     }
 
     if (text.length > 1000) {
-      return m.reply(claraWrap("qrgen", "Teks terlalu panjang! Maksimal 1000 karakter.", "error"));
+      return m.reply("❌ Teks terlalu panjang! Maksimal 1000 karakter.");
     }
 
     await m.react("🕒");
@@ -41,12 +41,15 @@ async function handler(m, { sock }) {
     });
 
     await m.react("🐣");
-    const caption = `╭─「 ✦ ǫʀ ᴄᴏᴅᴇ ✦ 」\n│ Content: ${text.slice(0, 60)}${text.length > 60 ? "..." : ""}\n│ Engine: qrcode (local)\n╰────  •  ────`;
+    const caption = `✅ *QR CODE*
+
+Content: ${text.slice(0, 60)}${text.length > 60 ? "..." : ""}
+Engine: qrcode (local)`;
     return await sock.sendMessage(m.chat, { image: buffer, caption });
   } catch (err) {
     console.error("qrgen error:", err);
     await m.react("❌");
-    return m.reply(claraWrap("qrgen", err.message || "Error", "error"));
+    return m.reply(`❌ ${err.message || "Error"}`);
   }
 }
 

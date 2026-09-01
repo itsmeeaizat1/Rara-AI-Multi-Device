@@ -38,17 +38,18 @@ async function handler(m, { sock }) {
     const input = (m.args.join(" ") || "").toLowerCase().trim();
 
     if (!input || input === "list") {
-      let listMsg = `╭─「 ✦ TREASURE HUNT LOCATIONS ✦ 」\n`;
-      listMsg += `│ Pilih lokasi berburu harta karun:\n│\n`;
+      let listMsg = "";
+      listMsg += `Pilih lokasi berburu harta karun:
+
+`;
       LOCATIONS.forEach((loc, idx) => {
-        listMsg += `│ ${idx + 1}. *${loc.name}*\n`;
-        listMsg += `│    ⚡ Biaya: *${loc.cost} Energi*\n`;
-        listMsg += `│    💰 Potensi: *${loc.minGold} - ${loc.maxGold} Gold*\n`;
+        listMsg += `${idx + 1}. *${loc.name}*\n`;
+        listMsg += `⚡ Biaya: *${loc.cost} Energi*\n`;
+        listMsg += `💰 Potensi: *${loc.minGold} - ${loc.maxGold} Gold*\n`;
       });
-      listMsg += `│\n│ 💡 *Penggunaan:* ${m.prefix}treasurehunt <nama_lokasi>\n`;
-      listMsg += `│ 📝 *Contoh:* ${m.prefix}treasurehunt pantai\n`;
-      listMsg += `╰────  •  ────`;
-      await m.react("🐣");
+      listMsg += `💡 *Penggunaan:* ${m.prefix}treasurehunt <nama_lokasi>\n`;
+      listMsg += `📝 *Contoh:* ${m.prefix}treasurehunt pantai\n`;
+            await m.react("🐣");
       return m.reply(listMsg);
     }
 
@@ -71,38 +72,39 @@ async function handler(m, { sock }) {
     }
 
     const roll = Math.floor(Math.random() * 100) + 1;
-    let msg = `╭─「 ✦ TREASURE HUNT ✦ 」\n`;
-    msg += `│ 📍 Lokasi: *${loc.name}*\n`;
-    msg += `│ ⛏️ *Penggalian:* ${loc.digText}\n│\n`;
+    let msg = "";
+    msg += `📍 Lokasi: *${loc.name}*\n`;
+    msg += `⛏️ *Penggalian:* ${loc.digText}
+
+`;
 
     const inventory = await db.getPlayerData?.(sender, "inventory") || { items: {} };
     if (!inventory.items) inventory.items = {};
 
     if (roll <= 20) {
-      msg += `│ ❌ *Hasil:* Zonk! Tidak menemukan apa-apa...\n`;
-      msg += `│ 💨 Kamu hanya mendapatkan tanah dan batu tak berharga.\n`;
+      msg += `❌ *Hasil:* Zonk! Tidak menemukan apa-apa...\n`;
+      msg += `💨 Kamu hanya mendapatkan tanah dan batu tak berharga.\n`;
     } else if (roll <= 24) {
       const legGold = Math.floor(Math.random() * 15000) + 10000;
       profile.gold = (profile.gold || 0) + legGold;
       inventory.items["Peti Harta Legendaris"] = (inventory.items["Peti Harta Legendaris"] || 0) + 1;
-      msg += `│ ✨ *HARTA LEGENDARIS!* ✨\n`;
-      msg += `│ 👑 Kamu menemukan Peti Emas Kuno Berkilau!\n`;
-      msg += `│ 💰 Gold: *+${legGold.toLocaleString()} Gold*\n`;
-      msg += `│ 📦 Item: *Peti Harta Legendaris x1*\n`;
+      msg += `✨ *HARTA LEGENDARIS!* ✨\n`;
+      msg += `👑 Kamu menemukan Peti Emas Kuno Berkilau!\n`;
+      msg += `💰 Gold: *+${legGold.toLocaleString()} Gold*\n`;
+      msg += `📦 Item: *Peti Harta Legendaris x1*\n`;
     } else {
       const goldReward = Math.floor(Math.random() * (loc.maxGold - loc.minGold + 1)) + loc.minGold;
       const itemReward = loc.items[Math.floor(Math.random() * loc.items.length)];
       profile.gold = (profile.gold || 0) + goldReward;
       inventory.items[itemReward] = (inventory.items[itemReward] || 0) + 1;
-      msg += `│ 🎁 *Hasil Temuan:* Berhasil!\n`;
-      msg += `│ 💰 Gold: *+${goldReward.toLocaleString()} Gold*\n`;
-      msg += `│ 📦 Item: *${itemReward} x1*\n`;
+      msg += `🎁 *Hasil Temuan:* Berhasil!\n`;
+      msg += `💰 Gold: *+${goldReward.toLocaleString()} Gold*\n`;
+      msg += `📦 Item: *${itemReward} x1*\n`;
     }
 
-    msg += `│\n│ ⚡ Sisa Energi: *${profile.energi}*\n`;
-    msg += `│ 💰 Total Gold: *${(profile.gold || 0).toLocaleString()}*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `⚡ Sisa Energi: *${profile.energi}*\n`;
+    msg += `💰 Total Gold: *${(profile.gold || 0).toLocaleString()}*\n`;
+    
     await db.setPlayerData?.(sender, "profile", profile);
     await db.setPlayerData?.(sender, "inventory", inventory);
 

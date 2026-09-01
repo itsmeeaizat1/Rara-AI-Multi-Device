@@ -37,20 +37,22 @@ async function handler(m, { sock, config: botConfig }) {
       }
     } catch (e) { console.error('[linode.js]:', e.message); }
 
-    let text = `╭─「 ✦ Server Info ✦ 」\n│ *OS:* ${osName}
-│ *ʜᴏꜱᴛ:* ${hostname}
-│ *ᴜᴘᴛɪᴍᴇ:* ${uptime}
-│ *ᴄᴘᴜ:* ${cpu}
-│ *ʀᴀᴍ:* ${ram}
-╰────  •  ────
+    let text = `
+*OS:* ${osName}
+*ʜᴏꜱᴛ:* ${hostname}
+*ᴜᴘᴛɪᴍᴇ:* ${uptime}
+*ᴄᴘᴜ:* ${cpu}
+*ʀᴀᴍ:* ${ram}
+
 Ketik ${prefix}menu untuk kembali`;
 
     await m.reply(claraWrap("linode", text));
   } catch (error) {
     const prefix = botConfig.command?.prefix || ".";
-    let text = `╭─「 ✦ Server Error ✦ 」\n│ *Status:* Gagal
-│ *ᴀʟᴀꜱᴀɴ:* ${error.message}
-╰────  •  ────
+    let text = `
+*Status:* Gagal
+*ᴀʟᴀꜱᴀɴ:* ${error.message}
+
 Coba lagi ya`;
 
     await m.reply( text, "linode");

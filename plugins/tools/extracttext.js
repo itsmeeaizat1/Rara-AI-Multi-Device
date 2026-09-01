@@ -330,17 +330,17 @@ async function handler(m, { sock, config: botConfig, text: args }) {
 
   if (!isImage && !isPdf) {
     const helpText = claraWrap("Extract Text", [
-      `│ Ekstrak teks dari *ᴘᴅꜰ* atau *ɢᴀᴍʙᴀʀ* dengan format rapi`,
+      `Ekstrak teks dari *ᴘᴅꜰ* atau *ɢᴀᴍʙᴀʀ* dengan format rapi`,
       ``,
-      `│ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
+      `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*`,
       `  Reply PDF/Gambar lalu ketik:`,
       `  ${prefix}extracttext (mode standar)`,
       `  ${prefix}extracttext ai (mode AI untuk gambar)`,
       ``,
-      `│ *ᴍᴇᴅɪᴀ ʏᴀɴɢ ᴅɪᴅᴜᴋᴜɴɢ:*`,
+      `*ᴍᴇᴅɪᴀ ʏᴀɴɢ ᴅɪᴅᴜᴋᴜɴɢ:*`,
       `  PDF (.pdf), JPG, PNG, WEBP`,
       ``,
-      `│ *ᴍᴏᴅᴇ:*`,
+      `*ᴍᴏᴅᴇ:*`,
       `  Standar - pdf-parse (PDF) / AI vision (gambar)`,
       `  ai - AI vision untuk hasil lebih akurat (PDF & gambar)`,
       `  Maks 5 halaman untuk AI mode PDF`,
@@ -368,18 +368,18 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     } else if (isPdf || pdfMime.includes("pdf")) {
       if (useAI) {
         modeLabel = "AI Vision";
-        m.reply(claraWrap("Extract Text", "│ Rendering halaman PDF & ekstrak dengan AI vision..."));
+        m.reply(claraWrap("Extract Text", "Rendering halaman PDF & ekstrak dengan AI vision..."));
         try {
           extractedText = await extractPdfViaAI(buffer, botConfig);
         } catch (aiErr) {
           // Fallback to pdf-parse if AI mode fails
-          m.reply(claraWrap("Extract Text", "│ AI mode gagal, fallback ke pdf-parse..."));
+          m.reply(claraWrap("Extract Text", "AI mode gagal, fallback ke pdf-parse..."));
           extractedText = await extractPdfText(buffer);
           modeLabel = "PDF Parse (fallback)";
         }
       } else {
         modeLabel = "PDF Parse";
-        m.reply(claraWrap("Extract Text", "│ Mengekstrak teks dari PDF dengan struktur..."));
+        m.reply(claraWrap("Extract Text", "Mengekstrak teks dari PDF dengan struktur..."));
         extractedText = await extractPdfText(buffer);
       }
     } else {

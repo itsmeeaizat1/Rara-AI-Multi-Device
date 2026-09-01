@@ -89,23 +89,27 @@ async function handler(m, { sock }) {
           case "gem": {
             const gemQty = Math.floor(Math.random() * (bonus.amount[1] - bonus.amount[0] + 1)) + bonus.amount[0];
             addGems(m, gemQty);
-            bonusText += `\n│ ${bonus.msg} *+${gemQty} gems*`;
+            bonusText += `
+${bonus.msg} *+${gemQty} gems*`;
             break;
           }
           case "fossil": {
             addItem(m, bonus.item, 1);
-            bonusText += `\n│ ${bonus.msg} *+1x Fosil*`;
+            bonusText += `
+${bonus.msg} *+1x Fosil*`;
             break;
           }
           case "chest": {
             const chestGold = Math.floor(Math.random() * (bonus.gold[1] - bonus.gold[0] + 1)) + bonus.gold[0];
             addGold(m, chestGold);
-            bonusText += `\n│ ${bonus.msg} *+${chestGold} gold*`;
+            bonusText += `
+${bonus.msg} *+${chestGold} gold*`;
             break;
           }
           case "cavein": {
             hpDmg = Math.floor(Math.random() * (bonus.dmg[1] - bonus.dmg[0] + 1)) + bonus.dmg[0];
-            bonusText += `\n│ ${bonus.msg} *-${hpDmg} HP*`;
+            bonusText += `
+${bonus.msg} *-${hpDmg} HP*`;
             break;
           }
         }
@@ -124,22 +128,23 @@ async function handler(m, { sock }) {
     const freshRpg = ensureRpg(m, m.pushName);
 
     await m.react("🐣");
-    let out = `╭─「 ✦ ᴍɪɴɪɴɢ ᴠ2 ✦ 」\n`;
-    out += `│ ⛏️ Menambang di Level ${rpg.level}...\n`;
-    out += `│\n`;
-    out += `│ 📦 *ʜᴀsɪʟ*\n`;
-    out += `│ 🪨 ${ore.name} Ore: *+${qty}x*\n`;
-    out += `│ 💰 Gold: *+${goldGain}*\n`;
-    out += `│ ✦ EXP: *+${expGain}*\n`;
+    let out = "";
+    out += `⛏️ Menambang di Level ${rpg.level}...\n`;
+    out += `
+`;
+    out += `📦 *ʜᴀsɪʟ*\n`;
+    out += `🪨 ${ore.name} Ore: *+${qty}x*\n`;
+    out += `💰 Gold: *+${goldGain}*\n`;
+    out += `✦ EXP: *+${expGain}*\n`;
     if (bonusText) out += bonusText + "\n";
-    out += `│\n`;
+    out += `
+`;
     if (streak > 1) {
-      out += `│ 🔥 Mining streak: *${streak}x* (+${Math.floor(streakBonus * 100)}%)\n`;
+      out += `🔥 Mining streak: *${streak}x* (+${Math.floor(streakBonus * 100)}%)\n`;
     }
-    out += `│ ❤️ HP: *${freshRpg.hp}/${rpg.maxHp}*\n`;
-    out += `│ ⚡ Energy: *${freshRpg.energy}/${rpg.maxEnergy}*\n`;
-    out += `╰────  •  ────`;
-
+    out += `❤️ HP: *${freshRpg.hp}/${rpg.maxHp}*\n`;
+    out += `⚡ Energy: *${freshRpg.energy}/${rpg.maxEnergy}*\n`;
+    
     return m.reply(out);
   } catch (err) {
     console.error("miningv2 error:", err);

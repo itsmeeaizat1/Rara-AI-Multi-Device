@@ -1,7 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import te from "../../src/lib/nova-error.js";
+import { novaGuide } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "voicemaker",
@@ -31,19 +30,7 @@ const VOICES = [
 async function handler(m, { sock }) {
   const text = m.text?.trim();
   if (!text) {
-    let help = "╭─「 ✦ VoiceMaker TTS ✦ 」\n";
-    help += "│ 📌 *Cara Pakai:*\n";
-    help += `│ \`${m.prefix}voicemaker <teks>\` — Default (Ardi)\n`;
-    help += `│ \`${m.prefix}voicemaker <voice>|<teks>\` — Pilih voice\n`;
-    help += "│\n";
-    help += "│ *Voice tersedia:*\n";
-    for (const v of VOICES) {
-      help += `│ • ${v.id} — ${v.name}\n`;
-    }
-    help += "│\n";
-    help += `│ 💡 *Contoh:* \`${m.prefix}voicemaker Halo semuanya\`\n`;
-    help += "╰────  •  ────";
-    return m.reply(novaGuide("VoiceMaker", "Mau bikin voice dari teks? Pilih voice-nya ya!", `${m.prefix}voicemaker id-ArdiNeural Halo dunia`));
+    return m.reply(novaGuide("VoiceMaker", "Mau bikin voice dari teks? Pilih voice-nya ya!", `${m.prefix}voicemaker id-ID-ArdiNeural Halo dunia`));
   }
 
   let voice = "id-ID-ArdiNeural";
@@ -60,7 +47,7 @@ async function handler(m, { sock }) {
   }
 
   if (!ttsText || ttsText.length > 500) {
-    return m.reply(novaError("VoiceMaker", "Teks kosong atau kepanjangan, max 500 karakter ya!"));
+    return m.reply("❌ Teks kosong atau kepanjangan, max 500 karakter ya!");
   }
   try {
     const res = await axios.get(
@@ -70,7 +57,7 @@ async function handler(m, { sock }) {
 
     const buf = Buffer.from(res.data);
     if (buf.length < 100) {
-      return m.reply(novaError("VoiceMaker", "Gagal generate voice-nya nih"));
+      return m.reply("❌ Gagal generate voice-nya nih");
     }
 
     await sock.sendMessage(
@@ -80,7 +67,7 @@ async function handler(m, { sock }) {
     );
   } catch (err) {
     console.error("[VoiceMaker] Error:", err.message);
-    return m.reply(novaError("VoiceMaker", e.message));
+    return m.reply("❌ " + (err.message || "Gagal generate voice"));
   }
 }
 

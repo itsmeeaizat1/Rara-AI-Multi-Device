@@ -43,10 +43,7 @@ async function handler(m, { sock }) {
         const buffer = Buffer.from(res.data);
 
         await m.react("🐣");
-        let caption = `╭─「 ✦ ᴀɪ ɪᴍᴀɢᴇ ✦ 」\n`;
-        caption += `│ 🎨 Prompt: *${prompt}*\n`;
-        caption += `│ ⚙️ Engine: *pollinations*\n`;
-        caption += `╰────  •  ────`;
+        let caption = `Prompt: *${prompt}*\nEngine: *pollinations*`;
         return await sock.sendMedia(m.chat, buffer, null, m, { type: "image", caption });
       } catch (e) {
         await m.react("❌");
@@ -87,12 +84,7 @@ async function handler(m, { sock }) {
 
       if (visionResult.status) {
         await m.react("🐣");
-        let msg = `╭─「 ✦ ᴀɪ ᴠɪsɪᴏɴ ᴄʜᴀᴛ ✦ 」\n`;
-        msg += `│ 👁️ Status: *Gambar dianalisis*\n`;
-        msg += `│\n`;
-        msg += `│ ${visionResult.text.replace(/\n/g, "\n│ ")}\n`;
-        msg += `╰────  •  ────`;
-        return m.reply(msg);
+        return m.reply(`Status: Gambar dianalisis\n\n${visionResult.text}`);
       }
 
       // Fallback: kalau Gemini key belum set, pakai UnlimitedAI tanpa gambar
@@ -100,13 +92,7 @@ async function handler(m, { sock }) {
       const res = await UnlimitedAI(fallbackPrompt, "nova-ai");
       if (res.status) {
         await m.react("🐣");
-        let msg = `╭─「 ✦ ᴀɪ ᴄʜᴀᴛ ✦ 」\n`;
-        msg += `│ ⚠️ Mode text-only (Gemini Vision belum aktif)\n`;
-        msg += `│ 🔑 Aktifkan: ${prefix}setkey gemini <key>\n`;
-        msg += `│ 🆓 Gratis: aistudio.google.com/apikey\n`;
-        msg += `│\n`;
-        msg += `│ ${res.answer.replace(/\n/g, "\n│ ")}\n`;
-        msg += `╰────  •  ────`;
+        let msg = `Mode text-only (Gemini Vision belum aktif)\nAktifkan: ${prefix}setkey gemini <key>\nGratis: aistudio.google.com/apikey\n\n${res.answer}`;
         return m.reply(msg);
       }
     }
@@ -114,19 +100,15 @@ async function handler(m, { sock }) {
     // Mode: chat teks biasa
     if (!text) {
       return m.reply(
-        `╭─「 ✦ ᴀɪ ᴄʜᴀᴛ+ɪᴍɢ ✦ 」\n` +
-        `│ 🤖 Chat AI yang bisa lihat gambar & generate gambar\n` +
-        `│\n` +
-        `│ 📌 Cara pakai:\n` +
-        `│ • Kirim foto + caption pertanyaan → AI analisis\n` +
-        `│ • Ketik "gambar <deskripsi>" → AI bikin gambar\n` +
-        `│ • Ketik pertanyaan biasa → AI jawab\n` +
-        `│\n` +
-        `│ 💡 Contoh:\n` +
-        `│ ${prefix}aichatimg apa di foto ini? (reply foto)\n` +
-        `│ ${prefix}aichatimg gambar kucing astronot\n` +
-        `│ ${prefix}aichatimg jelaskan teori relativitas\n` +
-        `╰────  •  ────`
+        `Chat AI yang bisa lihat gambar & generate gambar\n\n` +
+        `Cara pakai:\n` +
+        `• Kirim foto + caption pertanyaan → AI analisis\n` +
+        `• Ketik "gambar <deskripsi>" → AI bikin gambar\n` +
+        `• Ketik pertanyaan biasa → AI jawab\n\n` +
+        `Contoh:\n` +
+        `${prefix}aichatimg apa di foto ini? (reply foto)\n` +
+        `${prefix}aichatimg gambar kucing astronot\n` +
+        `${prefix}aichatimg jelaskan teori relativitas`
       );
     }
 
@@ -138,10 +120,7 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴀɪ ᴄʜᴀᴛ ✦ 」\n`;
-    msg += `│ ${result.answer.trim().replace(/\n/g, "\n│ ")}\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    return m.reply(result.answer.trim());
   } catch (err) {
     console.error("aichatimg error:", err);
     await m.react("❌");

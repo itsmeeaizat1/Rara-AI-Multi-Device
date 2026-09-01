@@ -42,16 +42,16 @@ async function handler(m, { sock }) {
     const db = await getDatabase();
 
     if (!targetName) {
-      let msg = `╭─「 ✦ ʜᴇɪsᴛ ᴛᴀʀɢᴇᴛs ✦ 」\n`;
+      let msg = "";
       TARGETS.forEach(t => {
-        msg += `│ ${t.emoji} ${t.name} [${t.difficulty}]\n`;
-        msg += `│   Success: ${Math.round(t.successRate*100)}% | Reward: ${t.reward[0]}-${t.reward[1]}g\n`;
-        msg += `│   Energi: ${t.energiCost} | Denda: ${t.fine}g\n`;
+        msg += `${t.emoji} ${t.name} [${t.difficulty}]\n`;
+        msg += `Success: ${Math.round(t.successRate*100)}% | Reward: ${t.reward[0]}-${t.reward[1]}g\n`;
+        msg += `Energi: ${t.energiCost} | Denda: ${t.fine}g\n`;
       });
-      msg += `│\n`;
-      msg += `│ ${m.prefix}heist <target>\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      msg += `
+`;
+      msg += `${m.prefix}heist <target>\n`;
+            return m.reply(msg);
     }
 
     const target = TARGETS.find(t => t.name.toLowerCase().includes(targetName));
@@ -89,20 +89,21 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ʜᴇɪsᴛ ʀᴇsᴜʟᴛ ✦ 」\n`;
-    msg += `│ Target: ${target.emoji} *${target.name}*\n`;
-    msg += `│\n`;
-    msg += `│ ${narrative}\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `Target: ${target.emoji} *${target.name}*\n`;
+    msg += `
+`;
+    msg += `${narrative}\n`;
+    msg += `
+`;
     if (success) {
-      msg += `│ 🏆 *BERHASIL!*\n`;
-      msg += `│ Reward: *+${goldChange} gold*\n`;
+      msg += `🏆 *BERHASIL!*\n`;
+      msg += `Reward: *+${goldChange} gold*\n`;
     } else {
-      msg += `│ 💀 *TERTANGKAP!*\n`;
-      msg += `│ Denda: *-${target.fine} gold*\n`;
+      msg += `💀 *TERTANGKAP!*\n`;
+      msg += `Denda: *-${target.fine} gold*\n`;
     }
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+        return m.reply(msg);
   } catch (err) {
     console.error("heist error:", err);
     await m.react("❌");

@@ -41,10 +41,10 @@ async function handler(m, { sock, config, db } = {}) {
     const cityInput = (m.text || m.args?.join(" ") || "").trim();
 
     if (!cityInput) {
-        return m.reply(`╭─「 ✦ Usage ✦ 」
+        return m.reply(`
 │ Usage: ${pluginConfig.usage}
 │ Contoh: ${pluginConfig.example}
-╰────  •  ────`);
+`);
     }
 
     try {
@@ -82,13 +82,13 @@ async function handler(m, { sock, config, db } = {}) {
                 hints = hints.slice(0, 5);
             }
 
-            const hintList = hints.map(c => `│ • ${c.lokasi}`).join("\n");
-            return m.reply(`╭─「 ✦ Kota Tidak Ditemukan ✦ 」
+            const hintList = hints.map(c => `• ${c.lokasi}`).join("\n");
+            return m.reply(`
 │ Kota "${cityInput}" tidak ditemukan.
 │
 │ Hint / Kota Mirip:
 ${hintList}
-╰────  •  ────`);
+`);
         }
 
         // Cari kota terbaik
@@ -110,15 +110,15 @@ ${hintList}
         const jadwal = dataJadwal?.jadwal;
 
         if (!jadwal) {
-            return m.reply(`╭─「 ✦ Error ✦ 」
+            return m.reply(`
 │ Gagal mengambil jadwal sholat untuk ${selectedCity.lokasi}.
-╰────  •  ────`);
+`);
         }
 
         const lokasiStr = dataJadwal.lokasi || selectedCity.lokasi;
         const tanggalStr = jadwal.tanggal || `${tanggal}/${bulan}/${tahun}`;
 
-        const resultText = `╭─「 ✦ Jadwal Sholat ✦ 」
+        const resultText = `
 │ ${lokasiStr} — ${tanggalStr}
 │
 │ Subuh: ${jadwal.subuh}
@@ -127,15 +127,15 @@ ${hintList}
 │ Ashar: ${jadwal.ashar}
 │ Maghrib: ${jadwal.maghrib}
 │ Isya: ${jadwal.isya}
-╰────  •  ────`;
+`;
 
         return m.reply(resultText);
 
     } catch (error) {
         console.error("[sholatv2] Error:", error);
-        return m.reply(`╭─「 ✦ Error ✦ 」
+        return m.reply(`
 │ Terjadi kesalahan: ${error.message}
-╰────  •  ────`);
+`);
     }
 }
 

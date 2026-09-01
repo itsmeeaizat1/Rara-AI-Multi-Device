@@ -147,21 +147,21 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let output = `╭─「 ✦ SLOT MACHINE ✦ 」\n`;
-    output += `│ 🎰 [ ${top1} | ${top2} | ${top3} ]\n`;
-    output += `│ 🎰 [ ${r1} | ${r2} | ${r3} ] ◄ LINE\n`;
-    output += `│ 🎰 [ ${bot1} | ${bot2} | ${bot3} ]\n`;
-    output += `│\n`;
-    output += `│ 📊 Status: ${resultMsg}\n`;
-    output += `│ 💵 Taruhan: *${bet} gold*\n`;
+    let output = "";
+    output += `🎰 [ ${top1} | ${top2} | ${top3} ]\n`;
+    output += `🎰 [ ${r1} | ${r2} | ${r3} ] ◄ LINE\n`;
+    output += `🎰 [ ${bot1} | ${bot2} | ${bot3} ]\n`;
+    output += `
+`;
+    output += `📊 Status: ${resultMsg}\n`;
+    output += `💵 Taruhan: *${bet} gold*\n`;
     if (netProfit > 0) {
-      output += `│ 💰 Menang: *+${netProfit} gold*\n`;
+      output += `💰 Menang: *+${netProfit} gold*\n`;
     } else {
-      output += `│ 💸 Kalah: *-${bet} gold*\n`;
+      output += `💸 Kalah: *-${bet} gold*\n`;
     }
-    output += `│ 💼 Sisa Gold: *${updatedGold} gold*\n`;
-    output += `╰────  •  ────`;
-
+    output += `💼 Sisa Gold: *${updatedGold} gold*\n`;
+    
     return m.reply(output);
   } catch (err) {
     console.error("slotmachine error:", err);

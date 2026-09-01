@@ -29,18 +29,20 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && (m.quoted.isImage || m.quoted.type === "imageMessage"));
     if (!isImage) {
       return m.reply(
-        `╭─「 ✦ ᴇᴅɪᴛ ɢᴀᴍʙᴀʀ ᴀɪ ✦ 」\n` +
-        `│ 🎨 Edit gambar dengan AI\n` +
-        `│\n` +
-        `│ 📌 Cara pakai:\n` +
-        `│ Kirim/reply foto + caption instruksi\n` +
-        `│\n` +
-        `│ 💡 Contoh:\n` +
-        `│ ${prefix}editimg ubah background jadi pantai\n` +
-        `│ ${prefix}editimg tambahkan kacamata hitam\n` +
-        `│ ${prefix}editimg ubah jadi gaya anime\n` +
-        `│ ${prefix}editimg hapus orang di belakang\n` +
-        `╰────  •  ────`
+        "" +
+        `🎨 Edit gambar dengan AI\n` +
+        `
+` +
+        `📌 Cara pakai:\n` +
+        `Kirim/reply foto + caption instruksi\n` +
+        `
+` +
+        `💡 Contoh:\n` +
+        `${prefix}editimg ubah background jadi pantai\n` +
+        `${prefix}editimg tambahkan kacamata hitam\n` +
+        `${prefix}editimg ubah jadi gaya anime\n` +
+        `${prefix}editimg hapus orang di belakang\n` +
+        ""
       );
     }
 
@@ -103,11 +105,10 @@ async function handler(m, { sock }) {
     await m.react("🐣");
 
     // Kirim hasil
-    let caption = `╭─「 ✦ ʜᴀsɪʟ ᴇᴅɪᴛ ✦ 」\n`;
-    caption += `│ 🎨 Instruksi: *${prompt}*\n`;
-    caption += `│ ⚙️ Engine: *${usedApi}*\n`;
-    caption += `╰────  •  ────`;
-
+    let caption = "";
+    caption += `🎨 Instruksi: *${prompt}*\n`;
+    caption += `⚙️ Engine: *${usedApi}*\n`;
+    
     // Jika result adalah Buffer, kirim langsung
     if (Buffer.isBuffer(result)) {
       await sock.sendMedia(m.chat, result, null, m, { type: "image", caption });

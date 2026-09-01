@@ -53,17 +53,16 @@ async function handler(m, { sock }) {
       if (action !== "panen") {
         const crop = CROPS.find(c => c.id === rpg.farm.crop);
         if (crop) {
-          let msg = `╭─「 ✦ ᴋᴇʙᴏɴ ✦ 」\n`;
-          msg += `│ 🌱 Tanaman siap dipanen!\n`;
-          msg += `│ 📦 ${crop.name} — ketik *.berkebon panen*\n`;
-          msg += `╰────  •  ────`;
-          return m.reply(msg);
+          let msg = "";
+          msg += `🌱 Tanaman siap dipanen!\n`;
+          msg += `📦 ${crop.name} — ketik *.berkebon panen*\n`;
+                    return m.reply(msg);
         }
       }
     }
 
     if (!action || action === "cek") {
-      let msg = `╭─「 ✦ ᴋᴇʙᴏɴ ✦ 」\n`;
+      let msg = "";
 
       if (rpg.farm.crop) {
         const crop = CROPS.find(c => c.id === rpg.farm.crop);
@@ -73,27 +72,28 @@ async function handler(m, { sock }) {
           if (remaining > 0) {
             const mins = Math.floor(remaining / 60000);
             const secs = Math.floor((remaining % 60000) / 1000);
-            msg += `│ 🌱 Tanaman: *${crop.name}*\n`;
-            msg += `│ ⏰ Tumbuh: *${mins}m ${secs}s* lagi\n`;
-            msg += `│ 📊 Progress: ${Math.min(100, Math.floor(elapsed / crop.growTime * 100))}%\n`;
+            msg += `🌱 Tanaman: *${crop.name}*\n`;
+            msg += `⏰ Tumbuh: *${mins}m ${secs}s* lagi\n`;
+            msg += `📊 Progress: ${Math.min(100, Math.floor(elapsed / crop.growTime * 100))}%\n`;
           } else {
-            msg += `│ 🌾 ${crop.name} siap dipanen!\n`;
-            msg += `│ 📌 Ketik *.berkebon panen*\n`;
+            msg += `🌾 ${crop.name} siap dipanen!\n`;
+            msg += `📌 Ketik *.berkebon panen*\n`;
           }
         }
       } else {
-        msg += `│ 📭 Kebon kosong\n`;
-        msg += `│\n`;
-        msg += `│ 📋 *ᴛᴀɴᴀᴍᴀɴ ᴛᴇʀsᴇᴅɪᴀ*\n`;
+        msg += `📭 Kebon kosong\n`;
+        msg += `
+`;
+        msg += `📋 *ᴛᴀɴᴀᴍᴀɴ ᴛᴇʀsᴇᴅɪᴀ*\n`;
         for (const crop of CROPS) {
-          msg += `│ 🌱 ${crop.name} (${crop.id}) — ${crop.growTime / 60000}m\n`;
+          msg += `🌱 ${crop.name} (${crop.id}) — ${crop.growTime / 60000}m\n`;
         }
-        msg += `│\n`;
-        msg += `│ 📌 .berkebon tanam <id> untuk mulai\n`;
+        msg += `
+`;
+        msg += `📌 .berkebon tanam <id> untuk mulai\n`;
       }
 
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+            return m.reply(msg);
     }
 
     if (action === "tanam" || action === "plant") {
@@ -123,15 +123,15 @@ async function handler(m, { sock }) {
       saveRpg(m, { farm: rpg.farm });
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ᴋᴇʙᴏɴ ✦ 」\n`;
-      msg += `│ ✅ Berhasil tanam!\n`;
-      msg += `│ 🌱 Tanaman: *${crop.name}*\n`;
-      msg += `│ ⏰ Grow time: *${crop.growTime / 60000} menit*\n`;
-      msg += `│\n`;
-      msg += `│ Ketik .berkebon cek untuk cek progress\n`;
-      msg += `│ Ketik .berkebon panen saat sudah siap\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `✅ Berhasil tanam!\n`;
+      msg += `🌱 Tanaman: *${crop.name}*\n`;
+      msg += `⏰ Grow time: *${crop.growTime / 60000} menit*\n`;
+      msg += `
+`;
+      msg += `Ketik .berkebon cek untuk cek progress\n`;
+      msg += `Ketik .berkebon panen saat sudah siap\n`;
+      
       return m.reply(msg);
     }
 
@@ -168,18 +168,19 @@ async function handler(m, { sock }) {
       saveRpg(m, { farm: rpg.farm });
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ᴋᴇʙᴏɴ ✦ 」\n`;
-      msg += `│ ✅ Panen berhasil!\n`;
-      msg += `│ 🌾 Tanaman: *${crop.name}*\n`;
-      msg += `│\n`;
-      msg += `│ 📦 *ʜᴀsɪʟ ᴘᴀɴᴇɴ*\n`;
-      msg += `│ 💰 Gold: *+${goldGain}*\n`;
-      msg += `│ ✦ EXP: *+${expGain}*\n`;
-      msg += `│ 📦 Item: *+${itemQty}x ${ITEM_DB[crop.item]?.name || crop.item}*\n`;
-      msg += `│\n`;
-      msg += `│ 📌 Ketik .berkebon tanam <id> untuk tanam lagi\n`;
-      msg += `╰────  •  ────`;
-
+      let msg = "";
+      msg += `✅ Panen berhasil!\n`;
+      msg += `🌾 Tanaman: *${crop.name}*\n`;
+      msg += `
+`;
+      msg += `📦 *ʜᴀsɪʟ ᴘᴀɴᴇɴ*\n`;
+      msg += `💰 Gold: *+${goldGain}*\n`;
+      msg += `✦ EXP: *+${expGain}*\n`;
+      msg += `📦 Item: *+${itemQty}x ${ITEM_DB[crop.item]?.name || crop.item}*\n`;
+      msg += `
+`;
+      msg += `📌 Ketik .berkebon tanam <id> untuk tanam lagi\n`;
+      
       return m.reply(msg);
     }
 

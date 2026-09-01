@@ -65,7 +65,7 @@ function formatGrid(grid) {
   for (let r = 0; r < 9; r++) {
     if (r % 3 === 0 && r > 0) out += "───────┼───────┼──────\n";
     for (let c = 0; c < 9; c++) {
-      if (c % 3 === 0 && c > 0) out += "│ ";
+      if (c % 3 === 0 && c > 0) out += "";
       out += (grid[r][c] === 0 ? "·" : grid[r][c]) + " ";
     }
     out += "\n";

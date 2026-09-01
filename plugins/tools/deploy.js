@@ -1,6 +1,6 @@
 import axios from 'axios'
 import config from '../../config.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+
 const pluginConfig = {
     name: "deploytool",
     alias: ["deploytool", "deploy"],
@@ -20,27 +20,28 @@ const pluginConfig = {
 async function handler(m, { sock }) {
     const name = m.args[0]
     if (!name) {
-        return m.reply(claraWrap("Deploy", `🚀 *ᴅᴇᴘʟᴏʏ*
+        return m.reply(
+`❌ *Masukkan nama website*
 
-│ Masukkan nama website
-│ Reply kode HTML atau file .html
+Reply kode HTML atau file .html
 
-💡 *Contoh:*
-.deploy mysite`))
+*Contoh:*
+.deploy mysite`
+        )
     }
 
     if (!m.quoted) {
         return m.reply(
-`❌ *ʜᴛᴍʟ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*
+`❌ *HTML TIDAK DITEMUKAN*
 
-│ Reply pesan berisi HTML
-│ atau reply file .html`
+Reply pesan berisi HTML
+atau reply file .html`
         )
     }
 
     const token = config.vercel?.token
     if (!token) {
-        { const __navText = claraWrap("Vercel token belum diset", '❌ *ᴠᴇʀᴄᴇʟ ᴛᴏᴋᴇɴ ʙᴇʟᴜᴍ ᴅɪꜱᴇᴛ*'); return await m.reply(__navText); }
+        return await m.reply('❌ *Vercel token belum diset*')
     }
     let htmlContent
 
@@ -54,16 +55,20 @@ async function handler(m, { sock }) {
             const buffer = await m.quoted.download()
             htmlContent = buffer.toString()
         } else {
-            return m.reply(claraWrap("Deploy", `❌ *ꜰᴏʀᴍᴀᴛ ᴛɪᴅᴀᴋ ᴅɪᴅᴜᴋᴜɴɢ*
+            return m.reply(
+`❌ *FORMAT TIDAK DIDUKUNG*
 
-│ Reply teks HTML
-│ atau file .html`))
+Reply teks HTML
+atau file .html`
+            )
         }
 
         if (!/<html|<!doctype html|<head|<body/i.test(htmlContent)) {
-            return m.reply(claraWrap("Deploy", `❌ *ʙᴜᴋᴀɴ ʜᴛᴍʟ ᴠᴀʟɪᴅ*
+            return m.reply(
+`❌ *BUKAN HTML VALID*
 
-│ Pastikan berisi struktur HTML`))
+Pastikan berisi struktur HTML`
+            )
         }
 
         const payload = {
@@ -115,17 +120,16 @@ async function handler(m, { sock }) {
         } catch {
             // fallback tetap ke default domain
         }
-        await m.reply(claraWrap("Deploy", `╭─「 ✦ DEPLOY SUCCESS ✦ 」
-│
-│ 🌐 Nama     : ${name}
-│ ☁️ Platform : Vercel
-│ 📄 Type     : Static HTML
-│ ⚙️ Status   : Building
-│
-│ 🔗 URL
-│ https://${domain}
-│
-╰────  •  ────`))
+        await m.reply(
+`✅ *DEPLOY SUCCESS*
+
+Nama: ${name}
+Platform: Vercel
+Type: Static HTML
+Status: Building
+
+URL: https://${domain}`
+        )
 
     } catch (error) {
 
@@ -135,11 +139,9 @@ async function handler(m, { sock }) {
             error.message
 
         m.reply(
-`╭─「 ✦ DEPLOY FAILED ✦ 」
-│
-│ ❌ ${err}
-│
-╰────  •  ────`
+`❌ *DEPLOY FAILED*
+
+${err}`
         )
     }
 }

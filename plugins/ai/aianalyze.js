@@ -96,7 +96,7 @@ async function handler(m, { sock, config: botConfig }) {
     const reply = data?.choices?.[0]?.message?.content || "Tidak dapat menganalisis media.";
 
     const out =
-      claraWrap("AI Analyze", [`│ Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
+      claraWrap("AI Analyze", [`Hasil: *${reply.slice(0, 1500)}${reply.length > 1500 ? "..." : ""}*`].join("\n")) +
       "\n" +
       tipText(`Ketik ${prefix}aianalyze untuk analisis lain`) +
       "\n" +

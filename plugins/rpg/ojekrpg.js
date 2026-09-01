@@ -73,19 +73,20 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastOjek", OJEK_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴏᴊᴇᴋ ✦ 」\n`;
-    msg += `│ 🏍️ Penumpang: *${passenger.name}*\n`;
-    msg += `│ 📍 Jarak: *${distance} km*\n`;
-    msg += `│\n`;
-    msg += `│ 📦 *ʜᴀsɪʟ* ${tip > 0 ? "+ tip!" : ""}\n`;
-    msg += `│ 💰 Ongkos: *+${baseFare}*\n`;
-    if (tip > 0) msg += `│ ✨ Tip: *+${tip} gold*\n`;
-    msg += `│ ✦ EXP: *+${expGain}*\n`;
-    msg += `│\n`;
-    msg += `│ 💼 Gold: *${rpg.gold + totalGold}*\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy - OJEK_ENERGY}/${rpg.maxEnergy}*\n`;
-    msg += `╰────  •  ────`;
-
+    let msg = "";
+    msg += `🏍️ Penumpang: *${passenger.name}*\n`;
+    msg += `📍 Jarak: *${distance} km*\n`;
+    msg += `
+`;
+    msg += `📦 *ʜᴀsɪʟ* ${tip > 0 ? "+ tip!" : ""}\n`;
+    msg += `💰 Ongkos: *+${baseFare}*\n`;
+    if (tip > 0) msg += `✨ Tip: *+${tip} gold*\n`;
+    msg += `✦ EXP: *+${expGain}*\n`;
+    msg += `
+`;
+    msg += `💼 Gold: *${rpg.gold + totalGold}*\n`;
+    msg += `⚡ Energy: *${rpg.energy - OJEK_ENERGY}/${rpg.maxEnergy}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("ojekrpg error:", err);

@@ -14,8 +14,8 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const quoted = m.quoted || m.msg?.contextInfo?.quotedMessage;
     if (!quoted) {
-      await m.reply( claraWrap("AI Diet", ["│ Reply foto makanan dengan command ini",
-        "│ AI akan estimasi kalori & gizi"].join("\n")), "aidiet");
+      await m.reply( claraWrap("AI Diet", ["Reply foto makanan dengan command ini",
+        "AI akan estimasi kalori & gizi"].join("\n")), "aidiet");
       return { handled: true };
     }
     const buffer = await m.download();

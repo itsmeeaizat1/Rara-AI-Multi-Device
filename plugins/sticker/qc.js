@@ -157,14 +157,11 @@ async function handler(m, { sock }) {
         const colorList = Object.keys(COLORS).join(', ')
         return m.reply(
             `💬 *ǫᴜᴏᴛᴇ ꜱᴛɪᴄᴋᴇʀ*\n\n` +
-            `╭─「 ✦ ᴄᴀʀᴀ ᴘᴀᴋᴀɪ ✦ 」\n` +
-            `│ │ \`${m.prefix}qc <warna> <text>\`\n` +
-            `│ │ Reply pesan + \`${m.prefix}qc <warna>\`\n` +
-            `╰────  •  ────\n\n` +
+            `\`${m.prefix}qc <warna> <text>\`\n` +
+            `Reply pesan + \`${m.prefix}qc <warna>\`\n` +
+            `\n` +
             `Contoh: \`${m.prefix}qc pink Hai semuanya!\`\n\n` +
-            `╭─「 ✦ ᴡᴀʀɴᴀ ✦ 」\n` +
-            `│ ${colorList}\n` +
-            `╰────  •  ────`
+            `${colorList}\n`
         )
     }
 

@@ -28,13 +28,13 @@ async function handler(m, { sock }) {
     }
     
     let caption = `🚫 *List Banned*\n\n`
-    caption += `╭─「 ✦ Users ✦ 」\n`
+    caption += ""
     
     for (let i = 0; i < bannedUsers.length; i++) {
-        caption += `│ ${i + 1}. \`${bannedUsers[i]}\`\n`
+        caption += `${i + 1}. \`${bannedUsers[i]}\`\n`
     }
     
-    caption += `╰────  •  ────\n\n`
+    caption += `\n`
     caption += `Total: \`${bannedUsers.length}\` Banned User`
     
     await m.reply(claraWrap("listban", caption))

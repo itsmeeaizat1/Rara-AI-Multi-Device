@@ -74,21 +74,22 @@ async function handler(m, { sock }) {
     }
 
     if (subCmd === "info" || subCmd === "prize") {
-      let msg = `╭─「 ✦ ᴘʀɪᴢᴇ ᴘᴏᴏʟ ✦ 」\n`;
-      msg += `│ Week: *${currentWeek}*\n`;
-      msg += `│ Entry fee: 500 gold\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `Week: *${currentWeek}*\n`;
+      msg += `Entry fee: 500 gold\n`;
+      msg += `
+`;
       PRIZE_POOL.forEach(p => {
-        let line = `│ #${p.rank} `;
+        let line = `#${p.rank} `;
         if (p.gold) line += `💰${p.gold}`;
         if (p.energi) line += ` ⚡${p.energi}`;
         line += ` ${p.badge}`;
         msg += line + "\n";
       });
-      msg += `│\n`;
-      msg += `│ ${m.prefix}tournament join - ikut sekarang\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      msg += `
+`;
+      msg += `${m.prefix}tournament join - ikut sekarang\n`;
+            return m.reply(msg);
     }
 
     // LEADERBOARD (default)
@@ -106,20 +107,21 @@ async function handler(m, { sock }) {
     // Sort by points
     const sorted = [...tournamentData.participants.entries()].sort((a, b) => b[1].points - a[1].points);
 
-    let msg = `╭─「 ✦ ᴡᴇᴇᴋʟʏ ᴛᴏᴜʀɴᴀᴍᴇɴᴛ ✦ 」\n`;
-    msg += `│ Week: *${currentWeek}* | Peserta: *${tournamentData.participants.size}*\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `Week: *${currentWeek}* | Peserta: *${tournamentData.participants.size}*\n`;
+    msg += `
+`;
 
     sorted.slice(0, 10).forEach(([sender, data], i) => {
       const prize = PRIZE_POOL[i];
-      msg += `│ ${i + 1}. ${data.name} - ${data.points} pts ${prize ? prize.badge : ""}\n`;
+      msg += `${i + 1}. ${data.name} - ${data.points} pts ${prize ? prize.badge : ""}\n`;
     });
 
-    msg += `│\n`;
-    msg += `│ ${m.prefix}tournament info - prize pool\n`;
-    msg += `│ ${m.prefix}tournament join - ikut turnamen\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `${m.prefix}tournament info - prize pool\n`;
+    msg += `${m.prefix}tournament join - ikut turnamen\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("tournament error:", err);
     await m.react("❌");

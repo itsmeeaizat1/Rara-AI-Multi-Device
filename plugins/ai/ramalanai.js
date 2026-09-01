@@ -62,33 +62,46 @@ Gunakan bahasa Indonesia santai. Ramalan harus positif, jangan menakut-nakuti.`;
       if (!t) continue;
 
       if (t.startsWith("BINTANG:")) {
-        formatted += `│ ${t.replace("BINTANG:", "").trim()}\n│\n`;
+        formatted += `${t.replace("BINTANG:", "").trim()}
+
+`;
       } else if (t.startsWith("RAMALAN:")) {
-        formatted += `│ 🔮 *ʀᴀᴍᴀʟᴀɴ*\n│ ${t.replace("RAMALAN:", "").trim()}\n│\n`;
+        formatted += `🔮 *ʀᴀᴍᴀʟᴀɴ*
+${t.replace("RAMALAN:", "").trim()}
+
+`;
       } else if (t.startsWith("PERINGATAN:")) {
-        formatted += `│ ⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ*\n│ ${t.replace("PERINGATAN:", "").trim()}\n│\n`;
+        formatted += `⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ*
+${t.replace("PERINGATAN:", "").trim()}
+
+`;
       } else if (t.startsWith("KEBERUNTUNGAN:")) {
-        formatted += `│ 🍀 *ᴋᴇʙᴇʀᴜɴᴛᴜɴɢᴀɴ*\n│ ${t.replace("KEBERUNTUNGAN:", "").trim()}\n│\n`;
+        formatted += `🍀 *ᴋᴇʙᴇʀᴜɴᴛᴜɴɢᴀɴ*
+${t.replace("KEBERUNTUNGAN:", "").trim()}
+
+`;
       } else if (t.startsWith("PESAN:")) {
-        formatted += `│ 💬 *ᴘᴇsᴀɴ ᴅᴜᴋᴜɴ*\n│ ${t.replace("PESAN:", "").trim()}\n`;
+        formatted += `💬 *ᴘᴇsᴀɴ ᴅᴜᴋᴜɴ*
+${t.replace("PESAN:", "").trim()}\n`;
       } else {
-        formatted += `│ ${t}\n`;
+        formatted += `${t}\n`;
       }
     }
 
     if (!formatted) {
-      formatted = `│ ${result.answer.trim()}\n`;
+      formatted = `${result.answer.trim()}\n`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ʀᴀᴍᴀʟᴀɴ ᴀɪ ✦ 」\n`;
-    msg += `│ 📌 Topik: *${topic}*\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `📌 Topik: *${topic}*\n`;
+    msg += `
+`;
     msg += formatted;
-    msg += `│\n`;
-    msg += `│ ⚠️ Ramalan untuk hiburan, jangan diambil serius 😄\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `⚠️ Ramalan untuk hiburan, jangan diambil serius 😄\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("ramalanai error:", err);
     await m.react("❌");

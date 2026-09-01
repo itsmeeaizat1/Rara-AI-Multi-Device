@@ -30,9 +30,9 @@ async function handler(m, { sock }) {
 
     if (!cinta.spouse) {
       return m.reply(
-        `╭─「 ✦ ᴘᴜᴛᴜs ᴍᴀᴛᴄʜ ✦ 」\n` +
-        `│ 💔 Kamu tidak punya pasangan!\n\n` +
-        `╰────  •  ────`
+        "" +
+        `💔 Kamu tidak punya pasangan!\n\n` +
+        ""
       );
     }
 
@@ -46,16 +46,15 @@ async function handler(m, { sock }) {
 
     breakUp(m);
 
-    let msg = `╭─「 ✦ ᴘᴜᴛᴜs ᴍᴀᴛᴄʜ ✦ 」\n`;
-    msg += `│ 💔 @${m.sender.split("@")[0]} putus dengan *${cinta.spouseName}*\n`;
-    msg += `│ ⏰ Durasi: *${formatDurasi(durasi)}*\n`;
-    if (durasiHari > 0) msg += `│ 📅 ${durasiHari} hari bersama\n`;
-    if (wasMarried) msg += `│ 💍 Status: *Dicerai otomatis*\n`;
+    let msg = "";
+    msg += `💔 @${m.sender.split("@")[0]} putus dengan *${cinta.spouseName}*\n`;
+    msg += `⏰ Durasi: *${formatDurasi(durasi)}*\n`;
+    if (durasiHari > 0) msg += `📅 ${durasiHari} hari bersama\n`;
+    if (wasMarried) msg += `💍 Status: *Dicerai otomatis*\n`;
     msg += `\n  📊 *Penalty:*\n`;
-    msg += `│ 💰 Gold: *-${goldLost}*\n`;
-    msg += `│ 💔 Affection direset ke *0*\n\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `💰 Gold: *-${goldLost}*\n`;
+    msg += `💔 Affection direset ke *0*\n\n`;
+    
     await m.reply(msg);
     await m.react("💔");
   } catch (e) {

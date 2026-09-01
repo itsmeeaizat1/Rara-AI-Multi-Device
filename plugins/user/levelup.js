@@ -44,9 +44,9 @@ function handler(m, { sock }) {
     const status = user.settings.levelupNotif !== false ? 'ON ✅' : 'OFF ❌'
     return m.reply(claraWrap("Level Up Notif", `🔔 *ʟᴇᴠᴇʟ ᴜᴘ ɴᴏᴛɪꜰ*\n\n` +
         `Status saat ini: *${status}*\n\n` +
-        `╭─「 ✦ ᴜꜱᴀɢᴇ ✦ 」\n` +
-        `│ > \`.levelup on\` - Aktifkan\n` +
-        `│ > \`.levelup off\` - Nonaktifkan\n` +
+        "" +
+        `> \`.levelup on\` - Aktifkan\n` +
+        `> \`.levelup off\` - Nonaktifkan\n` +
         `╰┈┈┈┈┈┈┈┈`))
 }
 

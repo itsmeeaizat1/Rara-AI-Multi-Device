@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     const msg = novaReply({
       title: "bratsquidward",
       status: "⚠ Masukkan teks untuk generate brat sticker",
-      content: `│\n│ Contoh: ${m.prefix}bratsquidward Hai semua`,
+      content: `Contoh: ${m.prefix}bratsquidward Hai semua`,
     });
     return await m.reply(msg);
   }

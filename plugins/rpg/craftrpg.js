@@ -122,25 +122,26 @@ async function handler(m, { sock }) {
 
     // Show recipe list
     if (!action || action === "list") {
-      let msg = `╭─「 ✦ ᴄʀᴀғᴛ ʀᴘɢ ✦ 」\n`;
-      msg += `│ 📋 Daftar resep crafting\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `📋 Daftar resep crafting\n`;
+      msg += `
+`;
 
       for (const recipe of RECIPES) {
         const resultItem = ITEM_DB[recipe.result];
         const rarity = resultItem?.rarity || "common";
         const rarityEmoji = { common: "⬜", uncommon: "🟩", rare: "🟦", epic: "🟪", legendary: "🟨" }[rarity] || "⬜";
 
-        msg += `│ ${rarityEmoji} *${recipe.name}* (${recipe.id})\n`;
-        msg += `│   Bahan: `;
+        msg += `${rarityEmoji} *${recipe.name}* (${recipe.id})\n`;
+        msg += `Bahan: `;
         const mats = recipe.materials.map(mat => `${mat.qty}x ${ITEM_DB[mat.id]?.name || mat.id}`);
         msg += mats.join(", ") + "\n";
       }
 
-      msg += `│\n`;
-      msg += `│ 📌 Ketik .craftrpg <id> untuk craft\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `
+`;
+      msg += `📌 Ketik .craftrpg <id> untuk craft\n`;
+      
       return m.reply(msg);
     }
 
@@ -173,16 +174,16 @@ async function handler(m, { sock }) {
     addItem(m, recipe.result, recipe.qty);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴄʀᴀғᴛ ʀᴘɢ ✦ 」\n`;
-    msg += `│ ✅ Craft berhasil!\n`;
-    msg += `│\n`;
-    msg += `│ 📦 Hasil: *${recipe.name}* x${recipe.qty}\n`;
-    msg += `│ 📂 Material digunakan:\n`;
+    let msg = "";
+    msg += `✅ Craft berhasil!\n`;
+    msg += `
+`;
+    msg += `📦 Hasil: *${recipe.name}* x${recipe.qty}\n`;
+    msg += `📂 Material digunakan:\n`;
     for (const mat of recipe.materials) {
-      msg += `│   - ${mat.qty}x ${ITEM_DB[mat.id]?.name || mat.id}\n`;
+      msg += `- ${mat.qty}x ${ITEM_DB[mat.id]?.name || mat.id}\n`;
     }
-    msg += `╰────  •  ────`;
-
+    
     return m.reply(msg);
   } catch (err) {
     console.error("craftrpg error:", err);

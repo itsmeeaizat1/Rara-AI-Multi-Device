@@ -337,10 +337,10 @@ function clearCaptchaSession(jid) {
 
 function buildUserDataBlock(name, age, gender, serial) {
   return (
-    "╭─「 ✦ " + (name || "-") + " ✦ 」\n│ Umur: " + (age || "-") +
-    "\n│ Gender: " + (gender || "-") +
-    (serial ? "\n│ Serial: " + serial : "") +
-    "\n╰────  •  ────"
+    "Nama: " + (name || "-") +
+    "\nUmur: " + (age || "-") +
+    "\nGender: " + (gender || "-") +
+    (serial ? "\nSerial: " + serial : "")
   )
 }
 
@@ -560,7 +560,7 @@ async function captchaAnswerHandler(m, sock) {
     session.age = age
     session.step = "gender"
     await sock.sendMessage(m.chat, {
-      text: "╭─「 ✦ \U0001F4DD LANJUTKAN ✦ 」\n│ *Pertanyaan 3/3*\n│ Kamu cowo atau cewe?\n\n│ *Cowo / Cowok / Laki-laki / L*\n│ *Cewe / Cewek / Perempuan / P*\n\n│ Reply pesan ini dengan jawabanmu\n╰────  •  ────",
+      text: "*Pertanyaan 3/3*\nKamu cowo atau cewe?\n\n*Cowo / Cowok / Laki-laki / L*\n*Cewe / Cewek / Perempuan / P*\n\nReply pesan ini dengan jawabanmu",
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
     return true

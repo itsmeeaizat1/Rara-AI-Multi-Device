@@ -64,16 +64,16 @@ async function handler(m, { sock }) {
     if (!targetJid) {
       return m.reply(
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `│ \`${m.prefix}soulmatematch @tag\`\n\n` +
-        `╰────  •  ────`
+        `\`${m.prefix}soulmatematch @tag\`\n\n` +
+        ""
       );
     }
 
     if (targetJid === m.sender) {
       return m.reply(
-        `╭─「 ✦ sᴏᴜʟᴍᴀᴛᴄʜ ✦ 」\n` +
-        `│ 😅 Cek compatibility sama diri sendiri? 100% narcisist!\n\n` +
-        `╰────  •  ────`
+        "" +
+        `😅 Cek compatibility sama diri sendiri? 100% narcisist!\n\n` +
+        ""
       );
     }
 
@@ -113,25 +113,25 @@ async function handler(m, { sock }) {
     const tier = getTier(score);
     const fact = pick(FACTS);
 
-    let msg = `╭─「 ✦ sᴏᴜʟᴍᴀᴛᴄʜ ✦ 」\n`;
-    msg += `│ 👤 ${myName} ❤️ ${targetName}\n\n`;
-    msg += `│ ${tier.emoji} Score: *${score}/100*\n`;
-    msg += `│ 📊 Tier: *${tier.label}*\n`;
-    msg += `│ 💬 "${tier.note}"\n\n`;
+    let msg = "";
+    msg += `👤 ${myName} ❤️ ${targetName}\n\n`;
+    msg += `${tier.emoji} Score: *${score}/100*\n`;
+    msg += `📊 Tier: *${tier.label}*\n`;
+    msg += `💬 "${tier.note}"\n\n`;
     msg += `  🔮 *Soul Insight:*\n`;
-    msg += `│ "${fact}"\n`;
+    msg += `"${fact}"\n`;
 
     // RPG stats comparison
     msg += `\n  ⚔️ *RPG Comparison:*\n`;
-    msg += `│ ⭐ Level: *${myRpg.level || 1}* vs *${targetRpg.level || 1}*\n`;
-    msg += `│ 💼 Job: *${myJob}* vs *${targetJob}*\n`;
+    msg += `⭐ Level: *${myRpg.level || 1}* vs *${targetRpg.level || 1}*\n`;
+    msg += `💼 Job: *${myJob}* vs *${targetJob}*\n`;
 
     if (myCinta.spouse === targetJid) {
       msg += `\n  💕 *Bonus +15* karena sudah berpacaran!\n`;
-      msg += `│ Affection: *${myCinta.affection || 0}*\n`;
+      msg += `Affection: *${myCinta.affection || 0}*\n`;
     }
 
-    msg += `\n╰────  •  ────`;
+    msg += ``;
 
     await m.reply(msg);
     await m.react(tier.emoji);

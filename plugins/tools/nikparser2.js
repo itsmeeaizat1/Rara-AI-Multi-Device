@@ -78,17 +78,16 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ɴɪᴋ ᴘᴀʀꜱᴇʀ v2 ✦ 」\n`;
-    msg += `│ NIK: *${r.nik || nik}*\n`;
-    msg += `│ Provinsi: *${r.provinsi || r.province || "-"}*\n`;
-    if (r.kabupaten || r.kota) msg += `│ Kab/Kota: *${r.kabupaten || r.kota}*\n`;
-    if (r.kecamatan) msg += `│ Kecamatan: *${r.kecamatan}*\n`;
-    if (r.kelurahan || r.desa) msg += `│ Kel/Desa: *${r.kelurahan || r.desa}*\n`;
-    if (r.tanggal_lahir || r.tglLahir) msg += `│ Tgl Lahir: *${r.tanggal_lahir || r.tglLahir}*\n`;
-    if (r.jenis_kelamin || r.gender) msg += `│ Gender: *${r.jenis_kelamin || r.gender}*\n`;
-    if (r.pas_foto || r.foto) msg += `│ Foto: Tersedia ✅\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    let msg = "";
+    msg += `NIK: *${r.nik || nik}*\n`;
+    msg += `Provinsi: *${r.provinsi || r.province || "-"}*\n`;
+    if (r.kabupaten || r.kota) msg += `Kab/Kota: *${r.kabupaten || r.kota}*\n`;
+    if (r.kecamatan) msg += `Kecamatan: *${r.kecamatan}*\n`;
+    if (r.kelurahan || r.desa) msg += `Kel/Desa: *${r.kelurahan || r.desa}*\n`;
+    if (r.tanggal_lahir || r.tglLahir) msg += `Tgl Lahir: *${r.tanggal_lahir || r.tglLahir}*\n`;
+    if (r.jenis_kelamin || r.gender) msg += `Gender: *${r.jenis_kelamin || r.gender}*\n`;
+    if (r.pas_foto || r.foto) msg += `Foto: Tersedia ✅\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("nikparser2 error:", err);
     await m.react("❌");

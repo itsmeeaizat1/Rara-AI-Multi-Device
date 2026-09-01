@@ -37,7 +37,7 @@ async function handler(m, { sock, command }) {
       rpg.maxHp = (rpg.maxHp || 100) + 50;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ᴘʀᴇsᴛɪɢᴇ ✦ 」\n│ 🏅 Kamu melakukan *Prestige*!\n│\n│ 📊 Prestige ke-" + rpg.prestigeCount + "\n│ 💰 +1000 Gold\n│ 💪 ATK +5 | 🛡️ DEF +5 | ❤️ HP +50\n│ 📌 Stat boost permanen setiap prestige\n╰────  •  ────");
+      return m.reply("Kamu melakukan *Prestige*!\n\nPrestige: Ke-" + rpg.prestigeCount + "\nGold: +1000\nATK: +5\nDEF: +5\nHP: +50\nStat boost permanen setiap prestige");
     }
 
     if (command === "reincarnate" || command === "reinkarnasi") {
@@ -54,7 +54,7 @@ async function handler(m, { sock, command }) {
       rpg.def = (rpg.def || 5) + 3;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ʀᴇɪɴᴋᴀʀɴᴀsɪ ✦ 」\n│ 🔁 Kamu telah bereinkarnasi!\n│\n│ 📊 Reinkarnasi ke-" + rpg.reincarnation + "\n│ 💪 Passive bonus: +" + rpg.passiveBonus + "% power\n│ 📌 Bonus permanen setiap reinkarnasi\n╰────  •  ────");
+      return m.reply("Kamu telah bereinkarnasi!\n\nReinkarnasi: Ke-" + rpg.reincarnation + "\nPassive bonus: +" + rpg.passiveBonus + "% power\nBonus permanen setiap reinkarnasi");
     }
   } catch (e) {
     console.error("prestige error:", e.message);

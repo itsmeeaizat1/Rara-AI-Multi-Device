@@ -172,7 +172,7 @@ async function handler(m, { sock }) {
         return m.reply(claraWrap("Upload SFTP",
             "*ꜱꜰᴛᴘ ꜱᴛᴀᴛᴜꜱ*\n\n" +
             "Config: " + (hasConfig ? 'Terpasang' : 'Belum ada') + configInfo + "\n\n" +
-            "│ Setup: Taruh `sftp-config.json` di folder `config/`"
+            "Setup: Taruh `sftp-config.json` di folder `config/`"
         ))
     }
 
@@ -188,8 +188,8 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("Upload SFTP",
                 "*ʀᴇᴍᴏᴛᴇ ᴅɪʀᴇᴄᴛᴏʀʏ*\n\n" +
                 "Current: `" + current + "`\n\n" +
-                "│ Set path: `.uploadsftp setpath /remote/folder`\n" +
-                "│ Reset: `.uploadsftp setpath /`"
+                "Set path: `.uploadsftp setpath /remote/folder`\n" +
+                "Reset: `.uploadsftp setpath /`"
             ))
         }
 
@@ -290,13 +290,13 @@ async function handler(m, { sock }) {
     if (!hasMedia) {
         return m.reply(
             "GAGAL\n\n" +
-            "│ Reply media/berkas dengan `" + m.prefix + "uploadsftp`\n\n" +
+            "Reply media/berkas dengan `" + m.prefix + "uploadsftp`\n\n" +
             "*ꜱᴜʙ-ᴄᴏᴍᴍᴀɴᴅꜱ:*\n" +
-            "│ `" + m.prefix + "uploadsftp status` - Cek status koneksi\n" +
-            "│ `" + m.prefix + "uploadsftp list` - List file di remote dir\n" +
-            "│ `" + m.prefix + "uploadsftp setpath <path>` - Set remote directory\n" +
-            "│ `" + m.prefix + "uploadsftp mkdir <path>` - Buat folder remote\n" +
-            "│ `" + m.prefix + "uploadsftp delete <name>` - Hapus file remote", "uploadsftp")
+            "`" + m.prefix + "uploadsftp status` - Cek status koneksi\n" +
+            "`" + m.prefix + "uploadsftp list` - List file di remote dir\n" +
+            "`" + m.prefix + "uploadsftp setpath <path>` - Set remote directory\n" +
+            "`" + m.prefix + "uploadsftp mkdir <path>` - Buat folder remote\n" +
+            "`" + m.prefix + "uploadsftp delete <name>` - Hapus file remote", "uploadsftp")
     }
     try {
         const downloadFn = m.quoted ? m.quoted.download : m.download
@@ -373,7 +373,7 @@ async function handler(m, { sock }) {
                 '  "remotePath": "/uploads"\n' +
                 "}\n" +
                 "```\n\n" +
-                "│ Lalu: `.uploadsftp status`"
+                "Lalu: `.uploadsftp status`"
             ))
         }
 

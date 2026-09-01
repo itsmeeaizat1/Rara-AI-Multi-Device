@@ -46,9 +46,9 @@ async function handler(m, { sock }) {
   const name = m.fullArgs?.trim() || m.args?.[0];
 
   if (!name) {
-    return m.reply( `🗑️ *DEL PLUGIN*\n\n` +
-        `Hapus plugin berdasarkan nama\n\n` +
-        `*Contoh:*\n` +
+    return m.reply(
+      `Hapus plugin berdasarkan nama\n\n` +
+        `Contoh:\n` +
         `\`${m.prefix}delplugin bliblidl\``, "delplugin");
   }
   try {
@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
     const found = findPluginFile(pluginsDir, name);
 
     if (!found) {
-      return m.reply(`❌ *GAGAL*\n\nPlugin \`${name}\` tidak ditemukan`);
+      return m.reply(`❌ Plugin \`${name}\` tidak ditemukan`);
     }
 
     let unloadResult = { success: false };
@@ -66,12 +66,10 @@ async function handler(m, { sock }) {
 
     fs.unlinkSync(found.path);
     return m.reply(
-      `✅ *PLUGIN DIHAPUS*\n\n` +
-        `╭─〔 *DETAIL* 〕───\n` +
-        `│ File: \`${found.file}\`\n` +
-        `│ Folder: \`${found.folder}\`\n` +
-        `│ Unload: ${unloadResult.success ? "✅ Sukses" : "⚠️ Pending"}\n` +
-        `╰────  •  ────\n\n` +
+      `✅ Plugin Dihapus\n\n` +
+        `File: \`${found.file}\`\n` +
+        `Folder: \`${found.folder}\`\n` +
+        `Unload: ${unloadResult.success ? "✅ Sukses" : "⚠️ Pending"}\n\n` +
         `Plugin sudah dihapus dan tidak aktif!`,
     );
   } catch (error) {

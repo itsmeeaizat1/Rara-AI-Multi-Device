@@ -54,14 +54,14 @@ async function handler(m, { sock }) {
       });
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ᴍᴀʀᴋᴇᴛ - sᴇʟʟ ✦ 」\n`;
-      msg += `│ Item: *${item.name || itemName}*\n`;
-      msg += `│ Price: *${price} gold*\n`;
-      msg += `│ ID: *${id}*\n`;
-      msg += `│\n`;
-      msg += `│ Item dipasang di market!\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `Item: *${item.name || itemName}*\n`;
+      msg += `Price: *${price} gold*\n`;
+      msg += `ID: *${id}*\n`;
+      msg += `
+`;
+      msg += `Item dipasang di market!\n`;
+            return m.reply(msg);
     }
 
     if (subCmd === "buy" || subCmd === "beli") {
@@ -99,14 +99,14 @@ async function handler(m, { sock }) {
       market.delete(String(id));
 
       await m.react("🐣");
-      let msg = `╭─「 ✦ ᴍᴀʀᴋᴇᴛ - ʙᴜʏ ✦ 」\n`;
-      msg += `│ Item: *${listing.item.name}*\n`;
-      msg += `│ Price: *${listing.price} gold*\n`;
-      msg += `│ Dari: ${listing.sellerName}\n`;
-      msg += `│\n`;
-      msg += `│ ✅ Berhasil dibeli!\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `Item: *${listing.item.name}*\n`;
+      msg += `Price: *${listing.price} gold*\n`;
+      msg += `Dari: ${listing.sellerName}\n`;
+      msg += `
+`;
+      msg += `✅ Berhasil dibeli!\n`;
+            return m.reply(msg);
     }
 
     // LIST MARKET (default)
@@ -114,18 +114,18 @@ async function handler(m, { sock }) {
       return m.reply(claraWrap("trading", `Market kosong.\n\nJual item: ${m.prefix}trading sell <item> <price>`, "guide"));
     }
 
-    let msg = `╭─「 ✦ ʀᴘɢ ᴍᴀʀᴋᴇᴛ ✦ 」\n`;
+    let msg = "";
     let count = 0;
     for (const [id, listing] of market) {
       if (count >= 15) break;
-      msg += `│ [${id}] ${listing.item.emoji || "📦"} *${listing.item.name}*\n`;
-      msg += `│   Price: ${listing.price}g | By: ${listing.sellerName}\n`;
+      msg += `[${id}] ${listing.item.emoji || "📦"} *${listing.item.name}*\n`;
+      msg += `Price: ${listing.price}g | By: ${listing.sellerName}\n`;
       count++;
     }
-    msg += `│\n`;
-    msg += `│ ${m.prefix}trading buy <id>\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `${m.prefix}trading buy <id>\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("trading error:", err);
     await m.react("❌");

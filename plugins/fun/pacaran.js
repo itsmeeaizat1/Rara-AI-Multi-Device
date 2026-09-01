@@ -52,9 +52,9 @@ async function handler(m, { sock }) {
     if (!targetJid) {
       return m.reply(
         `⚠️ *ᴄᴀʀᴀ ᴘᴀᴋᴀɪ*\n\n` +
-        `│ \`${m.prefix}jadian @tag\`\n` +
-        `│ Reply pesan + \`${m.prefix}jadian\`\n\n` +
-        `╰────  •  ────`
+        `\`${m.prefix}jadian @tag\`\n` +
+        `Reply pesan + \`${m.prefix}jadian\`\n\n` +
+        ""
       );
     }
 
@@ -131,12 +131,12 @@ async function handler(m, { sock }) {
 
     await m.reply(
       `💘 *ᴀᴅᴀ ʏᴀɴɢ ɴᴇᴍʙᴀᴋ ɴɪʜʜ*\n\n` +
-      `│ 🏹 @${m.sender.split("@")[0]} nembak @${targetJid.split("@")[0]}\n` +
-      `│ 💬 "${quote}"\n` +
-      `│ ⏱️ Berlaku *1 jam*\n\n` +
+      `🏹 @${m.sender.split("@")[0]} nembak @${targetJid.split("@")[0]}\n` +
+      `💬 "${quote}"\n` +
+      `⏱️ Berlaku *1 jam*\n\n` +
       `_Balas pesan ini dengan *terima* atau *tolak*_\n` +
       `Atau gunakan \`${m.prefix}terima\` / \`${m.prefix}tolak\`\n\n` +
-      `╰────  •  ────`
+      ""
     );
     await m.react("💘");
   } catch (e) {

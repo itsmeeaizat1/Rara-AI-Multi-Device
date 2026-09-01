@@ -51,16 +51,16 @@ async function handler(m, { sock }) {
       address = place.display_name.slice(0, 200);
     }
 
-    let msg = `╭─「 ✦ ʟᴏᴋᴀsɪ ᴅɪᴛᴇᴍᴜᴋᴀɴ ✦ 」\n`;
-    msg += `│ Nama: *${place.name || query}*\n`;
-    msg += `│ Alamat: ${address}\n`;
-    msg += `│ Koordinat: *${lat.toFixed(4)}, ${lon.toFixed(4)}*\n`;
-    if (place.type) msg += `│ Tipe: *${place.type}*\n`;
-    if (place.class) msg += `│ Kategori: *${place.class}*\n`;
-    msg += `│\n`;
-    msg += `│ OSM: https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=16/${lat}/${lon}\n`;
-    msg += `╰────  •  ────`;
-
+    let msg = "";
+    msg += `Nama: *${place.name || query}*\n`;
+    msg += `Alamat: ${address}\n`;
+    msg += `Koordinat: *${lat.toFixed(4)}, ${lon.toFixed(4)}*\n`;
+    if (place.type) msg += `Tipe: *${place.type}*\n`;
+    if (place.class) msg += `Kategori: *${place.class}*\n`;
+    msg += `
+`;
+    msg += `OSM: https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=16/${lat}/${lon}\n`;
+    
     // Kirim text info dulu
     await m.reply(msg);
 

@@ -47,17 +47,17 @@ async function handler(m, { sock }) {
 
     if (m.command === 'listmutemember' || m.command === 'listmute') {
         if (mutedMembers.length === 0) {
-            return m.reply(claraWrap("Unmutemember", `🔇 *ʟɪꜱᴛ ᴍᴜᴛᴇᴅ ᴍᴇᴍʙᴇʀꜱ*\n\nTidak ada member yang dimute di grup ini`))
+            return m.reply("🔇 Tidak ada member yang dimute di grup ini")
         }
 
-        let txt = `🔇 *ʟɪꜱᴛ ᴍᴜᴛᴇᴅ ᴍᴇᴍʙᴇʀꜱ*\n\n╭─「 ✦ ᴅᴀꜰᴛᴀʀ ✦ 」\n`
+        let txt = `🔇 *List Muted Members*\n\n`
         mutedMembers.forEach((jid, i) => {
             const num = jid.replace(/@.+/g, '')
-            txt += `│ ${i + 1}. @${num}\n`
+            txt += `${i + 1}. @${num}\n`
         })
-        txt += `╰────  •  ────\n\nTotal: \`${mutedMembers.length}\` member dimute`
+        txt += `\nTotal: \`${mutedMembers.length}\` member dimute`
 
-        return m.reply(claraWrap("unmutemember", txt))
+        return m.reply(txt)
     }
 
     const targetJid = resolveTarget(m)
@@ -86,11 +86,11 @@ async function handler(m, { sock }) {
     db.setGroup(m.chat, { ...groupData, mutedMembers })
 
     await m.reply(`🔊 *ᴍᴇᴍʙᴇʀ ᴅɪᴜɴᴍᴜᴛᴇ*\n\n` +
-        `╭─「 ✦ ᴅᴇᴛᴀɪʟ ✦ 」\n` +
-        `│ 👤 Member: @${targetNumber}\n` +
-        `│ 🔊 sTatus: \`Unmuted\`\n` +
-        `│ 📊 sIsa Mute: \`${mutedMembers.length}\` Member\n` +
-        `╰────  •  ────`)
+        "" +
+        `👤 Member: @${targetNumber}\n` +
+        `🔊 sTatus: \`Unmuted\`\n` +
+        `📊 sIsa Mute: \`${mutedMembers.length}\` Member\n` +
+        "")
 }
 
 export { pluginConfig as config, handler }

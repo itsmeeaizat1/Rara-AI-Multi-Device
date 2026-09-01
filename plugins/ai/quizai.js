@@ -58,9 +58,11 @@ Pastikan soal menantang tapi tidak terlalu sulit. Hanya 1 soal saja.`;
     for (const line of lines) {
       const trimmed = line.trim();
       if (trimmed.startsWith("SOAL:")) {
-        formatted += `│ ❓ ${trimmed.replace("SOAL:", "").trim()}\n│\n`;
+        formatted += `❓ ${trimmed.replace("SOAL:", "").trim()}
+
+`;
       } else if (trimmed.match(/^[ABCD]\./)) {
-        formatted += `│ ${trimmed}\n`;
+        formatted += `${trimmed}\n`;
       } else if (trimmed.startsWith("JAWABAN:")) {
         answerHidden = trimmed.replace("JAWABAN:", "").trim();
       } else if (trimmed.startsWith("PENJELASAN:")) {
@@ -70,25 +72,27 @@ Pastikan soal menantang tapi tidak terlalu sulit. Hanya 1 soal saja.`;
 
     if (!formatted) {
       // Fallback — just show raw
-      formatted = `│ ${result.answer.trim()}\n`;
+      formatted = `${result.answer.trim()}\n`;
     }
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ǫᴜɪᴢ ᴀɪ ✦ 」\n`;
-    msg += `│ 📚 Kategori: *${category}*\n`;
-    msg += `│\n`;
+    let msg = "";
+    msg += `📚 Kategori: *${category}*\n`;
+    msg += `
+`;
     msg += formatted;
-    msg += `│\n`;
+    msg += `
+`;
     if (answerHidden) {
-      msg += `│ 💡 Jawaban: ||${answerHidden}||\n`;
+      msg += `💡 Jawaban: ||${answerHidden}||\n`;
     }
     if (explanation) {
-      msg += `│ 📝 ${explanation}\n`;
+      msg += `📝 ${explanation}\n`;
     }
-    msg += `│\n`;
-    msg += `│ 📌 Ketik .quizai ${category} untuk soal baru\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    msg += `
+`;
+    msg += `📌 Ketik .quizai ${category} untuk soal baru\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("quizai error:", err);
     await m.react("❌");

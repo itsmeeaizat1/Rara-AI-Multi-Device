@@ -194,20 +194,20 @@ export default {
     if (command === "cekfaktaon") {
       if (!isOwner) {
         await m.reply(claraWrap("Cek Fakta", [
-          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
-          `│ Hanya owner yang bisa mengatur fitur ini.`,
+          `Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOn(groupId);
       await m.reply(claraWrap("Cek Fakta", [
-        `│ Status: *Aktif*`,
+        `Status: *Aktif*`,
         ``,
-        `│ Fitur Cek Fakta & Hoax Detector v2 dinyalakan.`,
-        `│ AI + Web Search aktif untuk verifikasi real-time.`,
+        `Fitur Cek Fakta & Hoax Detector v2 dinyalakan.`,
+        `AI + Web Search aktif untuk verifikasi real-time.`,
         ``,
-        `│ Anggota grup: reply pesan + *${prefix}cekfakta*`,
+        `Anggota grup: reply pesan + *${prefix}cekfakta*`,
       ].join("\n")));
       return { handled: true };
     }
@@ -216,18 +216,18 @@ export default {
     if (command === "cekfaktaoff") {
       if (!isOwner) {
         await m.reply(claraWrap("Cek Fakta", [
-          `│ Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
+          `Status: *ᴀᴋꜱᴇꜱ ᴅɪᴛᴏʟᴀᴋ*`,
           ``,
-          `│ Hanya owner yang bisa mengatur fitur ini.`,
+          `Hanya owner yang bisa mengatur fitur ini.`,
         ].join("\n")));
         return { handled: true };
       }
       toggleOff(groupId);
       await m.reply(claraWrap("Cek Fakta", [
-        `│ Status: *Nonaktif*`,
+        `Status: *Nonaktif*`,
         ``,
-        `│ Fitur Cek Fakta dimatikan.`,
-        `│ Ketik *${prefix}cekfaktaon* untuk aktifkan lagi.`,
+        `Fitur Cek Fakta dimatikan.`,
+        `Ketik *${prefix}cekfaktaon* untuk aktifkan lagi.`,
       ].join("\n")));
       return { handled: true };
     }
@@ -237,17 +237,17 @@ export default {
       const stats = getStats(groupId);
       const statusText = stats.enabled ? "AKTIF" : "NONAKTIF";
       await m.reply(claraWrap("Cek Fakta - Status", [
-        `│ Status: *${statusText}*`,
+        `Status: *${statusText}*`,
         ``,
-        `│ 📊 Statistik Grup Ini:`,
-        `│ Total cek: *${stats.totalChecks}*`,
-        `│ Hoax: *${stats.hoaxCount}* 🔴`,
-        `│ Fakta: *${stats.faktaCount}* 🟢`,
-        `│ Belum terverifikasi: *${stats.unverifiedCount}* 🟡`,
+        `📊 Statistik Grup Ini:`,
+        `Total cek: *${stats.totalChecks}*`,
+        `Hoax: *${stats.hoaxCount}* 🔴`,
+        `Fakta: *${stats.faktaCount}* 🟢`,
+        `Belum terverifikasi: *${stats.unverifiedCount}* 🟡`,
         ``,
-        `│ Owner:`,
-        `│ ${prefix}cekfaktaon - Aktifkan`,
-        `│ ${prefix}cekfaktaoff - Matikan`,
+        `Owner:`,
+        `${prefix}cekfaktaon - Aktifkan`,
+        `${prefix}cekfaktaoff - Matikan`,
       ].join("\n")));
       return { handled: true };
     }
@@ -255,18 +255,18 @@ export default {
     // ─── Main: .cekfakta (fact-check) ───
     if (!isCekFaktaOn(groupId)) {
       await m.reply(claraWrap("Cek Fakta", [
-        `│ Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
+        `Status: *ɴᴏɴᴀᴋᴛɪꜰ ᴅɪ ɢʀᴜᴘ ɪɴɪ*`,
         ``,
-        `│ Owner: ketik *${prefix}cekfaktaon* untuk mengaktifkan.`,
+        `Owner: ketik *${prefix}cekfaktaon* untuk mengaktifkan.`,
       ].join("\n")));
       return { handled: true };
     }
 
     if (!aiConfig.apiKey) {
       await m.reply(claraWrap("Cek Fakta", [
-        `│ Status: *ᴀɪ ʙᴇʟᴜᴍ ᴅɪᴋᴏɴꜰɪɢᴜʀᴀꜱɪ*`,
+        `Status: *ᴀɪ ʙᴇʟᴜᴍ ᴅɪᴋᴏɴꜰɪɢᴜʀᴀꜱɪ*`,
         ``,
-        `│ Owner: ketik *${prefix}aihelp* untuk set API key.`,
+        `Owner: ketik *${prefix}aihelp* untuk set API key.`,
       ].join("\n")));
       return { handled: true };
     }
@@ -286,17 +286,17 @@ export default {
 
     if (!claimText || claimText.length < 3) {
       await m.reply(claraWrap("Cek Fakta", [
-        `│ 📌 *Cara Pakai:*`,
+        `📌 *Cara Pakai:*`,
         ``,
-        `│ 1. Reply pesan/berita → ketik *${prefix}cekfakta*`,
-        `│ 2. Atau ketik: *${prefix}cekfakta <klaim>*`,
+        `1. Reply pesan/berita → ketik *${prefix}cekfakta*`,
+        `2. Atau ketik: *${prefix}cekfakta <klaim>*`,
         ``,
-        `│ 💡 *Contoh:*`,
-        `│ *${prefix}cekfakta Vaksin COVID bikin mandul*`,
-        `│ Reply WA forward → *${prefix}cekfakta*`,
+        `💡 *Contoh:*`,
+        `*${prefix}cekfakta Vaksin COVID bikin mandul*`,
+        `Reply WA forward → *${prefix}cekfakta*`,
         ``,
-        `│ Owner:`,
-        `│ *${prefix}cekfaktaon* / *${prefix}cekfaktaoff* / *${prefix}cekfaktastatus*`,
+        `Owner:`,
+        `*${prefix}cekfaktaon* / *${prefix}cekfaktaoff* / *${prefix}cekfaktastatus*`,
       ].join("\n")));
       return { handled: true };
     }
@@ -313,8 +313,8 @@ export default {
     let searchSources = [];
     try {
       await m.reply(claraWrap("Cek Fakta - Searching", [
-        `│ 🔍 Mencari informasi di internet...`,
-        `│ 🤖 AI akan menganalisis hasil pencarian...`,
+        `🔍 Mencari informasi di internet...`,
+        `🤖 AI akan menganalisis hasil pencarian...`,
       ].join("\n")));
 
       const webResults = await searchWebForContext(claimText);
@@ -430,48 +430,48 @@ Aturan:
       // Build search source list
       let sourceLines = [];
       if (searchSources.length > 0) {
-        sourceLines.push(``, `│ 🔎 Sumber Pencarian Internet:`);
+        sourceLines.push(``, `🔎 Sumber Pencarian Internet:`);
         searchSources.slice(0, 5).forEach((s, i) => {
-          sourceLines.push(`│ ${i + 1}. ${s.title || "Tanpa judul"}`);
-          if (s.source) sourceLines.push(`│ Sumber: ${s.source}`);
+          sourceLines.push(`${i + 1}. ${s.title || "Tanpa judul"}`);
+          if (s.source) sourceLines.push(`Sumber: ${s.source}`);
         });
       }
 
       // Build output
       const lines = [
-        `│ ${verdictEmoji} Verdict: *${verdictColor}*`,
-        `│ Keyakinan: *${confidence}%*`,
-        `│ Sumber: ${searchSources.length > 0 ? "AI + Web Search" : "AI saja"}`,
+        `${verdictEmoji} Verdict: *${verdictColor}*`,
+        `Keyakinan: *${confidence}%*`,
+        `Sumber: ${searchSources.length > 0 ? "AI + Web Search" : "AI saja"}`,
         ``,
-        `│ 📝 Klaim:`,
-        `│ "${displayClaim}"`,
+        `📝 Klaim:`,
+        `"${displayClaim}"`,
         ``,
-        `│ 📋 Ringkasan:`,
-        `│ ${sections["RINGKASAN"]}`,
+        `📋 Ringkasan:`,
+        `${sections["RINGKASAN"]}`,
         ``,
-        `│ 🔍 Penjelasan:`,
-        `│ ${sections["PENJELASAN"]}`,
+        `🔍 Penjelasan:`,
+        `${sections["PENJELASAN"]}`,
         ``,
-        `│ 🌐 Konteks:`,
-        `│ ${sections["KONTEKS"]}`,
+        `🌐 Konteks:`,
+        `${sections["KONTEKS"]}`,
         ``,
-        `│ 💡 Rekomendasi:`,
-        `│ ${sections["REKOMENDASI"]}`,
+        `💡 Rekomendasi:`,
+        `${sections["REKOMENDASI"]}`,
         ``,
-        `│ 📚 Sumber Verifikasi:`,
-        `│ ${sections["SUMBER VERIFIKASI"]}`,
+        `📚 Sumber Verifikasi:`,
+        `${sections["SUMBER VERIFIKASI"]}`,
       ];
 
       // Add local pattern note
       if (localNote) {
-        lines.push(``, `│ ⚠️ Deteksi Lokal:`, `│ ${localNote}`);
+        lines.push(``, `⚠️ Deteksi Lokal:`, `${localNote}`);
       }
 
       // Add web search sources
       lines.push(...sourceLines);
 
       lines.push(
-        ``, `│ 📊 *${prefix}cekfaktastatus* untuk statistik grup`,
+        ``, `📊 *${prefix}cekfaktastatus* untuk statistik grup`,
       );
 
       const text =
@@ -485,10 +485,10 @@ Aturan:
     } catch (error) {
       const text =
         claraWrap("Cek Fakta - Error", [
-          `│ Status: *ɢᴀɢᴀʟ*`,
-          `│ Alasan: *${error.message}*`,
+          `Status: *ɢᴀɢᴀʟ*`,
+          `Alasan: *${error.message}*`,
           ``,
-          `│ Cek AI API key: *${prefix}aihelp*`,
+          `Cek AI API key: *${prefix}aihelp*`,
         ].join("\n"));
       await m.reply(text);
     }

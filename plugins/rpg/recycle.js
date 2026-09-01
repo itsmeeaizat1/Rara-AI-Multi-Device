@@ -33,7 +33,7 @@ async function handler(m, { sock, text, command }) {
       rpg.inventory.fragmen = (rpg.inventory.fragmen || 0) + 1;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ʀᴇᴄʏᴄʟᴇ ✦ 」\n│ ♻️ Item *" + itemName + "* dihancurkan jadi *fragmen*!\n│ 📦 Fragmen: " + rpg.inventory.fragmen + "\n╰────  •  ────");
+      return m.reply("Item *" + itemName + "* dihancurkan jadi *fragmen*!\nFragmen: " + rpg.inventory.fragmen);
     }
 
     if (command === "exchange") {
@@ -49,7 +49,7 @@ async function handler(m, { sock, text, command }) {
       rpg.gold = (rpg.gold || 0) + coins;
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ ᴇxᴄʜᴀɴɢᴇ ✦ 」\n│ 🪙 Kamu tukar *" + itemName + "* jadi " + coins + " koin!\n│ 💰 Total gold: " + rpg.gold + "\n╰────  •  ────");
+      return m.reply("Kamu tukar *" + itemName + "* jadi " + coins + " koin!\nTotal gold: " + rpg.gold);
     }
 
     if (command === "stashall") {
@@ -65,7 +65,7 @@ async function handler(m, { sock, text, command }) {
       rpg.inventory = {};
       saveRpg(m, rpg);
       await m.react("🐣");
-      return m.reply("╭─「 ✦ sᴛᴀsʜᴀʟʟ ✦ 」\n│ 📦 Semua item dipindah ke storage!\n│ 📊 " + itemCount + " jenis item dipindah\n╰────  •  ────");
+      return m.reply("Semua item dipindah ke storage!\n" + itemCount + " jenis item dipindah");
     }
   } catch (e) {
     console.error("recycle error:", e.message);

@@ -46,32 +46,34 @@ async function handler(m, { sock }) {
     // Show current equipment
     if (!itemId || command === "equiprpg" && itemId === "list") {
       const equip = getEquipStats(m);
-      let msg = `╭─「 ✦ ᴇϙᴜɪᴘᴍᴇɴᴛ ✦ 」\n`;
-      msg += `│ 👤 ${m.pushName || "Player"}\n`;
-      msg += `│\n`;
+      let msg = "";
+      msg += `👤 ${m.pushName || "Player"}\n`;
+      msg += `
+`;
 
       for (const [slot, name] of Object.entries(SLOT_NAMES)) {
         const key = `equip${slot.charAt(0).toUpperCase()}${slot.slice(1)}`;
         const equipped = rpg[key];
         if (equipped) {
           const item = ITEM_DB[equipped];
-          msg += `│ ${name}: *${item?.name || equipped}*\n`;
+          msg += `${name}: *${item?.name || equipped}*\n`;
         } else {
-          msg += `│ ${name}: *kosong*\n`;
+          msg += `${name}: *kosong*\n`;
         }
       }
 
-      msg += `│\n`;
-      msg += `│ 📊 *ᴛᴏᴛᴀʟ ʙᴏɴᴜs*\n`;
-      msg += `│ ATK: *+${equip.atk}*\n`;
-      msg += `│ DEF: *+${equip.def}*\n`;
-      msg += `│ HP: *+${equip.hp}*\n`;
-      msg += `│ SPD: *+${equip.spd}*\n`;
-      msg += `│\n`;
-      msg += `│ 📌 .equiprpg <item> untuk equip\n`;
-      msg += `│ 📌 .unequiprpg <slot> untuk unequip\n`;
-      msg += `╰────  •  ────`;
-
+      msg += `
+`;
+      msg += `📊 *ᴛᴏᴛᴀʟ ʙᴏɴᴜs*\n`;
+      msg += `ATK: *+${equip.atk}*\n`;
+      msg += `DEF: *+${equip.def}*\n`;
+      msg += `HP: *+${equip.hp}*\n`;
+      msg += `SPD: *+${equip.spd}*\n`;
+      msg += `
+`;
+      msg += `📌 .equiprpg <item> untuk equip\n`;
+      msg += `📌 .unequiprpg <slot> untuk unequip\n`;
+      
       return m.reply(msg);
     }
 
@@ -95,22 +97,23 @@ async function handler(m, { sock }) {
 
       if (result.success) {
         await m.react("🐣");
-        let msg = `╭─「 ✦ ᴇϙᴜɪᴘ ✦ 」\n`;
-        msg += `│ ✅ Berhasil equip!\n`;
-        msg += `│\n`;
-        msg += `│ 📦 Item: *${itemInfo.name}*\n`;
-        msg += `│ 📂 Slot: *${SLOT_NAMES[itemInfo.type] || itemInfo.type}*\n`;
-        msg += `│\n`;
-        msg += `│ 📊 *sᴛᴀᴛ ʙᴏɴᴜs*\n`;
-        if (itemInfo.atk) msg += `│ ⚔️ ATK: *+${itemInfo.atk}*\n`;
-        if (itemInfo.def) msg += `│ 🛡️ DEF: *+${itemInfo.def}*\n`;
-        if (itemInfo.hp) msg += `│ ❤️ HP: *+${itemInfo.hp}*\n`;
-        if (itemInfo.spd) msg += `│ 💨 SPD: *+${itemInfo.spd}*\n`;
-        if (itemInfo.critRate) msg += `│ 🎯 Crit: *+${itemInfo.critRate}%*\n`;
-        if (itemInfo.critDmg) msg += `│ 💥 Crit DMG: *+${itemInfo.critDmg}%*\n`;
-        if (itemInfo.evasion) msg += `│ 💨 Evasion: *+${itemInfo.evasion}%*\n`;
-        msg += `╰────  •  ────`;
-
+        let msg = "";
+        msg += `✅ Berhasil equip!\n`;
+        msg += `
+`;
+        msg += `📦 Item: *${itemInfo.name}*\n`;
+        msg += `📂 Slot: *${SLOT_NAMES[itemInfo.type] || itemInfo.type}*\n`;
+        msg += `
+`;
+        msg += `📊 *sᴛᴀᴛ ʙᴏɴᴜs*\n`;
+        if (itemInfo.atk) msg += `⚔️ ATK: *+${itemInfo.atk}*\n`;
+        if (itemInfo.def) msg += `🛡️ DEF: *+${itemInfo.def}*\n`;
+        if (itemInfo.hp) msg += `❤️ HP: *+${itemInfo.hp}*\n`;
+        if (itemInfo.spd) msg += `💨 SPD: *+${itemInfo.spd}*\n`;
+        if (itemInfo.critRate) msg += `🎯 Crit: *+${itemInfo.critRate}%*\n`;
+        if (itemInfo.critDmg) msg += `💥 Crit DMG: *+${itemInfo.critDmg}%*\n`;
+        if (itemInfo.evasion) msg += `💨 Evasion: *+${itemInfo.evasion}%*\n`;
+        
         return m.reply(msg);
       } else {
         return m.reply(claraWrap("equiprpg", result.reason || "Gagal equip item.", "warn"));
@@ -128,12 +131,11 @@ async function handler(m, { sock }) {
 
       if (result.success) {
         await m.react("🐣");
-        let msg = `╭─「 ✦ ᴜɴᴇϙᴜɪᴘ ✦ 」\n`;
-        msg += `│ ✅ Berhasil unequip!\n`;
-        msg += `│ 📂 Slot: *${SLOT_NAMES[slot]}*\n`;
-        msg += `│ 📦 Item dikembalikan ke inventory\n`;
-        msg += `╰────  •  ────`;
-
+        let msg = "";
+        msg += `✅ Berhasil unequip!\n`;
+        msg += `📂 Slot: *${SLOT_NAMES[slot]}*\n`;
+        msg += `📦 Item dikembalikan ke inventory\n`;
+        
         return m.reply(msg);
       } else {
         return m.reply(claraWrap("unequiprpg", result.reason || "Slot kosong atau gagal unequip.", "warn"));

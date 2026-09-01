@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
     rpg.exp = (rpg.exp || 0) + 10;
     saveRpg(m, rpg);
     await m.react("🐣");
-    return m.reply("╭─「 ✦ ғᴏʀᴀɢᴇ ✦ 」\n│ 🌿 Kamu mencari di alam...\n│ 🎁 Mendapat: *" + item.name + "* (" + item.rarity + ")\n│ ⭐ +10 EXP\n│ ⚡ Sisa energi: " + rpg.energy + "\n╰────  •  ────");
+    return m.reply("🌿 Kamu mencari di alam...\n🎁 Mendapat: *" + item.name + "* (" + item.rarity + ")\n⭐ +10 EXP\n⚡ Sisa energi: " + rpg.energy);
   } catch (e) {
     console.error("forage error:", e.message);
     await m.react("❌");

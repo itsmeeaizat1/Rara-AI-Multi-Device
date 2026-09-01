@@ -156,18 +156,18 @@ async function handler(m, { sock }) {
     } catch (e) { console.error('[ganticode.js]:', e.message); }
     let replyText =
       `✅ *CODE ${isNewFile ? "DITAMBAH" : "DIGANTI"}*\n\n` +
-      `╭─〔 *DETAIL* 〕───\n` +
-      `│ File: \`${fileName}.js\`\n` +
-      `│ Folder: \`${targetFolder}\`\n` +
-      `│ Size: \`${code.length} bytes\`\n`;
+      `` +
+      `File: \`${fileName}.js\`\n` +
+      `Folder: \`${targetFolder}\`\n` +
+      `Size: \`${code.length} bytes\`\n`;
 
     if (!isNewFile) {
-      replyText += `│ Old Size: \`${oldSize} bytes\`\n`;
+      replyText += `Old Size: \`${oldSize} bytes\`\n`;
     }
 
     replyText +=
       ` │ 🔄 Hot Reload: ${reloadResult.success ? "✅ Sukses" : "⚠️ Pending"}\n` +
-      `╰────  •  ────\n\n`;
+      `\n`;
 
     if (backupPath) {
       const relBackup = path.relative(process.cwd(), backupPath);

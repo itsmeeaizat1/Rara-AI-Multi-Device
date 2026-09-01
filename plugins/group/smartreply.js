@@ -157,10 +157,10 @@ async function handler(m, { sock, config: botConfig }) {
       smartReply.enabled = true;
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        claraWrap("Smart Reply", [`│ Status: *ᴀᴋᴛɪꜰ*`,
-          `│ Provider: *${smartReply.provider.toUpperCase()}*`,
-          `│ Topics: *${smartReply.topics.length}*`,
-          `│ Bot akan auto-jawab pertanyaan yang match keyword`].join("\n")) + "\n" +
+        claraWrap("Smart Reply", [`Status: *ᴀᴋᴛɪꜰ*`,
+          `Provider: *${smartReply.provider.toUpperCase()}*`,
+          `Topics: *${smartReply.topics.length}*`,
+          `Bot akan auto-jawab pertanyaan yang match keyword`].join("\n")) + "\n" +
         tipText(`Tambah topic: ${prefix}smartreply add <keyword>|<context>`);
 
       await m.reply(text);
@@ -171,8 +171,8 @@ async function handler(m, { sock, config: botConfig }) {
       smartReply.enabled = false;
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        claraWrap("Smart Reply", [`│ Status: *ɴᴏɴᴀᴋᴛɪꜰ*`,
-          `│ Topics tersimpan, bisa diaktifkan lagi`].join("\n")) + "\n" +
+        claraWrap("Smart Reply", [`Status: *ɴᴏɴᴀᴋᴛɪꜰ*`,
+          `Topics tersimpan, bisa diaktifkan lagi`].join("\n")) + "\n" +
         tipText(`Aktifkan: ${prefix}smartreply on`);
 
       await m.reply(text);
@@ -209,10 +209,10 @@ async function handler(m, { sock, config: botConfig }) {
 
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        claraWrap("Smart Reply", [`│ Keyword: *${keyword}*`,
-          `│ Context: *${context.slice(0, 80)}${context.length > 80 ? "..." : ""}*`,
-          `│ Total topics: *${smartReply.topics.length}*`,
-          `${smartReply.enabled ? "" : `│ Catatan: Smart Reply belum aktif, ketik ${prefix}smartreply on`}`].join("\n")) + "\n" +
+        claraWrap("Smart Reply", [`Keyword: *${keyword}*`,
+          `Context: *${context.slice(0, 80)}${context.length > 80 ? "..." : ""}*`,
+          `Total topics: *${smartReply.topics.length}*`,
+          `${smartReply.enabled ? "" : `Catatan: Smart Reply belum aktif, ketik ${prefix}smartreply on`}`].join("\n")) + "\n" +
         tipText(`Saat orang nanya "${keyword}", AI akan auto-jawab`);
 
       await m.reply(text);
@@ -239,8 +239,8 @@ async function handler(m, { sock, config: botConfig }) {
       smartReply.topics.splice(idx, 1);
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        claraWrap("Smart Reply", [`│ Keyword: *${keyword}*`,
-          `│ Sisa topics: *${smartReply.topics.length}*`].join("\n")) + "\n" +
+        claraWrap("Smart Reply", [`Keyword: *${keyword}*`,
+          `Sisa topics: *${smartReply.topics.length}*`].join("\n")) + "\n" +
         tipText(`Lihat daftar: ${prefix}smartreply list`);
 
       await m.reply(text);
@@ -258,9 +258,9 @@ async function handler(m, { sock, config: botConfig }) {
       );
 
       const text =
-        claraWrap("Smart Reply", [`│ Status: *${smartReply.enabled ? "Aktif" : "Nonaktif"}*`,
-          `│ Provider: *${smartReply.provider.toUpperCase()}*`,
-          `│ Total: *${smartReply.topics.length}* topics`,
+        claraWrap("Smart Reply", [`Status: *${smartReply.enabled ? "Aktif" : "Nonaktif"}*`,
+          `Provider: *${smartReply.provider.toUpperCase()}*`,
+          `Total: *${smartReply.topics.length}* topics`,
           ``,
           ...topicLines].join("\n")) + "\n" +
         tipText(`Hapus: ${prefix}smartreply del <keyword>`);
@@ -280,8 +280,8 @@ async function handler(m, { sock, config: botConfig }) {
       smartReply.provider = model;
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        claraWrap("Smart Reply", [`│ Provider: *${model.toUpperCase()}*`,
-          `${model === "tio" ? "│ Pastikan API key Tio AI sudah di-set di config" : "│ Free, no API key needed"}`].join("\n")) + "\n" +
+        claraWrap("Smart Reply", [`Provider: *${model.toUpperCase()}*`,
+          `${model === "tio" ? "Pastikan API key Tio AI sudah di-set di config" : "Free, no API key needed"}`].join("\n")) + "\n" +
         tipText("AI akan menggunakan provider ini untuk auto-reply");
 
       await m.reply(text);
@@ -292,8 +292,8 @@ async function handler(m, { sock, config: botConfig }) {
       smartReply.topics = [];
       db.setGroup(m.chat, { ...groupData, smartReply });
       const text =
-        claraWrap("Smart Reply", [`│ Semua topic dihapus`,
-          `│ Smart Reply: *${smartReply.enabled ? "Aktif" : "Nonaktif"}*`].join("\n")) + "\n" +
+        claraWrap("Smart Reply", [`Semua topic dihapus`,
+          `Smart Reply: *${smartReply.enabled ? "Aktif" : "Nonaktif"}*`].join("\n")) + "\n" +
         tipText(`Tambah baru: ${prefix}smartreply add <keyword>|<context>`);
 
       await m.reply(text);

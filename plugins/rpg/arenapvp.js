@@ -38,13 +38,12 @@ async function handler(m, { sock }) {
     if (subCmd === "rank") {
       const data = await db.getPlayerData?.(m.sender, "arena") || { points: 0, wins: 0, losses: 0 };
       const rank = getRank(data.points || 0);
-      let msg = `╭─「 ✦ ᴀʀᴇɴᴀ ʀᴀɴᴋ ✦ 」\n`;
-      msg += `│ Rank: ${rank.emoji} *${rank.name}*\n`;
-      msg += `│ Points: *${data.points || 0}*\n`;
-      msg += `│ Wins: *${data.wins || 0}* | Losses: *${data.losses || 0}*\n`;
-      msg += `│ Win Rate: *${data.wins + data.losses > 0 ? Math.round(data.wins / (data.wins + data.losses) * 100) : 0}%*\n`;
-      msg += `╰────  •  ────`;
-      return m.reply(msg);
+      let msg = "";
+      msg += `Rank: ${rank.emoji} *${rank.name}*\n`;
+      msg += `Points: *${data.points || 0}*\n`;
+      msg += `Wins: *${data.wins || 0}* | Losses: *${data.losses || 0}*\n`;
+      msg += `Win Rate: *${data.wins + data.losses > 0 ? Math.round(data.wins / (data.wins + data.losses) * 100) : 0}%*\n`;
+            return m.reply(msg);
     }
 
     await m.react("🕒");
@@ -85,17 +84,17 @@ async function handler(m, { sock }) {
     } catch {}
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ᴀʀᴇɴᴀ ᴘᴠᴘ ✦ 」\n`;
-    msg += `│ Lawan: *${enemyName}*\n`;
-    msg += `│ Enemy Power: *${enemyPower}*\n`;
-    msg += `│ Your Power: *${playerPower}*\n`;
-    msg += `│\n`;
-    msg += `│ ${won ? "🏆 VICTORY!" : "💀 DEFEAT"}\n`;
-    msg += `│ Points: ${pointChange > 0 ? "+" : ""}${pointChange}\n`;
-    msg += `│ Reward: +${reward} gold\n`;
-    msg += `│ Total Points: *${playerData.points}*\n`;
-    msg += `╰────  •  ────`;
-    return m.reply(msg);
+    let msg = "";
+    msg += `Lawan: *${enemyName}*\n`;
+    msg += `Enemy Power: *${enemyPower}*\n`;
+    msg += `Your Power: *${playerPower}*\n`;
+    msg += `
+`;
+    msg += `${won ? "🏆 VICTORY!" : "💀 DEFEAT"}\n`;
+    msg += `Points: ${pointChange > 0 ? "+" : ""}${pointChange}\n`;
+    msg += `Reward: +${reward} gold\n`;
+    msg += `Total Points: *${playerData.points}*\n`;
+        return m.reply(msg);
   } catch (err) {
     console.error("arena error:", err);
     await m.react("❌");

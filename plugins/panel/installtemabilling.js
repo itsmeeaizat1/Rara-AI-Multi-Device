@@ -66,8 +66,9 @@ function handler(m, { sock }) {
     const text = m.text?.trim()
 
     if (!text) {
-        return m.reply( `╭─「 ✦ ɪɴꜱᴛᴀʟʟ ᴛᴇᴍᴀ ʙɪʟʟɪɴɢ ✦ 」
-│ Usage: \`${m.prefix}installtemabilling <ip>|<password>\`\n╰────  •  ────\n\n\`Contoh: ${m.prefix}installtemabilling 192.168.1.1|secretpass\``, "installtemabilling")
+        return m.reply(`Usage: \`${m.prefix}installtemabilling <ip>|<password>\`
+
+Contoh: \`${m.prefix}installtemabilling 192.168.1.1|secretpass\``)
     }
 
     const parts = text.split('|')
@@ -101,9 +102,7 @@ function handler(m, { sock }) {
 
             await m.reply(claraWrap("installtemabilling", `🕕 *[3/3] Build Assets...*\n\nCompiling panel assets...`))
             await execSSH(conn, BUILD_CMD)
-            await m.reply(claraWrap("installtemabilling", `╭─「 ✦ ᴛᴇᴍᴀ ʙɪʟʟɪɴɢ ✦ 」
-│ sTatus: *ᴛᴇʀɪɴꜱᴛᴀʟʟ*
-│ Ip: ${ipvps}\n╰────  •  ────\n\n_Tema Billing + dependencies berhasil diinstall!_`))
+            await m.reply(claraWrap("installtemabilling", `✅ Status: *Terinstall*\nIP: ${ipvps}\n\n_Tema Billing + dependencies berhasil diinstall!_`))
         } catch (err) {
             m.reply(claraWrap("installtemabilling", te(m.prefix, m.command, m.pushName), "error"))
         } finally {

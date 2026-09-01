@@ -38,12 +38,11 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let caption = `╭─「 ✦ sᴅxʟ ɢᴇɴ ✦ 」\n`;
-    caption += `│ 🎨 Prompt: *${text}*\n`;
-    caption += `│ ⚙️ Engine: *${result.model}*\n`;
-    caption += `│ 📐 Size: *1024x1024*\n`;
-    caption += `╰────  •  ────`;
-
+    let caption = "";
+    caption += `🎨 Prompt: *${text}*\n`;
+    caption += `⚙️ Engine: *${result.model}*\n`;
+    caption += `📐 Size: *1024x1024*\n`;
+    
     return await sock.sendMedia(m.chat, result.buffer, null, m, { type: "image", caption });
   } catch (err) {
     console.error("sdxl error:", err);

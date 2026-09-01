@@ -115,30 +115,32 @@ async function handler(m, { sock }) {
     setCooldown(m, "lastHilo", HILO_COOLDOWN);
 
     await m.react("🐣");
-    let msg = `╭─「 ✦ ʜɪ-ʟᴏ ✦ 」\n`;
-    msg += `│ 🃏 Tebak: *${isHigh ? "TINGGI" : "RENDAH"}*\n`;
-    msg += `│ 💵 Bet: *${bet} gold*\n`;
-    msg += `│\n`;
-    msg += `│ 📊 Hasil:\n`;
+    let msg = "";
+    msg += `🃏 Tebak: *${isHigh ? "TINGGI" : "RENDAH"}*\n`;
+    msg += `💵 Bet: *${bet} gold*\n`;
+    msg += `
+`;
+    msg += `📊 Hasil:\n`;
     for (const l of log) {
-      msg += `│ ${l}\n`;
+      msg += `${l}\n`;
     }
-    msg += `│\n`;
+    msg += `
+`;
 
     if (wins > 0) {
-      msg += `│ 🎉 Menang *${wins}* ronde!\n`;
-      msg += `│ 📊 Multiplier: *${multiplier}x*\n`;
-      msg += `│ 💰 Payout: *${payout} gold*\n`;
-      msg += `│ ✦ EXP: *+${expGain}*\n`;
+      msg += `🎉 Menang *${wins}* ronde!\n`;
+      msg += `📊 Multiplier: *${multiplier}x*\n`;
+      msg += `💰 Payout: *${payout} gold*\n`;
+      msg += `✦ EXP: *+${expGain}*\n`;
     } else {
-      msg += `│ 💀 Kalah di ronde pertama!\n`;
-      msg += `│ 💸 Rugi: *-${bet} gold*\n`;
+      msg += `💀 Kalah di ronde pertama!\n`;
+      msg += `💸 Rugi: *-${bet} gold*\n`;
     }
 
-    msg += `│\n`;
-    msg += `│ 💼 Gold: *${rpg.gold - bet + payout}*\n`;
-    msg += `╰────  •  ────`;
-
+    msg += `
+`;
+    msg += `💼 Gold: *${rpg.gold - bet + payout}*\n`;
+    
     return m.reply(msg);
   } catch (err) {
     console.error("hilorpg error:", err);

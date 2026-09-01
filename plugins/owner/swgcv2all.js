@@ -82,9 +82,9 @@ async function handler(m, { sock }) {
     return m.reply(
       `👋 *sWgcv2 All Global*\n\n` +
       `Kirim pesan *Status Grup V2* ke SEMUA grup sekaligus.\n\n` +
-      `╭─「 ✦ ᴄᴀʀᴀ ᴘᴀᴋᴀɪ ✦ 」\n` +
-      `│ ${m.prefix}swgcv2all Halo semua!\n` +
-      `│ atau reply gambar/video dengan caption ${m.prefix}swgcv2all\n` +
+      "" +
+      `${m.prefix}swgcv2all Halo semua!\n` +
+      `atau reply gambar/video dengan caption ${m.prefix}swgcv2all\n` +
       `╰┈┈┈┈┈┈┈┈`
     );
   }
@@ -165,10 +165,10 @@ async function handler(m, { sock }) {
       }
     }
     await m.reply(claraWrap("swgcv2all", `✅ *sWgcv2 All sElesai*\n\n` +
-      `╭─「 ✦ ʀᴇꜱᴜʟᴛ ✦ 」\n` +
-      `│ 🌐 Total Grup: *${groupIds.length}*\n` +
-      `│ ✅ Sukses: *${successCount}*\n` +
-      `│ ❌ Gagal: *${failCount}*\n` +
+      "" +
+      `🌐 Total Grup: *${groupIds.length}*\n` +
+      `✅ Sukses: *${successCount}*\n` +
+      `❌ Gagal: *${failCount}*\n` +
       `╰┈┈┈┈┈┈┈┈\n\n` +
       `Broadcast Status Grup V2 (Ring Pink) berhasil dikirim ke semua grup!`));
 

@@ -45,11 +45,10 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let result = `╭─「 ✦ TINYURL SHORTENER ✦ 」\n`;
-    result += `│ Original: ${url}\n`;
-    result += `│ Short URL: ${shortUrl.trim()}\n`;
-    result += `╰────  •  ────`;
-    return m.reply(result);
+    let result = "";
+    result += `Original: ${url}\n`;
+    result += `Short URL: ${shortUrl.trim()}\n`;
+        return m.reply(result);
   } catch (err) {
     console.error("tinyurl error:", err);
     await m.react("❌");
