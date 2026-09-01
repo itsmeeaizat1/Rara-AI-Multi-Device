@@ -853,6 +853,137 @@ class Database {
     return this.db.data.partner;
   }
 
+  // ===== RPG WRAPPER METHODS =====
+  // Compatibility wrappers for RPG plugins that use db.setPlayerData / db.addGold / etc.
+  // These delegate to existing methods (getUser/setUser/updateRpgCurrency/etc).
+
+  getPlayerAllData(jid) {
+    return this.getUser(jid) || {};
+  }
+
+  getPlayerData(jid, key) {
+    const user = this.getUser(jid);
+    if (!user) return null;
+    if (!key) return user;
+    if (user.rpg && user.rpg[key] !== undefined) return user.rpg[key];
+    if (user[key] !== undefined) return user[key];
+    return null;
+  }
+
+  async setPlayerData(jid, key, value) {
+    const user = this.getUser(jid) || this.setUser(jid);
+    if (!user) return false;
+    if (!user.rpg) user.rpg = {};
+    // Store under rpg[key] — merge objects, replace otherwise
+    if (value && typeof value === "object" && !Array.isArray(value) && user.rpg[key] && typeof user.rpg[key] === "object") {
+      user.rpg[key] = { ...user.rpg[key], ...value };
+    } else {
+      user.rpg[key] = value;
+    }
+    this.setUser(jid, user);
+    return true;
+  }
+
+  async addGold(jid, amount) {
+    return this.updateRpgCurrency(jid, "gold", amount);
+  }
+
+  async removeGold(jid, amount) {
+    return this.updateRpgCurrency(jid, "gold", -Math.abs(amount));
+  }
+
+  async spendGold(jid, amount) {
+    const user = this.getUser(jid) || this.setUser(jid);
+    if (!user || !user.rpg) return false;
+    const current = user.rpg.gold || 0;
+    if (current < amount) return false;
+    user.rpg.gold = current - amount;
+    this.setUser(jid, user);
+    return true;
+  }
+
+  async addEnergi(jid, amount) {
+    return this.updateEnergi(jid, amount);
+  }
+
+  async minEnergi(jid, amount) {
+    return this.updateEnergi(jid, -Math.abs(amount));
+  }
+
+  async addExp(jid, amount) {
+    return this.updateExp(jid, amount);
+  }
+
+  async addGems(jid, amount) {
+    return this.updateRpgCurrency(jid, "gems", amount);
+  }
+
+  async addDiamonds(jid, amount) {
+    return this.updateRpgCurrency(jid, "diamonds", amount);
+  }
+
+  async addTokens(jid, amount) {
+    return this.updateRpgCurrency(jid, "tokens", amount);
+  }
+
+  getGold(jid) {
+    return this.getRpgStat(jid, "gold") || 0;
+  }
+
+  getEnergi(jid) {
+    return this.getUser(jid)?.energi || 0;
+  }
+
+  getExp(jid) {
+    return this.getUser(jid)?.exp || 0;
+  }
+
+  async minGold(jid, amount) {
+    return this.updateRpgCurrency(jid, "gold", -Math.abs(amount));
+  }
+
+  // Alias for updateRpgCurrency
+  async updateCurrency(jid, currency, amount) {
+    return this.updateRpgCurrency(jid, currency, amount);
+  }
+
+  async addBalance(jid, amount) {
+    return this.updateSaldo(jid, amount);
+  }
+
+  getBalance(jid) {
+    return this.getUser(jid)?.saldo || 0;
+  }
+
+  async addAtk(jid, amount) {
+    const user = this.getUser(jid) || this.setUser(jid);
+    if (!user || !user.rpg) return false;
+    user.rpg.atk = Math.max(0, (user.rpg.atk || 0) + amount);
+    this.setUser(jid, user);
+    return true;
+  }
+
+  async addHP(jid, amount) {
+    const user = this.getUser(jid) || this.setUser(jid);
+    if (!user || !user.rpg) return false;
+    user.rpg.hp = Math.min(user.rpg.maxHp || 100, (user.rpg.hp || 0) + amount);
+    this.setUser(jid, user);
+    return true;
+  }
+
+  async setHP(jid, value) {
+    const user = this.getUser(jid) || this.setUser(jid);
+    if (!user || !user.rpg) return false;
+    user.rpg.hp = Math.max(0, Math.min(user.rpg.maxHp || 100, value));
+    this.setUser(jid, user);
+    return true;
+  }
+
+  async addDiamond(jid, amount) {
+    return this.updateRpgCurrency(jid, "diamonds", amount);
+  }
+
+
   get data() {
     return this.db.data;
   }
