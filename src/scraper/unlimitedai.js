@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Migrated from UnlimitedAI.chat → Google Gemini API (better data freshness)
 // Same export interface: UnlimitedAI(prompt, character) returns { status, answer, character, model }
-import { callGemini } from "../lib/nova-ai-service.js";
+import { callGemini, resolveLatestGeminiModel } from "../lib/nova-ai-service.js";
 
 const CHARACTERS = {
   "nova-ai": {

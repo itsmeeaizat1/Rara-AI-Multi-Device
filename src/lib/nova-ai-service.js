@@ -21,7 +21,7 @@ const DEFAULT_PROVIDERS = {
   gemini: {
     name: "Google Gemini",
     models: ["gemini-3.7-flash", "gemini-3.6-flash", "gemini-3.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-2.5-pro", "gemini-2.5-flash", "gemini-2.5-flash-lite"],
-    defaultModel: "gemini-3.5-flash-lite",
+    defaultModel: "auto-latest",
     chatEndpoint: (model) => `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=__API_KEY__`,
     authHeader: () => ({}),
     buildBody: ({ messages, systemPrompt }) => {
@@ -328,6 +328,55 @@ async function callAI(firstArg, secondArg) {
 }
 
 
+// ═══════════════════════════════════════════════════════════
+// AUTO-LATEST GEMINI MODEL RESOLVER
+// Otomatis fetch model Gemini terbaru dari API, cache 1 jam
+// ═══════════════════════════════════════════════════════════
+let _cachedLatestModel = null;
+let _cachedAt = 0;
+const FALLBACK_LATEST = "gemini-3.5-flash-lite";
+
+/**
+ * resolveLatestGeminiModel — fetch model terbaru dari Gemini API
+ * Cari model dengan "flash-lite" di nama, urutkan by version, ambil terbaru
+ * @param {string} apiKey - Gemini API key
+ * @returns {Promise<string>} model endpoint name
+ */
+async function resolveLatestGeminiModel(apiKey) {
+  const now = Date.now();
+  // Cache 1 jam
+  if (_cachedLatestModel && (now - _cachedAt) < 3600000) return _cachedLatestModel;
+
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    const models = (data.models || [])
+      .map(m => m.name?.replace("models/", "") || "")
+      .filter(name => name.includes("flash-lite") && !name.includes("image") && !name.includes("live") && !name.includes("tts") && !name.includes("transcribe"))
+      .filter(name => /^gemini-\d+\.\d+-flash-lite/.test(name));
+
+    if (models.length === 0) throw new Error("No flash-lite models found");
+
+    // Sort by version descending (gemini-3.5 > gemini-3.1 > gemini-2.5)
+    models.sort((a, b) => {
+      const va = parseFloat(a.match(/\d+\.\d+/)?.[0] || "0");
+      const vb = parseFloat(b.match(/\d+\.\d+/)?.[0] || "0");
+      return vb - va;
+    });
+
+    _cachedLatestModel = models[0];
+    _cachedAt = now;
+    return _cachedLatestModel;
+  } catch (e) {
+    // Fallback ke hardcoded latest
+    if (!_cachedLatestModel) _cachedLatestModel = FALLBACK_LATEST;
+    return _cachedLatestModel;
+  }
+}
+
+
 /**
  * Helper: callGemini — panggil Google Gemini dengan API key dari config
  * Auto-inject API key dari apikeys.json (google) atau config.aiHelp.geminiApiKey
@@ -355,7 +404,7 @@ async function callGemini(prompt, opts = {}) {
   return callAI({
     providerKey: "gemini",
     apiKey,
-    model: opts.model || "gemini-3.5-flash-lite",
+    model: opts.model || await resolveLatestGeminiModel(apiKey),
     messages: [{ role: "user", content: prompt }],
     systemPrompt: opts.systemPrompt || "",
     temperature: opts.temperature ?? 0.7,
@@ -369,5 +418,6 @@ export {
   resolveProvider,
   callAI,
   callGemini,
+  resolveLatestGeminiModel,
   normalizeMessages,
 };
