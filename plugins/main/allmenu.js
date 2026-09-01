@@ -190,8 +190,8 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
-    // ── Info section (Full SmallCaps Style v7) ──
-    let txt = `
+    // ── Info section (Full SmallCaps Style v7) — open box, perlu closeBoxRight sendiri ──
+    const openBox = `
 ╭──「 *${toSC("Info Profil")}* 」
 │ *${toSC("Nama")}:*  ${toSC(m.pushName || "User")}
 │ *${toSC("Nomor")}:* @${m.sender.split("@")[0]}
@@ -249,15 +249,17 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
 │ *${toSC("RAM")}:* ${formatBytes(usedMem)} / ${formatBytes(totalMem)} (${memPercent}%)
 │ *${toSC("RAM Bot")}:* ${formatBytes(memUsage.rss)}
 ╰──────────
-${weatherBlock}${readMore}
 ╭──「 *${toSC("Keterangan")}* 」\n│ Ⓞ = ${toSC("Hanya untuk owner")}
 │ ⓟ = ${toSC("Hanya untuk premium")}
 │ Ⓛ = ${toSC("Membutuhkan limit")}
 │ Ⓐ = ${toSC("Hanya untuk admin")}
 │ Ⓖ = ${toSC("Hanya di dalam grup")}
 │ Ⓟ = ${toSC("Hanya di private chat")}
-╰──────────
-`;
+╰──────────`;
+
+    // closeBoxRight HANYA diterapkan ke openBox — weatherBlock & category boxes (novaBox)
+    // sudah closed sendiri, jangan ikut diproses biar lebarnya gak ikut melar
+    let txt = closeBoxRight(openBox) + `\n${weatherBlock}${readMore}\n`;
 
     // ── Category commands (Clara-MD box style) ──
     const sortedCategories = [...categories].sort((a, b) => {
@@ -318,7 +320,7 @@ ${weatherBlock}${readMore}
       { id: `${prefix}owner`, text: toSC("Owner") },
     ];
     await sendMenuCard(sock, m, {
-      text: closeBoxRight(txt),
+      text: txt,
       footer: "",
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu.jpg"),
       buttons: navButtons,
