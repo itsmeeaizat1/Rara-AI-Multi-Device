@@ -15,11 +15,11 @@ import {
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuAudio } from "../../src/lib/send-menu.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton } from "../../src/lib/nova-category-list.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, toSC, closeBoxRight, novaBox, novaMenuLayout } from "../../src/lib/nova-menu-style.js";
+import { buildMenuInfo } from "../../src/lib/nova-info-section.js";
 
 const pluginConfig = {
   name: "menu",
@@ -94,18 +94,9 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     if (m.isOwner) userRole = "Owner";
     else if (m.isPremium) userRole = "Premium";
 
-    // ── Info section (compact) ──
-    const info = [
-      `${getTimeGreeting()}, ${m.pushName || "User"}`,
-      { label: "Uptime", value: runtimeStr },
-      { label: "Mode", value: (botConfig.mode || "public").toUpperCase() },
-      { label: "Prefix", value: prefix },
-      { label: "User", value: `${totalUsers} (${totalPremium} Premium)` },
-      { label: "Grup", value: `${totalActiveGroups} / ${totalGroups}` },
-      { label: "Total Fitur", value: `${totalFitur}` },
-      { label: "Role", value: userRole },
-      { label: "Energi", value: m.isOwner || m.isPremium ? "∞ Unlimited" : (user?.energi ?? 25) },
-    ];
+    // ── Info section lengkap (user, bot, database, server, weather) ──
+    const { info: menuInfo, weatherStr } = await buildMenuInfo(m, { db, config: botConfig, uptime });
+    const info = menuInfo;
 
     // ── Categories ──
     const menuCats = [
@@ -141,7 +132,10 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
       prefix,
     });
 
-    return txt + "\n\n" + toSC("Ketik") + " *" + prefix + "allmenu* " + toSC("untuk melihat semua fitur");
+    let result = txt;
+    if (weatherStr) result += "\n" + weatherStr;
+    result += "\n\n" + toSC("Ketik") + " *" + prefix + "allmenu* " + toSC("untuk melihat semua fitur");
+    return result;
   } catch (e) {
     console.error("[menu] buildMenuText error:", e.message);
     return novaError("menu", e.message);

@@ -15,6 +15,7 @@ import { getWeatherFooter } from "../../src/lib/nova-weather-footer.js";
 import { sendMenuCard } from "../../src/lib/nova-menu-card.js";
 import { buildCategoryButton, CATEGORY_EMOJI } from "../../src/lib/nova-category-list.js";
 import { commandListLine, toSC } from "../../src/lib/nova-menu-style.js";
+import { buildMenuInfo } from "../../src/lib/nova-info-section.js";
 
 const pluginConfig = {
   name: "allmenucategory",
@@ -146,11 +147,25 @@ async function handler(m, { sock, db }) {
         return total > 0;
       });
 
-      let weatherBlock = "";
-      try {
-        const wf = await getWeatherFooter();
-        if (wf) weatherBlock = `${wf}\n`;
-      } catch {}
+      // ── Info section lengkap dari shared builder ──
+      const { info: menuInfo, weatherStr: weatherBlock } = await buildMenuInfo(m, { db, config: botConfig, uptime: process.uptime() * 1000 });
+
+      // Build info section text
+      let infoText = "";
+      let maxLabel = 6;
+      for (const item of menuInfo) {
+        if (item && item.label) {
+          const ll = toSC(item.label).length;
+          if (ll > maxLabel) maxLabel = ll;
+        }
+      }
+      for (const item of menuInfo) {
+        if (typeof item === "string") {
+          infoText += `│ ${toSC(item)}\n`;
+        } else if (item && item.label !== undefined) {
+          infoText += `│ • ${toSC(item.label).padEnd(maxLabel)} : ${item.value}\n`;
+        }
+      }
 
       // Compact index — cuma nama kategori + jumlah command, BUKAN dump semua command
       // (yang itu tugas allmenu, bukan allmenucategory)
@@ -167,8 +182,9 @@ async function handler(m, { sock, db }) {
         catEntries.push({ cat, catName, emoji, total });
       }
 
-      let txt = `${weatherBlock}
-╭─「 ✦ ${toSC("Daftar Kategori")} ✦ 」
+      let txt = `╭─「 ✦ ${toSC("Info")} ✦ 」
+${infoText}╰────  •  ────
+${weatherBlock ? weatherBlock + "\n" : ""}╭─「 ✦ ${toSC("Daftar Kategori")} ✦ 」
 │ *${toSC("Total")}:* ${catEntries.length} ${toSC("kategori")}
 │ *${toSC("Total Fitur")}:* ${totalAllCmds} ${toSC("command")}
 │
@@ -232,11 +248,8 @@ async function handler(m, { sock, db }) {
     const catName = CATEGORY_NAMES[matchedCat] || matchedCat.charAt(0).toUpperCase() + matchedCat.slice(1);
     const totalFitur = allCommands.length;
 
-    let weatherBlock2 = "";
-    try {
-      const wf2 = await getWeatherFooter();
-      if (wf2) weatherBlock2 = `${wf2}\n`;
-    } catch {}
+    // Weather sudah ada di info section atas, tidak perlu duplikat
+    const weatherBlock2 = "";
 
     // Compact 2-column layout — beda dari allmenu yang dump semua kategori
     const emoji = CATEGORY_EMOJI?.[matchedCat] || "📋";
