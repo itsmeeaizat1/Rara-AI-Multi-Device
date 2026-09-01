@@ -43,7 +43,7 @@ async function handler(m, { sock }) {
             count++
         }
         if (status) {
-            return m.m.reply(claraWrap("welcomeall", `✅ *Welcome Global On*\n\n` +
+            return m.reply(claraWrap("welcomeall", `✅ *Welcome Global On*\n\n` +
                 `╭─「 ✦ Result ✦ 」\n` +
                 `│ 🌐 Total Grup: *${count}*\n` +
                 `│ ✅ Welcome: *AKTIF*\n` +

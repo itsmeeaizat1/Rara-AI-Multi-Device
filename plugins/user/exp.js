@@ -26,6 +26,7 @@ function formatNumber(num) {
 }
 
 async function handler(m, { sock }) {
+  try {
   const db = getDatabase();
 
   let targetJid = m.sender;
@@ -53,6 +54,11 @@ async function handler(m, { sock }) {
   txt += "╰────  •  ────";
 
   await m.reply(txt, { mentions: [targetJid] });
+
+  } catch (e) {
+    console.error("[user/exp.js]:", e.message);
+    try { await m.reply("❌ Terjadi error: " + (e.message || "unknown")); } catch {}
+  }
 }
 
 export { pluginConfig as config, handler };

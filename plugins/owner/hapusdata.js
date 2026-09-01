@@ -20,6 +20,7 @@ const pluginConfig = {
 const pendingReset = new Map()
 
 async function handler(m, { sock }) {
+  try {
     const args = m.text
 
     if (args === 'ya' || args === 'yes' || args === 'confirm') {
@@ -121,6 +122,11 @@ async function handler(m, { sock }) {
     }, { quoted: m })
 
     setTimeout(() => { pendingReset.delete(m.sender) }, 60000)
+
+  } catch (e) {
+    console.error("[hapusdata.js]:", e.message);
+    try { await m.reply("❌ Terjadi error: " + (e.message || "unknown")); } catch {}
+  }
 }
 
 export { pluginConfig as config, handler }

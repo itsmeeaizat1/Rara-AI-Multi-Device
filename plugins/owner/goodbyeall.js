@@ -39,11 +39,11 @@ async function handler(m, { sock }) {
         let count = 0
         
         for (const groupId of groupIds) {
-            db.setGroup(groupId, { leave: status })
+            db.setGroup(groupId, { goodbye: status })
             count++
         }
         if (status) {
-            return m.m.reply(claraWrap("goodbyeall", `✅ *Goodbye Global On*\n\n` +
+            return m.reply(claraWrap("goodbyeall", `✅ *Goodbye Global On*\n\n` +
                 `╭─「 ✦ Result ✦ 」\n` +
                 `│ 🌐 Total Grup: *${count}*\n` +
                 `│ ✅ Goodbye: *AKTIF*\n` +

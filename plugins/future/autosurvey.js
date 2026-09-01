@@ -37,6 +37,7 @@ function saveConfig(db, gid, data) {
 const DAYS = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 
 async function handler(m, { sock, db, config: botConfig }) {
+  try {
   const prefix = botConfig.command?.prefix || ".";
   const args = (m.text || "").trim().split(/\s+/);
   const sub = (args[1] || "").toLowerCase();
@@ -189,6 +190,11 @@ async function handler(m, { sock, db, config: botConfig }) {
     prefix + "autosurvey status",
   ].join("\n")));
   return { handled: true };
+
+  } catch (e) {
+    console.error("[autosurvey.js]:", e.message);
+    try { await m.reply("❌ Terjadi error: " + (e.message || "unknown")); } catch {}
+  }
 }
 
 export { pluginConfig as config, handler, getConfig, saveConfig };

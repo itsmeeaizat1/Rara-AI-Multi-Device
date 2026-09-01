@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
         
         if (isUnban) {
             if (!groupData.isBanned) {
-                return mm.reply(claraWrap("banchat", `⚠️ *ɢʀᴜᴘ ᴛɪᴅᴀᴋ ᴅɪʙᴀɴ*\n\n` +
+                return m.reply(claraWrap("banchat", `⚠️ *ɢʀᴜᴘ ᴛɪᴅᴀᴋ ᴅɪʙᴀɴ*\n\n` +
                     `Grup ini tidak dalam status banned.\n` +
                     `Semua user bisa menggunakan bot.`))            }
             
@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
         }
         
         if (groupData.isBanned) {
-            return m.m.reply(`⚠️ *ɢʀᴜᴘ ꜱᴜᴅᴀʜ ᴅɪʙᴀɴ*\n\n` +
+            return m.reply(`⚠️ *ɢʀᴜᴘ ꜱᴜᴅᴀʜ ᴅɪʙᴀɴ*\n\n` +
                 `Grup ini sudah dalam status banned.\n` +
                 `Gunakan \`.unbanchat\` untuk membuka akses.`)       }
         

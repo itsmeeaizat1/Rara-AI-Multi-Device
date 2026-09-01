@@ -20,6 +20,7 @@ const pluginConfig = {
 };
 
 async function handler(m, { sock }) {
+  try {
   const db = getDatabase();
   const lists = db.setting("storeLists") || [];
 
@@ -72,6 +73,11 @@ async function handler(m, { sock }) {
   txt += `💡 _Ketik \`${m.prefix}list <nomor>\` untuk membaca detail informasi_`;
 
   await m.reply(claraWrap("list", txt));
+
+  } catch (e) {
+    console.error("[store/list.js]:", e.message);
+    try { await m.reply("❌ Terjadi error: " + (e.message || "unknown")); } catch {}
+  }
 }
 
 export { pluginConfig as config, handler };
