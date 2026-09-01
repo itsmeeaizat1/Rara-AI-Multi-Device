@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20update%20ikyyxd%20%26%20albyoffc%20API%20info%20-success?style=for-the-badge)
-> *Commit: "feat: update ikyyxd & albyoffc API info di list api.md"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20update%20firefly%20apikey%20ke%20OurinNextG-success?style=for-the-badge)
+> *Commit: "fix: update firefly apikey ke OurinNextGen — API alive lagi"*
 <!--END_SECTION:latest-update-->
 
 ---
