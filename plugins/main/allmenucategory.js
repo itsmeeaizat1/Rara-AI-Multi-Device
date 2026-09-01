@@ -112,7 +112,7 @@ async function handler(m, { sock, db }) {
         // Media & Kreatif
         "canvas", "convert", "maker", "ephoto", "fun", "game",
         // Game & RPG
-        "rpg", "rpg cinta", "clan", "turnamen",
+        "rpg", "rpg couple", "clan", "turnamen",
         // Search & Info
         "search", "stalker", "anime", "asupan", "cecan", "nsfw",
         // Entertainment

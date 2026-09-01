@@ -10,7 +10,7 @@ import {
 const pluginConfig = {
   name: "cintainfo",
   alias: ["cintainfo"],
-  category: "rpg cinta",
+  category: "rpg couple",
   description: "Dashboard hubungan RPG couple",
   usage: ".cintainfo atau .cintainfo @tag",
   example: ".cintainfo",

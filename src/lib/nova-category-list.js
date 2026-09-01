@@ -17,7 +17,7 @@ import { getCasesByCategory } from "../../case/nova.js";
 const CATEGORY_NAMES = {
   ai: "AI", sticker: "Sticker", group: "Group", download: "Download",
   tools: "Tools", canvas: "Canvas", fun: "Fun", game: "Game",
-  rpg: "RPG", "rpg cinta": "RPG Cinta", clan: "Clan",
+  rpg: "RPG", "rpg couple": "RPG Couple", clan: "Clan",
   search: "Search", stalker: "Stalker", anime: "Anime",
   asupan: "Asupan", cecan: "Cecan", nsfw: "NSFW",
   convert: "Convert", maker: "Maker", ephoto: "Ephoto",
@@ -39,7 +39,7 @@ const CATEGORY_ORDER = [
   // Media & Kreatif
   "canvas", "convert", "maker", "ephoto", "fun", "game",
   // Game & RPG
-  "rpg", "rpg cinta", "clan", "turnamen",
+  "rpg", "rpg couple", "clan", "turnamen",
   // Search & Info
   "search", "stalker", "anime", "asupan", "cecan", "nsfw",
   // Entertainment
@@ -63,7 +63,7 @@ const CATEGORY_ORDER = [
 const CATEGORY_EMOJI = {
   ai: "🤖", sticker: "🖼️", group: "👥", download: "⬇️", tools: "🛠️",
   canvas: "🎨", convert: "🔄", maker: "🖌️", ephoto: "📸",
-  fun: "🎉", game: "🎮", rpg: "⚔️", "rpg cinta": "❤️", clan: "🛡️", turnamen: "🏆",
+  fun: "🎉", game: "🎮", rpg: "⚔️", "rpg couple": "❤️", clan: "🛡️", turnamen: "🏆",
   search: "🔍", stalker: "🕵️", anime: "🎌", asupan: "😍", cecan: "💃", nsfw: "🔞",
   media: "🎬", tts: "🔊", quotes: "💬", primbon: "🔮",
   education: "📚", food: "🍔", info: "ℹ️", cek: "🔎", berita: "📰",
