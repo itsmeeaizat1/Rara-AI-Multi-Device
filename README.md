@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20hapus%20baris%20pemblokir%20input%20teks%20di-success?style=for-the-badge)
-> *Commit: "fix: hapus baris pemblokir input teks di slangtranslate.js + dokumen dead API"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20smeme.js%20migrasi%20upload%20ke%20catbox.m-success?style=for-the-badge)
+> *Commit: "fix: smeme.js migrasi upload ke catbox.moe + list dead API sticker"*
 <!--END_SECTION:latest-update-->
 
 ---
