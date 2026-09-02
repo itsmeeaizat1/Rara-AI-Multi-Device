@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20sesi%20.daftar%20%26%20.daftarotomatis%20sali-success?style=for-the-badge)
-> *Commit: "fix: sesi .daftar & .daftarotomatis saling hijack pesan reply — captcha jawaban salah kepotong sama sesi lain"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20reorganisasi%20assets%2Fimage%20ke%20f-success?style=for-the-badge)
+> *Commit: "refactor: reorganisasi assets/image ke folder kategori — 15 kategori (store, channel, group, jadibot, jpm, pushkontak, search, serialize, settings, sticker, swgc, panel, rpg, user, tools)"*
 <!--END_SECTION:latest-update-->
 
 ---
