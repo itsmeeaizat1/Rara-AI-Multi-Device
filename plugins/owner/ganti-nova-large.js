@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const isImage = m.isImage || (m.quoted && m.quoted.type === 'imageMessage')
     
     if (!isImage) {
-        return m.reply(claraWrap("Nova-large", `🖼️ *ɴᴏᴠᴀ ʟᴀʀɢᴇ ᴘʀᴇꜱᴇᴛ*\n\nKirim/reply gambar untuk mengganti kumpulan foto besar (nova.jpg, nova-v8.jpg, nova-v10.jpg) sekaligus.\nPastikan rasio gambar sesuai dengan yang diinginkan.`))
+        return m.reply(claraWrap("Nova-large", `🖼️ *ɴᴏᴠᴀ ʟᴀʀɢᴇ ᴘʀᴇꜱᴇᴛ*\n\nKirim/reply gambar untuk mengganti kumpulan foto besar (nova.jpg, panel/panel-thumb.jpg, nova-v10.jpg) sekaligus.\nPastikan rasio gambar sesuai dengan yang diinginkan.`))
     }
     try {
         let buffer
@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
         
         const targetImages = [
             'nova.jpg',
-            'nova-v8.jpg',
+            'panel/panel-thumb.jpg',
             'nova-v10.jpg'
         ]
         

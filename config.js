@@ -43,35 +43,35 @@ const config = {
     "nova-welcome": "./assets/image/welcome/wellcome.jpg",
     "nova-goodbye": "./assets/image/welcome/left.jpg",
     // Thumbnail per kategori (placeholder — ganti dengan gambar asli)
-    "search-thumb": "./assets/image/search-thumb.jpg",
-    "sticker-thumb": "./assets/image/sticker-thumb.jpg",
-    "jpm-thumb": "./assets/image/jpm-thumb.jpg",
-    "pushkontak-thumb": "./assets/image/pushkontak-thumb.jpg",
-    "serialize-thumb": "./assets/image/serialize-thumb.jpg",
-    "jadibot-thumb": "./assets/image/jadibot-thumb.jpg",
-    "swgc-thumb": "./assets/image/swgc-thumb.jpg",
-    "settings-thumb": "./assets/image/settings-thumb.jpg",
-    "group-thumb": "./assets/image/group-thumb.jpg",
+    "search-thumb": "./assets/image/search/search-thumb.jpg",
+    "sticker-thumb": "./assets/image/sticker/sticker-thumb.jpg",
+    "jpm-thumb": "./assets/image/jpm/jpm-thumb.jpg",
+    "pushkontak-thumb": "./assets/image/pushkontak/pushkontak-thumb.jpg",
+    "serialize-thumb": "./assets/image/serialize/serialize-thumb.jpg",
+    "jadibot-thumb": "./assets/image/jadibot/jadibot-thumb.jpg",
+    "swgc-thumb": "./assets/image/swgc/swgc-thumb.jpg",
+    "settings-thumb": "./assets/image/settings/settings-thumb.jpg",
+    "group-thumb": "./assets/image/group/group-thumb.jpg",
     // Fallback
-    "example": "./assets/image/example.jpg",
+    "example": "./assets/image/tools/example.jpg",
     // Game & RPG
-    "nova-games": "./assets/image/nova-games.jpg",
-    "nova-rpg": "./assets/image/nova-rpg.jpg",
-    "nova-winner": "./assets/image/nova-winner.jpg",
-    "nova-levelup": "./assets/image/nova-levelup.jpg",
+    "nova-games": "./assets/image/rpg/nova-games.jpg",
+    "nova-rpg": "./assets/image/rpg/nova-rpg.jpg",
+    "nova-winner": "./assets/image/rpg/nova-winner.jpg",
+    "nova-levelup": "./assets/image/rpg/nova-levelup.jpg",
     // Group
-    "nova-rules": "./assets/image/nova-rules.jpg",
-    "nova-promote": "./assets/image/nova-promote.png",
-    "nova-demote": "./assets/image/nova-demote.png",
-    "channel-banner": "./assets/image/channel-banner.png",
+    "nova-rules": "./assets/image/group/nova-rules.jpg",
+    "nova-promote": "./assets/image/group/nova-promote.png",
+    "nova-demote": "./assets/image/group/nova-demote.png",
+    "channel-banner": "./assets/image/channel/channel-banner.png",
     // Store
-    "nova-store": "./assets/image/nova-store.png",
-    "aizat-store-qris": "./assets/image/aizat-store-qris.jpg",
+    "nova-store": "./assets/image/store/nova-store.png",
+    "aizat-store-qris": "./assets/image/store/aizat-store-qris.jpg",
     // Canvas & tools
-    "pp-kosong": "./assets/image/pp-kosong.jpg",
-    "nova-kertas": "./assets/image/nova-kertas.jpg",
-    "nova-daftar": "./assets/image/nova-daftar.png",
-    "nova-v8": "./assets/image/nova-v8.jpg",
+    "pp-kosong": "./assets/image/user/pp-kosong.jpg",
+    "nova-kertas": "./assets/image/tools/nova-kertas.jpg",
+    "nova-daftar": "./assets/image/user/nova-daftar.png",
+    "panel-thumb": "./assets/image/panel/panel-thumb.jpg",
     // Non-image assets
     "nova-mp4": "./assets/video/nova-mp4.mp4",
     "nova-mp3": "./assets/audio/cinta-terbaik-cassandra.mp3",
@@ -123,7 +123,7 @@ const config = {
 
   sewaPrice: {
     // QRIS KHUSUS SEWA BOT (bisa beda sama payment & donasi)
-    qrisUrl: "./assets/image/aizat-store-qris.jpg",
+    qrisUrl: "./assets/image/store/aizat-store-qris.jpg",
 
     // HARGA SEWA BOT - Default per durasi
     // Format: Rp format Indonesia
