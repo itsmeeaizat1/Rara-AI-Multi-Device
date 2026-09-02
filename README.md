@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20integrasi%20.leaderboard%20ke%20RPG%20syst-success?style=for-the-badge)
-> *Commit: "feat: integrasi .leaderboard ke RPG system baru"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20audit%20%26%20merge%20kategori%20%E2%80%94%2046%20%E2%86%92%20-success?style=for-the-badge)
+> *Commit: "refactor: audit & merge kategori — 46 → 41 kategori, 1835 → 1810 plugin"*
 <!--END_SECTION:latest-update-->
 
 ---
