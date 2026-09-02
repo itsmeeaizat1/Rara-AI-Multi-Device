@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20.ai%20(nova-assistant.js)%2C-success?style=for-the-badge)
-> *Commit: "refactor: hapus .ai (nova-assistant.js), sudah digantikan oleh .novaai"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20rewrite%20.aitio%20%E2%80%94%20pilih%20model%20langs-success?style=for-the-badge)
+> *Commit: "feat: rewrite .aitio — pilih model langsung, satu command"*
 <!--END_SECTION:latest-update-->
 
 ---
