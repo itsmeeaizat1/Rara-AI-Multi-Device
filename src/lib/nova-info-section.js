@@ -5,7 +5,7 @@
 import os from "os";
 import fs from "fs";
 import { formatUptime, getTimeGreeting, getImportantDay } from "./nova-formatter.js";
-import { getWeatherFooter, getWeatherAddress } from "./nova-weather-footer.js";
+import { getWeatherDetail } from "./nova-weather-footer.js";
 import { toSC } from "./nova-menu-style.js";
 import { getDatabase } from "./nova-database.js";
 
@@ -128,7 +128,7 @@ export async function buildMenuInfo(m, ctx = {}) {
   }
 
   // ── Weather (cek setting weatherRealtime dulu) ──
-  let weatherAddr = "";
+  let weatherDetail = null;
   let weatherEnabled = true;
   try {
     const db2 = getDatabase();
@@ -144,7 +144,7 @@ export async function buildMenuInfo(m, ctx = {}) {
   } catch {}
   if (weatherEnabled) {
     try {
-      weatherAddr = await getWeatherAddress();
+      weatherDetail = await getWeatherDetail();
     } catch {}
   }
 
@@ -189,7 +189,20 @@ export async function buildMenuInfo(m, ctx = {}) {
     { label: "RAM", value: `${(usedMem / 1024 / 1024).toFixed(0)}/${(totalMem / 1024 / 1024).toFixed(0)} MB (${memPercent}%)` },
     { label: "CPU", value: `${cpuCores} cores / ${cpuSpeed} MHz` },
     { label: "Load", value: loadAvg },
-    ...(weatherAddr ? ["", "Cuaca", { label: "Cuaca", value: weatherAddr }] : []),
+    ...(weatherDetail ? [
+      "",
+      "Cuaca",
+      { label: "Lokasi", value: `${weatherDetail.location}` },
+      { label: "Kondisi", value: `${weatherDetail.kondisi} ${weatherDetail.emoji}` },
+      { label: "Suhu", value: weatherDetail.suhu },
+      { label: "Terasa", value: weatherDetail.terasa },
+      { label: "Kelembapan", value: weatherDetail.kelembapan },
+      { label: "Angin", value: weatherDetail.angin },
+      { label: "Arah Angin", value: weatherDetail.arahAngin },
+      { label: "Tutupan Awan", value: weatherDetail.tutupanAwan },
+      { label: "UV Index", value: weatherDetail.uv },
+      { label: "Curah Hujan", value: weatherDetail.curahHujan },
+    ] : []),
   ];
 
   // weatherStr null karena weather sudah di dalam info
