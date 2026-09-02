@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     const products = db.setting('storeProducts') || []
 
     if (products.length === 0) {
-        return m.reply(`*ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`)
+        return m.reply(`*Belum Ada Produk.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`)
     }
 
     const text = m.text?.trim() || ''
@@ -115,13 +115,13 @@ async function handler(m, { sock }) {
         }
         case 'stok': {
             product.stock = value.toLowerCase() === 'unlimited' ? -1 : parseInt(value)
-            if (isNaN(product.stock)) return m.reply(`❌ *ꜱᴛᴏᴋ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.* Gunakan angka atau \`unlimited\` 📊`)
+            if (isNaN(product.stock)) return m.reply(`❌ *Stok Tidak Valid.* Gunakan angka atau \`unlimited\` 📊`)
             break
         }
         case 'tipe': {
             const newType = value.toLowerCase()
             if (newType !== 'digital' && newType !== 'fisik') {
-                return m.reply(`❌ *ᴛɪᴘᴇ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.* Gunakan \`digital\` 🔑 atau \`fisik\` 📦`)
+                return m.reply(`❌ *Tipe Tidak Valid.* Gunakan \`digital\` 🔑 atau \`fisik\` 📦`)
             }
             if (newType === 'fisik' && product.type === 'digital' && product.stockItems?.length > 0) {
                 return m.reply(

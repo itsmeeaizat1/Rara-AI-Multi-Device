@@ -75,7 +75,7 @@ function handler(m, { sock }) {
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\n💡 *Contoh:* \`07.00,12.30,19.00\``)
+            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\n💡 *Contoh:* \`07.00,12.30,19.00\``)
         }
 
         const menu = args.slice(2).join(' ').trim()
@@ -105,7 +105,7 @@ function handler(m, { sock }) {
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\n💡 *Contoh:* \`08.00,13.00,20.00\``)
+            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\n💡 *Contoh:* \`08.00,13.00,20.00\``)
         }
 
         const menu = args.slice(2).join(' ').trim() || existing.menu || ''
