@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20konsolidasi%20folder%20database%2F%20k-success?style=for-the-badge)
-> *Commit: "refactor: konsolidasi folder database/ ke src/data/"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20satukan%20allmenu%20ke%20V1%2C%20hapus%20v-success?style=for-the-badge)
+> *Commit: "refactor: satukan allmenu ke V1, hapus varian V2/V5/V6"*
 <!--END_SECTION:latest-update-->
 
 ---
