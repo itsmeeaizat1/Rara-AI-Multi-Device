@@ -10,7 +10,7 @@ import { claraWrap, toSC, novaBox } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "lihatproduk",
   alias: ["lihatproduk"],
-  category: "store",
+  category: 'owner',
   description: "🖼️ Lihat gambar produk toko",
   usage: ".lihatproduk <nomor>",
   example: ".lihatproduk 1",

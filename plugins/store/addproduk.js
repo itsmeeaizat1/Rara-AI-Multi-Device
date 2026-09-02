@@ -8,7 +8,7 @@ import FormData from 'form-data'
 const pluginConfig = {
     name: 'addproduk',
     alias: ["addproduk"],
-    category: 'store',
+    category: 'owner',
     description: '➕ Tambah produk baru ke toko (hanya di private chat)',
     usage: '.addproduk <nama>|<harga>|<tipe>|<stok>|<deskripsi>|<kategori>',
     example: '.addproduk Spotify Premium|25000|digital|10|Akun Premium 1 Bulan|app',

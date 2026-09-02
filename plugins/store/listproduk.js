@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "listproduk",
   alias: ["listproduk"],
-  category: "store",
+  category: 'owner',
   description: "🛍️ Lihat daftar produk yang tersedia",
   usage: ".listproduk [kategori]",
   example: ".listproduk",

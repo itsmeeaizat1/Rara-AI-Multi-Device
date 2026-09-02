@@ -6,7 +6,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "track",
   alias: ["track"],
-  category: "store",
+  category: 'owner',
   description: "Lacak status pesanan berdasarkan nomor transaksi",
   usage: ".track <nomor_trx> — Lacak pesanan\n.track list — Lihat semua pesanan (owner)\n.track pending — Lihat pesanan pending (owner)\n.track update <trx> <status> — Update status (owner)\n.track stats — Statistik pesanan (owner)",
   example: ".track TRX-001",
