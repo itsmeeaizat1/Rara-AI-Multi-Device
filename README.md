@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20pindah%20Waktu%20%26%20Tanggal%20ke%20setelah%20I-success?style=for-the-badge)
-> *Commit: "fix: pindah Waktu & Tanggal ke setelah Info User (sebelum Info Bot) di info section menu/allmenu/allmenucategory"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20config.weather%20%2B%20.setweather%20comma-success?style=for-the-badge)
+> *Commit: "feat: config.weather + .setweather command — set lokasi cuaca (default Serang) via nama kota/koordinat/reset, tampil di info section menu"*
 <!--END_SECTION:latest-update-->
 
 ---
