@@ -1,29 +1,29 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// Unified Leaderboard: Dispatcher + RPG + Group Activity (semua dalam 1 file)
+// Unified Leaderboard — RPG (new fields) + Group Activity (semua dalam 1 file)
 import fs from 'fs'
 import path from 'path'
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { getRpgData } from '../../src/lib/nova-rpg-service.js'
+import { getRpgData, JOB_DB } from '../../src/lib/nova-rpg-service.js'
 import { getCintaData, getLovePower } from '../../src/lib/nova-rpg-cinta.js'
 import { toSC, claraWrap, bracketBox, tipText, formatNumber } from '../../src/lib/nova-menu-style.js'
 import {
   trackActivity, getLeaderboard, getWeeklyStats,
   getRank, resetWeekly, getActivityStatus, setActivityTracking
 } from '../../src/lib/nova-activity-tracker.js'
-import config from '../../config.js'
 
 const pluginConfig = {
   name: "leaderboard",
   alias: [
-    "leaderboard", "leaderboardrpg", "lbrpg",
+    "leaderboard", "leaderboardrpg", "lbrpg", "toprpg", "papanrpg",
     "topkoin", "topexp", "topenergi", "toplevel", "topbalance",
+    "topgold", "topgems", "toppvp", "topboss", "topdungeon",
     "topcinta", "toplove", "topcouple",
     "aktifitas", "aktif", "topaktif", "activity"
   ],
   category: 'main',
-  description: 'Pusat leaderboard — RPG (koin/exp/energi/cinta) & Group (aktivitas)',
-  usage: '.leaderboard [rpg|group|koin|exp|energi|cinta|aktif|me|reset|stats]',
-  example: '.leaderboard rpg',
+  description: 'Pusat leaderboard — RPG (gold/exp/level/pvp/gems/boss/dungeon/cinta) & Group (aktivitas)',
+  usage: '.leaderboard [rpg|gold|exp|level|pvp|gems|boss|dungeon|cinta|group|me|reset|stats]',
+  example: '.leaderboard rpg\n.leaderboard gold\n.leaderboard pvp',
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -46,23 +46,35 @@ function getMode(cmd, args) {
   if (['aktifitas', 'aktif', 'topaktif', 'activity'].some(x => c.includes(x)))
     return 'group'
   // RPG direct aliases
-  if (c.includes('koin') || c.includes('coin') || c.includes('bal') || c.includes('money'))
-    return 'rpg:koin'
-  if (c.includes('exp') || c.includes('xp') || c.includes('level'))
+  if (c.includes('koin') || c.includes('coin') || c.includes('bal') || c.includes('money') || c.includes('topgold'))
+    return 'rpg:gold'
+  if (c.includes('topexp') || c.includes('xp') || c.includes('toplevel'))
     return 'rpg:exp'
   if (c.includes('energi') || c.includes('energy'))
     return 'rpg:energi'
+  if (c.includes('toppvp') || c.includes('pvp'))
+    return 'rpg:pvp'
+  if (c.includes('topgems') || c.includes('gems'))
+    return 'rpg:gems'
+  if (c.includes('topboss') || c.includes('boss'))
+    return 'rpg:boss'
+  if (c.includes('topdungeon') || c.includes('dungeon'))
+    return 'rpg:dungeon'
   if (c.includes('cinta') || c.includes('love') || c.includes('couple'))
     return 'rpg:cinta'
-  if (c.includes('leaderboardrpg') || c.includes('lbrpg'))
+  if (c.includes('leaderboardrpg') || c.includes('lbrpg') || c.includes('toprpg') || c.includes('papanrpg'))
     return 'rpg:overview'
 
   // Arg-based routing
-  if (a === 'rpg' || a === 'rpg2') return 'rpg:overview'
+  if (a === 'rpg' || a === 'rpg2' || a === 'overview') return 'rpg:overview'
   if (a === 'group' || a === 'grup') return 'group'
-  if (['koin', 'coin', 'bal', 'balance', 'money'].includes(a)) return 'rpg:koin'
+  if (['gold', 'koin', 'coin', 'bal', 'balance', 'money'].includes(a)) return 'rpg:gold'
   if (['exp', 'xp', 'level'].includes(a)) return 'rpg:exp'
   if (['energi', 'energy'].includes(a)) return 'rpg:energi'
+  if (['pvp', 'arena', 'duel'].includes(a)) return 'rpg:pvp'
+  if (['gems', 'gem'].includes(a)) return 'rpg:gems'
+  if (['boss', 'raid', 'bos'].includes(a)) return 'rpg:boss'
+  if (['dungeon', 'dg'].includes(a)) return 'rpg:dungeon'
   if (['cinta', 'love', 'couple'].includes(a)) return 'rpg:cinta'
   // Group sub-commands via arg
   if (['me', 'saya', 'my', 'reset', 'clear', 'stats', 'stat', 'info', 'on', 'off', 'enable', 'disable'].includes(a))
@@ -73,83 +85,115 @@ function getMode(cmd, args) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// RPG LEADERBOARD
+// COLLECT ALL RPG USERS — baca dari field RPG baru
 // ═══════════════════════════════════════════════════════════
-async function showRpgLeaderboard(m, sock, subType) {
+function collectRpgUsers(senderJid) {
   const db = getDatabase()
   const dbData = db.data?.users || db.getAllUsers?.() || {}
-  const senderJid = m.sender.replace('@s.whatsapp.net', '')
   const users = []
 
   for (const [jid, userData] of Object.entries(dbData)) {
     if (!jid || jid === 'undefined') continue
     if (jid.length > 15 || jid.startsWith('120')) continue
 
+    const rpg = userData.rpg || null
+    const fullJid = jid.includes('@') ? jid : jid + '@s.whatsapp.net'
+
+    // Cinta data
     let cintaAffection = 0, hasSpouse = false, lovePower = 0
     try {
-      const fullJid = jid.includes('@') ? jid : jid + '@s.whatsapp.net'
-      const rpg = getRpgData({ sender: fullJid, pushName: userData.name || jid.split('@')[0] })
-      const cinta = rpg.cinta || {}
+      const cinta = rpg?.cinta || {}
       cintaAffection = cinta.affection || 0
-      hasSpouse = Boolean(cinta.spouse)
-      lovePower = hasSpouse ? getLovePower({ sender: fullJid, pushName: userData.name || jid.split('@')[0] }) : 0
+      hasSpouse = Boolean(cinta.spouse || rpg?.coupleId || rpg?.married)
+      if (hasSpouse) {
+        lovePower = getLovePower({ sender: fullJid, pushName: userData.name || jid.split('@')[0] })
+      }
     } catch {}
 
     users.push({
       jid,
-      koin: userData.koin || 0,
-      exp: userData.rpg?.exp || userData.exp || 0,
-      energi: userData.energi || 0,
-      level: userData.rpg?.level || userData.level || 1,
-      cinta: cintaAffection,
+      name: userData.name || jid.split('@')[0],
+      // RPG new fields (from nova-rpg-service DEFAULT_RPG)
+      gold:        rpg?.gold || userData.koin || userData.balance || 0,
+      exp:         rpg?.exp || userData.exp || 0,
+      totalExp:    rpg?.totalExp || 0,
+      level:       rpg?.level || userData.level || 1,
+      energy:      rpg?.energy || userData.energi || 0,
+      gems:        rpg?.gems || 0,
+      tokens:      rpg?.tokens || 0,
+      // Combat stats
+      pvpRating:   rpg?.pvpRating || 1000,
+      pvpWins:     rpg?.pvpWins || 0,
+      pvpLosses:   rpg?.pvpLosses || 0,
+      pvpStreak:   rpg?.pvpStreak || 0,
+      bossKills:   rpg?.bossKills || 0,
+      dungeonClears: rpg?.dungeonClears || 0,
+      totalKills:  rpg?.totalKills || 0,
+      // Job
+      job:         rpg?.job || 'novice',
+      jobLevel:    rpg?.jobLevel || 1,
+      // Cinta
+      cinta:       cintaAffection,
       lovePower,
       hasSpouse,
-      name: userData.name || jid.split('@')[0]
     })
   }
 
+  return users
+}
+
+// ═══════════════════════════════════════════════════════════
+// RPG LEADERBOARD
+// ═══════════════════════════════════════════════════════════
+async function showRpgLeaderboard(m, sock, subType) {
+  const senderJid = m.sender.replace(/@s\.whatsapp\.net/, '')
+  const users = collectRpgUsers(senderJid)
+
   if (users.length === 0)
-    return m.reply(`
-${toSC('Belum ada data user')}\n`)
+    return m.reply(claraWrap('Leaderboard', 'Belum ada data player RPG terdaftar.'))
 
   // ── Overview ──
   if (subType === 'overview') {
-    const maxBal = users.reduce((a, b) => a.koin > b.koin ? a : b, users[0])
-    const maxExp = users.reduce((a, b) => a.exp > b.exp ? a : b, users[0])
-    const maxNrg = users.reduce((a, b) => a.energi > b.energi ? a : b, users[0])
+    const maxGold   = users.reduce((a, b) => a.gold > b.gold ? a : b, users[0])
+    const maxExp    = users.reduce((a, b) => a.totalExp > b.totalExp ? a : b, users[0])
+    const maxLevel  = users.reduce((a, b) => a.level > b.level ? a : b, users[0])
+    const maxPvp    = users.reduce((a, b) => a.pvpRating > b.pvpRating ? a : b, users[0])
+    const maxBoss   = users.reduce((a, b) => a.bossKills > b.bossKills ? a : b, users[0])
     const cintaUsers = users.filter(u => u.hasSpouse)
-    const maxCinta = cintaUsers.length > 0
+    const maxCinta  = cintaUsers.length > 0
       ? cintaUsers.reduce((a, b) => a.lovePower > b.lovePower ? a : b, cintaUsers[0])
       : null
 
-    const mentions = [
-      maxBal.jid.includes('@') ? maxBal.jid : maxBal.jid + '@s.whatsapp.net',
-      maxExp.jid.includes('@') ? maxExp.jid : maxExp.jid + '@s.whatsapp.net',
-      maxNrg.jid.includes('@') ? maxNrg.jid : maxNrg.jid + '@s.whatsapp.net',
+    const mkJid = (u) => u.jid.includes('@') ? u.jid : u.jid + '@s.whatsapp.net'
+    const mentions = [maxGold, maxLevel, maxPvp, maxBoss].map(mkJid)
+    if (maxCinta) mentions.push(mkJid(maxCinta))
+
+    const lines = [
+      `Total Player: *${formatNumber(users.length)}*`,
+      ``,
+      `Gold: ${formatNumber(maxGold.gold)} (@${maxGold.jid.split('@')[0]})`,
+      `Level: Lv.${maxLevel.level} (@${maxLevel.jid.split('@')[0]})`,
+      `PvP: ${maxPvp.pvpRating} rating (@${maxPvp.jid.split('@')[0]})`,
+      `Boss: ${maxBoss.bossKills} kills (@${maxBoss.jid.split('@')[0]})`,
+      maxCinta
+        ? `Cinta: ${formatNumber(maxCinta.lovePower)} LP (@${maxCinta.jid.split('@')[0]})`
+        : `Cinta: Belum ada couple`,
+      ``,
+      `Pilih tombol di bawah untuk detail ranking!`,
     ]
-    if (maxCinta) mentions.push(maxCinta.jid.includes('@') ? maxCinta.jid : maxCinta.jid + '@s.whatsapp.net')
-
-    const text = `
-│ ${toSC('Total User')}: ${formatNumber(users.length)}
-│ 💰 ${toSC('Koin Teratas')}: ${formatNumber(maxBal.koin)} (@${maxBal.jid.split('@')[0]})
-│ ✨ ${toSC('EXP Teratas')}: ${formatNumber(maxExp.exp)} (@${maxExp.jid.split('@')[0]})
-│ ⚡ ${toSC('Energi Teratas')}: ${formatNumber(maxNrg.energi)} (@${maxNrg.jid.split('@')[0]})
-${maxCinta ? `❤️ ${toSC('Cinta Teratas')}: ${formatNumber(maxCinta.lovePower)} LP (@${maxCinta.jid.split('@')[0]})` : `❤️ ${toSC('Cinta')}: ${toSC('Belum ada couple')}`}
-
-${toSC('Pilih tombol di bawah untuk melihat ranking')}!`
 
     try {
-      await sock.sendButton(m.chat, fs.readFileSync(path.join(process.cwd(), 'assets', 'images', 'nova.jpg')), text, m, {
+      await sock.sendButton(m.chat, fs.readFileSync(path.join(process.cwd(), 'assets', 'images', 'nova.jpg')), lines.join('\n'), m, {
         buttons: [
-          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '💰 Top Koin', id: `${m.prefix}topkoin` }) },
-          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '✨ Top EXP', id: `${m.prefix}topexp` }) },
-          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '⚡ Top Energi', id: `${m.prefix}topenergi` }) },
-          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '❤️ Top Cinta', id: `${m.prefix}topcinta` }) },
-          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '👥 Group', id: `${m.prefix}leaderboard group` }) },
+          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Gold', id: `${m.prefix}topgold` }) },
+          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Level', id: `${m.prefix}toplevel` }) },
+          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'PvP', id: `${m.prefix}toppvp` }) },
+          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Boss', id: `${m.prefix}topboss` }) },
+          { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Cinta', id: `${m.prefix}topcinta` }) },
         ],
       })
     } catch {
-      await m.reply(claraWrap('leaderboard', text, { mentions }))
+      await m.reply(claraWrap('Leaderboard RPG', lines.join('\n'), { mentions }))
     }
     return
   }
@@ -158,70 +202,62 @@ ${toSC('Pilih tombol di bawah untuk melihat ranking')}!`
   if (subType === 'cinta') {
     const cintaUsers = users.filter(u => u.hasSpouse)
     if (cintaUsers.length === 0)
-      return m.reply(`
-${toSC('Belum ada couple terdaftar')}
-${toSC('Mulai berpacaran dengan')} .jadian\n`)
+      return m.reply(claraWrap('Leaderboard Cinta', 'Belum ada couple terdaftar.\nMulai berpacaran dengan .jadian'))
 
     cintaUsers.sort((a, b) => b.lovePower - a.lovePower)
     const top10 = cintaUsers.slice(0, 10)
     const mentions = []
 
-    let text = ``
+    let text = ""
     top10.forEach((u, i) => {
       const medal = MEDALS[i] || `${i + 1}.`
       const isMe = u.jid === senderJid ? " *(You)*" : ""
-      text += `
-${medal} @${u.jid.split('@')[0]}${isMe}`
-      text += `
-❤️ ${toSC('Affection')}: ${formatNumber(u.cinta)} | 💪 LP: ${formatNumber(u.lovePower)}`
+      text += `\n${medal} @${u.jid.split('@')[0]}${isMe}`
+      text += `\nAffection: ${formatNumber(u.cinta)} | LP: ${formatNumber(u.lovePower)}`
       mentions.push(u.jid.includes('@') ? u.jid : u.jid + '@s.whatsapp.net')
     })
-    text += `\n`
 
     const myRank = cintaUsers.findIndex(u => u.jid === senderJid)
-    if (myRank !== -1) text += `\n${toSC('Posisi kamu')}: *#${myRank + 1}* ${toSC('dari')} *${formatNumber(cintaUsers.length)}* couple.`
-    else text += `\n${toSC('Kamu belum punya pasangan')}. ${toSC('Ketik')} .jadian ${toSC('untuk mulai')}!`
+    if (myRank !== -1) text += `\n\nPosisi kamu: *#${myRank + 1}* dari *${formatNumber(cintaUsers.length)}* couple.`
+    else text += `\n\nKamu belum punya pasangan. Ketik .jadian untuk mulai!`
 
-    await m.reply(claraWrap('leaderboard', text, { mentions }))
+    await m.reply(claraWrap('Leaderboard Cinta', text, { mentions }))
     return
   }
 
-  // ── Koin / Exp / Energi ──
-  let title, field, formatVal
-  if (subType === 'koin') {
-    title = 'TOP GLOBAL KOIN'; field = 'koin'
-    formatVal = (u) => `Rp ${formatNumber(u.koin)}`
-  } else if (subType === 'exp') {
-    title = 'TOP GLOBAL LEVEL'; field = 'exp'
-    formatVal = (u) => `Lv. ${u.level} (${formatNumber(u.exp)} XP)`
-  } else {
-    title = 'TOP GLOBAL ENERGI'; field = 'energi'
-    formatVal = (u) => `${formatNumber(u.energi)} ${toSC('Energi')}`
+  // ── Gold / Exp / PvP / Gems / Boss / Dungeon / Energi ──
+  const FIELDS = {
+    gold:     { title: 'TOP GLOBAL GOLD',     key: 'gold',        label: (u) => `${formatNumber(u.gold)} gold` },
+    exp:      { title: 'TOP GLOBAL LEVEL',    key: 'totalExp',    label: (u) => `Lv.${u.level} (${formatNumber(u.exp)} XP)` },
+    pvp:      { title: 'TOP GLOBAL PvP',       key: 'pvpRating',  label: (u) => `${u.pvpRating} rating (W:${u.pvpWins} L:${u.pvpLosses})` },
+    gems:     { title: 'TOP GLOBAL GEMS',      key: 'gems',       label: (u) => `${formatNumber(u.gems)} gems` },
+    boss:     { title: 'TOP GLOBAL BOSS KILL', key: 'bossKills',  label: (u) => `${u.bossKills} boss kills` },
+    dungeon:  { title: 'TOP GLOBAL DUNGEON',  key: 'dungeonClears', label: (u) => `${u.dungeonClears} dungeon clears` },
+    energi:   { title: 'TOP GLOBAL ENERGI',    key: 'energy',     label: (u) => `${formatNumber(u.energy)} energi` },
   }
 
-  users.sort((a, b) => b[field] - a[field])
+  const field = FIELDS[subType] || FIELDS['gold']
+  users.sort((a, b) => b[field.key] - a[field.key])
   const top10 = users.slice(0, 10)
-  const totalField = users.reduce((s, u) => s + (u[field] || 0), 0)
+  const totalField = users.reduce((s, u) => s + (u[field.key] || 0), 0)
   const mentions = []
 
   let text = ""
   top10.forEach((u, i) => {
     const medal = MEDALS[i] || `${i + 1}.`
-    const pct = totalField > 0 ? ((u[field] / totalField) * 100).toFixed(1) : 0
+    const pct = totalField > 0 ? ((u[field.key] / totalField) * 100).toFixed(1) : 0
     const isMe = u.jid === senderJid ? " *(You)*" : ""
-    text += `
-${medal} @${u.jid.split('@')[0]}${isMe}`
-    text += `
-${formatVal(u)} (${pct}%)`
+    const jobName = JOB_DB[u.job]?.name || 'Pemula'
+    text += `\n${medal} @${u.jid.split('@')[0]}${isMe}`
+    text += `\n${field.label(u)} (${pct}%) | ${jobName}`
     mentions.push(u.jid.includes('@') ? u.jid : u.jid + '@s.whatsapp.net')
   })
-  text += `\n`
 
   const myRank = users.findIndex(u => u.jid === senderJid)
-  if (myRank !== -1) text += `\n${toSC('Posisi kamu')}: *#${myRank + 1}* ${toSC('dari')} *${formatNumber(users.length)}* user.`
-  else text += `\n${toSC('Kamu belum terdaftar di database')}.`
+  if (myRank !== -1) text += `\n\nPosisi kamu: *#${myRank + 1}* dari *${formatNumber(users.length)}* player.`
+  else text += `\n\nKamu belum terdaftar di database RPG.`
 
-  await m.reply(claraWrap('leaderboard', text, { mentions }))
+  await m.reply(claraWrap(field.title, text, { mentions }))
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -229,8 +265,8 @@ ${formatVal(u)} (${pct}%)`
 // ═══════════════════════════════════════════════════════════
 async function showGroupLeaderboard(m, sock) {
   if (!m.isGroup)
-    return m.reply(`
-${toSC('Hanya bisa digunakan di dalam grup')}\n`)
+    return m.reply(claraWrap('Leaderboard', 'Hanya bisa digunakan di dalam grup.'))
+
   trackActivity(m, { isCommand: true })
   const args = m.args || []
   const sub = args[0]?.toLowerCase()
@@ -245,22 +281,18 @@ ${toSC('Hanya bisa digunakan di dalam grup')}\n`)
     // on/off
     if (['on', 'off', 'enable', 'disable'].includes(sub)) {
       const isAdmin = await checkAdmin()
-      if (!isAdmin) {
-        if (typeof m.react === 'function') { try { } catch {} }
-        return m.reply(bracketBox('❌', 'Akses Ditolak', ['Fitur ini hanya dapat diubah oleh Admin Grup.']))
-      }
+      if (!isAdmin)
+        return m.reply(bracketBox('❌', 'Akses Ditolak', ['Fitur ini hanya untuk Admin Grup.']))
       setActivityTracking(m.chat, sub === 'on' || sub === 'enable')
       const status = sub === 'on' || sub === 'enable' ? 'Aktif' : 'Nonaktif'
-      const desc = sub === 'on' || sub === 'enable' ? 'Pelacakan keaktifan diaktifkan.' : 'Pelacakan keaktifan dimatikan.'
-      return m.reply(bracketBox('⚙️', 'Status Activity Tracker', [`Status: *${status}*`, desc]) + '\n' + tipText(`Ketik .aktifitas untuk melihat papan peringkat.`))
+      return m.reply(bracketBox('⚙️', 'Status Activity Tracker', [`Status: *${status}*`]))
     }
 
     // me
     if (['me', 'saya', 'my'].includes(sub)) {
       const userRank = getRank(m.chat, m.sender)
-      if (!userRank || !userRank.memberStats) {
-        return m.reply(bracketBox('📊', 'Statistik Keaktifan Anda', ['Belum ada data aktivitas minggu ini.', 'Kirim pesan untuk mulai mengumpulkan poin!']) + '\n' + tipText('Poin: 1/pesan, 2/command, 5/media'))
-      }
+      if (!userRank || !userRank.memberStats)
+        return m.reply(bracketBox('📊', 'Statistik Keaktifan Anda', ['Belum ada data aktivitas minggu ini.', 'Kirim pesan untuk mulai mengumpulkan poin!']))
       const { rank, totalMembers, memberStats, topPercentage } = userRank
       const lines = [
         `Member: ${memberStats.name || m.sender.split('@')[0]}`,
@@ -270,18 +302,16 @@ ${toSC('Hanya bisa digunakan di dalam grup')}\n`)
         `Command: ${formatNumber(memberStats.commandCount || 0)}x`,
         `Media: ${formatNumber(memberStats.mediaCount || 0)}x`,
       ]
-      return m.reply(bracketBox('📊', 'Statistik Keaktifan Anda', lines) + '\n' + tipText('Kirim lebih banyak pesan & media untuk menaikkan peringkat!'))
+      return m.reply(bracketBox('📊', 'Statistik Keaktifan Anda', lines))
     }
 
     // reset
     if (['reset', 'clear'].includes(sub)) {
       const isAdmin = await checkAdmin()
-      if (!isAdmin) {
-        if (typeof m.react === 'function') { try { } catch {} }
-        return m.reply(bracketBox('❌', 'Akses Ditolak', ['Hanya Admin Grup yang dapat mereset leaderboard.']))
-      }
+      if (!isAdmin)
+        return m.reply(bracketBox('❌', 'Akses Ditolak', ['Hanya Admin Grup yang dapat reset.']))
       resetWeekly(m.chat)
-      return m.reply(bracketBox('🔄', 'Reset Leaderboard', ['Leaderboard keaktifan grup berhasil direset.', 'Semua poin dikembalikan ke awal.']) + '\n' + tipText('Periode mingguan baru dimulai sekarang.'))
+      return m.reply(bracketBox('🔄', 'Reset Leaderboard', ['Leaderboard keaktifan direset.', 'Periode mingguan baru dimulai.']))
     }
 
     // stats
@@ -291,7 +321,7 @@ ${toSC('Hanya bisa digunakan di dalam grup')}\n`)
       const topPts = stats.topMember ? formatNumber(stats.topMember.points || 0) : '0'
       const weekStartStr = stats.weekStart ? new Date(stats.weekStart).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Jakarta' }) : '-'
       const lines = [
-        `Status Tracker: ${stats.trackingEnabled ? 'Aktif' : 'Nonaktif'}`,
+        `Status: ${stats.trackingEnabled ? 'Aktif' : 'Nonaktif'}`,
         `Awal Periode: ${weekStartStr}`,
         `Total Pesan: ${formatNumber(stats.totalMessages)}`,
         `Total Poin: ${formatNumber(stats.totalPoints)}`,
@@ -300,59 +330,64 @@ ${toSC('Hanya bisa digunakan di dalam grup')}\n`)
         `Member Aktif: ${formatNumber(stats.activeMembers)} / ${stats.totalMembersTracked}`,
         `Top Member: ${topName} (${topPts} pts)`,
       ]
-      return m.reply(bracketBox('📈', 'Statistik Keaktifan Grup', lines) + '\n' + tipText('Gunakan .aktifitas untuk melihat top 10 member.'))
+      return m.reply(bracketBox('📈', 'Statistik Keaktifan Grup', lines))
     }
 
     // default: top 10
     const status = getActivityStatus(m.chat)
-    if (!status.trackingEnabled) {
-      if (typeof m.react === 'function') { try { } catch {} }
-      return m.reply(bracketBox('⚠️', 'Leaderboard Nonaktif', ['Pelacakan keaktifan di grup ini dinonaktifkan.', 'Admin dapat mengaktifkannya: .aktifitas on']))
-    }
+    if (!status.trackingEnabled)
+      return m.reply(bracketBox('⚠️', 'Leaderboard Nonaktif', ['Aktifkan dengan .aktifitas on (admin only)']))
 
     const lb = getLeaderboard(m.chat, 10)
-    if (!lb || lb.length === 0) {
-      return m.reply(bracketBox('🏆', 'Leaderboard Keaktifan Minggu Ini', ['Belum ada data keaktifan member minggu ini.', 'Mulai kirim pesan untuk mencatatkan poin!']) + '\n' + tipText('Poin: 1/pesan, 2/command, 5/media'))
-    }
+    if (!lb || lb.length === 0)
+      return m.reply(bracketBox('🏆', 'Leaderboard Keaktifan Minggu Ini', ['Belum ada data keaktifan member.', 'Mulai kirim pesan untuk mencatatkan poin!']))
 
     const lines = lb.map((item, i) => {
       const icon = MEDALS[i] || `#${i + 1}`
       const name = item.name || item.jid.split('@')[0]
       return `${icon} ${name} — *${formatNumber(item.points)} pts* (${formatNumber(item.messageCount)} pesan)`
     })
-    return m.reply(bracketBox('🏆', 'Leaderboard Keaktifan Minggu Ini', lines) + '\n' + tipText('Poin: 1/pesan, 2/command, 5/media | .aktifitas me untuk rank Anda'))
-
+    return m.reply(bracketBox('🏆', 'Leaderboard Keaktifan Minggu Ini', lines))
   } catch (error) {
-    if (typeof m.react === 'function') { try { } catch {} }
-    return m.reply(bracketBox('❌', 'Error Leaderboard', [`Terjadi kesalahan: ${error.message}`]))
+    return m.reply(bracketBox('❌', 'Error', [`Terjadi kesalahan: ${error.message}`]))
   }
 }
 
 // ═══════════════════════════════════════════════════════════
-// MENU DISPATCHER — .leaderboard tanpa arg
+// MENU DISPATCHER
 // ═══════════════════════════════════════════════════════════
 async function showMenu(m, sock) {
   const thumbPath = path.join(process.cwd(), 'assets', 'images', 'nova.jpg')
   let thumb
   try { thumb = fs.readFileSync(thumbPath) } catch { thumb = Buffer.alloc(0) }
 
-  const text = `
-│ ${toSC('Pilih jenis leaderboard')}:
-│
-│ 🎮 *${toSC('RPG')}*
-│   ${toSC('Koin, EXP, Energi, Cinta — global semua user')}
-│
-│ 👥 *${toSC('Group')}*
-│   ${toSC('Aktivitas member grup minggu ini')}
-│
-
-${toSC('Ketik')} *${m.prefix}leaderboard rpg* ${toSC('atau')} *${m.prefix}leaderboard group*`
+  const text = [
+    'Pilih jenis leaderboard:',
+    '',
+    'RPG:',
+    '  gold    — Top player by gold',
+    '  level   — Top player by level/EXP',
+    '  pvp     — Top player by PvP rating',
+    '  gems    — Top player by gems',
+    '  boss    — Top player by boss kills',
+    '  dungeon — Top player by dungeon clears',
+    '  cinta   — Top couple by love power',
+    '',
+    'Group:',
+    '  group   — Aktivitas member minggu ini',
+    '  me      — Statistik aktivitas kamu',
+    '',
+    'Contoh: .leaderboard gold',
+  ].join('\n')
 
   try {
     await sock.sendButton(m.chat, thumb, text, m, {
       buttons: [
-        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '🎮 RPG Leaderboard', id: `${m.prefix}leaderboard rpg` }) },
-        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: '👥 Group Leaderboard', id: `${m.prefix}leaderboard group` }) },
+        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'RPG Overview', id: `${m.prefix}leaderboard rpg` }) },
+        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Top Gold', id: `${m.prefix}topgold` }) },
+        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Top PvP', id: `${m.prefix}toppvp` }) },
+        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Top Boss', id: `${m.prefix}topboss` }) },
+        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Group', id: `${m.prefix}leaderboard group` }) },
       ],
     })
   } catch {
