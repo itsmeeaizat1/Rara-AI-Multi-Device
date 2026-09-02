@@ -4,7 +4,8 @@
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy, regenHP,
   addItem, getEquipStats, getRandomMonster, rollDrop, ITEM_DB,
-  checkCooldown, setCooldown, formatTime
+  checkCooldown, setCooldown, formatTime,
+  bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
 import { animBattle, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
@@ -112,6 +113,7 @@ async function handler(m, { sock }) {
       addExp(m, expGain);
       addGold(m, goldGain);
       for (const drop of drops) addItem(m, drop.item, drop.qty);
+      await bumpPlayerStat(m, "berburu", "totalHunt", 1);
 
       const newHp = Math.max(1, rpg.hp - playerDmgTaken);
       saveRpg(m, { hp: newHp });

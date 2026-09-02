@@ -4,7 +4,8 @@
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy,
   addItem, ITEM_DB,
-  checkCooldown, setCooldown, formatTime
+  checkCooldown, setCooldown, formatTime,
+  bumpPlayerStat,
 } from "../../src/lib/nova-rpg-service.js";
 import { animGather, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
@@ -74,6 +75,9 @@ async function handler(m, { sock }) {
         addItem(m, ore.item, qty);
       }
     }
+
+    const totalMined = drops.reduce((a, d) => a + d.qty, 0);
+    if (totalMined > 0) await bumpPlayerStat(m, "mining", "totalMine", totalMined);
 
     const expGain = Math.floor(Math.random() * (EXP_RANGE[1] - EXP_RANGE[0] + 1)) + EXP_RANGE[0];
     const goldGain = Math.floor(Math.random() * (GOLD_RANGE[1] - GOLD_RANGE[0] + 1)) + GOLD_RANGE[0];
