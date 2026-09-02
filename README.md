@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20merge%20tanyaai%E2%86%92novaai%2C%20hapus%20alias%20'-success?style=for-the-badge)
-> *Commit: "fix: merge tanyaai→novaai, hapus alias 'ai' dari 18 plugin, konsolidasi v1/v2 duplikat, hapus dead code"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20cuaca%20detail%20lengkap%2C%20readmore%20sblm-success?style=for-the-badge)
+> *Commit: "fix: cuaca detail lengkap, readmore sblm list command, garbled smallcaps di header kategori"*
 <!--END_SECTION:latest-update-->
 
 ---
