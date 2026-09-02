@@ -1,65 +1,94 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
-
+import moment from "moment-timezone";
+import config from "../../config.js";
+import {
+  searchKota,
+  getTodaySchedule,
+  extractPrayerTimes,
+} from "../../src/lib/nova-sholat-api.js";
+import te from "../../src/lib/nova-error.js";
+import { saluranCtx } from "../../src/lib/nova-context.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
-  name: "jadwalsholat",
-  alias: ["jadwalsholat", "jadwalsolat", "sholat", "solat", "prayerschedule"],
+  name: "jadwalsholat2",
+  alias: ["jadwalsholat", "jadwalsolat", "solat", "prayerschedule"],
   category: "islami",
-  description: "Jadwal sholat berdasarkan kota (API Aladhan)",
-  usage: ".jadwalsholat <nama kota>",
+  description: "Menampilkan jadwal sholat real-time dari myquran.com",
+  usage: ".jadwalsholat <kota>",
   example: ".jadwalsholat Jakarta",
-  isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
-  cooldown: 10, energi: 1, isEnabled: true,
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
+  cooldown: 5,
+  energi: 0,
+  isEnabled: true,
 };
-
-const PRAYER_NAMES = {
-  Fajr: "Subuh", Dhuhr: "Dzuhur", Asr: "Ashar",
-  Maghrib: "Maghrib", Isha: "Isya", Sunrise: "Terbit", Sunset: "Terbenam",
-};
-
 async function handler(m, { sock }) {
+  const city = m.args.join(" ").trim() || "Jakarta";
   try {
-    const city = m.args.join(" ").trim();
-    if (!city) {
-      return m.reply(claraWrap("jadwalsholat", `Mau cek jadwal sholat kota mana?\n\nContoh: ${m.prefix}jadwalsholat Jakarta`, "guide"));
+    const kota = await searchKota(city);
+    if (!kota) {
+      return m.reply(novaError("Religi", `❌ *ɢᴀɢᴀʟ*\n\nKota "${city}" tidak ditemukan\nCoba nama kabupaten/kota lain`));
     }
+    const jadwalData = await getTodaySchedule(kota.id);
+    const times = extractPrayerTimes(jadwalData);
+    const lokasi = jadwalData.lokasi || kota.lokasi;
+    const daerah = jadwalData.daerah || "";
+    const today = moment.tz("Asia/Jakarta").format("dddd, DD MMMM YYYY");
+    const saluranId = config.saluran?.id || "120363400911374213@newsletter";
+    const saluranName = config.saluran?.name || config.bot?.name || "Nova-AI";
 
-    await m.react("🕒");
-    const { data } = await axios.get(`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Indonesia&method=20`, {
-      timeout: 15000, headers: { "User-Agent": "Mozilla/5.0" },
-    });
+    const caption = `🕌 *ᴊᴀᴅᴡᴀʟ ꜱʜᴏʟᴀᴛ*
+📍 Lokasi: ${lokasi}
+📅 ${today}
+🗺️ ${daerah}
 
-    if (!data || data.code !== 200 || !data.data) {
-      await m.react("❌");
-      return m.reply(claraWrap("jadwalsholat", `Kota "${city}" tidak ditemukan. Coba nama kota lain.`, "error"));
+Waktu Sholat:
+🌙 Imsak: \`${times.imsak}\`
+🌅 sUbuh: \`${times.subuh}\`
+☀️ Terbit: \`${times.terbit}\`
+🌤️ Dhuha: \`${times.dhuha}\`
+🌞 Dzuhur: \`${times.dzuhur}\`
+🌇 Ashar: \`${times.ashar}\`
+🌆 Maghrib: \`${times.maghrib}\`
+🌃 Isya: \`${times.isya}\`
+
+_Sumber: myquran.com | Jangan lupa sholat ya! 🤲_`;
+    const adzanUrl = "https://media.vocaroo.com/mp3/1ofLT2YUJAjQ";
+    let adzanBuffer;
+    try {
+      const res = await axios.get(adzanUrl, {
+        responseType: "arraybuffer",
+        timeout: 30000,
+      });
+      adzanBuffer = Buffer.from(res.data);
+    } catch {
+      adzanBuffer = null;
     }
-
-    const timings = data.data.timings;
-    const date = data.data.date;
-    const hijri = date.hijri;
-    const gregorian = date.gregorian;
-
-    const masehi = `${gregorian.day} ${gregorian.month.en} ${gregorian.year}`;
-    const hijriDate = `${hijri.day} ${hijri.month.en} ${hijri.year} H`;
-
-    await m.react("🐣");
-    let _lines = [];
-      _lines.push(`📍 Kota: *${city}*`);
-      _lines.push(`📅 ${hijriDate}`);
-      _lines.push(`📆 ${masehi}`);
-      _lines.push(`🌅 Subuh    : ${timings.Fajr}`);
-      _lines.push(`☀️ Dzuhur  : ${timings.Dhuhr}`);
-      _lines.push(`🌤️ Ashar   : ${timings.Asr}`);
-      _lines.push(`🌇 Maghrib : ${timings.Maghrib}`);
-      _lines.push(`🌙 Isya     : ${timings.Isha}`);
-    let msg = novaBox("ᴊᴀᴅᴡᴀʟ ꜱʜᴏʟᴀᴛ", _lines);
-    return m.reply(msg);
-  } catch (err) {
-    console.error("jadwalsholat error:", err);
-    await m.react("❌");
-    return m.reply(claraWrap("jadwalsholat", err.message || "Error", "error"));
+    const contextInfo = saluranCtx();
+    if (adzanBuffer) {
+      await sock.sendMessage(
+        m.chat,
+        {
+          audio: adzanBuffer,
+          mimetype: "audio/mpeg",
+          ptt: false,
+          contextInfo,
+        },
+        { quoted: m },
+      );
+      await sock.sendMessage(m.chat, { text: caption }, { quoted: m });
+    } else {
+      await sock.sendMessage(
+        m.chat,
+        { text: caption, contextInfo },
+        { quoted: m },
+      );
+    }
+  } catch (error) {
+    m.reply(claraWrap("jadwalsholat2", te(m.prefix, m.command, m.pushName), "error"));
   }
 }
-
 export { pluginConfig as config, handler };

@@ -51,7 +51,7 @@ const pluginConfig = {
         'rainytext', 'lighteffects'
     ],
     alias: ["glitchtext", "writetext", "advancedglow", "typographytext", "pixelglitch", "neonglitch", "flagtext", "flag3dtext", "deletingtext", "blackpinkstyle", "glowingtext", "underwatertext", "logomaker", "cartoonstyle", "papercutstyle", "watercolortext", "effectclouds", "blackpinklogo", "gradienttext", "summerbeach", "luxurygold", "multicoloredneon", "sandsummer", "galaxywallpaper", "1917style", "makingneon", "royaltext", "freecreate", "galaxystyle", "amongustext", "rainytext", "lighteffects"],
-    category: 'ephoto',
+    category: "maker",
     description: 'Buat efek text keren dengan berbagai style',
     usage: '.<effect> <text>',
     example: '.glitchtext Nova-AI',

@@ -4,7 +4,7 @@
 const pluginConfig = {
     name: "quranv4",
     alias: ["quranv4", "quranv2"],
-    category: 'islamic',
+    category: "islami",
     description: 'Al-Quran lengkap (equran.id API v2)',
     usage: '.quranv2 <nomor surat>',
     example: '.quranv2 1',

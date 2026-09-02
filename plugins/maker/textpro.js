@@ -11,7 +11,7 @@ const pluginConfig = {
   name: "textpro",
   alias: ["textpro"],
   aliases: ["textpro", "texteffect", "tp", "texmaker"],
-  category: "ephoto",
+  category: "maker",
   description: "Text effect maker dengan 30+ style (TextPro API gratis)",
   usage: ".textpro <style> <teks> | .textpro list",
   example: ".textpro neon Halo Dunia | .textpro glitch Nova AI | .textpro list",
