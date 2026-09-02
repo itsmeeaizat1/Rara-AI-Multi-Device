@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20100%25%20RPG%20animasi%20complete%20(158%2F158-success?style=for-the-badge)
-> *Commit: "feat: 100% RPG animasi complete (158/158 plugin) + 83 plugin batch animGeneric + fix: FEATURES.md update"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20NovaAI%20AI%20Agent%20expanded%20%E2%80%94%2023%20tool-success?style=for-the-badge)
+> *Commit: "feat: NovaAI AI Agent expanded — 23 tools (block, setdesc, setpp, lockedit, link, approval, poll, groupinfo, delmsg, leavegc) + 27 localParse patterns + blocklist auto-kick di connection.js"*
 <!--END_SECTION:latest-update-->
 
 ---
