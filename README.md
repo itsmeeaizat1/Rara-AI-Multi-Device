@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20desain%20menu%20skrg%20jadi%20V1%20(hapu-success?style=for-the-badge)
-> *Commit: "refactor: desain menu skrg jadi V1 (hapus V1 lama VIDEO GIF), reply V7 FAKE LOCATION jadi V1 (hapus V1 lama BASIC plain text)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20semua%20varian%20menu%20%26%20repl-success?style=for-the-badge)
+> *Commit: "refactor: hapus semua varian menu & reply kecuali V1"*
 <!--END_SECTION:latest-update-->
 
 ---
