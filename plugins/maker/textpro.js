@@ -1,127 +1,144 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import axios from 'axios'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
-import fs from 'fs'
-import path from 'path'
-import os from 'os'
-import { spawn } from 'child_process'
-import { claraWrap } from '../../src/lib/nova-menu-style.js'
+// textpro.js — Text effect maker via ephoto360 scraping (lokal, no API key)
+import axios from "axios";
+import * as cheerio from "cheerio";
+import FormData from "form-data";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "textpro",
   alias: ["textpro"],
-  aliases: ["textpro", "texteffect", "tp", "texmaker"],
   category: "maker",
-  description: "Text effect maker dengan 30+ style (TextPro API gratis)",
+  description: "Text effect maker dengan 20+ style (ephoto360 scraping)",
   usage: ".textpro <style> <teks> | .textpro list",
-  example: ".textpro neon Halo Dunia | .textpro glitch Nova AI | .textpro list",
-  isGroupOnly: false,
+  example: ".textpro neon Halo Dunia",
+  isOwner: false,
+  isPremium: false,
+  isGroup: false,
+  isPrivate: false,
   cooldown: 10,
-}
-
-// TextPro API - free, no key needed (via btch-rest-api or direct)
-const TP_API = "https://btch-rest-api.vercel.app/api";
-
-const STYLES = {
-  "neon": { endpoint: "/textpro/neon", emoji: "🔴", desc: "Neon light text" },
-  "glitch": { endpoint: "/textpro/glitch", emoji: "⚡", desc: "Glitch effect" },
-  "devil": { endpoint: "/textpro/devil", emoji: "😈", desc: "Devil text" },
-  "transformer": { endpoint: "/textpro/transformer", emoji: "🤖", desc: "Transformer style" },
-  "thunder": { endpoint: "/textpro/thunder", emoji: "⛈️", desc: "Thunder text" },
-  "stone": { endpoint: "/textpro/stone", emoji: "🪨", desc: "Stone carved text" },
-  "lavastone": { endpoint: "/textpro/lavastone", emoji: "🌋", desc: "Lava stone text" },
-  "pinkneon": { endpoint: "/textpro/pinkneon", emoji: "💖", desc: "Pink neon text" },
-  "typography": { endpoint: "/textpro/typography", emoji: "✍️", desc: "Typography style" },
-  "greenneon": { endpoint: "/textpro/greenneon", emoji: "🟢", desc: "Green neon text" },
-  "metal": { endpoint: "/textpro/metal", emoji: "🔩", desc: "Metal text" },
-  "carbon": { endpoint: "/textpro/carbon", emoji: "⬛", desc: "Carbon fiber text" },
-  "gold": { endpoint: "/textpro/gold", emoji: "🥇", desc: "Gold text" },
-  "ice": { endpoint: "/textpro/ice", emoji: "🧊", desc: "Ice text" },
-  "water": { endpoint: "/textpro/waterpipe", emoji: "💧", desc: "Water pipe text" },
-  "sky": { endpoint: "/textpro/sky", emoji: "☁️", desc: "Sky text" },
-  "horror": { endpoint: "/textpro/horror", emoji: "🩸", desc: "Horror blood text" },
-  "scifi": { endpoint: "/textpro/scifi", emoji: "🛸", desc: "Sci-fi text" },
-  "rainbow": { endpoint: "/textpro/rainbow", emoji: "🌈", desc: "Rainbow text" },
-  "chrome": { endpoint: "/textpro/chrome", emoji: "🔷", desc: "Chrome text" },
-  "glass": { endpoint: "/textpro/glass", emoji: "🔮", desc: "Glass text" },
-  "lead": { endpoint: "/textpro/lead", emoji: "🪫", desc: "Lead metal text" },
-  "magma": { endpoint: "/textpro/magma", emoji: "🔥", desc: "Magma text" },
-  "sandwrite": { endpoint: "/textpro/sandwrite", emoji: "🏖️", desc: "Sand write text" },
-  "wooden": { endpoint: "/textpro/wooden", emoji: "🪵", desc: "Wooden text" },
-  "halloween": { endpoint: "/textpro/halloween", emoji: "🎃", desc: "Halloween text" },
-  "valentine": { endpoint: "/textpro/valentine", emoji: "💝", desc: "Valentine text" },
-  "batman": { endpoint: "/textpro/batman", emoji: "🦇", desc: "Batman logo style" },
-  "captain": { endpoint: "/textpro/captain", emoji: "🛡️", desc: "Captain America style" },
-  "deepsea": { endpoint: "/textpro/deepsea", emoji: "🌊", desc: "Deep sea text" },
+  energi: 1,
+  isEnabled: true,
 };
 
-async function handler(m, { conn, text, args, usedPrefix, command }) {
+const STYLES = {
+  neon: { url: "https://en.ephoto360.com/create-impressive-neon-glitch-text-effects-online-768.html", emoji: "🔴", desc: "Neon glitch text" },
+  glitch: { url: "https://en.ephoto360.com/create-digital-glitch-text-effects-online-767.html", emoji: "⚡", desc: "Glitch effect" },
+  glow: { url: "https://en.ephoto360.com/create-glowing-text-effects-online-706.html", emoji: "✨", desc: "Glowing text" },
+  blackpink: { url: "https://en.ephoto360.com/online-blackpink-style-logo-maker-effect-711.html", emoji: "🖤", desc: "Blackpink style" },
+  gradient: { url: "https://en.ephoto360.com/create-3d-gradient-text-effect-online-600.html", emoji: "🎨", desc: "3D gradient text" },
+  gold: { url: "https://en.ephoto360.com/create-a-luxury-gold-text-effect-online-594.html", emoji: "🥇", desc: "Luxury gold text" },
+  galaxy: { url: "https://en.ephoto360.com/create-galaxy-style-free-name-logo-438.html", emoji: "🌌", desc: "Galaxy style" },
+  typography: { url: "https://en.ephoto360.com/create-typography-text-effect-on-pavement-online-774.html", emoji: "✍️", desc: "Typography style" },
+  pixel: { url: "https://en.ephoto360.com/create-pixel-glitch-text-effect-online-769.html", emoji: "👾", desc: "Pixel glitch text" },
+  paper: { url: "https://en.ephoto360.com/multicolor-3d-paper-cut-style-text-effect-658.html", emoji: "📄", desc: "Paper cut style" },
+  watercolor: { url: "https://en.ephoto360.com/create-a-watercolor-text-effect-online-655.html", emoji: "🎨", desc: "Watercolor text" },
+  cartoon: { url: "https://en.ephoto360.com/create-a-cartoon-style-graffiti-text-effect-online-668.html", emoji: "🎨", desc: "Cartoon graffiti" },
+  underwater: { url: "https://en.ephoto360.com/3d-underwater-text-effect-online-682.html", emoji: "🌊", desc: "Underwater text" },
+  cloud: { url: "https://en.ephoto360.com/write-text-effect-clouds-in-the-sky-online-619.html", emoji: "☁️", desc: "Cloud text effect" },
+  sand: { url: "https://en.ephoto360.com/write-in-sand-summer-beach-online-free-595.html", emoji: "🏖️", desc: "Sand write text" },
+  royal: { url: "https://en.ephoto360.com/royal-text-effect-online-free-471.html", emoji: "👑", desc: "Royal text" },
+  multineon: { url: "https://en.ephoto360.com/create-multicolored-neon-light-signatures-591.html", emoji: "🌈", desc: "Multicolored neon" },
+  hologram: { url: "https://en.ephoto360.com/free-create-a-3d-hologram-text-effect-441.html", emoji: "🔮", desc: "3D hologram text" },
+  bplogo: { url: "https://en.ephoto360.com/create-blackpink-logo-online-free-607.html", emoji: "🖤", desc: "Blackpink logo" },
+  erase: { url: "https://en.ephoto360.com/create-eraser-deleting-text-effect-online-717.html", emoji: "🧹", desc: "Eraser deleting text" },
+};
+
+async function ephoto360(url, text) {
+  const res = await axios.get(url, {
+    headers: { "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36" },
+    timeout: 15000,
+  });
+  const $ = cheerio.load(res.data);
+  const token = $("input[name=token]").val();
+  const buildServer = $("input[name=build_server]").val();
+  const buildServerId = $("input[name=build_server_id]").val();
+  if (!token || !buildServer) throw new Error("Gagal parse ephoto360");
+
+  const form = new FormData();
+  form.append("text[]", text);
+  form.append("token", token);
+  form.append("build_server", buildServer);
+  form.append("build_server_id", buildServerId);
+
+  const postRes = await axios.post(url, form, {
+    headers: {
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+      "cookie": res.headers["set-cookie"]?.join("; "),
+      ...form.getHeaders(),
+    },
+    timeout: 30000,
+  });
+
+  const $$ = cheerio.load(postRes.data);
+  const formValueStr = $$("input[name=form_value_input]").val();
+  if (!formValueStr) throw new Error("Gagal dapat form value");
+
+  const formValue = JSON.parse(formValueStr);
+  formValue["text[]"] = formValue.text;
+  delete formValue.text;
+
+  const { data: finalRes } = await axios.post(
+    "https://en.ephoto360.com/effect/create-image",
+    new URLSearchParams(formValue),
+    {
+      headers: {
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "cookie": res.headers["set-cookie"].join("; "),
+      },
+      timeout: 30000,
+    }
+  );
+
+  if (!finalRes.image) throw new Error("Gagal generate gambar");
+  return buildServer + finalRes.image;
+}
+
+async function handler(m, { sock }) {
+  const args = (m.text || "").trim().split(/\s+/);
+  const style = (args[0] || "").toLowerCase();
+  const content = args.slice(1).join(" ");
+
+  if (!style || style === "list") {
+    const list = Object.entries(STYLES)
+      .map(([k, v]) => `${v.emoji} ${k} — ${v.desc}`)
+      .join("\n");
+    return m.reply(claraWrap("Text Pro", [
+      "Daftar style tersedia:",
+      "",
+      list,
+      "",
+      `Cara: ${m.prefix}textpro <style> <teks>`,
+      `Contoh: ${m.prefix}textpro neon Halo Dunia`,
+    ].join("\n")));
+  }
+
+  if (!STYLES[style]) {
+    return m.reply(claraWrap("Text Pro", `Style tidak ditemukan: ${style}\nKetik ${m.prefix}textpro list`));
+  }
+
+  if (!content) {
+    return m.reply(claraWrap("Text Pro", `Masukkan teks!\nContoh: ${m.prefix}textpro ${style} Halo Dunia`));
+  }
+
   try {
-    const style = (args[0] || "").toLowerCase().trim();
-    const content = args.slice(1).join(" ").trim();
-
-    if (!style || style === "list" || !content) {
-      let lines = [];
-      lines.push("Text Pro - " + Object.keys(STYLES).length + " Style");
-      lines.push("");
-      Object.entries(STYLES).forEach(([name, s], i) => {
-        lines.push((i + 1) + ". " + s.emoji + " " + name + " - " + s.desc);
-      });
-      lines.push("");
-      lines.push("Cara: " + usedPrefix + "textpro <style> <teks>");
-      lines.push("Contoh: " + usedPrefix + "textpro neon Nova AI");
-      return m.reply(claraWrap("Text Pro", lines.join("\n")));
-    }
-
-    if (!STYLES[style]) {
-      return m.reply(claraWrap("Text Pro", "Style tidak ditemukan: " + style + "\nKetik " + usedPrefix + "textpro list"));
-    }
-
+    await m.react("🕒");
     const st = STYLES[style];
-    const statusMsg = await conn.sendMessage(m.key.remoteJid, {
-      text: claraWrap("Text Pro", "Membuat: " + st.emoji + " " + style + "..."),
-    });
+    const imageUrl = await ephoto360(st.url, content);
+    const { data: imgBuf } = await axios.get(imageUrl, { responseType: "arraybuffer", timeout: 15000 });
+    const buffer = Buffer.from(imgBuf);
 
-    const res = await axios.get(TP_API + st.endpoint, {
-      params: { text: content },
-      timeout: 15000,
-    });
+    if (buffer.length < 100) throw new Error("Gambar kosong");
 
-    const imageUrl = res.data?.result || res.data?.url || res.data?.image;
-    if (!imageUrl) {
-      return m.reply(claraWrap("Text Pro", "Gagal generate text effect."));
-    }
-
-    // Download image
-    const imgRes = await axios.get(imageUrl, {
-      timeout: 15000,
-      responseType: 'arraybuffer',
-    });
-
-    if (!imgRes.data || imgRes.data.length < 100) {
-      return m.reply(claraWrap("Text Pro", "Gagal download gambar."));
-    }
-
-    const tmpDir = path.join(os.tmpdir(), 'nova-textpro');
-    if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });
-    const imgPath = path.join(tmpDir, 'tp_' + Date.now() + '.jpg');
-    fs.writeFileSync(imgPath, imgRes.data);
-
-    await conn.sendMessage(m.key.remoteJid, {
-      image: fs.readFileSync(imgPath),
-      caption: claraWrap("Text Pro", [
-        st.emoji + " " + style + " - " + st.desc,
-        "Teks: " + content,
-      ].join("\n")),
-    });
-
-    try { fs.unlinkSync(imgPath); } catch (e) { console.error('[textpro.js]:', e.message); }
-    try {
-      await conn.sendMessage(m.key.remoteJid, { delete: { remoteJid: m.key.remoteJid, id: statusMsg.key.id, fromMe: true } });
-    } catch (e) { console.error('[textpro.js]:', e.message); }
-  } catch (e) {
-    console.error("textpro error:", e.message);
-    return m.reply(claraWrap("Text Pro", "Error: " + e.message));
+    await m.react("🐣");
+    await sock.sendMessage(m.chat, {
+      image: buffer,
+      caption: claraWrap("Text Pro", `${st.emoji} ${style} — ${st.desc}\nTeks: ${content}`),
+    }, { quoted: m });
+  } catch (err) {
+    console.error("[textpro] Error:", err.message);
+    await m.react("❌");
+    m.reply(claraWrap("Text Pro", `Gagal generate: ${err.message}`));
   }
 }
 
