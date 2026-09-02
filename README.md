@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20config.weather%20%2B%20.setweather%20comma-success?style=for-the-badge)
-> *Commit: "feat: config.weather + .setweather command — set lokasi cuaca (default Serang) via nama kota/koordinat/reset, tampil di info section menu"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20.autoweatherrealtime%20%E2%80%94%20on%2Foff%20cuac-success?style=for-the-badge)
+> *Commit: "feat: .autoweatherrealtime — on/off cuaca di info section + set lokasi + notification scheduler ke grup (gantikan .setweather)"*
 <!--END_SECTION:latest-update-->
 
 ---
