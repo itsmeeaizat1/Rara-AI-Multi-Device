@@ -32,8 +32,8 @@ function appendSession(key, role, content) {
 
 // 🔹 AUTO-EXECUTE: kategori command yang BOLEH dijalankan otomatis
 const SAFE_EXEC_CATEGORIES = [
-  "group", "search", "download", "media", "fun", "sticker",
-  "tools", "random", "info", "religi", "rpg",
+  "main", "group", "search", "download", "media", "fun", "sticker",
+  "tools", "random", "info", "religi", "rpg", "utility", "user",
 ];
 const BLOCKED_EXEC_COMMANDS = [
   "self", "public", "setprefix", "setpp", "setname", "addowner",
@@ -41,6 +41,9 @@ const BLOCKED_EXEC_COMMANDS = [
   "addpremium", "delpremium", "addlimit", "setlimit", "bc", "bcgc",
   "pushkontak", "jpm", "shutdown", "restart", "exec", "eval",
   "setbotpp", "autoread", "autotyping", "autosw",
+  // main category berisiko
+  "jadibot", "stopjadibot", "block2", "owner", "buyprem", "buysewa",
+  "daftarsewa2", "belanja",
 ];
 
 const CATEGORY_NAMES = {
