@@ -26,7 +26,7 @@ import {
 import fs from "fs";
 import path from "path";
 import { downloadMediaMessage, getContentType } from "nova";
-import { addExifToWebp, DEFAULT_METADATA } from "./nova-exif.js";
+import { addExifToWebp, imageToWebpFFmpeg, DEFAULT_METADATA } from "./nova-exif.js";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import ffmpeg from "fluent-ffmpeg";
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
@@ -101,22 +101,18 @@ function videoToWebp(buffer) {
       cleanup();
       reject(new Error("Video conversion timeout"));
     }, 60000);
+    // Alice-style: 320x320, fps=15, 5sec, palette optimization
     ffmpeg(inputPath)
-      .inputOptions(["-y", "-t", "6"])
+      .inputOptions(["-y", "-t", "5"])
       .outputOptions([
-        "-vcodec",
-        "libwebp",
-        "-vf",
-        "fps=12,scale='min(512,iw)':'min(512,ih)':force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=0x00000000,setsar=1",
-        "-loop",
-        "0",
-        "-preset",
-        "default",
+        "-vcodec", "libwebp",
+        "-vf", "fps=15,scale='min(320,iw)':'min(320,ih)':force_original_aspect_ratio=decrease,pad=320:320:-1:-1:color=white@0.0,split [a][b];[a] palettegen=reserve_transparent=on:transparency_color=ffffff [p];[b][p] paletteuse",
+        "-loop", "0",
+        "-ss", "00:00:00",
+        "-t", "00:00:05",
+        "-preset", "default",
         "-an",
-        "-vsync",
-        "0",
-        "-q:v",
-        "50",
+        "-vsync", "0",
       ])
       .toFormat("webp")
       .on("end", () => {
@@ -191,15 +187,7 @@ async function extendSocket(sock) {
     const buffer = await resolveInput(input);
     let webpBuffer;
     try {
-      webpBuffer = await (
-        await getSharp()
-      )(buffer)
-        .resize(512, 512, {
-          fit: "contain",
-          background: { r: 0, g: 0, b: 0, alpha: 0 },
-        })
-        .webp({ quality: 80 })
-        .toBuffer();
+      webpBuffer = await imageToWebpFFmpeg(buffer);
     } catch (err) {
       throw new Error("Failed to convert image: " + err.message);
     }

@@ -3,6 +3,7 @@ import te from "../../src/lib/nova-error.js";
 import moment from "moment-timezone";
 import axios from "axios";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import config from "../../config.js";
 
 const pluginConfig = {
   name: "iqc",
@@ -41,7 +42,11 @@ async function handler(m, { sock }) {
     }
 
     const cardBuffer = Buffer.from(res.data);
-    await sock.sendMessage(m.chat, { image: cardBuffer, caption: "" }, { quoted: m });
+    await m.react("🐣");
+    await sock.sendImageAsSticker(m.chat, cardBuffer, m, {
+      packname: config.sticker?.packname || "Nova-AI",
+      author: config.sticker?.author || "IQC",
+    });
   } catch (error) {
     console.error("[IQC]", error.message);
     m.reply(novaError("IQC", "Gagal bikin gambar chat nih, coba lagi ya"));
