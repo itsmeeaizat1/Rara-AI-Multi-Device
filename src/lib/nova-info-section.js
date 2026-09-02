@@ -7,6 +7,7 @@ import fs from "fs";
 import { formatUptime, getTimeGreeting, getImportantDay } from "./nova-formatter.js";
 import { getWeatherFooter, getWeatherAddress } from "./nova-weather-footer.js";
 import { toSC } from "./nova-menu-style.js";
+import { getDatabase } from "./nova-database.js";
 
 function getWeton(date = new Date()) {
   const days = ["Pahing", "Pon", "Wage", "Kliwon", "Legi"];
@@ -126,11 +127,26 @@ export async function buildMenuInfo(m, ctx = {}) {
     } catch {}
   }
 
-  // ── Weather (fetch address singkat untuk info section) ──
+  // ── Weather (cek setting weatherRealtime dulu) ──
   let weatherAddr = "";
+  let weatherEnabled = true;
   try {
-    weatherAddr = await getWeatherAddress();
+    const db2 = getDatabase();
+    const wrSettings = db2.setting("weatherRealtime");
+    if (wrSettings && wrSettings.realtime === false) {
+      weatherEnabled = false;
+    }
+    // Sync lokasi dari setting ke config kalau ada
+    if (wrSettings?.location) {
+      if (!config.weather) config.weather = {};
+      config.weather.location = wrSettings.location;
+    }
   } catch {}
+  if (weatherEnabled) {
+    try {
+      weatherAddr = await getWeatherAddress();
+    } catch {}
+  }
 
   // ── Build info array ──
   const greeting = `${getTimeGreeting()}, ${m.pushName || "User"}`;
