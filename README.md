@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20info%20section%20lengkap%20di%20allmenu%20%2B%20-success?style=for-the-badge)
-> *Commit: "feat: info section lengkap di allmenu + allmenucategory + fix weather & format"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20AutoFlow%20AI%20%E2%80%94%20bikin%20rule%20automatio-success?style=for-the-badge)
+> *Commit: "feat: AutoFlow AI — bikin rule automation pakai bahasa manusia"*
 <!--END_SECTION:latest-update-->
 
 ---
