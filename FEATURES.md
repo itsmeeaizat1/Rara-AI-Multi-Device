@@ -58,7 +58,6 @@
 - `.duelrpg` — rpg — PvP 1v1 melawan player lain untuk EXP, Gold, rating
 - `.casinorpg` — rpg — Slot machine gambling gold (multiplier up to 50x)
 - `.tfgold` — rpg — Transfer gold ke player lain (5% tax)
-- `.toprpg` — rpg — Papan peringkat RPG (level, gold, pvp, gems)
 - `.equiprpg` — rpg — Equip/unequip item RPG dari inventory
 - `.bankrpg` — rpg — Bank simpan/tarik gold dengan bunga 5% harian
 - `.investrpg` — rpg — Investasi gold (70% profit, 30% rugi, 1 jam)
