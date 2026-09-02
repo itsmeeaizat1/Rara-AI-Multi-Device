@@ -113,7 +113,7 @@ async function handler(m, { sock }) {
             }
         })
         
-        return m.reply(`✅ *ꜱᴇʀᴠᴇʀ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
+        return m.reply(`✅ *Server Dihapus*\n\n` +
             `Panel: *${serverLabel}*\n` +
             `Server ID: \`${serverId}\`\n` +
             `Nama: \`${server.name}\``)

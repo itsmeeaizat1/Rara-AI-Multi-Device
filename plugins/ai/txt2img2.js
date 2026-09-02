@@ -21,7 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const text = m.args.join(" ");
   if (!text) {
-    return m.reply(`🎨 *Text to Image (Flux)*\n\n` +
+    return m.reply(`*Text to Image (Flux)*\n\n` +
       `Buat gambar dari deskripsi teks pakai AI Flux Klein 4B.\n\n` +
       `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
       `*${m.prefix}txt2img2 <deskripsi>*\n\n` +

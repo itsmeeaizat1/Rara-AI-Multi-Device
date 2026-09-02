@@ -141,7 +141,7 @@ async function handler(m, { sock, jadibotId, isJadibot }) {
     if (isJadibot && jadibotId) {
       const jbOwners = getJadibotOwners(jadibotId);
       if (jbOwners.length === 0) {
-        return m.reply(`📋 *Daftar Owner Jadibot*\n\nBelum ada owner terdaftar.\nGunakan \`${m.prefix}addowner\` untuk menambah.`);
+        return m.reply(`*Daftar Owner Jadibot*\n\nBelum ada owner terdaftar.\nGunakan \`${m.prefix}addowner\` untuk menambah.`);
       }
       let txt = `📋 *DAFTAR OWNER JADIBOT* — ${jadibotId}\n\n`;
       const mentions = jbOwners.map(toMentionJid).filter(Boolean);

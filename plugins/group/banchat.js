@@ -48,7 +48,7 @@ async function handler(m, { sock }) {
         }
         
         if (groupData.isBanned) {
-            return m.reply(`⚠️ *ɢʀᴜᴘ ꜱᴜᴅᴀʜ ᴅɪʙᴀɴ*\n\n` +
+            return m.reply(`⚠️ *Grup Sudah Diban*\n\n` +
                 `Grup ini sudah dalam status banned.\n` +
                 `Gunakan \`.unbanchat\` untuk membuka akses.`)       }
         

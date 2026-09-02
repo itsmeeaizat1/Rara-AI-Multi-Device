@@ -42,7 +42,7 @@ async function handler(m, { sock }) {
     const uptime = status ? formatUptime(Date.now() - status.startedAt) : '-'
     try {
         await stopJadibot(sender, false)
-        await m.reply(`*ᴊᴀᴅɪʙᴏᴛ ᴅɪʜᴇɴᴛɪᴋᴀɴ*\n\n` +
+        await m.reply(`*Jadibot Dihentikan*\n\n` +
             `Nomor: *@${sender.split('@')[0]}*\n` +
             `Uptime: *${uptime}*\n` +
             `💾 Session: *ᴛᴇʀꜱɪᴍᴘᴀɴ*\n\n` +

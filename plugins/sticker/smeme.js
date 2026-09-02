@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
     m.isSticker ||
     (m.quoted && (m.quoted.isSticker || m.quoted.type === "stickerMessage"));
   if (!isImage && !isSticker) {
-    return m.reply(`😂 *ᴍᴇᴍᴇ ꜱᴛɪᴄᴋᴇʀ*\n\nReply atau kirim gambar/sticker dengan caption\n\n\`Contoh: ${m.prefix}smeme Top|Bottom\``);
+    return m.reply(`*Meme Sticker*\n\nReply atau kirim gambar/sticker dengan caption\n\n\`Contoh: ${m.prefix}smeme Top|Bottom\``);
   }
   const input = m.args.join(" ");
   if (!input || !input.includes("|")) {

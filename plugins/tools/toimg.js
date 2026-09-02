@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
     const isAnimated = stickerMsg?.isAnimated
 
     if (isAnimated) {
-        await m.reply(`⚠️ *ꜱᴛɪᴄᴋᴇʀ ᴀɴɪᴍᴀꜱɪ*\n\n` +
+        await m.reply(`⚠️ *Sticker Animasi*\n\n` +
             `Sticker ini adalah sticker animasi (GIF).\n` +
             `Gunakan \`${m.prefix}tovideo\` untuk mengubahnya.`)
         return

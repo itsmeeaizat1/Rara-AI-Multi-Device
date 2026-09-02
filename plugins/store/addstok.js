@@ -30,7 +30,7 @@ async function handler(m, { sock }) {
   const products = db.setting("storeProducts") || [];
 
   if (products.length === 0) {
-    return m.reply(`📭 *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`);
+    return m.reply(`*ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`);
   }
 
   const text = m.text?.trim() || "";
@@ -47,14 +47,14 @@ async function handler(m, { sock }) {
         if (!isNaN(addCount) && addCount > 0) {
           product.stock = (product.stock === -1 ? 0 : product.stock) + addCount;
           db.setting("storeProducts", products);
-          return m.reply(`📦 *ꜱᴛᴏᴋ ꜰɪꜱɪᴋ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
+          return m.reply(`*Stok Fisik Ditambahkan*\n\n` +
               `🏷️ Produk: *${product.name}*\n` +
               `➕ Ditambahkan: *${addCount} pcs*\n` +
               `📊 Total stok: *${product.stock} pcs*\n\n` +
               `_Tambah lagi: \`${m.prefix}addstok ${productNo + 1} <jumlah>\`_`);
         }
 
-        return m.reply(`📦 *ᴛᴀᴍʙᴀʜ ꜱᴛᴏᴋ ꜰɪꜱɪᴋ*\n\n` +
+        return m.reply(`*Tambah Stok Fisik*\n\n` +
             `Produk *${product.name}* bertipe **ꜰɪꜱɪᴋ** 📦\n\n` +
             `Format: \`${m.prefix}addstok ${productNo + 1} <jumlah>\`\n\n` +
             `📝 *ᴄᴏɴᴛᴏʜ:*\n` +
@@ -138,7 +138,7 @@ async function handler(m, { sock }) {
 
           product.stock = product.stockItems.length;
           db.setting("storeProducts", products);
-          return m.reply(`✅ *ɪᴍᴘᴏʀᴛ ꜱᴛᴏᴋ ꜱᴇʟᴇꜱᴀɪ*\n\n` +
+          return m.reply(`✅ *Import Stok Selesai*\n\n` +
               `🏷️ Produk: *${product.name}*\n` +
               `➕ Ditambahkan: *${added}* akun 🔑\n` +
               (skipped > 0 ? `⏭️ Duplikat dilewati: *${skipped}*\n` : "") +
@@ -148,7 +148,7 @@ async function handler(m, { sock }) {
       }
     }
 
-    return m.reply(`📦 *ᴛᴀᴍʙᴀʜ ꜱᴛᴏᴋ*\n\n` +
+    return m.reply(`*Tambah Stok*\n\n` +
         `🔑 *ᴘʀᴏᴅᴜᴋ ᴅɪɢɪᴛᴀʟ* — Tambah data akun/key:\n` +
         `\`${m.prefix}addstok <nomor_produk>|<detail>\`\n\n` +
         `📄 *Import dari file .txt:*\n` +
@@ -180,7 +180,7 @@ async function handler(m, { sock }) {
   if (product.type === "fisik") {
     const addCount = parseInt(detail);
     if (isNaN(addCount) || addCount <= 0) {
-      return m.reply(`📦 *ᴘʀᴏᴅᴜᴋ ɪɴɪ ʙᴇʀᴛɪᴘᴇ ꜰɪꜱɪᴋ*\n\n` +
+      return m.reply(`*Produk Ini Bertipe Fisik*\n\n` +
           `Gunakan format: \`${m.prefix}addstok ${productNo + 1} <jumlah>\`\n\n` +
           `📝 Contoh: \`${m.prefix}addstok ${productNo + 1} 8\` — Tambah 8 pcs`);
     }
@@ -210,7 +210,7 @@ async function handler(m, { sock }) {
   });
   product.stock = product.stockItems.length;
   db.setting("storeProducts", products);
-  return m.reply(`✅ *ꜱᴛᴏᴋ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
+  return m.reply(`✅ *Stok Ditambahkan*\n\n` +
       `🏷️ Produk: *${product.name}*\n` +
       `🔑 Total stok saat ini: *${product.stockItems.length}* akun\n\n` +
       `_Tambah lagi: \`${m.prefix}addstok ${productNo + 1}|<detail>\`_`);

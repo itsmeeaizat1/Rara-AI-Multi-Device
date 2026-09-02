@@ -23,7 +23,7 @@ async function handler(m, { sock }) {
     const args = m.args || []
     
     if (args.length === 0) {
-        return m.reply(`👥 *ᴀᴅᴅ ᴍᴇᴍʙᴇʀ*\n\n` +
+        return m.reply(`*Add Member*\n\n` +
             `Cara pakai:\n` +
             `1. Di grup: \`${m.prefix}add <nomor>\`\n` +
             `2. Multiple: \`${m.prefix}add <nomor1> <nomor2> ...\`\n` +
@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
     }
     
     if (!targetGroup) {
-        return m.reply(`❌ *ɢᴀɢᴀʟ*\n\nJalankan di grup atau sertakan link grup!\n\n\`${m.prefix}add <nomor> <link_grup>\``)
+        return m.reply(`❌ *Gagal*\n\nJalankan di grup atau sertakan link grup!\n\n\`${m.prefix}add <nomor> <link_grup>\``)
     }
     
     try {

@@ -170,7 +170,7 @@ async function handler(m, { sock }) {
     const backgroundColor = COLORS[color]
 
     if (!backgroundColor) {
-        return m.reply(`❌ *ᴇʀʀᴏʀ*\n\nWarna \`${color}\` tidak ditemukan!\nGunakan salah satu warna yang tersedia.`)
+        return m.reply(`❌ *Error*\n\nWarna \`${color}\` tidak ditemukan!\nGunakan salah satu warna yang tersedia.`)
     }
 
     let message = args.slice(1).join(' ')
@@ -180,7 +180,7 @@ async function handler(m, { sock }) {
     }
 
     if (!message) {
-        return m.reply(`❌ *ᴇʀʀᴏʀ*\n\nMasukkan text untuk quote!`)
+        return m.reply(`❌ *Error*\n\nMasukkan text untuk quote!`)
     }
 
     if (message.length > 80) {

@@ -54,7 +54,7 @@ function handler(m, { sock }) {
             return m.reply(claraWrap("Notiftidur", `❌ *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘᴇɴɢɪɴɢᴀᴛ ᴛɪᴅᴜʀ* yang aktif di chat ini`))
         }
         toggleNotif('tidur', sender, chatJid, false)
-        return m.reply(`✅ *ᴘᴇɴɢɪɴɢᴀᴛ ᴛɪᴅᴜʀ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ* 🔕\n\nKetik \`${m.prefix}notiftidur on\` untuk mengaktifkan kembali`)
+        return m.reply(`✅ *Pengingat Tidur Dinonaktifkan* 🔕\n\nKetik \`${m.prefix}notiftidur on\` untuk mengaktifkan kembali`)
     }
 
     if (sub === 'on') {

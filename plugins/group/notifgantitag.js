@@ -67,7 +67,7 @@ async function handler(m, { sock }) {
   }
   if (sub === "on") {
     if (currentStatus) {
-      return m.reply(`⚠️ *ɴᴏᴛɪꜰ ʟᴀʙᴇʟ ᴀʟʀᴇᴀᴅʏ ᴀᴄᴛɪᴠᴇ*\n\n` +
+      return m.reply(`⚠️ *Notif Label Already Active*\n\n` +
           `Status: *✅ ON*\n` +
           `Notifikasi ganti label sudah aktif di grup ini.\n\n` +
           `_Gunakan \`${m.prefix}notifgantitag off\` untuk menonaktifkan._`);

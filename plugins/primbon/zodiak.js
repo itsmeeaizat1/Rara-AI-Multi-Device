@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const zodiac = m.args[0]?.toLowerCase()
     
     if (!zodiac || !validZodiacs.includes(zodiac)) {
-        return m.reply(`⭐ *ᴢᴏᴅɪᴀᴋ*\n\nMasukkan nama zodiak:\n\n${validZodiacs.map(z => `${z}`).join('\n')}\n\n\`Contoh: ${m.prefix}zodiak aries\``)
+        return m.reply(`⭐ *Zodiak*\n\nMasukkan nama zodiak:\n\n${validZodiacs.map(z => `${z}`).join('\n')}\n\n\`Contoh: ${m.prefix}zodiak aries\``)
     }
     try {
         const url = `https://api.siputzx.my.id/api/primbon/zodiak?zodiak=${zodiac}`

@@ -397,7 +397,7 @@ ${r.reply.substring(0, 30)}${r.reply.length > 30 ? '...' : ''}\n\n`
         return m.reply(claraWrap("Autoreply", `🗑️ *ᴀᴜᴛᴏʀᴇᴘʟʏ ᴅɪʀᴇꜱᴇᴛ*\n\nSemua autoreply custom dihapus!`))
     }
     
-    return m.reply(`❌ *ᴀᴄᴛɪᴏɴ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\nGunakan: \`on\`, \`off\`, \`private on/off\`, \`add\`, \`del\`, \`list\`, \`reset\``)
+    return m.reply(`❌ *Action Tidak Valid*\n\nGunakan: \`on\`, \`off\`, \`private on/off\`, \`add\`, \`del\`, \`list\`, \`reset\``)
 }
 
 export { pluginConfig as config, handler }

@@ -85,7 +85,7 @@ async function handler(m, { sock }) {
     mutedMembers.splice(index, 1)
     db.setGroup(m.chat, { ...groupData, mutedMembers })
 
-    await m.reply(`🔊 *ᴍᴇᴍʙᴇʀ ᴅɪᴜɴᴍᴜᴛᴇ*\n\n` +
+    await m.reply(`*Member Diunmute*\n\n` +
         "" +
         `👤 Member: @${targetNumber}\n` +
         `🔊 sTatus: \`Unmuted\`\n` +

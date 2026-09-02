@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim()
 
     if (!query) {
-        return m.reply(`📸 *ᴛɪᴋᴛᴏᴋ ꜰᴏᴛᴏ ꜱᴇᴀʀᴄʜ*\n\nContoh:\n\`${m.prefix}tiktokfoto cosplay\``)
+        return m.reply(`*Tiktok Foto Search*\n\nContoh:\n\`${m.prefix}tiktokfoto cosplay\``)
     }
     try {
         const result = await fetchTiktokFoto(query)

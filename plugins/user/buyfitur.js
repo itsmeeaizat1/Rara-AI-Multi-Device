@@ -89,7 +89,7 @@ async function handler(m, { sock }) {
     const unlockedFeatures = user.unlockedFeatures || []
     
     if (unlockedFeatures.includes(feature.id)) {
-        return m.reply(`❌ *ɢᴀɢᴀʟ*\n\nFitur \`${feature.name}\` sudah ter-unlock!`)
+        return m.reply(`❌ *Gagal*\n\nFitur \`${feature.name}\` sudah ter-unlock!`)
     }
     
     if ((user.koin || 0) < PRICE_PER_FEATURE) {

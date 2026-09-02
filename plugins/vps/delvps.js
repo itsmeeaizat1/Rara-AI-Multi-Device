@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
         })
         await m.reply(`
 *ID:* ${dropletId}
-│ *ꜱᴛᴀᴛᴜꜱ:* Berhasil dihapus
+│ *Status:* Berhasil dihapus
 `)
         
     } catch (err) {

@@ -49,7 +49,7 @@ async function handler(m, { sock }) {
     const products = db.setting('storeProducts') || []
 
     if (products.length === 0) {
-        return m.reply(`📭 *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`)
+        return m.reply(`*ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`)
     }
 
     const text = m.text?.trim() || ''

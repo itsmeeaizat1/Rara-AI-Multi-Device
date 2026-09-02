@@ -102,7 +102,7 @@ function handler(m, { sock }) {
         case 'setprefix':
         case 'gantiprefix': {
             if (args.length === 0) {
-                return m.reply(`🔄 *Ganti/sEt PreғIx*\n\n` +
+                return m.reply(`*Ganti/sEt PreғIx*\n\n` +
                     `Ganti semua prefix dengan yang baru\n\n` +
                     `*Format:*\n` +
                     `\`${m.prefix}${cmd} <prefix1> <prefix2> ...\`\n\n` +

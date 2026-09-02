@@ -52,7 +52,7 @@ function handler(m, { sock }) {
     antilinkList.splice(index, 1)
     db.setGroup(m.chat, { antilinkList })
     
-    m.reply(`✅ *ᴀɴᴛɪʟɪɴᴋ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
+    m.reply(`✅ *Antilink Dihapus*\n\n` +
         `Link: \`${link}\`\n` +
         `Sisa: *${antilinkList.length}* link`)
 }
