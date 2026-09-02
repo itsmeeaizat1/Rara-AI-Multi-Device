@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20pindah%20autonovaai%20ke%20kategori%20-success?style=for-the-badge)
-> *Commit: "refactor: pindah autonovaai ke kategori ai (tetap owner-only)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20Auto%20Role%20Assignment%20%E2%80%94%20role%20otomat-success?style=for-the-badge)
+> *Commit: "feat: Auto Role Assignment — role otomatis + poin + leaderboard"*
 <!--END_SECTION:latest-update-->
 
 ---
