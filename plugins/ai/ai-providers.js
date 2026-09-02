@@ -1,15 +1,74 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { DEFAULT_PROVIDERS } from "../../src/lib/nova-ai-service.js";
+// ai-providers.js — Individual AI command per provider
+// .openai .gemini .claude .groq .grok .xai .qwen .cohere .perplexity .fireworks
+// .ai21 .reka .cerebras .huggingface .voyage .cloudflare .stability .jina
+// .mistral .together .github + IkyyXD & Tio providers
+import { callAI, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/nova-ai-service.js";
+import { novaBox } from "../../src/lib/nova-menu-style.js";
 
+// Command → providerKey mapping
+const PROVIDER_COMMANDS = {
+  // Global providers (butuh API key)
+  openai: "openai",
+  gpt: "openai",
+  gemini: "gemini",
+  google: "gemini",
+  claude: "anthropic",
+  anthropic: "anthropic",
+  groq: "groq",
+  grok: "xai",
+  xai: "xai",
+  qwen: "qwen",
+  cohere: "cohere",
+  perplexity: "perplexity",
+  fireworks: "fireworks",
+  ai21: "ai21",
+  reka: "reka",
+  cerebras: "cerebras",
+  huggingface: "huggingface",
+  hf: "huggingface",
+  voyage: "voyage",
+  cloudflare: "cloudflare",
+  stability: "stability",
+  jina: "jina",
+  mistral: "mistral",
+  together: "together",
+  // Free / no-key providers
+  github: "github",
+  // IkyyXD providers (gratis via IkyyXD API)
+  ikyygemini: "ikyy_gemini",
+  ikyygpt5: "ikyy_gpt5",
+  ikyygemma: "ikyy_gemma",
+  ikyyuni: "ikyy_unliai",
+  ikyypub: "ikyy_publicai",
+  ikyyperplex: "ikyy_perplexity",
+  // Tio providers (gratis via Tio API)
+  tioai: "tio_openai",
+  tiogemini: "tio_gemini",
+  tioclaude: "tio_anthropic",
+};
+
+const allCommands = Object.keys(PROVIDER_COMMANDS);
+
+// Provider yang gratis (tidak butuh API key)
+const FREE_PROVIDERS = new Set([
+  "blackbox", "github",
+  "tio_openai", "tio_gemini", "tio_anthropic",
+  "ikyy_gemini", "ikyy_cici", "ikyy_gpt5", "ikyy_gemma",
+  "ikyy_unliai", "ikyy_publicai", "ikyy_perplexity", "ikyy_zai", "ikyy_zerogpt",
+]);
+
+// Smallcaps helper
+const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+const toSC = (s) => String(s || "").replace(/[a-z]/g, c => SC_MAP[c] || c);
 
 const pluginConfig = {
-  name: "ai-providers",
-  alias: ["ai-providers", "ai"],
+  name: "openai",
+  alias: allCommands,
   category: "ai",
-  description: "Lihat semua provider AI yang tersedia",
-  usage: ".ai-providers",
-  example: ".ai-providers",
+  description: "Chat langsung dengan AI provider pilihanmu (35+ provider)",
+  usage: ".<provider> [model] <pesan>",
+  example: ".openai apa itu AI\n.gemini gemini-2.0-flash jelaskan kuantum\n.groq qwen/qwen3.8-27b hai\n.grok buat puisi",
   isOwner: false,
   isPremium: false,
   isGroup: true,
@@ -19,37 +78,123 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-async function handler(m, { sock, config: botConfig }) {
-    const prefix = botConfig.command?.prefix || ".";
+async function handler(m, { sock, config, db, args, text }) {
   try {
-    const lines = Object.entries(DEFAULT_PROVIDERS).map(([key, provider]) => {
-      const models = (provider.models || []).slice(0, 5).join(", ");
-      const vision = provider.supportsVision ? "Ya" : "Tidak";
-      return `${provider.name} (${key})\n  Model: ${models}\n  Vision: ${vision}\n  Default: ${provider.defaultModel}`;
+    const prefix = config.command?.prefix || ".";
+    const cmdUsed = (m.command || "").toLowerCase();
+    const providerKey = PROVIDER_COMMANDS[cmdUsed] || cmdUsed;
+
+    const providers = getAllProviders();
+    const provider = providers[providerKey];
+    if (!provider) {
+      await m.reply("Provider \"" + cmdUsed + "\" tidak ditemukan.\nKetik *" + prefix + "multi-ai list* untuk lihat semua provider.");
+      return { handled: true };
+    }
+
+    const fullText = (text || "").trim();
+
+    // No text → show info
+    if (!fullText) {
+      const models = (provider.models || []).join(", ");
+      const keyStatus = FREE_PROVIDERS.has(providerKey) ? "Gratis" : (resolveApiKeyForProvider(providerKey, {}) ? "Terisi" : "Belum diisi");
+      const lines = [
+        "Provider  : " + provider.name,
+        "Default   : " + provider.defaultModel,
+      ];
+      if (models) lines.push("Models    : " + models);
+      lines.push("Key       : " + keyStatus);
+      lines.push("---");
+      lines.push("Cara pakai: " + prefix + cmdUsed + " [model] <pesan>");
+      lines.push("Contoh    : " + prefix + cmdUsed + " apa itu AI");
+      const box = novaBox ? novaBox("Info Provider", lines) : lines.join("\n");
+      await m.reply(box);
+      return { handled: true };
+    }
+
+    // Parse model dari kata pertama jika cocok
+    const parts = fullText.split(/\s+/);
+    let model = provider.defaultModel;
+    let userMessage = fullText;
+
+    if (provider.models && parts.length > 1) {
+      const possibleModel = parts[0];
+      if (provider.models.includes(possibleModel)) {
+        model = possibleModel;
+        userMessage = parts.slice(1).join(" ");
+      }
+    }
+
+    if (!userMessage) {
+      await m.reply("Tulis pesan kamu setelah command.\nContoh: *" + prefix + cmdUsed + " halo*");
+      return { handled: true };
+    }
+
+    // Resolve API key
+    const aiConfig = config.aiHelp || {};
+    const apiKey = resolveApiKeyForProvider(providerKey, aiConfig);
+
+    if (!apiKey && !FREE_PROVIDERS.has(providerKey)) {
+      const globalMap = {
+        openai: "openaiApiKey", gemini: "geminiApiKey", anthropic: "anthropicApiKey",
+        groq: "groqkey", deepseek: "deepseekkey", xai: "xaikey", qwen: "qwenkey",
+        cohere: "coherekey", perplexity: "perplexitykey", fireworks: "fireworkskey",
+        ai21: "ai21key", reka: "rekakey", cerebras: "cerebraskey", openrouter: "openrouterkey",
+        huggingface: "huggingfacekey", voyage: "voyagekey", cloudflare: "cloudflarekey",
+        stability: "stabilitykey", jina: "jinakey", mistral: "mistralkey", together: "togetherkey",
+      };
+      const gKey = globalMap[providerKey] ? (global[globalMap[providerKey]] || "") : "";
+      if (!gKey) {
+        const lines = [
+          "Provider : " + provider.name,
+          "Status   : API key belum diisi",
+          "---",
+          "Isi di src/lib/apikey/apikeys.json",
+          "Atau ketik " + prefix + "ai-set apiKey " + providerKey + " <key>",
+        ];
+        const box = novaBox ? novaBox("API Key Diperlukan", lines) : lines.join("\n");
+        await m.reply(box);
+        return { handled: true };
+      }
+    }
+
+    // Loading react
+    try { await m.react("🕒"); } catch {}
+
+    // Call AI
+    const reply = await callAI({
+      providerKey,
+      model,
+      messages: [{ role: "user", content: userMessage }],
+      systemPrompt: String(aiConfig.systemPrompt || "Kamu adalah asisten AI yang membantu."),
+      apiKey,
+      apiEndpoint: "",
     });
 
-    const text = claraWrap("AI Providers",
-      lines.join("\n") +
-      "\n\nPAKAI:\n" +
-      `*${prefix}multi-ai <provider> <pesan>* — chat dengan provider tertentu\n` +
-      `*${prefix}ai-set provider <nama>* — ganti provider default\n` +
-      `*${prefix}ai-addprovider list* — lihat provider custom\n` +
-      `*${prefix}menu* — kembali ke menu utama`
-    );
+    if (!reply || reply.trim() === "") {
+      try { await m.react("❌"); } catch {}
+      const lines = [
+        "Provider : " + provider.name,
+        "Model    : " + model,
+        "Status   : Tidak ada respons",
+        "---",
+        "Cek API key atau coba model lain",
+      ];
+      const box = novaBox ? novaBox("AI Error", lines) : lines.join("\n");
+      await m.reply(box);
+      return { handled: true };
+    }
 
-    await m.reply(text);
+    // Trim + send
+    const trimmedReply = reply.length > 3000 ? reply.slice(0, 3000) + "..." : reply;
+    try { await m.react("🐣"); } catch {}
+    await m.reply(trimmedReply);
+    return { handled: true };
   } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text = novaError("AIProviders",
-      `Status: *ɢᴀɢᴀʟ*\n` +
-      `Alasan: *${error.message}*`,
-      "error"
-    );
-
-    await m.reply(text);
+    console.error("[ai-providers.js]:", error.message);
+    try { await m.react("❌"); } catch {}
+    await m.reply("Gagal: " + error.message);
+    return { handled: true };
   }
-
-  return { handled: true };
 }
 
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler };

@@ -1,26 +1,8 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // multi-ai.js — OpenRouter-style: pilih provider + model lewat chat
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { callAI, DEFAULT_PROVIDERS } from "../../src/lib/nova-ai-service.js";
-import { getDatabase } from "../../src/lib/nova-database.js";
+import { callAI, DEFAULT_PROVIDERS, getAllProviders, resolveApiKeyForProvider } from "../../src/lib/nova-ai-service.js";
 
-function getCustomProviders() {
-  try {
-    const db = getDatabase();
-    const data = db.get("aiCustomProviders");
-    if (data && typeof data === "object") return data;
-  } catch (e) { console.error('[multi-ai.js]:', e.message); }
-  return {};
-}
-
-function getAllProviders() {
-  try {
-    const custom = getCustomProviders();
-    return { ...DEFAULT_PROVIDERS, ...custom };
-  } catch {
-    return { ...DEFAULT_PROVIDERS };
-  }
-}
 
 function resolveModel(providerKey, modelArg) {
   const providers = getAllProviders();
@@ -119,7 +101,7 @@ Contoh: *${prefix}multi-ai ${providerArg} ${model} apa itu AI*`;
 
     // Panggil AI
     const aiConfig = botConfig.aiHelp || {};
-    const apiKey = String(aiConfig.apiKey || "");
+    const apiKey = resolveApiKeyForProvider(providerArg, aiConfig);
     const apiEndpoint = String(
       typeof provider.chatEndpoint === "function"
         ? provider.chatEndpoint(model || providerArg)
@@ -156,7 +138,7 @@ ${trimmedReply}`;
   } catch (error) {
     console.error('[multi-ai.js]:', error.message);
     const prefix = botConfig.command?.prefix || ".";
-    const text = `❌ Gagal: ${error.message}\nCek API key: *${prefix}ai-set apiKey <key>*`;
+    const text = `❌ Gagal: ${error.message}\nCek API key: isi di apikeys.json atau *${prefix}ai-set apiKey <key>*`;
     await m.reply(text);
   }
 

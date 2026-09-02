@@ -99,6 +99,21 @@ export function getGroqKey() {
   return apikeysData.groqkey || "";
 }
 
+export function getXaiKey() { return apikeysData.xai || ""; }
+export function getQwenKey() { return apikeysData.qwen || ""; }
+export function getCohereKey() { return apikeysData.cohere || ""; }
+export function getPerplexityKey() { return apikeysData.perplexity || ""; }
+export function getFireworksKey() { return apikeysData.fireworks || ""; }
+export function getAi21Key() { return apikeysData.ai21 || ""; }
+export function getRekaKey() { return apikeysData.reka || ""; }
+export function getCerebrasKey() { return apikeysData.cerebras || ""; }
+export function getOpenRouterKey() { return apikeysData.openrouter || ""; }
+export function getHuggingFaceKey() { return apikeysData.huggingface || ""; }
+export function getVoyageKey() { return apikeysData.voyage || ""; }
+export function getCloudflareKey() { return apikeysData.cloudflare || ""; }
+export function getStabilityKey() { return apikeysData.stability || ""; }
+export function getJinaKey() { return apikeysData.jina || ""; }
+
 export function getPteroConfig() {
   return {
     server1: {
