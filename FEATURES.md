@@ -197,8 +197,8 @@ binderbyteKey: ""   // Binderbyte cek resi
 ## 📂 Daftar Kategori & Command
 
 ### 🤖 AI (85 plugin)
-nova-ai, nova-ai-addprovider, nova-ai-blog, nova-ai-code, nova-ai-copilot, nova-ai-detector, nova-ai-email, nova-ai-essay, nova-ai-explainer, nova-ai-image, nova-ai-ocr, nova-ai-prompt, nova-ai-providers, nova-ai-review, nova-ai-set, nova-ai-social, nova-ai-story, nova-ai-translate, nova-ai-web, nova-ai4chat, aianalyze, aiavatar, aibrowse, aicaption, aichat, aichat-history, aichat-model, aigrup, aihelp, aiidea, aimath, aiseo, aiset, aitimewarp, aivoice, audio.wav, automemegenerator, claudehaiku, deepai, deepaixemoz, deepseek, deepseekv2, deepseekv2xemoz, deepseekv4flash, deepseekv4flashxemoz, dolphin, feelbetter, gita, gpt4o, gpt5, gpt5v2xemoz, gpt5xemoz, jokowi-nova-ai, kobo-nova-ai, matematika, multi-nova-ai, musicmaker, muslimai, nova-nova-ai, ocrsolve, openrouter, parallelai, prabowo-nova-ai, puter, paraphrase, qwen3, rewrite, simi, slangtranslate, stt, summarize, tanyadokter, vision, waguri-nova-ai, zai
-roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, pujianai, sarkasai, cegpt
+tanyaai, nova-ai-addprovider, nova-ai-blog, nova-ai-code, nova-ai-copilot, nova-ai-detector, nova-ai-email, nova-ai-essay, nova-ai-explainer, nova-ai-image, nova-ai-ocr, nova-ai-prompt, nova-ai-providers, nova-ai-review, nova-ai-set, nova-ai-social, nova-ai-story, nova-ai-translate, nova-ai-web, nova-aianalyze, aiavatar, aibrowse, aicaption, aichat, aichat-history, aichat-model, aigrup, aihelp, aiidea, aimath, aiseo, aiset, aitimewarp, aivoice, audio.wav, automemegenerator, claudehaiku, deepai, deepaixemoz, deepseek, deepseekv2, deepseekv4flash, dolphin, feelbetter, gita, gpt4o, gpt5, gpt5v2xemoz, gpt5xemoz, jokowi-nova-ai, kobo-nova-ai, matematika, multi-nova-ai, musicmaker, muslimai, nova-nova-ai, ocrsolve, openrouter, parallelai, prabowo-nova-ai, puter, paraphrase, qwen3, rewrite, simi, slangtranslate, stt, summarize, tanyadokter, vision, waguri-nova-ai, zai
+roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, pujianai, sarkasai
 
 
 - .lirikai - ai - AI generator lirik lagu dari tema
@@ -345,7 +345,7 @@ roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, puji
 - .talentrpg - rpg - Lihat talent berdasar kelas
 - .passiverpg - rpg - Lihat skill pasif
 ### 🎨 AI Image (40 plugin)
-aiimggen, anime-gen, anime2real, enhance, faceswap, flux2pro, fluxkontext, gemini-flash, gptimage, ikyy-text2img, jadianime, jadigta, jadihijab, jadihitam, mewarnai, nanobanana, nanobananav2, novabanana, novabanana2, photiu, sologo, text2img, text2img2, to3d, toanime, toblack, tocartoon, tocermin, tochibi, toemotebatu, tofigure, tofigurev2, toghibli, tohijab, toisland, tojapanese, tomanga, tomekah, tooilpainting, txt2img2
+aiimggen, anime-gen, anime2real, enhance, faceswap, flux2pro, fluxkontext, gemini-flash, gptimage, ikyy-text2img, jadianime, jadigta, jadihijab, jadihitam, mewarnai, nanobanana, nanobananav2, novabanana, novabanana2, photiu, sologo, text2img, text2img2, to3d, toanime, toblack, tocartoon, tocermin, tochibi, toemotebatu, tofigurev2, toghibli, tohijab, toisland, tojapanese, tomanga, tomekah, tooilpainting, txt2img2
 
 ### 🌸 Anime (14 plugin)
 animechar, animecouple, animegenre, animemanga, animemoments, animepowerlevel, animequote, animerec, animestudio, animetop, animevillain, autoanimewinbu, otakudict, wallpaperanime

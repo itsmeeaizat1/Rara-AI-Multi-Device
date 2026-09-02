@@ -4,7 +4,7 @@ import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-web",
-  alias: ["ai-web", "ai"],
+  alias: ["ai-web"],
   category: "ai",
   description: "Cari dan ringkas info dari web dengan AI",
   usage: ".ai-web <pertanyaan>",
