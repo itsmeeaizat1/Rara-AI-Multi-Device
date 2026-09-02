@@ -188,6 +188,19 @@ const AUTO_REGISTRY = {
     getStatus: () => { try { return getBmkgStatus()?.enabled ?? false } catch { return false } },
     toggle: (on) => { updateBmkgSettings({ enabled: on }); on ? startBmkgJobs() : stopBmkgJobs() },
   },
+  autoweatherrealtime: {
+    label: "Auto Notifikasi Cuaca Realtime",
+    getStatus: () => { try { return getDatabase().setting("weatherRealtime")?.notification ?? false } catch { return false } },
+    toggle: (on) => {
+      try {
+        const db = getDatabase();
+        const s = db.setting("weatherRealtime") || {};
+        s.notification = on;
+        db.setting("weatherRealtime", s);
+        db.save();
+      } catch (e) { console.error("[switch] weatherRealtime:", e.message); }
+    },
+  },
   autocleancache: {
     label: "Auto Clean Cache & Temp",
     getStatus: () => { try { return getCleanSettings()?.enabled ?? false } catch { return false } },
@@ -250,7 +263,7 @@ const AUTO_ALIASES = {
   readsw: "autoreadsw", reactsw: "autoreactsw", backup: "autobackup",
   health: "autohealth", reengage: "autoreengage", refill: "autorefill",
   renewal: "autorenewal", report: "autoreport", ulah: "autoulah", birthday: "autoulah",
-  bmkg: "autobmkg", clean: "autocleancache", cleancache: "autocleancache",
+  bmkg: "autobmkg", cuacascheduler: "autoweatherrealtime", weatherscheduler: "autoweatherrealtime", clean: "autocleancache", cleancache: "autocleancache",
   reactsticker: "autoreactsticker", reactvn: "autoreactvn", sholat: "autosholat",
   statusview: "autostatusview", translatevn: "autotranslatevn", forward: "autoforward",
   sambut: "autosambut", mod: "automod", broadcastchannel: "autobroadcastchannel",
@@ -269,7 +282,7 @@ const AUTO_CATEGORIES = {
     "autoreengage", "autorefill", "autorenewal", "autoreport", "autoulah"
   ],
   "Info & Utilitas": [
-    "autobmkg", "autosholat", "autoforward", "autosambut",
+    "autobmkg", "autoweatherrealtime", "autosholat", "autoforward", "autosambut",
     "automod", "autobroadcastchannel"
   ]
 }
