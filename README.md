@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20.autoweather%2F.autocuaca%20-success?style=for-the-badge)
-> *Commit: "refactor: hapus .autoweather/.autocuaca (dobel dengan .autoweatherrealtime), bersihkan switch.js"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20toggle%20.autoweatherrealtime%20schedu-success?style=for-the-badge)
+> *Commit: "feat: toggle .autoweatherrealtime scheduler on/off terintegrasi ke .switch (alias: cuacascheduler/weatherscheduler)"*
 <!--END_SECTION:latest-update-->
 
 ---
