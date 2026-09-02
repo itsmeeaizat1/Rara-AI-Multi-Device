@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20standardisasi%20pesan%20usage%2Fguide%2Ferr-success?style=for-the-badge)
-> *Commit: "fix: standardisasi pesan usage/guide/error ke format box-drawing"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20menu2.js%20%E2%80%94%20redundant%20den-success?style=for-the-badge)
+> *Commit: "refactor: hapus menu2.js — redundant dengan menu, allmenu, allmenucategory"*
 <!--END_SECTION:latest-update-->
 
 ---
