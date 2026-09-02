@@ -11,6 +11,7 @@ import config from "../config.js";
 import { c, logger, logMessage } from "./lib/nova-logger.js";
 import { trackNotFound, isNotFoundMuted, resetNotFoundTracker } from "./lib/nova-notfound-antispam.js";
 import { handleMessage as _autoflowHandleMessage } from "./lib/autoflow.js";
+import { addChat as _autoRoleAddChat } from "./lib/nova-autorole.js";
 import { buildNotFoundReply } from "./lib/nova-notfound-info.js";
 
 // Re-export handleAntiRemoveFromUpsert from group-protection
@@ -85,6 +86,9 @@ async function messageHandler(msg, sock) {
 
   // === AutoFlow: cek rule automation (keyword/media) tiap pesan masuk ===
   try { _autoflowHandleMessage(sock, m); } catch {}
+
+  // === AutoRole: track poin per chat + cek upgrade role ===
+  if (m.isGroup) { _autoRoleAddChat(sock, m.chat, m.sender, m.pushName).catch(() => {}); }
 
   // === Self mode guard for non-command features ===
   // In self mode, only owner/fromMe can trigger non-command auto-features (AI grup, auto-AI, etc.)
