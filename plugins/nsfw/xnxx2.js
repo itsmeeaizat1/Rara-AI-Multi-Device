@@ -1,8 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
-import config from "../../config.js";
 
 const pluginConfig = {
   name: "xnxx2",
@@ -11,38 +10,26 @@ const pluginConfig = {
   description: "Download video dari XVideos/XNXX by URL (NSFW)",
   usage: ".xnxx2 <url>",
   example: ".xnxx2 https://www.xnxx.com/video-xxxx",
-  isOwner: false,
-  isPremium: true,
-  isGroup: false,
-  isPrivate: true,
-  cooldown: 60,
-  energi: 5,
-  isEnabled: false,
+  isOwner: false, isPremium: true, isGroup: false, isPrivate: true,
+  cooldown: 60, energi: 5, isEnabled: false,
 };
 
 async function handler(m, { sock }) {
   const url = m.text?.trim();
-
   if (!url || (!url.includes("xnxx") && !url.includes("xvideos"))) {
-    return m.reply(`Kirim URL video XNXX/XVideos\n\nContoh: \`${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx\``, "xnxx2");
+    return m.reply(claraWrap("XNXX Download", `Kirim URL video XNXX/XVideos.\n\nContoh: ${m.prefix}xnxx2 https://www.xnxx.com/video-xxxx`));
   }
   try {
     const res = await axios.get(
       `https://api.siputzx.my.id/api/s/xnxxdl?url=${encodeURIComponent(url)}`,
       { timeout: 60000 }
     );
-
     if (!res.data?.status || !res.data?.data) {
-      return m.reply("❌ Gagal download\nURL mungkin tidak valid", "xnxx2");
+      return m.reply(claraWrap("XNXX Download", `Gagal download. URL mungkin tidak valid.`));
     }
-
     const d = res.data.data;
-    let text = `Title: ${d.title || "-"}\n`;
-    text += `Duration: ${d.duration || "-"}\n`;
-    text += `Quality: ${d.quality || "-"}\n\n`;
-    text += `Sedang mengirim video...`;
-
-    await m.reply(text, "xnxx2");
+    const info = `Title: ${d.title || "-"}\nDurasi: ${d.duration || "-"}\nQuality: ${d.quality || "-"}\n\nSedang mengirim video...`;
+    await m.reply(claraWrap("XNXX Download", info));
 
     if (d.url || d.downloadUrl) {
       const vidRes = await axios.get(d.url || d.downloadUrl, {
@@ -55,11 +42,10 @@ async function handler(m, { sock }) {
         return;
       }
     }
-
-    return m.reply("❌ File gagal diunduh\nCoba lagi nanti", "xnxx2");
+    return m.reply(claraWrap("XNXX Download", `File gagal diunduh. Coba lagi nanti.`));
   } catch (err) {
     console.error("[XNXX2] Error:", err.message);
-    return m.reply(te(m.prefix, m.command, m.pushName), "xnxx2");
+    return m.reply(te(m.prefix, m.command, m.pushName));
   }
 }
 

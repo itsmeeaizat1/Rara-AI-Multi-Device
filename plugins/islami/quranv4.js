@@ -51,7 +51,7 @@ async function handler(m, { text, args }) {
             lines.push("");
             lines.push(`... dan ${surahs.length - limit} surat lainnya.`);
             lines.push("");
-            lines.push("💡 *Cara Pakai:*");
+            lines.push("Cara pakai:");
             lines.push("Ketik .quranv4 <nomor_surat> untuk membaca.");
             lines.push("Contoh: .quranv4 1");
             lines.push("");
@@ -90,7 +90,7 @@ async function handler(m, { text, args }) {
         }
 
         if (ayatList.length > 20) {
-            lines.push(`📌 *Catatan:* Menampilkan 20 dari ${surah.jumlahAyat} ayat.`);
+            lines.push(`Catatan: Menampilkan 20 dari ${surah.jumlahAyat} ayat.`);
         } else {
             // Hapus baris pemisah kosong terakhir jika tidak dipotong
             if (lines[lines.length - 1] === "") {
