@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20allmenu%20store%20section%20diganti%20jadi%20-success?style=for-the-badge)
-> *Commit: "fix: allmenu store section diganti jadi .sewa + .buypremium, store plugins lama dipindah ke owner, .listban dihilangkan dari menu (kategori hidden)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20sesi%20.daftar%20%26%20.daftarotomatis%20sali-success?style=for-the-badge)
+> *Commit: "fix: sesi .daftar & .daftarotomatis saling hijack pesan reply — captcha jawaban salah kepotong sama sesi lain"*
 <!--END_SECTION:latest-update-->
 
 ---
