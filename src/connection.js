@@ -31,6 +31,7 @@ import { initReengage } from "./lib/nova-auto-reengage.js";
 import { handleParticipants as _autoflowHandleParticipants } from "./lib/autoflow.js";
 import { initRefill } from "./lib/nova-auto-refill.js";
 import { initRenewalReminder } from "./lib/nova-auto-renewal.js";
+import { startWeatherRealtimeScheduler } from "./lib/nova-weather-realtime-scheduler.js";
 import { getAuthKey, verifyAuth, getOwnerContact } from "./lib/auth/auth.js";
 import { trackMessage as pulseTrack } from "../plugins/future/autopulse.js";
 const groupCache = new NodeCache({ stdTTL: 5 * 60, useClones: false });
@@ -761,6 +762,7 @@ async function startConnection(options = {}) {
         try { const { initQuizVerify } = await import("./lib/nova-quiz-verify.js"); initQuizVerify(sock); } catch (e) { colors.logger.error("init", "QuizVerify init failed: " + e.message); }
         try { const { initActivityTracker } = await import("./lib/nova-activity-tracker.js"); initActivityTracker(); } catch (e) { colors.logger.error("init", "ActivityTracker init failed: " + e.message); }
         try { const { initAutoTranslate } = await import("./lib/nova-autotranslate.js"); initAutoTranslate(); } catch (e) { colors.logger.error("init", "AutoTranslate init failed: " + e.message); }
+        try { startWeatherRealtimeScheduler(sock); } catch (e) { colors.logger.error("init", "WeatherRealtime scheduler failed: " + e.message); }
       } catch (e) {
         colors.logger.debug("renewal", "skipped: " + e.message);
       }

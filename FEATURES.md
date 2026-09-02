@@ -1300,10 +1300,14 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - Blocklist otomatis: user diblokir tidak bisa masuk grup lagi
 - AI online hanya dipanggil jika localParse tidak match
 
-## Weather Config
-- .setweather — Set lokasi cuaca untuk info section menu (owner only)
-- .setweather Serang → cari kota via Open-Meteo Geocoding API
-- .setweather -6.12,106.14 → set manual lat,lng
-- .setweather reset → kembalikan ke default (Serang)
-- .setweather → tampilkan lokasi sekarang
-- Default: Serang, Banten (-6.1200, 106.1443)
+## Weather Realtime
+- .autoweatherrealtime — Atur cuaca realtime di info section + notifikasi (owner only)
+- .autoweatherrealtime on/off → tampilkan/sembunyikan cuaca di info section
+- .autoweatherrealtime lokasi serang → set lokasi (nama kota via geocoding API)
+- .autoweatherrealtime lokasi -6.12,106.14 → set lokasi (koordinat manual)
+- .autoweatherrealtime notification on/off → aktifkan/matikan notifikasi cuaca ke grup
+- .autoweatherrealtime jadwal 06:30 12:00 17:00 20:00 → set jadwal notif
+- .autoweatherrealtime target <jid grup> → set grup target notif
+- .autoweatherrealtime test → test kirim cuaca sekarang
+- .autoweatherrealtime status → tampilkan status lengkap
+- Default: Serang, Banten | Info Section: ON | Notification: OFF
