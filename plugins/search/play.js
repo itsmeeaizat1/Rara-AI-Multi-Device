@@ -6,6 +6,24 @@ import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
 
+async function fetchLyricsSnippet(title) {
+  try {
+    const { data } = await axios.get(`https://api.nexray.eu.cc/search/lyrics`, {
+      params: { q: title },
+      timeout: 8000,
+    });
+    if (data?.status && data?.result?.lyrics?.plain_lyrics) {
+      const artist = data.result.artist || data.result.lyrics?.artist_name || null;
+      const plain = data.result.lyrics.plain_lyrics.trim();
+      const snippet = plain.length > 200 ? plain.slice(0, 200).trim() + "..." : plain;
+      return { snippet, artist };
+    }
+  } catch (e) {
+    console.error("[Play] Lyrics fetch error:", e.message);
+  }
+  return null;
+}
+
 const pluginConfig = {
   name: "play",
   alias: ["play"],
@@ -125,14 +143,29 @@ async function handler(m, { sock, text }) {
     }
     console.log(`[Play] Audio OK: ${audio.buffer.length} bytes`);
 
-    // Step 3: Send
-    const caption = [
+    // Step 3: Ambil lirik (best-effort, gak block kalau gagal/timeout)
+    const titleForLyrics = audio.title || video.title;
+    const lyricsData = await fetchLyricsSnippet(titleForLyrics);
+
+    // Step 4: Info section lengkap — dikirim sebagai teks karena WhatsApp
+    // TIDAK support caption pada pesan audio (caption gak akan pernah muncul)
+    const infoLines = [
       `*YouTube Play — Audio*`,
       ``,
-      `*Judul:* ${audio.title || video.title}`,
-      `*Channel:* ${video.author}`,
+      `*Judul:* ${titleForLyrics}`,
+      `*Artis/Channel:* ${lyricsData?.artist || video.author}`,
       `*Durasi:* ${video.duration}`,
-    ].join("\n");
+      `*Views:* ${video.views ? video.views.toLocaleString("id-ID") : "-"}`,
+      `*Link:* ${video.url}`,
+    ];
+
+    if (lyricsData?.snippet) {
+      infoLines.push(``, `*Lirik:*`, lyricsData.snippet, ``, `Lirik lengkap: .lirik ${titleForLyrics}`);
+    } else {
+      infoLines.push(``, `Lirik gak ketemu, coba: .lirik ${titleForLyrics}`);
+    }
+
+    await m.reply(infoLines.join("\n"));
 
     await m.react("🐣");
     await sock.sendMessage(
@@ -142,7 +175,6 @@ async function handler(m, { sock, text }) {
         mimetype: "audio/mpeg",
         ptt: false,
         fileName: `${(audio.title || video.title).replace(/[^\w\s-]/g, "").substring(0, 50)}.mp3`,
-        caption,
       },
       { quoted: m },
     );

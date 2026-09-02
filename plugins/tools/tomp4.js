@@ -134,11 +134,12 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
+    const sizeKb = (mp4Buffer.length / 1024).toFixed(1);
     return await sock.sendMessage(
       m.chat,
       {
         video: mp4Buffer,
-        caption: "✅ *CONVERTED TO MP4*",
+        caption: `*Stiker → MP4*\n\n*Format:* MP4 (H.264)\n*Ukuran:* ${sizeKb} KB`,
       },
       { quoted: m }
     );
