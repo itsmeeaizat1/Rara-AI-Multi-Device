@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20rapikan%2011%20file%20sisa%20smallcaps%20di%20p-success?style=for-the-badge)
-> *Commit: "fix: rapikan 11 file sisa smallcaps di plain text reply (store, group notif, panel, utility)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20revert%20.play%20ke%20versi%20simple%20(searc-success?style=for-the-badge)
+> *Commit: "fix: revert .play ke versi simple (search + link ytmp3/ytmp4) — versi IkyyXD error, kembali ke yg work"*
 <!--END_SECTION:latest-update-->
 
 ---
