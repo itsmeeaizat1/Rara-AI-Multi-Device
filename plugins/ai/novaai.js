@@ -3,7 +3,7 @@
 // 🔹 AI AGENT PLUGIN — .novaai
 // 🔹 Beda dari AI biasa: bisa EKSEKUSI aksi grup (tutup/buka/kick/promote/dll)
 // 🔹 AI biasa (aichat/deepseek) hanya ngobrol, AI Agent bisa "ngerjain"
-// 🔹 Alur: localParse (instan) → DeepSeek (fallback) → Pollinations → Groq
+// 🔹 Alur: localParse (instan) → Groq (utama) → IkyyXD Gemini (fallback) → DeepSeek (cadangan)
 // ============================================================
 
 import { TOOLS, localParse, think } from "../../src/lib/aiagent.js";

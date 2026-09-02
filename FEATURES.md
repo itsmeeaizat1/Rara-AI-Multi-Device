@@ -211,7 +211,39 @@ roastai, debateai, quizai, recipeai, mimpiai, tutorai, ramalanai, travelai, puji
 - .workoutai - ai - AI rencana workout personal
 - .gombalai - ai - AI generator gombalan/pickup lines
 - .alasanai - ai - AI generator alasan kreatif
-- .novaai - ai - AI Agent — ngatur fitur bot via bahasa natural (tutup/buka grup, kick, promote, setname, hidetag, ngobrol) — DeepSeek utama, Pollinations fallback, Groq opsional
+- .novaai
+- .openai - ai - Chat dengan OpenAI (GPT-4o, GPT-4o-mini, dll)
+- .gemini - ai - Chat dengan Google Gemini (gemini-3.7-flash, gemini-2.0-flash, dll)
+- .claude - ai - Chat dengan Anthropic Claude (claude-sonnet-4, claude-3.5-haiku, dll)
+- .groq - ai - Chat dengan Groq (gpt-oss-120b, qwen3.8-27b, dll)
+- .grok - ai - Chat dengan xAI Grok (grok-3, grok-3-mini, grok-2)
+- .xai - ai - Chat dengan xAI Grok (alias .grok)
+- .qwen - ai - Chat dengan Qwen Alibaba (qwen-max, qwen-plus, qwen-turbo)
+- .cohere - ai - Chat dengan Cohere (command-r-plus, command-r)
+- .perplexity - ai - Chat dengan Perplexity (sonar-large, sonar-small)
+- .fireworks - ai - Chat dengan Fireworks AI (llama-v3p1-70b, qwen2p5-72b)
+- .ai21 - ai - Chat dengan AI21 Labs (jamba-1.5-large, jamba-1.5-mini)
+- .reka - ai - Chat dengan Reka AI (reka-core, reka-flash, reka-edge)
+- .cerebras - ai - Chat dengan Cerebras (llama-3.1-8b, llama-3.1-70b)
+- .huggingface - ai - Chat dengan HuggingFace (Llama-3.3-70B, Mistral-7B)
+- .voyage - ai - Chat dengan Voyage AI
+- .cloudflare - ai - Chat dengan Cloudflare Workers AI
+- .stability - ai - Chat dengan Stability AI
+- .jina - ai - Chat dengan Jina AI
+- .mistral - ai - Chat dengan Mistral (mistral-small, open-mistral-nemo)
+- .together - ai - Chat dengan Together AI (Llama-3.3-70B, Qwen2.5-72B)
+- .github - ai - Chat dengan GitHub Models (gpt-4o-mini, llama-3.3-70b)
+- .ikyygemini - ai - Chat dengan IkyyXD Gemini (gratis)
+- .ikyygpt5 - ai - Chat dengan IkyyXD GPT-5 Mini (gratis)
+- .ikyygemma - ai - Chat dengan IkyyXD Google Gemma (gratis)
+- .ikyyuni - ai - Chat dengan IkyyXD Unlimited AI (gratis)
+- .ikyypub - ai - Chat dengan IkyyXD Public AI (gratis)
+- .ikyyperplex - ai - Chat dengan IkyyXD Perplexity (gratis)
+- .tioai - ai - Chat dengan Tio AI OpenAI (gratis)
+- .tiogemini - ai - Chat dengan Tio AI Gemini (gratis)
+- .tioclaude - ai - Chat dengan Tio AI Anthropic (gratis)
+- .multi-ai - ai - Multi-provider: pilih provider+model via chat
+ - ai - AI Agent — ngatur fitur bot via bahasa natural (tutup/buka grup, kick, promote, setname, hidetag, ngobrol) — DeepSeek utama, Pollinations fallback, Groq opsional
 - .aitio - ai - Tio AI AIO — pilih model langsung: .aitio <model> <prompt> (deepseek, kimi, qwen, nemotron, dll)
 - .faktaai - ai - AI generator fakta menarik
 - .editimg - ai image - Edit gambar dengan AI (text-to-image editing)

@@ -14,11 +14,31 @@
 import path from "path";
 import fs from "fs";
 import config from "./config.js";
-// 🔹 AI AGENT: load DeepSeek & Groq keys untuk aiagent.js provider chain
-import { getDeepSeekKey, getGroqKey } from "./src/lib/config/env-loader.js";
-// 🔹 AI AGENT: set global keys — dipakai oleh src/lib/aiagent.js (deepseek utama, groq fallback)
-global.deepseekkey = getDeepSeekKey();   // 'sk-...' dari platform.deepseek.com
-global.groqkey = getGroqKey();           // 'gsk_...' dari console.groq.com (opsional)
+// 🔹 AI AGENT: load all AI provider keys
+import {
+  getDeepSeekKey, getGroqKey,
+  getXaiKey, getQwenKey, getCohereKey, getPerplexityKey,
+  getFireworksKey, getAi21Key, getRekaKey, getCerebrasKey,
+  getOpenRouterKey, getHuggingFaceKey, getVoyageKey,
+  getCloudflareKey, getStabilityKey, getJinaKey
+} from "./src/lib/config/env-loader.js";
+// 🔹 Set global keys — dipakai oleh aiagent.js & nova-ai-service.js
+global.deepseekkey = getDeepSeekKey();
+global.groqkey = getGroqKey();
+global.xaikey = getXaiKey();
+global.qwenkey = getQwenKey();
+global.coherekey = getCohereKey();
+global.perplexitykey = getPerplexityKey();
+global.fireworkskey = getFireworksKey();
+global.ai21key = getAi21Key();
+global.rekakey = getRekaKey();
+global.cerebraskey = getCerebrasKey();
+global.openrouterkey = getOpenRouterKey();
+global.huggingfacekey = getHuggingFaceKey();
+global.voyagekey = getVoyageKey();
+global.cloudflarekey = getCloudflareKey();
+global.stabilitykey = getStabilityKey();
+global.jinakey = getJinaKey();
 import { startConnection } from "./src/connection.js";
 import {
   messageHandler,

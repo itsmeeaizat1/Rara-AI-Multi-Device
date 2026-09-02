@@ -92,16 +92,16 @@ export function localParse(text) {
 }
 
 // ================= OTAK AI — PROVIDER CHAIN =================
-// 🔹 AI AGENT: Urutan provider — DeepSeek utama, Pollinations fallback, Groq opsional
-// 🔹 DeepSeek butuh key (global.deepseekkey), IkyyXD gratis (key dari apikeys.json)
+// 🔹 AI AGENT: Urutan provider — Groq utama (cepat 0.1s), IkyyXD fallback (gratis), DeepSeek cadangan
+// 🔹 Groq butuh key (global.groqkey dari apikeys.json), IkyyXD gratis (fallback)
 // 🔹 Groq hanya dipakai kalau ada key (global.groqkey)
 const PROVIDERS = [
   {
-    name: 'deepseek',
+    name: 'groq',
     method: 'post',
-    url: 'https://api.deepseek.com/chat/completions',
-    key: () => process.env.DEEPSEEK_KEY || global.deepseekkey || '',
-    model: 'deepseek-chat',
+    url: 'https://api.groq.com/openai/v1/chat/completions',
+    key: () => process.env.GROQ_KEY || global.groqkey || '',
+    model: 'openai/gpt-oss-120b',
     headers: (k) => ({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${k}`
@@ -117,11 +117,11 @@ const PROVIDERS = [
     headers: () => ({ 'Content-Type': 'application/json' })
   },
   {
-    name: 'groq',
+    name: 'deepseek',
     method: 'post',
-    url: 'https://api.groq.com/openai/v1/chat/completions',
-    key: () => process.env.GROQ_KEY || global.groqkey || '',
-    model: 'llama-3.3-70b-versatile',
+    url: 'https://api.deepseek.com/chat/completions',
+    key: () => process.env.DEEPSEEK_KEY || global.deepseekkey || '',
+    model: 'deepseek-chat',
     headers: (k) => ({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${k}`
