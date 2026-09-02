@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20semua%20error%20test-plugins.js%20(0%2F1811-success?style=for-the-badge)
-> *Commit: "fix: semua error test-plugins.js (0/1811)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20Absen%20otomatis%20grup%20(.absen)%20%E2%80%94%201%20f-success?style=for-the-badge)
+> *Commit: "feat: Absen otomatis grup (.absen) — 1 file plugin"*
 <!--END_SECTION:latest-update-->
 
 ---
