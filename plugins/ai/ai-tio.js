@@ -1,14 +1,23 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+// ═══════════════════════════════════════════════
+// 🔹 Tio AI Unified — .aitio <model> <prompt>
+// 🔹 Semua model Tio dalam satu command, langsung pilih model
+// 🔹 Format: .aitio <model_alias> <prompt>
+// 🔹 Contoh: .aitio deepseek hai
+//            .aitio kimi buatkan cerita
+//            .aitio qwen jelaskan kuantum
+// ═══════════════════════════════════════════════
+
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
-import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
+import { getTioKey } from "../../src/lib/config/env-loader.js";
 
 const pluginConfig = {
   name: "ai-tio",
-  alias: ["ai-tio", "tio"],
+  alias: ["ai-tio", "aitio", "tio"],
   category: "ai",
-  description: "Tanya AI via Tio AIO - 3 format: .tio openai/gemini/anthropic <pesan>",
-  usage: ".tio <format> <pertanyaan>",
-  example: ".tio openai halo\n.tio gemini hai\n.tio anthropic hai",
+  description: "Tanya AI via Tio AIO — pilih model langsung: .aitio <model> <prompt>",
+  usage: ".aitio <model> <prompt>",
+  example: ".aitio deepseek halo\n.aitio kimi buatkan cerita\n.aitio list",
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -19,285 +28,264 @@ const pluginConfig = {
 };
 
 // ═══════════════════════════════════════════════
-// Tio AI - 34 models, semua support 3 format API
-// Format = cara manggil API, bukan jenis model
+// MODEL REGISTRY — semua model Tio API
+// id = actual model ID di Tio API
+// aliases = nama pendek yang gampang diketik
+// Semua model dipanggil via OpenAI format endpoint
 // ═══════════════════════════════════════════════
 
-const TIO_FORMATS = {
-  openai: {
-    label: "OpenAI",
-    emoji: "🟢",
-    providerKey: "ikyy_gemini",
-    endpoint: "https://ai.tioo.eu.org/v1/chat/completions",
-    defaultModel: "kilo-auto/free",
-    apiKeyField: "openaiApiKey",
-    modelField: "openaiModel",
-  },
-  gemini: {
-    label: "Gemini",
-    emoji: "🔵",
-    providerKey: "ikyy_gemini",
-    endpoint: null, // dynamic per model
-    defaultModel: "kilo-auto/free",
-    apiKeyField: "geminiApiKey",
-    modelField: "geminiModel",
-  },
-  anthropic: {
-    label: "Anthropic",
-    emoji: "🟣",
-    providerKey: "ikyy_gemini",
-    endpoint: "https://ai.tioo.eu.org/v1/messages",
-    defaultModel: "kilo-auto/free",
-    apiKeyField: "anthropicApiKey",
-    modelField: "anthropicModel",
-  },
-};
-
-// Daftar model tersedia di Tio AI - dikelompok per brand
-// Semua model support 3 format: openai, gemini, anthropic
 const TIO_MODELS = [
   // ── Auto / Router ──
-  { id: "auto", label: "Auto Router", brand: "Auto", desc: "Auto-route ke model terbaik", free: false },
-  { id: "openrouter/free", label: "OpenRouter Free", brand: "Auto", desc: "Auto-route gratis", free: true },
-  { id: "kilo-auto/free", label: "Kilo Auto", brand: "Auto", desc: "Auto + image gen, gratis", free: true },
-  { id: "step-3.5-flash", label: "Step 3.5 Flash", brand: "StepFun", desc: "StepFun flash", free: false },
-  { id: "step-3.7-flash", label: "Step 3.7 Flash", brand: "StepFun", desc: "StepFun flash baru", free: false },
-  { id: "stepfun/step-3.7-flash:free", label: "Step 3.7 Flash (Free)", brand: "StepFun", desc: "StepFun gratis", free: true },
+  { id: "auto",              label: "Auto Router",        aliases: ["auto", "router"],          brand: "Auto",     free: false, desc: "Auto-route ke model terbaik" },
+  { id: "openrouter/free",   label: "OpenRouter Free",   aliases: ["openrouter", "or"],        brand: "Auto",     free: true,  desc: "Auto-route gratis" },
+  { id: "kilo-auto/free",    label: "Kilo Auto",          aliases: ["kilo", "kiloauto"],        brand: "Auto",     free: true,  desc: "Auto + image gen, gratis" },
 
   // ── DeepSeek ──
-  { id: "deepseek-v4-flash", label: "DeepSeek V4 Flash", brand: "DeepSeek", desc: "Cepat & murah", free: false },
-  { id: "DeepSeek-V4-Pro", label: "DeepSeek V4 Pro", brand: "DeepSeek", desc: "Model terkuat", free: false },
-  { id: "deepseek-ai/DeepSeek-V4-Flash-0731", label: "DeepSeek V4 Flash 0731", brand: "DeepSeek", desc: "Versi 0731", free: false },
-  { id: "deepseek/deepseek-v4-pro-0813-free", label: "DeepSeek V4 Pro (Free)", brand: "DeepSeek", desc: "Pro gratis (rate limit 1/min)", free: true },
+  { id: "deepseek-v4-flash", label: "DeepSeek V4 Flash",  aliases: ["deepseek", "ds", "dsflash"], brand: "DeepSeek", free: false, desc: "Cepat & murah" },
+  { id: "DeepSeek-V4-Pro",   label: "DeepSeek V4 Pro",    aliases: ["dspro", "deepseekpro"],    brand: "DeepSeek", free: false, desc: "Model terkuat DeepSeek" },
+  { id: "deepseek-ai/DeepSeek-V4-Flash-0731", label: "DeepSeek V4 Flash 0731", aliases: ["ds0731", "dsflash0731"], brand: "DeepSeek", free: false, desc: "Versi 0731" },
+  { id: "deepseek/deepseek-v4-pro-0813-free", label: "DeepSeek V4 Pro Free", aliases: ["dsfree", "deepseekfree"], brand: "DeepSeek", free: true, desc: "Pro gratis (rate limit 1/min)" },
 
   // ── Kimi / Moonshot ──
-  { id: "moonshotai/Kimi-K2.6", label: "Kimi K2.6", brand: "Kimi", desc: "Flagship Moonshot", free: false },
+  { id: "moonshotai/Kimi-K2.6", label: "Kimi K2.6",      aliases: ["kimi", "moonshot"],        brand: "Kimi",     free: false, desc: "Flagship Moonshot" },
 
   // ── Qwen / Alibaba ──
-  { id: "qwen/qwen3.8-max-free", label: "Qwen 3.8 Max (Free)", brand: "Qwen", desc: "Qwen Max gratis", free: true },
+  { id: "qwen/qwen3.8-max-free", label: "Qwen 3.8 Max Free", aliases: ["qwen", "qwenfree"],   brand: "Qwen",     free: true,  desc: "Qwen Max gratis" },
+  { id: "Qwen3.6-35B-A3B-FP8",    label: "Qwen 3.6 35B",   aliases: ["qwen36", "qwen3.6"],     brand: "Qwen",     free: false, desc: "Efisien & cepat" },
 
   // ── NVIDIA ──
-  { id: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", label: "Nemotron 3 Nano", brand: "NVIDIA", desc: "Reasoning 30B, gratis", free: true },
-  { id: "nvidia/nemotron-3-super-120b-a12b:free", label: "Nemotron 3 Super", brand: "NVIDIA", desc: "120B, gratis", free: true },
-  { id: "nvidia/nemotron-3-ultra-550b-a55b:free", label: "Nemotron 3 Ultra", brand: "NVIDIA", desc: "550B terbesar, gratis", free: true },
+  { id: "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free", label: "Nemotron 3 Nano", aliases: ["nemotron", "nano", "nemotronnano"], brand: "NVIDIA", free: true, desc: "Reasoning 30B, gratis" },
+  { id: "nvidia/nemotron-3-super-120b-a12b:free", label: "Nemotron 3 Super", aliases: ["nemotronsuper", "super"], brand: "NVIDIA", free: true, desc: "120B, gratis" },
+  { id: "nvidia/nemotron-3-ultra-550b-a55b:free",  label: "Nemotron 3 Ultra", aliases: ["nemotronultra", "ultra"], brand: "NVIDIA", free: true, desc: "550B terbesar, gratis" },
+  { id: "nvidia/nemotron-3.5-content-safety:free",  label: "Nemotron Safety", aliases: ["safety", "nemotronsafety"], brand: "NVIDIA", free: true, desc: "Content safety model" },
+
+  // ── StepFun ──
+  { id: "step-3.5-flash",                          label: "Step 3.5 Flash",   aliases: ["step", "step35", "step3.5"], brand: "StepFun", free: false, desc: "StepFun flash" },
+  { id: "step-3.7-flash",                          label: "Step 3.7 Flash",   aliases: ["step37", "step3.7"],        brand: "StepFun", free: false, desc: "StepFun flash baru" },
+  { id: "stepfun/step-3.7-flash:free",             label: "Step 3.7 Free",   aliases: ["stepfree", "step37free"],   brand: "StepFun", free: true,  desc: "StepFun gratis" },
 
   // ── Cohere ──
-  { id: "cohere/north-mini-code:free", label: "Cohere North Mini", brand: "Cohere", desc: "Code + chat, gratis", free: true },
+  { id: "cohere/north-mini-code:free", label: "Cohere North Mini", aliases: ["cohere", "north"],  brand: "Cohere",   free: true,  desc: "Code + chat, gratis" },
 
   // ── MiniMax ──
-  { id: "MiniMaxAI/MiniMax-M2.7", label: "MiniMax M2.7", brand: "MiniMax", desc: "Model MiniMax", free: false },
+  { id: "MiniMaxAI/MiniMax-M2.7", label: "MiniMax M2.7", aliases: ["minimax", "mm"],         brand: "MiniMax",  free: false, desc: "Model MiniMax" },
 
   // ── Tencent ──
-  { id: "tencent/hy3:free", label: "Tencent HY3", brand: "Tencent", desc: "Hunyuan, gratis", free: true },
+  { id: "tencent/hy3:free",  label: "Tencent HY3",   aliases: ["tencent", "hy3", "hunyuan"],  brand: "Tencent",  free: true,  desc: "Hunyuan, gratis" },
 
   // ── SenseNova ──
-  { id: "sensenova-6.7-flash-lite", label: "SenseNova 6.7", brand: "SenseNova", desc: "Lite flash", free: false },
+  { id: "sensenova-6.7-flash-lite", label: "SenseNova 6.7", aliases: ["sense", "sensenova"], brand: "SenseNova", free: false, desc: "Lite flash" },
 
   // ── Poolside ──
-  { id: "poolside/laguna-s-2.1:free", label: "Laguna S 2.1", brand: "Poolside", desc: "Code model, gratis", free: true },
+  { id: "poolside/laguna-s-2.1:free", label: "Laguna S 2.1", aliases: ["laguna", "poolside"], brand: "Poolside",  free: true,  desc: "Code model, gratis" },
 
   // ── Kat ──
-  { id: "kat-coder-pro-v2.5", label: "Kat Coder Pro", brand: "Kat", desc: "Code specialist", free: false },
-  { id: "Qwen3.6-35B-A3B-FP8", label: "Qwen 3.6 (35B FP8)", brand: "Qwen", desc: "Efisien & cepat", free: false },
-  { id: "nvidia/nemotron-3.5-content-safety:free", label: "Nemotron Safety", brand: "NVIDIA", desc: "Content safety model", free: true },
+  { id: "kat-coder-pro-v2.5", label: "Kat Coder Pro", aliases: ["kat", "katcoder"],         brand: "Kat",       free: false, desc: "Code specialist" },
 ];
 
-// Short alias map for formats
-const FORMAT_ALIASES = {
-  o: "openai", open: "openai", oai: "openai", gpt: "openai",
-  g: "gemini", gem: "gemini", google: "gemini",
-  a: "anthropic", ant: "anthropic", claude: "anthropic", antro: "anthropic",
-};
+// ═══════════════════════════════════════════════
+// MODEL RESOLVER — cari model by alias, id, atau label
+// ═══════════════════════════════════════════════
 
-function resolveFormat(arg) {
-  const lower = String(arg || "").toLowerCase().trim();
-  if (TIO_FORMATS[lower]) return lower;
-  if (FORMAT_ALIASES[lower]) return FORMAT_ALIASES[lower];
-  return null;
+function resolveModel(input) {
+  if (!input) return null;
+  const lower = input.toLowerCase().trim();
+
+  // 1. Exact match on id
+  let found = TIO_MODELS.find(m => m.id === input);
+  if (found) return found;
+
+  // 2. Match on alias (case-insensitive)
+  found = TIO_MODELS.find(m => m.aliases.some(a => a.toLowerCase() === lower));
+  if (found) return found;
+
+  // 3. Match on label (case-insensitive)
+  found = TIO_MODELS.find(m => m.label.toLowerCase() === lower);
+  if (found) return found;
+
+  // 4. Fuzzy: underscore → hyphen, remove dots/slashes
+  const normalized = lower.replace(/_/g, "-").replace(/[./]/g, "");
+  found = TIO_MODELS.find(m => {
+    const idNorm = m.id.toLowerCase().replace(/_/g, "-").replace(/[./]/g, "");
+    return idNorm === normalized;
+  });
+  if (found) return found;
+
+  // 5. Partial match on alias or id (contains)
+  found = TIO_MODELS.find(m =>
+    m.aliases.some(a => a.toLowerCase().includes(lower) || lower.includes(a.toLowerCase())) ||
+    m.id.toLowerCase().includes(lower)
+  );
+  if (found) return found;
+
+  // 6. Not in registry — return raw input (Tio API will validate)
+  return { id: input, label: input, aliases: [], brand: "Unknown", free: false, desc: "Custom model" };
 }
 
+// ═══════════════════════════════════════════════
+// API CALL — Tio API via OpenAI format
+// ═══════════════════════════════════════════════
+
+async function callTio(model, messages, systemPrompt, apiKey) {
+  const url = "https://ai.tioo.eu.org/v1/chat/completions";
+
+  const body = {
+    model: model,
+    messages: [],
+    temperature: 0.7,
+    max_tokens: 4096,
+  };
+
+  if (systemPrompt) {
+    body.messages.push({ role: "system", content: systemPrompt });
+  }
+  body.messages.push(...messages);
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    let errMsg = `HTTP ${res.status}`;
+    try {
+      const errJson = JSON.parse(errText);
+      errMsg = errJson?.error?.message || errJson?.message || errMsg;
+    } catch {
+      if (errText) errMsg = errText.slice(0, 200);
+    }
+    throw new Error(errMsg);
+  }
+
+  const data = await res.json();
+  const reply = data?.choices?.[0]?.message?.content
+    || data?.choices?.[0]?.message?.reasoning
+    || "";
+
+  if (!reply) throw new Error("Response kosong dari Tio API");
+  return reply;
+}
+
+// ═══════════════════════════════════════════════
+// MAIN HANDLER
+// ═══════════════════════════════════════════════
+
 async function handler(m, { sock, config: botConfig }) {
-    const prefix = botConfig.command?.prefix || ".";
+  const prefix = botConfig.command?.prefix || ".";
+  const apiKey = getTioKey();
+
   try {
     const raw = m.text?.trim() || "";
-    const body = raw.replace(/^\.ai-tio\s+/i, "").replace(/^\.tio\s+/i, "").replace(/^\.aio\s+/i, "").replace(/^\.asktio\s+/i, "").trim();
+    // Strip command prefix
+    const body = raw
+      .replace(/^\.ai-tio\s+/i, "")
+      .replace(/^\.aitio\s+/i, "")
+      .replace(/^\.tio\s+/i, "")
+      .replace(/^\.asktio\s+/i, "")
+      .trim();
 
-    const aiHelp = botConfig.aiHelp || {};
-
-    // Resolve API key per format: format-specific key → fallback key → env var
-    function getKeyForFormat(fmtKey) {
-      const fmt = TIO_FORMATS[fmtKey];
-      const fmtKey2 = aiHelp[fmt.apiKeyField] || "";
-      const fallback = aiHelp.apiKey || process.env.OPENAI_API_KEY || "";
-      return fmtKey2 || fallback;
-    }
-
-    function hasAnyKey() {
-      return !!(aiHelp.openaiApiKey || aiHelp.geminiApiKey || aiHelp.anthropicApiKey || aiHelp.apiKey || process.env.OPENAI_API_KEY);
-    }
-
-    const hasKey = hasAnyKey();
-
-    // ═══ No args → show menu ═══
+    // ═══ No args → show help ═══
     if (!body) {
-      const text =
-        claraWrap("Tio AI (AIO)", [`34 model AI via *ai.tioo.eu.org*`,
-          `3 Format: OpenAI / Gemini / Anthropic`,
-          `OpenAI Key: *${aiHelp.openaiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
-          `Gemini Key: *${aiHelp.geminiApiKey ? "Terpasang ✅" : "Belum ❌"}*`,
-          `Anthropic Key: *${aiHelp.anthropicApiKey ? "Terpasang ✅" : "Belum ❌"}*`].join("\n")) +
-        claraWrap("Openai Format", [`  *${prefix}tio openai <pesan>*`, `  Endpoint: /v1/chat/completions`].join("\n")) +
-        claraWrap("Gemini Format", [`  *${prefix}tio gemini <pesan>*`, `  Endpoint: /v1beta/models/{model}:generateContent`].join("\n")) +
-        claraWrap("Anthropic Format", [`  *${prefix}tio anthropic <pesan>*`, `  Endpoint: /v1/messages`].join("\n")) +
-        claraWrap("Command Lain", [`*${prefix}tio model <format> <nama>* — ganti model`, `*${prefix}tio list* — lihat semua model`, `*${prefix}tio list free* — lihat model gratis`, `Set API key di config.js:`, `    aiHelp.openaiApiKey / geminiApiKey / anthropicApiKey`].join("\n")) +
-        
-        "\n" ;
-
-      await m.reply(text, "ai-tio");
-      return { handled: true };
+      const lines = [
+        `Pilih model langsung, semua dalam satu command`,
+        ``,
+        `Format: *${prefix}aitio <model> <prompt>*`,
+        `Contoh: *${prefix}aitio deepseek halo*`,
+        ``,
+        `Model populer:`,
+        `  deepseek  — DeepSeek V4 Flash`,
+        `  kimi      — Kimi K2.6 (Moonshot)`,
+        `  qwen      — Qwen 3.8 Max (Free)`,
+        `  nemotron  — Nemotron 3 Nano (Free)`,
+        `  cohere    — Cohere North Mini (Free)`,
+        `  auto      — Auto Router`,
+        ``,
+        `Ketik *${prefix}aitio list* untuk lihat semua model`,
+        `Ketik *${prefix}aitio list free* untuk model gratis`,
+      ];
+      return m.reply(claraWrap("Tio AI", lines.join("\n")), "ai-tio");
     }
 
     const parts = body.split(/[ \t]+/).filter(Boolean);
     const firstWord = (parts[0] || "").toLowerCase();
 
-    // ═══ "list" subcommand - grouped by brand with emoji ═══
+    // ═══ "list" subcommand ═══
     if (firstWord === "list") {
       const filterFree = (parts[1] || "").toLowerCase() === "free";
-
-      const emojiMap = {
-        "Auto": "🔀", "DeepSeek": "🐉", "Kimi": "🌙", "Qwen": "🦁",
-        "GLM": "🧠", "MiniMax": "📊", "NVIDIA": "💚", "StepFun": "👣",
-        "Tencent": "🐧", "Xiaomi": "📱", "SenseTime": "👁️", "Cohere": "🔗",
-        "InclusionAI": "🤝", "Poolside": "🏖️", "Coding": "💻",
-      };
+      const models = TIO_MODELS.filter(m => filterFree ? m.free : true);
 
       const brandOrder = [
-        "Auto", "DeepSeek", "Kimi", "Qwen", "GLM",
-        "MiniMax", "NVIDIA", "StepFun", "Tencent", "Xiaomi",
-        "SenseTime", "Cohere", "InclusionAI", "Poolside", "Coding",
+        "Auto", "DeepSeek", "Kimi", "Qwen", "NVIDIA",
+        "StepFun", "Cohere", "MiniMax", "Tencent",
+        "SenseNova", "Poolside", "Kat",
       ];
 
-      // Group by brand
       const brands = {};
-      for (const mdl of TIO_MODELS) {
-        if (filterFree && !mdl.free) continue;
+      for (const mdl of models) {
         if (!brands[mdl.brand]) brands[mdl.brand] = [];
         brands[mdl.brand].push(mdl);
       }
 
-      let text = "";
-      const totalShown = Object.values(brands).reduce((a, b) => a + b.length, 0);
-      text += `Total: *${totalShown} model*\n\n`;
-
-      let num = 1;
+      let text = `Total: *${models.length} model*\n\n`;
       for (const brand of brandOrder) {
-        const models = brands[brand];
-        if (!models) continue;
-        const modelNames = models.map((mdl) =>
-          mdl.free ? `${mdl.label} (free)` : mdl.label
-        ).join(", ");
-        text += `${num}. *${brand}:* ${modelNames}\n`;
-        num++;
+        const list = brands[brand];
+        if (!list) continue;
+        for (const mdl of list) {
+          const aliasStr = mdl.aliases[0] ? ` (${mdl.aliases[0]})` : "";
+          const freeTag = mdl.free ? " free" : "";
+          text += `${mdl.label}${aliasStr}${freeTag}\n`;
+        }
       }
+      text += `\nPakai: *${prefix}aitio <alias> <prompt>*`;
 
-
-      await m.reply(claraWrap("Daftar Model Tio AI" + (filterFree ? " (Free)" : ""), text));
-      return { handled: true };
+      return m.reply(claraWrap("Daftar Model Tio AI" + (filterFree ? " (Free)" : ""), text), "ai-tio");
     }
 
-    // ═══ "model" subcommand ═══
-    if (firstWord === "model") {
-      const fmtArg = (parts[1] || "").toLowerCase();
-      const modelArg = parts.slice(2).join(" ").trim();
+    // ═══ Resolve model from first word ═══
+    const model = resolveModel(firstWord);
 
-      if (!fmtArg || !modelArg) {
-        const text =
-          claraWrap("Ganti Model", [`*${prefix}tio model openai deepseek-v4-flash:free*`,
-            `*${prefix}tio model gemini kimi-k3:free*`,
-            `*${prefix}tio model anthropic auto*`,
-          `Set API key di config.js:`,
-          `    aiHelp.openaiApiKey / geminiApiKey / anthropicApiKey`,
-            `*${prefix}tio list* — lihat semua model`].join("\n"));
-        await m.reply(text, "ai-tio");
-        return { handled: true };
-      }
-
-      const fmtKey = resolveFormat(fmtArg);
-      if (!fmtKey) {
-        const text =
-          claraWrap("Format Tidak Valid", [`Format *${fmtArg}* tidak dikenal`,
-            `Pilih: openai / gemini / anthropic`].join("\n"));
-        await m.reply(text, "ai-tio");
-        return { handled: true };
-      }
-
-      const fmt = TIO_FORMATS[fmtKey];
-      const found = TIO_MODELS.find(
-        (mdl) => mdl.id === modelArg || mdl.label.toLowerCase() === modelArg.toLowerCase()
+    // If model is "Unknown" (not in registry) and there's only 1 word,
+    // treat as error — user probably mistyped
+    if (model.brand === "Unknown" && parts.length <= 1) {
+      return m.reply(
+        claraWrap("Tio AI", [
+          `Model *${firstWord}* tidak dikenal`,
+          `Ketik *${prefix}aitio list* untuk lihat semua model`,
+          `Atau: *${prefix}aitio deepseek <pesan>*`,
+        ].join("\n")),
+        "ai-tio"
       );
-
-      if (!found) {
-        const text =
-          claraWrap("Model Tidak Ditemukan", [`Model *${modelArg}* tidak ada`,
-            `Ketik *${prefix}tio list* untuk lihat semua model`].join("\n"));
-        await m.reply(text, "ai-tio");
-        return { handled: true };
-      }
-
-      if (!botConfig.aiHelp) botConfig.aiHelp = {};
-      botConfig.aiHelp[fmt.modelField || (fmtKey + "Model")] = found.id;
-
-      const text =
-        claraWrap("Model Diganti", [`Format: *${fmt.label}*`,
-          `Model: *${found.label}*`,
-          `ID: *${found.id}*`,
-          `${found.desc}`,
-          `Gratis: *${found.free ? "Ya ✅" : "Tidak 💎"}*`].join("\n")) +
-        "\n" ;
-      await m.reply(text);
-      return { handled: true };
     }
 
-    // ═══ Main: .tio <format> <pesan> ═══
-    const fmtKey = resolveFormat(firstWord);
-
-    if (!fmtKey) {
-      const text =
-        claraWrap("Format Tidak Dikenal", [`Format *${parts[0]}* tidak dikenal`,
-          `Pilih: *openai* / *gemini* / *anthropic*`,
-          `Contoh: *${prefix}tio openai halo*`].join("\n")) +
-        "\n" ;
-      await m.reply(text, "ai-tio");
-      return { handled: true };
-    }
-
-    const fmt = TIO_FORMATS[fmtKey];
-    const prompt = parts.slice(1).join(" ").trim();
+    // Prompt = everything after model name
+    let prompt = parts.slice(1).join(" ").trim();
 
     if (!prompt) {
-      const text = claraWrap("Tio AI - Kosong",
-        `Pesan tidak boleh kosong\n` +
-        `Contoh: *${prefix}tio ${fmtKey} halo*`,
-        "error"
+      return m.reply(
+        claraWrap("Tio AI", [
+          `Model: *${model.label}*`,
+          `Pesan kosong!`,
+          `Contoh: *${prefix}aitio ${model.aliases[0] || model.id} halo*`,
+        ].join("\n")),
+        "ai-tio"
       );
-      await m.reply(text, "ai-tio");
-      return { handled: true };
     }
 
-    // Check API key for this format
-    const apiKey = getKeyForFormat(fmtKey);
+    // Check API key
     if (!apiKey) {
-      const text =
-        claraWrap("API Key Belum Diisi", [`API Key untuk format *${fmt.label}* belum di-set`,
-          `Set di config.js: aiHelp.${fmt.apiKeyField}`,
-          `Atau pakai fallback: aiHelp.apiKey`].join("\n"));
-      await m.reply(text, "ai-tio");
-      return { handled: true };
+      return m.reply(
+        novaError("Tio AI", "API Key Tio belum di-set. Isi di src/lib/apikey/apikeys.json: tioApiKey"),
+        "ai-tio"
+      );
     }
 
-    // Get model for this format
-    const model = aiHelp[fmtKey + "Model"] || aiHelp[fmt.modelField] || fmt.defaultModel;
-    const systemPrompt = aiHelp.systemPrompt || "Kamu adalah Nova AI, asisten yang ramah dan cerdas. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia.";
+    // React loading
+    try { await sock.sendMessage(m.chat, { react: { text: "🕒", key: m.key } }); } catch {}
 
     // Build messages
     const messages = [];
@@ -306,46 +294,38 @@ async function handler(m, { sock, config: botConfig }) {
     }
     messages.push({ role: "user", content: prompt });
 
-    // Set endpoint (Gemini is dynamic per model)
-    const apiEndpoint = fmtKey === "gemini"
-      ? `https://ai.tioo.eu.org/v1beta/models/${model}:generateContent`
-      : fmt.endpoint;
+    const systemPrompt = botConfig.aiHelp?.systemPrompt
+      || "Kamu adalah Nova AI, asisten yang ramah dan cerdas. Jawab dalam bahasa Indonesia jika user bertanya dalam bahasa Indonesia.";
 
-    // Call AI
-    const reply = await callAI({
-      providerKey: fmt.providerKey,
-      model: model,
-      messages: messages,
-      systemPrompt: systemPrompt,
-      apiKey: apiKey,
-      apiEndpoint: apiEndpoint,
-      temperature: 0.7,
-      maxTokens: 4096,
-    });
+    // Call Tio API
+    const reply = await callTio(model.id, messages, systemPrompt, apiKey);
 
-    // Find model label
-    const modelInfo = TIO_MODELS.find((mdl) => mdl.id === model);
-    const modelLabel = modelInfo?.label || model;
-    const replyText = reply.length > 3800 ? reply.slice(0, 3800) + "\n\n_... respon dipotong_" : reply;
+    // React done
+    try { await sock.sendMessage(m.chat, { react: { text: "🐣", key: m.key } }); } catch {}
 
-        const text = claraWrap("Tio AI",
-      `Format: *${fmt.label}*\n` +
-      `Model: *${modelLabel}*\n` +
-      `Pertanyaan: *${prompt.slice(0, 100)}${prompt.length > 100 ? "..." : ""}*\n` +
+    // Format reply
+    const replyText = reply.length > 3800
+      ? reply.slice(0, 3800) + "\n\n_... respon dipotong_"
+      : reply;
+
+    const freeTag = model.free ? " (Free)" : "";
+    const response = claraWrap(
+      `Tio AI — ${model.label}${freeTag}`,
       replyText
     );
 
-    await m.reply(text);
-  } catch (error) {
-    const prefix = botConfig.command?.prefix || ".";
-    const text =
-      claraWrap("Tio AI Error", [`Status: *Gagal*`,
-        `Error: *${error.message || "Unknown error"}*`].join("\n")) +
-      "\n" ;
-    await m.reply(text, "ai-tio");
-  }
+    return m.reply(response, "ai-tio");
 
-  return { handled: true };
+  } catch (error) {
+    try { await sock.sendMessage(m.chat, { react: { text: "❌", key: m.key } }); } catch {}
+    return m.reply(
+      claraWrap("Tio AI Error", [
+        `Status: *Gagal*`,
+        `Error: *${error.message || "Unknown error"}*`,
+      ].join("\n")),
+      "ai-tio"
+    );
+  }
 }
 
-export { pluginConfig as config, handler }
+export { pluginConfig as config, handler };
