@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20weather%20masuk%20ke%20info%20section%20(buka-success?style=for-the-badge)
-> *Commit: "fix: weather masuk ke info section (bukan blok terpisah di akhir) + info section lengkap (User, Bot, Database, Server, Waktu & Tanggal, Cuaca) di menu, allmenu, allmenucategory"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20pindah%20Waktu%20%26%20Tanggal%20ke%20setelah%20I-success?style=for-the-badge)
+> *Commit: "fix: pindah Waktu & Tanggal ke setelah Info User (sebelum Info Bot) di info section menu/allmenu/allmenucategory"*
 <!--END_SECTION:latest-update-->
 
 ---
