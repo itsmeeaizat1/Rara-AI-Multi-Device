@@ -121,7 +121,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply( help, "kontrak");
   }
-  m.reply(claraWrap("Kontrak", "AI lagi menyusun draft kontrak..."));
+  await m.react("🕒");
 
   try {
     const result = await UnlimitedAI(KONTRAK_PROMPT.replace("__INPUT__", args), "nova-ai");

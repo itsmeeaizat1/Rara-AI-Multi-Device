@@ -36,7 +36,7 @@ async function handler(m, { sock }) {
   ) {
     { const __navText = `❌ *ғORMAT TIDAK VALID*\n\n💡 *Contoh:* \`google.com\``; return await m.reply(__navText); };
   }
-  await m.reply(claraWrap("Lookup", `🕕 *ᴍᴇɴᴄᴀʀɪ ɪɴꜰᴏ ᴅᴏᴍᴀɪɴ...*`));
+  await m.react("🕒");
 
   try {
     const [dnsRes, whoisRes] = await Promise.allSettled([

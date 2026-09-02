@@ -32,7 +32,7 @@ async function handler(m, { sock }) {
             return m.reply(claraWrap("Imgtoprompt", '❌ *ɢᴀᴍʙᴀʀ ᴅɪʙᴜᴛᴜʜᴋᴀɴ*\n\nReply atau kirim gambar dengan caption .imgtoprompt'));
         }
         
-        await m.reply(claraWrap("Imgtoprompt", '🕕 *ᴍᴇᴍᴘʀᴏꜱᴇꜱ ɢᴀᴍʙᴀʀ...*\n\nMenganalisis gambar untuk menghasilkan prompt'));
+        await m.react("🕒");
         let mediaBuffer;
         if (m.isImage && m.download) {
             mediaBuffer = await m.download();

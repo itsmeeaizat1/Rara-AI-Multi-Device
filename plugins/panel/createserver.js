@@ -270,7 +270,7 @@ async function handler(m, { sock }) {
   const password = username + crypto.randomBytes(3).toString("hex");
   const serverLabel = serverVersion.toUpperCase();
 
-  await m.reply(`🕕 Membuat panel *${serverLabel}* untuk \`${targetUser.split("@")[0]}\`...`);
+  await m.react("🕒");
 
   try {
     let userRes;

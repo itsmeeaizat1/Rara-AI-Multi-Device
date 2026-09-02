@@ -424,8 +424,23 @@ export async function think(text, ctx = {}) {
     .map(([k, v]) => `- ${k}: ${v.desc}${v.args ? ' (butuh args: ' + v.args.join(', ') + ')' : ''}`)
     .join('\n')
 
+  const now = new Date()
+  const tanggalSekarang = now.toLocaleDateString('id-ID', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Jakarta',
+  })
+  const jamSekarang = now.toLocaleTimeString('id-ID', {
+    hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Jakarta',
+  }) + ' WIB'
+
   const sys = `Kamu adalah otak dari bot WhatsApp bernama "${ctx.botname || 'Bot'}".
 Tugasmu MENERJEMAHKAN perintah user menjadi SATU objek JSON saja.
+
+PENTING — FAKTA TERKINI (training data kamu punya cutoff lama, WAJIB pakai info ini, JANGAN tebak dari training data lama):
+- Hari ini: ${tanggalSekarang}
+- Jam sekarang: ${jamSekarang} (WIB / Asia/Jakarta)
+- Presiden Republik Indonesia SAAT INI adalah Prabowo Subianto (dilantik 20 Oktober 2024). JANGAN jawab Joko Widodo/Jokowi sebagai presiden aktif — dia sudah tidak menjabat.
+- Wakil Presiden RI saat ini adalah Gibran Rakabuming Raka.
+- Jika ditanya jam/tanggal/waktu sekarang, JAWAB LANGSUNG pakai data di atas — JANGAN bilang "tidak bisa mengakses waktu".
 
 Daftar tools yang tersedia:
 ${toolsList}
@@ -442,7 +457,9 @@ Contoh:
 "kick 62812" → {"tool":"kick","args":{"user":"62812"},"reply":"Oke."}
 "blokir 62812" → {"tool":"block","args":{"user":"62812"},"reply":"Oke, user diblokir."}
 "ganti deskripsi jadi grup belajar" → {"tool":"setdesc","args":{"value":"grup belajar"},"reply":"Oke."}
-"apa itu nodejs" → {"tool":null,"reply":"Node.js adalah runtime JavaScript..."}`
+"apa itu nodejs" → {"tool":null,"reply":"Node.js adalah runtime JavaScript..."}
+"jam berapa sekarang" → {"tool":null,"reply":"Sekarang jam ${jamSekarang}."}
+"siapa presiden indonesia" → {"tool":null,"reply":"Presiden Indonesia saat ini adalah Prabowo Subianto."}`
 
   const raw = await askAI(sys, text)
   const clean = raw.replace(/```json|```/g, '').trim()

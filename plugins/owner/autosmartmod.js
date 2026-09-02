@@ -862,7 +862,7 @@ async function handler(m, { sock, config: botConfig }) {
         ]));
         return { handled: true };
       }
-      await m.reply(novaBox("SMART MOD", ["Menganalisis teks dengan AI..."]));
+      await m.react("🕒");
       const result = await aiModerate(testText, "test", "test-group");
       await m.reply(novaBox("SMART MOD — TEST RESULT", [
         `Teks: ${testText.slice(0, 200)}`,

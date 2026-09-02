@@ -148,7 +148,7 @@ async function handleSession(m, sock) {
     session.prizeName = prizeName;
     session.prizeDetails = detailParts.join(" | ");
 
-    await m.reply(claraWrap("Quick_reply", "✅ Detail hadiah tersimpan! Membuat giveaway..."));
+    await m.react("🕒");
 
     await createGiveaway(session, sock, m);
     createSessions.delete(m.sender);
