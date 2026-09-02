@@ -6,7 +6,7 @@ import axios from "axios";
 import ffmpeg from "fluent-ffmpeg";
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 const pluginConfig = {
@@ -91,6 +91,7 @@ async function handler(m, { sock }) {
     return m.reply(novaGuide("TikTok Audio", "Link yang kamu masukkan bukan link TikTok valid!", `${m.prefix}ttmp3 https://vt.tiktok.com/xxx`));
   }
   try {
+    await m.react("🕒");
     const result = await ttdown(url);
     const audioDownload = result.downloads.find((d) => d.type === "mp3");
     let audioSource = audioDownload?.url || null;
@@ -108,6 +109,18 @@ async function handler(m, { sock }) {
       cleanupFiles = extractedAudio.files;
       audioSource = extractedAudio.buffer;
     }
+
+    // WhatsApp doesn't support caption on audio — send info as text first
+    const infoText = mediaCaption({
+      platformIcon: "🎵", platformName: "TikTok Audio",
+      title: result.title || result.author || "TikTok Audio",
+      author: result.author || null,
+      duration: result.duration || null,
+      format: "🎵 MP3 (Audio Extracted)",
+      method: "tikwm",
+    });
+    await m.reply(infoText);
+    await m.react("🐣");
 
     await sock.sendMedia(m.chat, audioSource, null, m, {
       type: "audio",

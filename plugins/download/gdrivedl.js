@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // gdrivedl — Download file dari Google Drive via IkyyXD
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
-import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -31,10 +31,11 @@ async function handler(m, { sock }) {
     if (result?.medias?.length) {
       const file = result.medias[0];
       await m.react("🐣");
-      await sock.sendMedia(m.chat, file.url, result.title || "Google Drive File", m, {
-        type: "file",
+const _cap = mediaCaption({ platformIcon: "📁", platformName: "Google Drive", title: result.title || "Google Drive File", format: "File", method: "IkyyXD" });
+      await sock.sendMessage(m.chat, {
+        document: { url: file.url }, caption: _cap,
         contextInfo: { forwardingScore: 0, isForwarded: false },
-      });
+      }, { quoted: m });
     } else {
       await m.react("❌");
       await m.reply(novaError("GDrive DL", "Gagal ambil file — pastikan file bersifat publik ya"));

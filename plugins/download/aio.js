@@ -4,7 +4,7 @@
 import { ikyyAio } from "../../src/scraper/ikyydl.js";
 import { aiodl } from "../../src/scraper/aio.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aio",

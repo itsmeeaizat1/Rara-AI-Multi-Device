@@ -79,6 +79,9 @@ async function handler(m, { sock }) {
       platformName: "YouTube",
       title: result.title || "YouTube Audio",
       author: ytMeta.author || null,
+      duration: result.duration || null,
+      views: result.views || null,
+      description: result.description ? String(result.description).slice(0, 120) : null,
       format: "🎵 MP3",
       method: result.method,
     });

@@ -6,7 +6,7 @@ import path from 'path'
 import fs from 'fs'
 import { f } from '../../src/lib/nova-http.js'
 import te from '../../src/lib/nova-error.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption } from "../../src/lib/nova-menu-style.js";
 const NEOXR_APIKEY = config.APIkey?.neoxr || "Milik-Bot-NovaMD";
 
 const pluginConfig = {
@@ -57,15 +57,13 @@ async function handler(m, { sock }) {
 
     if (sizeInMB > 0 && sizeInMB <= 100) {
 
-      await sock.sendMedia(m.chat, file.url, null, m, {
-        type: 'document',
+      const _cap = mediaCaption({ platformIcon: "🟦", platformName: "PixelDrain", title: file.name || "PixelDrain File", format: "File", method: "pixeldrain" });
+      await sock.sendMessage(m.chat, {
+        document: { url: file.url }, caption: _cap,
         fileName: file.filename,
         mimetype: 'application/octet-stream',
-        contextInfo: {
-          forwardingScore: 0,
-          isForwarded: false
-        }
-      })
+        contextInfo: { forwardingScore: 0, isForwarded: false },
+      }, { quoted: m })
     } else if (sizeInMB > 100) {
       await m.reply(claraWrap("Pixeldraindl", `⚠️ *ꜰɪʟᴇ ᴛᴇʀʟᴀʟᴜ ʙᴇꜱᴀʀ*\n\nFile ${file.size} terlalu besar untuk dikirim\nGunakan link download di atas`));
     }

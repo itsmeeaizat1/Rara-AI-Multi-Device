@@ -52,9 +52,21 @@ async function handler(m, { sock }) {
     const ikyyResult = await ikyyDl("twitterdl", url, { extraParams: { apikey: "kyzz" } });
     if (ikyyResult?.medias?.length) {
       const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
-      await sock.sendMedia(m.chat, video.url, ikyyResult.title || "Twitter/X", m, {
-        type: "video", contextInfo: { forwardingScore: 0, isForwarded: false }
+      const caption = mediaCaption({
+        platformIcon: "𝕏",
+        platformName: "Twitter/X",
+        title: ikyyResult.title || "Twitter Video",
+        author: ikyyResult.author || null,
+        duration: ikyyResult.duration || null,
+        description: ikyyResult.description ? String(ikyyResult.description).slice(0, 120) : null,
+        format: "📹 Video",
+        method: "IkyyXD",
       });
+      await sock.sendMessage(m.chat, {
+        video: { url: video.url },
+        caption,
+        contextInfo: { forwardingScore: 0, isForwarded: false },
+      }, { quoted: m });
       return;
     }
 

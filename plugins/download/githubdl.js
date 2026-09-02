@@ -1,5 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
 import config from '../../config.js'
 import path from 'path'
 import fs from 'fs'
@@ -68,15 +68,13 @@ async function handler(m, { sock }) {
             return m.reply(`❌ *Branch Tidak Ada*\n\nBranch \`${branch}\` tidak ditemukan\nDefault: \`${defaultBranch}\``)
         }
         
-        await sock.sendMedia(m.chat, zipUrl, null, m, {
-            type: 'document',
+        const _cap = mediaCaption({ platformIcon: "🐙", platformName: "GitHub", title: `${repo} (${branch})`, format: "ZIP Archive", method: "github" });
+        await sock.sendMessage(m.chat, {
+            document: { url: zipUrl }, caption: _cap,
             fileName: `${repo} - Branch: ${branch}.zip`,
             mimetype: 'application/zip',
-            contextInfo: {
-                forwardingScore: 0,
-                isForwarded: false
-            }
-        })
+            contextInfo: { forwardingScore: 0, isForwarded: false },
+        }, { quoted: m })
     } catch (e) {
         m.reply(claraWrap("githubdl", te(m.prefix, m.command, m.pushName), "error"))
     }

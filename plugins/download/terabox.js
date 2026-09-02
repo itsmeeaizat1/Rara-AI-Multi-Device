@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,9 +26,11 @@ async function handler(m, { sock, config: botConfig }) {
     const ikyyResult = await ikyyDl("terabox", url);
     if (ikyyResult?.medias?.length) {
       const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
-      await sock.sendMedia(m.chat, video.url, ikyyResult.title || "Terabox", m, {
-        type: "video", contextInfo: { forwardingScore: 0, isForwarded: false }
-      });
+const _cap = mediaCaption({ platformIcon: "📦", platformName: "Terabox", title: ikyyResult.title || "Terabox Video", format: "Video", method: "IkyyXD" });
+      await sock.sendMessage(m.chat, {
+        video: { url: video.url }, caption: _cap,
+        contextInfo: { forwardingScore: 0, isForwarded: false },
+      }, { quoted: m });
       return;
     }
 

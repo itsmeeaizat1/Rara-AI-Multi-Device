@@ -4,7 +4,7 @@
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import te from "../../src/lib/nova-error.js";
 import mediafire from "../../src/scraper/mediafire.js";
-import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, mediaCaption } from "../../src/lib/nova-menu-style.js";
 import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
@@ -36,10 +36,11 @@ async function handler(m, { sock }) {
     if (result?.medias?.length) {
       const file = result.medias[0];
       await m.react("🐣");
-      return await sock.sendMedia(m.chat, file.url, result.title || "MediaFire File", m, {
-        type: "file",
+      const _cap = mediaCaption({ platformIcon: "🔥", platformName: "MediaFire", title: result.title || "MediaFire File", format: "File", method: "IkyyXD" });
+      return await sock.sendMessage(m.chat, {
+        document: { url: file.url }, caption: _cap,
         contextInfo: { forwardingScore: 0, isForwarded: false },
-      });
+      }, { quoted: m });
     }
 
     // Step 2: Fallback to builtin mediafire.js
@@ -48,15 +49,11 @@ async function handler(m, { sock }) {
       const data = await mediafire(url);
       if (data?.download_url || data?.link) {
         await m.react("🐣");
-        let caption = claraWrap("MediaFire DL", [
-          data?.title || data?.name || "File",
-          data?.size ? `Size: ${data.size}` : "",
-          data?.ext ? `Type: ${data.ext}` : "",
-        ].filter(Boolean).join("\n"));
-        return await sock.sendMedia(m.chat, data.download_url || data.link, caption, m, {
-          type: "file",
+        const _cap2 = mediaCaption({ platformIcon: "🔥", platformName: "MediaFire", title: data?.title || data?.name || "MediaFire File", format: data?.ext || "File", method: "builtin" });
+        return await sock.sendMessage(m.chat, {
+          document: { url: data.download_url || data.link }, caption: _cap2,
           contextInfo: { forwardingScore: 0, isForwarded: false },
-        });
+        }, { quoted: m });
       }
     } catch (e) {
       console.error("[mediafiredl.js] builtin fallback failed:", e.message);

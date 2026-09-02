@@ -4,7 +4,7 @@
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import likee from "../../src/scraper/likee.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "likeedl",

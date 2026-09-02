@@ -2,7 +2,7 @@
 // ytmp3v3.js — YouTube MP3 v3 (@distube/ytdl-core, direct engine)
 import ytdl from "@distube/ytdl-core";
 import axios from "axios";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ytmp3v3",
@@ -49,13 +49,17 @@ async function handler(m, { sock }) {
 
     await m.react("🐣");
 
-    let _lines = [];
-      _lines.push(`Judul: *${title}*`);
-      _lines.push(`Channel: *${author}*`);
-      _lines.push(`Durasi: *${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, "0")}*`);
-      _lines.push(`Views: *${parseInt(views).toLocaleString()}*`);
-      _lines.push(`Engine: @distube/ytdl-core`);
-    let msg = novaBox("ʏᴏᴜᴛᴜʙᴇ ᴍᴘ3 v3", _lines);
+    const durStr = `${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, "0")}`;
+    let msg = mediaCaption({
+      platformIcon: "▶️",
+      platformName: "YouTube MP3 v3",
+      title,
+      author,
+      duration: durStr,
+      views: parseInt(views).toLocaleString(),
+      format: "🎵 MP3",
+      method: "@distube/ytdl-core",
+    });
 
     await sock.sendMessage(m.chat, {
       audio: buffer,
