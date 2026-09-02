@@ -2,7 +2,7 @@
 // songs.js — Cari & play lagu (iTunes)
 import axios from "axios";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap , novaBox} from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBox, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "songs",
@@ -29,10 +29,18 @@ async function handler(m, { sock }) {
     // Send first result preview
     const track = results[0];
     if (track.previewUrl) {
+      const _cap = mediaCaption({
+        platformIcon: "🎵", platformName: "iTunes",
+        title: track.trackName,
+        author: track.artistName,
+        description: track.collectionName || null,
+        format: "Preview (30s)",
+        method: "iTunes",
+      });
+      await m.reply(_cap);
       await sock.sendMessage(from, {
         audio: { url: track.previewUrl },
         mimetype: "audio/mpeg",
-        caption: `🎵 ${track.trackName} - ${track.artistName}`
       }, { quoted: m });
     }
 

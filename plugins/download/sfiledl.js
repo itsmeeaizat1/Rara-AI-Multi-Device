@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,25 +30,23 @@ async function handler(m, { sock, config: botConfig }) {
 
     const response = await axios.get(url, { responseType: "arraybuffer", maxRedirects: 5 });
     const buffer = Buffer.from(response.data);
-    const ext = ".bin";
-    const filePath = tempPath(ext);
-    fs.writeFileSync(filePath, buffer);
+    const fileName = url.split("/").pop() || `sfile_${Date.now()}`;
+    const fileSize = (buffer.length / 1024 / 1024).toFixed(2);
 
-    await sock.sendMessage(m.chat, {
-      document: fs.readFileSync(filePath),
-      mimetype: "application/octet-stream",
-      fileName: `sfile_${Date.now()}${ext}`,
+    const _cap = mediaCaption({
+      platformIcon: "📂", platformName: "SFile",
+      title: fileName,
+      format: `${fileSize} MB`,
+      method: "direct",
     });
 
-    const text =
-      claraWrap("SFile", [`Link: *${url}*`,
-        "Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}sfiledl <link> untuk download file lain`) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
-
-    await m.reply(text);
+    await m.react("🐣");
+    await sock.sendMessage(m.chat, {
+      document: buffer,
+      mimetype: "application/octet-stream",
+      fileName,
+      caption: _cap,
+    }, { quoted: m });
   } catch (error) {
     await m.reply(novaError("SFile DL", `Gagal mengunduh file: ${error.message}`));
   }

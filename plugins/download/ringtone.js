@@ -2,7 +2,7 @@
 // ringtone.js — Search & download ringtone (meloboom scrape, no API)
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { novaBox, novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaBox, novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "ringtone",
@@ -59,6 +59,14 @@ async function handler(m, { sock }) {
       headers: { "User-Agent": "Mozilla/5.0" },
     });
     const buffer = Buffer.from(audioRes.data);
+
+    const _cap = mediaCaption({
+      platformIcon: "🔔", platformName: "Ringtone",
+      title: first.title,
+      format: "MP3 Audio",
+      method: "meloboom",
+    });
+    await m.reply(_cap);
 
     await sock.sendMessage(m.chat, {
       audio: buffer,

@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
-import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { tipText, claraWrap, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,22 +30,21 @@ async function handler(m, { sock, config: botConfig }) {
 
     const response = await axios.get(url, { responseType: "arraybuffer", maxRedirects: 5 });
     const buffer = Buffer.from(response.data);
-    const filePath = tempPath(".mp4");
-    fs.writeFileSync(filePath, buffer);
+    const fileName = url.split("/").pop() || `video_${Date.now()}.mp4`;
+    const fileSize = (buffer.length / 1024 / 1024).toFixed(2);
 
+    const _cap = mediaCaption({
+      platformIcon: "🎬", platformName: "MP4",
+      title: fileName,
+      format: `${fileSize} MB`,
+      method: "direct",
+    });
+
+    await m.react("🐣");
     await sock.sendMessage(m.chat, {
-      video: fs.readFileSync(filePath),
-      caption: `URL: *${url}*
-Ukuran: *${(buffer.length / 1024 / 1024).toFixed(2)} MB*`,
+      video: buffer,
+      caption: _cap,
     }, { quoted: m });
-
-    const text =
-      claraWrap("MP4 Download", [`Link: *${url}*`,
-        "Status: *ʙᴇʀʜᴀꜱɪʟ*"].join("\n")) +
-      "\n" +
-      tipText(`Ketik ${prefix}menu untuk kembali ke menu utama`);
-
-    await m.reply(text);
   } catch (error) {
     await m.reply(novaError("MP4 Downloader", `Gagal mengunduh MP4: ${error.message}`));
   }
