@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20info%20section%20lengkap%20di%20Mode%202%20all-success?style=for-the-badge)
-> *Commit: "feat: info section lengkap di Mode 2 allmenucategory"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20handler%20allmenucategory%20terima%20conf-success?style=for-the-badge)
+> *Commit: "fix: handler allmenucategory terima config & uptime dari caller"*
 <!--END_SECTION:latest-update-->
 
 ---
