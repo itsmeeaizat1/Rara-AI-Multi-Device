@@ -9,7 +9,7 @@ const pluginConfig = {
   alias: ["setreply"],
   category: "owner",
   description: "Mengatur variant tampilan reply",
-  usage: ".setreply <v1-v6>",
+  usage: ".setreply v1",
   example: ".setreply v1",
   isOwner: true,
   isPremium: false,
@@ -24,38 +24,8 @@ const VARIANTS = {
   v1: {
     id: 1,
     name: "FAKE LOCATION",
-    desc: "InteractiveMessage + externalAdReply (thumbnail + weather) — desain aktif",
+    desc: "InteractiveMessage + externalAdReply (thumbnail + weather)",
     emoji: "📍",
-  },
-  v2: {
-    id: 2,
-    name: "PREMIUM",
-    desc: "Document + fake contact quote + thumbnail",
-    emoji: "🖼️",
-  },
-  v3: {
-    id: 3,
-    name: "TITANIUM",
-    desc: "Video GIF + caption",
-    emoji: "📨",
-  },
-  v4: {
-    id: 4,
-    name: "LV",
-    desc: "Link preview dengan thumbnail",
-    emoji: "💼",
-  },
-  v5: {
-    id: 5,
-    name: "FAKE ORDER",
-    desc: "Teks dengan fake quoted order message",
-    emoji: "🛒",
-  },
-  v6: {
-    id: 6,
-    name: "SIMPLE DOCUMENT",
-    desc: "Document + thumbnail tanpa fake contact quote",
-    emoji: "📄",
   },
 };
 
@@ -65,7 +35,7 @@ async function handler(m, { sock, db }) {
   if (variant) {
     const selected = VARIANTS[variant];
     if (!selected) {
-      m.reply(claraWrap("Setreply", `❌ *VARIANT TIDAK VALID*\n\nGunakan: *v1* s/d *v6*`));
+      m.reply(claraWrap("Setreply", `❌ *VARIANT TIDAK VALID*\n\nSatu-satunya variant: *v1*`));
       return;
     }
 
