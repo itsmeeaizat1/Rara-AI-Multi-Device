@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // spotifyplay2.js — Spotify Play v2 (spotifydown scrape + tikwm fallback)
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "spotifyplay2",
@@ -61,6 +61,15 @@ async function handler(m, { sock }) {
     const audioRes = await axios.get(dlUrl, { responseType: "arraybuffer", timeout: 60000, headers: { "User-Agent": ua } });
     const buffer = Buffer.from(audioRes.data);
 
+    const _cap = mediaCaption({
+      platformIcon: "🎧", platformName: "Spotify",
+      title: title,
+      author: artist || null,
+      format: "MP3 320kbps",
+      method: "spotifydown",
+    });
+    await m.reply(_cap);
+
     await sock.sendMessage(m.chat, {
       audio: buffer,
       mimetype: "audio/mpeg",
@@ -73,12 +82,6 @@ async function handler(m, { sock }) {
         }
       },
     }, { quoted: m });
-
-    let _lines = [`Judul: *${title}*`];
-    if (artist) _lines.push(`Artist: *${artist}*`);
-    _lines.push(`Source: Spotify`);
-    _lines.push(`Quality: 320kbps`);
-    await m.reply(claraWrap("Spotify Play v2", _lines.join("\n")));
     await m.react("🐣");
   } catch (err) {
     console.error("[spotifyplay2]", err);
