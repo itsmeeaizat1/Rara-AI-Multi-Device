@@ -3,6 +3,7 @@
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -66,6 +67,7 @@ async function handler(m, { sock, text, command }) {
     if (action === "pilih" || action === "beli") {
       const mountId = args[1]?.toLowerCase();
       if (!mountId || !MOUNTS[mountId]) return m.reply(claraWrap("mount", "Tunggangan tidak valid. Ketik .mount list.", "guide"));
+  await animGeneric(m, sock, "🐴", "Mounting");
       if (rpg.mount) return m.reply(claraWrap("mount", "Kamu sudah punya tunggangan: " + MOUNTS[rpg.mount.id].name, "info"));
 
       const mount = MOUNTS[mountId];

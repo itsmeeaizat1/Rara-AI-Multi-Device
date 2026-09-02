@@ -2,6 +2,7 @@
 // RPG Buff — Buff ATK diri sendiri
 import { ensureRpg, saveRpg, useMana } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "buffrpg", alias: ["buffrpg", "buff"],
@@ -21,6 +22,7 @@ async function handler(m, { sock }) {
     rpg.buffExpire = Date.now() + 3600000;
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "💪", "Applying Buff");
     return m.reply(claraWrap("buffrpg", `🔆 Kamu menerima buff: ATK +10 (1 jam)`, "success"));
   } catch (e) {
     return m.reply(claraWrap("buffrpg", "Terjadi error.", "error"));

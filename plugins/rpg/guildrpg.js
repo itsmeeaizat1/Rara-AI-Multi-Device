@@ -6,6 +6,7 @@ import {
 } from "../../src/lib/nova-rpg-service.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -48,6 +49,7 @@ async function handler(m, { sock }) {
       const guild = getGuild(rpg.guildId);
       if (!guild) {
         saveRpg: rpg.guildId = null; rpg.guildRank = null;
+  await animGeneric(m, sock, "🏰", "Loading Guild");
         return m.reply(claraWrap("guildrpg", "Guild tidak ditemukan (mungkin sudah dihapus).", "warn"));
       }
 

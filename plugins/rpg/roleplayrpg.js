@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Roleplay — Ekspresikan aksi RP
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "roleplayrpg", alias: ["roleplayrpg", "roleplay", "rp"],
@@ -13,6 +14,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim();
     if (!text) return m.reply(claraWrap("roleplayrpg", `Ketik teks RP-mu.\nContoh: ${m.prefix}roleplayrpg aku memeluk naga yang terluka...`, "guide"));
+  await animGeneric(m, sock, "🎭", "Role Play");
     return m.reply(claraWrap("roleplayrpg", `🎭 *${m.pushName} beraksi:*\n_${text}_`, "info"));
   } catch (e) {
     return m.reply(claraWrap("roleplayrpg", "Terjadi error.", "error"));

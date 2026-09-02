@@ -2,6 +2,7 @@
 // RPG Debuff — Beri debuff ke musuh (reply target)
 import { ensureRpg, saveRpg, useMana, getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "debuffrpg", alias: ["debuffrpg", "debuff"],
@@ -25,6 +26,7 @@ async function handler(m, { sock }) {
     saveRpg({ sender: targetJid, key: { remoteJid: targetJid } }, target);
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🤢", "Applying Debuff");
     return m.reply(claraWrap("debuffrpg", `🔥 Musuh terkena efek *burn*! (-5 HP/turn selama 30 menit)`, "success"));
   } catch (e) {
     return m.reply(claraWrap("debuffrpg", "Terjadi error.", "error"));

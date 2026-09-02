@@ -3,6 +3,7 @@
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -66,6 +67,7 @@ async function handler(m, { sock, command }) {
         const remaining = 86400000 - (Date.now() - lastBless);
         const hours = Math.floor(remaining / 3600000);
         const mins = Math.floor((remaining % 3600000) / 60000);
+  await animGeneric(m, sock, "⚔️", "Combat Mode");
         return m.reply(claraWrap("bless", "Kamu sudah menerima blessing hari ini.\nCoba lagi dalam " + hours + "j " + mins + "m.", "info"));
       }
       await m.react("🕒");

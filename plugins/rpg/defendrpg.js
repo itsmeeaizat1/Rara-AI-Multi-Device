@@ -2,6 +2,7 @@
 // RPG Defend — Perkuat pertahanan markas
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "defendrpg", alias: ["defendrpg", "defend", "pertahanan"],
@@ -18,6 +19,7 @@ async function handler(m, { sock }) {
     rpg.def += 50;
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🛡️", "Defending");
     return m.reply(claraWrap("defendrpg", `🛡️ Kamu memperkuat markas. DEF bertambah +50.`, "success"));
   } catch (e) {
     return m.reply(claraWrap("defendrpg", "Terjadi error.", "error"));

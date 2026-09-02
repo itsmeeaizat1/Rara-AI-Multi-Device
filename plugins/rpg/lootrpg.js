@@ -1,5 +1,6 @@
 import { ensureRpg, saveRpg, getRpgData, addItem } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "lootrpg", alias: ["lootrpg", "loot", "ramtas"],
   category: "rpg", description: "Loot item dari musuh yang mati (reply target)",
@@ -15,6 +16,7 @@ async function handler(m, { sock }) {
     if (target.hp > 0) return m.reply(claraWrap("lootrpg", "🎯 Target masih hidup!", "error"));
     const inv = target.inventory || {};
     const items = Object.keys(inv).filter(k => inv[k] > 0);
+  await animGeneric(m, sock, "💰", "Collecting Loot");
     if (!items.length) return m.reply(claraWrap("lootrpg", "📭 Tidak ada barang untuk di-loot.", "info"));
     const loot = items[0];
     addItem(m, loot, 1);

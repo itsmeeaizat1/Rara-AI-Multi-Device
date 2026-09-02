@@ -2,6 +2,7 @@
 // RPG TimeTravel — Perjalanan waktu harian
 import { ensureRpg, saveRpg, addGold } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "timetravelrpg", alias: ["timetravelrpg", "timetravel"],
@@ -14,6 +15,7 @@ async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("timetravelrpg", "RPG belum siap.", "error"));
+  await animGeneric(m, sock, "⏳", "Time Travel");
     if (rpg.lastTimetravel && Date.now() - rpg.lastTimetravel < 86400000) return m.reply(claraWrap("timetravelrpg", "⏳ Kamu sudah melakukan perjalanan waktu hari ini.", "info"));
     rpg.lastTimetravel = Date.now();
     const reward = Math.floor(Math.random() * 1000) + 1000;

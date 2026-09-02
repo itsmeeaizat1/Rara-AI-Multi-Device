@@ -2,6 +2,7 @@
 // RPG Revive — Bangkit dari kematian
 import { ensureRpg, saveRpg, removeGold } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "reviverpg", alias: ["reviverpg", "revive", "bangkit"],
@@ -14,6 +15,7 @@ async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("reviverpg", "RPG belum siap.", "error"));
+  await animGeneric(m, sock, "💔", "Reviving");
     if (rpg.hp > 0) return m.reply(claraWrap("reviverpg", "❤️ Kamu masih hidup.", "info"));
     if (rpg.gold < 200) return m.reply(claraWrap("reviverpg", `💰 Butuh 200 gold untuk hidup kembali. Kamu punya ${rpg.gold}.`, "error"));
     removeGold(m, 200, sock);

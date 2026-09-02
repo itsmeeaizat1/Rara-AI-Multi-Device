@@ -1,5 +1,6 @@
 import { ensureRpg, saveRpg, addItem, useEnergy, addExp } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "huntwildrpg", alias: ["huntwildrpg", "huntwild"],
   category: "rpg", description: "Berburu hewan liar (10 energy)",
@@ -18,6 +19,7 @@ async function handler(m, { sock }) {
     addExp(m, 20);
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🏹", "Hunting Wild");
     return m.reply(claraWrap("huntwildrpg", `🏹 Kamu berburu dan mendapatkan *daging ${animal}*!\n+20 EXP`, "success"));
   } catch (e) { return m.reply(claraWrap("huntwildrpg", "Error.", "error")); }
 }

@@ -3,6 +3,7 @@
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -22,6 +23,7 @@ async function handler(m, { sock, command }) {
     if (!rpg) return m.reply(claraWrap("prestige", "RPG belum siap. Ketik .daftar dulu.", "error"));
 
     if (command === "prestige") {
+  await animGeneric(m, sock, "⭐", "Prestige");
       if (rpg.level < 50) return m.reply(claraWrap("prestige", "Minimal level 50 untuk prestige.", "info"));
 
       await m.react("🕒");

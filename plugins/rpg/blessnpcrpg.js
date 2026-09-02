@@ -1,5 +1,6 @@
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "blessnpcrpg", alias: ["blessnpcrpg", "blessnpc"],
   category: "rpg", description: "Blessing dari NPC (random buff)",
@@ -20,6 +21,7 @@ async function handler(m, { sock }) {
     if (buff.includes("Crit")) rpg.critRate += 5;
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🙏", "Blessing NPC");
     return m.reply(claraWrap("blessnpcrpg", `✨ NPC memberkati kamu!\nEffect: *${buff}*`, "success"));
   } catch (e) { return m.reply(claraWrap("blessnpcrpg", "Error.", "error")); }
 }

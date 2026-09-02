@@ -1,5 +1,6 @@
 import { ensureRpg, saveRpg, removeGold } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "learnskillrpg", alias: ["learnskillrpg", "learnskill", "belajarskill"],
   category: "rpg", description: "Pelajari skill baru (biaya 200 gold)",
@@ -15,6 +16,7 @@ async function handler(m, { sock }) {
     if (!text || !SKILLS.includes(text)) return m.reply(claraWrap("learnskillrpg", `Skill tersedia: ${SKILLS.join(", ")}\nContoh: ${m.prefix}learnskillrpg fireball`, "guide"));
     if (rpg.gold < 200) return m.reply(claraWrap("learnskillrpg", `💰 Butuh 200 gold. Kamu punya ${rpg.gold}.`, "error"));
     if (!rpg.skills) rpg.skills = [];
+  await animGeneric(m, sock, "📖", "Learning Skill");
     if (rpg.skills.includes(text)) return m.reply(claraWrap("learnskillrpg", "Kamu sudah punya skill ini.", "info"));
     removeGold(m, 200, sock);
     rpg.skills.push(text);

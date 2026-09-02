@@ -2,6 +2,7 @@
 // RPG Build — Bangun markas pemain
 import { ensureRpg, saveRpg, removeGold } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "buildrpg", alias: ["buildrpg", "build", "markas"],
@@ -14,6 +15,7 @@ async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("buildrpg", "RPG belum siap. Ketik .daftar dulu.", "error"));
+  await animGeneric(m, sock, "🏗️", "Building");
     if (rpg.build) return m.reply(claraWrap("buildrpg", `🏠 Kamu sudah punya markas: *${rpg.build}*`, "info"));
     if (rpg.gold < 500) return m.reply(claraWrap("buildrpg", `💰 Butuh 500 gold. Kamu punya ${rpg.gold}.`, "error"));
     removeGold(m, 500, sock);

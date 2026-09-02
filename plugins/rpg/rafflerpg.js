@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -69,6 +70,7 @@ async function handler(m, { sock }) {
     }
 
     if (action !== "buy" && action !== "beli") {
+  await animGeneric(m, sock, "🎟️", "Raffle Draw");
       return m.reply(claraWrap("rafflerpg", "Gunakan .rafflerpg buy atau .rafflerpg cek", "warn"));
     }
 

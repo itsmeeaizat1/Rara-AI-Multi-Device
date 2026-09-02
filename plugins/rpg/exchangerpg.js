@@ -1,5 +1,6 @@
 import { ensureRpg, saveRpg, removeItem, addGold, getItemCount } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "exchangerpg", alias: ["exchangerpg", "exchange", "tukar"],
   category: "rpg", description: "Tukar item jadi 200 gold",
@@ -17,6 +18,7 @@ async function handler(m, { sock }) {
     addGold(m, 200);
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "💱", "Exchange");
     return m.reply(claraWrap("exchangerpg", `🪙 Kamu menukar *${text}* jadi 200 gold.`, "success"));
   } catch (e) { return m.reply(claraWrap("exchangerpg", "Error.", "error")); }
 }

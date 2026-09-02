@@ -6,6 +6,7 @@ import {
   getAvailableSkills, JOB_DB, SKILL_DB
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -94,6 +95,7 @@ async function handler(m, { sock }) {
     // Change job
     if (action === "change" || action === "ganti") {
       const jobName = args[1]?.toLowerCase();
+  await animGeneric(m, sock, "💼", "Job Search");
       if (!jobName) return m.reply(claraWrap("jobrpg", "Job apa? Ketik .jobrpg list untuk lihat pilihan.", "warn"));
 
       if (!JOB_DB[jobName]) {

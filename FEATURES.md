@@ -1292,4 +1292,4 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - Owner: 12 plugin dikonversi ke format novaBox (autoforward, cheatrpg, crashguard, servermonitor, smartdigest, automod, autobmkg, autobroadcastchannel, bcgc, bcpc, broadcast)
 - Owner: addlimitall name fixed
 - RPG: 15+ fungsi animasi baru ditambahkan ke nova-rpg-anim.js
-- RPG: 72/158 plugin kini memiliki animasi
+- RPG: 158/158 plugin kini memiliki animasi (100% complete)

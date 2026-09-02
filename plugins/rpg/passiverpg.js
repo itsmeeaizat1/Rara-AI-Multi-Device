@@ -1,5 +1,6 @@
 import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "passiverpg", alias: ["passiverpg", "passive", "pasif"],
   category: "rpg", description: "Lihat skill pasif",
@@ -11,6 +12,7 @@ async function handler(m, { sock }) {
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("passiverpg", "RPG belum siap.", "error"));
     const passive = rpg.passive || "Belum ada";
+  await animGeneric(m, sock, "🛡️", "Passive Skill");
     return m.reply(claraWrap("passiverpg", `🌀 *Skill Pasif:* ${passive}`, "info"));
   } catch (e) { return m.reply(claraWrap("passiverpg", "Error.", "error")); }
 }

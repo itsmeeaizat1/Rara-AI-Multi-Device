@@ -2,6 +2,7 @@
 // RPG Trap — Pasang jebakan
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "traprpg", alias: ["traprpg", "trap", "jebak"],
@@ -18,6 +19,7 @@ async function handler(m, { sock }) {
     rpg.trapExpire = Date.now() + 1800000;
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🪤", "Setting Trap");
     return m.reply(claraWrap("traprpg", `🕳️ Kamu memasang jebakan di lokasi saat ini. Aktif 30 menit.`, "success"));
   } catch (e) {
     return m.reply(claraWrap("traprpg", "Terjadi error.", "error"));

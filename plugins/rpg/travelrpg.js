@@ -2,6 +2,7 @@
 // RPG Travel — Pindah lokasi
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "travelrpg", alias: ["travelrpg", "travel"],
@@ -30,6 +31,7 @@ async function handler(m, { sock }) {
     rpg.location = text;
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🧭", "Traveling");
     return m.reply(claraWrap("travelrpg", `🧭 Kamu berpindah ke *${LOCATIONS[text]}*`, "success"));
   } catch (e) {
     console.error("travelrpg error:", e.message);
