@@ -42,5 +42,5 @@ export const assets = {
   // Non-image assets
   "nova-mp4": "./assets/video/nova-mp4.mp4",
   "nova-mp3": "./assets/audio/cinta-terbaik-cassandra.mp3",
-  "nova-font": "./assets/nova-font.ttf",
+  "nova-font": "./assets/fonts/nova-font.ttf",
 };
