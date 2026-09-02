@@ -181,9 +181,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const expMax = userLevel * 20000;
     const expCurr = userExp - expMin;
 
-    const more = String.fromCharCode(8206);
-    const readMore = more.repeat(4001);
-
     const botName = config.bot?.name || "Nova AI Whatsapp Bot";
 
     // ── Info section lengkap (user, bot, database, server, weather) ──
@@ -246,6 +243,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       info,
       categories: menuCats,
       prefix,
+      readMoreBeforeCategories: true,
     });
 
     let finalText = txt;

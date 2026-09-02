@@ -463,7 +463,7 @@ function novaInfoBox(title, items = [], opts = {}) {
  * @param {boolean} opts.sc - Apply smallcaps (default: true)
  * @returns {string}
  */
-function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true } = {}) {
+function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info", info = [], categories = [], prefix = ".", sc = true, readMoreBeforeCategories = false } = {}) {
   const scFn = sc ? toSC : (s) => String(s);
   
   let out = "";
@@ -508,11 +508,21 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
       out += `│ • ${label} : ${value}\n`;
     }
   }
-  
+
+  // ── Close info box sebelum daftar kategori ──
+  out += `╰────  •  ────\n`;
+
+  // ── Readmore trick: sembunyikan daftar command panjang di balik "Baca Selengkapnya" ──
+  // biar pas allmenu dibuka gak langsung wall-of-text, cuma info section yang kelihatan.
+  if (readMoreBeforeCategories && categories.length > 0) {
+    out += String.fromCharCode(8206).repeat(4001);
+  }
+  out += `\n`;
+
   // ── Category sections ──
   for (let i = 0; i < categories.length; i++) {
     const cat = categories[i];
-    const catName = scFn(cat.name).toUpperCase();
+    const catName = scFn(String(cat.name).toUpperCase());
     
     // Proper close prev + open new section
     if (i > 0) out += `╰────  •  ────\n\n`;

@@ -254,6 +254,35 @@ function buildFooter(normalized) {
 }
 
 
+export async function getWeatherDetail() {
+  try {
+    const now = Date.now();
+    if (!cachedWeather || now >= cacheExpiry) {
+      const data = await fetchWeather();
+      cachedWeather = data;
+      cacheExpiry = now + CACHE_TTL_MS;
+    }
+    const w = cachedWeather;
+    const { location } = getWeatherConfig();
+    const emoji = symbolFor(w.weather_code);
+    return {
+      location: location.name || "Lokasi",
+      emoji,
+      kondisi: w.description,
+      suhu: fmt(w.temperature_2m, "°C"),
+      terasa: fmt(w.apparent_temperature, "°C"),
+      kelembapan: fmt(w.relative_humidity_2m, "%"),
+      angin: fmt(w.wind_speed_10m, " km/jam"),
+      arahAngin: windDirectionText(w.wind_direction_10m),
+      tutupanAwan: fmt(w.cloud_cover, "%"),
+      uv: uvText(w.uv_index),
+      curahHujan: fmt(w.precipitation, " mm"),
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function getWeatherAddress() {
   try {
     const now = Date.now();

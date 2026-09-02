@@ -270,9 +270,11 @@ ${infoText}╰────  •  ────
 
     // Compact 2-column layout — beda dari allmenu yang dump semua kategori
     const emoji = CATEGORY_EMOJI?.[matchedCat] || "📋";
+    // Readmore trick — sembunyikan daftar command panjang biar gak wall-of-text
+    const readMore = allCommands.length > 15 ? String.fromCharCode(8206).repeat(4001) : "";
     let txt = `╭─「 ✦ ${toSC("Info")} ✦ 」
 ${infoText}╰────  •  ────
-╭─「 ✦ ${emoji} *${toSC(catName)}* ✦ 」
+${readMore}╭─「 ✦ ${emoji} *${toSC(catName)}* ✦ 」
 │ *${toSC("Total")}:* ${totalFitur} ${toSC("fitur")}
 │
 `;
