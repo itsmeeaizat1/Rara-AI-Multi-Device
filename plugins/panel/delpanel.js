@@ -108,7 +108,7 @@ async function handler(m, { sock }) {
             isUserAdmin = userInfo.root_admin
         } catch (e) { console.error('[delpanel.js]:', e.message); }
         
-        await m.reply(`🗑️ *ᴍᴇɴɢʜᴀᴘᴜꜱ ᴘᴀɴᴇʟ...*\n\nServer: *${serverLabel}*\nPanel: \`${server.name}\`\nMode: *${option === 'full' ? 'Server + User' : 'Server saja'}*`)
+        await m.reply(`🗑️ *Menghapus Panel...*\n\nServer: *${serverLabel}*\nPanel: \`${server.name}\`\nMode: *${option === 'full' ? 'Server + User' : 'Server saja'}*`)
         
         await axios.delete(`${serverConfig.domain}/api/application/servers/${serverId}`, {
             headers: {

@@ -29,7 +29,7 @@ async function handler(m, { sock }) {
     const products = db.setting('storeProducts') || []
 
     if (products.length === 0) {
-        return m.reply(`*ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`)
+        return m.reply(`*Belum Ada Produk.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`)
     }
 
     const text = m.text?.trim() || ''
@@ -68,7 +68,7 @@ async function handler(m, { sock }) {
     const stockItems = product.stockItems || []
 
     if (isNaN(itemNo) || itemNo < 0 || itemNo >= stockItems.length) {
-        return m.reply(`❌ *ɴᴏᴍᴏʀ ɪᴛᴇᴍ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ.*\n\nRentang: 1-${stockItems.length}\n\n📋 Lihat daftar: \`${m.prefix}liststok ${productNo + 1}\``)
+        return m.reply(`❌ *Nomor Item Tidak Valid.*\n\nRentang: 1-${stockItems.length}\n\n📋 Lihat daftar: \`${m.prefix}liststok ${productNo + 1}\``)
     }
 
     if (!newDetail || newDetail.length < 3) {

@@ -74,7 +74,7 @@ function handler(m, { sock }) {
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\n💡 *Contoh:* \`22.00\` atau \`23.30\``)
+            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\n💡 *Contoh:* \`22.00\` atau \`23.30\``)
         }
 
         setNotifTidur(sender, chatJid, jadwal)
@@ -101,7 +101,7 @@ function handler(m, { sock }) {
 
         const jadwal = parseJadwal(timeInput)
         if (jadwal.length === 0) {
-            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *ʜʜ.ᴍᴍ* atau *HH:MM*\n💡 *Contoh:* \`23.00\` atau \`22.30\``)
+            return m.reply(`❌ *Format jam salah!*\n\nGunakan format *HH.MM* atau *HH:MM*\n💡 *Contoh:* \`23.00\` atau \`22.30\``)
         }
 
         setNotifTidur(sender, chatJid, jadwal)
