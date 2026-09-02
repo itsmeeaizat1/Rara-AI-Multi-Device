@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
       msg += `🎯 Target: *${cinta.tembakTarget.split("@")[0]}*\n`;
     } else {
       msg += `💔 Status: *Jomblo*\n`;
-      msg += `💡 Mulai dengan \`${m.prefix}jadianmatch @tag\`\n`;
+      msg += `Mulai dengan \`${m.prefix}jadianmatch @tag\`\n`;
     }
 
     // Kencan stats

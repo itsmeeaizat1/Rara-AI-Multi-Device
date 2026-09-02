@@ -1,71 +1,49 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-// aihelp.js — AI help berdasarkan command yang ada
-import { getAllPlugins, getPluginInfo } from "../../src/lib/nova-plugins.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "aihelp",
   alias: ["aihelp"],
   category: "ai",
-  description: "Bantuan AI untuk menemukan command yang tersedia",
+  description: "Cari command AI berdasarkan keyword",
   usage: ".aihelp <keyword>",
   example: ".aihelp download",
-  isOwner: false,
-  isPremium: false,
-  isGroup: false,
-  isPrivate: false,
-  cooldown: 3,
-  energi: 0,
-  isEnabled: true,
+  isOwner: false, isPremium: false, isGroup: false, isPrivate: false,
+  cooldown: 5, energi: 0, isEnabled: true,
 };
 
-const SC_MAP = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
-const toSC = (s) => s.replace(/[a-z]/g, c => SC_MAP[c] || c);
+const AI_COMMANDS = {
+  download: { cmds: ["ytmp3", "ytmp4", "igdl", "tiktok", "mediafire", "gdrive"], desc: "Download media dari berbagai platform" },
+  sticker: { cmds: ["sticker", "stickerwm", "toimg", "emojimix"], desc: "Buat dan edit sticker" },
+  group: { cmds: ["closegc", "opengc", "kick", "add", "promote", "demote", "hidetag"], desc: "Admin grup management" },
+  game: { cmds: ["asahotak", "caklontong", "kuis", "tebakbendera", "siapakahaku"], desc: "Game tebak-tebakan" },
+  rpg: { cmds: ["rpginventory", "rpgkerja", "rpgquest", "rpgbattle", "rpgshop"], desc: "RPG adventure" },
+  ai: { cmds: ["ai", "cegpt", "blackbox", "deepseek", "bardai"], desc: "Chat dengan AI" },
+  search: { cmds: ["yts", "google", "pinterest", "wallpaper"], desc: "Cari di internet" },
+  tools: { cmds: ["ssweb", "translate", "tts", "qrcode", "calc"], desc: "Tools utility" },
+  primbon: { cmds: ["cekjodoh", "cekhoki", "artimimpi", "ramalan"], desc: "Primbon dan ramalan" },
+  maker: { cmds: ["ephoto", "textpro", "nulis", "quotemaker"], desc: "Text effect maker" },
+  convert: { cmds: ["toimg", "tomp3", "tovideo", "stickerwm"], desc: "Convert format media" },
+  nsfw: { cmds: ["xnxx", "xnxx2"], desc: "NSFW content (18+)" },
+  owner: { cmds: ["bc", "bcpc", "addprem", "addsewa", "setbot"], desc: "Owner only commands" },
+};
 
-async function handler(m, { sock, config: botConfig }) {
-    const prefix = botConfig.command?.prefix || ".";
-  try {
-    const args = m.text?.slice(prefix.length).trim().split(/\s+/).slice(1) || [];
-    const keyword = args.join(" ").toLowerCase().trim();
+async function handler(m, { sock }) {
+  const prefix = m.prefix || ".";
+  const keyword = (m.args[0] || "").toLowerCase().trim();
 
-    if (!keyword) {
-      await m.reply(`Ketik *${prefix}aihelp <keyword>* untuk cari command.\n\nContoh:\n${prefix}aihelp download\n${prefix}aihelp sticker\n${prefix}aihelp group`);
-      return;
-    }
-
-    // Cari command yang match keyword
-    const allPlugins = getAllPlugins();
-    const matches = [];
-    for (const p of allPlugins) {
-      const info = getPluginInfo(p);
-      if (!info) continue;
-      const name = (info.name || "").toLowerCase();
-      const desc = (info.description || "").toLowerCase();
-      const cat = (info.category || "").toLowerCase();
-      const alias = (info.alias || []).join(" ").toLowerCase();
-      if (name.includes(keyword) || desc.includes(keyword) || cat.includes(keyword) || alias.includes(keyword)) {
-        matches.push(info);
-      }
-    }
-
-    if (matches.length === 0) {
-      await m.reply(`❌ Gak ada command untuk "${keyword}" nih\nCoba keyword lain!\nContoh: download, sticker, game, rpg`);
-      return;
-    }
-
-    let cmdLines = "";
-    for (let i = 0; i < matches.length; i++) {
-      const desc = matches[i].description ? ` — ${matches[i].description}` : "";
-      cmdLines += `${prefix}${matches[i].name}${desc}\n`;
-    }
-
-    const text = `Keyword: ${keyword}\nDitemukan: ${matches.length} command\n\n${cmdLines.trim()}`;
-
-    await m.reply(text);
-  } catch (e) {
-    console.error("[aihelp] handler error:", e.message);
-    try { await m.reply("❌ Ada error nih. Coba lagi ya"); } catch {}
+  if (!keyword) {
+    const cats = Object.keys(AI_COMMANDS).map(k => `${prefix}aihelp ${k}`).join("\n");
+    return m.reply(claraWrap("AI Help", `Cari command berdasarkan kategori.\n\nContoh:\n${cats}`));
   }
+
+  const match = AI_COMMANDS[keyword];
+  if (!match) {
+    return m.reply(claraWrap("AI Help", `Tidak ada kategori "${keyword}".\nCoba: download, sticker, group, game, rpg, ai, search, tools`));
+  }
+
+  const cmds = match.cmds.map(c => `${prefix}${c}`).join(" · ");
+  return m.reply(claraWrap("AI Help", `${match.desc}\n\nCommand:\n${cmds}`));
 }
 
 export { pluginConfig as config, handler };
