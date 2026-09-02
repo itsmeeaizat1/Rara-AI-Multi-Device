@@ -1,192 +1,160 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
-/**
- * Nama Plugin: PlayVideo (dipanggil dari tombol .play)
- * Pembuat Code: Aizat
- * Fitur: Download video YouTube dengan kualitas spesifik
- * API: IkyyXD ytmp4 (primary) → yt-dlp → ytdl.js (fallback) → firefly (last resort)
- */
-
+// playvideo.js — Search YouTube → download video → kirim langsung
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
-import { downloadVideo } from "../../src/scraper/nova-ytdlp.js";
-import config from "../../config.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
+
+const IKYY = "https://api.ikyyxd.my.id";
 
 const pluginConfig = {
   name: "playvideo",
   alias: ["playvideo"],
   category: "search",
-  description: "Download video YouTube dengan kualitas spesifik",
-  usage: ".playvideo<quality> <url> (dipanggil dari tombol .play)",
-  example: ".playvideo720 https://youtube.com/watch?v=xxx",
+  description: "Cari & download video YouTube",
+  usage: ".playvideo <query>",
+  example: ".playvideo komang",
   cooldown: 20,
   energi: 2,
   isEnabled: true,
-  isHidden: true,
 };
 
-/**
- * ytdl.js fallback (ytmp3.mobi MP4)
- */
-async function getVideoYtdl(url) {
+async function searchYoutube(query) {
+  // Try 1: IkyyXD search
+  try {
+    const { data } = await axios.get(`${IKYY}/search/youtube`, {
+      params: { query, apikey: "kyzz" },
+      timeout: 15000,
+    });
+    if (data?.status && data?.result?.length) {
+      const v = data.result[0];
+      return {
+        title: v.title,
+        author: v.channel,
+        duration: v.duration,
+        views: 0,
+        thumbnail: v.imageUrl || "",
+        url: v.link,
+      };
+    }
+  } catch (e) {
+    console.error("[PlayVideo] IkyyXD search error:", e.message);
+  }
+
+  // Try 2: yt-search
+  try {
+    const yts = (await import("yt-search")).default;
+    const search = await yts(query);
+    if (search.videos?.length) {
+      const v = search.videos[0];
+      return {
+        title: v.title,
+        author: v.author.name,
+        duration: v.duration.timestamp,
+        views: v.views,
+        thumbnail: v.thumbnail || "",
+        url: v.url,
+      };
+    }
+  } catch (e) {
+    console.error("[PlayVideo] yt-search error:", e.message);
+  }
+
+  return null;
+}
+
+async function downloadVideo(url) {
+  // Try 1: IkyyXD ytmp4 (pakai "q" param)
+  try {
+    const { data } = await axios.get(`${IKYY}/download/ytmp4`, {
+      params: { q: url, apikey: "kyzz" },
+      timeout: 60000,
+    });
+    if (data?.status && data?.result) {
+      const dl = data.result.VideoUrl?.url || data.result.download_url || data.result.url;
+      if (dl) {
+        const { data: buf } = await axios.get(dl, {
+          responseType: "arraybuffer",
+          timeout: 120000,
+        });
+        const buffer = Buffer.from(buf);
+        if (buffer.length > 10000) {
+          return { buffer, title: data.result.title };
+        }
+      }
+    }
+  } catch (e) {
+    console.error("[PlayVideo] IkyyXD ytmp4 error:", e.message);
+  }
+
+  // Try 2: ytdl.js mp4
   try {
     const result = await ytdl(url, "mp4");
     if (result?.status && result?.dl) {
-      return { download: result.dl, title: result.title };
-    }
-  } catch (err) {
-    console.error("[PlayVideo] ytdl error:", err.message);
-  }
-  return null;
-}
-
-/**
- * Firefly API last resort
- */
-async function getVideoFirefly(url) {
-  try {
-    const { data } = await axios.get(
-      `https://firefly.maiku.my.id/api/ytdown?apikey=${config.APIkey?.firefly || ""}&url=${encodeURIComponent(url)}`,
-      { timeout: 30000 },
-    );
-
-    if (data?.status && data?.data?.mediaItems) {
-      const video =
-        data.data.mediaItems.find((m) => m.type === "Video" && m.mediaQuality === "HD") ||
-        data.data.mediaItems.find((m) => m.type === "Video" && m.mediaQuality === "SD") ||
-        data.data.mediaItems.find((m) => m.type === "Video");
-
-      if (video && video.mediaUrl) {
-        let attempts = 0;
-        while (attempts < 10) {
-          const { data: fileData } = await axios.get(video.mediaUrl, { timeout: 10000 });
-          if (fileData?.status === "completed" && fileData?.fileUrl) {
-            return { download: fileData.fileUrl, title: "Video" };
-          }
-          await new Promise((resolve) => setTimeout(resolve, 3000));
-          attempts++;
-        }
-      }
-    }
-  } catch (err) {
-    console.error("[PlayVideo] Firefly API error:", err.message);
-  }
-  return null;
-}
-
-async function handler(m, { sock }) {
-  // Parse: .playvideo720 <url> atau .playvideo <url>
-  const rawText = m.text?.trim() || "";
-  const match = rawText.match(/^(\d{3,4})?\s*(https?:\/\/\S+)/);
-  if (!match) {
-    return m.reply(
-      claraWrap("playvideo", `Contoh: ${m.prefix}playvideo720 https://youtube.com/watch?v=xxx`),
-    );
-  }
-
-  const quality = match[1] || "720";
-  const url = match[2];
-
-  if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
-    return m.reply("URL harus YouTube");
-  }
-  try {
-    let videoBuffer = null;
-    let videoTitle = "Video";
-
-    // 0. Try IkyyXD ytmp4 (primary, uses "q" param)
-    try {
-      console.log("[PlayVideo] 🎥 IkyyXD ytmp4...");
-      const { data } = await axios.get("https://api.ikyyxd.my.id/download/ytmp4", {
-        params: { q: url },
-        timeout: 60000,
+      const { data: buf } = await axios.get(result.dl, {
+        responseType: "arraybuffer",
+        timeout: 120000,
       });
-      if (data?.status && data?.result) {
-        const r = data.result;
-        const dl = r.VideoUrl?.url || r.download_url || r.url;
-        if (dl) {
-          const { data: buf } = await axios.get(dl, { responseType: "arraybuffer", timeout: 120000 });
-          videoBuffer = Buffer.from(buf);
-          videoTitle = r.title || "Video";
-        }
-      }
-    } catch (err) {
-      console.error("[PlayVideo] IkyyXD error:", err.message);
-    }
-
-    // 1. Try yt-dlp (fallback dari IkyyXD) (free, no API key, supports quality selection)
-    try {
-      console.log(`[PlayVideo] 🎥 yt-dlp ${quality}p...`);
-      const result = await downloadVideo(url, quality);
-      if (result?.buffer?.length > 10000) {
-        videoBuffer = result.buffer;
-        videoTitle = result.title;
-      }
-    } catch (err) {
-      console.error("[PlayVideo] yt-dlp failed:", err.message);
-    }
-
-    // 2. Fallback: ytdl.js (fallback dari yt-dlp) (no quality control)
-    if (!videoBuffer) {
-      const ytdlResult = await getVideoYtdl(url);
-      if (ytdlResult?.download) {
-        // Download the URL to buffer
-        try {
-          const { data } = await axios.get(ytdlResult.download, {
-            responseType: "arraybuffer",
-            timeout: 120000,
-          });
-          videoBuffer = Buffer.from(data);
-          videoTitle = ytdlResult.title;
-        } catch (err) {
-          console.error("[PlayVideo] ytdl buffer error:", err.message);
-        }
+      const buffer = Buffer.from(buf);
+      if (buffer.length > 10000) {
+        return { buffer, title: result.title };
       }
     }
+  } catch (e) {
+    console.error("[PlayVideo] ytdl.js error:", e.message);
+  }
 
-    // 3. Last resort: firefly API (fallback dari ytdl)
-    if (!videoBuffer) {
-      const fireflyResult = await getVideoFirefly(url);
-      if (fireflyResult?.download) {
-        try {
-          const { data } = await axios.get(fireflyResult.download, {
-            responseType: "arraybuffer",
-            timeout: 120000,
-          });
-          videoBuffer = Buffer.from(data);
-          videoTitle = fireflyResult.title;
-        } catch (err) {
-          console.error("[PlayVideo] firefly buffer error:", err.message);
-        }
-      }
+  return null;
+}
+
+async function handler(m, { sock, text }) {
+  const query = (text || m.text || "").trim();
+  if (!query) {
+    return m.reply(novaGuide("PlayVideo", "Kirim judul video yang mau dicari!", `${m.prefix}playvideo komang`));
+  }
+
+  try {
+    await m.react("🕒");
+
+    // Step 1: Search
+    const video = await searchYoutube(query);
+    if (!video) {
+      await m.react("❌");
+      return m.reply(novaError("PlayVideo", "Video tidak ditemukan, coba kata kunci lain ya!"));
     }
+    console.log(`[PlayVideo] Found: ${video.title} → ${video.url}`);
 
-    if (!videoBuffer || videoBuffer.length < 10000) {
-      throw new Error("Semua API video gagal");
+    // Step 2: Download video
+    const vid = await downloadVideo(video.url);
+    if (!vid?.buffer || vid.buffer.length < 10000) {
+      await m.react("❌");
+      return m.reply(novaError("PlayVideo", "Gagal download video, coba lagi nanti ya!"));
     }
+    console.log(`[PlayVideo] Video OK: ${vid.buffer.length} bytes`);
 
+    // Step 3: Send
+    const caption = [
+      `*YouTube Play — Video*`,
+      ``,
+      `*Judul:* ${vid.title || video.title}`,
+      `*Channel:* ${video.author}`,
+      `*Durasi:* ${video.duration}`,
+    ].join("\n");
+
+    await m.react("🐣");
     await sock.sendMessage(
       m.chat,
       {
-        video: videoBuffer,
-        caption: claraWrap("play", [
-          `Judul: *${videoTitle}*`,
-          `Quality: *${quality}p*`,
-          `Format: *MP4*`,
-        ].join("\n")),
+        video: vid.buffer,
+        caption,
         mimetype: "video/mp4",
-        fileName: `${videoTitle}.mp4`,
+        fileName: `${(vid.title || video.title).replace(/[^\w\s-]/g, "").substring(0, 50)}.mp4`,
       },
       { quoted: m },
     );
   } catch (err) {
-    console.error("[PlayVideo]", err);
-    m.reply(
-      claraWrap(
-        "playvideo",
-        "Gagal download video nih, coba lagi ya",
-      ),
-    );
+    console.error("[PlayVideo]", err.message || err);
+    await m.react("❌");
+    return m.reply(novaError("PlayVideo", err.message || "Gagal download video, coba lagi nanti ya!"));
   }
 }
 
