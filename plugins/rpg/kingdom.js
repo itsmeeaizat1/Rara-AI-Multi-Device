@@ -3,6 +3,7 @@
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -30,6 +31,7 @@ async function handler(m, { sock, text, command }) {
 
     // .kingdom <nama> — dirikan kerajaan
     if (command === "kingdom") {
+  await animGeneric(m, sock, "👑", "Loading Kingdom");
       if (rpg.kingdom) return m.reply(claraWrap("kingdom", "Kerajaanmu: *" + rpg.kingdom + "*", "info"));
       const name = (text || "").trim();
       if (!name) return m.reply(claraWrap("kingdom", "Ketik: .kingdom <nama_kerajaan>", "guide"));

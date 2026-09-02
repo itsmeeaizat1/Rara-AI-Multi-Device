@@ -2,6 +2,7 @@
 // RPG Scout — Intai lokasi musuh (reply)
 import { getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "scoutrpg", alias: ["scoutrpg", "scout"],
@@ -17,6 +18,7 @@ async function handler(m, { sock }) {
     const target = getRpgData({ sender: targetJid, key: { remoteJid: targetJid } });
     if (!target) return m.reply(claraWrap("scoutrpg", "Target belum terdaftar.", "error"));
     const loc = target.location || "rahasia";
+  await animGeneric(m, sock, "🔍", "Scouting");
     return m.reply(claraWrap("scoutrpg", `🔍 Lokasi musuh: *${loc}*`, "success"));
   } catch (e) {
     return m.reply(claraWrap("scoutrpg", "Terjadi error.", "error"));

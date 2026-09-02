@@ -2,6 +2,7 @@
 // RPG Spy — Intai target (reply)
 import { ensureRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "spyrpg", alias: ["spyrpg", "spy", "intai"],
@@ -19,6 +20,7 @@ async function handler(m, { sock }) {
     const loc = target.location || "tidak diketahui";
     const hp = `${target.hp}/${target.maxHp}`;
     const lvl = target.level || 1;
+  await animGeneric(m, sock, "🕵️", "Spying");
     return m.reply(claraWrap("spyrpg", `🕵️ Intel Target:\n📍 Lokasi: *${loc}*\n🎚️ Level: ${lvl}\n❤️ HP: ${hp}`, "success"));
   } catch (e) {
     return m.reply(claraWrap("spyrpg", "Terjadi error.", "error"));

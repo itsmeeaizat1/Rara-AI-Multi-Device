@@ -2,6 +2,7 @@
 // staminabar.js — Stamina system (manage energy for RPG activities)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "staminabar",
@@ -55,6 +56,7 @@ async function handler(m, { sock }) {
       data.lastRest = now;
       await db.setPlayerData?.(m.sender, "stamina", data);
       await m.react("🐣");
+  await animGeneric(m, sock, "⚡", "Checking Stamina");
       return m.reply(claraWrap("staminabar", `🛌 Istirahat berhasil! +${restored} stamina\n[${bar(data.stamina, MAX_STAMINA)}] ${data.stamina}/${MAX_STAMINA}`));
     }
 

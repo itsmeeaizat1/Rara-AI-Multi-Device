@@ -2,6 +2,7 @@
 // selectskill.js — Pilih skill RPG
 import { ensureRpg, saveRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const SKILLS = ["swordmaster", "necromancer", "witch", "archer", "magicswordmaster", "thief", "shadow"];

@@ -7,6 +7,7 @@ import {
 } from "../../src/lib/nova-rpg-service.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -113,6 +114,7 @@ async function handler(m, { sock }) {
         .slice(0, 10);
 
       if (players.length === 0) {
+  await animGeneric(m, sock, "⚔️", "Arena Battle");
         return m.reply(claraWrap("arenav3", "Belum ada player di arena.", "info"));
       }
 

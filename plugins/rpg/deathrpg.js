@@ -2,6 +2,7 @@
 // RPG Death — Cek & proses kematian
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "deathrpg", alias: ["deathrpg", "death", "mati"],
@@ -20,6 +21,7 @@ async function handler(m, { sock }) {
       saveRpg(m, rpg);
       return m.reply(claraWrap("deathrpg", `☠️ Kamu tewas!\nKehilangan: ${lostGold} gold.\nGunakan .revive untuk hidup kembali (biaya 200 gold).`, "error"));
     }
+  await animGeneric(m, sock, "☠️", "Death Check");
     return m.reply(claraWrap("deathrpg", `❤️ Kamu masih hidup.\nHP: ${rpg.hp}/${rpg.maxHp}`, "info"));
   } catch (e) {
     return m.reply(claraWrap("deathrpg", "Terjadi error.", "error"));

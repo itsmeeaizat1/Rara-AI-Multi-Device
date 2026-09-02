@@ -2,6 +2,7 @@
 // RPG Combo — Combo attack berdasar kelas
 import { ensureRpg, useEnergy } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "comborpg", alias: ["comborpg", "combo"],
@@ -21,6 +22,7 @@ async function handler(m, { sock }) {
     const crit = Math.random() < rpg.critRate / 100;
     const dmg = Math.floor(baseDmg * (crit ? 2 : 1));
     await m.react("🐣");
+  await animGeneric(m, sock, "🔗", "Combo Attack");
     return m.reply(claraWrap("comborpg", `🗡️ COMBO ATTACK!\nDamage: *${dmg}*${crit ? " 💥 CRITICAL!" : ""}`, "success"));
   } catch (e) {
     return m.reply(claraWrap("comborpg", "Terjadi error.", "error"));

@@ -1,4 +1,5 @@
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "npcrpg", alias: ["npcrpg", "npc"],
   category: "rpg", description: "Bicara dengan NPC",
@@ -15,6 +16,7 @@ async function handler(m, { sock }) {
   try {
     const text = m.args.join(" ").trim().toLowerCase();
     if (!text || !NPCS[text]) return m.reply(claraWrap("npcrpg", `NPC tersedia: ${Object.keys(NPCS).join(", ")}\nContoh: ${m.prefix}npcrpg penjaga`, "guide"));
+  await animGeneric(m, sock, "🧙", "NPC Interaction");
     return m.reply(claraWrap("npcrpg", NPCS[text], "info"));
   } catch (e) { return m.reply(claraWrap("npcrpg", "Error.", "error")); }
 }

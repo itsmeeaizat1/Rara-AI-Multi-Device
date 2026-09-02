@@ -5,6 +5,7 @@ import {
   ensureRpg, enchantItem, getItemCount, ITEM_DB
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -87,6 +88,7 @@ async function handler(m, { sock }) {
     }
 
     if (!rpg[slot]) {
+  await animGeneric(m, sock, "✨", "Enchanting");
       return m.reply(claraWrap("enchantrpg", `Slot *${SLOT_LABEL[slot]}* kosong. Equip item dulu dengan .equiprpg.`, "warn"));
     }
 

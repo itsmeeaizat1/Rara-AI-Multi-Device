@@ -2,6 +2,7 @@
 // RPG Reincarnate — Reinkarnasi (reset level, bonus permanen)
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "reincarnaterpg", alias: ["reincarnaterpg", "reincarnate"],
@@ -21,6 +22,7 @@ async function handler(m, { sock }) {
     rpg.atk += 5; rpg.def += 5;
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "✨", "Reincarnation");
     return m.reply(claraWrap("reincarnaterpg", `🔁 Kamu telah bereinkarnasi!\nReinkarnasi ke-${rpg.reincarnation}\nBonus permanen: +5% power\nATK & DEF +5 permanen`, "success"));
   } catch (e) {
     return m.reply(claraWrap("reincarnaterpg", "Terjadi error.", "error"));

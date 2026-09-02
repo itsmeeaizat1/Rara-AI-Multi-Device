@@ -2,6 +2,7 @@
 // RPG Curse — Kutuk musuh (reply target)
 import { ensureRpg, saveRpg, useMana, getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "curserpg", alias: ["curserpg", "curse", "kutuk"],
@@ -25,6 +26,7 @@ async function handler(m, { sock }) {
     saveRpg({ sender: targetJid, key: { remoteJid: targetJid } }, target);
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "💀", "Casting Curse");
     return m.reply(claraWrap("curserpg", `👻 Target telah dikutuk! Efek negatif aktif selama 1 jam.`, "success"));
   } catch (e) {
     return m.reply(claraWrap("curserpg", "Terjadi error.", "error"));

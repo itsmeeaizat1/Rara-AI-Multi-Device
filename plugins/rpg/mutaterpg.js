@@ -2,6 +2,7 @@
 // RPG Mutate — Ubah skill random
 import { ensureRpg, saveRpg, removeGold } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "mutaterpg", alias: ["mutaterpg", "mutate"],
@@ -23,6 +24,7 @@ async function handler(m, { sock }) {
     if (rpg.skills.length > 0) rpg.skills[0] = skill; else rpg.skills.push(skill);
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🧬", "Mutation");
     return m.reply(claraWrap("mutaterpg", `🧬 Skillmu berubah menjadi *${skill}*!`, "success"));
   } catch (e) {
     return m.reply(claraWrap("mutaterpg", "Terjadi error.", "error"));

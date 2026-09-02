@@ -2,6 +2,7 @@
 // RPG Ward — Aktifkan ward proteksi
 import { ensureRpg, saveRpg, useMana } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "wardrpg", alias: ["wardrpg", "ward", "perlindungan"],
@@ -20,6 +21,7 @@ async function handler(m, { sock }) {
     rpg.wardExpire = Date.now() + 3600000;
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🛡️", "Warding");
     return m.reply(claraWrap("wardrpg", `🔆 Ward aktif! Lokasimu aman dari trap & curse selama 1 jam.`, "success"));
   } catch (e) {
     return m.reply(claraWrap("wardrpg", "Terjadi error.", "error"));

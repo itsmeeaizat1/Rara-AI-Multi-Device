@@ -5,6 +5,7 @@ import {
   ensureRpg, getLeaderboard
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -33,6 +34,7 @@ async function handler(m, { sock }) {
     const leaderboard = getLeaderboard("gold", 10);
     if (!leaderboard || leaderboard.length === 0) {
       await m.react("🐣");
+  await animGeneric(m, sock, "🏹", "Loading");
       return m.reply(claraWrap("rankkerja", "Belum ada pemain RPG yang terdaftar.", "info"));
     }
 

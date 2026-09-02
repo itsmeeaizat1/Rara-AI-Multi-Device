@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG ZombieEvent — Wabah zombie (owner only)
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "zombieeventrpg", alias: ["zombieeventrpg", "zombieevent"],
@@ -12,6 +13,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   try {
     await m.react("🐣");
+  await animGeneric(m, sock, "🧟", "Zombie Event");
     return m.reply(claraWrap("zombieeventrpg", `🧟 *WABAH ZOMBIE TERJADI!*\n\nSemua pemain kehilangan 20 HP!\nGunakan .heal untuk pulih!`, "success"));
   } catch (e) {
     return m.reply(claraWrap("zombieeventrpg", "Terjadi error.", "error"));

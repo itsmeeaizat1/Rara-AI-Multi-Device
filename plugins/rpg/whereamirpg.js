@@ -2,6 +2,7 @@
 // RPG WhereAmI — Cek lokasi pemain
 import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "whereamirpg", alias: ["whereamirpg", "whereami", "lokasi"],
@@ -15,6 +16,7 @@ async function handler(m, { sock }) {
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("whereamirpg", "RPG belum siap.", "error"));
     const loc = rpg.location || "desa";
+  await animGeneric(m, sock, "📍", "Locating");
     return m.reply(claraWrap("whereamirpg", `📍 Kamu berada di: *${loc}*`, "info"));
   } catch (e) {
     return m.reply(claraWrap("whereamirpg", "Terjadi error.", "error"));

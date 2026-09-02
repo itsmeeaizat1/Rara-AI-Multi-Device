@@ -2,6 +2,7 @@
 // RPG DarkMode — Mode gelap RPG
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "darkmoderpg", alias: ["darkmoderpg", "darkmode"],
@@ -17,6 +18,7 @@ async function handler(m, { sock }) {
     rpg.mode = rpg.mode === "dark" ? "normal" : "dark";
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🌑", "Dark Mode");
     return m.reply(claraWrap("darkmoderpg", rpg.mode === "dark" ? `🌑 Kamu memasuki *DARK MODE RPG*. Efek negatif meningkat di malam hari, tapi drop rate juga naik.` : `☀️ Kamu kembali ke *NORMAL MODE*.`, "success"));
   } catch (e) {
     return m.reply(claraWrap("darkmoderpg", "Terjadi error.", "error"));

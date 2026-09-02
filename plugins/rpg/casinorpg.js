@@ -6,6 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -50,6 +51,7 @@ async function handler(m, { sock }) {
     const bet = parseInt(args[0]);
 
     if (!bet || bet < MIN_BET) {
+  await animGeneric(m, sock, "🎰", "Casino");
       return m.reply(claraWrap("casinorpg", `Minimal bet *${MIN_BET} gold*. Contoh: .casinorpg 100`, "warn"));
     }
 

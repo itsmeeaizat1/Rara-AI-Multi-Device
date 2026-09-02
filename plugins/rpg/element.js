@@ -3,6 +3,7 @@
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -70,6 +71,7 @@ async function handler(m, { sock, text }) {
 
     if (rpg.element) {
       const elem = ELEMENTS[rpg.element];
+  await animGeneric(m, sock, "🔮", "Selecting Element");
       return m.reply(claraWrap("element", "Elemenmu sudah dipilih: *" + elem.name + "*\nTidak bisa diganti.", "info"));
     }
 

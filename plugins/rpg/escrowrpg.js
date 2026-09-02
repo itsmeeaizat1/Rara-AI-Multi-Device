@@ -1,5 +1,6 @@
 import { ensureRpg, saveRpg, removeGold, addGold } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "escrowrpg", alias: ["escrowrpg", "escrow", "titipan"],
   category: "rpg", description: "Escrow — titipan aman antar pemain",
@@ -25,6 +26,7 @@ async function handler(m, { sock }) {
       global.rpgEscrow.push({ id: Date.now(), sender: m.sender, receiver: target, amount: jumlah, status: "pending" });
       saveRpg(m, rpg);
       await m.react("🐣");
+  await animGeneric(m, sock, "🔒", "Escrow Transaction");
       return m.reply(claraWrap("escrowrpg", `🤝 Escrow dibuat: ${jumlah} gold untuk @${target.split("@")[0]}.\nKetik .escrowrpg konfirmasi untuk cairkan.`, "success"));
     }
     if (aksi === "cek") {

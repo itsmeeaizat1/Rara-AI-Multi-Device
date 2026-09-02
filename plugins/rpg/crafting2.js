@@ -2,6 +2,7 @@
 // crafting2.js — Crafting System v2 (recipe, material, craft)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "crafting2",

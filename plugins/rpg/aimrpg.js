@@ -1,5 +1,6 @@
 import { ensureRpg, saveRpg, getRpgData, useEnergy } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "aimrpg", alias: ["aimrpg", "aim", "bidik"],
   category: "rpg", description: "Bidik & serang target (reply musuh, -50 HP, 10 energy)",
@@ -20,6 +21,7 @@ async function handler(m, { sock }) {
     saveRpg({ sender: targetJid, key: { remoteJid: targetJid } }, target);
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🎯", "Aiming");
     return m.reply(claraWrap("aimrpg", `🎯 Kamu membidik dan menyerang ${targetJid.split("@")[0]}, -50 HP!`, "success"));
   } catch (e) { return m.reply(claraWrap("aimrpg", "Error.", "error")); }
 }

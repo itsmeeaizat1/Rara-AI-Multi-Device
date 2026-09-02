@@ -2,6 +2,7 @@
 // pet.js — Pet System (adopsi, feed, level up, battle)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "pet",
@@ -86,6 +87,7 @@ async function handler(m, { sock }) {
 
       await savePetData(db, m.sender, pet);
       await m.react("🐣");
+  await animGeneric(m, sock, "🐾", "Summoning Pet");
       return m.reply(claraWrap("pet", `${petTemplate.emoji} Berhasil adopsi *${petTemplate.type}*!\nATK: ${pet.atk} | DEF: ${pet.def} | HP: ${pet.hp}\nJangan lupa feed dengan ${m.prefix}pet feed`));
     }
 

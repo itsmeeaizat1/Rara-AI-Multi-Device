@@ -1,5 +1,6 @@
 import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "talentrpg", alias: ["talentrpg", "talent"],
   category: "rpg", description: "Lihat talent berdasar kelas",
@@ -17,6 +18,7 @@ async function handler(m, { sock }) {
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("talentrpg", "RPG belum siap.", "error"));
     const talent = TALENTS[rpg.job] || "Belum tersedia";
+  await animGeneric(m, sock, "🌟", "Loading Talents");
     return m.reply(claraWrap("talentrpg", `💡 *Talent Class ${rpg.job}:*\n${talent}`, "info"));
   } catch (e) { return m.reply(claraWrap("talentrpg", "Error.", "error")); }
 }

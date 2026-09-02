@@ -2,6 +2,7 @@
 // RPG Bless — Blessing harian random buff
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "blessrpg", alias: ["blessrpg", "bless", "berkat"],
@@ -22,6 +23,7 @@ async function handler(m, { sock }) {
   try {
     const rpg = ensureRpg(m, m.pushName);
     if (!rpg) return m.reply(claraWrap("blessrpg", "RPG belum siap.", "error"));
+  await animGeneric(m, sock, "🙏", "Blessing");
     if (rpg.lastBless && Date.now() - rpg.lastBless < 86400000) return m.reply(claraWrap("blessrpg", "Kamu sudah menerima bless hari ini.", "info"));
     const buff = BUFFS[Math.floor(Math.random() * BUFFS.length)];
     buff.apply(rpg);

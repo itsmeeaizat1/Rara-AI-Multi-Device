@@ -5,6 +5,7 @@ import {
   ensureRpg, removeGold, addGold
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -40,6 +41,7 @@ async function handler(m, { sock }) {
     if (!targetJid && m.quoted) targetJid = m.quoted.sender;
 
     if (!amount || amount < MIN_TRANSFER) {
+  await animGeneric(m, sock, "💰", "Transferring Gold");
       return m.reply(claraWrap("tfgold", `Jumlah tidak valid. Contoh: .tfgold 100 @user`, "warn"));
     }
 

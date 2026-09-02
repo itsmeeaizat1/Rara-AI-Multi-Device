@@ -3,6 +3,7 @@
 
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -25,6 +26,7 @@ async function handler(m, { sock, text, command }) {
       const itemName = (text || "").trim();
       if (!itemName) return m.reply(claraWrap("recycle", "Masukkan nama item. Contoh: .recycle rawMeat", "guide"));
       rpg.inventory = rpg.inventory || {};
+  await animGeneric(m, sock, "♻️", "Recycling");
       if (!rpg.inventory[itemName] || rpg.inventory[itemName] < 1) return m.reply(claraWrap("recycle", "Item *" + itemName + "* tidak ada di inventory.", "info"));
 
       await m.react("🕒");

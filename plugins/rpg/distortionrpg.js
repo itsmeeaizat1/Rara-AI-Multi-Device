@@ -2,6 +2,7 @@
 // RPG Distortion — Zona distorsi (random loot)
 import { ensureRpg, saveRpg, addItem, useEnergy } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "distortionrpg", alias: ["distortionrpg", "distortion"],
@@ -25,6 +26,7 @@ async function handler(m, { sock }) {
     addItem(m, item, qty);
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🌀", "Distortion");
     return m.reply(claraWrap("distortionrpg", `${effect}\n\n🎁 Kamu mendapat ${qty}x *${item}* dari zona distorsi.`, "success"));
   } catch (e) {
     return m.reply(claraWrap("distortionrpg", "Terjadi error.", "error"));

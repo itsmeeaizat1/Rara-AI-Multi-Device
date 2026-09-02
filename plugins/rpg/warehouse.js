@@ -2,6 +2,7 @@
 // warehouse.js — Warehouse/Storage system (store items, expand capacity)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "warehouse",
@@ -58,6 +59,7 @@ async function handler(m, { sock }) {
       await saveData(db, m.sender, data);
 
       await m.react("🐣");
+  await animGeneric(m, sock, "🏪", "Opening Warehouse");
       return m.reply(claraWrap("warehouse", `📦 Disimpan: *${item.name || itemName}*\nGudang: ${data.items.length}/${data.slots}`));
     }
 

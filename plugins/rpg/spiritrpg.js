@@ -2,6 +2,7 @@
 // RPG Spirit — Panggil roh petarung
 import { ensureRpg, saveRpg, useMana } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "spiritrpg", alias: ["spiritrpg", "spirit", "roh"],
@@ -20,6 +21,7 @@ async function handler(m, { sock }) {
     rpg.spiritExpire = Date.now() + 3600000;
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🏹", "Loading");
     return m.reply(claraWrap("spiritrpg", `🪶 Kamu memanggil roh petarung! DMG +20 selama 1 jam.`, "success"));
   } catch (e) {
     return m.reply(claraWrap("spiritrpg", "Terjadi error.", "error"));

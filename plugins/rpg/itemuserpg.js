@@ -1,5 +1,6 @@
 import { ensureRpg, saveRpg, removeItem, regenHP, regenMana, getItemCount } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "itemuserpg", alias: ["itemuserpg", "itemuse"],
   category: "rpg", description: "Gunakan item dari inventory",
@@ -23,6 +24,7 @@ async function handler(m, { sock }) {
     const effect = ITEM_EFFECTS[text](rpg);
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "🎒", "Using Item");
     return m.reply(claraWrap("itemuserpg", `✅ Kamu menggunakan *${text}*. Effect: ${effect}`, "success"));
   } catch (e) { return m.reply(claraWrap("itemuserpg", "Error.", "error")); }
 }

@@ -1,5 +1,6 @@
 import { ensureRpg, saveRpg, removeGold, addGold } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "gbankrpg", alias: ["gbankrpg", "gbank"],
   category: "rpg", description: "Guild Bank — saldo bersama guild",
@@ -19,6 +20,7 @@ async function handler(m, { sock }) {
     if (!aksi) return m.reply(claraWrap("gbankrpg", `🏰 *GUILD BANK*\n\ngbankrpg saldo → cek saldo guild\ngbankrpg setor <jumlah> → setor gold\ngbankrpg tarik <jumlah> → tarik gold`, "guide"));
     if (!global.rpgGuildBank[rpg.guildId]) global.rpgGuildBank[rpg.guildId] = { balance: 0 };
     const gb = global.rpgGuildBank[rpg.guildId];
+  await animGeneric(m, sock, "🏦", "Guild Bank");
     if (aksi === "saldo") return m.reply(claraWrap("gbankrpg", `🏰 Saldo Guild: *${gb.balance} gold*`, "info"));
     if (aksi === "setor") {
       if (jumlah <= 0) return m.reply(claraWrap("gbankrpg", "Jumlah tidak valid.", "error"));

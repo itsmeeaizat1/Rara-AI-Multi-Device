@@ -1,5 +1,6 @@
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "savepointrpg", alias: ["savepointrpg", "savepoint", "savedata"],
   category: "rpg", description: "Simpan progres RPG",
@@ -13,6 +14,7 @@ async function handler(m, { sock }) {
     rpg.savePoint = Date.now();
     saveRpg(m, rpg);
     await m.react("🐣");
+  await animGeneric(m, sock, "💾", "Saving Points");
     return m.reply(claraWrap("savepointrpg", `💾 Kamu menyentuh *Save Point*. Progresmu disimpan.`, "success"));
   } catch (e) { return m.reply(claraWrap("savepointrpg", "Error.", "error")); }
 }

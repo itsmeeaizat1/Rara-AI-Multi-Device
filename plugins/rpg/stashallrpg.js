@@ -1,5 +1,6 @@
 import { ensureRpg, saveRpg, addItem, removeItem, getItemCount } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 const pluginConfig = {
   name: "stashallrpg", alias: ["stashallrpg", "stashall"],
   category: "rpg", description: "Pindah semua item ke storage",
@@ -12,6 +13,7 @@ async function handler(m, { sock }) {
     if (!rpg) return m.reply(claraWrap("stashallrpg", "RPG belum siap.", "error"));
     const inv = rpg.inventory || {};
     const items = Object.keys(inv).filter(k => inv[k] > 0);
+  await animGeneric(m, sock, "📦", "Stashing Items");
     if (!items.length) return m.reply(claraWrap("stashallrpg", "Inventory kosong.", "info"));
     let count = 0;
     for (const item of items) {
