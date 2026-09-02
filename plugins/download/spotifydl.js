@@ -57,6 +57,14 @@ async function handler(m, { sock }) {
     const ikyyResult = await ikyyDl("spotifydl", url);
     if (ikyyResult?.medias?.length) {
       const audio = ikyyResult.medias.find(m => m.type === "audio") || ikyyResult.medias[0];
+      const caption = mediaCaption({
+        platformIcon: "🎵", platformName: "Spotify",
+        title: ikyyResult.title || "Spotify Track",
+        author: ikyyResult.author || null,
+        format: "🎶 MP3", method: "IkyyXD",
+      });
+      await m.reply(caption);
+      await m.react("🐣");
       await sock.sendMessage(m.chat, {
         audio: { url: audio.url },
         mimetype: "audio/mpeg",

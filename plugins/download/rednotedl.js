@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { RedNoteDL } from "../../src/scraper/rednote.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "rednotedl",
@@ -36,14 +36,18 @@ async function handler(m, { sock }) {
     }
 
     if (result.type === "video" && result.results?.[0]) {
-      await sock.sendMedia(m.chat, result.results[0], result.title, m, {
-        type: "video",
-      });
+      const _cap = mediaCaption({ platformIcon: "🔴", platformName: "RedNote", title: result.title || "RedNote Video", format: "Video", method: "IkyyXD" });
+      await sock.sendMessage(m.chat, {
+        video: { url: result.results[0] }, caption: _cap,
+        contextInfo: { forwardingScore: 0, isForwarded: false },
+      }, { quoted: m });
     } else if (result.results?.length > 0) {
       for (let i = 0; i < Math.min(result.results.length, 5); i++) {
-        await sock.sendMedia(m.chat, result.results[i], "", m, {
-          type: "image",
-        });
+        const _imgCap = i === 0 ? mediaCaption({ platformIcon: "🔴", platformName: "RedNote", title: result.title || "RedNote", format: "Image", method: "IkyyXD" }) : null;
+        await sock.sendMessage(m.chat, {
+          image: { url: result.results[i] },
+          ...( _imgCap ? { caption: _imgCap } : {}),
+        }, { quoted: m });
       }
       if (result.results.length > 5) {
         await m.reply(

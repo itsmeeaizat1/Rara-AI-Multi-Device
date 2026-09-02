@@ -3,7 +3,7 @@
 // Primary: IkyyXD /download/douyin → /download/all-in-one | Fallback: azbry API
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import axios from "axios";
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "douyindl",
@@ -46,13 +46,18 @@ async function handler(m, { sock }) {
       const video = result.medias.find(m => m.type === "video") || result.medias[0];
       const audio = result.medias.find(m => m.type === "audio");
 
-      let caption = claraWrap("Douyin DL", [
-        result.title || "Media",
-        result.author ? `Author: ${result.author}` : "",
-      ].filter(Boolean).join("\n"));
+      const caption = mediaCaption({
+        platformIcon: "🎵", platformName: "Douyin",
+        title: result.title || "Douyin Video",
+        author: result.author || null,
+        duration: result.duration || null,
+        format: "Video", method: "IkyyXD",
+      });
 
       await m.react("🐣");
-      await sock.sendMedia(m.chat, video.url, caption, m, { type: "video" });
+      await sock.sendMessage(m.chat, {
+        video: { url: video.url }, caption,
+      }, { quoted: m });
       return;
     }
 
@@ -62,12 +67,21 @@ async function handler(m, { sock }) {
       const data = await azbryFetch(text);
       const r = data.result;
 
-      let caption = `🎵 *${r.platform || "Douyin"}*\n\n${r.title || ""}`;
+      const caption2 = mediaCaption({
+        platformIcon: "🎵", platformName: "Douyin",
+        title: r.title || "Douyin Video",
+        author: r.author || null,
+        format: r.video ? "Video" : "Audio",
+        method: "azbry",
+      });
 
       if (r.video) {
         await m.react("🐣");
-        await sock.sendMedia(m.chat, r.video, caption, m, { type: "video" });
+        await sock.sendMessage(m.chat, {
+          video: { url: r.video }, caption: caption2,
+        }, { quoted: m });
       } else if (r.audio) {
+        await m.reply(caption2);
         await m.react("🐣");
         await sock.sendMessage(m.chat, {
           audio: { url: r.audio },

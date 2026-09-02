@@ -5,7 +5,7 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { DailymotionDL } from "../../src/scraper/dailymotion.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const exec = promisify(execFile);
 
@@ -43,16 +43,18 @@ async function handler(m, { sock }) {
       return m.reply(novaError("Dailymotion", result.error || "Gagal download nih"));
     }
 
-    let caption =
-      `🎬 *ᴅᴀɪʟʏᴍᴏᴛɪᴏɴ*\n\n` +
-      `📌 ${result.title}\n` +
-      `⏱️ Durasi: ${result.duration}\n` +
-      `📺 Kualitas: ${result.quality}`;
+    const caption = mediaCaption({
+      platformIcon: "🎬", platformName: "Dailymotion",
+      title: result.title || "Dailymotion Video",
+      duration: result.duration || null,
+      format: result.quality || "Video",
+      method: "dailymotion",
+    });
 
     if (result.thumbnail) {
-      await sock.sendMedia(m.chat, result.thumbnail, caption, m, {
-        type: "image",
-      });
+      await sock.sendMessage(m.chat, {
+        image: { url: result.thumbnail }, caption,
+      }, { quoted: m });
     }
 
     if (result.video) {

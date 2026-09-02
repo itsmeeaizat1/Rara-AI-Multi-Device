@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from "axios";
-import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
 const pluginConfig = {
@@ -47,9 +47,18 @@ async function handler(m, { sock }) {
     const ikyyResult = await ikyyDl("tiktokkv2", text);
     if (ikyyResult?.medias?.length) {
       const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
-      await sock.sendMedia(m.chat, video.url, ikyyResult.title || "TikTok", m, {
-        type: "video", contextInfo: { forwardingScore: 0, isForwarded: false }
+      const caption = mediaCaption({
+        platformIcon: "🎵", platformName: "TikTok V2",
+        title: ikyyResult.title || "TikTok Video",
+        author: ikyyResult.author || null,
+        duration: ikyyResult.duration || null,
+        description: ikyyResult.description ? String(ikyyResult.description).slice(0, 120) : null,
+        format: "Video (No Watermark)", method: "IkyyXD",
       });
+      await sock.sendMessage(m.chat, {
+        video: { url: video.url }, caption,
+        contextInfo: { forwardingScore: 0, isForwarded: false },
+      }, { quoted: m });
       return;
     }
 
@@ -57,7 +66,17 @@ async function handler(m, { sock }) {
     const r = res.data?.result || res.data?.data;
     if (!r?.play) throw new Error("Gagal mengambil video TikTok");
 
-    const caption = `Title: ${r.title || "TikTok Video"}\nAuthor: ${r.author?.nickname || "-"}`;
+    const caption = mediaCaption({
+      platformIcon: "🎵", platformName: "TikTok V2",
+      title: r.title || "TikTok Video",
+      author: r.author?.nickname || null,
+      authorHandle: r.author?.unique_id || null,
+      duration: r.duration ? `${r.duration}s` : null,
+      views: r.play_count ? parseInt(r.play_count).toLocaleString() : null,
+      likes: r.digg_count ? parseInt(r.digg_count).toLocaleString() : null,
+      description: r.desc ? String(r.desc).slice(0, 120) : null,
+      format: "Video (No Watermark)", method: "Sanka",
+    });
 
     await sock.sendMessage(m.chat, {
         video: { url: r.play },

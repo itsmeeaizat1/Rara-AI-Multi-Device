@@ -3,7 +3,7 @@
 // Primary: IkyyXD /download/igv2 → all-in-one | Fallback: builtin ig.js
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
-import { novaError, novaGuide } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaGuide, mediaCaption } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -37,9 +37,11 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       for (const item of result.medias) {
         if (item.type === "video") {
-          await sock.sendMedia(m.chat, item.url, result.title || null, m, { type: "video", contextInfo: ctxInfo });
+          const _cap = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: result.title || "Instagram Media", format: "Video", method: "IkyyXD" });
+          await sock.sendMessage(m.chat, { video: { url: item.url }, caption: _cap, contextInfo: ctxInfo }, { quoted: m });
         } else {
-          await sock.sendMedia(m.chat, item.url, result.title || null, m, { type: "image", contextInfo: ctxInfo });
+          const _cap2 = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: result.title || "Instagram Media", format: "Image", method: "IkyyXD" });
+          await sock.sendMessage(m.chat, { image: { url: item.url }, caption: _cap2, contextInfo: ctxInfo }, { quoted: m });
         }
         break;
       }
@@ -55,9 +57,11 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         for (const item of igResult.media) {
           if (item.type === "video") {
-            await sock.sendMedia(m.chat, item.url, igResult.title || null, m, { type: "video", contextInfo: ctxInfo });
+            const _cap3 = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: igResult.title || "Instagram Media", format: "Video", method: "ig scraper" });
+            await sock.sendMessage(m.chat, { video: { url: item.url }, caption: _cap3, contextInfo: ctxInfo }, { quoted: m });
           } else {
-            await sock.sendMedia(m.chat, item.url, igResult.title || null, m, { type: "image", contextInfo: ctxInfo });
+            const _cap4 = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: igResult.title || "Instagram Media", format: "Image", method: "ig scraper" });
+            await sock.sendMessage(m.chat, { image: { url: item.url }, caption: _cap4, contextInfo: ctxInfo }, { quoted: m });
           }
           break;
         }

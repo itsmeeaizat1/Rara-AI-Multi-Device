@@ -138,6 +138,9 @@ async function handler(m, { sock }) {
         platformIcon: "🎵",
         platformName: "TikTok",
         title: ikyyResult.title || "TikTok Video",
+        author: ikyyResult.author || null,
+        duration: ikyyResult.duration || null,
+        description: ikyyResult.description || null,
         format: "Video HD (No Watermark)",
         method: "IkyyXD",
       });

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { snackvideo } from 'btch-downloader'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: "snackvideodl",
     alias: ["snackvideodl", "svdl"],
@@ -29,6 +29,7 @@ async function handler(m, { sock }) {
         return m.reply(novaGuide("SnackVideo", "URL-nya gak valid nih! Pastikan dari SnackVideo ya.", `${m.prefix}svdl https://www.snackvideo.com/@xxx/video/xxx`))
     }
     try {
+        await m.react("🕒")
         const data = await snackvideo(url)
         
         if (!data?.status || !data?.result?.videoUrl) {
@@ -37,13 +38,18 @@ async function handler(m, { sock }) {
         
         const result = data.result
         
-        await sock.sendMedia(m.chat, result.videoUrl, null, m, {
-            type: 'video',
-            contextInfo: {
-                forwardingScore: 0,
-                isForwarded: false
-            }
+        const caption = mediaCaption({
+            platformIcon: "🎬", platformName: "SnackVideo",
+            title: result.title || result.author || "SnackVideo",
+            author: result.author || null,
+            format: "Video", method: "btch-downloader",
         })
+        await m.react("🐣")
+        await sock.sendMessage(m.chat, {
+            video: { url: result.videoUrl },
+            caption,
+            contextInfo: { forwardingScore: 0, isForwarded: false },
+        }, { quoted: m })
         
     } catch (err) {
         return m.reply(novaError("SnackVideo", "Gagal memproses video SnackVideo. Coba lagi nanti!"))

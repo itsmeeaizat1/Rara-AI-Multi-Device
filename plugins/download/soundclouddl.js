@@ -31,6 +31,14 @@ async function handler(m, { sock }) {
 
     if (result?.medias?.length) {
       const audio = result.medias.find(m => m.type === "audio") || result.medias[0];
+      const caption = mediaCaption({
+        platformIcon: "☁️", platformName: "SoundCloud",
+        title: result.title || "SoundCloud Track",
+        author: result.author || null,
+        duration: result.duration || null,
+        format: "🎶 MP3", method: "IkyyXD",
+      });
+      await m.reply(caption);
       await m.react("🐣");
       await sock.sendMessage(m.chat, {
         audio: { url: audio.url },

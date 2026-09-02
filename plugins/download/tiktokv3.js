@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // tiktokv3.js — TikTok Downloader v3 (Sanka API + tikwm fallback)
 import axios from "axios";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 
@@ -55,9 +55,18 @@ async function handler(m, { sock }) {
     const ikyyResult = await ikyyDl("tiktokv3", text);
     if (ikyyResult?.medias?.length) {
       const video = ikyyResult.medias.find(m => m.type === "video") || ikyyResult.medias[0];
-      await sock.sendMedia(m.chat, video.url, ikyyResult.title || "TikTok", m, {
-        type: "video", contextInfo: { forwardingScore: 0, isForwarded: false }
+      const caption = mediaCaption({
+        platformIcon: "🎵", platformName: "TikTok V3",
+        title: ikyyResult.title || "TikTok Video",
+        author: ikyyResult.author || null,
+        duration: ikyyResult.duration || null,
+        description: ikyyResult.description ? String(ikyyResult.description).slice(0, 120) : null,
+        format: "Video (No Watermark)", method: "IkyyXD",
       });
+      await sock.sendMessage(m.chat, {
+        video: { url: video.url }, caption,
+        contextInfo: { forwardingScore: 0, isForwarded: false },
+      }, { quoted: m });
       return;
     }
 
@@ -78,16 +87,20 @@ async function handler(m, { sock }) {
       });
       const buffer = Buffer.from(vidRes.data);
 
-      let _lines = [];
-      _lines.push("✅ Berhasil!");
-      if (r.title || r.desc) _lines.push(`Title: ${(r.title || r.desc).slice(0, 80)}`);
-      if (r.author || r.username) _lines.push(`Author: @${r.author || r.username}`);
-      _lines.push(`Size: ${(buffer.length / 1024 / 1024).toFixed(1)} MB`);
-      _lines.push(`Source: Sanka + tikwm`);
+      const caption = mediaCaption({
+        platformIcon: "🎵", platformName: "TikTok V3",
+        title: r.title || r.desc || "TikTok Video",
+        author: r.author || r.username || null,
+        duration: r.duration ? `${r.duration}s` : null,
+        views: r.play_count ? parseInt(r.play_count).toLocaleString() : null,
+        likes: r.digg_count ? parseInt(r.digg_count).toLocaleString() : null,
+        format: `Video (${(buffer.length / 1024 / 1024).toFixed(1)} MB)`,
+        method: "Sanka + tikwm",
+      });
 
       await sock.sendMessage(m.chat, {
         video: buffer,
-        caption: claraWrap("TikTok v3", _lines.join("\n")),
+        caption,
       }, { quoted: m });
     } else if (r.images && r.images.length > 0) {
       for (const img of r.images.slice(0, 5)) {

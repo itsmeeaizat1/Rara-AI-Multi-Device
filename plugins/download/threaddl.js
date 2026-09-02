@@ -2,7 +2,7 @@
 import axios from "axios";
 import he from "he";
 import te from "../../src/lib/nova-error.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const BASE_URL = "https://workers-playground-cool-wood-c008.accoutydusra.workers.dev";
 
@@ -92,15 +92,14 @@ async function handler(m, { sock }) {
       return m.reply(novaError("Threads", "Gagal ambil data — mungkin privat atau sudah dihapus"));
     }
 
-    const captionText = `✨ *ᴛʜʀᴇᴀᴅꜱ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ* ✨
-
-Halo! Ini hasil unduhan Threads yang kamu minta:
-
-👤 *ᴘᴇᴍʙᴜᴀᴛ*: ${info.author || "Unknown"}
-📝 *ᴛᴇᴋꜱ ᴘᴏꜱᴛɪɴɢᴀɴ*: ${cleanText(info.title) || cleanText(info.description) || "Tidak ada deskripsi."}
-📊 *ᴊᴜᴍʟᴀʜ ꜰɪʟᴇ ᴍᴇᴅɪᴀ*: ${result.length} file
-
-*Semoga bermanfaat ya!* Jangan lupa mampir lagi kalau mau download yang lain. 🚀`;
+    const captionText = mediaCaption({
+      platformIcon: "🧵", platformName: "Threads",
+      title: cleanText(info.title) || cleanText(info.description) || "Threads Post",
+      author: info.author || null,
+      description: cleanText(info.description) ? cleanText(info.description).slice(0, 120) : null,
+      format: `${result.length} file`,
+      method: "threadsvid",
+    });
 
     const mediaList = [];
     for (const item of result) {

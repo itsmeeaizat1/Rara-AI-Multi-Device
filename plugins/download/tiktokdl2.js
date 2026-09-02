@@ -5,7 +5,7 @@ import crypto from 'crypto'
 import { generateWAMessage, generateWAMessageFromContent, jidNormalizedUser } from 'nova'
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
-import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, claraLine, novaCaption, novaError, novaEmpty, novaGuide, mediaCaption, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
@@ -132,13 +132,18 @@ async function handler(m, { sock }) {
     try {
         const result = await savett(url)
 
-        const caption =
-            "" +
-            `Author: ${result.username || '-'}\n` +
-            `Views: ${result.views || '-'} | Likes: ${result.likes || '-'}\n` +
-            `Comments: ${result.comments || '-'} | Shares: ${result.shares || '-'}\n` +
-            `Duration: ${result.duration || '-'}\n` +
-            ""
+        const caption = mediaCaption({
+            platformIcon: "🎵", platformName: "TikTok DL2",
+            title: result.username || "TikTok Video",
+            author: result.username || null,
+            duration: result.duration || null,
+            views: result.views || null,
+            likes: result.likes || null,
+            comments: result.comments || null,
+            shares: result.shares || null,
+            format: "Video (No Watermark)",
+            method: "savett scrape",
+        });
 
         if (result.type === 'video' && result.downloads.nowm.length > 0) {
             const videoRes = await axios.get(result.downloads.nowm[0], {

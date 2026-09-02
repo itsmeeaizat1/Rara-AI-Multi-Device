@@ -6,7 +6,7 @@ import { queueFFmpeg } from "../../src/lib/nova-ffmpeg.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { f } from "../../src/lib/nova-http.js";
 import te from "../../src/lib/nova-error.js";
-import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "pindl",
@@ -37,11 +37,17 @@ async function handler(m, { sock }) {
     const ikyyResult = await ikyyDl("pindl", url);
     if (ikyyResult?.medias?.length) {
       const ctxInfo = { forwardingScore: 0, isForwarded: false };
+      const caption = mediaCaption({
+        platformIcon: "📌", platformName: "Pinterest",
+        title: ikyyResult.title || "Pinterest Media",
+        format: ikyyResult.medias[0].type === "video" ? "Video" : "Image",
+        method: "IkyyXD",
+      });
       for (const item of ikyyResult.medias) {
         if (item.type === "video") {
-          await sock.sendMedia(m.chat, item.url, ikyyResult.title || "Pinterest", m, { type: "video", contextInfo: ctxInfo });
+          await sock.sendMessage(m.chat, { video: { url: item.url }, caption, contextInfo: ctxInfo }, { quoted: m });
         } else {
-          await sock.sendMedia(m.chat, item.url, ikyyResult.title || "Pinterest", m, { type: "image", contextInfo: ctxInfo });
+          await sock.sendMessage(m.chat, { image: { url: item.url }, caption, contextInfo: ctxInfo }, { quoted: m });
         }
         break;
       }
@@ -53,15 +59,18 @@ async function handler(m, { sock }) {
     if (!result || !result.media || result.media.length === 0) {
       return m.reply(novaEmpty("Pinterest DL", "Tidak ada media yang ditemukan dari link Pinterest tersebut."));
     }
+    const fbCaption = mediaCaption({
+      platformIcon: "📌", platformName: "Pinterest",
+      title: result.title || "Pinterest Media",
+      format: result.media[0].type === "video" ? "Video" : "Image",
+      method: "pinterestdl",
+    });
     for (const media of result.media) {
       if (media.type === "video") {
-        await sock.sendMedia(m.chat, media.url, null, m, {
-          type: "video",
-          contextInfo: {
-            forwardingScore: 0,
-            isForwarded: false,
-          },
-        });
+        await sock.sendMessage(m.chat, {
+          video: { url: media.url }, caption: fbCaption,
+          contextInfo: { forwardingScore: 0, isForwarded: false },
+        }, { quoted: m });
       } else if (media.type === "image") {
         if (media.url.includes("gif")) {
           const tempPath = path.join(process.cwd(), "temp");

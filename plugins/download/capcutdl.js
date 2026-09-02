@@ -3,7 +3,7 @@
 // Primary: IkyyXD /download/capcut → /download/all-in-one | Fallback: btch-downloader
 import { ikyyDownload } from "../../src/scraper/ikyydl.js";
 import { capcut } from "btch-downloader";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, mediaCaption } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "capcutdl",
@@ -39,11 +39,16 @@ async function handler(m, { sock }) {
       try {
         const data = await capcut(url);
         if (data?.status && data?.originalVideoUrl) {
-          await m.react("🐣");
-          return await sock.sendMedia(m.chat, data.originalVideoUrl, null, m, {
-            type: "video",
-            contextInfo: { forwardingScore: 0, isForwarded: false },
+          const caption = mediaCaption({
+            platformIcon: "✂️", platformName: "CapCut",
+            title: data?.title || "CapCut Video",
+            format: "Video", method: "btch-downloader",
           });
+          await m.react("🐣");
+          return await sock.sendMessage(m.chat, {
+            video: { url: data.originalVideoUrl }, caption,
+            contextInfo: { forwardingScore: 0, isForwarded: false },
+          }, { quoted: m });
         }
       } catch (e) {
         console.error("[capcutdl.js] btch fallback failed:", e.message);
@@ -53,11 +58,16 @@ async function handler(m, { sock }) {
     // Step 3: Send IkyyXD result if available
     if (result?.medias?.length) {
       const video = result.medias.find(m => m.type === "video") || result.medias[0];
-      await m.react("🐣");
-      return await sock.sendMedia(m.chat, video.url, result.title || null, m, {
-        type: "video",
-        contextInfo: { forwardingScore: 0, isForwarded: false },
+      const caption = mediaCaption({
+        platformIcon: "✂️", platformName: "CapCut",
+        title: result.title || "CapCut Video",
+        format: "Video", method: "IkyyXD",
       });
+      await m.react("🐣");
+      return await sock.sendMessage(m.chat, {
+        video: { url: video.url }, caption,
+        contextInfo: { forwardingScore: 0, isForwarded: false },
+      }, { quoted: m });
     }
 
     await m.react("❌");
