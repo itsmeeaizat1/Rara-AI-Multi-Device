@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20satukan%20allmenu%20ke%20V1%2C%20hapus%20v-success?style=for-the-badge)
-> *Commit: "refactor: satukan allmenu ke V1, hapus varian V2/V5/V6"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20rename%20folder%20docs%2F%20-%3E%20changel-success?style=for-the-badge)
+> *Commit: "refactor: rename folder docs/ -> changelogs/"*
 <!--END_SECTION:latest-update-->
 
 ---
