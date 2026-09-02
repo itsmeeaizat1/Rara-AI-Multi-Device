@@ -230,17 +230,20 @@ function tipText(text) {
 }
 
 function claraWrap(title, body, type = "info") {
-  if (type === "guide") {
-    const raw = Array.isArray(body) ? body : String(body).split("\n");
-    const lines = raw.filter(l => l.trim());
-    return bracketBox(type, title, lines);
-  }
   const raw = Array.isArray(body) ? body : String(body).split("\n");
-  const text = raw.filter(l => l.trim()).join("\n");
-  if (type === "error") return `❌ Gagal: ${text}`;
-  if (type === "success") return `✅ ${text}`;
-  if (type === "warn") return `⚠ ${text}`;
-  return text;
+  const lines = raw.filter(l => l.trim());
+
+  // Prefix icon di baris pertama untuk status type (error/success/warn)
+  if (type === "error" && lines.length) {
+    lines[0] = lines[0].startsWith("❌") ? lines[0] : `❌ ${lines[0]}`;
+  } else if (type === "success" && lines.length) {
+    lines[0] = lines[0].startsWith("✅") ? lines[0] : `✅ ${lines[0]}`;
+  } else if (type === "warn" && lines.length) {
+    lines[0] = lines[0].startsWith("⚠") ? lines[0] : `⚠ ${lines[0]}`;
+  }
+
+  // Semua type (info/guide/error/success/warn) pakai box-drawing yang sama
+  return buildBox(title, lines);
 }
 
 function claraLine(title, text) {
@@ -697,9 +700,13 @@ function pickRandom(arr) {
  * @param {string} [detail] - detail error opsional
  */
 function novaError(commandName, detail) {
-  let msg = `❌ Gagal`;
-  if (detail) msg += `: ${detail}`;
-  return msg;
+  const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("ERROR");
+  let out = `╭─「 ✦ ${title} ✦ 」\n`;
+  out += `│\n`;
+  out += `│ ❌ ${scLine(detail || "Gagal, coba lagi ya")}\n`;
+  out += `│\n`;
+  out += `╰────  •  ────`;
+  return out;
 }
 
 /**
@@ -708,9 +715,13 @@ function novaError(commandName, detail) {
  * @param {string} [detail] - detail opsional
  */
 function novaEmpty(commandName, detail) {
-  let msg = `❌ Kosong`;
-  if (detail) msg += `: ${detail}`;
-  return msg;
+  const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("KOSONG");
+  let out = `╭─「 ✦ ${title} ✦ 」\n`;
+  out += `│\n`;
+  out += `│ ❌ ${scLine(detail || "Kosong, tidak ada data")}\n`;
+  out += `│\n`;
+  out += `╰────  •  ────`;
+  return out;
 }
 
 /**
@@ -751,7 +762,13 @@ function novaNoQuoted(commandName, mediaType) {
  * @param {string} message - pesan sukses
  */
 function novaSuccess(commandName, message) {
-  return `✅ ${message || "Berhasil!"}`;
+  const title = commandName ? toSC(String(commandName).toUpperCase()) : toSC("SUKSES");
+  let out = `╭─「 ✦ ${title} ✦ 」\n`;
+  out += `│\n`;
+  out += `│ ✅ ${scLine(message || "Berhasil!")}\n`;
+  out += `│\n`;
+  out += `╰────  •  ────`;
+  return out;
 }
 
 /**
