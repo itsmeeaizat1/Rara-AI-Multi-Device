@@ -1299,3 +1299,11 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - 27 localParse patterns (instan, tanpa AI online)
 - Blocklist otomatis: user diblokir tidak bisa masuk grup lagi
 - AI online hanya dipanggil jika localParse tidak match
+
+## Weather Config
+- .setweather — Set lokasi cuaca untuk info section menu (owner only)
+- .setweather Serang → cari kota via Open-Meteo Geocoding API
+- .setweather -6.12,106.14 → set manual lat,lng
+- .setweather reset → kembalikan ke default (Serang)
+- .setweather → tampilkan lokasi sekarang
+- Default: Serang, Banten (-6.1200, 106.1443)

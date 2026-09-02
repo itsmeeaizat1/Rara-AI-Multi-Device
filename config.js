@@ -380,15 +380,31 @@ const config = {
   backup: { enabled: false, intervalHours: 24, retainDays: 7 },
   scheduler: { resetHour: 0, resetMinute: 0 },
 
+  // ═══════════════════════════════════════════
+  // Konfigurasi Cuaca (untuk info section menu + .cuaca)
+  // Provider: open-meteo (gratis, tanpa API key) atau accuweather (butuh key)
+  // Lokasi default: Serang, Banten
+  // ═══════════════════════════════════════════
+  weather: {
+    provider: "open-meteo",
+    apiKey: "",
+    timezone: "Asia/Jakarta",
+    location: {
+      name: "Serang",
+      latitude: -6.1200,
+      longitude: 106.1443,
+    },
+  },
+
   // Laporan cuaca otomatis memakai Open-Meteo (gratis, tanpa API key).
   // Aktifkan dan tentukan grup tujuan melalui command .cuaca.
   weatherScheduler: {
     enabled: false,
     timezone: "Asia/Jakarta",
     location: {
-      name: "Jakarta",
-      latitude: -6.2088,
-      longitude: 106.8456,
+      name: "Serang",
+      latitude: -6.1200,
+      longitude: 106.1443,
     },
     schedules: [
       { key: "pagi", label: "Pagi", hour: 6, minute: 30 },
