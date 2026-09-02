@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20rapikan%20duplikat%20plugin%20%E2%80%94%20hapu-success?style=for-the-badge)
-> *Commit: "refactor: rapikan duplikat plugin — hapus 18 file, rename 2"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20integrasi%20.leaderboard%20ke%20RPG%20syst-success?style=for-the-badge)
+> *Commit: "feat: integrasi .leaderboard ke RPG system baru"*
 <!--END_SECTION:latest-update-->
 
 ---
