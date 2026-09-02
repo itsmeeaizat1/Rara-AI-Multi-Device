@@ -23,9 +23,9 @@ const pluginConfig = {
 const VARIANTS = {
   v1: {
     id: 1,
-    name: "FAKE LOCATION",
-    desc: "InteractiveMessage + externalAdReply (thumbnail + weather)",
-    emoji: "📍",
+    name: "EXTERNAL AD REPLY",
+    desc: "InteractiveMessage + externalAdReply (thumbnail + weather) — desain aktif",
+    emoji: "✨",
   },
 };
 
