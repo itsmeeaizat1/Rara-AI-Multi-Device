@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20hapus%20info%20section%20dari%20command%20not-success?style=for-the-badge)
-> *Commit: "fix: hapus info section dari command not found reply — cuma suggestion doang, info section hanya untuk menu/allmenu"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20perbaiki%20claraWrap%2FnovaError%2FnovaEm-success?style=for-the-badge)
+> *Commit: "fix: perbaiki claraWrap/novaError/novaEmpty/novaSuccess yang return teks polos tanpa box-drawing — sekarang semua konsisten pakai format ╭─「✦ Title ✦」/│/╰──── di 1600+ pemakaian"*
 <!--END_SECTION:latest-update-->
 
 ---
