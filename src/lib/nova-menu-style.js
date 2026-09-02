@@ -50,6 +50,24 @@ const isRealEmoji = (s) => s && /\p{Extended_Pictographic}/u.test(s);
  * Separator: pass "---" as a line.
  * Empty: pass "" as a line.
  */
+// Wrap konten box per kata supaya WhatsApp gak hard-wrap acak di tengah
+// baris — lanjutan baris tetap pakai prefix │ biar box keliatan rapi.
+const BOX_WRAP_WIDTH = 60;
+
+function wrapLine(text, width = BOX_WRAP_WIDTH) {
+  const str = String(text);
+  if (str.length <= width) return [str];
+  const rows = [];
+  let cur = "";
+  for (const w of str.split(" ")) {
+    if (!cur) { cur = w; continue; }
+    if ((cur + " " + w).length <= width) cur += " " + w;
+    else { rows.push(cur); cur = w; }
+  }
+  if (cur) rows.push(cur);
+  return rows;
+}
+
 function buildBox(headerTitle, lines = []) {
   // Header TIDAK di-stretch mengikuti panjang body — dash panjang tanpa spasi
   // bikin WhatsApp hard-wrap jadi beberapa baris "──────" berantakan di HP.
@@ -67,13 +85,19 @@ function buildBox(headerTitle, lines = []) {
     } else if (!line || !String(line).trim()) {
       body.push("│");
     } else {
+      // FIX garis dobel: dulu cuma satu karakter depan yang di-strip, jadi teks
+      // yang sudah bawa prefix │ │ sendiri menghasilkan │ │ │ dobel di output.
       const clean = String(line)
         .replace(/^╎❏\s*/, '')
         .replace(/^╎\s*$/, '')
         .replace(/^┊\s+➶\s*/, '')
-        .replace(/^[•┊╎❏➶╭╰│┃]\s*/g, '');
+        .replace(/^(?:[•┊╎❏➶╭╰│┃]\s*)+/, '');
       const text = scLine(clean);
-      body.push(`│ ${text}`);
+      // FIX word-wrap: pecah baris panjang per kata, tiap lanjutan tetap
+      // dibungkus │ — WhatsApp tidak lagi hard-wrap acak tanpa prefix.
+      for (const row of wrapLine(text)) {
+        body.push(`│ ${row}`);
+      }
     }
   }
   const footer = "╰────  •  ────";
