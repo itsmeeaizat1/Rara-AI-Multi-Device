@@ -85,7 +85,7 @@ function describe(r) {
 const pluginConfig = {
   name: "autonovaai",
   alias: ["autonovaai", "setautonovaai"],
-  category: "owner",
+  category: "ai",
   description: "Bikin rule automation pakai bahasa manusia — AI terjemahin jadi aturan",
   usage: ".autonovaai <kalimat bebas>",
   example: ".autonovaai kalau ada yang bilang assalamualaikum, balas waalaikumsalam\n.autonovaai setiap jam 05:00 ingatin sholat subuh\n.autonovaai kalau ada yang kirim sticker, react 🔥\n.autonovaai list / del AF-1 / on AF-1 / off AF-1",
