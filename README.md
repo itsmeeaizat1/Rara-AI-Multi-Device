@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20standardisasi%20info%20section%20(mediaC-success?style=for-the-badge)
-> *Commit: "feat: standardisasi info section (mediaCaption) untuk semua plugin downloader"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20info%20section%20(mediaCaption)%20untuk%20-success?style=for-the-badge)
+> *Commit: "feat: info section (mediaCaption) untuk sisa plugin downloader"*
 <!--END_SECTION:latest-update-->
 
 ---
