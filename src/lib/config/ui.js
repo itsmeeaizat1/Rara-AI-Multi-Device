@@ -5,7 +5,7 @@ export const ui = {
   menuVariant: 1,
   menuVideoUrl: "",
   allmenuVideoUrl: "",
-  allmenuVariant: 3,
+  allmenuVariant: 1,
   replyVariant: 1,
 };
 
