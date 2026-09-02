@@ -445,6 +445,14 @@ async function registrationAnswerHandler(m, sock) {
   if (!session) return false;
   if (m.chat !== session.chatJid) return false;
 
+  // Kalau user reply pesan LAIN (bukan prompt sesi .daftar ini) — misal
+  // reply ke captcha .daftarotomatis — jangan di-hijack sesi ini. Biarkan
+  // lolos ke handler lain biar fokus tetap di flow yang lagi dijawab.
+  const quotedIdForCheck = getQuotedMessageId(m);
+  if (m.quoted && session.promptId && quotedIdForCheck && quotedIdForCheck !== session.promptId) {
+    return false;
+  }
+
   // Kalau gak ada text body (misal reply pakai VN/gambar/sticker), kasih tau
   // user wajib jawab pakai TEKS — jangan diemin aja biar gak bingung.
   if (!m.body || !m.body.trim()) {

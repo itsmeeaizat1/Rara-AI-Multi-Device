@@ -373,8 +373,9 @@ async function handler(m, { sock }) {
   session.captcha = captcha
 
   // Send captcha to user
+  var sentCaptcha = null
   if (captcha.type === "image" && captcha.imageBuffer) {
-    await sock.sendMessage(m.chat, {
+    sentCaptcha = await sock.sendMessage(m.chat, {
       image: captcha.imageBuffer,
       caption: claraWrap("daftarotomatis", [
         "Selesaikan captcha di atas",
@@ -384,7 +385,7 @@ async function handler(m, { sock }) {
       ]),
     }, { quoted: m })
   } else if (captcha.type === "text-api" && captcha.textCaptcha) {
-    await sock.sendMessage(m.chat, {
+    sentCaptcha = await sock.sendMessage(m.chat, {
       text: claraWrap("daftarotomatis", [
         captcha.textCaptcha,
         "",
@@ -393,7 +394,7 @@ async function handler(m, { sock }) {
       ]),
     }, { quoted: m })
   } else if (captcha.type === "math") {
-    await sock.sendMessage(m.chat, {
+    sentCaptcha = await sock.sendMessage(m.chat, {
       text: claraWrap("daftarotomatis", [
         captcha.question,
         "",
@@ -402,6 +403,20 @@ async function handler(m, { sock }) {
       ]),
     }, { quoted: m })
   }
+  session.promptId = sentCaptcha?.key?.id || null
+}
+
+function getQuotedMessageId(m) {
+  return m.quoted?.id || m.quoted?.stanzaId || m.quoted?.key?.id || null
+}
+
+// Cek apakah pesan ini adalah reply ke prompt LAIN (bukan punya sesi captcha
+// ini) — misal reply ke prompt .daftar. Kalau iya, JANGAN di-hijack, biarkan
+// lolos ke handler lain biar fokus captcha gak keserobot flow lain.
+function isReplyToOtherPrompt(m, session) {
+  const quotedId = getQuotedMessageId(m)
+  if (!m.quoted || !quotedId || !session.promptId) return false
+  return quotedId !== session.promptId
 }
 
 async function captchaAnswerHandler(m, sock) {
@@ -414,6 +429,7 @@ async function captchaAnswerHandler(m, sock) {
   var session = getCaptchaSession(m.sender)
   if (!session) return false
   if (m.chat !== session.chatJid) return false
+  if (isReplyToOtherPrompt(m, session)) return false
 
   var text = m.body.trim()
   var lowText = text.toLowerCase()
@@ -512,7 +528,7 @@ async function captchaAnswerHandler(m, sock) {
 
     // Ask for name
     session.step = "name"
-    await sock.sendMessage(m.chat, {
+    var sentName = await sock.sendMessage(m.chat, {
       text: claraWrap("daftarotomatis", [
         "Captcha benar!",
         "",
@@ -523,6 +539,7 @@ async function captchaAnswerHandler(m, sock) {
       ]),
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
+    session.promptId = sentName?.key?.id || null
     return true
   }
 
@@ -535,7 +552,7 @@ async function captchaAnswerHandler(m, sock) {
     }
     session.name = name
     session.step = "age"
-    await sock.sendMessage(m.chat, {
+    var sentAge = await sock.sendMessage(m.chat, {
       text: claraWrap("daftarotomatis", [
         "Halo " + name + "!",
         "",
@@ -547,6 +564,7 @@ async function captchaAnswerHandler(m, sock) {
       ]),
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
+    session.promptId = sentAge?.key?.id || null
     return true
   }
 
@@ -559,10 +577,11 @@ async function captchaAnswerHandler(m, sock) {
     }
     session.age = age
     session.step = "gender"
-    await sock.sendMessage(m.chat, {
+    var sentGender = await sock.sendMessage(m.chat, {
       text: "*Pertanyaan 3/3*\nKamu cowo atau cewe?\n\n*Cowo / Cowok / Laki-laki / L*\n*Cewe / Cewek / Perempuan / P*\n\nReply pesan ini dengan jawabanmu",
       contextInfo: getRegistrationContextInfo(),
     }, { quoted: m })
+    session.promptId = sentGender?.key?.id || null
     return true
   }
 
