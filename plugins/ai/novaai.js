@@ -32,41 +32,66 @@ async function handler(m, { sock, conn, config }) {
   const text = m.args.join(" ");
 
   if (!text) {
-    return m.reply(
-      "╭─「 ✦ ɴᴏᴠᴀ ᴀɪ ✦ 」\n" +
-      "│\n" +
-      "│ 🧠 AI Agent — 25+ perintah tanpa AI online\n" +
-      "│\n" +
-      "│ 📌 Grup:\n" +
-      "│ • .novaai tutup grup / buka grup\n" +
-      "│ • .novaai kunci edit info / buka edit info\n" +
-      "│ • .novaai ganti nama jadi [nama]\n" +
-      "│ • .novaai ganti deskripsi jadi [desc]\n" +
-      "│ • .novaai ganti foto profil grup (reply gambar)\n" +
-      "│\n" +
-      "│ 📌 Member:\n" +
-      "│ • .novaai kick @user\n" +
-      "│ • .novaai blokir @user (kick + blok masuk lagi)\n" +
-      "│ • .novaai unblokir @user\n" +
-      "│ • .novaai jadikan @user admin / turunkan @user\n" +
-      "│ • .novaai tambah @user ke grup\n" +
-      "│\n" +
-      "│ 📌 Link & Approval:\n" +
-      "│ • .novaai link grup\n" +
-      "│ • .novaai reset link grup\n" +
-      "│ • .novaai aktifkan approval / matikan approval\n" +
-      "│\n" +
-      "│ 📌 Lainnya:\n" +
-      "│ • .novaai tag semua [pesan]\n" +
-      "│ • .novaai tag admin [pesan]\n" +
-      "│ • .novaai poll [pertanyaan | opsi1, opsi2]\n" +
-      "│ • .novaai info grup\n" +
-      "│ • .novaai hapus pesan (reply pesan)\n" +
-      "│ • .novaai keluar grup (owner only)\n" +
-      "│ • .novaai [pertanyaan apa saja]\n" +
-      "│\n" +
-      "╰────  •  ────"
-    );
+    // Dynamic command list dari TOOLS — selalu sinkron dengan aiagent.js
+    const scMap = {a:'ᴀ',b:'ʙ',c:'ᴄ',d:'ᴅ',e:'ᴇ',f:'ꜰ',g:'ɢ',h:'ʜ',i:'ɪ',j:'ᴊ',k:'ᴋ',l:'ʟ',m:'ᴍ',n:'ɴ',o:'ᴏ',p:'ᴘ',r:'ʀ',s:'ꜱ',t:'ᴛ',u:'ᴜ',v:'ᴠ',w:'ᴡ',y:'ʏ',z:'ᴢ'};
+    const toSC = (s) => s.replace(/[a-z]/g, c => scMap[c] || c);
+
+    // Kategori tools
+    const categories = {
+      'Grup': ['closegc', 'opengc', 'lockedit', 'unlockedit', 'setname', 'setdesc', 'setpp', 'groupinfo'],
+      'Member': ['kick', 'add', 'promote', 'demote', 'block', 'unblock'],
+      'Link': ['getlink', 'revokelink'],
+      'Approval': ['approvalon', 'approvaloff'],
+      'Tag': ['hidetag', 'tagadmin'],
+      'Lainnya': ['poll', 'delmsg', 'leavegc']
+    };
+
+    // Contoh perintah natural untuk tiap tool
+    const examples = {
+      closegc: '.novaai tutup grup',
+      opengc: '.novaai buka grup',
+      lockedit: '.novaai kunci edit info grup',
+      unlockedit: '.novaai buka edit info grup',
+      setname: '.novaai ganti nama jadi [nama]',
+      setdesc: '.novaai ganti deskripsi jadi [desc]',
+      setpp: '.novaai ganti foto profil grup (reply gambar)',
+      groupinfo: '.novaai info grup',
+      kick: '.novaai kick @user',
+      add: '.novaai tambah @user ke grup',
+      promote: '.novaai jadikan @user admin',
+      demote: '.novaai turunkan @user jadi member',
+      block: '.novaai blokir @user (kick + blok masuk lagi)',
+      unblock: '.novaai unblokir @user',
+      getlink: '.novaai link grup',
+      revokelink: '.novaai reset link grup',
+      approvalon: '.novaai aktifkan approval',
+      approvaloff: '.novaai matikan approval',
+      hidetag: '.novaai tag semua [pesan]',
+      tagadmin: '.novaai tag admin [pesan]',
+      poll: '.novaai poll [pertanyaan | opsi1, opsi2]',
+      delmsg: '.novaai hapus pesan (reply pesan)',
+      leavegc: '.novaai keluar grup (owner only)'
+    };
+
+    let text_out = '╭─「 ✦ ɴᴏᴠᴀ ᴀɪ ✦ 」\n';
+    text_out += '│\n';
+    text_out += '│ 🧠 AI Agent — ' + Object.keys(TOOLS).length + ' perintah\n';
+    text_out += '│';
+
+    for (const [cat, tools] of Object.entries(categories)) {
+      text_out += '\n│ 📌 ' + toSC(cat) + ':\n';
+      for (const tool of tools) {
+        if (TOOLS[tool]) {
+          text_out += '│ • ' + (examples[tool] || tool) + '\n';
+        }
+      }
+    }
+
+    text_out += '\n│\n';
+    text_out += '│ 💬 Atau ketik pertanyaan apa saja\n';
+    text_out += '│';
+
+    return m.reply(text_out + '\n╰────  •  ────');
   }
 
   // React 🧠 untuk AI Agent
