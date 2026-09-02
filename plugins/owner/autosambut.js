@@ -70,7 +70,7 @@ async function handler(m, { sock, db }) {
     const delayMs = groupData.autoSambut.delayMs || 7200000;
     const totalPesan = groupData.autoSambut.pesanList.length;
 
-    return m.reply( `⚠️ *SISTEM AUTO SAMBUT*\n\n` +
+    return m.reply( `⚠️ *ꜱɪꜱᴛᴇᴍ ᴀᴜᴛᴏ ꜱᴀᴍʙᴜᴛ*\n\n` +
       `Sistem otomatis menyambut owner di grup secara acak ketika owner muncul setelah lama idle.\n` +
       `Status: *${status}*\n` +
       `Batas Waktu Idle: *${formatTime(delayMs)}*\n` +

@@ -63,7 +63,7 @@ async function handler(m, { sock, db }) {
   ];
 
   const bodyText =
-    `🎨 *WELCOME TYPE*\n\n` +
+    `🎨 *ᴡᴇʟᴄᴏᴍᴇ ᴛʏᴘᴇ*\n\n` +
     `Atur tampilan pesan welcome saat member baru masuk grup\n` +
     `Tipe aktif: *V${current} — ${VARIANTS[current]?.name || "Text"}*\n\n` +
     `*V1 Text Only* 📝 — Pesan teks biasa tanpa gambar\n\n` +

@@ -207,21 +207,21 @@ function getRandomReward() {
 
 // ─── Win Messages ───
 const WIN_MSGS = [
-  "🎉 *SELAMAT!* Semua jawaban ketemu!",
+  "🎉 *ꜱᴇʟᴀᴍᴀᴛ!* Semua jawaban ketemu!",
   "🔥 *WOW!* Board selesai semua!",
-  "✨ *MANTAP!* Kerja sama tim yang mantap!",
-  "🏆 *GG WP!* Keluarga cerdas nih!",
+  "✨ *ᴍᴀɴᴛᴀᴘ!* Kerja sama tim yang mantap!",
+  "🏆 *ɢɢ ᴡᴘ!* Keluarga cerdas nih!",
 ];
 
 const TIMEOUT_MSGS = [
   "⏱️ *Waktu habis! Game berakhir!*",
   "⏱️ *Time's up! Yah telat nih~*",
-  "⏱️ *WAKTU HABIS!*",
+  "⏱️ *ᴡᴀᴋᴛᴜ ʜᴀʙɪꜱ!*",
 ];
 
 const SURRENDER_MSGS = [
   "🏳️ *Yah nyerah deh...*",
-  "🏳️ *MENYERAH!* Oke, ini jawabannya:",
+  "🏳️ *ᴍᴇɴʏᴇʀᴀʜ!* Oke, ini jawabannya:",
   "🏳️ *Kasihan nih nyerah...*",
 ];
 
@@ -309,7 +309,7 @@ Total jawaban: *${questionData.jawaban.length}*\n`;
       try {
         let endText = `${pick(TIMEOUT_MSGS)}\n\n`;
         endText += `${session.question}\n\n`;
-        endText += `📊 *JAWABAN LENGKAP:*\n\n`;
+        endText += `📊 *ᴊᴀᴡᴀʙᴀɴ ʟᴇɴɢᴋᴀᴘ:*\n\n`;
         for (let i = 0; i < session.answers.length; i++) {
           const ans = session.answers[i];
           if (ans.revealed) {
@@ -322,7 +322,7 @@ Total jawaban: *${questionData.jawaban.length}*\n`;
 Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
         const scores = renderScores(session);
         if (scores) {
-          endText += `🏆 *SKOR AKHIR:*\n${scores}\n\n`;
+          endText += `🏆 *ꜱᴋᴏʀ ᴀᴋʜɪʀ:*\n${scores}\n\n`;
         }
         endText += ``;
         await sock.sendMessage(chatId, { text: endText });
@@ -362,7 +362,7 @@ async function answerHandler(m, sock) {
       // Build reveal text BEFORE ending session
       let text = `${pick(SURRENDER_MSGS)}\n\n`;
       text += `${session.question}\n\n`;
-      text += `📊 *JAWABAN LENGKAP:*\n\n`;
+      text += `📊 *ᴊᴀᴡᴀʙᴀɴ ʟᴇɴɢᴋᴀᴘ:*\n\n`;
       for (let i = 0; i < session.answers.length; i++) {
         const ans = session.answers[i];
         if (ans.revealed) {
@@ -375,7 +375,7 @@ async function answerHandler(m, sock) {
 Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
       const scores = renderScores(session);
       if (scores) {
-        text += `🏆 *SKOR AKHIR:*\n${scores}\n\n`;
+        text += `🏆 *ꜱᴋᴏʀ ᴀᴋʜɪʀ:*\n${scores}\n\n`;
       }
       text += ``;
 
@@ -415,7 +415,7 @@ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
       session.scores[sender].correct++;
       const points = session.totalAnswers - result.answer.index;
       session.scores[sender].points += points;
-      let replyText = `✅ *BENAR!*\n`;
+      let replyText = `✅ *ʙᴇɴᴀʀ!*\n`;
       replyText += `*@${sender.split("@")[0]}* menebak: *${result.answer.text.toUpperCase()}*\n`;
       replyText += `│ Dapat *${points} poin*\n`;
       replyText += `│ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
@@ -425,7 +425,7 @@ Ditemukan: *${session.foundCount}/${session.totalAnswers}*\n\n`;
 Sisa waktu: *${formatTime(getRemainingTime(chatId))}*\n`;
       const scores = renderScores(session);
       if (scores) {
-        replyText += `\n🏆 *SKOR:*\n${scores}\n`;
+        replyText += `\n🏆 *ꜱᴋᴏʀ:*\n${scores}\n`;
       }
       replyText += `\n`;
 

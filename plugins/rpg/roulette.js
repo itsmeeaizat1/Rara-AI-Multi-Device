@@ -204,10 +204,10 @@ async function handler(m, { sock }) {
     output += `
 `;
     if (won) {
-      output += `🎉 *MENANG!* Multiplier: *${multiplier}x*\n`;
+      output += `🎉 *ᴍᴇɴᴀɴɢ!* Multiplier: *${multiplier}x*\n`;
       output += `💰 Total Payout: *+${payout} gold* (Net: +${netProfit})\n`;
     } else {
-      output += `❌ *KALAH!* Bola mendarat di ${winningColor} ${winningNumber}\n`;
+      output += `❌ *ᴋᴀʟᴀʜ!* Bola mendarat di ${winningColor} ${winningNumber}\n`;
       output += `💸 Kerugian: *-${bet} gold*\n`;
     }
     output += `💼 Sisa Gold: *${updatedGold} gold*\n`;

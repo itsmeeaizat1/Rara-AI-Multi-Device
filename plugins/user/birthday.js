@@ -57,7 +57,7 @@ async function handler(m, { sock }) {
     text += `📅 ${day} ${months[month - 1]}\n`
     
     if (isToday) {
-        text += `🎉 *HARI INI ULTAH!*\n`
+        text += `🎉 *ʜᴀʀɪ ɪɴɪ ᴜʟᴛᴀʜ!*\n`
     } else {
         text += `🕕 ${diffDays} hari lagi\n`
     }
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
     text += `╰┈┈┈┈┈┈┈┈`
     
     if (isToday) {
-        text += `\n\n🎊 *HAPPY BIRTHDAY!* 🎊\n`
+        text += `\n\n🎊 *ʜᴀᴘᴘʏ ʙɪʀᴛʜᴅᴀʏ!* 🎊\n`
         text += `Semoga panjang umur dan\n`
         text += `sukses selalu! 🎉🎂`
     }

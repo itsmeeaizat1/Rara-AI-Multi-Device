@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
 
   if (!input) {
     if (!m.isGroup) {
-      return m.reply( `📝 *HAPUS SEWA*\n\n` +
+      return m.reply( `📝 *ʜᴀᴘᴜꜱ ꜱᴇᴡᴀ*\n\n` +
           `Dari private: *${m.prefix}delsewa <link/id>*\n` +
           `Dari grup: ketik *${m.prefix}delsewa* langsung di grup\n\n` +
           `Contoh:\n` +

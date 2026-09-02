@@ -21,7 +21,7 @@ const pluginConfig = {
 if (!global.sulapSessions) global.sulapSessions = new Map()
 
 const successLines = [
-    '💨 *POOF!* Dan... dia menghilang!',
+    '💨 *ᴘᴏᴏꜰ!* Dan... dia menghilang!',
     '🌟 Sulap berhasil! Sampai jumpa lagi~',
     '✨ Absen dulu ya, ditunggu berikutnya!',
     '🎪 Pertunjukan selesai! 👏'

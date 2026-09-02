@@ -76,7 +76,7 @@ async function handler(m, { sock }) {
 
         const orderedKeys = [...imageKeys, ...videoKeys, ...audioKeys, ...fontKeys, ...otherKeys];
 
-        let listText = `📂 *PILIH ASSET YANG INGIN DIGANTI*\n\n`;
+        let listText = `📂 *ᴘɪʟɪʜ ᴀꜱꜱᴇᴛ ʏᴀɴɢ ɪɴɢɪɴ ᴅɪɢᴀɴᴛɪ*\n\n`;
         listText += `_Silakan reply pesan ini dengan nomor (1-${orderedKeys.length})_\n\n`;
 
         let idx = 1;
@@ -182,7 +182,7 @@ async function gantiAssetAnswerHandler(m, sock) {
     const filename = selectedKey + ext;
     try {
         const newPath = await updateAssetUrl(selectedKey, session.buffer, filename);
-        { const __navText = `✅ *BERHASIL*\n\nAsset *${selectedKey}* telah diganti ke:\n${newPath}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); };
+        { const __navText = `✅ *ʙᴇʀʜᴀꜱɪʟ*\n\nAsset *${selectedKey}* telah diganti ke:\n${newPath}\nConfig telah diupdate secara realtime!`; await m.reply(__navText); };
         delete global.gantiAssetSessions[m.chat];
     } catch (e) {
         await m.reply(claraWrap("ganti-asset", `❌ Gagal mengganti asset: ${e.message}`));

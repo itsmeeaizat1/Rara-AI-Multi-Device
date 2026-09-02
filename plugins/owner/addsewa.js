@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
   const args = m.args;
   if (args.length < 2) {
     return m.reply(
-      `📝 *TAMBAH SEWA*\n\n` +
+      `📝 *ᴛᴀᴍʙᴀʜ ꜱᴇᴡᴀ*\n\n` +
         `Format: *${m.prefix}addsewa <link/id> <durasi> [harga]*\n\n` +
         `*ꜰᴏʀᴍᴀᴛ ᴅᴜʀᴀꜱɪ:*\n` +
         `30i = 30 menit\n` +
@@ -184,7 +184,7 @@ async function handler(m, { sock }) {
       isLifetime,
       totalGroups: Object.keys(db.db.data.sewa.groups).length,
     }).catch((e) => { console.error('[addsewa.js]:', e.message); });
-    let text = `✅ *SEWA BERHASIL DITAMBAHKAN*\n\n`;
+    let text = `✅ *ꜱᴇᴡᴀ ʙᴇʀʜᴀꜱɪʟ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n`;
     text += `Grup: *${groupName}*\n`;
     text += `ID: ${groupId.split("@")[0]}\n`;
     text += `Durasi: *${formatDuration(durationStr)}*\n`;

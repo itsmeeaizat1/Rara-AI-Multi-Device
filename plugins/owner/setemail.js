@@ -27,7 +27,7 @@ async function handler(m, { args, sock, isOwner }) {
   setEmailDb(db);
 
   if (!args[0]) {
-    let txt = `📧 *SET EMAIL SMTP*\n\n`;
+    let txt = `📧 *ꜱᴇᴛ ᴇᴍᴀɪʟ ꜱᴍᴛᴘ*\n\n`;
     txt += `Konfigurasi email untuk kirim OTP registrasi.\n\n`;
     txt += `*Cara Pakai:*\n`;
     txt += `\`${m.prefix}setemail <email> <app-password>\`\n\n`;

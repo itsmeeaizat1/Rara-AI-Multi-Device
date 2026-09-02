@@ -140,7 +140,7 @@ async function handler(m, { sock }) {
       `💌 Ada seseorang yang ngirim pesan buat kamu\n\n` +
       `  💬 *ɪsɪ ᴘᴇsᴀɴ:*\n` +
       `  \`\`\`${message}\`\`\`\n\n` +
-      `  🔒 _Pesan ini dikirim secara *ANONIM*_\n` +
+      `  🔒 _Pesan ini dikirim secara *ᴀɴᴏɴɪᴍ*_\n` +
       `Identitas pengirim dirahasiakan\n` +
       `  ✉️ _Balas pesan ini untuk membalas pengirim_\n\n` +
       "";
@@ -149,7 +149,7 @@ async function handler(m, { sock }) {
       `💌 *${senderName}* ngirim pesan buat kamu\n\n` +
       `  💬 *ɪsɪ ᴘᴇsᴀɴ:*\n` +
       `  \`\`\`${message}\`\`\`\n\n` +
-      `  📝 _Pesan ini dikirim secara *NON-ANONIM*_\n` +
+      `  📝 _Pesan ini dikirim secara *ɴᴏɴ-ᴀɴᴏɴɪᴍ*_\n` +
       `Pengirim: *${senderName}*\n` +
       `  ✉️ _Balas pesan ini untuk membalas pengirim_\n\n` +
       "";

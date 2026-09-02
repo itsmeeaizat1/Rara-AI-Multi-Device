@@ -210,7 +210,7 @@ async function handler(m, { sock }) {
       let animText = "";
       animText += `🔪 Memotong bahan & meracik bumbu rahasia...\n`;
       animText += `🔥 Memasak ${recipe.name} di atas tungku api membara...\n`;
-      animText += `✨ *MEMASAK BERHASIL!* 🎉\n`;
+      animText += `✨ *ᴍᴇᴍᴀꜱᴀᴋ ʙᴇʀʜᴀꜱɪʟ!* 🎉\n`;
       animText += `
 `;
       animText += `🍽️ Hidangan : *${recipe.name}*\n`;

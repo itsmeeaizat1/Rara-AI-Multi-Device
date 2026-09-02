@@ -40,7 +40,7 @@ function buildPaymentText(paymentCfg, customText, botName, ownerName) {
       .replace(/\{qris\}/gi, paymentCfg.qrisUrl ? 'Tersedia' : 'Belum diatur')
   }
 
-  let text = `*P A Y M E N T*\n`
+  let text = `*ᴘ ᴀ ʏ ᴍ ᴇ ɴ ᴛ*\n`
   text += `━━━━━━━━━━━━━━━━━━\n\n`
 
   if (cash.enabled) {
@@ -67,7 +67,7 @@ function buildPaymentText(paymentCfg, customText, botName, ownerName) {
   }
 
   if (paymentCfg.qrisUrl) {
-    text += `*QRIS:* Tersedia (lihat gambar)\n\n`
+    text += `*Qʀɪꜱ:* Tersedia (lihat gambar)\n\n`
   }
 
   text += `━━━━━━━━━━━━━━━━━━\n`

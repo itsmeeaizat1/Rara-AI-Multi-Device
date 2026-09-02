@@ -235,7 +235,7 @@ async function handler(m, { sock }) {
     const statusEmoji =
       response.status >= 200 && response.status < 300 ? "✅" : "⚠️";
 
-    let header = `🌐 *HTTP RESPONSE*
+    let header = `🌐 *ʜᴛᴛᴘ ʀᴇꜱᴘᴏɴꜱᴇ*
 
 ${statusEmoji} Status: ${response.status} ${response.statusText}
 Method: ${method}
