@@ -23,7 +23,7 @@ const pluginConfig = {
     isBotAdmin: false
 }
 
-const AUTOREPLY_MEDIA_DIR = path.join(process.cwd(), 'database', 'autoreply_media')
+const AUTOREPLY_MEDIA_DIR = path.join(process.cwd(), "src", "data", 'autoreply_media')
 
 if (!fs.existsSync(AUTOREPLY_MEDIA_DIR)) {
     fs.mkdirSync(AUTOREPLY_MEDIA_DIR, { recursive: true })

@@ -83,7 +83,7 @@ function shouldExclude(filePath, basePath) {
   if (EXCLUDE_EXTENSIONS.has(ext)) {
     const isAsset =
       relativePath.startsWith("assets" + path.sep) ||
-      relativePath.startsWith("database" + path.sep);
+      relativePath.startsWith("src" + path.sep + "data" + path.sep);
     if (!isAsset) return true;
   }
   if (fileName.endsWith(".tar.gz")) return true;

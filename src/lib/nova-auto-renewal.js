@@ -11,7 +11,7 @@ import { toSC, bracketBox, tipText } from "./nova-menu-style.js";
 import { saluranCtx } from "./nova-context.js";
 import * as premiumDb from "./nova-premium-db.js";
 
-const STATE_FILE = path.join(process.cwd(), "database", "autorenewal.json");
+const STATE_FILE = path.join(process.cwd(), "src", "data", "autorenewal.json");
 const TZ = "Asia/Jakarta";
 
 let sockInstance = null;

@@ -6,7 +6,7 @@ import fs from "fs";
 import { askAI } from "../../src/lib/aiagent.js";
 import { load, save } from "../../src/lib/autoflow.js";
 
-const DB = "./database/autoflow.json";
+const DB = "./src/data/autoflow.json";
 
 // ===== daftar resmi (validasi di KODE, bukan percaya AI mentah-mentah) =====
 const TRIGGERS = ["keyword", "schedule", "join", "leave", "media"];

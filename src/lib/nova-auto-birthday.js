@@ -11,7 +11,7 @@ import { logger } from "./nova-logger.js";
 import { toSC, bracketBox } from "./nova-menu-style.js";
 import { saluranCtx } from "./nova-context.js";
 
-const BIRTHDAY_STATE_FILE = path.join(process.cwd(), "database", "autobirthday.json");
+const BIRTHDAY_STATE_FILE = path.join(process.cwd(), "src", "data", "autobirthday.json");
 const TZ = "Asia/Jakarta";
 
 let sockInstance = null;

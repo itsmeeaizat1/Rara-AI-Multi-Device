@@ -12,7 +12,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 // Flow: liat produk -> isi data -> bayar -> data dikirim API
 // ============================================================
 
-const DATA_FILE = path.join(process.cwd(), "database", "digipulsa.json");
+const DATA_FILE = path.join(process.cwd(), "src", "data", "digipulsa.json");
 const BASE_API = "https://api.digiflazz.com/v1";
 
 function loadData() {

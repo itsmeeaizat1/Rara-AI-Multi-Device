@@ -19,7 +19,7 @@ const pluginConfig = {
 };
 
 // ═══ DB HELPERS ═══
-const DB_DIR = path.join(process.cwd(), "database");
+const DB_DIR = path.join(process.cwd(), "src", "data");
 const CATUR_FILE = path.join(DB_DIR, "catur.json");
 const SKOR_FILE = path.join(DB_DIR, "caturSkor.json");
 

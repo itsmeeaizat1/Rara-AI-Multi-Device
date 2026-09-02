@@ -10,7 +10,7 @@ import crypto from 'crypto'
 import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const STICKER_CMD_FILE = path.join(__dirname, '../../database/stickerCommands.json')
+const STICKER_CMD_FILE = path.join(__dirname, '../../src/data/stickerCommands.json')
 
 // In-memory cache
 let stickerCommands = {}

@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import archiver from 'archiver'
 import * as timeHelper from './nova-time.js'
-const DATABASE_DIR = path.join(process.cwd(), 'database')
+const DATABASE_DIR = path.join(process.cwd(), "src", "data")
 const TEMP_DIR = path.join(process.cwd(), 'temp')
 
 const SCHEMA_VERSION = '1.0.0'
@@ -83,9 +83,9 @@ async function createDatabaseBackup() {
                     archive.file(rootDbFile, { name: 'db.json' })
                 }
                 
-                const mainDbFile = path.join(process.cwd(), 'database', 'main', 'db.json')
+                const mainDbFile = path.join(process.cwd(), "src", "data", 'main', 'db.json')
                 if (fs.existsSync(mainDbFile)) {
-                    archive.file(mainDbFile, { name: 'database/main/db.json' })
+                    archive.file(mainDbFile, { name: 'src/data/main/db.json' })
                 }
                 
                 archive.finalize()

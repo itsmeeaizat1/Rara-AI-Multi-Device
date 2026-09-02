@@ -10,7 +10,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 // Provider: NexusSMM (nexussmm.com)
 // ============================================================
 
-const DATA_FILE = path.join(process.cwd(), "database", "nokos_smm.json");
+const DATA_FILE = path.join(process.cwd(), "src", "data", "nokos_smm.json");
 const NEXUS_BASE = "https://nexussmm.com";
 
 function loadData() {

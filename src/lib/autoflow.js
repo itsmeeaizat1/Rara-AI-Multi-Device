@@ -4,7 +4,7 @@
 
 import fs from "fs";
 
-const DB = "./database/autoflow.json";
+const DB = "./src/data/autoflow.json";
 const cooldown = new Map();
 
 let _conn = null; // koneksi otomatis terisi dari pesan pertama
@@ -14,7 +14,7 @@ export const load = () => {
 };
 
 export const save = (rules) => {
-  fs.mkdirSync("./database", { recursive: true });
+  fs.mkdirSync("./src/data", { recursive: true });
   fs.writeFileSync(DB, JSON.stringify(rules, null, 2));
 };
 

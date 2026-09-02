@@ -11,7 +11,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 // Providers: 5SIM, SMS-Activate, SMS-Hub, WarungNokos (WN1 // Providers: 5SIM, SMS-Activate, SMS-Hub, WarungNokos (WN1 Providers: 5SIM, SMS-Activate, SMS-Hub WN2) WN2)
 // ============================================================
 
-const DATA_FILE = path.join(process.cwd(), "database", "nokos_beli.json");
+const DATA_FILE = path.join(process.cwd(), "src", "data", "nokos_beli.json");
 
 // === TIER SYSTEM ===
 const TIERS = {

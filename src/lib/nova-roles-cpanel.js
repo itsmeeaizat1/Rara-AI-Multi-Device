@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from 'fs'
 import path from 'path'
-const CPANEL_DIR = path.join(process.cwd(), 'database', 'cpanel')
+const CPANEL_DIR = path.join(process.cwd(), "src", "data", 'cpanel')
 const VALID_SERVERS = ['v1', 'v2', 'v3', 'v4', 'v5']
 const VALID_ROLES = ['owner', 'ceo', 'reseller']
 

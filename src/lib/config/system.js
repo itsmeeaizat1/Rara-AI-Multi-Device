@@ -3,7 +3,7 @@
 
 import { apiKeys } from "./apikey.js";
 
-export const database = { path: "./database/main" };
+export const database = { path: "./src/data/main" };
 
 export const backup = {
   enabled: false,

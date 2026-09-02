@@ -9,7 +9,7 @@ import { logger } from "./nova-logger.js";
 import * as timeHelper from "./nova-time.js";
 import { toSC, bracketBox } from "./nova-menu-style.js";
 
-const REPORT_STATE_FILE = path.join(process.cwd(), "database", "autoreport.json");
+const REPORT_STATE_FILE = path.join(process.cwd(), "src", "data", "autoreport.json");
 const TZ = "Asia/Jakarta";
 
 let sockInstance = null;

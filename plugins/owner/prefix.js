@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import config from '../../config.js'
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
-const PREF_DB_PATH = path.join(process.cwd(), 'database', 'prefix.json')
+const PREF_DB_PATH = path.join(process.cwd(), "src", "data", 'prefix.json')
 
 function loadPrefixes() {
     try {
