@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20AutoFlow%20AI%20%E2%80%94%20bikin%20rule%20automatio-success?style=for-the-badge)
-> *Commit: "feat: AutoFlow AI — bikin rule automation pakai bahasa manusia"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20pindah%20autonovaai%20ke%20kategori%20-success?style=for-the-badge)
+> *Commit: "refactor: pindah autonovaai ke kategori ai (tetap owner-only)"*
 <!--END_SECTION:latest-update-->
 
 ---
