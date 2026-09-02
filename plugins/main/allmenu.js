@@ -263,7 +263,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
       { id: `${prefix}owner`, text: toSC("Owner") },
     ];
     await sendMenuCard(sock, m, {
-      text: txt,
+      text: finalText,
       footer: "",
       thumbnailPath: path.join(process.cwd(), "assets", "image", "menu", "allmenuthumbnail.jpg"),
       buttons: navButtons,
