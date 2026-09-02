@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20perbaiki%20claraWrap%2FnovaError%2FnovaEm-success?style=for-the-badge)
-> *Commit: "fix: perbaiki claraWrap/novaError/novaEmpty/novaSuccess yang return teks polos tanpa box-drawing — sekarang semua konsisten pakai format ╭─「✦ Title ✦」/│/╰──── di 1600+ pemakaian"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20perbaiki%20novaReply%20(18%20plugin)%20yang-success?style=for-the-badge)
+> *Commit: "fix: perbaiki novaReply (18 plugin) yang return teks polos + buildBox sekarang selalu toSC header — jamin semua box-drawing reply konsisten smallcaps di header & body"*
 <!--END_SECTION:latest-update-->
 
 ---
