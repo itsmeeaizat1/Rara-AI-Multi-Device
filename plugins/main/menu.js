@@ -133,7 +133,6 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     });
 
     let result = txt;
-    if (weatherStr) result += "\n" + weatherStr;
     result += "\n\n" + toSC("Ketik") + " *" + prefix + "allmenu* " + toSC("untuk melihat semua fitur");
     return result;
   } catch (e) {

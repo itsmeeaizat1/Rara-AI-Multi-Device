@@ -248,7 +248,6 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     });
 
     let finalText = txt;
-    if (weatherStr) finalText += "\n" + weatherStr;
 
 
 

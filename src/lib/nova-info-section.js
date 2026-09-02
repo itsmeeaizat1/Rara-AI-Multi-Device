@@ -1,11 +1,11 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // Shared info section builder untuk menu, allmenu, allmenucategory
-// Format: Info User, Info Bot, Info Database, Info Server, Waktu & Tanggal, Weather
+// Format: Info User, Info Bot, Info Database, Info Server, Waktu & Tanggal, Cuaca
 
 import os from "os";
 import fs from "fs";
 import { formatUptime, getTimeGreeting, getImportantDay } from "./nova-formatter.js";
-import { getWeatherFooter } from "./nova-weather-footer.js";
+import { getWeatherFooter, getWeatherAddress } from "./nova-weather-footer.js";
 import { toSC } from "./nova-menu-style.js";
 
 function getWeton(date = new Date()) {
@@ -25,11 +25,13 @@ function getIslamicDate(date = new Date()) {
 
 /**
  * Build info section lengkap untuk menu/allmenu/allmenucategory
- * Returns array of { label, value } items + greeting string (compatible dengan novaMenuLayout)
+ * Weather dimasukkan LANGSUNG ke dalam info array (bukan terpisah)
  *
  * @param m — message object
  * @param ctx — { db, config: botConfig, uptime }
- * @returns { greeting, info }
+ * @returns { greeting, info, weatherStr }
+ *   - info: array untuk novaMenuLayout
+ *   - weatherStr: null (weather sudah di dalam info), tetap dikembalikan untuk backward compat
  */
 export async function buildMenuInfo(m, ctx = {}) {
   const { db, config: botConfig, uptime } = ctx;
@@ -124,15 +126,13 @@ export async function buildMenuInfo(m, ctx = {}) {
     } catch {}
   }
 
-  // ── Weather ──
-  let weatherStr = "";
+  // ── Weather (fetch address singkat untuk info section) ──
+  let weatherAddr = "";
   try {
-    const wf = await getWeatherFooter();
-    if (wf) weatherStr = wf;
+    weatherAddr = await getWeatherAddress();
   } catch {}
 
-  // ── Build info array (compatible dengan novaMenuLayout format) ──
-  // Format: string = separator/header, { label, value } = item
+  // ── Build info array ──
   const greeting = `${getTimeGreeting()}, ${m.pushName || "User"}`;
 
   const info = [
@@ -173,7 +173,9 @@ export async function buildMenuInfo(m, ctx = {}) {
     { label: "Tanggal", value: dateStr },
     { label: "Hijriah", value: islamicDate },
     ...(importantDay && importantDay !== "-" ? [{ label: "Hari Penting", value: importantDay }] : []),
+    ...(weatherAddr ? ["", "Cuaca", { label: "Cuaca", value: weatherAddr }] : []),
   ];
 
-  return { greeting, info, weatherStr };
+  // weatherStr null karena weather sudah di dalam info
+  return { greeting, info, weatherStr: null };
 }
