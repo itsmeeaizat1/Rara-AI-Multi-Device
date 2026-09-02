@@ -169,7 +169,6 @@ function startWatcher() {
 }
 
 // ── "hadir" catcher via sock.ev.on("messages.upsert") ──
-// Base bot tidak punya handler.before hook, jadi pakai ev listener langsung
 function hookUpsert() {
   if (_upsertHooked || !_sock?.ev) return;
   _upsertHooked = true;
@@ -215,7 +214,7 @@ function hookUpsert() {
           // Ketik kedua kali: tandai telat kalau melewati setengah durasi
           if (pastHalf && !existing.late) {
             existing.late = true;
-            existing.ts = now; // update timestamp ke waktu kedua
+            existing.ts = now;
             setSession(chatId, s);
           }
           // React ⏳ (sudah absen, tidak dobel catat)
@@ -272,12 +271,16 @@ const pluginConfig = {
 async function handler(m, { sock, config: botConfig }) {
   init(sock);
 
+  // Loading: 🕒 saat diproses
+  try { await m.react("🕒"); } catch {}
+
   const prefix = botConfig.command?.prefix || ".";
   const args = m.args || [];
   const sub = (args[0] || "").toLowerCase();
 
   // ── HELP ──
   if (!sub) {
+    try { await m.react("🐣"); } catch {}
     return m.reply(
       `⏳ ABSEN GRUP\n\n` +
       `Cara pakai:\n` +
@@ -293,6 +296,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (sub === "buka") {
     const durText = args[1];
     if (!durText) {
+      try { await m.react("❌"); } catch {}
       return m.reply(
         `❌ Durasi wajib diisi.\n\nContoh:\n.absen buka 10 menit absen malam\n.absen buka 2 jam\n.absen buka 30 detik`,
       );
@@ -300,15 +304,17 @@ async function handler(m, { sock, config: botConfig }) {
 
     const durMs = parseDuration(durText);
     if (!durMs) {
+      try { await m.react("❌"); } catch {}
       return m.reply(
         `❌ Format durasi tidak valid: "${durText}"\n\nContoh: 30 detik / 10 menit / 2 jam / 5 (menit)`,
       );
     }
 
-    if (durMs < 30_000) return m.reply(`❌ Durasi minimal 30 detik.`);
-    if (durMs > 86_400_000) return m.reply(`❌ Durasi maksimal 24 jam.`);
+    if (durMs < 30_000) { try { await m.react("❌"); } catch {} return m.reply(`❌ Durasi minimal 30 detik.`); }
+    if (durMs > 86_400_000) { try { await m.react("❌"); } catch {} return m.reply(`❌ Durasi maksimal 24 jam.`); }
 
     if (isSessionActive(m.chat)) {
+      try { await m.react("❌"); } catch {}
       return m.reply(`❌ Masih ada sesi aktif, tutup dulu dengan ${prefix}absen tutup`);
     }
 
@@ -324,6 +330,7 @@ async function handler(m, { sock, config: botConfig }) {
       hadir: [],
     });
 
+    try { await m.react("🐣"); } catch {}
     return m.reply(
       `✅ Sesi absen dibuka: ${title}\n` +
       `Durasi: ${formatDuration(durMs)}\n` +
@@ -335,7 +342,11 @@ async function handler(m, { sock, config: botConfig }) {
   // ── TUTUP ──
   if (sub === "tutup") {
     const s = getSession(m.chat);
-    if (!s || !s.active) return m.reply(`❌ Tidak ada sesi absen aktif.`);
+    if (!s || !s.active) {
+      try { await m.react("❌"); } catch {}
+      return m.reply(`❌ Tidak ada sesi absen aktif.`);
+    }
+    try { await m.react("🐣"); } catch {}
     await sendRekap(m.chat);
     return;
   }
@@ -343,11 +354,18 @@ async function handler(m, { sock, config: botConfig }) {
   // ── STATUS ──
   if (sub === "status") {
     const s = getSession(m.chat);
-    if (!s || !s.active) return m.reply(`❌ Tidak ada sesi absen aktif.`);
+    if (!s || !s.active) {
+      try { await m.react("❌"); } catch {}
+      return m.reply(`❌ Tidak ada sesi absen aktif.`);
+    }
 
     const remaining = s.expiresAt - Date.now();
-    if (remaining <= 0) return m.reply(`⏳ Sesi sudah berakhir, rekap sedang diproses...`);
+    if (remaining <= 0) {
+      try { await m.react("🐣"); } catch {}
+      return m.reply(`⏳ Sesi sudah berakhir, rekap sedang diproses...`);
+    }
 
+    try { await m.react("🐣"); } catch {}
     return m.reply(
       `⏳ STATUS ABSEN: ${s.title || "Absen Grup"}\n\n` +
       `Sisa waktu: ${formatDuration(remaining)}\n` +
@@ -356,6 +374,7 @@ async function handler(m, { sock, config: botConfig }) {
     );
   }
 
+  try { await m.react("❌"); } catch {}
   return m.reply(`❌ Subcommand tidak dikenal: "${sub}"\n\nGunakan: buka / tutup / status`);
 }
 
