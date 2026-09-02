@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20rewrite%20.aitio%20%E2%80%94%20pilih%20model%20langs-success?style=for-the-badge)
-> *Commit: "feat: rewrite .aitio — pilih model langsung, satu command"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20rapikan%20duplikat%20plugin%20%E2%80%94%20hapu-success?style=for-the-badge)
+> *Commit: "refactor: rapikan duplikat plugin — hapus 18 file, rename 2"*
 <!--END_SECTION:latest-update-->
 
 ---
