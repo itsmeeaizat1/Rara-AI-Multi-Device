@@ -5,6 +5,7 @@ import { getCategories, getCommandsByCategory } from "../../src/lib/nova-plugins
 import { getCaseCount, getCasesByCategory } from "../../case/nova.js";
 import * as timeHelper from "../../src/lib/nova-time.js";
 import config from "../../config.js";
+import { sewaPrice } from "../../src/lib/sewa.js";
 import fs from "fs";
 
 const pluginConfig = {
@@ -35,7 +36,7 @@ function formatCountdown(expiredAt) {
 }
 
 function buildPriceList() {
-  const p = config.sewaPrice || {};
+  const p = sewaPrice;
   return [
     "Harian    " + (p.daily || "Rp 5.000"),
     "Mingguan  " + (p.weekly || "Rp 25.000"),
