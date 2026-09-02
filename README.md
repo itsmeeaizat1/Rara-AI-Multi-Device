@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20Tambah%20sistem%20loading%20%F0%9F%95%92%E2%86%92%F0%9F%90%A3%20ke%20plu-success?style=for-the-badge)
-> *Commit: "feat: Tambah sistem loading 🕒→🐣 ke plugin absen"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20Ganti%20Pollinations%20(402)%20%E2%86%92%20IkyyXD%20G-success?style=for-the-badge)
+> *Commit: "fix: Ganti Pollinations (402) → IkyyXD Gemini sebagai AI fallback gratis"*
 <!--END_SECTION:latest-update-->
 
 ---
