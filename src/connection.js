@@ -28,6 +28,7 @@ import { initAutoReport } from "./lib/nova-auto-report.js";
 import { initAutoBirthday } from "./lib/nova-auto-birthday.js";
 import { initHealthCheck } from "./lib/nova-auto-api-health.js";
 import { initReengage } from "./lib/nova-auto-reengage.js";
+import { handleParticipants as _autoflowHandleParticipants } from "./lib/autoflow.js";
 import { initRefill } from "./lib/nova-auto-refill.js";
 import { initRenewalReminder } from "./lib/nova-auto-renewal.js";
 import { getAuthKey, verifyAuth, getOwnerContact } from "./lib/auth/auth.js";
@@ -848,6 +849,9 @@ async function startConnection(options = {}) {
 
     const botNumber =
       sock.user?.id?.split(":")[0] || sock.user?.id?.split("@")[0];
+
+    // === AutoFlow: cek rule automation (join/leave) ===
+    try { _autoflowHandleParticipants(sock, event.id, event.participants || [], event.action === "add" ? "join" : "leave"); } catch {}
     const botLid = sock.user?.id;
     if (event.action === "add") {
       await sock.sendPresenceUpdate("available", event.id);

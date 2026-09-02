@@ -10,6 +10,7 @@ import { handleAntiRemoveFromUpsert as _handleAntiRemove } from "./lib/nova-grou
 import config from "../config.js";
 import { c, logger, logMessage } from "./lib/nova-logger.js";
 import { trackNotFound, isNotFoundMuted, resetNotFoundTracker } from "./lib/nova-notfound-antispam.js";
+import { handleMessage as _autoflowHandleMessage } from "./lib/autoflow.js";
 import { buildNotFoundReply } from "./lib/nova-notfound-info.js";
 
 // Re-export handleAntiRemoveFromUpsert from group-protection
@@ -81,6 +82,9 @@ async function messageHandler(msg, sock) {
   }
 
   const db = getDatabase();
+
+  // === AutoFlow: cek rule automation (keyword/media) tiap pesan masuk ===
+  try { _autoflowHandleMessage(sock, m); } catch {}
 
   // === Self mode guard for non-command features ===
   // In self mode, only owner/fromMe can trigger non-command auto-features (AI grup, auto-AI, etc.)
