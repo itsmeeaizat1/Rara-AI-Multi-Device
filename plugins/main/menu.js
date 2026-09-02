@@ -102,7 +102,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
     const menuCats = [
       { name: "Menu", commands: ["menu", "allmenu", "allmenucategory", "tanyaai"] },
       { name: "Info", commands: ["info", "owner", "rules", "donasi"] },
-      { name: "Store", commands: ["sewa", "payment", "listban"] },
+      { name: "Store", commands: ["sewa", "buyprem"] },
     ];
 
     const intro = [

@@ -6,6 +6,24 @@ import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
 
+async function fetchLyricsSnippet(title) {
+  try {
+    const { data } = await axios.get(`https://api.nexray.eu.cc/search/lyrics`, {
+      params: { q: title },
+      timeout: 8000,
+    });
+    if (data?.status && data?.result?.lyrics?.plain_lyrics) {
+      const artist = data.result.artist || data.result.lyrics?.artist_name || null;
+      const plain = data.result.lyrics.plain_lyrics.trim();
+      const snippet = plain.length > 200 ? plain.slice(0, 200).trim() + "..." : plain;
+      return { snippet, artist };
+    }
+  } catch (e) {
+    console.error("[PlayVideo] Lyrics fetch error:", e.message);
+  }
+  return null;
+}
+
 const pluginConfig = {
   name: "playvideo",
   alias: ["playvideo"],
@@ -32,6 +50,7 @@ async function searchYoutube(query) {
         author: v.channel,
         duration: v.duration,
         views: 0,
+        description: v.description || null,
         thumbnail: v.imageUrl || "",
         url: v.link,
       };
@@ -51,6 +70,7 @@ async function searchYoutube(query) {
         author: v.author.name,
         duration: v.duration.timestamp,
         views: v.views,
+        description: v.description || null,
         thumbnail: v.thumbnail || "",
         url: v.url,
       };
@@ -131,14 +151,27 @@ async function handler(m, { sock, text }) {
     }
     console.log(`[PlayVideo] Video OK: ${vid.buffer.length} bytes`);
 
-    // Step 3: Send
-    const caption = [
+    // Step 3: Ambil lirik (best-effort, gak block kalau gagal/timeout)
+    const titleForLyrics = vid.title || video.title;
+    const lyricsData = await fetchLyricsSnippet(titleForLyrics);
+
+    // Step 4: Info section lengkap
+    const captionLines = [
       `*YouTube Play — Video*`,
       ``,
-      `*Judul:* ${vid.title || video.title}`,
-      `*Channel:* ${video.author}`,
+      `*Judul:* ${titleForLyrics}`,
+      `*Artis/Channel:* ${lyricsData?.artist || video.author}`,
       `*Durasi:* ${video.duration}`,
-    ].join("\n");
+      `*Views:* ${video.views ? video.views.toLocaleString("id-ID") : "-"}`,
+      `*Deskripsi:* ${video.description ? video.description.slice(0, 150) + (video.description.length > 150 ? "..." : "") : "-"}`,
+      `*Link:* ${video.url}`,
+    ];
+
+    if (lyricsData?.snippet) {
+      captionLines.push(``, `*Lirik:*`, lyricsData.snippet, ``, `Lirik lengkap: .lirik ${titleForLyrics}`);
+    }
+
+    const caption = captionLines.join("\n");
 
     await m.react("🐣");
     await sock.sendMessage(

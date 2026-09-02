@@ -35,11 +35,12 @@ async function handler(m, { sock }) {
     // Coba kirim langsung sebagai video dengan gifPlayback
     try {
       await m.react("🐣");
+      const sizeKb = (mediaBuffer.length / 1024).toFixed(1);
       await sock.sendMessage(m.chat, {
         video: mediaBuffer,
         mimetype: "video/mp4",
         gifPlayback: true,
-        caption: "✅ Converted to GIF",
+        caption: `*Media → GIF*\n\n*Format:* GIF (via mp4 gifPlayback)\n*Ukuran:* ${sizeKb} KB`,
       }, { quoted: m });
     } catch (err) {
       // Fallback: upload ke catbox lalu convert webp → mp4

@@ -56,6 +56,99 @@ async function downloadBuffer(url) {
   return Buffer.from(response.data);
 }
 
+// ── WhatsApp video codec compatibility guard ──
+// WhatsApp (esp. Android) can't play AV1/HEVC/VP9 video — many 3rd-party
+// download CDNs (savetube, etc) serve these codecs mislabeled as .mp4,
+// causing "Video ini tidak tersedia karena ada masalah dengan file video".
+// We byte-scan for known-incompatible codec fourccs and only transcode
+// (to h264/aac/yuv420p/faststart) when actually needed — avoids wasting
+// CPU re-encoding videos that are already compatible.
+const INCOMPATIBLE_VIDEO_CODECS = [
+  Buffer.from("av01"), // AV1
+  Buffer.from("hev1"), // HEVC/H265
+  Buffer.from("hvc1"), // HEVC/H265
+  Buffer.from("vp09"), // VP9
+  Buffer.from("vp08"), // VP8
+];
+
+function needsVideoTranscode(buffer) {
+  if (!buffer || buffer.length < 12) return false;
+  // only scan moov-ish header region for speed (codec fourcc lives in stsd, near the start of moov)
+  const scanRegion = buffer.subarray(0, Math.min(buffer.length, 500000));
+  for (const codec of INCOMPATIBLE_VIDEO_CODECS) {
+    if (scanRegion.indexOf(codec) !== -1) return true;
+  }
+  return false;
+}
+
+function transcodeToWaCompatible(buffer) {
+  return new Promise((resolve, reject) => {
+    const tmpDir = getTempDir();
+    const ts = Date.now();
+    const inputPath = path.join(tmpDir, `vid_in_${ts}.mp4`);
+    const outputPath = path.join(tmpDir, `vid_out_${ts}.mp4`);
+    fs.writeFileSync(inputPath, buffer);
+
+    const cleanup = () => {
+      try { if (fs.existsSync(inputPath)) fs.unlinkSync(inputPath); } catch {}
+      try { if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath); } catch {}
+    };
+    const timeout = setTimeout(() => {
+      cleanup();
+      reject(new Error("Video transcode timeout"));
+    }, 120000);
+
+    ffmpeg(inputPath)
+      .inputOptions(["-y"])
+      .outputOptions([
+        "-c:v", "libx264",
+        "-profile:v", "baseline",
+        "-level", "3.0",
+        "-pix_fmt", "yuv420p",
+        "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2",
+        "-preset", "veryfast",
+        "-crf", "23",
+        "-c:a", "aac",
+        "-b:a", "128k",
+        "-movflags", "+faststart",
+      ])
+      .toFormat("mp4")
+      .on("end", () => {
+        clearTimeout(timeout);
+        try {
+          if (!fs.existsSync(outputPath) || fs.statSync(outputPath).size < 1000) {
+            cleanup();
+            return reject(new Error("Transcode output is empty or invalid"));
+          }
+          const out = fs.readFileSync(outputPath);
+          cleanup();
+          resolve(out);
+        } catch (err) {
+          cleanup();
+          reject(err);
+        }
+      })
+      .on("error", (err) => {
+        clearTimeout(timeout);
+        cleanup();
+        reject(new Error("FFmpeg transcode error: " + err.message));
+      })
+      .save(outputPath);
+  });
+}
+
+async function ensureWaCompatibleVideo(buffer) {
+  try {
+    if (needsVideoTranscode(buffer)) {
+      console.log("[VideoGuard] Incompatible codec detected — transcoding to h264...");
+      return await transcodeToWaCompatible(buffer);
+    }
+  } catch (e) {
+    console.error("[VideoGuard] Transcode failed, sending original:", e.message);
+  }
+  return buffer;
+}
+
 async function resolveInput(input) {
   if (Buffer.isBuffer(input)) return input;
   if (typeof input === "string") {
@@ -183,6 +276,28 @@ async function simpleImageToWebp(buffer) {
 }
 
 async function extendSocket(sock) {
+  // ── Global video compatibility guard ──
+  // Wrap sendMessage so ANY plugin sending { video: buffer } or { video: { url } }
+  // automatically gets checked/transcoded if the codec is WhatsApp-incompatible.
+  const _originalSendMessage = sock.sendMessage.bind(sock);
+  sock.sendMessage = async (jid, content, options = {}) => {
+    try {
+      if (content && content.video) {
+        let videoBuf = content.video;
+        if (videoBuf && typeof videoBuf === "object" && !Buffer.isBuffer(videoBuf) && videoBuf.url) {
+          videoBuf = Buffer.isBuffer(videoBuf.url) ? videoBuf.url : await downloadBuffer(videoBuf.url);
+        }
+        if (Buffer.isBuffer(videoBuf)) {
+          const fixedBuf = await ensureWaCompatibleVideo(videoBuf);
+          content = { ...content, video: fixedBuf };
+        }
+      }
+    } catch (e) {
+      console.error("[VideoGuard] pre-send check failed, sending as-is:", e.message);
+    }
+    return _originalSendMessage(jid, content, options);
+  };
+
   sock.sendImageAsSticker = async (jid, input, m, options = {}) => {
     const buffer = await resolveInput(input);
     let webpBuffer;
