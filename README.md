@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20folder%20skills%2F%20%E2%80%94%20dead%20co-success?style=for-the-badge)
-> *Commit: "refactor: hapus folder skills/ — dead code, gak dipakai"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20hapus%20alias%20novaai%20dari%20nova-ai.js%2C-success?style=for-the-badge)
+> *Commit: "fix: hapus alias novaai dari nova-ai.js, sisain di novaai.js"*
 <!--END_SECTION:latest-update-->
 
 ---
