@@ -92,7 +92,7 @@ async function handler(m, { sock }) {
     if (dropText) msg += dropText + "\n";
     msg += `
 `;
-    msg += `⚡ Energy: *${rpg.energy - NEBANG_ENERGY}/${rpg.maxEnergy}*\n`;
+    msg += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
     
     return m.reply(msg);
   } catch (err) {

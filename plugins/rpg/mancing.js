@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
     msg += `EXP: +${expGain}\n`;
     msg += `Gold: +${goldGain}`;
     msg += dropText + "\n\n";
-    msg += `Energy: ${rpg.energy - FISH_ENERGY}/${rpg.maxEnergy}`;
+    msg += `Energy: ${rpg.energy}/${rpg.maxEnergy}`;
 
     return m.reply(msg);
   } catch (err) {

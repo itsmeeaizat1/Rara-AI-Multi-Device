@@ -133,7 +133,7 @@ async function handler(m, { sock }) {
       if (dropText) msg += dropText + "\n";
       msg += `│\n`;
       msg += `│ ❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-      msg += `│ ⚡ Energy: *${rpg.energy - HUNT_ENERGY}/${rpg.maxEnergy}*\n`;
+      msg += `│ ⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
       msg += `╰──── • ────`;
       return m.reply(msg);
     } else {
