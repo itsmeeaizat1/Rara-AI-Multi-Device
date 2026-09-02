@@ -3,9 +3,8 @@ import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "typingrace",
-  alias: ["typingrace"],
-  aliases: ["typingrace", "typerace", "ketikcepat"],
+  name: "typingracegroup",
+  alias: ["typingracegroup", "typingrace"],
   category: "group",
   description: "Race ketik cepat - siapa pertama ketik persis sama menang",
   usage: ".typingrace start | .typingrace join | .typingrace go | .typingrace leaderboard | .typingrace stop",
