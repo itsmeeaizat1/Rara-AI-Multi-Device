@@ -854,6 +854,26 @@ async function startConnection(options = {}) {
     try { _autoflowHandleParticipants(sock, event.id, event.participants || [], event.action === "add" ? "join" : "leave"); } catch {}
     const botLid = sock.user?.id;
     if (event.action === "add") {
+      // === AI AGENT: Blocklist check — auto-kick blocked users ===
+      try {
+        const { getDatabase } = await import("./lib/nova-database.js");
+        const db = getDatabase();
+        const blocklist = db.db.data.groupBlocklist?.[event.id] || [];
+        if (blocklist.length) {
+          for (const participant of event.participants || []) {
+            const pJid = typeof participant === "object" ? participant.id : participant;
+            if (blocklist.includes(pJid)) {
+              await sock.groupParticipantsUpdate(event.id, [pJid], "remove");
+              console.log(`[Blocklist] Auto-kick ${pJid} from ${event.id}`);
+              await sock.sendMessage(event.id, {
+                text: "🚫 User @" + pJid.split("@")[0] + " diblokir di grup ini dan tidak bisa masuk.",
+                mentions: [pJid]
+              });
+            }
+          }
+        }
+      } catch (e) { console.error("[Blocklist] check error:", e.message); }
+
       await sock.sendPresenceUpdate("available", event.id);
       const addedParticipants = event.participants || [];
       const isBotAdded = addedParticipants.some((p) => {
