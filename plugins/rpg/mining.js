@@ -96,7 +96,7 @@ async function handler(m, { sock }) {
     msg += `│ 💰 Gold : *+${goldGain}*\n`;
     msg += `${dropText}\n`;
     msg += `│\n`;
-    msg += `│ ⚡ Energy: *${rpg.energy - MINE_ENERGY}/${rpg.maxEnergy}*\n`;
+    msg += `│ ⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
     msg += `╰──── • ────`;
     return m.reply(msg);
   } catch (err) {

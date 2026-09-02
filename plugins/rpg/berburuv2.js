@@ -168,7 +168,7 @@ async function handler(m, { sock }) {
         out += `🎯 Combo tinggi! Tetap berburu untuk bonus lebih besar!\n`;
       }
       out += `❤️ HP: *${newHp}/${rpg.maxHp}*\n`;
-      out += `⚡ Energy: *${rpg.energy - HUNT_ENERGY}/${rpg.maxEnergy}*\n`;
+      out += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
       
       return m.reply(out);
     } else {

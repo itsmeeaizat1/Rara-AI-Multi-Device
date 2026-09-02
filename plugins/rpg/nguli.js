@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
     msg += `✦ EXP: *+${expGain}*\n`;
     msg += `
 `;
-    msg += `⚡ Energy: *${rpg.energy - NGULI_ENERGY}/${rpg.maxEnergy}*\n`;
+    msg += `⚡ Energy: *${rpg.energy}/${rpg.maxEnergy}*\n`;
     
     return m.reply(msg);
   } catch (err) {
