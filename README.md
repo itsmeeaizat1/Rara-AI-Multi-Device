@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20audit%20owner%20(41%20duplikat%20alias%20dipe-success?style=for-the-badge)
-> *Commit: "fix: audit owner (41 duplikat alias diperbaiki, 12 plugin convert novaBox) + feat: 22 RPG plugin animasi baru + 15 fungsi animasi di nova-rpg-anim.js"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20100%25%20RPG%20animasi%20complete%20(158%2F158-success?style=for-the-badge)
+> *Commit: "feat: 100% RPG animasi complete (158/158 plugin) + 83 plugin batch animGeneric + fix: FEATURES.md update"*
 <!--END_SECTION:latest-update-->
 
 ---
