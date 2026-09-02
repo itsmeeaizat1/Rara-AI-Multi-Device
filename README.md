@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20Ganti%20Pollinations%20(402)%20%E2%86%92%20IkyyXD%20G-success?style=for-the-badge)
-> *Commit: "fix: Ganti Pollinations (402) → IkyyXD Gemini sebagai AI fallback gratis"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20tambah%2034%20command%20AI%20provider%20indi-success?style=for-the-badge)
+> *Commit: "feat: tambah 34 command AI provider individual (.openai .gemini .groq .grok .xai .qwen .cohere .perplexity .fireworks .ai21 .reka .cerebras .huggingface .voyage .cloudflare .stability .jina .mistral .together .github + IkyyXD & Tio providers) + 15 provider baru di nova-ai-service.js + resolveApiKeyForProvider + getAllProviders + auto-load API keys dari apikeys.json"*
 <!--END_SECTION:latest-update-->
 
 ---
