@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20hapus%20alias%20novaai%20dari%20nova-ai.js%2C-success?style=for-the-badge)
-> *Commit: "fix: hapus alias novaai dari nova-ai.js, sisain di novaai.js"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20merge%20tanyaai%E2%86%92novaai%2C%20hapus%20alias%20'-success?style=for-the-badge)
+> *Commit: "fix: merge tanyaai→novaai, hapus alias 'ai' dari 18 plugin, konsolidasi v1/v2 duplikat, hapus dead code"*
 <!--END_SECTION:latest-update-->
 
 ---
