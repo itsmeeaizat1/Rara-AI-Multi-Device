@@ -184,7 +184,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
 
       let txt = `╭─「 ✦ ${toSC("Info")} ✦ 」
 ${infoText}╰────  •  ────
-${weatherBlock ? weatherBlock + "\n" : ""}╭─「 ✦ ${toSC("Daftar Kategori")} ✦ 」
+╭─「 ✦ ${toSC("Daftar Kategori")} ✦ 」
 │ *${toSC("Total")}:* ${catEntries.length} ${toSC("kategori")}
 │ *${toSC("Total Fitur")}:* ${totalAllCmds} ${toSC("command")}
 │
@@ -271,7 +271,7 @@ ${weatherBlock ? weatherBlock + "\n" : ""}╭─「 ✦ ${toSC("Daftar Kategori"
     const emoji = CATEGORY_EMOJI?.[matchedCat] || "📋";
     let txt = `╭─「 ✦ ${toSC("Info")} ✦ 」
 ${infoText}╰────  •  ────
-${weatherBlock ? weatherBlock + "\n" : ""}╭─「 ✦ ${emoji} *${toSC(catName)}* ✦ 」
+╭─「 ✦ ${emoji} *${toSC(catName)}* ✦ 」
 │ *${toSC("Total")}:* ${totalFitur} ${toSC("fitur")}
 │
 `;
