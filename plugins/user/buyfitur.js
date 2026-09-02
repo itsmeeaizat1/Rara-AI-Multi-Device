@@ -40,7 +40,7 @@ async function handler(m, { sock }) {
     
     if (user.isPremium || config.isPremium(m.sender)) {
         return m.reply(
-            `✨ *ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ*\n\n` +
+            `*ᴘʀᴇᴍɪᴜᴍ ᴜꜱᴇʀ*\n\n` +
             `Kamu sudah premium!\n` +
             `Semua fitur sudah ter-unlock!`
         )

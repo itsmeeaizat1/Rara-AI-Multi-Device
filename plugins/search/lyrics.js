@@ -35,7 +35,7 @@ async function handler(m, { sock }) {
     const query = m.text?.trim()
     
     if (!query) {
-        return m.reply( `Hai kak! ✨ Lupa masukin judul lagunya ya? 😅\n\n` +
+        return m.reply( `Hai kak! Lupa masukin judul lagunya ya? 😅\n\n` +
             `Coba deh ketik perintahnya begini: *${m.prefix}lirik sempurna andra and the backbone* 🎶\n\n` +
             `Yuk, masukin judulnya biar kita bisa nyanyi bareng! 🎤🔥`, "lirik")
     }

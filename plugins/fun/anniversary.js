@@ -61,7 +61,7 @@ function getMilestone(days) {
   if (days >= 90) return { label: "3 BULAN+ AWET!", emoji: "💕" };
   if (days >= 30) return { label: "1 BULAN+ BERJALAN!", emoji: "💗" };
   if (days >= 7) return { label: "1 MINGGU+ COBA!", emoji: "💘" };
-  return { label: "BARU DIMULAI", emoji: "✨" };
+  return { label: "BARU DIMULAI", emoji: "" };
 }
 
 function getCountdownText(target) {

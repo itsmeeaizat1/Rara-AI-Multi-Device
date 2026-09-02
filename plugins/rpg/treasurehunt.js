@@ -91,7 +91,7 @@ async function handler(m, { sock }) {
       const legGold = Math.floor(Math.random() * 15000) + 10000;
       profile.gold = (profile.gold || 0) + legGold;
       inventory.items["Peti Harta Legendaris"] = (inventory.items["Peti Harta Legendaris"] || 0) + 1;
-      msg += `✨ *HARTA LEGENDARIS!* ✨\n`;
+      msg += `*HARTA LEGENDARIS!* \n`;
       msg += `👑 Kamu menemukan Peti Emas Kuno Berkilau!\n`;
       msg += `💰 Gold: *+${legGold.toLocaleString()} Gold*\n`;
       msg += `📦 Item: *Peti Harta Legendaris x1*\n`;

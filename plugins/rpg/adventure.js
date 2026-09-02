@@ -214,7 +214,7 @@ async function handler(m, { sock }) {
         expGain = 50 + Math.floor(Math.random() * 100);
         addExp(m, expGain);
         hpChange = healAmount;
-        extraText = `\n✨ Blessing: HP +${healAmount} | Mana +${manaAmount}\n`;
+        extraText = `\n Blessing: HP +${healAmount} | Mana +${manaAmount}\n`;
         break;
       }
 

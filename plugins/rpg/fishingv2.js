@@ -25,7 +25,7 @@ const RODS = [
 const BAITS = [
   { name: "Worm", price: 10, bonus: 0, emoji: "🪱" },
   { name: "Shrimp", price: 50, bonus: 8, emoji: "🦐" },
-  { name: "Golden Bait", price: 200, bonus: 20, emoji: "✨" },
+  { name: "Golden Bait", price: 200, bonus: 20, emoji: "" },
 ];
 
 const FISH = [
@@ -122,7 +122,7 @@ async function handler(m, { sock }) {
       const rod = RODS[data.rod || 0];
       let msg = "";
       msg += `Rod: ${rod.emoji} *${rod.name}*\n`;
-      msg += `Baits: 🪱Worm:${data.baits?.Worm||0} 🦐Shrimp:${data.baits?.Shrimp||0} ✨Golden:${data.baits?.["Golden Bait"]||0}\n`;
+      msg += `Baits: 🪱Worm:${data.baits?.Worm||0} 🦐Shrimp:${data.baits?.Shrimp||0} Golden:${data.baits?.["Golden Bait"]||0}\n`;
       msg += `Total Catch: *${data.totalCaught || 0}*\n`;
       msg += `Best: *${data.bestCatch || "-"}*\n`;
       if (data.catches?.length > 0) {
@@ -161,7 +161,7 @@ async function handler(m, { sock }) {
     msg += `Rod: ${rod.emoji} ${rod.name} | Bait: ${activeBait.emoji} ${activeBait.name}\n`;
     msg += `
 `;
-    msg += `${isRare ? "✨ TANGKAPAN LANGKA! ✨" : "Berhasil!"}\n`;
+    msg += `${isRare ? " TANGKAPAN LANGKA! " : "Berhasil!"}\n`;
     msg += `${fish.emoji} *${fish.name}*\n`;
     msg += `Rarity: *${fish.rarity}* | Price: *${fish.price}g*\n`;
     msg += `Total: *${data.totalCaught}* | Best: *${data.bestCatch}*\n`;

@@ -17,7 +17,7 @@ async function handler(m, { sock }) {
     if (!rpg) return m.reply(claraWrap("statrpg", "RPG belum siap.", "error"));
   await animGeneric(m, sock, "📊", "Loading Stats");
     return m.reply(claraWrap("statrpg",
-      `📊 *STAT KARAKTER*\n⚔️ ATK: ${rpg.atk}\n🛡️ DEF: ${rpg.def}\n⚡ SPD: ${rpg.spd}\n❤️ HP: ${rpg.hp}/${rpg.maxHp}\n💧 Mana: ${rpg.mana}/${rpg.maxMana}\n🎯 Crit: ${rpg.critRate}%\n✨ Evasion: ${rpg.evasion}%`, "info"));
+      `📊 *STAT KARAKTER*\n⚔️ ATK: ${rpg.atk}\n🛡️ DEF: ${rpg.def}\n⚡ SPD: ${rpg.spd}\n❤️ HP: ${rpg.hp}/${rpg.maxHp}\n💧 Mana: ${rpg.mana}/${rpg.maxMana}\n🎯 Crit: ${rpg.critRate}%\n Evasion: ${rpg.evasion}%`, "info"));
   } catch (e) {
     return m.reply(claraWrap("statrpg", "Terjadi error.", "error"));
   }

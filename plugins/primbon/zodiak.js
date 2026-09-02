@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
         const response = `⭐ *Zodiak ${zodiac.toUpperCase()}*\n\n` +
             `${r.zodiak}\n\n` +
             `🔢 *ɴᴏᴍᴏʀ:* ${r.nomor_keberuntungan}\n` +
-            `🌸 *ʙᴜɴɢᴀ:* ${r.bunga_keberuntungan}\n` +
+            `*ʙᴜɴɢᴀ:* ${r.bunga_keberuntungan}\n` +
             `🎨 *ᴡᴀʀɴᴀ:* ${r.warna_keberuntungan}\n` +
             `💎 *ʙᴀᴛᴜ:* ${r.batu_keberuntungan}\n` +
             `🔥 *ᴇʟᴇᴍᴇɴ:* ${r.elemen_keberuntungan}\n` +

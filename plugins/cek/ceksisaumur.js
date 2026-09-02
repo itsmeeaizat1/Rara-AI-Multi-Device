@@ -30,7 +30,7 @@ async function handler(m, { sock, config: botConfig }) {
     if (tahun > 80) {
         desc = 'Panjang umur banget! 🎉'
     } else if (tahun > 60) {
-        desc = 'Lumayan panjang~ ✨'
+        desc = 'Lumayan panjang~'
     } else if (tahun > 40) {
         desc = 'Cukup lah ya 😊'
     } else {

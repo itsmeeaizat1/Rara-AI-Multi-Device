@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
         const group = await sock.groupCreate(name, participants)
         
         let successTxt = `👥 *GRUP BERHASIL DIBUAT* 👥\n\n`
-        successTxt += `✨ *ɴᴀᴍᴀ:* ${name}\n`
+        successTxt += `*ɴᴀᴍᴀ:* ${name}\n`
         successTxt += `🆔 *ɪᴅ:* ${group.id}\n`
         successTxt += `👤 *ᴘᴇꜱᴇʀᴛᴀ:* ${participants.length} orang\n`
         

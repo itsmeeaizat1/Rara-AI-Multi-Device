@@ -98,7 +98,7 @@ async function handler(m, { sock }) {
 
     await sock.sendMessage(m.chat, {
       image: cardBuffer,
-      caption: `✨ *MUSIC CARD BERHASIL DIBUAT!* ✨\n\n🎧 *ᴊᴜᴅᴜʟ*: ${judul}\n🎤 *ᴀʀᴛɪꜱ*: ${nama}\n\nKeren banget kan hasilnya? Pamerin ke teman-temanmu yuk! 🚀`
+      caption: `*MUSIC CARD BERHASIL DIBUAT!* \n\n🎧 *ᴊᴜᴅᴜʟ*: ${judul}\n🎤 *ᴀʀᴛɪꜱ*: ${nama}\n\nKeren banget kan hasilnya? Pamerin ke teman-temanmu yuk! 🚀`
     }, { quoted: m });
   } catch (err) {
     console.error("[Music Card]", err.message);

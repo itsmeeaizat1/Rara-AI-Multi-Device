@@ -23,7 +23,7 @@ const VARIANTS = {
     id: 1,
     name: "ALLMENU NATIVEFLOW",
     desc: "Thumbnail header + nativeFlow buttons + box-drawing text (single variant)",
-    emoji: "✨",
+    emoji: "",
   },
 };
 
@@ -70,7 +70,7 @@ async function handler(m, { sock, db }) {
 
   const bodyText =
     `📋📑 *ALLMENU VARIANT*\n\n` +
-    `Atur tampilan allmenu yang menampilkan seluruh daftar perintah bot dalam satu halaman 📖✨\n` +
+    `Atur tampilan allmenu yang menampilkan seluruh daftar perintah bot dalam satu halaman 📖 \n` +
     `Variant aktif saat ini: *V${current} — ${VARIANTS[`v${current}`]?.name || "Unknown"}* 🎯\n\n` +
     `Pilih variant allmenu dari tombol di bawah 👇`;
 

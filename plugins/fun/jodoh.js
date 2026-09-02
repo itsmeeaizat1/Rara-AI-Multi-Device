@@ -35,7 +35,7 @@ const loveQuotes = [
   "Cinta sejati tidak pernah mengenal jarak 💕",
   "Dua hati yang bersatu takkan terpisahkan 💗",
   "Kalian seperti puzzle yang sempurna 🧩",
-  "Match made in heaven! ✨",
+  "Match made in heaven!",
   "Chemistry-nya kuat banget! 🔥",
   "Couple goals banget sih kalian 💑",
   "Destiny brought you together 🌟",
@@ -177,7 +177,7 @@ async function handler(m, { sock }) {
   text += `Status: *${compatibilityText(compatibility)}*\n`;
   text += `╰┈┈┈┈┈┈┈┈\n\n`;
   if (usedRegistration) {
-    text += `✨ _Dijodohkan berdasarkan data registrasi_\n`;
+    text += `_Dijodohkan berdasarkan data registrasi_\n`;
   }
   if (registrationRequired) {
     text += `🔒 _Mode wajib daftar aktif, hanya member terdaftar yang dipilih_\n`;

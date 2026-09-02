@@ -43,7 +43,7 @@ const EVOLUTION_STAGES = {
   ],
   unicorn: [
     { stage: 1, name: "Unicorn", emoji: "🦄", atk: 35, def: 45 },
-    { stage: 2, name: "Unicorn Royal", emoji: "🦄✨", atk: 52, def: 67 },
+    { stage: 2, name: "Unicorn Royal", emoji: "🦄", atk: 52, def: 67 },
     { stage: 3, name: "Unicorn Celestial", emoji: "🌠🦄", atk: 78, def: 100 },
   ],
   tiger: [
@@ -174,7 +174,7 @@ async function handler(m, { sock }) {
       // Evolution Animation Box Output
       let animText = "";
       animText += `⚡ Pet kamu menyerap energi sihir kuno...\n`;
-      animText += `✨ Tubuh *${oldName}* dipenuhi aura cahaya terang!\n`;
+      animText += `Tubuh *${oldName}* dipenuhi aura cahaya terang!\n`;
       animText += `💥 *BOOM! EVOLUSI BERHASIL!*\n`;
       animText += `
 `;

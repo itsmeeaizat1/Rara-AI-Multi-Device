@@ -112,7 +112,7 @@ async function handler(m, { sock }) {
 
     if (isSuccess) {
       equipData[type] = targetLvl;
-      msg += `✨ *HASIL: BERHASIL!* 🎉\n`;
+      msg += `*HASIL: BERHASIL!* 🎉\n`;
       if (targetLvl === 10) {
         msg += `⚡ *CONGRATULATIONS!* Equipment telah mencapai status *⚡ LEGENDARY STATUS ⚡*!\n`;
       } else {

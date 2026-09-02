@@ -88,7 +88,7 @@ async function handler(m, { sock }) {
 `;
     msg += `📦 *ʜᴀsɪʟ* ${tip > 0 ? "+ tip!" : ""}\n`;
     msg += `💰 Ongkos: *+${baseFare}*\n`;
-    if (tip > 0) msg += `✨ Tip: *+${tip} gold*\n`;
+    if (tip > 0) msg += `Tip: *+${tip} gold*\n`;
     msg += `✦ EXP: *+${expGain}*\n`;
     msg += `
 `;

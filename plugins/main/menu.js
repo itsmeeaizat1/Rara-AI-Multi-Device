@@ -120,7 +120,7 @@ async function buildMenuText(m, botConfig, db, uptime, sock) {
       "bosen.",
       "",
       "Gak perlu install apa-apa.",
-      "Cuma ketik .allmenu untuk melihat semua fitur ✨",
+      "Cuma ketik .allmenu untuk melihat semua fitur",
     ];
 
     const txt = novaMenuLayout({

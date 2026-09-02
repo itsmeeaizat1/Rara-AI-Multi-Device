@@ -14,7 +14,7 @@ async function handler(m, { sock, config: botConfig }) {
   try {
     const { data } = await axios.get("https://api.waifu.pics/sfw/husbando", { timeout: 10000 });
     if (!data?.url) throw new Error("Gagal ambil nih gambar");
-    await sock.sendMessage(m.key.remoteJid, { image: { url: data.url }, caption: claraWrap("Husbu", "✨") }, { quoted: m });
+    await sock.sendMessage(m.key.remoteJid, { image: { url: data.url }, caption: claraWrap("Husbu", "") }, { quoted: m });
   } catch (e) {
     await m.reply(claraWrap("husbu", "Error: " + e.message, "error"));
   }

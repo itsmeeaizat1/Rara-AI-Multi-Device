@@ -61,7 +61,7 @@ async function handler(m, { sock }) {
       KENCAN_ACTIVITIES.forEach((a, i) => {
         msg += `${i + 1}. ${a.emoji} ${a.name}\n`;
         msg += `💰 ${a.cost} gold | ⚡ ${a.energy} energy\n`;
-        msg += `💕 +${a.affection} affection | ✨ +${a.exp} exp\n\n`;
+        msg += `💕 +${a.affection} affection | +${a.exp} exp\n\n`;
       });
       msg += `  Ketik: \`${m.prefix}rpgkencan <nomor>\`\n\n`;
             return m.reply(msg);
@@ -125,7 +125,7 @@ async function handler(m, { sock }) {
     msg += `❤️ Bersama: *${cinta.spouseName || cinta.spouse.split("@")[0]}*\n\n`;
     msg += `  📊 *Hasil:*\n`;
     msg += `💕 Affection: *+${activity.affection}* (Total: ${myCinta.affection})\n`;
-    msg += `✨ EXP: *+${activity.exp}*\n`;
+    msg += `EXP: *+${activity.exp}*\n`;
     msg += `💰 Gold: *-${activity.cost}*\n`;
     msg += `⚡ Energy: *-${activity.energy}*\n\n`;
     

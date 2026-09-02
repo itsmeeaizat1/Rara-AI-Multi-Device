@@ -37,7 +37,7 @@ const VARIANTS = {
     id: 5,
     name: "MENUCAT NATIVEFLOW",
     desc: "Tampilan native flow premium dengan video & cuaca",
-    emoji: "✨",
+    emoji: "",
   },
   v6: {
     id: 6,
@@ -92,7 +92,7 @@ async function handler(m, { sock, db }) {
 
   const bodyText =
     `📂🗂️ *MENUCAT VARIANT*\n\n` +
-    `Atur tampilan menu per kategori ketika user memilih kategori dari menu utama 📋✨\n` +
+    `Atur tampilan menu per kategori ketika user memilih kategori dari menu utama 📋 \n` +
     `Variant aktif saat ini: *V${current} — ${VARIANTS[`v${current}`]?.name || "Unknown"}* 🎯\n\n` +
     `Pilih variant menucat dari tombol di bawah 👇`;
 

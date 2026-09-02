@@ -65,7 +65,7 @@ Gunakan bahasa Indonesia, tafsir dengan bijak dan positif. Jangan menakut-nakuti
 
 `;
       } else if (t.startsWith("ASPEK SPIRITUAL:")) {
-        formatted += `✨ *ᴀsᴘᴇᴋ sᴘɪʀɪᴛᴜᴀʟ*\n`;
+        formatted += `*ᴀsᴘᴇᴋ sᴘɪʀɪᴛᴜᴀʟ*\n`;
         formatted += `${t.replace("ASPEK SPIRITUAL:", "").trim()}
 
 `;

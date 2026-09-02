@@ -378,10 +378,10 @@ const CATEGORY_EMOJIS = {
   economy: "💰", user: "📊", random: "🎲", premium: "💎",
   ephoto: "🎨", jpm: "📢", pushkontak: "📱",
   panel: "🖥️", owner: "👑", store: "🛒",
-  anime: "🎌", asupan: "🌸", clan: "⚔️", convert: "🔄",
+  anime: "🎌", asupan: "", clan: "⚔️", convert: "🔄",
   downloader: "📥", education: "📚", food: "🍜",
   future: "🔮", islami: "🕌", islamic: "🕌", menu: "📋",
-  maker: "✨", news: "📰", nsfw: "🔞", linode: "☁️",
+  maker: "", news: "📰", nsfw: "🔞", linode: "☁️",
   primbon: "🔮", cecan: "👧", stalker: "🔎", tts: "🔊",
   vps: "🖥️",
 };

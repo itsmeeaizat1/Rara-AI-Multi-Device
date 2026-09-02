@@ -24,7 +24,7 @@ async function handler(m, { sock, config: botConfig }) {
     
     let desc = ''
     if (iq >= 150) {
-        desc = 'JENIUS! Einstein level! 🧠✨'
+        desc = 'JENIUS! Einstein level! 🧠'
     } else if (iq >= 130) {
         desc = 'Sangat cerdas! 🎓'
     } else if (iq >= 110) {

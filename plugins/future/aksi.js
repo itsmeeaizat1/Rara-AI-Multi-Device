@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   }
 
   const header = "🔥 *ᴀᴄᴛɪᴏɴ ꜱᴛᴏʀʏ*\n\nKarakter: " + names.join(", ") + "\n\n";
-  const footer = "\n\n✨ Dibuat oleh Nova AI";
+  const footer = "\n\n Dibuat oleh Nova AI";
   return m.reply( header + story + footer, "aksi");
 }
 

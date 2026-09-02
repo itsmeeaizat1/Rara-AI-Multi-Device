@@ -185,7 +185,7 @@ function addRodExp(fischUser, rodKey, amount) {
     statsIncreased.push(`Luck +1%, Speed +1%`);
   }
   if (levelUp)
-    return `🎣 Rod *${rod.name}* naik ke level ${rod.level}!\n✨ ${statsIncreased.join(", ")}`;
+    return `🎣 Rod *${rod.name}* naik ke level ${rod.level}!\n ${statsIncreased.join(", ")}`;
   return null;
 }
 

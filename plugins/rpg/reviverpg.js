@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     rpg.energy = rpg.maxEnergy;
     saveRpg(m, rpg);
     await m.react("🐣");
-    return m.reply(claraWrap("reviverpg", `✨ Kamu bangkit kembali! HP, Mana, dan Energy pulih penuh.`, "success"));
+    return m.reply(claraWrap("reviverpg", `Kamu bangkit kembali! HP, Mana, dan Energy pulih penuh.`, "success"));
   } catch (e) {
     return m.reply(claraWrap("reviverpg", "Terjadi error.", "error"));
   }

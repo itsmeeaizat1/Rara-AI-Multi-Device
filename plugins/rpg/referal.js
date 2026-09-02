@@ -53,7 +53,7 @@ async function handler(m, { sock }) {
       await m.react("🐣");
       let msg = "";
       msg += `✅ Kamu menggunakan kode referral!\n`;
-      msg += `✨ +${XP_FIRST_TIME.toLocaleString("id-ID")} EXP\n`;
+      msg += `+${XP_FIRST_TIME.toLocaleString("id-ID")} EXP\n`;
             return m.reply(msg);
     }
 

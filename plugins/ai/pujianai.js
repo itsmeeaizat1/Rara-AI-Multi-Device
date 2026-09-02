@@ -44,7 +44,7 @@ Gunakan bahasa Indonesia santai. Pujian harus bikin senyum, bukan cringe.`;
     }
 
     await m.react("🐣");
-    let msg = `Untuk: ${target}\n\n${result.answer.trim()}\n\nSemoga harimu jadi lebih baik! ✨`;
+    let msg = `Untuk: ${target}\n\n${result.answer.trim()}\n\nSemoga harimu jadi lebih baik!`;
     return m.reply(msg);
   } catch (err) {
     console.error("pujianai error:", err);

@@ -214,7 +214,7 @@ function addPickExp(mcUser, pickKey, amount) {
     statsIncreased.push("Luck +1%, Speed +1%, Fortune +0.5%");
   }
   if (levelUp)
-    return `⛏️ Pickaxe *${pick.name}* naik ke level ${pick.level}!\n✨ ${statsIncreased.join(", ")}`;
+    return `⛏️ Pickaxe *${pick.name}* naik ke level ${pick.level}!\n ${statsIncreased.join(", ")}`;
   return null;
 }
 
