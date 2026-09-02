@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import axios from 'axios'
-import { createCanvas, loadImage, registerFont } from '@napi-rs/canvas'
+import canvasPkg from '@napi-rs/canvas';
+const { createCanvas, loadImage, registerFont } = canvasPkg;
 import config from '../../config.js'
 import te from '../../src/lib/nova-error.js'
 import { claraWrap } from "../../src/lib/nova-menu-style.js"

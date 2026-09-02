@@ -98,6 +98,7 @@ async function scrapePinterest(pinUrl) {
   }
 }
 
+export { scrapePinterest as PinDL };
 export default scrapePinterest;
 // useage
 // const url = 'https://id.pinterest.com/pin/87186942777228203/';

@@ -9,7 +9,8 @@ import {
   useEnergy, checkCooldown
 } from "./nova-rpg-service.js";
 
-const db = getDatabase();
+let _db = null;
+function getDb() { if (!_db) _db = getDatabase(); return _db; }
 
 // === RPG CINTA CONSTANTS ===
 const DATING_MIN_LEVEL = 3;
@@ -115,7 +116,7 @@ export function breakUp(m) {
   if (!partner) return false;
 
   const myName = m.pushName || "Player";
-  const partnerData = db.getUser(partner) || {};
+  const partnerData = getDb().getUser(partner) || {};
   const partnerName = partnerData.name || partner.split("@")[0];
 
   // Clear both
@@ -153,7 +154,7 @@ export function marry(m) {
   cinta.marriedDate = Date.now();
   saveCintaData(m, cinta);
 
-  const partnerData = db.getUser(partner) || {};
+  const partnerData = getDb().getUser(partner) || {};
   const partnerName = partnerData.name || partner.split("@")[0];
   const pCinta = getCintaData({ sender: partner, pushName: partnerName });
   pCinta.married = true;
@@ -174,7 +175,7 @@ export function divorce(m) {
 
   const partner = cinta.spouse;
   if (partner) {
-    const partnerData = db.getUser(partner) || {};
+    const partnerData = getDb().getUser(partner) || {};
     const partnerName = partnerData.name || partner.split("@")[0];
     const pCinta = getCintaData({ sender: partner, pushName: partnerName });
     pCinta.married = false;
