@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20rebuild%20sticker%20maker%20pipeline%20matc-success?style=for-the-badge)
-> *Commit: "fix: rebuild sticker maker pipeline match Alice standard"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20info%20section%20lengkap%20di%20play%2Fplayvi-success?style=for-the-badge)
+> *Commit: "fix: info section lengkap di play/playvideo, video AV1 gak bisa play, store menu salah"*
 <!--END_SECTION:latest-update-->
 
 ---
