@@ -9,7 +9,7 @@ import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
   name: "tanyaai",
-  alias: ["tanyaai", "nova-ai", "novaai", "nova", "tanya"],
+  alias: ["tanyaai", "nova-ai", "nova", "tanya"],
   category: "ai",
   description: "Chat dengan Nova AI — Asisten bot cerdas yang bisa jalanin command otomatis",
   usage: ".tanyaai <pertanyaan>",
