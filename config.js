@@ -288,12 +288,12 @@ const config = {
   goodbye: { defaultEnabled: false },
 
   ui: {
-    menuVariant: 3,
+    menuVariant: 1,
     // V1 menu video/GIF source: isi URL untuk video online, kosong = pakai assets/video/nova-mp4.mp4
     menuVideoUrl: "",
     allmenuVideoUrl: "",
     allmenuVariant: 3,
-    replyVariant: 7,
+    replyVariant: 1,
   },
 
   // ═══════════════════════════════════════════
