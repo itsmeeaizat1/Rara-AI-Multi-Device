@@ -5,7 +5,7 @@ import config from '../../config.js'
 const pluginConfig = {
     name: "islami",
     alias: ["islami"],
-    category: 'religi',
+    category: "islami",
     description: 'Kumpulan fitur Islami (Asmaul Husna, Niat Sholat, Surah, Doa, Artikel, Kata Mutiara)',
     usage: '.islami <fitur>',
     isGroup: false,

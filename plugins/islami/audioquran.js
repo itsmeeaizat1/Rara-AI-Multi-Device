@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "audioquran",
   alias: ["audioquran", "audio"],
-  category: "religi",
+  category: "islami",
   description: "Cari dan putar audio Al-Quran dari berbagai Qari (mp3quran)",
   usage: ".audio-quran [mode] [args]",
   example: ".audio-quran audio Sudais 1\n.audio-quran reciters\n.audio-quran suwar",

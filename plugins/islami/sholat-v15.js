@@ -5,9 +5,9 @@ import { claraHeader,
 import { fetchPrayerTimes, buildPrayerMessage, PRAYER_LABELS, PRAYER_EMOJIS, ADVANCE_REMINDER_MINUTES } from "../../src/lib/nova-sholat-scheduler.js";
 
 const pluginConfig = {
-  name: "sholat",
-  alias: ["sholat", "jadwalsholat"],
-  category: "religi",
+  name: "sholatscheduler",
+  alias: ["sholatscheduler", "jadwalsholatauto"],
+  category: "islami",
   description: "Auto jadwal sholat akurat API: reminder 5 menit, notifikasi waktu sholat, info iqamah/jamaah",
   usage: ".jadwalsholat <aktif|off|setting|kota>\n.lokasijadwalsholat <kota>",
   example: ".jadwalsholat Jakarta",

@@ -3,7 +3,7 @@ import {  claraHeader,  separator, tipText, claraWrap, novaCaption } from "../..
 import axios from "axios";
 
 const pluginConfig = {
-  name: "hadith", alias: ["hadith"], category: "religi",
+  name: "hadith", alias: ["hadith"], category: "islami",
   alias: ["hadith"],
   description: "Cari hadis Bukhari & Muslim", usage: ".hadith <kata kunci>",
   example: ".hadith sabar", isOwner: false, isPremium: false,

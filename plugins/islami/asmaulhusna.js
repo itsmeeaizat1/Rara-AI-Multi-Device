@@ -5,7 +5,7 @@ import { getRandomItem, getItemByIndex, searchItem, getAllData } from '../../src
 const pluginConfig = {
     name: "asmaulhusna",
     alias: ["asmaulhusna"],
-    category: 'religi',
+    category: "islami",
     description: '99 Nama Allah (Asmaul Husna)',
     usage: '.asmaulhusna [nomor/nama]',
     example: '.asmaulhusna 1\n.asmaulhusna ar rahman',

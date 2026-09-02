@@ -1,9 +1,9 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-
-import { f } from '../../src/lib/nova-http.js'
-import te from '../../src/lib/nova-error.js'
+import { f } from '../../src/lib/nova-http.js';
+import te from '../../src/lib/nova-error.js';
 import { callIkyy } from "../../src/lib/nova-ai-service.js";
+
 const pluginConfig = {
     name: "muslimai",
     alias: ["muslimai"],
@@ -31,18 +31,11 @@ class MuslimAI {
     }
 
     _body(q) {
-        return JSON.stringify({
-            query: q,
-            distinctId: this._id()
-        });
+        return JSON.stringify({ query: q, distinctId: this._id() });
     }
 
     _opts(q) {
-        return {
-            method: "POST",
-            headers: this.headers,
-            body: this._body(q)
-        };
+        return { method: "POST", headers: this.headers, body: this._body(q) };
     }
 
     _parse(res) {
@@ -52,14 +45,8 @@ class MuslimAI {
                 const p = JSON.parse(l);
                 if (p.type === "text") txt += p.data;
             } catch (e) {
-    // IkyyXD fallback
-    try {
-      const ikyyReply = await callIkyy(text?.trim() || m.text, {});
-      if (ikyyReply) return m.reply(ikyyReply);
-    } catch (ikyyErr) {
-      console.error("[muslimai.js] IkyyXD fallback failed:", ikyyErr.message);
-    }
- console.error('[muslimai.js]:', e.message); }
+                // skip non-JSON lines
+            }
         }
         return txt || res;
     }
@@ -74,15 +61,20 @@ class MuslimAI {
 async function handler(m, { sock }) {
     const text = m.args.join(' ')
     if (!text) {
-        return m.reply(`☪️ *ᴍᴜꜱʟɪᴍ ᴀɪ*\n\nMasukkan pertanyaan tentang Islam\n\n\`Contoh: ${m.prefix}muslimai Apa itu sholat?\``)
+        return m.reply(claraWrap("Muslim AI", `Masukkan pertanyaan tentang Islam.\n\nContoh: ${m.prefix}muslimai Apa itu sholat?`))
     }
     try {
-        const data = await new MuslimAI().chat(`${text}`)
-        let response = `${data}`
-        await m.reply(response)
-
+        const data = await new MuslimAI().chat(text)
+        await m.reply(data)
     } catch (error) {
-        m.reply(claraWrap("muslimai", te(m.prefix, m.command, m.pushName), "error"))
+        // IkyyXD fallback
+        try {
+            const ikyyReply = await callIkyy(text, {});
+            if (ikyyReply) return m.reply(ikyyReply);
+        } catch (ikyyErr) {
+            console.error("[muslimai.js] IkyyXD fallback failed:", ikyyErr.message);
+        }
+        m.reply(claraWrap("Muslim AI", te(m.prefix, m.command, m.pushName), "error"))
     }
 }
 
