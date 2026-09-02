@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20semua%20varian%20menu%20%26%20repl-success?style=for-the-badge)
-> *Commit: "refactor: hapus semua varian menu & reply kecuali V1"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20ganti%20nama%20varian%20reply%20V1%20dar-success?style=for-the-badge)
+> *Commit: "refactor: ganti nama varian reply V1 dari FAKE LOCATION ke EXTERNAL AD REPLY"*
 <!--END_SECTION:latest-update-->
 
 ---
