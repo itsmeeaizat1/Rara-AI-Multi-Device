@@ -1293,3 +1293,9 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - Owner: addlimitall name fixed
 - RPG: 15+ fungsi animasi baru ditambahkan ke nova-rpg-anim.js
 - RPG: 158/158 plugin kini memiliki animasi (100% complete)
+
+## NovaAI AI Agent
+- .novaai — 23 tools (closegc, opengc, kick, add, promote, demote, block, unblock, setname, setdesc, setpp, lockedit, unlockedit, getlink, revokelink, approvalon, approvaloff, hidetag, tagadmin, poll, groupinfo, delmsg, leavegc)
+- 27 localParse patterns (instan, tanpa AI online)
+- Blocklist otomatis: user diblokir tidak bisa masuk grup lagi
+- AI online hanya dipanggil jika localParse tidak match

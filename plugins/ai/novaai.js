@@ -35,16 +35,35 @@ async function handler(m, { sock, conn, config }) {
     return m.reply(
       "╭─「 ✦ ɴᴏᴠᴀ ᴀɪ ✦ 」\n" +
       "│\n" +
-      "│ 🧠 AI Agent bisa ngatur grup & jawab pertanyaan\n" +
+      "│ 🧠 AI Agent — 25+ perintah tanpa AI online\n" +
       "│\n" +
-      "│ 📌 Contoh perintah:\n" +
-      "│ • .novaai tutup grup\n" +
-      "│ • .novaai buka grup\n" +
+      "│ 📌 Grup:\n" +
+      "│ • .novaai tutup grup / buka grup\n" +
+      "│ • .novaai kunci edit info / buka edit info\n" +
+      "│ • .novaai ganti nama jadi [nama]\n" +
+      "│ • .novaai ganti deskripsi jadi [desc]\n" +
+      "│ • .novaai ganti foto profil grup (reply gambar)\n" +
+      "│\n" +
+      "│ 📌 Member:\n" +
       "│ • .novaai kick @user\n" +
-      "│ • .novaai jadikan @user admin\n" +
-      "│ • .novaai ganti nama jadi Ruang Belajar\n" +
-      "│ • .novaai tag absen malam\n" +
-      "│ • .novaai apa itu nodejs (ngobrol biasa)\n" +
+      "│ • .novaai blokir @user (kick + blok masuk lagi)\n" +
+      "│ • .novaai unblokir @user\n" +
+      "│ • .novaai jadikan @user admin / turunkan @user\n" +
+      "│ • .novaai tambah @user ke grup\n" +
+      "│\n" +
+      "│ 📌 Link & Approval:\n" +
+      "│ • .novaai link grup\n" +
+      "│ • .novaai reset link grup\n" +
+      "│ • .novaai aktifkan approval / matikan approval\n" +
+      "│\n" +
+      "│ 📌 Lainnya:\n" +
+      "│ • .novaai tag semua [pesan]\n" +
+      "│ • .novaai tag admin [pesan]\n" +
+      "│ • .novaai poll [pertanyaan | opsi1, opsi2]\n" +
+      "│ • .novaai info grup\n" +
+      "│ • .novaai hapus pesan (reply pesan)\n" +
+      "│ • .novaai keluar grup (owner only)\n" +
+      "│ • .novaai [pertanyaan apa saja]\n" +
       "│\n" +
       "╰────  •  ────"
     );
@@ -90,6 +109,10 @@ async function handler(m, { sock, conn, config }) {
     if (!m.isGroup) return m.reply("❌ Perintah ini hanya bisa di dalam grup.");
     if (!m.isAdmin) return m.reply("❌ Kamu bukan admin, tidak bisa menjalankan ini.");
     if (!m.isBotAdmin) return m.reply("❌ Jadikan aku admin dulu supaya bisa menjalankan ini.");
+  }
+
+  if (tool.perm === "owner") {
+    if (!m.isOwner) return m.reply("❌ Perintah ini khusus owner bot.");
   }
 
   // normalisasi user (dari @mention / reply)
