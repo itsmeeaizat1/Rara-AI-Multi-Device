@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20menu2.js%20%E2%80%94%20redundant%20den-success?style=for-the-badge)
-> *Commit: "refactor: hapus menu2.js — redundant dengan menu, allmenu, allmenucategory"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20info%20section%20lengkap%20di%20Mode%202%20all-success?style=for-the-badge)
+> *Commit: "feat: info section lengkap di Mode 2 allmenucategory"*
 <!--END_SECTION:latest-update-->
 
 ---
