@@ -37,10 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20rapikan%2054%20plugin%20plain%20text%20reply%20-success?style=for-the-badge)
-> *Commit: "fix: rapikan 54 plugin plain text reply — hapus smallcaps & emoji dekoratif dari title, pertahankan status emoji (❌✅), konsisten *Title*
-
-Content"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20rapikan%2011%20file%20sisa%20smallcaps%20di%20p-success?style=for-the-badge)
+> *Commit: "fix: rapikan 11 file sisa smallcaps di plain text reply (store, group notif, panel, utility)"*
 <!--END_SECTION:latest-update-->
 
 ---
