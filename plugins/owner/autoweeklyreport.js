@@ -55,7 +55,7 @@ const pluginConfig = {
 // ============================================================
 // STATE
 // ============================================================
-const SNAPSHOT_FILE = path.join(process.cwd(), "database", "weekly-snapshots.json");
+const SNAPSHOT_FILE = path.join(process.cwd(), "src", "data", "weekly-snapshots.json");
 let cronJob = null;
 
 // ============================================================

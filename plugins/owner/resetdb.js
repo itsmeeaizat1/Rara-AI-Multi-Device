@@ -55,8 +55,8 @@ async function handler(m, { sock }) {
     delete global.resetDbPending[m.sender]
     
     try {
-        const dbPath = path.join(process.cwd(), 'database', 'db.json')
-        const backupPath = path.join(process.cwd(), 'database', `db_backup_${Date.now()}.json`)
+        const dbPath = path.join(process.cwd(), "src", "data", 'db.json')
+        const backupPath = path.join(process.cwd(), "src", "data", `db_backup_${Date.now()}.json`)
         
         if (fs.existsSync(dbPath)) {
             fs.copyFileSync(dbPath, backupPath)

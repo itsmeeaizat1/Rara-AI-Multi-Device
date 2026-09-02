@@ -9,7 +9,7 @@ import config from "../../config.js";
 import { logger } from "./nova-logger.js";
 import { toSC, bracketBox } from "./nova-menu-style.js";
 
-const STATE_FILE = path.join(process.cwd(), "database", "autoapihealth.json");
+const STATE_FILE = path.join(process.cwd(), "src", "data", "autoapihealth.json");
 const TZ = "Asia/Jakarta";
 
 let sockInstance = null;

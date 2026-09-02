@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Database path for storing per-group autotranslate settings
-const DB_FILE = path.join(process.cwd(), 'database', 'autotranslate.json');
+const DB_FILE = path.join(process.cwd(), "src", "data", 'autotranslate.json');
 
 // In-memory state cache
 let state = {};

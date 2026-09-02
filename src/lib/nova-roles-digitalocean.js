@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from 'fs'
 import path from 'path'
-const DO_DIR = path.join(process.cwd(), 'database', 'digitalocean')
+const DO_DIR = path.join(process.cwd(), "src", "data", 'digitalocean')
 const VALID_SERVERS = ['do1', 'do2', 'do3', 'do4', 'do5']
 const VALID_ROLES = ['owner', 'ceo', 'reseller']
 

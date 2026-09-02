@@ -4,7 +4,7 @@
 
 import fs from "fs";
 
-const DB = "./database/autorole.json";
+const DB = "./src/data/autorole.json";
 
 // ===== DEFINISI ROLE =====
 export const ROLES = {
@@ -40,7 +40,7 @@ function loadDB() {
 }
 
 function saveDB(data) {
-  fs.mkdirSync("./database", { recursive: true });
+  fs.mkdirSync("./src/data", { recursive: true });
   fs.writeFileSync(DB, JSON.stringify(data, null, 2));
 }
 

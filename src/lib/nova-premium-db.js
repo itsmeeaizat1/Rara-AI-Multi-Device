@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from 'fs'
 import path from 'path'
-const DB_PATH = path.join(process.cwd(), 'src', 'database')
+const DB_PATH = path.join(process.cwd(), 'src', 'data', 'premium-db')
 const OWNER_FILE = path.join(DB_PATH, 'owner.json')
 const PREMIUM_FILE = path.join(DB_PATH, 'premium.json')
 const PARTNER_FILE = path.join(DB_PATH, 'partner.json')

@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import fs from 'fs'
 import path from 'path'
-const LINODE_DIR = path.join(process.cwd(), 'database', 'linode')
+const LINODE_DIR = path.join(process.cwd(), "src", "data", 'linode')
 const VALID_SERVERS = ['ln1', 'ln2', 'ln3', 'ln4', 'ln5']
 const VALID_ROLES = ['owner', 'ceo', 'reseller']
 

@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import { logger } from "./nova-logger.js";
 
-const STATE_FILE = path.join(process.cwd(), "database", "autocleancache.json");
+const STATE_FILE = path.join(process.cwd(), "src", "data", "autocleancache.json");
 
 // Directories to clean (relative to project root)
 const CLEAN_DIRS = [

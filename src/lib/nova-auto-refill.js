@@ -11,7 +11,7 @@ import { logger } from "./nova-logger.js";
 import { toSC, bracketBox, tipText } from "./nova-menu-style.js";
 import { saluranCtx } from "./nova-context.js";
 
-const STATE_FILE = path.join(process.cwd(), "database", "autorefill.json");
+const STATE_FILE = path.join(process.cwd(), "src", "data", "autorefill.json");
 const TZ = "Asia/Jakarta";
 
 let sockInstance = null;

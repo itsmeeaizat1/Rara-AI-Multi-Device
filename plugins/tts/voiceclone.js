@@ -14,7 +14,7 @@ import { promisify } from "util";
 
 const execAsync = promisify(exec);
 
-const CLONE_DIR = path.join(process.cwd(), "database", "voice-clone");
+const CLONE_DIR = path.join(process.cwd(), "src", "data", "voice-clone");
 const STATE_FILE = path.join(CLONE_DIR, "state.json");
 const FISH_API_BASE = "https://api.fish.audio";
 

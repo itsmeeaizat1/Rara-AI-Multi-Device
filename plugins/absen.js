@@ -11,7 +11,7 @@ let _botJid = null;
 let _watcherStarted = false;
 let _upsertHooked = false;
 
-const DB_PATH = path.join(process.cwd(), "database", "absen.json");
+const DB_PATH = path.join(process.cwd(), "src", "data", "absen.json");
 
 // ── Database helpers ──
 function loadDB() {
@@ -60,7 +60,7 @@ function getBotJid() {
   if (_botJid) return _botJid;
   try {
     const raw = fs.readFileSync(
-      path.join(process.cwd(), "database", "auth_info", "creds.json"), "utf-8",
+      path.join(process.cwd(), "src", "data", "auth_info", "creds.json"), "utf-8",
     );
     _botJid = JSON.parse(raw).me?.id || null;
   } catch {}

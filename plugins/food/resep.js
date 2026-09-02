@@ -8,7 +8,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const API = "https://www.themealdb.com/api/json/v1/1";
 const COOKPAD_BASE = "https://cookpad.com/id";
-const ID_DATA = path.join(__dirname, "../../database/resep-indonesia.json");
+const ID_DATA = path.join(__dirname, "../../src/data/resep-indonesia.json");
 
 // Load Indonesian recipes as fallback (when Cookpad is down)
 let ID_RECIPES = [];
