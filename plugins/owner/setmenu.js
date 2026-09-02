@@ -9,7 +9,7 @@ const pluginConfig = {
   alias: ["setmenu"],
   category: "owner",
   description: "Mengatur variant tampilan menu",
-  usage: ".setmenu <v1-v6>",
+  usage: ".setmenu v1",
   example: ".setmenu v1",
   isOwner: true,
   isPremium: false,
@@ -24,38 +24,8 @@ const VARIANTS = {
   v1: {
     id: 1,
     name: "NATIVEFLOW CARD",
-    desc: "Thumbnail header + nativeFlow buttons + box-drawing text (desain aktif)",
+    desc: "Thumbnail header + nativeFlow buttons + box-drawing text",
     emoji: "✨",
-  },
-  v2: {
-    id: 2,
-    name: "PREMIUM",
-    desc: "",
-    emoji: "🖼️",
-  },
-  v3: {
-    id: 3,
-    name: "PREMIUM",
-    desc: "",
-    emoji: "✅",
-  },
-  v4: {
-    id: 4,
-    name: "LV",
-    desc: "",
-    emoji: "💼",
-  },
-  v5: {
-    id: 5,
-    name: "LV 2",
-    desc: "",
-    emoji: "✅",
-  },
-  v6: {
-    id: 6,
-    name: "LOCATION",
-    desc: "Location Message dengan Buttons",
-    emoji: "📍",
   },
 };
 
@@ -65,7 +35,7 @@ async function handler(m, { sock, db }) {
   if (variant) {
     const selected = VARIANTS[variant];
     if (!selected) {
-      m.reply(claraWrap("Setmenu", `❌ *VARIANT TIDAK VALID*\n\nGunakan: *v1* s/d *v6*`));
+      m.reply(claraWrap("Setmenu", `❌ *VARIANT TIDAK VALID*\n\nSatu-satunya variant: *v1*`));
       return;
     }
     db.setting("menuVariant", selected.id);
