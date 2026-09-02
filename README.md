@@ -37,8 +37,10 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20perbaiki%20novaReply%20(18%20plugin)%20yang-success?style=for-the-badge)
-> *Commit: "fix: perbaiki novaReply (18 plugin) yang return teks polos + buildBox sekarang selalu toSC header — jamin semua box-drawing reply konsisten smallcaps di header & body"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20rapikan%2054%20plugin%20plain%20text%20reply%20-success?style=for-the-badge)
+> *Commit: "fix: rapikan 54 plugin plain text reply — hapus smallcaps & emoji dekoratif dari title, pertahankan status emoji (❌✅), konsisten *Title*
+
+Content"*
 <!--END_SECTION:latest-update-->
 
 ---
