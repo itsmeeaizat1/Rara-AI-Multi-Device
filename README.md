@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20reorganisasi%20assets%2Fimage%20ke%20f-success?style=for-the-badge)
-> *Commit: "refactor: reorganisasi assets/image ke folder kategori — 15 kategori (store, channel, group, jadibot, jpm, pushkontak, search, serialize, settings, sticker, swgc, panel, rpg, user, tools)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20desain%20menu%20skrg%20jadi%20V1%20(hapu-success?style=for-the-badge)
+> *Commit: "refactor: desain menu skrg jadi V1 (hapus V1 lama VIDEO GIF), reply V7 FAKE LOCATION jadi V1 (hapus V1 lama BASIC plain text)"*
 <!--END_SECTION:latest-update-->
 
 ---
