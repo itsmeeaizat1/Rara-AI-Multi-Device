@@ -62,7 +62,7 @@ async function fetchCouplePP() {
 
 async function handler(m, { conn, text, args, usedPrefix, command }) {
   try {
-    m.reply(claraWrap("Anime Couple PP", "Sedang mencari gambar couple anime..."));
+    await m.react("🕒");
 
     const result = await fetchCouplePP();
 

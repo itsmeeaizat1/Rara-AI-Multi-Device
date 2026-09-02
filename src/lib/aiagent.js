@@ -254,6 +254,65 @@ export const TOOLS = {
   },
 }
 
+// ================= RESOLVE NAMA MEMBER KE JID =================
+// 🔹 AI AGENT: cari JID member grup dari nama/nomor yang disebut user
+// 🔹 Sumber nama: sock.store.contacts (Baileys cache) + nova-activity-tracker (histori chat grup)
+// 🔹 Return: string JID kalau ketemu 1, { multiple: [...] } kalau ambigu, null kalau tidak ketemu
+export async function resolveUserByName(sock, m, nameQuery) {
+  if (!nameQuery || !m?.chat) return null
+  const digitsOnly = String(nameQuery).replace(/[^0-9]/g, '')
+  // Kalau sudah berupa nomor WA valid (8-15 digit), langsung pakai itu
+  if (/^\d{8,15}$/.test(digitsOnly) && !/[a-zA-Z]/.test(String(nameQuery))) {
+    return digitsOnly + '@s.whatsapp.net'
+  }
+
+  const query = String(nameQuery).toLowerCase().trim()
+  if (!query) return null
+
+  try {
+    const gc = await sock.groupMetadata(m.chat)
+    const participantJids = new Set(gc.participants.map(p => p.id))
+    const candidates = []
+    const seen = new Set()
+
+    // Sumber 1: Baileys contact store (nama dari kontak WA / notify name)
+    for (const jid of participantJids) {
+      const ct = sock.store?.contacts?.[jid]
+      const name = ct?.name || ct?.notify || ct?.verifiedName || ''
+      const num = jid.split('@')[0]
+      if (name && name.toLowerCase().includes(query) && !seen.has(jid)) {
+        candidates.push({ jid, name })
+        seen.add(jid)
+      } else if (num.includes(digitsOnly) && digitsOnly.length >= 5 && !seen.has(jid)) {
+        candidates.push({ jid, name: num })
+        seen.add(jid)
+      }
+    }
+
+    // Sumber 2: histori aktivitas grup (nama tersimpan dari pushName saat chat)
+    if (candidates.length === 0) {
+      try {
+        const { getLeaderboard } = await import('./nova-activity-tracker.js')
+        const members = getLeaderboard(m.chat, 9999)
+        for (const mem of members) {
+          if (!participantJids.has(mem.jid)) continue
+          if (mem.name && mem.name.toLowerCase().includes(query) && !seen.has(mem.jid)) {
+            candidates.push({ jid: mem.jid, name: mem.name })
+            seen.add(mem.jid)
+          }
+        }
+      } catch { /* activity tracker tidak tersedia, lanjut tanpa itu */ }
+    }
+
+    if (candidates.length === 1) return candidates[0].jid
+    if (candidates.length > 1) return { multiple: candidates }
+    return null
+  } catch (e) {
+    console.error('[aiagent] resolveUserByName error:', e.message)
+    return null
+  }
+}
+
 // ================= PARSER LOKAL (tanpa API, instan) =================
 // 🔹 AI AGENT: parser lokal untuk perintah sederhana — instan, tanpa panggil API
 // 🔹 Mendukung 25+ perintah tanpa perlu AI online
@@ -270,20 +329,33 @@ export function localParse(text) {
   if (/(buka|open)/.test(t) && /grup|gc\b|group/.test(t)) return { tool: 'opengc', args: {} }
 
   // ─── KICK/USIR ───
-  if (/(kick|keluarkan|usir|tendang|buang)/.test(t)) return { tool: 'kick', args: {} }
+  if (/(kick|keluarkan|usir|tendang|buang)/.test(t)) {
+    const nameMatch = original.replace(/(kick|keluarkan|usir|tendang|buang|dari grup|dari gc|dari group)/gi, '').trim()
+    return { tool: 'kick', args: nameMatch ? { user: nameMatch } : {} }
+  }
 
   // ─── BLOKIR/UNBLOKIR ───
-  if (/(blokir|blok|block|ban)\b/.test(t) && !/(unblok|unban|buka blokir|buka blok)/.test(t))
-    return { tool: 'block', args: {} }
-  if (/(unblokir|unblok|unblock|unban|buka blokir|buka blok|bebaskan)/.test(t))
-    return { tool: 'unblock', args: {} }
+  if (/(blokir|blok|block|ban)\b/.test(t) && !/(unblok|unban|buka blokir|buka blok)/.test(t)) {
+    const nameMatch = original.replace(/(blokir|blok|block|ban|dari grup|dari gc|dari group)/gi, '').trim()
+    return { tool: 'block', args: nameMatch ? { user: nameMatch } : {} }
+  }
+  if (/(unblokir|unblok|unblock|unban|buka blokir|buka blok|bebaskan)/.test(t)) {
+    const nameMatch = original.replace(/(unblokir|unblok|unblock|unban|buka blokir|buka blok|bebaskan|dari grup|dari gc|dari group)/gi, '').trim()
+    return { tool: 'unblock', args: nameMatch ? { user: nameMatch } : {} }
+  }
 
   // ─── ADD MEMBER ───
   if (/(tambahkan|masukkan|add|tambah).*(nomor|member|orang|ke grup|ke gc|to group)/.test(t)) return { tool: 'add', args: {} }
 
   // ─── PROMOTE/DEMOTE ───
-  if (/(jadikan|adminin|promote|naikin).*(admin)/.test(t)) return { tool: 'promote', args: {} }
-  if (/(turunkan|cabut admin|demote|turunin).*(admin|member)/.test(t)) return { tool: 'demote', args: {} }
+  if (/(jadikan|adminin|promote|naikin).*(admin)/.test(t)) {
+    const nameMatch = original.replace(/(jadikan|adminin|promote|naikin|admin|jadi)/gi, '').trim()
+    return { tool: 'promote', args: nameMatch ? { user: nameMatch } : {} }
+  }
+  if (/(turunkan|cabut admin|demote|turunin).*(admin|member)/.test(t)) {
+    const nameMatch = original.replace(/(turunkan|cabut|demote|turunin|admin|member|jadi)/gi, '').trim()
+    return { tool: 'demote', args: nameMatch ? { user: nameMatch } : {} }
+  }
 
   // ─── SETNAME ───
   if (/ganti.*(nama|judul|subject)/.test(t) || /ubah.*(nama|judul)/.test(t)) {
@@ -307,8 +379,12 @@ export function localParse(text) {
   if (/(reset|revoke|perbarui).*(link|invite)/.test(t)) return { tool: 'revokelink', args: {} }
 
   // ─── APPROVAL MODE ───
-  if (/(aktifkan|on|nyalakan).*(approval|persetujuan|approve)/.test(t)) return { tool: 'approvalon', args: {} }
-  if (/(matikan|off|nonaktifkan).*(approval|persetujuan|approve)/.test(t)) return { tool: 'approvaloff', args: {} }
+  if (/(aktifkan|on\b|nyalakan|hidupkan).*(approval|persetujuan|approve|setuju|izin.*gabung|izin.*masuk)/.test(t) ||
+      /(izin|persetujuan).*(anggota|member).*(aktifkan|nyalakan|hidupkan|on\b)/.test(t))
+    return { tool: 'approvalon', args: {} }
+  if (/(matikan|off\b|nonaktifkan|hentikan).*(approval|persetujuan|approve|setuju|izin.*gabung|izin.*masuk)/.test(t) ||
+      /(izin|persetujuan).*(anggota|member).*(matikan|hentikan|off\b|nonaktifkan)/.test(t))
+    return { tool: 'approvaloff', args: {} }
 
   // ─── HIDETAG / TAG ALL ───
   if (/(tag|panggil|notify|hidetag).*(semua|all|semua member|all member)/.test(t)) {
@@ -400,7 +476,8 @@ export async function askAI(system, user) {
               { role: 'system', content: system },
               { role: 'user', content: user }
             ],
-            temperature: 0.1
+            temperature: 0.1,
+            max_tokens: 2048
           })
         })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
@@ -424,25 +501,51 @@ export async function think(text, ctx = {}) {
     .map(([k, v]) => `- ${k}: ${v.desc}${v.args ? ' (butuh args: ' + v.args.join(', ') + ')' : ''}`)
     .join('\n')
 
+  const now = new Date()
+  const tanggalSekarang = now.toLocaleDateString('id-ID', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Jakarta',
+  })
+  const jamSekarang = now.toLocaleTimeString('id-ID', {
+    hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Jakarta',
+  }) + ' WIB'
+
+  // 🔹 AUTO-EXECUTE: daftar command bot lain (sticker, download, dll) yang boleh dijalankan AI
+  const execSection = ctx.executableCmds
+    ? `\n\n== COMMAND BOT LAIN YANG BISA KAMU JALANKAN (via execCommand) ==\nCommand yang boleh: ${ctx.executableCmds}\nDaftar lengkap per kategori:\n${ctx.commandList || ''}\nKalau user minta sesuatu yang cocok dengan salah satu command ini (misal "jadikan stiker gambar ini" → command "s", "downloadin video tiktok ini" → command sesuai), isi field "execCommand" dengan NAMA command (tanpa titik/prefix) dan "execArgs" dengan argumennya (boleh kosong string). Field "tool" tetap null untuk kasus ini.`
+    : ''
+
   const sys = `Kamu adalah otak dari bot WhatsApp bernama "${ctx.botname || 'Bot'}".
 Tugasmu MENERJEMAHKAN perintah user menjadi SATU objek JSON saja.
 
-Daftar tools yang tersedia:
+PENTING — FAKTA TERKINI (training data kamu punya cutoff lama, WAJIB pakai info ini, JANGAN tebak dari training data lama):
+- Hari ini: ${tanggalSekarang}
+- Jam sekarang: ${jamSekarang} (WIB / Asia/Jakarta)
+- Presiden Republik Indonesia SAAT INI adalah Prabowo Subianto (dilantik 20 Oktober 2024). JANGAN jawab Joko Widodo/Jokowi sebagai presiden aktif — dia sudah tidak menjabat.
+- Wakil Presiden RI saat ini adalah Gibran Rakabuming Raka.
+- Jika ditanya jam/tanggal/waktu sekarang, JAWAB LANGSUNG pakai data di atas — JANGAN bilang "tidak bisa mengakses waktu".
+
+Daftar tools grup (manajemen grup, whitelist ketat) yang tersedia:
 ${toolsList}
+- Untuk kick/block/unblock/promote/demote: args.user BOLEH berupa NAMA member (misal "aizat 2") kalau user sebut nama, bukan hanya nomor/mention — sistem akan otomatis cari JID-nya dari nama itu. Isi args.user dengan nama/nomor APAPUN yang disebut user, jangan dikosongkan kalau ada nama yang disebut.${execSection}
 
 Aturan WAJIB:
 - Balas HANYA JSON mentah, tanpa \`\`\` dan tanpa teks lain
-- Format: {"tool":"nama_tool","args":{},"reply":"kalimat singkat"}
+- Format: {"tool":"nama_tool"|null,"args":{},"execCommand":"nama_command"|null,"execArgs":"","reply":"..."}
 - Nomor WA format 62xxx tanpa + dan tanpa strip. Mention yang tersedia: ${ctx.mentions || 'tidak ada'}
 - Untuk setname/setdesc/hidetag/poll isi args.value dengan teksnya
-- Jika perintah user BUKAN aksi bot (hanya bertanya/ngobrol), balas: {"tool":null,"reply":"jawaban percakapanmu"}
+- Kalau "tool" dan "execCommand" TIDAK NULL (aksi grup/command dijalankan): "reply" cukup konfirmasi SINGKAT 1 kalimat.
+- Kalau "tool" dan "execCommand" NULL (user cuma nanya/ngobrol/minta info seperti resep, penjelasan, list, dll): "reply" WAJIB LENGKAP DAN DETAIL, JANGAN dipotong/disingkat, JANGAN bilang "silakan beri tahu lebih lanjut" kalau informasinya sudah bisa kamu jawab langsung dari konteks yang ada. Jawab selengkap yang dibutuhkan, boleh panjang, boleh pakai poin bernomor.
+- Jika perintah user BUKAN aksi bot (hanya bertanya/ngobrol), balas: {"tool":null,"execCommand":null,"reply":"jawaban lengkap kamu"}
 
 Contoh:
-"tutup grup" → {"tool":"closegc","args":{},"reply":"Baik, menutup grup."}
-"kick 62812" → {"tool":"kick","args":{"user":"62812"},"reply":"Oke."}
-"blokir 62812" → {"tool":"block","args":{"user":"62812"},"reply":"Oke, user diblokir."}
-"ganti deskripsi jadi grup belajar" → {"tool":"setdesc","args":{"value":"grup belajar"},"reply":"Oke."}
-"apa itu nodejs" → {"tool":null,"reply":"Node.js adalah runtime JavaScript..."}`
+"tutup grup" → {"tool":"closegc","args":{},"execCommand":null,"reply":"Baik, menutup grup."}
+"kick aizat 2" → {"tool":"kick","args":{"user":"aizat 2"},"execCommand":null,"reply":"Oke, coba kick aizat 2."}
+"blokir 62812" → {"tool":"block","args":{"user":"62812"},"execCommand":null,"reply":"Oke, user diblokir."}
+"ganti deskripsi jadi grup belajar" → {"tool":"setdesc","args":{"value":"grup belajar"},"execCommand":null,"reply":"Oke."}
+"jadikan stiker gambar ini" → {"tool":null,"args":{},"execCommand":"s","execArgs":"","reply":"Oke, aku jadikan stiker ya!"}
+"apa itu nodejs" → {"tool":null,"execCommand":null,"reply":"Node.js adalah runtime JavaScript yang dibangun di atas engine V8 Chrome, dipakai untuk menjalankan JavaScript di luar browser (server-side). Cocok buat backend API, real-time app, dan tooling."}
+"jam berapa sekarang" → {"tool":null,"execCommand":null,"reply":"Sekarang jam ${jamSekarang}."}
+"siapa presiden indonesia" → {"tool":null,"execCommand":null,"reply":"Presiden Indonesia saat ini adalah Prabowo Subianto, didampingi Wakil Presiden Gibran Rakabuming Raka."}`
 
   const raw = await askAI(sys, text)
   const clean = raw.replace(/```json|```/g, '').trim()

@@ -310,7 +310,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       if (limit < 1) limit = 1;
       if (limit > 10) limit = 10;
 
-      m.reply(claraWrap("AM Premium V2", "Membuat " + limit + " akun AM Premium V2...\nProses mungkin butuh 1-2 menit per akun."));
+      await m.react("🕒");
 
       const am = new AlightMotionV3();
       let successCount = 0;

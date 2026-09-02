@@ -1298,6 +1298,12 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - 27 localParse patterns (instan, tanpa AI online)
 - Blocklist otomatis: user diblokir tidak bisa masuk grup lagi
 - AI online hanya dipanggil jika localParse tidak match
+- Provider chain: GROQ (gpt-oss-120b, utama) → IkyyXD Gemini (fallback) → DeepSeek (cadangan, aktif jika deepseekkey diisi)
+- Fakta terkini (tanggal/jam WIB/presiden RI) di-inject ke system prompt think() supaya AI gak jawab dari training data cutoff lama
+- Jawaban percakapan (tool null) TIDAK dibatasi "kalimat singkat" lagi — AI bebas jawab lengkap/detail (resep, penjelasan, dll), reply pendek hanya dipakai untuk konfirmasi aksi
+- execCommand: AI bisa eksekusi command bot LAIN di luar 23 tools grup (sticker, downloader, dll) via bahasa natural, contoh ".novaai jadikan stiker gambar ini" → auto-jalankan .s
+- Resolve nama member: kick/block/unblock/promote/demote bisa pakai NAMA member (bukan cuma @mention/reply/nomor) — dicari dari Baileys contact store + histori aktivitas grup, kalau nama ambigu bot kasih daftar pilihan
+- Approval mode regex diperluas: nangkep "setujui", "izin gabung/masuk", bukan cuma kata "approval/persetujuan" harfiah
 
 ## Weather Realtime
 - .autoweatherrealtime — Atur cuaca realtime di info section + notifikasi (owner only)

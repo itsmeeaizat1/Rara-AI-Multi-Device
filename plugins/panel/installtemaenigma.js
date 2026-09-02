@@ -94,11 +94,10 @@ Contoh:
     const conn = new Client()
     conn.on('ready', async () => {
         try {
-            await m.reply(claraWrap("installtemaenigma", `🕕 *[1/3] Install Dependencies...*\n\nMenginstall Node.js, Yarn, Composer...`))
+            await m.react("🕒");
             await execSSH(conn, DEPS_CMD)
 
-            await m.reply(claraWrap("installtemaenigma", `🕕 *[2/3] Install Tema...*\n\nMendownload & install tema Enigma...`))
-            await execSSHInteractive(conn, THEME_CMD, [
+                        await execSSHInteractive(conn, THEME_CMD, [
                 { trigger: 'AKSES TOKEN', value: 'skyzodev' },
                 { trigger: 'Masukkan pilihan', value: '1' },
                 { trigger: 'Masukkan pilihan', value: '3' },
@@ -107,8 +106,7 @@ Contoh:
                 { trigger: 'channel', value: linkChannel }
             ])
 
-            await m.reply(claraWrap("installtemaenigma", `🕕 *[3/3] Build Assets...*\n\nCompiling panel assets...`))
-            await execSSH(conn, BUILD_CMD)
+                        await execSSH(conn, BUILD_CMD)
             await m.reply(claraWrap("installtemaenigma", `✅ Status: *Terinstall*\nIP: ${ipvps}\n\n_Tema Enigma + dependencies berhasil diinstall!_`))
         } catch (err) {
             m.reply(claraWrap("installtemaenigma", te(m.prefix, m.command, m.pushName), "error"))

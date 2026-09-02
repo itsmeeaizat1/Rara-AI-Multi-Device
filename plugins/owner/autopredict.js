@@ -449,7 +449,7 @@ async function handler(m, { sock, config: botConfig }) {
         await m.reply(novaBox("AUTO-PREDICT", ["Gunakan di grup atau ketik: .autopredict now <gid>"]));
         return { handled: true };
       }
-      await m.reply(novaBox("AUTO-PREDICT", ["Menganalisis data grup & generating AI prediction..."]));
+      await m.react("🕒");
       const report = await buildInsightReport(sock, targetGid);
       settings.stats.totalReports++;
       settings.stats.totalPredictions++;

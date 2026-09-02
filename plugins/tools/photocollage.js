@@ -190,7 +190,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ], "warn"));
     }
 
-    m.reply(claraWrap("Photo Collage", "Membuat collage " + LAYOUTS[layout].label + "..."));
+    await m.react("🕒");
 
     const result = await makeCollage(images.slice(0, needed), layout);
 
