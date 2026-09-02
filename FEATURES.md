@@ -13,9 +13,6 @@
 
 ## 🔊 Play System v21.7.0
 
-- `.play <query>` — Search YouTube + tombol pilihan Audio/Video/kbps
-- `.playaudio<kbps> <url>` — Audio dengan kbps spesifik (128/192/256/320)
-- `.playvideo<quality> <url>` — Video dengan quality spesifik (360/480/720/1080)
 - nova-ytdlp.js: yt-dlp binary scraper (gratis, no API key) + cobalt fallback
 
 
@@ -1069,6 +1066,8 @@ V2 Upgrades (from Alya API endpoints):
 Download Upgrades:
 - .ytmp3v3 - download - YouTube MP3 v3 (@distube/ytdl-core direct engine)
 - .ytmp4v3 - download - YouTube MP4 v3 (@distube/ytdl-core direct engine)
+- .play <query> - search - Cari & download audio YouTube langsung
+- .playvideo <query> - search - Cari & download video YouTube langsung
 - .tiktokv3 - download - TikTok v3 (nexray API, support slideshow)
 - .teraboxv2 - download - Terabox v2 (nekolabs + teraboxdl.site)
 - .spotifyplay2 - download - Spotify play v2 (nexray + spotifydown fallback)
