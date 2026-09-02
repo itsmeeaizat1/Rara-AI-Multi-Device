@@ -2,8 +2,8 @@
 import { claraWrap, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "bounty",
-  alias: ["bounty"],
+  name: "bountyboard",
+  alias: ["bountyboard", "bounty"],
   category: "group",
   description: "Bounty Board - Post tugas dengan reward, member claim & selesaikan",
   usage: ".bounty <command>",
