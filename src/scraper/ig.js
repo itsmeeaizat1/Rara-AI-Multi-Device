@@ -150,4 +150,5 @@ async function instagramDownloader(url) {
     : formatPostResult(data);
 }
 
+export { instagramDownloader as igDownload };
 export default instagramDownloader;
