@@ -74,7 +74,7 @@ function getThumb() {
   return _thumbCache;
 }
 
-async function handler(m, { sock, db }) {
+async function handler(m, { sock, db, config: botConfig, uptime }) {
     const prefix = config.command?.prefix || ".";
   try {
     const args = m.args || [];
@@ -148,7 +148,7 @@ async function handler(m, { sock, db }) {
       });
 
       // ── Info section lengkap dari shared builder ──
-      const { info: menuInfo, weatherStr: weatherBlock } = await buildMenuInfo(m, { db, config: botConfig, uptime: process.uptime() * 1000 });
+      const { info: menuInfo, weatherStr: weatherBlock } = await buildMenuInfo(m, { db, config: botConfig, uptime: uptime || process.uptime() * 1000 });
 
       // Build info section text
       let infoText = "";
@@ -249,7 +249,7 @@ ${weatherBlock ? weatherBlock + "\n" : ""}╭─「 ✦ ${toSC("Daftar Kategori"
     const totalFitur = allCommands.length;
 
     // ── Info section lengkap (sama kayak menu/allmenu) ──
-    const { info: menuInfo, weatherStr: weatherBlock } = await buildMenuInfo(m, { db, config: botConfig, uptime: process.uptime() * 1000 });
+    const { info: menuInfo, weatherStr: weatherBlock } = await buildMenuInfo(m, { db, config: botConfig, uptime: uptime || process.uptime() * 1000 });
 
     let infoText = "";
     let maxLabel = 6;
