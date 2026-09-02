@@ -54,7 +54,8 @@ function buildBox(headerTitle, lines = []) {
   // Header TIDAK di-stretch mengikuti panjang body — dash panjang tanpa spasi
   // bikin WhatsApp hard-wrap jadi beberapa baris "──────" berantakan di HP.
   // Header dipakai apa adanya, sama seperti style menu/allmenu yang disetujui owner.
-  const headerCore = `╭─「 ✦ ${headerTitle} ✦ 」`;
+  // toSC di-apply di sini biar SEMUA caller otomatis smallcaps, konsisten.
+  const headerCore = `╭─「 ✦ ${toSC(String(headerTitle))} ✦ 」`;
   const header = headerCore;
   const body = [];
   for (const line of lines) {
@@ -552,9 +553,9 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
 function novaReply({ title = "", info = [], status = "", content = "", sc = true } = {}) {
   const lines = [];
   if (status) {
-    lines.push(status);
-  } else if (title) {
-    lines.push(`✅ ${title}`);
+    // Tambah icon default kalau belum ada icon status di depan
+    const hasIcon = /^[✅❌⚠]/.test(status.trim());
+    lines.push(hasIcon ? status : `✅ ${status}`);
   }
   if (info && info.length > 0) {
     for (const item of info) {
@@ -565,9 +566,11 @@ function novaReply({ title = "", info = [], status = "", content = "", sc = true
     }
   }
   if (content) {
-    lines.push(String(content));
+    // Bersihkan legacy "|" ASCII pipe prefix (pengganti sebelum ada box-drawing standar)
+    const contentLines = String(content).split("\n").map(l => l.replace(/^\|\s*/, ""));
+    for (const cl of contentLines) lines.push(cl);
   }
-  return lines.join("\n");
+  return buildBox(title || "Nova AI", lines);
 }
 
 
