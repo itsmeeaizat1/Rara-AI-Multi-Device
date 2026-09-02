@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20audit%20%26%20merge%20kategori%20%E2%80%94%2046%20%E2%86%92%20-success?style=for-the-badge)
-> *Commit: "refactor: audit & merge kategori — 46 → 41 kategori, 1835 → 1810 plugin"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20standardisasi%20pesan%20usage%2Fguide%2Ferr-success?style=for-the-badge)
+> *Commit: "fix: standardisasi pesan usage/guide/error ke format box-drawing"*
 <!--END_SECTION:latest-update-->
 
 ---
