@@ -184,7 +184,7 @@ async function handler(m, { sock }) {
       text += `
 `;
       if (isDone) {
-        text += `✨ Ketik *${prefix}expedition claim* untuk mengambil hadiah!\n`;
+        text += `Ketik *${prefix}expedition claim* untuk mengambil hadiah!\n`;
       } else {
         text += `ℹ️ Tunggu hingga timer selesai untuk klaim reward.\n`;
       }

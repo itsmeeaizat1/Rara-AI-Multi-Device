@@ -26,7 +26,7 @@ async function handler(m, { sock }) {
     msg += `👤 ${m.pushName || "Player"}\n`;
     msg += `\n`;
     msg += `📊 Level: ${rpg.level || 1}\n`;
-    msg += `✨ EXP: ${rpg.exp || 0}/${rpg.expNext || 100}\n`;
+    msg += `EXP: ${rpg.exp || 0}/${rpg.expNext || 100}\n`;
     msg += `💰 Gold: ${(rpg.gold || 0).toLocaleString("id-ID")}\n`;
     msg += `💎 Gems: ${rpg.gems || 0}\n`;
     msg += `\n`;

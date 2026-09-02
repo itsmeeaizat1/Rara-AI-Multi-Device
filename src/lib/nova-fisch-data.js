@@ -297,7 +297,7 @@ const mutations = {
   "Absolute": { multiplier: 30, chance: 0.00001 },
 }
 
-const RARITY_EMOJI = { common: "⚪", uncommon: "🟢", rare: "🔵", epic: "🟣", legendary: "🟡", mythic: "🔴", godly: "🟠", exotic: "🟤", secret: "⚫", extinct: "💀", special: "✨" }
+const RARITY_EMOJI = { common: "⚪", uncommon: "🟢", rare: "🔵", epic: "🟣", legendary: "🟡", mythic: "🔴", godly: "🟠", exotic: "🟤", secret: "⚫", extinct: "💀", special: "" }
 const RARITY_ORDER = ["common","uncommon","rare","epic","legendary","mythic","godly","exotic","secret","extinct","special"]
 
 const UPGRADES = {

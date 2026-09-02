@@ -23,7 +23,7 @@ if (!global.sulapSessions) global.sulapSessions = new Map()
 const successLines = [
     '💨 *POOF!* Dan... dia menghilang!',
     '🌟 Sulap berhasil! Sampai jumpa lagi~',
-    '✨ Absen dulu ya, ditunggu berikutnya!',
+    'Absen dulu ya, ditunggu berikutnya!',
     '🎪 Pertunjukan selesai! 👏'
 ]
 
@@ -33,7 +33,7 @@ function sleep(ms) {
 
 async function handler(m, { sock }) {
 
-    const sent = await m.reply(claraWrap("sulap", `🎩✨ *ᴘᴇʀᴛᴜɴᴊᴜᴋᴀɴ ꜱᴜʟᴀᴘ*\n\n` +
+    const sent = await m.reply(claraWrap("sulap", `🎩 *ᴘᴇʀᴛᴜɴᴊᴜᴋᴀɴ ꜱᴜʟᴀᴘ*\n\n` +
             `Siapa yang ingin dihilangkan?\n\n` +
             `Reply pesan ini + mention orangnya`))
 
@@ -104,7 +104,7 @@ async function replyHandler(m, sock) {
         }
 
         await sock.sendMessage(m.chat, {
-            text: `🪄 *Bersiaplah @${targetNumber}...* ✨`,
+            text: `🪄 *Bersiaplah @${targetNumber}...*`,
             mentions: [targetJid]
         })
 
@@ -117,7 +117,7 @@ async function replyHandler(m, sock) {
             text: `${line}\n\n` +
                 `🎯 @${targetNumber} telah menghilang!\n` +
                 `🎩 Pesulap: @${senderNumber}\n\n` +
-                `_Pertunjukan selesai~_ ✨`,
+                `_Pertunjukan selesai~_`,
             mentions: [targetJid, m.sender]
         })
 

@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
       resultMsg = `🎉 JACKPOT 3 MATCH (${r1})! Multiplier: *${multiplier}x*`;
     } else if (r1 === r2 || r2 === r3 || r1 === r3) {
       multiplier = 1.5;
-      resultMsg = `✨ 2 MATCH! Multiplier: *1.5x*`;
+      resultMsg = `2 MATCH! Multiplier: *1.5x*`;
     } else {
       multiplier = 0;
       resultMsg = `❌ ZONK! Semua simbol berbeda.`;

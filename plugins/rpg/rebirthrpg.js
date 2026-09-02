@@ -99,7 +99,7 @@ async function handler(m, { sock }) {
       msg += `
 `;
       msg += `📊 Rebirth Count: *${result.rebirthCount}*\n`;
-      msg += `✨ Permanent Bonus: *+${result.bonusPercent}%* (ATK/DEF/HP/MP)\n`;
+      msg += `Permanent Bonus: *+${result.bonusPercent}%* (ATK/DEF/HP/MP)\n`;
       msg += `
 `;
       msg += `💡 Level & stats direset, tapi permanent bonus aktif\n`;

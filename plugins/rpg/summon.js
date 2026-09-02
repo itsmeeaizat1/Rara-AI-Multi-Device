@@ -47,7 +47,7 @@ async function handler(m, { sock }) {
         const mins = Math.floor(remainingMs / 60000);
         const secs = Math.floor((remainingMs % 60000) / 1000);
         msg += `🌟 Spirit Aktif: *${summonData.activeSpirit.name}* ${summonData.activeSpirit.emoji}\n`;
-        msg += `✨ Efek Buff: *${summonData.activeSpirit.effect}*\n`;
+        msg += `Efek Buff: *${summonData.activeSpirit.effect}*\n`;
         msg += `⏳ Sisa Durasi: *${mins}m ${secs}d*\n`;
       } else {
         msg += `❌ Tidak ada spirit buff yang aktif saat ini.\n`;
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
 `;
       SPIRITS.forEach((s, i) => {
         listMsg += `${i + 1}. *${s.name}* ${s.emoji}\n`;
-        listMsg += `✨ Efek: *${s.effect}*\n`;
+        listMsg += `Efek: *${s.effect}*\n`;
         listMsg += `🔑 Perintah: *${m.prefix}summon ${s.id}*\n`;
       });
       listMsg += `💡 *Cek Buff:* ${m.prefix}summon status\n`;
@@ -109,7 +109,7 @@ async function handler(m, { sock }) {
     let msg = "";
     msg += `🔮 *Ritual Pemanggilan Elementalis*\n`;
     msg += `🕯️ Menggambar lingkaran sihir di atas tanah...\n`;
-    msg += `✨ Mengalirkan ${SUMMON_COST_GOLD} Gold & ${SUMMON_COST_ENERGI} Energi ke dalam altar...\n`;
+    msg += `Mengalirkan ${SUMMON_COST_GOLD} Gold & ${SUMMON_COST_ENERGI} Energi ke dalam altar...\n`;
     msg += `🌟 Cahaya berkilau! *${spirit.name}* ${spirit.emoji} berhasil dipanggil!
 
 `;

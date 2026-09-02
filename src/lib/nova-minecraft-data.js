@@ -108,7 +108,7 @@ const biomes = {
       { name: "🔴 Netherrack", rarity: "common", avgValue: 800, minStack: 1, maxStack: 64 },
       { name: "🟫 Soul Sand", rarity: "common", avgValue: 900, minStack: 1, maxStack: 48 },
       { name: "🟠 Magma Block", rarity: "common", avgValue: 1000, minStack: 1, maxStack: 32 },
-      { name: "✨ Nether Quartz", rarity: "uncommon", avgValue: 2200, minStack: 1, maxStack: 16 },
+      { name: "Nether Quartz", rarity: "uncommon", avgValue: 2200, minStack: 1, maxStack: 16 },
       { name: "🟡 Gold Nugget", rarity: "uncommon", avgValue: 2800, minStack: 1, maxStack: 24 },
       { name: "🔥 Blaze Rod", rarity: "rare", avgValue: 8500, minStack: 1, maxStack: 4 },
       { name: "👻 Ghast Tear", rarity: "rare", avgValue: 12000, minStack: 1, maxStack: 4 },
@@ -196,7 +196,7 @@ const pickaxes = {
   woodpick: { name: "🪵 Wooden Pickaxe", luck: 0, speed: 0, comboOre: 1, fortuneBonus: 0, sellMultiplier: 0, price: 0, description: "Pickaxe kayu untuk pemula.", level: 1, maxLevel: 5, exp: 0, expToNextLevel: 80 },
   stonepick: { name: "🪨 Stone Pickaxe", luck: 0.02, speed: 0.03, comboOre: 1, fortuneBonus: 0.01, sellMultiplier: 0.05, price: 30000, description: "Pickaxe batu, lebih kuat dari kayu.", level: 1, maxLevel: 10, exp: 0, expToNextLevel: 100 },
   ironpick: { name: "⛏️ Iron Pickaxe", luck: 0.06, speed: 0.07, comboOre: 1, fortuneBonus: 0.03, sellMultiplier: 0.15, price: 300000, description: "Pickaxe besi, andalan penambang.", level: 1, maxLevel: 15, exp: 0, expToNextLevel: 120 },
-  goldpick: { name: "✨ Gold Pickaxe", luck: 0.10, speed: 0.12, comboOre: 2, fortuneBonus: 0.05, sellMultiplier: 0.25, price: 3000000, description: "Pickaxe emas, cepat tapi rapuh.", level: 1, maxLevel: 20, exp: 0, expToNextLevel: 150 },
+  goldpick: { name: "Gold Pickaxe", luck: 0.10, speed: 0.12, comboOre: 2, fortuneBonus: 0.05, sellMultiplier: 0.25, price: 3000000, description: "Pickaxe emas, cepat tapi rapuh.", level: 1, maxLevel: 20, exp: 0, expToNextLevel: 150 },
   diamondpick: { name: "💎 Diamond Pickaxe", luck: 0.15, speed: 0.15, comboOre: 2, fortuneBonus: 0.08, sellMultiplier: 0.40, price: 30000000, description: "Pickaxe berlian, kuat dan tahan lama.", level: 1, maxLevel: 30, exp: 0, expToNextLevel: 180 },
   netheritepick: { name: "🔮 Netherite Pickaxe", luck: 0.25, speed: 0.22, comboOre: 3, fortuneBonus: 0.12, sellMultiplier: 0.65, price: 300000000, description: "Pickaxe netherite, kekuatan dari neraka.", level: 1, maxLevel: 40, exp: 0, expToNextLevel: 220 },
   endpick: { name: "🌌 End Pickaxe", luck: 0.35, speed: 0.30, comboOre: 3, fortuneBonus: 0.18, sellMultiplier: 0.90, price: 3000000000, description: "Pickaxe dari dimensi akhir.", level: 1, maxLevel: 50, exp: 0, expToNextLevel: 280 },
@@ -214,7 +214,7 @@ const pickEnchants = {
   efficiency3: { name: "⚡ Efficiency III", rarity: "rare", effect: { speed: 1.25 }, desc: "Kecepatan tambang +25%" },
   fortune2: { name: "🍀 Fortune II", rarity: "rare", effect: { fortune: 1.25 }, desc: "Fortune +25% drop" },
   unbreaking2: { name: "🛡️ Unbreaking II", rarity: "rare", effect: { durability: 1.30 }, desc: "Durabilitas +30%" },
-  silktouch: { name: "✨ Silk Touch", rarity: "epic", effect: { luck: 1.3, specialDrop: true }, desc: "Dapat blok utuh +30% luck" },
+  silktouch: { name: "Silk Touch", rarity: "epic", effect: { luck: 1.3, specialDrop: true }, desc: "Dapat blok utuh +30% luck" },
   fortune3: { name: "🍀 Fortune III", rarity: "epic", effect: { fortune: 1.50 }, desc: "Fortune +50% drop" },
   efficiency5: { name: "⚡ Efficiency V", rarity: "epic", effect: { speed: 1.45 }, desc: "Kecepatan tambang +45%" },
   mending: { name: "💚 Mending", rarity: "legendary", effect: { luck: 1.5, speed: 1.2, durability: 2.0 }, desc: "Auto repair +50% luck +20% speed" },
@@ -247,7 +247,7 @@ const mobData = {
   warden: { name: "👁️ Warden", hp: 500, atk: 35, rarity: "secret", expReward: 50000, drops: [{ name: "🖤 Warden Heart", value: 5000000, chance: 10 }, { name: "🔮 Echo Shard", value: 200000, chance: 50 }, { name: "🌀 Sculk Catalyst", value: 50000, chance: 70 }], minLevel: 80 },
 }
 
-const RARITY_EMOJI = { common: "⚪", uncommon: "🟢", rare: "🔵", epic: "🟣", legendary: "🟡", mythic: "🔴", godly: "🟠", exotic: "🟤", secret: "⚫", extinct: "💀", special: "✨" }
+const RARITY_EMOJI = { common: "⚪", uncommon: "🟢", rare: "🔵", epic: "🟣", legendary: "🟡", mythic: "🔴", godly: "🟠", exotic: "🟤", secret: "⚫", extinct: "💀", special: "" }
 const RARITY_ORDER = ["common", "uncommon", "rare", "epic", "legendary", "mythic", "godly", "exotic", "secret", "extinct", "special"]
 
 const UPGRADES = {

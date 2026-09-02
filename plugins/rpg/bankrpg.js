@@ -62,7 +62,7 @@ async function handler(m, { sock }) {
       msg += `💰 Gold di tangan: *${rpg.gold}*\n`;
       msg += `🏦 Gold di bank: *${bank.deposit}*\n`;
       if (interest > 0) {
-        msg += `✨ Bunga diterima: *+${interest} gold*\n`;
+        msg += `Bunga diterima: *+${interest} gold*\n`;
       }
       msg += `📈 Bunga: *5% per hari*\n`;
       msg += `

@@ -209,7 +209,7 @@ function getRandomReward() {
 const WIN_MSGS = [
   "🎉 *SELAMAT!* Semua jawaban ketemu!",
   "🔥 *WOW!* Board selesai semua!",
-  "✨ *MANTAP!* Kerja sama tim yang mantap!",
+  "*MANTAP!* Kerja sama tim yang mantap!",
   "🏆 *GG WP!* Keluarga cerdas nih!",
 ];
 

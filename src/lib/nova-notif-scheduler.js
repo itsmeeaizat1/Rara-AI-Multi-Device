@@ -18,7 +18,7 @@ const MAKAN_MESSAGES = [
 
 const TIDUR_MESSAGES = [
     '🌙 *Waktunya istirahat!*\n\n⏰ *{jam} WIB*\n\nTaruh HP-nya, pejamkan mata 😴\nTidur cukup bikin otak fresh buat besok!\n_Selamat malam_ 🌟\n\n📌 _Diatur oleh @{sender}_',
-    '💤 *Udah jam {jam} nih @{sender}!*\n\nYuk istirahat, jangan begadang terus 🛏️\nKesehatan itu investasi paling berharga\n_Mimpi indah ya_ ✨',
+    '💤 *Udah jam {jam} nih @{sender}!*\n\nYuk istirahat, jangan begadang terus 🛏️\nKesehatan itu investasi paling berharga\n_Mimpi indah ya_',
     '😴 *Reminder tidur malam*\n\n⏰ *{jam} WIB*\n\nLayar HP itu musuh tidur nyenyak 📵\nMatikan notifikasi dan rebahan sekarang!\n_Good night_ 🌜\n\n📌 _Diatur oleh @{sender}_',
     '*TURU WOYY @{sender}*\n\n⏰ Udah jam *{jam}*',
 ]

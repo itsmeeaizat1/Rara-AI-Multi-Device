@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
   let isDocumentMessage = (m.type === "documentMessage" && m.message?.documentMessage?.mimetype?.startsWith("video")) || (m.quoted && m.quoted.type === "documentMessage" && m.quoted.message?.documentMessage?.mimetype?.startsWith("video"));
 
   if (!isVideoMessage && !isDocumentMessage) {
-    return m.reply( `✨ *ᴡɪɴᴋ ᴠɪᴅᴇᴏ ᴇɴʜᴀɴᴄᴇʀ*\n\n` +
+    return m.reply( `*ᴡɪɴᴋ ᴠɪᴅᴇᴏ ᴇɴʜᴀɴᴄᴇʀ*\n\n` +
         `Bikin video buram jadi *ᴜʟᴛʀᴀ ʜᴅ* pakai AI Wink!\n\n` +
         `*ᴄᴀʀᴀ ᴘᴀᴋᴀɪ:*\n` +
         `Kirim/reply video lalu caption \`${m.prefix}wink\`\n\n` +
@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
       filename: `wink-${Date.now()}.mp4`,
     });
 
-    await sock.sendMedia(m.chat, result.resultUrl, `✨ *WINK ENHANCE sELEsAI!*\n\nIni dia hasilnya, udah jadi *ᴜʟᴛʀᴀ ʜᴅ* kan? 😍`, m, {
+    await sock.sendMedia(m.chat, result.resultUrl, `*WINK ENHANCE sELEsAI!*\n\nIni dia hasilnya, udah jadi *ᴜʟᴛʀᴀ ʜᴅ* kan? 😍`, m, {
       type: "video",
       mimetype: "video/mp4",
       fileName: `WINK-HD-${Date.now()}.mp4`,

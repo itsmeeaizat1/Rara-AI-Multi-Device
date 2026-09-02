@@ -135,7 +135,7 @@ async function handler(m, { sock }) {
           .map(([k, q]) => `${q}x ${(INGREDIENT_NAMES[k] || k).split(" ")[1] || k}`)
           .join(", ");
         text += `*${idx + 1}. ${r.name}* (${r.id})\n`;
-        text += `✨ Efek : ${r.effectStr}\n`;
+        text += `Efek : ${r.effectStr}\n`;
         text += `📦 Bahan : ${reqStr}\n`;
       });
       text += `📌 Cara memasak: *${prefix}cookingv2 cook <id_resep>*\n`;
@@ -210,7 +210,7 @@ async function handler(m, { sock }) {
       let animText = "";
       animText += `🔪 Memotong bahan & meracik bumbu rahasia...\n`;
       animText += `🔥 Memasak ${recipe.name} di atas tungku api membara...\n`;
-      animText += `✨ *MEMASAK BERHASIL!* 🎉\n`;
+      animText += `*MEMASAK BERHASIL!* 🎉\n`;
       animText += `
 `;
       animText += `🍽️ Hidangan : *${recipe.name}*\n`;

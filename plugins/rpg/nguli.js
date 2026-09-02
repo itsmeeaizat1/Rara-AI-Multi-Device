@@ -83,7 +83,7 @@ async function handler(m, { sock }) {
 `;
     msg += `📦 *ʜᴀsɪʟ* ${streak > 1 ? `(streak: ${streak})` : ""}\n`;
     msg += `💰 Gold: *+${goldGain}*\n`;
-    if (bonusGold > 0) msg += `✨ Streak bonus: *+${bonusGold} gold*\n`;
+    if (bonusGold > 0) msg += `Streak bonus: *+${bonusGold} gold*\n`;
     msg += `✦ EXP: *+${expGain}*\n`;
     msg += `
 `;

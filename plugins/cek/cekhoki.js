@@ -23,7 +23,7 @@ async function handler(m, { sock, config: botConfig }) {
                     
     let desc = ''
     if (percent >= 90) {
-        desc = 'HOKI DEWA! Main gacha pasti menang! 🍀✨'
+        desc = 'HOKI DEWA! Main gacha pasti menang! 🍀'
     } else if (percent >= 70) {
         desc = 'Hoki banget! 🎰'
     } else if (percent >= 50) {

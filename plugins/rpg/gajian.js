@@ -52,7 +52,7 @@ async function handler(m, { sock }) {
     let msg = "";
     msg += `👤 ${m.pushName || "Player"}\n`;
     msg += `💰 +Rp${GAJIAN_GOLD.toLocaleString("id-ID")}\n`;
-    msg += `✨ +${GAJIAN_EXP} EXP\n`;
+    msg += `+${GAJIAN_EXP} EXP\n`;
     
     return m.reply(msg);
   } catch (err) {

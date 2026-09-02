@@ -39,7 +39,7 @@ async function handler(m, { sock }) {
         const randomMember = members[Math.floor(Math.random() * members.length)]
         const positiveWords = ['ganteng', 'cantik', 'keren', 'pro', 'sultan', 'kaya', 'pinter', 'pintar', 'mastah']
         const isPositive = positiveWords.includes(command)
-        const emoji = isPositive ? '✨' : '😏'
+        const emoji = isPositive ? '' : '😏'
         const label = isPositive ? 'Yang paling' : 'Anak'
         await m.reply(claraWrap("Siapa", `*${label} ${command} di sini adalah* @${randomMember.split('@')[0]}`))
     } catch (error) {

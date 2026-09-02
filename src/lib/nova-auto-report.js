@@ -114,7 +114,7 @@ function generateDailyReport(db) {
     "",
     `${toSC("Stats Hari Ini")}`,
     `👥 ${toSC("Total User")}: ${totalUsers}`,
-    `✨ ${toSC("User Baru")}: ${newToday}`,
+    `${toSC("User Baru")}: ${newToday}`,
     `👥 ${toSC("Total Grup")}: ${totalGroups}`,
     "",
   ];

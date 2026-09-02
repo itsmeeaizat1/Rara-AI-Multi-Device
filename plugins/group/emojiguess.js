@@ -32,7 +32,7 @@ const PUZZLES = [
   { emoji: "🍓🍰", answer: "strawberry shortcake", hints: ["Dessert", "Buah"] },
   { emoji: "🍫🏭", answer: "charlie and the chocolate factory", hints: ["Film", "Coklat"] },
   { emoji: "🤝🧟", answer: "zombie", hints: ["Film horor", "Mayat hidup"] },
-  { emoji: "🌞🌻", answer: "tangled", hints: ["Disney", "Rapunzel"] },
+  { emoji: "🌞", answer: "tangled", hints: ["Disney", "Rapunzel"] },
   { emoji: "🏎️💨", answer: "fast and furious", hints: ["Film aksi", "Balap"] },
   { emoji: "🦖🦕🧬", answer: "jurassic park", hints: ["Film", "Dinosaurus"] },
   { emoji: "💍🌋👤", answer: "lord of the rings", hints: ["Film fantasi", "Cincin"] },

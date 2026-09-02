@@ -22,7 +22,7 @@ async function handler(m, { sock, config: botConfig }) {
     const mentioned = m.mentionedJid[0] || m.sender
                     
     let desc = ''
-    if (percent >= 90) desc = 'SUPER KREATIF! Artis sejati! 🎨✨'
+    if (percent >= 90) desc = 'SUPER KREATIF! Artis sejati! 🎨'
     else if (percent >= 70) desc = 'Imajinatif banget! 💡'
     else if (percent >= 50) desc = 'Cukup kreatif 😊'
     else if (percent >= 30) desc = 'Biasa aja sih 🤔'
