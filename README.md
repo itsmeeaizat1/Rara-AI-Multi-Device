@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20revert%20.play%20ke%20versi%20simple%20(searc-success?style=for-the-badge)
-> *Commit: "fix: revert .play ke versi simple (search + link ytmp3/ytmp4) — versi IkyyXD error, kembali ke yg work"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20.play%20langsung%20download%20audio%2C%20.pl-success?style=for-the-badge)
+> *Commit: "feat: .play langsung download audio, .playvideo langsung download video — dual search (IkyyXD + yt-search fallback), dual download (ytdl.js + IkyyXD fallback)"*
 <!--END_SECTION:latest-update-->
 
 ---
