@@ -19,7 +19,6 @@ import { enableRenewalReminder, disableRenewalReminder, getRenewalStatus } from 
 import { enableAutoReport, disableAutoReport, getReportStatus } from '../../src/lib/nova-auto-report.js'
 import { enableAutoBirthday, disableAutoBirthday, getBirthdayStatus } from '../../src/lib/nova-auto-birthday.js'
 import { getBmkgStatus, updateBmkgSettings, startBmkgJobs, stopBmkgJobs } from '../../src/lib/nova-bmkg-scheduler.js'
-import { getCuacaStatus, updateCuacaSettings, startCuacaJobs, stopCuacaJobs } from '../../src/lib/nova-bmkg-cuaca-scheduler.js'
 import { getSettings as getCleanSettings, updateSettings as updateCleanSettings, startCleaner, stopCleaner } from '../../src/lib/nova-cache-cleaner.js'
 
 const pluginConfig = {
@@ -189,11 +188,6 @@ const AUTO_REGISTRY = {
     getStatus: () => { try { return getBmkgStatus()?.enabled ?? false } catch { return false } },
     toggle: (on) => { updateBmkgSettings({ enabled: on }); on ? startBmkgJobs() : stopBmkgJobs() },
   },
-  autocuaca: {
-    label: "Auto Info Cuaca BMKG",
-    getStatus: () => { try { return getCuacaStatus()?.enabled ?? false } catch { return false } },
-    toggle: (on) => { updateCuacaSettings({ enabled: on }); on ? startCuacaJobs() : stopCuacaJobs() },
-  },
   autocleancache: {
     label: "Auto Clean Cache & Temp",
     getStatus: () => { try { return getCleanSettings()?.enabled ?? false } catch { return false } },
@@ -256,7 +250,7 @@ const AUTO_ALIASES = {
   readsw: "autoreadsw", reactsw: "autoreactsw", backup: "autobackup",
   health: "autohealth", reengage: "autoreengage", refill: "autorefill",
   renewal: "autorenewal", report: "autoreport", ulah: "autoulah", birthday: "autoulah",
-  bmkg: "autobmkg", cuaca: "autocuaca", clean: "autocleancache", cleancache: "autocleancache",
+  bmkg: "autobmkg", clean: "autocleancache", cleancache: "autocleancache",
   reactsticker: "autoreactsticker", reactvn: "autoreactvn", sholat: "autosholat",
   statusview: "autostatusview", translatevn: "autotranslatevn", forward: "autoforward",
   sambut: "autosambut", mod: "automod", broadcastchannel: "autobroadcastchannel",
@@ -275,7 +269,7 @@ const AUTO_CATEGORIES = {
     "autoreengage", "autorefill", "autorenewal", "autoreport", "autoulah"
   ],
   "Info & Utilitas": [
-    "autobmkg", "autocuaca", "autosholat", "autoforward", "autosambut",
+    "autobmkg", "autosholat", "autoforward", "autosambut",
     "automod", "autobroadcastchannel"
   ]
 }
