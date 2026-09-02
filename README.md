@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20NovaAI%20AI%20Agent%20expanded%20%E2%80%94%2023%20tool-success?style=for-the-badge)
-> *Commit: "feat: NovaAI AI Agent expanded — 23 tools (block, setdesc, setpp, lockedit, link, approval, poll, groupinfo, delmsg, leavegc) + 27 localParse patterns + blocklist auto-kick di connection.js"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20.novaai%20help%20dinamis%20dari%20TOOLS%20%E2%80%94%20-success?style=for-the-badge)
+> *Commit: "feat: .novaai help dinamis dari TOOLS — 23 perintah kategori (Grup, Member, Link, Approval, Tag, Lainnya) dengan smallcaps"*
 <!--END_SECTION:latest-update-->
 
 ---
