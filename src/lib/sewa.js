@@ -5,7 +5,7 @@
 
 export const sewaPrice = {
   // QRIS KHUSUS SEWA BOT (bisa beda sama payment & donasi)
-  qrisUrl: "./assets/image/aizat-store-qris.jpg",
+  qrisUrl: "./assets/image/store/aizat-store-qris.jpg",
 
   // HARGA SEWA BOT - Default per durasi
   // Format: Rp format Indonesia

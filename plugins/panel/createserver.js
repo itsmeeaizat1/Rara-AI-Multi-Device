@@ -408,7 +408,7 @@ async function handler(m, { sock }) {
     detailTxt += `\nSimpan data ini, jangan bagikan ke siapapun!`;
 
     const headerMedia = await prepareWAMessageMedia(
-      { image: getAssetBuffer("nova-v8") },
+      { image: getAssetBuffer("panel-thumb") },
       { upload: sock.waUploadToServer }
     );
 

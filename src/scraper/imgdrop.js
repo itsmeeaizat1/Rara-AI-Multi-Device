@@ -6,7 +6,7 @@ import crypto from "node:crypto";
 const BASE_URL = "https://imgdrop.web.id";
 const UPLOAD_URL = `${BASE_URL}/upload.php`;
 const REFERER = `${BASE_URL}/?i=1`;
-const FILE_PATH = "/home/container/assets/Narutogesamt.webp";
+const FILE_PATH = "/home/container/assets/image/sticker/Narutogesamt.webp";
 
 function randomBoundary() {
   const rand = crypto.randomBytes(12).toString("base64url").replace(/[^a-zA-Z0-9]/g, "");

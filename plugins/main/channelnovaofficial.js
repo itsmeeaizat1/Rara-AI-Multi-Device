@@ -21,7 +21,7 @@ const pluginConfig = {
 };
 
 // Banner asset - isi gambar kamu di sini
-const BANNER_PATH = "assets/image/channel-banner.png";
+const BANNER_PATH = "assets/image/channel/channel-banner.png";
 
 // Helper format tanggal
 function formatDate(ts) {
