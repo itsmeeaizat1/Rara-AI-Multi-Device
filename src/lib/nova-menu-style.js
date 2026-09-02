@@ -510,18 +510,19 @@ function novaMenuLayout({ intro = null, introTitle = "Nova", infoTitle = "Info",
     const cat = categories[i];
     const catName = scFn(cat.name).toUpperCase();
     
-    // Transition: ╰─「 CategoryName 」
-    out += `╰─「 ${catName} 」\n`;
+    // Proper close prev + open new section
+    if (i > 0) out += `╰────  •  ────\n\n`;
+    out += `╭─「 ✦ ${catName} ✦ 」\n`;
     out += `│\n`;
     
-    // Commands: ├ ✦ .command
+    // Commands: │ ✦ .command
     for (const cmd of cat.commands) {
-      out += `├ ✦ ${prefix}${cmd}\n`;
+      out += `│ ✦ ${prefix}${cmd}\n`;
     }
   }
   
   // ── Final close ──
-  out += `└────  •  ────`;
+  out += `╰────  •  ────`;
   
   return out;
 }
