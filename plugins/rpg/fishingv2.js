@@ -71,11 +71,11 @@ async function handler(m, { sock }) {
 
     if (subCmd === "shop" || subCmd === "toko") {
       let msg = "";
-      msg += `🎣 *RODS:*\n`;
+      msg += `🎣 *ʀᴏᴅꜱ:*\n`;
       RODS.forEach((r, i) => msg += `${r.emoji} ${r.name} - ${r.price === 0 ? "FREE" : r.price + "g"} (+${r.bonus}% catch)\n`);
       msg += `
 `;
-      msg += `🪱 *BAITS:*\n`;
+      msg += `🪱 *ʙᴀɪᴛꜱ:*\n`;
       BAITS.forEach(b => msg += `${b.emoji} ${b.name} - ${b.price}g (+${b.bonus}% rarity)\n`);
       msg += `
 `;

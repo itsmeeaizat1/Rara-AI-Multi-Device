@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
         })
         db.save()
 
-        await m.reply(`*LOCKED BERHASIL*\n\n` +
+        await m.reply(`*ʟᴏᴄᴋᴇᴅ ʙᴇʀʜᴀꜱɪʟ*\n\n` +
             `Mulai sekarang, bot hanya bisa digunakan secara eksklusif di grup:\n` +
             `*${groupName}*\n\n` +
             `Pengguna di grup lain akan diarahkan untuk bergabung melalui tautan:\n` +

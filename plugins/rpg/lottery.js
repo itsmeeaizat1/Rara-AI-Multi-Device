@@ -151,7 +151,7 @@ async function handler(m, { sock }) {
       await db.setPlayerData?.(winnerSender, "wallet", winnerWallet);
 
       let msg = "";
-      msg += `🎊 *PENGUNDIAN LOTRE SAKRAL* 🎊\n`;
+      msg += `🎊 *ᴘᴇɴɢᴜɴᴅɪᴀɴ ʟᴏᴛʀᴇ ꜱᴀᴋʀᴀʟ* 🎊\n`;
       msg += `\n`;
       msg += `🎟️ Total Tiket Terundi: ${totalTickets} Tiket\n`;
       msg += `🏆 Total Hadiah: *${prizePool} Gold*\n`;

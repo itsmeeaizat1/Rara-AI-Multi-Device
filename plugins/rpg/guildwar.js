@@ -90,11 +90,11 @@ async function handler(m, { sock }) {
       msg += `
 `;
       if (won) {
-        msg += `🏆 *VICTORY!*\n`;
+        msg += `🏆 *ᴠɪᴄᴛᴏʀʏ!*\n`;
         msg += `Reward: *+${reward.toLocaleString()} gold*\n`;
         msg += `Guild Power: +500\n`;
       } else {
-        msg += `💀 *DEFEAT!*\n`;
+        msg += `💀 *ᴅᴇꜰᴇᴀᴛ!*\n`;
         msg += `Kerugian: *-${loss || 500} gold*\n`;
       }
       msg += `Record: ${guildData.wins || 0}W / ${guildData.losses || 0}L\n`;

@@ -45,7 +45,7 @@ async function handler(m, { args, sock }) {
     contentTxt += `❤️ *ʟɪᴋᴇꜱ :* ${downloadInfo.likes}\n`;
     contentTxt += `📦 *ᴜᴋᴜʀᴀɴ :* ${downloadInfo.size}`;
 
-    let txt = `🎉 *BERHASIL DOWNLOAD LAGU!* 🎉\n\n`;
+    let txt = `🎉 *ʙᴇʀʜᴀꜱɪʟ ᴅᴏᴡɴʟᴏᴀᴅ ʟᴀɢᴜ!* 🎉\n\n`;
     txt += contentTxt.trim().split("\n").map(line => `${line}`).join("\n");
     txt += `\n\n`;
     txt += `_Audio MP3 sedang dikirim, ditunggu ya kak!_ 🎶`;

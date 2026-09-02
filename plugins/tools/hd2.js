@@ -30,7 +30,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const isImage = m.isImage || (m.quoted && m.quoted.type === "imageMessage");
   if (!isImage) {
-    return m.reply( `✨ *HD ENHANCE V2*\n\nKirim/reply gambar untuk di-enhance\n\n\`${m.prefix}hd2\`\n\nProses membutuhkan waktu ±1 menit`, "hd2");
+    return m.reply( `✨ *ʜᴅ ᴇɴʜᴀɴᴄᴇ ᴠ2*\n\nKirim/reply gambar untuk di-enhance\n\n\`${m.prefix}hd2\`\n\nProses membutuhkan waktu ±1 menit`, "hd2");
   }
   try {
     let buffer;

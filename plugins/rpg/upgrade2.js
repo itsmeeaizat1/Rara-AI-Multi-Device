@@ -112,14 +112,14 @@ async function handler(m, { sock }) {
 
     if (isSuccess) {
       equipData[type] = targetLvl;
-      msg += `✨ *HASIL: BERHASIL!* 🎉\n`;
+      msg += `✨ *ʜᴀꜱɪʟ: ʙᴇʀʜᴀꜱɪʟ!* 🎉\n`;
       if (targetLvl === 10) {
-        msg += `⚡ *CONGRATULATIONS!* Equipment telah mencapai status *⚡ LEGENDARY STATUS ⚡*!\n`;
+        msg += `⚡ *ᴄᴏɴɢʀᴀᴛᴜʟᴀᴛɪᴏɴꜱ!* Equipment telah mencapai status *⚡ LEGENDARY STATUS ⚡*!\n`;
       } else {
         msg += `🌟 *${EQUIP_TYPES[type].name}* milikmu naik ke *Level ${targetLvl}*!\n`;
       }
     } else {
-      msg += `❌ *HASIL: GAGAL!* 💥\n`;
+      msg += `❌ *ʜᴀꜱɪʟ: ɢᴀɢᴀʟ!* 💥\n`;
       msg += `💨 Tempaan retak dan gagal berkilau. Level tetap di *Lvl ${currentLvl}*, namun Gold hangus!\n`;
     }
 

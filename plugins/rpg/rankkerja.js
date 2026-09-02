@@ -53,10 +53,9 @@ async function handler(m, { sock }) {
       msg += `💰 Rp${gold} | ⚔️ Lv.${level}\n`;
     });
 
-    msg += `│\n`;
 
     await m.react("🐣");
-    return m.reply(msg);
+    return m.reply(claraWrap("rankkerja", msg, "success"));
   } catch (err) {
     console.error("rankkerja error:", err);
     await m.react("❌");

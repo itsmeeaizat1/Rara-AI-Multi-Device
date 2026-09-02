@@ -63,7 +63,7 @@ async function handler(m, { sock, db }) {
   ];
 
   const bodyText =
-    `🎨 *GOODBYE TYPE*\n\n` +
+    `🎨 *ɢᴏᴏᴅʙʏᴇ ᴛʏᴘᴇ*\n\n` +
     `Atur tampilan pesan goodbye saat member keluar dari grup\n` +
     `Tipe aktif: *V${current} — ${VARIANTS[current]?.name || "Text"}*\n\n` +
     `*V1 Text Only* 📝 — Pesan teks biasa tanpa gambar\n\n` +

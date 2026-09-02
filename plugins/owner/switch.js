@@ -602,11 +602,11 @@ async function showMenu(m, sock) {
   const prefix = m.prefix || '.'
   const text = `Pilih kategori toggle:
 
-📢 *SALURAN*
+📢 *ꜱᴀʟᴜʀᴀɴ*
    Notifikasi event ke channel WhatsApp
    \`${prefix}switch channel\`
 
-🏠 *GROUP*
+🏠 *ɢʀᴏᴜᴘ*
    Fitur grup (welcome, antilink, anti-toxic, dll)
    \`${prefix}switch group\`
 
@@ -614,7 +614,7 @@ async function showMenu(m, sock) {
    Semua fitur auto (backup, read, typing, BMKG, dll)
    \`${prefix}switch auto\`
 
-⚙️ *FITUR*
+⚙️ *ꜰɪᴛᴜʀ*
    On/off command atau kategori plugin
    \`${prefix}switch fitur\`
 

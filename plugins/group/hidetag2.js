@@ -25,7 +25,7 @@ async function handler(m, { sock }) {
     const text = m.fullArgs?.trim()
 
     if (!text && !m.quoted) {
-        return m.reply( `📢 *HIDETAG 2*\n\n` +
+        return m.reply( `📢 *ʜɪᴅᴇᴛᴀɢ 2*\n\n` +
             `\`${m.prefix}h2 <text>\`\n` +
             `Reply pesan + \`${m.prefix}h2\``, "hidetag2")
     }
