@@ -61,14 +61,12 @@ function handler(m, { sock }) {
     const conn = new Client()
     conn.on('ready', async () => {
         try {
-            await m.reply(claraWrap("installtemastellar", `🕕 *[1/3] Install Dependencies...*\n\nMenginstall Node.js, Yarn, Composer...`))
+            await m.react("🕒");
             await execSSH(conn, DEPS_CMD)
 
-            await m.reply(claraWrap("installtemastellar", `🕕 *[2/3] Install Tema...*\n\nMendownload & install tema Stellar...`))
-            await execSSH(conn, THEME_CMD)
+                        await execSSH(conn, THEME_CMD)
 
-            await m.reply(claraWrap("installtemastellar", `🕕 *[3/3] Build Assets...*\n\nCompiling panel assets...`))
-            await execSSH(conn, BUILD_CMD)
+                        await execSSH(conn, BUILD_CMD)
             await m.reply(claraWrap("installtemastellar", `
 │ sTatus: *ᴛᴇʀɪɴꜱᴛᴀʟʟ*
 │ Ip: ${ipvps}\n\n_Tema Stellar + dependencies berhasil diinstall!_`))

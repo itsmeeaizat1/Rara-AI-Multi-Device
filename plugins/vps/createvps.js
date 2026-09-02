@@ -98,7 +98,7 @@ ssh_pwauth: True`,
         volumes: null,
         tags: ['nova-bot']
     }
-    await m.reply(claraWrap("VPS", `Membuat VPS...\nHostname: ${hostname}\nSpec: ${spec.ram} RAM, ${spec.cpu}\nRegion: ${region}`))
+    await m.react("🕒");
     
     try {
         const response = await axios.post('https://api.digitalocean.com/v2/droplets', dropletData, {

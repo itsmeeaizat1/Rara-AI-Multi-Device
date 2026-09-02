@@ -206,7 +206,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       ]));
     }
 
-    m.reply(claraWrap("ZAI", "Z.ai sedang berpikir..."));
+    await m.react("🕒");
 
     // Get session from Z.ai
     const session = await getZaiSession();

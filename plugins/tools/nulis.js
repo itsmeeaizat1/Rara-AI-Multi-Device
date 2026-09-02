@@ -58,7 +58,7 @@ async function handler(m, { sock }) {
   if (!inputUrl) {
     return m.reply(claraWrap("Nulis", `❌ *ᴛᴇᴍᴘʟᴀᴛᴇ ᴛɪᴅᴀᴋ ᴀᴅᴀ*\n\nFile template kertas tidak ditemukan di config.assets`));
   }
-  await m.reply(claraWrap("Nulis", `🕕 *ᴍᴇᴍᴘʀᴏꜱᴇꜱ...*\n\nMembuat tulisan tangan...`));
+  await m.react("🕒");
   try {
     const { createCanvas, loadImage, GlobalFonts } = _canvas;
     if (!_fontRegistered) {

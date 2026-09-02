@@ -123,7 +123,7 @@ async function handler(m, { sock, config: botConfig, text: args }) {
     ].join("\n"));
     return m.reply( help, "sppd");
   }
-  m.reply(claraWrap("SPPD", "AI lagi menyusun SPPD..."));
+  await m.react("🕒");
 
   try {
     const result = await UnlimitedAI(SPPD_PROMPT.replace("__INPUT__", args), "nova-ai");

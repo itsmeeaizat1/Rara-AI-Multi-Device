@@ -87,7 +87,7 @@ async function handler(m, { sock }) {
             return m.reply(novaError("PinPack", `Gak nemu hasil untuk: ${query} nih`))
         }
 
-        await m.reply(claraWrap("pinpack", `Mengunduh *${results.length}* gambar dari Pinterest\nLalu dikonversi ke sticker pack...`))
+        await m.react("🕒");
 
         const stickerBuffers = []
 
