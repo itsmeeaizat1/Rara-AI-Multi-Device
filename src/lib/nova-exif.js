@@ -90,15 +90,15 @@ function imageToWebpFFmpeg(buffer) {
         
         fs.writeFileSync(inputPath, buffer);
         
+        // Alice-style: 320x320 with palette optimization for best quality
         ffmpeg(inputPath)
             .outputOptions([
                 '-vcodec', 'libwebp',
-                '-vf', "scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=0x00000000,setsar=1",
+                '-vf', "scale='min(320,iw)':'min(320,ih)':force_original_aspect_ratio=decrease,fps=15,pad=320:320:-1:-1:color=white@0.0,split [a][b];[a] palettegen=reserve_transparent=on:transparency_color=ffffff [p];[b][p] paletteuse",
                 '-loop', '0',
                 '-preset', 'default',
                 '-an',
-                '-vsync', '0',
-                '-quality', '80'
+                '-vsync', '0'
             ])
             .toFormat('webp')
             .on('end', () => {
@@ -131,14 +131,15 @@ function videoToWebpFFmpeg(buffer, options = {}) {
         const duration = options.duration || 5;
         const fps = options.fps || 15;
         
+        // Alice-style: 320x320 with palette optimization
         ffmpeg(inputPath)
             .inputOptions(['-y'])
             .outputOptions([
                 '-vcodec', 'libwebp',
-                '-vf', `fps=${fps},scale=512:512:force_original_aspect_ratio=decrease,pad=512:512:(ow-iw)/2:(oh-ih)/2:color=0x00000000,setsar=1`,
+                '-vf', `fps=${fps},scale='min(320,iw)':'min(320,ih)':force_original_aspect_ratio=decrease,pad=320:320:-1:-1:color=white@0.0,split [a][b];[a] palettegen=reserve_transparent=on:transparency_color=ffffff [p];[b][p] paletteuse`,
                 '-loop', '0',
-                '-ss', '0',
-                '-t', String(duration),
+                '-ss', '00:00:00',
+                '-t', `00:00:0${duration}`,
                 '-preset', 'default',
                 '-an',
                 '-vsync', '0'

@@ -34,7 +34,17 @@ async function handler(m, { sock, text }) {
 
     await m.react("🕒");
 
-    const buffer = await bratVid(text, { outputFormat: "mp4" });
+    const urlOrBuffer = await bratVid(text, { outputFormat: "mp4" });
+    
+    // bratVid returns URL — download actual buffer
+    let buffer
+    if (Buffer.isBuffer(urlOrBuffer)) {
+      buffer = urlOrBuffer
+    } else {
+      const axios = (await import('axios')).default
+      const res = await axios.get(urlOrBuffer, { responseType: 'arraybuffer', timeout: 30000 })
+      buffer = Buffer.from(res.data)
+    }
 
     const tmpDir = path.join(os.tmpdir(), "nova-brat");
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir, { recursive: true });

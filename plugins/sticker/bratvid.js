@@ -30,11 +30,20 @@ async function handler(m, { sock }) {
         { const __navText = `🎬 *ʙʀᴀᴛ ᴀɴɪᴍᴀᴛᴇᴅ*\n\nMasukkan teks\n\n\`Contoh: ${m.prefix}bratvid Hai semua\``; return await m.reply( __navText, "bratvid"); }
     }
     try {
-        const tempFile = path.join(os.tmpdir(), `brat-${Date.now()}.webp`)
-        const url = await bratVid(text, {
-            outputFormat: 'mp4',
-        })
-        await fs.promises.writeFile(tempFile, url)
+        await m.react("🕒")
+        const tempFile = path.join(os.tmpdir(), `brat-${Date.now()}.mp4`)
+        const url = await bratVid(text, { outputFormat: 'mp4' })
+        
+        // bratVid returns URL — download the actual video buffer
+        let videoBuffer
+        if (Buffer.isBuffer(url)) {
+            videoBuffer = url
+        } else {
+            const res = await axios.get(url, { responseType: 'arraybuffer', timeout: 30000 })
+            videoBuffer = Buffer.from(res.data)
+        }
+        await fs.promises.writeFile(tempFile, videoBuffer)
+        await m.react("🐣")
         await sock.sendVideoAsSticker(m.chat, tempFile, m, {
             packname: config.sticker.packname,
             author: config.sticker.author
