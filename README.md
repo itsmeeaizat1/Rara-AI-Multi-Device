@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20rename%20folder%20docs%2F%20-%3E%20changel-success?style=for-the-badge)
-> *Commit: "refactor: rename folder docs/ -> changelogs/"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20folder%20skills%2F%20%E2%80%94%20dead%20co-success?style=for-the-badge)
+> *Commit: "refactor: hapus folder skills/ — dead code, gak dipakai"*
 <!--END_SECTION:latest-update-->
 
 ---
