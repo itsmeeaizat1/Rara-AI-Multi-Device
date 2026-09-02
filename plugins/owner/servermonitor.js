@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // servermonitor.js — VPS Health Monitor + Auto-Alert (integrated with automation hub)
 import os from 'os'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src/lib/nova-menu-style.js";
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import { getDatabase } from '../../src/lib/nova-database.js'
@@ -86,10 +86,10 @@ async function handler(m, { sock }) {
       const toggle = args[1]?.toLowerCase()
       if (toggle === "on") {
         cfg.alertEnabled = true; save(db)
-        return m.reply("Auto-alert: *ON*\nCek tiap 60 detik, alert ke PM owner\nThreshold: CPU *" + cfg.cpuThreshold + "%* / RAM *" + cfg.ramThreshold + "%* / Disk *" + cfg.diskThreshold + "%*")
+        return m.reply(novaBox("Server Monitor", ["✅ Auto-alert: ON", "Cek tiap 60 detik, alert ke PM owner", "---", "Threshold: CPU " + cfg.cpuThreshold + "% | RAM " + cfg.ramThreshold + "% | Disk " + cfg.diskThreshold + "%"]))
       } else if (toggle === "off") {
         cfg.alertEnabled = false; save(db)
-        return m.reply("Auto-alert: *OFF*\nMonitoring dimatikan")
+        return m.reply(novaBox("Server Monitor", ["❌ Auto-alert: OFF", "Monitoring dimatikan"]))
       }
     }
 
@@ -102,7 +102,7 @@ async function handler(m, { sock }) {
         if (key === "disk" && val) cfg.diskThreshold = val
       }
       save(db);
-      return m.reply("✅ Threshold diupdate!\nCPU: *" + cfg.cpuThreshold + "%*\nRAM: *" + cfg.ramThreshold + "%*\nDisk: *" + cfg.diskThreshold + "%*")
+      return m.reply(novaBox("Server Monitor", ["✅ Threshold diupdate!", "CPU: " + cfg.cpuThreshold + "%", "RAM: " + cfg.ramThreshold + "%", "Disk: " + cfg.diskThreshold + "%"]))
     }
 
     if (subCmd === "test") {

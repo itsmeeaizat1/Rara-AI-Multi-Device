@@ -56,7 +56,7 @@ async function handler(m, { sock }) {
 
   if (command === "stopbcgc" || command === "stopbroadcastgc") {
     if (!global.statusBcgc) {
-      return m.reply("ℹ️ Tidak ada broadcast yang sedang berjalan");
+      return m.reply(novaBox("Broadcast Grup", ["Tidak ada broadcast yang sedang berjalan"]));
     }
     global.stopBcgc = true;
     return m.reply("🔄 Sedang dihentikan...");
@@ -72,7 +72,7 @@ async function handler(m, { sock }) {
 
   if (input.toLowerCase() === "on") {
     db.setting("bcgcEnabled", true);
-    return m.reply("✅ Berhasil diaktifkan\nSekarang bisa broadcast ke semua grup");
+    return m.reply(novaBox("Broadcast Grup", ["✅ Berhasil diaktifkan", "Sekarang bisa broadcast ke semua grup"]));
   }
 
   if (input.toLowerCase() === "off") {

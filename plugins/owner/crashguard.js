@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // crashguard.js — PM2 Crash Monitor + Auto-Restart (integrated with automation hub)
 import { exec } from 'child_process'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src/lib/nova-menu-style.js";
 import { promisify } from 'util'
 import { getDatabase } from '../../src/lib/nova-database.js'
 
@@ -70,7 +70,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "on" || subCmd === "off") {
       cfg.enabled = subCmd === "on"; save(db)
-      return m.reply("Status: " + (cfg.enabled ? "ON (monitoring)" : "OFF") + "\nMax restarts: " + cfg.maxRestarts + " per " + (cfg.restartWindow / 60000) + " min")
+      return m.reply(novaBox("Crash Guard", ["Status: " + (cfg.enabled ? "ON (monitoring)" : "OFF"), "Max restarts: " + cfg.maxRestarts + " per " + (cfg.restartWindow / 60000) + " min"]))
     }
 
     if (subCmd === "restart") {
@@ -81,15 +81,15 @@ async function handler(m, { sock }) {
         cfg.restartHistory = cfg.restartHistory.slice(0, 20)
         cfg.lastRestart = Date.now()
         save(db)
-        return m.reply("PM2 \"" + procName + "\" berhasil di-restart")
+        return m.reply(novaBox("Crash Guard", ["✅ PM2 " + procName + " berhasil di-restart"]))
       } catch (e) {
-        return m.reply("❌ Gagal restart: " + e.message.slice(0, 100))
+        return m.reply(novaBox("Crash Guard", ["❌ Gagal restart: " + e.message.slice(0, 100)]))
       }
     }
 
     if (subCmd === "history") {
       const history = cfg.restartHistory || []
-      if (!history.length) return m.reply("Belum ada history.")
+      if (!history.length) return m.reply(novaBox("Crash Guard", ["Belum ada history."]))
       let text = ""
       history.slice(0, 10).forEach((h, i) => {
         const icon = h.success ? "✅" : "❌"
@@ -103,7 +103,7 @@ async function handler(m, { sock }) {
 
     if (subCmd === "clear") {
       cfg.restartHistory = []; save(db)
-      return m.reply("History dihapus.")
+      return m.reply(novaBox("Crash Guard", ["✅ History dihapus."]))
     }
 
     if (subCmd === "set") {
@@ -111,7 +111,7 @@ async function handler(m, { sock }) {
       if (key === "process" && val) cfg.processName = val
       if (key === "maxrestart" && val) cfg.maxRestarts = parseInt(val) || 5
       save(db);
-      return m.reply("Config updated.\nProcess: " + cfg.processName + "\nMax restarts: " + cfg.maxRestarts)
+      return m.reply(novaBox("Crash Guard", ["✅ Config updated.", "Process: " + cfg.processName, "Max restarts: " + cfg.maxRestarts]))
     }
 
     // Default: status

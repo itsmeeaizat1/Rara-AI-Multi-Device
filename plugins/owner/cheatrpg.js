@@ -1,6 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 import { getDatabase } from "../../src/lib/nova-database.js";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src/lib/nova-menu-style.js";
 import config from "../../config.js";
 
 const pluginConfig = {
@@ -89,34 +89,26 @@ async function handler(m, { sock }) {
 
   // No args — show help
   if (args.length === 0) {
-    let txt = "Owner only command\n";
-    txt += "Tambah RPG stats ke user langsung\n\n";
-    txt += "Cara Pakai:\n";
-    txt += "`.cheatrpg <type> <jumlah> @user`\n";
-    txt += "`.cheatrpg <type> <jumlah>` (ke diri sendiri)\n\n";
-    txt += "Tersedia:\n";
-    txt += "exp — EXP\n";
-    txt += "koin — Koin\n";
-    txt += "saldo — Saldo\n";
-    txt += "energi — Energi Bot\n";
-    txt += "gold — Gold RPG\n";
-    txt += "gems — Gems\n";
-    txt += "diamonds — Diamonds\n";
-    txt += "tokens — Tokens\n";
-    txt += "hp — HP\n";
-    txt += "mana — Mana\n";
-    txt += "stamina — Stamina\n";
-    txt += "atk — Attack\n";
-    txt += "def — Defense\n";
-    txt += "spd — Speed\n";
-    txt += "critrate — Crit Rate\n";
-    txt += "critdmg — Crit Damage\n";
-    txt += "luck — Luck\n";
-    txt += "dailystreak — Daily Streak\n";
-    txt += "level — Set Level langsung\n\n";
-    txt += "Jumlah bisa negatif untuk kurang\n";
-    txt += "Contoh: `.cheatrpg exp 999999999 @user`";
-    return m.reply(txt);
+    return m.reply(novaBox("Cheat RPG", [
+      "Owner only — tambah RPG stats langsung",
+      "---",
+      "Cara pakai:",
+      ".cheatrpg <type> <jumlah> @user",
+      ".cheatrpg <type> <jumlah> (ke diri sendiri)",
+      "---",
+      "Tersedia:",
+      "exp — EXP | koin — Koin | saldo — Saldo",
+      "energi — Energi Bot | gold — Gold RPG",
+      "gems — Gems | diamonds — Diamonds",
+      "tokens — Tokens | hp — HP | mana — Mana",
+      "stamina — Stamina | atk — Attack | def — Defense",
+      "spd — Speed | critrate — Crit Rate",
+      "critdmg — Crit Damage | luck — Luck",
+      "dailystreak — Daily Streak | level — Set Level",
+      "---",
+      "Jumlah bisa negatif untuk kurang",
+      "Contoh: .cheatrpg exp 999999999 @user",
+    ]));
   }
 
   const cheatType = args[0]?.toLowerCase();
@@ -125,15 +117,19 @@ async function handler(m, { sock }) {
   const targetJid = extractTarget(m) || m.sender;
 
   if (!cheatType || !CHEAT_TYPES[cheatType]) {
-    let txt = "❌ Type `" + (cheatType || "kosong") + "` tidak ditemukan\n\n";
-    txt += "Ketik `.cheatrpg` untuk lihat daftar lengkap";
-    return m.reply(txt);
+    return m.reply(novaBox("Cheat RPG", [
+      "❌ Type: " + (cheatType || "kosong") + " tidak ditemukan",
+      "---",
+      "Ketik .cheatrpg untuk lihat daftar lengkap",
+    ]));
   }
 
   if (amount === 0) {
-    let txt = "❌ Jumlah harus lebih dari 0 (bisa negatif untuk mengurangi)\n\n";
-    txt += "Contoh: `.cheatrpg " + cheatType + " 999999 @user`";
-    return m.reply(txt);
+    return m.reply(novaBox("Cheat RPG", [
+      "❌ Jumlah harus lebih dari 0 (bisa negatif)",
+      "---",
+      "Contoh: .cheatrpg " + cheatType + " 999999 @user",
+    ]));
   }
 
   const cfg = CHEAT_TYPES[cheatType];
@@ -190,14 +186,19 @@ async function handler(m, { sock }) {
   const isAdd = amount > 0;
   const sign = isAdd ? "+" : "";
 
-  let txt = "✅ Berhasil " + (isAdd ? "menambah" : "mengurangi") + " stats\n\n";
-  txt += "Target: @" + targetPhone + "\n";
-  txt += "Type: " + cfg.label + "\n";
-  txt += "Jumlah: " + sign + formatNumber(amount) + "\n\n";
-  txt += "Sebelum: " + formatNumber(oldValue) + "\n";
-  txt += "Sekarang: " + formatNumber(newValue) + "\n";
-  txt += "Selisih: " + sign + formatNumber(amount) + "\n\n";
-  txt += "Cheated by: " + (config.owner?.name || "Owner");
+  const txt = novaBox("Cheat RPG", [
+    "✅ Berhasil " + (isAdd ? "menambah" : "mengurangi") + " stats",
+    "---",
+    "Target: @" + targetPhone,
+    "Type: " + cfg.label + " " + cfg.icon,
+    "Jumlah: " + sign + formatNumber(amount),
+    "---",
+    "Sebelum: " + formatNumber(oldValue),
+    "Sekarang: " + formatNumber(newValue),
+    "Selisih: " + sign + formatNumber(amount),
+    "---",
+    "Cheated by: " + (config.owner?.name || "Owner"),
+  ]);
   await sock.sendMessage(m.chat, { text: txt, mentions: [targetJid] }, { quoted: m });
 }
 

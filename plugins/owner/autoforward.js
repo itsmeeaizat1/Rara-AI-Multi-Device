@@ -2,7 +2,7 @@
 // autoforward.js — Auto-forward pesan berdasarkan keyword ke PM owner
 // Integrated with automation hub (checkAutoForward hook)
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "autoforward",
@@ -39,10 +39,10 @@ async function handler(m, { sock }) {
 
     if (subCmd === "add") {
       const keyword = args.slice(1).join(" ").toLowerCase().trim()
-      if (!keyword) { return m.reply("❌ Masukkan keyword!\n.autoforward add <keyword>") }
-      if (cfg.keywords.includes(keyword)) { return m.reply("❌ Keyword sudah ada.") }
+      if (!keyword) { return m.reply(novaBox("Auto Forward", ["❌ Masukkan keyword!", "---", "Contoh: .autoforward add <keyword>"])) }
+      if (cfg.keywords.includes(keyword)) { return m.reply(novaBox("Auto Forward", ["❌ Keyword sudah ada."])) }
       cfg.keywords.push(keyword); save(db);
-      return m.reply("✅ Keyword ditambah: \"" + keyword + "\"\nTotal: " + cfg.keywords.length + "\nStatus: " + (cfg.enabled ? "ON" : "OFF"))
+      return m.reply(novaBox("Auto Forward", ["✅ Keyword ditambah: " + keyword, "Total: " + cfg.keywords.length, "Status: " + (cfg.enabled ? "ON" : "OFF")]))
     }
 
     if (subCmd === "del") {

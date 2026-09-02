@@ -6,7 +6,7 @@ import { updateAssetUrl } from '../../src/lib/nova-uploader.js'
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
     name: 'ganti-pp-kosong.jpg',
-    alias: ["ganti-pp-kosong.jpg", "ganti"],
+    alias: ["ganti-pp-kosong.jpg"],
     category: 'owner',
     description: 'Ganti gambar pp-kosong.jpg',
     usage: '.ganti-pp-kosong.jpg (reply/kirim gambar)',

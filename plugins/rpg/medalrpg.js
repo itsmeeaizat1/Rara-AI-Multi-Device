@@ -2,6 +2,7 @@
 // RPG Medal — Tampilkan medali pemain
 import { ensureRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "medalrpg", alias: ["medalrpg", "medal", "medali"],
@@ -16,6 +17,7 @@ async function handler(m, { sock }) {
     if (!rpg) return m.reply(claraWrap("medalrpg", "RPG belum siap.", "error"));
     const medals = rpg.achievements || [];
     if (!medals.length) return m.reply(claraWrap("medalrpg", "🎖️ Kamu belum punya medali.", "info"));
+    await animGeneric(m, sock, '🏅', 'Loading medals');
     return m.reply(claraWrap("medalrpg", `🎖️ *MEDALI-MU:*\n${medals.map(a => `🏅 ${a}`).join("\n")}`, "info"));
   } catch (e) {
     return m.reply(claraWrap("medalrpg", "Terjadi error.", "error"));

@@ -42,9 +42,7 @@ async function handler(m, { sock, config: botConfig }) {
     const groupJids = Object.keys(groups);
 
     if (!groupJids.length) {
-      await m.reply(
-        "❌ Tidak ada grup terdaftar\nStatus: Dibatalkan"
-      );
+      await m.reply(novaBox("Broadcast", ["❌ Tidak ada grup terdaftar", "Status: Dibatalkan"]));
       return { handled: true };
     }
 
@@ -69,21 +67,18 @@ async function handler(m, { sock, config: botConfig }) {
       }
     }
 
-    const result =
-      "*Broadcast Selesai*\n\n" +
-      "📝 Pesan: " + message.slice(0, 50) + (message.length > 50 ? "..." : "") + "\n" +
-      "🎯 Target: " + groupJids.length + " Grup\n" +
-      "✅ Berhasil: " + success.length + "\n" +
-      "❌ Gagal: " + failed.length + "\n" +
-      "📊 Sukses Rate: " + Math.round((success.length / groupJids.length) * 100) + "%\n\n" +
-      "🏷️ " + botName;
+    const result = novaBox("Broadcast Selesai", [
+      "Pesan: " + message.slice(0, 50) + (message.length > 50 ? "..." : ""),
+      "---",
+      "Target: " + groupJids.length + " Grup",
+      "Berhasil: " + success.length,
+      "Gagal: " + failed.length,
+      "Sukses Rate: " + Math.round((success.length / groupJids.length) * 100) + "%",
+    ]);
 
     await m.reply(result);
   } catch (error) {
-    const text =
-      "❌ Gagal mengirim broadcast\nAlasan: " + error.message;
-
-    await m.reply(text, "broadcast");
+    await m.reply(novaBox("Broadcast", ["❌ Gagal mengirim broadcast", "Alasan: " + error.message]), "broadcast");
   }
 
   return { handled: true };

@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Shop — Buy and sell items
 
+import { animShop } from "../../src/lib/nova-rpg-anim.js";
 import {
   ensureRpg, saveRpg, addGold, removeGold, addItem, removeItem,
   getInventory, ITEM_DB, getItemCount, equipItem
@@ -108,6 +109,7 @@ async function handler(m, { sock }) {
       msg += `💰 Harga: *${total} gold*\n`;
       msg += `💼 Sisa gold: *${rpg.gold - total}*\n`;
       
+      await animShop(m, sock, "buy");
       return m.reply(msg);
     }
 
@@ -143,6 +145,7 @@ async function handler(m, { sock }) {
       msg += `💰 Diterima: *${total} gold*\n`;
       msg += `💼 Total gold: *${rpg.gold + total}*\n`;
       
+      await animShop(m, sock, "sell");
       return m.reply(msg);
     }
 

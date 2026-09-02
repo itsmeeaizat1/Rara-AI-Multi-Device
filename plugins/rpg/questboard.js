@@ -2,6 +2,7 @@
 // questboard.js — Daily Quest Board (5 quest random, reward progresif)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animQuest } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "questboard",
@@ -83,11 +84,12 @@ async function handler(m, { sock }) {
       if (quest.reward.energi) try { await db.addEnergi?.(m.sender, quest.reward.energi); } catch {}
       await saveQuestData(db, m.sender, data);
 
+      await animQuest(m, sock, 'quest');
+
       await m.react("🐣");
       let msg = "";
       msg += `${quest.emoji} *${quest.name}*\n`;
-      msg += `
-`;
+      msg += `\n`;
       msg += `Reward:\n`;
       if (quest.reward.gold) msg += `💰 +${quest.reward.gold} Gold\n`;
       if (quest.reward.energi) msg += `⚡ +${quest.reward.energi} Energi\n`;
@@ -102,8 +104,7 @@ async function handler(m, { sock }) {
 
     let msg = "";
     msg += `Date: *${getTodayKey()}*\n`;
-    msg += `
-`;
+    msg += `\n`;
 
     let completed = 0;
     quests.forEach((q, i) => {
@@ -119,8 +120,7 @@ async function handler(m, { sock }) {
     });
 
     const allDone = quests.every(q => q.claimed);
-    msg += `
-`;
+    msg += `\n`;
     msg += `Completed: *${quests.filter(q => q.claimed).length}/${quests.length}*\n`;
     if (allDone) msg += `🎉 Semua quest selesai hari ini!\n`;
         return m.reply(msg);

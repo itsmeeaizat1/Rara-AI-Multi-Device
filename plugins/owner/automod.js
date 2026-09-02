@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // automod.js — Group Auto-Moderation (integrated with automation hub)
 import { getDatabase } from '../../src/lib/nova-database.js'
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
   name: "automod",
@@ -48,15 +48,15 @@ async function handler(m, { sock }) {
 
     if (subCmd === "addgc") {
       const gid = args[1]
-      if (!gid?.includes("@g.us")) { return m.reply("❌ Format: .automod addgc <groupId>") }
+      if (!gid?.includes("@g.us")) { return m.reply(novaBox("Auto Mod", ["❌ Format: .automod addgc <groupId>"])) }
       ensureGroup(cfg, gid); save(db);
-      return m.reply("✅ Grup ditambah: " + gid.slice(0, 20) + "...\nRules: antilink, antispam\nAction: warn")
+      return m.reply(novaBox("Auto Mod", ["✅ Grup ditambah: " + gid.slice(0, 20) + "...", "Rules: antilink, antispam", "Action: warn"]))
     }
 
     if (subCmd === "delgc") {
       const gid = args[1]
       if (cfg.groups[gid]) { delete cfg.groups[gid]; save(db) }
-      return m.reply("✅ Grup dihapus: " + (gid || "?").slice(0, 20) + "...")
+      return m.reply(novaBox("Auto Mod", ["✅ Grup dihapus: " + (gid || "?").slice(0, 20) + "..."]))
     }
 
     if (subCmd === "setrule") {

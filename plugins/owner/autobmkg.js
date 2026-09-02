@@ -5,7 +5,7 @@
  * Default jeda 6 jam: 00:00, 06:00, 12:00, 18:00 WIB.
  */
 
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import { novaError, novaEmpty, novaGuide, novaNoInput, novaBox } from "../../src/lib/nova-menu-style.js";
 import {
   getBmkgStatus,
   updateBmkgSettings,
@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
     if (action === "off") {
       const settings = updateBmkgSettings((cur) => ({ ...cur, enabled: false }));
       stopBmkgJobs();
-      return m.reply("Auto-broadcast BMKG: *OFF*");
+      return m.reply(novaBox("Auto BMKG", ["❌ Auto-broadcast BMKG: OFF"]));
     }
 
     if (action === "add") {

@@ -33,7 +33,7 @@ import config from "../../config.js";
 
 const pluginConfig = {
   name: "autochurn",
-  alias: ["autochurn", "churndetect", "churnalert", "reengage"],
+  alias: ["autochurn", "churndetect", "churnalert"],
   category: "owner",
   description: "Auto Churn Detection — detect & re-engage user yang sudah tidak aktif",
   usage: ".autochurn <on/off/scan/send/threshold/cooldown/message/exclude/list/reset/settime>",

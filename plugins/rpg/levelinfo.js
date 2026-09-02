@@ -2,6 +2,7 @@
 // levelinfo.js — Lihat info level RPG
 import { ensureRpg, getPlayerInfo } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -23,24 +24,23 @@ async function handler(m, { sock }) {
 
     let msg = "";
     msg += `👤 ${m.pushName || "Player"}\n`;
-    msg += `
-`;
+    msg += `\n`;
     msg += `📊 Level: ${rpg.level || 1}\n`;
     msg += `✨ EXP: ${rpg.exp || 0}/${rpg.expNext || 100}\n`;
     msg += `💰 Gold: ${(rpg.gold || 0).toLocaleString("id-ID")}\n`;
     msg += `💎 Gems: ${rpg.gems || 0}\n`;
-    msg += `
-`;
+    msg += `\n`;
     msg += `❤️ HP: ${rpg.hp || 100}/${rpg.maxHp || 100}\n`;
     msg += `🔮 Mana: ${rpg.mana || 50}/${rpg.maxMana || 50}\n`;
     msg += `⚡ Energy: ${rpg.energy || 100}/${rpg.maxEnergy || 100}\n`;
-    msg += `
-`;
+    msg += `\n`;
     msg += `👔 Job: ${rpg.job || "novice"}\n`;
     msg += `📖 Job Lv: ${rpg.jobLevel || 1}\n`;
     msg += `📖 Job EXP: ${rpg.jobExp || 0}/${rpg.jobExpNext || 50}\n`;
     if (rpg.skill) msg += `🃏 Skill: ${rpg.skill}\n`;
-        await m.react("🐣");
+
+    await m.react("🐣");
+    await animGeneric(m, sock, '📊', 'Loading level info');
     return m.reply(msg);
   } catch (err) {
     console.error("levelinfo error:", err);

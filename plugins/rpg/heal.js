@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Heal — Recover HP and Energy using potions or resting
 
+import { animHeal } from "../../src/lib/nova-rpg-anim.js";
 import {
   ensureRpg, saveRpg, regenHP, regenEnergy, regenMana,
   removeItem, getItemCount, ITEM_DB
@@ -109,6 +110,7 @@ async function handler(m, { sock }) {
     msg += `⚡ Energy: *${freshRpg.energy}/${freshRpg.maxEnergy}*\n`;
     msg += `💧 Mana: *${freshRpg.mana}/${freshRpg.maxMana}*\n`;
     
+    await animHeal(m, sock);
     return m.reply(msg);
   } catch (err) {
     console.error("heal error:", err);

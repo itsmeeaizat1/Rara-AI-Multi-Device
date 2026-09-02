@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // farmrpg.js — Farming system (plant, grow, harvest, sell)
+import { animFarm } from "../../src/lib/nova-rpg-anim.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -74,6 +75,7 @@ async function handler(m, { sock }) {
 
       await m.react("🐣");
       const mins = crop.growTime / 60000;
+      await animFarm(m, sock, 'Planting');
       return m.reply(claraWrap("farmrpg", `${crop.emoji} Berhasil tanam *${crop.name}*!\nSiap panen dalam ${mins >= 60 ? Math.floor(mins/60)+'j ' : ''}${mins % 60}m`));
     }
 

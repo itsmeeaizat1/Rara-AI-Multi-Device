@@ -2,6 +2,7 @@
 // RPG Class — Pilih kelas karakter (knight/mage/archer)
 import { ensureRpg, saveRpg } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "classrpg", alias: ["classrpg", "class", "kelas"],
@@ -29,6 +30,7 @@ async function handler(m, { sock }) {
     if (c.critRate) rpg.critRate = c.critRate;
     saveRpg(m, rpg);
     await m.react("🐣");
+    await animGeneric(m, sock, '⚔️', 'Changing class');
     return m.reply(claraWrap("classrpg", `✅ Kamu kini seorang *${text}*!\n⚔️ ATK: ${c.atk} | 🛡️ DEF: ${c.def} | ⚡ SPD: ${c.spd} | ❤️ HP: ${c.hp}`, "success"));
   } catch (e) {
     console.error("classrpg error:", e.message);
