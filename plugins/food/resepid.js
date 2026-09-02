@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import { claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA_FILE = path.join(__dirname, "../../assets/resep-id/resep-indonesia.json");
+const DATA_FILE = path.join(__dirname, "../../database/resep-indonesia.json");
 
 // Load recipes once at startup
 let RECIPES = [];
@@ -58,7 +58,7 @@ function formatRecipe(r) {
 
 async function handler(m, { sock, args }) {
   if (RECIPES.length === 0) {
-    return m.reply(claraWrap("Resepid", "Data resep Indonesia tidak tersedia. Pastikan file resep-indonesia.json ada di assets/resep-id/"));
+    return m.reply(claraWrap("Resepid", "Data resep Indonesia tidak tersedia. Pastikan file resep-indonesia.json ada di database/"));
   }
 
   const sub = (args[0] || "").toLowerCase();

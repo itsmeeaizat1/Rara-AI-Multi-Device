@@ -19,8 +19,8 @@ async function generateImage(saldo, greet) {
   const fontUrl = "https://raw.githubusercontent.com/uploader762/dat2/main/uploads/49bbd8-1773045557233.otf"
   const font2Url = "https://raw.githubusercontent.com/uploader762/dat1/main/uploads/203827-1773063086445.ttf"
 
-  const font1 = "../data/Demo_fonts/Fontspring-DEMO-ceraroundpro-medium.otf"
-  const font2 = "../data/Roboto_Medium.ttf"
+  const font1 = "../assets/fonts/Fontspring-DEMO-ceraroundpro-medium.otf"
+  const font2 = "../assets/fonts/Roboto_Medium.ttf"
 
   await ensureFile(fontUrl, font1)
   await ensureFile(font2Url, font2)
