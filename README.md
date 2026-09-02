@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20Auto%20Role%20Assignment%20%E2%80%94%20role%20otomat-success?style=for-the-badge)
-> *Commit: "feat: Auto Role Assignment — role otomatis + poin + leaderboard"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20semua%20error%20test-plugins.js%20(0%2F1811-success?style=for-the-badge)
+> *Commit: "fix: semua error test-plugins.js (0/1811)"*
 <!--END_SECTION:latest-update-->
 
 ---
