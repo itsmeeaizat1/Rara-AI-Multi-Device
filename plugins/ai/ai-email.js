@@ -4,7 +4,7 @@ import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 
 const pluginConfig = {
   name: "ai-email",
-  alias: ["ai-email", "ai"],
+  alias: ["ai-email"],
   category: "ai",
   description: "Tulis email/resmi surat dengan AI",
   usage: ".ai-email <tujuan/isi>",

@@ -26,7 +26,7 @@ const ENDPOINTS = [
 
 const pluginConfig = {
   name: "aiavatar",
-  alias: ["aiavatar", "ai"],
+  alias: ["aiavatar"],
   category: "ai",
   description: "Buat avatar/profil picture AI",
   usage: ".ai-avatar <prompt>",
