@@ -11,6 +11,7 @@ import config from "../../config.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap, bracketBox, tipText, toSC } from "../../src/lib/nova-menu-style.js";
 import { calculateSewaPrice } from "../../src/lib/nova-sewa-price.js";
+import { sewaPrice } from "../../src/lib/sewa.js";
 
 const pluginConfig = {
   name: "buysewa",
@@ -28,7 +29,7 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// Harga sewa per durasi (ambil dari config.sewaPrice)
+// Harga sewa per durasi (ambil dari sewaPrice)
 const SEWA_PACKAGES = [
   { duration: "7d", label: "7 Hari", days: 7 },
   { duration: "30d", label: "30 Hari", days: 30 },
@@ -42,7 +43,7 @@ const buySewaSessions = new Map();
 const SESSION_TIMEOUT = 10 * 60 * 1000;
 
 function getSewaPrice(durationStr) {
-  const prices = config.sewaPrice || {};
+  const prices = sewaPrice;
   const lower = durationStr.toLowerCase();
 
   if (["lifetime", "permanent", "forever", "unlimited"].includes(lower)) {
@@ -93,7 +94,7 @@ function buildPaymentMethods() {
 }
 
 async function sendQRIS(sock, m) {
-  const qrisUrl = config.payment?.qrisUrl || config.sewaPrice?.qrisUrl || "";
+  const qrisUrl = config.payment?.qrisUrl || sewaPrice.qrisUrl || "";
   if (!qrisUrl) return;
 
   try {
