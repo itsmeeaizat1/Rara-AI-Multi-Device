@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20AI%20Agent%20.novaai%20%E2%80%94%20ngatur%20fitur%20bo-success?style=for-the-badge)
-> *Commit: "feat: AI Agent .novaai — ngatur fitur bot via bahasa natural"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20hapus%20.ai%20(nova-assistant.js)%2C-success?style=for-the-badge)
+> *Commit: "refactor: hapus .ai (nova-assistant.js), sudah digantikan oleh .novaai"*
 <!--END_SECTION:latest-update-->
 
 ---
