@@ -3,6 +3,7 @@
 
 import { ensureRpg, saveRpg, SKILL_DB } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -82,6 +83,7 @@ async function handler(m, { sock, text, command }) {
       }
       msg += "\n.learnskill <nama> — pelajari skill\n";
       msg += ".talent — lihat talent class";
+      await animGeneric(m, sock, '🌳', 'Opening skill tree');
       return m.reply(msg);
     }
 
@@ -93,6 +95,7 @@ async function handler(m, { sock, text, command }) {
       msg += talent.name + "\n";
       msg += talent.desc + "\n\n";
       msg += "Talent aktif otomatis sesuai job";
+      await animGeneric(m, sock, '🌳', 'Opening skill tree');
       return m.reply(msg);
     }
 
@@ -117,6 +120,7 @@ async function handler(m, { sock, text, command }) {
       rpg.skillPoints = (rpg.skillPoints || 0) - 1;
       saveRpg(m, rpg);
       await m.react("🐣");
+      await animGeneric(m, sock, '🌳', 'Opening skill tree');
       return m.reply("✅ Kamu mempelajari *" + skillDef.name + "*!\nMP Cost: " + skillDef.mpCost + "\nPower: " + skillDef.power + "x\nSP tersisa: " + rpg.skillPoints);
     }
 
@@ -132,6 +136,7 @@ async function handler(m, { sock, text, command }) {
       rpg.skillPoints = (rpg.skillPoints || 0) - 1;
       saveRpg(m, rpg);
       await m.react("🐣");
+      await animGeneric(m, sock, '🌳', 'Opening skill tree');
       return m.reply("Skill *" + firstSkill.name + "* di-upgrade!\nLv." + firstSkill.level + " | Power: " + firstSkill.power + "x\nSP tersisa: " + rpg.skillPoints);
     }
 
@@ -146,6 +151,7 @@ async function handler(m, { sock, text, command }) {
       rpg.skills[0] = { id: newSkillId, name: newSkillDef.name, level: 1, mpCost: newSkillDef.mpCost, power: newSkillDef.power };
       saveRpg(m, rpg);
       await m.react("🐣");
+      await animGeneric(m, sock, '🌳', 'Opening skill tree');
       return m.reply("Skill *" + oldName + "* bermutasi jadi *" + newSkillDef.name + "*!\nMP: " + newSkillDef.mpCost + " | Power: " + newSkillDef.power + "x");
     }
   } catch (e) {

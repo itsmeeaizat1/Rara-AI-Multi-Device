@@ -6,7 +6,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } fr
 import { notifyPremiumAdd } from "../../src/lib/nova-saluran-broadcast.js";
 const pluginConfig = {
     name: 'addpremall',
-    alias: ["addpremall", "addprem"],
+    alias: ["addpremall"],
     category: 'owner',
     description: 'Menambahkan semua member grup ke premium',
     usage: '.addprem all',

@@ -28,11 +28,8 @@ const pluginConfig = {
     "switch", "enable", "disable", "togglefitur", "onofffitur", "onoff",
     // Auto aliases — semua command auto* lama tetap works
     "autoread", "autotyping", "autojoingc", "autoreadsw", "autoreactsw",
-    "autobackup", "autohealth", "autoreengage", "autorefill", "autorenewal",
-    "autoreport", "autoulah", "autobmkg", "autocleancache", "autocuaca",
-    "autoreactsticker", "autoreactvn", "autosholat", "autostatusview",
-    "autotranslatevn", "autoforward", "autosambut", "automod",
-    "autobroadcastchannel", "autobackupdrive"
+    // Auto* aliases dihapus — masing-masing punya plugin sendiri
+    // .switch auto <feature> on/off tetap works via "switch" command
   ],
   category: "owner",
   description: 'Switch on/off semua fitur (channel, group, auto, command)',

@@ -55,9 +55,7 @@ async function handler(m, { sock, config: botConfig }) {
   if (subCmd === "all") {
     const action = args[1]?.toLowerCase();
     if (action !== "on" && action !== "off") {
-      return m.reply(
-        "❌ Gunakan: `" + prefix + "autobroadcastchannel all on` atau `" + prefix + "autobroadcastchannel all off`"
-      );
+      return m.reply(novaBox("Auto Broadcast Channel", ["❌ Gunakan: " + prefix + "autobroadcastchannel all on/off"]));
     }
 
     const enabled = action === "on";
@@ -67,11 +65,7 @@ async function handler(m, { sock, config: botConfig }) {
       count++;
     }
 
-    return m.reply(
-      "✅ Status: *" + (enabled ? "ALL ON" : "ALL OFF") + "*\n" +
-      "Total: " + count + " event\n\n" +
-      "Cek status: `" + prefix + "autobroadcastchannel`"
-    );
+    return m.reply(novaBox("Auto Broadcast Channel", ["✅ Status: " + (enabled ? "ALL ON" : "ALL OFF"), "Total: " + count + " event", "---", "Cek status: " + prefix + "autobroadcastchannel"]));
   }
 
   // Toggle specific event
@@ -87,12 +81,7 @@ async function handler(m, { sock, config: botConfig }) {
 
     setNotifyEnabled(subCmd, newVal);
 
-    return m.reply(
-      "Event: " + NOTIFY_EVENTS[subCmd] + "\n" +
-      "Status: " + (newVal ? "✅ ON" : "❌ OFF") + "\n\n" +
-      (newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan") + "\n" +
-      "Cek semua: `" + prefix + "autobroadcastchannel`"
-    );
+    return m.reply(novaBox("Auto Broadcast Channel", ["Event: " + NOTIFY_EVENTS[subCmd], "Status: " + (newVal ? "✅ ON" : "❌ OFF"), "---", newVal ? "Notifikasi akan dikirim ke saluran" : "Notifikasi dimatikan", "Cek semua: " + prefix + "autobroadcastchannel"]));
   }
 
   // Unknown event
@@ -101,12 +90,7 @@ async function handler(m, { sock, config: botConfig }) {
     availableList += key + " — " + label + "\n";
   }
 
-  return m.reply(
-    "❌ Event: *" + subCmd + "* tidak ada dalam daftar\n\n" +
-    "Event Tersedia:\n" +
-    availableList + "\n" +
-    "Contoh: `" + prefix + "autobroadcastchannel userBanned on`"
-  );
+  return m.reply(novaBox("Auto Broadcast Channel", ["❌ Event: " + subCmd + " tidak ada", "---", "Event tersedia:", availableList.trim(), "---", "Contoh: " + prefix + "autobroadcastchannel userBanned on"]));
 }
 
 export { pluginConfig as config, handler };

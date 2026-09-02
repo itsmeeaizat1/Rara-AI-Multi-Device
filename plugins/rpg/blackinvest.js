@@ -3,6 +3,7 @@
 import { ensureRpg, addGold, removeGold, checkCooldown, setCooldown, formatTime } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { animInvest } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "blackinvest",
@@ -43,6 +44,8 @@ async function handler(m, { sock }) {
 
     removeGold(m, amount, sock);
     setCooldown(m, "lastBlackinvest", BLACK_CD);
+
+    await animInvest(m, sock, amount || 100);
 
     const roll = Math.random();
     if (roll < 0.5) {

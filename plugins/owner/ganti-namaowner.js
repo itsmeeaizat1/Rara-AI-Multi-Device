@@ -7,7 +7,7 @@ import te from "../../src/lib/nova-error.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "ganti-namaowner",
-  alias: ["ganti-namaowner", "ganti"],
+  alias: ["ganti-namaowner"],
   category: "owner",
   description: "Ganti nama owner (utama atau tambahan)",
   usage: ".ganti-namaowner <nomor> <nama baru>",

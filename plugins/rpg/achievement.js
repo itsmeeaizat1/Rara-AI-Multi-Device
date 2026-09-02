@@ -2,6 +2,7 @@
 // achievement.js — Achievement System (unlock badges & rewards)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "achievement",
@@ -70,12 +71,13 @@ async function handler(m, { sock }) {
       let msg = "";
       msg += `${ach.emoji} *${ach.name}*\n`;
       msg += `${ach.desc}\n`;
-      msg += `
-`;
+      msg += `\n`;
       msg += `Reward:\n`;
       if (ach.reward.gold) msg += `💰 +${ach.reward.gold} Gold\n`;
       if (ach.reward.energi) msg += `⚡ +${ach.reward.energi} Energi\n`;
-            return m.reply(msg);
+
+      await animGeneric(m, sock, '🏆', 'Loading achievements');
+      return m.reply(msg);
     }
 
     // LIST all achievements
@@ -94,14 +96,14 @@ async function handler(m, { sock }) {
       msg += `${a.desc}\n`;
     });
 
-    msg += `
-`;
+    msg += `\n`;
     msg += `Unlocked: *${unlocked}/${ACHIEVEMENTS.length}*\n`;
     msg += `Can claim: *${canClaim}*\n`;
-    if (canClaim > 0) msg += `
-`;
+    if (canClaim > 0) msg += `\n`;
     if (canClaim > 0) msg += `${m.prefix}achievement claim <id>\n`;
-        return m.reply(msg);
+
+    await animGeneric(m, sock, '🏆', 'Loading achievements');
+    return m.reply(msg);
   } catch (err) {
     console.error("achievement error:", err);
     await m.react("❌");

@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Bank — Simpan & tarik gold dengan bunga harian
 
+import { animBank } from "../../src/lib/nova-rpg-anim.js";
 import {
   ensureRpg, saveRpg, addGold, removeGold
 } from "../../src/lib/nova-rpg-service.js";
@@ -104,6 +105,7 @@ async function handler(m, { sock }) {
       msg += `💰 Sisa di tangan: *${rpg.gold - amount} gold*\n`;
       msg += `📈 Bunga 5% harian akan otomatis masuk\n`;
       
+      await animBank(m, sock, "nabung");
       return m.reply(msg);
     }
 
@@ -132,6 +134,7 @@ async function handler(m, { sock }) {
       msg += `🏦 Sisa saldo bank: *${bank.deposit} gold*\n`;
       msg += `💰 Gold di tangan: *${rpg.gold + amount} gold*\n`;
       
+      await animBank(m, sock, "tarik");
       return m.reply(msg);
     }
 

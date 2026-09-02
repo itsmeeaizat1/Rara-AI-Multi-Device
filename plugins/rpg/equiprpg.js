@@ -6,6 +6,7 @@ import {
   ITEM_DB, getItemCount
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -48,8 +49,7 @@ async function handler(m, { sock }) {
       const equip = getEquipStats(m);
       let msg = "";
       msg += `👤 ${m.pushName || "Player"}\n`;
-      msg += `
-`;
+      msg += `\n`;
 
       for (const [slot, name] of Object.entries(SLOT_NAMES)) {
         const key = `equip${slot.charAt(0).toUpperCase()}${slot.slice(1)}`;
@@ -62,18 +62,17 @@ async function handler(m, { sock }) {
         }
       }
 
-      msg += `
-`;
+      msg += `\n`;
       msg += `📊 *ᴛᴏᴛᴀʟ ʙᴏɴᴜs*\n`;
       msg += `ATK: *+${equip.atk}*\n`;
       msg += `DEF: *+${equip.def}*\n`;
       msg += `HP: *+${equip.hp}*\n`;
       msg += `SPD: *+${equip.spd}*\n`;
-      msg += `
-`;
+      msg += `\n`;
       msg += `📌 .equiprpg <item> untuk equip\n`;
       msg += `📌 .unequiprpg <slot> untuk unequip\n`;
       
+      await animGeneric(m, sock, '🛡️', 'Equipping item');
       return m.reply(msg);
     }
 
@@ -99,12 +98,10 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         let msg = "";
         msg += `✅ Berhasil equip!\n`;
-        msg += `
-`;
+        msg += `\n`;
         msg += `📦 Item: *${itemInfo.name}*\n`;
         msg += `📂 Slot: *${SLOT_NAMES[itemInfo.type] || itemInfo.type}*\n`;
-        msg += `
-`;
+        msg += `\n`;
         msg += `📊 *sᴛᴀᴛ ʙᴏɴᴜs*\n`;
         if (itemInfo.atk) msg += `⚔️ ATK: *+${itemInfo.atk}*\n`;
         if (itemInfo.def) msg += `🛡️ DEF: *+${itemInfo.def}*\n`;
@@ -114,6 +111,7 @@ async function handler(m, { sock }) {
         if (itemInfo.critDmg) msg += `💥 Crit DMG: *+${itemInfo.critDmg}%*\n`;
         if (itemInfo.evasion) msg += `💨 Evasion: *+${itemInfo.evasion}%*\n`;
         
+        await animGeneric(m, sock, '🛡️', 'Equipping item');
         return m.reply(msg);
       } else {
         return m.reply(claraWrap("equiprpg", result.reason || "Gagal equip item.", "warn"));
@@ -136,6 +134,7 @@ async function handler(m, { sock }) {
         msg += `📂 Slot: *${SLOT_NAMES[slot]}*\n`;
         msg += `📦 Item dikembalikan ke inventory\n`;
         
+        await animGeneric(m, sock, '🛡️', 'Equipping item');
         return m.reply(msg);
       } else {
         return m.reply(claraWrap("unequiprpg", result.reason || "Slot kosong atau gagal unequip.", "warn"));

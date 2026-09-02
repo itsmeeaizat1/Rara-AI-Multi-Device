@@ -1,3 +1,4 @@
+import { animShop } from "../../src/lib/nova-rpg-anim.js";
 import { ensureRpg, saveRpg, removeGold, addItem } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
@@ -24,6 +25,7 @@ async function handler(m, { sock }) {
     if (text === "essencexp") { rpg.exp += 500; addItem(m, text, -1); }
     saveRpg(m, rpg);
     await m.react("🐣");
+    await animShop(m, sock, "buy");
     return m.reply(claraWrap("buyrpg", `✅ Kamu membeli *${text}* seharga ${SHOP[text]} gold.`, "success"));
   } catch (e) { return m.reply(claraWrap("buyrpg", "Error.", "error")); }
 }

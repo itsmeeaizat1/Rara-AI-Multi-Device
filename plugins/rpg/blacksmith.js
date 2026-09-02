@@ -1,6 +1,6 @@
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { animCraft } from "../../src/lib/nova-rpg-anim.js";
+import { animEnchant } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "blacksmith",
@@ -47,17 +47,13 @@ async function handler(m, { sock }) {
       msg += `📊 *Level:* ${currentLevel} / ${maxLevel}\n`;
       msg += `💥 *Total ATK:* ${currentAtk} (+${currentLevel * 5})\n`;
       msg += `💰 *Biaya Upgrade:* ${upgradeCost} Gold\n`;
-      msg += `🎲 *Tingkat Keberhasilan:* 80%
-
-`;
+      msg += `🎲 *Tingkat Keberhasilan:* 80%\n\n`;
       msg += `*Catatan Upgrade:*\n`;
       msg += `• Setiap level menambah +5 ATK\n`;
-      msg += `• Gagal tempa: senjata tidak hilang/turun level
-
-`;
+      msg += `• Gagal tempa: senjata tidak hilang/turun level\n\n`;
       msg += `Perintah Upgrade:\n`;
       msg += `${m.prefix}blacksmith upgrade <nama_senjata>\n`;
-            await m.react('🐣');
+      await m.react('🐣');
       return m.reply(msg);
     }
 
@@ -94,6 +90,8 @@ async function handler(m, { sock }) {
       if (inputName && weapon.level === 0) {
         weapon.name = inputName;
       }
+
+      await animEnchant(m, sock, 'weapon');
 
       // 80% success, 20% fail
       const roll = Math.random() * 100;

@@ -4,6 +4,7 @@
 import { ensureRpg, saveRpg, getRpgData } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "mailbox",
@@ -73,6 +74,8 @@ async function handler(m, { sock, text, command }) {
       // .mailbox — lihat kotak surat
       rpg.mailbox = rpg.mailbox || [];
       if (rpg.mailbox.length === 0) return m.reply(claraWrap("mailbox", "Kotak suratmu kosong.", "info"));
+
+      await animGeneric(m, sock, '📬', 'Opening mailbox');
 
       let msg = "";
       for (let i = 0; i < rpg.mailbox.length; i++) {

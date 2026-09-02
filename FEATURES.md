@@ -1287,3 +1287,9 @@ RPG Mega Expansion (57 → 85, full Alya parity):
 - .laheludl - download - Download video dari Lahelu via IkyyX
 - .tiktokv4 - download - Download video TikTok V4 via IkyyXD
 - .soundclouddl - download - Download lagu dari SoundCloud via IkyyXD (apikey)D
+# Audit Log
+- Owner: 41 duplikat alias diperbaiki (ganti-*, switch.js, addprem, reengage)
+- Owner: 12 plugin dikonversi ke format novaBox (autoforward, cheatrpg, crashguard, servermonitor, smartdigest, automod, autobmkg, autobroadcastchannel, bcgc, bcpc, broadcast)
+- Owner: addlimitall name fixed
+- RPG: 15+ fungsi animasi baru ditambahkan ke nova-rpg-anim.js
+- RPG: 72/158 plugin kini memiliki animasi

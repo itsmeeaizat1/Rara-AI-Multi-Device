@@ -1,5 +1,6 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // dailyreward.js — Daily Login Reward (streak system)
+import { animDaily } from "../../src/lib/nova-rpg-anim.js";
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
 
@@ -79,7 +80,8 @@ async function handler(m, { sock }) {
     msg += `💰 ${nextReward.gold} Gold | ⚡ ${nextReward.energi} Energi`;
     if (nextReward.item) msg += ` | 🎁 ${nextReward.item}`;
     msg += `\n`;
-    
+
+    await animDaily(m, sock);
     return m.reply(msg);
   } catch (err) {
     console.error("dailyreward error:", err);

@@ -2,7 +2,7 @@
 // legendaryquest.js — Legendary Quest chain (7-part epic quest)
 import { getDatabase } from "../../src/lib/nova-database.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
-import { rpgSleep } from "../../src/lib/nova-rpg-anim.js";
+import { rpgSleep, animQuest } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "legendaryquest",
@@ -45,8 +45,7 @@ async function handler(m, { sock }) {
       // Stage 7 = Final Boss (auto battle)
       if (stage.id === 7 && !progress.claimed.includes(7)) {
         await m.react("🕒");
-    await m.reply("🌟 Memulai quest legendaris...");
-    await rpgSleep(900);
+        await animQuest(m, sock, 'legendary quest');
         await m.reply("🐉 Final Boss muncul... Memulai pertempuran...");
         await new Promise(r => setTimeout(r, 2000));
 
@@ -67,8 +66,7 @@ async function handler(m, { sock }) {
         await m.react("🐣");
         let msg = "";
         msg += `🏆 🐉 Final Boss dikalahkan!\n`;
-        msg += `
-`;
+        msg += `\n`;
         msg += `Title: *LEGENDARY HERO*\n`;
         msg += `Reward:\n`;
         if (stage.reward.gold) msg += `💰 +${stage.reward.gold} Gold\n`;
@@ -93,16 +91,16 @@ async function handler(m, { sock }) {
       progress.currentStage = stageId + 1;
       await db.setPlayerData?.(m.sender, "legendaryquest", progress);
 
+      await animQuest(m, sock, 'legendary quest');
+
       await m.react("🐣");
       let msg = "";
       msg += `${stage.emoji} Stage ${stage.id}: *${stage.name}*\n`;
       msg += `✅ Berhasil diklaim!\n`;
-      msg += `
-`;
+      msg += `\n`;
       if (stage.reward.gold) msg += `💰 +${stage.reward.gold} Gold\n`;
       if (stage.reward.energi) msg += `⚡ +${stage.reward.energi} Energi\n`;
-      msg += `
-`;
+      msg += `\n`;
       const next = STAGES.find(s => s.id === stageId + 1);
       if (next) {
         msg += `Next: ${next.emoji} *${next.name}*\n`;
@@ -123,8 +121,7 @@ async function handler(m, { sock }) {
     const currentStage = STAGES.find(s => s.id === progress.currentStage);
     let msg = "";
     msg += `Progress: *${progress.currentStage - 1}/7* stages\n`;
-    msg += `
-`;
+    msg += `\n`;
 
     STAGES.forEach(s => {
       const isDone = progress.claimed?.includes(s.id);
@@ -142,8 +139,7 @@ async function handler(m, { sock }) {
       }
     });
 
-    msg += `
-`;
+    msg += `\n`;
     msg += `Reward akhir: *50,000g + 200 energi + Title*\n`;
         return m.reply(msg);
   } catch (err) {

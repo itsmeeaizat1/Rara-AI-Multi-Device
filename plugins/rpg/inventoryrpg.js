@@ -5,6 +5,7 @@ import {
   ensureRpg, getInventory, ITEM_DB
 } from "../../src/lib/nova-rpg-service.js";
 import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -54,8 +55,7 @@ async function handler(m, { sock }) {
     let msg = "";
     msg += `👤 ${m.pushName || "Player"}\n`;
     msg += `📦 Total: *${items.length}* jenis item\n`;
-    msg += `
-`;
+    msg += `\n`;
 
     let materials = [];
     let consumables = [];
@@ -78,32 +78,28 @@ async function handler(m, { sock }) {
     if (materials.length > 0) {
       msg += `📦 *ᴍᴀᴛᴇʀɪᴀʟ*\n`;
       for (const l of materials) msg += `${l}\n`;
-      msg += `
-`;
+      msg += `\n`;
     }
 
     if (consumables.length > 0) {
       msg += `🧪 *ᴄᴏɴsᴜᴍᴀʙʟᴇ*\n`;
       for (const l of consumables) msg += `${l}\n`;
-      msg += `
-`;
+      msg += `\n`;
     }
 
     if (equipment.length > 0) {
       msg += `⚔️ *ᴇϙᴜɪᴘᴍᴇɴᴛ*\n`;
       for (const l of equipment) msg += `${l}\n`;
-      msg += `
-`;
+      msg += `\n`;
     }
 
     if (others.length > 0) {
       msg += `📌 *ʟᴀɪɴɴʏᴀ*\n`;
       for (const l of others) msg += `${l}\n`;
-      msg += `
-`;
+      msg += `\n`;
     }
 
-    
+    await animGeneric(m, sock, '🎒', 'Opening inventory');
     return m.reply(msg);
   } catch (err) {
     console.error("inventory rpg error:", err);

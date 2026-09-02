@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // RPG Berkebon — Farm crops for gold and materials
 
+import { animFarm } from "../../src/lib/nova-rpg-anim.js";
 import {
   ensureRpg, saveRpg, addExp, addGold, useEnergy,
   addItem, ITEM_DB,
@@ -132,6 +133,7 @@ async function handler(m, { sock }) {
       msg += `Ketik .berkebon cek untuk cek progress\n`;
       msg += `Ketik .berkebon panen saat sudah siap\n`;
       
+      await animFarm(m, sock, "Menanam");
       return m.reply(msg);
     }
 

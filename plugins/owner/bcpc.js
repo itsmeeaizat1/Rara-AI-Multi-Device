@@ -106,7 +106,7 @@ async function handler(m, { sock }) {
     }
 
     if (privateJids.size === 0) {
-      return m.reply("❌ Tidak ada kontak ditemukan\nPastikan bot sudah pernah menerima pesan dari kontak tersebut");
+      return m.reply(novaBox("Broadcast PC", ["❌ Tidak ada kontak ditemukan", "Pastikan bot sudah pernah menerima pesan dari kontak tersebut"]));
     }
 
     const filtered = [...privateJids];
