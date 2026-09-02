@@ -73,7 +73,7 @@ async function handler(m, { sock }) {
           }).catch((e) => { console.error('[addpremall.js]:', e.message); });
         }
         
-        await m.reply(`💎 *Add Premium All*\n\n` +
+        await m.reply(`*Add Premium All*\n\n` +
             `👥 Total Member: \`${participants.length}\`\n` +
             `✅ Ditambahkan: \`${addedCount}\`\n` +
             `⏭️ sUdah Premium: \`${alreadyPremCount}\`\n` +

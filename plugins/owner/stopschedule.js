@@ -58,7 +58,7 @@ async function handler(m, { sock, args }) {
             stopSholatScheduler();
             db.setting('autoSholat', false);
             
-            await m.reply(`🛑 *sCheduler Dihentikan*
+            await m.reply(`*sCheduler Dihentikan*
 
 │ Scheduler: *Sholat Scheduler*
 │ Status: ❌ Dihentikan

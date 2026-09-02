@@ -156,7 +156,7 @@ async function handler(m, { sock }) {
     if (subCommand === 'metode' || subCommand === 'method' || subCommand === 'mode') {
         const method = args[1]?.toLowerCase()
         if (!method || !['kick', 'delete'].includes(method)) {
-            return m.reply(`❌ Pilih metode: *ᴋɪᴄᴋ* atau *ᴅᴇʟᴇᴛᴇ*\n💡 *Contoh:* \`.antitoxic metode kick\``)
+            return m.reply(`❌ Pilih metode: *Kick* atau *Delete*\n💡 *Contoh:* \`.antitoxic metode kick\``)
         }
         db.setGroup(m.chat, { toxicMethod: method })
         await m.reply(claraWrap("Antitoxic", `✅ Metode diubah ke *${method}*`))

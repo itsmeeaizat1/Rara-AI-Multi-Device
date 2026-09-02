@@ -134,7 +134,7 @@ function handler(m, { sock }) {
         pteroConfig.sellers.push(targetUser)
         
         if (saveConfig()) {
-            return m.reply(`✅ *ꜱᴇʟʟᴇʀ ᴅɪᴛᴀᴍʙᴀʜᴋᴀɴ*\n\n` +
+            return m.reply(`✅ *Seller Ditambahkan*\n\n` +
                 `📱 Nomor: \`${targetUser}\`\n` +
                 `🏷️ sTatus: \`Seller/Reseller\`\n` +
                 `🔓 Akses: \`Create Server (1gb-10gb v1-v3)\`\n` +
@@ -154,7 +154,7 @@ function handler(m, { sock }) {
         pteroConfig.sellers = pteroConfig.sellers.filter(s => s !== targetUser)
         
         if (saveConfig()) {
-            return m.reply(`✅ *ꜱᴇʟʟᴇʀ ᴅɪʜᴀᴘᴜꜱ*\n\n` +
+            return m.reply(`✅ *Seller Dihapus*\n\n` +
                 `Nomor: \`${targetUser}\`\n` +
                 `Total: *${pteroConfig.sellers.length}* seller`)
         } else {

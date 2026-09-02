@@ -54,7 +54,7 @@ async function handler(m, { sock }) {
         const repoInfo = await fetch(`https://api.github.com/repos/${username}/${repo}`)
         
         if (!repoInfo.ok) {
-            return m.reply(`❌ *ʀᴇᴘᴏ ᴛɪᴅᴀᴋ ᴅɪᴛᴇᴍᴜᴋᴀɴ*\n\n\`${username}/${repo}\` tidak ada`)
+            return m.reply(`❌ *Repo Tidak Ditemukan*\n\n\`${username}/${repo}\` tidak ada`)
         }
         
         const repoData = await repoInfo.json()
@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
         
         const checkRes = await fetch(zipUrl, { method: 'HEAD' })
         if (!checkRes.ok) {
-            return m.reply(`❌ *ʙʀᴀɴᴄʜ ᴛɪᴅᴀᴋ ᴀᴅᴀ*\n\nBranch \`${branch}\` tidak ditemukan\nDefault: \`${defaultBranch}\``)
+            return m.reply(`❌ *Branch Tidak Ada*\n\nBranch \`${branch}\` tidak ditemukan\nDefault: \`${defaultBranch}\``)
         }
         
         await sock.sendMedia(m.chat, zipUrl, null, m, {

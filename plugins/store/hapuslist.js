@@ -24,7 +24,7 @@ async function handler(m, { sock }) {
     const lists = db.setting('storeLists') || []
 
     if (lists.length === 0) {
-        return m.reply(`📭 *ʙᴇʟᴜᴍ ᴀᴅᴀ ɪɴꜰᴏʀᴍᴀꜱɪ.*\n\nTambahkan informasi terlebih dahulu: \`${m.prefix}addlist\` ➕`)
+        return m.reply(`*ʙᴇʟᴜᴍ ᴀᴅᴀ ɪɴꜰᴏʀᴍᴀꜱɪ.*\n\nTambahkan informasi terlebih dahulu: \`${m.prefix}addlist\` ➕`)
     }
 
     const idx = parseInt(m.text?.trim()) - 1

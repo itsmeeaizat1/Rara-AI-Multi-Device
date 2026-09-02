@@ -44,7 +44,7 @@ async function handler(m, { sock }) {
 
     const emblem = clan.emblem || '🏰'
 
-    await m.reply(`${emblem} *ᴋɪᴄᴋᴇᴅ*\n\n` +
+    await m.reply(`${emblem} *Kicked*\n\n` +
         `@${target.split('@')[0]} dikeluarkan dari *${clan.name}*\n` +
         `Sisa members: ${clan.members.length}/50`)
 }

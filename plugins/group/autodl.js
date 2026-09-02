@@ -50,7 +50,7 @@ function handler(m, { sock }) {
         return m.reply(claraWrap("Autodl", `❌ *ᴀᴜᴛᴏ ᴅᴏᴡɴʟᴏᴀᴅ ɴᴏɴᴀᴋᴛɪꜰ*`))
     }
     
-    return m.reply(`❌ *ᴀʀɢᴜᴍᴇɴ ᴛɪᴅᴀᴋ ᴠᴀʟɪᴅ*\n\nGunakan: \`on\` atau \`off\``)
+    return m.reply(`❌ *Argumen Tidak Valid*\n\nGunakan: \`on\` atau \`off\``)
 }
 
 export { pluginConfig as config, handler }

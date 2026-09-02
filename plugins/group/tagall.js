@@ -50,7 +50,7 @@ async function handler(m, { sock }) {
       .join("\n")
       .trim();
 
-    await m.reply(`*ᴘᴇꜱᴀɴ:* ${text}\n\n` +
+    await m.reply(`*Pesan:* ${text}\n\n` +
         `\`\`\`━━━ ${targetParticipants.length} MEMBER TOTAL ━━━\`\`\`\n` +
         memberList);
   } catch (error) {

@@ -54,7 +54,7 @@ function handler(m, { sock }) {
             return m.reply(claraWrap("Notifmakan", `❌ *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘᴇɴɢɪɴɢᴀᴛ ᴍᴀᴋᴀɴ* yang aktif di chat ini`))
         }
         toggleNotif('makan', sender, chatJid, false)
-        return m.reply(`✅ *ᴘᴇɴɢɪɴɢᴀᴛ ᴍᴀᴋᴀɴ ᴅɪɴᴏɴᴀᴋᴛɪꜰᴋᴀɴ* 🔕\n\nKetik \`${m.prefix}notifmakan on\` untuk mengaktifkan kembali`)
+        return m.reply(`✅ *Pengingat Makan Dinonaktifkan* 🔕\n\nKetik \`${m.prefix}notifmakan on\` untuk mengaktifkan kembali`)
     }
 
     if (sub === 'on') {

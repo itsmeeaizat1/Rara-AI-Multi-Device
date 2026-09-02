@@ -81,7 +81,7 @@ async function handler(m, { sock }) {
     mutedMembers.push(targetJid)
     db.setGroup(m.chat, { ...groupData, mutedMembers })
 
-    await m.reply(`🔇 *ᴍᴇᴍʙᴇʀ ᴅɪᴍᴜᴛᴇ*\n\n` +
+    await m.reply(`*Member Dimute*\n\n` +
         `👤 Member: @${targetNumber}\n` +
         `🔇 sTatus: \`Muted\`\n` +
         `📊 Total Mute: \`${mutedMembers.length}\` Member\n` +

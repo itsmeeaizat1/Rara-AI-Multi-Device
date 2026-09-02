@@ -29,14 +29,14 @@ async function handler(m, { sock }) {
     const products = db.setting('storeProducts') || []
 
     if (products.length === 0) {
-        return m.reply(`📭 *ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`)
+        return m.reply(`*ʙᴇʟᴜᴍ ᴀᴅᴀ ᴘʀᴏᴅᴜᴋ.*\n\nTambahkan produk terlebih dahulu: \`${m.prefix}addproduk\` ➕`)
     }
 
     const text = m.text?.trim() || ''
     const firstPipe = text.indexOf('|')
 
     if (firstPipe === -1) {
-        return m.reply(`✏️ *ᴇᴅɪᴛ ꜱᴛᴏᴋ*\n\n` +
+        return m.reply(`✏️ *Edit Stok*\n\n` +
             `📋 Format: \`${m.prefix}editstok <nomor_produk> <nomor_item>|<detail_baru>\`\n\n` +
             `📝 *ᴄᴏɴᴛᴏʜ:*\n` +
             `\`${m.prefix}editstok 1 3|Email: baru@mail.com;;Password: newpass\`\n\n` +
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
     const product = products[productNo]
 
     if (product.type === 'fisik') {
-        return m.reply(`📦 *ᴘʀᴏᴅᴜᴋ ꜰɪꜱɪᴋ*\n\n` +
+        return m.reply(`*Produk Fisik*\n\n` +
             `Produk fisik tidak memiliki data per-item 🔑\n` +
             `Untuk mengubah stok, gunakan:\n` +
             `\`${m.prefix}editproduk ${productNo + 1} stok <jumlah>\``)
@@ -80,7 +80,7 @@ async function handler(m, { sock }) {
     stockItems[itemNo].updatedAt = new Date().toISOString()
 
     db.setting('storeProducts', products)
-    return m.reply(`✅ *ꜱᴛᴏᴋ ᴅɪᴘᴇʀʙᴀʀᴜɪ*\n\n` +
+    return m.reply(`✅ *Stok Diperbarui*\n\n` +
         `🏷️ Produk: *${product.name}*\n` +
         `🔑 Item #${itemNo + 1}\n\n` +
         `❌ Sebelum:\n\`${oldDetail.replace(/\n/g, ' ').substring(0, 50)}\`\n\n` +
