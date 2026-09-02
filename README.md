@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20.play%20langsung%20download%20audio%2C%20.pl-success?style=for-the-badge)
-> *Commit: "feat: .play langsung download audio, .playvideo langsung download video — dual search (IkyyXD + yt-search fallback), dual download (ytdl.js + IkyyXD fallback)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20maker%20plugins%20%E2%80%94%20brat.js%20ke%20brat-can-success?style=for-the-badge)
+> *Commit: "fix: maker plugins — brat.js ke brat-canvas lokal (Yupra API mati), textpro.js ke ephoto360 scraping (btch-rest-api mati), bratvideo.js ke brat-canvas/video (anomali API mati)"*
 <!--END_SECTION:latest-update-->
 
 ---
