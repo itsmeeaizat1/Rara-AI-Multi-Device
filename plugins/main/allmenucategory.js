@@ -142,6 +142,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
 
       const visibleCats = sortedCats.filter((cat) => {
         if (cat === "owner" && !m.isOwner) return false;
+        if (cat === "hidden") return false;
         if (excludeCategories.includes(cat.toLowerCase())) return false;
         const total = (commandsByCategory[cat] || []).length + (casesByCategory[cat] || []).length;
         return total > 0;

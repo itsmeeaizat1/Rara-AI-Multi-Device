@@ -6,7 +6,7 @@ import { getDatabase } from '../../src/lib/nova-database.js'
 const pluginConfig = {
     name: 'hapuslist',
     alias: ["hapuslist"],
-    category: 'store',
+    category: 'owner',
     description: '🗑️ Hapus informasi toko',
     usage: '.hapuslist <nomor>',
     example: '.hapuslist 1',

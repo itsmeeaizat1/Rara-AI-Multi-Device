@@ -5,7 +5,7 @@ import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../s
 const pluginConfig = {
   name: "addstok",
   alias: ["addstok"],
-  category: "store",
+  category: 'owner',
   description: "📦 Tambah stok item ke produk (hanya di private chat)",
   usage:
     ".addstok <nomor_produk>|<detail> atau .addstok <nomor> <jumlah> (fisik)",

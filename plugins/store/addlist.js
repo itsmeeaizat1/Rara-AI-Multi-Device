@@ -8,7 +8,7 @@ import FormData from 'form-data'
 const pluginConfig = {
     name: 'addlist',
     alias: ["addlist"],
-    category: 'store',
+    category: 'owner',
     description: '➕ Tambah informasi toko baru (hanya di private chat)',
     usage: '.addlist <nama>|<isi>',
     example: '.addlist Syarat & Ketentuan|1. Pembelian tidak bisa dibatalkan;;2. Garansi 7 hari',

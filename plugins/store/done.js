@@ -6,7 +6,7 @@ import { claraWrap } from "../../src/lib/nova-menu-style.js";
 const pluginConfig = {
   name: "done",
   alias: ["done"],
-  category: "store",
+  category: 'owner',
   description:
     "✅ Konfirmasi transaksi selesai dan kirim data ke pembeli (reply pesan pembeli)",
   usage: ".done <nomor_trx> (reply pesan pembeli)",

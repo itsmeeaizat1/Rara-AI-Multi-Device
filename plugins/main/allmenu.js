@@ -211,6 +211,7 @@ async function handler(m, { sock, config: botConfig, db, uptime }) {
     const menuCats = [];
     for (const category of sortedCategories) {
       if (category === "owner" && !m.isOwner) continue;
+      if (category === "hidden") continue;
       if (excludeCategories.includes(category.toLowerCase())) continue;
       const pluginCmds = commandsByCategory[category] || [];
       const caseCmds = casesByCategory[category] || [];
