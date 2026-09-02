@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20.novaai%20help%20dinamis%20dari%20TOOLS%20%E2%80%94%20-success?style=for-the-badge)
-> *Commit: "feat: .novaai help dinamis dari TOOLS — 23 perintah kategori (Grup, Member, Link, Approval, Tag, Lainnya) dengan smallcaps"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20weather%20masuk%20ke%20info%20section%20(buka-success?style=for-the-badge)
+> *Commit: "fix: weather masuk ke info section (bukan blok terpisah di akhir) + info section lengkap (User, Bot, Database, Server, Waktu & Tanggal, Cuaca) di menu, allmenu, allmenucategory"*
 <!--END_SECTION:latest-update-->
 
 ---
