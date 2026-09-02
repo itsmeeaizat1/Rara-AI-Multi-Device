@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20toggle%20.autoweatherrealtime%20schedu-success?style=for-the-badge)
-> *Commit: "feat: toggle .autoweatherrealtime scheduler on/off terintegrasi ke .switch (alias: cuacascheduler/weatherscheduler)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20hapus%20info%20section%20dari%20command%20not-success?style=for-the-badge)
+> *Commit: "fix: hapus info section dari command not found reply — cuma suggestion doang, info section hanya untuk menu/allmenu"*
 <!--END_SECTION:latest-update-->
 
 ---
