@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20info%20section%20lengkap%20di%20play%2Fplayvi-success?style=for-the-badge)
-> *Commit: "fix: info section lengkap di play/playvideo, video AV1 gak bisa play, store menu salah"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20standardisasi%20info%20section%20(mediaC-success?style=for-the-badge)
+> *Commit: "feat: standardisasi info section (mediaCaption) untuk semua plugin downloader"*
 <!--END_SECTION:latest-update-->
 
 ---
