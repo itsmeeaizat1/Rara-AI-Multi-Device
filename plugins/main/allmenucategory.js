@@ -248,13 +248,30 @@ ${weatherBlock ? weatherBlock + "\n" : ""}╭─「 ✦ ${toSC("Daftar Kategori"
     const catName = CATEGORY_NAMES[matchedCat] || matchedCat.charAt(0).toUpperCase() + matchedCat.slice(1);
     const totalFitur = allCommands.length;
 
-    // Weather sudah ada di info section atas, tidak perlu duplikat
-    const weatherBlock2 = "";
+    // ── Info section lengkap (sama kayak menu/allmenu) ──
+    const { info: menuInfo, weatherStr: weatherBlock } = await buildMenuInfo(m, { db, config: botConfig, uptime: process.uptime() * 1000 });
+
+    let infoText = "";
+    let maxLabel = 6;
+    for (const item of menuInfo) {
+      if (item && item.label) {
+        const ll = toSC(item.label).length;
+        if (ll > maxLabel) maxLabel = ll;
+      }
+    }
+    for (const item of menuInfo) {
+      if (typeof item === "string") {
+        infoText += `│ ${toSC(item)}\n`;
+      } else if (item && item.label !== undefined) {
+        infoText += `│ • ${toSC(item.label).padEnd(maxLabel)} : ${item.value}\n`;
+      }
+    }
 
     // Compact 2-column layout — beda dari allmenu yang dump semua kategori
     const emoji = CATEGORY_EMOJI?.[matchedCat] || "📋";
-    let txt = `${weatherBlock2}
-╭─「 ✦ ${emoji} *${toSC(catName)}* ✦ 」
+    let txt = `╭─「 ✦ ${toSC("Info")} ✦ 」
+${infoText}╰────  •  ────
+${weatherBlock ? weatherBlock + "\n" : ""}╭─「 ✦ ${emoji} *${toSC(catName)}* ✦ 」
 │ *${toSC("Total")}:* ${totalFitur} ${toSC("fitur")}
 │
 `;
