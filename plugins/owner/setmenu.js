@@ -9,8 +9,8 @@ const pluginConfig = {
   alias: ["setmenu"],
   category: "owner",
   description: "Mengatur variant tampilan menu",
-  usage: ".setmenu <v1-v16>",
-  example: ".setmenu v8",
+  usage: ".setmenu <v1-v6>",
+  example: ".setmenu v1",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -23,15 +23,15 @@ const pluginConfig = {
 const VARIANTS = {
   v1: {
     id: 1,
-    name: "VIDEO GIF",
-    desc: "Header video/GIF animasi + tombol quick_reply + banner greeting",
-    emoji: "🎬",
+    name: "NATIVEFLOW CARD",
+    desc: "Thumbnail header + nativeFlow buttons + box-drawing text (desain aktif)",
+    emoji: "✨",
   },
   v2: {
     id: 2,
     name: "PREMIUM",
     desc: "",
-    emoji: "✅",
+    emoji: "🖼️",
   },
   v3: {
     id: 3,
@@ -43,7 +43,7 @@ const VARIANTS = {
     id: 4,
     name: "LV",
     desc: "",
-    emoji: "✅",
+    emoji: "💼",
   },
   v5: {
     id: 5,
@@ -76,7 +76,7 @@ async function handler(m, { sock, db }) {
     return;
   }
 
-  const current = db.setting("menuVariant") || config.ui?.menuVariant || 3;
+  const current = db.setting("menuVariant") || config.ui?.menuVariant || 1;
 
   const rows = [];
   for (const [key, val] of Object.entries(VARIANTS)) {

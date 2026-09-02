@@ -814,14 +814,14 @@ async function serialize(sock, msg, store = {}) {
       }
     } catch (e) { }
 
-    let replyVariant = 7;
+    let replyVariant = 1;
     try {
       replyVariant =
         db?.setting?.("replyVariant") ||
         db?.db?.data?.settings?.replyVariant ||
-        7;
+        1;
     } catch (e) {
-      replyVariant = 7;
+      replyVariant = 1;
     }
 
     let contextInfo = {
@@ -833,7 +833,48 @@ async function serialize(sock, msg, store = {}) {
 
     let quotedMsg = options.quoted !== false ? msg : undefined;
 
-    if (replyVariant === 2) {
+    // V1 — FAKE LOCATION (interactiveMessage + externalAdReply + weather)
+    // Mantan V7, sekarang jadi V1 (default). Plain text fallback dihapus.
+    if (replyVariant === 1) {
+      const thumbnailBuf = srtImage || getAssetBuffer("serialize-thumb");
+      const weatherAddr = await getWeatherAddress();
+
+      const msg = generateWAMessageFromContent(m.chat, {
+        viewOnceMessage: {
+          message: {
+            messageContextInfo: {},
+            interactiveMessage: {
+              header: {
+                hasMediaAttachment: false,
+              },
+              body: {
+                text: text,
+              },
+              contextInfo: {
+                mentionedJid: options?.mentions || [m?.sender] || [],
+                isForwarded: false,
+                externalAdReply: {
+                  title: config.bot?.name || "Nova AI Whatsapp Bot",
+                  body: weatherAddr || config.bot?.version || "",
+                  thumbnail: await sharp(thumbnailBuf).resize(640, 360).toBuffer(),
+                  previewType: "PHOTO",
+                  showAdAttribution: false,
+                  renderLargerThumbnail: true,
+                },
+                ...options.contextInfo
+              },
+              nativeFlowMessage: {
+                buttons: []
+              }
+            }
+          }
+        }
+      }, { quoted: m, userJid: sock.user.jid });
+
+      return sock.relayMessage(m.chat, msg.message, {
+        messageId: msg.key.id,
+      });
+    } else if (replyVariant === 2) {
       let troliThumbnail = null;
       quotedMsg = {
         key: {
@@ -965,47 +1006,9 @@ async function serialize(sock, msg, store = {}) {
           quoted: m,
         },
       );
-    } else if (replyVariant === 7) {
-      const thumbnailBuf = srtImage || getAssetBuffer("serialize-thumb");
-      const weatherAddr = await getWeatherAddress();
-
-      const msg = generateWAMessageFromContent(m.chat, {
-        viewOnceMessage: {
-          message: {
-            messageContextInfo: {},
-            interactiveMessage: {
-              header: {
-                hasMediaAttachment: false,
-              },
-              body: {
-                text: text,
-              },
-              contextInfo: {
-                mentionedJid: options?.mentions || [m?.sender] || [],
-                isForwarded: false,
-                externalAdReply: {
-                  title: config.bot?.name || "Nova AI Whatsapp Bot",
-                  body: weatherAddr || config.bot?.version || "",
-                  thumbnail: await sharp(thumbnailBuf).resize(640, 360).toBuffer(),
-                  previewType: "PHOTO",
-                  showAdAttribution: false,
-                  renderLargerThumbnail: true,
-                },
-                ...options.contextInfo
-              },
-              nativeFlowMessage: {
-                buttons: []
-              }
-            }
-          }
-        }
-      }, { quoted: m, userJid: sock.user.jid });
-
-      return sock.relayMessage(m.chat, msg.message, {
-        messageId: msg.key.id,
-      });
     }
 
+    // Fallback: plain text (untuk variant yang tidak dikenal)
     return sock.sendMessage(
       m.chat,
       {
@@ -1017,6 +1020,7 @@ async function serialize(sock, msg, store = {}) {
         quoted: quotedMsg,
       },
     );
+
   };
 
   /**

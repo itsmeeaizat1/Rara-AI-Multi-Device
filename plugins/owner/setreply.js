@@ -9,8 +9,8 @@ const pluginConfig = {
   alias: ["setreply"],
   category: "owner",
   description: "Mengatur variant tampilan reply",
-  usage: ".setreply <v1-v11>",
-  example: ".setreply v5",
+  usage: ".setreply <v1-v6>",
+  example: ".setreply v1",
   isOwner: true,
   isPremium: false,
   isGroup: false,
@@ -23,26 +23,26 @@ const pluginConfig = {
 const VARIANTS = {
   v1: {
     id: 1,
-    name: "BASIC",
-    desc: "",
-    emoji: "✨",
+    name: "FAKE LOCATION",
+    desc: "InteractiveMessage + externalAdReply (thumbnail + weather) — desain aktif",
+    emoji: "📍",
   },
   v2: {
     id: 2,
     name: "PREMIUM",
-    desc: "",
+    desc: "Document + fake contact quote + thumbnail",
     emoji: "🖼️",
   },
   v3: {
     id: 3,
     name: "TITANIUM",
-    desc: "",
+    desc: "Video GIF + caption",
     emoji: "📨",
   },
   v4: {
     id: 4,
     name: "LV",
-    desc: "",
+    desc: "Link preview dengan thumbnail",
     emoji: "💼",
   },
   v5: {
@@ -54,14 +54,8 @@ const VARIANTS = {
   v6: {
     id: 6,
     name: "SIMPLE DOCUMENT",
-    desc: "Seperti V2 tapi tanpa fake contact quote (quoted ori)",
+    desc: "Document + thumbnail tanpa fake contact quote",
     emoji: "📄",
-  },
-  v7: {
-    id: 7,
-    name: "FAKE LOCATION",
-    desc: "Teks dengan fake quoted location message",
-    emoji: "📍",
   },
 };
 
@@ -71,7 +65,7 @@ async function handler(m, { sock, db }) {
   if (variant) {
     const selected = VARIANTS[variant];
     if (!selected) {
-      m.reply(claraWrap("Setreply", `❌ *VARIANT TIDAK VALID*\n\nGunakan: *v1* s/d *v7*`));
+      m.reply(claraWrap("Setreply", `❌ *VARIANT TIDAK VALID*\n\nGunakan: *v1* s/d *v6*`));
       return;
     }
 
@@ -84,7 +78,7 @@ async function handler(m, { sock, db }) {
     return;
   }
 
-  const current = db.setting("replyVariant") || config.ui?.replyVariant || 7;
+  const current = db.setting("replyVariant") || config.ui?.replyVariant || 1;
 
   const rows = [];
   for (const [key, val] of Object.entries(VARIANTS)) {
