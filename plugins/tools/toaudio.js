@@ -74,7 +74,7 @@ async function handler(m, { sock }) {
         return
     }
 
-    await m.reply(claraWrap("Toaudio", `🕕 *ᴍᴇᴍᴘʀᴏꜱᴇꜱ...*\n\nMengekstrak audio dari media...`))
+    await m.react("🕒")
 
     const tempDir = path.join(process.cwd(), 'temp')
     if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true })

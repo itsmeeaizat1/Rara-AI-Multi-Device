@@ -105,7 +105,7 @@ async function handler(m, { sock }) {
 
         // Step 2: Pick random pack
         const randomPack = packs[Math.floor(Math.random() * packs.length)]
-        await m.reply(claraWrap("stickerpack", `Mengunduh sticker pack: *${randomPack}*\nMencari gambar...`))
+        await m.react("🕒");
 
         // Step 3: Get sticker URLs from pack page
         const stickerUrls = await getStickerSetUrls(randomPack)
@@ -114,8 +114,7 @@ async function handler(m, { sock }) {
         }
 
         const limited = stickerUrls.slice(0, MAX_STICKERS)
-        await m.reply(claraWrap("stickerpack", `Ditemukan *${stickerUrls.length}* sticker\nMengunduh *${limited.length}* sticker...`))
-
+        
         // Step 4: Download & convert stickers
         const stickerBuffers = []
         for (const url of limited) {

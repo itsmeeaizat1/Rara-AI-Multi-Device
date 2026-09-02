@@ -123,7 +123,7 @@ async function handler(m, { conn, text, args, usedPrefix, command }) {
       templateId = random.id;
     }
 
-    m.reply(claraWrap("Meme Generator", "Sedang membuat meme..."));
+    await m.react("🕒");
 
     // Try caption via Imgflip API
     const result = await captionMeme(templateId, textParts);

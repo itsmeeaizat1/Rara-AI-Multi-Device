@@ -7,7 +7,7 @@
 // 🔹 Alur: localParse (instan) → think (AI provider) → [ACTION] auto-execute
 // ============================================================
 
-import { TOOLS, localParse, think } from "../../src/lib/aiagent.js";
+import { TOOLS, localParse, think, resolveUserByName } from "../../src/lib/aiagent.js";
 import { callAI, callIkyy } from "../../src/lib/nova-ai-service.js";
 import { claraWrap, bracketBox } from "../../src/lib/nova-menu-style.js";
 import { getCommandsByCategory, getCategories, getPlugin } from "../../src/lib/nova-plugins.js";
@@ -32,8 +32,8 @@ function appendSession(key, role, content) {
 
 // 🔹 AUTO-EXECUTE: kategori command yang BOLEH dijalankan otomatis
 const SAFE_EXEC_CATEGORIES = [
-  "group", "search", "download", "media", "fun", "sticker",
-  "tools", "random", "info", "religi", "rpg",
+  "main", "group", "search", "download", "media", "fun", "sticker",
+  "tools", "random", "info", "religi", "rpg", "utility", "user",
 ];
 const BLOCKED_EXEC_COMMANDS = [
   "self", "public", "setprefix", "setpp", "setname", "addowner",
@@ -41,6 +41,9 @@ const BLOCKED_EXEC_COMMANDS = [
   "addpremium", "delpremium", "addlimit", "setlimit", "bc", "bcgc",
   "pushkontak", "jpm", "shutdown", "restart", "exec", "eval",
   "setbotpp", "autoread", "autotyping", "autosw",
+  // main category berisiko
+  "jadibot", "stopjadibot", "block2", "owner", "buyprem", "buysewa",
+  "daftarsewa2", "belanja",
 ];
 
 const CATEGORY_NAMES = {
@@ -242,9 +245,12 @@ async function handler(m, { sock, conn, config, db }) {
   // TAHAP 2: think() — kalimat rumit → AI provider
   if (!decision) {
     try {
+      const prefixForThink = config?.command?.prefix || ".";
       decision = await think(text, {
         botname: config?.bot?.name || "Nova AI",
-        mentions: (m.mentionedJid || []).map(j => j.split("@")[0]).join(", ")
+        mentions: (m.mentionedJid || []).map(j => j.split("@")[0]).join(", "),
+        executableCmds: buildExecutableList(),
+        commandList: buildCommandContext(prefixForThink)
       });
     } catch (e) {
       // 🔹 CHAT FALLBACK: coba callIkyy/callAI sebelum menyerah
@@ -285,14 +291,17 @@ async function handler(m, { sock, conn, config, db }) {
     }
   }
 
-  // 🔹 CHAT: tool null = user ngobrol → pakai reply dari think()
+  // 🔹 CHAT: tool null = user ngobrol atau minta execCommand (dari think() JSON langsung)
   if (!decision?.tool || !TOOLS[decision.tool]) {
     if (decision?.reply) {
       const { text: visibleText, action } = parseAIResponse(decision.reply);
       if (visibleText) await m.reply(visibleText.length > 4096 ? visibleText.slice(0, 4096) + "..." : visibleText);
-      if (action) {
+      // 🔹 AUTO-EXECUTE: dari field execCommand (think() JSON) ATAU tag [ACTION] di teks reply
+      const execFromJson = decision.execCommand ? { command: decision.execCommand, args: decision.execArgs || "" } : null;
+      const finalAction = execFromJson || action;
+      if (finalAction) {
         if (db) config.__db = db;
-        const result = await executeCommand(action, m, sock, config);
+        const result = await executeCommand(finalAction, m, sock, config);
         if (!result.success && result.message) await m.reply(claraWrap("Info", `⚠️ ${result.message}`));
       }
       return;
@@ -312,14 +321,27 @@ async function handler(m, { sock, conn, config, db }) {
     if (!m.isOwner) return m.reply("❌ Perintah ini khusus owner bot.");
   }
 
-  // normalisasi user (dari @mention / reply)
+  // normalisasi user (dari @mention / reply / NAMA member / nomor)
   let finalArgs = decision.args || {};
   if (tool.args?.includes("user")) {
     let user = finalArgs.user;
     if (m.mentionedJid?.length) user = m.mentionedJid[0];
     else if (m.quoted?.sender) user = m.quoted.sender;
+    else if (user) {
+      const digitsOnly = String(user).replace(/[^0-9]/g, "");
+      const looksLikeNumber = /^\d{8,15}$/.test(digitsOnly) && !/[a-zA-Z]/.test(String(user));
+      if (!looksLikeNumber) {
+        // bukan nomor murni → coba cari JID member dari NAMA yang disebut
+        const resolved = await resolveUserByName(sock, m, user);
+        if (resolved && resolved.multiple) {
+          const list = resolved.multiple.map(c => `• ${c.name} (${c.jid.split("@")[0]})`).join("\n");
+          return m.reply(`❌ Ada ${resolved.multiple.length} member mirip "${user}":\n${list}\n\nSebutkan lebih spesifik atau @mention langsung.`);
+        }
+        user = resolved || null;
+      }
+    }
     user = String(user || "").replace(/[^0-9]/g, "");
-    if (!user) return m.reply("❌ Usernya siapa? Reply pesannya atau @mention.\nContoh: " + m.prefix + m.command + " kick @user");
+    if (!user) return m.reply("❌ Usernya siapa? Reply pesannya, @mention, atau sebutkan nama membernya.\nContoh: " + m.prefix + m.command + " kick @user");
     finalArgs.user = user + "@s.whatsapp.net";
   }
 

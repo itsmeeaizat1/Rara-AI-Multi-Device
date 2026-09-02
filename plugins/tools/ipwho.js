@@ -33,7 +33,7 @@ async function handler(m, { sock }) {
   if (!ipRegex.test(ip)) {
     return m.reply(`❌ *ғORMAT TIDAK VALID*\n\n💡 *Contoh:* \`8.8.8.8\``);
   }
-  await m.reply(claraWrap("Ipwho", `🕕 *ᴍᴇɴᴄᴀʀɪ ɪɴꜰᴏ ɪᴘ...*`));
+  await m.react("🕒");
 
   try {
     const res = await fetch(`https://ipwho.is/${ip}`);
