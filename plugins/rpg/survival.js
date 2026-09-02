@@ -22,6 +22,7 @@ async function getData(db, sender) {
   let data = await db.getPlayerData?.(sender, "survival") || null;
   if (!data) {
     data = { hp: MAX_HP, hunger: MAX_HUNGER, thirst: MAX_THIRST, lastUpdate: Date.now(), alive: true, deaths: 0, daysSurvived: 0 };
+    await db.setPlayerData?.(sender, "survival", data);
   }
   // Apply decay
   const now = Date.now();
