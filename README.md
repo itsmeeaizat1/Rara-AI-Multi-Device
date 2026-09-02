@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20pindah%20resep%20ke%20database%2C%20font-success?style=for-the-badge)
-> *Commit: "refactor: pindah resep ke database, font ke assets/fonts, hapus file gak terpakai"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-refactor%3A%20konsolidasi%20folder%20database%2F%20k-success?style=for-the-badge)
+> *Commit: "refactor: konsolidasi folder database/ ke src/data/"*
 <!--END_SECTION:latest-update-->
 
 ---
