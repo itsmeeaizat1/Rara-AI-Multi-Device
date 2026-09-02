@@ -1,4 +1,5 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
+import fs from "fs";
 // ============================================================
 // 🔹 AI AGENT — Otak AI yang bisa ngatur fitur bot via bahasa natural
 // 🔹 Berbeda dari AI biasa (aichat/deepseek), AI Agent bisa EKSEKUSI aksi:
@@ -92,11 +93,12 @@ export function localParse(text) {
 
 // ================= OTAK AI — PROVIDER CHAIN =================
 // 🔹 AI AGENT: Urutan provider — DeepSeek utama, Pollinations fallback, Groq opsional
-// 🔹 DeepSeek butuh key (global.deepseekkey), Pollinations gratis tanpa key
+// 🔹 DeepSeek butuh key (global.deepseekkey), IkyyXD gratis (key dari apikeys.json)
 // 🔹 Groq hanya dipakai kalau ada key (global.groqkey)
 const PROVIDERS = [
   {
     name: 'deepseek',
+    method: 'post',
     url: 'https://api.deepseek.com/chat/completions',
     key: () => process.env.DEEPSEEK_KEY || global.deepseekkey || '',
     model: 'deepseek-chat',
@@ -106,14 +108,17 @@ const PROVIDERS = [
     })
   },
   {
-    name: 'pollinations',
-    url: 'https://text.pollinations.ai/openai',
-    key: null, // tanpa API key
-    model: 'openai',
+    name: 'ikyyxd-gemini',
+    method: 'get',
+    url: 'https://api.ikyyxd.my.id/ai/gemini',
+    key: () => {
+      try { return JSON.parse(fs.readFileSync('src/lib/apikey/apikeys.json','utf8')).ikyyxd || '' } catch { return '' }
+    },
     headers: () => ({ 'Content-Type': 'application/json' })
   },
   {
     name: 'groq',
+    method: 'post',
     url: 'https://api.groq.com/openai/v1/chat/completions',
     key: () => process.env.GROQ_KEY || global.groqkey || '',
     model: 'llama-3.3-70b-versatile',
@@ -130,21 +135,33 @@ export async function askAI(system, user) {
     const key = p.key?.()
     if (p.key && !key) continue // provider ini gak ada key → skip
     try {
-      const res = await fetch(p.url, {
-        method: 'POST',
-        headers: p.headers(key),
-        body: JSON.stringify({
-          model: p.model,
-          messages: [
-            { role: 'system', content: system },
-            { role: 'user', content: user }
-          ],
-          temperature: 0.1
+      let text
+      if (p.method === 'get') {
+        // GET-based provider (IkyyXD): gabung system+user jadi satu prompt
+        const fullPrompt = `${system}\n\n${user}`
+        const url = `${p.url}?apikey=${encodeURIComponent(key)}&text=${encodeURIComponent(fullPrompt)}`
+        const res = await fetch(url, { headers: p.headers(key) })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data = await res.json()
+        text = data.result || ''
+      } else {
+        // POST-based provider (DeepSeek, Groq, OpenAI-compatible)
+        const res = await fetch(p.url, {
+          method: 'POST',
+          headers: p.headers(key),
+          body: JSON.stringify({
+            model: p.model,
+            messages: [
+              { role: 'system', content: system },
+              { role: 'user', content: user }
+            ],
+            temperature: 0.1
+          })
         })
-      })
-      if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const data = await res.json()
-      const text = data.choices?.[0]?.message?.content
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data = await res.json()
+        text = data.choices?.[0]?.message?.content
+      }
       if (!text) throw new Error('balasan kosong')
       console.log(`[AI] ${p.name} sukses`)
       return text
