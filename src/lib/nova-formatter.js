@@ -50,8 +50,8 @@ const CHARS = {
  cornerBottomRight: "",
  horizontal: "─",
  vertical: "│",
- arrow: "❏",
- bullet: "❏",
+ arrow: "•",
+ bullet: "•",
  star: "",
  diamond: "◇",
  dot: "•",
@@ -448,7 +448,7 @@ function createCommandList(categoryName, commands, prefix = ".") {
  const emoji = config.categoryEmojis?.[categoryName.toLowerCase()] || "📋";
 
  const lines = [
- `${CHARS.cornerTopLeft}${CHARS.horizontal}❏ ${emoji} *${categoryName.toUpperCase()}*`,
+ `${CHARS.cornerTopLeft}${CHARS.horizontal}「 ${emoji} *${categoryName.toUpperCase()}* 」`,
  "",
  ];
 

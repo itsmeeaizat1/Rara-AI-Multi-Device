@@ -160,8 +160,8 @@ class NovaGames {
             if (cfg.questionField && session.question[cfg.questionField]) {
               text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
             }
-            text += `│ ❏ Hint: *${getHint(answer, cfg.hintCount)}*\n`;
-            text += `│ ❏ Sisa waktu: *${formatRemainingTime(remaining)}*\n\n`;
+            text += `│ • Hint: ${getHint(answer, cfg.hintCount)}\n`;
+            text += `│ • Sisa waktu: ${formatRemainingTime(remaining)}\n\n`;
             text += `_Reply pesan game ini untuk jawab atau ketik "nyerah"_`;
             text += `\n╰────  •  ────`;
             await m.reply(text);
@@ -197,10 +197,10 @@ class NovaGames {
             caption += `\`\`\`${question[cfg.questionField]}\`\`\`\n`;
           }
           if (cfg.hintEnabled !== false) {
-            caption += `│ ❏ Hint: *${getHint(answer, cfg.hintCount)}*\n`;
+            caption += `│ • Hint: ${getHint(answer, cfg.hintCount)}\n`;
           }
-          caption += `│ ❏ Waktu: *${cfg.timeout / 1000} detik*\n`;
-          caption += `│ ❏ Hadiah: *Limit, Koin, EXP (random)*\n\n`;
+          caption += `│ • Waktu: ${cfg.timeout / 1000} detik\n`;
+          caption += `│ • Hadiah: Limit, Koin, EXP (random)\n\n`;
           caption += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
           caption += `╰────  •  ────`;
 
@@ -215,10 +215,10 @@ class NovaGames {
             text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
           }
           if (cfg.hintEnabled !== false) {
-            text += `│ ❏ Hint: *${getHint(answer, cfg.hintCount)}*\n`;
+            text += `│ • Hint: ${getHint(answer, cfg.hintCount)}\n`;
           }
-          text += `│ ❏ Waktu: *${cfg.timeout / 1000} detik*\n`;
-          text += `│ ❏ Hadiah: *Limit, Koin, EXP (random)*\n\n`;
+          text += `│ • Waktu: ${cfg.timeout / 1000} detik\n`;
+          text += `│ • Hadiah: Limit, Koin, EXP (random)\n\n`;
           text += `_Reply pesan ini untuk jawab atau ketik "nyerah"_\n`;
           text += `╰────  •  ────`;
 
@@ -236,9 +236,9 @@ class NovaGames {
             if (cfg.questionField && question[cfg.questionField]) {
               text += `\`\`\`${question[cfg.questionField]}\`\`\`\n\n`;
             }
-            text += `│ ❏ Jawaban: *${answer}*\n`;
+            text += `│ • Jawaban: ${answer}\n`;
             if (question.deskripsi) {
-              text += `│ ❏ Info: ${question.deskripsi}\n`;
+              text += `│ • Info: ${question.deskripsi}\n`;
             }
             text += `\n_Gak ada yang bisa jawab nih~_\n`;
             text += `╰────  •  ────`;
@@ -279,9 +279,9 @@ class NovaGames {
           if (cfg.questionField && session.question[cfg.questionField]) {
             text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
           }
-          text += `│ ❏ Jawaban: *${answer}*\n`;
+          text += `│ • Jawaban: ${answer}\n`;
           if (session.question.deskripsi) {
-            text += `│ ❏ Info: ${session.question.deskripsi}\n`;
+            text += `│ • Info: ${session.question.deskripsi}\n`;
           }
           text += `\n_@${m.sender.split("@")[0]} menyerah_\n`;
           text += `╰────  •  ────`;
@@ -326,9 +326,9 @@ class NovaGames {
 
           let text = `${pick(WIN_MESSAGES)}\n\n`;
           text += `*${cfg.title}*\n\n`;
-          text += `│ ❏ Jawaban: *${answer}*\n`;
-          text += `│ ❏ Pemenang: *@${m.sender.split("@")[0]}*\n`;
-          text += `│ ❏ Percobaan: *${session.attempts}x*\n\n`;
+          text += `│ • Jawaban: ${answer}\n`;
+          text += `│ • Pemenang: @${m.sender.split("@")[0]}\n`;
+          text += `│ • Percobaan: ${session.attempts}x\n\n`;
 
           let parts = [];
           if (totalLimit > 0) parts.push(`+${totalLimit} Limit`);
@@ -339,7 +339,7 @@ class NovaGames {
           }
 
           if (session.question.deskripsi) {
-            text += `\n│ ❏ Info: ${session.question.deskripsi}\n`;
+            text += `\n│ • Info: ${session.question.deskripsi}\n`;
           }
 
           text += `\n╰────  •  ────`;

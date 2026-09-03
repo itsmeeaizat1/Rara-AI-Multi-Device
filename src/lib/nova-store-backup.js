@@ -127,10 +127,10 @@ async function sendStoreBackup(sock) {
         
         const caption = 
             `╭─「 ✦ Sᴛᴏʀᴇ Bᴀᴄᴋᴜᴘ ✦ 」\n│\n` + +
-            `  │ ❏ *Waktu:* ${timeHelper.formatDateTime('DD MMMM YYYY HH:mm:ss')} WIB\n` +
-            `  │ ❏ *Size:* ${sizeDisplay}\n` +
-            `  │ ❏ *Files:* ${backupInfo.fileCount}\n` +
-            `  │ ❏ *Schema:* v${SCHEMA_VERSION}\n` +
+            `  │ • *Waktu:* ${timeHelper.formatDateTime('DD MMMM YYYY HH:mm:ss')} WIB\n` +
+            `  │ • *Size:* ${sizeDisplay}\n` +
+            `  │ • *Files:* ${backupInfo.fileCount}\n` +
+            `  │ • *Schema:* v${SCHEMA_VERSION}\n` +
             `│\n` +
             `${config.bot?.name || 'Nova-AI'}`
         
