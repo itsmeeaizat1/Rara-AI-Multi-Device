@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20merge%20PR%20%231%20%E2%80%94%20media%20converter%20univ-success?style=for-the-badge)
-> *Commit: "feat: merge PR #1 — media converter universal + tombol pilihan format play/playvideo"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20toggle%20owner%20.convertoffer%20on%2Foff%20-success?style=for-the-badge)
+> *Commit: "feat: toggle owner .convertoffer on/off untuk tawaran convert otomatis"*
 <!--END_SECTION:latest-update-->
 
 ---
