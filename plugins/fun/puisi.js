@@ -31,7 +31,7 @@ async function handler(m, { sock }) {
         }
         
         const text = res.data.text
-        await m.reply(claraWrap(text.split("\n").filter(l => l.trim())))
+        await m.reply(claraWrap("Puisi", text.split("\n")))
     } catch (err) {
         return m.reply(claraWrap("puisi", te(m.prefix, m.command, m.pushName), "error"))
     }

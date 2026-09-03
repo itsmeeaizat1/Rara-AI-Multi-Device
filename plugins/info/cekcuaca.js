@@ -36,8 +36,8 @@ async function handler(m, { sock }) {
       { ...settings, location },
       { label: "Sekarang" },
     );
-    const _lines = message.split("\n").filter(l => l.trim());
-    return await m.reply(claraWrap("cekcuaca", claraWrap(_lines)));
+    const _lines = message.split("\n");
+    return await m.reply(claraWrap("Cek Cuaca", _lines));
   } catch (error) {
     return m.reply(claraWrap("cekcuaca", [
         "Gagal ambil cuaca nih",
