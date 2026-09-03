@@ -21,6 +21,8 @@ Tiga pesan status standar untuk SEMUA fitur media (download, play/playvideo, sti
 
 Helper: `novaBerhasil(fitur)`, `novaGagal(fitur)`, `novaGangguan(fitur)` di `src/lib/nova-menu-style.js` (box open-format + smallcaps title). Semua pesan validasi/panduan (URL invalid, file kegedean, video kepanjangan) TETAP memakai pesan informatif aslinya. Plugin hasil teks (googlesearch, imdb, ringtone, an1, happymod, songs, tocase, tocode) tidak menerima pesan Berhasil tapi tetap menerima Gagal/Gangguan.
 
+- **Ucapan AI di menu** → ucapan pembuka info section (.menu/.allmenu/.allmenucategory/.menukategori) digenerate AI IkyyXD gratis (`/ai/gemini`), berubah tiap 30 menit, fallback ke ucapan lokal kalau API mati. Helper: `getAiGreeting()` di `src/lib/nova-greeting.js` (cache 30 menit, timeout 8s, single-flight, tanpa apikey — gak nguras token DeepSeek).
+
 Cakupan: 50 plugin download, 26 plugin sticker, 35 plugin convert, play/playvideo, convert.js (.convert), sticker.js.
 
 ## 🔊 Play System v21.7.0
