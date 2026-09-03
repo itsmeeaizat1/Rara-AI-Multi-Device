@@ -9,6 +9,7 @@ import mediafire from "../../src/scraper/mediafire.js";
 import { toSC, novaError, novaGuide, novaBox, mediaCaption, bracketBox } from "../../src/lib/nova-menu-style.js";
 import { saluranCtx } from "../../src/lib/nova-context.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { offerConvert } from "../../src/lib/nova-convert.js";
 
 const pluginConfig = {
   name: "downloader",
@@ -138,6 +139,7 @@ async function downloadYouTube(url, format, sock, m, meta = {}) {
         caption,
         contextInfo: ytCard,
       }, { quoted: m });
+      await offerConvert(sock, m, { buffer, type: "video", platform: "YouTube", title, sourceUrl: url });
     }
     await m.react("🐣");
   } catch (err) {
@@ -205,6 +207,7 @@ async function handleAIO(url, format, platformName, sock, m) {
     await sock.sendMessage(m.chat, {
       video: buffer, caption, contextInfo: ctxInfo,
     }, { quoted: m });
+    await offerConvert(sock, m, { buffer, type: "video", platform: platformName, title: result.title, sourceUrl: url });
   }
   await m.react("🐣");
 }

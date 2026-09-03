@@ -5,6 +5,7 @@ import { claraWrap, mediaCaption } from "../../src/lib/nova-menu-style.js";
 import { getSankaConfig } from "../../src/lib/config/env-loader.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
+import { offerConvert } from "../../src/lib/nova-convert.js";
 
 const pluginConfig = {
   name: "tiktokv3",
@@ -69,6 +70,7 @@ async function handler(m, { sock }) {
         video: { url: video.url }, caption,
         contextInfo: mediaPreviewCard({ title: ikyyResult.title || "TikTok Video", body: "TikTok V3", sourceUrl: text, thumbnailUrl: ikyyResult.thumbnail || "" }),
       }, { quoted: m });
+      await offerConvert(sock, m, { mediaUrl: video.url, type: "video", platform: "TikTok", title: ikyyResult.title, sourceUrl: text });
       return;
     }
 
@@ -105,6 +107,7 @@ async function handler(m, { sock }) {
         caption,
         contextInfo: mediaPreviewCard({ title: r.title || r.desc || "TikTok Video", body: "TikTok V3", sourceUrl: url, thumbnailUrl: r.cover || "" }),
       }, { quoted: m });
+      await offerConvert(sock, m, { buffer, type: "video", platform: "TikTok", title: r.title || r.desc, sourceUrl: url });
     } else if (r.images && r.images.length > 0) {
       for (const img of r.images.slice(0, 5)) {
         await sock.sendMessage(m.chat, { image: { url: img }, contextInfo: mediaPreviewCard({ title: r.title || r.desc || "TikTok Photo", body: "TikTok V3 • Image", sourceUrl: url, thumbnailUrl: r.cover || img }) }, { quoted: m });

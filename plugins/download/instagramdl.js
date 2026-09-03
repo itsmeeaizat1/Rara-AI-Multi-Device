@@ -1,6 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // instagramdl — Download video/foto Instagram
 // Primary: IkyyXD /download/instagram (apikey + query) → all-in-one | Fallback: builtin ig.js
+import { offerConvert } from "../../src/lib/nova-convert.js";
 import { ikyyDownload, ikyyAio } from "../../src/scraper/ikyydl.js";
 import instagramDownloader from "../../src/scraper/ig.js";
 import { claraWrap, claraLine, mediaCaption, toSC, novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
@@ -113,6 +114,7 @@ async function handler(m, { sock }) {
     for (const item of result.medias) {
       if (item.type === "video") {
         await sock.sendMedia(m.chat, item.url, result.title || null, m, { type: "video", contextInfo: ctxInfo });
+        await offerConvert(sock, m, { mediaUrl: item.url, type: "video", platform: "Instagram", title: result.title, sourceUrl: text });
       } else if (item.type === "audio") {
         await sock.sendMessage(m.chat, { audio: { url: item.url }, mimetype: "audio/mpeg", contextInfo: ctxInfo }, { quoted: m });
       } else {
