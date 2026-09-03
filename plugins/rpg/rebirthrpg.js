@@ -65,7 +65,7 @@ async function handler(m, { sock }) {
 
     if (confirm !== "confirm" && confirm !== "ya") {
       let msg = "";
-      msg += `⚠️ *ᴘᴇʀɪɴɢᴀᴛᴀɴ*\n`;
+      msg += `❗ *ᴘᴇʀɪɴɢᴀᴛᴀɴ*\n`;
       msg += `
 `;
       msg += `Kamu akan kehilalian:\n`;
