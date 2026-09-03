@@ -36,7 +36,6 @@ async function handler(m, { sock }) {
       const audio = result.medias.find(m => m.type === "audio") || result.medias[0];
 
       await m.react("🐣");
-    await m.reply(novaBerhasil("applemusicdl"));
       const _cap = mediaCaption({ platformIcon: "🍎", platformName: "Apple Music", title: result.title || "Apple Music Track", author: result.author || null, format: "🎵 MP3", method: "IkyyXD" });
       await m.reply(_cap);
       await sock.sendMessage(m.chat, {
@@ -49,6 +48,7 @@ async function handler(m, { sock }) {
         "Gagal download — endpoint Apple Music sedang down.",
         "Coba lagi nanti atau gunakan .applemusic untuk cari lagunya dulu.",
       ].join("\n"), "error"));
+      await m.reply(novaBerhasil("applemusicdl"));
     }
   } catch (error) {
     console.error("[applemusicdl.js]:", error.message);

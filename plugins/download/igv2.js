@@ -37,7 +37,6 @@ async function handler(m, { sock }) {
     if (result?.medias?.length) {
       const ctxInfo = mediaPreviewCard({ title: result.title || "Instagram Media", body: "Instagram", sourceUrl: url, thumbnailUrl: result.thumbnail || "" });
       await m.react("🐣");
-      await m.reply(novaBerhasil("IG V2"));
       for (const item of result.medias) {
         if (item.type === "video") {
           const _cap = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: result.title || "Instagram Media", format: "Video", method: "IkyyXD" });
@@ -46,6 +45,7 @@ async function handler(m, { sock }) {
         } else {
           const _cap2 = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: result.title || "Instagram Media", format: "Image", method: "IkyyXD" });
           await sock.sendMessage(m.chat, { image: { url: item.url }, caption: _cap2, contextInfo: ctxInfo }, { quoted: m });
+          await m.reply(novaBerhasil("IG V2"));
         }
         break;
       }
@@ -59,7 +59,7 @@ async function handler(m, { sock }) {
       if (igResult?.media?.length) {
         const ctxInfo = mediaPreviewCard({ title: igResult.title || "Instagram Media", body: "Instagram", sourceUrl: url, thumbnailUrl: igResult.thumbnail || "" });
         await m.react("🐣");
-      await m.reply(novaBerhasil("IG V2"));
+        await m.reply(novaBerhasil("IG V2"));
         for (const item of igResult.media) {
           if (item.type === "video") {
             const _cap3 = mediaCaption({ platformIcon: "📸", platformName: "Instagram V2", title: igResult.title || "Instagram Media", format: "Video", method: "ig scraper" });

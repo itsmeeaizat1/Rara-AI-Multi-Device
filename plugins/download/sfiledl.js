@@ -41,13 +41,13 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("sfiledl2"));
     await sock.sendMessage(m.chat, {
       document: buffer,
       mimetype: "application/octet-stream",
       fileName,
       caption: _cap,
     }, { quoted: m });
+    await m.reply(novaBerhasil("sfiledl2"));
   } catch (error) {
     await m.reply(novaGagal("SFile DL"));
   }

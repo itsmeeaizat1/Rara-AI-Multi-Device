@@ -110,7 +110,6 @@ async function handler(m, { sock }) {
 
     const ctxInfo = { forwardingScore: 0, isForwarded: false };
     await m.react("🐣");
-    await m.reply(novaBerhasil("Instagram DL"));
 
     for (const item of result.medias) {
       if (item.type === "video") {
@@ -120,6 +119,7 @@ async function handler(m, { sock }) {
         await sock.sendMessage(m.chat, { audio: { url: item.url }, mimetype: "audio/mpeg", contextInfo: ctxInfo }, { quoted: m });
       } else {
         await sock.sendMedia(m.chat, item.url, result.title || null, m, { type: "image", contextInfo: ctxInfo });
+        await m.reply(novaBerhasil("Instagram DL"));
       }
       break;
     }

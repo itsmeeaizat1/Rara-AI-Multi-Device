@@ -83,7 +83,6 @@ async function handler(m, { sock }) {
       } else if (r.audio) {
         await m.reply(caption2);
         await m.react("🐣");
-    await m.reply(novaBerhasil("douyindl"));
         await sock.sendMessage(m.chat, {
           audio: { url: r.audio },
           mimetype: "audio/mpeg",
@@ -91,6 +90,7 @@ async function handler(m, { sock }) {
       } else {
         await m.react("❌");
         await m.reply(novaGagal("Douyin DL"));
+        await m.reply(novaBerhasil("douyindl"));
       }
       return;
     } catch (e) {

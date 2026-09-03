@@ -38,7 +38,6 @@ async function handler(m, { sock }) {
         format: "Video (No Watermark)", method: "IkyyXD",
       });
       await m.react("🐣");
-    await m.reply(novaBerhasil("tiktokv4"));
       await sock.sendMessage(m.chat, {
         video: { url: video.url }, caption,
         contextInfo: { forwardingScore: 0, isForwarded: false },
@@ -46,6 +45,7 @@ async function handler(m, { sock }) {
     } else {
       await m.react("❌");
       await m.reply(novaGagal("TikTok V4"));
+      await m.reply(novaBerhasil("tiktokv4"));
     }
   } catch (error) {
     console.error("[tiktokv4.js]:", error.message);

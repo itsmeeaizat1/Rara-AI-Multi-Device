@@ -157,9 +157,9 @@ async function handler(m, { sock }) {
           mediaType: 2,
         }),
       }, { quoted: m });
-      await m.reply(novaBerhasil("TikTok"));
       await offerConvert(sock, m, { mediaUrl: video.url, type: "video", platform: "TikTok", title: ikyyResult.title, sourceUrl: text });
       return;
+      await m.reply(novaBerhasil("TikTok"));
     }
 
     // Fallback to tikwm

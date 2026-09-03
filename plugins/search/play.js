@@ -180,7 +180,6 @@ async function sendPlayAudio(sock, m, video, kbps) {
 
   // 1. Notifikasi sukses dulu (sesuai request owner)
   await m.react("🐣");
-  await m.reply(novaBerhasil("Play"));
 
   // 2. Info section lengkap — dikirim sebagai teks karena WhatsApp
   // TIDAK support caption pada pesan audio (caption gak akan pernah muncul)
@@ -206,6 +205,7 @@ async function sendPlayAudio(sock, m, video, kbps) {
 
   // 4. Tawaran convert di bawahnya
   await offerConvert(sock, m, { buffer: audio.buffer, type: "audio", platform: "YouTube", title: titleForLyrics, sourceUrl: video.url });
+  await m.reply(novaBerhasil("Play"));
 }
 
 async function handler(m, { sock }) {

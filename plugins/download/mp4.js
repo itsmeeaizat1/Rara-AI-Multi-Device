@@ -41,11 +41,11 @@ async function handler(m, { sock, config: botConfig }) {
     });
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("mp4"));
     await sock.sendMessage(m.chat, {
       video: buffer,
       caption: _cap,
     }, { quoted: m });
+    await m.reply(novaBerhasil("mp4"));
   } catch (error) {
     await m.reply(novaGagal("MP4 Downloader"));
   }

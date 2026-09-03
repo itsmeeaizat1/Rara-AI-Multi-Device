@@ -45,8 +45,8 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("tozombie"));
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "🧟 Kamu jadi zombie!" }, { quoted: m });
+    await m.reply(novaBerhasil("tozombie"));
   } catch (e) {
     console.error("tozombie error:", e.message);
     await m.react("❌");
