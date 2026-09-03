@@ -5,30 +5,11 @@ import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
 import { downloadVideo as downloadVideoYtDlp } from "../../src/scraper/nova-ytdlp.js";
 import { toWhatsAppVideo } from "../../src/lib/nova-ffmpeg.js";
-import { novaError, novaGuide, claraWrap, toSC, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, novaBerhasil, novaGagal, novaGangguan } from "../../src/lib/nova-menu-style.js";
 import { offerConvert } from "../../src/lib/nova-convert.js";
 import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
-import { sendMenuPreview } from "../../src/lib/send-menu.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
-
-// Session pilihan resolusi (klik tombol) — TTL 5 menit
-const PV_TTL = 5 * 60 * 1000;
-const pvSessions = new Map(); // m.sender → { video, startedAt }
-
-function savePvSession(m, video) {
-  const key = m.sender;
-  const old = pvSessions.get(key);
-  if (old?.timer) clearTimeout(old.timer);
-  const s = { video, startedAt: Date.now(), timer: null };
-  s.timer = setTimeout(() => pvSessions.delete(key), PV_TTL);
-  pvSessions.set(key, s);
-}
-function getPvSession(m) {
-  const s = pvSessions.get(m.sender);
-  if (!s || Date.now() - s.startedAt > PV_TTL) { if (s?.timer) clearTimeout(s.timer); pvSessions.delete(m.sender); return null; }
-  return s;
-}
 
 async function fetchLyricsSnippet(title) {
   try {
@@ -60,18 +41,21 @@ const pluginConfig = {
   isEnabled: true,
 };
 
-// Parse resolusi dari argumen pertama: 360/480/720/1080/hd (default 480)
+// Parse resolusi dari argumen — bisa di posisi AWAL (".playvideo 720 faded")
+// ATAU AKHIR (".playvideo faded 720"), default 480 kalau gak disebut sama sekali
 function parseQualityArgs(args) {
+  const norm = (s) => String(s || "").toLowerCase().replace(/p$/, "");
+  const toQuality = (v) => (v === "hd" ? "1080" : v);
+  const list = [...args];
   let quality = "480";
-  let explicit = false;
-  let query = args.join(" ").trim();
-  const first = String(args[0] || "").toLowerCase().replace(/p$/, "");
-  if (/^(360|480|720|1080|hd)$/.test(first)) {
-    quality = first === "hd" ? "1080" : first;
-    explicit = true;
-    query = args.slice(1).join(" ").trim();
+
+  if (list.length && /^(360|480|720|1080|hd)$/.test(norm(list[0]))) {
+    quality = toQuality(norm(list.shift()));
+  } else if (list.length && /^(360|480|720|1080|hd)$/.test(norm(list[list.length - 1]))) {
+    quality = toQuality(norm(list.pop()));
   }
-  return { quality, query, explicit };
+
+  return { quality, query: list.join(" ").trim() };
 }
 
 async function searchYoutube(query) {
@@ -174,7 +158,7 @@ async function downloadVideo(url, quality) {
   return null;
 }
 
-// Kirim video hasil download — dipakai jalur langsung & klik tombol
+// Kirim video hasil download
 async function sendPlayVideo(sock, m, video, quality) {
   await m.react("🕒");
 
@@ -240,27 +224,8 @@ async function sendPlayVideo(sock, m, video, quality) {
 }
 
 async function handler(m, { sock }) {
-  // ── Mode 2: Klik tombol resolusi (.playvideo_360/480/720/hd) ──
-  const cmd = (m.command || "").toLowerCase();
-  if (/^playvideo_(360|480|720|hd|1080)$/.test(cmd)) {
-    const session = getPvSession(m);
-    if (!session) {
-      await m.react("❗");
-      return m.reply(novaGuide("Playvideo", "Pilihan resolusi udah kedaluwarsa nih! Cari ulang videonya ya: .playvideo <judul>", ".playvideo komang"));
-    }
-    const quality = cmd.split("_")[1] === "hd" ? "1080" : cmd.split("_")[1];
-    try {
-      await sendPlayVideo(sock, m, session.video, quality);
-    } catch (err) {
-      console.error("[PlayVideo]", err.message || err);
-      await m.react("❌");
-      return m.reply(novaGangguan("PlayVideo"));
-    }
-    return;
-  }
-
   const args = m.args || [];
-  const { quality, query, explicit } = parseQualityArgs(args);
+  const { quality, query } = parseQualityArgs(args);
 
   // Usage: pilihan resolusi (default 480p)
   if (!query) {
@@ -287,35 +252,7 @@ async function handler(m, { sock }) {
     }
     console.log(`[PlayVideo] Found: ${video.title} → ${video.url} (${quality}p)`);
 
-    // Step 2: Kalau user belum pilih resolusi eksplisit → tawarkan tombol
-    if (!explicit) {
-      savePvSession(m, video);
-      await m.react("🐣");
-      const infoText = [
-        `Video ketemu!`,
-        ``,
-        `Judul: ${video.title}`,
-        `Channel: ${video.author}`,
-        `Durasi: ${video.duration}`,
-        ``,
-        `Pilih resolusi di bawah`,
-      ].join("\n");
-      return await sendMenuPreview(sock, m, {
-        text: infoText,
-        footer: "",
-        buttons: [
-          { id: "playvideo_360", text: toSC("360p") },
-          { id: "playvideo_480", text: toSC("480p") },
-          { id: "playvideo_720", text: toSC("720p") },
-          { id: "playvideo_hd", text: toSC("HD 1080p") },
-        ],
-        title: `${toSC("Nova AI")} — ${toSC("Playvideo")}`,
-        body: toSC(video.title.slice(0, 40)),
-        sourceUrl: video.url,
-      });
-    }
-
-    // Step 3: Resolusi eksplisit (mis. .playvideo 720 judul) → langsung kirim
+    // Langsung proses & kirim — resolusi eksplisit kalau disebut, default 480p kalau gak
     await sendPlayVideo(sock, m, video, quality);
   } catch (err) {
     console.error("[PlayVideo]", err.message || err);
