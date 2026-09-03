@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20.play%20pilihan%20bitrate%20128%2F256%2F320%20-success?style=for-the-badge)
-> *Commit: "feat: .play pilihan bitrate 128/256/320 (default 256) + .playvideo pilihan resolusi 360/480/720/hd (default 480p)"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20yt-dlp%20ikut%20keinstall%20via%20npm%20(you-success?style=for-the-badge)
+> *Commit: "feat: yt-dlp ikut keinstall via npm (youtube-dl-exec) — gak perlu pip install lagi"*
 <!--END_SECTION:latest-update-->
 
 ---
