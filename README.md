@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-feat%3A%20remini%20baru%20dengan%20AI%20enhance%20asli-success?style=for-the-badge)
-> *Commit: "feat: remini baru dengan AI enhance asli (BeautyPlus engine) + rename remini lama ke .hd"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20qc%20blank%2Fgepeng%20%2B%20iqc%20kepotong%20jadi-success?style=for-the-badge)
+> *Commit: "fix: qc blank/gepeng + iqc kepotong jadi stiker"*
 <!--END_SECTION:latest-update-->
 
 ---
