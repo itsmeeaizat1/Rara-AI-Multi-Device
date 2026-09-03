@@ -3,6 +3,7 @@ import axios from "axios";
 import { AIRich } from "../../src/lib/nova-builder.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap, claraLine, mediaCaption, toSC } from "../../src/lib/nova-menu-style.js";
 import { ikyyDl } from "../../src/scraper/ikyydl.js";
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
 async function tiktokDl(url) {
   function formatNumber(integer) {
@@ -147,6 +148,13 @@ async function handler(m, { sock }) {
       await sock.sendMessage(m.chat, {
         video: { url: video.url },
         caption,
+        contextInfo: mediaPreviewCard({
+          title: ikyyResult.title || "TikTok Video",
+          body: "TikTok • Video HD",
+          sourceUrl: text,
+          thumbnailUrl: ikyyResult.thumbnail || "",
+          mediaType: 2,
+        }),
       }, { quoted: m });
       return;
     }
@@ -181,6 +189,13 @@ async function handler(m, { sock }) {
       await sock.sendMessage(m.chat, {
         video: { url: zann.url },
         caption,
+        contextInfo: mediaPreviewCard({
+          title: result.title || "TikTok Video",
+          body: `TikTok • ${result.author?.nickname || "Video"}`,
+          sourceUrl: text,
+          thumbnailUrl: result.cover || "",
+          mediaType: 2,
+        }),
       }, { quoted: m });
 
       await sock.sendMessage(
