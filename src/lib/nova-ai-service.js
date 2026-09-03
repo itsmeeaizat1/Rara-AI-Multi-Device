@@ -8,6 +8,7 @@
  */
 
 import { getDatabase } from "./nova-database.js";
+import { getProviderApiKey } from "./apikey/ai-chain.js";
 
 const DEFAULT_PROVIDERS = {
   openai: {
@@ -572,6 +573,13 @@ function normalizeMessages(messages, systemPrompt) {
  * Resolve API key per provider — cek global key, apikeys.json, dan aiConfig
  */
 function resolveApiKeyForProvider(providerKey, aiConfig = {}) {
+  // 🔹 1) CONFIG BARU: src/lib/apikey/ai-providers.json — single source of
+  // truth. Fitur AI satuan (.grok, .openai, .deepseek, ikyy_*, dll) ambil
+  // key dari sini. Keluarga ikyy otomatis pakai shared key ikyy (kyzz).
+  try {
+    const fromCfg = getProviderApiKey(providerKey);
+    if (fromCfg) return fromCfg;
+  } catch {}
   const globalMap = {
     openai: "openaiApiKey",
     gemini: "geminiApiKey",
