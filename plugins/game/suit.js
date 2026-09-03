@@ -50,7 +50,7 @@ async function handler(m, { args, prefix }) {
     ? (e.unlimited
         ? `│ • ⚡ Energi: ∞ (unlimited)\n`
         : (e.deducted > 0
-            ? `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n`
+            ? (e.game ? `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa}/${e.max})\n` : `│ • ⚡ Energi: -${e.deducted} (sisa ${e.sisa})\n`)
             : `│ • ⚡ Energi: gratis\n`))
     : "";
 

@@ -5,6 +5,7 @@ import { serialize } from "./lib/nova-serialize.js";
 import { getPlugin, pluginStore } from "./lib/nova-plugins.js";
 import { recordPluginExecution, postExecutionCheck } from "./lib/nova-plugin-health-hook.js";
 import { getDatabase } from "./lib/nova-database.js";
+import { ensureRpg, saveRpg } from "./lib/nova-rpg-service.js";
 import { checkPermission, checkMode } from "./lib/nova-middleware.js";
 import { handleAntiRemoveFromUpsert as _handleAntiRemove } from "./lib/nova-group-protection.js";
 import config from "../config.js";
@@ -854,11 +855,16 @@ try {
   } catch {}
 
   // === ENERGI / LIMIT CHECK & DEDUCTION ===
+  // (owner: dua mata uang BEDA — energi itu khusus game, limit itu akses fitur)
   const energiCost = plugin.config.energi || 0;
+  // Game (rpg/game) → potong ENERGI GAME (rpg.energy/maxEnergy)
+  // Fitur lain (ai/download/dll) → potong LIMIT AKSES FITUR (user.energi)
+  const gameCtx = ["rpg", "game"].includes(String(plugin.config.category || ""));
   let energiDeducted = 0;
   let sisaEnergi = 0;
   let isUnlimited = false;
   let isWeekendDouble = false;
+  let gameEnergiUsed = false;
 
   // Weekend double limit (Sabtu-Minggu)
   if (config.energi?.weekendDouble !== false && energiCost > 0) {
@@ -871,8 +877,34 @@ try {
   if (config.energi?.enabled && energiCost > 0 && !m.isOwner) {
     try {
       const db = getDatabase();
-      const user = db.getUser(m.sender);
-      let currentEnergi = user?.energi ?? config.energi?.default ?? 25;
+
+      // ═══ ENERGI GAME (rpg.energy/maxEnergy) — khusus kategori rpg/game ═══
+      if (gameCtx) {
+        const rpg = ensureRpg(m);
+        const energiGame = rpg?.energy ?? 0;
+        const maxEnergy = rpg?.maxEnergy ?? 100;
+        if (energiGame < energiCost) {
+          if (!m.isNewsletter) {
+            try { await m.react("❗"); } catch {}
+            try {
+              await m.reply(
+                "╭─「 ✦ ᴇɴᴇʀɢɪ ɢᴀᴍᴇ ᴋᴜʀᴀɴɢ ✦ 」\n│\n│ ⚠ Butuh *" + energiCost + "* energi game\n│ ⚡ Energi: *" + energiGame + "/" + maxEnergy + "*\n│ 💡 Isi ulang via *.heal* (energy drink)\n│\n╰────  •  ────"
+              );
+            } catch {}
+          }
+          return;
+        }
+        rpg.energy -= energiCost;
+        rpg.lastActive = Date.now();
+        saveRpg(m, rpg);
+        gameEnergiUsed = true;
+        energiDeducted = energiCost;
+        sisaEnergi = rpg.energy;
+        m.energiInfo = { game: true, deducted: energiCost, sisa: rpg.energy, max: maxEnergy, unlimited: false };
+      } else {
+        // ═══ LIMIT AKSES FITUR (user.energi, refill harian) ═══
+        const user = db.getUser(m.sender);
+        let currentEnergi = user?.energi ?? config.energi?.default ?? 25;
 
       // Weekend: gratis user dapat double limit (bonus di awal hari)
       // Cek apakah sudah dikasih bonus weekend
@@ -914,13 +946,15 @@ try {
           db.save();
         }
       }
+      } // end cabang limit akses fitur
     } catch (e) {
       if (config.dev?.debugLog) logger.error("energi", e.message);
     }
   }
 
   // Teruskan info energi ke plugin (dipakai buat info section di caption hasil game)
-  m.energiInfo = {
+  // Catatan: cabang energi game sudah set m.energiInfo sendiri (format game) — jangan ditimpa
+  if (!gameEnergiUsed) m.energiInfo = {
     deducted: energiDeducted,
     sisa: sisaEnergi,
     unlimited: isUnlimited,
@@ -964,7 +998,8 @@ try {
     }
 
     // === ENERGI NOTIF SETELAH EKSEKUSI (simple, plain text, tanpa quote) ===
-    if (energiCost > 0 && !m.isNewsletter && !m.isOwner) {
+    // Notif LIMIT hanya buat fitur — game (energi game) udah ada baris ⚡ Energi di caption hasil
+    if (energiCost > 0 && !m.isNewsletter && !m.isOwner && !gameEnergiUsed) {
       try {
         const usedAmount = isUnlimited ? energiCost : energiDeducted;
         let notifText = "╭─「 ✦ Limit ✦ 」\n│ " + usedAmount + " limit terpakai";
