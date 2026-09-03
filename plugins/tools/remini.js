@@ -17,7 +17,7 @@ const pluginConfig = {
   alias: ["remini", "enhance"],
   category: "tools",
   description: "AI Photo Enhancer ala Remini (unblur, face enhance, upscale AI)",
-  usage: ".remini (reply gambar) — enhance HD 2x, local AI tanpa watermark\n.remini real — 4x ala Remini (unblur/restore)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
+  usage: ".remini (reply gambar) — enhance HD 2x, local AI tanpa watermark\n.remini real — 4x ala Remini (unblur/restore)\n.remini 1080 / 2k / 4k / 5k — pilih ukuran hasil (di atas 1080p otomatis dikirim via document)\n.remini real 4k — bisa digabung (mode + ukuran)\n.remini bp hd/face/16k/product/text/concert — engine BeautyPlus (bisa ada watermark)\n.remini doc — kirim hasil sebagai dokumen",
   example: ".remini\n.remini face\n.remini doc",
   cooldown: 20,
   energi: 2,
@@ -258,9 +258,15 @@ async function handler(m, { sock, args }) {
     const wantDoc = argList.includes("doc");
     const wantBp = argList.includes("bp");
     // Local AI (default): hd → 2x cepat, real → 4x ala Remini — TANPA WATERMARK
-    const localMode = argList.some((a) => ["real", "4x", "ultra"].includes(a)) ? "real" : "hd";
+    // "4x" = alias lama buat mode real (scale 4x) — beda sama "4k" (pilihan ukuran output)
+    const localMode = argList.some((a) => ["real", "ultra", "4x"].includes(a)) ? "real" : "hd";
     // BeautyPlus (opsi): hasil bisa ada watermark
     const bpMode = wantBp ? argList.find((a, i) => i > 0 && MODES[a]) || "hd" : null;
+    // Pilihan ukuran output — teks list (1080p biasa s/d 5K HD)
+    // Catatan: "4x" sekarang = pilihan ukuran 4K, bukan mode real — real tetep via "real"/"ultra"
+    const SIZES = { "1080": 1920, fhd: 1920, fullhd: 1920, "2k": 2560, qhd: 2560, "4k": 3840, uhd: 3840, "5k": 5120 };
+    const sizeArg = argList.find((a) => SIZES[a]);
+    const targetOut = sizeArg ? SIZES[sizeArg] : null;
 
     let mediaBuffer;
     if (m.quoted?.isMedia || m.quoted?.type === "imageMessage") {
@@ -281,6 +287,8 @@ async function handler(m, { sock, args }) {
 
     let resultBuffer;
     let label;
+    let outWidth = 0;
+    let outHeight = 0;
     let engineNote = "Engine: Local AI (tanpa watermark)";
 
     if (bpMode) {
@@ -292,9 +300,16 @@ async function handler(m, { sock, args }) {
     } else {
       // Default: local AI — tanpa watermark. Kalau gagal, fallback ke BeautyPlus.
       try {
-        const r = await enhanceLocal(mediaBuffer, localMode);
+        // targetOut = sisi terpanjang hasil. input maxSide = target / scale
+        // (gambar kecil tetap gak di-upscale paksa — tanpa piksel palsu)
+        const opts = targetOut
+          ? { maxSide: Math.max(128, Math.round(targetOut / (localMode === "real" ? 4 : 2))), enlarge: true }
+          : {};
+        const r = await enhanceLocal(mediaBuffer, localMode, opts);
         resultBuffer = r.buffer;
-        label = `${r.label} - ${r.width}x${r.height}`;
+        label = `${r.label} - ${r.width}x${r.height} (${(r.ms / 1000).toFixed(0)}s)`;
+        outWidth = r.width;
+        outHeight = r.height;
       } catch (e) {
         console.error("[REMINI] local engine gagal, fallback ke BeautyPlus:", e.message);
         const r = await reminiEnhance(mediaBuffer, "hd");
@@ -307,8 +322,12 @@ async function handler(m, { sock, args }) {
 
     await m.react("🐣");
 
+    // Hasil di atas 1080p → otomatis document (WA bakal nge-compress kalo dikirim
+    // sebagai image — document jaga kualitas hasil HD/2K/4K/5K)
+    const autoDoc = outWidth > 1920 || outHeight > 1920;
+
     const caption = `*Remini AI Enhanced*\nMode: ${label}\n${engineNote}\nQuality: ${sizeMB}MB`;
-    if (wantDoc || resultBuffer.length > 5 * 1024 * 1024) {
+    if (wantDoc || autoDoc || resultBuffer.length > 5 * 1024 * 1024) {
       return await sock.sendMessage(
         m.chat,
         { document: resultBuffer, mimetype: "image/jpeg", fileName: `Remini-${label.replace(/\s+/g, "")}-${Date.now()}.jpg`, caption },
