@@ -87,7 +87,6 @@ async function handler(m, { sock }) {
     });
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("ytmp3"));
 
     if (result.isFallback) {
       const mp3Buffer = await fallbackToMp3Buffer(result.download);
@@ -101,6 +100,7 @@ async function handler(m, { sock }) {
         type: "audio", mimetype: "audio/mpeg", ptt: false,
         fileName: result.title || "audio.mp3",
       });
+      await m.reply(novaBerhasil("ytmp3"));
     }
     await m.reply(caption);
   } catch (err) {

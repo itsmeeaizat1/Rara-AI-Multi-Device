@@ -45,8 +45,8 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("tovintage"));
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "📼 Vintage mode aktif!" }, { quoted: m });
+    await m.reply(novaBerhasil("tovintage"));
   } catch (e) {
     console.error("tovintage error:", e.message);
     await m.react("❌");

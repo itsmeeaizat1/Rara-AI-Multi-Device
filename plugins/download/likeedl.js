@@ -47,11 +47,12 @@ async function handler(m, { sock }) {
       const data = await likee(url);
       if (data?.status && (data?.video || data?.url)) {
         await m.react("🐣");
-    await m.reply(novaBerhasil("likeedl"));
-        return await sock.sendMedia(m.chat, data.video || data.url, data?.title || null, m, {
+        await sock.sendMedia(m.chat, data.video || data.url, data?.title || null, m, {
           type: "video",
           contextInfo: { forwardingScore: 0, isForwarded: false },
         });
+        await m.reply(novaBerhasil("likeedl"));
+        return;
       }
     } catch (e) {
       console.error("[likeedl.js] builtin fallback failed:", e.message);

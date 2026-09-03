@@ -45,8 +45,8 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("tojepang"));
     await sock.sendMessage(m.chat, { image: imgBuffer, caption: "🗾 Kamu sudah di Jepang!" }, { quoted: m });
+    await m.reply(novaBerhasil("tojepang"));
   } catch (e) {
     console.error("tojepang error:", e.message);
     await m.react("❌");

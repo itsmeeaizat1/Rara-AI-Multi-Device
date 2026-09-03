@@ -50,8 +50,8 @@ async function handler(m, { sock }) {
       if (!convertUrl) throw new Error("Gagal convert ke GIF");
 
       await m.react("🐣");
-    await m.reply(novaBerhasil("togif"));
       await sock.sendMessage(m.chat, { video: { url: convertUrl }, gifPlayback: true }, { quoted: m });
+      await m.reply(novaBerhasil("togif"));
     }
   } catch (e) {
     console.error("togif error:", e.message);

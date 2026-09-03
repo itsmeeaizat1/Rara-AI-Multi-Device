@@ -52,7 +52,6 @@ async function handler(m, { sock, text }) {
     fs.writeFileSync(outputPath, buffer);
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("bratvideo"));
     await sock.sendVideoAsSticker(m.chat, outputPath, m, {
       packname: config.sticker.packname,
       author: config.sticker.author,
@@ -61,6 +60,7 @@ async function handler(m, { sock, text }) {
     setTimeout(() => {
       try { if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath); } catch {}
     }, 5000);
+    await m.reply(novaBerhasil("bratvideo"));
   } catch (e) {
     console.error("[bratvideo] error:", e.message);
     await m.react("❌");

@@ -198,7 +198,6 @@ async function sendPlayVideo(sock, m, video, quality) {
 
   // 1. Notifikasi sukses dulu (sesuai request owner)
   await m.react("🐣");
-  await m.reply(novaBerhasil("Playvideo"));
 
   // 2. Baru videonya (caption info nempel di situ)
   await sock.sendMessage(
@@ -221,6 +220,7 @@ async function sendPlayVideo(sock, m, video, quality) {
 
   // 3. Tawaran convert di bawahnya
   await offerConvert(sock, m, { buffer: vid.buffer, type: "video", platform: "YouTube", title: titleForLyrics, sourceUrl: video.url });
+  await m.reply(novaBerhasil("Playvideo"));
 }
 
 async function handler(m, { sock }) {

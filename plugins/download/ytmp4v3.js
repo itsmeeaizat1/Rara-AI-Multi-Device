@@ -53,7 +53,6 @@ async function handler(m, { sock }) {
     }
 
     await m.react("🐣");
-    await m.reply(novaBerhasil("ytmp4v3"));
 
     const durStr = `${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, "0")}`;
     let msg = mediaCaption({
@@ -81,6 +80,7 @@ async function handler(m, { sock }) {
         },
       },
     });
+    await m.reply(novaBerhasil("ytmp4v3"));
   } catch (err) {
     console.error("ytmp4v3 error:", err);
     await m.react("❌");
