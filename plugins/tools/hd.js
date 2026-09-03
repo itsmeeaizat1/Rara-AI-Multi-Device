@@ -7,12 +7,12 @@ import cfg from "../../config.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
 
 const pluginConfig = {
-  name: "remini",
-  alias: ["remini"],
+  name: "hd",
+  alias: ["hd", "hdx"],
   category: "tools",
   description: "Enhance gambar jadi HD (Sharp Lanczos3 upscaler, no API key)",
-  usage: ".remini (reply gambar)\n.remini doc — kirim sebagai dokumen\n.remini 2x / 4x / 8x",
-  example: ".remini\n.remini 4x doc",
+  usage: ".hd (reply gambar)\n.hd doc — kirim sebagai dokumen\n.hd 2x / 4x / 8x",
+  example: ".hd\n.hd 4x doc",
   cooldown: 15,
   energi: 1,
   isEnabled: true,
@@ -49,10 +49,10 @@ async function handler(m, { sock, args }) {
     let txt = "";
     txt += ``;
     txt += `Kirim/reply gambar dulu ya!\n`;
-    txt += `Contoh: .remini (reply gambar)\n`;
-    txt += `Custom scale: .remini 4x\n`;
-    txt += `Kirim sebagai dokumen: .remini doc\n`;
-        return await m.reply( txt, "remini");
+    txt += `Contoh: .hd (reply gambar)\n`;
+    txt += `Custom scale: .hd 4x\n`;
+    txt += `Kirim sebagai dokumen: .hd doc\n`;
+        return await m.reply( txt, "hd");
   }
 
   try {
@@ -63,7 +63,7 @@ async function handler(m, { sock, args }) {
     scale = Math.max(2, Math.min(8, scale || 2));
     const buffer = await m.download();
     if (!buffer) {
-      return await m.reply(claraWrap("remini", "Gagal download gambar! Coba lagi."));
+      return await m.reply(claraWrap("hd", "Gagal download gambar! Coba lagi."));
     }
 
     const { buffer: resultBuffer, width: outW, height: outH } = await upscaleImage(buffer, scale);
@@ -95,11 +95,11 @@ async function handler(m, { sock, args }) {
       );
     }
   } catch (e) {
-    console.error("[HD/Remini] Error:", e.message);
+    console.error("[HD] Error:", e.message);
     let txt = "";
     txt += `Gagal enhance gambar!\n`;
     txt += `${e.message}\n`;
-        await m.reply(claraWrap("remini", txt));
+        await m.reply(claraWrap("hd", txt));
   }
 }
 

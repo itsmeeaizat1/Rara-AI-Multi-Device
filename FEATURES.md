@@ -1002,6 +1002,32 @@ vps-create, vps-delete, vps-restart, vps-stats, dll
 - Cooldown: 20s, Energi: 2
 - Contoh: `.reminiv2` (reply gambar), `.reminiv2 4x doc`
 
+## 🖼️ Remini — AI Photo Enhancer (BeautyPlus Engine)
+
+- `.remini (reply gambar)` — AI enhance ala app Remini asli: unblur, face recolor, upscale AI
+- Alias: `.enhance`
+- Engine: BeautyPlus img-enhancer (pixocial) — AI asli, bukan sharp upscale (vyro.ai/Remini asli sudah mati)
+- `.remini hd` — enhance standar (default, 2x upscale AI)
+- `.remini face` — restore wajah / foto portrait (4x upscale)
+- `.remini 16k` — ultra 16K enhance
+- `.remini product` — foto produk jadi tajam
+- `.remini text` — foto teks/dokumen jelas
+- `.remini concert` — foto konser low-light
+- `.remini doc` — kirim hasil sebagai dokumen
+- Guest flow: uid anonim per request + signature HMAC x-sign
+- Cooldown: 20s, Energi: 2 | Max input: 15MB
+- Contoh: `.remini`, `.remini face`, `.remini 16k doc`
+
+## 🖼️ HD Upscaler — Sharp Local
+
+- `.hd (reply gambar)` — Upscale gambar 2x-8x pakai Sharp Lanczos3 (local, no API)
+- Alias: `.hdx`
+- `.hd doc` — kirim hasil sebagai dokumen
+- `.hd 2x / 4x / 8x` — custom scale
+- Cooldown: 15s, Energi: 1
+- Contoh: `.hd 4x doc`
+- Note: sebelumnya command ini bernama `.remini` — di-rename karena `.remini` kini AI enhance asli
+
 ## 🛡️ Quiz Verification (Anti-Spam Bot)
 
 - `.quizverify on/off` — Aktifkan/nonaktifkan verifikasi member baru (admin only)
