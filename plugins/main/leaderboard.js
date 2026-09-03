@@ -22,8 +22,8 @@ const pluginConfig = {
   ],
   category: 'main',
   description: 'Pusat leaderboard — RPG (gold/exp/level/pvp/gems/boss/dungeon/cinta) & Group (aktivitas)',
-  usage: '.leaderboard [rpg|gold|exp|level|pvp|gems|boss|dungeon|cinta|group|me|reset|stats]',
-  example: '.leaderboard rpg\n.leaderboard gold\n.leaderboard pvp',
+  usage: '.leaderboard [all|rpg|gold|exp|level|pvp|gems|boss|dungeon|cinta|group|me|reset|stats]',
+  example: '.leaderboard all\n.leaderboard rpg\n.leaderboard gold\n.leaderboard pvp',
   isOwner: false,
   isPremium: false,
   isGroup: false,
@@ -66,6 +66,7 @@ function getMode(cmd, args) {
     return 'rpg:overview'
 
   // Arg-based routing
+  if (a === 'all' || a === 'semua') return 'all'
   if (a === 'rpg' || a === 'rpg2' || a === 'overview') return 'rpg:overview'
   if (a === 'group' || a === 'grup') return 'group'
   if (['gold', 'koin', 'coin', 'bal', 'balance', 'money'].includes(a)) return 'rpg:gold'
@@ -356,6 +357,78 @@ async function showGroupLeaderboard(m, sock) {
 }
 
 // ═══════════════════════════════════════════════════════════
+// LEADERBOARD ALL — semua board game jadi 1 pesan (jalur cepat)
+// Bagian atas = ringkasan juara tiap board (kelihatan langsung),
+// sisanya disembunyikan di balik readmore biar gak wall-of-text.
+// ═══════════════════════════════════════════════════════════
+const READMORE = String.fromCharCode(8206).repeat(4001)
+
+const ALL_FIELDS = [
+  { key: 'gold',        title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ɢᴏʟᴅ',     label: (u) => `${formatNumber(u.gold)} gold`,           raw: 'Gold' },
+  { key: 'totalExp',    title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʟᴇᴠᴇʟ',    label: (u) => `Lv.${u.level} (${formatNumber(u.exp)} XP)`, raw: 'Level' },
+  { key: 'pvpRating',   title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴘᴠᴘ',       label: (u) => `${u.pvpRating} rating (W:${u.pvpWins} L:${u.pvpLosses})`, raw: 'PvP' },
+  { key: 'gems',        title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ɢᴇᴍꜱ',      label: (u) => `${formatNumber(u.gems)} gems`,            raw: 'Gems' },
+  { key: 'bossKills',   title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʙᴏꜱꜱ',      label: (u) => `${u.bossKills} boss kills`,              raw: 'Boss' },
+  { key: 'dungeonClears', title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴅᴜɴɢᴇᴏɴ', label: (u) => `${u.dungeonClears} dungeon clears`,      raw: 'Dungeon' },
+  { key: 'limit',       title: 'ᴛᴏᴘ ɢʟᴏʙᴀʟ ʟɪᴍɪᴛ',     label: (u) => `${formatNumber(u.limit)} limit`,         raw: 'Limit' },
+]
+
+async function showAllLeaderboards(m, sock) {
+  const senderJid = m.sender.replace(/@s\.whatsapp\.net/, '')
+  const users = collectRpgUsers(senderJid)
+
+  if (users.length === 0)
+    return m.reply(claraWrap('Leaderboard All', 'Belum ada data player RPG terdaftar.\nKetik .daftar untuk mulai main RPG.'))
+
+  const mkJid = (u) => u.jid.includes('@') ? u.jid : u.jid + '@s.whatsapp.net'
+  const mentions = []
+  const boards = []
+
+  // Bagian VISIBLE — ringkasan juara #1 tiap board
+  const summary = [`Total Player: *${formatNumber(users.length)}*`, ``]
+
+  for (const f of ALL_FIELDS) {
+    const sorted = [...users].sort((a, b) => (b[f.key] || 0) - (a[f.key] || 0))
+    const champ = sorted[0]
+    summary.push(`${f.raw}: ${f.label(champ)} (@${champ.jid.split('@')[0]})`)
+    mentions.push(mkJid(champ))
+
+    // Bagian READMORE — top 5 per board
+    const top5 = sorted.slice(0, 5)
+    let block = `▌${f.title}\n`
+    top5.forEach((u, i) => {
+      const medal = MEDALS[i] || `${i + 1}.`
+      block += `${medal} @${u.jid.split('@')[0]}${u.jid === senderJid ? ' *(You)*' : ''}\n   ${f.label(u)}\n`
+      mentions.push(mkJid(u))
+    })
+    const myRank = sorted.findIndex((u) => u.jid === senderJid)
+    if (myRank !== -1) block += `Kamu: #${myRank + 1} dari ${formatNumber(sorted.length)}\n`
+    boards.push(block)
+  }
+
+  // Board cinta (khusus yang udah punya pasangan)
+  const cintaUsers = users.filter((u) => u.hasSpouse).sort((a, b) => b.lovePower - a.lovePower)
+  if (cintaUsers.length > 0) {
+    const champ = cintaUsers[0]
+    summary.push(`Cinta: ${formatNumber(champ.lovePower)} LP (@${champ.jid.split('@')[0]})`)
+    mentions.push(mkJid(champ))
+
+    let block = `▌ᴛᴏᴘ ɢʟᴏʙᴀʟ ᴄɪɴᴛᴀ\n`
+    cintaUsers.slice(0, 5).forEach((u, i) => {
+      const medal = MEDALS[i] || `${i + 1}.`
+      block += `${medal} @${u.jid.split('@')[0]}${u.jid === senderJid ? ' *(You)*' : ''}\n   ${formatNumber(u.cinta)} affection | ${formatNumber(u.lovePower)} LP\n`
+      mentions.push(mkJid(u))
+    })
+    boards.push(block)
+  }
+
+  summary.push(``, `👇 Buka *Baca selengkapnya* buat liat Top 5 tiap board`)
+
+  const content = summary.join('\n') + `\n` + READMORE + `\n\n` + boards.join(`\n`)
+  await m.reply(claraWrap('Leaderboard All', content, { mentions }))
+}
+
+// ═══════════════════════════════════════════════════════════
 // MENU DISPATCHER
 // ═══════════════════════════════════════════════════════════
 async function showMenu(m, sock) {
@@ -364,6 +437,9 @@ async function showMenu(m, sock) {
   try { thumb = fs.readFileSync(thumbPath) } catch { thumb = Buffer.alloc(0) }
 
   const text = [
+    '⚡ Jalur cepat: .leaderboard all',
+    'Semua ranking game jadi 1 pesan (readmore).',
+    '',
     'Pilih jenis leaderboard:',
     '',
     'RPG:',
@@ -379,12 +455,13 @@ async function showMenu(m, sock) {
     '  group   — Aktivitas member minggu ini',
     '  me      — Statistik aktivitas kamu',
     '',
-    'Contoh: .leaderboard gold',
+    'Contoh: .leaderboard all | .leaderboard gold',
   ].join('\n')
 
   try {
     await sock.sendButton(m.chat, thumb, text, m, {
       buttons: [
+        { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Semua (All)', id: `${m.prefix}leaderboard all` }) },
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'RPG Overview', id: `${m.prefix}leaderboard rpg` }) },
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Top Gold', id: `${m.prefix}topgold` }) },
         { name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Top PvP', id: `${m.prefix}toppvp` }) },
@@ -406,6 +483,7 @@ async function handler(m, { sock, config: cfg }) {
   const mode = getMode(cmd, args)
 
   if (mode === 'menu') return showMenu(m, sock)
+  if (mode === 'all') return showAllLeaderboards(m, sock)
   if (mode === 'group') return showGroupLeaderboard(m, sock)
   if (mode === 'limit') return showRpgLeaderboard(m, sock, 'limit')
 
