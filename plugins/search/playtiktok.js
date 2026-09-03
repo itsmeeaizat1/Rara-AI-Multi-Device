@@ -2,6 +2,8 @@
 import te from "../../src/lib/nova-error.js";
 import { tiktokSearchVideo } from "../../src/scraper/tiktoksearch.js";
 import { novaError, novaEmpty, novaGuide, novaNoInput, claraWrap } from "../../src/lib/nova-menu-style.js";
+import { mediaCaption } from "../../src/lib/nova-menu-style.js";
+import { mediaPreviewCard } from "../../src/lib/nova-media-card.js";
 
 const pluginConfig = {
   name: "playtiktok",
@@ -30,7 +32,13 @@ async function handler(m, { sock }) {
   const query = m.args.join(" ")?.trim();
 
   if (!query) {
-    return m.reply( `🎵 *ᴘʟᴀʏ ᴛɪᴋᴛᴏᴋ*\n\nContoh:\n\`${m.prefix}playtiktok cewe tiktok\``, "playtiktok");
+    return m.reply(claraWrap("PlayTikTok", [
+      `📌 Cari dan kirim satu video TikTok dari keyword:`,
+      ``,
+      `💡 Contoh:`,
+      `${m.prefix}playtiktok cewe tiktok`,
+      `${m.prefix}playtiktok viral`,
+    ]));
   }
   try {
     const videos = await tiktokSearchVideo(query);
@@ -39,23 +47,31 @@ async function handler(m, { sock }) {
     }
 
     const video = videos[0];
-    let caption = "🎵 *ᴘʟᴀʏ ᴛɪᴋᴛᴏᴋ*\n\n";
-    caption += `📌 *ᴊᴜᴅᴜʟ:* ${video.title || "-"}\n`;
-    caption += `👤 *ᴀᴜᴛʜᴏʀ:* ${video.author?.nickname || "-"}\n`;
-    caption += `👀 *ᴠɪᴇᴡꜱ:* ${formatNumber(video.stats?.plays)}\n`;
-    caption += `❤️ *ʟɪᴋᴇꜱ:* ${formatNumber(video.stats?.likes)}\n`;
-    caption += `💬 *ᴄᴏᴍᴍᴇɴᴛꜱ:* ${formatNumber(video.stats?.comments)}\n`;
-    caption += `🔁 *ꜱʜᴀʀᴇꜱ:* ${formatNumber(video.stats?.shares)}\n`;
-    caption += `🎧 *ᴍᴜꜱɪᴄ:* ${video.music || "-"}\n`;
-    caption += `🔗 *ʟɪɴᴋ:* ${video.link}`;
+    const caption = mediaCaption({
+      platformIcon: "🎵",
+      platformName: "TikTok",
+      title: video.title || "TikTok Video",
+      author: video.author?.nickname || null,
+      authorHandle: video.author?.uniqueId || null,
+      duration: video.duration ? `${Math.floor(video.duration / 60)}:${String(video.duration % 60).padStart(2, "0")}` : null,
+      views: formatNumber(video.stats?.plays),
+      likes: formatNumber(video.stats?.likes),
+      comments: formatNumber(video.stats?.comments),
+      shares: formatNumber(video.stats?.shares),
+      format: "Video HD (No Watermark)",
+      method: "TikTok Search",
+    }) + (video.link ? `\nLink: ${video.link}` : "");
 
-    await sock.sendMedia(m.chat, video.link, caption, m, {
+    await sock.sendMedia(m.chat, video.download || video.link, caption, m, {
       type: "video",
       mimetype: "video/mp4",
-      contextInfo: {
-        forwardingScore: 0,
-        isForwarded: false,
-      },
+      contextInfo: mediaPreviewCard({
+        title: video.title || "TikTok Video",
+        body: "TikTok • PlayTikTok",
+        sourceUrl: video.link || "",
+        thumbnailUrl: video.cover || video.originCover || "",
+        mediaType: 2,
+      }),
     });
   } catch (error) {
     console.log(error);
