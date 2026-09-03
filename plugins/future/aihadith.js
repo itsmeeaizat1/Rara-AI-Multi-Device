@@ -27,7 +27,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(`Cari hadis yang berkaitan dengan: "${query}". Berikan riwayat (Bukhari/Muslim/dll), teks hadis, dan terjemahan dalam Bahasa Indonesia. Maksimal 3 hadis.`, {
       systemPrompt: "Kamu adalah ahli hadis. Berikan jawaban akurat dan singkat.",
     });
-    await m.reply(claraWrap("AI Hadith", "📖") + "\n\n" + result + "\n\n" + separator("━", 22));
+    await m.reply(claraWrap("AI Hadith", "📖") + "\n\n" + result );
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

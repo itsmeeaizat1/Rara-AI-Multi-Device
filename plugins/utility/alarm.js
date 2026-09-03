@@ -33,7 +33,7 @@ async function handler(m, { sock, config: botConfig }) {
       }
       let text = claraHeader("Alarm Aktif", "⏰") + "\n\n";
       myAlarms.forEach((a, i) => { text += `${i+1}. *${a.time}* - ${a.message}\n`; });
-      text += "\n" + separator("━", 22);
+      text += "\n";
       await m.reply(text);
       return { handled: true };
     }

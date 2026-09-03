@@ -2,7 +2,7 @@
 // Truth or Dare — Dare command
 
 import fs from "fs";
-import { novaError, novaEmpty, novaGuide, novaNoInput } from "../../src/lib/nova-menu-style.js";
+import {novaBox, novaEmpty, novaError, novaGuide, novaNoInput} from "../../src/lib/nova-menu-style.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -46,14 +46,12 @@ export async function handler(m, { sock }) {
       return;
     }
 
-    const text = [
-      "🔥 *Mode:* DARE",
-      "",
-      "```" + dare + "```",
+    const text = novaBox("Dare", [
+      dare,
       "",
       "💡 Berani lakuin?",
-      "Atau ketik .truth buat ganti ke pertanyaan",
-    ].join("\n");
+      "📌 Ketik .truth buat ganti ke pertanyaan",
+    ]);
 
     await m.reply(text);
     await m.react("🔥");

@@ -47,7 +47,7 @@ async function handler(m, { sock, config: botConfig }) {
       if (!expenses.length) { await m.reply(claraWrap("expensetrack", "Belum ada expense. Ketik .expensetrack add <desc> <jumlah>")); return { handled: true }; }
       let total = 0; let text = claraWrap("Group Expenses", "💰") + "\n\n";
       expenses.forEach((e, i) => { text += `${i+1}. ${e.desc} - Rp${e.amount.toLocaleString("id-ID")}\n`; total += e.amount; });
-      text += `\n*Total: Rp${total.toLocaleString("id-ID")}*\n\n` + separator("━", 22);
+      text += `\n*Total: Rp${total.toLocaleString("id-ID")}*`;
       await m.reply(text);
     }
   } catch (e) { await m.reply("Error: " + e.message); }

@@ -78,20 +78,16 @@ async function handler(m, { sock, config: botConfig, db }) {
         "\n" +
         claraWrap("sTATUs", [`Footer otomatis: *${enabled ? "ON" : "OFF"}*`, `Provider: *${currentProvider}*`].join("\n")) +
         "\n\n" +
-        separator("━", 22) +
-        "\n" +
+        
         claraWrap("PROVIDER", providerList) +
         "\n\n" +
-        separator("━", 22) +
-        "\n" +
+        
         claraWrap("LOKAsI", [`Nama: *${currentLocation.name || "Jakarta"}*`, `Lat: *${currentLocation.latitude ?? -6.2088}*`, `Lon: *${currentLocation.longitude ?? 106.8456}*`].join("\n")) +
         "\n\n" +
-        separator("━", 22) +
-        "\n" +
+        
         claraWrap("KONFIG", [`Provider aktif: *${currentProvider}*`, `API key: *${current.apiKey ? "terpasang" : "belum diatur"}*`, `Location key: *${current.locationKey || "belum diatur"}*`].join("\n")) +
         "\n\n" +
-        separator("━", 22) +
-        "\n" +
+        
         tipText("Ganti provider lewat .cuaca provider <nama>") +
         "\n" +
         tipText(`Ketik ${prefix}menu untuk kembali`);
@@ -111,8 +107,7 @@ async function handler(m, { sock, config: botConfig, db }) {
             enabled ? "Sekarang setiap pesan bot akan menambahkan footer cuaca" : "Footer cuaca tidak akan ditambahkan lagi",
           ]) +
           "\n\n" +
-          separator("━", 22) +
-          "\n" +
+          
           tipText(`Ganti lagi kapan saja dengan ${prefix}cuaca on|off`) +
           "\n" +
           tipText(`Ketik ${prefix}cuaca help untuk melihat bantuan`)

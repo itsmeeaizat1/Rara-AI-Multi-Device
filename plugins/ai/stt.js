@@ -51,8 +51,6 @@ async function handler(m, { sock, config: botConfig }) {
       claraWrap("Speech to Text", [`Hasil: *${replyText.slice(0, 300)}${replyText.length > 300 ? "..." : ""}*`].join("\n")) +
       "\n\n" +
       claraWrap("RANGKUM", `Ringkasan: *${aiReply}*`) +
-      "\n\n" +
-      separator("━", 22) +
       "\n" +
       tipText(`Ketik ${prefix}stt untuk ringkas pesan lain`) +
       "\n" +

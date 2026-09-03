@@ -21,7 +21,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(`Dari teks berikut, deteksi tanggal & event/acara. Format jawaban: TANGGAL: DD-MM-YYYY | EVENT: nama_event. Jika tidak ada tanggal, jawab: TIDAK ADA EVENT.\n\n${text.substring(0, 500)}`, {
       systemPrompt: "Kamu adalah event detector. Berikan jawaban singkat sesuai format.",
     });
-    await m.reply(claraWrap("Auto Event", "📅") + "\n\n" + result + "\n\n" + separator("━", 22));
+    await m.reply(claraWrap("Auto Event", "📅") + "\n\n" + result );
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }

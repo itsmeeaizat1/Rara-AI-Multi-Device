@@ -213,7 +213,6 @@ async function handler(m, { sock, config: botConfig }) {
     const result =
       novaError("AICaption", "Error nih") + "\n\n" +
       `${captionResult}` + "\n\n" +
-      separator("━", 22) + "\n" +
       tipText("Copy caption favoritmu untuk Instagram") + "\n" +
       tipText(`${prefix}aicaption product — style jualan`);
 

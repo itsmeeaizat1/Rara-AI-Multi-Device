@@ -34,12 +34,8 @@ function buildMenu(prefix) {
       "Cooldown: *10 detik*"].join("\n")) +
     "\n" +
     claraWrap("PreꜱEt Idea", PRESETS) +
-    "\n\n" +
-    separator("━", 22) +
     "\n" +
     claraWrap("Pakai", [`${prefix}timecapsule <hari>|<pesan>`, `Contoh: ${prefix}timecapsule 7|Semoga grup rame terus`].join("\n")) +
-    "\n\n" +
-    separator("━", 22) +
     "\n" +
     tipText("Pesan tidak dikirim otomatis; ini simulasi konsep dulu") +
     "\n" +

@@ -38,7 +38,7 @@ async function handler(m, { sock, config: botConfig }) {
       text += claraWrap("Berita Terakhir", items.map((it,i) => `${i+1}. ${it.substring(0,60)}`)) + "\n\n";
     } catch (e) { console.error('[smartbriefing.js]:', e.message); }
     
-    text += separator("━", 22) + "\n" + tipText(`Ketik ${prefix}menu untuk kembali`);
+    text +=  tipText(`Ketik ${prefix}menu untuk kembali`);
     await m.reply(text);
   } catch (e) { await m.reply(claraWrap("smartbriefing", "Error: " + e.message, "error")); }
   return { handled: true };

@@ -21,7 +21,7 @@ async function handler(m, { sock, config: botConfig }) {
     const result = await callAI(`Analisis sentiment dari teks berikut. Jawab HANYA dengan: POSITIF, NEGATIF, atau NETRAL, lalu berikan alasan singkat dalam Bahasa Indonesia.\n\n${text.substring(0, 500)}`, {
       systemPrompt: "Kamu adalah sentiment analyzer. Berikan jawaban singkat.",
     });
-    await m.reply(claraWrap("Sentiment Analysis", "📊") + "\n\n" + result + "\n\n" + separator("━", 22));
+    await m.reply(claraWrap("Sentiment Analysis", "📊") + "\n\n" + result );
   } catch (e) { await m.reply("Error: " + e.message); }
   return { handled: true };
 }
