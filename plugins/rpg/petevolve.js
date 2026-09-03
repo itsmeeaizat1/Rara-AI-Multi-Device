@@ -174,8 +174,8 @@ async function handler(m, { sock }) {
       // Evolution Animation Box Output
       let animText = "";
       animText += `⚡ Pet kamu menyerap energi sihir kuno...\n`;
-      animText += `Tubuh *${oldName}* dipenuhi aura cahaya terang!\n`;
-      animText += `💥 *BOOM! EVOLUSI BERHASIL!*\n`;
+      animText += ` Tubuh *${oldName}* dipenuhi aura cahaya terang!\n`;
+      animText += `💥 *ʙᴏᴏᴍ! ᴇᴠᴏʟᴜꜱɪ ʙᴇʀʜᴀꜱɪʟ!*\n`;
       animText += `
 `;
       animText += `🐾 Pet Baru : *${pet.emoji} ${pet.name}*\n`;

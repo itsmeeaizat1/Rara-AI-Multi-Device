@@ -68,8 +68,8 @@ async function handler(m, { sock, db }) {
   ];
 
   const bodyText =
-    `🎨🖼️ *MENU VARIANT*\n\n` +
-    `Atur tampilan menu utama bot ketika user mengetik perintah menu 📋 \n` +
+    `🎨🖼️ *ᴍᴇɴᴜ ᴠᴀʀɪᴀɴᴛ*\n\n` +
+    `Atur tampilan menu utama bot ketika user mengetik perintah menu 📋\n` +
     `Variant aktif saat ini: *V${current} — ${VARIANTS[`v${current}`]?.name || "Unknown"}* 🎯\n\n` +
     `Pilih variant menu dari tombol di bawah 👇`;
 

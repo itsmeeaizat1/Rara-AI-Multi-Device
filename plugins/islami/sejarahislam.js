@@ -60,7 +60,7 @@ async function handler(m, { sock }) {
     if (action === "daftarsurat" || action === "list") {
       const res = await fetchJson(EQURAN_API);
       const allSurah = res.data || res;
-      let txt = "*DAFTAR SURAT AL-QURAN*\n\n";
+      let txt = "*ᴅᴀꜰᴛᴀʀ ꜱᴜʀᴀᴛ ᴀʟ-Qᴜʀᴀɴ*\n\n";
 
       for (let i = 0; i < allSurah.length; i++) {
         const s = allSurah[i];

@@ -21,7 +21,7 @@ const pluginConfig = {
 async function handler(m, { sock }) {
   const prompt = m.text;
   if (!prompt) {
-    return m.reply( `🍌 *NOVA BANANA SUPER 2*\n\n` +
+    return m.reply( `🍌 *ɴᴏᴠᴀ ʙᴀɴᴀɴᴀ ꜱᴜᴘᴇʀ 2*\n\n` +
         `Buat gambar dengan AI\n\n` +
         `\`Contoh: ${m.prefix}novabanana2 make a cat\``, "novabanana2");
   }

@@ -33,22 +33,22 @@ async function handler(m, { sock }) {
     ? Object.values(db.db.data.sewa.registrations).filter((r) => r.status === "pending").length
     : 0;
   if (!args || args === "status") {
-    return m.reply( `🔧 *SISTEM SEWA BOT*\n\n` +
+    return m.reply( `🔧 *ꜱɪꜱᴛᴇᴍ ꜱᴇᴡᴀ ʙᴏᴛ*\n\n` +
         `Status: *${currentStatus ? "✅ AKTIF" : "❌ NONAKTIF"}*\n` +
         `Grup terdaftar: *${sewaGroups.length}*\n` + `Pendaftaran pending: *${pendingRegs}*\n\n` +
-        `*PERINTAH TERSEDIA:*\n` +
+        `*ᴘᴇʀɪɴᴛᴀʜ ᴛᴇʀꜱᴇᴅɪᴀ:*\n` +
         `*${m.prefix}sewabot on* — Aktifkan sistem sewa\n` +
         `*${m.prefix}sewabot off* — Nonaktifkan sistem sewa\n` +
         `*${m.prefix}sewabot leave* — Keluar dari semua grup non-whitelist\n\n` +
-        `*KELOLA SEWA:*\n` +
+        `*ᴋᴇʟᴏʟᴀ ꜱᴇᴡᴀ:*\n` +
         `*${m.prefix}addsewa <link> <durasi>* — Tambah grup + auto join\n` +
         `*${m.prefix}delsewa <link/id>* — Hapus grup dari whitelist\n` +
         `*${m.prefix}renewsewa <link/id> <durasi>* — Perpanjang sewa\n` +
         `*${m.prefix}listsewa* — Lihat semua grup terdaftar\n` +
-        `*${m.prefix}checksewa* — Cek sisa sewa (di grup)\n\n` + `*PENDAFTARAN SEWA:*\n` + `*${m.prefix}daftarsewa* — User daftar sewa (private)\n` + `*${m.prefix}approvesewa* — Owner approve pendaftaran\n` + `*${m.prefix}rejectsewa* — Owner tolak pendaftaran\n\n` +
-        `*FORMAT DURASI:*\n` +
+        `*${m.prefix}checksewa* — Cek sisa sewa (di grup)\n\n` + `*ᴘᴇɴᴅᴀꜰᴛᴀʀᴀɴ ꜱᴇᴡᴀ:*\n` + `*${m.prefix}daftarsewa* — User daftar sewa (private)\n` + `*${m.prefix}approvesewa* — Owner approve pendaftaran\n` + `*${m.prefix}rejectsewa* — Owner tolak pendaftaran\n\n` +
+        `*ꜰᴏʀᴍᴀᴛ ᴅᴜʀᴀꜱɪ:*\n` +
         `30i (menit) • 12h (jam) • 7d (hari) • 1m (bulan) • 1y (tahun) • lifetime\n\n` +
-        `*CARA KERJA:*\n` +
+        `*ᴄᴀʀᴀ ᴋᴇʀᴊᴀ:*\n` +
         `1. Tambahkan grup dengan *${m.prefix}addsewa*\n` +
         `2. Bot otomatis join jika pakai link\n` +
         `3. Aktifkan dengan *${m.prefix}sewabot on*\n` +
@@ -121,7 +121,7 @@ async function handler(m, { sock }) {
         }
       }
       return m.reply(
-        `✅ *SEWA BOT AKTIF*\n\n` +
+        `✅ *ꜱᴇᴡᴀ ʙᴏᴛ ᴀᴋᴛɪꜰ*\n\n` +
           `Grup whitelist: *${sewaGroups.length}*\n` +
           `Keluar dari: *${leftCount}* grup\n` +
           `Gagal: *${failedCount}* grup`,

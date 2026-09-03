@@ -104,7 +104,7 @@ Mau jadian? Tag orangnya atau reply pesannya ya!\n\n` +
 
       return m.reply(
         "" +
-        `💕 *CIE CIE!*\n` +
+        `💕 *ᴄɪᴇ ᴄɪᴇ!*\n` +
         `@${m.sender.split("@")[0]} dan @${targetJid.split("@")[0]} resmi jadian!\n` +
         `❤️ Affection awal: *50*\n` +
         `📅 Mulai kencan dengan \`${m.prefix}rpgkencan\`\n\n` +
@@ -171,7 +171,7 @@ async function answerHandler(m, sock) {
       await m.react("💕");
       await m.reply(
         "" +
-        `💕 *CIE CIE!*\n` +
+        `💕 *ᴄɪᴇ ᴄɪᴇ!*\n` +
         `@${m.sender.split("@")[0]} dan @${shooter.split("@")[0]} resmi jadian!\n` +
         `❤️ Affection awal: *50*\n` +
         `📅 Mulai kencan dengan \`${m.prefix}rpgkencan\`\n\n` +

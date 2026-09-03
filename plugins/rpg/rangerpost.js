@@ -113,10 +113,10 @@ async function handler(m, { sock }) {
       msg += `
 `;
       if (success) {
-        msg += `🏆 *BERHASIL!*\n`;
+        msg += `🏆 *ʙᴇʀʜᴀꜱɪʟ!*\n`;
         msg += `Reward: +${task.reward} gold\n`;
       } else {
-        msg += `💀 *GAGAL!*\n`;
+        msg += `💀 *ɢᴀɢᴀʟ!*\n`;
         msg += `Tidak ada reward\n`;
       }
       const remaining = 3 - data.tasksDone.length;

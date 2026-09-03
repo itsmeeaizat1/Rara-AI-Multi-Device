@@ -180,7 +180,7 @@ async function handler(m, { sock }) {
     else inactive.push("selfMode");
 
     let lines = [
-      "Status Safe Mode: " + (active.length > 15 ? "*AKTIF*" : "*SEBAGIAN*"),
+      "Status Safe Mode: " + (active.length > 15 ? "*ᴀᴋᴛɪꜰ*" : "*ꜱᴇʙᴀɢɪᴀɴ*"),
       "",
       "Proteksi aktif (" + active.length + "):",
     ];
