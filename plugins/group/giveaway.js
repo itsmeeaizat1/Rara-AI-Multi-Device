@@ -394,7 +394,6 @@ const rerollCmds = ["giveawayreroll", "gareroll", "ulangigiveaway"];
 
 const plugin = {
   name: ["giveaway", ...createCmds, ...listCmds, ...deleteCmds, ...rerollCmds],
-  alias: ["quick_reply", "giveaway"],
   alias: "ga",
   category: "group",
   description: "Sistem giveaway dengan interactive buttons",
@@ -460,7 +459,7 @@ async function handler(m, { sock }) {
 
     const giveaways = db.setting("giveaways") || {};
     const giveaway = giveaways[giveawayId];
-    if (!giveaway) return m.reply(claraWrap("quick_reply", "⚠️ Giveaway tidak ditemukan!"));
+    if (!giveaway) return m.reply(claraWrap("Giveaway", "⚠️ Giveaway tidak ditemukan!"));
     if (giveaway.ended) return m.reply(claraWrap("Quick_reply", "⚠️ Giveaway sudah berakhir!"));
     if (giveaway.participants.includes(m.sender))
       return m.reply(claraWrap("Quick_reply", "⚠️ Kamu sudah join!"));
@@ -498,7 +497,7 @@ async function handler(m, { sock }) {
       }
     }
 
-    await m.reply(claraWrap("quick_reply", text));
+    await m.reply(claraWrap("Giveaway", text));
     return;
   }
 
@@ -508,7 +507,7 @@ async function handler(m, { sock }) {
     if (!giveawayId) return m.reply(claraWrap("Quick_reply", `⚠️ Format: ${prefix}${cmd} GA-XXXXXX`));
 
     const giveaways = db.setting("giveaways") || {};
-    if (!giveaways[giveawayId]) return m.reply(claraWrap("quick_reply", "⚠️ Giveaway tidak ditemukan!"));
+    if (!giveaways[giveawayId]) return m.reply(claraWrap("Giveaway", "⚠️ Giveaway tidak ditemukan!"));
 
     delete giveaways[giveawayId];
     db.setting("giveaways", giveaways);
@@ -523,8 +522,8 @@ async function handler(m, { sock }) {
 
     const giveaways = db.setting("giveaways") || {};
     const giveaway = giveaways[giveawayId];
-    if (!giveaway) return m.reply(claraWrap("quick_reply", "⚠️ Giveaway tidak ditemukan!"));
-    if (!giveaway.ended) return m.reply(claraWrap("quick_reply", "⚠️ Giveaway belum berakhir!"));
+    if (!giveaway) return m.reply(claraWrap("Giveaway", "⚠️ Giveaway tidak ditemukan!"));
+    if (!giveaway.ended) return m.reply(claraWrap("Giveaway", "⚠️ Giveaway belum berakhir!"));
     if (giveaway.participants.length === 0)
       return m.reply(claraWrap("Quick_reply", "⚠️ Tidak ada peserta!"));
 
