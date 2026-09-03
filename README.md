@@ -37,8 +37,8 @@ Automation:
 
 
 <!--START_SECTION:latest-update-->
-> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-fix%3A%20qc%20blank%2Fgepeng%20%2B%20iqc%20kepotong%20jadi-success?style=for-the-badge)
-> *Commit: "fix: qc blank/gepeng + iqc kepotong jadi stiker"*
+> 🔥 **Fitur/Update Terbaru:** ![Fitur Terbaru](https://img.shields.io/badge/Update-docs%3A%20tambah%20dokumentasi%20.qc%20dan%20.iqc%20di-success?style=for-the-badge)
+> *Commit: "docs: tambah dokumentasi .qc dan .iqc di FEATURES.md"*
 <!--END_SECTION:latest-update-->
 
 ---
