@@ -5,7 +5,6 @@ import {
   claraWrap, toSC
 } from "../../src/lib/nova-menu-style.js";
 import { getLeaderboard } from "../../src/lib/nova-rpg-service.js";
-import { animGeneric } from "../../src/lib/nova-rpg-anim.js";
 
 const pluginConfig = {
   name: "leaderboard",
@@ -78,7 +77,6 @@ async function handler(m, { sock }) {
     // ── Tanpa argumen / kategori tidak dikenal → menu kategori ──
     if (!input || !cat) {
       if (input && !cat) await m.react("🚫");
-      await animGeneric(m, sock, "🏆", "Loading Leaderboard");
 
       let menu = "";
       if (input && !cat) menu += `Kategori *${input}* tidak ditemukan.\n\n`;
@@ -94,7 +92,6 @@ async function handler(m, { sock }) {
     }
 
     // ── Board kategori terpilih ──
-    await animGeneric(m, sock, cat.icon, "Loading Leaderboard");
     const board = getLeaderboard(cat.metric, 10);
     if (!board.length) {
       await m.react("🐣");
