@@ -312,26 +312,20 @@ async function handler(m, { sock }) {
 
     setSessionTimer(chatId, async () => {
       try {
-        const revealLines = [];
+        // Reveal jawaban = hasil game → plain text tanpa box (aturan hasil plain)
+        let endText = `${pick(TIMEOUT_MSGS)}\n\n`;
+        endText += `${session.question}\n\n`;
+        endText += `Jawaban lengkap:\n\n`;
         for (let i = 0; i < session.answers.length; i++) {
           const ans = session.answers[i];
-          revealLines.push(`${i + 1}. ${ans.text} ${ans.revealed ? "✅" : "❌"}`);
+          endText += `${i + 1}. ${ans.text} ${ans.revealed ? "✅" : "❌"}\n`;
         }
-        const endLines = [
-          pick(TIMEOUT_MSGS),
-          "---",
-          session.question,
-          { sub: "Jawaban Lengkap" },
-          ...revealLines,
-          "---",
-          `${toSC("Ditemukan")} : ${session.foundCount}/${session.totalAnswers}`,
-        ];
+        endText += `\nDitemukan: ${session.foundCount}/${session.totalAnswers}\n\n`;
         const scores = renderScores(session);
-        if (scores) {
-          endLines.push({ sub: "Skor Akhir" }, ...scores);
+        if (scores.length) {
+          endText += `🏆 Skor akhir:\n${scores.join("\n")}\n\n`;
         }
-        endLines.push("---", "Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳");
-        const endText = novaBox("Family 100", endLines);
+        endText += `Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳`;
         await sock.sendMessage(chatId, { text: endText });
       } catch (e) {
         console.error("[family100] Timeout handler error:", e.message);
@@ -369,26 +363,20 @@ async function answerHandler(m, sock) {
       // Build reveal text BEFORE ending session
       // Format hasil (request owner): jawaban plain tanpa bold/uppercase,
       // bold cuma di header — biar gak berlebihan.
-      const revealLines = [];
+      // Reveal jawaban = hasil game → plain text tanpa box (aturan hasil plain)
+      let text = `${pick(SURRENDER_MSGS)}\n\n`;
+      text += `${session.question}\n\n`;
+      text += `Jawaban lengkap:\n\n`;
       for (let i = 0; i < session.answers.length; i++) {
         const ans = session.answers[i];
-        revealLines.push(`${i + 1}. ${ans.text} ${ans.revealed ? "✅" : "❌"}`);
+        text += `${i + 1}. ${ans.text} ${ans.revealed ? "✅" : "❌"}\n`;
       }
-      const endLines = [
-        pick(SURRENDER_MSGS),
-        "---",
-        session.question,
-        { sub: "Jawaban Lengkap" },
-        ...revealLines,
-        "---",
-        `${toSC("Ditemukan")} : ${session.foundCount}/${session.totalAnswers}`,
-      ];
+      text += `\nDitemukan: ${session.foundCount}/${session.totalAnswers}\n\n`;
       const scores = renderScores(session);
-      if (scores) {
-        endLines.push({ sub: "Skor Akhir" }, ...scores);
+      if (scores.length) {
+        text += `🏆 Skor akhir:\n${scores.join("\n")}\n\n`;
       }
-      endLines.push("---", "Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳");
-      let text = novaBox("Family 100", endLines);
+      text += `Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳`;
 
       const mentionJids = Object.keys(session.scores).length > 0
         ? Object.keys(session.scores)
