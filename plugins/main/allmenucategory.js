@@ -165,6 +165,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
           },
         ],
         prefix: "",
+        footerName: botName,
       });
 
       const navButtons = [
@@ -238,6 +239,7 @@ async function handler(m, { sock, db, config: botConfig, uptime }) {
       ],
       prefix,
       readMoreBeforeCategories: true,
+        footerName: botName,
     });
 
     const navButtons2 = [
