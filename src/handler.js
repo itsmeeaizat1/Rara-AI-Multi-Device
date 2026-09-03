@@ -857,9 +857,9 @@ try {
   // === ENERGI / LIMIT CHECK & DEDUCTION ===
   // (owner: dua mata uang BEDA — energi itu khusus game, limit itu akses fitur)
   const energiCost = plugin.config.energi || 0;
-  // Game (rpg/game) → potong ENERGI GAME (rpg.energy/maxEnergy)
+  // Game (rpg/game/rpg couple) → potong ENERGI GAME (rpg.energy/maxEnergy)
   // Fitur lain (ai/download/dll) → potong LIMIT AKSES FITUR (user.energi)
-  const gameCtx = ["rpg", "game"].includes(String(plugin.config.category || ""));
+  const gameCtx = ["rpg", "game", "rpg couple"].includes(String(plugin.config.category || ""));
   let energiDeducted = 0;
   let sisaEnergi = 0;
   let isUnlimited = false;
