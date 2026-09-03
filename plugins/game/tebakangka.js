@@ -69,6 +69,7 @@ async function handler(m, { args, prefix }) {
       `┊ 🎉 Benar! Angkanya ${game.target}\n` +
       `┊ 🔄 Tebakan ke-${game.attempts} dari ${game.maxAttempts}\n` +
       `┊ 🏆 +${expGain} EXP\n` +
+      `┊ Yuk tebak angka lain kak, biar makin jago nebak 🥳\n` +
       ""
     );
   }
@@ -80,6 +81,7 @@ async function handler(m, { args, prefix }) {
       `┊ 😭 Kesempatan habis!\n` +
       `┊ Angkanya: ${game.target}\n` +
       `┊ Coba lagi: ${prefix}tebakangka mulai\n` +
+      `┊ Yuk coba lagi kak, angkanya gak akan kabur 🥳\n` +
       ""
     );
   }

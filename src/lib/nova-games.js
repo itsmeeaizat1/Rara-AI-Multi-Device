@@ -52,6 +52,70 @@ function pick(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+
+// ─── CTA tematik per game — kalimat interaktif penutup pesan hasil ───
+// Beda game, beda kalimat, sesuai temanya masing-masing (request owner).
+const GAME_CTA = {
+  // TEXT GAMES
+  asahotak: "Yuk asah otakmu lagi kak, biar makin encer 🧠🥳",
+  caklontong: "Yuk caklon lagi kak, biar ketawanya makin ringan 😂🥳",
+  kataacak: "Yuk acak kata lain kak, biar makin jago 🔤🥳",
+  kuis: "Yuk jawab kuis lain kak, biar nilaimu makin tinggi 📝🥳",
+  riddle: "Yuk pecahkan riddle lain kak, biar makin paham 🔮🥳",
+  siapakahaku: "Yuk tebak siapa lagi kak, biar makin jago nebak orang 🎭🥳",
+  susunkata: "Yuk susun kata lain kak, biar makin cepat 🧩🥳",
+  tebakfilm: "Yuk tebak film lain kak, biar kamu makin jago soal perfilman 🎬🥳",
+  tebakhewan: "Yuk tebak hewan lain kak, biar makin kenal satwa 🐾🥳",
+  tebakkalimat: "Yuk lengkapi kalimat lain kak, biar makin fasih 📝🥳",
+  tebakkata: "Yuk tebak kata lain kak, biar kosakatamu makin luas 💬🥳",
+  tebakkimia: "Yuk tebak unsur lain kak, biar makin jago kimia ⚗️🥳",
+  tebaklagu: "Yuk nebak lagu lain kak, biar kupingmu makin teliti 🎵🥳",
+  tebaklirik: "Yuk lengkapi lirik lain kak, biar makin hapal lagu 🎶🥳",
+  tebaknegara: "Yuk tebak negara lain kak, biar makin hafal dunia 🌍🥳",
+  tebakprofesi: "Yuk tebak profesi lain kak, biar makin kenal dunia kerja 👷🥳",
+  tebaktebakan: "Yuk tebak-tebak lagi kak, biar makin seru ❓🥳",
+  tekateki: "Yuk pecahkan teka-teki lain kak, biar otakmu makin tajam 🧩🥳",
+  trivia: "Yuk jawab trivia lain kak, biar wawasanmu makin luas 💡🥳",
+  quizbattle: "Yuk battle lagi kak, biar kamu makin sering jadi juara ⚔️🥳",
+  tebakkapital: "Yuk tebak ibukota lain kak, biar makin hafal negara 🏛️🥳",
+  tebaklogika: "Yuk asah logika lain kak, biar makin pintar 🧩🥳",
+  tebakbahasa: "Yuk tebak peribahasa lain kak, biar makin bijak berbahasa 📖🥳",
+  asahotak2: "Yuk naik level lagi kak, biar makin pro 🔥🥳",
+  tebakpahlawan: "Yuk kenal pahlawan lain kak, biar makin cinta tanah air 🦸🥳",
+  tebakgeografi: "Yuk jelajah lagi kak, biar makin paham bumi 🗺️🥳",
+  tebakkimia2: "Yuk tebak unsur lagi kak, biar makin rame di lab 🧪🥳",
+  caklontong2: "Yuk caklon lagi kak, biar makin ngakak 😂🥳",
+  tebakmusik: "Yuk tebak musik lain kak, biar makin update lagu 🎤🥳",
+  tebaktebakan2: "Yuk tebak lagi kak, biar makin penasaran 🤔🥳",
+  tebakasmaulhusna: "Yuk tebak nama lain kak, biar hafalanmu makin banyak 📿🥳",
+  // IMAGE GAMES
+  tebakbendera: "Yuk tebak bendera lain kak, biar makin hafal negara 🚩🥳",
+  tebakbendera2: "Yuk tebak bendera lagi kak, biar makin jago 🏁🥳",
+  tebakdrakor: "Yuk tebak drakor lain kak, biar makin update drama 🇰🇷🥳",
+  tebakepep: "Yuk tebak karakter lain kak, biar makin jago FF 🎮🥳",
+  tebakgambar: "Yuk tebak gambar lain kak, biar imajinasimu makin luas 🖼️🥳",
+  tebakgambarv2: "Yuk tebak gambar lagi kak, biar makin asik 🖼️🥳",
+  tebakjkt48: "Yuk tebak member lain kak, biar makin jago JKT48 🎤🥳",
+  tebakkabupaten: "Yuk tebak kabupaten lain kak, biar makin kenal Indonesia 📍🥳",
+  tebaklogo: "Yuk tebak logo lain kak, biar makin observatif 🏢🥳",
+  tebakmakanan: "Yuk tebak makanan lain kak, biar makin kenyal pengetahuanmu 🍜🥳",
+  // MULTI ANSWER
+  family100: "Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳",
+};
+
+// Fallback kalau game-nya belum punya CTA khusus
+const GENERIC_CTAS = [
+  "Yuk main lagi kak untuk mendapatkan poin yang lebih tinggi 🥳",
+  "Yuk coba soal lain kak, siapa tau skor lebih tinggi 🥳",
+  "Yuk main lagi kak, biar makin jago 🥳",
+];
+
+function gameCTA(gameType) {
+  const cta = GAME_CTA[gameType];
+  if (cta) return cta;
+  return GENERIC_CTAS[Math.floor(Math.random() * GENERIC_CTAS.length)];
+}
+
 class NovaGames {
   constructor() {
     this.registry = new Map();
@@ -389,4 +453,4 @@ games.register("tebakkabupaten", { emoji: "📍", title: "TEBAK KABUPATEN", desc
 games.register("tebaklogo", { emoji: "🏢", title: "TEBAK LOGO", description: "Tebak logo perusahaan", hasImage: true, imageField: "img", answerField: "name", questionField: null, timeout: 60000, alias: [] });
 games.register("tebakmakanan", { emoji: "🍜", title: "TEBAK MAKANAN", description: "Tebak makanan Indonesia", hasImage: true, imageField: "img", answerField: "jawaban", questionField: null, timeout: 60000, alias: [] });
 
-export { NovaGames, games };
+export { NovaGames, games, gameCTA };

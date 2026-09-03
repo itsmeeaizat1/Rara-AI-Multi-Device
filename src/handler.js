@@ -913,6 +913,13 @@ try {
     }
   }
 
+  // Teruskan info energi ke plugin (dipakai buat info section di caption hasil game)
+  m.energiInfo = {
+    deducted: energiDeducted,
+    sisa: sisaEnergi,
+    unlimited: isUnlimited,
+  };
+
   // Run the plugin handler
   try {
     // Auto typing/read - check DB setting first, fallback to config

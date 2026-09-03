@@ -10,12 +10,30 @@ import {
   pick, WIN_MSGS, TIMEOUT_MSGS, SURRENDER_MSGS, WRONG_MSGS,
 } from './nova-game-engine.js';
 import { getDatabase } from './nova-database.js';
+import { gameCTA } from './nova-games.js';
 import { addExpWithLevelCheck } from './nova-level.js';
 
 let fetchBuffer;
 try {
   fetchBuffer = (await import('./nova-utils.js')).fetchBuffer;
 } catch {}
+
+// ─── Info energi kekuras (request owner: info section di caption hasil game) ───
+// m.energiInfo diset sama handler.js setelah pemotongan energi.
+function renderEnergiLine(m, cfg) {
+  const e = m?.energiInfo;
+  if (e) {
+    if (e.unlimited) return `│ ❈ Energi: ∞ (unlimited)\n`;
+    if (e.deducted > 0) return `│ ❈ Energi: -${e.deducted} (sisa ${e.sisa})\n`;
+    return `│ ❈ Energi: gratis\n`;
+  }
+  if (cfg.energi > 0) return `│ ❈ Energi: -${cfg.energi}\n`;
+  return '';
+}
+
+function fmtNum(n) {
+  return n.toLocaleString('id-ID');
+}
 
 class GameFactory {
   constructor() {
@@ -195,12 +213,14 @@ class GameFactory {
           if (cfg.questionField && session.question[cfg.questionField]) {
             text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
           }
-          text += `│ ❏ Jawaban: *${answer}*\n`;
+          text += `│ ❏ Jawaban: ${answer}\n`;
+          text += renderEnergiLine(m, cfg);
           if (session.question.deskripsi) {
             text += `│ ❏ Info: ${session.question.deskripsi}\n`;
           }
           text += `\n_@${m.sender.split('@')[0]} menyerah_\n`;
           text += `╰────  •  ────`;
+          text += `\n\n${gameCTA(gameType)}`;
 
           try {
             await sock.sendMessage(chatId, {
@@ -253,26 +273,28 @@ class GameFactory {
             console.error(`[${gameType}] Reward error:`, e.message);
           }
 
+          // Pesan hasil: bold cuma di pembuka, value plain (request owner)
           let text = `${pick(WIN_MSGS)}\n\n`;
           text += `╭─「 ✦ ${cfg.title} ✦ 」\n\n`;
-          text += `│ ❏ Jawaban: *${answer}*\n`;
-          text += `│ ❏ Pemenang: *@${m.sender.split('@')[0]}*\n`;
-          text += `│ ❏ Percobaan: *${session.attempts}x*\n\n`;
+          text += `│ ❏ Jawaban: ${answer}\n`;
+          text += `│ ❏ Pemenang: @${m.sender.split('@')[0]}\n`;
+          text += `│ ❏ Percobaan: ${session.attempts}x\n\n`;
 
-          let parts = [];
-          if (reward.limit > 0) parts.push(`+${reward.limit} Limit`);
-          if (reward.koin > 0) parts.push(`+${reward.koin} Koin`);
-          if (reward.exp > 0) parts.push(`+${reward.exp} EXP`);
-          if (reward.gold > 0) parts.push(`+${reward.gold} Gold`);
-          if (reward.gems > 0) parts.push(`+${reward.gems} Gems`);
-          if (reward.diamonds > 0) parts.push(`+${reward.diamonds} Diamonds`);
-          if (parts.length > 0) text += `🎁 *Hadiah:* ${parts.join(', ')}\n`;
+          // Info section: yang kekuras (energi) & yang nambah (reward)
+          text += renderEnergiLine(m, cfg);
+          if (reward.limit > 0) text += `│ ❏ 🎫 Limit: +${reward.limit}\n`;
+          if (reward.koin > 0) text += `│ ❏ 🪙 Koin: +${fmtNum(reward.koin)}\n`;
+          if (reward.exp > 0) text += `│ ❏ ✨ EXP: +${fmtNum(reward.exp)}\n`;
+          if (reward.gold > 0) text += `│ ❏ 🪭 Gold: +${fmtNum(reward.gold)}\n`;
+          if (reward.gems > 0) text += `│ ❏ 💎 Gems: +${reward.gems}\n`;
+          if (reward.diamonds > 0) text += `│ ❏ 💎 Diamonds: +${reward.diamonds}\n`;
 
           if (session.question.deskripsi) {
             text += `\n│ ❏ Info: ${session.question.deskripsi}\n`;
           }
 
           text += `\n╰────  •  ────`;
+          text += `\n\n${gameCTA(gameType)}`;
 
           try {
             await sock.sendMessage(chatId, { text, mentions: [m.sender] });
@@ -289,7 +311,7 @@ class GameFactory {
           const percent = Math.round(result.similarity * 100);
           await m.react('🔥');
           try {
-            await m.reply(`🔥 *Hampir!* Jawabanmu *${percent}%* mirip!\n_Sisa waktu: *${formatTime(remaining)}*_`);
+            await m.reply(`🔥 Hampir! Jawabanmu ${percent}% mirip!\nSisa waktu: ${formatTime(remaining)}`);
           } catch {}
           return false;
         }
@@ -300,7 +322,7 @@ class GameFactory {
           await m.react('❌');
           const hint = getProgressiveHint(answer, session.attempts);
           try {
-            await m.reply(`${pick(WRONG_MSGS)} Hint: *${hint}*\n_Sisa: *${formatTime(remaining)}*_`);
+            await m.reply(`${pick(WRONG_MSGS)} Hint: ${hint}\nSisa: ${formatTime(remaining)}`);
           } catch {}
           return false;
         }
@@ -312,11 +334,13 @@ class GameFactory {
         if (cfg.questionField && session.question[cfg.questionField]) {
           text += `\`\`\`${session.question[cfg.questionField]}\`\`\`\n\n`;
         }
-        text += `│ ❏ Jawaban: *${answer}*\n`;
+        text += `│ ❏ Jawaban: ${answer}\n`;
+        text += renderEnergiLine(m, cfg);
         if (session.question.deskripsi) {
           text += `│ ❏ Info: ${session.question.deskripsi}\n`;
         }
         text += `\n╰────  •  ────`;
+        text += `\n\n${gameCTA(gameType)}`;
         try {
           await sock.sendMessage(chatId, { text });
         } catch {}

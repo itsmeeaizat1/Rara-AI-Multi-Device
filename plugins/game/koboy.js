@@ -59,6 +59,7 @@ async function handler(m, { sock }) {
       msg += `
 `;
       msg += `🎯 HEADSHOT! Kamu menang!\n`;
+      msg += `Yuk duel lagi kak, biar refleksmu makin cepat 🤠🥳\n`;
       msg += `Round: ${game.round} | Hits: ${game.hits}\n`;
             games.delete(from);
       return m.reply(msg);

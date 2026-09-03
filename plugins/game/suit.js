@@ -52,6 +52,7 @@ async function handler(m, { args, prefix }) {
     text += `┊ Bot: ${EMOJI[botPick]} ${botPick}\n`;
     text += `┊\n`;
     text += `┊ 🎉 Kamu menang! +${expGain} EXP\n`;
+    text += `┊ Yuk suit lagi kak, biar tanganmu makin sakti ✊🥳\n`;
         try { await addExpWithLevelCheck(m.sender, expGain, m); } catch {}
   } else if (result === "kalah") {
     text = "";
@@ -59,6 +60,7 @@ async function handler(m, { args, prefix }) {
     text += `┊ Bot: ${EMOJI[botPick]} ${botPick}\n`;
     text += `┊\n`;
     text += `┊ 😂 Kamu kalah! Coba lagi ya\n`;
+    text += `┊ Yuk revans kak, pias balik ✊🥳\n`;
       } else {
     text = "";
     text += `┊ Kamu: ${EMOJI[pilihan]} ${pilihan}\n`;
