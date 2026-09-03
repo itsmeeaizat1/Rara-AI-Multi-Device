@@ -7,7 +7,7 @@ import {
   checkCooldown, setCooldown, formatTime,
   getMonstersByLevel, getRandomMonster
 } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
 import { animDungeon, rpgSleep } from "../../src/lib/nova-rpg-anim.js";
 import te from "../../src/lib/nova-error.js";
 
@@ -128,7 +128,7 @@ async function handler(m, { sock }) {
       if (!rpg.dungeonV2.active) {
         const cd = checkCooldown(m, "lastDungeonV2");
         if (cd) {
-          await m.react("🚫");
+          await reactCooldown(m);
           return m.reply(claraWrap("dungeonv2", `Cooldown tersisa *${formatTime(cd)}*`, "warn"));
         }
 

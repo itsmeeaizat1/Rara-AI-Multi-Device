@@ -6,7 +6,7 @@ import {
   checkCooldown, setCooldown, formatTime, JOB_DB
 } from "../../src/lib/nova-rpg-service.js";
 import { animKerja } from "../../src/lib/nova-rpg-anim.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 
 const pluginConfig = {
@@ -95,7 +95,7 @@ async function handler(m, { sock }) {
 
     const cd = checkCooldown(m, "lastWork");
     if (cd) {
-      await m.react("🚫");
+      await reactCooldown(m);
       return m.reply(claraWrap("kerja", `Cooldown kerja tersisa *${formatTime(cd)}*`, "warn"));
     }
 

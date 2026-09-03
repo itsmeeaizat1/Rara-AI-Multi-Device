@@ -1,7 +1,7 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // blackinvest.js — Investasi black market (high risk)
 import { ensureRpg, addGold, removeGold, checkCooldown, setCooldown, formatTime } from "../../src/lib/nova-rpg-service.js";
-import { claraWrap } from "../../src/lib/nova-menu-style.js";
+import { claraWrap, reactCooldown } from "../../src/lib/nova-menu-style.js";
 import te from "../../src/lib/nova-error.js";
 import { animInvest } from "../../src/lib/nova-rpg-anim.js";
 
@@ -38,7 +38,7 @@ async function handler(m, { sock }) {
 
     const cd = checkCooldown(m, "lastBlackinvest");
     if (cd) {
-      await m.react("🚫");
+      await reactCooldown(m);
       return m.reply(claraWrap("blackinvest", `Black market cooldown! Tunggu *${formatTime(cd)}* lagi.`, "error"));
     }
 
