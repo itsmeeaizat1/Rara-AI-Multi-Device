@@ -21,12 +21,9 @@ const pluginConfig = {
 }
 
 function getServerConfig(pteroConfig, serverKey) {
-    const serverConfigs = {
-        's1': pteroConfig.server1,
-        's2': pteroConfig.server2,
-        's3': pteroConfig.server3
-    }
-    return serverConfigs[serverKey] || pteroConfig.server1
+    const num = parseInt(String(serverKey || '').replace('s', ''), 10)
+    if (!(num >= 1 && num <= 100)) return pteroConfig.server1
+    return pteroConfig['server' + num] || pteroConfig.server1
 }
 
 function validateServerConfig(serverConfig) {
@@ -38,9 +35,10 @@ function validateServerConfig(serverConfig) {
 
 function getAvailableServers(pteroConfig) {
     const available = []
-    if (pteroConfig.server1?.domain && pteroConfig.server1?.apikey) available.push('s1')
-    if (pteroConfig.server2?.domain && pteroConfig.server2?.apikey) available.push('s2')
-    if (pteroConfig.server3?.domain && pteroConfig.server3?.apikey) available.push('s3')
+    for (let i = 1; i <= 100; i++) {
+        const cfg = pteroConfig?.['server' + i]
+        if (cfg?.domain && cfg?.apikey) available.push('s' + i)
+    }
     return available
 }
 
@@ -51,9 +49,14 @@ async function handler(m, { sock }) {
     let serverKey = 's1'
     let restArgs = args
     
-    if (args[0] && ['s1', 's2', 's3'].includes(args[0].toLowerCase())) {
-        serverKey = args[0].toLowerCase()
-        restArgs = args.slice(1)
+    // slot panel: s1 / 1 / 1-100 (default s1)
+    const slotArg = String(args[0] || '').toLowerCase().match(/^s?(\d{1,3})$/)
+    if (args[0] && slotArg) {
+        const num = parseInt(slotArg[1], 10)
+        if (num >= 1 && num <= 100) {
+            serverKey = 's' + num
+            restArgs = args.slice(1)
+        }
     }
     
     const serverConfig = getServerConfig(pteroConfig, serverKey)
