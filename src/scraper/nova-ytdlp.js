@@ -1,17 +1,57 @@
 // NOVA AI WHATSAPP BOT, AIZAT, MADE IN INDONESIA
 // nova-ytdlp.js — YouTube downloader via yt-dlp binary (100% gratis, no API key)
 // Support: audio (128/192/256/320 kbps) + video (360/480/720/1080p)
-// Requires: yt-dlp + ffmpeg installed on VPS
-// Fallback: cobalt API (self-hosted or community instance)
+// yt-dlp binary: otomatis dari dependency youtube-dl-exec (npm install saja),
+// fallback ke yt-dlp sistem (pip install yt-dlp) kalau binary lokal gak ada.
+// ffmpeg: otomatis dari @ffmpeg-installer/ffmpeg, fallback ke ffmpeg sistem.
 
 import { exec } from "child_process";
 import { promisify } from "util";
+import { fileURLToPath } from "url";
 import axios from "axios";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
 
 const run = promisify(exec);
+
+// ═══ Resolver binary yt-dlp & ffmpeg ═══
+// Prioritas: youtube-dl-exec (npm, ikut keinstall pas npm install) → yt-dlp sistem
+let _ytdlpCmd = null;
+function getYtDlpCmd() {
+  if (_ytdlpCmd !== null) return _ytdlpCmd;
+  const localBin = path.join(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "../../node_modules/youtube-dl-exec/bin/yt-dlp",
+  );
+  if (fs.existsSync(localBin)) {
+    _ytdlpCmd = `"${localBin}"`;
+    console.log("[nova-ytdlp] ✅ pakai binary yt-dlp dari youtube-dl-exec (npm)");
+  } else {
+    _ytdlpCmd = "yt-dlp"; // sistem PATH (pip install yt-dlp)
+  }
+  return _ytdlpCmd;
+}
+
+// ffmpeg location untuk yt-dlp (merge/postprocess) — pakai @ffmpeg-installer/ffmpeg
+let _ffmpegLoc = null;
+function getYtDlpFfmpegArgs() {
+  if (_ffmpegLoc !== null) return _ffmpegLoc;
+  _ffmpegLoc = [];
+  try {
+    const ffPath = path.join(
+      path.dirname(fileURLToPath(import.meta.url)),
+      "../../node_modules/@ffmpeg-installer/ffmpeg/bin/ffmpeg",
+    );
+    if (fs.existsSync(ffPath)) {
+      _ffmpegLoc = ["--ffmpeg-location", `"${ffPath}"`];
+      console.log("[nova-ytdlp] ✅ pakai ffmpeg dari @ffmpeg-installer/ffmpeg");
+    }
+  } catch {
+    // fallback: yt-dlp pakai ffmpeg sistem dari PATH
+  }
+  return _ffmpegLoc;
+}
 
 const YT_ID_REGEX =
   /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
@@ -25,7 +65,7 @@ let _ytdlpAvailable = null;
 async function isYtDlpAvailable() {
   if (_ytdlpAvailable !== null) return _ytdlpAvailable;
   try {
-    await run("yt-dlp --version", { timeout: 5000 });
+    await run(`${getYtDlpCmd()} --version`, { timeout: 5000 });
     _ytdlpAvailable = true;
     console.log("[nova-ytdlp] ✅ yt-dlp terdeteksi");
   } catch {
@@ -80,14 +120,15 @@ async function downloadAudioYtDlp(url, kbps = "128") {
 
     // Get title first
     const { stdout: titleOut } = await run(
-      `yt-dlp --get-title --no-warnings "${url}"`,
+      `${getYtDlpCmd()} --get-title --no-warnings "${url}"`,
       { timeout: 15000 },
     );
     const title = titleOut.trim() || "Audio";
 
     // Download + convert to mp3 with specified bitrate
     const cmd = [
-      "yt-dlp",
+      getYtDlpCmd(),
+      ...getYtDlpFfmpegArgs(),
       "-x",                              // extract audio
       "--audio-format", "mp3",
       "--audio-quality", "0",            // best source quality
@@ -146,14 +187,15 @@ async function downloadVideoYtDlp(url, quality = "720") {
   try {
     // Get title first
     const { stdout: titleOut } = await run(
-      `yt-dlp --get-title --no-warnings "${url}"`,
+      `${getYtDlpCmd()} --get-title --no-warnings "${url}"`,
       { timeout: 15000 },
     );
     const title = titleOut.trim() || "Video";
 
     // Download video with max quality constraint
     const cmd = [
-      "yt-dlp",
+      getYtDlpCmd(),
+      ...getYtDlpFfmpegArgs(),
       "-f", `"bestvideo[height<=${quality}]+bestaudio/best[height<=${quality}]/best"`,
       "--merge-output-format", "mp4",
       "-o", `"${outputPath.replace(/\.mp4$/, "")}.%(ext)s"`,
@@ -255,7 +297,7 @@ async function downloadAudio(url, kbps = "128") {
   }
 
   // 3. Fallback to ytdl.js (ytmp3.mobi) — no kbps control, default 128
-  throw new Error("Semua API audio gagal. Pastikan yt-dlp terinstall di VPS: pip install yt-dlp");
+  throw new Error("Semua API audio gagal. Pastikan npm install sudah dijalankan (yt-dlp ikut keinstall via youtube-dl-exec)");
 }
 
 /**
@@ -285,7 +327,7 @@ async function downloadVideo(url, quality = "720") {
     console.error("[nova-ytdlp] cobalt video failed:", err.message);
   }
 
-  throw new Error("Semua API video gagal. Pastikan yt-dlp terinstall di VPS: pip install yt-dlp");
+  throw new Error("Semua API video gagal. Pastikan npm install sudah dijalankan (yt-dlp ikut keinstall via youtube-dl-exec)");
 }
 
 export {
