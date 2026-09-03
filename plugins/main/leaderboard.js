@@ -462,7 +462,7 @@ const ALL_FIELDS = [
 const SECTIONS = [
   { group: 'game',   title: 'ᴍɪɴɪ ɢᴀᴍᴇ & ꜱᴛᴀᴛꜱ' },
   { group: 'rpg',    title: 'ʀᴘɢ ᴄᴏʀᴇ' },
-  { group: 'couple', title: 'ᴄᴏᴜᴘʟᴇ' },
+  { group: 'couple', title: 'ʀᴘɢ ᴄɪɴᴛᴀ' },
 ]
 
 async function showAllLeaderboards(m, sock) {
@@ -500,7 +500,7 @@ async function showAllLeaderboards(m, sock) {
     sec.boardBlocks.push(block)
   }
 
-  // ── Section COUPLE — board khusus yang udah punya pasangan ──
+  // ── Section RPG CINTA — board cinta khusus yang udah punya pasangan ──
   const cintaUsers = users.filter((u) => u.hasSpouse)
   if (cintaUsers.length > 0) {
     const coupleSec = sections.find(s => s.group === 'couple')
