@@ -9,6 +9,7 @@ import { getAiGreeting } from "./nova-greeting.js";
 import { getWeatherDetail } from "./nova-weather-footer.js";
 import { toSC } from "./nova-menu-style.js";
 import { getDatabase } from "./nova-database.js";
+import { botIdentity } from "./config/bot-identity.js";
 
 function getWeton(date = new Date()) {
   const days = ["Pahing", "Pon", "Wage", "Kliwon", "Legi"];
@@ -227,7 +228,7 @@ export async function buildMenuInfo(m, ctx = {}) {
     "",
     "Info Bot",
     { label: "Nama", value: botName },
-    { label: "Versi", value: botConfig?.bot?.version || "v20.0.0" },
+    { label: "Versi", value: "v" + String(botIdentity.bot?.version || botConfig?.bot?.version || "-").replace(/^v/i, "") },
     { label: "Mode", value: (botConfig?.mode || "public").toUpperCase() },
     { label: "Prefix", value: prefix },
     ...(totalCommands ? [{ label: "Total Perintah", value: formatNum(totalCommands) }] : []),
