@@ -2,6 +2,7 @@
 // playvideo.js — Search YouTube → download video → kirim langsung
 import axios from "axios";
 import ytdl from "../../src/scraper/ytdl.js";
+import { toWhatsAppVideo } from "../../src/lib/nova-ffmpeg.js";
 import { novaGuide, novaError } from "../../src/lib/nova-menu-style.js";
 
 const IKYY = "https://api.ikyyxd.my.id";
@@ -150,6 +151,15 @@ async function handler(m, { sock, text }) {
       return m.reply(novaError("PlayVideo", "Gagal download video, coba lagi nanti ya!"));
     }
     console.log(`[PlayVideo] Video OK: ${vid.buffer.length} bytes`);
+
+    // Step 2.5: Pastikan H.264+AAC (banyak sumber savetube/ytdl diam-diam kasih
+    // AV1/VP9 yang gagal diputar di WhatsApp walau ekstensinya .mp4)
+    try {
+      vid.buffer = await toWhatsAppVideo(vid.buffer);
+      console.log(`[PlayVideo] Video setelah convert: ${vid.buffer.length} bytes`);
+    } catch (convErr) {
+      console.error("[PlayVideo] Convert error, kirim buffer asli:", convErr.message);
+    }
 
     // Step 3: Ambil lirik (best-effort, gak block kalau gagal/timeout)
     const titleForLyrics = vid.title || video.title;
