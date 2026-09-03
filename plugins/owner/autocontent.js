@@ -114,25 +114,32 @@ const CONTENT_TYPES = {
 // ============================================================
 // SETTINGS
 // ============================================================
+const DEFAULT_AUTOCONTENT = {
+  enabled: false,
+  schedules: [],
+  defaultTime: "08:00",
+  smartDelay: 5, // detik antar grup
+  stats: {
+    totalSent: 0,
+    totalFailed: 0,
+    byType: {},
+    byGroup: {},
+    lastRun: null,
+  },
+  lastReport: null,
+};
+
 function getSettings() {
   const db = getDatabase();
   if (!db.db.data.automation) db.db.data.automation = {};
   if (!db.db.data.automation.autoContent) {
-    db.db.data.automation.autoContent = {
-      enabled: false,
-      schedules: [],
-      defaultTime: "08:00",
-      smartDelay: 5, // detik antar grup
-      stats: {
-        totalSent: 0,
-        totalFailed: 0,
-        byType: {},
-        byGroup: {},
-        lastRun: null,
-      },
-      lastReport: null,
-    };
+    db.db.data.automation.autoContent = DEFAULT_AUTOCONTENT;
     db.db.write();
+  } else {
+    // SCHEMA EVOLUTION: settings lama (persist sebelum field baru ada)
+    // di-merge dengan defaults biar gak TypeError "reading 'push'/undefined"
+    // saat fitur jalan. Field user yang udah ada gak ketimpa.
+    db.db.data.automation.autoContent = { ...DEFAULT_AUTOCONTENT, ...db.db.data.automation.autoContent };
   }
   return db.db.data.automation.autoContent;
 }

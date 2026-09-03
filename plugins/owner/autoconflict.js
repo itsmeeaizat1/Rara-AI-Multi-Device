@@ -53,36 +53,47 @@ const pluginConfig = {
 // ============================================================
 // SETTINGS
 // ============================================================
+const DEFAULT_CONFLICT_SETTINGS = {
+  enabled: false,
+  sensitivity: "medium", // low, medium, high
+  style: "calm", // calm, humor, fact
+  cooldownMinutes: 10, // cooldown between interventions per group
+  notifyOwner: true,
+  activeGroups: [], // empty = all groups
+  conflictKeywords: [
+    "bego", "goblok", "anjing", "kontol", "memek", "bangsat", "gblk",
+    "kampret", "setan", "sialan", "brengsek", "tolol", "idiot", "bodoh",
+    "soktahu", "nyebelin", "gak guna", "mental", "lempar", "usir",
+    "kafir", "sesat", "sara", "rasist", "racist", "babi", "monyet",
+  ],
+  groupTension: {}, // { jid: { level, lastMessage, lastIntervention, messageBuffer, peak } }
+  stats: {
+    totalAnalyzed: 0,
+    totalConflicts: 0,
+    totalInterventions: 0,
+    totalDeEscalated: 0,
+    totalFalseAlarm: 0,
+    byGroup: {},
+    lastConflict: null,
+  },
+  history: [], // last 30 conflicts
+};
+
 function getSettings() {
   const db = getDatabase();
   if (!db.db.data.automation) db.db.data.automation = {};
   if (!db.db.data.automation.autoConflict) {
-    db.db.data.automation.autoConflict = {
-      enabled: false,
-      sensitivity: "medium", // low, medium, high
-      style: "calm", // calm, humor, fact
-      cooldownMinutes: 10, // cooldown between interventions per group
-      notifyOwner: true,
-      activeGroups: [], // empty = all groups
-      conflictKeywords: [
-        "bego", "goblok", "anjing", "kontol", "memek", "bangsat", "gblk",
-        "kampret", "setan", "sialan", "brengsek", "tolol", "idiot", "bodoh",
-        "soktahu", "nyebelin", "gak guna", "mental", "lempar", "usir",
-        "kafir", "sesat", "sara", "rasist", "racist", "babi", "monyet",
-      ],
-      groupTension: {}, // { jid: { level, lastMessage, lastIntervention, messageBuffer, peak } }
-      stats: {
-        totalAnalyzed: 0,
-        totalConflicts: 0,
-        totalInterventions: 0,
-        totalDeEscalated: 0,
-        totalFalseAlarm: 0,
-        byGroup: {},
-        lastConflict: null,
-      },
-      history: [], // last 30 conflicts
-    };
+    db.db.data.automation.autoConflict = { ...DEFAULT_CONFLICT_SETTINGS };
     db.db.write();
+  } else {
+    // SCHEMA EVOLUTION: settings yang persist dari versi lama bisa
+    // kehilangan field baru (stats, history, dll) → merge defaults
+    // biar gak ada TypeError "reading 'push'/undefined" saat runtime.
+    const existing = db.db.data.automation.autoConflict;
+    db.db.data.automation.autoConflict = {
+      ...DEFAULT_CONFLICT_SETTINGS,
+      ...existing,
+    };
   }
   return db.db.data.automation.autoConflict;
 }
@@ -301,6 +312,14 @@ export async function processConflictMessage(m, sock) {
   let newTension = gt.level;
 
   if (aiResult) {
+    // defensive: settings lama (persist sebelum field stats ada) gak punya
+    // stats object → init dulu biar gak throw & fitur gak mati diam-diam
+    if (!settings.stats) {
+      settings.stats = {
+        totalAnalyzed: 0, totalConflicts: 0, totalInterventions: 0,
+        totalDeEscalated: 0, totalFalseAlarm: 0, byGroup: {},
+      };
+    }
     settings.stats.totalAnalyzed++;
     // Blend: AI tension + keyword quick check
     newTension = Math.max(aiResult.tension, quickTension);

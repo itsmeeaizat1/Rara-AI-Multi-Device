@@ -63,24 +63,31 @@ let cronJob = null;
 // ============================================================
 // SETTINGS
 // ============================================================
+const DEFAULT_AUTOPREDICT = {
+  enabled: false,
+  reportTime: "08:00",
+  groups: [],
+  groupSettings: {},
+  lastReport: null,
+  history: [],
+  stats: {
+    totalReports: 0,
+    totalPredictions: 0,
+    accuracyScore: null,
+  },
+};
+
 function getSettings() {
   const db = getDatabase();
   if (!db.db.data.automation) db.db.data.automation = {};
   if (!db.db.data.automation.autoPredict) {
-    db.db.data.automation.autoPredict = {
-      enabled: false,
-      reportTime: "08:00",
-      groups: [],
-      groupSettings: {},
-      lastReport: null,
-      history: [],
-      stats: {
-        totalReports: 0,
-        totalPredictions: 0,
-        accuracyScore: null,
-      },
-    };
+    db.db.data.automation.autoPredict = DEFAULT_AUTOPREDICT;
     db.db.write();
+  } else {
+    // SCHEMA EVOLUTION: settings lama (persist sebelum field baru ada)
+    // di-merge dengan defaults biar gak TypeError "reading 'push'/undefined"
+    // saat fitur jalan. Field user yang udah ada gak ketimpa.
+    db.db.data.automation.autoPredict = { ...DEFAULT_AUTOPREDICT, ...db.db.data.automation.autoPredict };
   }
   return db.db.data.automation.autoPredict;
 }
