@@ -480,39 +480,115 @@ export function localParse(text) {
   return null // tidak match → lanjut ke AI provider
 }
 
-// ================= OTAK AI — PROVIDER CHAIN =================
-// 🔹 AI AGENT: Urutan provider — Groq utama (cepat 0.1s), IkyyXD fallback (gratis), DeepSeek cadangan
+// ================= OTAK AI — MULTI-PROVIDER CHAIN (request owner) =================
+// Urutan PRIORITAS: yang paling atas paling sering dipakai. Kalau provider #1
+// aktif & key valid → SEMUA respon cuma dari #1. Kalau down / key expired /
+// rate-limit → otomatis deteksi & lanjut ke #2, dst sampai kebawah.
+// Key kosong di apikeys.json = provider di-skip otomatis (gak nyoba).
+// Tambah/isi key owner: edit src/lib/apikey/apikeys.json
+// (groqkey, deepseekkey, zhipu, kimi, claude, ikyyxd).
+const readApiKeys = () => {
+  try { return JSON.parse(fs.readFileSync('src/lib/apikey/apikeys.json', 'utf8')) } catch { return {} }
+}
+
 const PROVIDERS = [
+  // 1️⃣ GROQ — utama (cepat, key aktif)
   {
     name: 'groq',
     method: 'post',
     url: 'https://api.groq.com/openai/v1/chat/completions',
-    key: () => process.env.GROQ_KEY || global.groqkey || '',
+    key: () => process.env.GROQ_KEY || readApiKeys().groqkey || global.groqkey || '',
     model: 'openai/gpt-oss-120b',
     headers: (k) => ({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${k}`
     })
   },
+  // 2️⃣ IKYYXD GEMINI — free (key ikyyxd)
   {
-    name: 'ikyyxd-gemini',
+    name: 'ikyy-gemini',
     method: 'get',
+    textParam: 'text',
     url: 'https://api.ikyyxd.my.id/ai/gemini',
-    key: () => {
-      try { return JSON.parse(fs.readFileSync('src/lib/apikey/apikeys.json','utf8')).ikyyxd || '' } catch { return '' }
-    },
+    key: () => readApiKeys().ikyyxd || '',
     headers: () => ({ 'Content-Type': 'application/json' })
   },
+  // 3️⃣ IKYYXD GPT-5-MINI (openai-style, free) — key ikyyxd
+  {
+    name: 'ikyy-gpt5mini',
+    method: 'get',
+    textParam: 'question',
+    url: 'https://api.ikyyxd.my.id/ai/gpt-5-mini',
+    key: () => readApiKeys().ikyyxd || '',
+    headers: () => ({ 'Content-Type': 'application/json' })
+  },
+  // 4️⃣ DEEPSEEK — key deepseekkey di apikeys.json
   {
     name: 'deepseek',
     method: 'post',
     url: 'https://api.deepseek.com/chat/completions',
-    key: () => process.env.DEEPSEEK_KEY || global.deepseekkey || '',
+    key: () => process.env.DEEPSEEK_KEY || readApiKeys().deepseekkey || global.deepseekkey || '',
     model: 'deepseek-chat',
     headers: (k) => ({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${k}`
     })
+  },
+  // 5️⃣ ZHIPU AI (GLM) — key "zhipu" di apikeys.json
+  {
+    name: 'zhipu',
+    method: 'post',
+    url: 'https://open.bigmodel.cn/api/paas/v4/chat/completions',
+    key: () => readApiKeys().zhipu || process.env.ZHIPU_KEY || '',
+    model: 'glm-4-flash',
+    headers: (k) => ({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${k}`
+    })
+  },
+  // 6️⃣ KIMI (Moonshot AI) — key "kimi" di apikeys.json
+  {
+    name: 'kimi',
+    method: 'post',
+    url: 'https://api.moonshot.cn/v1/chat/completions',
+    key: () => readApiKeys().kimi || process.env.MOONSHOT_KEY || '',
+    model: 'kimi-k2-0905-preview',
+    headers: (k) => ({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${k}`
+    })
+  },
+  // 7️⃣ CLAUDE (Anthropic) — key "claude" di apikeys.json (format anthropic khusus)
+  {
+    name: 'claude',
+    method: 'post',
+    format: 'anthropic',
+    url: 'https://api.anthropic.com/v1/messages',
+    key: () => readApiKeys().claude || process.env.ANTHROPIC_KEY || '',
+    model: 'claude-sonnet-4-20250514',
+    headers: (k) => ({
+      'Content-Type': 'application/json',
+      'x-api-key': k,
+      'anthropic-version': '2023-06-01'
+    })
+  },
+  // 8️⃣ IKYYXD CICI — cadangan free (gak butuh key lain)
+  {
+    name: 'ikyy-cici',
+    method: 'get',
+    textParam: 'prompt',
+    url: 'https://api.ikyyxd.my.id/ai/cici',
+    key: () => readApiKeys().ikyyxd || '',
+    headers: () => ({ 'Content-Type': 'application/json' })
+  },
+  // 9️⃣ IKYYXD GEMMA — cadangan terakhir free
+  {
+    name: 'ikyy-gemma',
+    method: 'get',
+    textParam: 'question',
+    url: 'https://api.ikyyxd.my.id/ai/google-gemma',
+    key: () => readApiKeys().ikyyxd || '',
+    headers: () => ({ 'Content-Type': 'application/json' })
   }
 ]
 
@@ -527,17 +603,40 @@ export async function askAI(system, user, history = []) {
     : ''
   for (const p of PROVIDERS) {
     const key = p.key?.()
+    // key kosong = provider gak dikonfigurasi → skip (bukan error, cuma belum diisi owner)
     if (p.key && !key) continue
     try {
       let text
       if (p.method === 'get') {
         const fullPrompt = `${system}\n\n${histAsText}User: ${user}`
-        const url = `${p.url}?apikey=${encodeURIComponent(key)}&text=${encodeURIComponent(fullPrompt)}`
+        // tiap endpoint GET beda nama param teks (text/question/prompt)
+        const tp = p.textParam || 'text'
+        const url = `${p.url}?apikey=${encodeURIComponent(key)}&${tp}=${encodeURIComponent(fullPrompt)}`
         const res = await fetch(url, { headers: p.headers(key) })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const data = await res.json()
-        text = data.result || ''
+        text = data.result || data?.result?.reply || ''
+      } else if (p.format === 'anthropic') {
+        // format Anthropic (Claude): system TERPISAH, wajib max_tokens
+        const res = await fetch(p.url, {
+          method: 'POST',
+          headers: p.headers(key),
+          body: JSON.stringify({
+            model: p.model,
+            system,
+            max_tokens: 2048,
+            temperature: 0.1,
+            messages: [
+              ...histTrimmed.map(h => ({ role: h.role === 'assistant' ? 'assistant' : 'user', content: h.content })),
+              { role: 'user', content: user }
+            ]
+          })
+        })
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        const data = await res.json()
+        text = data?.content?.[0]?.text || ''
       } else {
+        // format OpenAI-compatible (groq, deepseek, zhipu, kimi, dll)
         const res = await fetch(p.url, {
           method: 'POST',
           headers: p.headers(key),
@@ -557,10 +656,10 @@ export async function askAI(system, user, history = []) {
         text = data.choices?.[0]?.message?.content
       }
       if (!text) throw new Error('balasan kosong')
-      console.log(`[AI] ${p.name} sukses`)
+      console.log(`[AI] provider "${p.name}" sukses`)
       return text
     } catch (e) {
-      console.log(`[AI] ${p.name} gagal: ${e.message} → coba berikutnya...`)
+      console.log(`[AI] provider "${p.name}" gagal: ${e.message} → lanjut provider berikutnya...`)
     }
   }
   throw new Error('Semua provider AI gagal')
