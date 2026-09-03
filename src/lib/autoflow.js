@@ -8,6 +8,22 @@ import { askAI } from "./aiagent.js";
 const DB = "./src/data/autoflow.json";
 const cooldown = new Map();
 
+// ================= ANTI-LOOP (echo balasan bot sendiri) =================
+// TIDAK blanket-skip semua fromMe — owner sering testing rule via self-chat
+// (chat ke diri sendiri / grup dgn nomor sendiri), itu fromMe:true JUGA.
+// Solusi: cuma skip message ID yang MEMANG bot ini kirim sendiri (dicatat
+// pas execute() ngirim), sisanya (termasuk fromMe krn self-chat) tetap diproses.
+const ownSentIds = new Set();
+const MAX_OWN_IDS = 500;
+function markOwnSent(id) {
+  if (!id) return;
+  ownSentIds.add(id);
+  if (ownSentIds.size > MAX_OWN_IDS) {
+    const first = ownSentIds.values().next().value;
+    ownSentIds.delete(first);
+  }
+}
+
 let _conn = null; // koneksi otomatis terisi dari pesan pertama
 
 // ================= MEMORY PER-USER (aichat) =================
@@ -82,29 +98,37 @@ async function execute(conn, m, rule, extra = {}) {
   const text = (a.value || "").replace(/@user/g, user ? "@" + user.split("@")[0] : "");
   const opts = m?.key ? { quoted: m } : {};
 
+  // wrapper: kirim + catat ID biar echo-nya (fromMe) dikenali & di-skip,
+  // TANPA nge-blok pesan asli yang diketik owner sendiri (self-chat testing)
+  const send = async (content, o = opts) => {
+    const res = await conn.sendMessage(chat, content, o);
+    markOwnSent(res?.key?.id);
+    return res;
+  };
+
   try {
     switch (a.type) {
       case "reply": {
         const payload = { text };
         const num = text.match(/@(\d{5,})/);
         if (num) payload.mentions = [num[1] + "@s.whatsapp.net"];
-        await conn.sendMessage(chat, payload, opts);
+        await send(payload);
         break;
       }
       case "react":
-        if (m?.key) await conn.sendMessage(chat, { react: { text: a.value, key: m.key } });
+        if (m?.key) await send({ react: { text: a.value, key: m.key } }, {});
         break;
       case "image": {
         if (fs.existsSync(a.value)) {
-          await conn.sendMessage(chat, { image: fs.readFileSync(a.value), caption: a.caption || "" }, opts);
+          await send({ image: fs.readFileSync(a.value), caption: a.caption || "" });
         } else if ((a.value || "").startsWith("http")) {
-          await conn.sendMessage(chat, { image: { url: a.value }, caption: a.caption || "" }, opts);
+          await send({ image: { url: a.value }, caption: a.caption || "" });
         }
         break;
       }
       case "audio":
         if (fs.existsSync(a.value)) {
-          await conn.sendMessage(chat, { audio: fs.readFileSync(a.value), mimetype: "audio/mpeg", ptt: true }, opts);
+          await send({ audio: fs.readFileSync(a.value), mimetype: "audio/mpeg", ptt: true });
         }
         break;
       case "kick":
@@ -137,7 +161,7 @@ async function execute(conn, m, rule, extra = {}) {
         try {
           const aiReply = await askAI(persona + (ctx ? "\n\n" + ctx : ""), userText);
           if (aiReply?.trim()) {
-            await conn.sendMessage(chat, { text: aiReply.trim() }, opts);
+            await send({ text: aiReply.trim() });
             pushMem(memKey, userText, aiReply.trim());
           }
         } catch (e) {
@@ -164,7 +188,13 @@ const MEDIA_TYPE = {
 };
 
 export async function handleMessage(conn, m) {
-  if (!m || m.key?.fromMe || m.fromMe) return; // anti-loop: abaikan pesan bot sendiri
+  if (!m) return;
+  // anti-loop: cuma skip ECHO balasan yang MEMANG bot ini kirim (ID tercatat
+  // di ownSentIds pas execute() ngirim). Pesan yang owner ketik sendiri lewat
+  // self-chat/self-bot (fromMe:true tapi BUKAN echo bot) tetap diproses —
+  // biar owner bisa testing rule "any"/aichat ke diri sendiri.
+  const msgId = m.key?.id;
+  if (msgId && ownSentIds.has(msgId)) { ownSentIds.delete(msgId); return; }
   if (conn) _conn = conn; // cache koneksi buat trigger jadwal
 
   const body = String(m.body || m.text || "").toLowerCase().trim();
