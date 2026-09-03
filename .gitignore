@@ -22,3 +22,4 @@ scripts/
 
 # Model AI lokal (Swin2SR/Real-ESRGAN) — diunduh otomatis di pemakaian pertama
 src/data/models/
+src/data/ptero-panels.json
