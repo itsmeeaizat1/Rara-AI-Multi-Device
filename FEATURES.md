@@ -1137,6 +1137,7 @@ Download Upgrades:
 - .ttsearch <keyword> - search - List video TikTok dari keyword search dengan stats + link canonical; media dikirim dari field download (no watermark)
 - .playtiktok <keyword> - search - Cari + kirim satu video TikTok dari keyword (hasil pertama); caption mediaCaption (views/likes/comments/shares + link), preview card asli
 - .ptvsearch <keyword> - search - Cari video TikTok → kirim random sebagai PTV (video note)
+- .igvideo/.igimage/.igaudio <url> - download - Download Instagram per format dari link post: .igvideo → video aja (preview card + offerConvert), .igimage → foto aja (carousel max 10, caption di foto pertama), .igaudio → audio MP3 (pakai track audio dari API kalau ada, kalau gak ada diekstrak via ffmpeg libmp3lame 128k); fetch chain IkyyXD instagram → ikyyAio → ig.js lokal (mirror instagramdl); catatan: keyword search IG gak mungkin — Meta blokir semua search tanpa login
 - .tiktokv3 - download - TikTok v3 (IkyyXD → Sanka → tikwm; support slideshow foto); semua media dikirim dengan preview card (cover asli TikTok — nova-media-card.js)
 - .teraboxv2 - download - Terabox v2 (nekolabs + teraboxdl.site)
 - .spotifyplay2 - download - Spotify play v2 (nexray + spotifydown fallback)
