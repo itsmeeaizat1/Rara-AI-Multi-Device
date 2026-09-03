@@ -87,11 +87,36 @@ async function messageHandler(msg, sock) {
 
   // === KILL-SWITCH GLOBAL: .bot off → bot TOTAL silent ===
   // Di-cek di titik PALING AWAL — sebelum stat, auto-flow, anti, dan semua fitur.
-  // Satu-satunya yang lolos: command .bot (biar bisa .bot on / cek status).
+  // Satu-satunya command yang lolos: .bot (biar bisa .bot on / cek status).
+  // Kalau ada user nyoba command APA PUN pas bot off → bot bales 1x info
+  // "dimatikan oleh owner" di chat itu (DM/grup/channel), tapi di-throttle
+  // GLOBAL 10 detik — jadi gak bisa di-spam buat bikin nomor keban.
+  // Pesan biasa (bukan command) tetap di-diamin total.
   // State disimpan di settings.botPower oleh plugins/owner/bot.js (owner only).
   try {
     if (db.db?.data?.settings?.botPower === false) {
-      if (String(m.command || "").toLowerCase() !== "bot") return; // diem total — gak ada respon apa pun
+      const __novaCmd = String(m.command || "").toLowerCase();
+      if (__novaCmd !== "bot") {
+        if (__novaCmd) {
+          const __novaNow = Date.now();
+          if (
+            !global.__novaBotOffNoticeAt ||
+            __novaNow - global.__novaBotOffNoticeAt >= 10000
+          ) {
+            global.__novaBotOffNoticeAt = __novaNow;
+            sock
+              .sendMessage(
+                m.chat,
+                {
+                  text: "Bot sedang dimatikan oleh owner.\nSemua fitur nonaktif sementara — bot tidak merespon command apa pun sampai diaktifkan kembali.\n\nTerima kasih atas pengertiannya.",
+                },
+                { quoted: m }
+              )
+              .catch(() => {});
+          }
+        }
+        return; // fitur gak diproses — diem total
+      }
     }
   } catch {}
 
