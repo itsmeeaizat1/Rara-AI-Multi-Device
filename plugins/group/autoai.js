@@ -273,6 +273,24 @@ async function handler(m, { sock }) {
     }
   }
 
+  // ---- .autoai status: cek persona & config aktif ----
+  if (subcmd === "status") {
+    const cfg = db.db.data.autoai[m.chat];
+    const g = db.db.data.autoai_global;
+    const fmt = (x, label) => {
+      if (!x?.enabled) return `🔴 ${label}: NONAKTIF`;
+      const ins = (x.instruction || "").replace(/\s+/g, " ").slice(0, 100);
+      return `🟢 ${label}: AKTIF
+  🎭 Persona: ${x.characterName || "-"} (${x.character || "-"})
+  📢 Response: ${x.responseType === "voice" ? "Voice Note" : "Text"}
+  🤖 Mode: ${x.mode || "assistant"}${x.enableCommands ? " (command ON)" : ""}
+  🧠 Logic: ${ins || "(kosong)"}${(x.instruction || "").length > 100 ? "..." : ""}`;
+    };
+    let txt = fmt(cfg, "GRUP INI") + "\n\n" + fmt(g, "GLOBAL");
+    txt += `\n\n💡 Kalau AI-nya jawab gaya aneh (misal kayak anime), cek Persona/Logic di atas — itu yang dipakai bot. Ganti: .autoai on --novamode=custom --logic=kamu adalah ...`;
+    return m.reply(claraWrap("Autoai Status", txt));
+  }
+
   const mode = subcmd;
   const modeMatch = fullArgs.match(/--novamode=(\w+)/i);
   const typeMatch = fullArgs.match(/--type=(text|voice)/i);
